@@ -1,1 +1,0 @@
-var tinyMCELinkList = new Array(["Jan den Besten - webontwerp","http://www.jandenbesten.net"]);
