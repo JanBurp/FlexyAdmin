@@ -1,0 +1,87 @@
+/* === Styles for layout of site =============================  */
+
+#wrapper {
+	position:absolute;
+	left:0px;
+	top:0px;
+	width:100%;
+	height:100%;
+}
+#container {
+	margin: 0px auto 0px;
+	width:802px;
+	height: 100%;
+	}
+
+.banner {
+	float:left;
+	width: 100%;
+	height: 40px;
+	background-image: url("../img/banner.gif");
+	background-position: -6px;
+	}
+
+	#menu	{
+		background-image:url("../img/title.gif");
+		background-repeat:no-repeat;
+		float:left;
+		width:100%;
+		height:65px;
+		margin:35px 0px 35px;
+		padding:0px;
+	}
+
+	#random {
+		float:left;
+		width:100%;
+	}
+		#random div.italic {
+		margin:10px 40px 12px;
+		}
+
+	#content	{
+		float:left;
+		width:100%;
+		margin-top:40px;
+		padding-bottom: 15px;
+	}
+
+
+
+/* === content item (normaal) === */
+
+	#content div.item {
+		float:left;
+		clear:both;
+		width: 100%;
+		padding:18px 0px 18px 0px;
+		background-image: url("../img/hr.gif");
+		background-repeat: repeat-x
+	}
+		.item .picture {
+			float:left;
+			width:400px;
+		}
+		.item .picture img {
+			max-width:400px;
+			float:right;
+		}
+		.text {
+			float:right;
+			width:380px;
+		}
+		.text img {
+			max-width:100%;
+		}
+
+
+/* === content item (portfolio) === */
+
+	#content.portfolio .item .text {
+			float:left;
+			width:100%;
+		}
+
+	#content.portfolio .item .text .date {
+		display:none;
+		}
