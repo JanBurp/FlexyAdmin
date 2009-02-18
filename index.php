@@ -1,4 +1,25 @@
 <?php
+
+/*
+|---------------------------------------------------------------
+| IS LOCAL ?
+|---------------------------------------------------------------
+|
+| Used for testing if site is localy tested, database is set accordingly in site/database.php
+| You can set several localhosts if needed.
+|
+*/
+
+	function is_local_host() {
+		$localhosts=array("localhost","localhost:8888");
+		$is=FALSE;
+		foreach ($localhosts as $host) {
+			if ($host==$_SERVER['HTTP_HOST']) { $is=TRUE; }
+		}
+		return $is;
+	}
+	$IS_LOCALHOST = is_local_host();
+
 /*
 |---------------------------------------------------------------
 | PHP ERROR REPORTING LEVEL
@@ -12,11 +33,12 @@
 	error_reporting(0); // For production site, set to 0, for developing set to E_ALL
 
 	/*
- 	 * Check if site is on localhost, if so, set error_reporting to E_ALL (for developing)
+ 	 * If site is on localhost, set error_reporting to E_ALL (for developing)
 	 */
-	if (strpos("localhost",$_SERVER['HTTP_HOST'])!==FALSE) {
+	if ($IS_LOCALHOST) {
 		error_reporting(E_ALL);
 	}
+
 
 /*
 |---------------------------------------------------------------
