@@ -552,7 +552,7 @@ label {
 		color:#FF0000;
 	}
 
-input, textarea, select, .jDrop {
+input, textarea, select {
 	width:450px;
 	padding:4px;
 	color:#669966;
@@ -613,8 +613,8 @@ select.media {
 p.form_field .flash,
 p.form_field img {
 	float:left;
-	width: 28px;
-	height: 28px;
+	width: 27px;
+	height: 27px;
 	margin:0px 10px 0px 0px;
 	border:1px solid #DDEEAA;
 	background-color: transparent;
@@ -655,66 +655,6 @@ input.button:hover {
 	clear:both;
 	width:50px;
 	}
-
-/* jDrop
-p.form_field.jdrop {
-	height: 28px;
-	}
-p.form_field.jdrop:hover .jDrop {
-	background-color: #fff;
-	}
-.jDrop {
-	float:right;
-	padding:0px;
-	width:459px;
-	}
-.jDrop .jSel,
-.jDrop .jSelOp,
-.jDrop .jOp {
-	width:100%;
-	float:left;
-	clear:both;
-	padding: 1px;
-	}
-.jDrop .jOp {
-	border-top: 1px solid #DDEEAA;
-	}
-.jDrop .jOpText {
-	margin:0px;
-	padding-top:3px;
-}
-
-.jDrop .jOp:hover {
-	background-color:#DDEEAA;
-	}
-.jDrop img {
-	float:left;
-	max-width: 20px;
-	height: 20px;
-	margin:0px 10px 0px 0px;
-	border-right:1px solid #DDEEAA;
-}
-.jDrop .flash {
-	float:left;
-	width: 20px;
-	height: 20px;
-	margin:0px 10px 0px 0px;
-	border-right:1px solid #DDEEAA;
-}
-.jDrop .jDropBut {
-	float:right;
-	width:25px;
-	height:25px;
-	background-image: url("../icons/dropbut.gif");
-	background-repeat: no-repeat;
-	background-position: 0px 0px;
-}
-.jDrop .jDropBut:hover {
-	background-image: url("../icons/dropbut.gif");
-	background-position: 0px -25px;
-	}
-
-*/
 
 
 /* filemanager fields/buttons */
