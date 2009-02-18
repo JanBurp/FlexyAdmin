@@ -28,7 +28,7 @@
  */
 
 $config['PHP_version']						= substr(phpversion(),0,1);
-$config['LOCAL']									= (strpos("localhost",$_SERVER['HTTP_HOST'])!==FALSE);
+$config['LOCAL']									= is_local_host();
 
 $config['ASSETS']									= "site/assets/";
 
