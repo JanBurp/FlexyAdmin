@@ -21,6 +21,6 @@ function popup_img($img,$txt) {
 function show_thumb($media,$ext="") {
 	if (empty($ext)) $ext=get_file_extension($media);
 	if ($ext=="swf") return flash($media,array("title"=>$media));
-	else 						 return img(array("src"=>$media,"alt"=>$media,"title"=>$media));
+	else 						 return img(array("src"=>$media,"alt"=>"","title"=>$media));
 }
 
