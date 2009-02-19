@@ -68,7 +68,20 @@ function flash($swf,$attr="") {
 		$attr=$a;
 	}
 
-	$object='<object class="flash" data="'.$swf.'" type="application/x-shockwave-flash" '.$attr.'><param name="src" value="'.$swf.'" /></object>';
+	$object=
+'<object data="'.$swf.'" '.$attr.' classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" >'.
+'<param name="allowScriptAccess" value="sameDomain" />'.
+'<param name="movie" value="'.$swf.'" />'.
+'<param name="quality" value="high" />'.
+'<param name="bgcolor" value="#ffffff" />'.
+'<embed src="'.$swf.'" quality="high" bgcolor="#ffffff" '.$attr.' allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.adobe.com/go/getflashplayer" />'.
+'</object>';
+
+
+//'<object class="flash" data="'.$swf.'" type="application/x-shockwave-flash" '.$attr.'>' .
+//'<param name="src" value="'.$swf.'" />' .
+//'</object>';
+
 
 //	$object="<object class=\"flash\" data=\"$swf\" type=\"application/x-shockwave-flash\" $attr>
 //						<param name=\"type\" value=\"application/x-shockwave-flash\" />
