@@ -610,6 +610,9 @@ select.multiselect:hover {
 select.media {
 	width:421px;
 	}
+select.medias {
+	float:right;
+	}
 p.form_field .flash,
 p.form_field img {
 	float:left;

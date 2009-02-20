@@ -27,19 +27,42 @@ $(document).ready(function() {
 		//
 
 		options=$("p.image_dropdown select.media option");
-		path=$("p.image_dropdown select.media").attr("path")+"/";
+		if (options.length>0) {
+			path=$("p.image_dropdown select.media").attr("path")+"/";
 
-		$("select.media").change(function() {
-			media=$("select.media option:selected").attr("value");
-			ext=get_ext(media);
-			if (ext=="swf") {
-				$("p.image_dropdown object").attr("data",path+media);
-				$("p.image_dropdown object param").attr("value",path+media);
-			}
-			else {
-				$("p.image_dropdown img").attr("src",path+media);
-			}
-		});
+			$("select.media").change(function() {
+				media=$("select.media option:selected").attr("value");
+				ext=get_ext(media);
+				if (ext=="swf") {
+					$("p.image_dropdown object").attr("data",path+media);
+					$("p.image_dropdown object param").attr("value",path+media);
+				}
+				else {
+					$("p.image_dropdown img").attr("src",path+media);
+				}
+			});
+		}
+		// Multiple media dropdown
+		options=$("p.image_dropdown select.medias option");
+		if (options.length>0) {
+			path=$("p.image_dropdown select.medias").attr("path")+"/";
+
+			$("select.medias").change(function() {
+				// remove old thumbs
+				$("p.image_dropdown.medias img").remove();
+				// show new thumbs
+				medias=$("select.medias option:selected");
+				$(medias).each(function() {
+					src=path+$(this).attr("value");
+					console.log(src);
+					$("p.image_dropdown select.medias").before('<img class="media" src="'+src+'" alt="'+src+'" title="'+src+'"');
+				});
+			});
+		}
+
+
+
+
 
 	}
 

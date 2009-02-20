@@ -102,6 +102,7 @@ class FrontEndController extends MY_Controller {
 		 */
 		$this->site["assets"]=assets();
 		$this->site["rel_assets"]=$this->config->item("ASSETS");
+		$this->site["admin_assets"]=admin_assets();
 		/**
 		 * Set global site info from tbl_site (if it doesn't exist, put some standard info)
 		 */

@@ -473,6 +473,20 @@ class Flexy_field extends Model {
 		return $out;
 	}
 
+	function _dropdown_medias_grid() {
+		$out="";
+		if (!empty($this->data)) {
+			$info=$this->cfg->get('CFG_media_info',$this->table.".".$this->field);
+			$path=$this->config->item('ASSETS').el("str_path",$info)."/";
+			$data=explode("|",$this->data);
+			$media=$this->config->item('ASSETS').$path."/".$this->data;
+			foreach($data as $img) {
+				$out.=show_thumb($path.$img);
+			}
+		}
+		return $out;
+	}
+
 	function _dropdown_media_form() {
 		$info=$this->cfg->get('CFG_media_info',$this->table.".".$this->field);
 		$types=explode(",",el("str_types",$info));
@@ -497,6 +511,11 @@ class Flexy_field extends Model {
 		return $out;
 	}
 
+	function _dropdown_medias_form() {
+		$out=$this->_dropdown_media_form();
+		$out["multiple"]="multiple";
+		return $out;
+	}
 
 
 }

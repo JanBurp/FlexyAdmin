@@ -430,9 +430,13 @@ class Form Extends Model {
 			$out.=form_label($field["label"],$name);
 		}
 		switch($field["type"]):
+
+
 			case "hidden":
 				$out.=form_hidden($name,$field["value"]);
 				break;
+
+
 			case "checkbox":
 				if ($attr["value"])
 					$attr["checked"]="checked";
@@ -441,12 +445,16 @@ class Form Extends Model {
 				$attr["value"]="true";
 				$out.=form_checkbox($attr);
 				break;
+
+
 			case "htmleditor":
 				$this->hasHtmlField=true;
 			case "textarea":
 				if ($field["type"]=="textarea") $attr["rows"]=5;
 				$out.=form_textarea($attr);
 				break;
+
+
 			case "image_dropdown":
 			case "dropdown":
 				$options=el("options",$field);
@@ -467,30 +475,43 @@ class Form Extends Model {
 						$value=explode("|",$value);
 					}
 				}
-				if ($field["type"]=="image_dropdown")	$out.=show_thumb($field["path"]."/".$value);
+				if ($field["type"]=="image_dropdown") {
+					if (!is_array($value)) $medias=array($value); else $medias=$value;
+					foreach($medias as $media) {
+						$out.=show_thumb(array("src"=>$field["path"]."/".$media,"class"=>"media"));
+					}
+				}
 				$out.=form_dropdown($name,$options,$value,$extra);
 				if (isset($button)) {
 					$out.=anchor($button,icon("add"));
 				}
 				break;
+
+
 			case "upload":
 				if (!empty($field["value"])) $out.=popup_img($field["upload_path"]."/".$field["value"],img($field["upload_path"]."/".$field["value"]));
 				$out.=form_input($attr);
 				$attr["class"].=" browse";
 				$out.=form_upload($attr);
 				break;
+
+
 			case "date":
 				$date=trim(strval($field["value"]));
 				if (($date=="0000-00-00") or ($date=="")) {
 					$date=date("Y-m-d");
 				}
 				$attr["value"]=$date;
+
+
 			case "time":
 			case "input":
 			case "default":
 			default:
 				$out.=form_input($attr);
+
 		endswitch;
+
 		if ($field["type"]!="hidden") {
 			$out.=$this->tmp($this->tmpFieldEnd);
 		}
