@@ -18,9 +18,19 @@ function popup_img($img,$txt) {
 }
 
 
-function show_thumb($media,$ext="") {
-	if (empty($ext)) $ext=get_file_extension($media);
-	if ($ext=="swf") return flash($media,array("title"=>$media));
-	else 						 return img(array("src"=>$media,"alt"=>"","title"=>$media));
+function show_thumb($attr) {
+	$a=array();
+	if (!is_array($attr)) $a["src"]=$attr; else $a=$attr;
+	$ext=get_file_extension($a["src"]);
+	if (!isset($a["title"])) $a["title"]=$a["src"];
+	if ($ext=="swf") {
+		$src=$a["src"];
+		unset($a["src"]);
+		return flash($src,$a);
+	}
+	else {
+		if (!isset($a["alt"])) $a["alt"]=$a["src"];
+		return img($a);
+	}
 }
 
