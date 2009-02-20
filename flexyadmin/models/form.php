@@ -478,7 +478,7 @@ class Form Extends Model {
 				if ($field["type"]=="image_dropdown") {
 					if (!is_array($value)) $medias=array($value); else $medias=$value;
 					foreach($medias as $media) {
-						$out.=show_thumb(array("src"=>$field["path"]."/".$media,"class"=>"media"));
+						if (!empty($media))	$out.=show_thumb(array("src"=>$field["path"]."/".$media,"class"=>"media"));
 					}
 				}
 				$out.=form_dropdown($name,$options,$value,$extra);
