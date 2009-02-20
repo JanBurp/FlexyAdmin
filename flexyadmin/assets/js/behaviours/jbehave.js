@@ -42,6 +42,7 @@ $(document).ready(function() {
 				}
 			});
 		}
+
 		// Multiple media dropdown
 		options=$("p.image_dropdown select.medias option");
 		if (options.length>0) {
@@ -52,11 +53,13 @@ $(document).ready(function() {
 				$("p.image_dropdown.medias img").remove();
 				// show new thumbs
 				medias=$("select.medias option:selected");
-				$(medias).each(function() {
-					src=path+$(this).attr("value");
-					console.log(src);
-					$("p.image_dropdown select.medias").before('<img class="media" src="'+src+'" alt="'+src+'" title="'+src+'"');
-				});
+				if (medias.length>0) {
+					$(medias).each(function() {
+						src=path+$(this).attr("value");
+						console.log(src);
+						$("p.image_dropdown select.medias").before('<img class="media" src="'+src+'" />');
+					});
+				}
 			});
 		}
 
