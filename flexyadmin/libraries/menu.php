@@ -51,11 +51,10 @@ class Menu {
 		$menu=array();
 		foreach($items as $item) {
 			if (!isset($item["b_visible"]) or ($item["b_visible"]) ) {
-				if (isset($item["uri"]))
-					$uri=$item["uri"];
-				else
-					$uri=$item["str_title"];
-				$menu[$item["str_title"]]=array("uri"=>$uri);
+				$thisItem=array();
+				if (isset($item["uri"])) $thisItem["uri"]=$item["uri"];	else $thisItem["uri"]=$item["str_title"];
+				if (isset($item["str_class"])) $thisItem["class"]=$item["str_class"];
+				$menu[$item["str_title"]]=$thisItem;
 			}
 		}
 		$this->set_menu($menu);
