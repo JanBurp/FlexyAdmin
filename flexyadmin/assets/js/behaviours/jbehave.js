@@ -32,14 +32,12 @@ $(document).ready(function() {
 
 			$("select.media").change(function() {
 				media=$("select.media option:selected").attr("value");
-				ext=get_ext(media);
-				if (ext=="swf") {
-					$("p.image_dropdown object").attr("data",path+media);
-					$("p.image_dropdown object param").attr("value",path+media);
-				}
-				else {
-					$("p.image_dropdown img").attr("src",path+media);
-				}
+				// remove old thumb
+				$("p.image_dropdown.media img").remove();
+				// show new thumb
+				src=path+media;
+				console.log(src);
+				$("p.image_dropdown select.media").before('<img class="media" src="'+src+'" />');
 			});
 		}
 
@@ -56,7 +54,6 @@ $(document).ready(function() {
 				if (medias.length>0) {
 					$(medias).each(function() {
 						src=path+$(this).attr("value");
-						console.log(src);
 						$("p.image_dropdown select.medias").before('<img class="media" src="'+src+'" />');
 					});
 				}
