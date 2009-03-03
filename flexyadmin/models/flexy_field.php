@@ -306,28 +306,28 @@ class Flexy_field extends Model {
 		 * Dropdown, no options set, but maybe in cfg_field_info?
 		 *TODO: Misschien is deze code niet meer nodig: komt uit fd..
 		 */
-		else {
-			if (isset($this->fieldCfg[$this->field])) {
-				$opt=el("str_options",$this->fieldCfg[$this->field]);
-				if (!empty($opt)) {
-					$o=explode("|",$opt);
-					$out["options"]=combine($o,$o);
-					$out["type"]="dropdown";
-					$multi=el("b_multi_options",$this->fieldCfg[$this->field]);
-					if ($multi)	{
-						$out["multiple"]="multiple";
-						if (!empty($this->data))
-							$v=explode("|",$this->data);
-						else
-							$v=array();
-						if (count($v)>0)
-							$out["value"]=array_combine($v,$v);
-						else
-							$out["value"]=array();
-					}
-				}
-			}
-		}
+//		else {
+//			if (isset($this->fieldCfg[$this->field])) {
+//				$opt=el("str_options",$this->fieldCfg[$this->field]);
+//				if (!empty($opt)) {
+//					$o=explode("|",$opt);
+//					$out["options"]=combine($o,$o);
+//					$out["type"]="dropdown";
+//					$multi=el("b_multi_options",$this->fieldCfg[$this->field]);
+//					if ($multi)	{
+//						$out["multiple"]="multiple";
+//						if (!empty($this->data))
+//							$v=explode("|",$this->data);
+//						else
+//							$v=array();
+//						if (count($v)>0)
+//							$out["value"]=array_combine($v,$v);
+//						else
+//							$out["value"]=array();
+//					}
+//				}
+//			}
+//		}
 		/**
 		 * Upload field
 		 */

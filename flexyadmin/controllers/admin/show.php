@@ -182,6 +182,7 @@ class Show extends AdminController {
 			/**
 			 * if data: first render data for the form class, then put data in form
 			 */
+
 			$data=$this->ff->render_form($table,$data,$options);
 
 			$form=new form(api_uri('API_view_form',$table,$id));
