@@ -294,10 +294,8 @@ class Flexy_field extends Model {
 		 * Dropdown fields, if there are options.
 		 */
 		if (isset($options) or isset($multiOptions)) {
-			if (!isset($options)) $options=array();
-			if (!isset($multiOptions)) $multiOptions=array();
-			$allOptions=array_merge($options,$multiOptions);
-			$out["options"] = $allOptions;
+			if (isset($multiOptions)) $options=$multiOptions;
+			$out["options"] = $options;
 			if ($this->type!="dropdown") {
 				$out["type"]="dropdown";
 			}
