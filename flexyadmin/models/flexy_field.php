@@ -241,12 +241,13 @@ class Flexy_field extends Model {
 	 * Renders full data set according to type and action (grid|form)
 	 *
 	 */
-	function render_form($table,$data,$options=NULL) {
+	function render_form($table,$data,$options=NULL,$multiOptions=NULL) {
 		$this->init_table($table,"form");
 		$out=array();
 		foreach ($data as $name => $value) {
 			$opt=el($name,$options);
-			$renderedField=$this->render_form_field($table,$name,$value,$opt);
+			$mOpt=el($name,$multiOptions);
+			$renderedField=$this->render_form_field($table,$name,$value,$opt,$mOpt);
 			if ($renderedField!==FALSE)	$out[$name]=$renderedField;
 		}
 		return $out;
@@ -258,7 +259,7 @@ class Flexy_field extends Model {
 	 * Renders full data set according to type and action (grid|form)
 	 *
 	 */
-	function render_form_field($table,$field,$value,$options=NULL) {
+	function render_form_field($table,$field,$value,$options=NULL,$multiOptions=NULL) {
 		$out=array();
 		$this->init_field($field,$value);
 		// Must field be shown?
@@ -274,12 +275,12 @@ class Flexy_field extends Model {
 				$out=$this->$func();
 		}
 		else {
-			$out=$this->_standard_form_field($options);
+			$out=$this->_standard_form_field($options,$multiOptions);
 		}
 		return $out;
 	}
 
-	function _standard_form_field($options=NULL) {
+	function _standard_form_field($options=NULL,$multiOptions=NULL) {
 		$out=array();
 		/**
 		 * Standard form field information
@@ -292,8 +293,11 @@ class Flexy_field extends Model {
 		/**
 		 * Dropdown fields, if there are options.
 		 */
-		if (isset($options)) {
-			$out["options"] = $options;
+		if (isset($options) or isset($multiOptions)) {
+			if (!isset($options)) $options=array();
+			if (!isset($multiOptions)) $multiOptions=array();
+			$allOptions=array_merge($options,$multiOptions);
+			$out["options"] = $allOptions;
 			if ($this->type!="dropdown") {
 				$out["type"]="dropdown";
 			}
@@ -301,6 +305,7 @@ class Flexy_field extends Model {
 				// add a 'new' item button
 				$out["button"]=api_uri('API_view_form',foreign_table_from_key($this->field),-1);
 			}
+			if (!empty($multiOptions)) $out["multiple"]="multiple";
 		}
 		/**
 		 * Dropdown, no options set, but maybe in cfg_field_info?

@@ -163,6 +163,7 @@ class Show extends AdminController {
 			if ($id!="") $this->fd->where($table.".".pk(),$id);
 			$data=$this->fd->get_results($table);
 			$options=el("options",$data);
+			$multiOptions=el("multi_options",$data);
 			$data=current($data);
 
 			/**
@@ -174,6 +175,7 @@ class Show extends AdminController {
 				$this->fd->with_options(true);
 				$data=$this->fd->defaults($table);
 				$options=el("options",$data);
+				$multiOptions=el("multi_options",$data);
 				$data=current($data);
 				$data[pk()]="-1";
 				$id=-1;
@@ -183,7 +185,7 @@ class Show extends AdminController {
 			 * if data: first render data for the form class, then put data in form
 			 */
 
-			$data=$this->ff->render_form($table,$data,$options);
+			$data=$this->ff->render_form($table,$data,$options,$multiOptions);
 
 			$form=new form(api_uri('API_view_form',$table,$id));
 			$uiTable=$this->uiNames->get($table);
