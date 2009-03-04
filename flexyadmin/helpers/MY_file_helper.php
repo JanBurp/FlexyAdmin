@@ -12,7 +12,9 @@
 
 
 function get_file_extension($f) {
-	return remove_prefix($f,".");
+	$p=strrpos($f,".");
+	if ($p===FALSE) return "";
+	return substr($f,$p+1);
 }
 
 
