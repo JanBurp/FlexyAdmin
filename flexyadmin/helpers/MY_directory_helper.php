@@ -23,7 +23,7 @@ function read_map($path) {
 				$data["alt"]=$name;
 			}
 			else {
-				$data["type"]=strtolower(remove_prefix($file,"."));
+				$data["type"]=strtolower(get_file_extension($file));
 				$name=$file;
 				$data["alt"]=get_prefix($file,".");
 				$data["size"]=sprintf("%d k",filesize($path."/".$name)/1024);
