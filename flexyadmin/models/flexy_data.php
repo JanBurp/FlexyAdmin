@@ -313,7 +313,7 @@ class Flexy_data extends Model {
 	}
 
 /**
- * function with_joins($joins=false)
+ * function joins($joins=false)
  *
  * Sets if join data has to be included in result array
  *
