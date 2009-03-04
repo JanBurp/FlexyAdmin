@@ -38,7 +38,6 @@ class Editor_lists {
 			foreach($query->result_array() as $row) {
 				$files[$row["str_title"]]=array("path"=>$row["url_url"],"alt"=>$row["str_title"]);
 			}
-			//$files=array_unique($files);
 		}
 		else {
 			$mediaTbl=$CI->config->item('CFG_table_prefix')."_".$CI->config->item('CFG_media_info');
@@ -60,7 +59,7 @@ class Editor_lists {
 		// set list
 		$img_list="var $jsArray = new Array(";
 		foreach($files as $name=>$file) {
-			$img_list.='["'.$file["alt"].'","'.$file["path"].'"],';
+			$img_list.='["'.$file["name"].'","'.$file["path"].'"],';
 		}
 		$img_list=substr($img_list,0,strlen($img_list)-1);
 		$img_list.=");";
