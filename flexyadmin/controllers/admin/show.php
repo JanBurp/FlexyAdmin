@@ -94,7 +94,6 @@ class Show extends AdminController {
 				$this->fd->foreign_with_abstracts();
 				$this->fd->joins(true);
 				$data=$this->fd->get_results($table);
-
 				if (empty($data)) {
 					/**
 					 * if no data, start an input form
