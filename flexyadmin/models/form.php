@@ -276,6 +276,9 @@ class Form Extends Model {
 		$uri=str_replace(" ","_",trim($uri));
 		// replace specialchars
 		$uri=clean_string($uri);
+		// forbidden uri's
+		$forbidden=array("flexyadmin","ci","site");
+		if (in_array($uri,$forbidden)) $uri="_".$uri;
 		return $uri;
 	}
 
