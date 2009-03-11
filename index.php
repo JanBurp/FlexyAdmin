@@ -11,7 +11,7 @@
 */
 
 	function is_local_host() {
-		$localhosts=array("localhost","localhost:8888");
+		$localhosts=array("localhost","localhost:8888","10.37.129.2");
 		$is=FALSE;
 		foreach ($localhosts as $host) {
 			if ($host==$_SERVER['HTTP_HOST']) { $is=TRUE; }
@@ -30,7 +30,7 @@
 | For more info visit:  http://www.php.net/error_reporting
 |
 */
-		error_reporting(0); // For production site, set to 0, for developing set to E_ALL
+	error_reporting(0); // For production site, set to 0, for developing set to E_ALL
 
 	/*
  	 * If site is on localhost, set error_reporting to E_ALL (for developing)
@@ -68,7 +68,7 @@
 | NO TRAILING SLASH!
 |
 */
-	$application_folder = "../flexyadmin";
+	$application_folder = "../fa";
 
 /*
 |===============================================================

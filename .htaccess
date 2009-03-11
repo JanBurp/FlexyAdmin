@@ -1,3 +1,3 @@
 RewriteEngine on
-RewriteCond $1 !^(index\.php|site|flexyadmin|robots\.txt)
+RewriteCond $1 !^(index\.php|site|fa|robots\.txt)
 RewriteRule ^(.*)$ index.php/$1 [L]
