@@ -152,7 +152,6 @@ class File_manager Extends Model {
 		else {
 			log_("info","[FM] ERROR deleting file/dir '$name'");
 		}
-		$this->set_lists();
 		return $result;
 	}
 
@@ -176,15 +175,7 @@ class File_manager Extends Model {
 		else {
 			log_("info","[FM] uploaded: '$file'");
 		}
-		$this->set_lists();
 		return array("error"=>$error,"file"=>$file);
-	}
-
-	function set_lists() {
-		$CI =& get_instance();
-		$CI->load->library("editor_lists");
-		$CI->editor_lists->create_list("img");
-		$CI->editor_lists->create_list("media");
 	}
 
 /**

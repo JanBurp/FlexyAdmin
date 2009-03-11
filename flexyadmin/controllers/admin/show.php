@@ -103,6 +103,8 @@ class Show extends AdminController {
 				}
 				else
 				{
+					$this->_before_grid($table,$data);
+					
 					/**
 					 * if data: first render data, then put data in grid and render as html
 					 */
@@ -136,7 +138,6 @@ class Show extends AdminController {
 			$this->_show_all($uiTable);
 		}
 	}
-
 
 /**
  * This controls the form view
@@ -235,7 +236,6 @@ class Show extends AdminController {
 		$this->_show_type("form");
 		$this->_show_all($uiTable);
 	}
-
 
 /**
  * Here are some form validation callback functions

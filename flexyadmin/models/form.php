@@ -229,15 +229,17 @@ class Form Extends Model {
 		$table=$this->data[pk()]["table"];
 		/**
 		 *  Is it a updated link from links table?
+		 *
+		 *	This code moved to MY_Controller -> before_grid_tbl_links
 		 */
-		if ($table==$this->cfg->get('CFG_editor','table')) {
-			/**
-			 * Reset link list
-			 */
-			$CI =& get_instance();
-			$CI->load->library("editor_lists");
-			$CI->editor_lists->create_list("links");
-		}
+//		if ($table==$this->cfg->get('CFG_editor','table')) {
+//			/**
+//			 * Reset link list
+//			 */
+//			$CI =& get_instance();
+//			$CI->load->library("editor_lists");
+//			$CI->editor_lists->create_list("links");
+//		}
 	}
 
 	function _get_uri_field($fields) {
