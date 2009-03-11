@@ -500,7 +500,7 @@ class Flexy_data extends Model {
 				$options[$key]=$this->get_options($forTable["table"]);
 			}
 		}
-		if (count($options)>0) $out=array_merge($out,array("options" => $options));
+		if (count($options)>0) $out["options"]=array_merge($out["options"],$options);
 		return $out;
 	}
 
@@ -519,7 +519,7 @@ class Flexy_data extends Model {
 				$options[$rel]=$this->get_options($jTable["join"]);
 			}
 		}
-		if (count($options)>0) $out=array_merge($out,array("options" => $options));
+		if (count($options)>0) $out["options"]=array_merge($out["options"],$options);
 		return $out;
 	}
 
@@ -711,13 +711,12 @@ class Flexy_data extends Model {
 		 */
 		if ($this->withOptions and !empty($out)) {
 			$out=$this->_add_field_options($out);
-
 			// options of foreigntables
 			if (!isset($foreignTables)) {
 				$foreignTables=$this->get_foreign_tables();
 			}
 			$out=$this->_add_foreign_options($out,$foreignTables);
-
+	
 			// options of jointables
 			if (!isset($joinTables)) {
 				$joinTables=$this->get_join_tables();
