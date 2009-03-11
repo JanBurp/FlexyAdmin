@@ -12,7 +12,7 @@
 
 
 function read_map($path,$types="") {
-	if (!is_array($types)) $types=explode(",",$types);
+	if (!is_array($types) and !empty($types)) $types=explode(",",$types);
 	$files=directory_map($path);
 	$prepFiles=array();
 	if (!empty($files)) {
