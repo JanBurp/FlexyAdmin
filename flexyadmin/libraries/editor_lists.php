@@ -30,13 +30,13 @@ class Editor_lists {
 		$jsFile		=$t["file_name"];
 		$CI =& get_instance();
 
-		$files=array();
+		$data=array();
 		if ($type=="links") {
 			$table=$CI->cfg->get('CFG_editor','table');
 			$CI->db->select("str_title,url_url");
 			$query=$CI->db->get($table);
 			foreach($query->result_array() as $row) {
-				$files[$row["str_title"]]=array("path"=>$row["url_url"],"alt"=>$row["str_title"]);
+				$data[$row["str_title"]]=array("url"=>$row["url_url"],"name"=>$row["str_title"]);
 			}
 		}
 		else {
@@ -49,25 +49,33 @@ class Editor_lists {
 					$path=$row["str_path"];
 					$map=$CI->config->item('ASSETS').$path;
 					$subFiles=read_map($map);
-					$files=$files + $subFiles;
+					$data=$data + $subFiles;
 				}
 			}
 		}
 
-		ignorecase_ksort($files);
+		ignorecase_ksort($data);
 
 		// set list
-		$img_list="var $jsArray = new Array(";
-		foreach($files as $name=>$file) {
-			$img_list.='["'.$file["name"].'","'.$file["path"].'"],';
+		$list="var $jsArray = new Array(";
+		if ($type=="links") {
+			foreach($data as $name=>$link) {
+				$list.='["'.$link["name"].'","'.$link["url"].'"],';
+			}
 		}
-		$img_list=substr($img_list,0,strlen($img_list)-1);
-		$img_list.=");";
-		$imgListFile="site/assets/lists/$jsFile.js";
-		$result=write_file($imgListFile, $img_list);
+		else {
+			foreach($data as $name=>$file) {
+				$list.='["'.$file["name"].'","'.$file["path"].'"],';
+			}
+		}
+		$list=substr($list,0,strlen($list)-1);
+		$list.=");";
+		$ListFile="site/assets/lists/$jsFile.js";
+		$result=write_file($ListFile, $list);
 //		trace_($result);
-//		trace_($imgListFile);
-//		trace_(file_exists($imgListFile));
+//		trace_($list);
+//		trace_(file_exists($ListFile));
+		return $result;
 	}
 
 	function delete($file,$type="") {

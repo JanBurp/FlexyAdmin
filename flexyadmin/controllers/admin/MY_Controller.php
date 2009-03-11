@@ -375,6 +375,39 @@ class AdminController extends BasicController {
 		$this->content.=$add;
 	}
 
+	/**
+	 * Here are fuctions that hook into the grid/form/update proces.
+	 * They check if a standard hook method for the current table/field/id, if so call it
+	 */
+
+	function _before_grid($table,&$data) {
+		$func="_before_grid_$table";
+		if (method_exists($this,$func)) {
+			$this->$func($data);
+		}
+	}
+
+	function _before_grid_tbl_links(&$data) {
+		/**
+		 * Reset link list
+		 */
+		$this->load->library("editor_lists");
+		$result=$this->editor_lists->create_list("links");
+		if (!$result) $this->set_message("Could not update Links List. Check file rights.");
+		return $result;
+	}
+
+	function _before_filemanager($path,&$files) {
+		/**
+		 * Reset img/media list
+		 */
+		$this->load->library("editor_lists");
+		$result=$this->editor_lists->create_list("img");
+		if ($result) $result=$this->editor_lists->create_list("media");
+		if (!$result) $this->set_message("Could not update img/media List. Check file rights.");
+		return $result;
+	}
+
 
 }
 

@@ -70,6 +70,11 @@ class Filemanager extends AdminController {
 			$uiName=$cfg['str_menu_name'];
 
 			/**
+			 * update img/media_lists
+			 */
+			$this->_before_filemanager($path,$files);
+
+			/**
 			 * Start file manager
 			 */
 			$fileManagerView=$this->cfg->get('CFG_configurations','str_filemanager_view');
