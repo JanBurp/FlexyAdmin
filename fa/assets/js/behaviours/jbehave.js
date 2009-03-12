@@ -34,10 +34,16 @@ $(document).ready(function() {
 				media=$("select.media option:selected").attr("value");
 				// remove old thumb
 				$("p.image_dropdown.media img").remove();
+				$("p.image_dropdown.media object").remove();
 				// show new thumb
 				src=path+media;
-				console.log(src);
-				$("p.image_dropdown select.media").before('<img class="media" src="'+src+'" />');
+				ext=get_ext(media);
+				if (ext=='swf' || ext=='flv') {
+					$("p.image_dropdown select.media").before(flash(src));
+				}
+				else {
+					$("p.image_dropdown select.media").before('<img class="media" src="'+src+'" />');
+				}
 			});
 		}
 
@@ -49,20 +55,23 @@ $(document).ready(function() {
 			$("select.medias").change(function() {
 				// remove old thumbs
 				$("p.image_dropdown.medias img").remove();
+				$("p.image_dropdown.media object").remove();
 				// show new thumbs
 				medias=$("select.medias option:selected");
 				if (medias.length>0) {
 					$(medias).each(function() {
 						src=path+$(this).attr("value");
-						$("p.image_dropdown select.medias").before('<img class="media" src="'+src+'" />');
+						ext=get_ext(media);
+						if (ext=='swf' || ext=='flv') {
+							$("p.image_dropdown select.medias").before(flash(src));
+						}
+						else {
+							$("p.image_dropdown select.medias").before('<img class="media" src="'+src+'" />');
+						}
 					});
 				}
 			});
 		}
-
-
-
-
 
 	}
 
@@ -281,11 +290,6 @@ $(document).ready(function() {
 
 
 
-
-
-
-
-
 //
 // Functions for confirm
 //
@@ -344,3 +348,17 @@ function get_subclass(sub,obj) {
 // Other functions
 //
 function get_ext(s){s=String(s);a=s.split(".");return a[a.length-1];}
+
+function flash(swf) {
+	attr='width="32" height="32"';
+	f='<object class="flash" data="#swf#" #attr# classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" >' +
+		'<param name="allowScriptAccess" value="sameDomain" />' +
+		'<param name="movie" value="#swf#" />' +
+		'<param name="quality" value="high" />' +
+		'<param name="bgcolor" value="#ffffff" />' +
+		'<embed class="flash" src="#swf#" quality="high" bgcolor="#ffffff" #attr# allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.adobe.com/go/getflashplayer" />' +
+		'</object>';
+	f=f.replace(/#swf#/g,swf);
+	f=f.replace(/#attr#/g,attr);
+	return f;
+}

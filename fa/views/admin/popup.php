@@ -1,7 +1,9 @@
 <?
 $sizes=getimagesize($img);
+$img=site_url($img);
+$ext=get_file_extension($img);
 $w=$sizes[0];
-$h=$sizes[1]+50;
+$h=$sizes[1];
 $size=$sizes[3];
 ?>
 
@@ -58,6 +60,17 @@ $size=$sizes[3];
   -->
   </style></head>
 <body oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onload="FitPic('<? echo $w; ?>','<? echo $h; ?>')">
-<a href="javascript:close()"><img src="<? echo $img; ?>" <? echo $size; ?> alt="<? echo $img; ?>" /></a>
+<a href="javascript:close()">
+<?
+	if ($ext=="swf" or $ext=="flv") {
+		echo flash($img,array("width"=>$w,"height"=>$h));
+	}
+	else {
+		?>
+		<img src="<? echo $img; ?>" <? echo $size; ?> alt="<? echo $img; ?>" />
+		<?
+	}
+?>
+</a>
 </body>
 </html>

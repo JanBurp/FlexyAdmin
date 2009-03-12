@@ -45,7 +45,7 @@ class Popup extends BasicController {
  */
 
 	function img($img) {
-		$img=site_url(pathdecode($img,TRUE));
+		$img=pathdecode($img,TRUE);
 		$this->load->view('admin/popup', array("img"=>$img));
 	}
 

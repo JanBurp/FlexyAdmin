@@ -288,17 +288,17 @@ function thumb($attr,$index=FALSE) {
 				if ($isImg) {
 					$icon=div(array("class"=>"thumb")).popup_img($this->map."/".$name,img(array("src" => $this->map."/".$name, "alt"=>$name,"title"=>$name))).end_div();
 				} elseif ($isFlash) {
-					$icon=div(array("class"=>"flash")).flash($this->map."/".$name).end_div();
+					$icon=div(array("class"=>"flash")).popup_img($this->map."/".$name,icon("flash $name"))._div(); //flash($this->map."/".$name).end_div();
 				} elseif (in_array($type,$mp3Types)) {
-					$icon=div(array("class"=>"sound")).icon("sound $name").end_div();
+					$icon=div(array("class"=>"sound")).icon("sound $name")._div();
 				} elseif (in_array($type,$movTypes)) {
-					$icon=div(array("class"=>"movie")).icon("movie $name").end_div();
+					$icon=div(array("class"=>"movie")).icon("movie $name")._div();
 				} elseif ($file["type"]=="dir") {
-					$icon=div(array("class"=>"image")).img(array("src" => admin_assets("icons/folder.gif"),"alt"=>$name,"title"=>$name)).end_div();
+					$icon=div(array("class"=>"image")).img(array("src" => admin_assets("icons/folder.gif"),"alt"=>$name,"title"=>$name))._div();
 				}
 				// default
 				else {
-					$icon=div(array("class"=>"file")).icon("file $name").end_div();;
+					$icon=div(array("class"=>"file")).icon("file $name")._div();;
 				}
 
 				$edit=anchor(api_uri('API_filemanager_confirm',pathencode($this->path),$name),icon("delete"),array("class"=>"delete"));

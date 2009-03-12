@@ -76,23 +76,6 @@ function flash($swf,$attr="") {
 '<param name="bgcolor" value="#ffffff" />'.
 '<embed class="flash" src="'.$swf.'" quality="high" bgcolor="#ffffff" '.$attr.' allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.adobe.com/go/getflashplayer" />'.
 '</object>';
-
-
-//'<object class="flash" data="'.$swf.'" type="application/x-shockwave-flash" '.$attr.'>' .
-//'<param name="src" value="'.$swf.'" />' .
-//'</object>';
-
-
-//	$object="<object class=\"flash\" data=\"$swf\" type=\"application/x-shockwave-flash\" $attr>
-//						<param name=\"type\" value=\"application/x-shockwave-flash\" />
-//						<param name=\"src\" value=\"$swf\" />
-//						<param name=\"data\" value=\"$swf\" />
-//						<param name=\"codebase\" value=\"$swf\" />
-//						<param name=\"allowScriptAccess\" value=\"sameDomain\" />
-//						<param name=\"movie\" value=\"$swf\" />
-//						<param name=\"loop\" value=\"true\" />
-//						<param name=\"quality\" value=\"high\" />
-//						</object>";
 	return $object;
 }
 
