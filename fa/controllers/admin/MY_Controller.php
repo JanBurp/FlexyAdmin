@@ -195,11 +195,17 @@ class BasicController extends MY_Controller {
 			$rights=$this->media_rights;
 		else
 			$rights=$this->table_rights;
-		if ($rights=="*") $ok=TRUE;
+		if ($rights=="*")
+			$ok=TRUE;
 		// has rights for exactly this table?
-		elseif (strpos($rights,$table)!==FALSE) $ok=TRUE;
+		elseif (strpos($rights,$table)!==FALSE)
+			$ok=TRUE;
 		// has rights for all tables with this prefix
-		elseif ($id!=="MEDIA" and strpos($rights,$preAll)!==FALSE) $ok=TRUE;
+		elseif ($id!=="MEDIA" and strpos($rights,$preAll)!==FALSE)
+			$ok=TRUE;
+		// has rights for own user form
+		elseif ($table==$this->config->item('CFG_table_prefix')."_".$this->config->item('CFG_users') and $id==$this->session->userdata("user_id"))
+			$ok=TRUE;
 		return $ok;
 	}
 
@@ -300,8 +306,10 @@ class AdminController extends BasicController {
 		// load menu items
 		$a=array();
 		// standard items
-		$a["Home"]	=array("uri"=>api_uri('API_home'));
-		$a["Logout"]=array("uri"=>api_uri('API_logout'));
+
+		$a["Home"]			=array("uri"=>api_uri('API_home'));
+		$a[ucwords($this->user)]	=array("uri"=>api_uri('API_user'));
+		$a["Logout"]		=array("uri"=>api_uri('API_logout'));
 		// tables
 		$tables=$this->db->list_tables();
 		$a=array_merge($a,$this->_show_table_menu($tables,$this->config->item('CFG_table_prefix')));

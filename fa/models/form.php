@@ -172,10 +172,11 @@ class Form Extends Model {
 		 *  Is it a updated link from links table?
 		 */
 
-		if 	($data["table"]==$this->cfg->get('CFG_editor','table')
-		and ($name=="url_url")
-		and (!empty($value))
-		and ($value!="http://")) {
+		if 	(isset($data["table"])
+			and $data["table"]==$this->cfg->get('CFG_editor','table')
+			and ($name=="url_url")
+			and (!empty($value))
+			and ($value!="http://")) {
 
 			/**
 			 * Update all links in txt fields...
@@ -226,7 +227,7 @@ class Form Extends Model {
  *	@param int $id	id of updated record (-1 is inserted)
  */
 	function _after_update($id) {
-		$table=$this->data[pk()]["table"];
+		//$table=$this->data[pk()]["table"];
 		/**
 		 *  Is it a updated link from links table?
 		 *
@@ -347,9 +348,29 @@ class Form Extends Model {
 				}
 
 				/**
+				 * Make sure all not given fields stays the same
+				 */
+				$staticFields=$this->db->list_fields($table);
+				$staticFields=combine($staticFields,$staticFields);
+				unset($staticFields[$pk]);
+				foreach($set as $name=>$value) {
+					unset($staticFields[$name]);
+				}
+				if (!empty($staticFields)) {
+					$this->db->select($staticFields);
+					$this->db->where($pk,$id);
+					$query=$this->db->get($table);
+					$staticData=$query->row_array();
+					foreach($staticData as $name=>$value) {
+						$set[$name]=$value;
+					}
+				}
+				/**
 				 * Update data
 				 */
-				foreach($set as $name=>$value) { $this->db->set($name,$value); }
+				foreach($set as $name=>$value) {
+					$this->db->set($name,$value);
+				}
 				if ($id==-1) {
 					$this->db->insert($table);
 					$id=$this->db->insert_id();
@@ -409,6 +430,7 @@ class Form Extends Model {
 		$out=form_open_multipart($this->action,array("class"=>$class));
 		$out.=form_fieldset($this->caption,array("class"=>"formfields"));
 		$data=$this->data;
+		//trace_($data);
 		foreach($data as $name => $field) {
 			$out.=$this->render_field($name,$field,$class);
 		}
