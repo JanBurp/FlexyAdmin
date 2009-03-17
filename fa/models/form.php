@@ -449,7 +449,9 @@ class Form Extends Model {
 		$out="";
 		$pre=get_prefix($name);
 		if ($pre==$name) $pre="";
-		$class="$pre $name ".$field['type']." $class";
+		$class="$pre $name ".$field['type'];
+		if (isset($field['multiple'])) $class.=" ".$field['multiple'];
+		$class.=" ".$class;
 		if (!empty($field["repopulate"])) $field["value"]=$field["repopulate"];
 		$attr=array("name"=>$name,"id"=>$name,"value"=>$field["value"], "class"=>$class);
 		if ($field["type"]!="hidden") {
@@ -484,11 +486,11 @@ class Form Extends Model {
 
 			case "image_dropdown":
 			case "dropdown":
+				$extra="";
 				$options=el("options",$field);
 				$value=$attr["value"];
 				$button=el("button",$field);
 				if (isset($button))	$attr["class"].=" button";
-				$extra="class=\"".$attr["class"]."\" id=\"".$name."\"";
 				if (isset($field["path"])) {
 					$extra.=" path=\"".$field["path"]."\"";
 				}
@@ -502,6 +504,7 @@ class Form Extends Model {
 						$value=explode("|",$value);
 					}
 				}
+				$extra.="class=\"".$attr["class"]."\" id=\"".$name."\"";
 				if ($field["type"]=="image_dropdown") {
 					if (!is_array($value)) $medias=array($value); else $medias=$value;
 					foreach($medias as $media) {

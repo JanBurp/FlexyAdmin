@@ -143,9 +143,11 @@ span.hide {
 .icon.add {
 	background-image: url("../icons/addfile.gif");
 	float:right;
-	margin-top:-129px;
+	margin-top:-23px;
 	}
-
+.multiple .icon.add {
+	margin-top:-154px;
+}
 .icon.list {
 	background-image: url("../icons/list.png");
 	padding-right:0px;

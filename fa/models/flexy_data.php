@@ -337,6 +337,7 @@ class Flexy_data extends Model {
 		$out=array();
 		$this->db->select($this->pk);
 		$this->db->select($this->get_abstract_field($table));
+		$this->db->order_by($this->config->item('ABSTRACT_field_name'));
 		$query=$this->db->get($table);
 		foreach($query->result_array() as $row) {
 			$out[$row[$this->pk]]=$row[$this->config->item('ABSTRACT_field_name')];
