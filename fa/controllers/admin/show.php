@@ -237,6 +237,85 @@ class Show extends AdminController {
 		$this->_show_all($uiTable);
 	}
 
+
+/**
+ * This controls the user settings
+ *
+ * @param string 	$table 	Table name
+ * @param mixed 	$id 		id
+ */
+
+	function user() {
+		/**
+		 * get user data
+		 */
+		$userTable=$this->config->item('CFG_table_prefix')."_".$this->config->item('CFG_users');
+		$userId=$this->session->userdata("user_id");
+		$this->db->select("str_user_name,gpw_user_pwd");
+		$this->db->where("id",$userId);
+		$query=$this->db->get($userTable);
+		$userData=$query->row_array();
+
+		/**
+		 * Init user form
+		 */
+		$formData=array(
+										"id"						=>array(	"type"				=>	"hidden",
+																							"label"				=>	"id",
+																							"name"				=>	"id",
+																							"value"				=>	$userId,
+																							"validation"	=>  "required|numeric"),
+										"str_user_name"	=>array(	"type"				=>	"input",
+																							"label"				=>	"Username",
+																							"name"				=>	"str_user_name",
+																							"value"				=>	$userData["str_user_name"],
+																							"validation"	=>  "required"),
+										"gpw_user_pwd"	=>array(	"type"				=>	"input",
+																							"label"				=>	"Password",
+																							"name"				=>	"gpw_user_pwd",
+																							"value"				=>	$userData["gpw_user_pwd"],
+																							"validation"	=>  "required"));
+		$this->load->library('form_validation');
+		$this->load->helper('html');
+		$this->form_validation->set_error_delimiters('<div id="formmessage">', '</div>');
+		$this->load->model("form");
+		$form=new form(api_uri('API_user'));
+		$form->set_data($formData,"Edit user");
+		/**
+		 * Validate form, if succes, make form do an update
+		 */
+		if ($form->validation()) {
+			$resultId=$form->update($userTable);
+			if (is_string($resultId)) {
+				$this->set_message("Update/Insert error on 'user Table','$resultId'");
+				redirect(api_uri('API_home'));
+			}
+			else {
+				$this->set_message("User has changed");
+				$this->load->model("login_log");
+				$this->login_log->update($userTable);
+				// reset user session
+				$this->db->where("id",$userId);
+				$this->db->select("str_user_name");
+				$query=$this->db->get($userTable);
+				$userData=$query->row_array();
+				//trace_($userData);
+				$this->session->set_userdata("user",$userData["str_user_name"]);
+				redirect(api_uri('API_home'));
+			}
+		}
+		else {
+			/**
+			 * Render
+			 */
+			$html=$form->render("html");
+			$this->_add_content($html);
+			$this->_show_type("form");
+		}
+		$this->_show_all();
+	}
+
+
 /**
  * Here are some form validation callback functions
  * Routings are set so that admin/show/valid_* is routed to admin/show, so these callbacks are not reached by url

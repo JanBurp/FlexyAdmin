@@ -41,6 +41,7 @@ $config['ASSETS']									= "site/assets/";
 |
 */
 $config['API_home']								= "/admin/";
+$config['API_user']								= "/admin/show/user/";
 $config['API_login']							= "/admin/user/login/";
 $config['API_logout']							= "/admin/user/logout/";
 
