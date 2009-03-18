@@ -16,10 +16,12 @@ class MY_URI extends CI_URI {
 
 	var $home;
 	var $homePart;
+	var $xdebug;
 
 	function MY_URI() {
 		parent::CI_URI();
 		$this->set_home();
+		$this->xdebug="XDEBUG_SESSION_START";
 	}
 
 	function set_home($home="",$p=1) {
@@ -27,9 +29,23 @@ class MY_URI extends CI_URI {
 		$this->homePart=$p;
 	}
 
+	function _segment($s) {
+		$s=$this->segment($s);
+		if ($s==$this->xdebug)
+			return "";
+		return $s;
+	}
+
+	function _uri_string() {
+		$s=$this->uri_string();
+		if ($s==$this->xdebug)
+			return "";
+		return $s;
+	}
+
 	function is($is,$s=1) {
-		if ($this->segment($s))
-			return ($this->segment($s)==$is);
+		if ($this->_segment($s))
+			return ($this->_segment($s)==$is);
 		else
 			return FALSE;
 	}
@@ -44,10 +60,10 @@ class MY_URI extends CI_URI {
 
 	function get($s=0) {
 		if ($s==0) {
-			return $this->uri_string();
+			return $this->_uri_string();
 		}
 		else {
-			$u=$this->segment($s);
+			$u=$this->_segment($s);
 			if (empty($u) and $s==$this->homePart) $u=$this->home;
 			return ($u);
 		}
