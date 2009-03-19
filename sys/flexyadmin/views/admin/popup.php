@@ -1,6 +1,6 @@
 <?
 $sizes=getimagesize($img);
-$img=site_url($img);
+//$img=site_url($img);
 $ext=get_file_extension($img);
 $w=$sizes[0];
 $h=$sizes[1];
@@ -11,7 +11,8 @@ $size=$sizes[3];
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title></title>
+	<title><?=$img?></title>
+	<base href="<?=base_url()?>" />
 	<meta http-equiv="imagetoolbar" content="no" />
 	<script language='javascript' type="text/javascript">
 	function FitPic(newWidth,newHeight)

@@ -1,8 +1,8 @@
 <html>
 <head>
 	<title>FlexyAdmin V1 - Login</title>
-	<link rel="stylesheet" href="<?=admin_assets()?>css/admin_main.css" type="text/css" />
 	<base href="<?=base_url()?>" />
+	<link rel="stylesheet" href="<?=admin_assets()?>css/admin_main.css" type="text/css" />
 </head>
 
 <body style='background-color:#EEFFBB'>
