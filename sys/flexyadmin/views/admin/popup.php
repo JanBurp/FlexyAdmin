@@ -17,6 +17,7 @@ $size=$sizes[3];
 	<script language='javascript' type="text/javascript">
 	function FitPic(newWidth,newHeight)
 	{
+		alert("test");
 		if (self.innerWidth)
 		{
 			frameWidth = self.innerWidth;
@@ -32,7 +33,9 @@ $size=$sizes[3];
 			frameWidth = document.body.clientWidth;
 			frameHeight = document.body.clientHeight;
 		}
-		else return;
+		else {
+			return;
+		}
 
 		if (document.layers)
 		{
@@ -60,7 +63,7 @@ $size=$sizes[3];
   }
   -->
   </style></head>
-<body oncontextmenu="return false" ondragstart="return false" onselectstart="return false" onload="FitPic('<? echo $w; ?>','<? echo $h; ?>')">
+<body onload="FitPic('<? echo $w; ?>','<? echo $h; ?>')">
 <a href="javascript:close()">
 <?
 	if ($ext=="swf" or $ext=="flv") {

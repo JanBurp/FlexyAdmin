@@ -9,6 +9,10 @@
 	<base href="<?=base_url()?>" />
 
 	<link rel="stylesheet" href="<?=admin_assets()?>css/admin_main.css" type="text/css" />
+	<!--[if lte IE 6]><style type="text/css" media="screen">@import url(<?=admin_assets()?>css/ie6.css);</style><![endif]-->
+	<!--[if IE 7]><style type="text/css" media="screen">@import url(<?=admin_assets()?>css/ie7.css);</style><![endif]-->
+	<!--[if IE 8]><style type="text/css" media="screen">@import url(<?=admin_assets()?>css/ie8.css);</style><![endif]-->
+
 	<link rel="stylesheet" type="text/css" href="<?=admin_assets()?>js/jquery/ui/theme/ui.all.css" />
 
 	<script language="javascript" type="text/javascript" src="<?=admin_assets()?>js/jquery/jquery-1.3.2.min.js"></script>

@@ -117,11 +117,13 @@ span.hide {
 
 .icon.new {
 	background-image: url("../icons/addfile.png");
+	background-repeat: no-repeat;
 	padding:3px 5px;
 	}
 .icon.caption {
 	font-size:14px;
 	background-position: 0px 2px;
+	background-repeat: no-repeat;
 	padding-left: 20px;
 	width:auto;
 	}
@@ -135,13 +137,16 @@ span.hide {
 }
 .icon.edit {
 	background-image: url("../icons/edit.gif");
+	background-repeat: no-repeat;
 	margin-right:10px;
 	}
 .icon.delete {
 	background-image: url("../icons/action_delete.gif");
+	background-repeat: no-repeat;
 	}
 .icon.add {
 	background-image: url("../icons/addfile.gif");
+	background-repeat: no-repeat;
 	float:right;
 	margin-top:-23px;
 	}
@@ -150,15 +155,18 @@ span.hide {
 }
 .icon.list {
 	background-image: url("../icons/list.png");
+	background-repeat: no-repeat;
 	padding-right:0px;
 	}
 .icon.listicons {
 	background-image: url("../icons/list_icons.png");
+	background-repeat: no-repeat;
 	padding-right:0px;
 }
 
 .icon.order {
 	background-image: url("../icons/arrow_order.gif");
+	background-repeat: no-repeat;
 	margin-left:10px;
 	margin-right: 0px;
 	padding-right: 0px;
@@ -221,14 +229,15 @@ span.hide {
 table.grid {
 	table-layout:fixed;
 	border-spacing:0px;
+	border-collapse:collapse;
 	border: solid 1px #DDEEAA;
 	border-left:none;
 	border-bottom:none;
 	-moz-border-radius-topleft: 4px;
 	-moz-border-radius-topright: 4px;
-	-webkit-border-radius-top-left: 4px;
-	-webkit-border-radius-top-right: 4px;
-	margin:0px;
+	-webkit-border-top-left-radius: 4px;
+	-webkit-border-top-right-radius: 4px;
+	margin:0px 20px 0px 0px;
 	padding:0px;
 	min-width:600px;
 }
@@ -241,8 +250,8 @@ table.grid {
 	border-right:none;
 	-moz-border-radius-topleft: 4px;
 	-moz-border-radius-topright: 4px;
-	-webkit-border-radius-top-left: 4px;
-	-webkit-border-radius-top-right: 4px;
+	-webkit-border-top-left-radius: 4px;
+	-webkit-border-top-right-radius: 4px;
 	padding:2px;
 	height: 34px;
 	min-width: 600px;
@@ -283,7 +292,7 @@ table.grid {
 .grid th {
 	padding:5px 18px 3px 5px;
 	font-weight: bold;
-	white-space: nowrap;
+	vertical-align:middle;
 }
 
 .grid .uri {
@@ -293,21 +302,31 @@ table.grid {
 .grid td.str,
 .grid td.txt {
 	max-width:300px;
-  white-space:nowrap;
 }
 .grid td.media,
 .grid td.rgb	{
 	text-align: center;
+	width:52px;
+	max-width:52px;
 }
 
-.grid th.id, .grid td.id {
+.grid th.id,
+.grid td.id,
+.grid th.edit,
+.grid td.edit {
 	text-align:center;
 	width:42px;
 	min-width:42px;
 	padding-right:10px;
 }
+.grid th.edit,
+.grid td.edit {
+	text-align:center;
+	width:20px;
+	min-width:20px;
+	padding-right:10px;
+}
 .grid th.order, .grid td.order {
-	min-width:auto;
 	width:10px;
 	padding:3px 7px 3px 0px;
 	border-left:none;
@@ -344,6 +363,14 @@ table.grid {
 }
 .grid tr td:hover {
 	background-color:#DDEEAA;
+}
+
+.nowrap {
+	white-space: nowrap;
+	overflow:hidden;
+}
+
+td:hover .nowrap {
 	white-space:normal;
 }
 
@@ -351,6 +378,10 @@ table.grid {
 {
 	margin:0px;
 	font-size:.8em;
+}
+
+img.zoom {
+	border:1px solid #333;
 }
 
 /** grid sorter **/
@@ -379,6 +410,10 @@ table.grid thead .order,
 	cursor: default;
 }
 
+img.zoom {
+	cursor:pointer;
+}
+
 /** drag helper: for sorting **/
 table.grid tr.ui-sortable-helper td {
 	}
@@ -398,8 +433,8 @@ table.grid tr.ui-sortable-helper td {
 	border: solid 1px #DDEEAA;
 	-moz-border-radius-bottomleft: 5px;
 	-moz-border-radius-bottomright: 5px;
-	-webkit-border-radius-bottom-left: 5px;
-	-webkit-border-radius-bottom-right: 5px;
+	-webkit-border-bottom-left-radius: 5px;
+	-webkit-border-bottom-right-radius: 5px;
 	height: 100%;
 	padding:0px;
 	margin: 0px;
@@ -719,9 +754,8 @@ input.upload {
 	top:50%;
 	left:50%;
 	margin-top:-180px;
-	margin-left:-227px;
-	width:453px;
-	height:200px;
+	margin-left:-200px;
+	width:355px;
 
 	border:solid 3px #CCDD99;
 	-moz-border-radius: 8px;
@@ -752,7 +786,11 @@ input.upload {
 	color:#669966;
 	border:none;
 }
-
+#dialog input {
+	width:350px;
+	}
+#dialog input.button {
+}
 #dialog a.button:hover {
 	background-color:#BBCC88;
 	color:#336633;
@@ -767,6 +805,18 @@ input.upload {
 	margin-top:0px;
 }
 
+
+/* ============== ui-dialog ================ */
+
+div.zoom img {
+	margin:0px;
+}
+div.zoom {
+	border:none;
+}
+div.zoom .ui-dialog-content {
+	padding:0px;
+}
 /* ============== composition ================ */
 
 #wrapper {

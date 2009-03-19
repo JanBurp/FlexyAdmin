@@ -168,6 +168,14 @@ $(document).ready(function() {
 			});
 		}
 
+		//
+		// img Zoom Popup Dialog
+		//
+		$('img.zoom').click(function() {
+			src=$(this).attr('src');
+			zoom_dialog(this,src);
+		});
+
 	}
 
 
@@ -309,6 +317,23 @@ function confirm_dialog(obj,item) {
 	});
 }
 function clean_message() {$("#message").html("");}
+
+function zoom_dialog(obj,src) {
+	ext=get_ext(src);
+	if (src=="swf" || src=="flc") {
+		dialog.html(flash(src));
+	}
+	else {
+		dialog.html('<img src="'+src+'" width="100%" />');
+	}
+	$(dialog).dialog({
+		title:src.substr(src.lastIndexOf("/")+1),
+		modal:true,
+		closeOnEscape:true,
+		dialogClass:'zoom',
+		close: function() {$(dialog).dialog("destroy"); }
+	});
+}
 
 //
 // Functions for obtaining table,id,field,nr information

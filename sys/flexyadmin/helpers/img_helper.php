@@ -5,16 +5,18 @@ function icon($class="",$s="",$extraClass="") {
 }
 
 function popup_img($img,$txt) {
-	$atts = array(
-              'width'      => '400',
-              'height'     => '300',
-              'scrollbars' => 'no',
-              'status'     => 'no',
-              'resizable'  => 'no',
-              'screenx'    => '0',
-              'screeny'    => '0'
-            );
-	return anchor_popup(api_url('API_popup_img',pathencode($img)),$txt,$atts);
+//	$atts = array(
+//              'width'      => '400',
+//              'height'     => '300',
+//              'scrollbars' => 'no',
+//              'status'     => 'no',
+//              'resizable'  => 'no',
+//              'screenx'    => '0',
+//              'screeny'    => '0'
+//            );
+//	return anchor_popup(api_url('API_popup_img',pathencode($img)),$txt,$atts);
+	$a=array("src"=>$img, "class"=>"zoom" );
+	return img($a);
 }
 
 
@@ -23,6 +25,7 @@ function show_thumb($attr) {
 	if (!is_array($attr)) $a["src"]=$attr; else $a=$attr;
 	$ext=get_file_extension($a["src"]);
 	if (!isset($a["title"])) $a["title"]=$a["src"];
+	if (!isset($a["class"])) $a["class"]="zoom"; else $a["class"].=" zoom";
 	if ($ext=="swf") {
 		$src=$a["src"];
 		unset($a["src"]);

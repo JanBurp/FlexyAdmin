@@ -1,0 +1,22 @@
+/* ============== IE7 specific styles ================ */
+
+/* ============== table grid ================== */
+
+.grid th.order, .grid td.order {
+	width:30px;
+}
+
+.grid td,
+.grid th {
+	padding:3px 5px 3px 5px;
+	border: solid 1px #DDEEAA;
+	border-top:none;
+	border-right:none;
+}
+
+
+/* ============== dialog ================ */
+
+#dialog{
+	width:405px;
+}

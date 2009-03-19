@@ -1,0 +1,15 @@
+/* ============== IE8 specific styles ================ */
+
+
+/* ============== table grid ================== */
+
+.grid th.order, .grid td.order {
+	width:30px;
+}
+
+
+/* ============== dialog ================ */
+
+#dialog{
+	width:405px;
+}
