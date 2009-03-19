@@ -2,12 +2,12 @@
 
 function assets($s="") {
 	$CI =& get_instance();
-	return base_url().$CI->config->item('ASSETS').$s;
+	return $CI->config->item('ASSETS').$s;
 }
 
 function admin_assets($s="") {
 	$CI =& get_instance();
-	return base_url().$CI->config->item('ADMINASSETS').$s;;
+	return $CI->config->item('ADMINASSETS').$s;;
 }
 
 function front_uri() {
