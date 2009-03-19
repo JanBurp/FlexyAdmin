@@ -421,7 +421,7 @@ class Flexy_field extends Model {
 	}
 
 	function _text_grid() {
-		return strip_tags($this->data);
+		return '<div class="nowrap">'.strip_tags($this->data).'</div>';
 	}
 
 	function _dropdown_tables_form() {

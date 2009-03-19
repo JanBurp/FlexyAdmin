@@ -3,6 +3,9 @@
 	<title>FlexyAdmin V1 - Login</title>
 	<base href="<?=base_url()?>" />
 	<link rel="stylesheet" href="<?=admin_assets()?>css/admin_main.css" type="text/css" />
+	<!--[if lte IE 6]><style type="text/css" media="screen">@import url(<?=admin_assets()?>css/ie6.css);</style><![endif]-->
+	<!--[if IE 7]><style type="text/css" media="screen">@import url(<?=admin_assets()?>css/ie7.css);</style><![endif]-->
+	<!--[if IE 8]><style type="text/css" media="screen">@import url(<?=admin_assets()?>css/ie8.css);</style><![endif]-->
 </head>
 
 <body style='background-color:#EEFFBB'>
