@@ -6,7 +6,8 @@ function assets($s="") {
 }
 
 function admin_assets($s="") {
-	return base_url()."fa/assets/".$s;;
+	$CI =& get_instance();
+	return base_url().$CI->config->item('ADMINASSETS').$s;;
 }
 
 function front_uri() {
