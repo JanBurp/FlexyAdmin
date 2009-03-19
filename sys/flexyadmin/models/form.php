@@ -280,7 +280,7 @@ class Form Extends Model {
 		// replace specialchars
 		$uri=clean_string($uri);
 		// forbidden uri's
-		$forbidden=array("site","sys");
+		$forbidden=array("site","sys","admin");
 		if (in_array($uri,$forbidden)) $uri="_".$uri;
 		return $uri;
 	}
