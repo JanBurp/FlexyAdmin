@@ -51,7 +51,7 @@
 | NO TRAILING SLASH!
 |
 */
-	$system_folder = "ci";
+	$system_folder = "codeigniter";
 
 /*
 |---------------------------------------------------------------
@@ -68,7 +68,7 @@
 | NO TRAILING SLASH!
 |
 */
-	$application_folder = "../fa";
+	$application_folder = "../flexyadmin";
 
 /*
 |===============================================================
