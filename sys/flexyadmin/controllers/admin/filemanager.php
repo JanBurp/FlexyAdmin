@@ -77,12 +77,23 @@ class Filemanager extends AdminController {
 			/**
 			 * Start file manager
 			 */
-			$fileManagerView=$this->cfg->get('CFG_configurations','str_filemanager_view');
+ 			$fileManagerView=$this->cfg->get('CFG_configurations','str_filemanager_view');
+			
 			$fileManager=new file_manager($path,$types,$fileManagerView);
 			$fileManager->set_files($files);
 			if (!empty($idFile)) $fileManager->set_current($idFile);
 			if (!empty($uiName)) $fileManager->set_caption($uiName);
-			$html=$fileManager->render();
+			$renderData=$fileManager->render();
+
+			
+			if ($fileManagerView=="list") {
+				// Grid
+				$html=$this->load->view("admin/grid",$renderData,true);
+			}
+			else {
+				// Thumb List
+				$html=$this->load->view("admin/thumbs",$renderData,true);
+			}
 			$this->_set_content($html);
 
 			/**

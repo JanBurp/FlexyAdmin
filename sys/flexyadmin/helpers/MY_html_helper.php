@@ -1,6 +1,5 @@
 <?
 
-
 function html($tag,$a=array(),$end=FALSE) {
 	if (!is_array($a)) $a=array("class"=>$a);
 	$attr="";

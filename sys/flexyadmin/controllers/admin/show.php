@@ -116,13 +116,14 @@ class Show extends AdminController {
 					$keys=array_keys(current($data));
 					$keys=combine($keys,$keys);
 					$newIcon=anchor(api_uri('API_view_form',$table,-1),icon("new"));
-					$grid->prepend_to_caption($newIcon,"new");
+					$grid->prepend_to_captions($newIcon,"new");
 					$grid->set_headings($this->uiNames->get($keys,$table));
 					$grid->set_heading(pk(),"Edit");
 					if (!empty($id)) {
 						$grid->set_current($id);
 					}
-					$html=$grid->render("html",$table,"grid");
+					$renderData=$grid->render("html",$table,"grid");
+					$html=$this->load->view("admin/grid",$renderData,true);
 					$this->_set_content($html);
 				}
 			}

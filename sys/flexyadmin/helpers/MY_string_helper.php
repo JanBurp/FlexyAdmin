@@ -108,4 +108,14 @@ function clean_string($s) {
 	return utf8_encode($s);
 }
 
+function strip_string($s,$c=0) {
+	$srch	=array("<br />","&nbsp;");
+	$rplc=array(" "," ");
+	$s=str_replace($srch,$rplc,$s);
+	$s=strip_tags($s);
+	$s=trim($s);
+	if ($c>0) $s=character_limiter($s,$c);
+	return $s;
+}
+
 ?>

@@ -39,7 +39,7 @@ $(document).ready(function() {
 				src=path+media;
 				ext=get_ext(media);
 				if (ext=='swf' || ext=='flv') {
-					$("p.image_dropdown select.media").before(flash(src));
+					$("p.image_dropdown select.media").before(flash(src,32,32));
 				}
 				else {
 					$("p.image_dropdown select.media").before('<img class="media" src="'+src+'" />');
@@ -63,7 +63,7 @@ $(document).ready(function() {
 						src=path+$(this).attr("value");
 						ext=get_ext(media);
 						if (ext=='swf' || ext=='flv') {
-							$("p.image_dropdown select.medias").before(flash(src));
+							$("p.image_dropdown select.medias").before(flash(src,32,32));
 						}
 						else {
 							$("p.image_dropdown select.medias").before('<img class="media" src="'+src+'" />');
@@ -122,18 +122,25 @@ $(document).ready(function() {
 
 		// enable filtering
 		if (isFile && !isGrid) {
-			filter=$("#filemanager");
-			$(filter).filterable({ affects: 'div.file' });
-		}
-		if (isGrid) {
 			filter=$("table.grid");
-			$(filter).filterable({ affects: 'tbody tr' });
+			$(filter).filterable({ affects: 'tbody tr .file' });
 		}
-		// place filter input on other place
-		filter_input=$("div.ui-filterable-query input");
-		$(filter_input).addClass("filter").attr({title:'search / filter'});
-		$(".caption").append('<div class="filter">');
-		$(".caption div:last").html(filter_input);
+		else {
+			if (isGrid) {
+				filter=$("table.grid");
+				$(filter).filterable({ affects: 'tbody tr' });
+			}
+		}
+		if (filter.length>0) {
+			// keep table width
+			w=$(filter).width();
+			$(filter).width(w);
+			// place filter input on other place
+			filter_input=$("div.ui-filterable-query input");
+			$(filter_input).addClass("filter").attr({title:'search / filter'});
+			$("tr.caption tr").append('<td class="filter">');
+			$("td.filter").html(filter_input);
+		}
 
 
 		//
@@ -144,7 +151,7 @@ $(document).ready(function() {
 		dialog=$("#ui");
 		if (isFile) {
 			// add events to remove buttons (filemanager view)
-			remove=$("#filemanager a.delete");
+			remove=$(".icons a.delete");
 			remove.click(function () {
 				clean_message();
 				href=$(this).attr("href");
@@ -172,8 +179,10 @@ $(document).ready(function() {
 		// img Zoom Popup Dialog
 		//
 		$('img.zoom').click(function() {
-			src=$(this).attr('src');
-			zoom_dialog(this,src);
+			zoom_dialog($(this));
+		});
+		$('.flash .zoom').click(function() {
+			zoom_dialog($(this));
 		});
 
 	}
@@ -237,7 +246,6 @@ $(document).ready(function() {
 					$("table.grid tbody tr:first td").each(function() {
 						w=$(this).width()+"px";
 						nr=get_nr($(this));
-						//console.log("nr:"+nr+"="+w);
 						$("table.grid tbody tr .nr"+nr).css("width",w);
 					});
 				},
@@ -318,22 +326,33 @@ function confirm_dialog(obj,item) {
 }
 function clean_message() {$("#message").html("");}
 
-function zoom_dialog(obj,src) {
+function zoom_dialog(obj) {
+	src=$(obj).attr('src');
+	w=$(obj).attr('zwidth');
+	h=$(obj).attr('zheight');
 	ext=get_ext(src);
-	if (src=="swf" || src=="flc") {
-		dialog.html(flash(src));
+	if (ext=="swf" || ext=="flc") {
+		dialog.html(flash(src,w,h));
 	}
 	else {
-		dialog.html('<img src="'+src+'" width="100%" />');
+		dialog.html('<a href="javascript:close_dialog()"><img src="'+src+'" width="'+w+'" height="'+h+'" alt="'+src+'" /></a>');
 	}
 	$(dialog).dialog({
-		title:src.substr(src.lastIndexOf("/")+1),
+		title:src.substr(src.lastIndexOf("/")+1)+" ("+w+"x"+h+")",
 		modal:true,
+		width: w+'px',
+		heigth: h+'px',
 		closeOnEscape:true,
 		dialogClass:'zoom',
+		resizable:false,
+		scrollable:false,
 		close: function() {$(dialog).dialog("destroy"); }
 	});
 }
+function close_dialog() {
+	$(dialog).dialog("destroy");
+}
+
 
 //
 // Functions for obtaining table,id,field,nr information
@@ -374,8 +393,8 @@ function get_subclass(sub,obj) {
 //
 function get_ext(s){s=String(s);a=s.split(".");return a[a.length-1];}
 
-function flash(swf) {
-	attr='width="32" height="32"';
+function flash(swf,w,h) {
+	attr='width="'+w+'" height="'+h+'"';
 	f='<object class="flash" data="#swf#" #attr# classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" >' +
 		'<param name="allowScriptAccess" value="sameDomain" />' +
 		'<param name="movie" value="#swf#" />' +
