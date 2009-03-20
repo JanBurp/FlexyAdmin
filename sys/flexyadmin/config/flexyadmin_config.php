@@ -245,7 +245,7 @@ $config['FIELDS_prefix'] = array (
 											"form"				=> ""
 											),
 	"stx"				=> array (
-											"grid"				=> "%s",
+											"grid"				=> "function_text",
 											"form"				=> "textarea"
 											),
 	"txt"				=> array (

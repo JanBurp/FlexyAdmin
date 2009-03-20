@@ -7,7 +7,7 @@ function assets($s="") {
 
 function admin_assets($s="") {
 	$CI =& get_instance();
-	return $CI->config->item('ADMINASSETS').$s;;
+	return $CI->config->item('ADMINASSETS').$s;
 }
 
 function front_uri() {

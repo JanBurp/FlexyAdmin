@@ -27,15 +27,6 @@ class File_manager Extends Model {
 
 	var $type;
 
-	var $tmpStart;
-	var $tmpEnd;
-	var $tmpCaptionStart;
-	var $tmpCaptionEnd;
-	var $tmpUploadStart;
-	var $tmpUploadEnd;
-	var $tmpFileStart;
-	var $tmpFileEnd;
-
 	function File_manager($path="",$types="",$view="list") {
 		parent::Model();
 		$this->init($path,$types,$view);
@@ -75,8 +66,6 @@ class File_manager Extends Model {
 
 	function set_type($type="html") {
 		$this->type=$type;
-		$func="set_".$type."_templates";
-		$this->$func();
 	}
 
 	function set_current($currentId=NULL) {
@@ -89,40 +78,6 @@ class File_manager Extends Model {
 			$this->files=$files;
 		}
 		$this->set_caption($name);
-	}
-
-/**
- * HTML template functions
- */
-	function set_html_templates() {
-		$this->set_html_manager_templates();
-		$this->set_html_caption_templates();
-		$this->set_html_upload_templates();
-		$this->set_html_file_templates();
-	}
-
-	function set_html_manager_templates($start="<div id=\"filemanager\" class=\"%s\">",$end="</div>") {
-		$this->tmpStart=$start;
-		$this->tmpEnd=$end;
-	}
-
-	function set_html_caption_templates($start="<div class=\"filemanager title %s\">",$end="</div>") {
-		$this->tmpCaptionStart=$start;
-		$this->tmpCaptionEnd=$end;
-	}
-
-	function set_html_upload_templates($start="<div class=\"filemanager fileupload %s\">",$end="</div>") {
-		$this->tmpUploadStart=$start;
-		$this->tmpUploadEnd=$end;
-	}
-
-	function set_html_file_templates($start="<div class=\"file %s\">",$end="</div>") {
-		$this->tmpFileStart=$start;
-		$this->tmpFileEnd=$end;
-	}
-
-	function tmp($tmp,$class="") {
-		return str_replace("%s",$class,$tmp);
 	}
 
 /**
@@ -284,11 +239,16 @@ function thumb($attr,$index=FALSE) {
 				$isImg=in_array($type,$imgTypes);
 				$isFlash=in_array($type,$flashTypes);
 
+				// size types (images, flash)
+				if ($isImg or $isFlash) {
+					$imgSize=getimagesize($this->map."/".$name);
+				}
+
 				// icon
 				if ($isImg) {
-					$icon=div(array("class"=>"thumb")).popup_img($this->map."/".$name,img(array("src" => $this->map."/".$name, "alt"=>$name,"title"=>$name))).end_div();
+					$icon=div(array("class"=>"thumb")).img(array("src"=>$this->map."/".$name,"alt"=>$name,"title"=>$name,"class"=>"zoom","zwidth"=>$imgSize[0],"zheight"=>$imgSize[1])).end_div();
 				} elseif ($isFlash) {
-					$icon=div(array("class"=>"flash")).popup_img($this->map."/".$name,icon("flash $name"))._div(); //flash($this->map."/".$name).end_div();
+					$icon=div(array("class"=>"flash")).icon("flash $name",$name,"zoom","src=\"".$this->map."/".$name."\" zwidth=\"".$imgSize[0]."\" zheight=\"".$imgSize[1]."\"")._div(); //flash($this->map."/".$name).end_div();
 				} elseif (in_array($type,$mp3Types)) {
 					$icon=div(array("class"=>"sound")).icon("sound $name")._div();
 				} elseif (in_array($type,$movTypes)) {
@@ -311,7 +271,6 @@ function thumb($attr,$index=FALSE) {
 					$fileData["type"]=$type;
 					// size types (images, flash)
 					if ($isImg or $isFlash) {
-						$imgSize=getimagesize($this->map."/".$name);
 						$fileData["size"]="(".$imgSize[0]." x ".$imgSize[1].")";
 					}
 					$fileData["filesize"]=$file["size"];
@@ -323,8 +282,6 @@ function thumb($attr,$index=FALSE) {
 		}
 		return $data;
 	}
-
-
 
 /**
  * function render()
@@ -351,7 +308,6 @@ function thumb($attr,$index=FALSE) {
 		if (empty($this->caption))	$this->set_caption($this->path);
 		// Buttons (with Viewtype switcher)
 		$buttons=icon("new","upload","upload path_".$this->path);
-		$buttons.=div()._div();
 		// view types
 		$types=$this->config->item('API_filemanager_view_types');
 		foreach($types as $view) {
@@ -361,46 +317,18 @@ function thumb($attr,$index=FALSE) {
 			$buttons.=anchor(api_uri('API_filemanager_set_view',$view,$this->path),icon($icon,$view,$extra));
 		}
 
-		/**
-		 * Decide wich view and how to render
-		 */
-		if ($this->view=="list") {
-			// Grid
-			$grid=new grid();
-			$grid->set_data($renderData,$this->caption);
+		$grid=new grid();
+		$grid->set_data($renderData,$this->caption);
+		if (!empty($renderData)) {
 			$keys=array_keys(current($renderData));
 			$keys=combine($keys,$keys);
-			$grid->prepend_to_caption($buttons);
-			$grid->set_heading("thumb","");
-			$grid->set_heading("edit","");
-			$grid->set_current($this->currentId);
-			$out=$grid->render("html",$this->path,"grid files");
 		}
-		else {
-			$out=div("filemanager $class caption");
-			// buttons
-			$out.=div(array("class"=>"buttons")).$buttons.end_div();
-			// Caption
-			$out.=$this->tmp($this->tmpCaptionStart,$class) . ucfirst($this->caption) . $this->tmp($this->tmpCaptionEnd);
-			$out.=_div();
+		$grid->prepend_to_captions($buttons);
+		$grid->set_heading("thumb","");
+		$grid->set_heading("edit","");
+		$grid->set_current($this->currentId);
+		$out=$grid->render("html",$this->path,"grid files");
 
-			if (!empty($type)) $this->set_type($type);
-			$out.=$this->tmp($this->tmpStart,$class);
-			// All files
-			$nr=1;
-			foreach($renderData as $name=>$file) {
-				if ($name==$this->currentId)
-					$currClass="current";
-				else
-					$currClass="";
-				$toolbar=div(array("class"=>"toolbar")).$file["edit"].end_div();
-				$cell=$file["thumb"];
-				$out.=$this->tmp($this->tmpFileStart,"$class nr$nr $name $currClass"). $toolbar. $cell . div(array("class"=>"name")).$name.end_div();
-				$out.=$this->tmp($this->tmpFileEnd);
-				$nr++;
-			}
-			$out.=$this->tmp($this->tmpEnd);
-		}
 		log_('info',"filemaneger: rendering");
 		return $out;
 	}

@@ -2,6 +2,10 @@
 
 /* ============== table grid ================== */
 
+.grid {
+	border-collapse:collapse;
+}
+
 .grid th.order, .grid td.order {
 	width:30px;
 }
