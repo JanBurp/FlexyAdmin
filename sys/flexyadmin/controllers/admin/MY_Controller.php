@@ -308,13 +308,13 @@ class AdminController extends BasicController {
 		// standard items
 
 		$a["Home"]			=array("uri"=>api_uri('API_home'));
-		$a[ucwords($this->user)]	=array("uri"=>api_uri('API_user'));
+		//$a[ucwords($this->user)]	=array("uri"=>api_uri('API_user'));
 		$a["Logout"]		=array("uri"=>api_uri('API_logout'));
-		// tables
+
+		// normal tables
 		$tables=$this->db->list_tables();
-		$a=array_merge($a,$this->_show_table_menu($tables,$this->config->item('CFG_table_prefix')));
-		$a=array_merge($a,$this->_show_table_menu($tables,$this->config->item('REL_table_prefix')));
 		$a=array_merge($a,$this->_show_table_menu($tables,$this->config->item('TABLE_prefix')));
+
 		// media
 		$mediaInfoTbl=$this->config->item('CFG_table_prefix')."_".$this->config->item('CFG_media_info');
 		if ($this->db->table_exists($mediaInfoTbl)) {
@@ -328,6 +328,10 @@ class AdminController extends BasicController {
 				}
 			}
 		}
+
+		// cfg tables
+		$a=array_merge($a,$this->_show_table_menu($tables,$this->config->item('CFG_table_prefix')));
+		$a=array_merge($a,$this->_show_table_menu($tables,$this->config->item('REL_table_prefix')));
 
 		$this->menu->set_menu($a);
 		$this->menu->set_current_name($currentMenuItem);
@@ -349,7 +353,33 @@ class AdminController extends BasicController {
 	}
 
 	function _show_footer($extra_view="",$data=NULL) {
-		$this->load->view('admin/footer',array("view"=>$extra_view,"data"=>$data));
+		$this->db->select("url_url");
+		$query=$this->db->get("tbl_site");
+		$siteInfo=$query->row_array();
+		$footer=array(	"view"		=> $extra_view,
+										"data"		=> $data,
+										"local"		=> $this->config->item('LOCAL'),
+										"site"		=> $siteInfo["url_url"],
+										"user"		=> ucwords($this->user),
+										"revision"=> $this->get_revision()
+									);
+		$this->load->view('admin/footer',$footer);
+	}
+
+	function get_revision() {
+		$svnfile="sys/.svn/entries";
+		$revfile="sys/build.txt";
+		if (file_exists($svnfile)) {
+			$svn = read_file($svnfile);
+			$svn=explode("\n",$svn);
+			$rev = $svn[3];
+			write_file($revfile, $rev);
+		}
+		elseif (file_exists($revfile)) {
+			$rev = read_file($revfile);
+		}
+		else $rev="#";
+		return $rev;
 	}
 
 	function _show_type($type) {

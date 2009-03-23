@@ -38,8 +38,6 @@ class Main extends AdminController {
 
 	function index() {
 		$this->_set_content($this->cfg->get('CFG_configurations',"txt_info"));
-		if ($this->config->item('LOCAL'))
-			$this->_add_content("You are testing this site local!");
 		$this->_show_all();
 	}
 

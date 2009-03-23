@@ -64,6 +64,9 @@ li
 li.logout {
 	margin-bottom:30px;
 }
+li.configurations {
+	margin-top:30px;
+}
 li.current, li:hover {
 	background-color:#DDEEAA;
 	background-image:url("../img/inset.png");
@@ -713,10 +716,6 @@ div.zoom .ui-dialog-content img {
 /* ============== composition ================ */
 
 #wrapper {
-	min-height: 100%;
-	height: auto !important;
-	height: 100%;
-	margin: 0px auto -15px; /* the bottom margin is the negative value of the footer's height */
 	padding:0px;
 	}
 
@@ -732,9 +731,8 @@ div.zoom .ui-dialog-content img {
 }
 
 #header {
-	position:absolute;
-	top:0px;
-	left:0px;
+	margin:0px;
+	padding:0px;
 	width:100%;
 	height:95px;
 	z-index:10;
@@ -752,22 +750,40 @@ div.zoom .ui-dialog-content img {
 	}
 
 #menu {
-	position:absolute;
+	float:left;
 	left:0px;
 	top:90px;
 	width:225px;
 	z-index:0;
+	min-height:700px;
 }
 
 #content {
-	position:absolute;
-	left:225px;
+	margin-left:225px;
 	top:95px;
-	padding-bottom:50px;
 	z-index:0;
 }
 
-#footer, #footer_push {
+#footer {
+	float:left;
+	margin-top:45px;
+	height:45px;
+	background-image:url("../img/dot_trans.gif");
+	background-repeat:repeat;
 	width:100%;
-	height:10px;
+}
+#footer div {
+	margin:0px;
+	margin-top:15px;
+	padding:0px;
+}
+#footer p {
+	float:left;
+	border:0px;
+	width:285px;
+	overflow:hidden;
+	margin:0px;
+	margin-left:30px;
+	background-color:#fff;
+	text-align:center;
 }
