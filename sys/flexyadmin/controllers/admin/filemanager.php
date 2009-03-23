@@ -85,7 +85,6 @@ class Filemanager extends AdminController {
 			if (!empty($uiName)) $fileManager->set_caption($uiName);
 			$renderData=$fileManager->render();
 
-			
 			if ($fileManagerView=="list") {
 				// Grid
 				$html=$this->load->view("admin/grid",$renderData,true);
