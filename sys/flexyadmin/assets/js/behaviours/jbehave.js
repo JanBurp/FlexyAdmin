@@ -19,7 +19,6 @@ $(document).ready(function() {
 		//
 		$("form input.date").datepicker({ dateFormat: 'yy-mm-dd' });
 
-
 		//
 		// Media dropdown
 		//
@@ -141,7 +140,6 @@ $(document).ready(function() {
 		//
 		dialog=$("#ui");
 		if (isFile) {
-			console.log("file")
 			// add events to remove buttons (filemanager view)
 			remove=$(".grid a.delete");
 			remove.click(function () {
@@ -197,10 +195,9 @@ $(document).ready(function() {
 		bFields=$(".grid td.b");
 		$(bFields).click(function() {
 			obj=this;
-			id=get_id($(this));
 			cell=get_cell($(this));
-			status=$(".grid td.b.id"+id+" div").attr("title");
-			if (status=="no") value="1"; else value="0";
+			id=cell.id;
+			if ($(this).children("div:first").hasClass("no")) {	value="1"; } else {	value="0"; }
 			url="admin/ajax/edit/"+cell.table+"/"+cell.id+"/"+cell.field+"/"+value;
 			// ajax request
 			$(this).css('cursor','wait');
@@ -212,7 +209,7 @@ $(document).ready(function() {
 					else {
 						// change the status
 						html=$(obj).html();
-						if (status=="no")
+						if (value=="1")
 							html=html.replace(/no/g,"yes");
 						else
 							html=html.replace(/yes/g,"no");
@@ -220,7 +217,7 @@ $(document).ready(function() {
 						$(obj).css('cursor','pointer');
 					}
 				});
-		});
+		})
 
 		//
 		// Setting order by drag 'n drop
@@ -235,24 +232,24 @@ $(document).ready(function() {
 			$(items).sortable({
 				axis:'y',
 				cursor:'move',
-				opacity:'0.8',
 				start:function() {
 					// set width of helper cells same as width of grid cells
 					$("table.grid tbody tr:first td").each(function() {
 						w=$(this).width()+"px";
 						nr=get_nr($(this));
-						$("table.grid tbody tr .nr"+nr).css("width",w);
+						$("tr.ui-sortable-helper td.nr"+nr).css({ width:w });
 					});
 				},
 				update:function() {
 					// prepare ajax request
-					serialize=$(items).sortable("serialize",{attribute:"class",expression:" id(.+)[ ]",key:"id[]"});
+					//ser=$(items).sortable("serialize",{attribute:"class",expression:" id(.+)[ ]",key:"id[]"});
+					ser=serialize("table.grid tbody tr");
 					table=$("table.grid").attr("class");
 					table=table.replace("grid","");
 					table=$.trim(table);
 					url="admin/ajax/order/"+table;
 					// ajax request
-					$.post(url,serialize,function(data) {
+					$.post(url,ser,function(data) {
 							if (data!="") {
 								// error
 								alert(data);
@@ -274,7 +271,6 @@ $(document).ready(function() {
 		// Make sure columns can be sortable if ordering by drag 'n drop is not on.
 		//
 		else { isSortable=true;	}
-
 	}
 
 	//
@@ -386,6 +382,16 @@ function get_subclass(sub,obj) {
 //
 // Other functions
 //
+function serialize(sel) {
+	s="";
+	sel=$(sel);
+	$(sel).each(function() {
+		i=get_id($(this));
+		s+="&id[]="+i;
+	});
+	return s.substr(1);
+}
+
 function get_ext(s){s=String(s);a=s.split(".");return a[a.length-1];}
 
 function flash(swf,w,h) {

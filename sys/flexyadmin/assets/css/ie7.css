@@ -19,6 +19,10 @@
 }
 
 
+.icons .file .toolbar {
+	visibility: visible;
+	}
+
 /* ============== dialog ================ */
 
 #dialog{
