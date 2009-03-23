@@ -6,7 +6,7 @@
 			<? endif; ?>
 			</a></p>
 			<p id="site"><a href="<?=$site;?>" target="_blank"><?=str_replace("http://","",$site);?></a></p>
-			<p id="copyright"><a href="http://www.flexyadmin.com" target="_blank">FlexyAdmin 2009 &nbsp;&nbsp;<span class="small">(r<?=$revision?>)</span></a></p>
+			<p id="copyright"><a href="http://www.flexyadmin.com" target="_blank">FlexyAdmin 2009 &nbsp;&nbsp;<span class="small">r<?=$revision?> &copy; 2009</span></a></p>
 		</div
 	</div>
 
