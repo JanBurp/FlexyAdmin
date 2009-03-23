@@ -74,8 +74,6 @@
 
 <body>
 
-<div id="wrapper">
-
 <div id="header">
 	<a id="flexyadmin" href="<?=api_url('API_home');?>"><span class="hide">FlexyAdmin - HOME</span></a>
 </div>
