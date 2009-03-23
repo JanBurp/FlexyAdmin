@@ -2,11 +2,11 @@ $(document).ready(function() {
 
 	// Check modes
 	isForm=$("#content").hasClass("form");
-	isFile=$("#content").hasClass("filemanager");
 	isGrid=$("#content").hasClass("grid");
-	if (!isGrid && isFile) {	isGrid=$("#content").hasClass("list"); }
+	isFile=$("#content").hasClass("filemanager");
+	if (!isGrid && isFile)	{	isGrid=$("#content").hasClass("list"); }
+	if (isFile)							{ isThumbs=$("#content").hasClass("icons");}
 	isSortable=false;
-
 
 	//
 	// Form
@@ -17,15 +17,12 @@ $(document).ready(function() {
 		//
 		// Datepicker dialog
 		//
-
-		// $.datepicker.setDefaults($.datepicker.regional['nl']);
 		$("form input.date").datepicker({ dateFormat: 'yy-mm-dd' });
 
 
 		//
 		// Media dropdown
 		//
-
 		options=$("p.image_dropdown select.media option");
 		if (options.length>0) {
 			path=$("p.image_dropdown select.media").attr("path")+"/";
@@ -76,16 +73,16 @@ $(document).ready(function() {
 	}
 
 
+
+
 	//
 	// File
 	//
-
 	if (isFile) {
 
 		//
 		// Upload button and dialog
 		//
-
 		$(".upload").click(function() {
 			path=get_subclass("path_",$(this));
 			dialog.html('<form class="upload" method="post" action="admin/filemanager/upload/'+path+'" enctype="multipart/form-data">'+
@@ -103,24 +100,21 @@ $(document).ready(function() {
 				close: function(){$(dialog).dialog("destroy"); }
 			});
 		});
-
 		//
 		// Make sure columns can be sortable
 		//
 		isSortable=isGrid;
 	}
 
+
 	//
 	// File & Grid (Life filter/search field)
 	//
-
 	if (isGrid || isFile) {
 
 		//
 		// Filter/Search rows
 		//
-
-		// enable filtering
 		if (isFile && !isGrid) {
 			filter=$("table.grid");
 			$(filter).filterable({ affects: 'tbody tr .file' });
@@ -142,26 +136,30 @@ $(document).ready(function() {
 			$("td.filter").html(filter_input);
 		}
 
-
 		//
 		// Delete Confirm Dialog
 		//
-
-		// The dialog
 		dialog=$("#ui");
 		if (isFile) {
+			console.log("file")
 			// add events to remove buttons (filemanager view)
-			remove=$(".icons a.delete");
+			remove=$(".grid a.delete");
 			remove.click(function () {
 				clean_message();
 				href=$(this).attr("href");
 				$(this).removeAttr("href");
-				paths=href.split("/");
-				file=paths[paths.length-1];
+				if (isThumbs) {
+					paths=href.split("/");
+					file=paths[paths.length-1];
+				}
+				else {
+					cell=$(this).parent(".edit");
+					file=get_id($(cell));
+				}
 				confirm_dialog(this,file);
 			});
 		}
-		if (isGrid) {
+		else {
 			// add events to delete buttons (grid view)
 			buttons=$(".grid a.delete");
 			buttons.click(function () {
@@ -191,13 +189,11 @@ $(document).ready(function() {
 	//
 	// Grid only (Edit Bool fields & Order editing)
 	//
-
 	if (isGrid && !isFile) {
 
 		//
 		// Editable boolean fields
 		//
-
 		bFields=$(".grid td.b");
 		$(bFields).click(function() {
 			obj=this;
@@ -229,7 +225,6 @@ $(document).ready(function() {
 		//
 		// Setting order by drag 'n drop
 		//
-
 		order=$("table.grid .order");
 		if (order.length>0) {
 			// change ui: remove normal order arrows, and place one item

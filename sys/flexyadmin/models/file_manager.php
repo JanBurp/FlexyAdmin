@@ -68,8 +68,8 @@ class File_manager Extends Model {
 		$this->type=$type;
 	}
 
-	function set_current($currentId=NULL) {
-		$this->currentId=$currentId;
+	function set_current($current="") {
+		$this->currentId=$current;
 	}
 
 
@@ -296,6 +296,7 @@ function thumb($attr,$index=FALSE) {
 	function render($type="", $class="") {
 		$out="";
 		$class.=" ".$this->view;
+		$current=$this->currentId;
 
 		/**
 		 * Prepare file data
@@ -326,8 +327,8 @@ function thumb($attr,$index=FALSE) {
 		$grid->prepend_to_captions($buttons);
 		$grid->set_heading("thumb","");
 		$grid->set_heading("edit","");
-		$grid->set_current($this->currentId);
-		$out=$grid->render("html",$this->path,"grid files");
+		$grid->set_current($current);
+		$out=$grid->render("html","","grid files");
 
 		log_('info',"filemaneger: rendering");
 		return $out;

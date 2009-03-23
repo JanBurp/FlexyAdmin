@@ -1,4 +1,4 @@
-<table class="<?=$class?>">
+<table class="thumbs <?=$class?>">
 
 	<thead>
 		<tr class="caption <?=$caption["class"];?>">
