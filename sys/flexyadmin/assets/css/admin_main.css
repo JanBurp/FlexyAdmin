@@ -248,7 +248,7 @@ table.grid {
 	-webkit-border-radius: 4px;
 	margin:0px;
 	padding:0px;
-	min-width:500px;
+	min-width:600px;
 }
 
 tr,td,th			{ background-color:transparent; }
@@ -276,14 +276,7 @@ tr.caption td.filter {
 	width:33%;
 	font-size:15px;
 }
-/*
-.caption td div {
-	width: 16px;
-	}
-.caption .buttons {
-	padding:4px 0px;
-}
-*/
+
 .grid td,
 .grid th {
 	text-align: left;
@@ -390,7 +383,7 @@ table.grid tr.ui-sortable-helper td {
 
 .icons .file {
 	padding:10px 10px 0px 0px;
-	margin:10px;
+	margin:15px 20px 10px 20px;
 	float:left;
 	width:130px;
 	height:144px;
