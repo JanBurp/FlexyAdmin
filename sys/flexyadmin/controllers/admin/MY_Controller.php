@@ -367,6 +367,7 @@ class AdminController extends BasicController {
 	}
 
 	function get_revision() {
+		$rev="";
 		$svnfile="sys/.svn/entries";
 		$revfile="sys/build.txt";
 		if (file_exists($svnfile)) {
@@ -375,12 +376,12 @@ class AdminController extends BasicController {
 			$fileKey=array_search(str_replace("sys/","",$revfile),$svn);
 			$revKey=$fileKey+2;
 			$rev = $svn[$revKey];
-			write_file($revfile, $rev);
+			if (!empty($rev)) write_file($revfile, $rev);
 		}
-		elseif (file_exists($revfile)) {
+		if (empty($rev) and file_exists($revfile)) {
 			$rev = read_file($revfile);
 		}
-		else $rev="#";
+		if (empty($rev)) $rev="#";
 		return $rev;
 	}
 
