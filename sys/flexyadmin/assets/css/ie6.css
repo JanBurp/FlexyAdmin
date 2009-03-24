@@ -1,8 +1,72 @@
-/* ============== IE8 specific styles ================ */
+/* ============== IE6 specific styles ================ */
 
 
 /* ============== dialog ================ */
 
 #dialog{
 	width:405px;
+}
+
+/* ============= icons ================ */
+
+/* ============== menu ================ */
+
+li .media,
+li a {
+	padding-left:0px;
+	background-image:none;
+}
+li.current a.media {
+	background-image:none;
+}
+li a.current {
+	background-color:transparent;
+}
+
+
+/* ============= grid =============== */
+
+td.edit {
+	background-image:none;
+}
+
+tr.caption td {
+	background-color: #DDEEAA;
+}
+
+td.new div.icon {
+	background-image:none;
+}
+
+.grid img,
+.grid embed,
+.grid .rgb					{	width:32px;	height:32px; }
+
+.icons .file .thumb img {
+	height: 80px;
+	}
+
+
+/* =========== form ================= */
+
+p.form_field label {
+	font-weight:bold;
+}
+
+input, textarea, select {
+	float:right;
+}
+
+textarea, .mceEditor {
+	float:right;
+	line-height: 1.4em;
+	display:block;
+	width:450px;
+	}
+.mceEditor table {
+	width:450px;
+}
+
+div.add_button {
+	display:none;
 }

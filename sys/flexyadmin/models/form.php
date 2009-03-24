@@ -458,8 +458,12 @@ class Form Extends Model {
 			$out.=$this->tmp($this->tmpFieldStart,$class);
 			$out.=form_label($field["label"],$name);
 		}
-		switch($field["type"]):
 
+//		if ($field["type"]!="hidden") {
+//			$out.=div("field");
+//		}
+
+		switch($field["type"]):
 
 			case "hidden":
 				$out.=form_hidden($name,$field["value"]);
@@ -479,7 +483,10 @@ class Form Extends Model {
 			case "htmleditor":
 				$this->hasHtmlField=true;
 			case "textarea":
-				if ($field["type"]=="textarea") $attr["rows"]=5;
+				if ($field["type"]=="textarea") {
+					$attr["rows"]=5;
+					$attr["cols"]=60;
+				}
 				$out.=form_textarea($attr);
 				break;
 
@@ -513,7 +520,7 @@ class Form Extends Model {
 				}
 				$out.=form_dropdown($name,$options,$value,$extra);
 				if (isset($button)) {
-					$out.=anchor($button,icon("add"));
+					$out.=div("add_button").anchor($button,icon("add"))._div();
 				}
 				break;
 
@@ -543,6 +550,7 @@ class Form Extends Model {
 		endswitch;
 
 		if ($field["type"]!="hidden") {
+//			$out.=_div();
 			$out.=$this->tmp($this->tmpFieldEnd);
 		}
 		return $out;
