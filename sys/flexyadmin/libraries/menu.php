@@ -26,6 +26,10 @@ class Menu {
 	var $current;
 
 	var $tmpUrl;
+	
+	var $menuTable;
+	var $menuTableNameField;
+	
 
 	var $tmpMenuStart;
 	var $tmpMenuEnd;
@@ -39,6 +43,7 @@ class Menu {
 	function init() {
 		$this->set_templates();
 		$this->set_current();
+		$this->set_menu_name_field();
 	}
 
 	function set_menu_from_table($table="") {
@@ -52,13 +57,17 @@ class Menu {
 		foreach($items as $item) {
 			if (!isset($item["b_visible"]) or ($item["b_visible"]) ) {
 				$thisItem=array();
-				if (isset($item["uri"])) $thisItem["uri"]=$item["uri"];	else $thisItem["uri"]=$item["str_title"];
+				if (isset($item["uri"])) $thisItem["uri"]=$item["uri"];	else $thisItem["uri"]=$item[$this->menuTableNameField];
 				if (isset($item["str_class"])) $thisItem["class"]=$item["str_class"];
-				$menu[$item["str_title"]]=$thisItem;
+				$menu[$item[$this->menuTableNameField]]=$thisItem;
 			}
 		}
 		$this->set_menu($menu);
 		return $menu;
+	}
+
+	function set_menu_name_field($nameField="str_title") {
+		$this->menuTableNameField=$nameField;
 	}
 
 	function set_menu($menu=NULL) {
