@@ -8,6 +8,14 @@
 }
 
 
+/* ============= form =================== */
+
+textarea, .mceEditor {
+	display:inline;
+	}
+
+
+
 /* ============== dialog ================ */
 
 #dialog{

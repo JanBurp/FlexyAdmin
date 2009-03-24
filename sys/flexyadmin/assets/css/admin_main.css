@@ -150,11 +150,15 @@ span.hide {
 	background-image: url("../icons/action_delete.gif");
 	background-repeat: no-repeat;
 	}
+div.add_button {
+	float:right;
+	width:20px;
+	height:20px;
+	margin-top:-32px;
+}
 .icon.add {
 	background-image: url("../icons/addfile.gif");
 	background-repeat: no-repeat;
-	float:right;
-	margin-top:-23px;
 	}
 .multiple .icon.add {
 	margin-top:-154px;
@@ -326,7 +330,8 @@ tr.caption td				{ border:none; }
 .grid tbody tr.current td {
 	background-color:#FFEEEE;
 	}
-.grid tbody tr:hover,
+
+.grid tbody tr.grid:hover,
 .grid tbody tr:hover td {
 	background-color:#DDEEAA;
 }
@@ -514,9 +519,14 @@ input.checkbox {
 	border:none;
 	width: auto;
 	}
-textarea,.mceEditor {
+textarea, .mceEditor {
 	line-height: 1.4em;
+	display:block;
+	width:450px;
 	}
+.mceEditor table {
+	width:450px;
+}
 /* will be overruled by the user in text.css */
 body#tinymce,
 body#tinymce td,

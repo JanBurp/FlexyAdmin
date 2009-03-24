@@ -112,6 +112,13 @@ $(document).ready(function() {
 	if (isGrid || isFile) {
 
 		//
+		// Make sure grid is minimal 600px width
+		if ($("table.grid").width() < 600) {
+			$("table.grid").css({width:"600px"});
+		}
+		
+
+		//
 		// Filter/Search rows
 		//
 		if (isFile && !isGrid) {
