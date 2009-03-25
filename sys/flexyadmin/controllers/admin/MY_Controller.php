@@ -380,7 +380,7 @@ class AdminController extends BasicController {
 		if (file_exists($svnfile)) {
 			$svn = read_file($svnfile);
 			$svn=explode("\n",$svn);
-			// $fileKey=array_search(str_replace("sys/","",$revfile),$svn);
+			//$fileKey=array_search(str_replace("sys/","",$revfile),$svn);
 			//$fileKey=array_search("jan",$svn);
 			$matches=array_keys($svn,"jan");
 			$fileKey=$matches[count($matches)-1];

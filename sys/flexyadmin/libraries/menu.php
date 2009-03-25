@@ -79,10 +79,31 @@ class Menu {
 		$this->set_menu($menu);
 	}
 
+	function add_after($name,$item,$after) {
+		if (array_key_exists($after,$this->menu)) {
+				$new=array();
+				foreach($this->menu as $k=>$i) {
+					$new[$k]=$i;
+					if ($k==$after) $new[$name]=$item;
+				}
+			$this->menu=$new;
+			return TRUE;
+		}
+		else return FALSE;
+	}
+
 	function add_to_bottom($name,$item) {
 		$menu=array_merge($this->menu,array($name=>$item));
 		$this->set_menu($menu);
 	}
+
+	function add_sub($name,$sub) {
+		if (array_key_exists($name,$this->menu)) {
+			$this->menu[$name]["sub"]=$sub;
+			return TRUE;
+		}
+		return FALSE;
+ 	}
 
 	function remove_item($name) {
 		unset($this->menu[$name]);
@@ -132,23 +153,25 @@ class Menu {
 		return $this->render($menu);
 	}
 
-	function render($menu=NULL,$class="") {
+	function render($menu=NULL,$class="",$level=1) {
+		$branch=array();
 		$out=$this->tmp($this->tmpMenuStart);
 		if (!isset($menu)) $menu=$this->menu;
+		// trace_($menu);
 		$pos=1;
 		foreach($menu as $name=>$item) {
 			// set class
-			$class=strtolower(str_replace(" ","_",$name))." pos$pos";
+			$class=strtolower(str_replace(" ","_",$name))." pos$pos lev$level";
 			if ($pos==1) $class.=" first";
 			if ($pos==count($menu)) $class.=" last";
 			if (isset($item["class"])) $class.=" ".$item["class"];
-			if ($this->current==$item["uri"]) $class.=" current";
+			if (isset($item["uri"]) and $this->current==$item["uri"]) $class.=" current";
 			$out.=$this->tmp($this->tmpItemStart,$class);
 			// render item or submenu
 			if (isset($item["uri"]))
 				$out.=anchor($this->tmp($this->tmpUrl,$item["uri"]), ascii_to_entities($name), array("class"=>$class));
 			if (isset($item["sub"]))
-				$out.=$this->render($item["sub"],$class);
+				$out.=$this->render($item["sub"],$class,$level+1);
 			$out.=$this->tmp($this->tmpItemEnd);
 			$pos++;
 		}
