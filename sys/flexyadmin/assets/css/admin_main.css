@@ -262,6 +262,9 @@ table.grid {
 	padding:0px;
 	min-width:600px;
 }
+table.home {
+	width:600px;
+}
 
 tr,td,th			{ background-color:transparent; }
 

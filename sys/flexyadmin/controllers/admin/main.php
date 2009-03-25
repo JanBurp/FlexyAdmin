@@ -48,10 +48,10 @@ class Main extends AdminController {
 		foreach($userData as $k=>$d) {
 			$userData[$k]=array(
 											"Datum"					=>	strftime("%A %e %B %Y om %R",strtotime($d["tme_login_time"])),
-											"Veranderingen"	=>	$this->uiNames->get($d["str_changed_tables"]) );
+											"Veranderingen"	=>	str_replace("|",", ",$this->uiNames->get($d["str_changed_tables"])) );
 		}
 		$grid->set_data($userData,"Laatste 5 login's");
-		$renderGrid=$grid->render("html","","grid");
+		$renderGrid=$grid->render("html","","grid home");
 		$data["logindata"]=$this->load->view("admin/grid",$renderGrid,true);
 		$data["username"]=$this->session->userdata("user");
 
@@ -64,7 +64,7 @@ class Main extends AdminController {
 		// stats in grid
 		$grid=new grid();
 		$grid->set_data($stats,"10 meest bezochte pagina's");
-		$renderGrid=$grid->render("html","","grid");
+		$renderGrid=$grid->render("html","","grid home");
 		$data["stats"]=$this->load->view("admin/grid",$renderGrid,true);
 		
 		$this->_set_content($this->load->view("admin/home",$data,true));

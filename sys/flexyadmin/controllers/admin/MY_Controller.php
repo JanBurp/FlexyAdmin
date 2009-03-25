@@ -87,7 +87,7 @@ class FrontEndController extends MY_Controller {
 		 */
 		if ($this->db->table_exists("cfg_stats")) {
 			$this->load->library("stats");
-			$this->stats->add_uri($this->uri->uri_string());
+			$this->stats->add_uri($this->uri->get());
 		}
 	}
 
@@ -101,7 +101,7 @@ class FrontEndController extends MY_Controller {
 	function _init_globals() {
 		$this->site=array();
 		/**
-		 * Set Asset folder
+		 * Set Asset folders
 		 */
 		$this->site["assets"]=assets();
 		$this->site["rel_assets"]=$this->config->item("ASSETS");
@@ -133,6 +133,12 @@ class FrontEndController extends MY_Controller {
 			$this->site["email"]="email of site administrator";
 			$this->site["description"]="Put some site description here,";
 			$this->site["keywords"]="site, keywords";
+		}
+		/**
+		 * Set home uri (is set in tbl_site)
+		 */
+		if (isset($this->site["str_start_uri"])) {
+			$this->uri->set_home($this->site["str_start_uri"]);
 		}
 	}
 
@@ -225,8 +231,6 @@ class BasicController extends MY_Controller {
  * @package			FlexyAdmin V1
  * @author			Jan den Besten
  * @version			V1 0.1
- *
- * @todo Authentication
  *
  */
 
