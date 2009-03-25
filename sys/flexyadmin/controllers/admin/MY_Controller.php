@@ -42,6 +42,9 @@ class MY_Controller extends Controller {
 		$this->cfg->load('CFG_field',$this->config->item('CFG_field_name'));
 		$this->cfg->load('CFG_media_info',array("str_path","fields"));
 		$this->cfg->load('CFG_img_info','str_path');
+		$lang=$this->cfg->get('CFG_configurations','str_language');
+		$lang=$lang."_".strtoupper($lang);
+		setlocale(LC_ALL, $lang);
 	}
 
 }
@@ -308,7 +311,6 @@ class AdminController extends BasicController {
 		// standard items
 
 		$a["Home"]			=array("uri"=>api_uri('API_home'));
-		//$a[ucwords($this->user)]	=array("uri"=>api_uri('API_user'));
 		$a["Logout"]		=array("uri"=>api_uri('API_logout'));
 
 		// normal tables
@@ -334,6 +336,7 @@ class AdminController extends BasicController {
 		$a=array_merge($a,$this->_show_table_menu($tables,$this->config->item('REL_table_prefix')));
 
 		$this->menu->set_menu($a);
+		// if ($currentMenuItem=="") $currentMenuItem="Home";
 		$this->menu->set_current_name($currentMenuItem);
 		$menu=$this->menu->render();
 		$this->load->view('admin/menu',array("menu"=>$menu));

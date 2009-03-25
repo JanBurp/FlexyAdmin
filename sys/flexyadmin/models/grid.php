@@ -128,7 +128,7 @@ class Grid Extends Model {
 		$alt="";
 		foreach($data as $id=>$row) {
 			$currClass="";
-			if ($id==$this->currentId) $currClass="current ";
+			if ($this->currentId!=NULL and $id==$this->currentId) $currClass="current ";
 			if ($alt=="evenrow") $alt="oddrow"; else $alt="evenrow";
 			$tableRowClass="$tableClass id$id $extraClass $currClass $alt";
 			$tableRowId=$id;
