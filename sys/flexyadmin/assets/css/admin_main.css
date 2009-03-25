@@ -19,8 +19,20 @@ a {
 a:hover {	text-decoration:underline; }
 
 h1 {
-	margin-left:10px;
-	font-size:1em;
+	display:inline-block;
+	font-size:1.2em;
+	background-color: #DDEEAA;
+	background-image: url("../img/inset.png");
+	background-position:50% 50%;
+	-moz-border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	margin:0px 0px 10px 0px;
+	padding:6px 6px 2px;
+	height: 19px;
+	width:590px;
+	text-align:center;
 }
 h2 {
 	margin-top:0px;
@@ -765,7 +777,8 @@ div.zoom .ui-dialog-content img {
 }
 
 #content {
-	top:95px;
+	margin-top:5px;
+	margin-left:225px;
 	z-index:1;
 }
 
@@ -773,13 +786,13 @@ div.zoom .ui-dialog-content img {
 	float:left;
 	margin-top:45px;
 	height:45px;
-	background-image:url("../img/dot_trans.gif");
-	background-repeat:repeat;
+	background-image:url("../img/back.gif");
+	background-repeat:no-repeat;
 	width:100%;
 }
 #footer div {
 	margin:0px;
-	margin-top:15px;
+	margin-top:14px;
 	padding:0px;
 }
 #footer p {
@@ -789,6 +802,7 @@ div.zoom .ui-dialog-content img {
 	overflow:hidden;
 	margin:0px;
 	margin-left:30px;
+	height:15px;
 	background-color:#fff;
 	text-align:center;
 }
