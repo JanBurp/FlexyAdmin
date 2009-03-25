@@ -38,8 +38,8 @@ class MY_URI extends CI_URI {
 
 	function _uri_string() {
 		$s=$this->uri_string();
-		if ($s==$this->xdebug)
-			return "";
+		if ($s==$this->xdebug) $s="";
+		if ($s=="") $s=$this->home;
 		return $s;
 	}
 
