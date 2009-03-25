@@ -132,7 +132,7 @@ class Menu {
 		$this->set_url_template();
 	}
 
-	function set_menu_templates($start="<ul class=\"menu %s\">",$end="</ul>") {
+	function set_menu_templates($start="<ul class=\"%s\">",$end="</ul>") {
 		$this->tmpMenuStart=$start;
 		$this->tmpMenuEnd=$end;
 	}
@@ -153,25 +153,35 @@ class Menu {
 		return $this->render($menu);
 	}
 
-	function render($menu=NULL,$class="",$level=1) {
+	function inUri($in,$uri) {
+		if (strpos($uri,$in)===FALSE) {
+			return FALSE;
+		}
+		return TRUE;
+	}
+
+	function render($menu=NULL,$class="",$level=1,$preUri="") {
 		$branch=array();
-		$out=$this->tmp($this->tmpMenuStart);
+		$out=$this->tmp($this->tmpMenuStart,"$class lev$level");
 		if (!isset($menu)) $menu=$this->menu;
-		// trace_($menu);
 		$pos=1;
 		foreach($menu as $name=>$item) {
+			$thisUri="/".$item["uri"];
+			if (!empty($preUri)) $thisUri=$preUri.$thisUri;
 			// set class
-			$class=strtolower(str_replace(" ","_",$name))." pos$pos lev$level";
-			if ($pos==1) $class.=" first";
-			if ($pos==count($menu)) $class.=" last";
-			if (isset($item["class"])) $class.=" ".$item["class"];
-			if (isset($item["uri"]) and $this->current==$item["uri"]) $class.=" current";
+			$cName=strtolower(str_replace(" ","_",$name));
+			$class="$cName pos$pos lev$level";
+			if ($pos==1)																$class.=" first";
+			if ($pos==count($menu))											$class.=" last";
+			if (isset($item["class"]))									$class.=" ".$item["class"];
+			if ($this->current==$thisUri) 							$class.=" current";
+			if ($this->inUri($thisUri,$this->current))	$class.=" active";
 			$out.=$this->tmp($this->tmpItemStart,$class);
 			// render item or submenu
 			if (isset($item["uri"]))
-				$out.=anchor($this->tmp($this->tmpUrl,$item["uri"]), ascii_to_entities($name), array("class"=>$class));
+				$out.=anchor($this->tmp($this->tmpUrl,$thisUri), ascii_to_entities($name), array("class"=>$class));
 			if (isset($item["sub"]))
-				$out.=$this->render($item["sub"],$class,$level+1);
+				$out.=$this->render($item["sub"],"$cName",$level+1,$thisUri);
 			$out.=$this->tmp($this->tmpItemEnd);
 			$pos++;
 		}
