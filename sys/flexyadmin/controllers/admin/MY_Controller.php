@@ -380,8 +380,10 @@ class AdminController extends BasicController {
 		if (file_exists($svnfile)) {
 			$svn = read_file($svnfile);
 			$svn=explode("\n",$svn);
-			$fileKey=array_search(str_replace("sys/","",$revfile),$svn);
-			$revKey=$fileKey+2;
+			// $fileKey=array_search(str_replace("sys/","",$revfile),$svn);
+			$fileKey=array_search("jan",$svn);
+			// $revKey=$fileKey+2;
+			$revKey=$fileKey-1;
 			$rev = $svn[$revKey];
 			if (!empty($rev)) write_file($revfile, $rev);
 		}
