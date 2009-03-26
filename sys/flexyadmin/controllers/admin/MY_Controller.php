@@ -145,10 +145,34 @@ class FrontEndController extends MY_Controller {
 	function add_keywords($words) {
 		$this->site["keywords"]=add_string($this->site["keywords"],$words,",");
 	}
+	
+	function add_title($title) {
+		$this->site["title"].=" - ".$title;
+	}
 
+	function add_content($c) {
+		if (!isset($this->site["content"]))
+			$this->site["content"]=$c;
+		else
+			$this->site["content"].=$c;
+	}
+	
+	function has_content() {
+		return (isset($this->site["content"]) and !empty($this->site["content"]));
+	}
+	
+	function no_content() {
+		return !$this->has_content();
+	}
+	
 	function add($key,$value) {
 		$this->site[$key]=$value;
 	}
+
+	function get($key) {
+		return el($key,$this->site);
+	}
+
 
 	function show($v="home",$data="",$return=FALSE) {
 		if (empty($data)) $data=$this->site;

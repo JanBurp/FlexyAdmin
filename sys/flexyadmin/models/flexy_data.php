@@ -31,6 +31,7 @@ class Flexy_data extends Model {
 	var $table;
 	var	$select;
 	var $where;
+	var $joinWhere;
 	var $like;
 	var $join;	//	array ("table"=> , "on" => )
 	var $order;
@@ -99,6 +100,9 @@ class Flexy_data extends Model {
 			case "LIKE":
 				$SQL=$this->like;
 				break;
+			case "JOINWHERE":
+				$SQL=$this->joinWhere;
+				break;
 			case "WHERE":
 			default:
 				$SQL=$this->where;
@@ -158,6 +162,9 @@ class Flexy_data extends Model {
 			case "LIKE":
 				$this->like=$SQL;
 				break;
+			case "JOINWHERE":
+				$this->joinWhere=$SQL;
+				break;
 			case "WHERE":
 			default:
 				$this->where=$SQL;
@@ -168,39 +175,16 @@ class Flexy_data extends Model {
 	function where() {
 		$args=func_get_args();
 		return $this->_sql("WHERE","AND",$args);
-//		$num_args=func_num_args();
-//		$args=func_get_args();
-//		/**
-//		 * reset?
-//		 */
-//		if ($num_args==0 or el(0,$args,"")=="") {
-//			$this->where="";
-//		}
-//		/**
-//		 * arguments: ('field','value')
-//		 */
-//		elseif ($num_args==2) {
-//			$this->where=add_string($this->where,$args[0]." = '".$args[1]."'", " AND ");
-//		}
-//		/**
-//		 * One argument: Array
-//		 */
-//		elseif (is_array($args[0])) {
-//			foreach($args[0] as $name=>$value) {
-//				$this->where($name,$value);
-//			}
-//		}
-//		/**
-//		 * One argument: String, a whole where string
-//		 */
-//		else {
-//			$this->where=add_string($this->where,$args[0]," AND ");
-//		}
 	}
 
 	function or_where() {
 		$args=func_get_args();
 		return $this->_sql("WHERE","OR",$args);
+	}
+
+	function join_where() {
+		$args=func_get_args();
+		return $this->_sql("JOINWHERE","AND",$args);
 	}
 
 	function like() {
@@ -612,7 +596,8 @@ class Flexy_data extends Model {
 						else {
 							$forFields=$this->db->list_fields($item["table"]);
 							foreach($forFields as $key=>$f) {
-								$selectFields[]= $item["table"].".".$f." AS ".$item["key"]."__".$f;
+								$selectFields[]= $item["table"].".".$f." AS ".$item["table"]."__".$f; // changed to 'table'  hope it all works out :-)
+								// $selectFields[]= $item["table"].".".$f." AS ".$item["key"]."__".$f;  
 							}
 						}
 					}
@@ -621,6 +606,15 @@ class Flexy_data extends Model {
 				$this->select=implode(",",$selectFields);
 			}
 		}
+
+		/**
+		*	Check join_wheres and translate them to normal wheres
+		*/
+		if (!empty($this->joinWhere)) {
+			trace_("TODO:JoinWheres");
+			trace_($this->joinWhere);
+		}
+
 
 		/**
 		 * set normal active record query items

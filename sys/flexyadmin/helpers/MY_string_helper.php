@@ -118,4 +118,8 @@ function strip_string($s,$c=0) {
 	return $s;
 }
 
+function nice_string($s) {
+	return ucfirst(str_replace("_"," ",$s));
+}
+
 ?>
