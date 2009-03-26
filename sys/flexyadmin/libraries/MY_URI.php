@@ -54,19 +54,20 @@ class MY_URI extends CI_URI {
 		return $this->is($this->home,$this->homePart);
 	}
 
-	function has_more() {
-		return $this->total_segments()>1;
+	function has_more($n=1) {
+		return $this->total_segments()>$n;
 	}
 
 	function get($s=0) {
 		if ($s==0) {
-			return $this->_uri_string();
+			$u=$this->_uri_string();
 		}
 		else {
 			$u=$this->_segment($s);
 			if (empty($u) and $s==$this->homePart) $u=$this->home;
-			return ($u);
 		}
+		if ($u[0]=="/") $u=substr($u,1);
+		return $u;
 	}
 
 }

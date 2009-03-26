@@ -122,6 +122,9 @@ class Menu {
 			return false;
 	}
 
+	function set_uri_template($tmpUri="%s") {
+		$this->set_url_template($tmpUri);
+	}
 	function set_url_template($tmpUrl="%s") {
 		$this->tmpUrl=$tmpUrl;
 	}
@@ -166,7 +169,7 @@ class Menu {
 		if (!isset($menu)) $menu=$this->menu;
 		$pos=1;
 		foreach($menu as $name=>$item) {
-			$thisUri="/".$item["uri"];
+			$thisUri=$item["uri"];
 			if (!empty($preUri)) $thisUri=$preUri.$thisUri;
 			// set class
 			$cName=strtolower(str_replace(" ","_",$name));
