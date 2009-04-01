@@ -305,8 +305,9 @@ class AdminController extends BasicController {
 		$buttons1=$this->cfg->get('CFG_editor',"str_buttons1");
 		$buttons2=$this->cfg->get('CFG_editor',"str_buttons2");
 		$buttons3=$this->cfg->get('CFG_editor',"str_buttons3");
+		$formats=$this->cfg->get('CFG_editor',"str_formats");
 		$styles=$this->cfg->get('CFG_editor',"str_styles");
-		$this->load->view('admin/header', array("title"=>$title,"url"=>$url,"show_type"=>$type,"show_editor"=>$editor,"buttons1"=>$buttons1,"buttons2"=>$buttons2,"buttons3"=>$buttons3,"styles"=>$styles));
+		$this->load->view('admin/header', array("title"=>$title,"url"=>$url,"show_type"=>$type,"show_editor"=>$editor,"buttons1"=>$buttons1,"buttons2"=>$buttons2,"buttons3"=>$buttons3,"formats"=>$formats,"styles"=>$styles));
 	}
 
 	function _show_table_menu($tables,$type) {

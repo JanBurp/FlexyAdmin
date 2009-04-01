@@ -57,6 +57,11 @@
 			theme_advanced_statusbar_location: "bottom",
 			theme_advanced_resizing : true,
 			theme_advanced_resize_horizontal : false,
+			<? if (isset($formats)): ?>
+			theme_advanced_blockformats : "<?=$formats?>",
+			<? else: ?>
+			theme_advanced_blockformats : "h1,h2,h3",
+			<? endif; ?>
 			theme_advanced_styles : "<?=$styles;?>",
 			plugins : "paste,table,fullscreen,advimage,media",
 			external_image_list_url : "<?=assets()?>/lists/img_list.js",
