@@ -31,6 +31,7 @@ class Content {
 		$this->addClasses=$classes;
 	}
 
+
 	function render($txt) {
 		
 		if ($this->addClasses) {
