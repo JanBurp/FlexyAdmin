@@ -374,7 +374,7 @@ class AdminController extends BasicController {
 	function _show_message() {
 		$message=$this->session->userdata("message");
 		if ($message!="") {
-			// $message=replace_ui_names($message);
+			$message=$this->uiNames->replace_ui_names($message);
 			$this->load->view('admin/message', array("message"=>$message));
 		}
 		$this->session->unset_userdata("message");
