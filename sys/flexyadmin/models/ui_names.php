@@ -90,6 +90,14 @@ class ui_names extends Model {
 		$s=ucwords($s);
 		return $s;
 	}
+	
+	function replace_ui_names($s) {
+		foreach($this->uiNames as $key=>$name) {
+			$s=str_replace($key,$this->get($key),$s);
+		}
+		return $s;
+	}
+	
 }
 
 ?>
