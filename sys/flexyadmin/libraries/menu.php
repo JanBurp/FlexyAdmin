@@ -51,8 +51,8 @@ class Menu {
 		if (empty($table)) {
 			$table=$CI->cfg->get('CFG_configurations',"str_menu_table");
 		}
-		$CI->fd->order_by("order");
-		$items=$CI->fd->get_results($table);
+		$CI->db->order_by("order");
+		$items=$CI->db->get_result($table);
 		$menu=array();
 		foreach($items as $item) {
 			if (!isset($item["b_visible"]) or ($item["b_visible"]) ) {

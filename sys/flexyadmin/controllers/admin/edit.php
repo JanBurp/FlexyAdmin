@@ -31,7 +31,7 @@ class Edit extends AdminController {
 
 	function Edit() {
 		parent::AdminController();
-		$this->load->model("flexy_data","fd");
+		// $this->load->model("flexy_data","fd");
 	}
 
 	function index() {
