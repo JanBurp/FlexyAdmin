@@ -107,7 +107,7 @@ class Edit extends AdminController {
 				 * Check if some data set in rel tables (if exists), if so delete them also
 				 */
 
-				$jTables=$this->fd->get_join_tables($table);
+				$jTables=$this->db->get_many_tables($table);
 				if (!empty($jTables)) {
 					foreach ($jTables as $jt=>$jItem) {
 						$this->db->where($jItem["id_this"],$id);
