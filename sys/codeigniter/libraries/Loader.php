@@ -198,34 +198,83 @@ class CI_Loader {
 	 * @param	bool	whether to enable active record (this allows us to override the config setting)
 	 * @return	object
 	 */
-	function database($params = '', $return = FALSE, $active_record = FALSE)
-	{
-		// Grab the super object
-		$CI =& get_instance();
+	// function database($params = '', $return = FALSE, $active_record = FALSE)
+	// {
+	// 	// Grab the super object
+	// 	$CI =& get_instance();
+	// 
+	// 	// Do we even need to load the database class?
+	// 	if (class_exists('CI_DB') AND $return == FALSE AND $active_record == FALSE AND isset($CI->db) AND is_object($CI->db))
+	// 	{
+	// 		return FALSE;
+	// 	}
+	// 
+	// 	require_once(BASEPATH.'database/DB'.EXT);
+	// 
+	// 	if ($return === TRUE)
+	// 	{
+	// 		return DB($params, $active_record);
+	// 	}
+	// 
+	// 	// Initialize the db variable.  Needed to prevent
+	// 	// reference errors with some configurations
+	// 	$CI->db = '';
+	// 
+	// 	// Load the DB class
+	// 	$CI->db =& DB($params, $active_record);
+	// 
+	// 	// Assign the DB object to any existing models
+	// 	$this->_ci_assign_to_models();
+	// }
 
-		// Do we even need to load the database class?
-		if (class_exists('CI_DB') AND $return == FALSE AND $active_record == FALSE AND isset($CI->db) AND is_object($CI->db))
-		{
-			return FALSE;
-		}
 
-		require_once(BASEPATH.'database/DB'.EXT);
+			/**
+	     * Database Loader Extension, see http://codeigniter.com/wiki/Extending_Database_Drivers/
+	     *
+	     * @access    public
+	     * @param    string    the DB credentials
+	     * @param    bool    whether to return the DB object
+	     * @param    bool    whether to enable active record (this allows us to override the config setting)
+	     * @return    object
+	     */
+	    function database($params = '', $return = FALSE, $active_record = FALSE)
+	    {
+	            // Do we even need to load the database class?
+	            if (class_exists('CI_DB') AND $return == FALSE AND $active_record == FALSE)
+	            {
+	            return FALSE;
+	            }
 
-		if ($return === TRUE)
-		{
-			return DB($params, $active_record);
-		}
+	            require_once(BASEPATH.'database/DB'.EXT);
 
-		// Initialize the db variable.  Needed to prevent
-		// reference errors with some configurations
-		$CI->db = '';
+	            // Load the DB class
+	            $db =& DB($params, $active_record);
 
-		// Load the DB class
-		$CI->db =& DB($params, $active_record);
+	            $my_driver = config_item('subclass_prefix').'DB_'.$db->dbdriver.'_driver';
+	            $my_driver_file = APPPATH.'libraries/'.$my_driver.EXT;
 
-		// Assign the DB object to any existing models
-		$this->_ci_assign_to_models();
-	}
+	            if (file_exists($my_driver_file))
+	            {
+	                require_once($my_driver_file);
+	                $db =& new $my_driver(get_object_vars($db));
+	            }
+
+	            if ($return === TRUE)
+	            {
+	                return $db;
+	            }
+	            // Grab the super object
+	            $CI =& get_instance();
+
+	            // Initialize the db variable.  Needed to prevent
+	            // reference errors with some configurations
+	            $CI->db = '';
+	            $CI->db = $db;
+	            // Assign the DB object to any existing models
+	            $this->_ci_assign_to_models();
+	    }
+
+
 
 	// --------------------------------------------------------------------
 

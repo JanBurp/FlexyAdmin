@@ -31,7 +31,7 @@ class Show extends AdminController {
 
 	function Show() {
 		parent::AdminController();
-		$this->load->model("flexy_data","fd");
+		// $this->load->model("flexy_data","fd");
 		$this->load->model("flexy_field","ff");
 	}
 
@@ -91,9 +91,11 @@ class Show extends AdminController {
 				/**
 				 * get data
 				 */
-				$this->fd->foreign_with_abstracts();
-				$this->fd->joins(true);
-				$data=$this->fd->get_results($table);
+				$this->db->add_foreigns_as_abstracts();
+				$this->db->add_many();
+				$this->db->max_text_len(40);
+				$data=$this->db->get_result($table);
+				// trace_($data);
 				if (empty($data)) {
 					/**
 					 * if no data, start an input form
@@ -158,12 +160,11 @@ class Show extends AdminController {
 			/**
 			 * get data
 			 */
-			$this->fd->joins(true);
-			$this->fd->abstracts(true);
-			$this->fd->with_options(true);
-			if ($id!="") $this->fd->where($table.".".pk(),$id);
-			$data=$this->fd->get_results($table);
-			//trace_($data);
+			$this->db->add_many();
+			$this->db->add_options();
+			if ($id!="") $this->db->where($table.".".pk(),$id);
+			$data=$this->db->get_result($table);
+			// trace_($data);
 			$options=el("options",$data);
 			$multiOptions=el("multi_options",$data);
 			$data=current($data);
@@ -172,10 +173,10 @@ class Show extends AdminController {
 			 * if no data, new item: fill data with default values
 			 */
 			if (empty($data)) {
-				$this->fd->joins(true);
-				$this->fd->foreign(true);
-				$this->fd->with_options(true);
-				$data=$this->fd->defaults($table);
+				$this->db->add_many();
+				$this->db->add_foreigns();
+				$this->db->add_options();
+				$data=$this->db->defaults($table);
 				$options=el("options",$data);
 				$multiOptions=el("multi_options",$data);
 				$data=current($data);

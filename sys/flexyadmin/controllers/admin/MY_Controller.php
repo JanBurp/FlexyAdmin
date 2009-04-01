@@ -73,7 +73,7 @@ class FrontEndController extends MY_Controller {
 		$this->load->library('user_agent');
 		$this->load->helper('date');
 		$this->load->helper("html_helper");
-		$this->load->model("flexy_data","fd");
+		// $this->load->model("flexy_data","fd");
 		$this->load->library("menu");
 		$this->load->library("content");
 

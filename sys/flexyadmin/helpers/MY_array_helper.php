@@ -117,6 +117,17 @@ function find_row_by_value($a,$v) {
 	return NULL;
 }
 
+function array_ereg_search($val, $array) {
+	$i = 0;
+	$return = array();
+	foreach($array as $v) {
+  	if(eregi($val, $v)) $return[] = $i;
+	  $i++;
+	}
+	return $return;
+}
+
+
 function select_fields($a,$fields) {
 	if (!is_array($fields)) { $fields=array($fields); }
 	$out=array();
