@@ -66,7 +66,7 @@ class MY_URI extends CI_URI {
 			$u=$this->_segment($s);
 			if (empty($u) and $s==$this->homePart) $u=$this->home;
 		}
-		if ($u[0]=="/") $u=substr($u,1);
+		if (isset($u[0]) and $u[0]=="/") $u=substr($u,1);
 		return $u;
 	}
 
