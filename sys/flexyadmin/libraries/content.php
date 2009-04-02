@@ -31,26 +31,26 @@ class Content {
 		$this->addClasses=$classes;
 	}
 
+	// callback for class replacing
+	function _countCallBack($matches) {
+		static $img_count=1;
+		static $p_count=1;
+		if ($matches[1]=="p") {
+			$class="p$p_count";
+			if ($p_count++%2) $class.=" odd"; else $class.=" even";
+		}
+		else {
+			$class="img$img_count";
+			if ($img_count++%2) $class.=" odd"; else $class.=" even";
+		}
+		return "<".$matches[1]." class=\"$class ".$matches[4]."\" ".$matches[2]." ".$matches[5].">";
+	}
 
 	function render($txt) {
 		
 		if ($this->addClasses) {
-			// callback for class replacing
-			function countCallBack($matches) {
-				static $img_count=1;
-				static $p_count=1;
-				if ($matches[1]=="p") {
-					$class="p$p_count";
-					if ($p_count++%2) $class.=" odd"; else $class.=" even";
-				}
-				else {
-					$class="img$img_count";
-					if ($img_count++%2) $class.=" odd"; else $class.=" even";
-				}
-				return "<".$matches[1]." class=\"$class ".$matches[4]."\" ".$matches[2]." ".$matches[5].">";
-			}
 		 	// add classes (odd even nrs to p and img tags)
-			$txt=preg_replace_callback("/<(img|p)(.*?)(class=\"(.*?)\")?(.*?)>/","countCallBack",$txt);
+			$txt=preg_replace_callback("/<(img|p)(.*?)(class=\"(.*?)\")?(.*?)>/",array($this,"_countCallBack"),$txt);
 		}
 		
 		if ($this->safeEmail) {
