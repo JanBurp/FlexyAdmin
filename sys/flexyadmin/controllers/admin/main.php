@@ -59,13 +59,16 @@ class Main extends AdminController {
 		$this->db->select("str_uri as Adres, COUNT(`str_uri`) as Aantal");
 		$this->db->group_by('Adres');
 		$this->db->order_by("Aantal DESC");
-		$query=$this->db->get("cfg_stats",10);
-		$stats=$query->result_array();
-		// stats in grid
-		$grid=new grid();
-		$grid->set_data($stats,"10 meest bezochte pagina's");
-		$renderGrid=$grid->render("html","","grid home");
-		$data["stats"]=$this->load->view("admin/grid",$renderGrid,true);
+		$stats=$this->db->get_results("cfg_stats",10);
+		// trace_($stats);
+		if (!empty($stats)) {
+			// stats in grid
+			$grid=new grid();
+			$grid->set_data($stats,"10 meest bezochte pagina's");
+			$renderGrid=$grid->render("html","","grid home");
+			$data["stats"]=$this->load->view("admin/grid",$renderGrid,true);
+		}
+		else $data["stats"]="";
 		
 		$this->_set_content($this->load->view("admin/home",$data,true));
 		$this->_show_all();

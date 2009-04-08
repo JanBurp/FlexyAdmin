@@ -107,10 +107,19 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 						$fields[$key]=$f;
 					}
 				}
+				else {
+					$fields=$this->ar_select;
+					$this->ar_select=array();
+					// trace_($this->ar_select);
+					// trace_($fields);
+				}
 				// loop through fields, add them to select array and see if it is a foreignfield with known foreigntables
 				$selectFields=array();
 				foreach($fields as $field) {
-					$selectFields[]=$table.".".$field;
+					if (strpos($field,".")===FALSE)
+						$selectFields[]=$table.".".$field;
+					else 
+						$selectFields[]=$field;
 					// is it a foreign key? Yes: add join and selectfield(s)
 					/**
 					 * TODO: check if this join allready exists: set by db->join();
@@ -133,6 +142,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				}
 				// select all fields including foreign fields
 				$this->select(implode(",",$selectFields));
+				// trace_($this->ar_select);
 			}
 		}
 		/**
@@ -200,9 +210,14 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		$query=$this->_get($table,$limit,$offset);
 		log_("info","[DB+] Get data from query:");
 		// set key
-		foreach($query->result_array() as $row) {
-			$result[$row[$this->pk]]=$row;
+		$res=$query->result_array();
+		$first=current($res);
+		if (isset($first[$this->pk])) {
+			foreach($res as $row) {
+				$result[$row[$this->pk]]=$row;
+			}
 		}
+		else $result=$res;
 
 		/**
 		 * add (one to) many data if asked for
@@ -246,6 +261,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		}
 
 		log_("info","[DB+] data ready");
+		$this->reset();
 		return $result;
 	}
 		

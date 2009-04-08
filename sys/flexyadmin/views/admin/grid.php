@@ -15,11 +15,13 @@
 			</td>
 		</tr>
 
-		<tr class="heading <?=$heading["class"];?>">
-		<? foreach($heading["row"] as $cell): ?>
-			<th class="<?=$cell["class"];?>"><?=$cell["cell"];?></th>
-		<? endforeach; ?>
-		</tr>
+		<? if (isset($heading["row"])): ?>
+			<tr class="heading <?=$heading["class"];?>">
+			<? foreach($heading["row"] as $cell): ?>
+				<th class="<?=$cell["class"];?>"><?=$cell["cell"];?></th>
+			<? endforeach; ?>
+			</tr>
+		<? endif; ?>
 	</thead>
 
 	<tbody>
