@@ -93,7 +93,7 @@ class Show extends AdminController {
 				 */
 				$this->db->add_foreigns_as_abstracts();
 				$this->db->add_many();
-				$this->db->max_text_len(40);
+				$this->db->max_text_len(250);
 				$data=$this->db->get_result($table);
 				// trace_($data);
 				if (empty($data)) {
