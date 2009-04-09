@@ -93,6 +93,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 */
 	function _get($table="",$limit=0,$offset=0) {
 		log_("info","[DB+] Get/create query:");
+
 		/**
 		 * add foreign (joins) if asked for
 		 */
@@ -148,8 +149,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		/**
 		 * set standard order if not set
 		 */
-		if (empty($this->ar_order))
-			$this->_set_standard_order($table);
+		if (empty($this->ar_order)) $this->_set_standard_order($table);
 
 		/**
 		 * if many, find if a where part is referring to a many table
@@ -158,23 +158,37 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			$manyTables=$this->get_many_tables($table);
 			foreach($manyTables as $mTable) {
 				$jTable=$mTable["join"];
+				// trace_($this->ar_where);
 				$foundKeysArray=array_ereg_search($jTable, $this->ar_where);
 				foreach($foundKeysArray as $key) {
 					$mWhere=$this->ar_where[$key];
+					$AndOr=trim(substr($mWhere,0,3));
+					if (!in_array($AndOr,array("AND","OR"))) $mWhere=" AND ".$mWhere;
 					$sql="SELECT ".$mTable["rel"].".".$mTable["id_this"]." AS id  
 								FROM ".$mTable["rel"].",".$mTable["join"]." 
 								WHERE ".$mTable["rel"].".".$mTable["id_join"]."=".$mTable["join"].".id ".$mWhere;
+					// trace_($sql);
 					$query=$this->query($sql);
 					$manyResults=$query->result_array();
+					// trace_($manyResults);
 					// remove current where and add new 'WHERE IN' to active record which selects the id where the many field is right
 					unset($this->ar_where[$key]);
-					foreach($manyResults as $r) {
-						$whereIn[]=$r["id"];
+					// add WHERE IN statement
+					if (!empty($manyResults)) {
+						foreach($manyResults as $r) {
+							$whereIn[]=$r["id"];
+						}
+
 					}
-					if (!empty($whereIn)) $this->where_in($mTable["this"].".".$this->pk,$whereIn);
+					if (!empty($whereIn))
+						$this->where_in($mTable["this"].".".$this->pk,$whereIn);
+					else
+						$this->where($this->pk,"-1"); // make sure no result is returned...
 				}
 			}
 		}
+		// trace_($this);
+		
 		
 		/**
 		*	If TEXT maxlength, replace these in ar_where
@@ -285,7 +299,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		return $row[$field];
 	}
 	function get_field($table,$field,$id) {
-		return $this->get_field_where($table,$field,"id",$id);
+		return $this->get_field_where($table,$field,$this->pk,$id);
 	}
 	
 	function get_each($table="",$limit=0,$offset=0) {
