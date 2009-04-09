@@ -274,6 +274,20 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		return current($data);
 	}
 	
+	function get_field_where($table,$field,$where,$what="") {
+		if (!is_array($where) and !empty($what))
+			$this->where($where,$what);
+		else
+			$this->where($where);
+		$this->select($field);
+		$query=$this->get($table,1);
+		$row=$query->row_array();
+		return $row[$field];
+	}
+	function get_field($table,$field,$id) {
+		return $this->get_field_where($table,$field,"id",$id);
+	}
+	
 	function get_each($table="",$limit=0,$offset=0) {
 		if (!isset($this->eachResult)) {
 			$this->eachResult=$this->get_result($table,$limit,$offset);
