@@ -166,11 +166,12 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 								WHERE ".$mTable["rel"].".".$mTable["id_join"]."=".$mTable["join"].".id ".$mWhere;
 					$query=$this->query($sql);
 					$manyResults=$query->result_array();
-					// remove current where and add new where's to active record which selects the id where the many field is right
+					// remove current where and add new 'WHERE IN' to active record which selects the id where the many field is right
 					unset($this->ar_where[$key]);
 					foreach($manyResults as $r) {
-						$this->where($mTable["this"].".".$this->pk,$r["id"]);
+						$whereIn[]=$r["id"];
 					}
+					if (!empty($whereIn)) $this->where_in($mTable["this"].".".$this->pk,$whereIn);
 				}
 			}
 		}
