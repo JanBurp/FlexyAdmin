@@ -36,7 +36,10 @@ class Main extends AdminController {
 	function index() {
 		//$this->_set_content($this->cfg->get('CFG_configurations',"txt_info"));
 		$this->load->model("grid");
+		$this->lang->load("home");
+
 		// last login info
+		$data["username"]=$this->session->userdata("user");
 		$user_id=$this->session->userdata("user_id");
 		$this->db->select("tme_login_time,str_changed_tables");
 		$this->db->where("id_user",$user_id);
@@ -47,24 +50,23 @@ class Main extends AdminController {
 		$grid=new grid();
 		foreach($userData as $k=>$d) {
 			$userData[$k]=array(
-											"Datum"					=>	strftime("%A %e %B %Y om %R",strtotime($d["tme_login_time"])),
-											"Veranderingen"	=>	str_replace("|",", ",$this->uiNames->get($d["str_changed_tables"])) );
+											lang("home_date")		=>	strftime("%A %e %B %Y om %R",strtotime($d["tme_login_time"])),
+											lang("home_changes")=>	str_replace("|",", ",$this->uiNames->get($d["str_changed_tables"])) );
 		}
-		$grid->set_data($userData,"Laatste 5 login's");
+		$grid->set_data($userData,langp("home_last_login",$data["username"]));
 		$renderGrid=$grid->render("html","","grid home");
 		$data["logindata"]=$this->load->view("admin/grid",$renderGrid,true);
-		$data["username"]=$this->session->userdata("user");
 
 		// stats
-		$this->db->select("str_uri as Adres, COUNT(`str_uri`) as Aantal");
-		$this->db->group_by('Adres');
-		$this->db->order_by("Aantal DESC");
+		$this->db->select("str_uri as ".lang("home_page").", COUNT(`str_uri`) as ".lang("home_count"));
+		$this->db->group_by(lang("home_page"));
+		$this->db->order_by(lang("home_count")." DESC");
 		$stats=$this->db->get_results($this->config->item('LOG_table_prefix')."_".$this->config->item('LOG_stats'),10);
 		// trace_($stats);
 		if (!empty($stats)) {
 			// stats in grid
 			$grid=new grid();
-			$grid->set_data($stats,"10 meest bezochte pagina's");
+			$grid->set_data($stats,langp("home_top_ten"));
 			$renderGrid=$grid->render("html","","grid home");
 			$data["stats"]=$this->load->view("admin/grid",$renderGrid,true);
 		}

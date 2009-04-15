@@ -54,16 +54,18 @@ class Show extends AdminController {
 			 * re-order data
 			 */
 			if (!empty($table) and !empty($id) and !empty($newOrder)) {
+				$this->lang->load("update_delete");
 				$this->load->model("order");
 				$this->order->reorder($table,$id,$newOrder);
-				$this->set_message("Re-ordered");
+				$this->set_message(langp("order_has_changed",$table));
 				$this->load->model("login_log");
 				$this->login_log->update($table);
 				redirect(api_uri('API_view_grid',$table,$id));
 			}
 		}
 		else {
-			$this->set_message("Sorry, you don't have rights to do this.");
+			$this->lang->load("rights");
+			$this->set_message(lang("rights_no_rights"));
 			$uiTable="";
 			/**
 			 * show
@@ -130,7 +132,8 @@ class Show extends AdminController {
 				}
 			}
 			else {
-				$this->set_message("Sorry, you don't have rights to do this.");
+				$this->lang->load("rights");
+				$this->set_message(lang("rights_no_rights"));
 				$uiTable="";
 			}
 
@@ -198,16 +201,17 @@ class Show extends AdminController {
 			 * Validate form, if succes, make form do an update
 			 */
 			if ($form->validation()) {
+				$this->lang->load("update_delete");
 				$resultId=$form->update($table);
 				if (is_string($resultId)) {
-					$this->set_message("Update/Insert error on '$table','$resultId'");
+					$this->set_message(langp("update_error",$table,$resultId));
 					redirect(api_uri('API_view_grid',$table));
 				}
 				else {
 					if ($id==-1)
-						$this->set_message("New item inserted on '$table'");
+						$this->set_message(langp("insert_new",$table));
 					else
-						$this->set_message("Updated item from '$table'");
+						$this->set_message(langp("update_succes",$table));
 					$this->load->model("login_log");
 					$this->login_log->update($table);
 					redirect(api_uri('API_view_grid',$table,$resultId));
@@ -228,7 +232,8 @@ class Show extends AdminController {
 			}
 		}
 		else {
-			$this->set_message("Sorry, you don't have rights to do this.");
+			$this->lang->load("rights");
+			$this->set_message(lang("rights_no_rights"));
 			$uiTable="";
 		}
 
@@ -253,56 +258,73 @@ class Show extends AdminController {
 		 */
 		$userTable=$this->config->item('CFG_table_prefix')."_".$this->config->item('CFG_users');
 		$userId=$this->session->userdata("user_id");
-		$this->db->select("str_user_name,gpw_user_pwd");
+		// $this->form($userTable,$userId);
+		
+		$this->db->select("id,str_user_name,gpw_user_pwd,str_language");
+		$this->db->add_options();
+		$this->db->add_many();
 		$this->db->where("id",$userId);
-		$query=$this->db->get($userTable);
-		$userData=$query->row_array();
-
+		$userData=$this->db->get_result($userTable);
+		$options=el("options",$userData);
+		$userData=current($userData);
+		
 		/**
 		 * Init user form
 		 */
-		$formData=array(
-										"id"						=>array(	"type"				=>	"hidden",
-																							"label"				=>	"id",
-																							"name"				=>	"id",
-																							"value"				=>	$userId,
-																							"validation"	=>  "required|numeric"),
-										"str_user_name"	=>array(	"type"				=>	"input",
-																							"label"				=>	"Username",
-																							"name"				=>	"str_user_name",
-																							"value"				=>	$userData["str_user_name"],
-																							"validation"	=>  "required"),
-										"gpw_user_pwd"	=>array(	"type"				=>	"input",
-																							"label"				=>	"Password",
-																							"name"				=>	"gpw_user_pwd",
-																							"value"				=>	$userData["gpw_user_pwd"],
-																							"validation"	=>  "required"));
+		
+		$formData=$this->ff->render_form($userTable,$userData,$options);
+		
+		// $formData=array(
+		// 									"id"						=>array(	"type"				=>	"hidden",
+		// 																						"label"				=>	"id",
+		// 																						"name"				=>	"id",
+		// 																						"value"				=>	$userId,
+		// 																						"validation"	=>  "required|numeric"),
+		// 									"str_user_name"	=>array(	"type"				=>	"input",
+		// 																						"label"				=>	"Username",
+		// 																						"name"				=>	"str_user_name",
+		// 																						"value"				=>	$userData["str_user_name"],
+		// 																						"validation"	=>  "required"),
+		// 									"gpw_user_pwd"	=>array(	"type"				=>	"input",
+		// 																						"label"				=>	"Password",
+		// 																						"name"				=>	"gpw_user_pwd",
+		// 																						"value"				=>	$userData["gpw_user_pwd"],
+		// 																						"validation"	=>  "required"),
+		// 									"str_language"	=>array(	"type"				=>	"input",
+		// 																						"label"				=>	"Language",
+		// 																						"name"				=>	"str_language",
+		// 																						"value"				=>	$userData["str_language"],
+		// 																						"validation"	=>  "required"));
+
 		$this->load->library('form_validation');
 		$this->load->helper('html');
 		$this->form_validation->set_error_delimiters('<div id="formmessage">', '</div>');
 		$this->load->model("form");
 		$form=new form(api_uri('API_user'));
-		$form->set_data($formData,"Edit user");
+		$form->set_data($formData,$userData["str_user_name"]);
 		/**
 		 * Validate form, if succes, make form do an update
 		 */
 		if ($form->validation()) {
+			$this->lang->load("update_delete");
 			$resultId=$form->update($userTable);
 			if (is_string($resultId)) {
-				$this->set_message("Update/Insert error on 'user Table','$resultId'");
+				$this->set_message(langp("update_error",$userTable,$resultId));
 				redirect(api_uri('API_home'));
 			}
 			else {
-				$this->set_message("User has changed");
+				$form->update($userTable);
+				$this->set_message(lang("update_user_changed"));
 				$this->load->model("login_log");
 				$this->login_log->update($userTable);
 				// reset user session
 				$this->db->where("id",$userId);
-				$this->db->select("str_user_name");
+				$this->db->select("str_user_name,str_language");
 				$query=$this->db->get($userTable);
 				$userData=$query->row_array();
 				//trace_($userData);
 				$this->session->set_userdata("user",$userData["str_user_name"]);
+				$this->session->set_userdata("language",$userData["str_language"]);
 				redirect(api_uri('API_home'));
 			}
 		}
@@ -332,14 +354,16 @@ class Show extends AdminController {
 		$rgb=str_replace("#","",$rgb);
 		$len=strlen($rgb);
 		if ($len!=3 and $len!=6) {
-			$this->form_validation->set_message('valid_rgb', 'Wrong color code in the %s field');
+			$this->lang->load("form_validation");
+			$this->form_validation->set_message('valid_rgb', lang('valid_rgb'));
 			return FALSE;
 		}
 		$rgb=strtoupper($rgb);
 		if (ctype_xdigit($rgb))
 			return "#$rgb";
 		else {
-			$this->form_validation->set_message('valid_rgb', 'Wrong color code in the %s field');
+			$this->lang->load("form_validation");
+			$this->form_validation->set_message('valid_rgb', lang('valid_rgb'));
 			return FALSE;
 		}
 	}

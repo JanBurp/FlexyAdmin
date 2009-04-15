@@ -14,6 +14,12 @@
 
 	<div id="ui">
 	</div>
+	
+	<div id="ui_messages">
+		<? foreach ($dialog as $key => $value) : ?>
+			<span id="<?=$key?>"><?=$value;?></span>
+		<? endforeach; ?>
+	</div>
 
 </body>
 </html>

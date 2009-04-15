@@ -738,6 +738,14 @@ div.zoom .ui-dialog-content {
 div.zoom .ui-dialog-content img {
 	cursor:pointer;
 }
+
+div#ui {
+	display:none;
+}
+div#ui_messages {
+	display:none;
+}
+
 /* ============== composition ================ */
 
 #wrapper {

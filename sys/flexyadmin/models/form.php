@@ -227,20 +227,10 @@ class Form Extends Model {
  *	@param int $id	id of updated record (-1 is inserted)
  */
 	function _after_update($id) {
-		//$table=$this->data[pk()]["table"];
 		/**
-		 *  Is it a updated link from links table?
-		 *
-		 *	This code moved to MY_Controller -> before_grid_tbl_links
-		 */
-//		if ($table==$this->cfg->get('CFG_editor','table')) {
-//			/**
-//			 * Reset link list
-//			 */
-//			$CI =& get_instance();
-//			$CI->load->library("editor_lists");
-//			$CI->editor_lists->create_list("links");
-//		}
+		* TODO: hook this
+		*/
+
 	}
 
 	function _get_uri_field($fields) {
@@ -425,6 +415,7 @@ class Form Extends Model {
  */
 
 	function render($type="", $class="") {
+		$this->lang->load("form");
 		if (!empty($type)) $this->set_type($type);
 
 		$out=form_open_multipart($this->action,array("class"=>$class));
@@ -436,9 +427,9 @@ class Form Extends Model {
 		}
 		$out.=form_fieldset_close();
 		$out.=form_fieldset("",array("class"=>"formbuttons"));
-		$out.=form_reset(array("name"=>"cancel", "value" => "Annuleer", "class"=>"button cancel", "onClick" => "window.history.back()"));
-		$out.=form_reset(array("name"=>"reset", "value" => "Beginwaarden", "class"=>"button reset"));
-		$out.=form_submit(array("submit"=>"submit", "value"=>"Invoeren","class"=>"button submit"));
+		$out.=form_reset(array("name"=>"cancel", "value" => lang("form_cancel"), "class"=>"button cancel", "onClick" => "window.history.back()"));
+		$out.=form_reset(array("name"=>"reset", "value" => lang("form_reset"), "class"=>"button reset"));
+		$out.=form_submit(array("submit"=>"submit", "value"=>lang("form_submit"),"class"=>"button submit"));
 		$out.=form_fieldset_close();
 		$out.=form_close();
 		log_('info',"form: rendering");
