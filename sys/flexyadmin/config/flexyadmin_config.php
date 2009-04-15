@@ -87,6 +87,7 @@ $config['AJAX']										= "/admin/ajax/";
 $config['MENU_excluded']							= array('cfg_sessions');
 
 $config['CFG_table_prefix']						= "cfg";
+$config['LOG_table_prefix']						= "log";
 $config['TABLE_prefix']								= "tbl";
 $config['REL_table_prefix']						= "rel";
 $config['REL_table_split']						= "__";
@@ -95,10 +96,13 @@ $config['REL_table_split']						= "__";
 
 $config['CFG_configurations']					= "configurations";
 $config['CFG_users']									= "users";
-$config['CFG_login_log']							= "login_log";
 $config['CFG_editor']									= "editor";
 $config['CFG_media_info']							= "media_info";
 $config['CFG_img_info']								= "img_info";
+
+$config['LOG_login']									= "login";
+$config['LOG_stats']									= "stats";
+
 
 $config['FILE_types_img']							= array('jpg','jpeg','gif','png');
 $config['FILE_types_mp3']							= array('mp3','wav','wma');

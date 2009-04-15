@@ -85,7 +85,7 @@ class FrontEndController extends MY_Controller {
 		/**
 		 * Add this page to statistics, if statistisc table exists
 		 */
-		if ($this->db->table_exists("cfg_stats")) {
+		if ($this->db->table_exists($this->config->item('LOG_table_prefix')."_".$this->config->item('LOG_stats'))) {
 			$this->load->library("stats");
 			$this->stats->add_uri($this->uri->get());
 		}
@@ -362,6 +362,7 @@ class AdminController extends BasicController {
 
 		// cfg tables
 		$a=array_merge($a,$this->_show_table_menu($tables,$this->config->item('CFG_table_prefix')));
+		$a=array_merge($a,$this->_show_table_menu($tables,$this->config->item('LOG_table_prefix')));
 		$a=array_merge($a,$this->_show_table_menu($tables,$this->config->item('REL_table_prefix')));
 
 		$this->menu->set_menu($a);

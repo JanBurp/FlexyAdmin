@@ -41,7 +41,7 @@ class Main extends AdminController {
 		$this->db->select("tme_login_time,str_changed_tables");
 		$this->db->where("id_user",$user_id);
 		$this->db->order_by("tme_login_time DESC");
-		$query=$this->db->get("cfg_login_log",4);
+		$query=$this->db->get($this->config->item('LOG_table_prefix')."_".$this->config->item('LOG_login'),4);
 		$userData=$query->result_array();
 		// in grid
 		$grid=new grid();
@@ -59,7 +59,7 @@ class Main extends AdminController {
 		$this->db->select("str_uri as Adres, COUNT(`str_uri`) as Aantal");
 		$this->db->group_by('Adres');
 		$this->db->order_by("Aantal DESC");
-		$stats=$this->db->get_results("cfg_stats",10);
+		$stats=$this->db->get_results($this->config->item('LOG_table_prefix')."_".$this->config->item('LOG_stats'),10);
 		// trace_($stats);
 		if (!empty($stats)) {
 			// stats in grid
