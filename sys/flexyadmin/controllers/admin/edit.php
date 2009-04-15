@@ -62,9 +62,9 @@ class Edit extends AdminController {
 	function delete($table,$id) {
 		$confirmed=$this->session->userdata("confirmed");
 		if ($this->has_rights($table,$id)) {
+			$this->lang->load("update_delete");
 			$message="";
 			if ($confirmed) {
-
 				/**
 				 * If there is media, delete them...
 				 */
@@ -85,11 +85,11 @@ class Edit extends AdminController {
 							$result=$fileManager->delete_file($value);
 							if ($result) {
 								log_("info","[FD] delete file '$value'");
-								$message.="'$value' deleted. ";
+								$message.=langp("delete_value",$value );
 							}
 							else {
 								log_("Error deleting file/dir '$value'.");
-								$message.="'$value' error deleting! ";
+								$message.=langp("delete_value_error",$value);
 							}
 						}
 					}
@@ -129,11 +129,12 @@ class Edit extends AdminController {
 				$this->load->model("login_log");
 				$this->login_log->update($table);
 
-				$this->set_message("Item from '$table' deleted. $message");
+				$this->set_message(langp("delete_succes",$table) . $message);
 			}
 		}
 		else {
-			$this->set_message("Sorry, you don't have rights to do this.");
+			$this->lang->load("rights");
+			$this->set_message(lang("rights_no_rights"));
 		}
 		redirect(api_uri('API_view_grid',$table));
 	}

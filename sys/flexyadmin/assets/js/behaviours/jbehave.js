@@ -87,7 +87,7 @@ $(document).ready(function() {
 			dialog.html('<form class="upload" method="post" action="admin/filemanager/upload/'+path+'" enctype="multipart/form-data">'+
 									'<input type="file" name="file" value="" class="filemanager" /></form>');
 			$(dialog).dialog({
-				title:"Upload a file to '"+path+"'",
+				title:langp("dialog_title_upload"),
 				modal:true,
 				width:400,
 				buttons: ({ cancel	: function(){	$(dialog).dialog("close"); },
@@ -98,6 +98,8 @@ $(document).ready(function() {
 								 }),
 				close: function(){$(dialog).dialog("destroy"); }
 			});
+			changeButt("cancel",lang("dialog_cancel"));
+			changeButt("upload",lang("dialog_upload"));
 		});
 		//
 		// Make sure columns can be sortable
@@ -309,10 +311,11 @@ $(document).ready(function() {
 //
 
 function confirm_dialog(obj,item) {
-	dialog.html("Delete <em>'"+item+"'</em><br/><strong>Are you sure?</strong>");
+	dialog.html(langp("dialog_delete_sure",item));
 	$(dialog).dialog({
-		title:"Confirm",
+		title:lang("dialog_title_confirm"),
 		modal:true,
+		width:500,
 		buttons: ({ cancel	: function(){	$(dialog).dialog("destroy"); $(obj).attr({"href":href}); },
 								yes			: function(){
 														$(dialog).dialog("destroy");
@@ -321,6 +324,8 @@ function confirm_dialog(obj,item) {
 						 }),
 		close: function(){$(dialog).dialog("destroy"); $(obj).attr({"href":href});}
 	});
+	changeButt("cancel",lang("dialog_cancel"));
+	changeButt("yes",lang("dialog_yes"));
 }
 function clean_message() {$("#message").html("");}
 
@@ -349,6 +354,23 @@ function zoom_dialog(obj) {
 }
 function close_dialog() {
 	$(dialog).dialog("destroy");
+}
+
+
+
+function changeButt(id,s) {
+	$("div.ui-dialog-buttonpane").children().each(function(){
+		h=$(this).html();
+		$(this).html(h=h.replace(id,s));
+	});
+}
+
+function lang(line) {
+	return $("div#ui_messages span#"+line).html();
+}
+function langp(line,p) {
+	s=lang(line);
+	return s.replace(/%s/g,p);
 }
 
 

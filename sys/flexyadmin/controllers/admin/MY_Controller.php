@@ -276,6 +276,7 @@ class AdminController extends BasicController {
 		$this->content="";
 		$this->showEditor=false;
 		$this->load->model("ui_names","uiNames");
+		$this->load->helper("language");
 	}
 
 	function set_message($message) {
@@ -389,8 +390,11 @@ class AdminController extends BasicController {
 		$this->db->select("url_url");
 		$query=$this->db->get("tbl_site");
 		$siteInfo=$query->row_array();
+		$this->lang->load("dialog");
+		$lang=$this->lang->get_all();
 		$footer=array(	"view"		=> $extra_view,
 										"data"		=> $data,
+										"dialog"  => $lang,
 										"local"		=> $this->config->item('LOCAL'),
 										"site"		=> $siteInfo["url_url"],
 										"user"		=> ucwords($this->user),

@@ -101,7 +101,8 @@ class Filemanager extends AdminController {
 			$name=$this->cfg->get('CFG_media_info',$path,'str_menu_name');
 		}
 		else {
-			$this->set_message("Sorry, you don't have rights to do this.");
+			$this->lang->load("rights");
+			$this->set_message(lang("rights_no_rights"));
 		}
 		$this->_show_type("filemanager ".$fileManagerView);
 		$this->_show_all($name);
@@ -140,27 +141,30 @@ class Filemanager extends AdminController {
 		$confirmed=$this->session->userdata("confirmed");
 		if ($this->_has_rights($path)) {
 			if ($confirmed) {
+				$this->lang->load("update_delete");
 				$this->load->model("file_manager");
 				$fileManager=new file_manager(pathdecode($path));
 				$result=$fileManager->delete_file($file);
 				if ($result) {
 					$this->load->model("login_log");
 					$this->login_log->update($path);
-					$this->set_message("File/Map '$file' deleted.");
+					$this->set_message(langp("delete_file_succes",$file));
 				}
 				else {
-					$this->set_message("Error deleting file/dir '$file'.");
+					$this->set_message(langp("delete_file_error",$file));
 				}
 			}
 		}
 		else {
-			$this->set_message("Sorry, you don't have rights to do this.");
+			$this->lang->load("rights");
+			$this->set_message(lang("rights_no_rights"));
 		}
 		redirect(api_uri('API_filemanager_view',$path));
 	}
 
 	function upload($path,$file="") {
 		if ($this->_has_rights($path)) {
+			$this->lang->load("update_delete");
 			$path=pathdecode($path);
 			$this->load->library("upload");
 			$this->load->model("file_manager");
@@ -170,17 +174,18 @@ class Filemanager extends AdminController {
 			$error=$result["error"];
 			$file=$result["file"];
 			if (!empty($error)) {
-				$this->set_message($error."($file)");
+				$this->set_message(langp("upload_error",$file));
 			}
 			else {
-				$this->set_message("Uploaded file '$file'.");
+				$this->set_message(langp("upload_succes",$file));
 				$this->load->model("login_log");
 				$this->login_log->update($path);
 				redirect(api_uri('API_filemanager_view',pathencode($path),$file));
 			}
 		}
 		else {
-			$this->set_message("Sorry, you don't have rights to do this.");
+			$this->lang->load("rights");
+			$this->set_message(lang("rights_no_rights"));
 		}
 		redirect(api_uri('API_filemanager_view',pathencode($path)));
 	}
