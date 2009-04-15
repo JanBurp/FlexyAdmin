@@ -21,7 +21,11 @@ class Stats {
 		$this->set_table();
 	}
 
-	function set_table($table="cfg_stats") {
+	function set_table($table="") {
+		if (empty($table)) {
+			$CI =& get_instance();
+			$table=$CI->config->item('LOG_table_prefix')."_".$CI->config->item('LOG_stats');
+		}
 		$this->table=$table;
 	}
 
@@ -54,7 +58,7 @@ class Stats {
 
 	function get_top($nr=10) {
 		$CI =& get_instance();
-		$results=$CI->fd->get_results($this->table);
+		$results=$CI->fd->get_results($this->table,$nr);
 		return $results;
 	}
 

@@ -96,10 +96,13 @@ li a {
 	height:100%;
 	}
 li a.cfg {
-	color:#CC3333;
+	color:#966;
+}
+li a.log {
+	color:#696;
 }
 li a.rel {
-	color:#3333CC;
+	color:#669;
 }
 li .media {
 	background-image: url("../icons/folder.gif");

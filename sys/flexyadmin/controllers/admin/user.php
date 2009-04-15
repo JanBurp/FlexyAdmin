@@ -62,7 +62,7 @@ class User extends Controller {
 					$this->db->set('id_user',$row->id);
 					$this->db->set('tme_login_time',standard_date('DATE_W3C',time()));
 					$this->db->set('ip_login_ip',$this->session->userdata('ip_address'));
-					$this->db->insert($this->config->item('CFG_table_prefix')."_".$this->config->item('CFG_login_log'));
+					$this->db->insert($this->config->item('LOG_table_prefix')."_".$this->config->item('LOG_login'));
 				}
 			}
 		}

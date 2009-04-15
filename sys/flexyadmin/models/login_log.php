@@ -21,7 +21,7 @@
 			$this->db->select("id,str_changed_tables");
 			$this->db->where("id_user",$user_id);
 			$this->db->order_by("tme_login_time DESC");
-			$query=$this->db->get($this->config->item('CFG_table_prefix')."_".$this->config->item('CFG_login_log'));
+			$query=$this->db->get($this->config->item('LOG_table_prefix')."_".$this->config->item('LOG_login'));
 			$row=$query->row();
 			$log_id=$row->id;
 			$changedTables=$row->str_changed_tables;
@@ -31,7 +31,7 @@
 				// update
 				$this->db->where("id",$log_id);
 				$this->db->set("str_changed_tables",$changedTables);
-				$this->db->update($this->config->item('CFG_table_prefix')."_".$this->config->item('CFG_login_log'));
+				$this->db->update($this->config->item('LOG_table_prefix')."_".$this->config->item('LOG_login'));
 			}
 		}
 	}
