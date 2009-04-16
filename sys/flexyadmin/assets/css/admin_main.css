@@ -36,7 +36,11 @@ h1 {
 }
 h2 {
 	margin-top:0px;
+	margin-bottom:2px;
 	font-size:1.2em;
+}
+#popup h2 {
+	margin-bottom:10px;
 }
 h3 {
 	margin:0px;
@@ -750,7 +754,7 @@ div.zoom img {
 div.zoom {
 	border:none;
 }
-div.zoom .ui-dialog-content {
+div.zoom .ui-dialog- {
 	padding:0px;
 	overflow:hidden;
 	text-align:center;
@@ -814,6 +818,9 @@ div#ui_messages {
 	margin-top:5px;
 	margin-left:225px;
 	z-index:1;
+}
+#content.info {
+	width:590px;
 }
 
 #footer {
