@@ -547,6 +547,25 @@ input.gpw,
 input.pwd {
 	width:150px;
 	}
+span.button {
+	font-weight:bold;
+	text-align:center;
+	background-color:#DDEEAA;
+	background-image:url("../img/inset.png");
+	background-position:50% 50%;
+	padding:4px 8px;
+	margin-left:10px;
+	color:#669966;
+	border:solid 1px #DDEEAA;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	cursor:pointer;
+}
+span.button:hover {
+	background-color:#fff;
+	background-position:50% 0%;
+	color:#669966;
+}
 input.date {
 	width:110px;
 	}

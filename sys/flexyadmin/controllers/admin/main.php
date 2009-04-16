@@ -53,7 +53,7 @@ class Main extends AdminController {
 											lang("home_date")		=>	strftime("%A %e %B %Y om %R",strtotime($d["tme_login_time"])),
 											lang("home_changes")=>	str_replace("|",", ",$this->uiNames->get($d["str_changed_tables"])) );
 		}
-		$grid->set_data($userData,langp("home_last_login",$data["username"]));
+		$grid->set_data($userData,langp("home_last_login",ucfirst($data["username"])));
 		$renderGrid=$grid->render("html","","grid home");
 		$data["logindata"]=$this->load->view("admin/grid",$renderGrid,true);
 

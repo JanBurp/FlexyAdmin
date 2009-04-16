@@ -523,15 +523,12 @@ class Form Extends Model {
 				$out.=form_upload($attr);
 				break;
 
-
 			case "date":
 				$date=trim(strval($field["value"]));
 				if (($date=="0000-00-00") or ($date=="")) {
 					$date=date("Y-m-d");
 				}
 				$attr["value"]=$date;
-
-
 			case "time":
 			case "input":
 			case "default":
