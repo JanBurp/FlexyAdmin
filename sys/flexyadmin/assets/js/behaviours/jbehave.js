@@ -14,20 +14,25 @@ $(document).ready(function() {
 	// Help
 	//
 
-	var delayID;
+	var ShowDelay;
+	var HideDelay;
 	$("span.help").mouseenter(function() {
 		obj=$(this);
-		delayID=setTimeout( function() {		
-			helpFor=$(obj).html();
+		ShowDelay=setTimeout( function() {		
+			// helpFor=$(obj).html();
 			helpTxt=$(obj).children("span.hide").html();
-			html="<h2>"+langp('dialog_title_help',helpFor)+"</h2>"+helpTxt;
+			html=helpTxt;
 			$(popup).html(html).fadeIn(150);
-		},700);
+			HideDelay=setTimeout( function(){
+				$(popup).fadeOut(1000);
+			},5000 );
+		},1000);
 	}).mouseout(function() {
-		clearInterval(delayID);
+		clearTimeout(ShowDelay);
 		$(popup).fadeOut(150);
 	}).mousemove(function(e){
-     $(popup).css({left:e.pageX+10,top:e.pageY+10});
+		clearTimeout(HideDelay);
+    $(popup).css({left:e.pageX+8,top:e.pageY+18});
   }); 
   
 
