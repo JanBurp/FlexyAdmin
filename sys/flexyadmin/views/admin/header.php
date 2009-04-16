@@ -39,7 +39,7 @@
 	tinyMCE_GZ.init({
 		plugins : "paste,table,fullscreen,advimage,media",
 		themes : 'advanced',
-		languages : 'nl',
+		languages : '<?=$language?>',
 		disk_cache : true,
 		debug : false
 	});
@@ -47,8 +47,8 @@
 
 	<script language="javascript" type="text/javascript">
 	tinyMCE.init({
-			language : "nl",
-			docs_language : "nl",
+			language : "<?=$language?>",
+			docs_language : "<?=$language?>",
 			mode : "specific_textareas",
 			editor_selector : "htmleditor",
 			theme : "advanced",
@@ -69,7 +69,7 @@
 			relative_urls : true,
 			document_base_url : "<?=base_url()?>",
 			content_css : "<?=assets()?>css/text.css",
-			external_link_list_url : "<?=assets()?>/lists/link_list.js",
+			external_link_list_url : "<?=assets()?>lists/link_list.js",
 			theme_advanced_buttons1 : "<?=$buttons1?>",
 			theme_advanced_buttons2 : "<?=$buttons2?>",
 			theme_advanced_buttons3 : "<?=$buttons3?>"

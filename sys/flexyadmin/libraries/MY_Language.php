@@ -49,8 +49,6 @@ class MY_Language extends CI_Language {
 			else {
 				$CI =& get_instance();
 				$deft_lang=$CI->session->userdata("language");
-				if (empty($deft_lang))
-					$deft_lang=$CI->cfg->get("CFG_configurations","str_language");
 				if (!empty($deft_lang))
 					$this->set($deft_lang);
 				else	

@@ -195,6 +195,10 @@ class Show extends AdminController {
 
 			$form=new form(api_uri('API_view_form',$table,$id));
 			$uiTable=$this->uiNames->get($table);
+			$tableHelp=$this->cfg->get("CFG_table",$table,"txt_help");
+			if (!empty($tableHelp)) {
+				$uiTable=help($uiTable,$tableHelp);
+			}
 			$form->set_data($data,$uiTable);
 
 			/**
