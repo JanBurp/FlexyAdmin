@@ -19,5 +19,4 @@ function langp() {
 	return $line;
 }
 
-
 ?>

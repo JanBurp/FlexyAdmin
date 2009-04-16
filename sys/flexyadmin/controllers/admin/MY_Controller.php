@@ -198,6 +198,7 @@ class BasicController extends MY_Controller {
 	var $table_rights;
 	var $media_rights;
 	var $user;
+	var $language;
 
 	function BasicController($isAdmin=false) {
 		parent::MY_Controller($isAdmin);
@@ -215,6 +216,7 @@ class BasicController extends MY_Controller {
 		$this->user=$this->session->userdata("user");
 		$this->table_rights=$this->session->userdata("table_rights");
 		$this->media_rights=$this->session->userdata("media_rights");
+		$this->language=$this->session->userdata("language");
 		$out=(!empty($this->user));
 		return $out;
 	}
@@ -308,7 +310,7 @@ class AdminController extends BasicController {
 		$buttons3=$this->cfg->get('CFG_editor',"str_buttons3");
 		$formats=$this->cfg->get('CFG_editor',"str_formats");
 		$styles=$this->cfg->get('CFG_editor',"str_styles");
-		$this->load->view('admin/header', array("title"=>$title,"url"=>$url,"show_type"=>$type,"show_editor"=>$editor,"buttons1"=>$buttons1,"buttons2"=>$buttons2,"buttons3"=>$buttons3,"formats"=>$formats,"styles"=>$styles));
+		$this->load->view('admin/header', array("title"=>$title,"url"=>$url,"show_type"=>$type,"show_editor"=>$editor,"buttons1"=>$buttons1,"buttons2"=>$buttons2,"buttons3"=>$buttons3,"formats"=>$formats,"styles"=>$styles,"language"=>$this->language));
 	}
 
 	function _show_table_menu($tables,$type) {
