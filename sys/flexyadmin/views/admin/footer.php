@@ -15,6 +15,9 @@
 	<div id="ui">
 	</div>
 	
+	<div id="popup">
+	</div>
+	
 	<div id="ui_messages">
 		<? foreach ($dialog as $key => $value) : ?>
 			<span id="<?=$key?>"><?=$value;?></span>

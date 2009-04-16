@@ -1,27 +1,35 @@
 $(document).ready(function() {
 
 	// Check modes
+	dialog=$("#ui");
+	popup=$("#popup");
 	isForm=$("#content").hasClass("form");
 	isGrid=$("#content").hasClass("grid");
 	isFile=$("#content").hasClass("filemanager");
 	if (!isGrid && isFile)	{	isGrid=$("#content").hasClass("list"); }
 	if (isFile)							{ isThumbs=$("#content").hasClass("icons");}
 	isSortable=false;
-
+		
 	//
 	// Help
 	//
-	
-	$("span.help").click(function(){
-		help=$(this).children("span.hide").text();
-		dialog.html(help);
-		$(dialog).dialog({
-			title:langp("Help"),
-				modal:true,
-				width:400
-		});
-	});
 
+	var delayID;
+	$("span.help").mouseenter(function() {
+		obj=$(this);
+		delayID=setTimeout( function() {		
+			helpFor=$(obj).html();
+			helpTxt=$(obj).children("span.hide").html();
+			html="<h2>"+langp('dialog_title_help',helpFor)+"</h2>"+helpTxt;
+			$(popup).html(html).fadeIn(150);
+		},700);
+	}).mouseout(function() {
+		clearInterval(delayID);
+		$(popup).fadeOut(150);
+	}).mousemove(function(e){
+     $(popup).css({left:e.pageX+10,top:e.pageY+10});
+  }); 
+  
 
 	//
 	// Form
@@ -162,7 +170,6 @@ $(document).ready(function() {
 		//
 		// Delete Confirm Dialog
 		//
-		dialog=$("#ui");
 		if (isFile) {
 			// add events to remove buttons (filemanager view)
 			remove=$(".grid a.delete");

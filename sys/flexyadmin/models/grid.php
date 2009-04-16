@@ -41,7 +41,7 @@ class Grid Extends Model {
 
 	function set_captions($caption="") {
 		$this->captions=NULL;
-		$this->captions[]=array("class"=>$caption,"cell"=>$caption);
+		$this->captions[]=array("class"=>get_prefix(strip_tags($caption)," "),"cell"=>$caption);
 	}
 
 	function prepend_to_captions($add,$class="") {

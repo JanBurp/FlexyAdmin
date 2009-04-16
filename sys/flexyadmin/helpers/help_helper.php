@@ -6,4 +6,5 @@ function help($s,$help) {
 	return span("help").$s.span("hide").$help._span()._span();
 }
 
+
 ?>
