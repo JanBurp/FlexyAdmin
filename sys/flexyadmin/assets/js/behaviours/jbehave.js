@@ -43,6 +43,15 @@ $(document).ready(function() {
 		$("form input.date").datepicker({ dateFormat: 'yy-mm-dd' });
 
 		//
+		// Password create button
+		//
+		$("form input.password").after('<span class="button">'+lang('form_random_password')+'</span>');
+		$("form span.button").click(function() {
+			pwd=randomPassword(10);
+			$(this).prev("input.password").attr("value",pwd);
+		});
+	
+		//
 		// Media dropdown
 		//
 		options=$("p.image_dropdown select.media option");
@@ -433,6 +442,16 @@ function get_subclass(sub,obj) {
 //
 // Other functions
 //
+function randomPassword(length) {
+   chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+   pass = "";
+   for(x=0;x<length;x++) {
+      i = Math.floor(Math.random() * 62);
+      pass += chars.charAt(i);
+   }
+   return pass;
+}
+
 function serialize(sel) {
 	s="";
 	sel=$(sel);
