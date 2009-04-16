@@ -114,6 +114,13 @@ li.current .media {
 	background-image: url("../icons/folder_files.gif");
 	}
 
+span.help:hover {
+	background-image: url("../icons/help.gif");
+	background-repeat: no-repeat;
+	background-position:right 50%;
+	padding-right:20px;
+	cursor:pointer;
+}
 
 /* ============== icons ================== */
 

@@ -9,6 +9,21 @@ $(document).ready(function() {
 	isSortable=false;
 
 	//
+	// Help
+	//
+	
+	$("span.help").click(function(){
+		help=$(this).children("span.hide").text();
+		dialog.html(help);
+		$(dialog).dialog({
+			title:langp("Help"),
+				modal:true,
+				width:400
+		});
+	});
+
+
+	//
 	// Form
 	//
 
