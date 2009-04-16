@@ -181,8 +181,11 @@ class Menu {
 			if ($this->inUri($thisUri,$this->current))	$class.=" active";
 			$out.=$this->tmp($this->tmpItemStart,$class);
 			// render item or submenu
-			if (isset($item["uri"]))
-				$out.=anchor($this->tmp($this->tmpUrl,$thisUri), ascii_to_entities($name), array("class"=>$class));
+			if (isset($item["uri"])) {
+				$showName=ascii_to_entities($name);
+				if (isset($item["help"])) $showName=help($showName,$item["help"]);
+				$out.=anchor($this->tmp($this->tmpUrl,$thisUri), $showName, array("class"=>$class));
+			}
 			if (isset($item["sub"]))
 				$out.=$this->render($item["sub"],"$cName",$level+1,$thisUri);
 			$out.=$this->tmp($this->tmpItemEnd);

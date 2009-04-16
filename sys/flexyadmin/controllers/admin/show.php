@@ -116,6 +116,10 @@ class Show extends AdminController {
 
 					$grid=new grid();
 					$uiTable=$this->uiNames->get($table);
+					$tableHelp=$this->cfg->get("CFG_table",$table,"txt_help");
+					if (!empty($tableHelp)) {
+						$uiTable=help($uiTable." ",$tableHelp);
+					}
 					$grid->set_data($data,$uiTable);
 					$keys=array_keys(current($data));
 					$keys=combine($keys,$keys);
@@ -229,7 +233,15 @@ class Show extends AdminController {
 
 				$keys=array_keys($data);
 				$keys=combine($keys,$keys);
-				$form->set_labels($this->uiNames->get($keys,$table));
+				$uiFieldNames=array();
+				foreach($keys as $key) {
+					$fieldHelp=$this->cfg->get("CFG_field",$table.".".$key,"txt_help");
+					if (!empty($fieldHelp))
+						$uiFieldNames[$key]=help($this->uiNames->get($key,$table),$fieldHelp);
+					else
+						$uiFieldNames[$key]=$this->uiNames->get($key,$table);
+				}
+				$form->set_labels($uiFieldNames);
 				$html=$form->render("html",$table);
 				if ($form->has_htmlfield()) $this->use_editor();
 				$this->_add_content($html);

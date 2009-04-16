@@ -42,9 +42,6 @@ class MY_Controller extends Controller {
 		$this->cfg->load('CFG_field',$this->config->item('CFG_field_name'));
 		$this->cfg->load('CFG_media_info',array("str_path","fields"));
 		$this->cfg->load('CFG_img_info','str_path');
-		$lang=$this->cfg->get('CFG_configurations','str_language');
-		$lang=$lang."_".strtoupper($lang);
-		setlocale(LC_ALL, $lang);
 	}
 
 }
@@ -73,7 +70,6 @@ class FrontEndController extends MY_Controller {
 		$this->load->library('user_agent');
 		$this->load->helper('date');
 		$this->load->helper("html_helper");
-		// $this->load->model("flexy_data","fd");
 		$this->load->library("menu");
 		$this->load->library("content");
 
@@ -209,6 +205,8 @@ class BasicController extends MY_Controller {
 		if (!$this->_user_logged_in()) {
 			redirect($this->config->item('API_login'));
 		}
+		$lang=$this->language."_".strtoupper($this->language);
+		setlocale(LC_ALL, $lang);
 	}
 
 	function _user_logged_in() {
@@ -331,6 +329,10 @@ class AdminController extends BasicController {
 		foreach ($oTables as $name) {
 			if (!in_array($name,$excluded) and $this->has_rights($name)) {
 				$a[$this->uiNames->get($name)]=array("uri"=>api_uri('API_view_grid',$name),"class"=>$type);
+				$tableHelp=$this->cfg->get("CFG_table",$name,"txt_help");
+				if (!empty($tableHelp)) {
+					$a[$this->uiNames->get($name)]["help"]=$tableHelp;
+				}
 			}
 		}
 		return $a;
