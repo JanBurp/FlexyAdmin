@@ -183,7 +183,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 					if (!empty($whereIn))
 						$this->where_in($mTable["this"].".".$this->pk,$whereIn);
 					else
-						$this->where($this->pk,"-1"); // make sure no result is returned...
+						$this->where($table.".".$this->pk,"-1"); // make sure no result is returned...
 				}
 			}
 		}
@@ -470,11 +470,6 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	function add_options($options=true) {
 		$this->options=$options;
 	}
-
-	function where_many() {
-		
-	}
-
 
 /**
 	*	Some functions to include options (for forms etc)
