@@ -136,6 +136,7 @@ class Grid Extends Model {
 			$tableCells=array();
 			$cn=0;
 			foreach($row as $name=>$cell) {
+				// if (empty($cell)) $cell="&nbsp;";
 				$pre=get_prefix($name);
 				if ($pre==$name) $pre="";
 				$tableCells[]=array(	"class"	=> "$tableClass id$id $name $pre $extraClass $currClass nr$cn ".alternator("oddcol","evencol"),

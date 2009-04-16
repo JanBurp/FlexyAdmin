@@ -280,8 +280,12 @@ $(document).ready(function() {
 				start:function() {
 					// set width of helper cells same as width of grid cells
 					$("table.grid tbody tr:first td").each(function() {
-						w=$(this).width()+"px";
+						if ($(this).css("display")=="none")
+							w=0;
+						else
+							w=$(this).width();
 						nr=get_nr($(this));
+						// console.log("nr:"+nr+" ="+w);
 						$("tr.ui-sortable-helper td.nr"+nr).css({ width:w });
 					});
 				},
