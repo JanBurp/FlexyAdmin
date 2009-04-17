@@ -272,23 +272,24 @@ $(document).ready(function() {
 			// change ui: remove normal order arrows, and place one item
 			$("table.grid tbody td.order").empty().append('<div class="icon order" title="order"></div>');
 			$("table.grid thead th.order").empty();
+			
 			// make sortable
 			items=$("table.grid tbody");
 			$(items).sortable({
 				axis:'y',
 				cursor:'move',
-				start:function() {
-					// set width of helper cells same as width of grid cells
-					$("table.grid tbody tr:first td").each(function() {
-						if ($(this).css("display")=="none")
-							w=0;
-						else
-							w=$(this).width();
-						nr=get_nr($(this));
-						// console.log("nr:"+nr+" ="+w);
-						$("tr.ui-sortable-helper td.nr"+nr).css({ width:w });
-					});
-				},
+				// sort:function() {
+				// 	// set width of helper cells same as width of grid cells
+				// 	$("table.grid thead tr:first td").each(function() {
+				// 		// if ($(this).css("display")=="none") 
+				// 		// 	w=0;
+				// 		// else
+				// 			w=$(this).width();
+				// 		nr=get_nr($(this));
+				// 		// console.log("nr:"+nr+" ="+w);
+				// 		$("tr.ui-sortable-helper td.nr"+nr).css({ width:w });
+				// 	});
+				// },
 				update:function() {
 					// prepare ajax request
 					//ser=$(items).sortable("serialize",{attribute:"class",expression:" id(.+)[ ]",key:"id[]"});
