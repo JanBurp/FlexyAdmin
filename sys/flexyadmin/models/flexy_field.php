@@ -400,6 +400,7 @@ class Flexy_field extends Model {
 
 	function _dropdown_tables_form() {
 		$tables=$this->db->list_tables();
+		$tables=filter_by($tables,"tbl_");
 		$tables=array_merge(array(""),$tables);
 		$options=combine($tables,$tables);
 		$out=$this->_standard_form_field($options);
@@ -410,6 +411,7 @@ class Flexy_field extends Model {
 
 	function _dropdown_field_form() {
 		$tables=$this->db->list_tables();
+		$tables=filter_by($tables,"tbl_");
 		$specialFields=array_keys($this->config->item('FIELDS_special'));
 		$options=array();
 		foreach ($tables as $table) {
