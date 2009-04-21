@@ -45,7 +45,7 @@ class User extends Controller {
 			$pwd=$this->input->post("password",TRUE);
 			if (!empty($pwd)) {
 				// check in database
-				$this->db->select("id,str_table_rights,str_media_rights,str_language");
+				$this->db->select("id,str_table_rights,str_media_rights,str_language,str_filemanager_view");
 				$this->db->where("str_user_name",$user);
 				$this->db->where("gpw_user_pwd",$pwd);
 				$query=$this->db->get($this->config->item('CFG_table_prefix')."_".$this->config->item('CFG_users'));
@@ -58,6 +58,7 @@ class User extends Controller {
 					$this->session->set_userdata("table_rights",$row->str_table_rights);
 					$this->session->set_userdata("media_rights",$row->str_media_rights);
 					$this->session->set_userdata("language",$row->str_language);
+					$this->session->set_userdata("fileview",$row->str_filemanager_view);
 					// set login log
 					$this->load->helper('date');
 					$this->db->set('id_user',$row->id);

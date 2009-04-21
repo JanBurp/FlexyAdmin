@@ -77,7 +77,7 @@ class Filemanager extends AdminController {
 			/**
 			 * Start file manager
 			 */
- 			$fileManagerView=$this->cfg->get('CFG_configurations','str_filemanager_view');
+ 			$fileManagerView=$this->session->userdata("fileview");
 			
 			$fileManager=new file_manager($path,$types,$fileManagerView);
 			$fileManager->set_files($files);
@@ -116,8 +116,10 @@ class Filemanager extends AdminController {
 
 	function setview($viewType,$path) {
 		$this->db->set("str_filemanager_view",$viewType);
-		$this->db->update($this->config->item('CFG_table_prefix')."_".$this->config->item('CFG_configurations'));
-		$this->cfg->load('CFG_configurations');
+		$this->db->where("str_user_name",$this->session->userdata("user"));
+		$this->db->update($this->config->item('CFG_table_prefix')."_".$this->config->item('CFG_users'));
+		// trace_($this->db);
+		$this->session->set_userdata("fileview",$viewType);
 		$this->show($path);
 	}
 
