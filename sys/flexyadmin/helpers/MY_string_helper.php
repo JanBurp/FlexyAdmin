@@ -13,6 +13,14 @@ function strsplit($s) {
 	return $a;
 }
 
+function in_string($in,$string) {
+	$in=strsplit($in);
+	$found=FALSE;
+	foreach($in as $c) {
+		if (!strpos($string,$c)===FALSE) $found=TRUE;
+	}
+	return $found;
+}
 
 function explode_pre($split,$fields,$pre) {
 	$fields=explode($split,$fields);

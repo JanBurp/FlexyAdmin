@@ -52,13 +52,58 @@ function object2array($object) {
 	return $array;
 }
 
+function array2php($array,$tabs=1) {
+	$php="array(\n";
+	$sub="";
+	foreach($array as $key=>$value) {
+		if (!empty($sub)) $sub.=",\n";
+		$sub.=repeater("\t",$tabs);
+		$sub.='"'.$key.'"=>';
+		if (is_array($value)) $sub.=array2php($value,$tabs+1);
+		else $sub.="'$value'";
+	}
+	$php.="$sub\n".repeater("\t",$tabs).")";
+	return $php;
+}
+
+function array2xml($array,$tabs=0) {
+	if ($tabs<=0)
+		$xml='<?xml version="1.0" encoding="ISO-8859-1"?>'."\n";
+	else
+		$xml="\n";
+	$sub="";
+	foreach($array as $key=>$value) {
+		$sub.=repeater("\t",$tabs);
+		$sub.="<$key>";
+		if (is_array($value)) $sub.=array2xml($value,$tabs+1);
+		else {
+			if (in_string("<&>",$value))
+				$sub.="<![CDATA[$value]]>";
+			else
+				$sub.=$value;
+		}
+		$sub.="</$key>\n";
+	}
+	$xml.="$sub";
+	return $xml;
+}
+
+
+
 /**
  * function filter_by($array,$prefix)
  *
  * Filters all (string) elements out that don't have the given prefix
  */
 function filter_by($a,$p) {
-	foreach($a as $k=>$i) { if (strncmp($i,$p,strlen($p))) unset($a[$k]);	}
+	foreach($a as $k=>$i) {
+		if (is_array($i)) {
+			if (strncmp($k,$p,strlen($p))) unset($a[$k]);
+		}
+		else {
+		 if (strncmp($i,$p,strlen($p))) unset($a[$k]);
+		}
+	}
 	return $a;
 }
 

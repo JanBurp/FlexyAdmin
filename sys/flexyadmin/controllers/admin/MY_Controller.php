@@ -42,6 +42,7 @@ class MY_Controller extends Controller {
 		$this->cfg->load('CFG_field',$this->config->item('CFG_field_name'));
 		$this->cfg->load('CFG_media_info',array("str_path","fields"));
 		$this->cfg->load('CFG_img_info','str_path');
+		// trace_($this->cfg->data);
 	}
 
 }
@@ -315,13 +316,12 @@ class AdminController extends BasicController {
 		$a=array();
 		$tables=filter_by($tables,$type);
 		$excluded=$this->config->item('MENU_excluded');
-		// first the ordered tables
-		$this->db->order_by("order");
-		$this->db->like("table","$type%");
-		$this->db->select("table");
-		$query=$this->db->get($this->config->item('CFG_table_prefix')."_".$this->config->item('CFG_table'));
+		$cfgTables=$this->cfg->get("CFG_table");
+		$cfgTables=filter_by($cfgTables,$type);
+		$cfgTables=sort_by($cfgTables,"order");
+		// trace_($cfgTables);
 		$oTables=array();
-		foreach ($query->result_array() as $row) {
+		foreach ($cfgTables as $row) {
 			$oTables[]=$row["table"];
 			unset($tables[array_search($row["table"],$tables)]);
 		}

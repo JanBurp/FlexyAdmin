@@ -279,6 +279,14 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		$this->reset();
 		return $result;
 	}
+	
+	function get_result_as_php($table,$limit=0,$offset=0) {
+		return array2php($this->get_result($table,$limit,$offset));
+	}
+	
+	function get_result_as_xml($table,$limit=0,$offset=0) {
+		return array2xml($this->get_result($table,$limit,$offset));
+	}
 		
 	function get_row($table,$limit=0,$offset=0) {
 		if ($limit>1)

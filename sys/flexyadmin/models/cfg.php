@@ -94,6 +94,11 @@
 			log_("info","[Cfg] Config table '$table' doesn't exists");
 			$this->data[$table]=array();
 		}
+		// add CFG tables
+		$cfg=$this->config->item("CFG_");
+		if (isset($cfg[$table])) {
+			$this->data[$table]=array_merge($this->data[$table],$cfg[$table]);
+		}
 		return $out;
 	}
 
