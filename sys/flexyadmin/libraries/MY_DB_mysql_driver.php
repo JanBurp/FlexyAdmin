@@ -18,8 +18,10 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	var $foreignTables;
 	var $foreigns;
 	var $abstracts;
+	var $asAbstracts;
 	var $many;
 	var $options;
+	var $whereUri;
 
 	function MY_DB_mysql_driver($params) {
 		parent::CI_DB_mysql_driver($params);
@@ -34,6 +36,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		$this->add_many(FALSE);
 		$this->add_options(FALSE);
 		$this->max_text_len();
+		$this->whereUri="";
 	}
 
 	/**
@@ -77,7 +80,11 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		return $order;
 	}
 
-
+	function where_uri($uri) {
+		$this->whereUri=$uri;
+		$lastPart=get_postfix($uri,"/");
+		$this->like("uri",$lastPart,"before");
+	}
 
 	/**
 	*	Some function to get nice results
@@ -93,6 +100,14 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 */
 	function _get($table="",$limit=0,$offset=0) {
 		log_("info","[DB+] Get/create query:");
+
+		/**
+			* As abstracts if asked for
+			*/
+		if ($this->asAbstracts) {
+			$this->ar_select=array();
+			$this->select(array($this->pk,$this->get_abstract_field($table)));
+		}
 
 		/**
 		 * add foreign (joins) if asked for
@@ -202,7 +217,6 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			// trace_($this->ar_select);			
 		}
 		
-		
 		/**
 		 * get the query
 		 */
@@ -262,6 +276,21 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		}
 
 		/**
+			* If where_uri, and more uri's found? Search parent uris for the right one
+			* TODO: Misschien blijven er nog meer over? Wat dat?
+			*/
+		if (!empty($this->whereUri) and count($result)>1) {
+			// trace_($this->whereUri);
+			// trace_($result);
+			foreach ($result as $key=>$item) {
+				$parent=$item["self_parent"];
+				$parentUri=$this->get_field_where($table,"uri",$this->pk,$parent);
+				if (strpos($this->whereUri,$parentUri)===FALSE) unset($result[$key]);
+			}
+			// trace_($result);
+		}
+
+		/**
 		 * add options if asked for
 		 */
 		if ($this->options and !empty($result)) {
@@ -297,12 +326,16 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	}
 	
 	function get_field_where($table,$field,$where,$what="") {
-		if (!is_array($where) and !empty($what))
-			$this->where($where,$what);
-		else
-			$this->where($where);
-		$this->select($field);
-		$query=$this->get($table,1);
+		// if (!is_array($where) and !empty($what))
+		// 	$this->where($where,$what);
+		// else
+		// 	$this->where($where);
+		// $this->select($field);
+		// $query=$this->get($table,1);
+		// $row=$query->row_array();
+		// $this->reset();
+		$sql="SELECT `$field` FROM `$table` WHERE `$where`='$what'";
+		$query=$this->query($sql);
 		$row=$query->row_array();
 		return $row[$field];
 	}
@@ -314,7 +347,9 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		if (!isset($this->eachResult)) {
 			$this->eachResult=$this->get_result($table,$limit,$offset);
 		}
-		return each($this->eachResult);
+		$result=each($this->eachResult);
+		if ($result===FALSE) $this->reset();
+		return $result;
 	}
 
 
@@ -322,7 +357,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 * function concat($fields)
 	 */
 	function concat($fields) {
-		$sql="CONCAT_WS('; ',".implode(",",$fields)." )";
+		$sql="CONCAT_WS(';',".implode(",",$fields)." )";
 		return $sql;
 	}
 
@@ -368,7 +403,11 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		$this->abstracts=$abstracts;
 		if ($abstracts!=false) $this->add_foreigns();
 	}
-
+	
+	function as_abstracts($as=true) {
+		$this->asAbstracts=$as;
+	}
+	
 	/**
 	 * function get_abstract_field($table)
 	 *
@@ -622,6 +661,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			$out=$this->_add_many_options($out,$jt);
 		}
 		log_("info","[DB+] default data ready");
+		$this->reset();
 		return $out;
 	}
 

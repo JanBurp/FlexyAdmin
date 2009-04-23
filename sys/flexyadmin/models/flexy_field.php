@@ -269,10 +269,14 @@ class Flexy_field extends Model {
 		// Show
 		$func=$this->_is_function();
 		if ($func!==false) {
-			if (isset($options))
-				$out=$this->$func($options);
+			if (method_exists($this,$func)) {
+				if (isset($options))
+					$out=$this->$func($options);
+				else
+					$out=$this->$func();
+			}
 			else
-				$out=$this->$func();
+				$out=$this->_standard_form_field($options,$multiOptions);
 		}
 		else {
 			$out=$this->_standard_form_field($options,$multiOptions);
@@ -336,6 +340,28 @@ class Flexy_field extends Model {
 		$class=$this->table." id".$this->id;
 		return 	anchor(api_uri('API_view_form',$this->table,$this->data),icon("edit"),array("class"=>"edit $class")).
 						anchor(api_uri('API_confirm',$this->table,$this->data),icon("delete"),array("class"=>"delete $class"));
+	}
+
+	function _self_grid() {
+		$this->db->as_abstracts();
+		$this->db->where(pk(),$this->data);
+		$out=$this->db->get_row($this->table);
+		$out=$out["abstract"];
+		return $out;		
+	}
+
+	function _self_form() {
+		$this->db->as_abstracts();
+		$abstracts=$this->db->get_result($this->table);
+		$options=array();
+		$options[]="";
+		foreach($abstracts as $id=>$ab) {
+			$options[$id]=$ab["abstract"];
+		}
+		$out=$this->_standard_form_field($options);
+		$out["type"]="dropdown";
+		unset($out["button"]);
+		return $out;		
 	}
 
 	function _foreign_key_grid() {
