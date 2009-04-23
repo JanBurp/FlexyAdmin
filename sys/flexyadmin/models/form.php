@@ -338,15 +338,23 @@ class Form Extends Model {
 				}
 
 				/**
-				 * Set specific order if a self_parent is set
+				 * Set order if new.
 				 */
-				if (isset($set["order"]) and isset($set["self_parent"]) and $set["self_parent"]>0) {
-					trace_($set);
-					$parentOrder=$this->db->get_field_where($table,"order",$pk,$set["self_parent"]);
-					trace_($parentOrder);
-					
-				}
+				if (isset($set["order"])) {
+					if ($id==-1) {
+						// set new order
+						$set["order"]=1;
+						// shift all items one up
+						$this->order->shift_up($table);
+					}
 
+					/**
+					 * Set specific order if a self_parent is set
+					 */
+					if (isset($set["self_parent"]) and $set["self_parent"]>0) {
+						$set["order"]=$this->order->get_order_after_parent($table,$set["self_parent"]);
+					}
+				}
 
 				/**
 				 * Make sure all not given fields stays the same

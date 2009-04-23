@@ -34,7 +34,7 @@ function err_($message) {
 function trace_($a=NULL,$return=false) {
 	static $c=0;
 	$type=gettype($a);
-	$out="<pre style=\"font-size:10px;z-index:1000;margin:2px;padding:2px;background-color:#ccc;color:#fff;border:solid 1px #000;\"><span style=\"color:#000;\">trace [#$c][$type]:</span>\n";
+	$out="<pre style=\"font-size:10px;z-index:1000;margin:2px;padding:2px;background-color:#ccc;color:#000;border:solid 1px #000;\"><span style=\"color:#fff;font-weight:bold;\">trace [#$c][$type]:</span>\n";
 	if (is_bool($a)) {
 		if ($a)
 			$out.="'True'";
