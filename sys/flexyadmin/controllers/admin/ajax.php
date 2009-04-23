@@ -45,7 +45,7 @@ class Ajax extends BasicController {
  * order()
  *
  * Handles AJAX order requests
- * (GET = array of id[] with in right order the new order of the table)
+ * (GET = array of id[] within right order the new order of the table)
  */
 
 	function order($table="") {

@@ -329,13 +329,24 @@ class Form Extends Model {
 				 */
 
 				/**
-				 *  first create an uri if necessary
+				 * First create an uri if necessary
 				 */
 				if (isset($uri)) {
 					$original_uri_field=$this->_get_uri_field(array_keys($set));
 					$uri=$this->_create_uri($set[$original_uri_field]);
 					$set["uri"]=$uri;
 				}
+
+				/**
+				 * Set specific order if a self_parent is set
+				 */
+				if (isset($set["order"]) and isset($set["self_parent"]) and $set["self_parent"]>0) {
+					trace_($set);
+					$parentOrder=$this->db->get_field_where($table,"order",$pk,$set["self_parent"]);
+					trace_($parentOrder);
+					
+				}
+
 
 				/**
 				 * Make sure all not given fields stays the same

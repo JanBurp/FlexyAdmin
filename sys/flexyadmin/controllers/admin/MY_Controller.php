@@ -147,6 +147,13 @@ class FrontEndController extends MY_Controller {
 		$this->site["title"].=" - ".$title;
 	}
 
+	function set_uri($uri) {
+		$this->site["uri"]=$uri;
+	}
+	function get_uri() {
+		return $this->site["uri"];
+	}
+
 	function add_content($c) {
 		if (!isset($this->site["content"]))
 			$this->site["content"]=$c;

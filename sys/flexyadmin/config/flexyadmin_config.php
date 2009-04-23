@@ -373,6 +373,11 @@ $config['FIELDS_prefix'] = array (
 											"form"				=> "dropdown",
 											"validation"	=> "trim|integer"
 											),
+	"self"			=> array(
+												"grid"				=> "function_self",
+												"form"				=> "function_self",
+												"validation"	=> "trim|integer|required",
+											),
 	"rel"				=> array (
 											"grid"				=> "function_join",
 											"form"				=> "function_join",

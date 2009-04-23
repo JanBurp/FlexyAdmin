@@ -31,31 +31,40 @@ function err_($message) {
 	log_('error',$message);
 }
 
-function trace_($a="",$return=false) {
+function trace_($a=NULL,$return=false) {
 	static $c=0;
-	$out="<pre class=\"debug\">trace: ";
+	$type=gettype($a);
+	$out="<pre style=\"font-size:10px;z-index:1000;margin:2px;padding:2px;background-color:#ccc;color:#fff;border:solid 1px #000;\"><span style=\"color:#000;\">trace [#$c][$type]:</span>\n";
 	if (is_bool($a)) {
 		if ($a)
 			$out.="'True'";
 		else
 			$out.="'False'";
 	}
-	elseif (empty($a)) {
-		$out.="#".$c++;
+	elseif (is_array($a) or is_object($a)) {
+		$out.=print_r(array_($a,true),true);
 	}
 	else
 		$out.=print_r($a,true);
+	$c++;
 	$out.="</pre>";
 	if (!$return) echo $out;
 	return $out;
 }
 
-function array_($a,$return=false) {
-	$out="<pre class=\"debug\">trace: ";
-	$out.=print_r($a,true);
-	$out.="</pre>";
-	if (isset($a)) reset($a);
-	if (!$return) echo $out;
+function array_($a) {
+	$out=array();
+	foreach($a as $key=>$value) {
+		if (is_array($value)) {
+			$out[$key]=array_($value);
+		}
+		else {
+			if (in_string("<>&",$value) or (strlen($value)>100))
+				$out[$key]="<span title=\"".htmlentities($value)."\" style=\"cursor:help;color:#fff;\">[text]</span>";
+			else
+				$out[$key]=$value;
+		}
+	}
 	return $out;
 }
 

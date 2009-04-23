@@ -26,11 +26,10 @@ class Menu {
 	var $current;
 
 	var $tmpUrl;
+	var $fields;
 	
 	var $menuTable;
-	var $menuTableNameField;
 	
-
 	var $tmpMenuStart;
 	var $tmpMenuEnd;
 	var $tmpItemStart;
@@ -43,7 +42,27 @@ class Menu {
 	function init() {
 		$this->set_templates();
 		$this->set_current();
-		$this->set_menu_name_field();
+		$this->set_uri_field();
+		$this->set_title_field();
+		$this->set_class_field();
+		$this->set_visible_field();
+		$this->set_parent_field();
+	}
+
+	function set_uri_field($uri="uri") {
+		$this->fields["uri"]=$uri;
+	}
+	function set_title_field($title="str_title") {
+		$this->fields["title"]=$title;
+	}
+	function set_class_field($class="str_class") {
+		$this->fields["class"]=$class;
+	}
+	function set_visible_field($visible="b_visible") {
+		$this->fields["visible"]=$visible;
+	}
+	function set_parent_field($parent="self_parent") {
+		$this->fields["parent"]=$parent;
 	}
 
 	function set_menu_from_table($table="") {
@@ -51,23 +70,40 @@ class Menu {
 		if (empty($table)) {
 			$table=$CI->cfg->get('CFG_configurations',"str_menu_table");
 		}
+		// select fields
+		$fields=$CI->db->list_fields($table);
+		foreach ($fields as $key=>$f) {
+			if (!in_array($f,$this->fields)) unset($fields[$key]);
+		}
+		// trace_($fields);
+		$CI->db->select(pk());
+		$CI->db->select($fields);
 		$CI->db->order_by("order");
 		$items=$CI->db->get_result($table);
 		$menu=array();
 		foreach($items as $item) {
-			if (!isset($item["b_visible"]) or ($item["b_visible"]) ) {
+			if (!isset($item[$this->fields["visible"]]) or ($item[$this->fields["visible"]]) ) {
 				$thisItem=array();
-				if (isset($item["uri"])) $thisItem["uri"]=$item["uri"];	else $thisItem["uri"]=$item[$this->menuTableNameField];
-				if (isset($item["str_class"])) $thisItem["class"]=$item["str_class"];
-				$menu[$item[$this->menuTableNameField]]=$thisItem;
+				$thisItem["id"]=$item[pk()];
+				if (isset($item[$this->fields["uri"]])) $thisItem["uri"]=$item[$this->fields["uri"]];	else $thisItem["uri"]=$item[$this->fields["title"]];
+				if (isset($item[$this->fields["class"]])) $thisItem["class"]=$item[$this->fields["class"]];
+				if (isset($item[$this->fields["parent"]])) $parent=$item[$this->fields["parent"]]; else $parent="";
+				$menu[$parent][$item[$this->fields["title"]]]=$thisItem;
 			}
 		}
+		foreach($menu as $id=>$item) {
+			foreach($item as $name=>$value) {
+				$sub_id=$value["id"];
+				if (isset($menu[$sub_id])) {
+					$menu[$id][$name]["sub"]=$menu[$sub_id];
+					unset($menu[$sub_id]);
+				}
+			}
+		}
+		reset($menu);
+		$menu=current($menu);
 		$this->set_menu($menu);
 		return $menu;
-	}
-
-	function set_menu_name_field($nameField="str_title") {
-		$this->menuTableNameField=$nameField;
 	}
 
 	function set_menu($menu=NULL) {
@@ -128,27 +164,22 @@ class Menu {
 	function set_url_template($tmpUrl="%s") {
 		$this->tmpUrl=$tmpUrl;
 	}
-
 	function set_templates() {
 		$this->set_menu_templates();
 		$this->set_item_templates();
 		$this->set_url_template();
 	}
-
 	function set_menu_templates($start="<ul class=\"%s\">",$end="</ul>") {
 		$this->tmpMenuStart=$start;
 		$this->tmpMenuEnd=$end;
 	}
-
 	function set_item_templates($start="<li class=\"%s\">",$end="</li>") {
 		$this->tmpItemStart=$start;
 		$this->tmpItemEnd=$end;
 	}
-
 	function tmp($tmp,$class="") {
 		return str_replace("%s",$class,$tmp);
 	}
-
 
 	function render_from_table($table) {
 		$menu=$this->set_menu_from_table($table);
@@ -157,9 +188,8 @@ class Menu {
 	}
 
 	function inUri($in,$uri) {
-		if (strpos($uri,$in)===FALSE) {
+		if (strpos($uri,$in)===FALSE)
 			return FALSE;
-		}
 		return TRUE;
 	}
 
@@ -170,7 +200,7 @@ class Menu {
 		$pos=1;
 		foreach($menu as $name=>$item) {
 			$thisUri=$item["uri"];
-			if (!empty($preUri)) $thisUri=$preUri.$thisUri;
+			if (!empty($preUri)) $thisUri=$preUri."/".$thisUri;
 			// set class
 			$cName=strtolower(str_replace(" ","_",$name));
 			$class="$cName pos$pos lev$level";

@@ -16,8 +16,11 @@ function strsplit($s) {
 function in_string($in,$string) {
 	$in=strsplit($in);
 	$found=FALSE;
-	foreach($in as $c) {
-		if (!strpos($string,$c)===FALSE) $found=TRUE;
+	$c=0;
+	while (!$found and $c<count($in)) {
+		$res=strpos($string,$in[$c]);
+		if ($res) $found=TRUE;
+		$c++;
 	}
 	return $found;
 }
