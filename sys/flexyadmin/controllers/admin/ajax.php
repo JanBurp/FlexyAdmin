@@ -55,7 +55,7 @@ class Ajax extends BasicController {
 		else {
 			$ids=$this->input->post("id");
 			$this->load->model("order");
-			$this->order->set_order($table,$ids);
+			$this->order->set_all($table,$ids);
 		}
 	}
 

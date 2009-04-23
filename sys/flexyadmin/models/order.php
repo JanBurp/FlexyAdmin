@@ -22,7 +22,6 @@ class order extends Model {
 	var $table;
 	var $pk;
 	var $order;
-	var $orderDec;
 
 	function order($table="") {
 		parent::Model();
@@ -31,7 +30,6 @@ class order extends Model {
 
 	function init($table="") {
 		$this->set_table($table);
-		$this->set_decimals();
 		$this->pk=pk();
 		$this->order=$this->config->item('ORDER_field_name');
 	}
@@ -40,94 +38,84 @@ class order extends Model {
 		$this->table=$table;
 	}
 
-	function set_decimals($dec="") {
-		if (empty($dec)) {
-			$this->orderDec=$this->config->item('ORDER_decimals');
-		}
-		else {
-			$this->orderDec=$dec;
-		}
-	}
-
 	function get_order($table,$id) {
-		$this->db->select($this->order);
-		$this->db->where($this->pk,$id);
-		$query=$this->db->get($table);
-		$row=$query->row_array();
-		return $row[$this->order];
+		return $this->db->get_field($table,$this->order,$id);
 	}
 
-	function _val($n) {
-		return sprintf("%0".$this->orderDec."d",strval($n));
-	}
-
-	function set_order($table,$ids) {
-		$n=0;
-		foreach($ids as $id) {
-			$this->db->where($this->pk,$id);
-			$this->db->update($table, array($this->order => $this->_val($n++) ));
-		}
-	}
-
-	function bottom($table) {
+	function get_bottom($table) {
 		$this->db->select($this->pk);
 		$query = $this->db->get($table);
 		return $query->num_rows();
 	}
 
-	function reorder($table="",$id="",$newOrder="") {
-		if (empty($table)) $table=$this->table;
-		if (!$this->db->field_exists($this->order,$table)) {
-			return false;
-		}
-		else {
-			if (!empty($id) and !empty($newOrder)) {
-				return $this->new_order($table,$id,$newOrder);
-			}
-			else {
-				$this->give_order($table);
-				return true;
-			}
+	/**
+		* Reset order, gives them a new fresh order, but ordering stays same
+		*/
+	function reset($table,$shift=0) {
+		$this->db->order_by($this->order);
+		$this->db->select($this->pk);
+		$result=$this->db->get_result($table);
+		$ids=array();
+		foreach($result as $id=>$v) $ids[]=$id;
+		$this->set_all($table,$ids,$shift);
+	}
+
+	/**
+		* Gives all items a new order according to the order of $ids array
+		*/
+	function set_all($table,$ids,$shift=0) {
+		$n=1+$shift;
+		foreach($ids as $id) {
+			$this->db->where($this->pk,$id);
+			$this->db->update($table, array($this->order => $n++ ));
 		}
 	}
 
-	function give_order($table,$id="",$new="") {
-		$reset=TRUE;
-		if (!empty($id) and intval($new)>=0) {
-			$o=$this->get_order($table,$id);
-			if ($o!=$new) {
-				$reset=FALSE;
-				// Set new order to given id
-				$this->db->where($this->pk,$id);
-				$this->db->update($table, array($this->order => $this->_val($new) ));
-				// give the rest a new order (skip where the new order is reached), except the new one.
-				$this->db->where($this->pk." !=",$id);
-				$this->db->order_by($this->order);
-				$this->db->select($this->pk);
-				$query=$this->db->get($table);
-				$n=0;
-				foreach($query->result_array() as $res) {
-					$this->db->where($this->pk,$res[$this->pk]);
-					if ($n==$new) $n++;
-					$this->db->update($table, array($this->order => $this->_val($n++) ));
-				}
-			}
-		}
-
-		if ($reset) {
-			$this->db->order_by($this->order);
-			$this->db->select($this->pk);
-			$query=$this->db->get($table);
-			$n=0;
-			foreach($query->result_array() as $res) {
-				$this->db->where($this->pk,$res[$this->pk]);
-				$this->db->update($table, array($this->order => $this->_val($n++) ));
-			}
-		}
-		return TRUE;
+	/**
+		* Get ordernr for a new item after parent, and shift all others up
+		*/
+	function get_order_after_parent($table,$parent_id) {
+		$parent_order=$this->get_order($table,$parent_id);
+		$this->shift_up_from($table,$parent_order);
+		return $parent_order+1;
 	}
 
-	function new_order($table,$id,$newOrder) {
+	/**
+		* Inserts a new item after id
+		*/
+	// function insert_after_id($table,$id,$before_id) {
+	// 	$before_order=$this->get_order($table,$before_id);
+	// 	return $this->set($table,$id,$before_order+1);
+	// }
+
+	/**
+		* Move given item to new place (give the new order nr)
+		*/
+	function set($table,$id,$new="") {
+		$old=$this->get_order($table,$id);
+		if ($old!=$new) {
+			// Set new order to given id
+			$this->db->where($this->pk,$id);
+			$this->db->update($table, array($this->order => $new ));
+		}
+		// give the rest a new order (skip where the new order is reached), except the new one.
+		$this->db->where($this->pk." !=",$id); // except new one
+		$this->db->order_by($this->order);
+		$this->db->select($this->pk);
+		$query=$this->db->get($table);
+		$n=1;
+		foreach($query->result_array() as $res) {
+			$this->db->where($this->pk,$res[$this->pk]);
+			if ($n==$new) $n++;									// skip new set order
+			$this->db->update($table, array($this->order => $n++ ));
+		}
+		return $new;
+	}
+
+	/**
+		* Move given item to new place in order (give "direction" or new order nr)
+		*/
+	function set_to($table,$id,$newOrder) {
 		$out="";
 		switch($newOrder) {
 			case "top" 		:
@@ -148,34 +136,48 @@ class order extends Model {
 		}
 		return $out;
 	}
-
 	function to_top($table,$id) {
-		return $this->give_order($table,$id,0);
+		return $this->set($table,$id,0);
 	}
-
 	function to_bottom($table,$id) {
-		$bottom=$this->bottom($table);
-		return $this->give_order($table,$id,$bottom);
+		$bottom=$this->get_bottom($table);
+		return $this->set($table,$id,$bottom);
 	}
-
 	function up($table,$id) {
 		$o=$this->get_order($table,$id);
 		$o--;
-		if ($o<0) $o=0;
-		return $this->give_order($table,$id,$o);
+		if ($o<1) $o=1;
+		return $this->set($table,$id,$o);
 	}
-
 	function down($table,$id) {
 		$o=$this->get_order($table,$id);
 		$o++;
-		$bottom=$this->bottom($table);
+		$bottom=$this->get_bottom($table);
 		if ($o>$bottom) $o=$bottom;
-		return $this->give_order($table,$id,$o);
+		return $this->set($table,$id,$o);
 	}
 
-	function set($table,$id,$new) {
-		return $this->give_order($table,$id,$new);
+	function shift($table,$shift) {
+		$this->reset($table,$shift);
 	}
+	function shift_up($table,$up=1) {
+		$this->shift($table,$up);
+	}
+	function shift_down($table,$down=1) {
+		$this->shift($table,-$down);
+	}
+	
+	function shift_up_from($table,$from) {
+		$this->db->order_by($this->order);
+		$this->db->where($this->order." >","$from");
+		$this->db->select($this->pk);
+		$result=$this->db->get_result($table);
+		$ids=array();
+		foreach($result as $id=>$v) $ids[]=$id;
+		$this->set_all($table,$ids,$from+1);
+	}
+
+
 
 }
 

@@ -56,7 +56,7 @@ class Show extends AdminController {
 			if (!empty($table) and !empty($id) and !empty($newOrder)) {
 				$this->lang->load("update_delete");
 				$this->load->model("order");
-				$this->order->reorder($table,$id,$newOrder);
+				$this->order->set_to($table,$id,$newOrder);
 				$this->set_message(langp("order_has_changed",$table));
 				$this->load->model("login_log");
 				$this->login_log->update($table);
@@ -160,6 +160,7 @@ class Show extends AdminController {
 		if ($this->has_rights($table,$id)) {
 			$this->load->library('form_validation');
 			$this->load->library('upload');
+			$this->load->model("order");
 			$this->load->helper('html');
 
 			$this->form_validation->set_error_delimiters('<div id="formmessage">', '</div>');

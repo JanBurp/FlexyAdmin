@@ -75,7 +75,7 @@ class Menu {
 		foreach ($fields as $key=>$f) {
 			if (!in_array($f,$this->fields)) unset($fields[$key]);
 		}
-		// trace_($fields);
+		// get data form menu_table
 		$CI->db->select(pk());
 		$CI->db->select($fields);
 		$CI->db->order_by("order");
@@ -91,7 +91,11 @@ class Menu {
 				$menu[$parent][$item[$this->fields["title"]]]=$thisItem;
 			}
 		}
-		foreach($menu as $id=>$item) {
+
+		// Set submenus on right place in array
+		$item=end($menu);
+		while ($item) {
+			$id=key($menu);
 			foreach($item as $name=>$value) {
 				$sub_id=$value["id"];
 				if (isset($menu[$sub_id])) {
@@ -99,7 +103,10 @@ class Menu {
 					unset($menu[$sub_id]);
 				}
 			}
+			$item=prev($menu);
 		}
+
+		// set first
 		reset($menu);
 		$menu=current($menu);
 		$this->set_menu($menu);
