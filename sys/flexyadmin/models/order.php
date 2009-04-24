@@ -38,8 +38,17 @@ class order extends Model {
 		$this->table=$table;
 	}
 
+	function is_a_tree($table) {
+		$fields=$this->db->list_fields($table);
+		return (in_array("self_parent",$fields));
+	}
+
 	function get_order($table,$id) {
 		return $this->db->get_field($table,$this->order,$id);
+	}
+
+	function get_parent($table,$id) {
+		return $this->db->get_field($table,"self_parent",$id);
 	}
 
 	function get_bottom($table) {
@@ -52,32 +61,48 @@ class order extends Model {
 		* Reset order, gives them a new fresh order, but ordering stays same
 		*/
 	function reset($table,$shift=0) {
-		$this->db->order_by($this->order);
+		$this->db->order_as_tree();
 		$this->db->select($this->pk);
 		$result=$this->db->get_result($table);
 		$ids=array();
 		foreach($result as $id=>$v) $ids[]=$id;
 		$this->set_all($table,$ids,$shift);
 	}
-
+	function shift_up($table,$parent=0) {
+		if ($this->is_a_tree($table)) {
+			$this->db->where("self_parent",$parent);
+			$this->db->select($this->pk);
+			$result=$this->db->get_result($table);
+			$ids=array();
+			foreach($result as $id=>$v) $ids[]=$id;
+			$this->set_all($table,$ids,1);
+		}
+		else
+			$this->reset($table,1);
+	}
 	/**
 		* Gives all items a new order according to the order of $ids array
 		*/
 	function set_all($table,$ids,$shift=0) {
-		$n=1+$shift;
+		$isTree=$this->is_a_tree($table);
+		$orders=array();
 		foreach($ids as $id) {
+			if ($isTree) {
+				$this->db->select(array($this->pk,"self_parent"));
+				$this->db->where($this->pk,$id);
+				$row=$this->db->get_result($table);
+				$row=current($row);
+				$parent=$row["self_parent"];
+			}
+			else
+				$parent=0;
+			if (isset($orders[$parent]))
+				$orders[$parent]++;
+			else
+				$orders[$parent]=1+$shift;
 			$this->db->where($this->pk,$id);
-			$this->db->update($table, array($this->order => $n++ ));
+			$this->db->update($table, array($this->order => $orders[$parent] ));
 		}
-	}
-
-	/**
-		* Get ordernr for a new item after parent, and shift all others up
-		*/
-	function get_order_after_parent($table,$parent_id) {
-		$parent_order=$this->get_order($table,$parent_id);
-		$this->shift_up_from($table,$parent_order);
-		return $parent_order+1;
 	}
 
 	/**
@@ -91,7 +116,7 @@ class order extends Model {
 	/**
 		* Move given item to new place (give the new order nr)
 		*/
-	function set($table,$id,$new="") {
+	function set($table,$id,$new) {
 		$old=$this->get_order($table,$id);
 		if ($old!=$new) {
 			// Set new order to given id
@@ -99,6 +124,10 @@ class order extends Model {
 			$this->db->update($table, array($this->order => $new ));
 		}
 		// give the rest a new order (skip where the new order is reached), except the new one.
+		if ($this->is_a_tree($table)) {
+			$parentId=$this->get_parent($table,$id);
+			$this->db->where("self_parent",$parentId);
+		}
 		$this->db->where($this->pk." !=",$id); // except new one
 		$this->db->order_by($this->order);
 		$this->db->select($this->pk);
@@ -118,12 +147,12 @@ class order extends Model {
 	function set_to($table,$id,$newOrder) {
 		$out="";
 		switch($newOrder) {
-			case "top" 		:
-				$out=$this->to_top($table,$id);
-				break;
-			case "bottom"	:
-				$out=$this->to_bottom($table,$id);
-				break;
+			// case "top" 		:
+			// 	$out=$this->to_top($table,$id);
+			// 	break;
+			// case "bottom"	:
+			// 	$out=$this->to_bottom($table,$id);
+			// 	break;
 			case "up"			:
 				$out=$this->up($table,$id);
 				break;
@@ -136,13 +165,13 @@ class order extends Model {
 		}
 		return $out;
 	}
-	function to_top($table,$id) {
-		return $this->set($table,$id,0);
-	}
-	function to_bottom($table,$id) {
-		$bottom=$this->get_bottom($table);
-		return $this->set($table,$id,$bottom);
-	}
+	// function to_top($table,$id) {
+	// 	return $this->set($table,$id,0);
+	// }
+	// function to_bottom($table,$id) {
+	// 	$bottom=$this->get_bottom($table);
+	// 	return $this->set($table,$id,$bottom);
+	// }
 	function up($table,$id) {
 		$o=$this->get_order($table,$id);
 		$o--;
@@ -156,28 +185,6 @@ class order extends Model {
 		if ($o>$bottom) $o=$bottom;
 		return $this->set($table,$id,$o);
 	}
-
-	function shift($table,$shift) {
-		$this->reset($table,$shift);
-	}
-	function shift_up($table,$up=1) {
-		$this->shift($table,$up);
-	}
-	function shift_down($table,$down=1) {
-		$this->shift($table,-$down);
-	}
-	
-	function shift_up_from($table,$from) {
-		$this->db->order_by($this->order);
-		$this->db->where($this->order." >","$from");
-		$this->db->select($this->pk);
-		$result=$this->db->get_result($table);
-		$ids=array();
-		foreach($result as $id=>$v) $ids[]=$id;
-		$this->set_all($table,$ids,$from+1);
-	}
-
-
 
 }
 

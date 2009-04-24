@@ -48,9 +48,8 @@ $config['API_logout']							= "/admin/user/logout/";
 
 $config['API_view_order']					= "/admin/show/order/";
 $config['API_view_grid']					= "/admin/show/grid/";
+$config['API_view_tree']					= "/admin/show/tree/";
 $config['API_view_form']					= "/admin/show/form/";
-
-//$config['API_view_tree']					= "/admin/view/tree/";
 
 $config['API_filemanager']					= "/admin/filemanager/";
 $config['API_filemanager_set_view']	= "/admin/filemanager/setview";
@@ -326,7 +325,7 @@ $config['FIELDS_special'] = array(
 
 	"id"				=> array(
 												"grid"				=> "function_primary_key",
-												"form"				=> "hidden",
+												"form"				=> "function_primary_key",
 												"validation"	=> "trim|integer|required",
 											),
 	"uri"				=> array(

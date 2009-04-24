@@ -342,21 +342,42 @@ class Flexy_field extends Model {
 						anchor(api_uri('API_confirm',$this->table,$this->data),icon("delete"),array("class"=>"delete $class"));
 	}
 
+	function _primary_key_form() {
+		$this->id=$this->data;
+		$out=$this->_standard_form_field();
+		$out["type"]="hidden";
+		return $out;
+	}
+
+	function _get_tree($id,$branch="",$tree="") {
+		if (!empty($tree)) $tree="/$tree";
+		$this->db->select(array(pk(),"uri","self_parent"));
+		$this->db->where(pk(),$id);
+		$res=$this->db->get_row($this->table);
+		if (empty($branch))
+			$tree=$res["uri"].$tree;
+		if ($res["self_parent"]>0) {
+			$tree=$branch.$tree;
+			$tree=$this->_get_tree($res["self_parent"],$branch,$tree);
+		}
+		return $tree;
+	}
+
 	function _self_grid() {
-		$this->db->as_abstracts();
-		$this->db->where(pk(),$this->data);
-		$out=$this->db->get_row($this->table);
-		$out=$out["abstract"];
+		$out=$this->_get_tree($this->data);
+		if (!empty($out)) $out.="/";
 		return $out;		
 	}
 
 	function _self_form() {
-		$this->db->as_abstracts();
-		$abstracts=$this->db->get_result($this->table);
+		$this->db->select(array(pk(),"uri","self_parent"));
+		$this->db->where(pk()." !=", $this->id);
+		$res=$this->db->get_result($this->table);
 		$options=array();
 		$options[]="";
-		foreach($abstracts as $id=>$ab) {
-			$options[$id]=$ab["abstract"];
+		foreach($res as $id=>$value) {
+			$options[$id]=$this->_get_tree($value["self_parent"],"",$value["uri"]);
+			if (substr($options[$id],0,1)=="/") $options[$id]=substr($options[$id],1);
 		}
 		$out=$this->_standard_form_field($options);
 		$out["type"]="dropdown";

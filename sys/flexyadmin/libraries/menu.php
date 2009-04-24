@@ -26,6 +26,7 @@ class Menu {
 	var $current;
 
 	var $tmpUrl;
+	var $urlField;
 	var $fields;
 	
 	var $menuTable;
@@ -34,6 +35,7 @@ class Menu {
 	var $tmpMenuEnd;
 	var $tmpItemStart;
 	var $tmpItemEnd;
+	var $itemControls;
 
 	function Menu() {
 		$this->init();
@@ -47,6 +49,7 @@ class Menu {
 		$this->set_class_field();
 		$this->set_visible_field();
 		$this->set_parent_field();
+		$this->add_controls();
 	}
 
 	function set_uri_field($uri="uri") {
@@ -78,7 +81,7 @@ class Menu {
 		// get data form menu_table
 		$CI->db->select(pk());
 		$CI->db->select($fields);
-		$CI->db->order_by("order");
+		$CI->db->order_as_tree();
 		$items=$CI->db->get_result($table);
 		$menu=array();
 		foreach($items as $item) {
@@ -91,7 +94,7 @@ class Menu {
 				$menu[$parent][$item[$this->fields["title"]]]=$thisItem;
 			}
 		}
-
+		
 		// Set submenus on right place in array
 		$item=end($menu);
 		while ($item) {
@@ -165,16 +168,20 @@ class Menu {
 			return false;
 	}
 
-	function set_uri_template($tmpUri="%s") {
-		$this->set_url_template($tmpUri);
-	}
+	// function set_uri_template($tmpUri="%s") {
+	// 	$this->set_url_template($tmpUri);
+	// }
 	function set_url_template($tmpUrl="%s") {
 		$this->tmpUrl=$tmpUrl;
+	}
+	function set_url_field($urlField="uri") {
+		$this->urlField=$urlField;
 	}
 	function set_templates() {
 		$this->set_menu_templates();
 		$this->set_item_templates();
 		$this->set_url_template();
+		$this->set_url_field();
 	}
 	function set_menu_templates($start="<ul class=\"%s\">",$end="</ul>") {
 		$this->tmpMenuStart=$start;
@@ -200,14 +207,18 @@ class Menu {
 		return TRUE;
 	}
 
+	function add_controls($controls="") {
+		$this->itemControls=$controls;
+	}
+
 	function render($menu=NULL,$class="",$level=1,$preUri="") {
 		$branch=array();
 		$out=$this->tmp($this->tmpMenuStart,"$class lev$level");
 		if (!isset($menu)) $menu=$this->menu;
 		$pos=1;
 		foreach($menu as $name=>$item) {
-			$thisUri=$item["uri"];
-			if (!empty($preUri)) $thisUri=$preUri."/".$thisUri;
+			$thisUri=$item[$this->urlField];
+			if (!empty($preUri) and $this->urlField=="uri") $thisUri=$preUri."/".$thisUri;
 			// set class
 			$cName=strtolower(str_replace(" ","_",$name));
 			$class="$cName pos$pos lev$level";
@@ -222,6 +233,7 @@ class Menu {
 				$showName=ascii_to_entities($name);
 				if (isset($item["help"])) $showName=help($showName,$item["help"]);
 				$out.=anchor($this->tmp($this->tmpUrl,$thisUri), $showName, array("class"=>$class));
+				// if (!empty($this->itemControls)) $out.=$this->tmp($this->itemControls,$thisUri);
 			}
 			if (isset($item["sub"]))
 				$out.=$this->render($item["sub"],"$cName",$level+1,$thisUri);
