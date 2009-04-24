@@ -338,21 +338,23 @@ class Form Extends Model {
 				}
 
 				/**
-				 * Set order if new.
+				 * Set order
 				 */
 				if (isset($set["order"])) {
-					if ($id==-1) {
-						// set new order
-						$set["order"]=1;
-						// shift all items one up
-						$this->order->shift_up($table);
-					}
 
-					/**
-					 * Set specific order if a self_parent is set
-					 */
-					if (isset($set["self_parent"]) and $set["self_parent"]>0) {
-						$set["order"]=$this->order->get_order_after_parent($table,$set["self_parent"]);
+					if ($id==-1) {
+						$set["order"]=1;
+						if (isset($set["self_parent"]))
+							$this->order->shift_up($table,$set["self_parent"]);
+						else
+							$this->order->shift_up($table);
+					}
+					elseif (isset($set["self_parent"])) {
+						$old_parent=$this->db->get_field($table,"self_parent",$id);
+						if ($old_parent!=$set["self_parent"]) {
+							$set["order"]=1;
+							$this->order->shift_up($table,$set["self_parent"]);
+						}
 					}
 				}
 

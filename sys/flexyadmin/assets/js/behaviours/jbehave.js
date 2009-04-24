@@ -5,6 +5,7 @@ $(document).ready(function() {
 	popup=$("#popup");
 	isForm=$("#content").hasClass("form");
 	isGrid=$("#content").hasClass("grid");
+	isTree=$("#content").hasClass("tree");
 	isFile=$("#content").hasClass("filemanager");
 	if (!isGrid && isFile)	{	isGrid=$("#content").hasClass("list"); }
 	if (isFile)							{ isThumbs=$("#content").hasClass("icons");}
@@ -148,15 +149,36 @@ $(document).ready(function() {
 	//
 	// File & Grid (Life filter/search field)
 	//
-	if (isGrid || isFile) {
+	if (isGrid || isFile || isTree ) {
 
 		//
 		// Make sure grid is minimal 600px width
 		if ($("table.grid").width() < 600) {
 			$("table.grid").css({width:"600px"});
 		}
-		
 
+		//
+		// if 'self_parent' is there hide that column and add content to next column
+		//
+		$("table.grid td.self_parent").each(function(){
+			html=$(this).html();
+			if (html.length>0) {
+				html='<span class="emptynode">'+html;
+				html=html.replace(/\//g,'</span><span class="emptynode">');
+			}
+			next=$(this).parent("tr").children("td.str:first");
+			if (html.length>0) {			
+				html=html+'</span><span class="lastnode">'+$(next).html()+'</span>';
+			}
+			else {
+				html=$(next).html();
+			}
+			$(next).html(html);
+		});
+		$("table.grid .self_parent").hide();
+		
+		
+	
 		//
 		// Filter/Search rows
 		//
@@ -165,6 +187,10 @@ $(document).ready(function() {
 			$(filter).filterable({ affects: 'tbody tr .file' });
 		}
 		else {
+			if (isTree) {
+				filter=$("table.grid");
+				$(filter).filterable({ affects: 'tbody li' });
+			}
 			if (isGrid) {
 				filter=$("table.grid");
 				$(filter).filterable({ affects: 'tbody tr' });

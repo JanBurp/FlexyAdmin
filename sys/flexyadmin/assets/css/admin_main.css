@@ -65,14 +65,14 @@ img {
 
 /* =============== menu ===================== */
 
-ul
+#menu ul
 {
 	padding-left:0px;
 	margin:5px 0px 0px;
 	z-index:10;
 }
 
-li
+#menu li
 {
 	list-style:none;
 	font-size:15px;
@@ -80,13 +80,14 @@ li
 	padding:3px 5px 7px 30px;
 	height:17px;
 }
-li.logout {
+#menu li.logout {
 	margin-bottom:30px;
 }
-li.configurations {
+#menu li.configurations {
 	margin-top:30px;
 }
-li.current, li:hover {
+#menu li.current,
+#menu li:hover {
 	background-color:#DDEEAA;
 	background-image:url("../img/inset.png");
 	background-position:50% 50%;
@@ -94,29 +95,31 @@ li.current, li:hover {
 	-webkit-border-radius: 5px;
 }
 
-li a {
+#menu li a {
 	display:block;
 	width:100%;
 	height:100%;
 	}
-li a.cfg {
+#menu li a.cfg {
 	color:#966;
 }
-li a.log {
+#menu li a.log {
 	color:#696;
 }
-li a.rel {
+#menu li a.rel {
 	color:#669;
 }
-li .media {
+#menu li .media {
 	background-image: url("../icons/folder.gif");
 	background-repeat: no-repeat;
 	background-position:0px 2px;
 	padding-left: 20px;
 	}
-li.current .media {
+#menu li.current .media {
 	background-image: url("../icons/folder_files.gif");
 	}
+
+/* =========== */
 
 span.help {
 	cursor:help;
@@ -374,6 +377,62 @@ tr.caption td				{ border:none; }
 .small { margin:0px; font-size:.8em; }
 
 img.zoom { border:1px solid #333; cursor:pointer; }
+
+/* =============== Tree ===================== */
+
+td.tree {
+	border:none;
+	font-size:1.2em;
+}
+.tree ul {
+	padding-left:10px;
+	margin:0px;
+}
+.tree li {
+	list-style:none;
+	background-color:#fff;
+	background-image:url("../icons/tree_line.gif");
+	background-repeat:repeat-y;
+	background-position:10px 0px;
+	padding:5px 5px 5px 10px;
+	margin:0px;
+}
+.tree li.current {
+/*	background-color:#FFEEEE;*/
+}
+.tree li.last {
+	background-image:url("../icons/tree_lastnode.gif");
+	background-repeat:no-repeat;
+}
+.tree li a {
+	background-repeat:no-repeat;
+	padding-left:20px;
+}
+.tree li.last a {
+/*	background-image:url("../icons/tree_lastnode.gif");*/
+}
+.tree li a.edit,
+.tree li a.delete {
+	background-image:none;
+}
+.tree li.current,
+.tree li:hover {
+}
+
+.node {
+	color:#BCA;
+}
+.emptynode {
+	float:left;
+	font-size:0px;
+	overflow:hidden;
+	width:20px;
+}
+.lastnode {
+	background-image:url("../icons/tree_lastnode.gif");
+	background-repeat:no-repeat;
+	padding-left:20px;
+}
 
 /** grid sorter **/
 

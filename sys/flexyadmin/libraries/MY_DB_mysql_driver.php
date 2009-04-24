@@ -22,6 +22,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	var $many;
 	var $options;
 	var $whereUri;
+	var $orderAsTree;
 
 	function MY_DB_mysql_driver($params) {
 		parent::CI_DB_mysql_driver($params);
@@ -31,12 +32,14 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	function reset() {
 		$this->primary_key();
 		$eachResult=array();
+		$savedQuery=array();
 		$this->add_foreigns(FALSE);
 		$this->add_abstracts(FALSE);
 		$this->add_many(FALSE);
 		$this->add_options(FALSE);
 		$this->max_text_len();
-		$this->whereUri="";
+		$this->where_uri();
+		// $this->order_as_tree(FALSE);
 	}
 
 	/**
@@ -59,7 +62,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		// find in table info
 		$order=$CI->cfg->get('CFG_table',$table,'str_order_by');
 		// or first standard order field
-		if (!empty($table)) {
+		if (empty($order) and !empty($table)) {
 			$stdFields=$CI->config->item('ORDER_default_fields');
 			$fields=$this->list_fields($table);
 			do {
@@ -75,15 +78,30 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				} while (empty($order) and next($fields));
 			}
 			while (empty($order) and next($stdFields));
+			// check if it is a tree
+			if ($order=="order" and in_array("self_parent",$fields)) {
+				$this->order_as_tree();
+			}
 		}
-		$this->order_by($order);
+		if ($this->orderAsTree) {
+			$this->order_by("self_parent");
+			$this->order_by("order");
+		}
+		else
+			$this->order_by($order);
 		return $order;
 	}
 
-	function where_uri($uri) {
+	function where_uri($uri="") {
 		$this->whereUri=$uri;
-		$lastPart=get_postfix($uri,"/");
-		$this->like("uri",$lastPart,"before");
+		if (!empty($uri)) {
+			$lastPart=get_postfix($uri,"/");
+			$this->like("uri",$lastPart,"before");
+		}
+	}
+
+	function order_as_tree($orderAsTree=TRUE) {
+		$this->orderAsTree=$orderAsTree;
 	}
 
 	/**
@@ -164,7 +182,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		/**
 		 * set standard order if not set
 		 */
-		if (empty($this->ar_order)) $this->_set_standard_order($table);
+		if (empty($this->ar_orderby)) $this->_set_standard_order($table);
 
 		/**
 		 * if many, find if a where part is referring to a many table
@@ -202,8 +220,6 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				}
 			}
 		}
-		// trace_($this);
-		
 		
 		/**
 		*	If TEXT maxlength, replace these in ar_where
@@ -214,7 +230,6 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				$field=$this->ar_select[$key];
 				$this->ar_select[$key]="SUBSTRING(".$field.",1,".$this->maxTextLen.") AS `".remove_prefix($field,".")."`";
 			}
-			// trace_($this->ar_select);			
 		}
 		
 		/**
@@ -231,22 +246,72 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	function get_results($table,$limit=0,$offset=0) {
 		return $this->get_result($table,$limit,$offset);
 	}
-			
 	function get_result($table,$limit=0,$offset=0) {
+		$result=$this->_get_result($table,$limit,$offset);
+		if ($this->orderAsTree and !empty($result)) {
+			$options=el("options",$result);
+			$multiOptions=el("multi_options",$result);
+			unset($result["options"]);
+			unset($result["multi_options"]);
+			$result=$this->_make_tree_result($result);
+			if ($options) $result=array_merge($result,$options);
+			if ($multiOptions) $result=array_merge($result,$multiOptions);
+		}
+		return $result;
+	}
+	
+	function _make_tree_result($result) {
+		$test=current($result);
+		if (isset($test["self_parent"])) {
+			// group by self_parent
+			$grouped=array();
+			foreach ($result as $id=>$val) {
+				$grouped[$val["self_parent"]][$id]=$val;
+			}
+			// trace_($grouped);		
+			// set groups on right place, from root (=0)
+			$result=$this->_groups_to_tree($grouped,0);
+			$result=$this->_set_key_to($result,$this->pk);
+		}
+		return $result;
+	}
+	function _groups_to_tree($grouped,$parent) {
+		$tree=array();
+		if (count($grouped)>1 and isset($grouped[$parent])) {
+			foreach($grouped[$parent] as $id=>$val) {
+				$tree[$id]=$val;
+				if (isset($grouped[$id])) {
+					$sub=$this->_groups_to_tree($grouped,$id);
+					$tree=array_merge($tree,$sub);
+				}
+			}
+		}
+		else
+			$tree=current($grouped);
+		return $tree;
+	}
+	
+	function _set_key_to($a,$key) {
+		$out=array();
+		$first=current($a);
+		if (isset($first[$key])) {
+			foreach($a as $row) {
+				$out[$row[$key]]=$row;
+			}
+		}
+		else
+			$out=$a;
+		return $out;
+	}
+	
+	function _get_result($table,$limit=0,$offset=0) {
 		// init
 		$result=array();
 		// fetch data
 		$query=$this->_get($table,$limit,$offset);
 		log_("info","[DB+] Get data from query:");
-		// set key
 		$res=$query->result_array();
-		$first=current($res);
-		if (isset($first[$this->pk])) {
-			foreach($res as $row) {
-				$result[$row[$this->pk]]=$row;
-			}
-		}
-		else $result=$res;
+		$result=$this->_set_key_to($res,$this->pk);
 
 		/**
 		 * add (one to) many data if asked for
@@ -326,14 +391,6 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	}
 	
 	function get_field_where($table,$field,$where,$what="") {
-		// if (!is_array($where) and !empty($what))
-		// 	$this->where($where,$what);
-		// else
-		// 	$this->where($where);
-		// $this->select($field);
-		// $query=$this->get($table,1);
-		// $row=$query->row_array();
-		// $this->reset();
 		$sql="SELECT `$field` FROM `$table` WHERE `$where`='$what'";
 		$query=$this->query($sql);
 		$row=$query->row_array();

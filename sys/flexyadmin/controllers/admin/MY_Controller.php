@@ -285,6 +285,7 @@ class AdminController extends BasicController {
 		$this->showEditor=false;
 		$this->load->model("ui_names","uiNames");
 		$this->load->helper("language");
+		$this->load->library("menu");
 	}
 
 	function set_message($message) {
@@ -335,7 +336,10 @@ class AdminController extends BasicController {
 		$oTables=array_merge($oTables,$tables);
 		foreach ($oTables as $name) {
 			if (!in_array($name,$excluded) and $this->has_rights($name)) {
-				$a[$this->uiNames->get($name)]=array("uri"=>api_uri('API_view_grid',$name),"class"=>$type);
+				// if ($name=="tbl_menu")
+				// 	$a[$this->uiNames->get($name)]=array("uri"=>api_uri('API_view_tree',$name),"class"=>$type);
+				// else
+					$a[$this->uiNames->get($name)]=array("uri"=>api_uri('API_view_grid',$name),"class"=>$type);
 				$tableHelp=$this->cfg->get("CFG_table",$name,"txt_help");
 				if (!empty($tableHelp)) {
 					$a[$this->uiNames->get($name)]["help"]=$tableHelp;
@@ -346,7 +350,6 @@ class AdminController extends BasicController {
 	}
 
 	function _show_menu($currentMenuItem="") {
-		$this->load->library('menu');
 		// load menu items
 		$a=array();
 		// standard items

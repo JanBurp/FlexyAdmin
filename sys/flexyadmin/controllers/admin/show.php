@@ -76,25 +76,23 @@ class Show extends AdminController {
 
 
 /**
- * This controls the grid view
+ * This controls the tree view
  *
  * @param string $table Table name
  * @param mixed $id maybe an id, the last that changed
  */
 
-	function grid($table,$id="") {
+	function tree($table,$id="") {
 		$singleRow=$this->cfg->get('CFG_table',$table,"b_single_row");
 		if ($singleRow)
 			$this->form($table);
 		else {
 			if ($this->has_rights($table,$id)) {
-				$this->load->model("grid");
-
 				/**
 				 * get data
 				 */
-				$this->db->add_foreigns_as_abstracts();
-				$this->db->add_many();
+				// $this->db->add_foreigns_as_abstracts();
+				// $this->db->add_many();
 				$this->db->max_text_len(250);
 				$data=$this->db->get_result($table);
 				// trace_($data);
@@ -112,26 +110,34 @@ class Show extends AdminController {
 					/**
 					 * if data: first render data, then put data in grid and render as html
 					 */
-					$data=$this->ff->render_grid($table,$data);
-
-					$grid=new grid();
+					$this->load->model("tree");
+					$tree=new tree();
+					
+					$innerTree=new menu();
+					$innerTree->set_current($id);
+					$innerTree->set_url_field("id");
+					$innerTree->set_url_template(api_uri('API_view_form',$table,"%s"));
+					$innerTree->set_menu_from_table($table);
+					// $innerTree->add_controls(	anchor(api_uri('API_view_form',$table,"%s"),icon("edit"),array("class"=>"edit")).
+					// 													anchor(api_uri('API_confirm',$table,"%s"),icon("delete"),array("class"=>"delete"))	);
+					$html=$innerTree->render();
 					$uiTable=$this->uiNames->get($table);
 					$tableHelp=$this->cfg->get("CFG_table",$table,"txt_help");
 					if (!empty($tableHelp)) {
-						$uiTable=help($uiTable." ",$tableHelp);
+						$uiShowTable=help($uiTable." ",$tableHelp);
 					}
-					$grid->set_data($data,$uiTable);
-					$keys=array_keys(current($data));
-					$keys=combine($keys,$keys);
+					else
+						$uiShowTable=$uiTable;
+					$tree->set_tree($html,$uiTable);
+					
 					$newIcon=anchor(api_uri('API_view_form',$table,-1),icon("new"));
-					$grid->prepend_to_captions($newIcon,"new");
-					$grid->set_headings($this->uiNames->get($keys,$table));
-					$grid->set_heading(pk(),"Edit");
+					$tree->prepend_to_captions($newIcon,"new");
 					if (!empty($id)) {
-						$grid->set_current($id);
+						$tree->set_current($id);
 					}
-					$renderData=$grid->render("html",$table,"grid");
-					$html=$this->load->view("admin/grid",$renderData,true);
+					$renderData=$tree->render($table,"tree");
+					// trace_($renderData);
+					$html=$this->load->view("admin/tree",$renderData,true);
 					$this->_set_content($html);
 				}
 			}
@@ -144,10 +150,90 @@ class Show extends AdminController {
 			/**
 			 * show
 			 */
-			$this->_show_type("grid");
+			$this->_show_type("tree");
 			$this->_show_all($uiTable);
 		}
 	}
+
+
+	/**
+	 * This controls the grid view
+	 *
+	 * @param string $table Table name
+	 * @param mixed $id maybe an id, the last that changed
+	 */
+
+		function grid($table,$id="") {
+			$singleRow=$this->cfg->get('CFG_table',$table,"b_single_row");
+			if ($singleRow)
+				$this->form($table);
+			else {
+				if ($this->has_rights($table,$id)) {
+					$this->load->model("grid");
+
+					/**
+					 * get data
+					 */
+					$this->db->add_foreigns_as_abstracts();
+					$this->db->add_many();
+					$this->db->max_text_len(250);
+					$data=$this->db->get_result($table);
+					// trace_($data);
+					if (empty($data)) {
+						/**
+						 * if no data, start an input form
+						 */
+						 $this->form($table,-1);
+						 return;
+					}
+					else
+					{
+						$this->_before_grid($table,$data);
+
+						/**
+						 * if data: first render data, then put data in grid and render as html
+						 */
+						$data=$this->ff->render_grid($table,$data);
+
+						$grid=new grid();
+						$uiTable=$this->uiNames->get($table);
+						$tableHelp=$this->cfg->get("CFG_table",$table,"txt_help");
+						if (!empty($tableHelp)) {
+							$uiShowTable=help($uiTable." ",$tableHelp);
+						}
+						else
+							$uiShowTable=$uiTable;
+						$grid->set_data($data,$uiShowTable);
+						$keys=array_keys(current($data));
+						$keys=combine($keys,$keys);
+						$newIcon=anchor(api_uri('API_view_form',$table,-1),icon("new"));
+						$grid->prepend_to_captions($newIcon,"new");
+						$grid->set_headings($this->uiNames->get($keys,$table));
+						$grid->set_heading(pk(),"Edit");
+						if (!empty($id)) {
+							$grid->set_current($id);
+						}
+						$renderData=$grid->render("html",$table,"grid");
+						$html=$this->load->view("admin/grid",$renderData,true);
+						$this->_set_content($html);
+					}
+				}
+				else {
+					$this->lang->load("rights");
+					$this->set_message(lang("rights_no_rights"));
+					$uiTable="";
+				}
+
+				/**
+				 * show
+				 */
+				$this->_show_type("grid");
+				$this->_show_all($uiTable);
+			}
+		}
+
+
+
 
 /**
  * This controls the form view
@@ -202,9 +288,11 @@ class Show extends AdminController {
 			$uiTable=$this->uiNames->get($table);
 			$tableHelp=$this->cfg->get("CFG_table",$table,"txt_help");
 			if (!empty($tableHelp)) {
-				$uiTable=help($uiTable,$tableHelp);
+				$uiShowTable=help($uiTable,$tableHelp);
 			}
-			$form->set_data($data,$uiTable);
+			else
+				$uiShowTable=$uiTable;
+			$form->set_data($data,$uiShowTable);
 
 			/**
 			 * Validate form, if succes, make form do an update
