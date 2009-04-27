@@ -262,7 +262,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	
 	function _make_tree_result($result) {
 		$test=current($result);
-		if (isset($test["self_parent"])) {
+		if (count($result)>1 and isset($test["self_parent"])) {
 			// group by self_parent
 			$grouped=array();
 			foreach ($result as $id=>$val) {
@@ -271,7 +271,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			// trace_($grouped);		
 			// set groups on right place, from root (=0)
 			$result=$this->_groups_to_tree($grouped,0);
-			$result=$this->_set_key_to($result,$this->pk);
+			// trace_($result);
 		}
 		return $result;
 	}
@@ -282,7 +282,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				$tree[$id]=$val;
 				if (isset($grouped[$id])) {
 					$sub=$this->_groups_to_tree($grouped,$id);
-					$tree=array_merge($tree,$sub);
+					foreach($sub as $i=>$v) $tree[$i]=$v; // merge $sub with keys in place
 				}
 			}
 		}
