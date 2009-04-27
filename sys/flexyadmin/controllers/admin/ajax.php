@@ -64,13 +64,13 @@ class Ajax extends BasicController {
  * Url holds all data
  */
  	function edit($table,$id,$field,$value) {
- 		if ($this->has_rights($table,$id)){
+ 		if ($this->has_rights($table,$id)) {
  			$this->db->set($field,$value);
  			$this->db->where(pk(),$id);
  			$this->db->update($table);
  		}
  		else
- 			$this->_result("AJAX|cell: $table,$id,$field=$value");
+ 			$this->_result("AJAX|cell| ERROR or No Rights: $table,$id,$field=$value");
  	}
 
 

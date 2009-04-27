@@ -211,7 +211,7 @@ class BasicController extends MY_Controller {
 		$this->table_rights="";
 		$this->media_rights="";
 		if (!$this->_user_logged_in()) {
-			redirect($this->config->item('API_login'));
+			// redirect($this->config->item('API_login'));
 		}
 		$lang=$this->language."_".strtoupper($this->language);
 		setlocale(LC_ALL, $lang);
@@ -277,6 +277,9 @@ class AdminController extends BasicController {
 
 	function AdminController() {
 		parent::BasicController(true);
+		if (!$this->_user_logged_in()) {
+			redirect($this->config->item('API_login'));
+		}
 		$this->currentTable="";
 		$this->currentId="";
 		$this->currentUser="";

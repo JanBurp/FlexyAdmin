@@ -365,7 +365,7 @@ class Flexy_field extends Model {
 
 	function _self_grid() {
 		$out=$this->_get_tree($this->data);
-		if (!empty($out)) $out.="/";
+		if (!empty($out)) $out="[$this->data] ".$out;
 		return $out;		
 	}
 

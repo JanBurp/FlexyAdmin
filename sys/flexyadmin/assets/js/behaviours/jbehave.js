@@ -158,22 +158,26 @@ $(document).ready(function() {
 		}
 
 		//
-		// if 'self_parent' is there hide that column and add content to next column
+		// if 'self_parent' is there hide that column, add parent_id class to row, and add content to next column
 		//
 		$("table.grid td.self_parent").each(function(){
 			html=$(this).html();
 			if (html.length>0) {
-				html='<span class="emptynode">'+html;
-				html=html.replace(/\//g,'</span><span class="emptynode">');
+				// get parent_id
+				parent_id=html.substring(1,html.indexOf(" ")-1);
+				$(this).parent("tr").addClass("parent_id_"+parent_id);
+				// create new html
+				newHtml='<span class="emptynode">'+html;
+				newHtml=newHtml.replace(/\//g,'</span><span class="emptynode">');
 			}
 			next=$(this).parent("tr").children("td.str:first");
 			if (html.length>0) {			
-				html=html+'</span><span class="lastnode">'+$(next).html()+'</span>';
+				newHtml=newHtml+'</span><span class="lastnode">&nbsp;</span>'+$(next).html();
 			}
 			else {
-				html=$(next).html();
+				newHtml=$(next).html();
 			}
-			$(next).html(html);
+			$(next).html(newHtml);
 		});
 		$("table.grid .self_parent").hide();
 		
@@ -298,31 +302,72 @@ $(document).ready(function() {
 			// change ui: remove normal order arrows, and place one item
 			$("table.grid tbody td.order").empty().append('<div class="icon order" title="order"></div>');
 			$("table.grid thead th.order").empty();
+
+			// set width of cells!
+			$("table.grid tbody tr:first td").each(function() {
+				if ($(this).css("display")=="none") w=0; else	w=$(this).width()+"px";
+				nr=get_nr($(this));
+				$("table.grid tbody tr td.nr"+nr).css({ width:w });
+			});
 			
 			// make sortable
 			items=$("table.grid tbody");
 			$(items).sortable({
 				axis:'y',
 				cursor:'move',
-				// sort:function() {
-				// 	// set width of helper cells same as width of grid cells
-				// 	$("table.grid thead tr:first td").each(function() {
-				// 		// if ($(this).css("display")=="none") 
-				// 		// 	w=0;
-				// 		// else
-				// 			w=$(this).width();
-				// 		nr=get_nr($(this));
-				// 		// console.log("nr:"+nr+" ="+w);
-				// 		$("tr.ui-sortable-helper td.nr"+nr).css({ width:w });
-				// 	});
-				// },
-				update:function() {
-					// prepare ajax request
-					//ser=$(items).sortable("serialize",{attribute:"class",expression:" id(.+)[ ]",key:"id[]"});
-					ser=serialize("table.grid tbody tr");
+				appendTo:"body",
+				start: function(event,ui) {
+					// hide all branches if any
+					id=get_id($(ui.item));
+					hide_branches(id);
+					// remove current
+					$("table.grid tbody tr").removeClass("current");
+				},
+				update:function(event,ui) {
 					table=$("table.grid").attr("class");
 					table=table.replace("grid","");
 					table=$.trim(table);
+					// show hidden branches if any
+					id=get_id($(ui.item));
+					// check if dropped on another branch
+					nextRow=$(ui.item).next("tr");
+					if (nextRow.length>0) {
+						newParentId=get_subclass("parent_id_",$(nextRow));
+						if (newParentId=="") newParentId=0;
+					}
+					else
+						newParentId=0;
+					if (newParentId>=0) {
+						// Yes, it has been moved to another branch
+						
+						// Set parent_id in table
+						parentId=get_subclass("parent_id_",$(ui.item));
+						$("table.grid tbody tr#"+id).removeClass("parent_id_"+parentId);
+						if (newParentId>0) $("table.grid tbody tr#"+id).addClass("parent_id_"+newParentId);
+						// Count Current nodes
+						SpanNodes=$("table.grid tbody tr#"+id+" td.str:first").children(".emptynode");
+						// Count Next nodes
+						nextRow=$("table.grid tbody tr#"+id).next("tr");
+						nextSpanNodes=$(nextRow).children("td.str:first").children(".emptynode");
+						if (SpanNodes.length!=nextSpanNodes.length) {
+							shiftNodes(id,nextSpanNodes.length-SpanNodes.length,newParentId);
+						}
+						// Set own parent with AJAX request
+						url="admin/ajax/edit/"+table+"/"+id+"/self_parent/"+newParentId;
+						$.get(url,"",function(data) {
+								if (data!="") {
+									// error
+									alert(data);
+								}
+							});							
+					}
+
+					// show the branches again, and set current classes
+					show_branches(id);
+					$(ui.item).addClass("current");
+
+					// prepare ajax request to re-order the table in the database
+					ser=serialize("table.grid tbody tr");
 					url="admin/ajax/order/"+table;
 					// ajax request
 					$.post(url,ser,function(data) {
@@ -438,6 +483,46 @@ function lang(line) {
 function langp(line,p) {
 	s=lang(line);
 	return s.replace(/%s/g,p);
+}
+
+
+function hide_branches(parent_id) {
+	$("table.grid tbody tr.parent_id_"+parent_id).each(function(){
+		id=get_id($(this));
+		hide_branches(id);
+		$(this).hide().addClass("hidden_branch");
+	});
+}
+function show_branches(id) {
+	$("table.grid tbody tr.hidden_branch").clone().show().removeClass("hidden_branch").addClass("current").insertAfter("table.grid tbody tr#"+id);
+	$("table.grid tbody tr.hidden_branch").remove();
+}
+
+function shiftNodes(id,add,newParentId) {
+	if (add<0) {
+		for (n=add; n<0; n++) {
+			$("table.grid tbody tr#"+id+" td.str:first span.emptynode:first").remove();
+			$("table.grid tbody tr.hidden_branch").each(function(){
+				$(this).children("td").children("span.emptynode:first").remove();
+			});
+		}
+		empty=$("table.grid tbody tr#"+id+" td.str:first span.emptynode").length;
+		if (empty==0) $("table.grid tbody tr#"+id+" td.str:first span.lastnode").remove();
+	}
+	if (add>0) {
+		emptyNode="<span class=\"emptynode\">&nbsp;</span>";
+		last=$("table.grid tbody tr#"+id+" td.str span.lastnode").length;
+		if (last==0) {
+			$("table.grid tbody tr#"+id).addClass("parent_id_"+newParentId);
+			$("table.grid tbody tr#"+id+" td.str:first").prepend("<span class=\"lastnode\">&nbsp;</span>");
+		}
+		for (n=0; n<add; n++) {
+			$("table.grid tbody tr#"+id+" td.str span.lastnode").before(emptyNode);
+			$("table.grid tbody tr.hidden_branch").each(function(){
+				$(this).children("td.str").children("span.lastnode").before(emptyNode);
+			});
+		}
+	}
 }
 
 

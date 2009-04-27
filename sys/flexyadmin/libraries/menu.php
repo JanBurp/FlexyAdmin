@@ -69,6 +69,7 @@ class Menu {
 	}
 
 	function set_menu_from_table($table="") {
+		$counter=1;
 		$CI =& get_instance();
 		if (empty($table)) {
 			$table=$CI->cfg->get('CFG_configurations',"str_menu_table");
@@ -91,10 +92,12 @@ class Menu {
 				if (isset($item[$this->fields["uri"]])) $thisItem["uri"]=$item[$this->fields["uri"]];	else $thisItem["uri"]=$item[$this->fields["title"]];
 				if (isset($item[$this->fields["class"]])) $thisItem["class"]=$item[$this->fields["class"]];
 				if (isset($item[$this->fields["parent"]])) $parent=$item[$this->fields["parent"]]; else $parent="";
-				$menu[$parent][$item[$this->fields["title"]]]=$thisItem;
+				if (isset($menu[$parent][$item[$this->fields["title"]]]))
+					$menu[$parent][$item[$this->fields["title"]]."__".$counter++]=$thisItem;
+				else
+					$menu[$parent][$item[$this->fields["title"]]]=$thisItem;
 			}
 		}
-		
 		// Set submenus on right place in array
 		$item=end($menu);
 		while ($item) {
@@ -231,6 +234,8 @@ class Menu {
 			// render item or submenu
 			if (isset($item["uri"])) {
 				$showName=ascii_to_entities($name);
+				$pre=get_prefix($showName,"__");
+				if (!empty($pre)) $showName=$pre;
 				if (isset($item["help"])) $showName=help($showName,$item["help"]);
 				$out.=anchor($this->tmp($this->tmpUrl,$thisUri), $showName, array("class"=>$class));
 				// if (!empty($this->itemControls)) $out.=$this->tmp($this->itemControls,$thisUri);
