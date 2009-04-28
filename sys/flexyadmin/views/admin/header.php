@@ -18,7 +18,7 @@
 	<link rel="stylesheet" type="text/css" href="<?=admin_assets()?>js/jquery/ui/theme/ui.all.css" />
 
 	<script language="javascript" type="text/javascript" src="<?=admin_assets()?>js/jquery/jquery-1.3.2.min.js"></script>
-	<script language="javascript" type="text/javascript" src="<?=admin_assets()?>js/jquery/ui/jquery-ui-1.7.custom.min.js"></script>
+	<script language="javascript" type="text/javascript" src="<?=admin_assets()?>js/jquery/ui/jquery-ui-1.7.1.custom.min.js"></script>
 
 	<script language="javascript" type="text/javascript" src="<?=admin_assets()?>js/jquery/plugins/filterable/jquery.filterable.min.js"></script>
 	<script language="javascript" type="text/javascript" src="<?=admin_assets()?>js/jquery/plugins/tablesorter/jquery.tablesorter.min.js"></script>
