@@ -28,3 +28,12 @@
 #dialog{
 	width:405px;
 }
+
+/* ============== popup ================ */
+#popup p {
+	width:392px;
+	height:auto;
+	text-align:left;
+	margin:5px;
+	padding-bottom:10px;
+}

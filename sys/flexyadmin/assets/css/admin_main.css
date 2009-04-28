@@ -50,7 +50,8 @@ h3 {
 }
 
 p {
-	margin:0px 0px 10px;}
+	margin:0px 0px 10px;
+}
 
 img {
 	border:none;
@@ -123,6 +124,9 @@ img {
 
 span.help {
 	cursor:help;
+	margin:0px;
+	padding:0px;
+	width:auto;
 }
 
 #popup {
@@ -144,7 +148,7 @@ span.help {
 
 /* ============== icons ================== */
 
-span.hide {
+.hide {
 	display:none;
 	}
 .icon {
@@ -424,7 +428,6 @@ td.tree {
 }
 .emptynode {
 	float:left;
-	font-size:0px;
 	overflow:hidden;
 	width:20px;
 }
@@ -845,6 +848,9 @@ div#ui {
 	display:none;
 }
 div#ui_messages {
+	display:none;
+}
+div#help_messages {
 	display:none;
 }
 

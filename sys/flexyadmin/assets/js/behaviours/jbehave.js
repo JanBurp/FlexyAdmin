@@ -2,7 +2,7 @@ $(document).ready(function() {
 
 	// Check modes
 	dialog=$("#ui");
-	popup=$("#popup");
+	Popup=$("#popup");
 	isForm=$("#content").hasClass("form");
 	isGrid=$("#content").hasClass("grid");
 	isTree=$("#content").hasClass("tree");
@@ -19,21 +19,22 @@ $(document).ready(function() {
 	var HideDelay;
 	$("span.help").mouseenter(function() {
 		obj=$(this);
+		helpName=get_subclass("help_",$(this));
 		ShowDelay=setTimeout( function() {		
-			// helpFor=$(obj).html();
-			helpTxt=$(obj).children("span.hide").html();
+			helpTxt=$("#help_messages span#help_"+helpName).html();
+			// helpTxt=$(obj).children("span.hide").html();
 			html=helpTxt;
-			$(popup).html(html).fadeIn(150);
+			$(Popup).html(html).fadeIn(150);
 			HideDelay=setTimeout( function(){
-				$(popup).fadeOut(1000);
+				$(Popup).fadeOut(1000);
 			},5000 );
 		},1000);
 	}).mouseout(function() {
 		clearTimeout(ShowDelay);
-		$(popup).fadeOut(150);
+		$(Popup).fadeOut(150);
 	}).mousemove(function(e){
 		clearTimeout(HideDelay);
-    $(popup).css({left:e.pageX+8,top:e.pageY+18});
+    $(Popup).css({left:e.pageX+8,top:e.pageY+18});
   }); 
   
 
@@ -56,6 +57,7 @@ $(document).ready(function() {
 			pwd=randomPassword(10);
 			$(this).prev("input.password").attr("value",pwd);
 		});
+	
 	
 		//
 		// Media dropdown
@@ -158,7 +160,7 @@ $(document).ready(function() {
 		}
 
 		//
-		// if 'self_parent' is there hide that column, add parent_id class to row, and add content to next column
+		// if 'self_parent' is there hide that column, add parent_id class to row, and visual nodes to next (str) column
 		//
 		$("table.grid td.self_parent").each(function(){
 			html=$(this).html();
@@ -169,6 +171,7 @@ $(document).ready(function() {
 				// create new html
 				newHtml='<span class="emptynode">'+html;
 				newHtml=newHtml.replace(/\//g,'</span><span class="emptynode">');
+				
 			}
 			next=$(this).parent("tr").children("td.str:first");
 			if (html.length>0) {			
@@ -177,6 +180,7 @@ $(document).ready(function() {
 			else {
 				newHtml=$(next).html();
 			}
+			newHtml=newHtml.replace(/>[^<>]*<\//g,">&nbsp;<\/"); // replace texts with &nbsp;
 			$(next).html(newHtml);
 		});
 		$("table.grid .self_parent").hide();
@@ -303,7 +307,8 @@ $(document).ready(function() {
 			$("table.grid tbody td.order").empty().append('<div class="icon order" title="order"></div>');
 			$("table.grid thead th.order").empty();
 
-			// set width of cells!
+			// set width and height of cells!
+			$("table.grid tbody tr").css({ height:"16px" });
 			$("table.grid tbody tr:first td").each(function() {
 				if ($(this).css("display")=="none") w=0; else	w=$(this).width()+"px";
 				nr=get_nr($(this));

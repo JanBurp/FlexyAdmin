@@ -110,13 +110,23 @@ function replace_html($sTag,$sReplace,$sSource) {
 	return preg_replace("/(<\/?(".$sTag."|".strtoupper($sTag).")\s\/?>)/",$sReplace,$sSource);
 }
 
-function clean_string($s) {
+function clean_string($s,$c=0) {
 	$a='ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ';
 	$b='aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr';
 	$s=utf8_decode($s);
 	$s=strtr($s,utf8_decode($a),$b);
 	$s=ereg_replace("[^A-Za-z0-9_-]", "", $s);
+	if ($c>0) $s=substr($s,0,$c);
 	return utf8_encode($s);
+}
+
+function safe_string($s,$c=0) {
+	$s=strip_tags($s);
+	$s=strtolower($s);
+	$s=trim($s);
+	$s=str_replace(" ","_",$s);
+	if ($c>0) $s=substr($s,0,$c);
+	return $s;
 }
 
 function strip_string($s,$c=0) {
