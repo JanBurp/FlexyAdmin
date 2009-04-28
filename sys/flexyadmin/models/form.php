@@ -262,16 +262,17 @@ class Form Extends Model {
 		return $uriField;
 	}
 
-	function _existing_uri($uri,$table) {
+	function _existing_uri($uri,$table,$id) {
 		$this->db->select("uri");
 		$this->db->where("uri",$uri);
+		$this->db->where("id !=",$id);
 		$uris=$this->db->get_result($table);
 		if (empty($uris))
 			return FALSE;
 		return current($uris);
 	}
 
-	function _create_uri($original_uri,$table) {
+	function _create_uri($original_uri,$table,$id) {
 		static $counter=1;
 		// lowercase
 		$uri=strtolower($original_uri);
@@ -283,7 +284,7 @@ class Form Extends Model {
 		$forbidden=array("site","sys","admin");
 		if (in_array($uri,$forbidden)) $uri="_".$uri;
 		// check if uri exists allready
-		while ($this->_existing_uri($uri,$table)) {
+		while ($this->_existing_uri($uri,$table,$id)) {
 			$uri=$uri."_".$counter++;
 		}
 		return $uri;
@@ -347,7 +348,7 @@ class Form Extends Model {
 				 */
 				if (isset($uri)) {
 					$original_uri_field=$this->_get_uri_field(array_keys($set));
-					$uri=$this->_create_uri($set[$original_uri_field],$table);
+					$uri=$this->_create_uri($set[$original_uri_field],$table,$id);
 					$set["uri"]=$uri;
 				}
 
