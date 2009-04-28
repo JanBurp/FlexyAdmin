@@ -254,8 +254,8 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			unset($result["options"]);
 			unset($result["multi_options"]);
 			$result=$this->_make_tree_result($result);
-			if ($options) $result=array_merge($result,$options);
-			if ($multiOptions) $result=array_merge($result,$multiOptions);
+			if ($options) $result["options"]=$options;
+			if ($multiOptions) $result["multi_options"]=$multiOptions;
 		}
 		return $result;
 	}

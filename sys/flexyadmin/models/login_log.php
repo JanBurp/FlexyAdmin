@@ -23,15 +23,17 @@
 			$this->db->order_by("tme_login_time DESC");
 			$query=$this->db->get($this->config->item('LOG_table_prefix')."_".$this->config->item('LOG_login'));
 			$row=$query->row();
-			$log_id=$row->id;
-			$changedTables=$row->str_changed_tables;
-			// add this changed table, if its not there now
-			if (strpos($changedTables,$table)===FALSE) {
-				$changedTables=add_string($changedTables,$table);
-				// update
-				$this->db->where("id",$log_id);
-				$this->db->set("str_changed_tables",$changedTables);
-				$this->db->update($this->config->item('LOG_table_prefix')."_".$this->config->item('LOG_login'));
+			if (!empty($row)) {
+				$log_id=$row->id;
+				$changedTables=$row->str_changed_tables;
+				// add this changed table, if its not there now
+				if (strpos($changedTables,$table)===FALSE) {
+					$changedTables=add_string($changedTables,$table);
+					// update
+					$this->db->where("id",$log_id);
+					$this->db->set("str_changed_tables",$changedTables);
+					$this->db->update($this->config->item('LOG_table_prefix')."_".$this->config->item('LOG_login'));
+				}
 			}
 		}
 	}
