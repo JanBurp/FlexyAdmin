@@ -348,7 +348,7 @@ tr.caption td				{ border:none; }
 .grid .caption td		{ padding:0px;}
 
 .grid td.id,
-.grid td.edit				{ text-align:center; width:42px; min-width:42px; padding-right:10px; }
+.grid td.edit				{ width:42px; min-width:42px; padding-right:10px; }
 .grid td.edit				{ width: 30px; min-width:30px; padding-right:5px; }
 .grid th.uri,
 .grid td.uri				{ display:none; }
