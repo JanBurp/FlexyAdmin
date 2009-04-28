@@ -231,18 +231,21 @@ class BasicController extends MY_Controller {
 		$ok=FALSE;
 		$pre=get_prefix($table);
 		$preAll=$pre."_*";
-		// has admin rights?
-		if ($id==="MEDIA")
-			$rights=$this->media_rights;
+		if ($id==="MEDIA") $rights=$this->media_rights;	else $rights=$this->table_rights;
+		$rightsTables=split("-",$rights);
+		$okTables=trim($rightsTables[0]);
+		if (isset($rightsTables[1]))
+			$forbiddenTables=trim($rightsTables[1]);
 		else
-			$rights=$this->table_rights;
+			$forbiddenTables="";
+		// has admin rights?
 		if ($rights=="*")
 			$ok=TRUE;
 		// has rights for exactly this table?
-		elseif (strpos($rights,$table)!==FALSE)
+		elseif (strpos($okTables,$table)!==FALSE)
 			$ok=TRUE;
 		// has rights for all tables with this prefix
-		elseif ($id!=="MEDIA" and strpos($rights,$preAll)!==FALSE)
+		elseif ($id!=="MEDIA" and strpos($okTables,$preAll)!==FALSE and strpos($forbiddenTables,$table)===FALSE)
 			$ok=TRUE;
 		// has rights for own user form
 		elseif ($table==$this->config->item('CFG_table_prefix')."_".$this->config->item('CFG_users') and $id==$this->session->userdata("user_id"))

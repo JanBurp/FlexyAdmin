@@ -332,45 +332,46 @@ $(document).ready(function() {
 					table=$("table.grid").attr("class");
 					table=table.replace("grid","");
 					table=$.trim(table);
-					// show hidden branches if any
 					id=get_id($(ui.item));
-					// check if dropped on another branch
-					nextRow=$(ui.item).next("tr");
-					if (nextRow.length>0) {
-						newParentId=get_subclass("parent_id_",$(nextRow));
-						if (newParentId=="") newParentId=0;
-					}
-					else
-						newParentId=0;
-					if (newParentId>=0) {
-						// Yes, it has been moved to another branch
-						
-						// Set parent_id in table
-						parentId=get_subclass("parent_id_",$(ui.item));
-						$("table.grid tbody tr#"+id).removeClass("parent_id_"+parentId);
-						if (newParentId>0) $("table.grid tbody tr#"+id).addClass("parent_id_"+newParentId);
-						// Count Current nodes
-						SpanNodes=$("table.grid tbody tr#"+id+" td.str:first").children(".emptynode");
-						// Count Next nodes
-						nextRow=$("table.grid tbody tr#"+id).next("tr");
-						nextSpanNodes=$(nextRow).children("td.str:first").children(".emptynode");
-						if (SpanNodes.length!=nextSpanNodes.length) {
-							shiftNodes(id,nextSpanNodes.length-SpanNodes.length,newParentId);
+					
+					// check if there are branches
+					if ($("table.grid tr td.self_parent").length>0) {
+						// check if dropped on another branch
+						nextRow=$(ui.item).next("tr");
+						if (nextRow.length>0) {
+							newParentId=get_subclass("parent_id_",$(nextRow));
+							if (newParentId=="") newParentId=0;
 						}
-						// Set own parent with AJAX request
-						url="admin/ajax/edit/"+table+"/"+id+"/self_parent/"+newParentId;
-						$.get(url,"",function(data) {
-								if (data!="") {
-									// error
-									alert(data);
-								}
-							});							
+						else
+							newParentId=0;
+						if (newParentId>=0) {
+							// Yes, it has been moved to another branch
+							// Set parent_id in table
+							parentId=get_subclass("parent_id_",$(ui.item));
+							$("table.grid tbody tr#"+id).removeClass("parent_id_"+parentId);
+							if (newParentId>0) $("table.grid tbody tr#"+id).addClass("parent_id_"+newParentId);
+							// Count Current nodes
+							SpanNodes=$("table.grid tbody tr#"+id+" td.str:first").children(".emptynode");
+							// Count Next nodes
+							nextRow=$("table.grid tbody tr#"+id).next("tr");
+							nextSpanNodes=$(nextRow).children("td.str:first").children(".emptynode");
+							if (SpanNodes.length!=nextSpanNodes.length) {
+								shiftNodes(id,nextSpanNodes.length-SpanNodes.length,newParentId);
+							}
+							// Set own parent with AJAX request
+							url="admin/ajax/edit/"+table+"/"+id+"/self_parent/"+newParentId;
+							$.get(url,"",function(data) {
+									if (data!="") {
+										// error
+										alert(data);
+									}
+								});							
+						}
+						// show the branches again
+						show_branches(id);
 					}
-
-					// show the branches again, and set current classes
-					show_branches(id);
+					
 					$(ui.item).addClass("current");
-
 					// prepare ajax request to re-order the table in the database
 					ser=serialize("table.grid tbody tr");
 					url="admin/ajax/order/"+table;

@@ -61,7 +61,7 @@ class order extends Model {
 		* Reset order, gives them a new fresh order, but ordering stays same
 		*/
 	function reset($table,$shift=0) {
-		$this->db->order_as_tree();
+		if ($this->is_a_tree($table))	$this->db->order_as_tree();
 		$this->db->select($this->pk);
 		$result=$this->db->get_result($table);
 		$ids=array();

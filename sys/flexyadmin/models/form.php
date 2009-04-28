@@ -355,7 +355,6 @@ class Form Extends Model {
 				 * Set order
 				 */
 				if (isset($set["order"])) {
-
 					if ($id==-1) {
 						$set["order"]=1;
 						if (isset($set["self_parent"]))
