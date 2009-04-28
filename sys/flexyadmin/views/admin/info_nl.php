@@ -10,6 +10,10 @@
 <h2>Met dank aan</h2>
 <p><a href="http://www.arnoudvandenheuvel.nl/" target="_blank">Arnoud van den Heuvel</a> voor de flexibele blokjes.<br /><a href="http://www.nervo.nl/" target="_blank">Emanuel Nervo</a> e.a. voor tips.</p>
 
+<h2>Welke browser?</h2>
+Het admin gedeelte van FlexyAdmin werkt op moderne browsers.<br/>
+Mocht je problemen ondervinden, gebruik dan de gratis en veilige <a href="http://www.mozilla.org/firefox">Firefox</a> browser.
+
 <p>&nbsp;</p>
 <p><a href="http://www.flexyadmin.com" target="_blank">FlexyAdmin 2009 r<?=$revision?></a></p>
 

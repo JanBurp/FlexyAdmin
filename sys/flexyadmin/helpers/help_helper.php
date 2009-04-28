@@ -1,9 +1,10 @@
 <?
 
 function help($s,$help) {
-	// return $s.img(admin_assets("icons/file.gif"));
-	// return $s.icon("help");
-	return span("help").$s.span("hide").$help._span()._span();
+	$CI =& get_instance();
+	$class=$CI->_add_help($help);
+	// return span("help $class").$s.span("hide").$help._span()._span();
+	return span("help $class").$s._span();
 }
 
 

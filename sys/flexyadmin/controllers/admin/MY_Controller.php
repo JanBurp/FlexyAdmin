@@ -274,6 +274,7 @@ class AdminController extends BasicController {
 	var $content;
 	var $showEditor;
 	var $showType;
+	var $helpTexts;
 
 	function AdminController() {
 		parent::BasicController(true);
@@ -289,6 +290,7 @@ class AdminController extends BasicController {
 		$this->load->model("ui_names","uiNames");
 		$this->load->helper("language");
 		$this->load->library("menu");
+		$this->helpTexts=array();
 	}
 
 	function set_message($message) {
@@ -412,6 +414,7 @@ class AdminController extends BasicController {
 		$footer=array(	"view"		=> $extra_view,
 										"data"		=> $data,
 										"dialog"  => $lang,
+										"help"		=> $this->helpTexts,
 										"local"		=> $this->config->item('LOCAL'),
 										"site"		=> $siteInfo["url_url"],
 										"user"		=> ucwords($this->user),
@@ -473,6 +476,16 @@ class AdminController extends BasicController {
 	}
 	function _add_content($add) {
 		$this->content.=$add;
+	}
+	
+	function _add_help($help,$name="") {
+		static $counter=0;
+		if (empty($name)) {
+			$name=safe_string($help,10);
+		}
+		$name="help_".$counter++."_$name";
+		$this->helpTexts[$name]=$help;
+		return $name;
 	}
 
 	/**
