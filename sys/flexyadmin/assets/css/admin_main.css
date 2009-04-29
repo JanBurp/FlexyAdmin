@@ -384,45 +384,6 @@ img.zoom { border:1px solid #333; cursor:pointer; }
 
 /* =============== Tree ===================== */
 
-td.tree {
-	border:none;
-	font-size:1.2em;
-}
-.tree ul {
-	padding-left:10px;
-	margin:0px;
-}
-.tree li {
-	list-style:none;
-	background-color:#fff;
-	background-image:url("../icons/tree_line.gif");
-	background-repeat:repeat-y;
-	background-position:10px 0px;
-	padding:5px 5px 5px 10px;
-	margin:0px;
-}
-.tree li.current {
-/*	background-color:#FFEEEE;*/
-}
-.tree li.last {
-	background-image:url("../icons/tree_lastnode.gif");
-	background-repeat:no-repeat;
-}
-.tree li a {
-	background-repeat:no-repeat;
-	padding-left:20px;
-}
-.tree li.last a {
-/*	background-image:url("../icons/tree_lastnode.gif");*/
-}
-.tree li a.edit,
-.tree li a.delete {
-	background-image:none;
-}
-.tree li.current,
-.tree li:hover {
-}
-
 .node {
 	color:#BCA;
 }
@@ -464,10 +425,15 @@ table.grid thead .order,
 }
 
 /** drag helper: for sorting **/
-table.grid tr.ui-sortable-helper td {
-	}
-
-
+.ui-sortable-helper {
+	filter:alpha(opacity=80);
+	opacity: 0.8;
+	-moz-opacity:0.8;
+	border:solid 1px #CD9;
+}
+.foldednode {
+	font-style:italic;
+}
 /* ============== filemanager ================== */
 
 .icons {
