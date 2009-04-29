@@ -330,6 +330,10 @@ $(document).ready(function() {
 					// remove current
 					$("table.grid tbody tr").removeClass("current");
 				},
+				stop: function(event,ui){
+					// show the branches again
+					show_branches(id);					
+				},
 				update:function(event,ui) {
 					table=$("table.grid").attr("class");
 					table=table.replace("grid","");
@@ -369,11 +373,12 @@ $(document).ready(function() {
 									}
 								});							
 						}
-						// show the branches again
-						show_branches(id);
 					}
 					
+					// show the branches again
+					show_branches(id);
 					$(ui.item).addClass("current");
+					
 					// prepare ajax request to re-order the table in the database
 					ser=serialize("table.grid tbody tr");
 					url="admin/ajax/order/"+table;
