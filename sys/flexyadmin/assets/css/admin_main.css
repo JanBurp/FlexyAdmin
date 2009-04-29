@@ -429,12 +429,12 @@ td.tree {
 .emptynode {
 	float:left;
 	overflow:hidden;
-	width:20px;
+	width:9px;
 }
 .lastnode {
 	background-image:url("../icons/tree_lastnode.gif");
 	background-repeat:no-repeat;
-	padding-left:20px;
+	padding-left:18px;
 }
 
 /** grid sorter **/

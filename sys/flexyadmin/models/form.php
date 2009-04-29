@@ -353,21 +353,19 @@ class Form Extends Model {
 				}
 
 				/**
-				 * Set order
+				 * Set (new) order
 				 */
 				if (isset($set["order"])) {
 					if ($id==-1) {
-						$set["order"]=1;
-						if (isset($set["self_parent"]))
-							$this->order->shift_up($table,$set["self_parent"]);
+						if (isset($set["self_parent"])) 
+							$set["order"]=$this->order->get_next_order($table,$set["self_parent"]);
 						else
-							$this->order->shift_up($table);
+							$set["order"]=$this->order->get_next_order($table);
 					}
 					elseif (isset($set["self_parent"])) {
 						$old_parent=$this->db->get_field($table,"self_parent",$id);
 						if ($old_parent!=$set["self_parent"]) {
-							$set["order"]=1;
-							$this->order->shift_up($table,$set["self_parent"]);
+							$set["order"]=$this->order->get_next_order($table,$set["self_parent"]);
 						}
 					}
 				}
@@ -437,6 +435,16 @@ class Form Extends Model {
 		}
 		return strval($error);
 	}
+
+	function get_data() {
+		$data=array();
+		foreach($this->data as $name=>$field) {
+			$data[$name]=$field;
+			$data[$name]["value"]=$field["repopulate"];
+		}
+		return $data;
+	}
+
 
 
 /**

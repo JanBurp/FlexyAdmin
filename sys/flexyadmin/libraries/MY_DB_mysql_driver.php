@@ -39,7 +39,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		$this->add_options(FALSE);
 		$this->max_text_len();
 		$this->where_uri();
-		// $this->order_as_tree(FALSE);
+		$this->order_as_tree(FALSE);
 	}
 
 	/**
@@ -51,6 +51,11 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		$this->pk=$pk;
 	}
 
+	function has_field($table,$field) {
+		$f=$this->list_fields($table);
+		return (in_array($field,$f));
+	}
+
 	/**
 	 * Searches for a standard order field in config table.
 	 * If no explicit order set, decides according to prefixen what order field to take.
@@ -58,37 +63,35 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 */
 	function _set_standard_order($table) {
 		$order="";
-		$CI=& get_instance();
-		// find in table info
-		$order=$CI->cfg->get('CFG_table',$table,'str_order_by');
-		// or first standard order field
-		if (empty($order) and !empty($table)) {
-			$stdFields=$CI->config->item('ORDER_default_fields');
-			$fields=$this->list_fields($table);
-			do {
-				$curr=current($stdFields);
-				$curr=explode(" ",$curr);
-				$testField=trim($curr[0]);
-				reset($fields);
-				do {
-					if (strncmp($testField,current($fields),strlen($testField))==0) {
-						$order=current($fields);
-						if (isset($curr[1])) $order.=" ".$curr[1];
-					}
-				} while (empty($order) and next($fields));
-			}
-			while (empty($order) and next($stdFields));
-			// check if it is a tree
-			if ($order=="order" and in_array("self_parent",$fields)) {
-				$this->order_as_tree();
-			}
-		}
 		if ($this->orderAsTree) {
 			$this->order_by("self_parent");
 			$this->order_by("order");
+			$order="self_parent";
 		}
-		else
+		else {
+			$CI=& get_instance();
+			// find in table info
+			$order=$CI->cfg->get('CFG_table',$table,'str_order_by');
+			// or first standard order field
+			if (empty($order) and !empty($table)) {
+				$stdFields=$CI->config->item('ORDER_default_fields');
+				$fields=$this->list_fields($table);
+				do {
+					$curr=current($stdFields);
+					$curr=explode(" ",$curr);
+					$testField=trim($curr[0]);
+					reset($fields);
+					do {
+						if (strncmp($testField,current($fields),strlen($testField))==0) {
+							$order=current($fields);
+							if (isset($curr[1])) $order.=" ".$curr[1];
+						}
+					} while (empty($order) and next($fields));
+				}
+				while (empty($order) and next($stdFields));
+			}
 			$this->order_by($order);
+		}
 		return $order;
 	}
 
@@ -247,8 +250,9 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		return $this->get_result($table,$limit,$offset);
 	}
 	function get_result($table,$limit=0,$offset=0) {
+		$orderAsTree=$this->orderAsTree;
 		$result=$this->_get_result($table,$limit,$offset);
-		if ($this->orderAsTree and !empty($result)) {
+		if ($orderAsTree and !empty($result)) {
 			$options=el("options",$result);
 			$multiOptions=el("multi_options",$result);
 			unset($result["options"]);
@@ -368,7 +372,6 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			}
 			$result=$this->_add_many_options($result,$manyTables);
 		}
-
 		log_("info","[DB+] data ready");
 		$this->reset();
 		return $result;
@@ -382,21 +385,24 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		return array2xml($this->get_result($table,$limit,$offset));
 	}
 		
-	function get_row($table,$limit=0,$offset=0) {
-		if ($limit>1)
-			$data=$this->get_result($table,$limit,$offset);
+	function get_row($table,$offset=0) {
+		if ($offset>1)
+			$data=$this->get_result($table,1,$offset);
 		else
-			$data=$this->get_result($table);
+			$data=$this->get_result($table,1);
 		return current($data);
 	}
 	
-	function get_field_where($table,$field,$where,$what="") {
-		$sql="SELECT `$field` FROM `$table` WHERE `$where`='$what'";
+	function get_field_where($table,$field,$where="",$what="") {
+		if (empty($where) or empty($what))
+			$sql="SELECT `$field` FROM `$table` LIMIT 1";
+		else
+			$sql="SELECT `$field` FROM `$table` WHERE `$where`='$what'";
 		$query=$this->query($sql);
 		$row=$query->row_array();
 		return $row[$field];
 	}
-	function get_field($table,$field,$id) {
+	function get_field($table,$field,$id="") {
 		return $this->get_field_where($table,$field,$this->pk,$id);
 	}
 	

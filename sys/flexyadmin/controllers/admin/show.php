@@ -174,6 +174,9 @@ class Show extends AdminController {
 					/**
 					 * get data
 					 */
+					if ($this->db->has_field($table,"self_parent")) {
+						$this->db->order_as_tree();
+					}
 					$this->db->add_foreigns_as_abstracts();
 					$this->db->add_many();
 					$this->db->max_text_len(250);
@@ -258,7 +261,6 @@ class Show extends AdminController {
 			$this->db->add_options();
 			if ($id!="") $this->db->where($table.".".pk(),$id);
 			$data=$this->db->get_result($table);
-			// trace_($data);
 			$options=el("options",$data);
 			$multiOptions=el("multi_options",$data);
 			$data=current($data);
