@@ -96,17 +96,42 @@ class Edit extends AdminController {
 				}
 
 				/**
+				 * Check if it is a tree, if so, and has branches, move the branch up
+				 */
+				if ($this->db->has_field($table,"self_parent")) {
+					$this->load->model("order");
+					// get info from current
+					$this->db->where(pk(),$id);
+					$this->db->select("order,self_parent");
+					$row=$this->db->get_row($table);
+					$parent=$row["self_parent"];
+					$order=$row["order"];
+					// get branches
+					$this->db->where("self_parent",$id);
+					$this->db->select(pk());
+					$branches=$this->db->get_result($table);
+					$count=count($branches);
+					// shift order of branches in same branch
+					$this->order->shift_up($table,$parent,$count,$order);
+					// update branches
+					foreach($branches as $branch=>$value) {
+						$this->db->set("self_parent",$parent);
+						$this->db->set("order",$order++);
+						$this->db->where(pk(),$value[pk()]);
+						$this->db->update($table);
+					}
+				}
+
+				/**
 				 * Remove database entry
 				 */
-
 				$this->db->where(pk(),$id);
 				$this->db->delete($table);
-				log_("info","[FD] delete item '$id' from '$table'");
+				log_("info","[FD] delete item '$id' from '$table'");				
 
 				/**
 				 * Check if some data set in rel tables (if exists), if so delete them also
 				 */
-
 				$jTables=$this->db->get_many_tables($table);
 				if (!empty($jTables)) {
 					foreach ($jTables as $jt=>$jItem) {

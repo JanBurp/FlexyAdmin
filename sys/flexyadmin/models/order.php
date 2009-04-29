@@ -76,38 +76,34 @@ class order extends Model {
 		foreach($result as $id=>$v) $ids[]=$id;
 		$this->set_all($table,$ids,$shift);
 	}
-	function shift_up($table,$parent=0) {
+	function shift_up($table,$parent=0,$up=1,$from=0) {
 		if ($this->is_a_tree($table)) {
 			$this->db->where("self_parent",$parent);
+			if ($from!=0) $this->db->where("order >",$from);
 			$this->db->select($this->pk);
 			$result=$this->db->get_result($table);
 			$ids=array();
 			foreach($result as $id=>$v) $ids[]=$id;
-			$this->set_all($table,$ids,1);
+			$this->set_all($table,$ids,$up,$from);
 		}
 		else
-			$this->reset($table,1);
+			$this->reset($table,$up);
 	}
 	/**
 		* Gives all items a new order according to the order of $ids array
 		*/
-	function set_all($table,$ids,$shift=0) {
+	function set_all($table,$ids,$shift=0,$from=0) {
 		$isTree=$this->is_a_tree($table);
 		$orders=array();
 		foreach($ids as $id) {
-			if ($isTree) {
-				$this->db->select(array($this->pk,"self_parent"));
-				$this->db->where($this->pk,$id);
-				$row=$this->db->get_result($table);
-				$row=current($row);
-				$parent=$row["self_parent"];
-			}
+			if ($isTree)
+				$parent=$this->db->get_field($table,"self_parent",$id);
 			else
 				$parent=0;
 			if (isset($orders[$parent]))
 				$orders[$parent]++;
 			else
-				$orders[$parent]=1+$shift;
+				$orders[$parent]=$from+$shift;
 			$this->db->where($this->pk,$id);
 			$this->db->update($table, array($this->order => $orders[$parent] ));
 		}
