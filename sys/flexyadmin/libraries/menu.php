@@ -82,7 +82,7 @@ class Menu {
 		// get data form menu_table
 		$CI->db->select(pk());
 		$CI->db->select($fields);
-		$CI->db->order_as_tree();
+		if (in_array("self_parent",$fields)) $CI->db->order_as_tree();
 		$items=$CI->db->get_result($table);
 		// trace_($items);
 		$menu=array();
