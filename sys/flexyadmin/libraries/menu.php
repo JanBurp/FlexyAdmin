@@ -84,6 +84,7 @@ class Menu {
 		$CI->db->select($fields);
 		$CI->db->order_as_tree();
 		$items=$CI->db->get_result($table);
+		// trace_($items);
 		$menu=array();
 		foreach($items as $item) {
 			if (!isset($item[$this->fields["visible"]]) or ($item[$this->fields["visible"]]) ) {
@@ -98,6 +99,7 @@ class Menu {
 					$menu[$parent][$item[$this->fields["title"]]]=$thisItem;
 			}
 		}
+		// trace_($menu);
 		// Set submenus on right place in array
 		$item=end($menu);
 		while ($item) {
@@ -111,7 +113,7 @@ class Menu {
 			}
 			$item=prev($menu);
 		}
-
+		// trace_($menu);
 		// set first
 		reset($menu);
 		$menu=current($menu);
