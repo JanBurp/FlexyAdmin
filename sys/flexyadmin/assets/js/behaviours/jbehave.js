@@ -169,18 +169,21 @@ $(document).ready(function() {
 				parent_id=html.substring(1,html.indexOf(" ")-1);
 				$(this).parent("tr").addClass("parent_id_"+parent_id);
 				// create new html
-				newHtml='<span class="emptynode">'+html;
-				newHtml=newHtml.replace(/\//g,'</span><span class="emptynode">');
-				
+				if (html.indexOf("/")<0)
+					newHtml='<span class="emptynode">&nbsp;</span>';
+				else {
+					newHtml='<span class="emptynode">&nbsp;</span>'+html;
+					newHtml=newHtml.replace(/[^\/]*\//g,'<span class="emptynode">&nbsp;</span>');
+					newHtml=newHtml.substr(0,newHtml.lastIndexOf('>')+1);
+				}
 			}
 			next=$(this).parent("tr").children("td.str:first");
 			if (html.length>0) {			
-				newHtml=newHtml+'</span><span class="lastnode">&nbsp;</span>'+$(next).html();
+				newHtml=newHtml+'<span class="lastnode">&nbsp;</span>'+$(next).html();
 			}
 			else {
 				newHtml=$(next).html();
 			}
-			newHtml=newHtml.replace(/>[^<>]*<\//g,">&nbsp;<\/"); // replace texts with &nbsp;
 			$(next).html(newHtml);
 		});
 		$("table.grid .self_parent").hide();
@@ -308,7 +311,6 @@ $(document).ready(function() {
 			$("table.grid thead th.order").empty();
 
 			// set width and height of cells!
-			$("table.grid tbody tr").css({ height:"16px" });
 			$("table.grid tbody tr:first td").each(function() {
 				if ($(this).css("display")=="none") w=0; else	w=$(this).width()+"px";
 				nr=get_nr($(this));

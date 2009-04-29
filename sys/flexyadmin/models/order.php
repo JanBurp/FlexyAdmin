@@ -56,6 +56,14 @@ class order extends Model {
 		$query = $this->db->get($table);
 		return $query->num_rows();
 	}
+	
+	function get_next_order($table,$parent="") {
+		if (!empty($parent)) $this->db->where("self_parent",$parent);
+		$this->db->select("order");
+		$this->db->order_by("order DESC");
+		$row=$this->db->get_row($table);
+		return $row["order"]+1;
+	} 
 
 	/**
 		* Reset order, gives them a new fresh order, but ordering stays same

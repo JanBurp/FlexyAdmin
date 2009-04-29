@@ -369,9 +369,11 @@ class Flexy_field extends Model {
 		return $out;		
 	}
 
+	// TODO: Meer self_ velden mogelijk (nu alleen nog self_parent)
 	function _self_form() {
 		$this->db->select(array(pk(),"uri","self_parent"));
 		$this->db->where(pk()." !=", $this->id);
+		$this->db->order_as_tree();
 		$res=$this->db->get_result($this->table);
 		$options=array();
 		$options[]="";
