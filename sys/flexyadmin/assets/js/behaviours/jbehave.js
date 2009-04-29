@@ -319,26 +319,39 @@ $(document).ready(function() {
 			
 			// make sortable
 			items=$("table.grid tbody");
+			startPos=0;
 			$(items).sortable({
-				axis:'y',
+				// axis:'y',
+				grid: [25, 1],
 				cursor:'move',
 				appendTo:"body",
 				start: function(event,ui) {
 					// hide all branches if any
 					id=get_id($(ui.item));
-					hide_branches(id);
+					if (hide_branches(id)) {
+						$(ui.helper).children("td.str:first").addClass("foldednode");
+					}
 					// remove current
 					$("table.grid tbody tr").removeClass("current");
 				},
+				sort:function(event,ui){
+					if (startPos==0) {
+						startPos=ui.position.left;
+					}
+				},
 				stop: function(event,ui){
 					// show the branches again
-					show_branches(id);					
+					show_branches(id);
+					$(ui.item).children().removeClass("foldednode");
 				},
 				update:function(event,ui) {
 					table=$("table.grid").attr("class");
 					table=table.replace("grid","");
 					table=$.trim(table);
 					id=get_id($(ui.item));
+					
+					endPos=ui.position.left;
+					shifted=(endPos-startPos)/25;
 					
 					// check if there are branches
 					if ($("table.grid tr td.self_parent").length>0) {
@@ -350,28 +363,43 @@ $(document).ready(function() {
 						}
 						else
 							newParentId=0;
+
+						// Check if shifted to another level under a branch?
+						if ((newParentId==0) && (shifted>0)) {
+							prevRow=$(ui.item).prev("tr");
+							if (prevRow.length>0) {
+								newParentId=get_id($(prevRow));
+								if (newParentId=="") newParentId=0;
+							}
+							console.log("shifted to:"+newParentId);
+						}
+						
 						if (newParentId>=0) {
 							// Yes, it has been moved to another branch
 							// Set parent_id in table
 							parentId=get_subclass("parent_id_",$(ui.item));
 							$("table.grid tbody tr#"+id).removeClass("parent_id_"+parentId);
 							if (newParentId>0) $("table.grid tbody tr#"+id).addClass("parent_id_"+newParentId);
-							// Count Current nodes
-							SpanNodes=$("table.grid tbody tr#"+id+" td.str:first").children(".emptynode");
-							// Count Next nodes
-							nextRow=$("table.grid tbody tr#"+id).next("tr");
-							nextSpanNodes=$(nextRow).children("td.str:first").children(".emptynode");
-							if (SpanNodes.length!=nextSpanNodes.length) {
-								shiftNodes(id,nextSpanNodes.length-SpanNodes.length,newParentId);
+							if (shifted>0)
+								shiftNodes(id,1);
+							else {
+								// Count Current nodes
+								SpanNodes=$("table.grid tbody tr#"+id+" td.str:first").children(".emptynode");
+								// Count Next nodes
+								nextRow=$("table.grid tbody tr#"+id).next("tr");
+								nextSpanNodes=$(nextRow).children("td.str:first").children(".emptynode");
+								if (SpanNodes.length!=nextSpanNodes.length) {
+									shiftNodes(id,nextSpanNodes.length-SpanNodes.length,newParentId);
+								}
 							}
 							// Set own parent with AJAX request
 							url="admin/ajax/edit/"+table+"/"+id+"/self_parent/"+newParentId;
 							$.get(url,"",function(data) {
-									if (data!="") {
-										// error
-										alert(data);
-									}
-								});							
+										if (data!="") {
+											// error
+											alert(data);
+										}
+									});							
 						}
 					}
 					
@@ -455,6 +483,7 @@ function confirm_dialog(obj,item) {
 function clean_message() {$("#message").html("");}
 
 function zoom_dialog(obj) {
+	var src,w,h,ext;
 	src=$(obj).attr('src');
 	w=$(obj).attr('zwidth');
 	h=$(obj).attr('zheight');
@@ -484,6 +513,7 @@ function close_dialog() {
 
 
 function changeButt(id,s) {
+	var h;
 	$("div.ui-dialog-buttonpane").children().each(function(){
 		h=$(this).html();
 		$(this).html(h=h.replace(id,s));
@@ -494,17 +524,22 @@ function lang(line) {
 	return $("div#ui_messages span#"+line).html();
 }
 function langp(line,p) {
+	var s;
 	s=lang(line);
 	return s.replace(/%s/g,p);
 }
 
 
 function hide_branches(parent_id) {
+	var id;
+	var hidden=false;
 	$("table.grid tbody tr.parent_id_"+parent_id).each(function(){
+		hidden=true;
 		id=get_id($(this));
 		hide_branches(id);
 		$(this).hide().addClass("hidden_branch");
 	});
+	return hidden;
 }
 function show_branches(id) {
 	$("table.grid tbody tr.hidden_branch").clone().show().removeClass("hidden_branch").addClass("current").insertAfter("table.grid tbody tr#"+id);
@@ -512,6 +547,7 @@ function show_branches(id) {
 }
 
 function shiftNodes(id,add,newParentId) {
+	var n,empty,last;
 	if (add<0) {
 		for (n=add; n<0; n++) {
 			$("table.grid tbody tr#"+id+" td.str:first span.emptynode:first").remove();
@@ -542,10 +578,11 @@ function shiftNodes(id,add,newParentId) {
 //
 // Functions for obtaining table,id,field,nr information
 //
-function get_cell(obj){c=obj.attr("class").split(" ");i=String(c[1]);i=i.replace("id","");return{'table':c[0],'id':i,'field':c[2]};}
-function get_table(obj){c=get_cell(obj);return c.table;}
-function get_field(obj){c=get_cell(obj);return c.field;}
+function get_cell(obj){var i;c=obj.attr("class").split(" ");i=String(c[1]);i=i.replace("id","");return{'table':c[0],'id':i,'field':c[2]};}
+function get_table(obj){var c;c=get_cell(obj);return c.table;}
+function get_field(obj){var c;c=get_cell(obj);return c.field;}
 function get_id(obj) {
+	var id,classes;
 	classes = obj.attr("class").split(" ");
 	id=jQuery.grep(classes, function (a) {
 		return (a.indexOf("id")==0);
@@ -555,6 +592,7 @@ function get_id(obj) {
 	return id;
 }
 function get_nr(obj) {
+	var id,classes;
 	classes = obj.attr("class").split(" ");
 	id=jQuery.grep(classes, function (a) {
 		return (a.indexOf("nr")>=0);
@@ -564,6 +602,7 @@ function get_nr(obj) {
 	return id;
 }
 function get_subclass(sub,obj) {
+	var s,classes;
 	classes = obj.attr("class").split(" ");
 	s=jQuery.grep(classes, function (a) {
 		return (a.indexOf(sub)>=0);
@@ -577,16 +616,18 @@ function get_subclass(sub,obj) {
 // Other functions
 //
 function randomPassword(length) {
-   chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-   pass = "";
-   for(x=0;x<length;x++) {
-      i = Math.floor(Math.random() * 62);
-      pass += chars.charAt(i);
-   }
-   return pass;
+	var chars,pass,x,i;
+  chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+  pass = "";
+  for(x=0;x<length;x++) {
+     i = Math.floor(Math.random() * 62);
+     pass += chars.charAt(i);
+  }
+  return pass;
 }
 
 function serialize(sel) {
+	var s,sel,i;
 	s="";
 	sel=$(sel);
 	$(sel).each(function() {
@@ -596,9 +637,10 @@ function serialize(sel) {
 	return s.substr(1);
 }
 
-function get_ext(s){s=String(s);a=s.split(".");return a[a.length-1];}
+function get_ext(s){var a,s;s=String(s);a=s.split(".");return a[a.length-1];}
 
 function flash(swf,w,h) {
+	var attr,f;
 	attr='width="'+w+'" height="'+h+'"';
 	f='<object class="flash" data="#swf#" #attr# classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" >' +
 		'<param name="allowScriptAccess" value="sameDomain" />' +
