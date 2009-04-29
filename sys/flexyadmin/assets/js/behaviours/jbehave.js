@@ -371,7 +371,6 @@ $(document).ready(function() {
 								newParentId=get_id($(prevRow));
 								if (newParentId=="") newParentId=0;
 							}
-							console.log("shifted to:"+newParentId);
 						}
 						
 						if (newParentId>=0) {
