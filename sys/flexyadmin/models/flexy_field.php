@@ -463,6 +463,7 @@ class Flexy_field extends Model {
 		$tables=filter_by($tables,"tbl_");
 		$specialFields=array_keys($this->config->item('FIELDS_special'));
 		$options=array();
+		$options[""]="";
 		foreach ($tables as $table) {
 			$fields=$this->db->list_fields($table);
 			foreach ($fields as $field) {
