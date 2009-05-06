@@ -577,7 +577,7 @@ function shiftNodes(id,add,newParentId) {
 //
 // Functions for obtaining table,id,field,nr information
 //
-function get_cell(obj){var i;c=obj.attr("class").split(" ");i=String(c[1]);i=i.replace("id","");return{'table':c[0],'id':i,'field':c[2]};}
+function get_cell(obj){var i;c=obj.attr("class").split(" ");i=String(c[1]);i=i.replace("id","");return{'table':c[0],'id':i,'field':c[2]};}S
 function get_table(obj){var c;c=get_cell(obj);return c.table;}
 function get_field(obj){var c;c=get_cell(obj);return c.field;}
 function get_id(obj) {
