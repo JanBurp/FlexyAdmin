@@ -131,7 +131,7 @@ class Filemanager extends AdminController {
 	function confirm($path,$file,$confirmed="") {
 		if ($confirmed=="confirm") {
 			$this->session->set_userdata("confirmed",true);
-			$this->delete($path,$file);
+			$this->delete(pathdecode($path,TRUE),$file);
 		}
 		else {
 			$this->set_message("Not confirmed... ".anchor(api_uri('API_filemanager_confirm',$path,$file,"confirm"),"confirm"));
@@ -145,7 +145,7 @@ class Filemanager extends AdminController {
 			if ($confirmed) {
 				$this->lang->load("update_delete");
 				$this->load->model("file_manager");
-				$fileManager=new file_manager(pathdecode($path));
+				$fileManager=new file_manager(pathdecode($path,TRUE));
 				$result=$fileManager->delete_file($file);
 				if ($result) {
 					$this->load->model("login_log");
@@ -166,12 +166,13 @@ class Filemanager extends AdminController {
 
 	function upload($path,$file="") {
 		if ($this->_has_rights($path)) {
+			ini_set("memory_limit","16M");
 			$this->lang->load("update_delete");
-			$path=pathdecode($path);
+			// $path=pathdecode($path);
 			$this->load->library("upload");
 			$this->load->model("file_manager");
 			$types=$this->cfg->get('CFG_media_info',$path,'str_types');
-			$fileManager=new file_manager(pathdecode($path),$types);
+			$fileManager=new file_manager($path,$types);
 			$result=$fileManager->upload_file();
 			$error=$result["error"];
 			$file=$result["file"];
