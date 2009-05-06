@@ -60,6 +60,15 @@ function pathdecode($p,$isPath=FALSE) {
 }
 
 
+function get_path_and_file($name) {
+	$explode=explode("/",$name);
+	$file=$explode[count($explode)-1];
+	array_pop($explode);
+	$path=implode("/",$explode);
+	return array("path"=>$path,"file"=>$file);
+}
+
+
 /*
 // string load_class( string sClass)
 
