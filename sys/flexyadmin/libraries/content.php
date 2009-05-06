@@ -17,10 +17,13 @@ class Content {
 
 	var $safeEmail;
 	var $addClasses;
+	var $addPopups;
+	var $prePopup;
 
 	function Content() {
 		$this->option_safe_email();
 		$this->add_classes();
+		$this->add_popups("popup_",FALSE);
 	}
 
 	function option_safe_email($safe=TRUE) {
@@ -30,17 +33,20 @@ class Content {
 	function add_classes($classes=TRUE) {
 		$this->addClasses=$classes;
 	}
+	
+	function add_popups($pre="popup_",$popups=TRUE) {
+		$this->prePopup=$pre;
+		$this->addPopups=$popups;
+	}
 
 	// callback for class replacing
 	function _countCallBack($matches) {
 		static $img_count=1;
 		static $p_count=1;
-		
 		$class="";
 		// is there a class allready?
-		if (preg_match("/class=\"(.*?)\"/",$matches[2],$cMatch)) {
+		if (preg_match("/class=\"(.*?)\"/",$matches[2],$cMatch))
 			$class=$cMatch[1]." ";
-		}
 		if ($matches[1]=="p") {
 			$class.="p$p_count";
 			if ($p_count++%2) $class.=" odd"; else $class.=" even";
@@ -49,7 +55,21 @@ class Content {
 			$class.="img$img_count";
 			if ($img_count++%2) $class.=" odd"; else $class.=" even";
 		}
-		return "<".$matches[1]." class=\"$class\"".$matches[2].">";
+		$result="<".$matches[1]." class=\"$class\"".$matches[2].">";
+		return $result;
+	}
+
+	// callback for popup adding replacing
+	function _popupCallBack($matches) {
+		$src=$matches[2];
+		$info=get_path_and_file($src);
+		$popup=$info['path']."/popup_".$info["file"];
+		if (file_exists($popup)) {
+			$result="<img".$matches[1]." longdesc=\"$popup\" src=\"".$src."\"".$matches[3]." />";
+		}
+		else
+			$result="<img".$matches[1]." src=\"".$src."\"".$matches[3]." />";
+		return $result;
 	}
 
 	function render($txt) {
@@ -57,6 +77,10 @@ class Content {
 		if ($this->addClasses) {
 		 	// add classes (odd even nrs to p and img tags)
 			$txt=preg_replace_callback("/<(img|p)(.*?)>/",array($this,"_countCallBack"),$txt);
+		}
+		
+		if ($this->addPopups) {
+			$txt=preg_replace_callback("/<img(.*?)src=['|\"](.*?)['|\"](.*?)>/",array($this,"_popupCallBack"),$txt);
 		}
 		
 		if ($this->safeEmail) {

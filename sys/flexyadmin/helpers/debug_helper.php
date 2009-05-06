@@ -73,7 +73,7 @@ function trace_($a=NULL,$return=false) {
 	}
 	else
 		$type=gettype($a);
-	$out="<pre style=\"font-size:10px;z-index:1000;margin:2px;padding:2px;background-color:#ccc;color:#000;border:solid 1px #000;\"><span style=\"color:#fff;font-weight:bold;\">trace [#$c][$type]:</span>\n";
+	$out="<pre style=\"font-size:10px;z-index:99999;margin:2px;padding:2px;background-color:#ccc;color:#000;border:solid 1px #000;\"><span style=\"color:#fff;font-weight:bold;\">trace [#$c][$type]:</span>\n";
 	if (is_bool($a)) {
 		if ($a)
 			$out.="'True'";
@@ -87,7 +87,7 @@ function trace_($a=NULL,$return=false) {
 		$out.=print_r($a,true);
 	$c++;
 	$out.="</pre>";
-	if (!$return) echo $out;
+	if (!$return) echo $out."<hr/>";
 	return $out;
 }
 
@@ -101,7 +101,7 @@ function array_($a) {
 			$out[$key]="{object}";
 		}
 		else {
-			if ((substr($value,0,6)!="#show#") and (in_string("<>",$value) or (strlen($value)>200)) )
+			if ((substr($value,0,6)!="#show#") and (in_string("<>",$value) or (strlen($value)>100)) )
 				$out[$key]="<span title=\"".htmlentities($value)."\" style=\"cursor:help;color:#fff;\">[text]</span>";
 			else {
 				$out[$key]=str_replace("#show#","",$value);
