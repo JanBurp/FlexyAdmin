@@ -53,7 +53,7 @@ class Filemanager extends AdminController {
  */
 
 	function show($path,$idFile="") {
-		$path=pathdecode($path);
+		$path=pathdecode($path,TRUE);
 		$name="";
 		if ($this->_has_rights($path)) {
 			$map=$this->config->item('ASSETS').$path;
