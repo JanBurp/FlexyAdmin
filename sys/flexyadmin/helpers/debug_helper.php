@@ -118,7 +118,7 @@ function print_ar($array,$return=false,$tabs=0) {
 		if (is_array($value))
 			$out.=print_ar($value,$return,$tabs+1);
 		else
-			$out.=$value."\n";
+			$out.="'$value'\n";
 	}
 	if (!$return) echo $out;
 	return $out;

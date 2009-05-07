@@ -1,10 +1,15 @@
-<div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+<div style="border:1px solid #990000;margin:4px;padding:4px;color:#000;">
 
 <h4>A PHP Error was encountered</h4>
 
-<p>Severity: <?php echo $severity; ?></p>
-<p>Message:  <?php echo $message; ?></p>
-<p>Filename: <?php echo $filepath; ?></p>
-<p>Line Number: <?php echo $line; ?></p>
+<pre>
+Severity:	<?php echo $severity; ?>
+
+Message:	<?php echo $message; ?>
+
+Filename:	<a style="color:#000;text-decoration:underline;" href="txmt://open?url=file:///<?=str_replace('errors/error_php.php','',__FILE__).$filepath ?>&amp;line=<?=$line?>"><?php echo $filepath; ?></a>
+Line:		<?php echo $line; ?>
+</pre>
+
 
 </div>

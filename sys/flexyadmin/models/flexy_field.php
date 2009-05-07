@@ -453,6 +453,25 @@ class Flexy_field extends Model {
 		return strip_string($this->data,30);
 	}
 
+	function _dropdown_rights_form() {
+		$tables=$this->db->list_tables();
+		$folders=$this->cfg->get('CFG_media_info');
+		$folders=array_keys($folders);
+		$not=filter_by($folders,"tbl_");
+		$folders=array_diff($folders,$not);
+		$media=array();
+		foreach($folders as $folder) { $media[]="media_".$folder; }
+		$options=array("","*","cfg_*","tbl_*","media_*");
+		$options=array_merge($options,$tables);
+		$options=array_merge($options,$media);
+		$options=combine($options,$options);
+		$out=$this->_standard_form_field($options);
+		$out["type"]="dropdown";
+		$out["multiple"]="multiple";
+		unset($out["button"]);
+		return $out;
+	}
+
 	function _dropdown_tables_form() {
 		$tables=$this->db->list_tables();
 		$tables=filter_by($tables,"tbl_");
