@@ -547,6 +547,12 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	*	Some functions to include and filter one to many tables
 	*/
 
+	function get_tables() {
+		$tables = $this->list_tables();
+		$tables = filter_by($tables,"tbl_");
+		return $tables;
+	}
+
 	/**
 	 * function get_many_tables([$table])
 	 *

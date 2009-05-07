@@ -94,11 +94,52 @@ class File_manager Extends Model {
 			$result=rmdir($name);
 		else {
 			$result=unlink($name);
-			// check if there are other sizes...
-			$big	= $this->map.$this->config->item('FILES_big_path').$file;
-			if (file_exists($big)) unlink($big);
-			$thumb= $this->map.$this->config->item('FILES_thumb_path').$file;
-			if (file_exists($thumb)) unlink($thumb);
+			if ($result) {
+				/**
+				 * Check if some data has this mediafile as content, remove it
+				 */
+				$tables=$this->db->get_tables();
+				if (!empty($tables)) {
+					foreach ($tables as $table) {
+						$fields=$this->db->list_fields($table);
+						$selectFields=array();
+						$selectFields[]=pk();
+						foreach ($fields as $field) {
+							$pre=get_prefix($field);
+							if (in_array($pre,array("txt","media"))) $selectFields[]=$field;
+						}
+						$this->db->select($selectFields);
+						$currentData=$this->db->get_result($table);
+						foreach ($currentData as $row) {
+							foreach ($row as $field=>$data) {
+								if ($field==pk()) $id=$data;
+								else {
+									$pre=get_prefix($field);
+									if ($pre=="media") {
+										if ($data==$file) {
+											$this->db->set($field,"");
+											$this->db->where(pk(),$id);
+											$this->db->update($table);
+										}
+									}
+									if ($pre=="txt") {
+										$preg_name=str_replace("/","\/",$name);
+										// remove all img tags with this media
+										$newdata=preg_replace("/<img(.*)".$preg_name."(.*)>/","",$data);
+										// remove all flash objects with this media
+										$newdata=preg_replace("/<object(.*)".$preg_name."(.*)<\/object>/","",$newdata);
+										if ($newdata!=$data) {
+											$this->db->set($field,$newdata);
+											$this->db->where(pk(),$id);
+											$this->db->update($table);
+										}
+									}
+								}
+							}
+						}
+					}
+				}				
+			}			
 		}
 
 		if ($result) {
