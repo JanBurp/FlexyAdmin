@@ -34,33 +34,15 @@ class ui_names extends Model {
 		$out=array();
 		log_('info',"ui_names: loading");
 		// table info
-		$table=table_name($this->config->item('CFG_table_prefix')."_table_info");
-		$tableName=$this->config->item('CFG_table_name');
-		$tableUiName=$this->config->item('CFG_table_ui_name');
-		if ($this->db->table_exists($table) and $this->db->field_exists($tableName,$table) and $this->db->field_exists($tableUiName,$table)) {
-			$query=$this->db->select("$tableName,$tableUiName");
-			$query=$this->db->get($table);
-			foreach($query->result_array($query) as $row) {
-				$out[$row[$tableName]]=$row[$tableUiName];
-			}
-			log_('info',"ui_names: table ui's loaded");
+		$tableInfo=$this->cfg->get('CFG_table');
+		foreach ($tableInfo as $table => $value) {
+			if (!empty($value['str_ui_name'])) $out[$table]=$value['str_ui_name'];
 		}
-		else
-			log_('info',"ui_names: table ui didn't exists, or fieldnames not right.");
 		// field info
-		$table=table_name($this->config->item('CFG_table_prefix')."_field_info");
-		$fieldName=$this->config->item('CFG_field_name');
-		$fieldUiName=$this->config->item('CFG_field_ui_name');
-		if ($this->db->table_exists($table) and $this->db->field_exists($fieldName,$table) and $this->db->field_exists($fieldUiName,$table)) {
-			$query=$this->db->select("$fieldName,$fieldUiName");
-			$query=$this->db->get($table);
-			foreach($query->result_array($query) as $row) {
-				$out[$row[$fieldName]]=$row[$fieldUiName];
-			}
-			log_('info',"ui_names: field ui's loaded");
-		}
-		else
-			log_('info',"ui_names: field ui didn't exists, or fieldnames not right.");
+		$fieldInfo=$this->cfg->get('CFG_field');
+		foreach ($fieldInfo as $field => $value) {
+			if (!empty($value['str_ui_name'])) $out[$field]=$value['str_ui_name'];
+		}		
 		$this->uiNames=$out;
 		return $out;
 	}

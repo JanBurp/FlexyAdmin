@@ -197,10 +197,19 @@ $config["CFG_"]=array(
 			"str_abstract_fields"=>'str_user_name',
 			"str_order_by"=>'',
 			"txt_help"=>''
+			),
+		"cfg_rights"=>array(
+			"order"=>'108',
+			"table"=>'cfg_rights',
+			"b_single_row"=>'0',
+			"str_ui_name"=>'',
+			"b_show_grid_with_joins"=>'0',
+			"str_abstract_fields"=>'str_name',
+			"str_order_by"=>'',
+			"txt_help"=>'<p>Create groups of rights here. For use in Users.</p>'
 			)
 		
 	),
-		
 	"cfg_field_info" => array(
 		"cfg_editor.str_class"=>array(
 			"field"=>'cfg_editor.class',
@@ -241,6 +250,17 @@ $config["CFG_"]=array(
 			"b_show_in_grid"=>'1',
 			"b_show_in_form"=>'1',
 			"str_options"=>'image|flash|other|all',
+			"b_multi_options"=>'0',
+			"str_overrule_prefix"=>'',
+			"str_validation_rules"=>'',
+			"txt_help"=>''
+			),
+		"cfg_rights.rights"=>array(
+			"field"=>'cfg_rights.rights',
+			"str_ui_name"=>'Rights for',
+			"b_show_in_grid"=>'1',
+			"b_show_in_form"=>'1',
+			"str_options"=>'',
 			"b_multi_options"=>'0',
 			"str_overrule_prefix"=>'',
 			"str_validation_rules"=>'',
@@ -357,6 +377,11 @@ $config['FIELDS_special'] = array(
 	"table"			=> array(
 												"grid"				=> "%s",
 												"form"				=> "function_dropdown_tables",
+												"validation"	=> "trim",
+											),
+	"rights"			=> array(
+												"grid"				=> "%s",
+												"form"				=> "function_dropdown_rights",
 												"validation"	=> "trim",
 											),
 	"field"			=> array(
