@@ -202,7 +202,18 @@ $config["CFG_"]=array(
 	),
 		
 	"cfg_field_info" => array(
-		"cfg_editor.table"=>array(
+		"cfg_editor.str_class"=>array(
+			"field"=>'cfg_editor.class',
+			"str_ui_name"=>'Editor size',
+			"b_show_in_grid"=>'1',
+			"b_show_in_form"=>'1',
+			"str_options"=>'normal|wide|big',
+			"b_multi_options"=>'0',
+			"str_overrule_prefix"=>'',
+			"str_validation_rules"=>'',
+			"txt_help"=>''
+			),
+			"cfg_editor.table"=>array(
 			"field"=>'cfg_editor.table',
 			"str_ui_name"=>'Links Table',
 			"b_show_in_grid"=>'1',
