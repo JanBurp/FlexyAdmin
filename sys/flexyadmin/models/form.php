@@ -483,7 +483,7 @@ class Form Extends Model {
 		$out="";
 		$pre=get_prefix($name);
 		if ($pre==$name) $pre="";
-		$class="$pre $name ".$field['type'];
+		$class="$pre $name ".$field['type']." ".$field['class'];
 		if (isset($field['multiple'])) $class.=" ".$field['multiple'];
 		$class.=" ".$class;
 		if (!empty($field["repopulate"])) $field["value"]=$field["repopulate"];

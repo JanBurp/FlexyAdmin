@@ -294,6 +294,7 @@ class Flexy_field extends Model {
 		$out["value"]			= $this->data;
 		$out["label"]			= $this->uiNames->get($this->field);
 		$out["type"]			= $this->type;
+		$out["class"]			= "";
 		/**
 		 * Dropdown fields, if there are options.
 		 */
@@ -321,6 +322,11 @@ class Flexy_field extends Model {
 			//$out['max_height'] = '768';
 		}
 		/**
+		 * HTML editor field
+		 */
+		if ($this->type=="htmleditor") {
+			$out['class'] = $this->cfg->get('CFG_editor','str_class');
+		}		/**
 		 * Add validation rules:
 		 * -first the standard validation rules set in flexyadmin_config.php.
 		 * -then add validation rules set in cfg_field_info

@@ -609,6 +609,23 @@ textarea, .mceEditor {
 .mceEditor table {
 	width:450px;
 }
+
+p.form_field.wide label,
+p.form_field.big label {
+	float:none;
+}
+p.form_field.wide .mceEditor,
+p.form_field.big .mceEditor {
+	margin:4px 0px 4px;
+}
+textarea.wide,
+textarea.big {
+	width:595px;
+}
+textarea.big {
+	height:450px;
+}
+
 /* will be overruled by the user in text.css */
 body#tinymce,
 body#tinymce td,
