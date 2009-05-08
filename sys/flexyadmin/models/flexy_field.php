@@ -556,7 +556,7 @@ class Flexy_field extends Model {
 		$options[""]="";
 		foreach($files as $file) {
 			if ($file["type"]!="dir") {
-				$ext=get_file_extension($file["name"]);
+				$ext=strtolower(get_file_extension($file["name"]));
 				if (in_array($ext,$types)) {
 					$options[$file["name"]]=$file["name"];
 				}
