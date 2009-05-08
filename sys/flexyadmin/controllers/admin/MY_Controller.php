@@ -206,7 +206,9 @@ class BasicController extends MY_Controller {
 
 	var $table_rights;
 	var $media_rights;
+	
 	var $user;
+	var $rights;
 	var $language;
 
 	function BasicController($isAdmin=false) {
@@ -225,38 +227,80 @@ class BasicController extends MY_Controller {
 	function _user_logged_in() {
 		$out=false;
 		$this->user=$this->session->userdata("user");
-		$this->table_rights=$this->session->userdata("table_rights");
-		$this->media_rights=$this->session->userdata("media_rights");
+		$this->rights=$this->session->userdata("rights");
+		// $this->table_rights=$this->session->userdata("table_rights");
+		// $this->media_rights=$this->session->userdata("media_rights");
 		$this->language=$this->session->userdata("language");
 		$out=(!empty($this->user));
 		return $out;
 	}
 
-	function has_rights($table,$id="") {
-		$ok=FALSE;
-		$pre=get_prefix($table);
-		$preAll=$pre."_*";
-		if ($id==="MEDIA") $rights=$this->media_rights;	else $rights=$this->table_rights;
-		$rightsTables=split("-",$rights);
-		$okTables=trim($rightsTables[0]);
-		if (isset($rightsTables[1]))
-			$forbiddenTables=trim($rightsTables[1]);
-		else
-			$forbiddenTables="";
-		// has admin rights?
-		if ($rights=="*")
-			$ok=TRUE;
-		// has rights for exactly this table?
-		elseif (strpos($okTables,$table)!==FALSE)
-			$ok=TRUE;
-		// has rights for all tables with this prefix
-		elseif ($id!=="MEDIA" and strpos($okTables,$preAll)!==FALSE and strpos($forbiddenTables,$table)===FALSE)
-			$ok=TRUE;
-		// has rights for own user form
-		elseif ($table==$this->config->item('CFG_table_prefix')."_".$this->config->item('CFG_users') and $id==$this->session->userdata("user_id"))
-			$ok=TRUE;
-		return $ok;
+	/**
+		* Returns rights:
+		*		RIGHTS_ALL		= 15 (all added)
+		*		RIGHTS_DELETE	= 8
+		*		RIGHTS_ADD		= 4
+		*		RIGHTS_EDIT		= 2
+		*		RIGHTS_SHOW		= 1
+		*		RIGHTS_NO			= 0 
+		* Or FALSE/TRUE if it has minimal these rights
+		*/
+	function _change_rights(&$found,$rights) {
+		foreach ($found as $key => $value) {
+			if ($rights[$key]) $found[$key]=TRUE;
+		}
 	}
+	function has_rights($item,$id="",$whatRight=0) {
+		$found=array('b_delete'=>FALSE,'b_add'=>FALSE,'b_edit'=>FALSE,'b_show'=>FALSE);
+		$pre=get_prefix($item);
+		$preAll=$pre."_*";
+		// trace_($item);
+		// trace_($pre);
+		// trace_($preAll);
+		// trace_($this->rights);
+		foreach ($this->rights as $key => $rights) {
+			if ($rights['rights']=="*" or (strpos($rights['rights'],$preAll)!==FALSE) or (strpos($rights['rights'],$item)!==FALSE) )
+				$this->_change_rights($found,$rights);
+		}
+		$foundRights=RIGHTS_NO;
+		if ($found['b_delete'])	$foundRights+=RIGHTS_DELETE;
+		if ($found['b_add'])		$foundRights+=RIGHTS_ADD;
+		if ($found['b_edit'])		$foundRights+=RIGHTS_EDIT;
+		if ($found['b_show'])		$foundRights+=RIGHTS_SHOW;
+		// trace_($foundRights);
+		if ($whatRight==0)
+			return $foundRights;
+		else
+			return ($foundRights>=$whatRight);
+	}
+
+
+
+	// function has_rights($table,$id="") {
+	// 	$ok=FALSE;
+	// 	$pre=get_prefix($table);
+	// 	$preAll=$pre."_*";
+	// 	if ($id==="MEDIA") $rights=$this->media_rights;	else $rights=$this->table_rights;
+	// 	$rightsTables=split("-",$rights);
+	// 	$okTables=trim($rightsTables[0]);
+	// 	if (isset($rightsTables[1]))
+	// 		$forbiddenTables=trim($rightsTables[1]);
+	// 	else
+	// 		$forbiddenTables="";
+	// 	// has admin rights?
+	// 	if ($rights=="*")
+	// 		$ok=TRUE;
+	// 	// has rights for exactly this table?
+	// 	elseif (strpos($okTables,$table)!==FALSE)
+	// 		$ok=TRUE;
+	// 	// has rights for all tables with this prefix
+	// 	elseif ($id!=="MEDIA" and strpos($okTables,$preAll)!==FALSE and strpos($forbiddenTables,$table)===FALSE)
+	// 		$ok=TRUE;
+	// 	// has rights for own user form
+	// 	elseif ($table==$this->config->item('CFG_table_prefix')."_".$this->config->item('CFG_users') and $id==$this->session->userdata("user_id"))
+	// 		$ok=TRUE;
+	// 	return $ok;
+	// }
 
 
 }
@@ -366,7 +410,6 @@ class AdminController extends BasicController {
 		// load menu items
 		$a=array();
 		// standard items
-
 		$a["Home"]			=array("uri"=>api_uri('API_home'));
 		$a["Logout"]		=array("uri"=>api_uri('API_logout'));
 
@@ -382,7 +425,7 @@ class AdminController extends BasicController {
 			foreach($query->result_array() as $mediaInfo) {
 				$menuName=el('str_menu_name',$mediaInfo);
 				$rightsName=el('str_name',$mediaInfo);
-				if (!empty($menuName) and $this->has_rights($rightsName,"MEDIA")) {
+				if (!empty($menuName) and $this->has_rights("media_".$rightsName)) {
 					$a[$menuName]=array("uri"=>api_uri('API_filemanager',"show",pathencode(el('str_path',$mediaInfo))),"class"=>"media");
 				}
 			}

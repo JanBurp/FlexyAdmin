@@ -24,6 +24,8 @@ class File_manager Extends Model {
 	var $view;
 	var $fileTypes;
 	var $currentId;
+	var $showUploadButton;
+	var $showDeleteButtons;
 
 	var $type;
 
@@ -40,6 +42,8 @@ class File_manager Extends Model {
 		$this->set_view($view);
 		$this->set_type();
 		$this->set_current();
+		$this->show_upload_button();
+		$this->show_delete_buttons();
 	}
 
 	function set_caption($caption="") {
@@ -72,6 +76,13 @@ class File_manager Extends Model {
 		$this->currentId=$current;
 	}
 
+	function show_upload_button($show=TRUE) {
+		$this->showUploadButton=$show;
+	}
+
+	function show_delete_buttons($show=TRUE) {
+		$this->showDeleteButtons=$show;
+	}
 
 	function set_files($files=NULL,$name="") {
 		if (isset($files) and !empty($files)) {
@@ -302,7 +313,9 @@ function thumb($attr,$index=FALSE) {
 					$icon=div(array("class"=>"file")).icon("file $name")._div();;
 				}
 
-				$edit=anchor(api_uri('API_filemanager_confirm',pathencode($this->path),$name),icon("delete"),array("class"=>"delete"));
+				$edit="";
+				if ($this->showDeleteButtons)	$edit.=anchor(api_uri('API_filemanager_confirm',pathencode($this->path),$name),icon("delete"),array("class"=>"delete"));
+				if (empty($edit)) $edit="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 
 				$fileData["edit"]=$edit;
 				$fileData["thumb"]=$icon;
@@ -349,7 +362,8 @@ function thumb($attr,$index=FALSE) {
 		 */
 		if (empty($this->caption))	$this->set_caption($this->path);
 		// Buttons (with Viewtype switcher)
-		$buttons=icon("new","upload","upload path_".$this->path);
+		$buttons="";
+		if ($this->showUploadButton) $buttons=icon("new","upload","upload path_".$this->path);
 		// view types
 		$types=$this->config->item('API_filemanager_view_types');
 		foreach($types as $view) {

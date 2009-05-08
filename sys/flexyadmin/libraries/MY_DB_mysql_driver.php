@@ -71,26 +71,28 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		else {
 			$CI=& get_instance();
 			// find in table info
-			$order=$CI->cfg->get('CFG_table',$table,'str_order_by');
-			// or first standard order field
-			if (empty($order) and !empty($table)) {
-				$stdFields=$CI->config->item('ORDER_default_fields');
-				$fields=$this->list_fields($table);
-				do {
-					$curr=current($stdFields);
-					$curr=explode(" ",$curr);
-					$testField=trim($curr[0]);
-					reset($fields);
+			if (isset($CI->cfg)) {
+				$order=$CI->cfg->get('CFG_table',$table,'str_order_by');
+				// or first standard order field
+				if (empty($order) and !empty($table)) {
+					$stdFields=$CI->config->item('ORDER_default_fields');
+					$fields=$this->list_fields($table);
 					do {
-						if (strncmp($testField,current($fields),strlen($testField))==0) {
-							$order=current($fields);
-							if (isset($curr[1])) $order.=" ".$curr[1];
-						}
-					} while (empty($order) and next($fields));
+						$curr=current($stdFields);
+						$curr=explode(" ",$curr);
+						$testField=trim($curr[0]);
+						reset($fields);
+						do {
+							if (strncmp($testField,current($fields),strlen($testField))==0) {
+								$order=current($fields);
+								if (isset($curr[1])) $order.=" ".$curr[1];
+							}
+						} while (empty($order) and next($fields));
+					}
+					while (empty($order) and next($stdFields));
 				}
-				while (empty($order) and next($stdFields));
+				$this->order_by($order);
 			}
-			$this->order_by($order);
 		}
 		return $order;
 	}
@@ -576,6 +578,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				$out[$rel]["id_this"]="id_".remove_prefix($table);
 				$out[$rel]["id_join"]="id_".remove_prefix($join);
 			}
+			// trace_($out);
 			return $out;
 		}
 

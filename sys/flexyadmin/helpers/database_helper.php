@@ -100,6 +100,7 @@ function foreign_table_from_key($key) {
 function join_table_from_rel_table($rel) {
 	$CI =& get_instance();
 	$join=$CI->config->item('TABLE_prefix')."_".remove_prefix($rel,$CI->config->item('REL_table_split'));
+	if (!$CI->db->table_exists($join)) $join=$CI->config->item('CFG_table_prefix')."_".remove_prefix($rel,$CI->config->item('REL_table_split'));
 	return $join;
 }
 

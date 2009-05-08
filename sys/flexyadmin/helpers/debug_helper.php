@@ -38,7 +38,7 @@ function backtrace_($offset=0,$return=false) {
 	foreach($dbgTrace as $key => $val) {
 		unset($val['object']);
 		if (isset($val['args'])) {
-			if (count($val['args'])==0) unset($val['args']);
+			if (count($val['args'])==0)	unset($val['args']);
 		}
 		if (isset($val['file'])) {
 			$explode=explode("/",$val['file']);
@@ -54,6 +54,8 @@ function backtrace_($offset=0,$return=false) {
 			$val['type']=htmlentities($val['type']);
 			if (isset($val['function'])) {
 				$val['class->method']=$val['class'].$val['type'].$val['function'];
+				if (isset($args)) $val['class->method'].="(".$args.")";
+				else $val['class->method'].="()";
 				unset($val['function']);
 				unset($val['type']);
 				unset($val['class']);

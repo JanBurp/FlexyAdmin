@@ -72,7 +72,18 @@ $config['API_confirm']						= "/admin/edit/confirm/";
 
 $config['AJAX']										= "/admin/ajax/";
 
-
+/*
+|--------------------------------------------------------------------------
+| Rights
+|--------------------------------------------------------------------------
+|
+*/
+define("RIGHTS_ALL",15);
+define("RIGHTS_DELETE",8);
+define("RIGHTS_ADD",4);
+define("RIGHTS_EDIT",2);
+define("RIGHTS_SHOW",1);
+define("RIGHTS_NO",0);
 
 /*
 |--------------------------------------------------------------------------
@@ -205,7 +216,7 @@ $config["CFG_"]=array(
 			"str_ui_name"=>'',
 			"b_show_grid_with_joins"=>'0',
 			"str_abstract_fields"=>'str_name',
-			"str_order_by"=>'',
+			"str_order_by"=>'id',
 			"txt_help"=>'<p>Create groups of rights here. For use in Users.</p>'
 			)
 		

@@ -49,7 +49,7 @@ class Show extends AdminController {
  */
 
 	function order($table,$id="",$newOrder="") {
-		if ($this->has_rights($table,$id)) {
+		if ($this->has_rights($table,$id)>=RIGHTS_EDIT) {
 			/**
 			 * re-order data
 			 */
@@ -82,78 +82,78 @@ class Show extends AdminController {
  * @param mixed $id maybe an id, the last that changed
  */
 
-	function tree($table,$id="") {
-		$singleRow=$this->cfg->get('CFG_table',$table,"b_single_row");
-		if ($singleRow)
-			$this->form($table);
-		else {
-			if ($this->has_rights($table,$id)) {
-				/**
-				 * get data
-				 */
-				// $this->db->add_foreigns_as_abstracts();
-				// $this->db->add_many();
-				$this->db->max_text_len(250);
-				$data=$this->db->get_result($table);
-				// trace_($data);
-				if (empty($data)) {
-					/**
-					 * if no data, start an input form
-					 */
-					 $this->form($table,-1);
-					 return;
-				}
-				else
-				{
-					$this->_before_grid($table,$data);
-					
-					/**
-					 * if data: first render data, then put data in grid and render as html
-					 */
-					$this->load->model("tree");
-					$tree=new tree();
-					
-					$innerTree=new menu();
-					$innerTree->set_current($id);
-					$innerTree->set_url_field("id");
-					$innerTree->set_url_template(api_uri('API_view_form',$table,"%s"));
-					$innerTree->set_menu_from_table($table);
-					// $innerTree->add_controls(	anchor(api_uri('API_view_form',$table,"%s"),icon("edit"),array("class"=>"edit")).
-					// 													anchor(api_uri('API_confirm',$table,"%s"),icon("delete"),array("class"=>"delete"))	);
-					$html=$innerTree->render();
-					$uiTable=$this->uiNames->get($table);
-					$tableHelp=$this->cfg->get("CFG_table",$table,"txt_help");
-					if (!empty($tableHelp)) {
-						$uiShowTable=help($uiTable." ",$tableHelp);
-					}
-					else
-						$uiShowTable=$uiTable;
-					$tree->set_tree($html,$uiTable);
-					
-					$newIcon=anchor(api_uri('API_view_form',$table,-1),icon("new"));
-					$tree->prepend_to_captions($newIcon,"new");
-					if (!empty($id)) {
-						$tree->set_current($id);
-					}
-					$renderData=$tree->render($table,"tree");
-					// trace_($renderData);
-					$html=$this->load->view("admin/tree",$renderData,true);
-					$this->_set_content($html);
-				}
-			}
-			else {
-				$this->lang->load("rights");
-				$this->set_message(lang("rights_no_rights"));
-				$uiTable="";
-			}
-
-			/**
-			 * show
-			 */
-			$this->_show_type("tree");
-			$this->_show_all($uiTable);
-		}
-	}
+	// function tree($table,$id="") {
+	// 	$singleRow=$this->cfg->get('CFG_table',$table,"b_single_row");
+	// 	if ($singleRow)
+	// 		$this->form($table);
+	// 	else {
+	// 		if ($this->has_rights($table,$id)) {
+	// 			/**
+	// 			 * get data
+	// 			 */
+	// 			// $this->db->add_foreigns_as_abstracts();
+	// 			// $this->db->add_many();
+	// 			$this->db->max_text_len(250);
+	// 			$data=$this->db->get_result($table);
+	// 			// trace_($data);
+	// 			if (empty($data)) {
+	// 				/**
+	// 				 * if no data, start an input form
+	// 				 */
+	// 				 $this->form($table,-1);
+	// 				 return;
+	// 			}
+	// 			else
+	// 			{
+	// 				$this->_before_grid($table,$data);
+	// 				
+	// 				/**
+	// 				 * if data: first render data, then put data in grid and render as html
+	// 				 */
+	// 				$this->load->model("tree");
+	// 				$tree=new tree();
+	// 				
+	// 				$innerTree=new menu();
+	// 				$innerTree->set_current($id);
+	// 				$innerTree->set_url_field("id");
+	// 				$innerTree->set_url_template(api_uri('API_view_form',$table,"%s"));
+	// 				$innerTree->set_menu_from_table($table);
+	// 				// $innerTree->add_controls(	anchor(api_uri('API_view_form',$table,"%s"),icon("edit"),array("class"=>"edit")).
+	// 				// 													anchor(api_uri('API_confirm',$table,"%s"),icon("delete"),array("class"=>"delete"))	);
+	// 				$html=$innerTree->render();
+	// 				$uiTable=$this->uiNames->get($table);
+	// 				$tableHelp=$this->cfg->get("CFG_table",$table,"txt_help");
+	// 				if (!empty($tableHelp)) {
+	// 					$uiShowTable=help($uiTable." ",$tableHelp);
+	// 				}
+	// 				else
+	// 					$uiShowTable=$uiTable;
+	// 				$tree->set_tree($html,$uiTable);
+	// 				
+	// 				$newIcon=anchor(api_uri('API_view_form',$table,-1),icon("new"));
+	// 				$tree->prepend_to_captions($newIcon,"new");
+	// 				if (!empty($id)) {
+	// 					$tree->set_current($id);
+	// 				}
+	// 				$renderData=$tree->render($table,"tree");
+	// 				// trace_($renderData);
+	// 				$html=$this->load->view("admin/tree",$renderData,true);
+	// 				$this->_set_content($html);
+	// 			}
+	// 		}
+	// 		else {
+	// 			$this->lang->load("rights");
+	// 			$this->set_message(lang("rights_no_rights"));
+	// 			$uiTable="";
+	// 		}
+	// 
+	// 		/**
+	// 		 * show
+	// 		 */
+	// 		$this->_show_type("tree");
+	// 		$this->_show_all($uiTable);
+	// 	}
+	// }
 
 
 	/**
@@ -168,7 +168,7 @@ class Show extends AdminController {
 			if ($singleRow)
 				$this->form($table);
 			else {
-				if ($this->has_rights($table,$id)) {
+				if ($right=$this->has_rights($table,$id)) {
 					$this->load->model("grid");
 
 					/**
@@ -196,7 +196,11 @@ class Show extends AdminController {
 						/**
 						 * if data: first render data, then put data in grid and render as html
 						 */
-						$data=$this->ff->render_grid($table,$data);
+						if ($right<RIGHTS_EDIT) {
+							// remove order fields
+							foreach ($data as $id => $row) unset($data[$id]['order']);
+						}
+						$data=$this->ff->render_grid($table,$data,$right);
 
 						$grid=new grid();
 						$uiTable=$this->uiNames->get($table);
@@ -209,8 +213,10 @@ class Show extends AdminController {
 						$grid->set_data($data,$uiShowTable);
 						$keys=array_keys(current($data));
 						$keys=combine($keys,$keys);
-						$newIcon=anchor(api_uri('API_view_form',$table,-1),icon("new"));
-						$grid->prepend_to_captions($newIcon,"new");
+						if ($right>=RIGHTS_ADD) {
+							$newIcon=anchor(api_uri('API_view_form',$table,-1),icon("new"));
+							$grid->prepend_to_captions($newIcon,"new");
+						}
 						$grid->set_headings($this->uiNames->get($keys,$table));
 						$grid->set_heading(pk(),"Edit");
 						if (!empty($id)) {
@@ -246,7 +252,7 @@ class Show extends AdminController {
  */
 
 	function form($table,$id="") {
-		if ($this->has_rights($table,$id)) {
+		if ($right=$this->has_rights($table,$id)) {
 			$this->load->library('form_validation');
 			$this->load->library('upload');
 			$this->load->model("order");
@@ -333,6 +339,7 @@ class Show extends AdminController {
 						$uiFieldNames[$key]=$this->uiNames->get($key,$table);
 				}
 				$form->set_labels($uiFieldNames);
+				if ($right<RIGHTS_EDIT) $form->show_submit(FALSE);
 				$html=$form->render("html",$table);
 				if ($form->has_htmlfield()) $this->use_editor();
 				$this->_add_content($html);
@@ -369,7 +376,7 @@ class Show extends AdminController {
 		
 		$this->db->select("id,str_user_name,gpw_user_pwd,str_language");
 		$this->db->add_options();
-		$this->db->add_many();
+		// $this->db->add_many();
 		$this->db->where("id",$userId);
 		$userData=$this->db->get_result($userTable);
 		$options=el("options",$userData);
@@ -380,28 +387,6 @@ class Show extends AdminController {
 		 */
 		
 		$formData=$this->ff->render_form($userTable,$userData,$options);
-		
-		// $formData=array(
-		// 									"id"						=>array(	"type"				=>	"hidden",
-		// 																						"label"				=>	"id",
-		// 																						"name"				=>	"id",
-		// 																						"value"				=>	$userId,
-		// 																						"validation"	=>  "required|numeric"),
-		// 									"str_user_name"	=>array(	"type"				=>	"input",
-		// 																						"label"				=>	"Username",
-		// 																						"name"				=>	"str_user_name",
-		// 																						"value"				=>	$userData["str_user_name"],
-		// 																						"validation"	=>  "required"),
-		// 									"gpw_user_pwd"	=>array(	"type"				=>	"input",
-		// 																						"label"				=>	"Password",
-		// 																						"name"				=>	"gpw_user_pwd",
-		// 																						"value"				=>	$userData["gpw_user_pwd"],
-		// 																						"validation"	=>  "required"),
-		// 									"str_language"	=>array(	"type"				=>	"input",
-		// 																						"label"				=>	"Language",
-		// 																						"name"				=>	"str_language",
-		// 																						"value"				=>	$userData["str_language"],
-		// 																						"validation"	=>  "required"));
 
 		$this->load->library('form_validation');
 		$this->load->helper('html');

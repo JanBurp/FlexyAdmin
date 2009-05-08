@@ -61,7 +61,7 @@ class Edit extends AdminController {
 
 	function delete($table,$id) {
 		$confirmed=$this->session->userdata("confirmed");
-		if ($this->has_rights($table,$id)) {
+		if ($this->has_rights($table,$id)>=RIGHTS_DELETE) {
 			$this->lang->load("update_delete");
 			$message="";
 			if ($confirmed) {

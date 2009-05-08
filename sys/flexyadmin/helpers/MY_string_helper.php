@@ -13,6 +13,10 @@ function strsplit($s) {
 	return $a;
 }
 
+
+/**
+	* Find a character in string
+	*/ 
 function in_string($in,$string) {
 	$in=strsplit($in);
 	$found=FALSE;

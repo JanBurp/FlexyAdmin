@@ -38,6 +38,23 @@ class User extends Controller {
 		$this->load->view('admin/login');
 	}
 
+	function _create_rights($userId) {
+		$this->db->select("id");
+		$this->db->where("id",$userId);
+		$this->db->add_many();
+		$result=$this->db->get_result("cfg_users");
+		$allrights=$result[$userId]["rel_users__rights"];
+		$rights=array();
+		foreach ($allrights as $id => $value) {
+			unset($value['id']);
+			unset($value['id_rights']);
+			unset($value['id_users']);
+			$rights[$id]=$value;
+		}
+		// trace_($rights);
+		return $rights;
+	}
+
 	function check_login() {
 		$check=false;
 		$user=$this->input->post("user",TRUE);
@@ -45,7 +62,7 @@ class User extends Controller {
 			$pwd=$this->input->post("password",TRUE);
 			if (!empty($pwd)) {
 				// check in database
-				$this->db->select("id,str_table_rights,str_media_rights,str_language,str_filemanager_view");
+				$this->db->select("id,str_language,str_filemanager_view");
 				$this->db->where("str_user_name",$user);
 				$this->db->where("gpw_user_pwd",$pwd);
 				$query=$this->db->get($this->config->item('CFG_table_prefix')."_".$this->config->item('CFG_users'));
@@ -55,10 +72,9 @@ class User extends Controller {
 					// set session
 					$this->session->set_userdata("user_id",$row->id);
 					$this->session->set_userdata("user",$user);
-					$this->session->set_userdata("table_rights",$row->str_table_rights);
-					$this->session->set_userdata("media_rights",$row->str_media_rights);
 					$this->session->set_userdata("language",$row->str_language);
 					$this->session->set_userdata("fileview",$row->str_filemanager_view);
+					$this->session->set_userdata("rights",$this->_create_rights($row->id));
 					// set login log
 					$this->load->helper('date');
 					$this->db->set('id_user',$row->id);
@@ -72,8 +88,9 @@ class User extends Controller {
 	}
 
 	function logout() {
-		$this->session->unset_userdata("user");
-		$this->session->unset_userdata("user_rights");
+		// $this->session->unset_userdata("user");
+		// $this->session->unset_userdata("user_rights");
+		$this->session->sess_destroy();
 		redirect($this->config->item('API_home'));
 	}
 
