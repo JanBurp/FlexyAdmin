@@ -132,10 +132,15 @@ class FrontEndController extends MY_Controller {
 			$this->site["keywords"]="site, keywords";
 		}
 		/**
-		 * Set home uri (is set in tbl_site)
+		 * Set home uri (top from tbl_menu)
 		 */
-		if (isset($this->site["str_start_uri"])) {
-			$this->uri->set_home($this->site["str_start_uri"]);
+		$menuTable=$this->cfg->get("CFG_configurations","str_menu_table");
+		if (!empty($menuTable)) {
+			$this->db->order_as_tree();
+			$this->db->select("uri");
+			$top2=$this->db->get_result($menuTable,2);
+			$top=current($top2);
+			$this->uri->set_home($top["uri"]);
 		}
 	}
 

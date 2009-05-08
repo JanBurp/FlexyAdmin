@@ -31,8 +31,9 @@ function err_($message) {
 	log_('error',$message);
 }
 
-function backtrace_($return=false) {
+function backtrace_($offset=0,$return=false) {
 	$dbgTrace = debug_backtrace();
+	if ($offset>0) $dbgTrace=array_slice($dbgTrace,$offset);
 	$out=array();
 	foreach($dbgTrace as $key => $val) {
 		unset($val['object']);
@@ -64,29 +65,26 @@ function backtrace_($return=false) {
 	return $out;
 }
 
-function trace_($a=NULL,$return=false) {
+function trace_($a=NULL,$return=false,$backtraceOffset=1) {
 	static $c=0;
-	if ($a==NULL) {
-		$a=backtrace_(true);
-		unset($a[0]);
-		$type="backtrace";
+	$show="Trace";
+	if (is_null($a)) {
+		$a=backtrace_($backtraceOffset,true);
+		$show="Backtrace";
+		$type="";
 	}
-	else
-		$type=gettype($a);
-	$out="<pre style=\"font-size:10px;z-index:99999;margin:2px;padding:2px;background-color:#ccc;color:#000;border:solid 1px #000;\"><span style=\"color:#fff;font-weight:bold;\">trace [#$c][$type]:</span>\n";
+	else $type="[".gettype($a)."]";
+	$out="<div style=\"font-family: courier, serif;font-size:10px;z-index:99999;margin:2px;padding:2px;background-color:#ccc;color:#000;border:solid 1px #000;\"><span style=\"font-weight:bold;\">$show #$c $type:</span>\n";
 	if (is_bool($a)) {
-		if ($a)
-			$out.="'True'";
-		else
-			$out.="'False'";
+		if ($a) $out.="'True'";
+		else		$out.="'False'";
 	}
-	elseif (is_array($a) or is_object($a)) {
+	elseif (is_array($a) or is_object($a))
 		$out.=print_ar(array_($a,true),true);
-	}
 	else
 		$out.=print_r($a,true);
 	$c++;
-	$out.="</pre>";
+	$out.="</div>";
 	if (!$return) echo $out."<hr/>";
 	return $out;
 }
@@ -112,16 +110,28 @@ function array_($a) {
 }
 
 function print_ar($array,$return=false,$tabs=0) {
-	$out="Array:\n";
+	$out="";
+	if ($tabs>0)	$out.="array (";
+	$out.="<br/>";
 	foreach($array as $key=>$value) {
-		$out.=repeater("\t",$tabs+1)."[".$key."] => ";
+		$out.=tabs($tabs);
+		$thisOut="[".$key."] => ";
+		$len=strlen($thisOut)+1;
 		if (is_array($value))
-			$out.=print_ar($value,$return,$tabs+1);
+			$thisOut.=print_ar($value,$return,$tabs+$len);
 		else
-			$out.="'$value'\n";
+			$thisOut.="'$value'<br/>\n";
+		$out.=$thisOut;
+		if ($tabs==0) $out.="<br/>";
 	}
+	$out.=tabs($tabs-1).')<br/>';
 	if (!$return) echo $out;
 	return $out;
+}
+
+
+function tabs($t,$tab="&nbsp;") {
+	return repeater($tab,$t);
 }
 
 ?>
