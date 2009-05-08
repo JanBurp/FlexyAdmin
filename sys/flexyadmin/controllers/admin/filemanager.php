@@ -39,10 +39,10 @@ class Filemanager extends AdminController {
 		$this->_show_all();
 	}
 
-	function _has_rights($path) {
+	function _has_rights($path,$whatRight=0) {
 		$ok=FALSE;
 		$mediaName=$this->cfg->get('CFG_media_info',$path,"str_name");
-		return $this->has_rights($mediaName,"MEDIA");
+		return $this->has_rights("media_".$mediaName,"",$whatRight);
 	}
 
 
@@ -55,7 +55,7 @@ class Filemanager extends AdminController {
 	function show($path,$idFile="") {
 		$path=pathdecode($path,TRUE);
 		$name="";
-		if ($this->_has_rights($path)) {
+		if ($right=$this->_has_rights($path)) {
 			$map=$this->config->item('ASSETS').$path;
 			$this->load->helper('html');
 			$this->load->model("file_manager");
@@ -80,6 +80,8 @@ class Filemanager extends AdminController {
  			$fileManagerView=$this->session->userdata("fileview");
 			
 			$fileManager=new file_manager($path,$types,$fileManagerView);
+			if ($right<RIGHTS_ADD) 		$fileManager->show_upload_button(FALSE);
+			if ($right<RIGHTS_DELETE)	$fileManager->show_delete_buttons(FALSE);
 			$fileManager->set_files($files);
 			if (!empty($idFile)) $fileManager->set_current($idFile);
 			if (!empty($uiName)) $fileManager->set_caption($uiName);
@@ -141,7 +143,7 @@ class Filemanager extends AdminController {
 
 	function delete($path,$file) {
 		$confirmed=$this->session->userdata("confirmed");
-		if ($this->_has_rights($path)) {
+		if ($this->_has_rights($path)>=RIGHTS_DELETE) {
 			if ($confirmed) {
 				$this->lang->load("update_delete");
 				$this->load->model("file_manager");
@@ -165,7 +167,7 @@ class Filemanager extends AdminController {
 	}
 
 	function upload($path,$file="") {
-		if ($this->_has_rights($path)) {
+		if ($this->_has_rights($path)>=RIGHTS_ADD) {
 			ini_set("memory_limit","16M");
 			$this->lang->load("update_delete");
 			// $path=pathdecode($path);

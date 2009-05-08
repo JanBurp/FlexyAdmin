@@ -53,9 +53,13 @@ class Ajax extends BasicController {
 			$this->_result("AJAX|order: No Table given");
 		}
 		else {
-			$ids=$this->input->post("id");
-			$this->load->model("order");
-			$this->order->set_all($table,$ids);
+			if ($this->has_rights($table)>=RIGHTS_EDIT) {
+				$ids=$this->input->post("id");
+				$this->load->model("order");
+				$this->order->set_all($table,$ids);
+			}
+			else
+				$this->_result("AJAX|cell| ERROR or No Rights: $table");
 		}
 	}
 
@@ -64,7 +68,7 @@ class Ajax extends BasicController {
  * Url holds all data
  */
  	function edit($table,$id,$field,$value) {
- 		if ($this->has_rights($table,$id)) {
+ 		if ($this->has_rights($table,$id)>=RIGHTS_EDIT) {
  			$this->db->set($field,$value);
  			$this->db->where(pk(),$id);
  			$this->db->update($table);

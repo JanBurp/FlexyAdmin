@@ -23,6 +23,8 @@ class Form Extends Model {
 	var $type;			// html
 	var $hasHtmlField;
 	var $isValidated;
+	
+	var $showSubmit;
 
 	function Form($action="") {
 		parent::Model();
@@ -36,6 +38,7 @@ class Form Extends Model {
 		$this->data=array();
 		$this->set_type();
 		$this->hasHtmlField=false;
+		$this->show_submit();
 	}
 
 	function set_action($action="") {
@@ -71,6 +74,9 @@ class Form Extends Model {
 		$this->set_caption($name);
 	}
 
+	function show_submit($show=TRUE) {
+		$this->showSubmit=$show;
+	}
 
 /**
  * HTML template functions
@@ -471,8 +477,10 @@ class Form Extends Model {
 		$out.=form_fieldset_close();
 		$out.=form_fieldset("",array("class"=>"formbuttons"));
 		$out.=form_reset(array("name"=>"cancel", "value" => lang("form_cancel"), "class"=>"button cancel", "onClick" => "window.history.back()"));
-		$out.=form_reset(array("name"=>"reset", "value" => lang("form_reset"), "class"=>"button reset"));
-		$out.=form_submit(array("submit"=>"submit", "value"=>lang("form_submit"),"class"=>"button submit"));
+		if ($this->showSubmit) {
+			$out.=form_reset(array("name"=>"reset", "value" => lang("form_reset"), "class"=>"button reset"));
+			$out.=form_submit(array("submit"=>"submit", "value"=>lang("form_submit"),"class"=>"button submit"));
+		}
 		$out.=form_fieldset_close();
 		$out.=form_close();
 		log_('info',"form: rendering");

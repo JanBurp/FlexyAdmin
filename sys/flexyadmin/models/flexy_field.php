@@ -27,7 +27,7 @@ class Flexy_field extends Model {
 	var $vars=array();
 	var $fieldCfg=array();
 	var $fieldInfo=array();
-
+	var $fieldRight;
 
 	function Flexy_field() {
 		parent::Model();
@@ -44,9 +44,10 @@ class Flexy_field extends Model {
 		if (!isset($vars)) $this->set_variables();
 	}
 
-	function init_field($field,$data) {
+	function init_field($field,$data,$right=RIGHTS_ALL) {
 		$this->data=$data;
 		$this->field=$field;
+		$this->fieldRight=$right;
 		$cfg=$this->cfg->get('CFG_field',$this->table.".".$field);
 		if (!empty($cfg)) $this->fieldCfg[$field]=$cfg;
 		$replacePre=el("str_overrule_prefix",$cfg);
@@ -170,11 +171,11 @@ class Flexy_field extends Model {
 	 * Renders full data set according to type and action (grid|form)
 	 *
 	 */
-	function render_grid($table,$data) {
-		$this->init_table($table,"grid");
+	function render_grid($table,$data,$right=RIGHTS_ALL) {
+		$this->init_table($table,"grid",$right);
 		$out=array();
 		foreach ($data as $idRow=>$row) {
-			$out[$idRow]=$this->render_grid_row($table,$row);
+			$out[$idRow]=$this->render_grid_row($table,$row,$right);
 		}
 		return $out;
 	}
@@ -185,12 +186,12 @@ class Flexy_field extends Model {
 	 * Renders row according to type and action (grid|form)
 	 *
 	 */
-	function render_grid_row($table,$row) {
+	function render_grid_row($table,$row,$right=RIGHTS_ALL) {
 		$out=array();
 		// first create one field from foreign data
 		$row=$this->concat_foreign_fields($row);
 		foreach ($row as $field=>$data) {
-			$renderedField=$this->render_grid_field($table,$field,$data);
+			$renderedField=$this->render_grid_field($table,$field,$data,$right);
 			if ($renderedField!==FALSE)	$out[$field]=$renderedField;
 		}
 		return $out;
@@ -202,8 +203,8 @@ class Flexy_field extends Model {
 	 * Renders field according to type and action (grid|form)
 	 *
 	 */
-	function render_grid_field($table,$field,$data) {
-		$this->init_field($field,$data);
+	function render_grid_field($table,$field,$data,$right=RIGHTS_ALL) {
+		$this->init_field($field,$data,$right);
 		// Must field be shown?
 		if (isset($this->fieldCfg[$field]) and (!$this->fieldCfg[$field]["b_show_in_grid"])) {
 			return FALSE;
@@ -344,8 +345,10 @@ class Flexy_field extends Model {
 	function _primary_key_grid() {
 		$this->id=$this->data;
 		$class=$this->table." id".$this->id;
-		return 	anchor(api_uri('API_view_form',$this->table,$this->data),icon("edit"),array("class"=>"edit $class")).
-						anchor(api_uri('API_confirm',$this->table,$this->data),icon("delete"),array("class"=>"delete $class"));
+		$out="";
+		if ($this->fieldRight>=RIGHTS_EDIT) 	$out.=anchor(api_uri('API_view_form',$this->table,$this->data),icon("edit"),array("class"=>"edit $class"));
+		if ($this->fieldRight>=RIGHTS_DELETE)	$out.=anchor(api_uri('API_confirm',$this->table,$this->data),icon("delete"),array("class"=>"delete $class"));
+		return $out;
 	}
 
 	function _primary_key_form() {
@@ -410,8 +413,10 @@ class Flexy_field extends Model {
 	function _order_grid() {
 		$out="";
 		$data=$this->data;
-		$out=	anchor(api_uri('API_view_order',$this->table,$this->id,"up"),icon("up")).
-					anchor(api_uri('API_view_order',$this->table,$this->id,"down"),icon("down"));
+		if ($this->fieldRight>=RIGHTS_EDIT) {
+			$out=	anchor(api_uri('API_view_order',$this->table,$this->id,"up"),icon("up")).
+						anchor(api_uri('API_view_order',$this->table,$this->id,"down"),icon("down"));
+		}
 		return $out;
 	}
 
