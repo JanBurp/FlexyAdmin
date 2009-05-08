@@ -176,6 +176,12 @@ class File_manager Extends Model {
 		$ok=$this->upload->upload_file('file');
 		$error=$this->upload->get_error();
 		$file=$this->upload->get_file();
+		$ext=get_file_extension($file);
+		$saveName=clean_string(str_replace(".$ext","",$file)).".$ext";
+		if ($file!=$saveName) {
+			if (rename($this->map.'/'.$file, $this->map.'/'.$saveName)) $file=$saveName;
+		}
+		
 		if (!$ok) {
 			log_("info","[FM] error while uploading: '$file' [$error]");
 		}
@@ -281,6 +287,8 @@ function thumb($attr,$index=FALSE) {
 		$flashTypes=$this->config->item('FILE_types_flash');
 		$mp3Types=$this->config->item('FILE_types_mp3');
 		$movTypes=$this->config->item('FILE_types_movies');
+		$pdfTypes=$this->config->item('FILE_types_pdf');
+		$docTypes=$this->config->item('FILE_types_docs');
 
 		$nr=1;
 		foreach($files as $id=>$file) {
@@ -305,9 +313,13 @@ function thumb($attr,$index=FALSE) {
 					$icon=div(array("class"=>"sound")).icon("sound $name")._div();
 				} elseif (in_array($type,$movTypes)) {
 					$icon=div(array("class"=>"movie")).icon("movie $name")._div();
+				} elseif (in_array($type,$docTypes)) {
+					$icon=div(array("class"=>"movie")).icon("doc $name")._div();
+				} elseif (in_array($type,$pdfTypes)) {
+					$icon=div(array("class"=>"movie")).icon("pdf $name")._div();
 				} elseif ($file["type"]=="dir") {
 					$icon=div(array("class"=>"image")).img(array("src" => admin_assets("icons/folder.gif"),"alt"=>$name,"title"=>$name))._div();
-				}
+				} 
 				// default
 				else {
 					$icon=div(array("class"=>"file")).icon("file $name")._div();;

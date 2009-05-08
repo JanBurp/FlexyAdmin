@@ -118,6 +118,8 @@ $config['FILE_types_img']							= array('jpg','jpeg','gif','png');
 $config['FILE_types_mp3']							= array('mp3','wav','wma');
 $config['FILE_types_flash']						= array('swf','flv');
 $config['FILE_types_movies'] 					= array('mov');
+$config['FILE_types_pdf']							= array('pdf');
+$config['FILE_types_docs']						= array('doc','docx','odt');
 
 
 $config['CFG_table']									= "table_info";
@@ -260,7 +262,7 @@ $config["CFG_"]=array(
 			"str_ui_name"=>'',
 			"b_show_in_grid"=>'1',
 			"b_show_in_form"=>'1',
-			"str_options"=>'image|flash|other|all',
+			"str_options"=>'image|flash|doc|pdf|other|all',
 			"b_multi_options"=>'0',
 			"str_overrule_prefix"=>'',
 			"str_validation_rules"=>'',

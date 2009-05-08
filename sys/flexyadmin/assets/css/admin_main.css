@@ -268,6 +268,31 @@ div.add_button {
 		height:32px;
 		margin:0px;
 		}
+.icon.pdf {
+	background-image: url("../icons/pdf-icon_50x50.gif");
+	width:50px;
+	height:50px;
+	margin:30px;
+}
+.list	.icon.pdf {
+		background-image: url("../icons/pdf-icon_small.gif");
+		width:20px;
+		height:20px;
+		margin:0px;
+		}
+.icon.doc {
+	background-image: url("../icons/doc_icon_50x50.gif");
+	width:50px;
+	height:50px;
+	margin:30px;
+}
+.list	.icon.doc {
+		background-image: url("../icons/doc_icon_small.gif");
+		width:20px;
+		height:20px;
+		margin:0px;
+		}
+
 .icon.movie {
 	background-image: url("../icons/movie.gif");
 	background-position:inherit;
