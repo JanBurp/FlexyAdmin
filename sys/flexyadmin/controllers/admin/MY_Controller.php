@@ -252,10 +252,7 @@ class BasicController extends MY_Controller {
 		$found=array('b_delete'=>FALSE,'b_add'=>FALSE,'b_edit'=>FALSE,'b_show'=>FALSE);
 		$pre=get_prefix($item);
 		$preAll=$pre."_*";
-		// trace_($item);
-		// trace_($pre);
-		// trace_($preAll);
-		// trace_($this->rights);
+
 		foreach ($this->rights as $key => $rights) {
 			if ($rights['rights']=="*" or (strpos($rights['rights'],$preAll)!==FALSE) or (strpos($rights['rights'],$item)!==FALSE) )
 				$this->_change_rights($found,$rights);
@@ -265,31 +262,31 @@ class BasicController extends MY_Controller {
 		if ($found['b_add'])		$foundRights+=RIGHTS_ADD;
 		if ($found['b_edit'])		$foundRights+=RIGHTS_EDIT;
 		if ($found['b_show'])		$foundRights+=RIGHTS_SHOW;
-		// trace_($foundRights);
+
 		if ($whatRight==0)
 			return $foundRights;
 		else
 			return ($foundRights>=$whatRight);
 	}
 
-	function _has_key($table) {
-		if (IS_LOCALHOST) return true;
+	function _has_key($table="") {
+		if ($table=='cfg_configurations') return true;
 		$k=$this->cfg->get('CFG_configurations',$this->_decode('==QOwAjM5V2a'));
 		$h=strtolower($_SERVER[$this->_decode('==QOwAjMUN1TI9FUURFS')]);
-		$h=explode('/',str_replace(array($this->_decode('=kDMwIzLvoDc0RHa'),$this->_decode('==QOwAjM3d3d')),"",strtolower($_SERVER[$this->_decode('==QOwAjMUN1TI9FUURFS')]),$h));
-		$h=$h[0];
-		if ($k==$this->_encode($h)) return true;
+		if (substr($h,0,7)=='http://') {
+			if (empty($k)) return false;
+			$h=explode('/',str_replace(array($this->_decode('=kDMwIzLvoDc0RHa'),$this->_decode('==QOwAjM3d3d')),"",$h));
+			$h=$h[0];
+			if ($k==$this->_encode($h)) return true;
+		}
+		elseif (IS_LOCALHOST) return true;
 		return false;
 	}
 
-	function _no_key($table) {
+	function _no_key($table="") {
 		$out=$this->_decode('5ADMy4TYvwTbvNmLulWbkFWe4VGbm5yd3dnPn02bj5ibp1GZhlHelxmZuc3d39yL6AHd0h2J9YWZyhGIhxDIvRHIvdGIy9GI+E2L8IXZ0NXYtJWZ35zJjMyIjozb0xWah12J9YWZyhGIhxDIyV3b5BCdjFGdu92Q+8icixjLzlGa0BicvZGIlNnblNWasBSYgQWZl5GI19WW');
 		$out=str_replace('####',$this->cfg->get('CFG_configurations','email_webmaster_email'),$out);
 		return $out;
-	}
-
-	function _create_key() {
-		
 	}
 
 	function _encode($tekst,$v="2009") {
