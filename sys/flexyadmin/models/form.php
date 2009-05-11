@@ -67,11 +67,23 @@ class Form Extends Model {
 		$this->$func();
 	}
 
-	function set_data($data=NULL,$name="") {
+	function set_data($data=NULL,$caption="") {
 		if (isset($data) and !empty($data)) {
-			$this->data=$data;
+			foreach ($data as $name => $field) {
+				$this->data[$name]=$this->_check_default_field($name,$field);
+			}
 		}
-		$this->set_caption($name);
+		$this->set_caption($caption);
+	}
+
+	function _check_default_field($name, $field) {
+		if (!isset($field['type']))				$field['type']="input";
+		if (!isset($field['name']))				$field['name']=$name;
+		if (!isset($field['label']))			$field['label']=ucfirst(remove_prefix($name));
+		if (!isset($field['class']))			$field['class']="";
+		if (!isset($field['value']))			$field['value']="";
+		if (!isset($field['validation']))	$field['validation']="";
+		return $field;
 	}
 
 	function show_submit($show=TRUE) {
@@ -450,8 +462,6 @@ class Form Extends Model {
 		}
 		return $data;
 	}
-
-
 
 /**
  * function render()

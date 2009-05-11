@@ -307,20 +307,24 @@ class Show extends AdminController {
 			 */
 			if ($form->validation()) {
 				$this->lang->load("update_delete");
-				$resultId=$form->update($table);
-				if (is_string($resultId)) {
-					$this->set_message(langp("update_error",$table,$resultId));
-					redirect(api_uri('API_view_grid',$table));
+				if ($this->_has_key($table)) {
+					$resultId=$form->update($table);
+					if (is_string($resultId)) {
+						$this->set_message(langp("update_error",$table,$resultId));
+						redirect(api_uri('API_view_grid',$table));
+					}
+					else {
+						if ($id==-1)
+							$this->set_message(langp("insert_new",$table));
+						else
+							$this->set_message(langp("update_succes",$table));
+						$this->load->model("login_log");
+						$this->login_log->update($table);
+						redirect(api_uri('API_view_grid',$table,$resultId));
+					}
 				}
-				else {
-					if ($id==-1)
-						$this->set_message(langp("insert_new",$table));
-					else
-						$this->set_message(langp("update_succes",$table));
-					$this->load->model("login_log");
-					$this->login_log->update($table);
-					redirect(api_uri('API_view_grid',$table,$resultId));
-				}
+				else
+					$this->set_message($this->_no_key($table));
 			}
 			/**
 			 * Validate form, no succes: show form, maybe with validation errors
