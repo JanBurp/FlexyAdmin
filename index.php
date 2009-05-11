@@ -10,15 +10,16 @@
 |
 */
 
+	define("LOCALHOSTS","localhost,localhost:8888,10.37.129.2");
 	function is_local_host() {
-		$localhosts=array("localhost","localhost:8888","10.37.129.2");
+		$localhosts=explode(",",LOCALHOSTS);
 		$is=FALSE;
 		foreach ($localhosts as $host) {
 			if ($host==$_SERVER['HTTP_HOST']) { $is=TRUE; }
 		}
 		return $is;
 	}
-	$IS_LOCALHOST = is_local_host();
+	define("IS_LOCALHOST",is_local_host());
 
 /*
 |---------------------------------------------------------------
@@ -30,12 +31,12 @@
 | For more info visit:  http://www.php.net/error_reporting
 |
 */
-	error_reporting(0); // For production site, set to 0, for developing set to E_ALL
+	error_reporting(E_ERROR); // For production site.
 
 	/*
  	 * If site is on localhost, set error_reporting to E_ALL (for developing)
 	 */
-	if ($IS_LOCALHOST) {
+	if (IS_LOCALHOST) {
 		error_reporting(E_ALL);
 	}
 
