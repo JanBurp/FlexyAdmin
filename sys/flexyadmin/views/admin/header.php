@@ -15,18 +15,18 @@
 	<!--[if IE 7]><style type="text/css" media="screen">@import url(<?=admin_assets()?>css/ie7.css);</style><![endif]-->
 	<!--[if IE 8]><style type="text/css" media="screen">@import url(<?=admin_assets()?>css/ie8.css);</style><![endif]-->
 
-	<link rel="stylesheet" type="text/css" href="<?=admin_assets()?>js/jquery/ui/theme/ui.all.css" />
+	<link rel="stylesheet" type="text/css" href="sys/jquery/ui/theme/ui.all.css" />
 
-	<script language="javascript" type="text/javascript" src="<?=admin_assets()?>js/jquery/jquery-1.3.2.min.js"></script>
-	<script language="javascript" type="text/javascript" src="<?=admin_assets()?>js/jquery/ui/jquery-ui-1.7.1.custom.min.js"></script>
+	<script language="javascript" type="text/javascript" src="sys/jquery/jquery-1.3.2.min.js"></script>
+	<script language="javascript" type="text/javascript" src="sys/jquery/ui/jquery-ui-1.7.1.custom.min.js"></script>
 
-	<script language="javascript" type="text/javascript" src="<?=admin_assets()?>js/jquery/plugins/filterable/jquery.filterable.min.js"></script>
-	<script language="javascript" type="text/javascript" src="<?=admin_assets()?>js/jquery/plugins/tablesorter/jquery.tablesorter.min.js"></script>
+	<script language="javascript" type="text/javascript" src="sys/jquery/plugins/filterable/jquery.filterable.min.js"></script>
+	<script language="javascript" type="text/javascript" src="sys/jquery/plugins/tablesorter/jquery.tablesorter.min.js"></script>
 
 	<? if ($show_type=="form"): ?>
 	<!-- js for form -->
-	<script language="javascript" type="text/javascript" src="<?=admin_assets()?>js/jquery/ui/i18n/ui.datepicker-nl.js"></script>
-	<script language="javascript" type="text/javascript" src="<?=admin_assets()?>js/jquery/plugins/form/jquery.form.js"></script>
+	<script language="javascript" type="text/javascript" src="sys/jquery/ui/i18n/ui.datepicker-nl.js"></script>
+	<script language="javascript" type="text/javascript" src="sys/jquery/plugins/form/jquery.form.js"></script>
 	<? endif; ?>
 
 	<script language="javascript" type="text/javascript" src="<?=admin_assets()?>js/behaviours/jbehave.js"></script>
@@ -34,7 +34,7 @@
 
 	<? if ($show_type=="form" and $show_editor): ?>
 	<!-- js for form, html editor -->
-	<script language="javascript" type="text/javascript" src="<?=admin_assets()?>js/tinymce/jscripts/tiny_mce/tiny_mce_gzip.js"></script>
+	<script language="javascript" type="text/javascript" src="sys/tinymce/jscripts/tiny_mce/tiny_mce_gzip.js"></script>
 	<script type="text/javascript">
 	tinyMCE_GZ.init({
 		plugins : "paste,table,fullscreen,advimage,media",

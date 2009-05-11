@@ -44,7 +44,7 @@
 /**
  * This routing makes sure all uri's go to the frontend site, except uri's beginning with 'admin'
  */
-$route['(?!admin)(.*)'] = "";
+$route['(?![admin])(.*)'] = "";
 
 /**
  * This routing makes sure all validation callbacks are not reachable
