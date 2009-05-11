@@ -31,7 +31,7 @@ function err_($message) {
 	log_('error',$message);
 }
 
-function backtrace_($offset=0,$return=false) {
+function backtrace_($offset=0,$echo=true) {
 	$dbgTrace = debug_backtrace();
 	if ($offset>0) $dbgTrace=array_slice($dbgTrace,$offset);
 	$out=array();
@@ -63,11 +63,11 @@ function backtrace_($offset=0,$return=false) {
 		}
 		$out[$key]=$val;
 	}
-	if (!$return) $out=trace_($out);
+	if ($echo) trace_($out,$echo);
 	return $out;
 }
 
-function trace_($a=NULL,$return=false,$backtraceOffset=1) {
+function trace_($a=NULL,$echo=true,$backtraceOffset=1) {
 	static $c=0;
 	$show="Trace";
 	if (is_null($a)) {
@@ -76,7 +76,7 @@ function trace_($a=NULL,$return=false,$backtraceOffset=1) {
 		$type="";
 	}
 	else $type="[".gettype($a)."]";
-	$out="<div style=\"font-family: courier, serif;font-size:10px;z-index:99999;margin:2px;padding:2px;background-color:#ccc;color:#000;border:solid 1px #000;\"><span style=\"font-weight:bold;\">$show #$c $type:</span>\n";
+	$out="<div style=\"font-family: courier, serif;font-size:10px;z-index:99999;margin:2px;padding:2px;background-color:#fff;color:#000;border:solid 1px #000;\"><span style=\"font-weight:bold;\">$show #$c $type:</span>\n";
 	if (is_bool($a)) {
 		if ($a) $out.="'True'";
 		else		$out.="'False'";
@@ -87,7 +87,7 @@ function trace_($a=NULL,$return=false,$backtraceOffset=1) {
 		$out.=print_r($a,true);
 	$c++;
 	$out.="</div>";
-	if (!$return) echo $out."<hr/>";
+	if ($echo) echo $out."<br/>";
 	return $out;
 }
 
