@@ -28,7 +28,7 @@
  */
 
 $config['PHP_version']						= substr(phpversion(),0,1);
-$config['LOCAL']									= is_local_host();
+$config['LOCAL']									= IS_LOCALHOST;
 
 $config['ASSETS']									= "site/assets/";
 $config['ADMINASSETS']						= "sys/flexyadmin/assets/";
