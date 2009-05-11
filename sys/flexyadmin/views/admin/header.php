@@ -29,7 +29,7 @@
 	<script language="javascript" type="text/javascript" src="sys/jquery/plugins/form/jquery.form.js"></script>
 	<? endif; ?>
 
-	<script language="javascript" type="text/javascript" src="<?=admin_assets()?>js/behaviours/jbehave.js"></script>
+	<script language="javascript" type="text/javascript" src="<?=admin_assets()?>js/flexyadmin.js"></script>
 
 
 	<? if ($show_type=="form" and $show_editor): ?>
