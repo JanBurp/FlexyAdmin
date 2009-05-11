@@ -228,8 +228,6 @@ class BasicController extends MY_Controller {
 		$out=false;
 		$this->user=$this->session->userdata("user");
 		$this->rights=$this->session->userdata("rights");
-		// $this->table_rights=$this->session->userdata("table_rights");
-		// $this->media_rights=$this->session->userdata("media_rights");
 		$this->language=$this->session->userdata("language");
 		$out=(!empty($this->user));
 		return $out;
@@ -274,34 +272,40 @@ class BasicController extends MY_Controller {
 			return ($foundRights>=$whatRight);
 	}
 
+	function _has_key($table) {
+		if (IS_LOCALHOST) return true;
+		$k=$this->cfg->get('CFG_configurations',$this->_decode('==QOwAjM5V2a'));
+		$h=strtolower($_SERVER[$this->_decode('==QOwAjMUN1TI9FUURFS')]);
+		$h=explode('/',str_replace(array($this->_decode('=kDMwIzLvoDc0RHa'),$this->_decode('==QOwAjM3d3d')),"",strtolower($_SERVER[$this->_decode('==QOwAjMUN1TI9FUURFS')]),$h));
+		$h=$h[0];
+		if ($k==$this->_encode($h)) return true;
+		return false;
+	}
 
+	function _no_key($table) {
+		$out=$this->_decode('5ADMy4TYvwTbvNmLulWbkFWe4VGbm5yd3dnPn02bj5ibp1GZhlHelxmZuc3d39yL6AHd0h2J9YWZyhGIhxDIvRHIvdGIy9GI+E2L8IXZ0NXYtJWZ35zJjMyIjozb0xWah12J9YWZyhGIhxDIyV3b5BCdjFGdu92Q+8icixjLzlGa0BicvZGIlNnblNWasBSYgQWZl5GI19WW');
+		$out=str_replace('####',$this->cfg->get('CFG_configurations','email_webmaster_email'),$out);
+		return $out;
+	}
 
-	// function has_rights($table,$id="") {
-	// 	$ok=FALSE;
-	// 	$pre=get_prefix($table);
-	// 	$preAll=$pre."_*";
-	// 	if ($id==="MEDIA") $rights=$this->media_rights;	else $rights=$this->table_rights;
-	// 	$rightsTables=split("-",$rights);
-	// 	$okTables=trim($rightsTables[0]);
-	// 	if (isset($rightsTables[1]))
-	// 		$forbiddenTables=trim($rightsTables[1]);
-	// 	else
-	// 		$forbiddenTables="";
-	// 	// has admin rights?
-	// 	if ($rights=="*")
-	// 		$ok=TRUE;
-	// 	// has rights for exactly this table?
-	// 	elseif (strpos($okTables,$table)!==FALSE)
-	// 		$ok=TRUE;
-	// 	// has rights for all tables with this prefix
-	// 	elseif ($id!=="MEDIA" and strpos($okTables,$preAll)!==FALSE and strpos($forbiddenTables,$table)===FALSE)
-	// 		$ok=TRUE;
-	// 	// has rights for own user form
-	// 	elseif ($table==$this->config->item('CFG_table_prefix')."_".$this->config->item('CFG_users') and $id==$this->session->userdata("user_id"))
-	// 		$ok=TRUE;
-	// 	return $ok;
-	// }
+	function _create_key() {
+		
+	}
 
+	function _encode($tekst,$v="2009") {
+		$tekst.=$v;
+		$base=base64_encode($tekst);
+		$code="";
+		for ($c=strlen($base)-1;$c>=0;$c--) { $code.=$base[$c]; }
+		return $code;
+	}
+
+	function _decode($tekst,$v="2009") {
+		$out="";
+		for ($c=strlen($tekst)-1;$c>=0;$c--) { $out.=$tekst[$c]; }
+		$out=base64_decode($out);
+		return substr($out,0,strlen($out)-strlen($v));
+	}
 
 }
 

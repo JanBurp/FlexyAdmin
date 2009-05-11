@@ -71,7 +71,7 @@ function trace_($a=NULL,$echo=true,$backtraceOffset=1) {
 	static $c=0;
 	$show="Trace";
 	if (is_null($a)) {
-		$a=backtrace_($backtraceOffset,true);
+		$a=backtrace_($backtraceOffset,false);
 		$show="Backtrace";
 		$type="";
 	}
