@@ -43,6 +43,12 @@ class Info extends AdminController {
 		$this->_show_all();
 	}
 
+	function license() {
+		$this->_set_content('<p class="small">'.str_replace("\n","<br/>",read_file('sys/flexyadmin/flexyadmin_license.txt'))."</p>");
+		$this->_show_type("info");
+		$this->_show_all();
+	}
+
 	function code() {
 		if ($this->_has_key()) {
 			$this->load->library('form_validation');
