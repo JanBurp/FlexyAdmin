@@ -271,13 +271,13 @@ class BasicController extends MY_Controller {
 
 	function _has_key($table="") {
 		if ($table=='cfg_configurations') return true;
+		if (IS_LOCALHOST) return true;
 		$k=$this->cfg->get('CFG_configurations',$this->_decode('==QOwAjM5V2a'));
 		if (empty($k)) return false;
 		$h=strtolower($_SERVER[$this->_decode('==QOwAjMUN1TI9FUURFS')]);
 		$h=explode('/',str_replace(array($this->_decode('=kDMwIzLvoDc0RHa'),$this->_decode('=kDMwIjL3d3d')),"",$h));
 		$h=$h[0];
 		if ($k==$this->_encode($h)) return true;
-		if (IS_LOCALHOST) return true;
 		return false;
 	}
 
