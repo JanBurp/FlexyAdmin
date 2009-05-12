@@ -1,0 +1,1 @@
+var tinyMCEImageList = new Array(["lucht.jpg","site/assets/pictures/lucht.jpg"],["Waterlelies.jpg","site/assets/pictures/Waterlelies.jpg"],["Winter.jpg","site/assets/pictures/Winter.jpg"],["Zonsondergang.jpg","site/assets/pictures/Zonsondergang.jpg"]);
