@@ -1,8 +1,8 @@
-<div style="border:1px solid #990000;margin:4px;padding:4px;color:#000;">
+<div style="border:1px solid #696;margin:4px;padding:10px;color:#000;">
 <?
 if (IS_LOCALHOST) {
 	?>
-	<h4>A PHP Error was encountered</h4>
+	<h4 style="font-weight:bold;font-size: 14px;color: #696;">A PHP Error was encountered</h4>
 
 	<pre>
 	Severity:	<?php echo $severity; ?>
@@ -18,7 +18,7 @@ if (IS_LOCALHOST) {
 	if ($severity!="Warning") { backtrace_(3); }
 }
 else {
-	?><h4>Sorry, an error (<?=$severity?>) has been encoutered</h4><?
+	?><h4 style="font-weight:bold;font-size: 14px;color: #696;">Sorry, an error (<?=$severity?>) has been encoutered</h4><?
 	if ($severity!="Warning") {
 		?><p>A mail is sent to flexyadmin.com with all necessary error information.</p><?
 		$to="error@flexyadmin.com";
