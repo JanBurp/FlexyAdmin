@@ -32,6 +32,7 @@ function err_($message) {
 }
 
 function backtrace_($offset=0,$echo=true) {
+	if ($echo) return trace_(NULL,$echo,$offset+1);
 	$dbgTrace = debug_backtrace();
 	if ($offset>0) $dbgTrace=array_slice($dbgTrace,$offset);
 	$out=array();
@@ -76,7 +77,7 @@ function trace_($a=NULL,$echo=true,$backtraceOffset=1) {
 		$type="";
 	}
 	else $type="[".gettype($a)."]";
-	$out="<div style=\"font-family: courier, serif;font-size:10px;z-index:99999;margin:2px;padding:2px;background-color:#fff;color:#000;border:solid 1px #000;\"><span style=\"font-weight:bold;\">$show #$c $type:</span>\n";
+	$out="<div style=\"font-family:courier,serif;font-size:10px;z-index:99999;margin:2px;padding:2px;background-color:#efe;color:#000;border:solid 1px #999;\"><span style=\"font-weight:bold;color:#696;\">$show #$c $type:</span>\n";
 	if (is_bool($a)) {
 		if ($a) $out.="'True'";
 		else		$out.="'False'";
@@ -102,7 +103,7 @@ function array_($a) {
 		}
 		else {
 			if ((substr($value,0,6)!="#show#") and (in_string("<>",$value) or (strlen($value)>100)) )
-				$out[$key]="<span title=\"".htmlentities($value)."\" style=\"cursor:help;color:#fff;\">[text]</span>";
+				$out[$key]="<span title=\"".htmlentities($value)."\" style=\"cursor:help;color:#696;\">[text]</span>";
 			else {
 				$out[$key]=str_replace("#show#","",$value);
 			}
