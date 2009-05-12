@@ -208,7 +208,7 @@ $config["CFG_"]=array(
 			"str_ui_name"=>'',
 			"b_show_grid_with_joins"=>'0',
 			"str_abstract_fields"=>'str_user_name',
-			"str_order_by"=>'',
+			"str_order_by"=>'id',
 			"txt_help"=>''
 			),
 		"cfg_rights"=>array(

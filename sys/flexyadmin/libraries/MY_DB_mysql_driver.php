@@ -61,7 +61,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 * If no explicit order set, decides according to prefixen what order field to take.
 	 * See flexyadmin_config [FIELDS_standard_order] what fields.
 	 */
-	function _set_standard_order($table) {
+	function _set_standard_order($table,$fallbackOrder="") {
 		$order="";
 		if ($this->orderAsTree) {
 			$this->order_by("self_parent");
@@ -75,21 +75,25 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				$order=$CI->cfg->get('CFG_table',$table,'str_order_by');
 				// or first standard order field
 				if (empty($order) and !empty($table)) {
-					$stdFields=$CI->config->item('ORDER_default_fields');
-					$fields=$this->list_fields($table);
-					do {
-						$curr=current($stdFields);
-						$curr=explode(" ",$curr);
-						$testField=trim($curr[0]);
-						reset($fields);
+					if (!empty($fallbackOrder))
+						$order=$fallbackOrder;
+					else {
+						$stdFields=$CI->config->item('ORDER_default_fields');
+						$fields=$this->list_fields($table);
 						do {
-							if (strncmp($testField,current($fields),strlen($testField))==0) {
-								$order=current($fields);
-								if (isset($curr[1])) $order.=" ".$curr[1];
-							}
-						} while (empty($order) and next($fields));
+							$curr=current($stdFields);
+							$curr=explode(" ",$curr);
+							$testField=trim($curr[0]);
+							reset($fields);
+							do {
+								if (strncmp($testField,current($fields),strlen($testField))==0) {
+									$order=current($fields);
+									if (isset($curr[1])) $order.=" ".$curr[1];
+								}
+							} while (empty($order) and next($fields));
+						}
+						while (empty($order) and next($stdFields));
 					}
-					while (empty($order) and next($stdFields));
 				}
 				$this->order_by($order);
 			}
@@ -607,7 +611,8 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			$CI=&get_instance();
 			$this->select($this->pk);
 			$this->select($this->get_abstract_field($table));
-			$this->order_by($CI->config->item('ABSTRACT_field_name'));
+			$this->_set_standard_order($table,$CI->config->item('ABSTRACT_field_name'));
+			// $this->order_by($CI->config->item('ABSTRACT_field_name'));
 			$query=$this->get($table);
 			foreach($query->result_array() as $row) {
 				$out[$row[$this->pk]]=$row[$CI->config->item('ABSTRACT_field_name')];
