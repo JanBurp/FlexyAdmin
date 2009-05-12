@@ -19,7 +19,10 @@
 		}
 		return $is;
 	}
-	define("IS_LOCALHOST",is_local_host());
+	if (is_local_host())
+		define("IS_LOCALHOST",TRUE);
+	else
+		define("IS_LOCALHOST",FALSE);
 
 /*
 |---------------------------------------------------------------
