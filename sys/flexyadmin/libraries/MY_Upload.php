@@ -60,9 +60,15 @@ class MY_Upload extends CI_Upload {
 			$uPath=str_replace($CI->config->item('ASSETS'),"",$config["upload_path"]);
 			$cfg=$CI->cfg->get('CFG_img_info',$uPath);
 			// first resize copies
+			$currentSizes=getimagesize($config["upload_path"]."/".$this->file_name);
 			$nr=1;
 			while (isset($cfg["b_create_$nr"])) {
 				if ($cfg["b_create_$nr"]!=FALSE) {
+					// check if resize is not bigger than original (that would be strange)
+					if ($currentSizes[0]<$cfg["int_width_$nr"] and $currentSizes[1]<$cfg["int_height_$nr"] ) {
+						$cfg["int_width_$nr"]=$currentSizes[0];
+						$cfg["int_height_$nr"]=$currentSizes[1];
+					}
 					$pre=$cfg["str_prefix_$nr"];
 					$post=$cfg["str_postfix_$nr"];
 					$ext=get_file_extension($this->file_name);
@@ -73,6 +79,7 @@ class MY_Upload extends CI_Upload {
 					$config['width'] 					= $cfg["int_width_$nr"];
 					$config['height'] 				= $cfg["int_height_$nr"];
 					$config['new_image']			= $config["upload_path"]."/".$copyName;;
+					$config['master_dim']			= 'auto';
 					$CI->image_lib->initialize($config);
 					if (!$CI->image_lib->resize()) {
 						$this->error=$CI->image_lib->display_errors();
@@ -83,15 +90,19 @@ class MY_Upload extends CI_Upload {
 			}
 			// resize original
 			if ($cfg["b_resize_img"]!=FALSE) {
-				$config['source_image'] 	= $config["upload_path"]."/".$this->file_name;
-				$config['maintain_ratio'] = TRUE;
-				$config['width'] 					= $cfg["int_img_width"];
-				$config['height'] 				= $cfg["int_img_height"];
-				$config['new_image']			= "";
-				$CI->image_lib->initialize($config);
-				if (!$CI->image_lib->resize()) {
-					$this->error=$CI->image_lib->display_errors();
-					$goodluck=FALSE;
+				// check if resize is necessary
+				if ($currentSizes[0]>$cfg["int_img_width"] or $currentSizes[1]>$cfg["int_img_height"] ) {
+					$config['source_image'] 	= $config["upload_path"]."/".$this->file_name;
+					$config['maintain_ratio'] = TRUE;
+					$config['width'] 					= $cfg["int_img_width"];
+					$config['height'] 				= $cfg["int_img_height"];
+					$config['new_image']			= "";
+					$config['master_dim']			= 'auto';
+					$CI->image_lib->initialize($config);
+					if (!$CI->image_lib->resize()) {
+						$this->error=$CI->image_lib->display_errors();
+						$goodluck=FALSE;
+					}
 				}
 			}
 		}
