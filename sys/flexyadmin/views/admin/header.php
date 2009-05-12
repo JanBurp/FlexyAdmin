@@ -4,7 +4,7 @@
 
 <html>
 <head>
-	<title>FlexyAdmin V1</title>
+	<title>FlexyAdmin 2009</title>
 	<meta http-equiv="content-type"	content="text/html;charset=utf-8" />
 	<meta http-equiv="Content-Style-Type" content="text/css" />
 
