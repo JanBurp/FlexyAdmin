@@ -1,7 +1,7 @@
 	<div id="footer">
 		<div>
 			<p id="user">User: <a href="<?=api_url('API_user')?>"><?=$user?>
-			<? if (isset($local) and ($local==TRUE)): ?>
+			<? if (IS_LOCALHOST): ?>
 				&nbsp;[LOCAL]
 			<? endif; ?>
 			</a></p>
