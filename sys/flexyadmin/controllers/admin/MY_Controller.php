@@ -270,8 +270,7 @@ class BasicController extends MY_Controller {
 	}
 
 	function _has_key($table="") {
-		if ($table=='cfg_configurations') return true;
-		if (IS_LOCALHOST) return true;
+		if ($table=='cfg_configurations' or IS_LOCALHOST) return true;
 		$k=$this->cfg->get('CFG_configurations',$this->_decode('==QOwAjM5V2a'));
 		if (empty($k)) return false;
 		$h=strtolower($_SERVER[$this->_decode('==QOwAjMUN1TI9FUURFS')]);
