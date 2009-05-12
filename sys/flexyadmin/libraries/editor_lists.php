@@ -72,9 +72,9 @@ class Editor_lists {
 		$list.=");";
 		$ListFile="site/assets/lists/$jsFile.js";
 		$result=write_file($ListFile, $list);
-//		trace_($result);
-//		trace_($list);
-//		trace_(file_exists($ListFile));
+		// trace_($result);
+		// trace_($list);
+		// trace_($ListFile);
 		return $result;
 	}
 
