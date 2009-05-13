@@ -23,6 +23,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	var $options;
 	var $whereUri;
 	var $orderAsTree;
+	var $ar_dont_select;
 
 	function MY_DB_mysql_driver($params) {
 		parent::CI_DB_mysql_driver($params);
@@ -40,6 +41,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		$this->max_text_len();
 		$this->where_uri();
 		$this->order_as_tree(FALSE);
+		$this->ar_dont_select=array();
 	}
 
 	/**
@@ -109,6 +111,12 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		}
 	}
 
+	function dont_select($dont_select="") {
+		if (!empty($dont_select)) {
+			$this->ar_dont_select[]=$dont_select;
+		}
+	}
+
 	function order_as_tree($orderAsTree=TRUE) {
 		$this->orderAsTree=$orderAsTree;
 	}
@@ -137,28 +145,29 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		}
 
 		/**
+			* Explicit select all fields
+			*/
+		if (empty($this->ar_select)) {
+			$select=$this->list_fields($table);
+			foreach($select as $key=>$f) {
+				$select[$key]=$f;
+			}
+		}
+		else {
+			$select=$this->ar_select;
+			$this->ar_select=array();
+		}		
+
+		/**
 		 * add foreign (joins) if asked for
 		 */
 		if (!empty($this->foreigns) and $this->foreigns!==false) {
 			log_("info","[DB+] add joins from foreign tables");
 			$foreignTables=$this->get_foreign_tables($table);
 			if (!empty($foreignTables)) {
-				// change select to all fields (if no select was set) // with tablename in front
-				if (empty($this->ar_select)) {
-					$fields=$this->list_fields($table);
-					foreach($fields as $key=>$f) {
-						$fields[$key]=$f;
-					}
-				}
-				else {
-					$fields=$this->ar_select;
-					$this->ar_select=array();
-					// trace_($this->ar_select);
-					// trace_($fields);
-				}
 				// loop through fields, add them to select array and see if it is a foreignfield with known foreigntables
 				$selectFields=array();
-				foreach($fields as $field) {
+				foreach($select as $field) {
 					if (strpos($field,".")===FALSE)
 						$selectFields[]=$table.".".$field;
 					else 
@@ -184,10 +193,20 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 					}
 				}
 				// select all fields including foreign fields
-				$this->select(implode(",",$selectFields));
-				// trace_($this->ar_select);
+				$select=$selectFields;
 			}
 		}
+
+		/**
+			* Select, but first unselect the dont select fields
+			*/
+		foreach ($this->ar_dont_select as $dont) {
+			foreach ($select as $key => $value) {
+				if ($value==$dont or $value=="$table.$dont") unset($select[$key]);
+			}
+		}
+		$this->select($select);
+
 		/**
 		 * set standard order if not set
 		 */

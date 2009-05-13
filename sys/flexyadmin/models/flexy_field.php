@@ -28,6 +28,8 @@ class Flexy_field extends Model {
 	var $fieldCfg=array();
 	var $fieldInfo=array();
 	var $fieldRight;
+	var $restrictedToUser;
+	var $user_id;
 
 	function Flexy_field() {
 		parent::Model();
@@ -56,6 +58,10 @@ class Flexy_field extends Model {
 		else
 			$this->pre=$replacePre;
 		$this->type();
+	}
+	function set_restricted_to_user($restrictedToUser=TRUE,$user_id='') {
+		$this->restrictedToUser=$restrictedToUser;
+		$this->user_id=$user_id;
 	}
 
 	function set_variables() {
@@ -357,6 +363,36 @@ class Flexy_field extends Model {
 		$out["type"]="hidden";
 		return $out;
 	}
+
+	function _user_grid() {
+		$this->db->as_abstracts();
+		$this->db->where("id",$this->data);
+		$user=$this->db->get_row("cfg_users");
+		$out=$user['abstract'];
+		return $out;		
+	}
+
+	function _user_form() {
+		if ($this->restrictedToUser===FALSE) {
+			$this->db->as_abstracts();
+			$users=$this->db->get_result("cfg_users");
+			$options=array();
+			$options[""]="";
+			foreach ($users as $key => $value) {
+				$options[$key]=$value['abstract'];
+			}
+			$out=$this->_standard_form_field($options);
+			$out["type"]="dropdown";
+			unset($out["button"]);
+			if (empty($out['value'])) $out['value']=$this->user_id;
+		}
+		else {
+			$out=$this->_standard_form_field();
+			$out["type"]="hidden";
+		}
+		return $out;
+	}
+
 
 	function _get_tree($id,$branch="",$tree="") {
 		if (!empty($tree)) $tree="/$tree";

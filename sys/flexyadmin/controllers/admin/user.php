@@ -49,6 +49,10 @@ class User extends Controller {
 			unset($value['id']);
 			unset($value['id_rights']);
 			unset($value['id_users']);
+			if ($value['b_all_users'])
+				$value['user_rights']="";
+			else
+				$value['user_rights']=$value['rights'];
 			$rights[$id]=$value;
 		}
 		// trace_($rights);

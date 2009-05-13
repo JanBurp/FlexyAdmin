@@ -316,7 +316,7 @@ class Form Extends Model {
  * @param string $table Table to update
  * @return bool	Validation succes
  */
-	function update($table) {
+	function update($table,$user_id='') {
 		$error="";
 		$id=-1;
 		/**
@@ -327,12 +327,22 @@ class Form Extends Model {
 			$pk=pk();
 			$joins=array();
 			foreach($this->data as $name=>$field) {
+				// set primary key (id)
 				if ($name==$pk) {
 					$id=$this->input->post($pk);
 				}
+				// set user (id) if set
+				elseif ($name=="user") {
+					if ($user_id===FALSE)
+						$set[$name]=$this->input->post($name);
+					else
+						$set[$name]=$user_id;
+				}
+				// set uri
 				elseif ($name=="uri") {
 					$uri=$this->input->post($name);
 				}
+				// set other fields
 				else {
 					$pre=get_prefix($name);
 					$value=$this->input->post($name);
