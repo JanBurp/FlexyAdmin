@@ -189,8 +189,6 @@ class FrontEndController extends MY_Controller {
 	}
 }
 
-
-
 /**
  * BasicController Class extends MY_Controller
  *

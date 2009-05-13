@@ -606,9 +606,27 @@ class Flexy_field extends Model {
 		return $out;
 	}
 
-	function _dropdown_medias_form() {
+	function _dropdown_form() {
 		$out=$this->_dropdown_media_form();
 		$out["multiple"]="multiple";
+		return $out;
+	}
+
+	function _dropdown_allfiles_form() {
+		$info=$this->cfg->get('CFG_media_info');
+		$info=not_filter_by($info,"tbl_");
+		$options=array();
+		foreach ($info as $path => $i) {
+			$map=$this->config->item('ASSETS').$path;
+			$files=read_map($map);
+			ignorecase_ksort($files);
+			$options[""]="";
+			foreach($files as $file) {
+				$options[$path."/".$file["name"]]=$file["name"];
+			}
+		}
+		$out=$this->_standard_form_field($options);
+		unset($out["button"]);
 		return $out;
 	}
 

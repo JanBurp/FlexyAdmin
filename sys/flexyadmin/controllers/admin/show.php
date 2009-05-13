@@ -246,8 +246,6 @@ class Show extends AdminController {
 		}
 
 
-
-
 /**
  * This controls the form view
  *

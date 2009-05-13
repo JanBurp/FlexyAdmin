@@ -106,6 +106,18 @@ function filter_by($a,$p) {
 	}
 	return $a;
 }
+function not_filter_by($a,$p) {
+	foreach($a as $k=>$i) {
+		if (is_array($i)) {
+			if (!strncmp($k,$p,strlen($p))) unset($a[$k]);
+		}
+		else {
+		 if (!strncmp($i,$p,strlen($p))) unset($a[$k]);
+		}
+	}
+	return $a;
+}
+
 
 /**
  * function ignorecase_sort(&$array)

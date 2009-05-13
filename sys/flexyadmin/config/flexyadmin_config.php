@@ -161,8 +161,18 @@ $config["CFG_"]=array(
 			"str_order_by"=>'',
 			"txt_help"=>''
 			),
-		"cfg_img_info"=>array(
+		"cfg_media_files"=>array(
 			"order"=>'102',
+			"table"=>'cfg_media_files',
+			"b_single_row"=>'0',
+			"str_ui_name"=>'',
+			"b_show_grid_with_joins"=>'0',
+			"str_abstract_fields"=>'',
+			"str_order_by"=>'',
+			"txt_help"=>''
+			),
+		"cfg_img_info"=>array(
+			"order"=>'103',
 			"table"=>'cfg_img_info',
 			"b_single_row"=>'0',
 			"str_ui_name"=>'',
@@ -172,7 +182,7 @@ $config["CFG_"]=array(
 			"txt_help"=>''
 			),
 		"cfg_editor"=>array(
-			"order"=>'103',
+			"order"=>'104',
 			"table"=>'cfg_editor',
 			"b_single_row"=>'1',
 			"str_ui_name"=>'',
@@ -182,7 +192,7 @@ $config["CFG_"]=array(
 			"txt_help"=>''
 			),
 		"cfg_table_info"=>array(
-			"order"=>'104',
+			"order"=>'105',
 			"table"=>'cfg_table_info',
 			"b_single_row"=>'0',
 			"str_ui_name"=>'',
@@ -192,7 +202,7 @@ $config["CFG_"]=array(
 			"txt_help"=>''
 			),
 		"cfg_field_info"=>array(
-			"order"=>'105',
+			"order"=>'106',
 			"table"=>'cfg_field_info',
 			"b_single_row"=>'0',
 			"str_ui_name"=>'',
@@ -202,7 +212,7 @@ $config["CFG_"]=array(
 			"txt_help"=>''
 			),
 		"cfg_users"=>array(
-			"order"=>'106',
+			"order"=>'107',
 			"table"=>'cfg_users',
 			"b_single_row"=>'0',
 			"str_ui_name"=>'',
@@ -422,7 +432,13 @@ $config['FIELDS_special'] = array(
 												"grid"				=> "%s",
 												"form"				=> "function_dropdown_fields",
 												"validation"	=> "trim",
+											),
+	"file"			=> array(
+												"grid"				=> "%s",
+												"form"				=> "function_dropdown_allfiles",
+												"validation"	=> "trim",
 											)
+										
 );
 
 
