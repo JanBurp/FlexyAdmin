@@ -169,13 +169,17 @@ class Show extends AdminController {
 				$this->form($table);
 			else {
 				if ($right=$this->has_rights($table,$id)) {
+					$restrictedToUser=$this->user_restriction_id($table);
 					$this->load->model("grid");
-
 					/**
 					 * get data
 					 */
 					if ($this->db->has_field($table,"self_parent")) {
 						$this->db->order_as_tree();
+					}
+					if ($restrictedToUser>0 and $this->db->has_field($table,"user")) {
+						$this->db->where("user",$restrictedToUser);
+						$this->db->dont_select("user");
 					}
 					$this->db->add_foreigns_as_abstracts();
 					$this->db->add_many();
@@ -253,6 +257,8 @@ class Show extends AdminController {
 
 	function form($table,$id="") {
 		if ($right=$this->has_rights($table,$id)) {
+			$restrictedToUser=$this->user_restriction_id($table);
+			
 			$this->load->library('form_validation');
 			$this->load->library('upload');
 			$this->load->model("order");
@@ -265,6 +271,10 @@ class Show extends AdminController {
 			 */
 			$this->db->add_many();
 			$this->db->add_options();
+			if ($restrictedToUser>0 and $this->db->has_field($table,"user")) {
+				$this->db->where("user",$restrictedToUser);
+				$this->db->dont_select("user");
+			}
 			if ($id!="") $this->db->where($table.".".pk(),$id);
 			$data=$this->db->get_result($table);
 			$options=el("options",$data);
@@ -290,6 +300,7 @@ class Show extends AdminController {
 			 * if data: first render data for the form class, then put data in form
 			 */
 
+			$this->ff->set_restricted_to_user($restrictedToUser,$this->user_id);
 			$data=$this->ff->render_form($table,$data,$options,$multiOptions);
 
 			$form=new form(api_uri('API_view_form',$table,$id));
@@ -308,7 +319,7 @@ class Show extends AdminController {
 			if ($form->validation()) {
 				$this->lang->load("update_delete");
 				if ($this->_has_key($table)) {
-					$resultId=$form->update($table);
+					$resultId=$form->update($table,$restrictedToUser);
 					if (is_string($resultId)) {
 						$this->set_message(langp("update_error",$table,$resultId));
 						redirect(api_uri('API_view_grid',$table));

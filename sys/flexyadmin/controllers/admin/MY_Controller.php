@@ -204,10 +204,8 @@ class FrontEndController extends MY_Controller {
 
 class BasicController extends MY_Controller {
 
-	var $table_rights;
-	var $media_rights;
-	
 	var $user;
+	var $user_id;
 	var $rights;
 	var $language;
 
@@ -215,11 +213,10 @@ class BasicController extends MY_Controller {
 		parent::MY_Controller($isAdmin);
 		$this->load->library("session");
 		$this->user="";
-		$this->table_rights="";
-		$this->media_rights="";
 		if (!$this->_user_logged_in()) {
 			// redirect($this->config->item('API_login'));
 		}
+		// trace_($this->rights);
 		$lang=$this->language."_".strtoupper($this->language);
 		setlocale(LC_ALL, $lang);
 	}
@@ -227,6 +224,7 @@ class BasicController extends MY_Controller {
 	function _user_logged_in() {
 		$out=false;
 		$this->user=$this->session->userdata("user");
+		$this->user_id=$this->session->userdata("user_id");
 		$this->rights=$this->session->userdata("rights");
 		$this->language=$this->session->userdata("language");
 		$out=(!empty($this->user));
@@ -257,6 +255,7 @@ class BasicController extends MY_Controller {
 			if ($rights['rights']=="*" or (strpos($rights['rights'],$preAll)!==FALSE) or (strpos($rights['rights'],$item)!==FALSE) )
 				$this->_change_rights($found,$rights);
 		}
+		
 		$foundRights=RIGHTS_NO;
 		if ($found['b_delete'])	$foundRights+=RIGHTS_DELETE;
 		if ($found['b_add'])		$foundRights+=RIGHTS_ADD;
@@ -268,6 +267,24 @@ class BasicController extends MY_Controller {
 		else
 			return ($foundRights>=$whatRight);
 	}
+	
+	// returns NULL if no user restrictions, else it gives back the user_id
+	function user_restriction_id($table) {
+		$restricted=TRUE;
+		$pre=get_prefix($table);
+		$preAll=$pre."_*";		
+		foreach ($this->rights as $key => $rights) {
+			if ($rights['user_rights']=="")
+				$restricted=FALSE;
+			if ($rights['user_rights']=="*" or (strpos($rights['user_rights'],$preAll)!==FALSE) or (strpos($rights['user_rights'],$table)!==FALSE) )
+				$restricted=$restricted and TRUE;
+		}
+		if ($restricted)
+			return $this->user_id;
+		else
+			return FALSE;
+	}
+
 
 	function _has_key($table="") {
 		if ($table=='cfg_configurations' or IS_LOCALHOST) return true;
