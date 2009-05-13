@@ -114,7 +114,7 @@ function array_($a) {
 
 function print_ar($array,$return=false,$tabs=0) {
 	$out="";
-	$out.="(<br/>";
+	$out.=" (<br/>";
 	foreach($array as $key=>$value) {
 		$out.=tabs($tabs);
 		$thisOut="[".$key."] => ";

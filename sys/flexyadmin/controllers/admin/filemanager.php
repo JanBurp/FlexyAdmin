@@ -46,6 +46,28 @@ class Filemanager extends AdminController {
 	}
 
 
+	function _get_unrestricted_files($restrictedToUser) {
+		$this->db->where('user',$restrictedToUser);
+		$this->db->primary_key('file'); 
+		return $this->db->get_result("cfg_media_files");
+	}
+
+	function _filter_restricted_files($files,$restrictedToUser) {
+		if ($this->db->table_exists("cfg_media_files")) {
+			if ($restrictedToUser) {
+				$unrestrictedFiles=$this->_get_unrestricted_files($restrictedToUser);
+				$unrestrictedFiles=array_keys($unrestrictedFiles);
+				$assetsPath=assets();
+				foreach ($files as $name => $file) {
+					$file=str_replace($assetsPath,"",$file['path']);
+					if (!in_array($file,$unrestrictedFiles)) unset($files[$name]);
+				}
+			}
+		}
+		// trace_($files);
+		return $files;
+	}
+
 /**
  * This controls the filemanager view
  *
@@ -64,11 +86,15 @@ class Filemanager extends AdminController {
 			/**
 			 * get files and info
 			 */
-			$files=read_map($map);
 			$cfg=$this->cfg->get('CFG_media_info',$path);
 			$types=$cfg['str_types'];
 			$uiName=$cfg['str_menu_name'];
-
+			$files=read_map($map);
+			// exclude files that are not owned by user
+			// trace_($files);
+			$restrictedToUser=$this->user_restriction_id($path);
+			$files=$this->_filter_restricted_files($files,$restrictedToUser);
+			
 			/**
 			 * update img/media_lists
 			 */
@@ -145,17 +171,34 @@ class Filemanager extends AdminController {
 		$confirmed=$this->session->userdata("confirmed");
 		if ($this->_has_rights($path)>=RIGHTS_DELETE) {
 			if ($confirmed) {
-				$this->lang->load("update_delete");
-				$this->load->model("file_manager");
-				$fileManager=new file_manager(pathdecode($path,TRUE));
-				$result=$fileManager->delete_file($file);
-				if ($result) {
-					$this->load->model("login_log");
-					$this->login_log->update($path);
-					$this->set_message(langp("delete_file_succes",$file));
+				$restrictedToUser=$this->user_restriction_id($path);
+				if ($restrictedToUser>0) {
+					$unrestrictedFiles=$this->_get_unrestricted_files($restrictedToUser);
+					if (in_array($path."/".$file,$unrestrictedFiles)) {
+						$restrictedToUser=FALSE;
+					}
+				}
+				if ($restrictedToUser===FALSE) {
+					$this->lang->load("update_delete");
+					$this->load->model("file_manager");
+					$fileManager=new file_manager(pathdecode($path,TRUE));
+					$result=$fileManager->delete_file($file);
+					if ($result) {
+						if ($this->db->table_exists("cfg_media_files")) {
+							$this->db->where('file',$path."/".$file);
+							$this->db->delete('cfg_media_files');
+						}
+						$this->load->model("login_log");
+						$this->login_log->update($path);
+						$this->set_message(langp("delete_file_succes",$file));
+					}
+					else {
+						$this->set_message(langp("delete_file_error",$file));
+					}
 				}
 				else {
-					$this->set_message(langp("delete_file_error",$file));
+					$this->lang->load("rights");
+					$this->set_message(lang("rights_no_rights"));
 				}
 			}
 		}
@@ -184,6 +227,11 @@ class Filemanager extends AdminController {
 				$this->set_message(langp("upload_error",$file));
 			}
 			else {
+				if ($this->db->table_exists("cfg_media_files")) {
+					$this->db->set('user',$this->user_id);
+					$this->db->set('file',$path."/".$file);
+					$this->db->insert('cfg_media_files');
+				}
 				$this->set_message(langp("upload_succes",$file));
 				$this->load->model("login_log");
 				$this->login_log->update($path);
