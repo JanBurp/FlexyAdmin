@@ -50,7 +50,7 @@
 		$cfg_pre=$this->config->item('CFG_table_prefix');
 		if ($pre!=$cfg_pre)
 			$table=$cfg_pre."_".$this->config->item($table);
-		return table_name($table);
+		return $table;
 	}
 
 /**

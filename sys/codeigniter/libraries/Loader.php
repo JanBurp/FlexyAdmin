@@ -11,6 +11,8 @@
  * @link		http://codeigniter.com
  * @since		Version 1.0
  * @filesource
+ *
+ * Changes made by Jan den Besten, see code_igniter_changes.txt
  */
 
 // ------------------------------------------------------------------------

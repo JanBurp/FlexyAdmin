@@ -9,19 +9,6 @@
 
 
 /**
- * function table_name($table)
- *
- * @param string $table Tablename to create
- * @return string Returns name of the table, with prefix for FlexyAdmin if set
- * @todo Set and get Prefix for all tables.
- *
- */
-function table_name($table) {
-	return $table;
-}
-
-
-/**
  * function get_primary_key()
  * function pk()
  *
