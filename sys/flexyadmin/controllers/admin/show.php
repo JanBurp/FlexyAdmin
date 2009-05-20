@@ -181,6 +181,8 @@ class Show extends AdminController {
 						$this->db->where("user",$restrictedToUser);
 						$this->db->dont_select("user");
 					}
+					if ($table=="cfg_users")
+						$this->db->where("id >=",$this->user_id);
 					$this->db->add_foreigns_as_abstracts();
 					$this->db->add_many();
 					$this->db->max_text_len(250);
