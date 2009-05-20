@@ -136,7 +136,7 @@ class FrontEndController extends MY_Controller {
 		 */
 		$menuTable=$this->cfg->get("CFG_configurations","str_menu_table");
 		if (!empty($menuTable)) {
-			$this->db->order_as_tree();
+			if ($this->db->has_field($menuTable,"self_parent")) $this->db->order_as_tree();
 			$this->db->select("uri");
 			$top2=$this->db->get_result($menuTable,2);
 			$top=current($top2);
