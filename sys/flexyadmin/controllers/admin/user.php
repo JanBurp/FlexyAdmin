@@ -93,8 +93,7 @@ class User extends Controller {
 
 	function logout() {
 		$this->session->sess_destroy();
-		$toSite=$this->db->get_field('cfg_configurations','b_logout_to_site');
-		if ($toSite)
+		if ($this->db->has_field('cfg_configurations','b_logout_to_site') and $this->db->get_field('cfg_configurations','b_logout_to_site'))
 			redirect();
 		else
 			redirect($this->config->item('API_home'));
