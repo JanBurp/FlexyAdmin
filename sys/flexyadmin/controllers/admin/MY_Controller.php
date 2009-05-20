@@ -400,11 +400,12 @@ class AdminController extends BasicController {
 		$cfgTables=$this->cfg->get("CFG_table");
 		$cfgTables=filter_by($cfgTables,$type);
 		$cfgTables=sort_by($cfgTables,"order");
-		// trace_($cfgTables);
 		$oTables=array();
 		foreach ($cfgTables as $row) {
-			$oTables[]=$row["table"];
-			unset($tables[array_search($row["table"],$tables)]);
+			if (in_array($row["table"],$tables)) {
+				$oTables[]=$row["table"];
+				unset($tables[array_search($row["table"],$tables)]);
+			}
 		}
 		$oTables=array_merge($oTables,$tables);
 		foreach ($oTables as $name) {
