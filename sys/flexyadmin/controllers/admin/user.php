@@ -92,10 +92,12 @@ class User extends Controller {
 	}
 
 	function logout() {
-		// $this->session->unset_userdata("user");
-		// $this->session->unset_userdata("user_rights");
 		$this->session->sess_destroy();
-		redirect($this->config->item('API_home'));
+		$toSite=$this->db->get_field('cfg_configurations','b_logout_to_site');
+		if ($toSite)
+			redirect();
+		else
+			redirect($this->config->item('API_home'));
 	}
 
 }
