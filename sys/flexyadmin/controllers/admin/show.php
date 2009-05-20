@@ -277,6 +277,7 @@ class Show extends AdminController {
 			}
 			if ($id!="") $this->db->where($table.".".pk(),$id);
 			$data=$this->db->get_result($table);
+			// trace_($data);
 			$options=el("options",$data);
 			$multiOptions=el("multi_options",$data);
 			$data=current($data);
