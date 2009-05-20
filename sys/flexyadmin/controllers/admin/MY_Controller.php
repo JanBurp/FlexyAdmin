@@ -245,6 +245,9 @@ class BasicController extends MY_Controller {
 		}
 	}
 	function has_rights($item,$id="",$whatRight=0) {
+		// No rights if cfg_users and id is smaller (higher rights)
+		if ($item=="cfg_users" and !empty($id) and ($id<$this->user_id)) return false;
+		
 		$found=array('b_delete'=>FALSE,'b_add'=>FALSE,'b_edit'=>FALSE,'b_show'=>FALSE);
 		$pre=get_prefix($item);
 		$preAll=$pre."_*";
