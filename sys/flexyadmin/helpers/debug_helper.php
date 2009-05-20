@@ -126,7 +126,7 @@ function print_ar($array,$return=false,$tabs=0) {
 		$out.=$thisOut;
 		if ($tabs==0) $out.="<br/>";
 	}
-	$out.=tabs($tabs-1).')';
+	$out.=tabs($tabs-1).')<br/>';
 	if (!$return) echo $out;
 	return $out;
 }
