@@ -625,13 +625,15 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 * @param string $table
 	 * @return array Result array with all options id=>abstract;
 	 */
-		function get_options($table) {
+		function get_options($table,$optionsWhere="") {
 			$out=array();
 			$CI=&get_instance();
 			$this->select($this->pk);
 			$this->select($this->get_abstract_field($table));
 			$this->_set_standard_order($table,$CI->config->item('ABSTRACT_field_name'));
-			// $this->order_by($CI->config->item('ABSTRACT_field_name'));
+			if (!empty($optionsWhere)) {
+				$this->ar_where[]=$optionsWhere;
+			}
 			$query=$this->get($table);
 			foreach($query->result_array() as $row) {
 				$out[$row[$this->pk]]=$row[$CI->config->item('ABSTRACT_field_name')];
@@ -650,8 +652,10 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 function _add_foreign_options($out,$foreignTables) {
 			$options=array();
 			if (isset($foreignTables)) {
+				$CI=&get_instance();
 				foreach ($foreignTables as $key => $forTable) {
-					$options[$key]=$this->get_options($forTable["table"]);
+					$optionsWhere=$CI->cfg->get('CFG_table',$forTable['table'],'str_options_where');
+					$options[$key]=$this->get_options($forTable["table"],$optionsWhere);
 				}
 			}
 			if (count($options)>0) {
