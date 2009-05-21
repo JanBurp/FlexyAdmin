@@ -66,25 +66,27 @@ class User extends Controller {
 			$pwd=$this->input->post("password",TRUE);
 			if (!empty($pwd)) {
 				// check in database
-				$this->db->select("id,str_language,str_filemanager_view");
+				$this->db->select("id,str_language,str_filemanager_view,ip_user_ip,b_strict_ip");
 				$this->db->where("str_user_name",$user);
 				$this->db->where("gpw_user_pwd",$pwd);
 				$query=$this->db->get($this->config->item('CFG_table_prefix')."_".$this->config->item('CFG_users'));
 				$row=$query->row();
 				if (!empty($row)) {
-					$check=TRUE;
-					// set session
-					$this->session->set_userdata("user_id",$row->id);
-					$this->session->set_userdata("user",$user);
-					$this->session->set_userdata("language",$row->str_language);
-					$this->session->set_userdata("fileview",$row->str_filemanager_view);
-					$this->session->set_userdata("rights",$this->_create_rights($row->id));
-					// set login log
-					$this->load->helper('date');
-					$this->db->set('id_user',$row->id);
-					$this->db->set('tme_login_time',standard_date('DATE_W3C',time()));
-					$this->db->set('ip_login_ip',$this->session->userdata('ip_address'));
-					$this->db->insert($this->config->item('LOG_table_prefix')."_".$this->config->item('LOG_login'));
+					if (!$row->b_strict_ip or ($row->b_strict_ip and $row->ip_user_ip==$this->input->ip_address()) ) {
+						$check=TRUE;
+						// set session
+						$this->session->set_userdata("user_id",$row->id);
+						$this->session->set_userdata("user",$user);
+						$this->session->set_userdata("language",$row->str_language);
+						$this->session->set_userdata("fileview",$row->str_filemanager_view);
+						$this->session->set_userdata("rights",$this->_create_rights($row->id));
+						// set login log
+						$this->load->helper('date');
+						$this->db->set('id_user',$row->id);
+						$this->db->set('tme_login_time',standard_date('DATE_W3C',time()));
+						$this->db->set('ip_login_ip',$this->session->userdata('ip_address'));
+						$this->db->insert($this->config->item('LOG_table_prefix')."_".$this->config->item('LOG_login'));
+					}
 				}
 			}
 		}
