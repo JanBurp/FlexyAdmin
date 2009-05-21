@@ -78,6 +78,7 @@ $(document).ready(function() {
 					$("p.image_dropdown select.media").before(flash(src,32,32));
 				}
 				else {
+					src=cachedThumb(src);
 					$("p.image_dropdown select.media").before('<img class="media" src="'+src+'" />');
 				}
 			});
@@ -102,6 +103,7 @@ $(document).ready(function() {
 							$("p.image_dropdown select.medias").before(flash(src,32,32));
 						}
 						else {
+							src=cachedThumb(src);
 							$("p.image_dropdown select.medias").before('<img class="media" src="'+src+'" />');
 						}
 					});
@@ -486,18 +488,56 @@ function zoom_dialog(obj) {
 	src=$(obj).attr('src');
 	w=$(obj).attr('zwidth');
 	h=$(obj).attr('zheight');
-	ext=get_ext(src);
-	if (ext=="swf" || ext=="flc") {
-		dialog.html(flash(src,w,h));
+	imgRatio=w/h;
+	// set sizes not bigger than screen
+	scrW=$("body").outerWidth()-50;
+	scrH=$("body").outerHeight()-100;
+	if ((w<scrW) && (h<scrH)) {
+		dw=w;
+		dh=h;
 	}
 	else {
-		dialog.html('<a href="javascript:close_dialog()"><img src="'+src+'" width="'+w+'" height="'+h+'" alt="'+src+'" /></a>');
+		if (w>scrW && h>scrH) {
+			if (scrW/w < scrH/h) {
+				dw=scrW;
+				dh=dw/imgRatio;
+			}
+			else {
+				dh=scrH;
+				dw=dh*imgRatio;
+			}
+		}
+		else {
+			if (w>scrW) {
+				dw=scrW;
+				dh=dw/imgRatio;
+			}
+			else {
+				dh=scrH;
+				dw=dh*imgRatio;
+			}
+		}	
+	}
+	// what file type?
+	ext=get_ext(src);
+	if (ext=="swf" || ext=="flc") {
+		dialog.html(flash(src,dw,dh));
+	}
+	else {
+		// is it a cached thumb?
+		i=src.indexOf("_thumbcache");
+		if (i>=0) {
+			src=src.substr(i+12); // 11 = length of '_thumbcache'
+			src=pathdecode(src);
+		}
+		dialog.html('<a href="javascript:close_dialog()"><img src="'+src+'" width="'+dw+'" height="'+dh+'" alt="'+src+'" /></a>');
 	}
 	$(dialog).dialog({
 		title:src.substr(src.lastIndexOf("/")+1)+" ("+w+"x"+h+")",
 		modal:true,
-		width: w+'px',
-		heigth: h+'px',
+		width: dw+'px',
+		heigth: dh+'px',
+		position: 'center',
 		closeOnEscape:true,
 		dialogClass:'zoom',
 		resizable:false,
@@ -637,6 +677,13 @@ function serialize(sel) {
 }
 
 function get_ext(s){var a,s;s=String(s);a=s.split(".");return a[a.length-1];}
+
+function pathdecode(s) { s=s.replace(/__/g,"/"); return s; }
+function pathencode(s) { s=s.replace(/\//g,"__"); return s; }
+
+function cachedThumb(src) {
+	return src;
+}
 
 function flash(swf,w,h) {
 	var attr,f;

@@ -107,6 +107,13 @@ class File_manager Extends Model {
 			$result=unlink($name);
 			if ($result) {
 				/**
+				 * Check if cached thumb exists, if so, delete it
+				 */
+				$cachedThumb=$this->config->item('THUMBCACHE').pathencode($name);
+				if (file_exists($cachedThumb)) {
+					unlink($cachedThumb);
+				}
+				/**
 				 * Check if some data has this mediafile as content, remove it
 				 */
 				$tables=$this->db->get_tables();
@@ -306,7 +313,10 @@ function thumb($attr,$index=FALSE) {
 
 				// icon
 				if ($isImg) {
-					$icon=div(array("class"=>"thumb")).img(array("src"=>$this->map."/".$name,"alt"=>$name,"title"=>$name,"class"=>"zoom","zwidth"=>$imgSize[0],"zheight"=>$imgSize[1])).end_div();
+					$img=$this->map."/".$name;
+					$cachedThumb=$this->config->item('THUMBCACHE').pathencode($img);
+					if (file_exists($cachedThumb)) $img=$cachedThumb;
+					$icon=div(array("class"=>"thumb")).img(array("src"=>$img,"alt"=>$name,"title"=>$name,"class"=>"zoom","zwidth"=>$imgSize[0],"zheight"=>$imgSize[1])).end_div();
 				} elseif ($isFlash) {
 					$icon=div(array("class"=>"flash")).icon("flash $name",$name,"zoom","src=\"".$this->map."/".$name."\" zwidth=\"".$imgSize[0]."\" zheight=\"".$imgSize[1]."\"")._div(); //flash($this->map."/".$name).end_div();
 				} elseif (in_array($type,$mp3Types)) {

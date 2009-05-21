@@ -26,6 +26,9 @@ function show_thumb($attr) {
 	}
 	else {
 		if (!isset($a["alt"])) $a["alt"]=$a["src"];
+		$CI=& get_instance();
+		$cachedThumb=$CI->config->item('THUMBCACHE').pathencode($a['src']);
+		if (file_exists($cachedThumb)) $a['src']=$cachedThumb;
 		return img($a);
 	}
 }
