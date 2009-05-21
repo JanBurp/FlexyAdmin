@@ -211,16 +211,12 @@ class Filemanager extends AdminController {
 
 	function upload($path,$file="") {
 		if ($this->_has_rights($path)>=RIGHTS_ADD) {
-			$memSet=ini_get("memory_limit");
-			ini_set("memory_limit","64M");
 			$this->lang->load("update_delete");
-			// $path=pathdecode($path);
 			$this->load->library("upload");
 			$this->load->model("file_manager");
 			$types=$this->cfg->get('CFG_media_info',$path,'str_types');
 			$fileManager=new file_manager($path,$types);
 			$result=$fileManager->upload_file();
-			ini_set("memory_limit",$memSet);
 			$error=$result["error"];
 			$file=$result["file"];
 			if (!empty($error)) {

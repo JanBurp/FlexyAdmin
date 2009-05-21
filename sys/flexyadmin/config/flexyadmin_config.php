@@ -33,6 +33,9 @@ $config['LOCAL']									= IS_LOCALHOST;
 $config['ASSETS']									= "site/assets/";
 $config['ADMINASSETS']						= "sys/flexyadmin/assets/";
 
+$config['THUMBCACHE']							= $config['ASSETS']."_thumbcache/";
+$config['THUMBSIZE']							= array(100,100);
+
 /*
 |--------------------------------------------------------------------------
 | API calls

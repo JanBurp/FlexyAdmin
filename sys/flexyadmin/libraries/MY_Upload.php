@@ -32,6 +32,16 @@ class MY_Upload extends CI_Upload {
 		return $this->file_name;
 	}
 
+	function _setMemory($imageInfo) {
+		$memoryNeeded = round(($imageInfo[0] * $imageInfo[1] * $imageInfo['bits'] * $imageInfo['channels'] / 8 + Pow(2, 16)) * 1.65);
+		$memoryLimit = (int) ini_get('memory_limit')*1048576;
+		if ((memory_get_usage() + $memoryNeeded) > $memoryLimit) {
+		  ini_set('memory_limit', ceil((memory_get_usage() + $memoryNeeded + $memoryLimit)/1048576).'M');
+		  return (true);
+		}
+		else return(false);
+	}
+
 /**
  * function upload_file()
  *
@@ -61,6 +71,7 @@ class MY_Upload extends CI_Upload {
 			$cfg=$CI->cfg->get('CFG_img_info',$uPath);
 			// first resize copies
 			$currentSizes=getimagesize($config["upload_path"]."/".$this->file_name);
+			$memSet=FALSE;
 			$nr=1;
 			while (isset($cfg["b_create_$nr"])) {
 				if ($cfg["b_create_$nr"]!=FALSE) {
@@ -78,8 +89,10 @@ class MY_Upload extends CI_Upload {
 					$config['maintain_ratio'] = TRUE;
 					$config['width'] 					= $cfg["int_width_$nr"];
 					$config['height'] 				= $cfg["int_height_$nr"];
-					$config['new_image']			= $config["upload_path"]."/".$copyName;;
+					$config['new_image']			= $config["upload_path"]."/".$copyName;
 					$config['master_dim']			= 'auto';
+					// set mem higher if needed
+					if (!$memSet) $memSet=$this->_setMemory($currentSizes);
 					$CI->image_lib->initialize($config);
 					if (!$CI->image_lib->resize()) {
 						$this->error=$CI->image_lib->display_errors();
@@ -98,6 +111,27 @@ class MY_Upload extends CI_Upload {
 					$config['height'] 				= $cfg["int_img_height"];
 					$config['new_image']			= "";
 					$config['master_dim']			= 'auto';
+					// set mem higher if needed
+					if (!$memSet) $memSet=$this->_setMemory($currentSizes);
+					$CI->image_lib->initialize($config);
+					if (!$CI->image_lib->resize()) {
+						$this->error=$CI->image_lib->display_errors();
+						$goodluck=FALSE;
+					}
+				}
+			}
+			// create cached thumb for flexyadmin if cache map exists
+			if (file_exists($CI->config->item('THUMBCACHE')) ) {
+				$thumbSize=$CI->config->item('THUMBSIZE');
+				if ($currentSizes[0]>$thumbSize[0] or $currentSizes[1]>$thumbSize[1]) { 
+					$config['source_image'] 	= $config["upload_path"]."/".$this->file_name;
+					$config['maintain_ratio'] = TRUE;
+					$config['width'] 					= $thumbSize[0];
+					$config['height'] 				= $thumbSize[1];
+					$config['new_image']			= $CI->config->item('THUMBCACHE')."/".pathencode($config['source_image']);
+					$config['master_dim']			= 'auto';
+					// set mem higher if needed
+					if (!$memSet) $memSet=$this->_setMemory($currentSizes);
 					$CI->image_lib->initialize($config);
 					if (!$CI->image_lib->resize()) {
 						$this->error=$CI->image_lib->display_errors();
