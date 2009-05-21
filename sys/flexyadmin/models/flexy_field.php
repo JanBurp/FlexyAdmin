@@ -561,9 +561,13 @@ class Flexy_field extends Model {
 		$out="";
 		if (!empty($this->data)) {
 			$info=$this->cfg->get('CFG_media_info',$this->table.".".$this->field);
-			$path=el("str_path",$info);
-			$media=$this->config->item('ASSETS').$path."/".$this->data;
-			$out=show_thumb($media);
+			$type=el("str_type",$info);
+			if ($type=="image" or $type=="flash") {
+				$path=el("str_path",$info);
+				$media=$this->config->item('ASSETS').$path."/".$this->data;
+				$out=show_thumb($media);
+			}
+			else $out=$this->data;
 		}
 		return $out;
 	}
@@ -572,12 +576,16 @@ class Flexy_field extends Model {
 		$out="";
 		if (!empty($this->data)) {
 			$info=$this->cfg->get('CFG_media_info',$this->table.".".$this->field);
-			$path=$this->config->item('ASSETS').el("str_path",$info)."/";
-			$data=explode("|",$this->data);
-			$media=$this->config->item('ASSETS').$path."/".$this->data;
-			foreach($data as $img) {
-				$out.=show_thumb($path.$img);
+			$type=el("str_type",$info);
+			if ($type=="image" or $type=="flash") {
+				$path=$this->config->item('ASSETS').el("str_path",$info)."/";
+				$data=explode("|",$this->data);
+				$media=$this->config->item('ASSETS').$path."/".$this->data;
+				foreach($data as $img) {
+					$out.=show_thumb($path.$img);
+				}
 			}
+			else $out=$this->data;
 		}
 		return $out;
 	}
