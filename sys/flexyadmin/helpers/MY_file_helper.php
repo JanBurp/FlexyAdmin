@@ -22,6 +22,12 @@ function get_file_without_extension($f) {
 	if ($p===FALSE) return $f;
 	return substr($f,0,$p);
 }
+function add_file_prefix($f,$pre) {
+	$p=strrpos($f,"/");
+	$path=substr($f,0,$p+1);
+	$file=substr($f,$p+1);
+	return $path.$pre.$file;
+}
 
 function clean_file_name($f) {
 	$ext=get_file_extension($f);
