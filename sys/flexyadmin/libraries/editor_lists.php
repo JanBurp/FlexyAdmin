@@ -52,6 +52,7 @@ class Editor_lists {
 					$path=$row["str_path"];
 					$map=$CI->config->item('ASSETS').$path;
 					$subFiles=read_map($map);
+					$subFiles=not_filter_by($subFiles,"_");
 					$data=$data + $subFiles;
 				}
 			}
