@@ -301,59 +301,61 @@ function thumb($attr,$index=FALSE) {
 		foreach($files as $id=>$file) {
 			$fileData=array();
 			$name=$file["name"];
-			$type=$file["type"];
-			if (in_array($type,$this->fileTypes)) {
-				$isImg=in_array($type,$imgTypes);
-				$isFlash=in_array($type,$flashTypes);
+			if (substr($name,0,1)!="_") {
+				$type=$file["type"];
+				if (in_array($type,$this->fileTypes)) {
+					$isImg=in_array($type,$imgTypes);
+					$isFlash=in_array($type,$flashTypes);
 
-				// size types (images, flash)
-				if ($isImg or $isFlash) {
-					$imgSize=getimagesize($this->map."/".$name);
-				}
-
-				// icon
-				if ($isImg) {
-					$img=$this->map."/".$name;
-					$cachedThumb=$this->config->item('THUMBCACHE').pathencode($img);
-					if (file_exists($cachedThumb)) $img=$cachedThumb;
-					$icon=div(array("class"=>"thumb")).img(array("src"=>$img,"alt"=>$name,"title"=>$name,"class"=>"zoom","zwidth"=>$imgSize[0],"zheight"=>$imgSize[1])).end_div();
-				} elseif ($isFlash) {
-					$icon=div(array("class"=>"flash")).icon("flash $name",$name,"zoom","src=\"".$this->map."/".$name."\" zwidth=\"".$imgSize[0]."\" zheight=\"".$imgSize[1]."\"")._div(); //flash($this->map."/".$name).end_div();
-				} elseif (in_array($type,$mp3Types)) {
-					$icon=div(array("class"=>"sound")).icon("sound $name")._div();
-				} elseif (in_array($type,$movTypes)) {
-					$icon=div(array("class"=>"movie")).icon("movie $name")._div();
-				} elseif (in_array($type,$docTypes)) {
-					$icon=div(array("class"=>"movie")).icon("doc $name")._div();
-				} elseif (in_array($type,$pdfTypes)) {
-					$icon=div(array("class"=>"movie")).icon("pdf $name")._div();
-				} elseif ($file["type"]=="dir") {
-					$icon=div(array("class"=>"image")).img(array("src" => admin_assets("icons/folder.gif"),"alt"=>$name,"title"=>$name))._div();
-				} 
-				// default
-				else {
-					$icon=div(array("class"=>"file")).icon("file $name")._div();;
-				}
-
-				$edit="";
-				if ($this->showDeleteButtons)	$edit.=anchor(api_uri('API_filemanager_confirm',pathencode($this->path),$name),icon("delete"),array("class"=>"delete"));
-				if (empty($edit)) $edit="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-
-				$fileData["edit"]=$edit;
-				$fileData["thumb"]=$icon;
-				$fileData["name"]=$name;
-				// details
-				if ($details) {
-					$fileData["type"]=$type;
 					// size types (images, flash)
 					if ($isImg or $isFlash) {
-						$fileData["size"]="(".$imgSize[0]." x ".$imgSize[1].")";
+						$imgSize=getimagesize($this->map."/".$name);
 					}
-					$fileData["filesize"]=$file["size"];
-					$fileData["date"]=$file["date"];
+
+					// icon
+					if ($isImg) {
+						$img=$this->map."/".$name;
+						$cachedThumb=$this->config->item('THUMBCACHE').pathencode($img);
+						if (file_exists($cachedThumb)) $img=$cachedThumb;
+						$icon=div(array("class"=>"thumb")).img(array("src"=>$img,"alt"=>$name,"title"=>$name,"class"=>"zoom","zwidth"=>$imgSize[0],"zheight"=>$imgSize[1])).end_div();
+					} elseif ($isFlash) {
+						$icon=div(array("class"=>"flash")).icon("flash $name",$name,"zoom","src=\"".$this->map."/".$name."\" zwidth=\"".$imgSize[0]."\" zheight=\"".$imgSize[1]."\"")._div(); //flash($this->map."/".$name).end_div();
+					} elseif (in_array($type,$mp3Types)) {
+						$icon=div(array("class"=>"sound")).icon("sound $name")._div();
+					} elseif (in_array($type,$movTypes)) {
+						$icon=div(array("class"=>"movie")).icon("movie $name")._div();
+					} elseif (in_array($type,$docTypes)) {
+						$icon=div(array("class"=>"movie")).icon("doc $name")._div();
+					} elseif (in_array($type,$pdfTypes)) {
+						$icon=div(array("class"=>"movie")).icon("pdf $name")._div();
+					} elseif ($file["type"]=="dir") {
+						$icon=div(array("class"=>"image")).img(array("src" => admin_assets("icons/folder.gif"),"alt"=>$name,"title"=>$name))._div();
+					} 
+					// default
+					else {
+						$icon=div(array("class"=>"file")).icon("file $name")._div();;
+					}
+
+					$edit="";
+					if ($this->showDeleteButtons)	$edit.=anchor(api_uri('API_filemanager_confirm',pathencode($this->path),$name),icon("delete"),array("class"=>"delete"));
+					if (empty($edit)) $edit="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+
+					$fileData["edit"]=$edit;
+					$fileData["thumb"]=$icon;
+					$fileData["name"]=$name;
+					// details
+					if ($details) {
+						$fileData["type"]=$type;
+						// size types (images, flash)
+						if ($isImg or $isFlash) {
+							$fileData["size"]="(".$imgSize[0]." x ".$imgSize[1].")";
+						}
+						$fileData["filesize"]=$file["size"];
+						$fileData["date"]=$file["date"];
+					}
+					$nr++;
+					$data[$name]=$fileData;
 				}
-				$nr++;
-				$data[$name]=$fileData;
 			}
 		}
 		return $data;
