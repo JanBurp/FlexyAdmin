@@ -45,7 +45,6 @@ class Filemanager extends AdminController {
 		return $this->has_rights("media_".$mediaName,"",$whatRight);
 	}
 
-
 	function _get_unrestricted_files($restrictedToUser) {
 		$this->db->where('user',$restrictedToUser);
 		$this->db->primary_key('file'); 
@@ -171,20 +170,25 @@ class Filemanager extends AdminController {
 		$confirmed=$this->session->userdata("confirmed");
 		if ($this->_has_rights($path)>=RIGHTS_DELETE) {
 			if ($confirmed) {
-				$restrictedToUser=$this->user_restriction_id($path);
-				if ($restrictedToUser>0) {
-					$unrestrictedFiles=$this->_get_unrestricted_files($restrictedToUser);
-					if (in_array($path."/".$file,$unrestrictedFiles)) {
-						$restrictedToUser=FALSE;
+				$DoDelete=TRUE;
+				$mediaTableExists=$this->db->table_exists("cfg_media_files");
+				if ($mediaTableExists) {
+					$restrictedToUser=$this->user_restriction_id($path);
+					if ($restrictedToUser>0) {
+						$DoDelete=FALSE;
+						$unrestrictedFiles=$this->_get_unrestricted_files($restrictedToUser);
+						if (in_array($path."/".$file,$unrestrictedFiles)) {
+							$DoDelete=TRUE;
+						}
 					}
 				}
-				if ($restrictedToUser===FALSE) {
+				if ($DoDelete) {
 					$this->lang->load("update_delete");
 					$this->load->model("file_manager");
 					$fileManager=new file_manager(pathdecode($path,TRUE));
 					$result=$fileManager->delete_file($file);
 					if ($result) {
-						if ($this->db->table_exists("cfg_media_files")) {
+						if ($mediaTableExists) {
 							$this->db->where('file',$path."/".$file);
 							$this->db->delete('cfg_media_files');
 						}
