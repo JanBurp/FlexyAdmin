@@ -11,14 +11,17 @@ class Editor_lists {
 
 	function set_type($type="img") {
 		$types=array();
-		$types["img"]		=array(	"boolean_field" => "b_in_img_list",
-														"array_name"		=> "tinyMCEImageList",
-														"file_name"			=> "img_list");
-		$types["media"]	=array(	"boolean_field" => "b_in_media_list",
-														"array_name"		=> "tinyMCEMediaList",
-														"file_name"			=> "media_list");
-		$types["links"]	=array(	"array_name"		=> "tinyMCELinkList",
-														"file_name"			=> "link_list");
+		$types["img"]				=array(	"boolean_field" => "b_in_img_list",
+																"array_name"		=> "tinyMCEImageList",
+																"file_name"			=> "img_list");
+		$types["media"]			=array(	"boolean_field" => "b_in_media_list",
+																"array_name"		=> "tinyMCEMediaList",
+																"file_name"			=> "media_list");
+		$types["downloads"]	=array(	"boolean_field" => "b_in_link_list",
+																"array_name"		=> "tinyMCELinkList",
+																"file_name"			=> "link_list");
+		$types["links"]			=array(	"array_name"		=> "tinyMCELinkList",
+																"file_name"			=> "link_list");
 		$this->type=$types[$type];
 	}
 
@@ -55,12 +58,16 @@ class Editor_lists {
 		}
 
 		ignorecase_ksort($data);
+		// trace_($data);
 
 		// set list
 		$list="var $jsArray = new Array(";
-		if ($type=="links") {
+		if ($type=="links" or $type=="downloads") {
 			foreach($data as $name=>$link) {
-				$list.='["'.$link["name"].'","'.$link["url"].'"],';
+				if ($type=="downloads")
+					$list.='["'.$link['type'].': '.$link["name"].'","'.$link["path"].'"],';
+				else
+					$list.='["'.$link["name"].'","'.$link["url"].'"],';
 			}
 		}
 		else {
