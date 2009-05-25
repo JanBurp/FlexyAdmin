@@ -105,6 +105,7 @@ class File_manager Extends Model {
 			$result=rmdir($name);
 		else {
 			$result=unlink($name);
+			// $result=true;
 			if ($result) {
 				/**
 				 * Check if cached thumb exists, if so, delete it
@@ -113,6 +114,22 @@ class File_manager Extends Model {
 				if (file_exists($cachedThumb)) {
 					unlink($cachedThumb);
 				}
+				/**
+				 * Check if other sizes exists and if they are hidden, delete them
+				 */
+				$info=$this->cfg->get('CFG_img_info',$this->path);
+				$nr=1;
+				$names=array();
+				while (isset($info["str_prefix_$nr"])) {
+					if (!empty($info["str_prefix_$nr"])) $names[]=$info["str_prefix_$nr"].$file;
+					if (!empty($info["str_postfix_$nr"])) $names[]=get_file_without_extension($file).$info["str_postfix_$nr"].get_file_extension($file);
+					$nr++;
+				}
+				$names=filter_by($names,"_");
+				foreach($names as $name) {
+					unlink($this->map."/".$name);
+				}
+				
 				/**
 				 * Check if some data has this mediafile as content, remove it
 				 */
