@@ -56,6 +56,12 @@ class MY_Upload extends CI_Upload {
 		$this->error=$this->display_errors();
 		$this->result=$this->data();
 		$this->file_name=$this->result["file_name"];
+		$cleanName=clean_file_name($this->file_name);
+		if ($cleanName!=$this->file_name) {
+			rename($config["upload_path"]."/".$this->file_name, $config["upload_path"]."/".$cleanName);
+			$this->file_name=$cleanName;
+		}
+		// trace_($this->file_name);
 		$goodluck=empty($this->error);
 		if (!$goodluck) {
 			log_("info","[UPLOAD] error while uploaded: '$this->file_name' [$this->error]");
@@ -128,7 +134,7 @@ class MY_Upload extends CI_Upload {
 					$config['maintain_ratio'] = TRUE;
 					$config['width'] 					= $thumbSize[0];
 					$config['height'] 				= $thumbSize[1];
-					$config['new_image']			= $CI->config->item('THUMBCACHE')."/".pathencode($config['source_image']);
+					$config['new_image']			= $CI->config->item('THUMBCACHE')."/".pathencode($config["upload_path"]."/".$this->file_name,FALSE);
 					$config['master_dim']			= 'auto';
 					// set mem higher if needed
 					if (!$memSet) $memSet=$this->_setMemory($currentSizes);
