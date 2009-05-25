@@ -596,6 +596,7 @@ class Flexy_field extends Model {
 		$path=el("str_path",$info);
 		$map=$this->config->item('ASSETS').$path;
 		$files=read_map($map);
+		$files=not_filter_by($files,"_");
 		ignorecase_ksort($files);
 		$options[""]="";
 		foreach($files as $file) {
