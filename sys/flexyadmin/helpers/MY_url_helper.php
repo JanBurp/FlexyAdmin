@@ -48,14 +48,15 @@ function linkdecode($l) {
 	return rawurldecode($l);
 }
 
-function pathencode($p) {
+function pathencode($p,$isPath=TRUE) {
 	$p=str_replace("/","__",$p);
-	return linkencode($p);
+	if ($isPath) $p=linkencode($p);
+	return $p;
 }
 
-function pathdecode($p,$isPath=FALSE) {
+function pathdecode($p,$isPath=TRUE) {
 	$p=str_replace("__","/",$p);
-	if (!$isPath) $p=linkdecode($p);
+	if ($isPath) $p=linkdecode($p);
 	return $p;
 }
 

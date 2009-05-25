@@ -17,5 +17,16 @@ function get_file_extension($f) {
 	return substr($f,$p+1);
 }
 
+function clean_file_name($f) {
+	$ext=get_file_extension($f);
+	if (!empty($ext))
+		$name=substr($f,0,strlen($f)-strlen($ext));
+	else
+		$name=$f;
+	$name=clean_string($name);
+	if (!empty($ext))
+		$name="$name.$ext";
+	return $name;
+}
 
 ?>
