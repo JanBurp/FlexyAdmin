@@ -17,6 +17,12 @@ function get_file_extension($f) {
 	return substr($f,$p+1);
 }
 
+function get_file_without_extension($f) {
+	$p=strrpos($f,".");
+	if ($p===FALSE) return $f;
+	return substr($f,0,$p);
+}
+
 function clean_file_name($f) {
 	$ext=get_file_extension($f);
 	if (!empty($ext))
