@@ -26,6 +26,7 @@ class Editor_lists {
 	}
 
 	function create_list($type="") {
+		if ($type=="links") $type="downloads";
 		if (!empty($type)) $this->set_type($type);
 		$t=$this->type;
 		$boolField=el("boolean_field",$t);
@@ -34,7 +35,7 @@ class Editor_lists {
 		$CI =& get_instance();
 
 		$data=array();
-		if ($type=="links") {
+		if ($type=="downloads") {
 			$table=$CI->cfg->get('CFG_editor','table');
 			$CI->db->select("str_title,url_url");
 			$query=$CI->db->get($table);
@@ -42,19 +43,18 @@ class Editor_lists {
 				$data[$row["str_title"]]=array("url"=>$row["url_url"],"name"=>$row["str_title"]);
 			}
 		}
-		else {
-			$mediaTbl=$CI->config->item('CFG_table_prefix')."_".$CI->config->item('CFG_media_info');
-			if ($CI->db->table_exists($mediaTbl)) {
-				$CI->db->select("str_path");
-				$CI->db->where($boolField,1);
-				$query=$CI->db->get($mediaTbl);
-				foreach($query->result_array() as $row) {
-					$path=$row["str_path"];
-					$map=$CI->config->item('ASSETS').$path;
-					$subFiles=read_map($map);
-					$subFiles=not_filter_by($subFiles,"_");
-					$data=$data + $subFiles;
-				}
+		//
+		$mediaTbl=$CI->config->item('CFG_table_prefix')."_".$CI->config->item('CFG_media_info');
+		if ($CI->db->table_exists($mediaTbl)) {
+			$CI->db->select("str_path");
+			$CI->db->where($boolField,1);
+			$query=$CI->db->get($mediaTbl);
+			foreach($query->result_array() as $row) {
+				$path=$row["str_path"];
+				$map=$CI->config->item('ASSETS').$path;
+				$subFiles=read_map($map);
+				$subFiles=not_filter_by($subFiles,"_");
+				$data=$data + $subFiles;
 			}
 		}
 
@@ -65,7 +65,7 @@ class Editor_lists {
 		$list="var $jsArray = new Array(";
 		if ($type=="links" or $type=="downloads") {
 			foreach($data as $name=>$link) {
-				if ($type=="downloads")
+				if ($type=="downloads" and isset($link['type']))
 					$list.='["'.$link['type'].': '.$link["name"].'","'.$link["path"].'"],';
 				else
 					$list.='["'.$link["name"].'","'.$link["url"].'"],';
