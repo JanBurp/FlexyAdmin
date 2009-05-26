@@ -1148,12 +1148,11 @@ class CI_Loader {
 				'_ci_vars' => $this->_ci_object_to_array($var),
 				'_ci_return' => $return
 		);
-
 		return $this->_ci_load($data);
 	}
 
 	function site_view($v,$var=array(),$return=false) {
-		return $this->my_view($v,"site/views/",$var,$return);
+		return $this->my_view($v,"site/views",$var,$return);
 	}
 
 
