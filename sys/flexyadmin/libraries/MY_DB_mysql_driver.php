@@ -263,7 +263,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		/**
 		 * get the query
 		 */
-		if ($limit>1)
+		if ($limit>=1)
 			$query=$this->get($table,$limit,$offset);
 		else
 			$query=$this->get($table);
