@@ -13,7 +13,7 @@
 <div id="wrapper">
 
 	<div id="dialog">
-		<form action="admin/user/check_login" method="post" class="login">
+		<form action="<?=site_url("admin/user/check_login")?>" method="post" class="login">
 			<h2>FlexyAdmin login</h2>
 			<p class="str"><label for="user">User</label><input type="text" name="user" value="" id="user" class="user" /></p>
 			<p class="pwd"><label for="pass">Password</label><input type="password" name="password" value="" id="password" class="password"  /></p>

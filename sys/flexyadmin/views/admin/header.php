@@ -17,6 +17,13 @@
 
 	<link rel="stylesheet" type="text/css" href="sys/jquery/ui/theme/ui.all.css" />
 
+	<script language="javascript" type="text/javascript">
+	<!--
+	config=new Object;
+	config.site_url="<?=site_url()?>";
+	-->
+	</script>
+
 	<script language="javascript" type="text/javascript" src="sys/jquery/jquery-1.3.2.min.js"></script>
 	<script language="javascript" type="text/javascript" src="sys/jquery/ui/jquery-ui-1.7.1.custom.min.js"></script>
 
