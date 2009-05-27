@@ -126,7 +126,7 @@ $(document).ready(function() {
 		//
 		$(".upload").click(function() {
 			path=get_subclass("path_",$(this));
-			dialog.html('<form class="upload" method="post" action="admin/filemanager/upload/'+path+'" enctype="multipart/form-data">'+
+			dialog.html('<form class="upload" method="post" action="'+site_url("admin/filemanager/upload/"+path)+'" enctype="multipart/form-data">'+
 									'<input type="file" name="file" value="" class="filemanager" /></form>');
 			$(dialog).dialog({
 				title:langp("dialog_title_upload"),
@@ -282,7 +282,7 @@ $(document).ready(function() {
 			cell=get_cell($(this));
 			id=cell.id;
 			if ($(this).children("div:first").hasClass("no")) {	value="1"; } else {	value="0"; }
-			url="admin/ajax/edit/"+cell.table+"/"+cell.id+"/"+cell.field+"/"+value;
+			url=site_url("admin/ajax/edit/"+cell.table+"/"+cell.id+"/"+cell.field+"/"+value);
 			// ajax request
 			$(this).css('cursor','wait');
 			$.post(url,"",function(data) {
@@ -394,7 +394,7 @@ $(document).ready(function() {
 								}
 							}
 							// Set own parent with AJAX request
-							url="admin/ajax/edit/"+table+"/"+id+"/self_parent/"+newParentId;
+							url=site_url("admin/ajax/edit/"+table+"/"+id+"/self_parent/"+newParentId);
 							$.get(url,"",function(data) {
 										if (data!="") {
 											// error
@@ -410,7 +410,7 @@ $(document).ready(function() {
 					
 					// prepare ajax request to re-order the table in the database
 					ser=serialize("table.grid tbody tr");
-					url="admin/ajax/order/"+table;
+					url=site_url("admin/ajax/order/"+table);
 					// ajax request
 					$.post(url,ser,function(data) {
 							if (data!="") {
@@ -680,6 +680,14 @@ function get_ext(s){var a,s;s=String(s);a=s.split(".");return a[a.length-1];}
 
 function pathdecode(s) { s=s.replace(/__/g,"/"); return s; }
 function pathencode(s) { s=s.replace(/\//g,"__"); return s; }
+function site_url(s) {
+	if (s=="")
+		s=config.site_url;
+	else
+		s=config.site_url+"/"+s;
+	return s;
+}
+
 
 function cachedThumb(src) {
 	return src;
