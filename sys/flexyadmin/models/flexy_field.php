@@ -609,6 +609,7 @@ class Flexy_field extends Model {
 		}
 		$out=$this->_standard_form_field($options);
 		$out["path"]=$map;
+		if ($this->pre=="medias") $out["multiple"]="multiple";
 		$type=el("str_type",$info);
 		if ($type=="all" or $type=="image" or $type=="flash") $out["type"]="image_dropdown";
 		unset($out["button"]);
