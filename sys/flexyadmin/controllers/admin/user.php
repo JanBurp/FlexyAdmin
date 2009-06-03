@@ -29,9 +29,12 @@ require_once(APPPATH."controllers/admin/MY_Controller.php");
 
 class User extends Controller {
 
+	var $homePage;
+
 	function User() {
 		parent::Controller();
 		$this->load->library('session');
+		$this->homePage=$this->config->item('API_home');
 	}
 
 	function login() {
@@ -90,7 +93,7 @@ class User extends Controller {
 				}
 			}
 		}
-		redirect($this->config->item('API_home'));
+		redirect($this->homePage);
 	}
 
 	function logout() {
@@ -98,7 +101,7 @@ class User extends Controller {
 		if ($this->db->has_field('cfg_configurations','b_logout_to_site') and $this->db->get_field('cfg_configurations','b_logout_to_site'))
 			redirect();
 		else
-			redirect($this->config->item('API_home'));
+			redirect($this->homePage);
 	}
 
 }
