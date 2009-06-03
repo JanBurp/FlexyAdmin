@@ -110,6 +110,18 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			$this->like("uri",$lastPart,"before");
 		}
 	}
+	
+	/**
+	*	array("search"=>"", "field"=>"", "or"=>"and/or" )
+	*/
+	function search($search) {
+		foreach ($search as $k => $s) {
+			if (isset($s["or"]) and $s["or"]=="or")
+				$this->or_like($s["field"],$s["search"]);
+			else
+				$this->like($s["field"],$s["search"]);
+		}
+	}
 
 	function dont_select($dont_select="") {
 		if (!empty($dont_select)) {
