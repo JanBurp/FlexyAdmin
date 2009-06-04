@@ -205,6 +205,7 @@ class Menu {
 		$this->tmpItemStart=$start;
 		$this->tmpItemEnd=$end;
 	}
+	
 	function tmp($tmp,$attr="") {
 		if (!empty($attr)) {
 			if (is_string($attr)) {
@@ -216,7 +217,7 @@ class Menu {
 				return str_replace("%s",$a,$tmp);
 			}
 		}
-		return $tmp;
+		return str_replace("%s","",$tmp);
 	}
 
 	function render_from_table($table) {
@@ -250,12 +251,15 @@ class Menu {
 			if (!empty($preUri) and $this->urlField=="uri") $thisUri=$preUri."/".$thisUri;
 			// set class
 			$cName=strtolower(str_replace(" ","_",$name));
+			$link=$this->tmp($this->tmpUrl,$thisUri);
+			// trace_($link);
 			$attr["class"]="$cName pos$pos lev$level";
 			if ($pos==1)																$attr["class"].=" first";
 			if ($pos==count($menu))											$attr["class"].=" last";
 			if (isset($item["class"]))									$attr["class"].=" ".$item["class"];
-			if ($this->current==$thisUri) 							$attr["class"].=" current";
-			if ($this->inUri($thisUri,$this->current))	$attr["class"].=" active";
+			if ($this->current==$link) 									$attr["class"].=" current";
+			// trace_(array("cur"=>$this->current,"link"=>$link,"is"=>($this->current==$link),"class"=>$attr["class"] ) );
+			if ($this->inUri($link,$this->current))	$attr["class"].=" active";
 			$out.=$this->tmp($this->tmpItemStart,array("class"=>$attr["class"]));
 			// render item or submenu
 			if (isset($item["uri"])) {
@@ -263,8 +267,7 @@ class Menu {
 				$pre=get_prefix($showName,"__");
 				if (!empty($pre)) $showName=$pre;
 				if (isset($item["help"])) $showName=help($showName,$item["help"]);
-				$out.=anchor($this->tmp($this->tmpUrl,$thisUri), $showName, $attr);
-				// if (!empty($this->itemControls)) $out.=$this->tmp($this->itemControls,$thisUri);
+				$out.=anchor($link, $showName, $attr);
 			}
 			if (isset($item["sub"]))
 				$out.=$this->render($item["sub"],"$cName",$level+1,$thisUri);
