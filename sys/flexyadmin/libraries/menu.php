@@ -28,6 +28,7 @@ class Menu {
 	var $tmpUrl;
 	var $urlField;
 	var $fields;
+	var	$attr;
 	
 	var $menuTable;
 	
@@ -49,6 +50,7 @@ class Menu {
 		$this->set_class_field();
 		$this->set_visible_field();
 		$this->set_parent_field();
+		$this->set_attributes();
 		$this->add_controls();
 	}
 
@@ -66,6 +68,11 @@ class Menu {
 	}
 	function set_parent_field($parent="self_parent") {
 		$this->fields["parent"]=$parent;
+	}
+
+	function set_attributes($attr="") {
+		if (!is_array($attr)) $attr=array("class"=>$attr);
+		$this->attr=$attr;
 	}
 
 	function set_menu_from_table($table="") {
@@ -161,6 +168,8 @@ class Menu {
 	}
 
 	function set_current($current="") {
+		$current=str_replace(index_page(),"",$current);
+		if (substr($current,0,1)=="/") $current=substr($current,1);
 		$this->current=$current;
 	}
 
@@ -188,16 +197,26 @@ class Menu {
 		$this->set_url_template();
 		$this->set_url_field();
 	}
-	function set_menu_templates($start="<ul class=\"%s\">",$end="</ul>") {
+	function set_menu_templates($start="<ul %s>",$end="</ul>") {
 		$this->tmpMenuStart=$start;
 		$this->tmpMenuEnd=$end;
 	}
-	function set_item_templates($start="<li class=\"%s\">",$end="</li>") {
+	function set_item_templates($start="<li %s>",$end="</li>") {
 		$this->tmpItemStart=$start;
 		$this->tmpItemEnd=$end;
 	}
-	function tmp($tmp,$class="") {
-		return str_replace("%s",$class,$tmp);
+	function tmp($tmp,$attr="") {
+		if (!empty($attr)) {
+			if (is_string($attr)) {
+				return str_replace("%s",$attr,$tmp);
+			}
+			else {
+				$a="";	
+				foreach ($attr as $key => $value) $a.=$key.'="'.$value.'" ';
+				return str_replace("%s",$a,$tmp);
+			}
+		}
+		return $tmp;
 	}
 
 	function render_from_table($table) {
@@ -216,9 +235,14 @@ class Menu {
 		$this->itemControls=$controls;
 	}
 
-	function render($menu=NULL,$class="",$level=1,$preUri="") {
+	function render($menu=NULL,$attr="",$level=1,$preUri="") {
+		if (empty($attr)) $attr=$this->attr;
+		if (!is_array($attr)) $attr=array("class"=>$attr);
+		if (empty($attr["class"])) $attr["class"]="";
+		$attr["class"].=" lev$level";
+		if ($level>1) unset($attr["id"]);
 		$branch=array();
-		$out=$this->tmp($this->tmpMenuStart,"$class lev$level");
+		$out=$this->tmp($this->tmpMenuStart,$attr);
 		if (!isset($menu)) $menu=$this->menu;
 		$pos=1;
 		foreach($menu as $name=>$item) {
@@ -226,20 +250,20 @@ class Menu {
 			if (!empty($preUri) and $this->urlField=="uri") $thisUri=$preUri."/".$thisUri;
 			// set class
 			$cName=strtolower(str_replace(" ","_",$name));
-			$class="$cName pos$pos lev$level";
-			if ($pos==1)																$class.=" first";
-			if ($pos==count($menu))											$class.=" last";
-			if (isset($item["class"]))									$class.=" ".$item["class"];
-			if ($this->current==$thisUri) 							$class.=" current";
-			if ($this->inUri($thisUri,$this->current))	$class.=" active";
-			$out.=$this->tmp($this->tmpItemStart,$class);
+			$attr["class"]="$cName pos$pos lev$level";
+			if ($pos==1)																$attr["class"].=" first";
+			if ($pos==count($menu))											$attr["class"].=" last";
+			if (isset($item["class"]))									$attr["class"].=" ".$item["class"];
+			if ($this->current==$thisUri) 							$attr["class"].=" current";
+			if ($this->inUri($thisUri,$this->current))	$attr["class"].=" active";
+			$out.=$this->tmp($this->tmpItemStart,array("class"=>$attr["class"]));
 			// render item or submenu
 			if (isset($item["uri"])) {
 				$showName=ascii_to_entities($name);
 				$pre=get_prefix($showName,"__");
 				if (!empty($pre)) $showName=$pre;
 				if (isset($item["help"])) $showName=help($showName,$item["help"]);
-				$out.=anchor($this->tmp($this->tmpUrl,$thisUri), $showName, array("class"=>$class));
+				$out.=anchor($this->tmp($this->tmpUrl,$thisUri), $showName, $attr);
 				// if (!empty($this->itemControls)) $out.=$this->tmp($this->itemControls,$thisUri);
 			}
 			if (isset($item["sub"]))
