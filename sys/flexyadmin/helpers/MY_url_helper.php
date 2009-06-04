@@ -1,5 +1,9 @@
 <?
 
+function index_url($s) {
+	return index_page()."/".$s;
+}
+
 function assets($s="") {
 	$CI =& get_instance();
 	return $CI->config->item('ASSETS').$s;
