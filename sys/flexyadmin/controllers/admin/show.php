@@ -181,6 +181,7 @@ class Show extends AdminController {
 			$this->load->library('upload');
 			$this->load->model("order");
 			$this->load->helper('html');
+			$this->lang->load("form");
 
 			$this->form_validation->set_error_delimiters('<div id="formmessage">', '</div>');
 			$this->load->model("form");

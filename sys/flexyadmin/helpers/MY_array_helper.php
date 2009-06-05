@@ -160,9 +160,15 @@ function combine($k,$v) {
 }
 
 // sort assoc array by assoc name
-function sort_by($a, $s) {
-	$f = "return strnatcmp(\$a['$s'], \$b['$s']);";
-	usort($a, create_function('$a,$b', $f));
+function sort_by($a,$s,$d=FALSE) {
+	if ($d) {
+		$f = "return strnatcmp(\$b['$s'], \$a['$s']);";
+		uasort($a, create_function('$a,$b', $f));
+	}
+	else {
+		$f = "return strnatcmp(\$a['$s'], \$b['$s']);";
+		uasort($a, create_function('$a,$b', $f));
+	}
 	return $a;
 }
 

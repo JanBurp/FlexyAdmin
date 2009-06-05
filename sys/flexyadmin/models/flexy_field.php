@@ -591,22 +591,29 @@ class Flexy_field extends Model {
 	}
 
 	function _dropdown_media_form() {
+		function _create_media_options($files,$types) {
+			$options=array();
+			foreach($files as $file) {
+				if ($file["type"]!="dir") {
+					$ext=strtolower(get_file_extension($file["name"]));
+					if (in_array($ext,$types)) {
+						$options[$file["name"]]=$file["name"]." (".trim(strftime("%e %B '%y",strtotime($file["date"]))).")";
+					}
+				}
+			}
+			return $options;
+		}
 		$info=$this->cfg->get('CFG_media_info',$this->table.".".$this->field);
 		$types=explode(",",el("str_types",$info));
 		$path=el("str_path",$info);
 		$map=$this->config->item('ASSETS').$path;
 		$files=read_map($map);
 		$files=not_filter_by($files,"_");
+		$lastUploads=array_slice(sort_by($files,"rawdate",TRUE),0,5);
 		ignorecase_ksort($files);
-		$options[""]="";
-		foreach($files as $file) {
-			if ($file["type"]!="dir") {
-				$ext=strtolower(get_file_extension($file["name"]));
-				if (in_array($ext,$types)) {
-					$options[$file["name"]]=$file["name"];
-				}
-			}
-		}
+		$optionsLast=_create_media_options($lastUploads,$types);
+		$optionsNames=_create_media_options($files,$types);
+		$options=array(lang("form_dropdown_sort_on_last_upload")=>$optionsLast, lang("form_dropdown_sort_on_name")=>$optionsNames);
 		$out=$this->_standard_form_field($options);
 		$out["path"]=$map;
 		if ($this->pre=="medias") $out["multiple"]="multiple";

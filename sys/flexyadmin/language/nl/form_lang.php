@@ -12,5 +12,8 @@ $lang['form_delete'] 			= "Verwijderen";
 
 $lang['form_item'] 				= "Item";
 
+$lang['form_dropdown_sort_on_name'] 				= "Op naam gesorteerd";
+$lang['form_dropdown_sort_on_last_upload'] 	= "Laatste uploads";
+
 
 ?>

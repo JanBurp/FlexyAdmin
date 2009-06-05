@@ -28,6 +28,7 @@ function read_map($path,$types="") {
 				$name=$file;
 				$data["alt"]=get_prefix($file,".");
 				$data["size"]=sprintf("%d k",filesize($path."/".$name)/1024);
+				$data["rawdate"]=date("Y m d",filemtime($path."/".$name));
 				$data["date"]=date("j M Y",filemtime($path."/".$name));
 			}
 			$data["name"]=$name;
