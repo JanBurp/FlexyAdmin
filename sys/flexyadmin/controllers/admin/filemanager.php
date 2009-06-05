@@ -109,6 +109,10 @@ class Filemanager extends AdminController {
 			if ($right<RIGHTS_DELETE)	$fileManager->show_delete_buttons(FALSE);
 			$fileManager->set_files($files);
 			if (!empty($idFile)) $fileManager->set_current($idFile);
+			$Help=$this->cfg->get("CFG_media_info",$path,"txt_help");
+			if (!empty($Help)) {
+				$uiName=help($uiName,$Help);
+			}
 			if (!empty($uiName)) $fileManager->set_caption($uiName);
 			$renderData=$fileManager->render();
 
