@@ -445,6 +445,11 @@ class AdminController extends BasicController {
 				if (!empty($menuName) and $this->has_rights("media_".$rightsName)) {
 					$a[$menuName]=array("uri"=>api_uri('API_filemanager',"show",pathencode(el('str_path',$mediaInfo))),"class"=>"media");
 				}
+				// trace_($mediaInfo);
+				$mediaHelp=$this->cfg->get("CFG_media_info",$mediaInfo["str_path"],"txt_help");
+				if (!empty($mediaHelp)) {
+					$a[$menuName]["help"]=$mediaHelp;
+				}
 			}
 		}
 
