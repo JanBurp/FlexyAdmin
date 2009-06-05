@@ -12,5 +12,8 @@ $lang['form_delete'] 			= "Delete";
 
 $lang['form_item'] 				= "Item";
 
+$lang['form_dropdown_sort_on_name'] 				= "Sorted on name";
+$lang['form_dropdown_sort_on_last_upload'] 	= "Last uploads";
+
 
 ?>
