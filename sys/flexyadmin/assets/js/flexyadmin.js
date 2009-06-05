@@ -11,32 +11,6 @@ $(document).ready(function() {
 	if (isFile)							{ isThumbs=$("#content").hasClass("icons");}
 	isSortable=false;
 		
-	//
-	// Help
-	//
-
-	var ShowDelay;
-	var HideDelay;
-	$("span.help").mouseenter(function() {
-		obj=$(this);
-		helpName=get_subclass("help_",$(this));
-		ShowDelay=setTimeout( function() {		
-			helpTxt=$("#help_messages span#help_"+helpName).html();
-			// helpTxt=$(obj).children("span.hide").html();
-			html=helpTxt;
-			$(Popup).html(html).fadeIn(150);
-			HideDelay=setTimeout( function(){
-				$(Popup).fadeOut(1000);
-			},5000 );
-		},1000);
-	}).mouseout(function() {
-		clearTimeout(ShowDelay);
-		$(Popup).fadeOut(150);
-	}).mousemove(function(e){
-		clearTimeout(HideDelay);
-    $(Popup).css({left:e.pageX+8,top:e.pageY+18});
-  }); 
-  
 
 	//
 	// Form
@@ -218,6 +192,7 @@ $(document).ready(function() {
 			$(filter_input).addClass("filter").attr({title:'search / filter'});
 			$("tr.caption tr").append('<td class="filter">');
 			$("td.filter").html(filter_input);
+			$("td.filter input").wrap('<span class="help '+config.help_filter+'"></span>');
 		}
 
 		//
@@ -454,6 +429,38 @@ $(document).ready(function() {
 			$("table.grid tbody tr:even").addClass("evenrow");
     });
 	}
+
+
+
+	//
+	// Help
+	//
+
+	var ShowDelay;
+	var HideDelay;
+	$("span.help").children().removeAttr("title");
+	$("span.help").mouseenter(function() {
+		obj=$(this);
+		helpName=get_subclass("help_",$(this));
+		ShowDelay=setTimeout( function() {		
+			helpTxt=$("#help_messages span#help_"+helpName).html();
+			// helpTxt=$(obj).children("span.hide").html();
+			html=helpTxt;
+			$(Popup).html(html).fadeIn(150);
+			HideDelay=setTimeout( function(){
+				$(Popup).fadeOut(1000);
+			},5000 );
+		},1000);
+	}).mouseout(function() {
+		clearTimeout(ShowDelay);
+		$(Popup).fadeOut(150);
+	}).mousemove(function(e){
+		clearTimeout(HideDelay);
+    $(Popup).css({left:e.pageX+8,top:e.pageY+18});
+  }); 
+
+
+
 
 });
 

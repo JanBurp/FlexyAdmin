@@ -133,7 +133,7 @@ span.help {
 	position:absolute;
 	background-color:#fff;
 	z-index:200;
-	width:400px;
+	max-width:400px;
 	padding:10px 10px 0px;
 	display:none;
 	border: solid 2px #BBCC88;

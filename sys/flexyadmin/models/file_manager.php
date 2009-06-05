@@ -354,7 +354,7 @@ function thumb($attr,$index=FALSE) {
 					}
 
 					$edit="";
-					if ($this->showDeleteButtons)	$edit.=anchor(api_uri('API_filemanager_confirm',pathencode($this->path),$name),icon("delete"),array("class"=>"delete"));
+					if ($this->showDeleteButtons)	$edit.=anchor(api_uri('API_filemanager_confirm',pathencode($this->path),$name),help(icon("delete"),lang('file_delete')),array("class"=>"delete"));
 					if (empty($edit)) $edit="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 
 					$fileData["edit"]=$edit;
@@ -404,14 +404,14 @@ function thumb($attr,$index=FALSE) {
 		if (empty($this->caption))	$this->set_caption($this->path);
 		// Buttons (with Viewtype switcher)
 		$buttons="";
-		if ($this->showUploadButton) $buttons=icon("new","upload","upload path_".$this->path);
+		if ($this->showUploadButton) $buttons=help(icon("new","upload","upload path_".$this->path),lang("file_upload"));
 		// view types
 		$types=$this->config->item('API_filemanager_view_types');
 		foreach($types as $view) {
 			$icon="list";
 			if ($view!=$icon) $icon.=$view;
 			if ($this->view==$view) $extra="current"; else $extra="";
-			$buttons.=anchor(api_uri('API_filemanager_set_view',$view,$this->path),icon($icon,$view,$extra));
+			$buttons.=anchor(api_uri('API_filemanager_set_view',$view,$this->path),help(icon($icon,$view,$extra),lang("file_list_$view")) );
 		}
 
 		$grid=new grid();
