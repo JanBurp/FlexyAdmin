@@ -343,6 +343,7 @@ class AdminController extends BasicController {
 	var $showEditor;
 	var $showType;
 	var $helpTexts;
+	var $js;
 
 	function AdminController() {
 		parent::BasicController(true);
@@ -390,7 +391,7 @@ class AdminController extends BasicController {
 		$buttons3=$this->cfg->get('CFG_editor',"str_buttons3");
 		$formats=$this->cfg->get('CFG_editor',"str_formats");
 		$styles=$this->cfg->get('CFG_editor',"str_styles");
-		$this->load->view('admin/header', array("title"=>$title,"url"=>$url,"show_type"=>$type,"show_editor"=>$editor,"buttons1"=>$buttons1,"buttons2"=>$buttons2,"buttons3"=>$buttons3,"formats"=>$formats,"styles"=>$styles,"language"=>$this->language));
+		$this->load->view('admin/header', array("title"=>$title,"url"=>$url,"js"=>$this->js,"show_type"=>$type,"show_editor"=>$editor,"buttons1"=>$buttons1,"buttons2"=>$buttons2,"buttons3"=>$buttons3,"formats"=>$formats,"styles"=>$styles,"language"=>$this->language));
 	}
 
 	function _show_table_menu($tables,$type) {
@@ -550,12 +551,20 @@ class AdminController extends BasicController {
 	
 	function _add_help($help,$name="") {
 		static $counter=0;
-		if (empty($name)) {
-			$name=safe_string($help,10);
+		$found=array_search($help,$this->helpTexts);
+		if (!$found) {
+			if (empty($name)) {
+				$name=safe_string($help,10);
+			}
+			$name="help_".$counter++."_$name";
+			$this->helpTexts[$name]=$help;
+			return $name;
 		}
-		$name="help_".$counter++."_$name";
-		$this->helpTexts[$name]=$help;
-		return $name;
+		return $found;
+	}
+
+	function _add_js_variable($name,$value) {
+		$this->js[$name]=$value;
 	}
 
 	/**

@@ -89,6 +89,9 @@ class Show extends AdminController {
 				if ($right=$this->has_rights($table,$id)) {
 					$restrictedToUser=$this->user_restriction_id($table);
 					$this->load->model("grid");
+					$this->lang->load("help");
+					$this->_add_js_variable("help_filter",$this->_add_help(langp('grid_filter')));
+					
 					/**
 					 * get data
 					 */
@@ -138,7 +141,7 @@ class Show extends AdminController {
 						$keys=array_keys(current($data));
 						$keys=combine($keys,$keys);
 						if ($right>=RIGHTS_ADD) {
-							$newIcon=anchor(api_uri('API_view_form',$table,-1),icon("new"));
+							$newIcon=anchor(api_uri('API_view_form',$table,-1),help(icon("new"),langp('grid_new',$uiTable)) );
 							$grid->prepend_to_captions($newIcon,"new");
 						}
 						$grid->set_headings($this->uiNames->get($keys,$table));

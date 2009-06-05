@@ -352,8 +352,8 @@ class Flexy_field extends Model {
 		$this->id=$this->data;
 		$class=$this->table." id".$this->id;
 		$out="";
-		if ($this->fieldRight>=RIGHTS_EDIT) 	$out.=anchor(api_uri('API_view_form',$this->table,$this->data),icon("edit"),array("class"=>"edit $class"));
-		if ($this->fieldRight>=RIGHTS_DELETE)	$out.=anchor(api_uri('API_confirm',$this->table,$this->data),icon("delete"),array("class"=>"delete $class"));
+		if ($this->fieldRight>=RIGHTS_EDIT) 	$out.=anchor(api_uri('API_view_form',$this->table,$this->data),help(icon("edit"),lang('grid_edit')),array("class"=>"edit $class"));
+		if ($this->fieldRight>=RIGHTS_DELETE)	$out.=anchor(api_uri('API_confirm',$this->table,$this->data),help(icon("delete"),lang('grid_delete')),array("class"=>"delete $class"));
 		return $out;
 	}
 
