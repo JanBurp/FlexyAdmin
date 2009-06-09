@@ -22,8 +22,11 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	var $many;
 	var $options;
 	var $whereUri;
+	var $uriAsFullUri;
 	var $orderAsTree;
 	var $ar_dont_select;
+	var $selectFirst;
+	var	$selectFirsts;
 
 	function MY_DB_mysql_driver($params) {
 		parent::CI_DB_mysql_driver($params);
@@ -40,8 +43,10 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		$this->add_options(FALSE);
 		$this->max_text_len();
 		$this->where_uri();
+		$this->uri_as_full_uri(FALSE);
 		$this->order_as_tree(FALSE);
 		$this->ar_dont_select=array();
+		$this->select_first();
 	}
 
 	/**
@@ -123,6 +128,18 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		}
 	}
 
+	function select_first($pre="") {
+		if (empty($pre))
+			$this->selectFirst=array();
+		else
+			$this->selectFirst[]=$pre;
+	}
+	
+	function get_select_first($n=-1) {
+		if ($n<0) return $this->selectFirsts;
+		else return $this->selectFirsts[$n];
+	}
+
 	function dont_select($dont_select="") {
 		if (!empty($dont_select)) {
 			$this->ar_dont_select[]=$dont_select;
@@ -131,6 +148,10 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 
 	function order_as_tree($orderAsTree=TRUE) {
 		$this->orderAsTree=$orderAsTree;
+	}
+
+	function uri_as_full_uri($fullUri=TRUE) {
+		$this->uriAsFullUri=$fullUri;
 	}
 
 	/**
@@ -147,6 +168,28 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 */
 	function _get($table="",$limit=0,$offset=0) {
 		log_("info","[DB+] Get/create query:");
+
+		/**
+		 * 'select_first' type of field is asked for
+		 */
+		if (!empty($this->selectFirst)) {
+			$this->selectFirsts=array();
+			reset($this->selectFirst);
+			$fields=$this->list_fields($table);
+			$loop=TRUE;
+			while ($loop) {
+				$preSearch=current($this->selectFirst);
+				$field=current($fields);
+				$preField=get_prefix($field);
+				if ($preSearch==$preField) {
+					$this->selectFirsts[]=$field;
+					$this->select($field);
+					$loop=FALSE;
+				}
+				$loop=($loop and each($fields)!==false);
+			}
+		}
+		
 
 		/**
 			* As abstracts if asked for
@@ -288,7 +331,10 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	}
 	function get_result($table,$limit=0,$offset=0) {
 		$orderAsTree=$this->orderAsTree;
+		$fullUri=$this->uriAsFullUri;
+		
 		$result=$this->_get_result($table,$limit,$offset);
+		// order results if asked for
 		if ($orderAsTree and !empty($result)) {
 			$options=el("options",$result);
 			$multiOptions=el("multi_options",$result);
@@ -297,6 +343,19 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			$result=$this->_make_tree_result($result);
 			if ($options) $result["options"]=$options;
 			if ($multiOptions) $result["multi_options"]=$multiOptions;
+		}
+		
+		/**
+		 * Full uris if asked for
+		 */
+		if ($fullUri) {
+			foreach ($result as $key => $row) {
+				if ($row["self_parent"]!=0) {
+					$uri=$row["uri"];
+					$parentUri=$result[$row["self_parent"]]["uri"];
+					$result[$key]["uri"]=$parentUri."/".$uri;
+				}
+			}
 		}
 		return $result;
 	}
