@@ -210,6 +210,8 @@ class BasicController extends MY_Controller {
 	function BasicController($isAdmin=false) {
 		parent::MY_Controller($isAdmin);
 		$this->load->library("session");
+		$this->load->helper("language");
+		
 		$this->user="";
 		if (!$this->_user_logged_in()) {
 			// redirect($this->config->item('API_login'));
@@ -252,16 +254,18 @@ class BasicController extends MY_Controller {
 		$pre=get_prefix($item);
 		$preAll=$pre."_*";
 
-		foreach ($this->rights as $key => $rights) {
-			if ($rights['rights']=="*" or (strpos($rights['rights'],$preAll)!==FALSE) or (strpos($rights['rights'],$item)!==FALSE) )
-				$this->_change_rights($found,$rights);
-		}
-		
 		$foundRights=RIGHTS_NO;
-		if ($found['b_delete'])	$foundRights+=RIGHTS_DELETE;
-		if ($found['b_add'])		$foundRights+=RIGHTS_ADD;
-		if ($found['b_edit'])		$foundRights+=RIGHTS_EDIT;
-		if ($found['b_show'])		$foundRights+=RIGHTS_SHOW;
+
+		if (is_array($this->rights)) {
+			foreach ($this->rights as $key => $rights) {
+				if ($rights['rights']=="*" or (strpos($rights['rights'],$preAll)!==FALSE) or (strpos($rights['rights'],$item)!==FALSE) )
+					$this->_change_rights($found,$rights);
+			}
+			if ($found['b_delete'])	$foundRights+=RIGHTS_DELETE;
+			if ($found['b_add'])		$foundRights+=RIGHTS_ADD;
+			if ($found['b_edit'])		$foundRights+=RIGHTS_EDIT;
+			if ($found['b_show'])		$foundRights+=RIGHTS_SHOW;
+		}
 
 		if ($whatRight==0)
 			return $foundRights;
@@ -357,7 +361,6 @@ class AdminController extends BasicController {
 		$this->content="";
 		$this->showEditor=false;
 		$this->load->model("ui_names","uiNames");
-		$this->load->helper("language");
 		$this->load->library("menu");
 		$this->helpTexts=array();
 	}
