@@ -570,16 +570,77 @@ class AdminController extends BasicController {
 		$this->js[$name]=$value;
 	}
 
+
+
+
 	/**
 	 * Here are fuctions that hook into the grid/form/update proces.
 	 * They check if a standard hook method for the current table/field/id, if so call it
 	 */
 
+	function _after_update($table,$id,$oldData) {
+		// First check a specific table
+		$func="_after_update_$table";
+		if (method_exists($this,$func)) {
+			$this->$func($oldData);
+		}
+
+		// common after update
+
+		// Check if uri has changed, if so, replace all internal links with new uri
+		if (isset($oldData["uri"])) {
+			$newUri=$this->db->get_field($table,"uri",$id);
+			$oldUri=$oldData["uri"];
+			if ($oldUri!=$newUri) {
+				$this->_update_links_in_txt($oldUri,$newUri);
+				$this->load->library("editor_lists");
+				$this->editor_lists->create_list("links");
+			}
+		}
+		
+		// Check if a Link has changed, if so, replace all internal links with new Link
+		if ($table==$this->cfg->get('CFG_editor','table')) {
+			$newUrl=$this->db->get_field($table,"url_url",$id);
+			$oldUrl=$oldData["url_url"];
+			if ($oldUrl!=$newUrl) {
+				$this->_update_links_in_txt($oldUrl,$newUrl);
+				$this->load->library("editor_lists");
+				$this->editor_lists->create_list("links");
+			}
+		}
+
+	}
+
+	function _update_links_in_txt($oldUrl,$newUrl) {
+		// loop through all txt fields..
+		$tables=$this->db->list_tables();
+		foreach($tables as $table) {
+			if (get_prefix($table)==$this->config->item('TABLE_prefix')) {
+				$fields=$this->db->list_fields($table);
+				foreach ($fields as $field) {
+					if (get_prefix($field)=="txt") {
+						$this->db->select("id,$field");
+						$this->db->where("$field !=","");
+						$query=$this->db->get($table);
+						foreach($query->result_array() as $row) {
+							$thisId=$row["id"];
+							$txt=$row[$field];
+							$txt=str_replace("href=\"$oldUrl","href=\"$newUrl",$txt);
+							$res=$this->db->update($table,array($field=>$txt),"id = $thisId");
+						}
+					}
+				}
+			}
+		}
+	}
+
 	function _before_grid($table,&$data) {
+		// First check a specific table
 		$func="_before_grid_$table";
 		if (method_exists($this,$func)) {
 			$this->$func($data);
 		}
+		// common table function
 	}
 
 	function _before_grid_tbl_links(&$data) {

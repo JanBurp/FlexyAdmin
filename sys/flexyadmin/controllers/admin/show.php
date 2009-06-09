@@ -224,7 +224,7 @@ class Show extends AdminController {
 			 */
 
 			$this->ff->set_restricted_to_user($restrictedToUser,$this->user_id);
-			$data=$this->ff->render_form($table,$data,$options,$multiOptions);
+			$ffData=$this->ff->render_form($table,$data,$options,$multiOptions);
 
 			$form=new form(api_uri('API_view_form',$table,$id));
 			$uiTable=$this->uiNames->get($table);
@@ -234,7 +234,7 @@ class Show extends AdminController {
 			}
 			else
 				$uiShowTable=$uiTable;
-			$form->set_data($data,$uiShowTable);
+			$form->set_data($ffData,$uiShowTable);
 
 			/**
 			 * Validate form, if succes, make form do an update
@@ -243,6 +243,7 @@ class Show extends AdminController {
 				$this->lang->load("update_delete");
 				if ($this->_has_key($table)) {
 					$resultId=$form->update($table,$restrictedToUser);
+					$this->_after_update($table,$resultId,$data);
 					if (is_string($resultId)) {
 						$this->set_message(langp("update_error",$table,$resultId));
 						redirect(api_uri('API_view_grid',$table));

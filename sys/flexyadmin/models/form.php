@@ -188,46 +188,47 @@ class Form Extends Model {
 
 		/**
 		 *  Is it a updated link from links table?
+		 *  -- MOVED TO MY_Controller _after_update();
 		 */
 
-		if 	(isset($data["table"])
-			and $data["table"]==$this->cfg->get('CFG_editor','table')
-			and ($name=="url_url")
-			and (!empty($value))
-			and ($value!="http://")) {
-
-			/**
-			 * Update all links in txt fields...
-			 */
-			if ($id>=0) {
-				// get old value
-				$this->db->select("url_url");
-				$this->db->where("id",$id);
-				$query=$this->db->get($data["table"]);
-				$result=$query->row_array();
-				$oldUrl=$result["url_url"];
-				// loop through all txt fields..
-				$tables=$this->db->list_tables();
-				foreach($tables as $table) {
-					if (get_prefix($table)==$this->config->item('TABLE_prefix')) {
-						$fields=$this->db->list_fields($table);
-						foreach ($fields as $field) {
-							if (get_prefix($field)=="txt") {
-								$this->db->select("id,$field");
-								$this->db->where("$field !=","");
-								$query=$this->db->get($table);
-								foreach($query->result_array() as $row) {
-									$thisId=$row["id"];
-									$txt=$row[$field];
-									$txt=str_replace("href=\"$oldUrl","href=\"$value",$txt);
-									$res=$this->db->update($table,array($field=>$txt),"id = $thisId");
-								}
-							}
-						}
-					}
-				}
-			}
-		}
+		// if 	(isset($data["table"])
+		// 	and $data["table"]==$this->cfg->get('CFG_editor','table')
+		// 	and ($name=="url_url")
+		// 	and (!empty($value))
+		// 	and ($value!="http://")) {
+		// 
+		// 	/**
+		// 	 * Update all links in txt fields...
+		// 	 */
+		// 	if ($id>=0) {
+		// 		// get old value
+		// 		$this->db->select("url_url");
+		// 		$this->db->where("id",$id);
+		// 		$query=$this->db->get($data["table"]);
+		// 		$result=$query->row_array();
+		// 		$oldUrl=$result["url_url"];
+		// 		// loop through all txt fields..
+		// 		$tables=$this->db->list_tables();
+		// 		foreach($tables as $table) {
+		// 			if (get_prefix($table)==$this->config->item('TABLE_prefix')) {
+		// 				$fields=$this->db->list_fields($table);
+		// 				foreach ($fields as $field) {
+		// 					if (get_prefix($field)=="txt") {
+		// 						$this->db->select("id,$field");
+		// 						$this->db->where("$field !=","");
+		// 						$query=$this->db->get($table);
+		// 						foreach($query->result_array() as $row) {
+		// 							$thisId=$row["id"];
+		// 							$txt=$row[$field];
+		// 							$txt=str_replace("href=\"$oldUrl","href=\"$value",$txt);
+		// 							$res=$this->db->update($table,array($field=>$txt),"id = $thisId");
+		// 						}
+		// 					}
+		// 				}
+		// 			}
+		// 		}
+		// 	}
+		// }
 
 		/**
 		 * Ready

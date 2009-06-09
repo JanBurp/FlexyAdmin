@@ -35,15 +35,7 @@ class Editor_lists {
 		$CI =& get_instance();
 
 		$data=array();
-		if ($type=="downloads") {
-			$table=$CI->cfg->get('CFG_editor','table');
-			$CI->db->select("str_title,url_url");
-			$query=$CI->db->get($table);
-			foreach($query->result_array() as $row) {
-				$data[$row["str_title"]]=array("url"=>$row["url_url"],"name"=>$row["str_title"]);
-			}
-		}
-		//
+
 		$mediaTbl=$CI->config->item('CFG_table_prefix')."_".$CI->config->item('CFG_media_info');
 		if ($CI->db->table_exists($mediaTbl)) {
 			$CI->db->select("str_path");
@@ -59,6 +51,37 @@ class Editor_lists {
 		}
 
 		ignorecase_ksort($data);
+
+		if ($type=="downloads") {
+			// add links from links table and if set, internal links from menu table
+			$table=$CI->cfg->get('CFG_editor','table');
+			$CI->db->select("str_title,url_url");
+			$CI->db->order_by("str_title");
+			$query=$CI->db->get($table);
+			foreach($query->result_array() as $row) {
+				$data[$row["str_title"]]=array("url"=>$row["url_url"],"name"=>$row["str_title"]);
+			}
+			
+			if ($CI->cfg->get('CFG_editor','b_add_internal_links')) {
+				$menuTable=$CI->cfg->get('CFG_configurations','str_menu_table');
+				if (!empty($menuTable) and $CI->db->table_exists($menuTable)) {
+					$CI->db->select('id,uri,self_parent,order');
+					$CI->db->select_first('str');
+					$CI->db->uri_as_full_uri();
+					$CI->db->order_as_tree();
+					$results=$CI->db->get_results($menuTable);
+					// trace_($results);
+					// add results to link list
+					$nameField=$CI->db->get_select_first(0);
+					foreach ($results as $key => $row) {
+						$url=$row["uri"];
+						$name="= ".$url;//$row[$nameField];
+						$data[$name]=array("url"=>$url,"name"=>$name);
+					}
+				}
+			}
+		}
+
 		// trace_($data);
 
 		// set list
