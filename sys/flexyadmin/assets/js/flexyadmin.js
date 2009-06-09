@@ -300,7 +300,7 @@ $(document).ready(function() {
 			$(items).sortable({
 				// axis:'y',
 				grid: [25, 1],
-				handle:'td.orderÅ',
+				handle:'td.order',
 				cursor:'move',
 				appendTo:"body",
 				start: function(event,ui) {
