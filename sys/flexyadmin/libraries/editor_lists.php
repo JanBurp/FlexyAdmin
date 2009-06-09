@@ -73,7 +73,8 @@ class Editor_lists {
 		}
 		else {
 			foreach($data as $name=>$file) {
-				$list.='["'.$file["name"].'","'.$file["path"].'"],';
+				$name=nice_string(get_file_without_extension($file["name"]));
+				$list.='["'.$name.'","'.$file["path"].'"],';
 			}
 		}
 		$list=substr($list,0,strlen($list)-1);
