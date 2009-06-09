@@ -262,8 +262,7 @@ $(document).ready(function() {
 			$(this).css('cursor','wait');
 			$.post(url,"",function(data) {
 					if (data!="") {
-						// error
-						alert(data);
+						ajaxError(data);
 					}
 					else {
 						// change the status
@@ -373,8 +372,7 @@ $(document).ready(function() {
 							url=site_url("admin/ajax/edit/"+table+"/"+id+"/self_parent/"+newParentId);
 							$.get(url,"",function(data) {
 										if (data!="") {
-											// error
-											alert(data);
+											ajaxError(data);
 										}
 									});							
 						}
@@ -390,8 +388,7 @@ $(document).ready(function() {
 					// ajax request
 					$.post(url,ser,function(data) {
 							if (data!="") {
-								// error
-								alert(data);
+								ajaxError(data);
 							}
 							else {
 								// reorder the order classes
@@ -557,6 +554,16 @@ function close_dialog() {
 	$(dialog).dialog("destroy");
 }
 
+function ajaxError(error) {
+	dialog.html(error);
+	$(dialog).dialog({
+		title:"Error",
+		modal:true,
+		width:500,
+		buttons: ({ ok	: function(){	$(dialog).dialog("destroy"); $(obj).attr({"href":href});}	 	}),
+		close: function(){$(dialog).dialog("destroy"); $(obj).attr({"href":href});}
+	});
+}
 
 
 function changeButt(id,s) {

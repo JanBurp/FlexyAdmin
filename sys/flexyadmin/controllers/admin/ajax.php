@@ -37,8 +37,9 @@ class Ajax extends BasicController {
 		$this->_result("AJAX");
 	}
 
-	function _result($result) {
-		echo $result;
+	function _result($result,$p="") {
+		$this->lang->load("ajax");
+		echo langp($result,$p);
 	}
 
 /**
@@ -50,7 +51,7 @@ class Ajax extends BasicController {
 
 	function order($table="") {
 		if (empty($table)) {
-			$this->_result("AJAX|order: No Table given");
+			$this->_result('ajax_error_wrong_parameters');
 		}
 		else {
 			if ($this->_has_key($table) and $this->has_rights($table)>=RIGHTS_EDIT) {
@@ -59,7 +60,7 @@ class Ajax extends BasicController {
 				$this->order->set_all($table,$ids);
 			}
 			else
-				$this->_result("ERROR: No Rights or License for $table");
+				$this->_result('ajax_error_no_rights');
 		}
 	}
 
@@ -74,7 +75,7 @@ class Ajax extends BasicController {
  			$this->db->update($table);
  		}
  		else
- 			$this->_result("ERROR: No Rights or License for $table");
+ 			$this->_result('ajax_error_no_rights');
  	}
 
 
