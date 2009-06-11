@@ -590,19 +590,19 @@ class Flexy_field extends Model {
 		return $out;
 	}
 
-	function _dropdown_media_form() {
-		function _create_media_options($files,$types) {
-			$options=array();
-			foreach($files as $file) {
-				if ($file["type"]!="dir") {
-					$ext=strtolower(get_file_extension($file["name"]));
-					if (in_array($ext,$types)) {
-						$options[$file["name"]]=$file["name"]." (".trim(strftime("%e %B '%y",strtotime($file["date"]))).")";
-					}
+	function _create_media_options($files,$types) {
+		$options=array();
+		foreach($files as $file) {
+			if ($file["type"]!="dir") {
+				$ext=strtolower(get_file_extension($file["name"]));
+				if (in_array($ext,$types)) {
+					$options[$file["name"]]=$file["name"]." (".trim(strftime("%e %B '%y",strtotime($file["date"]))).")";
 				}
 			}
-			return $options;
 		}
+		return $options;
+	}
+	function _dropdown_media_form() {
 		$info=$this->cfg->get('CFG_media_info',$this->table.".".$this->field);
 		$types=explode(",",el("str_types",$info));
 		$path=el("str_path",$info);
@@ -611,9 +611,12 @@ class Flexy_field extends Model {
 		$files=not_filter_by($files,"_");
 		$lastUploads=array_slice(sort_by($files,"rawdate",TRUE),0,5);
 		ignorecase_ksort($files);
-		$optionsLast=_create_media_options($lastUploads,$types);
-		$optionsNames=_create_media_options($files,$types);
-		$options=array(lang("form_dropdown_sort_on_last_upload")=>$optionsLast, lang("form_dropdown_sort_on_name")=>$optionsNames);
+		$options=array();
+		$optionsLast=$this->_create_media_options($lastUploads,$types);
+		if (!empty($optionsLast)) $options[lang("form_dropdown_sort_on_last_upload")]=$optionsLast;
+		$optionsNames=$this->_create_media_options($files,$types);
+		if (!empty($optionsNames)) $options[lang("form_dropdown_sort_on_name")]=$optionsNames;
+		// $options=array(lang("form_dropdown_sort_on_last_upload")=>$optionsLast, lang("form_dropdown_sort_on_name")=>$optionsNames);
 		$out=$this->_standard_form_field($options);
 		$out["path"]=$map;
 		if ($this->pre=="medias") $out["multiple"]="multiple";
