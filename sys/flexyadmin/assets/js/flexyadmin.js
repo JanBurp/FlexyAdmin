@@ -72,7 +72,7 @@ $(document).ready(function() {
 				if (medias.length>0) {
 					$(medias).each(function() {
 						src=path+$(this).attr("value");
-						ext=get_ext(media);
+						ext=get_ext(src);
 						if (ext=='swf' || ext=='flv') {
 							$("p.image_dropdown select.medias").before(flash(src,32,32));
 						}
