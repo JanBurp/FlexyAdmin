@@ -34,12 +34,15 @@ class Ajax extends BasicController {
 	}
 
 	function index() {
-		$this->_result("AJAX");
+		$this->_result();
 	}
 
-	function _result($result,$p="") {
-		$this->lang->load("ajax");
-		echo langp($result,$p);
+	function _result($result="",$p="") {
+		if (!empty($result)) {
+			$this->lang->load("ajax");
+			$result=langp($result,$p);
+		}
+		echo $result;
 	}
 
 /**
@@ -50,32 +53,48 @@ class Ajax extends BasicController {
  */
 
 	function order($table="") {
-		if (empty($table)) {
-			$this->_result('ajax_error_wrong_parameters');
-		}
-		else {
+		$result='';
+		if (!empty($table) and $this->db->table_exists($table)) {
 			if ($this->_has_key($table) and $this->has_rights($table)>=RIGHTS_EDIT) {
 				$ids=$this->input->post("id");
-				$this->load->model("order");
-				$this->order->set_all($table,$ids);
+				if ($ids) {
+					$this->load->model("order");
+					$this->order->set_all($table,$ids);
+					$result='';
+				}
+				else {
+					$result='ajax_error_wrong_parameters';
+				}
 			}
-			else
-				$this->_result('ajax_error_no_rights');
+			else {
+				$result='ajax_error_no_rights';
+			}
 		}
+		else {
+			$result='ajax_error_wrong_parameters';
+		}
+		$this->_result($result);
 	}
 
 /**
  * Handles AJAX request to edit a cell
  * Url holds all data
  */
- 	function edit($table,$id,$field,$value) {
- 		if ($this->_has_key($table) and $this->has_rights($table,$id)>=RIGHTS_EDIT) {
- 			$this->db->set($field,$value);
- 			$this->db->where(pk(),$id);
- 			$this->db->update($table);
- 		}
- 		else
- 			$this->_result('ajax_error_no_rights');
+ 	function edit($table="",$id="",$field="",$value="") {
+		$result='';
+		if (!empty($table) and ($id!="") and !empty($field)) {
+			if ($this->db->table_exists($table) and $this->db->field_exists($field,$table)) {
+ 				if ($this->_has_key($table) and $this->has_rights($table,$id)>=RIGHTS_EDIT) {
+		 			$this->db->set($field,$value);
+		 			$this->db->where(pk(),$id);
+		 			$this->db->update($table);
+				}
+				else $result='ajax_error_no_rights';		 		
+	 		}
+			else $result='ajax_error_wrong_parameters';
+		}
+		else $result='ajax_error_wrong_parameters';
+		$this->_result($result);
  	}
 
 

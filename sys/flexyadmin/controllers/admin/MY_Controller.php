@@ -495,7 +495,11 @@ class AdminController extends BasicController {
 	}
 
 	function _show_content() {
-		$this->load->view('admin/content',array("content"=> $this->content));
+		if (empty($this->content))
+			show_404();
+			//$this->load->view('admin/no_page_'.$this->language);
+		else
+			$this->load->view('admin/content',array("content"=> $this->content));
 	}
 
 	function _show_footer($extra_view="",$data=NULL) {
