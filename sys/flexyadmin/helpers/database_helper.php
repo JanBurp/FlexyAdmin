@@ -92,6 +92,22 @@ function join_table_from_rel_table($rel) {
 }
 
 /**
+ * Gives main tablename from given rel_table name
+ *
+ * @param string $rel Name of relation table
+ * @return string join table name
+ */
+function table_from_rel_table($rel) {
+	$CI =& get_instance();
+	$rel=explode("_",$rel);
+	$table=$CI->config->item('TABLE_prefix')."_".$rel[1];
+	if (!$CI->db->table_exists($table)) $table=$CI->config->item('CFG_table_prefix')."_".$rel[1];
+	return $table;
+}
+
+
+
+/**
  * function this_key_from_rel_table($rel)
  *
  * Gives this key name from given rel_table name

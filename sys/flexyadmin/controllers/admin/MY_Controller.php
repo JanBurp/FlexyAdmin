@@ -290,6 +290,22 @@ class BasicController extends MY_Controller {
 			return FALSE;
 	}
 
+	function _get_table_rights($atLeast=RIGHTS_ALL) {
+		$tables=$this->db->list_tables();
+		$tableRights=array();
+		foreach ($tables as $key => $table) {
+			$pre=get_prefix($table);
+			if ($pre==$this->config->item('REL_table_prefix')) {
+				$rTable=table_from_rel_table($table);
+				$rights=$this->has_rights($rTable);
+			}
+			else {
+				$rights=$this->has_rights($table);
+			}
+			if ($rights>=$atLeast) $tableRights[]=$table;
+		}
+		return $tableRights;
+	}
 
 	function _has_key($table="") {
 		if ($table=='cfg_configurations' or IS_LOCALHOST) return true;
@@ -606,6 +622,25 @@ class AdminController extends BasicController {
 				$this->_update_links_in_txt($oldUrl,$newUrl);
 				$this->load->library("editor_lists");
 				$this->editor_lists->create_list("links");
+			}
+		}
+		
+		// Check if txt fields has invalid HTML tags
+		$validHTML=$this->cfg->get('CFG_editor','str_valid_html');
+		if (!empty($validHTML)) {
+			$fields=$this->db->list_fields($table);
+			foreach ($fields as $field) {
+				if (get_prefix($field)=="txt") {
+					$this->db->select("$field");
+					$this->db->where("id",$id);
+					$this->db->where("$field !=","");
+					$query=$this->db->get($table);
+					foreach($query->result_array() as $row) {
+						$txt=$row[$field];
+						$txt=strip_tags($txt,$validHTML);
+						$res=$this->db->update($table,array($field=>$txt),"id = $id");
+					}
+				}
 			}
 		}
 

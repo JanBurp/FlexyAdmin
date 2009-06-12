@@ -37,7 +37,6 @@ function explode_pre($split,$fields,$pre) {
 	return $fields;
 }
 
-
 /**
  * function add_string($string,$add,$split)
  *
@@ -145,6 +144,23 @@ function strip_string($s,$c=0) {
 
 function nice_string($s) {
 	return ucfirst(str_replace("_"," ",$s));
+}
+
+function hex2str($hexstr) {
+	if (substr($hexstr,0,2)=="0x") $hexstr=substr($hexstr,2);
+  $hexstr = str_replace(' ', '', $hexstr);
+  $hexstr = str_replace('\x', '', $hexstr);
+  $retstr = pack('H*', $hexstr);
+  return $retstr;
+}
+
+function str2hex($string) {
+  $hexstr = unpack('H*', $string);
+	$hexstr=array_shift($hexstr);
+	if (!empty($hexstr))
+  	return "0x".$hexstr;
+	else
+		return "";
 }
 
 ?>

@@ -18,7 +18,7 @@ function _html($tag) {
 	return "</$tag>";
 }
 
-function h($t,$h,$a=array()) {
+function h($t,$h=1,$a=array()) {
 	return html("h$h",$a).$t._html("h$h");
 }
 

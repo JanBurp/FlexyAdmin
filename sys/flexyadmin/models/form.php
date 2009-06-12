@@ -487,7 +487,7 @@ class Form Extends Model {
 	function render($type="", $class="") {
 		$this->lang->load("form");
 		if (!empty($type)) $this->set_type($type);
-
+		
 		$out=form_open_multipart($this->action,array("class"=>$class));
 		$out.=form_fieldset($this->caption,array("class"=>"formfields"));
 		$data=$this->data;
@@ -587,6 +587,10 @@ class Form Extends Model {
 				}
 				break;
 
+			case "file":
+				$attr["class"].=" browse";
+				$out.=form_upload($attr);
+				break;
 
 			case "upload":
 				if (!empty($field["value"])) $out.=popup_img($field["upload_path"]."/".$field["value"],img($field["upload_path"]."/".$field["value"]));

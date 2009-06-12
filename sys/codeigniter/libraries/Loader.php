@@ -303,6 +303,16 @@ class CI_Loader {
 		require_once(BASEPATH.'database/drivers/'.$CI->db->dbdriver.'/'.$CI->db->dbdriver.'_utility'.EXT);
 		$class = 'CI_DB_'.$CI->db->dbdriver.'_utility';
 
+		// Added from here, to extend the mysql_utility driver (JdB)
+    $my_driver = config_item('subclass_prefix').'DB_'.$CI->db->dbdriver.'_utility';
+    $my_driver_file = APPPATH.'libraries/'.$my_driver.EXT;
+    if (file_exists($my_driver_file))
+    {
+        require_once($my_driver_file);
+				$class = $my_driver;
+    }
+		// Added stops here
+
 		$CI->dbutil =& new $class();
 
 		$CI->load->_ci_assign_to_models();
