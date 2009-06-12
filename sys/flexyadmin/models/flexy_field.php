@@ -450,8 +450,8 @@ class Flexy_field extends Model {
 		$out="";
 		$data=$this->data;
 		if ($this->fieldRight>=RIGHTS_EDIT) {
-			$out=	anchor(api_uri('API_view_order',$this->table,$this->id,"up"),icon("up")).
-						anchor(api_uri('API_view_order',$this->table,$this->id,"down"),icon("down"));
+			$out=	anchor(api_uri('API_view_order',$this->table,$this->id,"up"),help(icon("up"),lang('grid_order'))).
+						anchor(api_uri('API_view_order',$this->table,$this->id,"down"),help(icon("down"),lang('grid_order')));
 		}
 		return $out;
 	}
