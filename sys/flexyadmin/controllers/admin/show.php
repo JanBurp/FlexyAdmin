@@ -36,7 +36,6 @@ class Show extends AdminController {
 	}
 
 	function index() {
-		$this->_set_content("VIEW");
 		$this->_show_all();
 	}
 
@@ -48,30 +47,20 @@ class Show extends AdminController {
  * @param mixed $newOrder (top|bottom|up|down|(number))
  */
 
-	function order($table,$id="",$newOrder="") {
-		if ($this->has_rights($table,$id)>=RIGHTS_EDIT) {
+	function order($table="",$id="",$newOrder="") {
+		if (!empty($table) and ($id!="") and !empty($newOrder) and $this->has_rights($table,$id)>=RIGHTS_EDIT) {
 			/**
 			 * re-order data
 			 */
-			if (!empty($table) and !empty($id) and !empty($newOrder)) {
-				$this->lang->load("update_delete");
-				$this->load->model("order");
-				$this->order->set_to($table,$id,$newOrder);
-				$this->set_message(langp("order_has_changed",$table));
-				$this->load->model("login_log");
-				$this->login_log->update($table);
-				redirect(api_uri('API_view_grid',$table,$id));
-			}
+			$this->lang->load("update_delete");
+			$this->load->model("order");
+			$this->order->set_to($table,$id,$newOrder);
+			$this->set_message(langp("order_has_changed",$table));
+			$this->load->model("login_log");
+			$this->login_log->update($table);
+			redirect(api_uri('API_view_grid',$table,$id));
 		}
-		else {
-			$this->lang->load("rights");
-			$this->set_message(lang("rights_no_rights"));
-			$uiTable="";
-			/**
-			 * show
-			 */
-			$this->_show_all($uiTable);
-		}
+		$this->_show_all();
 	}
 
 	/**
@@ -81,91 +70,90 @@ class Show extends AdminController {
 	 * @param mixed $id maybe an id, the last that changed
 	 */
 
-		function grid($table,$id="") {
-			$singleRow=$this->cfg->get('CFG_table',$table,"b_single_row");
-			if ($singleRow)
-				$this->form($table);
-			else {
-				if ($right=$this->has_rights($table,$id)) {
-					$restrictedToUser=$this->user_restriction_id($table);
-					$this->load->model("grid");
-					$this->lang->load("help");
-					$this->_add_js_variable("help_filter",$this->_add_help(langp('grid_filter')));
-					
-					/**
-					 * get data
-					 */
-					if ($this->db->has_field($table,"self_parent")) {
-						$this->db->order_as_tree();
-					}
-					if ($restrictedToUser>0 and $this->db->has_field($table,"user")) {
-						$this->db->where("user",$restrictedToUser);
-						$this->db->dont_select("user");
-					}
-					if ($table=="cfg_users")
-						$this->db->where("id >=",$this->user_id);
-					$this->db->add_foreigns_as_abstracts();
-					$this->db->add_many();
-					$this->db->max_text_len(250);
-					$data=$this->db->get_result($table);
-					// trace_($data);
-					if (empty($data)) {
-						/**
-						 * if no data, start an input form
-						 */
-						 $this->form($table,-1);
-						 return;
-					}
-					else
-					{
-						$this->_before_grid($table,$data);
-
-						/**
-						 * if data: first render data, then put data in grid and render as html
-						 */
-						if ($right<RIGHTS_EDIT) {
-							// remove order fields
-							foreach ($data as $id => $row) unset($data[$id]['order']);
-						}
-						$data=$this->ff->render_grid($table,$data,$right);
-
-						$grid=new grid();
-						$uiTable=$this->uiNames->get($table);
-						$tableHelp=$this->cfg->get("CFG_table",$table,"txt_help");
-						if (!empty($tableHelp)) {
-							$uiShowTable=help($uiTable." ",$tableHelp);
-						}
-						else
-							$uiShowTable=$uiTable;
-						$grid->set_data($data,$uiShowTable);
-						$keys=array_keys(current($data));
-						$keys=combine($keys,$keys);
-						if ($right>=RIGHTS_ADD) {
-							$newIcon=anchor(api_uri('API_view_form',$table,-1),help(icon("new"),langp('grid_new',$uiTable)) );
-							$grid->prepend_to_captions($newIcon,"new");
-						}
-						$grid->set_headings($this->uiNames->get($keys,$table));
-						$grid->set_heading(pk(),"Edit");
-						if (!empty($id)) {
-							$grid->set_current($id);
-						}
-						$renderData=$grid->render("html",$table,"grid");
-						$html=$this->load->view("admin/grid",$renderData,true);
-						$this->_set_content($html);
-					}
+		function grid($table="",$id="") {
+			if (!empty($table) and $this->db->table_exists($table)) {
+				$singleRow=$this->cfg->get('CFG_table',$table,"b_single_row");
+				if ($singleRow) {
+					$this->db->select("id");
+					$row=$this->db->get_row($table,1);
+					$id=$row["id"];
+					$this->form($table,$id);
+					return;
 				}
 				else {
-					$this->lang->load("rights");
-					$this->set_message(lang("rights_no_rights"));
-					$uiTable="";
-				}
+					if ($right=$this->has_rights($table,$id)) {
+						$restrictedToUser=$this->user_restriction_id($table);
+						$this->load->model("grid");
+						$this->lang->load("help");
+						$this->_add_js_variable("help_filter",$this->_add_help(langp('grid_filter')));
+					
+						/**
+						 * get data
+						 */
+						if ($this->db->has_field($table,"self_parent")) {
+							$this->db->order_as_tree();
+						}
+						if ($restrictedToUser>0 and $this->db->has_field($table,"user")) {
+							$this->db->where("user",$restrictedToUser);
+							$this->db->dont_select("user");
+						}
+						if ($table=="cfg_users")
+							$this->db->where("id >=",$this->user_id);
+						$this->db->add_foreigns_as_abstracts();
+						$this->db->add_many();
+						$this->db->max_text_len(250);
+						$data=$this->db->get_result($table);
+						// trace_($data);
+						if (empty($data)) {
+							/**
+							 * if no data, start an input form
+							 */
+							 $this->form($table,-1);
+							 return;
+						}
+						else
+						{
+							$this->_before_grid($table,$data);
 
-				/**
-				 * show
-				 */
+							/**
+							 * if data: first render data, then put data in grid and render as html
+							 */
+							if ($right<RIGHTS_EDIT) {
+								// remove order fields
+								foreach ($data as $id => $row) unset($data[$id]['order']);
+							}
+							$data=$this->ff->render_grid($table,$data,$right);
+
+							$grid=new grid();
+							$uiTable=$this->uiNames->get($table);
+							$tableHelp=$this->cfg->get("CFG_table",$table,"txt_help");
+							if (!empty($tableHelp)) {
+								$uiShowTable=help($uiTable." ",$tableHelp);
+							}
+							else
+								$uiShowTable=$uiTable;
+							$grid->set_data($data,$uiShowTable);
+							$keys=array_keys(current($data));
+							$keys=combine($keys,$keys);
+							if ($right>=RIGHTS_ADD) {
+								$newIcon=anchor(api_uri('API_view_form',$table,-1),help(icon("new"),langp('grid_new',$uiTable)) );
+								$grid->prepend_to_captions($newIcon,"new");
+							}
+							$grid->set_headings($this->uiNames->get($keys,$table));
+							$grid->set_heading(pk(),"Edit");
+							if (!empty($id)) {
+								$grid->set_current($id);
+							}
+							$renderData=$grid->render("html",$table,"grid");
+							$html=$this->load->view("admin/grid",$renderData,true);
+							$this->_set_content($html);
+						}
+					}
+				}
 				$this->_show_type("grid");
-				$this->_show_all($uiTable);
 			}
+			if (!isset($uiTable)) $uiTable="";
+			$this->_show_all($uiTable);
 		}
 
 
@@ -176,8 +164,10 @@ class Show extends AdminController {
  * @param mixed 	$id 		id
  */
 
-	function form($table,$id="") {
-		if ($right=$this->has_rights($table,$id)) {
+	function form($table="",$id="") {
+		if (!empty($table) and ($id!="")
+				and $this->db->table_exists($table)
+				and $right=$this->has_rights($table,$id)) {
 			$restrictedToUser=$this->user_restriction_id($table);
 			
 			$this->load->library('form_validation');
@@ -188,26 +178,12 @@ class Show extends AdminController {
 
 			$this->form_validation->set_error_delimiters('<div id="formmessage">', '</div>');
 			$this->load->model("form");
+
 			/**
 			 * get data
 			 */
-			$this->db->add_many();
-			$this->db->add_options();
-			if ($restrictedToUser>0 and $this->db->has_field($table,"user")) {
-				$this->db->where("user",$restrictedToUser);
-				$this->db->dont_select("user");
-			}
-			if ($id!="") $this->db->where($table.".".pk(),$id);
-			$data=$this->db->get_result($table);
-			// trace_($data);
-			$options=el("options",$data);
-			$multiOptions=el("multi_options",$data);
-			$data=current($data);
-
-			/**
-			 * if no data, new item: fill data with default values
-			 */
-			if (empty($data)) {
+			if ($id==-1) {
+				// New item, fill data with defaults
 				$this->db->add_many();
 				$this->db->add_foreigns();
 				$this->db->add_options();
@@ -216,84 +192,93 @@ class Show extends AdminController {
 				$multiOptions=el("multi_options",$data);
 				$data=current($data);
 				$data[pk()]="-1";
-				$id=-1;
+			}
+			else {
+				$this->db->add_many();
+				$this->db->add_options();
+				if ($restrictedToUser>0 and $this->db->has_field($table,"user")) {
+					$this->db->where("user",$restrictedToUser);
+					$this->db->dont_select("user");
+				}
+				if ($id!="") $this->db->where($table.".".pk(),$id);
+				$data=$this->db->get_result($table);
+				// trace_($data);
+				$options=el("options",$data);
+				$multiOptions=el("multi_options",$data);
+				$data=current($data);
 			}
 
 			/**
 			 * if data: first render data for the form class, then put data in form
 			 */
+			if (!empty($data)) {
+				$this->ff->set_restricted_to_user($restrictedToUser,$this->user_id);
+				$ffData=$this->ff->render_form($table,$data,$options,$multiOptions);
 
-			$this->ff->set_restricted_to_user($restrictedToUser,$this->user_id);
-			$ffData=$this->ff->render_form($table,$data,$options,$multiOptions);
-
-			$form=new form(api_uri('API_view_form',$table,$id));
-			$uiTable=$this->uiNames->get($table);
-			$tableHelp=$this->cfg->get("CFG_table",$table,"txt_help");
-			if (!empty($tableHelp)) {
-				$uiShowTable=help($uiTable,$tableHelp);
-			}
-			else
-				$uiShowTable=$uiTable;
-			$form->set_data($ffData,$uiShowTable);
-
-			/**
-			 * Validate form, if succes, make form do an update
-			 */
-			if ($form->validation()) {
-				$this->lang->load("update_delete");
-				if ($this->_has_key($table)) {
-					$resultId=$form->update($table,$restrictedToUser);
-					$this->_after_update($table,$resultId,$data);
-					if (is_string($resultId)) {
-						$this->set_message(langp("update_error",$table,$resultId));
-						redirect(api_uri('API_view_grid',$table));
-					}
-					else {
-						if ($id==-1)
-							$this->set_message(langp("insert_new",$table));
-						else
-							$this->set_message(langp("update_succes",$table));
-						$this->load->model("login_log");
-						$this->login_log->update($table);
-						redirect(api_uri('API_view_grid',$table,$resultId));
-					}
+				$form=new form(api_uri('API_view_form',$table,$id));
+				$uiTable=$this->uiNames->get($table);
+				$tableHelp=$this->cfg->get("CFG_table",$table,"txt_help");
+				if (!empty($tableHelp)) {
+					$uiShowTable=help($uiTable,$tableHelp);
 				}
 				else
-					$this->set_message($this->_no_key($table));
-			}
-			/**
-			 * Validate form, no succes: show form, maybe with validation errors
-			 */
-			else {
-				$this->_add_content(validation_errors());
+					$uiShowTable=$uiTable;
+				$form->set_data($ffData,$uiShowTable);
 
-				$keys=array_keys($data);
-				$keys=combine($keys,$keys);
-				$uiFieldNames=array();
-				foreach($keys as $key) {
-					$fieldHelp=$this->cfg->get("CFG_field",$table.".".$key,"txt_help");
-					if (!empty($fieldHelp))
-						$uiFieldNames[$key]=help($this->uiNames->get($key,$table),$fieldHelp);
+				/**
+				 * Validate form, if succes, make form do an update
+				 */
+				if ($form->validation()) {
+					$this->lang->load("update_delete");
+					if ($this->_has_key($table)) {
+						$resultId=$form->update($table,$restrictedToUser);
+						$this->_after_update($table,$resultId,$data);
+						if (is_string($resultId)) {
+							$this->set_message(langp("update_error",$table,$resultId));
+							redirect(api_uri('API_view_grid',$table));
+						}
+						else {
+							if ($id==-1)
+								$this->set_message(langp("insert_new",$table));
+							else
+								$this->set_message(langp("update_succes",$table));
+							$this->load->model("login_log");
+							$this->login_log->update($table);
+							redirect(api_uri('API_view_grid',$table,$resultId));
+						}
+					}
 					else
-						$uiFieldNames[$key]=$this->uiNames->get($key,$table);
+						$this->set_message($this->_no_key($table));
 				}
-				$form->set_labels($uiFieldNames);
-				if ($right<RIGHTS_EDIT) $form->show_submit(FALSE);
-				$html=$form->render("html",$table);
-				if ($form->has_htmlfield()) $this->use_editor();
-				$this->_add_content($html);
+				/**
+				 * Validate form, no succes: show form, maybe with validation errors
+				 */
+				else {
+					$this->_add_content(validation_errors());
+
+					$keys=array_keys($data);
+					$keys=combine($keys,$keys);
+					$uiFieldNames=array();
+					foreach($keys as $key) {
+						$fieldHelp=$this->cfg->get("CFG_field",$table.".".$key,"txt_help");
+						if (!empty($fieldHelp))
+							$uiFieldNames[$key]=help($this->uiNames->get($key,$table),$fieldHelp);
+						else
+							$uiFieldNames[$key]=$this->uiNames->get($key,$table);
+					}
+					$form->set_labels($uiFieldNames);
+					if ($right<RIGHTS_EDIT) $form->show_submit(FALSE);
+					$html=$form->render("html",$table);
+					if ($form->has_htmlfield()) $this->use_editor();
+					$this->_add_content($html);
+				}
+				$this->_show_type("form");
 			}
 		}
-		else {
-			$this->lang->load("rights");
-			$this->set_message(lang("rights_no_rights"));
-			$uiTable="";
-		}
-
 		/**
 		 * output
 		 */
-		$this->_show_type("form");
+		if (!isset($uiTable)) $uiTable="";
 		$this->_show_all($uiTable);
 	}
 

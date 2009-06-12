@@ -699,7 +699,7 @@ function site_url(s) {
 	if (s=="")
 		s=config.site_url;
 	else
-		s=config.site_url+"/"+s;
+		s=config.site_url+s;
 	return s;
 }
 
