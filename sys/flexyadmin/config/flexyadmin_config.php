@@ -44,15 +44,15 @@ $config['THUMBSIZE']							= array(100,100);
 | URI to FlexyAdmin controllers.
 |
 */
-$config['API_home']								= "/admin/";
-$config['API_user']								= "/admin/show/user/";
-$config['API_login']							= "/admin/user/login/";
-$config['API_logout']							= "/admin/user/logout/";
+$config['API_home']									= "/admin/";
+$config['API_user']									= "/admin/show/user/";
+$config['API_login']								= "/admin/user/login/";
+$config['API_logout']								= "/admin/user/logout/";
 
-$config['API_view_order']					= "/admin/show/order/";
-$config['API_view_grid']					= "/admin/show/grid/";
-$config['API_view_tree']					= "/admin/show/tree/";
-$config['API_view_form']					= "/admin/show/form/";
+$config['API_view_order']						= "/admin/show/order/";
+$config['API_view_grid']						= "/admin/show/grid/";
+$config['API_view_tree']						= "/admin/show/tree/";
+$config['API_view_form']						= "/admin/show/form/";
 
 $config['API_filemanager']					= "/admin/filemanager/";
 $config['API_filemanager_set_view']	= "/admin/filemanager/setview";
@@ -61,19 +61,29 @@ $config['API_filemanager_delete']		= "/admin/filemanager/delete/";
 $config['API_filemanager_confirm']	= "/admin/filemanager/confirm/";
 $config['API_filemanager_upload']		= "/admin/filemanager/upload/";
 
+$config['API_popup_img']						= "/admin/popup/img/";
+
+$config['API_delete']								= "/admin/edit/delete/";
+$config['API_confirm']							= "/admin/edit/confirm/";
+
+$config['AJAX']											= "/admin/ajax/";
+
+$config['API_db']										= "/admin/db/";
+$config['API_db_backup']						= "/admin/db/backup/";
+$config['API_db_export']						= "/admin/db/export/";
+$config['API_db_import']						= "/admin/db/import/";
+$config['API_db_sql']								= "/admin/db/sql/";
+
+
+
 $config['API_filemanager_view_types']	= array("list","icons");
+
 $config['FILES_thumb_path']						= "/thumb/";
 $config['FILES_big_path']							= "/big/";
 
-$config['API_popup_img']					= "/admin/popup/img/";
 
-//$config['API_order_up']						= "/admin/order/up";
-//$config['API_order_down']					= "/admin/order/down";
 
-$config['API_delete']							= "/admin/edit/delete/";
-$config['API_confirm']						= "/admin/edit/confirm/";
 
-$config['AJAX']										= "/admin/ajax/";
 
 /*
 |--------------------------------------------------------------------------

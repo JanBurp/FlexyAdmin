@@ -10,13 +10,19 @@ Description		http://codeigniter.com/wiki/Extending_Database_Drivers/
 This change makes it possible to create a database extension (library) by loading MY_DB_db_driver.PHP
 
 File					sys\codeigniter\libraries\Loader.php
-Line					1135-1151
+Line					306-314
+Method				dbutil()
+Description		http://codeigniter.com/wiki/Extending_Database_Drivers/
+This change makes it possible to create a database utility extension (library) by loading MY_DB_db_mysql_utility.PHP
+
+File					sys\codeigniter\libraries\Loader.php
+Line					1147-1162
 Method				my_view()
 Description		http://codeigniter.com/forums/viewthread/73545/
 Same as the view() method: loads a view. But with this one you can give the path of the view, which makes it possible to load a view outside the standard directory structure.
 
 File					sys\codeigniter\libraries\Loader.php
-Line					1153-1155
+Line					1164-1166
 Method				site_view()
 Description		http://codeigniter.com/forums/viewthread/73545/
 Calls my_view() with path: site/views/. So this is a standard view method for loading views for the frontend sites of FlexyAdmin.

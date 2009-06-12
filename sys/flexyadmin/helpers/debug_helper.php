@@ -85,29 +85,34 @@ function trace_($a=NULL,$echo=true,$backtraceOffset=1) {
 	elseif (is_array($a) or is_object($a))
 		$out.=print_ar(array_($a,true),true);
 	else
-		$out.=print_r($a,true);
+		$out.=print_r(tr_string($a),true);
 	$c++;
 	$out.="</div>";
 	if ($echo) echo $out."<br/>";
 	return $out;
 }
 
+function tr_string($value) {
+	$s="";
+	$html=in_string("<>",$value);
+	if ((substr($value,0,6)!="#show#") and ($html or (strlen($value)>100)) ) {
+		$s.=strip_tags(substr($value,0,40));
+		$s.=" <span title=\"".htmlentities($value)."\" style=\"cursor:help;color:#696;\">...</span>";
+	}
+	else
+		$s=str_replace("#show#","",$value);
+	return $s;
+}
+
 function array_($a) {
 	$out=array();
 	foreach($a as $key=>$value) {
-		if (is_array($value)) {
+		if (is_array($value))
 			$out[$key]=array_($value);
-		}
-		elseif (is_object($value)) {
+		elseif (is_object($value))
 			$out[$key]="{object}";
-		}
-		else {
-			if ((substr($value,0,6)!="#show#") and (in_string("<>",$value) or (strlen($value)>100)) )
-				$out[$key]="<span title=\"".htmlentities($value)."\" style=\"cursor:help;color:#696;\">[text]</span>";
-			else {
-				$out[$key]=str_replace("#show#","",$value);
-			}
-		}
+		else
+			$out[$key]=tr_string($value);
 	}
 	return $out;
 }
