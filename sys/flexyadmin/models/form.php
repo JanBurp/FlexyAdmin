@@ -129,6 +129,13 @@ class Form Extends Model {
 		return $this->isValidated;
 	}
 
+	function reset_data() {
+		foreach ($this->data as $key => $field) {
+			$this->data[$key]["value"]="";
+			$this->data[$key]["repopulate"]="";
+		}
+	}
+
 /**
  * function prepare_data($name,$value)
  *
