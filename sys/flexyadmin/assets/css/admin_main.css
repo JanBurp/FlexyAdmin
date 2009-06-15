@@ -84,7 +84,8 @@ img {
 #menu li.logout {
 	margin-bottom:30px;
 }
-#menu li.configurations {
+#menu li.configurations,
+#menu li.db_backup {
 	margin-top:30px;
 }
 #menu li.current,
@@ -119,6 +120,13 @@ img {
 #menu li.current .media {
 	background-image: url("../icons/folder_files.gif");
 	}
+#menu li .db {
+	background-image: url("../icons/time.gif");
+	background-repeat: no-repeat;
+	background-position:0px 2px;
+	padding-left: 20px;
+	}
+
 
 /* =========== */
 

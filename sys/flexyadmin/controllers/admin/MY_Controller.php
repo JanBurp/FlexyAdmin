@@ -231,6 +231,18 @@ class BasicController extends MY_Controller {
 		return $out;
 	}
 
+	function _is_super_admin() {
+		reset($this->rights);
+		$rights=current($this->rights);
+		return ($rights["rights"]=="*");
+	}
+
+	function _can_backup() {
+		reset($this->rights);
+		$rights=current($this->rights);
+		return ($rights["b_backup"]);
+	}
+
 	/**
 		* Returns rights:
 		*		RIGHTS_ALL		= 15 (all added)
@@ -470,6 +482,20 @@ class AdminController extends BasicController {
 				if (!empty($mediaHelp)) {
 					$a[$menuName]["help"]=$mediaHelp;
 				}
+			}
+		}
+		
+		// Backup / Restore
+		if ($this->_is_super_admin()) {
+			$this->lang->load('help');
+			$a[lang('db_export')]		=array("uri"=>api_uri('API_db_export'),"class"=>"db db_backup");
+			$a[lang('db_import')]		=array("uri"=>api_uri('API_db_import'),"class"=>"db");
+		}
+		else {
+			if ($this->_can_backup()) {
+				$this->lang->load('help');
+				$a[lang('db_backup')]		=array("uri"=>api_uri('API_db_backup'),"class"=>"db db_backup");
+				$a[lang('db_restore')]	=array("uri"=>api_uri('API_db_restore'),"class"=>"db");
 			}
 		}
 

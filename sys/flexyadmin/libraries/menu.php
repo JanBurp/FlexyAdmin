@@ -175,7 +175,7 @@ class Menu {
 
 	function set_current_name($current="") {
 		if (isset($this->menu[$current]["uri"])) {
-			$this->set_current($this->menu[$current]["uri"]);
+			$this->set_current("/".$this->menu[$current]["uri"]);
 			return $this->current;
 		}
 		else
@@ -258,7 +258,7 @@ class Menu {
 			if ($pos==count($menu))											$attr["class"].=" last";
 			if (isset($item["class"]))									$attr["class"].=" ".$item["class"];
 			if ($this->current==$link) 									$attr["class"].=" current";
-			// trace_(array("cur"=>$this->current,"link"=>$link,"is"=>($this->current==$link),"class"=>$attr["class"] ) );
+			//trace_(array("cur"=>$this->current,"link"=>$link,"is"=>($this->current==$link),"class"=>$attr["class"] ) );
 			if ($this->inUri($link,$this->current))	$attr["class"].=" active";
 			$out.=$this->tmp($this->tmpItemStart,array("class"=>$attr["class"]));
 			// render item or submenu
