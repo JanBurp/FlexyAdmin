@@ -70,6 +70,7 @@ $config['AJAX']											= "/admin/ajax/";
 
 $config['API_db']										= "/admin/db/";
 $config['API_db_backup']						= "/admin/db/backup/";
+$config['API_db_restore']						= "/admin/db/restore/";
 $config['API_db_export']						= "/admin/db/export/";
 $config['API_db_import']						= "/admin/db/import/";
 $config['API_db_sql']								= "/admin/db/sql/";

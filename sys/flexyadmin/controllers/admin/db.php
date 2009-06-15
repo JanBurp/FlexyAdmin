@@ -34,12 +34,12 @@ class Db extends AdminController {
 	}
 
 	function index() {
-		$this->_set_content("Database Import/Export");
 		$this->_show_all();
 	}
 
 	function _export() {
 		$this->load->model('form');
+		$this->lang->load('help');
 
 		$form=new form($this->config->item('API_db_export'));
 		$tablesWithRights=$this->_get_table_rights();
@@ -54,38 +54,41 @@ class Db extends AdminController {
 		$data=array(
 								"data"			=> array("label"=>"Tables (with data)","type"=>"dropdown","multiple"=>"multiple","options"=>$options,"value"=>$valuesData),
 								"structure"	=> array("label"=>"Tables (structure)","type"=>"dropdown","multiple"=>"multiple","options"=>$options,"value"=>$valuesStructure),
-								"type"			=> array("type"=>"dropdown","options"=>array("gz"=>"gz","txt"=>"txt")),
+								// "type"			=> array("type"=>"dropdown","options"=>array("txt"=>"txt","gz"=>"gz")),
 								"filename"	=> array("label"=>"Filename","value"=>$name)
 								);
 		$form->set_data($data,"Choose tables to export");
 		$this->_add_content($form->render());
-		$this->_show_all();
 	}
 
 	function export() {
-		$dataTables=$this->input->post('data');
-		$structureTables=$this->input->post('structure');
-		$type=$this->input->post('type');
-		$name=$this->input->post('filename');
-		if (!$dataTables) {
-			$this->_export();
-		}
-		else {
-			$this->load->dbutil();
-			$this->load->helper('download');
-			
-			$prefs = array('tables'=> $dataTables,'format'=>'txt');
-			$backup=$this->dbutil->backup($prefs);
-			if ($structureTables) {
-				$prefs = array('tables'=> $structureTables,'format'=>'txt','add_insert'  => FALSE);
-				$backup=$backup.$this->dbutil->backup($prefs);				
+		if ($this->_is_super_admin()) {
+			$dataTables=$this->input->post('data');
+			$structureTables=$this->input->post('structure');
+			// $type=$this->input->post('type');
+			$type="txt";
+			$name=$this->input->post('filename');
+			if (!$dataTables) {
+				$this->_export();
 			}
+			else {
+				$this->load->dbutil();
+				$this->load->helper('download');
+
+				$prefs = array('tables'=> $dataTables,'format'=>'txt');
+				$backup=$this->dbutil->backup($prefs);
+				if ($structureTables) {
+					$prefs = array('tables'=> $structureTables,'format'=>'txt','add_insert'  => FALSE);
+					$backup=$backup.$this->dbutil->backup($prefs);				
+				}
 			
-			if ($type=="gzip") {
-				$backup=gzencode($backup);
+				if ($type=="gzip") {
+					$backup=gzencode($backup);
+				}
+				force_download($name.'.'.$type, $backup);
 			}
-			force_download($name.'.'.$type, $backup);
 		}
+		$this->_show_all();
 	}
 
 	function _clean_sql($sql) {
@@ -116,130 +119,174 @@ class Db extends AdminController {
 	}
 
 	function backup() {
-		$this->load->dbutil();
-		$this->load->helper('download');
+		if ($this->_can_backup()) {
+			$this->load->dbutil();
+			$this->load->helper('download');
 		
-		$tablesWithRights=$this->_get_table_rights();
-		// select only data (not config)
-		$tablesWithRights=combine($tablesWithRights,$tablesWithRights);
-		$tablesWithRights=not_filter_by($tablesWithRights,"cfg");
-		$tablesWithRights=not_filter_by($tablesWithRights,"log");
-		unset($tablesWithRights["rel_users__rights"]);
+			$tablesWithRights=$this->_get_table_rights();
+			// select only data (not config)
+			$tablesWithRights=combine($tablesWithRights,$tablesWithRights);
+			$tablesWithRights=not_filter_by($tablesWithRights,"cfg");
+			$tablesWithRights=not_filter_by($tablesWithRights,"log");
+			unset($tablesWithRights["rel_users__rights"]);
 		
-		// create backup
-		$prefs = array('tables'=> $tablesWithRights,'format'=>'txt');
-		$sql = $this->dbutil->backup($prefs);
-		// clean backup
-		$sql=$this->_clean_sql($sql);
-		$sql="# FlexyAdmin backup\n# User: '".$this->user."'  \n# Date: ".date("d F Y")."\n\n".$sql;
+			// create backup
+			$prefs = array('tables'=> $tablesWithRights,'format'=>'txt');
+			$sql = $this->dbutil->backup($prefs);
+			// clean backup
+			$sql=$this->_clean_sql($sql);
+			$sql="# FlexyAdmin backup\n# User: '".$this->user."'  \n# Date: ".date("d F Y")."\n\n".$sql;
 		
-		$backup=$sql;
-		$filename='backup_'.date("Y-m-d").'.txt';
-		force_download($filename, $backup);
+			$backup=$sql;
+			$filename='backup_'.date("Y-m-d").'.txt';
+			force_download($filename, $backup);
+			$this->_add_content(h(1,"Backup"));
+		}
+		$this->_show_all();
+	}
+
+	function restore() {
+		if ($this->_can_backup()) {
+			if (!isset($_FILES["userfile"])) {
+				$this->lang->load('help');
+				$this->load->model('form');
+				$form=new form($this->config->item('API_db_restore'));
+				$data=array( "userfile"	=> array("type"=>"file","label"=>lang('file')),
+										 "sure"=> array("type"=>"hidden","value"=>$this->cfg->get('CFG_configurations','key')) );
+				$form->set_data($data,lang('db_restore'));
+				$this->_add_content($form->render());
+			}
+			else {
+				$sure=$this->input->post('sure');
+				if ($sure and ($sure==$this->cfg->get('CFG_configurations','key'))) {
+					$sql=$this->_upload_sql();
+					if ($sql) {
+						$this->_sql($sql,"Restore","Restoring ...");			
+					}
+				}
+			}
+		}
+		$this->_show_all(lang('db_restore'));
+	}
+	
+
+	function _upload_sql() {
+		// upload (to list path, 'coz this exists!)
+		$sql=FALSE;
+		$config['upload_path'] = 'site/assets/lists';
+		$config['allowed_types'] = 'txt|sql';
+		$this->load->library('upload', $config);
+		if ( ! $this->upload->do_upload()) {
+			$error = array('error' => $this->upload->display_errors());
+			print $error["error"];
+		}	
+		else	{
+			$data = array('upload_data' => $this->upload->data());
+			$data=$data["upload_data"];
+			// import (ungzip if needed)
+			if ($data["file_ext"]==".gz" or $data["file_ext"]==".gzip") {
+				$sql=gzfile($data["full_path"]);
+			}
+			else {
+				$sql=file($data["full_path"]);
+			}
+			// delete file
+			unlink($data["full_path"]);
+			
+			if (is_array($sql)) {
+				$s="";
+				foreach ($sql as $line) {
+					$s.=$line;
+				}
+				$sql=$s;
+			}
+		}
+		return $sql;
 	}
 
 	function _import() {
 		$this->load->model('form');
+		$this->lang->load('help');
 		$form=new form($this->config->item('API_db_import'));
 		$data=array( "userfile"	=> array("type"=>"file","label"=>"Filename") );
 		$form->set_data($data,"Choose File to upload and import");
 		$this->_add_content($form->render());
-		$this->_show_all();		
 	}
 
 	function import() {
-		if (!isset($_FILES["userfile"])) {
-			$this->_import();
-		}
-		else {
-			// upload (to list path, 'coz this exists!)
-			$config['upload_path'] = 'site/assets/lists';
-			$config['allowed_types'] = 'txt|gzip|gz';
-			$this->load->library('upload', $config);
-			if ( ! $this->upload->do_upload()) {
-				$error = array('error' => $this->upload->display_errors());
-				print $error["error"];
-			}	
-			else	{
-				$data = array('upload_data' => $this->upload->data());
-				$data=$data["upload_data"];
-				// import (ungzip if needed)
-				if ($data["file_ext"]==".gz" or $data["file_ext"]==".gzip") {
-					$sql=gzfile($data["full_path"]);
-				}
-				else {
-					$sql=file($data["full_path"]);
-				}
-				// delete file
-				unlink($data["full_path"]);
-				
-				if (is_array($sql)) {
-					$s="";
-					foreach ($sql as $line) {
-						$s.=$line;
-					}
-					$sql=$s;
-				}
-				
-				// do the actual import..
-				$this->load->model('form');
-				$form=new form($this->config->item('API_db_sql'));
-				$data=array( 	"sql" => array("type"=>"textarea","value"=>$sql),
-				 							"sure"=> array("type"=>"hidden","value"=>$this->cfg->get('CFG_configurations','key')) // insert license here!!
-										);
-				$form->set_data($data,"Are you sure to run this Query?");
-				$this->_add_content($form->render());
-				$this->_show_all();				
+		if ($this->_is_super_admin()) {
+			if (!isset($_FILES["userfile"])) {
+				$this->_import();
 			}
+			else {
+				$sql=$this->_upload_sql();
+				if ($sql) {
+					// do the actual import..
+					$this->load->model('form');
+					$this->lang->load('help');
+					$form=new form($this->config->item('API_db_sql'));
+					$data=array( 	"sql" => array("type"=>"textarea","value"=>$sql),
+					 							"sure"=> array("type"=>"hidden","value"=>$this->cfg->get('CFG_configurations','key')) // insert license here!!
+											);
+					$form->set_data($data,"Are you sure to run this Query?");
+					$this->_add_content($form->render());
+				}
+			}
+		}
+		$this->_show_all(lang('db_import'));					
+	}
+	
+	function _sql($sql,$title,$action) {
+		$this->_add_content(h($title));
+		$safe=$this->_is_safe_sql($sql);
+		if ($safe)
+			$this->_add_content(p()."Checking safety ... ok"._p());
+		else {
+			$rights=current($this->rights);
+			if ($rights["str_name"]=="super_admin" and $rights["rights"]=="*" and $rights["b_all_users"]) {
+				$safe=TRUE;
+				$this->_add_content(p()."Checking safety ... Risky SQL, but Super Admin Rights."._p());
+			}
+			else
+				$this->_add_content(p()."Checking safety ... Unsafe SQL. Import aborted."._p());
+		}
+		if ($safe) {
+			$lines=explode("\n",$sql);
+			$comments="";
+			foreach ($lines as $k=>$l) {
+				if (substr($l,0,1)=="#")	{
+					if (strlen($l)>2)	$comments.=$l.br();
+					unset($lines[$k]);
+				}
+			}
+			$sql=implode("\n",$lines);
+			$lines=explode(";",$sql);
+			
+			$this->_add_content(p().$action.br(2));//.$comments);
+			
+			foreach ($lines as $key => $line) {
+				$line=trim($line);
+				if (!empty($line)) {
+					$query=$this->db->query($line);
+				}
+			}
+			$this->_add_content(_p());
 		}
 	}
 	
 	function sql() {
-		$sql=$this->input->post('sql');
-		$sure=$this->input->post('sure');
-		$this->_add_content(h("Import"));
-		if ($sql and $sure and ($sure==$this->cfg->get('CFG_configurations','key'))) {
-			$safe=$this->_is_safe_sql($sql);
-			if ($safe)
-				$this->_add_content(p()."Checking safety ... ok"._p());
-			else {
-				$rights=current($this->rights);
-				if ($rights["str_name"]=="super_admin" and $rights["rights"]=="*" and $rights["b_all_users"]) {
-					$safe=TRUE;
-					$this->_add_content(p()."Checking safety ... Risky SQL, but Super Admin Rights."._p());
-				}
-				else
-					$this->_add_content(p()."Checking safety ... Unsafe SQL. Import aborted."._p());
-			}
-			if ($safe) {
-				$lines=explode("\n",$sql);
-				$comments="";
-				foreach ($lines as $k=>$l) {
-					if (substr($l,0,1)=="#")	{
-						if (strlen($l)>2)	$comments.=$l.br();
-						unset($lines[$k]);
-					}
-				}
-				$sql=implode("\n",$lines);
-				$lines=explode(";",$sql);
-				
-				$this->_add_content(p()."Importing ...".br(2).$comments);
-				
-				foreach ($lines as $key => $line) {
-					$line=trim($line);
-					if (!empty($line)) {
-						$query=$this->db->query($line);
-					}
-				}
-				$this->_add_content(_p());
+		if ($this->_is_super_admin()) {
+			$sql=$this->input->post('sql');
+			$sure=$this->input->post('sure');
+			$this->lang->load('help');
+			if ($sql and $sure and ($sure==$this->cfg->get('CFG_configurations','key'))) {
+				$this->_sql($sql,"Import","Importing ...");
 			}
 		}
-		else 
-			$this->_add_content(p()."Error"._p());
-		$this->_show_all();				
+		$this->_show_all(lang('db_import'));				
 	}
-
-
+	
+	
 }
 
 ?>
