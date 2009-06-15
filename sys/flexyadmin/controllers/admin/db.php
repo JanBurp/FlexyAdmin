@@ -50,7 +50,7 @@ class Db extends AdminController {
 		unset($valuesData['log_stats']);
 		$valuesStructure=array_diff($options,$valuesData);
 
-		$name="export_".date("Y-m-d");
+		$name="export_".$this->_filename()."_".date("Y-m-d");
 		$data=array(
 								"data"			=> array("label"=>"Tables (with data)","type"=>"dropdown","multiple"=>"multiple","options"=>$options,"value"=>$valuesData),
 								"structure"	=> array("label"=>"Tables (structure)","type"=>"dropdown","multiple"=>"multiple","options"=>$options,"value"=>$valuesStructure),
@@ -118,6 +118,13 @@ class Db extends AdminController {
 		return $safe;
 	}
 
+	function _filename() {
+		$name=$this->db->get_field("tbl_site","url_url");
+		$name=explode(".",$name);
+		$name=$name[count($name)-2];
+		return $name;
+	}
+
 	function backup() {
 		if ($this->_can_backup()) {
 			$this->load->dbutil();
@@ -138,7 +145,7 @@ class Db extends AdminController {
 			$sql="# FlexyAdmin backup\n# User: '".$this->user."'  \n# Date: ".date("d F Y")."\n\n".$sql;
 		
 			$backup=$sql;
-			$filename='backup_'.date("Y-m-d").'.txt';
+			$filename='backup_'.$this->_filename().'_'.date("Y-m-d").'.txt';
 			force_download($filename, $backup);
 			$this->_add_content(h(1,"Backup"));
 		}
