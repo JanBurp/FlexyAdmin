@@ -612,6 +612,7 @@ class Flexy_field extends Model {
 		$lastUploads=array_slice(sort_by($files,"rawdate",TRUE),0,5);
 		ignorecase_ksort($files);
 		$options=array();
+		$options[]="";
 		$optionsLast=$this->_create_media_options($lastUploads,$types);
 		if (!empty($optionsLast)) $options[lang("form_dropdown_sort_on_last_upload")]=$optionsLast;
 		$optionsNames=$this->_create_media_options($files,$types);
