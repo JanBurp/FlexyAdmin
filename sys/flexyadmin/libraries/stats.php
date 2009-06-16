@@ -33,7 +33,8 @@ class Stats {
  *
  */
 
-	function add_uri($uri) {
+	function add_uri($uri=NULL) {
+		if ($uri==NULL) $uri="";
 		$CI =& get_instance();
 		if (!$CI->agent->is_robot()) {
 			$CI->db->set("tme_date_time",standard_date('DATE_ATOM', now()));
