@@ -11,10 +11,11 @@ CREATE TABLE `cfg_configurations` (
   `str_menu_table` varchar(50) collate latin1_general_ci NOT NULL default '',
   `str_content_table` varchar(50) collate latin1_general_ci NOT NULL default '',
   `b_logout_to_site` tinyint(1) NOT NULL default '0',
+  `b_query_urls` tinyint(1) NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
-INSERT INTO cfg_configurations (`id`, `key`, `email_webmaster_email`, `str_menu_table`, `str_content_table`, `b_logout_to_site`) VALUES (1, '', 'info@flexyadmin.com', 'tbl_menu', '', 0);
+INSERT INTO cfg_configurations (`id`, `key`, `email_webmaster_email`, `str_menu_table`, `str_content_table`, `b_logout_to_site`, `b_query_urls`) VALUES (1, '', 'info@flexyadmin.com', 'tbl_menu', '', 0, 0);
 
 
 #
@@ -59,7 +60,10 @@ CREATE TABLE `cfg_field_info` (
   `str_validation_rules` varchar(255) NOT NULL default '',
   `txt_help` text NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+INSERT INTO cfg_field_info (`id`, `field`, `str_ui_name`, `b_show_in_grid`, `b_show_in_form`, `str_options`, `b_multi_options`, `str_overrule_prefix`, `str_validation_rules`, `txt_help`) VALUES (1, 'tbl_menu.str_module', '', 1, 1, '', 0, '', '', '');
+
 
 #
 # TABLE STRUCTURE FOR: cfg_img_info
@@ -150,7 +154,12 @@ CREATE TABLE `cfg_table_info` (
   `str_order_by` varchar(50) collate latin1_general_ci NOT NULL default '',
   `txt_help` blob NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+
+INSERT INTO cfg_table_info (`id`, `order`, `table`, `b_single_row`, `str_ui_name`, `b_show_grid_with_joins`, `str_abstract_fields`, `str_options_where`, `str_order_by`, `txt_help`) VALUES (1, 1, 'tbl_site', 1, '', 0, '', '', '', '');
+INSERT INTO cfg_table_info (`id`, `order`, `table`, `b_single_row`, `str_ui_name`, `b_show_grid_with_joins`, `str_abstract_fields`, `str_options_where`, `str_order_by`, `txt_help`) VALUES (2, 2, 'tbl_menu', 0, '', 0, '', '', '', '');
+INSERT INTO cfg_table_info (`id`, `order`, `table`, `b_single_row`, `str_ui_name`, `b_show_grid_with_joins`, `str_abstract_fields`, `str_options_where`, `str_order_by`, `txt_help`) VALUES (3, 3, 'tbl_links', 0, '', 0, '', '', '', '');
+
 
 #
 # TABLE STRUCTURE FOR: cfg_users
@@ -222,9 +231,17 @@ CREATE TABLE `tbl_menu` (
   `txt_tekst` text NOT NULL,
   `str_module` varchar(20) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 
-INSERT INTO tbl_menu (`id`, `order`, `self_parent`, `uri`, `str_title`, `str_keywords`, `txt_tekst`, `str_module`) VALUES (1, 1, 0, 'home', 'Home', '', '', '');
+INSERT INTO tbl_menu (`id`, `order`, `self_parent`, `uri`, `str_title`, `str_keywords`, `txt_tekst`, `str_module`) VALUES (1, 1, 0, 'home', 'Home', '', 0x3c703e5374617274706167696e612076616e2065656e206e696575776520736974652e3c2f703e, '');
+INSERT INTO tbl_menu (`id`, `order`, `self_parent`, `uri`, `str_title`, `str_keywords`, `txt_tekst`, `str_module`) VALUES (2, 2, 0, 'advies', 'Advies', '', '', '');
+INSERT INTO tbl_menu (`id`, `order`, `self_parent`, `uri`, `str_title`, `str_keywords`, `txt_tekst`, `str_module`) VALUES (3, 3, 0, 'schrijven', 'Schrijven', '', '', '');
+INSERT INTO tbl_menu (`id`, `order`, `self_parent`, `uri`, `str_title`, `str_keywords`, `txt_tekst`, `str_module`) VALUES (4, 4, 0, 'fotografie', 'Fotografie', '', '', '');
+INSERT INTO tbl_menu (`id`, `order`, `self_parent`, `uri`, `str_title`, `str_keywords`, `txt_tekst`, `str_module`) VALUES (5, 5, 0, 'eugenie', 'Eugenie', '', '', '');
+INSERT INTO tbl_menu (`id`, `order`, `self_parent`, `uri`, `str_title`, `str_keywords`, `txt_tekst`, `str_module`) VALUES (6, 6, 0, 'contact', 'Contact', '', '', '');
+INSERT INTO tbl_menu (`id`, `order`, `self_parent`, `uri`, `str_title`, `str_keywords`, `txt_tekst`, `str_module`) VALUES (7, 1, 2, 'verandermanagement', 'verandermanagement', '', '', '');
+INSERT INTO tbl_menu (`id`, `order`, `self_parent`, `uri`, `str_title`, `str_keywords`, `txt_tekst`, `str_module`) VALUES (8, 2, 2, 'co-creatie', 'co-creatie', '', '', '');
+INSERT INTO tbl_menu (`id`, `order`, `self_parent`, `uri`, `str_title`, `str_keywords`, `txt_tekst`, `str_module`) VALUES (9, 3, 2, 'workshops', 'workshops', '', '', '');
 
 
 #
@@ -244,7 +261,7 @@ CREATE TABLE `tbl_site` (
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
-INSERT INTO tbl_site (`id`, `str_title`, `str_author`, `url_url`, `email_email`, `stx_description`, `stx_keywords`) VALUES (1, 'FlexyAdmin site', 'Jan den Besten', 'http://www.flexyadmin.com', 'info@flexyadmin.com', '', '');
+INSERT INTO tbl_site (`id`, `str_title`, `str_author`, `url_url`, `email_email`, `stx_description`, `stx_keywords`) VALUES (1, 'Eugenie Boon', 'Eugenie Boon', 'http://www.eugenieboon.nl', 'info@flexyadmin.com', '', '');
 
 
 #
@@ -294,5 +311,5 @@ CREATE TABLE `log_stats` (
   `str_platform` varchar(20) NOT NULL default '',
   `str_referrer` varchar(100) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=69 DEFAULT CHARSET=latin1;
 
