@@ -1,0 +1,69 @@
+/* ====== Common styles for site and tinyMCE ========================= */
+
+/* reset all, and set common styles */
+body,div,span,hr,img,ul,li,p,h1,h2,h3,h4,h5,h6,h7,a {
+	margin:0px;
+	padding:0px;
+	border:none;
+	background:transparent;
+	color:#999;
+	font-size:1em;
+	letter-spacing:.01em;
+  font-family: "Lucida Grande",Lucida,Geneva,Arial,Helvetica,sans-serif;
+}
+
+/* set specifics */
+p,h1,h2,h3,h4,h5,h6,h7 	{ padding-bottom:16px; }
+
+h1											{ font-weight:bold; color:#000; }
+h2											{ padding-bottom:0px; }
+
+a, a:visited 						{ text-decoration:none; }
+a:hover,
+a:active,
+a.current,
+a.current:visited 			{ text-decoration:underline; color:#000; }
+li a:hover,
+li.current a.current		{ text-decoration:none; }
+#artikel a							{ color:#000; }
+
+
+img {
+	margin:0px;
+}
+
+hr, .hr {
+	width: 100%;
+	height:1px;
+	background-color:#CCC;
+	margin:10px 0px;
+	}
+
+ul.lev1 {
+}
+li {
+	float:left;
+	display:inline;
+	list-style:none;
+	margin-right:10px;
+	padding-bottom:5px;
+	min-width:100px;
+}
+li.lev2 {
+	margin-left:5px;
+	display:block;
+	clear:both;
+}
+
+
+/* === Common styles, also used in styles dropdown of tinyMCE ========= */
+
+
+/* === Common styles, not used in tinyMCE ============================= */
+
+.small 					{ font-size:.85em; }
+
+
+/* ============== tinyMCE specific styles, only for admin ============ */
+body#tinymce			{ margin:5px; }
+#tinymce a 				{ text-decoration: underline; }

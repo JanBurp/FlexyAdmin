@@ -37,10 +37,10 @@
 $active_group = "default";
 $active_record = TRUE;
 
-$db['default']['hostname'] = "mysql1.greenhost.nl";
-$db['default']['username'] = "ntozl";
-$db['default']['password'] = "UbJadfoa";
-$db['default']['database'] = "ntozl_nl";
+$db['default']['hostname'] = "localhost";
+$db['default']['username'] = "";
+$db['default']['password'] = "";
+$db['default']['database'] = "";
 $db['default']['dbdriver'] = "mysql";
 $db['default']['dbprefix'] = "";
 $db['default']['pconnect'] = TRUE;
