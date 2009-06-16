@@ -129,6 +129,8 @@ class Edit extends AdminController {
 					 * Remove database entry
 					 */
 					$this->db->where(pk(),$id);
+					$oldData=$this->db->get_row($table);
+					$this->db->where(pk(),$id);
 					$this->db->delete($table);
 					log_("info","[FD] delete item '$id' from '$table'");				
 
@@ -148,8 +150,10 @@ class Edit extends AdminController {
 					 * If special data, do special action:
 					 * - tbl_links, remove the link from link.list
 					 */
-					$this->load->library("editor_lists");
-					$this->editor_lists->create_list("links");
+					$this->_after_delete($table,$oldData);
+					// 
+					// $this->load->library("editor_lists");
+					// $this->editor_lists->create_list("links");
 
 					/**
 					 * End messages

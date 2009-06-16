@@ -232,7 +232,10 @@ class Show extends AdminController {
 					$this->lang->load("update_delete");
 					if ($this->_has_key($table)) {
 						$resultId=$form->update($table,$restrictedToUser);
-						$this->_after_update($table,$resultId,$data);
+						if ($id==-1)
+							$this->_after_update($table,$resultId);
+						else
+							$this->_after_update($table,$resultId,$data);
 						if (is_string($resultId)) {
 							$this->set_message(langp("update_error",$table,$resultId));
 							redirect(api_uri('API_view_grid',$table));
