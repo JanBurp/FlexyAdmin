@@ -630,7 +630,30 @@ class AdminController extends BasicController {
 	 * They check if a standard hook method for the current table/field/id, if so call it
 	 */
 
-	function _after_update($table,$id,$oldData) {
+	function _after_delete($table,$oldData) {
+		// First check a specific table
+		$func="_after_delete_$table";
+		if (method_exists($this,$func)) {
+			$this->$func($oldData);
+		}
+		
+		// common after delete
+
+		// Check if uri has been deleted, delete all internal links with new uri and update link list
+		if (isset($oldData["uri"]) or (isset($oldData["url_url"]) and $table==$this->cfg->get('CFG_editor','table')) ) {
+			if (isset($oldData["uri"]))
+				$oldUri=$oldData["uri"];
+			else
+				$oldUri=$oldData["url_url"];
+			$this->_update_links_in_txt($oldUri);
+			$this->load->library("editor_lists");
+			$this->editor_lists->create_list("links");
+		}
+
+	}
+
+
+	function _after_update($table,$id,$oldData=NULL) {
 		// First check a specific table
 		$func="_after_update_$table";
 		if (method_exists($this,$func)) {
@@ -651,7 +674,7 @@ class AdminController extends BasicController {
 		}
 		
 		// Check if a Link has changed, if so, replace all internal links with new Link
-		if ($table==$this->cfg->get('CFG_editor','table')) {
+		if (isset($oldData["url_url"]) and $table==$this->cfg->get('CFG_editor','table')) {
 			$newUrl=$this->db->get_field($table,"url_url",$id);
 			$oldUrl=$oldData["url_url"];
 			if ($oldUrl!=$newUrl) {
@@ -660,6 +683,13 @@ class AdminController extends BasicController {
 				$this->editor_lists->create_list("links");
 			}
 		}
+		
+		// if new uri or url, refresh link list
+		if (empty($oldData) and ($table==$this->cfg->get('CFG_editor','table') or $this->db->field_exists("uri",$table)) ) {
+			$this->load->library("editor_lists");
+			$this->editor_lists->create_list("links");
+		}
+		
 		
 		// Check if txt fields has invalid HTML tags
 		$validHTML=$this->cfg->get('CFG_editor','str_valid_html');
@@ -682,7 +712,7 @@ class AdminController extends BasicController {
 
 	}
 
-	function _update_links_in_txt($oldUrl,$newUrl) {
+	function _update_links_in_txt($oldUrl,$newUrl="") {
 		// loop through all txt fields..
 		$tables=$this->db->list_tables();
 		foreach($tables as $table) {
@@ -696,7 +726,12 @@ class AdminController extends BasicController {
 						foreach($query->result_array() as $row) {
 							$thisId=$row["id"];
 							$txt=$row[$field];
-							$txt=str_replace("href=\"$oldUrl","href=\"$newUrl",$txt);
+							if (empty($newUrl)) {
+								$pattern='/<a(.*?)href="'.str_replace("/","\/",$oldUrl).'"(.*?)>(.*?)<\/a>/';
+								$txt=preg_replace($pattern,'\\3',$txt);
+							}
+							else
+								$txt=str_replace("href=\"$oldUrl","href=\"$newUrl",$txt);
 							$res=$this->db->update($table,array($field=>$txt),"id = $thisId");
 						}
 					}
