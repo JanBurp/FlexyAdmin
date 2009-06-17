@@ -227,9 +227,8 @@ class Menu {
 	}
 
 	function inUri($in,$uri) {
-		if (strpos($uri,$in)===FALSE)
-			return FALSE;
-		return TRUE;
+		$in=explode("/",$in);
+		return (in_array($uri,$in));
 	}
 
 	function add_controls($controls="") {
@@ -258,8 +257,7 @@ class Menu {
 			if ($pos==count($menu))											$attr["class"].=" last";
 			if (isset($item["class"]))									$attr["class"].=" ".$item["class"];
 			if ($this->current==$link) 									$attr["class"].=" current";
-			//trace_(array("cur"=>$this->current,"link"=>$link,"is"=>($this->current==$link),"class"=>$attr["class"] ) );
-			if ($this->inUri($link,$this->current))	$attr["class"].=" active";
+			if ($this->inUri($link,$this->current))			$attr["class"].=" active";
 			$out.=$this->tmp($this->tmpItemStart,array("class"=>$attr["class"]));
 			// render item or submenu
 			if (isset($item["uri"])) {
