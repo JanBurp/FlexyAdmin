@@ -228,7 +228,22 @@ class Menu {
 
 	function inUri($in,$uri) {
 		$in=explode("/",$in);
-		return (in_array($uri,$in));
+		$uri=explode("/",$uri);
+		// if same TRUE
+		if ($in==$uri) return TRUE;
+		// if in longer then uri, impossible active, FALSE
+		if (count($uri)<count($in)) return FALSE;
+		// ok, possible active branch, first set in as long as uri, then check if same
+		$uri=array_slice($uri,0,count($in));
+		if ($in==$uri) return TRUE;
+		
+		// $active=FALSE;
+		// while (!$active and (count($in)>0) ) {
+		// 	$active=$in[count($in)-1]==$uri[count($uri)-1];
+		// 	array_pop($in);
+		// 	array_pop($uri);
+		// }
+		return FALSE;
 	}
 
 	function add_controls($controls="") {
