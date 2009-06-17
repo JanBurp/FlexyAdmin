@@ -604,20 +604,26 @@ class Flexy_field extends Model {
 	}
 	function _dropdown_media_form() {
 		$info=$this->cfg->get('CFG_media_info',$this->table.".".$this->field);
-		$types=explode(",",el("str_types",$info));
-		$path=el("str_path",$info);
-		$map=$this->config->item('ASSETS').$path;
-		$files=read_map($map);
-		$files=not_filter_by($files,"_");
-		$lastUploads=array_slice(sort_by($files,"rawdate",TRUE),0,5);
-		ignorecase_ksort($files);
-		$options=array();
-		$options[]="";
-		$optionsLast=$this->_create_media_options($lastUploads,$types);
-		if (!empty($optionsLast)) $options[lang("form_dropdown_sort_on_last_upload")]=$optionsLast;
-		$optionsNames=$this->_create_media_options($files,$types);
-		if (!empty($optionsNames)) $options[lang("form_dropdown_sort_on_name")]=$optionsNames;
-		// $options=array(lang("form_dropdown_sort_on_last_upload")=>$optionsLast, lang("form_dropdown_sort_on_name")=>$optionsNames);
+		if (empty($info)) {
+			$options=array(""=>"ERROR: add this field in Media Info");
+			$map="";
+		}
+		else {
+			$types=explode(",",el("str_types",$info));
+			$path=el("str_path",$info);
+			$map=$this->config->item('ASSETS').$path;
+			$files=read_map($map);
+			$files=not_filter_by($files,"_");
+			$lastUploads=array_slice(sort_by($files,"rawdate",TRUE),0,5);
+			ignorecase_ksort($files);
+			$options=array();
+			$options[]="";
+			$optionsLast=$this->_create_media_options($lastUploads,$types);
+			if (!empty($optionsLast)) $options[lang("form_dropdown_sort_on_last_upload")]=$optionsLast;
+			$optionsNames=$this->_create_media_options($files,$types);
+			if (!empty($optionsNames)) $options[lang("form_dropdown_sort_on_name")]=$optionsNames;
+			// $options=array(lang("form_dropdown_sort_on_last_upload")=>$optionsLast, lang("form_dropdown_sort_on_name")=>$optionsNames);
+		}
 		$out=$this->_standard_form_field($options);
 		$out["path"]=$map;
 		if ($this->pre=="medias") $out["multiple"]="multiple";
