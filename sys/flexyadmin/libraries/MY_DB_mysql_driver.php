@@ -13,6 +13,7 @@
 class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	
 	var $pk;
+	var $key;
 	var $maxTextLen;
 	var $eachResult;
 	var $foreignTables;
@@ -35,6 +36,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 
 	function reset() {
 		$this->primary_key();
+		$this->set_key();
 		$eachResult=array();
 		$savedQuery=array();
 		$this->add_foreigns(FALSE);
@@ -56,6 +58,10 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 */
 	function primary_key($pk="id") {
 		$this->pk=$pk;
+	}
+
+	function set_key($key="id") {
+		$this->key=$key;
 	}
 
 	function has_field($table,$field) {
@@ -411,7 +417,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		$query=$this->_get($table,$limit,$offset);
 		log_("info","[DB+] Get data from query:");
 		$res=$query->result_array();
-		$result=$this->_set_key_to($res,$this->pk);
+		$result=$this->_set_key_to($res,$this->key);
 
 		/**
 		 * add (one to) many data if asked for
