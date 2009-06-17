@@ -245,18 +245,10 @@ class Form Extends Model {
 		return $out;
 	}
 
-/**
- * function _after_update($id)
- *
- * Actions to perform when update is done
- *
- *	@param int $id	id of updated record (-1 is inserted)
- */
 	function _after_update($id) {
 		/**
-		* TODO: hook this
+		* Moved to controllers (show and edit)
 		*/
-
 	}
 
 	function _get_uri_field($fields) {
@@ -298,21 +290,26 @@ class Form Extends Model {
 		return current($uris);
 	}
 
-	function _create_uri($original_uri,$table,$id) {
-		static $counter=1;
-		// lowercase
-		$uri=strtolower($original_uri);
-		// replace spaces
-		$uri=str_replace(" ","_",trim($uri));
-		// replace specialchars
-		$uri=clean_string($uri);
-		// forbidden uri's
-		$forbidden=array("site","sys","admin");
-		if (in_array($uri,$forbidden)) $uri="_".$uri;
-		// check if uri exists allready
-		while ($this->_existing_uri($uri,$table,$id)) {
-			$uri=$uri."_".$counter++;
+	function _create_uri($original_uri_field,$table,$id) {
+		$current_uri=$this->db->get_field($table,"uri",$id);
+		if (empty($current_uri) or !($this->cfg->get('CFG_table',$table,'b_freeze_uris')) ) {
+			static $counter=1;
+			// lowercase
+			$uri=strtolower($original_uri_field);
+			// replace spaces
+			$uri=str_replace(" ","_",trim($uri));
+			// replace specialchars
+			$uri=clean_string($uri);
+			// forbidden uri's
+			$forbidden=array("site","sys","admin");
+			if (in_array($uri,$forbidden)) $uri="_".$uri;
+			// check if uri exists allready
+			while ($this->_existing_uri($uri,$table,$id)) {
+				$uri=$uri."_".$counter++;
+			}
 		}
+		else
+			$uri=$current_uri;
 		return $uri;
 	}
 
