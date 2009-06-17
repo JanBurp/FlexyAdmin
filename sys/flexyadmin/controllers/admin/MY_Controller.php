@@ -161,8 +161,11 @@ class FrontEndController extends MY_Controller {
 	function set_uri($uri) {
 		$this->site["uri"]=$uri;
 	}
-	function get_uri() {
-		return $this->site["uri"];
+	function get_uri($max=0) {
+		if ($max==0) return $this->site["uri"];
+		$u=explode("/",$this->site["uri"]);
+		$u=array_slice($u,0,$max);
+		return implode("/",$u);
 	}
 
 	function add_content($c) {
