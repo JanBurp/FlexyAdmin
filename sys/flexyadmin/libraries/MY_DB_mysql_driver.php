@@ -496,7 +496,10 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			$sql="SELECT `$field` FROM `$table` WHERE `$where`='$what'";
 		$query=$this->query($sql);
 		$row=$query->row_array();
-		return $row[$field];
+		if (isset($row[$field]))
+			return $row[$field];
+		else
+			return FALSE;
 	}
 	function get_field($table,$field,$id="") {
 		return $this->get_field_where($table,$field,$this->pk,$id);
