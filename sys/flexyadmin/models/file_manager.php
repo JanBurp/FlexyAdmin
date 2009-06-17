@@ -326,7 +326,10 @@ function thumb($attr,$index=FALSE) {
 
 					// size types (images, flash)
 					if ($isImg or $isFlash) {
-						$imgSize=getimagesize($this->map."/".$name);
+						if (isset($file["width"]) and isset($file["height"]))
+							$imgSize=array($file["width"],$file["height"]);
+						else
+							$imgSize=getimagesize($this->map."/".$name);
 					}
 
 					// icon

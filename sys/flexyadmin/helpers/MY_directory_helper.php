@@ -30,6 +30,13 @@ function read_map($path,$types="") {
 				$data["size"]=sprintf("%d k",filesize($path."/".$name)/1024);
 				$data["rawdate"]=date("Y m d",filemtime($path."/".$name));
 				$data["date"]=date("j M Y",filemtime($path."/".$name));
+				$CI =& get_instance();
+				if (in_array($data["type"],$CI->config->item('FILE_types_img'))) {
+					// add img dimensions
+					$size=getimagesize($path."/".$file);
+					$data["width"]=$size[0];
+					$data["height"]=$size[1];
+				}
 			}
 			$data["name"]=$name;
 			$data["path"]=$path."/".$name;
