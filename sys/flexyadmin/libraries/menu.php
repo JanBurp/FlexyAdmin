@@ -28,6 +28,7 @@ class Menu {
 	var $tmpUrl;
 	var $urlField;
 	var $fields;
+	var $extraFields;
 	var	$attr;
 	
 	var $menuTable;
@@ -50,6 +51,7 @@ class Menu {
 		$this->set_class_field();
 		$this->set_visible_field();
 		$this->set_parent_field();
+		$this->set_extra_field();
 		$this->set_attributes();
 		$this->add_controls();
 	}
@@ -59,6 +61,12 @@ class Menu {
 	}
 	function set_title_field($title="str_title") {
 		$this->fields["title"]=$title;
+	}
+	function set_extra_field($extra="",$startTag="<p>",$closeTag="</p>"){
+		if (empty($extra))
+			$this->extraFields=array();
+		else
+			$this->extraFields[$extra]=array("name"=>$extra,"start"=>$startTag,"close"=>$closeTag);
 	}
 	function set_class_field($class="str_class") {
 		$this->fields["class"]=$class;
@@ -84,26 +92,35 @@ class Menu {
 		// select fields
 		$fields=$CI->db->list_fields($table);
 		foreach ($fields as $key=>$f) {
-			if (!in_array($f,$this->fields)) unset($fields[$key]);
+			if (!in_array($f,$this->fields) and !isset($this->extraFields[$f])) unset($fields[$key]);
 		}
 		// get data form menu_table
 		$CI->db->select(pk());
 		$CI->db->select($fields);
 		if (in_array("self_parent",$fields)) $CI->db->order_as_tree();
 		$items=$CI->db->get_result($table);
-		// trace_($items);
 		$menu=array();
 		foreach($items as $item) {
 			if (!isset($item[$this->fields["visible"]]) or ($item[$this->fields["visible"]]) ) {
 				$thisItem=array();
 				$thisItem["id"]=$item[pk()];
-				if (isset($item[$this->fields["uri"]])) $thisItem["uri"]=$item[$this->fields["uri"]];	else $thisItem["uri"]=$item[$this->fields["title"]];
-				if (isset($item[$this->fields["class"]])) $thisItem["class"]=$item[$this->fields["class"]];
-				if (isset($item[$this->fields["parent"]])) $parent=$item[$this->fields["parent"]]; else $parent="";
+				if (isset($item[$this->fields["uri"]]))			$thisItem["uri"]=$item[$this->fields["uri"]];	else $thisItem["uri"]=$item[$this->fields["title"]];
+				if (isset($item[$this->fields["class"]])) 	$thisItem["class"]=$item[$this->fields["class"]];
+				if (isset($item[$this->fields["parent"]])) 	$parent=$item[$this->fields["parent"]]; else $parent="";
+				
+				if (!empty($this->extraFields)) {
+					foreach ($this->extraFields as $extraName => $extra) {
+						if (isset($item[$extraName])) {
+							$thisItem["extra"][]=$extra["start"].$item[$extraName].$extra["close"];
+						}
+					}
+				}
+				
 				if (isset($menu[$parent][$item[$this->fields["title"]]]))
 					$menu[$parent][$item[$this->fields["title"]]."__".$counter++]=$thisItem;
 				else
 					$menu[$parent][$item[$this->fields["title"]]]=$thisItem;
+				
 			}
 		}
 		// trace_($menu);
@@ -130,6 +147,10 @@ class Menu {
 
 	function set_menu($menu=NULL) {
 		$this->menu=$menu;
+	}
+
+	function add($name,$item) {
+		$this->menu[$name]=$item;
 	}
 
 	function add_to_top($name,$item) {
@@ -259,6 +280,7 @@ class Menu {
 		$branch=array();
 		$out=$this->tmp($this->tmpMenuStart,$attr);
 		if (!isset($menu)) $menu=$this->menu;
+		// trace_($menu);
 		$pos=1;
 		foreach($menu as $name=>$item) {
 			$thisUri=$item[$this->urlField];
@@ -280,6 +302,11 @@ class Menu {
 				$pre=get_prefix($showName,"__");
 				if (!empty($pre)) $showName=$pre;
 				if (isset($item["help"])) $showName=help($showName,$item["help"]);
+				if (isset($item['extra'])) {
+					foreach ($item['extra'] as $extra) {
+						$showName.=$extra;
+					}
+				}
 				$out.=anchor($link, $showName, $attr);
 			}
 			if (isset($item["sub"]))
