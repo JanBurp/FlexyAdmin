@@ -397,12 +397,16 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		return $tree;
 	}
 	
-	function _set_key_to($a,$key) {
+	function _set_key_to($a,$key="") {
+		$n=0;
 		$out=array();
 		$first=current($a);
 		if (isset($first[$key])) {
 			foreach($a as $row) {
-				$out[$row[$key]]=$row;
+				if (empty($key))
+					$out[$n++]=$row;
+				else
+					$out[$row[$key]]=$row;
 			}
 		}
 		else
