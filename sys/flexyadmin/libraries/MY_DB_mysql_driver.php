@@ -330,7 +330,18 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			$query=$this->get($table);
 		return $query;
 	}
-			
+	
+	function get_parent_uri($table,$uri="") {
+		if (!empty($uri))	$id=$this->get_field_where($table,"id","uri",$uri);
+		$this->order_as_tree();
+		$this->uri_as_full_uri();
+		$this->select("id,order,uri,self_parent");
+		$result=$this->get_result($table);
+		if (!empty($uri))
+			return $result[$id];
+		else
+			return $result;
+	}
 	
 	function get_results($table,$limit=0,$offset=0) {
 		return $this->get_result($table,$limit,$offset);
@@ -358,8 +369,14 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			foreach ($result as $key => $row) {
 				if ($row["self_parent"]!=0) {
 					$uri=$row["uri"];
-					$parentUri=$result[$row["self_parent"]]["uri"];
-					$result[$key]["uri"]=$parentUri."/".$uri;
+					if (isset($result[$row["self_parent"]])) {
+						$parentUri=$result[$row["self_parent"]]["uri"];
+						$result[$key]["uri"]=$parentUri."/".$uri;
+					}
+					else {
+						$parentUri=$this->get_parent_uri($table,$uri);
+						$result[$key]["uri"]=$parentUri."/".$uri;
+					}
 				}
 			}
 		}
