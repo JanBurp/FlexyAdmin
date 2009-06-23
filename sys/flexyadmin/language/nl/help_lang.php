@@ -18,6 +18,17 @@ $lang['db_import']					= 'Importeer Database';
 $lang['db_backup']					= 'Maak backup';
 $lang['db_restore']					= 'Zet backup terug';
 
+$lang['sr_search_replace']	= 'Zoeken/Vervangen';
+$lang['sr_search']					= 'Zoek';
+$lang['sr_replace']					= 'Vervang';
+$lang['sr_tables']					= 'In tabellen';
+$lang['sr_field_types']			= 'In veld typen';
+$lang['sr_regex']						= 'Regular Expression';
+$lang['sr_result']					= 'Resultaat';
+
+$lang['bad_regex']					= 'Fout in reguliere expressie.';
+
+
 
 
 ?>

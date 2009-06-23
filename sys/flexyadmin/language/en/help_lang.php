@@ -16,5 +16,13 @@ $lang['db_import']					= 'Import Database';
 $lang['db_backup']					= 'Create backup';
 $lang['db_restore']					= 'Restore backup';
 
+$lang['sr_search_replace']	= 'Search/Replace';
+$lang['sr_search']					= 'Search';
+$lang['sr_replace']					= 'Replace';
+$lang['sr_tables']					= 'In tables';
+$lang['sr_field_types']			= 'In field types';
+$lang['sr_regex']						= 'Regular Expression';
+$lang['sr_result']					= 'Result';
 
+$lang['bad_regex']					= 'Error in regular expression.';
 ?>
