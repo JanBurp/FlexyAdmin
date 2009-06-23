@@ -83,12 +83,12 @@ class Search extends AdminController {
 				if (!$tables) {
 					$tables[]=$this->cfg->get('CFG_configurations','str_menu_table');
 				}
-				$tables=array_combine($tables,$tables);
+				$tables=combine($tables,$tables);
 				// types options/value
 				$typesOptions=$this->config->item('FIELDS_prefix');
 				$typesOptions=array_keys($typesOptions);
 				sort($typesOptions);
-				$typesOptions=array_combine($typesOptions,$typesOptions);
+				$typesOptions=combine($typesOptions,$typesOptions);
 				unset($typesOptions['id']);
 				unset($typesOptions['self']);
 				unset($typesOptions['rel']);
@@ -96,7 +96,7 @@ class Search extends AdminController {
 				if (!$types) {
 					$types=array('txt','stx');
 				}
-				$types=array_combine($types,$types);
+				$types=combine($types,$types);
 				// create form
 				$data=array( 	"search"	=> array("label"=>lang('sr_search'),"value"=>$search),
 											"replace"	=> array("label"=>lang('sr_replace'),"value"=>$replace),
