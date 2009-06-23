@@ -360,6 +360,149 @@ class BasicController extends MY_Controller {
 		return substr($out,0,strlen($out)-strlen($v));
 	}
 
+	function _update_links_in_txt($oldUrl,$newUrl="") {
+		// loop through all txt fields..
+		$tables=$this->db->list_tables();
+		foreach($tables as $table) {
+			if (get_prefix($table)==$this->config->item('TABLE_prefix')) {
+				$fields=$this->db->list_fields($table);
+				foreach ($fields as $field) {
+					if (get_prefix($field)=="txt") {
+						$this->db->select("id,$field");
+						$this->db->where("$field !=","");
+						$query=$this->db->get($table);
+						foreach($query->result_array() as $row) {
+							$thisId=$row["id"];
+							$txt=$row[$field];
+							if (empty($newUrl)) {
+								// remove
+								$pattern='/<a(.*?)href="'.str_replace("/","\/",$oldUrl).'"(.*?)>(.*?)<\/a>/';
+								$txt=preg_replace($pattern,'\\3',$txt);
+							}
+							else {
+								$txt=str_replace("href=\"$oldUrl","href=\"$newUrl",$txt);
+							}
+							$res=$this->db->update($table,array($field=>$txt),"id = $thisId");
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Here are fuctions that hook into the grid/form/update proces.
+	 * They check if a standard hook method for the current table/field/id, if so call it
+	 */
+
+	function _after_delete($table,$oldData) {
+		// First check a specific table
+		$func="_after_delete_$table";
+		if (method_exists($this,$func)) {
+			$this->$func($oldData);
+		}
+		
+		// common after delete
+
+		// Check if uri has been deleted, delete all internal links with new uri and update link list
+		if (isset($oldData["uri"]) or (isset($oldData["url_url"]) and $table==$this->cfg->get('CFG_editor','table')) ) {
+			if (isset($oldData["uri"]))
+				$oldUri=$oldData["uri"];
+			else
+				$oldUri=$oldData["url_url"];
+			$this->_update_links_in_txt($oldUri);
+			$this->load->library("editor_lists");
+			$this->editor_lists->create_list("links");
+		}
+
+	}
+
+
+	function _get_parent_uri($table,$uri,$parent) {
+		if ($parent!=0) {
+			$this->db->select('id,uri,self_parent');
+			$this->db->where(pk(),$parent);
+			$parentRow=$this->db->get_row($table);
+			$uri=$parentRow['uri']."/".$uri;
+			if ($parentRow['self_parent']!=0) $uri=$this->_get_parent_uri($table,$uri,$parentRow['self_parent']);
+		}
+		return $uri;
+	}
+	
+	function _after_update($table,$id,$oldData=NULL) {
+		// First check a specific table
+		$func="_after_update_$table";
+		if (method_exists($this,$func)) {
+			$this->$func($oldData);
+		}
+
+		// common after update
+		
+		// Check if uri or self_parent has changed, if so, replace all internal links with new uri
+		if (isset($oldData["uri"])) {
+			if (isset($oldData['self_parent'])) {
+				$this->db->select('uri,self_parent');
+				$this->db->where(pk(),$id);
+				$new=$this->db->get_row($table);
+				$newUri=$new['uri'];
+				$newParent=$new['self_parent'];
+				$oldParent=$oldData['self_parent'];
+			}
+			else
+				$newUri=$this->db->get_field($table,'uri',$id);
+			$oldUri=$oldData["uri"];
+			if ($oldUri!=$newUri or (isset($oldParent) and $oldParent!=$newParent)) {
+				if (isset($newParent)) {
+					$full=$this->db->get_parent_uri($table,$newUri);
+					$newUri=$full['uri'];
+					$oldUri=$this->_get_parent_uri($table,$oldUri,$oldParent);
+				}
+				// trace_(array('old'=>$oldUri,"new"=>$newUri));
+				$this->_update_links_in_txt($oldUri,$newUri);
+				$this->load->library("editor_lists");
+				$this->editor_lists->create_list("links");
+			}
+		}
+		
+		// Check if a Link has changed, if so, replace all internal links with new Link
+		if (isset($oldData["url_url"]) and $table==$this->cfg->get('CFG_editor','table')) {
+			$newUrl=$this->db->get_field($table,"url_url",$id);
+			$oldUrl=$oldData["url_url"];
+			if ($oldUrl!=$newUrl) {
+				$this->_update_links_in_txt($oldUrl,$newUrl);
+				$this->load->library("editor_lists");
+				$this->editor_lists->create_list("links");
+			}
+		}
+		
+		// if new uri or url, refresh link list
+		if (empty($oldData) and ($table==$this->cfg->get('CFG_editor','table') or $this->db->field_exists("uri",$table)) ) {
+			$this->load->library("editor_lists");
+			$this->editor_lists->create_list("links");
+		}
+		
+		
+		// Check if txt fields has invalid HTML tags
+		$validHTML=$this->cfg->get('CFG_editor','str_valid_html');
+		if (!empty($validHTML)) {
+			$fields=$this->db->list_fields($table);
+			foreach ($fields as $field) {
+				if (get_prefix($field)=="txt") {
+					$this->db->select("$field");
+					$this->db->where("id",$id);
+					$this->db->where("$field !=","");
+					$query=$this->db->get($table);
+					foreach($query->result_array() as $row) {
+						$txt=$row[$field];
+						$txt=strip_tags($txt,$validHTML);
+						$res=$this->db->update($table,array($field=>$txt),"id = $id");
+					}
+				}
+			}
+		}
+
+	}
+
 }
 
 
@@ -628,124 +771,10 @@ class AdminController extends BasicController {
 	function _add_js_variable($name,$value) {
 		$this->js[$name]=$value;
 	}
-
-
-
-
-	/**
-	 * Here are fuctions that hook into the grid/form/update proces.
-	 * They check if a standard hook method for the current table/field/id, if so call it
-	 */
-
-	function _after_delete($table,$oldData) {
-		// First check a specific table
-		$func="_after_delete_$table";
-		if (method_exists($this,$func)) {
-			$this->$func($oldData);
-		}
-		
-		// common after delete
-
-		// Check if uri has been deleted, delete all internal links with new uri and update link list
-		if (isset($oldData["uri"]) or (isset($oldData["url_url"]) and $table==$this->cfg->get('CFG_editor','table')) ) {
-			if (isset($oldData["uri"]))
-				$oldUri=$oldData["uri"];
-			else
-				$oldUri=$oldData["url_url"];
-			$this->_update_links_in_txt($oldUri);
-			$this->load->library("editor_lists");
-			$this->editor_lists->create_list("links");
-		}
-
-	}
-
-
-	function _after_update($table,$id,$oldData=NULL) {
-		// First check a specific table
-		$func="_after_update_$table";
-		if (method_exists($this,$func)) {
-			$this->$func($oldData);
-		}
-
-		// common after update
-
-		// Check if uri has changed, if so, replace all internal links with new uri
-		if (isset($oldData["uri"])) {
-			$newUri=$this->db->get_field($table,"uri",$id);
-			$oldUri=$oldData["uri"];
-			if ($oldUri!=$newUri) {
-				$this->_update_links_in_txt($oldUri,$newUri);
-				$this->load->library("editor_lists");
-				$this->editor_lists->create_list("links");
-			}
-		}
-		
-		// Check if a Link has changed, if so, replace all internal links with new Link
-		if (isset($oldData["url_url"]) and $table==$this->cfg->get('CFG_editor','table')) {
-			$newUrl=$this->db->get_field($table,"url_url",$id);
-			$oldUrl=$oldData["url_url"];
-			if ($oldUrl!=$newUrl) {
-				$this->_update_links_in_txt($oldUrl,$newUrl);
-				$this->load->library("editor_lists");
-				$this->editor_lists->create_list("links");
-			}
-		}
-		
-		// if new uri or url, refresh link list
-		if (empty($oldData) and ($table==$this->cfg->get('CFG_editor','table') or $this->db->field_exists("uri",$table)) ) {
-			$this->load->library("editor_lists");
-			$this->editor_lists->create_list("links");
-		}
-		
-		
-		// Check if txt fields has invalid HTML tags
-		$validHTML=$this->cfg->get('CFG_editor','str_valid_html');
-		if (!empty($validHTML)) {
-			$fields=$this->db->list_fields($table);
-			foreach ($fields as $field) {
-				if (get_prefix($field)=="txt") {
-					$this->db->select("$field");
-					$this->db->where("id",$id);
-					$this->db->where("$field !=","");
-					$query=$this->db->get($table);
-					foreach($query->result_array() as $row) {
-						$txt=$row[$field];
-						$txt=strip_tags($txt,$validHTML);
-						$res=$this->db->update($table,array($field=>$txt),"id = $id");
-					}
-				}
-			}
-		}
-
-	}
-
-	function _update_links_in_txt($oldUrl,$newUrl="") {
-		// loop through all txt fields..
-		$tables=$this->db->list_tables();
-		foreach($tables as $table) {
-			if (get_prefix($table)==$this->config->item('TABLE_prefix')) {
-				$fields=$this->db->list_fields($table);
-				foreach ($fields as $field) {
-					if (get_prefix($field)=="txt") {
-						$this->db->select("id,$field");
-						$this->db->where("$field !=","");
-						$query=$this->db->get($table);
-						foreach($query->result_array() as $row) {
-							$thisId=$row["id"];
-							$txt=$row[$field];
-							if (empty($newUrl)) {
-								$pattern='/<a(.*?)href="'.str_replace("/","\/",$oldUrl).'"(.*?)>(.*?)<\/a>/';
-								$txt=preg_replace($pattern,'\\3',$txt);
-							}
-							else
-								$txt=str_replace("href=\"$oldUrl","href=\"$newUrl",$txt);
-							$res=$this->db->update($table,array($field=>$txt),"id = $thisId");
-						}
-					}
-				}
-			}
-		}
-	}
+	
+	
+	
+	
 
 	function _before_grid($table,&$data) {
 		// First check a specific table

@@ -52,6 +52,13 @@ class Ajax extends BasicController {
  * (GET = array of id[] within right order the new order of the table)
  */
 
+	function _get_current_order($table) {
+		$this->select('id,order,self_parent,uri');
+		$this->db->order_as_tree();
+		$this->db->uri_as_full_uri();
+		return $this->db->get_result($table);
+	}
+
 	function order($table="") {
 		$result='';
 		if (!empty($table) and $this->db->table_exists($table)) {
@@ -85,9 +92,12 @@ class Ajax extends BasicController {
 		if (!empty($table) and ($id!="") and !empty($field)) {
 			if ($this->db->table_exists($table) and $this->db->field_exists($field,$table)) {
  				if ($this->_has_key($table) and $this->has_rights($table,$id)>=RIGHTS_EDIT) {
+					$this->db->where(pk(),$id);
+					$oldData=$this->db->get_row($table);
 		 			$this->db->set($field,$value);
 		 			$this->db->where(pk(),$id);
 		 			$this->db->update($table);
+					$this->_after_update($table,$id,$oldData);
 				}
 				else $result='ajax_error_no_rights';		 		
 	 		}
