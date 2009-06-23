@@ -215,18 +215,21 @@ class Db extends AdminController {
 		$this->load->model('form');
 		$this->lang->load('help');
 		$form=new form($this->config->item('API_db_import'));
-		$data=array( "userfile"	=> array("type"=>"file","label"=>"Filename") );
+		$data=array( 	"userfile"	=> array("type"=>"file","label"=>"File (txt)"),
+		 							"sql"				=> array("type"=>"textarea","label"=>"Or (update) SQL"));
 		$form->set_data($data,"Choose File to upload and import");
 		$this->_add_content($form->render());
 	}
 
 	function import() {
 		if ($this->_is_super_admin()) {
-			if (!isset($_FILES["userfile"])) {
+			$sql=$this->input->post('sql');
+			if (!isset($_FILES["userfile"]) and !$sql) {
 				$this->_import();
 			}
 			else {
-				$sql=$this->_upload_sql();
+				// trace_($sql);
+				if (!$sql) $sql=$this->_upload_sql();
 				if ($sql) {
 					// do the actual import..
 					$this->load->model('form');
