@@ -75,7 +75,7 @@ $config['API_db_export']						= "/admin/db/export/";
 $config['API_db_import']						= "/admin/db/import/";
 $config['API_db_sql']								= "/admin/db/sql/";
 
-
+$config['API_search']								= '/admin/search/';
 
 $config['API_filemanager_view_types']	= array("list","icons");
 

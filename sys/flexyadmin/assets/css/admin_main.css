@@ -126,6 +126,12 @@ img {
 	background-position:0px 2px;
 	padding-left: 20px;
 	}
+#menu li .sr {
+	background-image: url("../icons/search.gif");
+	background-repeat: no-repeat;
+	background-position:0px 2px;
+	padding-left: 20px;
+	}
 
 
 /* =========== */
@@ -784,6 +790,18 @@ input.upload {
 	height: 20px;
 	font-size:14px;
 	}
+
+.after_form {
+	position:relative;
+	top:-220px;
+	float:left;
+	clear:both;
+}
+
+p.error {
+	color:#f00;
+	font-weight:bold;
+}
 
 /* ============== dialog ================ */
 
