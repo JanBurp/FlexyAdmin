@@ -35,7 +35,12 @@
 				break;
 			case 1102:
 			case 1049:
-				echo "Set your database table correct in 'site/database.php' or 'site/database_local.php'.";
+				echo "Set your database table correct in 'site/database.php' or 'site/database_local.php'.<br/><br/>Known databases:<ul>";
+				$db_list = mysql_list_dbs();
+				while ($row = mysql_fetch_object($db_list)) {
+		     echo '<li>'.$row->Database.'</li>';
+				}
+				echo '</ul>';
 				break;
 
 			default:
