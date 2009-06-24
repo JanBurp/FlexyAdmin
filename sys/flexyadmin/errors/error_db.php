@@ -34,6 +34,7 @@
 				echo "Set your database information in 'site/database.php' or 'site/database_local.php'.";
 				break;
 			case 1102:
+			case 1049:
 				echo "Set your database table correct in 'site/database.php' or 'site/database_local.php'.";
 				break;
 
