@@ -25,7 +25,24 @@
 	<div id="content">
 		<h1><? echo $heading; ?></h1>
 		<? echo $message; ?>
-		<? if (IS_LOCALHOST) backtrace_(3); ?>
+		<?
+		$error=explode(' ',$message);
+		$error=substr($error[2],0,4);
+		if (empty($error) or $error<'0000' or $error>'9999') $error=mysql_errno();
+		switch ($error) {
+			case 1045:
+				echo "Set your database information in 'site/database.php' or 'site/database_local.php'.";
+				break;
+			case 1102:
+				echo "Set your database table correct in 'site/database.php' or 'site/database_local.php'.";
+				break;
+
+			default:
+				echo "Error: '".$error."'<br/>";
+				if (IS_LOCALHOST) backtrace_(3);
+			break;
+		}
+		?>
 	</div>
 </body>
 </html>
