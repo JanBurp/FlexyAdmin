@@ -1,0 +1,305 @@
+#
+# TABLE STRUCTURE FOR: cfg_configurations
+#
+
+DROP TABLE IF EXISTS cfg_configurations;
+
+CREATE TABLE `cfg_configurations` (
+  `id` tinyint(4) NOT NULL auto_increment,
+  `key` varchar(255) collate latin1_general_ci NOT NULL default '',
+  `email_webmaster_email` varchar(100) collate latin1_general_ci NOT NULL default '',
+  `str_menu_table` varchar(50) collate latin1_general_ci NOT NULL default '',
+  `str_content_table` varchar(50) collate latin1_general_ci NOT NULL default '',
+  `b_logout_to_site` tinyint(1) NOT NULL default '0',
+  `b_query_urls` tinyint(1) NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+
+INSERT INTO cfg_configurations (`id`, `key`, `email_webmaster_email`, `str_menu_table`, `str_content_table`, `b_logout_to_site`, `b_query_urls`) VALUES (1, '', 'info@flexyadmin.com', 'tbl_menu', '', 0, 0);
+
+
+#
+# TABLE STRUCTURE FOR: cfg_editor
+#
+
+DROP TABLE IF EXISTS cfg_editor;
+
+CREATE TABLE `cfg_editor` (
+  `id` int(11) NOT NULL auto_increment,
+  `b_use_editor` tinyint(1) NOT NULL default '0',
+  `str_class` varchar(10) NOT NULL default '',
+  `str_valid_html` varchar(255) NOT NULL default '',
+  `table` varchar(50) NOT NULL default '',
+  `b_add_internal_links` tinyint(1) NOT NULL default '0',
+  `str_buttons1` varchar(255) NOT NULL default '',
+  `str_buttons2` varchar(255) NOT NULL default '',
+  `str_buttons3` varchar(255) NOT NULL default '',
+  `str_formats` varchar(255) NOT NULL default '',
+  `str_styles` varchar(100) NOT NULL default '',
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+INSERT INTO cfg_editor (`id`, `b_use_editor`, `str_class`, `str_valid_html`, `table`, `b_add_internal_links`, `str_buttons1`, `str_buttons2`, `str_buttons3`, `str_formats`, `str_styles`) VALUES (1, 1, 'big', '', 'tbl_links', 1, 'cut,copy,pastetext,pasteword,selectall,undo,bold,italic,formatselect,removeformat,link,unlink,image', '', '', 'h2,h3', '');
+
+
+#
+# TABLE STRUCTURE FOR: cfg_field_info
+#
+
+DROP TABLE IF EXISTS cfg_field_info;
+
+CREATE TABLE `cfg_field_info` (
+  `id` int(11) NOT NULL auto_increment,
+  `field` varchar(50) NOT NULL default '',
+  `str_ui_name` varchar(100) NOT NULL default '',
+  `b_show_in_grid` tinyint(1) NOT NULL default '1',
+  `b_show_in_form` tinyint(1) NOT NULL default '1',
+  `str_options` varchar(255) NOT NULL default '',
+  `b_multi_options` tinyint(1) NOT NULL default '0',
+  `str_overrule_prefix` varchar(10) NOT NULL default '',
+  `str_validation_rules` varchar(255) NOT NULL default '',
+  `txt_help` text NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+#
+# TABLE STRUCTURE FOR: cfg_img_info
+#
+
+DROP TABLE IF EXISTS cfg_img_info;
+
+CREATE TABLE `cfg_img_info` (
+  `id` int(11) NOT NULL auto_increment,
+  `str_path` varchar(255) NOT NULL default '',
+  `b_resize_img` tinyint(1) NOT NULL default '0',
+  `int_img_width` int(11) NOT NULL default '0',
+  `int_img_height` int(11) NOT NULL default '0',
+  `b_create_1` tinyint(1) NOT NULL default '0',
+  `int_width_1` int(6) NOT NULL default '0',
+  `int_height_1` int(6) NOT NULL default '0',
+  `str_prefix_1` varchar(10) NOT NULL default '',
+  `str_postfix_1` varchar(10) NOT NULL default '',
+  `b_create_2` tinyint(1) NOT NULL default '0',
+  `int_width_2` int(6) NOT NULL default '0',
+  `int_height_2` int(6) NOT NULL default '0',
+  `str_prefix_2` varchar(10) NOT NULL default '',
+  `str_postfix_2` varchar(10) NOT NULL default '',
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+#
+# TABLE STRUCTURE FOR: cfg_media_info
+#
+
+DROP TABLE IF EXISTS cfg_media_info;
+
+CREATE TABLE `cfg_media_info` (
+  `id` int(11) NOT NULL auto_increment,
+  `order` smallint(6) NOT NULL default '0',
+  `str_menu_name` varchar(50) NOT NULL default '',
+  `str_type` varchar(20) NOT NULL default '',
+  `fields` varchar(100) NOT NULL default '',
+  `str_path` varchar(255) NOT NULL default '',
+  `str_types` varchar(100) NOT NULL default '',
+  `b_in_media_list` tinyint(4) NOT NULL default '0',
+  `b_in_img_list` tinyint(4) NOT NULL default '0',
+  `b_in_link_list` tinyint(1) NOT NULL default '0',
+  `txt_help` blob NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+#
+# TABLE STRUCTURE FOR: cfg_rights
+#
+
+DROP TABLE IF EXISTS cfg_rights;
+
+CREATE TABLE `cfg_rights` (
+  `id` int(11) NOT NULL auto_increment,
+  `str_name` varchar(50) NOT NULL default '',
+  `rights` varchar(255) NOT NULL default '',
+  `b_all_users` tinyint(1) NOT NULL default '0',
+  `b_backup` tinyint(1) NOT NULL default '0',
+  `b_delete` tinyint(1) NOT NULL default '0',
+  `b_add` tinyint(1) NOT NULL default '0',
+  `b_edit` tinyint(1) NOT NULL default '0',
+  `b_show` tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+
+INSERT INTO cfg_rights (`id`, `str_name`, `rights`, `b_all_users`, `b_backup`, `b_delete`, `b_add`, `b_edit`, `b_show`) VALUES (1, 'super_admin', '*', 1, 1, 1, 1, 1, 1);
+INSERT INTO cfg_rights (`id`, `str_name`, `rights`, `b_all_users`, `b_backup`, `b_delete`, `b_add`, `b_edit`, `b_show`) VALUES (2, 'admin', 'tbl_*|media_*|cfg_users', 1, 1, 1, 1, 1, 1);
+INSERT INTO cfg_rights (`id`, `str_name`, `rights`, `b_all_users`, `b_backup`, `b_delete`, `b_add`, `b_edit`, `b_show`) VALUES (3, 'user', 'tbl_*|media_*', 1, 0, 1, 1, 1, 1);
+INSERT INTO cfg_rights (`id`, `str_name`, `rights`, `b_all_users`, `b_backup`, `b_delete`, `b_add`, `b_edit`, `b_show`) VALUES (4, 'visiter', 'tbl_*|media_*', 0, 0, 0, 0, 0, 1);
+
+
+#
+# TABLE STRUCTURE FOR: cfg_table_info
+#
+
+DROP TABLE IF EXISTS cfg_table_info;
+
+CREATE TABLE `cfg_table_info` (
+  `id` tinyint(4) NOT NULL auto_increment,
+  `order` smallint(6) NOT NULL default '0',
+  `table` varchar(25) collate latin1_general_ci NOT NULL default '',
+  `b_single_row` tinyint(1) NOT NULL default '0',
+  `str_ui_name` varchar(50) collate latin1_general_ci NOT NULL default '',
+  `b_show_grid_with_joins` tinyint(1) NOT NULL default '0',
+  `str_abstract_fields` varchar(255) collate latin1_general_ci NOT NULL default '',
+  `str_options_where` varchar(255) collate latin1_general_ci NOT NULL default '',
+  `str_order_by` varchar(50) collate latin1_general_ci NOT NULL default '',
+  `b_freeze_uris` tinyint(1) NOT NULL,
+  `txt_help` blob NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+
+INSERT INTO cfg_table_info (`id`, `order`, `table`, `b_single_row`, `str_ui_name`, `b_show_grid_with_joins`, `str_abstract_fields`, `str_options_where`, `str_order_by`, `b_freeze_uris`, `txt_help`) VALUES (1, 0, 'tbl_site', 0, '', 0, '', '', '', 0, '');
+INSERT INTO cfg_table_info (`id`, `order`, `table`, `b_single_row`, `str_ui_name`, `b_show_grid_with_joins`, `str_abstract_fields`, `str_options_where`, `str_order_by`, `b_freeze_uris`, `txt_help`) VALUES (2, 2, 'tbl_links', 0, '', 0, '', '', '', 0, '');
+INSERT INTO cfg_table_info (`id`, `order`, `table`, `b_single_row`, `str_ui_name`, `b_show_grid_with_joins`, `str_abstract_fields`, `str_options_where`, `str_order_by`, `b_freeze_uris`, `txt_help`) VALUES (3, 1, 'tbl_menu', 0, '', 0, '', '', '', 0, '');
+
+
+#
+# TABLE STRUCTURE FOR: cfg_users
+#
+
+DROP TABLE IF EXISTS cfg_users;
+
+CREATE TABLE `cfg_users` (
+  `id` int(11) NOT NULL auto_increment,
+  `str_user_name` varchar(50) collate latin1_general_ci NOT NULL default '',
+  `gpw_user_pwd` varchar(50) collate latin1_general_ci NOT NULL default '',
+  `str_language` char(3) collate latin1_general_ci NOT NULL default '',
+  `str_filemanager_view` varchar(10) collate latin1_general_ci NOT NULL default '',
+  `ip_user_ip` varchar(16) collate latin1_general_ci NOT NULL default '',
+  `b_strict_ip` tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+
+INSERT INTO cfg_users (`id`, `str_user_name`, `gpw_user_pwd`, `str_language`, `str_filemanager_view`, `ip_user_ip`, `b_strict_ip`) VALUES (1, 'admin', 'admin', 'nl', 'list', '', 0);
+INSERT INTO cfg_users (`id`, `str_user_name`, `gpw_user_pwd`, `str_language`, `str_filemanager_view`, `ip_user_ip`, `b_strict_ip`) VALUES (2, 'user', 'user', 'nl', 'list', '', 0);
+
+
+#
+# TABLE STRUCTURE FOR: rel_users__rights
+#
+
+DROP TABLE IF EXISTS rel_users__rights;
+
+CREATE TABLE `rel_users__rights` (
+  `id` int(11) NOT NULL auto_increment,
+  `id_users` int(11) NOT NULL default '0',
+  `id_rights` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
+
+INSERT INTO rel_users__rights (`id`, `id_users`, `id_rights`) VALUES (17, 1, 1);
+INSERT INTO rel_users__rights (`id`, `id_users`, `id_rights`) VALUES (20, 2, 3);
+
+
+#
+# TABLE STRUCTURE FOR: tbl_links
+#
+
+DROP TABLE IF EXISTS tbl_links;
+
+CREATE TABLE `tbl_links` (
+  `id` int(11) NOT NULL auto_increment,
+  `str_title` varchar(255) character set utf8 collate utf8_unicode_ci NOT NULL default '',
+  `url_url` varchar(255) character set utf8 collate utf8_unicode_ci NOT NULL default '',
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=36 DEFAULT CHARSET=latin1;
+
+INSERT INTO tbl_links (`id`, `str_title`, `url_url`) VALUES (35, 'Jan den Besten - webontwerp en geluidsontwerp', 'http://www.jandenbesten.net');
+
+
+#
+# TABLE STRUCTURE FOR: tbl_menu
+#
+
+DROP TABLE IF EXISTS tbl_menu;
+
+CREATE TABLE `tbl_menu` (
+  `id` int(11) NOT NULL auto_increment,
+  `order` smallint(6) NOT NULL default '0',
+  `self_parent` int(11) NOT NULL default '0',
+  `uri` varchar(100) NOT NULL default '',
+  `str_title` varchar(255) character set utf8 collate utf8_unicode_ci NOT NULL default '',
+  `str_keywords` varchar(255) NOT NULL default '',
+  `txt_tekst` text NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+INSERT INTO tbl_menu (`id`, `order`, `self_parent`, `uri`, `str_title`, `str_keywords`, `txt_tekst`) VALUES (1, 1, 0, 'home', 'home', '', 0x3c703e5374617274706167696e612076616e20466c65787941646d696e3c2f703e);
+INSERT INTO tbl_menu (`id`, `order`, `self_parent`, `uri`, `str_title`, `str_keywords`, `txt_tekst`) VALUES (2, 2, 0, 'demo', 'demo', '', 0x3c703e4469742069732065656e2065656e766f75646967652064656d6f2073697465206d65742065656e207374616e64616172642064617461626173652e3c2f703e);
+
+
+#
+# TABLE STRUCTURE FOR: tbl_site
+#
+
+DROP TABLE IF EXISTS tbl_site;
+
+CREATE TABLE `tbl_site` (
+  `id` tinyint(4) NOT NULL auto_increment,
+  `str_title` varchar(255) NOT NULL default '',
+  `str_author` varchar(255) NOT NULL default '',
+  `url_url` varchar(255) NOT NULL default '',
+  `email_email` varchar(255) NOT NULL default '',
+  `stx_description` text NOT NULL,
+  `stx_keywords` text NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+INSERT INTO tbl_site (`id`, `str_title`, `str_author`, `url_url`, `email_email`, `stx_description`, `stx_keywords`) VALUES (1, 'FlexyAdmin site', 'Jan den Besten', 'http://www.flexyadmin.com', 'info@flexyadmin.com', '', '');
+
+
+#
+# TABLE STRUCTURE FOR: cfg_sessions
+#
+
+DROP TABLE IF EXISTS cfg_sessions;
+
+CREATE TABLE `cfg_sessions` (
+  `session_id` varchar(40) NOT NULL default '0',
+  `ip_address` varchar(16) NOT NULL default '0',
+  `user_agent` varchar(50) NOT NULL default '',
+  `last_activity` int(10) unsigned NOT NULL default '0',
+  `user_data` text NOT NULL,
+  PRIMARY KEY  (`session_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+#
+# TABLE STRUCTURE FOR: log_login
+#
+
+DROP TABLE IF EXISTS log_login;
+
+CREATE TABLE `log_login` (
+  `id` int(11) NOT NULL auto_increment,
+  `id_user` int(11) NOT NULL default '0',
+  `tme_login_time` datetime NOT NULL default '0000-00-00 00:00:00',
+  `str_changed_tables` varchar(255) collate latin1_general_ci NOT NULL default '',
+  `ip_login_ip` varchar(16) collate latin1_general_ci NOT NULL default '',
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+
+#
+# TABLE STRUCTURE FOR: log_stats
+#
+
+DROP TABLE IF EXISTS log_stats;
+
+CREATE TABLE `log_stats` (
+  `id` int(11) NOT NULL auto_increment,
+  `tme_date_time` datetime NOT NULL default '0000-00-00 00:00:00',
+  `str_uri` varchar(100) NOT NULL default '',
+  `ip_ip` varchar(16) NOT NULL default '',
+  `str_host` varchar(50) NOT NULL default '',
+  `str_browser` varchar(16) NOT NULL default '',
+  `str_version` varchar(8) NOT NULL default '',
+  `str_platform` varchar(20) NOT NULL default '',
+  `str_referrer` varchar(100) NOT NULL default '',
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+

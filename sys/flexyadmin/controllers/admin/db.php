@@ -289,7 +289,7 @@ class Db extends AdminController {
 			$sql=$this->input->post('sql');
 			$sure=$this->input->post('sure');
 			$this->lang->load('help');
-			if ($sql and $sure and ($sure==$this->cfg->get('CFG_configurations','key'))) {
+			if ($sql and (IS_LOCALHOST or ($sure and $sure==$this->cfg->get('CFG_configurations','key')) ) ) {
 				$this->_sql($sql,"Import","Importing ...");
 			}
 		}
