@@ -20,7 +20,7 @@
 	<script language="javascript" type="text/javascript">
 	<!--
 	config=new Object;
-	config.site_url="<?=site_url()?>";
+	config.site_url="<?=site_url()?>/";
 	<?
 	foreach ($js as $key => $value) {
 		?>config.<?=$key?>="<?=$value?>";<?
