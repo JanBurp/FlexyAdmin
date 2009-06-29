@@ -72,7 +72,7 @@
 | NO TRAILING SLASH!
 |
 */
-	$application_folder = "../flexyadmin";
+	$application_folder = "sys/flexyadmin";
 
 /*
 |===============================================================
