@@ -695,8 +695,8 @@ function serialize(sel) {
 
 function get_ext(s){var a,s;s=String(s);a=s.split(".");return a[a.length-1];}
 
-function pathdecode(s) { s=s.replace(/__/g,"/"); return s; }
-function pathencode(s) { s=s.replace(/\//g,"__"); return s; }
+function pathdecode(s) { s=s.replace(/___/g,"/"); return s; }
+function pathencode(s) { s=s.replace(/\//g,"___"); return s; }
 function site_url(s) {
 	if (s=="")
 		s=config.site_url;

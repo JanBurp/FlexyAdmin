@@ -53,13 +53,13 @@ function linkdecode($l) {
 }
 
 function pathencode($p,$isPath=TRUE) {
-	$p=str_replace("/","__",$p);
+	$p=str_replace("/","___",$p);
 	if ($isPath) $p=linkencode($p);
 	return $p;
 }
 
 function pathdecode($p,$isPath=TRUE) {
-	$p=str_replace("__","/",$p);
+	$p=str_replace("___","/",$p);
 	if ($isPath) $p=linkdecode($p);
 	return $p;
 }
