@@ -55,13 +55,15 @@ class Editor_lists {
 		if ($type=="downloads") {
 			// add links from links table and if set, internal links from menu table
 			$table=$CI->cfg->get('CFG_editor','table');
-			$CI->db->select("str_title,url_url");
-			$CI->db->order_by("str_title");
-			$query=$CI->db->get($table);
-			foreach($query->result_array() as $row) {
-				$data[$row["str_title"]]=array("url"=>$row["url_url"],"name"=>$row["str_title"]);
+			if ($CI->db->table_exists($table)) {
+	 			$CI->db->select("str_title,url_url");
+				$CI->db->order_by("str_title");
+				$query=$CI->db->get($table);
+				foreach($query->result_array() as $row) {
+					$data[$row["str_title"]]=array("url"=>$row["url_url"],"name"=>$row["str_title"]);
+				}
 			}
-			
+			// add uri links
 			if ($CI->cfg->get('CFG_editor','b_add_internal_links')) {
 				$menuTable=$CI->cfg->get('CFG_configurations','str_menu_table');
 				if (!empty($menuTable) and $CI->db->table_exists($menuTable)) {
