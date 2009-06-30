@@ -2,6 +2,8 @@
 
 $lang['file']								= "Bestand";
 
+$lang['help_no_help']				= 'Sorry, er is geen help gevonden. Neem contact op met je webbouwer.';
+
 $lang['grid_new'] 					= '<p>Voeg een nieuw item toe aan %s.</p>';
 $lang['grid_filter'] 				= '<p>Snelzoeken: type hier je zoekterm</p>';
 $lang['grid_edit']					= '<p>Pas dit item aan</p>';
