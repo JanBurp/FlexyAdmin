@@ -1,5 +1,10 @@
 <?php
 
+$lang['file']								= "File";
+
+$lang['help_no_help']				= 'Sorry, no help found. Please contact your webmaster.';
+
+
 $lang['grid_new'] 					= '<p>Add new item to %s.</p>';
 $lang['grid_filter'] 				= '<p>Fast search</p>';
 $lang['grid_edit']					= '<p>Edit</p>';

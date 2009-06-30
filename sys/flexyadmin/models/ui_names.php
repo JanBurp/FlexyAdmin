@@ -38,6 +38,11 @@ class ui_names extends Model {
 		foreach ($tableInfo as $table => $value) {
 			if (!empty($value['str_ui_name'])) $out[$table]=$value['str_ui_name'];
 		}
+		// media info
+		$tableInfo=$this->cfg->get('CFG_media_info');
+		foreach ($tableInfo as $table => $value) {
+			if (!empty($value['str_ui_name'])) $out[$table]=$value['str_ui_name'];
+		}
 		// field info
 		$fieldInfo=$this->cfg->get('CFG_field');
 		foreach ($fieldInfo as $field => $value) {

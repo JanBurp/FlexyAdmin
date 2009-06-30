@@ -619,6 +619,8 @@ class AdminController extends BasicController {
 		// standard items
 		$a["Home"]			=array("uri"=>api_uri('API_home'));
 		$a["Logout"]		=array("uri"=>api_uri('API_logout'));
+		// Help
+		$a['Help']	=array("uri"=>api_uri('API_help'));
 
 		// normal tables
 		$tables=$this->db->list_tables();
@@ -630,7 +632,7 @@ class AdminController extends BasicController {
 			$this->db->order_by("order");
 			$query=$this->db->get($mediaInfoTbl);
 			foreach($query->result_array() as $mediaInfo) {
-				$menuName=el('str_menu_name',$mediaInfo);
+				$menuName=$this->uiNames->get($mediaInfo['str_path']);
 				$rightsName=el('str_name',$mediaInfo);
 				if (!empty($menuName) and $this->has_rights("media_".$rightsName)) {
 					$a[$menuName]=array("uri"=>api_uri('API_filemanager',"show",pathencode(el('str_path',$mediaInfo))),"class"=>"media");
@@ -657,6 +659,7 @@ class AdminController extends BasicController {
 				$a[lang('db_restore')]	=array("uri"=>api_uri('API_db_restore'),"class"=>"db");
 			}
 		}
+		
 
 		// cfg tables
 		$a=array_merge($a,$this->_show_table_menu($tables,$this->config->item('CFG_table_prefix')));
