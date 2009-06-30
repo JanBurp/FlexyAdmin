@@ -633,6 +633,7 @@ class AdminController extends BasicController {
 			$query=$this->db->get($mediaInfoTbl);
 			foreach($query->result_array() as $mediaInfo) {
 				$menuName=$this->uiNames->get($mediaInfo['str_path']);
+				while (isset($a[$menuName])) {$menuName.=" ";}
 				$rightsName=el('str_name',$mediaInfo);
 				if (!empty($menuName) and $this->has_rights("media_".$rightsName)) {
 					$a[$menuName]=array("uri"=>api_uri('API_filemanager',"show",pathencode(el('str_path',$mediaInfo))),"class"=>"media");
