@@ -515,7 +515,9 @@ class Flexy_field extends Model {
 
 	function _dropdown_tables_form() {
 		$tables=$this->db->list_tables();
-		$tables=filter_by($tables,"tbl_");
+		$tables=not_filter_by($tables,"cfg_");
+		$tables=not_filter_by($tables,"log_");
+		$tables=not_filter_by($tables,"rel_users");
 		$tables=array_merge(array(""),$tables);
 		$options=combine($tables,$tables);
 		$out=$this->_standard_form_field($options);
