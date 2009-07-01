@@ -251,7 +251,7 @@ class Show extends AdminController {
 						}
 					}
 					else
-						$this->set_message($this->_no_key($table));
+						$this->_add_content('<p class="error">'.$this->_no_key($table).'</p>');
 				}
 				/**
 				 * Validate form, no succes: show form, maybe with validation errors
