@@ -24,19 +24,15 @@ class Help extends AdminController {
 	}
 
 	function index() {
+		$lang=$this->session->userdata('language');
 		// last login info
-		$this->_set_content(h('Help',1));
-
+		$commonHelp=$this->cfg->get('CFG_configurations','txt_help');
+		$specificHelp='';
 		// help for tables
-		$help=$this->_get_help('CFG_table');
+		$specificHelp.=$this->_get_help('CFG_table');
 		// help for media
-		$help.=$this->_get_help('CFG_media_info');
-		
-		if (empty($help)) {
-			$this->lang->load('help');
-			$help=lang('help_no_help');
-		}
-		$this->_add_content($help);
+		$specificHelp.=$this->_get_help('CFG_media_info');
+		$this->_add_content($this->load->view("admin/help_".$lang,array('commonHelp'=>$commonHelp,'specificHelp'=>$specificHelp),true) );
 		
 		$this->_show_type("info");
 		$this->_show_all();
@@ -57,7 +53,6 @@ class Help extends AdminController {
 						$fieldInfo=$this->cfg->get('CFG_field',"$table.$field");
 						if (isset($fieldInfo[$helpField]) and !empty($fieldInfo[$helpField]))
 						$help.="<h3>$uiTable - ".$this->uiNames->get($field)."</h3>".$fieldInfo[$helpField];
-						
 					}
 				}
 				$help.="<p>&nbsp;</p>";
