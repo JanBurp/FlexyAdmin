@@ -60,10 +60,10 @@ function add_string($s,$add,$split="|") {
 }
 
 function str_reverse($s) {
-	$a=strsplit($s);
-	$a=array_reverse($a);
 	$o="";
-	foreach($a as $c) $o.=$c;
+	for ($c=strlen($s); $c>=0; $c--) {
+		$o.=substr($s,$c,1);
+	}
 	return $o;
 }
 
