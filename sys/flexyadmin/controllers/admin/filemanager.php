@@ -89,7 +89,7 @@ class Filemanager extends AdminController {
 				 * get files and info
 				 */
 				$types=$cfg['str_types'];
-				$uiName=$cfg['str_menu_name'];
+				$uiName=$cfg['str_ui_name'];
 				$files=read_map($map);
 				// exclude files that are not owned by user
 				// trace_($files);
