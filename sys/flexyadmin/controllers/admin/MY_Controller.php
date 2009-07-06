@@ -31,7 +31,15 @@ class MY_Controller extends Controller {
 
 	function MY_Controller($isAdmin=false) {
 		parent::Controller();
-		$this->_init_flexy_admin($isAdmin);
+		if ($this->_check_if_flexy_database_exists())
+			$this->_init_flexy_admin($isAdmin);
+		else {
+			show_error('Database login: correct.<br/>But no tables (for flexyadmin) found.');
+		}
+	}
+
+	function _check_if_flexy_database_exists() {
+		return $this->db->table_exists('cfg_configurations');
 	}
 
 	function _init_flexy_admin($isAdmin=false) {
