@@ -137,7 +137,10 @@ class Show extends AdminController {
 							$keys=combine($keys,$keys);
 							if ($right>=RIGHTS_ADD) {
 								$newIcon=anchor(api_uri('API_view_form',$table,-1),help(icon("new"),langp('grid_new',$uiTable)) );
-								$grid->prepend_to_captions($newIcon,"new");
+								if ($this->cfg->get('CFG_table',$table,'int_max_rows')<count($data))
+									$grid->prepend_to_captions($newIcon,"new");
+								else
+									$grid->prepend_to_captions('&nbsp;');
 							}
 							$grid->set_headings($this->uiNames->get($keys,$table));
 							$grid->set_heading(pk(),"Edit");
@@ -259,7 +262,7 @@ class Show extends AdminController {
 				else {
 					$this->_add_content(validation_errors());
 
-					$keys=array_keys($data);
+					$keys=array_keys($ffData);
 					$keys=combine($keys,$keys);
 					$uiFieldNames=array();
 					foreach($keys as $key) {
