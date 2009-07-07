@@ -92,10 +92,8 @@ class Filemanager extends AdminController {
 				$uiName=$cfg['str_ui_name'];
 				$files=read_map($map);
 				// exclude files that are not owned by user
-				// trace_($files);
 				$restrictedToUser=$this->user_restriction_id($path);
 				$files=$this->_filter_restricted_files($files,$restrictedToUser);
-			
 				/**
 				 * update img/media_lists
 				 */
