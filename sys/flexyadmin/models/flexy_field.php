@@ -306,6 +306,10 @@ class Flexy_field extends Model {
 		 * Dropdown fields, if there are options.
 		 */
 		if (isset($options) or isset($multiOptions)) {
+			// $name=$out['name'];
+			// trace_(array('out'=>$out,'options'=>$options,'multi opt'=>$multiOptions));
+			// if (get_prefix($name)==$this->config->item('REL_table_prefix')) {
+			// }
 			if (isset($multiOptions)) $options=$multiOptions;
 			$out["options"] = $options;
 			if ($this->type!="dropdown") {
@@ -477,6 +481,11 @@ class Flexy_field extends Model {
 
 	function _join_form($options) {
 		$out=$this->_standard_form_field($options);
+		$tableInfo=$this->cfg->get('CFG_table',$out['name']);
+		$formManyType=$tableInfo['str_form_many_type'];
+		if (!empty($formManyType) and $formManyType!='dropdown') {
+			$out['type']=$formManyType;
+		}
 		$out["multiple"]="multiple";
 		$out["button"]=api_uri('API_view_form',join_table_from_rel_table($out["name"]),-1);
 		return $out;

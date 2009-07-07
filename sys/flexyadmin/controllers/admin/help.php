@@ -25,7 +25,7 @@ class Help extends AdminController {
 
 	function index() {
 		$lang=$this->session->userdata('language');
-		// last login info
+		// common help
 		$commonHelp=$this->cfg->get('CFG_configurations','txt_help');
 		$specificHelp='';
 		// help for tables

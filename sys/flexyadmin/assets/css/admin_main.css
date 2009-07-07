@@ -81,7 +81,7 @@ img {
 	padding:3px 5px 7px 30px;
 	height:17px;
 }
-#menu li.help {
+#menu li.seperator {
 	margin-bottom:30px;
 }
 #menu li.configurations,
@@ -578,12 +578,12 @@ legend {
 	background-position: 50% 50%;
 }
 
-p.form_field {
+div.form_field {
 	clear:both;
 	margin:0px;
 	padding:5px 5px 5px 5px;
 }
-p.form_field:hover {
+div.form_field:hover {
 	background-color: #DDEEAA;
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
@@ -769,6 +769,33 @@ input.upload {
 .filemanager form {
 	margin:0px;
 	padding:0px;
+}
+
+/* subfields */
+.subfields {
+	border-top:solid 1px #DDEEAA;
+	border-left:none;
+	border-right:none;
+	border-bottom:none;
+}
+.sub {
+	margin-top:25px;
+}
+.sub label {
+	font-style:italic;
+	margin-left:20px;
+	width:120px;
+}
+.sub label.first {
+	margin-left:4px;
+}
+.subfields .icon {
+	padding-left:0px;
+	margin-left:-3px;
+}
+.subfields .sub .icon {
+	margin-top:5px;
+	margin-left:0px;
 }
 
 /* === grid filter form === */
