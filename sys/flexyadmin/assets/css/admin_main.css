@@ -652,12 +652,12 @@ textarea, .mceEditor {
 	width:450px;
 }
 
-p.form_field.wide label,
-p.form_field.big label {
+div.form_field.wide label,
+div.form_field.big label {
 	float:none;
 }
-p.form_field.wide .mceEditor,
-p.form_field.big .mceEditor {
+div.form_field.wide .mceEditor,
+div.form_field.big .mceEditor {
 	margin:4px 0px 4px;
 }
 textarea.wide,
