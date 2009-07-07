@@ -86,6 +86,8 @@ class Show extends AdminController {
 						$this->load->model("grid");
 						$this->lang->load("help");
 						$this->_add_js_variable("help_filter",$this->_add_help(langp('grid_filter')));
+						$tableInfo=$this->cfg->get('CFG_table',$table);
+						// trace_($tableInfo);
 					
 						/**
 						 * get data
@@ -100,7 +102,7 @@ class Show extends AdminController {
 						if ($table=="cfg_users")
 							$this->db->where("id >=",$this->user_id);
 						$this->db->add_foreigns_as_abstracts();
-						$this->db->add_many();
+						if ($tableInfo['b_grid_add_many']) $this->db->add_many();
 						$this->db->max_text_len(250);
 						$data=$this->db->get_result($table);
 						// trace_($data);
@@ -185,11 +187,13 @@ class Show extends AdminController {
 			/**
 			 * get data
 			 */
+			if (get_prefix($table)!=$this->config->item('REL_table_prefix')) {
+				$this->db->add_many();
+				// $this->db->add_foreigns();
+			}
+			$this->db->add_options();
 			if ($id==-1) {
 				// New item, fill data with defaults
-				$this->db->add_many();
-				$this->db->add_foreigns();
-				$this->db->add_options();
 				$data=$this->db->defaults($table);
 				$options=el("options",$data);
 				$multiOptions=el("multi_options",$data);
@@ -197,8 +201,6 @@ class Show extends AdminController {
 				$data[pk()]="-1";
 			}
 			else {
-				$this->db->add_many();
-				$this->db->add_options();
 				if ($restrictedToUser>0 and $this->db->has_field($table,"user")) {
 					$this->db->where("user",$restrictedToUser);
 					$this->db->dont_select("user");
@@ -227,6 +229,7 @@ class Show extends AdminController {
 				else
 					$uiShowTable=$uiTable;
 				$form->set_data($ffData,$uiShowTable);
+				// trace_($ffData);
 
 				/**
 				 * Validate form, if succes, make form do an update

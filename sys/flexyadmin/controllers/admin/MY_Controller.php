@@ -628,7 +628,11 @@ class AdminController extends BasicController {
 		$a["Home"]			=array("uri"=>api_uri('API_home'));
 		$a["Logout"]		=array("uri"=>api_uri('API_logout'));
 		// Help
-		$a['Help']	=array("uri"=>api_uri('API_help'));
+		$help=$this->cfg->get('CFG_configurations','txt_help');
+		if (!empty($help))
+			$a['Help']	=array("uri"=>api_uri('API_help'),'class'=>'seperator');
+		else
+			$a['Logout']['class']='seperator';
 
 		// normal tables
 		$tables=$this->db->list_tables();

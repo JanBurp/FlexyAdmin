@@ -97,7 +97,7 @@ class Form Extends Model {
 		$this->set_html_field_templates();
 	}
 
-	function set_html_field_templates($start="<p class=\"form_field %s\">",$end="</p>") {
+	function set_html_field_templates($start="<div class=\"form_field %s\">",$end="</div>") {
 		$this->tmpFieldStart=$start;
 		$this->tmpFieldEnd=$end;
 	}
@@ -469,7 +469,7 @@ class Form Extends Model {
 		if ($pre==$name) $pre="";
 		$class="$pre $name ".$field['type']." ".$field['class'];
 		if (isset($field['multiple'])) $class.=" ".$field['multiple'];
-		$class.=" ".$class;
+		$class=" ".$class;
 		if (!empty($field["repopulate"])) $field["value"]=$field["repopulate"];
 		$attr=array("name"=>$name,"id"=>$name,"value"=>$field["value"], "class"=>$class);
 		if ($field["type"]!="hidden") {
@@ -540,6 +540,47 @@ class Form Extends Model {
 				if (isset($button)) {
 					$out.=div("add_button").anchor($button,icon("add"))._div();
 				}
+				break;
+				
+			case "subfields":
+				$out.=icon('new');
+				$out.=div('sub');
+				foreach ($field['value'] as $id => $subfields) {
+					$first=true;
+					foreach ($subfields as $subfieldName => $subfieldValue) {
+						$preSub=get_prefix($subfieldName);
+						$subAttr['name']=$name.'___'.$subfieldName.'[]';
+						$subAttr['value']=$subfieldValue;
+						switch ($preSub) {
+							case 'id':
+								if ($subfieldName=='id') {
+									$out.=form_hidden($subAttr['name'],$subAttr['value']);
+								}
+								break;
+							default:
+								$labelClass=array();
+								if ($first) {
+									$labelClass=array('class'=>'first');
+									$out.=icon('delete');
+									$first=FALSE;
+								}
+								$out.=form_label($this->uiNames->get($subfieldName),$subAttr['name'],$labelClass);
+								if ($preSub=='txt') {
+									$this->hasHtmlField=true;
+									$subAttr["rows"]=5;
+									$subAttr["cols"]=60;
+									$subAttr['class']='htmleditor';
+									$out.=form_textarea($subAttr);
+								}
+								else {
+									$out.=form_input($subAttr);
+								}
+								break;
+						}
+					}
+					$out.=br(2);
+				}
+				$out.=_div();
 				break;
 
 			case "file":

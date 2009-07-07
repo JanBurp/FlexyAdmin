@@ -71,12 +71,14 @@ function backtrace_($offset=0,$echo=true) {
 function trace_($a=NULL,$echo=true,$backtraceOffset=1) {
 	static $c=0;
 	$show="Trace";
-	if (is_null($a)) {
+	if (!isset($a)) {
 		$a=backtrace_($backtraceOffset,false);
-		$show="Backtrace";
+		$show="Variable is empty, do a Backtrace";
 		$type="";
 	}
-	else $type="[".gettype($a)."]";
+	else {
+		$type="[".gettype($a)."]";
+	}
 	$out="<div style=\"font-family:courier,serif;font-size:10px;z-index:99999;margin:2px;padding:2px;background-color:#efe;color:#000;border:solid 1px #999;\"><span style=\"font-weight:bold;color:#696;\">$show #$c $type:</span>\n";
 	if (is_bool($a)) {
 		if ($a) $out.="'True'";
