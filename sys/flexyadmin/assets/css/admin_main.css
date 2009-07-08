@@ -703,8 +703,8 @@ select.media {
 select.medias {
 	float:right;
 	}
-p.form_field .flash,
-p.form_field img {
+.form_field .flash,
+.form_field img {
 	float:left;
 	width: 27px;
 	height: 27px;
