@@ -38,6 +38,8 @@ function clean_file_name($f) {
 	$name=clean_string($name);
 	if (!empty($ext))
 		$name="$name.$ext";
+	// remove underscores off the beginning
+	$name=trim($name,'_');
 	// remove more than double underscores, safer for path encode/decode
 	$name=preg_replace('/(__(_+))/','__',$name);
 	return $name;
