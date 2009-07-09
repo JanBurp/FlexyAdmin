@@ -34,39 +34,44 @@ $(document).ready(function() {
 	
 	
 		//
+		// Remove double selections
+		//
+		$("div.image_dropdown select.medias optgroup:first option:selected").attr('selected','');
+	
+		//
 		// Media dropdown
 		//
-		options=$("p.image_dropdown select.media option");
+		options=$("div.image_dropdown select.media option");
 		if (options.length>0) {
-			path=$("p.image_dropdown select.media").attr("path")+"/";
+			path=$("div.image_dropdown select.media").attr("path")+"/";
 
 			$("select.media").change(function() {
 				media=$("select.media option:selected").attr("value");
 				// remove old thumb
-				$("p.image_dropdown.media img").remove();
-				$("p.image_dropdown.media object").remove();
+				$("div.image_dropdown.media img").remove();
+				$("div.image_dropdown.media object").remove();
 				// show new thumb
 				src=path+media;
 				ext=get_ext(media);
 				if (ext=='swf' || ext=='flv') {
-					$("p.image_dropdown select.media").before(flash(src,32,32));
+					$("div.image_dropdown select.media").before(flash(src,32,32));
 				}
 				else {
 					src=cachedThumb(src);
-					$("p.image_dropdown select.media").before('<img class="media" src="'+src+'" />');
+					$("div.image_dropdown select.media").before('<img class="media" src="'+src+'" />');
 				}
 			});
 		}
 
 		// Multiple media dropdown
-		options=$("p.image_dropdown select.medias option");
+		options=$("div.image_dropdown select.medias option");
 		if (options.length>0) {
-			path=$("p.image_dropdown select.medias").attr("path")+"/";
+			path=$("div.image_dropdown select.medias").attr("path")+"/";
 
 			$("select.medias").change(function() {
 				// remove old thumbs
-				$("p.image_dropdown.medias img").remove();
-				$("p.image_dropdown.media object").remove();
+				$("div.image_dropdown.medias img").remove();
+				$("div.image_dropdown.media object").remove();
 				// show new thumbs
 				medias=$("select.medias option:selected");
 				if (medias.length>0) {
@@ -74,11 +79,11 @@ $(document).ready(function() {
 						src=path+$(this).attr("value");
 						ext=get_ext(src);
 						if (ext=='swf' || ext=='flv') {
-							$("p.image_dropdown select.medias").before(flash(src,32,32));
+							$("div.image_dropdown select.medias").before(flash(src,32,32));
 						}
 						else {
 							src=cachedThumb(src);
-							$("p.image_dropdown select.medias").before('<img class="media" src="'+src+'" />');
+							$("div.image_dropdown select.medias").before('<img class="media" src="'+src+'" />');
 						}
 					});
 				}

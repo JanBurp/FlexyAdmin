@@ -513,6 +513,7 @@ class Form Extends Model {
 			case "dropdown":
 				$extra="";
 				$options=el("options",$field);
+				if (current($options)!='') array_unshift($options,'');
 				$value=$attr["value"];
 				$button=el("button",$field);
 				if (isset($button))	$attr["class"].=" button";
