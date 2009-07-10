@@ -274,38 +274,61 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		if (empty($this->ar_orderby)) $this->_set_standard_order($table);
 
 		/**
-		 * if many, find if a where part is referring to a many table
+		 * if many, find if a where or like part is referring to a many table
 		 */
 		if ($this->many) {
 			$manyTables=$this->get_many_tables($table);
+			$manyWhere=FALSE;
+			$manyLike=FALSE;
 			foreach($manyTables as $mTable) {
 				$jTable=$mTable["join"];
+				// WHERE
 				// trace_($this->ar_where);
 				$foundKeysArray=array_ereg_search($jTable, $this->ar_where);
 				foreach($foundKeysArray as $key) {
+					$manyWhere=TRUE;
 					$mWhere=$this->ar_where[$key];
 					$AndOr=trim(substr($mWhere,0,3));
 					if (!in_array($AndOr,array("AND","OR"))) $mWhere=" AND ".$mWhere;
 					$sql="SELECT ".$mTable["rel"].".".$mTable["id_this"]." AS id  
 								FROM ".$mTable["rel"].",".$mTable["join"]." 
 								WHERE ".$mTable["rel"].".".$mTable["id_join"]."=".$mTable["join"].".id ".$mWhere;
-					// trace_($sql);
 					$query=$this->query($sql);
 					$manyResults=$query->result_array();
-					// trace_($manyResults);
 					// remove current where and add new 'WHERE IN' to active record which selects the id where the many field is right
 					unset($this->ar_where[$key]);
 					// add WHERE IN statement
+					$whereIn=array();
 					if (!empty($manyResults)) {
 						foreach($manyResults as $r) {
 							$whereIn[]=$r["id"];
 						}
-
-					}
-					if (!empty($whereIn))
 						$this->where_in($mTable["this"].".".$this->pk,$whereIn);
-					else
-						$this->where($table.".".$this->pk,"-1"); // make sure no result is returned...
+					}
+				}
+				// LIKE
+				$foundKeysArray=array_ereg_search($jTable, $this->ar_like);
+				foreach($foundKeysArray as $key) {
+					$manyLike=TRUE;
+					$mLike=$this->ar_like[$key];
+					$AndOr=trim(substr($mLike,0,3));
+					if (!in_array($AndOr,array("AND","OR"))) $mLike=" AND ".$mLike;
+					$sql="SELECT ".$mTable["rel"].".".$mTable["id_this"]." AS id  
+								FROM ".$mTable["rel"].",".$mTable["join"]." 
+								WHERE ".$mTable["rel"].".".$mTable["id_join"]."=".$mTable["join"].".id ".$mLike;
+					$query=$this->query($sql);
+					$manyResults=$query->result_array();
+					// trace_($manyResults);
+					// remove current like and add new 'WHERE IN' to active record which selects the id where the many field is right
+					unset($this->ar_like[$key]);
+					// add WHERE IN statement
+					$whereIn=array();
+					if (!empty($manyResults)) {
+						foreach($manyResults as $r) {
+							$whereIn[]=$r["id"];
+						}
+						$this->where_in($mTable["this"].".".$this->pk,$whereIn);
+					}
 				}
 			}
 		}
@@ -328,6 +351,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			$query=$this->get($table,$limit,$offset);
 		else
 			$query=$this->get($table);
+		// trace_($this->last_query());
 		return $query;
 	}
 	
@@ -459,7 +483,8 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 						$this->where($jTable["id_this"],$id);
 						$this->join($join,$join.".".pk()."=".$rel.".".$jTable["id_join"],"left");
 						$query=$this->get();
-						foreach($query->result_array() as $res) {
+						$resultArray=$query->result_array();
+						foreach($resultArray as $res) {
 							$result[$id][$rel][$res[pk()]]=$res;
 						}
 					}

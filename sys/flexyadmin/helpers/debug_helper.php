@@ -97,7 +97,7 @@ function trace_($a=NULL,$echo=true,$backtraceOffset=1) {
 function tr_string($value) {
 	$s="";
 	$html=in_string("<>",$value);
-	if ((substr($value,0,6)!="#show#") and ($html or (strlen($value)>100)) ) {
+	if ((substr($value,0,6)!="#show#") and ($html or (strlen($value)>200)) ) {
 		$s.=strip_tags(substr($value,0,40));
 		$s.=" <span title=\"".htmlentities($value)."\" style=\"cursor:help;color:#696;\">...</span>";
 	}
