@@ -1,7 +1,7 @@
 // reverse string
 function str_reverse(s) {
 	var l=s.length-1;
-	r="";
+	var r="";
 	for (var x=l;x>=0;x--) {
 		r+=s.charAt(x);
 	}
@@ -10,13 +10,14 @@ function str_reverse(s) {
 
 // Safe email adres, no spam
 function nospam( user, domain, show) {
-	var m1="mai"; var m2="lto:";
-	u=str_reverse(user);
-	d=str_reverse(domain);
+	var m1="mai";
+	var m2="lto:";
+	var u=str_reverse(user);
+	var d=str_reverse(domain);
 	if ((show.length == 0) || (show.indexOf('@')+1))
 		document.write("<a href="+m1+m2+u+"@"+d+">"+u+"@"+d+"</a>");
 	else {
-		s=str_reverse(show);
+		var s=str_reverse(show);
 		document.write("<a href="+m1+m2+u+"@"+d+">"+s+"</a>");
 	}
 }

@@ -46,6 +46,11 @@ class User extends Controller {
 		$this->db->where("id",$userId);
 		$this->db->add_many();
 		$result=$this->db->get_result("cfg_users");
+		if (!isset($result[$userId]["rel_users__rights"])) {
+			// pre version of flexy database..
+			show_error('You are using a FlexyAdmin version that is newer than the database.<br/>Check your version in "sys/build.txt" and exectute the update sql files found in the directory "db".');
+			die();
+		}
 		$allrights=$result[$userId]["rel_users__rights"];
 		$rights=array();
 		foreach ($allrights as $id => $value) {
@@ -69,7 +74,7 @@ class User extends Controller {
 			$pwd=$this->input->post("password",TRUE);
 			if (!empty($pwd)) {
 				// check in database
-				$this->db->select("id,str_language,str_filemanager_view,ip_user_ip,b_strict_ip");
+				// $this->db->select("id,str_language,str_filemanager_view,ip_user_ip,b_strict_ip");
 				$this->db->where("str_user_name",$user);
 				$this->db->where("gpw_user_pwd",$pwd);
 				$query=$this->db->get($this->config->item('CFG_table_prefix')."_".$this->config->item('CFG_users'));
@@ -80,8 +85,14 @@ class User extends Controller {
 						// set session
 						$this->session->set_userdata("user_id",$row->id);
 						$this->session->set_userdata("user",$user);
-						$this->session->set_userdata("language",$row->str_language);
-						$this->session->set_userdata("fileview",$row->str_filemanager_view);
+						if (isset($row->str_language))
+							$this->session->set_userdata("language",$row->str_language);
+						else
+							$this->session->set_userdata("language",'nl');
+						if (isset($row->str_filemanager_view))
+							$this->session->set_userdata("fileview",$row->str_filemanager_view);
+						else
+							$this->session->set_userdata("fileview",'icons');
 						$this->session->set_userdata("rights",$this->_create_rights($row->id));
 						// set login log
 						$this->load->helper('date');

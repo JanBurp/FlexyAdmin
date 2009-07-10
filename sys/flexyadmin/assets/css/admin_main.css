@@ -215,6 +215,9 @@ div.add_button {
 	width:20px;
 	height:20px;
 }
+.multiple div.add_button {
+	margin-top:153px;
+}
 .icon.add {
 	background-image: url("../icons/addfile.gif");
 	background-repeat: no-repeat;
