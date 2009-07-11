@@ -67,12 +67,15 @@ class Editor_lists {
 			if ($CI->cfg->get('CFG_editor','b_add_internal_links')) {
 				$menuTable=$CI->cfg->get('CFG_configurations','str_menu_table');
 				if (!empty($menuTable) and $CI->db->table_exists($menuTable)) {
-					$CI->db->select('id,uri,self_parent,order');
+					$menuFields=$CI->db->list_fields($menuTable);
+					$CI->db->select('id,uri,order');
+					if (in_array('self_parent',$menuFields)) {
+						$CI->db->select('self_parent');
+						$CI->db->order_as_tree();
+						$CI->db->uri_as_full_uri();
+					}
 					$CI->db->select_first('str');
-					$CI->db->uri_as_full_uri();
-					$CI->db->order_as_tree();
 					$results=$CI->db->get_results($menuTable);
-					// trace_($results);
 					// add results to link list
 					$nameField=$CI->db->get_select_first(0);
 					foreach ($results as $key => $row) {
