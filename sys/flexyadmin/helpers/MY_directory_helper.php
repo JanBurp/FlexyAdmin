@@ -11,7 +11,7 @@
  */
 
 
-function read_map($path,$types="") {
+function read_map($path,$types="",$recursive=FALSE) {
 	if (!is_array($types) and !empty($types)) $types=explode(",",$types);
 	$files=directory_map($path);
 	$prepFiles=array();
@@ -22,6 +22,9 @@ function read_map($path,$types="") {
 				$name=$id;
 				$data["type"]="dir";
 				$data["alt"]=$name;
+				if ($recursive) {
+					$data["."]=read_map($path."/".$name,$types,$recursive);
+				}
 			}
 			else {
 				$data["type"]=strtolower(get_file_extension($file));
