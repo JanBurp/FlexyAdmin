@@ -105,7 +105,7 @@ class Menu {
 				$thisItem=array();
 				$thisItem["id"]=$item[pk()];
 				if (isset($item[$this->fields["uri"]]))			$thisItem["uri"]=$item[$this->fields["uri"]];	else $thisItem["uri"]=$item[$this->fields["title"]];
-				if (isset($item[$this->fields["class"]])) 	$thisItem["class"]=$item[$this->fields["class"]];
+				if (isset($item[$this->fields["class"]])) 	$thisItem["class"]=str_replace('|',' ',$item[$this->fields["class"]]);
 				if (isset($item[$this->fields["parent"]])) 	$parent=$item[$this->fields["parent"]]; else $parent="";
 				
 				if (!empty($this->extraFields)) {
