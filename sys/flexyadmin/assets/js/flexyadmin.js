@@ -198,6 +198,17 @@ $(document).ready(function() {
 			$("tr.caption tr").append('<td class="filter">');
 			$("td.filter").html(filter_input);
 			$("td.filter input").wrap('<span class="help '+config.help_filter+'"></span>');
+			// if filter active, make found text bold
+			$("input.filter").keyup(function() {
+				s=$("input.filter").attr("value");
+				$('table.grid:not(.thumbs) tbody td:not(.id):not(.order):not(.thumb):not(.media):not(.medias):not(.edit):not(.b):not(.url)').each(function(){
+					t=$(this).html();
+					t=t.replace(new RegExp('<(/|)b>','g'),'');
+					if (s!='') {t=t.replace(new RegExp('('+s+')','gi'),regBoldReplace);}
+					$(this).html(t);
+				});
+				rowsEvenOdd();				
+			});
 		}
 
 		//
@@ -398,10 +409,7 @@ $(document).ready(function() {
 								ajaxError(data);
 							}
 							else {
-								// reorder the order classes
-								$("table.grid tbody tr").removeClass("oddrow").removeClass("evenrow");
-								$("table.grid tbody tr:odd").addClass("oddrow");
-								$("table.grid tbody tr:even").addClass("evenrow");
+								rowsEvenOdd();
 							}
 						});
 				}
@@ -428,13 +436,9 @@ $(document).ready(function() {
     });
 		$(grid).bind("sortEnd",function() {
 			$(grid).css("cursor","default");
-			// reorder the order classes
-			$("table.grid tbody tr").removeClass("oddrow").removeClass("evenrow");
-			$("table.grid tbody tr:odd").addClass("oddrow");
-			$("table.grid tbody tr:even").addClass("evenrow");
+			rowsEvenOdd();
     });
 	}
-
 
 
 	//
@@ -698,6 +702,12 @@ function serialize(sel) {
 	return s.substr(1);
 }
 
+function rowsEvenOdd() {
+	$("table.grid tbody tr").removeClass("oddrow").removeClass("evenrow");
+	$("table.grid tbody tr:visible:odd").addClass("oddrow");
+	$("table.grid tbody tr:visible:even").addClass("evenrow");
+}
+
 function get_ext(s){var a,s;s=String(s);a=s.split(".");return a[a.length-1];}
 
 function pathdecode(s) { s=s.replace(/___/g,"/"); return s; }
@@ -710,6 +720,10 @@ function site_url(s) {
 	return s;
 }
 
+// regex callback, makes bold
+function regBoldReplace(all,match) {
+	return '<b>'+match+'</b>';
+}
 
 function cachedThumb(src) {
 	return src;
