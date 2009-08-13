@@ -482,11 +482,13 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 						$this->from($rel);
 						$this->where($jTable["id_this"],$id);
 						$this->join($join,$join.".".pk()."=".$rel.".".$jTable["id_join"],"left");
+						$this->order_by($rel.'.id');
 						$query=$this->get();
 						$resultArray=$query->result_array();
 						foreach($resultArray as $res) {
 							$result[$id][$rel][$res[pk()]]=$res;
 						}
+						// trace_($this->last_query());
 					}
 				}
 			}
