@@ -12,11 +12,15 @@ to copy, share, and modify.
 Use as is fit,
 free or for profit.
 On this notice these rights rely.
+
+(c) 2009, Jdb, Jan den Besten, changes made for FlexyAdmin:
+- callback function, after filtering is ready.
+
 */
 
 (function($) {
   // Extend all jQuery objects with the filterable method.
-  $.fn.filterable = function(options) {
+  $.fn.filterable = function(options, callback) {													// Jdb added callback parameter
     var o = $.extend({}, $.fn.filterable.defaults, options);
 
     return this.each(function() {
@@ -34,13 +38,17 @@ On this notice these rights rely.
       if (o.queryLabel) div.prepend('<label>' + o.queryLabel + '</label>');
 
       // Define the filtering function.
-      var fn = function() {
+      var fn = function(key) {
         var query = txt.val().toLowerCase();
         target.find(o.affects).each(function() {
           var item = $(this);
           if (item.text().toLowerCase().indexOf(query) >= 0) item.show();
           else item.hide();
         });
+				// Jdb: Call callback function if defined
+				if (callback!=undefined) {
+					callback.call(this,key.keyCode);
+				}
       };
 
       // Attach the function to the input text field (onKeyUp) or to a button (onClick).
@@ -55,6 +63,6 @@ On this notice these rights rely.
     queryLabel: '',
     queryButton: '',
     queryPosition: 'before',
-    queryCss: 'ui-filterable-query'
+    queryCss: 'ui-filterable-query',
   };
 })(jQuery);

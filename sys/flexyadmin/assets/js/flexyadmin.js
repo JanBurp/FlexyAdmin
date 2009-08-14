@@ -1,16 +1,20 @@
 $(document).ready(function() {
 
+	// define
+	keyEnter=13;
+	keyUp=38;
+	keyDown=40;
+
 	// Check modes
 	dialog=$("#ui");
 	Popup=$("#popup");
 	isForm=$("#content").hasClass("form");
 	isGrid=$("#content").hasClass("grid");
-	isTree=$("#content").hasClass("tree");
+	// isTree=$("#content").hasClass("tree");
 	isFile=$("#content").hasClass("filemanager");
 	if (!isGrid && isFile)	{	isGrid=$("#content").hasClass("list"); }
 	if (isFile)							{ isThumbs=$("#content").hasClass("icons");}
 	isSortable=false;
-		
 
 	//
 	// Form
@@ -132,7 +136,7 @@ $(document).ready(function() {
 	//
 	// File & Grid (Life filter/search field)
 	//
-	if (isGrid || isFile || isTree ) {
+	if (isGrid || isFile ) {
 
 		//
 		// Make sure grid is minimal 600px width
@@ -174,41 +178,79 @@ $(document).ready(function() {
 		//
 		// Filter/Search rows
 		//
-		if (isFile && !isGrid) {
-			filter=$("table.grid");
-			$(filter).filterable({ affects: 'tbody tr .file' });
-		}
-		else {
-			if (isTree) {
-				filter=$("table.grid");
-				$(filter).filterable({ affects: 'tbody li' });
-			}
-			if (isGrid) {
-				filter=$("table.grid");
-				$(filter).filterable({ affects: 'tbody tr' });
-			}
-		}
+		filter=$("table.grid");
 		if (filter.length>0) {
 			// keep table width
 			w=$(filter).width();
 			$(filter).width(w);
+
+			// set filter
+			if (isFile && !isGrid) {
+				affects='tbody tr .file';
+			}
+			else {
+				affects='tbody tr';
+			}
+
+			$(filter).filterable({ affects: affects, queryCss:'filter' }, function(keyCode){
+				// reset rows
+				rowsEvenOdd();
+				
+				// make selected text bold
+				s=$("input.filter").attr("value");
+				if (s.length==2) {
+					$('table.grid:not(.thumbs) tbody td:not(.id):not(.order):not(.thumb):not(.media):not(.medias):not(.edit):not(.b):not(.url)').each(function(){
+						t=$(this).html();
+						t=t.replace(new RegExp('<(/|)b>','g'),'');
+						$(this).html(t);
+					});
+				}
+				if (s.length>=3) {
+					$('table.grid:not(.thumbs) tbody td:not(.id):not(.order):not(.thumb):not(.media):not(.medias):not(.edit):not(.b):not(.url)').each(function(){
+						t=$(this).html();
+						t=t.replace(new RegExp('<(/|)b>','g'),'');
+						if (s!='') {t=t.replace(new RegExp('('+s+')','gi'),regBoldReplace);}
+						$(this).html(t);
+					});
+				}
+				
+				// check keypresses for special actions
+				switch (keyCode) {
+					case keyEnter:
+						if (!$('.grid').hasClass('files')) {
+							select=$('.grid: tr.current');
+							if (select.length==0) {
+								select=$('.grid tbody tr:first');
+							}
+							id=get_id(select);
+							table=get_table(select);
+							url=site_url('admin/show/form/'+table+'/'+id);
+							location.href=url;
+						}
+						break;
+
+					case keyUp:
+						setCurrent('up');
+						break;
+					case keyDown:
+						setCurrent('down');
+						break;
+
+					default:
+						setCurrent('first');
+				}
+								
+			});
+			
+			
+			
 			// place filter input on other place
-			filter_input=$("div.ui-filterable-query input");
+			filter_input=$("div.filter input");
 			$(filter_input).addClass("filter").attr({title:'search / filter'});
 			$("tr.caption tr").append('<td class="filter">');
 			$("td.filter").html(filter_input);
 			$("td.filter input").wrap('<span class="help '+config.help_filter+'"></span>');
-			// if filter active, make found text bold
-			$("input.filter").keyup(function() {
-				s=$("input.filter").attr("value");
-				$('table.grid:not(.thumbs) tbody td:not(.id):not(.order):not(.thumb):not(.media):not(.medias):not(.edit):not(.b):not(.url)').each(function(){
-					t=$(this).html();
-					t=t.replace(new RegExp('<(/|)b>','g'),'');
-					if (s!='') {t=t.replace(new RegExp('('+s+')','gi'),regBoldReplace);}
-					$(this).html(t);
-				});
-				rowsEvenOdd();				
-			});
+			
 		}
 
 		//
@@ -703,9 +745,38 @@ function serialize(sel) {
 }
 
 function rowsEvenOdd() {
-	$("table.grid tbody tr").removeClass("oddrow").removeClass("evenrow");
-	$("table.grid tbody tr:visible:odd").addClass("oddrow");
-	$("table.grid tbody tr:visible:even").addClass("evenrow");
+	if ($('.grid tbody tr .file').length==0) {
+		$("table.grid tbody tr").removeClass("oddrow").removeClass("evenrow");
+		$("table.grid tbody tr:visible:odd").addClass("oddrow");
+		$("table.grid tbody tr:visible:even").addClass("evenrow");
+	}
+}
+
+function setCurrent(c) {
+	if (!$('.grid').hasClass('files')) {
+		current=$('.grid tbody tr.current').removeClass('current');
+		oldIndex=$('.grid tbody tr:visible').index(current);
+		switch (c) {
+			case 'first':
+				current=$('.grid tbody tr:visible:first').addClass('current');
+				break;
+			case 'down':
+				index=oldIndex+1;
+				len=$('.grid tbody tr:visible').length-1;
+				if (index>=len) index=len;
+				current=$('.grid tbody tr:visible:eq('+index+')').addClass('current');
+				break;
+			case 'up':
+				index=oldIndex-1;
+				if (index<0) index=0;
+				current=$('.grid tbody tr:visible:eq('+index+')').addClass('current');
+				break;
+			default:
+				current=$('.grid tbody tr:visible:eq('+c+')').addClass('current');
+		}
+	}
+	// newIndex=$('.grid tbody tr:visible').index(current);
+	// return newIndex;
 }
 
 function get_ext(s){var a,s;s=String(s);a=s.split(".");return a[a.length-1];}
