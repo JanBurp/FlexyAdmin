@@ -260,7 +260,8 @@ class BasicController extends MY_Controller {
 	function _can_backup() {
 		reset($this->rights);
 		$rights=current($this->rights);
-		return ($rights["b_backup"]);
+		if ($rights['b_backup']) return TRUE;
+		return FALSE;
 	}
 
 	/**
