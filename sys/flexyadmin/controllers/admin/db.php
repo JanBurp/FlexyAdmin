@@ -103,12 +103,13 @@ class Db extends AdminController {
 	function _is_safe_sql($sql) {
 		$safe=TRUE;
 		// Check on DROP/ALTER/RENAME statements ;
-		if (preg_match("/(DROP|ALTER|RENAME|REPLACE|LOAD\sDATA|SET)/i",$sql)>0) $safe=FALSE;
+		if (preg_match("/(DROP|ALTER|RENAME|REPLACE|LOAD\sDATA|SET)/i",$sql)>0)	$safe=FALSE;
 		// Check on TRUNCATE / CREATE table names, if it has rights for tables
 		if ($safe) {
 			if (preg_match_all("/(TRUNCATE\sTABLE|CREATE\sTABLE|INSERT\sINTO|DELETE\sFROM|UPDATE)\s(.*?)(;|\s)/i",$sql,$matches)>0) {
 				$tables=$matches[2];
 				$tables=array_unique($tables);
+				$tables=not_filter_by($tables,'rel');
 				// check if rights for found tables
 				foreach ($tables as $table) {
 					if ($this->has_rights($table) < RIGHTS_ALL) $safe=FALSE;
@@ -158,19 +159,19 @@ class Db extends AdminController {
 				$this->lang->load('help');
 				$this->load->model('form');
 				$form=new form($this->config->item('API_db_restore'));
-				$data=array( "userfile"	=> array("type"=>"file","label"=>lang('file')),
-										 "sure"=> array("type"=>"hidden","value"=>$this->cfg->get('CFG_configurations','key')) );
+				$data=array( "userfile"	=> array("type"=>"file","label"=>lang('file')) );
+										 // "sure"=> array("type"=>"hidden","value"=>$this->cfg->get('CFG_configurations','key')) );
 				$form->set_data($data,lang('db_restore'));
 				$this->_add_content($form->render());
 			}
 			else {
-				$sure=$this->input->post('sure');
-				if ($sure and ($sure==$this->cfg->get('CFG_configurations','key'))) {
+				// $sure=$this->input->post('sure');
+				// if ($sure and ($sure==$this->cfg->get('CFG_configurations','key'))) {
 					$sql=$this->_upload_sql();
 					if ($sql) {
 						$this->_sql($sql,"Restore","Restoring ...");			
 					}
-				}
+				// }
 			}
 		}
 		$this->_show_all(lang('db_restore'));
