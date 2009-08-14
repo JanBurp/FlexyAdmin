@@ -47,6 +47,7 @@ class Main extends FrontEndController {
 		parent::FrontEndController();
 	}
 
+	
 	/**
 	 * function index()
 	 *
@@ -55,6 +56,7 @@ class Main extends FrontEndController {
 	 */
 	function index() {
 		$this->load->helper('text');
+	
 	
 		/***********************************************
 		 * Sets current URI
