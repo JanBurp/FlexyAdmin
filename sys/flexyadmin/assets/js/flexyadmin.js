@@ -118,6 +118,7 @@ $(document).ready(function() {
 				buttons: ({ cancel	: function(){	$(dialog).dialog("close"); },
 										upload	: function(){
 																$(dialog).dialog("destroy");
+																$('body').css({'cursor':'wait'});
 																$("form.upload").submit();
 															}
 								 }),

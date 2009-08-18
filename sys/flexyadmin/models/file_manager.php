@@ -203,9 +203,9 @@ class File_manager Extends Model {
 		$ext=get_file_extension($file);
 		$saveName=clean_string(str_replace(".$ext","",$file)).".$ext";
 		if ($file!=$saveName) {
-			if (rename($this->map.'/'.$file, $this->map.'/'.$saveName)) $file=$saveName;
+			if (rename($this->map.'/'.$file, $this->map.'/'.$saveName))
+				$file=$saveName;
 		}
-		
 		if (!$ok) {
 			log_("info","[FM] error while uploading: '$file' [$error]");
 		}
