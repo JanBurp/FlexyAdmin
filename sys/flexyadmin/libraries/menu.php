@@ -307,6 +307,13 @@ class Menu {
 						$showName.=$extra;
 					}
 				}
+				// extra attributes set?
+				$extra=$item;
+				unset($extra['class']);
+				unset($extra['uri']);
+				unset($extra['id']);
+				$attr=array_merge($attr,$extra);
+				// trace_($attr);
 				$out.=anchor($link, $showName, $attr);
 			}
 			if (isset($item["sub"]))
