@@ -283,46 +283,48 @@ class Menu {
 		// trace_($menu);
 		$pos=1;
 		foreach($menu as $name=>$item) {
-			$thisUri=$item[$this->urlField];
-			if (!empty($preUri) and $this->urlField=="uri") $thisUri=$preUri."/".$thisUri;
-			// set class
-			$cName=strtolower(str_replace(" ","_",$name));
-			$link=$this->tmp($this->tmpUrl,$thisUri);
-			// trace_($link);
-			$itemAttr=array();
-			$itemAttr['class']=$attr['class'];
-			$itemAttr["class"]="$cName pos$pos lev$level";
-			if ($pos==1)																$itemAttr["class"].=" first";
-			if ($pos==count($menu))											$itemAttr["class"].=" last";
-			if (isset($item["class"]))									$itemAttr["class"].=" ".$item["class"];
-			if ($this->current==$link) 									$itemAttr["class"].=" current";
-			if ($this->inUri($link,$this->current))			$itemAttr["class"].=" active";
-			$out.=$this->tmp($this->tmpItemStart,array("class"=>$itemAttr["class"]));
-			// render item or submenu
-			if (isset($item["uri"])) {
-				$showName=ascii_to_entities($name);
-				$pre=get_prefix($showName,"__");
-				if (!empty($pre)) $showName=$pre;
-				if (isset($item["help"])) $showName=help($showName,$item["help"]);
-				if (isset($item['extra'])) {
-					foreach ($item['extra'] as $extra) {
-						$showName.=$extra;
+			if (isset($item[$this->urlField])) {
+				$thisUri=$item[$this->urlField];
+				if (!empty($preUri) and $this->urlField=="uri") $thisUri=$preUri."/".$thisUri;
+				// set class
+				$cName=strtolower(str_replace(" ","_",$name));
+				$link=$this->tmp($this->tmpUrl,$thisUri);
+				// trace_($link);
+				$itemAttr=array();
+				$itemAttr['class']=$attr['class'];
+				$itemAttr["class"]="$cName pos$pos lev$level";
+				if ($pos==1)																$itemAttr["class"].=" first";
+				if ($pos==count($menu))											$itemAttr["class"].=" last";
+				if (isset($item["class"]))									$itemAttr["class"].=" ".$item["class"];
+				if ($this->current==$link) 									$itemAttr["class"].=" current";
+				if ($this->inUri($link,$this->current))			$itemAttr["class"].=" active";
+				$out.=$this->tmp($this->tmpItemStart,array("class"=>$itemAttr["class"]));
+				// render item or submenu
+				if (isset($item["uri"])) {
+					$showName=ascii_to_entities($name);
+					$pre=get_prefix($showName,"__");
+					if (!empty($pre)) $showName=$pre;
+					if (isset($item["help"])) $showName=help($showName,$item["help"]);
+					if (isset($item['extra'])) {
+						foreach ($item['extra'] as $extra) {
+							$showName.=$extra;
+						}
 					}
+					// extra attributes set?
+					$extraAttr=array();
+					$extraAttr=$item;
+					unset($extraAttr['class']);
+					unset($extraAttr['uri']);
+					unset($extraAttr['id']);
+					$itemAttr=array_merge($itemAttr,$extraAttr);
+					// trace_($itemAttr);
+					$out.=anchor($link, $showName, $itemAttr);
 				}
-				// extra attributes set?
-				$extraAttr=array();
-				$extraAttr=$item;
-				unset($extraAttr['class']);
-				unset($extraAttr['uri']);
-				unset($extraAttr['id']);
-				$itemAttr=array_merge($itemAttr,$extraAttr);
-				// trace_($itemAttr);
-				$out.=anchor($link, $showName, $itemAttr);
+				if (isset($item["sub"]))
+					$out.=$this->render($item["sub"],"$cName",$level+1,$thisUri);
+				$out.=$this->tmp($this->tmpItemEnd);
+				$pos++;
 			}
-			if (isset($item["sub"]))
-				$out.=$this->render($item["sub"],"$cName",$level+1,$thisUri);
-			$out.=$this->tmp($this->tmpItemEnd);
-			$pos++;
 		}
 		$out.=$this->tmp($this->tmpMenuEnd);
 		return $out;
