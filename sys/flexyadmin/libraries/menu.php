@@ -289,13 +289,15 @@ class Menu {
 			$cName=strtolower(str_replace(" ","_",$name));
 			$link=$this->tmp($this->tmpUrl,$thisUri);
 			// trace_($link);
-			$attr["class"]="$cName pos$pos lev$level";
-			if ($pos==1)																$attr["class"].=" first";
-			if ($pos==count($menu))											$attr["class"].=" last";
-			if (isset($item["class"]))									$attr["class"].=" ".$item["class"];
-			if ($this->current==$link) 									$attr["class"].=" current";
-			if ($this->inUri($link,$this->current))			$attr["class"].=" active";
-			$out.=$this->tmp($this->tmpItemStart,array("class"=>$attr["class"]));
+			$itemAttr=array();
+			$itemAttr['class']=$attr['class'];
+			$itemAttr["class"]="$cName pos$pos lev$level";
+			if ($pos==1)																$itemAttr["class"].=" first";
+			if ($pos==count($menu))											$itemAttr["class"].=" last";
+			if (isset($item["class"]))									$itemAttr["class"].=" ".$item["class"];
+			if ($this->current==$link) 									$itemAttr["class"].=" current";
+			if ($this->inUri($link,$this->current))			$itemAttr["class"].=" active";
+			$out.=$this->tmp($this->tmpItemStart,array("class"=>$itemAttr["class"]));
 			// render item or submenu
 			if (isset($item["uri"])) {
 				$showName=ascii_to_entities($name);
@@ -308,13 +310,14 @@ class Menu {
 					}
 				}
 				// extra attributes set?
-				$extra=$item;
-				unset($extra['class']);
-				unset($extra['uri']);
-				unset($extra['id']);
-				$attr=array_merge($attr,$extra);
-				// trace_($attr);
-				$out.=anchor($link, $showName, $attr);
+				$extraAttr=array();
+				$extraAttr=$item;
+				unset($extraAttr['class']);
+				unset($extraAttr['uri']);
+				unset($extraAttr['id']);
+				$itemAttr=array_merge($itemAttr,$extraAttr);
+				// trace_($itemAttr);
+				$out.=anchor($link, $showName, $itemAttr);
 			}
 			if (isset($item["sub"]))
 				$out.=$this->render($item["sub"],"$cName",$level+1,$thisUri);
