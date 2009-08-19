@@ -194,11 +194,11 @@ class File_manager Extends Model {
  * @return result
  */
 	function upload_file() {
+		$error='';
 		$config['upload_path'] = $this->map;
 		$config['allowed_types'] = implode("|",$this->fileTypes);
 		$this->upload->config($config);
 		$ok=$this->upload->upload_file('file');
-		$error=$this->upload->get_error();
 		$file=$this->upload->get_file();
 		$ext=get_file_extension($file);
 		$saveName=clean_string(str_replace(".$ext","",$file)).".$ext";
@@ -208,9 +208,17 @@ class File_manager Extends Model {
 		}
 		if (!$ok) {
 			log_("info","[FM] error while uploading: '$file' [$error]");
+			$error=$this->upload->get_error();
 		}
 		else {
 			log_("info","[FM] uploaded: '$file'");
+			if (in_array($ext,$this->config->item('FILE_types_img'))) {
+				// is image, maybe resizing
+				$ok=$this->upload->resize_image($file,$this->map);
+				if (!($ok)) {
+					$error=$this->upload->get_error();
+				}
+			}
 		}
 		return array("error"=>$error,"file"=>$file);
 	}
