@@ -44,8 +44,14 @@ class Info extends AdminController {
 	}
 
 	function php() {
-		$this->_set_content(phpinfo());
+		ob_start();                                                                                                       
+		phpinfo();                                                                                                        
+		$info = ob_get_contents();                                                                                        
+		ob_end_clean();                                                                                                   
+		$info = preg_replace('%^.*<body>(.*)</body>.*$%ms', '$1', $info);
+		$info = str_replace('<table ', '<table class="grid" ', $info);
 		$this->_show_type("phpinfo");
+		$this->_add_content($info);
 		$this->_show_all();
 	}
 

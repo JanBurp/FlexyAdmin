@@ -22,8 +22,10 @@
 	config=new Object;
 	config.site_url="<?=site_url()?>/";
 	<?
-	foreach ($js as $key => $value) {
-		?>config.<?=$key?>="<?=$value?>";<?
+	if (isset($js)) {
+		foreach ($js as $key => $value) {
+			?>config.<?=$key?>="<?=$value?>";<?
+		}
 	}
 	?>
 	

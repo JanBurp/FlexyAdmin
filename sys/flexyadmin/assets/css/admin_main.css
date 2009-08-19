@@ -18,6 +18,14 @@ a {
 }
 a:hover {	text-decoration:underline; }
 
+.phpinfo hr,
+.phpinfo img {
+	display:none;
+}
+.phpinfo td.e {
+	font-weight:bold;
+}
+
 h1 {
 	display:inline-block;
 	font-size:1.2em;
