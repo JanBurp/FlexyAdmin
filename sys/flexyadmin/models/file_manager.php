@@ -214,7 +214,7 @@ class File_manager Extends Model {
 		// RESIZING and AUTO FILL
 		else {
 			log_("info","[FM] uploaded: '$file'");
-			if (in_array($ext,$this->config->item('FILE_types_img'))) {
+			if (in_array(strtolower($ext),$this->config->item('FILE_types_img'))) {
 				// is image, maybe resizing
 				$ok=$this->upload->resize_image($file,$this->map);
 				if (!($ok)) {
