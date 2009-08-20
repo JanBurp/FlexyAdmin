@@ -117,9 +117,11 @@ $(document).ready(function() {
 				width:400,
 				buttons: ({ cancel	: function(){	$(dialog).dialog("close"); },
 										upload	: function(){
-																$(dialog).dialog("destroy");
-																$('body').css({'cursor':'wait'});
+																file=$('.ui-dialog input.filemanager').val();
+																$('.ui-dialog .ui-dialog-buttonpane').add('.ui-dialog a').add('.ui-dialog form').hide();
+																$('.ui-dialog .ui-dialog-content').prepend("Uploading '<i>"+file+"</i>' <img src='"+site_url("sys/flexyadmin/assets/icons/wait.gif")+"' align='right' />");
 																$("form.upload").submit();
+																// $(dialog).dialog("destroy");
 															}
 								 }),
 				close: function(){$(dialog).dialog("destroy"); }
@@ -531,7 +533,9 @@ function confirm_dialog(obj,item) {
 		width:500,
 		buttons: ({ cancel	: function(){	$(dialog).dialog("destroy"); $(obj).attr({"href":href}); },
 								yes			: function(){
-														$(dialog).dialog("destroy");
+														$('.ui-dialog .ui-dialog-buttonpane').add('.ui-dialog a').hide();
+														$('.ui-dialog .ui-dialog-content').append("<img src='"+site_url("sys/flexyadmin/assets/icons/wait.gif")+"' align='right' />");
+														// $(dialog).dialog("destroy");
 														location.replace(href+"/confirm");
 													}
 						 }),
@@ -785,7 +789,7 @@ function get_ext(s){var a,s;s=String(s);a=s.split(".");return a[a.length-1];}
 function pathdecode(s) { s=s.replace(/___/g,"/"); return s; }
 function pathencode(s) { s=s.replace(/\//g,"___"); return s; }
 function site_url(s) {
-	if (s=="")
+	if (s==undefined)
 		s=config.site_url;
 	else
 		s=config.site_url+s;
