@@ -107,6 +107,13 @@ class Ajax extends BasicController {
 		$this->_result($result);
  	}
 
+	
+	
+	function upload($path) {
+		echo $path;
+		print_r($_FILES);
+	}
+
 
 }
 
