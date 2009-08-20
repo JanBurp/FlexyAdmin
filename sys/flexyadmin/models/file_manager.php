@@ -195,6 +195,7 @@ class File_manager Extends Model {
  */
 	function upload_file() {
 		$error='';
+		// UPLOAD
 		$config['upload_path'] = $this->map;
 		$config['allowed_types'] = implode("|",$this->fileTypes);
 		$this->upload->config($config);
@@ -210,6 +211,7 @@ class File_manager Extends Model {
 			log_("info","[FM] error while uploading: '$file' [$error]");
 			$error=$this->upload->get_error();
 		}
+		// RESIZING and AUTO FILL
 		else {
 			log_("info","[FM] uploaded: '$file'");
 			if (in_array($ext,$this->config->item('FILE_types_img'))) {
@@ -219,6 +221,11 @@ class File_manager Extends Model {
 					$error=$this->upload->get_error();
 				}
 			}
+			if ($ok) {
+				// auto fill
+				// $this->upload->auto_fill_fields($file,$this->map);
+			}
+			
 		}
 		return array("error"=>$error,"file"=>$file);
 	}

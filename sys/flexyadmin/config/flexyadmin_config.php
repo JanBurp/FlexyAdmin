@@ -33,6 +33,7 @@ $config['LOCAL']									= IS_LOCALHOST;
 $config['ASSETS']									= "site/assets/";
 $config['ADMINASSETS']						= "sys/flexyadmin/assets/";
 
+$config['BULKUPLOAD']							= 'bulk_upload';
 $config['THUMBCACHE']							= $config['ASSETS']."_thumbcache/";
 $config['THUMBSIZE']							= array(100,100);
 
@@ -316,6 +317,17 @@ $config["CFG_"]=array(
 			"str_validation_rules"=>'',
 			"txt_help"=>''
 			),
+		"cfg_img_info.fields"=>array(
+			"field"=>'cfg_img_info.fields',
+			"str_ui_name"=>'Auto fill fields',
+			"b_show_in_grid"=>'1',
+			"b_show_in_form"=>'1',
+			"str_options"=>'',
+			"b_multi_options"=>'0',
+			"str_overrule_prefix"=>'',
+			"str_validation_rules"=>'',
+			"txt_help"=>''
+			),
 		"cfg_rights.rights"=>array(
 			"field"=>'cfg_rights.rights',
 			"str_ui_name"=>'Rights for',
@@ -343,7 +355,7 @@ $config["CFG_"]=array(
 			"str_ui_name"=>'',
 			"b_show_in_grid"=>'1',
 			"b_show_in_form"=>'1',
-			"str_options"=>'en|nl',
+			"str_options"=>'nl|en',
 			"b_multi_options"=>'0',
 			"str_overrule_prefix"=>'',
 			"str_validation_rules"=>'',
