@@ -666,12 +666,15 @@ class AdminController extends BasicController {
 			}
 		}
 		
-		// Backup / Restore
+		// Backup / Restore & other Tools
 		if ($this->_is_super_admin()) {
 			$this->lang->load('help');
 			$a[lang('db_export')]					=array("uri"=>api_uri('API_db_export'),"class"=>"db db_backup");
 			$a[lang('db_import')]					=array("uri"=>api_uri('API_db_import'),"class"=>"db");
 			$a[lang('sr_search_replace')]	=array("uri"=>api_uri('API_search'),"class"=>"sr");
+			if (file_exists($this->config->item('BULKUPLOAD'))) {
+				$a['Bulk upload']	=array("uri"=>api_uri('API_bulk_upload'),"class"=>"media");
+			}
 		}
 		else {
 			if ($this->_can_backup()) {

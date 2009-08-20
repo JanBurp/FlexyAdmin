@@ -97,22 +97,33 @@ class MY_Upload extends CI_Upload {
 					$table=get_prefix($field,'.');
 					$field=remove_prefix($field,'.');
 					$fieldPre=get_prefix($field);
+					if (empty($fieldPre)) $fieldPre=$field;
 					$cleanName=str_replace('_',' ',get_file_without_extension($image));
-					if ($fieldPre=='media' or $fieldPre=='medias')
-						$CI->db->set($field,$image);
-					else
-						$CI->db->set($field,$cleanName);
-				}
-				// TODO: database model maken voor dit soort dingen
-				if ($CI->db->has_field($table,'user')) {
-					$CI->db->set('user',$CI->user_id);
+					// TODO: database model maken voor dit soort dingen
+					switch ($fieldPre) {
+						case 'user':
+							$CI->db->set('user',$CI->user_id);
+							break;
+						case 'media':
+						case 'medias':
+							$CI->db->set($field,$image);
+							break;
+						case 'dat':
+							$CI->db->set($field,date("Y-m-d"));
+							break;
+						case 'str':
+							$CI->db->set($field,$cleanName);
+							break;
+					}
 				}
 				$CI->db->insert($table);
 			}
 		}
+		return TRUE;
 	}
 	
 	function resize_image($image,$path) {
+		$this->file_name=$image;
 		$goodluck=TRUE;
 		if (!isset($this->CI)) {
 			$this->CI =& get_instance();
