@@ -142,10 +142,12 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	*/
 	function search($search) {
 		foreach ($search as $k => $s) {
-			if (isset($s["or"]) and $s["or"]=="or")
-				$this->or_like($s["field"],$s["search"]);
-			else
-				$this->like($s["field"],$s["search"]);
+			if (!empty($s['search']) and !empty($s['field'])) {
+				if (isset($s["or"]) and $s["or"]=="or")
+					$this->or_like($s["field"],$s["search"]);
+				else
+					$this->like($s["field"],$s["search"]);
+			}
 		}
 	}
 
