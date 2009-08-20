@@ -78,6 +78,7 @@ $config['API_db_sql']								= "/admin/db/sql/";
 
 $config['API_search']								= '/admin/search/';
 $config['API_help']									= '/admin/help/';
+$config['API_bulk_upload']					= '/admin/bulkupload/';
 
 
 $config['API_filemanager_view_types']	= array("list","icons");

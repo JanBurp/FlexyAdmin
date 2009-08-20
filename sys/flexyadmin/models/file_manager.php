@@ -127,7 +127,7 @@ class File_manager Extends Model {
 				}
 				$names=filter_by($names,"_");
 				foreach($names as $name) {
-					unlink($this->map."/".$name);
+					if (file_exists($this->map."/".$name)) unlink($this->map."/".$name);
 				}
 				
 				/**

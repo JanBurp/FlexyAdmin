@@ -68,6 +68,21 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		$f=$this->list_fields($table);
 		return (in_array($field,$f));
 	}
+	
+	function get_first_field($table,$pre="str") {
+		$f=$this->list_fields($table);
+		$found=FALSE;
+		while (!$found and $i=each($f)) {
+			if ($pre==get_prefix($i['value'])) {
+				$found=TRUE;
+				$field=$i['value'];
+			}
+		}
+		if ($found)
+			return $field;
+		else
+			return FALSE;
+	}
 
 	/**
 	 * Searches for a standard order field in config table.
