@@ -82,6 +82,36 @@ class MY_Upload extends CI_Upload {
 		return $goodluck;
 	}
 	
+	function auto_fill_fields($image,$path) {
+		if (!isset($this->CI)) {
+			$this->CI =& get_instance();
+		}
+		$CI=$this->CI;
+		
+		$uPath=str_replace($CI->config->item('ASSETS'),"",$path);
+		$cfg=$CI->cfg->get('CFG_img_info',$uPath,'fields');
+		if (!empty($cfg)) {
+			$fields=explode('|',$cfg);
+			if (count($fields)>0) {
+				foreach ($fields as $field) {
+					$table=get_prefix($field,'.');
+					$field=remove_prefix($field,'.');
+					$fieldPre=get_prefix($field);
+					$cleanName=str_replace('_',' ',get_file_without_extension($image));
+					if ($fieldPre=='media' or $fieldPre=='medias')
+						$CI->db->set($field,$image);
+					else
+						$CI->db->set($field,$cleanName);
+				}
+				// TODO: database model maken voor dit soort dingen
+				if ($CI->db->has_field($table,'user')) {
+					$CI->db->set('user',$CI->user_id);
+				}
+				$CI->db->insert($table);
+			}
+		}
+	}
+	
 	function resize_image($image,$path) {
 		$goodluck=TRUE;
 		if (!isset($this->CI)) {

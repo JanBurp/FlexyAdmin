@@ -317,10 +317,12 @@ class BasicController extends MY_Controller {
 			if ($rights['user_rights']=="*" or (strpos($rights['user_rights'],$preAll)!==FALSE) or (strpos($rights['user_rights'],$table)!==FALSE) )
 				$restricted=$restricted and TRUE;
 		}
-		if ($restricted)
+		if ($restricted) {
+			// trace_($this->user_id);
 			return $this->user_id;
+		}
 		else
-			return FALSE;
+			return NULL;
 	}
 
 	function _get_table_rights($atLeast=RIGHTS_ALL) {
