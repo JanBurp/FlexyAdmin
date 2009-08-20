@@ -322,7 +322,7 @@ class BasicController extends MY_Controller {
 			return $this->user_id;
 		}
 		else
-			return NULL;
+			return FALSE;
 	}
 
 	function _get_table_rights($atLeast=RIGHTS_ALL) {
