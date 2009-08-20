@@ -117,9 +117,9 @@ $(document).ready(function() {
 				width:400,
 				buttons: ({ cancel	: function(){	$(dialog).dialog("close"); },
 										upload	: function(){
-																file=$('.ui-dialog input.filemanager').val();
+																uploadFile=$('.ui-dialog input.filemanager').val();
 																$('.ui-dialog .ui-dialog-buttonpane').add('.ui-dialog a').add('.ui-dialog form').hide();
-																$('.ui-dialog .ui-dialog-content').prepend("Uploading '<i>"+file+"</i>' <img src='"+site_url("sys/flexyadmin/assets/icons/wait.gif")+"' align='right' />");
+																$('.ui-dialog .ui-dialog-content').prepend("Uploading '<i>"+uploadFile+"</i>' <img src='"+site_url("sys/flexyadmin/assets/icons/wait.gif")+"' align='right' />");
 																$("form.upload").submit();
 																// $(dialog).dialog("destroy");
 															}
@@ -268,13 +268,13 @@ $(document).ready(function() {
 				$(this).removeAttr("href");
 				if (isThumbs) {
 					paths=href.split("/");
-					file=paths[paths.length-1];
+					deleteFile=paths[paths.length-1];
 				}
 				else {
 					cell=$(this).parent(".edit");
-					file=get_id($(cell));
+					deleteFile=get_id($(cell));
 				}
-				confirm_dialog(this,file);
+				confirm_dialog(this,deleteFile);
 			});
 		}
 		else {

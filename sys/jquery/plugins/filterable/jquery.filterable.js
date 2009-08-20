@@ -46,14 +46,16 @@ On this notice these rights rely.
           else item.hide();
         });
 				// Jdb: Call callback function if defined
-				if (callback!=undefined) {
+				if (callback!=undefined && callback!='') {
 					callback.call(this,key.keyCode);
 				}
       };
 
       // Attach the function to the input text field (onKeyUp) or to a button (onClick).
-      if (o.queryButton) $('<input type="button" value="' + o.queryButton + '" />').appendTo(div).click(fn);
-      else txt.keyup(fn);
+      if (o.queryButton)
+				$('<input type="button" value="' + o.queryButton + '" />').appendTo(div).click(fn);
+      else
+				txt.keyup(fn);
     });
   };
 
@@ -64,5 +66,7 @@ On this notice these rights rely.
     queryButton: '',
     queryPosition: 'before',
     queryCss: 'ui-filterable-query',
+		callback: ''
   };
+
 })(jQuery);
