@@ -32,9 +32,29 @@ class Bulkupload extends AdminController {
 
 				// is form submitted?
 				$path=$this->input->post('path');
+				
+				// Show form?
+				if (empty($path)) {
+					// create form
+					$this->load->model('form');
+					$form=new form($this->config->item('API_bulk_upload'));
+					$options=array();
+					foreach ($cfgImg as $info) {
+						$options[$info['str_path']]=$info['str_path'];
+					}
+					// trace_($cfgImg);
+					$data=array(	"path"				=> array("label"=>'Move to:','type'=>'dropdown','options'=>$options)
+												// "do_resize"		=> array('type'=>'checkbox','value'=>'1'),
+												// 		"do_autofill"	=> array("label"=>'Auto fill fields','type'=>'checkbox','value'=>'1')								
+						);
+					$form->set_data($data,'Bulk upload settings');
+					$this->_add_content($form->render());			
+					$this->_add_content(p().nbs()._p().p().nbs()._p());
+				}
+				
+				
+				// Show and move files
 				if (!empty($path)) {
-					$do_resize=$this->input->post('do_resize');
-					$do_autofill=$this->input->post('do_autofill');
 					$path=assets($path);
 					$this->load->library('upload');
 					$config['upload_path'] = $path;
@@ -52,9 +72,9 @@ class Bulkupload extends AdminController {
 						$moved=copy($bulkMap.'/'.$file['name'],$path.'/'.$saveFile);
 						if ($moved) {
 							// resize
-							if ($do_resize)	$resized=$this->upload->resize_image($saveFile,$path);
+							$resized=$this->upload->resize_image($saveFile,$path);
 							// autofill
-							if ($do_autofill) $autoFill=$this->upload->auto_fill_fields($saveFile,$path);
+							$autoFill=$this->upload->auto_fill_fields($saveFile,$path);
 							// delete original from Bulk map
 							unlink($bulkMap.'/'.$file['name']);
 						}
@@ -85,28 +105,9 @@ class Bulkupload extends AdminController {
 				$renderData=$grid->render("html",'bulkupload',"grid");
 				$this->_add_content($this->load->view("admin/grid",$renderData,true));
 
-				$this->_add_content(p().nbs()._p().p().nbs()._p());
-			
-				// Show form?
-				if (empty($path)) {
-					// create form
-					$this->load->model('form');
-					$form=new form($this->config->item('API_bulk_upload'));
-					$options=array();
-					foreach ($cfgImg as $info) {
-						$options[$info['str_path']]=$info['str_path'];
-					}
-					// trace_($cfgImg);
-					$data=array(	"path"				=> array("label"=>'Move to:','type'=>'dropdown','options'=>$options),
-												"do_resize"		=> array('type'=>'checkbox','value'=>'1'),
-												"do_autofill"	=> array("label"=>'Auto fill fields','type'=>'checkbox','value'=>'1')								
-						);
-					$form->set_data($data,'Bulk upload settings');
-					$this->_add_content($form->render());			
-				}
 			}
 		}
-		$this->_show_type("bulkupload");
+		$this->_show_type("form");
 		$this->_show_all();
 	}
 
