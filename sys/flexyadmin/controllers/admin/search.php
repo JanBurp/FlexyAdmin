@@ -19,7 +19,7 @@ class Search extends AdminController {
 	}
 
 	function index() {
-		if ($this->_is_super_admin()) {
+		if ($this->_can_use_tools()) {
 			$this->lang->load('help');
 		
 			$search=$this->input->post('search');

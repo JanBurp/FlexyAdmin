@@ -19,7 +19,7 @@ class Bulkupload extends AdminController {
 	}
 
 	function index() {
-		if ($this->_is_super_admin()) {
+		if ($this->_can_use_tools()) {
 			$this->_add_content(h('Bulk Upload'));
 			$bulkMap=$this->config->item('BULKUPLOAD');
 			$files=read_map($bulkMap);
