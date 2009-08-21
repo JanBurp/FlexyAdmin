@@ -145,7 +145,7 @@ $config['CFG_table_name']							= "table";
 $config['CFG_table_ui_name']					= "str_ui_name";
 
 $config['CFG_field']									= "field_info";
-$config['CFG_field_name']							= "field";
+$config['CFG_field_name']							= "field_field";
 $config['CFG_field_ui_name']					= "str_ui_name";
 
 
@@ -226,7 +226,7 @@ $config["CFG_"]=array(
 			"str_ui_name"=>'',
 			"b_grid_add_many"=>'0',
 			"str_abstract_fields"=>'',
-			"str_order_by"=>'field',
+			"str_order_by"=>'field_field',
 			"txt_help"=>''
 			),
 		"cfg_users"=>array(
@@ -463,16 +463,16 @@ $config['FIELDS_special'] = array(
 												"form"				=> "function_dropdown_rights",
 												"validation"	=> "trim",
 											),
-	"field"			=> array(
-												"grid"				=> "%s",
-												"form"				=> "function_dropdown_field",
-												"validation"	=> "trim",
-											),
-	"fields"		=> array(
-												"grid"				=> "%s",
-												"form"				=> "function_dropdown_fields",
-												"validation"	=> "trim",
-											),
+	// "field"			=> array(
+	// 											"grid"				=> "%s",
+	// 											"form"				=> "function_dropdown_field",
+	// 											"validation"	=> "trim",
+	// 										),
+	// "fields"		=> array(
+	// 											"grid"				=> "%s",
+	// 											"form"				=> "function_dropdown_fields",
+	// 											"validation"	=> "trim",
+	// 										),
 	"file"			=> array(
 												"grid"				=> "%s",
 												"form"				=> "function_dropdown_allfiles",
@@ -503,6 +503,16 @@ $config['FIELDS_prefix'] = array (
 											"form"				=> "function_join",
 											"validation"	=> "function_join"
 											),
+	"field"			=> array(
+												"grid"				=> "%s",
+												"form"				=> "function_dropdown_field",
+												"validation"	=> "trim",
+											),
+	"fields"		=> array(
+												"grid"				=> "%s",
+												"form"				=> "function_dropdown_fields",
+												"validation"	=> "trim",
+											),											
 	"media"			=> array (
 											"grid"				=> "function_dropdown_media",
 											"form"				=> "function_dropdown_media",

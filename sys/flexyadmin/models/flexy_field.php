@@ -615,6 +615,7 @@ class Flexy_field extends Model {
 	}
 	function _dropdown_media_form() {
 		$info=$this->cfg->get('CFG_media_info',$this->table.".".$this->field);
+		// trace_($info);
 		if (empty($info)) {
 			$options=array(""=>"ERROR: add this field in Media Info");
 			$map="";

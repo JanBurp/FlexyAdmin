@@ -28,7 +28,7 @@ class Bulkupload extends AdminController {
 			}
 			else {
 				$gridFiles=array();
-				$cfgImg=$this->cfg->get('CFG_img_info');
+				$mediaCfg=$this->cfg->get('CFG_media_info');
 
 				// is form submitted?
 				$path=$this->input->post('path');
@@ -39,10 +39,9 @@ class Bulkupload extends AdminController {
 					$this->load->model('form');
 					$form=new form($this->config->item('API_bulk_upload'));
 					$options=array();
-					foreach ($cfgImg as $info) {
+					foreach ($mediaCfg as $info) {
 						$options[$info['str_path']]=$info['str_path'];
 					}
-					// trace_($cfgImg);
 					$data=array(	"path"				=> array("label"=>'Move to:','type'=>'dropdown','options'=>$options)
 												// "do_resize"		=> array('type'=>'checkbox','value'=>'1'),
 												// 		"do_autofill"	=> array("label"=>'Auto fill fields','type'=>'checkbox','value'=>'1')								
