@@ -560,7 +560,7 @@ table.grid thead .order,
 	}
 fieldset.formfields {
 	float:left;
-	width:615px;
+	width:600px;
 	border:solid 1px #DDEEAA;
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
@@ -601,7 +601,7 @@ div.form_field:hover {
 
 label {
 	float:left;
-	width:140px;
+	width:125px;
 	padding:5px 0px 0px 4px;
 }
 	label.required {
@@ -976,6 +976,9 @@ div#help_messages {
 	margin-top:5px;
 	margin-left:225px;
 	z-index:1;
+}
+#content.form {
+	width:800px;
 }
 #content.info {
 	width:590px;
