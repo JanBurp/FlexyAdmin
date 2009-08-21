@@ -89,7 +89,7 @@ class MY_Upload extends CI_Upload {
 		$CI=$this->CI;
 		
 		$uPath=str_replace($CI->config->item('ASSETS'),"",$path);
-		$cfg=$CI->cfg->get('CFG_img_info',$uPath,'fields');
+		$cfg=$CI->cfg->get('CFG_media_info',$uPath,'fields_autofill_fields');
 		if (!empty($cfg)) {
 			$fields=explode('|',$cfg);
 			if (count($fields)>0) {

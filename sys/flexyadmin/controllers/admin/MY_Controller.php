@@ -48,7 +48,7 @@ class MY_Controller extends Controller {
 		$this->cfg->load('CFG_configurations');
 		$this->cfg->load('CFG_table',$this->config->item('CFG_table_name'));
 		$this->cfg->load('CFG_field',$this->config->item('CFG_field_name'));
-		$this->cfg->load('CFG_media_info',array("str_path","fields"));
+		$this->cfg->load('CFG_media_info',array("str_path","fields_media_fields"));
 		$this->cfg->load('CFG_img_info','str_path');
 		// trace_($this->cfg->data);
 	}
