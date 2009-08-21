@@ -118,10 +118,14 @@ $(document).ready(function() {
 				buttons: ({ cancel	: function(){	$(dialog).dialog("close"); },
 										upload	: function(){
 																uploadFile=$('.ui-dialog input.filemanager').val();
+																// prevent the 'fakedisk' in name of IE8
+																backslash=uploadFile.lastIndexOf('\\');
+																if (backslash>0) uploadFile=uploadFile.substr(backslash+1);
 																$('.ui-dialog .ui-dialog-buttonpane').add('.ui-dialog a').add('.ui-dialog form').hide();
 																$('.ui-dialog .ui-dialog-content').prepend("Uploading '<i>"+uploadFile+"</i>' <img src='"+site_url("sys/flexyadmin/assets/icons/wait.gif")+"' align='right' />");
 																$("form.upload").submit();
 																// $(dialog).dialog("destroy");
+																// alert('Hups');
 															}
 								 }),
 				close: function(){$(dialog).dialog("destroy"); }
