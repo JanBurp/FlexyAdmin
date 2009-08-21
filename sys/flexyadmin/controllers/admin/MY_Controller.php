@@ -264,6 +264,14 @@ class BasicController extends MY_Controller {
 		return FALSE;
 	}
 
+	function _can_use_tools() {
+		reset($this->rights);
+		$rights=current($this->rights);
+		if ($rights['b_tools']) return TRUE;
+		return FALSE;
+	}
+
+
 	/**
 		* Returns rights:
 		*		RIGHTS_ALL		= 15 (all added)
@@ -666,23 +674,23 @@ class AdminController extends BasicController {
 			}
 		}
 		
-		// Backup / Restore & other Tools
+		// Backup / Restore
+		$this->lang->load('help');
 		if ($this->_is_super_admin()) {
-			$this->lang->load('help');
 			$a[lang('db_export')]					=array("uri"=>api_uri('API_db_export'),"class"=>"db db_backup");
 			$a[lang('db_import')]					=array("uri"=>api_uri('API_db_import'),"class"=>"db");
-			$a[lang('sr_search_replace')]	=array("uri"=>api_uri('API_search'),"class"=>"sr");
+		}
+		elseif ($this->_can_backup()) {
+			$a[lang('db_backup')]		=array("uri"=>api_uri('API_db_backup'),"class"=>"db db_backup");
+			$a[lang('db_restore')]	=array("uri"=>api_uri('API_db_restore'),"class"=>"db");
+		}
+		if ($this->_can_use_tools()) {
+			$a[lang('sr_search_replace')]	=array("uri"=>api_uri('API_search'),"class"=>"sr db_backup");
 			if (file_exists($this->config->item('BULKUPLOAD'))) {
 				$a['Bulk upload']	=array("uri"=>api_uri('API_bulk_upload'),"class"=>"media");
 			}
 		}
-		else {
-			if ($this->_can_backup()) {
-				$this->lang->load('help');
-				$a[lang('db_backup')]		=array("uri"=>api_uri('API_db_backup'),"class"=>"db db_backup");
-				$a[lang('db_restore')]	=array("uri"=>api_uri('API_db_restore'),"class"=>"db");
-			}
-		}
+
 		
 
 		// cfg tables
