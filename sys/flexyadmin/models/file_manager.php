@@ -335,7 +335,8 @@ function thumb($attr,$index=FALSE) {
 			$name=$file["name"];
 			if (substr($name,0,1)!="_") {
 				$type=$file["type"];
-				if (in_array($type,$this->fileTypes)) {
+				$fileTypesArray=explode('|',$this->fileTypes[0]);
+				if (in_array($type,$fileTypesArray)) {
 					$isImg=in_array($type,$imgTypes);
 					$isFlash=in_array($type,$flashTypes);
 
