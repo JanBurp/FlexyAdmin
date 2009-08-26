@@ -56,7 +56,7 @@ class File_manager Extends Model {
 	}
 
 	function set_types($types="") {
-		if (!is_array($types)) $types=explode(",",$types);
+		if (!is_array($types)) $types=explode("|",$types);
 		$this->fileTypes=$types;
 	}
 
@@ -335,8 +335,7 @@ function thumb($attr,$index=FALSE) {
 			$name=$file["name"];
 			if (substr($name,0,1)!="_") {
 				$type=$file["type"];
-				$fileTypesArray=explode('|',$this->fileTypes[0]);
-				if (in_array($type,$fileTypesArray)) {
+				if (in_array($type,$this->fileTypes)) {
 					$isImg=in_array($type,$imgTypes);
 					$isFlash=in_array($type,$flashTypes);
 
