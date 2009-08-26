@@ -58,12 +58,12 @@ class MY_Upload extends CI_Upload {
 	function upload_file($file="userfile") {
 		$config=$this->config;
 		// trace_($config);
+		$goodluck=FALSE;
 		$this->initialize($config);
 		$this->do_upload($file);
 		$this->error=$this->display_errors();
 		if (empty($this->error)) {
 			$this->result=$this->data();
-			// trace_($this->result);
 			$this->file_name=$this->result["file_name"];
 			$cleanName=clean_file_name($this->file_name);
 			if ($cleanName!=$this->file_name) {
@@ -79,6 +79,10 @@ class MY_Upload extends CI_Upload {
 				log_("info","[UPLOAD] uploaded: '$this->file_name'");
 			}
 		}
+		else {
+			trace_($this->error);
+		}
+		
 		return $goodluck;
 	}
 	

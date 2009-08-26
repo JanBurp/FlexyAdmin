@@ -621,7 +621,7 @@ class Flexy_field extends Model {
 			$map="";
 		}
 		else {
-			$types=explode(",",el("str_types",$info));
+			$types=explode("|",el("str_types",$info));
 			$path=el("str_path",$info);
 			$map=$this->config->item('ASSETS').$path;
 			$files=read_map($map);
