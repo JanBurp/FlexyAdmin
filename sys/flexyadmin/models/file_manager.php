@@ -56,9 +56,13 @@ class File_manager Extends Model {
 	}
 
 	function set_types($types="") {
-		if (!is_array($types)) $types=explode("|",$types);
+		if (!is_array($types)) {
+			$types=str_replace(",","|",$types);
+			$types=explode("|",$types);
+		}
 		$this->fileTypes=$types;
 	}
+
 
 	function set_view($view="list") {
 		$this->view=$view;
