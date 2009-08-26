@@ -360,9 +360,10 @@ function thumb($attr,$index=FALSE) {
 					} elseif (in_array($type,$movTypes)) {
 						$icon=div(array("class"=>"movie")).icon("movie $name")._div();
 					} elseif (in_array($type,$docTypes)) {
-						$icon=div(array("class"=>"movie")).icon("doc $name")._div();
+						$icon=div(array("class"=>"doc")).icon("doc $name")._div();
 					} elseif (in_array($type,$pdfTypes)) {
-						$icon=div(array("class"=>"movie")).icon("pdf $name")._div();
+						$pdf=$this->map."/".$name;
+						$icon=div(array("class"=>"pdf")).'<a href="'.$pdf.'" target="_blank">'.icon("pdf $name").'</a>'._div();
 					} elseif ($file["type"]=="dir") {
 						$icon=div(array("class"=>"image")).img(array("src" => admin_assets("icons/folder.gif"),"alt"=>$name,"title"=>$name))._div();
 					} 
