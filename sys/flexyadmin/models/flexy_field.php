@@ -621,7 +621,9 @@ class Flexy_field extends Model {
 			$map="";
 		}
 		else {
-			$types=explode("|",el("str_types",$info));
+			$types=el("str_types",$info);
+			$types=str_replace(",","|",$types);
+			$types=explode("|",$types);
 			$path=el("str_path",$info);
 			$map=$this->config->item('ASSETS').$path;
 			$files=read_map($map);
@@ -633,8 +635,10 @@ class Flexy_field extends Model {
 			$optionsLast=$this->_create_media_options($lastUploads,$types);
 			if (!empty($optionsLast)) $options[lang("form_dropdown_sort_on_last_upload")]=$optionsLast;
 			$optionsNames=$this->_create_media_options($files,$types);
+			// trace_($optionsNames);
 			if (!empty($optionsNames)) $options[lang("form_dropdown_sort_on_name")]=$optionsNames;
 			// $options=array(lang("form_dropdown_sort_on_last_upload")=>$optionsLast, lang("form_dropdown_sort_on_name")=>$optionsNames);
+			// trace_($options);
 		}
 		$out=$this->_standard_form_field($options);
 		$out["path"]=$map;
