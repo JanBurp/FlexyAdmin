@@ -46,7 +46,7 @@ class Filemanager extends AdminController {
 
 	function _get_unrestricted_files($restrictedToUser) {
 		$this->db->where('user',$restrictedToUser);
-		$this->db->primary_key('file'); 
+		$this->db->set_key('file'); 
 		return $this->db->get_result("cfg_media_files");
 	}
 
@@ -62,7 +62,6 @@ class Filemanager extends AdminController {
 				}
 			}
 		}
-		// trace_($files);
 		return $files;
 	}
 
