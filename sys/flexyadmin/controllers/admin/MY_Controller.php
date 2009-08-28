@@ -296,17 +296,27 @@ class BasicController extends MY_Controller {
 		$preAll=$pre."_*";
 
 		$foundRights=RIGHTS_NO;
+		
+		// $condition=($item=='media_knipsels');
+		// trace_if($condition,$item);
+		// trace_if($condition,$this->rights);
+		// trace_if($condition,array('item'=>$item,'pre'=>$pre,'preAll'=>$preAll));
 
 		if (is_array($this->rights)) {
 			foreach ($this->rights as $key => $rights) {
-				if ($rights['rights']=="*" or (strpos($rights['rights'],$preAll)!==FALSE) or (strpos($rights['rights'],$item)!==FALSE) )
+				if ($rights['rights']=="*" or (strpos($rights['rights'],$preAll)!==FALSE) or (strpos($rights['rights'],$item)!==FALSE) ) {
 					$this->_change_rights($found,$rights);
+					// trace_if($condition,array('item'=>$item,'found'=>$found,'key'=>$key,'rights'=>$rights));
+				}
 			}
-			if ($found['b_delete'])	$foundRights+=RIGHTS_DELETE;
-			if ($found['b_add'])		$foundRights+=RIGHTS_ADD;
-			if ($found['b_edit'])		$foundRights+=RIGHTS_EDIT;
-			if ($found['b_show'])		$foundRights+=RIGHTS_SHOW;
+			// trace_if($condition,$found);
+			if (!empty($found['b_delete'])	and $found['b_delete'])	$foundRights+=RIGHTS_DELETE;
+			if (!empty($found['b_add']) 		and $found['b_add'])		$foundRights+=RIGHTS_ADD;
+			if (!empty($found['b_edit'])		and $found['b_edit'])		$foundRights+=RIGHTS_EDIT;
+			if (!empty($found['b_show'])		and $found['b_show'])		$foundRights+=RIGHTS_SHOW;
 		}
+		// trace_if($condition,$foundRights);
+		// trace_if($condition,$whatRight);
 
 		if ($whatRight==0)
 			return $foundRights;
@@ -662,7 +672,9 @@ class AdminController extends BasicController {
 			foreach($query->result_array() as $mediaInfo) {
 				$menuName=$this->uiNames->get($mediaInfo['str_path']);
 				while (isset($a[$menuName])) {$menuName.=" ";}
-				$rightsName=el('str_name',$mediaInfo);
+				// trace_($mediaInfo);
+				$rightsName=el('str_path',$mediaInfo);
+				// trace_($rightsName);
 				if (!empty($menuName) and $this->has_rights("media_".$rightsName)) {
 					$a[$menuName]=array("uri"=>api_uri('API_filemanager',"show",pathencode(el('str_path',$mediaInfo))),"class"=>"media");
 				}

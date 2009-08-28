@@ -80,7 +80,7 @@ class MY_Upload extends CI_Upload {
 			}
 		}
 		else {
-			trace_($this->error);
+			die($this->error);
 		}
 		
 		return $goodluck;

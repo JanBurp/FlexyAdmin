@@ -68,6 +68,10 @@ function backtrace_($offset=0,$echo=true) {
 	return $out;
 }
 
+function trace_if($condition,$a=NULL,$echo=true,$backtraceOffset=1) {
+	if ($condition) return trace_($a,$echo,$backtraceOffset);
+}
+
 function trace_($a=NULL,$echo=true,$backtraceOffset=1) {
 	static $c=0;
 	$show="Trace";
