@@ -40,16 +40,18 @@ class Filemanager extends AdminController {
 
 	function _has_rights($path,$whatRight=0) {
 		$ok=FALSE;
-		$mediaName=$this->cfg->get('CFG_media_info',$path,"str_name");
+		$mediaName=$this->cfg->get('CFG_media_info',$path,"str_path");
 		return $this->has_rights("media_".$mediaName,"",$whatRight);
 	}
+
+	// A copy of underlying methods sits in flexy_field
 
 	function _get_unrestricted_files($restrictedToUser) {
 		$this->db->where('user',$restrictedToUser);
 		$this->db->set_key('file'); 
 		return $this->db->get_result("cfg_media_files");
 	}
-
+	
 	function _filter_restricted_files($files,$restrictedToUser) {
 		if ($this->db->table_exists("cfg_media_files")) {
 			if ($restrictedToUser) {
@@ -180,7 +182,7 @@ class Filemanager extends AdminController {
 						if ($restrictedToUser>0) {
 							$DoDelete=FALSE;
 							$unrestrictedFiles=$this->_get_unrestricted_files($restrictedToUser);
-							if (in_array($path."/".$file,$unrestrictedFiles)) {
+							if (array_key_exists($path."/".$file,$unrestrictedFiles)) {
 								$DoDelete=TRUE;
 							}
 						}

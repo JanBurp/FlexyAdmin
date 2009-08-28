@@ -601,6 +601,30 @@ class Flexy_field extends Model {
 		return $out;
 	}
 
+
+
+	/* This came form file_manager */
+
+	function _get_unrestricted_files($restrictedToUser) {
+		$this->db->where('user',$restrictedToUser);
+		$this->db->set_key('file'); 
+		return $this->db->get_result("cfg_media_files");
+	}
+	function _filter_restricted_files($files,$restrictedToUser) {
+		if ($this->db->table_exists("cfg_media_files")) {
+			if ($restrictedToUser) {
+				$unrestrictedFiles=$this->_get_unrestricted_files($restrictedToUser);
+				$unrestrictedFiles=array_keys($unrestrictedFiles);
+				$assetsPath=assets();
+				foreach ($files as $name => $file) {
+					$file=str_replace($assetsPath,"",$file['path']);
+					if (!in_array($file,$unrestrictedFiles)) unset($files[$name]);
+				}
+			}
+		}
+		return $files;
+	}
+
 	function _create_media_options($files,$types) {
 		$options=array();
 		foreach($files as $file) {
@@ -627,6 +651,9 @@ class Flexy_field extends Model {
 			$path=el("str_path",$info);
 			$map=$this->config->item('ASSETS').$path;
 			$files=read_map($map);
+			if ($this->restrictedToUser) {
+				$files=$this->_filter_restricted_files($files,$this->restrictedToUser);
+			}
 			$files=not_filter_by($files,"_");
 			$lastUploads=array_slice(sort_by($files,"rawdate",TRUE),0,5);
 			ignorecase_ksort($files);

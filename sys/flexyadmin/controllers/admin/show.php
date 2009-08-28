@@ -96,7 +96,7 @@ class Show extends AdminController {
 							$this->db->order_as_tree();
 						}
 						if ($restrictedToUser>0 and $this->db->has_field($table,"user")) {
-							$this->db->where("user",$restrictedToUser);
+							$this->db->where($table.".user",$restrictedToUser);
 							$this->db->dont_select("user");
 						}
 						if ($table=="cfg_users")
