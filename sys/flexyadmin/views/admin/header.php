@@ -33,7 +33,7 @@
 	</script>
 
 	<script language="javascript" type="text/javascript" src="sys/jquery/jquery-1.3.2.min.js"></script>
-	<script language="javascript" type="text/javascript" src="sys/jquery/ui/jquery-ui-1.7.1.custom.min.js"></script>
+	<script language="javascript" type="text/javascript" src="sys/jquery/ui/jquery-ui-1.7.2.custom.min.js"></script>
 
 	<script language="javascript" type="text/javascript" src="sys/jquery/plugins/filterable/jquery.filterable.js"></script>
 	<script language="javascript" type="text/javascript" src="sys/jquery/plugins/tablesorter/jquery.tablesorter.min.js"></script>
@@ -41,6 +41,7 @@
 	<? if ($show_type=="form"): ?>
 	<!-- js for form -->
 	<script language="javascript" type="text/javascript" src="sys/jquery/ui/i18n/ui.datepicker-nl.js"></script>
+	<script language="javascript" type="text/javascript" src="sys/jquery/plugins/timepicker/timepicker.js"></script>
 	<script language="javascript" type="text/javascript" src="sys/jquery/plugins/form/jquery.form.js"></script>
 	<? endif; ?>
 

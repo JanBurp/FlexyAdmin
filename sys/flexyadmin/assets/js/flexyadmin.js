@@ -23,9 +23,10 @@ $(document).ready(function() {
 	if (isForm) {
 
 		//
-		// Datepicker dialog
+		// Timepicker and Datepicker dialog
 		//
 		$("form input.date").datepicker({ dateFormat: 'yy-mm-dd' });
+		$("form input.time").datepicker({ dateFormat: 'yy-mm-dd', duration:'', showTime:true, constrainInput:false,time24h:true });
 
 		//
 		// Password create button
