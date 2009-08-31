@@ -48,8 +48,8 @@ class MY_Controller extends Controller {
 		$this->cfg->load('CFG_configurations');
 		$this->cfg->load('CFG_table',$this->config->item('CFG_table_name'));
 		$this->cfg->load('CFG_field',$this->config->item('CFG_field_name'));
-		$this->cfg->load('CFG_media_info',array("str_path","fields_media_fields"));
-		$this->cfg->load('CFG_img_info','str_path');
+		$this->cfg->load('CFG_media_info',array("path","fields_media_fields"));
+		$this->cfg->load('CFG_img_info','path');
 		// trace_($this->cfg->data);
 	}
 
@@ -670,16 +670,16 @@ class AdminController extends BasicController {
 			$this->db->order_by("order");
 			$query=$this->db->get($mediaInfoTbl);
 			foreach($query->result_array() as $mediaInfo) {
-				$menuName=$this->uiNames->get($mediaInfo['str_path']);
+				$menuName=$this->uiNames->get($mediaInfo['path']);
 				while (isset($a[$menuName])) {$menuName.=" ";}
 				// trace_($mediaInfo);
-				$rightsName=el('str_path',$mediaInfo);
+				$rightsName=el('path',$mediaInfo);
 				// trace_($rightsName);
 				if (!empty($menuName) and $this->has_rights("media_".$rightsName)) {
-					$a[$menuName]=array("uri"=>api_uri('API_filemanager',"show",pathencode(el('str_path',$mediaInfo))),"class"=>"media");
+					$a[$menuName]=array("uri"=>api_uri('API_filemanager',"show",pathencode(el('path',$mediaInfo))),"class"=>"media");
 				}
 				// trace_($mediaInfo);
-				$mediaHelp=$this->cfg->get("CFG_media_info",$mediaInfo["str_path"],"txt_help");
+				$mediaHelp=$this->cfg->get("CFG_media_info",$mediaInfo["path"],"txt_help");
 				if (!empty($mediaHelp)) {
 					$a[$menuName]["help"]=$mediaHelp;
 				}

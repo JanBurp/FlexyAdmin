@@ -66,7 +66,7 @@ class Flexy_field extends Model {
 
 	function set_variables() {
 		$this->vars=array(
-				"IMG_MAP"=> $this->cfg->get('CFG_media_info',$this->table,"str_path")
+				"IMG_MAP"=> $this->cfg->get('CFG_media_info',$this->table,"path")
 				);
 	}
 
@@ -326,7 +326,7 @@ class Flexy_field extends Model {
 		 */
 		if ($this->type=="upload") {
 			$uploadCfg=$this->cfg->get('CFG_media_info',$this->table);
-			$out['upload_path'] 	= el("str_path",$uploadCfg);
+			$out['upload_path'] 	= el("path",$uploadCfg);
 			$out['allowed_types'] = el("str_types",$uploadCfg);
 			//$out['max_size'] = '100';
 			//$out['max_width'] = '1024';
@@ -587,7 +587,7 @@ class Flexy_field extends Model {
 			$info=$this->cfg->get('CFG_media_info',$this->table.".".$this->field);
 			$type=el("str_type",$info);
 			if ($type=="image" or $type=="flash") {
-				$path=el("str_path",$info);
+				$path=el("path",$info);
 				$media=$this->config->item('ASSETS').$path."/".$this->data;
 				$out=show_thumb($media);
 			}
@@ -602,7 +602,7 @@ class Flexy_field extends Model {
 			$info=$this->cfg->get('CFG_media_info',$this->table.".".$this->field);
 			$type=el("str_type",$info);
 			if ($type=="image" or $type=="flash") {
-				$path=$this->config->item('ASSETS').el("str_path",$info)."/";
+				$path=$this->config->item('ASSETS').el("path",$info)."/";
 				$data=explode("|",$this->data);
 				$media=$this->config->item('ASSETS').$path."/".$this->data;
 				foreach($data as $img) {
@@ -661,7 +661,7 @@ class Flexy_field extends Model {
 			$types=el("str_types",$info);
 			$types=str_replace(",","|",$types);
 			$types=explode("|",$types);
-			$path=el("str_path",$info);
+			$path=el("path",$info);
 			$map=$this->config->item('ASSETS').$path;
 			$files=read_map($map);
 			if ($this->restrictedToUser) {
@@ -712,6 +712,24 @@ class Flexy_field extends Model {
 		unset($out["button"]);
 		return $out;
 	}
+
+	function _dropdown_path_form() {
+		$options=array();
+		$map=$this->config->item('ASSETS');
+		$files=read_map($map,'dir');
+		unset($files['css']);
+		unset($files['img']);
+		unset($files['js']);
+		unset($files['lists']);
+		$options[""]="";
+		foreach($files as $file) {
+			$options[$file["name"]]=$file["name"];
+		}
+		$out=$this->_standard_form_field($options);
+		unset($out["button"]);
+		return $out;
+	}
+
 
 
 }

@@ -57,7 +57,7 @@ class Edit extends AdminController {
 	}
 
 	function _has_media($table) {
-		$path=$this->cfg->get('CFG_media_info',$table,"str_path");
+		$path=$this->cfg->get('CFG_media_info',$table,"path");
 		return ($path);
 	}
 

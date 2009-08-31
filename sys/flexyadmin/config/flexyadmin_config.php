@@ -474,16 +474,11 @@ $config['FIELDS_special'] = array(
 												"form"				=> "function_dropdown_rights",
 												"validation"	=> "trim",
 											),
-	// "field"			=> array(
-	// 											"grid"				=> "%s",
-	// 											"form"				=> "function_dropdown_field",
-	// 											"validation"	=> "trim",
-	// 										),
-	// "fields"		=> array(
-	// 											"grid"				=> "%s",
-	// 											"form"				=> "function_dropdown_fields",
-	// 											"validation"	=> "trim",
-	// 										),
+	"path"			=> array(
+												"grid"				=> "%s",
+												"form"				=> "function_dropdown_path",
+												"validation"	=> "trim",
+											),
 	"file"			=> array(
 												"grid"				=> "%s",
 												"form"				=> "function_dropdown_allfiles",
