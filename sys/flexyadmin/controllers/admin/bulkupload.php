@@ -40,7 +40,7 @@ class Bulkupload extends AdminController {
 					$form=new form($this->config->item('API_bulk_upload'));
 					$options=array();
 					foreach ($mediaCfg as $info) {
-						$options[$info['str_path']]=$info['str_path'];
+						$options[$info['path']]=$info['path'];
 					}
 					$data=array(	"path"				=> array("label"=>'Move to:','type'=>'dropdown','options'=>$options)
 												// "do_resize"		=> array('type'=>'checkbox','value'=>'1'),

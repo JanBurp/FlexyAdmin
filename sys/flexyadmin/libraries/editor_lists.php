@@ -38,11 +38,11 @@ class Editor_lists {
 
 		$mediaTbl=$CI->config->item('CFG_table_prefix')."_".$CI->config->item('CFG_media_info');
 		if ($CI->db->table_exists($mediaTbl)) {
-			$CI->db->select("str_path");
+			$CI->db->select("path");
 			$CI->db->where($boolField,1);
 			$query=$CI->db->get($mediaTbl);
 			foreach($query->result_array() as $row) {
-				$path=$row["str_path"];
+				$path=$row["path"];
 				$map=$CI->config->item('ASSETS').$path;
 				$subFiles=read_map($map);
 				$subFiles=not_filter_by($subFiles,"_");

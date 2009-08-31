@@ -40,7 +40,7 @@ class Filemanager extends AdminController {
 
 	function _has_rights($path,$whatRight=0) {
 		$ok=FALSE;
-		$mediaName=$this->cfg->get('CFG_media_info',$path,"str_path");
+		$mediaName=$this->cfg->get('CFG_media_info',$path,"path");
 		return $this->has_rights("media_".$mediaName,"",$whatRight);
 	}
 
