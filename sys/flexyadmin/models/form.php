@@ -24,7 +24,9 @@ class Form Extends Model {
 	var $hasHtmlField;
 	var $isValidated;
 	
-	var $showSubmit;
+	var $buttons;
+	// var $showSubmit;
+	
 
 	function Form($action="") {
 		parent::Model();
@@ -38,7 +40,8 @@ class Form Extends Model {
 		$this->data=array();
 		$this->set_type();
 		$this->hasHtmlField=false;
-		$this->show_submit();
+		$this->show_buttons();
+		// $this->show_submit();
 	}
 
 	function set_action($action="") {
@@ -86,8 +89,24 @@ class Form Extends Model {
 		return $field;
 	}
 
-	function show_submit($show=TRUE) {
-		$this->showSubmit=$show;
+	function show_buttons($buttons=NULL) {
+		if (empty($buttons)) {
+			$buttons=array(	'cancel'	=> array( "value" => lang("form_cancel"), "class"=>"button cancel", "onClick" => "window.history.back()"),
+											'reset'		=> array( "value" => lang("form_reset"), "class"=>"button reset"),
+											'submit'	=> array( "submit"=>"submit", "value"=>lang("form_submit")));
+		}
+		foreach ($buttons as $name => $button) {
+			if (!isset($button['name'])) $buttons[$name]['name']=$name;
+			if (!isset($button['class'])) $buttons[$name]['class']="button";
+			if (isset($button['submit'])) $buttons[$name]['class'].=" submit";
+		}
+		$this->buttons=$buttons;
+	}
+
+	function no_submit() {
+		foreach ($this->buttons as $name => $button) {
+			if (isset($button['submit'])) unset($this->buttons[$name]);
+		}
 	}
 
 /**
@@ -452,11 +471,17 @@ class Form Extends Model {
 		}
 		$out.=form_fieldset_close();
 		$out.=form_fieldset("",array("class"=>"formbuttons"));
-		$out.=form_reset(array("name"=>"cancel", "value" => lang("form_cancel"), "class"=>"button cancel", "onClick" => "window.history.back()"));
-		if ($this->showSubmit) {
-			$out.=form_reset(array("name"=>"reset", "value" => lang("form_reset"), "class"=>"button reset"));
-			$out.=form_submit(array("submit"=>"submit", "value"=>lang("form_submit"),"class"=>"button submit"));
+		foreach ($this->buttons as $name => $button) {
+			if (isset($button['submit']))
+				$out.=form_submit($button);
+			else
+				$out.=form_reset($button);
 		}
+		// $out.=form_reset(array("name"=>"cancel", "value" => lang("form_cancel"), "class"=>"button cancel", "onClick" => "window.history.back()"));
+		// if ($this->showSubmit) {
+		// 	$out.=form_reset(array("name"=>"reset", "value" => lang("form_reset"), "class"=>"button reset"));
+		// 	$out.=form_submit(array("submit"=>"submit", "value"=>lang("form_submit"),"class"=>"button submit"));
+		// }
 		$out.=form_fieldset_close();
 		$out.=form_close();
 		log_('info',"form: rendering");
