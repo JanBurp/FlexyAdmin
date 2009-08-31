@@ -110,7 +110,7 @@ class Flexy_field extends Model {
 		$info=$this->cfg->field_data($this->table);
 		$database=$this->config->item('FIELDS_'.$platform);
 		if (isset($database[$this->field][$this->action])) {
-			//trace_($this->field." - from database field info");
+			// trace_($this->field." - from database field info");
 			$type=$database[$this->field][$this->action];
 			$validation=el("validation",$database[$this->field]);
 			$this->_set_type($type);
@@ -344,7 +344,20 @@ class Flexy_field extends Model {
 		 */
 		$out["validation"]= $this->validation;
 		$extraValidation=$this->cfg->get('CFG_field',$this->table.".".$this->field,'str_validation_rules');
-		if (!empty($extraValidation)) $out["validation"]=add_string($out["validation"],$extraValidation,"|");
+		if (!empty($extraValidation)) {
+			$extraValidation=explode("|",$extraValidation);
+			$validationParams=$this->cfg->get('CFG_field',$this->table.".".$this->field,'str_validation_parameters');
+			$validationParams=explode(",",$validationParams);
+			$addValidation='';
+			foreach ($extraValidation as $thisValidation) {
+				if (strpos($thisValidation,'[]')>0) {
+					$thisParam=current($validationParams);
+					$thisValidation=str_replace('[]','['.$thisParam.']',$thisValidation);
+				}
+				$addValidation=add_string($thisValidation,$addValidation,'|');
+			}
+			$out["validation"]=add_string($out["validation"],$addValidation,"|");
+		}
 		return $out;
 	}
 

@@ -296,6 +296,17 @@ $config["CFG_"]=array(
 			"str_validation_rules"=>'',
 			"txt_help"=>''
 			),
+		"cfg_field_info.str_validation_parameters"=>array(
+			"field"=>'cfg_field_info.str_validation_parameters',
+			"str_ui_name"=>'Val. Parameters',
+			"b_show_in_grid"=>'1',
+			"b_show_in_form"=>'1',
+			"str_options"=>'',
+			"b_multi_options"=>'1',
+			"str_overrule_prefix"=>'',
+			"str_validation_rules"=>'',
+			"txt_help"=>''
+			),
 		"cfg_table_info.str_form_many_type"=>array(
 			"field"=>'cfg_table_info.str_form_many_type',
 			"str_ui_name"=>'',
