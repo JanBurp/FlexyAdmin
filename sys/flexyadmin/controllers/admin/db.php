@@ -156,8 +156,9 @@ class Db extends AdminController {
 	function restore() {
 		if ($this->_can_backup()) {
 			if (!isset($_FILES["userfile"])) {
-				$this->lang->load('help');
 				$this->load->model('form');
+				$this->lang->load('help');
+				$this->lang->load('form');
 				$form=new form($this->config->item('API_db_restore'));
 				$data=array( "userfile"	=> array("type"=>"file","label"=>lang('file')) );
 										 // "sure"=> array("type"=>"hidden","value"=>$this->cfg->get('CFG_configurations','key')) );
@@ -215,6 +216,7 @@ class Db extends AdminController {
 	function _import() {
 		$this->load->model('form');
 		$this->lang->load('help');
+		$this->lang->load('form');
 		$form=new form($this->config->item('API_db_import'));
 		$data=array( 	"userfile"	=> array("type"=>"file","label"=>"File (txt)"),
 		 							"sql"				=> array("type"=>"textarea","label"=>"Or (update) SQL"));
@@ -235,6 +237,7 @@ class Db extends AdminController {
 					// do the actual import..
 					$this->load->model('form');
 					$this->lang->load('help');
+					$this->lang->load('form');
 					$form=new form($this->config->item('API_db_sql'));
 					$data=array( 	"sql" => array("type"=>"textarea","value"=>$sql),
 					 							"sure"=> array("type"=>"hidden","value"=>$this->cfg->get('CFG_configurations','key')) // insert license here!!
