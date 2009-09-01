@@ -96,7 +96,7 @@ class Form Extends Model {
 											'submit'	=> array( "submit"=>"submit", "value"=>lang("form_submit")));
 		}
 		foreach ($buttons as $name => $button) {
-			if (!isset($button['name'])) $buttons[$name]['name']=$name;
+			if (!isset($button['name'])) 	$buttons[$name]['name']=$name;
 			if (!isset($button['class'])) $buttons[$name]['class']="button";
 			if (isset($button['submit'])) $buttons[$name]['class'].=" submit";
 		}
