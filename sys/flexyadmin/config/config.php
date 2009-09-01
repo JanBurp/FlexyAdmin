@@ -16,7 +16,17 @@
 */
 
 if (isset($_SERVER["HTTP_HOST"]) and isset($_SERVER["SCRIPT_NAME"]) ) {
-	$config['base_url']	= "http://".$_SERVER["HTTP_HOST"].str_replace("index.php","",$_SERVER["SCRIPT_NAME"]);
+	$host=$_SERVER["HTTP_HOST"];
+	$script=$_SERVER["SCRIPT_NAME"];
+	$script=str_replace("index.php","",$script);
+	$script=str_replace($host."/","",$script);
+	$config['base_url']	= "http://".$host.$script;
+	// echo $config['base_url'];
+	// echo $_SERVER["HTTP_HOST"]."<br/>";
+	// echo $_SERVER["SCRIPT_NAME"];
+	// echo "<pre>";
+	// print_r($_SERVER);
+	// echo "</pre>";
 }
 else {
 	// If no automatic base_url, comment this:
