@@ -1,19 +1,10 @@
--- phpMyAdmin SQL Dump
--- version 2.11.7.1
--- http://www.phpmyadmin.net
 --
--- Host: localhost
--- Generatie Tijd: 27 Aug 2009 om 11:10
--- Server versie: 5.0.41
--- PHP Versie: 5.2.6
+-- FlexyAdmin demo database (r459)
 --
--- FlexyAdmin r446
+
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
---
--- Database: `flexyadmin_demo`
---
 
 -- --------------------------------------------------------
 
@@ -30,6 +21,7 @@ CREATE TABLE IF NOT EXISTS `cfg_configurations` (
   `str_content_table` varchar(50) collate latin1_general_ci NOT NULL default '',
   `b_logout_to_site` tinyint(1) NOT NULL default '0',
   `b_query_urls` tinyint(1) NOT NULL,
+  `txt_help` text collate latin1_general_ci NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=4 ;
 
@@ -37,7 +29,7 @@ CREATE TABLE IF NOT EXISTS `cfg_configurations` (
 -- Gegevens worden uitgevoerd voor tabel `cfg_configurations`
 --
 
-INSERT INTO `cfg_configurations` VALUES(1, '-not needed-', 'info@flexyadmin.com', 'tbl_menu', '', 0, 0);
+INSERT INTO `cfg_configurations` VALUES(1, '-not needed-', 'info@flexyadmin.com', 'tbl_menu', '', 0, 0, '');
 
 -- --------------------------------------------------------
 
@@ -84,6 +76,7 @@ CREATE TABLE IF NOT EXISTS `cfg_field_info` (
   `b_multi_options` tinyint(1) NOT NULL default '0',
   `str_overrule_prefix` varchar(10) NOT NULL default '',
   `str_validation_rules` varchar(255) NOT NULL default '',
+  `str_validation_parameters` varchar(20) NOT NULL,
   `txt_help` text NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
@@ -102,7 +95,7 @@ CREATE TABLE IF NOT EXISTS `cfg_field_info` (
 DROP TABLE IF EXISTS `cfg_img_info`;
 CREATE TABLE IF NOT EXISTS `cfg_img_info` (
   `id` int(11) NOT NULL auto_increment,
-  `str_path` varchar(255) NOT NULL default '',
+  `path` varchar(255) NOT NULL,
   `b_resize_img` tinyint(1) NOT NULL default '0',
   `int_img_width` int(11) NOT NULL default '0',
   `int_img_height` int(11) NOT NULL default '0',
@@ -117,12 +110,13 @@ CREATE TABLE IF NOT EXISTS `cfg_img_info` (
   `str_prefix_2` varchar(10) NOT NULL default '',
   `str_postfix_2` varchar(10) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 --
 -- Gegevens worden uitgevoerd voor tabel `cfg_img_info`
 --
 
+INSERT INTO `cfg_img_info` VALUES(1, 'pictures', 0, 0, 0, 0, 0, 0, '', '', 0, 0, 0, '', '');
 
 -- --------------------------------------------------------
 
@@ -137,7 +131,7 @@ CREATE TABLE IF NOT EXISTS `cfg_media_info` (
   `str_ui_name` varchar(50) NOT NULL,
   `str_type` varchar(20) NOT NULL default '',
   `fields_media_fields` varchar(100) NOT NULL,
-  `str_path` varchar(255) NOT NULL default '',
+  `path` varchar(255) NOT NULL,
   `fields_autofill_fields` varchar(255) NOT NULL,
   `str_types` varchar(100) NOT NULL default '',
   `b_in_media_list` tinyint(4) NOT NULL default '0',
@@ -145,12 +139,13 @@ CREATE TABLE IF NOT EXISTS `cfg_media_info` (
   `b_in_link_list` tinyint(1) NOT NULL default '0',
   `txt_help` blob NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 --
 -- Gegevens worden uitgevoerd voor tabel `cfg_media_info`
 --
 
+INSERT INTO `cfg_media_info` VALUES(1, 1, 'Foto''s', 'image', '', 'pictures', '', 'jpg,jpeg,gif,png', 0, 1, 0, '');
 
 -- --------------------------------------------------------
 
@@ -177,9 +172,9 @@ CREATE TABLE IF NOT EXISTS `cfg_rights` (
 -- Gegevens worden uitgevoerd voor tabel `cfg_rights`
 --
 
-INSERT INTO `cfg_rights` VALUES(1, 'super_admin', '*', 1, 1, 0, 1, 1, 1, 1);
-INSERT INTO `cfg_rights` VALUES(2, 'admin', 'tbl_*|media_*|cfg_users', 1, 1, 0, 1, 1, 1, 1);
-INSERT INTO `cfg_rights` VALUES(3, 'user', 'tbl_*|media_*', 1, 0, 0, 1, 1, 1, 1);
+INSERT INTO `cfg_rights` VALUES(1, 'super_admin', '*', 1, 1, 1, 1, 1, 1, 1);
+INSERT INTO `cfg_rights` VALUES(2, 'admin', 'tbl_*|media_*|cfg_users', 1, 1, 1, 1, 1, 1, 1);
+INSERT INTO `cfg_rights` VALUES(3, 'user', 'tbl_*|media_*', 0, 0, 0, 1, 1, 1, 1);
 INSERT INTO `cfg_rights` VALUES(4, 'visiter', 'tbl_*|media_*', 0, 0, 0, 0, 0, 0, 1);
 
 -- --------------------------------------------------------
@@ -275,7 +270,7 @@ CREATE TABLE IF NOT EXISTS `log_login` (
   `str_changed_tables` varchar(255) collate latin1_general_ci NOT NULL default '',
   `ip_login_ip` varchar(16) collate latin1_general_ci NOT NULL default '',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=13 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=1 ;
 
 --
 -- Gegevens worden uitgevoerd voor tabel `log_login`
@@ -300,13 +295,12 @@ CREATE TABLE IF NOT EXISTS `log_stats` (
   `str_platform` varchar(20) NOT NULL default '',
   `str_referrer` varchar(100) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=207 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
 -- Gegevens worden uitgevoerd voor tabel `log_stats`
 --
 
-INSERT INTO `log_stats` VALUES(206, '2009-08-27 11:10:17', 'home', '::1', 'localhost', 'Firefox', '3.5', 'Mac OS X', 'http://localhost/');
 
 -- --------------------------------------------------------
 
@@ -348,7 +342,6 @@ CREATE TABLE IF NOT EXISTS `tbl_links` (
 --
 
 INSERT INTO `tbl_links` VALUES(35, 'Jan den Besten - webontwerp en geluidsontwerp', 'http://www.jandenbesten.net');
-INSERT INTO `tbl_links` VALUES(38, 'test', 'http://www.ntozl.nl');
 
 -- --------------------------------------------------------
 
