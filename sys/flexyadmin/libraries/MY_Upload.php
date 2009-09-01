@@ -35,16 +35,11 @@ class MY_Upload extends CI_Upload {
 	}
 
 	function _setMemory($imageInfo) {
-		// trace_($imageInfo);
-		if (isset($imageInfo['channels']) and isset($imageInfo['bits']) ) {
+		if (isset($imageInfo['channels']) and isset($imageInfo['bits']) and function_exists('memory_get_usage') and function_exists('ini_set')) {
 			$memoryNeeded = round(($imageInfo[0] * $imageInfo[1] * $imageInfo['bits'] * $imageInfo['channels'] / 8 / 1048576 * 2 ));
-			// trace_("needed=". $memoryNeeded.'Mb');
 			$memoryLimit = (int) ini_get('memory_limit');
-			// trace_("limit=".$memoryLimit.'Mb');
 			$memoryUsage=memory_get_usage()/1048576;
-			// trace_("usage=".$memoryUsage.'Mb');
 			$memorySet=ceil($memoryUsage + $memoryNeeded);
-			// trace_("set to=".$memorySet);
 			if (($memoryUsage + $memoryNeeded) > $memoryLimit) {
 			  ini_set('memory_limit', $memorySet.'M');
 			  return true;
