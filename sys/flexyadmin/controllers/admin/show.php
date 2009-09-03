@@ -321,6 +321,9 @@ class Show extends AdminController {
 		
 		$formData=$this->ff->render_form($userTable,$userData,$options);
 
+		$this->lang->load("update_delete");
+		$this->lang->load("form");
+
 		$this->load->library('form_validation');
 		$this->load->helper('html');
 		$this->form_validation->set_error_delimiters('<div id="formmessage">', '</div>');
@@ -331,7 +334,6 @@ class Show extends AdminController {
 		 * Validate form, if succes, make form do an update
 		 */
 		if ($form->validation()) {
-			$this->lang->load("update_delete");
 			$resultId=$form->update($userTable);
 			if (is_string($resultId)) {
 				$this->set_message(langp("update_error",$userTable,$resultId));
