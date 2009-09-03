@@ -21,6 +21,7 @@ class Search extends AdminController {
 	function index() {
 		if ($this->_can_use_tools()) {
 			$this->lang->load('help');
+			$this->lang->load('form');
 		
 			$search=$this->input->post('search');
 			$replace=$this->input->post('replace');
