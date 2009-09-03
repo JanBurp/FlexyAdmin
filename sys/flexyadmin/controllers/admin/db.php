@@ -40,6 +40,8 @@ class Db extends AdminController {
 	function _export() {
 		$this->load->model('form');
 		$this->lang->load('help');
+		$this->lang->load("update_delete");
+		$this->lang->load("form");
 
 		$form=new form($this->config->item('API_db_export'));
 		$tablesWithRights=$this->_get_table_rights();
