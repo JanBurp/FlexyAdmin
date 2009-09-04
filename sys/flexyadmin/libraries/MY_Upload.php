@@ -75,7 +75,8 @@ class MY_Upload extends CI_Upload {
 			}
 		}
 		else {
-			die($this->error);
+			// die($this->error);
+			$goodluck=FALSE;
 		}
 		
 		return $goodluck;

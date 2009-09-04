@@ -332,6 +332,7 @@ function thumb($attr,$index=FALSE) {
 		$movTypes=$this->config->item('FILE_types_movies');
 		$pdfTypes=$this->config->item('FILE_types_pdf');
 		$docTypes=$this->config->item('FILE_types_docs');
+		$xlsTypes=$this->config->item('FILE_types_xls');
 
 		$nr=1;
 		foreach($files as $id=>$file) {
@@ -363,11 +364,17 @@ function thumb($attr,$index=FALSE) {
 						$icon=div(array("class"=>"sound")).icon("sound $name")._div();
 					} elseif (in_array($type,$movTypes)) {
 						$icon=div(array("class"=>"movie")).icon("movie $name")._div();
+
 					} elseif (in_array($type,$docTypes)) {
-						$icon=div(array("class"=>"doc")).icon("doc $name")._div();
+						$downloadFile=$this->map."/".$name;
+						$icon=div(array("class"=>"doc")).'<a href="'.$downloadFile.'" target="_blank">'.icon("doc $name").'</a>'._div();
+					} elseif (in_array($type,$xlsTypes)) {
+						$downloadFile=$this->map."/".$name;
+						$icon=div(array("class"=>"xls")).'<a href="'.$downloadFile.'" target="_blank">'.icon("xls $name").'</a>'._div();
 					} elseif (in_array($type,$pdfTypes)) {
-						$pdf=$this->map."/".$name;
-						$icon=div(array("class"=>"pdf")).'<a href="'.$pdf.'" target="_blank">'.icon("pdf $name").'</a>'._div();
+						$downloadFile=$this->map."/".$name;
+						$icon=div(array("class"=>"pdf")).'<a href="'.$downloadFile.'" target="_blank">'.icon("pdf $name").'</a>'._div();
+
 					} elseif ($file["type"]=="dir") {
 						$icon=div(array("class"=>"image")).img(array("src" => admin_assets("icons/folder.gif"),"alt"=>$name,"title"=>$name))._div();
 					} 

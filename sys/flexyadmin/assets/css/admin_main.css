@@ -297,6 +297,7 @@ div.add_button {
 	width:50px;
 	height:50px;
 	margin:30px;
+	cursor:pointer;
 }
 .list	.icon.pdf {
 		background-image: url("../icons/pdf-icon_small.gif");
@@ -305,19 +306,31 @@ div.add_button {
 		margin:0px;
 		}
 .icon.doc {
-	background-image: url("../icons/doc_icon_50x50.gif");
+	background-image: url("../icons/icon_doc.gif");
 	width:50px;
 	height:50px;
 	margin:30px;
-	cursor:default;
+	cursor:pointer;
 }
 .list	.icon.doc {
-		background-image: url("../icons/doc_icon_small.gif");
+		background-image: url("../icons/icon_doc_small.gif");
 		width:20px;
 		height:20px;
 		margin:0px;
 		}
-
+.icon.xls {
+	background-image: url("../icons/icon_excel.gif");
+	width:50px;
+	height:50px;
+	margin:30px;
+	cursor:pointer;
+}
+.list	.icon.xls {
+		background-image: url("../icons/icon_excel_small.gif");
+		width:20px;
+		height:20px;
+		margin:0px;
+		}
 .icon.movie {
 	background-image: url("../icons/movie.gif");
 	background-position:inherit;
