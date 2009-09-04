@@ -138,7 +138,7 @@ $config['FILE_types_flash']						= array('swf','flv');
 $config['FILE_types_movies'] 					= array('mov');
 $config['FILE_types_pdf']							= array('pdf');
 $config['FILE_types_docs']						= array('doc','docx','odt');
-
+$config['FILE_types_xls']							= array('xls','xlsx','ods');
 
 $config['CFG_table']									= "table_info";
 $config['CFG_table_name']							= "table";

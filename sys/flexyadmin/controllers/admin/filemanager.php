@@ -231,7 +231,10 @@ class Filemanager extends AdminController {
 				$error=$result["error"];
 				$file=$result["file"];
 				if (!empty($error)) {
-					$this->set_message(langp("upload_error",$file));
+					if (is_string($error))
+						$this->set_message($error,$file);
+					else
+						$this->set_message(langp("upload_error",$file));
 				}
 				else {
 					if ($this->db->table_exists("cfg_media_files")) {
