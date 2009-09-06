@@ -15,24 +15,19 @@
 
 */
 
-if (isset($_SERVER["HTTP_HOST"]) and isset($_SERVER["SCRIPT_NAME"]) ) {
-	$host=$_SERVER["HTTP_HOST"];
-	$script=$_SERVER["SCRIPT_NAME"];
-	$script=str_replace("index.php","",$script);
-	$script=str_replace($host."/","",$script);
-	$config['base_url']	= "http://".$host.$script;
-	// echo $config['base_url'];
-	// echo $_SERVER["HTTP_HOST"]."<br/>";
-	// echo $_SERVER["SCRIPT_NAME"];
-	// echo "<pre>";
-	// print_r($_SERVER);
-	// echo "</pre>";
+if (isset($_SERVER["HTTP_HOST"])) {
+	if (IS_LOCALHOST and isset($_SERVER["SCRIPT_NAME"]))
+		$config['base_url']='http://'.$_SERVER["HTTP_HOST"].$_SERVER["SCRIPT_NAME"];
+	else
+		$config['base_url']='http://'.$_SERVER["HTTP_HOST"];
+	$config['base_url']=str_replace('index.php','',$config['base_url']);
 }
-else {
+if (!isset($config['base_url'])) {
 	// If no automatic base_url, comment this:
 	die("sorry no automatic 'base_url', edit your config.php file");
 	// And uncomment this with right base_url
-	// $config['base_url']	= "http://localhost/JdB/FlexyAdminV1/code/";
+	// $config['base_url']	= "http://www.flexyadmin.com/";
+	
 }
 
 /*
@@ -63,7 +58,7 @@ $config['index_page'] = "";
 | 'ORIG_PATH_INFO'	Uses the ORIG_PATH_INFO
 |
 */
-$config['uri_protocol']	= "PATH_INFO";
+$config['uri_protocol']	= "AUTO";
 
 /*
 |--------------------------------------------------------------------------
