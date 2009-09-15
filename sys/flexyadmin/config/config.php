@@ -22,13 +22,6 @@ if (isset($_SERVER["HTTP_HOST"])) {
 		$config['base_url']='http://'.$_SERVER["HTTP_HOST"];
 	$config['base_url']=str_replace('index.php','',$config['base_url']);
 }
-if (!isset($config['base_url'])) {
-	// If no automatic base_url, comment this:
-	die("sorry no automatic 'base_url', edit your config.php file");
-	// And uncomment this with right base_url
-	// $config['base_url']	= "http://www.flexyadmin.com/";
-	
-}
 
 /*
 |--------------------------------------------------------------------------
@@ -327,6 +320,8 @@ $config['time_reference'] = 'local';
 */
 $config['rewrite_short_tags'] = FALSE;
 
+
+require_once("site/config.php");
 
 
 /* End of file config.php */
