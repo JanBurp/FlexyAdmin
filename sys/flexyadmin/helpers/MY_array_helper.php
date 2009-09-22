@@ -66,16 +66,20 @@ function array2php($array,$tabs=1) {
 	return $php;
 }
 
+
 function array2xml($array,$tabs=0) {
 	if ($tabs<=0)
-		$xml='<?xml version="1.0" encoding="ISO-8859-1"?>'."\n";
+		$xml='<?xml version="1.0" encoding="ISO-8859-1"?>'."\n\n";
 	else
 		$xml="\n";
 	$sub="";
 	foreach($array as $key=>$value) {
 		$sub.=repeater("\t",$tabs);
 		$sub.="<$key>";
-		if (is_array($value)) $sub.=array2xml($value,$tabs+1);
+		if (is_array($value)) {
+			$sub.=array2xml($value,$tabs+1);
+			$sub.=repeater("\t",$tabs);
+		}
 		else {
 			if (in_string("<&>",$value))
 				$sub.="<![CDATA[$value]]>";
@@ -83,9 +87,42 @@ function array2xml($array,$tabs=0) {
 				$sub.=$value;
 		}
 		$sub.="</$key>\n";
+		if ($tabs==0) $sub.="\n";
 	}
 	$xml.="$sub";
 	return $xml;
+}
+
+function xml2array($xml) {
+	$xmlary = array();
+	$xmlArray=array();
+	$reels = '/<(\w+)\s*([^\/>]*)\s*(?:\/>|>(.*)<\/\s*\\1\s*>)/s';
+	$reattrs = '/(\w+)=(?:"|\')([^"\']*)(:?"|\')/';
+	preg_match_all($reels, $xml, $elements);
+	foreach ($elements[1] as $ie => $xx) {
+		$key=$elements[1][$ie];
+		// TODO: xml attributes in xml2array
+		// if ($attributes = trim($elements[2][$ie])) {
+		// 	preg_match_all($reattrs, $attributes, $att);
+		// 	foreach ($att[1] as $ia => $xx)	$xmlary[$ie]["attributes"][$att[1][$ia]] = $att[2][$ia];
+		// }
+		// $cdend = strpos($elements[3][$ie], "<");
+		// if ($cdend > 0) {
+		// 	$xmlary[$ie]["text"] = substr($elements[3][$ie], 0, $cdend - 1);
+		// }
+		
+		if (preg_match($reels, $elements[3][$ie]))
+			$value=xml2array($elements[3][$ie]);
+		elseif (isset($elements[3][$ie])) {
+			$value=$elements[3][$ie];
+			$value=str_replace(array('<![CDATA[',']]>'),'',$value);
+		}
+		else
+			$value='';
+		$xmlArray[$key]=$value;
+	}
+
+	return $xmlArray;
 }
 
 
@@ -206,6 +243,21 @@ function implode_pre($i,$a,$pre) {
 	$out=implode($i.$pre,$a);
 	$out=$pre.$out;
 	return $out;
+}
+
+function find_max($a,$k=NULL) {
+	$max=NULL;
+	foreach ($a as $key => $value) {
+		if (is_array($value)) {
+			if (isset($k))
+				$val=$value[$k];
+			else
+				$val=current($value);
+			if (!isset($max)) $max=$val;
+			if ($val>$max) $max=$val;
+		}
+	}
+	return $max;
 }
 
 ?>

@@ -16,6 +16,23 @@ $(document).ready(function() {
 	if (isFile)							{ isThumbs=$("#content").hasClass("icons");}
 	isSortable=false;
 
+
+	// ALL
+
+
+
+	//
+	// Vertical Text in Bars (if small space)
+	//
+	$('.verticalText').each(function(){
+		w=$(this).width();
+		if (w<30) {
+			$(this).flipv().addClass('verticalShow');
+		}
+	});
+
+
+
 	//
 	// Form
 	//

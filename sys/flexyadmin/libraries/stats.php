@@ -1,9 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /**
  * FlexyAdmin V1
- *
- * frontend_menu.php Created on 9-dec-2008
- *
  * @author Jan den Besten
  */
 
@@ -35,25 +32,31 @@ class Stats {
 
 	function add_uri($uri=NULL) {
 		if ($uri==NULL) $uri="";
-		$CI =& get_instance();
-		if (!$CI->agent->is_robot()) {
-			$CI->db->set("tme_date_time",standard_date('DATE_ATOM', now()));
-			$CI->db->set("str_uri",$uri);
-			$CI->db->set("ip_ip",$_SERVER['REMOTE_ADDR']);
-			if (isset($_SERVER["HTTP_HOST"]))
-				$CI->db->set("str_host",$_SERVER["HTTP_HOST"]);
-			elseif (isset($_SERVER["REMOTE_HOST"]))
-				$CI->db->set("str_host",$_SERVER["REMOTE_HOST"]);
-			if ($CI->agent->is_browser()) {
-				$CI->db->set("str_browser",$CI->agent->browser());
-				$CI->db->set("str_version",$CI->agent->version());
-				$CI->db->set("str_platform",$CI->agent->platform());
+		// only insert page uri's (no images, css etc).
+		if (strpos($uri,'.')===FALSE) {
+			$CI =& get_instance();
+			if (!$CI->agent->is_robot()) {
+				$CI->db->set("tme_date_time",standard_date('DATE_ATOM', now()));
+				$CI->db->set("str_uri",$uri);
+				if ($CI->agent->is_browser()) {
+					$CI->db->set("str_browser",$CI->agent->browser());
+					$CI->db->set("str_version",$CI->agent->version());
+				}
+				elseif ($CI->agent->is_mobile()) {
+					$CI->db->set("str_browser",$CI->agent->mobile());
+					$CI->db->set("str_version",$CI->agent->version());
+				}
+				else {
+					$agent=$CI->agent->agent_string();
+					if (!empty($agent))
+						$CI->db->set("str_browser",$agent);
+					else	
+						$CI->db->set("str_browser",'unidentified');
+				}
 				$CI->db->set("str_referrer",$CI->agent->referrer());
+				$CI->db->set("str_platform",$CI->agent->platform());
+				$CI->db->insert($this->table);
 			}
-			else {
-				$CI->db->set("str_platform",$CI->agent->mobile());
-			}
-			$CI->db->insert($this->table);
 		}
 	}
 

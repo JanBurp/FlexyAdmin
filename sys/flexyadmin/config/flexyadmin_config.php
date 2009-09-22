@@ -30,11 +30,14 @@
 $config['PHP_version']						= substr(phpversion(),0,1);
 $config['LOCAL']									= IS_LOCALHOST;
 
-$config['ASSETS']									= "site/assets/";
+// Directories
+$config['SITE']										= 'site';
 $config['ADMINASSETS']						= "sys/flexyadmin/assets/";
-
-$config['BULKUPLOAD']							= 'bulk_upload';
+$config['ASSETS']									= $config['SITE'].'/assets/';
 $config['THUMBCACHE']							= $config['ASSETS']."_thumbcache/";
+$config['STATS']									= $config['SITE'].'/stats/';
+$config['BULKUPLOAD']							= 'bulk_upload';
+
 $config['THUMBSIZE']							= array(100,100);
 
 /*
@@ -80,6 +83,8 @@ $config['API_search']								= '/admin/search/';
 $config['API_help']									= '/admin/help/';
 $config['API_bulk_upload']					= '/admin/bulkupload/';
 
+$config['API_stats']								= '/admin/stats/show';
+$config['API_info']									= '/admin/info/';
 
 $config['API_filemanager_view_types']	= array("list","icons");
 

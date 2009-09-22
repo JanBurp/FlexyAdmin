@@ -37,6 +37,10 @@
 
 	<script language="javascript" type="text/javascript" src="sys/jquery/plugins/filterable/jquery.filterable.js"></script>
 	<script language="javascript" type="text/javascript" src="sys/jquery/plugins/tablesorter/jquery.tablesorter.min.js"></script>
+	
+	<script language="javascript" type="text/javascript" src="sys/jquery/plugins/flipv/cvi_text_lib.js"></script>
+	<script language="javascript" type="text/javascript" src="sys/jquery/plugins/flipv/jquery.flipv.js"></script>
+	
 
 	<? if ($show_type=="form"): ?>
 	<!-- js for form -->

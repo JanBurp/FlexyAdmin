@@ -56,21 +56,21 @@ class Main extends AdminController {
 		$grid->set_data($userData,langp("home_last_login",ucfirst($data["username"])));
 		$renderGrid=$grid->render("html","","grid home");
 		$data["logindata"]=$this->load->view("admin/grid",$renderGrid,true);
-
-		// stats
-		$this->db->select("str_uri as ".lang("home_page").", COUNT(`str_uri`) as ".lang("home_count"));
-		$this->db->group_by(lang("home_page"));
-		$this->db->order_by(lang("home_count")." DESC");
-		$stats=$this->db->get_results($this->config->item('LOG_table_prefix')."_".$this->config->item('LOG_stats'),10);
-		// trace_($stats);
-		if (!empty($stats)) {
-			// stats in grid
-			$grid=new grid();
-			$grid->set_data($stats,langp("home_top_ten"));
-			$renderGrid=$grid->render("html","","grid home");
-			$data["stats"]=$this->load->view("admin/grid",$renderGrid,true);
-		}
-		else $data["stats"]="";
+		// 
+		// // stats
+		// $this->db->select("str_uri as ".lang("home_page").", COUNT(`str_uri`) as ".lang("home_count"));
+		// $this->db->group_by(lang("home_page"));
+		// $this->db->order_by(lang("home_count")." DESC");
+		// $stats=$this->db->get_results($this->config->item('LOG_table_prefix')."_".$this->config->item('LOG_stats'),10);
+		// // trace_($stats);
+		// if (!empty($stats)) {
+		// 	// stats in grid
+		// 	$grid=new grid();
+		// 	$grid->set_data($stats,langp("home_top_ten"));
+		// 	$renderGrid=$grid->render("html","","grid home");
+		// 	$data["stats"]=$this->load->view("admin/grid",$renderGrid,true);
+		// }
+		// else $data["stats"]="";
 		
 		$this->_set_content($this->load->view("admin/home",$data,true));
 		$this->_show_all();
