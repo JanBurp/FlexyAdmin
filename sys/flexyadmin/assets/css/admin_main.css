@@ -93,7 +93,8 @@ img {
 	margin-bottom:30px;
 }
 #menu li.configurations,
-#menu li.db_backup {
+#menu li.db_backup,
+#menu li.stats {
 	margin-top:30px;
 }
 #menu li.current,
@@ -136,6 +137,12 @@ img {
 	}
 #menu li .sr {
 	background-image: url("../icons/search.gif");
+	background-repeat: no-repeat;
+	background-position:0px 2px;
+	padding-left: 20px;
+	}
+#menu li .stats {
+	background-image: url("../icons/stats.gif");
 	background-repeat: no-repeat;
 	background-position:0px 2px;
 	padding-left: 20px;
@@ -442,9 +449,34 @@ tr.caption td				{ border:none; }
 	background-color:#DDEEAA;
 }
 
-.small { margin:0px; font-size:.8em; }
+.small 					{ margin:0px; font-size:.8em; }
+.xsmall 				{ margin:0px; font-size:.7em; padding:0px; }
+.weekend				{ font-weight:bold; }
 
 img.zoom { border:1px solid #333; cursor:pointer; }
+
+/* =============== Graph ===================== */
+
+.graphBar {
+	background-color:#F4FFE0;
+	border-top:solid 1px #DDEEAA;
+}
+.evenrow .graphBar {
+	background-color:#EDF7D4;
+}
+.graph td {
+	padding:0px;
+	text-align:center;
+	min-width:0px;
+}
+.graph tbody td a {
+	display:block;
+}
+.graph tbody td a:hover {
+	background-color:#DDEEAA;
+	text-decoration:none;
+}
+
 
 /* =============== Tree ===================== */
 

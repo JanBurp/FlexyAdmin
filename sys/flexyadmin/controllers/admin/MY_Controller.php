@@ -328,7 +328,7 @@ class BasicController extends MY_Controller {
 	function user_restriction_id($table) {
 		$restricted=TRUE;
 		$pre=get_prefix($table);
-		$preAll=$pre."_*";		
+		$preAll=$pre."_*";
 		foreach ($this->rights as $key => $rights) {
 			if ($rights['user_rights']=="")
 				$restricted=FALSE;
@@ -336,7 +336,6 @@ class BasicController extends MY_Controller {
 				$restricted=$restricted and TRUE;
 		}
 		if ($restricted) {
-			// trace_($this->user_id);
 			return $this->user_id;
 		}
 		else
@@ -684,6 +683,11 @@ class AdminController extends BasicController {
 					$a[$menuName]["help"]=$mediaHelp;
 				}
 			}
+		}
+		
+		// stats
+		if ($this->db->table_exists('log_stats')) {
+			$a['SiteStats']=array("uri"=>api_uri('API_stats'),"class"=>"stats");
 		}
 		
 		// Backup / Restore

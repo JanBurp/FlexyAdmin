@@ -15,7 +15,6 @@ function admin_assets($s="") {
 }
 
 function front_uri() {
-	//$uri=str_replace(uri_segments(),"",current_url());
 	$uri=base_url();
 	return $uri;
 }
