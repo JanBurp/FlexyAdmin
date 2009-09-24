@@ -119,6 +119,8 @@ class MY_Upload extends CI_Upload {
 				$CI->db->insert($table);
 			}
 		}
+		
+		
 		return TRUE;
 	}
 	

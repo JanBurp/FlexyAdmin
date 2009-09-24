@@ -55,6 +55,7 @@ class Bulkupload extends AdminController {
 				
 				// Show and move files
 				if (!empty($path)) {
+					$map=$path;
 					$path=assets($path);
 					$this->load->library('upload');
 					$config['upload_path'] = $path;
@@ -75,6 +76,13 @@ class Bulkupload extends AdminController {
 							$resized=$this->upload->resize_image($saveFile,$path);
 							// autofill
 							$autoFill=$this->upload->auto_fill_fields($saveFile,$path);
+							// fill in media table
+							if ($this->db->table_exists("cfg_media_files")) {
+								$this->db->set('user',$this->user_id);
+								$this->db->set('file',$map."/".$saveFile);
+								$this->db->insert('cfg_media_files');
+							}
+							
 							// delete original from Bulk map
 							unlink($bulkMap.'/'.$file['name']);
 						}
