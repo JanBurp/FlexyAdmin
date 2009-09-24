@@ -668,12 +668,13 @@ class Flexy_field extends Model {
 				$files=$this->_filter_restricted_files($files,$this->restrictedToUser);
 			}
 			$files=not_filter_by($files,"_");
-			$lastUploads=array_slice(sort_by($files,"rawdate",TRUE),0,5);
+			$lastUploadMax=$this->cfg->get('CFG_media_info',$path,'int_last_uploads');
+			$lastUploads=array_slice(sort_by($files,"rawdate",TRUE),0,$lastUploadMax);
 			ignorecase_ksort($files);
 			$options=array();
 			$options[]="";
 			$optionsLast=$this->_create_media_options($lastUploads,$types);
-			if (!empty($optionsLast)) $options[lang("form_dropdown_sort_on_last_upload")]=$optionsLast;
+			if (!empty($optionsLast)) $options[langp("form_dropdown_sort_on_last_upload",$lastUploadMax)]=$optionsLast;
 			$optionsNames=$this->_create_media_options($files,$types);
 			// trace_($optionsNames);
 			if (!empty($optionsNames)) $options[lang("form_dropdown_sort_on_name")]=$optionsNames;
