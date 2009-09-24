@@ -56,26 +56,21 @@ class Stats extends AdminController {
 				
 		// get data from XML (if exists)
 		$this->Data=$this->_stat_data_from_xml();
-		
-		// Add current month to this_year (if exists) from DB
-		if (isset($this->Data['this_year'])) {
-			$thisYearMonth=$this->_stat_data_from_db('this_year');
-			if (isset($thisYearMonth[$todayMonth]))
-				$this->Data['this_year'][$todayMonth]=$thisYearMonth[$todayMonth];
-		}
-		
-		// Check if data exists (from XML) or if its current month, load from DB
+
+		// Get data from DB if it doesn't exists yet.
 		foreach ($statTypes as $type) {
-			// if data from month doesn't exists in XML, load from DB, or if it is this month
-			if ($type!='this_year' and (!isset($this->Data[$type]) or $month==$todayMonth) ) {
+			if (
+					($type!='this_year') and (!isset($this->Data[$type]) or $month==$todayMonth)
+					or
+					($type=='this_year' and !isset($this->Data['this_year']) )
+				)
 				$this->Data[$type]=$this->_stat_data_from_db($type);
-			}
 		}
-		
-		// Delete data from DB older than current month
-		$this->db->where('tme_date_time <',date('Y-m'));
-		$this->db->delete($this->logTable);
-		
+		// Add current month to this_year from DB
+		$thisYearMonth=$this->_stat_data_from_db('this_year');
+		if (isset($thisYearMonth[$todayMonth]))
+			$this->Data['this_year'][$todayMonth]=$thisYearMonth[$todayMonth];
+
 		
 		// show data
 		foreach ($statTypes as $type) {
@@ -85,15 +80,42 @@ class Stats extends AdminController {
 		// save data as XML
 		$this->_stat2xml();
 
+		// Check if there is older data than this month (in DB and XML) than create XML data for it
+		$oldMonth=$month;
+		$oldYear=$year;
+		$notReady=TRUE;
+		do {
+			$oldMonth--;
+			if ($oldMonth<1) { $oldMonth=12; $oldYear--; }
+			$xmlFile=$this->_xmlMonthFile($oldMonth,$oldYear);
+			if (!file_exists($xmlFile)) {
+				$oldStats=array();
+				$oldStats['month']=$oldMonth;
+				$oldStats['year']=$oldYear;
+				foreach ($statTypes as $type) {
+					$oldStats[$type]=$this->_stat_data_from_db($type,$oldMonth,$oldYear);
+				}
+				if (empty($oldStats[$type])) $notReady=FALSE;
+				else $this->_stat2xml($oldStats);
+			}
+		} while ($notReady);
+		
+		// Delete data from DB older than current month
+		$this->db->where('tme_date_time <',date('Y-m'));
+		$this->db->delete($this->logTable);
+
+
 		$this->_show_type("stats");
 		$this->_show_all();
 	}
 
 	function _lang($stats) {
-		foreach ($stats as $id => $row) {
-			foreach ($row as $key => $value) {
-				$stats[$id][lang('stats_'.$key)]=$value;
-				unset($stats[$id][$key]);
+		if (is_array($stats)) {
+			foreach ($stats as $id => $row) {
+				foreach ($row as $key => $value) {
+					$stats[$id][lang('stats_'.$key)]=$value;
+					unset($stats[$id][$key]);
+				}
 			}
 		}
 		return $stats;
@@ -113,7 +135,7 @@ class Stats extends AdminController {
 	}
 	
 	function _add_table($stats,$title,$s='') {
-		if (!empty($stats)) {
+		if (!empty($stats) and is_array($stats)) {
 			$stats=$this->_lang($stats);
 			$grid=new grid();
 			$grid->set_data($stats,langp('stats_'.$title,$s));
@@ -175,13 +197,15 @@ class Stats extends AdminController {
 		return $this->config->item('STATS').$year.'-'.sprintf('%02d',$month).'.xml';
 	}
 
-	function _stat2xml() {
-		$xmlYearFile=$this->_xmlYearFile();
-		$xmlYear=array2xml(array('stats'=> array('year'=>$this->Data['year'],'this_year'=>$this->Data['this_year'])) );
+	function _stat2xml($stats=NULL) {
+		if (empty($stats)) $stats=$this->Data;
+		
+		$xmlYearFile=$this->_xmlYearFile($stats['year']);
+		$xmlYear=array2xml(array('stats'=> array('year'=>$stats['year'],'this_year'=>$stats['this_year'])) );
 		write_file($xmlYearFile, $xmlYear);
 		
-		$xmlMonthFile=$this->_xmlMonthFile();
-		$monthData=$this->Data;
+		$xmlMonthFile=$this->_xmlMonthFile($stats['month'],$stats['year']);
+		$monthData=$stats;
 		unset($monthData['this_year']);
 		$xmlMonth=array2xml(array('stats'=>$monthData));
 		write_file($xmlMonthFile, $xmlMonth);
@@ -207,41 +231,43 @@ class Stats extends AdminController {
 		return $xmlData;
 	}
 
-	function _stat_data_from_db($type) {
+	function _stat_data_from_db($type,$month='',$year='') {
+		if (empty($month))	$month=$this->Month;
+		if (empty($year))		$year=$this->Year;
 		$data=NULL;
 		$limit=10;
 		switch ($type) {
 			case 'total':
 				// Total
 				$this->db->select("COUNT('id') as total");
-				$this->db->where(array('YEAR(tme_date_time)' => $this->Year, 'MONTH(tme_date_time)' => $this->Month));
+				$this->db->where(array('YEAR(tme_date_time)' => $year, 'MONTH(tme_date_time)' => $month));
 				$data=$this->db->get_row($this->logTable);
 				$data=$data['total'];
 				$this->Total=$data;
 				break;
 			case 'this_year':
 				$this->db->select("MONTH(tme_date_time) as `month`, COUNT(DATE(tme_date_time)) as `views`");
-				$this->db->where(array('YEAR(tme_date_time) >=' => $this->Year, 'YEAR(tme_date_time) <' => $this->Year+1) );
+				$this->db->where(array('YEAR(tme_date_time) >=' => $year, 'YEAR(tme_date_time) <' => $year+1) );
 				$this->db->group_by('`month`');
 				$this->db->order_by("`month`");
 				$limit=12;
 				break;
 			case 'this_month':
 				$this->db->select("DAYOFMONTH(tme_date_time) as `day`, COUNT(DATE(tme_date_time)) as `views`");
-				$this->db->where(array('YEAR(tme_date_time)' => $this->Year, 'MONTH(tme_date_time)' => $this->Month));
+				$this->db->where(array('YEAR(tme_date_time)' => $year, 'MONTH(tme_date_time)' => $month));
 				$this->db->group_by('`day`');
 				$this->db->order_by("`day`");
 				$limit=0;
 				break;
 			case 'top_10_pages':
 				$this->db->select("str_uri as page, COUNT(`str_uri`) as hits");
-				$this->db->where(array('YEAR(tme_date_time)' => $this->Year, 'MONTH(tme_date_time)' => $this->Month));
+				$this->db->where(array('YEAR(tme_date_time)' => $year, 'MONTH(tme_date_time)' => $month));
 				$this->db->group_by("page");
 				$this->db->order_by("hits DESC");
 				break;
 			case 'top_10_referers':
 				$this->db->select("str_referrer as referer, COUNT(`str_referrer`) as hits");
-				$this->db->where(array('YEAR(tme_date_time)' => $this->Year, 'MONTH(tme_date_time)' => $this->Month));
+				$this->db->where(array('YEAR(tme_date_time)' => $year, 'MONTH(tme_date_time)' => $month));
 				$this->db->where('str_referrer !=','');
 				if (!empty($this->url)) {
 					$this->url=str_replace('http://','',$this->url);
@@ -253,7 +279,7 @@ class Stats extends AdminController {
 				break;
 			case 'top_10_google':
 				$this->db->select("str_referrer as search, COUNT(`str_referrer`) as hits");
-				$this->db->where(array('YEAR(tme_date_time)' => $this->Year, 'MONTH(tme_date_time)' => $this->Month));
+				$this->db->where(array('YEAR(tme_date_time)' => $year, 'MONTH(tme_date_time)' => $month));
 				$this->db->like('str_referrer','q=');
 				$this->db->group_by('str_referrer');
 				$this->db->order_by("hits DESC");
@@ -261,13 +287,13 @@ class Stats extends AdminController {
 				break;
 			case 'top_10_browsers':
 				$this->db->select("str_browser as browser, str_version as version, COUNT(`str_browser`) as hits, (COUNT(`str_browser`)/".$this->Total."*100) as percent");
-				$this->db->where(array('YEAR(tme_date_time)' => $this->Year, 'MONTH(tme_date_time)' => $this->Month));
+				$this->db->where(array('YEAR(tme_date_time)' => $year, 'MONTH(tme_date_time)' => $month));
 				$this->db->group_by('str_browser');
 				$this->db->order_by("hits DESC");
 				break;
 			case 'top_10_platform':
 				$this->db->select("str_platform as platform, COUNT(`str_platform`) as hits, (COUNT(`str_platform`)/".$this->Total."*100) as percent");
-				$this->db->where(array('YEAR(tme_date_time)' => $this->Year, 'MONTH(tme_date_time)' => $this->Month));
+				$this->db->where(array('YEAR(tme_date_time)' => $year, 'MONTH(tme_date_time)' => $month));
 				$this->db->group_by('str_platform');
 				$this->db->order_by("hits DESC");
 				break;
@@ -294,7 +320,7 @@ class Stats extends AdminController {
 			case 'top_10_google':
 				$gstats=array();
 				foreach ($data as $key => $value) {
-					$term=$value['search'].'&';
+					$term=strtolower($value['search'].'&');
 					preg_match("/q=(.*?)&/",$term,$matches);
 					if (isset($matches[1])) {
 						$term=urldecode($matches[1]);

@@ -94,7 +94,7 @@ class Grid Extends Model {
 	function set_data($data=NULL,$name="") {
 		if (isset($data) and !empty($data)) {
 			$this->rows=$data;
-			$this->set_headings(array_keys(current($data)));
+			if (is_array($data)) $this->set_headings(array_keys(current($data)));
 		}
 		$this->set_captions($name);
 	}
@@ -126,27 +126,29 @@ class Grid Extends Model {
 
 		$data=$this->rows;
 		$alt="";
-		foreach($data as $id=>$row) {
-			$currClass="";
-			if ($this->currentId!=NULL and $id==$this->currentId) $currClass="current ";
-			if ($alt=="evenrow") $alt="oddrow"; else $alt="evenrow";
-			$tableRowClass="$tableClass id$id $extraClass $currClass $alt";
-			$tableRowId=$id;
+		if (is_array($data)) {
+			foreach($data as $id=>$row) {
+				$currClass="";
+				if ($this->currentId!=NULL and $id==$this->currentId) $currClass="current ";
+				if ($alt=="evenrow") $alt="oddrow"; else $alt="evenrow";
+				$tableRowClass="$tableClass id$id $extraClass $currClass $alt";
+				$tableRowId=$id;
 
-			$tableCells=array();
-			$cn=0;
-			foreach($row as $name=>$cell) {
-				// if (empty($cell)) $cell="&nbsp;";
-				$pre=get_prefix($name);
-				if ($pre==$name) $pre="";
-				$tableCells[]=array(	"class"	=> "$tableClass id$id $name $pre $extraClass $currClass nr$cn ".alternator("oddcol","evencol"),
-															"cell"	=> $cell );
-				$cn++;
+				$tableCells=array();
+				$cn=0;
+				foreach($row as $name=>$cell) {
+					// if (empty($cell)) $cell="&nbsp;";
+					$pre=get_prefix($name);
+					if ($pre==$name) $pre="";
+					$tableCells[]=array(	"class"	=> "$tableClass id$id $name $pre $extraClass $currClass nr$cn ".alternator("oddcol","evencol"),
+																"cell"	=> $cell );
+					$cn++;
+				}
+
+				$table["rows"][]=array(	"class"	=> $tableRowClass,
+																"id"		=> $tableRowId,
+																"row"	=> $tableCells );
 			}
-
-			$table["rows"][]=array(	"class"	=> $tableRowClass,
-															"id"		=> $tableRowId,
-															"row"	=> $tableCells );
 		}
 		
 		log_('info',"grid: rendering");

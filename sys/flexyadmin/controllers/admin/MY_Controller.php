@@ -647,6 +647,8 @@ class AdminController extends BasicController {
 	}
 
 	function _show_menu($currentMenuItem="") {
+		$this->lang->load('help');
+		
 		// load menu items
 		$a=array();
 		// standard items
@@ -687,11 +689,10 @@ class AdminController extends BasicController {
 		
 		// stats
 		if ($this->db->table_exists('log_stats')) {
-			$a['SiteStats']=array("uri"=>api_uri('API_stats'),"class"=>"stats");
+			$a[lang('stats_menu')]=array("uri"=>api_uri('API_stats'),"class"=>"sitestats");
 		}
-		
+
 		// Backup / Restore
-		$this->lang->load('help');
 		if ($this->_is_super_admin()) {
 			$a[lang('db_export')]					=array("uri"=>api_uri('API_db_export'),"class"=>"db db_backup");
 			$a[lang('db_import')]					=array("uri"=>api_uri('API_db_import'),"class"=>"db");

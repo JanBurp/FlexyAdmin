@@ -15,6 +15,8 @@ $lang['file_upload'] 				= '<p>Upload een nieuw bestand.</p>';
 $lang['file_list_icons'] 		= '<p>Laat bestanden zien als iconen.</p>';
 $lang['file_list_list'] 		= '<p>Laat bestanden zien als lijst met extra informatie.</p>';
 
+$lang['stats_menu']					= 'Site Statistieken';
+
 $lang['db_export']					= 'Exporteer Database';
 $lang['db_import']					= 'Importeer Database';
 $lang['db_backup']					= 'Maak backup';
