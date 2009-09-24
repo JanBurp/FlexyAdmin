@@ -44,25 +44,54 @@ class Filemanager extends AdminController {
 		return $this->has_rights("media_".$mediaName,"",$whatRight);
 	}
 
-	// A copy of underlying methods sits in flexy_field
-
+	// A (older) copy of underlying methods sits in flexy_field
 	function _get_unrestricted_files($restrictedToUser) {
 		$this->db->where('user',$restrictedToUser);
 		$this->db->set_key('file'); 
 		return $this->db->get_result("cfg_media_files");
 	}
 	
+	function _get_user_files() {
+		$this->db->set_key('file');
+		return $this->db->get_result("cfg_media_files");
+	}
+	
 	function _filter_restricted_files($files,$restrictedToUser) {
 		if ($this->db->table_exists("cfg_media_files")) {
-			if ($restrictedToUser) {
-				$unrestrictedFiles=$this->_get_unrestricted_files($restrictedToUser);
-				$unrestrictedFiles=array_keys($unrestrictedFiles);
-				$assetsPath=assets();
-				foreach ($files as $name => $file) {
+			$assetsPath=assets();
+			$userFiles=$this->_get_user_files();
+			ksort($userFiles);
+			// trace_($userFiles);
+			foreach ($files as $name => $file) {
+				if (substr($name,0,1)!="_") {
 					$file=str_replace($assetsPath,"",$file['path']);
-					if (!in_array($file,$unrestrictedFiles)) unset($files[$name]);
+					if ($restrictedToUser) {
+						if ( (!isset($userFiles[$file]['user'])) or
+								 (isset($userFiles[$file]['user']) and $userFiles[$file]['user']!=$restrictedToUser) ) unset($files[$name]);
+					}
+					else {
+						if (isset($userFiles[$file]['user'])) {
+							$this->db->where('id',$userFiles[$file]['user']);
+							$this->db->select('str_user_name');
+							$user=$this->db->get_row('cfg_users');
+							$files[$name]['user']=$user['str_user_name'];
+						}
+						else
+							$files[$name]['user']='';
+					}
 				}
 			}
+			// trace_($files);
+
+			// if ($restrictedToUser) {
+			// 	$unrestrictedFiles=$this->_get_unrestricted_files($restrictedToUser);
+			// 	$unrestrictedFiles=array_keys($unrestrictedFiles);
+			// 	$assetsPath=assets();
+			// 	foreach ($files as $name => $file) {
+			// 		$file=str_replace($assetsPath,"",$file['path']);
+			// 		if (!in_array($file,$unrestrictedFiles)) unset($files[$name]);
+			// 	}
+			// }
 		}
 		return $files;
 	}

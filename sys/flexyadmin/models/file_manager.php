@@ -392,6 +392,8 @@ function thumb($attr,$index=FALSE) {
 					$fileData["name"]=$name;
 					// details
 					if ($details) {
+						// show user if needed
+						if (isset($file['user'])) $fileData['user']=$file['user'];
 						$fileData["type"]=$type;
 						// size types (images, flash)
 						if ($isImg or $isFlash) {

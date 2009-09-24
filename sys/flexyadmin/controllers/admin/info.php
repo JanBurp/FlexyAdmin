@@ -88,6 +88,24 @@ class Info extends AdminController {
 	}
 
 
+	// function extra() {
+	// 	$this->_set_content('<h1>Extra</h1>');
+	// 	
+	// 	$f=$this->db->get_result('tbl_fotoarchief');
+	// 	foreach ($f as $key => $value) {
+	// 		$c=$value['str_copyright'];
+	// 		$cid=$this->db->get_field_where('tbl_copyright','id','str_naam',$c);
+	// 		$this->db->set('id_copyright',$cid);
+	// 		$this->db->where('id',$value['id']);
+	// 		$this->db->update('tbl_fotoarchief');
+	// 		$this->_add_content(p().$c.$cid._p());
+	// 	}
+	// 	
+	// 	$this->_show_type("info");
+	// 	$this->_show_all();		
+	// }
+
+
 
 }
 
