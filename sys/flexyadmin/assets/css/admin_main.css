@@ -94,7 +94,7 @@ img {
 }
 #menu li.configurations,
 #menu li.db_backup,
-#menu li.stats {
+#menu li.sitestats {
 	margin-top:30px;
 }
 #menu li.current,
@@ -141,7 +141,7 @@ img {
 	background-position:0px 2px;
 	padding-left: 20px;
 	}
-#menu li .stats {
+#menu li .sitestats {
 	background-image: url("../icons/stats.gif");
 	background-repeat: no-repeat;
 	background-position:0px 2px;
