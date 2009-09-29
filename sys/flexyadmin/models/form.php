@@ -23,6 +23,7 @@ class Form Extends Model {
 	var $type;			// html
 	var $hasHtmlField;
 	var $isValidated;
+	var $captchaWords;
 	
 	var $buttons;
 	// var $showSubmit;
@@ -41,6 +42,7 @@ class Form Extends Model {
 		$this->set_type();
 		$this->hasHtmlField=false;
 		$this->show_buttons();
+		$this->set_captcha_words();
 		// $this->show_submit();
 	}
 
@@ -77,6 +79,10 @@ class Form Extends Model {
 			}
 		}
 		$this->set_caption($caption);
+	}
+
+	function set_captcha_words($words=NULL) {
+		$this->captchaWords=$words;
 	}
 
 	function _check_default_field($name, $field) {
@@ -137,14 +143,22 @@ class Form Extends Model {
  */
 	function validation() {
 		$data=$this->data;
+		$hasCaptcha=FALSE;
 		foreach($data as $name=>$field) {
 			if (!isset($field["multiple"])) {
 				$this->form_validation->set_rules($field["name"], $field["label"], $field["validation"]);
 			}
+			if ($field['type']=='captcha') $hasCaptcha=$name;
 			$this->data[$name]["repopulate"]=$this->input->post($name);
 		}
 		log_('info',"form: validation");
 		$this->isValidated=$this->form_validation->run();
+		// validate captcha
+		if ($hasCaptcha!=FALSE) {
+			$value=$this->input->post($hasCaptcha);
+			$code=str_reverse($this->input->post($hasCaptcha.'__captcha'));
+			$this->isValidated=($value==$code);
+		}
 		return $this->isValidated;
 	}
 
@@ -497,14 +511,26 @@ class Form Extends Model {
 		$class=" ".$class;
 		if (!empty($field["repopulate"])) $field["value"]=$field["repopulate"];
 		$attr=array("name"=>$name,"id"=>$name,"value"=>$field["value"], "class"=>$class);
+
+		// Label or Captcha
 		if ($field["type"]!="hidden") {
 			$out.=$this->tmp($this->tmpFieldStart,$class);
-			$out.=form_label($field["label"],$name);
+			if ($field["type"]=='captcha') {
+				$vals = array(
+								'img_path'	 	=> assets().'captcha/',
+								'img_url'	 		=> site_url().assets().'captcha/',
+								'img_width'	 	=> '125',
+								'img_height' 	=> '25',
+							);
+				if ($this->captchaWords!=NULL) $vals['word']=random_element($this->captchaWords);
+				$cap = create_captcha($vals);
+				$out.=div('captcha').$cap['image'].form_hidden($name.'__captcha',str_reverse($cap['word']))._div();
+			}
+			else
+				$out.=form_label($field["label"],$name);
 		}
 
-//		if ($field["type"]!="hidden") {
-//			$out.=div("field");
-//		}
+
 
 		switch($field["type"]):
 
@@ -513,7 +539,7 @@ class Form Extends Model {
 				break;
 
 
-			case "checkbox":
+		case "checkbox":
 				if ($attr["value"])
 					$attr["checked"]="checked";
 				else
