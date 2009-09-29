@@ -77,7 +77,8 @@ class Bulkupload extends AdminController {
 							// autofill
 							$autoFill=$this->upload->auto_fill_fields($saveFile,$path);
 							// fill in media table
-							if ($this->db->table_exists("cfg_media_files")) {
+							$userRestricted=$this->cfg->get('CFG_media_info',$map,'b_user_restricted');
+							if ($userRestricted and $this->db->table_exists("cfg_media_files")) {
 								$this->db->set('user',$this->user_id);
 								$this->db->set('file',$map."/".$saveFile);
 								$this->db->insert('cfg_media_files');

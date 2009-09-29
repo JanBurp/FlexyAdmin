@@ -199,7 +199,7 @@ class File_manager Extends Model {
  */
 	function upload_file() {
 		$error='';
-		// UPLOAD
+		// UPLOAD 
 		$config['upload_path'] = $this->map;
 		$config['allowed_types'] = implode("|",$this->fileTypes);
 		$this->upload->config($config);

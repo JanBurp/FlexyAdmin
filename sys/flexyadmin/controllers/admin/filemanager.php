@@ -121,13 +121,18 @@ class Filemanager extends AdminController {
 				$types=$cfg['str_types'];
 				$uiName=$cfg['str_ui_name'];
 				$files=read_map($map);
-				// exclude files that are not owned by user
-				$restrictedToUser=$this->user_restriction_id($path);
-				$files=$this->_filter_restricted_files($files,$restrictedToUser);
 				/**
 				 * update img/media_lists
 				 */
 				$this->_before_filemanager($path,$files);
+
+				/**
+					* Exclude files that are not owned by user
+					*/
+				if ($cfg['b_user_restricted']) {
+					$restrictedToUser=$this->user_restriction_id($path);
+					$files=$this->_filter_restricted_files($files,$restrictedToUser);
+				}
 
 				/**
 				 * Start file manager
@@ -266,7 +271,8 @@ class Filemanager extends AdminController {
 						$this->set_message(langp("upload_error",$file));
 				}
 				else {
-					if ($this->db->table_exists("cfg_media_files")) {
+					$userRestricted=$this->cfg->get('CFG_media_info',$path,'b_user_restricted');
+					if ($userRestricted and $this->db->table_exists("cfg_media_files")) {
 						$this->db->set('user',$this->user_id);
 						$this->db->set('file',$path."/".$file);
 						$this->db->insert('cfg_media_files');
