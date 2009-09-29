@@ -521,6 +521,7 @@ class Form Extends Model {
 								'img_url'	 		=> site_url().assets().'captcha/',
 								'img_width'	 	=> '125',
 								'img_height' 	=> '25',
+								'expiration' => '600',
 							);
 				if ($this->captchaWords!=NULL) $vals['word']=random_element($this->captchaWords);
 				$cap = create_captcha($vals);
