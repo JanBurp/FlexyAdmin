@@ -373,7 +373,6 @@ class Show extends AdminController {
  */
 
 	function valid_rgb($rgb) {
-
 		$rgb=trim($rgb);
 		if (empty($rgb)) {
 			return TRUE;
@@ -394,11 +393,6 @@ class Show extends AdminController {
 			return FALSE;
 		}
 	}
-
-
-
-
-
 
 }
 
