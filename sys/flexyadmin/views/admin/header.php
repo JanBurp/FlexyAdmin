@@ -54,7 +54,8 @@
 
 	<? if ($show_type=="form" and $show_editor): ?>
 	<!-- js for form, html editor -->
-	<script language="javascript" type="text/javascript" src="sys/tinymce/jscripts/tiny_mce/tiny_mce_gzip.js"></script>
+	
+	<!-- <script language="javascript" type="text/javascript" src="sys/tinymce/jscripts/tiny_mce/tiny_mce_gzip.js"></script>
 	<script type="text/javascript">
 	tinyMCE_GZ.init({
 		plugins : "paste,table,fullscreen,advimage,media",
@@ -63,13 +64,15 @@
 		disk_cache : true,
 		debug : false
 	});
-	</script>
+	</script> -->
 
-	<script language="javascript" type="text/javascript">
+
+	<script language="javascript" type="text/javascript" src="sys/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+	<script>
 	tinyMCE.init({
 			language : "<?=$language?>",
 			docs_language : "<?=$language?>",
-			mode : "specific_textareas",
+			mode : "textareas",
 			editor_selector : "htmleditor",
 			theme : "advanced",
 			theme_advanced_toolbar_location : "top",
@@ -95,6 +98,7 @@
 			theme_advanced_buttons3 : "<?=$buttons3?>"
 	});
 	</script>
+	
 	<? endif; ?>
 
 </head>
