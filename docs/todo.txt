@@ -3,6 +3,14 @@ PRIO:
 - where statements, meerdere versie van tabel op die manier
 - pagination
 
+CLEANUP:
+- config items in one place (no $CI needed??)
+- html output models (one base class, method view)
+- data model
+- cleaner CSS etc
+
+
+
 HANDLEIDING:
 - FAQ
 - Installatie

@@ -1,10 +1,18 @@
 --
--- FlexyAdmin demo database (r459)
+-- FlexyAdmin demo database (r478)
 --
-
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+
+--
+-- Database: `flexy_demo`
+--
 
 -- --------------------------------------------------------
 
@@ -132,8 +140,10 @@ CREATE TABLE IF NOT EXISTS `cfg_media_info` (
   `str_type` varchar(20) NOT NULL default '',
   `fields_media_fields` varchar(100) NOT NULL,
   `path` varchar(255) NOT NULL,
+  `b_user_restricted` int(1) default '0',
   `fields_autofill_fields` varchar(255) NOT NULL,
   `str_types` varchar(100) NOT NULL default '',
+  `int_last_uploads` int(2) default '5',
   `b_in_media_list` tinyint(4) NOT NULL default '0',
   `b_in_img_list` tinyint(4) NOT NULL default '0',
   `b_in_link_list` tinyint(1) NOT NULL default '0',
@@ -145,7 +155,7 @@ CREATE TABLE IF NOT EXISTS `cfg_media_info` (
 -- Gegevens worden uitgevoerd voor tabel `cfg_media_info`
 --
 
-INSERT INTO `cfg_media_info` VALUES(1, 1, 'Foto''s', 'image', '', 'pictures', '', 'jpg,jpeg,gif,png', 0, 1, 0, '');
+INSERT INTO `cfg_media_info` VALUES(1, 1, 'Foto''s', 'image', '', 'pictures', 0, '', 'jpg,jpeg,gif,png', 5, 0, 1, 0, '');
 
 -- --------------------------------------------------------
 
@@ -288,11 +298,9 @@ CREATE TABLE IF NOT EXISTS `log_stats` (
   `id` int(11) NOT NULL auto_increment,
   `tme_date_time` datetime NOT NULL default '0000-00-00 00:00:00',
   `str_uri` varchar(100) NOT NULL default '',
-  `ip_ip` varchar(16) NOT NULL default '',
-  `str_host` varchar(50) NOT NULL default '',
-  `str_browser` varchar(16) NOT NULL default '',
+  `str_browser` varchar(20) NOT NULL,
   `str_version` varchar(8) NOT NULL default '',
-  `str_platform` varchar(20) NOT NULL default '',
+  `str_platform` varchar(25) NOT NULL,
   `str_referrer` varchar(100) NOT NULL default '',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
