@@ -1,0 +1,33 @@
+PRIO:
+- Volgorde bepalen bij meerdere media bestanden / multi options
+- where statements, meerdere versie van tabel op die manier
+- pagination
+
+HANDLEIDING:
+- FAQ
+- Installatie
+- Frontend functies, en verwijzing naar CI (db, uri, content, helpers, form)
+- Screenshots
+- Bugtracker
+- Download
+- Free downloads: jQuery en CodeIgniter plugins
+
+
+HANDIG
+- Rechten ook in te stellen voor frontend? inlog?
+- Editor, popup waar de breedte ook met CSS kan ingesteld
+- voor table_links het ankertje als plaatje
+- Maximaal aantal items in een tabel (of submenu)
+
+- Textveld (laten zien hoeveel tekens nog kunnen)
+- Foto: controle bij uploaden op formaat (waarschuw als te klein)
+
+- Frontend: form!! en menu, uitbreidingen
+- Modules (frontend), ook mogelijkheid tot php code?
+- Hernoemen images (kan dan overal, in media fields en txt_ fields)
+
+- in Grid, items veranderen die dropdown hebben!
+- Strakkere lay-out:
+	- balk bovenin, met home, backup, logout knoppen
+	- home page met info (zoek, stats, user info, klikken naar (c) en licentie
+	- onderbalk weg
