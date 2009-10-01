@@ -1,5 +1,5 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-require_once("site/database.php");
+require_once("site/config/database.php");
 
 
 /*

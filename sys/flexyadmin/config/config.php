@@ -321,7 +321,7 @@ $config['time_reference'] = 'local';
 $config['rewrite_short_tags'] = FALSE;
 
 
-require_once("site/config.php");
+require_once("site/config/config.php");
 
 
 /* End of file config.php */
