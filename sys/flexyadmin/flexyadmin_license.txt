@@ -16,6 +16,7 @@ You are permitted to use the Software, without modification, provided that the f
    they are derived from FlexyAdmin in their documentation and/or other
    materials provided with the distribution.
 
+
 PERMITTED DISTRIBUTION
 You are permitted to distribute the Software, without modification, provided that the following conditions are met:
 
@@ -26,6 +27,7 @@ You are permitted to distribute the Software, without modification, provided tha
 3. Products derived from the Software must include an acknowledgment that
    they are derived from FlexyAdmin in their documentation and/or other
    materials provided with the distribution.
+
 
 
 INDEMNITY
