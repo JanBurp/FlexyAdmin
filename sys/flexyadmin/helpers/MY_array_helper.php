@@ -155,6 +155,15 @@ function not_filter_by($a,$p) {
 	return $a;
 }
 
+function filter_by_key($a,$preKey) {
+	$arr=array();
+	$len=strlen($preKey);
+	foreach ($a as $key => $value) {
+		if (substr($key,0,$len)==$preKey) $arr[$key]=$value;
+	}
+	return $arr;
+}
+
 
 /**
  * function ignorecase_sort(&$array)

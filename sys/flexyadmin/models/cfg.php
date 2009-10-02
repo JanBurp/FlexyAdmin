@@ -72,8 +72,12 @@
 			$query=$this->db->get($table);
 			$data=array();
 			foreach ($query->result_array() as $row) {
-				if (empty($key))
-					$data[]=$row;
+				if (empty($key)) {
+					if (isset($row['id']))
+						$data[$row['id']]=$row;
+					else
+						$data[]=$row;
+				}
 				else {
 					foreach($key as $k) {
 						if (!empty($row[$k])) {

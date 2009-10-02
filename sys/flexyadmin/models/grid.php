@@ -22,6 +22,7 @@ class Grid Extends Model {
 	var $rows=array();
 	var $rowId;
 	var $currentId;
+	var $renderData;
 
 	var $type;			// html | files
 
@@ -152,7 +153,15 @@ class Grid Extends Model {
 		}
 		
 		log_('info',"grid: rendering");
+		$this->renderData=$table;
 		return $table;
+	}
+	
+	
+	function view($type="", $tableClass="", $extraClass="") {
+		if (empty($this->renderData)) $this->render($type, $tableClass, $extraClass);
+		$html=$this->load->view("admin/grid",$this->renderData,true);
+		return $html;
 	}
 
 }

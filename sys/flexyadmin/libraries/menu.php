@@ -283,6 +283,12 @@ class Menu {
 		// trace_($menu);
 		$pos=1;
 		foreach($menu as $name=>$item) {
+			if (empty($item)) {
+				// seperator
+				$out.=$this->tmp($this->tmpItemStart,array("class"=>"seperator pos$pos lev$level"));
+				$out.=$this->tmp($this->tmpItemEnd);
+				$pos++;
+			}
 			if (isset($item[$this->urlField])) {
 				$thisUri=$item[$this->urlField];
 				if (!empty($preUri) and $this->urlField=="uri") $thisUri=$preUri."/".$thisUri;
