@@ -82,7 +82,7 @@ class Show extends AdminController {
 					$this->db->select("id");
 					$row=$this->db->get_row($table,1);
 					$id=$row["id"];
-					$this->form($table,$id);
+					$this->form($table.':'.$id);
 					return;
 				}
 				else {
@@ -186,15 +186,15 @@ class Show extends AdminController {
  * @param mixed 	$id 		id
  */
 
-	function form($table='',$id='') {
+	function form($table='') {
 		if (empty($table)) {
 			$args=$this->uri->uri_to_assoc();
 			$table=el('form',$args);
-			$table=explode(':',$table);
-			$id=el(1,$table);
-			$table=el(0,$table);
 			$info=el('info',$args);
 		}
+		$table=explode(':',$table);
+		$id=el(1,$table);
+		$table=el(0,$table);
 
 		if (!empty($table) and ($id!="")
 				and $this->db->table_exists($table)
