@@ -30,6 +30,7 @@ class Flexy_field extends Model {
 	var $fieldRight;
 	var $restrictedToUser;
 	var $user_id;
+	var $extraInfoId;
 
 	function Flexy_field() {
 		parent::Model();
@@ -68,6 +69,10 @@ class Flexy_field extends Model {
 		$this->vars=array(
 				"IMG_MAP"=> $this->cfg->get('CFG_media_info',$this->table,"path")
 				);
+	}
+
+	function set_info_id($id='') {
+		$this->extraInfoId=$id;
 	}
 
 	/**
@@ -177,11 +182,11 @@ class Flexy_field extends Model {
 	 * Renders full data set according to type and action (grid|form)
 	 *
 	 */
-	function render_grid($table,$data,$right=RIGHTS_ALL) {
+	function render_grid($table,$data,$right=RIGHTS_ALL,$extraInfoId=NULL) {
 		$this->init_table($table,"grid",$right);
 		$out=array();
 		foreach ($data as $idRow=>$row) {
-			$out[$idRow]=$this->render_grid_row($table,$row,$right);
+			$out[$idRow]=$this->render_grid_row($table,$row,$right,$extraInfoId);
 		}
 		return $out;
 	}
@@ -192,12 +197,12 @@ class Flexy_field extends Model {
 	 * Renders row according to type and action (grid|form)
 	 *
 	 */
-	function render_grid_row($table,$row,$right=RIGHTS_ALL) {
+	function render_grid_row($table,$row,$right=RIGHTS_ALL,$extraInfoId=NULL) {
 		$out=array();
 		// first create one field from foreign data
 		$row=$this->concat_foreign_fields($row);
 		foreach ($row as $field=>$data) {
-			$renderedField=$this->render_grid_field($table,$field,$data,$right);
+			$renderedField=$this->render_grid_field($table,$field,$data,$right,$extraInfoId);
 			if ($renderedField!==FALSE)	$out[$field]=$renderedField;
 		}
 		return $out;
@@ -209,7 +214,8 @@ class Flexy_field extends Model {
 	 * Renders field according to type and action (grid|form)
 	 *
 	 */
-	function render_grid_field($table,$field,$data,$right=RIGHTS_ALL) {
+	function render_grid_field($table,$field,$data,$right=RIGHTS_ALL,$extraInfoId=NULL) {
+		$this->extraInfoId=$extraInfoId;
 		$this->init_field($field,$data,$right);
 		// Must field be shown?
 		if (isset($this->fieldCfg[$field]) and (!$this->fieldCfg[$field]["b_show_in_grid"])) {
@@ -248,13 +254,13 @@ class Flexy_field extends Model {
 	 * Renders full data set according to type and action (grid|form)
 	 *
 	 */
-	function render_form($table,$data,$options=NULL,$multiOptions=NULL) {
+	function render_form($table,$data,$options=NULL,$multiOptions=NULL,$extraInfoId=NULL) {
 		$this->init_table($table,"form");
 		$out=array();
 		foreach ($data as $name => $value) {
 			$opt=el($name,$options);
 			$mOpt=el($name,$multiOptions);
-			$renderedField=$this->render_form_field($table,$name,$value,$opt,$mOpt);
+			$renderedField=$this->render_form_field($table,$name,$value,$opt,$mOpt,$extraInfoId);
 			if ($renderedField!==FALSE)	$out[$name]=$renderedField;
 		}
 		return $out;
@@ -266,7 +272,8 @@ class Flexy_field extends Model {
 	 * Renders full data set according to type and action (grid|form)
 	 *
 	 */
-	function render_form_field($table,$field,$value,$options=NULL,$multiOptions=NULL) {
+	function render_form_field($table,$field,$value,$options=NULL,$multiOptions=NULL,$extraInfoId=NULL) {
+		$this->extraInfoId=$extraInfoId;
 		$out=array();
 		$this->init_field($field,$value);
 		// Must field be shown?
@@ -369,8 +376,20 @@ class Flexy_field extends Model {
 		$this->id=$this->data;
 		$class=$this->table." id".$this->id;
 		$out="";
-		if ($this->fieldRight>=RIGHTS_EDIT) 	$out.=anchor(api_uri('API_view_form',$this->table,$this->data),help(icon("edit"),lang('grid_edit')),array("class"=>"edit $class"));
-		if ($this->fieldRight>=RIGHTS_DELETE)	$out.=anchor(api_uri('API_confirm',$this->table,$this->data),help(icon("delete"),lang('grid_delete')),array("class"=>"delete $class"));
+		if ($this->fieldRight>=RIGHTS_EDIT) 	{
+			if (isset($this->extraInfoId))
+				$uri=api_uri('API_view_form',$this->table.':'.$this->data,'info',$this->extraInfoId);
+			else
+				$uri=api_uri('API_view_form',$this->table.':'.$this->data);
+			$out.=anchor( $uri, help(icon("edit"),lang('grid_edit')), array("class"=>"edit $class"));
+		}
+		if ($this->fieldRight>=RIGHTS_DELETE)	{
+			if (isset($this->extraInfoId))
+				$uri=api_uri('API_confirm',$this->table.':'.$this->data,'info',$this->extraInfoId);
+			else
+				$uri=api_uri('API_confirm',$this->table.':'.$this->data);
+			$out.=anchor($uri, help(icon("delete"),lang('grid_delete')), array("class"=>"delete $class"));
+		}
 		return $out;
 	}
 
@@ -731,6 +750,18 @@ class Flexy_field extends Model {
 		return $out;
 	}
 
+	function _dropdown_api_form() {
+		$options=array();
+		$apis=$this->config->config;
+		$apis=filter_by_key($apis,'API');
+		$options[""]="";
+		foreach ($apis as $key => $value) {
+			$options[$key]=$value;
+		}
+		$out=$this->_standard_form_field($options);
+		unset($out["button"]);
+		return $out;
+	}
 
 
 }

@@ -179,7 +179,7 @@ class Filemanager extends AdminController {
  */
 
 	function setview($viewType="",$path="") {
-		if (!empty($viewType) and in_array($viewType,$this->config->item('API_filemanager_view_types'))) {
+		if (!empty($viewType) and in_array($viewType,$this->config->item('FILES_view_types'))) {
 			$this->db->set("str_filemanager_view",$viewType);
 			$this->db->where("str_user_name",$this->session->userdata("user"));
 			$this->db->update($this->config->item('CFG_table_prefix')."_".$this->config->item('CFG_users'));
@@ -194,7 +194,7 @@ class Filemanager extends AdminController {
 	 */
 
 	function confirm($path="",$file="",$confirmed="") {
-		if ($confirmed=="confirm") {
+		if ($confirmed=="confirmed") {
 			$this->session->set_userdata("confirmed",true);
 			$this->delete(pathdecode($path,TRUE),$file);
 		}

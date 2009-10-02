@@ -1,7 +1,8 @@
 PRIO:
+& where statements, meerdere versie van tabel op die manier
 - Volgorde bepalen bij meerdere media bestanden / multi options
-- where statements, meerdere versie van tabel op die manier
 - pagination
+
 
 CLEANUP:
 - config items in one place (no $CI needed??)

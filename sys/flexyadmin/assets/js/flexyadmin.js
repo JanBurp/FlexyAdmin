@@ -558,7 +558,7 @@ function confirm_dialog(obj,item) {
 														$('.ui-dialog .ui-dialog-buttonpane').add('.ui-dialog a').hide();
 														$('.ui-dialog .ui-dialog-content').append("<img src='"+site_url("sys/flexyadmin/assets/icons/wait.gif")+"' align='right' />");
 														// $(dialog).dialog("destroy");
-														location.replace(href+"/confirm");
+														location.replace(href+"/confirmed/confirm");
 													}
 						 }),
 		close: function(){$(dialog).dialog("destroy"); $(obj).attr({"href":href});}

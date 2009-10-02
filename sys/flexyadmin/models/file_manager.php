@@ -438,7 +438,7 @@ function thumb($attr,$index=FALSE) {
 		$buttons="";
 		if ($this->showUploadButton) $buttons=help(icon("new","upload","upload path_".$this->path),lang("file_upload"));
 		// view types
-		$types=$this->config->item('API_filemanager_view_types');
+		$types=$this->config->item('FILES_view_types');
 		foreach($types as $view) {
 			$icon="list";
 			if ($view!=$icon) $icon.=$view;

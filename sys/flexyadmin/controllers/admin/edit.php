@@ -42,11 +42,19 @@ class Edit extends AdminController {
 	 * Database edit controller
 	 */
 
-	function confirm($table="",$id="",$confirmed="") {
+	function confirm() {//}$table="",$id="",$confirmed="") {
+		$args=$this->uri->uri_to_assoc();
+		$table=el('confirm',$args);
+		$table=explode(':',$table);
+		$id=el(1,$table);
+		$table=el(0,$table);
+		$info=el('info',$args);
+		$confirmed=el('confirmed',$args);
+				
 		if (!empty($table) and ($id!="") and !empty($confirmed) and $this->db->table_exists($table)	) {
 			if ($confirmed=="confirm") {
 				$this->session->set_userdata("confirmed",true);
-				$this->delete($table,$id);
+				$this->delete($table,$id,$info);
 			}
 			else {
 				$this->set_message("Not confirmed... ".anchor(api_uri('API_confirm',$table,$id,"confirm"),"confirm"));
@@ -61,7 +69,7 @@ class Edit extends AdminController {
 		return ($path);
 	}
 
-	function delete($table="",$id="") {
+	function delete($table="",$id="",$info='') {
 		$confirmed=$this->session->userdata("confirmed");
 		if (!empty($table) and ($id!="") and $this->db->table_exists($table)) {
 			if ($this->has_rights($table,$id)>=RIGHTS_DELETE) {
@@ -169,7 +177,9 @@ class Edit extends AdminController {
 				$this->set_message(lang("rights_no_rights"));
 			}
 		}
-		redirect(api_uri('API_view_grid',$table));
+		$redirectUri=api_uri('API_view_grid',$table);
+		if (!empty($info)) $redirectUri.='/info/'.$info;
+		redirect($redirectUri);
 	}
 
 

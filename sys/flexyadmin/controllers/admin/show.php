@@ -70,7 +70,12 @@ class Show extends AdminController {
 	 * @param mixed $id maybe an id, the last that changed
 	 */
 
-		function grid($table="",$id="") {
+		function grid() {
+			$args=$this->uri->uri_to_assoc();
+			$table=el('grid',$args);
+			$id=el('current',$args);
+			$info=el('info',$args);
+			
 			if (!empty($table) and $this->db->table_exists($table)) {
 				$singleRow=$this->cfg->get('CFG_table',$table,"b_single_row");
 				if ($singleRow) {
@@ -87,11 +92,21 @@ class Show extends AdminController {
 						$this->lang->load("help");
 						$this->_add_js_variable("help_filter",$this->_add_help(langp('grid_filter')));
 						$tableInfo=$this->cfg->get('CFG_table',$table);
-						// trace_($tableInfo);
 					
 						/**
 						 * get data
 						 */
+						
+						// extra info?
+						if (!empty($info)) {
+							// yes, get extra query info
+							$extraInfo=$this->cfg->get('cfg_admin_menu',$info);
+							$where=$extraInfo['str_table_where'];
+							if (!empty($where));
+							$this->db->where($where,NULL,FALSE);
+							$uiTable=$extraInfo['str_ui_name'];
+							// trace_($extraInfo);
+						}
 						if ($this->db->has_field($table,"self_parent")) {
 							$this->db->order_as_tree();
 						}
@@ -101,6 +116,7 @@ class Show extends AdminController {
 						}
 						if ($table=="cfg_users")
 							$this->db->where("id >=",$this->user_id);
+							
 						$this->db->add_foreigns_as_abstracts();
 						if ($tableInfo['b_grid_add_many']) $this->db->add_many();
 						$this->db->max_text_len(250);
@@ -124,10 +140,10 @@ class Show extends AdminController {
 								// remove order fields
 								foreach ($data as $id => $row) unset($data[$id]['order']);
 							}
-							$data=$this->ff->render_grid($table,$data,$right);
+							$data=$this->ff->render_grid($table,$data,$right,$info);
 
 							$grid=new grid();
-							$uiTable=$this->uiNames->get($table);
+							if (empty($uiTable)) $uiTable=$this->uiNames->get($table);
 							$tableHelp=$this->cfg->get("CFG_table",$table,"txt_help");
 							if (!empty($tableHelp)) {
 								$uiShowTable=help($uiTable." ",$tableHelp);
@@ -138,7 +154,9 @@ class Show extends AdminController {
 							$keys=array_keys(current($data));
 							$keys=combine($keys,$keys);
 							if ($right>=RIGHTS_ADD) {
-								$newIcon=anchor(api_uri('API_view_form',$table,-1),help(icon("new"),langp('grid_new',$uiTable)) );
+								$newUri=api_uri('API_view_form',$table.':-1');
+								if (!empty($info)) $newUri.='/info/'.$info;
+								$newIcon=anchor($newUri,help(icon("new"),langp('grid_new',$uiTable)) );
 								if ($this->cfg->get('CFG_table',$table,'int_max_rows')<count($data))
 									$grid->prepend_to_captions($newIcon,"new");
 								else
@@ -149,8 +167,7 @@ class Show extends AdminController {
 							if (!empty($id)) {
 								$grid->set_current($id);
 							}
-							$renderData=$grid->render("html",$table,"grid");
-							$html=$this->load->view("admin/grid",$renderData,true);
+							$html=$grid->view("html",$table,"grid");
 							$this->_set_content($html);
 						}
 					}
@@ -169,7 +186,16 @@ class Show extends AdminController {
  * @param mixed 	$id 		id
  */
 
-	function form($table="",$id="") {
+	function form($table='',$id='') {
+		if (empty($table)) {
+			$args=$this->uri->uri_to_assoc();
+			$table=el('form',$args);
+			$table=explode(':',$table);
+			$id=el(1,$table);
+			$table=el(0,$table);
+			$info=el('info',$args);
+		}
+
 		if (!empty($table) and ($id!="")
 				and $this->db->table_exists($table)
 				and $right=$this->has_rights($table,$id)) {
@@ -220,8 +246,14 @@ class Show extends AdminController {
 				$this->ff->set_restricted_to_user($restrictedToUser,$this->user_id);
 				$ffData=$this->ff->render_form($table,$data,$options,$multiOptions);
 
-				$form=new form(api_uri('API_view_form',$table,$id));
-				$uiTable=$this->uiNames->get($table);
+				$actionUri=api_uri('API_view_form',$table.':'.$id);
+				if (!empty($info)) $actionUri.='/info/'.$info;
+				$form=new form($actionUri);
+
+				if (!empty($info))
+					$uiTable=$this->cfg->get('cfg_admin_menu',$info,'str_ui_name');
+				else
+					$uiTable=$this->uiNames->get($table);
 				$tableHelp=$this->cfg->get("CFG_table",$table,"txt_help");
 				if (!empty($tableHelp)) {
 					$uiShowTable=help($uiTable,$tableHelp);
@@ -236,6 +268,9 @@ class Show extends AdminController {
 				 */
 				if ($form->validation()) {
 					$this->lang->load("update_delete");
+					$redirectUri=api_uri('API_view_grid',$table);
+					if (!empty($info)) $redirectUri.='/info/'.$info;
+					
 					if ($this->_has_key($table)) {
 						$resultId=$form->update($table,$restrictedToUser);
 						if ($id==-1)
@@ -244,7 +279,7 @@ class Show extends AdminController {
 							$this->_after_update($table,$resultId,$data);
 						if (is_string($resultId)) {
 							$this->set_message(langp("update_error",$table,$resultId));
-							redirect(api_uri('API_view_grid',$table));
+							redirect($redirectUri);
 						}
 						else {
 							if ($id==-1)
@@ -253,12 +288,13 @@ class Show extends AdminController {
 								$this->set_message(langp("update_succes",$table));
 							$this->load->model("login_log");
 							$this->login_log->update($table);
-							redirect(api_uri('API_view_grid',$table,$resultId));
+							redirect($redirectUri.'/current/'.$resultId);
 						}
 					}
 					else
 						$this->_add_content('<p class="error">'.$this->_no_key($table).'</p>');
 				}
+
 				/**
 				 * Validate form, no succes: show form, maybe with validation errors
 				 */
@@ -276,6 +312,7 @@ class Show extends AdminController {
 							$uiFieldNames[$key]=$this->uiNames->get($key,$table);
 					}
 					$form->set_labels($uiFieldNames);
+					
 					if ($right<RIGHTS_EDIT) $form->no_submit();
 					$html=$form->render("html",$table);
 					if ($form->has_htmlfield()) $this->use_editor();

@@ -70,8 +70,6 @@ $config['API_popup_img']						= "/admin/popup/img/";
 $config['API_delete']								= "/admin/edit/delete/";
 $config['API_confirm']							= "/admin/edit/confirm/";
 
-$config['AJAX']											= "/admin/ajax/";
-
 $config['API_db']										= "/admin/db/";
 $config['API_db_backup']						= "/admin/db/backup/";
 $config['API_db_restore']						= "/admin/db/restore/";
@@ -86,10 +84,13 @@ $config['API_bulk_upload']					= '/admin/bulkupload/';
 $config['API_stats']								= '/admin/stats/show';
 $config['API_info']									= '/admin/info/';
 
-$config['API_filemanager_view_types']	= array("list","icons");
+$config['AJAX']											= "/admin/ajax/";
 
-$config['FILES_thumb_path']						= "/thumb/";
-$config['FILES_big_path']							= "/big/";
+$config['FILES_view_types']					= array("list","icons");
+
+
+$config['FILES_thumb_path']					= "/thumb/";
+$config['FILES_big_path']						= "/big/";
 
 
 
@@ -164,8 +165,18 @@ $config['CFG_field_ui_name']					= "str_ui_name";
 
 $config["CFG_"]=array(
 	"cfg_table_info" => array(
-		"cfg_configurations"=>array(
+		"cfg_admin_menu"=>array(
 			"order"=>'100',
+			"table"=>'cfg_admin_menu',
+			"b_single_row"=>'0',
+			"str_ui_name"=>'',
+			"b_grid_add_many"=>'0',
+			"str_abstract_fields"=>'',
+			"str_order_by"=>'',
+			"txt_help"=>''
+			),
+		"cfg_configurations"=>array(
+			"order"=>'101',
 			"table"=>'cfg_configurations',
 			"b_single_row"=>'1',
 			"str_ui_name"=>'',
@@ -175,7 +186,7 @@ $config["CFG_"]=array(
 			"txt_help"=>''
 			),
 		"cfg_media_info"=>array(
-			"order"=>'101',
+			"order"=>'102',
 			"table"=>'cfg_media_info',
 			"b_single_row"=>'0',
 			"str_ui_name"=>'',
@@ -185,7 +196,7 @@ $config["CFG_"]=array(
 			"txt_help"=>''
 			),
 		"cfg_media_files"=>array(
-			"order"=>'102',
+			"order"=>'103',
 			"table"=>'cfg_media_files',
 			"b_single_row"=>'0',
 			"str_ui_name"=>'',
@@ -195,7 +206,7 @@ $config["CFG_"]=array(
 			"txt_help"=>''
 			),
 		"cfg_img_info"=>array(
-			"order"=>'103',
+			"order"=>'104',
 			"table"=>'cfg_img_info',
 			"b_single_row"=>'0',
 			"str_ui_name"=>'',
@@ -205,7 +216,7 @@ $config["CFG_"]=array(
 			"txt_help"=>''
 			),
 		"cfg_editor"=>array(
-			"order"=>'104',
+			"order"=>'105',
 			"table"=>'cfg_editor',
 			"b_single_row"=>'1',
 			"str_ui_name"=>'',
@@ -215,7 +226,7 @@ $config["CFG_"]=array(
 			"txt_help"=>''
 			),
 		"cfg_table_info"=>array(
-			"order"=>'105',
+			"order"=>'106',
 			"table"=>'cfg_table_info',
 			"b_single_row"=>'0',
 			"str_ui_name"=>'',
@@ -225,7 +236,7 @@ $config["CFG_"]=array(
 			"txt_help"=>''
 			),
 		"cfg_field_info"=>array(
-			"order"=>'106',
+			"order"=>'107',
 			"table"=>'cfg_field_info',
 			"b_single_row"=>'0',
 			"str_ui_name"=>'',
@@ -235,7 +246,7 @@ $config["CFG_"]=array(
 			"txt_help"=>''
 			),
 		"cfg_users"=>array(
-			"order"=>'107',
+			"order"=>'108',
 			"table"=>'cfg_users',
 			"b_single_row"=>'0',
 			"str_ui_name"=>'',
@@ -245,7 +256,7 @@ $config["CFG_"]=array(
 			"txt_help"=>''
 			),
 		"cfg_rights"=>array(
-			"order"=>'108',
+			"order"=>'109',
 			"table"=>'cfg_rights',
 			"b_single_row"=>'0',
 			"str_ui_name"=>'',
@@ -267,6 +278,17 @@ $config["CFG_"]=array(
 			"str_overrule_prefix"=>'',
 			"str_validation_rules"=>'',
 			"txt_help"=>'<p>Enter your license for FlexyAdmin here.</p>'
+			),
+		"cfg_admin_menu.str_type"=>array(
+			"field"=>'cfg_admin_menu.str_type',
+			"str_ui_name"=>'',
+			"b_show_in_grid"=>'1',
+			"b_show_in_form"=>'1',
+			"str_options"=>'api|tools|table|all_tbl_tables|all_cfg_tables|media|all_media|seperator',
+			"b_multi_options"=>'0',
+			"str_overrule_prefix"=>'',
+			"str_validation_rules"=>'',
+			"txt_help"=>''
 			),
 		"cfg_editor.str_class"=>array(
 			"field"=>'cfg_editor.class',
@@ -457,6 +479,11 @@ $config['FIELDS_special'] = array(
 	"uri"				=> array(
 												"grid"				=> "/%s",
 												"form"				=> "hidden",
+												"validation"	=> "trim",
+											),
+	"api"				=> array(
+												"grid"				=> "%s",
+												"form"				=> "function_dropdown_api",
 												"validation"	=> "trim",
 											),
 	"order"			=> array(
