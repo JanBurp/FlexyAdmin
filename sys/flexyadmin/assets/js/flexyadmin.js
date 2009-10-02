@@ -19,8 +19,6 @@ $(document).ready(function() {
 
 	// ALL
 
-
-
 	//
 	// Vertical Text in Bars (if small space)
 	//
@@ -38,6 +36,14 @@ $(document).ready(function() {
 	//
 
 	if (isForm) {
+
+		//
+		// Make sure fields with selects are good height
+		//
+		$('.form_field select[multiple]').each(function(){
+			selHeight=$(this).outerHeight();
+			$(this).parent('.form_field:first').css({height:selHeight});
+		});
 
 		//
 		// Timepicker and Datepicker dialog
@@ -92,8 +98,7 @@ $(document).ready(function() {
 
 			$("select.medias").change(function() {
 				// remove old thumbs
-				$("div.image_dropdown.medias img").remove();
-				$("div.image_dropdown.media object").remove();
+				$("div.image_dropdown.medias ul li").remove();
 				// show new thumbs
 				medias=$("select.medias option:selected");
 				if (medias.length>0) {
@@ -101,16 +106,36 @@ $(document).ready(function() {
 						src=path+$(this).attr("value");
 						ext=get_ext(src);
 						if (ext=='swf' || ext=='flv') {
-							$("div.image_dropdown select.medias").before(flash(src,32,32));
+							$("div.image_dropdown ul").append('<li>'+flash(src,32,32)+'</li>');
 						}
 						else {
 							src=cachedThumb(src);
-							$("div.image_dropdown select.medias").before('<img class="media" src="'+src+'" />');
+							$("div.image_dropdown ul").append('<li><img class="media" src="'+src+'" /></li>');
 						}
 					});
 				}
 			});
 		}
+		// ordering of the medias
+		$('div.medias ul').sortable({
+			update: function(event,ui) {
+				value='';
+				$(this).children('li').each(function(){
+					src=$(this).children('img:first').attr('src');
+					src=src.substr(src.lastIndexOf('/')+1);
+					value+='|'+src;
+				});
+				value=value.substr(1);
+				$(this).parent('.form_field').children('input:first').attr('value',value);
+				console.log(out);
+			},
+			out: function(event,ui) {
+				out=true;
+			},
+			over: function(event,ui) {
+				out=false;
+			}
+		});
 
 	}
 

@@ -430,8 +430,8 @@ tr.caption td				{ border:none; }
 
 .grid img,
 .grid embed,
-.grid .rgb					{	max-width:32px;	max-height:32px;margin:0px auto 5px; }
-.grid div.rgb				{	width:32px;	height:32px; }
+.grid .rgb					{	width:25px;	height:25px; margin:0px 5px 0px 0px;; }
+.grid div.rgb				{	width:25px;	height:25px; }
 .grid .b						{	cursor: pointer; }
 
 .grid tbody tr.evenrow td {
@@ -753,8 +753,25 @@ select.media {
 	width:421px;
 	}
 select.medias {
-	float:right;
+	float:left;
+	width:420px;
 	}
+.form_field ul {
+	float:right;
+	margin:0px;
+	padding:0px;
+	display:block;
+}
+.form_field li {
+	list-style:none;
+	display:block;
+	top:0px;
+	margin:0px;
+	padding:0px;
+	height:27px;
+	width:27px;
+	cursor:pointer;
+}
 .form_field .flash,
 .form_field img {
 	float:left;
