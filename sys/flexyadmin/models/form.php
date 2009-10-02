@@ -184,10 +184,16 @@ class Form Extends Model {
 		$error="";
 		if (is_array($value)) {
 			// multi options (string)
-			if (count($value)==0)
-				$out="";
-			else
-				$out=implode("|",$out);
+			$hidden=$this->input->post($name.'__hidden');
+			if ($hidden) {
+				$out=$hidden;
+			}
+			else {
+				if (count($value)==0)
+					$out="";
+				else
+					$out=implode("|",$out);
+			}
 		}
 		$data=$this->data[$name];
 
@@ -588,9 +594,14 @@ class Form Extends Model {
 				$extra.="class=\"".$attr["class"]."\" id=\"".$name."\"";
 				if ($field["type"]=="image_dropdown") {
 					if (!is_array($value)) $medias=array($value); else $medias=$value;
+					$out.='<ul>';
+					$hiddenValue='';
 					foreach($medias as $media) {
-						if (!empty($media))	$out.=show_thumb(array("src"=>$field["path"]."/".$media,"class"=>"media"));
+						if (!empty($media))	$out.='<li>'.show_thumb(array("src"=>$field["path"]."/".$media,"class"=>"media")).'</li>';
+						$hiddenValue=add_string($hiddenValue,$media,'|');
 					}
+					$out.='</ul>';
+					$out.=form_hidden($field['name'].'__hidden',$hiddenValue);
 				}
 				$out.=form_dropdown($name,$options,$value,$extra);
 				if (isset($button)) {
