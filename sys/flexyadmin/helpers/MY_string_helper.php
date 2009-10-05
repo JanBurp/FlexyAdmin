@@ -118,7 +118,7 @@ function clean_string($s,$c=0) {
 	$b='aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr';
 	$s=utf8_decode($s);
 	$s=strtr($s,utf8_decode($a),$b);
-	$s=ereg_replace("[^A-Za-z0-9_-]", "", $s);
+	$s=preg_replace("/[^A-Za-z0-9_-]/", "", $s);
 	if ($c>0) $s=substr($s,0,$c);
 	return utf8_encode($s);
 }

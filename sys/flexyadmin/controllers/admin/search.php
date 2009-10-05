@@ -50,11 +50,12 @@ class Search extends AdminController {
 						foreach ($row as $key=>$txt) {
 							if ($regex) {
 								$oldErrorHandler=set_error_handler(array($this,"myErrorHandler"));
-								$new=ereg_replace($search,$replace,$txt);
+								$new=preg_replace("/$search/",$replace,$txt);
 								set_error_handler($oldErrorHandler);
 							}
-							else
+							else {
 								$new=str_replace($search,$replace,$txt);
+							}
 							if ($new!=$txt) {
 								$this->db->as_abstracts();
 								$this->db->where(pk(),$id);
@@ -68,6 +69,7 @@ class Search extends AdminController {
 							$this->db->where(pk(),$id);
 							$res=$this->db->update($table);
 						}
+						$this->db->as_abstracts(FALSE);
 					}
 					$htmlTest.="</ul>";
 				}		

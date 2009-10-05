@@ -230,7 +230,7 @@ function array_ereg_search($val, $array) {
 	$i = 0;
 	$return = array();
 	foreach($array as $v) {
-  	if(eregi($val, $v)) $return[] = $i;
+  	if(preg_match("/$val/i", $v)) $return[] = $i;
 	  $i++;
 	}
 	return $return;
