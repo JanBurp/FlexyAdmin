@@ -430,7 +430,7 @@ tr.caption td				{ border:none; }
 
 .grid img,
 .grid embed,
-.grid .rgb					{	width:25px;	height:25px; margin:0px 5px 0px 0px;; }
+.grid .rgb					{	max-width:50px;	height:25px; margin:0px 1px 0px 0px; }
 .grid div.rgb				{	width:25px;	height:25px; }
 .grid .b						{	cursor: pointer; }
 
@@ -529,10 +529,10 @@ table.grid thead .order,
 }
 /* ============== filemanager ================== */
 
-.icons {
+.thumbs {
 	max-width:1000px;
 }
-.icons div.file:hover {
+.thumbs div.file:hover {
 	border:solid 1px #DDEEAA;
 	background-color: #DDEEAA;
 	}
@@ -540,11 +540,11 @@ table.grid thead .order,
 .grid tbody tr:hover td {
 	background-color:transparent;
 }
-.icons tbody div.current {
+.thumbs tbody div.current {
 	background-color:#FFEEEE;
 	}
 
-.icons .file {
+.thumbs .file {
 	padding:10px 10px 0px 0px;
 	margin:15px 20px 10px 20px;
 	float:left;
@@ -556,35 +556,37 @@ table.grid thead .order,
 	-webkit-border-radius: 5px;
 	}
 
-.icons .file div {
+.thumbs .file div {
 	float:left;
 	margin:2px 3px;
 	padding:0px;
 	}
-.icons .file div.flash {
+.thumbs .file div.flash {
 	margin:11px;
 }
 
-.icons .file .toolbar {
+.thumbs .file .toolbar {
 	margin:0px;
 	visibility: hidden;
 	}
-.icons .file:hover .toolbar {
+.thumbs .file:hover .toolbar {
 	visibility:visible;
 	}
 
-.icons .file .thumb {
+.thumbs .file .thumb {
 	width:100px;
 	height: 100px;
 	margin:0px;
 	text-align: center;
 	}
-	.icons .file .thumb img {
-		max-height: 100px;
-		max-width: 100px;
+	.thumbs .file .thumb .thumb img {
+		height: auto;
+		width: auto;
+		max-width:100px;
+		max-height:100px;
 		}
 
-.icons .file .name {
+.thumbs .file .name {
 	margin-left:5px;
 	clear:both;
 	width:100%;
