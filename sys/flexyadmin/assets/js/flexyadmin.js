@@ -29,6 +29,15 @@ $(document).ready(function() {
 		}
 	});
 
+	//
+	// img Zoom Popup Dialog
+	//
+	$('img.zoom').add('.flash .zoom').click(function() {
+		zoom_dialog($(this));
+	});
+	$('li img.zoom').add('li .flash .zoom').unbind('click','').dblclick(function(){
+		zoom_dialog($(this));
+	});
 
 
 	//
@@ -38,12 +47,20 @@ $(document).ready(function() {
 	if (isForm) {
 
 		//
-		// Make sure fields with selects are good height
+		// Make sure fields with (media) selects are good height
 		//
-		$('.form_field select[multiple]').each(function(){
+		$('.form_field select').each(function(){
 			selHeight=$(this).outerHeight();
+			imgList=$(this).parent('.form_field:first').children('ul.multiple:first');
+			if (imgList.length>0) { selHeight+=$(imgList).outerHeight(); }
 			$(this).parent('.form_field:first').css({height:selHeight});
 		});
+		$('.form_field.image_dragndrop').each(function(){
+			selHeight=$(this).children('ul.choices').outerHeight();
+			selHeight+=$(this).children('ul.values').outerHeight();
+			$(this).css({height:selHeight});
+		});		
+		
 
 		//
 		// Timepicker and Datepicker dialog
@@ -76,17 +93,16 @@ $(document).ready(function() {
 			$("select.media").change(function() {
 				media=$("select.media option:selected").attr("value");
 				// remove old thumb
-				$("div.image_dropdown.media img").remove();
-				$("div.image_dropdown.media object").remove();
+				$("div.image_dropdown.media ul li").remove();
 				// show new thumb
 				src=path+media;
 				ext=get_ext(media);
 				if (ext=='swf' || ext=='flv') {
-					$("div.image_dropdown select.media").before(flash(src,32,32));
+					$("div.image_dropdown ul").append('<li>'+flash(src,32,32)+'</li>');
 				}
 				else {
 					src=cachedThumb(src);
-					$("div.image_dropdown select.media").before('<img class="media" src="'+src+'" />');
+					$("div.image_dropdown ul").append('<li><img class="media" src="'+src+'" /></li>');
 				}
 			});
 		}
@@ -106,29 +122,33 @@ $(document).ready(function() {
 						src=path+$(this).attr("value");
 						ext=get_ext(src);
 						if (ext=='swf' || ext=='flv') {
-							$("div.image_dropdown ul").append('<li>'+flash(src,32,32)+'</li>');
+							$("div.image_dropdown ul.values").append('<li>'+flash(src,32,32)+'</li>');
 						}
 						else {
 							src=cachedThumb(src);
-							$("div.image_dropdown ul").append('<li><img class="media" src="'+src+'" /></li>');
+							$("div.image_dropdown ul.values").append('<li><img class="media" src="'+src+'" /></li>');
 						}
 					});
 				}
 			});
 		}
+		
 		// ordering of the medias
 		$('div.medias ul').sortable({
+			connectWith: 'div.medias ul',
 			update: function(event,ui) {
-				value='';
-				$(this).children('li').each(function(){
-					src=$(this).children('img:first').attr('src');
-					src=src.substr(src.lastIndexOf('/')+1);
-					value+='|'+src;
-				});
-				value=value.substr(1);
-				$(this).parent('.form_field').children('input:first').attr('value',value);
-				console.log(out);
+				if ($(this).hasClass('values')) {
+					value='';
+					$(this).children('li').each(function(){
+						src=$(this).children('img:first').attr('src');
+						src=src.substr(src.lastIndexOf('/')+1);
+						value+='|'+src;
+					});
+					value=value.substr(1);
+					$(this).parent('.form_field').children('input:first').attr('value',value);
+				}
 			},
+			
 			out: function(event,ui) {
 				out=true;
 			},
@@ -337,16 +357,6 @@ $(document).ready(function() {
 				confirm_dialog(this,name);
 			});
 		}
-
-		//
-		// img Zoom Popup Dialog
-		//
-		$('img.zoom').click(function() {
-			zoom_dialog($(this));
-		});
-		$('.flash .zoom').click(function() {
-			zoom_dialog($(this));
-		});
 
 	}
 

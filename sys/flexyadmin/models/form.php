@@ -567,14 +567,11 @@ class Form Extends Model {
 				break;
 
 
-			case "image_dropdown":
 			case "dropdown":
+			case "image_dropdown":
+			case "image_dragndrop":
 				$extra="";
 				$options=el("options",$field);
-				// if (current($options)!='') {
-				// 		$options['']='';
-				// 		asort($options,SORT_LOCALE_STRING);
-				// 	}
 				$value=$attr["value"];
 				$button=el("button",$field);
 				if (isset($button))	$attr["class"].=" button";
@@ -592,18 +589,35 @@ class Form Extends Model {
 					}
 				}
 				$extra.="class=\"".$attr["class"]."\" id=\"".$name."\"";
-				if ($field["type"]=="image_dropdown") {
+				if ($field["type"]=="image_dropdown" or $field["type"]=="image_dragndrop") {
+					// show values
 					if (!is_array($value)) $medias=array($value); else $medias=$value;
-					$out.='<ul>';
+					$out.='<ul class="values '.$attr['class'].'">';
 					$hiddenValue='';
 					foreach($medias as $media) {
-						if (!empty($media))	$out.='<li>'.show_thumb(array("src"=>$field["path"]."/".$media,"class"=>"media")).'</li>';
-						$hiddenValue=add_string($hiddenValue,$media,'|');
+						if (!empty($media)) {
+							$out.='<li>'.show_thumb(array("src"=>$field["path"]."/".$media,"class"=>"media")).'</li>';
+							$hiddenValue=add_string($hiddenValue,$media,'|');
+						}
 					}
 					$out.='</ul>';
-					$out.=form_hidden($field['name'].'__hidden',$hiddenValue);
+					// hidden value, needed for jQuery dragndrop and sortable
+					if ($field["type"]=="image_dragndrop")
+						$hiddenName=$field['name'];
+					else
+						$hiddenName=$field['name'].'__hidden';
+					$out.=form_hidden($hiddenName,$hiddenValue);
 				}
-				$out.=form_dropdown($name,$options,$value,$extra);
+				if ($field["type"]=="image_dragndrop") {
+					$out.='<ul class="choices">';
+					foreach($options as $img) {
+						$image=$img['name'];
+						if (!in_array($image,$medias)) $out.='<li>'.show_thumb(array("src"=>$field["path"]."/".$image,"class"=>"media",'title'=>$image)).'</li>';
+					}
+					$out.='</ul>';					
+				}
+				else
+					$out.=form_dropdown($name,$options,$value,$extra);
 				if (isset($button)) {
 					$out.=div("add_button").anchor($button,icon("add"))._div();
 				}

@@ -751,38 +751,28 @@ select.multiselect {
 select.multiselect:hover {
 	height: 250px;
 	}
-select.media {
-	width:421px;
-	}
-select.medias {
-	float:left;
-	width:420px;
-	}
-.form_field ul {
+select.media, select.medias {
 	float:right;
-	margin:0px;
-	padding:0px;
-	display:block;
-}
-.form_field li {
-	list-style:none;
-	display:block;
-	top:0px;
-	margin:0px;
-	padding:0px;
-	height:27px;
-	width:27px;
-	cursor:pointer;
+	width:460px;
+	margin:0px 0px 2px 0px;
+	}
+select.media {
+	width:400px;
 }
 .form_field .flash,
 .form_field img {
 	float:left;
-	width: 27px;
+	max-width: 50px;
 	height: 27px;
-	margin:0px 10px 0px 0px;
+	margin:0px;
 	border:1px solid #DDEEAA;
 	background-color: transparent;
 }
+.form_field .flash:hover,
+.form_field img:hover {
+	border:1px solid #000;
+}
+
 input.button {
 	float:right;
 	width:125px;
@@ -819,6 +809,38 @@ input.button:hover {
 	clear:both;
 	width:50px;
 	}
+
+.form_field ul {
+	float:left;
+	display:block;
+	width:30px;
+	min-height:30px;
+	margin: 0px 0px 4px 0px;
+	padding:0px 0px 2px 0px;
+	border:solid 1px #DDEEAA;
+	background-color:#FFF;
+}
+.form_field ul.multiple,
+.form_field ul.choices {
+	float:right;
+	width:450px;
+	padding:3px 4px 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+}
+
+.form_field ul li {
+	list-style:none;
+	display:block;
+	float:left;
+	top:0px;
+	margin:0px;
+	padding:0px;
+	height:30px;
+	max-width:50px;
+	cursor:pointer;
+}
+
 
 
 /* filemanager fields/buttons */

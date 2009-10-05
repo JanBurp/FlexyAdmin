@@ -671,7 +671,6 @@ class Flexy_field extends Model {
 	}
 	function _dropdown_media_form() {
 		$info=$this->cfg->get('CFG_media_info',$this->table.".".$this->field);
-		// trace_($info);
 		if (empty($info)) {
 			$options=array(""=>"ERROR: add this field in Media Info");
 			$map="";
@@ -687,16 +686,21 @@ class Flexy_field extends Model {
 				$files=$this->_filter_restricted_files($files,$this->restrictedToUser);
 			}
 			$files=not_filter_by($files,"_");
-			$lastUploadMax=$this->cfg->get('CFG_media_info',$path,'int_last_uploads');
-			$lastUploads=array_slice(sort_by($files,"rawdate",TRUE),0,$lastUploadMax);
-			ignorecase_ksort($files);
-			$options=array();
-			$options[]="";
-			$optionsLast=$this->_create_media_options($lastUploads,$types);
-			if (!empty($optionsLast)) $options[langp("form_dropdown_sort_on_last_upload",$lastUploadMax)]=$optionsLast;
-			$optionsNames=$this->_create_media_options($files,$types);
-			// trace_($optionsNames);
-			if (!empty($optionsNames)) $options[lang("form_dropdown_sort_on_name")]=$optionsNames;
+			if (el('b_dragndrop',$info)) {
+				$options=sort_by($files,"rawdate",TRUE);
+			}
+			else {
+				$lastUploadMax=$this->cfg->get('CFG_media_info',$path,'int_last_uploads');
+				$lastUploads=array_slice(sort_by($files,"rawdate",TRUE),0,$lastUploadMax);
+				ignorecase_ksort($files);
+				$options=array();
+				$options[]="";
+				$optionsLast=$this->_create_media_options($lastUploads,$types);
+				if (!empty($optionsLast)) $options[langp("form_dropdown_sort_on_last_upload",$lastUploadMax)]=$optionsLast;
+				$optionsNames=$this->_create_media_options($files,$types);
+				// trace_($optionsNames);
+				if (!empty($optionsNames)) $options[lang("form_dropdown_sort_on_name")]=$optionsNames;
+			}
 			// $options=array(lang("form_dropdown_sort_on_last_upload")=>$optionsLast, lang("form_dropdown_sort_on_name")=>$optionsNames);
 			// trace_($options);
 		}
@@ -705,6 +709,7 @@ class Flexy_field extends Model {
 		if ($this->pre=="medias") $out["multiple"]="multiple";
 		$type=el("str_type",$info);
 		if ($type=="all" or $type=="image" or $type=="flash") $out["type"]="image_dropdown";
+		if (el('b_dragndrop',$info)) $out["type"]="image_dragndrop";
 		unset($out["button"]);
 		return $out;
 	}
