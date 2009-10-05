@@ -126,7 +126,7 @@ class Show extends AdminController {
 							/**
 							 * if no data, start an input form
 							 */
-							 $this->form($table,-1);
+							 $this->form($table.':-1');
 							 return;
 						}
 						else
