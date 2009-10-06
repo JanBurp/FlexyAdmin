@@ -1,6 +1,21 @@
 PRIO:
 & where statements, meerdere versie van tabel op die manier
-- Volgorde bepalen bij meerdere media bestanden / multi options
+& Depricated PHP functies...
+	& ereg_replace() (use preg_replace() instead)
+	& eregi() (use preg_match() with the 'i' modifier instead)
+	& split() (use preg_split() instead)
+& thumb sizes (filemanager)
+
+& Volgorde bepalen bij meerdere media bestanden
+& multi options (ordered_lists)
+		
+- Testen in 
+	& Safari
+	& IE8
+	& IE7
+
+
+- styling van TinyMCE
 - pagination
 
 
