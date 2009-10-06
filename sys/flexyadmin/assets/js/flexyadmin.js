@@ -147,18 +147,27 @@ $(document).ready(function() {
 					value=value.substr(1);
 					$(this).parent('.form_field').children('input:first').attr('value',value);
 				}
-			},
-			
-			out: function(event,ui) {
-				out=true;
-			},
-			over: function(event,ui) {
-				out=false;
 			}
 		});
 
 	}
 
+	// ordering of many type ordered_list
+	$('div.ordered_list ul').sortable({
+		connectWith: 'div.ordered_list ul',
+		update: function(event,ui) {
+			if ($(this).hasClass('list_values')) {
+				value='';
+				$(this).children('li').each(function(){
+					id=$(this).attr('id');
+					value+='|'+id;
+				});
+				value=value.substr(1);
+				$(this).parent('.form_field').children('input:first').attr('value',value);
+			}
+		}
+	});	
+	
 
 
 

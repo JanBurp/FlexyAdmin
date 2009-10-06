@@ -513,13 +513,17 @@ class Flexy_field extends Model {
 
 	function _join_form($options) {
 		$out=$this->_standard_form_field($options);
-		$tableInfo=$this->cfg->get('CFG_table',$out['name']);
-		$formManyType=$tableInfo['str_form_many_type'];
-		if (!empty($formManyType) and $formManyType!='dropdown') {
-			$out['type']=$formManyType;
-		}
 		$out["multiple"]="multiple";
-		$out["button"]=api_uri('API_view_form',join_table_from_rel_table($out["name"]),-1);
+		$out["button"]=api_uri('API_view_form',join_table_from_rel_table($out["name"]).':-1');
+		if (get_prefix($out['name'])==$this->config->item('REL_table_prefix')) {
+			$table=join_table_from_rel_table($out['name']);
+			$tableInfo=$this->cfg->get('CFG_table',$table);
+			$formManyType=$tableInfo['str_form_many_type'];
+			if (!empty($formManyType) and $formManyType!='dropdown') {
+				$out['type']=$formManyType;
+				unset($out['button']);
+			}
+		}
 		return $out;
 	}
 

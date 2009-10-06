@@ -348,6 +348,10 @@ class Form Extends Model {
 					if ($pre==$this->config->item('REL_table_prefix')) {
 						if (empty($value)) $value=array();
 						$joins[$name]=$value;
+						$hidden=$this->input->post($name.'__hidden');
+						if ($hidden) {
+							$joins[$name]=explode('|',$hidden);
+						}
 					}
 					/**
 					 * Normal data
@@ -568,27 +572,31 @@ class Form Extends Model {
 
 
 			case "dropdown":
+			case 'ordered_list':
 			case "image_dropdown":
 			case "image_dragndrop":
+				//
+				// set classes etc
+				//
 				$extra="";
 				$options=el("options",$field);
 				$value=$attr["value"];
 				$button=el("button",$field);
 				if (isset($button))	$attr["class"].=" button";
-				if (isset($field["path"])) {
-					$extra.=" path=\"".$field["path"]."\"";
-				}
+				if (isset($field["path"])) 	$extra.=" path=\"".$field["path"]."\"";
 				if (isset($field["multiple"]) or is_array($value)) {
 					$extra.=" multiple=\"multipe\"";
 					$name.="[]";
-					if (is_array($value)) {
+					if (is_array($value)) 
 						$value=array_keys($value);
-					}
-					else {
+					else
 						$value=explode("|",$value);
-					}
 				}
 				$extra.="class=\"".$attr["class"]."\" id=\"".$name."\"";
+				
+				//
+				// Show images if it is an image dropdown
+				//
 				if ($field["type"]=="image_dropdown" or $field["type"]=="image_dragndrop") {
 					// show values
 					if (!is_array($value)) $medias=array($value); else $medias=$value;
@@ -608,6 +616,10 @@ class Form Extends Model {
 						$hiddenName=$field['name'].'__hidden';
 					$out.=form_hidden($hiddenName,$hiddenValue);
 				}
+
+				//
+				// Show all possible images as images instead of a dropdown
+				//
 				if ($field["type"]=="image_dragndrop") {
 					$out.='<ul class="choices">';
 					foreach($options as $img) {
@@ -616,8 +628,39 @@ class Form Extends Model {
 					}
 					$out.='</ul>';					
 				}
-				else
+
+				//
+				// Normal dropdown (also normal image dropdown)
+				//
+				if ($field['type']=='dropdown' or $field['type']=='image_dropdown') {
 					$out.=form_dropdown($name,$options,$value,$extra);
+				}
+
+				//
+				// Ordered lists
+				//
+				if ($field['type']=='ordered_list') {
+					// show (ordered) choices	
+					$out.='<ul class="list list_choices">';
+					foreach($options as $id=>$option) {
+						if (!in_array($id,$value)) $out.='<li id="'.$id.'">'.$option.'</li>';
+					}
+					$out.='</ul>';
+					$out.=icon('right');
+					// show values
+					$hiddenValue='';
+					if (!is_array($value)) $value=array($value);
+					$out.='<ul class="list list_values '.$attr['class'].'">';
+					foreach($value as $val) {
+						if (!empty($val)) {
+							$out.='<li id="'.$val.'">'.$options[$val].'</li>';
+							$hiddenValue=add_string($hiddenValue,$val,'|');
+						}
+					}
+					$out.='</ul>';
+					$out.=form_hidden($field['name'].'__hidden',$hiddenValue);				
+				}
+				
 				if (isset($button)) {
 					$out.=div("add_button").anchor($button,icon("add"))._div();
 				}
