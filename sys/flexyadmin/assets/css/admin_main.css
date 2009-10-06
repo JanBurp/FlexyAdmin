@@ -194,7 +194,7 @@ span.help {
 	}
 
 .icon.new {
-	background-image: url("../icons/addfile.png");
+	background-image: url("../icons/addfile.gif");
 	background-repeat: no-repeat;
 	padding:3px 5px;
 	}
@@ -238,13 +238,13 @@ div.add_button {
 	margin-top:-154px;
 }
 .icon.list {
-	background-image: url("../icons/list.png");
+	background-image: url("../icons/list.gif");
 	background-repeat: no-repeat;
 	padding-right:0px;
 	padding:3px 5px;
 	}
 .icon.listicons {
-	background-image: url("../icons/list_icons.png");
+	background-image: url("../icons/list_icons.gif");
 	background-repeat: no-repeat;
 	padding-right:0px;
 	padding:3px 5px;
