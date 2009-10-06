@@ -66,6 +66,7 @@ class Stats extends AdminController {
 				)
 				$this->Data[$type]=$this->_stat_data_from_db($type);
 		}
+		if (!is_array($this->Data['this_year'])) $this->Data['this_year']=array();
 		// Add current month to this_year from DB
 		$thisYearMonth=$this->_stat_data_from_db('this_year');
 		if (isset($thisYearMonth[$todayMonth])) {
