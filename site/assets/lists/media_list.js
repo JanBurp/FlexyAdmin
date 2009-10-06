@@ -1,1 +1,0 @@
-var tinyMCEMediaList = new Array);
