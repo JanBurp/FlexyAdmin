@@ -1,0 +1,18 @@
+UPDATE FlexyAdmin to r502
+
+- Write down the current revision (see in the bottom bar in FlexyAdmin or in sys/build.txt)
+
+- Run all SQL updates from your revision until the latest (you can find the SQL updates in db/ ).
+
+- Remove the current sys map
+- Copy the new sys map
+
+- If you start a new site:
+	- Copy the site map
+	- Copy .htacces,index.php and robots.txt to the root of your site
+
+- If you update a current site:
+	- Add site/config and move your config files from site/ to site/config/ (database.php etc )
+	- Add the new config files (found in the original site/config)
+	- Add site/stats and give it all rights (online)
+

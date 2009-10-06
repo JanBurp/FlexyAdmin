@@ -1,6 +1,4 @@
---
--- FlexyAdmin demo database (r478)
---
+-- FlexyAdmin demo database
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
@@ -13,6 +11,43 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 --
 -- Database: `flexy_demo`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Tabel structuur voor tabel `cfg_admin_menu`
+--
+
+DROP TABLE IF EXISTS `cfg_admin_menu`;
+CREATE TABLE IF NOT EXISTS `cfg_admin_menu` (
+  `id` int(11) NOT NULL auto_increment,
+  `order` smallint(6) default '0',
+  `str_ui_name` varchar(50) default '',
+  `b_visible` tinyint(1) default '1',
+  `str_type` varchar(20) default '',
+  `api` varchar(20) default '',
+  `path` varchar(50) NOT NULL,
+  `table` varchar(25) default NULL,
+  `str_table_where` varchar(50) default '',
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
+
+--
+-- Gegevens worden uitgevoerd voor tabel `cfg_admin_menu`
+--
+
+INSERT INTO `cfg_admin_menu` VALUES(1, 0, 'Home', 1, 'api', 'API_home', '', '', '');
+INSERT INTO `cfg_admin_menu` VALUES(2, 1, 'Logout', 1, 'api', 'API_logout', '', '', '');
+INSERT INTO `cfg_admin_menu` VALUES(3, 2, 'Help', 0, 'api', 'API_help', '', '', '');
+INSERT INTO `cfg_admin_menu` VALUES(4, 5, '# all normal tables (if user has rights)', 1, 'all_tbl_tables', '', '', '', '');
+INSERT INTO `cfg_admin_menu` VALUES(5, 6, '# all media (if user has rights)', 1, 'all_media', '', '', '', '');
+INSERT INTO `cfg_admin_menu` VALUES(6, 10, '# all tools (if user has rights)', 1, 'tools', '', '', '', '');
+INSERT INTO `cfg_admin_menu` VALUES(7, 12, '# all config tables (if user has rights)', 1, 'all_cfg_tables', '', '', '', '');
+INSERT INTO `cfg_admin_menu` VALUES(8, 3, '', 1, 'seperator', '', '', '', '');
+INSERT INTO `cfg_admin_menu` VALUES(9, 7, '', 1, 'seperator', '', '', '', '');
+INSERT INTO `cfg_admin_menu` VALUES(10, 11, '', 1, 'seperator', '', '', '', '');
+INSERT INTO `cfg_admin_menu` VALUES(11, 8, '_stats_menu', 1, 'api', 'API_stats', '', '', '');
+INSERT INTO `cfg_admin_menu` VALUES(12, 9, '', 1, 'seperator', '', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -37,7 +72,7 @@ CREATE TABLE IF NOT EXISTS `cfg_configurations` (
 -- Gegevens worden uitgevoerd voor tabel `cfg_configurations`
 --
 
-INSERT INTO `cfg_configurations` VALUES(1, '-not needed-', 'info@flexyadmin.com', 'tbl_menu', '', 0, 0, '');
+INSERT INTO `cfg_configurations` VALUES(1, '-not needed-', 'info@flexyadmin.com', 'tbl_menu', '', 0, 0, '<p>Test tekst</p>');
 
 -- --------------------------------------------------------
 
@@ -65,7 +100,7 @@ CREATE TABLE IF NOT EXISTS `cfg_editor` (
 -- Gegevens worden uitgevoerd voor tabel `cfg_editor`
 --
 
-INSERT INTO `cfg_editor` VALUES(1, 1, 'big', '', 'tbl_links', 1, 'cut,copy,pastetext,pasteword,selectall,undo,bold,italic,formatselect,removeformat,link,unlink,image', '', '', 'h2,h3', '');
+INSERT INTO `cfg_editor` VALUES(1, 1, 'normal', '', 'tbl_links', 1, 'cut,copy,pastetext,pasteword,selectall,undo,bold,italic,formatselect,removeformat,link,unlink,image', '', '', 'h2,h3', '');
 
 -- --------------------------------------------------------
 
@@ -139,6 +174,7 @@ CREATE TABLE IF NOT EXISTS `cfg_media_info` (
   `str_ui_name` varchar(50) NOT NULL,
   `str_type` varchar(20) NOT NULL default '',
   `fields_media_fields` varchar(100) NOT NULL,
+  `b_dragndrop` tinyint(1) default '1',
   `path` varchar(255) NOT NULL,
   `b_user_restricted` int(1) default '0',
   `fields_autofill_fields` varchar(255) NOT NULL,
@@ -155,7 +191,7 @@ CREATE TABLE IF NOT EXISTS `cfg_media_info` (
 -- Gegevens worden uitgevoerd voor tabel `cfg_media_info`
 --
 
-INSERT INTO `cfg_media_info` VALUES(1, 1, 'Foto''s', 'image', '', 'pictures', 0, '', 'jpg,jpeg,gif,png', 5, 0, 1, 0, '');
+INSERT INTO `cfg_media_info` VALUES(1, 1, 'Foto''s', 'image', '', 1, 'pictures', 0, '', 'jpg,jpeg,gif,png', 5, 0, 1, 0, '');
 
 -- --------------------------------------------------------
 
@@ -231,15 +267,15 @@ CREATE TABLE IF NOT EXISTS `cfg_table_info` (
   `b_freeze_uris` tinyint(1) NOT NULL,
   `txt_help` blob NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=4 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=5 ;
 
 --
 -- Gegevens worden uitgevoerd voor tabel `cfg_table_info`
 --
 
 INSERT INTO `cfg_table_info` VALUES(1, 0, 'tbl_site', 1, '', 0, 0, 0, '', '', '', '', 0, '');
-INSERT INTO `cfg_table_info` VALUES(2, 2, 'tbl_links', 0, '', 0, 0, 0, '', '', '', '', 0, '');
-INSERT INTO `cfg_table_info` VALUES(3, 1, 'tbl_menu', 0, '', 0, 0, 0, '', '', '', '', 0, '');
+INSERT INTO `cfg_table_info` VALUES(2, 3, 'tbl_links', 0, '', 0, 0, 0, 'ordered_list', 'str_title', '', '', 0, '');
+INSERT INTO `cfg_table_info` VALUES(3, 2, 'tbl_menu', 0, '', 0, 0, 1, '', '', '', '', 0, '');
 
 -- --------------------------------------------------------
 
@@ -263,7 +299,7 @@ CREATE TABLE IF NOT EXISTS `cfg_users` (
 -- Gegevens worden uitgevoerd voor tabel `cfg_users`
 --
 
-INSERT INTO `cfg_users` VALUES(1, 'admin', 'admin', 'nl', 'list', '', 0);
+INSERT INTO `cfg_users` VALUES(1, 'admin', 'admin', 'nl', 'icons', '', 0);
 INSERT INTO `cfg_users` VALUES(2, 'user', 'user', 'nl', 'list', '', 0);
 
 -- --------------------------------------------------------
@@ -343,13 +379,19 @@ CREATE TABLE IF NOT EXISTS `tbl_links` (
   `str_title` varchar(255) character set utf8 collate utf8_unicode_ci NOT NULL default '',
   `url_url` varchar(255) character set utf8 collate utf8_unicode_ci NOT NULL default '',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=39 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=45 ;
 
 --
 -- Gegevens worden uitgevoerd voor tabel `tbl_links`
 --
 
 INSERT INTO `tbl_links` VALUES(35, 'Jan den Besten - webontwerp en geluidsontwerp', 'http://www.jandenbesten.net');
+INSERT INTO `tbl_links` VALUES(39, 'FlexyAdmin', 'http://www.flexyadmin.com');
+INSERT INTO `tbl_links` VALUES(40, 'Muziek van Jan', 'http://www.burp.nl');
+INSERT INTO `tbl_links` VALUES(41, 'test', 'http://test');
+INSERT INTO `tbl_links` VALUES(42, 'test2', 'http://test2');
+INSERT INTO `tbl_links` VALUES(43, 'test3', 'http://test3');
+INSERT INTO `tbl_links` VALUES(44, 'test4', 'http://test4');
 
 -- --------------------------------------------------------
 
@@ -375,8 +417,8 @@ CREATE TABLE IF NOT EXISTS `tbl_menu` (
 
 INSERT INTO `tbl_menu` VALUES(1, 0, 0, 'home', 'home', '', '<p>Welkom bij FlexyAdmin.</p>\n<p>Dit is een eenvoudige demo site.</p>\n<p><img title="lucht.jpg" src="site/assets/pictures/lucht.jpg" alt="lucht.jpg" width="400" height="268" /></p>');
 INSERT INTO `tbl_menu` VALUES(2, 1, 0, 'hoe_bouw_je_een_site', 'Hoe bouw je een site', '', '<p>Er zijn drie manieren om een site te bouwen met behulp van FlexyAdmin:</p>\n<ul>\n<li><a href="hoe_bouw_je_een_site/met_controller">Met alle hulp van FlexyAdmin (controller,views)</a></li>\n<li><a href="hoe_bouw_je_een_site/zonder_controller">Met database en helpers, maar zonder controller (en views)</a></li>\n<li><a href="hoe_bouw_je_een_site/geheel_eigen_code">Zonder FlexyAdmin: bouw je eigen database connectie</a></li>\n</ul>');
-INSERT INTO `tbl_menu` VALUES(3, 0, 2, 'met_controller', 'met controller', '', '<p>In de map site zie je controller.php en de map views.</p>\n<p>In controller.php maak je de inhoud van de site klaar en zet deze in de variable $this-&gt;site[#naam#]. Deze variabelen worden doorgegeven naar de view home.php waar de variabel #naam# bekend is al een normale PHP variabele.</p>\n<p>&nbsp;</p>');
-INSERT INTO `tbl_menu` VALUES(4, 1, 2, 'zonder_controller', 'zonder controller', '', '<p>Zoals je vroeger alles in index.php maakte, zo kun je nu alles in home.php maken. Dit bestand vind je in de map site/views.</p>\n<p>Doe nog even de volgende stappen zodat er geen overbodige zaken worden gedaan:</p>\n<p>Vervang controller.php door empty_controller.php.<br />Vervang home.php door full_home.php.</p>\n<p>&nbsp;</p>');
+INSERT INTO `tbl_menu` VALUES(3, 0, 2, 'met_controller', 'met controller', '', '<p>In de map site zie je controller.php en de map views.</p>\n<p>In controller.php maak je de inhoud van de site klaar en zet deze in de variable $this-&gt;site[#naam#]. Deze variabelen worden doorgegeven naar de view home.php waar de variabel #naam# bekend is al een normale PHP variabele.</p>');
+INSERT INTO `tbl_menu` VALUES(4, 1, 2, 'zonder_controller', 'zonder controller', '', '<p>Zoals je vroeger alles in index.php maakte, zo kun je nu alles in home.php maken. Dit bestand vind je in de map site/views.</p>\n<p>Doe nog even de volgende stappen zodat er geen overbodige zaken worden gedaan:</p>\n<p>Vervang controller.php door empty_controller.php.<br />Vervang home.php door full_home.php.</p>');
 INSERT INTO `tbl_menu` VALUES(5, 2, 2, 'geheel_eigen_code', 'geheel eigen code', '', '<p>Je kunt ook FlexyAdmin alleen als de backend CMS van je site gebruiken.</p>\n<p>Zorg ervoor dat FlexyAdmin in zijn geheel in een submap (admin) van je site staat en maak je eigen site aan zoals je gewend bent. Je moet nu zelf helemaal zorg dragen voor de database connectie. Gebruik hiervoor indien nodig database.php van FlexyAdmin voor de database gegevens.</p>\n<p>Je roept de backend dan aan door naar site/admin/admin te gaan.</p>');
 
 -- --------------------------------------------------------
