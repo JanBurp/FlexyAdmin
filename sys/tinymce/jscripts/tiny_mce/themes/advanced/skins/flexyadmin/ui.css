@@ -1,0 +1,214 @@
+/* Reset */
+.flexyadminSkin table, .flexyadminSkin tbody, .flexyadminSkin a, .flexyadminSkin img, .flexyadminSkin tr, .flexyadminSkin div, .flexyadminSkin td, .flexyadminSkin iframe, .flexyadminSkin span, .flexyadminSkin *, .flexyadminSkin .mceText {border:0; margin:0; padding:0; background:transparent; white-space:nowrap; text-decoration:none; font-weight:normal; cursor:default; color:#696; vertical-align:baseline; width:auto; border-collapse:separate; text-align:left}
+.flexyadminSkin a:hover, .flexyadminSkin a:link, .flexyadminSkin a:visited, .flexyadminSkin a:active {text-decoration:none; font-weight:normal; cursor:default; color:#696}
+.flexyadminSkin table td {vertical-align:middle}
+
+/* Containers */
+.flexyadminSkin table {background:#FFF}
+.flexyadminSkin iframe {display:block; background:#FFF}
+.flexyadminSkin .mceToolbar {height:26px}
+.flexyadminSkin .mceLeft {text-align:left}
+.flexyadminSkin .mceRight {text-align:right}
+
+/* External */
+.flexyadminSkin .mceExternalToolbar {position:absolute; border:1px solid #DEA; border-bottom:0; display:none;}
+.flexyadminSkin .mceExternalToolbar td.mceToolbar {padding-right:13px;}
+.flexyadminSkin .mceExternalClose {position:absolute; top:3px; right:3px; width:7px; height:7px; background:url(../../img/icons.gif) -820px 0}
+
+/* Layout */
+.flexyadminSkin table.mceLayout {border:1px solid #DEA; -moz-border-radius: 4px; -webkit-border-radius: 4px; }
+.flexyadminSkin table.mceLayout tr.mceFirst td {padding-bottom:2px;}
+.flexyadminSkin table.mceLayout tr.mceLast td {padding-top:2px;}
+.flexyadminSkin table.mceToolbar, .flexyadminSkin tr.mceFirst .mceToolbar tr td, .flexyadminSkin tr.mceLast .mceToolbar tr td {border:0; margin:0; padding:0;}
+.flexyadminSkin td.mceToolbar {padding-top:1px; vertical-align:top}
+.flexyadminSkin .mceIframeContainer {border-top:1px solid #DEA; border-bottom:1px solid #DEA}
+.flexyadminSkin .mceStatusbar {font-family:'MS Sans Serif',sans-serif,Verdana,Arial; font-size:9pt; line-height:16px; overflow:visible; color:#000; display:block; height:20px}
+.flexyadminSkin .mceStatusbar div {float:left; margin:2px}
+.flexyadminSkin .mceStatusbar a.mceResize {display:block; float:right; background:url(../../img/icons.gif) -800px 0; width:20px; height:20px; cursor:se-resize}
+.flexyadminSkin .mceStatusbar a:hover {text-decoration:underline}
+.flexyadminSkin table.mceToolbar {margin-left:3px}
+.flexyadminSkin span.mceIcon, .flexyadminSkin img.mceIcon {display:block; width:20px; height:20px}
+.flexyadminSkin .mceIcon {background:url(../../img/icons.gif) no-repeat 20px 20px}
+.flexyadminSkin td.mceCenter {text-align:center;}
+.flexyadminSkin td.mceCenter table {margin:0 auto; text-align:left;}
+.flexyadminSkin td.mceRight table {margin:0 0 0 auto;}
+
+/* Button */
+.flexyadminSkin .mceButton {display:block; border:1px solid #FFF; width:20px; height:20px; margin-right:1px; padding:1px;}
+.flexyadminSkin a.mceButtonEnabled:hover {border:1px solid #DEA; -moz-border-radius: 4px; -webkit-border-radius: 4px; background-color:#F4FFE0; }
+.flexyadminSkin a.mceButtonActive, .flexyadminSkin a.mceButtonSelected {border:1px solid #696; background-color:#DEA;-moz-border-radius: 4px; -webkit-border-radius: 4px;}
+.flexyadminSkin .mceButtonDisabled .mceIcon {opacity:0.3; -ms-filter:'alpha(opacity=30)'; filter:alpha(opacity=30)}
+.flexyadminSkin .mceButtonLabeled {width:auto}
+.flexyadminSkin .mceButtonLabeled span.mceIcon {float:left}
+.flexyadminSkin span.mceButtonLabel {display:block; font-size:10px; padding:4px 6px 0 22px; font-family:Tahoma,Verdana,Arial,Helvetica}
+.flexyadminSkin .mceButtonDisabled .mceButtonLabel {color:#888}
+
+/* Separator */
+.flexyadminSkin .mceSeparator {display:block; background:url(../../img/icons.gif) -180px 0; width:2px; height:20px; margin:2px 2px 0 4px}
+
+/* ListBox */
+.flexyadminSkin .mceListBox {direction:ltr}
+.flexyadminSkin .mceListBox, .flexyadminSkin .mceListBox a {display:block}
+.flexyadminSkin .mceListBox .mceText {padding-left:4px; width:70px; text-align:left; border:1px solid #DEA; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-right:0; background:#FFF; font-family:Tahoma,Verdana,Arial,Helvetica; font-size:11px; height:20px; line-height:20px; overflow:hidden}
+.flexyadminSkin .mceListBox .mceOpen {width:9px; height:20px; background:url(../../img/icons.gif) -741px 0; margin-right:2px; border:1px solid #DEA; -moz-border-radius: 4px; -webkit-border-radius: 4px; }
+.flexyadminSkin table.mceListBoxEnabled:hover .mceText, .flexyadminSkin .mceListBoxHover .mceText, .flexyadminSkin .mceListBoxSelected .mceText {border:1px solid #696; border-right:0; background:#FFF}
+.flexyadminSkin table.mceListBoxEnabled:hover .mceOpen, .flexyadminSkin .mceListBoxHover .mceOpen, .flexyadminSkin .mceListBoxSelected .mceOpen {background-color:#FFF; border:1px solid #696}
+.flexyadminSkin .mceListBoxDisabled a.mceText {color:#DEA; background-color:transparent;}
+.flexyadminSkin .mceListBoxMenu {overflow:auto; overflow-x:hidden}
+.flexyadminSkin .mceOldBoxModel .mceListBox .mceText {height:22px}
+.flexyadminSkin .mceOldBoxModel .mceListBox .mceOpen {width:11px; height:22px;}
+.flexyadminSkin select.mceNativeListBox {font-family:'MS Sans Serif',sans-serif,Verdana,Arial; font-size:7pt; background:#DEA; border:1px solid #DEA; margin-right:2px;}
+
+/* SplitButton */
+.flexyadminSkin .mceSplitButton {width:32px; height:20px; direction:ltr}
+.flexyadminSkin .mceSplitButton a, .flexyadminSkin .mceSplitButton span {height:20px; display:block}
+.flexyadminSkin .mceSplitButton a.mceAction {width:20px; border:1px solid #F0F0EE; border-right:0;}
+.flexyadminSkin .mceSplitButton span.mceAction {width:20px; background:url(../../img/icons.gif) 20px 20px;}
+.flexyadminSkin .mceSplitButton a.mceOpen {width:9px; background:url(../../img/icons.gif) -741px 0; border:1px solid #F0F0EE;}
+.flexyadminSkin .mceSplitButton span.mceOpen {display:none}
+.flexyadminSkin table.mceSplitButtonEnabled:hover a.mceAction, .flexyadminSkin .mceSplitButtonHover a.mceAction, .flexyadminSkin .mceSplitButtonSelected a.mceAction {border:1px solid #0A246A; border-right:0; background-color:#B2BBD0}
+.flexyadminSkin table.mceSplitButtonEnabled:hover a.mceOpen, .flexyadminSkin .mceSplitButtonHover a.mceOpen, .flexyadminSkin .mceSplitButtonSelected a.mceOpen {background-color:#B2BBD0; border:1px solid #0A246A;}
+.flexyadminSkin .mceSplitButtonDisabled .mceAction, .flexyadminSkin .mceSplitButtonDisabled a.mceOpen {opacity:0.3; -ms-filter:'alpha(opacity=30)'; filter:alpha(opacity=30)}
+.flexyadminSkin .mceSplitButtonActive a.mceAction {border:1px solid #0A246A; background-color:#C2CBE0}
+.flexyadminSkin .mceSplitButtonActive a.mceOpen {border-left:0;}
+
+/* ColorSplitButton */
+.flexyadminSkin div.mceColorSplitMenu table {background:#FFF; border:1px solid gray}
+.flexyadminSkin .mceColorSplitMenu td {padding:2px}
+.flexyadminSkin .mceColorSplitMenu a {display:block; width:9px; height:9px; overflow:hidden; border:1px solid #808080}
+.flexyadminSkin .mceColorSplitMenu td.mceMoreColors {padding:1px 3px 1px 1px}
+.flexyadminSkin .mceColorSplitMenu a.mceMoreColors {width:100%; height:auto; text-align:center; font-family:Tahoma,Verdana,Arial,Helvetica; font-size:11px; line-height:20px; border:1px solid #FFF}
+.flexyadminSkin .mceColorSplitMenu a.mceMoreColors:hover {border:1px solid #0A246A; background-color:#B6BDD2}
+.flexyadminSkin a.mceMoreColors:hover {border:1px solid #0A246A}
+.flexyadminSkin .mceColorPreview {margin-left:2px; width:16px; height:4px; overflow:hidden; background:#9a9b9a}
+.flexyadminSkin .mce_forecolor span.mceAction, .flexyadminSkin .mce_backcolor span.mceAction {overflow:hidden; height:16px}
+
+/* Menu */
+.flexyadminSkin .mceMenu {position:absolute; left:0; top:0; z-index:1000; border:1px solid #DEA;-moz-border-radius: 4px; -webkit-border-radius: 4px;}
+.flexyadminSkin .mceNoIcons span.mceIcon {width:0;}
+.flexyadminSkin .mceNoIcons a .mceText {padding-left:10px}
+.flexyadminSkin .mceMenu table {background:#FFF}
+.flexyadminSkin .mceMenu a, .flexyadminSkin .mceMenu span, .flexyadminSkin .mceMenu {display:block}
+.flexyadminSkin .mceMenu td {height:20px}
+.flexyadminSkin .mceMenu a {position:relative;padding:3px 0 4px 0}
+.flexyadminSkin .mceMenu .mceText {position:relative; display:block; font-family:Tahoma,Verdana,Arial,Helvetica; color:#696; cursor:default; margin:0; padding:0 25px 0 25px; display:block}
+.flexyadminSkin .mceMenu span.mceText, .flexyadminSkin .mceMenu .mcePreview {font-size:11px}
+.flexyadminSkin .mceMenu pre.mceText {font-family:Monospace}
+.flexyadminSkin .mceMenu .mceIcon {position:absolute; top:0; left:0; width:22px;}
+.flexyadminSkin .mceMenu .mceMenuItemEnabled a:hover, .flexyadminSkin .mceMenu .mceMenuItemActive {background-color:#DEA}
+.flexyadminSkin td.mceMenuItemSeparator {background:#DDD; height:1px}
+.flexyadminSkin .mceMenuItemTitle a {border:0; background:#DEA; }
+.flexyadminSkin .mceMenuItemTitle span.mceText {color:#696; font-weight:bold; padding-left:4px}
+.flexyadminSkin .mceMenuItemDisabled .mceText {color:#FFF;}
+.flexyadminSkin .mceMenuItemSelected .mceIcon {background:url(img/menu_check.gif)}
+.flexyadminSkin .mceNoIcons .mceMenuItemSelected a {background:url(img/menu_arrow.gif) no-repeat -6px center}
+.flexyadminSkin .mceMenu span.mceMenuLine {display:none}
+.flexyadminSkin .mceMenuItemSub a {background:url(img/menu_arrow.gif) no-repeat top right;}
+
+/* Progress,Resize */
+.flexyadminSkin .mceBlocker {position:absolute; left:0; top:0; z-index:1000; opacity:0.5; -ms-filter:'alpha(opacity=50)'; filter:alpha(opacity=50); background:#FFF}
+.flexyadminSkin .mceProgress {position:absolute; left:0; top:0; z-index:1001; background:url(img/progress.gif) no-repeat; width:32px; height:32px; margin:-16px 0 0 -16px}
+.flexyadminSkin .mcePlaceHolder {border:1px dotted gray}
+
+/* Formats */
+.flexyadminSkin .mce_formatPreview a {font-size:10px}
+.flexyadminSkin .mce_p span.mceText {}
+.flexyadminSkin .mce_address span.mceText {font-style:italic}
+.flexyadminSkin .mce_pre span.mceText {font-family:monospace}
+.flexyadminSkin .mce_h1 span.mceText {font-weight:bolder; font-size: 2em}
+.flexyadminSkin .mce_h2 span.mceText {font-weight:bolder; font-size: 1.5em}
+.flexyadminSkin .mce_h3 span.mceText {font-weight:bolder; font-size: 1.17em}
+.flexyadminSkin .mce_h4 span.mceText {font-weight:bolder; font-size: 1em}
+.flexyadminSkin .mce_h5 span.mceText {font-weight:bolder; font-size: .83em}
+.flexyadminSkin .mce_h6 span.mceText {font-weight:bolder; font-size: .75em}
+
+/* Theme */
+.flexyadminSkin span.mce_bold {background-position:0 0}
+.flexyadminSkin span.mce_italic {background-position:-60px 0}
+.flexyadminSkin span.mce_underline {background-position:-140px 0}
+.flexyadminSkin span.mce_strikethrough {background-position:-120px 0}
+.flexyadminSkin span.mce_undo {background-position:-160px 0}
+.flexyadminSkin span.mce_redo {background-position:-100px 0}
+.flexyadminSkin span.mce_cleanup {background-position:-40px 0}
+.flexyadminSkin span.mce_bullist {background-position:-20px 0}
+.flexyadminSkin span.mce_numlist {background-position:-80px 0}
+.flexyadminSkin span.mce_justifyleft {background-position:-460px 0}
+.flexyadminSkin span.mce_justifyright {background-position:-480px 0}
+.flexyadminSkin span.mce_justifycenter {background-position:-420px 0}
+.flexyadminSkin span.mce_justifyfull {background-position:-440px 0}
+.flexyadminSkin span.mce_anchor {background-position:-200px 0}
+.flexyadminSkin span.mce_indent {background-position:-400px 0}
+.flexyadminSkin span.mce_outdent {background-position:-540px 0}
+.flexyadminSkin span.mce_link {background-position:-500px 0}
+.flexyadminSkin span.mce_unlink {background-position:-640px 0}
+.flexyadminSkin span.mce_sub {background-position:-600px 0}
+.flexyadminSkin span.mce_sup {background-position:-620px 0}
+.flexyadminSkin span.mce_removeformat {background-position:-580px 0}
+.flexyadminSkin span.mce_newdocument {background-position:-520px 0}
+.flexyadminSkin span.mce_image {background-position:-380px 0}
+.flexyadminSkin span.mce_help {background-position:-340px 0}
+.flexyadminSkin span.mce_code {background-position:-260px 0}
+.flexyadminSkin span.mce_hr {background-position:-360px 0}
+.flexyadminSkin span.mce_visualaid {background-position:-660px 0}
+.flexyadminSkin span.mce_charmap {background-position:-240px 0}
+.flexyadminSkin span.mce_paste {background-position:-560px 0}
+.flexyadminSkin span.mce_copy {background-position:-700px 0}
+.flexyadminSkin span.mce_cut {background-position:-680px 0}
+.flexyadminSkin span.mce_blockquote {background-position:-220px 0}
+.flexyadminSkin .mce_forecolor span.mceAction {background-position:-720px 0}
+.flexyadminSkin .mce_backcolor span.mceAction {background-position:-760px 0}
+.flexyadminSkin span.mce_forecolorpicker {background-position:-720px 0}
+.flexyadminSkin span.mce_backcolorpicker {background-position:-760px 0}
+
+/* Plugins */
+.flexyadminSkin span.mce_advhr {background-position:-0px -20px}
+.flexyadminSkin span.mce_ltr {background-position:-20px -20px}
+.flexyadminSkin span.mce_rtl {background-position:-40px -20px}
+.flexyadminSkin span.mce_emotions {background-position:-60px -20px}
+.flexyadminSkin span.mce_fullpage {background-position:-80px -20px}
+.flexyadminSkin span.mce_fullscreen {background-position:-100px -20px}
+.flexyadminSkin span.mce_iespell {background-position:-120px -20px}
+.flexyadminSkin span.mce_insertdate {background-position:-140px -20px}
+.flexyadminSkin span.mce_inserttime {background-position:-160px -20px}
+.flexyadminSkin span.mce_absolute {background-position:-180px -20px}
+.flexyadminSkin span.mce_backward {background-position:-200px -20px}
+.flexyadminSkin span.mce_forward {background-position:-220px -20px}
+.flexyadminSkin span.mce_insert_layer {background-position:-240px -20px}
+.flexyadminSkin span.mce_insertlayer {background-position:-260px -20px}
+.flexyadminSkin span.mce_movebackward {background-position:-280px -20px}
+.flexyadminSkin span.mce_moveforward {background-position:-300px -20px}
+.flexyadminSkin span.mce_media {background-position:-320px -20px}
+.flexyadminSkin span.mce_nonbreaking {background-position:-340px -20px}
+.flexyadminSkin span.mce_pastetext {background-position:-360px -20px}
+.flexyadminSkin span.mce_pasteword {background-position:-380px -20px}
+.flexyadminSkin span.mce_selectall {background-position:-400px -20px}
+.flexyadminSkin span.mce_preview {background-position:-420px -20px}
+.flexyadminSkin span.mce_print {background-position:-440px -20px}
+.flexyadminSkin span.mce_cancel {background-position:-460px -20px}
+.flexyadminSkin span.mce_save {background-position:-480px -20px}
+.flexyadminSkin span.mce_replace {background-position:-500px -20px}
+.flexyadminSkin span.mce_search {background-position:-520px -20px}
+.flexyadminSkin span.mce_styleprops {background-position:-560px -20px}
+.flexyadminSkin span.mce_table {background-position:-580px -20px}
+.flexyadminSkin span.mce_cell_props {background-position:-600px -20px}
+.flexyadminSkin span.mce_delete_table {background-position:-620px -20px}
+.flexyadminSkin span.mce_delete_col {background-position:-640px -20px}
+.flexyadminSkin span.mce_delete_row {background-position:-660px -20px}
+.flexyadminSkin span.mce_col_after {background-position:-680px -20px}
+.flexyadminSkin span.mce_col_before {background-position:-700px -20px}
+.flexyadminSkin span.mce_row_after {background-position:-720px -20px}
+.flexyadminSkin span.mce_row_before {background-position:-740px -20px}
+.flexyadminSkin span.mce_merge_cells {background-position:-760px -20px}
+.flexyadminSkin span.mce_table_props {background-position:-980px -20px}
+.flexyadminSkin span.mce_row_props {background-position:-780px -20px}
+.flexyadminSkin span.mce_split_cells {background-position:-800px -20px}
+.flexyadminSkin span.mce_template {background-position:-820px -20px}
+.flexyadminSkin span.mce_visualchars {background-position:-840px -20px}
+.flexyadminSkin span.mce_abbr {background-position:-860px -20px}
+.flexyadminSkin span.mce_acronym {background-position:-880px -20px}
+.flexyadminSkin span.mce_attribs {background-position:-900px -20px}
+.flexyadminSkin span.mce_cite {background-position:-920px -20px}
+.flexyadminSkin span.mce_del {background-position:-940px -20px}
+.flexyadminSkin span.mce_ins {background-position:-960px -20px}
+.flexyadminSkin span.mce_pagebreak {background-position:0 -40px}
+.flexyadminSkin .mce_spellchecker span.mceAction {background-position:-540px -20px}
