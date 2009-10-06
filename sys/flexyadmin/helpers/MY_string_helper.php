@@ -48,14 +48,10 @@ function explode_pre($split,$fields,$pre) {
  * @return string result string after adding
  */
 function add_string($s,$add,$split="|") {
-	if (!empty($add)) {
-		if (strpos($s,$add)===false) {
-			if ($s!="")
-				$s.=$split.$add;
-			else
-			 $s=$add;
-		}
-	}
+	if (empty($s))
+		$s=$add;
+	else
+		$s=$s.$split.$add;
 	return $s;
 }
 

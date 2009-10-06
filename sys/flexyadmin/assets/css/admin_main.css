@@ -264,6 +264,10 @@ div.add_button {
 .icon.down {
 	background-image: url("../icons/arrow_down.gif");
 	}
+.icon.right {
+	background-image: url("../icons/arrow_next.gif");
+	cursor:normal;
+	}
 
 .icon.remove {
 	background-image: url("../icons/action_delete.gif");
@@ -770,7 +774,7 @@ select.media {
 }
 .form_field .flash:hover,
 .form_field img:hover {
-	border:1px solid #000;
+	border:1px solid #696;
 }
 
 input.button {
@@ -841,6 +845,40 @@ input.button:hover {
 	cursor:pointer;
 }
 
+div.form_field.ordered_list {
+	height:160px;
+}
+.form_field ul.list {
+	width:200px;
+	height:150px;
+	overflow:auto;
+	overflow-x:hidden;
+	float:left;
+	margin-right:4px;
+	padding:2px 12px 2px 2px;
+	border:solid 1px #DDEEAA;
+	background-color:transparent;
+}
+.form_field:hover ul.list {
+	border-color:#FFF;
+}
+.form_field ul.list li {
+	list-style:disc;
+	max-width:none;
+	font-size:12px;
+	border:solid 1px #DDEEAA;
+	background-color:#FFF;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	width:180px;
+	height:17px;
+	overflow:hidden;
+	padding:2px 4px;
+	margin:2px;
+}
+.form_field ul.list li:hover {
+	border-color:#696;
+}
 
 
 /* filemanager fields/buttons */
