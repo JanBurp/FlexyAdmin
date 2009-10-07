@@ -28,6 +28,8 @@ require_once(APPPATH."controllers/admin/MY_Controller.php");
  */
 
 class Show extends AdminController {
+	
+	var $form_args;
 
 	function Show() {
 		parent::AdminController();
@@ -82,7 +84,8 @@ class Show extends AdminController {
 					$this->db->select("id");
 					$row=$this->db->get_row($table,1);
 					$id=$row["id"];
-					$this->form($table.':'.$id);
+					$this->form_args['form']=$table.':'.$id;
+					$this->form();
 					return;
 				}
 				else {
@@ -126,8 +129,9 @@ class Show extends AdminController {
 							/**
 							 * if no data, start an input form
 							 */
-							 $this->form($table.':-1');
-							 return;
+							$this->form_args['form']=$table.':-1';
+							$this->form();
+							return;
 						}
 						else
 						{
@@ -187,11 +191,14 @@ class Show extends AdminController {
  */
 
 	function form($table='') {
-		if (empty($table)) {
-			$args=$this->uri->uri_to_assoc();
-			$table=el('form',$args);
-			$info=el('info',$args);
+		if (isset($this->form_args)) {
+			$args=$this->form_args;
 		}
+		else {
+			$args=$this->uri->uri_to_assoc();
+		}
+		$table=el('form',$args);
+		$info=el('info',$args);
 		$table=explode(':',$table);
 		$id=el(1,$table);
 		$table=el(0,$table);
