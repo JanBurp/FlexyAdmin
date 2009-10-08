@@ -54,20 +54,48 @@
 
 	<? if ($show_type=="form" and $show_editor): ?>
 	<!-- js for form, html editor -->
-	
-	<!-- <script language="javascript" type="text/javascript" src="sys/tinymce/jscripts/tiny_mce/tiny_mce_gzip.js"></script>
-	<script type="text/javascript">
-	tinyMCE_GZ.init({
-		plugins : "paste,table,fullscreen,advimage,media",
-		themes : 'advanced',
-		languages : '<?=$language?>',
-		disk_cache : true,
-		debug : false
-	});
-	</script> -->
-
 
 	<script language="javascript" type="text/javascript" src="sys/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+	<script language="javascript" type="text/javascript" src="sys/tinymce/jscripts/tiny_mce/jquery.tinymce.js"></script>
+	<script>
+	$().ready(function() {
+	   $('textarea.htmleditor').tinymce({
+	      // script_url : 'sys/tinymce/jscripts/tiny_mce/tiny_mce.js',
+				plugins : "paste,advimage,media,table,inlinepopups",
+		 		dialog_type : "modal",
+				inlinepopups_skin : "flexyadmin",
+				language : "<?=$language?>",
+				docs_language : "<?=$language?>",
+				theme : "advanced",
+				skin : "flexyadmin",
+				theme_advanced_toolbar_location : "top",
+				theme_advanced_toolbar_align : "left",
+				theme_advanced_statusbar_location: "bottom",
+				theme_advanced_resizing : true,
+				theme_advanced_resize_horizontal : false,
+				<? if (isset($formats)): ?>
+				theme_advanced_blockformats : "<?=$formats?>",
+				<? else: ?>
+				theme_advanced_blockformats : "h1,h2,h3",
+				<? endif; ?>
+				theme_advanced_styles : "<?=$styles;?>",
+				external_image_list_url : "<?=assets()?>/lists/img_list.js",
+				media_external_list_url : "<?=assets()?>/lists/media_list.js",
+				relative_urls : true,
+				document_base_url : "<?=base_url()?>",
+				content_css : "<?=assets()?>css/text.css",
+				external_link_list_url : "<?=assets()?>lists/link_list.js",
+				theme_advanced_buttons1 : "<?=$buttons1?>",
+				theme_advanced_buttons2 : "<?=$buttons2?>",
+				theme_advanced_buttons3 : "<?=$buttons3?>"
+	   });
+	});
+	</script>
+
+
+
+
+	<!-- <script language="javascript" type="text/javascript" src="sys/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
 	<script>
 	tinyMCE.init({
 		mode : "textareas",
@@ -101,7 +129,7 @@
 		theme_advanced_buttons2 : "<?=$buttons2?>",
 		theme_advanced_buttons3 : "<?=$buttons3?>"
 	});
-	</script>
+	</script> -->
 	
 	<? endif; ?>
 
