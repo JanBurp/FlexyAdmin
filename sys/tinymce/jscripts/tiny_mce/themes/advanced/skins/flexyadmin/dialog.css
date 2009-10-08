@@ -10,6 +10,9 @@ scrollbar-face-color:#E0E0DD;
 scrollbar-highlight-color:#F0F0EE;
 scrollbar-shadow-color:#F0F0EE;
 scrollbar-track-color:#F5F5F5;
+
+
+
 background:#FFF;
 padding:0;
 margin:8px 8px 0 8px;
@@ -30,7 +33,7 @@ label.invalid {color:#DEA; display:inline;}
 input.invalid {border:1px solid #696;}
 input {background:#FFF; border:1px solid #DEA;}
 input, select, textarea {font-family:Verdana, Arial, Helvetica, sans-serif; font-size:10px;color:#696;}
-input, select, textarea {border:1px solid #DEA; max-width:230px;}
+input, select, textarea {border:1px solid #DEA; width:203px;}
 textarea {max-width:none;}
 input.radio {border:1px none #696; background:transparent; vertical-align:middle;}
 input.checkbox {border:1px none #696; background:transparent; vertical-align:middle;}
@@ -86,7 +89,7 @@ td.charmap, #charmap a {width:18px; height:18px; color:#DEA; border:1px solid #D
 
 /* Panels */
 .panel_wrapper div.panel 		{display:none;}
-.panel_wrapper div.current 	{display:block; width:100%; height:300px; overflow:visible;}
+.panel_wrapper div.current 	{display:block; width:100%; height:300px; overflow:hidden;}
 .panel_wrapper { border:1px solid #DEA; padding:10px; padding-top:5px; clear:both; background:white;}
 
 /* Columns */
