@@ -62,24 +62,25 @@
 /* SplitButton */
 .flexyadminSkin .mceSplitButton {width:32px; height:20px; direction:ltr}
 .flexyadminSkin .mceSplitButton a, .flexyadminSkin .mceSplitButton span {height:20px; display:block}
-.flexyadminSkin .mceSplitButton a.mceAction {width:20px; border:1px solid #F0F0EE; border-right:0;}
+.flexyadminSkin .mceSplitButton a.mceAction {width:20px; border:1px solid #DEA; border-right:0; -moz-border-radius: 4px; -webkit-border-radius: 4px;}
 .flexyadminSkin .mceSplitButton span.mceAction {width:20px; background:url(../../img/icons.gif) 20px 20px;}
-.flexyadminSkin .mceSplitButton a.mceOpen {width:9px; background:url(../../img/icons.gif) -741px 0; border:1px solid #F0F0EE;}
+.flexyadminSkin .mceSplitButton a.mceOpen {width:9px; background:url(../../img/icons.gif) -741px 0; border:1px solid #DEA; -moz-border-radius: 4px; -webkit-border-radius: 4px;}
 .flexyadminSkin .mceSplitButton span.mceOpen {display:none}
-.flexyadminSkin table.mceSplitButtonEnabled:hover a.mceAction, .flexyadminSkin .mceSplitButtonHover a.mceAction, .flexyadminSkin .mceSplitButtonSelected a.mceAction {border:1px solid #0A246A; border-right:0; background-color:#B2BBD0}
-.flexyadminSkin table.mceSplitButtonEnabled:hover a.mceOpen, .flexyadminSkin .mceSplitButtonHover a.mceOpen, .flexyadminSkin .mceSplitButtonSelected a.mceOpen {background-color:#B2BBD0; border:1px solid #0A246A;}
+.flexyadminSkin table.mceSplitButtonEnabled:hover a.mceAction, .flexyadminSkin .mceSplitButtonHover a.mceAction, .flexyadminSkin .mceSplitButtonSelected a.mceAction {border:1px solid #696; border-right:0; background-color:#F4FFE0;}
+.flexyadminSkin table.mceSplitButtonEnabled:hover a.mceOpen, .flexyadminSkin .mceSplitButtonHover a.mceOpen, .flexyadminSkin .mceSplitButtonSelected a.mceOpen {background-color:#F4FFE0; border:1px solid #696;}
 .flexyadminSkin .mceSplitButtonDisabled .mceAction, .flexyadminSkin .mceSplitButtonDisabled a.mceOpen {opacity:0.3; -ms-filter:'alpha(opacity=30)'; filter:alpha(opacity=30)}
-.flexyadminSkin .mceSplitButtonActive a.mceAction {border:1px solid #0A246A; background-color:#C2CBE0}
+.flexyadminSkin .mceSplitButtonActive a.mceAction {border:1px solid #DEA; background-color:#F4FFE0; -moz-border-radius: 4px; -webkit-border-radius: 4px;}
 .flexyadminSkin .mceSplitButtonActive a.mceOpen {border-left:0;}
 
 /* ColorSplitButton */
-.flexyadminSkin div.mceColorSplitMenu table {background:#FFF; border:1px solid gray}
+.flexyadminSkin div.mceColorSplitMenu table {background:#FFF; border:1px solid #DEA; -moz-border-radius: 4px; -webkit-border-radius: 4px;}
 .flexyadminSkin .mceColorSplitMenu td {padding:2px}
-.flexyadminSkin .mceColorSplitMenu a {display:block; width:9px; height:9px; overflow:hidden; border:1px solid #808080}
+.flexyadminSkin .mceColorSplitMenu a {display:block; width:9px; height:9px; overflow:hidden; border:1px solid #DEA;}
+.flexyadminSkin .mceColorSplitMenu a:hover {border:1px solid #696;}
 .flexyadminSkin .mceColorSplitMenu td.mceMoreColors {padding:1px 3px 1px 1px}
 .flexyadminSkin .mceColorSplitMenu a.mceMoreColors {width:100%; height:auto; text-align:center; font-family:Tahoma,Verdana,Arial,Helvetica; font-size:11px; line-height:20px; border:1px solid #FFF}
-.flexyadminSkin .mceColorSplitMenu a.mceMoreColors:hover {border:1px solid #0A246A; background-color:#B6BDD2}
-.flexyadminSkin a.mceMoreColors:hover {border:1px solid #0A246A}
+.flexyadminSkin .mceColorSplitMenu a.mceMoreColors:hover {border:1px solid #696; background-color:#DEA}
+.flexyadminSkin a.mceMoreColors:hover {border:1px solid #696;}
 .flexyadminSkin .mceColorPreview {margin-left:2px; width:16px; height:4px; overflow:hidden; background:#9a9b9a}
 .flexyadminSkin .mce_forecolor span.mceAction, .flexyadminSkin .mce_backcolor span.mceAction {overflow:hidden; height:16px}
 
