@@ -700,11 +700,8 @@ class Flexy_field extends Model {
 				$optionsLast=$this->_create_media_options($lastUploads,$types);
 				if (!empty($optionsLast)) $options[langp("form_dropdown_sort_on_last_upload",$lastUploadMax)]=$optionsLast;
 				$optionsNames=$this->_create_media_options($files,$types);
-				// trace_($optionsNames);
 				if (!empty($optionsNames)) $options[lang("form_dropdown_sort_on_name")]=$optionsNames;
 			}
-			// $options=array(lang("form_dropdown_sort_on_last_upload")=>$optionsLast, lang("form_dropdown_sort_on_name")=>$optionsNames);
-			// trace_($options);
 		}
 		$out=$this->_standard_form_field($options);
 		$out["path"]=$map;

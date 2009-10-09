@@ -133,7 +133,7 @@ $(document).ready(function() {
 			});
 		}
 
-		// media dragndrop selecting
+		// media dragndrop-click selecting
 		$('div.media ul li').click(function(){
 			src=$(this).children('img:first').attr('src');
 			$(this).parent('ul').parent('div.media').children('ul.values li img:first').attr('src',src);
@@ -144,6 +144,7 @@ $(document).ready(function() {
 		// ordering of the medias
 		$('div.medias ul').sortable({
 			connectWith: 'div.medias ul',
+			revert:true,
 			update: function(event,ui) {
 				if ($(this).hasClass('values')) {
 					value='';
@@ -157,12 +158,12 @@ $(document).ready(function() {
 				}
 			}
 		});
-
 	}
 
 	// ordering of many type ordered_list
 	$('div.ordered_list ul').sortable({
 		connectWith: 'div.ordered_list ul',
+		revert:true,
 		update: function(event,ui) {
 			if ($(this).hasClass('list_values')) {
 				value='';
