@@ -608,13 +608,9 @@ class Flexy_field extends Model {
 		$out="";
 		if (!empty($this->data)) {
 			$info=$this->cfg->get('CFG_media_info',$this->table.".".$this->field);
-			$type=el("str_type",$info);
-			if ($type=="image" or $type=="flash") {
-				$path=el("path",$info);
-				$media=$this->config->item('ASSETS').$path."/".$this->data;
-				$out=show_thumb($media);
-			}
-			else $out=$this->data;
+			$path=el("path",$info);
+			$media=$this->config->item('ASSETS').$path."/".$this->data;
+			$out=show_thumb($media);
 		}
 		return $out;
 	}

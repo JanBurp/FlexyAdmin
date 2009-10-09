@@ -132,6 +132,14 @@ $(document).ready(function() {
 				}
 			});
 		}
+
+		// media dragndrop selecting
+		$('div.media ul li').click(function(){
+			src=$(this).children('img:first').attr('src');
+			$(this).parent('ul').parent('div.media').children('ul.values li img:first').attr('src',src);
+			src=src.substr(src.lastIndexOf('/')+1);
+			$(this).parent('ul').parent('div.media').children('input:first').attr('value',src);
+		});
 		
 		// ordering of the medias
 		$('div.medias ul').sortable({
