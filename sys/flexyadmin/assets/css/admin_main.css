@@ -434,7 +434,7 @@ tr.caption td				{ border:none; }
 .grid img,
 .grid embed,
 .grid .rgb					{	max-width:50px;	height:25px; margin:0px 1px 0px 0px; }
-.grid div.rgb				{	width:25px;	height:25px; }
+.grid div.rgb				{	width:25px;	height:25px; border:solid 1px #DEA;}
 .grid .b						{	cursor: pointer; }
 
 .grid td ul {
@@ -462,7 +462,8 @@ tr.caption td				{ border:none; }
 .xsmall 				{ margin:0px; font-size:.7em; padding:0px; }
 .weekend				{ font-weight:bold; }
 
-img.zoom { border:1px solid #333; cursor:pointer; }
+img.zoom 				{ border:1px solid #DEA; cursor:pointer; }
+img.zoom:hover	{ border-color:#696; }
 
 /* =============== Graph ===================== */
 
@@ -774,15 +775,15 @@ select.media {
 .form_field .flash,
 .form_field img {
 	float:left;
-	max-width: 50px;
-	height: 27px;
+	width: 25px;
+	height: 25px;
 	margin:0px;
-	border:1px solid #DDEEAA;
+/*	border:1px solid #DDEEAA;*/
 	background-color: transparent;
 }
 .form_field .flash:hover,
 .form_field img:hover {
-	border:1px solid #696;
+/*	border:1px solid #696;*/
 }
 
 input.button {
@@ -825,20 +826,24 @@ input.button:hover {
 .form_field ul {
 	float:left;
 	display:block;
-	width:30px;
-	min-height:30px;
+	min-width:25px;
+	max-width:50px;
+	min-height:25px;
 	margin: 0px 0px 4px 0px;
 	padding:0px 0px 2px 0px;
 	border:solid 1px #DDEEAA;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
 	background-color:#FFF;
 }
 .form_field ul.multiple,
 .form_field ul.choices {
+	max-width:none;
 	float:right;
 	width:450px;
+	max-height:200px;
+	overflow:auto;
 	padding:3px 4px 4px;
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
 }
 
 .form_field ul li {
@@ -847,8 +852,8 @@ input.button:hover {
 	float:left;
 	top:0px;
 	margin:0px;
-	padding:0px;
-	height:30px;
+	padding:1px;
+	height:25px;
 	max-width:50px;
 	cursor:pointer;
 }
