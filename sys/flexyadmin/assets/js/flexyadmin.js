@@ -35,7 +35,7 @@ $(document).ready(function() {
 	$('img.zoom').add('.flash .zoom').click(function() {
 		zoom_dialog($(this));
 	});
-	$('li img.zoom').add('li .flash .zoom').unbind('click','').dblclick(function(){
+	$('form li img.zoom').add('form li .flash .zoom').unbind('click','').dblclick(function(){
 		zoom_dialog($(this));
 	});
 
@@ -303,7 +303,7 @@ $(document).ready(function() {
 							}
 							id=get_id(select);
 							table=get_table(select);
-							url=site_url('admin/show/form/'+table+'/'+id);
+							url=site_url('admin/show/form/'+table+':'+id);
 							location.href=url;
 						}
 						break;
