@@ -643,7 +643,7 @@ class Form Extends Model {
 					// show (ordered) choices	
 					$out.='<ul class="list list_choices">';
 					foreach($options as $id=>$option) {
-						if (!in_array($id,$value)) $out.='<li id="'.$id.'">'.$option.'</li>';
+						if (!in_array($id,$value))	$out.='<li id="'.$id.'">'.$option.'</li>';
 					}
 					$out.='</ul>';
 					$out.=icon('right');

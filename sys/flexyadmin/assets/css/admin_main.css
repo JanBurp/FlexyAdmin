@@ -827,7 +827,7 @@ input.button:hover {
 	float:left;
 	display:block;
 	min-width:25px;
-	max-width:50px;
+/*	max-width:50px;*/
 	min-height:25px;
 	margin: 0px 0px 4px 0px;
 	padding:0px 0px 2px 0px;
