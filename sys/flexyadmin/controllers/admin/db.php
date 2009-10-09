@@ -123,8 +123,9 @@ class Db extends AdminController {
 
 	function _filename() {
 		$name=$this->db->get_field("tbl_site","url_url");
+		$name=str_replace(array('http://','www.'),'',$name);
 		$name=explode(".",$name);
-		$name=$name[count($name)-2];
+		$name=$name[0];
 		return $name;
 	}
 

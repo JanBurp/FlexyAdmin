@@ -628,9 +628,11 @@ class Flexy_field extends Model {
 				$path=$this->config->item('ASSETS').el("path",$info)."/";
 				$data=explode("|",$this->data);
 				$media=$this->config->item('ASSETS').$path."/".$this->data;
+				$out.='<ul>';
 				foreach($data as $img) {
-					$out.=show_thumb($path.$img);
+					$out.='<li>'.show_thumb($path.$img).'</li>';
 				}
+				$out.='</ul>';
 			}
 			else $out=$this->data;
 		}

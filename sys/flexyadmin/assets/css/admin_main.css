@@ -429,12 +429,22 @@ tr.caption td				{ border:none; }
 .grid td.txt				{ max-width:250px; overflow:hidden;}
 .grid td.media,
 .grid td.rgb				{ text-align: center;	width:52px;	max-width:52px; }
+.grid td.medias			{ max-width:none; width:200px;}
 
 .grid img,
 .grid embed,
 .grid .rgb					{	max-width:50px;	height:25px; margin:0px 1px 0px 0px; }
 .grid div.rgb				{	width:25px;	height:25px; }
 .grid .b						{	cursor: pointer; }
+
+.grid td ul {
+	margin:0px;
+	padding:0px;
+}
+.grid td ul li {
+	list-style:none;
+	display:inline;
+}
 
 .grid tbody tr.evenrow td {
 	background-color:#F4FFE0;
