@@ -621,10 +621,11 @@ class Form Extends Model {
 				// Show all possible images as images instead of a dropdown
 				//
 				if ($field["type"]=="image_dragndrop") {
+					// $out.=div('buttons').icon('up').icon('delete')._div();
 					$out.='<ul class="choices">';
 					foreach($options as $img) {
 						$image=$img['name'];
-						if (!in_array($image,$medias)) $out.='<li>'.show_thumb(array("src"=>$field["path"]."/".$image,"class"=>"media",'title'=>$image)).'</li>';
+						$out.='<li>'.show_thumb(array("src"=>$field["path"]."/".$image,"class"=>"media",'title'=>$image)).'</li>';
 					}
 					$out.='</ul>';					
 				}
@@ -646,7 +647,7 @@ class Form Extends Model {
 						if (!in_array($id,$value))	$out.='<li id="'.$id.'">'.$option.'</li>';
 					}
 					$out.='</ul>';
-					$out.=icon('right');
+					// $out.=icon('right');
 					// show values
 					$hiddenValue='';
 					if (!is_array($value)) $value=array($value);
