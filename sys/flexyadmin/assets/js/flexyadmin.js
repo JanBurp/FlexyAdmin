@@ -4,6 +4,8 @@ $(document).ready(function() {
 	keyEnter=13;
 	keyUp=38;
 	keyDown=40;
+	keyBackspace=8;
+	keyDelete=48;
 
 	// Check modes
 	dialog=$("#ui");
@@ -35,9 +37,7 @@ $(document).ready(function() {
 	$('img.zoom').add('.flash .zoom').click(function() {
 		zoom_dialog($(this));
 	});
-	$('form li img.zoom').add('form li .flash .zoom').unbind('click','').dblclick(function(){
-		zoom_dialog($(this));
-	});
+	$('form ul li img.zoom').add('form ul li .flash .zoom').unbind('click');
 
 
 	//
@@ -58,7 +58,7 @@ $(document).ready(function() {
 		$('.form_field.image_dragndrop').each(function(){
 			selHeight=$(this).children('ul.choices').outerHeight();
 			selHeight+=$(this).children('ul.values').outerHeight();
-			$(this).css({height:selHeight});
+			$(this).css({height:selHeight+4});
 		});		
 		
 
@@ -132,19 +132,47 @@ $(document).ready(function() {
 				}
 			});
 		}
+		
+		// Media selecting
 
-		// media dragndrop-click selecting
+		// Media select by click
 		$('div.media ul li').click(function(){
 			src=$(this).children('img:first').attr('src');
 			$(this).parent('ul').parent('div.media').children('ul.values li img:first').attr('src',src);
 			src=src.substr(src.lastIndexOf('/')+1);
 			$(this).parent('ul').parent('div.media').children('input:first').attr('value',src);
-		});
-		
-		// ordering of the medias
-		$('div.medias ul').sortable({
-			connectWith: 'div.medias ul',
-			revert:true,
+		});		
+
+		// Medias selecting and removing by click
+		function resetMediaValues(thisMedia) {
+			values='';
+			$(thisMedia).children('ul.values:first li').each(function(){
+				src=$(this).children('img:first').attr('src');
+				src=src.substr(src.lastIndexOf('/')+1);
+				values+='|'+src;
+			});
+			values=values.substr(1);
+			$(thisMedia).children('input:first').attr('value',values);			
+		};
+		function bindMediasClick() {
+			$('div.medias ul li').unbind('click');
+			// medias click 'n drop selecting
+			$('div.medias ul.choices li').click(function(){
+				thisMedia=$(this).parent('ul').parent('div.medias');
+				$(thisMedia).children('ul.values').append($(this).clone());
+				resetMediaValues($(thisMedia));
+				bindMediasClick();
+			});
+			$('div.medias ul.values li').dblclick(function(){
+				thisMedia=$(this).parent('ul.values').parent('div.medias');
+				$(this).remove();
+				resetMediaValues(thisMedia);
+			});
+		};
+		bindMediasClick();
+
+		// dragndrop ordering of medias
+		$('div.medias ul.values').sortable({
 			update: function(event,ui) {
 				if ($(this).hasClass('values')) {
 					value='';
@@ -160,10 +188,36 @@ $(document).ready(function() {
 		});
 	}
 
+	// Ordered Lists selecting and removing by click
+	function resetListValues(thisList) {
+		values='';
+		$(thisList).children('li').each(function(){
+			id=$(this).attr('id');
+			values+='|'+id;
+		});
+		values=values.substr(1);
+		$(thisList).parent('.ordered_list').children('input:first').attr('value',values);		
+	};
+	function bindListClick() {
+		$('div.ordered_list ul li').unbind('click');
+		// medias click 'n drop selecting
+		$('div.ordered_list ul.list_choices li').click(function(){
+			thisChoices=$(this).parent('ul.list_choices');
+			thisValues=$(thisChoices).parent('div.ordered_list').children('ul.list_values');
+			$(thisValues).append($(this).clone());
+			resetListValues(thisValues);
+			bindListClick();
+		});
+		$('div.ordered_list ul.list_values li').dblclick(function(){
+			thisValues=$(this).parent('ul.list_values');
+			$(this).remove();
+			resetListValues(thisValues);
+		});
+	};
+	bindListClick();
+
 	// ordering of many type ordered_list
-	$('div.ordered_list ul').sortable({
-		connectWith: 'div.ordered_list ul',
-		revert:true,
+	$('div.ordered_list ul.list_values').sortable({
 		update: function(event,ui) {
 			if ($(this).hasClass('list_values')) {
 				value='';

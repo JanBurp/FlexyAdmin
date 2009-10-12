@@ -823,6 +823,11 @@ input.button:hover {
 	width:50px;
 	}
 
+.form_field div.buttons {
+	width:450px;
+	margin:2px 5px 5px;
+	float:right;
+}
 .form_field ul {
 	float:left;
 	display:block;
@@ -851,18 +856,23 @@ input.button:hover {
 	display:block;
 	float:left;
 	top:0px;
-	margin:0px;
+	margin:0px 1px 0px 0px;
 	padding:1px;
 	height:25px;
 	max-width:50px;
 	cursor:pointer;
+	background-color:transparent;
+}
+.form_field ul li.ui-selected {
+	border-color:#F00;
+	background-color:#F00;
 }
 
 div.form_field.ordered_list {
 	height:160px;
 }
 .form_field ul.list {
-	width:200px;
+	width:205px;
 	height:150px;
 	overflow:auto;
 	overflow-x:hidden;
@@ -875,6 +885,9 @@ div.form_field.ordered_list {
 .form_field:hover ul.list {
 	border-color:#FFF;
 }
+.form_field ul.list_values {
+	margin-left:11px;
+}
 .form_field ul.list li {
 	list-style:disc;
 	max-width:none;
@@ -883,7 +896,7 @@ div.form_field.ordered_list {
 	background-color:#FFF;
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
-	width:180px;
+	width:185px;
 	height:17px;
 	overflow:hidden;
 	padding:2px 4px;
