@@ -72,6 +72,10 @@ img {
 	padding:0px;
 }
 
+.hidden {
+	display:none;
+}
+
 /* =============== menu ===================== */
 
 #menu ul
@@ -222,6 +226,9 @@ span.help {
 	background-image: url("../icons/action_delete.gif");
 	background-repeat: no-repeat;
 	}
+table.thumbs .icon.delete {
+	margin:3px 0px 0px 8px;
+}
 div.add_button {
 	float:right;
 	width:20px;
@@ -407,6 +414,9 @@ tr.caption td.filter {
 	overflow:hidden;
 	min-width:20px;
 }
+.grid th.id {
+	padding-right:0px;
+}
 tr.caption td				{ border:none; }
 
 .grid thead td,
@@ -418,8 +428,7 @@ tr.caption td				{ border:none; }
 .grid .caption td		{ padding:0px;}
 
 .grid td.id,
-.grid td.edit				{ width:42px; min-width:42px; padding-right:10px; }
-.grid td.edit				{ width: 30px; min-width:30px; padding-right:5px; }
+.grid td.edit				{ width:20px; min-width:20px; padding-right:0px; }
 .grid th.uri,
 .grid td.uri				{ display:none; }
 .grid th.order,
@@ -454,7 +463,8 @@ tr.caption td				{ border:none; }
 	}
 
 .grid tbody tr.grid:hover,
-.grid tbody tr:hover td {
+.grid tbody tr:hover td,
+.grid tbody tr.ui-selected td {
 	background-color:#DDEEAA;
 }
 
@@ -545,7 +555,8 @@ table.grid thead .order,
 .thumbs {
 	max-width:1000px;
 }
-.thumbs div.file:hover {
+.thumbs div.file:hover,
+.thumbs div.file.ui-selected {
 	border:solid 1px #DDEEAA;
 	background-color: #DDEEAA;
 	}
@@ -578,18 +589,19 @@ table.grid thead .order,
 	margin:11px;
 }
 
-.thumbs .file .toolbar {
+/*.thumbs .file .toolbar {
 	margin:0px;
 	visibility: hidden;
 	}
 .thumbs .file:hover .toolbar {
 	visibility:visible;
 	}
+*/
 
 .thumbs .file .thumb {
 	width:100px;
 	height: 100px;
-	margin:0px;
+	margin:0px 0px 0px 10px;
 	text-align: center;
 	}
 	.thumbs .file .thumb .thumb img {

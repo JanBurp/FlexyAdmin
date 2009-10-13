@@ -396,39 +396,51 @@ $(document).ready(function() {
 		}
 
 		//
-		// Delete Confirm Dialog
-		//
-		if (isFile) {
-			// add events to remove buttons (filemanager view)
-			remove=$(".grid a.delete");
-			remove.click(function () {
-				clean_message();
-				href=$(this).attr("href");
-				$(this).removeAttr("href");
-				if (isThumbs) {
-					paths=href.split("/");
-					deleteFile=paths[paths.length-1];
-				}
-				else {
-					cell=$(this).parent(".edit");
-					deleteFile=get_id($(cell));
-				}
-				confirm_dialog(this,deleteFile);
-			});
+		// Selecting multiple
+		// 
+		if (isThumbs) {
+			$('table.thumbs tbody td:first').selectable();
 		}
 		else {
-			// add events to delete buttons (grid view)
-			buttons=$(".grid a.delete");
-			buttons.click(function () {
-				clean_message();
-				id=get_id($(this));
-				name=$(".grid tr.id"+id+" td.str").html();
-				if (name=="") name="id:"+id;
-				href=$(this).attr("href");
-				$(this).removeAttr("href");
-				confirm_dialog(this,name);
+			$('table.grid:not(.thumbs) tbody').selectable({
+				cancel:'td.id, td.url, td.b, td.thumb'
 			});
 		}
+
+		//
+		// Delete Confirm Dialog
+		//
+
+		$("table.grid th div.delete").add('table.thumbs thead div.delete').click(function () {
+			clean_message();
+			var id = new Array();
+			var name = new Array();
+			nr=0;
+			if (isThumbs)
+				selected=$('table.thumbs tbody div.file.ui-selected');
+			else
+				selected=$('table.grid tr.ui-selected');
+			if (selected.length>0) {
+				$(selected).each(function(){
+					id[nr]=get_id($(this));
+					name[nr]=get_name($(this));
+					if (name[nr]=="") name[nr]="id:"+id[nr];
+					nr++;
+				});
+				if (isFile) {
+					if (isThumbs)
+						path=$('table.grid tbody div.file div.path:first').text();
+					else
+						path=$('table.grid tr td.thumb div.path:first').text();
+					uri=site_url('admin/filemanager/confirm/'+path);
+				}
+				else {
+					table=get_table($('table.grid tbody tr:first'));
+					uri=site_url('admin/edit/confirm/'+table);
+				}
+				confirm_dialog(uri,name,id);
+			}
+		});
 
 	}
 
@@ -642,9 +654,6 @@ $(document).ready(function() {
     $(Popup).css({left:e.pageX+8,top:e.pageY+18});
   }); 
 
-
-
-
 });
 
 
@@ -654,21 +663,29 @@ $(document).ready(function() {
 // Functions for confirm
 //
 
-function confirm_dialog(obj,item) {
-	dialog.html(langp("dialog_delete_sure",item));
+function confirm_dialog(uri,name,id) {
+	showName='';
+	for (x in name) {
+		showName+=" + '"+name[x]+"'";
+	}
+	showName=showName.substr(3);
+	dialog.html(langp("dialog_delete_sure",showName));
 	$(dialog).dialog({
 		title:lang("dialog_title_confirm"),
 		modal:true,
 		width:500,
-		buttons: ({ cancel	: function(){	$(dialog).dialog("destroy"); $(obj).attr({"href":href}); },
+		buttons: ({ cancel	: function(){	$(dialog).dialog("destroy"); },
 								yes			: function(){
 														$('.ui-dialog .ui-dialog-buttonpane').add('.ui-dialog a').hide();
 														$('.ui-dialog .ui-dialog-content').append("<img src='"+site_url("sys/flexyadmin/assets/icons/wait.gif")+"' align='right' />");
-														// $(dialog).dialog("destroy");
-														location.replace(href+"/confirmed/confirm");
+														for(x in id) {
+															uri+=':'+id[x];
+														}
+														// console.log(uri);
+														location.replace(uri+"/confirmed/confirm");
 													}
 						 }),
-		close: function(){$(dialog).dialog("destroy"); $(obj).attr({"href":href});}
+		close: function(){$(dialog).dialog("destroy");}
 	});
 	changeButt("cancel",lang("dialog_cancel"));
 	changeButt("yes",lang("dialog_yes"));
@@ -852,10 +869,23 @@ function get_subclass(sub,obj) {
 	s=s.replace(sub,"");
 	return s;
 }
+function get_name(obj) {
+	var s;
+	s=$('td.str:first',obj).text();
+	if (s=='') s=$('td.name:first',obj).text();
+	if (s=='') s=$('div.name:first',obj).text();
+	s=stripTags(s);
+	return s.trim();
+}
 
 //
 // Other functions
 //
+
+function stripTags(s) {
+	return s.replace(/<\/?[^>]+>/gi, '');
+}
+
 function randomPassword(length) {
 	var chars,pass,x,i;
   chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
