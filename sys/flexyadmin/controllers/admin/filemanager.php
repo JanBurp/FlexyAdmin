@@ -193,55 +193,63 @@ class Filemanager extends AdminController {
 	 * FileManager controller
 	 */
 
-	function confirm($path="",$file="",$confirmed="") {
+	function confirm($files="",$confirmed="") {
 		if ($confirmed=="confirmed") {
 			$this->session->set_userdata("confirmed",true);
-			$this->delete(pathdecode($path,TRUE),$file);
+			$this->delete($files);
 		}
 		else {
-			$this->set_message("Not confirmed... ".anchor(api_uri('API_filemanager_confirm',$path,$file,"confirm"),"confirm"));
-			redirect(api_uri('API_filemanager_view',$path,$file));
+			$this->set_message("Not confirmed... ".anchor(api_uri('API_filemanager_confirm',$file,"confirm"),"confirm"));
+			redirect(api_uri('API_filemanager_view',$files));
 		}
 	}
 
-	function delete($path="",$file="") {
-		if (!empty($path) and !empty($file)) {
+	function delete($files="") {
+		$files=explode(':',$files);
+		$path=array_shift($files);
+		$path=pathdecode($path);
+		if (!empty($path) and !empty($files)) {
 			$confirmed=$this->session->userdata("confirmed");
 			if ($this->_has_rights($path)>=RIGHTS_DELETE) {
 				if ($confirmed) {
-					$DoDelete=TRUE;
-					$mediaTableExists=$this->db->table_exists("cfg_media_files");
-					if ($mediaTableExists) {
-						$restrictedToUser=$this->user_restriction_id($path);
-						if ($restrictedToUser>0) {
-							$DoDelete=FALSE;
-							$unrestrictedFiles=$this->_get_unrestricted_files($restrictedToUser);
-							if (array_key_exists($path."/".$file,$unrestrictedFiles)) {
-								$DoDelete=TRUE;
+					$deletedFiles='';
+					foreach ($files as $file) {
+						$DoDelete=TRUE;
+						$mediaTableExists=$this->db->table_exists("cfg_media_files");
+						if ($mediaTableExists) {
+							$restrictedToUser=$this->user_restriction_id($path);
+							if ($restrictedToUser>0) {
+								$DoDelete=FALSE;
+								$unrestrictedFiles=$this->_get_unrestricted_files($restrictedToUser);
+								if (array_key_exists($path."/".$file,$unrestrictedFiles)) {
+									$DoDelete=TRUE;
+								}
 							}
 						}
-					}
-					if ($DoDelete) {
-						$this->lang->load("update_delete");
-						$this->load->model("file_manager");
-						$fileManager=new file_manager(pathdecode($path,TRUE));
-						$result=$fileManager->delete_file($file);
-						if ($result) {
-							if ($mediaTableExists) {
-								$this->db->where('file',$path."/".$file);
-								$this->db->delete('cfg_media_files');
+						if ($DoDelete) {
+							$this->lang->load("update_delete");
+							$this->load->model("file_manager");
+							$fileManager=new file_manager(pathdecode($path,TRUE));
+							$result=$fileManager->delete_file($file);
+							if ($result) {
+								if ($mediaTableExists) {
+									$this->db->where('file',$path."/".$file);
+									$this->db->delete('cfg_media_files');
+								}
+								$this->load->model("login_log");
+								$this->login_log->update($path);
+								$deletedFiles.=', '.$file;
+								// $this->set_message(langp("delete_file_succes",$file));
 							}
-							$this->load->model("login_log");
-							$this->login_log->update($path);
-							$this->set_message(langp("delete_file_succes",$file));
+							else {
+								$this->set_message(langp("delete_file_error",$file));
+							}
 						}
 						else {
-							$this->set_message(langp("delete_file_error",$file));
+							$this->lang->load("rights");
+							$this->set_message(lang("rights_no_rights"));
 						}
-					}
-					else {
-						$this->lang->load("rights");
-						$this->set_message(lang("rights_no_rights"));
+						if (!empty($deletedFiles)) $this->set_message(langp("delete_file_succes",substr($deletedFiles,2)));
 					}
 				}
 			}

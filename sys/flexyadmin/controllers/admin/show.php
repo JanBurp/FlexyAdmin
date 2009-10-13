@@ -167,7 +167,7 @@ class Show extends AdminController {
 									$grid->prepend_to_captions('&nbsp;');
 							}
 							$grid->set_headings($this->uiNames->get($keys,$table));
-							$grid->set_heading(pk(),"Edit");
+							$grid->set_heading(pk(),help(icon("delete"),lang('grid_delete'), array("class"=>"delete") ) );
 							if (!empty($id)) {
 								$grid->set_current($id);
 							}
