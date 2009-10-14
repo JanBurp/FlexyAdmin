@@ -37,7 +37,7 @@
 	<!-- jQuery -->
 	<script language="javascript" type="text/javascript" src="sys/jquery/jquery-1.3.2.min.js"></script>
 	<script language="javascript" type="text/javascript" src="sys/jquery/ui/jquery-ui-1.7.2.custom.min.js"></script>
-	<? if ($show_type=="grid"): ?>
+	<? if ($show_type=="grid" or $show_type=="filemanager list" or $show_type=="filemanager icons"): ?>
 		<!-- grid Scripts -->
 		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/filterable/jquery.filterable.js"></script>
 		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/tablesorter/jquery.tablesorter.min.js"></script>
@@ -92,7 +92,7 @@
 	<? endif; ?>
 	<!-- FlexyAdmin Scripts -->
 	<script language="javascript" type="text/javascript" src="<?=admin_assets()?>js/jFlexyCore.js"></script>
-	<? if ($show_type=="grid"): ?>
+	<? if ($show_type=="grid" or $show_type=="filemanager list" or $show_type=="filemanager icons"): ?>
 		<script language="javascript" type="text/javascript" src="<?=admin_assets()?>js/jFlexyGrid.js"></script>
 	<? endif; ?>
 	<? if ($show_type=="form"): ?>
@@ -102,7 +102,6 @@
 </head>
 
 <body>
-
 <div id="header">
 	<a id="flexyadmin" href="<?=api_url('API_home');?>"><span class="hide">FlexyAdmin - HOME</span></a>
 </div>

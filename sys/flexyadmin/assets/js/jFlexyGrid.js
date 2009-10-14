@@ -193,8 +193,8 @@ $(document).ready(function() {
 		//
 		// Delete Confirm Dialog
 		//
-
-		$("table.grid th div.delete").add('table.thumbs thead div.delete').addClass('inactive').click(function () {
+		
+		$("table.grid thead div.delete").add('table.thumbs thead div.delete').addClass('inactive').click(function () {
 			clean_message();
 			var id = new Array();
 			var name = new Array();
