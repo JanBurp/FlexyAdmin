@@ -482,6 +482,7 @@ tr.caption td				{ border:none; }
 	background-color:#DDEEAA;
 }
 
+/* Safari hack for hidden cells in grid in combo with jQuery sortable & selectable */
 table.grid td.hiddenCell,
 table.grid th.hiddenCell {
 	width:0px;
@@ -492,6 +493,7 @@ table.grid th.hiddenCell {
 	margin:0px;
 	border:none;
 	color:transparent;
+	font-size:0px;
 }
 table.grid td.hiddenCell *,
 table.grid th.hiddenCell * {
@@ -822,6 +824,7 @@ select.media {
 	float:left;
 	width: 25px;
 	height: 25px;
+	min-width:25px;
 	margin:0px;
 /*	border:1px solid #DDEEAA;*/
 	background-color: transparent;
