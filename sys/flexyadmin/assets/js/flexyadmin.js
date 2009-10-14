@@ -319,9 +319,12 @@ $(document).ready(function() {
 			}
 			$(next).html(newHtml);
 		});
-		// $("table.grid .self_parent").hide();
-		$("table.grid .self_parent").add("table.grid .uri").addClass('hiddenCell').show(); // Safari hack for selectable & sortable
-	
+		
+		if ($.browser.safari)
+			$("table.grid .self_parent").add("table.grid .uri").addClass('hiddenCell').show();
+		else
+			$("table.grid .self_parent").hide();
+		
 		
 		//
 		// Filter/Search rows
