@@ -47,7 +47,7 @@ $(document).ready(function() {
 	if (isForm) {
 
 		//
-		// Make sure fields with (media) selects are good height
+		// Make sure media fields with selects are good height
 		//
 		$('.form_field select').each(function(){
 			selHeight=$(this).outerHeight();
@@ -148,14 +148,17 @@ $(document).ready(function() {
 			values='';
 			$(thisMedia).children('ul.values:first li').each(function(){
 				src=$(this).children('img:first').attr('src');
-				src=src.substr(src.lastIndexOf('/')+1);
-				values+='|'+src;
+				if (src!=undefined) {
+					src=src.substr(src.lastIndexOf('/')+1);
+					values+='|'+src;
+				}
 			});
 			values=values.substr(1);
 			$(thisMedia).children('input:first').attr('value',values);			
 		};
 		function bindMediasClick() {
 			$('div.medias ul li').unbind('click');
+			$('div.medias ul.values li').unbind('dblclick');
 			// medias click 'n drop selecting
 			$('div.medias ul.choices li').click(function(){
 				thisMedia=$(this).parent('ul').parent('div.medias');
@@ -163,6 +166,7 @@ $(document).ready(function() {
 				resetMediaValues($(thisMedia));
 				bindMediasClick();
 			});
+			// dblclick removing
 			$('div.medias ul.values li').dblclick(function(){
 				thisMedia=$(this).parent('ul.values').parent('div.medias');
 				$(this).remove();
@@ -178,8 +182,10 @@ $(document).ready(function() {
 					value='';
 					$(this).children('li').each(function(){
 						src=$(this).children('img:first').attr('src');
-						src=src.substr(src.lastIndexOf('/')+1);
-						value+='|'+src;
+						if (src!=undefined) {
+							src=src.substr(src.lastIndexOf('/')+1);
+							value+='|'+src;
+						}
 					});
 					value=value.substr(1);
 					$(this).parent('.form_field').children('input:first').attr('value',value);
@@ -313,10 +319,10 @@ $(document).ready(function() {
 			}
 			$(next).html(newHtml);
 		});
-		$("table.grid .self_parent").hide();
-		
-		
+		// $("table.grid .self_parent").hide();
+		$("table.grid .self_parent").add("table.grid .uri").addClass('hiddenCell').show(); // Safari hack for selectable & sortable
 	
+		
 		//
 		// Filter/Search rows
 		//
@@ -398,12 +404,26 @@ $(document).ready(function() {
 		//
 		// Selecting multiple
 		// 
-		if (isThumbs) {
-			$('table.thumbs tbody td:first').selectable();
+		if (isFile && isThumbs) {
+			$('table.thumbs tbody td:first').selectable({
+				cancel:'img.zoom',
+				stop: function(event,ui){
+					if ($(this).children('div.ui-selected').length>0)
+						$('table.thumbs thead div.delete').removeClass('inactive');
+					else
+						$('table.thumbs thead div.delete').addClass('inactive');
+				} 
+			});
 		}
 		else {
 			$('table.grid:not(.thumbs) tbody').selectable({
-				cancel:'td.id, td.url, td.b, td.thumb'
+				cancel:'td.id, td.order, td.url, td.b, td.thumb',
+				stop: function(event,ui){
+					if ($(this).children('tr.ui-selected').length>0)
+						$('table.grid th div.delete').removeClass('inactive');
+					else
+						$('table.grid th div.delete').addClass('inactive');
+				}
 			});
 		}
 
@@ -411,12 +431,12 @@ $(document).ready(function() {
 		// Delete Confirm Dialog
 		//
 
-		$("table.grid th div.delete").add('table.thumbs thead div.delete').click(function () {
+		$("table.grid th div.delete").add('table.thumbs thead div.delete').addClass('inactive').click(function () {
 			clean_message();
 			var id = new Array();
 			var name = new Array();
 			nr=0;
-			if (isThumbs)
+			if (isFile && isThumbs)
 				selected=$('table.thumbs tbody div.file.ui-selected');
 			else
 				selected=$('table.grid tr.ui-selected');
@@ -482,21 +502,20 @@ $(document).ready(function() {
 		//
 		// Setting order by drag 'n drop
 		//
-		order=$("table.grid .order");
-		if (order.length>0) {
+		if ($("table.grid .order").length>0) {
 			// change ui: remove normal order arrows, and place one item
 			help=$("table.grid tbody td.order:first span.help");
 			help='help_'+get_subclass("help_",$(help));
 			$("table.grid tbody td.order").empty().append('<span class="help '+help+'"><div class="icon order" title="order"></div></span>');
 			$("table.grid thead th.order").empty();
-
+ 				
 			// set width and height of cells!
 			$("table.grid tbody tr:first td").each(function() {
 				if ($(this).css("display")=="none") w=0; else	w=$(this).width()+"px";
 				nr=get_nr($(this));
 				$("table.grid tbody tr td.nr"+nr).css({ width:w });
 			});
-			
+		
 			// make sortable
 			items=$("table.grid tbody");
 			startPos=0;
@@ -506,6 +525,8 @@ $(document).ready(function() {
 				handle:'td.order',
 				cursor:'move',
 				appendTo:"body",
+				forceHelperSize: true,
+				forcePlaceholderSize: true,
 				start: function(event,ui) {
 					// hide all branches if any
 					id=get_id($(ui.item));
@@ -544,7 +565,7 @@ $(document).ready(function() {
 						}
 						else
 							newParentId=0;
-
+					
 						// Check if shifted to another level under a branch?
 						if ((newParentId==0) && (shifted>0)) {
 							prevRow=$(ui.item).prev("tr");
@@ -591,25 +612,26 @@ $(document).ready(function() {
 					url=site_url("admin/ajax/order/"+table);
 					// ajax request
 					$.post(url,ser,function(data) {
-							if (data!="") {
-								ajaxError(data);
-							}
-							else {
-								rowsEvenOdd();
-							}
-						});
+						if (data!="") {
+							ajaxError(data);
+						}
+						else {
+							rowsEvenOdd();
+						}
+					});
 				}
 			});
 			// reset style
 			$("table.grid tbody").attr("style","");
 		}
-
+		
 		//
 		// Make sure columns can be sortable if ordering by drag 'n drop is not on.
 		//
-		else { isSortable=true;	}
-	}
-
+		else {
+			isSortable=true;	}
+		}
+	
 	//
 	// Sortable columns in Grid or File (list) modes.
 	//
@@ -619,11 +641,11 @@ $(document).ready(function() {
 		$(grid).tablesorter();
 		$(grid).bind("sortStart",function() {
 			$(grid).css("cursor","wait");
-    });
+			    });
 		$(grid).bind("sortEnd",function() {
 			$(grid).css("cursor","default");
 			rowsEvenOdd();
-    });
+			    });
 	}
 
 
@@ -875,7 +897,7 @@ function get_name(obj) {
 	if (s=='') s=$('td.name:first',obj).text();
 	if (s=='') s=$('div.name:first',obj).text();
 	s=stripTags(s);
-	return s.trim();
+	return trim(s);
 }
 
 //
@@ -884,6 +906,12 @@ function get_name(obj) {
 
 function stripTags(s) {
 	return s.replace(/<\/?[^>]+>/gi, '');
+}
+
+function trim(s) {
+  s=s.replace(/^\s+/,'');
+  s=s.replace(/\s+$/,'');
+  return s;
 }
 
 function randomPassword(length) {
