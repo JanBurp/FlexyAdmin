@@ -29,7 +29,7 @@ a:hover {color:#696;}
 fieldset {margin:0; padding:4px; border:1px solid #DEA; font-family:Verdana, Arial; font-size:10px;}
 legend {color:#696; font-weight:bold;}
 label.msg {display:none;}
-label.invalid {color:#DEA; display:inline;}
+label.invalid {color:#696; display:inline;}
 input.invalid {border:1px solid #696;}
 input {background:#FFF; border:1px solid #DEA;}
 input, select, textarea {font-family:Verdana, Arial, Helvetica, sans-serif; font-size:10px;color:#696;}
