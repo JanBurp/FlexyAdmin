@@ -1,7 +1,21 @@
+<?
+// Minimized versions of Javascript & CSS files (see http://refresh-sf.com/yui/)
+$minimize=TRUE;
+if ($minimize) {
+	$js='.min.js';
+	$css='.min.css';
+}
+else{
+	$js='.js';
+	$css='.css';
+}
+
+?>
+
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
-
 <html>
 <head>
 	<title>FlexyAdmin 2009</title>
@@ -10,7 +24,7 @@
 
 	<base href="<?=base_url()?>" />
 
-	<link rel="stylesheet" href="<?=admin_assets()?>css/admin_main.css" type="text/css" />
+	<link rel="stylesheet" href="<?=admin_assets()?>css/admin_main<?=$css?>" type="text/css" />
 	<!--[if lte IE 6]><style type="text/css" media="screen">@import url(<?=admin_assets()?>css/ie6.css);</style><![endif]-->
 	<!--[if IE 7]><style type="text/css" media="screen">@import url(<?=admin_assets()?>css/ie7.css);</style><![endif]-->
 	<!--[if IE 8]><style type="text/css" media="screen">@import url(<?=admin_assets()?>css/ie8.css);</style><![endif]-->
@@ -91,12 +105,12 @@
 		<? endif; ?>
 	<? endif; ?>
 	<!-- FlexyAdmin Scripts -->
-	<script language="javascript" type="text/javascript" src="<?=admin_assets()?>js/jFlexyCore.js"></script>
+	<script language="javascript" type="text/javascript" src="<?=admin_assets()?>js/jFlexyCore<?=$js?>"></script>
 	<? if ($show_type=="grid" or $show_type=="filemanager list" or $show_type=="filemanager icons"): ?>
-		<script language="javascript" type="text/javascript" src="<?=admin_assets()?>js/jFlexyGrid.js"></script>
+		<script language="javascript" type="text/javascript" src="<?=admin_assets()?>js/jFlexyGrid<?=$js?>"></script>
 	<? endif; ?>
 	<? if ($show_type=="form"): ?>
-		<script language="javascript" type="text/javascript" src="<?=admin_assets()?>js/jFlexyForm.js"></script>
+		<script language="javascript" type="text/javascript" src="<?=admin_assets()?>js/jFlexyForm<?=$js?>"></script>
 	<? endif; ?>
 
 </head>
