@@ -168,8 +168,6 @@ span.help {
 	display:none;
 	border: solid 2px #BBCC88;
 	-moz-border-radius: 4px;
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
 	-webkit-border-radius: 4px;
 	filter:alpha(opacity=90);
 	opacity: 0.9;
@@ -193,6 +191,18 @@ span.help {
 	margin:0px;
 	cursor:pointer;
 	}
+thead tr.caption .icon {
+	border:solid 1px transparent;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	margin-right:2px;
+	width:16px;
+	height:16px;
+}
+thead tr.caption .icon:hover {
+	border-color:#696;
+	background-color:#CD9;
+}
 .icon.current {
 	background-color: #CCDD99;
 	}
@@ -226,8 +236,12 @@ span.help {
 	background-image: url("../icons/action_delete.gif");
 	background-repeat: no-repeat;
 	}
-table.thumbs .icon.delete {
-	margin:3px 0px 0px 8px;
+.icon.delete.inactive {
+	background-image: url("../icons/action_delete_inactive.gif");
+}
+table.thumbs tr.caption .icon.delete {
+	margin:0px 0px 0px 5px;
+	padding:3px 4px;
 }
 div.add_button {
 	float:right;
@@ -468,6 +482,24 @@ tr.caption td				{ border:none; }
 	background-color:#DDEEAA;
 }
 
+table.grid td.hiddenCell,
+table.grid th.hiddenCell {
+	width:0px;
+	min-width:0px;
+	max-width:0px;
+	overflow:hidden;
+	padding:0px;
+	margin:0px;
+	border:none;
+	color:transparent;
+}
+table.grid td.hiddenCell *,
+table.grid th.hiddenCell * {
+	display:none;
+}
+
+
+
 .small 					{ margin:0px; font-size:.8em; }
 .xsmall 				{ margin:0px; font-size:.7em; padding:0px; }
 .weekend				{ font-weight:bold; }
@@ -578,6 +610,7 @@ table.grid thead .order,
 	border:solid 1px #FFFFFF;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
+	cursor:pointer;
 	}
 
 .thumbs .file div {
@@ -601,7 +634,7 @@ table.grid thead .order,
 .thumbs .file .thumb {
 	width:100px;
 	height: 100px;
-	margin:0px 0px 0px 10px;
+	margin:0px 0px 0px 9px;
 	text-align: center;
 	}
 	.thumbs .file .thumb .thumb img {
