@@ -17,6 +17,8 @@
 
 	<link rel="stylesheet" type="text/css" href="sys/jquery/ui/theme/ui.all.css" />
 
+
+	<!-- JS variables -->
 	<script language="javascript" type="text/javascript">
 	<!--
 	config=new Object;
@@ -32,137 +34,69 @@
 	-->
 	</script>
 
+	<!-- jQuery -->
 	<script language="javascript" type="text/javascript" src="sys/jquery/jquery-1.3.2.min.js"></script>
 	<script language="javascript" type="text/javascript" src="sys/jquery/ui/jquery-ui-1.7.2.custom.min.js"></script>
-
-	<script language="javascript" type="text/javascript" src="sys/jquery/plugins/filterable/jquery.filterable.js"></script>
-	<script language="javascript" type="text/javascript" src="sys/jquery/plugins/tablesorter/jquery.tablesorter.min.js"></script>
-	
-	<script language="javascript" type="text/javascript" src="sys/jquery/plugins/flipv/cvi_text_lib.js"></script>
-	<script language="javascript" type="text/javascript" src="sys/jquery/plugins/flipv/jquery.flipv.js"></script>
-	
-
-	<? if ($show_type=="form"): ?>
-	<!-- js for form -->
-	<script language="javascript" type="text/javascript" src="sys/jquery/ui/i18n/ui.datepicker-nl.js"></script>
-	<script language="javascript" type="text/javascript" src="sys/jquery/plugins/timepicker/timepicker.js"></script>
-	<script language="javascript" type="text/javascript" src="sys/jquery/plugins/form/jquery.form.js"></script>
+	<? if ($show_type=="grid"): ?>
+		<!-- grid Scripts -->
+		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/filterable/jquery.filterable.js"></script>
+		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/tablesorter/jquery.tablesorter.min.js"></script>
+		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/flipv/cvi_text_lib.js"></script>
+		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/flipv/jquery.flipv.js"></script>
 	<? endif; ?>
 
-	<script language="javascript" type="text/javascript" src="<?=admin_assets()?>js/flexyadmin.js"></script>
-
-
-	<? if ($show_type=="form" and $show_editor): ?>
-	<!-- js for form, html editor -->
-
-	<script language="javascript" type="text/javascript" src="sys/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-	<script language="javascript" type="text/javascript" src="sys/tinymce/jscripts/tiny_mce/jquery.tinymce.js"></script>
-	<script>
-	$().ready(function() {
-	   $('textarea.htmleditor').tinymce({
-	      // script_url : 'sys/tinymce/jscripts/tiny_mce/tiny_mce.js',
-				plugins : "paste,advimage,media,table,inlinepopups",
-		 		dialog_type : "modal",
-				inlinepopups_skin : "flexyadmin",
-				language : "<?=$language?>",
-				docs_language : "<?=$language?>",
-				theme : "advanced",
-				skin : "flexyadmin",
-				theme_advanced_toolbar_location : "top",
-				theme_advanced_toolbar_align : "left",
-				theme_advanced_statusbar_location: "bottom",
-				theme_advanced_resizing : true,
-				theme_advanced_resize_horizontal : false,
-				<? if (isset($formats)): ?>
-				theme_advanced_blockformats : "<?=$formats?>",
-				<? else: ?>
-				theme_advanced_blockformats : "h1,h2,h3",
-				<? endif; ?>
-				theme_advanced_styles : "<?=$styles;?>",
-				external_image_list_url : "<?=assets()?>/lists/img_list.js",
-				media_external_list_url : "<?=assets()?>/lists/media_list.js",
-				relative_urls : true,
-				document_base_url : "<?=base_url()?>",
-				content_css : "<?=assets()?>css/text.css",
-				external_link_list_url : "<?=assets()?>lists/link_list.js",
-				theme_advanced_buttons1 : "<?=$buttons1?>",
-				theme_advanced_buttons2 : "<?=$buttons2?>",
-				theme_advanced_buttons3 : "<?=$buttons3?>"
-	   });
-	});
-	</script>
-
-
-
-
-	<!-- <script language="javascript" type="text/javascript" src="sys/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-	<script>
-	tinyMCE.init({
-<<<<<<< .mine
-			mode : "textareas",
-			editor_selector : "htmleditor",
-			plugins : "inlinepopups,paste,table,fullscreen,advimage,media",
-   		// dialog_type : "modal",
-			language : "<?=$language?>",
-			docs_language : "<?=$language?>",
-			theme : "advanced",
-			skin : "flexyadmin",
-			
-			theme_advanced_toolbar_location : "top",
-			theme_advanced_toolbar_align : "left",
-			theme_advanced_statusbar_location: "bottom",
-			theme_advanced_resizing : true,
-			theme_advanced_resize_horizontal : false,
-			<? if (isset($formats)): ?>
-			theme_advanced_blockformats : "<?=$formats?>",
-			<? else: ?>
-			theme_advanced_blockformats : "h1,h2,h3",
-			<? endif; ?>
-			theme_advanced_styles : "<?=$styles;?>",
-			external_image_list_url : "<?=assets()?>/lists/img_list.js",
-			media_external_list_url : "<?=assets()?>/lists/media_list.js",
-			relative_urls : true,
-			document_base_url : "<?=base_url()?>",
-			content_css : "<?=assets()?>css/text.css",
-			external_link_list_url : "<?=assets()?>lists/link_list.js",
-			theme_advanced_buttons1 : "<?=$buttons1?>",
-			theme_advanced_buttons2 : "<?=$buttons2?>",
-			theme_advanced_buttons3 : "<?=$buttons3?>"
-=======
-		mode : "textareas",
-		editor_selector : "htmleditor",
-		plugins : "inlinepopups,paste,table,fullscreen,advimage,media",
- 		dialog_type : "modal",
-		inlinepopups_skin : "flexyadmin",
-		language : "<?=$language?>",
-		docs_language : "<?=$language?>",
-		theme : "advanced",
-		skin : "flexyadmin",
-		
-		theme_advanced_toolbar_location : "top",
-		theme_advanced_toolbar_align : "left",
-		theme_advanced_statusbar_location: "bottom",
-		theme_advanced_resizing : true,
-		theme_advanced_resize_horizontal : false,
-		<? if (isset($formats)): ?>
-		theme_advanced_blockformats : "<?=$formats?>",
-		<? else: ?>
-		theme_advanced_blockformats : "h1,h2,h3",
-		<? endif; ?>
-		theme_advanced_styles : "<?=$styles;?>",
-		external_image_list_url : "<?=assets()?>/lists/img_list.js",
-		media_external_list_url : "<?=assets()?>/lists/media_list.js",
-		relative_urls : true,
-		document_base_url : "<?=base_url()?>",
-		content_css : "<?=assets()?>css/text.css",
-		external_link_list_url : "<?=assets()?>lists/link_list.js",
-		theme_advanced_buttons1 : "<?=$buttons1?>",
-		theme_advanced_buttons2 : "<?=$buttons2?>",
-		theme_advanced_buttons3 : "<?=$buttons3?>"
->>>>>>> .r511
-	});
-	</script> -->
+	<? if ($show_type=="form"): ?>
+		<!-- form Scripts -->
+		<script language="javascript" type="text/javascript" src="sys/jquery/ui/i18n/ui.datepicker-nl.js"></script>
+		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/timepicker/timepicker.js"></script>
+		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/form/jquery.form.js"></script>
 	
+		<? if ($show_editor): ?>
+			<!-- editor Scripts -->
+			<script language="javascript" type="text/javascript" src="sys/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+			<script language="javascript" type="text/javascript" src="sys/tinymce/jscripts/tiny_mce/jquery.tinymce.js"></script>
+			<script>
+			$().ready(function() {
+			   $('textarea.htmleditor').tinymce({
+						plugins : "paste,advimage,media,table,inlinepopups",
+				 		dialog_type : "modal",
+						inlinepopups_skin : "flexyadmin",
+						language : "<?=$language?>",
+						docs_language : "<?=$language?>",
+						theme : "advanced",
+						skin : "flexyadmin",
+						theme_advanced_toolbar_location : "top",
+						theme_advanced_toolbar_align : "left",
+						theme_advanced_statusbar_location: "bottom",
+						theme_advanced_resizing : true,
+						theme_advanced_resize_horizontal : false,
+						<? if (isset($formats)): ?>
+						theme_advanced_blockformats : "<?=$formats?>",
+						<? else: ?>
+						theme_advanced_blockformats : "h1,h2,h3",
+						<? endif; ?>
+						theme_advanced_styles : "<?=$styles;?>",
+						external_image_list_url : "<?=assets()?>/lists/img_list.js",
+						media_external_list_url : "<?=assets()?>/lists/media_list.js",
+						relative_urls : true,
+						document_base_url : "<?=base_url()?>",
+						content_css : "<?=assets()?>css/text.css",
+						external_link_list_url : "<?=assets()?>lists/link_list.js",
+						theme_advanced_buttons1 : "<?=$buttons1?>",
+						theme_advanced_buttons2 : "<?=$buttons2?>",
+						theme_advanced_buttons3 : "<?=$buttons3?>"
+			   });
+			});
+			</script>
+		<? endif; ?>
+	<? endif; ?>
+	<!-- FlexyAdmin Scripts -->
+	<script language="javascript" type="text/javascript" src="<?=admin_assets()?>js/jFlexyCore.js"></script>
+	<? if ($show_type=="grid"): ?>
+		<script language="javascript" type="text/javascript" src="<?=admin_assets()?>js/jFlexyGrid.js"></script>
+	<? endif; ?>
+	<? if ($show_type=="form"): ?>
+		<script language="javascript" type="text/javascript" src="<?=admin_assets()?>js/jFlexyForm.js"></script>
 	<? endif; ?>
 
 </head>
