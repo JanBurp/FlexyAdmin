@@ -518,6 +518,7 @@ class Flexy_field extends Model {
 		if (get_prefix($out['name'])==$this->config->item('REL_table_prefix')) {
 			$table=join_table_from_rel_table($out['name']);
 			$tableInfo=$this->cfg->get('CFG_table',$table);
+			trace_($tableInfo);
 			$formManyType=$tableInfo['str_form_many_type'];
 			if (!empty($formManyType) and $formManyType!='dropdown') {
 				$out['type']=$formManyType;
