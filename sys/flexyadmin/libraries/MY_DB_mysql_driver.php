@@ -575,6 +575,12 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	function get_field($table,$field,$id="") {
 		return $this->get_field_where($table,$field,$this->pk,$id);
 	}
+	function get_random_field($table,$field='id') {
+		$sql="SELECT `$field` FROM `$table` ORDER BY RAND()";
+		$query=$this->query($sql);
+		$row=$query->row_array();
+		return $row[$field];
+	}
 	
 	function get_each($table="",$limit=0,$offset=0) {
 		if (!isset($this->eachResult)) {

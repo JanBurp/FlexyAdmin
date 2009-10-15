@@ -21,6 +21,7 @@ if (isset($_SERVER["HTTP_HOST"])) {
 	else
 		$config['base_url']='http://'.$_SERVER["HTTP_HOST"];
 	$config['base_url']=str_replace('index.php','',$config['base_url']);
+	$config['auto_base_url']=$config['base_url'];
 }
 
 /*
