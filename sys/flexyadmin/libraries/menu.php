@@ -322,6 +322,7 @@ class Menu {
 					unset($extraAttr['class']);
 					unset($extraAttr['uri']);
 					unset($extraAttr['id']);
+					unset($extraAttr['sub']);
 					$itemAttr=array_merge($itemAttr,$extraAttr);
 					// trace_($itemAttr);
 					$out.=anchor($link, $showName, $itemAttr);
