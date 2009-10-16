@@ -386,7 +386,7 @@ function thumb($attr,$index=FALSE) {
 					$icon.=div('hidden path').pathencode($this->path)._div();
 
 					$edit="";
-					if ($this->showDeleteButtons)	$edit.=anchor(api_uri('API_filemanager_confirm',pathencode($this->path),$name),help(icon("delete inactive"),lang('grid_select')),array("class"=>"delete"));
+					if ($this->showDeleteButtons)	$edit.=help(icon("delete inactive"),lang('grid_select'));
 					if (empty($edit)) $edit="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 
 					$fileData["edit"]=$edit;

@@ -613,7 +613,7 @@ class AdminController extends BasicController {
 		}
 		$formats=$this->cfg->get('CFG_editor',"str_formats");
 		$styles=$this->cfg->get('CFG_editor',"str_styles");
-		$this->load->view('admin/header', array("title"=>$title,"url"=>$url,"js"=>$this->js,"show_type"=>$type,"show_editor"=>$editor,"buttons1"=>$buttons1,"buttons2"=>$buttons2,"buttons3"=>$buttons3,"formats"=>$formats,"styles"=>$styles,"language"=>$this->language));
+		$this->load->view('admin/header', array("title"=>$title,"url"=>$url,"jsVars"=>$this->js,"show_type"=>$type,"show_editor"=>$editor,"buttons1"=>$buttons1,"buttons2"=>$buttons2,"buttons3"=>$buttons3,"formats"=>$formats,"styles"=>$styles,"language"=>$this->language));
 	}
 
 	function _show_table_menu($tables,$type) {
@@ -836,8 +836,6 @@ class AdminController extends BasicController {
 	function _add_js_variable($name,$value) {
 		$this->js[$name]=$value;
 	}
-	
-	
 	
 	
 

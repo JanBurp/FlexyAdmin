@@ -145,16 +145,13 @@ function doGrid() {
 				}
 								
 			});
-			
-			
-			
+
 			// place filter input on other place
 			filter_input=$("div.filter input");
 			$(filter_input).addClass("filter").attr({title:'search / filter'});
 			$("tr.caption tr").append('<td class="filter">');
 			$("td.filter").html(filter_input);
 			$("td.filter input").wrap('<span class="help '+config.help_filter+'"></span>');
-			
 		}
 
 		//
@@ -186,7 +183,7 @@ function doGrid() {
 
 		if (isFile && isThumbs) {
 			delButton=$('table.grid thead div.delete');
-			delButtons=$('table.grid tbody tr td div.file div.delete');
+			delButtons=$('table.grid tbody div.file div.toolbar span div.delete');
 		}
 		else {
 			delButton=$('table.grid thead div.delete');
@@ -217,7 +214,8 @@ function doGrid() {
 				$(this).addClass('inactive')
 				$(this).parents('.selected').removeClass('selected');
 				lightDeleteButton();
-			});
+			}
+		);
 
 		//
 		// Delete Confirm Dialog

@@ -1,8 +1,7 @@
 <?
 // Minimized versions of Javascript & CSS files (see http://refresh-sf.com/yui/)
-
 $minimize=FALSE;
-// $minimize=TRUE;
+$minimize=TRUE;
 if ($minimize) {
 	$js='.min.js';
 	$css='.min.css';
@@ -40,8 +39,8 @@ else{
 	config=new Object;
 	config.site_url="<?=site_url()?>/";
 	<?
-	if (isset($js)) {
-		foreach ($js as $key => $value) {
+	if (isset($jsVars) && !empty($jsVars)) {
+		foreach ($jsVars as $key => $value) {
 			?>config.<?=$key?>="<?=$value?>";<?
 		}
 	}
