@@ -386,10 +386,10 @@ function thumb($attr,$index=FALSE) {
 					$icon.=div('hidden path').pathencode($this->path)._div();
 
 					$edit="";
-					// if ($this->showDeleteButtons)	$edit.=anchor(api_uri('API_filemanager_confirm',pathencode($this->path),$name),help(icon("delete"),lang('file_delete')),array("class"=>"delete"));
-					// if (empty($edit)) $edit="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+					if ($this->showDeleteButtons)	$edit.=anchor(api_uri('API_filemanager_confirm',pathencode($this->path),$name),help(icon("delete inactive"),lang('grid_select')),array("class"=>"delete"));
+					if (empty($edit)) $edit="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 
-					// $fileData["edit"]=$edit;
+					$fileData["edit"]=$edit;
 					$fileData["thumb"]=$icon;
 					$fileData["name"]=$name;
 					// details
@@ -452,7 +452,7 @@ function thumb($attr,$index=FALSE) {
 		if ($this->view=='icons') {
 			$buttons.=help(icon("delete"),lang('grid_delete'));
 		}
-
+		
 		$grid=new grid();
 		$grid->set_data($renderData,$this->caption);
 		if (!empty($renderData)) {
@@ -460,8 +460,8 @@ function thumb($attr,$index=FALSE) {
 			$keys=combine($keys,$keys);
 		}
 		$grid->prepend_to_captions($buttons);
-		$grid->set_heading("thumb",help(icon("delete"),lang('grid_delete'), array("class"=>"delete") ));
-		// $grid->set_heading("edit","X");
+		$grid->set_heading("edit",help(icon("delete"),lang('grid_delete'), array("class"=>"delete") ));
+		$grid->set_heading("thumb","");
 		$grid->set_current($current);
 		$out=$grid->render("html","","grid files");
 

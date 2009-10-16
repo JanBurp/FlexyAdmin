@@ -383,13 +383,13 @@ class Flexy_field extends Model {
 				$uri=api_uri('API_view_form',$this->table.':'.$this->data);
 			$out.=anchor( $uri, help(icon("edit"),lang('grid_edit')), array("class"=>"edit $class"));
 		}
-		// if ($this->fieldRight>=RIGHTS_DELETE)	{
-		// 	if (isset($this->extraInfoId))
-		// 		$uri=api_uri('API_confirm',$this->table.':'.$this->data,'info',$this->extraInfoId);
-		// 	else
-		// 		$uri=api_uri('API_confirm',$this->table.':'.$this->data);
-		// 	$out.=anchor($uri, help(icon("delete"),lang('grid_delete')), array("class"=>"delete $class"));
-		// }
+		if ($this->fieldRight>=RIGHTS_DELETE)	{
+			// if (isset($this->extraInfoId))
+			// 	$uri=api_uri('API_confirm',$this->table.':'.$this->data,'info',$this->extraInfoId);
+			// else
+			// 	$uri=api_uri('API_confirm',$this->table.':'.$this->data);
+			$out.=help(icon("delete inactive"),lang('grid_select'));
+		}
 		return $out;
 	}
 

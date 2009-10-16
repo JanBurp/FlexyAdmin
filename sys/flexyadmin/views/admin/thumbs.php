@@ -14,8 +14,6 @@
 				</table>
 			</td>
 		</tr>
-		</thead>
-		
 	</thead>
 
 	<tbody>
@@ -24,8 +22,9 @@
 	<? if (isset($rows) and !empty($rows)):
 			foreach($rows as $row): ?>
 				<div class="file <?=$row["class"]?>">
-					<div class="thumb"><?=$row["row"][0]["cell"];?></div>
-					<div class="name"><?=$row["id"];?></div>
+					<div  class="toolbar"><?=$row["row"][0]["cell"];?></div>
+					<div class="thumb"><?=$row["row"][1]["cell"];?></div>
+					<div  class="name"><?=$row["id"];?></div>
 				</div>
 	<? endforeach;
 		endif; ?>
