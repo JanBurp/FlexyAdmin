@@ -1,45 +1,38 @@
-$(document).ready(function() {
+function doGrid() {
 
 	//
-	// File
+	// Upload button and dialog
 	//
-	if (isFile) {
-
-		//
-		// Upload button and dialog
-		//
-		$(".upload").click(function() {
-			path=get_subclass("path_",$(this));
-			dialog.html('<form class="upload" method="post" action="'+site_url("admin/filemanager/upload/"+path)+'" enctype="multipart/form-data">'+
-									'<input type="file" name="file" value="" class="filemanager" /></form>');
-			$(dialog).dialog({
-				title:langp("dialog_title_upload"),
-				modal:true,
-				width:400,
-				buttons: ({ cancel	: function(){	$(dialog).dialog("close"); },
-										upload	: function(){
-																uploadFile=$('.ui-dialog input.filemanager').val();
-																// prevent the 'fakedisk' in name of IE8
-																backslash=uploadFile.lastIndexOf('\\');
-																if (backslash>0) uploadFile=uploadFile.substr(backslash+1);
-																$('.ui-dialog .ui-dialog-buttonpane').add('.ui-dialog a').add('.ui-dialog form').hide();
-																$('.ui-dialog .ui-dialog-content').prepend("Uploading '<i>"+uploadFile+"</i>' <img src='"+site_url("sys/flexyadmin/assets/icons/wait.gif")+"' align='right' />");
-																$("form.upload").submit();
-																// $(dialog).dialog("destroy");
-																// alert('Hups');
-															}
-								 }),
-				close: function(){$(dialog).dialog("destroy"); }
-			});
-			changeButt("cancel",lang("dialog_cancel"));
-			changeButt("upload",lang("dialog_upload"));
+	$(".upload").click(function() {
+		path=get_subclass("path_",$(this));
+		dialog.html('<form class="upload" method="post" action="'+site_url("admin/filemanager/upload/"+path)+'" enctype="multipart/form-data">'+
+								'<input type="file" name="file" value="" class="filemanager" /></form>');
+		$(dialog).dialog({
+			title:langp("dialog_title_upload"),
+			modal:true,
+			width:400,
+			buttons: ({ cancel	: function(){	$(dialog).dialog("close"); },
+									upload	: function(){
+															uploadFile=$('.ui-dialog input.filemanager').val();
+															// prevent the 'fakedisk' in name of IE8
+															backslash=uploadFile.lastIndexOf('\\');
+															if (backslash>0) uploadFile=uploadFile.substr(backslash+1);
+															$('.ui-dialog .ui-dialog-buttonpane').add('.ui-dialog a').add('.ui-dialog form').hide();
+															$('.ui-dialog .ui-dialog-content').prepend("Uploading '<i>"+uploadFile+"</i>' <img src='"+site_url("sys/flexyadmin/assets/icons/wait.gif")+"' align='right' />");
+															$("form.upload").submit();
+															// $(dialog).dialog("destroy");
+															// alert('Hups');
+														}
+							 }),
+			close: function(){$(dialog).dialog("destroy"); }
 		});
-		//
-		// Make sure columns can be sortable
-		//
-		isSortable=isGrid;
-	}
-
+		changeButt("cancel",lang("dialog_cancel"));
+		changeButt("upload",lang("dialog_upload"));
+	});
+	//
+	// Make sure columns can be sortable
+	//
+	isSortable=isGrid;
 
 	//
 	// File & Grid (Life filter/search field)
@@ -167,28 +160,64 @@ $(document).ready(function() {
 		//
 		// Selecting multiple
 		// 
+
+		// if (isFile && isThumbs) {
+		// 	$('table.thumbs tbody td:first').selectable({
+		// 		cancel:'img.zoom',
+		// 		stop: function(event,ui){
+		// 			if ($(this).children('div.ui-selected').length>0)
+		// 				$('table.thumbs thead div.delete').removeClass('inactive');
+		// 			else
+		// 				$('table.thumbs thead div.delete').addClass('inactive');
+		// 		} 
+		// 	});
+		// }
+		// else {
+		// 	$('table.grid:not(.thumbs) tbody').selectable({
+		// 		cancel:'td.id, td.order, td.url, td.b, td.thumb',
+		// 		stop: function(event,ui){
+		// 			if ($(this).children('tr.ui-selected').length>0)
+		// 				$('table.grid th div.delete').removeClass('inactive');
+		// 			else
+		// 				$('table.grid th div.delete').addClass('inactive');
+		// 		}
+		// 	});
+		// }
+
 		if (isFile && isThumbs) {
-			$('table.thumbs tbody td:first').selectable({
-				cancel:'img.zoom',
-				stop: function(event,ui){
-					if ($(this).children('div.ui-selected').length>0)
-						$('table.thumbs thead div.delete').removeClass('inactive');
-					else
-						$('table.thumbs thead div.delete').addClass('inactive');
-				} 
-			});
+			delButton=$('table.grid thead div.delete');
+			delButtons=$('table.grid tbody tr td div.file div.delete');
 		}
 		else {
-			$('table.grid:not(.thumbs) tbody').selectable({
-				cancel:'td.id, td.order, td.url, td.b, td.thumb',
-				stop: function(event,ui){
-					if ($(this).children('tr.ui-selected').length>0)
-						$('table.grid th div.delete').removeClass('inactive');
-					else
-						$('table.grid th div.delete').addClass('inactive');
-				}
-			});
+			delButton=$('table.grid thead div.delete');
+			delButtons=$('table.grid tbody tr div.delete');
 		}
+
+		function lightDeleteButton() {
+			var active=0;
+			if (isFile && isThumbs)
+				active=$('table.grid tbody div.file.selected').length;
+			else
+				active=$('table.grid tbody tr.selected').length;
+			if (active>0)
+				$(delButton).removeClass('inactive');
+			else
+				$(delButton).addClass('inactive');
+		}
+		$(delButtons).toggle(
+			function(){
+				$(this).removeClass('inactive');
+				if (isFile && isThumbs)
+					$(this).parents('div.file').addClass('selected');
+				else
+					$(this).parents('tr').addClass('selected');
+				lightDeleteButton();
+			},
+			function(){
+				$(this).addClass('inactive')
+				$(this).parents('.selected').removeClass('selected');
+				lightDeleteButton();
+			});
 
 		//
 		// Delete Confirm Dialog
@@ -200,9 +229,9 @@ $(document).ready(function() {
 			var name = new Array();
 			nr=0;
 			if (isFile && isThumbs)
-				selected=$('table.thumbs tbody div.file.ui-selected');
+				selected=$('table.thumbs tbody div.file.selected');
 			else
-				selected=$('table.grid tr.ui-selected');
+				selected=$('table.grid tbody tr.selected');
 			if (selected.length>0) {
 				$(selected).each(function(){
 					id[nr]=get_id($(this));
@@ -411,7 +440,7 @@ $(document).ready(function() {
 			    });
 	}
 
-});
+};
 
 
 

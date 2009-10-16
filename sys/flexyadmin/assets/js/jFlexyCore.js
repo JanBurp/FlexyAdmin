@@ -17,12 +17,13 @@ $(document).ready(function() {
 	if (!isGrid && isFile)	{	isGrid=$("#content").hasClass("list"); }
 	if (isFile)							{ isThumbs=$("#content").hasClass("icons");}
 	isSortable=false;
+	//
 
-
-	// ALL
+	if (isGrid) doGrid();
+	if (isForm) doForm();
 
 	//
-	// Vertical Text in Bars (if small space)
+	// Some UI things
 	//
 	$('.verticalText').each(function(){
 		w=$(this).width();
@@ -30,44 +31,17 @@ $(document).ready(function() {
 			$(this).flipv().addClass('verticalShow');
 		}
 	});
-
-	//
-	// img Zoom Popup Dialog
-	//
 	$('img.zoom').add('.flash .zoom').click(function() {
 		zoom_dialog($(this));
 	});
 	$('form ul li img.zoom').add('form ul li .flash .zoom').unbind('click');
-
-
-	//
-	// Help
-	//
-
-	var ShowDelay;
-	var HideDelay;
-	$("span.help").children().removeAttr("title");
-	$("span.help").mouseenter(function() {
-		obj=$(this);
-		helpName=get_subclass("help_",$(this));
-		ShowDelay=setTimeout( function() {		
-			helpTxt=$("#help_messages span#help_"+helpName).html();
-			// helpTxt=$(obj).children("span.hide").html();
-			html=helpTxt;
-			$(Popup).html(html).fadeIn(150);
-			HideDelay=setTimeout( function(){
-				$(Popup).fadeOut(1000);
-			},5000 );
-		},1000);
-	}).mouseout(function() {
-		clearTimeout(ShowDelay);
-		$(Popup).fadeOut(150);
-	}).mousemove(function(e){
-		clearTimeout(HideDelay);
-    $(Popup).css({left:e.pageX+8,top:e.pageY+18});
-  }); 
+	
+	
+	showHelpItems();
+	
 
 });
+
 
 
 //
@@ -101,6 +75,32 @@ function confirm_dialog(uri,name,id) {
 	changeButt("yes",lang("dialog_yes"));
 }
 function clean_message() {$("#message").html("");}
+
+function showHelpItems() {
+	var ShowDelay;
+	var HideDelay;
+	$("span.help").children().removeAttr("title");
+	$("span.help").mouseenter(function() {
+		obj=$(this);
+		helpName=get_subclass("help_",$(this));
+		ShowDelay=setTimeout( function() {		
+			helpTxt=$("#help_messages span#help_"+helpName).html();
+			// helpTxt=$(obj).children("span.hide").html();
+			html=helpTxt;
+			$(Popup).html(html).fadeIn(150);
+			HideDelay=setTimeout( function(){
+				$(Popup).fadeOut(1000);
+			},5000 );
+		},1000);
+	}).mouseout(function() {
+		clearTimeout(ShowDelay);
+		$(Popup).fadeOut(150);
+	}).mousemove(function(e){
+		clearTimeout(HideDelay);
+    $(Popup).css({left:e.pageX+8,top:e.pageY+18});
+  });
+};
+
 
 function zoom_dialog(obj) {
 	var src,w,h,ext;

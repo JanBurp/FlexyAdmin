@@ -1,6 +1,8 @@
 <?
 // Minimized versions of Javascript & CSS files (see http://refresh-sf.com/yui/)
-$minimize=TRUE;
+
+$minimize=FALSE;
+// $minimize=TRUE;
 if ($minimize) {
 	$js='.min.js';
 	$css='.min.css';

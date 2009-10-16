@@ -625,7 +625,7 @@ class Form Extends Model {
 					$out.='<ul class="choices">';
 					foreach($options as $img) {
 						$image=$img['name'];
-						$out.='<li>'.show_thumb(array("src"=>$field["path"]."/".$image,"class"=>"media",'title'=>$image)).'</li>';
+						if (!in_array($image,$value))	$out.='<li>'.show_thumb(array("src"=>$field["path"]."/".$image,"class"=>"media",'title'=>$image)).'</li>';
 					}
 					$out.='</ul>';					
 				}
@@ -644,7 +644,7 @@ class Form Extends Model {
 					// show (ordered) choices	
 					$out.='<ul class="list list_choices">';
 					foreach($options as $id=>$option) {
-						$out.='<li id="'.$id.'">'.$option.'</li>';
+						if (!in_array($id,$value)) $out.='<li id="'.$id.'">'.$option.'</li>';
 					}
 					$out.='</ul>';
 					// $out.=icon('right');

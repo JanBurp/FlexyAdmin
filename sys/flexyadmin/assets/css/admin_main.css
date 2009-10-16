@@ -239,6 +239,12 @@ thead tr.caption .icon:hover {
 .icon.delete.inactive {
 	background-image: url("../icons/action_delete_inactive.gif");
 }
+thead .delete {
+	margin-left:26px;
+}
+.files thead .delete {
+	margin-left:0px;
+}
 table.thumbs tr.caption .icon.delete {
 	margin:0px 0px 0px 5px;
 	padding:3px 4px;
@@ -442,7 +448,8 @@ tr.caption td				{ border:none; }
 .grid .caption td		{ padding:0px;}
 
 .grid td.id,
-.grid td.edit				{ width:20px; min-width:20px; padding-right:0px; }
+.grid td.edit				{ width:52px; min-width:32px; padding-right:0px; }
+.files td.edit			{ width:16px; min-width:10px; padding-right:0px; }
 .grid th.uri,
 .grid td.uri				{ display:none; }
 .grid th.order,
@@ -624,19 +631,20 @@ table.grid thead .order,
 	margin:11px;
 }
 
-/*.thumbs .file .toolbar {
+.thumbs .file .toolbar {
 	margin:0px;
 	visibility: hidden;
 	}
-.thumbs .file:hover .toolbar {
+.thumbs .file:hover .toolbar,
+.thumbs .file.selected .toolbar {
 	visibility:visible;
 	}
-*/
+
 
 .thumbs .file .thumb {
 	width:100px;
 	height: 100px;
-	margin:0px 0px 0px 9px;
+	margin:0px;
 	text-align: center;
 	}
 	.thumbs .file .thumb .thumb img {
