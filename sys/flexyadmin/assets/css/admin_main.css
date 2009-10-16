@@ -619,7 +619,7 @@ table.grid thead .order,
 	border:solid 1px #FFFFFF;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
-	cursor:pointer;
+/*	cursor:pointer;*/
 	}
 
 .thumbs .file div {
@@ -887,11 +887,11 @@ input.button:hover {
 .form_field ul {
 	float:left;
 	display:block;
-	min-width:25px;
+	min-width:29px;
 /*	max-width:50px;*/
-	min-height:25px;
+	min-height:27px;
 	margin: 0px 0px 4px 0px;
-	padding:0px 0px 2px 0px;
+	padding:2px 2px 4px 2px;
 	border:solid 1px #DDEEAA;
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
@@ -913,7 +913,7 @@ input.button:hover {
 	float:left;
 	top:0px;
 	margin:0px 1px 0px 0px;
-	padding:1px;
+	padding:2px;
 	height:25px;
 	max-width:50px;
 	cursor:pointer;

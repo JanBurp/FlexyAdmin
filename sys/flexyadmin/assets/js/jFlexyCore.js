@@ -19,8 +19,8 @@ $(document).ready(function() {
 	isSortable=false;
 	//
 
-	if (isGrid) doGrid();
-	if (isForm) doForm();
+	if (isGrid || isFile) doGrid();
+	if (isForm) 					doForm();
 
 	//
 	// Some UI things
