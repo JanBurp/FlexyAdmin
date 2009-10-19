@@ -260,28 +260,18 @@ class File_manager Extends Model {
 	}
 
 function thumb($attr,$index=FALSE) {
-	if (is_array($attr)) {
+	if (is_array($attr))
 		$a=$attr;
-	}
 	else {
 		$a['src']=$attr;
 		$a['alt']=$attr;
 		$a['title']=$attr;
 	}
+	$a['src']=$a['path'].'/'.$a['src'];
 	if (empty($a['alt'])) $a['alt']=$a['src'];
 
-	if (!empty($a['height']) and !empty($a['width'])) {
-		$size="(".$a['width']."x".$a['height'].")";
-	}
-	elseif (empty($a['height'])) {
-		$size="(w".$a['width'].")";
-	}
-	elseif (empty($a['width'])) {
-		$size="(h".$a['height'].")";
-	}
-
-	$thumbPath="site/assets/_thumbs";
-	$thumb=$thumbPath."/".$size."__".str_replace("/","__",$a['src']);
+	$thumbPath=$this->config->item('THUMBCACHE');
+	$thumb=$thumbPath.pathencode($a['src']);
 	if (file_exists($thumb)) {
 		$a['src']=$thumb;
 	}
@@ -289,16 +279,10 @@ function thumb($attr,$index=FALSE) {
 		/**
 		 * Create new thumb, if its bigger, else make a copy with thumb name
 		 */
-		$orgSize=getimagesize($a['src']);
-		if ($a['width']>=$orgSize[0] and $a['height']>=$orgSize[1]) {
-			$config['width'] = $orgSize[0];
-			$config['height'] = $orgSize[1];
-		}
-		else {
-			$config['width'] = $a['width'];
-			$config['height'] = $a['height'];
-		}
-		$config['image_library'] = 'gd2';
+		$thumbSize=$this->config->item('THUMBSIZE');
+		$config['width'] = $thumbSize[0];
+		$config['height'] = $thumbSize[1];
+		// $config['image_library'] = 'gd2';
 		$config['source_image'] = $a['src'];
 		$config['maintain_ratio'] = TRUE;
 		$config['new_image'] = $thumb;
@@ -354,10 +338,10 @@ function thumb($attr,$index=FALSE) {
 
 					// icon
 					if ($isImg) {
-						$img=$this->map."/".$name;
-						$cachedThumb=$this->config->item('THUMBCACHE').pathencode($img);
-						if (file_exists($cachedThumb)) $img=$cachedThumb;
-						$icon=div(array("class"=>"thumb")).img(array("src"=>$img,"alt"=>$name,"title"=>$name,"class"=>"zoom","zwidth"=>$imgSize[0],"zheight"=>$imgSize[1])).end_div();
+						// $img=$this->map."/".$name;
+						// $cachedThumb=$this->config->item('THUMBCACHE').pathencode($img);
+						// if (file_exists($cachedThumb)) $img=$cachedThumb;
+						$icon=div(array("class"=>"thumb")).$this->thumb(array("src"=>$name,"path"=>$this->map,"alt"=>$name,"title"=>$name,"class"=>"zoom","zwidth"=>$imgSize[0],"zheight"=>$imgSize[1])).end_div();
 					} elseif ($isFlash) {
 						$icon=div(array("class"=>"flash")).icon("flash $name",$name,"zoom","src=\"".$this->map."/".$name."\" zwidth=\"".$imgSize[0]."\" zheight=\"".$imgSize[1]."\"")._div(); //flash($this->map."/".$name).end_div();
 					} elseif (in_array($type,$mp3Types)) {
