@@ -111,6 +111,8 @@ class Filemanager extends AdminController {
 			if (!empty($cfg) and $right=$this->_has_rights($path)) {
 				$this->load->helper('html');
 				$this->load->model("file_manager");
+				$this->load->library('image_lib');
+				
 				$this->load->model("grid");
 				$this->lang->load("help");
 				$this->_add_js_variable("help_filter",$this->_add_help(langp('grid_filter')));
@@ -121,6 +123,7 @@ class Filemanager extends AdminController {
 				$types=$cfg['str_types'];
 				$uiName=$cfg['str_ui_name'];
 				$files=read_map($map);
+				
 				/**
 				 * update img/media_lists
 				 */
@@ -298,7 +301,6 @@ class Filemanager extends AdminController {
 		}
 		redirect(api_uri('API_filemanager_view',pathencode($path)));
 	}
-
 
 }
 
