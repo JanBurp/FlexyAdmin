@@ -413,6 +413,7 @@ function doGrid() {
 			});
 			// reset style
 			$("table.grid tbody").attr("style","");
+			isSortable=false;
 		}
 		
 		//
