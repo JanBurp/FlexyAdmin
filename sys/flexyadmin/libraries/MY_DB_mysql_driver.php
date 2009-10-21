@@ -250,22 +250,25 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 						$selectFields[]=$table.".".$field;
 					else 
 						$selectFields[]=$field;
+					
 					// is it a foreign key? Yes: add join and selectfield(s)
 					/**
 					 * TODO: check if this join allready exists: set by db->join();
 					 */
 					if (isset($foreignTables[$field])) {
 						$item=$foreignTables[$field];
-						$this->join($item["table"], $item["table"].".$this->pk = ".$table.".".$item["key"], 'left');
+						$joinTable=rtrim($item["table"],'_'); // Make sure self relations are possible
+						$joinAsTable=$item["table"];
+						$this->join($joinTable.' '.$joinAsTable, $joinAsTable.".$this->pk = ".$table.".".$item["key"], 'left');
 						// add abstract or all foreign fields?
 						if ($this->abstracts) {
-							$abstractField=$this->get_abstract_field($item["table"],$field."__");
+							$abstractField=$this->get_abstract_field($joinAsTable,$field."__");
 							$selectFields[]=$abstractField;
 						}
 						else {
-							$forFields=$this->list_fields($item["table"]);
+							$forFields=$this->list_fields($joinTable);
 							foreach($forFields as $key=>$f) {
-								$selectFields[]= $item["table"].".".$f." AS ".$item["table"]."__".$f;
+								$selectFields[]= $joinAsTable.".".$f." AS ".$joinAsTable."__".$f;
 							}
 						}
 					}
@@ -274,7 +277,10 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				$select=$selectFields;
 			}
 		}
-
+		
+		// trace_($this->ar_select);
+		// trace_($this->ar_join);
+		
 		/**
 			* Select, but first unselect the dont select fields
 			*/
@@ -487,11 +493,13 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		if ($this->many) {
 			$manyTables=$this->get_many_tables($table);
 			if (count($manyTables)>0) {
+				// loop through all results to add the add_many data
 				foreach($result as $id=>$row) {
+					// loop throught all many tabels to add the many data
 					foreach($manyTables as $rel=>$jTable) {
 						$result[$id][$rel]=array();
 						$rel=$jTable["rel"];
-						$join=$jTable["join"];
+						$join=rtrim($jTable["join"],'_');
 						if ($this->abstracts) {
 							$this->select($join.".".pk());
 							$this->select($this->get_abstract_field($join));
@@ -502,6 +510,10 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 						$this->order_by($rel.'.id');
 						$query=$this->get();
 						$resultArray=$query->result_array();
+						// if (!empty($resultArray)) {
+						// 	trace_($jTable);
+						// 	trace_($resultArray);
+						// }
 						foreach($resultArray as $res) {
 							$result[$id][$rel][$res[pk()]]=$res;
 						}
@@ -656,19 +668,20 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 * @return string Result SQL
 	 */
 		function get_abstract_field($table,$asPre="") {
+			$cleanTable=rtrim($table,'_'); // make sure self relation is possible
 			$CI=& get_instance();
 			$abFields=array();
 			/**
 			 * First check if abstract fields are set for this table
 			 */
-			$f=$CI->cfg->get('CFG_table',$table,"str_abstract_fields");
-			if (isset($f)) $abFields=explode_pre(",",$f,$table.".");
+			$f=$CI->cfg->get('CFG_table',$cleanTable,"str_abstract_fields");
+			if (isset($f)) $abFields=explode_pre(",",$f,$cleanTable.".");
 
 			/**
 			 * If not set: Auto abstract fields according to prefixes
 			 */
 			if (empty($abFields)) {
-				$allFields=$this->list_fields($table);
+				$allFields=$this->list_fields($cleanTable);
 				$preTypes=$CI->config->item('ABSTRACT_field_pre_types');
 				$nr=$CI->config->item('ABSTRACT_field_max');
 				$loop=true;
@@ -686,7 +699,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			 * If not set: Auto abstract fields according to db types
 			 */
 			if (empty($abFields)) {
-				$fieldData=$this->field_data($table);
+				$fieldData=$this->field_data($cleanTable);
 				$types=$CI->config->item('ABSTRACT_field_types');
 				$nr=$CI->config->item('ABSTRACT_field_max');
 				$loop=true;
@@ -704,7 +717,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			 * If still nothing set... just get the first fields
 			 */
 			if (empty($abFields)) {
-				$allFields=$this->list_fields($table);
+				$allFields=$this->list_fields($cleanTable);
 				$nr=$CI->config->item('ABSTRACT_field_max');
 				for ($n=0; $n<$nr; $n++) {
 					array_push($abFields,$table.".".each($allFields));
@@ -745,12 +758,13 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			$tables = $this->list_tables();
 			$tables = filter_by($tables,$like);
 			foreach ($tables as $rel) {
+				$relFields=$this->list_fields($rel);
 				$out[$rel]["this"]=$table;
 				$out[$rel]["rel"] =$rel;
-				$join=join_table_from_rel_table($rel);
-				$out[$rel]["join"]=$join;
-				$out[$rel]["id_this"]="id_".remove_prefix($table);
-				$out[$rel]["id_join"]="id_".remove_prefix($join);
+				// $join=join_table_from_rel_table($rel);
+				$out[$rel]["join"]=foreign_table_from_key($relFields[2]);
+				$out[$rel]["id_this"]=$relFields[1];
+				$out[$rel]["id_join"]=$relFields[2];
 			}
 			// trace_($out);
 			return $out;
@@ -778,14 +792,15 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 */
 		function get_options($table,$optionsWhere="") {
 			$out=array();
+			$cleanTable=rtrim($table,'_');
 			$CI=&get_instance();
 			$this->select($this->pk);
-			$this->select($this->get_abstract_field($table));
-			$this->_set_standard_order($table,$CI->config->item('ABSTRACT_field_name'));
+			$this->select($this->get_abstract_field($cleanTable));
+			$this->_set_standard_order($cleanTable,$CI->config->item('ABSTRACT_field_name'));
 			if (!empty($optionsWhere)) {
 				$this->ar_where[]=$optionsWhere;
 			}
-			$query=$this->get($table);
+			$query=$this->get($cleanTable);
 			foreach($query->result_array() as $row) {
 				$out[$row[$this->pk]]=$row[$CI->config->item('ABSTRACT_field_name')];
 			}
@@ -805,8 +820,9 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			if (isset($foreignTables)) {
 				$CI=&get_instance();
 				foreach ($foreignTables as $key => $forTable) {
-					$optionsWhere=$CI->cfg->get('CFG_table',$forTable['table'],'str_options_where');
-					$options[$key]=$this->get_options($forTable["table"],$optionsWhere);
+					$cleanTable=rtrim($forTable['table'],'_');
+					$optionsWhere=$CI->cfg->get('CFG_table',$cleanTable,'str_options_where');
+					$options[$key]=$this->get_options($cleanTable,$optionsWhere);
 				}
 			}
 			if (count($options)>0) {
