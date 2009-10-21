@@ -124,7 +124,10 @@ class Show extends AdminController {
 						if ($tableInfo['b_grid_add_many']) $this->db->add_many();
 						$this->db->max_text_len(250);
 						$data=$this->db->get_result($table);
+
+						// trace_('#show#'.$this->db->last_query());
 						// trace_($data);
+
 						if (empty($data)) {
 							/**
 							 * if no data, start an input form
@@ -238,14 +241,19 @@ class Show extends AdminController {
 					$this->db->where("user",$restrictedToUser);
 					$this->db->dont_select("user");
 				}
-				if ($id!="") $this->db->where($table.".".pk(),$id);
+				if ($id!="") {
+					$this->db->where($table.".".pk(),$id);
+				}
 				$data=$this->db->get_result($table);
+				// trace_('#show#'.$this->db->last_query());
 				// trace_($data);
 				$options=el("options",$data);
 				$multiOptions=el("multi_options",$data);
 				$data=current($data);
 			}
-						
+								
+								
+									
 			/**
 			 * if data: first render data for the form class, then put data in form
 			 */

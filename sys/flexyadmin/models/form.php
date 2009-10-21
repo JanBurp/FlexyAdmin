@@ -436,11 +436,16 @@ class Form Extends Model {
 				 * If Joins, update them to
 				 */
 				if (!empty($joins)) {
+					// trace_($joins);
 					foreach($joins as $name=>$value) {
 						// first delete current selection
 						$relTable=$name;
 						$thisKey=this_key_from_rel_table($relTable);
 						$joinKey=join_key_from_rel_table($relTable);
+						if ($thisKey==$joinKey) {
+							// self relation
+							$joinKey.="_";
+						}
 						$this->db->where($thisKey,$id);
 						$this->db->delete($relTable);
 						// insert new selection
