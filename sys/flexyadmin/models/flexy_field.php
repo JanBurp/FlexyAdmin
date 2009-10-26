@@ -388,7 +388,7 @@ class Flexy_field extends Model {
 			// 	$uri=api_uri('API_confirm',$this->table.':'.$this->data,'info',$this->extraInfoId);
 			// else
 			// 	$uri=api_uri('API_confirm',$this->table.':'.$this->data);
-			$out.=help(icon("delete inactive"),lang('grid_select'));
+			$out.=help(icon("select"),lang('grid_select')).help(icon("delete item"),lang('grid_delete'));
 		}
 		return $out;
 	}

@@ -158,38 +158,21 @@ function doGrid() {
 		// Selecting multiple
 		// 
 
-		// if (isFile && isThumbs) {
-		// 	$('table.thumbs tbody td:first').selectable({
-		// 		cancel:'img.zoom',
-		// 		stop: function(event,ui){
-		// 			if ($(this).children('div.ui-selected').length>0)
-		// 				$('table.thumbs thead div.delete').removeClass('inactive');
-		// 			else
-		// 				$('table.thumbs thead div.delete').addClass('inactive');
-		// 		} 
-		// 	});
-		// }
-		// else {
-		// 	$('table.grid:not(.thumbs) tbody').selectable({
-		// 		cancel:'td.id, td.order, td.url, td.b, td.thumb',
-		// 		stop: function(event,ui){
-		// 			if ($(this).children('tr.ui-selected').length>0)
-		// 				$('table.grid th div.delete').removeClass('inactive');
-		// 			else
-		// 				$('table.grid th div.delete').addClass('inactive');
-		// 		}
-		// 	});
-		// }
-
+		// init buttons
 		if (isFile && isThumbs) {
 			delButton=$('table.grid thead div.delete');
 			delButtons=$('table.grid tbody div.file div.toolbar span div.delete');
+			selButton=$('table.grid thead div.select');
+			selButtons=$('table.grid tbody div.file div.toolbar span div.select');
 		}
 		else {
 			delButton=$('table.grid thead div.delete');
 			delButtons=$('table.grid tbody tr div.delete');
+			selButton=$('table.grid thead div.select');
+			selButtons=$('table.grid tbody tr div.select');
 		}
 
+		// set state of delete selection button
 		function lightDeleteButton() {
 			var active=0;
 			if (isFile && isThumbs)
@@ -201,27 +184,55 @@ function doGrid() {
 			else
 				$(delButton).addClass('inactive');
 		}
-		$(delButtons).toggle(
-			function(){
-				$(this).removeClass('inactive');
+
+		// toggle state of Select buttons
+		$(selButtons).click(function(){
+			if ($(this).hasClass('selected')) {
+				$(this).removeClass('selected');
+				$(this).parents('.selected').removeClass('selected');
+			}
+			else {
+				$(this).addClass('selected');
 				if (isFile && isThumbs)
 					$(this).parents('div.file').addClass('selected');
 				else
 					$(this).parents('tr').addClass('selected');
-				lightDeleteButton();
-			},
-			function(){
-				$(this).addClass('inactive')
-				$(this).parents('.selected').removeClass('selected');
-				lightDeleteButton();
 			}
-		);
+			lightDeleteButton();
+		});
+
+		// Select or Deselect all
+		$(selButton).click(function(){
+			$(selButtons).toggleClass('selected');
+			if (isFile && isThumbs)
+				$('.grid tbody div.file').toggleClass('selected');
+			else
+				$('.grid tbody tr').toggleClass('selected');
+			lightDeleteButton();
+		});
+		
+
 
 		//
 		// Delete Confirm Dialog
 		//
 		
-		$("table.grid thead div.delete").add('table.thumbs thead div.delete').addClass('inactive').click(function () {
+		$("table.grid thead div.delete").add('table.thumbs thead div.delete').addClass('inactive').add(delButtons).click(function () {
+			if ($(this).hasClass('item')) {
+				// deselect others
+				$(selButtons).removeClass('selected');
+				$('.grid .selected').removeClass('selected');
+				// select current
+				if (isFile && isThumbs) {
+					$(this).parents('.toolbar').find('.select').addClass('selected');
+					$(this).parents('.file').addClass('selected');
+				}
+				else {
+					$(this).parents('td').find('.select').addClass('selected');
+					$(this).parents('tr').addClass('selected');
+				}
+				lightDeleteButton();
+			}
 			clean_message();
 			var id = new Array();
 			var name = new Array();
