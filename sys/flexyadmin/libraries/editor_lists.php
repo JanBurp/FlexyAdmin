@@ -66,6 +66,7 @@ class Editor_lists {
 			// add uri links
 			if ($CI->cfg->get('CFG_editor','b_add_internal_links')) {
 				$menuTable=$CI->cfg->get('CFG_configurations','str_menu_table');
+				if ($CI->db->table_exists($menuTable.'_result')) $menuTable=$menuTable.'_result'; // for menu automation
 				if (!empty($menuTable) and $CI->db->table_exists($menuTable)) {
 					$menuFields=$CI->db->list_fields($menuTable);
 					$CI->db->select('id,uri,order');

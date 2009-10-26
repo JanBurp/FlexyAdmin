@@ -88,6 +88,8 @@ class Menu {
 		$CI =& get_instance();
 		if (empty($table)) {
 			$table=$CI->cfg->get('CFG_configurations',"str_menu_table");
+			$resultTable=$table.'_result';
+			if ($CI->db->table_exists($resultTable)) $table=$resultTable; // Menu automation
 		}
 		// select fields
 		$fields=$CI->db->list_fields($table);
