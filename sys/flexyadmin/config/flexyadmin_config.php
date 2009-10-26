@@ -471,11 +471,6 @@ $config['FIELDS_special'] = array(
 												"form"				=> "function_primary_key",
 												"validation"	=> "trim|integer|required",
 											),
-	// "ids"				=> array(
-	// 											"grid"				=> "function_primary_key",
-	// 											"form"				=> "function_primary_key",
-	// 											"validation"	=> "trim|integer|required",
-	// 										),
 	"user"			=> array(
 												"grid"				=> "function_user",
 												"form"				=> "function_user",

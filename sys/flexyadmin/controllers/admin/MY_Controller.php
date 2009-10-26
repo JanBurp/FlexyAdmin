@@ -439,6 +439,9 @@ class BasicController extends MY_Controller {
 		}
 		
 		// common after delete
+		
+		// check if there is Menu Automation and some data has changed, if so create automenu
+		$this->_resultMenu($table);
 
 		// Check if uri has been deleted, delete all internal links with new uri and update link list
 		if (isset($oldData["uri"]) or (isset($oldData["url_url"]) and $table==$this->cfg->get('CFG_editor','table')) ) {
@@ -450,9 +453,7 @@ class BasicController extends MY_Controller {
 			$this->load->library("editor_lists");
 			$this->editor_lists->create_list("links");
 		}
-
 	}
-
 
 	function _get_parent_uri($table,$uri,$parent) {
 		if ($parent!=0) {
@@ -516,7 +517,9 @@ class BasicController extends MY_Controller {
 			$this->load->library("editor_lists");
 			$this->editor_lists->create_list("links");
 		}
-		
+
+		// check if there is Menu Automation and some data has changed, if so create automenu
+		$this->_resultMenu($table);
 		
 		// Check if txt fields has invalid HTML tags
 		$validHTML=$this->cfg->get('CFG_editor','str_valid_html');
@@ -537,6 +540,83 @@ class BasicController extends MY_Controller {
 			}
 		}
 
+	}
+	
+	function _setResultMenuItem($resultMenu,$item,$setId=false) {
+		if (!$setId) {
+			unset($item['id']);
+			unset($item['self_parent']);
+		}
+		foreach ($item as $key => $value) {
+			if ($this->db->field_exists($key,$resultMenu)) $this->db->set($key,$value);
+		}
+	}
+	
+	function _resultMenu($table) {
+		$menuTable=$this->cfg->get('CFG_configurations','str_menu_table');
+		$automationTable=$menuTable.'_automation';
+		$resultMenu=$menuTable.'_result';
+		if ($this->db->table_exists($automationTable)) {
+			$checkTables=array();
+			$checkTables[]=$menuTable;
+			$checkTables[]=$automationTable;
+			$checkTables[]=$resultMenu;
+			$automationData=$this->db->get_results($automationTable);
+			foreach ($automationData as $aData) {
+				$checkTables[]=$aData['table'];
+			}
+			// check if some table content has changed
+			if (in_array($table,$checkTables)) {
+				// Create auto menu
+				$this->db->truncate($resultMenu);
+				// First from normal menu
+				$data=$this->db->get_results($menuTable);
+				foreach ($data as $item) {
+					$this->_setResultMenuItem($resultMenu,$item,true);
+					$this->db->set('str_table',$menuTable);
+					$this->db->set('str_uri',$item['uri']);
+					if ($item['self_parent']==0) $lastOrder=$item['order'];
+					$this->db->insert($resultMenu);
+				}
+				// Loop through automation
+				foreach ($automationData as $key => $value) {
+					// level 1
+					$level1Table=$value['field_group_by'];
+					$level1Table=explode('.',$level1Table);
+					$level1Table=foreign_table_from_key($level1Table[1]);
+
+					// level 1 entries
+					$level1=$this->db->get_result($level1Table);
+					foreach ($level1 as $item) {
+						$this->_setResultMenuItem($resultMenu,$item);
+						$this->db->set('order',$lastOrder++);
+						$this->db->set('self_parent',0);
+						$this->db->set('str_table',$level1Table);
+						$this->db->set('str_uri',$item['uri']);
+						$this->db->insert($resultMenu);		
+
+						// level 2 entries
+						$this->db->where($value['field_group_by'],$item['id']);
+						$level2=$this->db->get_result($value['table']);
+						$subOrder=0;
+						$self_parent=$this->db->insert_id();
+						foreach ($level2 as $item2) {
+							$this->_setResultMenuItem($resultMenu,$item2);
+							$this->db->set('order',$subOrder++);
+							$this->db->set('self_parent',$self_parent);
+							$this->db->set('str_table',$value['table']);
+							$this->db->set('str_uri',$item2['uri']);
+							$this->db->insert($resultMenu);		
+						}
+									
+					}
+				}
+			
+				// update linklist etc
+				$this->load->library("editor_lists");
+				$this->editor_lists->create_list("links");
+			}
+		}		
 	}
 
 }
