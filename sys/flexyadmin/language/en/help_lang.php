@@ -8,8 +8,9 @@ $lang['help_no_help']				= 'Sorry, no help found. Please contact your webmaster.
 $lang['grid_new'] 					= '<p>Add new item to %s.</p>';
 $lang['grid_filter'] 				= '<p>Fast search</p>';
 $lang['grid_edit']					= '<p>Edit</p>';
-$lang['grid_delete']				= '<p>Delete Selection</p>';
+$lang['grid_delete']				= '<p>Delete this item</p>';
 $lang['grid_select']				= '<p>Select this item</p>';
+$lang['grid_select_all']		= '<p>Select all items</p>';
 $lang['grid_order']					= '<p>Move</p>';
 
 $lang['file_delete']				= '<p>Remove this file</p>';
