@@ -1215,3 +1215,6 @@ div#help_messages {
 iframe {
 	overflow:hidden;
 }
+.mceEditor iframe {
+	overflow:auto;
+}
