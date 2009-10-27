@@ -102,7 +102,7 @@ if (!isset($config['base_url'])) {
 /*
  * Check if localhost and config_local.php exists, load local settings.
  */
-if (IS_LOCALHOST and file_exists('config_local.php')) {
+if (IS_LOCALHOST and file_exists('site/config/config_local.php')) {
 	require("config_local.php");
 }
 
