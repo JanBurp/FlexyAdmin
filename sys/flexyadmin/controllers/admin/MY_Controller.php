@@ -698,7 +698,7 @@ class AdminController extends BasicController {
 
 	function _show_table_menu($tables,$type) {
 		$a=array();
-		$tables=filter_by($tables,$type);
+		$tables=filter_by($tables,$type."_");
 		$excluded=$this->config->item('MENU_excluded');
 		$cfgTables=$this->cfg->get("CFG_table");
 		// trace_($cfgTables);
