@@ -1,7 +1,7 @@
 <?
 // Minimized versions of Javascript & CSS files (see http://refresh-sf.com/yui/)
 $minimize=FALSE;
-$minimize=TRUE;
+// $minimize=TRUE;
 if ($minimize) {
 	$js='.min.js';
 	$css='.min.css';
@@ -11,6 +11,7 @@ else{
 	$css='.css';
 }
 
+$show_type=trim($show_type);
 ?>
 
 
@@ -52,19 +53,20 @@ else{
 	<!-- jQuery -->
 	<script language="javascript" type="text/javascript" src="sys/jquery/jquery-1.3.2.min.js"></script>
 	<script language="javascript" type="text/javascript" src="sys/jquery/ui/jquery-ui-1.7.2.custom.min.js"></script>
-	<? if ($show_type=="grid" or $show_type=="filemanager list" or $show_type=="filemanager icons"): ?>
+	<? if ($show_type=="grid" or $show_type=="filemanager list" or $show_type=="filemanager icons" or $show_type=="grid graph stats"): ?>
 		<!-- grid Scripts -->
-		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/filterable/jquery.filterable.js"></script>
+		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/filterable/jquery.filterable<?=$js?>"></script>
 		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/tablesorter/jquery.tablesorter.min.js"></script>
-		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/flipv/cvi_text_lib.js"></script>
-		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/flipv/jquery.flipv.js"></script>
+		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/flipv/cvi_text_lib<?=$js?>"></script>
+		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/flipv/jquery.flipv<?=$js?>"></script>
 	<? endif; ?>
+
 
 	<? if ($show_type=="form"): ?>
 		<!-- form Scripts -->
-		<script language="javascript" type="text/javascript" src="sys/jquery/ui/i18n/ui.datepicker-nl.js"></script>
-		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/timepicker/timepicker.js"></script>
-		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/form/jquery.form.js"></script>
+		<script language="javascript" type="text/javascript" src="sys/jquery/ui/i18n/ui.datepicker-nl<?=$js?>"></script>
+		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/timepicker/timepicker<?=$js?>"></script>
+		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/form/jquery.form<?=$js?>"></script>
 	
 		<? if ($show_editor): ?>
 			<!-- editor Scripts -->
