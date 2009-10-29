@@ -564,6 +564,13 @@ class BasicController extends MY_Controller {
 			$automationData=$this->db->get_results($automationTable);
 			foreach ($automationData as $aData) {
 				$checkTables[]=$aData['table'];
+				$foreignTable=$aData['field_group_by'];
+				$foreignTable=explode('.',$foreignTable);
+				if (isset($foreignTable[1])) {
+					$foreignTable=$foreignTable[1];
+					$foreignTable=foreign_table_from_key($foreignTable);
+					$checkTables[]=$foreignTable;
+				}
 			}
 			// check if some table content has changed
 			if (in_array($table,$checkTables)) {
