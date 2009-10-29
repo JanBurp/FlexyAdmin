@@ -94,6 +94,7 @@ function doForm() {
 		src=$(this).children('img:first').attr('src');
 		$(this).parent('ul').parent('div.media').children('ul.values').empty();
 		$(this).parent('ul').parent('div.media').children('ul.values').append('<li><img class="zoom" src="'+src+'" alt="'+src+'" title="'+src+'" /></li>');
+		src=pathdecode(src);
 		src=src.substr(src.lastIndexOf('/')+1);
 		$(this).parent('ul').parent('div.media').children('input:first').attr('value',src);
 	});		
@@ -139,6 +140,7 @@ function doForm() {
 				$(this).children('li').each(function(){
 					src=$(this).children('img:first').attr('src');
 					if (src!=undefined) {
+						src=pathdecode(src);
 						src=src.substr(src.lastIndexOf('/')+1);
 						value+='|'+src;
 					}

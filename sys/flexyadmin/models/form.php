@@ -182,6 +182,7 @@ class Form Extends Model {
 	function prepare_data($name,$value,$id) {
 		$out=$value;
 		$error="";
+		// trace_($value);
 		if (is_array($value)) {
 			// multi options (string)
 			$hidden=$this->input->post($name.'__hidden');
