@@ -50,6 +50,7 @@ class Menu {
 		$this->set_title_field();
 		$this->set_class_field();
 		$this->set_visible_field();
+		$this->set_clickable_field();
 		$this->set_parent_field();
 		$this->set_extra_field();
 		$this->set_attributes();
@@ -73,6 +74,9 @@ class Menu {
 	}
 	function set_visible_field($visible="b_visible") {
 		$this->fields["visible"]=$visible;
+	}
+	function set_clickable_field($clickable="b_clickable") {
+		$this->fields["clickable"]=$clickable;
 	}
 	function set_parent_field($parent="self_parent") {
 		$this->fields["parent"]=$parent;
@@ -107,6 +111,7 @@ class Menu {
 				$thisItem=array();
 				$thisItem["id"]=$item[pk()];
 				if (isset($item[$this->fields["uri"]]))			$thisItem["uri"]=$item[$this->fields["uri"]];	else $thisItem["uri"]=$item[$this->fields["title"]];
+				if (isset($item[$this->fields["clickable"]]) && $item[$this->fields["clickable"]]==false) $thisItem["uri"]='';
 				if (isset($item[$this->fields["class"]])) 	$thisItem["class"]=str_replace('|',' ',$item[$this->fields["class"]]);
 				if (isset($item[$this->fields["parent"]])) 	$parent=$item[$this->fields["parent"]]; else $parent="";
 				
@@ -293,11 +298,11 @@ class Menu {
 			}
 			if (isset($item[$this->urlField])) {
 				$thisUri=$item[$this->urlField];
-				if (!empty($preUri) and $this->urlField=="uri") $thisUri=$preUri."/".$thisUri;
+				if (!empty($preUri) and !empty($thisUri) and $this->urlField=="uri") $thisUri=$preUri."/".$thisUri;
 				// set class
 				$cName=strtolower(str_replace(" ","_",$name));
-				$link=$this->tmp($this->tmpUrl,$thisUri);
-				// trace_($link);
+				$link="";
+				if (!empty($thisUri))	$link=$this->tmp($this->tmpUrl,$thisUri);
 				$itemAttr=array();
 				$itemAttr['class']=$attr['class'];
 				$itemAttr["class"]="$cName pos$pos lev$level";
@@ -327,7 +332,12 @@ class Menu {
 					unset($extraAttr['sub']);
 					$itemAttr=array_merge($itemAttr,$extraAttr);
 					// trace_($itemAttr);
-					$out.=anchor($link, $showName, $itemAttr);
+					if (empty($link)) {
+						$itemAttr['class'].=' nonClickable';
+						$out.=span($itemAttr).$showName._span();
+					}
+					else
+						$out.=anchor($link, $showName, $itemAttr);
 				}
 				if (isset($item["sub"]))
 					$out.=$this->render($item["sub"],"$cName",$level+1,$thisUri);
