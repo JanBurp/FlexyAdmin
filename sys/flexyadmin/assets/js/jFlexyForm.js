@@ -33,7 +33,7 @@ function doForm() {
 	
 	
 	//
-	// Remove double selections
+	// Remove double selections (last updates / ordered by name)
 	//
 	$("div.image_dropdown select.medias optgroup:first option:selected").attr('selected','');
 	
@@ -150,6 +150,7 @@ function doForm() {
 			}
 		}
 	});
+
 
 	// Ordered Lists selecting and removing by click
 	// function resetListValues(thisList) {

@@ -21,8 +21,8 @@ function show_thumb($attr) {
 	if ($imgSize) {
 		$a["zwidth"]=$imgSize[0];
 		$a["zheight"]=$imgSize[1];
-		if (!isset($a["title"])) $a["title"]=$a["src"];
-		if (!isset($a["class"])) $a["class"]="zoom"; else $a["class"].=" zoom";
+		if (!isset($a["alt"]))		$a["alt"]=$a["src"];
+		if (!isset($a["class"]))	$a["class"]="zoom"; else $a["class"].=" zoom";
 		if ($ext=="swf") {
 			$src=$a["src"];
 			unset($a["src"]);

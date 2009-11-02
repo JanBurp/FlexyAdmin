@@ -23,7 +23,7 @@ $(document).ready(function() {
 	if (isForm) 					doForm();
 
 	//
-	// Some UI things
+	// Vertical Text
 	//
 	$('.verticalText').each(function(){
 		w=$(this).width();
@@ -31,12 +31,19 @@ $(document).ready(function() {
 			$(this).flipv().addClass('verticalShow');
 		}
 	});
-	$('img.zoom').add('.flash .zoom').click(function() {
+
+	//
+	// IMG zoom
+	//
+	showAutoZoom();
+	
+	$('form ul li img.zoom').add('form ul li .flash .zoom').unbind('click').dblclick(function(){
 		zoom_dialog($(this));
 	});
-	$('form ul li img.zoom').add('form ul li .flash .zoom').unbind('click');
 	
-	
+	//
+	// Help
+	//
 	showHelpItems();
 	
 
@@ -101,6 +108,39 @@ function showHelpItems() {
   });
 };
 
+function showAutoZoom() {
+	var ShowDelay;
+	var HideDelay;
+	$('img.zoom').add('.flash .zoom').not('.thumbs img.zoom').not('.thumbs .flash .zoom').mouseenter(function(){
+		obj=$(this);
+		ShowDelay=setTimeout( function() {		
+			zoomThumb=$(obj).clone().addClass('autoZoom');
+			offsetThumb=$(obj).offset();
+			if ($(obj).parent('li').parent('ul.values').length>0) {
+				leftThumb=offsetThumb.left-25 + 'px';
+				topThumb=offsetThumb.top-107 + 'px';
+			}
+			else {
+				leftThumb=offsetThumb.left-25 + 'px';
+				topThumb=offsetThumb.top+30 + 'px';
+			}
+			$('body').append(zoomThumb);
+			$('.autoZoom').css({left:leftThumb, top:topThumb}).fadeIn(150).mouseleave(function(){
+				$(this).remove();
+			}).click(function() {
+				zoom_dialog($(this));
+			});
+		},200);
+	}).mouseleave(function() {
+		clearTimeout(ShowDelay);
+		$('.autoZoom').fadeOut(150,function(){
+			$(this).remove();
+		});
+	});
+	$('img.zoom').add('.flash .zoom').click(function() {
+		zoom_dialog($(this));
+	});
+}
 
 function zoom_dialog(obj) {
 	var src,w,h,ext;
