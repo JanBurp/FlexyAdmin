@@ -631,7 +631,7 @@ class Form Extends Model {
 					$out.='<ul class="choices">';
 					foreach($options as $img) {
 						$image=$img['name'];
-						if (!in_array($image,$medias))	$out.='<li>'.show_thumb(array("src"=>$field["path"]."/".$image,"class"=>"media",'title'=>$image)).'</li>';
+						if (!in_array($image,$medias))	$out.='<li>'.show_thumb(array("src"=>$field["path"]."/".$image,"class"=>"media",'alt'=>$image)).'</li>';
 					}
 					$out.='</ul>';					
 				}
