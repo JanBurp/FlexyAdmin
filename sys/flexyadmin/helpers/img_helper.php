@@ -30,6 +30,7 @@ function show_thumb($attr) {
 		}
 		else {
 			if (!isset($a["alt"])) $a["alt"]=$a["src"];
+			if (!isset($a["longdesc"])) $a["longdesc"]=$a["src"];
 			$CI=& get_instance();
 			$cachedThumb=$CI->config->item('THUMBCACHE').pathencode($a['src']);
 			if (file_exists($cachedThumb)) $a['src']=$cachedThumb;

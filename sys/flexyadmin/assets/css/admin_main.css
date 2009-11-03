@@ -481,7 +481,7 @@ tr.caption td				{ border:none; }
 
 .grid img,
 .grid embed,
-.grid .rgb					{	max-width:50px;	height:25px; margin:0px 1px 0px 0px; }
+.grid .rgb					{	min-width:25px; max-width:50px;	height:25px; max-height:25px; margin:0px 1px 0px 0px; }
 .grid div.rgb				{	width:25px;	height:25px; border:solid 1px #DEA;}
 .grid .b						{	cursor: pointer; }
 
@@ -865,11 +865,12 @@ img.autoZoom,
 img.autoZoom:hover {
 	position:absolute;
 	display:none;
-	height:100px;
 	border:solid 2px #696;
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 	z-index:999;
+	min-width:50px;
+	min-height:50px;
 }
 
 input.button {
