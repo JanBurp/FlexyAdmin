@@ -36,24 +36,22 @@ class Editor_lists {
 
 		$data=array();
 
-		$mediaTbl=$CI->config->item('CFG_table_prefix')."_".$CI->config->item('CFG_media_info');
-		if ($CI->db->table_exists($mediaTbl)) {
-			$CI->db->select("path");
-			$CI->db->where($boolField,1);
-			$query=$CI->db->get($mediaTbl);
-			foreach($query->result_array() as $row) {
-				$path=$row["path"];
-				$map=$CI->config->item('ASSETS').$path;
-				$subFiles=read_map($map);
-				$subFiles=not_filter_by($subFiles,"_");
-				$data=$data + $subFiles;
-			}
-		}
-
-		ignorecase_ksort($data);
-
 		if ($type=="downloads") {
-			// add links from links table and if set, internal links from menu table
+			
+			// add special links from tbl_site
+			$data['-- info -----------------']=NULL;
+			$tblSite=$CI->db->get_row('tbl_site');
+			if (isset($tblSite['url_url'])) {
+				$name=str_replace('http://','',$tblSite['url_url']);
+				$data[$name]=array('name'=>$name,'url'=>$tblSite['url_url']);
+			}
+			if (isset($tblSite['email_email'])) {
+				$name=$tblSite['email_email'];
+				$data[$name]=array('name'=>$name,'url'=>'mailto:'.$tblSite['email_email']);
+			}
+
+			// add links from links table
+			$data['-- links ----------------']=NULL;
 			$table=$CI->cfg->get('CFG_editor','table');
 			if ($CI->db->table_exists($table)) {
 	 			$CI->db->select("str_title,url_url");
@@ -63,8 +61,10 @@ class Editor_lists {
 					$data[$row["str_title"]]=array("url"=>$row["url_url"],"name"=>$row["str_title"]);
 				}
 			}
-			// add uri links
+			
+			// add if asked for, internal links from menu table
 			if ($CI->cfg->get('CFG_editor','b_add_internal_links')) {
+				$data['-- site links -----------']=NULL;
 				$menuTable=$CI->cfg->get('CFG_configurations','str_menu_table');
 				if ($CI->db->table_exists($menuTable.'_result')) $menuTable=$menuTable.'_result'; // for menu automation
 				if (!empty($menuTable) and $CI->db->table_exists($menuTable)) {
@@ -81,23 +81,49 @@ class Editor_lists {
 					$nameField=$CI->db->get_select_first(0);
 					foreach ($results as $key => $row) {
 						$url=$row["uri"];
-						$name="= ".$url;//$row[$nameField];
+						$name=$row[$nameField];
+						if (isset($row['self_parent']) and $row['self_parent']!=0) $name=' └ '.$name;
 						$data[$name]=array("url"=>$url,"name"=>$name);
 					}
 				}
 			}
 		}
 
+		// Media files (for download links)
+		$mediaTbl=$CI->config->item('CFG_table_prefix')."_".$CI->config->item('CFG_media_info');
+		if ($CI->db->table_exists($mediaTbl)) {
+			$data['-- downloads ----------']=NULL;
+			$CI->db->select("path");
+			$CI->db->where($boolField,1);
+			$query=$CI->db->get($mediaTbl);
+			foreach($query->result_array() as $row) {
+				$path=$row["path"];
+				$map=$CI->config->item('ASSETS').$path;
+				$subFiles=read_map($map);
+				$subFiles=not_filter_by($subFiles,"_");
+				$data=$data + $subFiles;
+			}
+		}
+
+		// ignorecase_ksort($data);
+		
 		// trace_($data);
+
 
 		// set list
 		$list="var $jsArray = new Array(";
 		if ($type=="links" or $type=="downloads") {
 			foreach($data as $name=>$link) {
-				if ($type=="downloads" and isset($link['type']))
-					$list.='["'.$link['type'].': '.$link["name"].'","'.$link["path"].'"],';
-				else
-					$list.='["'.$link["name"].'","'.$link["url"].'"],';
+				if (empty($link)) {
+					$list.='[""],';
+					$list.='["'.$name.'"],';
+				}
+				else {
+					if ($type=="downloads" and isset($link['type']))
+						$list.='["'.$link['type'].': '.$link["name"].'","'.$link["path"].'"],';
+					else
+						$list.='["'.$link["name"].'","'.$link["url"].'"],';
+				}
 			}
 		}
 		else {
