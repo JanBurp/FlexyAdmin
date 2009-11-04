@@ -15,6 +15,7 @@ class MY_Upload extends CI_Upload {
 		$this->CI=NULL;
 	}
 
+
 	function config($config) {
 		if (!isset($config['upload_path'])) 	$config['upload_path'] = assets();
 		if (!isset($config['allowed_types']))	$config['allowed_types'] = "jpg|jpeg|gif|png|mp3|wav|ogg|wma|pdf";
@@ -57,6 +58,8 @@ class MY_Upload extends CI_Upload {
 		$this->initialize($config);
 		$this->do_upload($file);
 		$this->error=$this->display_errors();
+		// trace_($this->error);
+		// trace_($_FILES);
 		if (empty($this->error)) {
 			$this->result=$this->data();
 			$this->file_name=$this->result["file_name"];
