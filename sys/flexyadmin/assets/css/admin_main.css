@@ -871,6 +871,8 @@ img.autoZoom:hover {
 	z-index:999;
 	min-width:50px;
 	min-height:50px;
+	max-width:250px;
+	max-height:250px;
 }
 
 input.button {
