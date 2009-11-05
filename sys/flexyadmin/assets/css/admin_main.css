@@ -904,18 +904,28 @@ select.media {
 	margin:0px;
 	background-color: transparent;
 }
-img.autoZoom,
-img.autoZoom:hover {
+div.zoomThumb {
 	position:absolute;
 	display:none;
+	min-width:50px;
+	min-height:70px;
+	max-width:250px;
+	max-height:270px;
+	z-index:999;
+}
+div.zoomThumb * {
+	margin:0px;
+	padding:0px;
 	border:solid 2px #696;
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
-	z-index:999;
-	min-width:50px;
-	min-height:50px;
-	max-width:250px;
-	max-height:250px;
+}
+div.zoomThumb p {
+	margin-bottom:4px;
+	padding:0px 4px 1px;	
+	background-color:#DEA;
+	color:#696;
+	font-size:12px;
 }
 
 input.button {
