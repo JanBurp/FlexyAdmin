@@ -513,7 +513,8 @@ class BasicController extends MY_Controller {
 		}
 		
 		// if new uri or url, refresh link list
-		if (empty($oldData) and ($table==$this->cfg->get('CFG_editor','table') or $this->db->field_exists("uri",$table)) ) {
+		// of if tbl_site has changed
+		if ($table=='tbl_site' or (empty($oldData) and ($table==$this->cfg->get('CFG_editor','table') or $this->db->field_exists("uri",$table)) ) ) {
 			$this->load->library("editor_lists");
 			$this->editor_lists->create_list("links");
 		}
