@@ -432,12 +432,13 @@ class Flexy_field extends Model {
 
 	function _get_tree($id,$branch="",$tree="") {
 		if (!empty($tree)) $tree="/$tree";
-		$this->db->select(array(pk(),"uri","self_parent"));
+		$this->db->select(array(pk()));
+		if ($this->db->field_exists('uri',$this->table)) $this->db->select('uri');
+		if ($this->db->field_exists('self_parent',$this->table)) $this->db->select('self_parent');
 		$this->db->where(pk(),$id);
 		$res=$this->db->get_row($this->table);
-		if (empty($branch))
-			$tree=$res["uri"].$tree;
-		if ($res["self_parent"]>0) {
+		if (empty($branch) and isset($res["uri"])) $tree=$res["uri"].$tree;
+		if (isset($res["self_parent"]) and $res["self_parent"]>0) {
 			$tree=$branch.$tree;
 			$tree=$this->_get_tree($res["self_parent"],$branch,$tree);
 		}
@@ -452,14 +453,17 @@ class Flexy_field extends Model {
 
 	// TODO: Meer self_ velden mogelijk (nu alleen nog self_parent)
 	function _self_form() {
-		$this->db->select(array(pk(),"uri","self_parent"));
+		$this->db->select(array(pk()));
+		if ($this->db->field_exists('uri',$this->table)) $this->db->select('uri');
+		if ($this->db->field_exists('self_parent',$this->table)) $this->db->select('self_parent');
 		$this->db->where(pk()." !=", $this->id);
 		$this->db->order_as_tree();
 		$res=$this->db->get_result($this->table);
 		$options=array();
 		$options[]="";
 		foreach($res as $id=>$value) {
-			$options[$id]=$this->_get_tree($value["self_parent"],"",$value["uri"]);
+			if (isset($value["uri"])) $uri=$value["uri"]; else $uri='';
+			$options[$id]=$this->_get_tree($value["self_parent"],"",$uri);
 			if (substr($options[$id],0,1)=="/") $options[$id]=substr($options[$id],1);
 		}
 		$out=$this->_standard_form_field($options);

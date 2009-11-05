@@ -112,23 +112,24 @@ img {
 	width:100%;
 	height:100%;
 	}
-#menu li a.cfg {
-	color:#966;
-}
-#menu li a.log {
-	color:#696;
-}
-#menu li a.rel {
-	color:#669;
-}
-#menu li .media {
+#menu li a.cfg {	color:#966; }
+#menu li a.res {	color:#999; }
+#menu li a.log {	color:#696; }
+#menu li a.rel {	color:#669; }
+
+#menu li .media,
+#menu li ._media_info {
 	background-image: url("../icons/folder.gif");
 	background-repeat: no-repeat;
 	background-position:0px 2px;
 	padding-left: 20px;
 	}
-#menu li.current .media {
-	background-image: url("../icons/folder_files.gif");
+#menu li.current .media {	background-image: url("../icons/folder_files.gif");	}
+#menu li ._img_info {
+	background-image: url("../icons/image.gif");
+	background-repeat: no-repeat;
+	background-position:0px 2px;
+	padding-left: 20px;
 	}
 #menu li .db {
 	background-image: url("../icons/time.gif");
@@ -142,13 +143,55 @@ img {
 	background-position:0px 2px;
 	padding-left: 20px;
 	}
-#menu li .API_stats {
+#menu li .API_stats,
+#menu li ._login,
+#menu li ._stats {
 	background-image: url("../icons/stats.gif");
 	background-repeat: no-repeat;
 	background-position:0px 2px;
 	padding-left: 20px;
 	}
+#menu li ._configurations {
+	background-image: url("../icons/config.gif");
+	background-repeat: no-repeat;
+	background-position:0px 2px;
+	padding-left: 20px;
+	}
+#menu li ._auto_menu,
+#menu li ._admin_menu  {
+	background-image: url("../icons/menu.jpg");
+	background-repeat: no-repeat;
+	background-position:0px 2px;
+	padding-left: 20px;
+	}
 
+#menu li ._table_info,
+#menu li ._field_info,
+#menu li ._editor {
+	background-image: url("../icons/table_info.gif");
+	background-repeat: no-repeat;
+	background-position:0px 2px;
+	padding-left: 20px;
+	}
+#menu li ._users {
+	background-image: url("../icons/user.gif");
+	background-repeat: no-repeat;
+	background-position:0px 2px;
+	padding-left: 20px;
+	}
+#menu li ._rights {
+	background-image: url("../icons/login.gif");
+	background-repeat: no-repeat;
+	background-position:0px 2px;
+	padding-left: 20px;
+	}
+	
+#menu li .rel {
+	background-image: url("../icons/relation.gif");
+	background-repeat: no-repeat;
+	background-position:0px 2px;
+	padding-left: 20px;
+	}
 
 /* =========== */
 
