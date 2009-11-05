@@ -92,7 +92,7 @@ class Menu {
 		$CI =& get_instance();
 		if (empty($table)) {
 			$table=$CI->cfg->get('CFG_configurations',"str_menu_table");
-			$resultTable=$table.'_result';
+			$resultTable='res_menu_result';
 			if ($CI->db->table_exists($resultTable)) $table=$resultTable; // Menu automation
 		}
 		// select fields
@@ -315,6 +315,7 @@ class Menu {
 				// render item or submenu
 				if (isset($item["uri"])) {
 					$showName=ascii_to_entities($name);
+					$showName=trim($showName,'_');
 					$pre=get_prefix($showName,"__");
 					if (!empty($pre)) $showName=$pre;
 					if (isset($item["help"])) $showName=help($showName,$item["help"]);

@@ -122,6 +122,7 @@ $config['MENU_excluded']							= array('cfg_sessions');
 
 $config['CFG_table_prefix']						= "cfg";
 $config['LOG_table_prefix']						= "log";
+$config['RES_table_prefix']						= "res";
 $config['TABLE_prefix']								= "tbl";
 $config['REL_table_prefix']						= "rel";
 $config['REL_table_split']						= "__";
@@ -165,18 +166,8 @@ $config['CFG_field_ui_name']					= "str_ui_name";
 
 $config["CFG_"]=array(
 	"cfg_table_info" => array(
-		"cfg_admin_menu"=>array(
-			"order"=>'100',
-			"table"=>'cfg_admin_menu',
-			"b_single_row"=>'0',
-			"str_ui_name"=>'',
-			"b_grid_add_many"=>'0',
-			"str_abstract_fields"=>'',
-			"str_order_by"=>'',
-			"txt_help"=>''
-			),
 		"cfg_configurations"=>array(
-			"order"=>'101',
+			"order"=>'100',
 			"table"=>'cfg_configurations',
 			"b_single_row"=>'1',
 			"str_ui_name"=>'',
@@ -185,8 +176,28 @@ $config["CFG_"]=array(
 			"str_order_by"=>'',
 			"txt_help"=>''
 			),
-		"cfg_media_info"=>array(
+		"cfg_auto_menu"=>array(
+			"order"=>'101',
+			"table"=>'cfg_auto_menu',
+			"b_single_row"=>'0',
+			"str_ui_name"=>'',
+			"b_grid_add_many"=>'0',
+			"str_abstract_fields"=>'',
+			"str_order_by"=>'',
+			"txt_help"=>''
+			),
+		"cfg_admin_menu"=>array(
 			"order"=>'102',
+			"table"=>'cfg_admin_menu',
+			"b_single_row"=>'0',
+			"str_ui_name"=>'',
+			"b_grid_add_many"=>'0',
+			"str_abstract_fields"=>'',
+			"str_order_by"=>'',
+			"txt_help"=>''
+			),
+		"cfg_media_info"=>array(
+			"order"=>'103',
 			"table"=>'cfg_media_info',
 			"b_single_row"=>'0',
 			"str_ui_name"=>'',
@@ -196,7 +207,7 @@ $config["CFG_"]=array(
 			"txt_help"=>''
 			),
 		"cfg_media_files"=>array(
-			"order"=>'103',
+			"order"=>'104',
 			"table"=>'cfg_media_files',
 			"b_single_row"=>'0',
 			"str_ui_name"=>'',
@@ -206,7 +217,7 @@ $config["CFG_"]=array(
 			"txt_help"=>''
 			),
 		"cfg_img_info"=>array(
-			"order"=>'104',
+			"order"=>'105',
 			"table"=>'cfg_img_info',
 			"b_single_row"=>'0',
 			"str_ui_name"=>'',
@@ -215,18 +226,8 @@ $config["CFG_"]=array(
 			"str_order_by"=>'',
 			"txt_help"=>''
 			),
-		"cfg_editor"=>array(
-			"order"=>'105',
-			"table"=>'cfg_editor',
-			"b_single_row"=>'1',
-			"str_ui_name"=>'',
-			"b_grid_add_many"=>'0',
-			"str_abstract_fields"=>'',
-			"str_order_by"=>'',
-			"txt_help"=>''
-			),
 		"cfg_table_info"=>array(
-			"order"=>'106',
+			"order"=>'107',
 			"table"=>'cfg_table_info',
 			"b_single_row"=>'0',
 			"str_ui_name"=>'',
@@ -236,7 +237,7 @@ $config["CFG_"]=array(
 			"txt_help"=>''
 			),
 		"cfg_field_info"=>array(
-			"order"=>'107',
+			"order"=>'108',
 			"table"=>'cfg_field_info',
 			"b_single_row"=>'0',
 			"str_ui_name"=>'',
@@ -245,8 +246,18 @@ $config["CFG_"]=array(
 			"str_order_by"=>'field_field',
 			"txt_help"=>''
 			),
+		"cfg_editor"=>array(
+			"order"=>'109',
+			"table"=>'cfg_editor',
+			"b_single_row"=>'1',
+			"str_ui_name"=>'',
+			"b_grid_add_many"=>'0',
+			"str_abstract_fields"=>'',
+			"str_order_by"=>'',
+			"txt_help"=>''
+			),
 		"cfg_users"=>array(
-			"order"=>'108',
+			"order"=>'120',
 			"table"=>'cfg_users',
 			"b_single_row"=>'0',
 			"str_ui_name"=>'',
@@ -256,7 +267,7 @@ $config["CFG_"]=array(
 			"txt_help"=>''
 			),
 		"cfg_rights"=>array(
-			"order"=>'109',
+			"order"=>'121',
 			"table"=>'cfg_rights',
 			"b_single_row"=>'0',
 			"str_ui_name"=>'',
@@ -284,7 +295,18 @@ $config["CFG_"]=array(
 			"str_ui_name"=>'',
 			"b_show_in_grid"=>'1',
 			"b_show_in_form"=>'1',
-			"str_options"=>'api|tools|table|all_tbl_tables|all_cfg_tables|media|all_media|seperator',
+			"str_options"=>'api|tools|table|all_tbl_tables|all_cfg_tables|all_res_tables|media|all_media|seperator',
+			"b_multi_options"=>'0',
+			"str_overrule_prefix"=>'',
+			"str_validation_rules"=>'',
+			"txt_help"=>''
+			),
+		"cfg_auto_menu.str_type"=>array(
+			"field"=>'cfg_auto_menu.str_type',
+			"str_ui_name"=>'',
+			"b_show_in_grid"=>'1',
+			"b_show_in_form"=>'1',
+			"str_options"=>'from menu table|from category table|from table group by category',
 			"b_multi_options"=>'0',
 			"str_overrule_prefix"=>'',
 			"str_validation_rules"=>'',

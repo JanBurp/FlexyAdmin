@@ -545,6 +545,7 @@ class BasicController extends MY_Controller {
 	function _setResultMenuItem($resultMenu,$item,$setId=false) {
 		if (!$setId) {
 			unset($item['id']);
+			unset($item['order']);
 			unset($item['self_parent']);
 		}
 		foreach ($item as $key => $value) {
@@ -554,14 +555,15 @@ class BasicController extends MY_Controller {
 	
 	function _resultMenu($table) {
 		$menuTable=$this->cfg->get('CFG_configurations','str_menu_table');
-		$automationTable=$menuTable.'_automation';
-		$resultMenu=$menuTable.'_result';
+		$automationTable='cfg_auto_menu';
+		$resultMenu='res_menu_result';
 		if ($this->db->table_exists($automationTable)) {
 			$checkTables=array();
 			$checkTables[]=$menuTable;
 			$checkTables[]=$automationTable;
 			$checkTables[]=$resultMenu;
 			$automationData=$this->db->get_results($automationTable);
+			// trace_($automationData);
 			foreach ($automationData as $aData) {
 				$checkTables[]=$aData['table'];
 				$foreignTable=$aData['field_group_by'];
@@ -572,52 +574,131 @@ class BasicController extends MY_Controller {
 					$checkTables[]=$foreignTable;
 				}
 			}
-			// check if some table content has changed
+			// check if some table content has changed, if so, create menu
 			if (in_array($table,$checkTables)) {
+				
 				// Create auto menu
 				$this->db->truncate($resultMenu);
-				// First from normal menu
-				$data=$this->db->get_results($menuTable);
-				foreach ($data as $item) {
-					$this->_setResultMenuItem($resultMenu,$item,true);
-					$this->db->set('str_table',$menuTable);
-					$this->db->set('str_uri',$item['uri']);
-					if ($item['self_parent']==0) $lastOrder=$item['order'];
-					$this->db->insert($resultMenu);
-				}
-				// Loop through automation
-				foreach ($automationData as $key => $value) {
-					// level 1
-					$level1Table=$value['field_group_by'];
-					$level1Table=explode('.',$level1Table);
-					$level1Table=foreign_table_from_key($level1Table[1]);
+				$lastId=-1;
+				$lastOrder=0;
+				
+				// Loop through all options in Auto Menu
+				foreach ($automationData as $autoKey => $autoValue) {
+					switch($autoValue['str_type']) {
+						case 'from menu table':
+							$data=$this->db->get_results($autoValue['table']);
+							foreach ($data as $item) {
+								$this->_setResultMenuItem($resultMenu,$item,true);
+								$this->db->set('str_table',$autoValue['table']);
+								$this->db->set('str_uri',$item['uri']);
+								if (isset($item['self_parent'])) {
+									$this->db->set('self_parent',$item['self_parent']);
+								}
+								$this->db->insert($resultMenu);
+							}
+							break;
+				
+						case 'from category table':
+							$data=$this->db->get_result($autoValue['table']);
+							foreach ($data as $item) {
+								$this->_setResultMenuItem($resultMenu,$item);
+								$this->db->set('order',$lastOrder++);
+								$this->db->set('self_parent',0);
+								$this->db->set('str_table',$autoValue['table']);
+								$this->db->set('str_uri',$item['uri']);
+								$this->db->insert($resultMenu);
+							}
+							break;
+				
+						case 'from table group by ':
+							$groupField=remove_prefix($autoValue['field_group_by'],'.');
+							$groupTable=foreign_table_from_key($groupField);
+							$groupData=$this->db->get_result($groupTable);
+							foreach ($groupData as $groupId=>$groupData) {
+								$this->db->where($autoValue['field_group_by'],$groupId);
+								$data=$this->db->get_result($autoValue['table']);
+								$lastOrder=0;
+								$this->db->where('str_title',$groupData['str_title']);
+								$parentData=$this->db->get_row($resultMenu);
+								$selfParent=$parentData['id'];
+								foreach ($data as $item) {
+									$this->_setResultMenuItem($resultMenu,$item);
+									$this->db->set('order',$lastOrder++);
+									$this->db->set('self_parent',$selfParent);
+									$this->db->set('str_table',$autoValue['table']);
+									$this->db->set('str_uri',$item['uri']);
+									$this->db->insert($resultMenu);
+								}
+							}
+							
+							
 
-					// level 1 entries
-					$level1=$this->db->get_result($level1Table);
-					foreach ($level1 as $item) {
-						$this->_setResultMenuItem($resultMenu,$item);
-						$this->db->set('order',$lastOrder++);
-						$this->db->set('self_parent',0);
-						$this->db->set('str_table',$level1Table);
-						$this->db->set('str_uri',$item['uri']);
-						$this->db->insert($resultMenu);		
-
-						// level 2 entries
-						$this->db->where($value['field_group_by'],$item['id']);
-						$level2=$this->db->get_result($value['table']);
-						$subOrder=0;
-						$self_parent=$this->db->insert_id();
-						foreach ($level2 as $item2) {
-							$this->_setResultMenuItem($resultMenu,$item2);
-							$this->db->set('order',$subOrder++);
-							$this->db->set('self_parent',$self_parent);
-							$this->db->set('str_table',$value['table']);
-							$this->db->set('str_uri',$item2['uri']);
-							$this->db->insert($resultMenu);		
-						}
-									
+	
+							// 
+							// $this->db->where($value['field_group_by'],$item['id']);
+							// $level2=$this->db->get_result($value['table']);
+							// $subOrder=0;
+							// $self_parent=$this->db->insert_id();
+							// foreach ($level2 as $item2) {
+							// 	$this->_setResultMenuItem($resultMenu,$item2);
+							// 	$this->db->set('order',$subOrder++);
+							// 	$this->db->set('self_parent',$self_parent);
+							// 	$this->db->set('str_table',$value['table']);
+							// 	$this->db->set('str_uri',$item2['uri']);
+							// 	$this->db->insert($resultMenu);		
+							// }
+							
+							break;
 					}
+					$lastId=$this->db->insert_id();
+					$lastOrder=$this->db->get_field($resultMenu,'order',$lastId);
+					
 				}
+
+
+				
+				// // First from normal menu
+				// $data=$this->db->get_results($menuTable);
+				// foreach ($data as $item) {
+				// 	$this->_setResultMenuItem($resultMenu,$item,true);
+				// 	$this->db->set('str_table',$menuTable);
+				// 	$this->db->set('str_uri',$item['uri']);
+				// 	if ($item['self_parent']==0) $lastOrder=$item['order'];
+				// 	$this->db->insert($resultMenu);
+				// }
+				// Loop through automation
+				// foreach ($automationData as $key => $value) {
+				// 	// level 1
+				// 	$level1Table=$value['field_group_by'];
+				// 	$level1Table=explode('.',$level1Table);
+				// 	$level1Table=foreign_table_from_key($level1Table[1]);
+				// 
+				// 	// level 1 entries
+				// 	$level1=$this->db->get_result($level1Table);
+				// 	foreach ($level1 as $item) {
+				// 		$this->_setResultMenuItem($resultMenu,$item);
+				// 		$this->db->set('order',$lastOrder++);
+				// 		$this->db->set('self_parent',0);
+				// 		$this->db->set('str_table',$level1Table);
+				// 		$this->db->set('str_uri',$item['uri']);
+				// 		$this->db->insert($resultMenu);		
+				// 
+				// 		// level 2 entries
+				// 		$this->db->where($value['field_group_by'],$item['id']);
+				// 		$level2=$this->db->get_result($value['table']);
+				// 		$subOrder=0;
+				// 		$self_parent=$this->db->insert_id();
+				// 		foreach ($level2 as $item2) {
+				// 			$this->_setResultMenuItem($resultMenu,$item2);
+				// 			$this->db->set('order',$subOrder++);
+				// 			$this->db->set('self_parent',$self_parent);
+				// 			$this->db->set('str_table',$value['table']);
+				// 			$this->db->set('str_uri',$item2['uri']);
+				// 			$this->db->insert($resultMenu);		
+				// 		}
+				// 					
+				// 	}
+				// }
 			
 				// update linklist etc
 				$this->load->library("editor_lists");
@@ -720,11 +801,14 @@ class AdminController extends BasicController {
 		}
 		$oTables=array_merge($oTables,$tables);
 		foreach ($oTables as $name) {
+			$menuName=$this->uiNames->get($name);
+			if ($type!='tbl') $menuName='_'.$menuName;
+			if ($type=='res') $menuName='_'.$menuName;
 			if (!in_array($name,$excluded) and $this->has_rights($name)) {
-					$a[$this->uiNames->get($name)]=array("uri"=>api_uri('API_view_grid',$name),"class"=>$type);
+					$a[$menuName]=array("uri"=>api_uri('API_view_grid',$name),"class"=>$type);
 				$tableHelp=$this->cfg->get("CFG_table",$name,"txt_help");
 				if (!empty($tableHelp)) {
-					$a[$this->uiNames->get($name)]["help"]=$tableHelp;
+					$a[$menuName]["help"]=$tableHelp;
 				}
 			}
 		}
@@ -783,6 +867,11 @@ class AdminController extends BasicController {
 					$menu=array_merge($menu,$this->_show_table_menu($tables,$this->config->item('CFG_table_prefix')));
 					$menu=array_merge($menu,$this->_show_table_menu($tables,$this->config->item('LOG_table_prefix')));
 					$menu=array_merge($menu,$this->_show_table_menu($tables,$this->config->item('REL_table_prefix')));
+					break;
+
+				case 'all_res_tables' :
+					$tables=$this->db->list_tables();
+					$menu=array_merge($menu,$this->_show_table_menu($tables,$this->config->item('RES_table_prefix')));
 					break;
 				
 				case 'media' :

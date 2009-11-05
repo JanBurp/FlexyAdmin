@@ -66,7 +66,8 @@ class Editor_lists {
 			if ($CI->cfg->get('CFG_editor','b_add_internal_links')) {
 				$data['-- site links -----------']=NULL;
 				$menuTable=$CI->cfg->get('CFG_configurations','str_menu_table');
-				if ($CI->db->table_exists($menuTable.'_result')) $menuTable=$menuTable.'_result'; // for menu automation
+				$resultTable='res_menu_result';
+				if ($CI->db->table_exists($resultTable)) $menuTable=$resultTable; // for menu automation
 				if (!empty($menuTable) and $CI->db->table_exists($menuTable)) {
 					$menuFields=$CI->db->list_fields($menuTable);
 					$CI->db->select('id,uri,order');
@@ -82,7 +83,7 @@ class Editor_lists {
 					foreach ($results as $key => $row) {
 						$url=$row["uri"];
 						$name=$row[$nameField];
-						if (isset($row['self_parent']) and $row['self_parent']!=0) $name=' └ '.$name;
+						if (isset($row['self_parent']) and $row['self_parent']!=0) $name=' - '.$name;
 						$data[$name]=array("url"=>$url,"name"=>$name);
 					}
 				}
