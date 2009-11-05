@@ -111,28 +111,36 @@ function showAutoZoom() {
 		obj=$(this);
 		ShowDelay=setTimeout( function() {		
 			zoomThumb=$(obj).clone().addClass('autoZoom');
+			// check size
 			$('body').append(zoomThumb);
-			// size and place
-			offsetThumb=$(obj).offset();
 			widthThumb=$('.autoZoom').width();
 			heightThumb=$('.autoZoom').height();
+			$('.autoZoom').remove(); // size now determined, clone can be removed
+			// name and place
+			imgName=$(zoomThumb).attr('alt');
+			imgName=imgName.substr(imgName.lastIndexOf('/')+1);
+			// place it
+			offsetThumb=$(obj).offset();
 			leftThumb=offsetThumb.left-(widthThumb/2)+13 + 'px';
+			$('body').append('<div class="zoomThumb"><p>'+imgName+'</p></div>');
 			if ($(obj).parent('li').parent('ul.values').length>0) {
-				topThumb=offsetThumb.top-(heightThumb+7) + 'px';
+				topThumb=offsetThumb.top-(heightThumb+34) + 'px';
+				$('div.zoomThumb').append(zoomThumb);
 			}
 			else {
 				topThumb=offsetThumb.top+30 + 'px';
+				$('div.zoomThumb').prepend(zoomThumb);
 			}
 			// set and show
-			$('.autoZoom').css({left:leftThumb, top:topThumb}).fadeIn(150).mouseleave(function(){
-				$('.autoZoom').fadeOut(150,function(){
+			$('.zoomThumb').css({left:leftThumb, top:topThumb}).fadeIn(150).mouseleave(function(){
+				$('.zoomThumb').fadeOut(150,function(){
 					$(this).remove();
 				});
 			})
 		},200);
 	}).mouseleave(function() {
 		clearTimeout(ShowDelay);
-		$('.autoZoom').fadeOut(150,function(){
+		$('.zoomThumb').fadeOut(150,function(){
 			$(this).remove();
 		});
 	});
