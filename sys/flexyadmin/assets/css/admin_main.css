@@ -913,7 +913,8 @@ div.zoomThumb {
 	max-height:270px;
 	z-index:999;
 }
-div.zoomThumb * {
+div.zoomThumb p,
+div.zoomThumb img {
 	margin:0px;
 	padding:0px;
 	border:solid 2px #696;
