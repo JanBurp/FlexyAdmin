@@ -288,6 +288,8 @@ class Form Extends Model {
 			static $counter=1;
 			// lowercase
 			$uri=strtolower($original_uri_field);
+			// strip html
+			$uri=strip_tags($uri);
 			// replace spaces
 			$uri=str_replace(" ","_",trim($uri));
 			// replace specialchars
