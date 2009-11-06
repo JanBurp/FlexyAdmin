@@ -611,7 +611,7 @@ class BasicController extends MY_Controller {
 							}
 							break;
 				
-						case 'from table group by ':
+						case 'from table group by category':
 							$groupField=remove_prefix($autoValue['field_group_by'],'.');
 							$groupTable=foreign_table_from_key($groupField);
 							$groupData=$this->db->get_result($groupTable);
