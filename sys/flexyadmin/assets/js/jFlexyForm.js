@@ -67,22 +67,27 @@ function doForm() {
 		path=$("div.image_dropdown select.medias").attr("path")+"/";
 
 		$("select.medias").change(function() {
-			// remove old thumbs
+			// remove old thumbs & clean value
 			$("div.image_dropdown.medias ul li").remove();
-			// show new thumbs
+			$(this).parent('.form_field').children('input:first').attr('value','');
+			// show new thumbs & change value
 			medias=$("select.medias option:selected");
+			value='';
 			if (medias.length>0) {
 				$(medias).each(function() {
-					src=path+$(this).attr("value");
+					src=$(this).attr("value");
+					if (value=='') value=src; else value=value+'|'+src;
+					src=path+src;
 					ext=get_ext(src);
 					if (ext=='swf' || ext=='flv') {
-						$("div.image_dropdown ul.values").append('<li>'+flash(src,32,32)+'</li>');
+						$("div.image_dropdown ul.values").append('<li>'+flash(src,25,25)+'</li>');
 					}
 					else {
 						src=cachedThumb(src);
 						$("div.image_dropdown ul.values").append('<li><img class="media" src="'+src+'" /></li>');
 					}
 				});
+				$(this).parent('.form_field').children('input:first').attr('value',value);
 			}
 		});
 	}
