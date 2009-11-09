@@ -274,6 +274,12 @@ class Menu {
 		return FALSE;
 	}
 
+	function get_home_uri() {
+		reset($this->menu);
+		$home=current($this->menu);
+		return $home['uri'];
+	}
+
 	function add_controls($controls="") {
 		$this->itemControls=$controls;
 	}
