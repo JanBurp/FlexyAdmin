@@ -51,7 +51,9 @@ class MY_URI extends CI_URI {
 	}
 
 	function is_home() {
-		return $this->is($this->home,$this->homePart);
+		$isHome=$this->is($this->home,$this->homePart);
+		if (!$isHome) $isHome=($this->total_segments()==0);
+		return $isHome;
 	}
 
 	function has_more($n=1) {
