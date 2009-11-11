@@ -367,6 +367,16 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			}
 		}
 		
+		//
+		// if $whereUri, add tablename in front of it
+		//
+		if ($this->whereUri) {
+			foreach ($this->ar_like as $key => $value) {
+				$new=str_replace('`uri`','`'.$table.'`.`uri`',$value);
+				if ($new!=$value) $this->ar_like[$key]=$new;
+			}
+		}
+		
 		/**
 		 * get the query
 		 */
