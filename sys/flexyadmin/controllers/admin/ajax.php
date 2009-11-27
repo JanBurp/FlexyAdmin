@@ -94,10 +94,12 @@ class Ajax extends BasicController {
  				if ($this->_has_key($table) and $this->has_rights($table,$id)>=RIGHTS_EDIT) {
 					$this->db->where(pk(),$id);
 					$oldData=$this->db->get_row($table);
+					$newData=$oldData;
+					$newData[$field]=$value;
 		 			$this->db->set($field,$value);
 		 			$this->db->where(pk(),$id);
 		 			$this->db->update($table);
-					$this->_after_update($table,$id,$oldData);
+					$this->_after_update($table,$id,$oldData,$newData);
 				}
 				else $result='ajax_error_no_rights';		 		
 	 		}
@@ -106,13 +108,6 @@ class Ajax extends BasicController {
 		else $result='ajax_error_wrong_parameters';
 		$this->_result($result);
  	}
-
-		// 
-		// 
-		// function upload($path) {
-		// 	echo $path;
-		// 	print_r($_FILES);
-		// }
 	
 
 }

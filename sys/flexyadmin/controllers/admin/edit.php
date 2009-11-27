@@ -78,6 +78,12 @@ class Edit extends AdminController {
 					$this->lang->load("update_delete");
 					$message="";
 					if ($confirmed) {
+						//
+						// First get current data
+						//
+						$this->db->where('id',$id);
+						$oldData=$this->db->get_row($table);
+						
 						/**
 						 * If there is media, delete them...
 						 */

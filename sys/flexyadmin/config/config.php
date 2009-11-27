@@ -184,7 +184,10 @@ $config['function_trigger'] = 'm';
 | your log files will fill up very fast.
 |
 */
-$config['log_threshold'] = 0;
+if (IS_LOCALHOST)
+	$config['log_threshold'] = 0;
+else
+	$config['log_threshold'] = 0;
 
 /*
 |--------------------------------------------------------------------------
