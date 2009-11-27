@@ -26,7 +26,7 @@ class plugin {
 	}
 	
 	function init($init=array()) {
-		strace_('========= '.$this->plugin.' ============');
+		// strace_('========= '.$this->plugin.' ============');
 		$default=array('table'=>'$table','id'=>'','oldData'=>NULL,'newData'=>NULL);
 		$init=array_merge($default,$init);
 		
@@ -38,7 +38,7 @@ class plugin {
 		foreach ($this->fields as $field) {
 			$this->types[]=get_prefix($field);
 		}
-		strace_(array('old'=>$this->oldData,'new'=>$this->newData));
+		// strace_(array('old'=>$this->oldData,'new'=>$this->newData));
 	}
 	
 	function act_on($acts=array()) {
@@ -95,7 +95,7 @@ class plugin {
 					if (!empty($fields)) {
 						$changedFields=false;
 						foreach ($fields as $field) {
-							if (empty($this->newData) or $this->newData[$field]!=$this->oldData[$field]) $changedFields=TRUE;
+							if (empty($this->newData) or (isset($this->newData[$field]) and $this->newData[$field]!=$this->oldData[$field]) ) $changedFields=TRUE;
 						}
 						if ($changedFields) {
 							$this->actOn[$key]['act']=true;
@@ -120,12 +120,12 @@ class plugin {
 			}
 		}
 		// strace_($this->actOn);
-		strace_($this->act);
+		// strace_($this->act);
 		return $this->act;
 	}
 
 	function _update_data() {
-		strace_("'$this->plugin ->_update_data'");
+		// strace_("'$this->plugin ->_update_data'");
 		foreach ($this->newData as $key => $value) {
 			if ($key!='id')	$this->CI->db->set($key,$value);
 		}
@@ -138,7 +138,7 @@ class plugin {
 		$data=$this->newData;
 		if ($this->act)	{
 			$data=$this->_after_update();
-			strace_("'$this->plugin ->_after_update'");
+			// strace_("'$this->plugin ->_after_update'");
 			if ($data and $this->oldData!=$data) {
 				$this->_update_data();
 				// strace_(array('changed'=>$data));
@@ -151,7 +151,7 @@ class plugin {
 	function after_delete($init) {
 		$this->init($init);
 		if ($this->act) {
-			strace_("'$this->plugin ->_after_delete'");
+			// strace_("'$this->plugin ->_after_delete'");
 			$this->_after_delete();
 		}
 		return $this->act;
