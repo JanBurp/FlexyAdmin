@@ -72,6 +72,14 @@ function trace_if($condition,$a=NULL,$echo=true,$backtraceOffset=1) {
 	if ($condition) return trace_($a,$echo,$backtraceOffset);
 }
 
+function strace_($a=NULL) {
+	$CI=&get_instance();
+	$trace=trace_($a,false);
+	$all=$CI->session->userdata('trace');
+	$all.=$trace;
+	$CI->session->set_userdata('trace',$all);
+}
+
 function trace_($a=NULL,$echo=true,$backtraceOffset=1) {
 	static $c=0;
 	$show="Trace";
@@ -132,8 +140,16 @@ function print_ar($array,$return=false,$tabs=0) {
 		$len=strlen($thisOut)+1;
 		if (is_array($value))
 			$thisOut.=print_ar($value,$return,$tabs+$len);
-		else
-			$thisOut.="'$value'<br/>";
+		else {
+			if (is_bool($value)) {
+				if ($value)
+					$thisOut.="'True'";
+				else
+					$thisOut.="'False'";
+			}
+			else
+				$thisOut.="'$value'<br/>";
+		}
 		$out.=$thisOut;
 		if ($tabs==0) $out.="<br/>";
 	}

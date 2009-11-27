@@ -40,6 +40,9 @@ $config['BULKUPLOAD']							= 'bulk_upload';
 
 $config['THUMBSIZE']							= array(100,100);
 
+$config['PLUGIN_ORDER']						= array('uri','links','striptags');
+
+
 /*
 |--------------------------------------------------------------------------
 | API calls
@@ -91,6 +94,8 @@ $config['FILES_view_types']					= array("list","icons");
 
 $config['FILES_thumb_path']					= "/thumb/";
 $config['FILES_big_path']						= "/big/";
+
+
 
 
 

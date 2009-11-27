@@ -206,9 +206,9 @@ class Form Extends Model {
 		switch ($type) {
 			case "checkbox" :
 				if ($value=="true")
-					$out=true;
+					$out=1;
 				else
-					$out=false;
+					$out=0;
 				break;
 			case "upload" :
 				if (!empty($_FILES[$name]['name'])) {
@@ -232,80 +232,74 @@ class Form Extends Model {
 				//$out=htmlentities($value);
 				break;
 		}
-
+		$this->data[$name]['newvalue']=$out;
 		$out=array("value"=>$out,"error"=>$error);
 		return $out;
 	}
 
-	function _after_update($id) {
-		/**
-		* Moved to controllers (show and edit)
-		*/
-	}
+	// function _get_uri_field($fields) {
+	// 	$uriField="";
+	// 	/**
+	// 	 * Auto uri field according to prefixes
+	// 	 */
+	// 	if (empty($uriField)) {
+	// 		$preTypes=$this->config->item('URI_field_pre_types');
+	// 		$loop=true;
+	// 		while ($loop) {
+	// 			$field=current($fields);
+	// 			$pre=get_prefix($field);
+	// 			if (in_array($pre,$preTypes)) {
+	// 				$uriField=$field;
+	// 			}
+	// 			$field=next($fields);
+	// 			$loop=(empty($uriField) and $field!==FALSE);
+	// 		}
+	// 	}
+	// 	/**
+	// 	 * If still nothing set... just get the first field (after id,order and uri)
+	// 	 */
+	// 	if (empty($uriField)) {
+	// 		unset($fields["order"]);
+	// 		reset($fields);
+	// 		$uriField=current($fields);
+	// 	}
+	// 	return $uriField;
+	// }
 
-	function _get_uri_field($fields) {
-		$uriField="";
-		/**
-		 * Auto uri field according to prefixes
-		 */
-		if (empty($uriField)) {
-			$preTypes=$this->config->item('URI_field_pre_types');
-			$loop=true;
-			while ($loop) {
-				$field=current($fields);
-				$pre=get_prefix($field);
-				if (in_array($pre,$preTypes)) {
-					$uriField=$field;
-				}
-				$field=next($fields);
-				$loop=(empty($uriField) and $field!==FALSE);
-			}
-		}
-		/**
-		 * If still nothing set... just get the first field (after id,order and uri)
-		 */
-		if (empty($uriField)) {
-			unset($fields["order"]);
-			reset($fields);
-			$uriField=current($fields);
-		}
-		return $uriField;
-	}
+	// function _existing_uri($uri,$table,$id) {
+	// 	$this->db->select("uri");
+	// 	$this->db->where("uri",$uri);
+	// 	$this->db->where("id !=",$id);
+	// 	$uris=$this->db->get_result($table);
+	// 	if (empty($uris))
+	// 		return FALSE;
+	// 	return current($uris);
+	// }
 
-	function _existing_uri($uri,$table,$id) {
-		$this->db->select("uri");
-		$this->db->where("uri",$uri);
-		$this->db->where("id !=",$id);
-		$uris=$this->db->get_result($table);
-		if (empty($uris))
-			return FALSE;
-		return current($uris);
-	}
-
-	function _create_uri($original_uri_field,$table,$id) {
-		$current_uri=$this->db->get_field($table,"uri",$id);
-		if (empty($current_uri) or !($this->cfg->get('CFG_table',$table,'b_freeze_uris')) ) {
-			static $counter=1;
-			// lowercase
-			$uri=strtolower($original_uri_field);
-			// strip html
-			$uri=strip_tags($uri);
-			// replace spaces
-			$uri=str_replace(" ","_",trim($uri));
-			// replace specialchars
-			$uri=clean_string($uri);
-			// forbidden uri's
-			$forbidden=array("site","sys","admin");
-			if (in_array($uri,$forbidden)) $uri="_".$uri;
-			// check if uri exists allready
-			while ($this->_existing_uri($uri,$table,$id)) {
-				$uri=$uri."_".$counter++;
-			}
-		}
-		else
-			$uri=$current_uri;
-		return $uri;
-	}
+	// function _create_uri($original_uri_field,$table,$id) {
+	// 	$current_uri=$this->db->get_field($table,"uri",$id);
+	// 	if (empty($current_uri) or !($this->cfg->get('CFG_table',$table,'b_freeze_uris')) ) {
+	// 		static $counter=1;
+	// 		// lowercase
+	// 		$uri=strtolower($original_uri_field);
+	// 		// strip html
+	// 		$uri=strip_tags($uri);
+	// 		// replace spaces
+	// 		$uri=str_replace(" ","_",trim($uri));
+	// 		// replace specialchars
+	// 		$uri=clean_string($uri);
+	// 		// forbidden uri's
+	// 		$forbidden=array("site","sys","admin");
+	// 		if (in_array($uri,$forbidden)) $uri="_".$uri;
+	// 		// check if uri exists allready
+	// 		while ($this->_existing_uri($uri,$table,$id)) {
+	// 			$uri=$uri."_".$counter++;
+	// 		}
+	// 	}
+	// 	else
+	// 		$uri=$current_uri;
+	// 	return $uri;
+	// }
 
 
 /**
@@ -375,13 +369,13 @@ class Form Extends Model {
 				 */
 
 				/**
-				 * First create an uri if necessary
+				 * First create an uri if necessary, moved to plugin_uri
 				 */
-				if (isset($uri)) {
-					$original_uri_field=$this->_get_uri_field(array_keys($set));
-					$uri=$this->_create_uri($set[$original_uri_field],$table,$id);
-					$set["uri"]=$uri;
-				}
+				// if (isset($uri)) {
+				// 	$original_uri_field=$this->_get_uri_field(array_keys($set));
+				// 	$uri=$this->_create_uri($set[$original_uri_field],$table,$id);
+				// 	$set["uri"]=$uri;
+				// }
 
 				/**
 				 * Set (new) order
@@ -461,11 +455,6 @@ class Form Extends Model {
 						log_('info',"form: updating join data from '$table', id='$id'");
 					}
 				}
-				/**
-				 * Actions after update
-				 */
-				$this->_after_update($id);
-
 				return intval($id);
 			}
 		}
@@ -475,8 +464,12 @@ class Form Extends Model {
 	function get_data() {
 		$data=array();
 		foreach($this->data as $name=>$field) {
-			$data[$name]=$field;
-			$data[$name]["value"]=$field["repopulate"];
+			// $data[$name]=$field;
+			// $data[$name]["value"]=$field["repopulate"];
+			if (isset($field['newvalue']))
+				$data[$name]=$field['newvalue'];
+			else
+				$data[$name]=$field['repopulate'];
 		}
 		return $data;
 	}

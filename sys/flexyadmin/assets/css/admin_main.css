@@ -1119,10 +1119,11 @@ input.upload {
 	}
 
 .after_form {
-	position:relative;
-	top:-220px;
+/*	position:relative;*/
+/*	top:-220px;*/
 	float:left;
-	clear:both;
+	clear:left;
+	margin-top:-475px;
 }
 
 p.error {
@@ -1272,6 +1273,12 @@ div#help_messages {
 }
 #content.info {
 	width:590px;
+}
+
+#trace {
+	float:left;
+	min-width:600px;
+	margin:20px 0px;
 }
 
 #footer {

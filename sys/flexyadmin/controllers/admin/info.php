@@ -61,31 +61,31 @@ class Info extends AdminController {
 		$this->_show_all();
 	}
 
-	function code() {
-		if ($this->_has_key()) {
-			$this->load->library('form_validation');
-			$this->load->helper('html');
-			$this->load->helper('language');
-			$this->load->model("form");
-			$this->lang->load("update_delete");
-			$formData=array( "str_line" => array(	"validation"	=>  "required"),
-											 "str_code"	=> array(	"validation"	=>  "required", "value"=>"2009"));
-			$form=new form('admin/info/code');
-			$form->set_data($formData,"Code");
-			if ($form->validation()) {
-				$data=$form->get_data();
-				$c=$this->_encode($data['str_line']['value']);
-				$this->_set_content("'$c'");
-			}
-			else {
-				$this->_set_content($form->render());
-			}
-			$this->_show_type("code");
-		}
-		else
-			$this->_set_content("");
-		$this->_show_all();
-	}
+	// function code() {
+	// 	if ($this->_has_key()) {
+	// 		$this->load->library('form_validation');
+	// 		$this->load->helper('html');
+	// 		$this->load->helper('language');
+	// 		$this->load->model("form");
+	// 		$this->lang->load("update_delete");
+	// 		$formData=array( "str_line" => array(	"validation"	=>  "required"),
+	// 										 "str_code"	=> array(	"validation"	=>  "required", "value"=>"2009"));
+	// 		$form=new form('admin/info/code');
+	// 		$form->set_data($formData,"Code");
+	// 		if ($form->validation()) {
+	// 			$data=$form->get_data();
+	// 			$c=$this->_encode($data['str_line']['value']);
+	// 			$this->_set_content("'$c'");
+	// 		}
+	// 		else {
+	// 			$this->_set_content($form->render());
+	// 		}
+	// 		$this->_show_type("code");
+	// 	}
+	// 	else
+	// 		$this->_set_content("");
+	// 	$this->_show_all();
+	// }
 
 
 	// function extra() {

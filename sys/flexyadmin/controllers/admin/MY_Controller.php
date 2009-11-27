@@ -226,6 +226,7 @@ class BasicController extends MY_Controller {
 	var $user_id;
 	var $rights;
 	var $language;
+	var $plugins;
 
 	function BasicController($isAdmin=false) {
 		parent::MY_Controller($isAdmin);
@@ -239,6 +240,9 @@ class BasicController extends MY_Controller {
 		// trace_($this->rights);
 		$lang=$this->language."_".strtoupper($this->language);
 		setlocale(LC_ALL, $lang);
+		
+		// load plugins
+		$this->_load_plugins();
 	}
 
 	function _user_logged_in() {
@@ -430,29 +434,37 @@ class BasicController extends MY_Controller {
 	 * Here are fuctions that hook into the grid/form/update proces.
 	 * They check if a standard hook method for the current table/field/id, if so call it
 	 */
-
-	function _after_delete($table,$oldData) {
-		// First check a specific table
-		$func="_after_delete_$table";
-		if (method_exists($this,$func)) {
-			$this->$func($oldData);
+	
+	function _load_plugins() {
+		// needed libraries for plugins
+		$this->load->library("editor_lists");
+		// load plugins
+		if (empty($this->plugins)) {
+			$files=read_map(APPPATH.'plugins');
+			// check order
+			$pluginFiles=array();
+			$pluginOrder=$this->config->item('PLUGIN_ORDER');
+			foreach ($pluginOrder as $plugin) {
+				$file='plugin_'.$plugin.'_pi.php';
+				if (isset($files[$file])) {
+					$pluginFiles[$file]=$files[$file];
+					unset($files[$file]);
+				}
+			}
+			$pluginFiles=array_merge($pluginFiles,$files);
+			unset($pluginFiles['plugin_template_pi.php']);
+			foreach ($pluginFiles as $file => $plugin) {
+				$Name=get_file_without_extension($file);
+				if (substr($Name,0,6)=='plugin') {
+					$this->load->plugin($Name);
+					$pluginName=str_replace('_pi','',$Name);
+					$this->$pluginName = new $pluginName($pluginName);
+					$this->plugins[]=$pluginName;
+				}
+			}
 		}
-		
-		// common after delete
-		
-		// check if there is Menu Automation and some data has changed, if so create automenu
-		$this->_resultMenu($table);
-
-		// Check if uri has been deleted, delete all internal links with new uri and update link list
-		if (isset($oldData["uri"]) or (isset($oldData["url_url"]) and $table==$this->cfg->get('CFG_editor','table')) ) {
-			if (isset($oldData["uri"]))
-				$oldUri=$oldData["uri"];
-			else
-				$oldUri=$oldData["url_url"];
-			$this->_update_links_in_txt($oldUri);
-			$this->load->library("editor_lists");
-			$this->editor_lists->create_list("links");
-		}
+		// trace_($this->plugins);
+		return $this->plugins;
 	}
 
 	function _get_parent_uri($table,$uri,$parent) {
@@ -465,82 +477,41 @@ class BasicController extends MY_Controller {
 		}
 		return $uri;
 	}
-	
-	function _after_update($table,$id,$oldData=NULL) {
-		// First check a specific table
-		$func="_after_update_$table";
-		if (method_exists($this,$func)) {
-			$this->$func($oldData);
-		}
 
-		// common after update
-		
-		// Check if uri or self_parent has changed, if so, replace all internal links with new uri
-		if (isset($oldData["uri"])) {
-			if (isset($oldData['self_parent'])) {
-				$this->db->select('uri,self_parent');
-				$this->db->where(pk(),$id);
-				$new=$this->db->get_row($table);
-				$newUri=$new['uri'];
-				$newParent=$new['self_parent'];
-				$oldParent=$oldData['self_parent'];
-			}
-			else
-				$newUri=$this->db->get_field($table,'uri',$id);
-			$oldUri=$oldData["uri"];
-			if ($oldUri!=$newUri or (isset($oldParent) and $oldParent!=$newParent)) {
-				if (isset($newParent)) {
-					$full=$this->db->get_parent_uri($table,$newUri);
-					$newUri=$full['uri'];
-					$oldUri=$this->_get_parent_uri($table,$oldUri,$oldParent);
-				}
-				// trace_(array('old'=>$oldUri,"new"=>$newUri));
-				$this->_update_links_in_txt($oldUri,$newUri);
-				$this->load->library("editor_lists");
-				$this->editor_lists->create_list("links");
+
+	function _after_delete($table,$oldData=NULL) {
+		// Call all plugins
+		foreach ($this->plugins as $plugin) {
+			if (method_exists($this->$plugin,'_after_delete')) {
+				$this->$plugin->after_delete(array('table'=>$table,'oldData'=>$oldData));
 			}
 		}
 		
-		// Check if a Link has changed, if so, replace all internal links with new Link
-		if (isset($oldData["url_url"]) and $table==$this->cfg->get('CFG_editor','table')) {
-			$newUrl=$this->db->get_field($table,"url_url",$id);
-			$oldUrl=$oldData["url_url"];
-			if ($oldUrl!=$newUrl) {
-				$this->_update_links_in_txt($oldUrl,$newUrl);
-				$this->load->library("editor_lists");
-				$this->editor_lists->create_list("links");
-			}
+		// check if there is Menu Automation and some data has changed, if so create automenu
+		$this->_resultMenu($table);
+	}
+	
+	function _after_update($table,$id,$oldData=NULL,$newData=NULL) {
+		// clean up many and foreign fields in data
+		$cleanUp=array('rel','tbl','cfg');
+		foreach ($oldData as $field => $value) {
+			$pre=get_prefix($field);
+			if (in_array($pre,$cleanUp)) unset($oldData[$field]);
+		}
+		foreach ($newData as $field => $value) {
+			$pre=get_prefix($field);
+			if (in_array($pre,$cleanUp)) unset($newData[$field]);
 		}
 		
-		// if new uri or url, refresh link list
-		// of if tbl_site has changed
-		if ($table=='tbl_site' or (empty($oldData) and ($table==$this->cfg->get('CFG_editor','table') or $this->db->field_exists("uri",$table)) ) ) {
-			$this->load->library("editor_lists");
-			$this->editor_lists->create_list("links");
+		// Call all plugins
+		foreach ($this->plugins as $plugin) {
+			if (method_exists($this->$plugin,'_after_update')) {
+				$newData=$this->$plugin->after_update(array('table'=>$table,'id'=>$id,'oldData'=>$oldData,'newData'=>$newData));
+			}
 		}
 
 		// check if there is Menu Automation and some data has changed, if so create automenu
 		$this->_resultMenu($table);
-		
-		// Check if txt fields has invalid HTML tags
-		$validHTML=$this->cfg->get('CFG_editor','str_valid_html');
-		if (!empty($validHTML)) {
-			$fields=$this->db->list_fields($table);
-			foreach ($fields as $field) {
-				if (get_prefix($field)=="txt") {
-					$this->db->select("$field");
-					$this->db->where("id",$id);
-					$this->db->where("$field !=","");
-					$query=$this->db->get($table);
-					foreach($query->result_array() as $row) {
-						$txt=$row[$field];
-						$txt=strip_tags($txt,$validHTML);
-						$res=$this->db->update($table,array($field=>$txt),"id = $id");
-					}
-				}
-			}
-		}
-
 	}
 	
 	function _setResultMenuItem($resultMenu,$item,$setId=false) {
@@ -926,6 +897,14 @@ class AdminController extends BasicController {
 			$this->load->view('admin/content',array("content"=> $this->content));
 	}
 
+	function _show_trace() {
+		$trace=$this->session->userdata('trace');
+		if (IS_LOCALHOST and !empty($trace)) {
+			$this->load->view('admin/trace',array('trace'=>$trace));
+		}
+		$this->session->unset_userdata('trace');
+	}
+
 	function _show_footer($extra_view="",$data=NULL) {
 		$this->db->select("url_url");
 		$query=$this->db->get("tbl_site");
@@ -974,6 +953,7 @@ class AdminController extends BasicController {
 		$this->_show_message();
 		$this->_show_menu($currentMenuItem);
 		$this->_show_content();
+		$this->_show_trace();
 		$this->_show_footer();
 	}
 

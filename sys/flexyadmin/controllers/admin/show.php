@@ -288,10 +288,8 @@ class Show extends AdminController {
 					
 					if ($this->_has_key($table)) {
 						$resultId=$form->update($table,$restrictedToUser);
-						if ($id==-1)
-							$this->_after_update($table,$resultId);
-						else
-							$this->_after_update($table,$resultId,$data);
+						$newData=$form->get_data();
+						$this->_after_update($table,$resultId,$data,$newData);
 						if (is_string($resultId)) {
 							$this->set_message(langp("update_error",$table,$resultId));
 							redirect($redirectUri);
