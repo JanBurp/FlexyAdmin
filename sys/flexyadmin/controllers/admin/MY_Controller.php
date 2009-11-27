@@ -478,8 +478,20 @@ class BasicController extends MY_Controller {
 		return $uri;
 	}
 
+	function _clean_plugin_data($data) {
+		// clean up many and foreign fields in data
+		$cleanUp=array('rel','tbl','cfg');
+		foreach ($data as $field => $value) {
+			$pre=get_prefix($field);
+			if (in_array($pre,$cleanUp)) unset($data[$field]);
+		}
+		return $data;
+	}
+
 
 	function _after_delete($table,$oldData=NULL) {
+		// clean up many and foreign fields in data
+		$oldData=$this->_clean_plugin_data($oldData);
 		// Call all plugins
 		foreach ($this->plugins as $plugin) {
 			if (method_exists($this->$plugin,'_after_delete')) {
@@ -493,16 +505,8 @@ class BasicController extends MY_Controller {
 	
 	function _after_update($table,$id,$oldData=NULL,$newData=NULL) {
 		// clean up many and foreign fields in data
-		$cleanUp=array('rel','tbl','cfg');
-		foreach ($oldData as $field => $value) {
-			$pre=get_prefix($field);
-			if (in_array($pre,$cleanUp)) unset($oldData[$field]);
-		}
-		foreach ($newData as $field => $value) {
-			$pre=get_prefix($field);
-			if (in_array($pre,$cleanUp)) unset($newData[$field]);
-		}
-		
+		$oldData=$this->_clean_plugin_data($oldData);
+		$newData=$this->_clean_plugin_data($newData);
 		// Call all plugins
 		foreach ($this->plugins as $plugin) {
 			if (method_exists($this->$plugin,'_after_update')) {
@@ -602,23 +606,7 @@ class BasicController extends MY_Controller {
 									$this->db->insert($resultMenu);
 								}
 							}
-							
-							
 
-	
-							// 
-							// $this->db->where($value['field_group_by'],$item['id']);
-							// $level2=$this->db->get_result($value['table']);
-							// $subOrder=0;
-							// $self_parent=$this->db->insert_id();
-							// foreach ($level2 as $item2) {
-							// 	$this->_setResultMenuItem($resultMenu,$item2);
-							// 	$this->db->set('order',$subOrder++);
-							// 	$this->db->set('self_parent',$self_parent);
-							// 	$this->db->set('str_table',$value['table']);
-							// 	$this->db->set('str_uri',$item2['uri']);
-							// 	$this->db->insert($resultMenu);		
-							// }
 							
 							break;
 					}
@@ -627,50 +615,6 @@ class BasicController extends MY_Controller {
 					
 				}
 
-
-				
-				// // First from normal menu
-				// $data=$this->db->get_results($menuTable);
-				// foreach ($data as $item) {
-				// 	$this->_setResultMenuItem($resultMenu,$item,true);
-				// 	$this->db->set('str_table',$menuTable);
-				// 	$this->db->set('str_uri',$item['uri']);
-				// 	if ($item['self_parent']==0) $lastOrder=$item['order'];
-				// 	$this->db->insert($resultMenu);
-				// }
-				// Loop through automation
-				// foreach ($automationData as $key => $value) {
-				// 	// level 1
-				// 	$level1Table=$value['field_group_by'];
-				// 	$level1Table=explode('.',$level1Table);
-				// 	$level1Table=foreign_table_from_key($level1Table[1]);
-				// 
-				// 	// level 1 entries
-				// 	$level1=$this->db->get_result($level1Table);
-				// 	foreach ($level1 as $item) {
-				// 		$this->_setResultMenuItem($resultMenu,$item);
-				// 		$this->db->set('order',$lastOrder++);
-				// 		$this->db->set('self_parent',0);
-				// 		$this->db->set('str_table',$level1Table);
-				// 		$this->db->set('str_uri',$item['uri']);
-				// 		$this->db->insert($resultMenu);		
-				// 
-				// 		// level 2 entries
-				// 		$this->db->where($value['field_group_by'],$item['id']);
-				// 		$level2=$this->db->get_result($value['table']);
-				// 		$subOrder=0;
-				// 		$self_parent=$this->db->insert_id();
-				// 		foreach ($level2 as $item2) {
-				// 			$this->_setResultMenuItem($resultMenu,$item2);
-				// 			$this->db->set('order',$subOrder++);
-				// 			$this->db->set('self_parent',$self_parent);
-				// 			$this->db->set('str_table',$value['table']);
-				// 			$this->db->set('str_uri',$item2['uri']);
-				// 			$this->db->insert($resultMenu);		
-				// 		}
-				// 					
-				// 	}
-				// }
 			
 				// update linklist etc
 				$this->load->library("editor_lists");
