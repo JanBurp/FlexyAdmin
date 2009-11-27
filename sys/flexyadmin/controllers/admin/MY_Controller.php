@@ -498,9 +498,6 @@ class BasicController extends MY_Controller {
 				$this->$plugin->after_delete(array('table'=>$table,'oldData'=>$oldData));
 			}
 		}
-		
-		// check if there is Menu Automation and some data has changed, if so create automenu
-		$this->_resultMenu($table);
 	}
 	
 	function _after_update($table,$id,$oldData=NULL,$newData=NULL) {
@@ -513,115 +510,8 @@ class BasicController extends MY_Controller {
 				$newData=$this->$plugin->after_update(array('table'=>$table,'id'=>$id,'oldData'=>$oldData,'newData'=>$newData));
 			}
 		}
-
-		// check if there is Menu Automation and some data has changed, if so create automenu
-		$this->_resultMenu($table);
 	}
-	
-	function _setResultMenuItem($resultMenu,$item,$setId=false) {
-		if (!$setId) {
-			unset($item['id']);
-			unset($item['order']);
-			unset($item['self_parent']);
-		}
-		foreach ($item as $key => $value) {
-			if ($this->db->field_exists($key,$resultMenu)) $this->db->set($key,$value);
-		}
-	}
-	
-	function _resultMenu($table) {
-		$menuTable=$this->cfg->get('CFG_configurations','str_menu_table');
-		$automationTable='cfg_auto_menu';
-		$resultMenu='res_menu_result';
-		if ($this->db->table_exists($automationTable)) {
-			$checkTables=array();
-			$checkTables[]=$menuTable;
-			$checkTables[]=$automationTable;
-			$checkTables[]=$resultMenu;
-			$automationData=$this->db->get_results($automationTable);
-			// trace_($automationData);
-			foreach ($automationData as $aData) {
-				$checkTables[]=$aData['table'];
-				$foreignTable=$aData['field_group_by'];
-				$foreignTable=explode('.',$foreignTable);
-				if (isset($foreignTable[1])) {
-					$foreignTable=$foreignTable[1];
-					$foreignTable=foreign_table_from_key($foreignTable);
-					$checkTables[]=$foreignTable;
-				}
-			}
-			// check if some table content has changed, if so, create menu
-			if (in_array($table,$checkTables)) {
-				
-				// Create auto menu
-				$this->db->truncate($resultMenu);
-				$lastId=-1;
-				$lastOrder=0;
-				
-				// Loop through all options in Auto Menu
-				foreach ($automationData as $autoKey => $autoValue) {
-					switch($autoValue['str_type']) {
-						case 'from menu table':
-							$data=$this->db->get_results($autoValue['table']);
-							foreach ($data as $item) {
-								$this->_setResultMenuItem($resultMenu,$item,true);
-								$this->db->set('str_table',$autoValue['table']);
-								$this->db->set('str_uri',$item['uri']);
-								if (isset($item['self_parent'])) {
-									$this->db->set('self_parent',$item['self_parent']);
-								}
-								$this->db->insert($resultMenu);
-							}
-							break;
-				
-						case 'from category table':
-							$data=$this->db->get_result($autoValue['table']);
-							foreach ($data as $item) {
-								$this->_setResultMenuItem($resultMenu,$item);
-								$this->db->set('order',$lastOrder++);
-								$this->db->set('self_parent',0);
-								$this->db->set('str_table',$autoValue['table']);
-								$this->db->set('str_uri',$item['uri']);
-								$this->db->insert($resultMenu);
-							}
-							break;
-				
-						case 'from table group by category':
-							$groupField=remove_prefix($autoValue['field_group_by'],'.');
-							$groupTable=foreign_table_from_key($groupField);
-							$groupData=$this->db->get_result($groupTable);
-							foreach ($groupData as $groupId=>$groupData) {
-								$this->db->where($autoValue['field_group_by'],$groupId);
-								$data=$this->db->get_result($autoValue['table']);
-								$lastOrder=0;
-								$this->db->where('str_title',$groupData['str_title']);
-								$parentData=$this->db->get_row($resultMenu);
-								$selfParent=$parentData['id'];
-								foreach ($data as $item) {
-									$this->_setResultMenuItem($resultMenu,$item);
-									$this->db->set('order',$lastOrder++);
-									$this->db->set('self_parent',$selfParent);
-									$this->db->set('str_table',$autoValue['table']);
-									$this->db->set('str_uri',$item['uri']);
-									$this->db->insert($resultMenu);
-								}
-							}
 
-							
-							break;
-					}
-					$lastId=$this->db->insert_id();
-					$lastOrder=$this->db->get_field($resultMenu,'order',$lastId);
-					
-				}
-
-			
-				// update linklist etc
-				$this->load->library("editor_lists");
-				$this->editor_lists->create_list("links");
-			}
-		}		
-	}
 
 }
 
