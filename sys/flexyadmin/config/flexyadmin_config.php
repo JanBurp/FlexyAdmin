@@ -84,7 +84,7 @@ $config['API_search']								= '/admin/search/';
 $config['API_help']									= '/admin/help/';
 $config['API_bulk_upload']					= '/admin/bulkupload/';
 
-$config['API_stats']								= '/admin/stats/show';
+// $config['API_stats']								= '/admin/stats/show';
 $config['API_info']									= '/admin/info/';
 
 $config['AJAX']											= "/admin/ajax/";
