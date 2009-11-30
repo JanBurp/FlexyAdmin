@@ -71,18 +71,3 @@ function get_path_and_file($name) {
 	$path=implode("/",$explode);
 	return array("path"=>$path,"file"=>$file);
 }
-
-
-/*
-// string load_class( string sClass)
-
-function load_library_class($sClass) {
-	require_once("system/application/libraries/$sClass.php");
-}
-
-function load_controller_class($sClass="MY_Controller") {
-	require_once("system/application/controllers/$sClass.php");
-}
-
-
-*/

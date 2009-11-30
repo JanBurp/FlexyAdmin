@@ -454,13 +454,17 @@ class BasicController extends MY_Controller {
 			$pluginFiles=array_merge($pluginFiles,$files);
 			unset($pluginFiles['plugin_template_pi.php']);
 			unset($pluginFiles['plugin_.php']);
+			// ok load them
 			foreach ($pluginFiles as $file => $plugin) {
 				$Name=get_file_without_extension($file);
 				if (substr($Name,0,6)=='plugin') {
 					$this->load->plugin($Name);
 					$pluginName=str_replace('_pi','',$Name);
+					$shortName=str_replace('plugin_','',$pluginName);
 					$this->$pluginName = new $pluginName($pluginName);
 					$this->plugins[]=$pluginName;
+					// add api call to config if it exist
+					if (method_exists($this->$pluginName,'_admin_api')) $this->config->set_item('API_'.$pluginName, 'admin/plugin/'.$shortName);
 				}
 			}
 		}
