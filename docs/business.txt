@@ -1,0 +1,28 @@
+DEMO versie:
+= Gratis
+: Code anders:
+- Alleen minimized js (en php?)
+: Geen extra's (zie hieronder)
+- alleen basis features: tabellen / media
+- geen plugin architectuur
+: updates
+- Eens in half jaar (bv)
+- Ruime tijd nadat betaalde updates verschenen zijn
+
+
+BETAALDE VERSIE:
+= Betaald + snelle antwoorden op forum (per site|jaar € 75  / per bouwer|jaar € 575,- / per bouwer|jaar)
+= Betaald + uitgebreide ondersteuning  (per site|jaar € 275 / per bouwer|jaar € 975,- / per bouwer|jaar)
+: Code
+- Ook de niet minimized versie
+: Extra's / Plugins
+- statistieken
+- flexibele menu's
+- bulk_upload
+- media popup's
+(- autolinks)
+: updates
+- meteen als update beschikbaar is
+: ondersteuning:
+- antwoorden via forum binnen aantal werkdagen
+- uitgebreide documentatie

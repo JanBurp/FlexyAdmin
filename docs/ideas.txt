@@ -15,7 +15,6 @@ JQUERY in Frontend
 
 Langere termijn:
 - Image Manager direct in Editor/Form
-- joins, in volgorde (dragn drop)
 - redesign DB & cfg (sneller, een keer laden van info als nodig)
 - redesign controllers,modules en afhankelijkheden
 - redesing css en alles wat daarbij hoort

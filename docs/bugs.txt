@@ -1,0 +1,3 @@
+- table info table field, longer names
+- rel tables both with order field gives problem.
+- styling bug in drag n drop relations?
