@@ -51,6 +51,12 @@ $route['(?!admin)(.*)'] = "";
  */
 $route['admin/show/valid_(.*)'] = "admin/show";
 
+/**
+ * This routing reroutes plugin calls
+ */
+$route['admin/plugin/(.+)'] = "admin/plugin/call/$1";
+
+
 
 // Reserved routes
 

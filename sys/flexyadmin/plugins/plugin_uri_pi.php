@@ -1,5 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-require_once(APPPATH."libraries/plugin.php");
+require_once(APPPATH."plugins/plugin_.php");
 
 /**
  * FlexyAdmin Plugin
@@ -8,11 +8,36 @@ require_once(APPPATH."libraries/plugin.php");
  */
 
 
-class plugin_uri extends plugin {
+class plugin_uri extends plugin_ {
 
 	function init($init=array()) {
 		parent::init($init);
 		$this->act_on(array('fields'=>'uri'));
+	}
+
+	function _admin_api($args=NULL) {
+		$this->CI->_add_content(h($this->plugin,1));
+		if (isset($args)) {
+			$this->table=$args[1];
+			if ($this->CI->db->table_exists($this->table) and $this->CI->db->field_exists('uri',$this->table)) {
+				// reset all uris of this table
+				$allData=$this->CI->db->get_results($this->table);
+				foreach ($allData as $id => $data) {
+					$this->id=$id;
+					$this->oldData=$data;
+					$this->newData=$data;
+					if (!isset($field)) $field=$this->_get_uri_field();
+					$uri=$data['uri'];
+					$newUri=$this->_create_uri($field);
+					if ($uri!=$newUri) {
+								$this->CI->db->set('uri',$newUri);
+								$this->CI->db->where('id',$id);
+								$this->CI->db->update($this->table);
+							}
+				}
+				$this->CI->_add_content("<p>All uri's in $this->table are (re)set.</p><p>Just change one in this table to make sure all other plugins did there work.</p>");
+			}
+		}
 	}
 
 	function _after_update() {
