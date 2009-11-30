@@ -119,7 +119,7 @@ class plugin_automenu extends plugin {
 		}
 
 		// update linklist etc
-		$this->CI->editor_lists->create_list("links");
+		// $this->CI->editor_lists->create_list("links");
 	}
 
 	function _setResultMenuItem($item,$setId=false) {
