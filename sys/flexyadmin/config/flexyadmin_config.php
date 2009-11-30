@@ -40,7 +40,7 @@ $config['BULKUPLOAD']							= 'bulk_upload';
 
 $config['THUMBSIZE']							= array(100,100);
 
-$config['PLUGIN_ORDER']						= array('uri','links','striptags');
+$config['PLUGIN_ORDER']						= array('uri','automenu','links','striptags');
 
 
 /*

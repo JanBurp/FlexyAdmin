@@ -137,10 +137,11 @@ class plugin {
 		$this->init($init);
 		$data=$this->newData;
 		if ($this->act)	{
-			$data=$this->_after_update();
+			$changed=$this->_after_update();
 			// strace_("'$this->plugin ->_after_update'");
-			if ($data and $this->oldData!=$data) {
+			if ($changed and $this->oldData!=$changed) {
 				$this->_update_data();
+				$data=$changed;
 				// strace_(array('changed'=>$data));
 			}
 		}
