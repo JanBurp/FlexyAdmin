@@ -5,7 +5,7 @@
  * @author Jan den Besten
  */
 
-class plugin {
+class plugin_ {
 	
 	var $plugin;
 	var $CI;
@@ -20,13 +20,13 @@ class plugin {
 	var $actOn;
 	var $act;
 	
-	function plugin($name='plugin') {
+	function plugin_($name='plugin') {
 		$this->plugin=$name;
 		$this->CI=&get_instance();
 	}
 	
 	function init($init=array()) {
-		// strace_('========= '.$this->plugin.' ============');
+		strace_('========= '.$this->plugin.' ============');
 		$default=array('table'=>'$table','id'=>'','oldData'=>NULL,'newData'=>NULL);
 		$init=array_merge($default,$init);
 		

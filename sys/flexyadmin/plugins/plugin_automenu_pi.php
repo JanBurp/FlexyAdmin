@@ -1,5 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-require_once(APPPATH."libraries/plugin.php");
+require_once(APPPATH."plugins/plugin_.php");
 
 /**
  * FlexyAdmin Plugin
@@ -8,7 +8,7 @@ require_once(APPPATH."libraries/plugin.php");
  */
 
 
-class plugin_automenu extends plugin {
+class plugin_automenu extends plugin_ {
 
 	var $menuTable;
 	var $automationTable;

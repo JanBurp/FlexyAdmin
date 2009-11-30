@@ -453,6 +453,7 @@ class BasicController extends MY_Controller {
 			}
 			$pluginFiles=array_merge($pluginFiles,$files);
 			unset($pluginFiles['plugin_template_pi.php']);
+			unset($pluginFiles['plugin_.php']);
 			foreach ($pluginFiles as $file => $plugin) {
 				$Name=get_file_without_extension($file);
 				if (substr($Name,0,6)=='plugin') {
