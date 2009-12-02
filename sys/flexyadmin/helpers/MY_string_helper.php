@@ -29,6 +29,11 @@ function in_string($in,$string) {
 	return $found;
 }
 
+function has_string($in,$string) {
+	return strpos($string,$in)!==false;
+}
+
+
 function explode_pre($split,$fields,$pre) {
 	$fields=explode($split,$fields);
 	foreach($fields as $key=>$field) {
@@ -111,12 +116,13 @@ function replace_html($sTag,$sReplace,$sSource) {
 
 function clean_string($s,$c=0) {
 	$a='ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ';
-	$b='aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr';
-	$s=utf8_decode($s);
+	$b='aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyrr';
+	// $s=utf8_decode($s);
 	$s=strtr($s,utf8_decode($a),$b);
 	$s=preg_replace("/[^A-Za-z0-9_-]/", "", $s);
+	// $s=utf8_encode($s);
 	if ($c>0) $s=substr($s,0,$c);
-	return utf8_encode($s);
+	return $s;
 }
 
 function safe_string($s,$c=0) {

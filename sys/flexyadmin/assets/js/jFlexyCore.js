@@ -12,6 +12,7 @@ $(document).ready(function() {
 	Popup=$("#popup");
 	isForm=$("#content").hasClass("form");
 	isGrid=$("#content").hasClass("grid");
+	isGridAction=$(".grid").hasClass("actionGrid");
 	// isTree=$("#content").hasClass("tree");
 	isFile=$("#content").hasClass("filemanager");
 	if (!isGrid && isFile)	{	isGrid=$("#content").hasClass("list"); }

@@ -54,7 +54,7 @@ $config['PLUGIN_ORDER']						= array('uri','automenu','links','striptags');
 $config['API_home']									= "/admin/";
 $config['API_user']									= "/admin/show/user/";
 $config['API_login']								= "/admin/user/login/";
-$config['API_logout']								= "/admin/user/logout/";
+$config['API_logout']								= "/admin/logout/";
 
 $config['API_view_order']						= "/admin/show/order/";
 $config['API_view_grid']						= "/admin/show/grid/";
@@ -255,6 +255,16 @@ $config["CFG_"]=array(
 			"order"=>'109',
 			"table"=>'cfg_editor',
 			"b_single_row"=>'1',
+			"str_ui_name"=>'',
+			"b_grid_add_many"=>'0',
+			"str_abstract_fields"=>'',
+			"str_order_by"=>'',
+			"txt_help"=>''
+			),
+		"cfg_plugins"=>array(
+			"order"=>'110',
+			"table"=>'cfg_plugins',
+			"b_single_row"=>'',
 			"str_ui_name"=>'',
 			"b_grid_add_many"=>'0',
 			"str_abstract_fields"=>'',
@@ -511,6 +521,11 @@ $config['FIELDS_special'] = array(
 	"api"				=> array(
 												"grid"				=> "%s",
 												"form"				=> "function_dropdown_api",
+												"validation"	=> "trim",
+											),
+	"plugin"		=> array(
+												"grid"				=> "%s",
+												"form"				=> "function_dropdown_plugin",
 												"validation"	=> "trim",
 											),
 	"order"			=> array(

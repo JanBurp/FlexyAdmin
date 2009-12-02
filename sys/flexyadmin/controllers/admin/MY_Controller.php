@@ -454,6 +454,13 @@ class BasicController extends MY_Controller {
 			$pluginFiles=array_merge($pluginFiles,$files);
 			unset($pluginFiles['plugin_template_pi.php']);
 			unset($pluginFiles['plugin_.php']);
+			// set plugin cfg
+			$cfg=$this->cfg->get('cfg_plugins');
+			$pluginCfg=array();
+			foreach ($cfg	as $c) {
+				$p=$c['plugin'];
+				$pluginCfg[$p][$c['str_set']]=$c['str_value'];
+			}
 			// ok load them
 			foreach ($pluginFiles as $file => $plugin) {
 				$Name=get_file_without_extension($file);
@@ -463,6 +470,8 @@ class BasicController extends MY_Controller {
 					$shortName=str_replace('plugin_','',$pluginName);
 					$this->$pluginName = new $pluginName($pluginName);
 					$this->plugins[]=$pluginName;
+					// set config in plugin
+					if (isset($pluginCfg[$shortName])) $this->$pluginName->cfg=$pluginCfg[$shortName];
 					// add api call to config if it exist
 					if (method_exists($this->$pluginName,'_admin_api')) $this->config->set_item('API_'.$pluginName, 'admin/plugin/'.$shortName);
 				}

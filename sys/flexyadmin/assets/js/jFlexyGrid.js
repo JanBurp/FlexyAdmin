@@ -450,6 +450,35 @@ function doGrid() {
 			    });
 	}
 
+	if (isGridAction) {
+		$('.actionGrid td.id').html('<div class="icon no" /></div');
+		$('.actionGrid tbody tr:first').each(function(){
+			doAction($(this));
+		});
+	}
+	
+	function doAction(obj) {
+		$(obj).children('td.id:first').html('<div class="icon wait" /></div');
+		uri=$(obj).children('td.uri').html();
+		if (uri!='') {
+			$.ajax({
+				type: "POST",
+				url: uri,
+				async:'false',
+				success: function(data){
+					if (data!="") {ajaxError(data);}
+					else {
+						$(obj).children('td.id:first').html('<div class="icon yes" /></div');
+						$(obj).next('tr:first').each(function(){
+							doAction($(this));
+						});
+					}
+				}
+			});
+		}
+	}
+
+
 };
 
 

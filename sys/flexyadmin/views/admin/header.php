@@ -11,7 +11,9 @@ else{
 	$css='.css';
 }
 
-$show_type=trim($show_type);
+$isGrid=has_string('grid',$show_type) or has_string('filemanager',$show_type);
+$isForm=has_string('form',$show_type);
+
 ?>
 
 
@@ -58,14 +60,14 @@ $show_type=trim($show_type);
 	<link rel="stylesheet" type="text/css" href="sys/jquery/plugins/fullsize/fullsize.css" />
 	<script language="javascript" type="text/javascript" src="sys/jquery/plugins/fullsize/jquery.fullsize<?=$js?>"></script>
 	
-	<? if ($show_type=="grid" or $show_type=="filemanager list" or $show_type=="filemanager icons" or $show_type=="grid graph stats"): ?>
+	<? if ($isGrid): ?>
 		<!-- grid Scripts -->
 		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/filterable/jquery.filterable<?=$js?>"></script>
 		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/tablesorter/jquery.tablesorter.min.js"></script>
 		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/flipv/cvi_text_lib<?=$js?>"></script>
 		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/flipv/jquery.flipv<?=$js?>"></script>
 	<? endif; ?>
-	<? if ($show_type=="form"): ?>
+	<? if ($isForm): ?>
 		<!-- form Scripts -->
 		<script language="javascript" type="text/javascript" src="sys/jquery/ui/i18n/ui.datepicker-nl<?=$js?>"></script>
 		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/timepicker/timepicker<?=$js?>"></script>
@@ -111,10 +113,10 @@ $show_type=trim($show_type);
 	<? endif; ?>
 	<!-- FlexyAdmin Scripts -->
 	<script language="javascript" type="text/javascript" src="<?=admin_assets()?>js/jFlexyCore<?=$js?>"></script>
-	<? if ($show_type=="grid" or $show_type=="filemanager list" or $show_type=="filemanager icons"): ?>
+	<? if ($isGrid): ?>
 		<script language="javascript" type="text/javascript" src="<?=admin_assets()?>js/jFlexyGrid<?=$js?>"></script>
 	<? endif; ?>
-	<? if ($show_type=="form"): ?>
+	<? if ($isForm): ?>
 		<script language="javascript" type="text/javascript" src="<?=admin_assets()?>js/jFlexyForm<?=$js?>"></script>
 	<? endif; ?>
 
