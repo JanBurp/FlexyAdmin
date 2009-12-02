@@ -1,6 +1,4 @@
 <?
-require_once(APPPATH."controllers/admin/MY_Controller.php");
-
 /**
  * FlexyAdmin V1
  *
@@ -105,14 +103,6 @@ class User extends Controller {
 			}
 		}
 		redirect($this->homePage);
-	}
-
-	function logout() {
-		$this->session->sess_destroy();
-		if ($this->db->has_field('cfg_configurations','b_logout_to_site') and $this->db->get_field('cfg_configurations','b_logout_to_site'))
-			redirect();
-		else
-			redirect($this->homePage);
 	}
 
 }

@@ -771,6 +771,19 @@ class Flexy_field extends Model {
 		return $out;
 	}
 
+	function _dropdown_plugin_form() {
+		$options=array();
+		$plugins=$this->plugins;
+		$options[""]="";
+		foreach ($plugins as $plugin) {
+			$plugin=str_replace('plugin_','',$plugin);
+			$options[$plugin]=$plugin;
+		}
+		$out=$this->_standard_form_field($options);
+		unset($out["button"]);
+		return $out;
+	}
+
 
 }
 

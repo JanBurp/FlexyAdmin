@@ -18,8 +18,8 @@ class plugin_uri extends plugin_ {
 	function _admin_api($args=NULL) {
 		$this->CI->_add_content(h($this->plugin,1));
 		if (isset($args)) {
-			if (isset($args[1])) {
-				$this->table=$args[1];
+			if (isset($args[0])) {
+				$this->table=$args[0];
 				if ($this->CI->db->table_exists($this->table) and $this->CI->db->field_exists('uri',$this->table)) {
 					// reset all uris of this table
 					$allData=$this->CI->db->get_results($this->table);
@@ -63,6 +63,8 @@ class plugin_uri extends plugin_ {
 			static $counter=1;
 			$uri=strtolower($uri_source);
 			$uri=strip_tags($uri);
+			$uri=trim($uri);
+			$uri=trim($uri,'-');
 			$uri=str_replace(" ","_",trim($uri));
 			$uri=clean_string($uri);
 			$forbidden=array("site","sys","admin");

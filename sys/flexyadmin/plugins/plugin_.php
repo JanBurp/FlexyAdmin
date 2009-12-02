@@ -120,7 +120,7 @@ class plugin_ {
 			}
 		}
 		// strace_($this->actOn);
-		// strace_($this->act);
+		strace_($this->act);
 		return $this->act;
 	}
 

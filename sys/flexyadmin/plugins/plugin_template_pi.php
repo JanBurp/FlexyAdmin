@@ -22,6 +22,12 @@ class plugin_template extends plugin_ {
 	// Here you find short templates of possible methods
 	//
 
+	//
+	// _admin_logout is a call that's made when user is logging out
+	//
+	// function _admin_logout() {
+	// }
+	
 	
 	//
 	// _admin_api is a call in admin:

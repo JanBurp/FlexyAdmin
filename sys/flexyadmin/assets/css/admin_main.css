@@ -18,6 +18,8 @@ a {
 }
 a:hover {	text-decoration:underline; }
 
+a.autoLink { text-decoration:underline;}
+
 .phpinfo hr,
 .phpinfo img {
 	display:none;
@@ -151,7 +153,8 @@ img {
 	background-position:0px 2px;
 	padding-left: 20px;
 	}
-#menu li ._configurations {
+#menu li ._configurations,
+#menu li ._plugins {
 	background-image: url("../icons/config.gif");
 	background-repeat: no-repeat;
 	background-position:0px 2px;
@@ -268,6 +271,10 @@ thead tr.caption .icon:hover {
 	}
 .icon.no {
 	background-image: url("../icons/action_remove.gif");
+	cursor:default;
+}
+.icon.wait {
+	background-image: url("../icons/action_wait.gif");
 	cursor:default;
 }
 .icon.edit {
