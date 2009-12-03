@@ -87,7 +87,7 @@ class Menu {
 		$this->attr=$attr;
 	}
 
-	function set_menu_from_table($table="") {
+	function set_menu_from_table($table="",$foreign=false) {
 		$counter=1;
 		$CI =& get_instance();
 		if (empty($table)) {
@@ -95,16 +95,28 @@ class Menu {
 			$resultTable='res_menu_result';
 			if ($CI->db->table_exists($resultTable)) $table=$resultTable; // Menu automation
 		}
+
 		// select fields
 		$fields=$CI->db->list_fields($table);
 		foreach ($fields as $key=>$f) {
 			if (!in_array($f,$this->fields) and !isset($this->extraFields[$f])) unset($fields[$key]);
 		}
-		// get data form menu_table
+		if (is_array($foreign)) {
+			foreach ($foreign as $t => $ff) {
+				$fields[]='id_'.remove_prefix($t);
+				foreach ($ff as $f) {
+					$fields[]=$t.'.'.$f;
+				}
+			}
+		}
+		// get data from menu_table
 		$CI->db->select(pk());
 		$CI->db->select($fields);
+		$CI->db->add_foreigns($foreign);
 		if (in_array("self_parent",$fields)) $CI->db->order_as_tree();
 		$items=$CI->db->get_result($table);
+
+		trace_($items);
 		$menu=array();
 		foreach($items as $item) {
 			if (!isset($item[$this->fields["visible"]]) or ($item[$this->fields["visible"]]) ) {

@@ -196,7 +196,7 @@ class plugin_autolinks extends plugin_ {
 		$actionGrid=new grid();
 		
 		// test render
-		$this->CI->db->select('id,uri,str_titel,str_tags');
+		$this->CI->db->select('id,uri,str_title,str_tags');
 		$this->CI->db->order_by('int_stat','DESC');
 		$articles=$this->CI->db->get_results($table,50);
 		foreach ($articles as $id => $article) {
@@ -217,7 +217,7 @@ class plugin_autolinks extends plugin_ {
 		$article=$this->CI->db->get_row($table);
 		if (!empty($article)) {
 			$id=$article['id'];
-			$txt=$article['txt_tekst'];
+			$txt=$article['txt_text'];
 			$renderedTxt=$this->_doRender($txt);
 			$this->CI->db->set('txt_rendered',$renderedTxt);
 			$this->CI->db->where('id',$id);
