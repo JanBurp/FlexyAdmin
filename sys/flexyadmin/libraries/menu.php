@@ -116,7 +116,6 @@ class Menu {
 		if (in_array("self_parent",$fields)) $CI->db->order_as_tree();
 		$items=$CI->db->get_result($table);
 
-		trace_($items);
 		$menu=array();
 		foreach($items as $item) {
 			if (!isset($item[$this->fields["visible"]]) or ($item[$this->fields["visible"]]) ) {
