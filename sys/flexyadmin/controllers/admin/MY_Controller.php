@@ -154,10 +154,15 @@ class FrontEndController extends MY_Controller {
 		$menuTable=$this->cfg->get("CFG_configurations","str_menu_table");
 		if (!empty($menuTable)) {
 			if ($this->db->has_field($menuTable,"self_parent")) $this->db->order_as_tree();
-			$this->db->select("uri");
-			$top2=$this->db->get_result($menuTable,2);
-			$top=current($top2);
-			$this->uri->set_home($top["uri"]);
+			if ($this->db->has_field($menuTable,"uri")) {
+				$this->db->select("uri");
+				$top2=$this->db->get_result($menuTable,2);
+				$top=current($top2);
+				$this->uri->set_home($top["uri"]);
+			}
+			else {
+				$this->uri->set_home('');
+			}
 		}
 	}
 

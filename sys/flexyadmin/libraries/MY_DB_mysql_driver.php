@@ -241,7 +241,11 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		 */
 		if (!empty($this->foreigns) and $this->foreigns!==false) {
 			log_("info","[DB+] add joins from foreign tables");
-			$foreignTables=$this->get_foreign_tables($table);
+			if (is_array($this->foreigns)) {
+				$foreignTables=$this->foreigns;
+			}
+			else
+				$foreignTables=$this->get_foreign_tables($table);
 			if (!empty($foreignTables)) {
 				// loop through fields, add them to select array and see if it is a foreignfield with known foreigntables
 				$selectFields=array();
@@ -266,7 +270,10 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 							$selectFields[]=$abstractField;
 						}
 						else {
-							$forFields=$this->list_fields($joinTable);
+							if (isset($item['fields']) and !empty($item['fields']))
+								$forFields=$item['fields'];
+							else
+								$forFields=$this->list_fields($joinTable);
 							foreach($forFields as $key=>$f) {
 								$selectFields[]= $joinAsTable.".".$f." AS ".$joinAsTable."__".$f;
 							}
@@ -652,6 +659,13 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 
 	function add_foreigns($foreigns=true) {
 		$this->foreigns=$foreigns;
+		if (is_array($foreigns)) {
+			$this->foreigns=array();
+			foreach ($foreigns as $table => $value) {
+				$key='id_'.remove_prefix($table);
+				$this->foreigns[$key]=array('key'=>$key,'table'=>$table,'fields'=>$value);
+			}
+		}
 		$this->foreignTables=array();
 	}
 
