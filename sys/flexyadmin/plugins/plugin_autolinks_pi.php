@@ -17,7 +17,7 @@ class plugin_autolinks extends plugin_ {
 		parent::init($init);
 		$this->needToRender=$this->CI->session->userdata('render');
 		$this->tagsPlus=false;
-		$this->act_on(array('changedFields'=>'uri,str_tags'));
+		$this->act_on(array('changedFields'=>'uri,str_tags,txt_text'));
 	}
 	
 	//
@@ -41,19 +41,19 @@ class plugin_autolinks extends plugin_ {
 	//
 	function _admin_api($args=NULL) {
 		$this->CI->_add_content(h($this->plugin,1));
-		if (!empty($args)) {
-			if (isset($args[0])) {
-				$action=$args[0];
-				array_shift($args);
-				switch ($action) {
-					case 'resettags':
-						$this->_resetTags();
-						break;
-					case 'render':
-						$this->_render($args);
-						break;
-				}
-			}
+		$action='';
+		if (isset($args[0])) {
+			$action=$args[0];
+			array_shift($args);
+		}
+		switch ($action) {
+			case 'resettags':
+				$this->_resetTags();
+				break;
+			case 'render':
+			default:
+				$this->_render($args);
+				break;
 		}
 	}
 
@@ -82,6 +82,8 @@ class plugin_autolinks extends plugin_ {
 	// These methods can be used to do some actions 
 
 	function _after_update() {
+		$changed=false;
+		
 		// if a uri has changed, replace all those uri's
 		if ($this->newData['uri']!=$this->oldData['uri']) {
 			$this->CI->db->set('uri',$newData['uri']);
@@ -108,18 +110,23 @@ class plugin_autolinks extends plugin_ {
 				// added tags
 				$addTags=array();
 				foreach ($newTags as $t) {
+					$t=strtoupper($t);
 					if (!in_array($t,$oldTags)) $addTags[]=$t;
 				}
-				foreach ($addTags as $key => $value) {
-					$this->CI->db->set('uri',$this->newData['uri']);
-					$this->CI->db->set('str_tag',$value);
-					$this->CI->db->insert('res_tags');
-				}
+				$this->_addTags($addTags);
 				$this->_setRender();
 			}
 			// strace_(array('oldTags'=>$oldTags,'newTags'=>$newTags,'changed?'=>($oldTags!=$newTags),'removed'=>$removedTags,'added'=>$addTags));
 		}
-		return FALSE;
+		
+		// if a txt field has changed, render it
+		if ($this->newData['txt_text']!=$this->oldData['txt_text']) {
+			$txt=$this->newData['txt_text'];
+			$rendered=$this->_doRender($txt,$this->newData['uri']);
+			$this->newData['txt_rendered']=$rendered;
+			$changed=$this->newData;
+		}
+		return $changed;
 	}
 
 	function _after_delete() {
@@ -157,6 +164,10 @@ class plugin_autolinks extends plugin_ {
 		
 		// scan all tags and put in array with uri
 		$tables=array_keys($this->cfg);
+		foreach ($tables as $key=>$table) {
+			$pre=get_prefix($table);
+			if (!in_array($pre,array('tbl','cfg','log','res','rel'))) unset($tables[$key]);
+		}
 		$tags=array();
 		foreach ($tables as $table) {
 			$this->CI->db->select('uri,str_tags');
@@ -168,17 +179,16 @@ class plugin_autolinks extends plugin_ {
 					$uri=$value['uri'];
 				$theseTags=$this->_trimExplode($value['str_tags']);
 				foreach ($theseTags as $tag) {
+					$tag=strtoupper($tag);
 					if (!isset($tags[$tag])) $tags[$tag]=array('uri'=>$uri, 'tag'=>$tag, 'len'=>strlen($tag));
 				}
 			}
 		}
-		// order on length of tag
-		$f = "return (\$a['len'] < \$b['len']);";
-		uasort($tags, create_function('$a,$b', $f));
 		// put in db
 		foreach ($tags as $key => $value) {
 			$this->CI->db->set('uri',$value['uri']);
 			$this->CI->db->set('str_tag',$value['tag']);
+			$this->CI->db->set('int_len',strlen($value['tag']));
 			$this->CI->db->insert('res_tags');
 		}
 		$this->CI->_add_content('<p>Tags created</p>');
@@ -186,11 +196,26 @@ class plugin_autolinks extends plugin_ {
 		$this->_setRender();
 	}
 	
+	function _addTags($tags) {
+		foreach ($tags as $key => $value) {
+			$this->CI->db->where('uri',$this->newData['uri']);
+			$this->CI->db->where('str_tag',$value);
+			$this->CI->db->select('id');
+			$exist=$this->CI->db->get_row('res_tags');
+			if (!$exist) {
+				$this->CI->db->set('uri',$this->newData['uri']);
+				$this->CI->db->set('str_tag',$value);
+				$this->CI->db->set('int_len',strlen($value));
+				$this->CI->db->insert('res_tags');
+			}
+		}
+	}
+	
 	
 	function _render($args=NULL) {
-		if (isset($args[0]) and !empty($args[0])) $id=$args[0];
-		if (isset($args[1]) and !empty($args[1]))	$table=$args[1]; else	$table='tbl_articles';
-		
+		if (isset($args[0]) and !empty($args[0]))	$table=$args[0]; else	$table='tbl_articles';
+		if (isset($args[1]) and !empty($args[1])) $id=$args[1];
+
 		$this->CI->load->model("grid");
 		$this->CI->lang->load("help");
 		$actionGrid=new grid();
@@ -198,15 +223,28 @@ class plugin_autolinks extends plugin_ {
 		// test render
 		$this->CI->db->select('id,uri,str_title,str_tags');
 		$this->CI->db->order_by('int_stat','DESC');
-		$articles=$this->CI->db->get_results($table,50);
-		foreach ($articles as $id => $article) {
-			$articles[$id]['uri']='admin/plugin/ajax/autolinks/render/'.$id;
+		if (isset($id)) {
+			$this->CI->db->select('txt_text');
+			$this->CI->db->where('id',$id);
 		}
-		$actionGrid->set_data($articles,'Render Articles');
+		$articles=$this->CI->db->get_results($table);
+		if (isset($id)) {
+			$article=current($articles);
+			$txt=$this->_doRender($article['txt_text'],$article['uri']);
+			$this->CI->_add_content('<h1>'.$article['str_title'].'</h1>');
+			$this->CI->_add_content($txt);
+			
+		}
+		else {
+			foreach ($articles as $id => $article) {
+				$articles[$id]['uri']='admin/plugin/ajax/autolinks/render/'.$id;
+			}
+			$actionGrid->set_data($articles,'Render Articles');
+			$this->CI->_add_content($actionGrid->view('html',$table,'grid actionGrid'));
+			$this->CI->_show_type("plugin grid");
+			$this->_setRender(false);
+		}
 		
-		$this->_setRender(false);
-		$this->CI->_add_content($actionGrid->view('html',$table,'grid actionGrid'));
-		$this->CI->_show_type("plugin grid");
 	}
 
 	function _ajaxRender($args=NULL) {
@@ -218,7 +256,8 @@ class plugin_autolinks extends plugin_ {
 		if (!empty($article)) {
 			$id=$article['id'];
 			$txt=$article['txt_text'];
-			$renderedTxt=$this->_doRender($txt);
+			$uri=$article['uri'];
+			$renderedTxt=$this->_doRender($txt,$uri);
 			$this->CI->db->set('txt_rendered',$renderedTxt);
 			$this->CI->db->where('id',$id);
 			$this->CI->db->update($table);
@@ -230,26 +269,42 @@ class plugin_autolinks extends plugin_ {
 		if ($this->tagsPlus)
 			return $this->tagsPlus;
 		else {
+			$this->CI->db->order_by('int_len','desc');
 			$tags=$this->CI->db->get_result('res_tags');
 			// put them in search/replace array
 			$search=array();
 			$replace=array();
-			$pattern='/\b(##)\b(?=[^>]*?<)(?!\s*<\s?\s?a\s?>)/'; 
+			$pattern='/\b(##)\b(?=[^>]*?<)(?!\s*<\s?\s?a\s?>)/i'; 
 			foreach ($tags as $key => $value) {
-				$search[]=str_replace('##',$value['str_tag'],$pattern);
-				$replace[]='<a class="autoLink" href="'.site_url().$value['uri'].'">$1</a>';
+				$uri=$value['uri'];
+				$tag=$value['str_tag'];
+				$search[$tag]=str_replace('##',$value['str_tag'],$pattern);
+				$replace[$tag]='<a class="autoLink" href="'.site_url().$uri.'">$1</a>';
 			}
 			return array('tags'=>$tags,'search'=>$search,'replace'=>$replace);
 		}
 	}
 
-	function _doRender($txt) {
-		// make sure txt is is embedded in <p> tags
+	function _doRender($txt,$uri='') {
+		// make sure txt is in embedded in <p> tags
 		if (substr($txt,1,3)!='<p>') $txt=p().$txt._p();
 		// get all tags & uris
 		$tags=$this->_getTags();
+		// trace_($tags);
+		// remove own tags/uri
+		if (!empty($uri)) {
+			$removeTags=find_row_by_value($tags['tags'],$uri);
+			if ($removeTags) {
+				foreach ($removeTags as $id => $value) {
+					$tag=$value['str_tag'];
+					unset($tags['search'][$tag]);
+					unset($tags['replace'][$tag]);
+				}
+			}
+		}
 		// render it!
-		$txt=preg_replace($tags['search'],$tags['replace'],$txt);
+		if (isset($this->cfg['limit'])) $limit=$this->cfg['limit']; else $limit=-1;
+		$txt=preg_replace($tags['search'],$tags['replace'],$txt,$limit);
 		return $txt;
 	}
 	
