@@ -1124,6 +1124,11 @@ input.upload {
 	height: 20px;
 	font-size:14px;
 	}
+input.filter.busy {
+	background-image:url("../icons/action_wait.gif");
+	background-position:2px 5px;
+	}
+
 
 .after_form {
 /*	position:relative;*/

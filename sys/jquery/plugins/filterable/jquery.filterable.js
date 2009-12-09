@@ -15,6 +15,7 @@ On this notice these rights rely.
 
 (c) 2009, Jdb, Jan den Besten, changes made for FlexyAdmin:
 - callback function, after filtering is ready.
+- starts filtering when more than 2 keys are entered
 
 */
 
@@ -39,16 +40,25 @@ On this notice these rights rely.
 
       // Define the filtering function.
       var fn = function(key) {
+				// change class of search field, to show its busy
+				$('input.filter').addClass('busy');
         var query = txt.val().toLowerCase();
-        target.find(o.affects).each(function() {
-          var item = $(this);
-          if (item.text().toLowerCase().indexOf(query) >= 0) item.show();
-          else item.hide();
-        });
-				// Jdb: Call callback function if defined
-				if (callback!=undefined && callback!='') {
-					callback.call(this,key.keyCode);
+				var qlen = query.length;
+				if (qlen>2 || qlen==0) {
+	        target.find(o.affects).each(function() {
+	          var item = $(this);
+	          if (item.text().toLowerCase().indexOf(query) >= 0)
+							item.show();
+	          else
+							item.hide();
+	        });
+					// Jdb: Call callback function if defined
+					if (callback!=undefined && callback!='') {
+						callback.call(this,key.keyCode);
+					}
 				}
+				// remove busy class
+				$('input.filter').removeClass('busy');
       };
 
       // Attach the function to the input text field (onKeyUp) or to a button (onClick).

@@ -220,10 +220,12 @@ function sort_by($a,$s,$d=FALSE) {
 
 
 function find_row_by_value($a,$v) {
+	$found=array();
 	foreach ($a as $id=>$row) {
-		if (in_array($v,$row)) return $row;
+		if (in_array($v,$row)) $found[$id]=$row;
 	}
-	return NULL;
+	if (empty($found)) $found=FALSE;
+	return $found;
 }
 
 function array_ereg_search($val, $array) {

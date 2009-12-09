@@ -83,7 +83,7 @@ function doGrid() {
 		// Filter/Search rows
 		//
 		filter=$("table.grid");
-		if (filter.length>0) {
+		if (filter.length>0 && !isGridAction) {
 			// keep table width
 			w=$(filter).width();
 			$(filter).width(w);
@@ -101,22 +101,22 @@ function doGrid() {
 				rowsEvenOdd();
 				
 				// make selected text bold
-				s=$("input.filter").attr("value");
-				if (s.length==2) {
-					$('table.grid:not(.thumbs) tbody td:not(.id):not(.order):not(.thumb):not(.media):not(.medias):not(.edit):not(.b):not(.url)').each(function(){
-						t=$(this).html();
-						t=t.replace(new RegExp('<(/|)b>','g'),'');
-						$(this).html(t);
-					});
-				}
-				if (s.length>=3) {
-					$('table.grid:not(.thumbs) tbody td:not(.id):not(.order):not(.thumb):not(.media):not(.medias):not(.edit):not(.b):not(.url)').each(function(){
-						t=$(this).html();
-						t=t.replace(new RegExp('<(/|)b>','g'),'');
-						if (s!='') {t=t.replace(new RegExp('('+s+')','gi'),regBoldReplace);}
-						$(this).html(t);
-					});
-				}
+				// s=$("input.filter").attr("value");
+				// if (s.length==2) {
+				// 	$('table.grid:not(.thumbs) tbody td:not(.id):not(.order):not(.thumb):not(.media):not(.medias):not(.edit):not(.b):not(.url)').each(function(){
+				// 		t=$(this).html();
+				// 		t=t.replace(new RegExp('<(/|)b>','g'),'');
+				// 		$(this).html(t);
+				// 	});
+				// }
+				// if (s.length>=3) {
+				// 	$('table.grid:not(.thumbs) tbody td:not(.id):not(.order):not(.thumb):not(.media):not(.medias):not(.edit):not(.b):not(.url)').each(function(){
+				// 		t=$(this).html();
+				// 		t=t.replace(new RegExp('<(/|)b>','g'),'');
+				// 		if (s!='') {t=t.replace(new RegExp('('+s+')','gi'),regBoldReplace);}
+				// 		$(this).html(t);
+				// 	});
+				// }
 				
 				// check keypresses for special actions
 				switch (keyCode) {

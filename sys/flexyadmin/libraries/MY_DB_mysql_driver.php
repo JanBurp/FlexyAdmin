@@ -310,10 +310,11 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			$manyTables=$this->get_many_tables($table);
 			$manyWhere=FALSE;
 			$manyLike=FALSE;
+			// trace_($this->ar_where);
+			// trace_($manyTables);
 			foreach($manyTables as $mTable) {
 				$jTable=$mTable["join"];
 				// WHERE
-				// trace_($this->ar_where);
 				$foundKeysArray=array_ereg_search($jTable, $this->ar_where);
 				foreach($foundKeysArray as $key) {
 					$manyWhere=TRUE;
