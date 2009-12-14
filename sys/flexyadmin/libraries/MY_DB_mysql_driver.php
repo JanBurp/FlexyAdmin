@@ -307,7 +307,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		 * if many, find if a where or like part is referring to a many table
 		 */
 		if ($this->many) {
-			$manyTables=$this->get_many_tables($table);
+			$manyTables=$this->get_many_tables($table,$this->many);
 			$manyWhere=FALSE;
 			$manyLike=FALSE;
 			// trace_($this->ar_where);
@@ -316,6 +316,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				$jTable=$mTable["join"];
 				// WHERE
 				$foundKeysArray=array_ereg_search($jTable, $this->ar_where);
+				// trace_($foundKeysArray);
 				foreach($foundKeysArray as $key) {
 					$manyWhere=TRUE;
 					$mWhere=$this->ar_where[$key];
@@ -509,7 +510,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		 * add (one to) many data if asked for
 		 */
 		if ($this->many) {
-			$manyTables=$this->get_many_tables($table);
+			$manyTables=$this->get_many_tables($table,$this->many);
 			if (count($manyTables)>0) {
 				// loop through all results to add the add_many data
 				foreach($result as $id=>$row) {
@@ -775,13 +776,15 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 * @param string $table Tablename for which to search, if empty, the current table is used.
 	 * @return array Join table array
 	 */
-		function get_many_tables($table) {
+		function get_many_tables($table,$tables=NULL) {
 			$out=array();
 			$CI=& get_instance();
-			// list all tables with right name
-			$like=$CI->config->item('REL_table_prefix')."_".remove_prefix($table).$CI->config->item('REL_table_split');
-			$tables = $this->list_tables();
-			$tables = filter_by($tables,$like);
+			if ($tables and !is_array($tables)) {
+				// list all tables with right name
+				$like=$CI->config->item('REL_table_prefix')."_".remove_prefix($table).$CI->config->item('REL_table_split');
+				$tables = $this->list_tables();
+				$tables = filter_by($tables,$like);
+			}
 			foreach ($tables as $rel) {
 				$relFields=$this->list_fields($rel);
 				$out[$rel]["this"]=$table;
@@ -796,6 +799,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		}
 
 	function add_many($many=true) {
+		if (is_string($many)) $many=array($many);
 		$this->many=$many;
 	}
 	
