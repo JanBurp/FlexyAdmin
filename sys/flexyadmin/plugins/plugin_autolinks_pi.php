@@ -274,7 +274,8 @@ class plugin_autolinks extends plugin_ {
 			// put them in search/replace array
 			$search=array();
 			$replace=array();
-			$pattern='/\b(##)\b(?=[^>]*?<)(?!\s*<\s?\s?a\s?>)/i'; 
+			/* $pattern='/\b(##)\b(?=[^>]*?<)(?!\s*<\s?\s?a\s?>)/i';  */
+			$pattern='/\b(##)\b(?!([\w\d\s]*?)<\/a\s?>)(?=[^>]*<)/i'; 
 			foreach ($tags as $key => $value) {
 				$uri=$value['uri'];
 				$tag=$value['str_tag'];
