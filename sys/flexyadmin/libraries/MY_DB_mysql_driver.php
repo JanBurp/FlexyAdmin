@@ -776,10 +776,10 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 * @param string $table Tablename for which to search, if empty, the current table is used.
 	 * @return array Join table array
 	 */
-		function get_many_tables($table,$tables=NULL) {
+		function get_many_tables($table,$tables='') {
 			$out=array();
 			$CI=& get_instance();
-			if ($tables and !is_array($tables)) {
+			if (empty($tables) or !is_array($tables)) {
 				// list all tables with right name
 				$like=$CI->config->item('REL_table_prefix')."_".remove_prefix($table).$CI->config->item('REL_table_split');
 				$tables = $this->list_tables();
