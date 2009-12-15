@@ -222,7 +222,7 @@ class plugin_autolinks extends plugin_ {
 		
 		// test render
 		$this->CI->db->select('id,uri,str_title,str_tags');
-		$this->CI->db->order_by('int_stat','DESC');
+		$this->CI->db->order_by('str_title');
 		if (isset($id)) {
 			$this->CI->db->select('txt_text');
 			$this->CI->db->where('id',$id);
