@@ -516,8 +516,8 @@ tr.caption td				{ border:none; }
 .grid .caption td		{ padding:0px;}
 
 .grid td.id,
-.grid td.edit				{ width:66px; min-width:52px; padding-right:0px; }
-.files td.edit			{ width:56px; min-width:56px; padding-right:0px; }
+.grid td.edit,
+.files td.edit			{ width:66px; min-width:52px; padding-right:0px; }
 .grid th.uri,
 .grid td.uri				{ display:none; }
 .grid th.order,
@@ -1185,6 +1185,11 @@ p.error {
 #dialog input {
 	width:350px;
 	}
+.ui-dialog input {
+	width:350px;
+	margin-right:5px;
+	text-align:right;
+}
 #dialog input.button {
 }
 #dialog a.button:hover {

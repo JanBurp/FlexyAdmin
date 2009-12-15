@@ -35,9 +35,10 @@ function clean_file_name($f) {
 		$name=substr($f,0,strlen($f)-strlen($ext));
 	else
 		$name=$f;
+	// replace spaces with underscores
+	$name=str_replace(' ','_',$name);
 	$name=clean_string($name);
-	if (!empty($ext))
-		$name="$name.$ext";
+	if (!empty($ext))	$name="$name.$ext";
 	// remove underscores off the beginning
 	$name=trim($name,'_');
 	// remove more than double underscores, safer for path encode/decode

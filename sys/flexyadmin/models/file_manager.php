@@ -145,7 +145,7 @@ class File_manager Extends Model {
 						$selectFields[]=pk();
 						foreach ($fields as $field) {
 							$pre=get_prefix($field);
-							if (in_array($pre,array("txt","media"))) $selectFields[]=$field;
+							if (in_array($pre,array("txt","media","medias"))) $selectFields[]=$field;
 						}
 						$this->db->select($selectFields);
 						$currentData=$this->db->get_result($table);
@@ -206,7 +206,7 @@ class File_manager Extends Model {
 		$ok=$this->upload->upload_file('file');
 		$file=$this->upload->get_file();
 		$ext=get_file_extension($file);
-		$saveName=clean_string(str_replace(".$ext","",$file)).".$ext";
+		$saveName=clean_file_name($file);
 		if ($file!=$saveName) {
 			if (rename($this->map.'/'.$file, $this->map.'/'.$saveName))
 				$file=$saveName;
@@ -371,7 +371,7 @@ function thumb($attr,$index=FALSE) {
 					$icon.=div('hidden path').pathencode($this->path)._div();
 
 					$edit="";
-					if ($this->showDeleteButtons)	$edit.=help(icon("select"),lang('grid_select')).help(icon("delete item"),lang('grid_delete'));
+					if ($this->showDeleteButtons)	$edit.=help(icon("edit"),lang('grid_edit')).help(icon("select"),lang('grid_select')).help(icon("delete item"),lang('grid_delete'));
 					if (empty($edit)) $edit="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 
 					$fileData["edit"]=$edit;
