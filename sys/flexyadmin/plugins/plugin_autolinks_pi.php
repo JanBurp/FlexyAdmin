@@ -251,7 +251,7 @@ class plugin_autolinks extends plugin_ {
 		if (isset($args[0]) and !empty($args[0])) $id=$args[0];
 		if (isset($args[1]) and !empty($args[1]))	$table=$args[1]; else	$table='tbl_articles';
 		if (isset($id)) {$this->CI->db->where('id',$id);}
-		$this->CI->db->order_by('int_stat','DESC');
+		$this->CI->db->order_by('str_title');
 		$article=$this->CI->db->get_row($table);
 		if (!empty($article)) {
 			$id=$article['id'];
