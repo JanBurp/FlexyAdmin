@@ -85,15 +85,15 @@ class plugin_autolinks extends plugin_ {
 		$changed=false;
 		
 		// if a uri has changed, replace all those uri's
-		if ($this->newData['uri']!=$this->oldData['uri']) {
-			$this->CI->db->set('uri',$newData['uri']);
-			$this->CI->db->where('uri',$oldData['uri']);
+		if (isset($this->newData['uri']) and $this->newData['uri']!=$this->oldData['uri']) {
+			$this->CI->db->set('uri',$this->newData['uri']);
+			$this->CI->db->where('uri',$this->oldData['uri']);
 			$this->CI->db->update('res_tags');
 			$this->_setRender();
 		}
 		
 		// if a tag field has changed, remove old tags, add new tags
-		if ($this->newData['str_tags']!=$this->oldData['str_tags']) {
+		if (isset($this->newData['str_tags']) and $this->newData['str_tags']!=$this->oldData['str_tags']) {
 			$oldTags=$this->_trimExplode($this->oldData['str_tags']);
 			$newTags=$this->_trimExplode($this->newData['str_tags']);
 			// check if it is realy different
@@ -120,7 +120,7 @@ class plugin_autolinks extends plugin_ {
 		}
 		
 		// if a txt field has changed, render it
-		if ($this->newData['txt_text']!=$this->oldData['txt_text']) {
+		if (isset($this->newData['txt_text']) and $this->newData['txt_text']!=$this->oldData['txt_text']) {
 			$txt=$this->newData['txt_text'];
 			$rendered=$this->_doRender($txt,$this->newData['uri']);
 			$this->newData['txt_rendered']=$rendered;
