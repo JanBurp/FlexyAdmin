@@ -26,7 +26,7 @@ class plugin_ {
 	}
 	
 	function init($init=array()) {
-		strace_('========= '.$this->plugin.' ============');
+		// strace_('========= '.$this->plugin.' ============');
 		$default=array('table'=>'$table','id'=>'','oldData'=>NULL,'newData'=>NULL);
 		$init=array_merge($default,$init);
 		
@@ -120,7 +120,7 @@ class plugin_ {
 			}
 		}
 		// strace_($this->actOn);
-		strace_($this->act);
+		// strace_($this->act);
 		return $this->act;
 	}
 
