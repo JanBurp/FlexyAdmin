@@ -11,7 +11,7 @@ else{
 	$css='.css';
 }
 
-$isGrid=has_string('grid',$show_type) or has_string('filemanager',$show_type);
+$isGrid=(has_string('grid',$show_type) or has_string('filemanager',$show_type));
 $isForm=has_string('form',$show_type);
 
 ?>

@@ -262,6 +262,45 @@ function doGrid() {
 				confirm_dialog(uri,name,id);
 			}
 		});
+		
+		
+		//
+		// Edit filename
+		//
+		if (isFile) {
+			$('tbody div.icon.edit').click(function(){
+				if (isThumbs)
+					fileObj=$(this).parents('div.file:first');
+				else
+					fileObj=$(this).parents('tr:first');
+				filename=$(fileObj).children('.name:first').text();
+				path=$(fileObj).children('.thumb:first').children('.path:first').text();
+				ext=get_ext(filename);
+				// console.log(path);
+				// console.log(filename);
+				// console.log(ext);
+				shortName=filename.replace('.'+ext,'');
+
+				dialog.html('<form method="post" action="'+site_url()+'admin/filemanager/rename/'+pathencode(path)+'/'+filename+'"><input id="name" name="name" value="'+shortName+'" />.'+ext+'<br/><input type="hidden" name="ext" value="'+ext+'"/><input type="hidden" name="path" value="'+path+'"/></form>');
+				$(dialog).dialog({
+					title:langp('dialog_title_rename',filename),
+					modal:true,
+					width:500,
+					buttons: ({ cancel	: function(){	$(dialog).dialog("destroy"); },
+											ok			: function(){
+																	$('.ui-dialog .ui-dialog-buttonpane').add('.ui-dialog a').hide();
+																	$('.ui-dialog .ui-dialog-content').append("<img src='"+site_url("sys/flexyadmin/assets/icons/wait.gif")+"' align='right' />");
+																	newName=$('.ui-dialog input#name').attr('value')+'.'+ext;
+																	location.replace(site_url('admin/filemanager/rename/'+pathencode(path)+'/'+filename+'/'+newName));
+																}
+									 }),
+					close: function(){$(dialog).dialog("destroy");}
+				});
+				changeButt("cancel",lang("dialog_cancel"));
+				changeButt("ok",lang("dialog_ok"));
+				
+			});
+		}
 
 	}
 

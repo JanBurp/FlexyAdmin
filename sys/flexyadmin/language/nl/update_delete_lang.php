@@ -19,6 +19,9 @@ $lang['delete_error_value']	= "Fout tijdens verwijderen van '%s'! ";
 $lang['upload_succes']			= "Bestand '%s' ge-upload.";
 $lang['upload_error']				= "Fout tijdens uploading '%s'. ";
 
+$lang['rename_succes']			= "Bestand hernoemd naar '%s'.";
+$lang['rename_error']				= "Fout tijdens hernoemen van '%s'.";
+
 $lang['order_has_changed']= "Volgorde van %s is aangepast.";
 
 ?>

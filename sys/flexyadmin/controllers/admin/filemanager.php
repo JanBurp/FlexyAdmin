@@ -302,6 +302,66 @@ class Filemanager extends AdminController {
 		redirect(api_uri('API_filemanager_view',pathencode($path)));
 	}
 
+	function rename($path="",$file='',$new='') {
+		if (empty($new)) {
+			$ext=$this->input->post('ext');
+			$new=$this->input->post('name').'.'.$ext;
+		}
+		
+		$map=$this->config->item('ASSETS').pathdecode($path);
+		$this->lang->load("update_delete");
+		$succes=false;
+		
+		$oldFile=$map.'/'.$file;
+		if (file_exists($oldFile)) {
+			$new=clean_file_name($new);
+			$newFile=$map.'/'.$new;
+			// rename
+			$succes=rename($oldFile,$newFile);
+			if ($succes) {
+				
+				// replace all filenames in media(s) and txt_
+				$tables=$this->db->get_tables();
+				if (!empty($tables)) {
+					foreach ($tables as $table) {
+						$fields=$this->db->list_fields($table);
+						$selectFields=array();
+						$selectFields[]=pk();
+						foreach ($fields as $field) {
+							$pre=get_prefix($field);
+							if (in_array($pre,array("txt","media","medias"))) $selectFields[]=$field;
+						}
+						if (!empty($selectFields)) {
+							$selectFields[]=pk();
+							$this->db->select($selectFields);
+							$currentData=$this->db->get_result($table);
+							foreach ($currentData as $row) {
+								foreach ($row as $field=>$data) {
+									if ($field==pk())
+										$id=$data;
+									else {
+										// replace filenames
+										$newData=str_replace($file,$new,$data);
+										$this->db->set($field,$newData);
+										$this->db->where(pk(),$id);
+										$this->db->update($table);
+									}
+								}
+							}
+						}
+					}
+				}
+				// new media list
+				// will go automatic after redirect
+			}
+		}
+		if ($succes)
+			$this->set_message(langp("rename_succes",$new));
+		else
+			$this->set_message(langp("rename_error",$file));
+		redirect(api_uri('API_filemanager_view',pathencode($path),$new));
+	}
+
 }
 
 ?>
