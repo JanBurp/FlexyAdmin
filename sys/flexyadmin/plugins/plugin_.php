@@ -26,7 +26,7 @@ class plugin_ {
 	}
 	
 	function init($init=array()) {
-		// strace_('========= '.$this->plugin.' ============');
+		strace_('========= '.$this->plugin.' ============');
 		$default=array('table'=>'$table','id'=>'','oldData'=>NULL,'newData'=>NULL);
 		$init=array_merge($default,$init);
 		
@@ -42,7 +42,7 @@ class plugin_ {
 	}
 	
 	function act_on($acts=array()) {
-		$default=array('tables'=>NULL,'id'=>'','fields'=>NULL,'changedFields'=>NULL,'types'=>NULL,'changedTypes'=>NULL);
+		$default=array('existingTables'=>NULL,'tables'=>NULL,'id'=>'','fields'=>NULL,'changedFields'=>NULL,'types'=>NULL,'changedTypes'=>NULL);
 		$actOn=array_merge($default,$acts);
 		$this->actOn=array();
 		foreach ($actOn as $key => $value) {
@@ -54,73 +54,83 @@ class plugin_ {
 		
 		// check if action is needed:
 		$this->act=false;
-		foreach ($this->actOn as $key => $value) {
-			switch($key) {
-				case 'id'			:
-					$id=$value['value'];
-					if (!empty($this->id) and $this->id==$id) {
-						$this->actOn[$key]['act']=true;
-						$this->act=true;
-					}
-					break;
-				case 'tables' :
-					$tables=$value['value'];
-					if (!empty($tables) and in_array($this->table,$tables)) {
-						$this->actOn[$key]['act']=true;
-						$this->act=true;
-					}
-					break;
-				case 'fields' :
-					$fields=$value['value'];
-					if (!empty($fields)) {
-						$intersect=array_intersect($this->fields, $fields);
-						if (!empty($intersect)) {
+		$check=true;
+		if (!empty($this->actOn['existingTables']['value'])) {
+			foreach ($this->actOn['existingTables']['value'] as $table) {
+				$check=$check and ($this->CI->db->table_exists($table));
+			}
+			if ($check) $this->actOn['existingTables']['act']=true;
+		}
+		
+		if ($check) {
+			foreach ($this->actOn as $key => $value) {
+				switch($key) {
+					case 'id'			:
+						$id=$value['value'];
+						if (!empty($this->id) and $this->id==$id) {
 							$this->actOn[$key]['act']=true;
 							$this->act=true;
 						}
-					}
-					break;
-				case 'types' 	:
-					$types=$value['value'];
-					if (!empty($types)) {
-						$intersect=array_intersect($this->types, $types);
-						if (!empty($intersect)) {
+						break;
+					case 'tables' :
+						$tables=$value['value'];
+						if (!empty($tables) and in_array($this->table,$tables)) {
 							$this->actOn[$key]['act']=true;
 							$this->act=true;
 						}
-					}
-					break;
-				case 'changedFields'	:
-					$fields=$value['value'];
-					if (!empty($fields)) {
-						$changedFields=false;
-						foreach ($fields as $field) {
-							if (empty($this->newData) or (isset($this->newData[$field]) and $this->newData[$field]!=$this->oldData[$field]) ) $changedFields=TRUE;
+						break;
+					case 'fields' :
+						$fields=$value['value'];
+						if (!empty($fields)) {
+							$intersect=array_intersect($this->fields, $fields);
+							if (!empty($intersect)) {
+								$this->actOn[$key]['act']=true;
+								$this->act=true;
+							}
 						}
-						if ($changedFields) {
-							$this->actOn[$key]['act']=true;
-							$this->act=true;
+						break;
+					case 'types' 	:
+						$types=$value['value'];
+						if (!empty($types)) {
+							$intersect=array_intersect($this->types, $types);
+							if (!empty($intersect)) {
+								$this->actOn[$key]['act']=true;
+								$this->act=true;
+							}
 						}
-					}
-					break;
-				case 'changedTypes'		:
-					$types=$value['value'];
-					if (!empty($types)) {
-						$changedFields=false;
-						foreach ($this->fields as $field) {
-							$pre=get_prefix($field);
-							if (in_array($pre,$types) and (empty($this->newData) or $this->newData[$field]!=$this->oldData[$field]) ) $changedFields=true;
+						break;
+					case 'changedFields'	:
+						$fields=$value['value'];
+						if (!empty($fields)) {
+							$changedFields=false;
+							foreach ($fields as $field) {
+								if (empty($this->newData) or (isset($this->newData[$field]) and $this->newData[$field]!=$this->oldData[$field]) ) $changedFields=TRUE;
+							}
+							if ($changedFields) {
+								$this->actOn[$key]['act']=true;
+								$this->act=true;
+							}
 						}
-						if ($changedFields) {
-							$this->actOn[$key]['act']=true;
-							$this->act=true;
+						break;
+					case 'changedTypes'		:
+						$types=$value['value'];
+						if (!empty($types)) {
+							$changedFields=false;
+							foreach ($this->fields as $field) {
+								$pre=get_prefix($field);
+								if (in_array($pre,$types) and (empty($this->newData) or $this->newData[$field]!=$this->oldData[$field]) ) $changedFields=true;
+							}
+							if ($changedFields) {
+								$this->actOn[$key]['act']=true;
+								$this->act=true;
+							}
 						}
-					}
-					break;
+						break;
+				}
 			}
 		}
-		// strace_($this->actOn);
-		// strace_($this->act);
+		strace_($this->actOn);
+		strace_($this->act);
 		return $this->act;
 	}
 
