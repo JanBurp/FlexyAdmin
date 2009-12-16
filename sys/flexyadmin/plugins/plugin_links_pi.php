@@ -43,32 +43,34 @@ class plugin_links extends plugin_ {
 		// loop through all changed fields
 		foreach ($changedFields as $field => $value) {
 			$oldUrl=$this->oldData[$field];
-			if (isset($this->newData[$field]))
-				$newUrl=$this->newData[$field];
-			else
-				$newUrl='';
-			// loop through all txt fields in all tables
-			$tables=$this->CI->db->list_tables();
-			foreach($tables as $table) {
-				if (get_prefix($table)==$this->CI->config->item('TABLE_prefix')) {
-					$fields=$this->CI->db->list_fields($table);
-					foreach ($fields as $field) {
-						if (get_prefix($field)=="txt") {
-							$this->CI->db->select("id,$field");
-							$this->CI->db->where("$field !=","");
-							$query=$this->CI->db->get($table);
-							foreach($query->result_array() as $row) {
-								$thisId=$row["id"];
-								$txt=$row[$field];
-								if (empty($newUrl)) {
-									// remove
-									$pattern='/<a(.*?)href="'.str_replace("/","\/",$oldUrl).'"(.*?)>(.*?)<\/a>/';
-									$txt=preg_replace($pattern,'\\3',$txt);
+			if (!empty($oldUrl)) {
+				if (isset($this->newData[$field]))
+					$newUrl=$this->newData[$field];
+				else
+					$newUrl='';
+				// loop through all txt fields in all tables
+				$tables=$this->CI->db->list_tables();
+				foreach($tables as $table) {
+					if (get_prefix($table)==$this->CI->config->item('TABLE_prefix')) {
+						$fields=$this->CI->db->list_fields($table);
+						foreach ($fields as $field) {
+							if (get_prefix($field)=="txt") {
+								$this->CI->db->select("id,$field");
+								$this->CI->db->where("$field !=","");
+								$query=$this->CI->db->get($table);
+								foreach($query->result_array() as $row) {
+									$thisId=$row["id"];
+									$txt=$row[$field];
+									if (empty($newUrl)) {
+										// remove
+										$pattern='/<a(.*?)href="'.str_replace("/","\/",$oldUrl).'"(.*?)>(.*?)<\/a>/';
+										$txt=preg_replace($pattern,'\\3',$txt);
+									}
+									else {
+										$txt=str_replace("href=\"$oldUrl","href=\"$newUrl",$txt);
+									}
+									$res=$this->CI->db->update($table,array($field=>$txt),"id = $thisId");
 								}
-								else {
-									$txt=str_replace("href=\"$oldUrl","href=\"$newUrl",$txt);
-								}
-								$res=$this->CI->db->update($table,array($field=>$txt),"id = $thisId");
 							}
 						}
 					}
