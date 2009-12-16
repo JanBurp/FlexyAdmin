@@ -341,7 +341,12 @@ class Filemanager extends AdminController {
 										$id=$data;
 									else {
 										// replace filenames
-										$newData=str_replace($file,$new,$data);
+										if ($pre=='txt') {
+											$newData=str_replace('/'.$file,'/'.$new,$data);
+										}
+										else {
+											$newData=str_replace($file,$new,$data);
+										}
 										$this->db->set($field,$newData);
 										$this->db->where(pk(),$id);
 										$this->db->update($table);
