@@ -280,7 +280,7 @@ class plugin_autolinks extends plugin_ {
 				$uri=$value['uri'];
 				$tag=$value['str_tag'];
 				$search[$tag]=str_replace('##',$value['str_tag'],$pattern);
-				$replace[$tag]='<a class="autoLink" href="'.site_url().$uri.'">$1</a>';
+				$replace[$tag]='<a class="autoLink" href="'.$uri.'">$1</a>';
 			}
 			return array('tags'=>$tags,'search'=>$search,'replace'=>$replace);
 		}
