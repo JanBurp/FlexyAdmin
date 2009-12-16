@@ -36,6 +36,7 @@ $config['ADMINASSETS']						= "sys/flexyadmin/assets/";
 $config['ASSETS']									= $config['SITE'].'/assets/';
 $config['THUMBCACHE']							= $config['ASSETS']."_thumbcache/";
 $config['STATS']									= $config['SITE'].'/stats/';
+$config['PLUGINS']								= $config['SITE'].'/plugins';
 $config['BULKUPLOAD']							= 'bulk_upload';
 
 $config['THUMBSIZE']							= array(100,100);
