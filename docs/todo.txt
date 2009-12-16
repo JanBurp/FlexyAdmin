@@ -1,39 +1,15 @@
-PLUGINS:
-
-& stats
-- bulk upload
-- search & replace
-- import / export
-
-
-DB bugs & cleanup
-
-
-
-NIEUWE PLUGIN:
-
-- Maak auto links (FlexyPedia):
-	Test:
-	<p class="test">Dit is een test om regex te testen die alle woorden "test" vervangt in een link naar de pagina Test. Behalve als het woord <b>TEST</b> staat binnen <test>html</test> tags zoals een <a href="http://www.test.nl">test</a> of een plaatje <img src="test.png" />.test.</p>
-	JA!!:
-	\b(test)\b(?=[^>]*<)(?!\s*</a>)     					(zoek 'test' tussen word boundaries, zonder dat er -space-</a> achter komt en dat er altijd eerst een < na komt voor een >)
-	\b(test)\b(?=[^>]*<)(?!\s*<\s?/\s?a\s?>)			(</a> met spaces)
-	\b(test)\b(?=[^>]*?<)(?!\s*<\s?/\s?a\s?>)			(nog greedy lookahead <)
-	LET OP: Moet case insensitive zijn en multi-line!
-	LET OP: Werkt alleen als de hele tekst is omsloten met een tag <p> of <div> of <span>
-	--
-
-
-
-
-
-
-
-
-
+BUGS:
+- bulkupload: spaties worden weggehaald in namen ipv vervangen door underscores (voetsporen).
+- stats: maanden die niet bekeken zijn worden niet aangemaakt.
 
 PRIO:
 - pagination
+- form/grid rewrite
+- move to plugin:
+	- bulkupload
+	- search & replace
+	- import & export
+	- mailinglist
 
 CLEANUP:
 - config items in one place (no $CI needed??)
@@ -71,3 +47,17 @@ HANDIG
 	- balk bovenin, met home, backup, logout knoppen
 	- home page met info (zoek, stats, user info, klikken naar (c) en licentie
 	- onderbalk weg
+
+
+
+AUTOLINK Plugin Info
+<p class="test">Dit is een test om regex te testen die alle woorden "test" vervangt in een link naar de pagina Test. Behalve als het woord <b>TEST</b> staat binnen <test>html</test> tags zoals een <a href="http://www.test.nl">test</a> of een plaatje <img src="test.png" />.test.</p>
+
+\b(test)\b(?=[^>]*<)(?!\s*</a>)     					(zoek 'test' tussen word boundaries, zonder dat er -space-</a> achter komt en dat er altijd eerst een < na komt voor een >)
+\b(test)\b(?=[^>]*<)(?!\s*<\s?/\s?a\s?>)			(</a> met spaces)
+\b(test)\b(?=[^>]*?<)(?!\s*<\s?/\s?a\s?>)			(nog greedy lookahead <)
+\b(test)\b(?!([\w\d\s]*?)</a>)(?=[^>]*<)			(BETER: zoek test tussen word boundaries, maar niet net voor een </a> en altijd zo dat er eerst een < komt voor een >)
+
+LET OP: Moet case insensitive zijn en multi-line!
+LET OP: Werkt alleen als de hele tekst is omsloten met een tag <p> of <div> of <span>
+--
