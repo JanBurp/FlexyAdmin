@@ -17,7 +17,7 @@ class plugin_autolinks extends plugin_ {
 		parent::init($init);
 		$this->needToRender=$this->CI->session->userdata('render');
 		$this->tagsPlus=false;
-		$this->act_on(array('changedFields'=>'uri,str_tags,txt_text'));
+		$this->act_on(array('existingTables'=>'res_tags','changedFields'=>'uri,str_tags,txt_text'));
 	}
 	
 	//

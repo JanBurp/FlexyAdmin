@@ -39,7 +39,7 @@ class plugin_automenu extends plugin_ {
 					if (!in_array($foreignTable, $checkTables))	$checkTables[]=$foreignTable;
 				}
 			}
-			$this->act_on(array('tables'=>implode(',',$checkTables)));
+			$this->act_on(array('existingTables'=>'res_menu_result','tables'=>implode(',',$checkTables)));
 		}
 		else
 			$this->act_on();
