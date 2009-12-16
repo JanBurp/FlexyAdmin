@@ -40,7 +40,6 @@ class plugin_autolinks extends plugin_ {
 	// admin/plugin/#plugin_name# 
 	//
 	function _admin_api($args=NULL) {
-		$this->CI->_add_content(h($this->plugin,1));
 		$action='';
 		if (isset($args[0])) {
 			$action=$args[0];
@@ -48,6 +47,7 @@ class plugin_autolinks extends plugin_ {
 		}
 		switch ($action) {
 			case 'resettags':
+				$this->CI->_add_content(h($this->plugin,1));
 				$this->_resetTags();
 				break;
 			case 'render':
@@ -239,7 +239,7 @@ class plugin_autolinks extends plugin_ {
 			foreach ($articles as $id => $article) {
 				$articles[$id]['uri']='admin/plugin/ajax/autolinks/render/'.$id;
 			}
-			$actionGrid->set_data($articles,'Render Articles');
+			$actionGrid->set_data($articles,'Render...');
 			$this->CI->_add_content($actionGrid->view('html',$table,'grid actionGrid'));
 			$this->CI->_show_type("plugin grid");
 			$this->_setRender(false);

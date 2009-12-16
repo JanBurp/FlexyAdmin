@@ -490,14 +490,17 @@ function doGrid() {
 	}
 
 	if (isGridAction) {
-		$('.actionGrid td.id').html('<div class="icon no" /></div');
+		totalActions=$('.actionGrid td.id').html('<div class="icon no" /></div').length;
+		actionNr=0;
+		$('.actionGrid thead table tr:first td:first').before('<td>&nbsp;</td>').after('<td id="actionCounter"></td>');
+		$('#actionCounter').html(actionNr/totalActions*100+' %');
 		$('.actionGrid tbody tr:first').each(function(){
 			doAction($(this));
 		});
 	}
 	
 	function doAction(obj) {
-		$(obj).children('td.id:first').html('<div class="icon wait" /></div');
+		$(obj).children('td.id:first').html('<div class="icon wait" /></div>');
 		uri=$(obj).children('td.uri').html();
 		if (uri!='') {
 			$.ajax({
@@ -509,6 +512,8 @@ function doGrid() {
 					else {
 						$(obj).children('td.id:first').html('<div class="icon yes" /></div');
 						$(obj).next('tr:first').each(function(){
+							actionNr++;
+							$('#actionCounter').html((actionNr/totalActions*100).toFixed(1)+' %');
 							doAction($(this));
 						});
 					}
