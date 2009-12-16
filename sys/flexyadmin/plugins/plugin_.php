@@ -57,9 +57,9 @@ class plugin_ {
 		$check=true;
 		if (!empty($this->actOn['existingTables']['value'])) {
 			foreach ($this->actOn['existingTables']['value'] as $table) {
-				$check=$check and ($this->CI->db->table_exists($table));
+				$check=($check and ($this->CI->db->table_exists($table)) );
 			}
-			if ($check) $this->actOn['existingTables']['act']=true;
+			$this->actOn['existingTables']['act']=$check;
 		}
 		
 		if ($check) {
@@ -129,7 +129,7 @@ class plugin_ {
 				}
 			}
 		}
-		strace_($this->actOn);
+		// strace_($this->actOn);
 		strace_($this->act);
 		return $this->act;
 	}
