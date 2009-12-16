@@ -26,7 +26,7 @@ class plugin_ {
 	}
 	
 	function init($init=array()) {
-		strace_('========= '.$this->plugin.' ============');
+		// strace_('========= '.$this->plugin.' ============');
 		$default=array('table'=>'$table','id'=>'','oldData'=>NULL,'newData'=>NULL);
 		$init=array_merge($default,$init);
 		
@@ -118,7 +118,7 @@ class plugin_ {
 							$changedFields=false;
 							foreach ($this->fields as $field) {
 								$pre=get_prefix($field);
-								if (in_array($pre,$types) and (empty($this->newData) or $this->newData[$field]!=$this->oldData[$field]) ) $changedFields=true;
+								if (in_array($pre,$types) and (empty($this->newData) or (isset($this->newData[$field]) and $this->newData[$field]!=$this->oldData[$field])) ) $changedFields=true;
 							}
 							if ($changedFields) {
 								$this->actOn[$key]['act']=true;
@@ -130,7 +130,7 @@ class plugin_ {
 			}
 		}
 		// strace_($this->actOn);
-		strace_($this->act);
+		// strace_($this->act);
 		return $this->act;
 	}
 
