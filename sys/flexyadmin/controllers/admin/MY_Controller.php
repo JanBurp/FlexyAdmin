@@ -459,6 +459,18 @@ class BasicController extends MY_Controller {
 			$pluginFiles=array_merge($pluginFiles,$files);
 			unset($pluginFiles['plugin_template_pi.php']);
 			unset($pluginFiles['plugin_.php']);
+			// load plugins from site
+			$siteMap=$this->config->item('PLUGINS');
+			if (file_exists($siteMap)) {
+				$files=read_map($siteMap);
+				if (!empty($files)) {
+					foreach ($files as $file => $value) {
+						$files[$file]['site']=$siteMap;
+					}
+					$pluginFiles=array_merge($pluginFiles,$files);
+				}
+			}
+
 			// set plugin cfg
 			$cfg=$this->cfg->get('cfg_plugins');
 			$pluginCfg=array();
@@ -470,7 +482,10 @@ class BasicController extends MY_Controller {
 			foreach ($pluginFiles as $file => $plugin) {
 				$Name=get_file_without_extension($file);
 				if (substr($Name,0,6)=='plugin') {
-					$this->load->plugin($Name);
+					if (isset($plugin['site']))
+						$this->load->site_plugin($Name,$plugin['site']);
+					else
+						$this->load->plugin($Name);
 					$pluginName=str_replace('_pi','',$Name);
 					$shortName=str_replace('plugin_','',$pluginName);
 					$this->$pluginName = new $pluginName($pluginName);
@@ -482,7 +497,7 @@ class BasicController extends MY_Controller {
 				}
 			}
 		}
-		// trace_($this->plugins);
+		// strace_($this->plugins);
 		return $this->plugins;
 	}
 

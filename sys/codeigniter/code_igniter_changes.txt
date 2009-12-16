@@ -27,3 +27,9 @@ Method				site_view()
 Description		http://codeigniter.com/forums/viewthread/73545/
 Calls my_view() with path: site/views/. So this is a standard view method for loading views for the frontend sites of FlexyAdmin.
 
+File					sys\codeigniter\libraries\Loader.php
+Line					1168-1199
+Method				site_plugin($plugins,$path)
+Description		http://codeigniter.com/forums/viewthread/73545/
+Load a plugin from given path. Makes it possible to load plugins from site/plugins.
+

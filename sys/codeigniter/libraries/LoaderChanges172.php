@@ -1165,6 +1165,41 @@ class CI_Loader {
 		return $this->my_view($v,"site/views",$var,$return);
 	}
 
+	/**
+	 * Load SitePlugin
+	 *
+	 * This function loads the specified plugin.
+	 *
+	 * @access	public
+	 * @param	array
+	 * @return	void
+	 */
+	function site_plugin($plugins = array(),$path)
+	{
+		if ( ! is_array($plugins)) {
+			$plugins = array($plugins);
+		}
+	
+		foreach ($plugins as $plugin)	{	
+			$plugin = strtolower(str_replace(EXT, '', str_replace('_pi', '', $plugin)).'_pi');		
+			if (isset($this->_ci_plugins[$plugin]))	{
+				continue;
+			}
+			
+			if (file_exists($path.'/'.$plugin.EXT)) {
+				include_once($path.'/'.$plugin.EXT);	
+			}
+			else {
+				show_error('Unable to load the requested file: '.$path.'/'.$plugin.EXT);
+			}
+			
+			$this->_ci_plugins[$plugin] = TRUE;
+			log_message('debug', 'Plugin loaded: '.$plugin);
+		}		
+	}
+
+
+
 
 }
 
