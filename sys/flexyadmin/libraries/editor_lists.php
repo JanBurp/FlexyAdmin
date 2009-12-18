@@ -70,21 +70,23 @@ class Editor_lists {
 				if ($CI->db->table_exists($resultTable)) $menuTable=$resultTable; // for menu automation
 				if (!empty($menuTable) and $CI->db->table_exists($menuTable)) {
 					$menuFields=$CI->db->list_fields($menuTable);
-					$CI->db->select('id,uri,order');
-					if (in_array('self_parent',$menuFields)) {
-						$CI->db->select('self_parent');
-						$CI->db->order_as_tree();
-						$CI->db->uri_as_full_uri();
-					}
-					$CI->db->select_first('str');
-					$results=$CI->db->get_results($menuTable);
-					// add results to link list
-					$nameField=$CI->db->get_select_first(0);
-					foreach ($results as $key => $row) {
-						$url=$row["uri"];
-						$name=$row[$nameField];
-						if (isset($row['self_parent']) and $row['self_parent']!=0) $name=' - '.$name;
-						$data[$name]=array("url"=>$url,"name"=>$name);
+					if (isset($menuFields['uri'])) {
+						$CI->db->select('id,uri,order');
+						if (in_array('self_parent',$menuFields)) {
+							$CI->db->select('self_parent');
+							$CI->db->order_as_tree();
+							$CI->db->uri_as_full_uri();
+						}
+						$CI->db->select_first('str');
+						$results=$CI->db->get_results($menuTable);
+						// add results to link list
+						$nameField=$CI->db->get_select_first(0);
+						foreach ($results as $key => $row) {
+							$url=$row["uri"];
+							$name=$row[$nameField];
+							if (isset($row['self_parent']) and $row['self_parent']!=0) $name=' - '.$name;
+							$data[$name]=array("url"=>$url,"name"=>$name);
+						}
 					}
 				}
 			}

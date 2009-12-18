@@ -104,7 +104,7 @@ class plugin_ {
 						if (!empty($fields)) {
 							$changedFields=false;
 							foreach ($fields as $field) {
-								if (empty($this->newData) or (isset($this->newData[$field]) and $this->newData[$field]!=$this->oldData[$field]) ) $changedFields=TRUE;
+								if ( (empty($this->newData) and isset($this->oldData[$field])) or (isset($this->newData[$field]) and $this->newData[$field]!=$this->oldData[$field]) ) $changedFields=TRUE;
 							}
 							if ($changedFields) {
 								$this->actOn[$key]['act']=true;
