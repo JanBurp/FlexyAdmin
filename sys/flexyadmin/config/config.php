@@ -24,6 +24,9 @@ if (isset($_SERVER["HTTP_HOST"])) {
 	$config['auto_base_url']=$config['base_url'];
 }
 
+
+
+
 /*
 |--------------------------------------------------------------------------
 | Index File
@@ -325,7 +328,7 @@ $config['time_reference'] = 'local';
 $config['rewrite_short_tags'] = FALSE;
 
 
-require_once("site/config/config.php");
+if (file_exists("site/config/config.php")) require_once("site/config/config.php");
 
 
 /* End of file config.php */

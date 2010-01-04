@@ -801,6 +801,7 @@ class AdminController extends BasicController {
 			$matches=array_keys($svn,"jan");
 			$fileKey=$matches[count($matches)-1];
 			// trace_($matches);
+			// trace_($fileKey);
 			$revKey=$fileKey-1;
 			$rev = $svn[$revKey];
 			if (!empty($rev)) write_file($revfile, $rev);
