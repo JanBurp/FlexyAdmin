@@ -131,12 +131,6 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 
 	function where_uri($uri="") {
 		$this->whereUri=$uri;
-		if (!empty($uri)) {
-			// $lastPart=get_postfix($uri,"/");
-			// $this->like("uri",$lastPart,"before");
-			// $uriParts=explode('/',$uri);
-			$this->where('uri',$lastPart);
-		}
 	}
 	
 	/**
@@ -379,13 +373,22 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		}
 		
 		//
-		// if $whereUri, add tablename in front of it
+		// whereUri
 		//
 		if ($this->whereUri) {
-			foreach ($this->ar_like as $key => $value) {
-				$new=str_replace('`uri`','`'.$table.'`.`uri`',$value);
-				if ($new!=$value) $this->ar_like[$key]=$new;
+			$uri=$this->whereUri;
+			$uriParts=explode('/',$this->whereUri);
+			// trace_($uriParts);
+			if (count($uriParts)>1) {
+				$uri=array_pop($uriParts);
+				$parent=array_pop($uriParts);
+				$sql="SELECT id FROM $table WHERE uri='$parent'";
+				$query=$this->query($sql);
+				$row=$query->row();
+				if (!empty($row)) $this->where($table.'.self_parent',$row->id);
 			}
+			$this->where($table.'.uri',$uri);
+			// trace_($this->ar_where);
 		}
 		
 		/**
