@@ -132,8 +132,10 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	function where_uri($uri="") {
 		$this->whereUri=$uri;
 		if (!empty($uri)) {
-			$lastPart=get_postfix($uri,"/");
-			$this->like("uri",$lastPart,"before");
+			// $lastPart=get_postfix($uri,"/");
+			// $this->like("uri",$lastPart,"before");
+			// $uriParts=explode('/',$uri);
+			$this->where('uri',$lastPart);
 		}
 	}
 	
