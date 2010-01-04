@@ -34,6 +34,8 @@ input.invalid {border:1px solid #696;}
 input {background:#FFF; border:1px solid #DEA;}
 input, select, textarea {font-family:Verdana, Arial, Helvetica, sans-serif; font-size:10px;color:#696;}
 input, select, textarea {border:1px solid #DEA; width:203px;}
+body.table_dialog #general_panel input, body.table_dialog #general_panel select, body.table_dialog #general_panel textarea {border:1px solid #DEA; width:70px;}
+
 textarea {max-width:none;}
 input.radio {border:1px none #696; background:transparent; vertical-align:middle;}
 input.checkbox {border:1px none #696; background:transparent; vertical-align:middle;}
