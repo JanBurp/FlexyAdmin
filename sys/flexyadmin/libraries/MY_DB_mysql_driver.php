@@ -378,6 +378,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		if ($this->whereUri) {
 			$uri=$this->whereUri;
 			$uriParts=explode('/',$this->whereUri);
+			// TODO: als er drie subnivos met zelfde uri dan gaat het mis...
 			// trace_($uriParts);
 			if (count($uriParts)>1) {
 				$uri=array_pop($uriParts);
@@ -386,6 +387,10 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				$query=$this->query($sql);
 				$row=$query->row();
 				if (!empty($row)) $this->where($table.'.self_parent',$row->id);
+			}
+			else {
+				if ($this->field_exists('self_parent',$table))
+					$this->where('self_parent',0);
 			}
 			$this->where($table.'.uri',$uri);
 			// trace_($this->ar_where);
