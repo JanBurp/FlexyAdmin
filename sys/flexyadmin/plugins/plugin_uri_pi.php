@@ -75,6 +75,10 @@ class plugin_uri extends plugin_ {
 	}
 	
 	function _existing_uri($uri) {
+		if ($this->CI->db->field_exists('self_parent',$this->table) and isset($this->newData['self_parent'])) {
+			$this->CI->db->select('self_parent');
+			$this->CI->db->where('self_parent',$this->newData['self_parent']);
+		}
 		$this->CI->db->select("uri");
 		$this->CI->db->where("uri",$uri);
 		$this->CI->db->where("id !=",$this->id);
