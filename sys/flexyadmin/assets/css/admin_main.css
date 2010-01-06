@@ -525,6 +525,7 @@ tr.caption td				{ border:none; }
 
 .grid td.str,
 .grid td.txt				{ max-width:250px; overflow:hidden;}
+.grid td.str_title	{ max-width:none;}
 .grid td.media,
 .grid td.rgb				{ text-align: center;	width:52px;	max-width:52px; }
 .grid td.medias			{ max-width:none; width:200px;}
