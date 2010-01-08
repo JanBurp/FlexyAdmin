@@ -69,7 +69,7 @@ class Bulkupload extends AdminController {
 						$autoFill=FALSE;
 						// move
 						$ext=get_file_extension($file['name']);
-						$saveFile=clean_file_name($file['name'])
+						$saveFile=clean_file_name($file['name']);
 						$moved=copy($bulkMap.'/'.$file['name'],$path.'/'.$saveFile);
 						if ($moved) {
 							// resize
