@@ -493,7 +493,18 @@ class BasicController extends MY_Controller {
 					// set config in plugin
 					if (isset($pluginCfg[$shortName])) $this->$pluginName->cfg=$pluginCfg[$shortName];
 					// add api call to config if it exist
-					if (method_exists($this->$pluginName,'_admin_api')) $this->config->set_item('API_'.$pluginName, 'admin/plugin/'.$shortName);
+					if (method_exists($this->$pluginName,'_admin_api')) {
+						if (method_exists($this->$pluginName,'_admin_api_calls'))
+							$apiCalls=$this->$pluginName->_admin_api_calls();
+						else
+							$apiCalls=array('');
+						foreach ($apiCalls as $call) {
+							if (empty($call))
+								$this->config->set_item('API_'.$pluginName, 'admin/plugin/'.$shortName);
+							else
+								$this->config->set_item('API_'.$pluginName.'__'.$call, 'admin/plugin/'.$shortName.'/'.$call);
+						}
+					}
 				}
 			}
 		}
@@ -666,8 +677,11 @@ class AdminController extends BasicController {
 			switch($item['str_type']) {
 				case 'api' :
 					$uiName=$item['str_ui_name'];
+					$args=array($item['path'],$item['table']);
+					$args=implode('/',$args);
+					if ($args=='/') $args='';
 					if (substr($uiName,0,1)=="_") $uiName=lang(substr($uiName,1));
-					$menu[$uiName]=array('uri'	=> api_uri($item['api']), 'class'=>str_replace('/','_',$item['api']) );
+					$menu[$uiName]=array('uri'	=> api_uri($item['api']).$args, 'class'=>str_replace('/','_',$item['api']) );
 					break;
 					
 				case 'seperator' :
