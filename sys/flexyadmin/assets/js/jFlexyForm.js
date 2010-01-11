@@ -95,14 +95,20 @@ function doForm() {
 	// Media selecting
 
 	// Media select by click
-	$('div.media ul li').click(function(){
+	$('div.media ul.choices li').click(function(){
 		src=$(this).children('img:first').attr('src');
 		$(this).parent('ul').parent('div.media').children('ul.values').empty();
 		$(this).parent('ul').parent('div.media').children('ul.values').append('<li><img class="zoom" src="'+src+'" alt="'+src+'" title="'+src+'" /></li>');
 		src=pathdecode(src);
 		src=src.substr(src.lastIndexOf('/')+1);
 		$(this).parent('ul').parent('div.media').children('input:first').attr('value',src);
-	});		
+	});
+	$('div.media ul.values†').click(function(){
+		$(this).empty();
+		$(this).parent('div.media').children('input:first').attr('value','');
+	});
+
+	
 
 	// Medias selecting and removing by click
 	// function resetMediaValues(thisMedia) {

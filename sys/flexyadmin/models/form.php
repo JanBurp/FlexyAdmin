@@ -622,11 +622,12 @@ class Form Extends Model {
 				// Show all possible images as images instead of a dropdown
 				//
 				if ($field["type"]=="image_dragndrop") {
+					$preName=get_prefix($field['name']);
 					// $out.=div('buttons').icon('up').icon('delete')._div();
 					$out.='<ul class="choices">';
 					foreach($options as $img) {
 						$image=$img['name'];
-						if (!in_array($image,$medias))	$out.='<li>'.show_thumb(array("src"=>$field["path"]."/".$image,"class"=>"media",'alt'=>$image)).'</li>';
+						if ($preName=='media' or !in_array($image,$medias))	$out.='<li>'.show_thumb(array("src"=>$field["path"]."/".$image,"class"=>"media",'alt'=>$image)).'</li>';
 					}
 					$out.='</ul>';					
 				}
