@@ -513,7 +513,7 @@ function doGrid() {
 						$(obj).children('td.id:first').html('<div class="icon yes" /></div');
 						$(obj).next('tr:first').each(function(){
 							actionNr++;
-							$('#actionCounter').html((actionNr/totalActions*100).toFixed(1)+' %');
+							$('#actionCounter').html(((actionNr+1)/totalActions*100).toFixed(1)+' %');
 							doAction($(this));
 						});
 					}

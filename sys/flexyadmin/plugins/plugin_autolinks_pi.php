@@ -56,6 +56,9 @@ class plugin_autolinks extends plugin_ {
 				break;
 		}
 	}
+	function _admin_api_calls() {
+		return array('resettags','render');
+	}
 
 
 	//
@@ -75,8 +78,6 @@ class plugin_autolinks extends plugin_ {
 			}
 		}
 	}
-
-
 
 
 	// These methods can be used to do some actions 
@@ -237,7 +238,7 @@ class plugin_autolinks extends plugin_ {
 		}
 		else {
 			foreach ($articles as $id => $article) {
-				$articles[$id]['uri']='admin/plugin/ajax/autolinks/render/'.$id;
+				$articles[$id]['uri']='admin/plugin/ajax/autolinks/render/'.$id.'/'.$table;
 			}
 			$actionGrid->set_data($articles,'Render...');
 			$this->CI->_add_content($actionGrid->view('html',$table,'grid actionGrid'));
