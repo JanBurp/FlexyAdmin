@@ -1,0 +1,140 @@
+/* ============== flexyHtml ==================== */
+
+/* ============== flexyTable =================== */
+
+.flexyTable {
+	border-spacing:0px;
+	border: solid 1px #DDEEAA;
+	border-left:none;
+	border-bottom:none;
+	margin:0px;
+	padding:0px;
+	min-width:600px;
+}
+
+.flexyTable td, .flexyTable th {
+	text-align: left;
+	vertical-align: top;
+	padding:3px 5px 3px 5px;
+	border: solid 1px #DDEEAA;
+	border-top:none;
+	border-right:none;
+	overflow:hidden;
+}
+
+tr.flexyCaption {
+	background-color: #DDEEAA;
+	background-image: url("../img/inset.png");
+	background-position:50% 50%;
+	margin:0px;
+	padding:2px;
+	width: 100%;
+}
+
+td.flexyTitle {
+	font-weight:bold;
+	font-size: 16px;
+	padding:3px 0px 2px;
+	text-align: center;
+}
+
+/* ============== flexyGrid ===================== */
+
+.flexyPagination td { text-align:center;}
+.flexyPagination .current { font-weight:bold;}
+
+
+.flexyOrder, .flexyOrderUp, .flexyOrderDown {
+	background-image:url(../icons/order.gif);
+	background-position:right center;
+	background-repeat:no-repeat;
+	cursor:pointer;
+	padding-left:5px;
+}
+.flexyOrderUp 	{	background-image:url(../icons/order_up.gif);}
+.flexyOrderDown {	background-image:url(../icons/order_down.gif);}
+.flexyOrder a 	{ display:block; width:100%;}
+
+
+
+/*
+tr.caption td.filter {
+	text-align:right;
+	padding-top:0px;
+	width:33%;
+	font-size:15px;
+}
+
+.grid th.id {
+	padding-right:0px;
+}
+tr.caption td				{ border:none; }
+
+.grid thead td,
+.grid thead th {
+	padding:5px 18px 3px 5px;
+	font-weight: bold;
+	vertical-align:middle;
+}
+.grid .caption td		{ padding:0px;}
+
+.grid td.id,
+.grid td.edit,
+.files td.edit			{ width:66px; min-width:52px; padding-right:0px; }
+.grid th.uri,
+.grid td.uri				{ display:none; }
+.grid th.order,
+.grid td.order			{ width:10px;	padding:3px 7px 3px 0px;border-left:none; }
+
+.grid td.str,
+.grid td.txt				{ max-width:250px; overflow:hidden;}
+.grid td.str_title	{ max-width:none;}
+.grid td.media,
+.grid td.rgb				{ text-align: center;	width:52px;	max-width:52px; }
+.grid td.medias			{ max-width:none; width:200px;}
+
+.grid img,
+.grid embed,
+.grid .rgb					{	min-width:25px; max-width:50px;	height:25px; max-height:25px; margin:0px 1px 0px 0px; }
+.grid div.rgb				{	width:25px;	height:25px; border:solid 1px #DEA;}
+.grid .b						{	cursor: pointer; }
+
+.grid td ul {
+	margin:0px;
+	padding:0px;
+}
+.grid td ul li {
+	list-style:none;
+	display:inline;
+}
+
+.grid tbody tr.evenrow td {
+	background-color:#F4FFE0;
+	}
+.grid tbody tr.current td {
+	background-color:#FFEEEE;
+	}
+
+.grid tbody tr.grid:hover,
+.grid tbody tr:hover td {
+	background-color:#DEA;
+}
+.grid tbody tr.selected td {
+	background-color:#EFB;
+}
+*/
+
+
+
+
+
+
+
+
+
+/* =========== rounded borders ================= */
+
+.flexyTable {
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+}
