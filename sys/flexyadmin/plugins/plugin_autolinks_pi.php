@@ -85,9 +85,6 @@ class plugin_autolinks extends plugin_ {
 	function _after_update() {
 		$changed=false;
 		
-		strace_($this->oldData);
-		strace_($this->newData);
-		
 		// if a uri has changed, replace all those uri's
 		if (isset($this->newData['uri']) and $this->newData['uri']!=$this->oldData['uri']) {
 			if (isset($this->newData['self_parent']) and ($this->newData['self_parent']!=0) ) {
