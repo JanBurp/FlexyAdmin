@@ -85,10 +85,22 @@ class plugin_autolinks extends plugin_ {
 	function _after_update() {
 		$changed=false;
 		
+		strace_($this->oldData);
+		strace_($this->newData);
+		
 		// if a uri has changed, replace all those uri's
 		if (isset($this->newData['uri']) and $this->newData['uri']!=$this->oldData['uri']) {
-			$this->CI->db->set('uri',$this->newData['uri']);
-			$this->CI->db->where('uri',$this->oldData['uri']);
+			if (isset($this->newData['self_parent']) and ($this->newData['self_parent']!=0) ) {
+				$parentUri=$this->_get_full_uri($this->table,$this->newData['self_parent']);
+				$uri=$parentUri.'/'.$this->newData['uri'];
+				$oldUri=$parentUri.'/'.$this->oldData['uri'];
+			}
+			else {
+				$uri=$this->newData['uri'];
+				$oldUri=$this->oldData['uri'];
+			}
+			$this->CI->db->set('uri',$uri);
+			$this->CI->db->where('uri',$oldUri);
 			$this->CI->db->update('res_tags');
 			$this->_setRender();
 		}
@@ -134,10 +146,14 @@ class plugin_autolinks extends plugin_ {
 		// delete all entries of deleted uri from tags
 		if (isset($this->oldData['uri'])) {
 			$uri=$this->oldData['uri'];
-			$this->CI->db->where('uri',$uri);
-			$areThere=$this->CI->db->get_results('res_tags');
+			$sql="SELECT id FROM `res_tags` WHERE `uri`='$uri' OR `uri` LIKE '%/$uri'";
+			$query=$this->CI->db->query($sql);
+			$areThere=$query->result_array(); //$this->CI->db->get_results('res_tags');
+			$lastq=$this->CI->db->last_query();
 			if ($areThere) {
-				$this->CI->db->where('uri',$uri);
+				foreach ($areThere as $row) {
+					$this->CI->db->or_where('id',$row['id']);
+				}
 				$this->CI->db->delete('res_tags');
 				$this->_setRender();
 			}
@@ -145,6 +161,16 @@ class plugin_autolinks extends plugin_ {
 		return FALSE;
 	}
 	
+	
+	function _get_full_uri($table,$id) {
+		if ($this->CI->db->field_exists('self_parent',$table)) {
+			$this->CI->db->select('id,self_parent');
+			$this->CI->db->uri_as_full_uri();
+		}
+		$this->CI->db->select('uri');
+		$result=$this->CI->db->get_result($table);
+		return $result[$id]['uri'];
+	}
 	
 	function _setRender($render=true) {
 		$this->needToRender=$render;
@@ -172,6 +198,10 @@ class plugin_autolinks extends plugin_ {
 		$tags=array();
 		foreach ($tables as $table) {
 			$this->CI->db->select('uri,str_tags');
+			if ($this->CI->db->field_exists('self_parent',$table)) {
+				$this->CI->db->select('id,self_parent');
+				$this->CI->db->uri_as_full_uri();
+			}
 			$res=$this->CI->db->get_results($table);
 			foreach ($res as $key => $value) {
 				if (!empty($this->cfg[$table]))
@@ -198,13 +228,17 @@ class plugin_autolinks extends plugin_ {
 	}
 	
 	function _addTags($tags) {
+		$uri=$this->newData['uri'];
+		if (isset($this->newData['self_parent']) and $this->newData['self_parent']!=0) {
+			$uri=$this->_get_full_uri($this->table,$this->newData['self_parent']).'/'.$uri;
+		}
 		foreach ($tags as $key => $value) {
-			$this->CI->db->where('uri',$this->newData['uri']);
+			$this->CI->db->where('uri',$uri);
 			$this->CI->db->where('str_tag',$value);
 			$this->CI->db->select('id');
 			$exist=$this->CI->db->get_row('res_tags');
 			if (!$exist) {
-				$this->CI->db->set('uri',$this->newData['uri']);
+				$this->CI->db->set('uri',$uri);
 				$this->CI->db->set('str_tag',$value);
 				$this->CI->db->set('int_len',strlen($value));
 				$this->CI->db->insert('res_tags');
