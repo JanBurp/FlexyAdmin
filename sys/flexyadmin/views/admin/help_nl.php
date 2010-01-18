@@ -1,5 +1,5 @@
 <h1>Help</h1>
-<p>Hieronder vind je algemene help.<br/><br/></p>
+<p>Hieronder vind je algemene hulp.<br/><br/></p>
 <?=$commonHelp?>
 
 <h1>Help per onderdeel</h2>
