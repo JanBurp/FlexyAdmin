@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `cfg_admin_menu` (
   `str_ui_name` varchar(50) default '',
   `b_visible` tinyint(1) default '1',
   `str_type` varchar(20) default '',
-  `api` varchar(20) default '',
+  `api` varchar(50) default '',
   `path` varchar(50) NOT NULL,
   `table` varchar(25) default NULL,
   `str_table_where` varchar(50) default '',
@@ -46,7 +46,7 @@ INSERT INTO `cfg_admin_menu` VALUES(7, 12, '# all config tables (if user has rig
 INSERT INTO `cfg_admin_menu` VALUES(8, 3, '', 1, 'seperator', '', '', '', '');
 INSERT INTO `cfg_admin_menu` VALUES(9, 7, '', 1, 'seperator', '', '', '', '');
 INSERT INTO `cfg_admin_menu` VALUES(10, 11, '', 1, 'seperator', '', '', '', '');
-INSERT INTO `cfg_admin_menu` VALUES(11, 8, '_stats_menu', 1, 'api', 'API_stats', '', '', '');
+INSERT INTO `cfg_admin_menu` VALUES(11, 8, '_stats_menu', 1, 'api', 'API_plugin_stats', '', '', '');
 INSERT INTO `cfg_admin_menu` VALUES(12, 9, '', 1, 'seperator', '', '', '', '');
 
 -- --------------------------------------------------------
