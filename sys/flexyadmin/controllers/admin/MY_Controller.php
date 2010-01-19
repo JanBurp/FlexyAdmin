@@ -813,11 +813,13 @@ class AdminController extends BasicController {
 			$svn = read_file($svnfile);
 			$svn=explode("\n",$svn);
 			$matches=array_keys($svn,"jan");
-			$fileKey=$matches[count($matches)-1];
+			// $fileKey=$matches[count($matches)-1];
+			$fileKey=$matches[0];
 			// trace_($matches);
 			// trace_($fileKey);
 			$revKey=$fileKey-1;
 			$rev = $svn[$revKey];
+			// trace_($rev);
 			if (!empty($rev)) write_file($revfile, $rev);
 		}
 		if (empty($rev) and file_exists($revfile)) {
