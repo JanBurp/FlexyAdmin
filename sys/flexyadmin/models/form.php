@@ -418,6 +418,7 @@ class Form Extends Model {
 				 */
 				foreach($set as $name=>$value) {
 					$this->db->set($name,$value);
+					$this->data[$name]['newvalue']=$value;
 				}
 				if ($id==-1) {
 					$this->db->insert($table);
