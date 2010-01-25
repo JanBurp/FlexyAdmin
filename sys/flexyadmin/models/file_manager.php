@@ -151,28 +151,35 @@ class File_manager Extends Model {
 						$currentData=$this->db->get_result($table);
 						foreach ($currentData as $row) {
 							foreach ($row as $field=>$data) {
-								if ($field==pk()) $id=$data;
+								if ($field==pk())
+									$id=$data;
 								else {
+									$newdata='';
 									$pre=get_prefix($field);
-									if ($pre=="media") {
-										if ($data==$file) {
-											$this->db->set($field,"");
-											$this->db->where(pk(),$id);
-											$this->db->update($table);
-										}
+									switch ($pre) {
+										case 'media':
+											if ($data==$file) $newdata='';
+											break;
+										case 'medias':
+											$newdata=str_replace($file,'',$data);
+											$newdata=str_replace('||','|',$newdata);
+											$newdata=trim($newdata,'|');
+											break;
+										case 'txt':
+											$preg_name=str_replace("/","\/",$name);
+											// remove all img tags with this media
+											$newdata=preg_replace("/<img(.*)".$preg_name."(.*)>/","",$data);
+											// remove all flash objects with this media
+											$newdata=preg_replace("/<object(.*)".$preg_name."(.*)<\/object>/","",$newdata);
+											break;
 									}
-									if ($pre=="txt") {
-										$preg_name=str_replace("/","\/",$name);
-										// remove all img tags with this media
-										$newdata=preg_replace("/<img(.*)".$preg_name."(.*)>/","",$data);
-										// remove all flash objects with this media
-										$newdata=preg_replace("/<object(.*)".$preg_name."(.*)<\/object>/","",$newdata);
-										if ($newdata!=$data) {
-											$this->db->set($field,$newdata);
-											$this->db->where(pk(),$id);
-											$this->db->update($table);
-										}
+									// if changed, put in db
+									if ($newdata!=$data) {
+										$this->db->set($field,$newdata);
+										$this->db->where(pk(),$id);
+										$this->db->update($table);
 									}
+
 								}
 							}
 						}
