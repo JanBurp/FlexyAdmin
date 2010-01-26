@@ -92,6 +92,7 @@ class plugin_automenu extends plugin_ {
 					}
 					foreach ($data as $item) {
 						$this->_setResultMenuItem($item);
+						if (!isset($item['str_title'])) $this->CI->db->set('str_title',$item['uri']);
 						$this->CI->db->set('order',$lastOrder++);
 						$this->CI->db->set('self_parent',$self_parent);
 						$this->CI->db->set('str_table',$autoValue['table']);
