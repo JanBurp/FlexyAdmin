@@ -65,6 +65,7 @@ class plugin_automenu extends plugin_ {
 		
 		// Loop through all options in Auto Menu
 		foreach ($this->automationData as $autoKey => $autoValue) {
+			
 			switch($autoValue['str_type']) {
 				case 'from menu table':
 					$data=$this->CI->db->get_results($autoValue['table']);
@@ -81,10 +82,18 @@ class plugin_automenu extends plugin_ {
 		
 				case 'from category table':
 					$data=$this->CI->db->get_result($autoValue['table']);
+					$self_parent=0;
+					if (!empty($autoValue['str_parent_uri'])) {
+						// zoek bijpassende self_parent
+						$this->CI->db->select('id');
+						$this->CI->db->where('uri',$autoValue['str_parent_uri']);
+						$parentItem=$this->CI->db->get_row($this->resultMenu);
+						if ($parentItem) $self_parent=$parentItem['id'];
+					}
 					foreach ($data as $item) {
 						$this->_setResultMenuItem($item);
 						$this->CI->db->set('order',$lastOrder++);
-						$this->CI->db->set('self_parent',0);
+						$this->CI->db->set('self_parent',$self_parent);
 						$this->CI->db->set('str_table',$autoValue['table']);
 						$this->CI->db->set('str_uri',$item['uri']);
 						$this->CI->db->insert($this->resultMenu);
