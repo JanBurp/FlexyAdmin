@@ -50,18 +50,6 @@ class Editor_lists {
 				$data[$name]=array('name'=>$name,'url'=>'mailto:'.$tblSite['email_email']);
 			}
 
-			// add links from links table
-			$data['-- links ----------------']=NULL;
-			$table=$CI->cfg->get('CFG_editor','table');
-			if ($CI->db->table_exists($table)) {
-	 			$CI->db->select("str_title,url_url");
-				$CI->db->order_by("str_title");
-				$query=$CI->db->get($table);
-				foreach($query->result_array() as $row) {
-					$data[$row["str_title"]]=array("url"=>$row["url_url"],"name"=>$row["str_title"]);
-				}
-			}
-			
 			// add if asked for, internal links from menu table
 			if ($CI->cfg->get('CFG_editor','b_add_internal_links')) {
 				$data['-- site links -----------']=NULL;
@@ -70,6 +58,7 @@ class Editor_lists {
 				if ($CI->db->table_exists($resultTable)) $menuTable=$resultTable; // for menu automation
 				if (!empty($menuTable) and $CI->db->table_exists($menuTable)) {
 					$menuFields=$CI->db->list_fields($menuTable);
+					$menuFields=combine($menuFields,$menuFields);
 					if (isset($menuFields['uri'])) {
 						$CI->db->select('id,uri,order');
 						if (in_array('self_parent',$menuFields)) {
@@ -90,6 +79,19 @@ class Editor_lists {
 					}
 				}
 			}
+			
+			// add links from links table
+			$data['-- links ----------------']=NULL;
+			$table=$CI->cfg->get('CFG_editor','table');
+			if ($CI->db->table_exists($table)) {
+	 			$CI->db->select("str_title,url_url");
+				$CI->db->order_by("str_title");
+				$query=$CI->db->get($table);
+				foreach($query->result_array() as $row) {
+					$data[$row["str_title"]]=array("url"=>$row["url_url"],"name"=>$row["str_title"]);
+				}
+			}
+			
 		}
 
 		// Media files (for download links)
