@@ -155,11 +155,13 @@ function not_filter_by($a,$p) {
 	return $a;
 }
 
-function filter_by_key($a,$preKey) {
+function filter_by_key($a,$preKey,$replaceKey=FALSE) {
 	$arr=array();
 	$len=strlen($preKey);
 	foreach ($a as $key => $value) {
-		if (substr($key,0,$len)==$preKey) $arr[$key]=$value;
+		$newKey=$key;
+		if ($replaceKey) $newKey=str_replace($preKey,'',$newKey);
+		if (substr($key,0,$len)==$preKey) $arr[$newKey]=$value;
 	}
 	return $arr;
 }
