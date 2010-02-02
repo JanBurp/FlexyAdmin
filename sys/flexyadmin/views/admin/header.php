@@ -35,6 +35,9 @@ $isForm=has_string('form',$show_type);
 	<!--[if IE 8]><style type="text/css" media="screen">@import url(<?=admin_assets()?>css/ie8.css);</style><![endif]-->
 
 
+	<? if (file_exists('site/assets/css/admin.css')) {?>
+	<link rel="stylesheet" href="site/assets/css/admin.css" type="text/css" />
+	<? } ?>
 
 	<!-- JS variables -->
 	<script language="javascript" type="text/javascript">
