@@ -884,8 +884,10 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 function _add_many_options($out,$manyTables) {
 			$options=array();
 			if (isset($manyTables)) {
+				$CI=&get_instance();
 				foreach ($manyTables as $rel => $jTable) {
-					$options[$rel]=$this->get_options($jTable["join"]);
+					$optionsWhere=$CI->cfg->get('CFG_table',$jTable["rel"],'str_options_where');
+					$options[$rel]=$this->get_options($jTable["join"],$optionsWhere);
 				}
 			}
 			if (count($options)>0) {

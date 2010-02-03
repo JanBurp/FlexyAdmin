@@ -251,8 +251,7 @@ class Show extends AdminController {
 				$multiOptions=el("multi_options",$data);
 				$data=current($data);
 			}
-								
-								
+			// strace_($options);
 									
 			/**
 			 * if data: first render data for the form class, then put data in form
