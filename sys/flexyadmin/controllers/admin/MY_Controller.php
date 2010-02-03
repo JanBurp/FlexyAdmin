@@ -811,6 +811,7 @@ class AdminController extends BasicController {
 		$revfile="sys/build.txt";
 		if (file_exists($svnfile)) {
 			$svn = read_file($svnfile);
+			// trace_($svn);
 			$svn=explode("\n",$svn);
 			$matches=array_keys($svn,"jan");
 			// $fileKey=$matches[count($matches)-1];

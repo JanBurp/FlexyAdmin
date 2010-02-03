@@ -207,14 +207,16 @@ function combine($k,$v) {
 	return $out;
 }
 
-// sort assoc array by assoc name
-function sort_by($a,$s,$d=FALSE) {
-	if ($d) {
-		$f = "return strnatcmp(\$b['$s'], \$a['$s']);";
+/**
+ * Sort an assoc array by its value, can be used to sort a db return array by another field than its 'id'key
+ */
+function sort_by($a,$key,$desc=FALSE) {
+	if ($desc) {
+		$f = "return strnatcmp(\$b['$key'], \$a['$key']);";
 		uasort($a, create_function('$a,$b', $f));
 	}
 	else {
-		$f = "return strnatcmp(\$a['$s'], \$b['$s']);";
+		$f = "return strnatcmp(\$a['$key'], \$b['$key']);";
 		uasort($a, create_function('$a,$b', $f));
 	}
 	return $a;

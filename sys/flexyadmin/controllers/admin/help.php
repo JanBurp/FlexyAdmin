@@ -25,12 +25,8 @@ class Help extends AdminController {
 
 	function index() {
 		$lang=$this->session->userdata('language');
-		// common help
 		$commonHelp=$this->cfg->get('CFG_configurations','txt_help');
-		$specificHelp='';
-		// help for tables
-		$specificHelp.=$this->_get_help('CFG_table');
-		// help for media
+		$specificHelp=$this->_get_help('CFG_table');
 		$specificHelp.=$this->_get_help('CFG_media_info');
 		$this->_add_content($this->load->view("admin/help_".$lang,array('commonHelp'=>$commonHelp,'specificHelp'=>$specificHelp),true) );
 		
@@ -40,6 +36,7 @@ class Help extends AdminController {
 	
 	function _get_help($helpTable,$helpField="txt_help") {
 		$info=$this->cfg->get($helpTable);
+		$info=sort_by($info,'order');
 		$help="";
 		foreach ($info as $table => $row) {
 			if (get_prefix($table)!="cfg" and strpos($table,'.')===FALSE and !empty($row[$helpField])) {

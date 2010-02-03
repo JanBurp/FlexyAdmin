@@ -1,10 +1,13 @@
+<? if (!empty($commonHelp)): ?>
 <h1>Help</h1>
-<p>Hieronder vind je algemene hulp.<br/><br/></p>
 <?=$commonHelp?>
+<? endif ?>
 
+<? if (!empty($specificHelp)): ?>
 <h1>Help per onderdeel</h2>
-<p>Hieronder vind je specifieke help per onderdeel.<br/>Deze help teksten krijg je ook te zien als je met de muis op de naam van het onderdeel gaat staan en even wacht.<br/><br/></p>
+<p>Deze help teksten krijg je ook te zien als je met de muis op de naam van een onderdeel gaat staan en even wacht.<br/><br/></p>
 <?=$specificHelp?>
+<? endif ?>
 
 <h1>FlexyAdmin 2009</h2>
 
