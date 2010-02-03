@@ -5,9 +5,6 @@
  * MY_directory_helper.php
  *
  * @author Jan den Besten
- *
- * adds some functions to the array helper
- *
  */
 
 
