@@ -74,7 +74,7 @@ class Editor_lists {
 							$url=$row["uri"];
 							$name=$row[$nameField];
 							if (isset($row['self_parent']) and $row['self_parent']!=0) $name=' - '.$name;
-							$data[$name]=array("url"=>$url,"name"=>$name);
+							$data[$name]=array("url"=>site_url($url),"name"=>$name);
 						}
 					}
 				}
