@@ -158,8 +158,6 @@ class File_manager Extends Model {
 									$pre=get_prefix($field);
 									switch ($pre) {
 										case 'media':
-											if ($data==$file) $newdata='';
-											break;
 										case 'medias':
 											$newdata=str_replace($file,'',$data);
 											$newdata=str_replace('||','|',$newdata);
