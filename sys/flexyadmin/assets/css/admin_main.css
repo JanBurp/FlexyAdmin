@@ -997,17 +997,27 @@ input.button:hover {
 	max-width:none;
 	float:right;
 	width:450px;
-	max-height:200px;
+	max-height:125px;
 	overflow:auto;
 	padding:3px 4px 4px;
 }
+.form_field ul.values {
+	float:right;
+	margin-right:424px;
+}
+.form_field.wide ul.choices,
+.form_field.big  ul.choices {
+	width:578px;
+}
+
+
 
 .form_field ul li {
 	list-style:none;
 	display:block;
 	float:left;
 	top:0px;
-	margin:0px 1px 0px 0px;
+	margin:0px;
 	padding:2px;
 	height:25px;
 	max-width:50px;

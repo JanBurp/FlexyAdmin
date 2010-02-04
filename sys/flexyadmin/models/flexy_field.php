@@ -340,11 +340,13 @@ class Flexy_field extends Model {
 			//$out['max_height'] = '768';
 		}
 		/**
-		 * HTML editor field
+		 * Wide?
 		 */
-		if ($this->type=="htmleditor") {
+		if ($this->type=="htmleditor" or $this->type=="function_dropdown_media" or $this->type=='function_dropdown_medias') {
 			$out['class'] = $this->cfg->get('CFG_editor','str_class');
-		}		/**
+		}
+		
+		/**
 		 * Add validation rules:
 		 * -first the standard validation rules set in flexyadmin_config.php.
 		 * -then add validation rules set in cfg_field_info
