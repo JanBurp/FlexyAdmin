@@ -850,10 +850,11 @@ textarea, .mceEditor {
 	width:450px;
 }
 
-div.form_field.wide label,
-div.form_field.big label {
+div.form_field.htmleditor.wide label,
+div.form_field.htmleditor.big label {
 	float:none;
 }
+
 div.form_field.wide .mceEditor,
 div.form_field.big .mceEditor {
 	margin:4px 0px 4px;
@@ -1001,12 +1002,12 @@ input.button:hover {
 	overflow:auto;
 	padding:3px 4px 4px;
 }
-.form_field ul.values {
+.form_field.media.image_dragndrop ul.values {
 	float:right;
 	margin-right:424px;
 }
-.form_field.wide ul.choices,
-.form_field.big  ul.choices {
+.form_field.image_dragndrop.wide ul.choices,
+.form_field.image_dragndrop.big  ul.choices {
 	width:578px;
 }
 
@@ -1017,7 +1018,7 @@ input.button:hover {
 	display:block;
 	float:left;
 	top:0px;
-	margin:0px;
+	margin:px;
 	padding:2px;
 	height:25px;
 	max-width:50px;
