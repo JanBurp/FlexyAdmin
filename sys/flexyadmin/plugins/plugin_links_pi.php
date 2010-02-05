@@ -22,9 +22,14 @@ class plugin_links extends plugin_ {
 	}
 	
 	function _after_delete() {
-		$this->newData=array();
-		$this->_update_links_in_text();
-		$this->_create_link_list();
+		$linkTable=$this->CI->cfg->get('cfg_editor','table');
+		$menuTable=$this->CI->cfg->get('cfg_configurations','str_menu_table');
+		if ($this->CI->db->table_exists('res_auto_menu')) $menuTable='res_auto_menu';
+		if ($this->table==$linkTable or $this->table==$menuTable) {
+			$this->newData=array();
+			$this->_update_links_in_text();
+			$this->_create_link_list();
+		}
 		return FALSE;
 	}
 	
