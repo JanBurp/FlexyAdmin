@@ -339,6 +339,7 @@ class Flexy_field extends Model {
 			//$out['max_width'] = '1024';
 			//$out['max_height'] = '768';
 		}
+		
 		/**
 		 * Wide?
 		 */
@@ -348,26 +349,76 @@ class Flexy_field extends Model {
 		
 		/**
 		 * Add validation rules:
-		 * -first the standard validation rules set in flexyadmin_config.php.
+		 * -first the standard validation rules set in flexyadmin_config.php
+		 * -validation rules depended on database field
 		 * -then add validation rules set in cfg_field_info
 		 */
-		$out["validation"]= $this->validation;
-		$extraValidation=$this->cfg->get('CFG_field',$this->table.".".$this->field,'str_validation_rules');
-		if (!empty($extraValidation)) {
-			$extraValidation=explode("|",$extraValidation);
-			$validationParams=$this->cfg->get('CFG_field',$this->table.".".$this->field,'str_validation_parameters');
-			$validationParams=explode(",",$validationParams);
-			$addValidation='';
-			foreach ($extraValidation as $thisValidation) {
-				if (strpos($thisValidation,'[]')>0) {
-					$thisParam=current($validationParams);
-					$thisValidation=str_replace('[]','['.$thisParam.']',$thisValidation);
-				}
-				$addValidation=add_string($thisValidation,$addValidation,'|');
-			}
-			$out["validation"]=add_string($out["validation"],$addValidation,"|");
-		}
+		
+		$out['validation']='';
+		$validation[]=array('rules'=>$this->validation,'params'=>'');
+		$validation[]=$this->_get_db_validation($out['table'],$out['name']);
+		$validation[]=$this->_get_set_validation($out['table'],$out['name']);
+		$validations=$this->_combine_validations($validation);
+		if (!empty($validations)) $out['validation']=$this->_set_validation_params($validations);
+		// trace_($out);
 		return $out;
+	}
+
+	function _get_db_validation($table,$field) {
+		$validation='';
+		$info=$this->cfg->field_data($table,$field);
+		if (isset($info['type']))
+		switch ($info['type']) {
+			case 'varchar':
+				if (isset($info['max_length'])) {
+					$validation['rules']='max_length[]';
+					$validation['params']=$info['max_length'];
+				}
+				break;
+		}
+		return $validation;
+	}
+
+	function _get_set_validation($table,$field) {
+		return array(	'rules'		=> $this->cfg->get('CFG_field',$table.".".$field,'str_validation_rules'),
+									'params'	=> $this->cfg->get('CFG_field',$table.".".$field,'str_validation_parameters'));
+	}
+	
+	function _combine_validations($validations) {
+		$validation=array();
+		// trace_($validations);
+		foreach ($validations as $val) {
+			if (!empty($val) and !empty($val['rules'])) {
+				$rules=explode('|',$val['rules']);
+				$params=explode('|',$val['params']);
+				foreach ($rules as $key => $rule) {
+					$param='';
+					if (isset($validation[$rule])) 	$param=$validation[$rule];
+					if (isset($params[$key])) 			$param=$params[$key];
+					if (isset($validation[$rule])) {
+						switch($rule) {
+							case 'max_length':
+								if ($validation[$rule]<$param) $param=$validation[$rule]; // get smallest
+								break;
+							case 'min_length':
+								if ($validation[$rule]>$param) $param=$validation[$rule]; // get biggest
+								break;
+						}
+					}
+					$validation[$rule]=$param;
+				}
+			}
+		}
+		return $validation;
+	}
+
+	function _set_validation_params($validations) {
+		$validation='';
+		foreach ($validations as $rule => $param) {
+			if (!empty($param)) $rule=str_replace('[]','['.$param.']',$rule);
+			$validation=add_string($validation,$rule,'|');
+		}
+		return $validation;
 	}
 
 	/**
