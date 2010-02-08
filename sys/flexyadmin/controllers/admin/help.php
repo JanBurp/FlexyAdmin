@@ -49,7 +49,7 @@ class Help extends AdminController {
 					foreach ($fields as $field) {
 						$fieldInfo=$this->cfg->get('CFG_field',"$table.$field");
 						if (isset($fieldInfo[$helpField]) and !empty($fieldInfo[$helpField]))
-						$help.="<h3>$uiTable - ".$this->uiNames->get($field)."</h3>".$fieldInfo[$helpField];
+						$help.=div('helpField')."<h3>$uiTable - ".$this->uiNames->get($field)."</h3>".$fieldInfo[$helpField]._div();
 					}
 				}
 				$help.="<p>&nbsp;</p>";
