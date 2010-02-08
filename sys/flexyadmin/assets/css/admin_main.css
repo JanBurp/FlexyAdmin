@@ -205,6 +205,9 @@ span.help {
 	width:auto;
 }
 
+div.helpField h3,
+div.helpField p 		{padding-left:25px;}
+
 #popup {
 	position:absolute;
 	background-color:#fff;
