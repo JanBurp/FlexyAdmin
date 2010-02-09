@@ -493,7 +493,7 @@ class Form Extends Model {
 		$out.=form_fieldset($this->caption,array("class"=>"formfields"));
 		$data=$this->data;
 		foreach($data as $name => $field) {
-			$out.=$this->render_field($name,$field,$class);
+			$out.=$this->render_field($field['name'],$field,$class);
 		}
 		$out.=form_fieldset_close();
 		$out.=form_fieldset("",array("class"=>"formbuttons"));
@@ -552,7 +552,7 @@ class Form Extends Model {
 				break;
 
 
-		case "checkbox":
+			case "checkbox":
 				if ($attr["value"])
 					$attr["checked"]="checked";
 				else
@@ -561,6 +561,9 @@ class Form Extends Model {
 				$out.=form_checkbox($attr);
 				break;
 
+			case 'radio':
+				$out.=form_radio($attr);
+				break;
 
 			case "htmleditor":
 				$this->hasHtmlField=true;
