@@ -144,7 +144,9 @@ class Form Extends Model {
 	function validation() {
 		$data=$this->data;
 		$hasCaptcha=FALSE;
+
 		foreach($data as $name=>$field) {
+			// set validation rules
 			if (!isset($field["multiple"])) {
 				$this->form_validation->set_rules($field["name"], $field["label"], $field["validation"]);
 			}
@@ -201,7 +203,6 @@ class Form Extends Model {
 		/**
 		 * Special form fields
 		 */
-
 		$type=el("type",$data);
 		switch ($type) {
 			case "checkbox" :
@@ -469,8 +470,10 @@ class Form Extends Model {
 			// $data[$name]["value"]=$field["repopulate"];
 			if (isset($field['newvalue']))
 				$data[$name]=$field['newvalue'];
-			else
+			elseif (isset($field['newvalue']))
 				$data[$name]=$field['repopulate'];
+			else
+				$data[$name]=$field['value'];
 		}
 		return $data;
 	}
@@ -503,11 +506,6 @@ class Form Extends Model {
 			else
 				$out.=form_reset($button);
 		}
-		// $out.=form_reset(array("name"=>"cancel", "value" => lang("form_cancel"), "class"=>"button cancel", "onClick" => "window.history.back()"));
-		// if ($this->showSubmit) {
-		// 	$out.=form_reset(array("name"=>"reset", "value" => lang("form_reset"), "class"=>"button reset"));
-		// 	$out.=form_submit(array("submit"=>"submit", "value"=>lang("form_submit"),"class"=>"button submit"));
-		// }
 		$out.=form_fieldset_close();
 		$out.=form_close();
 		log_('info',"form: rendering");
@@ -521,6 +519,7 @@ class Form Extends Model {
 		$class="$pre $name ".$field['type']." ".$field['class'];
 		if (isset($field['multiple'])) $class.=" ".$field['multiple'];
 		$class=" ".$class;
+		
 		if (!empty($field["repopulate"])) $field["value"]=$field["repopulate"];
 		$attr=array("name"=>$name,"id"=>$name,"value"=>$field["value"], "class"=>$class);
 
@@ -562,7 +561,14 @@ class Form Extends Model {
 				break;
 
 			case 'radio':
-				$out.=form_radio($attr);
+				$options=$field['options'];
+				$value=$field['value'];
+				foreach ($options as $option => $optLabel) {
+					$attr['value']=$option;
+					if ($value==$option) $attr['checked']='checked'; else $attr['checked']='';Å
+					$attr['id']=$name.'__'.$option;
+					$out.=div('radioOption').span('optionLabel').$optLabel._span().form_radio($attr)._div();
+				}
 				break;
 
 			case "htmleditor":
