@@ -869,6 +869,7 @@ textarea.big {
 textarea.big {
 	height:450px;
 }
+form.tbl_site textarea {height:auto;}
 
 /* will be overruled by the user in text.css */
 body#tinymce,

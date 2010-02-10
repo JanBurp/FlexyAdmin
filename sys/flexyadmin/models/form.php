@@ -465,12 +465,11 @@ class Form Extends Model {
 
 	function get_data() {
 		$data=array();
+		// trace_($this->data);
 		foreach($this->data as $name=>$field) {
-			// $data[$name]=$field;
-			// $data[$name]["value"]=$field["repopulate"];
 			if (isset($field['newvalue']))
 				$data[$name]=$field['newvalue'];
-			elseif (isset($field['newvalue']))
+			elseif (isset($field['repopulate']))
 				$data[$name]=$field['repopulate'];
 			else
 				$data[$name]=$field['value'];
