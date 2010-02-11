@@ -550,6 +550,10 @@ class Form Extends Model {
 				break;
 
 
+			case "html":
+				$out.=$field['value'];
+				break;
+
 			case "checkbox":
 				if ($attr["value"])
 					$attr["checked"]="checked";
