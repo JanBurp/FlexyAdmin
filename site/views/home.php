@@ -52,10 +52,10 @@
 
 	<!--[if lte IE 6]><style type="text/css" media="screen">@import url(<?=$assets;?>/css/ie6.css);</style><![endif]-->
 	<!--[if IE 7]><style type="text/css" media="screen">@import url(<?=$assets;?>/css/ie7.css);</style><![endif]-->
-	<!--[if IE 8]><style type="text/css" media="screen">@import url(<?=$assets;?>/css/ie7.css);</style><![endif]-->
+	<!--[if IE 8]><style type="text/css" media="screen">@import url(<?=$assets;?>/css/ie8.css);</style><![endif]-->
 </head>
 
-<body>
+<body class="<?=$class?>">
 
 	<div id="title">
 	<p><?=$title?></p>
