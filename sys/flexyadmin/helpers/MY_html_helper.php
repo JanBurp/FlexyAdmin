@@ -57,8 +57,10 @@ function end_div() {
 	return _html("div");
 }
 
-function hr() {
-	return div("hr")._div(); // this is better cross browser!
+function hr($a=array()) {
+	if (!isset($a['class'])) $a['class']='';
+	$a['class'].=' hr';
+	return div($a)._div(); // this is better cross browser!
 }
 
 function safe_email($adres,$text) {
