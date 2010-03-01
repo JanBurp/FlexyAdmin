@@ -446,30 +446,44 @@ class BasicController extends MY_Controller {
 		// load plugins
 		if (empty($this->plugins)) {
 			$files=read_map(APPPATH.'plugins');
-			// check order
+			// load plugins from site
+			$siteMap=$this->config->item('PLUGINS');
+			if (file_exists($siteMap)) {
+				$siteFiles=read_map($siteMap);
+				if (!empty($siteFiles)) {
+					foreach ($siteFiles as $file => $value) {
+						$siteFiles[$file]['site']=$siteMap;
+					}
+					$files=array_merge($files,$siteFiles);
+				}
+			}
+			
+			// check first order
 			$pluginFiles=array();
 			$pluginOrder=$this->config->item('PLUGIN_ORDER');
-			foreach ($pluginOrder as $plugin) {
+			foreach ($pluginOrder['first'] as $plugin) {
 				$file='plugin_'.$plugin.'_pi.php';
 				if (isset($files[$file])) {
 					$pluginFiles[$file]=$files[$file];
 					unset($files[$file]);
 				}
 			}
+			// add other plugins
 			$pluginFiles=array_merge($pluginFiles,$files);
-			unset($pluginFiles['plugin_template_pi.php']);
-			unset($pluginFiles['plugin_.php']);
-			// load plugins from site
-			$siteMap=$this->config->item('PLUGINS');
-			if (file_exists($siteMap)) {
-				$files=read_map($siteMap);
-				if (!empty($files)) {
-					foreach ($files as $file => $value) {
-						$files[$file]['site']=$siteMap;
-					}
-					$pluginFiles=array_merge($pluginFiles,$files);
+			// check last order
+			foreach ($pluginOrder['last'] as $plugin) {
+				$file='plugin_'.$plugin.'_pi.php';
+				if (isset($pluginFiles[$file])) {
+					$swap=$pluginFiles[$file];
+					unset($pluginFiles[$file]);
+					$pluginFiles[$file]=$files[$file];
 				}
 			}
+			// remove templates and parent class
+			unset($pluginFiles['plugin_template_pi.php']);
+			unset($pluginFiles['plugin_.php']);
+
+			// trace_($pluginFiles);
 
 			// set plugin cfg
 			$cfg=$this->cfg->get('cfg_plugins');
