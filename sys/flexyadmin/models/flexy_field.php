@@ -356,9 +356,11 @@ class Flexy_field extends Model {
 		
 		$out['validation']='';
 		$validation[]=array('rules'=>$this->validation,'params'=>'');
-		$validation[]=$this->_get_db_validation($out['table'],$out['name']);
-		$validation[]=$this->_get_set_validation($out['table'],$out['name']);
-		$validations=$this->_combine_validations($validation);
+		if (!empty($out['table'])) {
+			$validation[]=$this->_get_db_validation($out['table'],$out['name']);
+			$validation[]=$this->_get_set_validation($out['table'],$out['name']);
+			$validations=$this->_combine_validations($validation);
+		}
 		if (!empty($validations)) $out['validation']=$this->_set_validation_params($validations);
 		// trace_($out);
 		return $out;
