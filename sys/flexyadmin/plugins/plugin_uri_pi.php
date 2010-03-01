@@ -56,7 +56,10 @@ class plugin_uri extends plugin_ {
 	
 	function _create_uri($uri_source_field) {
 		$uri=$this->oldData['uri'];
-		$uri_source=$this->newData[$uri_source_field];
+		if (isset($this->newData[$uri_source_field]))
+			$uri_source=$this->newData[$uri_source_field];
+		else
+			$uri_source=$this->newData['id'];
 		// trace_($this->newData);
 		// trace_($uri_source);
 		if (empty($uri) or !($this->CI->cfg->get('CFG_table',$this->table,'b_freeze_uris')) ) {
