@@ -570,7 +570,7 @@ class Form Extends Model {
 					$attr['value']=$option;
 					if ($value==$option) $attr['checked']='checked'; else $attr['checked']='';
 					$attr['id']=str_replace('.','_',$name.'__'.$option);
-					$out.=div('radioOption').span('optionLabel').$optLabel._span().form_radio($attr)._div();
+					$out.=div('radioOption '.$option).span('optionLabel').$optLabel._span().form_radio($attr)._div();
 				}
 				break;
 
