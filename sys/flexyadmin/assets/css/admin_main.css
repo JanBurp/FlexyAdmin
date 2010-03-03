@@ -176,6 +176,13 @@ img {
 	background-position:0px 2px;
 	padding-left: 20px;
 	}
+#menu li ._rss {
+	background-image: url("../icons/rss.gif");
+	background-repeat: no-repeat;
+	background-position:0px 2px;
+	padding-left: 20px;
+	}
+	
 #menu li ._users {
 	background-image: url("../icons/user.gif");
 	background-repeat: no-repeat;
