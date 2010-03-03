@@ -1,5 +1,8 @@
 <? require_once(APPPATH."controllers/admin/MY_Controller.php");
 
+// - zie http://www.derekallard.com/blog/post/building-an-rss-feed-in-code-igniter/
+
+
 class Main extends FrontEndController {
 	
 	function Main()	{
