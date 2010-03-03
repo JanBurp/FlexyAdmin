@@ -263,8 +263,18 @@ $config["CFG_"]=array(
 			"str_order_by"=>'',
 			"txt_help"=>''
 			),
-		"cfg_plugins"=>array(
+		"cfg_rss"=>array(
 			"order"=>'110',
+			"table"=>'cfg_rss',
+			"b_single_row"=>'0',
+			"str_ui_name"=>'',
+			"b_grid_add_many"=>'0',
+			"str_abstract_fields"=>'',
+			"str_order_by"=>'id',
+			"txt_help"=>''
+			),
+		"cfg_plugins"=>array(
+			"order"=>'115',
 			"table"=>'cfg_plugins',
 			"b_single_row"=>'',
 			"str_ui_name"=>'',
