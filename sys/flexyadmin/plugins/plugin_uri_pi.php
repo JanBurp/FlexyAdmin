@@ -70,7 +70,7 @@ class plugin_uri extends plugin_ {
 			$uri=trim($uri,'-');
 			$uri=str_replace(" ","_",trim($uri));
 			$uri=clean_string($uri);
-			$forbidden=array("site","sys","admin");
+			$forbidden=array("site","sys","admin","rss");
 			if (in_array($uri,$forbidden)) $uri="_".$uri;
 			while ($this->_existing_uri($uri)) $uri=$uri."_".$counter++;
 		}
