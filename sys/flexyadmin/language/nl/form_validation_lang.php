@@ -3,7 +3,7 @@
 $lang['required']         = "'%s' is verplicht.";
 $lang['isset']            = "'%s' moet een waarde hebben.";
 $lang['valid_email']    	= "'%s' moet een geldig emailadres bevatten.";
-$lang['valid_emails'] 		= "'%s' moet geldige emaialadressen bevatten.";
+$lang['valid_emails'] 		= "'%s' moet geldige emailadressen bevatten.";
 $lang['valid_url']        = "'%s' moet een geldige URL bevatten.";
 $lang['valid_ip'] 				= "'%s' moet een geldig IP adres bevatten.";
 $lang['min_length']       = "'%s' moet tenminste %s karakters lang zijn.";
