@@ -35,6 +35,8 @@ class Main extends FrontEndController {
 				}
 				$feeds=sort_by($feeds,'date',TRUE);
 				
+				
+				
 				if ($feeds) {
 					$siteInfo=$this->db->get_row('tbl_site');
 					$data['encoding'] = 'utf-8';
@@ -43,8 +45,12 @@ class Main extends FrontEndController {
 					$data['page_description'] = 'RSS: '.$siteInfo['stx_description'];
 					$data['page_language'] = 'nl_nl'; //$config['language'].'_'.$config['language'];
 					$data['creator_email'] = str_replace(array('@','.'),array('-at-','-dot-'),$siteInfo['email_email']);
+					
+					// form dates
+					foreach ($feeds as $id => $feed) {
+						$feeds[$id]['date']=date("r",mysql_to_unix($feed['date']));
+					}
 					$data['posts'] = $feeds;
-					// trace_($data);
 
 					header("Content-Type: application/rss+xml");
 					$this->load->view('rss/feed', $data);
