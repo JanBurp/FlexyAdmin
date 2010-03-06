@@ -828,7 +828,7 @@ class AdminController extends BasicController {
 			// trace_($svn);
 			$svn=explode("\n",$svn);
 			$matches=array_keys($svn,"jan");
-			// $fileKey=$matches[count($matches)-1];
+			$fileKey=$matches[count($matches)-1];
 			$fileKey=$matches[0];
 			// trace_($matches);
 			// trace_($fileKey);

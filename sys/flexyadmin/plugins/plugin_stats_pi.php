@@ -26,9 +26,9 @@ class plugin_stats extends plugin_ {
 	}
 	
 	function _admin_api($args=NULL) {
+		if (isset($args[0])) $year=$args[0];
 		if (isset($args[1])) $month=$args[1];
-		if (isset($args[2])) $year=$args[2];
-		
+
 		$this->CI->_add_content(h($this->plugin,1));
 
 		$this->CI->load->model("grid");
@@ -57,10 +57,25 @@ class plugin_stats extends plugin_ {
 		$this->Time=mktime(0,0,0,$month,1,$year);
 		$this->Month=date('m',$this->Time);
 		$this->MonthTxt=strftime('%B',$this->Time);
+
+		// Is there xml data for earlier years? Give option to show it
+		$xmlYearFiles=read_map('site/stats','xml');
+		$years='';
+		foreach ($xmlYearFiles as $file => $info) {
+			if (strlen($file)>8)
+				unset($xmlYearFiles[$file]);
+			else {
+				$y=substr($file,0,4);
+				$years=add_string($years,anchor(site_url('admin/plugin/stats/'.$y),$y),'|');
+			}
+		}
+		if (!empty($years)) $this->CI->_add_content('<p>'.$years.'</p>');
+
+
 		
 		$this->url=$this->CI->db->get_field('tbl_site','url_url');
 		$this->logTable=$this->CI->config->item('LOG_table_prefix')."_".$this->CI->config->item('LOG_stats');
-				
+
 		// get data from XML (if exists)
 		$this->Data=$this->_stat_data_from_xml();
 
@@ -89,7 +104,7 @@ class plugin_stats extends plugin_ {
 		// save data as XML
 		$this->_stat2xml();
 
-		// Check if there is older data than this month (in DB and XML) than create XML data for it
+		// Check if there is older data than this month (in DB and XML) create XML data for it
 		$oldMonth=$month;
 		$oldYear=$year;
 		$notReady=TRUE;
@@ -112,7 +127,7 @@ class plugin_stats extends plugin_ {
 		// Delete data from DB older than current month
 		$this->CI->db->where('tme_date_time <',date('Y-m'));
 		$this->CI->db->delete($this->logTable);
-
+		
 		$this->CI->_show_type("stats");
 	}
 
@@ -160,7 +175,7 @@ class plugin_stats extends plugin_ {
 		switch ($type) {
 			case 'this_year':
 				foreach ($data as $key => $value) {
-					$data[$key]['month']=anchor(site_url('admin/plugin/stats/'.$value['month'].'/'.$this->Year),strftime('%b',mktime(0,0,0,$value['month'])));
+					$data[$key]['month']=anchor(site_url('admin/plugin/stats/'.$this->Year.'/'.$value['month']),strftime('%b',mktime(0,0,0,$value['month'])));
 				}
 				$this->_add_graph($data,$type,$this->Year);
 				break;
