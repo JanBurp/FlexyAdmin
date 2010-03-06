@@ -55,7 +55,7 @@
 	<!--[if IE 8]><style type="text/css" media="screen">@import url(<?=$assets;?>/css/ie8.css);</style><![endif]-->
 </head>
 
-<body class="<?=$class?>">
+<body>
 
 	<div id="title">
 	<p><?=$title?></p>
