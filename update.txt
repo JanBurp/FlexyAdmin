@@ -1,26 +1,5 @@
-NEW:
-====
-
-- site statistics:
-	- needs table log_stats and map site/stats
-	
-- Flexible Admin menu:
-	- needs a new table: cfg_admin_menu
-	- You can create you're own admin menu in a flexible way now. Even double tables with where statements
-	
-- Drag 'N Drop ordering of images and multiple selections:
-	- field medias_ : you can change the order of images by drag 'n drop
-	- field media_  : default is a dropdown with filenames, but you can choose to do it with a drag 'n drop (images), select it in cfg_media_info (b_dragndrop)
-	- rel_tabes			: default is a dropdown with multiple selections, but now you can choose to drag 'n drop between lists and order the items, select it in cfg_table_info (form_many_type, ordered_list)
-
-- Restyling of tinyMCE
-- Slimming down the styling: removed unused icons and move the originals outside
-
-
-
-UPDATE FlexyAdmin to r502
+UPDATE to r502
 =========================
-
 
 - Write down the current revision (see in the bottom bar in FlexyAdmin or in sys/build.txt)
 
@@ -38,3 +17,11 @@ UPDATE FlexyAdmin to r502
 	- Add the new config files (found in the original site/config)
 	- Add site/stats and give it all rights (online)
 
+LATER UPDATES
+=========================
+
+- Write down the current revision (see in the bottom bar in FlexyAdmin or in sys/build.txt)
+
+- Run all SQL updates from your revision until the latest (you can find the SQL updates in db/ ).
+
+- Replace current sys map with new sys map
