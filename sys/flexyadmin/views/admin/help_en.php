@@ -8,7 +8,7 @@
 
 <h1>FlexyAdmin 2009</h2>
 <h2>By</h2>
-<p><a href="http://www.jandenbesten.net" target="_blank">Jan den Besten</a></p>
+<p><a href="http://www.jandenbesten.net" target="_blank">Jan den Besten</a> (c) 2009-2010</p>
 
 <h2>Which browser?</h2>
 The backend of FlexyAdmin works on modern browsers.<br/>
