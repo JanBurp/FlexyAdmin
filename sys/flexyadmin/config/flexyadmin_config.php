@@ -181,7 +181,7 @@ $config["CFG_"]=array(
 			"b_grid_add_many"=>'0',
 			"str_abstract_fields"=>'',
 			"str_order_by"=>'',
-			"txt_help"=>''
+			"txt_help"=>'<p>Common settings</p>'
 			),
 		"cfg_auto_menu"=>array(
 			"order"=>'101',
@@ -191,7 +191,7 @@ $config["CFG_"]=array(
 			"b_grid_add_many"=>'0',
 			"str_abstract_fields"=>'',
 			"str_order_by"=>'',
-			"txt_help"=>''
+			"txt_help"=>'<p>Settings for creating an automatic menu. Needs a res_table table.</p>'
 			),
 		"cfg_admin_menu"=>array(
 			"order"=>'102',
@@ -201,7 +201,7 @@ $config["CFG_"]=array(
 			"b_grid_add_many"=>'0',
 			"str_abstract_fields"=>'',
 			"str_order_by"=>'',
-			"txt_help"=>''
+			"txt_help"=>'<p>Change your admin menu here.</p>'
 			),
 		"cfg_media_info"=>array(
 			"order"=>'103',
@@ -211,7 +211,7 @@ $config["CFG_"]=array(
 			"b_grid_add_many"=>'0',
 			"str_abstract_fields"=>'',
 			"str_order_by"=>'',
-			"txt_help"=>''
+			"txt_help"=>'<p>Settings for Files.</p>'
 			),
 		"cfg_media_files"=>array(
 			"order"=>'104',
@@ -231,7 +231,7 @@ $config["CFG_"]=array(
 			"b_grid_add_many"=>'0',
 			"str_abstract_fields"=>'',
 			"str_order_by"=>'',
-			"txt_help"=>''
+			"txt_help"=>'<p>Settings for image resizing after uploading.</p>'
 			),
 		"cfg_table_info"=>array(
 			"order"=>'107',
