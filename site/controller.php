@@ -1,24 +1,20 @@
 <?
 
 /**
- * FlexyAdmin V1
- *
+ * FlexyAdmin 2009
  * A Flexible Database based CMS
  *
- * @package		FlexyAdmin V1
+ * @package		FlexyAdmin 2009
  * @author		Jan den Besten
- * @copyright	Copyright (c) 2009, Jan den Besten
+ * @copyright	Copyright (c) 2009-2010, Jan den Besten
  * @link			http://flexyadmin.com
- * @version		V1 0.1
  */
 
 // ------------------------------------------------------------------------
 
 /**
  * main Frontend Controller
- *
- * This Controller handles the url and loads views of the site accordingly
- *
+ * This Controller handles the url and loads views of the site accordingly *
  */
 
 class Main extends FrontEndController {
@@ -28,8 +24,9 @@ class Main extends FrontEndController {
 	 * It contains standard data, but you can add own data.
 	 *
 	 * Standard $site contains:
-	 * 	$site["assets"]						Assets folder (set in flexyadmin_config)
-	 * 	$site["title"]						Set in tbl_site:
+	 * 	$site["assets"]						Assets folder
+	 * 	$site["admin_assets"]			FlexyAdmin Assets (folder for including jQuery etc.)
+	 * 	$site["title"]						All data set in tbl_site, at least:
 	 * 	$site["author"]
 	 *  $site["url"]
 	 * 	$site["email"]
@@ -39,9 +36,7 @@ class Main extends FrontEndController {
 	var $site;
 
 	/**
-	 * function Main()
-	 *
-	 * Just leave it this way.
+	 * function Main(), Just leave it this way.
 	 */
 	function Main() {
 		parent::FrontEndController();
@@ -54,65 +49,63 @@ class Main extends FrontEndController {
 	 * This is called everytime your site is loaded.
 	 * Here you have to decide according to the given url what is to be showed.
 	 */
+
 	function index() {
-		$this->load->helper('text');
-	
-	
+
 		/***********************************************
-		 * Sets current URI
+		 * Set current uri to menu & gets menu data from standard menu table & creates menu
 		 */
-		$this->set_uri($this->uri->get());
-		
-		/***********************************************
-		 * Set menu
-		 * - loads menu
-		 * - render
-		 */
-		$this->menu->set_current($this->get_uri());
+		$this->menu->set_current($this->uri->get());
 		$this->menu->set_menu_from_table();
 		$this->site["menu"]=$this->menu->render();
 
 		/**********************************************
-		 * Get content and show the page
+		 * Get content according to current uri and show the page
 		 */
-		$this->db->where_uri($this->get_uri());
+		$this->db->where_uri($this->uri->get());
 		$item=$this->db->get_row("tbl_menu");
-		if (!empty($item)) $this->_page($item);
+		if ($item) $this->_page($item);
 
 		/**********************************************
 		 * No Content? Show error page.
 		 */
-		if ($this->no_content())
-			$this->add_content($this->show("error","",true));
+		if ($this->no_content()) $this->add_content($this->show("error","",true));
 		
 		/**
-		 * View the page
+		 * Show site
 		 */
 		$this->show();
 	}
 
+
+
+
 	/**
 	 * extra functions:
-	 * - start with _
-	 * - call them from index as $this->_name()
+	 * - start names with '_'
 	 */
 
+
 	function _page($item) {
-		$this->content->add_popups();
-		// Make safe content from all txt_ fields
-		foreach($item as $f=>$v) {
-			if (get_prefix($f)=="txt") $item[$f]=$this->content->render($v);
-		}
-		// Add title to title of site
+		// Get content through the content class (replaces mailto into spamsafe javascript, creates extra classes for p and img tags, additional creates popups of images with a longdesc parameter)
+		// $this->content->add_popups();
+		foreach($item as $f=>$v) {if (get_prefix($f)=="txt") $item[$f]=$this->content->render($v);}
+
+		// Add extra title and keywords to the sites meta tags
 		if (isset($item["str_title"])) $this->add_title($item["str_title"]);
-		// Add keywords if any
 		if (isset($item["str_keywords"])) $this->add_keywords($item["str_keywords"]);
-		// Add page to content of the site
-		$this->add_content($this->show('page',$item,true));
+
+		// Add this page to the sites content
+		$content=$this->show('page',$item,true);
+		$this->add_content($content);
+		
 		// Is there a module set? If so, add module content.
 		if (isset($item["tbl_module__str_module"]) and !empty($item["tbl_module__str_module"]))
 			$this->_module($item);
 	}
+
+
+
 
 	function _module($item) {
 		$type=$item["tbl_module__str_type"];
