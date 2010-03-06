@@ -1,4 +1,4 @@
-Copyright (c) 2009, Jan den Besten, www.jandenbesten.net
+Copyright (c) 2009-2010, Jan den Besten, www.jandenbesten.net
 All rights reserved.
 
 This license is a legal agreement between you and Jan den Besten for the use
@@ -10,9 +10,7 @@ You are permitted to use the Software, without modification, provided that the f
 
 1. A copy of this license agreement must be included.
 
-2. A licensekey must be obtained from Jan den Besten (see www.flexyadmin.com)
-
-3. Products derived from the Software must include an acknowledgment that
+2. Products derived from the Software must include an acknowledgment that
    they are derived from FlexyAdmin in their documentation and/or other
    materials provided with the distribution.
 
@@ -22,9 +20,7 @@ You are permitted to distribute the Software, without modification, provided tha
 
 1. A copy of this license agreement must be included with the distribution.
 
-2. Before using a distributed copy a licensekey must be obtained from Jan den Besten (see www.flexyadmin.com)
-
-3. Products derived from the Software must include an acknowledgment that
+2. Products derived from the Software must include an acknowledgment that
    they are derived from FlexyAdmin in their documentation and/or other
    materials provided with the distribution.
 
