@@ -1,2 +1,1 @@
 Keep track of you're todo's here.
-// Minimized versions of Javascript & CSS files (see http://refresh-sf.com/yui/)
