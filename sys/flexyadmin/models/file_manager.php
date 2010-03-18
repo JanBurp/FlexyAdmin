@@ -207,6 +207,19 @@ class File_manager Extends Model {
 		// UPLOAD 
 		$config['upload_path'] = $this->map;
 		$config['allowed_types'] = implode("|",$this->fileTypes);
+		// CI bug work around, make sure all imagesfiletypes are at the end
+		$types=explode('|',$config['allowed_types']);
+		$imgtypes=array();
+		$cfg=$this->config->item('FILE_types_img');
+		foreach ($types as $key=>$type) {
+			if (in_array($type,$cfg)) {
+				$imgtypes[]=$type;
+				unset($types[$key]);
+			}
+		}
+		$types=array_merge($types,$imgtypes);
+		$config['allowed_types']=implode('|',$types);
+		//
 		$this->upload->config($config);
 		$ok=$this->upload->upload_file('file');
 		$file=$this->upload->get_file();
