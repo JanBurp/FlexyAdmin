@@ -766,7 +766,7 @@ class Flexy_field extends Model {
 		$out["path"]=$map;
 		if ($this->pre=="medias") $out["multiple"]="multiple";
 		$type=el("str_type",$info);
-		if ($type=="all" or $type=="image" or $type=="flash") $out["type"]="image_dropdown";
+		if ($type=="image" or $type=="flash") $out["type"]="image_dropdown";
 		if (el('b_dragndrop',$info)) $out["type"]="image_dragndrop";
 		unset($out["button"]);
 		return $out;

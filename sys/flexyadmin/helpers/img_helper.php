@@ -17,27 +17,32 @@ function show_thumb($attr) {
 	$a=array();
 	if (!is_array($attr)) $a["src"]=$attr; else $a=$attr;
 	$ext=get_file_extension($a["src"]);
-	$imgSize=get_img_size($a["src"]);
-	if ($imgSize) {
-		$a["zwidth"]=$imgSize[0];
-		$a["zheight"]=$imgSize[1];
-		if (!isset($a["alt"]))		$a["alt"]=$a["src"];
-		if (!isset($a["class"]))	$a["class"]="zoom"; else $a["class"].=" zoom";
-		if ($ext=="swf") {
-			$src=$a["src"];
-			unset($a["src"]);
-			return flash($src,$a);
-		}
-		else {
-			if (!isset($a["alt"])) $a["alt"]=$a["src"];
-			if (!isset($a["longdesc"])) $a["longdesc"]=$a["src"];
-			$CI=& get_instance();
-			$cachedThumb=$CI->config->item('THUMBCACHE').pathencode($a['src']);
-			if (file_exists($cachedThumb)) $a['src']=$cachedThumb;
-			return img($a);
+	$CI=& get_instance();
+	$img_types=$CI->config->item('FILE_types_img');
+	$flash_types=$CI->config->item('FILE_types_flash');
+	if (in_array($ext,$img_types) or in_array($ext,$flash_types)) {
+		$imgSize=get_img_size($a["src"]);
+		if ($imgSize) {
+			$a["zwidth"]=$imgSize[0];
+			$a["zheight"]=$imgSize[1];
+			if (!isset($a["alt"]))		$a["alt"]=$a["src"];
+			if (!isset($a["class"]))	$a["class"]="zoom"; else $a["class"].=" zoom";
+			if ($ext=="swf") {
+				$src=$a["src"];
+				unset($a["src"]);
+				return flash($src,$a);
+			}
+			else {
+				if (!isset($a["alt"])) $a["alt"]=$a["src"];
+				if (!isset($a["longdesc"])) $a["longdesc"]=$a["src"];
+				$cachedThumb=$CI->config->item('THUMBCACHE').pathencode($a['src']);
+				if (file_exists($cachedThumb)) $a['src']=$cachedThumb;
+				return img($a);
+			}
 		}
 	}
-	return '';
+	$path=explode('/',$a['src']);
+	return $path[count($path)-1];
 }
 
 function get_img_size($i) {
