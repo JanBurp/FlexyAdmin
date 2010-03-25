@@ -14,7 +14,7 @@
 function get_file_extension($f) {
 	$p=strrpos($f,".");
 	if ($p===FALSE) return "";
-	return substr($f,$p+1);
+	return strtolower(substr($f,$p+1));
 }
 
 function get_file_without_extension($f) {
