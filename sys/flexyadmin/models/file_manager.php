@@ -219,6 +219,8 @@ class File_manager Extends Model {
 		}
 		$types=array_merge($types,$imgtypes);
 		$config['allowed_types']=implode('|',$types);
+		// trace_($config);
+		// trace_($_FILES);
 		//
 		$this->upload->config($config);
 		$ok=$this->upload->upload_file('file');
