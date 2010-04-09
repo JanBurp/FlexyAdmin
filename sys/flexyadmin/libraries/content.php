@@ -76,7 +76,7 @@ class Content {
 		
 		if ($this->addClasses) {
 		 	// add classes (odd even nrs to p and img tags)
-			$txt=preg_replace_callback("/<(img|p) (.*?)>/",array($this,"_countCallBack"),$txt);
+			$txt=preg_replace_callback("/<(img|p)(.*?)>/",array($this,"_countCallBack"),$txt);
 		}
 		
 		if ($this->addPopups) {
