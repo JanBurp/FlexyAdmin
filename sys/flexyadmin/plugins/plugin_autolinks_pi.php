@@ -194,21 +194,23 @@ class plugin_autolinks extends plugin_ {
 		}
 		$tags=array();
 		foreach ($tables as $table) {
-			$this->CI->db->select('uri,str_tags');
-			if ($this->CI->db->field_exists('self_parent',$table)) {
-				$this->CI->db->select('id,self_parent');
-				$this->CI->db->uri_as_full_uri();
-			}
-			$res=$this->CI->db->get_results($table);
-			foreach ($res as $key => $value) {
-				if (!empty($this->cfg[$table]))
-					$uri=$this->cfg[$table].'/'.$value['uri'];
-				else
-					$uri=$value['uri'];
-				$theseTags=$this->_trimExplode($value['str_tags']);
-				foreach ($theseTags as $tag) {
-					$tag=strtoupper($tag);
-					if (!isset($tags[$tag])) $tags[$tag]=array('uri'=>$uri, 'tag'=>$tag, 'len'=>strlen($tag));
+			if ($this->CI->db->field_exists('uri',$table) and $this->CI->db->field_exists('str_tags',$table)) {
+				$this->CI->db->select('uri,str_tags');
+				if ($this->CI->db->field_exists('self_parent',$table)) {
+					$this->CI->db->select('id,self_parent');
+					$this->CI->db->uri_as_full_uri();
+				}
+				$res=$this->CI->db->get_results($table);
+				foreach ($res as $key => $value) {
+					if (!empty($this->cfg[$table]))
+						$uri=$this->cfg[$table].'/'.$value['uri'];
+					else
+						$uri=$value['uri'];
+					$theseTags=$this->_trimExplode($value['str_tags']);
+					foreach ($theseTags as $tag) {
+						$tag=strtoupper($tag);
+						if (!isset($tags[$tag])) $tags[$tag]=array('uri'=>$uri, 'tag'=>$tag, 'len'=>strlen($tag));
+					}
 				}
 			}
 		}
@@ -245,37 +247,55 @@ class plugin_autolinks extends plugin_ {
 	
 	
 	function _render($args=NULL) {
-		if (isset($args[0]) and !empty($args[0]))	$table=$args[0]; else	$table='tbl_articles';
+		if (isset($args[0]) and !empty($args[0]))	$table=$args[0]; else	$table='';
 		if (isset($args[1]) and !empty($args[1])) $id=$args[1];
 
-		$this->CI->load->model("grid");
-		$this->CI->lang->load("help");
-		$actionGrid=new grid();
-		
-		// test render
-		$this->CI->db->select('id,uri,str_title,str_tags');
-		$this->CI->db->order_by('str_title');
-		if (isset($id)) {
-			$this->CI->db->select('txt_text');
+		// TODO, duidelijke keuze tussen een record van een tabel, of een tabel of als niets gegeven alle tabbellen in de plugin config
+
+		if (isset($id) and isset($table)) {
+ 			// just one record from a table
+			if (empty($table)) $table='tbl_articles';
+			$this->CI->db->select('id,uri,str_title,str_tags,txt_text');
 			$this->CI->db->where('id',$id);
-		}
-		$articles=$this->CI->db->get_results($table);
-		if (isset($id)) {
+			$articles=$this->CI->db->get_results($table);
 			$article=current($articles);
 			$txt=$this->_doRender($article['txt_text'],$article['uri']);
 			$this->CI->_add_content('<h1>'.$article['str_title'].'</h1>');
 			$this->CI->_add_content($txt);
-			
 		}
 		else {
-			foreach ($articles as $id => $article) {
-				$articles[$id]['uri']='admin/plugin/ajax/autolinks/render/'.$id.'/'.$table;
+			// AJAX render
+			$this->CI->load->model("grid");
+			$this->CI->lang->load("help");
+			$actionGrid=new grid();
+
+			if (empty($table)){
+				$tables=array_keys($this->cfg);
+				foreach ($tables as $key=>$table) {
+					$pre=get_prefix($table);
+					if (!in_array($pre,array('tbl','cfg','res'))) unset($tables[$key]);
+				}
 			}
-			$actionGrid->set_data($articles,'Render...');
+			else
+				$tables=array($table);
+
+			$ajaxTable=array();
+			foreach ($tables as $table) {
+				$this->CI->db->select('id,str_title');
+				$this->CI->db->order_by('str_title');
+				$articles=$this->CI->db->get_results($table);
+				foreach ($articles as $id => $article) {
+					$articles[$id]['table']=$table;
+					$articles[$id]['uri']='admin/plugin/ajax/autolinks/render/'.$id.'/'.$table;
+				}
+				$ajaxTable=array_merge($ajaxTable,$articles);
+			}
+			$actionGrid->set_data($ajaxTable,'Render...');
 			$this->CI->_add_content($actionGrid->view('html',$table,'grid actionGrid'));
 			$this->CI->_show_type("plugin grid");
 			$this->_setRender(false);
 		}
+		
 		
 	}
 
@@ -288,7 +308,10 @@ class plugin_autolinks extends plugin_ {
 		if (!empty($article)) {
 			$id=$article['id'];
 			$txt=$article['txt_text'];
-			$uri=$article['uri'];
+			if (isset($article['uri']))
+				$uri=$article['uri'];
+			else
+				$uri='';
 			$renderedTxt=$this->_doRender($txt,$uri);
 			$this->CI->db->set('txt_rendered',$renderedTxt);
 			$this->CI->db->where('id',$id);

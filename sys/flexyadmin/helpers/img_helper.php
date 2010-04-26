@@ -4,14 +4,14 @@ function icon($class="",$s="",$extraClass="",$a="") {
 	return "<div class=\"icon $class $extraClass\" title=\"$s\" $a><span class=\"hide\">$s</span></div>";
 }
 
-function popup_img($img) {
-	$imgSize=get_img_size($this->map."/".$name);
-	if ($imgSize)
-		$a=array("src"=>$img, "class"=>"zoom", "zwidth"=>$imgSize[0], "zheight"=>$imgSize[1] );
-	else
-		$a=NULL;
-	return img($a);
-}
+// function popup_img($img) {
+// 	$imgSize=get_img_size($this->map."/".$name);
+// 	if ($imgSize)
+// 		$a=array("src"=>$img, "class"=>"zoom", "zwidth"=>$imgSize[0], "zheight"=>$imgSize[1] );
+// 	else
+// 		$a=NULL;
+// 	return img($a);
+// }
 
 function show_thumb($attr) {
 	$a=array();
