@@ -322,13 +322,16 @@ class Menu {
 				if (!empty($thisUri))	$link=$this->tmp($this->tmpUrl,$thisUri);
 				$itemAttr=array();
 				$itemAttr['class']=$attr['class'];
-				$itemAttr["class"]="$cName pos$pos lev$level";
+				$itemAttr["class"].="$cName pos$pos lev$level";
 				if ($pos==1)																$itemAttr["class"].=" first";
 				if ($pos==count($menu))											$itemAttr["class"].=" last";
 				if (isset($item["class"]))									$itemAttr["class"].=" ".$item["class"];
 				if ($this->current==$link) 									$itemAttr["class"].=" current";
 				if ($this->inUri($link,$this->current))			$itemAttr["class"].=" active";
-				$out.=$this->tmp($this->tmpItemStart,array("class"=>$itemAttr["class"]));
+				// set id
+				$itemAttr['id']="menu_".$cName."_pos".$pos."_lev$level";
+				// render item
+				$out.=$this->tmp($this->tmpItemStart,array("class"=>$itemAttr["class"],'id'=>$itemAttr['id']));
 				// render item or submenu
 				if (isset($item["uri"])) {
 					$showName=ascii_to_entities($name);
@@ -349,7 +352,6 @@ class Menu {
 					unset($extraAttr['id']);
 					unset($extraAttr['sub']);
 					$itemAttr=array_merge($itemAttr,$extraAttr);
-					// trace_($itemAttr);
 					if (empty($link)) {
 						$itemAttr['class'].=' nonClickable';
 						$out.=span($itemAttr).$showName._span();

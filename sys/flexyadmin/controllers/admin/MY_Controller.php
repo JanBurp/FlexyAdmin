@@ -845,7 +845,7 @@ class AdminController extends BasicController {
 	}
 
 	function _show_type($type) {
-		$this->showType=$type;
+		$this->showType=add_string($this->showType,$type,' ');
 	}
 
 	function _show_all($currentMenuItem="") {

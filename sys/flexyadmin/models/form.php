@@ -728,12 +728,12 @@ class Form Extends Model {
 				$out.=form_upload($attr);
 				break;
 
-			case "upload":
-				if (!empty($field["value"])) $out.=popup_img($field["upload_path"]."/".$field["value"],img($field["upload_path"]."/".$field["value"]));
-				$out.=form_input($attr);
-				$attr["class"].=" browse";
-				$out.=form_upload($attr);
-				break;
+			// case "upload":
+			// 	if (!empty($field["value"])) $out.=popup_img($field["upload_path"]."/".$field["value"],img($field["upload_path"]."/".$field["value"]));
+			// 	$out.=form_input($attr);
+			// 	$attr["class"].=" browse";
+			// 	$out.=form_upload($attr);
+			// 	break;
 
 			case "date":
 				$date=trim(strval($field["value"]));

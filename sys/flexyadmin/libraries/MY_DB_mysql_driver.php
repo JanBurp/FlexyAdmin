@@ -310,6 +310,8 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			// trace_($manyTables);
 			foreach($manyTables as $mTable) {
 				$jTable=$mTable["join"];
+				$relTable=$mTable['rel'];
+				// trace_($relTable);
 				// WHERE
 				$foundKeysArray=array_ereg_search($jTable, $this->ar_where);
 				// trace_($foundKeysArray);
@@ -319,8 +321,8 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 					$AndOr=trim(substr($mWhere,0,3));
 					if (!in_array($AndOr,array("AND","OR"))) $mWhere=" AND ".$mWhere;
 					$sql="SELECT ".$mTable["rel"].".".$mTable["id_this"]." AS id  
-								FROM ".$mTable["rel"].",".$mTable["join"]." 
-								WHERE ".$mTable["rel"].".".$mTable["id_join"]."=".$mTable["join"].".id ".$mWhere;
+								FROM ".$mTable["rel"].",".trim($mTable["join"],'_')." 
+								WHERE ".$mTable["rel"].".".$mTable["id_join"]."=".trim($mTable["join"],'_').".id ".$mWhere;
 					$query=$this->query($sql);
 					$manyResults=$query->result_array();
 					// remove current where and add new 'WHERE IN' to active record which selects the id where the many field is right
