@@ -68,6 +68,7 @@ class plugin_uri extends plugin_ {
 			$uri=strip_tags($uri);
 			$uri=trim($uri);
 			$uri=trim($uri,'-');
+			$uri=trim($uri,'_');
 			$uri=str_replace(" ","_",trim($uri));
 			$uri=clean_string($uri);
 			$forbidden=array("site","sys","admin","rss");
