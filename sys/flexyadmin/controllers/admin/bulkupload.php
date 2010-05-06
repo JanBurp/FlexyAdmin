@@ -32,6 +32,7 @@ class Bulkupload extends AdminController {
 
 				// is form submitted?
 				$path=$this->input->post('path');
+				$rename=$this->input->post('rename');
 				
 				// Show form?
 				if (empty($path)) {
@@ -43,9 +44,10 @@ class Bulkupload extends AdminController {
 					foreach ($mediaCfg as $info) {
 						$options[$info['path']]=$info['path'];
 					}
-					$data=array(	"path"				=> array("label"=>'Move to:','type'=>'dropdown','options'=>$options)
+					$data=array(	"path"				=> array("label"=>'Move to:','type'=>'dropdown','options'=>$options),
+												"rename"			=> array('label'=>"Autorename")
 												// "do_resize"		=> array('type'=>'checkbox','value'=>'1'),
-												// 		"do_autofill"	=> array("label"=>'Auto fill fields','type'=>'checkbox','value'=>'1')								
+												// "do_autofill"	=> array("label"=>'Auto fill fields','type'=>'checkbox','value'=>'1')								
 						);
 					$form->set_data($data,'Bulk upload settings');
 					$this->_add_content($form->render());			
@@ -62,14 +64,28 @@ class Bulkupload extends AdminController {
 					$config['allowed_types'] = implode("|",$this->config->item('FILE_types_img'));
 					$this->upload->config($config);
 
+					$renameCount=-1;
 					foreach ($files as $name => $file) {
 						$gridFiles[$name]['File']=$file['name'];
 						$moved=FALSE;
 						$resized=FALSE;
 						$autoFill=FALSE;
-						// move
+						// (re)name
 						$ext=get_file_extension($file['name']);
-						$saveFile=clean_file_name($file['name']);
+						if (!empty($rename)) {
+							$renameCount++;
+							$saveFile=$rename.'_'.$renameCount;
+						}
+						else {
+							$saveFile=clean_file_name($file['name']);
+						}
+						// check if name exists, if so, add number
+						$existsCount=-1;
+						$newFile=$saveFile.'.'.$ext;
+						while (file_exists($path.'/'.$newFile)) {
+							$newFile=$saveFile.'_'.$existsCount++.'.'.$ext;
+						}
+						$saveFile=$newFile;
 						$moved=copy($bulkMap.'/'.$file['name'],$path.'/'.$saveFile);
 						if ($moved) {
 							// resize
