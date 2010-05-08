@@ -30,6 +30,7 @@ class Menu {
 	var $fields;
 	var $extraFields;
 	var	$attr;
+	var $itemAttr;
 	
 	var $menuTable;
 	
@@ -85,6 +86,11 @@ class Menu {
 	function set_attributes($attr="") {
 		if (!is_array($attr)) $attr=array("class"=>$attr);
 		$this->attr=$attr;
+	}
+
+	function set_item_attributes($attr="") {
+		if (!is_array($attr)) $attr=array("class"=>$attr);
+		$this->itemAttr=$attr;
 	}
 
 	function set_menu_from_table($table="",$foreign=false) {
@@ -299,7 +305,7 @@ class Menu {
 		if (empty($attr)) $attr=$this->attr;
 		if (!is_array($attr)) $attr=array("class"=>$attr);
 		if (empty($attr["class"])) $attr["class"]="";
-		$attr["class"].=" lev$level";
+		$attr["class"].=" ";
 		if ($level>1) unset($attr["id"]);
 		$branch=array();
 		$out=$this->tmp($this->tmpMenuStart,$attr);
@@ -321,7 +327,7 @@ class Menu {
 				$link="";
 				if (!empty($thisUri))	$link=$this->tmp($this->tmpUrl,$thisUri);
 				$itemAttr=array();
-				$itemAttr['class']=$attr['class'];
+				$itemAttr['class']=$attr['class'].' '.$this->itemAttr['class'].' ';
 				$itemAttr["class"].="$cName pos$pos lev$level";
 				if ($pos==1)																$itemAttr["class"].=" first";
 				if ($pos==count($menu))											$itemAttr["class"].=" last";
