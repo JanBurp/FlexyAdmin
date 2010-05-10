@@ -747,8 +747,21 @@ class Flexy_field extends Model {
 				$files=$this->_filter_restricted_files($files,$this->restrictedToUser);
 			}
 			$files=not_filter_by($files,"_");
+
+			$order='_rawdate';
+			if (isset($info['str_order'])) {
+				$order=$info['str_order'];
+			}
+			if (substr($order,0,1)=='_') {
+				$desc=TRUE;	
+				$order=substr($order,1);
+			}
+			else {
+				$desc=FALSE;
+			}
+
 			if (el('b_dragndrop',$info)) {
-				$options=sort_by($files,"rawdate",TRUE);
+				$options=sort_by($files,$order,$desc);
 			}
 			else {
 				$lastUploadMax=$this->cfg->get('CFG_media_info',$path,'int_last_uploads');
