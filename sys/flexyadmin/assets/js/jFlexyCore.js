@@ -115,6 +115,7 @@ function showAutoZoom() {
 			// check size
 			$('body').append(zoomThumb);
 			widthThumb=$('.autoZoom').width();
+			if (widthThumb>250) widthThumb=250; // max width
 			heightThumb=$('.autoZoom').height();
 			$('.autoZoom').remove(); // size now determined, clone can be removed
 			// name and place
@@ -150,68 +151,6 @@ function showAutoZoom() {
 	$('form ul li img.zoom').add('form ul li .flash .zoom').fullsize({triggerIcon:false,triggerEvent:'dblclick'});
 }
 
-// function zoom_dialog(obj) {
-	// var src,w,h,ext;
-	// src=$(obj).attr('src');
-	// w=$(obj).attr('zwidth');
-	// h=$(obj).attr('zheight');
-	// imgRatio=w/h;
-	// // set sizes not bigger than screen
-	// scrW=$("body").outerWidth()-50;
-	// scrH=$("body").outerHeight()-100;
-	// if ((w<scrW) && (h<scrH)) {
-	// 	dw=w;
-	// 	dh=h;
-	// }
-	// else {
-	// 	if (w>scrW && h>scrH) {
-	// 		if (scrW/w < scrH/h) {
-	// 			dw=scrW;
-	// 			dh=dw/imgRatio;
-	// 		}
-	// 		else {
-	// 			dh=scrH;
-	// 			dw=dh*imgRatio;
-	// 		}
-	// 	}
-	// 	else {
-	// 		if (w>scrW) {
-	// 			dw=scrW;
-	// 			dh=dw/imgRatio;
-	// 		}
-	// 		else {
-	// 			dh=scrH;
-	// 			dw=dh*imgRatio;
-	// 		}
-	// 	}	
-	// }
-	// // what file type?
-	// ext=get_ext(src);
-	// if (ext=="swf" || ext=="flc") {
-	// 	dialog.html(flash(src,dw,dh));
-	// }
-	// else {
-	// 	// is it a cached thumb?
-	// 	i=src.indexOf("_thumbcache");
-	// 	if (i>=0) {
-	// 		src=src.substr(i+12); // 11 = length of '_thumbcache'
-	// 		src=pathdecode(src);
-	// 	}
-	// 	dialog.html('<a href="javascript:close_dialog()"><img src="'+src+'" width="'+dw+'" height="'+dh+'" alt="'+src+'" /></a>');
-	// }
-	// $(dialog).dialog({
-	// 	title:src.substr(src.lastIndexOf("/")+1)+" ("+w+"x"+h+")",
-	// 	modal:true,
-	// 	width: dw+'px',
-	// 	heigth: dh+'px',
-	// 	position: 'center',
-	// 	closeOnEscape:true,
-	// 	// dialogClass:'zoom',
-	// 	resizable:false,
-	// 	scrollable:false,
-	// 	close: function() {$(dialog).dialog("destroy"); }
-	// });
-// }
 function close_dialog() {
 	$(dialog).dialog("destroy");
 }
@@ -226,7 +165,6 @@ function ajaxError(error) {
 		close: function(){$(dialog).dialog("destroy"); $(obj).attr({"href":href});}
 	});
 }
-
 
 function changeButt(id,s) {
 	var h;
