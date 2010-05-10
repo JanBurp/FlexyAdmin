@@ -394,6 +394,17 @@ $config["CFG_"]=array(
 			"str_validation_rules"=>'',
 			"txt_help"=>''
 			),
+		"cfg_media_info.str_order"=>array(
+			"field"=>'cfg_media_info.str_order',
+			"str_ui_name"=>'',
+			"b_show_in_grid"=>'1',
+			"b_show_in_form"=>'1',
+			"str_options"=>'name|_name|rawdate|_rawdate|type|_type|size|_size|width|_width|height|_height',
+			"b_multi_options"=>'0',
+			"str_overrule_prefix"=>'',
+			"str_validation_rules"=>'',
+			"txt_help"=>''
+			),
 		"cfg_media_info.str_type"=>array(
 			"field"=>'cfg_media_info.str_type',
 			"str_ui_name"=>'',
