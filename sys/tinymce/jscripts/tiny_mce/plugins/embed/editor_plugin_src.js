@@ -75,10 +75,10 @@
 		 */
 		getInfo : function() {
 			return {
-				longname : 'Embed plugin',
-				author : 'Chili Pepper Design',
-				authorurl : 'http://www.chilipepperdesign.com',
-				infourl : 'http://www.chilipepperdesign.com',
+				longname : 'Embed plugin Plus',
+				author : 'Chili Pepper Design & Jan den Besten',
+				authorurl : 'http://www.jandenbesten.net',
+				infourl : 'http://www.jandenbesten.net',
 				version : "1.0"
 			};
 		}
