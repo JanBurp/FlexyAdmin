@@ -18,6 +18,11 @@ del {color:red; text-decoration:line-through}
 cite {border-bottom:1px dashed blue}
 acronym {border-bottom:1px dotted #CCC; cursor:help}
 abbr, html\:abbr {border-bottom:1px dashed #CCC; cursor:help}
+iframe {
+	background-color:#FFFFCC;
+	border:1px dotted #CC0000;
+}
+
 
 /* IE */
 * html body {

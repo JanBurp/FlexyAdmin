@@ -100,8 +100,10 @@ $isForm=has_string('form',$show_type);
 						theme_advanced_blockformats : "h1,h2,h3",
 						<? endif; ?>
 						theme_advanced_styles : "<?=$styles;?>",
+						extended_valid_elements : "iframe[align<bottom?left?middle?right?top|class|frameborder|height|id|longdesc|marginheight|marginwidth|name|scrolling<auto?no?yes|src|style|title|width]",
 						external_image_list_url : "<?=assets()?>/lists/img_list.js",
 						media_external_list_url : "<?=assets()?>/lists/media_list.js",
+						external_embed_list_url : "<?=assets()?>/lists/embed_list.js",
 						relative_urls : true,
 						document_base_url : "<?=base_url()?>",
 						content_css : "<?=assets()?>css/text.css",
