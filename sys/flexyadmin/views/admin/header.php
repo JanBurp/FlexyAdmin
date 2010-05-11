@@ -82,7 +82,7 @@ $isForm=has_string('form',$show_type);
 			<script>
 			$().ready(function() {
 			   $('textarea.htmleditor').tinymce({
-						plugins : "paste,advimage,media,table,inlinepopups",
+						plugins : "paste,advimage,media,table,inlinepopups,embed",
 				 		dialog_type : "modal",
 						inlinepopups_skin : "flexyadmin",
 						language : "<?=$language?>",
