@@ -22,6 +22,8 @@ class Editor_lists {
 																"file_name"			=> "link_list");
 		$types["links"]			=array(	"array_name"		=> "tinyMCELinkList",
 																"file_name"			=> "link_list");
+		$types["embed"]			=array(	"array_name"		=> "tinyMCEEmbedList",
+																"file_name"			=> "embed_list");
 		$this->type=$types[$type];
 	}
 
@@ -35,7 +37,7 @@ class Editor_lists {
 		$CI =& get_instance();
 
 		$data=array();
-
+		
 		if ($type=="downloads") {
 			
 			// add special links from tbl_site
@@ -93,25 +95,37 @@ class Editor_lists {
 			}
 			
 		}
-
-		// Media files (for download links)
-		$mediaTbl=$CI->config->item('CFG_table_prefix')."_".$CI->config->item('CFG_media_info');
-		if ($CI->db->table_exists($mediaTbl)) {
-			$data['-- downloads ----------']=NULL;
-			$CI->db->select("path");
-			$CI->db->where($boolField,1);
-			$query=$CI->db->get($mediaTbl);
-			foreach($query->result_array() as $row) {
-				$path=$row["path"];
-				$map=$CI->config->item('ASSETS').$path;
-				$subFiles=read_map($map);
-				$subFiles=not_filter_by($subFiles,"_");
-				$data=$data + $subFiles;
+		
+		if ($type=='embed') {
+			$embedTbl='tbl_embeds';
+			if ($CI->db->table_exists($embedTbl)) {
+				$embeds=$CI->db->get_result($embedTbl);
+				foreach($embeds as $row) {
+					$data[$row["str_title"]]=array("embed"=>$row["stx_embed"],"name"=>$row["str_title"]);
+				}
+			}
+		}
+		else {
+			// Media files (for download links)
+			$mediaTbl=$CI->config->item('CFG_table_prefix')."_".$CI->config->item('CFG_media_info');
+			if ($CI->db->table_exists($mediaTbl)) {
+				$data['-- downloads ----------']=NULL;
+				$CI->db->select('path');
+				if (!empty($boolField))	$CI->db->where($boolField,1);
+				$query=$CI->db->get($mediaTbl);
+				foreach($query->result_array() as $row) {
+					$path=$row["path"];
+					$map=$CI->config->item('ASSETS').$path;
+					$subFiles=read_map($map);
+					$subFiles=not_filter_by($subFiles,"_");
+					$data=$data + $subFiles;
+				}
 			}
 		}
 
 		// ignorecase_ksort($data);
 		
+		// trace_($type);
 		// trace_($data);
 
 
@@ -129,6 +143,11 @@ class Editor_lists {
 					else
 						$list.='["'.$link["name"].'","'.$link["url"].'"],';
 				}
+			}
+		}
+		elseif ($type=='embed') {
+			foreach($data as $name=>$embed) {
+				$list.='["'.$name.'",\''.$embed['embed'].'\'],';
 			}
 		}
 		else {
