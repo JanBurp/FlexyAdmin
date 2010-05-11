@@ -305,7 +305,7 @@ class Menu {
 		if (empty($attr)) $attr=$this->attr;
 		if (!is_array($attr)) $attr=array("class"=>$attr);
 		if (empty($attr["class"])) $attr["class"]="";
-		$attr["class"].=" ";
+		$attr["class"].=" lev$level";
 		if ($level>1) unset($attr["id"]);
 		$branch=array();
 		$out=$this->tmp($this->tmpMenuStart,$attr);
@@ -334,6 +334,7 @@ class Menu {
 				if (isset($item["class"]))									$itemAttr["class"].=" ".$item["class"];
 				if ($this->current==$link) 									$itemAttr["class"].=" current";
 				if ($this->inUri($link,$this->current))			$itemAttr["class"].=" active";
+				$itemAttr['class']=trim($itemAttr['class']);
 				// set id
 				$itemAttr['id']="menu_".$cName."_pos".$pos."_lev$level";
 				// render item
