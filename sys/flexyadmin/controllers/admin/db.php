@@ -188,9 +188,10 @@ class Db extends AdminController {
 		$config['upload_path'] = 'site/assets/lists';
 		$config['allowed_types'] = 'txt|sql';
 		$this->load->library('upload', $config);
-		if ( ! $this->upload->do_upload()) {
+		if (!$this->upload->do_upload()) {
 			$error = array('error' => $this->upload->display_errors());
 			print $error["error"];
+			trace_($this->upload->data());
 		}	
 		else	{
 			$data = array('upload_data' => $this->upload->data());
@@ -221,7 +222,7 @@ class Db extends AdminController {
 		$this->lang->load('help');
 		$this->lang->load('form');
 		$form=new form($this->config->item('API_db_import'));
-		$data=array( 	"userfile"	=> array("type"=>"file","label"=>"File (txt)"),
+		$data=array( 	"userfile"	=> array("type"=>"file","label"=>"File (txt,sql)"),
 		 							"sql"				=> array("type"=>"textarea","label"=>"Or (update) SQL"));
 		$form->set_data($data,"Choose File to upload and import");
 		$this->_add_content($form->render());
