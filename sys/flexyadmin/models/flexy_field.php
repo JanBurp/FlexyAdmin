@@ -318,7 +318,13 @@ class Flexy_field extends Model {
 			// if (get_prefix($name)==$this->config->item('REL_table_prefix')) {
 			// }
 			if (isset($multiOptions)) $options=$multiOptions;
+			// empty option on top?
+			$optCfg=$this->cfg->get('CFG_table',foreign_table_from_key($this->field));
+			if (isset($optCfg['b_add_empty_choice']) and $optCfg['b_add_empty_choice']) {
+				$options=array(''=>'') + $options;
+			}
 			$out["options"] = $options;
+			// type?
 			if ($this->type!="dropdown") {
 				$out["type"]="dropdown";
 			}
