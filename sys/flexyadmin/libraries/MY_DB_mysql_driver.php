@@ -159,6 +159,9 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		else return $this->selectFirsts[$n];
 	}
 
+	function unselect($dont_select=""){
+		$this->dont_select($dont_select);
+	}
 	function dont_select($dont_select="") {
 		if (!empty($dont_select)) {
 			$this->ar_dont_select[]=$dont_select;

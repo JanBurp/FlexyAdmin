@@ -16,6 +16,9 @@ On this notice these rights rely.
 (c) 2009, Jdb, Jan den Besten, changes made for FlexyAdmin:
 - callback function, after filtering is ready.
 - starts filtering when more than 2 keys are entered
+(c) 2010, Jdb, Jan den Besten, changes made for FlexyAdmin:
+- add class 'filtered' when filtered out
+
 
 */
 
@@ -48,9 +51,9 @@ On this notice these rights rely.
 	        target.find(o.affects).each(function() {
 	          var item = $(this);
 	          if (item.text().toLowerCase().indexOf(query) >= 0)
-							item.show();
+							item.show().removeClass('filtered');
 	          else
-							item.hide();
+							item.hide().addClass('filtered');
 	        });
 					// Jdb: Call callback function if defined
 					if (callback!=undefined && callback!='') {

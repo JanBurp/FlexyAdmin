@@ -100,24 +100,6 @@ function doGrid() {
 				// reset rows
 				rowsEvenOdd();
 				
-				// make selected text bold
-				// s=$("input.filter").attr("value");
-				// if (s.length==2) {
-				// 	$('table.grid:not(.thumbs) tbody td:not(.id):not(.order):not(.thumb):not(.media):not(.medias):not(.edit):not(.b):not(.url)').each(function(){
-				// 		t=$(this).html();
-				// 		t=t.replace(new RegExp('<(/|)b>','g'),'');
-				// 		$(this).html(t);
-				// 	});
-				// }
-				// if (s.length>=3) {
-				// 	$('table.grid:not(.thumbs) tbody td:not(.id):not(.order):not(.thumb):not(.media):not(.medias):not(.edit):not(.b):not(.url)').each(function(){
-				// 		t=$(this).html();
-				// 		t=t.replace(new RegExp('<(/|)b>','g'),'');
-				// 		if (s!='') {t=t.replace(new RegExp('('+s+')','gi'),regBoldReplace);}
-				// 		$(this).html(t);
-				// 	});
-				// }
-				
 				// check keypresses for special actions
 				switch (keyCode) {
 					case keyEnter:
@@ -238,9 +220,9 @@ function doGrid() {
 			var name = new Array();
 			nr=0;
 			if (isFile && isThumbs)
-				selected=$('table.thumbs tbody div.file.selected');
+				selected=$('table.thumbs tbody div.file.selected:not(.filtered)');
 			else
-				selected=$('table.grid tbody tr.selected');
+				selected=$('table.grid tbody tr.selected:not(.filtered)');
 			if (selected.length>0) {
 				$(selected).each(function(){
 					id[nr]=get_id($(this));
