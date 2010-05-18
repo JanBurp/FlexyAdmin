@@ -81,7 +81,7 @@ class Bulkupload extends AdminController {
 						}
 						// check if name exists, if so, add number
 						$existsCount=-1;
-						$newFile=$saveFile.'.'.$ext;
+						$newFile=$saveFile;
 						while (file_exists($path.'/'.$newFile)) {
 							$newFile=$saveFile.'_'.$existsCount++.'.'.$ext;
 						}
