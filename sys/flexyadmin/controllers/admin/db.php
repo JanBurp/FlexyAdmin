@@ -278,7 +278,7 @@ class Db extends AdminController {
 				}
 			}
 			$sql=implode("\n",$lines);
-			$lines=explode(";",$sql);
+			$lines=preg_split('/;\n+/',$sql); // split at ; with EOL
 			
 			$this->_add_content(p().$action.br(2));//.$comments);
 			
