@@ -208,8 +208,8 @@ class plugin_autolinks extends plugin_ {
 						$uri=$value['uri'];
 					$theseTags=$this->_trimExplode($value['str_tags']);
 					foreach ($theseTags as $tag) {
-						$tag=strtoupper($tag);
-						if (!isset($tags[$tag])) $tags[$tag]=array('uri'=>$uri, 'tag'=>$tag, 'len'=>strlen($tag));
+						$tag=strtoupper(trim($tag));
+						if (!empty($tag) and !isset($tags[$tag])) $tags[$tag]=array('uri'=>$uri, 'tag'=>$tag, 'len'=>strlen($tag));
 					}
 				}
 			}
