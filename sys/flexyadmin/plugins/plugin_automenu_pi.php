@@ -71,8 +71,8 @@ class plugin_automenu extends plugin_ {
 					$data=$this->CI->db->get_results($autoValue['table']);
 					foreach ($data as $item) {
 						$this->_setResultMenuItem($item,true);
-						$this->CI->db->set('str_table',$autoValue['table']);
-						$this->CI->db->set('str_uri',$item['uri']);
+						if ($this->CI->db->field_exists('str_table',$this->resultMenu))	$this->CI->db->set('str_table',$autoValue['table']);
+						if ($this->CI->db->field_exists('str_uri',$this->resultMenu))	$this->CI->db->set('str_uri',$item['uri']);
 						if (isset($item['self_parent'])) {
 							$this->CI->db->set('self_parent',$item['self_parent']);
 						}
@@ -95,8 +95,8 @@ class plugin_automenu extends plugin_ {
 						if (!isset($item['str_title'])) $this->CI->db->set('str_title',$item['uri']);
 						$this->CI->db->set('order',$lastOrder++);
 						$this->CI->db->set('self_parent',$self_parent);
-						$this->CI->db->set('str_table',$autoValue['table']);
-						$this->CI->db->set('str_uri',$item['uri']);
+						if ($this->CI->db->field_exists('str_table',$this->resultMenu))	$this->CI->db->set('str_table',$autoValue['table']);
+						if ($this->CI->db->field_exists('str_uri',$this->resultMenu))	$this->CI->db->set('str_uri',$item['uri']);
 						$this->CI->db->insert($this->resultMenu);
 					}
 					break;
@@ -116,8 +116,8 @@ class plugin_automenu extends plugin_ {
 							$this->_setResultMenuItem($item);
 							$this->CI->db->set('order',$lastOrder++);
 							$this->CI->db->set('self_parent',$selfParent);
-							$this->CI->db->set('str_table',$autoValue['table']);
-							$this->CI->db->set('str_uri',$item['uri']);
+							if ($this->CI->db->field_exists('str_table',$this->resultMenu))	$this->CI->db->set('str_table',$autoValue['table']);
+							if ($this->CI->db->field_exists('str_uri',$this->resultMenu))	$this->CI->db->set('str_uri',$item['uri']);
 							$this->CI->db->insert($this->resultMenu);
 						}
 					}
@@ -134,9 +134,9 @@ class plugin_automenu extends plugin_ {
 
 	function _setResultMenuItem($item,$setId=false) {
 		if (!$setId) {
-			unset($item['id']);
-			unset($item['order']);
-			unset($item['self_parent']);
+			if (isset($item['id']))						unset($item['id']);
+			if (isset($item['order']))				unset($item['order']);
+			if (isset($item['self_parent']))	unset($item['self_parent']);
 		}
 		foreach ($item as $key => $value) {
 			if ($this->CI->db->field_exists($key,$this->resultMenu)) $this->CI->db->set($key,$value);
