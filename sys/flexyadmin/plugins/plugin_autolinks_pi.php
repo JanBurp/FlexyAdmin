@@ -17,8 +17,11 @@ class plugin_autolinks extends plugin_ {
 		parent::init($init);
 		$this->needToRender=$this->CI->session->userdata('render');
 		$this->tagsPlus=false;
-		$tables=array_keys($this->cfg);
-		$tables=implode(',',$tables);
+		$tables='';
+		if (isset($this->cfg)) {
+			$tables=array_keys($this->cfg);
+			$tables=implode(',',$tables);
+		}
 		$this->act_on(array('existingTables'=>'res_tags','tables'=>$tables));//,'changedFields'=>'uri,str_tags,txt_text'));
 	}
 	
