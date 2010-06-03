@@ -77,15 +77,20 @@ class Bulkupload extends AdminController {
 							$saveFile=$rename.'_'.$renameCount;
 						}
 						else {
-							$saveFile=clean_file_name($file['name']);
+							$saveFile=clean_file_name(get_file_without_extension($file['name']));
 						}
 						// check if name exists, if so, add number
-						$existsCount=-1;
-						$newFile=$saveFile;
-						while (file_exists($path.'/'.$newFile)) {
-							$newFile=$saveFile.'_'.$existsCount++.'.'.$ext;
+						$existsCount=0;
+						$newFile=$saveFile.'.'.$ext;
+						if (file_exists($path.'/'.$newFile)) {
+							while (file_exists($path.'/'.$newFile)) {
+								$newFile=$saveFile.'_'.$existsCount++.'.'.$ext;
+							}
+							$saveFile=$newFile;
 						}
-						$saveFile=$newFile;
+						else {
+							$saveFile=$saveFile.'.'.$ext;
+						}
 						$moved=copy($bulkMap.'/'.$file['name'],$path.'/'.$saveFile);
 						if ($moved) {
 							// resize
@@ -101,7 +106,7 @@ class Bulkupload extends AdminController {
 							}
 							
 							// delete original from Bulk map
-							unlink($bulkMap.'/'.$file['name']);
+							// unlink($bulkMap.'/'.$file['name']);
 						}
 						if ($moved)
 							$gridFiles[$name]['Moved']=icon('yes');
