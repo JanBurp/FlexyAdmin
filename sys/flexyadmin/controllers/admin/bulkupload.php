@@ -106,7 +106,7 @@ class Bulkupload extends AdminController {
 							}
 							
 							// delete original from Bulk map
-							// unlink($bulkMap.'/'.$file['name']);
+							unlink($bulkMap.'/'.$file['name']);
 						}
 						if ($moved)
 							$gridFiles[$name]['Moved']=icon('yes');
