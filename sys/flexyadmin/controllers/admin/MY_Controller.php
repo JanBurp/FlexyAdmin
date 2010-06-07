@@ -43,7 +43,7 @@ class MY_Controller extends Controller {
 	}
 
 	function _init_flexy_admin($isAdmin=false) {
-		//$this->output->enable_profiler(TRUE);
+		// $this->output->enable_profiler(TRUE);
 		$this->load->model("cfg");
 		$this->cfg->load('CFG_configurations');
 		$this->cfg->load('CFG_table',$this->config->item('CFG_table_name'));
@@ -685,6 +685,7 @@ class AdminController extends BasicController {
 		$menu=array();
 		$this->db->where('b_visible',1);
 		$adminMenu=$this->db->get_result('cfg_admin_menu');
+		
 		// trace_($adminMenu);
 
 		foreach ($adminMenu as $item) {

@@ -137,6 +137,18 @@ class Filemanager extends AdminController {
 					$files=$this->_filter_restricted_files($files,$restrictedToUser);
 				}
 
+				// Include extra data from cfg_media_files if any
+				// if ($this->db->table_exists('cfg_media_files')) {
+				// 	foreach ($files as $name => $file) {
+				// 		$this->db->where('file', str_replace('site/assets/','',$file['path']));
+				// 		$info=$this->db->get_row('cfg_media_files');
+				// 		if ($info) {
+				// 			$files[$name]=array_merge($file,$info);
+				// 		}
+				// 	}
+				// }
+				
+
 				/**
 				 * Start file manager
 				 */

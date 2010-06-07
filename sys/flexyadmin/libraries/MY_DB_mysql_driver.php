@@ -39,6 +39,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		$this->set_key();
 		$eachResult=array();
 		$savedQuery=array();
+		$this->as_abstracts(FALSE);
 		$this->add_foreigns(FALSE);
 		$this->add_abstracts(FALSE);
 		$this->add_many(FALSE);

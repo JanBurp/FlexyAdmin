@@ -69,7 +69,7 @@ class Search extends AdminController {
 							$this->db->where(pk(),$id);
 							$res=$this->db->update($table);
 						}
-						$this->db->as_abstracts(FALSE);
+						// $this->db->as_abstracts(FALSE);
 					}
 					$htmlTest.="</ul>";
 				}		
