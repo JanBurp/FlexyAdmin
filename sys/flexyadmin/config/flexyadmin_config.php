@@ -416,6 +416,17 @@ $config["CFG_"]=array(
 			"str_validation_rules"=>'',
 			"txt_help"=>''
 			),
+		"cfg_media_info.str_autofill"=>array(
+			"field"=>'cfg_media_info.str_autofill',
+			"str_ui_name"=>'',
+			"b_show_in_grid"=>'1',
+			"b_show_in_form"=>'1',
+			"str_options"=>'|single upload|bulk upload|both',
+			"b_multi_options"=>'0',
+			"str_overrule_prefix"=>'',
+			"str_validation_rules"=>'',
+			"txt_help"=>''
+			),
 		"cfg_img_info.fields"=>array(
 			"field"=>'cfg_img_info.fields',
 			"str_ui_name"=>'Auto fill fields',

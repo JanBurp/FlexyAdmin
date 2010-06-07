@@ -282,7 +282,8 @@ class Filemanager extends AdminController {
 				$this->lang->load("update_delete");
 				$this->load->library("upload");
 				$this->load->model("file_manager");
-				$types=$this->cfg->get('CFG_media_info',$path,'str_types');
+				$mediaCfg=$this->cfg->get('CFG_media_info');
+				$types=$mediaCfg[$path]['str_types'];
 				$fileManager=new file_manager($path,$types);
 				$result=$fileManager->upload_file();
 				$error=$result["error"];
@@ -294,12 +295,18 @@ class Filemanager extends AdminController {
 						$this->set_message(langp("upload_error",$file));
 				}
 				else {
+					// autofill
+					if ($mediaCfg[$path]['str_autofill']=='single upload' or $mediaCfg[$path]['str_autofill']=='both') {
+						$autoFill=$this->upload->auto_fill_fields($file,$path);
+					}
+					// fill in media table if any
 					$userRestricted=$this->cfg->get('CFG_media_info',$path,'b_user_restricted');
 					if ($userRestricted and $this->db->table_exists("cfg_media_files")) {
 						$this->db->set('user',$this->user_id);
 						$this->db->set('file',$path."/".$file);
 						$this->db->insert('cfg_media_files');
 					}
+					// message
 					$this->set_message(langp("upload_succes",$file));
 					$this->load->model("login_log");
 					$this->login_log->update($path);
