@@ -74,7 +74,7 @@ class Bulkupload extends AdminController {
 						$ext=get_file_extension($file['name']);
 						if (!empty($rename)) {
 							$renameCount++;
-							$saveFile=$rename.'_'.$renameCount;
+							$saveFile=$rename.'_'.sprintf('%03d',$renameCount);
 						}
 						else {
 							$saveFile=clean_file_name(get_file_without_extension($file['name']));
@@ -96,7 +96,10 @@ class Bulkupload extends AdminController {
 							// resize
 							$resized=$this->upload->resize_image($saveFile,$path);
 							// autofill
-							$autoFill=$this->upload->auto_fill_fields($saveFile,$path);
+							$cfg=$mediaCfg[str_replace('site/assets/','',$path)];
+							if (!isset($cfg['str_autofill']) or $cfg['str_autofill']=='bulk upload' or $cfg['str_autofill']=='both') {
+								$autoFill=$this->upload->auto_fill_fields($saveFile,$path);
+							}
 							// fill in media table
 							$userRestricted=$this->cfg->get('CFG_media_info',$map,'b_user_restricted');
 							if ($userRestricted and $this->db->table_exists("cfg_media_files")) {
