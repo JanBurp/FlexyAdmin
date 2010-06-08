@@ -48,6 +48,20 @@ function add_file_postfix($f,$post) {
 	$file=get_file_without_extension($file);
 	return $path.$file.$post.'.'.$ext;
 }
+function add_file_prepostfix($f,$pre='',$post='') {
+	$p=strrpos($f,"/");
+	if ($p===false) {
+		$path='';
+		$file=$f;
+	}
+	else {
+		$path=substr($f,0,$p+1);
+		$file=substr($f,$p+1);
+	}
+	$ext=get_file_extension($file);
+	$file=get_file_without_extension($file);
+	return $path.$pre.$file.$post.'.'.$ext;
+}
 
 function clean_file_name($f) {
 	$ext=get_file_extension($f);

@@ -321,6 +321,8 @@ class Filemanager extends AdminController {
 		redirect(api_uri('API_filemanager_view',pathencode($path)));
 	}
 
+
+
 	function rename($path="",$file='',$new='') {
 		if (empty($new)) {
 			$ext=$this->input->post('ext');
@@ -337,9 +339,31 @@ class Filemanager extends AdminController {
 			$newFile=$map.'/'.$new;
 			// rename
 			$succes=rename($oldFile,$newFile);
+			
 			if ($succes) {
-				
-				// replace all filenames in media(s) and txt_
+				// remove from thumbcache if exists
+				if (file_exists($this->config->item('THUMBCACHE')) ) {
+					$thumbName=$this->config->item('THUMBCACHE').pathencode('site/assets/'.$path.'/'.$file);
+					if (file_exists($thumbName)) unlink($thumbName);
+				}
+				// put file in sr array
+				$sr=array();
+				$sr[$file]=$new;
+
+				// rename other size of same file
+				$cfg=$this->cfg->get('cfg_img_info',str_replace('site/assets/','',$map));
+				if (!empty($cfg)) {
+					$sizes=1;
+					while(isset($cfg['b_create_'.$sizes]) and $cfg['b_create_'.$sizes]) {
+						$thisFile=add_file_prepostfix($file,$cfg['str_prefix_'.$sizes],$cfg['str_postfix_'.$sizes]);
+						$thisNewFile=add_file_prepostfix($new,$cfg['str_prefix_'.$sizes],$cfg['str_postfix_'.$sizes]);
+						rename($map.'/'.$thisFile, $map.'/'.$thisNewFile);
+						$sr[$thisFile]=$thisNewFile;
+						$sizes++;
+					}
+				}
+
+				// replace all filenames in media(s) and txt_ etc
 				$tables=$this->db->get_tables();
 				if (!empty($tables)) {
 					foreach ($tables as $table) {
@@ -348,7 +372,7 @@ class Filemanager extends AdminController {
 						$selectFields[]=pk();
 						foreach ($fields as $field) {
 							$pre=get_prefix($field);
-							if (in_array($pre,array("txt","media","medias"))) $selectFields[]=$field;
+							if (in_array($pre,array('txt','stx','media','medias'))) $selectFields[]=$field;
 						}
 						if (!empty($selectFields)) {
 							$selectFields[]=pk();
@@ -360,11 +384,17 @@ class Filemanager extends AdminController {
 										$id=$data;
 									else {
 										// replace filenames
-										if ($pre=='txt') {
-											$newData=str_replace('/'.$file,'/'.$new,$data);
+										$pre=get_prefix($field);
+										if (in_array($pre,array('txt','stx'))) {
+											// make sure it replaces only filenames
+											if (!isset($txtsr)) {
+												$txtsr=array();
+												foreach ($sr as $key => $value) {$txtsr['/'.$key]='/'.$value;}
+											}
+											$newData=str_replace(array_keys($txtsr),array_values($txtsr) ,$data);
 										}
 										else {
-											$newData=str_replace($file,$new,$data);
+											$newData=str_replace(array_keys($sr),array_values($sr) ,$data);
 										}
 										$this->db->set($field,$newData);
 										$this->db->where(pk(),$id);
