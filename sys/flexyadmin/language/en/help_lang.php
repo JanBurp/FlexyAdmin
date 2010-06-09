@@ -33,5 +33,12 @@ $lang['sr_field_types']			= 'In field types';
 $lang['sr_regex']						= 'Regular Expression';
 $lang['sr_result']					= 'Result';
 
+$lang['fill_fill']					= 'Automatic fill';
+$lang['fill_fields']				= 'Fields to fill';
+$lang['fill_where']					= 'WHERE ...';
+$lang['fill_with']					= 'Fill with';
+$lang['fill_use_random']		= 'Random code';
+
+
 $lang['bad_regex']					= 'Error in regular expression.';
 ?>

@@ -1,5 +1,40 @@
 <?
 
+/**
+ * Create a Random String
+ *
+ * Useful for generating passwords or hashes.
+ *
+ * @access	public
+ * @param	string 	type of random string.  Options: alunum, numeric, nozero, unique
+ * @param	integer	number of characters
+ * @return	string
+ */
+if ( ! function_exists('random_string')) {	
+	function random_string($type = 'alnum', $len = 8)	{					
+		switch($type)		{
+			case 'alnum'	:
+			case 'alfa'		:
+			case 'numeric':
+			case 'nozero'	:
+					switch ($type)	{
+						case 'alnum'	:	$pool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';	break;
+						case 'alfa'		:	$pool = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';	break;
+						case 'numeric':	$pool = '0123456789';	break;
+						case 'nozero'	:	$pool = '123456789';	break;
+					}
+					$str = '';
+					for ($i=0; $i < $len; $i++)	{
+						$str .= substr($pool, mt_rand(0, strlen($pool) -1), 1);
+					}
+					return $str;
+			  break;
+			case 'unique' : return md5(uniqid(mt_rand()));
+			  break;
+		}
+	}
+}
+
 
 function strsplit($s) {
 	$CI =& get_instance();

@@ -716,6 +716,7 @@ class AdminController extends BasicController {
 					// Search&Replace AND Bulkupload tools
 					if ($this->_can_use_tools()) {
 						$menu[lang('sr_search_replace')]	=array("uri"=>api_uri('API_search'),"class"=>"sr db_backup");
+						$menu[lang('fill_fill')] =array("uri"=>api_uri('API_fill'),"class"=>"db db_fill");
 						if (file_exists($this->config->item('BULKUPLOAD'))) {
 							$menu['Bulk upload']						=array("uri"=>api_uri('API_bulk_upload'),"class"=>"media");
 						}

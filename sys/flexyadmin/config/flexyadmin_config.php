@@ -83,6 +83,7 @@ $config['API_db_import']						= "/admin/db/import/";
 $config['API_db_sql']								= "/admin/db/sql/";
 
 $config['API_search']								= '/admin/search/';
+$config['API_fill']									= '/admin/fill/';
 $config['API_help']									= '/admin/help/';
 $config['API_bulk_upload']					= '/admin/bulkupload/';
 

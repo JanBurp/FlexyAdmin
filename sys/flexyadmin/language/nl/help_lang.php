@@ -32,6 +32,13 @@ $lang['sr_field_types']			= 'In veld typen';
 $lang['sr_regex']						= 'Regular Expression';
 $lang['sr_result']					= 'Resultaat';
 
+$lang['fill_fill']					= 'Automatisch vullen';
+$lang['fill_fields']				= 'Te vullen velden';
+$lang['fill_where']					= 'WHERE ...';
+$lang['fill_with']					= 'Vullen met';
+$lang['fill_use_random']		= 'Random code';
+
+
 $lang['bad_regex']					= 'Fout in reguliere expressie.';
 
 
