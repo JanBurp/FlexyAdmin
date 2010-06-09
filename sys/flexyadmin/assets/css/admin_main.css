@@ -145,6 +145,12 @@ img {
 	background-position:0px 2px;
 	padding-left: 20px;
 	}
+#menu li .db_fill {
+	background-image: url("../icons/edit.gif");
+	background-repeat: no-repeat;
+	background-position:0px 2px;
+	padding-left: 20px;
+	}
 #menu li .API_plugin_stats,
 #menu li ._login,
 #menu li ._stats {
