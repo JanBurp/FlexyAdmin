@@ -42,13 +42,13 @@ class Fill extends AdminController {
 						// what rnd type?
 						if (strpos($e,'|')) $type='alt';
 						elseif (strpos($e,'int')!==false) $type='int';
-						elseif (strpos($e,'string')!==false) $type='string';
+						elseif (strpos($e,'str')!==false) $type='str';
 						switch ($type) {
 							case 'alt':
 								$params=explode('|',$e);
 								break;
 							case 'int':
-							case 'string':
+							case 'str':
 								$params=preg_split('.[(|,|)].',$e,-1,PREG_SPLIT_NO_EMPTY);
 								array_shift($params);
 								break;
@@ -77,11 +77,21 @@ class Fill extends AdminController {
 										if (isset($params[1])) $result.=rand($params[0],$params[1]);
 										else $result.=rand($params[0],$params[1]);
 										break;
-									case 'string':
-										$rndString=random_string('alfa',$params[1]);
-										switch ($params[0]) {
-											case 'lower': $rndString=strtolower($rndString);break;
-											case 'upper': $rndString=strtoupper($rndString);break;
+									case 'str':
+										if ($params[0]=='html') {
+											$html=$this->load->view('admin/html_lorum',array(),true);
+											$paragraphs=explode('<h2>',$html);
+											array_shift($paragraphs);
+											foreach ($paragraphs as $key=>$par) {$paragraphs[$key]=trim('<h2>'.$par);}
+											$rndString='';
+											for ($p=0;$p<$params[1];$p++) $rndString.=random_element($paragraphs);
+										}
+										else {
+											$rndString=random_string('alfa',$params[1]);
+											switch ($params[0]) {
+												case 'lower': $rndString=strtolower($rndString);break;
+												case 'upper': $rndString=strtoupper($rndString);break;
+											}
 										}
 										$result.=$rndString;
 										break;
@@ -121,7 +131,7 @@ class Fill extends AdminController {
 											"where"		=> array("label"=>lang('fill_where'),"value"=>$where),
 											"fill"		=> array("label"=>lang('fill_with'),"value"=>$fill),
 											"random"	=> array("label"=>lang('fill_use_random'),"type"=>"checkbox","value"=>$random),
-											""				=> array("type"=>"html","value"=>'[1|2|3|...], [int(min,max)], [string([mixed|lower|upper],len)]'),
+											""				=> array("type"=>"html","value"=>'[yes|no|..],[int(min,max)],[str([html|mix|lower|upper],len)]'),
 											"test"		=> array("type"=>'checkbox','value'=>1)
 											);
 				$form->set_data($data,lang('fill_fill'));
