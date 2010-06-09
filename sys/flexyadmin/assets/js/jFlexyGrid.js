@@ -247,7 +247,7 @@ function doGrid() {
 		
 		
 		//
-		// Edit filename
+		// Edit filename & date
 		//
 		if (isFile) {
 			$('tbody div.icon.edit').click(function(){
@@ -255,15 +255,25 @@ function doGrid() {
 					fileObj=$(this).parents('div.file:first');
 				else
 					fileObj=$(this).parents('tr:first');
-				filename=$(fileObj).children('.name:first').text();
+				var filename=$(fileObj).children('.name:first').text();
 				path=$(fileObj).children('.thumb:first').children('.path:first').text();
 				ext=get_ext(filename);
 				// console.log(path);
 				// console.log(filename);
 				// console.log(ext);
 				shortName=filename.replace('.'+ext,'');
-
-				dialog.html('<form method="post" action="'+site_url()+'admin/filemanager/rename/'+pathencode(path)+'/'+filename+'"><input id="name" name="name" value="'+shortName+'" />.'+ext+'<br/><input type="hidden" name="ext" value="'+ext+'"/><input type="hidden" name="path" value="'+path+'"/></form>');
+				var filedate=$(fileObj).find('.date:first .hidden').text();
+				filedate=filedate.replace(/ /g,'-');
+				
+				var dialogHtml=	'<form method="post" action="'+site_url()+'admin/filemanager/rename/'+pathencode(path)+'/'+filename+'">'+
+												'<input id="name" name="name" value="'+shortName+'" />.'+ext+'<br/>'+
+												'<input type="hidden" name="ext" value="'+ext+'"/>'+
+												'<input type="hidden" name="path" value="'+path+'"/>';
+				if (filedate!='') dialogHtml+='<br/><input id="date" name="date" value="'+filedate+'"/>';
+				dialogHtml	+='</form>';
+				dialog.html(dialogHtml);
+				$('input#date').datepicker({ dateFormat: 'yy-mm-dd' });
+				$('#ui-datepicker-div').css({'z-index':2000});
 				$(dialog).dialog({
 					title:langp('dialog_title_rename',filename),
 					modal:true,
@@ -273,7 +283,9 @@ function doGrid() {
 																	$('.ui-dialog .ui-dialog-buttonpane').add('.ui-dialog a').hide();
 																	$('.ui-dialog .ui-dialog-content').append("<img src='"+site_url("sys/flexyadmin/assets/icons/wait.gif")+"' align='right' />");
 																	newName=$('.ui-dialog input#name').attr('value')+'.'+ext;
-																	location.replace(site_url('admin/filemanager/rename/'+pathencode(path)+'/'+filename+'/'+newName));
+																	var newdate=$('.ui-dialog input#date').attr('value');
+																	if (newdate!=undefined && newdate!='') {filedate=newdate;}
+																	location.replace(site_url('admin/filemanager/edit/'+pathencode(path)+'/'+filename+'/'+newName+'/'+filedate));
 																}
 									 }),
 					close: function(){$(dialog).dialog("destroy");}

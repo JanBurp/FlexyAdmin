@@ -323,12 +323,12 @@ class Filemanager extends AdminController {
 
 
 
-	function rename($path="",$file='',$new='') {
+	function edit($path="",$file='',$new='',$newDate='') {
 		if (empty($new)) {
 			$ext=$this->input->post('ext');
 			$new=$this->input->post('name').'.'.$ext;
 		}
-		
+
 		$map=$this->config->item('ASSETS').pathdecode($path);
 		$this->lang->load("update_delete");
 		$succes=false;
@@ -341,6 +341,13 @@ class Filemanager extends AdminController {
 			$succes=rename($oldFile,$newFile);
 			
 			if ($succes) {
+				// new date if set
+				if (!empty($newDate)) {
+					$this->load->helper('date');
+					$newDate=strtotime($newDate);
+					touch($newFile,$newDate);
+				}
+
 				// remove from thumbcache if exists
 				if (file_exists($this->config->item('THUMBCACHE')) ) {
 					$thumbName=$this->config->item('THUMBCACHE').pathencode('site/assets/'.$path.'/'.$file);

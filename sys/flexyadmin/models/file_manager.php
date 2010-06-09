@@ -340,6 +340,7 @@ function thumb($attr,$index=FALSE) {
 		$xlsTypes=$this->config->item('FILE_types_xls');
 
 		$nr=1;
+		// trace_($files);
 		foreach($files as $id=>$file) {
 			$fileData=array();
 			$name=$file["name"];
@@ -407,7 +408,7 @@ function thumb($attr,$index=FALSE) {
 							$fileData["size"]="(".$imgSize[0]." x ".$imgSize[1].")";
 						}
 						$fileData["filesize"]=$file["size"];
-						$fileData["date"]=$file["date"];
+						$fileData["date"]=span('hidden').$file['rawdate']._span().$file["date"];
 					}
 					$nr++;
 					$data[$name]=$fileData;
