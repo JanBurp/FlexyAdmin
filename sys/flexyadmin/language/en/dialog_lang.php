@@ -10,6 +10,8 @@ $lang['dialog_title_help']			= "Help for '%s'";
 $lang['dialog_title_confirm']		= "Are you sure?";
 $lang['dialog_title_upload']		= "Upload a file.";
 $lang['dialog_title_rename']		= "Rename '<i>%s</i>'";
+$lang['dialog_title_edit']			= "Rename or set new date of '<i>%s</i>'";
+
 
 $lang['dialog_delete_sure']			= "Are you sure you wan't to delete <strong>%s</strong> ?";
 
