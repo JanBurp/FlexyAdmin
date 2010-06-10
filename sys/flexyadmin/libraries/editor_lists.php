@@ -113,14 +113,17 @@ class Editor_lists {
 				$CI->db->select('path');
 				if (!empty($boolField))	$CI->db->where($boolField,1);
 				$query=$CI->db->get($mediaTbl);
+				$files=array();
 				foreach($query->result_array() as $row) {
 					$path=$row["path"];
 					$map=$CI->config->item('ASSETS').$path;
 					$subFiles=read_map($map);
 					$subFiles=not_filter_by($subFiles,"_");
-					$data=$data + $subFiles;
+					$files=$files + $subFiles;
 				}
+				ignorecase_ksort($files);
 			}
+			$data=$data + $files;
 		}
 
 		// ignorecase_ksort($data);
