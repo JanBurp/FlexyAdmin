@@ -78,8 +78,8 @@ class Fill extends AdminController {
 										else $result.=rand($params[0],$params[1]);
 										break;
 									case 'str':
+										$html=$this->load->view('admin/html_lorum',array(),true);
 										if ($params[0]=='html') {
-											$html=$this->load->view('admin/html_lorum',array(),true);
 											$paragraphs=explode('<h2>',$html);
 											array_shift($paragraphs);
 											foreach ($paragraphs as $key=>$par) {$paragraphs[$key]=trim('<h2>'.$par);}
@@ -87,7 +87,11 @@ class Fill extends AdminController {
 											for ($p=0;$p<$params[1];$p++) $rndString.=random_element($paragraphs);
 										}
 										else {
-											$rndString=random_string('alfa',$params[1]);
+											$lines=explode('.',str_replace(',','',strip_tags($html)));
+											foreach ($lines as $key => $line) {
+												if (empty($line)) unset($lines[$key]);
+											}
+											$rndString=trim(substr(random_element($lines),0,$params[1]));
 											switch ($params[0]) {
 												case 'lower': $rndString=strtolower($rndString);break;
 												case 'upper': $rndString=strtoupper($rndString);break;
