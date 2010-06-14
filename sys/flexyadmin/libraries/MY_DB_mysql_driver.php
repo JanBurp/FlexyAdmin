@@ -579,7 +579,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		if ($this->options and !empty($result)) {
 			$result=$this->_add_field_options($result,$table);
 			// options of foreigntables
-			$result=$this->_add_foreign_options($result,$this->get_foreign_tables($table));
+			$result=$this->_add_foreign_options($result,$this->get_foreign_tables($table),$table);
 			// options of many tables
 			if (!isset($manyTables)) {
 				$manyTables=$this->get_many_tables($table);
@@ -860,13 +860,19 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 * @param array	$foreignTables	Tables from the options to be added
 	 * @return array	Resultarray with options
 	 */
-	 function _add_foreign_options($out,$foreignTables) {
+	 function _add_foreign_options($out,$foreignTables,$table='') {
 			$options=array();
 			if (isset($foreignTables)) {
 				$CI=&get_instance();
 				foreach ($foreignTables as $key => $forTable) {
 					$cleanTable=rtrim($forTable['table'],'_');
 					$optionsWhere=$CI->cfg->get('CFG_table',$cleanTable,'str_options_where');
+					// override options Where with Field Info, if there is any
+					if (!empty($table)) {
+						$cfgKey=$table.'.'.$forTable['key'];
+						$optWhere=$CI->cfg->get('CFG_field',$cfgKey,'str_options_where');
+						if (!empty($optWhere)) $optionsWhere=$optWhere;
+					}
 					$options[$key]=$this->get_options($cleanTable,$optionsWhere);
 				}
 			}
@@ -969,7 +975,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			$out=$this->_add_field_options($out,$table);
 			// foreign table options
 			$ft=$this->get_foreign_tables($table);
-			$out=$this->_add_foreign_options($out,$ft);
+			$out=$this->_add_foreign_options($out,$ft,$table);
 			// join table options
 			if (!isset($jt)) $jt=$this->get_many_tables($table);
 			$out=$this->_add_many_options($out,$jt);
