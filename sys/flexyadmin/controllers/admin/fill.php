@@ -35,12 +35,13 @@ class Fill extends AdminController {
 				// decode random
 				if ($random) {
 					$expression=preg_split('[\[|\]]',$fill,-1,PREG_SPLIT_NO_EMPTY);
+					strace_($expression);
 					foreach ($expression as $key=>$text) {
 						$type='text';
 						$params='';
 						$e=$text;
 						// what rnd type?
-						if (strpos($e,'|')) $type='alt';
+						if (strpos($e,'alt')) $type='alt';
 						elseif (strpos($e,'int')!==false) $type='int';
 						elseif (strpos($e,'str')!==false) $type='str';
 						switch ($type) {
@@ -56,7 +57,8 @@ class Fill extends AdminController {
 						if ($type!='text') $text="[$text]";
 						$expression[$key]=array('text'=>$text,'type'=>$type,'params'=>$params);
 					}
-					// strace_($expression);
+					strace_($expression);
+					strace_($params);
 				}
 				foreach($fields as $field) {
 					$table=get_prefix($field,'.');
@@ -87,11 +89,16 @@ class Fill extends AdminController {
 											for ($p=0;$p<$params[1];$p++) $rndString.=random_element($paragraphs);
 										}
 										else {
-											$lines=explode('.',str_replace(',','',strip_tags($html)));
-											foreach ($lines as $key => $line) {
-												if (empty($line)) unset($lines[$key]);
+											if ($params[1]<=8) {
+												$rndString=random_string('alfa',$params[1]);
 											}
-											$rndString=trim(substr(random_element($lines),0,$params[1]));
+											else {
+												$lines=explode('.',str_replace(',','',strip_tags($html)));
+												foreach ($lines as $key => $line) {
+													if (empty($line)) unset($lines[$key]);
+												}
+												$rndString=trim(substr(random_element($lines),0,$params[1]));
+											}
 											switch ($params[0]) {
 												case 'lower': $rndString=strtolower($rndString);break;
 												case 'upper': $rndString=strtoupper($rndString);break;
@@ -135,7 +142,7 @@ class Fill extends AdminController {
 											"where"		=> array("label"=>lang('fill_where'),"value"=>$where),
 											"fill"		=> array("label"=>lang('fill_with'),"value"=>$fill),
 											"random"	=> array("label"=>lang('fill_use_random'),"type"=>"checkbox","value"=>$random),
-											""				=> array("type"=>"html","value"=>'[yes|no|..],[int(min,max)],[str([html|mix|lower|upper],len)]'),
+											""				=> array("type"=>"html","value"=>'alt[yes|no|..],[int(min,max)],[str([html|mix|lower|upper],len)]'),
 											"test"		=> array("type"=>'checkbox','value'=>1)
 											);
 				$form->set_data($data,lang('fill_fill'));
