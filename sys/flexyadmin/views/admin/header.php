@@ -28,7 +28,6 @@ $isForm=has_string('form',$show_type);
 	<base href="<?=base_url()?>" />
 
 	<link rel="stylesheet" href="<?=admin_assets()?>css/admin_main<?=$css?>" type="text/css" />
-	<link rel="stylesheet" href="site/assets/css/text.css" type="text/css" />
 
 	<? if (file_exists('site/assets/css/admin.css')) {?>
 	<link rel="stylesheet" href="site/assets/css/admin.css" type="text/css" />
