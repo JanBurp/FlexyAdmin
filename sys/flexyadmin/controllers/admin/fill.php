@@ -35,7 +35,7 @@ class Fill extends AdminController {
 				// decode random
 				if ($random) {
 					$expression=preg_split('[\[|\]]',$fill,-1,PREG_SPLIT_NO_EMPTY);
-					strace_($expression);
+					// strace_($expression);
 					foreach ($expression as $key=>$text) {
 						$type='text';
 						$params='';
@@ -57,8 +57,8 @@ class Fill extends AdminController {
 						if ($type!='text') $text="[$text]";
 						$expression[$key]=array('text'=>$text,'type'=>$type,'params'=>$params);
 					}
-					strace_($expression);
-					strace_($params);
+					// strace_($expression);
+					// strace_($params);
 				}
 				foreach($fields as $field) {
 					$table=get_prefix($field,'.');
