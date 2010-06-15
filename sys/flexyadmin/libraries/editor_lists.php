@@ -61,7 +61,7 @@ class Editor_lists {
 				if (!empty($menuTable) and $CI->db->table_exists($menuTable)) {
 					$menuFields=$CI->db->list_fields($menuTable);
 					$menuFields=combine($menuFields,$menuFields);
-					if (isset($menuFields['uri'])) {
+					if (isset($menuFields['uri']) and isset($menuFields['order'])) {
 						$CI->db->select('id,uri,order');
 						if (in_array('self_parent',$menuFields)) {
 							$CI->db->select('self_parent');
