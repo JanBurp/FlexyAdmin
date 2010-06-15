@@ -61,12 +61,15 @@ class Editor_lists {
 				if (!empty($menuTable) and $CI->db->table_exists($menuTable)) {
 					$menuFields=$CI->db->list_fields($menuTable);
 					$menuFields=combine($menuFields,$menuFields);
-					if (isset($menuFields['uri']) and isset($menuFields['order'])) {
-						$CI->db->select('id,uri,order');
-						if (in_array('self_parent',$menuFields)) {
-							$CI->db->select('self_parent');
-							$CI->db->order_as_tree();
-							$CI->db->uri_as_full_uri();
+					if (isset($menuFields['uri'])) {
+						$CI->db->select('id,uri');
+						if (isset($menuFields['order'])) {
+							$CI->db->select('order');
+							if (in_array('self_parent',$menuFields)) {
+								$CI->db->select('self_parent');
+								$CI->db->order_as_tree();
+								$CI->db->uri_as_full_uri();
+							}
 						}
 						$CI->db->select_first('str');
 						$results=$CI->db->get_results($menuTable);
