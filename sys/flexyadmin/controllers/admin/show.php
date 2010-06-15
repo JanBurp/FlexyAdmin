@@ -117,8 +117,7 @@ class Show extends AdminController {
 							$this->db->where($table.".user",$restrictedToUser);
 							$this->db->dont_select("user");
 						}
-						if ($table=="cfg_users")
-							$this->db->where("id >=",$this->user_id);
+						if ($table=="cfg_users") $this->db->where("id >=",$this->user_id);
 							
 						$this->db->add_foreigns_as_abstracts();
 						if ($tableInfo['b_grid_add_many']) $this->db->add_many();
@@ -170,10 +169,12 @@ class Show extends AdminController {
 									$grid->prepend_to_captions('&nbsp;');
 							}
 							$grid->set_headings($this->uiNames->get($keys,$table));
-							$grid->set_heading(pk(),help(icon("select all"),lang('grid_select_all')).help(icon("delete"),lang('grid_delete'), array("class"=>"delete") ) );
-							if (!empty($id)) {
-								$grid->set_current($id);
-							}
+							if ($right>=RIGHTS_DELETE)
+								$grid->set_heading(pk(),help(icon("select all"),lang('grid_select_all')).help(icon("delete"),lang('grid_delete'), array("class"=>"delete") ) );
+							else
+								$grid->set_heading(pk(),'');
+							
+							if (!empty($id)) $grid->set_current($id);
 							$html=$grid->view("html",$table,"grid");
 							$this->_set_content($html);
 						}
