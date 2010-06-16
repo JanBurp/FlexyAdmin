@@ -154,14 +154,16 @@ class File_manager Extends Model {
 								if ($field==pk())
 									$id=$data;
 								else {
-									$newdata='';
+									$newdata=$data;
 									$pre=get_prefix($field);
 									switch ($pre) {
 										case 'media':
+											if ($data==$file) $newdata='';
+											break;
 										case 'medias':
-											$newdata=str_replace($file,'',$data);
-											$newdata=str_replace('||','|',$newdata);
-											$newdata=trim($newdata,'|');
+											$arrData=explode('|',$data);
+											foreach ($arrData as $key => $value) {if ($value==$file) unset($arrData[$key]);}
+											$newdata=implode('|',$arrData);
 											break;
 										case 'txt':
 											$preg_name=str_replace("/","\/",$name);
