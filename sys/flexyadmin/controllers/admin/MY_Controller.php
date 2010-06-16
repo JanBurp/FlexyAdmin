@@ -85,6 +85,7 @@ class FrontEndController extends MY_Controller {
 		/**
 			*	Set $_GET if asked for
 			* See http://www.askaboutphp.com/tutorials/58/codeigniter-mixing-segment-based-url-with-querystrings.html
+			* For this to work, config.php: $config['uri_protocol']	= "PATH_INFO";
 			*/
 		if ($this->cfg->get('CFG_configurations','b_query_urls'))	parse_str($_SERVER['QUERY_STRING'],$_GET);
 
