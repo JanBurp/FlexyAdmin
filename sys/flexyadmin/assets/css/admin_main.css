@@ -527,13 +527,13 @@ tr.caption td				{ border:none; }
 .grid thead th {
 	padding:5px 18px 3px 5px;
 	font-weight: bold;
-	vertical-align:middle;
+/*	vertical-align:middle;*/
 }
 .grid .caption td		{ padding:0px;}
 
 .grid td.id,
 .grid td.edit,
-.files td.edit			{ width:66px; min-width:52px; padding-right:0px; }
+.files td.edit			{ width:66px; min-width:63px; padding-right:0px; }
 .grid th.uri,
 .grid td.uri				{ display:none; }
 .grid th.order,
@@ -649,7 +649,7 @@ img.zoom:hover	{ border-color:#696; }
 table.grid .header {
 	background-image: url(../icons/order.gif);
 	background-repeat: no-repeat;
-	background-position: right;
+	background-position: right 6px;
 	padding-left: 5px;
 	cursor: pointer;
 }
