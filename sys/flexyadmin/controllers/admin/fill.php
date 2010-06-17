@@ -37,28 +37,21 @@ class Fill extends AdminController {
 					$expression=preg_split('[\[|\]]',$fill,-1,PREG_SPLIT_NO_EMPTY);
 					// strace_($expression);
 					foreach ($expression as $key=>$text) {
-						$type='text';
 						$params='';
 						$e=$text;
 						// what rnd type?
-						if (strpos($e,'alt')) $type='alt';
-						elseif (strpos($e,'int')!==false) $type='int';
-						elseif (strpos($e,'str')!==false) $type='str';
-						switch ($type) {
-							case 'alt':
-								$params=explode('|',$e);
-								break;
-							case 'int':
-							case 'str':
-								$params=preg_split('.[(|,|)].',$e,-1,PREG_SPLIT_NO_EMPTY);
-								array_shift($params);
-								break;
+						$types=array('alt','int','str');
+						$type=substr($e,0,3);
+						if (!in_array($type,$types))
+							$type='text';
+						else {
+							$params=preg_split('.[(|,|)].',$e,-1,PREG_SPLIT_NO_EMPTY);
+							array_shift($params);
+							if ($type!='text') $text="[$text]";
 						}
-						if ($type!='text') $text="[$text]";
 						$expression[$key]=array('text'=>$text,'type'=>$type,'params'=>$params);
 					}
 					// strace_($expression);
-					// strace_($params);
 				}
 				foreach($fields as $field) {
 					$table=get_prefix($field,'.');
