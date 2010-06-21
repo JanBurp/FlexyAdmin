@@ -43,7 +43,6 @@ td.flexyTitle {
 .flexyPagination td { text-align:center;}
 .flexyPagination .current { font-weight:bold;}
 
-
 .flexyOrder, .flexyOrderUp, .flexyOrderDown {
 	background-image:url(../icons/order.gif);
 	background-position:right center;
@@ -54,6 +53,12 @@ td.flexyTitle {
 .flexyOrderUp 	{	background-image:url(../icons/order_up.gif);}
 .flexyOrderDown {	background-image:url(../icons/order_down.gif);}
 .flexyOrder a 	{ display:block; width:100%;}
+
+.flexyHeadings th,
+.flexyBody td					{width:150px;max-width:150px;overflow:hidden;height:22px;white-space:nowrap;}
+.flexyHeadings th.id,
+.flexyBody td.id			{width:50px;}
+
 
 
 

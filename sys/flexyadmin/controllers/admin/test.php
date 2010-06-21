@@ -13,9 +13,11 @@ class Test extends AdminController {
 	}
 	
 	function grid() {
+		$this->load->model("flexy_field","ff");
+
 		$params=$this->uri->uri_to_assoc(4);
-		$page=$params['page'];
-		$order=$params['order'];
+		$page=el('page',$params);
+		$order=el('order',$params);
 
 		
 		// $this->load->model('flexyHtml','Html');
@@ -31,11 +33,17 @@ class Test extends AdminController {
 		$this->load->model('flexyGrid','Grid');
 		$this->Grid->set_title('Grid');
 		$this->Grid->set_order($order);
-		$this->Grid->set_pagination_length(10);
+		$this->Grid->set_pagination_length(20);
 		$this->Grid->set_pagination_url('admin/test/grid');
 		$this->Grid->set_pagination_page($page);
-		$this->db->order_by(trim($order,'_'),substr($order,0,1)=='_' ? 'DESC':'ASC');
-		$data=$this->db->get_result('log_login');
+		if ($order) $this->db->order_by(trim($order,'_'),substr($order,0,1)=='_' ? 'DESC':'ASC');
+		
+		$table='log_stats';
+		$right=15;
+		$info='';
+		
+		$data=$this->db->get_result($table);
+		// $data=$this->ff->render_grid($table,$data,$right,$info);
 		$this->Grid->set_data($data);
 		$this->_add_content($this->Grid->view());
 
