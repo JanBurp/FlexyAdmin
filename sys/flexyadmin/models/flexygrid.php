@@ -13,25 +13,21 @@ class FlexyGrid Extends FlexyTable {
 		$this->set_pagination_length();
 		$this->set_pagination_url();
 		$this->set_pagination_page();
+		$this->set_pagination_show();
 		$this->set_order();
 	}
 
-	function set_pagination_length($length=0) {
-		$this->pagination['length']=$length;
-	}
-
-	function set_pagination_url($url='') {
-		$this->pagination['url']=$url;
-	}
-	
-	function set_pagination_page($page=1) {
-		$this->pagination['page']=$page;
-	}
+	function set_pagination_length($length=0) 	{ $this->pagination['length']=$length; }
+	function set_pagination_url($url='') 				{ $this->pagination['url']=$url; }
+	function set_pagination_page($page=1) 			{ $this->pagination['page']=$page; }
+	function set_pagination_show($show=10) 			{ $this->pagination['show']=$show; }
 	
 	function set_order($column='',$direction='') {
 		if ($direction=='down' and substr($column,1,1)!='_') $column='_'.$column;
 		$this->order=$column;
 	}
+
+
 
 	function render() {
 		parent::render();
@@ -51,8 +47,15 @@ class FlexyGrid Extends FlexyTable {
 		$this->render['pagination']=NULL;
 		if ($this->pagination['length']>0 and $this->render['totalRows']!=$this->render['nrRows']) {
 			$this->add_class('pagination');
-			$pages=$this->render['totalRows'] / $this->pagination['length'];
-			for ($p=1; $p < $pages; $p++) { 
+			$pages=round($this->render['totalRows'] / $this->pagination['length']);
+			$start=1; $end=$pages;
+			if ($pages>$this->pagination['show']) {
+				$start=$this->pagination['page']-5;
+				if ($start<1) $start=1;
+				if ($start+$this->pagination['page'] > $pages) $start=$pages-$this->pagination['show']+1;
+				$end=$start+$this->pagination['show'];
+			}
+			for ($p=$start; $p < $end; $p++) { 
 				$this->render['pagination']['pages'][$p]=$p;
 			}
 			$this->render['pagination']['prev']=$this->pagination['page']-1;
