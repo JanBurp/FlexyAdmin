@@ -343,6 +343,7 @@ function thumb($attr,$index=FALSE) {
 
 		$nr=1;
 		// trace_($files);
+		$showImgSize=false;
 		foreach($files as $id=>$file) {
 			$fileData=array();
 			$name=$file["name"];
@@ -407,13 +408,26 @@ function thumb($attr,$index=FALSE) {
 						$fileData["type"]=$type;
 						// size types (images, flash)
 						if ($isImg or $isFlash) {
-							$fileData["size"]="(".$imgSize[0]." x ".$imgSize[1].")";
+							$fileData["size"]="(".$imgSize[0]."&nbsp;x&nbsp;".$imgSize[1].")";
+							$showImgSize=true;
 						}
 						$fileData["filesize"]=$file["size"];
-						$fileData["date"]=span('hidden').$file['rawdate']._span().$file["date"];
+						$fileData["date"]=span('hidden').$file['rawdate']._span().str_replace(' ','&nbsp;',$file["date"]);
 					}
 					$nr++;
 					$data[$name]=$fileData;
+				}
+			}
+		}
+		if ($showImgSize) {
+			foreach ($data as $name => $info) {
+				if (!isset($info['size'])) {
+					$newInfo=array();
+					foreach ($info as $key => $value) {
+						$newInfo[$key]=$value;
+						if ($key=='type') $newInfo['size']='&nbsp;';
+					}
+					$data[$name]=$newInfo;
 				}
 			}
 		}
