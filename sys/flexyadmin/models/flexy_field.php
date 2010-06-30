@@ -287,14 +287,16 @@ class Flexy_field extends Model {
 			if (isset($this->fieldCfg[$field]["str_show_in_form_where"]) and !empty($this->fieldCfg[$field]["str_show_in_form_where"])) {
 				$when=trim($this->fieldCfg[$field]["str_show_in_form_where"]);
 				$when=preg_split('/([=|<|>])/',$when,-1,PREG_SPLIT_DELIM_CAPTURE);
-				foreach ($when as $key => $value) {$when[$key]=trim($value);}
-				// strace_($when);
-				// strace_($this->formData);
-				$show=FALSE;
-				switch ($when[1]) {
-					case '=' : if ($this->formData[$when[0]]==$when[2]) {$show=TRUE;} break;
-					case '>' : if ($this->formData[$when[0]]>$when[2]) {$show=TRUE;} break;
-					case '<' : if ($this->formData[$when[0]]<$when[2]) {$show=TRUE;} break;
+				if (count($when)==3) {
+					foreach ($when as $key => $value) {$when[$key]=trim($value);}
+					// strace_($when);
+					// strace_($this->formData);
+					$show=FALSE;
+					switch ($when[1]) {
+						case '=' : if ($this->formData[$when[0]]==$when[2]) {$show=TRUE;} break;
+						case '>' : if ($this->formData[$when[0]]>$when[2]) {$show=TRUE;} break;
+						case '<' : if ($this->formData[$when[0]]<$when[2]) {$show=TRUE;} break;
+					}
 				}
 			}
 			if (!$show) return FALSE;
