@@ -59,7 +59,7 @@ function is_foreign_field($field) {
  * @param string $key Name of foreign key
  * @return string foreign table name
  */
-function foreign_table_from_key($key) {
+function foreign_table_from_key($key,$give_clean=false) {
 	$CI =& get_instance();
 	$sFid=rtrim($key,"_"); // make sure id_item_ is cleaned to id_item for self relations
 	$s=$CI->config->item('TABLE_prefix')."_".remove_prefix($sFid);
@@ -72,7 +72,7 @@ function foreign_table_from_key($key) {
 			}
 		}
 	}
-	if (strcmp($key,$sFid)!=0) $s.="_";		// for self relations add a _
+	if (strcmp($key,$sFid)!=0 and !$give_clean) $s.="_";		// for self relations add a _
 	return $s;
 }
 
