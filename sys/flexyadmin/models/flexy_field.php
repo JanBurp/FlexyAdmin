@@ -18,6 +18,7 @@ class Flexy_field extends Model {
 
 	var $table;
 	var $field;
+	var $formData;
 	var $data;
 	var $id;
 	var $action;
@@ -41,9 +42,10 @@ class Flexy_field extends Model {
 		$this->init_field($field,$data);
 	}
 
-	function init_table($table,$action) {
+	function init_table($table,$action,$formData=array()) {
 		$this->table=$table;
 		$this->action=$action;
+		$this->formData=$formData;
 		if (!isset($vars)) $this->set_variables();
 	}
 
@@ -255,7 +257,7 @@ class Flexy_field extends Model {
 	 *
 	 */
 	function render_form($table,$data,$options=NULL,$multiOptions=NULL,$extraInfoId=NULL) {
-		$this->init_table($table,"form");
+		$this->init_table($table,"form",$data);
 		$out=array();
 		foreach ($data as $name => $value) {
 			$opt=el($name,$options);
@@ -277,8 +279,25 @@ class Flexy_field extends Model {
 		$out=array();
 		$this->init_field($field,$value);
 		// Must field be shown?
-		if (isset($this->fieldCfg[$field]) and (!$this->fieldCfg[$field]["b_show_in_form"])) {
-			return FALSE;
+		if (isset($this->fieldCfg[$field]))	{
+			$show=TRUE;
+		 	if (!$this->fieldCfg[$field]["b_show_in_form"]) {
+				$show=FALSE;
+			}
+			if (isset($this->fieldCfg[$field]["str_show_in_form_where"]) and !empty($this->fieldCfg[$field]["str_show_in_form_where"])) {
+				$when=trim($this->fieldCfg[$field]["str_show_in_form_where"]);
+				$when=preg_split('/([=|<|>])/',$when,-1,PREG_SPLIT_DELIM_CAPTURE);
+				foreach ($when as $key => $value) {$when[$key]=trim($value);}
+				// strace_($when);
+				// strace_($this->formData);
+				$show=FALSE;
+				switch ($when[1]) {
+					case '=' : if ($this->formData[$when[0]]==$when[2]) {$show=TRUE;} break;
+					case '>' : if ($this->formData[$when[0]]>$when[2]) {$show=TRUE;} break;
+					case '<' : if ($this->formData[$when[0]]<$when[2]) {$show=TRUE;} break;
+				}
+			}
+			if (!$show) return FALSE;
 		}
 		// Show
 		$func=$this->_is_function();
