@@ -313,13 +313,10 @@ class Flexy_field extends Model {
 		 * Dropdown fields, if there are options.
 		 */
 		if (isset($options) or isset($multiOptions)) {
-			// $name=$out['name'];
-			// trace_(array('out'=>$out,'options'=>$options,'multi opt'=>$multiOptions));
-			// if (get_prefix($name)==$this->config->item('REL_table_prefix')) {
-			// }
 			if (isset($multiOptions)) $options=$multiOptions;
 			// empty option on top?
-			$optCfg=$this->cfg->get('CFG_table',foreign_table_from_key($this->field));
+			$key=foreign_table_from_key($this->field,true);
+			$optCfg=$this->cfg->get('CFG_table',$key);
 			if (isset($optCfg['b_add_empty_choice']) and $optCfg['b_add_empty_choice']) {
 				$options=array(''=>'') + $options;
 			}
