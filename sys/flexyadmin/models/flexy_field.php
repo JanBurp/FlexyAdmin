@@ -290,11 +290,12 @@ class Flexy_field extends Model {
 				$when=preg_split('/([=|<|>])/',$when,-1,PREG_SPLIT_DELIM_CAPTURE);
 				if (count($when)==3) {
 					foreach ($when as $key => $value) {$when[$key]=trim($value);}
+					$when= array('field'=>$this->field,'actor'=>$when[0],'operator'=>$when[1],'value'=>$when[2]);
 					$class='hidden';
-					switch ($when[1]) {
-						case '=' : if ($this->formData[$when[0]]==$when[2]) {$class='';} break;
-						case '>' : if ($this->formData[$when[0]]>$when[2]) {$class='';} break;
-						case '<' : if ($this->formData[$when[0]]<$when[2]) {$class='';} break;
+					switch ($when['operator']) {
+						case '=' : if ($this->formData[$when['actor']]==$when['value']) {$class='';} break;
+						case '>' : if ($this->formData[$when['actor']]>$when['value']) {$class='';} break;
+						case '<' : if ($this->formData[$when['actor']]<$when['value']) {$class='';} break;
 					}
 				}
 				else $when=array();
@@ -311,15 +312,18 @@ class Flexy_field extends Model {
 					$out=$this->$func();
 			}
 			else
-				$out=$this->_standard_form_field($options,$multiOptions,$class,$when);
+				$out=$this->_standard_form_field($options,$multiOptions);
 		}
 		else {
-			$out=$this->_standard_form_field($options,$multiOptions,$class,$when);
+			$out=$this->_standard_form_field($options,$multiOptions);
 		}
+		$out['when']=$when;
+		$out['class']=$class;
+		// strace_($out);
 		return $out;
 	}
 
-	function _standard_form_field($options=NULL,$multiOptions=NULL,$class='',$when='') {
+	function _standard_form_field($options=NULL,$multiOptions=NULL) {
 		$out=array();
 		/**
 		 * Standard form field information
@@ -329,11 +333,6 @@ class Flexy_field extends Model {
 		$out["value"]			= $this->data;
 		$out["label"]			= $this->uiNames->get($this->field);
 		$out["type"]			= $this->type;
-		$out["class"]			= $class;
-		if (is_array($when) and !empty($when) and count($when)==3)
-			$out['when'] = array('field'=>$this->field,'actor'=>$when[0],'operator'=>$when[1],'value'=>$when[2]);
-		else
-			$out['when'] = '';
 		/**
 		 * Dropdown fields, if there are options.
 		 */
