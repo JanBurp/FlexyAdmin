@@ -1,4 +1,36 @@
 function doForm() {
+	
+	// conditional formfield showing
+	if (typeof(formFieldWhen)!="undefined") {
+		var fields=$('.form_field');
+		$(fields).each(function(){
+			var name=$(this).attr('class');
+			name=name.split(' ');
+			name=name[2];
+			if (typeof(formFieldWhen[name])!="undefined") {
+				var when=formFieldWhen[name];
+				// ok found one, bind an action
+				$('#'+when.actor).change(function(){
+					var val=$(this).val();
+					// first hide, and then check if it can be shown
+					$('.form_field.'+when.field).add('#'+name).addClass('hidden');
+					switch (when.operator) {
+						case '=':
+							if (val==when.value) $('.form_field.'+when.field).add('#'+name).removeClass('hidden');
+							break;
+						case '>':
+							if (val>when.value) $('.form_field.'+when.field).add('#'+name).removeClass('hidden');
+							break;
+						case '<':
+							if (val<when.value) $('.form_field.'+when.field).add('#'+name).removeClass('hidden');
+							break;
+					}
+					if ( ! $('.form_field.'+when.field).hasClass('hidden')) $('.form_field.'+when.field).css({'min-height':'27px'});
+				});
+			}
+		});
+	}
+	
 
 	//
 	// Make sure media fields with selects are good height

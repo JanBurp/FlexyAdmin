@@ -25,6 +25,8 @@ class Form Extends Model {
 	var $isValidated;
 	var $captchaWords;
 	
+	var $when;  // javascript
+	
 	var $buttons;
 	// var $showSubmit;
 	
@@ -43,6 +45,7 @@ class Form Extends Model {
 		$this->hasHtmlField=false;
 		$this->show_buttons();
 		$this->set_captcha_words();
+		$this->when();
 		// $this->show_submit();
 	}
 
@@ -83,6 +86,14 @@ class Form Extends Model {
 
 	function set_captcha_words($words=NULL) {
 		$this->captchaWords=$words;
+	}
+
+	function when($when='',$field='') {
+		if (empty($when))
+			$this->when=array();
+		else {
+			$this->when[$field]=$when;
+		}
 	}
 
 	function _check_default_field($name, $field) {
@@ -507,6 +518,13 @@ class Form Extends Model {
 		}
 		$out.=form_fieldset_close();
 		$out.=form_close();
+		// prepare javascript for conditional field showing
+		if (!empty($this->when)) {
+			$json=array2json($this->when);
+			// strace_($this->when);
+			// strace_($json);
+			$out.="\n<script language=\"javascript\" type=\"text/javascript\">\n<!--\nvar formFieldWhen=".$json.";\n-->\n</script>\n";
+		}
 		log_('info',"form: rendering");
 		return $out;
 	}
@@ -517,7 +535,7 @@ class Form Extends Model {
 		if ($pre==$name) $pre="";
 		$class="$pre $name ".$field['type']." ".$field['class'];
 		if (isset($field['multiple'])) $class.=" ".$field['multiple'];
-		$class=" ".$class;
+		// $class=" ".$class;
 		
 		if (!empty($field["repopulate"])) $field["value"]=$field["repopulate"];
 		$attr=array("name"=>$name,"id"=>$name,"value"=>$field["value"], "class"=>$class);
@@ -541,7 +559,8 @@ class Form Extends Model {
 				$out.=form_label($field["label"],$name);
 		}
 
-
+		// When (javascript triggers)
+		if (!empty($field['when'])) $this->when($field['when'],$name);
 
 		switch($field["type"]):
 
@@ -640,7 +659,8 @@ class Form Extends Model {
 					$out.='<ul class="choices">';
 					foreach($options as $img) {
 						$image=$img['name'];
-						if ($preName=='media' or !in_array($image,$medias))	$out.='<li>'.show_thumb(array("src"=>$field["path"]."/".$image,"class"=>"media",'alt'=>$image)).'</li>';
+						if ($preName=='media' or !in_array($image,$medias))
+							$out.='<li>'.show_thumb(array("src"=>$field["path"]."/".$image,"class"=>"media",'alt'=>$image)).'</li>';
 					}
 					$out.='</ul>';					
 				}
