@@ -278,28 +278,28 @@ class Flexy_field extends Model {
 		$this->extraInfoId=$extraInfoId;
 		$out=array();
 		$this->init_field($field,$value);
+		$class='';
+		$when=array();
 		// Must field be shown?
 		if (isset($this->fieldCfg[$field]))	{
-			$show=TRUE;
 		 	if (!$this->fieldCfg[$field]["b_show_in_form"]) {
-				$show=FALSE;
+				return FALSE;
 			}
 			if (isset($this->fieldCfg[$field]["str_show_in_form_where"]) and !empty($this->fieldCfg[$field]["str_show_in_form_where"])) {
 				$when=trim($this->fieldCfg[$field]["str_show_in_form_where"]);
 				$when=preg_split('/([=|<|>])/',$when,-1,PREG_SPLIT_DELIM_CAPTURE);
 				if (count($when)==3) {
 					foreach ($when as $key => $value) {$when[$key]=trim($value);}
-					// strace_($when);
-					// strace_($this->formData);
-					$show=FALSE;
+					$class='hidden';
 					switch ($when[1]) {
-						case '=' : if ($this->formData[$when[0]]==$when[2]) {$show=TRUE;} break;
-						case '>' : if ($this->formData[$when[0]]>$when[2]) {$show=TRUE;} break;
-						case '<' : if ($this->formData[$when[0]]<$when[2]) {$show=TRUE;} break;
+						case '=' : if ($this->formData[$when[0]]==$when[2]) {$class='';} break;
+						case '>' : if ($this->formData[$when[0]]>$when[2]) {$class='';} break;
+						case '<' : if ($this->formData[$when[0]]<$when[2]) {$class='';} break;
 					}
 				}
+				else $when=array();
+				
 			}
-			if (!$show) return FALSE;
 		}
 		// Show
 		$func=$this->_is_function();
@@ -311,15 +311,15 @@ class Flexy_field extends Model {
 					$out=$this->$func();
 			}
 			else
-				$out=$this->_standard_form_field($options,$multiOptions);
+				$out=$this->_standard_form_field($options,$multiOptions,$class,$when);
 		}
 		else {
-			$out=$this->_standard_form_field($options,$multiOptions);
+			$out=$this->_standard_form_field($options,$multiOptions,$class,$when);
 		}
 		return $out;
 	}
 
-	function _standard_form_field($options=NULL,$multiOptions=NULL) {
+	function _standard_form_field($options=NULL,$multiOptions=NULL,$class='',$when='') {
 		$out=array();
 		/**
 		 * Standard form field information
@@ -329,7 +329,11 @@ class Flexy_field extends Model {
 		$out["value"]			= $this->data;
 		$out["label"]			= $this->uiNames->get($this->field);
 		$out["type"]			= $this->type;
-		$out["class"]			= "";
+		$out["class"]			= $class;
+		if (is_array($when) and !empty($when) and count($when)==3)
+			$out['when'] = array('field'=>$this->field,'actor'=>$when[0],'operator'=>$when[1],'value'=>$when[2]);
+		else
+			$out['when'] = '';
 		/**
 		 * Dropdown fields, if there are options.
 		 */
@@ -386,7 +390,7 @@ class Flexy_field extends Model {
 			$validations=$this->_combine_validations($validation);
 		}
 		if (!empty($validations)) $out['validation']=$this->_set_validation_params($validations);
-		// trace_($out);
+		// strace_($out);
 		return $out;
 	}
 
