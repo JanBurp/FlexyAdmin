@@ -1,0 +1,23 @@
+r622>r723
+---------
+
+
+BUGS/CHANGES:
+- some styling (table, thumbs, hoverthumbs etc.)
+- some bugs (DB import,editor list order)
+- upload new file types (pdf,flv,sql)
+- Table: delete only visible/filtered items
+- cleaner controller/page view
+- new demo site/database
+
+UPGRADED:
+- jQuery 1.4.2 (1.3.2 is still there for compatibility when updating)
+
+NEW:
+- RSS feeds possible
+- embed plugin for tinyMCE
+- auto-fill option
+- ordering of drag'n'drop images possible
+- show a field in a form optionally
+- automatic validation of formfields (info from DB)
+
