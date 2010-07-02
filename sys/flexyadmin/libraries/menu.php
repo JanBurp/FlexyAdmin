@@ -215,6 +215,9 @@ class Menu {
 	function set_current($current="") {
 		$current=str_replace(index_page(),"",$current);
 		if (substr($current,0,1)=="/") $current=substr($current,1);
+		// remove query's
+		$current=explode('?',$current);
+		$current=current($current);
 		$this->current=$current;
 	}
 
@@ -272,13 +275,17 @@ class Menu {
 	}
 
 	function inUri($in,$uri) {
+		// remove query's from $in
+		$in=explode('?',$in);
+		$in=current($in);
+		//
 		$in=explode("/",$in);
 		$uri=explode("/",$uri);
 		// if same TRUE
 		if ($in==$uri) return TRUE;
 		// if in longer then uri, impossible active, FALSE
 		if (count($uri)<count($in)) return FALSE;
-		// ok, possible active branch, first set in as long as uri, then check if same
+		// ok, possible active branch, first set uri as long as in, then check if same
 		$uri=array_slice($uri,0,count($in));
 		if ($in==$uri) return TRUE;
 		
@@ -335,6 +342,7 @@ class Menu {
 				if ($this->current==$link) 									$itemAttr["class"].=" current";
 				if ($this->inUri($link,$this->current))			$itemAttr["class"].=" active";
 				$itemAttr['class']=trim($itemAttr['class']);
+
 				// set id
 				$itemAttr['id']="menu_".$cName."_pos".$pos."_lev$level";
 				// render item
