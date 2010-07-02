@@ -28,11 +28,8 @@ $isForm=has_string('form',$show_type);
 	<base href="<?=base_url()?>" />
 
 	<link rel="stylesheet" href="<?=admin_assets()?>css/admin_main<?=$css?>" type="text/css" />
-	<!-- <link rel="stylesheet" href="<?=admin_assets()?>css/flexyobjects.css" type="text/css" /> -->
-
-	<? if (file_exists('site/assets/css/admin.css')) {?>
 	<link rel="stylesheet" href="site/assets/css/admin.css" type="text/css" />
-	<? } ?>
+	<!-- <link rel="stylesheet" href="<?=admin_assets()?>css/flexyobjects.css" type="text/css" /> -->
 	<!--[if lte IE 6]><style type="text/css" media="screen">@import url(<?=admin_assets()?>css/ie6.css);</style><![endif]-->
 	<!--[if IE 7]><style type="text/css" media="screen">@import url(<?=admin_assets()?>css/ie7.css);</style><![endif]-->
 	<!--[if IE 8]><style type="text/css" media="screen">@import url(<?=admin_assets()?>css/ie8.css);</style><![endif]-->

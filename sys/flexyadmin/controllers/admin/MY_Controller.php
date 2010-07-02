@@ -839,6 +839,8 @@ class AdminController extends BasicController {
 			$rev = $svn[$revKey];
 			// trace_($rev);
 			if (!empty($rev)) write_file($revfile, $rev);
+			// $this->db->set('str_revision',$rev);
+			// $this->db->update('cfg_configurations');
 		}
 		if (empty($rev) and file_exists($revfile)) {
 			$rev = read_file($revfile);
