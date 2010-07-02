@@ -27,7 +27,7 @@
 	<meta http-equiv="Content-Type" content="text/html" charset="utf8" />
 	<base href="<?=base_url()?>" />
 	<title><?=ascii_to_entities($title);?></title>
-	<link rel="shortcut icon" href="<?=$assets?>/img/favicon.ico" type="image/x-icon" />
+	<link rel="shortcut icon" href="site/assets/img/favicon.ico" type="image/x-icon" />
 
 	<meta http-equiv="imagetoolbar" content="no" />
 	<meta http-equiv="content-language" content="nl" />
@@ -40,16 +40,11 @@
 	<meta name="revisit-after" content="7 days" />
 
 	<script language="javascript" type="text/javascript" src="<?=$admin_assets?>js/nospam.js"></script>
-	<!-- <script language="javascript" type="text/javascript" src="sys/jquery/jquery-1.3.2.min.js"></script> -->
-	
-	<!-- <link href="<?=$assets?>js/fullsize/fullsize.css" media="screen" rel="stylesheet" type="text/css" /> -->
-	<!-- <script type="text/javascript" src="<?=$assets?>js/fullsize/jquery.fullsize.pack.js"></script> -->
-	<!-- <script language="javascript" type="text/javascript" src="<?=$assets?>js/menu.js"></script> -->
-	<!-- <script language="javascript" type="text/javascript" src="<?=$assets?>js/popup.js"></script> -->
+	<!-- <script language="javascript" type="text/javascript" src="sys/jquery/jquery-1.4.2.min.js"></script> -->
+	<!-- <script language="javascript" type="text/javascript" src="site/assetsjs/site.js"></script> -->
 	
 	<link href="<?=$assets;?>/css/text.css" rel="stylesheet" type="text/css" />
 	<link href="<?=$assets;?>/css/layout.css" rel="stylesheet" type="text/css" />
-
 	<!--[if lte IE 6]><style type="text/css" media="screen">@import url(<?=$assets;?>/css/ie6.css);</style><![endif]-->
 	<!--[if IE 7]><style type="text/css" media="screen">@import url(<?=$assets;?>/css/ie7.css);</style><![endif]-->
 	<!--[if IE 8]><style type="text/css" media="screen">@import url(<?=$assets;?>/css/ie8.css);</style><![endif]-->
@@ -57,16 +52,18 @@
 
 <body>
 
-	<div id="title">
-	<p><?=$title?></p>
-	</div>
+	<div id="container">
+		<div id="title">
+		<p><a href="./"><?=$title?></a></p>
+		</div>
 
-	<div id="menu">
-	<?=$menu;?>
-	</div>
+		<div id="menu">
+		<?=$menu;?>
+		</div>
 
-	<div id="content">
-	<?=$content;?>
+		<div id="content">
+		<?=$content;?>
+		</div>
 	</div>
 
 </body>

@@ -51,19 +51,26 @@ class Main extends FrontEndController {
 	 */
 
 	function index() {
+		
+		/***********************************************
+		 * Default information & localisation
+		 */
+		$this->site['language']=$this->config->item('language');
+		setlocale(LC_ALL, $this->site['language'].'_'.$this->site['language']);
+		$this->site['uri']=$this->uri->get();
 
 		/***********************************************
 		 * Set current uri to menu & gets menu data from standard menu table & creates menu
 		 */
-		$this->menu->set_current($this->uri->get());
+		$this->menu->set_current($this->site['uri']);
 		$this->menu->set_menu_from_table();
 		$this->site["menu"]=$this->menu->render();
 
 		/**********************************************
 		 * Get content according to current uri and show the page
 		 */
-		$this->db->where_uri($this->uri->get());
-		$item=$this->db->get_row("tbl_menu");
+		$this->db->where_uri($this->site['uri']);
+		$item=$this->db->get_row('tbl_menu');
 		if ($item) $this->_page($item);
 
 		/**********************************************
@@ -100,104 +107,88 @@ class Main extends FrontEndController {
 		$this->add_content($content);
 		
 		// Is there a module set? If so, add module content.
-		if (isset($item["tbl_module__str_module"]) and !empty($item["tbl_module__str_module"]))
-			$this->_module($item);
+		if (isset($item["str_module"]) and !empty($item["str_module"]))	$this->_module($item);
 	}
 
 
 
 
+
+
 	function _module($item) {
-		$type=$item["tbl_module__str_type"];
+		$type=$item["str_module"];
 		switch ($type) {
-				
-			case 'sitemap':
-				$table=$item["tbl_module__table"];
-				$sitemap=new menu();
-				$sitemap->set_current($this->get_uri());
-				$sitemap->set_menu_from_table($table);
-				$this->add_content($sitemap->render());
-				break;
 				
 			case 'contact_form'	:
 				$this->_contact_form($item);
 				break;
 			case 'contact_form_send':
 				break;
-				
-			case 'table' :
-			default:
-				$table=$item["tbl_module__table"];
-				$fields=str_replace("|",",",$item["tbl_module__fields"]);
-				$view=$item["tbl_module__str_view"];
-				$this->db->select($fields);
-				$data=$this->db->get_result($table);
-				$this->add_content($this->show($view,array("table"=>$table,"fields"=>$fields,"view"=>$view,"links"=>$data),true));
-				break;
-				
+
 		}
 	}
 
-// 
-// 	function _contact_form($item) {
-// 		$this->load->library('form_validation');
-// 		$this->load->helper('html');
-// 		$this->load->helper('language');
-// 		$this->load->model("form");
-// 		$this->lang->load("update_delete");
-// 		$formData=array(
-// 								"str_name"		=>array(	"type"				=>	"input",
-// 																				"label"				=>	"Naam",
-// 																				"name"				=>	"str_name",
-// 																				"value"				=>	"",
-// 																				"validation"	=>  "required"),
-// 								"email_email"	=>array(	"type"				=>	"input",
-// 																				"label"				=>	"Email",
-// 																				"name"				=>	"email_email",
-// 																				"value"				=>	"",
-// 																				"validation"	=>  "required|valid_email"),
-// 								"str_subject"	=>array(	"type"				=>	"input",
-// 																				"label"				=>	"Onderwerp",
-// 																				"name"				=>	"str_subject",
-// 																				"value"				=>	"",
-// 																				"validation"	=>  "required"),																				
-// 								"txt_text"		=>array(	"type"				=>	"textarea",
-// 																				"label"				=>	"Vraag",
-// 																				"name"				=>	"txt_text",
-// 																				"value"				=>	"",
-// 																				"validation"	=>  "required"));
-// 		$form=new form($this->get_uri());
-// 		$form->set_data($formData,"Contact");
-// 		/**
-// 		 * Validate form, if succes, make form do an update
-// 		 */
-// 		if ($form->validation()) {
-// 			// Send form
-// 			$this->db->select("email_email,str_author");
-// 			$to=$this->db->get_result("tbl_site",1);
-// 			$to=current($to);
-// 			$data=$form->get_data();
-// 			$this->load->library('email');
-// 			$this->email->to($to["email_email"],$to["str_author"]);
-// 			$this->email->from($data["email_email"]["value"]);
-// 			$this->email->subject("Email van site: '".$data["str_subject"]["value"]."'");
-// 			$this->email->message($data["txt_text"]["value"]);
-// 			$this->email->send();
-// 			// redirect to send page
-// 			$this->db->add_foreigns();
-// 			$this->db->select("uri");
-// 			$this->db->where("id","44");
-// 			$res=$this->db->get_result("tbl_menu");
-// 			$res=current($res);
-// 			redirect($res["uri"]);
-// 		}
-// 		else {
-// 			// Show form
-// 			$validationErrors=validation_errors('<div class="error">', '</div>');
-// 			if (!empty($validationErrors)) $this->add_content($validationErrors);
-// 			$this->add_content($form->render());
-// 		}
-// 	}
+
+	function _contact_form($item) {
+		$this->load->library('form_validation');
+		$this->load->helper('html');
+		$this->load->helper('language');
+		$this->load->model("form");
+		$this->lang->load("update_delete");
+		$this->lang->load("form");
+		$formData=array(
+								"str_name"		=>array(	"type"				=>	"input",
+																				"label"				=>	"Naam",
+																				"name"				=>	"str_name",
+																				"value"				=>	"",
+																				"validation"	=>  "required"),
+								"email_email"	=>array(	"type"				=>	"input",
+																				"label"				=>	"Email",
+																				"name"				=>	"email_email",
+																				"value"				=>	"",
+																				"validation"	=>  "required|valid_email"),
+								"str_subject"	=>array(	"type"				=>	"input",
+																				"label"				=>	"Onderwerp",
+																				"name"				=>	"str_subject",
+																				"value"				=>	"",
+																				"validation"	=>  "required"),																				
+								"txt_text"		=>array(	"type"				=>	"textarea",
+																				"label"				=>	"Vraag",
+																				"name"				=>	"txt_text",
+																				"value"				=>	"",
+																				"validation"	=>  "required"));
+		$form=new form($this->get_uri());
+		$form->set_data($formData,"Contact");
+		/**
+		 * Validate form, if succes, make form do an update
+		 */
+		if ($form->validation()) {
+			// Send form
+			$this->db->select("email_email,str_author");
+			$to=$this->db->get_result("tbl_site",1);
+			$to=current($to);
+			$data=$form->get_data();
+			$this->load->library('email');
+			$this->email->to($to["email_email"],$to["str_author"]);
+			$this->email->from($data["email_email"]["value"]);
+			$this->email->subject("Email van site: '".$data["str_subject"]["value"]."'");
+			$this->email->message($data["txt_text"]["value"]);
+			$this->email->send();
+			// redirect to send page
+			$this->db->add_foreigns();
+			$this->db->select("uri");
+			$this->db->where("id","44");
+			$res=$this->db->get_result("tbl_menu");
+			$res=current($res);
+			redirect($res["uri"]);
+		}
+		else {
+			// Show form
+			$validationErrors=validation_errors('<div class="error">', '</div>');
+			if (!empty($validationErrors)) $this->add_content($validationErrors);
+			$this->add_content($form->render());
+		}
+	}
 
 
 }
