@@ -1,7 +1,7 @@
 <?
 // Minimized versions of Javascript & CSS files (see http://refresh-sf.com/yui/)
 $minimize=FALSE;
-$minimize=TRUE;
+// $minimize=TRUE;
 if ($minimize) {
 	$js='.min.js';
 	$css='.min.css';
@@ -10,8 +10,7 @@ else{
 	$js='.js';
 	$css='.css';
 }
-
-$isGrid=(has_string('grid',$show_type) or has_string('filemanager',$show_type));
+$isGrid=(has_string('grid',$show_type) or has_string('filemanager',$show_type) or has_string('stats',$show_type));
 $isForm=has_string('form',$show_type);
 ?>
 
@@ -51,11 +50,10 @@ $isForm=has_string('form',$show_type);
 	</script>
 
 	<!-- jQuery -->
-	<!-- // <script language="javascript" type="text/javascript" src="sys/jquery/jquery-1.3.2.min.js"></script> -->
 	<script language="javascript" type="text/javascript" src="sys/jquery/jquery-1.4.2.min.js"></script>
 	<!-- jQuery UI -->
-	<link rel="stylesheet" type="text/css" href="sys/jquery/ui/theme/ui.all.css" />
-	<script language="javascript" type="text/javascript" src="sys/jquery/ui/jquery-ui-1.7.2.custom.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="sys/jquery/ui/custom-theme/jquery-ui-1.8.2.custom<?=$css?>" />
+	<script language="javascript" type="text/javascript" src="sys/jquery/ui/jquery-ui-1.8.2.custom.min.js"></script>
 	<!-- jQuery plugins-->
 	<link rel="stylesheet" type="text/css" href="sys/jquery/plugins/fullsize/fullsize.css" />
 	<script language="javascript" type="text/javascript" src="sys/jquery/plugins/fullsize/jquery.fullsize<?=$js?>"></script>
@@ -70,7 +68,7 @@ $isForm=has_string('form',$show_type);
 	<? if ($isForm): ?>
 		<!-- form Scripts -->
 		<script language="javascript" type="text/javascript" src="sys/jquery/ui/i18n/ui.datepicker-nl<?=$js?>"></script>
-		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/timepicker/timepicker<?=$js?>"></script>
+		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/timepicker/jquery.ui.timepicker<?=$js?>"></script>
 		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/form/jquery.form<?=$js?>"></script>
 		<? if ($show_editor): ?>
 			<!-- editor Scripts -->

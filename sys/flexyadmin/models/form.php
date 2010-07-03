@@ -761,7 +761,25 @@ class Form Extends Model {
 					$date=date("Y-m-d");
 				}
 				$attr["value"]=$date;
+				$out.=form_input($attr);
+				break;
+			case 'datetime':
+				$date=trim(strval($field["value"]));
+				if (($date=="0000-00-00 00:00:00") or ($date=="")) {
+					$date=date("Y-m-d H:i:s");
+				}
+				$attr["value"]=$date;
+				$out.=form_input($attr);
+				break;
 			case "time":
+				$time=trim(strval($field["value"]));
+				if (($time=="00:00:00") or ($time=="")) {
+					$time=date("H:i:s");
+				}
+				$attr["value"]=$time;
+				$out.=form_input($attr);
+				break;
+
 			case "input":
 			case "default":
 			default:

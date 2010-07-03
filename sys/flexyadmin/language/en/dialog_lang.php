@@ -17,4 +17,8 @@ $lang['dialog_delete_sure']			= "Are you sure you wan't to delete <strong>%s</st
 
 $lang['form_random_password']		= "Random Password";
 
+$lang['ui-timepicker-choose-hours'] = 'First choose the hour';
+$lang['ui-timepicker-choose-minutes'] = 'Now choose the minutes';
+
+
 ?>
