@@ -51,8 +51,26 @@ function doForm() {
 	//
 	// Timepicker and Datepicker dialog
 	//
+	$("form input.datetime").each(function(){
+		var dt=$(this).attr('value');
+		var c=$(this).attr('class');
+		var id=$(this).attr('id');
+		var did=id+'__date';
+		var tid=id+'__time';
+		dt=dt.split(' ');
+		var date=dt[0];
+		var time=dt[1];
+		$(this).after('<input id="'+tid+'" name="'+tid+'" class="'+c+' time" value="'+time+'">');
+		$(this).after('<input id="'+did+'" name="'+did+'" class="'+c+' date" value="'+date+'">');
+		$(this).hide();
+		$('#'+did).add('#'+tid).change(function(){
+			dt=$('#'+did).val()+' '+$('#'+tid).val();
+			$('#'+id).attr('value',dt);
+		});
+		
+	});
 	$("form input.date").datepicker({ dateFormat: 'yy-mm-dd' });
-	$("form input.time").datepicker({ dateFormat: 'yy-mm-dd', duration:'', showTime:true, constrainInput:false,time24h:true });
+	$("form input.time").timepicker({ hourCols:6, minDivision:5, hourCaption:lang('ui-timepicker-choose-hours'), minuteCaption:lang('ui-timepicker-choose-minutes'), closeOnFormclick: true });
 
 	//
 	// Password create button

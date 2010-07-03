@@ -850,10 +850,9 @@ span.button:hover {
 	background-position:50% 0%;
 	color:#669966;
 }
-input.date,
-input.time {
-	width:150px;
-	}
+input.datetime {width:150px;}
+input.date {width:85px;margin-right:5px;}
+input.time {width:65px;}
 input.checkbox {
 	border:none;
 	width: auto;
@@ -1218,9 +1217,7 @@ p.error {
 .ui-dialog input {
 	width:350px;
 	margin-right:5px;
-	text-align:right;
-}
-#dialog input.button {
+	text-align:left;
 }
 #dialog a.button:hover {
 	background-color:#BBCC88;
@@ -1265,6 +1262,9 @@ div#ui_messages {
 div#help_messages {
 	display:none;
 }
+
+#ui-timepicker-div {width:18em;}
+.ui-timepicker-close {float:right;cursor:pointer;margin-top:4px;}
 
 /* ============== composition ================ */
 

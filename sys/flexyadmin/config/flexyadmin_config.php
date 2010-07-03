@@ -503,12 +503,12 @@ $config['ORDER_decimals']						= 3;
 $config['ORDER_default_fields']			= array( "order","dat DESC","tme DESC","str","id");
 
 $config['ABSTRACT_field_name']			= "abstract";
-$config['ABSTRACT_field_pre_types']	= array("str","url","img","dat","tme","int");
-$config['ABSTRACT_field_types']			= array("varchar","int","date");
+$config['ABSTRACT_field_pre_types']	= array("str","url","img","dat","tme","time","int");
+$config['ABSTRACT_field_types']			= array("varchar","int","date",'datetime','time');
 $config['ABSTRACT_field_max']				= 2;
 $config['ABSTRACT_field_split']			= " | ";
 
-$config['URI_field_pre_types']			= array("str","url","img","dat","tme","int");
+$config['URI_field_pre_types']			= array("str","url","img","dat","tme",'time',"int");
 
 
 
@@ -696,7 +696,28 @@ $config['FIELDS_prefix'] = array (
 											"form"				=> "date",
 											"validation"	=> "function_today"
 											),
+	"date"			=> array (
+											"grid"				=> "%s",
+											"form"				=> "date",
+											"validation"	=> "function_today"
+											),
+
 	"tme"				=> array (
+											"grid"				=> "%s",
+											"form"				=> "datetime",
+											"validation"	=> ""
+											),
+	"datetime"	=> array (
+											"grid"				=> "%s",
+											"form"				=> "datetime",
+											"validation"	=> ""
+											),
+	"dtm"				=> array (
+											"grid"				=> "%s",
+											"form"				=> "datetime",
+											"validation"	=> ""
+											),
+	"time"			=> array (
 											"grid"				=> "%s",
 											"form"				=> "time",
 											"validation"	=> ""
