@@ -1,0 +1,83 @@
+/* Compositie ********************************************/
+
+body {background:#F4FFE0;}
+
+#container {
+	width:760px;
+	min-height:600px;
+	left:50%;
+	margin-left:380px;
+	background-color:#FFF;
+}
+
+#title {
+	float:left;
+	width:100%;
+	height:50px;
+	background-color:#CCDD99;
+}
+#title p { color:#000; padding:10px; font-size:1.5em;}
+#title a { color:#000; text-decoration:none;}
+
+
+#menu {
+	float:left;
+	width:100%;
+	height:30px;
+	background-color:#DDEEAA;
+	border-bottom:solid 1px #CCDD99;
+}
+
+#content {
+	float:left;
+	width:100%;
+	margin-top:20px;
+	padding:10px;
+}
+
+#content .text {
+	float:left;
+	width:50%;
+}
+#content .photo {
+	float:right;
+	width:50%;
+}
+
+
+/* Menu ********************************************/
+
+#menu ul {display:none;width:100%;}
+#menu ul.lev1 {display:block;}
+#menu li.lev1:hover {position:relative;}
+#menu li.lev1:hover ul.lev2 {
+	display:block;
+	position:absolute;
+	left:0px; top:100%;
+	width:auto;
+	min-width:100%;
+	padding:0px 10px 10px;
+	background-color:#DDEEAA;
+	border:solid 1px #CCDD99;
+	border-top:none;
+}
+
+#menu li {
+	list-style:none;
+	display:inline;
+	float:left;
+	margin-left:0px;
+	padding:5px 10px;
+	background-color:#DDEEAA;
+	white-space:nowrap;
+}
+
+#menu li.lev2 {
+	float:none;
+	display:block;
+	width:auto;
+	padding:5px 0px;
+}
+
+#menu li a {text-decoration:none;color:#000;}
+#menu li a:hover, #menu li a.active {text-decoration:underline;}

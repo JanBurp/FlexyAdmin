@@ -1,0 +1,43 @@
+/* ============== IE7 specific styles ================ */
+
+/* ============== table grid ================== */
+
+.grid {
+	border-collapse:collapse;
+}
+
+.grid th.order, .grid td.order {
+	width:30px;
+}
+
+.grid td,
+.grid th {
+	padding:3px 5px 3px 5px;
+	border: solid 1px #DDEEAA;
+	border-top:none;
+	border-right:none;
+}
+
+.icons .file .toolbar {
+	visibility: visible;
+	}
+
+/* ============== dialog ================ */
+
+#dialog{
+	width:405px;
+}
+
+/* ============== popup ================ */
+#popup p {
+	width:392px;
+	height:auto;
+	text-align:left;
+	margin:5px;
+	padding-bottom:10px;
+}
+
+/* ============== zoomThumb ============ */
+div.zoomThumb img {
+	margin-bottom:4px;
+}

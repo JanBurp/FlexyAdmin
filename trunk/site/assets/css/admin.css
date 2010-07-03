@@ -1,0 +1,3 @@
+/* tinyMCE specific styles, only for admin  */
+body#tinymce{ margin:4px; }
+#tinymce a { text-decoration: underline; }
