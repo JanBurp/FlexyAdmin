@@ -334,13 +334,14 @@ class Menu {
 				$link="";
 				if (!empty($thisUri))	$link=$this->tmp($this->tmpUrl,$thisUri);
 				$itemAttr=array();
-				$itemAttr['class']=$attr['class'].' '.$this->itemAttr['class'].' ';
-				$itemAttr["class"].="$cName pos$pos lev$level";
+				$itemAttr['class']=$attr['class']." pos$pos";
 				if ($pos==1)																$itemAttr["class"].=" first";
 				if ($pos==count($menu))											$itemAttr["class"].=" last";
+				$itemAttr['class'].=" $cName ".$this->itemAttr['class'];
 				if (isset($item["class"]))									$itemAttr["class"].=" ".$item["class"];
 				if ($this->current==$link) 									$itemAttr["class"].=" current";
 				if ($this->inUri($link,$this->current))			$itemAttr["class"].=" active";
+				if (isset($item['sub']))										$itemAttr["class"].=" sub";
 				$itemAttr['class']=trim($itemAttr['class']);
 
 				// set id
