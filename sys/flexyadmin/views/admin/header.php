@@ -1,7 +1,7 @@
 <?
 // Minimized versions of Javascript & CSS files (see http://refresh-sf.com/yui/)
 $minimize=FALSE;
-// $minimize=TRUE;
+$minimize=TRUE;
 if ($minimize) {
 	$js='.min.js';
 	$css='.min.css';
@@ -67,7 +67,7 @@ $isForm=has_string('form',$show_type);
 	<? endif; ?>
 	<? if ($isForm): ?>
 		<!-- form Scripts -->
-		<script language="javascript" type="text/javascript" src="sys/jquery/ui/i18n/ui.datepicker-nl<?=$js?>"></script>
+		<script language="javascript" type="text/javascript" src="sys/jquery/ui/i18n/ui.datepicker-nl.js"></script>
 		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/timepicker/jquery.ui.timepicker<?=$js?>"></script>
 		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/form/jquery.form<?=$js?>"></script>
 		<? if ($show_editor): ?>
