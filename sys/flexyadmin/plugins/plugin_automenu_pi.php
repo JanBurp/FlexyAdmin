@@ -82,22 +82,33 @@ class plugin_automenu extends plugin_ {
 		
 				case 'from category table':
 					$data=$this->CI->db->get_result($autoValue['table']);
-					$self_parent=0;
+					$self_parents=array();
 					if (!empty($autoValue['str_parent_uri'])) {
-						// zoek bijpassende self_parent
-						$this->CI->db->select('id');
-						$this->CI->db->where('uri',$autoValue['str_parent_uri']);
-						$parentItem=$this->CI->db->get_row($this->resultMenu);
-						if ($parentItem) $self_parent=$parentItem['id'];
+						// On multiple places?
+						if (strpos($autoValue['str_parent_uri'],'/*')!==false) {
+							$topUri=str_replace('/*','',$autoValue['str_parent_uri']);
+							$this->CI->db->select('id');
+							$this->CI->db->where('uri',$topUri);
+							$self_parent=$this->CI->db->get_row($this->resultMenu);
+							$self_parent=$self_parent['id'];
+							$this->CI->db->where('self_parent',$self_parent);
+						}
+						else
+							$this->CI->db->where('uri',$autoValue['str_parent_uri']);
+						$this->CI->db->select('id,uri,self_parent');
+						$parentItems=$this->CI->db->get_result($this->resultMenu);
+						$self_parents=array_keys($parentItems);
 					}
 					foreach ($data as $item) {
-						$this->_setResultMenuItem($item);
-						if (!isset($item['str_title'])) $this->CI->db->set('str_title',$item['uri']);
-						$this->CI->db->set('order',$lastOrder++);
-						$this->CI->db->set('self_parent',$self_parent);
-						if ($this->CI->db->field_exists('str_table',$this->resultMenu))	$this->CI->db->set('str_table',$autoValue['table']);
-						if ($this->CI->db->field_exists('str_uri',$this->resultMenu))	$this->CI->db->set('str_uri',$item['uri']);
-						$this->CI->db->insert($this->resultMenu);
+						foreach ($self_parents as $self_parent) {
+							$this->_setResultMenuItem($item);
+							// if (!isset($item['str_title'])) $this->CI->db->set('str_title',$item['uri']);
+							$this->CI->db->set('order',$lastOrder++);
+							$this->CI->db->set('self_parent',$self_parent);
+							if ($this->CI->db->field_exists('str_table',$this->resultMenu))	$this->CI->db->set('str_table',$autoValue['table']);
+							if ($this->CI->db->field_exists('str_uri',$this->resultMenu))	$this->CI->db->set('str_uri',$item['uri']);
+							$this->CI->db->insert($this->resultMenu);
+						}
 					}
 					break;
 		
