@@ -72,6 +72,14 @@ class MY_URI extends CI_URI {
 		return $u;
 	}
 
+	function get_to($s=0) {
+		$u=explode('/',$this->_uri_string());
+		$u=array_slice($u,0,$s+1);
+		$u=implode('/',$u);
+		return $u;
+	}
+
+
 }
 
 ?>
