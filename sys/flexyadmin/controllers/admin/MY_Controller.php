@@ -560,10 +560,10 @@ class BasicController extends MY_Controller {
 		}
 	}
 	
-	function _after_update($table,$id,$oldData=NULL,$newData=NULL) {
+	function _after_update($table,$id='',$oldData=NULL,$newData=NULL) {
 		// clean up many and foreign fields in data
-		$oldData=$this->_clean_plugin_data($oldData);
-		$newData=$this->_clean_plugin_data($newData);
+		if (isset($oldData)) $oldData=$this->_clean_plugin_data($oldData);
+		if (isset($newData)) $newData=$this->_clean_plugin_data($newData);
 		// Call all plugins
 		foreach ($this->plugins as $plugin) {
 			if (method_exists($this->$plugin,'_after_update')) {

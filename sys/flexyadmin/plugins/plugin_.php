@@ -34,7 +34,8 @@ class plugin_ {
 		$this->id=$init['id'];
 		$this->oldData=$init['oldData'];
 		$this->newData=$init['newData'];
-		$this->fields=array_keys($this->oldData);
+		$this->fields=array();
+		if (isset($this->oldData)) $this->fields=array_keys($this->oldData);
 		foreach ($this->fields as $field) {
 			$this->types[]=get_prefix($field);
 		}
