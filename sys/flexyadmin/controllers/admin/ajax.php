@@ -67,6 +67,7 @@ class Ajax extends BasicController {
 				if ($ids) {
 					$this->load->model("order");
 					$this->order->set_all($table,$ids);
+					$this->_after_update($table);
 					$result='';
 				}
 				else {
