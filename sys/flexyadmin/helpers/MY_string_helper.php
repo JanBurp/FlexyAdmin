@@ -123,9 +123,8 @@ function get_prefix($s,$split="_") {
 }
 
 function get_postfix($s,$split="_") {
-	$r=remove_prefix($s,$split);
-	if (strpos($r,$split)===false) return $r;
-	return get_postfix($r,$split);
+	$e=explode($split,$s);
+	return $e[count($e)-1];
 }
 
 //
