@@ -279,8 +279,9 @@ class Flexy_field extends Model {
 		$out=array();
 		$this->init_field($field,$value);
 		$class='';
-		$when=array();
+		
 		// Must field be shown?
+		$when=array();
 		if (isset($this->fieldCfg[$field]))	{
 		 	if (!$this->fieldCfg[$field]["b_show_in_form"]) {
 				return FALSE;
@@ -302,6 +303,7 @@ class Flexy_field extends Model {
 				
 			}
 		}
+		
 		// Show
 		$func=$this->_is_function();
 		if ($func!==false) {
@@ -318,7 +320,10 @@ class Flexy_field extends Model {
 			$out=$this->_standard_form_field($options,$multiOptions);
 		}
 		$out['when']=$when;
-		$out['class']=$class;
+		if (isset($out['class']))
+			$out['class'].=' '.$class;
+		else
+			$out['class']=$class;
 		// strace_($out);
 		return $out;
 	}
