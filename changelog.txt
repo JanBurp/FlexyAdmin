@@ -1,3 +1,28 @@
+>r745
+-----
+
+- updated to tinyMCE 3.2.8
+- better MY_string_helper get_postfix()
+- bug in showing wide/big editors (sinces r720)
+- bug in importing SQL (since removing license key from db)
+
+
+
+
+>r740
+-----
+
+- CodeIgniter 1.7.2 security patch for Upload class
+- updated to jQuery UI 1.8
+- other time widget (needed due to upgrade to jQuery UI 1.8)
+- some styling (needed due to upgrade to jQuery UI 1.8)
+- class sub added to menu items that have subitems
+- MY_Uri, added get_to() for getting a part of the URI
+- AutoMenu, now possible to add same categories as submenu under more menus
+
+
+
+
 r622>r723
 ---------
 
