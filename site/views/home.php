@@ -41,7 +41,7 @@
 
 	<script language="javascript" type="text/javascript" src="<?=$admin_assets?>js/nospam.js"></script>
 	<!-- <script language="javascript" type="text/javascript" src="sys/jquery/jquery-1.4.2.min.js"></script> -->
-	<!-- <script language="javascript" type="text/javascript" src="site/assetsjs/site.js"></script> -->
+	<!-- <script language="javascript" type="text/javascript" src="site/assets/js/site.js"></script> -->
 	
 	<link href="<?=$assets;?>/css/text.css" rel="stylesheet" type="text/css" />
 	<link href="<?=$assets;?>/css/layout.css" rel="stylesheet" type="text/css" />
