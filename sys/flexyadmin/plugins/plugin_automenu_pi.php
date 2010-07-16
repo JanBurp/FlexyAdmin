@@ -71,10 +71,34 @@ class plugin_automenu extends plugin_ {
 					$data=$this->CI->db->get_results($autoValue['table']);
 					foreach ($data as $item) {
 						$this->_setResultMenuItem($item,true);
+						// $this->_setResultMenuItem($item);
 						if ($this->CI->db->field_exists('str_table',$this->resultMenu))	$this->CI->db->set('str_table',$autoValue['table']);
 						if ($this->CI->db->field_exists('str_uri',$this->resultMenu))	$this->CI->db->set('str_uri',$item['uri']);
 						if (isset($item['self_parent'])) {
 							$this->CI->db->set('self_parent',$item['self_parent']);
+						}
+						$this->CI->db->insert($this->resultMenu);
+					}
+					break;
+		
+				case 'from submenu table':
+					$data=$this->CI->db->get_results($autoValue['table']);
+					if (isset($autoValue['str_parent_where'])) {
+						// $this->CI->db->select('id');
+						$this->CI->db->where($autoValue['str_parent_where']);
+						$parent=$this->CI->db->get_row($this->resultMenu);
+						$parent=$parent['id'];
+					}
+					$order=0;
+					foreach ($data as $item) {
+						$this->_setResultMenuItem($item);
+						if ($this->CI->db->field_exists('str_table',$this->resultMenu))	$this->CI->db->set('str_table',$autoValue['table']);
+						if ($this->CI->db->field_exists('str_uri',$this->resultMenu))	$this->CI->db->set('str_uri',$item['uri']);
+						if (isset($parent)) {
+							$this->CI->db->set('self_parent',$parent);
+						}
+						if (!isset($item['order'])) {
+							$this->CI->db->set('order',$order++);
 						}
 						$this->CI->db->insert($this->resultMenu);
 					}
