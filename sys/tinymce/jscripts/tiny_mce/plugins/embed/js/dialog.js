@@ -18,13 +18,18 @@ var EmbedDialog = {
 		// get the Embed list and put in as options
 		var dom = tinyMCEPopup.dom;
 		var lst = dom.get('src_list');
-		var l = tinyMCEEmbedList;
-		lst.options.length = 0;
-		if (l && l.length > 0) {
-			lst.options[lst.options.length] = new Option('', '');
-			tinymce.each(l, function(o) {
-				lst.options[lst.options.length] = new Option(o[0], o[1]);
-			});
+		if (typeof(tinyMCEEmbedList)!='undefined') {
+			var l = tinyMCEEmbedList;
+			lst.options.length = 0;
+			if (l && l.length > 0) {
+				lst.options[lst.options.length] = new Option('', '');
+				tinymce.each(l, function(o) {
+					lst.options[lst.options.length] = new Option(o[0], o[1]);
+				});
+			}
+			else {
+				dom.remove(dom.getParent('src_list', 'p'));
+			}
 		}
 		else {
 			dom.remove(dom.getParent('src_list', 'p'));
