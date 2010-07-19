@@ -56,7 +56,7 @@ class Main extends FrontEndController {
 		 * Default information & localisation
 		 */
 		$this->site['language']=$this->config->item('language');
-		setlocale(LC_ALL, $this->site['language'].'_'.$this->site['language']);
+		setlocale(LC_ALL, $this->site['language'].'_'.strtoupper($this->site['language']));
 		$this->site['uri']=$this->uri->get();
 
 		/***********************************************
