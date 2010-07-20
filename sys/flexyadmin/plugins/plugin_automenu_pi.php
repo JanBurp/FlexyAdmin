@@ -84,7 +84,7 @@ class plugin_automenu extends plugin_ {
 				case 'from submenu table':
 					$data=$this->CI->db->get_results($autoValue['table']);
 					if (isset($autoValue['str_parent_where'])) {
-						// $this->CI->db->select('id');
+						$this->CI->db->select('id');
 						$this->CI->db->where($autoValue['str_parent_where']);
 						$parent=$this->CI->db->get_row($this->resultMenu);
 						$parent=$parent['id'];
@@ -163,6 +163,12 @@ class plugin_automenu extends plugin_ {
 			
 		}
 
+		// check if all items have a title, if not, replace it with uri
+		$titleField=$this->CI->db->get_first_field($this->resultMenu);
+		$this->CI->db->where($titleField,'');
+		$this->CI->db->set($titleField,'uri',FALSE);
+		$this->CI->db->update($this->resultMenu);
+		
 		// update linklist etc
 		// $this->CI->editor_lists->create_list("links");
 	}

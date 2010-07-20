@@ -508,7 +508,7 @@ $config['ABSTRACT_field_types']			= array("varchar","int","date",'datetime','tim
 $config['ABSTRACT_field_max']				= 2;
 $config['ABSTRACT_field_split']			= " | ";
 
-$config['URI_field_pre_types']			= array("str","url","img","dat","tme",'time',"int");
+$config['URI_field_pre_types']			= array("str","url","dat","date","datetime","tme",'time',"int","media");
 
 
 
