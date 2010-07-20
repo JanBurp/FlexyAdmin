@@ -94,7 +94,7 @@ class plugin_automenu extends plugin_ {
 						$this->CI->db->where('self_parent',$parent);
 						$this->CI->db->order_by('order','DESC');
 						$order=$this->CI->db->get_row($this->resultMenu);
-						$order=$order['order'];
+						$order=$order['order']+1;
 					}
 					foreach ($data as $item) {
 						$this->_setResultMenuItem($item);
