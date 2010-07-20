@@ -83,13 +83,19 @@ class plugin_automenu extends plugin_ {
 		
 				case 'from submenu table':
 					$data=$this->CI->db->get_results($autoValue['table']);
+					$order=0;
 					if (isset($autoValue['str_parent_where'])) {
 						$this->CI->db->select('id');
 						$this->CI->db->where($autoValue['str_parent_where']);
 						$parent=$this->CI->db->get_row($this->resultMenu);
 						$parent=$parent['id'];
+						// order?
+						$this->CI->db->select('order');
+						$this->CI->db->where('self_parent',$parent);
+						$this->CI->db->order_by('order','DESC');
+						$order=$this->CI->db->get_row($this->resultMenu);
+						$order=$order['order'];
 					}
-					$order=0;
 					foreach ($data as $item) {
 						$this->_setResultMenuItem($item);
 						if ($this->CI->db->field_exists('str_table',$this->resultMenu))	$this->CI->db->set('str_table',$autoValue['table']);
