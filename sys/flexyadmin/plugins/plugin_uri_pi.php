@@ -62,7 +62,11 @@ class plugin_uri extends plugin_ {
 			$uri_source=$this->newData['id'];
 		// trace_($this->newData);
 		// trace_($uri_source);
-		if (empty($uri) or !($this->CI->cfg->get('CFG_table',$this->table,'b_freeze_uris')) ) {
+		$createUri=true;
+		if ($this->CI->cfg->get('CFG_table',$this->table,'b_freeze_uris')) $createUri=false;
+		if (isset($this->newData['b_freeze_uri']) and $this->newData['b_freeze_uri']) $createUri=false;
+		if (empty($uri)) $createUri=true;
+		if ($createUri) {
 			static $counter=1;
 			$uri=strtolower($uri_source);
 			$uri=strip_tags($uri);
