@@ -84,7 +84,7 @@ class plugin_automenu extends plugin_ {
 				case 'from submenu table':
 					$data=$this->CI->db->get_results($autoValue['table']);
 					$order=0;
-					if (isset($autoValue['str_parent_where'])) {
+					if (!empty($autoValue['str_parent_where'])) {
 						$this->CI->db->select('id');
 						$this->CI->db->where($autoValue['str_parent_where']);
 						$parent=$this->CI->db->get_row($this->resultMenu);
@@ -102,6 +102,9 @@ class plugin_automenu extends plugin_ {
 						if ($this->CI->db->field_exists('str_uri',$this->resultMenu))	$this->CI->db->set('str_uri',$item['uri']);
 						if (isset($parent)) {
 							$this->CI->db->set('self_parent',$parent);
+						}
+						elseif (isset($item['self_parent'])) {
+							$this->CI->db->set('self_parent',$item['self_parent']);
 						}
 						if (!isset($item['order'])) {
 							$this->CI->db->set('order',$order++);
