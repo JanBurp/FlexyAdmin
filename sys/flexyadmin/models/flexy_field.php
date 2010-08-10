@@ -794,13 +794,14 @@ class Flexy_field extends Model {
 
 			if (el('b_dragndrop',$info)) {
 				$options=sort_by($files,$order,$desc);
+				if ($this->cfg->get('CFG_media_info',$path,'b_add_empty_choice') and ($this->pre!='medias'))	array_unshift($options,'');
 			}
 			else {
 				$lastUploadMax=$this->cfg->get('CFG_media_info',$path,'int_last_uploads');
 				$lastUploads=array_slice(sort_by($files,"rawdate",TRUE),0,$lastUploadMax);
 				ignorecase_ksort($files);
 				$options=array();
-				// $options[]="";
+				if ($this->cfg->get('CFG_media_info',$path,'b_add_empty_choice')) $options[]="";
 				$optionsLast=$this->_create_media_options($lastUploads,$types);
 				if (!empty($optionsLast)) $options[langp("form_dropdown_sort_on_last_upload",$lastUploadMax)]=$optionsLast;
 				$optionsNames=$this->_create_media_options($files,$types);
