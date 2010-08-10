@@ -42,22 +42,17 @@ class Edit extends AdminController {
 	 * Database edit controller
 	 */
 
-	function confirm() {//}$table="",$id="",$confirmed="") {
-		$args=$this->uri->uri_to_assoc();
-		$table=el('confirm',$args);
-		$tableId=explode(':',$table);
-		$table=el(0,$tableId);
-		$ids=array_slice($tableId,1);
-		$info=el('info',$args);
-		$confirmed=el('confirmed',$args);
-
+	function confirm($table,$info='') {
+		$confirmed=$this->input->post('confirm');
+		$ids=$this->input->post('items');
+		$ids=explode(':',$ids);
 		if (!empty($table) and (!empty($ids)) and !empty($confirmed) and $this->db->table_exists($table)	) {
-			if ($confirmed=="confirm") {
+			if ($confirmed=="confirmed") {
 				$this->session->set_userdata("confirmed",true);
 				$this->delete($table,$ids,$info);
 			}
 			else {
-				$this->set_message("Not confirmed... ".anchor(api_uri('API_confirm',$table,$id,"confirm"),"confirm"));
+				$this->set_message("Not confirmed... ".anchor(api_uri('API_confirm',$table),"confirm"));
 				redirect(api_uri('API_view_grid',$table));
 			}
 		}

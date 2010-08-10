@@ -53,10 +53,12 @@ $(document).ready(function() {
 //
 function confirm_dialog(uri,name,id) {
 	showName='';
-	for (x in name) {
-		showName+=" + '"+name[x]+"'";
+	if (name.length>1)
+		showName+=langp('dialog_delete_more',name.length);
+	else {
+		for (x in name) {showName+=" + '"+name[x]+"'";}
+		showName=showName.substr(3);
 	}
-	showName=showName.substr(3);
 	dialog.html(langp("dialog_delete_sure",showName));
 	$(dialog).dialog({
 		title:lang("dialog_title_confirm"),
@@ -66,11 +68,11 @@ function confirm_dialog(uri,name,id) {
 								yes			: function(){
 														$('.ui-dialog .ui-dialog-buttonpane').add('.ui-dialog a').hide();
 														$('.ui-dialog .ui-dialog-content').append("<img src='"+site_url("sys/flexyadmin/assets/icons/wait.gif")+"' align='right' />");
-														for(x in id) {
-															uri+=':'+id[x];
-														}
-														// console.log(uri);
-														location.replace(uri+"/confirmed/confirm");
+														var value='';
+														for(x in id) {value+=':'+id[x];}
+														value=value.substr(1);
+														$('.ui-dialog .ui-dialog-content').append('<form method="POST" id="confirmform" action="'+uri+'"><input type="hidden" name="items" value="'+value+'" /><input name="confirm" value="confirmed" type="hidden" /></form>');
+														$('#confirmform').submit();
 													}
 						 }),
 		close: function(){$(dialog).dialog("destroy");}
