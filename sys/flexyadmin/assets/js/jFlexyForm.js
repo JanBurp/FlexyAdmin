@@ -72,6 +72,7 @@ function doForm() {
 	$("form input.date").datepicker({ dateFormat: 'yy-mm-dd' });
 	$("form input.time").timepicker({ hourCols:6, minDivision:5, hourCaption:lang('ui-timepicker-choose-hours'), minuteCaption:lang('ui-timepicker-choose-minutes'), closeOnFormclick: true });
 
+
 	//
 	// Password create button
 	//
@@ -210,6 +211,14 @@ function doForm() {
 				$(this).parent('.form_field').children('input:first').attr('value',value);
 			}
 		}
+	});
+
+	// handle empty images with drag n drop
+	$('form').submit(function(){
+		$('form .image_dragndrop input').each(function(){
+			var value=$(this).attr('value');
+			if (value=='flexyadmin_empty_image.gif') $(this).attr('value','');
+		});
 	});
 
 

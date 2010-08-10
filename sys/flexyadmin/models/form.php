@@ -633,6 +633,7 @@ class Form Extends Model {
 				if ($field["type"]=="image_dropdown" or $field["type"]=="image_dragndrop") {
 					// show values
 					if (!is_array($value)) $medias=array($value); else $medias=$value;
+					// if (empty($medias)) $medias=$this->config->item('ADMINASSETS').'icons/empty.gif';
 					$out.='<ul class="values '.$attr['class'].'">';
 					$hiddenValue='';
 					foreach($medias as $media) {
@@ -655,12 +656,15 @@ class Form Extends Model {
 				//
 				if ($field["type"]=="image_dragndrop") {
 					$preName=get_prefix($field['name']);
-					// $out.=div('buttons').icon('up').icon('delete')._div();
 					$out.='<ul class="choices">';
 					foreach($options as $img) {
-						$image=$img['name'];
-						if ($preName=='media' or !in_array($image,$medias))
-							$out.='<li>'.show_thumb(array("src"=>$field["path"]."/".$image,"class"=>"media",'alt'=>$image)).'</li>';
+						if (empty($img)) {
+							$out.='<li><img src="'.$this->config->item('ADMINASSETS').'icons/flexyadmin_empty_image.gif" class="media empty" /></li>';
+						}
+						else {
+							$image=$img['name'];
+							if ($preName=='media' or !in_array($image,$medias)) $out.='<li>'.show_thumb(array("src"=>$field["path"]."/".$image,"class"=>"media",'alt'=>$image)).'</li>';
+						}
 					}
 					$out.='</ul>';					
 				}

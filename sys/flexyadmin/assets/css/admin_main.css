@@ -602,7 +602,8 @@ table.grid th.hiddenCell * {
 .xsmall 				{ margin:0px; font-size:.7em; padding:0px; }
 .weekend				{ font-weight:bold; }
 
-img.zoom 				{ border:1px solid #DEA; cursor:pointer; }
+img.zoom,
+img.empty				{ border:1px solid #DEA; cursor:pointer; }
 img.zoom:hover	{ border-color:#696; }
 
 /* =============== Graph ===================== */
