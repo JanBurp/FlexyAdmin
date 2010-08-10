@@ -208,20 +208,35 @@ class Filemanager extends AdminController {
 	 * FileManager controller
 	 */
 
-	function confirm($files="",$confirmed="") {
+	// function confirm($files="",$confirmed="") {
+	// 	if ($confirmed=="confirmed") {
+	// 		$this->session->set_userdata("confirmed",true);
+	// 		$this->delete($files);
+	// 	}
+	// 	else {
+	// 		$this->set_message("Not confirmed... ".anchor(api_uri('API_filemanager_confirm',$file,"confirm"),"confirm"));
+	// 		redirect(api_uri('API_filemanager_view',$files));
+	// 	}
+	// }
+
+	function confirm($path='') {
+		$confirmed=$this->input->post('confirm');
+		$files=$this->input->post('items');
 		if ($confirmed=="confirmed") {
 			$this->session->set_userdata("confirmed",true);
-			$this->delete($files);
+			$this->delete($path,$files);
 		}
 		else {
-			$this->set_message("Not confirmed... ".anchor(api_uri('API_filemanager_confirm',$file,"confirm"),"confirm"));
-			redirect(api_uri('API_filemanager_view',$files));
+			$this->set_message("Not confirmed... ".anchor(api_uri('API_filemanager_confirm'),"confirm"));
+			redirect(api_uri('API_filemanager_view'));
 		}
 	}
 
-	function delete($files="") {
+
+
+	function delete($path,$files="") {
 		$files=explode(':',$files);
-		$path=array_shift($files);
+		// $path=array_shift($files);
 		$path=pathdecode($path);
 		if (!empty($path) and !empty($files)) {
 			$confirmed=$this->session->userdata("confirmed");

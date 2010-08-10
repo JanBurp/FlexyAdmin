@@ -5,7 +5,10 @@
  *
  * Author: http://www.chilipepperdesign.com
  * Based on the Example Plugin
- * 
+ *
+ * Changes by Jan den Besten 2010 - http://www.flexyadmin.com
+ *
+ *
  * Copyright 2009, Moxiecode Systems AB
  * Released under LGPL License.
  *
