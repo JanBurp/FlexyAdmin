@@ -89,26 +89,25 @@ class plugin_automenu extends plugin_ {
 						$this->CI->db->where($autoValue['str_parent_where']);
 						$parent=$this->CI->db->get_row($this->resultMenu);
 						$parent=$parent['id'];
-						// order?
-						$this->CI->db->select('order');
-						$this->CI->db->where('self_parent',$parent);
-						$this->CI->db->order_by('order','DESC');
-						$order=$this->CI->db->get_row($this->resultMenu);
-						$order=$order['order']+1;
 					}
+					// order?
+					$this->CI->db->select('order');
+					$this->CI->db->where('self_parent',$parent);
+					$this->CI->db->order_by('order','DESC');
+					$order=$this->CI->db->get_row($this->resultMenu);
+					$order=$order['order']+1;
 					foreach ($data as $item) {
 						$this->_setResultMenuItem($item);
 						if ($this->CI->db->field_exists('str_table',$this->resultMenu))	$this->CI->db->set('str_table',$autoValue['table']);
 						if ($this->CI->db->field_exists('str_uri',$this->resultMenu))	$this->CI->db->set('str_uri',$item['uri']);
-						if (isset($parent)) {
+						if (isset($parent))
 							$this->CI->db->set('self_parent',$parent);
-						}
-						elseif (isset($item['self_parent'])) {
+						elseif (isset($item['self_parent']))
 							$this->CI->db->set('self_parent',$item['self_parent']);
-						}
-						if (!isset($item['order'])) {
+						if (!isset($item['order']))
 							$this->CI->db->set('order',$order++);
-						}
+						else
+							$this->CI->db->set('order',$item['order']);
 						$this->CI->db->insert($this->resultMenu);
 					}
 					break;
