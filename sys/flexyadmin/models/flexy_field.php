@@ -356,7 +356,7 @@ class Flexy_field extends Model {
 			}
 			else {
 				// add a 'new' item button
-				$out["button"]=api_uri('API_view_form',foreign_table_from_key($this->field),-1);
+				$out["button"]=api_uri('API_view_form',foreign_table_from_key($this->field).':-1');
 			}
 			if (!empty($multiOptions)) $out["multiple"]="multiple";
 		}
