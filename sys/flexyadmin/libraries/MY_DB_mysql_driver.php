@@ -529,10 +529,13 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			$manyTables=$this->get_many_tables($table,$this->many);
 			if (count($manyTables)>0) {
 				// loop through all results to add the add_many data
+				$CI=& get_instance();
+				$manyOrder=$CI->cfg->get('CFG_table',$table,'str_form_many_order');
 				foreach($result as $id=>$row) {
-					// loop throught all many tabels to add the many data
+					$manyResult=array();
+					// loop throught all many tables to add the many data
 					foreach($manyTables as $rel=>$jTable) {
-						$result[$id][$rel]=array();
+						$manyResult[$rel]=array();
 						$rel=$jTable["rel"];
 						$join=rtrim($jTable["join"],'_');
 						if ($this->abstracts) {
@@ -545,14 +548,26 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 						$this->order_by($rel.'.id');
 						$query=$this->get();
 						$resultArray=$query->result_array();
-						// if (!empty($resultArray)) {
-						// 	trace_($jTable);
-						// 	trace_($resultArray);
-						// }
 						foreach($resultArray as $res) {
-							$result[$id][$rel][$res[pk()]]=$res;
+							$manyResult[$rel][$res[pk()]]=$res;
 						}
-						// trace_($this->last_query());
+					}
+					switch ($manyOrder) {
+						case 'first':
+							// always first: id, uri, order, self_parent
+							$firstResult=$result[$id];
+							$lastResult=$result[$id];
+							unset($lastResult[pk()]);
+							unset($lastResult['uri']);
+							unset($lastResult['order']);
+							unset($lastResult['self_parent']);
+							$firstResult=array_diff_assoc($firstResult,$lastResult);
+							$result[$id]=array_merge($firstResult,$manyResult,$lastResult); // first many fields
+							break;
+						case 'last':
+						default:
+							$result[$id]=array_merge($result[$id],$manyResult); // normal order
+							break;
 					}
 				}
 			}
