@@ -395,6 +395,17 @@ $config["CFG_"]=array(
 			"str_validation_rules"=>'',
 			"txt_help"=>''
 			),
+		"cfg_table_info.str_form_many_order"=>array(
+			"field"=>'cfg_table_info.str_form_many_order',
+			"str_ui_name"=>'',
+			"b_show_in_grid"=>'1',
+			"b_show_in_form"=>'1',
+			"str_options"=>'first|last',
+			"b_multi_options"=>'0',
+			"str_overrule_prefix"=>'',
+			"str_validation_rules"=>'',
+			"txt_help"=>''
+			),
 		"cfg_media_info.str_order"=>array(
 			"field"=>'cfg_media_info.str_order',
 			"str_ui_name"=>'',

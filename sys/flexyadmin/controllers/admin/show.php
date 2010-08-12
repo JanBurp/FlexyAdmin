@@ -125,7 +125,7 @@ class Show extends AdminController {
 						$data=$this->db->get_result($table);
 
 						// trace_('#show#'.$this->db->last_query());
-						// trace_($data);
+						// strace_($data);
 
 						if (empty($data)) {
 							/**
@@ -247,7 +247,7 @@ class Show extends AdminController {
 				}
 				$data=$this->db->get_result($table);
 				// trace_('#show#'.$this->db->last_query());
-				// trace_($data);
+				// strace_($data);
 				$options=el("options",$data);
 				$multiOptions=el("multi_options",$data);
 				$data=current($data);
