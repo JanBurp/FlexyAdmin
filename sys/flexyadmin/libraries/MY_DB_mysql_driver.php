@@ -538,8 +538,9 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			$manyTables=$this->get_many_tables($table,$this->many);
 			if (count($manyTables)>0) {
 				// loop through all results to add the add_many data
+				$manyOrder='last';
 				$CI=& get_instance();
-				$manyOrder=$CI->cfg->get('CFG_table',$table,'str_form_many_order');
+				if (isset($CI->cfg)) $manyOrder=$CI->cfg->get('CFG_table',$table,'str_form_many_order');
 				foreach($result as $id=>$row) {
 					$manyResult=array();
 					// loop throught all many tables to add the many data
@@ -822,16 +823,18 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			if (empty($tables) or !is_array($tables)) {
 				// list all tables with right name
 				$like=$CI->config->item('REL_table_prefix')."_".remove_prefix($table).$CI->config->item('REL_table_split');
-				// first table with info (for order)
-				$tablesWithInfo=$CI->cfg->get('CFG_table');
-				$tablesWithInfo=array_keys($tablesWithInfo);
-				$tablesWithInfo=filter_by($tablesWithInfo,$like);
-				if (!empty($tablesWithInfo)) $tablesWithInfo=combine($tablesWithInfo,$tablesWithInfo);
+				if (isset($CI->cfg)) {
+					// first table with info (for order)
+					$tablesWithInfo=$CI->cfg->get('CFG_table');
+					$tablesWithInfo=array_keys($tablesWithInfo);
+					$tablesWithInfo=filter_by($tablesWithInfo,$like);
+					if (!empty($tablesWithInfo)) $tablesWithInfo=combine($tablesWithInfo,$tablesWithInfo);
+				}
 				// add tables with no info
 				$tables=$this->list_tables();
 				$tables=filter_by($tables,$like);
 				if (!empty($tables)) $tables=combine($tables,$tables);
-				if (!empty($tablesWithInfo)) $tables=array_merge($tablesWithInfo,$tables);
+				if (isset($tablesWithInfo) and !empty($tablesWithInfo)) $tables=array_merge($tablesWithInfo,$tables);
 			}
 			foreach ($tables as $rel) {
 				$relFields=$this->list_fields($rel);
