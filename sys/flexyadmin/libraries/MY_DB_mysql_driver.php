@@ -315,31 +315,40 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			foreach($manyTables as $mTable) {
 				$jTable=$mTable["join"];
 				$relTable=$mTable['rel'];
-				// trace_($relTable);
+				// trace_($mTable);
 				// WHERE
-				$foundKeysArray=array_ereg_search($jTable, $this->ar_where);
+				$foundKeysArray=array_ereg_search($mTable['id_join'], $this->ar_where);
+				// trace_($this->ar_where);
 				// trace_($foundKeysArray);
 				foreach($foundKeysArray as $key) {
 					$manyWhere=TRUE;
 					$mWhere=$this->ar_where[$key];
+					// trace_($mWhere);
 					$AndOr=trim(substr($mWhere,0,3));
-					if (!in_array($AndOr,array("AND","OR"))) $mWhere=" AND ".$mWhere;
+					if (!in_array($AndOr,array("AND","OR"))) {
+						$AndOr='';
+						$mWhere=" AND ".$mWhere;
+					}
+					else {
+						$AndOr.=' ';
+					}
 					$sql="SELECT ".$mTable["rel"].".".$mTable["id_this"]." AS id  
 								FROM ".$mTable["rel"].",".trim($mTable["join"],'_')." 
 								WHERE ".$mTable["rel"].".".$mTable["id_join"]."=".trim($mTable["join"],'_').".id ".$mWhere;
 					$query=$this->query($sql);
 					$manyResults=$query->result_array();
-					// remove current where and add new 'WHERE IN' to active record which selects the id where the many field is right
-					unset($this->ar_where[$key]);
-					// add WHERE IN statement
-					$whereIn=array();
+					// replace current where and add new 'WHERE IN' to active record which selects the id where the many field is right
 					if (!empty($manyResults)) {
-						foreach($manyResults as $r) {
-							$whereIn[]=$r["id"];
-						}
-						$this->where_in($mTable["this"].".".$this->pk,$whereIn);
+						$whereIn='';
+						foreach($manyResults as $r) { $whereIn=add_string($whereIn,$r["id"],',');	}
+						// $this->where_in($mTable["this"].".".$this->pk,$whereIn);
+						$this->ar_where[$key]=$AndOr.$mTable["this"].".".$this->pk.' IN ('.$whereIn.')';
+					}
+					else {
+						$this->ar_where[$key]='FALSE';
 					}
 				}
+				// trace_($this->ar_where);
 				// LIKE
 				$foundKeysArray=array_ereg_search($jTable, $this->ar_like);
 				foreach($foundKeysArray as $key) {
