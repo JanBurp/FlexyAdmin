@@ -802,12 +802,12 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				$tablesWithInfo=$CI->cfg->get('CFG_table');
 				$tablesWithInfo=array_keys($tablesWithInfo);
 				$tablesWithInfo=filter_by($tablesWithInfo,$like);
-				$tablesWithInfo=combine($tablesWithInfo,$tablesWithInfo);
+				if (!empty($tablesWithInfo)) $tablesWithInfo=combine($tablesWithInfo,$tablesWithInfo);
 				// add tables with no info
 				$tables=$this->list_tables();
 				$tables=filter_by($tables,$like);
-				$tables=combine($tables,$tables);
-				$tables=array_merge($tablesWithInfo,$tables);
+				if (!empty($tables)) $tables=combine($tables,$tables);
+				if (!empty($tablesWithInfo)) $tables=array_merge($tablesWithInfo,$tables);
 			}
 			foreach ($tables as $rel) {
 				$relFields=$this->list_fields($rel);

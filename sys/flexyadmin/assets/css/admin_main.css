@@ -339,14 +339,14 @@ div.add_button {
 	height:20px;
 }
 .multiple div.add_button {
-	margin-top:153px;
+/*	margin-top:153px;*/
 }
 .icon.add {
 	background-image: url("../icons/addfile.gif");
 	background-repeat: no-repeat;
 	}
 .multiple .icon.add {
-	margin-top:-154px;
+/*	margin-top:-154px;*/
 }
 .icon.list {
 	background-image: url("../icons/list.gif");
