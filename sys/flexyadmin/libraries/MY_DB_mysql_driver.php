@@ -898,7 +898,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			if (isset($manyTables)) {
 				$CI=&get_instance();
 				foreach ($manyTables as $rel => $jTable) {
-					$optionsWhere=$CI->cfg->get('CFG_table',$jTable["rel"],'str_options_where');
+					$optionsWhere=$CI->cfg->get('CFG_table',$jTable["join"],'str_options_where');
 					$options[$rel]=$this->get_options($jTable["join"],$optionsWhere);
 				}
 			}
