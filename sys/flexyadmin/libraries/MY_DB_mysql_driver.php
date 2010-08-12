@@ -798,8 +798,16 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			if (empty($tables) or !is_array($tables)) {
 				// list all tables with right name
 				$like=$CI->config->item('REL_table_prefix')."_".remove_prefix($table).$CI->config->item('REL_table_split');
-				$tables = $this->list_tables();
-				$tables = filter_by($tables,$like);
+				// first table with info (for order)
+				$tablesWithInfo=$CI->cfg->get('CFG_table');
+				$tablesWithInfo=array_keys($tablesWithInfo);
+				$tablesWithInfo=filter_by($tablesWithInfo,$like);
+				$tablesWithInfo=combine($tablesWithInfo,$tablesWithInfo);
+				// add tables with no info
+				$tables=$this->list_tables();
+				$tables=filter_by($tables,$like);
+				$tables=combine($tables,$tables);
+				$tables=array_merge($tablesWithInfo,$tables);
 			}
 			foreach ($tables as $rel) {
 				$relFields=$this->list_fields($rel);
