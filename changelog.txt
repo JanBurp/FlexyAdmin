@@ -1,3 +1,32 @@
+>766
+----
+
+BUGS:
+- small bugs in automenu
+- dropdown field, add button, didn't work anymore
+- db->where works now better for many options
+NEW:
+- dropdown table options, also works now on many options
+- possible to set many dropdowns to top instead of bottom
+- added sql for standard newsletter table
+
+
+
+>r758
+-----
+
+BUGS:
+- bug if multiple deleting of items/files.
+- bug in tinyMCE embed plugin, showed allways the list, even if there's not any
+- typobug in home.php, js loading adres.
+- typobug in frontend controller for localisation
+- some other styling bugs in frontend demo
+NEW:
+- new option for media pulldowns: add an empty choice (needs: db/update_r756.sql)
+- it's now possible to freeze individual uri's (needs: b_freeze_uri in same table as uri)
+- added some standard sql files to add extra functionality (ie rss_feeds etc)
+
+
 >r745
 -----
 
@@ -5,7 +34,6 @@
 - better MY_string_helper get_postfix()
 - bug in showing wide/big editors (sinces r720)
 - bug in importing SQL (since removing license key from db)
-
 
 
 
@@ -26,7 +54,6 @@
 r622>r723
 ---------
 
-
 BUGS/CHANGES:
 - some styling (table, thumbs, hoverthumbs etc.)
 - some bugs (DB import,editor list order)
@@ -45,4 +72,3 @@ NEW:
 - ordering of drag'n'drop images possible
 - show a field in a form optionally
 - automatic validation of formfields (info from DB)
-
