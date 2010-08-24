@@ -24,6 +24,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	var $options;
 	var $whereUri;
 	var $uriAsFullUri;
+	var $extraFullField;
 	var $orderAsTree;
 	var $ar_dont_select;
 	var $selectFirst;
@@ -173,8 +174,9 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		$this->orderAsTree=$orderAsTree;
 	}
 
-	function uri_as_full_uri($fullUri=TRUE) {
+	function uri_as_full_uri($fullUri=TRUE,$extraFullField='') {
 		$this->uriAsFullUri=$fullUri;
+		$this->extraFullField=$extraFullField;
 	}
 
 	/**
@@ -422,11 +424,12 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		return $query;
 	}
 	
-	function get_parent_uri($table,$uri="") {
+	function get_parent_uri($table,$uri="",$field='') {
 		if (!empty($uri))	$id=$this->get_field_where($table,"id","uri",$uri);
 		$this->order_as_tree();
 		$this->uri_as_full_uri();
 		$this->select("id,order,uri,self_parent");
+		if (!empty($field)) $this->select($field);
 		$result=$this->get_result($table);
 		if (!empty($uri))
 			return $result[$id];
@@ -440,6 +443,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	function get_result($table,$limit=0,$offset=0) {
 		$orderAsTree=$this->orderAsTree;
 		$fullUri=$this->uriAsFullUri;
+		$extraFullField=$this->extraFullField;
 		
 		$result=$this->_get_result($table,$limit,$offset);
 		// order results if asked for
@@ -466,7 +470,19 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 					}
 					else {
 						$parentUri=$this->get_parent_uri($table,$uri);
-						$result[$key]["uri"]=$parentUri."/".$uri;
+						$result[$key]["uri"]=$parentUri['uri']."/".$uri;
+					}
+					if (!empty($extraFullField)) {
+						$extra=$row[$extraFullField];
+						if (isset($result[$row["self_parent"]])) {
+							$parentExtra=$result[$row["self_parent"]][$extraFullField];
+							$result[$key][$extraFullField]=$parentExtra." / ".$extra;
+						}
+						else {
+							$parentExtra=$this->get_parent_uri($table,$uri,$extraFullField);
+							$result[$key][$extraFullField]=$parentExtra[$extraFullField]." / ".$extra;
+						}
+						
 					}
 				}
 			}

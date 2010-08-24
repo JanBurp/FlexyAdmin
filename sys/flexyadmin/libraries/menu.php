@@ -308,6 +308,13 @@ class Menu {
 		$this->itemControls=$controls;
 	}
 
+	
+	function render_branch($branchUri,$attr="",$level=1,$preUri="") {
+		$preUri=add_string($preUri,$branchUri,'/');
+		$branch=$this->menu[$branchUri]['sub'];
+		return $this->render($branch,$attr,$level,$preUri);
+	}
+
 	function render($menu=NULL,$attr="",$level=1,$preUri="") {
 		if (empty($attr)) $attr=$this->attr;
 		if (!is_array($attr)) $attr=array("class"=>$attr);

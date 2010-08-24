@@ -45,6 +45,10 @@ class plugin_links extends plugin_ {
 			if (!in_array($field,$this->actOn['changedFields']['value']) and !in_array($pre,$this->actOn['changedTypes']['value'])) unset($changedFields[$field]);
 		}
 		
+		$languages=$this->CI->config->item('LANGUAGES');
+		$languagesRegex=implode('/|',$languages).'/|';
+		$languagesRegex=str_replace('/','\/',$languagesRegex);
+
 		// loop through all changed fields
 		foreach ($changedFields as $field => $value) {
 			$oldUrl=$this->oldData[$field];
@@ -68,11 +72,13 @@ class plugin_links extends plugin_ {
 									$txt=$row[$field];
 									if (empty($newUrl)) {
 										// remove
-										$pattern='/<a(.*?)href="'.str_replace("/","\/",$oldUrl).'"(.*?)>(.*?)<\/a>/';
-										$txt=preg_replace($pattern,'\\3',$txt);
+										$pattern='/<a(.*?)href="('.$languagesRegex.')'.str_replace("/","\/",$oldUrl).'"(.*?)>(.*?)<\/a>/';
+										$txt=preg_replace($pattern,'$4',$txt);
 									}
 									else {
-										$txt=str_replace("href=\"$oldUrl","href=\"$newUrl",$txt);
+										// replace
+										$pattern='/<a(.*?)href="('.$languagesRegex.')'.str_replace("/","\/",$oldUrl).'"(.*?)>(.*?)<\/a>/';
+										$txt=preg_replace($pattern,'<a$1href="$2'.$newUrl.'"$3>$4</a>',$txt);
 									}
 									$res=$this->CI->db->update($table,array($field=>$txt),"id = $thisId");
 								}

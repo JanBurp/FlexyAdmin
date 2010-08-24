@@ -29,6 +29,7 @@
 
 $config['PHP_version']						= substr(phpversion(),0,1);
 $config['LOCAL']									= IS_LOCALHOST;
+$config['LANGUAGES']							= array('nl','en','de','es','fr');
 
 // Directories
 $config['SITE']										= 'site';
@@ -116,6 +117,8 @@ define("RIGHTS_ADD",4);
 define("RIGHTS_EDIT",2);
 define("RIGHTS_SHOW",1);
 define("RIGHTS_NO",0);
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -334,7 +337,7 @@ $config["CFG_"]=array(
 			"str_ui_name"=>'',
 			"b_show_in_grid"=>'1',
 			"b_show_in_form"=>'1',
-			"str_options"=>'from menu table|from submenu table|from category table|from table group by category',
+			"str_options"=>'from menu table|from submenu table|from category table|from table group by category|split by language',
 			"b_multi_options"=>'0',
 			"str_overrule_prefix"=>'',
 			"str_validation_rules"=>'',
