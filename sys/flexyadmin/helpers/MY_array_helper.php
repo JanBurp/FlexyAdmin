@@ -403,10 +403,15 @@ function sort_by($a,$key,$desc=FALSE) {
 }
 
 
-function find_row_by_value($a,$v) {
+function find_row_by_value($a,$v,$key='') {
 	$found=array();
 	foreach ($a as $id=>$row) {
-		if (in_array($v,$row)) $found[$id]=$row;
+		if (empty($key)) {
+			if (in_array($v,$row)) $found[$id]=$row;
+		}
+		else {
+			if (isset($row[$key]) and $row[$key]==$v) $found[$id]=$row;
+		}
 	}
 	if (empty($found)) $found=FALSE;
 	return $found;

@@ -14,6 +14,11 @@ class plugin_automenu extends plugin_ {
 	var $automationTable;
 	var $resultMenu;
 	
+	var $newMenu;
+	var $lastId;
+	var $parentIDs;
+	var $languages;
+	
 	var $automationData;
 
 	function init($init=array()) {
@@ -56,13 +61,20 @@ class plugin_automenu extends plugin_ {
 		return FALSE;
 	}
 
+	function _admin_api($args=NULL) {
+		$this->CI->_add_content(h($this->plugin,1));
+		$this->init();
+		$this->_create_auto_menu();
+	}
+	
 	
 	function _create_auto_menu() {
 		// clean current automenu and init some vars
-		$this->CI->db->truncate($this->resultMenu);
-		$lastId=-1;
 		$lastOrder=0;
-		
+		$this->newMenu=array();
+		$this->parentIDs=array();
+		$this->lastId=1;
+
 		// Loop through all options in Auto Menu
 		foreach ($this->automationData as $autoKey => $autoValue) {
 			
@@ -70,47 +82,45 @@ class plugin_automenu extends plugin_ {
 				case 'from menu table':
 					$data=$this->CI->db->get_results($autoValue['table']);
 					foreach ($data as $item) {
-						$this->_setResultMenuItem($item,true);
-						// $this->_setResultMenuItem($item);
-						if ($this->CI->db->field_exists('str_table',$this->resultMenu))	$this->CI->db->set('str_table',$autoValue['table']);
-						if ($this->CI->db->field_exists('str_uri',$this->resultMenu))	$this->CI->db->set('str_uri',$item['uri']);
-						if (isset($item['self_parent'])) {
-							$this->CI->db->set('self_parent',$item['self_parent']);
-						}
-						$this->CI->db->insert($this->resultMenu);
+						$item=$this->_setResultMenuItem($item,true);
+						$item['str_table']=$autoValue['table'];
+						$item['str_uri']=$item['uri'];
+						$this->_insertItem($item);
 					}
+					$this->_moveChildren();
 					break;
 		
-				case 'from submenu table':
-					$data=$this->CI->db->get_results($autoValue['table']);
-					$order=0;
-					if (!empty($autoValue['str_parent_where'])) {
-						$this->CI->db->select('id');
-						$this->CI->db->where($autoValue['str_parent_where']);
-						$parent=$this->CI->db->get_row($this->resultMenu);
-						$parent=$parent['id'];
-					}
-					// order?
-					$this->CI->db->select('order');
-					$this->CI->db->where('self_parent',$parent);
-					$this->CI->db->order_by('order','DESC');
-					$order=$this->CI->db->get_row($this->resultMenu);
-					$order=$order['order']+1;
-					foreach ($data as $item) {
-						$this->_setResultMenuItem($item);
-						if ($this->CI->db->field_exists('str_table',$this->resultMenu))	$this->CI->db->set('str_table',$autoValue['table']);
-						if ($this->CI->db->field_exists('str_uri',$this->resultMenu))	$this->CI->db->set('str_uri',$item['uri']);
-						if (isset($parent))
-							$this->CI->db->set('self_parent',$parent);
-						elseif (isset($item['self_parent']))
-							$this->CI->db->set('self_parent',$item['self_parent']);
-						if (!isset($item['order']))
-							$this->CI->db->set('order',$order++);
-						else
-							$this->CI->db->set('order',$item['order']);
-						$this->CI->db->insert($this->resultMenu);
-					}
-					break;
+				case 'from submenu table': // BUSY: moet nog vernieuwd
+					break; 
+					// $data=$this->CI->db->get_results($autoValue['table']);
+					// $order=0;
+					// if (!empty($autoValue['str_parent_where'])) {
+					// 	$this->CI->db->select('id');
+					// 	$this->CI->db->where($autoValue['str_parent_where']);
+					// 	$parent=$this->CI->db->get_row($this->resultMenu);
+					// 	$parent=$parent['id'];
+					// }
+					// // order?
+					// $this->CI->db->select('order');
+					// $this->CI->db->where('self_parent',$parent);
+					// $this->CI->db->order_by('order','DESC');
+					// $order=$this->CI->db->get_row($this->resultMenu);
+					// $order=$order['order']+1;
+					// foreach ($data as $item) {
+					// 	$this->_setResultMenuItem($item);
+					// 	if ($this->CI->db->field_exists('str_table',$this->resultMenu))	$this->CI->db->set('str_table',$autoValue['table']);
+					// 	if ($this->CI->db->field_exists('str_uri',$this->resultMenu))	$this->CI->db->set('str_uri',$item['uri']);
+					// 	if (isset($parent))
+					// 		$this->CI->db->set('self_parent',$parent);
+					// 	elseif (isset($item['self_parent']))
+					// 		$this->CI->db->set('self_parent',$item['self_parent']);
+					// 	if (!isset($item['order']))
+					// 		$this->CI->db->set('order',$order++);
+					// 	else
+					// 		$this->CI->db->set('order',$item['order']);
+					// 	$this->CI->db->insert($this->resultMenu);
+					// }
+					// break;
 		
 				case 'from category table':
 					$data=$this->CI->db->get_result($autoValue['table']);
@@ -119,78 +129,166 @@ class plugin_automenu extends plugin_ {
 						// On multiple places?
 						if (strpos($autoValue['str_parent_uri'],'/*')!==false) {
 							$topUri=str_replace('/*','',$autoValue['str_parent_uri']);
-							$this->CI->db->select('id');
-							$this->CI->db->where('uri',$topUri);
-							$self_parent=$this->CI->db->get_row($this->resultMenu);
-							$self_parent=$self_parent['id'];
-							$this->CI->db->where('self_parent',$self_parent);
+							$topItem=find_row_by_value($this->newMenu,$topUri,'uri');
+							$topItem=current($topItem);
+							$parentItems=find_row_by_value($this->newMenu,$topItem['id'],'self_parent');
 						}
-						else
-							$this->CI->db->where('uri',$autoValue['str_parent_uri']);
-						$this->CI->db->select('id,uri,self_parent');
-						$parentItems=$this->CI->db->get_result($this->resultMenu);
+						else {
+							$parentItems=find_row_by_value($this->newMenu,$autoValue['str_parent_uri'],'uri');
+						}
 						$self_parents=array_keys($parentItems);
 					}
-					foreach ($data as $item) {
+					foreach ($data as $key=>$item) {
 						foreach ($self_parents as $self_parent) {
-							$this->_setResultMenuItem($item);
-							// if (!isset($item['str_title'])) $this->CI->db->set('str_title',$item['uri']);
-							$this->CI->db->set('order',$lastOrder++);
-							$this->CI->db->set('self_parent',$self_parent);
-							if ($this->CI->db->field_exists('str_table',$this->resultMenu))	$this->CI->db->set('str_table',$autoValue['table']);
-							if ($this->CI->db->field_exists('str_uri',$this->resultMenu))	$this->CI->db->set('str_uri',$item['uri']);
-							$this->CI->db->insert($this->resultMenu);
+							$item=$this->_setResultMenuItem($item);
+							$item['order']=$lastOrder++;
+							$item['self_parent']=$self_parent;
+							$item['str_table']=$autoValue['table'];
+							$item['str_uri']=$item['uri'];
+							$this->_insertItem($item);
 						}
 					}
 					break;
 		
-				case 'from table group by category':
-					$groupField=remove_prefix($autoValue['field_group_by'],'.');
-					$groupTable=foreign_table_from_key($groupField);
-					$groupData=$this->CI->db->get_result($groupTable);
-					foreach ($groupData as $groupId=>$groupData) {
-						$this->CI->db->where($autoValue['field_group_by'],$groupId);
-						$data=$this->CI->db->get_result($autoValue['table']);
-						$lastOrder=0;
-						$this->CI->db->where('str_title',$groupData['str_title']);
-						$parentData=$this->CI->db->get_row($this->resultMenu);
-						$selfParent=$parentData['id'];
-						foreach ($data as $item) {
-							$this->_setResultMenuItem($item);
-							$this->CI->db->set('order',$lastOrder++);
-							$this->CI->db->set('self_parent',$selfParent);
-							if ($this->CI->db->field_exists('str_table',$this->resultMenu))	$this->CI->db->set('str_table',$autoValue['table']);
-							if ($this->CI->db->field_exists('str_uri',$this->resultMenu))	$this->CI->db->set('str_uri',$item['uri']);
-							$this->CI->db->insert($this->resultMenu);
+				case 'from table group by category': // BUSY: moet nog vernieuwd
+					break;
+					// $groupField=remove_prefix($autoValue['field_group_by'],'.');
+					// $groupTable=foreign_table_from_key($groupField);
+					// $groupData=$this->CI->db->get_result($groupTable);
+					// foreach ($groupData as $groupId=>$groupData) {
+					// 	$this->CI->db->where($autoValue['field_group_by'],$groupId);
+					// 	$data=$this->CI->db->get_result($autoValue['table']);
+					// 	$lastOrder=0;
+					// 	$this->CI->db->where('str_title',$groupData['str_title']);
+					// 	$parentData=$this->CI->db->get_row($this->resultMenu);
+					// 	$selfParent=$parentData['id'];
+					// 	foreach ($data as $item) {
+					// 		$this->_setResultMenuItem($item);
+					// 		$this->CI->db->set('order',$lastOrder++);
+					// 		$this->CI->db->set('self_parent',$selfParent);
+					// 		if ($this->CI->db->field_exists('str_table',$this->resultMenu))	$this->CI->db->set('str_table',$autoValue['table']);
+					// 		if ($this->CI->db->field_exists('str_uri',$this->resultMenu))	$this->CI->db->set('str_uri',$item['uri']);
+					// 		$this->CI->db->insert($this->resultMenu);
+					// 	}
+					// }
+					// break;
+					
+				case 'split by language':
+					$this->languages=$autoValue['str_parameters'];
+					$this->languages=explode('|',$this->languages);
+					$order=0;
+					$beforeMenu=$this->newMenu;
+					foreach ($this->languages as $lang) {
+						// add language
+						$item=array('uri'=>$lang,'order'=>$order++,'self_parent'=>-1,'str_title'=>$lang,'str_title_'.$lang=>$lang);
+						if ($order==1) {
+							$item=$this->_insertItem($item,1);
+							$langID=$item['id'];
+							// first language, just move current menu under it
+							foreach ($this->newMenu as $id => $item) {
+								if ($id!=$langID and $item['self_parent']==0)	$this->newMenu[$id]['self_parent']=$langID;
+							}
+						}
+						else {
+							$item=$this->_insertItem($item);
+							$langID=$item['id'];
+						 	$this->_addBranch($item,$beforeMenu);
 						}
 					}
 					break;
 			}
-			$lastId=$this->CI->db->insert_id();
-			$lastOrder=$this->CI->db->get_field($this->resultMenu,'order',$lastId);
+			
+			// $lastId=$this->CI->db->insert_id();
+			// $lastOrder=$this->CI->db->get_field($this->resultMenu,'order',$lastId);
 			
 		}
 
-		// check if all items have a title, if not, replace it with uri
-		$titleField=$this->CI->db->get_first_field($this->resultMenu);
-		$this->CI->db->where($titleField,'');
-		$this->CI->db->set($titleField,'uri',FALSE);
-		$this->CI->db->update($this->resultMenu);
-		
+		// change some things
+		foreach ($this->newMenu as $id => $item) {
+		  // if self_parent -1 (language) replace with 0
+			if (isset($item['self_parent']) and $item['self_parent']==-1) $item['self_parent']=0;
+		 	// if str_title is empty replace it with uri
+			$languages=$this->languages;
+			$languages[]='';
+			foreach ($languages as $lang) {
+				if (!empty($lang)) $lang='_'.$lang;
+				if (isset($item['str_title'.$lang]) and isset($item['uri']) and empty($item['str_title'.$lang])) $item['str_title'.$lang]=$item['uri'];
+			}
+			$this->newMenu[$id]=$item;
+		}
+		ksort($this->newMenu);
+
+		// put in db
+		$this->CI->db->truncate($this->resultMenu);
+		$fields=$this->CI->db->list_fields($this->resultMenu);
+		$lang='';
+		foreach ($this->newMenu as $row) {
+			if (isset($row['self_parent']) and in_array($row['uri'],$this->languages)) $lang=$row['uri'];
+			foreach ($row as $field => $value) {
+				if (in_array($field,$fields)) {
+					$this->CI->db->set($field,$value);
+				}
+				else {
+					$langField=str_replace('_'.$lang,'',$field);
+					if (!empty($this->languages) and in_array($langField,$fields))
+						$this->CI->db->set($langField,$value);
+				}
+			}
+			$this->CI->db->insert($this->resultMenu);
+		}
+
 		// update linklist etc
-		// $this->CI->editor_lists->create_list("links");
+		$this->CI->editor_lists->create_list("links");
 	}
 
+
 	function _setResultMenuItem($item,$setId=false) {
-		if (!$setId) {
-			if (isset($item['id']))						unset($item['id']);
-			if (isset($item['order']))				unset($item['order']);
-			if (isset($item['self_parent']))	unset($item['self_parent']);
-		}
+		// if (!$setId) {
+		// 	if (isset($item['id']))						unset($item['id']);
+		// 	if (isset($item['order']))				unset($item['order']);
+		// 	if (isset($item['self_parent']))	unset($item['self_parent']);
+		// }
 		foreach ($item as $key => $value) {
-			if ($this->CI->db->field_exists($key,$this->resultMenu)) $this->CI->db->set($key,$value);
+			// if (!$this->CI->db->field_exists($key,$this->resultMenu)) unset($item[$key]);
+		}
+		return $item;
+	}
+	
+	function _insertItem($item,$id='') {
+		if (empty($id)) {
+			$this->lastId++;
+			if (!isset($item['id'])) $item['id']=$this->lastId;
+			$this->parentIDs[$item['id']]=$this->lastId;
+			$item['id']=$this->lastId;
+			$this->newMenu[$this->lastId]=$item;
+		}
+		else {
+			$item['id']=$id;
+			$this->newMenu[$id]=$item;
+		}
+		return $item;
+	}
+	
+	function _moveChildren($fromID=-1) {
+		$parentIDs=$this->parentIDs;
+		foreach ($this->newMenu as $id => $item) {
+			if ($id>$fromID and isset($item['self_parent']) and $item['self_parent']>0 and isset($parentIDs[$item['self_parent']])) {
+				$this->newMenu[$id]['self_parent']=$parentIDs[$item['self_parent']];
+			}
 		}
 	}
+	
+	function _addBranch($topItem,$branch) {
+		$fromId=$this->lastId;
+		$parentIDs=array();
+		foreach ($branch as $oldId => $item) {
+			if ($item['self_parent']==0) $item['self_parent']=$topItem['id'];
+			$newItem=$this->_insertItem($item);
+		}
+		$this->_moveChildren($fromId);
+	}
+	
+	
 	
 	
 	

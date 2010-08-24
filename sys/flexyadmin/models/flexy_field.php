@@ -540,17 +540,27 @@ class Flexy_field extends Model {
 
 	// TODO: Meer self_ velden mogelijk (nu alleen nog self_parent)
 	function _self_form() {
+		$strField=$this->db->get_first_field($this->table,'str');
 		$this->db->select(array(pk()));
+		if ($strField) $this->db->select($strField);
 		if ($this->db->field_exists('uri',$this->table)) $this->db->select('uri');
 		if ($this->db->field_exists('self_parent',$this->table)) $this->db->select('self_parent');
 		$this->db->where(pk()." !=", $this->id);
 		$this->db->order_as_tree();
+		if ($strField)
+			$this->db->uri_as_full_uri(TRUE,$strField);
+		else
+			$this->db->uri_as_full_uri(TRUE,$strField);
 		$res=$this->db->get_result($this->table);
 		$options=array();
 		$options[]="";
 		foreach($res as $id=>$value) {
 			if (isset($value["uri"])) $uri=$value["uri"]; else $uri='';
-			$options[$id]=$this->_get_tree($value["self_parent"],"",$uri);
+			// $options[$id]=$this->_get_tree($value["self_parent"],"",$uri);
+			if ($strField)
+				$options[$id]=$value[$strField];
+			else
+				$options[$id]=$uri;
 			if (substr($options[$id],0,1)=="/") $options[$id]=substr($options[$id],1);
 		}
 		$out=$this->_standard_form_field($options);
