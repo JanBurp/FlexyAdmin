@@ -90,37 +90,31 @@ class plugin_automenu extends plugin_ {
 					$this->_moveChildren();
 					break;
 		
-				case 'from submenu table': // BUSY: moet nog vernieuwd
-					break; 
-					// $data=$this->CI->db->get_results($autoValue['table']);
-					// $order=0;
-					// if (!empty($autoValue['str_parent_where'])) {
-					// 	$this->CI->db->select('id');
-					// 	$this->CI->db->where($autoValue['str_parent_where']);
-					// 	$parent=$this->CI->db->get_row($this->resultMenu);
-					// 	$parent=$parent['id'];
-					// }
-					// // order?
-					// $this->CI->db->select('order');
-					// $this->CI->db->where('self_parent',$parent);
-					// $this->CI->db->order_by('order','DESC');
-					// $order=$this->CI->db->get_row($this->resultMenu);
-					// $order=$order['order']+1;
-					// foreach ($data as $item) {
-					// 	$this->_setResultMenuItem($item);
-					// 	if ($this->CI->db->field_exists('str_table',$this->resultMenu))	$this->CI->db->set('str_table',$autoValue['table']);
-					// 	if ($this->CI->db->field_exists('str_uri',$this->resultMenu))	$this->CI->db->set('str_uri',$item['uri']);
-					// 	if (isset($parent))
-					// 		$this->CI->db->set('self_parent',$parent);
-					// 	elseif (isset($item['self_parent']))
-					// 		$this->CI->db->set('self_parent',$item['self_parent']);
-					// 	if (!isset($item['order']))
-					// 		$this->CI->db->set('order',$order++);
-					// 	else
-					// 		$this->CI->db->set('order',$item['order']);
-					// 	$this->CI->db->insert($this->resultMenu);
-					// }
-					// break;
+				case 'from submenu table':
+					$data=$this->CI->db->get_results($autoValue['table']);
+					$order=0;
+					if (!empty($autoValue['str_parent_where'])) {
+						$this->CI->db->select('id');
+						$this->CI->db->where($autoValue['str_parent_where']);
+						$parent=$this->CI->db->get_row($this->resultMenu);
+						$parent=$parent['id'];
+					}
+					// is er al een sub? Gebruik die order
+					$sub=$this->newMenu;
+					$sub=find_row_by_value($sub,$parent,'self_parent');
+					if ($sub) {
+						$sub=current($sub);
+						$order=$sub['order']+1;
+					} 
+					foreach ($data as $item) {
+						$this->_setResultMenuItem($item);
+						$item['str_table']=$autoValue['table'];
+						$item['str_uri']=$item['uri'];
+						if (isset($parent)) $item['self_parent']=$parent;
+						if (!isset($item['order'])) $item['order']=$order++;
+						$this->_insertItem($item);
+					}
+					break;
 		
 				case 'from category table':
 					$data=$this->CI->db->get_result($autoValue['table']);
@@ -209,10 +203,11 @@ class plugin_automenu extends plugin_ {
 			if (isset($item['self_parent']) and $item['self_parent']==-1) $item['self_parent']=0;
 		 	// if str_title is empty replace it with uri
 			$languages=$this->languages;
-			$languages[]='';
+			// $languages[]='';
 			foreach ($languages as $lang) {
 				if (!empty($lang)) $lang='_'.$lang;
-				if (isset($item['str_title'.$lang]) and isset($item['uri']) and empty($item['str_title'.$lang])) $item['str_title'.$lang]=$item['uri'];
+				if (!isset($item['str_title'.$lang])) $item['str_title'.$lang]='';
+				if (isset($item['uri']) and empty($item['str_title'.$lang])) $item['str_title'.$lang]=$item['uri'];
 			}
 			$this->newMenu[$id]=$item;
 		}
@@ -223,7 +218,7 @@ class plugin_automenu extends plugin_ {
 		$fields=$this->CI->db->list_fields($this->resultMenu);
 		$lang='';
 		foreach ($this->newMenu as $row) {
-			if (isset($row['self_parent']) and in_array($row['uri'],$this->languages)) $lang=$row['uri'];
+			if (isset($row['self_parent']) and isset($this->languages) and in_array($row['uri'],$this->languages)) $lang=$row['uri'];
 			foreach ($row as $field => $value) {
 				if (in_array($field,$fields)) {
 					$this->CI->db->set($field,$value);
@@ -238,7 +233,7 @@ class plugin_automenu extends plugin_ {
 		}
 
 		// update linklist etc
-		$this->CI->editor_lists->create_list("links");
+		// $this->CI->editor_lists->create_list("links");
 	}
 
 
