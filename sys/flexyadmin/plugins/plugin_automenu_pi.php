@@ -145,7 +145,6 @@ class plugin_automenu extends plugin_ {
 					break;
 		
 				case 'from table group by category': // BUSY: moet nog vernieuwd
-					break;
 					// $groupField=remove_prefix($autoValue['field_group_by'],'.');
 					// $groupTable=foreign_table_from_key($groupField);
 					// $groupData=$this->CI->db->get_result($groupTable);
