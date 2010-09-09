@@ -395,22 +395,27 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		if ($this->whereUri) {
 			$uri=$this->whereUri;
 			$uriParts=explode('/',$this->whereUri);
-			// TODO: als er drie subnivos met zelfde uri dan gaat het mis...
-			// trace_($uriParts);
-			if (count($uriParts)>1) {
-				$uri=array_pop($uriParts);
-				$parent=array_pop($uriParts);
-				$sql="SELECT id FROM $table WHERE uri='$parent'";
-				$query=$this->query($sql);
-				$row=$query->row();
-				if (!empty($row)) $this->where($table.'.self_parent',$row->id);
+			switch (count($uriParts)) {
+				case 1:
+					$this->where($table.'.uri',$uri);
+					break;
+				case 2:
+					$parent=$uriParts[0];
+					$uri=$uriParts[1];
+					$sql="SELECT id FROM $table WHERE uri='$parent'";
+					$query=$this->query($sql);
+					$row=$query->row();
+					if (!empty($row)) {
+						$this->where($table.'.self_parent',$row->id);
+						$this->where($table.'.uri',$uri);
+					}
+					break;
+				default:
+					// > 2
+					$foundId=$this->get_unique_id_from_fulluri($table,$uri);
+					if ($foundId>-1) $this->where($table.'.id',$foundId);
+					break;
 			}
-			else {
-				if ($this->field_exists('self_parent',$table))
-					$this->where('self_parent',0);
-			}
-			$this->where($table.'.uri',$uri);
-			// trace_($this->ar_where);
 		}
 		
 		/**
@@ -436,6 +441,48 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		else
 			return $result;
 	}
+	
+	function get_unique_id_from_fulluri($table,$uri) {
+		$foundID=-1;
+		$uriParts=explode('/',$uri);
+		if (count($uriParts)>=1) {
+			$part=array_pop($uriParts);
+			$sql="SELECT id,self_parent FROM $table WHERE uri='$part'";
+			$query=$this->query($sql);
+			if ($query->num_rows()==1) {
+				$row=$query->row_array();
+				$foundID=$row['id'];
+			}
+			else {
+				$res=$query->result_array();
+				foreach ($res as $key => $row) {
+					if ( ! $this->_check_fulluri($table,$uriParts,$row['self_parent'])) unset($res[$key]);
+				}
+				if (count($res)==1) {
+					$row=current($res);
+					$foundID=$row['id'];
+				}
+			}
+		}
+		return $foundID;
+	}
+	
+	function _check_fulluri($table,$uriParts,$self_parent) {
+		$check=FALSE;
+		$part=array_pop($uriParts);
+		$sql="SELECT id,self_parent FROM $table WHERE id=$self_parent AND uri='$part'";
+		$query=$this->query($sql);
+		$row=$query->row_array();
+		if (!empty($row)) {
+			if ($row['self_parent']==0)
+				$check=TRUE;
+			else
+				$check=$this->_check_fulluri($table,$uriParts,$row['self_parent']);
+		}
+		return $check;
+	}
+	
+	
 	
 	function get_results($table,$limit=0,$offset=0) {
 		return $this->get_result($table,$limit,$offset);
