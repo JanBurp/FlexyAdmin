@@ -539,6 +539,8 @@ class Form Extends Model {
 		
 		if (!empty($field["repopulate"])) $field["value"]=$field["repopulate"];
 		$attr=array("name"=>$name,"id"=>$name,"value"=>$field["value"], "class"=>$class);
+		if (isset($field['attr'])) {$attr=array_merge($attr,$field['attr']);}
+		if (isset($field['attributes'])) {$attr=array_merge($attr,$field['attributes']);}
 
 		// Label or Captcha
 		if ($field["type"]!="hidden") {
