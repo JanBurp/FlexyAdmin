@@ -19,6 +19,7 @@ class Content {
 	var $addClasses;
 	var $addPopups;
 	var $prePopup;
+	var $replaceLanguageLinks;
 
 	function Content() {
 		$this->option_safe_email();
@@ -32,6 +33,11 @@ class Content {
 	
 	function add_classes($classes=TRUE) {
 		$this->addClasses=$classes;
+	}
+	
+	// example: $this->content->replace_language_links( array('search'=>'nl','replace'=>'en') );
+	function replace_language_links($replace=FALSE) {
+		$this->replaceLanguageLinks=$replace;
 	}
 	
 	function add_popups($pre="popup_",$popups=TRUE) {
@@ -75,8 +81,11 @@ class Content {
 	function render($txt) {
 		
 		if ($this->addClasses) {
-		 	// add classes (odd even nrs to p and img tags)
 			$txt=preg_replace_callback("/<(img|p)(.*?)>/",array($this,"_countCallBack"),$txt);
+		}
+
+		if ($this->replaceLanguageLinks) {
+			$txt=preg_replace('/<a[\s]*href=\"'.$this->replaceLanguageLinks['search'].'\/(.*)\">(.*)<\/a>/','<a href="'.$this->replaceLanguageLinks['replace'].'/$1">$2</a>',$txt);
 		}
 		
 		if ($this->addPopups) {
