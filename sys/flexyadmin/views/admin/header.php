@@ -53,7 +53,7 @@ $isForm=has_string('form',$show_type);
 	<script language="javascript" type="text/javascript" src="sys/jquery/jquery-1.4.2.min.js"></script>
 	<!-- jQuery UI -->
 	<link rel="stylesheet" type="text/css" href="sys/jquery/ui/custom-theme/jquery-ui-1.8.2.custom<?=$css?>" />
-	<script language="javascript" type="text/javascript" src="sys/jquery/ui/jquery-ui-1.8.2.custom.min.js"></script>
+	<script language="javascript" type="text/javascript" src="sys/jquery/ui/jquery-ui-1.8.4.custom.min.js"></script>
 	<!-- jQuery plugins-->
 	<link rel="stylesheet" type="text/css" href="sys/jquery/plugins/fullsize/fullsize.css" />
 	<script language="javascript" type="text/javascript" src="sys/jquery/plugins/fullsize/jquery.fullsize<?=$js?>"></script>

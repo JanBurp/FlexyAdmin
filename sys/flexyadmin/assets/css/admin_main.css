@@ -1173,7 +1173,7 @@ p.error {
 	font-weight:bold;
 }
 
-/* ============== dialog ================ */
+/* ============== dialog (login) ================ */
 
 #dialog{
 	position:absolute;
@@ -1215,11 +1215,7 @@ p.error {
 #dialog input {
 	width:350px;
 	}
-.ui-dialog input {
-	width:350px;
-	margin-right:5px;
-	text-align:left;
-}
+
 #dialog a.button:hover {
 	background-color:#BBCC88;
 	color:#336633;
@@ -1236,6 +1232,12 @@ p.error {
 
 
 /* ============== ui-dialog ================ */
+
+.ui-dialog input {
+	width:350px;
+	margin-right:5px;
+	text-align:left;
+}
 
 div.zoom img {
 	margin:0px;
