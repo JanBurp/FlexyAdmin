@@ -634,8 +634,10 @@ class AdminController extends BasicController {
 	// show methods
 
 	function _show_header() {
-		$title=$this->cfg->get('CFG_configurations',"str_name");
-		$url=$this->cfg->get('CFG_configurations',"url_site_url");
+		$site=$this->db->get_row('tbl_site');
+		$title=$site['str_title'];
+		if ($this->config->item('LOCAL'))	$title=' # '.$title; else $title=' - '.$title;
+		$url=str_replace('http://','',$site['url_url']);
 		$editor=$this->showEditor and $this->cfg->get('CFG_editor',"b_use_editor");
 		$type="";
 		if (isset($this->showType)) $type=$this->showType;
@@ -647,14 +649,7 @@ class AdminController extends BasicController {
 		}
 		$formats=$this->cfg->get('CFG_editor',"str_formats");
 		$styles=$this->cfg->get('CFG_editor',"str_styles");
-		$showStyles=$styles;
-		// $styles=str_replace(',','|',$styles);
-		// $styles=explode('|',$styles);
-		// $showStyles='';
-		// foreach ($styles as $style) {
-		// 	$showStyles=add_string($showStyles,$style.'='.$style,';');
-		// }
-		$this->load->view('admin/header', array("title"=>$title,"url"=>$url,"jsVars"=>$this->js,"show_type"=>$type,"show_editor"=>$editor,"buttons1"=>$buttons1,"buttons2"=>$buttons2,"buttons3"=>$buttons3,"formats"=>$formats,"styles"=>$showStyles,"language"=>$this->language));
+		$this->load->view('admin/header', array("title"=>$title,"url"=>$url,"jsVars"=>$this->js,"show_type"=>$type,"show_editor"=>$editor,"buttons1"=>$buttons1,"buttons2"=>$buttons2,"buttons3"=>$buttons3,"formats"=>$formats,"styles"=>$styles,"language"=>$this->language));
 	}
 
 	function _show_table_menu($tables,$type) {

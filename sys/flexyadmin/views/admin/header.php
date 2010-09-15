@@ -20,15 +20,15 @@ $isForm=has_string('form',$show_type);
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-	<title>FlexyAdmin 2009</title>
+	<title>FlexyAdmin <?=$title?></title>
 	<meta http-equiv="content-type"	content="text/html;charset=utf-8" />
 	<meta http-equiv="Content-Style-Type" content="text/css" />
-
 	<base href="<?=base_url()?>" />
-
+	
+	<link rel="shortcut icon" href="<?=admin_assets()?>img/favicon.ico" type="image/x-icon" />
 	<link rel="stylesheet" href="<?=admin_assets()?>css/admin_main<?=$css?>" type="text/css" />
 	<link rel="stylesheet" href="site/assets/css/admin.css" type="text/css" />
-	<!-- <link rel="stylesheet" href="<?=admin_assets()?>css/flexyobjects.css" type="text/css" /> -->
+	
 	<!--[if lte IE 6]><style type="text/css" media="screen">@import url(<?=admin_assets()?>css/ie6.css);</style><![endif]-->
 	<!--[if IE 7]><style type="text/css" media="screen">@import url(<?=admin_assets()?>css/ie7.css);</style><![endif]-->
 	<!--[if IE 8]><style type="text/css" media="screen">@import url(<?=admin_assets()?>css/ie8.css);</style><![endif]-->
