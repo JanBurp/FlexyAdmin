@@ -64,7 +64,8 @@ function confirm_dialog(uri,name,id) {
 		title:lang("dialog_title_confirm"),
 		modal:true,
 		width:500,
-		buttons: ({ cancel	: function(){	$(dialog).dialog("destroy"); },
+		buttons: ({
+								cancel	: function(){	$(dialog).dialog("destroy"); },
 								yes			: function(){
 														$('.ui-dialog .ui-dialog-buttonpane').add('.ui-dialog a').hide();
 														$('.ui-dialog .ui-dialog-content').append("<img src='"+site_url("sys/flexyadmin/assets/icons/wait.gif")+"' align='right' />");
@@ -170,7 +171,7 @@ function ajaxError(error) {
 
 function changeButt(id,s) {
 	var h;
-	$("div.ui-dialog-buttonpane").children().each(function(){
+	$("div.ui-dialog-buttonset button").each(function(){
 		h=$(this).html();
 		$(this).html(h=h.replace(id,s));
 	});
