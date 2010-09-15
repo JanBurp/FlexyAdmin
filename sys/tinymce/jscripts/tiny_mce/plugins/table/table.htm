@@ -10,7 +10,7 @@
 	<script type="text/javascript" src="js/table.js"></script>
 	<link href="css/table.css" rel="stylesheet" type="text/css" />
 </head>
-<body id="table" style="display: none" class="table_dialog">
+<body id="table" style="display: none">
 	<form onsubmit="insertTable();return false;" action="#">
 		<div class="tabs">
 			<ul>
@@ -179,13 +179,8 @@
 		</div>
 
 		<div class="mceActionPanel">
-			<div style="float: left">
-				<input type="submit" id="insert" name="insert" value="{#insert}" />
-			</div>
-
-			<div style="float: right">
-				<input type="button" id="cancel" name="cancel" value="{#cancel}" onclick="tinyMCEPopup.close();" />
-			</div>
+			<input type="submit" id="insert" name="insert" value="{#insert}" />
+			<input type="button" id="cancel" name="cancel" value="{#cancel}" onclick="tinyMCEPopup.close();" />
 		</div>
 	</form>
 </body>
