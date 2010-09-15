@@ -36,7 +36,12 @@ class User extends Controller {
 	}
 
 	function login() {
-		$this->load->view('admin/login');
+		$site['title']='';
+		if ($this->db->table_exists('tbl_site')) {
+			if ($this->db->field_exists('str_title','tbl_site'))
+				$site['title']='- '.$this->db->get_field('tbl_site','str_title');
+		}
+		$this->load->view('admin/login',$site);
 	}
 
 	function _create_rights($userId) {

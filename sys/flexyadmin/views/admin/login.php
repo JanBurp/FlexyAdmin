@@ -1,7 +1,8 @@
 <html>
 <head>
-	<title>FlexyAdmin V1 - Login</title>
+	<title>FlexyAdmin - Login <?=$title?></title>
 	<base href="<?=base_url()?>" />
+	<link rel="shortcut icon" href="<?=admin_assets()?>img/favicon.ico" type="image/x-icon" />
 	<link rel="stylesheet" href="<?=admin_assets()?>css/admin_main.css" type="text/css" />
 	<!--[if lte IE 6]><style type="text/css" media="screen">@import url(<?=admin_assets()?>css/ie6.css);</style><![endif]-->
 	<!--[if IE 7]><style type="text/css" media="screen">@import url(<?=admin_assets()?>css/ie7.css);</style><![endif]-->
