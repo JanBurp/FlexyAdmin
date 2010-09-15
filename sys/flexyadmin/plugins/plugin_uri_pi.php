@@ -55,6 +55,7 @@ class plugin_uri extends plugin_ {
 	// extra methods for this plugin
 	
 	function _create_uri($uri_source_field) {
+		$replaceSpace=$this->CI->config->item('PLUGIN_URI_REPLACE_CHAR');
 		$uri=$this->oldData['uri'];
 		if (isset($this->newData[$uri_source_field]))
 			$uri_source=$this->newData[$uri_source_field];
@@ -73,11 +74,11 @@ class plugin_uri extends plugin_ {
 			$uri=trim($uri);
 			$uri=trim($uri,'-');
 			$uri=trim($uri,'_');
-			$uri=str_replace(" ","_",trim($uri));
+			$uri=str_replace(" ",$replaceSpace,trim($uri));
 			$uri=clean_string($uri);
 			$forbidden=array("site","sys","admin","rss");
-			if (in_array($uri,$forbidden)) $uri="_".$uri;
-			while ($this->_existing_uri($uri)) $uri=$uri."_".$counter++;
+			if (in_array($uri,$forbidden)) $uri=$replaceSpace.$uri;
+			while ($this->_existing_uri($uri)) $uri=$uri.$replaceSpace.$counter++;
 		}
 		return $uri;
 	}

@@ -42,8 +42,16 @@ $config['BULKUPLOAD']							= 'bulk_upload';
 
 $config['THUMBSIZE']							= array(100,100);
 
-$config['PLUGIN_ORDER']						= array('first'=>array('uri','links','striptags'),
-																					'last' =>array('automenu'));
+
+/*
+|--------------------------------------------------------------------------
+| PLUGIN cfg
+|--------------------------------------------------------------------------
+|
+*/
+
+$config['PLUGIN_ORDER']							= array('first'=>array('uri','links','striptags'),'last' =>array('automenu'));
+$config['PLUGIN_URI_REPLACE_CHAR']	= '_';
 
 
 /*
@@ -762,6 +770,11 @@ $config['FIELDS_prefix'] = array (
 											"validation"	=> ""
 										)
 		);
+
+
+
+
+if (file_exists("site/config/flexyadmin_config.php")) require_once("site/config/flexyadmin_config.php");
 
 
 /* End of file flexyadmin_config.php */
