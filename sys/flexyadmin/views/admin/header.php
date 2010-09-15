@@ -77,6 +77,7 @@ $isForm=has_string('form',$show_type);
 			<script>
 			$().ready(function() {
 			   $('textarea.htmleditor').tinymce({
+						document_base_url : "<?=base_url()?>",
 						plugins : "paste,advimage,media,table,inlinepopups,embed",
 				 		dialog_type : "modal",
 						inlinepopups_skin : "flexyadmin",
@@ -89,6 +90,7 @@ $isForm=has_string('form',$show_type);
 						theme_advanced_statusbar_location: "bottom",
 						theme_advanced_resizing : true,
 						theme_advanced_resize_horizontal : false,
+						content_css : "<?=assets()?>css/text.css",
 						<? if (isset($formats)): ?>
 						theme_advanced_blockformats : "<?=$formats?>",
 						<? else: ?>
@@ -96,13 +98,11 @@ $isForm=has_string('form',$show_type);
 						<? endif; ?>
 						theme_advanced_styles : "<?=$styles;?>",
 						extended_valid_elements : "iframe[align<bottom?left?middle?right?top|class|frameborder|height|id|longdesc|marginheight|marginwidth|name|scrolling<auto?no?yes|src|style|title|width]",
-						external_image_list_url : "<?=assets()?>/lists/img_list.js",
-						media_external_list_url : "<?=assets()?>/lists/media_list.js",
-						external_embed_list_url : "<?=assets()?>/lists/embed_list.js",
+						external_image_list_url : "<?=assets()?>/lists/img_list.js?"+new Date().getTime(),
+						media_external_list_url : "<?=assets()?>/lists/media_list.js?"+new Date().getTime(),
+						external_embed_list_url : "<?=assets()?>/lists/embed_list.js?"+new Date().getTime(),
+						external_link_list_url : "<?=assets()?>lists/link_list.js?"+new Date().getTime(),
 						relative_urls : true,
-						document_base_url : "<?=base_url()?>",
-						content_css : "<?=assets()?>css/text.css",
-						external_link_list_url : "<?=assets()?>lists/link_list.js",
 						theme_advanced_buttons1 : "<?=$buttons1?>",
 						theme_advanced_buttons2 : "<?=$buttons2?>",
 						theme_advanced_buttons3 : "<?=$buttons3?>"
