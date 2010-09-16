@@ -665,7 +665,7 @@ class Form Extends Model {
 						}
 						else {
 							$image=$img['name'];
-							if ($preName=='media' or !in_array($image,$medias)) $out.='<li>'.show_thumb(array("src"=>$field["path"]."/".$image,"class"=>"media",'alt'=>$image)).'</li>';
+							if ($preName=='media' or !in_array($image,$medias)) $out.='<li>'.show_thumb(array("src"=>$field["path"]."/".$image,"class"=>"media",'alt'=>$image,'title'=>$image)).'</li>';
 						}
 					}
 					$out.='</ul>';					
