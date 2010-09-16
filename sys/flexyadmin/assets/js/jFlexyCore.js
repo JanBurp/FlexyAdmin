@@ -150,8 +150,8 @@ function showAutoZoom() {
 		});
 	});
 	// fullsize zoom
-	$('img.zoom').add('.flash .zoom').not('form ul li img.zoom').not('form ul li .flash .zoom').fullsize({triggerIcon:false});
-	$('form ul li img.zoom').add('form ul li .flash .zoom').fullsize({triggerIcon:false,triggerEvent:'dblclick'});
+	$('img.zoom').add('.flash .zoom').not('form ul li img.zoom').not('form ul li .flash .zoom').fullsize({triggerIcon:false,forceTitleBar:true});
+	$('form ul li img.zoom').add('form ul li .flash .zoom').fullsize({triggerIcon:false,triggerEvent:'dblclick',forceTitleBar:true});
 }
 
 function close_dialog() {

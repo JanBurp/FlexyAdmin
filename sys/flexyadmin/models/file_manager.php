@@ -366,7 +366,7 @@ function thumb($attr,$index=FALSE) {
 						// $img=$this->map."/".$name;
 						// $cachedThumb=$this->config->item('THUMBCACHE').pathencode($img);
 						// if (file_exists($cachedThumb)) $img=$cachedThumb;
-						$icon=div(array("class"=>"thumb")).$this->thumb(array("src"=>$name,"path"=>$this->map,"alt"=>$name,"class"=>"zoom","zwidth"=>$imgSize[0],"zheight"=>$imgSize[1])).end_div();
+						$icon=div(array("class"=>"thumb")).$this->thumb(array("src"=>$name,"path"=>$this->map,"alt"=>$name,"title"=>$name,"class"=>"zoom","zwidth"=>$imgSize[0],"zheight"=>$imgSize[1])).end_div();
 					} elseif ($isFlash) {
 						$icon=div(array("class"=>"flash")).icon("flash $name",$name,"zoom","src=\"".$this->map."/".$name."\" zwidth=\"".$imgSize[0]."\" zheight=\"".$imgSize[1]."\"")._div(); //flash($this->map."/".$name).end_div();
 					} elseif (in_array($type,$mp3Types)) {

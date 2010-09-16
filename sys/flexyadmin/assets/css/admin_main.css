@@ -35,8 +35,6 @@ h1 {
 	background-image: url("../img/inset.png");
 	background-position:50% 50%;
 	-moz-border-radius: 4px;
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
 	-webkit-border-radius: 4px;
 	margin:0px 0px 10px 0px;
 	padding:6px 6px 2px;
@@ -69,6 +67,7 @@ img {
 	max-width:100%;
 	z-index:10;
 }
+.fullsize-wrapper img {margin:0px;}
 .img_text {
 	margin:0px;
 	padding:0px;
