@@ -69,7 +69,6 @@ class plugin_automenu extends plugin_ {
 	
 	
 	function _create_auto_menu() {
-		// clean current automenu and init some vars
 		$lastOrder=0;
 		$this->newMenu=array();
 		$this->parentIDs=array();
@@ -132,6 +131,14 @@ class plugin_automenu extends plugin_ {
 						}
 						$self_parents=array_keys($parentItems);
 					}
+					$lastOrder=0;
+					if (empty($self_parents)) {
+						$self_parents[]=0;
+						$last=find_row_by_value($this->newMenu,0,'self_parent');
+						$last=sort_by($last,'order',TRUE);
+						$last=current($last);
+						$lastOrder=$last['order']+1;
+					}
 					foreach ($data as $key=>$item) {
 						foreach ($self_parents as $self_parent) {
 							$item=$this->_setResultMenuItem($item);
@@ -144,27 +151,27 @@ class plugin_automenu extends plugin_ {
 					}
 					break;
 		
-				case 'from table group by category': // BUSY: moet nog vernieuwd
-					// $groupField=remove_prefix($autoValue['field_group_by'],'.');
-					// $groupTable=foreign_table_from_key($groupField);
-					// $groupData=$this->CI->db->get_result($groupTable);
-					// foreach ($groupData as $groupId=>$groupData) {
-					// 	$this->CI->db->where($autoValue['field_group_by'],$groupId);
-					// 	$data=$this->CI->db->get_result($autoValue['table']);
-					// 	$lastOrder=0;
-					// 	$this->CI->db->where('str_title',$groupData['str_title']);
-					// 	$parentData=$this->CI->db->get_row($this->resultMenu);
-					// 	$selfParent=$parentData['id'];
-					// 	foreach ($data as $item) {
-					// 		$this->_setResultMenuItem($item);
-					// 		$this->CI->db->set('order',$lastOrder++);
-					// 		$this->CI->db->set('self_parent',$selfParent);
-					// 		if ($this->CI->db->field_exists('str_table',$this->resultMenu))	$this->CI->db->set('str_table',$autoValue['table']);
-					// 		if ($this->CI->db->field_exists('str_uri',$this->resultMenu))	$this->CI->db->set('str_uri',$item['uri']);
-					// 		$this->CI->db->insert($this->resultMenu);
-					// 	}
-					// }
-					// break;
+				case 'from table group by category':
+					$groupField=remove_prefix($autoValue['field_group_by'],'.');
+					$groupTable=foreign_table_from_key($groupField);
+					$groupData=$this->CI->db->get_result($groupTable);
+					foreach ($groupData as $groupId=>$groupData) {
+						$this->CI->db->where($autoValue['field_group_by'],$groupId);
+						$data=$this->CI->db->get_result($autoValue['table']);
+						$lastOrder=0;
+						$parentData=find_row_by_value($this->newMenu,$groupData['str_title'],'str_title');
+						$parentData=current($parentData);
+						$selfParent=$parentData['id'];
+						foreach ($data as $item) {
+							$this->_setResultMenuItem($item);
+							$item['order']=$lastOrder++;
+							$item['self_parent']=$selfParent;
+							$item['str_table']=$autoValue['table'];
+							$item['str_uri']=$item['uri'];
+							$this->_insertItem($item);
+						}
+					}
+					break;
 					
 				case 'split by language':
 					$this->languages=$autoValue['str_parameters'];
@@ -191,18 +198,16 @@ class plugin_automenu extends plugin_ {
 					break;
 			}
 			
-			// $lastId=$this->CI->db->insert_id();
-			// $lastOrder=$this->CI->db->get_field($this->resultMenu,'order',$lastId);
-			
 		}
 
 		// change some things
 		foreach ($this->newMenu as $id => $item) {
 		  // if self_parent -1 (language) replace with 0
 			if (isset($item['self_parent']) and $item['self_parent']==-1) $item['self_parent']=0;
-		 	// if str_title is empty replace it with uri
 			$languages=$this->languages;
-			// $languages[]='';
+			if (empty($languages)) {
+				$languages[]='';
+			}
 			foreach ($languages as $lang) {
 				if (!empty($lang)) $lang='_'.$lang;
 				if (!isset($item['str_title'.$lang])) $item['str_title'.$lang]='';
@@ -232,7 +237,7 @@ class plugin_automenu extends plugin_ {
 		}
 
 		// update linklist etc
-		// $this->CI->editor_lists->create_list("links");
+		$this->CI->editor_lists->create_list("links");
 	}
 
 
