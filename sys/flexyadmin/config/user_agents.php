@@ -12,6 +12,7 @@
 
 $platforms = array (
 					'windows nt 7.0'	=> 'Windows 7',
+					'windows nt 6.1'	=> 'Windows 7',
 					'windows nt 6.0'	=> 'Windows Vista',
 					'windows nt 5.2'	=> 'Windows 2003',
 					'windows nt 5.0'	=> 'Windows 2000',
@@ -56,6 +57,8 @@ $platforms = array (
 // The order of this array should NOT be changed. Many browsers return
 // multiple browser types so we want to identify the sub-type first.
 $browsers = array(
+					'Flock'				=> 'Flock',
+					'Chrome'			=> 'Chrome',
 					'Opera'				=> 'Opera',
 					'MSIE'				=> 'Internet Explorer',
 					'Internet Explorer'	=> 'Internet Explorer',
@@ -63,13 +66,13 @@ $browsers = array(
 					'Firefox'			=> 'Firefox',
 					'Chimera'			=> 'Chimera',
 					'Phoenix'			=> 'Phoenix',
-					'Firebird'		=> 'Firebird',
+					'Firebird'			=> 'Firebird',
 					'Camino'			=> 'Camino',
-					'Netscape'		=> 'Netscape',
+					'Netscape'			=> 'Netscape',
 					'OmniWeb'			=> 'OmniWeb',
-					'Mozilla'			=> 'Mozilla',
 					'Safari'			=> 'Safari',
-					'Konqueror'		=> 'Konqueror',
+					'Mozilla'			=> 'Mozilla',
+					'Konqueror'			=> 'Konqueror',
 					'icab'				=> 'iCab',
 					'Lynx'				=> 'Lynx',
 					'Links'				=> 'Links',
@@ -94,7 +97,7 @@ $mobiles = array(
 //					'ericsson'			=> 'Ericsson',
 //					'blackberry'		=> 'BlackBerry',
 //					'motorola'			=> 'Motorola'
-					
+
 					// Phones and Manufacturers
 					'motorola'			=> "Motorola",
 					'nokia'				=> "Nokia",
@@ -129,22 +132,23 @@ $mobiles = array(
 					'spv'				=> "SPV",
 					'zte'				=> "ZTE",
 					'sendo'				=> "Sendo",
-					
+
 					// Operating Systems
 					'symbian'				=> "Symbian",
+					'SymbianOS'				=> "SymbianOS", 
 					'elaine'				=> "Palm",
 					'palm'					=> "Palm",
 					'series60'				=> "Symbian S60",
 					'windows ce'			=> "Windows CE",
-				
-					// Browsers	
+
+					// Browsers
 					'obigo'					=> "Obigo",
 					'netfront'				=> "Netfront Browser",
 					'openwave'				=> "Openwave Browser",
 					'mobilexplorer'			=> "Mobile Explorer",
 					'operamini'				=> "Opera Mini",
 					'opera mini'			=> "Opera Mini",
-				
+
 					// Other
 					'digital paths'			=> "Digital Paths",
 					'avantgo'				=> "AvantGo",
@@ -153,7 +157,7 @@ $mobiles = array(
 					'vodafone'				=> "Vodafone",
 					'docomo'				=> "NTT DoCoMo",
 					'o2'					=> "O2",
-				
+
 					// Fallback
 					'mobile'				=> "Generic Mobile",
 					'wireless' 				=> "Generic Mobile",
@@ -166,6 +170,24 @@ $mobiles = array(
 					'cellphone'				=> "Generic Mobile"
 				);
 
+// There are hundreds of bots but these are the most common.
+$robots = array(
+					'askjeeves'    => 'AskJeeves',
+					'baiduspider'    => 'Baiduspider',
+					'cazoodlebot'    => 'CazoodleBot',
+					'charlotte'    => 'searchme',
+					'dotbot'    => 'DotBot',
+					'fastcrawler'    => 'FastCrawler',
+					'gigabot'    => 'Gigablast',
+					'googlebot'			=> 'Googlebot',
+					'infoseek'    => 'InfoSeek Robot 1.0',
+					'lycos'        => 'Lycos',
+					'msnbot'    => 'MSNBot',
+					'slurp'        => 'Inktomi Slurp',
+					'teoma'        => 'Ask Jeeves Teoma',
+					'twiceler'    => 'Twiceler',
+					'yahoo'        => 'Yahoo'
+				);
 
 /* End of file user_agents.php */
-/* Location: ./system/application/config/user_agents.php */
+/* Location: ./application/config/user_agents.php */
