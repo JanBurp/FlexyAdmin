@@ -35,24 +35,18 @@ class Stats {
 		// only insert page uri's (no images, css etc).
 		if (strpos($uri,'.')===FALSE) {
 			$CI =& get_instance();
-			if (!$CI->agent->is_robot()) {
+			// only insert a known (mobile) browser
+			if ($CI->agent->is_browser() or $CI->agent->is_mobile()) {
 				$CI->db->set("tme_date_time",standard_date('DATE_ATOM', now()));
 				$CI->db->set("str_uri",$uri);
-				if ($CI->agent->is_browser()) {
+				if ($CI->agent->is_browser())
 					$CI->db->set("str_browser",$CI->agent->browser());
-					$CI->db->set("str_version",$CI->agent->version());
-				}
-				elseif ($CI->agent->is_mobile()) {
+				else
 					$CI->db->set("str_browser",$CI->agent->mobile());
-					$CI->db->set("str_version",$CI->agent->version());
-				}
-				else {
-					$agent=$CI->agent->agent_string();
-					if (!empty($agent))
-						$CI->db->set("str_browser",$agent);
-					else	
-						$CI->db->set("str_browser",'unidentified');
-				}
+				// nicer version info
+				$version=substr($CI->agent->version(),0,3);
+				if (strpos($version,'.')===false) $version=substr($version,0,1);
+				$CI->db->set("str_version",$version);
 				$CI->db->set("str_referrer",$CI->agent->referrer());
 				$CI->db->set("str_platform",$CI->agent->platform());
 				$CI->db->insert($this->table);

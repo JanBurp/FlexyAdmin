@@ -310,7 +310,7 @@ class plugin_stats extends plugin_ {
 			case 'top_10_browsers':
 				$this->CI->db->select("str_browser as browser, str_version as version, COUNT(`str_browser`) as hits, (COUNT(`str_browser`)/".$this->Total."*100) as percent");
 				$this->CI->db->where(array('YEAR(tme_date_time)' => $year, 'MONTH(tme_date_time)' => $month));
-				$this->CI->db->group_by('str_browser');
+				$this->CI->db->group_by('str_browser,str_version');
 				$this->CI->db->order_by("hits DESC");
 				break;
 			case 'top_10_platform':
