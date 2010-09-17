@@ -19,6 +19,8 @@ UPDATES r503 and later
 
 - Write down the current revision (see in the bottom bar in FlexyAdmin or in sys/build.txt)
 - Run all SQL updates from your revision until the latest (you can find the SQL updates in db/ ).
-	You can do this with the Import Database option in the backend.
+	You can do this with the Import Database option in FlexyAdmin.
 - Replace current sys map with new sys map
+
+
 
