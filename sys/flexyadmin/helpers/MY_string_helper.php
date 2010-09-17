@@ -169,9 +169,12 @@ function safe_string($s,$c=0) {
 	$s=strip_tags($s);
 	$s=strtolower($s);
 	$s=trim($s);
-	$s=str_replace(" ","_",$s);
+	$s=preg_replace("/\s/","_",$s);
 	$s=str_replace(array('"',"'","`",'.'),'',$s);
 	if ($c>0) $s=substr($s,0,$c);
+	$s=explode('_',$s);
+	array_pop($s);
+	$s=implode('_',$s);
 	return $s;
 }
 
