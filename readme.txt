@@ -1,4 +1,4 @@
-== FLEXYADMIN 2009 ==
+== FLEXYADMIN 2009/2010 ==
 (c) Jan den Besten
 www.flexyadmin.com
 for license see /sys/flexyadmin/flexyadmin_license.txt
@@ -7,7 +7,11 @@ All other libraries in /sys/ are LGPL or MIT licences.
 == INSTALLING ==
 Make sure .htaccess exists (is hidden) or rename htaccess.htaccess to .htaccess.
 Set your database information in /site/config/database.php and /site/config/database_local.php
-Use the latest demo database from /db/ if you need one.
+
+== DATABASE ==
+Use the latest demo database from /db/ if you start. If you need it, change the database.
+Log in as admin/admin or user/user
+
 
 == FILES ==
 .htacces													- url rewrite settings for apache, don't change if not needed!

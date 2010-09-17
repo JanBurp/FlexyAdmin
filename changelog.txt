@@ -1,3 +1,31 @@
+>788
+----
+
+BUGS:
+- tinyMCE styles dropdown didn't work
+- styling of img popup wasn't nice
+- db->where_uri(): had a bug when branches are up to 3 levels of more are the same. Now it's working!
+- Statistics: a bug when counting several IE versions
+- Statistics: now only records known (mobile)browsers (to prevent robots)
+
+NEW:
+- added: site/config/flexyadmin_config.php, for specific flexyadmin config options such as:
+- Possible to set uri space replace character (if SEO wishes it)
+- added Google Analytics to tbl_site and to site/views/home.php
+- favicon added
+- title added
+- # between main and sub title if FlexyAdmin is working local
+- Statistics: added some new browsers and OS: Chrome, Windows 7 etc.
+- Plugin->Automenu: it's now possible to make a language split
+- Form, a field attr or attributes are now rendered for special attributes when needed
+- Content->ReplaceLanguagLinks(s,r); You can replace the first uri part of a (internal) link. For multi-language sites
+
+UPDATES:
+- tinyMCE 3.3.9
+- jQuery UI 1.8.4
+
+
+
 >766
 ----
 
