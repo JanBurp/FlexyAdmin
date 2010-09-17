@@ -88,12 +88,11 @@ function showHelpItems() {
 	var HideDelay;
 	$("span.help").children().removeAttr("title");
 	$("span.help").mouseenter(function() {
-		obj=$(this);
-		helpName=get_subclass("help_",$(this));
+		var obj=$(this);
+		var helpName=get_subclass("help_",$(this));
 		ShowDelay=setTimeout( function() {		
-			helpTxt=$("#help_messages span#help_"+helpName).html();
-			// helpTxt=$(obj).children("span.hide").html();
-			html=helpTxt;
+			var helpTxt=$("#help_messages span#help_"+helpName).html();
+			var html=helpTxt;
 			$(Popup).html(html).fadeIn(150);
 			HideDelay=setTimeout( function(){
 				$(Popup).fadeOut(1000);

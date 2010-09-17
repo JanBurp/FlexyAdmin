@@ -887,10 +887,11 @@ class AdminController extends BasicController {
 		static $counter=0;
 		$found=array_search($help,$this->helpTexts);
 		if (!$found) {
-			if (empty($name)) {
+			if (empty($name))
 				$name=safe_string($help,20);
-			}
-			$name="help_".$counter++."_$name";
+			else
+				$name=safe_string($name);
+			$name='help_'.$counter++.'_'.$name;
 			$this->helpTexts[$name]=$help;
 			return $name;
 		}

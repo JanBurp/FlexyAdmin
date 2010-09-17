@@ -2,7 +2,7 @@
 <p>Here you find common help.<br/><br/></p>
 <?=$commonHelp?>
 
-<h1>Help for each item</h2>
+<h1>Help for each item</h1>
 <p>Here you find help for each item.<br/>These help texts will popup if you move the mouse over an item and wait a moment.<br/><br/></p>
 <?=$specificHelp?>
 

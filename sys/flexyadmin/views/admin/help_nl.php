@@ -4,7 +4,7 @@
 <? endif ?>
 
 <? if (!empty($specificHelp)): ?>
-<h1>Help per onderdeel</h2>
+<h1>Help per onderdeel</h1>
 <p>Deze help teksten krijg je ook te zien als je met de muis op de naam van een onderdeel gaat staan en even wacht.<br/><br/></p>
 <?=$specificHelp?>
 <? endif ?>

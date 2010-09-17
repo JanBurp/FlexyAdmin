@@ -318,17 +318,6 @@ $config["CFG_"]=array(
 		
 	),
 	"cfg_field_info" => array(
-		"cfg_configurations.key"=>array(
-			"field"=>'cfg_configurations.key',
-			"str_ui_name"=>'License Key',
-			"b_show_in_grid"=>'0',
-			"b_show_in_form"=>'1',
-			"str_options"=>'',
-			"b_multi_options"=>'0',
-			"str_overrule_prefix"=>'',
-			"str_validation_rules"=>'',
-			"txt_help"=>'<p>Enter your license for FlexyAdmin here.</p>'
-			),
 		"cfg_admin_menu.str_type"=>array(
 			"field"=>'cfg_admin_menu.str_type',
 			"str_ui_name"=>'',
@@ -362,7 +351,7 @@ $config["CFG_"]=array(
 			"str_validation_rules"=>'',
 			"txt_help"=>''
 			),
-			"cfg_editor.table"=>array(
+		"cfg_editor.table"=>array(
 			"field"=>'cfg_editor.table',
 			"str_ui_name"=>'Links Table',
 			"b_show_in_grid"=>'1',
