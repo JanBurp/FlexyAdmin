@@ -35,16 +35,13 @@
 .fullsize-title {
 	position: relative;
 	width: 100%;
-	margin:0px 0px 0px -2px;
-	padding:5px 1px;
+	margin:0px 0px 0px 0px;
+	padding:5px 0px;
 	height: 18px;
 	background-color: #DDEEAA;
 	background-image: url("../../../flexyadmin/assets/img/inset.png");
 	background-position:50% 45%;
 	font-weight:bold;
-	border: solid 1px #DEA;
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
 }
 
 .fullsize-title-text {
