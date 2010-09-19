@@ -1,5 +1,6 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+
 /**
 *	Extended DB_Mysql Class
 *	
@@ -31,7 +32,10 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	var	$selectFirsts;
 
 	function MY_DB_mysql_driver($params) {
-		parent::CI_DB_mysql_driver($params);
+		if (substr(phpversion(),0,1)=='4')
+			parent::CI_DB_mysql_driver($params);
+		else
+			parent::__construct($params);
 		$this->reset();
 	}
 

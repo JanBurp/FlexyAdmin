@@ -108,6 +108,7 @@ function trace_($a=NULL,$echo=true,$backtraceOffset=1) {
 
 function tr_string($value) {
 	$s="";
+	$value=(string) $value;
 	$html=in_string("<>",$value);
 	if ((substr($value,0,6)!="#show#") and ($html or (strlen($value)>200)) ) {
 		$s.=strip_tags(substr($value,0,80));
