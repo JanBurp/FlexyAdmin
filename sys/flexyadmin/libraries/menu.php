@@ -311,7 +311,7 @@ class Menu {
 	
 	function render_branch($branchUri,$attr="",$level=1,$preUri="") {
 		$preUri=add_string($preUri,$branchUri,'/');
-		$branch=$this->menu[$branchUri]['sub'];
+		$branch=find_row_by_value($this->menu,$branchUri,'uri');
 		return $this->render($branch,$attr,$level,$preUri);
 	}
 
