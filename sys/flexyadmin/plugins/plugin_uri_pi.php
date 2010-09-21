@@ -77,6 +77,7 @@ class plugin_uri extends plugin_ {
 			$uri=str_replace(" ",$replaceSpace,trim($uri));
 			$uri=clean_string($uri);
 			$forbidden=array("site","sys","admin","rss");
+			$forbidden=array_merge($forbidden,$this->CI->config->item('LANGUAGES'));
 			if (in_array($uri,$forbidden)) $uri=$replaceSpace.$uri;
 			while ($this->_existing_uri($uri)) $uri=$uri.$replaceSpace.$counter++;
 		}

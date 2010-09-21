@@ -227,10 +227,12 @@ class plugin_automenu extends plugin_ {
 				if (in_array($field,$fields)) {
 					$this->CI->db->set($field,$value);
 				}
-				else {
+				elseif ($lang!='') {
+					$post=get_postfix($field);
 					$langField=str_replace('_'.$lang,'',$field);
-					if (!empty($this->languages) and in_array($langField,$fields))
+					if (in_array($langField,$fields)) {
 						$this->CI->db->set($langField,$value);
+					}
 				}
 			}
 			$this->CI->db->insert($this->resultMenu);
