@@ -1,3 +1,16 @@
+> 801
+-----
+
+BUGS:
+- Problems with PHP 5.3 (CI database extending), Solved, works still on PHP 4
+- Render branch in Menu class had some problmens
+- Uri/Automenu: languages are now reserved uri's (are automatically checked)
+
+UPDATE:
+- jQuery UI 1.8.5
+
+
+
 >788
 ----
 
