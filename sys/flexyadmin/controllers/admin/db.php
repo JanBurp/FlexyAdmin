@@ -223,7 +223,10 @@ class Db extends AdminController {
 		$this->lang->load('form');
 		$form=new form($this->config->item('API_db_import'));
 		$data=array( 	"userfile"	=> array("type"=>"file","label"=>"File (txt,sql)"),
-		 							"sql"				=> array("type"=>"textarea","label"=>"Or (update) SQL"));
+		 							"sql"				=> array("type"=>"textarea","label"=>"SQL"));
+		if ($this->has_rights('cfg_configurations')) {
+			$data['update']=array('label'=>'Update DB from r');
+		}
 		$form->set_data($data,"Choose File to upload and import");
 		$this->_add_content($form->render());
 	}
@@ -235,8 +238,29 @@ class Db extends AdminController {
 				$this->_import();
 			}
 			else {
-				// trace_($sql);
-				if (!$sql) $sql=$this->_upload_sql();
+				$update=(int) $this->input->post('update');
+				if ($update) {
+					$sql='';
+					$latestRev=(int) $this->get_revision();
+					$this->_add_content(h('Update from r'.$update.' to r'.$latestRev));
+					// load all update sql files
+					$updates=read_map('db','sql');
+					$updates=array_keys($updates);
+					$updates=filter_by($updates,'update_');
+					foreach ($updates as $key=>$file) {
+						$fileRev=(int) substr($file,8,3);
+						if ($fileRev<=$update)
+							unset($updates[$key]);
+						else {
+							// load SQL
+							$usql=read_file('db/'.$file);
+							$sql.="# $file\n".$usql."\n\n";
+						}
+					}
+				}
+				else {
+					if (!$sql) $sql=$this->_upload_sql();
+				}
 				if ($sql) {
 					// do the actual import..
 					$this->load->model('form');
