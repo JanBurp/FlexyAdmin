@@ -21,7 +21,7 @@ var EmbedDialog = {
 		if (typeof(tinyMCEEmbedList)!='undefined') {
 			var l = tinyMCEEmbedList;
 			lst.options.length = 0;
-			if (l && l.length > 0) {
+			if (l && l.length > 1) {
 				lst.options[lst.options.length] = new Option('', '');
 				tinymce.each(l, function(o) {
 					lst.options[lst.options.length] = new Option(o[0], o[1]);
