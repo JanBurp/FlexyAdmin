@@ -217,4 +217,11 @@ function max_length($txt,$len=100) {
 	return $line;
 }
 
+function has_alpha($s) {
+	return preg_match('/[a-zA-Z]/',$s);
+}
+function has_digits($s) {
+	return preg_match('/\d/',$s);
+}
+
 ?>

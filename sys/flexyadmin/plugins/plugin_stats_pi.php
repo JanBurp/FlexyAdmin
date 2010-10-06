@@ -71,8 +71,6 @@ class plugin_stats extends plugin_ {
 		}
 		if (!empty($years)) $this->CI->_add_content('<p>'.$years.'</p>');
 
-
-		
 		$this->url=$this->CI->db->get_field('tbl_site','url_url');
 		$this->logTable=$this->CI->config->item('LOG_table_prefix')."_".$this->CI->config->item('LOG_stats');
 
@@ -238,13 +236,41 @@ class plugin_stats extends plugin_ {
 		$xmlYearFile=$this->_xmlYearFile();
 		if (file_exists($xmlYearFile)) {
 			$xmlYear=read_file($xmlYearFile);
+			$xmlYear=reformMalformedXML($xmlYear);
 			$yearData=xml2array($xmlYear);
+			$yearData['stats']['this_year']=reformXmlArrayKey($yearData['stats']['this_year'],'month');
+		}
+		// other months of this year?
+		$yearDataMonths=$yearData['stats']['this_year'];
+		$firstMonth=current($yearDataMonths);
+		$firstMonth=$firstMonth['month'];
+		if ($firstMonth>1) {
+			for ($m=1; $m < $firstMonth ; $m++) { 
+				$xmlMonthFile=$this->_xmlMonthFile($m,$this->Data['year']);
+				if (file_exists($xmlMonthFile)) {
+					$xmlMonth=read_file($xmlMonthFile);
+					$monthData=xml2array($xmlMonth);
+					$monthTotal=$monthData['stats']['total'];
+					$yearData['stats']['this_year'][$m]=array('month'=>$m,'views'=>$monthTotal);
+				}
+			}
+			$this_year=$yearData['stats']['this_year'];
+			ksort($this_year);
+			$yearData['stats']['this_year']=$this_year;
 		}
 		
+		// this month
 		$xmlMonthFile=$this->_xmlMonthFile();
 		if (file_exists($xmlMonthFile)) {
 			$xmlMonth=read_file($xmlMonthFile);
+			$xmlMonth=reformMalformedXML($xmlMonth);
 			$monthData=xml2array($xmlMonth);
+			$monthData['stats']['this_month']=reformXmlArrayKey($monthData['stats']['this_month'],'day');
+			$monthData['stats']['top_10_pages']=reformXmlArrayKey($monthData['stats']['top_10_pages'],'page');
+			$monthData['stats']['top_10_referers']=reformXmlArrayKey($monthData['stats']['top_10_referers'],'referer');
+			$monthData['stats']['top_10_google']=reformXmlArrayKey($monthData['stats']['top_10_google'],'search');
+			$monthData['stats']['top_10_browsers']=reformXmlArrayKey($monthData['stats']['top_10_browsers'],'browser');
+			$monthData['stats']['top_10_platform']=reformXmlArrayKey($monthData['stats']['top_10_platform'],'platform');
 		}
 
 		$xmlData=$this->Data;

@@ -139,7 +139,7 @@ function array2xml($array,$tabs=0) {
 	return $xml;
 }
 
-// function xml2array($xml) {
+// function xml2arraySimple($xml) {
 // 	$xmlary = array();
 // 	$xmlArray=array();
 // 	$reels = '/<(\w+)\s*([^\/>]*)\s*(?:\/>|>(.*)<\/\s*\\1\s*>)/s';
@@ -171,12 +171,41 @@ function array2xml($array,$tabs=0) {
 // 	return $xmlArray;
 // }
 
+
+// These function are used to reform a malformed XML (before r804)
+
+function reformMalformedXML($xml) {
+	return preg_replace('/<(\d+)>([^<]*)<(.*?)>(.*?)<\/(\d+)>/s','<$3>$2<$3>$4</$3>',$xml);
+}
+function reformXmlArrayKey($a,$rKey) {
+	$r=$a;
+	if (isset($a[$rKey])) {
+		$a=$a[$rKey];
+		$r=array();
+		$c=current($a);
+		if (is_array($c)) {
+			foreach ($a as $key => $value) {
+				$newKey=$value[$rKey];
+				if (!has_alpha($newKey))
+					$r[$value[$rKey]] = $value;
+				else
+					$r[] = $value;
+			}
+		}
+		else {
+			$r[$a[$rKey]]=$a;
+		}
+	}
+	return $r;
+}
+
+
 /**
  * xml2array() will convert the given XML text to an array in the XML structure.
  * Link: http://www.bin-co.com/php/scripts/xml2array/
  * Arguments : $contents - The XML text
  *             $get_attributes - 1 or 0. If this is 1 the function will get the attributes as well as the tag values - this results in a different array structure in the return value.
- *             $priority - Can be 'tag' or 'attribute'. This will change the way the resulting array sturcture. For 'tag', the tags are given more importance.
+ *             $priority - Can be 'tag' or 'attribute'. This will change the way the resulting array structure. For 'tag', the tags are given more importance.
  * Return: The parsed XML in an array form. Use print_r() to see the resulting array structure.
  * Examples: $array =  xml2array(file_get_contents('feed.xml'));
  *           $array =  xml2array(file_get_contents('feed.xml', 1, 'attribute'));
@@ -185,7 +214,7 @@ function xml2array($contents, $get_attributes=true, $priority = 'tag') {
     if(!$contents) return array();
 
     if(!function_exists('xml_parser_create')) {
-       //print "'xml_parser_create()' function not found!";
+       print "'xml_parser_create()' function not found!";
        return array();
     }
 
