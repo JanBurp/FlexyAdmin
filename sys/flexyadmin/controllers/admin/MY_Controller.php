@@ -645,7 +645,9 @@ class AdminController extends BasicController {
 		$buttons2=$this->cfg->get('CFG_editor',"str_buttons2");
 		$buttons3=$this->cfg->get('CFG_editor',"str_buttons3");
 		$previewWidth=$this->cfg->get('CFG_editor',"int_preview_width");
+		if (!$previewWidth) $previewWidth=450;
 		$previewHeight=$this->cfg->get('CFG_editor',"int_preview_height");
+		if (!$previewHeight) $previewHeight=500;
 		if ($this->_is_super_admin()) {
 			if (strpos($buttons1,"code")===FALSE) $buttons1.=",|,code";
 		}
