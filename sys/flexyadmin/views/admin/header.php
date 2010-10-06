@@ -78,7 +78,9 @@ $isForm=has_string('form',$show_type);
 			$().ready(function() {
 			   $('textarea.htmleditor').tinymce({
 						document_base_url : "<?=base_url()?>",
-						plugins : "paste,advimage,media,table,inlinepopups,embed,fullscreen",
+						plugins : "paste,advimage,media,table,inlinepopups,embed,fullscreen,preview",
+						plugin_preview_width : "<?=$preview_width?>",
+						plugin_preview_height : "<?=$preview_height?>",
 				 		dialog_type : "modal",
 						inlinepopups_skin : "flexyadmin",
 						language : "<?=$language?>",

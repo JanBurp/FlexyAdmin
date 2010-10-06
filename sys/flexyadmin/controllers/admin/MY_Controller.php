@@ -644,12 +644,14 @@ class AdminController extends BasicController {
 		$buttons1=$this->cfg->get('CFG_editor',"str_buttons1");
 		$buttons2=$this->cfg->get('CFG_editor',"str_buttons2");
 		$buttons3=$this->cfg->get('CFG_editor',"str_buttons3");
+		$previewWidth=$this->cfg->get('CFG_editor',"int_preview_width");
+		$previewHeight=$this->cfg->get('CFG_editor',"int_preview_height");
 		if ($this->_is_super_admin()) {
 			if (strpos($buttons1,"code")===FALSE) $buttons1.=",|,code";
 		}
 		$formats=$this->cfg->get('CFG_editor',"str_formats");
 		$styles=$this->cfg->get('CFG_editor',"str_styles");
-		$this->load->view('admin/header', array("title"=>$title,"url"=>$url,"jsVars"=>$this->js,"show_type"=>$type,"show_editor"=>$editor,"buttons1"=>$buttons1,"buttons2"=>$buttons2,"buttons3"=>$buttons3,"formats"=>$formats,"styles"=>$styles,"language"=>$this->language));
+		$this->load->view('admin/header', array("title"=>$title,"url"=>$url,"jsVars"=>$this->js,"show_type"=>$type,"show_editor"=>$editor,"buttons1"=>$buttons1,"buttons2"=>$buttons2,"buttons3"=>$buttons3,'preview_width'=>$previewWidth,'preview_height'=>$previewHeight,"formats"=>$formats,"styles"=>$styles,"language"=>$this->language));
 	}
 
 	function _show_table_menu($tables,$type) {
