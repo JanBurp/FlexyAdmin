@@ -33,6 +33,7 @@ class Spam {
 
 
 	function check_text($txt) {
+		if (empty($txt)) $txt=' ';
 		$this->text=$txt;
 		$this->text_no_html=strip_tags($txt);
 		$this->rapport['score']=0;
