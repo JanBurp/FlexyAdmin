@@ -49,19 +49,25 @@ class Content {
 	function _countCallBack($matches) {
 		static $img_count=1;
 		static $p_count=1;
+		static $h_count=array(1=>1,2=>1,3=>1,4=>1,5=>1,6=>1,7=>1);
 		$class="";
 		// is there a class allready?
-		if (preg_match("/class=\"(.*?)\"/",$matches[2],$cMatch))
+		if (preg_match("/class=\"(.*?)\"/",$matches[3],$cMatch))
 			$class=$cMatch[1]." ";
 		if ($matches[1]=="p") {
 			$class.="p$p_count";
 			if ($p_count++%2) $class.=" odd"; else $class.=" even";
 		}
-		else {
+		elseif ($matches[1]=="img") {
 			$class.="img$img_count";
 			if ($img_count++%2) $class.=" odd"; else $class.=" even";
 		}
-		$result="<".$matches[1]." class=\"$class\"".$matches[2].">";
+		else {
+			$h=$matches[2];
+			$class.="h".$h.$h_count[$h];
+			if ($h_count[$h]++%2) $class.=" odd"; else $class.=" even";
+		}
+		$result="<".$matches[1]." class=\"$class\"".$matches[3].">";
 		return $result;
 	}
 
@@ -81,7 +87,7 @@ class Content {
 	function render($txt) {
 		
 		if ($this->addClasses) {
-			$txt=preg_replace_callback("/<(img|p)(.*?)>/",array($this,"_countCallBack"),$txt);
+			$txt=preg_replace_callback("/<(img|p|h(\d))(.*?)>/",array($this,"_countCallBack"),$txt);
 		}
 
 		if ($this->replaceLanguageLinks) {
