@@ -92,10 +92,14 @@ class plugin_automenu extends plugin_ {
 				case 'from submenu table':
 					$data=$this->CI->db->get_results($autoValue['table']);
 					$order=0;
+					$parent=0;
 					if (!empty($autoValue['str_parent_where'])) {
-						$this->CI->db->select('id');
-						$this->CI->db->where($autoValue['str_parent_where']);
-						$parent=$this->CI->db->get_row($this->resultMenu);
+						// parse where...
+						$whenParser=preg_split('/\s*(<>|!=|=|>|<)\s*/',$autoValue['str_parent_where'],-1,PREG_SPLIT_DELIM_CAPTURE);
+						// trace_($whenParser);
+						// TODO: only '=' operator works now
+						$parent=find_row_by_value($this->newMenu,str_replace(array('"',"'"),'',$whenParser[2]),$whenParser[0]);
+						$parent=current($parent);
 						$parent=$parent['id'];
 					}
 					// is er al een sub? Gebruik die order
