@@ -337,6 +337,54 @@ function xml2array($contents, $get_attributes=true, $priority = 'tag') {
 
 
 /**
+* @param string $cvs
+* @param array $fldnames array of fields names. Leave this to null to use the first row values as fields names.
+* @param string $sep string used as a field separator (default ';')
+* @param string $protect char used to protect field (generally single or double quote)
+* @param array  $filters array of regular expression that row must match to be in the returned result.
+*                        ie: array('fldname'=>'/pcre_regexp/')
+* @return array
+*/
+function csv2array($csv,$fldnames=null,$sep=',',$protect='"',$filters=null){
+	$csv=explode("\n",$csv);
+	# use the first line as fields names
+	if( is_null($fldnames)) {
+		$fldnames = array_shift($csv);
+		$fldnames = explode($sep,$fldnames);
+		$fldnames = array_map('trim',$fldnames);
+		if($protect) {
+			foreach($fldnames as $k=>$v) $fldnames[$k] = preg_replace(array("/(?<!\\\\)$protect/","!\\\\($protect)!"),'\\1',$v);
+		}            
+	}
+	elseif (is_string($fldnames)) {
+		$fldnames = explode($sep,$fldnames);
+		$fldnames = array_map('trim',$fldnames);
+	}
+
+	$i=0;
+	foreach($csv as $row){
+		if($protect) {
+			$row = preg_replace(array("/(?<!\\\\)$protect/","!\\\\($protect)!"),'\\1',$row);
+		}
+		$row = explode($sep,trim($row));
+
+		foreach($row as $fldnb=>$fldval) $res[$i][(isset($fldnames[$fldnb])?$fldnames[$fldnb]:$fldnb)] = $fldval;
+
+		if (is_array($filters)) {
+			foreach($filters as $k=>$exp){
+				if(! preg_match($exp,$res[$i][$k]) )  unset($res[$i]);
+			}
+		}
+		$i++;
+	}
+	return $res;
+}
+
+
+
+
+
+/**
  * function filter_by($array,$prefix)
  *
  * Filters all (string) elements out that don't have the given prefix
