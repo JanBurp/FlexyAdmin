@@ -90,14 +90,16 @@ function showHelpItems() {
 	$("span.help").mouseenter(function() {
 		var obj=$(this);
 		var helpName=get_subclass("help_",$(this));
-		ShowDelay=setTimeout( function() {		
-			var helpTxt=$("#help_messages span#help_"+helpName).html();
-			var html=helpTxt;
-			$(Popup).html(html).fadeIn(150);
-			HideDelay=setTimeout( function(){
-				$(Popup).fadeOut(1000);
-			},5000 );
-		},1000);
+		if (helpName!='') {
+			ShowDelay=setTimeout( function() {		
+				var helpTxt=$("#help_messages span#help_"+helpName).html();
+				var html=helpTxt;
+				$(Popup).html(html).fadeIn(150);
+				HideDelay=setTimeout( function(){
+					$(Popup).fadeOut(1000);
+				},5000 );
+			},1000);
+		}
 	}).mouseout(function() {
 		clearTimeout(ShowDelay);
 		$(Popup).fadeOut(150);
