@@ -731,7 +731,8 @@ class AdminController extends BasicController {
 					break;
 				
 				case 'table' :
-					$menu[$item['str_ui_name']]=array("uri"=>api_uri('API_view_grid',$item['table'],'info',$item['id']),"class"=>'tbl ');
+					// $menu[$item['str_ui_name']]=array("uri"=>api_uri('API_view_grid',$item['table'],'info',$item['id']),"class"=>'tbl ');
+					$menu[$item['str_ui_name']]=array("uri"=>api_uri('API_view_grid',$item['table']),"class"=>'tbl ');
 					break;
 					
 				case 'all_tbl_tables' :

@@ -82,7 +82,7 @@ function doGrid() {
 		//
 		// Filter/Search rows
 		//
-		filter=$("table.grid");
+		filter=$("table.grid:first");
 		if (filter.length>0 && !isGridAction) {
 			// keep table width
 			w=$(filter).width();
@@ -129,11 +129,11 @@ function doGrid() {
 			});
 
 			// place filter input on other place
-			filter_input=$("div.filter input");
+			filter_input=$("div.filter:first input");
 			$(filter_input).addClass("filter").attr({title:'search / filter'});
-			$("tr.caption tr").append('<td class="filter">');
-			$("td.filter").html(filter_input);
-			$("td.filter input").wrap('<span class="help '+config.help_filter+'"></span>');
+			$("tr.caption:first tr").append('<td class="filter">');
+			$("td.filter:first").html(filter_input);
+			$("td.filter:first input").wrap('<span class="help '+config.help_filter+'"></span>');
 		}
 
 		//
