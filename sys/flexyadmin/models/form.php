@@ -567,7 +567,9 @@ class Form Extends Model {
 		switch($field["type"]):
 
 			case "hidden":
-				$out.=form_hidden($name,$field["value"]);
+				$out.='<input type="hidden" ';
+				foreach ($attr as $name => $value) {$out.=$name.'="'.$value.'" '}
+				$out.='/>';
 				break;
 
 
