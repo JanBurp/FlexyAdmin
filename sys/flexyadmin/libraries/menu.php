@@ -310,10 +310,26 @@ class Menu {
 
 	
 	function render_branch($branchUri,$attr="",$level=1,$preUri="") {
-		$preUri=add_string($preUri,$branchUri,'/');
-		$branch=find_row_by_value($this->menu,$branchUri,'uri');
-		$branch=$branch[$branchUri]['sub'];
-		return $this->render($branch,$attr,$level,$preUri);
+		$out='';
+		$preUri=ltrim(add_string($preUri,$branchUri,'/'),'/');
+		$branchUri=ltrim($branchUri,'/');
+		$uris=explode('/',$branchUri);
+		$branch=$this->menu;
+		while (count($uris)>0 and $branch) {
+			$uri=array_shift($uris);
+			$branch=find_row_by_value($branch,$uri,'uri');
+			if ($branch) {
+				$branch=current($branch);
+				if (isset($branch['sub']))
+					$branch=$branch['sub'];
+				else
+					$branch=false;
+			}
+		}
+		if ($branch) {
+			$out=$this->render($branch,$attr,$level,$preUri);
+		}
+		return $out;
 	}
 
 	function render($menu=NULL,$attr="",$level=1,$preUri="") {
