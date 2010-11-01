@@ -789,7 +789,10 @@ class Form Extends Model {
 				break;
 
 			case "password":
-				$out.=form_password($attr);
+				if (substr($this->action,0,17)=='/admin/show/form/')
+					$out.=form_input($attr);
+				else
+					$out.=form_password($attr);
 				break;
 				
 			case "input":
