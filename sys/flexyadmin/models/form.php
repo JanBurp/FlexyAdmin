@@ -568,7 +568,7 @@ class Form Extends Model {
 
 			case "hidden":
 				$out.='<input type="hidden" ';
-				foreach ($attr as $name => $value) {$out.=$name.'="'.$value.'" '}
+				foreach ($attr as $name => $value) {$out.=$name.'="'.$value.'" ';}
 				$out.='/>';
 				break;
 
