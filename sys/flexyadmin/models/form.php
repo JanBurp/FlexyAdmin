@@ -788,6 +788,10 @@ class Form Extends Model {
 				$out.=form_input($attr);
 				break;
 
+			case "password":
+				$out.=form_password($attr);
+				break;
+				
 			case "input":
 			case "default":
 			default:
