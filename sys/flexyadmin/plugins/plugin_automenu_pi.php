@@ -84,6 +84,7 @@ class plugin_automenu extends plugin_ {
 						$item=$this->_setResultMenuItem($item,true);
 						$item['str_table']=$autoValue['table'];
 						$item['str_uri']=$item['uri'];
+						$item['int_id']=$item['id'];
 						$this->_insertItem($item);
 					}
 					$this->_moveChildren();
@@ -113,6 +114,7 @@ class plugin_automenu extends plugin_ {
 						$this->_setResultMenuItem($item);
 						$item['str_table']=$autoValue['table'];
 						$item['str_uri']=$item['uri'];
+						$item['int_id']=$item['id'];
 						if (isset($parent)) $item['self_parent']=$parent;
 						if (!isset($item['order'])) $item['order']=$order++;
 						$this->_insertItem($item);
@@ -150,6 +152,7 @@ class plugin_automenu extends plugin_ {
 							$item['self_parent']=$self_parent;
 							$item['str_table']=$autoValue['table'];
 							$item['str_uri']=$item['uri'];
+							$item['int_id']=$item['id'];
 							$this->_insertItem($item);
 						}
 					}
@@ -172,6 +175,7 @@ class plugin_automenu extends plugin_ {
 							$item['self_parent']=$selfParent;
 							$item['str_table']=$autoValue['table'];
 							$item['str_uri']=$item['uri'];
+							$item['int_id']=$item['id'];
 							$this->_insertItem($item);
 						}
 					}
