@@ -113,17 +113,23 @@ function array2json($arr) {
 
 
 
-function array2xml($array,$tabs=0) {
+function array2xml($array,$keys=NULL,$attr=NULL,$tabs=0) {
 	if ($tabs<=0)
-		$xml='<?xml version="1.0" encoding="ISO-8859-1"?>'."\n\n";
+		$xml='<?xml version="1.0" encoding="UTF-8"?>'."\n\n";
 	else
 		$xml="\n";
 	$sub="";
 	foreach($array as $key=>$value) {
 		$sub.=repeater("\t",$tabs);
-		$sub.="<$key>";
+		if (isset($keys[$tabs])) {
+			$at='';
+			if (isset($attr[$keys[$tabs]])) {	foreach ($attr[$keys[$tabs]] as $a => $v) {	$at.=' '.$a.'="'.$v.'" ';	}	}
+			$sub.="<$keys[$tabs]$at>";
+		}
+		else
+			$sub.="<$key>";
 		if (is_array($value)) {
-			$sub.=array2xml($value,$tabs+1);
+			$sub.=array2xml($value,$keys,$attr,$tabs+1);
 			$sub.=repeater("\t",$tabs);
 		}
 		else {
@@ -132,7 +138,10 @@ function array2xml($array,$tabs=0) {
 			else
 				$sub.=$value;
 		}
-		$sub.="</$key>\n";
+		if (isset($keys[$tabs]))
+			$sub.="</$keys[$tabs]>\n";
+		else
+			$sub.="</$key>\n";
 		if ($tabs==0) $sub.="\n";
 	}
 	$xml.="$sub";
