@@ -44,13 +44,19 @@ class MY_Controller extends Controller {
 
 	function _init_flexy_admin($isAdmin=false) {
 		// $this->output->enable_profiler(TRUE);
-		$this->load->model("cfg");
-		$this->cfg->load('CFG_configurations');
-		$this->cfg->load('CFG_table',$this->config->item('CFG_table_name'));
-		$this->cfg->load('CFG_field',$this->config->item('CFG_field_name'));
-		$this->cfg->load('CFG_media_info',array("path","fields_media_fields"));
-		$this->cfg->load('CFG_img_info','path');
-		// trace_($this->config->config);
+		$this->load->model('cfg');
+		if ($isAdmin) {
+			$this->cfg->load('CFG_configurations');
+			$this->cfg->load('CFG_table',$this->config->item('CFG_table_name'));
+			$this->cfg->load('CFG_field',$this->config->item('CFG_field_name'));
+			$this->cfg->load('CFG_media_info',array("path","fields_media_fields"));
+			$this->cfg->load('CFG_img_info','path');
+		}
+		else {
+			$this->cfg->load('CFG_configurations','','email_webmaster_email,str_menu_table,b_logout_to_site,b_query_urls');
+			$this->cfg->load('CFG_table',$this->config->item('CFG_table_name'),'id,table,str_order_by');
+		}
+		// trace_($this->cfg);
 	}
 
 }
@@ -79,8 +85,10 @@ class FrontEndController extends MY_Controller {
 		$this->load->library('user_agent');
 		$this->load->helper('date');
 		$this->load->helper("html_helper");
+		$this->load->helper("language");
 		$this->load->library("menu");
 		$this->load->library("content");
+		$this->load->library('form_validation');
 
 		/**
 			*	Set $_GET if asked for
@@ -157,8 +165,7 @@ class FrontEndController extends MY_Controller {
 			if ($this->db->has_field($menuTable,"self_parent")) $this->db->order_as_tree();
 			if ($this->db->has_field($menuTable,"uri")) {
 				$this->db->select("uri");
-				$top2=$this->db->get_result($menuTable,2);
-				$top=current($top2);
+				$top=$this->db->get_row($menuTable);
 				$this->uri->set_home($top["uri"]);
 			}
 			else {
@@ -674,14 +681,13 @@ class AdminController extends BasicController {
 		$oTables=array_merge($oTables,$tables);
 		foreach ($oTables as $name) {
 			$menuName=$this->uiNames->get($name);
+			$uri=api_uri('API_view_grid',$name);
 			if ($type!='tbl') $menuName='_'.$menuName;
 			if ($type=='res') $menuName='_'.$menuName;
 			if (!in_array($name,$excluded) and $this->has_rights($name)) {
-					$a[$menuName]=array("uri"=>api_uri('API_view_grid',$name),"class"=>$type);
+				$a[$uri]=array("uri"=>$uri,'name'=>$menuName,"class"=>$type);
 				$tableHelp=$this->cfg->get("CFG_table",$name,"txt_help");
-				if (!empty($tableHelp)) {
-					$a[$menuName]["help"]=$tableHelp;
-				}
+				if (!empty($tableHelp)) $a[$uri]["help"]=$tableHelp;
 			}
 		}
 		return $a;
@@ -703,7 +709,8 @@ class AdminController extends BasicController {
 					$args=implode('/',$args);
 					if ($args=='/') $args='';
 					if (substr($uiName,0,1)=="_") $uiName=lang(substr($uiName,1));
-					$menu[$uiName]=array('uri'	=> api_uri($item['api']).$args, 'class'=>str_replace('/','_',$item['api']) );
+					$uri=api_uri($item['api']).$args;
+					$menu[$uri]=array('uri'=>$uri,'name'=>$uiName,'class'=>str_replace('/','_',$item['api']) );
 					break;
 					
 				case 'seperator' :
@@ -713,26 +720,33 @@ class AdminController extends BasicController {
 				case 'tools':
 					// Database import/export tools
 					if ($this->_is_super_admin()) {
-						$menu[lang('db_export')]					=array("uri"=>api_uri('API_db_export'),"class"=>"db db_backup");
-						$menu[lang('db_import')]					=array("uri"=>api_uri('API_db_import'),"class"=>"db");
+						$uri=api_uri('API_db_export');
+						$menu[$uri]=array("uri"=>$uri,'name'=>lang('db_export'), "class"=>"db db_backup");
+						$uri=api_uri('API_db_import');
+						$menu[$uri]=array("uri"=>$uri,'name'=>lang('db_import'),"class"=>"db");
 					}
 					elseif ($this->_can_backup()) {
-						$menu[lang('db_backup')]					=array("uri"=>api_uri('API_db_backup'),"class"=>"db db_backup");
-						$menu[lang('db_restore')]					=array("uri"=>api_uri('API_db_restore'),"class"=>"db");
+						$uri=api_uri('API_db_import');
+						$menu[$uri]=array("uri"=>$uri,'name'=>lang('db_backup'),"class"=>"db db_backup");
+						$uri=api_uri('API_db_restore');
+						$menu[$uri]=array("uri"=>api_uri('API_db_restore'),'name'=>lang('db_restore'),"class"=>"db");
 					}
 					// Search&Replace AND Bulkupload tools
 					if ($this->_can_use_tools()) {
-						$menu[lang('sr_search_replace')]	=array("uri"=>api_uri('API_search'),"class"=>"sr db_backup");
-						$menu[lang('fill_fill')] =array("uri"=>api_uri('API_fill'),"class"=>"db db_fill");
+						$uri=api_uri('API_search');
+						$menu[$uri]=array("uri"=>$uri,'name'=>lang('sr_search_replace'),"class"=>"sr db_backup");
+						$uri=api_uri('API_fill');
+						$menu[$uri] =array("uri"=>$uri,'name'=>lang('fill_fill'),"class"=>"db db_fill");
 						if (file_exists($this->config->item('BULKUPLOAD'))) {
-							$menu['Bulk upload']						=array("uri"=>api_uri('API_bulk_upload'),"class"=>"media");
+							$uri=api_uri('API_bulk_upload');
+							$menu[$uri]=array("uri"=>$uri,'name'=>'Bulk upload',"class"=>"media");
 						}
 					}
 					break;
 				
 				case 'table' :
-					// $menu[$item['str_ui_name']]=array("uri"=>api_uri('API_view_grid',$item['table'],'info',$item['id']),"class"=>'tbl ');
-					$menu[$item['str_ui_name']]=array("uri"=>api_uri('API_view_grid',$item['table']),"class"=>'tbl ');
+					$uri=api_uri('API_view_grid',$item['table']);
+					$menu[$uri]=array("uri"=>$uri,'name'=>$item['str_ui_name'],"class"=>'tbl ');
 					break;
 					
 				case 'all_tbl_tables' :
@@ -753,7 +767,8 @@ class AdminController extends BasicController {
 					break;
 				
 				case 'media' :
-					$menu[$item['str_ui_name']]=array("uri"=>api_uri('API_filemanager','show',pathencode($item['path'])),"class"=>'media ');
+					$uri=api_uri('API_filemanager','show',pathencode($item['path']));
+					$menu[$uri]=array("uri"=>$uri,'name'=>$item['str_ui_name'],"class"=>'media ');
 					break;
 					
 				case 'all_media':
@@ -765,12 +780,13 @@ class AdminController extends BasicController {
 							$menuName=$this->uiNames->get($mediaInfo['path']);
 							while (isset($a[$menuName])) {$menuName.=" ";}
 							$rightsName=el('path',$mediaInfo);
+							$uri=api_uri('API_filemanager',"show",pathencode(el('path',$mediaInfo)));
 							if (!empty($menuName) and $this->has_rights("media_".$rightsName)) {
-								$menu[$menuName]=array("uri"=>api_uri('API_filemanager',"show",pathencode(el('path',$mediaInfo))),"class"=>"media");
+								$menu[$uri]=array("uri"=>$uri,'name'=>$menuName,"class"=>"media");
 							}
 							$mediaHelp=$this->cfg->get("CFG_media_info",$mediaInfo["path"],"txt_help");
 							if (!empty($mediaHelp)) {
-								$menu[$menuName]["help"]=$mediaHelp;
+								$menu[$uri]["help"]=$mediaHelp;
 							}
 						}
 					}
