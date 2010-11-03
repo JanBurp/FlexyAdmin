@@ -431,7 +431,8 @@ class Menu {
 		$CI->db->where_uri($uri);
 		if ($foreigns) $CI->db->add_foreigns();
 		if ($many) $CI->db->add_many();
-		return $CI->db->get_row($this->menuTable);
+		$item=$CI->db->get_row($this->menuTable);
+		return $item;
 	}
 
 

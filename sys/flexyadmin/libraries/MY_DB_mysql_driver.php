@@ -413,11 +413,17 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 						$this->where($table.'.self_parent',$row->id);
 						$this->where($table.'.uri',$uri);
 					}
+					else {
+						$this->where('id','-1'); // can't be found!
+					}
 					break;
 				default:
 					// > 2
 					$foundId=$this->get_unique_id_from_fulluri($table,$uri);
-					if ($foundId>-1) $this->where($table.'.id',$foundId);
+					if ($foundId>-1)
+						$this->where($table.'.id',$foundId);
+					else
+						$this->where('id','-1'); // can't be found!
 					break;
 			}
 		}
