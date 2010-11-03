@@ -234,6 +234,7 @@ class plugin_stats extends plugin_ {
 
 	function _stat_data_from_xml() {
 		$xmlYearFile=$this->_xmlYearFile();
+		$yearData=array();
 		if (file_exists($xmlYearFile)) {
 			$xmlYear=read_file($xmlYearFile);
 			$xmlYear=reformMalformedXML($xmlYear);
@@ -241,22 +242,24 @@ class plugin_stats extends plugin_ {
 			$yearData['stats']['this_year']=reformXmlArrayKey($yearData['stats']['this_year'],'month');
 		}
 		// other months of this year?
-		$yearDataMonths=$yearData['stats']['this_year'];
-		$firstMonth=current($yearDataMonths);
-		$firstMonth=$firstMonth['month'];
-		if ($firstMonth>1) {
-			for ($m=1; $m < $firstMonth ; $m++) { 
-				$xmlMonthFile=$this->_xmlMonthFile($m,$this->Data['year']);
-				if (file_exists($xmlMonthFile)) {
-					$xmlMonth=read_file($xmlMonthFile);
-					$monthData=xml2array($xmlMonth);
-					$monthTotal=$monthData['stats']['total'];
-					$yearData['stats']['this_year'][$m]=array('month'=>$m,'views'=>$monthTotal);
+		if (isset($yearData['stats']['this_year'])) {
+			$yearDataMonths=$yearData['stats']['this_year'];
+			$firstMonth=current($yearDataMonths);
+			$firstMonth=$firstMonth['month'];
+			if ($firstMonth>1) {
+				for ($m=1; $m < $firstMonth ; $m++) { 
+					$xmlMonthFile=$this->_xmlMonthFile($m,$this->Data['year']);
+					if (file_exists($xmlMonthFile)) {
+						$xmlMonth=read_file($xmlMonthFile);
+						$monthData=xml2array($xmlMonth);
+						$monthTotal=$monthData['stats']['total'];
+						$yearData['stats']['this_year'][$m]=array('month'=>$m,'views'=>$monthTotal);
+					}
 				}
+				$this_year=$yearData['stats']['this_year'];
+				ksort($this_year);
+				$yearData['stats']['this_year']=$this_year;
 			}
-			$this_year=$yearData['stats']['this_year'];
-			ksort($this_year);
-			$yearData['stats']['this_year']=$this_year;
 		}
 		
 		// this month
