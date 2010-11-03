@@ -23,6 +23,7 @@
 </head>
 <body>
 	<div id="content">
+		<? if (empty($heading)) $heading='Database Error'?>
 		<h1><? echo $heading; ?></h1>
 		<? echo $message; ?>
 		<?
@@ -31,6 +32,7 @@
 		if (empty($error) or $error<'0000' or $error>'9999') $error=mysql_errno();
 		switch ($error) {
 			case 1045:
+			case 2005:
 				echo "Set your database information in 'site/database.php' or 'site/database_local.php'.";
 				break;
 			case 1102:

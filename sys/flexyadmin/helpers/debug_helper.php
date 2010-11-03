@@ -31,10 +31,10 @@ function err_($message) {
 	log_('error',$message);
 }
 
-function backtrace_($offset=0,$echo=true) {
+function backtrace_($offset=0,$limit=10,$echo=true) {
 	if ($echo) return trace_(NULL,$echo,$offset+1);
 	$dbgTrace = debug_backtrace();
-	if ($offset>0) $dbgTrace=array_slice($dbgTrace,$offset);
+	if ($offset>0) $dbgTrace=array_slice($dbgTrace,$offset,$limit);
 	$out=array();
 	foreach($dbgTrace as $key => $val) {
 		unset($val['object']);
@@ -84,8 +84,9 @@ function trace_($a=NULL,$echo=true,$backtraceOffset=1) {
 	static $c=0;
 	$show="Trace";
 	if (!isset($a)) {
-		$a=backtrace_($backtraceOffset,false);
+		$a=backtrace_($backtraceOffset,5,false);
 		$show="Variable is empty, do a Backtrace";
+		// $show="Variable is empty";
 		$type="";
 	}
 	else {
