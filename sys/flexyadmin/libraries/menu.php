@@ -107,8 +107,8 @@ class Menu {
 
 	function set_menu_from_table($table="",$foreign=false) {
 		$counter=1;
-		$CI =& get_instance();
 		$table=$this->set_menu_table($table);
+		$CI =& get_instance();
 
 		// select fields
 		$fields=$CI->db->list_fields($table);
@@ -123,22 +123,27 @@ class Menu {
 				}
 			}
 		}
+
 		// get data from menu_table
 		$CI->db->select(pk());
 		$CI->db->select($fields);
-		$CI->db->add_foreigns($foreign);
+		if ($foreign) $CI->db->add_foreigns($foreign);
 		if (in_array("self_parent",$fields)) $CI->db->order_as_tree();
 		$items=$CI->db->get_result($table);
+		// trace_($items);
 
 		$menu=array();
 		foreach($items as $item) {
 			if (!isset($item[$this->fields["visible"]]) or ($item[$this->fields["visible"]]) ) {
 				$thisItem=array();
 				$thisItem["id"]=$item[pk()];
-				if (isset($item[$this->fields["uri"]]))			$thisItem["uri"]=$item[$this->fields["uri"]];	else $thisItem["uri"]=$item[$this->fields["title"]];
-				if (isset($item[$this->fields["clickable"]]) && $item[$this->fields["clickable"]]==false) $thisItem["uri"]='';
+				$uri=$item[$this->fields["uri"]];
+				$thisItem["uri"]=$uri;
+				
+				if (isset($item[$this->fields["title"]])) 	$thisItem['name']=$item[$this->fields["title"]]; else $thisItem['name']=$uri;
 				if (isset($item[$this->fields["class"]])) 	$thisItem["class"]=str_replace('|',' ',$item[$this->fields["class"]]);
 				if (isset($item[$this->fields["parent"]])) 	$parent=$item[$this->fields["parent"]]; else $parent="";
+				if (isset($item[$this->fields["clickable"]]) && $item[$this->fields["clickable"]]==false) $thisItem["uri"]='';
 				
 				if (!empty($this->extraFields)) {
 					foreach ($this->extraFields as $extraName => $extra) {
@@ -148,14 +153,15 @@ class Menu {
 					}
 				}
 				
-				if (isset($menu[$parent][$item[$this->fields["title"]]]))
-					$menu[$parent][$item[$this->fields["title"]]."__".$counter++]=$thisItem;
-				else
-					$menu[$parent][$item[$this->fields["title"]]]=$thisItem;
+				// if (isset($menu[$parent][$item[$this->fields["title"]]]))
+				// 	$menu[$parent][$item[$this->fields["title"]]."__".$counter++]=$thisItem;
+				// else
+				$menu[$parent][$uri]=$thisItem;
 				
 			}
 		}
 		// trace_($menu);
+		
 		// Set submenus on right place in array
 		$item=end($menu);
 		while ($item) {
@@ -170,10 +176,12 @@ class Menu {
 			$item=prev($menu);
 		}
 		// trace_($menu);
+		
 		// set first
 		reset($menu);
 		$menu=current($menu);
 		$this->set_menu($menu);
+		// trace_($menu);
 		return $menu;
 	}
 
@@ -181,21 +189,21 @@ class Menu {
 		$this->menu=$menu;
 	}
 
-	function add($name,$item) {
-		$this->menu[$name]=$item;
+	function add($item) {
+		$this->menu[$item['uri']]=$item;
 	}
 
-	function add_to_top($name,$item) {
-		$menu=array_merge(array($name=>$item),$this->menu);
+	function add_to_top($item) {
+		$menu=array_merge(array($item['uri']=>$item),$this->menu);
 		$this->set_menu($menu);
 	}
 
-	function add_after($name,$item,$after) {
+	function add_after($item,$after) {
 		if (array_key_exists($after,$this->menu)) {
 				$new=array();
 				foreach($this->menu as $k=>$i) {
 					$new[$k]=$i;
-					if ($k==$after) $new[$name]=$item;
+					if ($k==$after) $new[$item['uri']]=$item;
 				}
 			$this->menu=$new;
 			return TRUE;
@@ -203,21 +211,21 @@ class Menu {
 		else return FALSE;
 	}
 
-	function add_to_bottom($name,$item) {
-		$menu=array_merge($this->menu,array($name=>$item));
+	function add_to_bottom($item) {
+		$menu=array_merge($this->menu,array($item['uri']=>$item));
 		$this->set_menu($menu);
 	}
 
-	function add_sub($name,$sub) {
-		if (array_key_exists($name,$this->menu)) {
-			$this->menu[$name]["sub"]=$sub;
+	function add_sub($sub) {
+		if (array_key_exists($sub['uri'],$this->menu)) {
+			$this->menu[$sub['uri']]["sub"]=$sub;
 			return TRUE;
 		}
 		return FALSE;
  	}
 
-	function remove_item($name) {
-		unset($this->menu[$name]);
+	function remove_item($uri) {
+		unset($this->menu[$uri]);
 	}
 
 	function set_current($current="") {
@@ -315,9 +323,10 @@ class Menu {
 		$branch=$this->menu;
 		while (count($uris)>0 and $branch) {
 			$uri=array_shift($uris);
-			$branch=find_row_by_value($branch,$uri,'uri');
+			// $branch=find_row_by_value($branch,$uri,'uri');
+			$branch=$branch[$uri];
 			if ($branch) {
-				$branch=current($branch);
+				// $branch=current($branch);
 				if (isset($branch['sub']))
 					$branch=$branch['sub'];
 				else
@@ -336,21 +345,31 @@ class Menu {
 		if (empty($attr["class"])) $attr["class"]="";
 		$attr["class"].=" lev$level";
 		if ($level>1) unset($attr["id"]);
+
 		$branch=array();
 		$out=$this->tmp($this->tmpMenuStart,$attr);
 		if (!isset($menu)) $menu=$this->menu;
 		// trace_($menu);
+
 		$pos=1;
-		foreach($menu as $name=>$item) {
+		foreach($menu as $uri=>$item) {
+
+			if (isset($item['name']))
+				$name=$item['name'];
+			else
+				$name='';
+
 			if (empty($item)) {
 				// seperator
 				$out.=$this->tmp($this->tmpItemStart,array("class"=>"seperator pos$pos lev$level"));
 				$out.=$this->tmp($this->tmpItemEnd);
 				$pos++;
 			}
+
 			if (isset($item[$this->urlField])) {
 				$thisUri=$item[$this->urlField];
 				if (!empty($preUri) and !empty($thisUri) and $this->urlField=="uri") $thisUri=$preUri."/".$thisUri;
+
 				// set class
 				$cName=strtolower(str_replace(" ","_",$name));
 				$link="";
@@ -368,9 +387,9 @@ class Menu {
 
 				// set id
 				$itemAttr['id']="menu_".$cName."_pos".$pos."_lev$level";
-				// render item
+
+				// render item/subitem
 				$out.=$this->tmp($this->tmpItemStart,array("class"=>$itemAttr["class"],'id'=>$itemAttr['id']));
-				// render item or submenu
 				if (isset($item["uri"])) {
 					$showName=ascii_to_entities($name);
 					$showName=trim($showName,'_');
@@ -397,8 +416,7 @@ class Menu {
 					else
 						$out.=anchor($link, $showName, $itemAttr);
 				}
-				if (isset($item["sub"]))
-					$out.=$this->render($item["sub"],"$cName",$level+1,$thisUri);
+				if (isset($item["sub"])) $out.=$this->render($item["sub"],"$cName",$level+1,$thisUri);
 				$out.=$this->tmp($this->tmpItemEnd);
 				$pos++;
 			}
@@ -407,10 +425,12 @@ class Menu {
 		return $out;
 	}
 	
-	function get_item($uri='') {
+	function get_item($uri='',$foreigns=false,$many=false) {
 		if (empty($uri)) $uri=$this->current;
 		$CI =& get_instance();
 		$CI->db->where_uri($uri);
+		if ($foreigns) $CI->db->add_foreigns();
+		if ($many) $CI->db->add_many();
 		return $CI->db->get_row($this->menuTable);
 	}
 

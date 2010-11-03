@@ -63,12 +63,13 @@
  * @return bool true on succes
  */
 
-	function load($table,$key="") {
+	function load($table,$key="",$fields='*') {
 		if (!empty($key) and !is_array($key)) $key=array($key);
 		$out=false;
 		$table=$this->_name($table);
 		log_("info","[Cfg] Loading config table '$table'");
 		if ($this->db->table_exists($table)) {
+			$this->db->select($fields);
 			$query=$this->db->get($table);
 			$data=array();
 			foreach ($query->result_array() as $row) {

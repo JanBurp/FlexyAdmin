@@ -6,18 +6,18 @@ function _module_contact_form($item, $submit='Verstuur', $sendMessage='<p>Bedank
 	// Load form library
 	$CI->load->model('form');
 
-	// Set Formfields
+	// Form Fields
 	$formData=array("str_name"		=>array("label"=>"Naam","validation"=>"required"),
 									"email_email"	=>array("label"=>"Email","validation"	=>  "required|valid_email"),
 									"str_subject"	=>array("label"=>"Onderwerp","validation"	=>  "required"),																				
-									"txt_text"		=>array("type"=>"textarea","label"=>"Vraag","validation"	=>  "required"));
-	// Set Formbuttons
+									"txt_text"		=>array("type"=>"textarea","label"=>"Vraag","validation"=>"required"));
+	// Form Buttons
 	$formButtons=array('submit'=>array("submit"=>"submit","value"=>$submit));
 
-	// Create form object
+	// Create form object and set fields and buttons
 	$form=new form($CI->get_uri());
 	$form->set_data($formData,"Contact");
-	$form->show_buttons($formButtons);
+	$form->set_buttons($formButtons);
 
 	// Is form validation ok?
 	if ($form->validation()) {

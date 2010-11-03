@@ -73,7 +73,7 @@ $config['base_url']=$config['auto_base_url'];
 | than english.
 |
 */
-#$config['language']	= "en";
+// $config['language']	= "en";
 
 /*
 |--------------------------------------------------------------------------
