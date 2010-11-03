@@ -72,7 +72,7 @@ if (!isset($config['base_url'])) {
 | than english.
 |
 */
-#$config['language']	= "en";
+$config['language']	= "nl";
 
 /*
 |--------------------------------------------------------------------------

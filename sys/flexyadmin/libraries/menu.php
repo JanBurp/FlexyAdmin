@@ -46,6 +46,7 @@ class Menu {
 
 	function init() {
 		$this->set_templates();
+		$this->set_menu_table();
 		$this->set_current();
 		$this->set_uri_field();
 		$this->set_title_field();
@@ -93,14 +94,21 @@ class Menu {
 		$this->itemAttr=$attr;
 	}
 
+	function set_menu_table($table='') {
+		if (empty($table)) {
+			$CI =& get_instance();
+			$table=$CI->cfg->get('CFG_configurations',"str_menu_table");
+			$resultTable='res_menu_result';
+			if ($CI->db->table_exists($resultTable)) $table=$resultTable;
+		}
+		$this->menuTable=$table;
+		return $table;
+	}
+
 	function set_menu_from_table($table="",$foreign=false) {
 		$counter=1;
 		$CI =& get_instance();
-		if (empty($table)) {
-			$table=$CI->cfg->get('CFG_configurations',"str_menu_table");
-			$resultTable='res_menu_result';
-			if ($CI->db->table_exists($resultTable)) $table=$resultTable; // Menu automation
-		}
+		$table=$this->set_menu_table($table);
 
 		// select fields
 		$fields=$CI->db->list_fields($table);
@@ -230,9 +238,6 @@ class Menu {
 			return false;
 	}
 
-	// function set_uri_template($tmpUri="%s") {
-	// 	$this->set_url_template($tmpUri);
-	// }
 	function set_url_template($tmpUrl="%s") {
 		$this->tmpUrl=$tmpUrl;
 	}
@@ -288,13 +293,6 @@ class Menu {
 		// ok, possible active branch, first set uri as long as in, then check if same
 		$uri=array_slice($uri,0,count($in));
 		if ($in==$uri) return TRUE;
-		
-		// $active=FALSE;
-		// while (!$active and (count($in)>0) ) {
-		// 	$active=$in[count($in)-1]==$uri[count($uri)-1];
-		// 	array_pop($in);
-		// 	array_pop($uri);
-		// }
 		return FALSE;
 	}
 
@@ -407,6 +405,13 @@ class Menu {
 		}
 		$out.=$this->tmp($this->tmpMenuEnd);
 		return $out;
+	}
+	
+	function get_item($uri='') {
+		if (empty($uri)) $uri=$this->current;
+		$CI =& get_instance();
+		$CI->db->where_uri($uri);
+		return $CI->db->get_row($this->menuTable);
 	}
 
 

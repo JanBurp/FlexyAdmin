@@ -1,7 +1,7 @@
 /* ====== Common styles for site and tinyMCE ========================= */
 
 /* reset all, and set common styles */
-body,div,span,hr,img,ul,li,p,h1,h2,h3,h4,h5,h6,h7,a {
+body,div,span,hr,img,ul,li,p,h1,h2,h3,h4,h5,h6,h7,a,input,textarea,select,option {
 	margin:0px;
 	padding:0px;
 	border:none;

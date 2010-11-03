@@ -35,16 +35,6 @@ body {background:#F4FFE0;}
 	padding:10px;
 }
 
-#content .text {
-	float:left;
-	width:50%;
-}
-#content .photo {
-	float:right;
-	width:50%;
-}
-
-
 /* Menu ********************************************/
 
 /* ul */
@@ -113,3 +103,11 @@ body {background:#F4FFE0;}
 #menu li a:hover, #menu li a.active {text-decoration:underline;}
 
 
+
+/* FORMS */
+.error {color:#F00;margin:0px;padding:0px;}
+form {margin-top:10px;}
+fieldset {border:none;margin:0px;padding:0px;}
+legend {display:none;}
+label,input,textarea {display:block;}
+input,textarea{margin-bottom:10px;border:solid 1px #CCC;cursor:pointer;}

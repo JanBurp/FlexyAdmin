@@ -483,7 +483,6 @@ $config["CFG_"]=array(
 			"str_validation_rules"=>'',
 			"txt_help"=>''
 			)
-		
 	)
 );
 

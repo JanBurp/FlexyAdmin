@@ -1195,8 +1195,6 @@ class CI_Loader {
 		}		
 	}
 
-
-
 }
 
 /* End of file Loader.php */
