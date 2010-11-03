@@ -276,6 +276,7 @@ class Show extends AdminController {
 				else
 					$uiShowTable=$uiTable;
 				$form->set_data($ffData,$uiShowTable);
+				$form->set_old_templates();
 				// trace_($ffData);
 
 				/**
@@ -380,6 +381,7 @@ class Show extends AdminController {
 		$this->load->model("form");
 		$form=new form(api_uri('API_user'));
 		$form->set_data($formData,$userData["str_user_name"]);
+		$form->set_old_templates();
 		/**
 		 * Validate form, if succes, make form do an update
 		 */

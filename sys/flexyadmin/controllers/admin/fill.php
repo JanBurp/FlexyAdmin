@@ -139,6 +139,7 @@ class Fill extends AdminController {
 											"test"		=> array("type"=>'checkbox','value'=>1)
 											);
 				$form->set_data($data,lang('fill_fill'));
+				$form->set_old_templates();
 				$this->_add_content($form->render());			
 			}
 			if (!empty($htmlTest)) {
