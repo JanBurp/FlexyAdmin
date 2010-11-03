@@ -20,15 +20,14 @@ class Form Extends Model {
 	var $caption;
 	var $action;
 	var $data=array();
-	var $type;			// html
+	// var $type;			// html
 	var $hasHtmlField;
 	var $isValidated;
 	var $captchaWords;
-	
+	var $fieldsets;
+	var $fieldsetClasses;
 	var $when;  // javascript
-	
 	var $buttons;
-	// var $showSubmit;
 	
 
 	function Form($action="") {
@@ -41,7 +40,10 @@ class Form Extends Model {
 		$this->set_caption();
 		$this->set_labels();
 		$this->data=array();
-		$this->set_type();
+		// $this->set_type();
+		$this->set_templates();
+		$this->set_fieldset_classes();
+		$this->set_fieldsets();
 		$this->hasHtmlField=false;
 		$this->show_buttons();
 		$this->set_captcha_words();
@@ -69,12 +71,6 @@ class Form Extends Model {
 		$this->data[$name]["label"]=$label;
 	}
 
-	function set_type($type="html") {
-		$this->type=$type;
-		$func="set_".$type."_templates";
-		$this->$func();
-	}
-
 	function set_data($data=NULL,$caption="") {
 		if (isset($data) and !empty($data)) {
 			foreach ($data as $name => $field) {
@@ -99,6 +95,7 @@ class Form Extends Model {
 	function _check_default_field($name, $field) {
 		if (!isset($field['type']))				$field['type']="input";
 		if (!isset($field['name']))				$field['name']=$name;
+		if (!isset($field['fieldset']))		$field['fieldset']='fieldset';
 		if (!isset($field['label']))			$field['label']=ucfirst(remove_prefix($name));
 		if (!isset($field['class']))			$field['class']="";
 		if (!isset($field['value']))			$field['value']="";
@@ -107,6 +104,9 @@ class Form Extends Model {
 	}
 
 	function show_buttons($buttons=NULL) {
+		$this->set_buttons($buttons);
+	}
+	function set_buttons($buttons=NULL) {
 		if (empty($buttons)) {
 			$buttons=array(	'cancel'	=> array( "value" => lang("form_cancel"), "class"=>"button cancel", "onClick" => "window.history.back()"),
 											'reset'		=> array( "value" => lang("form_reset"), "class"=>"button reset"),
@@ -127,15 +127,32 @@ class Form Extends Model {
 	}
 
 /**
- * HTML template functions
+ * Template functions
  */
-	function set_html_templates() {
-		$this->set_html_field_templates();
+	function set_templates() {
+		$this->set_field_templates();
+	}
+	function set_old_templates() {
+		$this->set_field_templates("<div class=\"form_field %s\">","</div>");
+		$this->set_fieldset_classes(array('fieldset'=>'formfields','buttons'=>'formbuttons'));
 	}
 
-	function set_html_field_templates($start="<div class=\"form_field %s\">",$end="</div>") {
+	function set_field_templates($start="<div class=\"flexyFormField %s\">",$end="</div>") {
 		$this->tmpFieldStart=$start;
 		$this->tmpFieldEnd=$end;
+	}
+
+	function set_fieldset_classes($fieldsetClasses=array('fieldset'=>'flexyFormFieldset','buttons'=>'flexyFormButtons')) {
+		$this->fieldsetClasses=$fieldsetClasses;
+	}
+	
+	function set_fieldsets($fieldsets=array('fieldset')) {
+		$this->fieldsets=$fieldsets;
+	}
+	function add_fieldset($fieldset='',$class='') {
+		$this->fieldsets[]=$fieldset;
+		if (empty($class)) $class=$this->fieldsetClasses['fieldset'];
+		$this->fieldsetClasses[$fieldset]=$class;
 	}
 
 	function tmp($tmp,$class="") {
@@ -249,70 +266,6 @@ class Form Extends Model {
 		return $out;
 	}
 
-	// function _get_uri_field($fields) {
-	// 	$uriField="";
-	// 	/**
-	// 	 * Auto uri field according to prefixes
-	// 	 */
-	// 	if (empty($uriField)) {
-	// 		$preTypes=$this->config->item('URI_field_pre_types');
-	// 		$loop=true;
-	// 		while ($loop) {
-	// 			$field=current($fields);
-	// 			$pre=get_prefix($field);
-	// 			if (in_array($pre,$preTypes)) {
-	// 				$uriField=$field;
-	// 			}
-	// 			$field=next($fields);
-	// 			$loop=(empty($uriField) and $field!==FALSE);
-	// 		}
-	// 	}
-	// 	/**
-	// 	 * If still nothing set... just get the first field (after id,order and uri)
-	// 	 */
-	// 	if (empty($uriField)) {
-	// 		unset($fields["order"]);
-	// 		reset($fields);
-	// 		$uriField=current($fields);
-	// 	}
-	// 	return $uriField;
-	// }
-
-	// function _existing_uri($uri,$table,$id) {
-	// 	$this->db->select("uri");
-	// 	$this->db->where("uri",$uri);
-	// 	$this->db->where("id !=",$id);
-	// 	$uris=$this->db->get_result($table);
-	// 	if (empty($uris))
-	// 		return FALSE;
-	// 	return current($uris);
-	// }
-
-	// function _create_uri($original_uri_field,$table,$id) {
-	// 	$current_uri=$this->db->get_field($table,"uri",$id);
-	// 	if (empty($current_uri) or !($this->cfg->get('CFG_table',$table,'b_freeze_uris')) ) {
-	// 		static $counter=1;
-	// 		// lowercase
-	// 		$uri=strtolower($original_uri_field);
-	// 		// strip html
-	// 		$uri=strip_tags($uri);
-	// 		// replace spaces
-	// 		$uri=str_replace(" ","_",trim($uri));
-	// 		// replace specialchars
-	// 		$uri=clean_string($uri);
-	// 		// forbidden uri's
-	// 		$forbidden=array("site","sys","admin");
-	// 		if (in_array($uri,$forbidden)) $uri="_".$uri;
-	// 		// check if uri exists allready
-	// 		while ($this->_existing_uri($uri,$table,$id)) {
-	// 			$uri=$uri."_".$counter++;
-	// 		}
-	// 	}
-	// 	else
-	// 		$uri=$current_uri;
-	// 	return $uri;
-	// }
-
 
 /**
  * function update($table)
@@ -379,15 +332,6 @@ class Form Extends Model {
 				/**
 				 * If no error setting data, insert/update data (looping through the set)
 				 */
-
-				/**
-				 * First create an uri if necessary, moved to plugin_uri
-				 */
-				// if (isset($uri)) {
-				// 	$original_uri_field=$this->_get_uri_field(array_keys($set));
-				// 	$uri=$this->_create_uri($set[$original_uri_field],$table,$id);
-				// 	$set["uri"]=$uri;
-				// }
 
 				/**
 				 * Set (new) order
@@ -498,18 +442,24 @@ class Form Extends Model {
  * @return string	grid output
  */
 
-	function render($type="", $class="") {
+	function render($class='flexyForm') {
 		$this->lang->load("form");
-		if (!empty($type)) $this->set_type($type);
+		// if (!empty($type)) $this->set_type($type);
 		
-		$out=form_open_multipart($this->action,array("class"=>$class));
-		$out.=form_fieldset($this->caption,array("class"=>"formfields"));
 		$data=$this->data;
-		foreach($data as $name => $field) {
-			$out.=$this->render_field($field['name'],$field,$class);
+		$out=form_open_multipart($this->action,array("class"=>$class));
+		
+		// fieldsets
+		foreach ($this->fieldsets as $fieldset) {
+			$out.=form_fieldset($this->caption,array("class"=>$this->fieldsetClasses[$fieldset].' '.$fieldset));
+			foreach($data as $name => $field) {
+				if ($field['fieldset']==$fieldset) $out.=$this->render_field($field['name'],$field,$class);
+			}
+			$out.=form_fieldset_close();
 		}
-		$out.=form_fieldset_close();
-		$out.=form_fieldset("",array("class"=>"formbuttons"));
+
+		// Buttons
+		$out.=form_fieldset("",array("class"=>$this->fieldsetClasses['buttons']));
 		foreach ($this->buttons as $name => $button) {
 			if (isset($button['submit']))
 				$out.=form_submit($button);
@@ -518,6 +468,7 @@ class Form Extends Model {
 		}
 		$out.=form_fieldset_close();
 		$out.=form_close();
+
 		// prepare javascript for conditional field showing
 		if (!empty($this->when)) {
 			$json=array2json($this->when);
@@ -803,11 +754,11 @@ class Form Extends Model {
 		endswitch;
 
 		if ($field["type"]!="hidden") {
-//			$out.=_div();
 			$out.=$this->tmp($this->tmpFieldEnd);
 		}
 		return $out;
 	}
+
 
 /**
  * function has_htmlfield()
