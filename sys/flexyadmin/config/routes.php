@@ -44,7 +44,12 @@
 /**
  * This routing makes sure all uri's go to the frontend site, except uri's beginning with 'admin' and 'rss'
  */
-$route['(?!admin|rss)(.*)'] = "";
+$route['(?!admin|rss|file)(.*)'] = "";
+
+/**
+ * This route makes a nice download path
+ */
+$route['file/(.*)/(.*)'] = "file/download/this/$1/$2";
 
 /**
  * This routing makes sure all validation callbacks are not reachable
