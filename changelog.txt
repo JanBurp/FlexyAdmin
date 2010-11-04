@@ -1,5 +1,35 @@
-> 8..
+> 835
 -----
+
+NEW:
+- sitemap.xml automatic creation on logout
+- frontend controller changed: now possible to load external module files
+- nice path for download files (100% automatic) so original path is not known to user
+- tinyMCE fullscreen & preview plugins
+- easy run SQL updates
+- form library is now easy to use in frontend:
+- nice classes in form library
+- cleanup fomr library and autoload necessary helpers
+- added int_id to res_menu_result in plugin_automenu, for remembering original id
+- content library: now spamfriendly mail can also include HTML (images for example)
+- content library: adds now classes to headers
+- now possible to include javascript to admin with site/assets/js/admin.js
+- form library: includes hidden field and hidden passwords on frontend
+
+BUGS:
+- some bugs in plugin_stats
+- small bug in spam library
+- help popup: if no help is known, popup isn't shown anymore
+- some bugs in library menu & plugin_automenu
+- error/warnings if no database is selected
+- language files english to en
+- small styling bugs in IE8/7
+- uri creating: better counting if double uri's
+
+UPDATE:
+- jQuery 1.4.3
+- jQuery UI 1.8.6
+- tinyMCE 3.3.9.2
 
 
 
