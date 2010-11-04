@@ -119,8 +119,10 @@ function showAutoZoom() {
 			// check size
 			$('body').append(zoomThumb);
 			widthThumb=$('.autoZoom').width();
+			if (widthThumb<100) widthThumb=100;
 			if (widthThumb>250) widthThumb=250; // max width
 			heightThumb=$('.autoZoom').height();
+			if (heightThumb<100) heightThumb=100;
 			$('.autoZoom').remove(); // size now determined, clone can be removed
 			// name and place
 			imgName=$(zoomThumb).attr('alt');

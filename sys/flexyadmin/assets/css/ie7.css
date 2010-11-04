@@ -34,10 +34,11 @@
 	height:auto;
 	text-align:left;
 	margin:5px;
-	padding-bottom:10px;
+	padding-bottom:7px;
 }
 
 /* ============== zoomThumb ============ */
 div.zoomThumb img {
 	margin-bottom:4px;
+	min-width:100px;min-height:80px;
 }

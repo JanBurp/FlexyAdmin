@@ -136,14 +136,15 @@ class Editor_lists {
 		// trace_($type);
 		// trace_($data);
 
-
 		// set list
 		$list="var $jsArray = new Array(";
+		$first=true;
 		if ($type=="links" or $type=="downloads") {
 			foreach($data as $name=>$link) {
 				if (empty($link)) {
-					$list.='[""],';
+					if (!$first) $list.='[""],';
 					$list.='["'.$name.'"],';
+					$first=false;
 				}
 				else {
 					if ($type=="downloads" and isset($link['type']))
@@ -153,6 +154,7 @@ class Editor_lists {
 						$list.='["'.$link["name"].'","'.$link["url"].'"],';
 				}
 			}
+			$list.='[""],';
 		}
 		elseif ($type=='embed') {
 			foreach($data as $name=>$embed) {
@@ -162,7 +164,9 @@ class Editor_lists {
 		else {
 			foreach($data as $name=>$file) {
 				$name=nice_string(get_file_without_extension($file["name"]));
-				$list.='["'.$name.'","'.$file["path"].'"],';
+				if (!empty($name)) {
+					$list.='["'.$name.'","'.$file["path"].'"],';
+				}
 			}
 		}
 		$list=substr($list,0,strlen($list)-1);

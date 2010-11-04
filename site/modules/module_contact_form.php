@@ -1,6 +1,6 @@
 <?
 
-function _module_contact_form($item, $submit='Verstuur', $sendMessage='<p>Bedankt voor uw mail.</p>') {
+function _module_contact_form($item, $submit='Verstuur', $sendText='<p>Bedankt voor uw mail.</p>') {
 	$CI=&get_instance();
 	
 	// Load form library
@@ -37,7 +37,7 @@ function _module_contact_form($item, $submit='Verstuur', $sendMessage='<p>Bedank
 		$CI->email->send();
 		
 		// Show Send message
-		$CI->add_content($sendMessage);
+		$CI->add_content($sendText);
 	}
 	
 	else {
