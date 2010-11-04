@@ -97,7 +97,6 @@ class plugin_automenu extends plugin_ {
 					if (!empty($autoValue['str_parent_where'])) {
 						// parse where...
 						$whenParser=preg_split('/\s*(<>|!=|=|>|<)\s*/',$autoValue['str_parent_where'],-1,PREG_SPLIT_DELIM_CAPTURE);
-						// trace_($whenParser);
 						// TODO: only '=' operator works now
 						$parent=find_row_by_value($this->newMenu,str_replace(array('"',"'"),'',$whenParser[2]),$whenParser[0]);
 						$parent=current($parent);
@@ -110,14 +109,22 @@ class plugin_automenu extends plugin_ {
 						$sub=current($sub);
 						$order=$sub['order']+1;
 					} 
+					$oldIDs=array();
 					foreach ($data as $item) {
 						$this->_setResultMenuItem($item);
 						$item['str_table']=$autoValue['table'];
 						$item['str_uri']=$item['uri'];
 						$item['int_id']=$item['id'];
-						if (isset($parent)) $item['self_parent']=$parent;
+						if (isset($parent) and $item['self_parent']==0) {
+							$item['self_parent']=$parent;
+						}
+						elseif ($item['self_parent']>0) {
+							$newParent=$oldIDs[$item['self_parent']];
+							$item['self_parent']=$newParent;
+						}
 						if (!isset($item['order'])) $item['order']=$order++;
-						$this->_insertItem($item);
+						$item=$this->_insertItem($item);
+						$oldIDs[$item['int_id']]=$item['id'];
 					}
 					break;
 		
