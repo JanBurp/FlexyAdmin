@@ -137,19 +137,21 @@ class Main extends FrontEndController {
 		$module=$item['str_module'];
 		$moduleFunction='_module_'.$module;
 
-		// does module function exists?
+		// does module function exists (here in controller.php)?
 		if (method_exists($this,$moduleFunction)) {
 			// Yes, call module
 			$this->$moduleFunction($item);
 		}
 		else {
-			// No: Try to load the module
+			// No: Try to load the module from site/modules/
 			$moduleFile='site/modules/module_'.$module.'.php';
 			if (file_exists($moduleFile)) {
-				// load it
+				// Load file
 				include_once('site/modules/module_'.$module.'.php');
-				// call it
-				$moduleFunction($item);
+				// if function exists, call it
+				if (function_exists($moduleFunction)) {
+					$moduleFunction($item);
+				}
 			}
 		}
 

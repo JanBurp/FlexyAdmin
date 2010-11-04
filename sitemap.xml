@@ -5,6 +5,12 @@
 		<loc>http://www.flexyadmin.com/start</loc>
 	</url>
 	<url>
+		<loc>http://www.flexyadmin.com/info</loc>
+	</url>
+	<url>
+		<loc>http://www.flexyadmin.com/info/subinfo</loc>
+	</url>
+	<url>
 		<loc>http://www.flexyadmin.com/contact</loc>
 	</url>
 </urlset>

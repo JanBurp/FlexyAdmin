@@ -1,1 +1,1 @@
-var tinyMCEMediaList = new Array(["",""]);
+var tinyMCEMediaList = new Array);
