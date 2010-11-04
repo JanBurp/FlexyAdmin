@@ -1,3 +1,30 @@
+UPDATES to r835
+===============
+
+START NEW SITE:
+- If you start a new site, start with complete new installation!
+
+UPDATE OLD SITE:
+- Write down the current revision (see in the bottom bar in FlexyAdmin or in sys/build.txt)
+- Run all SQL updates from your revision until the latest (you can find the SQL updates in db/ ).
+	You can do this with the Import Database option in FlexyAdmin.
+- Replace current sys map with new sys map
+- Replace:
+	- robots.txt
+- Add:
+	- sitemap.xml
+
+
+UPDATES r503 to r801
+=========================
+
+- Write down the current revision (see in the bottom bar in FlexyAdmin or in sys/build.txt)
+- Run all SQL updates from your revision until the latest (you can find the SQL updates in db/ ).
+	You can do this with the Import Database option in FlexyAdmin.
+- Replace current sys map with new sys map
+
+
+
 UPDATE to r502
 =========================
 
@@ -12,15 +39,5 @@ UPDATE to r502
 	- Add site/config and move your config files from site/ to site/config/ (database.php etc )
 	- Add the new config files (found in the original site/config)
 	- Add site/stats and give it all rights (online)
-
-
-UPDATES r503 and later
-=========================
-
-- Write down the current revision (see in the bottom bar in FlexyAdmin or in sys/build.txt)
-- Run all SQL updates from your revision until the latest (you can find the SQL updates in db/ ).
-	You can do this with the Import Database option in FlexyAdmin.
-- Replace current sys map with new sys map
-
 
 
