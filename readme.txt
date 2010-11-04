@@ -8,6 +8,16 @@ All other libraries in /sys/ are LGPL or MIT licences.
 Make sure .htaccess exists (is hidden) or rename htaccess.htaccess to .htaccess.
 Set your database information in /site/config/database.php and /site/config/database_local.php
 
+== FILERIGHTS ==
+These sites/maps needs to be writeable
+- robots.txt  	(once to create the link to sitemap.xml)
+- sitemap.xml
+- bulk_upload
+- site/stats
+- site/assets/lists
+- site/assets/_thumbcache
+- site/assets/* (all the maps that have uploadable files)
+
 == DATABASE ==
 Use the latest demo database from /db/ if you start. If you need it, change the database.
 Log in as admin/admin or user/user
@@ -18,7 +28,8 @@ Log in as admin/admin or user/user
 htacces.htacces										- rename this to .htaccess if .htaccess isn't there.
 index.php													- start of it all, don't change it!
 readme.txt												- this file
-robots.txt												- info for search engine robots (excludes sys)
+robots.txt												- info for search engine robots (excludes sys), points also to sitemap.xml
+sitemap.xml												- sitemap of all the pages in menu
 todo.txt													- file to put some comments if you like
 update.txt												- how to update FlexyAdmin to the latest version
 
