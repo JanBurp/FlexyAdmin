@@ -45,11 +45,26 @@ class plugin_sitemap extends plugin_ {
 		$XML=array2XML($sitemap,array('urlset','url'),array('urlset'=>array('xmlns'=>"http://www.sitemaps.org/schemas/sitemap/0.9")));
 		$err=write_file('sitemap.xml', $XML);
 		
-		if ($err)
+		if ($err) {
 			$this->CI->_add_content('<p>sitemap.xml created</p>');
+			$this->_create_robots();
+		}
 		else
 			$this->CI->_add_content('<p>could not create sitemap.xml: '.$err.'</p>');
-		
+	}
+	
+	function _create_robots() {
+		$robots=read_file('robots.txt');
+		// Replace old Sitemap line with new
+		$url=$this->CI->db->get_field('tbl_site','url_url');
+		$newSitemapLine='Sitemap: '.$url.'/sitemap.xml';
+		$robots=preg_replace('/sitemap(.*)\w/i',$newSitemapLine,$robots);
+		// write file
+		$err=write_file('robots.txt', $robots);
+		if ($err)
+			$this->CI->_add_content('<p>robots.txt created</p>');
+		else
+			$this->CI->_add_content('<p>could not create robots.txt: '.$err.'</p>');
 	}
 	
 }
