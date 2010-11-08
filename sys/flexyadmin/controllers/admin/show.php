@@ -77,6 +77,8 @@ class Show extends AdminController {
 			$table=el('grid',$args);
 			$id=el('current',$args);
 			$info=el('info',$args);
+			$sub=el('sub',$args);
+			// trace_($args);
 			
 			if (!empty($table) and $this->db->table_exists($table)) {
 				$singleRow=$this->cfg->get('CFG_table',$table,"b_single_row");
@@ -105,10 +107,10 @@ class Show extends AdminController {
 							// yes, get extra query info
 							$extraInfo=$this->cfg->get('cfg_admin_menu',$info);
 							$where=$extraInfo['str_table_where'];
-							if (!empty($where));
-							$this->db->where($where,NULL,FALSE);
-							$uiTable=$extraInfo['str_ui_name'];
-							// trace_($extraInfo);
+							if (!empty($where)) {
+								$this->db->where($where,NULL,FALSE);
+								$uiTable=$extraInfo['str_ui_name'];
+							}
 						}
 						if ($this->db->has_field($table,"self_parent")) {
 							$this->db->order_as_tree();
