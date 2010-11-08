@@ -99,8 +99,10 @@ class plugin_automenu extends plugin_ {
 						$whenParser=preg_split('/\s*(<>|!=|=|>|<)\s*/',$autoValue['str_parent_where'],-1,PREG_SPLIT_DELIM_CAPTURE);
 						// TODO: only '=' operator works now
 						$parent=find_row_by_value($this->newMenu,str_replace(array('"',"'"),'',$whenParser[2]),$whenParser[0]);
-						$parent=current($parent);
-						$parent=$parent['id'];
+						if ($parent) {
+							$parent=current($parent);
+							$parent=$parent['id'];
+						}
 					}
 					// is er al een sub? Gebruik die order
 					$sub=$this->newMenu;
