@@ -349,10 +349,10 @@ class Menu {
 		$branch=array();
 		$out=$this->tmp($this->tmpMenuStart,$attr);
 		if (!isset($menu)) $menu=$this->menu;
-		// trace_($menu);
 
 		$pos=1;
-		foreach($menu as $uri=>$item) {
+		if ($menu) {
+			foreach($menu as $uri=>$item) {
 
 			if (isset($item['name']))
 				$name=$item['name'];
@@ -421,6 +421,7 @@ class Menu {
 				$pos++;
 			}
 		}
+	}
 		$out.=$this->tmp($this->tmpMenuEnd);
 		return $out;
 	}
