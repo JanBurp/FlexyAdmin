@@ -1,12 +1,12 @@
 <?
 
-function echo_if_set(&$var,$a=array(),$tag="p") {
-	return if_set(&$var,$a=array(),$tag="p");
-}
-function if_set(&$var,$a=array(),$tag="p") {
-	if (isset($var)) return html($tag,$a).$var._html($tag);
- return "";
-}
+// function echo_if_set(&$var,$a=array(),$tag="p") {
+// 	return if_set(&$var,$a=array(),$tag="p");
+// }
+// function if_set(&$var,$a=array(),$tag="p") {
+// 	if (isset($var)) return html($tag,$a).$var._html($tag);
+//  return "";
+// }
 
 function html($tag,$a=array(),$end=FALSE) {
 	if (!is_array($a)) $a=array("class"=>$a);
