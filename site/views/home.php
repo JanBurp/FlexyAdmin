@@ -28,7 +28,7 @@
 	<base href="<?=base_url()?>" />
 	<title><?=ascii_to_entities($title);?></title>
 	<link rel="shortcut icon" href="site/assets/img/favicon.ico" type="image/x-icon" />
-
+	
 	<meta http-equiv="imagetoolbar" content="no" />
 	<meta http-equiv="content-language" content="nl" />
 	<meta name="Description" content="<?=ascii_to_entities($description);?>" />
@@ -48,6 +48,7 @@
 	<!--[if lte IE 6]><style type="text/css" media="screen">@import url(<?=$assets;?>/css/ie6.css);</style><![endif]-->
 	<!--[if IE 7]><style type="text/css" media="screen">@import url(<?=$assets;?>/css/ie7.css);</style><![endif]-->
 	<!--[if IE 8]><style type="text/css" media="screen">@import url(<?=$assets;?>/css/ie8.css);</style><![endif]-->
+	<!--[if IE 9]><style type="text/css" media="screen">@import url(<?=$assets;?>/css/ie9.css);</style><![endif]-->
 	
 	<? if (isset($str_google_analytics) and !empty($str_google_analytics)): ?><script type="text/javascript">
 	// Google Analytics

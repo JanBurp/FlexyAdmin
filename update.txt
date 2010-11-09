@@ -1,4 +1,12 @@
-UPDATES to r836
+UPDATES to 847
+==============
+
+- Write down the current revision (see in the bottom bar in FlexyAdmin or in sys/build.txt)
+- Run all SQL updates from your revision until the latest, you can do this with the Import Database option in FlexyAdmin.
+- Replace current sys map with new sys map
+
+
+UPDATES r802 to r840
 ===============
 
 START NEW SITE:

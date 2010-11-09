@@ -1,4 +1,15 @@
-> 836
+> 848
+
+NEW:
+- more modules can be set in a page and they can also be ordered
+- content -> spamfriendly mail now also creates a <NOSCRIPT> part
+BUGS:
+- some bugs in menu
+- uploading of .sql files in db import (mime added)
+
+
+
+> 840
 -----
 
 NEW:
