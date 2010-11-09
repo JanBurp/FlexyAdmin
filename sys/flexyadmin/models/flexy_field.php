@@ -338,6 +338,7 @@ class Flexy_field extends Model {
 		$out["value"]			= $this->data;
 		$out["label"]			= $this->uiNames->get($this->field);
 		$out["type"]			= $this->type;
+		
 		/**
 		 * Dropdown fields, if there are options.
 		 */
@@ -353,6 +354,8 @@ class Flexy_field extends Model {
 			// type?
 			if ($this->type!="dropdown") {
 				$out["type"]="dropdown";
+				$orderedOptions=$this->cfg->get('cfg_field_info',$out['table'].'.'.$out['name'],'b_ordered_options');
+				if ($orderedOptions) $out['type']='ordered_list';
 			}
 			else {
 				// add a 'new' item button
