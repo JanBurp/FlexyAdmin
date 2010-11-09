@@ -181,6 +181,7 @@ class Form Extends Model {
 			if ($field['type']=='captcha') $hasCaptcha=$name;
 			$this->data[$name]["repopulate"]=$this->input->post($name);
 		}
+		
 		log_('info',"form: validation");
 		$this->isValidated=$this->form_validation->run();
 		// validate captcha
@@ -212,18 +213,14 @@ class Form Extends Model {
 	function prepare_data($name,$value,$id) {
 		$out=$value;
 		$error="";
-		// trace_($value);
-		if (is_array($value)) {
+		if (is_array($value) or empty($value)) {
 			// multi options (string)
 			$hidden=$this->input->post($name.'__hidden');
 			if ($hidden) {
 				$out=$hidden;
 			}
 			else {
-				if (count($value)==0)
-					$out="";
-				else
-					$out=implode("|",$out);
+				if (is_array($value) and count($value)>0)	$out=implode("|",$out);
 			}
 		}
 		$data=$this->data[$name];
