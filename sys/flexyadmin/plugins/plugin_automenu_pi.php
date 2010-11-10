@@ -111,7 +111,10 @@ class plugin_automenu extends plugin_ {
 						$sub=current($sub);
 						$order=$sub['order']+1;
 					} 
-					$oldIDs=array();
+
+					// stop ze er eerst allemaal in met zelfde parent en onthou ondertussen dat ze eventueel andere parent moeten krijgen
+					$parIDs=array(); // array met id's die andere parent moeten krijgen
+					$oldIDs=array(); // onthou hier de originele id's
 					foreach ($data as $item) {
 						$this->_setResultMenuItem($item);
 						$item['str_table']=$autoValue['table'];
@@ -121,12 +124,21 @@ class plugin_automenu extends plugin_ {
 							$item['self_parent']=$parent;
 						}
 						elseif ($item['self_parent']>0) {
-							$newParent=$oldIDs[$item['self_parent']];
-							$item['self_parent']=$newParent;
+							$item['old_parent']=$item['self_parent'];
+							$item['self_parent']=$parent;
 						}
 						if (!isset($item['order'])) $item['order']=$order++;
 						$item=$this->_insertItem($item);
+						if (isset($item['old_parent'])) {
+							$parIDs[$item['id']]=$item['old_parent'];
+							unset($item['old_parent']);
+						}
 						$oldIDs[$item['int_id']]=$item['id'];
+					}
+					// ok, verplaats nu naar goede parents nu ze allemaal bekend zijn
+					foreach ($parIDs as $id => $oldParent) {
+						$newParent=$oldIDs[$oldParent];
+						$this->newMenu[$id]['self_parent']=$newParent;
 					}
 					break;
 		
