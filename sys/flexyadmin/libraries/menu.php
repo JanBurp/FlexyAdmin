@@ -324,14 +324,17 @@ class Menu {
 		while (count($uris)>0 and $branch) {
 			$uri=array_shift($uris);
 			// $branch=find_row_by_value($branch,$uri,'uri');
-			$branch=$branch[$uri];
-			if ($branch) {
-				// $branch=current($branch);
-				if (isset($branch['sub']))
-					$branch=$branch['sub'];
-				else
-					$branch=false;
+			if (isset($branch[$uri])) {
+				$branch=$branch[$uri];
+				if ($branch) {
+					// $branch=current($branch);
+					if (isset($branch['sub']))
+						$branch=$branch['sub'];
+					else
+						$branch=false;
+				}
 			}
+			else $branch=false;
 		}
 		if ($branch) {
 			$out=$this->render($branch,$attr,$level,$preUri);
