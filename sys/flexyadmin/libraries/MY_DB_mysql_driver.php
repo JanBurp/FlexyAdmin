@@ -399,8 +399,6 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		if ($this->whereUri) {
 			$uri=$this->whereUri;
 			$uriParts=explode('/',$this->whereUri);
-			trace_($uriParts);
-			trace_(count($uriParts));
 			switch (count($uriParts)) {
 				case 1:
 					$this->where($table.'.uri',$uri);
@@ -422,7 +420,6 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				default:
 					// > 2
 					$foundId=$this->get_unique_id_from_fulluri($table,$uriParts);
-					trace_($foundId);
 					if ($foundId>-1)
 						$this->where($table.'.id',$foundId);
 					else
@@ -462,19 +459,15 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			$sql="SELECT id,self_parent FROM $table WHERE uri='$part' AND self_parent='$parent'";
 			$query=$this->query($sql);
 			$items=$query->result_array();
-			// zoek in subitems
-			foreach ($items as $id => $item) {
-				if ($this->get_unique_id_from_fulluri($table,$uriParts,$id)<0) unset($items[$id]);
+			// zoek in gevonden subitem
+			$item=current($items);
+			$found=$this->get_unique_id_from_fulluri($table,$uriParts,$item['id']);
+			// geef gevonden id door
+			if (count($uriParts)>0) {
+				$foundID=$found;
 			}
-			// hoeveel zijn er nu nog over?
-			$num=count($items);
-			if ($num==1) {
-				$item=current($item);
+			else {
 				$foundID=$item['id'];
-			}
-			if ($num>1) {
-				// er zijn er meer, dat mag eigenlijk niet...
-				trace_('Double URIs in: '.$table);
 			}
 		}
 		return $foundID;
