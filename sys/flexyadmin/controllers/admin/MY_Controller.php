@@ -51,7 +51,7 @@ class MY_Controller extends Controller {
 			$this->cfg->load('CFG_field',$this->config->item('CFG_field_name'));
 			$this->cfg->load('CFG_media_info',array("path","fields_media_fields"));
 			$this->cfg->load('CFG_img_info','path');
-			$this->cfg->load('cfg_admin_menu',array('table'));
+			$this->cfg->load('cfg_admin_menu',array('id'));
 		}
 		else {
 			$this->cfg->load('CFG_configurations','','email_webmaster_email,str_menu_table,b_logout_to_site,b_query_urls');
@@ -747,7 +747,7 @@ class AdminController extends BasicController {
 				
 				case 'table' :
 					$uri=api_uri('API_view_grid',$item['table']);
-					$uri.='/info/'.$item['table'];
+					$uri.='/info/'.$item['id'];
 					$menu[$uri]=array("uri"=>$uri,'name'=>$item['str_ui_name'],"class"=>'tbl ');
 					break;
 					
