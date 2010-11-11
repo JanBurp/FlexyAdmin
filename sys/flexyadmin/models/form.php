@@ -579,6 +579,8 @@ class Form Extends Model {
 				}
 				$extra.="class=\"".$attr["class"]."\" id=\"".$name."\"";
 				
+				
+				
 				//
 				// Show images if it is an image dropdown
 				//
@@ -634,6 +636,7 @@ class Form Extends Model {
 				if ($field['type']=='ordered_list') {
 					// show (ordered) choices	
 					$out.='<ul class="list list_choices">';
+					$value=$field['value'];
 					foreach($options as $id=>$option) {
 						if (!in_array($id,$value)) $out.='<li id="'.$id.'">'.$option.'</li>';
 					}

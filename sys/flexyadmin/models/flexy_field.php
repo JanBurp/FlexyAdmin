@@ -355,7 +355,10 @@ class Flexy_field extends Model {
 			if ($this->type!="dropdown") {
 				$out["type"]="dropdown";
 				$orderedOptions=$this->cfg->get('cfg_field_info',$out['table'].'.'.$out['name'],'b_ordered_options');
-				if ($orderedOptions) $out['type']='ordered_list';
+				if ($orderedOptions) {
+					$out['type']='ordered_list';
+					$out['value']=explode('|',$out['value']);
+				}
 			}
 			else {
 				// add a 'new' item button
@@ -397,7 +400,7 @@ class Flexy_field extends Model {
 			$validations=$this->_combine_validations($validation);
 		}
 		if (!empty($validations)) $out['validation']=$this->_set_validation_params($validations);
-		// strace_($out);
+		// trace_($out);
 		return $out;
 	}
 
