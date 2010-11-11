@@ -419,7 +419,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 					break;
 				default:
 					// > 2
-					$foundId=$this->get_unique_id_from_fulluri($table,$uriParts);
+					$foundId=$this->get_unique_id_from_fulluri($table,$uri);
 					if ($foundId>-1)
 						$this->where($table.'.id',$foundId);
 					else
@@ -451,53 +451,31 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		else
 			return $result;
 	}
-
-	function get_unique_id_from_fulluri($table,$uriParts,$parent=0) {
+	
+	function get_unique_id_from_fulluri($table,$uri) {
 		$foundID=-1;
+		$uriParts=explode('/',$uri);
 		if (count($uriParts)>=1) {
-			$part=array_shift($uriParts);
-			$sql="SELECT id,self_parent FROM $table WHERE uri='$part' AND self_parent='$parent'";
+			$part=array_pop($uriParts);
+			$sql="SELECT id,self_parent FROM $table WHERE uri='$part'";
 			$query=$this->query($sql);
-			$items=$query->result_array();
-			// zoek in gevonden subitem
-			$item=current($items);
-			$found=$this->get_unique_id_from_fulluri($table,$uriParts,$item['id']);
-			// geef gevonden id door
-			if (count($uriParts)>0) {
-				$foundID=$found;
+			if ($query->num_rows()==1) {
+				$row=$query->row_array();
+				$foundID=$row['id'];
 			}
 			else {
-				$foundID=$item['id'];
+				$res=$query->result_array();
+				foreach ($res as $key => $row) {
+					if ( ! $this->_check_fulluri($table,$uriParts,$row['self_parent'])) unset($res[$key]);
+				}
+				if (count($res)==1) {
+					$row=current($res);
+					$foundID=$row['id'];
+				}
 			}
 		}
 		return $foundID;
 	}
-
-	// function get_unique_id_from_fulluri($table,$uri) {
-	// 	$foundID=-1;
-	// 	$uriParts=explode('/',$uri);
-	// 	if (count($uriParts)>=1) {
-	// 		$part=array_pop($uriParts);
-	// 		$sql="SELECT id,self_parent FROM $table WHERE uri='$part'";
-	// 		$query=$this->query($sql);
-	// 		if ($query->num_rows()==1) {
-	// 			$row=$query->row_array();
-	// 			$foundID=$row['id'];
-	// 		}
-	// 		else {
-	// 			$res=$query->result_array();
-	// 			foreach ($res as $key => $row) {
-	// 				if ( ! $this->_check_fulluri($table,$uriParts,$row['self_parent'])) unset($res[$key]);
-	// 			}
-	// 			if (count($res)==1) {
-	// 				$row=current($res);
-	// 				$foundID=$row['id'];
-	// 			}
-	// 		}
-	// 	}
-	// 	return $foundID;
-	// }
-
 	
 	function _check_fulluri($table,$uriParts,$self_parent) {
 		$check=FALSE;
