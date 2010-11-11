@@ -399,6 +399,8 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		if ($this->whereUri) {
 			$uri=$this->whereUri;
 			$uriParts=explode('/',$this->whereUri);
+			trace_($uriParts);
+			trace_(count($uriParts));
 			switch (count($uriParts)) {
 				case 1:
 					$this->where($table.'.uri',$uri);
@@ -419,7 +421,8 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 					break;
 				default:
 					// > 2
-					$foundId=$this->get_unique_id_from_fulluri($table,$uri);
+					$foundId=$this->get_unique_id_from_fulluri($table,$uriParts);
+					trace_($foundId);
 					if ($foundId>-1)
 						$this->where($table.'.id',$foundId);
 					else
@@ -451,31 +454,57 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		else
 			return $result;
 	}
-	
-	function get_unique_id_from_fulluri($table,$uri) {
+
+	function get_unique_id_from_fulluri($table,$uriParts,$parent=0) {
 		$foundID=-1;
-		$uriParts=explode('/',$uri);
 		if (count($uriParts)>=1) {
-			$part=array_pop($uriParts);
-			$sql="SELECT id,self_parent FROM $table WHERE uri='$part'";
+			$part=array_shift($uriParts);
+			$sql="SELECT id,self_parent FROM $table WHERE uri='$part' AND self_parent='$parent'";
 			$query=$this->query($sql);
-			if ($query->num_rows()==1) {
-				$row=$query->row_array();
-				$foundID=$row['id'];
+			$items=$query->result_array();
+			// zoek in subitems
+			foreach ($items as $id => $item) {
+				if ($this->get_unique_id_from_fulluri($table,$uriParts,$id)<0) unset($items[$id]);
 			}
-			else {
-				$res=$query->result_array();
-				foreach ($res as $key => $row) {
-					if ( ! $this->_check_fulluri($table,$uriParts,$row['self_parent'])) unset($res[$key]);
-				}
-				if (count($res)==1) {
-					$row=current($res);
-					$foundID=$row['id'];
-				}
+			// hoeveel zijn er nu nog over?
+			$num=count($items);
+			if ($num==1) {
+				$item=current($item);
+				$foundID=$item['id'];
+			}
+			if ($num>1) {
+				// er zijn er meer, dat mag eigenlijk niet...
+				trace_('Double URIs in: '.$table);
 			}
 		}
 		return $foundID;
 	}
+
+	// function get_unique_id_from_fulluri($table,$uri) {
+	// 	$foundID=-1;
+	// 	$uriParts=explode('/',$uri);
+	// 	if (count($uriParts)>=1) {
+	// 		$part=array_pop($uriParts);
+	// 		$sql="SELECT id,self_parent FROM $table WHERE uri='$part'";
+	// 		$query=$this->query($sql);
+	// 		if ($query->num_rows()==1) {
+	// 			$row=$query->row_array();
+	// 			$foundID=$row['id'];
+	// 		}
+	// 		else {
+	// 			$res=$query->result_array();
+	// 			foreach ($res as $key => $row) {
+	// 				if ( ! $this->_check_fulluri($table,$uriParts,$row['self_parent'])) unset($res[$key]);
+	// 			}
+	// 			if (count($res)==1) {
+	// 				$row=current($res);
+	// 				$foundID=$row['id'];
+	// 			}
+	// 		}
+	// 	}
+	// 	return $foundID;
+	// }
+
 	
 	function _check_fulluri($table,$uriParts,$self_parent) {
 		$check=FALSE;
