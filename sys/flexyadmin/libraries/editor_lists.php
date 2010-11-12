@@ -79,8 +79,7 @@ class Editor_lists {
 						foreach ($results as $key => $row) {
 							$url=$row["uri"];
 							$name=$url;
-							$name=$row[$nameField];
-							// if (isset($row['self_parent']) and $row['self_parent']!=0) $name=' - '.$name;
+							$name=addslashes($row[$nameField]);
 							$data[$name]=array("url"=>site_url($url),"name"=>$name);
 						}
 					}
@@ -95,7 +94,8 @@ class Editor_lists {
 				$CI->db->order_by("str_title");
 				$query=$CI->db->get($table);
 				foreach($query->result_array() as $row) {
-					$data[$row["str_title"]]=array("url"=>$row["url_url"],"name"=>$row["str_title"]);
+					$name=addslashes($row['str_title']);
+					$data[$name]=array("url"=>$row["url_url"],"name"=>$name);
 				}
 			}
 			
