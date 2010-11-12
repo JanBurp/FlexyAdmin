@@ -71,6 +71,17 @@ class Menu {
 		else
 			$this->extraFields[$extra]=array("name"=>$extra,"start"=>$startTag,"close"=>$closeTag);
 	}
+	
+	function remove_extra_fields($fields='',$menu='',$level=0) {
+		$this->set_extra_field();
+		if (empty($menu)) {$menu=$this->menu;}
+		foreach ($menu as $uri => $item) {
+			unset($menu[$uri]['extra']);
+			if (isset($item['sub']) and !empty($item['sub'])) {$menu[$uri]['sub']=$this->remove_extra_fields($fields,$item['sub'],$level+1);}
+		}
+		if ($level==0) $this->menu=$menu;
+		return $menu;
+	}
 	function set_class_field($class="str_class") {
 		$this->fields["class"]=$class;
 	}
@@ -106,10 +117,8 @@ class Menu {
 	}
 
 	function set_menu_from_table($table="",$foreign=false) {
-		$counter=1;
 		$table=$this->set_menu_table($table);
 		$CI =& get_instance();
-
 		// select fields
 		$fields=$CI->db->list_fields($table);
 		foreach ($fields as $key=>$f) {
@@ -123,14 +132,18 @@ class Menu {
 				}
 			}
 		}
-
-		// get data from menu_table
+		// get data from table
 		$CI->db->select(pk());
 		$CI->db->select($fields);
 		if ($foreign) $CI->db->add_foreigns($foreign);
 		if (in_array("self_parent",$fields)) $CI->db->order_as_tree();
-		$items=$CI->db->get_result($table);
-		// trace_($items);
+		$data=$CI->db->get_result($table);
+		return $this->set_menu_from_table_data($data,$foreign);
+	}
+	
+	function set_menu_from_table_data($items="",$foreign=false) {
+		$counter=1;
+		$CI =& get_instance();
 
 		$menu=array();
 		foreach($items as $item) {
@@ -143,21 +156,16 @@ class Menu {
 				if (isset($item[$this->fields["title"]])) 	$thisItem['name']=$item[$this->fields["title"]]; else $thisItem['name']=$uri;
 				if (isset($item[$this->fields["class"]])) 	$thisItem["class"]=str_replace('|',' ',$item[$this->fields["class"]]);
 				if (isset($item[$this->fields["parent"]])) 	$parent=$item[$this->fields["parent"]]; else $parent="";
-				if (isset($item[$this->fields["clickable"]]) && $item[$this->fields["clickable"]]==false) $thisItem["uri"]='';
+				if (isset($item[$this->fields["clickable"]]) && !$item[$this->fields["clickable"]]) $thisItem["uri"]='';
 				
 				if (!empty($this->extraFields)) {
 					foreach ($this->extraFields as $extraName => $extra) {
 						if (isset($item[$extraName])) {
-							$thisItem["extra"][]=$extra["start"].$item[$extraName].$extra["close"];
+							$thisItem["extra"][$extraName]=$extra["start"].$item[$extraName].$extra["close"];
 						}
 					}
 				}
-				
-				// if (isset($menu[$parent][$item[$this->fields["title"]]]))
-				// 	$menu[$parent][$item[$this->fields["title"]]."__".$counter++]=$thisItem;
-				// else
 				$menu[$parent][$uri]=$thisItem;
-				
 			}
 		}
 		// trace_($menu);
@@ -323,11 +331,9 @@ class Menu {
 		$branch=$this->menu;
 		while (count($uris)>0 and $branch) {
 			$uri=array_shift($uris);
-			// $branch=find_row_by_value($branch,$uri,'uri');
 			if (isset($branch[$uri])) {
 				$branch=$branch[$uri];
 				if ($branch) {
-					// $branch=current($branch);
 					if (isset($branch['sub']))
 						$branch=$branch['sub'];
 					else
@@ -346,86 +352,75 @@ class Menu {
 		if (empty($attr)) $attr=$this->attr;
 		if (!is_array($attr)) $attr=array("class"=>$attr);
 		if (empty($attr["class"])) $attr["class"]="";
-		$attr["class"].=" lev$level";
 		if ($level>1) unset($attr["id"]);
 
 		$branch=array();
-		$out=$this->tmp($this->tmpMenuStart,$attr);
+		$out=$this->tmp($this->tmpMenuStart,$attr); // <ul .. >
 		if (!isset($menu)) $menu=$this->menu;
 
 		$pos=1;
 		if ($menu) {
 			foreach($menu as $uri=>$item) {
-
-			if (isset($item['name']))
-				$name=$item['name'];
-			else
-				$name='';
-
-			if (empty($item)) {
-				// seperator
-				$out.=$this->tmp($this->tmpItemStart,array("class"=>"seperator pos$pos lev$level"));
-				$out.=$this->tmp($this->tmpItemEnd);
-				$pos++;
-			}
-
-			if (isset($item[$this->urlField])) {
-				$thisUri=$item[$this->urlField];
-				if (!empty($preUri) and !empty($thisUri) and $this->urlField=="uri") $thisUri=$preUri."/".$thisUri;
-
-				// set class
-				$cName=strtolower(str_replace(" ","_",$name));
-				$link="";
-				if (!empty($thisUri))	$link=$this->tmp($this->tmpUrl,$thisUri);
-				$itemAttr=array();
-				$itemAttr['class']=$attr['class']." pos$pos";
-				if ($pos==1)																$itemAttr["class"].=" first";
-				if ($pos==count($menu))											$itemAttr["class"].=" last";
-				$itemAttr['class'].=" $cName ".$this->itemAttr['class'];
-				if (isset($item["class"]))									$itemAttr["class"].=" ".$item["class"];
-				if ($this->current==$link) 									$itemAttr["class"].=" current";
-				if ($this->inUri($link,$this->current))			$itemAttr["class"].=" active";
-				if (isset($item['sub']))										$itemAttr["class"].=" sub";
-				$itemAttr['class']=trim($itemAttr['class']);
-
-				// set id
-				$itemAttr['id']="menu_".$cName."_pos".$pos."_lev$level";
-
-				// render item/subitem
-				$out.=$this->tmp($this->tmpItemStart,array("class"=>$itemAttr["class"],'id'=>$itemAttr['id']));
-				if (isset($item["uri"])) {
-					$showName=ascii_to_entities($name);
-					$showName=trim($showName,'_');
-					$pre=get_prefix($showName,"__");
-					if (!empty($pre)) $showName=$pre;
-					if (isset($item["help"])) $showName=help($showName,$item["help"]);
-					if (isset($item['extra'])) {
-						foreach ($item['extra'] as $extra) {
-							$showName.=$extra;
+				$itemOut='';
+				if (isset($item['name']))	$name=$item['name']; else $name='';
+				if (empty($item)) {
+					// seperator
+					$itemOut.=$this->tmp($this->tmpItemStart,array("class"=>"seperator pos$pos lev$level"));
+					$itemOut.=$this->tmp($this->tmpItemEnd);
+					$pos++;
+				}
+				if (isset($item[$this->urlField])) {
+					$thisUri=$item[$this->urlField];
+					if (!empty($preUri) and !empty($thisUri) and $this->urlField=="uri" and !(isset($item['unique_uri']) and $item['unique_uri'])) $thisUri=$preUri."/".$thisUri;
+					$link='';
+					if (!empty($thisUri))	$link=trim($this->tmp($this->tmpUrl,$thisUri),'/');
+					// set class
+					$cName=strtolower(str_replace(" ","_",$name));
+					$first=($pos==1)?' first':'';
+					$last=($pos==count($menu))?' last':'';
+					$sub=(isset($item['sub']))?' sub':'';
+					$current=($this->current==$link)?' current':'';
+					$class=$attr['class']." lev$level pos$pos $first$last$sub $cName$current";
+					if (isset($this->itemAttr['class']) and !empty($this->itemAttr['class'])) $class.=' '.$this->itemAttr['class'];
+					if (isset($item['class']) and !empty($item['class'])) $class.=' '.$item['class'];
+					$itemAttr['class']=trim($class);
+					// set id
+					$itemAttr['id']="menu_$cName"."_pos$pos"."_lev$level";
+					
+					// render item/subitem
+					$itemOut.=$this->tmp($this->tmpItemStart,array("class"=>$itemAttr["class"],'id'=>$itemAttr['id']));  // <li ... >
+					if (isset($item["uri"])) {
+						$showName=trim(ascii_to_entities($name),'_');
+						$pre=get_prefix($showName,"__");
+						if (!empty($pre)) $showName=$pre;
+						if (isset($item["help"])) $showName=help($showName,$item["help"]);
+						if (isset($item['extra'])) {foreach ($item['extra'] as $extra) {$showName.=$extra;}	}
+						// extra attributes set?
+						$extraAttr=array();
+						$extraAttr=$item;
+						unset($extraAttr['class'],$extraAttr['uri'],$extraAttr['id'],$extraAttr['sub']);
+						$itemAttr=array_merge($itemAttr,$extraAttr);
+						if (isset($item['external'])) $itemAttr['target']='_blank';
+						if (empty($link)) {
+							$itemAttr['class'].=' nonClickable';
+							$itemOut.=span($itemAttr).$showName._span();
+						}
+						else {
+							$itemOut.=anchor($link, $showName, $itemAttr);
 						}
 					}
-					// extra attributes set?
-					$extraAttr=array();
-					$extraAttr=$item;
-					unset($extraAttr['class']);
-					unset($extraAttr['uri']);
-					unset($extraAttr['id']);
-					unset($extraAttr['sub']);
-					$itemAttr=array_merge($itemAttr,$extraAttr);
-					if (empty($link)) {
-						$itemAttr['class'].=' nonClickable';
-						$out.=span($itemAttr).$showName._span();
+					if (isset($item["sub"])) {
+						$subOut=$this->render($item["sub"],"$cName",$level+1,$thisUri);
+						// check if needs to add active class
+						if (strpos($subOut,'current')>0) $itemOut=preg_replace("/<li([^>]*)class=\"([^\"]*)\"/","<li$1class=\"$2 active\"",$itemOut);
+						$itemOut.=$subOut;
 					}
-					else
-						$out.=anchor($link, $showName, $itemAttr);
+					$out.=$itemOut.$this->tmp($this->tmpItemEnd);
+					$pos++;
 				}
-				if (isset($item["sub"])) $out.=$this->render($item["sub"],"$cName",$level+1,$thisUri);
-				$out.=$this->tmp($this->tmpItemEnd);
-				$pos++;
 			}
 		}
-	}
-		$out.=$this->tmp($this->tmpMenuEnd);
+		$out.=$this->tmp($this->tmpMenuEnd); // </ul>
 		return $out;
 	}
 	
