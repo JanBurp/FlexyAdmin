@@ -360,6 +360,7 @@ class Menu {
 
 		$pos=1;
 		if ($menu) {
+			trace_($menu);
 			foreach($menu as $uri=>$item) {
 				$itemOut='';
 				if (isset($item['name']))	$name=$item['name']; else $name='';
@@ -367,6 +368,7 @@ class Menu {
 					// seperator
 					$itemOut.=$this->tmp($this->tmpItemStart,array("class"=>"seperator pos$pos lev$level"));
 					$itemOut.=$this->tmp($this->tmpItemEnd);
+					$out.=$itemOut;
 					$pos++;
 				}
 				if (isset($item[$this->urlField])) {
