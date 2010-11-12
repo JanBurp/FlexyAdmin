@@ -353,9 +353,11 @@ class Menu {
 		if (!is_array($attr)) $attr=array("class"=>$attr);
 		if (empty($attr["class"])) $attr["class"]="";
 		if ($level>1) unset($attr["id"]);
+		$ULattr=$attr;
+		$ULattr['class']=trim("lev$level ".$ULattr['class']);
 
 		$branch=array();
-		$out=$this->tmp($this->tmpMenuStart,$attr); // <ul .. >
+		$out=$this->tmp($this->tmpMenuStart,$ULattr); // <ul .. >
 		if (!isset($menu)) $menu=$this->menu;
 
 		$pos=1;
