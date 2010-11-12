@@ -403,7 +403,7 @@ class Menu {
 						$extraAttr=$item;
 						unset($extraAttr['class'],$extraAttr['uri'],$extraAttr['id'],$extraAttr['sub']);
 						$itemAttr=array_merge($itemAttr,$extraAttr);
-						if (isset($item['external'])) $itemAttr['target']='_blank';
+						// if (isset($item['target'])) $itemAttr['target']=$item['target'];
 						if (empty($link)) {
 							$itemAttr['class'].=' nonClickable';
 							$itemOut.=span($itemAttr).$showName._span();
