@@ -1,3 +1,14 @@
+> 887
+
+BUGS:
+- some menu bugs (new code for class generating)
+- bug in db->where_uri
+- bug in linklists
+
+UPDATE:
+- jQuery 1.4.4
+
+
 > 848
 
 NEW:
