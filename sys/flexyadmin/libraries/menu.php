@@ -383,7 +383,7 @@ class Menu {
 					$last=($pos==count($menu))?' last':'';
 					$sub=(isset($item['sub']))?' sub':'';
 					$current=($this->current==$link)?' current':'';
-					$class=$attr['class']." lev$level pos$pos $first$last$sub $cName$current";
+					$class="lev$level pos$pos $first$last$sub ".$attr['class']." $cName$current";
 					if (isset($this->itemAttr['class']) and !empty($this->itemAttr['class'])) $class.=' '.$this->itemAttr['class'];
 					if (isset($item['class']) and !empty($item['class'])) $class.=' '.$item['class'];
 					$itemAttr['class']=trim($class);
@@ -415,7 +415,10 @@ class Menu {
 					if (isset($item["sub"])) {
 						$subOut=$this->render($item["sub"],"$cName",$level+1,$thisUri);
 						// check if needs to add active class
-						if (strpos($subOut,'current')>0) $itemOut=preg_replace("/<li([^>]*)class=\"([^\"]*)\"/","<li$1class=\"$2 active\"",$itemOut);
+						if (strpos($subOut,'current')>0) {
+							$itemOut=preg_replace("/<li([^>]*)class=\"([^\"]*)\"/","<li$1class=\"$2 active\"",$itemOut);
+							$itemOut=preg_replace("/<a([^>]*)class=\"([^\"]*)\"/","<a$1class=\"$2 active\"",$itemOut);
+						}
 						$itemOut.=$subOut;
 					}
 					$out.=$itemOut.$this->tmp($this->tmpItemEnd);
