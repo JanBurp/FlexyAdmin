@@ -64,7 +64,14 @@ class Main extends FrontEndController {
 		 */
 		$this->menu->set_menu_from_table();
 		$this->site['menu']=$this->menu->render();
-		
+
+		// Example of a simple submenu, show $submenu somewhere in views/home.php
+		//
+		// $sub_uri$this->uri->get(1);
+		// if ($sub_uri) {
+		// 	$this->site["submenu"]=$this->menu->render_branch($sub_uri);
+		// }
+
 
 		/***********************************************
 		 * Get current page item from menu (with current uri)
