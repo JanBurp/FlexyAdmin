@@ -37,7 +37,11 @@ class plugin_sitemap extends plugin_ {
 		$menu=$this->CI->db->get_result($menuTable);
 		$urlset=array();
 		foreach ($menu as $id => $item) {
-			$urlset[]=array('loc'=>$url.htmlentities($item['uri']));
+			$set=array();
+			$set['loc']=$url.htmlentities($item['uri']);
+			if (isset($item['str_title'])) $set['title']=$item['str_title'];
+			if (isset($item['txt_text'])) $set['content']=strip_tags($item['txt_text']);
+			$urlset[]=$set;
 		}
 		$sitemap['urlset']=$urlset;
 		
