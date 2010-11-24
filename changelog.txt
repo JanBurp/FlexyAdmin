@@ -1,4 +1,16 @@
+> 899
+-----
+
+BUGS:
+- .htacces didn't show sitemap.xml
+- small bugs in menu (classes)
+
+NEW:
+- more complete sitemap.xml
+
+
 > 887
+-----
 
 BUGS:
 - some menu bugs (new code for class generating)
