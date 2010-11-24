@@ -3,15 +3,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" >
 	<url>
 		<loc>http://www.flexyadmin.com/start</loc>
+		<title>Start</title>
+		<content>Welkom bij FlexyAdmin.</content>
 	</url>
 	<url>
-		<loc>http://www.flexyadmin.com/info</loc>
+		<loc>http://www.flexyadmin.com/een_pagina</loc>
+		<title>Een pagina</title>
+		<content>een download link</content>
 	</url>
 	<url>
-		<loc>http://www.flexyadmin.com/info/subinfo</loc>
+		<loc>http://www.flexyadmin.com/een_pagina/subpagina</loc>
+		<title>Subpagina</title>
+		<content>Een subpagina</content>
 	</url>
 	<url>
 		<loc>http://www.flexyadmin.com/contact</loc>
+		<title>Contact</title>
+		<content>Hier een voorbeeld van een eenvoudig contactformulier.</content>
 	</url>
 </urlset>
 

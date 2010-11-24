@@ -1,9 +1,10 @@
-UPDATES to 888
+UPDATES to 899
 ==============
 
 - Write down the current revision (see in the bottom bar in FlexyAdmin or in sys/build.txt)
 - Run all SQL updates from your revision until the latest, you can do this with the Import Database option in FlexyAdmin.
 - Replace current sys map with new sys map
+- Replace .htaccess
 
 
 UPDATES r802 to r840
