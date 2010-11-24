@@ -729,7 +729,7 @@ class AdminController extends BasicController {
 						$menu[$uri]=array("uri"=>$uri,'name'=>lang('db_import'),"class"=>"db");
 					}
 					elseif ($this->_can_backup()) {
-						$uri=api_uri('API_db_import');
+						$uri=api_uri('API_db_backup');
 						$menu[$uri]=array("uri"=>$uri,'name'=>lang('db_backup'),"class"=>"db db_backup");
 						$uri=api_uri('API_db_restore');
 						$menu[$uri]=array("uri"=>api_uri('API_db_restore'),'name'=>lang('db_restore'),"class"=>"db");

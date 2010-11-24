@@ -33,7 +33,7 @@ class plugin_sitemap extends plugin_ {
 
 		// create Sitemap
 		$url=$this->CI->db->get_field('tbl_site','url_url').'/';
-		$this->CI->db->uri_as_full_uri();
+		if ($this->CI->db->field_exists('self_parent',$menuTable)) $this->CI->db->uri_as_full_uri();
 		$menu=$this->CI->db->get_result($menuTable);
 		$urlset=array();
 		foreach ($menu as $id => $item) {
