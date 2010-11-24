@@ -242,6 +242,8 @@ class Menu {
 		// remove query's
 		$current=explode('?',$current);
 		$current=current($current);
+		// remove everything after :
+		if (strpos($current,':')>0) $current=get_prefix($current,':');
 		$this->current=$current;
 	}
 
@@ -382,7 +384,12 @@ class Menu {
 					$first=($pos==1)?' first':'';
 					$last=($pos==count($menu))?' last':'';
 					$sub=(isset($item['sub']))?' sub':'';
-					$current=($this->current==$link)?' current':'';
+					// trace_(array('current'=>$this->current,'link'=>$link));
+					if (strpos($link,':')>0)
+						$checklink=get_prefix($link,':');
+					else
+						$checklink=$link;
+					$current=($this->current==$checklink)?' current':'';
 					$class="lev$level pos$pos $first$last$sub ".$attr['class']." $cName$current";
 					if (isset($this->itemAttr['class']) and !empty($this->itemAttr['class'])) $class.=' '.$this->itemAttr['class'];
 					if (isset($item['class']) and !empty($item['class'])) $class.=' '.$item['class'];
@@ -401,7 +408,7 @@ class Menu {
 						// extra attributes set?
 						$extraAttr=array();
 						$extraAttr=$item;
-						unset($extraAttr['class'],$extraAttr['uri'],$extraAttr['id'],$extraAttr['sub']);
+						unset($extraAttr['class'],$extraAttr['uri'],$extraAttr['id'],$extraAttr['sub'],$extraAttr['unique_uri']);
 						$itemAttr=array_merge($itemAttr,$extraAttr);
 						// if (isset($item['target'])) $itemAttr['target']=$item['target'];
 						if (empty($link)) {

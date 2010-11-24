@@ -95,6 +95,7 @@ img {
 	height:17px;
 }
 #menu li.current,
+#menu li.active,
 #menu li:hover {
 	background-color:#DDEEAA;
 	background-image:url("../img/inset.png");
@@ -102,6 +103,7 @@ img {
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 }
+#menu li.home {background-color:transparent; background-image:none;}
 #menu li.seperator:hover {
 	background-color:transparent;
 	background-image:none;
@@ -209,6 +211,8 @@ img {
 	}
 
 #menu ._users-rights {display:none;}
+
+#menu ul.lev2 {display:none;}
 
 /* =========== */
 
@@ -1110,28 +1114,28 @@ input.upload {
 }
 
 /* subfields */
-.subfields {
+form .subfields {
 	border-top:solid 1px #DDEEAA;
 	border-left:none;
 	border-right:none;
 	border-bottom:none;
 }
-.sub {
+form .sub {
 	margin-top:25px;
 }
-.sub label {
+form .sub label {
 	font-style:italic;
 	margin-left:20px;
 	width:120px;
 }
-.sub label.first {
+form .sub label.first {
 	margin-left:4px;
 }
-.subfields .icon {
+form .subfields .icon {
 	padding-left:0px;
 	margin-left:-3px;
 }
-.subfields .sub .icon {
+form .subfields .sub .icon {
 	margin-top:5px;
 	margin-left:0px;
 }

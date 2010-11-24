@@ -686,7 +686,9 @@ class AdminController extends BasicController {
 			if ($type!='tbl') $menuName='_'.$menuName;
 			if ($type=='res') $menuName='_'.$menuName;
 			if (!in_array($name,$excluded) and $this->has_rights($name)) {
-				$a[$uri]=array("uri"=>$uri,'name'=>$menuName,"class"=>$type);
+				$subUri=api_uri('API_view_form',$name);
+				$sub=array($subUri=>array('uri'=>$subUri,'name'=>$menuName,'unique_uri'=>true));
+				$a[$uri]=array("uri"=>$uri,'unique_uri'=>true,'name'=>$menuName,"class"=>$type,'sub'=>$sub);
 				$tableHelp=$this->cfg->get("CFG_table",$name,"txt_help");
 				if (!empty($tableHelp)) $a[$uri]["help"]=$tableHelp;
 			}
@@ -798,8 +800,11 @@ class AdminController extends BasicController {
 		}
 		// trace_($menu);
 		$this->menu->set_menu($menu);
-		$this->menu->set_current_name($currentMenuItem);
+		$uri=$this->uri->get();
+		$this->menu->set_current($uri);
+		$this->menu->set_current_name($currentMenuItem); // ??
 		$menu=$this->menu->render();
+		// trace_($this->menu);
 		$this->load->view('admin/menu',array("menu"=>$menu));
 	}
 
