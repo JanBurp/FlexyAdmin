@@ -231,6 +231,7 @@ function doGrid() {
 					nr++;
 				});
 				if (isFile) {
+					var path='';
 					if (isThumbs)
 						path=$('table.grid tbody div.file div.path:first').text();
 					else
