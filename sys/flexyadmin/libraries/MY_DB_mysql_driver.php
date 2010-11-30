@@ -143,11 +143,14 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	*	array("search"=>"", "field"=>"", "or"=>"and/or", "in"=>array(val1,val2,val3) )
 	*/
 	function search($search) {
+		$default=array('search'=>'','field'=>'id','or'=>'AND');
 		foreach ($search as $k => $s) {
 			if (!empty($s['search']) and !empty($s['field'])) {
+				$s=array_merge($default,$s);
+				$s['or']=strtoupper($s['or']);
 				if (isset($s['in'])) {
 					// (or_)where_in
-					if (isset($s["or"]) and $s["or"]=="or") {
+					if ($s["or"]=="OR") {
 						if (!empty($s['in']))	$this->or_where_in($s["field"],$s["in"]);
 					}
 					else {
@@ -159,7 +162,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				}
 				else {
 					// (or_)like
-					if (isset($s["or"]) and $s["or"]=="or")
+					if ($s["or"]=="OR")
 						$this->or_like($s["field"],$s["search"]);
 					else
 						$this->like($s["field"],$s["search"]);
