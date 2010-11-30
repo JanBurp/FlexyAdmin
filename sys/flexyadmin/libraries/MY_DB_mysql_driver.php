@@ -140,15 +140,30 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	}
 	
 	/**
-	*	array("search"=>"", "field"=>"", "or"=>"and/or" )
+	*	array("search"=>"", "field"=>"", "or"=>"and/or", "in"=>array(val1,val2,val3) )
 	*/
 	function search($search) {
 		foreach ($search as $k => $s) {
 			if (!empty($s['search']) and !empty($s['field'])) {
-				if (isset($s["or"]) and $s["or"]=="or")
-					$this->or_like($s["field"],$s["search"]);
-				else
-					$this->like($s["field"],$s["search"]);
+				if (isset($s['in'])) {
+					// (or_)where_in
+					if (isset($s["or"]) and $s["or"]=="or") {
+						if (!empty($s['in']))	$this->or_where_in($s["field"],$s["in"]);
+					}
+					else {
+						if (!empty($s['in']))
+							$this->where_in($s["field"],$s["in"]);
+						else
+							$this->where_in($s["field"],array(-1)); // empty result
+					}
+				}
+				else {
+					// (or_)like
+					if (isset($s["or"]) and $s["or"]=="or")
+						$this->or_like($s["field"],$s["search"]);
+					else
+						$this->like($s["field"],$s["search"]);
+				}
 			}
 		}
 	}
