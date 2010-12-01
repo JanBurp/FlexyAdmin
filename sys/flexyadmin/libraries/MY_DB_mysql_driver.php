@@ -140,35 +140,32 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	}
 	
 	/**
-	*	array("search"=>"", "field"=>"", "or"=>"and/or", "in"=>array(val1,val2,val3) )
+	*	array("search"=>"", "field"=>"", "or"=>"AND/OR", "in"=>array(val1,val2,val3) )
 	*/
 	function search($search) {
 		$default=array('search'=>'','field'=>'id','or'=>'AND');
+		$query='';
 		foreach ($search as $k => $s) {
 			if (!empty($s['search']) and !empty($s['field'])) {
 				$s=array_merge($default,$s);
 				$s['or']=strtoupper($s['or']);
+				$query.=$s['or'].' ';
 				if (isset($s['in'])) {
-					// (or_)where_in
-					if ($s["or"]=="OR") {
-						if (!empty($s['in']))	$this->or_where_in($s["field"],$s["in"]);
-					}
-					else {
-						if (!empty($s['in']))
-							$this->where_in($s["field"],$s["in"]);
-						else
-							$this->where_in($s["field"],array(-1)); // empty result
-					}
+					// IN ()
+					$in="'".implode("','",$s['in'])."'";
+					if (!empty($s['in']))
+						$query.='`'.$s['field'].'` IN ('.$in.') ';
+					else
+						$query.='`'.$s['field'].'` IN (-1) '; // empty result
 				}
 				else {
-					// (or_)like
-					if ($s["or"]=="OR")
-						$this->or_like($s["field"],$s["search"]);
-					else
-						$this->like($s["field"],$s["search"]);
+					// LIKE
+					$query.='`'.$s['field'].'` LIKE \'%'.$s['search'].'%\' ';
 				}
 			}
 		}
+		$query=substr($query,5); // remove first AND
+		$this->where($query);
 	}
 
 	function select_first($pre="") {
