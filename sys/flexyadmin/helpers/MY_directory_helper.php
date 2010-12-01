@@ -17,6 +17,7 @@ function read_map($path,$types="",$recursive=FALSE) {
 			$data=array();
 			if (is_array($file)) {
 				$name=$id;
+				$data["name"]=$name;
 				$data["type"]="dir";
 				$data["alt"]=$name;
 				if ($recursive) {
@@ -24,8 +25,9 @@ function read_map($path,$types="",$recursive=FALSE) {
 				}
 			}
 			else {
-				$data["type"]=strtolower(get_file_extension($file));
 				$name=$file;
+				$data["name"]=$name;
+				$data["type"]=strtolower(get_file_extension($file));
 				$data["alt"]=get_prefix($file,".");
 				$data["size"]=sprintf("%d k",filesize($path."/".$name)/1024);
 				$data["rawdate"]=date("Y m d",filemtime($path."/".$name));
@@ -38,7 +40,6 @@ function read_map($path,$types="",$recursive=FALSE) {
 					$data["height"]=$size[1];
 				}
 			}
-			$data["name"]=$name;
 			$data["path"]=$path."/".$name;
 			if (empty($types) or (in_array($data["type"],$types)))
 				$prepFiles[strtolower($name)]=$data;
