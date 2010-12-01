@@ -476,32 +476,59 @@ function combine($k,$v) {
 /**
  * Sort an assoc array by its value, can be used to sort a db return array by another field than its 'id'key
  */
-function sort_by($a,$key,$desc=FALSE) {
+function sort_by($a,$key,$desc=FALSE,$case=FALSE) {
 	if ($desc) {
-		$f = "return strnatcmp(\$b['$key'], \$a['$key']);";
+		if ($case) 
+			$f = "return strcasecmp(\$b['$key'], \$a['$key']);";
+		else
+			$f = "return strnatcmp(\$b['$key'], \$a['$key']);";
 		uasort($a, create_function('$a,$b', $f));
 	}
 	else {
-		$f = "return strnatcmp(\$a['$key'], \$b['$key']);";
+		if ($case) 
+			$f = "return strcasecmp(\$a['$key'], \$b['$key']);";
+		else
+			$f = "return strnatcmp(\$a['$key'], \$b['$key']);";
 		uasort($a, create_function('$a,$b', $f));
 	}
 	return $a;
 }
 
+function in_array_like($v,$a) {
+	$in=false;
+	$i=array_shift($a);
+	while (!empty($i) and !$in) {
+		if (strpos($i,$v)!==false) $in=true;
+		$i=array_shift($a);
+	}
+	trace_(array('value'=>$v,'array'=>$a,'res'=>$in));
+	return $in;
+}
 
-function find_row_by_value($a,$v,$key='') {
+function find_row_by_value($a,$v,$key='',$like=false) {
 	$found=array();
 	foreach ($a as $id=>$row) {
 		if (empty($key)) {
-			if (in_array($v,$row)) $found[$id]=$row;
+			if ($like) {
+				if (in_array_like($v,$row)) $found[$id]=$row;
+			}
+			else {
+				if (in_array($v,$row)) $found[$id]=$row;
+			}
 		}
 		else {
-			if (isset($row[$key]) and $row[$key]==$v) $found[$id]=$row;
+			if ($like) {
+				if (isset($row[$key]) and has_string($v,$row[$key])) $found[$id]=$row;
+			}
+			else {
+				if (isset($row[$key]) and $row[$key]==$v) $found[$id]=$row;
+			}
 		}
 	}
 	if (empty($found)) $found=FALSE;
 	return $found;
 }
+
 
 function array_ereg_search($val, $array) {
 	$i = 0;
