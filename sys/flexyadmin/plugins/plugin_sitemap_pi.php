@@ -32,15 +32,15 @@ class plugin_sitemap extends plugin_ {
 			$menuTable=$this->CI->cfg->get('cfg_configurations','str_menu_table');
 
 		// create Sitemap
-		$url=$this->CI->db->get_field('tbl_site','url_url').'/';
+		$url=trim($this->CI->db->get_field('tbl_site','url_url'),'/');
 		if ($this->CI->db->field_exists('self_parent',$menuTable)) $this->CI->db->uri_as_full_uri();
 		$menu=$this->CI->db->get_result($menuTable);
 		$urlset=array();
 		foreach ($menu as $id => $item) {
 			$set=array();
-			$set['loc']=$url.htmlentities($item['uri']);
+			$set['loc']=$url.'/'.htmlentities($item['uri']);
 			if (isset($item['str_title'])) $set['title']=$item['str_title'];
-			if (isset($item['txt_text'])) $set['content']=strip_tags($item['txt_text']);
+			if (isset($item['txt_text'])) $set['content']=htmlentities(strip_tags($item['txt_text']),ENT_QUOTES);
 			$urlset[]=$set;
 		}
 		$sitemap['urlset']=$urlset;
