@@ -221,6 +221,18 @@ class FrontEndController extends MY_Controller {
 		if (empty($data)) $data=$this->site;
 		return $this->load->site_view($v,$data,$return);
 	}
+	
+	function module($module) {
+		if (!function_exists('_module_'.$module) and file_exists('site/modules/module_'.$module.'.php')) {
+			include_once('site/modules/module_'.$module.'.php');
+		}
+		if (function_exists('_module_'.$module)) {
+			$module='_module_'.$module;
+			$module();
+		}
+	}
+	
+	
 }
 
 /**
