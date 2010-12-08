@@ -59,10 +59,16 @@ class plugin_sitemap extends plugin_ {
 	
 	function _create_robots() {
 		$robots=read_file('robots.txt');
-		// Replace old Sitemap line with new
 		$url=$this->CI->db->get_field('tbl_site','url_url');
 		$newSitemapLine='Sitemap: '.$url.'/sitemap.xml';
-		$robots=preg_replace('/sitemap(.*)\w/i',$newSitemapLine,$robots);
+		if (strpos($robots,'Sitemap')!==false) {
+			// Replace old Sitemap line with new
+			$robots=preg_replace('/sitemap(.*)\w/i',$newSitemapLine,$robots);
+		}
+		else {
+			// add Sitemap
+			$robots.=$newSitemapLine;
+		}
 		// write file
 		$err=write_file('robots.txt', $robots);
 		if ($err)
