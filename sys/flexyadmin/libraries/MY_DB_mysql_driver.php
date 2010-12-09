@@ -164,7 +164,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				}
 			}
 		}
-		$query=substr($query,5); // remove first AND
+		$query=substr($query,4); // remove first AND
 		$this->where($query);
 	}
 
