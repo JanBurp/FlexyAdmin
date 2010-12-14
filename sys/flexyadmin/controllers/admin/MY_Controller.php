@@ -711,8 +711,25 @@ class AdminController extends BasicController {
 	function _show_menu($currentMenuItem="") {
 		$this->lang->load('help');
 		$menu=array();
-		$this->db->where('b_visible',1);
-		$adminMenu=$this->db->get_result('cfg_admin_menu');
+		if ($this->db->table_exists('cfg_admin_menu')) {
+			$this->db->where('b_visible',1);
+			$adminMenu=$this->db->get_result('cfg_admin_menu');
+		}
+		else {
+			// minimal standard menu
+			$adminMenu=array(
+				"1"=>array("id"=>'1',"order"=>'0',"str_ui_name"=>'Home',"b_visible"=>'1', "str_type"=>'api', "api"=>'API_home', "path"=>'', "table"=>'', "str_table_where"=>'' ),
+				"2"=>array( "id"=>'2', "order"=>'1', "str_ui_name"=>'Logout', "b_visible"=>'1', "str_type"=>'api', "api"=>'API_logout', "path"=>'', "table"=>'', "str_table_where"=>'' ),
+				"8"=>array( "id"=>'8', "order"=>'4', "str_ui_name"=>'', "b_visible"=>'1', "str_type"=>'seperator', "api"=>'', "path"=>'', "table"=>'', "str_table_where"=>'' ),
+				"4"=>array( "id"=>'4', "order"=>'5', "str_ui_name"=>'# all normal tables (if user has rights)', "b_visible"=>'1', "str_type"=>'all_tbl_tables', "api"=>'', "path"=>'', "table"=>'', "str_table_where"=>'' ),
+				"5"=>array( "id"=>'5', "order"=>'6', "str_ui_name"=>'# all media (if user has rights)', "b_visible"=>'1', "str_type"=>'all_media', "api"=>'', "path"=>'', "table"=>'', "str_table_where"=>'' ),
+				"9"=>array( "id"=>'9', "order"=>'7', "str_ui_name"=>'', "b_visible"=>'1', "str_type"=>'seperator', "api"=>'', "path"=>'', "table"=>'', "str_table_where"=>'' ),
+				"11"=>array( "id"=>'11', "order"=>'8', "str_ui_name"=>'_stats_menu', "b_visible"=>'1', "str_type"=>'api', "api"=>'API_plugin_stats', "path"=>'', "table"=>'', "str_table_where"=>'' ),
+				"12"=>array( "id"=>'12', "order"=>'9', "str_ui_name"=>'', "b_visible"=>'1', "str_type"=>'seperator', "api"=>'', "path"=>'', "table"=>'', "str_table_where"=>'' ),
+				"6"=>array( "id"=>'6', "order"=>'10', "str_ui_name"=>'# all tools (if user has rights)', "b_visible"=>'1', "str_type"=>'tools', "api"=>'', "path"=>'', "table"=>'', "str_table_where"=>'' ),
+				"10"=>array( "id"=>'10', "order"=>'11', "str_ui_name"=>'', "b_visible"=>'1', "str_type"=>'seperator', "api"=>'', "path"=>'', "table"=>'', "str_table_where"=>'' ),
+				"7"=>array( "id"=>'7', "order"=>'12', "str_ui_name"=>'# all config tables (if user has rights)', "b_visible"=>'1', "str_type"=>'all_cfg_tables', "api"=>'', "path"=>'', "table"=>'', "str_table_where"=>'' ) );
+		}
 		
 		// trace_($adminMenu);
 
