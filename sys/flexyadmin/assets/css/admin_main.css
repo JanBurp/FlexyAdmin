@@ -534,7 +534,8 @@ tr.caption td				{ border:none; }
 	font-weight: bold;
 /*	vertical-align:middle;*/
 }
-.grid .caption td		{ padding:0px;}
+
+.grid .caption td		{padding:2px 0px}
 
 .grid td.id,
 .grid td.edit,
@@ -686,6 +687,12 @@ table.grid thead .order,
 .foldednode {
 	font-style:italic;
 }
+
+/** grid pager **/
+tfoot tr.pagination td {padding:10px;background-color:#DEA;background-image: url("../img/inset.png");background-position: 50% 50%;text-align:center;}
+span.pager * {padding:0px 2px;font-size:14px;}
+span.pager_totals {float:right;}
+
 /* ============== filemanager ================== */
 
 .thumbs {
@@ -1145,13 +1152,11 @@ form .subfields .sub .icon {
 .filter input.filter {
 	background:#F4FFE0 url("../icons/search.gif");
 	background-repeat:no-repeat;
-	background-position:5px 8px;
+	background-position:5px 5px;
 	border:solid 1px #DDEEAA;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
-	padding-top:6px;
-	padding-bottom:3px;
-	padding-left:23px;
+	padding:1px 0px 1px 23px;
 	margin:0px;
 	cursor: pointer;
 	width:100%;

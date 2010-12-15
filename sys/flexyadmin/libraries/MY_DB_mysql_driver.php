@@ -27,6 +27,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	var $uriAsFullUri;
 	var $extraFullField;
 	var $orderAsTree;
+	var $order;
 	var $ar_dont_select;
 	var $selectFirst;
 	var	$selectFirsts;
@@ -132,7 +133,19 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				$this->order_by($order);
 			}
 		}
+		$this->order=$this->ar_orderby;
 		return $order;
+	}
+
+	function order_by($args) {
+		parent::order_by($args);
+		$this->order=$args;
+	}
+
+	function get_last_order() {
+		$order=$this->order;
+		if (is_array($order)) $order=current($order);
+		return str_replace('`','',$order);
 	}
 
 	function where_uri($uri="") {

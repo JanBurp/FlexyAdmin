@@ -21,8 +21,11 @@ class Grid Extends Model {
 	var $headings=array();
 	var $rows=array();
 	var $rowId;
+	var $order;
+	var $search;
 	var $currentId;
 	var $renderData;
+	var $pagin;
 
 	var $type;			// html | files
 
@@ -37,7 +40,10 @@ class Grid Extends Model {
 		$this->set_headings();
 		$this->rows=array();
 		$this->set_type();
+		$this->set_order();
+		$this->set_search();
 		$this->set_current();
+		$this->set_pagination();
 	}
 
 	function set_captions($caption="") {
@@ -70,8 +76,28 @@ class Grid Extends Model {
 		$this->type=$type;
 	}
 
+	function set_order($order='id') {
+		$post=get_postfix($order,' ');
+		if ($post=='DESC') $order='_'.$order;
+		$order=str_replace(array(' DESC',' ASC'),'',$order);
+		$this->order=$order;
+	}
+	
+	function set_search($search='') {
+		$this->search=$search;
+	}
+
 	function set_current($currentId=NULL) {
 		$this->currentId=$currentId;
+	}
+
+	function set_pagination($pagin=false) {
+		if ($pagin) {
+			$pagin['base_url'].='/offset';
+			$default=array('uri_segment'=>6,'num_links'=>5,'first_link'=>'&lt;&lt;','last_link'=>'&gt;&gt;','full_tag_open'=>'<span class="pager">','full_tag_close'=>'</span>','total_tag_open'=>'<span class="pager_totals">','total_tag_close'=>'</span>');
+			$pagin=array_merge($default,$pagin);
+		}
+		$this->pagin=$pagin;
 	}
 
 	function set_rows($rows=NULL) {
@@ -114,16 +140,30 @@ class Grid Extends Model {
 		if (!empty($type)) $this->set_type($type);
 
 		$table=array();
+
+		if ($this->pagin) {
+			$this->pagination->initialize($this->pagin);
+			$this->pagin['links']=$this->pagination->create_links();
+			$table['pagination']=$this->pagin;
+			$extraClass.=' pagination';
+		}
+
 		$table["class"]="$tableClass $extraClass";
+		$table['order']=$this->order;
+		$table['search']=$this->search;
 
 		$table["caption"]["class"]="$tableClass $extraClass";
 		$table["caption"]["row"]=$this->captions;
 
 		$table["heading"]["class"]="$tableClass $extraClass";
 		foreach($this->headings as $name=>$heading) {
-			$table["heading"]["row"][]=array(	"class"	=>"$tableClass $name $extraClass ".alternator("oddcol","evencol"),
+			$orderClass='';
+			if ($this->order==$name) $orderClass=' headerSortUp';
+			if ($this->order=='_'.$name) $orderClass=' headerSortDown';
+			$table["heading"]["row"][]=array(	"class"	=>"$tableClass $name $extraClass ".alternator("oddcol","evencol").$orderClass,
 																				"cell"	=> $heading );
 		}
+		
 
 		$data=$this->rows;
 		$alt="";
