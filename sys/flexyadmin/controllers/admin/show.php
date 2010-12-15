@@ -78,7 +78,10 @@ class Show extends AdminController {
 			$id=el('current',$args);
 			$info=el('info',$args);
 			$sub=el('sub',$args);
-			// trace_($args);
+			$offset=el('offset',$args,0);
+			$order=el('order',$args);
+			$search=el('search',$args);
+			// strace_($args);
 			
 			if (!empty($table) and $this->db->table_exists($table)) {
 				$singleRow=$this->cfg->get('CFG_table',$table,"b_single_row");
@@ -93,6 +96,7 @@ class Show extends AdminController {
 				else {
 					if ($right=$this->has_rights($table,$id)) {
 						$restrictedToUser=$this->user_restriction_id($table);
+						$this->load->library("pagination");
 						$this->load->model("grid");
 						$this->lang->load("help");
 						$this->_add_js_variable("help_filter",$this->_add_help(langp('grid_filter')));
@@ -115,6 +119,10 @@ class Show extends AdminController {
 						if ($this->db->has_field($table,"self_parent")) {
 							$this->db->order_as_tree();
 						}
+						elseif ($order) {
+							if (substr($order,0,1)=='_') $order=substr($order,1).' DESC';
+							$this->db->order_by($order);
+						}
 						if ($restrictedToUser>0 and $this->db->has_field($table,"user")) {
 							$this->db->where($table.".user",$restrictedToUser);
 							$this->db->dont_select("user");
@@ -124,12 +132,25 @@ class Show extends AdminController {
 						$this->db->add_foreigns_as_abstracts();
 						if ($tableInfo['b_grid_add_many']) $this->db->add_many();
 						$this->db->max_text_len(250);
+						
+						// search?
+						if ($search) {
+							$fields=$this->db->list_fields($table);
+							$searchArr=array();
+							foreach ($fields as $field) {
+								$searchArr[]=array('field'=>$field,'search'=>$search,'or'=>'OR');
+							}
+							$this->db->search($searchArr);
+						}
+
 						$data=$this->db->get_result($table);
+						$order=$this->db->get_last_order();
+						// strace_($order);
 
 						// trace_('#show#'.$this->db->last_query());
 						// strace_($data);
 
-						if (empty($data)) {
+						if (empty($data) and empty($search)) {
 							/**
 							 * if no data, start an input form
 							 */
@@ -140,6 +161,22 @@ class Show extends AdminController {
 						else
 						{
 							$this->_before_grid($table,$data);
+							$pagination=$this->cfg->get("CFG_table",$table,'int_pagination');
+
+							$grid=new grid();
+
+							if ($pagination) {
+								$pagination=array('base_url'=>api_url('API_view_grid',$table),'per_page'=>$pagination,'total_rows'=>count($data),'offset'=>$offset);
+								$grid->set_pagination($pagination);
+								// strace_($pagination);
+								$data=array_slice($data,$pagination['offset'],$pagination['per_page'],true);
+							}
+
+							// if (empty($id) and !empty($data)) {
+							// 	$id=current($data);
+							// 	$id=$id['id'];
+							// }
+
 
 							/**
 							 * if data: first render data, then put data in grid and render as html
@@ -150,7 +187,6 @@ class Show extends AdminController {
 							}
 							$data=$this->ff->render_grid($table,$data,$right,$info);
 
-							$grid=new grid();
 							if (empty($uiTable)) $uiTable=$this->uiNames->get($table);
 							$tableHelp=$this->cfg->get("CFG_table",$table,"txt_help");
 							if (!empty($tableHelp)) {
@@ -159,8 +195,13 @@ class Show extends AdminController {
 							else
 								$uiShowTable=$uiTable;
 							$grid->set_data($data,$uiShowTable);
-							$keys=array_keys(current($data));
-							$keys=combine($keys,$keys);
+							$grid->set_order($order);
+							$grid->set_search($search);
+							$keys=array();
+							if (!empty($data)) {
+								$keys=array_keys(current($data));
+								$keys=combine($keys,$keys);
+							}
 							if ($right>=RIGHTS_ADD) {
 								$newUri=api_uri('API_view_form',$table.':-1');
 								if (!empty($info)) $newUri.='/info/'.$info;

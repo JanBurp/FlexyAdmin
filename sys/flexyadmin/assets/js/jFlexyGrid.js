@@ -84,56 +84,59 @@ function doGrid() {
 		//
 		filter=$("table.grid:first");
 		if (filter.length>0 && !isGridAction) {
-			// keep table width
-			w=$(filter).width();
-			$(filter).width(w);
-
-			// set filter
-			if (isFile && !isGrid) {
-				affects='tbody tr .file';
+			if ($(filter).hasClass('pagination')) {
+				// add filter input
+				var search=$(filter).attr('search');
+				$("tr.caption:first tr").append('<td class="filter"><span class="help '+config.help_filter+'"><input class="filter" type="text" value="'+search+'"/></span></div>');
+				// bind action on change
+				$('input.filter').change(function(){
+					var search=$(this).val();
+					// ok now reload the page, starting from page 0, with this search and current order
+					var url=$(filter).attr('url')+'/0/order/'+$(filter).attr('order')+'/search/'+search;
+					location.href=url;
+				});
 			}
 			else {
-				affects='tbody tr';
-			}
+				// keep table width
+				w=$(filter).width();
+				$(filter).width(w);
+				// set filter
+				if (isFile && !isGrid) {affects='tbody tr .file';} else {affects='tbody tr';}
 
-			$(filter).filterable({ affects: affects, queryCss:'filter' }, function(keyCode){
-				// reset rows
-				rowsEvenOdd();
-				
-				// check keypresses for special actions
-				switch (keyCode) {
-					case keyEnter:
-						if (!$('.grid').hasClass('files')) {
-							select=$('.grid: tr.current');
-							if (select.length==0) {
-								select=$('.grid tbody tr:first');
+				$(filter).filterable({ affects: affects, queryCss:'filter' }, function(keyCode){
+					// reset rows
+					rowsEvenOdd();
+					// check keypresses for special actions
+					switch (keyCode) {
+						case keyEnter:
+							if (!$('.grid').hasClass('files')) {
+								select=$('.grid: tr.current');
+								if (select.length==0) {
+									select=$('.grid tbody tr:first');
+								}
+								id=get_id(select);
+								table=get_table(select);
+								url=site_url('admin/show/form/'+table+':'+id);
+								location.href=url;
 							}
-							id=get_id(select);
-							table=get_table(select);
-							url=site_url('admin/show/form/'+table+':'+id);
-							location.href=url;
-						}
-						break;
-
-					case keyUp:
-						setCurrent('up');
-						break;
-					case keyDown:
-						setCurrent('down');
-						break;
-
-					default:
-						setCurrent('first');
-				}
-								
-			});
-
-			// place filter input on other place
-			filter_input=$("div.filter:first input");
-			$(filter_input).addClass("filter").attr({title:'search / filter'});
-			$("tr.caption:first tr").append('<td class="filter">');
-			$("td.filter:first").html(filter_input);
-			$("td.filter:first input").wrap('<span class="help '+config.help_filter+'"></span>');
+							break;
+						case keyUp:
+							setCurrent('up');
+							break;
+						case keyDown:
+							setCurrent('down');
+							break;
+						default:
+							setCurrent('first');
+					}
+				});
+				// place filter input on other place
+				filter_input=$("div.filter:first input");
+				$(filter_input).addClass("filter").attr({title:'search / filter'});
+				$("tr.caption:first tr").append('<td class="filter">');
+				$("td.filter:first").html(filter_input);
+				$("td.filter:first input").wrap('<span class="help '+config.help_filter+'"></span>');
+			}
 		}
 
 		//
@@ -474,14 +477,42 @@ function doGrid() {
 
 	if (isSortable) {
 		grid=$("table.grid");
-		$(grid).tablesorter();
-		$(grid).bind("sortStart",function() {
-			$(grid).css("cursor","wait");
-			    });
-		$(grid).bind("sortEnd",function() {
-			$(grid).css("cursor","default");
-			rowsEvenOdd();
-			    });
+		if ($(grid).hasClass('pagination')) {
+			// sort with pagination needs to reload page with another sort field
+			$(grid).find('tr.heading th').addClass('header').click(function(){
+				var field=get_class($(this),1);
+				if ($(this).hasClass('headerSortUp')) field='_'+field;
+				// ok now reload the page, starting from page 0
+				var url=$(grid).attr('url')+'/0/order/'+field+'/search/'+$(grid).attr('search');
+				location.href=url;
+			});
+			// replace pagination links with current order field
+			$(grid).find('span.pager a').each(function(){
+				var order=$(grid).attr('order');
+				var url=$(this).attr('href')+'/order/'+order+'/search/'+$(grid).attr('search');
+				$(this).attr('href',url);
+			});
+		}
+		else {
+			// live sorting, first find ordered col
+			var cols=$(grid).find('tr.heading th');
+			var sortcol=0;
+			var desc=0;
+			for (var i=0; i<cols.length; i++) {
+				if ( ($(cols[i]).hasClass('headerSortUp')) || ($(cols[i]).hasClass('headerSortDown')) ) {
+					sortcol=i;
+					if ($(cols[i]).hasClass('headerSortUp')) desc=1;
+				}
+			};
+			$(grid).tablesorter({sortList:[[sortcol,desc]]});
+			$(grid).bind("sortStart",function() {
+				$(grid).css("cursor","wait");
+			});
+			$(grid).bind("sortEnd",function() {
+				$(grid).css("cursor","default");
+				rowsEvenOdd();
+			});
+		}
 	}
 
 	if (isGridAction) {

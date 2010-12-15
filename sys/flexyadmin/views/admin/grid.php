@@ -1,4 +1,4 @@
-<table class="<?=$class?>">
+<table class="<?=$class?>" <?if(isset($pagination['offset'])):?>offset="<?=$pagination['offset']?>" url="<?=$pagination['base_url']?>"<?endif;?> order=<?=$order?> search="<?=$search?>">
 
 	<thead>
 		<tr class="caption <?=$caption["class"];?>">
@@ -22,7 +22,9 @@
 			<? endforeach; ?>
 			</tr>
 		<? endif; ?>
+
 	</thead>
+
 
 	<tbody>
 	<? if (isset($rows) and !empty($rows)):
@@ -35,4 +37,15 @@
 	<? endforeach;
 		endif; ?>
 	</tbody>
+	
+	<? if (isset($pagination['links'])): ?>
+	<tfoot>
+		<tr class="pagination">
+			<td colspan="100">
+				<?=$pagination['links']?>
+			</td>
+		</tr>
+	</tfoot>
+	<? endif; ?>
+	
 	</table>
