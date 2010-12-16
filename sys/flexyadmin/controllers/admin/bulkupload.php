@@ -27,6 +27,8 @@ class Bulkupload extends AdminController {
 				$this->_add_content(p()."No files found in '".$bulkMap."'."._p());
 			}
 			else {
+				$this->load->library('session');
+				
 				$gridFiles=array();
 				$mediaCfg=$this->cfg->get('CFG_media_info');
 
@@ -47,107 +49,122 @@ class Bulkupload extends AdminController {
 					$data=array(	"path"				=> array("label"=>'Move to:','type'=>'dropdown','options'=>$options),
 												"rename"			=> array('label'=>"Autorename")
 												// "do_resize"		=> array('type'=>'checkbox','value'=>'1'),
-												// "do_autofill"	=> array("label"=>'Auto fill fields','type'=>'checkbox','value'=>'1')								
-						);
+												// "do_autofill"	=> array("label"=>'Auto fill fields','type'=>'checkbox','value'=>'1')
+												);
 					$form->set_data($data,'Bulk upload settings');
 					$form->set_old_templates();
 					$this->_add_content($form->render());			
 					$this->_add_content(p().nbs()._p().p().nbs()._p());
 				}
 				
-				
 				// Show and move files
-				if (!empty($path)) {
-					$map=$path;
-					$path=assets($path);
-					$this->load->library('upload');
-					$config['upload_path'] = $path;
-					$config['allowed_types'] = implode("|",$this->config->item('FILE_types_img'));
-					$this->upload->config($config);
-
-					$renameCount=-1;
-					foreach ($files as $name => $file) {
-						$gridFiles[$name]['File']=$file['name'];
-						$moved=FALSE;
-						$resized=FALSE;
-						$autoFill=FALSE;
-						// (re)name
-						$ext=get_file_extension($file['name']);
-						if (!empty($rename)) {
-							$renameCount++;
-							$saveFile=$rename.'_'.sprintf('%03d',$renameCount);
-						}
-						else {
-							$saveFile=clean_file_name(get_file_without_extension($file['name']));
-						}
-						// check if name exists, if so, add number
-						$existsCount=0;
-						$newFile=$saveFile.'.'.$ext;
-						if (file_exists($path.'/'.$newFile)) {
-							while (file_exists($path.'/'.$newFile)) {
-								$newFile=$saveFile.'_'.$existsCount++.'.'.$ext;
-							}
-							$saveFile=$newFile;
-						}
-						else {
-							$saveFile=$saveFile.'.'.$ext;
-						}
-						$moved=copy($bulkMap.'/'.$file['name'],$path.'/'.$saveFile);
-						if ($moved) {
-							// resize
-							$resized=$this->upload->resize_image($saveFile,$path);
-							// autofill
-							$cfg=$mediaCfg[str_replace('site/assets/','',$path)];
-							if (!isset($cfg['str_autofill']) or $cfg['str_autofill']=='bulk upload' or $cfg['str_autofill']=='both') {
-								$autoFill=$this->upload->auto_fill_fields($saveFile,$path);
-							}
-							// fill in media table
-							$userRestricted=$this->cfg->get('CFG_media_info',$map,'b_user_restricted');
-							if ($userRestricted and $this->db->table_exists("cfg_media_files")) {
-								$this->db->set('user',$this->user_id);
-								$this->db->set('file',$map."/".$saveFile);
-								$this->db->insert('cfg_media_files');
-							}
-							
-							// delete original from Bulk map
-							unlink($bulkMap.'/'.$file['name']);
-						}
-						if ($moved)
-							$gridFiles[$name]['Moved']=icon('yes');
-						else
-							$gridFiles[$name]['Moved']=icon('no');
-						if ($resized)
-							$gridFiles[$name]['Resized']=icon('yes');
-						else
-							$gridFiles[$name]['Resized']=icon('no');
-						if ($autoFill)
-							$gridFiles[$name]['Auto fill']=icon('yes');
-						else
-							$gridFiles[$name]['Auto fill']=icon('no');
-					}
-				
+				$map=$path;
+				$path=assets($path);
+				foreach ($files as $name => $file) {
+					$gridFiles[$name]['File']=$file['name'];
+					$moved=FALSE;
+					$resized=FALSE;
+					$autoFill=FALSE;
 				}
-				else {
-					foreach ($files as $name => $file) {
-						$gridFiles[$name]=array('File'=>$file['name'],'Moved'=>icon('no'),'Resized'=>icon('no'),'Auto fill'=>icon('no'));
-						if (!empty($path)) $gridFiles[$name]['uri']='admin/bulkupload/ajax/'.$path.'/'.$name;
-					}
+
+				$this->session->set_userdata('fileRenameCount',-1);
+				foreach ($files as $name => $file) {
+					// $gridFiles[$name]=array('File'=>$file['name'],'Moved'=>icon('no'),'Resized'=>icon('no'),'Auto fill'=>icon('no'));
+					$gridFiles[$name]=array('id'=>icon('no'),'File'=>$file['name'],'uri'=>'admin/bulkupload/ajaxUpload/'.pathencode($path).'/'.$name.'/'.$rename);
+					if (!empty($map)) $gridFiles[$name]['Rename']=$this->_newName($path,$name,$rename);
 				}
 
 				$this->load->model("grid");
 				$grid=new grid();			
 				$grid->set_data($gridFiles,'Files');
-				// if (empty($path))
+				$grid->set_heading('id','');
+				if (empty($map))
 					$renderData=$grid->render("html",'bulkupload',"grid");
-				// else
-				// 	$renderData=$grid->render("html",'bulkupload',"grid actionGrid");
+				else
+					$renderData=$grid->render("html",'bulkupload',"grid actionGrid");
 				$this->_add_content($this->load->view("admin/grid",$renderData,true));
-
+				$this->session->set_userdata('fileRenameCount',-1);
 			}
 		}
-		$this->_show_type("form");
+		$this->_show_type("form grid");
 		$this->_show_all();
 	}
+
+
+	function _newName($path,$name,$rename) {
+		$renameCount=$this->session->userdata('fileRenameCount');
+		
+		$name=$name;
+		$ext=get_file_extension($name);
+		if (!empty($rename)) {
+			$renameCount++;
+			$saveFile=$rename.'_'.sprintf('%03d',$renameCount);
+			$this->session->set_userdata('fileRenameCount',$renameCount);
+		}
+		else {
+			$saveFile=clean_file_name(get_file_without_extension($name));
+		}
+		// check if name exists, if so, add number
+		$existsCount=0;
+		$newFile=$saveFile.'.'.$ext;
+		if (file_exists($path.'/'.$newFile)) {
+			while (file_exists($path.'/'.$newFile)) {
+				$newFile=$saveFile.'_'.$existsCount++.'.'.$ext;
+			}
+			$saveFile=$newFile;
+		}
+		else {
+			$saveFile=$saveFile.'.'.$ext;
+		}
+		return $saveFile;
+	}
+
+
+	function ajaxUpload($args) {
+		$args=func_get_args();
+		$path=pathdecode($args[0]);
+		$file=$args[1];
+		$rename='';
+		if (isset($args[2])) $rename=$args[2];
+		
+		if ($this->_can_use_tools()) {
+			$this->load->library('upload');
+			$this->load->library('session');
+
+			$config['upload_path'] = $path;
+			$config['allowed_types'] = implode("|",$this->config->item('FILE_types_img'));
+			$this->upload->config($config);
+			
+			$mediaCfg=$this->cfg->get('CFG_media_info');
+			
+			$bulkMap=$this->config->item('BULKUPLOAD');
+			$moved=FALSE;
+			$resized=FALSE;
+			$autoFill=FALSE;
+			$saveFile=$this->_newName($path,$file,$rename);
+			$moved=copy($bulkMap.'/'.$file, $path.'/'.$saveFile);
+			if ($moved) {
+				// resize
+				$resized=$this->upload->resize_image($saveFile,$path);
+				// autofill
+				$cfg=$mediaCfg[str_replace('site/assets/','',$path)];
+				if (!isset($cfg['str_autofill']) or $cfg['str_autofill']=='bulk upload' or $cfg['str_autofill']=='both') {
+					$autoFill=$this->upload->auto_fill_fields($saveFile,$path);
+				}
+				// fill in media table
+				$userRestricted=$this->cfg->get('CFG_media_info',$path,'b_user_restricted');
+				if ($userRestricted and $this->db->table_exists("cfg_media_files")) {
+					$this->db->set('user',$this->user_id);
+					$this->db->set('file',$map."/".$saveFile);
+					$this->db->insert('cfg_media_files');
+				}
+				// delete original from Bulk map
+				unlink($bulkMap.'/'.$file);
+			}
+		}
+	}
+	
+	
 
 }
 
