@@ -163,7 +163,6 @@ class Grid Extends Model {
 			$table["heading"]["row"][]=array(	"class"	=>"$tableClass $name $extraClass ".alternator("oddcol","evencol").$orderClass,
 																				"cell"	=> $heading );
 		}
-		
 
 		$data=$this->rows;
 		$alt="";

@@ -501,7 +501,7 @@ function in_array_like($v,$a) {
 		if (strpos($i,$v)!==false) $in=true;
 		$i=array_shift($a);
 	}
-	trace_(array('value'=>$v,'array'=>$a,'res'=>$in));
+	// trace_(array('value'=>$v,'array'=>$a,'res'=>$in));
 	return $in;
 }
 

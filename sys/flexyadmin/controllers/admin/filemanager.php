@@ -102,7 +102,25 @@ class Filemanager extends AdminController {
  * @param string $path Path name
  */
 
-	function show($path="",$idFile="") {
+	function show() {
+		$args=$this->uri->uri_to_assoc();
+		$keys=array_keys($args);
+		if ($keys[0]=='setview') {
+			$path=$keys[1];
+			$offset=0;
+			$order='';
+			$search='';
+		}
+		else {
+			$path=el('show',$args);
+			$id=el('current',$args);
+			$info=el('info',$args);
+			// $sub=el('sub',$args);
+			$offset=el('offset',$args,0);
+			$order=el('order',$args,'name');
+			$search=el('search',$args,'');
+		}
+		
 		if (!empty($path)) {
 			$path=pathdecode($path,TRUE);
 			$name="";
@@ -113,6 +131,7 @@ class Filemanager extends AdminController {
 				$this->load->model("file_manager");
 				$this->load->library('image_lib');
 				
+				$this->load->library("pagination");
 				$this->load->model("grid");
 				$this->lang->load("help");
 				$this->_add_js_variable("help_filter",$this->_add_help(langp('grid_filter')));
@@ -147,7 +166,20 @@ class Filemanager extends AdminController {
 				// 		}
 				// 	}
 				// }
-				
+
+				// Search in files
+				if (!empty($search)) {
+					foreach ($files as $name => $file) {
+						if (!in_array_like($search,$file)) unset($files[$name]);
+					}
+				}
+				// Sort files
+				if (!empty($order)) {
+					$sorder=$order;
+					$sorder=str_replace(array('size','filewidth'),array('width','size'),$order);
+					$desc=(substr($order,0,1)=='_');
+					$files=sort_by($files,ltrim($sorder,'_'),$desc);
+				}
 
 				/**
 				 * Start file manager
@@ -164,6 +196,7 @@ class Filemanager extends AdminController {
 					$uiName=help($uiName,$Help);
 				}
 				if (!empty($uiName)) $fileManager->set_caption($uiName);
+				$fileManager->set_pagination(array('offset'=>$offset,'order'=>$order,'search'=>$search));
 				$renderData=$fileManager->render();
 
 				if ($fileManagerView=="list") {

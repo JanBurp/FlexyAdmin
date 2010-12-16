@@ -22,6 +22,7 @@ class File_manager Extends Model {
 	var $path;
 	var $map;
 	var $view;
+	var $pagin;
 	var $fileTypes;
 	var $currentId;
 	var $showUploadButton;
@@ -332,7 +333,8 @@ function thumb($attr,$index=FALSE) {
 
 	function _create_render_data($details=TRUE) {
 		$data=array();
-		$files=$this->file_sort($this->files);
+		$files=$this->files;
+		// $files=$this->file_sort($files);
 		$imgTypes=$this->config->item('FILE_types_img');
 		$flashTypes=$this->config->item('FILE_types_flash');
 		$mp3Types=$this->config->item('FILE_types_mp3');
@@ -431,8 +433,12 @@ function thumb($attr,$index=FALSE) {
 				}
 			}
 		}
-		// trace_($data);
 		return $data;
+	}
+
+
+	function set_pagination($pagin=NULL) {
+		$this->pagin=$pagin;
 	}
 
 /**
@@ -475,8 +481,23 @@ function thumb($attr,$index=FALSE) {
 			$buttons.=div('seperator')._div().help(icon("select all"),lang('grid_select_all')).help(icon("delete"),lang('grid_delete'));
 		}
 		
+		$pagination=$this->cfg->get("CFG_media_info",$this->path,'int_pagination');
+		$offset=0;
+
 		$grid=new grid();
+
+		if ($pagination) {
+			$pagination=array('base_url'=>api_url('API_filemanager_view',$this->path),'per_page'=>$pagination,'total_rows'=>count($renderData));
+			$pagination=array_merge($pagination,$this->pagin);
+			$grid->set_pagination($pagination);
+			$renderData=array_slice($renderData,$pagination['offset'],$pagination['per_page'],true);
+		}
+		// strace_($pagination);
+		
 		$grid->set_data($renderData,$this->caption);
+		$grid->set_order($pagination['order']);
+		$grid->set_search($pagination['search']);
+		
 		if (!empty($renderData)) {
 			$keys=array_keys(current($renderData));
 			$keys=combine($keys,$keys);
