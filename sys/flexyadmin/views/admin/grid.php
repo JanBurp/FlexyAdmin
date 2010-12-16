@@ -1,4 +1,4 @@
-<table class="<?=$class?>" <?if(isset($pagination['offset'])):?>offset="<?=$pagination['offset']?>" url="<?=$pagination['base_url']?>"<?endif;?> order=<?=$order?> search="<?=$search?>">
+<table class="<?=$class?>" <?if(isset($pagination['offset'])):?>offset="<?=$pagination['offset']?>" url="<?=$pagination['base_url']?>"<?endif;?> order="<?=$order?>" search="<?=$search?>">
 
 	<thead>
 		<tr class="caption <?=$caption["class"];?>">

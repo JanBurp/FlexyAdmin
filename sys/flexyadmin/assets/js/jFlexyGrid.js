@@ -480,7 +480,10 @@ function doGrid() {
 		if ($(grid).hasClass('pagination')) {
 			// sort with pagination needs to reload page with another sort field
 			$(grid).find('tr.heading th').addClass('header').click(function(){
-				var field=get_class($(this),1);
+				if (isFile)
+					var field=get_class($(this),0);
+				else
+					var field=get_class($(this),1);
 				if ($(this).hasClass('headerSortUp')) field='_'+field;
 				// ok now reload the page, starting from page 0
 				var url=$(grid).attr('url')+'/0/order/'+field+'/search/'+$(grid).attr('search');
@@ -489,22 +492,28 @@ function doGrid() {
 			// replace pagination links with current order field
 			$(grid).find('span.pager a').each(function(){
 				var order=$(grid).attr('order');
+				if (order=='') order='name';
 				var url=$(this).attr('href')+'/order/'+order+'/search/'+$(grid).attr('search');
 				$(this).attr('href',url);
 			});
 		}
 		else {
 			// live sorting, first find ordered col
-			var cols=$(grid).find('tr.heading th');
-			var sortcol=0;
-			var desc=0;
-			for (var i=0; i<cols.length; i++) {
-				if ( ($(cols[i]).hasClass('headerSortUp')) || ($(cols[i]).hasClass('headerSortDown')) ) {
-					sortcol=i;
-					if ($(cols[i]).hasClass('headerSortUp')) desc=1;
-				}
-			};
-			$(grid).tablesorter({sortList:[[sortcol,desc]]});
+			if ($(grid).find('tbody tr').length>0) {
+				var cols=$(grid).find('tr.heading th');
+				var sortcol=0;
+				var desc=0;
+				for (var i=0; i<cols.length; i++) {
+					if ( ($(cols[i]).hasClass('headerSortUp')) || ($(cols[i]).hasClass('headerSortDown')) ) {
+						sortcol=i;
+						if ($(cols[i]).hasClass('headerSortUp')) desc=1;
+					}
+				};
+				$(grid).tablesorter({sortList:[[sortcol,desc]]});
+			}
+			else
+				$(grid).tablesorter();
+			
 			$(grid).bind("sortStart",function() {
 				$(grid).css("cursor","wait");
 			});
