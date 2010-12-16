@@ -130,13 +130,17 @@ class Bulkupload extends AdminController {
 				else {
 					foreach ($files as $name => $file) {
 						$gridFiles[$name]=array('File'=>$file['name'],'Moved'=>icon('no'),'Resized'=>icon('no'),'Auto fill'=>icon('no'));
+						if (!empty($path)) $gridFiles[$name]['uri']='admin/bulkupload/ajax/'.$path.'/'.$name;
 					}
 				}
 
 				$this->load->model("grid");
 				$grid=new grid();			
-				$grid->set_data($gridFiles,'Files');			
-				$renderData=$grid->render("html",'bulkupload',"grid");
+				$grid->set_data($gridFiles,'Files');
+				// if (empty($path))
+					$renderData=$grid->render("html",'bulkupload',"grid");
+				// else
+				// 	$renderData=$grid->render("html",'bulkupload',"grid actionGrid");
 				$this->_add_content($this->load->view("admin/grid",$renderData,true));
 
 			}

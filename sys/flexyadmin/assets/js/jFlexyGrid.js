@@ -479,7 +479,7 @@ function doGrid() {
 		grid=$("table.grid");
 		if ($(grid).hasClass('pagination')) {
 			// sort with pagination needs to reload page with another sort field
-			$(grid).find('tr.heading th').addClass('header').click(function(){
+			$(grid).find('tr.heading th:not[id]:not[edit]').addClass('header').click(function(){
 				if (isFile)
 					var field=get_class($(this),0);
 				else
