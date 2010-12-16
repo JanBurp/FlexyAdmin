@@ -468,8 +468,9 @@ function doGrid() {
 		// Make sure columns can be sortable if ordering by drag 'n drop is not on.
 		//
 		else {
-			isSortable=true;	}
-		}
+			isSortable=true;
+			}
+	}
 	
 	//
 	// Sortable columns in Grid or File (list) modes.
@@ -479,15 +480,19 @@ function doGrid() {
 		grid=$("table.grid");
 		if ($(grid).hasClass('pagination')) {
 			// sort with pagination needs to reload page with another sort field
-			$(grid).find('tr.heading th:not[id]:not[edit]').addClass('header').click(function(){
-				if (isFile)
-					var field=get_class($(this),0);
-				else
-					var field=get_class($(this),1);
-				if ($(this).hasClass('headerSortUp')) field='_'+field;
-				// ok now reload the page, starting from page 0
-				var url=$(grid).attr('url')+'/0/order/'+field+'/search/'+$(grid).attr('search');
-				location.href=url;
+			$(grid).find('tr.heading th').each(function(){
+				if (!$(this).hasClass('id') && !$(this).hasClass('edit')) {
+					$(this).addClass('header').click(function(){
+						if (isFile)
+							var field=get_class($(this),0);
+						else
+							var field=get_class($(this),1);
+						if ($(this).hasClass('headerSortUp')) field='_'+field;
+						// ok now reload the page, starting from page 0
+						var url=$(grid).attr('url')+'/0/order/'+field+'/search/'+$(grid).attr('search');
+						location.href=url;
+					});
+				}
 			});
 			// replace pagination links with current order field
 			$(grid).find('span.pager a').each(function(){
@@ -523,6 +528,11 @@ function doGrid() {
 			});
 		}
 	}
+
+
+	//
+	// ActionGrid
+	//
 
 	if (isGridAction) {
 		totalActions=$('.actionGrid td.id').html('<div class="icon no" /></div').length;
