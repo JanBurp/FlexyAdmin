@@ -155,6 +155,16 @@ function remove_accent($s) {
 	return $s;
 }
 
+function strip_nonascii($s) {
+	$s=preg_replace('/[^(\x20-\x7F)\x0A]*/','', $s);
+	return $s;
+}
+
+function replace_linefeeds($s,$r=' ') {
+	$s=preg_replace('/\n+/',' ', $s);
+	return $s;
+}
+
 function clean_string($s,$c=0) {
 	$s=str_replace('&amp;','&',$s);
 	$s=str_replace('&','en',$s);
