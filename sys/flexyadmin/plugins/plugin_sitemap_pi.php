@@ -40,7 +40,7 @@ class plugin_sitemap extends plugin_ {
 			$set=array();
 			$set['loc']=$url.'/'.htmlentities($item['uri']);
 			if (isset($item['str_title'])) $set['title']=$item['str_title'];
-			if (isset($item['txt_text'])) $set['content']=htmlentities(strip_tags($item['txt_text']),ENT_QUOTES);
+			if (isset($item['txt_text'])) $set['content']=htmlentities(replace_linefeeds(strip_nonascii(strip_tags(str_replace('<br />',' ',$item['txt_text'])))),ENT_QUOTES);
 			$urlset[]=$set;
 		}
 		$sitemap['urlset']=$urlset;
