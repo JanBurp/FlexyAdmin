@@ -153,27 +153,28 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	}
 	
 	/**
-	*	array("search"=>"", "field"=>"", "or"=>"AND/OR", "in"=>array(val1,val2,val3) )
+	*	array("search"=>"", "field"=>"", "or"=>"AND/OR", "in"=>array(val1,val2,val3), "table"=>'' )
 	*/
 	function search($search) {
-		$default=array('search'=>'','field'=>'id','or'=>'AND');
+		$default=array('search'=>'','field'=>'id','or'=>'AND','table'=>'');
 		$query='';
 		foreach ($search as $k => $s) {
 			if (!empty($s['search']) and !empty($s['field'])) {
 				$s=array_merge($default,$s);
+				if (!empty($s['table'])) $s['table'].='`.`';
 				$s['or']=strtoupper($s['or']);
 				$query.=$s['or'].' ';
 				if (isset($s['in'])) {
 					// IN ()
 					$in="'".implode("','",$s['in'])."'";
 					if (!empty($s['in']))
-						$query.='`'.$s['field'].'` IN ('.$in.') ';
+						$query.='`'.$s['table'].$s['field'].'` IN ('.$in.') ';
 					else
-						$query.='`'.$s['field'].'` IN (-1) '; // empty result
+						$query.='`'.$s['table'].$s['field'].'` IN (-1) '; // empty result
 				}
 				else {
 					// LIKE
-					$query.='`'.$s['field'].'` LIKE \'%'.$s['search'].'%\' ';
+					$query.='`'.$s['table'].$s['field'].'` LIKE \'%'.$s['search'].'%\' ';
 				}
 			}
 		}

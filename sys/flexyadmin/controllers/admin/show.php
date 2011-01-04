@@ -138,11 +138,11 @@ class Show extends AdminController {
 							$fields=$this->db->list_fields($table);
 							$searchArr=array();
 							foreach ($fields as $field) {
-								$searchArr[]=array('field'=>$field,'search'=>$search,'or'=>'OR');
+								$searchArr[]=array('field'=>$field,'search'=>$search,'or'=>'OR','table'=>$table);
 							}
 							$this->db->search($searchArr);
 						}
-
+						
 						$data=$this->db->get_result($table);
 						$order=$this->db->get_last_order();
 						// strace_($order);
