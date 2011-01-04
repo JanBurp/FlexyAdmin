@@ -189,15 +189,15 @@ class CI_Loader {
 		
 	// --------------------------------------------------------------------
 	
-	/**
-	 * Database Loader
-	 *
-	 * @access	public
-	 * @param	string	the DB credentials
-	 * @param	bool	whether to return the DB object
-	 * @param	bool	whether to enable active record (this allows us to override the config setting)
-	 * @return	object
-	 */	
+	// /**
+	//  * Database Loader
+	//  *
+	//  * @access	public
+	//  * @param	string	the DB credentials
+	//  * @param	bool	whether to return the DB object
+	//  * @param	bool	whether to enable active record (this allows us to override the config setting)
+	//  * @return	object
+	//  */	
 	// function database($params = '', $return = FALSE, $active_record = FALSE)
 	// {
 	// 	// Grab the super object
@@ -226,6 +226,7 @@ class CI_Loader {
 	// 	// Assign the DB object to any existing models
 	// 	$this->_ci_assign_to_models();
 	// }
+	
 	/**
 	* Database Loader
 	*
@@ -237,16 +238,16 @@ class CI_Loader {
 	*/
 	function database($params = '', $return = FALSE, $active_record = FALSE)
 	{
+		// Grab the super object
+		$CI =& get_instance();
+		
 		// Do we even need to load the database class?
-		if (class_exists('CI_DB') AND $return == FALSE AND $active_record == FALSE)
+		if (class_exists('CI_DB') AND $return == FALSE AND $active_record == FALSE AND isset($CI->db) AND is_object($CI->db))
 		{
 			return FALSE;
-		}
-
+		}	
+	
 		require_once(BASEPATH.'database/DB'.EXT);
-
-		// Load the DB class
-		$db =& DB($params, $active_record);
 
 		$my_driver = config_item('subclass_prefix').'DB_'.$db->dbdriver.'_driver';
 		$my_driver_file = APPPATH.'libraries/'.$my_driver.EXT;
@@ -259,18 +260,21 @@ class CI_Loader {
 
 		if ($return === TRUE)
 		{
-			return $db;
+			// return $db;
+			return DB($params, $active_record);
 		}
-		// Grab the super object
-		$CI =& get_instance();
 
 		// Initialize the db variable.  Needed to prevent
 		// reference errors with some configurations
 		$CI->db = '';
-		$CI->db = $db;
+		// $CI->db = $db;
+		// Load the DB class
+		$CI->db =& DB($params, $active_record);	
 		// Assign the DB object to any existing models
 		$this->_ci_assign_to_models();
 	}
+	
+	
 	
 	// --------------------------------------------------------------------
 
@@ -296,7 +300,7 @@ class CI_Loader {
 		require_once(BASEPATH.'database/DB_utility'.EXT);
 		require_once(BASEPATH.'database/drivers/'.$CI->db->dbdriver.'/'.$CI->db->dbdriver.'_utility'.EXT);
 		$class = 'CI_DB_'.$CI->db->dbdriver.'_utility';
-		
+
 		// Added from here, to extend the mysql_utility driver (JdB)
     $my_driver = config_item('subclass_prefix').'DB_'.$CI->db->dbdriver.'_utility';
     $my_driver_file = APPPATH.'libraries/'.$my_driver.EXT;
@@ -306,7 +310,6 @@ class CI_Loader {
 				$class = $my_driver;
     }
 		// Added stops here
-		
 
 		$CI->dbutil =& instantiate_class(new $class());
 
@@ -1135,9 +1138,7 @@ class CI_Loader {
 		return (is_object($CI)) ? TRUE : FALSE;
 	}
 
-
-
-
+}
 
 
 
@@ -1195,9 +1196,8 @@ class CI_Loader {
 		}		
 	}
 
-
-
 }
+
 
 /* End of file Loader.php */
 /* Location: ./system/libraries/Loader.php */
