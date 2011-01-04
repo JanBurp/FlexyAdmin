@@ -236,9 +236,9 @@ function doGrid() {
 				if (isFile) {
 					var path='';
 					if (isThumbs)
-						path=$('table.grid tbody div.file div.path:first').text();
+						path=$('table.grid tbody div.file div.path').first().text();
 					else
-						path=$('table.grid tr td.thumb div.path:first').text();
+						path=$('table.grid tbody tr td.thumb div.path').first().text();
 					uri=site_url('admin/filemanager/confirm/'+path);
 				}
 				else {
