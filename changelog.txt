@@ -1,3 +1,23 @@
+> 931
+-----
+
+BUGS:
+- Backup DB
+- sitemap XML (non ascii characters)
+
+UPDATES:
+- CodeIginter 1.7.3
+- jQuery 1.4.4
+- jQuery UI 1.8.7
+- tinyMCE 3.3.9.3
+
+NEW:
+- HTML doctype
+- Pagination for tables/media (set in TableInfo & MediaInfo)
+- AJAX action for bulk upload (so no server time-outs are generated when uploading los of files)
+
+
+
 > 899
 -----
 
