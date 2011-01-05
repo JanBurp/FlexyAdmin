@@ -314,6 +314,28 @@ $config["CFG_"]=array(
 			"str_abstract_fields"=>'str_name',
 			"str_order_by"=>'id',
 			"txt_help"=>'<p>Create groups of rights here. For use in Users.</p>'
+			),
+		"log_login"=>array(
+			"order"=>'130',
+			"table"=>'log_login',
+			"b_single_row"=>'0',
+			"str_ui_name"=>'',
+			'int_pagination'=>25,
+			"b_grid_add_many"=>'0',
+			"str_abstract_fields"=>'',
+			"str_order_by"=>'',
+			"txt_help"=>''
+			),
+		"log_stats"=>array(
+			"order"=>'131',
+			"table"=>'log_stats',
+			"b_single_row"=>'0',
+			"str_ui_name"=>'',
+			'int_pagination'=>25,
+			"b_grid_add_many"=>'0',
+			"str_abstract_fields"=>'',
+			"str_order_by"=>'',
+			"txt_help"=>''
 			)
 		
 	),
