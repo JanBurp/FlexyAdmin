@@ -22,7 +22,7 @@
  * You can use all the funcionality from Code Igniter and the special FlexyAdmin classes and helper functions.
  * But you are encouriged to do this all in controller.php and leave this file as a simple html file with just some php to put the content.
  */
-?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+?><!DOCTYPE html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html" charset="utf8" />
 	<base href="<?=base_url()?>" />
