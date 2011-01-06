@@ -737,9 +737,10 @@ class AdminController extends BasicController {
 			switch($item['str_type']) {
 				case 'api' :
 					$uiName=$item['str_ui_name'];
-					$args=array($item['path'],$item['table']);
+					$args=array($item['path'],$item['table'],$item['str_table_where']);
 					$args=implode('/',$args);
 					if ($args=='/') $args='';
+					$args=str_replace('//','/',$args);
 					if (substr($uiName,0,1)=="_") $uiName=lang(substr($uiName,1));
 					$uri=api_uri($item['api']).$args;
 					$menu[$uri]=array('uri'=>$uri,'name'=>$uiName,'class'=>str_replace('/','_',$item['api']) );
