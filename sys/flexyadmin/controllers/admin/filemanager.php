@@ -151,7 +151,7 @@ class Filemanager extends AdminController {
 				/**
 					* Exclude files that are not owned by user
 					*/
-				if ($cfg['b_user_restricted']) {
+				if (isset($cfg['b_user_restricted']) and $cfg['b_user_restricted']) {
 					$restrictedToUser=$this->user_restriction_id($path);
 					$files=$this->_filter_restricted_files($files,$restrictedToUser);
 				}
