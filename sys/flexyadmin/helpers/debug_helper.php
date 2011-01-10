@@ -84,9 +84,9 @@ function trace_($a=NULL,$echo=true,$backtraceOffset=1) {
 	static $c=0;
 	$show="Trace";
 	if (!isset($a)) {
-		$a=backtrace_($backtraceOffset,10,false);
-		$show="Variable is empty, do a Backtrace";
-		// $show="Variable is empty";
+		// $a=backtrace_($backtraceOffset,2,false);
+		// $show="Variable is empty, do a Backtrace";
+		$show="ERROR: Variable doesn't exist or is NULL.";
 		$type="";
 	}
 	else {
