@@ -60,6 +60,8 @@ class plugin_stats extends plugin_ {
 
 		// Is there xml data for earlier years? Give option to show it
 		$xmlYearFiles=read_map('site/stats','xml');
+		ksort($xmlYearFiles);
+		
 		$years='';
 		foreach ($xmlYearFiles as $file => $info) {
 			if (strlen($file)>8)
