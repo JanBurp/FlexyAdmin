@@ -107,7 +107,7 @@ class Content {
 					$show=str_replace('"',"'",$matches[2][$key]);
 					$search[]=$matches[0][$key];
 					if (!isset($adres[1])) $adres[1]='';
-					$replace[]='<script language="JavaScript" type="text/javascript">nospam("'.str_reverse($adres[0]).'","'.str_reverse($adres[1]).'","'.str_reverse($show).'");</script><noscript>'.$show.'</noscript>';
+					$replace[]='<script language="JavaScript" type="text/javascript">nospam("'.str_reverse($adres[0]).'","'.str_reverse($adres[1]).'","'.str_reverse($show).'");</script>';
 				}
 				$txt=str_replace($search,$replace,$txt);
 			}
