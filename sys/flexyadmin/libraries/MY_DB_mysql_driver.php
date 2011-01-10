@@ -159,7 +159,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		$default=array('search'=>'','field'=>'id','or'=>'AND','table'=>'');
 		$query='';
 		foreach ($search as $k => $s) {
-			if (!empty($s['search']) and !empty($s['field'])) {
+			if (($s['search']!='') and ($s['field']!='')) {
 				$s=array_merge($default,$s);
 				if (!empty($s['table'])) $s['table'].='`.`';
 				$s['or']=strtoupper($s['or']);
