@@ -120,6 +120,7 @@ class plugin_automenu extends plugin_ {
 						$item['str_table']=$autoValue['table'];
 						$item['str_uri']=$item['uri'];
 						$item['int_id']=$item['id'];
+						if (!isset($item['self_parent'])) $item['self_parent']=0;
 						if (isset($parent) and $item['self_parent']==0) {
 							$item['self_parent']=$parent;
 						}
