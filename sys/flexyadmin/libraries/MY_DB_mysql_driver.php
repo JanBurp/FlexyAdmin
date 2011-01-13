@@ -99,8 +99,8 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	function _set_standard_order($table,$fallbackOrder="") {
 		$order="";
 		if ($this->orderAsTree) {
-			$this->order_by("self_parent");
-			$this->order_by("order");
+			if ($this->field_exists('self_parent',$table)) $this->order_by("self_parent");
+			if ($this->field_exists('order',$table)) $this->order_by("order");
 			$order="self_parent";
 		}
 		else {
