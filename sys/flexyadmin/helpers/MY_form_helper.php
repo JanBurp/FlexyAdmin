@@ -27,13 +27,13 @@ function form_dropdown($name = '', $options = array(), $selected = array(), $ext
 			$form .= '<optgroup label="'.$key.'">'."\n";
 			foreach ($val as $optgroup_key => $optgroup_val) {
 				$sel = (in_array($optgroup_key, $selected)) ? ' selected="selected"' : '';
-				$form .= '<option value="'.$optgroup_key.'"'.$sel.'>'.(string) $optgroup_val."</option>\n";
+				$form .= '<option title="'.(string) $optgroup_val.'" value="'.$optgroup_key.'"'.$sel.'>'.(string) $optgroup_val."</option>\n";
 			}
 			$form .= '</optgroup>'."\n";
 		}
 		else {
 			$sel = (in_array($key, $selected)) ? ' selected="selected"' : '';
-			$form .= '<option value="'.$key.'"'.$sel.'>'.(string) $val."</option>\n";
+			$form .= '<option title="'.(string) $val.'" value="'.$key.'"'.$sel.'>'.(string) $val."</option>\n";
 		}
 	}
 	$form .= '</select>';
