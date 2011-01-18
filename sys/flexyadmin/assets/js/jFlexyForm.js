@@ -1,5 +1,5 @@
 function doForm() {
-	
+
 	// conditional formfield showing
 	if (typeof(formFieldWhen)!="undefined") {
 		var fields=$('.form_field');

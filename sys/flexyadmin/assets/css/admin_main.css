@@ -931,7 +931,9 @@ select.media, select.medias {
 	width:460px;
 	margin:0px 0px 2px 0px;
 	}
-select.image_dropdown {	width:400px;}
+select.image_dropdown {
+	width:400px;
+}
 .form_field.medias select.image_dropdown {	width:460px;}
 
 .form_field .flash,

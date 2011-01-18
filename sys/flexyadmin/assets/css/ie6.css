@@ -68,3 +68,6 @@ textarea, .mceEditor {
 div.add_button {
 	display:none;
 }
+
+
+input.date {width:95px;}
