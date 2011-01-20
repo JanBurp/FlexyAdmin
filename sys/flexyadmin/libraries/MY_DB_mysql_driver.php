@@ -168,18 +168,18 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 					// IN ()
 					$in="'".implode("','",$s['in'])."'";
 					if (!empty($s['in']))
-						$query.='`'.$s['table'].$s['field'].'` IN ('.$in.') ';
+						$query.=$s['table'].$s['field'].' IN ('.$in.') ';
 					else
-						$query.='`'.$s['table'].$s['field'].'` IN (-1) '; // empty result
+						$query.=$s['table'].$s['field'].' IN (-1) '; // empty result
 				}
 				else {
 					// LIKE
-					$query.='`'.$s['table'].$s['field'].'` LIKE \'%'.$s['search'].'%\' ';
+					$query.=$s['table'].$s['field'].' LIKE \'%'.$s['search'].'%\' ';
 				}
 			}
 		}
 		$query=substr($query,4); // remove first AND
-		$this->where($query);
+		$this->where($query,NULL,FALSE);
 	}
 
 	function select_first($pre="") {
