@@ -22,6 +22,7 @@
 	visibility: visible;
 	}
 
+
 /* ============== dialog ================ */
 
 #dialog{
@@ -45,3 +46,7 @@ div.zoomThumb img {
 
 
 input.date {width:95px;}
+
+.icon.add {
+	margin-top:-23px;
+	}
