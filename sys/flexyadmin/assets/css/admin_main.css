@@ -662,10 +662,12 @@ table.grid .header {
 }
 table.grid .headerSortUp {
 	background-image: url(../icons/order_down.gif);
+	background-position: right 6px;
 	background-repeat: no-repeat;
 }
 table.grid .headerSortDown {
 	background-image: url(../icons/order_up.gif);
+	background-position: right 6px;
 	background-repeat: no-repeat;
 }
 table.grid thead .id,
