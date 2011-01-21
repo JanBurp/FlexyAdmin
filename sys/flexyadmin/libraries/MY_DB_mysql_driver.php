@@ -179,7 +179,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			}
 		}
 		$query=substr($query,3); // remove first AND
-		trace_($query);
+		// trace_($query);
 		$this->where($query,NULL,FALSE);
 	}
 
