@@ -161,7 +161,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		foreach ($search as $k => $s) {
 			if (($s['search']!='') and ($s['field']!='')) {
 				$s=array_merge($default,$s);
-				if (!empty($s['table'])) $s['table'].='`.`';
+				if (!empty($s['table'])) $s['table'].='.';
 				$s['or']=strtoupper($s['or']);
 				$query.=$s['or'].' ';
 				if (isset($s['in'])) {
@@ -178,7 +178,8 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				}
 			}
 		}
-		$query=substr($query,4); // remove first AND
+		$query=substr($query,3); // remove first AND
+		trace_($query);
 		$this->where($query,NULL,FALSE);
 	}
 
