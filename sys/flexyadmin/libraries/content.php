@@ -99,15 +99,23 @@ class Content {
 		}
 		
 		if ($this->safeEmail) {
-			if (preg_match_all("/<a[\s]*href=\"mailto:(.*)\">(.*)<\/a>/",$txt,$matches)) { 	//<a[\s]*href="(.*)">(.*)</a>
+			if (preg_match_all("/<a(.*)href=\"mailto:(.*)\"(.*)>(.*)<\/a>/",$txt,$matches)) { 	//<a[\s]*href="(.*)">(.*)</a>
 				$search=array();
 				$replace=array();
-				foreach ($matches[1] as $key=>$adres) {
+				// trace_($matches);
+				foreach ($matches[2] as $key=>$adres) {
 					$adres=explode("@",$adres);
-					$show=str_replace('"',"'",$matches[2][$key]);
+					foreach ($adres as $k => $value) {
+						$adres[$k]=str_replace(array('"',"'",'<','>'),'',$value);
+					}
+					$show=str_replace('"',"'",$matches[4][$key]);
 					$search[]=$matches[0][$key];
 					if (!isset($adres[1])) $adres[1]='';
-					$replace[]='<script language="JavaScript" type="text/javascript">nospam("'.str_reverse($adres[0]).'","'.str_reverse($adres[1]).'","'.str_reverse($show).'");</script>';
+					// classes, id's etc
+					$extra='';
+					if (isset($matches[1][0])) $extra.=$matches[1][0];
+					if (isset($matches[3][0])) $extra.=$matches[3][0];
+					$replace[]='<span '.$extra.'><script language="JavaScript" type="text/javascript">nospam("'.str_reverse($adres[0]).'","'.str_reverse($adres[1]).'","'.str_reverse($show).'");</script></span>';
 				}
 				$txt=str_replace($search,$replace,$txt);
 			}
