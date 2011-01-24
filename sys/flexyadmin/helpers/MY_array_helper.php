@@ -433,6 +433,13 @@ function filter_by_key($a,$preKey,$replaceKey=FALSE) {
 }
 
 
+function array_change_key_name($orig,$new, &$array) {
+	foreach ($array as $k => $v)
+		$return[($k===$orig) ? $new:$k]=$v;
+	return (array)$return;
+}
+
+
 /**
  * function ignorecase_sort(&$array)
  *
