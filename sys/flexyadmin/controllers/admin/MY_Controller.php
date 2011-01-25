@@ -233,6 +233,81 @@ class FrontEndController extends MY_Controller {
 	}
 	
 	
+	///// FORMS
+	
+	function getFormByModule($module) {
+		$this->db->where('str_module',$module);
+		return $this->_get_form();
+	}
+	
+	function getFormByTitle($title) {
+		$this->db->where('str_title',$title);
+		return $this->_get_form();
+	}
+
+	function getFormById($id) {
+		$this->db->where('id',$id);
+		return $this->_get_form();
+	}
+	
+	function _get_form() {
+		$form=array();
+		$form['form']=$this->db->get_row('tbl_forms');
+		if ($form['form']) {
+			$this->db->where('id_form',$form['form']['id']);
+			$fields=$this->db->get_result('tbl_formfields');
+			if ($fields) {
+				$options=false;
+				$optionsKey='';
+				foreach ($fields as $key => $value) {
+					unset($value['id']);
+					unset($value['id_form']);
+					foreach ($value as $k => $v) {
+						$value[remove_prefix($k)]=$v;
+						unset($value[$k]);
+					}
+					$name=$value['label'].'_'.$key;
+					$value['name']=$name;
+					$value['validation']=add_validation_parameters($value['validation'],$value['validation_parameters']);
+					unset($value['validation_parameters']);
+					if ($this->input->post($name)) $value['value']=$this->input->post($name);
+					$fields[$key]=$value;
+					
+					// End options setting
+					if (is_array($options) and $value['type']!='option') {
+						$fields[$optionsKey]['options']=$options;
+						$options=FALSE;
+						$optionsKey='';
+					}
+					// Start option settings
+					if ($value['type']=='radio' or $value['type']=='select') {
+						$optionsKey=$name;
+						$options=array();
+					}
+					// add option
+					if ($value['type']=='option' and is_array($options)) {
+						$options[safe_string($value['html'],50)]=$value['html'];
+						unset($fields[$key]);
+					}
+
+					if (isset($fields[$key])) {
+						$fields[$name]=$fields[$key];
+						unset($fields[$key]);
+					}
+				}
+			}
+			$form['fields']=$fields;
+			$form['buttons']=array('submit'=>array("submit"=>"submit","value"=>'submit'));
+		}
+		return $form;
+	}
+	
+	
+	
+	
+	
+	
+	
 }
 
 /**

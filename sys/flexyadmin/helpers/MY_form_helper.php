@@ -39,3 +39,16 @@ function form_dropdown($name = '', $options = array(), $selected = array(), $ext
 	$form .= '</select>';
 	return $form;
 }
+
+
+function add_validation_parameters($rules,$params) {
+	$validation=array();
+	$rules=explode('|',$rules);
+	$params=explode('|',$params);
+	foreach ($rules as $key => $rule) {
+		$validation[$rule]=$rule;
+		if (isset($params[$key]) and !empty($params[$key])) $validation[$rule]=str_replace('[]','['.$params[$key].']',$validation[$rule]);
+	}
+	return implode($validation,'|');
+}
+
