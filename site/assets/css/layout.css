@@ -109,5 +109,9 @@ body {background:#F4FFE0;}
 form {margin-top:10px;}
 fieldset {border:none;margin:0px;padding:0px;}
 legend {display:none;}
+label {font-weight:bold;}
 label,input,textarea {display:block;}
 input,textarea{margin-bottom:10px;border:solid 1px #CCC;cursor:pointer;}
+.radioOption {margin-left:15px;}
+input.radio, input.checkbox {float:left;margin:5px 10px 0px 0px;}
+input.checkbox {margin-top:3;}
