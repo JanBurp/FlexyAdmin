@@ -159,7 +159,6 @@ class Form Extends Model {
 		return str_replace("%s",$class,$tmp);
 	}
 
-
 /**
  * function validation()
  *
@@ -417,7 +416,6 @@ class Form Extends Model {
 
 	function get_data() {
 		$data=array();
-		// trace_($this->data);
 		foreach($this->data as $name=>$field) {
 			if (isset($field['newvalue']))
 				$data[$name]=$field['newvalue'];
@@ -505,8 +503,9 @@ class Form Extends Model {
 				$cap = create_captcha($vals);
 				$out.=div('captcha').$cap['image'].form_hidden($name.'__captcha',str_reverse($cap['word']))._div();
 			}
-			else
+			else {
 				$out.=form_label($field["label"],$name);
+			}
 		}
 
 		// When (javascript triggers)
@@ -523,6 +522,7 @@ class Form Extends Model {
 
 			case "html":
 				$out.=$field['value'];
+				if (isset($field['html'])) $out.=$field['html'];
 				break;
 
 			case "checkbox":
@@ -532,16 +532,19 @@ class Form Extends Model {
 					$attr["checked"]="";
 				$attr["value"]="true";
 				$out.=form_checkbox($attr);
+				if (isset($field['html'])) $out.=$field['html'];
 				break;
 
 			case 'radio':
+				if (isset($field['html'])) $out.=$field['html'];
 				$options=$field['options'];
 				$value=$field['value'];
 				foreach ($options as $option => $optLabel) {
 					$attr['value']=$option;
 					if ($value==$option) $attr['checked']='checked'; else $attr['checked']='';
 					$attr['id']=str_replace('.','_',$name.'__'.$option);
-					$out.=div('radioOption '.$option).span('optionLabel').$optLabel._span().form_radio($attr)._div();
+					// $out.=div('radioOption '.$option).span('optionLabel').$optLabel._span().form_radio($attr)._div();
+					$out.=div('radioOption '.$option).form_radio($attr).span('optionLabel').$optLabel._span()._div();
 				}
 				break;
 
