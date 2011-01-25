@@ -866,8 +866,8 @@ span.button:hover {
 	color:#669966;
 }
 input.datetime {width:150px;}
-input.date {width:85px;margin-right:5px;}
-input.time {width:65px;}
+input.date {width:95px;margin-right:5px;}
+input.time {width:75px;}
 input.checkbox {
 	border:none;
 	width: auto;
