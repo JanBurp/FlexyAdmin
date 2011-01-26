@@ -334,7 +334,6 @@ class Db extends AdminController {
 		$this->_show_all(lang('db_import'));				
 	}
 	
-	
 }
 
 ?>
