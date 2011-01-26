@@ -1,4 +1,26 @@
+> ### 
+
+UPDATE:
+- jQuery UI 1.8.9
+
+NEW:
+- Flexy Forms: user can edit/create own forms
+- autoloading latest demodatabase (if database login correct and no tables found)
+- content->safe_email now adds original class and id
+- new pdf mime
+
+BUGS:
+- content->safe_email (bug when more than one email address)
+- small styling bugs in IE
+- DB->search
+- automenu submenu's without self_parent now possible
+
+
+
+
+
 > 940
+-----
 
 BUGS:
 - Sitemap order
