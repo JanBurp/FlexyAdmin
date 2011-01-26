@@ -34,7 +34,44 @@ class MY_Controller extends Controller {
 		if ($this->_check_if_flexy_database_exists())
 			$this->_init_flexy_admin($isAdmin);
 		else {
-			show_error('Database login: correct.<br/>But no tables (for flexyadmin) found.');
+			// database login correct, but no database found, try to load the demodatabase
+			$succes=false;
+			// try to load latest demodatabase
+			if (file_exists('db')) {
+				$demoDB=read_map('db','sql');
+				$demoDB=filter_by($demoDB,'flexyadmin_demo_');
+				if ($demoDB) {
+					$demoDB=current($demoDB);
+					$demoDB=$demoDB['path'];
+					// trace_($demoDB);
+					$SQL=read_file($demoDB);
+					if ($SQL) {
+						$lines=explode("\n",$SQL);
+						$comments="";
+						foreach ($lines as $k=>$l) {
+							if (substr($l,0,1)=="#")	{
+								if (strlen($l)>2)	$comments.=$l.br();
+								unset($lines[$k]);
+							}
+						}
+						$sql=implode("\n",$lines);
+						$lines=preg_split('/;\n+/',$sql); // split at ; with EOL
+
+						foreach ($lines as $key => $line) {
+							$line=trim($line);
+							if (!empty($line)) {
+								$query=$this->db->query($line);
+							}
+						}
+						$succes=TRUE;
+						redirect('admin');
+					}
+				}
+			}
+
+			if (!$succes) {
+				show_error('Database login: correct.<br/>No tables (for flexyadmin) found.<br/>Tried to load demodatabase, no succes.');
+			}
 		}
 	}
 
