@@ -1,4 +1,4 @@
-== FLEXYADMIN 2009/2010 ==
+== FLEXYADMIN 2009/2011 ==
 (c) Jan den Besten
 www.flexyadmin.com
 for license see /sys/flexyadmin/flexyadmin_license.txt
