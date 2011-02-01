@@ -158,8 +158,8 @@ class Grid Extends Model {
 		$table["heading"]["class"]="$tableClass $extraClass";
 		foreach($this->headings as $name=>$heading) {
 			$orderClass='';
-			if ($this->order==$name) $orderClass=' headerSortUp';
-			if ($this->order=='_'.$name) $orderClass=' headerSortDown';
+			if ($this->order==$name) $orderClass=' headerSortDown';
+			if ($this->order=='_'.$name) $orderClass=' headerSortUp';
 			$table["heading"]["row"][]=array(	"class"	=>"$tableClass $name $extraClass ".alternator("oddcol","evencol").$orderClass,
 																				"cell"	=> $heading );
 		}
