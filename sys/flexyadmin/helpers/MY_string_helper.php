@@ -221,7 +221,7 @@ function str2hex($string) {
 
 function max_length($txt,$len=100) {
 	$lines=explode('.',$txt);
-	$line='';
+	$line=current($lines);
 	$l=0;
 	while (strlen($line)<$len and isset($lines[$l+1])) {	$line.=$lines[$l++].'. ';	}
 	return $line;
