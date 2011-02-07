@@ -21,6 +21,7 @@ class Content {
 	var $prePopup;
 	var $replaceLanguageLinks;
 	
+	var $div_count;
 	var $img_count;
 	var $p_count;
 	var $h_count;
@@ -59,6 +60,10 @@ class Content {
 			$class.="p$this->p_count";
 			if ($this->p_count++%2) $class.=" odd"; else $class.=" even";
 		}
+		elseif ($matches[1]=="div") {
+			$class.="div$this->div_count";
+			if ($this->div_count++%2) $class.=" odd"; else $class.=" even";
+		}
 		elseif ($matches[1]=="img") {
 			$class.="img$this->img_count";
 			if ($this->img_count++%2) $class.=" odd"; else $class.=" even";
@@ -86,6 +91,7 @@ class Content {
 	}
 
 	function reset_counters() {
+		$this->div_count=1;
 		$this->img_count=1;
 		$this->p_count=1;
 		$this->h_count=array(1=>1,2=>1,3=>1,4=>1,5=>1,6=>1,7=>1);
@@ -96,7 +102,7 @@ class Content {
 		$this->reset_counters();
 		
 		if ($this->addClasses) {
-			$txt=preg_replace_callback("/<(img|p|h(\d))(.*?)>/",array($this,"_countCallBack"),$txt);
+			$txt=preg_replace_callback("/<(div|img|p|h(\d))(.*?)>/",array($this,"_countCallBack"),$txt);
 		}
 
 		if ($this->replaceLanguageLinks) {
