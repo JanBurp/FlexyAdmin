@@ -32,6 +32,7 @@ class MY_URI extends CI_URI {
 	}
 
 	function set_remove($remove="") {
+		if (!empty($remove) and !is_array($remove)) $remove=array($remove);
 		$this->remove=$remove;
 	}
 
@@ -47,9 +48,11 @@ class MY_URI extends CI_URI {
 		if ($s==$this->xdebug) $s="";
 		if ($s=="") $s=$this->home;
 		if (!empty($this->remove)) {
-			$pos=strpos($s,$this->remove);
-			if ($pos>0) {
-				$s=substr($s,0,$pos-1);
+			foreach ($this->remove as $remove) {
+				$pos=strpos($s,$remove);
+				if ($pos>0) {
+					$s=substr($s,0,$pos-1);
+				}
 			}
 		}
 		return $s;
