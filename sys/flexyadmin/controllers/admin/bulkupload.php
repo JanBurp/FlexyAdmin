@@ -66,6 +66,7 @@ class Bulkupload extends AdminController {
 					$resized=FALSE;
 					$autoFill=FALSE;
 				}
+				asort($gridFiles);
 
 				$this->session->set_userdata('fileRenameCount',-1);
 				foreach ($files as $name => $file) {
