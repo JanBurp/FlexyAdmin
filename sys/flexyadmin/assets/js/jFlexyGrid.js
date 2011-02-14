@@ -476,7 +476,7 @@ function doGrid() {
 	// Sortable columns in Grid or File (list) modes.
 	//
 
-	if (isSortable) {
+	if (isSortable && $('table.bulkupload').length<1) {
 		grid=$("table.grid");
 		if ($(grid).hasClass('pagination')) {
 			// sort with pagination needs to reload page with another sort field
