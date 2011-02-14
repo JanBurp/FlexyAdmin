@@ -14,8 +14,11 @@ require_once(APPPATH."controllers/admin/MY_Controller.php");
 
 class Bulkupload extends AdminController {
 
+	var $renameCount;
+
 	function Bulkupload() {
 		parent::AdminController();
+		$this->resetRenameCount();
 	}
 
 	function index() {
@@ -62,17 +65,19 @@ class Bulkupload extends AdminController {
 				$path=assets($path);
 				foreach ($files as $name => $file) {
 					$gridFiles[$name]['File']=$file['name'];
-					$moved=FALSE;
-					$resized=FALSE;
-					$autoFill=FALSE;
 				}
 				asort($gridFiles);
-
-				$this->session->set_userdata('fileRenameCount',-1);
+				
+				$this->resetRenameCount();
+				
 				foreach ($files as $name => $file) {
-					$gridFiles[$name]=array('id'=>icon('no'),'File'=>$file['name'],'uri'=>'admin/bulkupload/ajaxUpload/'.pathencode($path).'/'.$name.'/'.$rename);
-					if (!empty($map)) $gridFiles[$name]['Rename']=$this->_newName($path,$name,$rename);
+					$renameThis='';
+					if (!empty($map)) $renameThis=$this->_newName($path,$name,$rename);
+					$gridFiles[$name]=array('id'=>icon('no'),'File'=>$file['name'],'uri'=>'admin/bulkupload/ajaxUpload/'.pathencode($path).'/'.$name.'/'.$renameThis);
+					if (!empty($map)) $gridFiles[$name]['Rename']=$renameThis;
 				}
+
+				// strace_($gridFiles);
 
 				$this->load->model("grid");
 				$grid=new grid();			
@@ -90,16 +95,23 @@ class Bulkupload extends AdminController {
 		$this->_show_all();
 	}
 
+	function resetRenameCount($reset=0) {
+		$this->renameCount=$reset;
+	}
 
-	function _newName($path,$name,$rename) {
-		$renameCount=$this->session->userdata('fileRenameCount');
+	function _newName($path,$name,$rename,$strict=FALSE) {
+		$renameCount=$this->renameCount;
 		
 		$name=$name;
 		$ext=get_file_extension($name);
 		if (!empty($rename)) {
-			$renameCount++;
-			$saveFile=$rename.'_'.sprintf('%03d',$renameCount);
-			$this->session->set_userdata('fileRenameCount',$renameCount);
+			if ($strict) {
+				$saveFile=$rename;
+			}
+			else {
+				$renameCount++;
+				$saveFile=$rename.'_'.sprintf('%03d',$renameCount);
+			}
 		}
 		else {
 			$saveFile=clean_file_name(get_file_without_extension($name));
@@ -116,6 +128,7 @@ class Bulkupload extends AdminController {
 		else {
 			$saveFile=$saveFile.'.'.$ext;
 		}
+		$this->renameCount=$renameCount;
 		return $saveFile;
 	}
 
@@ -138,10 +151,7 @@ class Bulkupload extends AdminController {
 			$mediaCfg=$this->cfg->get('CFG_media_info');
 			
 			$bulkMap=$this->config->item('BULKUPLOAD');
-			$moved=FALSE;
-			$resized=FALSE;
-			$autoFill=FALSE;
-			$saveFile=$this->_newName($path,$file,$rename);
+			$saveFile=$this->_newName($path,$file,$rename,TRUE);
 			$moved=copy($bulkMap.'/'.$file, $path.'/'.$saveFile);
 			if ($moved) {
 				// resize
