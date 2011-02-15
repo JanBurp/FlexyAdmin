@@ -70,6 +70,8 @@ $isForm=has_string('form',$show_type);
 		<script language="javascript" type="text/javascript" src="sys/jquery/ui/i18n/ui.datepicker-nl.js"></script>
 		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/timepicker/jquery.ui.timepicker<?=$js?>"></script>
 		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/form/jquery.form<?=$js?>"></script>
+		<script src="sys/jquery/plugins/colorpicker/js/colorpicker.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" href="sys/jquery/plugins/colorpicker/css/colorpicker.css" type="text/css" media="screen" title="no title" charset="utf-8" />
 		<? if ($show_editor): ?>
 			<!-- editor Scripts -->
 			<script language="javascript" type="text/javascript" src="sys/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>

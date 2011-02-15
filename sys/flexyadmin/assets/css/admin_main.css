@@ -556,7 +556,8 @@ tr.caption td				{ border:none; }
 .grid img,
 .grid embed,
 .grid .rgb					{	min-width:25px; max-width:50px;	height:25px; max-height:25px; margin:0px 1px 0px 0px; }
-.grid div.rgb				{	width:25px;	height:25px; border:solid 1px #DEA;}
+.grid div.rgb				{	width:25px;	height:25px; border:solid 1px #DEA;-moz-border-radius: 4px;-webkit-border-radius: 4px;
+}
 .grid .b						{	cursor: pointer; }
 
 .grid td ul {
@@ -846,6 +847,23 @@ input.gpw,
 input.pwd {
 	width:150px;
 	}
+input.rgb {
+	width:80px;
+}
+div.rgbColor {
+	float:left;
+	padding:4px;
+	width:18px;
+	height:18px;
+	margin-right:5px;
+	border:solid 1px #DEA;
+	cursor:pointer;
+	border:solid 1px #DDEEAA;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+}
+
+
 span.button {
 	font-weight:bold;
 	text-align:center;
