@@ -74,6 +74,39 @@ function doForm() {
 
 
 	//
+	// ColorPicker dialog
+	//
+	$("form input.rgb").each(function(){
+		var color=$(this).val();
+		$(this).after('<div class="rgbColor" style="background-color:'+color+';" color="'+color+'"></div>');
+		$(this).change(function(){
+			var show=$(this).next('.rgbColor');
+			var color=$(this).val();
+			$(show).css({'background-color':color}).attr('color',color);
+		});
+		$(this).next('.rgbColor').click(function(){
+			$(this).ColorPicker({
+				onBeforeShow: function () {
+					self=this;
+					var color=$(this).attr('color');
+					$(this).ColorPickerSetColor(color);
+				},
+				onSubmit: function(hsb, hex, rgb, el) {
+					var color='#'+ hex.toUpperCase();
+					$(el).css({'background-color':color}).attr('color',color).prev('input.rgb:first').val(color);
+					$(el).ColorPickerHide();
+				},
+				onChange: function (hsb, hex, rgb) {
+					var color='#'+ hex.toUpperCase();
+					$(self).css({'background-color':color}).prev('input.rgb:first').val(color);
+				}
+			});
+		}).trigger('click');
+	});
+	
+	
+
+	//
 	// Password create button
 	//
 	$("form input.password").after('<span class="button">'+lang('form_random_password')+'</span>');
