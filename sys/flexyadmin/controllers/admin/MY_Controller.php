@@ -298,40 +298,52 @@ class FrontEndController extends MY_Controller {
 				if ($fields) {
 					$options=false;
 					$optionsKey='';
+					$fieldset=$form['form']['str_title'];
 					foreach ($fields as $key => $value) {
-						unset($value['id']);
-						unset($value['id_form']);
-						foreach ($value as $k => $v) {
-							$value[remove_prefix($k)]=$v;
-							unset($value[$k]);
-						}
-						$name=$value['label'].'_'.$key;
-						$value['name']=$name;
-						$value['validation']=add_validation_parameters($value['validation'],$value['validation_parameters']);
-						unset($value['validation_parameters']);
-						if ($this->input->post($name)) $value['value']=$this->input->post($name);
-						$fields[$key]=$value;
-
-						// End options setting
-						if (is_array($options) and $value['type']!='option') {
-							$fields[$optionsKey]['options']=$options;
-							$options=FALSE;
-							$optionsKey='';
-						}
-						// Start option settings
-						if ($value['type']=='radio' or $value['type']=='select') {
-							$optionsKey=$name;
-							$options=array();
-						}
-						// add option
-						if ($value['type']=='option' and is_array($options)) {
-							$options[safe_string($value['html'],50)]=$value['html'];
+						// Check if a fieldset
+						if ($value['str_type']=='fieldset') {
+							$fieldset=$value['str_label'];
+							$form['fieldsets'][]=$fieldset;
 							unset($fields[$key]);
 						}
+						else {
+							// Normal field
+							unset($value['id']);
+							unset($value['id_form']);
+							foreach ($value as $k => $v) {
+								$value[remove_prefix($k)]=$v;
+								unset($value[$k]);
+							}
+							$value['label']=strtolower($value['label']);
+							$name=$value['label'].'_'.$key;
+							$value['name']=$name;
+							$value['fieldset']=$fieldset;
+							$value['validation']=add_validation_parameters($value['validation'],$value['validation_parameters']);
+							unset($value['validation_parameters']);
+							if ($this->input->post($name)) $value['value']=$this->input->post($name);
+							$fields[$key]=$value;
 
-						if (isset($fields[$key])) {
-							$fields[$name]=$fields[$key];
-							unset($fields[$key]);
+							// End options setting
+							if (is_array($options) and $value['type']!='option') {
+								$fields[$optionsKey]['options']=$options;
+								$options=FALSE;
+								$optionsKey='';
+							}
+							// Start option settings
+							if ($value['type']=='radio' or $value['type']=='select') {
+								$optionsKey=$name;
+								$options=array();
+							}
+							// add option
+							if ($value['type']=='option' and is_array($options)) {
+								$options[safe_string($value['html'],50)]=$value['html'];
+								unset($fields[$key]);
+							}
+
+							if (isset($fields[$key])) {
+								$fields[$name]=$fields[$key];
+								unset($fields[$key]);
+							}
 						}
 					}
 				}

@@ -446,7 +446,9 @@ class Form Extends Model {
 		
 		// fieldsets
 		foreach ($this->fieldsets as $fieldset) {
-			$out.=form_fieldset($this->caption,array("class"=>$this->fieldsetClasses[$fieldset].' '.$fieldset));
+			$fieldSetClass='fieldSet_'.$fieldset;
+			if (isset($this->fieldsetClasses[$fieldset])) $fieldSetClass.=' '.$this->fieldsetClasses[$fieldset];
+			$out.=form_fieldset($fieldset,array("class"=>$fieldSetClass));
 			foreach($data as $name => $field) {
 				if ($field['fieldset']==$fieldset) $out.=$this->render_field($field['name'],$field,$class);
 			}
@@ -522,7 +524,7 @@ class Form Extends Model {
 
 			case "html":
 				$out.=$field['value'];
-				if (isset($field['html'])) $out.=$field['html'];
+				if (isset($field['html'])) $out.=div('flexyFormHtml').$field['html']._div();
 				break;
 
 			case "checkbox":
@@ -532,11 +534,11 @@ class Form Extends Model {
 					$attr["checked"]="";
 				$attr["value"]="true";
 				$out.=form_checkbox($attr);
-				if (isset($field['html'])) $out.=$field['html'];
+				if (isset($field['html'])) $out.=div('flexyFormHtml').$field['html']._div();
 				break;
 
 			case 'radio':
-				if (isset($field['html'])) $out.=$field['html'];
+				if (isset($field['html'])) $out.=div('flexyFormHtml').$field['html']._div();
 				$options=$field['options'];
 				$value=$field['value'];
 				foreach ($options as $option => $optLabel) {
