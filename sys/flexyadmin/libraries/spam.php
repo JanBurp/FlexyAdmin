@@ -1,6 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-
 /**
 *	Thanks to Dr. Peter J. Meyers
 */
@@ -105,6 +104,17 @@ class Spam {
 		if($this->rapport['vowel_density'] < $this->settings['vowel_density_limit']) $score = $this->settings['vowel_density_weight'];
 		$this->rapport['score']+=$score;
 		return $score;
+	}
+	
+	// extra checks
+	function has_html($txt) {
+		return ($txt!=strip_tags($txt));
+	}
+
+	function has_url($txt) {
+		$topdomains='aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|root|tel|travel';
+		$urls=preg_match('/(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+('.$topdomains.'|[a-z]{2})/',$txt);
+		return $urls;
 	}
 
 }
