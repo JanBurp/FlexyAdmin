@@ -448,7 +448,9 @@ class Form Extends Model {
 		foreach ($this->fieldsets as $fieldset) {
 			$fieldSetClass='fieldSet_'.$fieldset;
 			if (isset($this->fieldsetClasses[$fieldset])) $fieldSetClass.=' '.$this->fieldsetClasses[$fieldset];
-			$out.=form_fieldset($fieldset,array("class"=>$fieldSetClass));
+			$caption=$fieldset;
+			if ($caption=='fieldset') $caption=$this->caption;
+			$out.=form_fieldset($caption,array("class"=>$fieldSetClass));
 			foreach($data as $name => $field) {
 				if ($field['fieldset']==$fieldset) $out.=$this->render_field($field['name'],$field,$class);
 			}
