@@ -315,7 +315,7 @@ class FrontEndController extends MY_Controller {
 								unset($value[$k]);
 							}
 							$value['label']=strtolower($value['label']);
-							$name=$value['label'].'_'.$key;
+							$name=str_replace(' ','_',$value['label']).'_'.$key;
 							$value['name']=$name;
 							$value['fieldset']=$fieldset;
 							$value['validation']=add_validation_parameters($value['validation'],$value['validation_parameters']);
