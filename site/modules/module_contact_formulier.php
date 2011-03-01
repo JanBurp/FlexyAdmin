@@ -21,11 +21,14 @@ function _module_contact_formulier($item) {
 	if ($formData) {
 		
 		// trace_($formData);
+		
+		$formFieldSets=$formData['fieldsets'];
 		$formFields=$formData['fields'];
 		$formButtons=$formData['buttons'];
 
 		// Create form object and set fields and buttons
 		$form=new form($CI->get_uri());
+		$form->set_fieldsets($formFieldSets);
 		$form->set_data($formFields,"Contact");
 		$form->set_buttons($formButtons);
 
@@ -41,6 +44,7 @@ function _module_contact_formulier($item) {
 
 			// Setup mail
 			$CI->load->library('email');
+			$CI->email->initialize(array('mailtype'=>'html'));
 			$CI->email->to($siteMail,$siteAuthor);
 
 			// Is there a from email?
@@ -54,18 +58,28 @@ function _module_contact_formulier($item) {
 			$body='';
 			foreach ($formValues as $key => $value) {
 				if (substr($key,0,1)!='_') {
-					$showKey=remove_postfix($key);
+					if ($formFields[$key]['type']=='checkbox') {if ($value) $value=strip_tags($formFields[$key]['html']); else $value='Nee';}
+					$showKey=ucfirst(remove_postfix($key));
+					$body.="<b>$showKey:&nbsp;</b>";
+					if ($formFields[$key]['type']=='textarea') $body.="<br/>";
+					$body.="$value<br/><br/>";
 					if (isset($formFields[$key]['options'][$value])) {
 						$value=strip_tags($formFields[$key]['options'][$value]);
 					}
-					$body.="$showKey:\n$value\n\n";
 				}
 			}
 			$CI->email->message($body);
-			$CI->email->send();
+			$succes=$CI->email->send();
+			if (!$succes) {
+				// Show Error message
+				$CI->add_content($formData['form']['txt_error']);
+			}
+			else {
+				// Show Send message
+				// $CI->add_content($formData['form']['txt_text'].'<p>&nbsp;</p>'.trace_($error,false).'<p>&nbsp;</p>'.$body.'<p>&nbsp;</p>'.trace_($formValues,false));
+				$CI->add_content($formData['form']['txt_text']);
+			}
 
-			// Show Send message
-			$CI->add_content($formData['form']['txt_text']);
 		}
 		else {
 			// Form isn't filled or validated: show form
