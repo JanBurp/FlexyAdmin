@@ -324,7 +324,7 @@ class Flexy_field extends Model {
 			$out['class'].=' '.$class;
 		else
 			$out['class']=$class;
-		// strace_($out);
+		// trace_($out);
 		return $out;
 	}
 
@@ -400,7 +400,6 @@ class Flexy_field extends Model {
 			$validations=$this->_combine_validations($validation);
 		}
 		if (!empty($validations)) $out['validation']=$this->_set_validation_params($validations);
-		// trace_($out);
 		return $out;
 	}
 
@@ -814,17 +813,23 @@ class Flexy_field extends Model {
 			}
 			else {
 				$lastUploadMax=$this->cfg->get('CFG_media_info',$path,'int_last_uploads');
-				$lastUploads=array_slice(sort_by($files,"rawdate",TRUE),0,$lastUploadMax);
-				ignorecase_ksort($files);
-				$options=array();
-				if ($this->cfg->get('CFG_media_info',$path,'b_add_empty_choice')) $options[]="";
-				$optionsLast=$this->_create_media_options($lastUploads,$types);
-				if (!empty($optionsLast)) $options[langp("form_dropdown_sort_on_last_upload",$lastUploadMax)]=$optionsLast;
-				$optionsNames=$this->_create_media_options($files,$types);
-				if (!empty($optionsNames)) $options[lang("form_dropdown_sort_on_name")]=$optionsNames;
+				if ($lastUploadMax>0) {
+					$lastUploads=array_slice(sort_by($files,"rawdate",TRUE),0,$lastUploadMax);
+					ignorecase_ksort($files);
+					$options=array();
+					// if ($this->cfg->get('CFG_media_info',$path,'b_add_empty_choice')) $options[]="";
+					$optionsLast=$this->_create_media_options($lastUploads,$types);
+					if (!empty($optionsLast)) $options[langp("form_dropdown_sort_on_last_upload",$lastUploadMax)]=$optionsLast;
+					$optionsNames=$this->_create_media_options($files,$types);
+					if (!empty($optionsNames)) $options[lang("form_dropdown_sort_on_name")]=$optionsNames;
+				}
+				else {
+					$options=$this->_create_media_options($files,$types);
+				}
 			}
 		}
 		$out=$this->_standard_form_field($options);
+		// trace_($options);
 		$out["path"]=$map;
 		if ($this->pre=="medias") $out["multiple"]="multiple";
 		$type=el("str_type",$info);
