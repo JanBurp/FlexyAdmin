@@ -73,10 +73,11 @@ class plugin_uri extends plugin_ {
 			$uri=clean_string($uri);
 			$forbidden=array("site","sys","admin","rss","file");
 			$forbidden=array_merge($forbidden,$this->CI->config->item('LANGUAGES'));
+			$postSpace=$replaceSpace.$replaceSpace;
 			while ($this->_existing_uri($uri) or in_array($uri,$forbidden)) {
-				$currUri=remove_postfix($uri,$replaceSpace);
-				$countUri=(int) get_postfix($uri,$replaceSpace);
-				$uri=$currUri.$replaceSpace.($countUri+1);
+				$currUri=remove_postfix($uri,$postSpace);
+				$countUri=(int) get_postfix($uri,$postSpace);
+				$uri=$currUri.$postSpace.($countUri+1);
 			}
 		}
 		return $uri;

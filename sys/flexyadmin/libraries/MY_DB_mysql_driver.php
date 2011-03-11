@@ -429,33 +429,11 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		if ($this->whereUri) {
 			$uri=$this->whereUri;
 			$uriParts=explode('/',$this->whereUri);
-			switch (count($uriParts)) {
-				case 1:
-					$this->where($table.'.uri',$uri);
-					break;
-				case 2:
-					$parent=$uriParts[0];
-					$uri=$uriParts[1];
-					$sql="SELECT id FROM $table WHERE uri='$parent'";
-					$query=$this->query($sql);
-					$row=$query->row();
-					if (!empty($row)) {
-						$this->where($table.'.self_parent',$row->id);
-						$this->where($table.'.uri',$uri);
-					}
-					else {
-						$this->where('id','-1'); // can't be found!
-					}
-					break;
-				default:
-					// > 2
-					$foundId=$this->get_unique_id_from_fulluri($table,$uriParts);
-					if ($foundId>-1)
-						$this->where($table.'.id',$foundId);
-					else
-						$this->where('id','-1'); // can't be found!
-					break;
-			}
+			$foundId=$this->get_unique_id_from_fulluri($table,$uriParts);
+			if ($foundId>-1)
+				$this->where($table.'.id',$foundId);
+			else
+				$this->where('id','-1'); // can't be found!
 		}
 		
 		/**
@@ -484,7 +462,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 
 	function get_unique_id_from_fulluri($table,$uriParts,$parent=0) {
 		$foundID=-1;
-		if (count($uriParts)>=1) {
+		if (count($uriParts)>1) {
 			$part=array_shift($uriParts);
 			$sql="SELECT id,self_parent FROM $table WHERE uri='$part' AND self_parent='$parent'";
 			$query=$this->query($sql);
@@ -497,6 +475,16 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				$foundID=$found;
 			}
 			else {
+				$foundID=$item['id'];
+			}
+		}
+		elseif (count($uriParts)==1) {
+			$part=current($uriParts);
+			$sql="SELECT id,self_parent FROM $table WHERE uri='$part' AND self_parent='$parent'";
+			$query=$this->query($sql);
+			$items=$query->result_array();
+			if ($items) {
+				$item=current($items);
 				$foundID=$item['id'];
 			}
 		}
