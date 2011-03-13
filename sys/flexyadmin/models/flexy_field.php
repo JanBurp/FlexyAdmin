@@ -686,8 +686,12 @@ class Flexy_field extends Model {
 		foreach ($tables as $table) {
 			$fields=$this->db->list_fields($table);
 			foreach ($fields as $field) {
-				//if (!in_array($field,$specialFields))
-				$options["$table.$field"]="$table . $field";
+				if (!in_array($field,$specialFields)) {
+					$pre=get_prefix($field);
+					if ( ($this->table!='cfg_media_info') or ($pre=='media') or ($pre=='medias') ) {
+						$options["$table.$field"]="$table . $field";
+					}
+				}
 			}
 			// join fields?
 			$jt=$this->config->item('REL_table_prefix')."_".remove_prefix($table).$this->config->item('REL_table_split');
