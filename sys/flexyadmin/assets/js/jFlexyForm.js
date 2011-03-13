@@ -124,60 +124,49 @@ function doForm() {
 	//
 	// Media dropdown
 	//
-	options=$("div.image_dropdown select.media option");
-	if (options.length>0) {
-		path=$("div.image_dropdown select.media").attr("path")+"/";
+	var mediaFields=$('div.image_dropdown');
+	$(mediaFields).each(function(){
+		var field=$(this);
+		var select=$(this).find('select');
+		var multiple=$(select).hasClass('medias');
+		var list=$(this).find('ul');
+		var options=$(select).find('option');
+		var path=$(select).attr("path")+"/";
+		if (options.length>0) {
+			$(select).change(function() {
+				// remove old thumb & clean value
+				$(list).find('li').remove();
+				if (multiple) $(field).find('input:first').attr('value','');
+				// show new thumb
+				var medias=$(select).find('option:selected');
+				var value='';
+				if (medias.length>0) {
+					$(medias).each(function(){
+						var src=$(this).attr("value");
+						if (multiple && value!='')
+							value=value+'|'+src;
+						else
+							value=src;
+						src=path+src;
+						var ext=get_ext(src);
+						var size=32;
+						if (multiple) size=25;
+						if (ext=='swf' || ext=='flv') {
+							$(field).find('ul:first').append('<li>'+flash(src,size,size)+'</li>');
+						}
+						else {
+							src=cachedThumb(src);
+							$(field).find('ul:first').append('<li><img class="media" src="'+src+'" /></li>');
+						}
+					});
+					$(field).find('input:first').attr('value',value);
+				}
+			});
+			
+		}
+	});
 
-		$("select.media").change(function() {
-			media=$("select.media option:selected").attr("value");
-			// remove old thumb
-			$("div.image_dropdown.media ul li").remove();
-			// show new thumb
-			src=path+media;
-			ext=get_ext(media);
-			if (ext=='swf' || ext=='flv') {
-				$("div.image_dropdown ul").append('<li>'+flash(src,32,32)+'</li>');
-			}
-			else {
-				src=cachedThumb(src);
-				$("div.image_dropdown ul").append('<li><img class="media" src="'+src+'" /></li>');
-			}
-		});
-	}
-
-	// Multiple media dropdown
-	options=$("div.image_dropdown select.medias option");
-	if (options.length>0) {
-		path=$("div.image_dropdown select.medias").attr("path")+"/";
-
-		$("select.medias").change(function() {
-			// remove old thumbs & clean value
-			$("div.image_dropdown.medias ul li").remove();
-			$(this).parent('.form_field').children('input:first').attr('value','');
-			// show new thumbs & change value
-			medias=$("select.medias option:selected");
-			value='';
-			if (medias.length>0) {
-				$(medias).each(function() {
-					src=$(this).attr("value");
-					if (value=='') value=src; else value=value+'|'+src;
-					src=path+src;
-					ext=get_ext(src);
-					if (ext=='swf' || ext=='flv') {
-						$("div.image_dropdown ul.values").append('<li>'+flash(src,25,25)+'</li>');
-					}
-					else {
-						src=cachedThumb(src);
-						$("div.image_dropdown ul.values").append('<li><img class="media" src="'+src+'" /></li>');
-					}
-				});
-				$(this).parent('.form_field').children('input:first').attr('value',value);
-			}
-		});
-	}
 		
-	// Media selecting
-
 	// Media select by click
 	$('div.media ul.choices li').click(function(){
 		src=$(this).children('img:first').attr('src');
@@ -187,53 +176,20 @@ function doForm() {
 		src=src.substr(src.lastIndexOf('/')+1);
 		$(this).parent('ul').parent('div.media').children('input:first').attr('value',src);
 	});
-	$('div.media ul.values†').click(function(){
+	$('div.media ul.values').click(function(){
 		$(this).empty();
 		$(this).parent('div.media').children('input:first').attr('value','');
 	});
 
 	
-
-	// Medias selecting and removing by click
-	// function resetMediaValues(thisMedia) {
-	// 	values='';
-	// 	$(thisMedia).children('ul.values:first li').each(function(){
-	// 		src=$(this).children('img:first').attr('src');
-	// 		if (src!=undefined) {
-	// 			src=src.substr(src.lastIndexOf('/')+1);
-	// 			values+='|'+src;
-	// 		}
-	// 	});
-	// 	values=values.substr(1);
-	// 	$(thisMedia).children('input:first').attr('value',values);			
-	// };
-	// function bindMediasClick() {
-	// 	$('div.medias ul li').unbind('click');
-	// 	$('div.medias ul.values li').unbind('dblclick');
-	// 	// medias click 'n drop selecting
-	// 	$('div.medias ul.choices li').click(function(){
-	// 		thisMedia=$(this).parent('ul').parent('div.medias');
-	// 		$(thisMedia).children('ul.values').append($(this).clone());
-	// 		resetMediaValues($(thisMedia));
-	// 		bindMediasClick();
-	// 	});
-	// 	// dblclick removing
-	// 	$('div.medias ul.values li').dblclick(function(){
-	// 		thisMedia=$(this).parent('ul.values').parent('div.medias');
-	// 		$(this).remove();
-	// 		resetMediaValues(thisMedia);
-	// 	});
-	// };
-	// bindMediasClick();
-
 	// dragndrop ordering of medias
 	$('div.medias ul').sortable({
 		connectWith: 'div.medias ul',
 		update: function(event,ui) {
 			if ($(this).hasClass('values')) {
-				value='';
+				var value='';
 				$(this).children('li').each(function(){
-					src=$(this).children('img:first').attr('src');
+					var src=$(this).children('img:first').attr('src');
 					if (src!=undefined) {
 						src=pathdecode(src);
 						src=src.substr(src.lastIndexOf('/')+1);
@@ -241,7 +197,7 @@ function doForm() {
 					}
 				});
 				value=value.substr(1);
-				$(this).parent('.form_field').children('input:first').attr('value',value);
+				$(this).parent('.form_field:first').children('input:first').attr('value',value);
 			}
 		}
 	});
@@ -253,35 +209,6 @@ function doForm() {
 			if (value=='flexyadmin_empty_image.gif') $(this).attr('value','');
 		});
 	});
-
-
-	// Ordered Lists selecting and removing by click
-	// function resetListValues(thisList) {
-	// 	values='';
-	// 	$(thisList).children('li').each(function(){
-	// 		id=$(this).attr('id');
-	// 		values+='|'+id;
-	// 	});
-	// 	values=values.substr(1);
-	// 	$(thisList).parent('.ordered_list').children('input:first').attr('value',values);		
-	// };
-	// function bindListClick() {
-	// 	$('div.ordered_list ul li').unbind('click');
-	// 	// medias click 'n drop selecting
-	// 	$('div.ordered_list ul.list_choices li').click(function(){
-	// 		thisChoices=$(this).parent('ul.list_choices');
-	// 		thisValues=$(thisChoices).parent('div.ordered_list').children('ul.list_values');
-	// 		$(thisValues).append($(this).clone());
-	// 		resetListValues(thisValues);
-	// 		bindListClick();
-	// 	});
-	// 	$('div.ordered_list ul.list_values li').dblclick(function(){
-	// 		thisValues=$(this).parent('ul.list_values');
-	// 		$(this).remove();
-	// 		resetListValues(thisValues);
-	// 	});
-	// };
-	// bindListClick();
 
 
 	// Ordering of many type ordered_list
