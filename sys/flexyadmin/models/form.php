@@ -276,6 +276,7 @@ class Form Extends Model {
 		/**
 		 * Sets data to update/insert
 		 */
+		// trace_($_POST);
 		$set=array();
 		if ($this->isValidated and $this->db->table_exists($table)) {
 			$pk=pk();
@@ -304,12 +305,14 @@ class Form Extends Model {
 					 *  Is data from join?
 					 */
 					if ($pre==$this->config->item('REL_table_prefix')) {
+						// strace_($name);
 						if (empty($value)) $value=array();
 						$joins[$name]=$value;
 						$hidden=$this->input->post($name.'__hidden');
 						if ($hidden) {
 							$joins[$name]=explode('|',$hidden);
 						}
+						// trace_($joins);
 					}
 					/**
 					 * Normal data
@@ -322,6 +325,10 @@ class Form Extends Model {
 					}
 				}
 			}
+			
+			// trace_($set);
+			
+			
 			if (!empty($error)) {
 			}
 			else {
@@ -386,7 +393,7 @@ class Form Extends Model {
 				 * If Joins, update them to
 				 */
 				if (!empty($joins)) {
-					// trace_($joins);
+					// strace_($joins);
 					foreach($joins as $name=>$value) {
 						// first delete current selection
 						$relTable=$name;
@@ -396,6 +403,7 @@ class Form Extends Model {
 							// self relation
 							$joinKey.="_";
 						}
+						// strace_(array('id'=>$id,'thisKey'=>$thisKey,'joinKey'=>$joinKey,'relTable'=>$relTable,'value'=>$value));
 						$this->db->where($thisKey,$id);
 						$this->db->delete($relTable);
 						// insert new selection
@@ -405,6 +413,7 @@ class Form Extends Model {
 							$this->db->insert($relTable);
 							$inId=$this->db->insert_id();
 						}
+						strace_('Should be updated..... ok');
 						log_('info',"form: updating join data from '$table', id='$id'");
 					}
 				}
@@ -642,6 +651,8 @@ class Form Extends Model {
 				//
 				if ($field['type']=='ordered_list') {
 					// show (ordered) choices	
+					// trace_($field);
+					// trace_($options);
 					$out.='<ul class="list list_choices">';
 					$value=$field['value'];
 					foreach($options as $id=>$option) {
@@ -653,10 +664,10 @@ class Form Extends Model {
 					$hiddenValue='';
 					if (!is_array($value)) $value=array($value);
 					$out.='<ul class="list list_values '.$attr['class'].'">';
-					foreach($value as $val) {
+					foreach($value as $valID => $val) {
 						if (!empty($val)) {
-							$out.='<li id="'.$val.'">'.$options[$val].'</li>';
-							$hiddenValue=add_string($hiddenValue,$val,'|');
+							$out.='<li id="'.$valID.'">'.$options[$valID].'</li>';
+							$hiddenValue=add_string($hiddenValue,$valID,'|');
 						}
 					}
 					$out.='</ul>';
