@@ -26,6 +26,7 @@ class plugin_template extends plugin_ {
 	// _admin_logout is a call that's made when user is logging out
 	//
 	// function _admin_logout() {
+	//	 return true;
 	// }
 	
 	

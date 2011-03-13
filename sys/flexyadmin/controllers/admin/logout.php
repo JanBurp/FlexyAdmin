@@ -26,16 +26,26 @@ class Logout extends AdminController {
 
 	function index() {
 		// plugin logouts...
+		$logout=true;
 		foreach ($this->plugins as $plugin) {
-			if (isset($this->$plugin) and method_exists($this->$plugin,'_admin_logout')) $this->$plugin->_admin_logout();
+			if (isset($this->$plugin) and method_exists($this->$plugin,'_admin_logout')) {
+				if ($this->$plugin->_admin_logout()===false) $logout=false;
+			}
 		}
 		
 		// logout
-		$this->session->sess_destroy();
-		if ($this->db->has_field('cfg_configurations','b_logout_to_site') and $this->db->get_field('cfg_configurations','b_logout_to_site'))
-			redirect();
-		else
-			redirect($this->homePage);
+		if ($logout) {
+			$this->session->sess_destroy();
+			if ($this->db->has_field('cfg_configurations','b_logout_to_site') and $this->db->get_field('cfg_configurations','b_logout_to_site'))
+				redirect();
+			else
+				redirect($this->homePage);
+		}
+		else {
+			$this->_add_content(h('Logout',1));
+			$this->_add_content(p('error').'Stopped logout, because there are important (red) messages.<br/>Try to logout for a second time. If the messages are still there, contact you\'re webmaste.'._p());
+			$this->_show_all();
+		}
 	}
 
 }

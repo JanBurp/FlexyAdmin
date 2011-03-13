@@ -15,6 +15,7 @@ class plugin_sitemap extends plugin_ {
 	}
 	
 	function _admin_logout() {
+		$this->CI->_add_content(h($this->plugin,1));
 		$this->_create_sitemap();
 	}
 	
