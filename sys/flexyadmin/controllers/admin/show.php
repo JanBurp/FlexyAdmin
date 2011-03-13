@@ -148,7 +148,7 @@ class Show extends AdminController {
 						// strace_($order);
 
 						// trace_('#show#'.$this->db->last_query());
-						// strace_($data);
+						// trace_($data);
 
 						if (empty($data) and empty($search)) {
 							/**
