@@ -1,21 +1,40 @@
-> ### 
+> XXX
+
+NEW:
+- Safer upload directories:
+. Creates automatically .htaccess files to prevend showing the directory and to hide forbidden (executable) filetypes
+. On Logout, checks all upload directories for executable files and removes them
+. New .htacces files in assets, assets/_thumbcache, assets/listst
+
+BUGS:
+- FORM: Multiple media(s) fields gives problems
+- FORM: multiple list order doesn't work (at least with self relations)
+- FORM: img dropdown: big when last_uploads=0
+- Getting menu-item with same uri's (ie:  item/item)
+- Double uri numbering bug (now with __#)
+
+
+> 981 
 
 UPDATE:
 - jQuery UI 1.8.9
 
 NEW:
+- colorPicker
+- new pdf mime
 - Flexy Forms: user can edit/create own forms
 - autoloading latest demodatabase (if database login correct and no tables found)
 - content->safe_email now adds original class and id
-- new pdf mime
+- content->render also adds classes to divs
 
 BUGS:
+- sitemap bugs
 - content->safe_email (bug when more than one email address)
 - small styling bugs in IE
 - DB->search
 - automenu submenu's without self_parent now possible
-
-
+- grid order bug
+- bulkupload order
 
 
 
