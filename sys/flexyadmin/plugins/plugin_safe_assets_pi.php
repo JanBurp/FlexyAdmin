@@ -52,9 +52,27 @@ class plugin_safe_assets extends plugin_ {
 	
 	function _admin_api($args=NULL) {
 		$this->CI->_add_content(h($this->plugin,1));
+
 		// loop through all asset maps to make them safe and clean
+
+		// first normal maps
+		$normalMaps=array(''						=>	"Order Allow,Deny\nDeny from all\n<Files ~ \"\.(css|img|js)$\">\nAllow from all\n</Files>\n",
+											'_thumbcache'	=>	"Order Allow,Deny\nDeny from all\n<Files ~ \"\.(jpg|jpeg|gif|png)$\">\nAllow from all\n</Files>\n",
+											'lists'				=>	"Order Allow,Deny\nDeny from all\n<Files ~ \"\.(js)$\">\nAllow from all\n</Files>\n",
+											'css'					=>	"Order Allow,Deny\nDeny from all\n<Files ~ \"\.(css|htc)$\">\nAllow from all\n</Files>\n",
+											'img'					=>	"Order Allow,Deny\nDeny from all\n<Files ~ \"\.(jpg|jpeg|gif|png)$\">\nAllow from all\n</Files>\n", 
+											'js'					=>	"Order Allow,Deny\nDeny from all\n<Files ~ \"\.(js|css|html|jpg|jpeg|gif|png)$\">\nAllow from all\n</Files>\n", 
+											);
+		foreach ($normalMaps as $map => $htaccess) {
+			$path=$this->CI->config->item('ASSETS').$map.'/.htaccess';
+			write_file($path,$htaccess);
+			$this->CI->_add_content('<p>Created : '.$path.'</p>');
+		}
+
+		// upload maps
 		$maps=read_map('site/assets','dir');
-		$allready_safe=array('css','img','js');
+		$allready_safe=array_keys($normalMaps);
+		array_shift($allready_safe);
 		foreach ($maps as $map => $row) {
 			if (!in_array($map,$allready_safe)) {
 				$types=$this->CI->cfg->get('cfg_media_info',$map,'str_types');
