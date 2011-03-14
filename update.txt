@@ -1,12 +1,11 @@
-UPDATES to 986 and up
+UPDATES to 990 and up
 ====================
 
 - Write down the current revision (see in the bottom bar in FlexyAdmin or in sys/build.txt)
 - Run all SQL updates from your revision until the latest, you can do this with the Import Database option in FlexyAdmin.
 - Replace current sys map with new sys map
 
-- To make sure the assets maps are safe and you are updating from a pre r986 version:
-	- Copy the .htacces files in site/assets, site/assets/_thumbcache, site/assets/listst
+- To make sure the assets maps are safe and you are updating from a pre r990 version:
 	- After logging in to FlexyAdmin, once run this uri: admin/plugin/safe_assets
 
 
