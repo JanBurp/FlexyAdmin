@@ -413,7 +413,7 @@ class Form Extends Model {
 							$this->db->insert($relTable);
 							$inId=$this->db->insert_id();
 						}
-						strace_('Should be updated..... ok');
+						// strace_('Should be updated..... ok');
 						log_('info',"form: updating join data from '$table', id='$id'");
 					}
 				}
