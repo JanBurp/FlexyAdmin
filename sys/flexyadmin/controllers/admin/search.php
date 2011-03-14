@@ -39,39 +39,43 @@ class Search extends AdminController {
 						$not_fields=not_filter_by($not_fields,$type);
 					}
 					$fields=array_diff($fields,$not_fields);
-					// $fields=array_values($fields);
-					// trace_(array('table'=>$table,'types'=>$types,'fields'=>$fields));
-					$this->db->select(pk());
-					$this->db->select($fields);
-					$result=$this->db->get_result($table);
-					$htmlTest.="<ul>";
-					foreach($result as $id=>$row) {
-						unset($row[pk()]);
-						foreach ($row as $key=>$txt) {
-							if ($regex) {
-								$oldErrorHandler=set_error_handler(array($this,"myErrorHandler"));
-								$new=preg_replace("/$search/",$replace,$txt);
-								set_error_handler($oldErrorHandler);
+					if (!empty($fields)) {
+						// $fields=array_values($fields);
+						// trace_(array('table'=>$table,'types'=>$types,'fields'=>$fields));
+						$this->db->select(pk());
+						$this->db->select($fields);
+						$result=$this->db->get_result($table);
+						$htmlTest.="<ul>";
+						foreach($result as $id=>$row) {
+							unset($row[pk()]);
+							foreach ($row as $key=>$txt) {
+								if ($regex) {
+									$oldErrorHandler=set_error_handler(array($this,"myErrorHandler"));
+									$new=preg_replace("/$search/",$replace,$txt);
+									set_error_handler($oldErrorHandler);
+								}
+								else {
+									$new=str_replace($search,$replace,$txt);
+								}
+								if ($new!=$txt) {
+									$this->db->as_abstracts();
+									$this->db->where(pk(),$id);
+									$abstract=$this->db->get_row($table);
+									$abstract=$abstract['abstract'];
+									$htmlTest.="<li>".$this->uiNames->get($table)." '$abstract'".' : <textarea>'.$txt.'</textarea> =&gt; <textarea>'.$new.'</textarea></li>';
+								}
+								if (!$test) {
+									$this->db->set($key,$new);	
+								}
 							}
-							else {
-								$new=str_replace($search,$replace,$txt);
-							}
-							if ($new!=$txt) {
-								$this->db->as_abstracts();
+							if (!$test) {
 								$this->db->where(pk(),$id);
-								$abstract=$this->db->get_row($table);
-								$abstract=$abstract['abstract'];
-								$htmlTest.="<li>".$this->uiNames->get($table)." '$abstract'".' : <textarea>'.$txt.'</textarea> =&gt; <textarea>'.$new.'</textarea></li>';
+								$res=$this->db->update($table);
 							}
-							if (!$test) $this->db->set($key,$new);
+							// $this->db->as_abstracts(FALSE);
 						}
-						if (!$test) {
-							$this->db->where(pk(),$id);
-							$res=$this->db->update($table);
-						}
-						// $this->db->as_abstracts(FALSE);
+						$htmlTest.="</ul>";
 					}
-					$htmlTest.="</ul>";
 				}		
 			}
 			if (!$search or $test) {
