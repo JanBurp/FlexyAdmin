@@ -1,10 +1,10 @@
-> XXX
+> 990
 
 NEW:
 - Safer upload directories:
 . Creates automatically .htaccess files to prevend showing the directory and to hide forbidden (executable) filetypes
 . On Logout, checks all upload directories for executable files and removes them
-. New .htacces files in assets, assets/_thumbcache, assets/listst
+. Running the plugin, creates .htaccess files for all assets folders
 
 BUGS:
 - FORM: Multiple media(s) fields gives problems
@@ -12,6 +12,7 @@ BUGS:
 - FORM: img dropdown: big when last_uploads=0
 - Getting menu-item with same uri's (ie:  item/item)
 - Double uri numbering bug (now with __#)
+- Search&Replace: sometimes a bug when no results
 
 
 > 981 
