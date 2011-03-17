@@ -219,12 +219,22 @@ function str2hex($string) {
 		return "";
 }
 
-function max_length($txt,$len=100) {
-	$lines=explode('.',$txt);
-	$line='';
-	$l=0;
-	while (strlen($line)<$len and isset($lines[$l+1])) {	$line.=$lines[$l++].'. ';	}
-	return $line;
+function max_length($txt,$len=100,$type='LINES') {
+	$out='';
+	switch ($type) {
+		case 'CHARS':
+			$out=substr(strip_tags($txt),0,$len);
+			break;
+		case 'LINES':
+		default;
+				$lines=explode('.',$txt);
+				$line='';
+				$l=0;
+				while (strlen($line)<$len and isset($lines[$l+1])) {	$line.=$lines[$l++].'. ';	}
+				$out=$line;
+			break;
+	}
+	return $out;
 }
 
 function has_alpha($s) {
