@@ -158,11 +158,11 @@ $config['LOG_login']									= "login";
 $config['LOG_stats']									= "stats";
 
 
-$config['FILE_types_forbidden']				= array('php','php3','php4','phtml','pl','py','jsp','asp','htm','shtml','sh','cgi','js');
+$config['FILE_types_forbidden']				= array('php','php3','php4','phtml','pl','py','jsp','asp','htm','html','shtml','sh','cgi','js');
 $config['FILE_types_img']							= array('jpg','jpeg','gif','png');
 $config['FILE_types_mp3']							= array('mp3','wav','wma');
 $config['FILE_types_flash']						= array('swf','flv');
-$config['FILE_types_movies'] 					= array('mov');
+$config['FILE_types_movies'] 					= array('mov','mp4');
 $config['FILE_types_pdf']							= array('pdf');
 $config['FILE_types_docs']						= array('doc','docx','odt');
 $config['FILE_types_xls']							= array('xls','xlsx','ods');

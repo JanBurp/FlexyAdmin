@@ -1,0 +1,5 @@
+Order Allow,Deny
+Deny from all
+<Files ~ "\.(xml)$">
+Allow from all
+</Files>
