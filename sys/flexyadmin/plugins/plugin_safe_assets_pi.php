@@ -25,74 +25,14 @@ class plugin_safe_assets extends plugin_ {
 	function _admin_logout() {
 		$logout=true;
 		$this->CI->_add_content(h($this->plugin,1));
-		// loop through all asset maps to make them safe and clean
-		$maps=read_map('site/assets','dir');
-		$allready_safe=array('css','img','js');
-		foreach ($maps as $map => $row) {
-			if (!in_array($map,$allready_safe)) {
-				$types=$this->CI->cfg->get('cfg_media_info',$map,'str_types');
-				if (empty($types)) $types=$this->CI->config->item('FILE_types_img');
-				$allowed='';
-				if ($map=='lists') {
-					$types='js';
-					$allowed='js';
-				}
-				$removed=$this->_remove_forbidden_files($map,$allowed);
-				if ($removed) {
-					$logout=false;
-					$removed=implode(',',$removed);
-					$this->CI->_add_content('<p class="error">Removed forbidden files ('.$removed.') from: '.$map.'</p>');
-				}
-			}
-		}
+		$logout=!$this->_safe_and_clean_all();
 		return $logout;
 	}
 	
-	
-	
 	function _admin_api($args=NULL) {
 		$this->CI->_add_content(h($this->plugin,1));
-
-		// loop through all asset maps to make them safe and clean
-
-		// first normal maps
-		$normalMaps=array(''						=>	"Order Allow,Deny\nDeny from all\n<Files ~ \"\.(css|img|js)$\">\nAllow from all\n</Files>\n",
-											'_thumbcache'	=>	"Order Allow,Deny\nDeny from all\n<Files ~ \"\.(jpg|jpeg|gif|png)$\">\nAllow from all\n</Files>\n",
-											'lists'				=>	"Order Allow,Deny\nDeny from all\n<Files ~ \"\.(js)$\">\nAllow from all\n</Files>\n",
-											'css'					=>	"Order Allow,Deny\nDeny from all\n<Files ~ \"\.(css|htc)$\">\nAllow from all\n</Files>\n",
-											'img'					=>	"Order Allow,Deny\nDeny from all\n<Files ~ \"\.(jpg|jpeg|gif|png)$\">\nAllow from all\n</Files>\n", 
-											'js'					=>	"Order Allow,Deny\nDeny from all\n<Files ~ \"\.(js|css|html|jpg|jpeg|gif|png)$\">\nAllow from all\n</Files>\n", 
-											);
-		foreach ($normalMaps as $map => $htaccess) {
-			$path=$this->CI->config->item('ASSETS').$map.'/.htaccess';
-			write_file($path,$htaccess);
-			$this->CI->_add_content('<p>Created : '.$path.'</p>');
-		}
-
-		// upload maps
-		$maps=read_map('site/assets','dir');
-		$allready_safe=array_keys($normalMaps);
-		array_shift($allready_safe);
-		foreach ($maps as $map => $row) {
-			if (!in_array($map,$allready_safe)) {
-				$types=$this->CI->cfg->get('cfg_media_info',$map,'str_types');
-				if (empty($types)) $types=$this->CI->config->item('FILE_types_img');
-				$allowed='';
-				if ($map=='lists') {
-					$types='js';
-					$allowed='js';
-				}
-				$this->_make_map_safe($map,$types,$allowed);
-				$this->CI->_add_content('<p>Created .htaccess for: '.$map.'</p>');
-				$removed=$this->_remove_forbidden_files($map,$allowed);
-				if ($removed) {
-					$removed=implode(',',$removed);
-					$this->CI->_add_content('<p class="error">Removed forbidden files ('.$removed.') from: '.$map.'</p>');
-				}
-			}
-		}
+		$this->_safe_and_clean_all();
 	}
-
 
 
 	function _after_update() {
@@ -102,35 +42,66 @@ class plugin_safe_assets extends plugin_ {
 		return $this->newData;
 	}
 
-	// Change safety .htaccess
-	function _make_map_safe($map,$types,$allowed='',$forbidden='') {
-		if (!is_array($types)) $types=explode(',',$types);
-		if ($forbidden=='') $forbidden=$this->CI->config->item('FILE_types_forbidden');
-		if ($allowed!='') {
-			if (!is_array($allowed)) $allowed=array($allowed);
-			foreach ($forbidden as $key=>$value) {
-				if (in_array($value,$allowed)) unset($forbidden[$key]);
+	function _safe_and_clean_all() {
+		$someRemoved=false;
+		$assets=$this->CI->config->item('ASSETS');
+		$images=implode('|',$this->CI->config->item('FILE_types_img'));
+		$allCfg=object2array($this->CI->config);
+		$allCfg=filter_by_key($allCfg['config'],'FILE_types_');
+		unset($allCfg['FILE_types_forbidden']);
+		$all='';
+		foreach ($allCfg as $key => $value) {
+			$all=add_string($all,implode('|',$value),'|');
+		}
+		// set static maps
+		$specialMaps=array(	'bulk_upload'						=> $all,
+												'site/stats'						=> "xml",
+												$assets									=> "css|img|js",
+												$assets.'_thumbcache'	=> $images,
+												$assets.'lists'				=> "js",
+												$assets.'css'					=> "css|htc",
+												$assets.'img'					=> $images, 
+												$assets.'js'						=> "js|css|html|".$images, 
+												);
+		// set user maps
+		$maps=read_map($assets,'dir');
+		$mapsToClean=$specialMaps;
+		foreach ($maps as $map => $value) {
+			$path=$assets.$map;
+			if (!isset($mapsToClean[$path])) {
+				$filetypes=str_replace(',','|',$this->CI->cfg->get('cfg_media_info',$map,'str_types'));
+				$mapsToClean[$path]=$filetypes;
 			}
 		}
-		foreach ($types as $key=>$type) {
-			if (in_array($type,$forbidden)) unset($types[$key]);
+		// Loop though all maps and make them safe and clen
+		foreach ($mapsToClean as $path => $allowed) {
+			$this->_make_map_safe($path,$allowed);
+			$this->CI->_add_content('<p>Created : '.$path.'/.htaccess</p>');
+			$removed=$this->_remove_forbidden_files($path,$allowed);
+			if ($removed) {
+				$removed=implode(',',$removed);
+				$this->CI->_add_content('<p class="error">Removed forbidden files ('.$removed.') from: '.$path.'</p>');
+				$someRemoved = true;
+			}
 		}
-		$htaccess="Order Allow,Deny\nDeny from all\n<Files ~ \"\.(".implode('|',$types).")$\">\nAllow from all\n</Files>\n";
-		$path=$this->CI->config->item('ASSETS').$map.'/.htaccess';
-		write_file($path,$htaccess);
+		return $someRemoved;
+	}
+
+
+	// Change safety .htaccess
+	function _make_map_safe($path,$types) {
+		$htaccess="Order Allow,Deny\nDeny from all\n<Files ~ \"\.(".$types.")$\">\nAllow from all\n</Files>\n";
+		write_file($path.'/.htaccess',$htaccess);
 	}
 	
 	// remove forbidden files
-	function _remove_forbidden_files($map,$allowed='',$forbidden='') {
+	function _remove_forbidden_files($path,$allowed,$forbidden='') {
 		$removed=false;
 		if ($forbidden=='') $forbidden=$this->CI->config->item('FILE_types_forbidden');
-		if ($allowed!='') {
-			if (!is_array($allowed)) $allowed=array($allowed);
-			foreach ($forbidden as $key=>$value) {
-				if (in_array($value,$allowed)) unset($forbidden[$key]);
-			}
+		$allowed=explode('|',$allowed);
+		foreach ($forbidden as $key=>$value) {
+			if (in_array($value,$allowed)) unset($forbidden[$key]);
 		}
-		$path=$this->CI->config->item('ASSETS').$map;
 		$files=read_map($path);
 		foreach ($files as $file => $value) {
 			if (in_array($value['type'],$forbidden)) {
