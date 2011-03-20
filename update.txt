@@ -1,4 +1,4 @@
-UPDATES to 990 and up
+UPDATES to 998 and up
 ====================
 
 - Write down the current revision (see in the bottom bar in FlexyAdmin or in sys/build.txt)

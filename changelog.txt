@@ -1,3 +1,14 @@
+> 998
+
+NEW:
+- plugin->safe_assets: now also for bulk_upload and site/stats
+- more options for MY_string_helper:max_length()
+
+UPDATE:
+- jQuery 1.5.1
+- jQuery UI 1.8.11
+
+
 > 990
 
 NEW:
