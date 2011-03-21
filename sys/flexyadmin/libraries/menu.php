@@ -31,6 +31,7 @@ class Menu {
 	var $extraFields;
 	var	$attr;
 	var $itemAttr;
+	var $currentAsActive;
 	
 	var $menuTable;
 	
@@ -57,6 +58,7 @@ class Menu {
 		$this->set_extra_field();
 		$this->set_attributes();
 		$this->add_controls();
+		$this->set_current_class_active(false);
 	}
 
 	function set_uri_field($uri="uri") {
@@ -84,6 +86,9 @@ class Menu {
 	}
 	function set_class_field($class="str_class") {
 		$this->fields["class"]=$class;
+	}
+	function set_current_class_active($currentAsActive=true) {
+		$this->currentAsActive=$currentAsActive;
 	}
 	function set_visible_field($visible="b_visible") {
 		$this->fields["visible"]=$visible;
@@ -389,7 +394,11 @@ class Menu {
 						$checklink=get_prefix($link,':');
 					else
 						$checklink=$link;
-					$current=($this->current==$checklink)?' current':'';
+					$current='';
+					if ($this->current==$checklink) {
+						$current=' current';
+						if ($this->currentAsActive) $current.=' active';
+					}
 					$class="lev$level pos$pos $first$last$sub ".$attr['class']." $cName$current";
 					if (isset($this->itemAttr['class']) and !empty($this->itemAttr['class'])) $class.=' '.$this->itemAttr['class'];
 					if (isset($item['class']) and !empty($item['class'])) $class.=' '.$item['class'];
