@@ -46,6 +46,7 @@ class plugin_safe_assets extends plugin_ {
 		$someRemoved=false;
 		$assets=$this->CI->config->item('ASSETS');
 		$images=implode('|',$this->CI->config->item('FILE_types_img'));
+		$flash=implode('|',$this->CI->config->item('FILE_types_flash'));
 		$allCfg=object2array($this->CI->config);
 		$allCfg=filter_by_key($allCfg['config'],'FILE_types_');
 		unset($allCfg['FILE_types_forbidden']);
@@ -60,7 +61,7 @@ class plugin_safe_assets extends plugin_ {
 												$assets.'_thumbcache'	=> $images,
 												$assets.'lists'				=> "js",
 												$assets.'css'					=> "css|htc|php",
-												$assets.'img'					=> $images, 
+												$assets.'img'					=> $images.'|'.$flash, 
 												$assets.'js'						=> "js|css|html|".$images, 
 												);
 		// set user maps
