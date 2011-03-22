@@ -433,7 +433,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			if ($foundId>-1)
 				$this->where($table.'.id',$foundId);
 			else
-				$this->where('id','-1'); // can't be found!
+				$this->where($table.'.id','-1'); // can't be found!
 		}
 		
 		/**
