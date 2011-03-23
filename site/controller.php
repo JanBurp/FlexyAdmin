@@ -78,6 +78,21 @@ class Main extends FrontEndController {
 		 */
 		$item=$this->menu->get_item();
 
+
+		/***********************************************
+		 * Redirect to a page down, if current page is empty
+		 */
+		// if (empty($item['txt_text'])) {
+		// 	$this->db->select('uri');
+		// 	$this->db->where('self_parent',$item['id']);
+		// 	$subItem=$this->db->get_row('res_menu_result');
+		// 	if ($subItem) {
+		// 		$newUri=$this->site['uri'].'/'.$subItem['uri'];
+		// 		redirect($newUri);
+		// 	}
+		// }
+
+
 		/***********************************************
 		 * If item exists call _page
 		 */
