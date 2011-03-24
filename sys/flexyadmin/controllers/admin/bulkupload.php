@@ -111,6 +111,11 @@ class Bulkupload extends AdminController {
 			else {
 				$renameCount++;
 				$saveFile=$rename.'_'.sprintf('%03d',$renameCount);
+				// check if a file with same name and numbering exists, if so, count further...
+				while (file_exists($path.'/'.$saveFile.'.'.$ext)) {
+					$renameCount++;
+					$saveFile=$rename.'_'.sprintf('%03d',$renameCount);
+				}
 			}
 		}
 		else {
@@ -119,17 +124,12 @@ class Bulkupload extends AdminController {
 		// check if name exists, if so, add number
 		$existsCount=0;
 		$newFile=$saveFile.'.'.$ext;
-		if (file_exists($path.'/'.$newFile)) {
-			while (file_exists($path.'/'.$newFile)) {
-				$newFile=$saveFile.'_'.$existsCount++.'.'.$ext;
-			}
-			$saveFile=$newFile;
+		while (file_exists($path.'/'.$newFile)) {
+			$newFile=$saveFile.'_'.$existsCount++.'.'.$ext;
 		}
-		else {
-			$saveFile=$saveFile.'.'.$ext;
-		}
+		$fileName=$newFile;
 		$this->renameCount=$renameCount;
-		return $saveFile;
+		return $fileName;
 	}
 
 
@@ -138,7 +138,7 @@ class Bulkupload extends AdminController {
 		$path=pathdecode($args[0]);
 		$file=$args[1];
 		$rename='';
-		if (isset($args[2])) $rename=$args[2];
+		if (isset($args[2])) $rename=get_file_without_extension($args[2]);
 		
 		if ($this->_can_use_tools()) {
 			$this->load->library('upload');
