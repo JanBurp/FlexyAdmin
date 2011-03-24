@@ -487,7 +487,7 @@ function doGrid() {
 							var field=get_class($(this),0);
 						else
 							var field=get_class($(this),1);
-						if ($(this).hasClass('headerSortUp')) field='_'+field;
+						if ($(this).hasClass('headerSortDown')) field='_'+field;
 						// ok now reload the page, starting from page 0
 						var url=$(grid).attr('url')+'/0/order/'+field+'/search/'+$(grid).attr('search');
 						location.href=url;
