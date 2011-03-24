@@ -193,18 +193,27 @@ class plugin_automenu extends plugin_ {
 						}
 						$this->CI->db->where($autoValue['field_group_by'],$groupId);
 						$data=$this->CI->db->get_result($autoValue['table']);
-						$lastOrder=0;
-						$parentData=find_row_by_value($this->newMenu,$groupData[$titleField],$titleField);
-						$parentData=current($parentData);
-						$selfParent=$parentData['id'];
-						foreach ($data as $item) {
-							$this->_setResultMenuItem($item);
-							$item['order']=$lastOrder++;
-							$item['self_parent']=$selfParent;
-							$item['str_table']=$autoValue['table'];
-							$item['str_uri']=$item['uri'];
-							$item['int_id']=$item['id'];
-							$this->_insertItem($item);
+						if ($data) {
+							$parentData=find_row_by_value($this->newMenu,$groupData[$titleField],$titleField);
+							$parentData=current($parentData);
+							$selfParent=$parentData['id'];
+							$lastOrder=0;
+							$subData=find_row_by_value($this->newMenu,$selfParent,'self_parent');
+							if ($subData) {
+								// lastOrder is not 0
+								$subData=array_slice($subData,count($subData)-1);
+								$subData=current($subData);
+								$lastOrder=$subData['order'];
+							}
+							foreach ($data as $item) {
+								$this->_setResultMenuItem($item);
+								$item['order']=$lastOrder++;
+								$item['self_parent']=$selfParent;
+								$item['str_table']=$autoValue['table'];
+								$item['str_uri']=$item['uri'];
+								$item['int_id']=$item['id'];
+								$this->_insertItem($item);
+							}
 						}
 					}
 					break;
