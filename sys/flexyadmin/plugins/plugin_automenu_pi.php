@@ -185,10 +185,16 @@ class plugin_automenu extends plugin_ {
 					$groupTable=foreign_table_from_key($groupField);
 					$groupData=$this->CI->db->get_result($groupTable);
 					foreach ($groupData as $groupId=>$groupData) {
+						$titleField='str_title';
+						if (!isset($groupData[$titleField])) {
+							$possibleFields=array_keys($groupData);
+							$possibleFields=filter_by($possibleFields,'str_title');
+							$titleField=current($possibleFields);
+						}
 						$this->CI->db->where($autoValue['field_group_by'],$groupId);
 						$data=$this->CI->db->get_result($autoValue['table']);
 						$lastOrder=0;
-						$parentData=find_row_by_value($this->newMenu,$groupData['str_title'],'str_title');
+						$parentData=find_row_by_value($this->newMenu,$groupData[$titleField],$titleField);
 						$parentData=current($parentData);
 						$selfParent=$parentData['id'];
 						foreach ($data as $item) {
