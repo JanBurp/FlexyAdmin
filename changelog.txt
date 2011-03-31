@@ -1,3 +1,25 @@
+> 1014
+
+NEW:
+- site: redirect code in controller
+- site: add jquery.corner.js
+- site: some styling changes
+- site: site.js simple again
+- site: added template.js for own jquery plugin
+- menu->set_current_class_active(); // gives all current classes also the active class
+- changes to plugin->safe_assets: in css map, php files are ok now (for dynamic css), in img flash files are ok.
+- FrontEndController: menu->set_home() checks if res_menu_result is used.
+BUGS:
+- db->where_uri() // ambigious id
+- rename bugs in bulk_upload
+- sorting tables when pagination has one page
+- plugin->automenu language split
+- plugin->automenu subcategory
+- DB->many_options (where_options)
+- form_fields: bug when using select as last field
+
+
+
 > 998
 
 NEW:
