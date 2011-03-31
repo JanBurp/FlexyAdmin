@@ -1,5 +1,5 @@
 Order Allow,Deny
 Deny from all
-<Files ~ "\.(css|htc)$">
+<Files ~ "\.(css|htc|php)$">
 Allow from all
 </Files>

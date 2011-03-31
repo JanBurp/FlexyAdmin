@@ -571,11 +571,11 @@ class Form Extends Model {
 				$out.=form_textarea($attr);
 				break;
 
-
-			case "dropdown":
+			case 'select':
+			case 'dropdown':
 			case 'ordered_list':
-			case "image_dropdown":
-			case "image_dragndrop":
+			case 'image_dropdown':
+			case 'image_dragndrop':
 				//
 				// set classes etc
 				//
@@ -642,7 +642,7 @@ class Form Extends Model {
 				//
 				// Normal dropdown (also normal image dropdown)
 				//
-				if ($field['type']=='dropdown' or $field['type']=='image_dropdown') {
+				if ($field['type']=='select' or $field['type']=='dropdown' or $field['type']=='image_dropdown') {
 					$out.=form_dropdown($name,$options,$value,$extra);
 				}
 
