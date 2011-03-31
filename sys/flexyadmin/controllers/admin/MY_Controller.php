@@ -296,6 +296,8 @@ class FrontEndController extends MY_Controller {
 			if ($form['form']) {
 				$this->db->where('id_form',$form['form']['id']);
 				$fields=$this->db->get_result('tbl_formfields');
+				array_push($fields,array('str_type'=>'##END##','str_label'=>'##END##','str_name'=>'','str_validation'=>'','str_validation_parameters'=>''));
+				// trace_($fields);
 				if ($fields) {
 					$options=false;
 					$optionsKey='';
@@ -323,9 +325,12 @@ class FrontEndController extends MY_Controller {
 							unset($value['validation_parameters']);
 							if ($this->input->post($name)) $value['value']=$this->input->post($name);
 							$fields[$key]=$value;
+							// trace_($value);
 
 							// End options setting
 							if (is_array($options) and $value['type']!='option') {
+								// trace_('End Options');
+								// trace_($options);
 								$fields[$optionsKey]['options']=$options;
 								$options=FALSE;
 								$optionsKey='';
@@ -334,12 +339,20 @@ class FrontEndController extends MY_Controller {
 							if ($value['type']=='radio' or $value['type']=='select') {
 								$optionsKey=$name;
 								$options=array();
+								// trace_('Start Options:'.$optionsKey);
 							}
 							// add option
 							if ($value['type']=='option' and is_array($options)) {
-								$options[safe_string($value['html'],50)]=$value['html'];
+								$optionKey=$value['name'];
+								$optionValue=remove_postfix($value['name']);
+								if (!empty($value['html'])) $optionValue=$value['html'];
+								$options[safe_string($optionKey,50)]=$optionValue;
 								unset($fields[$key]);
+								// trace_('Add Option to '.$optionsKey.': '.$optionValue);
 							}
+
+							// Remove ##END##
+							if ($value['type']=='##END##' and $value['label']=='##end##') {unset($fields[$key]);}
 
 							if (isset($fields[$key])) {
 								$fields[$name]=$fields[$key];
@@ -348,6 +361,7 @@ class FrontEndController extends MY_Controller {
 						}
 					}
 				}
+				// trace_($fields);
 				$form['fields']=$fields;
 				$form['buttons']=array('submit'=>array("submit"=>"submit","value"=>'submit'));
 			}
