@@ -664,10 +664,13 @@ class Form Extends Model {
 					$hiddenValue='';
 					if (!is_array($value)) $value=array($value);
 					$out.='<ul class="list list_values '.$attr['class'].'">';
+					// trace_($value);
 					foreach($value as $valID => $val) {
 						if (!empty($val)) {
-							$out.='<li id="'.$valID.'">'.$options[$valID].'</li>';
-							$hiddenValue=add_string($hiddenValue,$valID,'|');
+							if (isset($options[$valID])) {
+								$out.='<li id="'.$valID.'">'.$options[$valID].'</li>';
+								$hiddenValue=add_string($hiddenValue,$valID,'|');
+							}
 						}
 					}
 					$out.='</ul>';
