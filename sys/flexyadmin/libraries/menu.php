@@ -455,6 +455,44 @@ class Menu {
 		$item=$CI->db->get_row($this->menuTable);
 		return $item;
 	}
+	
+	function get_prev_uri($uri='') {
+		if (empty($uri)) $uri=$this->current;
+		$submenu=$this->_get_submenu($uri);
+		$thisUri=get_postfix($uri,'/');
+		$prev=false;
+		foreach ($submenu as $key=>$value) {
+			if ($key==$thisUri) break;
+			$prev=$key;
+		}
+		return $prev;
+	}
+
+	function get_next_uri($uri='') {
+		if (empty($uri)) $uri=$this->current;
+		$submenu=$this->_get_submenu($uri);
+		arsort($submenu);
+		$thisUri=get_postfix($uri,'/');
+		$next=false;
+		foreach ($submenu as $key=>$value) {
+			if ($key==$thisUri) break;
+			$next=$key;
+		}
+		return $next;
+	}
+	
+	function _get_submenu($uri) {
+		$parts=explode('/',$uri);
+		array_pop($parts);
+		$submenu=$this->menu;
+		foreach ($parts as $part) {
+			if (isset($submenu[$part]['sub']))
+				$submenu=$submenu[$part]['sub'];
+			else
+				$submenu=false;
+		}
+		return $submenu;
+	}
 
 
 }
