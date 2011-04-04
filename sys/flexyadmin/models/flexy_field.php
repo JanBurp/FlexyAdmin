@@ -829,6 +829,7 @@ class Flexy_field extends Model {
 				}
 				else {
 					$options=$this->_create_media_options($files,$types);
+					if ($this->cfg->get('CFG_media_info',$path,'b_add_empty_choice')) array_unshift($options,'');
 				}
 			}
 		}
