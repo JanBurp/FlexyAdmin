@@ -387,6 +387,7 @@ function doGrid() {
 				update:function(event,ui) {
 					table=$("table.grid").attr("class");
 					table=table.replace("grid","");
+					table=table.replace("pagination","");
 					table=$.trim(table);
 					id=get_id($(ui.item));
 					
