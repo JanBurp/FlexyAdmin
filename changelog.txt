@@ -1,3 +1,11 @@
+> 1017
+
+BUGS:
+- flexy_field: media_dropdown, add_empty_choice
+NEW:
+- menu->get_next_uri() and menu->get_prev_uri()
+  
+
 > 1014
 
 NEW:
