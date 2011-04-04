@@ -203,7 +203,7 @@ class plugin_automenu extends plugin_ {
 								// lastOrder is not 0
 								$subData=array_slice($subData,count($subData)-1);
 								$subData=current($subData);
-								$lastOrder=$subData['order'];
+								$lastOrder=$subData['order']+1;
 							}
 							foreach ($data as $item) {
 								$this->_setResultMenuItem($item);
