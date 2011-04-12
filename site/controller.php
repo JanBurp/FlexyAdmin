@@ -136,7 +136,7 @@ class Main extends FrontEndController {
 		// Add extra title and keywords, replace description (if any)
 		if (isset($item["str_title"])) $this->add_title($item["str_title"]);
 		if (isset($item["str_keywords"])) $this->add_keywords($item["str_keywords"]);
-		if (isset($item['stx_description'])) $this->site['description']=$item['stx_description'];
+		if (isset($item['stx_description']) and !empty($item['stx_description'])) $this->site['description']=$item['stx_description'];
 
 		// Add this page to the content
 		$content=$this->show('page',$item,true);
