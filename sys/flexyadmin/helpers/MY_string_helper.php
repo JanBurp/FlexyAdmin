@@ -225,6 +225,13 @@ function max_length($txt,$len=100,$type='LINES') {
 		case 'CHARS':
 			$out=substr(strip_tags($txt),0,$len);
 			break;
+		case 'WORDS':
+				$words=explode(' ',$txt);
+				$line='';
+				$w=0;
+				while (strlen($line)<$len and isset($words[$w+1])) { $line.=$words[$w++].' ';	}
+				$out=$line;
+			break;
 		case 'LINES':
 		default;
 				$lines=explode('.',$txt);
