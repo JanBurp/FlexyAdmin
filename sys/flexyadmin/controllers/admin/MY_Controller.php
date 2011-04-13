@@ -361,7 +361,7 @@ class FrontEndController extends MY_Controller {
 						}
 					}
 				}
-				// trace_($fields);
+				if (!isset($form['fieldsets'])) $form['fieldsets']=array($fieldset);
 				$form['fields']=$fields;
 				$form['buttons']=array('submit'=>array("submit"=>"submit","value"=>'submit'));
 			}
