@@ -219,7 +219,11 @@ function str2hex($string) {
 		return "";
 }
 
-function max_length($txt,$len=100,$type='LINES') {
+function intro_string($txt,$len,$type='WORDS',$strip_tags='<br/><strong><italic><em><b><a>') {
+	return max_length(str_replace('&nbsp;',' ',strip_tags($txt,$strip_tags)),$len,$type,true);
+}
+
+function max_length($txt,$len=100,$type='LINES',$closetags=false) {
 	$out='';
 	switch ($type) {
 		case 'CHARS':
@@ -241,7 +245,32 @@ function max_length($txt,$len=100,$type='LINES') {
 				$out=$line;
 			break;
 	}
+	if ($closetags) {
+		$out=restore_tags($out);
+	}
 	return $out;
+}
+
+function restore_tags($input) {
+	$opened = array();
+	// loop through opened and closed tags in order
+	if(preg_match_all("/<(\/?[a-z]+)>?/i", $input, $matches)) {
+		foreach($matches[1] as $tag) {
+			if(preg_match("/^[a-z]+$/i", $tag, $regs)) {
+				// a tag has been opened
+				if(strtolower($regs[0]) != 'br') $opened[] = $regs[0];
+			} elseif(preg_match("/^\/([a-z]+)$/i", $tag, $regs)) {
+				// a tag has been closed
+				unset($opened[array_pop(array_keys($opened, $regs[1]))]);
+			}
+		}
+	}
+	// close tags that are still open
+	if($opened) {
+		$tagstoclose = array_reverse($opened);
+		foreach($tagstoclose as $tag) $input .= "</$tag>";
+	}
+	return $input;
 }
 
 function has_alpha($s) {
