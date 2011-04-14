@@ -219,8 +219,14 @@ function str2hex($string) {
 		return "";
 }
 
-function intro_string($txt,$len,$type='WORDS',$strip_tags='<br/><strong><italic><em><b><a>') {
+function intro_string($txt,$len,$type='WORDS',$strip_tags='<br/><strong><italic><em><b><a><p>') {
 	return max_length(str_replace('&nbsp;',' ',strip_tags($txt,$strip_tags)),$len,$type,true);
+}
+
+function add_before_last_tag($txt,$more,$tag='</p>') {
+	$stag=str_replace('/','\/',$tag);
+	$txt=preg_replace('/(.*)'.$stag.'\z/','$1'.$more.$tag,$txt);
+	return $txt;
 }
 
 function max_length($txt,$len=100,$type='LINES',$closetags=false) {
