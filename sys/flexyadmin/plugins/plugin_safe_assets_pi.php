@@ -91,6 +91,7 @@ class plugin_safe_assets extends plugin_ {
 
 	// Change safety .htaccess
 	function _make_map_safe($path,$types) {
+		$types=strtolower($types).'|'.strtoupper($types);
 		$htaccess="Order Allow,Deny\nDeny from all\n<Files ~ \"\.(".$types.")$\">\nAllow from all\n</Files>\n";
 		write_file($path.'/.htaccess',$htaccess);
 	}
