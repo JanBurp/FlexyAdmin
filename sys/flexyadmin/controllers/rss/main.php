@@ -34,7 +34,6 @@ class Main extends FrontEndController {
 					}
 				}
 				$feeds=sort_by($feeds,'date',TRUE);
-
 				
 				if ($feeds) {
 					$siteInfo=$this->db->get_row('tbl_site');
