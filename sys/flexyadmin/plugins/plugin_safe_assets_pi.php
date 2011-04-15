@@ -62,7 +62,7 @@ class plugin_safe_assets extends plugin_ {
 												$assets.'lists'				=> "js",
 												$assets.'css'					=> "css|htc|php",
 												$assets.'img'					=> $images.'|'.$flash, 
-												$assets.'js'						=> "js|css|html|".$images, 
+												$assets.'js'						=> "js|css|html|swf|".$images, 
 												);
 		// set user maps
 		$maps=read_map($assets,'dir');
