@@ -1,7 +1,7 @@
 <?
 // Minimized versions of Javascript & CSS files (see http://refresh-sf.com/yui/)
 $minimize=FALSE;
-// $minimize=TRUE;
+$minimize=TRUE;
 
 if ($minimize) {
 	$js='.min.js';
@@ -32,7 +32,7 @@ $isForm=has_string('form',$show_type);
 	<!--[if lte IE 6]><style type="text/css" media="screen">@import url(<?=admin_assets()?>css/ie6.css);</style><![endif]-->
 	<!--[if IE 7]><style type="text/css" media="screen">@import url(<?=admin_assets()?>css/ie7.css);</style><![endif]-->
 	<!--[if IE 8]><style type="text/css" media="screen">@import url(<?=admin_assets()?>css/ie8.css);</style><![endif]-->
-	<!--[if IE 8]><style type="text/css" media="screen">@import url(<?=admin_assets()?>css/ie9.css);</style><![endif]-->
+	<!--[if IE 9]><style type="text/css" media="screen">@import url(<?=admin_assets()?>css/ie9.css);</style><![endif]-->
 
 	<!-- JS variables -->
 	<script language="javascript" type="text/javascript">
