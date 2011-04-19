@@ -43,6 +43,14 @@ $(document).ready(function() {
 	//
 	showHelpItems();
 	
+	//
+	// some styling
+	//
+	$('.after_form').each(function(){
+		var fh=$('fieldset.formfields').height();
+		var mh=$('#menu').height();
+		$(this).css({'top':-(-fh+mh-30)});
+	});
 
 });
 
