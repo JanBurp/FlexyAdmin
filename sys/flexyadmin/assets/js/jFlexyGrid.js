@@ -563,7 +563,16 @@ function doGrid() {
 							doAction($(this));
 						});
 					}
+				},
+				error: function() {
+					$(obj).children('td.id:first').html('<div class="icon no" /></div');
+					$(obj).next('tr:first').each(function(){
+						actionNr++;
+						$('#actionCounter').html(((actionNr+1)/totalActions*100).toFixed(1)+' %');
+						doAction($(this));
+					});
 				}
+				
 			});
 		}
 	}
