@@ -774,6 +774,8 @@ span.pager_totals {float:right;}
 
 /* ============== form ================== */
 
+form {}
+
 #formmessage {
 	color:#F00;
 	font-weight: bold;
@@ -1193,11 +1195,8 @@ input.filter.busy {
 
 
 .after_form {
-/*	position:relative;*/
-/*	top:-220px;*/
-	float:left;
-	clear:left;
-	margin-top:-375px;
+	clear:both;
+	position:relative;
 }
 
 p.error {
