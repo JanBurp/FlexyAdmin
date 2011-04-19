@@ -14,9 +14,8 @@ textarea, .mceEditor {
 
 /* ============== dialog ================ */
 #dialog{
-	width:450px;
+	width:420px;
 }
-
 
 /* ============== popup ================ */
 #popup p {
