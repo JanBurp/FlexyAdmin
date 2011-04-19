@@ -679,7 +679,8 @@ class Flexy_field extends Model {
 
 	function _dropdown_field_form() {
 		$tables=$this->db->list_tables();
-		$tables=filter_by($tables,"tbl_");
+		$thisRights=current($this->rights);
+		if ($thisRights['rights']!='*') $tables=filter_by($tables,"tbl_");
 		$specialFields=array_keys($this->config->item('FIELDS_special'));
 		$options=array();
 		$options[""]="";
@@ -818,7 +819,7 @@ class Flexy_field extends Model {
 			else {
 				$lastUploadMax=$this->cfg->get('CFG_media_info',$path,'int_last_uploads');
 				if ($lastUploadMax>0) {
-					$lastUploads=array_slice(sort_by($files,"rawdate",TRUE),0,$lastUploadMax);
+					$lastUploads=sort_by($files,array("rawdate","name"),TRUE,FALSE,$lastUploadMax);
 					ignorecase_ksort($files);
 					$options=array();
 					if ($this->cfg->get('CFG_media_info',$path,'b_add_empty_choice')) $options[]="";
