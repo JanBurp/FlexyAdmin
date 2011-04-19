@@ -483,21 +483,51 @@ function combine($k,$v) {
 /**
  * Sort an assoc array by its value, can be used to sort a db return array by another field than its 'id'key
  */
-function sort_by($a,$key,$desc=FALSE,$case=FALSE) {
+function sort_by($a,$keys,$desc=FALSE,$case=FALSE,$max=0) {
+	if (!is_array($keys)) $keys=array($keys);
+	if ($case) $comparefunction='strcasecmp'; else $comparefunction='strnatcmp';
+	$key=array_shift($keys);
 	if ($desc) {
-		if ($case) 
-			$f = "return strcasecmp(\$b['$key'], \$a['$key']);";
-		else
-			$f = "return strnatcmp(\$b['$key'], \$a['$key']);";
+		$f = "return $comparefunction(\$b['$key'], \$a['$key']);";
 		uasort($a, create_function('$a,$b', $f));
 	}
 	else {
-		if ($case) 
-			$f = "return strcasecmp(\$a['$key'], \$b['$key']);";
-		else
-			$f = "return strnatcmp(\$a['$key'], \$b['$key']);";
+		$f = "return $comparefunction(\$a['$key'], \$b['$key']);";
 		uasort($a, create_function('$a,$b', $f));
 	}
+	// slice
+	if ($max>0) $a=array_slice($a,0,$max);
+	// subsort
+	if (count($keys)>0) {
+		$nr=0;
+		array_push($a,array());
+		foreach ($a as $k => $val) {
+			if (isset($v)) {
+				if (!empty($val) and $val[$key]==$v) {
+					// add to sub
+					$b[$k]=$val;
+				}
+				else {
+					// end of sub, start subsort
+					if (count($b)>1) {
+						// subsort
+						$b=sort_by($b,$keys,FALSE,$case); // $desc standard
+						$a=array_merge( array_slice($a,0,$start), $b, array_slice($a,$start+count($b)) );
+					}
+					unset($b);
+					unset($v);
+				}
+			}
+			if (!isset($v) and !empty($val))	{
+				$v=$val[$key];
+				$b=array();
+				$b[$k]=$val;
+				$start=$nr;
+			}
+			$nr++;
+		}
+	}
+	array_pop($a);
 	return $a;
 }
 
@@ -508,7 +538,6 @@ function in_array_like($v,$a) {
 		if (strpos($i,$v)!==false) $in=true;
 		$i=array_shift($a);
 	}
-	// trace_(array('value'=>$v,'array'=>$a,'res'=>$in));
 	return $in;
 }
 

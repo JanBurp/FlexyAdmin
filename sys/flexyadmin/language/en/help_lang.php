@@ -30,6 +30,7 @@ $lang['sr_search']					= 'Search';
 $lang['sr_replace']					= 'Replace';
 $lang['sr_tables']					= 'In tables';
 $lang['sr_field_types']			= 'In field types';
+$lang['sr_fields']					= 'In fields';
 $lang['sr_regex']						= 'Regular Expression';
 $lang['sr_result']					= 'Result';
 

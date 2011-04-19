@@ -29,6 +29,7 @@ $lang['sr_search']					= 'Zoek';
 $lang['sr_replace']					= 'Vervang';
 $lang['sr_tables']					= 'In tabellen';
 $lang['sr_field_types']			= 'In veld typen';
+$lang['sr_fields']					= 'In velden';
 $lang['sr_regex']						= 'Regular Expression';
 $lang['sr_result']					= 'Resultaat';
 
