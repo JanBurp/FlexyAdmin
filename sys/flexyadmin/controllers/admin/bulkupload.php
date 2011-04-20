@@ -172,7 +172,7 @@ class Bulkupload extends AdminController {
 				unlink($bulkMap.'/'.$file);
 			}
 			else {
-				echo "Couldn't move: $file";
+				echo "Couldn't move '$file'.";
 			}
 		}
 	}
