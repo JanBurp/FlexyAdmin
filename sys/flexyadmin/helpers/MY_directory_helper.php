@@ -8,7 +8,7 @@
  */
 
 
-function read_map($path,$types="",$recursive=FALSE) {
+function read_map($path,$types="",$recursive=FALSE, $getInfo=TRUE, $getMetaData=FALSE) {
 	if (!is_array($types) and !empty($types)) $types=explode(",",$types);
 	$files=directory_map($path);
 	$prepFiles=array();
@@ -29,15 +29,25 @@ function read_map($path,$types="",$recursive=FALSE) {
 				$data["name"]=$name;
 				$data["type"]=strtolower(get_file_extension($file));
 				$data["alt"]=get_prefix($file,".");
-				$data["size"]=sprintf("%d k",filesize($path."/".$name)/1024);
-				$data["rawdate"]=date("Y m d",filemtime($path."/".$name));
-				$data["date"]=date("j M Y",filemtime($path."/".$name));
-				$CI =& get_instance();
-				if (in_array($data["type"],$CI->config->item('FILE_types_img'))) {
-					// add img dimensions
-					$size=getimagesize($path."/".$file);
-					$data["width"]=$size[0];
-					$data["height"]=$size[1];
+				if ($getInfo) {
+					$data["size"]=sprintf("%d k",filesize($path."/".$name)/1024);
+					$data["rawdate"]=date("Y m d",filemtime($path."/".$name));
+					$data["date"]=date("j M Y",filemtime($path."/".$name));
+					$CI =& get_instance();
+					if (in_array($data["type"],$CI->config->item('FILE_types_img'))) {
+						// add img dimensions
+						$size=getimagesize($path."/".$file);
+						$data["width"]=$size[0];
+						$data["height"]=$size[1];
+					}
+				}
+				if ($getMetaData and in_array($data['type'],array('jpg','tiff'))) {
+					// set warnings off...
+					$errorReporting=error_reporting(E_ALL);
+					error_reporting($errorReporting - E_WARNING);
+					$exif=exif_read_data($path.'/'.$file);
+					error_reporting($errorReporting);
+					if ($exif) $data['meta']=$exif;
 				}
 			}
 			$data["path"]=$path."/".$name;
