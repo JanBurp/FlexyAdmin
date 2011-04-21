@@ -152,7 +152,7 @@ class Bulkupload extends AdminController {
 			
 			$bulkMap=$this->config->item('BULKUPLOAD');
 			$saveFile=$this->_newName($path,$file,$rename,TRUE);
-			$moved=copy($bulkMap.'/'.$file, $path.'/'.$saveFile);
+			$moved=copy_file($bulkMap.'/'.$file, $path.'/'.$saveFile);
 			if ($moved) {
 				// resize
 				$resized=$this->upload->resize_image($saveFile,$path);
