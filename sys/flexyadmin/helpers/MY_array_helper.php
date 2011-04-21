@@ -526,8 +526,8 @@ function sort_by($a,$keys,$desc=FALSE,$case=FALSE,$max=0) {
 			}
 			$nr++;
 		}
+		array_pop($a);
 	}
-	array_pop($a);
 	return $a;
 }
 
