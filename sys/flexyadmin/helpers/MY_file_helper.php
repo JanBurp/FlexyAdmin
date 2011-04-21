@@ -11,6 +11,19 @@
  */
 
 
+function copy_file($source,$dest) {
+	$content=@file_get_contents($source);
+	$copy=fopen($dest, "w");
+	fwrite($copy, $content);
+	fclose($copy);
+	if ($content === FALSE)
+		$status=false;
+	else
+		$status=true;
+	return $status;
+}
+
+
 function get_file_extension($f) {
 	$p=strrpos($f,".");
 	if ($p===FALSE) return "";
