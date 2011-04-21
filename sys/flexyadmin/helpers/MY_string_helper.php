@@ -220,13 +220,33 @@ function str2hex($string) {
 }
 
 function intro_string($txt,$len,$type='WORDS',$strip_tags='<br/><strong><italic><em><b><a><p>') {
-	return max_length(str_replace('&nbsp;',' ',strip_tags($txt,$strip_tags)),$len,$type,true);
+	// first check if there's an intro set by class: intro
+	$matches=array();
+	preg_match_all('/<(.*?)class="(.*?)intro(.*?)"(.*?)>(.*?)<\/(.*?)>/is',$txt,$matches);
+	$intro='';
+	if (isset($matches[0]) and !empty($matches[0])) {
+		foreach ($matches[0] as $match) {
+			$intro.=$match;
+		}
+		$intro=str_replace('&nbsp;',' ',strip_tags($intro,$strip_tags));
+	}
+	// no intro class found, pick an intro by length
+	if ($intro=='') {
+		$intro=max_length(str_replace('&nbsp;',' ',strip_tags($txt,$strip_tags)),$len,$type,true);
+	}
+	// make sure all tags are closed
+	$intro=restore_tags($intro);
+	return $intro;
 }
 
 function add_before_last_tag($txt,$more,$tag='</p>') {
 	$stag=str_replace('/','\/',$tag);
-	$txt=preg_replace('/(.*)'.$stag.'\z/','$1'.$more.$tag,$txt);
-	return $txt;
+	$rtxt=preg_replace('/(.*)'.$stag.'\z/','$1'.$more.$tag,$txt);
+	if ($rtxt==$txt) {
+		$txt.=$tag;
+		$rtxt=preg_replace('/(.*)'.$stag.'\z/','$1'.$more.$tag,$txt);
+	}
+	return $rtxt;
 }
 
 function max_length($txt,$len=100,$type='LINES',$closetags=false) {
