@@ -143,7 +143,7 @@ class Main extends FrontEndController {
 		$this->add_content($content);
 		
 		// Is there a module set? If so, call the module function
-		if (isset($item["str_module"]) and !empty($item["str_module"]))	$this->_module($item);
+		if (isset($item["str_module"]) and !empty($item["str_module"]))	$item=$this->_module($item);
 	}
 
 
@@ -165,7 +165,7 @@ class Main extends FrontEndController {
 			// does module function exists (here in controller.php)?
 			if (method_exists($this,$moduleFunction)) {
 				// Yes, call module
-				$this->$moduleFunction($item);
+				$item=$this->$moduleFunction($item);
 			}
 			else {
 				// No: Try to load the module from site/modules/
@@ -175,12 +175,12 @@ class Main extends FrontEndController {
 					include_once('site/modules/module_'.$module.'.php');
 					// if function exists, call it
 					if (function_exists($moduleFunction)) {
-						$moduleFunction($item);
+						$item=$moduleFunction($item);
 					}
 				}
 			}
 		}
-
+		return $item;
 	}
 
 	
