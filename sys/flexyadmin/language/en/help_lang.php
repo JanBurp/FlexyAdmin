@@ -35,6 +35,8 @@ $lang['sr_regex']						= 'Regular Expression';
 $lang['sr_result']					= 'Result';
 
 $lang['fill_fill']					= 'Automatic fill';
+$lang['fill_aantal']				= 'Create rows';
+$lang['fill_tables']				= 'In table';
 $lang['fill_fields']				= 'Fields to fill';
 $lang['fill_where']					= 'WHERE ...';
 $lang['fill_with']					= 'Fill with';
