@@ -129,6 +129,15 @@ class plugin_automenu extends plugin_ {
 							$item['self_parent']=$parent;
 						}
 						if (!isset($item['order'])) $item['order']=$order++;
+						if (isset($autoValue['b_keep_parent_modules']) and $autoValue['b_keep_parent_modules']) {
+							if (isset($this->newMenu[$item['self_parent']]['str_module'])) {
+								$parentModule=$this->newMenu[$item['self_parent']]['str_module'];
+								if (isset($item['str_module']))
+									$item['str_module'].=' '.$parentModule;
+								else
+									$item['str_module']=$parentModule;
+							}
+						}
 						$item=$this->_insertItem($item);
 						if (isset($item['old_parent'])) {
 							$parIDs[$item['id']]=$item['old_parent'];
@@ -175,6 +184,15 @@ class plugin_automenu extends plugin_ {
 							$item['str_table']=$autoValue['table'];
 							$item['str_uri']=$item['uri'];
 							$item['int_id']=$item['id'];
+							if (isset($autoValue['b_keep_parent_modules']) and $autoValue['b_keep_parent_modules']) {
+								if (isset($this->newMenu[$item['self_parent']]['str_module'])) {
+									$parentModule=$this->newMenu[$item['self_parent']]['str_module'];
+									if (isset($item['str_module']))
+										$item['str_module'].=' '.$parentModule;
+									else
+										$item['str_module']=$parentModule;
+								}
+							}
 							$this->_insertItem($item);
 						}
 					}
@@ -212,6 +230,15 @@ class plugin_automenu extends plugin_ {
 								$item['str_table']=$autoValue['table'];
 								$item['str_uri']=$item['uri'];
 								$item['int_id']=$item['id'];
+								if (isset($autoValue['b_keep_parent_modules']) and $autoValue['b_keep_parent_modules']) {
+									if (isset($this->newMenu[$item['self_parent']]['str_module'])) {
+										$parentModule=$this->newMenu[$item['self_parent']]['str_module'];
+										if (isset($item['str_module']))
+											$item['str_module'].=' '.$parentModule;
+										else
+											$item['str_module']=$parentModule;
+									}
+								}
 								$this->_insertItem($item);
 							}
 						}
@@ -294,9 +321,9 @@ class plugin_automenu extends plugin_ {
 		// 	if (isset($item['order']))				unset($item['order']);
 		// 	if (isset($item['self_parent']))	unset($item['self_parent']);
 		// }
-		foreach ($item as $key => $value) {
+		// foreach ($item as $key => $value) {
 			// if (!$this->CI->db->field_exists($key,$this->resultMenu)) unset($item[$key]);
-		}
+		// }
 		return $item;
 	}
 	
