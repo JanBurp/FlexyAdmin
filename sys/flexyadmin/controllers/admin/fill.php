@@ -23,15 +23,34 @@ class Fill extends AdminController {
 			$this->lang->load('help');
 			$this->lang->load('form');
 		
+			$aantal=$this->input->post('aantal');
+			$addtable=$this->input->post('addtable');
 			$fields=$this->input->post('fields');
 			$where=$this->input->post('where');
 			$fill=$this->input->post('fill');
 			$random=$this->input->post('random');
 			$test=$this->input->post('test');
 		
-			if ($fill) {
-				$htmlTest=h(lang('fill_fill'),1);
-				$htmlTest.="<ul>";
+			$htmlTest='';
+
+			// create rows in table
+			if ($aantal and $addtable) {
+				$forbidden_fields=$this->config->item('FIELDS_special');
+				$forbidden_fields=array_keys($forbidden_fields);
+				$first_field=$this->db->list_fields($addtable);
+				$first_field=not_filter_by($first_field,$forbidden_fields);
+				$first_field=array_shift($first_field);
+				for ($i=0; $i < $aantal; $i++) { 
+					$id='#';
+					if (!$test) {
+						$this->db->insert($addtable,array($first_field=>''));
+						$id=$this->db->insert_id();
+					}
+					$htmlTest.="<li>+ $addtable [$id]</li>";
+				}
+			}
+
+			if ($fields and $fill) {
 				// decode random
 				if ($random) {
 					$expression=preg_split('[\[|\]]',$fill,-1,PREG_SPLIT_NO_EMPTY);
@@ -53,6 +72,7 @@ class Fill extends AdminController {
 					}
 					// strace_($expression);
 				}
+				// fille fields
 				foreach($fields as $field) {
 					$table=get_prefix($field,'.');
 					$this->db->select('id');
@@ -113,25 +133,30 @@ class Fill extends AdminController {
 							$this->db->update($table);
 							// trace_($this->db->last_query());
 						}
-						
 						$htmlTest.="<li>$field [$id] = '$result'</li>";
 					}
 				}		
-				$htmlTest.="</ul>";
+			}
+			if (!empty($htmlTest)) {
+				$htmlTest=h(lang('fill_fill'),1)."<ul>".$htmlTest."</ul>";
 			}
 			if (!$fill or $test) {
 				// show form
 				$this->load->model('form');
 				$this->load->model('flexy_field','ff');
 				$form=new form($this->config->item('API_fill'));
+				$tablesOptions=$this->ff->_dropdown_tables_form();
+				$tablesOptions=$tablesOptions['options'];
 				$fieldsOptions=$this->ff->_dropdown_fields_form();
 				$fieldsOptions=$fieldsOptions["options"];
-				unset($fieldsOptions[""]);
+				// unset($fieldsOptions[""]);
 				$fieldsOptions=combine($fieldsOptions,$fieldsOptions);
 				if (empty($fields)) $fields=array();
 				else $fields=combine($fields,$fields);
 				// create form
-				$data=array( 	"fields"	=> array("label"=>lang('fill_fields'),"value"=>$fields,"type"=>'dropdown','options'=>$fieldsOptions,'multiple'=>'multiple'),
+				$data=array( 	"aantal"	=> array("label"=>lang('fill_aantal'),"value"=>$aantal),
+											"addtable"=> array("label"=>lang('fill_tables'),"value"=>$addtable,"type"=>'dropdown','options'=>$tablesOptions),
+											"fields"	=> array("label"=>lang('fill_fields'),"value"=>$fields,"type"=>'dropdown','options'=>$fieldsOptions,'multiple'=>'multiple'),
 											"where"		=> array("label"=>lang('fill_where'),"value"=>$where),
 											"fill"		=> array("label"=>lang('fill_with'),"value"=>$fill),
 											"random"	=> array("label"=>lang('fill_use_random'),"type"=>"checkbox","value"=>$random),
@@ -142,10 +167,7 @@ class Fill extends AdminController {
 				$form->set_old_templates();
 				$this->_add_content($form->render());			
 			}
-			if (!empty($htmlTest)) {
-				if ($test) $class="after_form"; else $class="";
-				$this->_add_content(div($class).$htmlTest._div());	
-			}
+			$this->_add_content(div('after_form').$htmlTest._div());	
 		}
 		$this->_show_all();
 	}
