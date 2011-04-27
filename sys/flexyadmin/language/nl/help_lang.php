@@ -34,6 +34,8 @@ $lang['sr_regex']						= 'Regular Expression';
 $lang['sr_result']					= 'Resultaat';
 
 $lang['fill_fill']					= 'Automatisch vullen';
+$lang['fill_aantal']				= 'Rijen aanmaken';
+$lang['fill_tables']				= 'In tabel';
 $lang['fill_fields']				= 'Te vullen velden';
 $lang['fill_where']					= 'WHERE ...';
 $lang['fill_with']					= 'Vullen met';
