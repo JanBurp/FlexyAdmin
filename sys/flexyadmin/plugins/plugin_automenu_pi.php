@@ -78,6 +78,8 @@ class plugin_automenu extends plugin_ {
 		foreach ($this->automationData as $autoKey => $autoValue) {
 			
 			switch($autoValue['str_type']) {
+				
+				
 				case 'from menu table':
 					$data=$this->CI->db->get_results($autoValue['table']);
 					foreach ($data as $item) {
@@ -90,19 +92,13 @@ class plugin_automenu extends plugin_ {
 					$this->_moveChildren();
 					break;
 		
+		
 				case 'from submenu table':
 					$data=$this->CI->db->get_results($autoValue['table']);
 					$order=0;
 					$parent=0;
 					if (!empty($autoValue['str_parent_where'])) {
-						// parse where...
-						$whenParser=preg_split('/\s*(<>|!=|=|>|<)\s*/',$autoValue['str_parent_where'],-1,PREG_SPLIT_DELIM_CAPTURE);
-						// TODO: only '=' operator works now
-						$parent=find_row_by_value($this->newMenu,str_replace(array('"',"'"),'',$whenParser[2]),$whenParser[0]);
-						if ($parent) {
-							$parent=current($parent);
-							$parent=$parent['id'];
-						}
+						$parent=$this->_get_where_parent($autoValue);
 					}
 					// is er al een sub? Gebruik die order
 					$sub=$this->newMenu;
@@ -152,6 +148,7 @@ class plugin_automenu extends plugin_ {
 					}
 					break;
 		
+		
 				case 'from category table':
 					$data=$this->CI->db->get_result($autoValue['table']);
 					$self_parents=array();
@@ -197,6 +194,7 @@ class plugin_automenu extends plugin_ {
 						}
 					}
 					break;
+		
 		
 				case 'from table group by category':
 					$groupField=remove_prefix($autoValue['field_group_by'],'.');
@@ -245,6 +243,7 @@ class plugin_automenu extends plugin_ {
 					}
 					break;
 					
+					
 				case 'split by language':
 					$this->languages=$autoValue['str_parameters'];
 					$this->languages=explode('|',$this->languages);
@@ -268,6 +267,38 @@ class plugin_automenu extends plugin_ {
 						}
 					}
 					break;
+					
+				
+				case 'by module':
+					// call module
+					$module=$autoValue['str_parameters'];
+					$moduleFile='site/modules/module_'.$module.'.php';
+					if (file_exists($moduleFile)) {
+						include_once($moduleFile);						// if function exists, call it
+						$moduleFunction='_module_'.$module;
+						if (function_exists($moduleFunction)) {
+							$items=$moduleFunction($autoValue);
+							// Produce menu from returned items
+							if ($items) {
+								$order=0;
+								$parent=$this->_get_where_parent($autoValue);
+								if (isset($autoValue['b_keep_parent_modules']) and $autoValue['b_keep_parent_modules']) {
+									if (isset($this->newMenu[$parent]['str_module'])) {
+										$parentModule=$this->newMenu[$parent]['str_module'];
+									}
+								}
+								foreach ($items as $item) {
+									$item=$this->_setResultMenuItem($item,true);
+									$item['self_parent']=$parent;
+									$item['order']=$order;
+									$order++;
+									if (isset($parentModule)) $item['str_module']=$parentModule;
+									$this->_insertItem($item);
+								}
+							}
+						}
+					}
+					break;	
 			}
 			
 		}
@@ -314,6 +345,18 @@ class plugin_automenu extends plugin_ {
 		$this->CI->editor_lists->create_list("links");
 	}
 
+
+	function _get_where_parent($autoValue) {
+		// parse where...
+		$whenParser=preg_split('/\s*(<>|!=|=|>|<)\s*/',$autoValue['str_parent_where'],-1,PREG_SPLIT_DELIM_CAPTURE);
+		// TODO: only '=' operator works now
+		$parent=find_row_by_value($this->newMenu,str_replace(array('"',"'"),'',$whenParser[2]),$whenParser[0]);
+		if ($parent) {
+			$parent=current($parent);
+			$parent=$parent['id'];
+		}
+		return $parent;
+	}
 
 	function _setResultMenuItem($item,$setId=false) {
 		// if (!$setId) {
