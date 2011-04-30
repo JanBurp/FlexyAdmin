@@ -685,7 +685,7 @@ class BasicController extends MY_Controller {
 				}
 			}
 		}
-		// strace_($this->plugins);
+		// trace_($this->plugins);
 		return $this->plugins;
 	}
 
@@ -703,9 +703,11 @@ class BasicController extends MY_Controller {
 	function _clean_plugin_data($data) {
 		// clean up many and foreign fields in data
 		$cleanUp=array('rel','tbl','cfg');
-		foreach ($data as $field => $value) {
-			$pre=get_prefix($field);
-			if (in_array($pre,$cleanUp)) unset($data[$field]);
+		if ($data) {
+			foreach ($data as $field => $value) {
+				$pre=get_prefix($field);
+				if (in_array($pre,$cleanUp)) unset($data[$field]);
+			}
 		}
 		return $data;
 	}
