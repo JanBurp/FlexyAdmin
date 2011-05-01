@@ -679,7 +679,8 @@ class Flexy_field extends Model {
 
 	function _dropdown_field_form() {
 		$tables=$this->db->list_tables();
-		$thisRights=current($this->rights);
+		$thisRights=$this->rights;
+		$thisRights=array_shift($thisRights);
 		if ($thisRights['rights']!='*') $tables=filter_by($tables,"tbl_");
 		$specialFields=array_keys($this->config->item('FIELDS_special'));
 		$options=array();

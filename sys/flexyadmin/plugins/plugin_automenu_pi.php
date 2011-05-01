@@ -197,9 +197,23 @@ class plugin_automenu extends plugin_ {
 		
 		
 				case 'from table group by category':
-					$groupField=remove_prefix($autoValue['field_group_by'],'.');
-					$groupTable=foreign_table_from_key($groupField);
+					// trace_($autoValue);
+					// check if table is many table
+					$fromRel=false;
+					$preTable=get_prefix($autoValue['field_group_by']);
+					if ($preTable=='rel') {
+						// yes many table
+						$fromRel=true;
+						$groupField=get_postfix($autoValue['field_group_by'],'.');
+						$groupTable='tbl_'.remove_prefix($groupField);
+					}
+					else {
+						// foreign table
+						$groupField=remove_prefix($autoValue['field_group_by'],'.');
+						$groupTable=foreign_table_from_key($groupField);
+					}
 					$groupData=$this->CI->db->get_result($groupTable);
+					
 					foreach ($groupData as $groupId=>$groupData) {
 						$titleField='str_title';
 						if (!isset($groupData[$titleField])) {
@@ -207,9 +221,16 @@ class plugin_automenu extends plugin_ {
 							$possibleFields=filter_by($possibleFields,'str_title');
 							$titleField=current($possibleFields);
 						}
-						$this->CI->db->where($autoValue['field_group_by'],$groupId);
+						if ($fromRel) {
+							$this->CI->db->add_many();
+							$this->CI->db->where($autoValue['field_group_by'],$groupId);
+						}
+						else {
+							$this->CI->db->where($autoValue['field_group_by'],$groupId);
+						}
 						$data=$this->CI->db->get_result($autoValue['table']);
 						if ($data) {
+							
 							$parentData=find_row_by_value($this->newMenu,$groupData[$titleField],$titleField);
 							$parentData=current($parentData);
 							$selfParent=$parentData['id'];
