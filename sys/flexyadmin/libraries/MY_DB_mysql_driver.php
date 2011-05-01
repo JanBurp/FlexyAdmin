@@ -651,11 +651,9 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			$manyTables=$this->get_many_tables($table,$this->many);
 			if (count($manyTables)>0) {
 				// loop through all results to add the add_many data
-				$manyOrder='last';
 				$CI=& get_instance();
-				if (isset($CI->cfg)) $manyOrder=$CI->cfg->get('CFG_table',$table,'str_form_many_order');
+				$manyResult=array();
 				foreach($result as $id=>$row) {
-					$manyResult=array();
 					// loop throught all many tables to add the many data
 					foreach($manyTables as $rel=>$jTable) {
 						$manyResult[$rel]=array();
@@ -681,22 +679,27 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 							$manyResult[$rel][$res[pk()]]=$res;
 						}
 					}
-					switch ($manyOrder) {
-						case 'first':
-							// always first: id, uri, order, self_parent
-							$firstResult=$result[$id];
-							$lastResult=$result[$id];
-							unset($lastResult[pk()]);
-							unset($lastResult['uri']);
-							unset($lastResult['order']);
-							unset($lastResult['self_parent']);
-							$firstResult=array_diff_assoc($firstResult,$lastResult);
-							$result[$id]=array_merge($firstResult,$manyResult,$lastResult); // first many fields
-							break;
-						case 'last':
-						default:
-							$result[$id]=array_merge($result[$id],$manyResult); // normal order
-							break;
+					// insert many results at right place
+					foreach ($manyResult as $rel => $relData) {
+						$manyOrder='last';
+						if (isset($CI->cfg)) $manyOrder=$CI->cfg->get('CFG_table',$rel,'str_form_many_order');
+						switch ($manyOrder) {
+							case 'first':
+								// always first: id, uri, order, self_parent
+								$firstResult=$result[$id];
+								$lastResult=$result[$id];
+								unset($lastResult[pk()]);
+								unset($lastResult['uri']);
+								unset($lastResult['order']);
+								unset($lastResult['self_parent']);
+								$firstResult=array_diff_assoc($firstResult,$lastResult);
+								$result[$id]=array_merge($firstResult,array($rel=>$relData),$lastResult); // first many fields
+								break;
+							case 'last':
+							default:
+								$result[$id]=array_merge($result[$id],array($rel=>$relData)); // normal order
+								break;
+						}
 					}
 				}
 			}
