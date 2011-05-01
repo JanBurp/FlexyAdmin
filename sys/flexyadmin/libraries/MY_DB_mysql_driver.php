@@ -665,6 +665,12 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 							$this->select($join.".".pk());
 							$this->select($this->get_abstract_field($join));
 						}
+						$relSelect=$this->many[$rel];
+						if (!empty($relSelect)) {
+							array_unshift($relSelect,$rel.'.id');
+							// trace_($relSelect);
+							$this->select($relSelect);
+						}
 						$this->from($rel);
 						$this->where($jTable["id_this"],$id);
 						$this->join($join,$join.".".pk()."=".$rel.".".$jTable["id_join"],"left");
@@ -949,7 +955,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				if (!empty($tables)) $tables=combine($tables,$tables);
 				if (isset($tablesWithInfo) and !empty($tablesWithInfo)) $tables=array_merge($tablesWithInfo,$tables);
 			}
-			foreach ($tables as $rel) {
+			foreach ($tables as $rel=>$row) {
 				$relFields=$this->list_fields($rel);
 				$out[$rel]["this"]=$table;
 				$out[$rel]["rel"] =$rel;
