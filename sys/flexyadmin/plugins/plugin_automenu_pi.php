@@ -65,6 +65,7 @@ class plugin_automenu extends plugin_ {
 		$this->CI->_add_content(h($this->plugin,1));
 		$this->init();
 		$this->_create_auto_menu();
+		$this->CI->_add_content('<p>Menu reset ready.');
 	}
 	
 	
