@@ -170,7 +170,7 @@ function clean_string($s,$c=0) {
 	$s=str_replace('&','en',$s);
 	$s=remove_accent($s);
 	$s=preg_replace("/[^A-Za-z0-9_-]/","",$s);
-	$s=preg_replace(array("/_+/","/-+/","/ +/"),array('_','-',' '),$s);
+	$s=preg_replace(array("/-+/","/ +/"),array('-',' '),$s);
 	if ($c>0) $s=substr($s,0,$c);
 	return $s;
 }
