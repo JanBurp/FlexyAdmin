@@ -371,7 +371,7 @@ class Show extends AdminController {
 					$form->set_labels($uiFieldNames);
 					
 					if ($right<RIGHTS_EDIT) $form->no_submit();
-					$html=$form->render("html",$table);
+					$html=$form->render("html ".$table,$table);
 					if ($form->has_htmlfield()) $this->use_editor();
 					$this->_add_content($html);
 				}
