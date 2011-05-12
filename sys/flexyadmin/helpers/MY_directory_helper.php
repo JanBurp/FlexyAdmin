@@ -58,5 +58,18 @@ function read_map($path,$types="",$recursive=FALSE, $getInfo=TRUE, $getMetaData=
 	return $prepFiles;
 }
 
+function empty_map($dir) {
+  if (is_dir($dir)) {
+    $objects = scandir($dir);
+    foreach ($objects as $object) {
+      if ($object != "." && $object != "..") {
+        if (filetype($dir."/".$object) == "dir") empty_map($dir."/".$object); else unlink($dir."/".$object);
+      }
+    }
+    reset($objects);
+    rmdir($dir);
+  }
+}
+
 
 ?>
