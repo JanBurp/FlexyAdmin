@@ -61,7 +61,7 @@ class plugin_safe_assets extends plugin_ {
 												$assets.'_thumbcache'	=> $images,
 												$assets.'lists'				=> "js",
 												$assets.'css'					=> "css|htc|php",
-												$assets.'img'					=> $images.'|'.$flash, 
+												$assets.'img'					=> $images.'|'.$flash.'|ico', 
 												$assets.'js'						=> "js|css|html|swf|".$images, 
 												);
 		// set user maps
@@ -77,7 +77,7 @@ class plugin_safe_assets extends plugin_ {
 		// Loop though all maps and make them safe and clen
 		foreach ($mapsToClean as $path => $allowed) {
 			$this->_make_map_safe($path,$allowed);
-			$this->CI->_add_content('<p>Created : '.$path.'/.htaccess</p>');
+			$this->CI->_add_content('<p>Created : '.$path.'/.htaccess ('.$allowed.')</p>');
 			$removed=$this->_remove_forbidden_files($path,$allowed);
 			if ($removed) {
 				$removed=implode(',',$removed);
