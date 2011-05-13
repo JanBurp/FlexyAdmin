@@ -170,9 +170,14 @@ class plugin_automenu extends plugin_ {
 					if (empty($self_parents)) {
 						$self_parents[]=0;
 						$last=find_row_by_value($this->newMenu,0,'self_parent');
-						$last=sort_by($last,'order',TRUE);
-						$last=current($last);
-						$lastOrder=$last['order']+1;
+						if ($last) {
+							$last=sort_by($last,'order',TRUE);
+							$last=current($last);
+							$lastOrder=$last['order']+1;
+						}
+						else {
+							$lastOrder=0;
+						}
 					}
 					foreach ($data as $key=>$item) {
 						foreach ($self_parents as $self_parent) {
