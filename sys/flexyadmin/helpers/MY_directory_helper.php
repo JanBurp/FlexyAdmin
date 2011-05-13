@@ -58,11 +58,11 @@ function read_map($path,$types="",$recursive=FALSE, $getInfo=TRUE, $getMetaData=
 	return $prepFiles;
 }
 
-function empty_map($dir,$remove=false) {
+function empty_map($dir,$remove=false,$remove_hidden=false) {
   if (is_dir($dir)) {
     $objects = scandir($dir);
     foreach ($objects as $object) {
-      if ($object != "." && $object != "..") {
+      if ($object != "." && $object != ".." && ($remove_hidden and substr($object,0,1)!='.')) {
         if (filetype($dir."/".$object) == "dir") empty_map($dir."/".$object,true); else unlink($dir."/".$object);
       }
     }
