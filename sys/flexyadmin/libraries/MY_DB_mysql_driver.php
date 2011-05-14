@@ -480,9 +480,16 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		}
 		elseif (count($uriParts)==1) {
 			$part=current($uriParts);
-			$sql="SELECT id,self_parent FROM $table WHERE uri='$part' AND self_parent='$parent'";
+			// first check without $parent, for simple menutree's
+			$sql="SELECT id FROM $table WHERE uri='$part'";
 			$query=$this->query($sql);
 			$items=$query->result_array();
+			if (count($items)>1) {
+				// More than one found, not a simple tree: find with parent
+				$sql="SELECT id,self_parent FROM $table WHERE uri='$part' AND self_parent='$parent'";
+				$query=$this->query($sql);
+				$items=$query->result_array();
+			}
 			if ($items) {
 				$item=current($items);
 				$foundID=$item['id'];
