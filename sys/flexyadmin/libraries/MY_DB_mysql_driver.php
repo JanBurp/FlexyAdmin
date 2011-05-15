@@ -576,7 +576,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 					}
 					else {
 						$parentUri=$this->get_parent_uri($table,$uri);
-						$result[$key]["uri"]=$parentUri['uri']."/".$uri;
+						$result[$key]["uri"]=$parentUri['uri'];
 					}
 					if (!empty($extraFullField)) {
 						$extra=$row[$extraFullField];
