@@ -13,13 +13,15 @@
 
 function copy_file($source,$dest) {
 	$content=@file_get_contents($source);
-	$copy=fopen($dest, "w");
-	fwrite($copy, $content);
-	fclose($copy);
-	if ($content === FALSE)
+	if ($content === FALSE) {
 		$status=false;
-	else
+	}
+	else {
+		$copy=fopen($dest, "w");
+		fwrite($copy, $content);
+		fclose($copy);
 		$status=true;
+	}
 	return $status;
 }
 
