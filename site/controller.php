@@ -47,16 +47,27 @@ class Main extends FrontEndController {
 		
 		/***********************************************
 		 * Set Language for localisation
+		 * Uncomment first line if the first part of the uri is the language
 		 */
-		$this->site['language']=$this->config->item('language');
+		// $this->site['language']=$this->uri->get(1);
+		if (!isset($this->site['language']) or empty($this->site['language'])) $this->site['language']=$this->config->item('language');
 		setlocale(LC_ALL, $this->site['language'].'_'.strtoupper($this->site['language']));
-		
-		
+				
 		/***********************************************
 		 * Get current uri and give it to menu
 		 */
 		$this->site['uri']=$this->uri->get();
 		$this->menu->set_current($this->site['uri']);
+
+		/***********************************************
+		 * Create a language switch menu (nl|en)
+		 * Uncomment if first line if the first part of the uri is the language
+		 */
+		// if ($this->site['language']=='nl')
+		// 	$this->site['language_switch']='en';
+		// else
+		// 	$this->site['language_switch']='nl';
+		// $this->site['language_switch'].='/'.remove_prefix($this->site['uri'],'/');
 		
 
 		/***********************************************
@@ -80,7 +91,7 @@ class Main extends FrontEndController {
 
 
 		/***********************************************
-		 * Redirect to a page down, if current page is empty
+		 * Redirect to a page down in the menu tree, if current page is empty
 		 */
 		// if (empty($item['txt_text'])) {
 		// 	$this->db->select('uri');
@@ -96,7 +107,7 @@ class Main extends FrontEndController {
 		/***********************************************
 		 * If item exists call _page
 		 */
-		if ($item) $this->_page($item);
+		if ($item) $item=$this->_page($item);
 
 
 		/**********************************************
@@ -117,8 +128,6 @@ class Main extends FrontEndController {
 	 * Extra functions start here.
 	 * Always start your function with '_' for safety
 	 */
-
-
 
 
 
@@ -144,6 +153,7 @@ class Main extends FrontEndController {
 		
 		// Is there a module set? If so, call the module function
 		if (isset($item["str_module"]) and !empty($item["str_module"]))	$item=$this->_module($item);
+		return $item;
 	}
 
 
@@ -154,35 +164,35 @@ class Main extends FrontEndController {
 	 * It checks if a module file method exists, if so calls it.
 	 * If not, if a module file exist (site/modules/...) load and call it.
 	 */
-
 	function _module($item) {
 		$modules=$item['str_module'];
-		
 		// Loop trough all possible modules
 		$modules=explode('|',$modules);
 		foreach ($modules as $module) {
 			$moduleFunction='_module_'.$module;
-			// does module function exists (here in controller.php)?
-			if (method_exists($this,$moduleFunction)) {
-				// Yes, call module
-				$item=$this->$moduleFunction($item);
-			}
-			else {
-				// No: Try to load the module from site/modules/
-				$moduleFile='site/modules/module_'.$module.'.php';
-				if (file_exists($moduleFile)) {
-					// Load file
-					include_once('site/modules/module_'.$module.'.php');
-					// if function exists, call it
-					if (function_exists($moduleFunction)) {
-						$item=$moduleFunction($item);
-					}
-				}
-			}
+			$item=$this->$moduleFunction($item); // if the module doesn't exists, PHP calls the magic method __call()
 		}
 		return $item;
 	}
-
+	public function __call($method,$args) {
+		$item=current($args);
+		// method doesn't exists, try to load it
+		$moduleFile='site/modules/'.ltrim($method,'_').'.php';
+		$model=str_replace('_module_','',$method);
+		$modelFile='site/modules/'.$model.'.php';
+		if (file_exists($moduleFile)) {
+			include_once($moduleFile);
+			if (function_exists($method)) {
+				$item=$method($item);
+			}
+		}
+		elseif (file_exists($modelFile)) {
+			// THIS IS EXPERIMENTAL, DON'T USE THIS FOR NOW
+			// $this->load->model($modelFile);
+			// $item=$this->$model->main($item);
+		}
+		return $item;
+	}
 	
 	
 	/*******************
@@ -193,7 +203,6 @@ class Main extends FrontEndController {
 	function _module_example($item) {
 		$this->add_content('<h2>MODULE EXAMPLE</h2>');
 	}
-
 
 }
 
