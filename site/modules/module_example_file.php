@@ -5,6 +5,8 @@ function _module_example_file($item) {
 	$CI=&get_instance();
 	
 	$CI->add_content('<h2>FILE MODULE EXAMPLE</h2>');
+	
+	return $item;
 }
 
 ?>
