@@ -108,6 +108,7 @@ $isForm=has_string('form',$show_type);
 						external_embed_list_url : "<?=assets()?>/lists/embed_list.js?"+new Date().getTime(),
 						external_link_list_url : "<?=assets()?>lists/link_list.js?"+new Date().getTime(),
 						relative_urls : true,
+						entities : "350,#350,351,#351",
 						theme_advanced_buttons1 : "<?=$buttons1?>",
 						theme_advanced_buttons2 : "<?=$buttons2?>",
 						theme_advanced_buttons3 : "<?=$buttons3?>"

@@ -134,7 +134,7 @@ var charmap = [
 	['&Oslash;',  '&#216;',  true, 'O - slash'],
 	['&OElig;',   '&#338;',  true, 'ligature OE'],
 	['&Scaron;',  '&#352;',  true, 'S - caron'],
-	['&#350;',		'&#350;',	 true, 's - cedilla'],
+	['&#350;',		'&#350;',	 true, 'S - cedilla'],
 	['&Ugrave;',  '&#217;',  true, 'U - grave'],
 	['&Uacute;',  '&#218;',  true, 'U - acute'],
 	['&Ucirc;',   '&#219;',  true, 'U - circumflex'],
