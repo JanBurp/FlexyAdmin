@@ -72,8 +72,8 @@ class Bulkupload extends AdminController {
 				
 				foreach ($files as $name => $file) {
 					$renameThis='';
-					if (!empty($map)) $renameThis=$this->_newName($path,$name,$rename);
-					$gridFiles[$name]=array('id'=>icon('no'),'File'=>$file['name'],'uri'=>'admin/bulkupload/ajaxUpload/'.pathencode($path).'/'.$name.'/'.$renameThis);
+					if (!empty($map)) $renameThis=$this->_newName($path,$file['name'],$rename);
+					$gridFiles[$name]=array('id'=>icon('no'),'File'=>$file['name'],'uri'=>'admin/bulkupload/ajaxUpload/'.pathencode($path).'/'.$file['name'].'/'.$renameThis);
 					if (!empty($map)) $gridFiles[$name]['Rename']=$renameThis;
 				}
 
