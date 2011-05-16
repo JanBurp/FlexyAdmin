@@ -1,3 +1,29 @@
+> 1068
+
+UPDATE:
+- jQuery 1.6.1
+- jQuery UI 1.8.12
+- tinyMCE 3.9.4
+- IE9 styling
+BUGS:
+- Grid: drag n drop sorting bug with pagination
+- AutoMenu some bugs
+- DB->where_uri()
+- bulk_upload: copy didn't work with new safe rights
+- MyArray: several bugs
+NEW:
+- Controller: checks if description exists and is not empty
+- Controller: more lines to uncheck: language switch, redirect code
+- Controller: rewritten module loading (+experimental model loading)
+- FileHelper: new copy_file()
+- DirHelper: new empty_map()
+- MyStrHelper: max_lenght() now has option 'WORDS'
+- MyStrHelper: added intro_string()
+- MyStrHelper: added restore_tags()
+- auto_fill: now you can create new rows
+- tinyMCE charmap: more exotic chars
+- SafeAssets: added .ico for assets/img
+
 > 1017
 
 BUGS:
