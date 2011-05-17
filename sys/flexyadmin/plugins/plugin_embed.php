@@ -1,5 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-require_once(APPPATH."plugins/plugin_.php");
+
 
 /**
  * FlexyAdmin Plugin
@@ -8,7 +8,7 @@ require_once(APPPATH."plugins/plugin_.php");
  */
 
 
-class plugin_embed extends plugin_ {
+class Plugin_embed extends Plugin_ {
 
 	function init($init=array()) {
 		parent::init($init);
@@ -26,7 +26,7 @@ class plugin_embed extends plugin_ {
 	}
 	
 	function _create_embed_list() {
-		$this->CI->editor_lists->create_list('embed');
+		$this->editor_lists->create_list('embed');
 	}
 		
 }

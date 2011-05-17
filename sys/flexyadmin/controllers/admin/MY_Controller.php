@@ -664,16 +664,18 @@ class BasicController extends MY_Controller {
 			foreach ($pluginFiles as $file => $plugin) {
 				$Name=get_file_without_extension($file);
 				if (substr($Name,0,6)=='plugin') {
-					if (isset($plugin['site']))
-						$this->load->site_plugin($Name,$plugin['site']);
-					else
-						$this->load->plugin($Name);
+					$this->load->model($plugin['path']);
+					// if (isset($plugin['site'])) {
+					// 	$this->load->site_plugin($Name,$plugin['site']);
+					// }
+					// else
+					// 	$this->load->plugin($Name);
 					$pluginName=str_replace('_pi','',$Name);
 					$shortName=str_replace('plugin_','',$pluginName);
 					$this->$pluginName = new $pluginName($pluginName);
 					$this->plugins[]=$pluginName;
 					// set config in plugin
-					if (isset($pluginCfg[$shortName])) $this->$pluginName->cfg=$pluginCfg[$shortName];
+					if (isset($pluginCfg[$shortName])) $this->$pluginName->_cfg=$pluginCfg[$shortName];
 					// add api call to config if it exist
 					if (method_exists($this->$pluginName,'_admin_api')) {
 						if (method_exists($this->$pluginName,'_admin_api_calls'))
