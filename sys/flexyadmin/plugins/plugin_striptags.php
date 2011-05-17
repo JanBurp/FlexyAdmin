@@ -1,5 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-require_once(APPPATH."plugins/plugin_.php");
+
 
 /**
  * FlexyAdmin Plugin
@@ -8,7 +8,7 @@ require_once(APPPATH."plugins/plugin_.php");
  */
 
 
-class plugin_striptags extends plugin_ {
+class Plugin_striptags extends Plugin_ {
 
 	function init($init=array()) {
 		parent::init($init);
@@ -16,7 +16,7 @@ class plugin_striptags extends plugin_ {
 	}
 	
 	function _after_update() {
-		$validHTML=$this->CI->cfg->get('CFG_editor','str_valid_html');
+		$validHTML=$this->cfg->get('CFG_editor','str_valid_html');
 		if (!empty($validHTML)) {
 			foreach ($this->fields as $field) {
 				if (get_prefix($field)=="txt") {

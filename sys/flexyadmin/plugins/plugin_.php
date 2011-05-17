@@ -1,14 +1,15 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
 /**
  * FlexyAdmin Plugin
  *
  * @author Jan den Besten
  */
 
-class plugin_ {
+class Plugin_ extends Model {
 	
 	var $plugin;
-	var $CI;
+	var $_cfg;
 	
 	var $table;
 	var $id;
@@ -20,9 +21,9 @@ class plugin_ {
 	var $actOn;
 	var $act;
 	
-	function plugin_($name='plugin') {
+	function Plugin_($name='plugin') {
+		parent::Model();
 		$this->plugin=$name;
-		$this->CI=&get_instance();
 	}
 	
 	function init($init=array()) {
@@ -42,6 +43,17 @@ class plugin_ {
 		// strace_(array('old'=>$this->oldData,'new'=>$this->newData));
 	}
 	
+	
+	// Same as in MyController:
+	function _add_content($add) {
+		$this->content.=$add;
+	}
+	function _show_type($type) {
+		$this->showType=add_string($this->showType,$type,' ');
+	}
+	/////
+	
+	
 	function act_on($acts=array()) {
 		$default=array('existingTables'=>NULL,'tables'=>NULL,'id'=>'','fields'=>NULL,'changedFields'=>NULL,'types'=>NULL,'changedTypes'=>NULL);
 		$actOn=array_merge($default,$acts);
@@ -58,7 +70,7 @@ class plugin_ {
 		$check=true;
 		if (!empty($this->actOn['existingTables']['value'])) {
 			foreach ($this->actOn['existingTables']['value'] as $table) {
-				$check=($check and ($this->CI->db->table_exists($table)) );
+				$check=($check and ($this->db->table_exists($table)) );
 			}
 			$this->actOn['existingTables']['act']=$check;
 		}
@@ -138,10 +150,10 @@ class plugin_ {
 	function _update_data() {
 		// strace_("'$this->plugin ->_update_data'");
 		foreach ($this->newData as $key => $value) {
-			if ($key!='id')	$this->CI->db->set($key,$value);
+			if ($key!='id')	$this->db->set($key,$value);
 		}
-		$this->CI->db->where('id',$this->id);
-		$this->CI->db->update($this->table);
+		$this->db->where('id',$this->id);
+		$this->db->update($this->table);
 	}
 
 	function after_update($init) {

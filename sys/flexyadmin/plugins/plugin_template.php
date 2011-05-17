@@ -1,5 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-require_once(APPPATH."plugins/plugin_.php");
+
 
 /**
  * FlexyAdmin Plugin template
@@ -8,7 +8,7 @@ require_once(APPPATH."plugins/plugin_.php");
  */
 
 
-class plugin_template extends plugin_ {
+class Plugin_template extends Plugin_ {
 
 	// You can declare some properties here if needed
 
@@ -35,7 +35,7 @@ class plugin_template extends plugin_ {
 	// admin/plugin/#plugin_name# 
 	//
 	// function _admin_api($args=NULL) {
-	// 	$this->CI->_add_content(h($this->plugin,1));
+	// 	$this->_add_content(h($this->plugin,1));
 	// }
 
 

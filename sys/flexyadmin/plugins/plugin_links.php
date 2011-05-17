@@ -1,5 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-require_once(APPPATH."plugins/plugin_.php");
+
 
 /**
  * FlexyAdmin Plugin
@@ -8,7 +8,7 @@ require_once(APPPATH."plugins/plugin_.php");
  */
 
 
-class plugin_links extends plugin_ {
+class Plugin_links extends Plugin_ {
 
 	function init($init=array()) {
 		parent::init($init);
@@ -22,9 +22,9 @@ class plugin_links extends plugin_ {
 	}
 	
 	function _after_delete() {
-		$linkTable=$this->CI->cfg->get('cfg_editor','table');
-		$menuTable=$this->CI->cfg->get('cfg_configurations','str_menu_table');
-		if ($this->CI->db->table_exists('res_auto_menu')) $menuTable='res_auto_menu';
+		$linkTable=$this->cfg->get('cfg_editor','table');
+		$menuTable=$this->cfg->get('cfg_configurations','str_menu_table');
+		if ($this->db->table_exists('res_auto_menu')) $menuTable='res_auto_menu';
 		if ($this->table==$linkTable or $this->table==$menuTable) {
 			$this->newData=array();
 			$this->_update_links_in_text();
@@ -34,7 +34,7 @@ class plugin_links extends plugin_ {
 	}
 	
 	function _create_link_list() {
-		$this->CI->editor_lists->create_list("links");
+		$this->editor_lists->create_list("links");
 	}
 		
 	function _update_links_in_text() {
@@ -45,7 +45,7 @@ class plugin_links extends plugin_ {
 			if (!in_array($field,$this->actOn['changedFields']['value']) and !in_array($pre,$this->actOn['changedTypes']['value'])) unset($changedFields[$field]);
 		}
 		
-		$languages=$this->CI->config->item('LANGUAGES');
+		$languages=$this->config->item('LANGUAGES');
 		$languagesRegex=implode('/|',$languages).'/|';
 		$languagesRegex=str_replace('/','\/',$languagesRegex);
 
@@ -58,15 +58,15 @@ class plugin_links extends plugin_ {
 				else
 					$newUrl='';
 				// loop through all txt fields in all tables
-				$tables=$this->CI->db->list_tables();
+				$tables=$this->db->list_tables();
 				foreach($tables as $table) {
-					if (get_prefix($table)==$this->CI->config->item('TABLE_prefix')) {
-						$fields=$this->CI->db->list_fields($table);
+					if (get_prefix($table)==$this->config->item('TABLE_prefix')) {
+						$fields=$this->db->list_fields($table);
 						foreach ($fields as $field) {
 							if (get_prefix($field)=="txt") {
-								$this->CI->db->select("id,$field");
-								$this->CI->db->where("$field !=","");
-								$query=$this->CI->db->get($table);
+								$this->db->select("id,$field");
+								$this->db->where("$field !=","");
+								$query=$this->db->get($table);
 								foreach($query->result_array() as $row) {
 									$thisId=$row["id"];
 									$txt=$row[$field];
@@ -80,7 +80,7 @@ class plugin_links extends plugin_ {
 										$pattern='/<a(.*?)href="('.$languagesRegex.')'.str_replace("/","\/",$oldUrl).'"(.*?)>(.*?)<\/a>/';
 										$txt=preg_replace($pattern,'<a$1href="$2'.$newUrl.'"$3>$4</a>',$txt);
 									}
-									$res=$this->CI->db->update($table,array($field=>$txt),"id = $thisId");
+									$res=$this->db->update($table,array($field=>$txt),"id = $thisId");
 								}
 							}
 						}

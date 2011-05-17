@@ -1,5 +1,4 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-require_once(APPPATH."plugins/plugin_.php");
 
 /**
  * FlexyAdmin Plugin template
@@ -8,7 +7,7 @@ require_once(APPPATH."plugins/plugin_.php");
  */
 
 
-class plugin_safe_assets extends plugin_ {
+class Plugin_safe_assets extends Plugin_ {
 
 	// You can declare some properties here if needed
 
@@ -24,13 +23,13 @@ class plugin_safe_assets extends plugin_ {
 
 	function _admin_logout() {
 		$logout=true;
-		$this->CI->_add_content(h($this->plugin,1));
+		$this->_add_content(h($this->plugin,1));
 		$logout=!$this->_safe_and_clean_all();
 		return $logout;
 	}
 	
 	function _admin_api($args=NULL) {
-		$this->CI->_add_content(h($this->plugin,1));
+		$this->_add_content(h($this->plugin,1));
 		$this->_safe_and_clean_all();
 	}
 
@@ -44,10 +43,10 @@ class plugin_safe_assets extends plugin_ {
 
 	function _safe_and_clean_all() {
 		$someRemoved=false;
-		$assets=$this->CI->config->item('ASSETS');
-		$images=implode('|',$this->CI->config->item('FILE_types_img'));
-		$flash=implode('|',$this->CI->config->item('FILE_types_flash'));
-		$allCfg=object2array($this->CI->config);
+		$assets=$this->config->item('ASSETS');
+		$images=implode('|',$this->config->item('FILE_types_img'));
+		$flash=implode('|',$this->config->item('FILE_types_flash'));
+		$allCfg=object2array($this->config);
 		$allCfg=filter_by_key($allCfg['config'],'FILE_types_');
 		unset($allCfg['FILE_types_forbidden']);
 		$all='';
@@ -70,18 +69,18 @@ class plugin_safe_assets extends plugin_ {
 		foreach ($maps as $map => $value) {
 			$path=$assets.$map;
 			if (!isset($mapsToClean[$path])) {
-				$filetypes=str_replace(',','|',$this->CI->cfg->get('cfg_media_info',$map,'str_types'));
+				$filetypes=str_replace(',','|',$this->cfg->get('cfg_media_info',$map,'str_types'));
 				$mapsToClean[$path]=$filetypes;
 			}
 		}
 		// Loop though all maps and make them safe and clen
 		foreach ($mapsToClean as $path => $allowed) {
 			$this->_make_map_safe($path,$allowed);
-			$this->CI->_add_content('<p>Created : '.$path.'/.htaccess ('.$allowed.')</p>');
+			$this->_add_content('<p>Created : '.$path.'/.htaccess ('.$allowed.')</p>');
 			$removed=$this->_remove_forbidden_files($path,$allowed);
 			if ($removed) {
 				$removed=implode(',',$removed);
-				$this->CI->_add_content('<p class="error">Removed forbidden files ('.$removed.') from: '.$path.'</p>');
+				$this->_add_content('<p class="error">Removed forbidden files ('.$removed.') from: '.$path.'</p>');
 				$someRemoved = true;
 			}
 		}
@@ -99,7 +98,7 @@ class plugin_safe_assets extends plugin_ {
 	// remove forbidden files
 	function _remove_forbidden_files($path,$allowed,$forbidden='') {
 		$removed=false;
-		if ($forbidden=='') $forbidden=$this->CI->config->item('FILE_types_forbidden');
+		if ($forbidden=='') $forbidden=$this->config->item('FILE_types_forbidden');
 		$allowed=explode('|',$allowed);
 		foreach ($forbidden as $key=>$value) {
 			if (in_array($value,$allowed)) unset($forbidden[$key]);

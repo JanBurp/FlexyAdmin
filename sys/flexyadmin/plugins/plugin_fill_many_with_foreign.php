@@ -1,5 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-require_once(APPPATH."plugins/plugin_.php");
+
 
 /**
  * FlexyAdmin Plugin template
@@ -8,7 +8,7 @@ require_once(APPPATH."plugins/plugin_.php");
  */
 
 
-class plugin_fill_many_with_foreign extends plugin_ {
+class Plugin_fill_many_with_foreign extends Plugin_ {
 
 	// You can declare some properties here if needed
 
@@ -35,7 +35,7 @@ class plugin_fill_many_with_foreign extends plugin_ {
 	// admin/plugin/#plugin_name# 
 	
 	function _admin_api($args=false) {
-		$this->CI->_add_content(h($this->plugin,1));
+		$this->_add_content(h($this->plugin,1));
 		$goodArgs=false;
 		if ($args) {
 			if (isset($args[0])) $relTable=$args[0];
@@ -46,20 +46,20 @@ class plugin_fill_many_with_foreign extends plugin_ {
 				$thisKey='id_'.get_postfix($table);
 			}
 			if (isset($relTable) and isset($table) and isset($foreignKey)) $goodArgs=true;
-			$this->CI->_add_content(h("Filling '$relTable' from '$table.$foreignKey'.",2));
+			$this->_add_content(h("Filling '$relTable' from '$table.$foreignKey'.",2));
 			// first emtpy many table
-			$this->CI->db->truncate($relTable);
+			$this->db->truncate($relTable);
 			// now fill
-			$this->CI->db->select('id,'.$foreignKey);
-			$data=$this->CI->db->get_result($table);
+			$this->db->select('id,'.$foreignKey);
+			$data=$this->db->get_result($table);
 			foreach ($data as $id => $row) {
-				$this->CI->db->set($thisKey,$id);
-				$this->CI->db->set($foreignKey,$row[$foreignKey]);
-				$this->CI->db->insert($relTable);
+				$this->db->set($thisKey,$id);
+				$this->db->set($foreignKey,$row[$foreignKey]);
+				$this->db->insert($relTable);
 			}
 		}
 		if (!$goodArgs) {
-			$this->CI->_add_content('<p>Which many table and foreign key?</br></br>Give: /rel_xxxx__xxxx/tbl_xxx.id_xxx</p>');
+			$this->_add_content('<p>Which many table and foreign key?</br></br>Give: /rel_xxxx__xxxx/tbl_xxx.id_xxx</p>');
 		}
 	}
 

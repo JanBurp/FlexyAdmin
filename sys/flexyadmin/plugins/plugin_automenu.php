@@ -1,5 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-require_once(APPPATH."plugins/plugin_.php");
+
 
 /**
  * FlexyAdmin Plugin
@@ -8,7 +8,7 @@ require_once(APPPATH."plugins/plugin_.php");
  */
 
 
-class plugin_automenu extends plugin_ {
+class Plugin_automenu extends Plugin_ {
 
 	var $menuTable;
 	var $automationTable;
@@ -25,15 +25,15 @@ class plugin_automenu extends plugin_ {
 		parent::init($init);
 		// Fill here on which trigger the plugin must act
 		$this->automationTable='cfg_auto_menu';
-		if ($this->CI->db->table_exists($this->automationTable)) {
-			$this->menuTable=$this->CI->cfg->get('CFG_configurations','str_menu_table');
+		if ($this->db->table_exists($this->automationTable)) {
+			$this->menuTable=$this->cfg->get('CFG_configurations','str_menu_table');
 			$this->resultMenu='res_menu_result';
 			$checkTables=array();
 			$checkTables[]=$this->menuTable;
 			$checkTables[]=$this->automationTable;
 			$checkTables[]=$this->resultMenu;
 			// get tables from automation data
-			$this->automationData=$this->CI->db->get_results($this->automationTable);
+			$this->automationData=$this->db->get_results($this->automationTable);
 			foreach ($this->automationData as $aData) {
 				if (!in_array($aData['table'], $checkTables))	$checkTables[]=$aData['table'];
 				$foreignTable=$aData['field_group_by'];
@@ -62,10 +62,10 @@ class plugin_automenu extends plugin_ {
 	}
 
 	function _admin_api($args=NULL) {
-		$this->CI->_add_content(h($this->plugin,1));
+		$this->_add_content(h($this->plugin,1));
 		$this->init();
 		$this->_create_auto_menu();
-		$this->CI->_add_content('<p>Menu reset ready.');
+		$this->_add_content('<p>Menu reset ready.');
 	}
 	
 	
@@ -82,7 +82,7 @@ class plugin_automenu extends plugin_ {
 				
 				
 				case 'from menu table':
-					$data=$this->CI->db->get_results($autoValue['table']);
+					$data=$this->db->get_results($autoValue['table']);
 					foreach ($data as $item) {
 						$item=$this->_setResultMenuItem($item,true);
 						$item['str_table']=$autoValue['table'];
@@ -95,7 +95,7 @@ class plugin_automenu extends plugin_ {
 		
 		
 				case 'from submenu table':
-					$data=$this->CI->db->get_results($autoValue['table']);
+					$data=$this->db->get_results($autoValue['table']);
 					$order=0;
 					$parent=0;
 					if (!empty($autoValue['str_parent_where'])) {
@@ -151,7 +151,7 @@ class plugin_automenu extends plugin_ {
 		
 		
 				case 'from category table':
-					$data=$this->CI->db->get_result($autoValue['table']);
+					$data=$this->db->get_result($autoValue['table']);
 					$self_parents=array();
 					if (!empty($autoValue['str_parent_uri'])) {
 						// On multiple places?
@@ -218,7 +218,7 @@ class plugin_automenu extends plugin_ {
 						$groupField=remove_prefix($autoValue['field_group_by'],'.');
 						$groupTable=foreign_table_from_key($groupField);
 					}
-					$groupData=$this->CI->db->get_result($groupTable);
+					$groupData=$this->db->get_result($groupTable);
 					
 					foreach ($groupData as $groupId=>$groupData) {
 						$titleField='str_title';
@@ -228,13 +228,13 @@ class plugin_automenu extends plugin_ {
 							$titleField=current($possibleFields);
 						}
 						if ($fromRel) {
-							$this->CI->db->add_many();
-							$this->CI->db->where($autoValue['field_group_by'],$groupId);
+							$this->db->add_many();
+							$this->db->where($autoValue['field_group_by'],$groupId);
 						}
 						else {
-							$this->CI->db->where($autoValue['field_group_by'],$groupId);
+							$this->db->where($autoValue['field_group_by'],$groupId);
 						}
-						$data=$this->CI->db->get_result($autoValue['table']);
+						$data=$this->db->get_result($autoValue['table']);
 						if ($data) {
 							
 							$parentData=find_row_by_value($this->newMenu,$groupData[$titleField],$titleField);
@@ -348,28 +348,28 @@ class plugin_automenu extends plugin_ {
 		ksort($this->newMenu);
 
 		// put in db
-		$this->CI->db->truncate($this->resultMenu);
-		$fields=$this->CI->db->list_fields($this->resultMenu);
+		$this->db->truncate($this->resultMenu);
+		$fields=$this->db->list_fields($this->resultMenu);
 		$lang='';
 		foreach ($this->newMenu as $row) {
 			if (isset($row['self_parent']) and isset($this->languages) and in_array($row['uri'],$this->languages)) $lang=$row['uri'];
 			foreach ($row as $field => $value) {
 				if (in_array($field,$fields)) {
-					$this->CI->db->set($field,$value);
+					$this->db->set($field,$value);
 				}
 				elseif ($lang!='') {
 					$post=get_postfix($field);
 					$langField=str_replace('_'.$lang,'',$field);
 					if (in_array($langField,$fields)) {
-						$this->CI->db->set($langField,$value);
+						$this->db->set($langField,$value);
 					}
 				}
 			}
-			$this->CI->db->insert($this->resultMenu);
+			$this->db->insert($this->resultMenu);
 		}
 
 		// update linklist etc
-		$this->CI->editor_lists->create_list("links");
+		$this->editor_lists->create_list("links");
 	}
 
 
@@ -392,7 +392,7 @@ class plugin_automenu extends plugin_ {
 		// 	if (isset($item['self_parent']))	unset($item['self_parent']);
 		// }
 		// foreach ($item as $key => $value) {
-			// if (!$this->CI->db->field_exists($key,$this->resultMenu)) unset($item[$key]);
+			// if (!$this->db->field_exists($key,$this->resultMenu)) unset($item[$key]);
 		// }
 		return $item;
 	}
