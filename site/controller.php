@@ -125,19 +125,17 @@ class Main extends FrontEndController {
 
 
 	/*************************************************
-	 * Extra functions start here.
 	 * Always start your function with '_' for safety
 	 */
-
 
 
 	/*
 	 * function _page($item)
 	 * 
 	 * This functions is called when a page item exists
-	 * It handles what to do with the item and put the content.
+	 * It handles what to do with the item and shows the content.
 	 */
-
+	
 	function _page($item) {
 		// Process the text fields (make safe email links, put classes in p/img/h tags)
 		foreach($item as $f=>$v) {if (get_prefix($f)=="txt") $item[$f]=$this->content->render($v);}
@@ -175,6 +173,7 @@ class Main extends FrontEndController {
 		}
 		return $item;
 	}
+
 	public function __call($module,$args) {
 		$item=current($args);
 		// method doesn't exists, try to load it
@@ -203,6 +202,7 @@ class Main extends FrontEndController {
 		return $item;
 	}
 	
+
 	
 	/*******************
 	* Module functions
