@@ -606,10 +606,12 @@ class BasicController extends MY_Controller {
 	function _load_plugins() {
 		// needed libraries for plugins
 		$this->load->library("editor_lists");
+		
 		// load plugins
 		if (empty($this->plugins)) {
+			// sys plugins
 			$files=read_map(APPPATH.'plugins');
-			// load plugins from site
+			// site plugins
 			$siteMap=$this->config->item('PLUGINS');
 			if (file_exists($siteMap)) {
 				$siteFiles=read_map($siteMap);
@@ -631,8 +633,10 @@ class BasicController extends MY_Controller {
 					unset($files[$file]);
 				}
 			}
+			
 			// add other plugins
 			$pluginFiles=array_merge($pluginFiles,$files);
+			
 			// check last order
 			foreach ($pluginOrder['last'] as $plugin) {
 				$file='plugin_'.$plugin.'_pi.php';
@@ -642,6 +646,7 @@ class BasicController extends MY_Controller {
 					$pluginFiles[$file]=$files[$file];
 				}
 			}
+			
 			// remove templates and parent class
 			unset($pluginFiles['plugin_template_pi.php']);
 			unset($pluginFiles['plugin_.php']);
