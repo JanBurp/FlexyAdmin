@@ -37,7 +37,7 @@ function read_map($path,$types='',$recursive=FALSE,$getInfo=TRUE,$getMetaData=FA
 					if (is_dir($data['path'])) {
 						$data['name']=$file;
 						$data['type']="dir";
-						$data['alt']=$name;
+						$data['alt']=$file;
 						if ($recursive) $data["."]=read_map($path."/".$name,$types,$recursive);
 					}
 					else {
