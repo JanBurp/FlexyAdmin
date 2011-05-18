@@ -612,4 +612,10 @@ function find_max($a,$k=NULL) {
 	return $max;
 }
 
+function array_last($a) {
+	$l=count($a);
+	$s=array_slice($a,$l-1,1);
+	return current($s);
+}
+
 ?>

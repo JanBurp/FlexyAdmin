@@ -141,6 +141,7 @@ class Filemanager extends AdminController {
 				 */
 				$types=$cfg['str_types'];
 				$uiName=$cfg['str_ui_name'];
+				
 				$files=read_map($map);
 				
 				/**
