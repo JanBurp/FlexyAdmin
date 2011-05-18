@@ -1002,20 +1002,32 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 * @return array Result array with all options id=>abstract;
 	 */
 		function get_options($table,$optionsWhere="") {
-			$out=array();
+			$options=array();
 			$cleanTable=rtrim($table,'_');
 			$CI=&get_instance();
+			$asTree=$this->has_field($cleanTable,'self_parent');
 			$this->select($this->pk);
+			if ($asTree) $this->select('uri,order,self_parent');
 			$this->select($this->get_abstract_field($cleanTable));
-			$this->_set_standard_order($cleanTable,$CI->config->item('ABSTRACT_field_name'));
+			if ($asTree) {
+				$this->order_as_tree();
+			}
+			else {
+				$this->_set_standard_order($cleanTable,$CI->config->item('ABSTRACT_field_name'));
+			}
 			if (!empty($optionsWhere)) {
 				$this->ar_where[]=$optionsWhere;
 			}
+			// $res=$this->get_results($cleanTable);
 			$query=$this->get($cleanTable);
-			foreach($query->result_array() as $row) {
-				$out[$row[$this->pk]]=$row[$CI->config->item('ABSTRACT_field_name')];
+			$res=$query->result_array();
+			// set id as key
+			$res=$this->_set_key_to($res,pk());
+			foreach($res as $row) {
+				$options[$row[$this->pk]]=$row[$CI->config->item('ABSTRACT_field_name')];
+				if ($asTree and $row['self_parent']!=0) $options[$row[$this->pk]]=$res[$row['self_parent']][$CI->config->item('ABSTRACT_field_name')].' / '.$options[$row[$this->pk]];
 			}
-			return $out;
+			return $options;
 		}
 
 	/**

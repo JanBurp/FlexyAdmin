@@ -550,6 +550,7 @@ class Flexy_field extends Model {
 		if ($strField) $this->db->select($strField);
 		if ($this->db->field_exists('uri',$this->table)) $this->db->select('uri');
 		if ($this->db->field_exists('self_parent',$this->table)) $this->db->select('self_parent');
+		if ($this->db->field_exists('order',$this->table)) $this->db->select('order');
 		$this->db->where(pk()." !=", $this->id);
 		$this->db->order_as_tree();
 		if ($strField)
@@ -561,7 +562,6 @@ class Flexy_field extends Model {
 		$options[]="";
 		foreach($res as $id=>$value) {
 			if (isset($value["uri"])) $uri=$value["uri"]; else $uri='';
-			// $options[$id]=$this->_get_tree($value["self_parent"],"",$uri);
 			if ($strField)
 				$options[$id]=$value[$strField];
 			else
