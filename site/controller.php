@@ -159,7 +159,7 @@ class Main extends FrontEndController {
 	 * function _module($item)
 	 * 
 	 * This functions is called if a module is set
-	 * It checks if a module file method exists, if so calls it.
+	 * It checks if a module function exists, if so calls it.
 	 * If not, if a module file exist (site/modules/...) load and call it.
 	 */
 	function _module($item) {
@@ -168,40 +168,25 @@ class Main extends FrontEndController {
 		$modules=explode('|',$modules);
 		foreach ($modules as $module) {
 			$moduleFunction='_module_'.$module;
-			// if the module doesn't exists, PHP calls the magic method __call()
-			$item=$this->$moduleFunction($item);
-		}
-		return $item;
-	}
-
-	public function __call($module,$args) {
-		$item=current($args);
-		// method doesn't exists, try to load it
-		$model=str_replace('_module_','',$module);
-		$method=get_postfix($model,'.');
-		$model=remove_postfix($model,'.');
-		$modelFile='site/modules/'.$model.'.php';
-		$moduleFile='site/modules/'.ltrim($module,'_').'.php';
-		// is it a CI like Model?
-		if (file_exists($modelFile)) {
-			if ($method==$model) $method='main';
-			$this->load->model($modelFile);
-			$modeldata=$this->$model->$method($item);
-			if (isset($modeldata['view']))
-				$this->site['content'].=$this->show($modeldata['view'],$modeldata,true);
-			else
-				$item=$modeldata;
-		}
-		// or a not so nice Module file
-		elseif (file_exists($moduleFile)) {
-			include_once($moduleFile);
-			if (function_exists($module)) {
-				$item=$module($item);
+			if (function_exists($moduleFunction))
+				$item=$this->$moduleFunction($item);
+			else {
+				// function doesn't exist, load model and call it
+				$model=remove_postfix($module,'.');
+				$method=get_postfix($model,'.');
+				if ($method==$model) $method='main';
+				$modelFile='site/modules/'.$model.'.php';
+				$this->load->model($modelFile);
+				$modeldata=$this->$model->$method($item);
+				// show corresponding view if needed
+				if (isset($modeldata['view']))
+					$this->site['content'].=$this->show($modeldata['view'],$modeldata,true);
+				else
+					$item=$modeldata;
 			}
 		}
 		return $item;
-	}
-	
+	}	
 
 	
 	/*******************
