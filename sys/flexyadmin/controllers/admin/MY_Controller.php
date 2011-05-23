@@ -569,6 +569,7 @@ class BasicController extends MY_Controller {
 				$pluginCfg[$p][$c['str_set']]=$c['str_value'];
 			}
 			// ok load them
+			$this->load->model('sys/flexyadmin/plugins/plugin_');
 			foreach ($pluginFiles as $file => $plugin) {
 				$Name=get_file_without_extension($file);
 				if (substr($Name,0,6)=='plugin') {
