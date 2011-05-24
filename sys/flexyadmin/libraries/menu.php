@@ -158,7 +158,12 @@ class Menu {
 				$uri=$item[$this->fields["uri"]];
 				$thisItem["uri"]=$uri;
 				
-				if (isset($item[$this->fields["title"]])) 	$thisItem['name']=$item[$this->fields["title"]]; else $thisItem['name']=$uri;
+				if (empty($thisItem['name'])) {
+					if (isset($item[$this->fields["title"]]))
+						$thisItem['name']=$item[$this->fields["title"]];
+					else
+						$thisItem['name']=$uri;
+				}
 				if (isset($item[$this->fields["class"]])) 	$thisItem["class"]=str_replace('|',' ',$item[$this->fields["class"]]);
 				if (isset($item[$this->fields["parent"]])) 	$parent=$item[$this->fields["parent"]]; else $parent="";
 				if (isset($item[$this->fields["clickable"]]) && !$item[$this->fields["clickable"]]) $thisItem["uri"]='';
@@ -173,7 +178,6 @@ class Menu {
 				$menu[$parent][$uri]=$thisItem;
 			}
 		}
-		// trace_($menu);
 		
 		// Set submenus on right place in array
 		$item=end($menu);
@@ -409,7 +413,10 @@ class Menu {
 					// render item/subitem
 					$itemOut.=$this->tmp($this->tmpItemStart,array("class"=>$itemAttr["class"],'id'=>$itemAttr['id']));  // <li ... >
 					if (isset($item["uri"])) {
-						$showName=trim(ascii_to_entities($name),'_');
+						if (isset($item['title']))
+							$showName=$item['title'];
+						else
+							$showName=trim(ascii_to_entities($name),'_');
 						$pre=get_prefix($showName,"__");
 						if (!empty($pre)) $showName=$pre;
 						if (isset($item["help"])) $showName=help($showName,$item["help"]);
@@ -420,6 +427,8 @@ class Menu {
 						unset($extraAttr['class'],$extraAttr['uri'],$extraAttr['id'],$extraAttr['sub'],$extraAttr['unique_uri']);
 						$itemAttr=array_merge($itemAttr,$extraAttr);
 						// if (isset($item['target'])) $itemAttr['target']=$item['target'];
+						if (isset($itemAttr['title'])) $itemAttr['title']=strip_tags($itemAttr['title']);
+						// trace_($showName);
 						if (empty($link)) {
 							$itemAttr['class'].=' nonClickable';
 							$itemOut.=span($itemAttr).$showName._span();
