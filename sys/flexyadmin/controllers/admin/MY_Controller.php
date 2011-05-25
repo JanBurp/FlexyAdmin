@@ -211,6 +211,10 @@ class FrontEndController extends MY_Controller {
 				$this->uri->set_home('');
 			}
 		}
+		/**
+		 * Set empty content
+		 */
+		$this->site['content']='';
 	}
 
 	function add_keywords($words) {
