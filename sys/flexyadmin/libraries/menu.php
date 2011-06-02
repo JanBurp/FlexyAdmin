@@ -465,7 +465,7 @@ class Menu {
 		return $item;
 	}
 	
-	function get_prev_uri($uri='') {
+	function get_prev_uri($uri='',$full=true) {
 		if (empty($uri)) $uri=$this->current;
 		$submenu=$this->_get_submenu($uri);
 		$thisUri=get_postfix($uri,'/');
@@ -474,10 +474,11 @@ class Menu {
 			if ($key==$thisUri) break;
 			$prev=$key;
 		}
+		if ($full and !empty($prev)) $prev=remove_postfix($uri,'/').'/'.$prev;
 		return $prev;
 	}
 
-	function get_next_uri($uri='') {
+	function get_next_uri($uri='',$full=true) {
 		if (empty($uri)) $uri=$this->current;
 		$submenu=$this->_get_submenu($uri);
 		arsort($submenu);
@@ -487,6 +488,7 @@ class Menu {
 			if ($key==$thisUri) break;
 			$next=$key;
 		}
+		if ($full and !empty($next)) $next=remove_postfix($uri,'/').'/'.$next;
 		return $next;
 	}
 	
