@@ -182,9 +182,12 @@ function safe_string($s,$c=0) {
 	$s=preg_replace("/\s/","_",$s);
 	$s=str_replace(array('"',"'","`",'.'),'',$s);
 	if ($c>0) $s=substr($s,0,$c);
-	$s=explode('_',$s);
-	array_pop($s);
-	$s=implode('_',$s);
+	$e=explode('_',$s);
+	if (!empty($e) and count($e)>1) {
+		$s=$e;
+		array_pop($s);
+		$s=implode('_',$s);
+	}
 	return $s;
 }
 
