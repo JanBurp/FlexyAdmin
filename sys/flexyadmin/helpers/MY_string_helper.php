@@ -137,8 +137,9 @@ function remove_prefix($s,$split="_") {
 }
 
 function remove_postfix($s,$split="_") {
-	$post=get_postfix($s,$split);
-	return str_replace($split.$post,"",$s);
+	$e=explode($split,$s);
+	$e=array_slice($e,0,count($e)-1);
+	return implode($split,$e);
 }
 
 //
