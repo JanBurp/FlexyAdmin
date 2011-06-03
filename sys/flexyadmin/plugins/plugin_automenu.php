@@ -79,6 +79,16 @@ class Plugin_automenu extends Plugin_ {
 			
 			switch($autoValue['str_type']) {
 				
+
+				case 'menu item':
+					$name=$autoValue['str_description'];
+					$uri=safe_string($name);
+					$item=array('uri'=>$uri,'str_title'=>$name);
+					$item=$this->_setResultMenuItem($item,true);
+					$this->_insertItem($item);
+					// $this->_moveChildren();
+					break;
+
 				
 				case 'from menu table':
 					$data=$this->db->get_results($autoValue['table']);
