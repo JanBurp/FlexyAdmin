@@ -12,10 +12,7 @@
  * Class Menu
  *
  *
- *	array ( "name" => array("class"=>class, "uri"=>uri),
- *					"name" => array("class"=>class, "sub"=>array(
- *																											)
- *					)
+ *	array("uri"=>uri, "name"=>name, "class"=>class, "sub"=>array())
  *
  */
 
@@ -413,8 +410,8 @@ class Menu {
 					// render item/subitem
 					$itemOut.=$this->tmp($this->tmpItemStart,array("class"=>$itemAttr["class"],'id'=>$itemAttr['id']));  // <li ... >
 					if (isset($item["uri"])) {
-						if (isset($item['title']))
-							$showName=$item['title'];
+						if (isset($item['name']))
+							$showName=$item['name'];
 						else
 							$showName=trim(ascii_to_entities($name),'_');
 						$pre=get_prefix($showName,"__");
