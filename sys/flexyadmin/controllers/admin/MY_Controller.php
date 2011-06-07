@@ -759,8 +759,8 @@ class AdminController extends BasicController {
 		foreach ($oTables as $name) {
 			$menuName=$this->uiNames->get($name);
 			$uri=api_uri('API_view_grid',$name);
-			if ($type!='tbl') $menuName='_'.$menuName;
-			if ($type=='res') $menuName='_'.$menuName;
+			// if ($type!='tbl') $menuName='_'.$menuName;
+			// if ($type=='res') $menuName='_'.$menuName;
 			if (!in_array($name,$excluded) and $this->has_rights($name)) {
 				$subUri=api_uri('API_view_form',$name);
 				$sub=array($subUri=>array('uri'=>$subUri,'name'=>$menuName,'unique_uri'=>true));
