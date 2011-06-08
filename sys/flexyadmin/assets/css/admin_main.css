@@ -622,7 +622,7 @@ table.grid th.hiddenCell * {
 .weekend				{ font-weight:bold; }
 
 img.zoom,
-img.empty				{ border:1px solid #DEA; cursor:pointer; }
+img.empty				{ border:1px solid #DEA; cursor:pointer; background-color:#FFF;}
 img.zoom:hover	{ border-color:#696; }
 
 /* =============== Graph ===================== */
