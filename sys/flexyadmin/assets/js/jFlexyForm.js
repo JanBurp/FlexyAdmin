@@ -167,38 +167,60 @@ function doForm() {
 	});
 
 		
-	// Media select by click
-	$('div.media ul.choices li').click(function(){
-		src=$(this).children('img:first').attr('src');
-		$(this).parent('ul').parent('div.media').children('ul.values').empty();
-		$(this).parent('ul').parent('div.media').children('ul.values').append('<li><img class="zoom" src="'+src+'" alt="'+src+'" title="'+src+'" /></li>');
-		src=pathdecode(src);
-		src=src.substr(src.lastIndexOf('/')+1);
-		$(this).parent('ul').parent('div.media').children('input:first').attr('value',src);
+	// Media(s) select by click
+	$('div.media ul.choices').add('div.medias ul.choices').add('div.medias ul.values').click(function(e){
+		var target=e.target; // img tag
+		var type='media';
+		if ($(target).parents('div:first').hasClass('medias')) type='medias';
+		var thumbsrc=$(target).attr('src');
+		if (type=='media') {
+			var src=pathdecode(thumbsrc);
+			src=src.substr(src.lastIndexOf('/')+1);
+			$(target).parents('div.media').children('ul.values').empty();
+			$(target).parents('div.media').children('ul.values').append('<li><img class="zoom" src="'+thumbsrc+'" alt="'+src+'" title="'+src+'" /></li>');
+			// change the hidden input value
+			$(target).parents('div.media').children('input:first').attr('value',src);
+		}
+		else {
+			var item=$(target).parent('li:first').clone(true);
+			var values=$(target).parents('div.medias').children('ul.values');
+			if ($(target).parents('ul:first').hasClass('choices'))
+				$(target).parents('div.medias').children('ul.values').append(item);
+			else
+				$(target).parents('div.medias').children('ul.choices').append(item);
+			$(target).parent('li:first').remove();
+			$('.zoomThumb').hide();
+			update_values_list($(values));
+		}
 	});
+	// Media, empty by a click
 	$('div.media ul.values').click(function(){
 		$(this).empty();
 		$(this).parent('div.media').children('input:first').attr('value','');
 	});
 
+	// update the hidden field with the sortable values list
+	function update_values_list(obj) {
+		if ($(obj).hasClass('values')) {
+			var value='';
+			$(obj).children('li').each(function(){
+				var src=$(this).children('img:first').attr('src');
+				if (src!=undefined) {
+					src=pathdecode(src);
+					src=src.substr(src.lastIndexOf('/')+1);
+					value+='|'+src;
+				}
+			});
+			value=value.substr(1);
+			$(obj).parent('.form_field:first').children('input:first').attr('value',value);
+		}
+	}
 	
 	// dragndrop ordering of medias
 	$('div.medias ul').sortable({
 		connectWith: 'div.medias ul',
 		update: function(event,ui) {
-			if ($(this).hasClass('values')) {
-				var value='';
-				$(this).children('li').each(function(){
-					var src=$(this).children('img:first').attr('src');
-					if (src!=undefined) {
-						src=pathdecode(src);
-						src=src.substr(src.lastIndexOf('/')+1);
-						value+='|'+src;
-					}
-				});
-				value=value.substr(1);
-				$(this).parent('.form_field:first').children('input:first').attr('value',value);
-			}
+			update_values_list($(this));
 		}
 	});
 
