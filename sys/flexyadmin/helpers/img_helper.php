@@ -50,3 +50,17 @@ function get_img_size($i) {
 	if (file_exists($i) and is_file($i)) $size=getimagesize($i);
 	return $size;
 }
+
+function portrait_or_landscape($i) {
+	$c='';
+	$s=get_img_size($i);
+	if ($s) {
+		if ($s[0]>$s[1])
+			$c='landscape';
+		else
+			$c='portrait';
+	}
+	else
+		$c='unknown';
+	return $c;
+}
