@@ -145,6 +145,7 @@ class Show extends AdminController {
 						
 						$data=$this->db->get_result($table);
 						$order=$this->db->get_last_order();
+						$order=get_postfix($order,'.'); // make sure no rel table is selected
 						// strace_($order);
 
 						// trace_('#show#'.$this->db->last_query());
