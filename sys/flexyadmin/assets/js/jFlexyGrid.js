@@ -482,7 +482,7 @@ function doGrid() {
 		if ($(grid).hasClass('pagination')) {
 			// sort with pagination needs to reload page with another sort field
 			$(grid).find('tr.heading th').each(function(){
-				if (!$(this).hasClass('id') && !$(this).hasClass('edit')) {
+				if (!$(this).hasClass('id') && !$(this).hasClass('edit') && !$(this).hasClass('rel') ) {
 					$(this).addClass('header').click(function(){
 						if (isFile)
 							var field=get_class($(this),0);
