@@ -248,6 +248,12 @@ function get_name(obj) {
 // Other functions
 //
 
+function get_prefix(s,sep) {
+	if (sep==undefined) sep='_';
+	var a=s.split(sep);
+	return a[0];
+}
+
 function stripTags(s) {
 	return s.replace(/<\/?[^>]+>/gi, '');
 }

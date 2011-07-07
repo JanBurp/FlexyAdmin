@@ -116,13 +116,19 @@ class Show extends AdminController {
 								$uiTable=$extraInfo['str_ui_name'];
 							}
 						}
+						
+						// How to order?
 						if ($this->db->has_field($table,"self_parent")) {
 							$this->db->order_as_tree();
 						}
 						elseif ($order) {
+							// check if it is not a many table (can't order on that)
+							if (get_prefix($order)=='rel') $order='';
 							if (substr($order,0,1)=='_') $order=substr($order,1).' DESC';
-							$this->db->order_by($order);
+							if ($order!='') $this->db->order_by($order);
 						}
+						
+						// has rights?
 						if ($restrictedToUser>0 and $this->db->has_field($table,"user")) {
 							$this->db->where($table.".user",$restrictedToUser);
 							$this->db->dont_select("user");
@@ -142,10 +148,9 @@ class Show extends AdminController {
 							}
 							$this->db->search($searchArr);
 						}
-						
+
 						$data=$this->db->get_result($table);
-						$order=$this->db->get_last_order();
-						$order=get_postfix($order,'.'); // make sure no rel table is selected
+						// $order=$this->db->get_last_order();
 						// strace_($order);
 
 						// trace_('#show#'.$this->db->last_query());

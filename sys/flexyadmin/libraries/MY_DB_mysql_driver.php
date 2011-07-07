@@ -679,7 +679,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 							$this->select($relSelect);
 						}
 						$this->from($rel);
-						$this->where($jTable["id_this"],$id);
+						$this->where($jTable['rel'].'.'.$jTable["id_this"],$id);
 						$this->join($join,$join.".".pk()."=".$rel.".".$jTable["id_join"],"left");
 						$this->order_by($rel.'.id');
 						$query=$this->get();
