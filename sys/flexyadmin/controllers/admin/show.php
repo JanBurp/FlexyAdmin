@@ -150,7 +150,8 @@ class Show extends AdminController {
 						}
 
 						$data=$this->db->get_result($table);
-						// $order=$this->db->get_last_order();
+						$last_order=$this->db->get_last_order();
+						if (get_prefix($last_order!='rel')) $order=$last_order;
 						// strace_($order);
 
 						// trace_('#show#'.$this->db->last_query());
