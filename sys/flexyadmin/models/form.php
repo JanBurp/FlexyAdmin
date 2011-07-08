@@ -532,7 +532,6 @@ class Form Extends Model {
 				$out.='/>';
 				break;
 
-
 			case "html":
 				$out.=$field['value'];
 				if (isset($field['html'])) $out.=div('flexyFormHtml').$field['html']._div();
@@ -761,7 +760,7 @@ class Form Extends Model {
 				break;
 
 			case "password":
-				if (substr($this->action,0,17)=='/admin/show/form/')
+				if (substr($this->action,0,12)=='/admin/show/')
 					$out.=form_input($attr);
 				else
 					$out.=form_password($attr);
