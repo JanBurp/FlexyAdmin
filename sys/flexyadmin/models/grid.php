@@ -160,8 +160,8 @@ class Grid Extends Model {
 			$orderClass='';
 			if ($this->order==$name) $orderClass=' headerSortDown';
 			if ($this->order=='_'.$name) $orderClass=' headerSortUp';
-			$table["heading"]["row"][]=array(	"class"	=>"$tableClass $name ".get_prefix($name)." $extraClass ".alternator("oddcol","evencol").$orderClass,
-																				"cell"	=> $heading );
+			if ($name=='id') $orderClass.=' edit';
+			$table["heading"]["row"][]=array(	"class"	=>"$tableClass $name ".get_prefix($name)." $extraClass ".alternator("oddcol","evencol").$orderClass, "cell"	=> $heading );
 		}
 
 		$data=$this->rows;

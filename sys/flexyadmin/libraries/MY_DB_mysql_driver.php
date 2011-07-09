@@ -28,6 +28,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	var $extraFullField;
 	var $orderAsTree;
 	var $order;
+	var $orderByForeign;
 	var $ar_dont_select;
 	var $selectFirst;
 	var	$selectFirsts;
@@ -54,6 +55,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		$this->where_uri();
 		$this->uri_as_full_uri(FALSE);
 		$this->order_as_tree(FALSE);
+		$this->order_by_foreign(FALSE);
 		$this->ar_dont_select=array();
 		$this->select_first();
 	}
@@ -91,14 +93,38 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			return FALSE;
 	}
 
+	
 	/**
-	 * Searches for a standard order field in config table.
+	 * Sets ar_order_by by the order of the given foreign keys, by looking into the order of the foreign tables
+	 */
+	function _set_order_by_foreign($order_by_foreign=FALSE) {
+		if ($order_by_foreign) {
+			if (!is_array($order_by_foreign)) $order_by_foreign=array($order_by_foreign);
+			$CI=& get_instance();
+			foreach ($order_by_foreign as $key => $foreign_order_id) {
+				$desc=explode(' ',$foreign_order_id);
+				$foreign_order_id=$desc[0];
+				// to get good order for SQL, ASC/DESC must be swapped.
+				if (isset($desc[1])) $desc=''; else $desc='DESC';
+				$foreign_table=foreign_table_from_key($foreign_order_id);
+				$abstract_fields=$this->get_abstract_field($foreign_table);
+				$sql="SELECT `id`,$abstract_fields FROM `$foreign_table` ORDER BY `abstract` $desc";
+				$query=$this->query($sql);
+				$foreign_order_ids=array();
+				foreach ($query->result_array() as $row) {$foreign_order_ids[$row['id']]=$row['id'];}
+				foreach ($foreign_order_ids as $id => $row) {$this->order_by('('.$foreign_order_id.' = '.$row['id'].')');}
+			}
+		}
+	}
+
+	/**
+	 * Sets standard order. First by looking in standard order field in config table.
 	 * If no explicit order set, decides according to prefixen what order field to take.
 	 * See flexyadmin_config [FIELDS_standard_order] what fields.
 	 */
-	function _set_standard_order($table,$fallbackOrder="") {
+	function _set_standard_order($table,$fallbackOrder="",$tree_possible=TRUE,$set=TRUE) {
 		$order="";
-		if ($this->orderAsTree) {
+		if ($this->orderAsTree and $tree_possible) {
 			if ($this->field_exists('self_parent',$table)) $this->order_by("self_parent");
 			if ($this->field_exists('order',$table)) $this->order_by("order");
 			$order="self_parent";
@@ -130,16 +156,24 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 						while (empty($order) and next($stdFields));
 					}
 				}
-				$this->order_by($order);
+				if ($set) $this->order_by($order);
 			}
 		}
-		$this->order=$this->ar_orderby;
+		if ($set) $this->order=$this->ar_orderby;
 		return $order;
 	}
 
 	function order_by($args) {
 		parent::order_by($args);
 		$this->order=$args;
+	}
+
+	function order_by_foreign($args=FALSE) {
+		$this->order_by_foreign=$args;
+	}
+
+	function order_as_tree($orderAsTree=TRUE) {
+		$this->orderAsTree=$orderAsTree;
 	}
 
 	function get_last_order() {
@@ -202,10 +236,6 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		if (!empty($dont_select)) {
 			$this->ar_dont_select[]=$dont_select;
 		}
-	}
-
-	function order_as_tree($orderAsTree=TRUE) {
-		$this->orderAsTree=$orderAsTree;
 	}
 
 	function uri_as_full_uri($fullUri=TRUE,$extraFullField='') {
@@ -335,9 +365,13 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		$this->select($select);
 
 		/**
-		 * set standard order if not set
+		 * Set Order
 		 */
-		if (empty($this->ar_orderby)) $this->_set_standard_order($table);
+		if ($this->order_by_foreign) {
+			$this->_set_order_by_foreign($this->order_by_foreign);
+		}
+		elseif (empty($this->ar_orderby))
+			$this->_set_standard_order($table);
 
 		/**
 		 * if many, find if a where or like part is referring to a many table
@@ -552,7 +586,8 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		$extraFullField=$this->extraFullField;
 		
 		$result=$this->_get_result($table,$limit,$offset);
-		// order results if asked for
+		
+		// order results as tree if asked for
 		if ($orderAsTree and !empty($result)) {
 			$options=el("options",$result);
 			$multiOptions=el("multi_options",$result);
@@ -563,9 +598,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			if ($multiOptions) $result["multi_options"]=$multiOptions;
 		}
 		
-		/**
-		 * Full uris if asked for
-		 */
+		// Full uris if asked for
 		if ($fullUri) {
 			foreach ($result as $key => $row) {
 				if ($row["self_parent"]!=0) {
@@ -647,6 +680,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	function _get_result($table,$limit=0,$offset=0) {
 		// init
 		$result=array();
+		
 		// fetch data
 		$query=$this->_get($table,$limit,$offset);
 		log_("info","[DB+] Get data from query:");
@@ -716,7 +750,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 
 		/**
 			* If where_uri, and more uri's found? Search parent uris for the right one
-			* TODO: Misschien blijven er nog meer over? Wat dat?
+			* TODO: Misschien blijven er nog meer over? Wat dan?
 			*/
 		if (!empty($this->whereUri) and count($result)>1) {
 			// trace_($this->whereUri);

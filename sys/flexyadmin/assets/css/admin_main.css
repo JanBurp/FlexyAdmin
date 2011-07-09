@@ -666,23 +666,6 @@ img.zoom:hover	{ border-color:#696; }
 
 /** grid sorter **/
 
-table.grid .header {
-	background-image: url(../icons/order.gif);
-	background-repeat: no-repeat;
-	background-position: right 6px;
-	padding-left: 5px;
-	cursor: pointer;
-}
-table.grid .headerSortUp {
-	background-image: url(../icons/order_down.gif);
-	background-position: right 6px;
-	background-repeat: no-repeat;
-}
-table.grid .headerSortDown {
-	background-image: url(../icons/order_up.gif);
-	background-position: right 6px;
-	background-repeat: no-repeat;
-}
 table.grid thead .id,
 table.grid thead .order,
 .filemanager table.grid thead .edit,
@@ -690,6 +673,24 @@ table.grid thead .order,
 {
 	background-image: none;
 	cursor: default;
+}
+
+table.grid thead .header {
+	background-image: url(../icons/order.gif);
+	background-repeat: no-repeat;
+	background-position: right 6px;
+	padding-left: 5px;
+	cursor: pointer;
+}
+table.grid thead .headerSortUp {
+	background-image: url(../icons/order_down.gif);
+	background-position: right 6px;
+	background-repeat: no-repeat;
+}
+table.grid thead .headerSortDown {
+	background-image: url(../icons/order_up.gif);
+	background-position: right 6px;
+	background-repeat: no-repeat;
 }
 
 /** drag helper: for sorting **/
