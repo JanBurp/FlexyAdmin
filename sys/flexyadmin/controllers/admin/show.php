@@ -122,10 +122,16 @@ class Show extends AdminController {
 							$this->db->order_as_tree();
 						}
 						elseif ($order) {
-							// check if it is not a many table (can't order on that)
-							if (get_prefix($order)=='rel') $order='';
 							if (substr($order,0,1)=='_') $order=substr($order,1).' DESC';
-							if ($order!='') $this->db->order_by($order);
+							// check if it is not a many table (can't order on that)
+							$orderPre=get_prefix($order);
+							if ($orderPre=='rel') $order='';
+							if ($order!='') {
+								if ($orderPre=='id')
+									$this->db->order_by_foreign($order);
+								else
+									$this->db->order_by($order);
+							}
 						}
 						
 						// has rights?
@@ -151,9 +157,8 @@ class Show extends AdminController {
 
 						$data=$this->db->get_result($table);
 						$last_order=$this->db->get_last_order();
-						if (get_prefix($last_order!='rel')) $order=$last_order;
+						if (get_prefix($last_order!='rel') and substr($last_order,0,1)!='(') $order=$last_order;
 						// strace_($order);
-
 						// trace_('#show#'.$this->db->last_query());
 						// trace_($data);
 
