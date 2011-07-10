@@ -696,6 +696,7 @@ class AdminController extends BasicController {
 		$this->showEditor=false;
 		$this->load->model("ui_names","uiNames");
 		$this->load->library("menu");
+		$this->load->dbforge();
 		$this->helpTexts=array();
 	}
 
