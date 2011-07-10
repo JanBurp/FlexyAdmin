@@ -62,6 +62,21 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		$this->select_first();
 	}
 
+	// Repairs active record
+	function _repair_ar() {
+		// splits ar_where by OR/AND
+		$where=implode($this->ar_where);
+		$split=preg_split("/\s(OR|AND)\s/", $where,-1,PREG_SPLIT_DELIM_CAPTURE);
+		$where=array();
+		$where[]=$split[0];
+		for ($i=1; $i < count($split); $i+=2) { 
+			$item=$split[$i];
+			if (isset($split[$i+1])) $item.=' '.$split[$i+1];
+			$where[]=$item;
+		}
+		$this->ar_where=$where;
+	}
+
 	/**
 	 * Sets primary key.
 	 * If not set, the standard primary key is used.
@@ -486,6 +501,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			$manyTables=$this->get_many_tables($table,$this->many);
 			$manyWhere=FALSE;
 			$manyLike=FALSE;
+			// $this->_repair_ar();
 			// trace_($this->ar_where);
 			// trace_($manyTables);
 			foreach($manyTables as $mTable) {
@@ -493,7 +509,9 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				$relTable=$mTable['rel'];
 				// trace_($mTable);
 				// WHERE
-				$foundKeysArray=array_ereg_search($mTable['id_join'], $this->ar_where);
+				$foundKeysArray=array_ereg_search($mTable['rel'], $this->ar_where);
+				// trace_($this->ar_where);
+				// trace_($foundKeysArray);
 				foreach($foundKeysArray as $key) {
 					$manyWhere=TRUE;
 					$mWhere=$this->ar_where[$key];
