@@ -107,7 +107,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				// to get good order for SQL, ASC/DESC must be swapped.
 				if (isset($desc[1])) $desc=''; else $desc='DESC';
 				$foreign_table=foreign_table_from_key($foreign_order_id);
-				$abstract_fields=$this->get_abstract_field($foreign_table);
+				$abstract_fields=$this->get_abstract_fields_sql($foreign_table);
 				$sql="SELECT `id`,$abstract_fields FROM `$foreign_table` ORDER BY `abstract` $desc";
 				$query=$this->query($sql);
 				$foreign_order_ids=array();
@@ -189,7 +189,9 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	/**
 	*	array("search"=>"", "field"=>"", "or"=>"AND/OR", "in"=>array(val1,val2,val3), "table"=>'' )
 	*/
-	function search($search) {
+	function search($search,$set_sql=TRUE) {
+		// if $search is one dimensial array, make more dimensonal
+		if (isset($search['search'])) $search=array($search);
 		$default=array('search'=>'','field'=>'id','or'=>'AND','table'=>'');
 		$query='';
 		foreach ($search as $k => $s) {
@@ -198,6 +200,26 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				if (!empty($s['table'])) $s['table'].='.';
 				$s['or']=strtoupper($s['or']);
 				$query.=$s['or'].' ';
+				
+				// search in foreign table, with abstract
+				if (get_prefix($s['field'])=='id' and $s['field']!='id') {
+					$foreign_search=$s;
+					$foreign_search['table']=foreign_table_from_key($s['field']);
+					$foreign_search['or']='OR';
+					$ab_fields=$this->get_abstract_fields($foreign_search['table']);
+					foreach ($ab_fields as $ab_field) {
+						$in=array();
+						$ab_field=remove_prefix($ab_field,'.');
+						$foreign_search['field']=$ab_field;
+						$sub_sql="SELECT `id` FROM `".$foreign_search['table']."` WHERE ".$this->search($foreign_search);
+						$sub_query=$this->query($sub_sql);
+						$foreign_ids=array();
+						foreach ($sub_query->result_array() as $row) {array_push($in,$row['id']);}
+						$s['in']=$in;
+					}
+				}
+				
+				// set sql depeding on search type
 				if (isset($s['in'])) {
 					// IN ()
 					$in="'".implode("','",$s['in'])."'";
@@ -214,7 +236,8 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		}
 		$query=substr($query,3); // remove first AND
 		// trace_($query);
-		$this->where($query,NULL,FALSE);
+		if ($set_sql) $this->where($query,NULL,FALSE);
+		return $query;
 	}
 
 	function select_first($pre="") {
@@ -285,7 +308,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			*/
 		if ($this->asAbstracts) {
 			$this->ar_select=array();
-			$this->select(array($this->pk,$this->get_abstract_field($table)));
+			$this->select(array($this->pk,$this->get_abstract_fields_sql($table)));
 		}
 
 		/**
@@ -332,7 +355,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 						$this->join($joinTable.' '.$joinAsTable, $joinAsTable.".$this->pk = ".$table.".".$item["key"], 'left');
 						// add abstract or all foreign fields?
 						if ($this->abstracts) {
-							$abstractField=$this->get_abstract_field($joinAsTable,$field."__");
+							$abstractField=$this->get_abstract_fields_sql($joinAsTable,$field."__");
 							$selectFields[]=$abstractField;
 						}
 						else {
@@ -704,7 +727,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 						$join=rtrim($jTable["join"],'_');
 						if ($this->abstracts) {
 							$this->select($join.".".pk());
-							$this->select($this->get_abstract_field($join));
+							$this->select($this->get_abstract_fields_sql($join));
 						}
 						$relSelect=$this->many[$rel];
 						if (!empty($relSelect)) {
@@ -892,77 +915,76 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	}
 	
 	/**
-	 * function get_abstract_field($table)
-	 *
-	 * Gets select field SQL for an abstract from a table
-	 *
-	 * @param string $table
-	 * @return string Result SQL
+		* Functions for getting the abstract fieds / sql for a table
 	 */
-		function get_abstract_field($table,$asPre="") {
-			$cleanTable=rtrim($table,'_'); // make sure self relation is possible
-			$CI=& get_instance();
-			$abFields=array();
-			/**
-			 * First check if abstract fields are set for this table
-			 */
-			$f=$CI->cfg->get('CFG_table',$cleanTable,"str_abstract_fields");
-			if (isset($f)) $abFields=explode_pre(",",$f,$cleanTable.".");
-
-			/**
-			 * If not set: Auto abstract fields according to prefixes
-			 */
-			if (empty($abFields)) {
-				$allFields=$this->list_fields($cleanTable);
-				$preTypes=$CI->config->item('ABSTRACT_field_pre_types');
-				$nr=$CI->config->item('ABSTRACT_field_max');
-				$loop=true;
-				while ($loop) {
-					$field=current($allFields);
-					$pre=get_prefix($field);
-					if (in_array($pre,$preTypes)) {
-						array_push($abFields,$table.".".$field);
-						$nr--;
-					}
-					$loop=($nr>0 and each($allFields)!==false);
+	function get_abstract_fields($table,$asPre='') {
+		$cleanTable=rtrim($table,'_'); // make sure self relation is possible
+		$CI=& get_instance();
+		$abFields=array();
+		/**
+		 * First check if abstract fields are set for this table
+		 */
+		$f=$CI->cfg->get('CFG_table',$cleanTable,"str_abstract_fields");
+		if (isset($f)) $abFields=explode_pre(",",$f,$cleanTable.".");
+		/**
+		 * If not set: Auto abstract fields according to prefixes
+		 */
+		if (empty($abFields)) {
+			$allFields=$this->list_fields($cleanTable);
+			$preTypes=$CI->config->item('ABSTRACT_field_pre_types');
+			$nr=$CI->config->item('ABSTRACT_field_max');
+			$loop=true;
+			while ($loop) {
+				$field=current($allFields);
+				$pre=get_prefix($field);
+				if (in_array($pre,$preTypes)) {
+					array_push($abFields,$table.".".$field);
+					$nr--;
 				}
+				$loop=($nr>0 and each($allFields)!==false);
 			}
-			/**
-			 * If not set: Auto abstract fields according to db types
-			 */
-			if (empty($abFields)) {
-				$fieldData=$this->field_data($cleanTable);
-				$types=$CI->config->item('ABSTRACT_field_types');
-				$nr=$CI->config->item('ABSTRACT_field_max');
-				$loop=true;
-				while ($loop) {
-					$fieldInfo=current($fieldData);
-					$type=$fieldInfo->type;
-					if (in_array($type,$types)) {
-						array_push($abFields,$table.".".$fieldInfo->name);
-						$nr--;
-					}
-					$loop=($nr>0 and each($fieldData)!==false);
-				}
-			}
-			/**
-			 * If still nothing set... just get the first fields
-			 */
-			if (empty($abFields)) {
-				$allFields=$this->list_fields($cleanTable);
-				$nr=$CI->config->item('ABSTRACT_field_max');
-				for ($n=0; $n<$nr; $n++) {
-					array_push($abFields,$table.".".each($allFields));
-				}
-			}
-
-			/**
-			 * ok, abstract fields are found, now create SQL for it.
-			 */
-			$out=$this->concat($abFields)." AS ".$asPre.$CI->config->item('ABSTRACT_field_name');
-			return $out;
 		}
+		/**
+		 * If not set: Auto abstract fields according to db types
+		 */
+		if (empty($abFields)) {
+			$fieldData=$this->field_data($cleanTable);
+			$types=$CI->config->item('ABSTRACT_field_types');
+			$nr=$CI->config->item('ABSTRACT_field_max');
+			$loop=true;
+			while ($loop) {
+				$fieldInfo=current($fieldData);
+				$type=$fieldInfo->type;
+				if (in_array($type,$types)) {
+					array_push($abFields,$table.".".$fieldInfo->name);
+					$nr--;
+				}
+				$loop=($nr>0 and each($fieldData)!==false);
+			}
+		}
+		/**
+		 * If still nothing set... just get the first fields
+		 */
+		if (empty($abFields)) {
+			$allFields=$this->list_fields($cleanTable);
+			$nr=$CI->config->item('ABSTRACT_field_max');
+			for ($n=0; $n<$nr; $n++) {
+				array_push($abFields,$table.".".each($allFields));
+			}
+		}
+		return $abFields;
+	}
 
+	function get_abstract_fields_sql($table,$asPre='') {
+		$abFields=$this->get_abstract_fields($table,$asPre);
+		$CI=& get_instance();
+		return $this->concat($abFields)." AS ".$asPre.$CI->config->item('ABSTRACT_field_name');
+	}
+
+	// This one is for old sites, same as get_abstract_fields_sql()
+	function get_abstract_field($table,$asPre="") {
+		return $this->get_abstract_fields_sql($table, $asPre);
+	}
 
 /**
 	*	Some functions to include and filter one to many tables
@@ -1042,7 +1064,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			$asTree=$this->has_field($cleanTable,'self_parent');
 			$this->select($this->pk);
 			if ($asTree) $this->select('uri,order,self_parent');
-			$this->select($this->get_abstract_field($cleanTable));
+			$this->select($this->get_abstract_fields_sql($cleanTable));
 			if ($asTree) {
 				$this->order_as_tree();
 			}
