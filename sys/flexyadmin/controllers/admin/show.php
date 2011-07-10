@@ -123,12 +123,12 @@ class Show extends AdminController {
 						}
 						elseif ($order) {
 							if (substr($order,0,1)=='_') $order=substr($order,1).' DESC';
-							// check if it is not a many table (can't order on that)
 							$orderPre=get_prefix($order);
-							if ($orderPre=='rel') $order='';
 							if ($order!='') {
 								if ($orderPre=='id')
 									$this->db->order_by_foreign($order);
+								elseif ($orderPre=='rel')
+									$this->db->order_by_many($order);
 								else
 									$this->db->order_by($order);
 							}
@@ -152,15 +152,24 @@ class Show extends AdminController {
 							foreach ($fields as $field) {
 								$searchArr[]=array('field'=>$field,'search'=>$search,'or'=>'OR','table'=>$table);
 							}
+							// search in many_tables if any
+							if ($this->db->many) {
+								if (!is_array($this->db->many))
+									$many_tables=$this->db->get_many_tables($table);
+								else
+									$many_tables=$many;
+								foreach ($many_tables as $many_table => $value) {
+									$searchArr[]=array('field'=>$many_table,'search'=>$search,'or'=>'OR','table'=>$table);
+								}
+							}
 							$this->db->search($searchArr);
 						}
 
 						$data=$this->db->get_result($table);
 						$last_order=$this->db->get_last_order();
-						if (get_prefix($last_order!='rel') and substr($last_order,0,1)!='(') $order=$last_order;
-						// strace_($order);
-						// trace_('#show#'.$this->db->last_query());
-						// trace_($data);
+						if (substr($last_order,0,1)!='(') $order=$last_order;
+						// if (empty($order)) $order=remove_postfix($last_order,'.');
+						
 
 						if (empty($data) and empty($search)) {
 							/**

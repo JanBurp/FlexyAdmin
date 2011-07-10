@@ -29,6 +29,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	var $orderAsTree;
 	var $order;
 	var $orderByForeign;
+	var $orderByMany;
 	var $ar_dont_select;
 	var $selectFirst;
 	var	$selectFirsts;
@@ -56,6 +57,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		$this->uri_as_full_uri(FALSE);
 		$this->order_as_tree(FALSE);
 		$this->order_by_foreign(FALSE);
+		$this->order_by_many(FALSE);
 		$this->ar_dont_select=array();
 		$this->select_first();
 	}
@@ -97,7 +99,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	/**
 	 * Sets ar_order_by by the order of the given foreign keys, by looking into the order of the foreign tables
 	 */
-	function _set_order_by_foreign($order_by_foreign=FALSE) {
+	function _set_order_by_foreign($order_by_foreign=FALSE,$table) {
 		if ($order_by_foreign) {
 			if (!is_array($order_by_foreign)) $order_by_foreign=array($order_by_foreign);
 			$CI=& get_instance();
@@ -112,7 +114,48 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				$query=$this->query($sql);
 				$foreign_order_ids=array();
 				foreach ($query->result_array() as $row) {$foreign_order_ids[$row['id']]=$row['id'];}
-				foreach ($foreign_order_ids as $id => $row) {$this->order_by('('.$foreign_order_id.' = '.$row['id'].')');}
+				foreach ($foreign_order_ids as $id => $row) {$this->order_by('('.$table.'.'.$foreign_order_id.' = '.$row['id'].')');}
+			}
+		}
+	}
+
+	/**
+	 * Sets ar_order_by by the order of the given relation tables keys, by looking at the first found data
+	 */
+	function _set_order_by_many($order_by_many=FALSE,$table) {
+		if ($order_by_many) {
+			if (!is_array($order_by_many)) $order_by_many=array($order_by_many);
+			$CI=& get_instance();
+			foreach ($order_by_many as $rel_table) {
+				// trace_($rel_table);
+				$desc=explode(' ',$rel_table);
+				$rel_table=$desc[0];
+				// to get good order for SQL, ASC/DESC must be swapped.
+				if (isset($desc[1])) $desc='DESC'; else $desc='';
+				$foreign_table=join_table_from_rel_table($rel_table);
+				$this_key=this_key_from_rel_table($rel_table);
+				$join_key=join_key_from_rel_table($rel_table);
+				$abstract_fields=$this->get_abstract_fields_sql($foreign_table);
+				// order of foreign table
+				$sql="SELECT `id`,$abstract_fields FROM `$foreign_table` ORDER BY `abstract` $desc";
+				// trace_($sql);
+				$query=$this->query($sql);
+				$foreign_order_ids=array();
+				foreach ($query->result_array() as $row) {$foreign_order_ids[$row['id']]=$row['id'];}
+				// order in relation table
+				$sql="SELECT * FROM `$rel_table` ORDER BY";
+				foreach ($foreign_order_ids as $id => $row) { $sql.=' ('.$join_key.' = '.$row['id'].'),'; }
+				$sql=substr($sql,0,strlen($sql)-1);
+				// trace_($sql);
+				$query=$this->query($sql);
+				// order
+				$order_ids=array();
+				foreach ($query->result_array() as $row) {
+					$order_ids[$row[$this_key]]=$row[$this_key];
+				}
+				// for right order (of empty fields)
+				// if ($desc=='DESC') sort($order_ids);
+				foreach ($order_ids as $key=>$value) {$this->order_by('(`'.$table.'`.`id` = '.$value.') ');}
 			}
 		}
 	}
@@ -172,6 +215,10 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		$this->order_by_foreign=$args;
 	}
 
+	function order_by_many($args=FALSE) {
+		$this->order_by_many=$args;
+	}
+
 	function order_as_tree($orderAsTree=TRUE) {
 		$this->orderAsTree=$orderAsTree;
 	}
@@ -192,17 +239,19 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	function search($search,$set_sql=TRUE) {
 		// if $search is one dimensial array, make more dimensonal
 		if (isset($search['search'])) $search=array($search);
+		// trace_($search);
 		$default=array('search'=>'','field'=>'id','or'=>'AND','table'=>'');
-		$query='';
+		$sql='';
 		foreach ($search as $k => $s) {
 			if (($s['search']!='') and ($s['field']!='')) {
 				$s=array_merge($default,$s);
 				if (!empty($s['table'])) $s['table'].='.';
 				$s['or']=strtoupper($s['or']);
-				$query.=$s['or'].' ';
+				$sql.=$s['or'].' ';
 				
+				$fieldPre=get_prefix($s['field']);
 				// search in foreign table, with abstract
-				if (get_prefix($s['field'])=='id' and $s['field']!='id') {
+				if ($fieldPre=='id' and $s['field']!='id') {
 					$foreign_search=$s;
 					$foreign_search['table']=foreign_table_from_key($s['field']);
 					$foreign_search['or']='OR';
@@ -211,33 +260,63 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 						$in=array();
 						$ab_field=remove_prefix($ab_field,'.');
 						$foreign_search['field']=$ab_field;
-						$sub_sql="SELECT `id` FROM `".$foreign_search['table']."` WHERE ".$this->search($foreign_search);
+						$sub_sql="SELECT `id` FROM `".$foreign_search['table']."` WHERE ".$this->search($foreign_search,FALSE);
 						$sub_query=$this->query($sub_sql);
 						$foreign_ids=array();
 						foreach ($sub_query->result_array() as $row) {array_push($in,$row['id']);}
 						$s['in']=$in;
 					}
 				}
+
+				// search in many table, with abstract
+				if ($fieldPre=='rel') {
+					$foreign_search=$s;
+					$rel_table=$s['field'];
+					$foreign_search['table']=join_table_from_rel_table($rel_table);
+					$foreign_search['or']='OR';
+					$this_key=this_key_from_rel_table($rel_table);
+					$join_key=join_key_from_rel_table($rel_table);
+					$ab_fields=$this->get_abstract_fields($foreign_search['table']);
+					foreach ($ab_fields as $ab_field) {
+						$in=array();
+						$ab_field=remove_prefix($ab_field,'.');
+						$foreign_search['field']=$ab_field;
+						$sub_sql="SELECT `id` FROM `".$foreign_search['table']."` WHERE ".$this->search($foreign_search,FALSE);
+						$sub_query=$this->query($sub_sql);
+						$foreign_ids=array();
+						foreach ($sub_query->result_array() as $row) {$foreign_ids[$row['id']]=$row;}
+						if ($foreign_ids) {
+							// search if any in relation table
+							$sub_sql="SELECT * FROM `$rel_table` WHERE ";
+							foreach ($foreign_ids as $id => $row) { $sub_sql.=' ('.$join_key.' = '.$row['id'].') OR '; }
+							$sub_sql=substr($sub_sql,0,strlen($sub_sql)-3);
+							$sub_query=$this->query($sub_sql);
+							foreach ($sub_query->result_array() as $row) {array_push($in,$row['id_test']);}
+						}
+						$s['in']=$in;
+					}
+					$s['field']='id';
+				}
 				
-				// set sql depeding on search type
+				// set sql depending on search type
 				if (isset($s['in'])) {
 					// IN ()
 					$in="'".implode("','",$s['in'])."'";
 					if (!empty($s['in']))
-						$query.=$s['table'].$s['field'].' IN ('.$in.') ';
+						$sql.=$s['table'].$s['field'].' IN ('.$in.') ';
 					else
-						$query.=$s['table'].$s['field'].' IN (-1) '; // empty result
+						$sql.=$s['table'].$s['field'].' IN (-1) '; // empty result
 				}
 				else {
 					// LIKE
-					$query.=$s['table'].$s['field'].' LIKE \'%'.$s['search'].'%\' ';
+					$sql.=$s['table'].$s['field'].' LIKE \'%'.$s['search'].'%\' ';
 				}
 			}
 		}
-		$query=substr($query,3); // remove first AND
-		// trace_($query);
-		if ($set_sql) $this->where($query,NULL,FALSE);
-		return $query;
+		$sql=substr($sql,3); // remove first AND
+		// trace_($sql);
+		if ($set_sql) $this->where($sql,NULL,FALSE);
+		return $sql;
 	}
 
 	function select_first($pre="") {
@@ -391,10 +470,14 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		 * Set Order
 		 */
 		if ($this->order_by_foreign) {
-			$this->_set_order_by_foreign($this->order_by_foreign);
+			$this->_set_order_by_foreign($this->order_by_foreign,$table);
+		}
+		elseif ($this->order_by_many) {
+			$this->_set_order_by_many($this->order_by_many,$table);
 		}
 		elseif (empty($this->ar_orderby))
 			$this->_set_standard_order($table);
+
 
 		/**
 		 * if many, find if a where or like part is referring to a many table
@@ -411,8 +494,6 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				// trace_($mTable);
 				// WHERE
 				$foundKeysArray=array_ereg_search($mTable['id_join'], $this->ar_where);
-				// trace_($this->ar_where);
-				// trace_($foundKeysArray);
 				foreach($foundKeysArray as $key) {
 					$manyWhere=TRUE;
 					$mWhere=$this->ar_where[$key];
@@ -469,6 +550,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			}
 		}
 		
+		
 		/**
 		*	If TEXT maxlength, replace these in ar_where
 		*/
@@ -496,11 +578,12 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		/**
 		 * get the query
 		 */
+		
 		if ($limit>=1)
 			$query=$this->get($table,$limit,$offset);
 		else
 			$query=$this->get($table);
-		// trace_($this->last_query());
+		// trace_('#show#'.$this->last_query());
 		return $query;
 	}
 	
@@ -706,6 +789,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		
 		// fetch data
 		$query=$this->_get($table,$limit,$offset);
+		
 		log_("info","[DB+] Get data from query:");
 		$res=$query->result_array();
 		$result=$this->_set_key_to($res,$this->key);
@@ -714,6 +798,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		 * add (one to) many data if asked for
 		 */
 		if ($this->many) {
+			$last_order=$this->get_last_order(); // keep last order
 			$manyTables=$this->get_many_tables($table,$this->many);
 			if (count($manyTables)>0) {
 				// loop through all results to add the add_many data
@@ -769,7 +854,9 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 					}
 				}
 			}
+			$this->order=$last_order;
 		}
+
 
 		/**
 			* If where_uri, and more uri's found? Search parent uris for the right one
