@@ -157,9 +157,10 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				$query=$this->query($sql);
 				$foreign_order_ids=array();
 				foreach ($query->result_array() as $row) {$foreign_order_ids[$row['id']]=$row['id'];}
+				// trace_($foreign_order_ids);
 				// order in relation table
 				$sql="SELECT * FROM `$rel_table` ORDER BY";
-				foreach ($foreign_order_ids as $id => $row) { $sql.=' ('.$join_key.' = '.$row['id'].'),'; }
+				foreach ($foreign_order_ids as $id => $row) { $sql.=' ('.$join_key.' = '.$id.'),'; }
 				$sql=substr($sql,0,strlen($sql)-1);
 				// trace_($sql);
 				$query=$this->query($sql);
@@ -306,7 +307,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 							foreach ($foreign_ids as $id => $row) { $sub_sql.=' ('.$join_key.' = '.$row['id'].') OR '; }
 							$sub_sql=substr($sub_sql,0,strlen($sub_sql)-3);
 							$sub_query=$this->query($sub_sql);
-							foreach ($sub_query->result_array() as $row) {array_push($in,$row['id_test']);}
+							foreach ($sub_query->result_array() as $row) {array_push($in,$row[$this_key]);}
 						}
 						$s['in']=$in;
 					}
