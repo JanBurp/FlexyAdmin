@@ -671,6 +671,11 @@ $config['FIELDS_prefix'] = array (
 											"form"				=> "function_dropdown_media",
 											"validation"	=> "trim"
 											),
+	"list"			=> array (
+											"grid"				=> "%s",
+											"form"				=> "function_dropdown_list",
+											"validation"	=> "trim"
+											),
 	"str"				=> array (
 											"grid"				=> "%s",
 											"form"				=> ""
