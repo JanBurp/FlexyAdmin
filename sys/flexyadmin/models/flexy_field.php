@@ -845,6 +845,36 @@ class Flexy_field extends Model {
 		unset($out["button"]);
 		return $out;
 	}
+	
+	function _dropdown_list_form() {
+		$options=array();
+		$field=$this->field;
+		$list=remove_prefix($field);
+		$list_file=$list.'_list.js';
+		$site_url=site_url();
+		if (file_exists('site/assets/lists/'.$list_file)) {
+			$c=read_file('site/assets/lists/'.$list_file);
+			$c=str_replace(array('var tinyMCELinkList = new Array(',');'),'',$c);
+			$links=explode('],[',$c);
+			foreach ($links as $key => $link) {
+				if ( ($link=='""') or (substr($link,0,1)=='[') or (substr($link,0,4)=='"-- ') )
+					unset($links[$key]);
+				else
+					$links[$key]=str_replace($site_url,'',$link);
+			}
+		}
+		$options[""]="";
+		foreach($links as $link) {
+			$lopt=explode(',',$link);
+			if (isset($lopt[1])) {
+				$options[str_replace('"','',$lopt[1])]=str_replace('"','',$lopt[0]);
+			}
+		}
+		$out=$this->_standard_form_field($options);
+		unset($out["button"]);
+		return $out;
+	}
+	
 
 	function _dropdown_form() {
 		$out=$this->_dropdown_media_form();
