@@ -88,7 +88,7 @@ td.charmap, #charmap a {width:18px; height:18px; color:#DEA; border:1px solid #D
 .tabs .current span {background:url(img/tabs.gif) no-repeat right -63px;}
 .tabs a {text-decoration:none; font-family:Verdana, Arial; font-size:10px;}
 .tabs a:link, .tabs a:visited, .tabs a:hover {color:#696;}
-#advimage #appearance_tab, #advimage #advanced_tab {display:none;}
+/*#advimage #appearance_tab, #advimage #advanced_tab {display:none;}*/
 
 /* Panels */
 .panel_wrapper div.panel 		{display:none;}
