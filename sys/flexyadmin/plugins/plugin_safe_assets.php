@@ -59,7 +59,7 @@ class Plugin_safe_assets extends Plugin_ {
 												$assets									=> "css|img|js",
 												$assets.'_thumbcache'	=> $images,
 												$assets.'lists'				=> "js",
-												$assets.'css'					=> "css|htc|php",
+												$assets.'css'					=> "css|htc|php|eot|svg|ttf|woff|otf",
 												$assets.'img'					=> $images.'|'.$flash.'|ico', 
 												$assets.'js'						=> "js|css|html|swf|".$images, 
 												);
