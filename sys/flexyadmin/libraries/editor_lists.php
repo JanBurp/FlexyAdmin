@@ -169,7 +169,7 @@ class Editor_lists {
 				}
 			}
 		}
-		$list=substr($list,0,strlen($list)-1);
+		if (substr($list,strlen($list)-1)==',') $list=substr($list,0,strlen($list)-1);
 		$list.=");";
 		$ListFile="site/assets/lists/$jsFile.js";
 		$result=write_file($ListFile, $list);
