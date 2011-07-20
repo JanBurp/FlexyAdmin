@@ -16,7 +16,7 @@ $lang['dialog_delete_sure']			= "Weet je zeker dat je <strong>%s</strong> wilt v
 $lang['dialog_delete_more']			= "%s items";
 
 
-$lang['form_random_password']		= "Willekeurig Paswoord";
+$lang['form_random_password']		= "Willekeurig Wachtwoord";
 
 $lang['ui-timepicker-choose-hours'] = 'Kies eerst het uur';
 $lang['ui-timepicker-choose-minutes'] = 'Kies nu de minuten';
