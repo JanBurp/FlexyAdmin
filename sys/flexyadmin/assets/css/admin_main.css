@@ -706,8 +706,10 @@ table.grid thead .headerSortDown {
 
 /** grid pager **/
 tfoot tr.pagination td {padding:10px;background-color:#DEA;background-image: url("../img/inset.png");background-position: 50% 50%;text-align:center;}
-span.pager * {padding:0px 2px;font-size:14px;}
-span.pager_totals {float:right;}
+tfoot tr.pagination * {padding:0px 2px;font-size:14px;}
+tfoot tr.pagination li {display:inline;}
+tfoot tr.pagination li.current {font-weight:bold;}
+tfoot tr.pagination .pagination_total {float:right;}
 
 /* ============== filemanager ================== */
 
