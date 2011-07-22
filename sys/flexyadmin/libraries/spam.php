@@ -17,7 +17,8 @@ class Spam {
 
 	function init($settings=array()) {
 		$default=array(	'score_low'=>5,'score_high'=>10,
-										'trigger_words'=>'buy,cheap,offer','trigger_word_weight'=>2,
+										'trigger_words'=>'buy,cheap,offer,discount,viagra,cialis,$,free,f r e e,amazing,billion,cash,cheap,credit,earn,sales,order now',
+										'trigger_word_weight'=>5,
 										'link_http_weight'=>5,
 										'link_url_weight'=>10,
 										'text_density_limit'=>70,
@@ -67,10 +68,11 @@ class Spam {
 	}
 	
 	function check_trigger_words() {
+		$text=strtolower($this->text);
 		$this->rapport['word_count']=0;
 		$word_array = explode(",", $this->settings['trigger_words']);
 		$word_array_len = count($word_array)-1;
-		for($i=0; $i<=$word_array_len; $i++) $this->rapport['word_count'] += substr_count($this->text, $word_array[$i]);
+		for($i=0; $i<=$word_array_len; $i++) $this->rapport['word_count'] += substr_count($text, $word_array[$i]);
 		$score=$this->rapport['word_count'] * $this->settings['trigger_word_weight'];
 		$this->rapport['score']+=$score;
 		return $score;
