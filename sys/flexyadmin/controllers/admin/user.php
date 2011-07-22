@@ -51,7 +51,7 @@ class User extends Controller {
 		$result=$this->db->get_result("cfg_users");
 		if (!isset($result[$userId]["rel_users__rights"])) {
 			// pre version of flexy database..
-			show_error('You are using a FlexyAdmin version that is newer than the database.<br/>Check your version in "sys/build.txt" and exectute the update sql files found in the directory "db".');
+			show_error('You are using a FlexyAdmin version that is newer than the database.<br/>Check your version in "sys/build.txt" and execute the update sql files found in the directory "db".');
 			die();
 		}
 		$allrights=$result[$userId]["rel_users__rights"];
