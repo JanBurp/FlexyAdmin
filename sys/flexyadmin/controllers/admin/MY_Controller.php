@@ -91,7 +91,7 @@ class MY_Controller extends Controller {
 			$this->cfg->load('cfg_admin_menu',array('id'));
 		}
 		else {
-			$this->cfg->load('CFG_configurations','','email_webmaster_email,str_menu_table,b_logout_to_site,b_query_urls');
+			$this->cfg->load('CFG_configurations'); //,'','email_webmaster_email,str_menu_table,b_logout_to_site,b_query_urls');
 			$this->cfg->load('CFG_table',$this->config->item('CFG_table_name'),'id,table,str_order_by');
 		}
 		// trace_($this->cfg);
@@ -351,7 +351,7 @@ class BasicController extends MY_Controller {
 	function _can_use_tools() {
 		reset($this->rights);
 		$rights=current($this->rights);
-		if ($rights['b_tools']) return TRUE;
+		if (isset($rights['b_tools']) and $rights['b_tools']) return TRUE;
 		return FALSE;
 	}
 
@@ -876,6 +876,7 @@ class AdminController extends BasicController {
 						$this->db->order_by("order");
 						$query=$this->db->get($mediaInfoTbl);
 						foreach($query->result_array() as $mediaInfo) {
+							if (!isset($mediaInfo['path']) and isset($mediaInfo['str_path'])) $mediaInfo['path']=$mediaInfo['str_path'];
 							$menuName=$this->uiNames->get($mediaInfo['path']);
 							while (isset($a[$menuName])) {$menuName.=" ";}
 							$rightsName=el('path',$mediaInfo);

@@ -142,7 +142,7 @@ class Show extends AdminController {
 						if ($table=="cfg_users") $this->db->where("id >=",$this->user_id);
 							
 						$this->db->add_foreigns_as_abstracts();
-						if ($tableInfo['b_grid_add_many']) $this->db->add_many();
+						if (isset($tableInfo['b_grid_add_many']) and $tableInfo['b_grid_add_many']) $this->db->add_many();
 						$this->db->max_text_len(250);
 						
 						// search?
