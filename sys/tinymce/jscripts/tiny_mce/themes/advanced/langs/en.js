@@ -45,7 +45,6 @@ custom1_desc:"Your custom description here",
 forecolor_desc:"Select text color",
 backcolor_desc:"Select background color",
 charmap_desc:"Insert custom character",
-charmap_delta_height:60,
 visualaid_desc:"Toggle guidelines/invisible elements",
 anchor_desc:"Insert/edit anchor",
 cut_desc:"Cut",
@@ -59,5 +58,11 @@ clipboard_msg:"Copy/Cut/Paste is not available in Mozilla and Firefox.\r\nDo you
 path:"Path",
 newdocument:"Are you sure you want clear all contents?",
 toolbar_focus:"Jump to tool buttons - Alt+Q, Jump to editor - Alt-Z, Jump to element path - Alt-X",
-more_colors:"More colors"
+more_colors:"More colors",
+
+// Accessibility Strings
+shortcuts_desc:'Accessibility Help',
+help_shortcut:'. Press ALT F10 for toolbar. Press ALT 0 for help.',
+rich_text_area:"Rich Text Area",
+toolbar:"Toolbar"
 });

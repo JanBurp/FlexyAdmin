@@ -35,6 +35,7 @@ input {background:#FFF; border:1px solid #DEA;}
 input, select, textarea {font-family:Verdana, Arial, Helvetica, sans-serif; font-size:10px;color:#696;}
 input, select, textarea {border:1px solid #DEA; width:203px;}
 body.table_dialog #general_panel input, body.table_dialog #general_panel select, body.table_dialog #general_panel textarea {border:1px solid #DEA; width:70px;}
+body#table input, body#table select, body#table textarea {width:96px;}
 
 textarea {max-width:none;}
 input.radio {border:1px none #696; background:transparent; vertical-align:middle;}
@@ -88,7 +89,6 @@ td.charmap, #charmap a {width:18px; height:18px; color:#DEA; border:1px solid #D
 .tabs .current span {background:url(img/tabs.gif) no-repeat right -63px;}
 .tabs a {text-decoration:none; font-family:Verdana, Arial; font-size:10px;}
 .tabs a:link, .tabs a:visited, .tabs a:hover {color:#696;}
-/*#advimage #appearance_tab, #advimage #advanced_tab {display:none;}*/
 
 /* Panels */
 .panel_wrapper div.panel 		{display:none;}
@@ -107,7 +107,7 @@ h3 {font-size:14px;}
 .title {font-size:12px; font-weight:bold; color:#696;}
 
 /* Dialog specific */
-#link .panel_wrapper, #link div.current {height:125px;}
+#link .panel_wrapper, #link div.current {height:126px;}
 #image .panel_wrapper, #image div.current {height:200px;}
 #plugintable thead {font-weight:bold; background:#DDD;}
 #plugintable, #about #plugintable td {border:1px solid #DEA;}
