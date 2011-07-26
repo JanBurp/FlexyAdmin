@@ -1,5 +1,0 @@
-Order Allow,Deny
-Deny from all
-<Files ~ "\.(xml|XML)$">
-Allow from all
-</Files>
