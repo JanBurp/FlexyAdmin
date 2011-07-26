@@ -15,12 +15,12 @@
   *
   */
 
-class ui_names extends Model {
+class ui_names extends CI_Model {
 
 	var $uiNames = array();
 
-	function ui_names() 	{
-		parent::Model();
+	function __construct() 	{
+		parent::__construct();
 		$this->load();
 	}
 

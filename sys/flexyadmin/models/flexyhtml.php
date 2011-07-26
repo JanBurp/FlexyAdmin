@@ -1,5 +1,5 @@
 <?
-class FlexyHtml Extends Model {
+class FlexyHtml Extends CI_Model {
 
 	var $name;
 	var $parent;
@@ -11,8 +11,8 @@ class FlexyHtml Extends Model {
 	var $html;
 	var $view;
 
-	function FlexyHtml() {
-		parent::Model();
+	function __construct() {
+		parent::__construct();
 		$this->init();
 	}
 

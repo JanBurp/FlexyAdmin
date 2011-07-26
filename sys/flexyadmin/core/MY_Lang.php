@@ -10,12 +10,12 @@
  * Language Class extension
  */
 
-class MY_Language extends CI_Language {
+class MY_Lang extends CI_Lang {
 
 	var $setLanguage;
 
-	function MY_Language() {
-		parent::CI_Language();
+	function __construct() {
+		parent::__construct();
 		$this->set();
 	}
 	

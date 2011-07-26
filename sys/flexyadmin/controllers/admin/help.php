@@ -19,8 +19,8 @@ require_once(APPPATH."controllers/admin/MY_Controller.php");
 
 class Help extends AdminController {
 
-	function Help() {
-		parent::AdminController();
+	function __construct() {
+		parent::__construct();
 	}
 
 	function index() {

@@ -19,8 +19,8 @@ class Logout extends AdminController {
 
 	var $homePage;
 
-	function Logout() {
-		parent::AdminController();
+	function __construct() {
+		parent::__construct();
 		$this->homePage=$this->config->item('API_home');
 	}
 

@@ -13,15 +13,15 @@
  *
  */
 
-class Tree Extends Model {
+class Tree Extends CI_Model {
 
 	var $captions=array();
 	var $headings=array();
 	var $tree;
 	var $currentId;
 
-	function Tree() {
-		parent::Model();
+	function __construct() {
+		parent::__construct();
 		$this->init();
 	}
 

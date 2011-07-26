@@ -29,8 +29,8 @@ require_once(APPPATH."controllers/admin/MY_Controller.php");
 
 class Edit extends AdminController {
 
-	function Edit() {
-		parent::AdminController();
+	function __construct() {
+		parent::__construct();
 		// $this->load->model("flexy_data","fd");
 	}
 

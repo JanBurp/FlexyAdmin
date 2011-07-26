@@ -2,10 +2,10 @@
 
 	// Loads a form from the flexyform tables
 
- class Getform extends Model {
+ class Getform extends CI_Model {
 
- 	function Getform() {
- 		parent::Model();
+ 	function __construct() {
+ 		parent::__construct();
  	}
 
 	function by_module($module) {

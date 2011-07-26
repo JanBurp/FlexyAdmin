@@ -14,7 +14,7 @@
  *
  */
 
-class Flexy_field extends Model {
+class Flexy_field extends CI_Model {
 
 	var $table;
 	var $field;
@@ -33,8 +33,8 @@ class Flexy_field extends Model {
 	var $user_id;
 	var $extraInfoId;
 
-	function Flexy_field() {
-		parent::Model();
+	function __construct() {
+		parent::__construct();
 	}
 
 	function init($table,$field,$data,$action) {

@@ -14,7 +14,7 @@
 
 // ------------------------------------------------------------------------
 
-class Table extends Model {
+class Table extends CI_Model {
 
 	var $table;
 	var $pk;
@@ -22,8 +22,8 @@ class Table extends Model {
 	var $id;
 	var $resultError;
 
-	function Table() {
-		parent::Model();
+	function __construct() {
+		parent::__construct();
 		$this->init();
 	}
 

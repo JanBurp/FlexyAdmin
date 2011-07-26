@@ -8,9 +8,9 @@ class MY_Upload extends CI_Upload {
 	var $file_name;
 	var $CI;
 
-	function MY_Upload($config=NULL)
+	function __construct($config=NULL)
 	{
-		parent::CI_Upload($config);
+		parent::__construct($config);
 		$this->config($config);
 		$this->CI=NULL;
 	}

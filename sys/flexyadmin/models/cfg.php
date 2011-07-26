@@ -16,7 +16,7 @@
   *
   */
 
- class Cfg extends Model {
+ class Cfg extends CI_Model {
 
  	/**
  	 * $data array (
@@ -30,8 +30,8 @@
  	 */
  	var $fieldInfo=array();
 
- 	function Cfg() {
- 		parent::Model();
+ 	function __construct() {
+ 		parent::__construct();
  		$this->hasData=false;
  		$this->data=NULL;
  	}

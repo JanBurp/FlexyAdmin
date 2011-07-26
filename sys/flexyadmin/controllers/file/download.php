@@ -2,8 +2,8 @@
 
 class Download extends FrontEndController {
 	
-	function Download()	{
-		parent::FrontEndController();
+	function __construct()	{
+		parent::__construct();
 		$this->load->helper('download');
 	}
 

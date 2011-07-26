@@ -20,8 +20,8 @@ class MY_Pagination extends CI_Pagination {
 	var $total_tag_open = '<span class="pagination_total">';
 	var $total_tag_close = '</span>';
 	
-	function MY_Pagination($params = array()) {
-		parent::CI_Pagination($params);
+	function __construct($params = array()) {
+		parent::__construct($params);
 	}
 
 	function create_links() 	{

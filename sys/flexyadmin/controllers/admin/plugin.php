@@ -4,8 +4,8 @@ require_once(APPPATH."controllers/admin/MY_Controller.php");
 
 class Plugin extends AdminController {
 
-	function Plugin() {
-		parent::AdminController();
+	function __construct() {
+		parent::__construct();
 	}
 
 	function index() {
@@ -16,9 +16,9 @@ class Plugin extends AdminController {
 		$args=func_get_args();
 		$ajax=false;
 		$show_type='';
-		
+
 		if (!empty($args)) {
-			$ajax=$args[0]=='ajax';
+			$ajax=($args[0]=='ajax');
 			if ($ajax) {
 				array_shift($args);
 				// next arg is plugin name
@@ -35,6 +35,7 @@ class Plugin extends AdminController {
 				if (isset($this->$plugin) and method_exists($this->$plugin,'_admin_api')) {
 					$this->$plugin->_admin_api($args);
 					if (method_exists($this->$plugin,'_get_show_type')) $show_type=$this->$plugin->_get_show_type();
+					$this->_add_content($this->$plugin->content);
 				}
 			}
 		}

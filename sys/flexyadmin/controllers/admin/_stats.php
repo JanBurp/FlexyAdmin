@@ -14,8 +14,8 @@ class Stats extends AdminController {
 	var $Time;
 	var $url;
 
-	function Stats() {
-		parent::AdminController();
+	function __construct() {
+		parent::__construct();
 		$this->load->helper('date');
 	}
 

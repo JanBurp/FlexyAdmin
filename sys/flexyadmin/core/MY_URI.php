@@ -19,8 +19,8 @@ class MY_URI extends CI_URI {
 	var $xdebug;
 	var $remove;
 
-	function MY_URI() {
-		parent::CI_URI();
+	function __construct() {
+		parent::__construct();
 		$this->set_home();
 		$this->set_remove();
 		$this->xdebug="XDEBUG_SESSION_START";
@@ -93,6 +93,11 @@ class MY_URI extends CI_URI {
 		$u=implode('/',$u);
 		$u=ltrim($u,'/');
 		return $u;
+	}
+	
+	function get_last() {
+		$u=explode('/',$this->_uri_string());
+		return array_pop($u);
 	}
 
 

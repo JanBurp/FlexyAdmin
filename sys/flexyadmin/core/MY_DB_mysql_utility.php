@@ -8,6 +8,7 @@
  */
 
 class MY_DB_mysql_utility extends CI_DB_mysql_utility {
+	
 	/**
 	 * MySQL Export
 	 *

@@ -4,8 +4,9 @@
  * See: http://codeigniter.com/forums/viewthread/62955/
  */
 class MY_Image_lib extends CI_Image_lib {
-	function MY_Image_lib($props = array()) {
-		parent::CI_Image_lib();
+	
+	function __construct($props = array()) {
+		parent::__construct();
 	}
 
 	/**

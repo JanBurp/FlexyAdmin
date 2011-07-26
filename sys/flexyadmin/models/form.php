@@ -15,7 +15,7 @@
  *
  */
 
-class Form Extends Model {
+class Form Extends CI_Model {
 
 	var $caption;
 	var $action;
@@ -30,8 +30,8 @@ class Form Extends Model {
 	var $buttons;
 	
 
-	function Form($action="") {
-		parent::Model();
+	function __construct($action="") {
+		parent::__construct();
 		$this->init($action);
 	}
 

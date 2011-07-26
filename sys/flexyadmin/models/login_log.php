@@ -12,7 +12,7 @@
   * Class Login_log extends model
   */
 
- class Login_log extends Model {
+ class Login_log extends CI_Model {
 
 	function update($table) {
 		if ($this->session->userdata("user_id")!==FALSE) {

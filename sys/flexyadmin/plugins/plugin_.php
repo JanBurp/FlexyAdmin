@@ -6,10 +6,11 @@
  * @author Jan den Besten
  */
 
-class Plugin_ extends Model {
+class Plugin_ extends CI_Model {
 	
 	var $plugin;
 	var $_cfg;
+	var $content;
 	
 	var $table;
 	var $id;
@@ -21,9 +22,10 @@ class Plugin_ extends Model {
 	var $actOn;
 	var $act;
 	
-	function Plugin_($name='plugin') {
-		parent::Model();
+	function __construct($name='plugin') {
+		parent::__construct();
 		$this->plugin=$name;
+		$this->content='';
 	}
 	
 	function init($init=array()) {
@@ -43,6 +45,9 @@ class Plugin_ extends Model {
 		// strace_(array('old'=>$this->oldData,'new'=>$this->newData));
 	}
 	
+	function _get_content() {
+		return $this->content;
+	}
 	
 	// Same as in MyController:
 	function _add_content($add) {
