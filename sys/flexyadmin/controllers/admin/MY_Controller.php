@@ -148,6 +148,12 @@ class FrontEndController extends MY_Controller {
 			$this->stats->add_uri($this->uri->get());
 		}
 	}
+	
+	// For compatibility with older sites
+	function FrontEndController() {
+		$this->__construct();
+	}
+	
 
 	/**
 	 * _init_globals()
