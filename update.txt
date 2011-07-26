@@ -1,3 +1,24 @@
+UPDATE to 1120
+==============
+
+- This is a major update, because of the latest CodeIgniter!!
+- replace index.php
+- in site/controller.php change (line 31):
+
+function Main() {
+	parent::FrontEndController();
+}
+
+into:
+
+function __construct() {
+	parent::__construct();
+}
+
+- if you have own plugins: change first method also to __construct();
+- Replace current sys map with new sys map
+
+
 UPDATES to 998 and up
 ====================
 
