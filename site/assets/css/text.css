@@ -1,0 +1,35 @@
+/* ====== Common styles for site and tinyMCE ========================= */
+
+/* reset all, and set common styles */
+body,div,span,hr,img,ul,li,p,h1,h2,h3,h4,h5,h6,h7,a,input,textarea,select,option {
+	margin:0px;
+	padding:0px;
+	border:none;
+	background:transparent;
+	color:#999;
+	font-size:14px;
+	letter-spacing:.01em;
+  font-family: "Lucida Grande",Lucida,Geneva,Arial,Helvetica,sans-serif;
+}
+
+/* set specifics */
+p,h1,h2,h3,h4,h5,h6,h7 { padding-bottom:0px; }
+h1 { font-weight:bold; color:#000; }
+h2 { padding-bottom:0px; }
+a, a:visited { text-decoration:none; }
+a:hover,a:active,a.current,a.current:visited { text-decoration:underline; color:#000; }
+li {margin-left:15px;}
+img {margin:0px;border:solid 1px #CCC;}
+hr, .hr {width: 100%;height:1px;background-color:#CCC;margin:10px 0px;border:solid 1px #CCC;}
+
+/* Common styles  */
+.small { font-size:12px; }
+.hidden { display:none;}
+.border {	border:solid 1px #000;}
+
+/* Common styles, also used in tinyMCE  */
+
+/* tinyMCE specific styles, only for admin  */
+body#tinymce  { margin:4px; }
+body#tinymce a { text-decoration: underline; }
+

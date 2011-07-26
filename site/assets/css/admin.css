@@ -1,0 +1,5 @@
+/* admin styles  */
+
+/* Comment this if you need to show extra tabs in tinyMCE's advimage or table plugin (the HTML editor) */
+#advimage #appearance_tab, #advimage #advanced_tab {display:none;}
+#table #advanced_tab {display:none;}
