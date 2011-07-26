@@ -14,7 +14,7 @@ class Stats {
 
 	var $table;
 
-	function Stats() {
+	function __construct() {
 		$this->set_table();
 	}
 

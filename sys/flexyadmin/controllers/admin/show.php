@@ -31,8 +31,8 @@ class Show extends AdminController {
 	
 	var $form_args;
 
-	function Show() {
-		parent::AdminController();
+	function __construct() {
+		parent::__construct();
 		// $this->load->model("flexy_data","fd");
 		$this->load->model("flexy_field","ff");
 	}

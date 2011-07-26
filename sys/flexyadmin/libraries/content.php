@@ -26,7 +26,7 @@ class Content {
 	var $p_count;
 	var $h_count;
 
-	function Content() {
+	function __construct() {
 		$this->option_safe_email();
 		$this->add_classes();
 		$this->add_popups("popup_",FALSE);

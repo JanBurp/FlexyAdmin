@@ -29,9 +29,8 @@ require_once(APPPATH."controllers/admin/MY_Controller.php");
 
 class Filemanager extends AdminController {
 
-	function Filemanager() {
-		parent::AdminController();
-		// $this->load->library('image_lib');
+	function __construct() {
+		parent::__construct();
 	}
 
 	function index() {

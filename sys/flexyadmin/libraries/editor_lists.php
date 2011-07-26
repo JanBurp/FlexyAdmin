@@ -4,7 +4,7 @@ class Editor_lists {
 
 	var $type;
 
-	function Editor_lists($type="img")
+	function __construct($type="img")
 	{
 		$this->set_type($type);
 	}

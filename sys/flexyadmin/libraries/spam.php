@@ -11,7 +11,7 @@ class Spam {
 	var $text_no_html;
 	var $rapport;
 
-	function Spam() {
+	function __construct() {
 		$this->init();
 	}
 

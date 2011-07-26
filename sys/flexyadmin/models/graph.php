@@ -15,7 +15,7 @@
  *
  */
 
-class Graph Extends Model {
+class Graph Extends CI_Model {
 
 	var $captions=array();
 	var $headings=array();
@@ -24,8 +24,8 @@ class Graph Extends Model {
 
 	var $type;			// html | files
 
-	function Graph() {
-		parent::Model();
+	function __construct() {
+		parent::__construct();
 		$this->init();
 	}
 

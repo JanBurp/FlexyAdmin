@@ -38,7 +38,7 @@ class Menu {
 	var $tmpItemEnd;
 	var $itemControls;
 
-	function Menu() {
+	function __construct() {
 		$this->init();
 	}
 

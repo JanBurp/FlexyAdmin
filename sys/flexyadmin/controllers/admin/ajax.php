@@ -29,8 +29,8 @@ require_once(APPPATH."controllers/admin/MY_Controller.php");
 
 class Ajax extends BasicController {
 
-	function Ajax() {
-		parent::BasicController();
+	function __construct() {
+		parent::__construct();
 	}
 
 	function index() {

@@ -15,7 +15,7 @@
  *
  */
 
-class Grid Extends Model {
+class Grid Extends CI_Model {
 
 	var $captions=array();
 	var $headings=array();
@@ -29,8 +29,8 @@ class Grid Extends Model {
 
 	var $type;			// html | files
 
-	function Grid() {
-		parent::Model();
+	function __construct() {
+		parent::__construct();
 		$this->init();
 	}
 

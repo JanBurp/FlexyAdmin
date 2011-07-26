@@ -15,7 +15,7 @@
  *
  */
 
-class File_manager Extends Model {
+class File_manager Extends CI_Model {
 
 	var $caption;
 	var $files;
@@ -30,8 +30,8 @@ class File_manager Extends Model {
 
 	var $type;
 
-	function File_manager($path="",$types="",$view="list") {
-		parent::Model();
+	function __construct($path="",$types="",$view="list") {
+		parent::__construct();
 		$this->init($path,$types,$view);
 	}
 

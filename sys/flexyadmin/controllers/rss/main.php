@@ -5,8 +5,8 @@
 
 class Main extends FrontEndController {
 	
-	function Main()	{
-		parent::FrontEndController();
+	function __construct()	{
+		parent::__construct();
 		$this->load->helper('xml');
 	}
 

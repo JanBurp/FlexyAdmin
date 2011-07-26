@@ -16,8 +16,8 @@ class Bulkupload extends AdminController {
 
 	var $renameCount;
 
-	function Bulkupload() {
-		parent::AdminController();
+	function __construct() {
+		parent::__construct();
 		$this->resetRenameCount();
 	}
 

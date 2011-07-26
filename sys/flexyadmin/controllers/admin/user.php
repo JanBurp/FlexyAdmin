@@ -25,12 +25,12 @@
  *
  */
 
-class User extends Controller {
+class User extends CI_Controller {
 
 	var $homePage;
 
-	function User() {
-		parent::Controller();
+	function __construct() {
+		parent::__construct();
 		$this->load->library('session');
 		$this->homePage=$this->config->item('API_home');
 	}

@@ -17,14 +17,14 @@
   *
   */
 
-class order extends Model {
+class order extends CI_Model {
 
 	var $table;
 	var $pk;
 	var $order;
 
-	function order($table="") {
-		parent::Model();
+	function __construct($table="") {
+		parent::__construct();
 		$this->init($table);
 	}
 

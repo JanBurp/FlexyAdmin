@@ -26,11 +26,11 @@
  *
  */
 
-class MY_Controller extends Controller {
+class MY_Controller extends CI_Controller {
 
 
-	function MY_Controller($isAdmin=false) {
-		parent::Controller();
+	function __construct($isAdmin=false) {
+		parent::__construct();
 		if ($this->_check_if_flexy_database_exists())
 			$this->_init_flexy_admin($isAdmin);
 		else {
@@ -115,11 +115,11 @@ class FrontEndController extends MY_Controller {
 
 	var $site;
 
-	function FrontEndController() {
+	function __construct() {
 		/**
 		 * Init controller, and load all libraries
 		 */
-		parent::MY_Controller();
+		parent::__construct();
 		$this->load->library('user_agent');
 		$this->load->helper('date');
 		$this->load->helper("html_helper");
@@ -212,9 +212,10 @@ class FrontEndController extends MY_Controller {
 			}
 		}
 		/**
-		 * Set empty content
+		 * Set empty content and class
 		 */
 		$this->site['content']='';
+		$this->site['class']='';
 	}
 
 	function add_keywords($words) {
@@ -248,6 +249,10 @@ class FrontEndController extends MY_Controller {
 	
 	function no_content() {
 		return !$this->has_content();
+	}
+	
+	function add_class($class) {
+		$this->site['class']=add_string($this->site['class'],$class,' ');
 	}
 	
 	function add($key,$value) {
@@ -308,8 +313,8 @@ class BasicController extends MY_Controller {
 	var $language;
 	var $plugins;
 
-	function BasicController($isAdmin=false) {
-		parent::MY_Controller($isAdmin);
+	function __construct($isAdmin=false) {
+		parent::__construct($isAdmin);
 		$this->load->library("session");
 		$this->load->helper("language");
 		
@@ -539,19 +544,21 @@ class BasicController extends MY_Controller {
 			$pluginFiles=array();
 			$pluginOrder=$this->config->item('PLUGIN_ORDER');
 			foreach ($pluginOrder['first'] as $plugin) {
-				$file='plugin_'.$plugin.'_pi.php';
+				$file='plugin_'.$plugin.'.php';
 				if (isset($files[$file])) {
 					$pluginFiles[$file]=$files[$file];
 					unset($files[$file]);
 				}
 			}
 			
+			// trace_($pluginFiles);
+			
 			// add other plugins
 			$pluginFiles=array_merge($pluginFiles,$files);
 			
 			// check last order
 			foreach ($pluginOrder['last'] as $plugin) {
-				$file='plugin_'.$plugin.'_pi.php';
+				$file='plugin_'.$plugin.'.php';
 				if (isset($pluginFiles[$file])) {
 					$swap=$pluginFiles[$file];
 					unset($pluginFiles[$file]);
@@ -560,7 +567,7 @@ class BasicController extends MY_Controller {
 			}
 			
 			// remove templates and parent class
-			unset($pluginFiles['plugin_template_pi.php']);
+			unset($pluginFiles['plugin_template.php']);
 			unset($pluginFiles['plugin_.php']);
 
 			// trace_($pluginFiles);
@@ -573,16 +580,11 @@ class BasicController extends MY_Controller {
 				$pluginCfg[$p][$c['str_set']]=$c['str_value'];
 			}
 			// ok load them
-			$this->load->model('sys/flexyadmin/plugins/plugin_');
+			$this->load->plugin('plugin_');
 			foreach ($pluginFiles as $file => $plugin) {
 				$Name=get_file_without_extension($file);
 				if (substr($Name,0,6)=='plugin') {
-					$this->load->model($plugin['path']);
-					// if (isset($plugin['site'])) {
-					// 	$this->load->site_plugin($Name,$plugin['site']);
-					// }
-					// else
-					// 	$this->load->plugin($Name);
+					$this->load->plugin($plugin['alt']);
 					$pluginName=str_replace('_pi','',$Name);
 					$shortName=str_replace('plugin_','',$pluginName);
 					$this->$pluginName = new $pluginName($pluginName);
@@ -683,8 +685,8 @@ class AdminController extends BasicController {
 	var $helpTexts;
 	var $js;
 
-	function AdminController() {
-		parent::BasicController(true);
+	function __construct() {
+		parent::__construct(true);
 		if (!$this->_user_logged_in()) {
 			redirect($this->config->item('API_login'));
 		}
