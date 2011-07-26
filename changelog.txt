@@ -1,3 +1,33 @@
+> 1120
+
+UPDATE:
+- CodeIgniter 2.0.2
+- jQuery 1.6.2
+- jQuery UI 1.8.14
+- tinyMCE 3.4.3.2 (jQuery)
+
+NEW:
+- New way of implementing modules: by CI->Models:
+	- deleting map: site/modules
+	- adding map: site/models
+	- changing existing moduleds
+- changes to controller/home (for models, adding class, adding methods for language settings and redirect)
+- Ordering and Searching in foreign and many data from Grid view
+- Better spamchecker
+- MY_URI: get_next_()  and get_prev_uri() now possible to get full uri
+- Drag n Drop selecting images, now also with a click
+- Added font files to safe_asset to site/assets/css
+- MY_Pagination, default configs
+- New plugin: add_relation_table
+- 
+
+BUGS:
+- bulk_upload (lowercase extensions)
+- lots of small bugs in 
+
+
+
+
 > 1068
 
 UPDATE:
