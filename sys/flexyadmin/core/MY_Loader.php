@@ -109,7 +109,7 @@ class MY_Loader extends CI_Loader {
 					$class = $my_driver;
 	    }
 			// Added stops here
-			$CI->dbutil =& instantiate_class(new $class());
+			$CI->dbutil =  new $class();
 		}
 
 
