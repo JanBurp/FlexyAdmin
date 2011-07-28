@@ -998,6 +998,10 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			foreach ($foreigns as $table => $value) {
 				$key='id_'.remove_prefix($table);
 				$this->foreigns[$key]=array('key'=>$key,'table'=>$table,'fields'=>$value);
+				if (substr($key,strlen($key)-1,1)=='s') {
+					$key=substr($key,0,strlen($key)-1);
+					$this->foreigns[$key]=array('key'=>$key,'table'=>$table,'fields'=>$value);
+				}
 			}
 		}
 		$this->foreignTables=array();
