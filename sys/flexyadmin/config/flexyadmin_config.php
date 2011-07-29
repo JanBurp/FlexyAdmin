@@ -39,6 +39,7 @@ $config['THUMBCACHE']							= $config['ASSETS']."_thumbcache/";
 $config['STATS']									= $config['SITE'].'/stats/';
 $config['PLUGINS']								= $config['SITE'].'/plugins';
 $config['BULKUPLOAD']							= 'bulk_upload';
+$config['CACHE']									= $config['SITE'].'/stats/';
 
 $config['THUMBSIZE']							= array(100,100);
 
