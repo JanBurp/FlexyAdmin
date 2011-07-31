@@ -500,7 +500,7 @@ function thumb($attr,$index=FALSE) {
 		
 		if (!empty($renderData)) {
 			$keys=array_keys(current($renderData));
-			$keys=combine($keys,$keys);
+			$keys=array_combine($keys,$keys);
 		}
 		$grid->prepend_to_captions($buttons);
 		$grid->set_heading("edit",help(icon("select all"),lang('grid_select_all')).help(icon("delete"),lang('grid_delete'), array("class"=>"delete") ));

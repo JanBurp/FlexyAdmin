@@ -60,7 +60,7 @@ class Editor_lists {
 				if ($CI->db->table_exists($resultTable)) $menuTable=$resultTable; // for menu automation
 				if (!empty($menuTable) and $CI->db->table_exists($menuTable)) {
 					$menuFields=$CI->db->list_fields($menuTable);
-					$menuFields=combine($menuFields,$menuFields);
+					$menuFields=array_combine($menuFields,$menuFields);
 					if (isset($menuFields['uri'])) {
 						$CI->db->select('id,uri');
 						if (isset($menuFields['order'])) {

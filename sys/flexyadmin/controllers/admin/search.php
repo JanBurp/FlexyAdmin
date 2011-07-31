@@ -84,7 +84,7 @@ class Search extends AdminController {
 					$selection=$fields;
 				else
 					$selection=array('');
-				$selection=combine($selection,$selection);
+				$selection=array_combine($selection,$selection);
 				$fields=$this->ff->_dropdown_fields_form();
 				$fields=$fields['options'];
 				unset($fields['']);
@@ -104,12 +104,12 @@ class Search extends AdminController {
 				// if (!$tables) {
 				// 	$tables[]=$this->cfg->get('CFG_configurations','str_menu_table');
 				// }
-				// $tables=combine($tables,$tables);
+				// $tables=array_combine($tables,$tables);
 				// // types options/value
 				// $typesOptions=$this->config->item('FIELDS_prefix');
 				// $typesOptions=array_keys($typesOptions);
 				// sort($typesOptions);
-				// $typesOptions=combine($typesOptions,$typesOptions);
+				// $typesOptions=array_combine($typesOptions,$typesOptions);
 				// unset($typesOptions['id']);
 				// unset($typesOptions['self']);
 				// unset($typesOptions['rel']);
@@ -117,7 +117,7 @@ class Search extends AdminController {
 				// if (!$types) {
 				// 	$types=array('txt','stx');
 				// }
-				// $types=combine($types,$types);
+				// $types=array_combine($types,$types);
 				// create form
 				$data=array( 	"search"	=> array("label"=>lang('sr_search'),"value"=>$search),
 											"replace"	=> array("label"=>lang('sr_replace'),"value"=>$replace),

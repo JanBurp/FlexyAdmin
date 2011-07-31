@@ -16,7 +16,7 @@ class FlexyTable Extends FlexyHtml {
 		$this->nrColumns=count($headings);
 		if (!empty($headings)) {
 			$headings=array_keys($headings);
-			$headings=combine($headings,$headings);
+			$headings=array_combine($headings,$headings);
 		}
 		$this->set_headings($headings);
 	}

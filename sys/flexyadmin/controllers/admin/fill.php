@@ -150,9 +150,9 @@ class Fill extends AdminController {
 				$fieldsOptions=$this->ff->_dropdown_fields_form();
 				$fieldsOptions=$fieldsOptions["options"];
 				// unset($fieldsOptions[""]);
-				$fieldsOptions=combine($fieldsOptions,$fieldsOptions);
+				$fieldsOptions=array_combine($fieldsOptions,$fieldsOptions);
 				if (empty($fields)) $fields=array();
-				else $fields=combine($fields,$fields);
+				else $fields=array_combine($fields,$fields);
 				// create form
 				$data=array( 	"aantal"	=> array("label"=>lang('fill_aantal'),"value"=>$aantal),
 											"addtable"=> array("label"=>lang('fill_tables'),"value"=>$addtable,"type"=>'dropdown','options'=>$tablesOptions),

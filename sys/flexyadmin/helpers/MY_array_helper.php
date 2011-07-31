@@ -466,23 +466,6 @@ function ignorecase_ksort(&$a) {
 }
 
 
-function combine($k,$v) {
-	$CI =& get_instance();
-	if ($CI->config->item('PHP_version')==5) {
-		$out=array_combine($k,$v);
-	}
-	elseif (empty($k) or empty($v) or count($k)!=count($v)) {
-		$out=false;
-	}
-	else {
-		foreach ($k as $key) {
-			$out[$key]=current($v);
-			next($v);
-		}
-	}
-	return $out;
-}
-
 /**
  * Sort an assoc array by its value, can be used to sort a db return array by another field than its 'id'key
  */
