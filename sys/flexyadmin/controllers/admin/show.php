@@ -221,7 +221,7 @@ class Show extends AdminController {
 							$keys=array();
 							if (!empty($data)) {
 								$keys=array_keys(current($data));
-								$keys=combine($keys,$keys);
+								$keys=array_combine($keys,$keys);
 							}
 							if ($right>=RIGHTS_ADD) {
 								$newUri=api_uri('API_view_form',$table.':-1');
@@ -378,7 +378,7 @@ class Show extends AdminController {
 					$this->_add_content(validation_errors());
 
 					$keys=array_keys($ffData);
-					$keys=combine($keys,$keys);
+					$keys=array_combine($keys,$keys);
 					$uiFieldNames=array();
 					foreach($keys as $key) {
 						$fieldHelp=$this->cfg->get("CFG_field",$table.".".$key,"txt_help");

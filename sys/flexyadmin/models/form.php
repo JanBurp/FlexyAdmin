@@ -362,7 +362,7 @@ class Form Extends CI_Model {
 				 * Make sure all not given fields stays the same
 				 */
 				$staticFields=$this->db->list_fields($table);
-				$staticFields=combine($staticFields,$staticFields);
+				$staticFields=array_combine($staticFields,$staticFields);
 				unset($staticFields[$pk]);
 				foreach($set as $name=>$value) {
 					unset($staticFields[$name]);

@@ -668,7 +668,7 @@ class Flexy_field extends CI_Model {
 		$options=array("","*","cfg_*","tbl_*","media_*");
 		$options=array_merge($options,$tables);
 		$options=array_merge($options,$media);
-		$options=combine($options,$options);
+		$options=array_combine($options,$options);
 		$out=$this->_standard_form_field($options);
 		$out["type"]="dropdown";
 		$out["multiple"]="multiple";
@@ -682,7 +682,7 @@ class Flexy_field extends CI_Model {
 		$tables=not_filter_by($tables,"log_");
 		$tables=not_filter_by($tables,"rel_users");
 		$tables=array_merge(array(""),$tables);
-		$options=combine($tables,$tables);
+		$options=array_combine($tables,$tables);
 		$out=$this->_standard_form_field($options);
 		$out["type"]="dropdown";
 		unset($out["button"]);

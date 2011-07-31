@@ -1122,12 +1122,12 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 					$tablesWithInfo=$CI->cfg->get('CFG_table');
 					$tablesWithInfo=array_keys($tablesWithInfo);
 					$tablesWithInfo=filter_by($tablesWithInfo,$like);
-					if (!empty($tablesWithInfo)) $tablesWithInfo=combine($tablesWithInfo,$tablesWithInfo);
+					if (!empty($tablesWithInfo)) $tablesWithInfo=array_combine($tablesWithInfo,$tablesWithInfo);
 				}
 				// add tables with no info
 				$tables=$this->list_tables();
 				$tables=filter_by($tables,$like);
-				if (!empty($tables)) $tables=combine($tables,$tables);
+				if (!empty($tables)) $tables=array_combine($tables,$tables);
 				if (isset($tablesWithInfo) and !empty($tablesWithInfo)) $tables=array_merge($tablesWithInfo,$tables);
 			}
 			foreach ($tables as $rel=>$row) {
@@ -1268,9 +1268,9 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				if (isset($options) and !empty($options))	{
 					$options=explode("|",$options);
 					if ($CI->cfg->get('CFG_field',$table.".".$field,'b_multi_options'))
-						$out["multi_options"][$field]=combine($options,$options);
+						$out["multi_options"][$field]=array_combine($options,$options);
 					else
-						$out["options"][$field]=combine($options,$options);
+						$out["options"][$field]=array_combine($options,$options);
 				}
 			}
 			return $out;

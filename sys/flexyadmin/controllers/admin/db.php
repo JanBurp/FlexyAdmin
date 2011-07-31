@@ -45,7 +45,7 @@ class Db extends AdminController {
 
 		$form=new form($this->config->item('API_db_export'));
 		$tablesWithRights=$this->user->get_table_rights();
-		$options=combine($tablesWithRights,$tablesWithRights);
+		$options=array_combine($tablesWithRights,$tablesWithRights);
 		$valuesData=$options;
 		unset($valuesData['cfg_sessions']);
 		unset($valuesData['log_login']);
@@ -137,7 +137,7 @@ class Db extends AdminController {
 		
 			$tablesWithRights=$this->user->get_table_rights();
 			// select only data (not config)
-			$tablesWithRights=combine($tablesWithRights,$tablesWithRights);
+			$tablesWithRights=array_combine($tablesWithRights,$tablesWithRights);
 			$tablesWithRights=not_filter_by($tablesWithRights,"cfg");
 			$tablesWithRights=not_filter_by($tablesWithRights,"log");
 			unset($tablesWithRights["rel_users__rights"]);

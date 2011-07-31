@@ -36,19 +36,6 @@ if ( ! function_exists('random_string')) {
 }
 
 
-function strsplit($s) {
-	$CI =& get_instance();
-	if ($CI->config->item('PHP_version')==5) {
-		return str_split($s);
-	}
-	$a=array();
-	for ($c=0; $c<strlen($s);$c++) {
-		$a[]=$s[$c];
-	}
-	return $a;
-}
-
-
 /**
 	* Find a character in string
 	*/ 
