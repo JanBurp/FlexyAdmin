@@ -34,8 +34,9 @@ class Plugin_template extends Plugin_ {
 	// admin/plugin/#plugin_name# 
 	//
 	// function _admin_api($args=NULL) {
-	//	// If you need to, check $this->rights
-	// 	$this->_add_content(h($this->plugin,1));
+	//	if ($this->user->is_super_admin()) {
+	// 		$this->_add_content(h($this->plugin,1));
+	//  }
 	// }
 
 

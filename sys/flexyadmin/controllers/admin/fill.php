@@ -19,7 +19,7 @@ class Fill extends AdminController {
 	}
 
 	function index() {
-		if ($this->_can_use_tools()) {
+		if ($this->user->can_use_tools()) {
 			$this->lang->load('help');
 			$this->lang->load('form');
 		

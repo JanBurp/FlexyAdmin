@@ -54,6 +54,7 @@ class Log extends AdminController {
 			}
 			$currentLog=implode(chr(10),$logArr);
 
+			$form->set_old_templates();
 			$this->_add_content($form->render());
 			$this->_add_content(div('after_form').h($file,1).'<pre>'.$currentLog.'<pre>'._div());
 		}

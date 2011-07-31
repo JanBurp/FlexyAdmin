@@ -34,43 +34,39 @@ class Main extends AdminController {
 	}
 
 	function index() {
-		//$this->_set_content($this->cfg->get('CFG_configurations',"txt_info"));
 		$this->load->model("grid");
 		$this->lang->load("home");
 
+
+		// messages:
+		$message=$this->session->flashdata("message");
+		if ($message) $this->set_message($message);
+
 		// last login info
-		$data["username"]=$this->session->userdata("user");
-		$user_id=$this->session->userdata("user_id");
+		$user=$this->user->get_user();
+		$data["username"]=$user->str_username;
+		$user_id=$user->id;
 		$this->db->select("tme_login_time,str_changed_tables");
 		$this->db->where("id_user",$user_id);
 		$this->db->order_by("tme_login_time DESC");
 		$query=$this->db->get($this->config->item('LOG_table_prefix')."_".$this->config->item('LOG_login'),5);
 		$userData=$query->result_array();
+		
 		// in grid
 		$grid=new grid();
 		foreach($userData as $k=>$d) {
 			$userData[$k]=array(
-											lang("home_date")		=>	strftime("%A %e %B %Y om %R",strtotime($d["tme_login_time"])),
+											lang("home_date")		=>	strftime("%a&nbsp;%e&nbsp;%B&nbsp;%Y&nbsp;-&nbsp;%R",strtotime($d["tme_login_time"])),
 											lang("home_changes")=>	str_replace("|",", ",$this->uiNames->get($d["str_changed_tables"])) );
 		}
 		$grid->set_data($userData,langp("home_last_login",ucfirst($data["username"])));
 		$renderGrid=$grid->render("html","","grid home");
 		$data["logindata"]=$this->load->view("admin/grid",$renderGrid,true);
-		// 
-		// // stats
-		// $this->db->select("str_uri as ".lang("home_page").", COUNT(`str_uri`) as ".lang("home_count"));
-		// $this->db->group_by(lang("home_page"));
-		// $this->db->order_by(lang("home_count")." DESC");
-		// $stats=$this->db->get_results($this->config->item('LOG_table_prefix')."_".$this->config->item('LOG_stats'),10);
-		// // trace_($stats);
-		// if (!empty($stats)) {
-		// 	// stats in grid
-		// 	$grid=new grid();
-		// 	$grid->set_data($stats,langp("home_top_ten"));
-		// 	$renderGrid=$grid->render("html","","grid home");
-		// 	$data["stats"]=$this->load->view("admin/grid",$renderGrid,true);
-		// }
-		// else $data["stats"]="";
+		
+		// Check if userdata is correct #TODO #BUSY
+		// if (isset($user->email_email) and empty(trim($user->email_email))) $data['message']='geen email';
+		// trace_($user);
+		// trace_($data);
 		
 		$this->_set_content($this->load->view("admin/home",$data,true));
 		$this->_show_all();

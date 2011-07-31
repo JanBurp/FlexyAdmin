@@ -35,6 +35,7 @@ class Logout extends AdminController {
 		
 		// logout
 		if ($logout) {
+			$this->user->logout();
 			$this->session->sess_destroy();
 			if ($this->db->has_field('cfg_configurations','b_logout_to_site') and $this->db->get_field('cfg_configurations','b_logout_to_site'))
 				redirect();

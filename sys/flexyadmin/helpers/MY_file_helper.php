@@ -95,4 +95,27 @@ function clean_file_name($f) {
 	return $name;
 }
 
+function file_types_are_images($types) {
+	$CI=&get_instance();
+	return file_types_in_array($types,$CI->config->item('FILE_types_img'));
+}
+
+function file_types_are_flash($types) {
+	$CI=&get_instance();
+	return file_types_in_array($types,$CI->config->item('FILE_types_flash'));
+}
+
+function file_types_in_array($types,$array) {
+	$in = TRUE;
+	if (!empty($types)) {
+		if (is_string($types)) $types=explode(',',$types);
+		foreach ($types as $type) {
+			$in = $in OR in_array($type,$array);
+		}
+	}
+	else return FALSE;
+	return $in;
+}
+
+
 ?>

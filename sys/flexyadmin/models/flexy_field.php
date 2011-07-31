@@ -55,11 +55,7 @@ class Flexy_field extends CI_Model {
 		$this->fieldRight=$right;
 		$cfg=$this->cfg->get('CFG_field',$this->table.".".$field);
 		if (!empty($cfg)) $this->fieldCfg[$field]=$cfg;
-		$replacePre=el("str_overrule_prefix",$cfg);
-		if (empty($replacePre))
-			$this->pre=get_prefix($field);
-		else
-			$this->pre=$replacePre;
+		$this->pre=get_prefix($field);
 		$this->type();
 	}
 	function set_restricted_to_user($restrictedToUser=TRUE,$user_id='') {
@@ -521,6 +517,22 @@ class Flexy_field extends CI_Model {
 		return $out;
 	}
 
+	function _id_group_form() {
+		/**
+			* User can't set itself to higher user group, Remove other options
+			*/
+		$user=$this->user->get_user();
+		$id_group=$user->id_group;
+		$this->db->where('id >=',$id_group);
+		$this->db->select('id,str_description');
+		$options=$this->db->get_result('cfg_groups');
+		foreach ($options as $id => $value) {
+			$options[$id]=$value['str_description'];
+		}
+		$out=$this->_standard_form_field($options);
+		$out['validation'].='|greater_than['.($id_group-1).']';
+		return $out;
+	}
 
 	function _get_tree($id,$branch="",$tree="") {
 		if (!empty($tree)) $tree="/$tree";
@@ -679,7 +691,7 @@ class Flexy_field extends CI_Model {
 
 	function _dropdown_field_form() {
 		$tables=$this->db->list_tables();
-		$thisRights=$this->rights;
+		$thisRights=$this->user->get_rights();
 		$thisRights=array_shift($thisRights);
 		if ($thisRights['rights']!='*') $tables=filter_by($tables,"tbl_");
 		$specialFields=array_keys($this->config->item('FIELDS_special'));
@@ -728,21 +740,20 @@ class Flexy_field extends CI_Model {
 	}
 
 	function _dropdown_medias_grid() {
-		$out="";
+		$out='';
 		if (!empty($this->data)) {
 			$info=$this->cfg->get('CFG_media_info',$this->table.".".$this->field);
-			$type=el("str_type",$info);
-			if ($type=="image" or $type=="flash") {
-				$path=$this->config->item('ASSETS').el("path",$info)."/";
-				$data=explode("|",$this->data);
-				$media=$this->config->item('ASSETS').$path."/".$this->data;
-				$out.='<ul>';
-				foreach($data as $img) {
+			$path=$this->config->item('ASSETS').el("path",$info)."/";
+			$data=explode("|",$this->data);
+			$out.='<ul>';
+			foreach($data as $img) {
+				$ext=get_file_extension($img);
+				if (in_array($ext,$this->config->item('FILE_types_img')) or in_array($ext,$this->config->item('FILE_types_flash')) )
 					$out.='<li>'.show_thumb($path.$img).'</li>';
-				}
-				$out.='</ul>';
+				else
+					$out.='<li>'.$img.'</li>';
 			}
-			else $out=$this->data;
+			$out.='</ul>';
 		}
 		return $out;
 	}
@@ -836,11 +847,10 @@ class Flexy_field extends CI_Model {
 			}
 		}
 		$out=$this->_standard_form_field($options);
-		// trace_($options);
 		$out["path"]=$map;
 		if ($this->pre=="medias") $out["multiple"]="multiple";
-		$type=el("str_type",$info);
-		if ($type=="image" or $type=="flash") $out["type"]="image_dropdown";
+		$types=el("str_types",$info);
+		if ( file_types_are_images($types) or file_types_are_flash($types) ) $out["type"]="image_dropdown";
 		if (el('b_dragndrop',$info)) $out["type"]="image_dragndrop";
 		unset($out["button"]);
 		return $out;

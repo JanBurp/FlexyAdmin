@@ -15,8 +15,11 @@
 <div id="wrapper">
 
 	<div id="dialog">
-		<form action="<?=site_url("admin/user/check_login")?>" method="post" class="login">
+		<form action="<?=site_url("admin/login/check")?>" method="post" class="login">
 			<h2>FlexyAdmin login</h2>
+			<? if (isset($message) and !empty($message)): ?>
+				<div class="error message"><br/><?=$message?></div>
+			<? endif ?>
 			<p class="str"><label for="user">User</label><input type="text" name="user" value="" id="user" class="user" /></p>
 			<p class="pwd"><label for="pass">Password</label><input type="password" name="password" value="" id="password" class="password"  /></p>
 			<input type="submit" name="" value="Login" submit="submit" class="button submit"  />
