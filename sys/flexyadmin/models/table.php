@@ -30,7 +30,7 @@ class Table extends CI_Model {
 	function init($table="") {
 		log_("info","[TABLE] init table '$table'");
 		$this->table=$table;
-		$this->pk=$this->config->item('PRIMARY_key');
+		$this->pk = ID;
 		$this->set_owner();
 		$this->resultError=0;
 	}

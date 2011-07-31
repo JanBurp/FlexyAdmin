@@ -477,7 +477,7 @@ class BasicController extends MY_Controller {
 	function _get_parent_uri($table,$uri,$parent) {
 		if ($parent!=0) {
 			$this->db->select('id,uri,self_parent');
-			$this->db->where(pk(),$parent);
+			$this->db->where(PRIMARY_KEY,$parent);
 			$parentRow=$this->db->get_row($table);
 			$uri=$parentRow['uri']."/".$uri;
 			if ($parentRow['self_parent']!=0) $uri=$this->_get_parent_uri($table,$uri,$parentRow['self_parent']);

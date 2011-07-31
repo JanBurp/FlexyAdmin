@@ -424,18 +424,18 @@ class Filemanager extends AdminController {
 					foreach ($tables as $table) {
 						$fields=$this->db->list_fields($table);
 						$selectFields=array();
-						$selectFields[]=pk();
+						$selectFields[]=PRIMARY_KEY;
 						foreach ($fields as $field) {
 							$pre=get_prefix($field);
 							if (in_array($pre,array('txt','stx','media','medias'))) $selectFields[]=$field;
 						}
 						if (!empty($selectFields)) {
-							$selectFields[]=pk();
+							$selectFields[]=PRIMARY_KEY;
 							$this->db->select($selectFields);
 							$currentData=$this->db->get_result($table);
 							foreach ($currentData as $row) {
 								foreach ($row as $field=>$data) {
-									if ($field==pk())
+									if ($field==PRIMARY_KEY)
 										$id=$data;
 									else {
 										// replace filenames
@@ -452,7 +452,7 @@ class Filemanager extends AdminController {
 											$newData=str_replace(array_keys($sr),array_values($sr) ,$data);
 										}
 										$this->db->set($field,$newData);
-										$this->db->where(pk(),$id);
+										$this->db->where(PRIMARY_KEY,$id);
 										$this->db->update($table);
 									}
 								}

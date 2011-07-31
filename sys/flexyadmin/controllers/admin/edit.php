@@ -89,7 +89,7 @@ class Edit extends AdminController {
 							$types=$this->config->item('FIELDS_media_fields');
 
 							// ok, get fields
-							$this->db->where(pk(),$id);
+							$this->db->where(PRIMARY_KEY,$id);
 							$query=$this->db->get($table);
 							$row=$query->row_array();
 							foreach ($row as $name=>$value) {
@@ -115,14 +115,14 @@ class Edit extends AdminController {
 						if ($this->db->has_field($table,"self_parent")) {
 							$this->load->model("order");
 							// get info from current
-							$this->db->where(pk(),$id);
+							$this->db->where(PRIMARY_KEY,$id);
 							$this->db->select("order,self_parent");
 							$row=$this->db->get_row($table);
 							$parent=$row["self_parent"];
 							$order=$row["order"];
 							// get branches
 							$this->db->where("self_parent",$id);
-							$this->db->select(pk());
+							$this->db->select(PRIMARY_KEY);
 							$branches=$this->db->get_result($table);
 							$count=count($branches);
 							// shift order of branches in same branch
@@ -131,7 +131,7 @@ class Edit extends AdminController {
 							foreach($branches as $branch=>$value) {
 								$this->db->set("self_parent",$parent);
 								$this->db->set("order",$order++);
-								$this->db->where(pk(),$value[pk()]);
+								$this->db->where(PRIMARY_KEY,$value[PRIMARY_KEY]);
 								$this->db->update($table);
 							}
 						}
@@ -139,9 +139,9 @@ class Edit extends AdminController {
 						/**
 						 * Remove database entry
 						 */
-						$this->db->where(pk(),$id);
+						$this->db->where(PRIMARY_KEY,$id);
 						$oldData=$this->db->get_row($table);
-						$this->db->where(pk(),$id);
+						$this->db->where(PRIMARY_KEY,$id);
 						$this->db->delete($table);
 						log_("info","[FD] delete item '$id' from '$table'");				
 

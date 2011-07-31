@@ -20,7 +20,6 @@
 class order extends CI_Model {
 
 	var $table;
-	var $pk;
 	var $order;
 
 	function __construct($table="") {
@@ -30,7 +29,6 @@ class order extends CI_Model {
 
 	function init($table="") {
 		$this->set_table($table);
-		$this->pk=pk();
 		$this->order=$this->config->item('ORDER_field_name');
 	}
 
@@ -52,7 +50,7 @@ class order extends CI_Model {
 	}
 
 	function get_bottom($table) {
-		$this->db->select($this->pk);
+		$this->db->select(PRIMARY_KEY);
 		$query = $this->db->get($table);
 		return $query->num_rows();
 	}
@@ -70,7 +68,7 @@ class order extends CI_Model {
 		*/
 	function reset($table,$shift=0) {
 		if ($this->is_a_tree($table))	$this->db->order_as_tree();
-		$this->db->select($this->pk);
+		$this->db->select(PRIMARY_KEY);
 		$result=$this->db->get_result($table);
 		$ids=array();
 		foreach($result as $id=>$v) $ids[]=$id;
@@ -80,7 +78,7 @@ class order extends CI_Model {
 		if ($this->is_a_tree($table)) {
 			$this->db->where("self_parent",$parent);
 			if ($from!=0) $this->db->where("order >",$from);
-			$this->db->select($this->pk);
+			$this->db->select(PRIMARY_KEY);
 			$result=$this->db->get_result($table);
 			$ids=array();
 			foreach($result as $id=>$v) $ids[]=$id;
@@ -104,7 +102,7 @@ class order extends CI_Model {
 				$orders[$parent]++;
 			else
 				$orders[$parent]=$from+$shift;
-			$this->db->where($this->pk,$id);
+			$this->db->where(PRIMARY_KEY,$id);
 			$this->db->update($table, array($this->order => $orders[$parent] ));
 		}
 	}
@@ -124,7 +122,7 @@ class order extends CI_Model {
 		$old=$this->get_order($table,$id);
 		if ($old!=$new) {
 			// Set new order to given id
-			$this->db->where($this->pk,$id);
+			$this->db->where(PRIMARY_KEY,$id);
 			$this->db->update($table, array($this->order => $new ));
 		}
 		// give the rest a new order (skip where the new order is reached), except the new one.
@@ -132,13 +130,13 @@ class order extends CI_Model {
 			$parentId=$this->get_parent($table,$id);
 			$this->db->where("self_parent",$parentId);
 		}
-		$this->db->where($this->pk." !=",$id); // except new one
+		$this->db->where(PRIMARY_KEY." !=",$id); // except new one
 		$this->db->order_by($this->order);
-		$this->db->select($this->pk);
+		$this->db->select(PRIMARY_KEY);
 		$query=$this->db->get($table);
 		$n=1;
 		foreach($query->result_array() as $res) {
-			$this->db->where($this->pk,$res[$this->pk]);
+			$this->db->where(PRIMARY_KEY,$res[PRIMARY_KEY]);
 			if ($n==$new) $n++;									// skip new set order
 			$this->db->update($table, array($this->order => $n++ ));
 		}

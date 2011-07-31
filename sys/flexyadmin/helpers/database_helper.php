@@ -8,20 +8,6 @@
  */
 
 
-/**
- * function get_primary_key()
- * function pk()
- *
- * Gets primary key from config
- */
-function get_primary_key() {
-	return pk();
-}
-function pk() {
-	$CI =& get_instance();
-	return $CI->config->item('PRIMARY_key');
-}
-
 
 /**
  * function is_foreign_key($field)

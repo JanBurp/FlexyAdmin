@@ -102,7 +102,7 @@ function remove_first_char($s) {
 // string get_prefix( string sName )
 //
 function get_prefix($s,$split="_") {
-	$pk=pk();
+	$pk=PRIMARY_KEY;
 	$i=strpos($s,$split);
 	if ($i) $out=substr($s,0,$i);
 	elseif ($s==$pk) $out=$pk; else $out="";

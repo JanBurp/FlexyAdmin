@@ -143,7 +143,7 @@ class File_manager Extends CI_Model {
 					foreach ($tables as $table) {
 						$fields=$this->db->list_fields($table);
 						$selectFields=array();
-						$selectFields[]=pk();
+						$selectFields[]=PRIMARY_KEY;
 						foreach ($fields as $field) {
 							$pre=get_prefix($field);
 							if (in_array($pre,array("txt","media","medias"))) $selectFields[]=$field;
@@ -152,7 +152,7 @@ class File_manager Extends CI_Model {
 						$currentData=$this->db->get_result($table);
 						foreach ($currentData as $row) {
 							foreach ($row as $field=>$data) {
-								if ($field==pk())
+								if ($field==PRIMARY_KEY)
 									$id=$data;
 								else {
 									$newdata=$data;
@@ -177,7 +177,7 @@ class File_manager Extends CI_Model {
 									// if changed, put in db
 									if ($newdata!=$data) {
 										$this->db->set($field,$newdata);
-										$this->db->where(pk(),$id);
+										$this->db->where(PRIMARY_KEY,$id);
 										$this->db->update($table);
 									}
 

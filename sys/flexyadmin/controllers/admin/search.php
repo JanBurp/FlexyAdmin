@@ -38,12 +38,12 @@ class Search extends AdminController {
 				foreach ($fields as $field) {
 					$table=get_prefix($field,'.');
 					$field=get_postfix($field,'.');
-					$this->db->select(pk());
+					$this->db->select(PRIMARY_KEY);
 					$this->db->select($field);
 					$result=$this->db->get_result($table);
 					$htmlTest.="<ul>";
 					foreach($result as $id=>$row) {
-						unset($row[pk()]);
+						unset($row[PRIMARY_KEY]);
 						foreach ($row as $key=>$txt) {
 							if ($regex) {
 								$oldErrorHandler=set_error_handler(array($this,"myErrorHandler"));
@@ -55,7 +55,7 @@ class Search extends AdminController {
 							}
 							if ($new!=$txt) {
 								$this->db->as_abstracts();
-								$this->db->where(pk(),$id);
+								$this->db->where(PRIMARY_KEY,$id);
 								$abstract=$this->db->get_row($table);
 								$abstract=$abstract['abstract'];
 								$htmlTest.="<li>".$this->uiNames->get($table)." '$abstract'".' : <textarea>'.$txt.'</textarea> =&gt; <textarea>'.$new.'</textarea></li>';
@@ -65,7 +65,7 @@ class Search extends AdminController {
 							}
 						}
 						if (!$test) {
-							$this->db->where(pk(),$id);
+							$this->db->where(PRIMARY_KEY,$id);
 							$res=$this->db->update($table);
 						}
 						// $this->db->as_abstracts(FALSE);

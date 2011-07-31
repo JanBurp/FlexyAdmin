@@ -135,7 +135,7 @@ class Menu {
 			}
 		}
 		// get data from table
-		$CI->db->select(pk());
+		$CI->db->select(PRIMARY_KEY);
 		$CI->db->select($fields);
 		if ($foreign) $CI->db->add_foreigns($foreign);
 		if (in_array("self_parent",$fields)) $CI->db->order_as_tree();
@@ -151,7 +151,7 @@ class Menu {
 		foreach($items as $item) {
 			if (!isset($item[$this->fields["visible"]]) or ($item[$this->fields["visible"]]) ) {
 				$thisItem=array();
-				$thisItem["id"]=$item[pk()];
+				$thisItem["id"]=$item[PRIMARY_KEY];
 				$uri=$item[$this->fields["uri"]];
 				$thisItem["uri"]=$uri;
 				

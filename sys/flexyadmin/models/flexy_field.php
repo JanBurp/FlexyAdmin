@@ -536,10 +536,10 @@ class Flexy_field extends CI_Model {
 
 	function _get_tree($id,$branch="",$tree="") {
 		if (!empty($tree)) $tree="/$tree";
-		$this->db->select(array(pk()));
+		$this->db->select(array(PRIMARY_KEY));
 		if ($this->db->field_exists('uri',$this->table)) $this->db->select('uri');
 		if ($this->db->field_exists('self_parent',$this->table)) $this->db->select('self_parent');
-		$this->db->where(pk(),$id);
+		$this->db->where(PRIMARY_KEY,$id);
 		$res=$this->db->get_row($this->table);
 		if (empty($branch) and isset($res["uri"])) $tree=$res["uri"].$tree;
 		if (isset($res["self_parent"]) and $res["self_parent"]>0) {
@@ -558,12 +558,12 @@ class Flexy_field extends CI_Model {
 	// TODO: Meer self_ velden mogelijk (nu alleen nog self_parent)
 	function _self_form() {
 		$strField=$this->db->get_first_field($this->table,'str');
-		$this->db->select(array(pk()));
+		$this->db->select(array(PRIMARY_KEY));
 		if ($strField) $this->db->select($strField);
 		if ($this->db->field_exists('uri',$this->table)) $this->db->select('uri');
 		if ($this->db->field_exists('self_parent',$this->table)) $this->db->select('self_parent');
 		if ($this->db->field_exists('order',$this->table)) $this->db->select('order');
-		$this->db->where(pk()." !=", $this->id);
+		$this->db->where(PRIMARY_KEY." !=", $this->id);
 		$this->db->order_as_tree();
 		if ($strField)
 			$this->db->uri_as_full_uri(TRUE,$strField);

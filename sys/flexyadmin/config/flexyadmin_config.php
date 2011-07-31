@@ -614,7 +614,9 @@ $config['UI_required_label_extra']		= "<span class=\"required\"> !</span>";
 |
 */
 
-$config['PRIMARY_key']							= "id";
+define('PRIMARY_KEY','id');
+
+$config['PRIMARY_key']							= PRIMARY_KEY;
 $config['FOREIGN_key_format']				= "/^id_.*/";		// regexpression used by preg_match
 
 $config['ORDER_field_name']					= "order";
