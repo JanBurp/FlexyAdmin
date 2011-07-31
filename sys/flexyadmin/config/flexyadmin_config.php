@@ -39,7 +39,6 @@ $config['THUMBCACHE']							= $config['ASSETS']."_thumbcache/";
 $config['STATS']									= $config['SITE'].'/stats/';
 $config['PLUGINS']								= $config['SITE'].'/plugins';
 $config['BULKUPLOAD']							= 'bulk_upload';
-$config['CACHE']									= $config['SITE'].'/stats/';
 
 $config['THUMBSIZE']							= array(100,100);
 
@@ -65,7 +64,7 @@ $config['PLUGIN_URI_REPLACE_CHAR']	= '_';
 */
 $config['API_home']									= "/admin/";
 $config['API_user']									= "/admin/show/user/";
-$config['API_login']								= "/admin/user/login/";
+$config['API_login']								= "/admin/login/";
 $config['API_logout']								= "/admin/logout/";
 
 $config['API_view_order']						= "/admin/show/order/";
@@ -303,18 +302,19 @@ $config["CFG_"]=array(
 			"b_single_row"=>'0',
 			"str_ui_name"=>'',
 			"b_grid_add_many"=>'1',
-			"str_abstract_fields"=>'str_user_name',
+			"str_abstract_fields"=>'str_username',
 			"str_order_by"=>'id',
 			"txt_help"=>''
 			),
-		"cfg_rights"=>array(
+		"cfg_user_groups"=>array(
 			"order"=>'121',
-			"table"=>'cfg_rights',
+			"table"=>'cfg_groups',
 			"b_single_row"=>'0',
 			"str_ui_name"=>'',
 			"b_grid_add_many"=>'0',
-			"str_abstract_fields"=>'str_name',
+			"str_abstract_fields"=>'str_description',
 			"str_order_by"=>'id',
+			"b_add_empty_choice"=>'1',
 			"txt_help"=>'<p>Create groups of rights here. For use in Users.</p>'
 			),
 		"log_login"=>array(
@@ -349,7 +349,6 @@ $config["CFG_"]=array(
 			"b_show_in_form"=>'1',
 			"str_options"=>'api|tools|table|all_tbl_tables|all_cfg_tables|all_res_tables|media|all_media|seperator',
 			"b_multi_options"=>'0',
-			"str_overrule_prefix"=>'',
 			"str_validation_rules"=>'',
 			"txt_help"=>''
 			),
@@ -360,7 +359,6 @@ $config["CFG_"]=array(
 			"b_show_in_form"=>'1',
 			"str_options"=>'menu item|from menu table|from submenu table|from category table|from table group by category|split by language|by module',
 			"b_multi_options"=>'0',
-			"str_overrule_prefix"=>'',
 			"str_validation_rules"=>'',
 			"txt_help"=>''
 			),
@@ -371,7 +369,6 @@ $config["CFG_"]=array(
 			"b_show_in_form"=>'1',
 			"str_options"=>'normal|wide|big',
 			"b_multi_options"=>'0',
-			"str_overrule_prefix"=>'',
 			"str_validation_rules"=>'',
 			"txt_help"=>''
 			),
@@ -382,8 +379,17 @@ $config["CFG_"]=array(
 			"b_show_in_form"=>'1',
 			"str_options"=>'',
 			"b_multi_options"=>'0',
-			"str_overrule_prefix"=>'',
 			"str_validation_rules"=>'',
+			"txt_help"=>''
+			),
+		"cfg_field_info.field_field"=>array(
+			"field"=>'cfg_field_info.field_field',
+			"str_ui_name"=>'',
+			"b_show_in_grid"=>'1',
+			"b_show_in_form"=>'1',
+			"str_options"=>'',
+			"b_multi_options"=>'1',
+			"str_validation_rules"=>'required',
 			"txt_help"=>''
 			),
 		"cfg_field_info.str_validation_rules"=>array(
@@ -393,7 +399,6 @@ $config["CFG_"]=array(
 			"b_show_in_form"=>'1',
 			"str_options"=>'|required|min_length[]|max_length[]|exact_length[]|alpha|alpha_numeric|alpha_dash|numeric|integer|is_natural|is_natural_no_zero|valid_email|valid_emails|callback_valid_ip|callback_valid_rgb|prep_url',
 			"b_multi_options"=>'1',
-			"str_overrule_prefix"=>'',
 			"str_validation_rules"=>'',
 			"txt_help"=>''
 			),
@@ -404,8 +409,17 @@ $config["CFG_"]=array(
 			"b_show_in_form"=>'1',
 			"str_options"=>'',
 			"b_multi_options"=>'1',
-			"str_overrule_prefix"=>'',
 			"str_validation_rules"=>'',
+			"txt_help"=>''
+			),
+		"cfg_table_info.table"=>array(
+			"field"=>'cfg_table_info.table',
+			"str_ui_name"=>'',
+			"b_show_in_grid"=>'1',
+			"b_show_in_form"=>'1',
+			"str_options"=>'',
+			"b_multi_options"=>'0',
+			"str_validation_rules"=>'required',
 			"txt_help"=>''
 			),
 		"cfg_table_info.str_form_many_type"=>array(
@@ -415,7 +429,6 @@ $config["CFG_"]=array(
 			"b_show_in_form"=>'1',
 			"str_options"=>'dropdown|ordered_list|subfields',
 			"b_multi_options"=>'0',
-			"str_overrule_prefix"=>'',
 			"str_validation_rules"=>'',
 			"txt_help"=>''
 			),
@@ -426,7 +439,6 @@ $config["CFG_"]=array(
 			"b_show_in_form"=>'1',
 			"str_options"=>'first|last',
 			"b_multi_options"=>'0',
-			"str_overrule_prefix"=>'',
 			"str_validation_rules"=>'',
 			"txt_help"=>''
 			),
@@ -437,19 +449,27 @@ $config["CFG_"]=array(
 			"b_show_in_form"=>'1',
 			"str_options"=>'name|_name|rawdate|_rawdate|type|_type|size|_size|width|_width|height|_height',
 			"b_multi_options"=>'0',
-			"str_overrule_prefix"=>'',
 			"str_validation_rules"=>'',
 			"txt_help"=>''
 			),
-		"cfg_media_info.str_type"=>array(
-			"field"=>'cfg_media_info.str_type',
+		"cfg_media_info.path"=>array(
+			"field"=>'cfg_media_info.path',
 			"str_ui_name"=>'',
 			"b_show_in_grid"=>'1',
 			"b_show_in_form"=>'1',
-			"str_options"=>'image|flash|doc|pdf|other|all',
+			"str_options"=>'',
 			"b_multi_options"=>'0',
-			"str_overrule_prefix"=>'',
-			"str_validation_rules"=>'',
+			"str_validation_rules"=>'required',
+			"txt_help"=>''
+			),
+		"cfg_media_info.str_types"=>array(
+			"field"=>'cfg_media_info.str_types',
+			"str_ui_name"=>'',
+			"b_show_in_grid"=>'1',
+			"b_show_in_form"=>'1',
+			"str_options"=>'',
+			"b_multi_options"=>'0',
+			"str_validation_rules"=>'required',
 			"txt_help"=>''
 			),
 		"cfg_media_info.str_autofill"=>array(
@@ -459,29 +479,96 @@ $config["CFG_"]=array(
 			"b_show_in_form"=>'1',
 			"str_options"=>'|single upload|bulk upload|both',
 			"b_multi_options"=>'0',
-			"str_overrule_prefix"=>'',
 			"str_validation_rules"=>'',
 			"txt_help"=>''
 			),
-		"cfg_img_info.fields"=>array(
-			"field"=>'cfg_img_info.fields',
-			"str_ui_name"=>'Auto fill fields',
+		"cfg_img_info.path"=>array(
+			"field"=>'cfg_img_info.path',
+			"str_ui_name"=>'',
 			"b_show_in_grid"=>'1',
 			"b_show_in_form"=>'1',
 			"str_options"=>'',
 			"b_multi_options"=>'0',
-			"str_overrule_prefix"=>'',
-			"str_validation_rules"=>'',
+			"str_validation_rules"=>'required',
 			"txt_help"=>''
 			),
-		"cfg_rights.rights"=>array(
-			"field"=>'cfg_rights.rights',
+		"cfg_user_groups.rights"=>array(
+			"field"=>'cfg_groups.rights',
 			"str_ui_name"=>'Rights for',
 			"b_show_in_grid"=>'1',
 			"b_show_in_form"=>'1',
 			"str_options"=>'',
 			"b_multi_options"=>'0',
-			"str_overrule_prefix"=>'',
+			"str_validation_rules"=>'',
+			"txt_help"=>''
+			),
+		"cfg_users.id_group"=>array(
+			"field"=>'cfg_users.id_group',
+			"str_ui_name"=>'Group',
+			"b_show_in_grid"=>'1',
+			"b_show_in_form"=>'1',
+			"str_options"=>'',
+			"b_multi_options"=>'0',
+			"str_validation_rules"=>'',
+			"txt_help"=>''
+			),
+		"cfg_users.str_salt"=>array(
+			"field"=>'cfg_users.str_salt',
+			"str_ui_name"=>'',
+			"b_show_in_grid"=>'0',
+			"b_show_in_form"=>'0',
+			"str_options"=>'',
+			"b_multi_options"=>'0',
+			"str_validation_rules"=>'',
+			"txt_help"=>''
+			),
+		"cfg_users.str_activation_code"=>array(
+			"field"=>'str_activation_code',
+			"str_ui_name"=>'',
+			"b_show_in_grid"=>'0',
+			"b_show_in_form"=>'0',
+			"str_options"=>'',
+			"b_multi_options"=>'0',
+			"str_validation_rules"=>'',
+			"txt_help"=>''
+			),
+		"cfg_users.str_forgotten_password_code"=>array(
+			"field"=>'str_forgotten_password_code',
+			"str_ui_name"=>'',
+			"b_show_in_grid"=>'0',
+			"b_show_in_form"=>'0',
+			"str_options"=>'',
+			"b_multi_options"=>'0',
+			"str_validation_rules"=>'',
+			"txt_help"=>''
+			),
+		"cfg_users.str_remember_code"=>array(
+			"field"=>'str_remember_code',
+			"str_ui_name"=>'',
+			"b_show_in_grid"=>'0',
+			"b_show_in_form"=>'0',
+			"str_options"=>'',
+			"b_multi_options"=>'0',
+			"str_validation_rules"=>'',
+			"txt_help"=>''
+			),
+		"cfg_users.created_on"=>array(
+			"field"=>'created_on',
+			"str_ui_name"=>'',
+			"b_show_in_grid"=>'0',
+			"b_show_in_form"=>'0',
+			"str_options"=>'',
+			"b_multi_options"=>'0',
+			"str_validation_rules"=>'',
+			"txt_help"=>''
+			),
+		"cfg_users.last_login"=>array(
+			"field"=>'last_login',
+			"str_ui_name"=>'',
+			"b_show_in_grid"=>'0',
+			"b_show_in_form"=>'0',
+			"str_options"=>'',
+			"b_multi_options"=>'0',
 			"str_validation_rules"=>'',
 			"txt_help"=>''
 			),
@@ -492,7 +579,6 @@ $config["CFG_"]=array(
 			"b_show_in_form"=>'1',
 			"str_options"=>'icons|list|detailed',
 			"b_multi_options"=>'0',
-			"str_overrule_prefix"=>'',
 			"str_validation_rules"=>'',
 			"txt_help"=>''
 			),
@@ -503,7 +589,6 @@ $config["CFG_"]=array(
 			"b_show_in_form"=>'1',
 			"str_options"=>'nl|en',
 			"b_multi_options"=>'0',
-			"str_overrule_prefix"=>'',
 			"str_validation_rules"=>'',
 			"txt_help"=>''
 			)
@@ -576,6 +661,11 @@ $config['FIELDS_special'] = array(
 												"grid"				=> "function_primary_key",
 												"form"				=> "function_primary_key",
 												"validation"	=> "trim|integer|required",
+											),
+	"id_group"	=> array (
+												"grid"				=> "function_foreign_key",
+												"form"				=> "function_id_group",
+												"validation"	=> "integer|required",
 											),
 	"user"			=> array(
 												"grid"				=> "function_user",
