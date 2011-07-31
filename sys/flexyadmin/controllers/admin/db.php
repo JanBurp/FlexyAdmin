@@ -44,7 +44,7 @@ class Db extends AdminController {
 		$this->lang->load("form");
 
 		$form=new form($this->config->item('API_db_export'));
-		$tablesWithRights=$this->_get_table_rights();
+		$tablesWithRights=$this->user->get_table_rights();
 		$options=combine($tablesWithRights,$tablesWithRights);
 		$valuesData=$options;
 		unset($valuesData['cfg_sessions']);
@@ -65,7 +65,7 @@ class Db extends AdminController {
 	}
 
 	function export() {
-		if ($this->_is_super_admin()) {
+		if ($this->user->is_super_admin()) {
 			$dataTables=$this->input->post('data');
 			$structureTables=$this->input->post('structure');
 			// $type=$this->input->post('type');
@@ -115,7 +115,7 @@ class Db extends AdminController {
 				$tables=not_filter_by($tables,'rel');
 				// check if rights for found tables
 				foreach ($tables as $table) {
-					if ($this->has_rights($table) < RIGHTS_ALL) $safe=FALSE;
+					if ($this->user->has_rights($table) < RIGHTS_ALL) $safe=FALSE;
 				}
 			}
 		}
@@ -131,11 +131,11 @@ class Db extends AdminController {
 	}
 
 	function backup() {
-		if ($this->_can_backup()) {
+		if ($this->user->can_backup()) {
 			$this->load->dbutil();
 			$this->load->helper('download');
 		
-			$tablesWithRights=$this->_get_table_rights();
+			$tablesWithRights=$this->user->get_table_rights();
 			// select only data (not config)
 			$tablesWithRights=combine($tablesWithRights,$tablesWithRights);
 			$tablesWithRights=not_filter_by($tablesWithRights,"cfg");
@@ -147,7 +147,7 @@ class Db extends AdminController {
 			$sql = $this->dbutil->backup($prefs);
 			// clean backup
 			$sql=$this->_clean_sql($sql);
-			$sql="# FlexyAdmin backup\n# User: '".$this->user."'  \n# Date: ".date("d F Y")."\n\n".$sql;
+			$sql="# FlexyAdmin backup\n# User: '".$this->user_name."'  \n# Date: ".date("d F Y")."\n\n".$sql;
 		
 			$backup=$sql;
 			$filename='backup_'.$this->_filename().'_'.date("Y-m-d").'.txt';
@@ -158,7 +158,7 @@ class Db extends AdminController {
 	}
 
 	function restore() {
-		if ($this->_can_backup()) {
+		if ($this->user->can_backup()) {
 			if (!isset($_FILES["userfile"])) {
 				$this->load->model('form');
 				$this->lang->load('help');
@@ -227,7 +227,7 @@ class Db extends AdminController {
 		$form=new form($this->config->item('API_db_import'));
 		$data=array( 	"userfile"	=> array("type"=>"file","label"=>"File (txt,sql)"),
 		 							"sql"				=> array("type"=>"textarea","label"=>"SQL"));
-		if ($this->has_rights('cfg_configurations')) {
+		if ($this->user->has_rights('cfg_configurations')) {
 			$data['update']=array('label'=>'Update DB from r');
 		}
 		$form->set_data($data,"Choose File to upload and import");
@@ -236,7 +236,7 @@ class Db extends AdminController {
 	}
 
 	function import() {
-		if ($this->_is_super_admin()) {
+		if ($this->user->is_super_admin()) {
 			$sql=$this->input->post('sql');
 			if (!isset($_FILES["userfile"]) and !$sql) {
 				$this->_import();
@@ -289,7 +289,7 @@ class Db extends AdminController {
 		if ($safe)
 			$this->_add_content(p()."Checking safety ... ok"._p());
 		else {
-			$rights=current($this->rights);
+			$rights=current($this->user->get_rights());
 			if ($rights["str_name"]=="super_admin" and $rights["rights"]=="*" and $rights["b_all_users"]) {
 				$safe=TRUE;
 				$this->_add_content(p()."Checking safety ... Risky SQL, but Super Admin Rights."._p());
@@ -322,7 +322,7 @@ class Db extends AdminController {
 	}
 	
 	function sql() {
-		if ($this->_is_super_admin()) {
+		if ($this->user->is_super_admin()) {
 			$sql=$this->input->post('sql');
 			// $sure=$this->input->post('sure');
 			$this->lang->load('help');

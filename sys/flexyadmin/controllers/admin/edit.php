@@ -69,7 +69,7 @@ class Edit extends AdminController {
 		if (!empty($table) and (!empty($ids)) and $this->db->table_exists($table)) {
 			if (!is_array($ids)) $ids=array($idss);
 			foreach ($ids as $id) {
-				if ($this->has_rights($table,$id)>=RIGHTS_DELETE) {
+				if ($this->user->has_rights($table,$id)>=RIGHTS_DELETE) {
 					$this->lang->load("update_delete");
 					$message="";
 					if ($confirmed) {

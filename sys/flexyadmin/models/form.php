@@ -315,6 +315,12 @@ class Form Extends CI_Model {
 						// trace_($joins);
 					}
 					/**
+					* Password, hash it
+					*/
+					elseif (in_array($pre,array('gpw','pwd'))) {
+						$set[$name]=$this->ion_auth_model->hash_password($value);
+					}
+					/**
 					 * Normal data
 					 */
 					else {
@@ -325,8 +331,6 @@ class Form Extends CI_Model {
 					}
 				}
 			}
-			
-			// trace_($set);
 			
 			
 			if (!empty($error)) {
@@ -368,10 +372,15 @@ class Form Extends CI_Model {
 					$this->db->where($pk,$id);
 					$query=$this->db->get($table);
 					$staticData=$query->row_array();
+					// trace_($staticData);
 					foreach($staticData as $name=>$value) {
-						$set[$name]=$value;
+						if (!isset($value))
+							$set[$name]='';
+						else
+							$set[$name]=$value;
 					}
 				}
+
 				/**
 				 * Update data
 				 */
@@ -760,8 +769,10 @@ class Form Extends CI_Model {
 				break;
 
 			case "password":
-				if (substr($this->action,0,12)=='/admin/show/')
+				if (substr($this->action,0,12)=='/admin/show/') {
+					$attr['value']='';
 					$out.=form_input($attr);
+				}
 				else
 					$out.=form_password($attr);
 				break;

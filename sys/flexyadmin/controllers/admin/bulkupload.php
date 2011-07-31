@@ -22,7 +22,7 @@ class Bulkupload extends AdminController {
 	}
 
 	function index() {
-		if ($this->_can_use_tools()) {
+		if ($this->user->can_use_tools()) {
 			$this->_add_content(h('Bulk Upload'));
 			$bulkMap=$this->config->item('BULKUPLOAD');
 			$files=read_map($bulkMap);
@@ -140,7 +140,7 @@ class Bulkupload extends AdminController {
 		$rename='';
 		if (isset($args[2])) $rename=get_file_without_extension($args[2]);
 		
-		if ($this->_can_use_tools()) {
+		if ($this->user->can_use_tools()) {
 			$this->load->library('upload');
 			$this->load->library('session');
 

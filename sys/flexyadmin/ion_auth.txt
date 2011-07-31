@@ -1,0 +1,60 @@
+/**
+* Name:  Ion Auth
+*
+* Author: Ben Edmunds
+*		  		ben.edmunds@gmail.com
+*         @benedmunds
+*
+* Added Awesomeness: Phil Sturgeon
+* FlexyAdmin adaption: Jan den Besten (2011)
+*
+* Location: http://github.com/benedmunds/CodeIgniter-Ion-Auth
+*
+* Created:  10.01.2009
+*
+* Description:  Modified auth system based on redux_auth with extensive customization.  This is basically what Redux Auth 2 should be.
+* Original Author name has been kept but that does not mean that the method has not been modified.
+*
+* Requirements: PHP5 or above
+*
+* License: Ion Auth is released under the Apache License v2.0. You can read the license here: http://www.apache.org/licenses/LICENSE-2.0
+*
+*/
+
+
+
+
+/******** FlexyAdmin changes *******************/
+
+- Remove all PHP4 ugliness
+- cfg: minumum password length: 4 (for standard passwords admin & user)
+- cfg: empty meta table and meta colums (we don't need this)
+- cfg: change 'groups' to 'cfg_user_groups'
+- cfg: change 'users' to 'cfg_users'
+- model: change databasefield names according to flexyadmin names
+- model->get_users: only join meta data if meta table/columns are set
+- renamed controller to auth_controller - we don't use this
+- there is a new library: user, which extends the ion_auth library
+
+Changes to ion_auth_model and user table so it works like tables in flexyadmin:
+
+Table 'users' => 'cfg_users':
+- username => str_username
+- password => gpw_password
+- email => email_email
+- group_id => id_user_group
+- active => b_active
+- salt => str_salt
+- activation_code => str_activation_code
+- forgotten_password_code => str_forgotten_password_code
+- remember_code => str_remember_code
++ str_language
++ str_filemanager_view
+
+Table 'groups' => 'cfg_user_groups':
+- name => str_name
+- description => str_description
+
+Table 'meta' => REMOVED (We don't need it)
+
+/*************************************************/

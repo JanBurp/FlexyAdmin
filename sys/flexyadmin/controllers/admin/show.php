@@ -50,7 +50,7 @@ class Show extends AdminController {
  */
 
 	function order($table="",$id="",$newOrder="") {
-		if (!empty($table) and ($id!="") and !empty($newOrder) and $this->has_rights($table,$id)>=RIGHTS_EDIT) {
+		if (!empty($table) and ($id!="") and !empty($newOrder) and $this->user->has_rights($table,$id)>=RIGHTS_EDIT) {
 			/**
 			 * re-order data
 			 */
@@ -94,8 +94,8 @@ class Show extends AdminController {
 					return;
 				}
 				else {
-					if ($right=$this->has_rights($table,$id)) {
-						$restrictedToUser=$this->user_restriction_id($table);
+					if ($right=$this->user->has_rights($table,$id)) {
+						$restrictedToUser=$this->user->restricted_id($table);
 						$this->load->library("pagination");
 						$this->load->model("grid");
 						$this->lang->load("help");
@@ -139,7 +139,7 @@ class Show extends AdminController {
 							$this->db->where($table.".user",$restrictedToUser);
 							$this->db->dont_select("user");
 						}
-						if ($table=="cfg_users") $this->db->where("id >=",$this->user_id);
+						if ($table=="cfg_users") $this->db->where('cfg_users.id >=',$this->user_id);
 							
 						$this->db->add_foreigns_as_abstracts();
 						if (isset($tableInfo['b_grid_add_many']) and $tableInfo['b_grid_add_many']) $this->db->add_many();
@@ -273,8 +273,8 @@ class Show extends AdminController {
 
 		if (!empty($table) and ($id!="")
 				and $this->db->table_exists($table)
-				and $right=$this->has_rights($table,$id)) {
-			$restrictedToUser=$this->user_restriction_id($table);
+				and $right=$this->user->has_rights($table,$id)) {
+			$restrictedToUser=$this->user->restricted_id($table);
 			
 			$this->load->library('form_validation');
 			$this->load->library('upload');
@@ -293,6 +293,7 @@ class Show extends AdminController {
 				// $this->db->add_foreigns();
 			}
 			$this->db->add_options();
+			
 			if ($id==-1) {
 				// New item, fill data with defaults
 				$data=$this->db->defaults($table);
@@ -317,14 +318,14 @@ class Show extends AdminController {
 				$data=current($data);
 			}
 			// strace_($options);
-									
+
 			/**
 			 * if data: first render data for the form class, then put data in form
 			 */
 			if (!empty($data)) {
 				$this->ff->set_restricted_to_user($restrictedToUser,$this->user_id);
 				$ffData=$this->ff->render_form($table,$data,$options,$multiOptions);
-
+				
 				$actionUri=api_uri('API_view_form',$table.':'.$id);
 				if (!empty($info)) $actionUri.='/info/'.$info;
 				$form=new form($actionUri);
@@ -341,7 +342,6 @@ class Show extends AdminController {
 					$uiShowTable=$uiTable;
 				$form->set_data($ffData,$uiShowTable);
 				$form->set_old_templates();
-				// trace_($ffData);
 
 				/**
 				 * Validate form, if succes, make form do an update
@@ -351,26 +351,24 @@ class Show extends AdminController {
 					$redirectUri=api_uri('API_view_grid',$table);
 					if (!empty($info)) $redirectUri.='/info/'.$info;
 					
-					if ($this->_has_key($table)) {
-						$resultId=$form->update($table,$restrictedToUser);
-						$newData=$form->get_data();
-						$this->_after_update($table,$resultId,$data,$newData);
-						if (is_string($resultId)) {
-							$this->set_message(langp("update_error",$table,$resultId));
-							redirect($redirectUri);
-						}
-						else {
-							if ($id==-1)
-								$this->set_message(langp("insert_new",$table));
-							else
-								$this->set_message(langp("update_succes",$table));
-							$this->load->model("login_log");
-							$this->login_log->update($table);
-							redirect($redirectUri.'/current/'.$resultId);
-						}
+					$resultId=$form->update($table,$restrictedToUser);
+
+					$newData=$form->get_data();
+
+					$this->_after_update($table,$resultId,$data,$newData);
+					if (is_string($resultId)) {
+						$this->set_message(langp("update_error",$table,$resultId));
+						redirect($redirectUri);
 					}
-					else
-						$this->_add_content('<p class="error">'.$this->_no_key($table).'</p>');
+					else {
+						if ($id==-1)
+							$this->set_message(langp("insert_new",$table));
+						else
+							$this->set_message(langp("update_succes",$table));
+						$this->load->model("login_log");
+						$this->login_log->update($table);
+						redirect($redirectUri.'/current/'.$resultId);
+					}
 				}
 
 				/**
@@ -418,13 +416,10 @@ class Show extends AdminController {
 		/**
 		 * get user data
 		 */
-		$userTable=$this->config->item('CFG_table_prefix')."_".$this->config->item('CFG_users');
+		$userTable='cfg_users';
 		$userId=$this->session->userdata("user_id");
-		// $this->form($userTable,$userId);
-		
-		$this->db->select("id,str_user_name,gpw_user_pwd,str_language");
+		$this->db->select("id,str_username,email_email,gpw_password,str_language");
 		$this->db->add_options();
-		// $this->db->add_many();
 		$this->db->where("id",$userId);
 		$userData=$this->db->get_result($userTable);
 		$options=el("options",$userData);
@@ -444,8 +439,9 @@ class Show extends AdminController {
 		$this->form_validation->set_error_delimiters('<div id="formmessage">', '</div>');
 		$this->load->model("form");
 		$form=new form(api_uri('API_user'));
-		$form->set_data($formData,$userData["str_user_name"]);
+		$form->set_data($formData,$userData["str_username"]);
 		$form->set_old_templates();
+		$form->set_caption(ucwords($userData["str_username"]));
 		/**
 		 * Validate form, if succes, make form do an update
 		 */
@@ -456,18 +452,9 @@ class Show extends AdminController {
 				redirect(api_uri('API_home'));
 			}
 			else {
-				$form->update($userTable);
 				$this->set_message(lang("update_user_changed"));
 				$this->load->model("login_log");
 				$this->login_log->update($userTable);
-				// reset user session
-				$this->db->where("id",$userId);
-				$this->db->select("str_user_name,str_language");
-				$query=$this->db->get($userTable);
-				$userData=$query->row_array();
-				//trace_($userData);
-				$this->session->set_userdata("user",$userData["str_user_name"]);
-				$this->session->set_userdata("language",$userData["str_language"]);
 				redirect(api_uri('API_home'));
 			}
 		}
@@ -476,6 +463,7 @@ class Show extends AdminController {
 			 * Render
 			 */
 			$html=$form->render("html");
+			$this->_add_content(validation_errors());
 			$this->_add_content($html);
 			$this->_show_type("form");
 		}

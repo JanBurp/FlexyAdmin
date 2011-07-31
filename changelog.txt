@@ -1,4 +1,4 @@
-> 1120
+> 1125
 
 UPDATE:
 - CodeIgniter 2.0.2
@@ -7,6 +7,11 @@ UPDATE:
 - tinyMCE 3.4.3.2 (jQuery)
 
 NEW:
+- New authentication sysem Ion Auth:
+	- Simpler user groups
+	- Safer (hashed) passwords
+	- Ready for some future authentication handling
+	- Possible to use in FrontEnd
 - New way of implementing modules: by CI->Models:
 	- deleting map: site/modules
 	- adding map: site/models
@@ -19,7 +24,7 @@ NEW:
 - Added font files to safe_asset to site/assets/css
 - MY_Pagination, default configs
 - New plugin: add_relation_table
-- 
+- Safer Plugins.
 
 BUGS:
 - bulk_upload (lowercase extensions)

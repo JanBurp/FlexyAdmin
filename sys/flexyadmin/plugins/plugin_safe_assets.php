@@ -29,8 +29,10 @@ class Plugin_safe_assets extends Plugin_ {
 	}
 	
 	function _admin_api($args=NULL) {
-		$this->_add_content(h($this->plugin,1));
-		$this->_safe_and_clean_all();
+		if ($this->user->is_super_admin()) {
+			$this->_add_content(h($this->plugin,1));
+			$this->_safe_and_clean_all();
+		}
 	}
 
 

@@ -62,7 +62,7 @@ class Ajax extends BasicController {
 	function order($table="") {
 		$result='';
 		if (!empty($table) and $this->db->table_exists($table)) {
-			if ($this->_has_key($table) and $this->has_rights($table)>=RIGHTS_EDIT) {
+			if ($this->user->has_rights($table)>=RIGHTS_EDIT) {
 				$ids=$this->input->post("id");
 				if ($ids) {
 					$this->load->model("order");
@@ -92,7 +92,7 @@ class Ajax extends BasicController {
 		$result='';
 		if (!empty($table) and ($id!="") and !empty($field)) {
 			if ($this->db->table_exists($table) and $this->db->field_exists($field,$table)) {
- 				if ($this->_has_key($table) and $this->has_rights($table,$id)>=RIGHTS_EDIT) {
+ 				if ($this->user->has_rights($table,$id)>=RIGHTS_EDIT) {
 					$this->db->where(pk(),$id);
 					$oldData=$this->db->get_row($table);
 					$newData=$oldData;
