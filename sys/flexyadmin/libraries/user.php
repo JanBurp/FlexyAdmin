@@ -43,8 +43,8 @@ class User Extends Ion_auth {
 		foreach ($field_data as $field_info) {
 			$field_info=object2array($field_info);
 			if ($field_info['name']=='gpw_password') {
-				$password = $this->ci->db->get_field_where('cfg_users','gpw_password','str_username',$identity);
-				$new_password = ( $field_info['max_length']==40 and strlen($password)==40 );
+				$password = $this->ci->db->get_field('cfg_users','gpw_password');
+				$new_password = ( $password and $field_info['max_length']==40 and strlen($password)==40 );
 			}
 		}
 		return ! $new_password;
