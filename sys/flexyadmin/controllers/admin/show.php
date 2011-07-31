@@ -234,9 +234,9 @@ class Show extends AdminController {
 							}
 							$grid->set_headings($this->uiNames->get($keys,$table));
 							if ($right>=RIGHTS_DELETE)
-								$grid->set_heading(pk(),help(icon("select all"),lang('grid_select_all')).help(icon("delete"),lang('grid_delete'), array("class"=>"delete") ) );
+								$grid->set_heading(PRIMARY_KEY,help(icon("select all"),lang('grid_select_all')).help(icon("delete"),lang('grid_delete'), array("class"=>"delete") ) );
 							else
-								$grid->set_heading(pk(),'');
+								$grid->set_heading(PRIMARY_KEY,'');
 							
 							if (!empty($id)) $grid->set_current($id);
 							$html=$grid->view("html",$table,"grid");
@@ -300,7 +300,7 @@ class Show extends AdminController {
 				$options=el("options",$data);
 				$multiOptions=el("multi_options",$data);
 				$data=current($data);
-				$data[pk()]="-1";
+				$data[PRIMARY_KEY]="-1";
 			}
 			else {
 				if ($restrictedToUser>0 and $this->db->has_field($table,"user")) {
@@ -308,7 +308,7 @@ class Show extends AdminController {
 					$this->db->dont_select("user");
 				}
 				if ($id!="") {
-					$this->db->where($table.".".pk(),$id);
+					$this->db->where($table.".".PRIMARY_KEY,$id);
 				}
 				$data=$this->db->get_result($table);
 				// trace_('#show#'.$this->db->last_query());

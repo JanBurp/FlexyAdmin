@@ -827,7 +827,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 						$rel=$jTable["rel"];
 						$join=rtrim($jTable["join"],'_');
 						if ($this->abstracts) {
-							$this->select($join.".".pk());
+							$this->select($join.".".PRIMARY_KEY);
 							$this->select($this->get_abstract_fields_sql($join));
 						}
 						$relSelect=$this->many[$rel];
@@ -838,12 +838,12 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 						}
 						$this->from($rel);
 						$this->where($jTable['rel'].'.'.$jTable["id_this"],$id);
-						$this->join($join,$join.".".pk()."=".$rel.".".$jTable["id_join"],"left");
+						$this->join($join,$join.".".PRIMARY_KEY."=".$rel.".".$jTable["id_join"],"left");
 						$this->order_by($rel.'.id');
 						$query=$this->get();
 						$resultArray=$query->result_array();
 						foreach($resultArray as $res) {
-							$manyResult[$rel][$res[pk()]]=$res;
+							$manyResult[$rel][$res[PRIMARY_KEY]]=$res;
 						}
 					}
 					// insert many results at right place
@@ -855,7 +855,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 								// always first: id, uri, order, self_parent
 								$firstResult=$result[$id];
 								$lastResult=$result[$id];
-								unset($lastResult[pk()]);
+								unset($lastResult[PRIMARY_KEY]);
 								unset($lastResult['uri']);
 								unset($lastResult['order']);
 								unset($lastResult['self_parent']);
@@ -1185,7 +1185,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			$query=$this->get($cleanTable);
 			$res=$query->result_array();
 			// set id as key
-			$res=$this->_set_key_to($res,pk());
+			$res=$this->_set_key_to($res,PRIMARY_KEY);
 			foreach($res as $row) {
 				$options[$row[$this->pk]]=$row[$CI->config->item('ABSTRACT_field_name')];
 				if ($asTree and $row['self_parent']!=0) $options[$row[$this->pk]]=$res[$row['self_parent']][$CI->config->item('ABSTRACT_field_name')].' / '.$options[$row[$this->pk]];

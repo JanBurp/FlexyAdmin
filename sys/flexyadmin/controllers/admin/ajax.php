@@ -93,12 +93,12 @@ class Ajax extends BasicController {
 		if (!empty($table) and ($id!="") and !empty($field)) {
 			if ($this->db->table_exists($table) and $this->db->field_exists($field,$table)) {
  				if ($this->user->has_rights($table,$id)>=RIGHTS_EDIT) {
-					$this->db->where(pk(),$id);
+					$this->db->where(PRIMARY_KEY,$id);
 					$oldData=$this->db->get_row($table);
 					$newData=$oldData;
 					$newData[$field]=$value;
 		 			$this->db->set($field,$value);
-		 			$this->db->where(pk(),$id);
+		 			$this->db->where(PRIMARY_KEY,$id);
 		 			$this->db->update($table);
 					$this->_after_update($table,$id,$oldData,$newData);
 				}

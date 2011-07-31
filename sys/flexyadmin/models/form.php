@@ -279,12 +279,11 @@ class Form Extends CI_Model {
 		// trace_($_POST);
 		$set=array();
 		if ($this->isValidated and $this->db->table_exists($table)) {
-			$pk=pk();
 			$joins=array();
 			foreach($this->data as $name=>$field) {
 				// set primary key (id)
-				if ($name==$pk) {
-					$id=$this->input->post($pk);
+				if ($name==PRIMARY_KEY) {
+					$id=$this->input->post(PRIMARY_KEY);
 				}
 				// set user (id) if set
 				elseif ($name=="user") {
@@ -363,13 +362,13 @@ class Form Extends CI_Model {
 				 */
 				$staticFields=$this->db->list_fields($table);
 				$staticFields=array_combine($staticFields,$staticFields);
-				unset($staticFields[$pk]);
+				unset($staticFields[PRIMARY_KEY]);
 				foreach($set as $name=>$value) {
 					unset($staticFields[$name]);
 				}
 				if (!empty($staticFields)) {
 					$this->db->select($staticFields);
-					$this->db->where($pk,$id);
+					$this->db->where(PRIMARY_KEY,$id);
 					$query=$this->db->get($table);
 					$staticData=$query->row_array();
 					// trace_($staticData);
@@ -394,7 +393,7 @@ class Form Extends CI_Model {
 					log_('info',"form: inserting data in '$table', id='$id'");
 				}
 				else {
-					$this->db->where($pk,$id);
+					$this->db->where(PRIMARY_KEY,$id);
 					$this->db->update($table);
 					log_('info',"form: updating data from '$table', id='$id'");
 				}
