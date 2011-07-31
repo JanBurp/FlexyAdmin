@@ -40,7 +40,7 @@ if ( ! function_exists('random_string')) {
 	* Find a character in string
 	*/ 
 function in_string($in,$string) {
-	$in=strsplit($in);
+	$in=str_split($in);
 	$found=FALSE;
 	$c=0;
 	while (!$found and $c<count($in)) {
