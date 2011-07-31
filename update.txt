@@ -1,0 +1,82 @@
+UPDATE to 1130
+==============
+
+- This is a major update:
+	- the latest CodeIgniter 2.0.2
+	- new Authentication systen: Ion Auth
+- MySQL update 1125
+- Replace index.php
+- Replace current sys map with new sys map
+
+
+UPDATES to 998 and up
+====================
+
+- Write down the current revision (see in the bottom bar in FlexyAdmin or in sys/build.txt)
+- Run all SQL updates from your revision until the latest, you can do this with the Import Database option in FlexyAdmin.
+- Replace current sys map with new sys map
+
+- To make sure the assets maps are safe and you are updating from a pre r990 version:
+	- After logging in to FlexyAdmin, once run this uri: admin/plugin/safe_assets
+
+
+UPDATES to 930 and up
+====================
+
+- Write down the current revision (see in the bottom bar in FlexyAdmin or in sys/build.txt)
+- Run all SQL updates from your revision until the latest, you can do this with the Import Database option in FlexyAdmin.
+- Replace current sys map with new sys map
+
+
+UPDATES to 899
+==============
+
+- Write down the current revision (see in the bottom bar in FlexyAdmin or in sys/build.txt)
+- Run all SQL updates from your revision until the latest, you can do this with the Import Database option in FlexyAdmin.
+- Replace current sys map with new sys map
+- Replace .htaccess
+
+
+UPDATES r802 to r840
+===============
+
+START NEW SITE:
+- If you start a new site, start with complete new installation!
+
+UPDATE OLD SITE:
+- Write down the current revision (see in the bottom bar in FlexyAdmin or in sys/build.txt)
+- Run all SQL updates from your revision until the latest (you can find the SQL updates in db/ ).
+	You can do this with the Import Database option in FlexyAdmin.
+- Replace current sys map with new sys map
+- Replace:
+	- robots.txt
+- Add:
+	- sitemap.xml
+
+
+UPDATES r503 to r801
+=========================
+
+- Write down the current revision (see in the bottom bar in FlexyAdmin or in sys/build.txt)
+- Run all SQL updates from your revision until the latest (you can find the SQL updates in db/ ).
+	You can do this with the Import Database option in FlexyAdmin.
+- Replace current sys map with new sys map
+
+
+
+UPDATE to r502
+=========================
+
+- Write down the current revision (see in the bottom bar in FlexyAdmin or in sys/build.txt)
+- Run all SQL updates from your revision until the latest (you can find the SQL updates in db/ ).
+- Remove the current sys map
+- Copy the new sys map
+- If you start a new site:
+	- Copy the site map
+	- Copy .htacces,index.php and robots.txt to the root of your site
+- If you update a current site:
+	- Add site/config and move your config files from site/ to site/config/ (database.php etc )
+	- Add the new config files (found in the original site/config)
+	- Add site/stats and give it all rights (online)
+
+
