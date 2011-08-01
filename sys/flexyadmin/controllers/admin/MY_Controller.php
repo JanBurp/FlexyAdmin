@@ -92,7 +92,7 @@ class MY_Controller extends CI_Controller {
 			$this->cfg->load('cfg_admin_menu',array('id'));
 		}
 		else {
-			$this->cfg->load('CFG_configurations'); //,'','email_webmaster_email,str_menu_table,b_logout_to_site,b_query_urls');
+			$this->cfg->load('CFG_configurations','b_logout_to_site,b_query_urls');
 			$this->cfg->load('CFG_table',$this->config->item('CFG_table_name'),'id,table,str_order_by');
 		}
 		// trace_($this->cfg);
