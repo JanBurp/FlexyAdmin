@@ -28,10 +28,7 @@ class Plugin_sitemap extends Plugin_ {
 
 
 	function _create_sitemap() {
-		if ($this->db->table_exists('res_menu_result'))
-			$menuTable='res_menu_result';
-		else
-			$menuTable=$this->cfg->get('cfg_configurations','str_menu_table');
+		$menuTable=get_menu_table();
 
 		// create Sitemap
 		$url=trim($this->db->get_field('tbl_site','url_url'),'/');
