@@ -108,18 +108,7 @@ class Menu {
 	}
 
 	function set_menu_table($table='') {
-		if (empty($table)) {
-			$CI =& get_instance();
-			$tables=$CI->config->item('MENU_TABLES');
-			$next=next($tables);
-			if ($next) {
-				$table=$next;
-				while ( $next and ! $CI->db ->table_exists($table)) {
-					$next=next($tables);
-					if ($next) $table=$next;
-				}
-			}
-		}
+		if (empty($table)) $table = get_menu_table();
 		$this->menuTable=$table;
 		return $table;
 	}
