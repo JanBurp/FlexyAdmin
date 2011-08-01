@@ -205,8 +205,7 @@ class FrontEndController extends MY_Controller {
 		/**
 		 * Set home uri (top from tbl_menu)
 		 */
-		$menuTable=$this->cfg->get("CFG_configurations","str_menu_table");
-		if ($this->db->table_exists('res_menu_result')) $menuTable='res_menu_result';
+		$menuTable=get_menu_table();
 		if (!empty($menuTable)) {
 			if ($this->db->has_field($menuTable,"self_parent")) $this->db->order_as_tree();
 			if ($this->db->has_field($menuTable,"uri")) {
