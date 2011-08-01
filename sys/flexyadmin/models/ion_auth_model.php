@@ -128,7 +128,7 @@ class Ion_auth_model extends CI_Model
 	   $query = $this->db->select('gpw_password')
 			     ->select('str_salt')
 			     ->where($this->identity_column, $identity)
-			     ->where($this->ion_auth->_extra_where)
+			     ->where($this->user->_extra_where)
 			     ->limit(1)
 			     ->get($this->tables['users']);
 
@@ -200,7 +200,7 @@ class Ion_auth_model extends CI_Model
 					'b_active'	  => 1
 					 );
 
-			$this->db->where($this->ion_auth->_extra_where);
+			$this->db->where($this->user->_extra_where);
 			$this->db->update($this->tables['users'], $data, array($this->identity_column => $identity));
 	    }
 	    else
@@ -210,7 +210,7 @@ class Ion_auth_model extends CI_Model
 					'b_active' => 1
 					 );
 
-			$this->db->where($this->ion_auth->_extra_where);
+			$this->db->where($this->user->_extra_where);
 			$this->db->update($this->tables['users'], $data, array('id' => $id));
 	    }
 
@@ -239,7 +239,7 @@ class Ion_auth_model extends CI_Model
 		    'b_active'	  => 0
 	    );
 
-	    $this->db->where($this->ion_auth->_extra_where);
+	    $this->db->where($this->user->_extra_where);
 	    $this->db->update($this->tables['users'], $data, array('id' => $id));
 
 	    return $this->db->affected_rows() == 1;
@@ -255,7 +255,7 @@ class Ion_auth_model extends CI_Model
 	{
 	    $query = $this->db->select('gpw_password, salt')
 			      ->where($this->identity_column, $identity)
-			      ->where($this->ion_auth->_extra_where)
+			      ->where($this->user->_extra_where)
 			      ->limit(1)
 			      ->get($this->tables['users']);
 
@@ -273,7 +273,7 @@ class Ion_auth_model extends CI_Model
 			    'str_remember_code' => '',
 			     );
 
-		$this->db->where($this->ion_auth->_extra_where);
+		$this->db->where($this->user->_extra_where);
 		$this->db->update($this->tables['users'], $data, array($this->identity_column => $identity));
 
 		return $this->db->affected_rows() == 1;
@@ -296,7 +296,7 @@ class Ion_auth_model extends CI_Model
 	    }
 
 	    return $this->db->where('str_username', $username)
-			    ->where($this->ion_auth->_extra_where)
+			    ->where($this->user->_extra_where)
 			    ->count_all_results($this->tables['users']) > 0;
 	}
 
@@ -314,7 +314,7 @@ class Ion_auth_model extends CI_Model
 	    }
 
 	    return $this->db->where('email_email', $email)
-		                ->where($this->ion_auth->_extra_where)
+		                ->where($this->user->_extra_where)
 		                ->count_all_results($this->tables['users']) > 0;
 	}
 
@@ -331,9 +331,9 @@ class Ion_auth_model extends CI_Model
 			return FALSE;
 	    }
 /*
-		if (isset($this->ion_auth->_extra_where) && !empty($this->ion_auth->_extra_where))
+		if (isset($this->user->_extra_where) && !empty($this->user->_extra_where))
 	    {
-			$this->db->where($this->ion_auth->_extra_where);
+			$this->db->where($this->user->_extra_where);
 	    }
 */
 	    return $this->db->where($this->identity_column, $identity)->count_all_results($this->tables['users']) > 0;
@@ -356,7 +356,7 @@ class Ion_auth_model extends CI_Model
 
 	    $this->forgotten_password_code = $key;
 
-	    $this->db->where($this->ion_auth->_extra_where);
+	    $this->db->where($this->user->_extra_where);
 
 	    $this->db->update($this->tables['users'], array('str_forgotten_password_code' => $key), array('email_email' => $email));
 
@@ -435,7 +435,7 @@ class Ion_auth_model extends CI_Model
 		$this->db->where($this->tables['users'].'.'.$this->identity_column, $identity);
 	    }
 
-	    $this->db->where($this->ion_auth->_extra_where);
+	    $this->db->where($this->user->_extra_where);
 
 	    $this->db->limit(1);
 	    $i = $this->db->get($this->tables['users']);
@@ -462,12 +462,12 @@ class Ion_auth_model extends CI_Model
 	{
 	    if ($this->identity_column == 'email_email' && $this->email_check($email))
 	    {
-		$this->ion_auth->set_error('account_creation_duplicate_email');
+		$this->user->set_error('account_creation_duplicate_email');
 		return FALSE;
 	    }
 	    elseif ($this->identity_column == 'str_username' && $this->username_check($username))
 	    {
-		$this->ion_auth->set_error('account_creation_duplicate_username');
+		$this->user->set_error('account_creation_duplicate_username');
 		return FALSE;
 	    }
 
@@ -527,9 +527,9 @@ class Ion_auth_model extends CI_Model
 		$data['str_salt'] = $salt;
 	    }
 
-	    if($this->ion_auth->_extra_set)
+	    if($this->user->_extra_set)
 	    {
-		$this->db->set($this->ion_auth->_extra_set);
+		$this->db->set($this->user->_extra_set);
 	    }
 
 	    $this->db->insert($this->tables['users'], $data);
@@ -575,7 +575,7 @@ class Ion_auth_model extends CI_Model
 		$query = $this->db->select($this->identity_column.', id, gpw_password, id_user_group')
 		   								->where($this->identity_column, $identity)
 		   								->where('b_active', 1)
-		   								->where($this->ion_auth->_extra_where)
+		   								->where($this->user->_extra_where)
 		   								->limit(1)
 		   								->get($this->tables['users']);
 
@@ -648,9 +648,9 @@ class Ion_auth_model extends CI_Model
 	  }
 
 		
-	  if (isset($this->ion_auth->_extra_where) && !empty($this->ion_auth->_extra_where))
+	  if (isset($this->user->_extra_where) && !empty($this->user->_extra_where))
 	  {
-			$this->db->where($this->ion_auth->_extra_where);
+			$this->db->where($this->user->_extra_where);
 	  }
 
 
@@ -678,9 +678,9 @@ class Ion_auth_model extends CI_Model
 			$this->db->where_in($this->tables['groups'].'.str_name', $group);
 	    }
 
-	    if (isset($this->ion_auth->_extra_where) && !empty($this->ion_auth->_extra_where))
+	    if (isset($this->user->_extra_where) && !empty($this->user->_extra_where))
 	    {
-			$this->db->where($this->ion_auth->_extra_where);
+			$this->db->where($this->user->_extra_where);
 	    }		
 
 		$this->db->from($this->tables['users']);
@@ -891,7 +891,7 @@ class Ion_auth_model extends CI_Model
 	    if (array_key_exists($this->identity_column, $data) && $this->identity_check($data[$this->identity_column]) && $user->{$this->identity_column} !== $data[$this->identity_column])
 	    {
 			$this->db->trans_rollback();
-			$this->ion_auth->set_error('account_creation_duplicate_'.$this->identity_column);
+			$this->user->set_error('account_creation_duplicate_'.$this->identity_column);
 			return FALSE;
 	    }
 
@@ -925,7 +925,7 @@ class Ion_auth_model extends CI_Model
 				$data['gpw_password'] = $this->hash_password($data['gpw_password'], $user->salt);
 			}
 
-			$this->db->where($this->ion_auth->_extra_where);
+			$this->db->where($this->user->_extra_where);
 
 			$this->db->update($this->tables['users'], $data, array('id' => $id));
 	    }
@@ -975,9 +975,9 @@ class Ion_auth_model extends CI_Model
 	{
 	    $this->load->helper('date');
 
-	    if (isset($this->ion_auth->_extra_where) && !empty($this->ion_auth->_extra_where))
+	    if (isset($this->user->_extra_where) && !empty($this->user->_extra_where))
 	    {
-			$this->db->where($this->ion_auth->_extra_where);
+			$this->db->where($this->user->_extra_where);
 	    }
 
 	    $this->db->update($this->tables['users'], array('last_login' => now()), array('id' => $id));
@@ -1018,9 +1018,9 @@ class Ion_auth_model extends CI_Model
 	    }
 
 	    //get the user
-	    if (isset($this->ion_auth->_extra_where) && !empty($this->ion_auth->_extra_where))
+	    if (isset($this->user->_extra_where) && !empty($this->user->_extra_where))
 	    {
-			$this->db->where($this->ion_auth->_extra_where);
+			$this->db->where($this->user->_extra_where);
 	    }
 
 	    $query = $this->db->select($this->identity_column.', id, id_user_group')
