@@ -110,9 +110,15 @@ class Menu {
 	function set_menu_table($table='') {
 		if (empty($table)) {
 			$CI =& get_instance();
-			$table=$CI->cfg->get('CFG_configurations',"str_menu_table");
-			$resultTable='res_menu_result';
-			if ($CI->db->table_exists($resultTable)) $table=$resultTable;
+			$tables=$CI->config->item('MENU_TABLES');
+			$next=next($tables);
+			if ($next) {
+				$table=$next;
+				while ( $next and ! $CI->db ->table_exists($table)) {
+					$next=next($tables);
+					if ($next) $table=$next;
+				}
+			}
 		}
 		$this->menuTable=$table;
 		return $table;
@@ -142,6 +148,11 @@ class Menu {
 		$data=$CI->db->get_result($table);
 		return $this->set_menu_from_table_data($data,$foreign);
 	}
+	
+	function get_menu_table() {
+		return $this->table;
+	}
+	
 	
 	function set_menu_from_table_data($items="",$foreign=false) {
 		$counter=1;
