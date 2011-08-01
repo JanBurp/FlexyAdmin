@@ -32,7 +32,6 @@ class Login extends CI_Controller {
 	function __construct() {
 		parent::__construct();
 		$this->load->library('session');
-		$this->load->library('ion_auth');
 		$this->load->library('user');
 		$this->homePage=$this->config->item('API_home');
 	}

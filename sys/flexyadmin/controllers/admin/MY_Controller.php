@@ -322,7 +322,6 @@ class BasicController extends MY_Controller {
 	function __construct($isAdmin=false) {
 		parent::__construct($isAdmin);
 		$this->load->library('session');
-		$this->load->library('ion_auth');
 		$this->load->library('user');
 		$this->load->helper("language");
 		
