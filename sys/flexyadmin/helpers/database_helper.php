@@ -124,15 +124,17 @@ function join_key_from_rel_table($rel) {
 
 
 function get_menu_table() {
-	$table='';
-	$CI =& get_instance();
-	$tables=$CI->config->item('MENU_TABLES');
-	$next=next($tables);
-	if ($next) {
-		$table=$next;
-		while ( $next and ! $CI->db ->table_exists($table)) {
-			$next=next($tables);
-			if ($next) $table=$next;
+	static $table='';
+	if (empty($table)) {
+		$CI =& get_instance();
+		$tables=$CI->config->item('MENU_TABLES');
+		$next=next($tables);
+		if ($next) {
+			$table=$next;
+			while ( $next and ! $CI->db ->table_exists($table)) {
+				$next=next($tables);
+				if ($next) $table=$next;
+			}
 		}
 	}
 	return $table;
