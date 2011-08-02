@@ -138,7 +138,7 @@ class Menu {
 		return $this->set_menu_from_table_data($data,$foreign);
 	}
 	
-	function get_menu_table() {
+	function get_table() {
 		return $this->table;
 	}
 	
