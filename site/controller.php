@@ -81,7 +81,7 @@ class Main extends FrontEndController {
 
 		/***********************************************
 		 * Redirect to a page down in the menu tree, if current page is empty.
-		 * (un)comment this if (not)neeeded
+		 * Comment this if not neeeded
 		 */
 		// $this->_redirect($item);
 
@@ -126,7 +126,7 @@ class Main extends FrontEndController {
 		// If not: get prefered language from users browser settings
 		if ( ! $this->_is_possible_language($lang) ) $lang=substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
 		
-		// If not, last guess: Get prefered language from config
+		// If not: Get prefered language from config
 		if ( ! $this->_is_possible_language($lang) ) $lang=$this->config->item('language');
 
 		// Sets some stuff
@@ -216,7 +216,7 @@ class Main extends FrontEndController {
 		if (empty($item['txt_text'])) {
 			$this->db->select('uri');
 			$this->db->where('self_parent',$item['id']);
-			$subItem=$this->db->get_row('res_menu_result');
+			$subItem=$this->db->get_row(get_menu_table());
 			if ($subItem) {
 				$newUri=$this->site['uri'].'/'.$subItem['uri'];
 				redirect($newUri);
