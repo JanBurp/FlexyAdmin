@@ -601,4 +601,41 @@ function array_last($a) {
 	return current($s);
 }
 
+
+function array_add_after($a,$key,$row) {
+	if (!is_array($row)) $row=array($row);
+	$firstslice=array();
+	$k='';
+	reset($a);
+	$item=each($a);
+	while ( $item and $item['key']!=$key ) {
+		$firstslice[$item['key']]=$item['value'];
+		array_shift($a);
+		$item=each($a);
+	}
+	$firstslice[$item['key']]=$item['value'];
+	array_shift($a);
+	$item=each($a);
+	return array_merge($firstslice,$row,$a);
+}
+
+function array_add_before($a,$key,$row) {
+	if (!is_array($row)) $row=array($row);
+	$firstslice=array();
+	$k='';
+	reset($a);
+	$item=each($a);
+	while ( $item and $item['key']!=$key ) {
+		$firstslice[$item['key']]=$item['value'];
+		array_shift($a);
+		$item=each($a);
+	}
+	// $firstslice[$item['key']]=$item['value'];
+	// array_shift($a);
+	// $item=each($a);
+	return array_merge($firstslice,$row,$a);
+}
+
+
+
 ?>

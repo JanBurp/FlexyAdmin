@@ -734,6 +734,11 @@ class Form Extends CI_Model {
 				$attr["class"].=" browse";
 				$out.=form_upload($attr);
 				break;
+				
+			case "image":
+				$attr['src']=$attr['value'];
+				$out.=img($attr);
+				break;
 
 			// case "upload":
 			// 	if (!empty($field["value"])) $out.=popup_img($field["upload_path"]."/".$field["value"],img($field["upload_path"]."/".$field["value"]));
