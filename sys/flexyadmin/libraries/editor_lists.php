@@ -55,33 +55,29 @@ class Editor_lists {
 			// add if asked for, internal links from menu table
 			if ($CI->cfg->get('CFG_editor','b_add_internal_links')) {
 				$data['-- site links -----------']=NULL;
-				$menuTable=$CI->cfg->get('CFG_configurations','str_menu_table');
-				$resultTable='res_menu_result';
-				if ($CI->db->table_exists($resultTable)) $menuTable=$resultTable; // for menu automation
-				if (!empty($menuTable) and $CI->db->table_exists($menuTable)) {
-					$menuFields=$CI->db->list_fields($menuTable);
-					$menuFields=array_combine($menuFields,$menuFields);
-					if (isset($menuFields['uri'])) {
-						$CI->db->select('id,uri');
-						if (isset($menuFields['order'])) {
-							$CI->db->select('order');
-							if (in_array('self_parent',$menuFields)) {
-								$CI->db->select('self_parent');
-								$CI->db->order_as_tree();
-								$CI->db->uri_as_full_uri(TRUE,'str_title');
-							}
+				$menuTable=get_menu_table();
+				$menuFields=$CI->db->list_fields($menuTable);
+				$menuFields=array_combine($menuFields,$menuFields);
+				if (isset($menuFields['uri'])) {
+					$CI->db->select('id,uri');
+					if (isset($menuFields['order'])) {
+						$CI->db->select('order');
+						if (in_array('self_parent',$menuFields)) {
+							$CI->db->select('self_parent');
+							$CI->db->order_as_tree();
+							$CI->db->uri_as_full_uri(TRUE,'str_title');
 						}
-						$CI->db->select_first('str');
-						$results=$CI->db->get_results($menuTable);
-						// strace_($results);
-						// add results to link list
-						$nameField=$CI->db->get_select_first(0);
-						foreach ($results as $key => $row) {
-							$url=$row["uri"];
-							$name=$url;
-							$name=addslashes($row[$nameField]);
-							$data[$name]=array("url"=>site_url($url),"name"=>$name);
-						}
+					}
+					$CI->db->select_first('str');
+					$results=$CI->db->get_results($menuTable);
+					// strace_($results);
+					// add results to link list
+					$nameField=$CI->db->get_select_first(0);
+					foreach ($results as $key => $row) {
+						$url=$row["uri"];
+						$name=$url;
+						$name=addslashes($row[$nameField]);
+						$data[$name]=array("url"=>site_url($url),"name"=>$name);
 					}
 				}
 			}
