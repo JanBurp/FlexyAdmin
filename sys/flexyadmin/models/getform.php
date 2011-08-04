@@ -52,7 +52,7 @@
 								$value[remove_prefix($k)]=$v;
 								unset($value[$k]);
 							}
-							$value['label']=strtolower($value['label']);
+							$value['label']=$value['label'];
 							$name=str_replace(' ','_',$value['label']).'_'.$key;
 							$value['name']=$name;
 							$value['fieldset']=$fieldset;
@@ -87,7 +87,7 @@
 							}
 
 							// Remove ##END##
-							if ($value['type']=='##END##' and $value['label']=='##end##') {unset($fields[$key]);}
+							if ($value['type']=='##END##' and $value['label']=='##END##') {unset($fields[$key]);}
 
 							if (isset($fields[$key])) {
 								$fields[$name]=$fields[$key];
