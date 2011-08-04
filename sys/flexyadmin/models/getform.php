@@ -5,6 +5,9 @@
  class Getform extends CI_Model {
 
  	function __construct() {
+		$this->lang->load('update_delete');
+		$this->lang->load('form');
+		$this->lang->load('form_validation');
  		parent::__construct();
  	}
 
@@ -28,6 +31,7 @@
 		if ($this->db->table_exists('tbl_forms') and $this->db->table_exists('tbl_formfields')) {
 			$form=array();
 			$form['form']=$this->db->get_row('tbl_forms');
+			
 			if ($form['form']) {
 				$this->db->where('id_form',$form['form']['id']);
 				$fields=$this->db->get_result('tbl_formfields');
@@ -79,11 +83,17 @@
 							// add option
 							if ($value['type']=='option' and is_array($options)) {
 								$optionKey=$value['name'];
-								$optionValue=remove_postfix($value['name']);
+								$optionValue=$value['label'];
 								if (!empty($value['html'])) $optionValue=$value['html'];
 								$options[safe_string($optionKey,50)]=$optionValue;
 								unset($fields[$key]);
 								// trace_('Add Option to '.$optionsKey.': '.$optionValue);
+							}
+
+							// button?
+							if (get_prefix($value['type'],'.')=='button') {
+								$form['buttons'][$value['name']]=array( 'value'=>$value['label'], 'type'=>get_postfix($value['type'],'.') );
+								unset($fields[$key]);
 							}
 
 							// Remove ##END##
@@ -98,7 +108,7 @@
 				}
 				if (!isset($form['fieldsets'])) $form['fieldsets']=array($fieldset);
 				$form['fields']=$fields;
-				$form['buttons']=array('submit'=>array("submit"=>"submit","value"=>'submit'));
+				if (!isset($form['buttons'])) $form['buttons']=array('submit'=>array("submit"=>"submit","value"=>'submit'));
 			}
 		}
 		return $form;
