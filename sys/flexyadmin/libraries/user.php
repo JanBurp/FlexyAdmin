@@ -117,9 +117,11 @@ class User Extends Ion_auth {
 		$this->ci->db->add_foreigns();
 		$user=$this->ci->db->get_row('cfg_users');
 		$rights=array();
-		foreach ($user as $key => $value) {
-			if (!in_array($key,array('id','id_group'))) {
-				$rights[str_replace('cfg_user_groups__','',$key)]=$value;
+		if ($user) {
+			foreach ($user as $key => $value) {
+				if (!in_array($key,array('id','id_group'))) {
+					$rights[str_replace('cfg_user_groups__','',$key)]=$value;
+				}
 			}
 		}
 		return $rights;
