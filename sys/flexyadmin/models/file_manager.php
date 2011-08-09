@@ -205,7 +205,7 @@ class File_manager Extends CI_Model {
  *
  * @return result
  */
-	function upload_file() {
+	function upload_file($file_field='file') {
 		$error='';
 		// UPLOAD 
 		$config['upload_path'] = $this->map;
@@ -226,7 +226,7 @@ class File_manager Extends CI_Model {
 		// trace_($_FILES);
 		//
 		$this->upload->config($config);
-		$ok=$this->upload->upload_file('file');
+		$ok=$this->upload->upload_file($file_field);
 		$file=$this->upload->get_file();
 		$ext=get_file_extension($file);
 		$saveName=clean_file_name($file);
