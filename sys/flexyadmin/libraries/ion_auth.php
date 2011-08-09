@@ -130,14 +130,11 @@ class Ion_auth
 	 * @return void
 	 * @author Mathew
 	 **/
-	public function activate($id, $code=false)
-	{
-		if ($this->ci->ion_auth_model->activate($id, $code))
-		{
+	public function activate($id, $code=false) {
+		if ($this->ci->ion_auth_model->activate($id, $code)) {
 			$this->set_message('activate_successful');
 			return TRUE;
 		}
-
 		$this->set_error('activate_unsuccessful');
 		return FALSE;
 	}
