@@ -286,38 +286,29 @@ class Ion_auth
 	 * @return void
 	 * @author Mathew
 	 **/
-	public function register($username, $password, $email, $additional_data, $group_name = false) //need to test email activation
-	{
+	public function register($username, $password, $email, $additional_data, $group_name = false) {
 		$email_activation = $this->ci->config->item('email_activation', 'ion_auth');
-
-		if (!$email_activation)
-		{
+		if (!$email_activation)	{
 			$id = $this->ci->ion_auth_model->register($username, $password, $email, $additional_data, $group_name);
-			if ($id !== FALSE)
-			{
+			if ($id !== FALSE) {
 				$this->set_message('account_creation_successful');
 				return $id;
 			}
-			else
-			{
+			else {
 				$this->set_error('account_creation_unsuccessful');
 				return FALSE;
 			}
 		}
-		else
-		{
+		else {
 			$id = $this->ci->ion_auth_model->register($username, $password, $email, $additional_data, $group_name);
-
-			if (!$id)
-			{
+			if (!$id)	{
 				$this->set_error('account_creation_unsuccessful');
 				return FALSE;
 			}
 
 			$deactivate = $this->ci->ion_auth_model->deactivate($id);
 
-			if (!$deactivate)
-			{
+			if (!$deactivate)	{
 				$this->set_error('deactivate_unsuccessful');
 				return FALSE;
 			}
@@ -338,14 +329,13 @@ class Ion_auth
 			$this->ci->email->clear();
 			$config['mailtype'] = $this->ci->config->item('email_type', 'ion_auth');
 			$this->ci->email->initialize($config);
-			$this->ci->email->set_newline("\r\n");
+			// $this->ci->email->set_newline("\r\n");
 			$this->ci->email->from($this->ci->config->item('admin_email', 'ion_auth'), $this->ci->config->item('site_title', 'ion_auth'));
 			$this->ci->email->to($email);
 			$this->ci->email->subject($this->ci->config->item('site_title', 'ion_auth') . ' - Account Activation');
 			$this->ci->email->message($message);
 
-			if ($this->ci->email->send() == TRUE)
-			{
+			if ($this->ci->email->send() == TRUE)	{
 				$this->set_message('activation_email_successful');
 				return $id;
 			}

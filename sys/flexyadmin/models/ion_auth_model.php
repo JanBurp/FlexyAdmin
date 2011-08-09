@@ -458,105 +458,85 @@ class Ion_auth_model extends CI_Model
 	 * @return bool
 	 * @author Mathew
 	 **/
-	public function register($username, $password, $email, $additional_data = false, $group_name = false)
-	{
-	    if ($this->identity_column == 'email_email' && $this->email_check($email))
-	    {
-		$this->user->set_error('account_creation_duplicate_email');
-		return FALSE;
-	    }
-	    elseif ($this->identity_column == 'str_username' && $this->username_check($username))
-	    {
-		$this->user->set_error('account_creation_duplicate_username');
-		return FALSE;
-	    }
-
-	    // If username is taken, use username1 or username2, etc.
-	    if ($this->identity_column != 'str_username')
-	    {
-		for($i = 0; $this->username_check($username); $i++)
-		{
-		    if($i > 0)
-		    {
-			$username .= $i;
-		    }
+	public function register($username, $password, $email, $additional_data = false, $group_name = false)		{
+		if ($this->identity_column == 'email_email' && $this->email_check($email))		{
+			$this->user->set_error('account_creation_duplicate_email');
+			return FALSE;
 		}
-	    }
-
-	    // If a group ID was passed, use it
-	    if(isset($additional_data['id_user_group']))
-	    {
-		$id_user_group = $additional_data['id_user_group'];
-		unset($additional_data['id_user_group']);
-	    }
-
-	    // Otherwise use the group name if it exists
-	    else
-	    {
-		// Group ID
-		if(!$group_name)
-		{
-		    $group_name = $this->config->item('default_group', 'ion_auth');
+		elseif ($this->identity_column == 'str_username' && $this->username_check($username))	{
+			$this->user->set_error('account_creation_duplicate_username');
+			return FALSE;
 		}
 
-		$id_user_group = $this->db->select('id')
-				     ->where('str_name', $group_name)
-				     ->get($this->tables['groups'])
-				     ->row()->id;
-	    }
-
-	    // IP Address
-	    $ip_address = $this->input->ip_address();
-	    $salt	= $this->store_salt ? $this->salt() : FALSE;
-	    $password	= $this->hash_password($password, $salt);
-
-	    // Users table.
-	    $data = array(
-			'str_username'   => $username,
-			'gpw_password'   => $password,
-			'email_email'      => $email,
-			'id_user_group'   => $id_user_group,
-			'ip_address' => $ip_address,
-			'created_on' => now(),
-			'last_login' => now(),
-			'b_active'     => 1
-			 );
-
-	    if ($this->store_salt)
-	    {
-		$data['str_salt'] = $salt;
-	    }
-
-	    if($this->user->_extra_set)
-	    {
-		$this->db->set($this->user->_extra_set);
-	    }
-
-	    $this->db->insert($this->tables['users'], $data);
-
-	    // Meta table.
-	    $id = $this->db->insert_id();
-
-	    $data = array($this->meta_join => $id);
-
-	    if (!empty($this->columns))
-	    {
-		foreach ($this->columns as $input)
-		{
-		    if (is_array($additional_data) && isset($additional_data[$input]))
-		    {
-			$data[$input] = $additional_data[$input];
-		    }
-		    elseif ($this->input->post($input))
-		    {
-			$data[$input] = $this->input->post($input);
-		    }
+		// If username is taken, use username1 or username2, etc.
+		if ($this->identity_column != 'str_username')	{
+			for($i = 0; $this->username_check($username); $i++)	{
+				if($i > 0) $username .= $i;
+			}
 		}
-	    }
 
-	    $this->db->insert($this->tables['meta'], $data);
+		// If a group ID was passed, use it
+		if(isset($additional_data['id_user_group']))	{
+			$id_user_group = $additional_data['id_user_group'];
+			unset($additional_data['id_user_group']);
+		}
+		// Otherwise use the group name if it exists
+		else {
+			// Group ID
+			if(!$group_name) {
+				$group_name = $this->config->item('default_group', 'ion_auth');
+			}
+			$id_user_group = $this->db->select('id')
+			->where('str_name', $group_name)
+			->get($this->tables['groups'])
+			->row()->id;
+		}
 
-	    return $this->db->affected_rows() > 0 ? $id : false;
+		// IP Address
+		$ip_address = $this->input->ip_address();
+		$salt	= $this->store_salt ? $this->salt() : FALSE;
+		$password	= $this->hash_password($password, $salt);
+
+		// Users table.
+		$data = array(
+		'str_username'   => $username,
+		'gpw_password'   => $password,
+		'email_email'      => $email,
+		'id_user_group'   => $id_user_group,
+		'ip_address' => $ip_address,
+		'created_on' => now(),
+		'last_login' => now(),
+		'b_active'     => 1
+		);
+
+		if ($this->store_salt) {
+			$data['str_salt'] = $salt;
+		}
+
+		if($this->user->_extra_set)	{
+			$this->db->set($this->user->_extra_set);
+		}
+
+		$this->db->insert($this->tables['users'], $data);
+		$id = $this->db->insert_id();
+
+		// Meta table.
+		if (!empty($this->columns) and !empty($this->tables['meta'])) {
+			$data = array($this->meta_join => $id);
+			if (!empty($this->columns)) {
+				foreach ($this->columns as $input) {
+					if (is_array($additional_data) && isset($additional_data[$input])) {
+						$data[$input] = $additional_data[$input];
+					}
+					elseif ($this->input->post($input)) {
+						$data[$input] = $this->input->post($input);
+					}
+				}
+			}
+			$this->db->insert($this->tables['meta'], $data);
+		}
+
+		return $this->db->affected_rows() > 0 ? $id : false;
 	}
 
 	/**

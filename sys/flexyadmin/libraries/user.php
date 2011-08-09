@@ -13,9 +13,16 @@ class User Extends Ion_auth {
 	
 	protected $rights;
 	protected $user_id;
+	protected $siteInfo;
+	
 
 	public function __construct() {
 		parent::__construct();
+		// set standard configurations
+		$this->ci->db->select('url_url,str_title,email_email');
+		$this->siteInfo = $this->ci->db->get_row('tbl_site');
+		$this->ci->config->set_item('site_title', $this->siteInfo['str_title'],'ion_auth');
+		$this->ci->config->set_item('admin_email', $this->siteInfo['email_email'],'ion_auth');
 	}
 	
 	
