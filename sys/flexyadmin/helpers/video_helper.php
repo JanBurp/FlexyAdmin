@@ -31,18 +31,21 @@ function get_video_thumb($code,$size='small',$type='youtube') {
 // http://www.soapboxdave.com/2010/04/getting-the-vimeo-thumbnail/
 function get_vimeo_info($id,$var='') {
 	if (!function_exists('curl_init')) die('CURL is not installed!');
-	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_URL, "http://vimeo.com/api/v2/video/$id.php");
-	curl_setopt($ch, CURLOPT_HEADER, 0);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-	$output = unserialize(curl_exec($ch));
-	$output = $output[0];
-	curl_close($ch);
-	if (empty($var))
-		return $output;
-	else 
-		return $output[$var];
+	if (!empty($id)) {
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, "http://vimeo.com/api/v2/video/$id.php");
+		curl_setopt($ch, CURLOPT_HEADER, 0);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+		$output = unserialize(curl_exec($ch));
+		$output = $output[0];
+		curl_close($ch);
+		if (empty($var))
+			return $output;
+		else 
+			return $output[$var];
+	}
+	return '';
 }
 
 
