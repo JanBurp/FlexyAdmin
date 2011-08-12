@@ -313,11 +313,12 @@ class Form Extends CI_Model {
 						}
 						// trace_($joins);
 					}
+
 					/**
-					* Password, hash it
+					* Password, hash it (or leave it same when empty)
 					*/
 					elseif (in_array($pre,array('gpw','pwd'))) {
-						$set[$name]=$this->ion_auth_model->hash_password($value);
+						if (!empty($value)) $set[$name]=$this->ion_auth_model->hash_password($value);
 					}
 					/**
 					 * Normal data
@@ -331,10 +332,7 @@ class Form Extends CI_Model {
 				}
 			}
 			
-			
-			if (!empty($error)) {
-			}
-			else {
+			if (empty($error)) {
 				/**
 				 * If no error setting data, insert/update data (looping through the set)
 				 */
@@ -371,7 +369,6 @@ class Form Extends CI_Model {
 					$this->db->where(PRIMARY_KEY,$id);
 					$query=$this->db->get($table);
 					$staticData=$query->row_array();
-					// trace_($staticData);
 					foreach($staticData as $name=>$value) {
 						if (!isset($value))
 							$set[$name]='';
@@ -383,6 +380,7 @@ class Form Extends CI_Model {
 				/**
 				 * Update data
 				 */
+				// strace_($set);
 				foreach($set as $name=>$value) {
 					$this->db->set($name,$value);
 					$this->data[$name]['newvalue']=$value;
