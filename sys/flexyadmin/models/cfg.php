@@ -24,6 +24,8 @@
  	 * 							)
  	 */
  	var $data=array();
+	var $keys=array();
+	var $isAdmin;
 
  	/**
  	 * Information for database fields
@@ -33,8 +35,22 @@
  	function __construct() {
  		parent::__construct();
  		$this->hasData=false;
- 		$this->data=NULL;
+ 		$this->data=array();
+		$this->keys=array(
+			'cfg_'.$this->config->item('CFG_configurations')	=> array( 'fields' => '`b_logout_to_site`,`b_query_urls`' ),
+			'cfg_'.$this->config->item('CFG_table')					=> array( 'key' => $this->config->item('CFG_table_name'), 'fields' => '`id`,`table`,`str_order_by`' ),
+			'cfg_'.$this->config->item('CFG_field') 					=> array( 'key' => $this->config->item('CFG_field_name') ),
+			'cfg_'.$this->config->item('CFG_media_info')			=> array( 'key' => array('path','fields_media_fields') ),
+			'cfg_'.$this->config->item('CFG_img_info')				=> array( 'key' => 'path' ),
+			'cfg_'.$this->config->item('cfg_admin_menu')			=> array( 'key' => 'id' )		
+		);
+		$this->isAdmin=FALSE;
  	}
+
+
+	function set_if_admin($isAdmin) {
+		$this->isAdmin=$isAdmin;
+	}
 
 /**
  * function _name($table)
@@ -63,14 +79,27 @@
  * @return bool true on succes
  */
 
-	function load($table,$key="",$fields='*') {
+	function load($table,$key='',$fields='') {
+		// set default keys/fields if not given
+		if (empty($key) and isset($this->keys[$table]['key'])) $key=$this->keys[$table]['key'];
+		if (empty($fields)) {
+			if ( ! $this->isAdmin and isset($this->keys[$table]['fields']))
+				$fields=$this->keys[$table]['fields'];
+			else
+				$fields='*';
+		}
 		if (!empty($key) and !is_array($key)) $key=array($key);
+		// trace_($table);
+		// trace_($key);
+		// trace_($fields);
+		// trace_($this->keys);
+		
 		$out=false;
 		$table=$this->_name($table);
 		log_("info","[Cfg] Loading config table '$table'");
 		if ($this->db->table_exists($table)) {
-			$this->db->select($fields);
-			$query=$this->db->get($table);
+			$sql="SELECT $fields FROM `$table`";
+			$query=$this->db->query($sql);
 			$data=array();
 			foreach ($query->result_array() as $row) {
 				if (empty($key)) {
@@ -179,14 +208,10 @@
 	 */
 	function field_data($table,$key="",$value="") {
 		if (!isset($this->fieldInfo[$table])) {
-			/**
-			 *TODO $CI weghalen bij object aanroepen (als er geen errors komen)
-			 */
-			$CI=$this;//&get_instance();
-			$platform=$CI->db->platform();
+			$platform=$this->db->platform();
 			if ($platform=="mysql") {
-				$sql = "SHOW COLUMNS FROM $table";
-				$query = $CI->db->query($sql);
+				$sql = "SHOW COLUMNS FROM `$table`";
+				$query = $this->db->query($sql);
 				foreach ($query->result() as $field) {
 					/** Explanation of the ugly regex:
 						*   match until first non '('

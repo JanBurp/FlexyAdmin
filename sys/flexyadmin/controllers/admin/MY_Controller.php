@@ -83,19 +83,7 @@ class MY_Controller extends CI_Controller {
 	function _init_flexy_admin($isAdmin=false) {
 		// $this->output->enable_profiler(TRUE);
 		$this->load->model('cfg');
-		if ($isAdmin) {
-			$this->cfg->load('CFG_configurations');
-			$this->cfg->load('CFG_table',$this->config->item('CFG_table_name'));
-			$this->cfg->load('CFG_field',$this->config->item('CFG_field_name'));
-			$this->cfg->load('CFG_media_info',array("path","fields_media_fields"));
-			$this->cfg->load('CFG_img_info','path');
-			$this->cfg->load('cfg_admin_menu',array('id'));
-		}
-		else {
-			$this->cfg->load('CFG_configurations','b_logout_to_site,b_query_urls');
-			$this->cfg->load('CFG_table',$this->config->item('CFG_table_name'),'id,table,str_order_by');
-		}
-		// trace_($this->cfg);
+		$this->cfg->set_if_admin($isAdmin);
 	}
 
 }
@@ -608,11 +596,14 @@ class AdminController extends BasicController {
 	function _show_table_menu($tables,$type) {
 		$a=array();
 		$tables=filter_by($tables,$type."_");
+		// trace_($tables);
 		$excluded=$this->config->item('MENU_excluded');
+		// trace_($this->cfg);
 		$cfgTables=$this->cfg->get("CFG_table");
 		// trace_($cfgTables);
 		$cfgTables=filter_by($cfgTables,$type);
 		$cfgTables=sort_by($cfgTables,"order");
+		// trace_($cfgTables);
 		$oTables=array();
 		foreach ($cfgTables as $row) {
 			if (in_array($row["table"],$tables)) {
@@ -714,6 +705,7 @@ class AdminController extends BasicController {
 					
 				case 'all_tbl_tables' :
 					$tables=$this->db->list_tables();
+					// trace_($tables);
 					$menu=array_merge($menu,$this->_show_table_menu($tables,$this->config->item('TABLE_prefix')));
 					break;
 
