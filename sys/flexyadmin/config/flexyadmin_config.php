@@ -148,7 +148,6 @@ $config['REL_table_prefix']						= "rel";
 $config['REL_table_split']						= "__";
 
 
-
 $config['CFG_configurations']					= "configurations";
 $config['CFG_users']									= "users";
 $config['CFG_editor']									= "editor";
