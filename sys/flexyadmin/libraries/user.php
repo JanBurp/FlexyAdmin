@@ -94,6 +94,47 @@ class User Extends Ion_auth {
 	
 	
 	
+	public function forgotten_password($email) {
+		$user = $this->get_user_by_email($email);
+
+		if ( $this->ci->ion_auth_model->forgotten_password($email) ) {
+			$data = array(
+				'user'										=> $user->str_username,
+				'forgotten_password_code' => $this->ci->ion_auth_model->forgotten_password_code,
+			);
+
+			$message = $this->ci->load->view($this->ci->config->item('email_templates', 'ion_auth').$this->ci->config->item('email_forgot_password', 'ion_auth'), $data, true);
+
+			$this->ci->email->clear();
+			$config['mailtype'] = $this->ci->config->item('email_type', 'ion_auth');
+			$config['protocol'] = 'mail';
+			
+			$this->ci->email->initialize($config);
+			$this->ci->email->from($this->ci->config->item('admin_email', 'ion_auth'), $this->ci->config->item('site_title', 'ion_auth'));
+			$this->ci->email->to($email);
+			$this->ci->email->subject($this->ci->config->item('site_title', 'ion_auth') . ' - Forgotten Password Verification');
+			$this->ci->email->message($message);
+			
+			if ( $this->ci->email->send() ) {
+				echo $this->ci->email->print_debugger();
+				$this->set_message('forgot_password_successful');
+				return TRUE;
+			}
+			else {
+				$this->set_error('forgot_password_unsuccessful');
+				return FALSE;
+			}
+		}
+		else {
+			$this->set_error('forgot_password_unsuccessful');
+			return FALSE;
+		}
+	}
+	
+	
+	
+	
+	
 	
 
 	function is_super_admin() {
