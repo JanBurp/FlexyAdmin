@@ -512,6 +512,16 @@ $config["CFG_"]=array(
 			"str_validation_rules"=>'',
 			"txt_help"=>''
 			),
+		"cfg_users.ip_address"=>array(
+			"field"=>'cfg_users.ip_address',
+			"str_ui_name"=>'IP Address',
+			"b_show_in_grid"=>'1',
+			"b_show_in_form"=>'1',
+			"str_options"=>'',
+			"b_multi_options"=>'0',
+			"str_validation_rules"=>'',
+			"txt_help"=>''
+			),
 		"cfg_users.str_salt"=>array(
 			"field"=>'cfg_users.str_salt',
 			"str_ui_name"=>'',
@@ -785,12 +795,12 @@ $config['FIELDS_prefix'] = array (
 	"pwd"				=> array (
 											"grid"				=> "***",
 											"form"				=> "password",
-											"validation"	=> "trim|required"
+											"validation"	=> "trim"
 										),
 	"gpw"				=> array (
 											"grid"				=> "***",
 											"form"				=> "password",
-											"validation"	=> "trim|required"
+											"validation"	=> "trim"
 											),
 	"url"				=> array (
 											"grid"				=> "<a target=\"_blank\" href=\"%s\">%s</a>",
