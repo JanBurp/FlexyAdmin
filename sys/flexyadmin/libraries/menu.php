@@ -84,6 +84,9 @@ class Menu {
 	function set_class_field($class="str_class") {
 		$this->fields["class"]=$class;
 	}
+	function add_bool_class_field($boolClass='') {
+		$this->fields[$boolClass]=$boolClass;
+	}
 	function set_current_class_active($currentAsActive=true) {
 		$this->currentAsActive=$currentAsActive;
 	}
@@ -148,6 +151,10 @@ class Menu {
 		$CI =& get_instance();
 
 		$menu=array();
+		
+		$boolFields=$this->fields;
+		$boolFields=filter_by_key($boolFields,'b_');
+
 		foreach($items as $item) {
 			if (!isset($item[$this->fields["visible"]]) or ($item[$this->fields["visible"]]) ) {
 				$thisItem=array();
@@ -164,6 +171,12 @@ class Menu {
 				if (isset($item[$this->fields["class"]])) 	$thisItem["class"]=str_replace('|',' ',$item[$this->fields["class"]]);
 				if (isset($item[$this->fields["parent"]])) 	$parent=$item[$this->fields["parent"]]; else $parent="";
 				if (isset($item[$this->fields["clickable"]]) && !$item[$this->fields["clickable"]]) $thisItem["uri"]='';
+				// classbooleans
+				if (!empty($boolFields)) {
+					foreach ($boolFields as $boolField) {
+						if (isset($item[$boolField]) && $item[$boolField]) $thisItem["class"]=' '.$boolField;
+					}
+				}
 				
 				if (!empty($this->extraFields)) {
 					foreach ($this->extraFields as $extraName => $extra) {
@@ -403,6 +416,7 @@ class Menu {
 					$class="lev$level pos$pos $first$last$sub ".$attr['class']." $cName$current";
 					if (isset($this->itemAttr['class']) and !empty($this->itemAttr['class'])) $class.=' '.$this->itemAttr['class'];
 					if (isset($item['class']) and !empty($item['class'])) $class.=' '.$item['class'];
+					
 					$itemAttr['class']=trim($class);
 					// set id
 					$itemAttr['id']="menu_$cName"."_pos$pos"."_lev$level";
