@@ -128,11 +128,13 @@ function get_menu_table() {
 	if (empty($table)) {
 		$CI =& get_instance();
 		$tables=$CI->config->item('MENU_TABLES');
-		$next=next($tables);
+		trace_($tables);
+		$next=current($tables);
 		if ($next) {
+			trace_($next);
 			$table=$next;
 			while ( $next and ! $CI->db ->table_exists($table)) {
-				$next=next($tables);
+				$next=current($tables);
 				if ($next) $table=$next;
 			}
 		}
