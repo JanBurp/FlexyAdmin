@@ -132,7 +132,7 @@ function get_menu_table() {
 		if ($next) {
 			$table=$next;
 			while ( $next and ! $CI->db ->table_exists($table)) {
-				$next=current($tables);
+				$next=next($tables);
 				if ($next) $table=$next;
 			}
 		}
