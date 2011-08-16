@@ -116,6 +116,7 @@ class FrontEndController extends MY_Controller {
 		$this->load->library("menu");
 		$this->load->library("content");
 		$this->load->library('form_validation');
+				
 
 		/**
 			*	Set $_GET if asked for
