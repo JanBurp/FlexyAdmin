@@ -71,10 +71,12 @@ class ui_names extends CI_Model {
 		if (is_foreign_key($s)) {
 			return $this->get(foreign_table_from_key($s));
 		}
+		$p=get_prefix($s);
 		$s=remove_prefix($s);
 		$s=str_replace("__","-",$s);
 		$s=str_replace("_"," ",$s);
 		$s=ucwords($s);
+		if ($p=='medias' and substr($s,strlen($s))!='s') $s.="s";
 		return $s;
 	}
 	

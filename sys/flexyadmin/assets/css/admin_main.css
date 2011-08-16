@@ -823,8 +823,8 @@ legend {
 	padding:5px 10px;
 	border:solid 1px #DDEEAA;
 	border-radius: 4px;
--o-border-radius: 4px;
--moz-border-radius: 4px;
+	-o-border-radius: 4px;
+	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 	background-color: #DDEEAA;
 	background-image: url("../img/inset.png");
@@ -835,6 +835,7 @@ div.form_field {
 	clear:both;
 	margin:0px;
 	padding:5px 5px 5px 5px;
+	min-height:27px;
 }
 div.form_field:hover {
 	background-color: #DDEEAA;
@@ -844,39 +845,34 @@ div.form_field:hover {
 	-webkit-border-radius: 4px;
 }
 
-label {
+div.form_field>label {
 	float:left;
 	width:125px;
 	padding:5px 0px 0px 4px;
 }
-	label.required {
-		font-weight:bold;
-	}
-	label span.required {
-		color:#FF0000;
-	}
+label.required {font-weight:bold;}
+label span.required {color:#FF0000;}
 
 input, textarea, select {
 	width:450px;
 	padding:4px;
 	color:#669966;
+	background-color:#FFF;
 	border:solid 1px #DDEEAA;
 	border-radius: 4px;
--o-border-radius: 4px;
--moz-border-radius: 4px;
+	-o-border-radius: 4px;
+	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 	font-family:"American Typewriter",Verdana,Arial,Helvetica, sans-serif;
 	font-size:1em;
 	line-height:1em;
 	letter-spacing:.04em;
 }
+
 input.gpw,
-input.pwd {
-	width:150px;
-	}
-input.rgb {
-	width:80px;
-}
+input.pwd {width:150px;}
+
+input.rgb {width:80px;}
 div.rgbColor {
 	float:left;
 	padding:4px;
@@ -917,13 +913,13 @@ span.button:hover {
 input.datetime {width:150px;}
 input.date {width:95px;margin-right:5px;}
 input.time {width:75px;}
+.ui-multiselect-menu input,
 input.checkbox {
 	border:none;
 	width: auto;
 	}
 textarea, .mceEditor {
 	line-height: 1.4em;
-	display:block;
 	width:450px;
 	}
 .mceEditor table {
@@ -931,21 +927,14 @@ textarea, .mceEditor {
 }
 
 div.form_field.htmleditor.wide label,
-div.form_field.htmleditor.big label {
-	float:none;
-}
+div.form_field.htmleditor.big label {float:none;}
 
 div.form_field.wide .mceEditor,
-div.form_field.big .mceEditor {
-	margin:4px 0px 4px;
-}
+div.form_field.big .mceEditor {margin:4px 0px 4px;}
 textarea.wide,
-textarea.big {
-	width:580px;
-}
-textarea.big {
-	height:450px;
-}
+textarea.big {width:580px;}
+textarea.high,
+textarea.big {height:450px;}
 form.tbl_site textarea {height:auto;}
 
 /* will be overruled by the user in text.css */
@@ -971,12 +960,9 @@ select.date {
 	width:auto;
 	padding:2px;
 	}
-select.multiselect {
-	height:70px;
-}
-select.multiselect:hover {
-	height: 250px;
-	}
+select.multiselect {height:70px;}
+select.multiselect:hover {height: 250px;}
+
 select.media, select.medias {
 	float:right;
 	width:460px;
@@ -986,6 +972,9 @@ select.image_dropdown {
 	width:400px;
 }
 .form_field.medias select.image_dropdown {	width:460px;}
+
+.form_field.media {min-height:35px;}
+.form_field.medias {height:36px;}
 
 .form_field .flash,
 .form_field img {
@@ -1067,21 +1056,25 @@ input.button:hover {
 	margin:2px 5px 5px;
 	float:right;
 }
-.form_field ul {
+.form_field>ul {
 	float:left;
 	display:block;
 	min-width:29px;
-/*	max-width:50px;*/
-	min-height:27px;
-	margin: 0px 0px 4px 0px;
+	min-height:29px;
+	margin: 0px 23px 4px 0px;
 	padding:2px 2px 4px 2px;
 	border:solid 1px #DDEEAA;
 	border-radius: 4px;
--o-border-radius: 4px;
--moz-border-radius: 4px;
+	-o-border-radius: 4px;
+	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 	background-color:#FFF;
 }
+.form_field .ui-multiselect {
+/*	float:right;*/
+	margin-right:1px;
+}
+
 .form_field ul.multiple,
 .form_field ul.choices {
 	max-width:none;
@@ -1089,7 +1082,8 @@ input.button:hover {
 	width:450px;
 	max-height:125px;
 	overflow:auto;
-	padding:3px 4px 4px;
+	padding:3px 3px 4px 4px;
+	margin-right:1px;
 }
 .form_field.media.image_dragndrop ul.values {
 	float:right;
@@ -1102,7 +1096,7 @@ input.button:hover {
 
 
 
-.form_field ul li {
+.form_field>ul li {
 	list-style:none;
 	display:block;
 	float:left;
@@ -1119,12 +1113,10 @@ input.button:hover {
 	background-color:#F00;
 }
 
-div.form_field.ordered_list {
-	height:160px;
-}
+div.form_field.ordered_list {height:132px;}
 .form_field ul.list {
 	width:205px;
-	height:150px;
+	height:125px;
 	overflow:auto;
 	overflow-x:hidden;
 	float:left;
@@ -1254,12 +1246,11 @@ p.error, div.error p {
 	margin-top:-180px;
 	margin-left:-200px;
 	width:355px;
-
 	border:solid 3px #CCDD99;
-	border-radius: 8px;
--o-border-radius: 8px;
--moz-border-radius: 8px;
+	-o-border-radius: 8px;
+	-moz-border-radius: 8px;
 	-webkit-border-radius: 8px;
+	border-radius: 8px;
 	padding:60px 30px 15px 30px;
 	overflow:hidden;
 	background-color:#FFFFFF;
@@ -1268,6 +1259,7 @@ p.error, div.error p {
 	background-position: 2px -30px;
 	z-index:200;
 }
+#dialog h2 {margin-bottom:10px;}
 #dialog p#question {
 	color:#FF0000;
 	font-weight:bold;
@@ -1286,9 +1278,7 @@ p.error, div.error p {
 	color:#669966;
 	border:none;
 }
-#dialog input {
-	width:350px;
-	}
+#dialog input {width:350px;}
 
 #dialog a.button:hover {
 	background-color:#BBCC88;

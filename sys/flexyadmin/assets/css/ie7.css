@@ -2,32 +2,12 @@
 
 /* ============== table grid ================== */
 
-.grid {
-	border-collapse:collapse;
-}
+.grid {	border-collapse:collapse; }
 
-.grid th.order, .grid td.order {
-	width:30px;
-}
+.thumbs .file .toolbar {visibility: visible;}
+.thumbs .file:hover .toolbar,
+.thumbs .file.selected .toolbar {visibility:visible;}
 
-.grid td,
-.grid th {
-	padding:3px 5px 3px 5px;
-	border: solid 1px #DDEEAA;
-	border-top:none;
-	border-right:none;
-}
-
-.icons .file .toolbar {
-	visibility: visible;
-	}
-
-
-/* ============== dialog ================ */
-
-#dialog{
-	width:405px;
-}
 
 /* ============== popup ================ */
 #popup p {

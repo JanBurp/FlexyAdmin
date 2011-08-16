@@ -318,6 +318,7 @@ class Show extends AdminController {
 				$data=current($data);
 			}
 			// strace_($options);
+			// strace_($multiOptions);
 
 			/**
 			 * if data: first render data for the form class, then put data in form
@@ -470,33 +471,6 @@ class Show extends AdminController {
 		$this->_show_all();
 	}
 
-
-/**
- * Here are some form validation callback functions
- * Routings are set so that admin/show/valid_* is routed to admin/show, so these callbacks are not reached by url
- */
-
-	function valid_rgb($rgb) {
-		$rgb=trim($rgb);
-		if (empty($rgb)) {
-			return TRUE;
-		}
-		$rgb=str_replace("#","",$rgb);
-		$len=strlen($rgb);
-		if ($len!=3 and $len!=6) {
-			$this->lang->load("form_validation");
-			$this->form_validation->set_message('valid_rgb', lang('valid_rgb'));
-			return FALSE;
-		}
-		$rgb=strtoupper($rgb);
-		if (ctype_xdigit($rgb))
-			return "#$rgb";
-		else {
-			$this->lang->load("form_validation");
-			$this->form_validation->set_message('valid_rgb', lang('valid_rgb'));
-			return FALSE;
-		}
-	}
 
 }
 

@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
 	<title>FlexyAdmin - Login <?=$title?></title>
@@ -8,6 +9,18 @@
 	<!--[if IE 7]><style type="text/css" media="screen">@import url(<?=admin_assets()?>css/ie7.css);</style><![endif]-->
 	<!--[if IE 8]><style type="text/css" media="screen">@import url(<?=admin_assets()?>css/ie8.css);</style><![endif]-->
 	<!--[if IE 9]><style type="text/css" media="screen">@import url(<?=admin_assets()?>/css/ie9.css);</style><![endif]-->
+	
+	<script src="sys/jquery/jquery-1.6.2.min.js" type="text/javascript" charset="utf-8"></script>
+	<script>
+	$(document).ready(function(){
+	if ( $.browser.msie && $.browser.version<=6 ) {
+		alert('LET OP: U gebruikt Internet Explorer 6 of ouder. Dit wordt niet ondersteund in FlexyAdmin. Gebruik een modernere browser zoals Firefox.\n\nWARNING: You are using Internet Explorer 6 or older. FlexyAdmin does not support them, use a modern browser such as Firefox.');
+	}
+	});
+	</script>
+	
+	
+	
 </head>
 
 <body style='background-color:#EEFFBB'>

@@ -174,9 +174,18 @@ class Form Extends CI_Model {
 
 		foreach($data as $name=>$field) {
 			// set validation rules
-			if (!isset($field["multiple"])) {
-				$this->form_validation->set_rules($field["name"], $field["label"], $field["validation"]);
+			$this->form_validation->set_rules($field["name"], $field["label"], $field["validation"]);
+
+			// Change multiple data to string (str_, medias_)
+			if (isset($field['multiple']) and isset($_POST[$name]) and is_array($_POST[$name]) ) { // and in_array(get_prefix($name),array('str','medias')) ) {
+				if (isset($_POST[$name.'__hidden']))
+					$_POST[$name]=$_POST[$name.'__hidden'];
+				else
+					$_POST[$name]=implode('|',array_unique($_POST[$name]));
+				// strace_($_POST[$name]);
+				// trace_($field);
 			}
+			
 			if ($field['type']=='captcha') $hasCaptcha=$name;
 			$this->data[$name]["repopulate"]=$this->input->post($name);
 		}
@@ -212,16 +221,7 @@ class Form Extends CI_Model {
 	function prepare_data($name,$value,$id) {
 		$out=$value;
 		$error="";
-		if (is_array($value) or empty($value)) {
-			// multi options (string)
-			$hidden=$this->input->post($name.'__hidden');
-			if ($hidden) {
-				$out=$hidden;
-			}
-			else {
-				if (is_array($value) and count($value)>0)	$out=implode("|",$out);
-			}
-		}
+		$value=$this->_value_from_hidden($name,$value);
 		$data=$this->data[$name];
 
 		/**
@@ -262,6 +262,19 @@ class Form Extends CI_Model {
 		return $out;
 	}
 
+	function _value_from_hidden($name,$value) {
+		if (is_array($value) or empty($value)) {
+			// multi options (string)
+			$hidden=$this->input->post($name.'__hidden');
+			if ($hidden) {
+				$out=$hidden;
+			}
+			else {
+				if (is_array($value) and count($value)>0)	$out=implode("|",$out);
+			}
+		}
+		return $value;
+	}
 
 /**
  * function update($table)
@@ -413,6 +426,7 @@ class Form Extends CI_Model {
 						$this->db->where($thisKey,$id);
 						$this->db->delete($relTable);
 						// insert new selection
+						if (!is_array($value)) $value=explode('|',$value);
 						foreach ($value as $data) {
 							$this->db->set($thisKey,$id);
 							$this->db->set($joinKey,$data);
@@ -660,8 +674,12 @@ class Form Extends CI_Model {
 					// trace_($options);
 					$out.='<ul class="list list_choices">';
 					$value=$field['value'];
+					// trace_($options);
+					// trace_($value);
 					foreach($options as $id=>$option) {
-						if (!in_array($id,$value)) $out.='<li id="'.$id.'">'.$option.'</li>';
+						// if (!in_array($id,$value)) $out.='<li id="'.$id.'">'.$option.'</li>';
+						if (!array_key_exists($id,$value)) $out.='<li id="'.$id.'">'.$option.'</li>';
+						
 					}
 					$out.='</ul>';
 					// $out.=icon('right');
@@ -687,6 +705,7 @@ class Form Extends CI_Model {
 				}
 				break;
 				
+			// #BUSY Form->Subfields
 			case "subfields":
 				$out.=icon('new');
 				$out.=div('sub');
