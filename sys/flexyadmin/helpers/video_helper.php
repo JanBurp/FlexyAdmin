@@ -38,12 +38,14 @@ function get_vimeo_info($id,$var='') {
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_TIMEOUT, 10);
 		$output = unserialize(curl_exec($ch));
-		$output = $output[0];
-		curl_close($ch);
-		if (empty($var))
-			return $output;
-		else 
-			return $output[$var];
+		if (isset($output[0])) {
+			$output = $output[0];
+			curl_close($ch);
+			if (empty($var))
+				return $output;
+			else 
+				return $output[$var];
+		}
 	}
 	return '';
 }
