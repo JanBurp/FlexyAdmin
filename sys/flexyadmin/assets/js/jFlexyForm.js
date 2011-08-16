@@ -1,6 +1,23 @@
 function doForm() {
 
+	//
+	// Make sure media fields with selects are good height
+	//
+	// $('.form_field select').each(function(){
+	// 	selHeight=$(this).outerHeight();
+	// 	imgList=$(this).parent('.form_field:first').children('ul.multiple:first');
+	// 	if (imgList.length>0) { selHeight+=$(imgList).outerHeight(); }
+	// 	$(this).parent('.form_field:first').css({height:selHeight});
+	// });
+	$('.form_field.image_dragndrop').each(function(){
+		selHeight=$(this).children('ul.choices').outerHeight();
+		selHeight+=$(this).children('ul.values').outerHeight();
+		$(this).css({height:selHeight+4});
+	});	
+
+	//
 	// conditional formfield showing
+	//
 	if (typeof(formFieldWhen)!="undefined") {
 		var fields=$('.form_field');
 		$(fields).each(function(){
@@ -33,21 +50,34 @@ function doForm() {
 	
 
 	//
-	// Make sure media fields with selects are good height
+	// Nice Select styling #BUSY: also the multiple and media
 	//
-	$('.form_field select').each(function(){
-		selHeight=$(this).outerHeight();
-		imgList=$(this).parent('.form_field:first').children('ul.multiple:first');
-		if (imgList.length>0) { selHeight+=$(imgList).outerHeight(); }
-		$(this).parent('.form_field:first').css({height:selHeight});
+	$('.form_field select:not(.multiple)').multiselect({header:false,multiple:false,selectedList:4,height:'auto'}).bind('multiselectclick', function(event,ui){
+		if ($(event.target).hasClass('image_dropdown')) {
+			var values = $(event.target).multiselect("getChecked").map(function(){return this.value;}).get();
+			update_image_dropdown(event.target,values);
+		}
 	});
-	$('.form_field.image_dragndrop').each(function(){
-		selHeight=$(this).children('ul.choices').outerHeight();
-		selHeight+=$(this).children('ul.values').outerHeight();
-		$(this).css({height:selHeight+4});
-	});		
-		
+	$('.form_field select.multiple:not(.image_dropdown)').multiselect({header:false,selectedList:4,height:'auto',noneSelectedText:''});
+	$('.form_field select.multiple.image_dropdown').multiselect({header:false,height:'auto',minWidth:'auto',selectedList:false,selectedText:'',noneSelectedText:''}).bind('multiselectclick', function(event,ui){
+		// make sure optgroups are all same checked/unchecked
+		var checked=ui.checked;
+		var text=ui.text;
+		// find same
+		var inputs=$(event.target).siblings('div.ui-multiselect-menu').find('input[title="'+text+'"]');
+		inputs.attr('checked',checked);
+		// get values
+		var allvalues = $(event.target).multiselect("getChecked").map(function(){return this.value;}).get();
+		// remove double values
+		var values = new Array();
+		for (i=0;i<allvalues.length;i++) { if ( $.inArray(allvalues[i],values)==-1 ) values.push(allvalues[i]); }
+		update_image_dropdown(event.target,values);
+	});
+	// styling of multiple
+	$('.form_field.image_dropdown.multiple ul.values').css({width:392,'float':'left',position:'relative','z-index':10});
+	$('.form_field.image_dropdown.multiple button.ui-multiselect').css({width:460,height:38,'float':'right','z-index':0,'margin-top':-42});
 
+		
 	//
 	// Timepicker and Datepicker dialog
 	//
@@ -127,44 +157,52 @@ function doForm() {
 	var mediaFields=$('div.image_dropdown');
 	$(mediaFields).each(function(){
 		var field=$(this);
-		var select=$(this).find('select');
-		var multiple=$(select).hasClass('medias');
-		var list=$(this).find('ul');
+		var select=$(field).find('select');
 		var options=$(select).find('option');
-		var path=$(select).attr("path")+"/";
 		if (options.length>0) {
 			$(select).change(function() {
-				// remove old thumb & clean value
-				$(list).find('li').remove();
-				if (multiple) $(field).find('input:first').attr('value','');
-				// show new thumb
-				var medias=$(select).find('option:selected');
-				var value='';
-				if (medias.length>0) {
-					$(medias).each(function(){
-						var src=$(this).attr("value");
-						if (multiple && value!='')
-							value=value+'|'+src;
-						else
-							value=src;
-						src=path+src;
-						var ext=get_ext(src);
-						var size=32;
-						if (multiple) size=25;
-						if (ext=='swf' || ext=='flv') {
-							$(field).find('ul:first').append('<li>'+flash(src,size,size)+'</li>');
-						}
-						else {
-							src=cachedThumb(src);
-							$(field).find('ul:first').append('<li><img class="media" src="'+src+'" /></li>');
-						}
-					});
-					$(field).find('input:first').attr('value',value);
-				}
+				update_image_dropdown(select);
 			});
-			
 		}
 	});
+	function update_image_dropdown(select,values) {
+		var list=$(select).prevAll('ul.values');
+		// var select=$(field).find('select');
+		var options=$(select).find('option');
+		var multiple=$(select).hasClass('medias');
+		var path=$(select).attr("path")+"/";
+		// remove old thumb & clean value
+		$(list).find('li').remove();
+		if (multiple) $(select).prevAll('input').attr('value','');
+		// show new thumb
+		if (typeof(values)=='undefined') {
+			var medias=$(select).find('option:selected');
+			values =  new Array;
+			$(medias).each(function(){
+				values.push($(this).attr("value"));
+			});
+		}
+		var value='';
+		for (var i=0;i<values.length;i++) {
+			var src=values[i];
+			if (multiple && value!='')
+				value=value+'|'+src;
+			else
+				value=src;
+			src=path+src;
+			var ext=get_ext(src);
+			var size=32;
+			if (multiple) size=25;
+			if (ext=='swf' || ext=='flv') {
+				$(list).append('<li>'+flash(src,size,size)+'</li>');
+			}
+			else {
+				src=cachedThumb(src);
+				$(list).append('<li><img class="media" src="'+src+'" /></li>');
+			}
+		}
+		$(select).prevAll('input').attr('value',value);
+	}
 
 		
 	// Media(s) select by click

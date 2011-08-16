@@ -346,6 +346,9 @@ class Flexy_field extends CI_Model {
 			if (isset($optCfg['b_add_empty_choice']) and $optCfg['b_add_empty_choice']) {
 				$options=array(''=>'') + $options;
 			}
+			// no empty option needed with jquery.multiselect if multiple
+			if (!empty($multiOptions) and isset($options[''])) unset($options['']);
+			// trace_($options);
 			$out["options"] = $options;
 			// type?
 			if ($this->type!="dropdown") {
@@ -788,7 +791,7 @@ class Flexy_field extends CI_Model {
 			if ($file["type"]!="dir") {
 				$ext=strtolower(get_file_extension($file["name"]));
 				if (in_array($ext,$types)) {
-					$options[$file["name"]]=$file["name"]." (".trim(strftime("%e %B '%y",strtotime($file["date"]))).")";
+					$options[$file["name"]]=$file["name"]." (".trim(strftime("%e %B %Y",strtotime($file["date"]))).")";
 				}
 			}
 		}
@@ -834,7 +837,8 @@ class Flexy_field extends CI_Model {
 					$lastUploads=sort_by($files,array("rawdate","name"),TRUE,FALSE,$lastUploadMax);
 					ignorecase_ksort($files);
 					$options=array();
-					if ($this->cfg->get('CFG_media_info',$path,'b_add_empty_choice')) $options[]="";
+					// add empty option if needed
+					if ($this->pre=='media' and $this->cfg->get('CFG_media_info',$path,'b_add_empty_choice')) $options[]="";
 					$optionsLast=$this->_create_media_options($lastUploads,$types);
 					if (!empty($optionsLast)) $options[langp("form_dropdown_sort_on_last_upload",$lastUploadMax)]=$optionsLast;
 					$optionsNames=$this->_create_media_options($files,$types);

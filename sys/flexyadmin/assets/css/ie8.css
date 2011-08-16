@@ -1,23 +1,6 @@
 /* ============== IE8 specific styles ================ */
 
 
-/* ============== table grid ================== */
-
-.grid th.order, .grid td.order {
-	width:30px;
-}
-
-/* ============= form =================== */
-textarea, .mceEditor {
-	display:inline;
-	}
-
-/* ============== dialog ================ */
-#dialog{
-	width:405px;
-}
-
-
 /* ============== popup ================ */
 #popup p {
 	width:auto;

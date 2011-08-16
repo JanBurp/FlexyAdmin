@@ -29,16 +29,15 @@ $isForm=has_string('form',$show_type);
 	<link rel="stylesheet" href="<?=admin_assets()?>css/admin_main<?=$css?>" type="text/css" />
 	<link rel="stylesheet" href="site/assets/css/admin.css" type="text/css" />
 	
-	<!--[if lte IE 6]><style type="text/css" media="screen">@import url(<?=admin_assets()?>css/ie6.css);</style><![endif]-->
-	<!--[if IE 7]><style type="text/css" media="screen">@import url(<?=admin_assets()?>css/ie7.css);</style><![endif]-->
+	<!--[if lte IE 7]><style type="text/css" media="screen">@import url(<?=admin_assets()?>css/ie7.css);</style><![endif]-->
 	<!--[if IE 8]><style type="text/css" media="screen">@import url(<?=admin_assets()?>css/ie8.css);</style><![endif]-->
 	<!--[if IE 9]><style type="text/css" media="screen">@import url(<?=admin_assets()?>css/ie9.css);</style><![endif]-->
 
 	<!-- JS variables -->
 	<script language="javascript" type="text/javascript">
 	<!--
-	config=new Object;
-	config.site_url="<?=site_url()?>/";
+	var config = new Object;
+	config.site_url = "<?=site_url()?>/";
 	<?
 	if (isset($jsVars) && !empty($jsVars)) {
 		foreach ($jsVars as $key => $value) {
@@ -71,6 +70,8 @@ $isForm=has_string('form',$show_type);
 		<script language="javascript" type="text/javascript" src="sys/jquery/ui/i18n/ui.datepicker-nl.js"></script>
 		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/timepicker/jquery.ui.timepicker<?=$js?>"></script>
 		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/form/jquery.form<?=$js?>"></script>
+		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/multiselect/jquery.multiselect<?=$js?>"></script>
+		<link rel="stylesheet" href="sys/jquery/plugins/multiselect/jquery.multiselect.css" type="text/css" media="screen" title="no title" charset="utf-8" />
 		<script src="sys/jquery/plugins/colorpicker/js/colorpicker.js" type="text/javascript" charset="utf-8"></script>
 		<link rel="stylesheet" href="sys/jquery/plugins/colorpicker/css/colorpicker.css" type="text/css" media="screen" title="no title" charset="utf-8" />
 		<? if ($show_editor): ?>
@@ -78,13 +79,13 @@ $isForm=has_string('form',$show_type);
 			<script language="javascript" type="text/javascript" src="sys/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
 			<script language="javascript" type="text/javascript" src="sys/tinymce/jscripts/tiny_mce/jquery.tinymce.js"></script>
 			<script>
-			$().ready(function() {
-			   $('textarea.htmleditor').tinymce({
+			$(document).ready(function() {
+			   $('textarea.htmleditor').tinymce( {
 						document_base_url : "<?=base_url()?>",
-						plugins : "paste,advimage,media,table,inlinepopups,embed,fullscreen,preview",
+						plugins: "paste,advimage,media,table,inlinepopups,fullscreen,preview,embed",
 						plugin_preview_width : "<?=$preview_width?>",
 						plugin_preview_height : "<?=$preview_height?>",
-				 		dialog_type : "modal",
+						dialog_type : "modal",
 						inlinepopups_skin : "flexyadmin",
 						language : "<?=$language?>",
 						docs_language : "<?=$language?>",
