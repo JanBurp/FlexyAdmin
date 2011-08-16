@@ -22,7 +22,7 @@
 .ui-multiselect-checkboxes { position:relative /* fixes bug in IE6/7 */; overflow-y:auto; max-height:275px;}
 .ui-multiselect-checkboxes label { height:18px; width:auto;cursor:default; display:block; border:none; padding:3px 1px }
 .ui-multiselect-checkboxes label input { width:18px; position:relative; top:1px}
-.ui-multiselect-checkboxes li { clear:both; padding-right:3px; border:none; }
+.ui-multiselect-checkboxes li { clear:both; padding-right:3px; border:none; max-height:22px; overflow:hidden;}
 .ui-multiselect-checkboxes li.ui-multiselect-optgroup-label { text-align:left; font-weight:bold;}
 .ui-multiselect-checkboxes li.ui-multiselect-optgroup-label a { display:block; padding:3px; margin:1px 0; text-decoration:none }
 .ui-multiselect-checkboxes li:not(.ui-multiselect-optgroup-label) span {padding-left:15px;}
