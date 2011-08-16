@@ -74,8 +74,8 @@ function doForm() {
 		update_image_dropdown(event.target,values);
 	});
 	// styling of multiple
-	$('.form_field.image_dropdown.multiple ul.values').css({width:392,'float':'left',position:'relative','z-index':10});
-	$('.form_field.image_dropdown.multiple button.ui-multiselect').css({width:460,height:38,'float':'right','z-index':0,'margin-top':-42});
+	$('.form_field.image_dropdown.multiple ul.values').css({width:392,'float':'left',position:'relative'});
+	$('.form_field.image_dropdown.multiple button.ui-multiselect').css({width:460,height:38,'float':'right','margin-top':-42});
 
 		
 	//
@@ -115,9 +115,9 @@ function doForm() {
 			$(show).css({'background-color':color}).attr('color',color);
 		});
 		$(this).next('.rgbColor').click(function(){
+			var self=$(this);
 			$(this).ColorPicker({
 				onBeforeShow: function () {
-					self=this;
 					var color=$(this).attr('color');
 					$(this).ColorPickerSetColor(color);
 				},

@@ -876,15 +876,15 @@ input.rgb {width:80px;}
 div.rgbColor {
 	float:left;
 	padding:4px;
-	width:18px;
+	width:28px;
 	height:18px;
-	margin-right:5px;
+	margin-right:22px;
 	border:solid 1px #DEA;
 	cursor:pointer;
 	border:solid 1px #DDEEAA;
 	border-radius: 4px;
--o-border-radius: 4px;
--moz-border-radius: 4px;
+	-o-border-radius: 4px;
+	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 }
 
