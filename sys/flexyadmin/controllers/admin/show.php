@@ -342,6 +342,7 @@ class Show extends AdminController {
 				else
 					$uiShowTable=$uiTable;
 				$form->set_data($ffData,$uiShowTable);
+				$form->add_password_match();
 				$form->set_old_templates();
 
 				/**
@@ -441,6 +442,7 @@ class Show extends AdminController {
 		$this->load->model("form");
 		$form=new form(api_uri('API_user'));
 		$form->set_data($formData,$userData["str_username"]);
+		$form->add_password_match();
 		$form->set_old_templates();
 		$form->set_caption(ucwords($userData["str_username"]));
 		/**

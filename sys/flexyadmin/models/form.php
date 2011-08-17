@@ -20,7 +20,7 @@ class Form Extends CI_Model {
 	var $caption;
 	var $action;
 	var $data=array();
-	// var $type;			// html
+	var $add_password_match=array();
 	var $hasHtmlField;
 	var $isValidated;
 	var $captchaWords;
@@ -41,6 +41,7 @@ class Form Extends CI_Model {
 		$this->set_labels();
 		$this->data=array();
 		// $this->set_type();
+		$this->add_password_match(FALSE);
 		$this->set_templates();
 		$this->set_fieldset_classes();
 		$this->set_fieldsets();
@@ -78,6 +79,14 @@ class Form Extends CI_Model {
 			}
 		}
 		$this->set_caption($caption);
+	}
+
+	function add_password_match($args=TRUE) {
+		$opts=array('fields'=>array('gpw','pwd'),'label'=>' (2x)','name'=>'matches','class'=>'matches');
+		if (is_array($args)) $opts=array_merge($opts,$args);
+		if (is_bool($args) and !$args) $opts=FALSE;
+		$this->add_password_match=$opts;
+		if ($this->add_password_match) $this->data=$this->_add_matching_password($this->data);
 	}
 
 	function set_captcha_words($words=NULL) {
@@ -154,6 +163,25 @@ class Form Extends CI_Model {
 		if (empty($class)) $class=$this->fieldsetClasses['fieldset'];
 		$this->fieldsetClasses[$fieldset]=$class;
 	}
+
+
+	function _add_matching_password($data) {
+		foreach ($data as $name => $field) {
+			$pre=get_prefix($name);
+			if (in_array($pre,$this->add_password_match['fields'])) {
+				$match=$field;
+				$match['matches']=$name;
+				$match['name'].='__'.$this->add_password_match['name'];
+				$match['label'].=$this->add_password_match['label'];
+				$match['class'].=$this->add_password_match['class'];
+				$match['validation']='|matches['.$name.']';
+				$data=array_add_after($data,$name,array($match['name']=>$match));
+				$data[$name]['validation'].='|matches['.$match['name'].']';
+			}
+		}
+		return $data;
+	}
+
 
 	function tmp($tmp,$class="") {
 		return str_replace("%s",$class,$tmp);
@@ -309,10 +337,20 @@ class Form Extends CI_Model {
 				elseif ($name=="uri") {
 					$uri=$this->input->post($name);
 				}
+
 				// set other fields
 				else {
 					$pre=get_prefix($name);
 					$value=$this->input->post($name);
+					
+					// remove matches if any
+					if ($this->add_password_match) {
+						if (in_array($pre,$this->add_password_match['fields']) and isset($field['matches'])) {
+							unset($this->data[$name]);
+							continue;
+						}
+					}
+					
 					/**
 					 *  Is data from join?
 					 */
@@ -328,7 +366,7 @@ class Form Extends CI_Model {
 					}
 
 					/**
-					* Password, hash it (or leave it same when empty)
+					* Password hash it (or leave it same when empty)
 					*/
 					elseif (in_array($pre,array('gpw','pwd'))) {
 						if (!empty($value)) $set[$name]=$this->ion_auth_model->hash_password($value);
@@ -471,17 +509,20 @@ class Form Extends CI_Model {
 		// if (!empty($type)) $this->set_type($type);
 		
 		$data=$this->data;
+		
 		$out=form_open_multipart($this->action,array("class"=>$class));
 		
-		// fieldsets
+		// fieldsets && fields
 		foreach ($this->fieldsets as $fieldset) {
 			$fieldSetClass='fieldSet_'.$fieldset;
 			if (isset($this->fieldsetClasses[$fieldset])) $fieldSetClass.=' '.$this->fieldsetClasses[$fieldset];
 			$caption=$fieldset;
 			if ($caption=='fieldset') $caption=$this->caption;
+
 			$out.=form_fieldset($caption,array("class"=>$fieldSetClass));
 			foreach($data as $name => $field) {
-				if ($field['fieldset']==$fieldset) $out.=$this->render_field($field['name'],$field,$class);
+				if ($field['fieldset']==$fieldset)
+					$out.=$this->render_field($field['name'],$field,$class);
 			}
 			$out.=form_fieldset_close();
 		}
@@ -500,8 +541,6 @@ class Form Extends CI_Model {
 		// prepare javascript for conditional field showing
 		if (!empty($this->when)) {
 			$json=array2json($this->when);
-			// strace_($this->when);
-			// strace_($json);
 			$out.="\n<script language=\"javascript\" type=\"text/javascript\">\n<!--\nvar formFieldWhen=".$json.";\n-->\n</script>\n";
 		}
 		log_('info',"form: rendering");

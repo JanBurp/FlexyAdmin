@@ -139,7 +139,7 @@ function doForm() {
 	//
 	// Password create button
 	//
-	$("form input.password").after('<span class="button">'+lang('form_random_password')+'</span>');
+	$("form input.password:not(.matches)").after('<span class="button">'+lang('form_random_password')+'</span>');
 	$("form span.button").click(function() {
 		pwd=randomPassword(10);
 		$(this).prev("input.password").attr("value",pwd);
