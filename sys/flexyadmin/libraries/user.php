@@ -258,4 +258,25 @@ class User Extends Ion_auth {
 
 
 
+
+	/**
+	 * get_inactive_old_users
+	 *
+	 * time as seconds since today
+	 *  
+	 * @return object
+	 * @author Jan den Besten
+	 **/
+	public function get_inactive_old_users($group_name = false, $time=1209600)
+		// day     86400
+		// week    604800
+		// 2 weeks 1209600
+		// 4 weeks 2419200
+	
+	{
+		return $this->ci->ion_auth_model->get_inactive_old_users($group_name,$time)->result();
+	}
+
+
+
 }
