@@ -16,14 +16,14 @@ $lang['numeric']        	= "'%s' mag alleen cijfers bevatten.";
 $lang['is_numeric']				= $lang["numeric"];
 $lang['integer']					= "'%s' mag alleen gehele getallen bevatten.";
 $lang['regex_match']			= "'%s' is niet in het goede formaat.";
-$lang['matches']        	= "'%s' is niet gelijk aan het veld %s.";
+$lang['matches']        	= "'%s' is niet gelijk aan '%s'.";
 $lang['is_natural']					= "'%s' mag alleen positieve getallen bevatten.";
 $lang['is_natural_no_zero']	= "'%s' mag alleen getallen bevatten groter dan nul.";
 $lang['decimal']					= "'%s' mag alleen decimale getallen bevatten.";
 $lang['less_than']				= "'%s' moet kleiner zijn dan %s.";
 $lang['greater_than']			= "'%s' moet groter zijn dan %s.";
 
-$lang['valid_rgb']	= "Geen juiste kleurcode in '%s'";
+$lang['valid_rgb']				= "Geen juiste kleurcode in '%s'";
 
 
 /* End of file form_validation_lang.php */
