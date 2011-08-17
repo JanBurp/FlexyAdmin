@@ -201,8 +201,6 @@ class Form Extends CI_Model {
 		$hasCaptcha=FALSE;
 
 		foreach($data as $name=>$field) {
-			// set validation rules
-			$this->form_validation->set_rules($field["name"], $field["label"], $field["validation"]);
 
 			// Change multiple data to string (str_, medias_)
 			if (isset($field['multiple']) and isset($_POST[$name]) and is_array($_POST[$name]) ) { // and in_array(get_prefix($name),array('str','medias')) ) {
@@ -213,11 +211,14 @@ class Form Extends CI_Model {
 				// strace_($_POST[$name]);
 				// trace_($field);
 			}
+
+			// set validation rules
+			$this->form_validation->set_rules($field["name"], $field["label"], $field["validation"]);
 			
 			if ($field['type']=='captcha') $hasCaptcha=$name;
 			$this->data[$name]["repopulate"]=$this->input->post($name);
 		}
-		
+
 		log_('info',"form: validation");
 		$this->isValidated=$this->form_validation->run();
 		// validate captcha
@@ -226,6 +227,13 @@ class Form Extends CI_Model {
 			$code=str_reverse($this->input->post($hasCaptcha.'__captcha'));
 			$this->isValidated=($value==$code);
 		}
+
+		if ($this->isValidated) {
+			foreach ($data as $name => $field) {
+				$this->data[$name]["repopulate"]=$this->input->post($name);
+			}
+		}
+		
 		return $this->isValidated;
 	}
 
@@ -483,6 +491,7 @@ class Form Extends CI_Model {
 
 	function get_data() {
 		$data=array();
+		
 		foreach($this->data as $name=>$field) {
 			if (isset($field['newvalue']))
 				$data[$name]=$field['newvalue'];
