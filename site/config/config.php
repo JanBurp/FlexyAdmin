@@ -100,6 +100,21 @@ $config['language']	= "nl";
 
 
 /*
+|--------------------------------------------------------------------------
+| Global XSS Filtering
+|--------------------------------------------------------------------------
+|
+| Determines whether the XSS filter is always active when GET, POST or
+| COOKIE data is encountered
+|
+*/
+$config['global_xss_filtering'] = FALSE;
+
+
+
+
+
+/*
  * Check if localhost and config_local.php exists, load local settings.
  */
 if (IS_LOCALHOST and file_exists('site/config/config_local.php')) {
