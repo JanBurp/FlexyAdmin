@@ -28,27 +28,24 @@ function el($name,$arr,$default=NULL) {
 /**
  * function array2object($array)
  */
-function array2object($array) {
-	if (is_array($array)) {
-		$obj = new StdClass();
-		foreach ($array as $key => $val){
-			$obj->$key = $val;
-		}
+function array2object($array,$recursive=TRUE) {
+	$obj = new StdClass();
+	foreach ($array as $key => $val){
+		if (is_array($val)) $val=array2object($val,$recursive);
+		$obj->$key = $val;
 	}
-	else { $obj = $array; }
 	return $obj;
 }
 
 /**
  * function object2array($object)
  */
-function object2array($object) {
-	if (is_object($object)) {
-		foreach ($object as $key => $value) {
-			$array[$key] = $value;
-		}
+function object2array($object,$recursive=TRUE) {
+	$array=array();
+	foreach ($object as $key => $value) {
+		if ($recursive and is_object($value)) $value=object2array($value,$recursive);
+		$array[$key] = $value;
 	}
-	else { $array = $object; }
 	return $array;
 }
 

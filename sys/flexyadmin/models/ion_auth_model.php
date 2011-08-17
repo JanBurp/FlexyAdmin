@@ -607,38 +607,26 @@ class Ion_auth_model extends CI_Model
 						$this->tables['groups'].'.str_description AS '. $this->db->protect_identifiers('group_description')
 				   	));
 
-   	if (!empty($this->columns) and !empty($this->tables['meta']))
-		{
-			foreach ($this->columns as $field)
-			{
-			    $this->db->select($this->tables['meta'].'.'. $field);
+   	if (!empty($this->columns) and !empty($this->tables['meta']))	{
+			foreach ($this->columns as $field) {
+		    $this->db->select($this->tables['meta'].'.'. $field);
 			}
 	    $this->db->join($this->tables['meta'], $this->tables['users'].'.id = '.$this->tables['meta'].'.'.$this->meta_join, 'left');
 	  }
-
     $this->db->join($this->tables['groups'], $this->tables['users'].'.id_user_group = '.$this->tables['groups'].'.id', 'left');
-
-    if (is_string($group))
-    {
+    if (is_string($group))  {
 			$this->db->where($this->tables['groups'].'.str_name', $group);
 	  }
-	  else if (is_array($group))
-	  {
+	  else if (is_array($group)) {
 			$this->db->where_in($this->tables['groups'].'.str_name', $group);
 	  }
-
 		
-	  if (isset($this->user->_extra_where) && !empty($this->user->_extra_where))
-	  {
+	  if (isset($this->user->_extra_where) && !empty($this->user->_extra_where)) {
 			$this->db->where($this->user->_extra_where);
 	  }
 
-
-		if (isset($limit) && isset($offset))
-			$this->db->limit($limit, $offset);
-		
-
-	    return $this->db->get($this->tables['users']);
+		if (isset($limit) && isset($offset)) $this->db->limit($limit, $offset);
+    return $this->db->get($this->tables['users']);
 	}
 
 	/**
@@ -687,13 +675,30 @@ class Ion_auth_model extends CI_Model
 	 * @return object
 	 * @author Ben Edmunds
 	 **/
-	public function get_inactive_users($group_name = false)
-	{
-	    $this->db->where($this->tables['users'].'.active', 0);
-
-	    return $this->get_users($group_name);
+	public function get_inactive_users($group_name = false) {
+  	$this->db->where($this->tables['users'].'.b_active', 0);
+	  return $this->get_users($group_name);
 	}
 
+
+	/**
+	 * get_inactive_old_users
+	 *
+	 * time as seconds since today
+	 *  
+	 * @return object
+	 * @author Jan den Besten
+	 **/
+	public function get_inactive_old_users($group_name = false, $time=604800) {
+		// day     86400
+		// week    604800
+		// 4 weeks 2419200
+  	$this->db->where($this->tables['users'].'.created_on >', time()-$time);
+  	$this->db->where($this->tables['users'].'.b_active', 0);
+	  return $this->get_users($group_name);
+	}
+
+	
 	/**
 	 * get_user
 	 *
@@ -930,14 +935,15 @@ class Ion_auth_model extends CI_Model
 	public function delete_user($id)
 	{
 	    $this->db->trans_begin();
-
-	    $this->db->delete($this->tables['meta'], array($this->meta_join => $id));
+			
+			if (!empty($this->columns) and !empty($this->tables['meta'])) {
+		    $this->db->delete($this->tables['meta'], array($this->meta_join => $id));
+			}
 	    $this->db->delete($this->tables['users'], array('id' => $id));
 
-	    if ($this->db->trans_status() === FALSE)
-	    {
-		$this->db->trans_rollback();
-		return FALSE;
+	    if ($this->db->trans_status() === FALSE) {
+				$this->db->trans_rollback();
+				return FALSE;
 	    }
 
 	    $this->db->trans_commit();

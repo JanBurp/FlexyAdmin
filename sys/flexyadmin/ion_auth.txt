@@ -33,7 +33,8 @@
 - cfg: change 'users' to 'cfg_users'
 - model: change databasefield names according to flexyadmin names
 - model: change $this->ion_auth-> to $this->user->
-- model->get_users: only join meta data if meta table/columns are set
+- model->... checks if meta data if meta table/columns are set when performing actions on them
+- new model->get_inactive_old_users($group_name = false, $time=604800)
 - renamed controller to auth_controller - we don't use this
 - there is a new library: user, which extends the ion_auth library
 - views, changed...
