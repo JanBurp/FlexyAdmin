@@ -10,9 +10,6 @@ scrollbar-face-color:#E0E0DD;
 scrollbar-highlight-color:#F0F0EE;
 scrollbar-shadow-color:#F0F0EE;
 scrollbar-track-color:#F5F5F5;
-
-
-
 background:#FFF;
 padding:0;
 margin:8px 8px 0 8px;
@@ -113,6 +110,7 @@ h3 {font-size:14px;}
 #plugintable, #about #plugintable td {border:1px solid #DEA;}
 #plugintable {width:96%; margin-top:10px;}
 #pluginscontainer {height:290px; overflow:auto;}
+/*#colorpicker .panel_wrapper, #colorpicker div.current {height:300px;}*/
 #colorpicker #preview {float:right; width:50px; height:16px;line-height:1px; border:1px solid #DEA; margin-left:5px;}
 #colorpicker #colors {float:left; border:1px solid #696; cursor:crosshair;}
 #colorpicker #light {border:1px solid #696; margin-left:5px; float:left;width:15px; height:150px; cursor:crosshair;}
@@ -123,4 +121,5 @@ h3 {font-size:14px;}
 #colorpicker #namedcolors a {display:block; float:left; width:10px; height:10px; margin:1px 1px 0 0; overflow:hidden;}
 #colorpicker #colornamecontainer {margin-top:5px;}
 #colorpicker #picker_panel fieldset {margin:auto;width:325px;}
+#colorpicker #color {width:100px;}
 #embedcode {width:277px;height:96px;}
