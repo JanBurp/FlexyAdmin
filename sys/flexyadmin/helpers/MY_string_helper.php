@@ -213,7 +213,7 @@ function str2hex($string) {
 		return "";
 }
 
-function intro_string($txt,$len,$type='WORDS',$strip_tags='<br/><strong><italic><em><b><a><p>') {
+function intro_string($txt,$len=50,$type='WORDS',$strip_tags='<br/><strong><italic><em><b><a><p>') {
 	// first check if there's an intro set by class: intro
 	$matches=array();
 	preg_match_all('/<(.*?)class="(.*?)intro(.*?)"(.*?)>(.*?)<\/(.*?)>/is',$txt,$matches);
