@@ -344,9 +344,12 @@ class Menu {
 	}
 
 	
-	function render_branch($branchUri,$attr="",$level=1,$preUri="") {
+	function render_branch($branchUri,$attr="",$level=1,$preUri="",$nobranchUri=FALSE) {
 		$out='';
-		$preUri=ltrim(add_string($preUri,$branchUri,'/'),'/');
+		if ($nobranchUri)
+			$preUri=ltrim($preUri.'/');
+		else
+			$preUri=ltrim(add_string($preUri,$branchUri,'/'),'/');
 		$branchUri=ltrim($branchUri,'/');
 		$uris=explode('/',$branchUri);
 		$branch=$this->menu;
