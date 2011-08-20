@@ -64,23 +64,25 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		// splits ar_where by OR/AND
 		$where=implode($this->ar_where);
 		$split=preg_split("/\s(OR|AND)\s/", $where,-1,PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
-		// Make sure, first one is OR
-		if ( ! in_array($split[0],array('AND','OR'))) array_unshift($split,'OR');
-		// trace_($split);
-		$where=array();
-		// $where[]=$split[0];
-		for ($i=0; $i < count($split); $i+=2) { 
-			$andor=$split[$i];
-			if (isset($split[$i+1]) and !empty($split[$i+1])) {
-				$item=trim($split[$i+1]);
-				if (!empty($item)) {
-					if ($i>0) $item=$andor.' '.$item;
-					$where[]=$item;
+		if ( ! empty($split)) {
+			// Make sure, first one is OR
+			if ( ! in_array($split[0],array('AND','OR'))) array_unshift($split,'OR');
+			// trace_($split);
+			$where=array();
+			// $where[]=$split[0];
+			for ($i=0; $i < count($split); $i+=2) { 
+				$andor=$split[$i];
+				if (isset($split[$i+1]) and !empty($split[$i+1])) {
+					$item=trim($split[$i+1]);
+					if (!empty($item)) {
+						if ($i>0) $item=$andor.' '.$item;
+						$where[]=$item;
+					}
 				}
 			}
+			$this->ar_where=$where;
+			// trace_($this->ar_where);
 		}
-		$this->ar_where=$where;
-		// trace_($this->ar_where);
 	}
 
 	/**
