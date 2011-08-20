@@ -29,6 +29,7 @@ function doGrid() {
 		changeButt("cancel",lang("dialog_cancel"));
 		changeButt("upload",lang("dialog_upload"));
 	});
+	
 	//
 	// Make sure columns can be sortable
 	//
