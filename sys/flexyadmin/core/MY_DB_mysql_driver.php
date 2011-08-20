@@ -63,15 +63,24 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	function _repair_ar() {
 		// splits ar_where by OR/AND
 		$where=implode($this->ar_where);
-		$split=preg_split("/\s(OR|AND)\s/", $where,-1,PREG_SPLIT_DELIM_CAPTURE);
+		$split=preg_split("/\s(OR|AND)\s/", $where,-1,PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
+		// Make sure, first one is OR
+		if ( ! in_array($split[0],array('AND','OR'))) array_unshift($split,'OR');
+		// trace_($split);
 		$where=array();
-		$where[]=$split[0];
-		for ($i=1; $i < count($split); $i+=2) { 
-			$item=$split[$i];
-			if (isset($split[$i+1])) $item.=' '.$split[$i+1];
-			$where[]=$item;
+		// $where[]=$split[0];
+		for ($i=0; $i < count($split); $i+=2) { 
+			$andor=$split[$i];
+			if (isset($split[$i+1]) and !empty($split[$i+1])) {
+				$item=trim($split[$i+1]);
+				if (!empty($item)) {
+					if ($i>0) $item=$andor.' '.$item;
+					$where[]=$item;
+				}
+			}
 		}
 		$this->ar_where=$where;
+		// trace_($this->ar_where);
 	}
 
 	/**
@@ -515,30 +524,36 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 					$mWhere=$this->ar_where[$key];
 					// trace_($mWhere);
 					$AndOr=trim(substr($mWhere,0,3));
-					if (!in_array($AndOr,array("AND","OR"))) {
+					if (!in_array($AndOr,array("AND","OR")))
 						$AndOr='';
-						$mWhere=" AND ".$mWhere;
-					}
-					else {
+					else
 						$AndOr.=' ';
-					}
+					$mWhere=' AND '.str_replace(array('AND','OR'),'',$mWhere);
+					// trace_($AndOr);
+					// trace_($mWhere);
 					$sql="SELECT ".$mTable["rel"].".".$mTable["id_this"]." AS id  
 								FROM ".$mTable["rel"].",".trim($mTable["join"],'_')." 
 								WHERE ".$mTable["rel"].".".$mTable["id_join"]."=".trim($mTable["join"],'_').".id ".$mWhere;
+					// trace_($sql);
 					$query=$this->query($sql);
 					$manyResults=$query->result_array();
+					// trace_($manyResults);
 					// replace current where and add new 'WHERE IN' to active record which selects the id where the many field is right
 					if (!empty($manyResults)) {
 						$whereIn='';
 						foreach($manyResults as $r) { $whereIn=add_string($whereIn,$r["id"],',');	}
 						// $this->where_in($mTable["this"].".".$this->pk,$whereIn);
-						$this->ar_where[$key]=$AndOr.$mTable["this"].".".$this->pk.' IN ('.$whereIn.')';
+						$this->ar_where[$key]=$AndOr.$mTable["this"].".".$this->pk.' IN ('.$whereIn.') ';
 					}
 					else {
-						$this->ar_where[$key]='FALSE';
+						if (count($this->ar_where)==0)
+							$this->ar_where[$key]='FALSE ';
+						else
+							$this->ar_where[$key]=' ';
 					}
 				}
-				// trace_($this->ar_where);
+				$this->_repair_ar();
+				
 				// LIKE
 				$foundKeysArray=array_ereg_search($jTable, $this->ar_like);
 				foreach($foundKeysArray as $key) {
