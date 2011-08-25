@@ -43,13 +43,13 @@ class MY_Loader extends CI_Loader {
 				return FALSE;
 			}
 
-			require_once(BASEPATH.'database/DB'.EXT);
+			require_once(BASEPATH.'database/DB'.'.php');
 
 			// Load the DB class
 			$db =& DB($params, $active_record);
 
 			$my_driver = config_item('subclass_prefix').'DB_'.$db->dbdriver.'_driver';
-			$my_driver_file = APPPATH.'core/'.$my_driver.EXT;
+			$my_driver_file = APPPATH.'core/'.$my_driver.'.php';
 
 			if (file_exists($my_driver_file)) 
 			{
@@ -96,13 +96,13 @@ class MY_Loader extends CI_Loader {
 			// this use is deprecated and strongly discouraged
 			$CI->load->dbforge();
 
-			require_once(BASEPATH.'database/DB_utility'.EXT);
-			require_once(BASEPATH.'database/drivers/'.$CI->db->dbdriver.'/'.$CI->db->dbdriver.'_utility'.EXT);
+			require_once(BASEPATH.'database/DB_utility'.'.php');
+			require_once(BASEPATH.'database/drivers/'.$CI->db->dbdriver.'/'.$CI->db->dbdriver.'_utility'.'.php');
 			$class = 'CI_DB_'.$CI->db->dbdriver.'_utility';
 
 			// Added from here, to extend the mysql_utility driver (JdB)
 	    $my_driver = config_item('subclass_prefix').'DB_'.$CI->db->dbdriver.'_utility';
-	    $my_driver_file = APPPATH.'core/'.$my_driver.EXT;
+	    $my_driver_file = APPPATH.'core/'.$my_driver.'.php';
 	    if (file_exists($my_driver_file))
 	    {
 	        require_once($my_driver_file);
@@ -123,7 +123,7 @@ class MY_Loader extends CI_Loader {
 		// Same as view() method: loads a view. But with this one you can give the path of the view, which makes it possible to load a view outside the standard directory structure.
 		function my_view($v,$path,$var=array(),$return=false) {
 			$file_ext = pathinfo($v,PATHINFO_EXTENSION);
-			$v = ($file_ext == '') ? $v.EXT : $v;
+			$v = ($file_ext == '') ? $v.'.php' : $v;
 
 			$data=array(
 			    '_ci_path' => $path.'/'.$v,
@@ -155,8 +155,8 @@ class MY_Loader extends CI_Loader {
 		
 				// try to load the plugin
 				foreach ($this->_ci_plugin_paths as $path) {
-					if (file_exists($path.'plugins/'.$plugin.EXT)) {
-						include_once($path.'plugins/'.$plugin.EXT);	
+					if (file_exists($path.'plugins/'.$plugin.'.php')) {
+						include_once($path.'plugins/'.$plugin.'.php');	
 						$this->_ci_plugins[$plugin] = TRUE;
 						log_message('debug', 'Plugin loaded: '.$plugin);
 						continue;
@@ -164,7 +164,7 @@ class MY_Loader extends CI_Loader {
 				}
 				
 				if (! $this->_ci_plugins[$plugin]) {
-					show_error('Unable to load the requested plugin: '.$plugin.EXT);
+					show_error('Unable to load the requested plugin: '.$plugin.'.php');
 				}
 				
 			}		

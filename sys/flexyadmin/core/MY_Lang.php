@@ -33,7 +33,7 @@ class MY_Lang extends CI_Lang {
 	 */
 	function load($langfile = '', $idiom = '', $return = FALSE)
 	{
-		$langfile = str_replace(EXT, '', str_replace('_lang.', '', $langfile)).'_lang'.EXT;
+		$langfile = str_replace('.php', '', str_replace('_lang.', '', $langfile)).'_lang'.'.php';
 
 		if (in_array($langfile, $this->is_loaded, TRUE))
 		{
