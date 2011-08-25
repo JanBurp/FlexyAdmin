@@ -92,7 +92,7 @@ if (defined('ENVIRONMENT'))
  * as this file.
  *
  */
-	$system_path = 'system';
+	$system_path = 'sys/codeigniter';
 
 /*
  *---------------------------------------------------------------
@@ -108,7 +108,9 @@ if (defined('ENVIRONMENT'))
  * NO TRAILING SLASH!
  *
  */
-	$application_folder = 'application';
+	$application_folder = 'sys/flexyadmin';
+
+	$site_folder = 'site';
 
 /*
  * --------------------------------------------------------------------
@@ -226,6 +228,9 @@ if (defined('ENVIRONMENT'))
 
 		define('APPPATH', BASEPATH.$application_folder.'/');
 	}
+	
+	define('SITEPATH', $site_folder.'/');
+	
 
 /*
  * --------------------------------------------------------------------
