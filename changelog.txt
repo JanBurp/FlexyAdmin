@@ -1,15 +1,18 @@
-> 1132
+> 1192
 
 UPDATE:
-- CodeIgniter 2.0.2
+- CodeIgniter 2.0.3
 - jQuery 1.6.2
-- jQuery UI 1.8.14
+- jQuery UI 1.8.16
 - tinyMCE 3.4.3.2 (jQuery)
 
 NEW:
+- Nicer dropdown styling
+- Big CSS controls in other browsers (FF/Webkit/Opera/IE9,8,7 IE6 is now depricated)
 - New authentication sysem Ion Auth:
 	- Simpler user groups
 	- Safer (hashed) passwords
+	- new passwords: double check
 	- Ready for some future authentication handling
 	- Possible to use in FrontEnd
 - New way of implementing modules: by CI->Models:
@@ -24,11 +27,13 @@ NEW:
 - Added font files to safe_asset to site/assets/css
 - MY_Pagination, default configs
 - New plugin: add_relation_table
-- Safer Plugins.
+- Video_helper
+- Safer Plugins
+- Longer session times
 
 BUGS:
 - bulk_upload (lowercase extensions)
-- lots of small bugs in 
+- lots of small bugs
 
 
 
