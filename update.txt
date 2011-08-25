@@ -1,10 +1,10 @@
-UPDATE to 1132
+UPDATE to 1192
 ==============
 
 - This is a major update:
-	- the latest CodeIgniter 2.0.2
+	- the latest CodeIgniter 2.0.3
 	- new Authentication systen: Ion Auth
-- MySQL update 1125
+- MySQL update 1125 & 1190
 - Replace index.php
 - Replace current sys map with new sys map
 
