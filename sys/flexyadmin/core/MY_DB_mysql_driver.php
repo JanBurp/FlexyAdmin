@@ -223,6 +223,11 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 						while (empty($order) and next($stdFields));
 					}
 				}
+				$order=trim($order);
+				// check if it is not id, add id to it to prefent dubious sort results
+				if ($order!=PRIMARY_KEY) $order.=','.PRIMARY_KEY;
+				// trace_($order);
+				
 				if ($set) $this->order_by($order);
 			}
 		}
