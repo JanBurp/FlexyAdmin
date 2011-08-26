@@ -631,7 +631,7 @@ $config['FOREIGN_key_format']				= "/^id_.*/";		// regexpression used by preg_ma
 
 $config['ORDER_field_name']					= "order";
 $config['ORDER_decimals']						= 3;
-$config['ORDER_default_fields']			= array( "order","dat DESC","tme DESC","str","id");
+$config['ORDER_default_fields']			= array( "order","dat DESC",'date DESC',"tme DESC","str","id");
 
 $config['ABSTRACT_field_name']			= "abstract";
 $config['ABSTRACT_field_pre_types']	= array("str","url","img","dat","tme","time","int");
