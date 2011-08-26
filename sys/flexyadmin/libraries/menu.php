@@ -483,6 +483,9 @@ class Menu {
 		if (empty($uri)) $uri=$this->current;
 		$submenu=$this->_get_submenu($uri);
 		$thisUri=get_postfix($uri,'/');
+		// trace_($uri);
+		// trace_($thisUri);
+		// trace_($submenu);
 		$prev=false;
 		foreach ($submenu as $key=>$value) {
 			if ($key==$thisUri) break;
@@ -510,6 +513,7 @@ class Menu {
 		$parts=explode('/',$uri);
 		array_pop($parts);
 		$submenu=$this->menu;
+		// trace_($submenu);
 		foreach ($parts as $part) {
 			if (isset($submenu[$part]['sub']))
 				$submenu=$submenu[$part]['sub'];

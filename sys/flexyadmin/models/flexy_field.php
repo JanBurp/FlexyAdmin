@@ -699,7 +699,7 @@ class Flexy_field extends CI_Model {
 		if ($thisRights['rights']!='*') $tables=filter_by($tables,"tbl_");
 		$specialFields=array_keys($this->config->item('FIELDS_special'));
 		$options=array();
-		$options[""]="";
+		// $options[""]="";
 		foreach ($tables as $table) {
 			$fields=$this->db->list_fields($table);
 			foreach ($fields as $field) {
