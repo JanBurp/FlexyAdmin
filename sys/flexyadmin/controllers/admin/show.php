@@ -170,6 +170,9 @@ class Show extends AdminController {
 						if (substr($last_order,0,1)!='(') $order=$last_order;
 						// if (empty($order)) $order=remove_postfix($last_order,'.');
 						
+						// strace_($order);
+						// strace_($last_order);
+						
 
 						if (empty($data) and empty($search)) {
 							/**

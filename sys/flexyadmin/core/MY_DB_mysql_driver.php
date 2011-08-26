@@ -137,7 +137,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				$query=$this->query($sql);
 				$foreign_order_ids=array();
 				foreach ($query->result_array() as $row) {$foreign_order_ids[$row['id']]=$row['id'];}
-				foreach ($foreign_order_ids as $id => $row) {$this->order_by('('.$table.'.'.$foreign_order_id.' = '.$row['id'].')');}
+				foreach ($foreign_order_ids as $id => $row) {$this->order_by('('.$table.'.'.$foreign_order_id.' = '.$id.')');}
 			}
 		}
 	}
