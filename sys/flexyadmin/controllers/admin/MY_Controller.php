@@ -170,6 +170,12 @@ class FrontEndController extends MY_Controller {
 			$this->load->library("stats");
 			$this->stats->add_uri($this->uri->get());
 		}
+
+		/**
+		 * Load standard Module Class
+		 */
+		$this->load->library('module');
+		
 	}
 	
 	// For compatibility with older sites
@@ -193,6 +199,12 @@ class FrontEndController extends MY_Controller {
 		$this->site["assets"]=assets();
 		$this->site["rel_assets"]=$this->config->item("ASSETS");
 		$this->site["admin_assets"]=admin_assets();
+
+		/**
+		 * Set Some Config
+		 */
+		$this->site['languages']=$this->config->item('languages');
+
 
 		/**
 		 * Set global site info from tbl_site (if it doesn't exist, put some standard info)
