@@ -18,6 +18,8 @@ class MY_Loader extends CI_Loader {
  		function __construct() {
 			parent::__construct();
 			array_push($this->_ci_model_paths,SITEPATH);
+			array_push($this->_ci_library_paths,SITEPATH);
+			array_push($this->_ci_helper_paths,SITEPATH);
 			$this->_ci_plugin_paths = array(APPPATH,SITEPATH);
 		}
 
