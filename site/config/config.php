@@ -2,6 +2,33 @@
 
 /*
 |--------------------------------------------------------------------------
+| Languages
+|--------------------------------------------------------------------------
+|
+| Array containing all the possible language prefixes used by the site.
+|
+*/
+
+$config['languages'] = array('nl');
+// $config['languages'] = array('nl','en');
+
+
+/*
+|--------------------------------------------------------------------------
+| Default Language
+|--------------------------------------------------------------------------
+|
+| This determines which set of language files should be used. Make sure
+| there is an available translation if you intend to use something other
+| than english.
+|
+*/
+$config['language']	= "nl";
+
+
+
+/*
+|--------------------------------------------------------------------------
 | Base Site URL
 |--------------------------------------------------------------------------
 |
@@ -49,6 +76,8 @@ if (!isset($config['base_url'])) {
 */
 #$config['uri_protocol']	= "AUTO";
 
+
+
 /*
 |--------------------------------------------------------------------------
 | URL suffix
@@ -62,17 +91,7 @@ if (!isset($config['base_url'])) {
 
 #$config['url_suffix'] = ".html";
 
-/*
-|--------------------------------------------------------------------------
-| Default Language
-|--------------------------------------------------------------------------
-|
-| This determines which set of language files should be used. Make sure
-| there is an available translation if you intend to use something other
-| than english.
-|
-*/
-$config['language']	= "nl";
+
 
 /*
 |--------------------------------------------------------------------------
@@ -84,6 +103,7 @@ $config['language']	= "nl";
 |
 */
 #$config['charset'] = "UTF-8";
+
 
 /*
 |--------------------------------------------------------------------------

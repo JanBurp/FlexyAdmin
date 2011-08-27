@@ -6,7 +6,7 @@
  *
  * @package		FlexyAdmin 2009
  * @author		Jan den Besten
- * @copyright	Copyright (c) 2009-2010, Jan den Besten
+ * @copyright	Copyright (c) 2009-2011, Jan den Besten
  * @link			http://flexyadmin.com
  */
 
@@ -19,22 +19,9 @@
 
 class Main extends FrontEndController {
 
-	/**
-	 * $site is an array containing all data from tbl_site, and is the array which is given to the home view.
-	 */
-	var $site;
-	
-	/**
-	 * $languages is an array containing all the possible language prefixes useds by the site.
-	 */
-	var $languages = array('nl');
-	// var $languages = array('nl','en');
-
-
 	function __construct() {
 		parent::__construct();
 	}
-
 
 	
 	/**
@@ -47,6 +34,7 @@ class Main extends FrontEndController {
 		
 		/***********************************************
 		 * Set Language for localisation (set possible languages at the start of the controller, near line 30)
+		 * See site/config/config.php for language settings
 		 */
 		$this->_set_language();
 
@@ -87,7 +75,7 @@ class Main extends FrontEndController {
 
 
 		/***********************************************
-		 * If item exists call _page (which calls modules and loads views)
+		 * If item exists call _page (which calls modules and loads views if set)
 		 */
 		if ($item) $item=$this->_page($item);
 
@@ -98,47 +86,9 @@ class Main extends FrontEndController {
 		if ($this->no_content()) $this->add_content($this->show("error","",true));
 		
 		/**
-		 * Show site
+		 * Show home view
 		 */
 		$this->show();
-	}
-
-
-
-
-
-	/*************************************************
-	 * Always start functions with '_' for safety
-	 */
-
-
-	/**
-	 * function _set_language()
-	 * 
-	 * Sets the current prefered language of the visitor. If you use other methods (ie: query string or sessions), change it accordingly.
-	 */
-	function _set_language() {
-		$lang='';
-
-		// Is language set by the first part of the URI?
-		if ( ! $this->_is_possible_language($lang) ) $lang=$this->uri->get(1);
-		
-		// If not: get prefered language from users browser settings
-		if ( ! $this->_is_possible_language($lang) ) $lang=substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
-		
-		// If not: Get prefered language from config
-		if ( ! $this->_is_possible_language($lang) ) $lang=$this->config->item('language');
-
-		// Sets some stuff
-		setlocale(LC_ALL, $lang.'_'.$lang);
-		$this->site['language']=$lang;
-		$this->add_class('language_'.$lang);
-		return $lang;
-	}
-	
-	// Test if language is set to a possible language (and not empty)
-	function _is_possible_language($lang) {
-		return (in_array($lang,$this->languages));
 	}
 
 
@@ -178,32 +128,61 @@ class Main extends FrontEndController {
 	 * function _module($item)
 	 * 
 	 * This functions is called if a module is set
-	 * It loads the module model and calls it, if needed it calls also the corresponding view
+	 * It loads the module (a special CI library) and calls it.
+	 * If it has a return value, check if it is $item of just a string.
 	 */
 	function _module($item) {
 		$modules=$item['str_module'];
-		// Loop trough all possible modules
+		// Loop trough all possible modules, load them, call them, and process return value
 		$modules=explode('|',$modules);
 		$item['module_content']='';
 		foreach ($modules as $module) {
-			// If model exists: load it, call the given or standard method, and add modelname to class
-			$model=remove_postfix($module,'.');
-			$method=get_postfix($model,'.');
-			if ($method==$model) $method='main';
-			if (file_exists('site/models/'.$model.'.php')) {
-				$this->load->model($model);
-				$modeldata=$this->$model->$method($item);
-				if (is_string($modeldata))
-					$item['module_content']=$modeldata;
-				else {
-					if (isset($modeldata['item'])) $item = $modeldata['item'];
-					if (isset($modeldata['view']) and !empty($modeldata['view'])) $item['module_content'] = $this->show( $modeldata['view'], $modeldata, true );
-				}
-				$this->add_class('module_'.$model);
+			// If module exists (a library): load it, call the given or standard method, and add modelname to class
+			$library=remove_postfix($module,'.');
+			$method=get_postfix($library,'.');
+			if ($method==$library) $method='module';
+			if (file_exists('site/libraries/'.$library.'.php')) {
+				$this->load->library($library);
+				$return=$this->$library->$method($item);
+				if (is_array($return))
+					$item=$return;
+				else
+					$item['module_content'].=$return;
+				$this->add_class('module_'.$module);
 			}
 		}
 		return $item;
 	}
+
+
+
+
+
+	/**
+	 * function _set_language()
+	 * 
+	 * Sets the current prefered language of the visitor. If you use other methods (ie: query string or sessions), change it accordingly.
+	 */
+	function _set_language() {
+		$lang='';
+		// Is language set by the first part of the URI?
+		if ( ! $this->_is_possible_language($lang) ) $lang=$this->uri->get(1);
+		// If not: get prefered language from users browser settings
+		if ( ! $this->_is_possible_language($lang) ) $lang=substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+		// If not: Get prefered language from config
+		if ( ! $this->_is_possible_language($lang) ) $lang=$this->config->item('language');
+		// Sets some stuff
+		setlocale(LC_ALL, $lang.'_'.$lang);
+		$this->site['language']=$lang;
+		$this->add_class('language_'.$lang);
+		return $lang;
+	}
+	
+	// Test if language is set to a possible language (and not empty)
+	function _is_possible_language($lang) {
+		return (in_array($lang,$this->site['languages']));
+	}
+
 	
 	
 	/*
