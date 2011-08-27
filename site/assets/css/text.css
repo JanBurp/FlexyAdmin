@@ -13,9 +13,8 @@ body,div,span,hr,img,ul,li,p,h1,h2,h3,h4,h5,h6,h7,a,input,textarea,select,option
 }
 
 /* set specifics */
-p,h1,h2,h3,h4,h5,h6,h7 { padding-bottom:0px; }
-h1 { font-weight:bold; color:#000; }
-h2 { padding-bottom:0px; }
+p,h1,h2 { margin-bottom:10px;}
+h1,h2 {color:#000;}
 a, a:visited { text-decoration:none; }
 a:hover,a:active,a.current,a.current:visited { text-decoration:underline; color:#000; }
 li {margin-left:15px;}

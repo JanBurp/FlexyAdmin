@@ -1,6 +1,8 @@
 <div id="links">
-<h2>links</h2>
+<h1>links</h1>
+<p>
 <? foreach($links as $link): ?>
-	<p><a href="<?=$link["url_url"]?>" target="_blank"><?=$link["str_title"]?></a></p>
+	<a href="<?=$link["url_url"]?>" target="_blank"><?=$link["str_title"]?></a><br />
 <? endforeach; ?>
+</p>
 </div>
