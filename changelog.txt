@@ -1,4 +1,4 @@
-> 1192
+> 1203
 
 UPDATE:
 - CodeIgniter 2.0.3
@@ -15,9 +15,9 @@ NEW:
 	- new passwords: double check
 	- Ready for some future authentication handling
 	- Possible to use in FrontEnd
-- New way of implementing modules: by CI->Models:
+- New way of implementing modules: by a special Libary called Module. Also helpers and modules can be loaded from site
 	- deleting map: site/modules
-	- adding map: site/models
+	- adding map: site/models, site/helpers and site/libraries
 	- changing existing moduleds
 - changes to controller/home (for models, adding class, adding methods for language settings and redirect)
 - Ordering and Searching in foreign and many data from Grid view
