@@ -784,7 +784,21 @@ class AdminController extends BasicController {
 				
 			}
 		}
-		// trace_($menu);
+
+		// remove double seperators
+		$firstSeperator=false;
+		foreach ($menu as $key => $item) {
+			$isSeperator = empty($item);
+			if ($isSeperator) {
+				if ( ! $firstSeperator)
+					$firstSeperator=true;
+				else
+					unset($menu[$key]);
+			}
+			else
+				$firstSeperator=false;
+		}
+		
 		$this->menu->set_menu($menu);
 		$uri=$this->uri->get();
 		$this->menu->set_current($uri);
