@@ -1,0 +1,8 @@
+# Use this to active the index_temp.html file when working on the site
+# If you need to use admin, uncomment this line:
+# $config['index_page'] = "index.php";
+# In site/config/config.php
+
+RewriteEngine on
+RewriteCond $1 !^(index\.php|site/assets|sys/flexyadmin/assets|sys/tinymce|sys/jquery|sitemap\.xml|robots\.txt)
+RewriteRule ^(.*)$ index_temp.html [L]
