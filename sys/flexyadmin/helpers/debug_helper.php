@@ -111,7 +111,7 @@ function tr_string($value) {
 	$s="";
 	$value=(string) $value;
 	$html=in_string("<>",$value);
-	if ((substr($value,0,6)!="#show#") and ($html or (strlen($value)>200)) ) {
+	if ((strtoupper(substr($value,0,6))!="#SHOW#") and ($html or (strlen($value)>200)) ) {
 		$s.=strip_tags(substr($value,0,80));
 		$s.=" <span title=\"".htmlentities($value)."\" style=\"cursor:help;color:#696;\">...</span>";
 	}
