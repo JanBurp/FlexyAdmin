@@ -32,7 +32,7 @@ class MY_URI extends CI_URI {
 	}
 
 	function set_remove($remove="") {
-		if (!empty($remove) and !is_array($remove)) $remove=array($remove);
+		if (!is_array($remove)) $remove=array($remove);
 		$this->remove=$remove;
 	}
 
@@ -49,9 +49,9 @@ class MY_URI extends CI_URI {
 		if ($s=="") $s=$this->home;
 		if (!empty($this->remove)) {
 			foreach ($this->remove as $remove) {
-				$pos=strpos($s,$remove);
-				if ($pos>0) {
-					$s=substr($s,0,$pos-1);
+				if (!empty($remove)) {
+					$pos=strpos($s,$remove);
+					if ($pos>0) $s=substr($s,0,$pos-1);
 				}
 			}
 		}
@@ -84,6 +84,7 @@ class MY_URI extends CI_URI {
 			if (empty($u) and $s==$this->homePart) $u=$this->home;
 		}
 		if (isset($u[0]) and $u[0]=="/") $u=substr($u,1);
+		if (in_array($u,$this->remove)) $u='';
 		return $u;
 	}
 
@@ -99,7 +100,6 @@ class MY_URI extends CI_URI {
 		$u=explode('/',$this->_uri_string());
 		return array_pop($u);
 	}
-
 
 }
 
