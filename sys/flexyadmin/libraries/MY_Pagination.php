@@ -3,6 +3,8 @@
 class MY_Pagination extends CI_Pagination {
 
 	// default and new config
+	var $first_link			= '&lt;&lt;';
+	var $last_link			= '&gt;&gt;';
 	var $full_tag_close = '</ul>';
 	var $num_tag_open = '<li>';
 	var $num_tag_close = '</li>';
