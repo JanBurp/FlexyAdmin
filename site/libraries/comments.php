@@ -30,7 +30,7 @@ class Comments extends Module {
 
 		// set form klaar
 		$formData=array();
-		$formData=$this->CI->_setform_fields($table);
+		$formData=$this->_setform_fields($table);
 		$formData['spambody']=array('label'=>'','type'=>'textarea','value'=>'','attr'=>array('style'=>'display:none;'));  // voor de spamcheck
 		$formData['id_menu']=array('type'=>'hidden','value'=>$item['id']);
 		unset($formData['int_spamscore']);
@@ -66,13 +66,13 @@ class Comments extends Module {
 		$formHtml=$form->render();
 	
 		// Get comments
-		$this->CI->db->where('id_menu',$item['id']);
+		$this->CI->db->where('id_blog',$item['id']);
 		$comments=$this->CI->db->get_results('tbl_comments');
 		// make nice date format
 		foreach ($comments as $id => $comment) {
-			$comments[$id]['niceDate']=strftime('%a %e %b %Y %R',mysql_to_unix($comment['datetime_datum']));
+			$comments[$id]['niceDate']=strftime('%a %e %b %Y %R',mysql_to_unix($comment['date_date']));
 		}
-	
+
 		// Show all
 		return $this->CI->show('comments',array('errors'=>$errorHtml,'form'=>$formHtml,'items'=>$comments),true);
 	}
