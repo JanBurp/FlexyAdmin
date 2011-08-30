@@ -40,6 +40,13 @@ class Main extends FrontEndController {
 
 
 		/***********************************************
+		 * If you need pagination for something, uncomment these lines and just set $config['auto']=TRUE in the pagination config. You don't need to set $config['base_url'] and $config['uri_segment']
+		 */
+		// $this->load->library('pagination');
+		// $this->uri->remove_pagination();
+
+
+		/***********************************************
 		 * Get current uri and give it to menu and add it to class
 		 */
 		$this->site['uri']=$this->uri->get();
