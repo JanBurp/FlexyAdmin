@@ -27,7 +27,7 @@ class Blog extends Module {
 		foreach ($blogItems as $id => $blogItem) {
 			$blogItems[$id]['comments'] = $this->CI->comments->module($blogItem);
 		}
-		return $this->CI->show('blog',array('items'=>$blogItems),true);
+		return $this->CI->view('blog',array('items'=>$blogItems),true);
 	}
 
 }

@@ -21,7 +21,7 @@ class Example {
 		// There are two ways to return something. Just a string wich will be added to the content after page
 		// Or return $item with 'module_content' as an extra field (which will be added to the content after page), 
 		// of just change $item.
-		// Offcourse you can use views with $this->show();
+		// Offcourse you can use views with $this->view();
 		return $item;
 	}
 
