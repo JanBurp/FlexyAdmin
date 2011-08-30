@@ -14,9 +14,9 @@ class MY_Loader extends CI_Loader {
 	
 		var $_ci_plugin_paths	= array();
 
-
  		function __construct() {
 			parent::__construct();
+			$this->_ci_view_paths[SITEPATH.'views/']=0;
 			array_push($this->_ci_model_paths,SITEPATH);
 			array_push($this->_ci_library_paths,SITEPATH);
 			array_push($this->_ci_helper_paths,SITEPATH);
@@ -112,30 +112,6 @@ class MY_Loader extends CI_Loader {
 	    }
 			// Added stops here
 			$CI->dbutil =  new $class();
-		}
-
-
-
-
-		/**
-		 * Extensions by Jan den Besten, 2009
-		 * See: http://codeigniter.com/forums/viewthread/73545/
-		 */
-
-		// Same as view() method: loads a view. But with this one you can give the path of the view, which makes it possible to load a view outside the standard directory structure.
-		function my_view($v,$path,$var=array(),$return=false) {
-			$file_ext = pathinfo($v,PATHINFO_EXTENSION);
-			$v = ($file_ext == '') ? $v.'.php' : $v;
-
-			$data=array(
-			    '_ci_path' => $path.'/'.$v,
-					'_ci_vars' => $this->_ci_object_to_array($var),
-					'_ci_return' => $return
-			);
-			return $this->_ci_load($data);
-		}
-		function site_view($v,$var=array(),$return=false) {
-			return $this->my_view($v,"site/views",$var,$return);
 		}
 
 
