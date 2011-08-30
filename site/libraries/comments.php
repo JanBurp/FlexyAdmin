@@ -74,7 +74,7 @@ class Comments extends Module {
 		}
 
 		// Show all
-		return $this->CI->show('comments',array('errors'=>$errorHtml,'form'=>$formHtml,'items'=>$comments),true);
+		return $this->CI->view('comments',array('errors'=>$errorHtml,'form'=>$formHtml,'items'=>$comments),true);
 	}
 
 

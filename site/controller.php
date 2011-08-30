@@ -90,12 +90,12 @@ class Main extends FrontEndController {
 		/**********************************************
 		 * No Content? Show error page.
 		 */
-		if ($this->no_content()) $this->add_content($this->show("error","",true));
+		if ($this->no_content()) $this->add_content($this->view("error","",true));
 		
 		/**
 		 * Show home view
 		 */
-		$this->show();
+		$this->view();
 	}
 
 
@@ -122,7 +122,7 @@ class Main extends FrontEndController {
 		if (isset($item["str_module"]) and !empty($item["str_module"]))	$item=$this->_module($item);
 
 		// Add content
-		$this->add_content( $this->show('page',$item,true) );
+		$this->add_content( $this->view('page',$item,true) );
 		if (isset($item['module_content'])) $this->add_content($item['module_content']);
 
 		return $item;
