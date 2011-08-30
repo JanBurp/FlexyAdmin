@@ -35,10 +35,18 @@ class MY_URI extends CI_URI {
 		if (!is_array($remove)) $remove=array($remove);
 		$this->remove=$remove;
 	}
+	
+	function remove_pagination() {
+		$CI=&get_instance();
+		if ( ! isset($CI->pagination)) return FALSE;
+		$parameter=$CI->pagination->auto_uripart;
+		$this->set_remove($parameter);
+		return $parameter;
+	}
 
 	function _segment($s) {
 		$s=$this->segment($s);
-		if ($s==$this->xdebug)
+		if ($s==$this->xdebug) 
 			return "";
 		return $s;
 	}
@@ -99,6 +107,21 @@ class MY_URI extends CI_URI {
 	function get_last() {
 		$u=explode('/',$this->_uri_string());
 		return array_pop($u);
+	}
+
+
+	function get_parameter($parameter,$default=FALSE) {
+		$uri=$this->segment_array();
+		$segment=array_search($parameter,$uri);
+		if ( ! $segment) $segment=1;
+		return $this->segment($segment+1,$default);
+	}
+	
+	function get_pagination() {
+		$CI=&get_instance();
+		if ( ! isset($CI->pagination)) return FALSE;
+		$parameter=$CI->pagination->auto_uripart;
+		return $this->get_parameter($parameter,0);
 	}
 
 }
