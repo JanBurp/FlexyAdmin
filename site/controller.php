@@ -145,8 +145,8 @@ class Main extends FrontEndController {
 		$item['module_content']='';
 		foreach ($modules as $module) {
 			// If module exists (a library): load it, call the given or standard method, and add modelname to class
-			$library=remove_postfix($module,'.');
-			$method=get_postfix($library,'.');
+			$library=remove_suffix($module,'.');
+			$method=get_suffix($library,'.');
 			if ($method==$library) $method='module';
 			if (file_exists('site/libraries/'.$library.'.php')) {
 				$this->load->library($library);

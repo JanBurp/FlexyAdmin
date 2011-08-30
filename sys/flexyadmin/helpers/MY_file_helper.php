@@ -49,7 +49,7 @@ function add_file_prefix($f,$pre) {
 	}
 	return $path.$pre.$file;
 }
-function add_file_postfix($f,$post) {
+function add_file_suffix($f,$post) {
 	$p=strrpos($f,"/");
 	if ($p===false) {
 		$path='';
@@ -63,7 +63,7 @@ function add_file_postfix($f,$post) {
 	$file=get_file_without_extension($file);
 	return $path.$file.$post.'.'.$ext;
 }
-function add_file_prepostfix($f,$pre='',$post='') {
+function add_file_presuffix($f,$pre='',$post='') {
 	$p=strrpos($f,"/");
 	if ($p===false) {
 		$path='';

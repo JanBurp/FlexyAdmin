@@ -92,7 +92,7 @@
 
 							// button?
 							if (get_prefix($value['type'],'.')=='button') {
-								$form['buttons'][$value['name']]=array( 'value'=>$value['label'], 'type'=>get_postfix($value['type'],'.') );
+								$form['buttons'][$value['name']]=array( 'value'=>$value['label'], 'type'=>get_suffix($value['type'],'.') );
 								unset($fields[$key]);
 							}
 

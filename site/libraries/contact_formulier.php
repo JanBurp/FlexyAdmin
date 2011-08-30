@@ -61,7 +61,7 @@ class Contact_formulier extends Module {
 				foreach ($formValues as $key => $value) {
 					if (substr($key,0,1)!='_') {
 						if ($formFields[$key]['type']=='checkbox') {if ($value) $value=strip_tags($formFields[$key]['html']); else $value='Nee';}
-						$showKey=ucfirst(remove_postfix($key));
+						$showKey=ucfirst(remove_suffix($key));
 						$body.="<b>$showKey:&nbsp;</b>";
 						if ($formFields[$key]['type']=='textarea') $body.="<br/>";
 						$body.="$value<br/><br/>";

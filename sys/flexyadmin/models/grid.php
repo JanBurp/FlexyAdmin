@@ -77,7 +77,7 @@ class Grid Extends CI_Model {
 	}
 
 	function set_order($order='id') {
-		$post=get_postfix($order,' ');
+		$post=get_suffix($order,' ');
 		if ($post=='DESC') $order='_'.$order;
 		$order=str_replace(array(' DESC',' ASC'),'',$order);
 		$this->order=$order;

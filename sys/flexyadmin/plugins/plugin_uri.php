@@ -74,8 +74,8 @@ class Plugin_uri extends Plugin_ {
 			$forbidden=array_merge($forbidden,$this->config->item('LANGUAGES'));
 			$postSpace=$replaceSpace.$replaceSpace;
 			while ($this->_existing_uri($uri) or in_array($uri,$forbidden)) {
-				$currUri=remove_postfix($uri,$postSpace);
-				$countUri=(int) get_postfix($uri,$postSpace);
+				$currUri=remove_suffix($uri,$postSpace);
+				$countUri=(int) get_suffix($uri,$postSpace);
 				$uri=$currUri.$postSpace.($countUri+1);
 			}
 		}
