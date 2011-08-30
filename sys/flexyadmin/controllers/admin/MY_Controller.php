@@ -303,10 +303,16 @@ class FrontEndController extends MY_Controller {
 		return el($key,$this->site);
 	}
 
-	function show($v="home",$data="",$return=FALSE) {
+
+	function view($v='home',$data='',$return=FALSE) {
 		if (empty($data)) $data=$this->site;
-		return $this->load->site_view($v,$data,$return);
+		return $this->load->view($v,$data,$return);
 	}
+
+	function show($v='home',$data='',$return=FALSE) {
+		return $this->view($v,$data,$return);
+	}
+	
 
 	function module($module) {
 		if (!function_exists('_module_'.$module) and file_exists('site/modules/module_'.$module.'.php')) {
