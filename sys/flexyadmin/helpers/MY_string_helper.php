@@ -109,9 +109,12 @@ function get_prefix($s,$split="_") {
 	return $out;
 }
 
-function get_postfix($s,$split="_") {
+function get_suffix($s,$split="_") {
 	$e=explode($split,$s);
 	return $e[count($e)-1];
+}
+function get_postfix($s,$split="_") {
+	return get_suffix($s,$split);
 }
 
 //
@@ -123,13 +126,16 @@ function remove_prefix($s,$split="_") {
 	return $out;
 }
 
-function remove_postfix($s,$split="_") {
+function remove_suffix($s,$split="_") {
 	$e=explode($split,$s);
 	$e=array_slice($e,0,count($e)-1);
 	if (!empty($e))
 		return implode($split,$e);
 	else
 		return $s;
+}
+function remove_postfix($s,$split="_") {
+	return remove_suffix($s,$split);
 }
 
 //

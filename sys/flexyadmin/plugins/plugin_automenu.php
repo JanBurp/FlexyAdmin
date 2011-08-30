@@ -219,7 +219,7 @@ class Plugin_automenu extends Plugin_ {
 					if ($preTable=='rel') {
 						// yes many table
 						$fromRel=true;
-						$groupField=get_postfix($autoValue['field_group_by'],'.');
+						$groupField=get_suffix($autoValue['field_group_by'],'.');
 						$groupTable='tbl_'.remove_prefix($groupField);
 					}
 					else {
@@ -367,7 +367,7 @@ class Plugin_automenu extends Plugin_ {
 					$this->db->set($field,$value);
 				}
 				elseif ($lang!='') {
-					$post=get_postfix($field);
+					$post=get_suffix($field);
 					$langField=str_replace('_'.$lang,'',$field);
 					if (in_array($langField,$fields)) {
 						$this->db->set($langField,$value);

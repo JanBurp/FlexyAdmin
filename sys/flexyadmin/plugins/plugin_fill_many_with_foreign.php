@@ -17,8 +17,8 @@ class Plugin_fill_many_with_foreign extends Plugin_ {
 				if (isset($args[1])) {
 					$foreignKey=$args[1];
 					$table=get_prefix($foreignKey,'.');
-					$foreignKey=get_postfix($foreignKey,'.');
-					$thisKey='id_'.get_postfix($table);
+					$foreignKey=get_suffix($foreignKey,'.');
+					$thisKey='id_'.get_suffix($table);
 				}
 				if (isset($relTable) and isset($table) and isset($foreignKey)) $goodArgs=true;
 				$this->_add_content(h("Filling '$relTable' from '$table.$foreignKey'.",2));

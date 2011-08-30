@@ -410,8 +410,8 @@ class Filemanager extends AdminController {
 				if (!empty($cfg)) {
 					$sizes=1;
 					while(isset($cfg['b_create_'.$sizes]) and $cfg['b_create_'.$sizes]) {
-						$thisFile=add_file_prepostfix($file,$cfg['str_prefix_'.$sizes],$cfg['str_postfix_'.$sizes]);
-						$thisNewFile=add_file_prepostfix($new,$cfg['str_prefix_'.$sizes],$cfg['str_postfix_'.$sizes]);
+						$thisFile=add_file_presuffix($file,$cfg['str_prefix_'.$sizes],$cfg['str_postfix_'.$sizes]);
+						$thisNewFile=add_file_presuffix($new,$cfg['str_prefix_'.$sizes],$cfg['str_postfix_'.$sizes]);
 						rename($map.'/'.$thisFile, $map.'/'.$thisNewFile);
 						$sr[$thisFile]=$thisNewFile;
 						$sizes++;

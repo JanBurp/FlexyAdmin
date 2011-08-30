@@ -168,7 +168,7 @@ class Show extends AdminController {
 						$data=$this->db->get_result($table);
 						$last_order=$this->db->get_last_order();
 						if (substr($last_order,0,1)!='(') $order=$last_order;
-						// if (empty($order)) $order=remove_postfix($last_order,'.');
+						// if (empty($order)) $order=remove_suffix($last_order,'.');
 						
 						// strace_($order);
 						// strace_($last_order);

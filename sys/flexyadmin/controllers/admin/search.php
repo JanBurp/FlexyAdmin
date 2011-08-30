@@ -37,7 +37,7 @@ class Search extends AdminController {
 				$htmlTest=h(lang('sr_result'),1);
 				foreach ($fields as $field) {
 					$table=get_prefix($field,'.');
-					$field=get_postfix($field,'.');
+					$field=get_suffix($field,'.');
 					$this->db->select(PRIMARY_KEY);
 					$this->db->select($field);
 					$result=$this->db->get_result($table);
@@ -89,7 +89,7 @@ class Search extends AdminController {
 				$fields=$fields['options'];
 				unset($fields['']);
 				foreach ($fields as $key => $value) {
-					$field=get_postfix($key,'.');
+					$field=get_suffix($key,'.');
 					if ($field=='id' or $field=='user')
 						unset($fields[$key]);
 					else {
