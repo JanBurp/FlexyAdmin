@@ -179,7 +179,7 @@ class Main extends FrontEndController {
 		// If not: Get prefered language from config
 		if ( ! $this->_is_possible_language($lang) ) $lang=$this->config->item('language');
 		// Sets some stuff
-		setlocale(LC_ALL, $lang.'_'.$lang);
+		setlocale(LC_ALL, $lang.'_'.strtoupper($lang));
 		$this->site['language']=$lang;
 		$this->add_class('language_'.$lang);
 		return $lang;
