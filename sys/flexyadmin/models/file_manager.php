@@ -229,11 +229,6 @@ class File_manager Extends CI_Model {
 		$ok=$this->upload->upload_file($file_field);
 		$file=$this->upload->get_file();
 		$ext=get_file_extension($file);
-		$saveName=clean_file_name($file);
-		if ($file!=$saveName) {
-			if (rename($this->map.'/'.$file, $this->map.'/'.$saveName))
-				$file=$saveName;
-		}
 		if (!$ok) {
 			log_("info","[FM] error while uploading: '$file' [$error]");
 			$error=$this->upload->get_error();
@@ -241,6 +236,11 @@ class File_manager Extends CI_Model {
 		// RESIZING and AUTO FILL
 		else {
 			log_("info","[FM] uploaded: '$file'");
+			$saveName=clean_file_name($file);
+			if ($file!=$saveName) {
+				if (rename($this->map.'/'.$file, $this->map.'/'.$saveName))
+					$file=$saveName;
+			}
 			if (in_array(strtolower($ext),$this->config->item('FILE_types_img'))) {
 				// is image, maybe resizing
 				$ok=$this->upload->resize_image($file,$this->map);
