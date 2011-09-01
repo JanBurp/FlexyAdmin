@@ -137,6 +137,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				$query=$this->query($sql);
 				$foreign_order_ids=array();
 				foreach ($query->result_array() as $row) {$foreign_order_ids[$row['id']]=$row['id'];}
+				$query->free_result();
 				foreach ($foreign_order_ids as $id => $row) {$this->order_by('('.$table.'.'.$foreign_order_id.' = '.$id.')');}
 			}
 		}
@@ -165,6 +166,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				$query=$this->query($sql);
 				$foreign_order_ids=array();
 				foreach ($query->result_array() as $row) {$foreign_order_ids[$row['id']]=$row['id'];}
+				$query->free_result();
 				// trace_($foreign_order_ids);
 				// order in relation table
 				$sql="SELECT * FROM `$rel_table` ORDER BY";
@@ -177,6 +179,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				foreach ($query->result_array() as $row) {
 					$order_ids[$row[$this_key]]=$row[$this_key];
 				}
+				$query->free_result();
 				// for right order (of empty fields)
 				// if ($desc=='DESC') sort($order_ids);
 				foreach ($order_ids as $key=>$value) {$this->order_by('(`'.$table.'`.`id` = '.$value.') ');}
@@ -293,6 +296,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 						$sub_query=$this->query($sub_sql);
 						$foreign_ids=array();
 						foreach ($sub_query->result_array() as $row) {array_push($in,$row['id']);}
+						$query->free_result();
 						$s['in']=$in;
 					}
 				}
@@ -314,6 +318,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 						$sub_query=$this->query($sub_sql);
 						$foreign_ids=array();
 						foreach ($sub_query->result_array() as $row) {$foreign_ids[$row['id']]=$row;}
+						$query->free_result();
 						if ($foreign_ids) {
 							// search if any in relation table
 							$sub_sql="SELECT * FROM `$rel_table` WHERE ";
@@ -321,6 +326,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 							$sub_sql=substr($sub_sql,0,strlen($sub_sql)-3);
 							$sub_query=$this->query($sub_sql);
 							foreach ($sub_query->result_array() as $row) {array_push($in,$row[$this_key]);}
+							$query->free_result();
 						}
 						$s['in']=$in;
 					}
@@ -544,6 +550,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 					// trace_($sql);
 					$query=$this->query($sql);
 					$manyResults=$query->result_array();
+					$query->free_result();
 					// trace_($manyResults);
 					// replace current where and add new 'WHERE IN' to active record which selects the id where the many field is right
 					if (!empty($manyResults)) {
@@ -573,6 +580,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 								WHERE ".$mTable["rel"].".".$mTable["id_join"]."=".$mTable["join"].".id ".$mLike;
 					$query=$this->query($sql);
 					$manyResults=$query->result_array();
+					$query->free_result();
 					// trace_($manyResults);
 					// remove current like and add new 'WHERE IN' to active record which selects the id where the many field is right
 					unset($this->ar_like[$key]);
@@ -645,6 +653,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			$sql="SELECT id,self_parent FROM $table WHERE uri='$part' AND self_parent='$parent'";
 			$query=$this->query($sql);
 			$items=$query->result_array();
+			$query->free_result();
 			// zoek in gevonden subitem
 			$item=current($items);
 			$found=$this->get_unique_id_from_fulluri($table,$uriParts,$item['id']);
@@ -671,6 +680,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				$items=$query->result_array();
 			}
 			if ($items) {
+				$query->free_result();
 				$item=current($items);
 				$foundID=$item['id'];
 			}
@@ -678,38 +688,13 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		return $foundID;
 	}
 
-	// function get_unique_id_from_fulluri($table,$uri) {
-	// 	$foundID=-1;
-	// 	$uriParts=explode('/',$uri);
-	// 	if (count($uriParts)>=1) {
-	// 		$part=array_pop($uriParts);
-	// 		$sql="SELECT id,self_parent FROM $table WHERE uri='$part'";
-	// 		$query=$this->query($sql);
-	// 		if ($query->num_rows()==1) {
-	// 			$row=$query->row_array();
-	// 			$foundID=$row['id'];
-	// 		}
-	// 		else {
-	// 			$res=$query->result_array();
-	// 			foreach ($res as $key => $row) {
-	// 				if ( ! $this->_check_fulluri($table,$uriParts,$row['self_parent'])) unset($res[$key]);
-	// 			}
-	// 			if (count($res)==1) {
-	// 				$row=current($res);
-	// 				$foundID=$row['id'];
-	// 			}
-	// 		}
-	// 	}
-	// 	return $foundID;
-	// }
-
-	
 	function _check_fulluri($table,$uriParts,$self_parent) {
 		$check=FALSE;
 		$part=array_pop($uriParts);
 		$sql="SELECT id,self_parent FROM $table WHERE id=$self_parent AND uri='$part'";
 		$query=$this->query($sql);
 		$row=$query->row_array();
+		$query->free_result();
 		if (!empty($row)) {
 			if ($row['self_parent']==0)
 				$check=TRUE;
@@ -830,6 +815,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		
 		log_("info","[DB+] Get data from query:");
 		$res=$query->result_array();
+		$query->free_result();
 		$result=$this->_set_key_to($res,$this->key);
 
 		/**
@@ -864,6 +850,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 						$this->order_by($rel.'.id');
 						$query=$this->get();
 						$resultArray=$query->result_array();
+						$query->free_result();
 						foreach($resultArray as $res) {
 							$manyResult[$rel][$res[PRIMARY_KEY]]=$res;
 						}
@@ -952,6 +939,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			$sql="SELECT `$field` FROM `$table` WHERE `$where`='$what'";
 		$query=$this->query($sql);
 		$row=$query->row_array();
+		$query->free_result();
 		if (isset($row[$field]))
 			return $row[$field];
 		else
@@ -964,6 +952,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		$sql="SELECT `$field` FROM `$table` ORDER BY RAND()";
 		$query=$this->query($sql);
 		$row=$query->row_array();
+		$query->free_result();
 		return $row[$field];
 	}
 	
@@ -1206,6 +1195,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			// $res=$this->get_results($cleanTable);
 			$query=$this->get($cleanTable);
 			$res=$query->result_array();
+			$query->free_result();
 			// set id as key
 			$res=$this->_set_key_to($res,PRIMARY_KEY);
 			foreach($res as $row) {

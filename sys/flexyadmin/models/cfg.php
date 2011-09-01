@@ -121,6 +121,7 @@
 					}
 				}
 			}
+			$query->free_result();
 			$this->data[$table]=$data;
 			$out=true;
 		}
@@ -231,6 +232,7 @@
 					$F->extra       = $field->Extra;
 					$info[] = $F;
 				}
+				$query->free_result();
 			}
 			else {
 				/**
@@ -260,8 +262,6 @@
 		else
 			return $out[$key][$value];
 	}
-
-
 
  }
 ?>

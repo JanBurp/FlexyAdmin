@@ -81,6 +81,7 @@ class Plugin_links extends Plugin_ {
 									}
 									$res=$this->db->update($table,array($field=>$txt),"id = $thisId");
 								}
+								$query->free_result();
 							}
 						}
 					}

@@ -51,6 +51,7 @@ class Main extends AdminController {
 		$this->db->order_by("tme_login_time DESC");
 		$query=$this->db->get($this->config->item('LOG_table_prefix')."_".$this->config->item('LOG_login'),5);
 		$userData=$query->result_array();
+		$query->free_result();
 		
 		// in grid
 		$grid=new grid();

@@ -81,7 +81,7 @@ class MY_Controller extends CI_Controller {
 	}
 
 	function _init_flexy_admin($isAdmin=false) {
-		// $this->output->enable_profiler(TRUE);
+		$this->output->enable_profiler(TRUE);
 		$this->load->model('cfg');
 		$this->cfg->set_if_admin($isAdmin);
 	}
@@ -214,6 +214,7 @@ class FrontEndController extends MY_Controller {
 			$stdFields=array("str_title","str_author","url_url","email_email","stx_description","stx_keywords");
 			$query=$this->db->get("tbl_site");
 			$row=$query->row_array();
+			$query->free_result();
 			// first standard fields
 			foreach ($stdFields as $f) {
 				if (isset($row[$f])) {
@@ -413,6 +414,7 @@ class BasicController extends MY_Controller {
 							}
 							$res=$this->db->update($table,array($field=>$txt),"id = $thisId");
 						}
+						$query->free_result();
 					}
 				}
 			}
@@ -800,6 +802,7 @@ class AdminController extends BasicController {
 								$menu[$uri]["help"]=$mediaHelp;
 							}
 						}
+						$query->free_result();
 					}
 					break;
 				
@@ -859,6 +862,7 @@ class AdminController extends BasicController {
 		$this->db->select("url_url");
 		$query=$this->db->get("tbl_site");
 		$siteInfo=$query->row_array();
+		$query->free_result();
 		$this->lang->load("dialog");
 		$lang=$this->lang->get_all();
 		$footer=array(	"view"		=> $extra_view,
