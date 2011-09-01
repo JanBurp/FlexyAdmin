@@ -24,7 +24,6 @@ class MY_Loader extends CI_Loader {
 		}
 
 
-
 	/**
 		* Database Loader
 		*
@@ -113,6 +112,9 @@ class MY_Loader extends CI_Loader {
 			// Added stops here
 			$CI->dbutil =  new $class();
 		}
+
+
+
 
 
 		/**

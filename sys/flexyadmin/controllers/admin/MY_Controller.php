@@ -303,13 +303,17 @@ class FrontEndController extends MY_Controller {
 		return el($key,$this->site);
 	}
 
-	function view($v='home',$data='',$return=FALSE) {
+	function view($view='',$data='',$return=FALSE) {
+		if (empty($view)) {
+			$view=$this->config->item('main_view');
+			if ( ! $view) $view='home'; // for backwards compatibility
+		}
 		if (empty($data)) $data=$this->site;
-		return $this->load->view($v,$data,$return);
+		return $this->load->view($view,$data,$return);
 	}
 	// this one only for backwards compatibility
-	function show($v='home',$data='',$return=FALSE) {
-		return $this->view($v,$data,$return);
+	function show($view='home',$data='',$return=FALSE) {
+		return $this->view($view,$data,$return);
 	}
 	
 
