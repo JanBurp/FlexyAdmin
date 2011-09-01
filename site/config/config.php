@@ -1,5 +1,18 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+
+/*
+|--------------------------------------------------------------------------
+| Main view
+|--------------------------------------------------------------------------
+|
+| The name of the view that the frontend controller will load if no view was given
+|
+*/
+
+$config['main_view']='site';
+
+
 /*
 |--------------------------------------------------------------------------
 | Languages
