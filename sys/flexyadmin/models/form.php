@@ -440,6 +440,9 @@ class Form Extends CI_Model {
 				 * Update data
 				 */
 				// strace_($set);
+				
+				$this->db->trans_start();
+				
 				foreach($set as $name=>$value) {
 					$this->db->set($name,$value);
 					$this->data[$name]['newvalue']=$value;
@@ -483,6 +486,10 @@ class Form Extends CI_Model {
 						log_('info',"form: updating join data from '$table', id='$id'");
 					}
 				}
+				
+				$this->db->trans_complete();
+				
+				
 				return intval($id);
 			}
 		}
