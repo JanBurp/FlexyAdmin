@@ -82,7 +82,7 @@ class Show extends AdminController {
 			$order=el('order',$args);
 			$search=el('search',$args);
 			// strace_($args);
-			
+
 			if (!empty($table) and $this->db->table_exists($table)) {
 				$singleRow=$this->cfg->get('CFG_table',$table,"b_single_row");
 				if ($singleRow) {
@@ -116,9 +116,15 @@ class Show extends AdminController {
 								$uiTable=$extraInfo['str_ui_name'];
 							}
 						}
+						// get information (from db) needed later...
+						$hasField=array();
+						$hasField['self_parent']=$this->db->has_field($table,"self_parent");
+						$hasField['user']=$this->db->has_field($table,"user");
+
+						$pagination=$this->cfg->get("CFG_table",$table,'int_pagination');
 						
 						// How to order?
-						if ($this->db->has_field($table,"self_parent")) {
+						if ($hasField['self_parent']) {
 							$this->db->order_as_tree();
 						}
 						elseif ($order) {
@@ -138,7 +144,7 @@ class Show extends AdminController {
 						}
 						
 						// has rights?
-						if ($restrictedToUser>0 and $this->db->has_field($table,"user")) {
+						if ($restrictedToUser>0 and $hasField['user']) {
 							$this->db->where($table.".user",$restrictedToUser);
 							$this->db->dont_select("user");
 						}
@@ -150,17 +156,19 @@ class Show extends AdminController {
 						
 						// search?
 						if ($search) {
-							$fields=$this->db->list_fields($table);
+							$fields=$this->db->list_fields($table);	
 							$searchArr=array();
 							foreach ($fields as $field) {
 								$searchArr[]=array('field'=>$field,'search'=>$search,'or'=>'OR','table'=>$table);
 							}
 							// search in many_tables if any
 							if ($this->db->many) {
-								if (!is_array($this->db->many))
-									$many_tables=$this->db->get_many_tables($table);
-								else
-									$many_tables=$many;
+								if ($this->db->many) {
+									if (!is_array($this->db->many))
+										$many_tables=$this->db->get_many_tables($table);
+									else
+										$many_tables=$many;
+								}
 								foreach ($many_tables as $many_table => $value) {
 									$searchArr[]=array('field'=>$many_table,'search'=>$search,'or'=>'OR','table'=>$table);
 								}
@@ -168,14 +176,11 @@ class Show extends AdminController {
 							$this->db->search($searchArr);
 						}
 
-						$data=$this->db->get_result($table);
+
+						$data=$this->db->get_result($table,$pagination,$offset);
+
 						$last_order=$this->db->get_last_order();
 						if (substr($last_order,0,1)!='(') $order=$last_order;
-						// if (empty($order)) $order=remove_suffix($last_order,'.');
-						
-						// strace_($order);
-						// strace_($last_order);
-						
 
 						if (empty($data) and empty($search)) {
 							/**
@@ -188,15 +193,13 @@ class Show extends AdminController {
 						else
 						{
 							$this->_before_grid($table,$data);
-							$pagination=$this->cfg->get("CFG_table",$table,'int_pagination');
 
 							$grid=new grid();
 
 							if ($pagination) {
-								$pagination=array('base_url'=>api_url('API_view_grid',$table),'per_page'=>$pagination,'total_rows'=>count($data),'offset'=>$offset);
+								$total_rows=$this->db->last_num_rows_no_limit();
+								$pagination=array('base_url'=>api_url('API_view_grid',$table),'per_page'=>$pagination,'total_rows'=>$total_rows,'offset'=>$offset);
 								$grid->set_pagination($pagination);
-								// strace_($pagination);
-								$data=array_slice($data,$pagination['offset'],$pagination['per_page'],true);
 							}
 
 							// if (empty($id) and !empty($data)) {
