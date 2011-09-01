@@ -296,7 +296,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 						$sub_query=$this->query($sub_sql);
 						$foreign_ids=array();
 						foreach ($sub_query->result_array() as $row) {array_push($in,$row['id']);}
-						$query->free_result();
+						$sub_query->free_result();
 						$s['in']=$in;
 					}
 				}
@@ -318,7 +318,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 						$sub_query=$this->query($sub_sql);
 						$foreign_ids=array();
 						foreach ($sub_query->result_array() as $row) {$foreign_ids[$row['id']]=$row;}
-						$query->free_result();
+						$sub_query->free_result();
 						if ($foreign_ids) {
 							// search if any in relation table
 							$sub_sql="SELECT * FROM `$rel_table` WHERE ";
@@ -326,7 +326,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 							$sub_sql=substr($sub_sql,0,strlen($sub_sql)-3);
 							$sub_query=$this->query($sub_sql);
 							foreach ($sub_query->result_array() as $row) {array_push($in,$row[$this_key]);}
-							$query->free_result();
+							$sub_query->free_result();
 						}
 						$s['in']=$in;
 					}
