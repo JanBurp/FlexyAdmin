@@ -77,10 +77,14 @@ class Grid Extends CI_Model {
 	}
 
 	function set_order($order='id') {
-		$post=get_suffix($order,' ');
-		if ($post=='DESC') $order='_'.$order;
-		$order=str_replace(array(' DESC',' ASC'),'',$order);
-		$this->order=$order;
+		$orderArr=explode(',',$order);
+		foreach ($orderArr as $key=>$order) {
+			$post=get_suffix($order,' ');
+			if ($post=='DESC') $order='_'.$order;
+			$order=str_replace(array(' DESC',' ASC'),'',$order);
+			$orderArr[$key]=trim($order);
+		}
+		$this->order=$orderArr;
 	}
 	
 	function set_search($search='') {
@@ -158,8 +162,8 @@ class Grid Extends CI_Model {
 		$table["heading"]["class"]="$tableClass $extraClass";
 		foreach($this->headings as $name=>$heading) {
 			$orderClass='';
-			if ($this->order==$name) $orderClass=' headerSortDown';
-			if ($this->order=='_'.$name) $orderClass=' headerSortUp';
+			if ($this->order[0]==$name) $orderClass=' headerSortDown';
+			if ($this->order[0]=='_'.$name) $orderClass=' headerSortUp';
 			if ($name=='id') $orderClass.=' edit';
 			$table["heading"]["row"][]=array(	"class"	=>"$tableClass $name ".get_prefix($name)." $extraClass ".alternator("oddcol","evencol").$orderClass, "cell"	=> $heading );
 		}

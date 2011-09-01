@@ -122,15 +122,18 @@ class Show extends AdminController {
 							$this->db->order_as_tree();
 						}
 						elseif ($order) {
-							if (substr($order,0,1)=='_') $order=substr($order,1).' DESC';
-							$orderPre=get_prefix($order);
-							if ($order!='') {
-								if ($orderPre=='id')
-									$this->db->order_by_foreign($order);
-								elseif ($orderPre=='rel')
-									$this->db->order_by_many($order);
-								else
-									$this->db->order_by($order);
+							$orderArr=explode(':',$order);
+							foreach ($orderArr as $key => $ord) {
+								if (substr($ord,0,1)=='_') $ord=substr($ord,1).' DESC';
+								$ordPre=get_prefix($ord);
+								if ($ord!='') {
+									if ($ordPre=='id' and $ord!='id')
+										$this->db->order_by_foreign($ord);
+									elseif ($ordPre=='rel')
+										$this->db->order_by_many($ord);
+									else
+										$this->db->order_by($ord);
+								}
 							}
 						}
 						
