@@ -37,7 +37,6 @@
  		$this->hasData=false;
  		$this->data=array();
 		$this->keys=array(
-			'cfg_'.$this->config->item('CFG_configurations')	=> array( 'fields' => '`b_logout_to_site`,`b_query_urls`' ),
 			'cfg_'.$this->config->item('CFG_table')					=> array( 'key' => $this->config->item('CFG_table_name'), 'fields' => '`id`,`table`,`str_order_by`' ),
 			'cfg_'.$this->config->item('CFG_field') 					=> array( 'key' => $this->config->item('CFG_field_name') ),
 			'cfg_'.$this->config->item('CFG_media_info')			=> array( 'key' => array('path','fields_media_fields') ),

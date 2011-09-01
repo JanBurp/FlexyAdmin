@@ -3,18 +3,6 @@
 
 /*
 |--------------------------------------------------------------------------
-| Main view
-|--------------------------------------------------------------------------
-|
-| The name of the view that the frontend controller will load if no view was given
-|
-*/
-
-$config['main_view']='site';
-
-
-/*
-|--------------------------------------------------------------------------
 | Languages
 |--------------------------------------------------------------------------
 |
@@ -37,6 +25,45 @@ $config['languages'] = array('nl');
 |
 */
 $config['language']	= "nl";
+
+
+/*
+|--------------------------------------------------------------------------
+| Main view
+|--------------------------------------------------------------------------
+|
+| The name of the view that the frontend controller will load if no view was given
+|
+*/
+
+$config['main_view']='site';
+
+
+/*
+|--------------------------------------------------------------------------
+| Logout to site
+|--------------------------------------------------------------------------
+|
+| If true, after logout the CMS redirects to the site
+|
+*/
+
+$config['logout_to_site']=FALSE;
+
+
+/*
+|--------------------------------------------------------------------------
+| Query URL's
+|--------------------------------------------------------------------------
+|
+| If true, $_GET will be preserved in the frontend controller, so url queries are possible, and the use of $this->input->get()
+|
+*/
+
+$config['query_urls']=FALSE;
+
+
+
 
 
 

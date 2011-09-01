@@ -81,7 +81,7 @@ class MY_Controller extends CI_Controller {
 	}
 
 	function _init_flexy_admin($isAdmin=false) {
-		// $this->output->enable_profiler(TRUE);
+		$this->output->enable_profiler(TRUE);
 		$this->load->model('cfg');
 		$this->cfg->set_if_admin($isAdmin);
 	}
@@ -156,7 +156,7 @@ class FrontEndController extends MY_Controller {
 			* See http://www.askaboutphp.com/tutorials/58/codeigniter-mixing-segment-based-url-with-querystrings.html
 			* For this to work, config.php: $config['uri_protocol']	= "PATH_INFO";
 			*/
-		if ($this->cfg->get('CFG_configurations','b_query_urls'))	parse_str($_SERVER['QUERY_STRING'],$_GET);
+		if ($this->config->item('query_urls'))	parse_str($_SERVER['QUERY_STRING'],$_GET);
 
 		/**
 		 * Init global site data
