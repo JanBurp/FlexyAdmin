@@ -31,6 +31,8 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	var $orderByForeign;
 	var $orderByMany;
 	var $ar_dont_select;
+	var $ar_last_query=FALSE;
+	var $ar_last_count=FALSE;
 	var $selectFirst;
 	var	$selectFirsts;
 
@@ -620,18 +622,23 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			else
 				$this->where($table.'.id','-1'); // can't be found!
 		}
+
+
+		// Stop caching the query
+		// $this->stop_cache();
 		
 		/**
 		 * get the query
 		 */
-		
 		if ($limit>=1)
 			$query=$this->get($table,$limit,$offset);
 		else
 			$query=$this->get($table);
-		// trace_('#show#'.$this->last_query());
+		$this->ar_last_query=$this->last_query();
+		// trace_('#show#'.$this->ar_last_query);
 		return $query;
 	}
+
 	
 	function get_parent_uri($table,$uri="",$field='') {
 		if (!empty($uri))	$id=$this->get_field_where($table,"id","uri",$uri);
@@ -912,6 +919,9 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			$result=$this->_add_many_options($result,$manyTables);
 		}
 		log_("info","[DB+] data ready");
+		
+		$this->ar_last_count=count($result);
+		
 		$this->reset();
 		return $result;
 	}
@@ -963,6 +973,25 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		$result=each($this->eachResult);
 		if ($result===FALSE) $this->reset();
 		return $result;
+	}
+
+	function last_num_rows() {
+		return $this->ar_last_count;
+	}
+
+	function last_num_rows_no_limit() {
+		if ( ! $this->ar_last_query) {
+			return FALSE;
+		}
+		$sql=$this->ar_last_query;
+
+		$sql=preg_replace('/SELECT(.*)?FROM/si','SELECT `id` FROM',$sql);
+		$sql=preg_replace('/ORDER BY(.*)?/si','',$sql);
+
+		$query=$this->query($sql);
+		$num_rows=$query->num_rows();
+		$query->free_result();
+		return $num_rows;
 	}
 
 
