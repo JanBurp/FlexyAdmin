@@ -150,6 +150,7 @@ class Plugin_autolinks extends Plugin_ {
 			$sql="SELECT id FROM `res_tags` WHERE `uri`='$uri' OR `uri` LIKE '%/$uri'";
 			$query=$this->db->query($sql);
 			$areThere=$query->result_array(); //$this->db->get_results('res_tags');
+			$query->free_result();
 			$lastq=$this->db->last_query();
 			if ($areThere) {
 				foreach ($areThere as $row) {

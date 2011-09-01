@@ -428,6 +428,7 @@ class Form Extends CI_Model {
 					$this->db->where(PRIMARY_KEY,$id);
 					$query=$this->db->get($table);
 					$staticData=$query->row_array();
+					$query->free_result();
 					foreach($staticData as $name=>$value) {
 						if (!isset($value))
 							$set[$name]='';

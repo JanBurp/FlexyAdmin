@@ -23,6 +23,7 @@
 			$this->db->order_by("tme_login_time DESC");
 			$query=$this->db->get($this->config->item('LOG_table_prefix')."_".$this->config->item('LOG_login'));
 			$row=$query->row();
+			$query->free_result();
 			if (!empty($row)) {
 				$log_id=$row->id;
 				$changedTables=$row->str_changed_tables;

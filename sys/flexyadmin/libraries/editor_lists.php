@@ -93,6 +93,7 @@ class Editor_lists {
 					$name=addslashes($row['str_title']);
 					$data[$name]=array("url"=>$row["url_url"],"name"=>$name);
 				}
+				$query->free_result();
 			}
 			
 		}
@@ -122,6 +123,7 @@ class Editor_lists {
 					$subFiles=not_filter_by($subFiles,"_");
 					$files=$files + $subFiles;
 				}
+				$query->free_result();
 				ignorecase_ksort($files);
 			}
 			$data=$data + $files;

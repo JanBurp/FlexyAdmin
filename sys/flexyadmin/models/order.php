@@ -140,6 +140,7 @@ class order extends CI_Model {
 			if ($n==$new) $n++;									// skip new set order
 			$this->db->update($table, array($this->order => $n++ ));
 		}
+		$query->free_result();
 		return $new;
 	}
 
