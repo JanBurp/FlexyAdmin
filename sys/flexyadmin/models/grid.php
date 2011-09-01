@@ -153,7 +153,7 @@ class Grid Extends CI_Model {
 		}
 
 		$table["class"]="$tableClass $extraClass";
-		$table['order']=$this->order;
+		$table['order']=implode(':',$this->order);
 		$table['search']=$this->search;
 
 		$table["caption"]["class"]="$tableClass $extraClass";
