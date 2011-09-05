@@ -363,10 +363,12 @@ class Show extends AdminController {
 					if (!empty($info)) $redirectUri.='/info/'.$info;
 					
 					$resultId=$form->update($table,$restrictedToUser);
-
 					$newData=$form->get_data();
-
 					$this->_after_update($table,$resultId,$data,$newData);
+					
+					// flush cache files
+					delete_all_cache();
+					
 					if (is_string($resultId)) {
 						$this->set_message(langp("update_error",$table,$resultId));
 						redirect($redirectUri);

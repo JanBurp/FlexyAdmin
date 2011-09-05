@@ -181,6 +181,8 @@ class Edit extends AdminController {
 				}
 			}
 		}
+		delete_all_cache();
+		
 		$redirectUri=api_uri('API_view_grid',$table);
 		if (!empty($info)) $redirectUri.='/info/'.$info;
 		redirect($redirectUri);
