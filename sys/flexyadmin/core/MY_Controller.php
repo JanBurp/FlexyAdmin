@@ -81,7 +81,7 @@ class MY_Controller extends CI_Controller {
 	}
 
 	function _init_flexy_admin($isAdmin=false) {
-		$this->output->enable_profiler(TRUE);
+		// $this->output->enable_profiler(TRUE);
 		$this->load->model('cfg');
 		$this->cfg->set_if_admin($isAdmin);
 	}
@@ -166,10 +166,10 @@ class FrontEndController extends MY_Controller {
 		/**
 		 * Add this page to statistics, if statistisc table exists
 		 */
-		if ($this->db->table_exists($this->config->item('LOG_table_prefix')."_".$this->config->item('LOG_stats'))) {
-			$this->load->library("stats");
-			$this->stats->add_uri($this->uri->get());
-		}
+		// if ($this->db->table_exists($this->config->item('LOG_table_prefix')."_".$this->config->item('LOG_stats'))) {
+		// 	$this->load->library("stats");
+		// 	$this->stats->add_uri($this->uri->get());
+		// }
 
 		/**
 		 * Load standard Module Class

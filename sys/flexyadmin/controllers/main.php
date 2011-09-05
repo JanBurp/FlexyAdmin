@@ -1,4 +1,4 @@
 <?
-require_once(APPPATH."controllers/admin/MY_Controller.php");
+require_once(APPPATH."core/MY_Controller.php");
 include("site/controller.php");
 ?>
