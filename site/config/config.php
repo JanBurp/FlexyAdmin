@@ -51,6 +51,7 @@ $config['main_view']='site';
 $config['logout_to_site']=FALSE;
 
 
+
 /*
 |--------------------------------------------------------------------------
 | Query URL's
@@ -63,6 +64,17 @@ $config['logout_to_site']=FALSE;
 $config['query_urls']=FALSE;
 
 
+
+/*
+|--------------------------------------------------------------------------
+| Add to Statistics
+|--------------------------------------------------------------------------
+|
+| If true, each page is added to log_stats
+|
+*/
+
+$config['add_to_statistics']=TRUE;
 
 
 

@@ -96,6 +96,21 @@ class Main extends FrontEndController {
 		 * Show home view
 		 */
 		$this->view();
+		
+		
+		/***********************************************
+		 * Caching
+		 * See: http://codeigniter.com/user_guide/general/caching.html
+		 * and: http://stevenbenner.com/2010/12/caching-with-codeigniter-zen-headaches-and-performance
+		 * Chache directory: site/cache must be writable.
+		 * After each change in admin the whole cache is flushed. So don't worry about that.
+		 * You have to flush the page yourself if the page is (partly) dynamic (for example comments) etc. with the cache_helper function: delete_cache( $this->uri->uri_string() );
+		 * Or decide if the page needs to be cached or not.
+		 */
+
+		// if (!isset($item['str_module']) or (!in_array($item['str_module'],array('contact_form','contact_formulier'))) )
+		// 	$this->output->cache(1440); // cache for 24 hours (1440 minutes)
+		
 	}
 
 

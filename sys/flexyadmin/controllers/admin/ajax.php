@@ -82,6 +82,7 @@ class Ajax extends BasicController {
 			$result='ajax_error_wrong_parameters';
 		}
 		$this->_result($result);
+		delete_all_cache();
 	}
 
 /**
@@ -101,6 +102,7 @@ class Ajax extends BasicController {
 		 			$this->db->where(PRIMARY_KEY,$id);
 		 			$this->db->update($table);
 					$this->_after_update($table,$id,$oldData,$newData);
+					delete_all_cache();
 				}
 				else $result='ajax_error_no_rights';		 		
 	 		}
