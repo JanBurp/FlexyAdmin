@@ -357,6 +357,8 @@ class Plugin_automenu extends Plugin_ {
 		ksort($this->newMenu);
 
 		// put in db
+		$this->db->trans_start();
+		
 		$this->db->truncate($this->resultMenu);
 		$fields=$this->db->list_fields($this->resultMenu);
 		$lang='';
@@ -375,6 +377,11 @@ class Plugin_automenu extends Plugin_ {
 				}
 			}
 			$this->db->insert($this->resultMenu);
+		}
+		
+		$this->db->trans_complete();
+		if ($this->db->trans_status() === FALSE) {
+			trace_('Sorry, transaction error');
 		}
 
 		// update linklist etc
