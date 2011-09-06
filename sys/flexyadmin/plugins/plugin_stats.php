@@ -402,6 +402,10 @@ class Plugin_stats extends Plugin_ {
 	}
 
 
+	function _get_show_type() {
+		return 'grid';
+	}
+
 
 	
 }
