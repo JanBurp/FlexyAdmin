@@ -192,7 +192,7 @@ function reformXmlArrayKey($a,$rKey) {
 		if (is_array($c)) {
 			foreach ($a as $key => $value) {
 				$newKey=$value[$rKey];
-				if (!has_alpha($newKey))
+				if (is_string($newKey) and !has_alpha($newKey))
 					$r[$value[$rKey]] = $value;
 				else
 					$r[] = $value;
