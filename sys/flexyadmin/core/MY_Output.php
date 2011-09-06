@@ -15,6 +15,24 @@ class MY_Output extends CI_OUTPUT {
 		}
 	}
 
+	function _can_cache() {
+		return (empty($_POST));
+	}
+
+
+	function _display_cache(&$CFG, &$URI) {
+		if ($this->_can_cache())
+			return parent::_display_cache($CFG,$URI);
+		return FALSE;
+	}
+	
+	function cache($time) {
+		if ($this->_can_cache())
+			return parent::cache($time);
+		return $this;
+	}
+	
+
 
 }
 

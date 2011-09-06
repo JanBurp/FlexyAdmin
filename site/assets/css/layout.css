@@ -3,10 +3,9 @@
 body {background:#F4FFE0;}
 
 #container {
+	margin:0px auto;
 	width:760px;
 	min-height:600px;
-	left:50%;
-	margin-left:380px;
 	background-color:#FFF;
 }
 
@@ -26,13 +25,28 @@ body {background:#F4FFE0;}
 	height:30px;
 	background-color:#DDEEAA;
 	border-bottom:solid 1px #CCDD99;
+	margin-bottom:20px;
 }
 
 #content {
-	float:left;
-	margin-top:20px;
-	padding:10px;
+	padding:20px 10px;
+	height:100%;
 }
+
+
+
+/* Usefull for testing with caching */
+#benchmark {
+/*	display:none;*/
+	position:fixed;
+	bottom:0px; left:0px;
+	background-color:#EEE;
+	padding:2px;
+	border:solid 1px #CCC;
+}
+#benchmark * {color:#999;font-size:8px;margin:0px;padding:0px;}
+
+
 
 /* Menu ********************************************/
 
