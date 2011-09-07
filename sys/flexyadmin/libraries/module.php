@@ -16,6 +16,13 @@ class Module {
 		$this->config=$this->CI->config->item($name);
 	}
 
+	function set_config($config,$merge=TRUE) {
+		if ($merge)
+			$this->config=array_merge($this->config,$config);
+		else
+			$this->config=$config;
+	}
+
 	// Module is the standard method
 	function module($item) {
 		return '<h1>Module</h1>';

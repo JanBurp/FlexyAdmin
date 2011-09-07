@@ -57,7 +57,10 @@ class Comments extends Module {
 		$formData=array();
 		$formData=$this->_setform_fields();
 		// Set id
+		$suffix='__'.$id;
 		$formData[$this->config['key_id']]=array('type'=>'hidden','value'=>$id);
+		$formData[$this->config['key_id'].$suffix]=$formData[$this->config['key_id']];
+		unset($formData[$this->config['key_id']]);
 		$formData[$this->config['field_date']]['class']='hidden';
 		// extra textarea to fake spammers
 		$formData['spambody']=array('label'=>'','type'=>'textarea','value'=>'', 'class'=>'hidden');  
@@ -69,10 +72,16 @@ class Comments extends Module {
 		$form->set_buttons(array('submit'=>array("submit"=>"submit","value"=>$this->get_text('submit'))));
 	
 		// Validate form, if succes, add comment
-		if ($form->validation()) {
+
+		$belongs_to_this=($id== $this->CI->input->post($this->config['key_id'].$suffix) );
+
+		if ($form->validation() and $belongs_to_this) {
 			$data=$form->get_data();
-			$data[$this->config['field_date']]=date(DATE_ISO8601);
+			$data[$this->config['key_id']]=$data[$this->config['key_id'].$suffix];
+			unset($data[$this->config['key_id'].$suffix]);
 			
+			$data[$this->config['field_date']]=date(DATE_ISO8601);
+
 			// Check for spam
 			$spam=FALSE;
 			// Check if a robot has filled the empty textarea 'body' (which is hidden)
@@ -81,7 +90,7 @@ class Comments extends Module {
 			if (!$spam and $this->_check_if_double($data,$this->config['table']))	$spam=TRUE;
 			// Check the text with FlexyAdmins spam checker
 			if (!$spam and $this->_check_if_spamtext($data))	$spam=TRUE;
-			
+
 			if ($spam) {
 				$errorHtml.=$this->get_text('spam');
 			}
@@ -91,7 +100,7 @@ class Comments extends Module {
 				$this->CI->db->insert($this->config['table']);
 				// Clean form
 				$form->set_data($formData,$this->get_text('title'));
-				
+
 				// send email that a comment has been placed to the sites owner
 				if ($this->config['mail_owner'] or $this->config['mail_others']) $this->CI->load->library('email');
 
@@ -118,12 +127,20 @@ class Comments extends Module {
 						$this->CI->email->clear();
 					}
 				}
-				
 			}
 		}
 
 		// Render form
-		$errorHtml.=validation_errors('<div class="error">', '</div>');
+		if ($belongs_to_this)
+			$errorHtml.=validation_errors('<div class="error">', '</div>');
+		else {
+			// clean values for others
+			foreach ($formData as $key => $value) {
+				$pre=get_prefix($key);
+				if ($pre!='id')	$formData[$key]['value']='';
+			}
+			$form->set_data($formData);
+		}
 		$formHtml=$form->render();
 	
 		// Get comments
