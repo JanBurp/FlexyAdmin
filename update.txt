@@ -1,10 +1,12 @@
-UPDATE to 1207
+UPDATE to 1230
 ==============
 
-- This is a major update:
+This is a major update:
 	- the latest CodeIgniter 2.0.3
 	- new Authentication systen: Ion Auth
-- MySQL update 1125 & 1190
+
+- Remember current usernames and password !!
+- Run MySQL updates 1125 & 1190 & 1230
 - Replace index.php
 - Replace current sys map with new sys map
 

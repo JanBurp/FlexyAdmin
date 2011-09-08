@@ -1,4 +1,4 @@
-> 1207
+> 1230
 
 UPDATE:
 - CodeIgniter 2.0.3
@@ -7,26 +7,29 @@ UPDATE:
 - tinyMCE 3.4.3.2 (jQuery)
 
 NEW:
-- Nicer dropdown styling
-- Big CSS controls in other browsers (FF/Webkit/Opera/IE9,8,7 IE6 is now depricated)
-- New authentication sysem Ion Auth:
+- Renamed site/views/home.php to site.php (can now be set in config.php)
+- Language settings now in config.php
+- New authentication system Ion Auth:
 	- Simpler user groups
 	- Safer (hashed) passwords
 	- new passwords: double check
 	- Ready for some future authentication handling
 	- Possible to use in FrontEnd
 - New way of implementing modules: by a special Libary called Module. Also helpers and modules can be loaded from site
-	- deleting map: site/modules
+	- deleted map: site/modules
 	- adding map: site/models, site/helpers and site/libraries
-	- changing existing moduleds
-- changes to controller/home (for models, adding class, adding methods for language settings and redirect)
+	- changing existing modules (also added config files for some)
+	- also possible to load modules direct from the uri
+- changes to controller/site (for models, adding class, adding methods for language settings and redirect)
+- Nicer dropdown styling
+- Big CSS controls in other browsers (FF/Webkit/Opera/IE9,8,7 IE6 is now depricated)
 - Ordering and Searching in foreign and many data from Grid view
 - Better spamchecker
 - MY_URI: get_next_()  and get_prev_uri() now possible to get full uri
 - Drag n Drop selecting images, now also with a click
 - Added font files to safe_asset to site/assets/css
-- MY_Pagination, default configs
-- New plugin: add_relation_table
+- MY_Pagination, default configs and automatic settings
+- New plugins: add_relation_table, create_indexes
 - Video_helper
 - Safer Plugins
 - Longer session times
@@ -320,7 +323,7 @@ NEW:
 -----
 
 - updated to tinyMCE 3.2.8
-- better MY_string_helper get_postfix()
+- better MY_string_helper get_suffix()
 - bug in showing wide/big editors (sinces r720)
 - bug in importing SQL (since removing license key from db)
 

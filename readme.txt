@@ -44,7 +44,9 @@ update.txt													- how to update FlexyAdmin to the latest version
 /site/config/database.php						- online database settings
 /site/config/database_local.php			- local database settings, you don't need to upload this
 /site/config/flexyadmin_config.php	- here you can override settings for flexyadmin (use only if you know what you're doing)
-/site/models/ 											- here you can put frontend modules, which are special models
-/site/plugins/											- here you can put admin plugins (backend)
-/site/views/												- folder with all your views, your html/php code!
-/site/views/home.php								- this is you core site
+/site/helpers/ 											- here you can put your own CodeIgniter helpers
+/site/models/ 											- here you can put your own CodeIgniter models
+/site/libraries/										- here you can put your own CodeIgniter libraries and frontend modules (which are special libraries)
+/site/plugins/											- here you can put admin plugins (models for the backend)
+/site/views/												- folder with all your views, where the html sits with some php
+/site/views/site.php								- this is you main view
