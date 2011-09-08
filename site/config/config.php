@@ -42,6 +42,22 @@ $config['main_view']='site';
 
 /*
 |--------------------------------------------------------------------------
+| Uri as modules
+|--------------------------------------------------------------------------
+|
+| If TRUE the controller loads modules (libraries) instead of collecting menu and pages from the database
+| Modules are special libraries (site/libraries). Modules whith names starting with an underscore '_' can't be loaded this way.
+| Example: uri= app/test/news/4 Will load site/libraries/app.php and will call its method show() with arguments 'news' and '4'.
+|
+*/
+
+$config['uri_as_modules']=FALSE;
+// $config['uri_as_modules']=TRUE;
+
+
+
+/*
+|--------------------------------------------------------------------------
 | Logout to site
 |--------------------------------------------------------------------------
 |
