@@ -57,13 +57,13 @@ class Plugin_safe_assets extends Plugin_ {
 		}
 		// set static maps
 		$specialMaps=array(	'bulk_upload'						=> $all,
-												'site/stats'						=> "xml",
-												$assets									=> "css|img|js",
-												$assets.'_thumbcache'	=> $images,
-												$assets.'lists'				=> "js",
-												$assets.'css'					=> "css|htc|php|eot|svg|ttf|woff|otf",
-												$assets.'img'					=> $images.'|'.$flash.'|ico', 
-												$assets.'js'						=> "js|css|html|swf|".$images, 
+												'site/stats'						=> 'xml',
+												$assets									=> 'css|img|js',
+												$assets.'_thumbcache'		=> $images,
+												$assets.'lists'					=> 'js',
+												$assets.'css'						=> 'css|htc|php|eot|svg|ttf|woff|otf',
+												$assets.'img'						=> $images.'|'.$flash.'|ico', 
+												$assets.'js'						=> 'js|css|html|swf|'.$images, 
 												);
 		// set user maps
 		$maps=read_map($assets,'dir');
