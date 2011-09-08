@@ -7,14 +7,14 @@
 
 class Contact_formulier extends Module {
 
-	function __construct() {
+	public function __construct() {
 		parent::__construct();
 		$this->CI->load->model('form');
 		$this->CI->load->model('getform');
 		$this->CI->load->library('email');
 	}
 
-	function module($item) {
+	public function index($item) {
 		
 		$content='';
 		

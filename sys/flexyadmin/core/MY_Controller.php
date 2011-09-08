@@ -185,6 +185,35 @@ class FrontEndController extends MY_Controller {
 	 */
 	function _init_globals() {
 		$this->site=array();
+
+		/**
+		 * Set global site info from tbl_site (if it doesn't exist, put some standard info)
+		 */
+		if ($this->db->table_exists("tbl_site")) {
+			// $fields = $this->db->list_fields("tbl_site");
+			$stdFields=array("str_title","str_author","url_url","email_email","stx_description","stx_keywords");
+			$query=$this->db->get("tbl_site");
+			$this->site=$query->row_array();
+			$query->free_result();
+			// remove the unneeded
+			unset($this->site['id']);
+			// rename standard fields
+			foreach ($stdFields as $f) {
+				if (isset($this->site[$f])) {
+					$this->site[remove_prefix($f)]=$this->site[$f];
+					unset($this->site[$f]);
+				}
+			}
+		}
+		else {
+			$this->site["title"]="title";
+			$this->site["author"]="author of site";
+			$this->site["url"]="http://www.flexyadmin.com/";
+			$this->site["email"]="email of site administrator";
+			$this->site["description"]="Put some site description here,";
+			$this->site["keywords"]="site, keywords";
+		}
+
 		/**
 		 * Set Asset folders
 		 */
@@ -197,58 +226,32 @@ class FrontEndController extends MY_Controller {
 		 */
 		$this->site['languages']=$this->config->item('languages');
 
-
 		/**
-		 * Set global site info from tbl_site (if it doesn't exist, put some standard info)
+		 * Set empty content
 		 */
-		if ($this->db->table_exists("tbl_site")) {
-			$fields = $this->db->list_fields("tbl_site");
-			$stdFields=array("str_title","str_author","url_url","email_email","stx_description","stx_keywords");
-			$query=$this->db->get("tbl_site");
-			$row=$query->row_array();
-			$query->free_result();
-			// first standard fields
-			foreach ($stdFields as $f) {
-				if (isset($row[$f])) {
-					$this->site[remove_prefix($f)]=$row[$f];
-					unset($fields[$f]);
-				}
-			}
-			// remaining fields, if any
-			foreach ($fields as $f) {
-					$this->site[$f]=$row[$f];
-			}
-			// remove the unneeded
-			unset($this->site['id']);
-		}
-		else {
-			$this->site["title"]="title";
-			$this->site["author"]="author of site";
-			$this->site["url"]="http://www.delaatstepagina.nl/";
-			$this->site["email"]="email of site administrator";
-			$this->site["description"]="Put some site description here,";
-			$this->site["keywords"]="site, keywords";
-		}
-		/**
-		 * Set home uri (top from tbl_menu)
-		 */
-		$menuTable=get_menu_table();
-		if (!empty($menuTable)) {
-			if ($this->db->has_field($menuTable,"self_parent")) $this->db->order_as_tree();
-			if ($this->db->has_field($menuTable,"uri")) {
-				$this->db->select("uri");
-				$top=$this->db->get_row($menuTable);
-				$this->uri->set_home($top["uri"]);
-			}
-			else {
-				$this->uri->set_home('');
-			}
-		}
-		/**
-		 * Set empty content and class
-		 */
+		$this->site['menu']='';
 		$this->site['content']='';
 		$this->site['class']='';
+
+		
+		/**
+		 * Set home uri (top from tbl_menu) if content comes from database
+		 */
+		if ( ! $this->config->item('uri_as_modules')) {
+			$menuTable=get_menu_table();
+			if ( ! empty($menuTable)) {
+				if ($this->db->has_field($menuTable,'self_parent')) $this->db->order_as_tree();
+				if ($this->db->has_field($menuTable,'uri')) {
+					$this->db->select('uri');
+					$top=$this->db->get_row($menuTable);
+					$this->uri->set_home($top['uri']);
+				}
+				else {
+					$this->uri->set_home('');
+				}
+			}
+		}
+		
 	}
 
 	function add_keywords($words) {

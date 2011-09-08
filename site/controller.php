@@ -19,7 +19,7 @@
 
 class Main extends FrontEndController {
 
-	function __construct() {
+	public function __construct() {
 		parent::__construct();
 	}
 
@@ -30,7 +30,7 @@ class Main extends FrontEndController {
 	 * This is called everytime a page of you're site is loaded.
 	 * Here you have to decide according to the given uri what is to be showed and what models/views are loaded.
 	 */
-	function index() {
+	public function index() {
 		
 		/***********************************************
 		 * Set Language for localisation (set possible languages at the start of the controller, near line 30)
@@ -40,51 +40,69 @@ class Main extends FrontEndController {
 
 
 		/***********************************************
-		 * If you need pagination for something, uncomment these lines and just set $config['auto']=TRUE in the pagination config. You don't need to set $config['base_url'] and $config['uri_segment']
+		 * If you need pagination for something, uncomment these lines and just set $config['auto']=TRUE in the pagination config.
+		 * You don't need to set $config['base_url'] and $config['uri_segment'], these are set automatic. uripart 'offset' is used standard.
 		 */
 		// $this->load->library('pagination');
 		// $this->uri->remove_pagination();
 
 
 		/***********************************************
-		 * Get current uri and give it to menu and add it to class
+		 * Get current uri and add it to class
 		 */
 		$this->site['uri']=$this->uri->get();
-		$this->menu->set_current($this->site['uri']);
 		$this->add_class(str_replace('/','__',$this->site['uri']));
 
 
-		/***********************************************
-		 * Create menu from standard menu table (tbl_menu or res_menu_result if exists)
-		 */
-		$this->menu->set_menu_from_table();
-		$this->site['menu']=$this->menu->render();
+		if ($this->config->item('uri_as_modules')) {
+			
+			/***********************************************
+			 * Load and call module (library) according to uri: file/method/args
+			 */
+			$uri=$this->uri->segment_array();
+			// $module='app';
+			// $method='index';
+			// $args=NULL;
+			// if (isset($uri[1])) $module=$uri[1];
+			// if (isset($uri[2])) $method=$uri[2];
+			// if (isset($uri[3])) $args=array_slice($uri,2);
+			$this->_call_library($uri);
+			
+		}
+		else {
 
-		// Example of a simple submenu, show $submenu somewhere in views/home.php
-		//
-		// $sub_uri$this->uri->get(1);
-		// if ($sub_uri) {
-		// 	$this->site["submenu"]=$this->menu->render_branch($sub_uri);
-		// }
+			/***********************************************
+			 * Create menu from menu table
+			 */
+			$this->menu->set_current($this->site['uri']);
+			$this->menu->set_menu_from_table();
+			$this->site['menu']=$this->menu->render();
+
+			// Example of a simple submenu, show $submenu somewhere in views/site.php
+			//
+			// $sub_uri$this->uri->get(1);
+			// if ($sub_uri) {
+			// 	$this->site["submenu"]=$this->menu->render_branch($sub_uri);
+			// }
 
 
-		/***********************************************
-		 * Get current page item from menu
-		 */
-		$item=$this->menu->get_item();
+			/***********************************************
+			 * Get current page item from menu
+			 */
+			$item=$this->menu->get_item();
 
 
-		/***********************************************
-		 * Redirect to a page down in the menu tree, if current page is empty.
-		 * Comment this if not neeeded
-		 */
-		// $this->_redirect($item);
+			/***********************************************
+			 * Redirect to a page down in the menu tree, if current page is empty.
+			 * Comment this if not neeeded
+			 */
+			// $this->_redirect($item);
 
-
-		/***********************************************
-		 * If item exists call _page (which calls modules and loads views if set)
-		 */
-		if ($item) $item=$this->_page($item);
+			/***********************************************
+			 * If item exists call _page (which calls modules and loads views if set)
+			 */
+			if ($item) $item=$this->_page($item);
+		}
 
 
 		/**********************************************
@@ -96,7 +114,7 @@ class Main extends FrontEndController {
 		 * Show home view
 		 */
 		$this->view();
-		
+
 		
 		/***********************************************
 		 * Caching
@@ -104,8 +122,8 @@ class Main extends FrontEndController {
 		 * and: http://stevenbenner.com/2010/12/caching-with-codeigniter-zen-headaches-and-performance
 		 * Chache directory: site/cache must be writable.
 		 * After each change in admin the whole cache is flushed. So don't worry about that.
-		 * You have to flush the page yourself if the page is (partly) dynamic (for example comments) etc. with the cache_helper function: delete_cache( $this->uri->uri_string() );
-		 * Or decide if the page needs to be cached or not (if certain modules are present)
+		 * You have to flush the page yourself if the page is (partly) dynamic with the cache_helper function: delete_cache( $this->uri->uri_string() );
+		 * Or decide if the page needs to be cached or not.
 		 */
 
 		// $this->output->cache(1440); // cache for 24 hours (1440 minutes)
@@ -123,7 +141,7 @@ class Main extends FrontEndController {
 	 * It handles what to do with the item and shows the content.
 	 */
 	
-	function _page($item) {
+	private function _page($item) {
 		// Process the text fields (make safe email links, put classes in p/img/h tags)
 		foreach($item as $f=>$v) {if (get_prefix($f)=="txt") $item[$f]=$this->content->render($v);}
 
@@ -152,7 +170,7 @@ class Main extends FrontEndController {
 	 * It loads the module (a special CI library) and calls it.
 	 * If it has a return value, check if it is $item of just a string.
 	 */
-	function _module($item) {
+	private function _module($item) {
 		$modules=$item['str_module'];
 		// Loop trough all possible modules, load them, call them, and process return value
 		$modules=explode('|',$modules);
@@ -161,10 +179,9 @@ class Main extends FrontEndController {
 			// If module exists (a library): load it, call the given or standard method, and add modelname to class
 			$library=remove_suffix($module,'.');
 			$method=get_suffix($library,'.');
-			if ($method==$library) $method='module';
-			if (file_exists('site/libraries/'.$library.'.php')) {
-				$this->load->library($library);
-				$return=$this->$library->$method($item);
+			if ($method==$library) $method='index';
+			$return=$this->_call_library($library,$method,$item);
+			if ($return) {
 				if (is_array($return))
 					$item=$return;
 				else
@@ -175,7 +192,26 @@ class Main extends FrontEndController {
 		return $item;
 	}
 
-
+	/*
+	 * function _call_library()
+	 * 
+	 * This functions loads the given library and calls it.
+	 * Used for loading and calling modules
+	 */
+	private function _call_library($library,$method='index',$args=NULL) {
+		if (is_array($library)) {
+			$args=array_slice($library,2);
+			$method=el(2,$library,'index');
+			$library=el(1,$library,'app');
+			// prevent loading hidden modules
+			if (substr($library,0,1)=='_') return FALSE;
+		}
+		if (file_exists('site/libraries/'.$library.'.php')) {
+			$this->load->library($library);
+			return $this->$library->$method($args);
+		}
+		return FALSE;
+	}
 
 
 
@@ -184,7 +220,7 @@ class Main extends FrontEndController {
 	 * 
 	 * Sets the current prefered language of the visitor. If you use other methods (ie: query string or sessions), change it accordingly.
 	 */
-	function _set_language() {
+	private function _set_language() {
 		$lang='';
 		// Is language set by the first part of the URI?
 		if ( ! $this->_is_possible_language($lang) ) $lang=$this->uri->get(1);
@@ -200,7 +236,7 @@ class Main extends FrontEndController {
 	}
 	
 	// Test if language is set to a possible language (and not empty)
-	function _is_possible_language($lang) {
+	private function _is_possible_language($lang) {
 		return (in_array($lang,$this->site['languages']));
 	}
 
@@ -211,7 +247,7 @@ class Main extends FrontEndController {
 	 * 
 	 * Redirect to a page down in the menu tree, if current page is empty
 	 */
-	function _redirect($item) {
+	private function _redirect($item) {
 		// Use you're own test if you need to.
 		if (empty($item['txt_text'])) {
 			$this->db->select('uri');

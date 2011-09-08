@@ -2,13 +2,13 @@
 
 class Contact_form extends Module {
 
-	function __construct() {
+	public function __construct() {
 		parent::__construct();
 		$this->CI->load->model('form');
 		$this->CI->load->library('email');
 	}
 
-	function module($item, $submit='Verstuur', $sendText='<p>Bedankt voor uw mail.</p>') {
+	public function index($item, $submit='Verstuur', $sendText='<p>Bedankt voor uw mail.</p>') {
 		
 		$content='';
 		
