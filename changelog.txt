@@ -1,10 +1,10 @@
-> 1230
+> 1245
 
 UPDATE:
 - CodeIgniter 2.0.3
-- jQuery 1.6.2
+- jQuery 1.6.3
 - jQuery UI 1.8.16
-- tinyMCE 3.4.3.2 (jQuery)
+- tinyMCE 3.4.5 (jQuery)
 
 NEW:
 - Renamed site/views/home.php to site.php (can now be set in config.php)
