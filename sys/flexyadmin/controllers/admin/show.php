@@ -198,7 +198,8 @@ class Show extends AdminController {
 
 							if ($pagination) {
 								$total_rows=$this->db->last_num_rows_no_limit();
-								$pagination=array('base_url'=>api_url('API_view_grid',$table),'per_page'=>$pagination,'total_rows'=>$total_rows,'offset'=>$offset);
+								$base_url=api_url('API_view_grid',$table);
+								$pagination=array('base_url'=>$base_url,'per_page'=>$pagination,'total_rows'=>$total_rows,'offset'=>$offset);
 								$grid->set_pagination($pagination);
 							}
 

@@ -13,7 +13,7 @@ class MY_Pagination extends CI_Pagination {
 	var $first_link			= '&lt;&lt;';
 	var $last_link			= '&gt;&gt;';
 	var $full_tag_close = '</ul>';
-	var $num_tag_open = '<li>';
+	var $num_tag_open = '<li class="pager">';
 	var $num_tag_close = '</li>';
 	var $cur_tag_open = '<li class="current">';
 	var $cur_tag_close = '</li>';

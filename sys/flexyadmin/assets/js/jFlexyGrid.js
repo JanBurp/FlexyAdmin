@@ -93,7 +93,7 @@ function doGrid() {
 				$('input.filter').change(function(){
 					var search=$(this).val();
 					// ok now reload the page, starting from page 0, with this search and current order
-					var url=$(filter).attr('url')+'/0/order/'+$(filter).attr('order')+'/search/'+search;
+					var url=$(filter).attr('url')+'/0/order/'+$(filter).attr('order')+'/search/'+search+'/offset';
 					location.href=url;
 				});
 			}
@@ -497,7 +497,7 @@ function doGrid() {
 				}
 			});
 			// replace pagination links with current order field
-			$(grid).find('span.pager a').each(function(){
+			$(grid).find('li.pager a').each(function(){
 				var order=$(grid).attr('order');
 				if (order=='') order='name';
 				var url=$(this).attr('href')+'/order/'+order+'/search/'+$(grid).attr('search');
