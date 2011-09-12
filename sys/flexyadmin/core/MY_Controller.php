@@ -201,7 +201,6 @@ class FrontEndController extends MY_Controller {
 			foreach ($stdFields as $f) {
 				if (isset($this->site[$f])) {
 					$this->site[remove_prefix($f)]=$this->site[$f];
-					unset($this->site[$f]);
 				}
 			}
 		}

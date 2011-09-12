@@ -985,7 +985,14 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		}
 		$sql=$this->ar_last_query;
 
-		$sql=preg_replace('/SELECT(.*)?FROM/si','SELECT `id` FROM',$sql);
+		$match=array();
+		$table='';
+		if ( preg_match('/FROM\s(.*?)\s/si',$sql,$match) ) {
+			$table=trim($match[1],'()`"');
+			$tablePlus="`$table`.";
+		}
+		
+		$sql=preg_replace('/SELECT(.*)?FROM/si','SELECT '.$tablePlus.'`id` FROM',$sql);
 		$sql=preg_replace('/ORDER BY(.*)?/si','',$sql);
 
 		$query=$this->query($sql);
