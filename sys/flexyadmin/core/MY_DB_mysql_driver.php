@@ -549,7 +549,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 					$sql="SELECT ".$mTable["rel"].".".$mTable["id_this"]." AS id  
 								FROM ".$mTable["rel"].",".trim($mTable["join"],'_')." 
 								WHERE ".$mTable["rel"].".".$mTable["id_join"]."=".trim($mTable["join"],'_').".id ".$mWhere;
-					// trace_($sql);
+					// trace_('#SHOW# '.$sql);
 					$query=$this->query($sql);
 					$manyResults=$query->result_array();
 					$query->free_result();
@@ -562,10 +562,10 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 						$this->ar_where[$key]=$AndOr.$mTable["this"].".".$this->pk.' IN ('.$whereIn.') ';
 					}
 					else {
-						if (count($this->ar_where)==0)
-							$this->ar_where[$key]='FALSE ';
-						else
-							$this->ar_where[$key]=' ';
+						// if (count($this->ar_where)==0)
+							$this->ar_where[$key]='FALSE';
+						// else
+							// $this->ar_where[$key]=' ';
 					}
 				}
 				$this->_repair_ar();

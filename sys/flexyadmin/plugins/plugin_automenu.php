@@ -244,10 +244,17 @@ class Plugin_automenu extends Plugin_ {
 							$this->db->where($autoValue['field_group_by'],$groupId);
 						}
 						$data=$this->db->get_result($autoValue['table']);
+						
+						
+						// trace_('#SHOW# '.$this->db->ar_last_query);
+						// trace_($groupId);
+						// trace_($groupData);
+						// trace_($data);
+						
 						if ($data) {
-							
 							$parentData=find_row_by_value($this->newMenu,$groupData[$titleField],$titleField);
 							$parentData=current($parentData);
+							// trace_($parentData);
 							$selfParent=$parentData['id'];
 							$lastOrder=0;
 							$subData=find_row_by_value($this->newMenu,$selfParent,'self_parent');
