@@ -693,6 +693,11 @@ table.grid thead .headerSortDown {
 	background-repeat: no-repeat;
 }
 
+table.grid thead .order {
+	background-image: none;
+}
+
+
 /** drag helper: for sorting **/
 .ui-sortable-helper {
 	filter:alpha(opacity=80);
