@@ -11,6 +11,7 @@
 */
 
 $config['languages'] = array('nl');
+// $config['languages'] = array('en');
 // $config['languages'] = array('nl','en');
 
 
@@ -52,8 +53,19 @@ $config['main_view']='site';
 */
 
 $config['uri_as_modules']=FALSE;
-// $config['uri_as_modules']=TRUE;
 
+
+/*
+|--------------------------------------------------------------------------
+| Module field
+|--------------------------------------------------------------------------
+|
+| Set here the fieldname of modules used in the controller.
+| Default value is 'str_module' (which is used in the standard demo database in 'tbl_menu' or 'res_menu_result' in case of merged menu's.
+| Other usefull options are 'uri' if the uri's are frozen. Or 'tbl_module__str_module' if a foreign module table is used.
+*/
+
+$config['module_field']='str_module';
 
 
 /*
@@ -111,7 +123,7 @@ $config['add_to_statistics']=TRUE;
 if (!isset($config['base_url'])) {
 	// If no automatic base_url, comment this:
 	die("sorry no automatic 'base_url', edit 'site/config.php'.");
-	// And uncomment this with right base_url
+	// And uncomment this with right base_url if needed
 	// $config['base_url']	= "http://www.flexyadmin.com/";
 }
 
