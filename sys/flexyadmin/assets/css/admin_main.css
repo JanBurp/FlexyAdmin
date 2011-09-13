@@ -693,7 +693,7 @@ table.grid thead .headerSortDown {
 	background-repeat: no-repeat;
 }
 
-table.grid thead .order {
+table.grid thead .order, table.grid thead .edit {
 	background-image: none;
 }
 
