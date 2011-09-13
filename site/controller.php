@@ -60,12 +60,6 @@ class Main extends FrontEndController {
 			 * Load and call module (library) according to uri: file/method/args
 			 */
 			$uri=$this->uri->segment_array();
-			// $module='app';
-			// $method='index';
-			// $args=NULL;
-			// if (isset($uri[1])) $module=$uri[1];
-			// if (isset($uri[2])) $method=$uri[2];
-			// if (isset($uri[3])) $args=array_slice($uri,2);
 			$this->_call_library($uri);
 			
 		}
@@ -82,7 +76,7 @@ class Main extends FrontEndController {
 			//
 			// $sub_uri$this->uri->get(1);
 			// if ($sub_uri) {
-			// 	$this->site["submenu"]=$this->menu->render_branch($sub_uri);
+			// 	$this->site['submenu']=$this->menu->render_branch($sub_uri);
 			// }
 
 
@@ -108,7 +102,7 @@ class Main extends FrontEndController {
 		/**********************************************
 		 * No Content? Show error page.
 		 */
-		if ($this->no_content()) $this->add_content($this->view("error","",true));
+		if ($this->no_content()) $this->add_content($this->view('error','',true));
 		
 		/**
 		 * Show home view
@@ -143,15 +137,15 @@ class Main extends FrontEndController {
 	
 	private function _page($item) {
 		// Process the text fields (make safe email links, put classes in p/img/h tags)
-		foreach($item as $f=>$v) {if (get_prefix($f)=="txt") $item[$f]=$this->content->render($v);}
+		foreach($item as $f=>$v) {if (get_prefix($f)=='txt') $item[$f]=$this->content->render($v);}
 
 		// Add extra title and keywords, replace description (if any)
-		if (isset($item["str_title"])) $this->add_title($item["str_title"]);
-		if (isset($item["str_keywords"])) $this->add_keywords($item["str_keywords"]);
+		if (isset($item['str_title'])) $this->add_title($item['str_title']);
+		if (isset($item['str_keywords'])) $this->add_keywords($item['str_keywords']);
 		if (isset($item['stx_description']) and !empty($item['stx_description'])) $this->site['description']=$item['stx_description'];
 
 		// Is there a module set? If so, call the module
-		if (isset($item["str_module"]) and !empty($item["str_module"]))	$item=$this->_module($item);
+		if (isset($item[$this->config->item('module_field')]) and !empty($item[$this->config->item('module_field')]))	$item=$this->_module($item);
 
 		// Add content
 		$this->add_content( $this->view('page',$item,true) );
@@ -171,7 +165,7 @@ class Main extends FrontEndController {
 	 * If it has a return value, check if it is $item of just a string.
 	 */
 	private function _module($item) {
-		$modules=$item['str_module'];
+		$modules=$item[$this->config->item('module_field')];
 		// Loop trough all possible modules, load them, call them, and process return value
 		$modules=explode('|',$modules);
 		$item['module_content']='';
