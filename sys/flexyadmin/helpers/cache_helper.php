@@ -113,6 +113,7 @@ if ( ! function_exists('delete_cache'))
  *
  * @author	Steven Benner & Jan den Besten
  * Changes made by Jan den Besten: First check if $cache_files exists, before deleting them
+ * 
  * @return	void
  */
 if ( ! function_exists('delete_all_cache'))
