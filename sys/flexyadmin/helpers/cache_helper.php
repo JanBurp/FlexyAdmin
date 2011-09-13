@@ -111,7 +111,8 @@ if ( ! function_exists('delete_cache'))
  *
  * Evicts the output cache for all pages currently cached.
  *
- * @author	Steven Benner
+ * @author	Steven Benner & Jan den Besten
+ * Changes made by Jan den Besten: First check if $cache_files exists, before deleting them
  * @return	void
  */
 if ( ! function_exists('delete_all_cache'))
@@ -119,13 +120,14 @@ if ( ! function_exists('delete_all_cache'))
 	function delete_all_cache()
 	{
 		$cache_files = get_all_cache_files();
-
-		foreach ($cache_files as $file)
-		{
-			// only delete files with names that are 32 characters in length (MD5)
-			if (strlen($file['name']) === 32 && is_really_writable($file['server_path']))
+		if ($cache_files) {
+			foreach ($cache_files as $file)
 			{
-				@unlink($file['server_path']);
+				// only delete files with names that are 32 characters in length (MD5)
+				if (strlen($file['name']) === 32 && is_really_writable($file['server_path']))
+				{
+					@unlink($file['server_path']);
+				}
 			}
 		}
 	}
