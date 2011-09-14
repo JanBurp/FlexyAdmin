@@ -402,7 +402,7 @@ class Menu {
 					$link='';
 					if (!empty($thisUri))	$link=trim($this->tmp($this->tmpUrl,$thisUri),'/');
 					// set class
-					$cName=strtolower(str_replace(" ","_",$name));
+					$cName=get_suffix($item[$this->urlField],'/');
 					$first=($pos==1)?' first':'';
 					$last=($pos==count($menu))?' last':'';
 					$sub=(isset($item['sub']))?' sub':'';
