@@ -94,6 +94,9 @@ class Plugin_safe_assets extends Plugin_ {
 	function _make_map_safe($path,$types) {
 		$types=strtolower($types).'|'.strtoupper($types);
 		$htaccess="Order Allow,Deny\nDeny from all\n<Files ~ \"\.(".$types.")$\">\nAllow from all\n</Files>\n";
+		if (has_string('htc',$types)) {
+			$htaccess.="\nAddType text/x-component .htc\n";
+		}
 		write_file($path.'/.htaccess',$htaccess);
 	}
 	
