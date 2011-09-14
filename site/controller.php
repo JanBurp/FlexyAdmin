@@ -161,12 +161,23 @@ class Main extends FrontEndController {
 	 * 
 	 * This functions is called if a module is set
 	 * It loads the module (a special CI library) and calls it.
-	 * If it has a return value, check if it is $item of just a string.
+	 * If it has a return value it will be added to $item['module_content'].
 	 */
 	private function _module($item) {
+		// See what modules to load
 		$modules=array();
-		if (isset($item[$this->config->item('module_field')])) {
-			$modules=$item[$this->config->item('module_field')];
+		if (isset($item[$this->config->item('module_field')]) and !empty($item[$this->config->item('module_field')])) {
+			if (get_prefix($this->config->item('module_field'))=='id') {
+				// Modules from foreign table
+				$foreign_key=$this->config->item('module_field');
+				$foreign_field='str_'.get_suffix($this->config->item('module_field'));
+				$foreign_table=foreign_table_from_key($foreign_key);
+				$modules=$this->db->get_field_where($foreign_table,$foreign_field,'id',$item[$foreign_key]);
+			}
+			else {
+				// Modules direct from field
+				$modules=$item[$this->config->item('module_field')];
+			}
 			$modules=explode('|',$modules);
 		}
 		// Autoload modules
@@ -175,10 +186,12 @@ class Main extends FrontEndController {
 		// Loop trough all possible modules, load them, call them, and process return value
 		$item['module_content']='';
 		foreach ($modules as $module) {
-			// If module exists (a library): load it, call the given or standard method, and add modelname to class
+			// make sure no spaces are in the modules name, split module and method
+			$module=str_replace(' ','_',$module);
 			$library=remove_suffix($module,'.');
 			$method=get_suffix($library,'.');
 			if ($method==$library) $method='index';
+			// Load and call the module and process the return value
 			$return=$this->_call_library($library,$method,$item);
 			if ($return) {
 				if (is_array($return))

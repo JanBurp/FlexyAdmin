@@ -75,6 +75,7 @@ $config['autoload_modules']=array();
 | Set here the fieldname of modules used in the controller.
 | Default value is 'str_module' (which is used in the standard demo database in 'tbl_menu' or 'res_menu_result' in case of merged menu's.
 | Other usefull options are 'uri' if the uri's are frozen. Or 'tbl_module__str_module' if a foreign module table is used.
+| You can also use a foreign key (id_module), the controller will load the field specified as the suffix. Example: 'id_module' will load tbl_module.str_module.
 */
 
 $config['module_field']='str_module';
