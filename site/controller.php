@@ -121,7 +121,6 @@ class Main extends FrontEndController {
 		 */
 
 		// $this->output->cache(1440); // cache for 24 hours (1440 minutes)
-		
 	}
 
 
@@ -144,8 +143,8 @@ class Main extends FrontEndController {
 		if (isset($item['str_keywords'])) $this->add_keywords($item['str_keywords']);
 		if (isset($item['stx_description']) and !empty($item['stx_description'])) $this->site['description']=$item['stx_description'];
 
-		// Is there a module set? If so, call the module
-		if (isset($item[$this->config->item('module_field')]) and !empty($item[$this->config->item('module_field')]))	$item=$this->_module($item);
+		// Load and call modules
+		$item=$this->_module($item);
 
 		// Add content
 		$this->add_content( $this->view('page',$item,true) );
@@ -165,9 +164,15 @@ class Main extends FrontEndController {
 	 * If it has a return value, check if it is $item of just a string.
 	 */
 	private function _module($item) {
-		$modules=$item[$this->config->item('module_field')];
+		$modules=array();
+		if (isset($item[$this->config->item('module_field')])) {
+			$modules=$item[$this->config->item('module_field')];
+			$modules=explode('|',$modules);
+		}
+		// Autoload modules
+		$autoload=$this->config->item('autoload_modules');
+		if ($autoload) $modules=array_merge($autoload,$modules);
 		// Loop trough all possible modules, load them, call them, and process return value
-		$modules=explode('|',$modules);
 		$item['module_content']='';
 		foreach ($modules as $module) {
 			// If module exists (a library): load it, call the given or standard method, and add modelname to class

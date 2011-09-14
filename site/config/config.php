@@ -54,6 +54,18 @@ $config['main_view']='site';
 
 $config['uri_as_modules']=FALSE;
 
+/*
+|--------------------------------------------------------------------------
+| Autoload Modules
+|--------------------------------------------------------------------------
+|
+| You can autoload modules from the controller. They are also called.
+| Usefull if you need to do something on every page and don't won't to change the controlle.
+*/
+
+$config['autoload_modules']=array();
+
+
 
 /*
 |--------------------------------------------------------------------------
