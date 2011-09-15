@@ -563,7 +563,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 					}
 					else {
 						// if (count($this->ar_where)==0)
-							$this->ar_where[$key]='FALSE';
+							$this->ar_where[$key]='FALSE ';
 						// else
 							// $this->ar_where[$key]=' ';
 					}
