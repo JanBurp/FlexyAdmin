@@ -1,26 +1,26 @@
-> 1250
+> 1261
 
 UPDATE:
 - CodeIgniter 2.0.3
-- jQuery 1.6.3
+- jQuery 1.6.4
 - jQuery UI 1.8.16
 - tinyMCE 3.4.5 (jQuery)
 
 NEW:
 - Renamed site/views/home.php to site.php (can now be set in config.php)
 - Language settings now in config.php
+- New way of implementing modules: by a special Libary called Module. Also helpers and models can be loaded from site
+	- deleted map: site/modules
+	- adding map: site/models, site/helpers and site/libraries
+	- changing existing modules (also added config files for some)
+	- also possible to load modules direct from the uri by a setting in site/config.php
+- changes to controller/site (for models, adding class, adding methods for language settings and redirect)
 - New authentication system Ion Auth:
 	- Simpler user groups
 	- Safer (hashed) passwords
 	- new passwords: double check
 	- Ready for some future authentication handling
 	- Possible to use in FrontEnd
-- New way of implementing modules: by a special Libary called Module. Also helpers and modules can be loaded from site
-	- deleted map: site/modules
-	- adding map: site/models, site/helpers and site/libraries
-	- changing existing modules (also added config files for some)
-	- also possible to load modules direct from the uri
-- changes to controller/site (for models, adding class, adding methods for language settings and redirect)
 - Nicer dropdown styling
 - Big CSS controls in other browsers (FF/Webkit/Opera/IE9,8,7 IE6 is now depricated)
 - Ordering and Searching in foreign and many data from Grid view
