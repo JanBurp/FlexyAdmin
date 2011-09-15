@@ -15,6 +15,7 @@ These sites/maps needs to be writeable
 - sitemap.xml
 - bulk_upload
 - site/stats
+- site/cache
 - site/assets/lists
 - site/assets/_thumbcache
 - site/assets/* (all the maps that have uploadable files)
