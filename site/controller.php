@@ -237,7 +237,7 @@ class Main extends FrontEndController {
 		// Is language set by the first part of the URI?
 		if ( ! $this->_is_possible_language($lang) ) $lang=$this->uri->get(1);
 		// If not: get prefered language from users browser settings
-		if ( ! $this->_is_possible_language($lang) ) $lang=substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+		if ( ! $this->_is_possible_language($lang) and isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) $lang=substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
 		// If not: Get prefered language from config
 		if ( ! $this->_is_possible_language($lang) ) $lang=$this->config->item('language');
 		// Sets some stuff
