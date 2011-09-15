@@ -125,14 +125,14 @@ img {
 #menu li a.rel {	color:#669; }
 
 #menu li .media,
-#menu li .media_info {
+#menu li .cfg_media_info {
 	background-image: url("../icons/folder.gif");
 	background-repeat: no-repeat;
 	background-position:0px 2px;
 	padding-left: 20px;
 	}
 #menu li.current .media {	background-image: url("../icons/folder_files.gif");	}
-#menu li .img_info {
+#menu li .cfg_img_info {
 	background-image: url("../icons/image.gif");
 	background-repeat: no-repeat;
 	background-position:0px 2px;
@@ -157,50 +157,50 @@ img {
 	padding-left: 20px;
 	}
 #menu li .API_plugin_stats,
-#menu li .login,
-#menu li .stats {
+#menu li .log_login,
+#menu li .log_stats {
 	background-image: url("../icons/stats.gif");
 	background-repeat: no-repeat;
 	background-position:0px 2px;
 	padding-left: 20px;
 	}
-#menu li .configurations,
-#menu li .plugins {
+#menu li .cfg_configurations,
+#menu li .cfg_plugins {
 	background-image: url("../icons/config.gif");
 	background-repeat: no-repeat;
 	background-position:0px 2px;
 	padding-left: 20px;
 	}
-#menu li .auto_menu,
-#menu li .admin_menu  {
+#menu li .cfg_auto_menu,
+#menu li .cfg_admin_menu  {
 	background-image: url("../icons/menu.jpg");
 	background-repeat: no-repeat;
 	background-position:0px 2px;
 	padding-left: 20px;
 	}
 
-#menu li .table_info,
-#menu li .field_info,
-#menu li .editor {
+#menu li .cfg_table_info,
+#menu li .cfg_field_info,
+#menu li .cfg_editor {
 	background-image: url("../icons/table_info.gif");
 	background-repeat: no-repeat;
 	background-position:0px 2px;
 	padding-left: 20px;
 	}
-#menu li .rss {
+#menu li .cfg_rss {
 	background-image: url("../icons/rss.gif");
 	background-repeat: no-repeat;
 	background-position:0px 2px;
 	padding-left: 20px;
 	}
 	
-#menu li .users {
+#menu li .cfg_users {
 	background-image: url("../icons/user.gif");
 	background-repeat: no-repeat;
 	background-position:0px 2px;
 	padding-left: 20px;
 	}
-#menu li .user_groups {
+#menu li .cfg_user_groups {
 	background-image: url("../icons/login.gif");
 	background-repeat: no-repeat;
 	background-position:0px 2px;
@@ -214,7 +214,7 @@ img {
 	padding-left: 20px;
 	}
 
-#menu .users-rights {display:none;}
+/*#menu .users-rights {display:none;}*/
 
 #menu ul.lev2 {display:none;}
 
