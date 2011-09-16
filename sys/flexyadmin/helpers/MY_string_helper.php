@@ -258,10 +258,12 @@ function max_length($txt,$len=100,$type='LINES',$closetags=false) {
 		case 'LINES':
 		default;
 				$lines=explode('.',$txt);
-				$line='';
-				$l=0;
-				while (strlen($line)<$len and isset($lines[$l+1])) {	$line.=$lines[$l++].'. ';	}
-				$out=$line;
+				$lines=array_slice($lines,0,$len);
+				$out=implode('.',$lines);
+				// $line='';
+				// $l=0;
+				// while (strlen($line)<$len and isset($lines[$l+1])) {	$line.=$lines[$l++].'. ';	}
+				// $out=$line;
 			break;
 	}
 	if ($closetags) {
