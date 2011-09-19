@@ -30,16 +30,45 @@ require_once(APPPATH."core/MY_Controller.php");
 class Show extends AdminController {
 	
 	var $form_args;
+	// var $grid_set;	// array that contains current table/offset/order/search
 
 	function __construct() {
 		parent::__construct();
-		// $this->load->model("flexy_data","fd");
 		$this->load->model("flexy_field","ff");
 	}
 
 	function index() {
 		$this->_show_all();
 	}
+
+
+	
+	private function _save_grid_set($set=array()) {
+		$default=array('table'=>'','offset'=>'','order'=>'','search'=>'');
+		$set=array_merge($default,$set);
+		$this->session->set_userdata('grid_set',$set);
+	}
+	
+	private function _open_grid_set() {
+		$set=$this->grid_set=$this->session->userdata('grid_set');
+		return $set;
+	}
+	
+	private function _open_grid_set_uri() {
+		$set=$this->_open_grid_set();
+		$uri=api_uri('API_view_grid',$set['table']);
+		unset($set['table']);
+		foreach ($set as $key => $value) {
+			if (!empty($value)) $uri.="/$key/$value";
+		}
+		return $uri;
+	}
+	
+	private function _reset_grid_set() {
+		$this->session->unset_userdata('grid_set');
+	}
+	
+	
 
 /**
  * This controls the order of a table
@@ -65,13 +94,13 @@ class Show extends AdminController {
 		$this->_show_all();
 	}
 
+
 	/**
 	 * This controls the grid view
 	 *
 	 * @param string $table Table name
 	 * @param mixed $id maybe an id, the last that changed
 	 */
-
 		function grid() {
 			$args=$this->uri->uri_to_assoc();
 			$table=el('grid',$args);
@@ -81,6 +110,7 @@ class Show extends AdminController {
 			$offset=el('offset',$args,0);
 			$order=el('order',$args);
 			$search=el('search',$args);
+			$this->_save_grid_set(array('table'=>$table,'offset'=>$offset,'order'=>$order,'search'=>$search));
 			// strace_($args);
 
 			if (!empty($table) and $this->db->table_exists($table)) {
@@ -275,6 +305,7 @@ class Show extends AdminController {
 		else {
 			$args=$this->uri->uri_to_assoc();
 		}
+
 		$table=el('form',$args);
 		$info=el('info',$args);
 		$table=explode(':',$table);
@@ -360,15 +391,14 @@ class Show extends AdminController {
 				 */
 				if ($form->validation()) {
 					$this->lang->load("update_delete");
-					$redirectUri=api_uri('API_view_grid',$table);
-					if (!empty($info)) $redirectUri.='/info/'.$info;
 					
 					$resultId=$form->update($table,$restrictedToUser);
 					$newData=$form->get_data();
 					$this->_after_update($table,$resultId,$data,$newData);
-					
-					// flush cache files
 					delete_all_cache();
+
+					$redirectUri=$this->_open_grid_set_uri();
+					if (!empty($info)) $redirectUri.='/info/'.$info;
 					
 					if (is_string($resultId)) {
 						$this->set_message(langp("update_error",$table,$resultId));
