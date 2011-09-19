@@ -223,7 +223,7 @@ $config['log_date_format'] = 'Y-m-d H:i:s';
 | system/cache/ folder.  Use a full server path with trailing slash.
 |
 */
-$config['cache_path'] = 'site/cache/';
+$config['cache_path'] = SITEPATH.'cache/';
 
 /*
 |--------------------------------------------------------------------------
@@ -330,7 +330,7 @@ $config['rewrite_short_tags'] = FALSE;
 
 
 
-if (file_exists("site/config/config.php")) require_once("site/config/config.php");
+if (file_exists(SITEPATH."/config/config.php")) require_once(SITEPATH."/config/config.php");
 
 
 /* End of file config.php */

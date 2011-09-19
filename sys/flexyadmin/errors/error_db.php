@@ -33,11 +33,11 @@
 		switch ($error) {
 			case 1045:
 			case 2005:
-				echo "Set your database information in 'site/database.php' or 'site/database_local.php'.";
+				echo "Set your database information in '".SITEPATH."config/database.php' or '".SITEPATH."config/database_local.php'.";
 				break;
 			case 1102:
 			case 1049:
-				echo "Set your database table correct in 'site/database.php' or 'site/database_local.php'.<br/><br/>Known databases:<ul>";
+				echo "Set your database table correct in '".SITEPATH."config/database.php' or '".SITEPATH."config/database_local.php'.<br/><br/>Known databases:<ul>";
 				$db_list = mysql_list_dbs();
 				while ($row = mysql_fetch_object($db_list)) {
 		     echo '<li>'.$row->Database.'</li>';

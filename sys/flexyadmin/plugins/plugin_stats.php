@@ -58,7 +58,7 @@ class Plugin_stats extends Plugin_ {
 		$this->MonthTxt=strftime('%B',$this->Time);
 
 		// Is there xml data for earlier years? Give option to show it
-		$xmlYearFiles=read_map('site/stats','xml');
+		$xmlYearFiles=read_map(SITEPATH.'stats','xml');
 		ksort($xmlYearFiles);
 		
 		$years='';

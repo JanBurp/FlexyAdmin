@@ -1,4 +1,4 @@
-<? require_once(APPPATH."core/MY_Controller.php");
+<? require_once(APPPATH."core/FrontendController.php");
 
 class Main extends FrontEndController {
 	

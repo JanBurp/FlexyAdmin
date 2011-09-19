@@ -36,7 +36,7 @@ class Stats {
 		global $URI;
 		$thisUri=$URI->uri_string();
 		$firstSegment=$URI->get(1);
-		if ( ! in_array($firstSegment,array('site','sys','admin','rss','file')) ) {
+		if ( ! in_array($firstSegment,array(SITEPATH,'sys','admin','rss','file')) ) {
 			$this->add_uri(trim($thisUri,'/'));
 		}
 	}
@@ -63,7 +63,7 @@ class Stats {
 				$set['str_platform']=$AGENT->platform();
 
 				// standard PHP database connect
-				include('site/config/database.php');
+				include(SITEPATH.'/config/database.php');
 				$db=$db[$active_group];
 				$con = mysql_connect($db['hostname'],$db['username'],$db['password']);
 				if (!$con) { die('Could not connect to database for stats: ' . mysql_error()); }

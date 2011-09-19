@@ -1,5 +1,5 @@
 <?
-require_once(APPPATH."core/MY_Controller.php");
+require_once(APPPATH."core/AdminController.php");
 
 /**
  * FlexyAdmin V1
@@ -187,7 +187,7 @@ class Db extends AdminController {
 	function _upload_sql() {
 		// upload (to list path, 'coz this exists!)
 		$sql=FALSE;
-		$config['upload_path'] = 'site/assets/lists';
+		$config['upload_path'] = SITEPATH.'assets/lists';
 		$config['allowed_types'] = 'txt|sql';
 		$this->load->library('upload', $config);
 		if (!$this->upload->do_upload()) {

@@ -218,7 +218,7 @@ class Main extends FrontEndController {
 			// prevent loading hidden modules
 			if (substr($library,0,1)=='_') return FALSE;
 		}
-		if (file_exists('site/libraries/'.$library.'.php')) {
+		if (file_exists(SITEPATH.'libraries/'.$library.'.php')) {
 			$this->load->library($library);
 			return $this->$library->$method($args);
 		}

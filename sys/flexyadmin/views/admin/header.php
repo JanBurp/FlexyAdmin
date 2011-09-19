@@ -27,7 +27,7 @@ $isForm=has_string('form',$show_type);
 	
 	<link rel="shortcut icon" href="<?=admin_assets()?>img/favicon.ico" type="image/x-icon" />
 	<link rel="stylesheet" href="<?=admin_assets()?>css/admin_main<?=$css?>" type="text/css" />
-	<link rel="stylesheet" href="site/assets/css/admin.css" type="text/css" />
+	<link rel="stylesheet" href="<?=assets()?>css/admin.css" type="text/css" />
 	
 	<!--[if lte IE 7]><style type="text/css" media="screen">@import url(<?=admin_assets()?>css/ie7.css);</style><![endif]-->
 	<!--[if IE 8]><style type="text/css" media="screen">@import url(<?=admin_assets()?>css/ie8.css);</style><![endif]-->
@@ -146,7 +146,7 @@ $isForm=has_string('form',$show_type);
 	<? if ($isForm): ?>
 		<script language="javascript" type="text/javascript" src="<?=admin_assets()?>js/jFlexyForm<?=$js?>"></script>
 	<? endif; ?>
-	<script language="javascript" type="text/javascript" src="site/assets/js/admin.js"></script>
+	<script language="javascript" type="text/javascript" src="<?=assets()?>assets/js/admin.js"></script>
 </head>
 
 <body>

@@ -315,10 +315,10 @@ class Plugin_automenu extends Plugin_ {
 				case 'by module':
 					// call module
 					$module=$autoValue['str_parameters'];
-					$moduleFile='site/modules/module_'.$module.'.php';
+					$moduleFile=SITEPATH.'libraries/'.$module.'.php';
 					if (file_exists($moduleFile)) {
 						include_once($moduleFile);						// if function exists, call it
-						$moduleFunction='_module_'.$module;
+						$moduleFunction=$module;
 						if (function_exists($moduleFunction)) {
 							$items=$moduleFunction($autoValue);
 							// Produce menu from returned items

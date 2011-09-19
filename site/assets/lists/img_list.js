@@ -1,1 +1,1 @@
-var tinyMCEImageList = new Array();
+var tinyMCEImageList = new Array(["Atom","site/assets/pictures/atom.jpg"]);

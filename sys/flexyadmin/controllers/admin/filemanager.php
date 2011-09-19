@@ -1,5 +1,5 @@
 <?
-require_once(APPPATH."core/MY_Controller.php");
+require_once(APPPATH."core/AdminController.php");
 
 /**
  * FlexyAdmin V1
@@ -159,7 +159,7 @@ class Filemanager extends AdminController {
 				// Include extra data from cfg_media_files if any
 				// if ($this->db->table_exists('cfg_media_files')) {
 				// 	foreach ($files as $name => $file) {
-				// 		$this->db->where('file', str_replace('site/assets/','',$file['path']));
+				// 		$this->db->where('file', str_replace(SITEPATH.'assets/','',$file['path']));
 				// 		$info=$this->db->get_row('cfg_media_files');
 				// 		if ($info) {
 				// 			$files[$name]=array_merge($file,$info);
@@ -398,7 +398,7 @@ class Filemanager extends AdminController {
 
 				// remove from thumbcache if exists
 				if (file_exists($this->config->item('THUMBCACHE')) ) {
-					$thumbName=$this->config->item('THUMBCACHE').pathencode('site/assets/'.$path.'/'.$file);
+					$thumbName=$this->config->item('THUMBCACHE').pathencode(SITEPATH.'assets/'.$path.'/'.$file);
 					if (file_exists($thumbName)) unlink($thumbName);
 				}
 				// put file in sr array
@@ -406,7 +406,7 @@ class Filemanager extends AdminController {
 				$sr[$file]=$new;
 
 				// rename other size of same file
-				$cfg=$this->cfg->get('cfg_img_info',str_replace('site/assets/','',$map));
+				$cfg=$this->cfg->get('cfg_img_info',str_replace(SITEPATH.'assets/','',$map));
 				if (!empty($cfg)) {
 					$sizes=1;
 					while(isset($cfg['b_create_'.$sizes]) and $cfg['b_create_'.$sizes]) {

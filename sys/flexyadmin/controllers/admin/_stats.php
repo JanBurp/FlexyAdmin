@@ -1,5 +1,5 @@
 <?
-require_once(APPPATH."core/MY_Controller.php");
+require_once(APPPATH."core/AdminController.php");
 
 
 class Stats extends AdminController {

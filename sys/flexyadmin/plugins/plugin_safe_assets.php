@@ -57,7 +57,7 @@ class Plugin_safe_assets extends Plugin_ {
 		}
 		// set static maps
 		$specialMaps=array(	'bulk_upload'						=> $all,
-												'site/stats'						=> 'xml',
+												SITEPATH.'stats'				=> 'xml',
 												$assets									=> 'css|img|js',
 												$assets.'_thumbcache'		=> $images,
 												$assets.'lists'					=> 'js',

@@ -27,7 +27,7 @@
 	<meta http-equiv="Content-Type" content="text/html" charset="utf8" />
 	<base href="<?=base_url()?>" />
 	<title><?=ascii_to_entities($title);?></title>
-	<link rel="shortcut icon" href="site/assets/img/favicon.ico" type="image/x-icon" />
+	<link rel="shortcut icon" href="<?=$assets?>img/favicon.ico" type="image/x-icon" />
 	
 	<meta http-equiv="imagetoolbar" content="no" />
 	<meta http-equiv="content-language" content="nl" />
@@ -41,14 +41,14 @@
 
 	<script language="javascript" type="text/javascript" src="<?=$admin_assets?>js/nospam.js"></script>
 	<!-- <script language="javascript" type="text/javascript" src="sys/jquery/jquery-1.6.4.min.js"></script> -->
-	<!-- <script language="javascript" type="text/javascript" src="site/assets/js/site.js"></script> -->
+	<!-- <script language="javascript" type="text/javascript" src="<?=$assets?>js/site.js"></script> -->
 	
-	<link href="<?=$assets;?>/css/text.css" rel="stylesheet" type="text/css" />
-	<link href="<?=$assets;?>/css/layout.css" rel="stylesheet" type="text/css" />
-	<!--[if lte IE 6]><style type="text/css" media="screen">@import url(<?=$assets;?>/css/ie6.css);</style><![endif]-->
-	<!--[if IE 7]><style type="text/css" media="screen">@import url(<?=$assets;?>/css/ie7.css);</style><![endif]-->
-	<!--[if IE 8]><style type="text/css" media="screen">@import url(<?=$assets;?>/css/ie8.css);</style><![endif]-->
-	<!--[if IE 9]><style type="text/css" media="screen">@import url(<?=$assets;?>/css/ie9.css);</style><![endif]-->
+	<link href="<?=$assets;?>css/text.css" rel="stylesheet" type="text/css" />
+	<link href="<?=$assets;?>css/layout.css" rel="stylesheet" type="text/css" />
+	<!--[if lte IE 6]><style type="text/css" media="screen">@import url(<?=$assets;?>css/ie6.css);</style><![endif]-->
+	<!--[if IE 7]><style type="text/css" media="screen">@import url(<?=$assets;?>css/ie7.css);</style><![endif]-->
+	<!--[if IE 8]><style type="text/css" media="screen">@import url(<?=$assets;?>css/ie8.css);</style><![endif]-->
+	<!--[if IE 9]><style type="text/css" media="screen">@import url(<?=$assets;?>css/ie9.css);</style><![endif]-->
 	
 	<? if (isset($str_google_analytics) and !empty($str_google_analytics)): ?><script type="text/javascript">
 	// Google Analytics
