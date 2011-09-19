@@ -13,6 +13,7 @@
 class MY_Lang extends CI_Lang {
 
 	var $setLanguage;
+	var $idiom;
 
 	function __construct() {
 		parent::__construct();
@@ -23,6 +24,7 @@ class MY_Lang extends CI_Lang {
 		$this->setLanguage=$lang;
 	}
 
+
 	/**
 	 * Load a language file
 	 *
@@ -31,14 +33,23 @@ class MY_Lang extends CI_Lang {
 	 * @param	string	the language (english, etc.)
 	 * @return	mixed
 	 */
-	function load($langfile = '', $idiom = '', $return = FALSE)
+	function load($langfile = '', $idiom = '', $return = FALSE, $add_suffix = TRUE, $alt_path = SITEPATH )
 	{
-		$langfile = str_replace('.php', '', str_replace('_lang.', '', $langfile)).'_lang'.'.php';
+		$langfile = str_replace('.php', '', $langfile);
+
+		if ($add_suffix == TRUE)
+		{
+			$langfile = str_replace('_lang.', '', $langfile).'_lang';
+		}
+
+		$langfile .= '.php';
 
 		if (in_array($langfile, $this->is_loaded, TRUE))
 		{
 			return;
 		}
+
+		$config =& get_config();
 
 		// Changed by JdB
 		if ($idiom == '')
@@ -54,27 +65,36 @@ class MY_Lang extends CI_Lang {
 				else	
 					$deft_lang = $CI->config->item('language');
 			}
-			$idiom = ($deft_lang == '') ? 'english' : $deft_lang;
+			$idiom = ($deft_lang == '') ? 'en' : $deft_lang;
+			$this->idiom=$idiom;
 		}
 		// Changes end here. JdB
 
-
 		// Determine where the language file is and load it
-		if (file_exists(APPPATH.'language/'.$idiom.'/'.$langfile))
+		if ($alt_path != '' && file_exists($alt_path.'language/'.$idiom.'/'.$langfile))
 		{
-			include(APPPATH.'language/'.$idiom.'/'.$langfile);
+			include($alt_path.'language/'.$idiom.'/'.$langfile);
 		}
 		else
 		{
-			if (file_exists(BASEPATH.'language/'.$idiom.'/'.$langfile))
+			$found = FALSE;
+
+			foreach (get_instance()->load->get_package_paths(TRUE) as $package_path)
 			{
-				include(BASEPATH.'language/'.$idiom.'/'.$langfile);
+				if (file_exists($package_path.'language/'.$idiom.'/'.$langfile))
+				{
+					include($package_path.'language/'.$idiom.'/'.$langfile);
+					$found = TRUE;
+					break;
+				}
 			}
-			else
+
+			if ($found !== TRUE)
 			{
-				show_error('Unable to load the requested language file: language/'.$langfile);
+				show_error('Unable to load the requested language file: language/'.$idiom.'/'.$langfile);
 			}
 		}
+
 
 		if ( ! isset($lang))
 		{
@@ -94,6 +114,14 @@ class MY_Lang extends CI_Lang {
 		log_message('debug', 'Language file loaded: language/'.$idiom.'/'.$langfile);
 		return TRUE;
 	}
+
+	function overrule_with_config() {
+		$CI=&get_instance();
+		if (isset($CI->config->config['lang'][$this->idiom])) {
+			$this->language=array_merge($this->language,$CI->config->config['lang'][$this->idiom]);
+		}
+	}
+
 	
 	function get_all() {
 		return $this->language;

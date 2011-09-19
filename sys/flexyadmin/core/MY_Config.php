@@ -26,6 +26,7 @@ Class MY_Config extends CI_Config {
 			$this->config[$section][$item] = $value;
 	}
 
+
 // --------------------------------------------------------------------
 
 }
