@@ -189,7 +189,7 @@ class Main extends FrontEndController {
 			// make sure no spaces are in the modules name, split module and method
 			$module=str_replace(' ','_',$module);
 			$library=remove_suffix($module,'.');
-			$method=get_suffix($library,'.');
+			$method=get_suffix($module,'.');
 			if ($method==$library) $method='index';
 			// Load and call the module and process the return value
 			$return=$this->_call_library($library,$method,$item);
@@ -211,6 +211,7 @@ class Main extends FrontEndController {
 	 * Used for loading and calling modules
 	 */
 	private function _call_library($library,$method='index',$args=NULL) {
+		// trace_($library.'.'.$method);
 		if (is_array($library)) {
 			$args=array_slice($library,2);
 			$method=el(2,$library,'index');
@@ -218,7 +219,7 @@ class Main extends FrontEndController {
 			// prevent loading hidden modules
 			if (substr($library,0,1)=='_') return FALSE;
 		}
-		if (file_exists(SITEPATH.'libraries/'.$library.'.php')) {
+		if (file_exists('site/libraries/'.$library.'.php')) {
 			$this->load->library($library);
 			return $this->$library->$method($args);
 		}
