@@ -1,5 +1,5 @@
 <?
-require_once(APPPATH."core/MY_Controller.php");
+require_once(APPPATH."core/AdminController.php");
 
 /**
  * Special Controller Class
@@ -157,7 +157,7 @@ class Bulkupload extends AdminController {
 				// resize
 				$resized=$this->upload->resize_image($saveFile,$path);
 				// autofill
-				$cfg=$mediaCfg[str_replace('site/assets/','',$path)];
+				$cfg=$mediaCfg[str_replace(SITEPATH.'assets/','',$path)];
 				if (!isset($cfg['str_autofill']) or $cfg['str_autofill']=='bulk upload' or $cfg['str_autofill']=='both') {
 					$autoFill=$this->upload->auto_fill_fields($saveFile,$path);
 				}

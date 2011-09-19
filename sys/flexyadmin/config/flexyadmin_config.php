@@ -33,12 +33,12 @@ $config['LANGUAGES']							= array('nl','en','de','es','fr');
 $config['MENU_TABLES']						= array('res_menu_result','tbl_menu');
 
 // Directories
-$config['SITE']										= 'site';
+$config['SITE']										= SITEPATH;
 $config['ADMINASSETS']						= "sys/flexyadmin/assets/";
-$config['ASSETS']									= $config['SITE'].'/assets/';
+$config['ASSETS']									= $config['SITE'].'assets/';
 $config['THUMBCACHE']							= $config['ASSETS']."_thumbcache/";
-$config['STATS']									= $config['SITE'].'/stats/';
-$config['PLUGINS']								= $config['SITE'].'/plugins';
+$config['STATS']									= $config['SITE'].'stats/';
+$config['PLUGINS']								= $config['SITE'].'plugins';
 $config['BULKUPLOAD']							= 'bulk_upload';
 
 $config['THUMBSIZE']							= array(100,100);
@@ -674,7 +674,7 @@ $config['FIELDS_special'] = array(
 												"form"				=> "function_primary_key",
 												"validation"	=> "trim|integer|required",
 											),
-	"id_group"	=> array (
+	"id_group"	=> array(
 												"grid"				=> "function_foreign_key",
 												"form"				=> "function_id_group",
 												"validation"	=> "integer|required",
@@ -893,7 +893,7 @@ $config['FIELDS_prefix'] = array (
 
 
 
-if (file_exists("site/config/flexyadmin_config.php")) require_once("site/config/flexyadmin_config.php");
+if (file_exists(SITEPATH."config/flexyadmin_config.php")) require_once(SITEPATH."config/flexyadmin_config.php");
 
 
 /* End of file flexyadmin_config.php */

@@ -147,7 +147,7 @@ class Editor_lists {
 				else {
 					if ($type=="downloads" and isset($link['type']))
 						// $list.='["'.$link['type'].': '.$link["name"].'","'.$link["path"].'"],';
-						$list.='["'.$link['type'].': '.$link["name"].'","file'.str_replace('site/assets','',$link["path"]).'"],';
+						$list.='["'.$link['type'].': '.$link["name"].'","file'.str_replace(SITEPATH.'assets','',$link["path"]).'"],';
 					else
 						$list.='["'.$link["name"].'","'.$link["url"].'"],';
 				}
@@ -169,7 +169,7 @@ class Editor_lists {
 		}
 		if (substr($list,strlen($list)-1)==',') $list=substr($list,0,strlen($list)-1);
 		$list.=");";
-		$ListFile="site/assets/lists/$jsFile.js";
+		$ListFile=SITEPATH."assets/lists/$jsFile.js";
 		$result=write_file($ListFile, $list);
 		// trace_($result);
 		// trace_($list);

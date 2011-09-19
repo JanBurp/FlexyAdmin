@@ -1,4 +1,4 @@
-<? require_once(APPPATH."core/MY_Controller.php");
+<? require_once(APPPATH."core/FrontendController.php");
 
 class Download extends FrontEndController {
 	
@@ -9,7 +9,7 @@ class Download extends FrontEndController {
 
 	function this($path='',$file='')	{
 		if (!empty($path) and !empty($file)) {
-			$path='site/assets/'.$path.'/'.$file;
+			$path=SITEPATH.'assets/'.$path.'/'.$file;
 			if (file_exists($path)) {
 				$data=file_get_contents($path);
 				$name=$file;

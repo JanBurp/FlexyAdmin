@@ -135,7 +135,7 @@ $config['add_to_statistics']=TRUE;
 
 if (!isset($config['base_url'])) {
 	// If no automatic base_url, comment this:
-	die("sorry no automatic 'base_url', edit 'site/config.php'.");
+	die("sorry no automatic 'base_url', edit '".SITEPATH."config.php'.");
 	// And uncomment this with right base_url if needed
 	// $config['base_url']	= "http://www.flexyadmin.com/";
 }
@@ -231,7 +231,7 @@ $config['global_xss_filtering'] = FALSE;
 /*
  * Check if localhost and config_local.php exists, load local settings.
  */
-if (IS_LOCALHOST and file_exists('site/config/config_local.php')) {
+if (IS_LOCALHOST and file_exists(SITEPATH.'config/config_local.php')) {
 	require("config_local.php");
 }
 

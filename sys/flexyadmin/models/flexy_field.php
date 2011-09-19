@@ -865,8 +865,8 @@ class Flexy_field extends CI_Model {
 		$list=remove_prefix($field);
 		$list_file=$list.'_list.js';
 		$site_url=site_url();
-		if (file_exists('site/assets/lists/'.$list_file)) {
-			$c=read_file('site/assets/lists/'.$list_file);
+		if (file_exists(SITEPATH.'assets/lists/'.$list_file)) {
+			$c=read_file(SITEPATH.'assets/lists/'.$list_file);
 			$c=str_replace(array('var tinyMCELinkList = new Array(',');'),'',$c);
 			$links=explode('],[',$c);
 			foreach ($links as $key => $link) {
