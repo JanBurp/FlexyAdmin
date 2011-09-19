@@ -38,6 +38,22 @@ class Edit extends AdminController {
 		$this->_show_all();
 	}
 
+
+	private function _open_grid_set() {
+		$set=$this->grid_set=$this->session->userdata('grid_set');
+		return $set;
+	}
+	
+	private function _open_grid_set_uri() {
+		$set=$this->_open_grid_set();
+		$uri=api_uri('API_view_grid',$set['table']);
+		unset($set['table']);
+		foreach ($set as $key => $value) {
+			if (!empty($value)) $uri.="/$key/$value";
+		}
+		return $uri;
+	}
+
 	/**
 	 * Database edit controller
 	 */
@@ -182,8 +198,9 @@ class Edit extends AdminController {
 			}
 		}
 		delete_all_cache();
-		
-		$redirectUri=api_uri('API_view_grid',$table);
+
+		$redirectUri=$this->_open_grid_set_uri();
+		// $redirectUri=api_uri('API_view_grid',$table);
 		if (!empty($info)) $redirectUri.='/info/'.$info;
 		redirect($redirectUri);
 	}
