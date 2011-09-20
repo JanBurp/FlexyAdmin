@@ -640,10 +640,10 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	}
 
 	
-	function get_parent_uri($table,$uri="",$field='') {
+	function get_parent($table,$uri="",$field='') {
 		if (!empty($uri))	$id=$this->get_field_where($table,"id","uri",$uri);
 		$this->order_as_tree();
-		$this->uri_as_full_uri();
+		$this->uri_as_full_uri(TRUE,$field);
 		$this->select("id,order,uri,self_parent");
 		if (!empty($field)) $this->select($field);
 		$result=$this->get_result($table);
@@ -739,30 +739,36 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			foreach ($result as $key => $row) {
 				if ($row["self_parent"]!=0) {
 					$uri=$row["uri"];
-					if (isset($result[$row["self_parent"]])) {
+					if (!empty($extraFullField)) $extra=$row[$extraFullField];
+					if ( $this->_test_if_full_path($result,$row) ) {
 						$parentUri=$result[$row["self_parent"]]["uri"];
 						$result[$key]["uri"]=$parentUri."/".$uri;
-					}
-					else {
-						$parentUri=$this->get_parent_uri($table,$uri);
-						$result[$key]["uri"]=$parentUri['uri'];
-					}
-					if (!empty($extraFullField)) {
-						$extra=$row[$extraFullField];
-						if (isset($result[$row["self_parent"]])) {
+						if (!empty($extraFullField)) {
 							$parentExtra=$result[$row["self_parent"]][$extraFullField];
 							$result[$key][$extraFullField]=$parentExtra." / ".$extra;
 						}
-						else {
-							$parentExtra=$this->get_parent_uri($table,$uri,$extraFullField);
-							$result[$key][$extraFullField]=$parentExtra[$extraFullField]." / ".$extra;
+					}
+					else {
+						$parent=$this->get_parent($table,$uri,$extraFullField);
+						$result[$key]["uri"]=$parent['uri'];
+						if (!empty($extraFullField)) {
+							$result[$key][$extraFullField]=$parent[$extraFullField];
 						}
-						
 					}
 				}
 			}
 		}
 		return $result;
+	}
+	
+	function _test_if_full_path($result,$row) {
+		$test=FALSE;
+		$self_parent=$row['self_parent'];
+		while (!$test and $self_parent>0 and isset($result[$self_parent])) {
+			$self_parent=$result[$self_parent]['self_parent'];
+			$test=($self_parent==0);
+		}
+		return $test;
 	}
 	
 	function _make_tree_result($result) {
