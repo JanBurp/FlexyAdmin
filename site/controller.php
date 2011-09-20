@@ -184,10 +184,10 @@ class Main extends FrontEndController {
 		$autoload=$this->config->item('autoload_modules');
 		if ($autoload) $modules=array_merge($autoload,$modules);
 		// Loop trough all possible modules, load them, call them, and process return value
+		// trace_($modules);
 		$item['module_content']='';
 		foreach ($modules as $module) {
-			// make sure no spaces are in the modules name, split module and method
-			$module=str_replace(' ','_',$module);
+			// split module and method
 			$library=remove_suffix($module,'.');
 			$method=get_suffix($module,'.');
 			if ($method==$library) $method='index';
@@ -219,24 +219,27 @@ class Main extends FrontEndController {
 			if (substr($library,0,1)=='_') return FALSE;
 		}
 		if (!empty($library)) {
-			if (file_exists(SITEPATH.'libraries/'.$library.'.php')) {
-				// trace_('Loading module: '.$library.'.'.$method);
-				$this->load->library($library);
-				return $this->$library->$method($args);
+			// trace_('Module: '.$library.'.'.$method);
+			$library_name=str_replace(' ','_',$library);
+			if (file_exists(SITEPATH.'libraries/'.$library_name.'.php')) {
+				// trace_('Loading module: '.$library_name.'.'.$method);
+				$this->load->library($library_name);
+				$this->$library_name->set_name($library);
+				return $this->$library_name->$method($args);
 			}
 			elseif ($this->config->item('fallback_module')) {
 				$fallback=$this->config->item('fallback_module');
-				if (file_exists(SITEPATH.'libraries/'.$fallback.'.php')) {
-					// trace_('Loading Fallback Module: '.$library.'.'.$method);
-					$this->load->library($fallback);
+				$fallback_name=str_replace(' ','_',$fallback);
+				if (file_exists(SITEPATH.'libraries/'.$fallback_name.'.php')) {
+					// trace_('Loading Fallback Module: '.$fallback_name.'.'.$method);
+					$this->load->library($fallback_name);
 					$this->$fallback->set_name($library);
-					return $this->$fallback->index($args);
+					return $this->$fallback_name->index($args);
 				}
 			}
 		}
 		return FALSE;
 	}
-
 
 
 
