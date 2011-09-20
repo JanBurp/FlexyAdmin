@@ -27,23 +27,8 @@ $config['search']['extra_fields']=array();
 $config['search']['result_page_uri']='';
 
 // Or set a test for a certain page which has...
-$config['search']['result_page_where']='';
-// $config['search']['result_page_where']='str_module="search"';
-
-// Or, if both are empty, the search result is just added to current page.
-
-
-/*
-|--------------------------------------------------------------------------
-| Filter by Uri
-|--------------------------------------------------------------------------
-|
-| If TRUE only results that have the same first uri part as the post page, and that uri is also used for the result page
-|
-*/
-
-$config['search']['filter_by_uri']=TRUE;
-
+// $config['search']['result_page_where']='';
+$config['search']['result_page_where']=array('str_module','search');
 
 
 
@@ -70,8 +55,10 @@ $config['search']['empty_value']='zoeken';
 |
 */
 
-$config['search']['result_max_type']='LINES';
-$config['search']['result_max_length']=2;
+$config['search']['order_as_tree']=TRUE;				// only possible with menu tables.
+
+$config['search']['result_max_type']='CHARS';
+$config['search']['result_max_length']=0;
 $config['search']['result_max_ellipses']='...';
 
 

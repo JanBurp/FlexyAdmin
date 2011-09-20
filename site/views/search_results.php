@@ -1,4 +1,4 @@
-<div id="results">
+<div id="search_results">
 <h2>zoekresultaat van: '<?=$search?>'</h2>
 <? if ($items): ?>
 	<ul>
