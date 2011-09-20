@@ -6,6 +6,7 @@ class Module {
 
 	var $CI;
 	var $config;
+	var $name='';
 
 	function __construct() {
 		$this->CI=&get_instance();
@@ -32,6 +33,10 @@ class Module {
 			$this->config=array_merge($this->config,$config);
 		else
 			$this->config=$config;
+	}
+
+	function set_name($name) {
+		$this->name=$name;
 	}
 
 
