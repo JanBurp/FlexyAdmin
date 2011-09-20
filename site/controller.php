@@ -211,7 +211,6 @@ class Main extends FrontEndController {
 	 * Used for loading and calling modules
 	 */
 	private function _call_library($library,$method='index',$args=NULL) {
-		// trace_($library.'.'.$method);
 		if (is_array($library)) {
 			$args=array_slice($library,2);
 			$method=el(2,$library,'index');
@@ -219,12 +218,25 @@ class Main extends FrontEndController {
 			// prevent loading hidden modules
 			if (substr($library,0,1)=='_') return FALSE;
 		}
-		if (file_exists('site/libraries/'.$library.'.php')) {
-			$this->load->library($library);
-			return $this->$library->$method($args);
+		if (!empty($library)) {
+			if (file_exists(SITEPATH.'libraries/'.$library.'.php')) {
+				// trace_('Loading module: '.$library.'.'.$method);
+				$this->load->library($library);
+				return $this->$library->$method($args);
+			}
+			elseif ($this->config->item('fallback_module')) {
+				$fallback=$this->config->item('fallback_module');
+				if (file_exists(SITEPATH.'libraries/'.$fallback.'.php')) {
+					// trace_('Loading Fallback Module: '.$library.'.'.$method);
+					$this->load->library($fallback);
+					$this->$fallback->set_name($library);
+					return $this->$fallback->index($args);
+				}
+			}
 		}
 		return FALSE;
 	}
+
 
 
 
