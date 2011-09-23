@@ -560,7 +560,12 @@ class Flexy_field extends CI_Model {
 
 	// TODO: Meer self_ velden mogelijk (nu alleen nog self_parent)
 	function _self_form() {
-		$strField=$this->db->get_first_field($this->table,'str');
+		if ($this->table=='cfg_auto_menu') {
+			$strField=$this->cfg->get('cfg_table_info','cfg_auto_menu','str_abstract_fields');
+		}
+		else {
+			$strField=$this->db->get_first_field($this->table,'str');
+		}
 		$this->db->select(array(PRIMARY_KEY));
 		if ($strField) $this->db->select($strField);
 		if ($this->db->field_exists('uri',$this->table)) $this->db->select('uri');
@@ -695,7 +700,8 @@ class Flexy_field extends CI_Model {
 	function _dropdown_field_form() {
 		$tables=$this->db->list_tables();
 		$thisRights=$this->user->get_rights();
-		if ($thisRights['rights']!='*') $tables=filter_by($tables,"tbl_");
+		// if ($thisRights['rights']!='*')
+		$tables=filter_by($tables,"tbl_");
 		$specialFields=array_keys($this->config->item('FIELDS_special'));
 		$options=array();
 		$options[""]="";
