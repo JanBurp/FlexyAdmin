@@ -202,9 +202,9 @@ $config["CFG_"]=array(
 			"b_single_row"=>'0',
 			"str_ui_name"=>'',
 			"b_grid_add_many"=>'0',
-			"str_abstract_fields"=>'',
+			"str_abstract_fields"=>'str_description',
 			"str_order_by"=>'',
-			"txt_help"=>'<p>Settings for creating an automatic menu. Needs a res_table table.</p>'
+			"txt_help"=>'<p>Settings for creating an automatic menu. Needs a res_menu_result table.</p>'
 			),
 		"cfg_admin_menu"=>array(
 			"order"=>'102',
