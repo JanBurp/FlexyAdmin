@@ -1,4 +1,4 @@
-> 1262
+> 1280
 
 UPDATE:
 - CodeIgniter 2.0.3
