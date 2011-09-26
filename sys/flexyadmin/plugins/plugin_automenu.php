@@ -32,7 +32,9 @@ class Plugin_automenu extends Plugin_ {
 			$checkTables[]=$this->automationTable;
 			$checkTables[]=$this->resultMenu;
 			// get tables from automation data
+			$this->db->order_as_tree();
 			$this->automationData=$this->db->get_results($this->automationTable);
+			// trace_($this->automationData);
 			foreach ($this->automationData as $aData) {
 				if (!in_array($aData['table'], $checkTables))	$checkTables[]=$aData['table'];
 				$foreignTable=$aData['field_group_by'];
@@ -75,6 +77,7 @@ class Plugin_automenu extends Plugin_ {
 		$this->lastId=1;
 
 		// Loop through all options in Auto Menu
+		
 		foreach ($this->automationData as $autoKey => $autoValue) {
 			
 			switch($autoValue['str_type']) {
@@ -104,12 +107,21 @@ class Plugin_automenu extends Plugin_ {
 		
 		
 				case 'from submenu table':
-					$data=$this->db->get_results($autoValue['table']);
+					if (isset($autoValue['str_where']) and !empty($autoValue['str_where'])) {
+						$this->db->where($autoValue['str_where']);
+					}
+					$limit=0;
+					if (isset($autoValue['int_limit'])) {
+						$limit=$autoValue['int_limit'];
+					}
+					$data=$this->db->get_results($autoValue['table'],$limit);
 					$order=0;
 					$parent=0;
 					if (!empty($autoValue['str_parent_where'])) {
 						$parent=$this->_get_where_parent($autoValue);
 					}
+					// trace_($parent);
+					// trace_($data);
 					// is er al een sub? Gebruik die order
 					$sub=$this->newMenu;
 					$sub=find_row_by_value($sub,$parent,'self_parent');
