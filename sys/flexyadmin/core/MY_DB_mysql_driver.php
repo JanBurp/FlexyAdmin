@@ -83,7 +83,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				}
 			}
 			$this->ar_where=$where;
-			// trace_($this->ar_where);
+			// trace_($where);
 		}
 	}
 
@@ -562,10 +562,10 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 						$this->ar_where[$key]=$AndOr.$mTable["this"].".".$this->pk.' IN ('.$whereIn.') ';
 					}
 					else {
-						// if (count($this->ar_where)==0)
+						if (count($this->ar_where)==0)
 							$this->ar_where[$key]='FALSE ';
-						// else
-							// $this->ar_where[$key]=' ';
+						else
+							$this->ar_where[$key]=' ';
 					}
 				}
 				$this->_repair_ar();
