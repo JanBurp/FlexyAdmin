@@ -51,6 +51,11 @@ function get_img_size($i) {
 	return $size;
 }
 
+function is_wider_than($i,$w) {
+	$s=get_img_size($i);
+	return $s[0]>$w;
+}
+
 function portrait_or_landscape($i) {
 	$c='';
 	$s=get_img_size($i);
