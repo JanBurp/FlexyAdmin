@@ -432,6 +432,14 @@ function filter_by_key($a,$preKey,$replaceKey=FALSE) {
 	return $arr;
 }
 
+function array_merge_strict($a,$b) {
+	$m=$a;
+	foreach ($b as $key => $value) {
+		if (!in_array($value,$m)) $m[]=$value;
+	}
+	return $m;
+}
+
 
 function array_change_key_name($orig,$new, &$array) {
 	foreach ($array as $k => $v)
