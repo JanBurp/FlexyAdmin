@@ -428,9 +428,10 @@ class Menu {
 					$itemOut.=$this->tmp($this->tmpItemStart,array("class"=>$itemAttr["class"],'id'=>$itemAttr['id']));  // <li ... >
 					if (isset($item["uri"])) {
 						if (isset($item['name']))
-							$showName=$item['name'];
+							$showName=ascii_to_entities($item['name']);
 						else
 							$showName=trim(ascii_to_entities($name),'_');
+						// trace_($showName);
 						$pre=get_prefix($showName,"__");
 						if (!empty($pre)) $showName=$pre;
 						if (isset($item["help"])) $showName=help($showName,$item["help"]);
