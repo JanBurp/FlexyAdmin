@@ -440,7 +440,6 @@ function array_merge_strict($a,$b) {
 	return $m;
 }
 
-
 function array_change_key_name($orig,$new, &$array) {
 	foreach ($array as $k => $v)
 		$return[($k===$orig) ? $new:$k]=$v;
