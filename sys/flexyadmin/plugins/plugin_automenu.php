@@ -257,7 +257,6 @@ class Plugin_automenu extends Plugin_ {
 						}
 						$data=$this->db->get_result($autoValue['table']);
 						
-						
 						// trace_('#SHOW# '.$this->db->ar_last_query);
 						// trace_($groupId);
 						// trace_($groupData);
