@@ -18,7 +18,7 @@ class Comments extends Module {
 	
 	public function __construct() {
 		parent::__construct();
-		$this->CI->load->model('form');
+		$this->CI->load->library('form');
 		$this->CI->load->library('spam');
 		$this->load_config('comments');
 		$this->set_language();
