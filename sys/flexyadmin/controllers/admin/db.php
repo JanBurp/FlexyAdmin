@@ -38,7 +38,7 @@ class Db extends AdminController {
 	}
 
 	function _export() {
-		$this->load->model('form');
+		$this->load->library('form');
 		$this->lang->load('help');
 		$this->lang->load("update_delete");
 		$this->lang->load("form");
@@ -160,7 +160,7 @@ class Db extends AdminController {
 	function restore() {
 		if ($this->user->can_backup()) {
 			if (!isset($_FILES["userfile"])) {
-				$this->load->model('form');
+				$this->load->library('form');
 				$this->lang->load('help');
 				$this->lang->load('form');
 				$form=new form($this->config->item('API_db_restore'));
@@ -221,7 +221,7 @@ class Db extends AdminController {
 	}
 
 	function _import() {
-		$this->load->model('form');
+		$this->load->library('form');
 		$this->lang->load('help');
 		$this->lang->load('form');
 		$form=new form($this->config->item('API_db_import'));
@@ -267,7 +267,7 @@ class Db extends AdminController {
 				}
 				if ($sql) {
 					// do the actual import..
-					$this->load->model('form');
+					$this->load->library('form');
 					$this->lang->load('help');
 					$this->lang->load('form');
 					$form=new form($this->config->item('API_db_sql'));

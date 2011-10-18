@@ -324,7 +324,7 @@ class Show extends AdminController {
 			$this->lang->load("form");
 
 			$this->form_validation->set_error_delimiters('<div id="formmessage">', '</div>');
-			$this->load->model("form");
+			$this->load->library("form");
 
 			/**
 			 * get data
@@ -481,7 +481,7 @@ class Show extends AdminController {
 		$this->load->library('form_validation');
 		$this->load->helper('html');
 		$this->form_validation->set_error_delimiters('<div id="formmessage">', '</div>');
-		$this->load->model("form");
+		$this->load->library("form");
 		$form=new form(api_uri('API_user'));
 		$form->set_data($formData,$userData["str_username"]);
 		$form->add_password_match();

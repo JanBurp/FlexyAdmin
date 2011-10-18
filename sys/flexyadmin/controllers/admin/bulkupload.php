@@ -43,7 +43,7 @@ class Bulkupload extends AdminController {
 				if (empty($path)) {
 					// create form
 					$this->lang->load('form');
-					$this->load->model('form');
+					$this->load->library('form');
 					$form=new form($this->config->item('API_bulk_upload'));
 					$options=array();
 					foreach ($mediaCfg as $info) {

@@ -142,7 +142,7 @@ class Fill extends AdminController {
 			}
 			if (!$fill or $test) {
 				// show form
-				$this->load->model('form');
+				$this->load->library('form');
 				$this->load->model('flexy_field','ff');
 				$form=new form($this->config->item('API_fill'));
 				$tablesOptions=$this->ff->_dropdown_tables_form();
