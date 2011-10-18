@@ -15,7 +15,9 @@
  *
  */
 
-class Form Extends CI_Model {
+class Form {
+
+	var $CI;
 
 	var $caption;
 	var $action;
@@ -31,7 +33,7 @@ class Form Extends CI_Model {
 	
 
 	function __construct($action="") {
-		parent::__construct();
+		$this->CI = &get_instance();
 		$this->init($action);
 	}
 
@@ -198,6 +200,7 @@ class Form Extends CI_Model {
  */
 	function validation() {
 		$data=$this->data;
+		// trace_($data);
 		$hasCaptcha=FALSE;
 
 		foreach($data as $name=>$field) {
@@ -213,24 +216,24 @@ class Form Extends CI_Model {
 			}
 
 			// set validation rules
-			$this->form_validation->set_rules($field["name"], $field["label"], $field["validation"]);
+			$this->CI->form_validation->set_rules($field["name"], $field["label"], $field["validation"]);
 			
 			if ($field['type']=='captcha') $hasCaptcha=$name;
-			$this->data[$name]["repopulate"]=$this->input->post($name);
+			$this->data[$name]["repopulate"]=$this->CI->input->post($name);
 		}
 
 		log_('info',"form: validation");
-		$this->isValidated=$this->form_validation->run();
+		$this->isValidated=$this->CI->form_validation->run();
 		// validate captcha
 		if ($hasCaptcha!=FALSE) {
-			$value=$this->input->post($hasCaptcha);
-			$code=str_reverse($this->input->post($hasCaptcha.'__captcha'));
+			$value=$this->CI->input->post($hasCaptcha);
+			$code=str_reverse($this->CI->input->post($hasCaptcha.'__captcha'));
 			$this->isValidated=($value==$code);
 		}
 
 		if ($this->isValidated) {
 			foreach ($data as $name => $field) {
-				$this->data[$name]["repopulate"]=$this->input->post($name);
+				$this->data[$name]["repopulate"]=$this->CI->input->post($name);
 			}
 		}
 		
@@ -275,17 +278,17 @@ class Form Extends CI_Model {
 				if (!empty($_FILES[$name]['name'])) {
 					$config['upload_path'] 		= $data['upload_path'];
 					$config['allowed_types'] 	= str_replace(",","|",$data['allowed_types']);
-					$this->upload->config($config);
-					$ok=$this->upload->upload_file($name);
+					$this->CI->upload->config($config);
+					$ok=$this->CI->upload->upload_file($name);
 					if (!$ok) {
-						$error=$this->upload->get_error();
+						$error=$this->CI->upload->get_error();
 					}
 					else {
-						$out=$this->upload->get_file();
+						$out=$this->CI->upload->get_file();
 						// reset lists
-						$this->load->library("editor_lists");
-						$this->editor_lists->create_list("img");
-						$this->editor_lists->create_list("media");
+						$this->CI->load->library("editor_lists");
+						$this->CI->editor_lists->create_list("img");
+						$this->CI->editor_lists->create_list("media");
 					}
 				}
 				break;
@@ -301,7 +304,7 @@ class Form Extends CI_Model {
 	function _value_from_hidden($name,$value) {
 		if (is_array($value) or empty($value)) {
 			// multi options (string)
-			$hidden=$this->input->post($name.'__hidden');
+			$hidden=$this->CI->input->post($name.'__hidden');
 			if ($hidden) {
 				$out=$hidden;
 			}
@@ -327,29 +330,29 @@ class Form Extends CI_Model {
 		 */
 		// trace_($_POST);
 		$set=array();
-		if ($this->isValidated and $this->db->table_exists($table)) {
+		if ($this->isValidated and $this->CI->db->table_exists($table)) {
 			$joins=array();
 			foreach($this->data as $name=>$field) {
 				// set primary key (id)
 				if ($name==PRIMARY_KEY) {
-					$id=$this->input->post(PRIMARY_KEY);
+					$id=$this->CI->input->post(PRIMARY_KEY);
 				}
 				// set user (id) if set
 				elseif ($name=="user") {
 					if ($user_id===FALSE)
-						$set[$name]=$this->input->post($name);
+						$set[$name]=$this->CI->input->post($name);
 					else
 						$set[$name]=$user_id;
 				}
 				// set uri
 				elseif ($name=="uri") {
-					$uri=$this->input->post($name);
+					$uri=$this->CI->input->post($name);
 				}
 
 				// set other fields
 				else {
 					$pre=get_prefix($name);
-					$value=$this->input->post($name);
+					$value=$this->CI->input->post($name);
 					
 					// remove matches if any
 					if ($this->add_password_match) {
@@ -362,11 +365,11 @@ class Form Extends CI_Model {
 					/**
 					 *  Is data from join?
 					 */
-					if ($pre==$this->config->item('REL_table_prefix')) {
+					if ($pre==$this->CI->config->item('REL_table_prefix')) {
 						// strace_($name);
 						if (empty($value)) $value=array();
 						$joins[$name]=$value;
-						$hidden=$this->input->post($name.'__hidden');
+						$hidden=$this->CI->input->post($name.'__hidden');
 						if ($hidden) {
 							$joins[$name]=explode('|',$hidden);
 						}
@@ -377,7 +380,7 @@ class Form Extends CI_Model {
 					* Password hash it (or leave it same when empty)
 					*/
 					elseif (in_array($pre,array('gpw','pwd'))) {
-						if (!empty($value)) $set[$name]=$this->ion_auth_model->hash_password($value);
+						if (!empty($value)) $set[$name]=$this->CI->ion_auth_model->hash_password($value);
 					}
 					/**
 					 * Normal data
@@ -402,14 +405,14 @@ class Form Extends CI_Model {
 				if (isset($set["order"])) {
 					if ($id==-1) {
 						if (isset($set["self_parent"])) 
-							$set["order"]=$this->order->get_next_order($table,$set["self_parent"]);
+							$set["order"]=$this->CI->order->get_next_order($table,$set["self_parent"]);
 						else
-							$set["order"]=$this->order->get_next_order($table);
+							$set["order"]=$this->CI->order->get_next_order($table);
 					}
 					elseif (isset($set["self_parent"])) {
-						$old_parent=$this->db->get_field($table,"self_parent",$id);
+						$old_parent=$this->CI->db->get_field($table,"self_parent",$id);
 						if ($old_parent!=$set["self_parent"]) {
-							$set["order"]=$this->order->get_next_order($table,$set["self_parent"]);
+							$set["order"]=$this->CI->order->get_next_order($table,$set["self_parent"]);
 						}
 					}
 				}
@@ -417,16 +420,16 @@ class Form Extends CI_Model {
 				/**
 				 * Make sure all not given fields stays the same
 				 */
-				$staticFields=$this->db->list_fields($table);
+				$staticFields=$this->CI->db->list_fields($table);
 				$staticFields=array_combine($staticFields,$staticFields);
 				unset($staticFields[PRIMARY_KEY]);
 				foreach($set as $name=>$value) {
 					unset($staticFields[$name]);
 				}
 				if (!empty($staticFields)) {
-					$this->db->select($staticFields);
-					$this->db->where(PRIMARY_KEY,$id);
-					$query=$this->db->get($table);
+					$this->CI->db->select($staticFields);
+					$this->CI->db->where(PRIMARY_KEY,$id);
+					$query=$this->CI->db->get($table);
 					$staticData=$query->row_array();
 					$query->free_result();
 					foreach($staticData as $name=>$value) {
@@ -442,20 +445,20 @@ class Form Extends CI_Model {
 				 */
 				// strace_($set);
 				
-				$this->db->trans_start();
+				$this->CI->db->trans_start();
 				
 				foreach($set as $name=>$value) {
-					$this->db->set($name,$value);
+					$this->CI->db->set($name,$value);
 					$this->data[$name]['newvalue']=$value;
 				}
 				if ($id==-1) {
-					$this->db->insert($table);
-					$id=$this->db->insert_id();
+					$this->CI->db->insert($table);
+					$id=$this->CI->db->insert_id();
 					log_('info',"form: inserting data in '$table', id='$id'");
 				}
 				else {
-					$this->db->where(PRIMARY_KEY,$id);
-					$this->db->update($table);
+					$this->CI->db->where(PRIMARY_KEY,$id);
+					$this->CI->db->update($table);
 					log_('info',"form: updating data from '$table', id='$id'");
 				}
 				/**
@@ -473,22 +476,22 @@ class Form Extends CI_Model {
 							$joinKey.="_";
 						}
 						// strace_(array('id'=>$id,'thisKey'=>$thisKey,'joinKey'=>$joinKey,'relTable'=>$relTable,'value'=>$value));
-						$this->db->where($thisKey,$id);
-						$this->db->delete($relTable);
+						$this->CI->db->where($thisKey,$id);
+						$this->CI->db->delete($relTable);
 						// insert new selection
 						if (!is_array($value)) $value=explode('|',$value);
 						foreach ($value as $data) {
-							$this->db->set($thisKey,$id);
-							$this->db->set($joinKey,$data);
-							$this->db->insert($relTable);
-							$inId=$this->db->insert_id();
+							$this->CI->db->set($thisKey,$id);
+							$this->CI->db->set($joinKey,$data);
+							$this->CI->db->insert($relTable);
+							$inId=$this->CI->db->insert_id();
 						}
 						// strace_('Should be updated..... ok');
 						log_('info',"form: updating join data from '$table', id='$id'");
 					}
 				}
 				
-				$this->db->trans_complete();
+				$this->CI->db->trans_complete();
 				
 				
 				return intval($id);
@@ -522,7 +525,7 @@ class Form Extends CI_Model {
  */
 
 	function render($class='flexyForm') {
-		$this->lang->load("form");
+		$this->CI->lang->load("form");
 		// if (!empty($type)) $this->set_type($type);
 		
 		$data=$this->data;
@@ -678,7 +681,7 @@ class Form Extends CI_Model {
 				if ($field["type"]=="image_dropdown" or $field["type"]=="image_dragndrop") {
 					// show values
 					if (!is_array($value)) $medias=array($value); else $medias=$value;
-					// if (empty($medias)) $medias=$this->config->item('ADMINASSETS').'icons/empty.gif';
+					// if (empty($medias)) $medias=$this->CI->config->item('ADMINASSETS').'icons/empty.gif';
 					$out.='<ul class="values '.$attr['class'].'">';
 					$hiddenValue='';
 					foreach($medias as $media) {
@@ -704,7 +707,7 @@ class Form Extends CI_Model {
 					$out.='<ul class="choices">';
 					foreach($options as $img) {
 						if (empty($img)) {
-							$out.='<li><img src="'.$this->config->item('ADMINASSETS').'icons/flexyadmin_empty_image.gif" class="media empty" /></li>';
+							$out.='<li><img src="'.$this->CI->config->item('ADMINASSETS').'icons/flexyadmin_empty_image.gif" class="media empty" /></li>';
 						}
 						else {
 							$image=$img['name'];
@@ -784,7 +787,7 @@ class Form Extends CI_Model {
 									$out.=icon('delete');
 									$first=FALSE;
 								}
-								$out.=form_label($this->uiNames->get($subfieldName),$subAttr['name'],$labelClass);
+								$out.=form_label($this->CI->uiNames->get($subfieldName),$subAttr['name'],$labelClass);
 								if ($preSub=='txt') {
 									$this->hasHtmlField=true;
 									$subAttr["rows"]=5;

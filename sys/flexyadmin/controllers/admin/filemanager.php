@@ -344,7 +344,7 @@ class Filemanager extends AdminController {
 				}
 				else {
 					// autofill
-					if ($mediaCfg[$path]['str_autofill']=='single upload' or $mediaCfg[$path]['str_autofill']=='both') {
+					if (isset($mediaCfg[$path]['str_autofill']) and ($mediaCfg[$path]['str_autofill']=='single upload' or $mediaCfg[$path]['str_autofill']=='both') ) {
 						$autoFill=$this->upload->auto_fill_fields($file,$path);
 					}
 					// fill in media table if any

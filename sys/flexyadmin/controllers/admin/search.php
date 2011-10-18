@@ -75,7 +75,7 @@ class Search extends AdminController {
 			}
 			if (!$search or $test) {
 				// show form
-				$this->load->model('form');
+				$this->load->library('form');
 				$this->load->model('flexy_field','ff');
 				$form=new form($this->config->item('API_search'));
 				

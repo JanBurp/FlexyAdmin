@@ -20,7 +20,7 @@ class Log extends AdminController {
 			
 			$this->load->library('form_validation');
 			$this->lang->load("form");
-			$this->load->model("form");
+			$this->load->library("form");
 			
 			$options=array();
 			foreach ($files as $file=>$value) {
