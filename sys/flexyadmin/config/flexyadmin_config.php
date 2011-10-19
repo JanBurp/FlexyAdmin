@@ -887,6 +887,11 @@ $config['FIELDS_prefix'] = array (
 											"grid"				=> "function_boolean",
 											"form"				=> "checkbox",
 											"validation"	=> ""
+										),
+	"is"					=> array (
+											"grid"				=> "function_boolean",
+											"form"				=> "checkbox",
+											"validation"	=> ""
 										)
 		);
 

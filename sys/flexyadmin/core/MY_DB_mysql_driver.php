@@ -1113,10 +1113,12 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			$loop=true;
 			while ($loop) {
 				$fieldInfo=current($fieldData);
-				$type=$fieldInfo->type;
-				if (in_array($type,$types)) {
-					array_push($abFields,$table.".".$fieldInfo->name);
-					$nr--;
+				if ($fieldInfo) {
+					$type=$fieldInfo->type;
+					if (in_array($type,$types)) {
+						array_push($abFields,$table.".".$fieldInfo->name);
+						$nr--;
+					}
 				}
 				$loop=($nr>0 and each($fieldData)!==false);
 			}
