@@ -1,3 +1,13 @@
+UPDATE to 1293
+==============
+
+If upgrading from 1262 or later:
+- Replace current sys map with new sys map
+- form is not a model anymore but a library, so you need to change the loading calls of form: "->load->model('form')" to "->load->library('form')"
+
+If upgrading from older version: check by 1262
+
+
 UPDATE to 1280
 ==============
 

@@ -1,3 +1,21 @@
+> 1293
+
+CHANGED:
+- form is now a library instead of a model (better for multiple forms on one page). UPDATE YOU'RE LOAD STATEMENT!
+
+NEW:
+- new field prefix: is_ same as b_ (boolean)
+- added MY_array_helper: array_merge_strict()
+- added menu: get_next() / get_prev()
+- added img_helper: is_wider_than()
+- MY_DB... search() -  search query now always between () so it's easy to add more criterea
+
+BUGS:
+- Several small bugs in DB... (MY_DB...) (due to abstract fields, where/many...)
+- now it's possible to use assets maps with underscores (MY_url_helper linkencode/decode)
+- menu name now always as html entities (menu)
+
+
 > 1280
 
 UPDATE:
