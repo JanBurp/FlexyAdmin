@@ -280,6 +280,7 @@ class Main extends FrontEndController {
 		if (empty($item['txt_text'])) {
 			$this->db->select('uri');
 			$this->db->where('self_parent',$item['id']);
+			if (isset($item['b_visible'])) $this->db->where('b_visible','1');
 			$subItem=$this->db->get_row(get_menu_table());
 			if ($subItem) {
 				$newUri=$this->site['uri'].'/'.$subItem['uri'];
