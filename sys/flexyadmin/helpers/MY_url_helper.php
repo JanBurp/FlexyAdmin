@@ -42,12 +42,12 @@ function api_uri() {
 }
 
 function linkencode($l) {
-	$l=str_replace(" ","_",$l);
+	// $l=str_replace(" ","_",$l); // Kan niet als je mappen met _ erin wilt maken
 	return rawurlencode($l);
 }
 
 function linkdecode($l) {
-	$l=str_replace("_"," ",$l);
+	// $l=str_replace("_"," ",$l);
 	return rawurldecode($l);
 }
 
