@@ -701,11 +701,11 @@ class Flexy_field extends CI_Model {
 		$tables=$this->db->list_tables();
 		$thisRights=$this->user->get_rights();
 		// if ($thisRights['rights']!='*')
-		$tables=filter_by($tables,"tbl_");
+		$normal_tables=filter_by($tables,"tbl_");
 		$specialFields=array_keys($this->config->item('FIELDS_special'));
 		$options=array();
 		$options[""]="";
-		foreach ($tables as $table) {
+		foreach ($normal_tables as $table) {
 			$fields=$this->db->list_fields($table);
 			foreach ($fields as $field) {
 				// if (!in_array($field,$specialFields)) {
@@ -716,8 +716,9 @@ class Flexy_field extends CI_Model {
 				// }
 			}
 			// join fields?
-			$jt=$this->config->item('REL_table_prefix')."_".remove_prefix($table).$this->config->item('REL_table_split');
-			foreach($tables as $key=>$jtable) {
+			$jt="rel_".remove_prefix($table).$this->config->item('REL_table_split');
+			$rel_tables=filter_by($tables,"rel_");
+			foreach($rel_tables as $key=>$jtable) {
 				if (strncmp($jt,$jtable,strlen($jt))==0) {
 					$field=$jtable;
 					$options["$table.$field"]="$table . $field";
