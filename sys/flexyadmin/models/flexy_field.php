@@ -702,6 +702,8 @@ class Flexy_field extends CI_Model {
 		$thisRights=$this->user->get_rights();
 		// if ($thisRights['rights']!='*')
 		$normal_tables=filter_by($tables,"tbl_");
+		$result_tables=filter_by($tables,"res_");
+		$normal_tables=array_merge($result_tables,$normal_tables);
 		$specialFields=array_keys($this->config->item('FIELDS_special'));
 		$options=array();
 		$options[""]="";
