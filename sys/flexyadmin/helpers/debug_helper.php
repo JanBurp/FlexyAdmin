@@ -92,7 +92,7 @@ function trace_($a=NULL,$echo=true,$backtraceOffset=1) {
 	else {
 		$type="[".gettype($a)."]";
 	}
-	$out="<div style=\"font-family:courier,serif;font-size:10px;z-index:99999;margin:2px;padding:2px;background-color:#efe;color:#000;border:solid 1px #999;\"><span style=\"font-weight:bold;color:#696;\">$show #$c $type:</span>\n";
+	$out="<div style=\"font-family:courier,serif;font-size:10px;z-index:99999;margin:40px 2px 2px;padding:2px;background-color:#efe;color:#000;border:solid 1px #999;\"><span style=\"font-weight:bold;color:#696;\">$show #$c $type:</span>\n";
 	if (is_bool($a)) {
 		if ($a) $out.="'True'";
 		else		$out.="'False'";
