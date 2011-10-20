@@ -23,6 +23,7 @@ class Main extends FrontEndController {
 				$feeds=array();
 				foreach ($rssCfg as $id => $rssInfo) {
 					if (!empty($rssInfo['str_where'])) $this->db->where($rssInfo['str_where']);
+					if (isset($rssInfo['b_full_uris']) and $rssInfo['b_full_uris']) $this->db->uri_as_full_uri();
 					$subFeeds=$this->db->get_result($rssInfo['table'],$rssInfo['int_limit']);
 
 					foreach ($subFeeds as $feed) {
