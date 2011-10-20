@@ -41,10 +41,10 @@ class BasicController extends MY_Controller {
 			$this->user_id=$this->session->userdata("user_id");
 			$this->user_name=$this->session->userdata("str_username");
 			$this->language=$this->session->userdata("language");
+			$this->user_group_id=$this->session->userdata("id_user_group");
 		}
 		return $logged_in;
 	}
-
 
 	function _update_links_in_txt($oldUrl,$newUrl="") {
 		// loop through all txt fields..

@@ -28,8 +28,12 @@ class AdminController extends BasicController {
 	function __construct() {
 		parent::__construct(true);
 		
-		if ( ! $this->_user_logged_in()) {
+		if ( ! $this->_user_logged_in() ) {
 			redirect($this->config->item('API_login'));
+		}
+		if ( ! $this->_user_can_use_admin() ) {
+			$this->user->logout();
+			redirect(site_url());
 		}
 		$this->currentTable="";
 		$this->currentId="";
@@ -42,6 +46,11 @@ class AdminController extends BasicController {
 		$this->load->dbforge();
 		$this->helpTexts=array();
 	}
+
+	private function _user_can_use_admin() {
+		return ($this->user_group_id<4); // restrict admin use only to users that ar at least a user (visitors are not allowed)
+	}
+
 
 	function set_message($message) {
 		$this->session->set_userdata("message",$message);
