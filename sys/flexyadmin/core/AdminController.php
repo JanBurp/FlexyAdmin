@@ -75,7 +75,7 @@ class AdminController extends BasicController {
 		$title=$site['str_title'];
 		if ($this->config->item('LOCAL'))	$title=' # '.$title; else $title=' - '.$title;
 		$url=str_replace('http://','',$site['url_url']);
-		$editor=$this->showEditor and $this->cfg->get('CFG_editor',"b_use_editor");
+		$editor=($this->showEditor and $this->cfg->get('CFG_editor',"b_use_editor"));
 		$type="";
 		if (isset($this->showType)) $type=$this->showType;
 		$buttons1=$this->cfg->get('CFG_editor',"str_buttons1");
