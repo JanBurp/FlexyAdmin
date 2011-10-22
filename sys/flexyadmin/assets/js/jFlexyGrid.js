@@ -475,7 +475,7 @@ function doGrid() {
 	}
 	
 	//
-	// Sortable columns in Grid or File (list) modes.
+	// Sortable columns in Grid or File (list) modes / Pagination
 	//
 
 	if (isSortable && $('table.bulkupload').length<1) {

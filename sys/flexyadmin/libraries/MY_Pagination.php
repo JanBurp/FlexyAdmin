@@ -17,13 +17,13 @@ class MY_Pagination extends CI_Pagination {
 	var $num_tag_close = '</li>';
 	var $cur_tag_open = '<li class="current">';
 	var $cur_tag_close = '</li>';
-	var $first_tag_open = '<li class="pagination_first">';
+	var $first_tag_open = '<li class="pager pagination_first">';
 	var $first_tag_close = '</li>';
-	var $last_tag_open = '<li class="pagination_last">';
+	var $last_tag_open = '<li class="pager pagination_last">';
 	var $last_tag_close = '</li>';
-	var $prev_tag_open = '<li class="pagination_prev">';
+	var $prev_tag_open = '<li class="pager pagination_prev">';
 	var $prev_tag_close = '</li>';
-	var $next_tag_open = '<li class="pagination_next">';
+	var $next_tag_open = '<li class="pager pagination_next">';
 	var $next_tag_close = '</li>';
 	
 	function __construct($params = array()) {
