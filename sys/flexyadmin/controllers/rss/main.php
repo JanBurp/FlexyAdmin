@@ -25,12 +25,12 @@ class Main extends FrontEndController {
 					if (!empty($rssInfo['str_where'])) $this->db->where($rssInfo['str_where']);
 					if (isset($rssInfo['b_full_uris']) and $rssInfo['b_full_uris']) $this->db->uri_as_full_uri();
 					$subFeeds=$this->db->get_result($rssInfo['table'],$rssInfo['int_limit']);
-
+					
 					foreach ($subFeeds as $feed) {
 						$feeds[]=array( 'title'	=> trim($rssInfo['str_pre_title'].' '.$this->_get_field($feed,$rssInfo['field_title'])),
 														'url'		=> trim($rssInfo['str_pre_uri'].'/'.$this->_get_field($feed,$rssInfo['field_uri']),'/'),
 														'date'	=> $this->_get_field($feed,$rssInfo['field_date']),
-														'body'	=> max_length(strip_tags($this->_get_field($feed,$rssInfo['field_body'])),$rssInfo['int_max_length'])
+														'body'	=> max_length(strip_tags($this->_get_field($feed,$rssInfo['field_body'])),$rssInfo['int_max_length'],'CHARS')
 														);
 					}
 				}
