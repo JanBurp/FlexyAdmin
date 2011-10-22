@@ -208,6 +208,7 @@ class Show extends AdminController {
 
 
 						$data=$this->db->get_result($table,$pagination,$offset);
+						$total_rows=$this->db->last_num_rows_no_limit();
 
 						$last_order=$this->db->get_last_order();
 						if (substr($last_order,0,1)!='(') $order=$last_order;
@@ -227,7 +228,6 @@ class Show extends AdminController {
 							$grid=new grid();
 
 							if ($pagination) {
-								$total_rows=$this->db->last_num_rows_no_limit();
 								$base_url=api_url('API_view_grid',$table);
 								$pagination=array('base_url'=>$base_url,'per_page'=>$pagination,'total_rows'=>$total_rows,'offset'=>$offset);
 								$grid->set_pagination($pagination);
