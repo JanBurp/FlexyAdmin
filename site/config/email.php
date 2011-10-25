@@ -1,8 +1,22 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-// $config['protocol'] = 'sendmail';
-// $config['mailpath'] = '/usr/sbin/sendmail';
+
+/*
+| -------------------------------------------------------------------------
+| Email
+|
+| Set you're email configuration here, it will override the standard settings
+|
+| See http://codeigniter.com/user_guide/libraries/email.html
+|
+| -------------------------------------------------------------------------
+*/
 
 
-/* End of file config.php */
-/* Location: ./system/application/config/config.php */
+
+// $config['mailtype'] = 'html';
+// $config['protocol'] = 'smtp';
+// $config['smtp_host'] = 'smtp.yourhost.nl';
+
+
+?>
