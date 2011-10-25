@@ -121,7 +121,7 @@ class MY_URI extends CI_URI {
 		$CI=&get_instance();
 		if ( ! isset($CI->pagination)) return FALSE;
 		$parameter=$CI->pagination->auto_uripart;
-		return $this->get_parameter($parameter,0);
+		return (int) $this->get_parameter($parameter,0);
 	}
 
 }
