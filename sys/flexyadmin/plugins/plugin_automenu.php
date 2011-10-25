@@ -225,6 +225,7 @@ class Plugin_automenu extends Plugin_ {
 		
 				case 'from table group by category':
 					// trace_($autoValue);
+					$pagination=(int)$autoValue['str_parameters'];
 					// check if table is many table
 					$fromRel=false;
 					$preTable=get_prefix($autoValue['field_group_by']);
@@ -260,9 +261,10 @@ class Plugin_automenu extends Plugin_ {
 						// trace_('#SHOW# '.$this->db->ar_last_query);
 						// trace_($groupId);
 						// trace_($groupData);
-						// trace_($data);
 						
 						if ($data) {
+							// trace_('Pagination: '.$pagination);
+							// trace_('Count Data:'.count($data));
 							$parentData=find_row_by_value($this->newMenu,$groupData[$titleField],$titleField);
 							$parentData=current($parentData);
 							// trace_($parentData);
@@ -275,7 +277,22 @@ class Plugin_automenu extends Plugin_ {
 								$subData=current($subData);
 								$lastOrder=$subData['order']+1;
 							}
+							if ($pagination) {
+								$subOrder=$lastOrder;
+								$lastOrder=0;
+								$subSelfParent=$selfParent;
+							}
+							$nr=0;
 							foreach ($data as $item) {
+								if ($pagination and ($nr%$pagination==0)) {
+									// add subpage if needed
+									$page=round($nr/$pagination)+1;
+									// trace_('Add subpage ['.$page.']');
+									$self=$this->_insertItem( array('uri'=>$page, $groupData[$titleField]=>$page, 'order'=>$subOrder++, 'self_parent'=>$subSelfParent) );
+									$selfParent=$self['id'];
+								}
+								$nr++;
+								
 								$this->_setResultMenuItem($item);
 								$item['order']=$lastOrder++;
 								$item['self_parent']=$selfParent;
