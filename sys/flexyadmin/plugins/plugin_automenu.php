@@ -288,7 +288,17 @@ class Plugin_automenu extends Plugin_ {
 									// add subpage if needed
 									$page=round($nr/$pagination)+1;
 									// trace_('Add subpage ['.$page.']');
-									$self=$this->_insertItem( array('uri'=>$page, $groupData[$titleField]=>$page, 'order'=>$subOrder++, 'self_parent'=>$subSelfParent) );
+									$subItem=array('uri'=>$page, $groupData[$titleField]=>$page, 'order'=>$subOrder++, 'self_parent'=>$subSelfParent);
+									if (isset($autoValue['b_keep_parent_modules']) and $autoValue['b_keep_parent_modules']) {
+										if (isset($this->newMenu[$subItem['self_parent']]['str_module'])) {
+											$parentModule=$this->newMenu[$subItem['self_parent']]['str_module'];
+											if (isset($subItem['str_module']))
+												$subItem['str_module'].=' '.$parentModule;
+											else
+												$subItem['str_module']=$parentModule;
+										}
+									}
+									$self=$this->_insertItem( $subItem );
 									$selfParent=$self['id'];
 								}
 								$nr++;
