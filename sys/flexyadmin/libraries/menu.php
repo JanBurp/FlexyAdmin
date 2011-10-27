@@ -535,6 +535,75 @@ class Menu {
 		}
 		return false;
 	}
+
+
+	function get_prev_branch($uri='') {
+		$branch=FALSE;
+		if (empty($uri)) $uri=$this->current;
+		$ParentUri=remove_suffix($uri,'/');
+		if ($ParentUri) {
+			$ParentMenu=$this->_get_submenu($ParentUri);
+			$ParentShortUri=get_suffix($ParentUri,'/');
+			end($ParentMenu);
+			do {
+				if (isset($current)) prev($ParentMenu);
+				$current=current($ParentMenu);
+			} while ($current and $current['uri']!=$ParentShortUri );
+			if ($current) {
+				$prev=prev($ParentMenu);
+				if ($prev) {
+					$branch=$prev['sub'];
+					$branch=end($branch);
+					$branch['full_uri']=remove_suffix($ParentUri,'/').'/'.$prev['uri'].'/'.$branch['uri'];
+				}
+			}
+		}
+		return $branch;
+	}
+	function get_prev_branch_uri($uri='',$full_uri=true) {
+		$prev=$this->get_prev_branch($uri);
+		if ($prev) {
+			if ($full_uri)
+				return $prev['full_uri'];
+			else
+				return $prev['uri'];
+		}
+		return $prev;
+	}
+
+
+	function get_next_branch($uri='') {
+		$branch=FALSE;
+		if (empty($uri)) $uri=$this->current;
+		$ParentUri=remove_suffix($uri,'/');
+		if ($ParentUri) {
+			$ParentMenu=$this->_get_submenu($ParentUri);
+			$ParentShortUri=get_suffix($ParentUri,'/');
+			do {
+				$current=each($ParentMenu);
+			} while ($current and $current['key']!=$ParentShortUri );
+			if ($current) {
+				$next=each($ParentMenu);
+				if ($next) {
+					$branch=$next['value']['sub'];
+					$branch=current($branch);
+					$branch['full_uri']=remove_suffix($ParentUri,'/').'/'.$next['value']['uri'].'/'.$branch['uri'];
+				}
+			}
+		}
+		return $branch;
+	}
+	function get_next_branch_uri($uri='',$full_uri=true) {
+		$next=$this->get_next_branch($uri);
+		if ($next) {
+			if ($full_uri)
+				return $next['full_uri'];
+			else
+				return $next['uri'];
+		}
+		return $next;
+	}
+
 	
 	function _get_submenu($uri) {
 		$parts=explode('/',$uri);
@@ -548,7 +617,6 @@ class Menu {
 		}
 		return $submenu;
 	}
-
 
 }
 
