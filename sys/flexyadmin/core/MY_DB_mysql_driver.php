@@ -738,10 +738,12 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			foreach ($result as $key => $row) {
 				if ($row["self_parent"]!=0) {
 					$uri=$row["uri"];
+					$uriField='uri';
+					if (is_string($fullUri)) $uriField=$fullUri;
 					if (!empty($extraFullField)) $extra=$row[$extraFullField];
 					if ( $this->_test_if_full_path($result,$row) ) {
 						$parentUri=$result[$row["self_parent"]]["uri"];
-						$result[$key]["uri"]=$parentUri."/".$uri;
+						$result[$key][$uriField]=$parentUri."/".$uri;
 						if (!empty($extraFullField)) {
 							$parentExtra=$result[$row["self_parent"]][$extraFullField];
 							$result[$key][$extraFullField]=$parentExtra." / ".$extra;
@@ -749,11 +751,14 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 					}
 					else {
 						$parent=$this->get_parent($table,$uri,$extraFullField);
-						$result[$key]["uri"]=$parent['uri'];
+						$result[$key][$uriField]=$parent['uri'];
 						if (!empty($extraFullField)) {
 							$result[$key][$extraFullField]=$parent[$extraFullField];
 						}
 					}
+				}
+				elseif (is_string($fullUri)) {
+					$result[$key][$fullUri]=$result[$key]['uri'];
 				}
 			}
 		}

@@ -24,6 +24,7 @@ $lang['account_creation_duplicate_username'] 	 = 'Username Already Used or Inval
 // Password
 $lang['password_change_successful'] 	 	 = 'Password Successfully Changed';
 $lang['password_change_unsuccessful'] 	  	 = 'Unable to Change Password';
+$lang['forgot_password_email_not_found'] 	 	 = 'Unable to find email address';
 $lang['forgot_password_successful'] 	 	 = 'Password Reset Email Sent';
 $lang['forgot_password_unsuccessful'] 	 	 = 'Unable to Reset Password';
 

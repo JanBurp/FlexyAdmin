@@ -30,6 +30,8 @@ class Menu {
 	var $itemAttr;
 	var $currentAsActive;
 	
+	var $changeModules;
+	
 	var $menuTable;
 	
 	var $tmpMenuStart;
@@ -56,6 +58,7 @@ class Menu {
 		$this->set_attributes();
 		$this->add_controls();
 		$this->set_current_class_active(false);
+		$this->register_change_module();
 	}
 
 	function set_uri_field($uri="uri") {
@@ -110,6 +113,13 @@ class Menu {
 		$this->itemAttr=$attr;
 	}
 
+	function register_change_module($module=false) {
+		if ($module)
+			$this->changeModules[]=$module;
+		else
+			$this->changeModules=NULL;
+	}
+
 	function set_menu_table($table='') {
 		if (empty($table)) $table = get_menu_table();
 		$this->menuTable=$table;
@@ -136,7 +146,10 @@ class Menu {
 		$CI->db->select(PRIMARY_KEY);
 		$CI->db->select($fields);
 		if ($foreign) $CI->db->add_foreigns($foreign);
-		if (in_array("self_parent",$fields)) $CI->db->order_as_tree();
+		if (in_array("self_parent",$fields)) {
+			$CI->db->uri_as_full_uri('full_uri');	
+			$CI->db->order_as_tree();	
+		}
 		$data=$CI->db->get_result($table);
 		return $this->set_menu_from_table_data($data,$foreign);
 	}
@@ -161,6 +174,7 @@ class Menu {
 				$thisItem["id"]=$item[PRIMARY_KEY];
 				$uri=$item[$this->fields["uri"]];
 				$thisItem["uri"]=$uri;
+				if (isset($item['full_uri']))	$thisItem["full_uri"]=$item['full_uri'];
 				
 				if (empty($thisItem['name'])) {
 					if (isset($item[$this->fields["title"]]))
@@ -387,6 +401,9 @@ class Menu {
 		$pos=1;
 		if ($menu) {
 			foreach($menu as $uri=>$item) {
+				// Change item before rendering, if some other classes has request so
+				$item=$this->_change_item($item);
+				
 				$itemOut='';
 				if (isset($item['name']))	$name=$item['name']; else $name='';
 				if (empty($item)) {
@@ -423,7 +440,7 @@ class Menu {
 					$itemAttr['class']=trim($class);
 					// set id
 					$itemAttr['id']="menu_$cName"."_pos$pos"."_lev$level";
-					
+
 					// render item/subitem
 					$itemOut.=$this->tmp($this->tmpItemStart,array("class"=>$itemAttr["class"],'id'=>$itemAttr['id']));  // <li ... >
 					if (isset($item["uri"])) {
@@ -468,6 +485,19 @@ class Menu {
 		}
 		$out.=$this->tmp($this->tmpMenuEnd); // </ul>
 		return $out;
+	}
+	
+	// This function checks if other classes needs to change something...
+	function _change_item($item) {
+		if ($this->changeModules) {
+			foreach ($this->changeModules as $key => $module) {
+				if (method_exists($module,'change_menu_item')) {
+					$give_item=$item;
+					$item=$module->change_menu_item($item);
+				}
+			}
+		}
+		return $item;
 	}
 	
 	function get_item($uri='',$foreigns=false,$many=false) {
