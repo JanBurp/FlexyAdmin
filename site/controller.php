@@ -70,7 +70,7 @@ class Main extends FrontEndController {
 			 */
 			$this->menu->set_current($this->site['uri']);
 			$this->menu->set_menu_from_table();
-			$this->site['menu']=$this->menu->render();
+			// Rendering moved to end
 
 			// Example of a simple submenu, show $submenu somewhere in views/site.php
 			//
@@ -105,8 +105,9 @@ class Main extends FrontEndController {
 		if ($this->no_content()) $this->add_content($this->view('error','',true));
 		
 		/**
-		 * Show home view
+		 * Rendering Menu's and show site view
 		 */
+		$this->site['menu']=$this->menu->render();
 		$this->view();
 
 		

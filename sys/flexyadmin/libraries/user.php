@@ -97,7 +97,12 @@ class User Extends Ion_auth {
 	public function forgotten_password($email) {
 		$user = $this->get_user_by_email($email);
 
-		if ( $this->ci->ion_auth_model->forgotten_password($email) ) {
+		// User not found?
+		if (empty($user)) {
+			$this->set_error('forgot_password_email_not_found');
+			return FALSE;
+		}
+		else if ( $this->ci->ion_auth_model->forgotten_password($email) ) {
 			$data = array(
 				'user'										=> $user->str_username,
 				'forgotten_password_code' => $this->ci->ion_auth_model->forgotten_password_code,
@@ -276,5 +281,7 @@ class User Extends Ion_auth {
 	{
 		return $this->ci->ion_auth_model->get_inactive_old_users($group_name,$time)->result();
 	}
+
+
 
 }

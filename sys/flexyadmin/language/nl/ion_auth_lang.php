@@ -25,6 +25,7 @@ $lang['account_creation_duplicate_username'] 	 = 'Gebruikersnaam is al in gebrui
 // Password
 $lang['password_change_successful'] 	 	 = 'Wachtwoord succesvol gewijzigd';
 $lang['password_change_unsuccessful'] 	  	 = 'Wachtwoord wijzigen is mislukt';
+$lang['forgot_password_email_not_found'] 	 	 = 'E-mail adres niet gevonden';
 $lang['forgot_password_successful'] 	 	 = 'E-mail om het wachtwoord te Resetten is verzonden';
 $lang['forgot_password_unsuccessful'] 	 	 = 'Wachtwoord resetten is mislukt';
 
