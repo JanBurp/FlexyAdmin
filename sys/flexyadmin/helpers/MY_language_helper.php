@@ -1,5 +1,37 @@
 <?
 
+function set_language_neutral_fields($item,$fields=array('str_title','txt_text'),$lang='') {
+	// set lang
+	if (empty($lang)) {
+		$CI=&get_instance();
+		if (isset($CI->site['language']))
+			$lang=$CI->site['language'];
+		else
+			$lang=$CI->config->item('language');
+	}
+	// set fields
+	if (!is_array($fields)) $fields=array($fields);
+	$orig_fields=$fields;
+	foreach ($orig_fields as $key => $field) {
+		$orig_fields[$key]=$field.'_'.$lang;
+	}
+	
+	// set language neutral fields (recursivly)
+	if (is_array($item)) {
+		foreach ($item as $field => $value) {
+			if (is_array($value)) {
+				$item[$field]=set_language_neutral_fields($value,$fields,$lang);
+			}
+			elseif (in_array($field,$orig_fields)) {
+				$item[str_replace('_'.$lang,'',$field)]=$value;
+			}
+		}
+	}
+	
+	return $item;
+}
+
+
 function langp() {
 	$args=func_get_args();
 	// trace_($args);
