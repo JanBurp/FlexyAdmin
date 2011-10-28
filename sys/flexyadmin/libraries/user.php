@@ -277,6 +277,4 @@ class User Extends Ion_auth {
 		return $this->ci->ion_auth_model->get_inactive_old_users($group_name,$time)->result();
 	}
 
-
-
 }
