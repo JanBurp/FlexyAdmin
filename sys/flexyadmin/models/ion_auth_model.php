@@ -406,33 +406,36 @@ class Ion_auth_model extends CI_Model
 	{
 	    if (empty($identity))
 	    {
-		return FALSE;
+				return FALSE;
 	    }
 
 	    $this->db->select(array(
 				$this->tables['users'].'.*',
 				$this->tables['groups'].'.str_name AS '. $this->db->protect_identifiers('group'),
 				$this->tables['groups'].'.str_description AS '. $this->db->protect_identifiers('group_description')
-				   ));
+	   ));
 
-	    if (!empty($this->columns))
-	    {
-		foreach ($this->columns as $field)
-		{
-		    $this->db->select($this->tables['meta'] .'.' . $field);
-		}
-	    }
-
-	    $this->db->join($this->tables['meta'], $this->tables['users'].'.id = '.$this->tables['meta'].'.'.$this->meta_join, 'left');
+   		if (!empty($this->tables['meta']))
+			{
+		    if (!empty($this->columns))
+		    {
+						foreach ($this->columns as $field)
+						{
+						    $this->db->select($this->tables['meta'] .'.' . $field);
+						}
+		    }
+				$this->db->join($this->tables['meta'], $this->tables['users'].'.id = '.$this->tables['meta'].'.'.$this->meta_join, 'left');
+			}
+			
 	    $this->db->join($this->tables['groups'], $this->tables['users'].'.id_user_group = '.$this->tables['groups'].'.id', 'left');
 
 	    if ($is_code)
 	    {
-		$this->db->where($this->tables['users'].'.forgotten_password_code', $identity);
+				$this->db->where($this->tables['users'].'.str_forgotten_password_code', $identity);
 	    }
 	    else
 	    {
-		$this->db->where($this->tables['users'].'.'.$this->identity_column, $identity);
+				$this->db->where($this->tables['users'].'.'.$this->identity_column, $identity);
 	    }
 
 	    $this->db->where($this->user->_extra_where);
