@@ -1,3 +1,20 @@
+> 1314
+
+NEW:
+	- a module can register itself to Menu and can change menu items on the fly (see example.php)
+	- RSS feed can have full uri's now
+	- menu items from a table have full_uri items
+	- res_menu_result can have pagination when using 'from table group by category', set number of items in paramaters (0=no pagination)
+	- site/config/email.php -> global email settings for Email Librabry
+	- small styling changes for trace_() debug_helper
+	
+BUGS:
+- user/ion_auth->reset_password()
+- small bugs in MY_pagination
+- Editor could not be turned off
+
+
+
 > 1297
 
 CHANGED:
