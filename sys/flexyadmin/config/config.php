@@ -328,8 +328,6 @@ $config['time_reference'] = 'local';
 $config['rewrite_short_tags'] = FALSE;
 
 
-
-
 if (file_exists(SITEPATH."/config/config.php")) require_once(SITEPATH."/config/config.php");
 
 

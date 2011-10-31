@@ -26,7 +26,16 @@ class Plugin_ extends CI_Model {
 		parent::__construct();
 		$this->plugin=$name;
 		$this->content='';
+		$this->load_config($name);
 	}
+
+	function load_config($name) {
+		if ( $this->config->load($name,true) ) {
+			$this->_cfg=$this->config->item($name);
+			// trace_($this->_cfg);
+		}
+	}
+
 	
 	function init($init=array()) {
 		// strace_('========= '.$this->plugin.' ============');
