@@ -16,7 +16,7 @@ class MY_Output extends CI_OUTPUT {
 	}
 
 	function _can_cache() {
-		return (empty($_POST));
+		return (empty($_POST) and empty($_GET));
 	}
 
 

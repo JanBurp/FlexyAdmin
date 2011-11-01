@@ -512,18 +512,20 @@ class Menu {
 	
 	
 	function get_prev($uri='') {
+		$prev=false;
 		if (empty($uri)) $uri=$this->current;
 		$submenu=$this->_get_submenu($uri);
-		$thisUri=get_suffix($uri,'/');
-		$prev=false;
-		$prev_uri=false;
-		foreach ($submenu as $key=>$value) {
-			if ($key==$thisUri) break;
-			$prev_uri=$key;
-		}
-		if ($prev_uri) {
-			$prev=$submenu[$prev_uri];
-			$prev['full_uri']=remove_suffix($uri,'/').'/'.$prev_uri;
+		if ($submenu) {
+			$thisUri=get_suffix($uri,'/');
+			$prev_uri=false;
+			foreach ($submenu as $key=>$value) {
+				if ($key==$thisUri) break;
+				$prev_uri=$key;
+			}
+			if ($prev_uri) {
+				$prev=$submenu[$prev_uri];
+				$prev['full_uri']=remove_suffix($uri,'/').'/'.$prev_uri;
+			}
 		}
 		return $prev;
 	}
@@ -539,19 +541,21 @@ class Menu {
 	}
 
 	function get_next($uri='') {
+		$next=false;
 		if (empty($uri)) $uri=$this->current;
 		$submenu=$this->_get_submenu($uri);
-		arsort($submenu);
-		$thisUri=get_suffix($uri,'/');
-		$next=false;
-		$next_uri=false;
-		foreach ($submenu as $key=>$value) {
-			if ($key==$thisUri) break;
-			$next_uri=$key;
-		}
-		if ($next_uri) {
-			$next=$submenu[$next_uri];
-			$next['full_uri']=remove_suffix($uri,'/').'/'.$next_uri;	
+		if ($submenu) {
+			arsort($submenu);
+			$thisUri=get_suffix($uri,'/');
+			$next_uri=false;
+			foreach ($submenu as $key=>$value) {
+				if ($key==$thisUri) break;
+				$next_uri=$key;
+			}
+			if ($next_uri) {
+				$next=$submenu[$next_uri];
+				$next['full_uri']=remove_suffix($uri,'/').'/'.$next_uri;	
+			}
 		}
 		return $next;
 	}
