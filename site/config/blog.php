@@ -10,11 +10,11 @@
 |
 */
 
-$config['blog']['table']='tbl_blog';
+$config['table']='tbl_blog';
 
-$config['blog']['field_date']='dat_date';
-$config['blog']['field_title']='str_title';
-$config['blog']['field_text']='txt_text';
+$config['field_date']='dat_date';
+$config['field_title']='str_title';
+$config['field_text']='txt_text';
 
 
 
@@ -28,10 +28,10 @@ $config['blog']['field_text']='txt_text';
 */
 
 
-$config['blog']['comments']=FALSE;
+$config['comments']=FALSE;
 
 // Override comments settings
-// $config['blog']['comments']= array(
+// $config['comments']= array(
 // 	'table'		=> 'tbl_blog_comments',
 // 	'key_id'	=> 'id_blog'
 // 	);

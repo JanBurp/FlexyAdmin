@@ -10,10 +10,10 @@
 |
 */
 
-$config['search']['table']=get_menu_table();
-$config['search']['title_field']='str_title';
-$config['search']['text_field']='txt_text';
-$config['search']['extra_fields']=array();
+$config['table']=get_menu_table();
+$config['title_field']='str_title';
+$config['text_field']='txt_text';
+$config['extra_fields']=array();
 
 
 /*
@@ -24,25 +24,11 @@ $config['search']['extra_fields']=array();
 */
 
 // Set a direct uri of a result page.
-$config['search']['result_page_uri']='';
+$config['result_page_uri']='';
 
 // Or set a test for a certain page which has...
-// $config['search']['result_page_where']='';
-$config['search']['result_page_where']=array('str_module','search');
-
-
-
-/*
-|--------------------------------------------------------------------------
-| Search Term
-|--------------------------------------------------------------------------
-|
-| Field in POST data that holds the search term
-|
-*/
-
-$config['search']['search_term']='search';
-$config['search']['empty_value']='zoeken';
+// $config['result_page_where']='';
+$config['result_page_where']=array('str_module','search');
 
 
 
@@ -55,11 +41,11 @@ $config['search']['empty_value']='zoeken';
 |
 */
 
-$config['search']['order_as_tree']=TRUE;				// only possible with menu tables.
+$config['order_as_tree']=TRUE;				// only possible with menu tables.
 
-$config['search']['result_max_type']='CHARS';
-$config['search']['result_max_length']=0;
-$config['search']['result_max_ellipses']='...';
+$config['result_max_type']='CHARS';
+$config['result_max_length']=0;
+$config['result_max_ellipses']='...';
 
 
 
@@ -73,7 +59,7 @@ $config['search']['result_max_ellipses']='...';
 |
 */
 
-$config['search']['pre_uri']='';
+$config['pre_uri']='';
 
 
 

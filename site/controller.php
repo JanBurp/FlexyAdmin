@@ -91,6 +91,9 @@ class Main extends FrontEndController {
 		if ($this->no_content()) $this->add_content($this->view('error','',true));
 
 
+		// trace_($this->site);
+
+
 		/**
 		 * Show site view
 		 */
@@ -212,7 +215,6 @@ class Main extends FrontEndController {
 			if (file_exists(SITEPATH.'libraries/'.$library_name.'.php')) {
 				// trace_('Loading module: '.$library_name.'.'.$method);
 				$this->load->library($library_name);
-				$this->$library_name->set_name($library);
 				return $this->$library_name->$method($args);
 			}
 			elseif ($this->config->item('fallback_module')) {
@@ -221,7 +223,6 @@ class Main extends FrontEndController {
 				if (file_exists(SITEPATH.'libraries/'.$fallback_name.'.php')) {
 					// trace_('Loading Fallback Module: '.$fallback_name.'.'.$method);
 					$this->load->library($fallback_name);
-					$this->$fallback->set_name($library);
 					return $this->$fallback_name->index($args);
 				}
 			}

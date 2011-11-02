@@ -4,11 +4,12 @@ class Contact_form extends Module {
 
 	public function __construct() {
 		parent::__construct();
+		$this->CI->lang->load('contact_form');
 		$this->CI->load->library('form');
 		$this->CI->load->library('email');
 	}
 
-	public function index($item, $submit='Verstuur', $sendText='<p>Bedankt voor uw mail.</p>') {
+	public function index($item) {
 		
 		$content='';
 		
@@ -18,7 +19,7 @@ class Contact_form extends Module {
 										"str_subject"	=>array("label"=>"Onderwerp","validation"	=>  "required"),																				
 										"txt_text"		=>array("type"=>"textarea","label"=>"Vraag","validation"=>"required"));
 		// Form Buttons
-		$formButtons=array('submit'=>array("submit"=>"submit","value"=>$submit));
+		$formButtons=array('submit'=>array("submit"=>"submit","value"=>lang('contact_submit')));
 
 		// Create form object and set fields and buttons
 		$form=new form($this->CI->uri->get());
@@ -42,7 +43,7 @@ class Contact_form extends Module {
 			$this->CI->email->send();
 		
 			// Show Send message
-			$content=$sendText;
+			$content=lang('contact_send_text');
 		}
 	
 		else {
