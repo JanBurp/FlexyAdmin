@@ -43,19 +43,6 @@ $config['main_view']='site';
 
 /*
 |--------------------------------------------------------------------------
-| Uri as modules
-|--------------------------------------------------------------------------
-|
-| If TRUE the controller loads modules (libraries) instead of collecting menu and pages from the database
-| Modules are special libraries (site/libraries). Modules whith names starting with an underscore '_' can't be loaded this way.
-| Example: uri= app/test/news/4 Will load site/libraries/app.php and will call its method show() with arguments 'news' and '4'.
-|
-*/
-
-$config['uri_as_modules']=FALSE;
-
-/*
-|--------------------------------------------------------------------------
 | Autoload Modules
 |--------------------------------------------------------------------------
 |
@@ -76,8 +63,6 @@ $config['autoload_modules']=array();
 */
 
 $config['fallback_module']='fallback';
-
-
 
 
 
@@ -155,6 +140,7 @@ if (!isset($config['base_url'])) {
 	// $config['base_url']	= "http://www.flexyadmin.com/";
 }
 
+
 /*
 |--------------------------------------------------------------------------
 | Index File
@@ -165,7 +151,7 @@ if (!isset($config['base_url'])) {
 | variable so that it is blank.
 |
 */
-#$config['index_page'] = "index.php";
+// $config['index_page'] = "index.php";
 
 /*
 |--------------------------------------------------------------------------
@@ -183,7 +169,7 @@ if (!isset($config['base_url'])) {
 | 'ORIG_PATH_INFO'	Uses the ORIG_PATH_INFO
 |
 */
-#$config['uri_protocol']	= "AUTO";
+// $config['uri_protocol']	= "AUTO";
 
 
 
@@ -197,8 +183,7 @@ if (!isset($config['base_url'])) {
 |
 | http://codeigniter.com/user_guide/general/urls.html
 */
-
-#$config['url_suffix'] = ".html";
+// $config['url_suffix'] = ".html";
 
 
 
@@ -211,7 +196,7 @@ if (!isset($config['base_url'])) {
 | that require a character set to be provided.
 |
 */
-#$config['charset'] = "UTF-8";
+// $config['charset'] = "UTF-8";
 
 
 /*
