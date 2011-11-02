@@ -54,60 +54,46 @@ class Main extends FrontEndController {
 		$this->add_class(str_replace('/','__',$this->site['uri']));
 
 
-		if ($this->config->item('uri_as_modules')) {
-			
-			/***********************************************
-			 * Load and call module (library) according to uri: file/method/args
-			 */
-			$uri=$this->uri->segment_array();
-			$this->_call_library($uri);
-			
-		}
-		else {
-
-			/***********************************************
-			 * Create menu from menu table
-			 */
-			$this->menu->set_current($this->site['uri']);
-			$this->menu->set_menu_from_table();
-			// Rendering moved to end
-
-			// Example of a simple submenu, show $submenu somewhere in views/site.php
-			//
-			// $sub_uri$this->uri->get(1);
-			// if ($sub_uri) {
-			// 	$this->site['submenu']=$this->menu->render_branch($sub_uri);
-			// }
+		/***********************************************
+		 * Init Menu
+		 */
+		$this->menu->set_current($this->site['uri']);
+		$this->menu->set_menu_from_table();
 
 
-			/***********************************************
-			 * Get current page item from menu
-			 */
-			$item=$this->menu->get_item();
+		/***********************************************
+		 * Get current page item from menu
+		 */
+		$item=$this->menu->get_item();
 
 
-			/***********************************************
-			 * Redirect to a page down in the menu tree, if current page is empty.
-			 * Comment this if not neeeded
-			 */
-			// $this->_redirect($item);
+		/***********************************************
+		 * Redirect to a page down in the menu tree, if current page is empty.
+		 * Comment this if not neeeded
+		 */
+		// $this->_redirect($item);
 
-			/***********************************************
-			 * If item exists call _page (which calls modules and loads views if set)
-			 */
-			if ($item) $item=$this->_page($item);
-		}
+		/***********************************************
+		 * If item exists call _page (which calls modules and loads views if set)
+		 */
+		if ($item) $item=$this->_page($item);
+
+
+		/**
+		 * Rendering Menu and show site view
+		 */
+		$this->site['menu']=$this->menu->render();
 
 
 		/**********************************************
 		 * No Content? Show error page.
 		 */
 		if ($this->no_content()) $this->add_content($this->view('error','',true));
-		
+
+
 		/**
-		 * Rendering Menu's and show site view
+		 * Show site view
 		 */
-		$this->site['menu']=$this->menu->render();
 		$this->view();
 
 		
@@ -116,12 +102,13 @@ class Main extends FrontEndController {
 		 * See: http://codeigniter.com/user_guide/general/caching.html
 		 * and: http://stevenbenner.com/2010/12/caching-with-codeigniter-zen-headaches-and-performance
 		 * Chache directory: site/cache must be writable.
-		 * After each change in admin the whole cache is flushed. So don't worry about that.
-		 * You have to flush the page yourself if the page is (partly) dynamic with the cache_helper function: delete_cache( $this->uri->uri_string() );
-		 * Or decide if the page needs to be cached or not.
+		 *
+		 * After each change in FlexyAdmin the whole cache is flushed. So don't worry about that.
+		 * You have to flush the page yourself (or set an smaller time) if the page is (partly) dynamic with the cache_helper function: delete_cache( $this->uri->uri_string() );
+		 * If $_POST or $_GET data are set (not empty) the page is not loaded from cache. So don't worry about forms etc.
 		 */
-
 		// $this->output->cache(1440); // cache for 24 hours (1440 minutes)
+		
 	}
 
 
