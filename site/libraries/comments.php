@@ -18,24 +18,10 @@ class Comments extends Module {
 	
 	public function __construct() {
 		parent::__construct();
+		$this->CI->lang->load('comments');
 		$this->CI->load->library('form');
 		$this->CI->load->library('spam');
-		$this->load_config('comments');
-		$this->set_language();
 		$this->foreign_table=foreign_table_from_key( $this->config['key_id'] );
-	}
-
-	public function set_language($lang='') {
-		if (empty($lang))	$this->config['language']=$lang;
-		if (empty($lang))	$this->config['language']=$this->CI->site['language'];
-	}
-
-	private function get_text($name,$s='') {
-		if (isset($this->config[$this->config['language']][$name]))
-			$text=$this->config[$this->config['language']][$name];
-		else
-			$text='';
-		return str_replace('%s',$s,$text);
 	}
 
 	public function index($item) {
@@ -65,8 +51,8 @@ class Comments extends Module {
 
 			// Create form
 			$form=new form($this->CI->uri->get());
-			$form->set_data($formData,$this->get_text('title'));
-			$form->set_buttons(array('submit'=>array("submit"=>"submit","value"=>$this->get_text('submit'))));
+			$form->set_data($formData,langp('comments_'.'title'));
+			$form->set_buttons(array('submit'=>array("submit"=>"submit","value"=>langp('comments_'.'submit'))));
 	
 			// Validate form, if succes, add comment
 
@@ -89,14 +75,14 @@ class Comments extends Module {
 				if (!$spam and $this->_check_if_spamtext($data))	$spam=TRUE;
 
 				if ($spam) {
-					$errorHtml.=$this->get_text('spam');
+					$errorHtml.=langp('comments_'.'spam');
 				}
 				else {
 					// Place comment in databas
 					foreach ($data as $field => $value) {$this->CI->db->set($field,$value);}
 					$this->CI->db->insert($this->config['table']);
 					// Clean form
-					$form->set_data($formData,$this->get_text('title'));
+					$form->set_data($formData,langp('comments_'.'title'));
 
 					// send email that a comment has been placed to the sites owner
 					if ($this->config['mail_owner'] or $this->config['mail_others']) $this->CI->load->library('email');
@@ -104,14 +90,14 @@ class Comments extends Module {
 					if ($this->config['mail_owner']) {
 						$this->CI->email->to( $this->CI->site['email_email'] );
 						$this->CI->email->from( $this->CI->site['email_email'] );
-						$this->CI->email->subject( $this->get_text('mail_to_owner_subject',$this->CI->site['url_url']) );
-						$this->CI->email->message( $this->get_text('mail_to_owner_body', site_url().$this->CI->uri->get())."\n\n".$data[$this->config['field_text']] );
+						$this->CI->email->subject( langp('comments_'.'mail_to_owner_subject',$this->CI->site['url_url']) );
+						$this->CI->email->message( langp('comments_'.'mail_to_owner_body', site_url().$this->CI->uri->get())."\n\n".$data[$this->config['field_text']] );
 						if ( ! $this->CI->email->send() )	$errorHtml.=$this->CI->email->print_debugger();
 						$this->CI->email->clear();
 					}
 					if ($this->config['mail_others']) {
-						$subject=$this->get_text('mail_to_others_subject',$this->CI->site['url_url']);
-						$body=$this->get_text('mail_to_others_body', site_url().$this->CI->uri->get())."\n\n".$data[$this->config['field_text']];
+						$subject=langp('comments_'.'mail_to_others_subject',$this->CI->site['url_url']);
+						$body=langp('comments_'.'mail_to_others_body', site_url().$this->CI->uri->get())."\n\n".$data[$this->config['field_text']];
 						$this->CI->db->select( $this->config['field_email'] );
 						$this->CI->db->where( $this->config['key_id'], $id );
 						$emails=$this->CI->db->get_results( $this->config['table'] );
@@ -149,7 +135,7 @@ class Comments extends Module {
 			}
 
 			// Show all
-			return $this->CI->view('comments',array('errors'=>$errorHtml,'form'=>$formHtml,'items'=>$comments,'lang'=>$this->config[$this->config['language']]),true);
+			return $this->CI->view('comments',array('errors'=>$errorHtml,'form'=>$formHtml,'items'=>$comments),true);
 		}
 		return FALSE;
 	}
@@ -166,7 +152,7 @@ class Comments extends Module {
 			$options=array();
 			$validation='required';
 			// label
-			$label=$this->get_text($field);
+			$label=langp('comments_'.$field);
 			if (empty($label)) $label=nice_string(remove_prefix($field));
 			
 			// special attributes for some fields

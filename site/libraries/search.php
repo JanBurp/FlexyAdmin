@@ -4,11 +4,11 @@ class Search extends Module {
 
 	public function __construct() {
 		parent::__construct();
-		$this->load_config('search');
+		$this->CI->lang->load('search');
 	}
 
 	public function index($item) {
-		$search=$this->CI->input->post( $this->config['search_term'] );
+		$search=$this->CI->input->post( lang('search_term') );
 		
 		if ($search) {
 			$fields=array();
@@ -60,8 +60,8 @@ class Search extends Module {
 		}
 		
 		// set search term
-		$search=$this->CI->input->post( $this->config['search_term'] );
-		if (empty($search)) $search=$this->config['empty_value'];
+		$search=$this->CI->input->post( lang('search_term') );
+		if (empty($search)) $search=lang('empty_value');
 		$this->CI->site['search_form']=$this->CI->show('search_form',array('action'=>$action, 'value'=>$search),true);
 	}
 	

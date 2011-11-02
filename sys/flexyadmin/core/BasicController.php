@@ -78,18 +78,24 @@ class BasicController extends MY_Controller {
 	}
 
 	/**
-	 * Here are fuctions that hook into the grid/form/update proces.
+	 * Here are functions that hook into the grid/form/update proces.
 	 * They check if a standard hook method for the current table/field/id, if so call it
 	 */
 	
 	function _load_plugins() {
 		// needed libraries for plugins
-		$this->load->library("editor_lists");
+		$this->load->library("editor_lists"); // (kan de plugin zelf laden!!!)
 		
 		// load plugins
 		if (empty($this->plugins)) {
 			// sys plugins
 			$files=read_map(APPPATH.'plugins');
+
+			// $plugin_config_files=read_map(APPPATH.'config','php',FALSE,FALSE,FALSE);
+			// $plugin_config_files=filter_by($plugin_config_files,'plugin');
+			// trace_($plugin_config_files);
+
+
 			// site plugins
 			$siteMap=$this->config->item('PLUGINS');
 			if (file_exists($siteMap)) {

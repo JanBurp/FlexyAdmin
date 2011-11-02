@@ -9,6 +9,7 @@ class Contact_formulier extends Module {
 
 	public function __construct() {
 		parent::__construct();
+		// $this->CI->lang->load('contact_form');
 		$this->CI->load->library('form');
 		$this->CI->load->model('getform');
 		$this->CI->load->library('email');

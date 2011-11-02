@@ -5,38 +5,50 @@
 class Module {
 
 	var $CI;
-	var $config;
+	var $config=array();
 	var $name='';
 
-	function __construct() {
+	function __construct($name='') {
 		$this->CI=&get_instance();
+		if (empty($name)) $name=strtolower(get_class($this));
+		if ($name!='module') {
+			$this->set_name($name);
+			$this->load_config();
+		}
 	}
 
 	// if method of module can't be found, print a simple warning
 	public function __call($function, $args) {
-		echo '<div class="warning">Method: `'.ucfirst($function)."` doesn't exists.<div>";
+		$args=implode(',',$args);
+		echo '<div class="warning">Method: `'.ucfirst($function)."(".$args.")` doesn't exists.<div>";
 	}
 
-	// Module is the standard method
-	function index($item) {
-		return '<h1>'.__CLASS__.'</h1>';
+	public function set_name($name) {
+		$this->name=$name;
 	}
 
-	// Methods for loading and setting config
-	function load_config($name) {
-		$this->CI->config->load($name);
-		$this->config=$this->CI->config->item($name);
+
+	public function load_config($name='') {
+		if (empty($name)) $name=$this->name;
+		if ( $this->CI->config->load($name,true) ) {
+			$this->set_config( $this->CI->config->item($name) );
+		}
+		return $this->config;
 	}
 
-	function set_config($config,$merge=TRUE) {
+	
+	public function set_config($config,$merge=TRUE) {
 		if ($merge)
 			$this->config=array_merge($this->config,$config);
 		else
 			$this->config=$config;
+		return $this->config;
 	}
 
-	function set_name($name) {
-		$this->name=$name;
+
+	// index is the standard method
+	public function index($item) {
+		return '<h1>'.__CLASS__.'</h1>';
 	}
 
 

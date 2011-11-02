@@ -4,7 +4,6 @@ class Blog extends Module {
 
 	public function __construct() {
 		parent::__construct();
-		$this->load_config('blog');
 		if ($this->config['comments']) {
 			$this->CI->load->library('comments');
 			$this->CI->comments->set_config( $this->config['comments'] );

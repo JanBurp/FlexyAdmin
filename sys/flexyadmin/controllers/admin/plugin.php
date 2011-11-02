@@ -1,6 +1,10 @@
 <?
 require_once(APPPATH."core/AdminController.php");
 
+/**
+ * This Controller loads a plugin and calls the method
+ */
+
 
 class Plugin extends AdminController {
 
