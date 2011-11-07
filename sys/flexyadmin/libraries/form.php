@@ -35,6 +35,7 @@ class Form {
 
 	function __construct($action="") {
 		$this->CI = &get_instance();
+		$this->CI->load->library('form_validation');
 		$this->init($action);
 	}
 

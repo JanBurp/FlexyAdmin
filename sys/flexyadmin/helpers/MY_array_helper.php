@@ -51,17 +51,37 @@ function object2array($object,$recursive=TRUE) {
 
 function array2php($array,$tabs=1) {
 	$php="array(\n";
-	$sub="";
+	$sub='';
 	foreach($array as $key=>$value) {
 		if (!empty($sub)) $sub.=",\n";
 		$sub.=repeater("\t",$tabs);
-		$sub.='"'.$key.'"=>';
+		$sub.="'".$key."'=>";
 		if (is_array($value)) $sub.=array2php($value,$tabs+1);
 		else $sub.="'$value'";
 	}
 	$php.="$sub\n".repeater("\t",$tabs).")";
 	return $php;
 }
+
+function array2csv($array,$eol="\r\n") {
+	$csv="";
+	$comma=',';
+	$firstLine=current($array);
+	foreach (array_keys($firstLine) as $key) { $csv.=$key.$comma; }
+	$csv=substr($csv,0,strlen($csv)-1).$eol;
+	foreach($array as $key=>$row) {
+		foreach ($row as $field => $value) {
+			// check if needs to be enclosed with ""
+			$enclose=preg_match('/[,"\n]/',$value);
+			if (!$enclose) $enclose=(trim($value)!=$value);
+			if ($enclose) $value='"'.$value.'"';
+			$csv.=$value.$comma;
+		}
+		$csv=substr($csv,0,strlen($csv)-1).$eol;
+	}
+	return $csv;
+}
+
 
 
 // http://www.bin-co.com/php/scripts/array2json/
