@@ -25,13 +25,7 @@ class Logout extends AdminController {
 	}
 
 	function index() {
-		// plugin logouts...
-		$logout=true;
-		foreach ($this->plugins as $plugin) {
-			if (isset($this->$plugin) and method_exists($this->$plugin,'_admin_logout')) {
-				if ($this->$plugin->_admin_logout()===false) $logout=false;
-			}
-		}
+		$logout=$this->plugin_handler->call_plugins_logout();
 		
 		// logout
 		if ($logout) {

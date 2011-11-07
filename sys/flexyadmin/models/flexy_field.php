@@ -706,7 +706,7 @@ class Flexy_field extends CI_Model {
 		$normal_tables=array_merge($result_tables,$normal_tables);
 		$specialFields=array_keys($this->config->item('FIELDS_special'));
 		$options=array();
-		$options[""]="";
+		// $options[""]="";
 		foreach ($normal_tables as $table) {
 			$fields=$this->db->list_fields($table);
 			foreach ($fields as $field) {

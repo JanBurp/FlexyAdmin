@@ -22,17 +22,19 @@ class BasicController extends MY_Controller {
 		parent::__construct($isAdmin);
 		$this->load->library('session');
 		$this->load->library('user');
-		$this->load->helper("language");
 		
 		if ( ! $this->_user_logged_in()) {
 			redirect($this->config->item('API_login'));
 		}
 
+		// ok move on...
+		$this->load->model('plugin_handler');
+		$this->load->helper("language");
+
 		$lang=$this->language."_".strtoupper($this->language);
 		setlocale(LC_ALL, $lang);
-		
-		// load plugins
-		$this->_load_plugins();
+
+		$this->plugin_handler->init_plugins();
 	}
 
 	function _user_logged_in() {
@@ -81,103 +83,7 @@ class BasicController extends MY_Controller {
 	 * Here are functions that hook into the grid/form/update proces.
 	 * They check if a standard hook method for the current table/field/id, if so call it
 	 */
-	
-	function _load_plugins() {
-		// needed libraries for plugins
-		$this->load->library("editor_lists"); // (kan de plugin zelf laden!!!)
-		
-		// load plugins
-		if (empty($this->plugins)) {
-			// sys plugins
-			$files=read_map(APPPATH.'plugins');
 
-			// $plugin_config_files=read_map(APPPATH.'config','php',FALSE,FALSE,FALSE);
-			// $plugin_config_files=filter_by($plugin_config_files,'plugin');
-			// trace_($plugin_config_files);
-
-
-			// site plugins
-			$siteMap=$this->config->item('PLUGINS');
-			if (file_exists($siteMap)) {
-				$siteFiles=read_map($siteMap);
-				if (!empty($siteFiles)) {
-					foreach ($siteFiles as $file => $value) {
-						$siteFiles[$file]['site']=$siteMap;
-					}
-					$files=array_merge($files,$siteFiles);
-				}
-			}
-			
-			// check first order
-			$pluginFiles=array();
-			$pluginOrder=$this->config->item('PLUGIN_ORDER');
-			foreach ($pluginOrder['first'] as $plugin) {
-				$file='plugin_'.$plugin.'.php';
-				if (isset($files[$file])) {
-					$pluginFiles[$file]=$files[$file];
-					unset($files[$file]);
-				}
-			}
-			
-			// trace_($pluginFiles);
-			
-			// add other plugins
-			$pluginFiles=array_merge($pluginFiles,$files);
-			
-			// check last order
-			foreach ($pluginOrder['last'] as $plugin) {
-				$file='plugin_'.$plugin.'.php';
-				if (isset($pluginFiles[$file])) {
-					$swap=$pluginFiles[$file];
-					unset($pluginFiles[$file]);
-					$pluginFiles[$file]=$files[$file];
-				}
-			}
-			
-			// remove templates and parent class
-			unset($pluginFiles['plugin_template.php']);
-			unset($pluginFiles['plugin_.php']);
-
-			// trace_($pluginFiles);
-
-			// set plugin cfg
-			$cfg=$this->cfg->get('cfg_plugins');
-			$pluginCfg=array();
-			foreach ($cfg	as $c) {
-				$p=$c['plugin'];
-				$pluginCfg[$p][$c['str_set']]=$c['str_value'];
-			}
-			// ok load them
-			$this->load->plugin('plugin_');
-			foreach ($pluginFiles as $file => $plugin) {
-				$Name=get_file_without_extension($file);
-				if (substr($Name,0,6)=='plugin') {
-					$this->load->plugin($plugin['alt']);
-					$pluginName=str_replace('_pi','',$Name);
-					$shortName=str_replace('plugin_','',$pluginName);
-					$this->$pluginName = new $pluginName($pluginName);
-					$this->plugins[]=$pluginName;
-					// set config in plugin
-					if (isset($pluginCfg[$shortName])) $this->$pluginName->_cfg=$pluginCfg[$shortName];
-					// add api call to config if it exist
-					if (method_exists($this->$pluginName,'_admin_api')) {
-						if (method_exists($this->$pluginName,'_admin_api_calls'))
-							$apiCalls=$this->$pluginName->_admin_api_calls();
-						else
-							$apiCalls=array('');
-						foreach ($apiCalls as $call) {
-							if (empty($call))
-								$this->config->set_item('API_'.$pluginName, 'admin/plugin/'.$shortName);
-							else
-								$this->config->set_item('API_'.$pluginName.'__'.$call, 'admin/plugin/'.$shortName.'/'.$call);
-						}
-					}
-				}
-			}
-		}
-		// trace_($this->plugins);
-		return $this->plugins;
-	}
 
 	function _get_parent_uri($table,$uri,$parent) {
 		if ($parent!=0) {
@@ -190,40 +96,22 @@ class BasicController extends MY_Controller {
 		return $uri;
 	}
 
-	function _clean_plugin_data($data) {
-		// clean up many and foreign fields in data
-		$cleanUp=array('rel','tbl','cfg');
-		if ($data) {
-			foreach ($data as $field => $value) {
-				$pre=get_prefix($field);
-				if (in_array($pre,$cleanUp)) unset($data[$field]);
-			}
-		}
-		return $data;
-	}
 
+	function _init_plugin($table,$oldData,$newData) {
+		if (isset($oldData)) $this->plugin_handler->set_data('old',$oldData);
+		if (isset($newData)) $this->plugin_handler->set_data('new',$newData);
+		$this->plugin_handler->set_data('table',$table);
+	}
 
 	function _after_delete($table,$oldData=NULL) {
-		// clean up many and foreign fields in data
-		$oldData=$this->_clean_plugin_data($oldData);
-		// Call all plugins
-		foreach ($this->plugins as $plugin) {
-			if (method_exists($this->$plugin,'_after_delete')) {
-				$this->$plugin->after_delete(array('table'=>$table,'oldData'=>$oldData));
-			}
-		}
+		$this->_init_plugin($table,$oldData,NULL);
+		$this->plugin_handler->call_plugins_after_delete_trigger();
 	}
 	
-	function _after_update($table,$id='',$oldData=NULL,$newData=NULL) {
-		// clean up many and foreign fields in data
-		if (isset($oldData)) $oldData=$this->_clean_plugin_data($oldData);
-		if (isset($newData)) $newData=$this->_clean_plugin_data($newData);
-		// Call all plugins
-		foreach ($this->plugins as $plugin) {
-			if (method_exists($this->$plugin,'_after_update')) {
-				$newData=$this->$plugin->after_update(array('table'=>$table,'id'=>$id,'oldData'=>$oldData,'newData'=>$newData));
-			}
-		}
+	function _after_update($table,$oldData=NULL,$newData=NULL) {
+		$this->_init_plugin($table,$oldData,$newData);
+		$newData=$this->plugin_handler->call_plugins_after_update_trigger();
+		return $newData;
 	}
 
 }

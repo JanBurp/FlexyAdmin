@@ -31,9 +31,14 @@ function api_url() {
 }
 
 function api_uri() {
-	$CI =& get_instance();
 	$aParams=func_get_args();
-	$uri=$CI->config->item($aParams[0]);
+	if (substr($aParams[0],0,3)=='API') {
+		$CI =& get_instance();
+		$uri=$CI->config->item($aParams[0]);
+	}
+	else {
+		$uri=$aParams[0];
+	}
 	unset($aParams[0]);
 	if (count($aParams)>0) {
 		foreach ($aParams as $p) $uri.="/$p";
