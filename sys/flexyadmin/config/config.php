@@ -201,7 +201,7 @@ else
 | system/logs/ folder.  Use a full server path with trailing slash.
 |
 */
-$config['log_path'] = '';
+$config['log_path'] = SITEPATH.'cache/';
 
 /*
 |--------------------------------------------------------------------------

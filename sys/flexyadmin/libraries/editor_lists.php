@@ -172,8 +172,8 @@ class Editor_lists {
 		$ListFile=SITEPATH."assets/lists/$jsFile.js";
 		$result=write_file($ListFile, $list);
 		// trace_($result);
-		// trace_($list);
-		// trace_($ListFile);
+		// strace_($list);
+		// strace_($ListFile);
 		return $result;
 	}
 

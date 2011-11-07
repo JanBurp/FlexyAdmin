@@ -11,6 +11,7 @@
 
 // $config['admin_api_method'] = '_admin_api';
 // $config['logout_method'] = '_admin_logout';
+// $config['ajax_api_method'] = '_ajax_api';
 // $config['after_update_method'] = '_after_update';
 // $config['after_delete_method'] = '_after_delete';
 
@@ -23,12 +24,13 @@
 |
 */
 
-$config['trigger'] = array(
-	// 'table_types'		=> array('tbl'),
-	// 'tables' 				=> array('tbl_menu','tbl_links'),
-	// 'field_types'		=> array('str','txt'),
-	// 'fields'					=> array('uri','str_title'),
-);
+// $config['trigger'] = array(
+//	'existing_tables' => array(),
+// 	'tables' 					=> array('tbl_menu','tbl_links'),
+// 	'field_types'			=> array('str','txt'),
+// 	'fields'					=> array('uri','str_title'),
+// );
+
 
 /*
 |--------------------------------------------------------------------------

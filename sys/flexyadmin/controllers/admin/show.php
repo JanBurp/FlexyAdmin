@@ -387,31 +387,41 @@ class Show extends AdminController {
 				$form->set_old_templates();
 
 				/**
-				 * Validate form, if succes, make form do an update
+				 * Validate form, if succes, update/insert data
 				 */
 				if ($form->validation()) {
 					$this->lang->load("update_delete");
-					
-					$resultId=$form->update($table,$restrictedToUser);
+					$this->load->model('queu');
+
 					$newData=$form->get_data();
-					$this->_after_update($table,$resultId,$data,$newData);
+					$newData=$this->_after_update($table,$data,$newData);
+
+					$this->crud->table($table,$restrictedToUser);
+					if ($id==-1) {
+						$id=$this->crud->insert(array('data'=>$newData));
+						$this->set_message(langp("insert_new",$table));
+					}
+					else {
+						$id=$this->crud->update(array('where'=>array(PRIMARY_KEY=>$id), 'data'=>$newData));
+						$this->set_message(langp("update_succes",$table));
+					}
+					
+					// Make calls that plugins might have put in the queu
+					$this->queu->run_calls();
+					// Remove all cached files
 					delete_all_cache();
 
 					$redirectUri=$this->_open_grid_set_uri();
 					if (!empty($info)) $redirectUri.='/info/'.$info;
 					
-					if (is_string($resultId)) {
-						$this->set_message(langp("update_error",$table,$resultId));
+					if ( $id===FALSE ) {
+						$this->set_message(langp("update_error",$table));
 						redirect($redirectUri);
 					}
 					else {
-						if ($id==-1)
-							$this->set_message(langp("insert_new",$table));
-						else
-							$this->set_message(langp("update_succes",$table));
 						$this->load->model("login_log");
 						$this->login_log->update($table);
-						redirect($redirectUri.'/current/'.$resultId);
+						redirect($redirectUri.'/current/'.$id);
 					}
 				}
 
@@ -444,6 +454,7 @@ class Show extends AdminController {
 		/**
 		 * output
 		 */
+		
 		if (!isset($uiTable)) $uiTable="";
 		$this->_show_all($uiTable);
 	}
@@ -491,17 +502,23 @@ class Show extends AdminController {
 		 * Validate form, if succes, make form do an update
 		 */
 		if ($form->validation()) {
-			$resultId=$form->update($userTable);
-			if (is_string($resultId)) {
+			$this->load->model('queu');
+			
+			$newData=$form->get_data();
+			$newData=$this->_after_update($userTable,'',$newData);
+			$resultId=$this->crud->table($userTable)->update(array('where'=>array(PRIMARY_KEY=>$userId), 'data'=>$newData));
+			
+			$this->queu->run_calls();
+			
+			if ($resultId===FALSE) {
 				$this->set_message(langp("update_error",$userTable,$resultId));
-				redirect(api_uri('API_home'));
 			}
 			else {
 				$this->set_message(lang("update_user_changed"));
 				$this->load->model("login_log");
 				$this->login_log->update($userTable);
-				redirect(api_uri('API_home'));
 			}
+			redirect(api_uri('API_home'));
 		}
 		else {
 			/**

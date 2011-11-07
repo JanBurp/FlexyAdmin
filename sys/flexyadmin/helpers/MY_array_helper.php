@@ -566,6 +566,13 @@ function array_ereg_search($val, $array) {
 	return $return;
 }
 
+function one_of_array_in_array($a,$b) {
+	$in=false;
+	foreach ($a as $k=>$v) {
+		$in=$in || in_array($v,$b);
+	}
+	return $in;
+}
 
 function select_fields($a,$fields) {
 	if (!is_array($fields)) { $fields=array($fields); }

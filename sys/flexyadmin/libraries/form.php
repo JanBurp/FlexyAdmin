@@ -22,6 +22,7 @@ class Form {
 	var $caption;
 	var $action;
 	var $data=array();
+	var $postdata=array();
 	var $add_password_match=array();
 	var $hasHtmlField;
 	var $isValidated;
@@ -42,6 +43,7 @@ class Form {
 		$this->set_caption();
 		$this->set_labels();
 		$this->data=array();
+		$this->postdata=array();
 		// $this->set_type();
 		$this->add_password_match(FALSE);
 		$this->set_templates();
@@ -54,15 +56,15 @@ class Form {
 		// $this->show_submit();
 	}
 
-	function set_action($action="") {
+	public function set_action($action="") {
 		$this->action=$action;
 	}
 
-	function set_caption($caption="") {
+	public function set_caption($caption="") {
 		$this->caption=$caption;
 	}
 
-	function set_labels($labels=NULL) {
+	public function set_labels($labels=NULL) {
 		if (isset($labels) and !empty($labels)) {
 			foreach($labels as $name=>$label) {
 				$this->set_label($name,$label);
@@ -70,11 +72,11 @@ class Form {
 		}
 	}
 
-	function set_label($name,$label) {
+	public function set_label($name,$label) {
 		$this->data[$name]["label"]=$label;
 	}
 
-	function set_data($data=NULL,$caption="") {
+	public function set_data($data=NULL,$caption="") {
 		if (isset($data) and !empty($data)) {
 			foreach ($data as $name => $field) {
 				$this->data[$name]=$this->_check_default_field($name,$field);
@@ -83,7 +85,7 @@ class Form {
 		$this->set_caption($caption);
 	}
 
-	function add_password_match($args=TRUE) {
+	public function add_password_match($args=TRUE) {
 		$opts=array('fields'=>array('gpw','pwd'),'label'=>' (2x)','name'=>'matches','class'=>'matches');
 		if (is_array($args)) $opts=array_merge($opts,$args);
 		if (is_bool($args) and !$args) $opts=FALSE;
@@ -91,11 +93,11 @@ class Form {
 		if ($this->add_password_match) $this->data=$this->_add_matching_password($this->data);
 	}
 
-	function set_captcha_words($words=NULL) {
+	public function set_captcha_words($words=NULL) {
 		$this->captchaWords=$words;
 	}
 
-	function when($when='',$field='') {
+	public function when($when='',$field='') {
 		if (empty($when))
 			$this->when=array();
 		else {
@@ -103,7 +105,7 @@ class Form {
 		}
 	}
 
-	function _check_default_field($name, $field) {
+	private function _check_default_field($name, $field) {
 		if (!isset($field['type']))				$field['type']="input";
 		if (!isset($field['name']))				$field['name']=$name;
 		if (!isset($field['fieldset']))		$field['fieldset']='fieldset';
@@ -114,10 +116,10 @@ class Form {
 		return $field;
 	}
 
-	function show_buttons($buttons=NULL) {
+	public function show_buttons($buttons=NULL) {
 		$this->set_buttons($buttons);
 	}
-	function set_buttons($buttons=NULL) {
+	public function set_buttons($buttons=NULL) {
 		if (empty($buttons)) {
 			$buttons=array(	'cancel'	=> array( "value" => lang("form_cancel"), "class"=>"button cancel", "onClick" => "window.history.back()"),
 											'reset'		=> array( "value" => lang("form_reset"), "class"=>"button reset"),
@@ -131,7 +133,7 @@ class Form {
 		$this->buttons=$buttons;
 	}
 
-	function no_submit() {
+	public function no_submit() {
 		foreach ($this->buttons as $name => $button) {
 			if (isset($button['submit'])) unset($this->buttons[$name]);
 		}
@@ -140,34 +142,34 @@ class Form {
 /**
  * Template functions
  */
-	function set_templates() {
+	public function set_templates() {
 		$this->set_field_templates();
 	}
-	function set_old_templates() {
+	public function set_old_templates() {
 		$this->set_field_templates("<div class=\"form_field %s\">","</div>");
 		$this->set_fieldset_classes(array('fieldset'=>'formfields','buttons'=>'formbuttons'));
 	}
 
-	function set_field_templates($start="<div class=\"flexyFormField %s\">",$end="</div>") {
+	public function set_field_templates($start="<div class=\"flexyFormField %s\">",$end="</div>") {
 		$this->tmpFieldStart=$start;
 		$this->tmpFieldEnd=$end;
 	}
 
-	function set_fieldset_classes($fieldsetClasses=array('fieldset'=>'flexyFormFieldset','buttons'=>'flexyFormButtons')) {
+	public function set_fieldset_classes($fieldsetClasses=array('fieldset'=>'flexyFormFieldset','buttons'=>'flexyFormButtons')) {
 		$this->fieldsetClasses=$fieldsetClasses;
 	}
 	
-	function set_fieldsets($fieldsets=array('fieldset')) {
+	public function set_fieldsets($fieldsets=array('fieldset')) {
 		$this->fieldsets=$fieldsets;
 	}
-	function add_fieldset($fieldset='',$class='') {
+	public function add_fieldset($fieldset='',$class='') {
 		$this->fieldsets[]=$fieldset;
 		if (empty($class)) $class=$this->fieldsetClasses['fieldset'];
 		$this->fieldsetClasses[$fieldset]=$class;
 	}
 
 
-	function _add_matching_password($data) {
+	private function _add_matching_password($data) {
 		foreach ($data as $name => $field) {
 			$pre=get_prefix($name);
 			if (in_array($pre,$this->add_password_match['fields'])) {
@@ -184,8 +186,7 @@ class Form {
 		return $data;
 	}
 
-
-	function tmp($tmp,$class="") {
+	private function tmp($tmp,$class="") {
 		return str_replace("%s",$class,$tmp);
 	}
 
@@ -198,7 +199,7 @@ class Form {
  *
  * @return bool	Validation succes
  */
-	function validation() {
+	public function validation() {
 		$data=$this->data;
 		// trace_($data);
 		$hasCaptcha=FALSE;
@@ -240,7 +241,7 @@ class Form {
 		return $this->isValidated;
 	}
 
-	function reset_data() {
+	public function reset_data() {
 		foreach ($this->data as $key => $field) {
 			$this->data[$key]["value"]="";
 			$this->data[$key]["repopulate"]="";
@@ -248,7 +249,7 @@ class Form {
 	}
 
 /**
- * function prepare_data($name,$value)
+ * function prepare_field($name,$value)
  *
  * This functions prepares data coming from a form. Some fields needs to be adjusted, ie: checkboxes for example
  *
@@ -257,15 +258,11 @@ class Form {
  * @return mixed The prepped data
  *
  */
-	function prepare_data($name,$value,$id) {
+	private function prepare_field($name,$value) {
 		$out=$value;
-		$error="";
 		$value=$this->_value_from_hidden($name,$value);
 		$data=$this->data[$name];
 
-		/**
-		 * Special form fields
-		 */
 		$type=el("type",$data);
 		switch ($type) {
 			case "checkbox" :
@@ -274,34 +271,11 @@ class Form {
 				else
 					$out=0;
 				break;
-			case "upload" :
-				if (!empty($_FILES[$name]['name'])) {
-					$config['upload_path'] 		= $data['upload_path'];
-					$config['allowed_types'] 	= str_replace(",","|",$data['allowed_types']);
-					$this->CI->upload->config($config);
-					$ok=$this->CI->upload->upload_file($name);
-					if (!$ok) {
-						$error=$this->CI->upload->get_error();
-					}
-					else {
-						$out=$this->CI->upload->get_file();
-						// reset lists
-						$this->CI->load->library("editor_lists");
-						$this->CI->editor_lists->create_list("img");
-						$this->CI->editor_lists->create_list("media");
-					}
-				}
-				break;
-			default:
-				//$out=htmlentities($value);
-				break;
 		}
-		$this->data[$name]['newvalue']=$out;
-		$out=array("value"=>$out,"error"=>$error);
 		return $out;
 	}
 
-	function _value_from_hidden($name,$value) {
+	private function _value_from_hidden($name,$value) {
 		if (is_array($value) or empty($value)) {
 			// multi options (string)
 			$hidden=$this->CI->input->post($name.'__hidden');
@@ -315,201 +289,77 @@ class Form {
 		return $value;
 	}
 
+
 /**
- * function update($table)
+ * function get_postdata$table)
  *
  * Update the data in form
  * @param string $table Table to update
  * @return bool	Validation succes
  */
-	function update($table,$user_id='') {
-		$error="";
-		$id=-1;
-		/**
-		 * Sets data to update/insert
-		 */
-		// trace_($_POST);
-		$set=array();
-		if ($this->isValidated and $this->CI->db->table_exists($table)) {
-			$joins=array();
+	private function get_postdata() {
+
+		$data=array();
+		$joins=array();
+
+		if ($this->isValidated) {
 			foreach($this->data as $name=>$field) {
-				// set primary key (id)
-				if ($name==PRIMARY_KEY) {
-					$id=$this->CI->input->post(PRIMARY_KEY);
+				$pre=get_prefix($name);
+				$value=$this->CI->input->post($name);
+				// remove matches if any
+				if ($this->add_password_match) {
+					if (in_array($pre,$this->add_password_match['fields']) and isset($field['matches'])) {
+						unset($this->data[$name]);
+						continue;
+					}
 				}
-				// set user (id) if set
-				elseif ($name=="user") {
-					if ($user_id===FALSE)
-						$set[$name]=$this->CI->input->post($name);
-					else
-						$set[$name]=$user_id;
-				}
-				// set uri
-				elseif ($name=="uri") {
-					$uri=$this->CI->input->post($name);
+				/**
+				 *  Is data from join?
+				 */
+				if ($pre==$this->CI->config->item('REL_table_prefix')) {
+					if (empty($value)) $value=array();
+					$hidden=$this->CI->input->post($name.'__hidden');
+					if ($hidden) $value=$hidden;
+					if (!is_array($value)) $value=explode('|',$value);
+					$joins[$name]=array();
+					foreach ($value as $key => $id) {
+						$joins[$name][$id]=array('id'=>$id);
+					}
 				}
 
-				// set other fields
+				/**
+				* Password hash it (or leave it same when empty)
+				*/
+				elseif (in_array($pre,array('gpw','pwd'))) {
+					if (!empty($value)) $data[$name]=$this->CI->ion_auth_model->hash_password($value);
+				}
+				
+				/**
+				 * Normal data
+				 */
 				else {
-					$pre=get_prefix($name);
-					$value=$this->CI->input->post($name);
-					
-					// remove matches if any
-					if ($this->add_password_match) {
-						if (in_array($pre,$this->add_password_match['fields']) and isset($field['matches'])) {
-							unset($this->data[$name]);
-							continue;
-						}
-					}
-					
-					/**
-					 *  Is data from join?
-					 */
-					if ($pre==$this->CI->config->item('REL_table_prefix')) {
-						// strace_($name);
-						if (empty($value)) $value=array();
-						$joins[$name]=$value;
-						$hidden=$this->CI->input->post($name.'__hidden');
-						if ($hidden) {
-							$joins[$name]=explode('|',$hidden);
-						}
-						// trace_($joins);
-					}
-
-					/**
-					* Password hash it (or leave it same when empty)
-					*/
-					elseif (in_array($pre,array('gpw','pwd'))) {
-						if (!empty($value)) $set[$name]=$this->CI->ion_auth_model->hash_password($value);
-					}
-					/**
-					 * Normal data
-					 */
-					else {
-						$prep=$this->prepare_data($name,$value,$id);
-						$error=el("error",$prep);
-						$value=el("value",$prep,"");
-						$set[$name]=$value;
-					}
+					$data[$name]=$this->prepare_field($name,$value);
 				}
 			}
 			
-			if (empty($error)) {
-				/**
-				 * If no error setting data, insert/update data (looping through the set)
-				 */
-
-				/**
-				 * Set (new) order
-				 */
-				if (isset($set["order"])) {
-					if ($id==-1) {
-						if (isset($set["self_parent"])) 
-							$set["order"]=$this->CI->order->get_next_order($table,$set["self_parent"]);
-						else
-							$set["order"]=$this->CI->order->get_next_order($table);
-					}
-					elseif (isset($set["self_parent"])) {
-						$old_parent=$this->CI->db->get_field($table,"self_parent",$id);
-						if ($old_parent!=$set["self_parent"]) {
-							$set["order"]=$this->CI->order->get_next_order($table,$set["self_parent"]);
-						}
-					}
-				}
-
-				/**
-				 * Make sure all not given fields stays the same
-				 */
-				$staticFields=$this->CI->db->list_fields($table);
-				$staticFields=array_combine($staticFields,$staticFields);
-				unset($staticFields[PRIMARY_KEY]);
-				foreach($set as $name=>$value) {
-					unset($staticFields[$name]);
-				}
-				if (!empty($staticFields)) {
-					$this->CI->db->select($staticFields);
-					$this->CI->db->where(PRIMARY_KEY,$id);
-					$query=$this->CI->db->get($table);
-					$staticData=$query->row_array();
-					$query->free_result();
-					foreach($staticData as $name=>$value) {
-						if (!isset($value))
-							$set[$name]='';
-						else
-							$set[$name]=$value;
-					}
-				}
-
-				/**
-				 * Update data
-				 */
-				// strace_($set);
-				
-				$this->CI->db->trans_start();
-				
-				foreach($set as $name=>$value) {
-					$this->CI->db->set($name,$value);
-					$this->data[$name]['newvalue']=$value;
-				}
-				if ($id==-1) {
-					$this->CI->db->insert($table);
-					$id=$this->CI->db->insert_id();
-					log_('info',"form: inserting data in '$table', id='$id'");
-				}
-				else {
-					$this->CI->db->where(PRIMARY_KEY,$id);
-					$this->CI->db->update($table);
-					log_('info',"form: updating data from '$table', id='$id'");
-				}
-				/**
-				 * If Joins, update them to
-				 */
-				if (!empty($joins)) {
-					// strace_($joins);
-					foreach($joins as $name=>$value) {
-						// first delete current selection
-						$relTable=$name;
-						$thisKey=this_key_from_rel_table($relTable);
-						$joinKey=join_key_from_rel_table($relTable);
-						if ($thisKey==$joinKey) {
-							// self relation
-							$joinKey.="_";
-						}
-						// strace_(array('id'=>$id,'thisKey'=>$thisKey,'joinKey'=>$joinKey,'relTable'=>$relTable,'value'=>$value));
-						$this->CI->db->where($thisKey,$id);
-						$this->CI->db->delete($relTable);
-						// insert new selection
-						if (!is_array($value)) $value=explode('|',$value);
-						foreach ($value as $data) {
-							$this->CI->db->set($thisKey,$id);
-							$this->CI->db->set($joinKey,$data);
-							$this->CI->db->insert($relTable);
-							$inId=$this->CI->db->insert_id();
-						}
-						// strace_('Should be updated..... ok');
-						log_('info',"form: updating join data from '$table', id='$id'");
-					}
-				}
-				
-				$this->CI->db->trans_complete();
-				
-				
-				return intval($id);
-			}
+			$this->post_data=array_merge($data,$joins);
 		}
-		return strval($error);
+		return $this->post_data;
 	}
 
-	function get_data() {
+	public function get_data() {
 		$data=array();
-		
-		foreach($this->data as $name=>$field) {
-			if (isset($field['newvalue']))
-				$data[$name]=$field['newvalue'];
-			elseif (isset($field['repopulate']))
-				$data[$name]=$field['repopulate'];
-			else
-				$data[$name]=$field['value'];
+		if (!empty($this->post_data))
+			$data=$this->post_data;
+		else
+			$data=$this->get_postdata();	
+		if (empty($data)) {
+			foreach($this->data as $name=>$field) {
+				if (isset($field['repopulate']))
+					$data[$name]=$field['repopulate'];
+				else
+					$data[$name]=$field['value'];
+			}
 		}
 		return $data;
 	}
@@ -524,7 +374,7 @@ class Form {
  * @return string	grid output
  */
 
-	function render($class='flexyForm') {
+	public function render($class='flexyForm') {
 		$this->CI->lang->load("form");
 		// if (!empty($type)) $this->set_type($type);
 		
@@ -567,7 +417,7 @@ class Form {
 		return $out;
 	}
 
-	function render_field($name,$field,$class="") {
+	private function render_field($name,$field,$class="") {
 		$out="";
 		$pre=get_prefix($name);
 		if ($pre==$name) $pre="";
@@ -810,11 +660,6 @@ class Form {
 				$attr["class"].=" browse";
 				$out.=form_upload($attr);
 				break;
-				
-			case "image":
-				$attr['src']=$attr['value'];
-				$out.=img($attr);
-				break;
 
 			// case "upload":
 			// 	if (!empty($field["value"])) $out.=popup_img($field["upload_path"]."/".$field["value"],img($field["upload_path"]."/".$field["value"]));
@@ -822,6 +667,12 @@ class Form {
 			// 	$attr["class"].=" browse";
 			// 	$out.=form_upload($attr);
 			// 	break;
+
+				
+			case "image":
+				$attr['src']=$attr['value'];
+				$out.=img($attr);
+				break;
 
 			case "date":
 				$date=trim(strval($field["value"]));
@@ -877,7 +728,7 @@ class Form {
  * Checks if a field in the form needs a html editor.
  * @return	bool True if one ore more fields is a html editor
  */
- 	function has_htmlfield() {
+ 	public function has_htmlfield() {
  		return $this->hasHtmlField;
 	}
 

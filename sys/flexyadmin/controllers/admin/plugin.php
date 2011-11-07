@@ -10,6 +10,7 @@ class Plugin extends AdminController {
 
 	function __construct() {
 		parent::__construct();
+		$this->load->model('plugin_handler');
 	}
 
 	function index() {
@@ -28,19 +29,15 @@ class Plugin extends AdminController {
 				// next arg is plugin name
 				$plugin='plugin_'.$args[0];
 				array_shift($args);
-				// call plugin if exists
-				if (isset($this->$plugin) and method_exists($this->$plugin,'_ajax_api')) $this->$plugin->_ajax_api($args);
+				$this->plugin_handler->call_plugin_ajax_api($plugin,$args);
 			}
 			else {
 				// first arg is plugin name
 				$plugin='plugin_'.$args[0];
 				array_shift($args);
-				// call plugin if exists
-				if (isset($this->$plugin) and method_exists($this->$plugin,'_admin_api')) {
-					$this->$plugin->_admin_api($args);
-					if (method_exists($this->$plugin,'_get_show_type')) $show_type=$this->$plugin->_get_show_type();
-					$this->_add_content($this->$plugin->content);
-				}
+				$this->plugin_handler->call_plugin_admin_api($plugin,$args);
+				$show_type=$this->plugin_handler->get_plugin_showtype($plugin);
+				$this->_add_content($this->plugin_handler->get_plugin_content($plugin));
 			}
 		}
 		// output

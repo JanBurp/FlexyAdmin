@@ -9,9 +9,25 @@
 |
 */
 
-$config['after_update_method'] = '_after_update';
-$config['after_delete_method'] = '_after_delete';
+// NEEDS REWRITE
 
+// $config['admin_api_method'] = '_admin_api';
+// $config['logout_method'] = '_admin_logout';
+// $config['after_update_method'] = '_after_update';
+// $config['after_delete_method'] = '_after_delete';
+
+
+/*
+|--------------------------------------------------------------------------
+| Plugin Update/Delete Triggers
+| Here you need to set when the update and delete methods of you're plugin are called
+|--------------------------------------------------------------------------
+|
+*/
+
+// $config['trigger'] = array(
+// 	'existing_tables' => array('res_tags')
+// );
 
 
 /*
@@ -23,18 +39,10 @@ $config['after_delete_method'] = '_after_delete';
 |
 */
 
-$config['trigger_method'] = '_trigger';
+// $config['trigger_method'] = '_trigger';
 
 
 
-/*
-|--------------------------------------------------------------------------
-| Plugin automenu config
-|--------------------------------------------------------------------------
-|
-*/
-
-$config['module_field']='str_module';
 
 
 ?>

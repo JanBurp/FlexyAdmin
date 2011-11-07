@@ -1,0 +1,328 @@
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+/**
+ * Crud, for any crud actions in Admin part of FlexyAdmin
+ */
+
+class Crud extends CI_Model {
+
+	private $table;
+	private $user_id;
+	private $data;
+	private $where;
+	private $limit;
+	private $offset;
+	private $order;
+
+	function __construct() {
+		parent::__construct();
+		$this->table='';
+	}
+
+	/**
+	 * table()
+	 *
+	 * @param string $table : table name
+	 * @return object $this
+	 * @author Jan den Besten
+	 */
+	public function table($table='',$user_id=FALSE) {
+		if (empty($table)) return FALSE;
+		if (!$this->db->table_exists($table)) return FALSE;
+		$this->table=$table;
+		$this->_set_args();
+		$this->user_id=$user_id;
+		log_message('debug', 'Model: Crud; Method: table("'.$table.')"');
+		return $this;
+	}
+
+
+	// args = array( where'=>array(), 'limit'=>int, 'offset'=>int, 'order'=>array() );
+	// public function retrieve($args='') {
+	// 	if (empty($this->table)) return FALSE;
+	// 
+	// 	$this->_set_args($args);
+	// 	if (is_array($this->where)) {
+	// 		$this->_set_order();
+	// 		$this->_set_limit();
+	// 		$this->db->where($this->where);
+	// 		return $this->db->get($this->table);
+	// 	}
+	// 	return FALSE;
+	// }
+
+
+
+	/**
+	 * create(), create item in database, including many tables (join/rel)
+	 *
+	 * @param array $args : array( 'data'=>array() )
+	 * @return int : id of inserted item
+	 * @author Jan den Besten
+	 */
+	public function insert($args='') {
+		if (empty($this->table)) return FALSE;
+		$this->_set_args($args);
+		return $this->_update_insert(TRUE);
+	}
+	public function create($args='') {
+		return $this->insert($args);
+	}
+
+
+	/**
+	 * update(), update item(s) in database, including many tables (join/rel)
+	 *
+	 * @param array $args : array( 'where'=>array(), 'data'=>array() )
+	 * @return boolean : TRUE on succes
+	 * @author Jan den Besten
+	 */
+	public function update($args='') {
+		if (empty($this->table)) return FALSE;
+		$this->_set_args($args);
+		return $this->_update_insert(FALSE);
+	}
+
+
+	/**
+	 * private _update_insert, does the actual updateing/inserting for create/update
+	 * @author Jan den Besten
+	 */
+	private function _update_insert($insert=FALSE) {
+		$id=FALSE;
+		if (is_array($this->where) && is_array($this->data)) {
+
+			/**
+			 * Set user (id) if needed
+			 */
+			if ($insert and isset($this->data['user'])) {
+				$this->data['user']=$user_id;
+			}
+
+			/**
+			 * Set new order if needed
+			 */
+			if (isset($this->data["order"]) and $insert) {
+				$this->load->model('order','order_model');
+				if (isset($this->data["self_parent"])) 
+					$this->data["order"]=$this->order_model->get_next_order($this->table,$this->data["self_parent"]);
+				else
+					$this->data["order"]=$this->order_model->get_next_order($this->table);
+			}
+
+			/**
+			 * Make sure all not given fields in data stays the same | #### kan dit niet gewoon weg??
+			 */
+			// $staticFields=$this->db->list_fields($this->table);
+			// $staticFields=array_combine($staticFields,$staticFields);
+			// unset($staticFields[PRIMARY_KEY]);
+			// foreach($this->data as $name=>$value) {
+			// 	unset($staticFields[$name]);
+			// }
+			// if (!empty($staticFields)) {
+			// 	$this->db->select($staticFields);
+			// 	$this->db->where(PRIMARY_KEY,$id);
+			// 	$query=$this->db->get($this->table);
+			// 	$staticData=$query->row_array();
+			// 	$query->free_result();
+			// 	foreach($staticData as $name=>$value) {
+			// 		if (!isset($value))
+			// 			$this->data[$name]='';
+			// 		else
+			// 			$this->data[$name]=$value;
+			// 	}
+			// }
+
+
+			$data=$this->data;
+
+
+			/**
+			 * Split many data if any
+			 */
+			$many=filter_by_key($this->data,'rel');
+			if (!empty($many)) {
+				foreach ($many as $key => $value) {
+					unset($data[$key]);
+				}
+			}
+
+			
+			/**
+			* Start updating the data
+			*/
+			$this->db->trans_start();
+			
+			if ($insert) unset($data[PRIMARY_KEY]);
+			$this->db->set($data);
+
+			if ($insert) {
+				$this->db->insert($this->table);
+				$id=$this->db->insert_id();
+			}
+			else {
+				$this->db->where($this->where);
+				$this->db->update($this->table);
+				$id=$this->_get_id();
+			}
+			
+			/**
+			 * If Many, update them to
+			 */
+			if (!empty($many)) {
+				foreach($many as $relTable=>$value) {
+					// first delete current selection
+					$thisKey=this_key_from_rel_table($relTable);
+					$joinKey=join_key_from_rel_table($relTable);
+					if ($thisKey==$joinKey) $joinKey.="_";
+					// trace_(array('id'=>$id,'thisKey'=>$thisKey,'joinKey'=>$joinKey,'relTable'=>$relTable,'value'=>$value));
+					$this->db->where($thisKey,$id);
+					$this->db->delete($relTable);
+					// insert new selection
+					if (!is_array($value)) $value=explode('|',$value);
+					foreach ($value as $jdata) {
+						$this->db->set($thisKey,$id);
+						$this->db->set($joinKey,$jdata[PRIMARY_KEY]);
+						$this->db->insert($relTable);
+						$inId=$this->db->insert_id();
+					}
+				}
+			}
+			
+			/**
+			 * Data is updated.
+			 */
+			
+			$this->db->trans_complete();
+		}
+		return intval($id);
+	}
+
+
+
+	/**
+	 * delete(), Deletes item from table. And if exists its relations from other tables. And if it is part of a tree, put its children a level up.
+	 *
+	 * @param array $where : array( 'key'=> 'value' [, ...])
+	 * @return boolean : TRUE if succes, FALSE if not
+	 * @author Jan den Besten
+	 */
+
+	public function delete($where=array()) {
+		if (empty($this->table)) return FALSE;
+
+		$is_deleted=FALSE;
+		$this->_set_args(array('where'=>$where));
+
+		if (is_array($this->where)) {
+
+			// Get id
+			$id=$this->_get_id();
+			
+			/**
+			 * Check if it is a tree, if so, get branches (to move them up later)
+			 */
+			$branches=FALSE;
+			if ($this->db->has_field($this->table,'self_parent')) {
+				$this->load->model('order','order_model');
+				// get info from current
+				$this->db->where(PRIMARY_KEY,$id);
+				$this->db->select('id,order,self_parent');
+				$row=$this->db->get_row($this->table);
+				$parent=$row['self_parent'];
+				$order=$row['order'];
+				// get branches
+				$this->db->where('self_parent',$id);
+				$this->db->select(PRIMARY_KEY);
+				$branches=$this->db->get_result($this->table);
+			}
+
+			/**
+			 * Remove database entry('s)
+			 */
+			$this->db->trans_start();			
+			
+			$this->db->where($this->where);
+			$is_deleted=$this->db->delete($this->table);
+			
+			if ($is_deleted) {
+
+				/**
+				 * Move branches up if any
+				 */
+				if ($branches) {
+					$count=count($branches);
+					$this->order_model->shift_up($this->table,$parent,$count,$order);
+					foreach($branches as $branch=>$value) {
+						$this->db->set('self_parent',$parent);
+						$this->db->set('order',$order++);
+						$this->db->where(PRIMARY_KEY,$value[PRIMARY_KEY]);
+						$this->db->update($this->table);
+					}
+				}
+
+
+				/**
+				 * Check if some data set in rel tables (if exists), if so delete them also
+				 */
+				$jTables=$this->db->get_many_tables($this->table);
+				if (!empty($jTables)) {
+					foreach ($jTables as $jt=>$jItem) {
+						$this->db->where($jItem['id_this'],$id);
+						$this->db->delete($jt);
+					}
+				}
+				
+				log_message('debug', 'Model: Crud->Delete() from table "'.$this->table.'"');
+			}
+
+			$this->db->trans_complete();
+		}
+		return $is_deleted;
+	}
+
+
+
+	/**
+	 * Some helper functions
+	 */
+
+	private function _set_args($args=NULL) {
+		$this->data   = element('data',$args,FALSE);
+		$this->where  = element('where',$args,FALSE);
+		if (!is_array($this->where)) $this->where=array(PRIMARY_KEY,$this->where);
+		$this->limit  = element('limit',$args,FALSE);
+		$this->offset = element('offset',$args,0);
+		$this->order 	= element('order',$args,FALSE);
+		if (!is_array($this->order)) $this->order=array($this->order=>'DESC');
+	}
+
+	private function _get_id() {
+		$id = element(PRIMARY_KEY,$this->where,FALSE);
+		if (!$id) {
+			$this->db->select(PRIMARY_KEY);
+			$this->db->where($this->where);
+			$row=$this->db->get_row($this->table);
+			$id=$row[PRIMARY_KEY];
+		}
+		return $id;
+	}
+
+	private function _set_order() {
+		foreach ($this->order as $order_by => $direction) {
+			$this->db->order_by($order_by,$direction);
+		}
+	}
+	
+	private function _set_limit() {
+		if ($this->limit) {
+			$this->db->limit($limit,$offset);
+		}
+	}
+
+}
+
+
+
+/* End of file crud.php */
+/* Location: ./system/application/models/crud.php */

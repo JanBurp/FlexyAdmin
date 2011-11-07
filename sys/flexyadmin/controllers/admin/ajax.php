@@ -65,9 +65,16 @@ class Ajax extends BasicController {
 			if ($this->user->has_rights($table)>=RIGHTS_EDIT) {
 				$ids=$this->input->post("id");
 				if ($ids) {
+					
 					$this->load->model("order");
+					$this->load->model('queu');
+					
 					$this->order->set_all($table,$ids);
 					$this->_after_update($table);
+					
+					$this->queu->run_calls();
+					delete_all_cache();
+
 					$result='';
 				}
 				else {
@@ -82,27 +89,37 @@ class Ajax extends BasicController {
 			$result='ajax_error_wrong_parameters';
 		}
 		$this->_result($result);
-		delete_all_cache();
 	}
+
 
 /**
  * Handles AJAX request to edit a cell
  * Url holds all data
  */
- 	function edit($table="",$id="",$field="",$value="") {
+ 	function edit($table="",$id="",$field="",$value="",$plugins=TRUE) {
 		$result='';
 		if (!empty($table) and ($id!="") and !empty($field)) {
 			if ($this->db->table_exists($table) and $this->db->field_exists($field,$table)) {
  				if ($this->user->has_rights($table,$id)>=RIGHTS_EDIT) {
+
+					if ($plugins) $this->load->model('queu');
+
 					$this->db->where(PRIMARY_KEY,$id);
 					$oldData=$this->db->get_row($table);
+
 					$newData=$oldData;
 					$newData[$field]=$value;
-		 			$this->db->set($field,$value);
-		 			$this->db->where(PRIMARY_KEY,$id);
-		 			$this->db->update($table);
-					$this->_after_update($table,$id,$oldData,$newData);
-					delete_all_cache();
+
+					if ($plugins)	$newData=$this->_after_update($table,$oldData,$newData);
+
+					$this->crud->table($table);
+					$this->crud->update(array('where'=>array(PRIMARY_KEY=>$id), 'data'=>$newData));
+
+					if ($plugins) {
+						$this->queu->run_calls();
+						delete_all_cache();
+					}
+
 				}
 				else $result='ajax_error_no_rights';		 		
 	 		}

@@ -113,44 +113,6 @@ class MY_Loader extends CI_Loader {
 			$CI->dbutil =  new $class();
 		}
 
-
-
-
-
-		/**
-		 * Load Plugin
-		 *
-		 * This function loads the specified plugin: a special Model
-		 */
-		function plugin($plugins = array() )	{
-			if ( !is_array($plugins)) {
-				$plugins = array($plugins);
-			}
-		
-			foreach ($plugins as $plugin)	{
-				
-				if (isset($this->_ci_plugins[$plugin]))	{
-					continue;
-				}
-		
-				// try to load the plugin
-				foreach ($this->_ci_plugin_paths as $path) {
-					if (file_exists($path.'plugins/'.$plugin.'.php')) {
-						include_once($path.'plugins/'.$plugin.'.php');	
-						$this->_ci_plugins[$plugin] = TRUE;
-						log_message('debug', 'Plugin loaded: '.$plugin);
-						continue;
-					}
-				}
-				
-				if (! $this->_ci_plugins[$plugin]) {
-					show_error('Unable to load the requested plugin: '.$plugin.'.php');
-				}
-				
-			}		
-		}
-
-
 }
 
 ?>

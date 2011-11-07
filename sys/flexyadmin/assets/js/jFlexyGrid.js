@@ -397,6 +397,7 @@ function doGrid() {
 					
 					// check if there are branches
 					if ($("table.grid tr td.self_parent").length>0) {
+						
 						// check if dropped on another branch
 						nextRow=$(ui.item).next("tr");
 						if (nextRow.length>0) {
@@ -433,13 +434,13 @@ function doGrid() {
 									shiftNodes(id,nextSpanNodes.length-SpanNodes.length,newParentId);
 								}
 							}
-							// Set own parent with AJAX request
-							url=site_url("admin/ajax/edit/"+table+"/"+id+"/self_parent/"+newParentId);
+							// Set own parent and reset order
+							url=site_url("admin/ajax/edit/"+table+"/"+id+"/self_parent/"+newParentId+"/0");
 							$.get(url,"",function(data) {
 										if (data!="") {
 											ajaxError(data);
 										}
-									});							
+									});
 						}
 					}
 					
