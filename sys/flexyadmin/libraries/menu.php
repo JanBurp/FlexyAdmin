@@ -399,8 +399,6 @@ class Menu {
 		$out=$this->tmp($this->tmpMenuStart,$ULattr); // <ul .. >
 		if (!isset($menu)) $menu=$this->menu;
 
-		trace_($menu);
-
 		$pos=1;
 		if ($menu) {
 			foreach($menu as $uri=>$item) {
