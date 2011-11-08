@@ -259,7 +259,8 @@ class Menu {
 
 	function add_sub($sub) {
 		if (array_key_exists($sub['uri'],$this->menu)) {
-			$this->menu[$sub['uri']]["sub"]=$sub;
+			$item=$this->menu[$sub['uri']];
+			$this->menu[$sub['uri']]['sub'][$sub['sub']['uri']]=$sub['sub'];
 			return TRUE;
 		}
 		return FALSE;
@@ -398,6 +399,8 @@ class Menu {
 		$out=$this->tmp($this->tmpMenuStart,$ULattr); // <ul .. >
 		if (!isset($menu)) $menu=$this->menu;
 
+		trace_($menu);
+
 		$pos=1;
 		if ($menu) {
 			foreach($menu as $uri=>$item) {
@@ -443,6 +446,7 @@ class Menu {
 
 					// render item/subitem
 					$itemOut.=$this->tmp($this->tmpItemStart,array("class"=>$itemAttr["class"],'id'=>$itemAttr['id']));  // <li ... >
+					
 					if (isset($item["uri"])) {
 						if (isset($item['name']))
 							$showName=ascii_to_entities($item['name']);
