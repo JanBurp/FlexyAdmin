@@ -19,10 +19,10 @@ class User Extends Ion_auth {
 	public function __construct() {
 		parent::__construct();
 		// set standard configurations
-		$this->ci->db->select('url_url,str_title,email_email');
-		$this->siteInfo = $this->ci->db->get_row('tbl_site');
-		$this->ci->config->set_item('site_title', $this->siteInfo['str_title'],'ion_auth');
-		$this->ci->config->set_item('admin_email', $this->siteInfo['email_email'],'ion_auth');
+		$this->CI->db->select('url_url,str_title,email_email');
+		$this->siteInfo = $this->CI->db->get_row('tbl_site');
+		$this->CI->config->set_item('site_title', $this->siteInfo['str_title'],'ion_auth');
+		$this->CI->config->set_item('admin_email', $this->siteInfo['email_email'],'ion_auth');
 	}
 	
 	
@@ -34,7 +34,7 @@ class User Extends Ion_auth {
 			if ( $this->_check_if_old_password($identity) ) {
 				$this->_update_old_passwords();
 			}
-			if ($this->ci->ion_auth_model->login($identity, $password, $remember)) {
+			if ($this->CI->ion_auth_model->login($identity, $password, $remember)) {
 				return TRUE;
 			}
 		}
@@ -43,17 +43,17 @@ class User Extends Ion_auth {
 	}
 	
 	private function _check_if_userdate_ok() {
-		return ($this->ci->db->field_exists('str_username','cfg_users') and $this->ci->db->field_exists('gpw_password','cfg_users') );
+		return ($this->CI->db->field_exists('str_username','cfg_users') and $this->CI->db->field_exists('gpw_password','cfg_users') );
 	}
 	
 	private function _check_if_old_password($identity) {
 		$new_password = FALSE;
 		// check if password field length = 40 and the password itself also 40 chars long, that should do it
-		$field_data=$this->ci->db->field_data('cfg_users');
+		$field_data=$this->CI->db->field_data('cfg_users');
 		foreach ($field_data as $field_info) {
 			$field_info=object2array($field_info);
 			if ($field_info['name']=='gpw_password') {
-				$password = $this->ci->db->get_field('cfg_users','gpw_password');
+				$password = $this->CI->db->get_field('cfg_users','gpw_password');
 				$new_password = ( $password and $field_info['max_length']==40 and strlen($password)==40 );
 			}
 		}
@@ -62,21 +62,21 @@ class User Extends Ion_auth {
 	
 	private function _update_old_passwords() {
 		// update all users:
-		$this->ci->db->select('id,gpw_password,id_user_group');
-		$users=$this->ci->db->get_results('cfg_users');
+		$this->CI->db->select('id,gpw_password,id_user_group');
+		$users=$this->CI->db->get_results('cfg_users');
 		foreach ($users as $id => $user) {
 			$set=array();
 			// hash password, and get usergroup
-			$set['gpw_password']=$this->ci->ion_auth_model->hash_password($user['gpw_password']);
-			$set['id_user_group']=$this->ci->db->get_field_where('rel_users__rights','id_rights','id_users',$id);
+			$set['gpw_password']=$this->CI->ion_auth_model->hash_password($user['gpw_password']);
+			$set['id_user_group']=$this->CI->db->get_field_where('rel_users__rights','id_rights','id_users',$id);
 			// update
-			$this->ci->db->set($set);
-			$this->ci->db->where('id',$id);
-			$this->ci->db->update('cfg_users');
+			$this->CI->db->set($set);
+			$this->CI->db->where('id',$id);
+			$this->CI->db->update('cfg_users');
 		}
 		// remove 'rel_users__rights'
-		$this->ci->load->dbforge();
-		$this->ci->dbforge->drop_table('rel_users__rights');
+		$this->CI->load->dbforge();
+		$this->CI->dbforge->drop_table('rel_users__rights');
 		// set a message
 		$this->set_message('update_to_safe_passwords');
 	}
@@ -86,7 +86,7 @@ class User Extends Ion_auth {
 	public function logged_in() {
 		$logged_in = parent::logged_in();
 		if ($logged_in) {
-			$this->user_id = $this->ci->session->userdata("user_id");
+			$this->user_id = $this->CI->session->userdata("user_id");
 			$this->rights = $this->create_rights( $this->user_id );
 		}
 		return (bool) $logged_in;
@@ -102,26 +102,26 @@ class User Extends Ion_auth {
 			$this->set_error('forgot_password_email_not_found');
 			return FALSE;
 		}
-		else if ( $this->ci->ion_auth_model->forgotten_password($email) ) {
+		else if ( $this->CI->ion_auth_model->forgotten_password($email) ) {
 			$data = array(
 				'user'										=> $user->str_username,
-				'forgotten_password_code' => $this->ci->ion_auth_model->forgotten_password_code,
+				'forgotten_password_code' => $this->CI->ion_auth_model->forgotten_password_code,
 			);
 
-			$message = $this->ci->load->view($this->ci->config->item('email_templates', 'ion_auth').$this->ci->config->item('email_forgot_password', 'ion_auth'), $data, true);
+			$message = $this->CI->load->view($this->CI->config->item('email_templates', 'ion_auth').$this->CI->config->item('email_forgot_password', 'ion_auth'), $data, true);
 
-			$this->ci->email->clear();
-			$config['mailtype'] = $this->ci->config->item('email_type', 'ion_auth');
+			$this->CI->email->clear();
+			$config['mailtype'] = $this->CI->config->item('email_type', 'ion_auth');
 			$config['protocol'] = 'mail';
 			
-			$this->ci->email->initialize($config);
-			$this->ci->email->from($this->ci->config->item('admin_email', 'ion_auth'), $this->ci->config->item('site_title', 'ion_auth'));
-			$this->ci->email->to($email);
-			$this->ci->email->subject($this->ci->config->item('site_title', 'ion_auth') . ' - Forgotten Password Verification');
-			$this->ci->email->message($message);
+			$this->CI->email->initialize($config);
+			$this->CI->email->from($this->CI->config->item('admin_email', 'ion_auth'), $this->CI->config->item('site_title', 'ion_auth'));
+			$this->CI->email->to($email);
+			$this->CI->email->subject($this->CI->config->item('site_title', 'ion_auth') . ' - Forgotten Password Verification');
+			$this->CI->email->message($message);
 			
-			if ( $this->ci->email->send() ) {
-				echo $this->ci->email->print_debugger();
+			if ( $this->CI->email->send() ) {
+				echo $this->CI->email->print_debugger();
 				$this->set_message('forgot_password_successful');
 				return TRUE;
 			}
@@ -157,11 +157,11 @@ class User Extends Ion_auth {
 	}
 
 	function create_rights($userId) {
-		$this->ci->db->select('id,id_user_group');
-		$this->ci->db->where("cfg_users.id",$userId);
-		// $this->ci->db->add_foreigns(array('cfg_user_groups'=>array('rights','b_all_users','b_backup','b_tools','b_delete','b_add','b_edit','b_show')));
-		$this->ci->db->add_foreigns();
-		$user=$this->ci->db->get_row('cfg_users');
+		$this->CI->db->select('id,id_user_group');
+		$this->CI->db->where("cfg_users.id",$userId);
+		// $this->CI->db->add_foreigns(array('cfg_user_groups'=>array('rights','b_all_users','b_backup','b_tools','b_delete','b_add','b_edit','b_show')));
+		$this->CI->db->add_foreigns();
+		$user=$this->CI->db->get_row('cfg_users');
 		$rights=array();
 		if ($user) {
 			foreach ($user as $key => $value) {
@@ -241,11 +241,11 @@ class User Extends Ion_auth {
 	}
 
 	function get_table_rights($atLeast=RIGHTS_ALL) {
-		$tables=$this->ci->db->list_tables();
+		$tables=$this->CI->db->list_tables();
 		$tableRights=array();
 		foreach ($tables as $key => $table) {
 			$pre=get_prefix($table);
-			if ($pre==$this->ci->config->item('REL_table_prefix')) {
+			if ($pre==$this->CI->config->item('REL_table_prefix')) {
 				$rTable=table_from_rel_table($table);
 				$rights=$this->has_rights($rTable);
 			}
@@ -279,7 +279,7 @@ class User Extends Ion_auth {
 		// 4 weeks 2419200
 	
 	{
-		return $this->ci->ion_auth_model->get_inactive_old_users($group_name,$time)->result();
+		return $this->CI->ion_auth_model->get_inactive_old_users($group_name,$time)->result();
 	}
 
 
