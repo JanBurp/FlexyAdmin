@@ -28,13 +28,13 @@ class Editor_lists {
 	}
 
 	function create_list($type="") {
+		$CI =& get_instance();
 		if ($type=="links") $type="downloads";
 		if (!empty($type)) $this->set_type($type);
 		$t=$this->type;
 		$boolField=el("boolean_field",$t);
 		$jsArray	=$t["array_name"];
 		$jsFile		=$t["file_name"];
-		$CI =& get_instance();
 
 		$data=array();
 		
@@ -54,46 +54,52 @@ class Editor_lists {
 
 			// add if asked for, internal links from menu table
 			if ($CI->cfg->get('CFG_editor','b_add_internal_links')) {
-				$data['-- site links -----------']=NULL;
 				$menuTable=get_menu_table();
-				$menuFields=$CI->db->list_fields($menuTable);
-				$menuFields=array_combine($menuFields,$menuFields);
-				if (isset($menuFields['uri'])) {
-					$CI->db->select('id,uri');
-					if (isset($menuFields['order'])) {
-						$CI->db->select('order');
-						if (in_array('self_parent',$menuFields)) {
-							$CI->db->select('self_parent');
-							$CI->db->order_as_tree();
-							$CI->db->uri_as_full_uri(TRUE,'str_title');
+				if ($CI->db->table_exists($menuTable)) {
+					$data['-- site links -----------']=NULL;
+					$titleField=$CI->db->get_first_field($menuTable,'str');
+					$menuFields=$CI->db->list_fields($menuTable);
+					$menuFields=array_combine($menuFields,$menuFields);
+					if (isset($menuFields['uri'])) {
+						$CI->db->select('id,uri');
+						if (isset($menuFields['order'])) {
+							$CI->db->select('order');
+							if (in_array('self_parent',$menuFields)) {
+								$CI->db->select('self_parent');
+								$CI->db->order_as_tree();
+								$CI->db->uri_as_full_uri(TRUE,$titleField);
+							}
 						}
-					}
-					$CI->db->select_first('str');
-					$results=$CI->db->get_results($menuTable);
-					// strace_($results);
-					// add results to link list
-					$nameField=$CI->db->get_select_first(0);
-					foreach ($results as $key => $row) {
-						$url=$row["uri"];
-						$name=$url;
-						$name=addslashes($row[$nameField]);
-						$data[$name]=array("url"=>site_url($url),"name"=>$name);
+						$CI->db->select_first('str');
+						$results=$CI->db->get_results($menuTable);
+						// strace_($results);
+						// add results to link list
+						$nameField=$CI->db->get_select_first(0);
+						foreach ($results as $key => $row) {
+							$url=$row["uri"];
+							$name=$url;
+							$name=addslashes($row[$nameField]);
+							$data[$name]=array("url"=>site_url($url),"name"=>$name);
+						}
 					}
 				}
 			}
 			
 			// add links from links table
-			$data['-- links ----------------']=NULL;
 			$table=$CI->cfg->get('CFG_editor','table');
 			if ($CI->db->table_exists($table)) {
-	 			$CI->db->select("str_title,url_url");
-				$CI->db->order_by("str_title");
-				$query=$CI->db->get($table);
-				foreach($query->result_array() as $row) {
-					$name=addslashes($row['str_title']);
-					$data[$name]=array("url"=>$row["url_url"],"name"=>$name);
+				$data['-- links ----------------']=NULL;
+				$titleField=$CI->db->get_first_field($table,'str');
+				if ($CI->db->table_exists($table)) {
+		 			$CI->db->select($titleField.",url_url");
+					$CI->db->order_by($titleField);
+					$query=$CI->db->get($table);
+					foreach($query->result_array() as $row) {
+						$name=addslashes($row[$titleField]);
+						$data[$name]=array("url"=>$row["url_url"],"name"=>$name);
+					}
+					$query->free_result();
 				}
-				$query->free_result();
 			}
 			
 		}
@@ -101,9 +107,10 @@ class Editor_lists {
 		if ($type=='embed') {
 			$embedTbl='tbl_embeds';
 			if ($CI->db->table_exists($embedTbl)) {
+				$titleField=$CI->db->get_first_field($embedTbl,'str');
 				$embeds=$CI->db->get_result($embedTbl);
 				foreach($embeds as $row) {
-					$data[$row["str_title"]]=array("embed"=>$row["stx_embed"],"name"=>$row["str_title"]);
+					$data[$row[$titleField]]=array("embed"=>$row["stx_embed"],"name"=>$row[$titleField]);
 				}
 			}
 		}
