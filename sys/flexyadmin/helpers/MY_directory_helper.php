@@ -37,8 +37,8 @@ function read_map($path,$types='',$recursive=FALSE,$getInfo=TRUE,$getMetaData=FA
 					if (is_dir($data['path'])) {
 						$data['name']=$file;
 						$data['type']="dir";
-						$data['alt']=$file;
-						if ($recursive) $data["."]=read_map($path."/".$name,$types,$recursive);
+						// $data['alt']=$file;
+						if ($recursive) $data["."]=read_map($path."/".$data['name'],$types,$recursive);
 					}
 					else {
 						$data['name']=$file;
@@ -86,6 +86,24 @@ function empty_map($dir,$remove=false,$remove_hidden=false) {
     reset($objects);
 		if ($remove) rmdir($dir);
   }
+}
+
+
+function clean_file_list($files,$tree=FALSE,$path='') {
+	$clean=array();
+	foreach ($files as $key => $value) {
+		if ($value['type']=='dir') {
+			$sub=clean_file_list($value['.'], $tree, trim($path.'/'.$key,'/') );
+			if ($tree)
+				$clean[]=$sub;
+			else
+				$clean=array_merge($clean,$sub);
+		}
+		else {
+			$clean[]=trim($path.'/'.$key,'/');
+		}
+	}
+	return $clean;
 }
 
 
