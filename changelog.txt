@@ -1,3 +1,36 @@
+> 1328
+
+NEW:
+- Added plugin_export (tables can be easy exported to csv,json,xml and as php array)
+- Loading config files: override site config if any
+- Total rewrite of Plugin concept:
+	- Plugins are now Libraries instead of Models (so calls to the CodeIgniter superobject now is $this->CI->...)
+	- Plugins map deleted, plugins moved to libraries map
+	- Plugins needs their onw config file in config map: plugin_name.php
+	- Plugins and Modules have now same parent class (flexy_library)
+- MY_array: added array2csv()
+- new Queu model: to make object calls later
+- new Crud model nice layer above DB classes for updating and deleting data
+- Some changes to Modules:
+	- Modules can have nicer config setting without their own name
+	- Modules set their own name automatically, and if config file exists it is loaded also automatic
+- Standard Modules now have their own language files
+- Cleanup controller and config
+- Controller: rendering of menu's moved to end of controller (makes it possible to change menu)
+- MY_Output: cache now also test if $_GET is empty: if so: no cache
+
+UPDATE:
+- jQuery 1.7
+
+BUGS:
+- Small bug in MY_DB->search() when searching twice in foreign table
+- $this->ci in ion_auth/user changed to $this->CI
+- bug in menu->add_sub() and ... add_help
+- editor_lists now searches more generic to title fields (was a bug when multiple languages without res_menu_result)
+- small bug in Form (loading Validation library)
+
+
+
 > 1314
 
 NEW:
