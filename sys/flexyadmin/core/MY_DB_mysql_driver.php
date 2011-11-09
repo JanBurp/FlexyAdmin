@@ -273,11 +273,10 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	function search($search,$set_sql=TRUE) {
 		// if $search is one dimensial array, make more dimensonal
 		if (isset($search['search'])) $search=array($search);
-		// trace_($search);
 		$default=array('search'=>'','field'=>'id','or'=>'AND','table'=>'');
 		$sql='';
 		foreach ($search as $k => $s) {
-			if (($s['search']!='') and ($s['field']!='')) {
+			if (($s['search']!='') and ($s['field']!='') and ($s['field']==trim($s['field'],'_'))) {
 				$s=array_merge($default,$s);
 				if (!empty($s['table'])) $s['table'].='.';
 				$s['or']=strtoupper($s['or']);
