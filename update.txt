@@ -1,9 +1,23 @@
+UPDATE to 1328
+==============
+
+If upgrading from older versions: check all earlier versions first.
+- Replace current sys map with new sys map
+- if you have own Modules which use a config file, delete the names in this config file: example: $config['your_module']['setting']=... => $config['setting']=...
+- if you have own Plugins:
+	- Move them to Libraries
+	- Give them a config file and put all settings there.
+	- Rename $this->_add_content to $this->add_content
+	- Rename all CI calls: $this->... to $this->CI->...
+- If you extended the User or Ion_auth library: rename $this->ci is renamed to $this->CI
+- Form->update is removed. Use $data=$form->get_data(); $this->crud->table(...)->update('where'=>array(...), 'data'=>$data );
+
+
 UPDATE to 1314
 ==============
 
 If upgrading from older versions: check all the versions.
 - Replace current sys map with new sys map
-
 
 
 UPDATE to 1297
