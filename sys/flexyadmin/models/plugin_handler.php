@@ -14,6 +14,8 @@ class Plugin_handler extends CI_Model {
 	
 	public function init_plugins() {
 		$plugin_config_files=read_map(APPPATH.'config','php',FALSE,FALSE,FALSE);
+		$plugin_config_files_site=read_map(SITEPATH.'config','php',FALSE,FALSE,FALSE);
+		$plugin_config_files=array_merge($plugin_config_files,$plugin_config_files_site);
 		$plugin_config_files=filter_by($plugin_config_files,'plugin');
 		unset($plugin_config_files['plugin_template.php']);
 
