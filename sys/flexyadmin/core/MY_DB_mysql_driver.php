@@ -241,8 +241,8 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	}
 
 	function order_by($args) {
-		parent::order_by($args);
 		$this->order=$args;
+		return parent::order_by($args);
 	}
 
 	function order_by_foreign($args=FALSE) {
