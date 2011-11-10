@@ -64,7 +64,7 @@ function doForm() {
 		var checked=ui.checked;
 		var text=ui.text;
 		// find same
-		var inputs=$(event.target).siblings('div.ui-multiselect-menu').find('input[title="'+text+'"]');
+		var inputs=$(event.target).parents('div.ui-multiselect-menu').find('input[title="'+text+'"]');
 		inputs.attr('checked',checked);
 		// get values
 		var allvalues = $(event.target).multiselect("getChecked").map(function(){return this.value;}).get();
@@ -177,10 +177,13 @@ function doForm() {
 		// show new thumb
 		if (typeof(values)=='undefined') {
 			var medias=$(select).find('option:selected');
-			values =  new Array;
+			var allvalues =  new Array;
+			var values = new Array;
 			$(medias).each(function(){
-				values.push($(this).attr("value"));
+				allvalues.push($(this).attr("value"));
 			});
+			// Remove double
+			for (i=0;i<allvalues.length;i++) { if ( $.inArray(allvalues[i],values)==-1 ) values.push(allvalues[i]); }
 		}
 		var value='';
 		for (var i=0;i<values.length;i++) {
