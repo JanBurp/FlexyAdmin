@@ -9,42 +9,51 @@
 |
 */
 
-$config['admin_api_method'] = '_admin_api';
+// $config['admin_api_method'] = '_admin_api';
+// $config['logout_method'] = '_admin_logout';
+// $config['ajax_api_method'] = '_ajax_api';
+// $config['after_update_method'] = '_after_update';
+// $config['after_delete_method'] = '_after_delete';
 
 
 /*
 |--------------------------------------------------------------------------
-| tables
-| Set the tables which are possible choices.
-| If empty the possible tables will be the tables the user has rights for
+| Plugin Update/Delete Triggers
+| Here you need to set when the update and delete methods of you're plugin are called
 |--------------------------------------------------------------------------
 |
 */
 
-$config['tables']=array();
+// $config['trigger'] = array(
+//	'existing_tables' => array(),
+// 	'tables' 					=> array('tbl_menu','tbl_links'),
+// 	'field_types'			=> array('str','txt'),
+// 	'fields'					=> array('uri','str_title'),
+// );
 
 
 /*
 |--------------------------------------------------------------------------
-| Add foreign/many data
+| Dynamic trigger method
+| If the above trigger settings needs to be dynamically set, set a method here
+| The plugin will allways be loaded!!
 |--------------------------------------------------------------------------
 |
 */
 
-$config['add_foreigns']=FALSE;
-$config['add_foreigns_as_abstracts']=FALSE;
-$config['add_many']=FALSE;
+// $config['trigger_method'] = '_trigger';
 
 
 
 /*
 |--------------------------------------------------------------------------
-| Use UI names instead of database names
+| Plugins specific config settings
 |--------------------------------------------------------------------------
 |
 */
 
-$config['use_ui_names']=FALSE;
+
+
 
 
 ?>

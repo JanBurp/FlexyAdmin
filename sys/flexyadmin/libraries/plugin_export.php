@@ -13,14 +13,36 @@ class Plugin_export extends Plugin_ {
 	public function _admin_api($args=NULL) {
 		$this->add_content(h('Export',1));
 
-		$tables=$this->CI->db->list_tables();
-		$tables=filter_by($tables,'tbl');
-		$tableOptions=array();
-		$pre='';
+		// What are possible tables to export?
+		$tables=$this->config['tables'];
+		if (empty($tables)) {
+			$tables=$this->CI->db->list_tables();
+		}
+		// only tables which user has rights for
 		foreach ($tables as $key=>$table) {
-			if ($this->CI->user->has_rights($table)) {
-				$tableOptions[$table]=$this->CI->uiNames->get($table);
+			if (!$this->CI->user->has_rights($table)) unset($tables[$key]);
+		}
+
+		// Check if args are set, and if so, do the export
+		if (isset($args[0])) {
+			$table=$args[0];
+			$type='csv';
+			if (isset($args[1])) $type=$args[1];
+			
+			if (in_array($table,$tables)) {
+				$this->export($table,$type);
+				return;
 			}
+		}
+
+		
+		// No args, show the form:
+		$tableOptions=array();
+		foreach ($tables as $key=>$table) {
+			if ($this->config['use_ui_names'])
+				$tableOptions[$table]=$this->CI->uiNames->get($table);
+			else
+				$tableOptions[$table]=$table;
 		}
 		
 		$typeOptions=array('csv','xml','json');
@@ -39,17 +61,10 @@ class Plugin_export extends Plugin_ {
 
 		// Is form validation ok?
 		if ($form->validation()) {
-
 			$table=$this->CI->input->post('table');
 			$type=$this->CI->input->post('type');
 
-			$out=$this->export($table,$type);
-
-			if ($out) {
-				$this->CI->load->helper('download');
-				force_download($table.'.'.$type, $out);
-			}
-
+			$this->export($table,$type);
 		}
 		else {
 			$validationErrors=validation_errors('<p class="error">', '</p>');
@@ -62,7 +77,65 @@ class Plugin_export extends Plugin_ {
 
 	private function export($table,$type='csv') {
 		
+		if ($this->config['add_foreigns']) {
+			$this->CI->db->add_foreigns( $this->config['add_foreigns'] );	
+			if ($this->config['add_foreigns_as_abstracts']) $this->CI->db->add_foreigns_as_abstracts( $this->config['add_foreigns'] );
+		}
+		if ($this->config['add_many']) {
+			$this->CI->db->add_many( $this->config['add_many'] );	
+		}
+		
 		$data=$this->CI->db->get_result($table);
+
+		// Keep only the abstract data
+		if ($this->config['add_foreigns_as_abstracts']) {
+			foreach ($data as $id => $row) {
+				foreach ($row as $field => $value) {
+					if (get_postfix($field,'__')=='abstract') {
+						$foreign_field=remove_postfix($field,'__');
+						$data[$id][$foreign_field]=$value;
+						unset($data[$id][$field]);
+					}
+				}
+			}
+		}
+
+		// Many data
+		if ($this->config['add_many']) {
+			foreach ($data as $id => $row) {
+				foreach ($row as $field => $value) {
+					if (is_array($value)) {
+						if ($this->config['add_foreigns_as_abstracts']) {
+							$val='';
+							foreach ($value as $k => $v) {
+								$val=add_string($val,$v['abstract'],'|');
+							}
+							$value=$val;
+						}
+						else {
+							$value=array_keys($value);
+							$value=implode('|',$value);
+						}
+						$data[$id][$field]=$value;
+					}
+				}
+			}
+		}
+
+
+		// Nice names of fields and tables
+		if ($this->config['use_ui_names']) {
+			$ui_data=array();
+			foreach ($data as $id => $row) {
+				foreach ($row as $field => $value) {
+					$ui_data[$id][$this->CI->uiNames->get($field)]=$value;
+				}
+			}
+			$data=$ui_data;
+		}
+
+		// trace_($data);
+
 		$out='';
 		
 		switch ($type) {
@@ -86,7 +159,15 @@ class Plugin_export extends Plugin_ {
 
 		}
 		
-		return $out;
+		if (!empty($out)) {
+			$this->CI->load->helper('download');
+			$filename=$table;
+			if ($this->config['use_ui_names']) $filename=$this->CI->uiNames->get($filename);
+			force_download($filename.'.'.$type, $out);	
+			return $out;
+		}
+		
+		return FALSE;
 	}
 
 

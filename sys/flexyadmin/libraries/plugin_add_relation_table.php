@@ -15,7 +15,7 @@ class Plugin_add_relation_table extends Plugin_ {
 				if ($goodArgs) {
 					$relTable='rel_'.remove_prefix($table1).'__'.remove_prefix($table2);
 					if ($table1==$table2) $table2=$table2.'_';
-					$this->dbforge->add_field('id');
+					$this->CI->dbforge->add_field('id');
 					$fields=array(	'id_'.remove_prefix($table1)	=>	array('type'=>'INT','unsigned'=>TRUE),
 													'id_'.remove_prefix($table2)	=>	array('type'=>'INT','unsigned'=>TRUE));
 					$this->CI->dbforge->add_field($fields);
