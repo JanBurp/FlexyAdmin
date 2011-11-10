@@ -1064,7 +1064,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	}
 
 	function add_foreigns_as_abstracts($foreigns=true) {
-		$this->add_foreigns();
+		$this->add_foreigns($foreigns);
 		$this->add_abstracts();
 	}
 
