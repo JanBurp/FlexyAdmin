@@ -136,7 +136,6 @@ class Crud extends CI_Model {
 
 			$data=$this->data;
 
-
 			/**
 			 * Split many data if any
 			 */

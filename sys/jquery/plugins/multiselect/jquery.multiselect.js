@@ -1,10 +1,8 @@
 /*
- * jQuery MultiSelect UI Widget 1.10
+ * jQuery MultiSelect UI Widget 1.11
  * Copyright (c) 2011 Eric Hynds
  *
  * http://www.erichynds.com/jquery/jquery-ui-multiselect-widget/
- *
- * Added option: join, which sets the delimter string. JdB aug 2011 (line 44, 216)
  *
  * Depends:
  *   - jQuery 1.4.2+
@@ -40,8 +38,7 @@ $.widget("ech.multiselect", {
 		hide: '',
 		autoOpen: false,
 		multiple: true,
-		position: {},
-		join:' | '
+		position: {}
 	},
 
 	_create: function(){
@@ -130,6 +127,7 @@ $.widget("ech.multiselect", {
 			var $this = $(this), 
 				parent = this.parentNode,
 				title = this.innerHTML,
+				description = this.title,
 				value = this.value,
 				inputID = this.id || 'ui-multiselect-'+id+'-option-'+i, 
 				isDisabled = this.disabled,
@@ -161,7 +159,7 @@ $.widget("ech.multiselect", {
 			html.push('<li class="' + (isDisabled ? 'ui-multiselect-disabled' : '') + '">');
 			
 			// create the label
-			html.push('<label for="'+inputID+'" class="'+labelClasses.join(' ')+ '">');
+			html.push('<label for="'+inputID+'" title="'+description+'" class="'+labelClasses.join(' ')+ '">');
 			html.push('<input id="'+inputID+'" name="multiselect_'+id+'" type="'+(o.multiple ? "checkbox" : "radio")+'" value="'+value+'" title="'+title+'"');
 
 			// pre-selected?
@@ -210,10 +208,10 @@ $.widget("ech.multiselect", {
 		if( numChecked === 0 ){
 			value = o.noneSelectedText;
 		} else {
-			if($.isFunction(o.selectedText)){
+			if($.isFunction( o.selectedText )){
 				value = o.selectedText.call(this, numChecked, $inputs.length, $checked.get());
 			} else if( /\d/.test(o.selectedList) && o.selectedList > 0 && numChecked <= o.selectedList){
-				value = $checked.map(function(){ return this.title; }).get().join(o.join);
+				value = $checked.map(function(){ return this.title; }).get().join(', ');
 			} else {
 				value = o.selectedText.replace('#', numChecked).replace('#', $inputs.length);
 			}
@@ -240,7 +238,7 @@ $.widget("ech.multiselect", {
 		// button events
 		button.bind({
 			click: clickHandler,
-			keypress: function(e){
+			keypress: function( e ){
 				switch(e.which){
 					case 27: // esc
 					case 38: // up
@@ -273,7 +271,7 @@ $.widget("ech.multiselect", {
 
 		// header links
 		this.header
-			.delegate('a', 'click.multiselect', function(e){
+			.delegate('a', 'click.multiselect', function( e ){
 				// close link
 				if( $(this).hasClass('ui-multiselect-close') ){
 					self.close();
@@ -288,7 +286,7 @@ $.widget("ech.multiselect", {
 		
 		// optgroup label toggle support
 		this.menu
-			.delegate('li.ui-multiselect-optgroup-label a', 'click.multiselect', function(e){
+			.delegate('li.ui-multiselect-optgroup-label a', 'click.multiselect', function( e ){
 				e.preventDefault();
 				
 				var $this = $(this),
@@ -319,7 +317,7 @@ $.widget("ech.multiselect", {
 					$(this).addClass('ui-state-hover').find('input').focus();
 				}
 			})
-			.delegate('label', 'keydown.multiselect', function(e){
+			.delegate('label', 'keydown.multiselect', function( e ){
 				e.preventDefault();
 				
 				switch(e.which){
@@ -338,7 +336,7 @@ $.widget("ech.multiselect", {
 						break;
 				}
 			})
-			.delegate('input[type="checkbox"], input[type="radio"]', 'click.multiselect', function(e){
+			.delegate('input[type="checkbox"], input[type="radio"]', 'click.multiselect', function( e ){
 				var $this = $(this),
 					val = this.value,
 					checked = this.checked,
@@ -353,10 +351,17 @@ $.widget("ech.multiselect", {
 				// toggle aria state
 				$this.attr('aria-selected', checked);
 				
-				// set the original option tag to selected
+				// change state on the original option tags
 				tags.each(function(){
 					if( this.value === val ){
 						this.selected = checked;
+
+						// for good measure. see #104
+						if( checked ) {
+							this.setAttribute('selected', 'selected');
+						} else {
+							this.removeAttribute('selected');
+						}
 
 					// deselect all others in a single select
 					} else if( !self.options.multiple ){
@@ -372,6 +377,9 @@ $.widget("ech.multiselect", {
 					// close menu
 					self.close();
 				}
+
+				// fire change on the select box
+				self.element.trigger("change");
 				
 				// setTimeout is to fix multiselect issue #14 and #47. caused by jQuery issue #3827
 				// http://bugs.jquery.com/ticket/3827 
@@ -379,7 +387,7 @@ $.widget("ech.multiselect", {
 			});
 		
 		// close each widget when clicking on any other element/anywhere else on the page
-		$(document).bind('mousedown.multiselect', function(e){
+		$(document).bind('mousedown.multiselect', function( e ){
 			if(self._isOpen && !$.contains(self.menu[0], e.target) && !$.contains(self.button[0], e.target) && e.target !== self.button[0]){
 				self.close();
 			}
@@ -420,7 +428,7 @@ $.widget("ech.multiselect", {
 	},
 	
 	// move up or down within the menu
-	_traverse: function(which, start){
+	_traverse: function( which, start ){
 		var $start = $(start),
 			moveToLast = which === 38 || which === 37,
 			
@@ -458,7 +466,7 @@ $.widget("ech.multiselect", {
 		}
 	},
 
-	_toggleChecked: function(flag, group){
+	_toggleChecked: function( flag, group ){
 		var $inputs = (group && group.length) ?
 			group :
 			this.labels.find('input'),
@@ -484,6 +492,11 @@ $.widget("ech.multiselect", {
 					self._toggleCheckbox('selected', flag).call( this );
 				}
 			});
+
+		// trigger the change event on the select
+		if( $inputs.length ) {
+			this.element.trigger("change");
+		}
 	},
 
 	_toggleDisabled: function( flag ){
@@ -500,7 +513,7 @@ $.widget("ech.multiselect", {
 	},
 	
 	// open the menu
-	open: function(e){
+	open: function( e ){
 		var self = this,
 			button = this.button,
 			menu = this.menu,
@@ -581,7 +594,7 @@ $.widget("ech.multiselect", {
 		this._toggleDisabled(true);
 	},
 	
-	checkAll: function(e){
+	checkAll: function( e ){
 		this._toggleChecked(true);
 		this._trigger('checkAll');
 	},
