@@ -52,30 +52,32 @@ function doForm() {
 	//
 	// Nice Select styling #BUSY: also the multiple and media
 	//
-	$('.form_field select:not(.multiple)').multiselect({header:false,multiple:false,selectedList:4,height:'auto'}).bind('multiselectclick', function(event,ui){
-		if ($(event.target).hasClass('image_dropdown')) {
-			var values = $(event.target).multiselect("getChecked").map(function(){return this.value;}).get();
+	if (config.form_nice_dropdowns) {
+		$('.form_field select:not(.multiple)').multiselect({header:false,multiple:false,selectedList:4,height:'auto'}).bind('multiselectclick', function(event,ui){
+			if ($(event.target).hasClass('image_dropdown')) {
+				var values = $(event.target).multiselect("getChecked").map(function(){return this.value;}).get();
+				update_image_dropdown(event.target,values);
+			}
+		});
+		$('.form_field select.multiple:not(.image_dropdown)').multiselect({header:false,selectedList:4,height:'auto',noneSelectedText:''});
+		$('.form_field select.multiple.image_dropdown').multiselect({header:false,height:'auto',minWidth:'auto',selectedList:false,selectedText:'',noneSelectedText:''}).bind('multiselectclick', function(event,ui){
+			// make sure optgroups are all same checked/unchecked
+			var checked=ui.checked;
+			var text=ui.text;
+			// find same
+			var inputs=$(event.target).parents('div.ui-multiselect-menu').find('input[title="'+text+'"]');
+			inputs.attr('checked',checked);
+			// get values
+			var allvalues = $(event.target).multiselect("getChecked").map(function(){return this.value;}).get();
+			// remove double values
+			var values = new Array();
+			for (i=0;i<allvalues.length;i++) { if ( $.inArray(allvalues[i],values)==-1 ) values.push(allvalues[i]); }
 			update_image_dropdown(event.target,values);
-		}
-	});
-	$('.form_field select.multiple:not(.image_dropdown)').multiselect({header:false,selectedList:4,height:'auto',noneSelectedText:''});
-	$('.form_field select.multiple.image_dropdown').multiselect({header:false,height:'auto',minWidth:'auto',selectedList:false,selectedText:'',noneSelectedText:''}).bind('multiselectclick', function(event,ui){
-		// make sure optgroups are all same checked/unchecked
-		var checked=ui.checked;
-		var text=ui.text;
-		// find same
-		var inputs=$(event.target).parents('div.ui-multiselect-menu').find('input[title="'+text+'"]');
-		inputs.attr('checked',checked);
-		// get values
-		var allvalues = $(event.target).multiselect("getChecked").map(function(){return this.value;}).get();
-		// remove double values
-		var values = new Array();
-		for (i=0;i<allvalues.length;i++) { if ( $.inArray(allvalues[i],values)==-1 ) values.push(allvalues[i]); }
-		update_image_dropdown(event.target,values);
-	});
-	// styling of multiple
-	$('.form_field.image_dropdown.multiple ul.values').css({width:392,'float':'left',position:'relative'});
-	$('.form_field.image_dropdown.multiple button.ui-multiselect').css({width:460,height:38,'float':'right','margin-top':-42});
+		});
+		// styling of multiple
+		$('.form_field.image_dropdown.multiple ul.values').css({width:392,'float':'left',position:'relative'});
+		$('.form_field.image_dropdown.multiple button.ui-multiselect').css({width:460,height:38,'float':'right','margin-top':-42});
+	}
 
 		
 	//
