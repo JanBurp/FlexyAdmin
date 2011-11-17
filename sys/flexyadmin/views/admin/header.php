@@ -145,7 +145,7 @@ $isForm=has_string('form',$show_type);
 	<? if ($isForm): ?>
 		<script language="javascript" type="text/javascript" src="<?=admin_assets()?>js/jFlexyForm<?=$js?>"></script>
 	<? endif; ?>
-	<script language="javascript" type="text/javascript" src="<?=assets()?>assets/js/admin.js"></script>
+	<script language="javascript" type="text/javascript" src="<?=assets()?>js/admin.js"></script>
 </head>
 
 <body>
