@@ -25,7 +25,7 @@ function count_files($path,$recursive=FALSE,$counter=0) {
 
 
 function read_map($path,$types='',$recursive=FALSE,$getInfo=TRUE,$getMetaData=FALSE) {
-	if (!empty($types)) $types=explode(',',$types);
+	if (!empty($types) and !is_array($types)) $types=explode(',',$types);
 	if ($getInfo) $CI =& get_instance();
 	$files=array();
 	if(is_dir($path)) {
@@ -48,7 +48,7 @@ function read_map($path,$types='',$recursive=FALSE,$getInfo=TRUE,$getMetaData=FA
 							$data['size']=sprintf("%d k",filesize($data['path'])/1024);
 							$data['rawdate']=date("Y m d",filemtime($data['path']));
 							$data['date']=date("j M Y",filemtime($data['path']));
-							if (in_array($data["type"],$CI->config->item('FILE_types_img')) and file_exists($path.'/'.$file)) {
+							if (in_array($data["type"],$CI->config->item('FILE_types_img'))) {
 								// add img dimensions
 								$size=getimagesize($path."/".$file);
 								$data["width"]=$size[0];
