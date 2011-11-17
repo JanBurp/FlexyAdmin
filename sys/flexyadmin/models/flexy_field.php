@@ -817,10 +817,12 @@ class Flexy_field extends CI_Model {
 			$types=explode("|",$types);
 			$path=el("path",$info);
 			$map=$this->config->item('ASSETS').$path;
-			$files=read_map($map);
+			$files=read_map($map,$types);
+			
 			if ($this->restrictedToUser) {
 				$files=$this->_filter_restricted_files($files,$this->restrictedToUser);
 			}
+
 			$files=not_filter_by($files,"_");
 
 			$order='_rawdate';
@@ -835,6 +837,7 @@ class Flexy_field extends CI_Model {
 				$desc=FALSE;
 			}
 
+
 			if (el('b_dragndrop',$info)) {
 				$options=sort_by($files,$order,$desc);
 				if ($this->cfg->get('CFG_media_info',$path,'b_add_empty_choice') and ($this->pre!='medias'))	array_unshift($options,'');
@@ -842,7 +845,7 @@ class Flexy_field extends CI_Model {
 			else {
 				$lastUploadMax=$this->cfg->get('CFG_media_info',$path,'int_last_uploads');
 				if ($lastUploadMax>0) {
-					$lastUploads=sort_by($files,array("rawdate","name"),TRUE,FALSE,$lastUploadMax);
+					$lastUploads=sort_by($files,array("rawdate"),TRUE,FALSE,$lastUploadMax);
 					ignorecase_ksort($files);
 					$options=array();
 					// add empty option if needed
