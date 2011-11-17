@@ -48,7 +48,7 @@ function read_map($path,$types='',$recursive=FALSE,$getInfo=TRUE,$getMetaData=FA
 							$data['size']=sprintf("%d k",filesize($data['path'])/1024);
 							$data['rawdate']=date("Y m d",filemtime($data['path']));
 							$data['date']=date("j M Y",filemtime($data['path']));
-							if (in_array($data["type"],$CI->config->item('FILE_types_img'))) {
+							if (in_array($data["type"],$CI->config->item('FILE_types_img')) and file_exists($path.'/'.$file)) {
 								// add img dimensions
 								$size=getimagesize($path."/".$file);
 								$data["width"]=$size[0];
