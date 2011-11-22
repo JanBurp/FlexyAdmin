@@ -114,16 +114,16 @@ class Plugin_handler extends CI_Model {
 
 
 	public function call_plugin($plugin,$method,$args=NULL) {
+		$return = FALSE;
 		// load if needed
 		if (!$this->plugins[$plugin]['is_loaded']) {
 			$this->load_plugin($plugin);
 		}
 		// call
 		if (method_exists($plugin,$method)) {
-			// if ($method!='set_data') strace_($plugin.'->'.$method);
-			return $this->$plugin->$method($args);
+			$return = $this->$plugin->$method($args);
 		}
-		return false;
+		return $return;
 	}
 
 	public function call_plugin_admin_api($plugin,$args) {
@@ -196,15 +196,18 @@ class Plugin_handler extends CI_Model {
 	}
 
 	public function call_plugins_after_delete_trigger() {
+		$delete=TRUE;
 		$this->_set_additional_data();
 		if (isset($this->trigger_methods['after_delete_method'])) {
 			foreach ($this->trigger_methods['after_delete_method'] as $plugin => $method) {
 				if ($this->is_triggered($plugin)) {
 					$this->_give_data_to_plugin($plugin);
-					$this->call_plugin($plugin,$method);
+					$return = $this->call_plugin($plugin,$method);
+					$delete = $delete && $return;
 				}
 			}
 		}
+		return $delete;
 	}
 
 	public function call_plugins_logout() {
@@ -213,7 +216,8 @@ class Plugin_handler extends CI_Model {
 		if (isset($this->trigger_methods['logout_method'])) {
 			foreach ($this->trigger_methods['logout_method'] as $plugin => $method) {
 				$this->_give_data_to_plugin($plugin);
-				$logout= $logout AND $this->call_plugin($plugin,$method);
+				$return = $this->call_plugin($plugin,$method);
+				$logout = $logout && $return;
 			}
 		}
 		return $logout;

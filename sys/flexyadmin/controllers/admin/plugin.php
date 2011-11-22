@@ -18,6 +18,8 @@ class Plugin extends AdminController {
 	}
 	
 	function call() {
+		$this->load->model('queu');
+		
 		$args=func_get_args();
 		$ajax=false;
 		$show_type='';

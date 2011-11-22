@@ -9,6 +9,7 @@
 |
 */
 
+$config['admin_api_method'] = '_admin_api';
 $config['after_update_method'] = '_after_update';
 $config['after_delete_method'] = '_after_delete';
 

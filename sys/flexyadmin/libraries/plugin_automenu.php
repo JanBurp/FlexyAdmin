@@ -58,7 +58,9 @@ class Plugin_automenu extends Plugin_ {
 
 	public function _after_delete() {
 		$this->_create_auto_menu();
-		return false;
+		$delete=TRUE;
+		if ($this->table=='res_menu_result') $delete=FALSE;
+		return $delete;
 	}
 
 	public function _admin_api($args=NULL) {
@@ -97,7 +99,6 @@ class Plugin_automenu extends Plugin_ {
 					$name=$autoValue['str_description'];
 					$uri=safe_string($name);
 					$item=array('uri'=>$uri,'str_title'=>$name);
-					$item=$this->_setResultMenuItem($item,true);
 					$this->_insertItem($item);
 					// $this->_moveChildren();
 					break;
@@ -106,7 +107,6 @@ class Plugin_automenu extends Plugin_ {
 				case 'from menu table':
 					$data=$this->_get_current_data($autoValue['table']);
 					foreach ($data as $item) {
-						$item=$this->_setResultMenuItem($item,true);
 						$item['str_table']=$autoValue['table'];
 						$item['str_uri']=$item['uri'];
 						$item['int_id']=$item['id'];
@@ -147,7 +147,6 @@ class Plugin_automenu extends Plugin_ {
 					$parIDs=array(); // array met id's die andere parent moeten krijgen
 					$oldIDs=array(); // onthou hier de originele id's
 					foreach ($data as $item) {
-						$this->_setResultMenuItem($item);
 						$item['str_table']=$autoValue['table'];
 						$item['str_uri']=$item['uri'];
 						$item['int_id']=$item['id'];
@@ -215,7 +214,6 @@ class Plugin_automenu extends Plugin_ {
 					}
 					foreach ($data as $key=>$item) {
 						foreach ($self_parents as $self_parent) {
-							$item=$this->_setResultMenuItem($item);
 							$item['order']=$lastOrder++;
 							$item['self_parent']=$self_parent;
 							$item['str_table']=$autoValue['table'];
@@ -316,7 +314,6 @@ class Plugin_automenu extends Plugin_ {
 								}
 								$nr++;
 								
-								$this->_setResultMenuItem($item);
 								$item['order']=$lastOrder++;
 								$item['self_parent']=$selfParent;
 								$item['str_table']=$autoValue['table'];
@@ -351,7 +348,9 @@ class Plugin_automenu extends Plugin_ {
 							$langID=$item['id'];
 							// first language, just move current menu under it
 							foreach ($this->newMenu as $id => $item) {
-								if ($id!=$langID and $item['self_parent']==0)	$this->newMenu[$id]['self_parent']=$langID;
+								if ($id!=$langID and $item['self_parent']==0)	{
+									$this->newMenu[$id]['self_parent']=$langID;
+								}
 							}
 						}
 						else {
@@ -382,7 +381,6 @@ class Plugin_automenu extends Plugin_ {
 									}
 								}
 								foreach ($items as $item) {
-									$item=$this->_setResultMenuItem($item,true);
 									$item['self_parent']=$parent;
 									$item['order']=$order;
 									$order++;
@@ -397,9 +395,14 @@ class Plugin_automenu extends Plugin_ {
 			
 		}
 
+
+		// $trace=$this->newMenu; foreach ($trace as $id => $row) {foreach ($row as $field => $value) {if (!in_array($field,array('uri','self_parent'))) unset($trace[$id][$field]);}} strace_($trace);
+
+
+
 		// change some things
 		foreach ($this->newMenu as $id => $item) {
-		  // if self_parent -1 (language) replace with 0
+			// if self_parent -1 (language) replace with 0
 			if (isset($item['self_parent']) and $item['self_parent']==-1) $item['self_parent']=0;
 			$languages=$this->languages;
 			if (empty($languages)) {
@@ -412,17 +415,21 @@ class Plugin_automenu extends Plugin_ {
 			}
 			$this->newMenu[$id]=$item;
 		}
+
 		ksort($this->newMenu);
 
 		// put in db
 		$this->CI->db->trans_start();
-		
 		$this->CI->db->truncate($this->resultMenu);
+
 		$fields=$this->CI->db->list_fields($this->resultMenu);
 		$lang='';
 		
 		foreach ($this->newMenu as $row) {
+
 			if (isset($row['self_parent']) and isset($this->languages) and in_array($row['uri'],$this->languages)) $lang=$row['uri'];
+			// strace_($lang);
+
 			foreach ($row as $field => $value) {
 				if (in_array($field,$fields)) {
 					$this->CI->db->set($field,$value);
@@ -436,12 +443,14 @@ class Plugin_automenu extends Plugin_ {
 				}
 			}
 			$this->CI->db->insert($this->resultMenu);
+			$iid=$this->CI->db->insert_id();
 		}
 		
 		$this->CI->db->trans_complete();
 		if ($this->CI->db->trans_status() === FALSE) {
 			trace_('Sorry, transaction error');
 		}
+
 
 		// update linklist etc
 		if (!isset($this->CI->editor_lists)) $this->CI->load->library('editor_lists');
@@ -461,22 +470,15 @@ class Plugin_automenu extends Plugin_ {
 		return $parent;
 	}
 
-	private function _setResultMenuItem($item,$setId=false) {
-		return $item;
-	}
-	
 	private function _insertItem($item,$id='') {
-		if (empty($id)) {
+		if ($id=='') {
 			$this->lastId++;
+			$id=$this->lastId;
 			if (!isset($item['id'])) $item['id']=$this->lastId;
-			$this->parentIDs[$item['id']]=$this->lastId;
-			$item['id']=$this->lastId;
-			$this->newMenu[$this->lastId]=$item;
+			$this->parentIDs[$item['id']]=$id;
 		}
-		else {
-			$item['id']=$id;
-			$this->newMenu[$id]=$item;
-		}
+		$item['id']=$id;
+		$this->newMenu[$id]=$item;
 		return $item;
 	}
 	
@@ -487,6 +489,7 @@ class Plugin_automenu extends Plugin_ {
 				$this->newMenu[$id]['self_parent']=$parentIDs[$item['self_parent']];
 			}
 		}
+		$this->parentIDs=array();
 	}
 	
 	private function _addBranch($topItem,$branch) {
