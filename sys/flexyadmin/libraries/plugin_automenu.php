@@ -239,12 +239,15 @@ class Plugin_automenu extends Plugin_ {
 					$pagination=(int)$autoValue['str_parameters'];
 					// check if table is many table
 					$fromRel=false;
-					$preTable=get_prefix($autoValue['field_group_by']);
+					
+					$preTable=get_prefix( remove_prefix($autoValue['field_group_by'],'.') );
 					if ($preTable=='rel') {
 						// yes many table
 						$fromRel=true;
-						$groupField=get_suffix($autoValue['field_group_by'],'.');
-						$groupTable='tbl_'.remove_prefix($groupField);
+						$autoValue['field_group_by']=remove_prefix($autoValue['field_group_by'],'.');
+						$groupField=get_suffix( $autoValue['field_group_by'],'.' ,'__' );
+						$groupTable='tbl_'.remove_prefix($groupField,'__');
+						$autoValue['field_group_by'].='.id_'.remove_prefix($groupTable);
 					}
 					else {
 						// foreign table
@@ -252,6 +255,9 @@ class Plugin_automenu extends Plugin_ {
 						$groupTable=foreign_table_from_key($groupField);
 					}
 					$groupData=$this->_get_current_data($groupTable);
+					
+					// trace_($autoValue);
+					// trace_($groupTable);
 					
 					foreach ($groupData as $groupId=>$groupData) {
 						$titleField='str_title';
@@ -272,13 +278,17 @@ class Plugin_automenu extends Plugin_ {
 						// trace_('#SHOW# '.$this->CI->db->ar_last_query);
 						// trace_($groupId);
 						// trace_($groupData);
+						// trace_($data);
+						
 						
 						if ($data) {
 							// trace_('Pagination: '.$pagination);
 							// trace_('Count Data:'.count($data));
 							$parentData=find_row_by_value($this->newMenu,$groupData[$titleField],$titleField);
+							if (count($parentData)>1) {
+								$parentData=find_row_by_value($parentData,$groupTable,'str_table');
+							}
 							$parentData=current($parentData);
-							// trace_($parentData);
 							$selfParent=$parentData['id'];
 							$lastOrder=0;
 							$subData=find_row_by_value($this->newMenu,$selfParent,'self_parent');
