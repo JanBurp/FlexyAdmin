@@ -38,7 +38,7 @@ class Logout extends AdminController {
 		}
 		else {
 			$this->_add_content(h('Logout',1));
-			$this->_add_content(p('error').'Stopped logout, because there are important (red) messages.<br/>Try to logout for a second time. If the messages are still there, contact you\'re webmaste.'._p());
+			$this->_add_content(p('error').'Stopped logout, because there are important messages.<br/>Try to logout for a second time. If the messages are still there, contact you\'re webmaster.'._p());
 			$this->_show_all();
 		}
 	}
