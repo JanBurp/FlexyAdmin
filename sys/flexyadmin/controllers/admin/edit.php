@@ -92,16 +92,16 @@ class Edit extends AdminController {
 						$this->db->where(PRIMARY_KEY,$id);
 						$oldData=$this->db->get_row($table);
 
-						$this->_after_delete($table,$oldData);
-						$this->crud->table($table)->delete( array(PRIMARY_KEY=>$id) );
-						
-						/**
-						 * End messages
-						 */
-						$this->load->model("login_log");
-						$this->login_log->update($table);
+						if ($this->_after_delete($table,$oldData)) {
+							$this->crud->table($table)->delete( array(PRIMARY_KEY=>$id) );	
 
-						$this->set_message(langp("delete_succes",$table) . $message);
+							/**
+							 * End messages
+							 */
+							$this->load->model("login_log");
+							$this->login_log->update($table);
+							$this->set_message(langp("delete_succes",$table) . $message);
+						}
 					}
 				}
 				else {
