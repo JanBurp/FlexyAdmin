@@ -1,5 +1,16 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/*
+|--------------------------------------------------------------------------
+| Caching
+|--------------------------------------------------------------------------
+|
+| Set to true if the pages need to be cached. Set also the time in minutes.
+|
+*/
+$config['caching'] = FALSE;
+$config['caching_time'] = 1440;	// 1440 minutes is 24 hours
+
 
 /*
 |--------------------------------------------------------------------------
@@ -9,11 +20,9 @@
 | Array containing all the possible language prefixes used by the site.
 |
 */
-
 $config['languages'] = array('nl');
 // $config['languages'] = array('en');
 // $config['languages'] = array('nl','en');
-
 
 /*
 |--------------------------------------------------------------------------
@@ -21,25 +30,31 @@ $config['languages'] = array('nl');
 |--------------------------------------------------------------------------
 |
 | This determines which set of language files should be used if nothing is set in the uri or in the browser.
-| Make sure there is an available translation if you intend to use something other
-| than english.
+| Make sure there is an available translation if you intend to use something other than english.
 |
 */
 $config['language']	= "nl";
 // $config['language']	= "en";
 
+/*
+|--------------------------------------------------------------------------
+| Redirect
+|--------------------------------------------------------------------------
+|
+| Set this to true if you need to redirect pages to their underlying pages if empty
+|
+*/
+$config['redirect']	= FALSE;
 
 /*
 |--------------------------------------------------------------------------
-| Main view
+| Auto Pagination
 |--------------------------------------------------------------------------
 |
-| The name of the view that the frontend controller will load if no view was given
+| Set this to true, if you need auto pagination somewhere on you're site
 |
 */
-
-$config['main_view']='site';
-
+$config['auto_pagination']	= FALSE;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,10 +64,7 @@ $config['main_view']='site';
 | You can autoload modules from the controller. They are also called.
 | Usefull if you need to do something on every page and don't won't to change the controlle.
 */
-
 $config['autoload_modules']=array();
-
-
 
 /*
 |--------------------------------------------------------------------------
@@ -61,11 +73,7 @@ $config['autoload_modules']=array();
 |
 | If a module doesn't exists, you can call a fallback module.
 */
-
 $config['fallback_module']='fallback';
-
-
-
 
 /*
 |--------------------------------------------------------------------------
@@ -77,9 +85,38 @@ $config['fallback_module']='fallback';
 | Other usefull options are 'uri' if the uri's are frozen. Or 'tbl_module__str_module' if a foreign module table is used.
 | You can also use a foreign key (id_module), the controller will load the field specified as the suffix. Example: 'id_module' will load tbl_module.str_module.
 */
-
 $config['module_field']='str_module';
 
+/*
+|--------------------------------------------------------------------------
+| Frontend menu automatic setting of homepage in menu
+|--------------------------------------------------------------------------
+|
+| If TRUE the frontend controller will find the homepage of the site.
+| This will be set to $this->uri.
+| The homepage is the page which is shown when only the url is typed in the browser and no uri's or queries.
+*/
+$config['menu_autoset_home']=TRUE;
+
+/*
+|--------------------------------------------------------------------------
+| Frontend menu hand setting
+|--------------------------------------------------------------------------
+|
+| If the above setting is FALSE, you can set an homepage uri here.
+| If you don't you will need to set it in the controller
+*/
+// $config['menu_homepage_uri']='home';
+
+/*
+|--------------------------------------------------------------------------
+| Main view
+|--------------------------------------------------------------------------
+|
+| The name of the view that the frontend controller will load if no view was given
+|
+*/
+$config['main_view']='site';
 
 /*
 |--------------------------------------------------------------------------
@@ -89,10 +126,7 @@ $config['module_field']='str_module';
 | If true, after logout the CMS redirects to the site
 |
 */
-
 $config['logout_to_site']=FALSE;
-
-
 
 /*
 |--------------------------------------------------------------------------
@@ -102,10 +136,7 @@ $config['logout_to_site']=FALSE;
 | If true, $_GET will be preserved in the frontend controller, so url queries are possible, and the use of $this->input->get()
 |
 */
-
 $config['query_urls']=FALSE;
-
-
 
 /*
 |--------------------------------------------------------------------------
@@ -115,11 +146,7 @@ $config['query_urls']=FALSE;
 | If true, each page is added to log_stats
 |
 */
-
 $config['add_to_statistics']=TRUE;
-
-
-
 
 /*
 |--------------------------------------------------------------------------
@@ -132,7 +159,6 @@ $config['add_to_statistics']=TRUE;
 |	http://example.com/
 |
 */
-
 if (!isset($config['base_url'])) {
 	// If no automatic base_url, comment this:
 	die("sorry no automatic 'base_url', edit '".SITEPATH."config.php'.");
@@ -171,8 +197,6 @@ if (!isset($config['base_url'])) {
 */
 // $config['uri_protocol']	= "AUTO";
 
-
-
 /*
 |--------------------------------------------------------------------------
 | URL suffix
@@ -185,8 +209,6 @@ if (!isset($config['base_url'])) {
 */
 // $config['url_suffix'] = ".html";
 
-
-
 /*
 |--------------------------------------------------------------------------
 | Default Character Set
@@ -198,21 +220,6 @@ if (!isset($config['base_url'])) {
 */
 // $config['charset'] = "UTF-8";
 
-
-/*
-|--------------------------------------------------------------------------
-| Rewrite PHP Short Tags
-|--------------------------------------------------------------------------
-|
-| If your PHP installation does not have short tag support enabled CI
-| can rewrite the tags on-the-fly, enabling you to utilize that syntax
-| in your view files.  Options are TRUE or FALSE (boolean)
-|
-*/
-#$config['rewrite_short_tags'] = FALSE;
-
-
-
 /*
 |--------------------------------------------------------------------------
 | Global XSS Filtering
@@ -223,9 +230,6 @@ if (!isset($config['base_url'])) {
 |
 */
 $config['global_xss_filtering'] = FALSE;
-
-
-
 
 
 /*

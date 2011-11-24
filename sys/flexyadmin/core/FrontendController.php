@@ -28,6 +28,10 @@ class FrontEndController extends MY_Controller {
 		$this->load->library("menu");
 		$this->load->library("content");
 		$this->load->library('form_validation');
+		/**
+		 * Load standard Module Class
+		 */
+		$this->load->library('module');
 				
 
 		/**
@@ -41,12 +45,6 @@ class FrontEndController extends MY_Controller {
 		 * Init global site data
 		 */
 		$this->_init_globals();
-
-		/**
-		 * Load standard Module Class
-		 */
-		$this->load->library('module');
-		
 	}
 	
 	// For compatibility with older sites
@@ -110,12 +108,11 @@ class FrontEndController extends MY_Controller {
 		$this->site['menu']='';
 		$this->site['content']='';
 		$this->site['class']='';
-
 		
 		/**
 		 * Set home uri (top from tbl_menu) if content comes from database
 		 */
-		if ( ! $this->config->item('uri_as_modules')) {
+		if ( $this->config->item('menu_autoset_home')) {
 			$menuTable=get_menu_table();
 			if ( ! empty($menuTable)) {
 				if ($this->db->has_field($menuTable,'self_parent')) $this->db->order_as_tree();
@@ -128,6 +125,9 @@ class FrontEndController extends MY_Controller {
 					$this->uri->set_home('');
 				}
 			}
+		}
+		elseif ($this->config->item('menu_homepage_uri')) {
+			$this->uri->set_home($this->config->item('menu_homepage_uri'));
 		}
 		
 	}
@@ -185,7 +185,6 @@ class FrontEndController extends MY_Controller {
 		if (empty($data)) $data=$this->site;
 		return $this->load->view($view,$data,$return);
 	}
-	// this one only for backwards compatibility
 	function show($view='home',$data='',$return=FALSE) {
 		return $this->view($view,$data,$return);
 	}
