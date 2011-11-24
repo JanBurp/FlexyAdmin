@@ -40,7 +40,7 @@
 	<meta name="revisit-after" content="7 days" />
 
 	<script language="javascript" type="text/javascript" src="<?=$admin_assets?>js/nospam.js"></script>
-	<!-- <script language="javascript" type="text/javascript" src="sys/jquery/jquery-1.7.min.js"></script> -->
+	<!-- <script language="javascript" type="text/javascript" src="sys/jquery/jquery-1.7.1.min.js"></script> -->
 	<!-- <script language="javascript" type="text/javascript" src="<?=$assets?>js/site.js"></script> -->
 	
 	<link href="<?=$assets;?>css/text.css" rel="stylesheet" type="text/css" />
