@@ -19,11 +19,13 @@ class Queu extends CI_Model {
 	}
 
 	public function add_call($object,$method,$args='') {
-		$this->calls[]=array('object'=>$object,'method'=>$method,'args'=>$args);
+		$call=array('object'=>$object,'method'=>$method,'args'=>$args);
+		if (!in_array($call,$this->calls)) $this->calls[]=$call;
 	}
 	
 	public function run_calls() {
 		$calls=$this->get_calls();
+		strace_($calls);
 		if (!empty($calls)) {
 			foreach ($calls as $call) {
 				if (method_exists($call['object'],$call['method'])) {
