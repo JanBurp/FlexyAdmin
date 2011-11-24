@@ -83,12 +83,12 @@ class Edit extends AdminController {
 			$this->lang->load("update_delete");
 			$this->load->model('queu');
 			
-			if (!is_array($ids)) $ids=array($idss);
+			if (!is_array($ids)) $ids=array($ids);
 			foreach ($ids as $id) {
 				if ($this->user->has_rights($table,$id)>=RIGHTS_DELETE) {
 					$message="";
 					if ($confirmed) {
-						
+
 						$this->db->where(PRIMARY_KEY,$id);
 						$oldData=$this->db->get_row($table);
 
