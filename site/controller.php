@@ -1,21 +1,22 @@
 <?
-
 /**
- * FlexyAdmin 2009
+ * FlexyAdmin
  * A Flexible Database based CMS
  *
- * @package		FlexyAdmin 2009
+ * @package		FlexyAdmin
  * @author		Jan den Besten
  * @copyright	Copyright (c) 2009-2011, Jan den Besten
- * @link			http://flexyadmin.com
+ * @link			http://www.flexyadmin.com
  */
 
 // ------------------------------------------------------------------------
 
 /**
  * main Frontend Controller
- * This Controller handles the url and loads views of the site accordingly *
+ * This Controller handles the url and loads views of the site accordingly
+ *
  */
+
 
 class Main extends FrontEndController {
 
@@ -28,23 +29,25 @@ class Main extends FrontEndController {
 	 * function index()
 	 *
 	 * This is called everytime a page of you're site is loaded.
-	 * Here you have to decide according to the given uri what is to be showed and what models/views are loaded.
 	 */
 	public function index() {
 		
 		/***********************************************
 		 * Set Language for localisation (set possible languages at the start of the controller, near line 30)
-		 * See site/config/config.php for language settings
+		 * See config.php for language settings
 		 */
 		$this->_set_language();
 
 
 		/***********************************************
-		 * If you need pagination for something, uncomment these lines and just set $config['auto']=TRUE in the pagination config.
-		 * You don't need to set $config['base_url'] and $config['uri_segment'], these are set automatic. uripart 'offset' is used standard.
+		 * If you need pagination for something, set the 'auto_pagination' config in config.php to TRUE.
+		 * Set also $config['auto']=TRUE in the pagination config.
+		 * Now you don't need to set $config['base_url'] and $config['uri_segment'], these are set automatic and uses uripart 'offset'.
 		 */
-		// $this->load->library('pagination');
-		// $this->uri->remove_pagination();
+		if ($this->config->item('auto_pagination')) {
+			$this->load->library('pagination');
+			$this->uri->remove_pagination();
+		}
 
 
 		/***********************************************
@@ -69,9 +72,10 @@ class Main extends FrontEndController {
 
 		/***********************************************
 		 * Redirect to a page down in the menu tree, if current page is empty.
-		 * Comment this if not neeeded
+		 * If needed, set the redirect config to TRUE in config.php
 		 */
-		// $this->_redirect($item);
+		if ($this->config->item('redirect')) $this->_redirect($item);
+
 
 		/***********************************************
 		 * If item exists call _page (which calls modules and loads views if set)
@@ -91,11 +95,8 @@ class Main extends FrontEndController {
 		if ($this->no_content()) $this->add_content($this->view('error','',true));
 
 
-		// trace_($this->site);
-
-
 		/**
-		 * Show site view
+		 * Send the site view to the browser
 		 */
 		$this->view();
 
@@ -110,10 +111,9 @@ class Main extends FrontEndController {
 		 * You have to flush the page yourself (or set an smaller time) if the page is (partly) dynamic with the cache_helper function: delete_cache( $this->uri->uri_string() );
 		 * If $_POST or $_GET data are set (not empty) the page is not loaded from cache. So don't worry about forms etc.
 		 */
-		// $this->output->cache(1440); // cache for 24 hours (1440 minutes)
+		if ($this->config->item('caching')) $this->output->cache( $this->config->item('caching_time') );
 		
 	}
-
 
 
 
@@ -146,13 +146,11 @@ class Main extends FrontEndController {
 
 
 
-
 	/*
 	 * function _module($item)
 	 * 
-	 * This functions is called if a module is set
-	 * It loads the module (a special CI library) and calls it.
-	 * If it has a return value it will be added to $item['module_content'].
+	 * This functions collects all the modules which need to be loaded and called. Then calls them.
+	 * If modules have a return value it will be added to $item['module_content'].
 	 */
 	private function _module($item) {
 		// See what modules to load
@@ -175,7 +173,6 @@ class Main extends FrontEndController {
 		$autoload=$this->config->item('autoload_modules');
 		if ($autoload) $modules=array_merge($autoload,$modules);
 		// Loop trough all possible modules, load them, call them, and process return value
-		// trace_($modules);
 		$item['module_content']='';
 		foreach ($modules as $module) {
 			// split module and method
@@ -195,6 +192,7 @@ class Main extends FrontEndController {
 		return $item;
 	}
 
+
 	/*
 	 * function _call_library()
 	 * 
@@ -210,10 +208,8 @@ class Main extends FrontEndController {
 			if (substr($library,0,1)=='_') return FALSE;
 		}
 		if (!empty($library)) {
-			// trace_('Module: '.$library.'.'.$method);
 			$library_name=str_replace(' ','_',$library);
 			if (file_exists(SITEPATH.'libraries/'.$library_name.'.php')) {
-				// trace_('Loading module: '.$library_name.'.'.$method);
 				$this->load->library($library_name);
 				return $this->$library_name->$method($args);
 			}
@@ -221,7 +217,6 @@ class Main extends FrontEndController {
 				$fallback=$this->config->item('fallback_module');
 				$fallback_name=str_replace(' ','_',$fallback);
 				if (file_exists(SITEPATH.'libraries/'.$fallback_name.'.php')) {
-					// trace_('Loading Fallback Module: '.$fallback_name.'.'.$method);
 					$this->load->library($fallback_name);
 					return $this->$fallback_name->index($args);
 				}
@@ -265,7 +260,6 @@ class Main extends FrontEndController {
 	 * Redirect to a page down in the menu tree, if current page is empty
 	 */
 	private function _redirect($item) {
-		// Use you're own test if you need to.
 		if (empty($item['txt_text'])) {
 			$this->db->select('uri');
 			$this->db->where('self_parent',$item['id']);
