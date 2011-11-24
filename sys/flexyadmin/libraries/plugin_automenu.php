@@ -12,6 +12,7 @@ class Plugin_automenu extends Plugin_ {
 	var $menuTable;
 	var $automationTable;
 	var $resultMenu;
+	var $delete=FALSE;
 	
 	var $newMenu;
 	var $lastId;
@@ -52,18 +53,21 @@ class Plugin_automenu extends Plugin_ {
 	
 
 	public function _after_update() {
+		$this->delete=FALSE;
 		$this->_create_auto_menu();
 		return $this->newData;
 	}
 
 	public function _after_delete() {
-		$this->_create_auto_menu();
+		$this->delete=TRUE;
+		$this->_create_auto_menu(TRUE);
 		$delete=TRUE;
 		if ($this->table=='res_menu_result') $delete=FALSE;
 		return $delete;
 	}
 
 	public function _admin_api($args=NULL) {
+		$this->delete=FALSE;
 		$this->add_content(h($this->name,1));
 		$this->_create_auto_menu();
 		$this->add_content('<p>Menu reset ready.');
@@ -78,6 +82,9 @@ class Plugin_automenu extends Plugin_ {
 		$data=$this->CI->db->get_results($table,$limit);
 		if ($table==$this->table and isset($this->newData['id'])) {
 			$data[$this->newData['id']]=$this->newData;
+		}
+		if ($this->delete) {
+			if ($this->table==$table)	unset($data[$this->oldData['id']]);
 		}
 		return $data;
 	}
