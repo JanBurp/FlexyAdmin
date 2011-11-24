@@ -38,6 +38,18 @@ $config['language']	= "nl";
 
 /*
 |--------------------------------------------------------------------------
+| Declare and initialise empty variables for $this->site
+|--------------------------------------------------------------------------
+|
+| If you need more variables in $this->site which are send to the main view you need to declare them.
+| Set this array with all the names of these variables and they will be declared automatic.
+|
+*/
+// $config['site_variables']	= array('submenu','comments');
+
+
+/*
+|--------------------------------------------------------------------------
 | Redirect
 |--------------------------------------------------------------------------
 |
@@ -64,7 +76,7 @@ $config['auto_pagination']	= FALSE;
 | You can autoload modules from the controller. They are also called.
 | Usefull if you need to do something on every page and don't won't to change the controlle.
 */
-$config['autoload_modules']=array();
+// $config['autoload_modules']=array('submenu');
 
 /*
 |--------------------------------------------------------------------------

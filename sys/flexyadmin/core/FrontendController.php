@@ -103,11 +103,14 @@ class FrontEndController extends MY_Controller {
 		$this->site['languages']=$this->config->item('languages');
 
 		/**
-		 * Set empty content
+		 * Declare and init some variables
 		 */
-		$this->site['menu']='';
-		$this->site['content']='';
-		$this->site['class']='';
+		$declare=array('menu','content','class');
+		if ($this->config->item('site_variables')) $declare=array_merge($declare,$this->config->item('site_variables'));	
+		foreach ($declare as $variable) {
+			$this->site[$variable]='';
+		}
+
 		
 		/**
 		 * Set home uri (top from tbl_menu) if content comes from database
