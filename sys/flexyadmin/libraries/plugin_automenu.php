@@ -461,7 +461,6 @@ class Plugin_automenu extends Plugin_ {
 			trace_('Sorry, transaction error');
 		}
 
-
 		// update linklist etc
 		if (!isset($this->CI->editor_lists)) $this->CI->load->library('editor_lists');
 		$this->CI->queu->add_call(@$this->CI->editor_lists,'create_list','links');

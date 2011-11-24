@@ -31,6 +31,10 @@ class Plugin_uri extends Plugin_ {
 								}
 					}
 					$this->add_content("<p>All uri's in $this->table are (re)set.</p><p>Just change one in this table to make sure all other plugins did there work.</p>");
+					// 
+					// // update linklist etc
+					// if (!isset($this->CI->editor_lists)) $this->CI->load->library('editor_lists');
+					// $this->CI->queu->add_call(@$this->CI->editor_lists,'create_list','links');
 				}
 			}
 			else
@@ -42,6 +46,11 @@ class Plugin_uri extends Plugin_ {
 		$field=$this->_get_uri_field();
 		$uri=$this->_create_uri($field);
 		$this->newData['uri']=$uri;
+		
+		// // update linklist etc
+		// if (!isset($this->CI->editor_lists)) $this->CI->load->library('editor_lists');
+		// $this->CI->queu->add_call(@$this->CI->editor_lists,'create_list','links');
+		
 		return $this->newData;
 	}
 	

@@ -121,6 +121,7 @@ class Plugin_handler extends CI_Model {
 		}
 		// call
 		if (method_exists($plugin,$method)) {
+			// strace_("Call Plugin: $plugin->$method");
 			$return = $this->$plugin->$method($args);
 		}
 		return $return;
