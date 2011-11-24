@@ -25,7 +25,6 @@ class Queu extends CI_Model {
 	
 	public function run_calls() {
 		$calls=$this->get_calls();
-		strace_($calls);
 		if (!empty($calls)) {
 			foreach ($calls as $call) {
 				if (method_exists($call['object'],$call['method'])) {
