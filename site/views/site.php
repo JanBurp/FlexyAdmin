@@ -77,6 +77,7 @@
 		<div id="content">
 		<?=$content;?>
 		</div>
+				
 	</div>
 
 	<div id="benchmark"><p>Time: <?php echo $this->benchmark->elapsed_time(); ?><br />Mem: <?php echo $this->benchmark->memory_usage(); ?></p></div>
