@@ -169,9 +169,22 @@ class Main extends FrontEndController {
 			}
 			$modules=explode('|',$modules);
 		}
+		
 		// Autoload modules
 		$autoload=$this->config->item('autoload_modules');
 		if ($autoload) $modules=array_merge($autoload,$modules);
+		// Autoload modules if
+		$autoload_if=$this->config->item('autoload_modules_if');
+		if ($autoload_if) {
+			foreach ($autoload_if as $module_if => $where) {
+				$load_if=FALSE;
+				foreach ($where as $field => $value) {
+					$load_if = $load_if || $item[$field]==$value;
+				}
+				if ($load_if) $modules[]=$module_if;
+			}
+		}
+
 		// Loop trough all possible modules, load them, call them, and process return value
 		$item['module_content']='';
 		foreach ($modules as $module) {
