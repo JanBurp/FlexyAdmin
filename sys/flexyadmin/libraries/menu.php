@@ -547,7 +547,7 @@ class Menu {
 		if (empty($uri)) $uri=$this->current;
 		$submenu=$this->_get_submenu($uri);
 		if ($submenu) {
-			arsort($submenu);
+ 			$submenu=array_reverse($submenu,true);
 			$thisUri=get_suffix($uri,'/');
 			$next_uri=false;
 			foreach ($submenu as $key=>$value) {
