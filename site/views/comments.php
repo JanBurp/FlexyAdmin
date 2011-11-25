@@ -1,6 +1,6 @@
 <div id="comments">
 	<hr/>
-	<h1><?=lang('title')?></h1>
+	<h1><?=lang('comments_title')?></h1>
 
 	<div id="commentErrors">
 		<?=$errors?>
