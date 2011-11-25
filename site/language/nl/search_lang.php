@@ -1,8 +1,8 @@
 <?php
 
 
-$config['search_term']='search';
-$config['search_empty_value']='Search';
+$lang['search_term']='search';
+$lang['search_empty_value']='Zoeken';
 
 
 ?>
