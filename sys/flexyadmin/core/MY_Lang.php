@@ -70,6 +70,7 @@ class MY_Lang extends CI_Lang {
 		}
 		// Changes end here. JdB
 
+
 		// Determine where the language file is and load it
 		if ($alt_path != '' && file_exists($alt_path.'language/'.$idiom.'/'.$langfile))
 		{
