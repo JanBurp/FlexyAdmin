@@ -526,7 +526,7 @@ class Menu {
 			}
 			if ($prev_uri) {
 				$prev=$submenu[$prev_uri];
-				$prev['full_uri']=remove_suffix($uri,'/').'/'.$prev_uri;
+				$prev['full_uri']=ltrim(remove_suffix('/'.$uri,'/').'/'.$prev_uri,'/');
 			}
 		}
 		return $prev;
@@ -556,7 +556,7 @@ class Menu {
 			}
 			if ($next_uri) {
 				$next=$submenu[$next_uri];
-				$next['full_uri']=remove_suffix($uri,'/').'/'.$next_uri;	
+				$next['full_uri']=ltrim(remove_suffix('/'.$uri,'/').'/'.$next_uri,'/');;	
 			}
 		}
 		return $next;
