@@ -7,7 +7,7 @@
 |
 | Used for testing if site is localy tested, database is set accordingly in site/database.php
 | You can set several localhosts if needed.
-|
+| // added/changed for FlexyAdmin
 */
 
 	define("LOCALHOSTS","localhost,localhost:8888,10.37.129.2");
@@ -23,7 +23,6 @@
 		define("IS_LOCALHOST",TRUE);
 	else
 		define("IS_LOCALHOST",FALSE);
-
 
 
 
@@ -47,13 +46,16 @@
  */
 
 /*
- * Set according to local
+ * Set according to local // added/changed for FlexyAdmin
  */
 if (IS_LOCALHOST) {
 	define('ENVIRONMENT', 'development');
 }
 else
 	define('ENVIRONMENT', 'production');
+
+
+
 
 /*
  *---------------------------------------------------------------
@@ -92,7 +94,7 @@ if (defined('ENVIRONMENT'))
  * as this file.
  *
  */
-	$system_path = 'sys/codeigniter';
+	$system_path = 'sys/codeigniter'; // added/changed for FlexyAdmin
 
 /*
  *---------------------------------------------------------------
@@ -108,9 +110,9 @@ if (defined('ENVIRONMENT'))
  * NO TRAILING SLASH!
  *
  */
-	$application_folder = 'sys/flexyadmin';
+	$application_folder = 'sys/flexyadmin'; // added/changed for FlexyAdmin
 
-	$site_folder = 'site';
+	$site_folder = 'site'; // added/changed for FlexyAdmin
 
 /*
  * --------------------------------------------------------------------
@@ -229,7 +231,7 @@ if (defined('ENVIRONMENT'))
 		define('APPPATH', BASEPATH.$application_folder.'/');
 	}
 	
-	define('SITEPATH', $site_folder.'/');
+	define('SITEPATH', $site_folder.'/');			// added/changed for FlexyAdmin
 	
 
 /*
