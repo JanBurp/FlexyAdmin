@@ -81,7 +81,18 @@ class Plugin_automenu extends Plugin_ {
 		if (!empty($where)) $this->CI->db->where($where);
 		$data=$this->CI->db->get_results($table,$limit);
 		if ($table==$this->table and isset($this->newData['id'])) {
-			$data[$this->newData['id']]=$this->newData;
+			$id=$this->newData['id'];
+			$data[$id]=$this->newData;
+			if ($id==-1) {
+				// new item, maybe it needs a new order
+				if (isset($this->newData['order'])) {
+					$this->CI->load->model('order','order_model');
+					if (isset($this->newData["self_parent"])) 
+						$data[$id]["order"]=$this->CI->order_model->get_next_order($this->table,$this->newData["self_parent"]);
+					else
+						$data[$id]["order"]=$this->CI->order_model->get_next_order($this->table);
+				}
+			}
 		}
 		if ($this->delete) {
 			if ($this->table==$table)	unset($data[$this->oldData['id']]);
