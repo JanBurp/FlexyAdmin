@@ -137,8 +137,9 @@ class Main extends FrontEndController {
 		// Load and call modules
 		$item=$this->_module($item);
 
-		// Add content
-		$this->add_content( $this->view('page',$item,true) );
+		// Add page content (if no break)
+		if (!$this->site['break']) { $this->add_content( $this->view('page',$item,true) ); }
+		// Add module content
 		if (isset($item['module_content'])) $this->add_content($item['module_content']);
 
 		return $item;
@@ -153,24 +154,10 @@ class Main extends FrontEndController {
 	 * If modules have a return value it will be added to $item['module_content'].
 	 */
 	private function _module($item) {
+		
 		// See what modules to load
 		$modules=array();
-		if (isset($item[$this->config->item('module_field')]) and !empty($item[$this->config->item('module_field')])) {
-			if (get_prefix($this->config->item('module_field'))=='id') {
-				// Modules from foreign table
-				$foreign_key=$this->config->item('module_field');
-				$foreign_field='str_'.get_suffix($this->config->item('module_field'));
-				$foreign_table=foreign_table_from_key($foreign_key);
-				$modules=$this->db->get_field_where($foreign_table,$foreign_field,'id',$item[$foreign_key]);
-			}
-			else {
-				// Modules direct from field
-				$modules=$item[$this->config->item('module_field')];
-			}
-			$modules=explode('|',$modules);
-		}
-		
-		// Autoload modules
+		// First autoload modules
 		$autoload=$this->config->item('autoload_modules');
 		if ($autoload) $modules=array_merge($autoload,$modules);
 		// Autoload modules if
@@ -184,14 +171,21 @@ class Main extends FrontEndController {
 				if ($load_if) $modules[]=$module_if;
 			}
 		}
-
+		// User set modules
+		if (isset($item[$this->config->item('module_field')]) and !empty($item[$this->config->item('module_field')])) {
+			$user_modules=$this->find_modules_in_item($item);
+			$user_modules=explode('|',$user_modules);
+			$modules=array_merge($modules,$user_modules);
+		}
+		// Keep it so modules can check what other modules are called
+		$this->site['modules']=$modules;
 		// Loop trough all possible modules, load them, call them, and process return value
 		$item['module_content']='';
 		foreach ($modules as $module) {
 			// split module and method
 			$library=remove_suffix($module,'.');
 			$method=get_suffix($module,'.');
-			if ($method==$library) $method='index';
+			if ($module==$library) $method='index';
 			// Load and call the module and process the return value
 			$return=$this->_call_library($library,$method,$item);
 			if ($return) {
@@ -201,6 +195,7 @@ class Main extends FrontEndController {
 					$item['module_content'].=$return;
 				$this->add_class('module_'.$module);
 			}
+			if ($this->site['break']) break;	// stop loading more modules if break is set
 		}
 		return $item;
 	}

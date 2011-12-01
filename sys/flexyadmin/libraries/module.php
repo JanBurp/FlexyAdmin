@@ -21,6 +21,11 @@ class Module extends Flexy_library {
 	}
 
 
+	public function break_content() {
+		$this->CI->site['content']='';
+		$this->CI->site['break']=true;
+	}
+
 }
 
 ?>

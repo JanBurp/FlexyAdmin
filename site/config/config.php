@@ -77,7 +77,7 @@ $config['auto_pagination']	= FALSE;
 | Usefull if you need to do something on every page and don't won't to change the controller.
 | You can also autoload a module with a simple test on a field in $item
 */
-// $config['autoload_modules'] = array('submenu','comments');
+// $config['autoload_modules'] = array('submenu');
 // $config['autoload_modules_if'] = array( 'comments'=>array('b_allow_comments'=>true) );
 
 

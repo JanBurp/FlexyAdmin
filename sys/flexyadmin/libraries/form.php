@@ -24,6 +24,7 @@ class Form {
 	var $data=array();
 	var $postdata=array();
 	var $add_password_match=array();
+	var $hash_passwords=false;
 	var $hasHtmlField;
 	var $isValidated;
 	var $captchaWords;
@@ -92,6 +93,10 @@ class Form {
 		if (is_bool($args) and !$args) $opts=FALSE;
 		$this->add_password_match=$opts;
 		if ($this->add_password_match) $this->data=$this->_add_matching_password($this->data);
+	}
+	
+	public function hash_passwords($hash=true) {
+		$this->hash_passwords=$hash;
 	}
 
 	public function set_captcha_words($words=NULL) {
@@ -243,11 +248,15 @@ class Form {
 	}
 
 	public function reset_data() {
+		$this->reset();
+	}
+	public function reset() {
 		foreach ($this->data as $key => $field) {
 			$this->data[$key]["value"]="";
 			$this->data[$key]["repopulate"]="";
 		}
 	}
+
 
 /**
  * function prepare_field($name,$value)
@@ -332,7 +341,10 @@ class Form {
 				* Password hash it (or leave it same when empty)
 				*/
 				elseif (in_array($pre,array('gpw','pwd'))) {
-					if (!empty($value)) $data[$name]=$this->CI->ion_auth_model->hash_password($value);
+					if ($this->hash_passwords and !empty($value))
+						$data[$name]=$this->CI->ion_auth_model->hash_password($value);
+					else
+						$data[$name]=$value;
 				}
 				
 				/**
