@@ -1,6 +1,10 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 
+// !! When registration and password resetting needs to be active: make sure that $config['query_urls']=TRUE; in site/config/config.php
+
+
+
 /*
 |--------------------------------------------------------------------------
 | Login css class
