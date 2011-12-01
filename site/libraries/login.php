@@ -1,5 +1,18 @@
 <?php
 
+
+/**
+ * Login
+ *
+ * !! When registration and password resetting needs to be active: make sure that $config['query_urls']=TRUE; in site/config/config.php
+ *
+ * @package default
+ * @author Jan den Besten
+ */
+
+
+
+
 class Login extends Module {
 	
 	var $errors = '';
