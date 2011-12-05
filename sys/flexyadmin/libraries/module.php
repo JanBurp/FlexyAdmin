@@ -10,8 +10,8 @@ class Module extends Flexy_library {
 
 	// if method of module can't be found, print a simple warning
 	public function __call($function, $args) {
-		$args=implode(',',$args);
-		echo '<div class="warning">Method: `'.ucfirst($function)."(".$args.")` doesn't exists.<div>";
+		// if (is_array($args)) $args=implode(',',$args);
+		echo '<div class="warning">Method: `'.ucfirst($function)."()` doesn't exists.<div>";
 	}
 
 
