@@ -29,18 +29,18 @@ class Login extends Module {
 	}
 	
 	
-	public function index($item) {
+	public function index($page) {
 		// If logged in, set class
 		if ($this->CI->user->logged_in()) $this->CI->add_class($this->config['class']);
 		// If Login is called also with other methods, don't go on with this call
 		$modules=$this->CI->site['modules'];
 		if (in_array('login.login',$modules) or in_array('login.logout',$modules) or in_array('login.register',$modules) or in_array('login.forgot_password',$modules) or in_array('login.reset_password',$modules)) {
-			return $item;
+			return $page;
 		}
-		return $this->login($item,false);
+		return $this->login($page,false);
 	}
 	
-	public function login($item, $show_if_allready=true) {
+	public function login($page, $show_if_allready=true) {
 		$title='';
 		$content='';
 		
@@ -99,14 +99,14 @@ class Login extends Module {
 	}
 	
 	
-	public function logout($item) {
+	public function logout($page) {
 		$this->CI->user->logout();
 		return lang('logout_done');
 	}
 	
 	
 	
-	public function forgot_password($item) {
+	public function forgot_password($page) {
 		$content='';
 		$code=$this->CI->input->get('code');
 		
@@ -150,7 +150,7 @@ class Login extends Module {
 	}
 
 
-	public function register($item) {
+	public function register($page) {
 		$errors		= '';
 		$content	= '';
 		

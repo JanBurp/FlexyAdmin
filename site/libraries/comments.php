@@ -24,13 +24,13 @@ class Comments extends Module {
 		$this->foreign_table=foreign_table_from_key( $this->config['key_id'] );
 	}
 
-	public function index($item) {
+	public function index($page) {
 		if ( $this->CI->db->table_exists($this->config['table'])) {
 			// Get id for current item where comments belong to
-			$id=$item['id'];
-			if (isset($item['int_id']) and isset($item['str_table']) and $item['str_table']==$this->foreign_table) {
-				// trace_($item);
-				$id=$item['int_id'];
+			$id=$page['id'];
+			if (isset($page['int_id']) and isset($page['str_table']) and $page['str_table']==$this->foreign_table) {
+				// trace_($page);
+				$id=$page['int_id'];
 			}
 		
 			$formHtml='';

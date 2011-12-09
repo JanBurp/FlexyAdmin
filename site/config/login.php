@@ -32,7 +32,7 @@ $config['group_id']=4;	// 4 is visitors which can't login to the backend
 | Login uri settings
 |--------------------------------------------------------------------------
 |
-| Set to auto will try to find the uri from the module field of $item.
+| Set to auto will try to find the uri from the module field of $page.
 | You can also set them by hand.
 |
 */

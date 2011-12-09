@@ -67,20 +67,20 @@ class Main extends FrontEndController {
 		/***********************************************
 		 * Get current page item from menu
 		 */
-		$item=$this->menu->get_item();
+		$page=$this->menu->get_item();
 
 
 		/***********************************************
 		 * Redirect to a page down in the menu tree, if current page is empty.
 		 * If needed, set the redirect config to TRUE in config.php
 		 */
-		if ($this->config->item('redirect')) $this->_redirect($item);
+		if ($this->config->item('redirect')) $this->_redirect($page);
 
 
 		/***********************************************
 		 * If item exists call _page (which calls modules and loads views if set)
 		 */
-		if ($item) $item=$this->_page($item);
+		if ($page) $page=$this->_page($page);
 
 
 		/**
@@ -119,41 +119,41 @@ class Main extends FrontEndController {
 
 
 	/*
-	 * function _page($item)
+	 * function _page($page)
 	 * 
 	 * This functions is called when a page item exists
 	 * It handles what to do with the item and shows the content.
 	 */
 	
-	private function _page($item) {
+	private function _page($page) {
 		// Process the text fields (make safe email links, put classes in p/img/h tags)
-		foreach($item as $f=>$v) {if (get_prefix($f)=='txt') $item[$f]=$this->content->render($v);}
+		foreach($page as $f=>$v) {if (get_prefix($f)=='txt') $page[$f]=$this->content->render($v);}
 
 		// Add extra title and keywords, replace description (if any)
-		if (isset($item['str_title'])) $this->add_title($item['str_title']);
-		if (isset($item['str_keywords'])) $this->add_keywords($item['str_keywords']);
-		if (isset($item['stx_description']) and !empty($item['stx_description'])) $this->site['description']=$item['stx_description'];
+		if (isset($page['str_title'])) $this->add_title($page['str_title']);
+		if (isset($page['str_keywords'])) $this->add_keywords($page['str_keywords']);
+		if (isset($page['stx_description']) and !empty($page['stx_description'])) $this->site['description']=$page['stx_description'];
 
 		// Load and call modules
-		$item=$this->_module($item);
+		$page=$this->_module($page);
 
 		// Add page content (if no break)
-		if (!$this->site['break']) { $this->add_content( $this->view('page',$item,true) ); }
+		if (!$this->site['break']) { $this->add_content( $this->view('page',$page,true) ); }
 		// Add module content
-		if (isset($item['module_content'])) $this->add_content($item['module_content']);
+		if (isset($page['module_content'])) $this->add_content($page['module_content']);
 
-		return $item;
+		return $page;
 	}
 
 
 
 	/*
-	 * function _module($item)
+	 * function _module($page)
 	 * 
 	 * This functions collects all the modules which need to be loaded and called. Then calls them.
-	 * If modules have a return value it will be added to $item['module_content'].
+	 * If modules have a return value it will be added to $page['module_content'].
 	 */
-	private function _module($item) {
+	private function _module($page) {
 		
 		// See what modules to load
 		$modules=array();
@@ -166,38 +166,38 @@ class Main extends FrontEndController {
 			foreach ($autoload_if as $module_if => $where) {
 				$load_if=FALSE;
 				foreach ($where as $field => $value) {
-					$load_if = $load_if || $item[$field]==$value;
+					$load_if = $load_if || $page[$field]==$value;
 				}
 				if ($load_if) $modules[]=$module_if;
 			}
 		}
 		// User set modules
-		if (isset($item[$this->config->item('module_field')]) and !empty($item[$this->config->item('module_field')])) {
-			$user_modules=$this->find_modules_in_item($item);
+		if (isset($page[$this->config->item('module_field')]) and !empty($page[$this->config->item('module_field')])) {
+			$user_modules=$this->find_modules_in_item($page);
 			$user_modules=explode('|',$user_modules);
 			$modules=array_merge($modules,$user_modules);
 		}
 		// Keep it so modules can check what other modules are called
 		$this->site['modules']=$modules;
 		// Loop trough all possible modules, load them, call them, and process return value
-		$item['module_content']='';
+		$page['module_content']='';
 		foreach ($modules as $module) {
 			// split module and method
 			$library=remove_suffix($module,'.');
 			$method=get_suffix($module,'.');
 			if ($module==$library) $method='index';
 			// Load and call the module and process the return value
-			$return=$this->_call_library($library,$method,$item);
+			$return=$this->_call_library($library,$method,$page);
 			if ($return) {
 				if (is_array($return))
-					$item=$return;
+					$page=$return;
 				else
-					$item['module_content'].=$return;
+					$page['module_content'].=$return;
 				$this->add_class('module_'.$module);
 			}
 			if ($this->site['break']) break;	// stop loading more modules if break is set
 		}
-		return $item;
+		return $page;
 	}
 
 
@@ -263,15 +263,15 @@ class Main extends FrontEndController {
 	
 	
 	/*
-	 * function _redirect($item)
+	 * function _redirect($page)
 	 * 
 	 * Redirect to a page down in the menu tree, if current page is empty
 	 */
-	private function _redirect($item) {
-		if (empty($item['txt_text'])) {
+	private function _redirect($page) {
+		if (empty($page['txt_text'])) {
 			$this->db->select('uri');
-			$this->db->where('self_parent',$item['id']);
-			if (isset($item['b_visible'])) $this->db->where('b_visible','1');
+			$this->db->where('self_parent',$page['id']);
+			if (isset($page['b_visible'])) $this->db->where('b_visible','1');
 			$subItem=$this->db->get_row(get_menu_table());
 			if ($subItem) {
 				$newUri=$this->site['uri'].'/'.$subItem['uri'];

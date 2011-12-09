@@ -16,7 +16,7 @@ class Module extends Flexy_library {
 
 
 	// index is the standard method
-	public function index($item) {
+	public function index($page) {
 		return '<h1>'.__CLASS__.'</h1>';
 	}
 

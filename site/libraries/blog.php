@@ -10,7 +10,7 @@ class Blog extends Module {
 		}
 	}
 
-	public function index($item) {
+	public function index($page) {
 		if ( $this->CI->db->table_exists($this->config['table'])) {
 			$blogItems=$this->CI->db->get_result( $this->config['table'] );
 			foreach ($blogItems as $id => $blogItem) {

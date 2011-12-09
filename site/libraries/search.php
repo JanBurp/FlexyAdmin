@@ -7,7 +7,7 @@ class Search extends Module {
 		$this->CI->lang->load('search');
 	}
 
-	public function index($item) {
+	public function index($page) {
 		$search=$this->CI->input->post( lang('search_term') );
 		
 		if ($search) {

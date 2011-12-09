@@ -22,7 +22,7 @@ class Submenu extends Module {
 		parent::__construct();
 	}
 
-	public function index($item) {
+	public function index($page) {
 		$level=$this->config['level'];
 		if ($level>0) {
 			$uri=$this->CI->uri->get_to($this->config['level']);
