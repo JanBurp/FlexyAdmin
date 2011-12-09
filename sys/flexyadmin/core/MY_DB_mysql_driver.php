@@ -951,11 +951,16 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		return current($data);
 	}
 	
-	function get_field_where($table,$field,$where="",$what="") {
+	function get_field_where($table,$field,$where="",$what="",$like=FALSE) {
+		$sql="SELECT `$field` FROM `$table` ";
 		if (empty($where) or empty($what))
-			$sql="SELECT `$field` FROM `$table` LIMIT 1";
-		else
-			$sql="SELECT `$field` FROM `$table` WHERE `$where`='$what'";
+			$sql.=" LIMIT 1";
+		else {
+			if ($like)
+				$sql.="WHERE `$where` LIKE '$what%'";
+			else
+				$sql.="WHERE `$where`='$what'";
+		}
 		$query=$this->query($sql);
 		$row=$query->row_array();
 		$query->free_result();
