@@ -194,7 +194,7 @@ class Db extends AdminController {
 			$error = array('error' => $this->upload->display_errors());
 			print $error["error"];
 			// trace_($config);
-			trace_($this->upload->data());
+			// trace_($this->upload->data());
 		}	
 		else	{
 			$data = array('upload_data' => $this->upload->data());
