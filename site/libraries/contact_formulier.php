@@ -15,7 +15,7 @@ class Contact_formulier extends Module {
 		$this->CI->load->library('email');
 	}
 
-	public function index($item) {
+	public function index($page) {
 		
 		$content='';
 		

@@ -2,7 +2,7 @@
 
 class Links extends Module {
 
-	public function index($item) {
+	public function index($page) {
 		if ( $this->CI->db->table_exists('tbl_links')) {
 			$links=$this->CI->db->get_results('tbl_links');
 			return $this->CI->view('links',array('links'=>$links),true);
