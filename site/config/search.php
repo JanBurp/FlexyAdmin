@@ -16,6 +16,7 @@ $config['text_field']='txt_text';
 $config['extra_fields']=array();
 
 
+
 /*
 |--------------------------------------------------------------------------
 | Search result page
@@ -42,6 +43,9 @@ $config['result_page_where']=array('str_module','search');
 */
 
 $config['order_as_tree']=TRUE;				// only possible with menu tables.
+$config['show_full_title']=FALSE;			// Show title as full tree title
+
+$config['group_result_by_uris']=array();
 
 $config['result_max_type']='CHARS';
 $config['result_max_length']=0;

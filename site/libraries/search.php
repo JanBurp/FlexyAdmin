@@ -17,7 +17,10 @@ class Search extends Module {
 			$fields=array_merge($fields,$this->config['extra_fields']);
 
 			$this->CI->db->search( $this->_create_search_array_for_db($search, $fields ) );
-			$this->CI->db->uri_as_full_uri(TRUE, $this->config['title_field'] );
+			if ($this->config['show_full_title'])
+				$this->CI->db->uri_as_full_uri(TRUE, $this->config['title_field'] );
+			else
+				$this->CI->db->uri_as_full_uri();
 			$results=$this->CI->db->get_results( $this->config['table'] );
 
 			if ($results) {
@@ -36,9 +39,10 @@ class Search extends Module {
 				}
 
 				if ($this->config['order_as_tree']) $results=$this->_order_as_menu($results);
+				if (isset($this->config['group_result_by_uris']) and $this->config['group_result_by_uris']) $results=$this->_group_by_uri($results,$this->config['group_result_by_uris']);
 			}
 
-			return $this->CI->show('search_results',array('search'=>$search,'items'=>$results),true);
+			return $this->CI->show('search_results',array('search'=>$search,'items'=>$results,'config'=>$this->config),true);
 		}
 	}
 	
@@ -82,7 +86,7 @@ class Search extends Module {
 	
 	private function _order_as_menu($result) {
 		// get full table with tree order, match with search_result
-		// $this->CI->db->select('id,order,self_parent');
+		$this->CI->db->select('id,order,self_parent');
 		$this->CI->db->order_as_tree();
 		$tree=$this->CI->db->get_result( $this->config['table']);
 		
@@ -95,6 +99,16 @@ class Search extends Module {
 
 		return $tree;
 	}
+
+	private function _group_by_uri($result,$uris) {
+		foreach ($uris as $key => $uri) {
+			$uris[$key]=array('uri'=>$uri);
+			$uris[$key]['title']=$this->CI->db->get_field_where(get_menu_table(),$this->config['title_field'],'uri',$uri,TRUE);
+			$uris[$key]['result']=find_row_by_value($result,$uri,'uri',true);
+		}
+		return $uris;
+	}
+
 
 }
 
