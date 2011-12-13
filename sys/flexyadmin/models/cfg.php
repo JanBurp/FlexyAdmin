@@ -38,10 +38,10 @@
  		$this->data=array();
 		$this->keys=array(
 			'cfg_'.$this->config->item('CFG_table')					=> array( 'key' => $this->config->item('CFG_table_name'), 'fields' => '`id`,`table`,`str_order_by`' ),
-			'cfg_'.$this->config->item('CFG_field') 					=> array( 'key' => $this->config->item('CFG_field_name') ),
-			'cfg_'.$this->config->item('CFG_media_info')			=> array( 'key' => array('path','fields_media_fields') ),
-			'cfg_'.$this->config->item('CFG_img_info')				=> array( 'key' => 'path' ),
-			'cfg_'.$this->config->item('cfg_admin_menu')			=> array( 'key' => 'id' )		
+			'cfg_'.$this->config->item('CFG_field') 				=> array( 'key' => $this->config->item('CFG_field_name') ),
+			'cfg_'.$this->config->item('CFG_media_info')		=> array( 'key' => array('path','fields_media_fields') ),
+			'cfg_'.$this->config->item('CFG_img_info')			=> array( 'key' => 'path' ),
+			'cfg_'.$this->config->item('cfg_admin_menu')		=> array( 'key' => 'id' )		
 		);
 		$this->isAdmin=FALSE;
  	}
@@ -65,7 +65,7 @@
 		$cfg_pre=$this->config->item('CFG_table_prefix');
 		if ($pre!=$cfg_pre)
 			$table=$cfg_pre."_".$this->config->item($table);
-		return $table;
+		return strtolower($table);
 	}
 
 /**

@@ -27,7 +27,7 @@ class Search extends Module {
 				foreach ($results as $id => $result) {
 					// add pre uri
 					if (!empty($this->config['pre_uri'])) {
-						$results['id']['uri']=$this->config['pre_uri'].'/'.$result['uri'];
+						$results[$id]['uri']=$this->config['pre_uri'].'/'.$result['uri'];
 					}
 					// smaller results messages
 					if ($this->config['result_max_length']==0) {

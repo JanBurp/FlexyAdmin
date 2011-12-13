@@ -53,7 +53,7 @@ class Editor_lists {
 			}
 
 			// add if asked for, internal links from menu table
-			if ($CI->cfg->get('CFG_editor','b_add_internal_links')) {
+			if ($CI->cfg->get('CFG_configurations','b_add_internal_links')) {
 				$menuTable=get_menu_table();
 				if ($CI->db->table_exists($menuTable)) {
 					$data['-- site links -----------']=NULL;
@@ -86,7 +86,7 @@ class Editor_lists {
 			}
 			
 			// add links from links table
-			$table=$CI->cfg->get('CFG_editor','table');
+			$table=$CI->cfg->get('CFG_configurations','table');
 			if ($CI->db->table_exists($table)) {
 				$data['-- links ----------------']=NULL;
 				$titleField=$CI->db->get_first_field($table,'str');
