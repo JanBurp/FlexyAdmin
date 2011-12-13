@@ -32,9 +32,9 @@ class Plugin_sitemap extends Plugin_ {
 			if (isset($item['str_title'])) $set['title']=$item['str_title'];
 			if (isset($item['txt_text'])) $set['content']=preg_replace('/\s\s+/si',' ',htmlentities(replace_linefeeds(strip_nonascii(strip_tags(str_replace(array('<br />','&nbsp;'),' ',$item['txt_text'])))),ENT_QUOTES));
 			// prevent very big sitemap.xml
-			if ($pageCount>500) $set['content']=max_length($set['content'],1000);
-			if ($pageCount>5000) $set['content']=max_length($set['content'],250);
-			if ($pageCount>10000) unset($set['content']);
+			if ($pageCount>100) $set['content']=max_length($set['content'],1000);
+			if ($pageCount>1000) $set['content']=max_length($set['content'],250);
+			if ($pageCount>2000) unset($set['content']);
 			$urlset[]=$set;
 		}
 		$sitemap['urlset']=$urlset;
