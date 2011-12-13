@@ -9,7 +9,7 @@ class MY_Output extends CI_OUTPUT {
 	
 	function add_to_stats() {
 		global $CFG;
-		if ($CFG->item('add_to_statistics')) {
+		if (!isset($CFG->config['add_to_statistics']) or $CFG->item('add_to_statistics')) {
 			$STATS=&load_class('stats', 'libraries','');
 			$STATS->add_current_uri();
 		}
