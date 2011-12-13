@@ -22,7 +22,7 @@ class Plugin_links extends Plugin_ {
 	}
 	
 	function _after_delete() {
-		$linkTable=$this->CI->cfg->get('cfg_editor','table');
+		$linkTable=$this->CI->cfg->get('CFG_configurations','table');
 		$menuTable=get_menu_table();
 		if ($this->table==$linkTable or $this->table==$menuTable) {
 			$this->newData=array();

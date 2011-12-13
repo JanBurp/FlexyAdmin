@@ -99,7 +99,6 @@ class Main extends FrontEndController {
 		 * Send the site view to the browser
 		 */
 		$this->view();
-
 		
 		/***********************************************
 		 * Caching

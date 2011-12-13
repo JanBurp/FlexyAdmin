@@ -15,7 +15,7 @@ class Plugin_striptags extends Plugin_ {
 	}
 	
 	function _after_update() {
-		$validHTML=$this->CI->cfg->get('CFG_editor','str_valid_html');
+		$validHTML=$this->CI->cfg->get('CFG_configurations','str_valid_html');
 		if (!empty($validHTML)) {
 			foreach ($this->fields as $field) {
 				if (get_prefix($field)=="txt") {

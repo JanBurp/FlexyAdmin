@@ -75,21 +75,21 @@ class AdminController extends BasicController {
 		$title=$site['str_title'];
 		if ($this->config->item('LOCAL'))	$title=' # '.$title; else $title=' - '.$title;
 		$url=str_replace('http://','',$site['url_url']);
-		$editor=($this->showEditor and $this->cfg->get('CFG_editor',"b_use_editor"));
+		$editor=($this->showEditor and $this->cfg->get('CFG_configurations',"b_use_editor"));
 		$type="";
 		if (isset($this->showType)) $type=$this->showType;
-		$buttons1=$this->cfg->get('CFG_editor',"str_buttons1");
-		$buttons2=$this->cfg->get('CFG_editor',"str_buttons2");
-		$buttons3=$this->cfg->get('CFG_editor',"str_buttons3");
-		$previewWidth=$this->cfg->get('CFG_editor',"int_preview_width");
+		$buttons1=$this->cfg->get('CFG_configurations',"str_buttons1");
+		$buttons2=$this->cfg->get('CFG_configurations',"str_buttons2");
+		$buttons3=$this->cfg->get('CFG_configurations',"str_buttons3");
+		$previewWidth=$this->cfg->get('CFG_configurations',"int_preview_width");
 		if (!$previewWidth) $previewWidth=450;
-		$previewHeight=$this->cfg->get('CFG_editor',"int_preview_height");
+		$previewHeight=$this->cfg->get('CFG_configurations',"int_preview_height");
 		if (!$previewHeight) $previewHeight=500;
 		if ($this->user->is_super_admin()) {
 			if (strpos($buttons1,"code")===FALSE) $buttons1.=",|,code";
 		}
-		$formats=$this->cfg->get('CFG_editor',"str_formats");
-		$styles=$this->cfg->get('CFG_editor',"str_styles");
+		$formats=$this->cfg->get('CFG_configurations',"str_formats");
+		$styles=$this->cfg->get('CFG_configurations',"str_styles");
 		$this->load->view('admin/header', array("title"=>$title,"url"=>$url,"jsVars"=>$this->js,"show_type"=>$type,"show_editor"=>$editor,"buttons1"=>$buttons1,"buttons2"=>$buttons2,"buttons3"=>$buttons3,'preview_width'=>$previewWidth,'preview_height'=>$previewHeight,"formats"=>$formats,"styles"=>$styles,"language"=>$this->language));
 	}
 

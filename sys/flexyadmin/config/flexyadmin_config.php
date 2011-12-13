@@ -158,7 +158,6 @@ $config['REL_table_split']						= "__";
 
 $config['CFG_configurations']					= "configurations";
 $config['CFG_users']									= "users";
-$config['CFG_editor']									= "editor";
 $config['CFG_media_info']							= "media_info";
 $config['CFG_img_info']								= "img_info";
 
@@ -274,16 +273,6 @@ $config["CFG_"]=array(
 			"str_order_by"=>'field_field',
 			"txt_help"=>''
 			),
-		"cfg_editor"=>array(
-			"order"=>'109',
-			"table"=>'cfg_editor',
-			"b_single_row"=>'1',
-			"str_ui_name"=>'',
-			"b_grid_add_many"=>'0',
-			"str_abstract_fields"=>'',
-			"str_order_by"=>'',
-			"txt_help"=>''
-			),
 		"cfg_rss"=>array(
 			"order"=>'110',
 			"table"=>'cfg_rss',
@@ -370,8 +359,8 @@ $config["CFG_"]=array(
 			"str_validation_rules"=>'',
 			"txt_help"=>''
 			),
-		"cfg_editor.str_class"=>array(
-			"field"=>'cfg_editor.class',
+		"cfg_configurations.str_class"=>array(
+			"field"=>'cfg_configurations.class',
 			"str_ui_name"=>'Editor size',
 			"b_show_in_grid"=>'1',
 			"b_show_in_form"=>'1',
@@ -380,8 +369,8 @@ $config["CFG_"]=array(
 			"str_validation_rules"=>'',
 			"txt_help"=>''
 			),
-		"cfg_editor.table"=>array(
-			"field"=>'cfg_editor.table',
+		"cfg_configurations.table"=>array(
+			"field"=>'cfg_configurations.table',
 			"str_ui_name"=>'Links Table',
 			"b_show_in_grid"=>'1',
 			"b_show_in_form"=>'1',
