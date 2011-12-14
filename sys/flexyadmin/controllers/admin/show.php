@@ -114,7 +114,7 @@ class Show extends AdminController {
 			// strace_($args);
 
 			if (!empty($table) and $this->db->table_exists($table)) {
-				$singleRow=$this->cfg->get('CFG_table',$table,"b_single_row");
+				$singleRow=( $this->cfg->get('CFG_table',$table,"int_max_rows") == 1);
 				if ($singleRow) {
 					$this->db->select("id");
 					$row=$this->db->get_row($table,1);
