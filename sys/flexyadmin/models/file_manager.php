@@ -481,7 +481,8 @@ function thumb($attr,$index=FALSE) {
 			$buttons.=div('seperator')._div().help(icon("select all"),lang('grid_select_all')).help(icon("delete"),lang('grid_delete'));
 		}
 		
-		$pagination=$this->cfg->get("CFG_media_info",$this->path,'int_pagination');
+		$pagination=$this->cfg->get("CFG_media_info",$this->path,'b_pagination');
+		if ($pagination) $pagination=$this->cfg->get('cfg_configurations','int_pagination');
 		$offset=0;
 
 		$grid=new grid();
