@@ -187,7 +187,14 @@ img {
 	}
 
 #menu li .cfg_table_info,
-#menu li .cfg_field_info,
+#menu li .cfg_field_info {
+	background-image: url("../icons/table_info.gif");
+	background-repeat: no-repeat;
+	background-position:0px 2px;
+	padding-left: 20px;
+}
+
+
 #menu li .cfg_rss {
 	background-image: url("../icons/rss.gif");
 	background-repeat: no-repeat;
