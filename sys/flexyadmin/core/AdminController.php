@@ -41,7 +41,7 @@ class AdminController extends BasicController {
 		$this->currentMenuItem="";
 		$this->content="";
 		$this->showEditor=false;
-		$this->load->model("ui_names","uiNames");
+		$this->load->model("ui");
 		$this->load->library("menu");
 		$this->load->dbforge();
 		$this->helpTexts=array();
@@ -113,7 +113,7 @@ class AdminController extends BasicController {
 		}
 		$oTables=array_merge($oTables,$tables);
 		foreach ($oTables as $name) {
-			$menuName=$this->uiNames->get($name);
+			$menuName=$this->ui->get($name);
 			$uri=api_uri('API_view_grid',$name);
 			// if ($type!='tbl') $menuName='_'.$menuName;
 			// if ($type=='res') $menuName='_'.$menuName;
@@ -121,7 +121,7 @@ class AdminController extends BasicController {
 				$subUri=api_uri('API_view_form',$name);
 				$sub=array($subUri=>array('uri'=>$subUri,'name'=>$menuName,'unique_uri'=>true));
 				$a[$uri]=array("uri"=>$uri,'unique_uri'=>true,'name'=>$menuName,"class"=>$type,'sub'=>$sub);
-				$tableHelp=$this->cfg->get("CFG_table",$name,"txt_help");
+				$tableHelp=$this->ui->get_help($name);
 				if (!empty($tableHelp)) $a[$uri]["help"]=$tableHelp;
 			}
 		}
@@ -233,14 +233,14 @@ class AdminController extends BasicController {
 						$query=$this->db->get($mediaInfoTbl);
 						foreach($query->result_array() as $mediaInfo) {
 							if (!isset($mediaInfo['path']) and isset($mediaInfo['str_path'])) $mediaInfo['path']=$mediaInfo['str_path'];
-							$menuName=$this->uiNames->get($mediaInfo['path']);
+							$menuName=$this->ui->get($mediaInfo['path']);
 							while (isset($a[$menuName])) {$menuName.=" ";}
 							$rightsName=el('path',$mediaInfo);
 							$uri=api_uri('API_filemanager',"show",pathencode(el('path',$mediaInfo)));
 							if (!empty($menuName) and $this->user->has_rights("media_".$rightsName)) {
 								$menu[$uri]=array("uri"=>$uri,'name'=>$menuName,"class"=>"media");
 							}
-							$mediaHelp=$this->cfg->get("CFG_media_info",$mediaInfo["path"],"txt_help");
+							$mediaHelp=$this->ui->get_help($mediaInfo["path"]);
 							if (!empty($mediaHelp)) {
 								$menu[$uri]["help"]=$mediaHelp;
 							}
@@ -279,7 +279,7 @@ class AdminController extends BasicController {
 	function _show_message() {
 		$message=$this->session->userdata("message");
 		if ($message!="") {
-			$message=$this->uiNames->replace_ui_names($message);
+			$message=$this->ui->replace_ui_names($message);
 			$this->load->view('admin/message', array("message"=>$message));
 		}
 		$this->session->unset_userdata("message");

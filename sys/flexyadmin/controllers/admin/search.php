@@ -58,7 +58,7 @@ class Search extends AdminController {
 								$this->db->where(PRIMARY_KEY,$id);
 								$abstract=$this->db->get_row($table);
 								$abstract=$abstract['abstract'];
-								$htmlTest.="<li>".$this->uiNames->get($table)." '$abstract'".' : <textarea>'.$txt.'</textarea> =&gt; <textarea>'.$new.'</textarea></li>';
+								$htmlTest.="<li>".$this->ui->get($table)." '$abstract'".' : <textarea>'.$txt.'</textarea> =&gt; <textarea>'.$new.'</textarea></li>';
 							}
 							if (!$test) {
 								$this->db->set($key,$new);	

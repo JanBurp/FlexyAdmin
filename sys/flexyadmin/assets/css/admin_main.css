@@ -164,6 +164,13 @@ img {
 	background-position:0px 2px;
 	padding-left: 20px;
 	}
+#menu li .cfg_ui {
+	background-image: url("../icons/comments.gif");
+	background-repeat: no-repeat;
+	background-position:0px 2px;
+	padding-left: 20px;
+}
+
 #menu li .cfg_configurations,
 #menu li .cfg_plugins {
 	background-image: url("../icons/config.gif");
