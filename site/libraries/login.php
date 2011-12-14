@@ -22,7 +22,7 @@ class Login extends Module {
 		parent::__construct();
 		$this->CI->load->library('user');
 		$this->CI->load->language('login');
-		if ($this->config['auto_uris']) $this->_find_uris();
+		if ($this->config('auto_uris')) $this->_find_uris();
 		
 		// redirect ion_auth to other email_templates
 		$this->CI->config->set_item('email_templates','login/'.$this->CI->site['language'].'/','ion_auth');
@@ -31,7 +31,7 @@ class Login extends Module {
 	
 	public function index($page) {
 		// If logged in, set class
-		if ($this->CI->user->logged_in()) $this->CI->add_class($this->config['class']);
+		if ($this->CI->user->logged_in()) $this->CI->add_class($this->config('class'));
 		// If Login is called also with other methods, don't go on with this call
 		$modules=$this->CI->site['modules'];
 		if (in_array('login.login',$modules) or in_array('login.logout',$modules) or in_array('login.register',$modules) or in_array('login.forgot_password',$modules) or in_array('login.reset_password',$modules)) {
@@ -71,13 +71,13 @@ class Login extends Module {
 			// Show login form and nothing else
 			$this->break_content();
 			$view=array('title'=>$title,'errors'=>$this->errors,'form'=> $this->form->render());
-			if ($this->config['forgotten_password_uri']) {
+			if ($this->config('forgotten_password_uri')) {
 				$view['forgotten_password']=lang('forgot_password');
-				$view['forgotten_password_uri']=$this->config['forgotten_password_uri'];
+				$view['forgotten_password_uri']=$this->config('forgotten_password_uri');
 			}
-			if ($this->config['register_uri']) {
+			if ($this->config('register_uri')) {
 				$view['register']=lang('register');
-				$view['register_uri']=$this->config['register_uri'];
+				$view['register_uri']=$this->config('register_uri');
 			}
 			$content=$this->CI->show('login/login',$view,true);
 			
@@ -114,7 +114,7 @@ class Login extends Module {
 			// reset password
 			$reset = $this->CI->user->forgotten_password_complete($code,lang('reset_password_mail_subject'));
 			if ($reset) {
-				$content=langp('reset_password_succes',$this->config['login_uri']);
+				$content=langp('reset_password_succes',$this->config('login_uri'));
 			}
 			else {
 				$content=lang('reset_password_error');
@@ -126,8 +126,8 @@ class Login extends Module {
 			if ($this->form->validation()) {
 				$data	= $this->form->get_data();
 				// Complete
-				if ($this->CI->user->forgotten_password($data['email'],$this->config['forgotten_password_uri'],lang('forgot_password_mail_subject')) ) {
-					$content = langp('forgot_password_completed',$this->config['login_uri']);
+				if ($this->CI->user->forgotten_password($data['email'],$this->config('forgotten_password_uri'),lang('forgot_password_mail_subject')) ) {
+					$content = langp('forgot_password_completed',$this->config('login_uri'));
 				}
 				// Error finding/sending mail
 				else {
@@ -158,7 +158,7 @@ class Login extends Module {
 		$activation=$this->CI->input->get('activation');
 		if ($id and $activation) {
 			if ($this->CI->user->activate($id,$activation)) {
-				$content=langp('register_succes',$this->config['login_uri']);
+				$content=langp('register_succes',$this->config('login_uri'));
 			}
 			else {
 				$content=langp('register_fail');
@@ -189,7 +189,7 @@ class Login extends Module {
 					}
 					else {
 						// d. Register
-						$this->CI->user->register($data['str_login_username'], $data['gpw_login_password'],	$data['email_login_email'],array('id_user_group'=>$this->config['group_id']),false, lang('register_mail_subject'));
+						$this->CI->user->register($data['str_login_username'], $data['gpw_login_password'],	$data['email_login_email'],array('id_user_group'=>$this->config('group_id')),false, lang('register_mail_subject'));
 						$errors = $this->CI->user->errors();
 						if ($errors!='') {
 							$content="<div class='error'>".$errors."</div>";
@@ -247,9 +247,9 @@ class Login extends Module {
 	}
 	
 	private function _find_uris() {
-		$this->config['login_uri']=$this->CI->find_module_uri('login.login');
-		$this->config['register_uri']=$this->CI->find_module_uri('login.register');
-		$this->config['forgotten_password_uri']=$this->CI->find_module_uri('login.forgot_password');
+		$this->config('login_uri')=$this->CI->find_module_uri('login.login');
+		$this->config('register_uri')=$this->CI->find_module_uri('login.register');
+		$this->config('forgotten_password_uri')=$this->CI->find_module_uri('login.forgot_password');
 	}
 	
 

@@ -14,7 +14,7 @@ class Plugin_export extends Plugin_ {
 		$this->add_content(h('Export',1));
 
 		// What are possible tables to export?
-		$tables=$this->config['tables'];
+		$tables=$this->config('tables');
 		if (empty($tables)) {
 			$tables=$this->CI->db->list_tables();
 		}
@@ -39,7 +39,7 @@ class Plugin_export extends Plugin_ {
 		// No args, show the form:
 		$tableOptions=array();
 		foreach ($tables as $key=>$table) {
-			if ($this->config['use_ui_names'])
+			if ($this->config('use_ui_names'))
 				$tableOptions[$table]=$this->CI->ui->get($table);
 			else
 				$tableOptions[$table]=$table;
@@ -77,18 +77,18 @@ class Plugin_export extends Plugin_ {
 
 	private function export($table,$type='csv') {
 		
-		if ($this->config['add_foreigns']) {
-			$this->CI->db->add_foreigns( $this->config['add_foreigns'] );	
-			if ($this->config['add_foreigns_as_abstracts']) $this->CI->db->add_foreigns_as_abstracts( $this->config['add_foreigns'] );
+		if ($this->config('add_foreigns')) {
+			$this->CI->db->add_foreigns( $this->config('add_foreigns') );	
+			if ($this->config('add_foreigns_as_abstracts')) $this->CI->db->add_foreigns_as_abstracts( $this->config('add_foreigns') );
 		}
-		if ($this->config['add_many']) {
-			$this->CI->db->add_many( $this->config['add_many'] );	
+		if ($this->config('add_many')) {
+			$this->CI->db->add_many( $this->config('add_many') );	
 		}
 		
 		$data=$this->CI->db->get_result($table);
 
 		// Keep only the abstract data
-		if ($this->config['add_foreigns_as_abstracts']) {
+		if ($this->config('add_foreigns_as_abstracts')) {
 			foreach ($data as $id => $row) {
 				foreach ($row as $field => $value) {
 					if (get_postfix($field,'__')=='abstract') {
@@ -101,11 +101,11 @@ class Plugin_export extends Plugin_ {
 		}
 
 		// Many data
-		if ($this->config['add_many']) {
+		if ($this->config('add_many')) {
 			foreach ($data as $id => $row) {
 				foreach ($row as $field => $value) {
 					if (is_array($value)) {
-						if ($this->config['add_foreigns_as_abstracts']) {
+						if ($this->config('add_foreigns_as_abstracts')) {
 							$val='';
 							foreach ($value as $k => $v) {
 								$val=add_string($val,$v['abstract'],'|');
@@ -124,7 +124,7 @@ class Plugin_export extends Plugin_ {
 
 
 		// Nice names of fields and tables
-		if ($this->config['use_ui_names']) {
+		if ($this->config('use_ui_names')) {
 			$ui_data=array();
 			foreach ($data as $id => $row) {
 				foreach ($row as $field => $value) {
@@ -162,7 +162,7 @@ class Plugin_export extends Plugin_ {
 		if (!empty($out)) {
 			$this->CI->load->helper('download');
 			$filename=$table;
-			if ($this->config['use_ui_names']) $filename=$this->CI->ui->get($filename);
+			if ($this->config('use_ui_names')) $filename=$this->CI->ui->get($filename);
 			force_download($filename.'.'.$type, $out);	
 			return $out;
 		}
