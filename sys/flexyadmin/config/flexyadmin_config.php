@@ -176,11 +176,8 @@ $config['FILE_types_xls']							= array('xls','xlsx','ods');
 
 $config['CFG_table']									= "table_info";
 $config['CFG_table_name']							= "table";
-$config['CFG_table_ui_name']					= "str_ui_name";
-
 $config['CFG_field']									= "field_info";
 $config['CFG_field_name']							= "field_field";
-$config['CFG_field_ui_name']					= "str_ui_name";
 
 
 /*
@@ -192,173 +189,219 @@ $config['CFG_field_ui_name']					= "str_ui_name";
 
 
 $config["CFG_"]=array(
-	"cfg_table_info" => array(
+	"cfg_ui" => array(
+		"cfg_ui"=>array(
+			"table"=>'cfg_ui',
+			"txt_help_nl"=>'<p>Maak hier teksten en help voor de backend userinterface.</p>',
+			"txt_help_en"=>'<p>Create texts and help for the backend userinterface.</p>'
+			),
 		"cfg_configurations"=>array(
-			"order"=>'100',
 			"table"=>'cfg_configurations',
-			"b_single_row"=>'1',
-			"str_ui_name"=>'',
+			"txt_help_nl"=>'<p>Globale instellingen</p>',
+			"txt_help_en"=>'<p>Common settings</p>'
+			),
+		"cfg_auto_menu"=>array(
+			"table"=>'cfg_auto_menu',
+			"txt_help_nl"=>'<p>Instellingen voor een samengesteld menu. Heeft res_menu_result nodig.</p>',
+			"txt_help_en"=>'<p>Settings for creating an automatic menu. Needs a res_menu_result table.</p>'
+			),
+		"cfg_admin_menu"=>array(
+			"table"=>'cfg_admin_menu',
+			"txt_help_nl"=>'<p>Pas het admin menu hier aan.</p>',
+			"txt_help_en"=>'<p>Change your admin menu here.</p>'
+			),
+		"cfg_media_info"=>array(
+			"table"=>'cfg_media_info',
+			"txt_help_nl"=>'<p>Instellingen voor bestandsmappen.</p>',
+			"txt_help_en"=>'<p>Settings for Files.</p>'
+			),
+		"cfg_img_info"=>array(
+			"table"=>'cfg_img_info',
+			"txt_help_nl"=>'<p>Instellingen voor resizen van afbeeldingen na uploaden.</p>',
+			"txt_help_en"=>'<p>Settings for image resizing after uploading.</p>'
+			),
+		"cfg_table_info"=>array(
+			"table"=>'cfg_table_info',
+			"txt_help_nl"=>'<p>Instellingen voor tabellen.</p>',
+			"txt_help_en"=>'<p>Settings for tables.</p>'
+			),
+		"cfg_field_info"=>array(
+			"table"=>'cfg_field_info',
+			"txt_help_nl"=>'<p>Instellingen voor velden.</p>',
+			"txt_help_en"=>'<p>Settings for fields.</p>'
+			),
+		"cfg_rss"=>array(
+			"table"=>'cfg_rss',
+			"txt_help_nl"=>'<p>Instellingen voor RSS feeds.</p>',
+			"txt_help_en"=>'<p>Settings for RSS feeds.</p>',
+			),
+		"cfg_user_groups"=>array(
+			"table"=>'cfg_user_groups',
+			"txt_help_nl"=>'<p>Maak hier usergroups aan voor gebruik bij Users.</p>',
+			"txt_help_en"=>'<p>Create groups of rights here. For use in Users.</p>'
+			),
+
+		"cfg_configurations.str_class"=>array(
+			"field"=>'cfg_configurations.class',
+			"str_title_nl"=>'Omvang van de editor',
+			"str_title_en"=>'Editor size'
+			),
+		"cfg_configurations.table"=>array(
+			"field"=>'cfg_configurations.table',
+			"str_title_nl"=>'Links Tabel',
+			"str_title_en"=>'Links Table'
+			),
+		"cfg_field_info.str_validation_parameters"=>array(
+			"field"=>'cfg_field_info.str_validation_parameters',
+			"str_title_nl"=>'Val. Parameters',
+			"str_title_en"=>'Val. Parameters'
+			)
+			
+	),
+	
+	"cfg_table_info" => array(
+		"cfg_ui"=>array(
+			"order"=>'100',
+			"table"=>'cfg_ui',
+			"b_single_row"=>'0',
 			"b_grid_add_many"=>'0',
 			"str_abstract_fields"=>'',
 			"str_order_by"=>'',
-			"txt_help"=>'<p>Common settings</p>'
+			),
+		"cfg_configurations"=>array(
+			"order"=>'101',
+			"table"=>'cfg_configurations',
+			"b_single_row"=>'1',
+			"b_grid_add_many"=>'0',
+			"str_abstract_fields"=>'',
+			"str_order_by"=>'',
 			),
 		"cfg_auto_menu"=>array(
-			"order"=>'101',
+			"order"=>'102',
 			"table"=>'cfg_auto_menu',
 			"b_single_row"=>'0',
-			"str_ui_name"=>'',
 			"b_grid_add_many"=>'0',
 			"str_abstract_fields"=>'str_description',
 			"str_order_by"=>'',
-			"txt_help"=>'<p>Settings for creating an automatic menu. Needs a res_menu_result table.</p>'
 			),
 		"cfg_admin_menu"=>array(
-			"order"=>'102',
+			"order"=>'103',
 			"table"=>'cfg_admin_menu',
 			"b_single_row"=>'0',
-			"str_ui_name"=>'',
 			"b_grid_add_many"=>'0',
 			"str_abstract_fields"=>'',
 			"str_order_by"=>'',
-			"txt_help"=>'<p>Change your admin menu here.</p>'
 			),
 		"cfg_media_info"=>array(
-			"order"=>'103',
+			"order"=>'104',
 			"table"=>'cfg_media_info',
 			"b_single_row"=>'0',
-			"str_ui_name"=>'',
 			"b_grid_add_many"=>'0',
 			"str_abstract_fields"=>'',
 			"str_order_by"=>'',
-			"txt_help"=>'<p>Settings for Files.</p>'
 			),
 		"cfg_media_files"=>array(
-			"order"=>'104',
+			"order"=>'105',
 			"table"=>'cfg_media_files',
 			"b_single_row"=>'0',
-			"str_ui_name"=>'',
 			"b_grid_add_many"=>'0',
 			"str_abstract_fields"=>'',
 			"str_order_by"=>'',
-			"txt_help"=>''
 			),
 		"cfg_img_info"=>array(
-			"order"=>'105',
+			"order"=>'106',
 			"table"=>'cfg_img_info',
 			"b_single_row"=>'0',
-			"str_ui_name"=>'',
 			"b_grid_add_many"=>'0',
 			"str_abstract_fields"=>'',
 			"str_order_by"=>'',
-			"txt_help"=>'<p>Settings for image resizing after uploading.</p>'
 			),
 		"cfg_table_info"=>array(
 			"order"=>'107',
 			"table"=>'cfg_table_info',
 			"b_single_row"=>'0',
-			"str_ui_name"=>'',
 			"b_grid_add_many"=>'0',
 			"str_abstract_fields"=>'',
 			"str_order_by"=>'',
-			"txt_help"=>''
 			),
 		"cfg_field_info"=>array(
 			"order"=>'108',
 			"table"=>'cfg_field_info',
 			"b_single_row"=>'0',
-			"str_ui_name"=>'',
 			"b_grid_add_many"=>'0',
 			"str_abstract_fields"=>'',
 			"str_order_by"=>'field_field',
-			"txt_help"=>''
 			),
 		"cfg_rss"=>array(
 			"order"=>'110',
 			"table"=>'cfg_rss',
 			"b_single_row"=>'0',
-			"str_ui_name"=>'',
 			"b_grid_add_many"=>'0',
 			"str_abstract_fields"=>'',
 			"str_order_by"=>'id',
-			"txt_help"=>''
 			),
 		"cfg_plugins"=>array(
 			"order"=>'115',
 			"table"=>'cfg_plugins',
 			"b_single_row"=>'',
-			"str_ui_name"=>'',
 			"b_grid_add_many"=>'0',
 			"str_abstract_fields"=>'',
 			"str_order_by"=>'',
-			"txt_help"=>''
 			),
 		"cfg_users"=>array(
 			"order"=>'120',
 			"table"=>'cfg_users',
 			"b_single_row"=>'0',
-			"str_ui_name"=>'',
 			"b_grid_add_many"=>'1',
 			"str_abstract_fields"=>'str_username',
 			"str_order_by"=>'id',
-			"txt_help"=>''
 			),
 		"cfg_user_groups"=>array(
 			"order"=>'121',
 			"table"=>'cfg_groups',
 			"b_single_row"=>'0',
-			"str_ui_name"=>'',
 			"b_grid_add_many"=>'0',
 			"str_abstract_fields"=>'str_description',
 			"str_order_by"=>'id',
 			"b_add_empty_choice"=>'1',
-			"txt_help"=>'<p>Create groups of rights here. For use in Users.</p>'
 			),
 		"log_login"=>array(
 			"order"=>'130',
 			"table"=>'log_login',
 			"b_single_row"=>'0',
-			"str_ui_name"=>'',
 			'int_pagination'=>25,
 			"b_grid_add_many"=>'0',
 			"str_abstract_fields"=>'',
 			"str_order_by"=>'',
-			"txt_help"=>''
 			),
 		"log_stats"=>array(
 			"order"=>'131',
 			"table"=>'log_stats',
 			"b_single_row"=>'0',
-			"str_ui_name"=>'',
 			'int_pagination'=>25,
 			"b_grid_add_many"=>'0',
 			"str_abstract_fields"=>'',
 			"str_order_by"=>'',
-			"txt_help"=>''
 			)
 		
 	),
 	"cfg_field_info" => array(
 		"cfg_admin_menu.str_type"=>array(
 			"field"=>'cfg_admin_menu.str_type',
-			"str_ui_name"=>'',
-			"b_show_in_grid"=>'1',
+ 			"b_show_in_grid"=>'1',
 			"b_show_in_form"=>'1',
 			"str_options"=>'api|tools|table|all_tbl_tables|all_cfg_tables|all_res_tables|media|all_media|seperator',
 			"b_multi_options"=>'0',
-			"str_validation_rules"=>'',
-			"txt_help"=>''
-			),
+			"str_validation_rules"=>''
+ 			),
 		"cfg_auto_menu.str_type"=>array(
 			"field"=>'cfg_auto_menu.str_type',
-			"str_ui_name"=>'',
-			"b_show_in_grid"=>'1',
+ 			"b_show_in_grid"=>'1',
 			"b_show_in_form"=>'1',
 			"str_options"=>'menu item|from menu table|from submenu table|from category table|from table group by category|split by language|by module',
 			"b_multi_options"=>'0',
-			"str_validation_rules"=>'',
-			"txt_help"=>''
-			),
+			"str_validation_rules"=>''
+ 			),
 		"cfg_configurations.str_class"=>array(
 			"field"=>'cfg_configurations.class',
 			"str_ui_name"=>'Editor size',
@@ -366,9 +409,8 @@ $config["CFG_"]=array(
 			"b_show_in_form"=>'1',
 			"str_options"=>'normal|high|wide|big',
 			"b_multi_options"=>'0',
-			"str_validation_rules"=>'',
-			"txt_help"=>''
-			),
+			"str_validation_rules"=>''
+ 			),
 		"cfg_configurations.table"=>array(
 			"field"=>'cfg_configurations.table',
 			"str_ui_name"=>'Links Table',
@@ -376,29 +418,24 @@ $config["CFG_"]=array(
 			"b_show_in_form"=>'1',
 			"str_options"=>'',
 			"b_multi_options"=>'0',
-			"str_validation_rules"=>'',
-			"txt_help"=>''
-			),
+			"str_validation_rules"=>''
+ 			),
 		"cfg_field_info.field_field"=>array(
 			"field"=>'cfg_field_info.field_field',
-			"str_ui_name"=>'',
-			"b_show_in_grid"=>'1',
+ 			"b_show_in_grid"=>'1',
 			"b_show_in_form"=>'1',
 			"str_options"=>'',
 			"b_multi_options"=>'1',
 			"str_validation_rules"=>'required',
-			"txt_help"=>''
-			),
+ 			),
 		"cfg_field_info.str_validation_rules"=>array(
 			"field"=>'cfg_field_info.str_validation_rules',
-			"str_ui_name"=>'',
-			"b_show_in_grid"=>'1',
+ 			"b_show_in_grid"=>'1',
 			"b_show_in_form"=>'1',
 			"str_options"=>'|required|matches|min_length[]|max_length[]|exact_length[]|greater_than[]|less_than[]|alpha|alpha_numeric|alpha_dash|numeric|integer|decimal|is_natural|is_natural_no_zero|valid_email|valid_emails|valid_ip|valid_base64|callback_valid_rgb|prep_url',
 			"b_multi_options"=>'1',
-			"str_validation_rules"=>'',
-			"txt_help"=>''
-			),
+			"str_validation_rules"=>''
+ 			),
 		"cfg_field_info.str_validation_parameters"=>array(
 			"field"=>'cfg_field_info.str_validation_parameters',
 			"str_ui_name"=>'Val. Parameters',
@@ -406,89 +443,72 @@ $config["CFG_"]=array(
 			"b_show_in_form"=>'1',
 			"str_options"=>'',
 			"b_multi_options"=>'1',
-			"str_validation_rules"=>'',
-			"txt_help"=>''
-			),
+			"str_validation_rules"=>''
+ 			),
 		"cfg_table_info.table"=>array(
 			"field"=>'cfg_table_info.table',
-			"str_ui_name"=>'',
-			"b_show_in_grid"=>'1',
+ 			"b_show_in_grid"=>'1',
 			"b_show_in_form"=>'1',
 			"str_options"=>'',
 			"b_multi_options"=>'0',
 			"str_validation_rules"=>'required',
-			"txt_help"=>''
-			),
+ 			),
 		"cfg_table_info.str_form_many_type"=>array(
 			"field"=>'cfg_table_info.str_form_many_type',
-			"str_ui_name"=>'',
-			"b_show_in_grid"=>'1',
+ 			"b_show_in_grid"=>'1',
 			"b_show_in_form"=>'1',
 			"str_options"=>'dropdown|ordered_list', //'|subfields',
 			"b_multi_options"=>'0',
-			"str_validation_rules"=>'',
-			"txt_help"=>''
-			),
+			"str_validation_rules"=>''
+ 			),
 		"cfg_table_info.str_form_many_order"=>array(
 			"field"=>'cfg_table_info.str_form_many_order',
-			"str_ui_name"=>'',
-			"b_show_in_grid"=>'1',
+ 			"b_show_in_grid"=>'1',
 			"b_show_in_form"=>'1',
 			"str_options"=>'first|last',
 			"b_multi_options"=>'0',
-			"str_validation_rules"=>'',
-			"txt_help"=>''
-			),
+			"str_validation_rules"=>''
+ 			),
 		"cfg_media_info.str_order"=>array(
 			"field"=>'cfg_media_info.str_order',
-			"str_ui_name"=>'',
-			"b_show_in_grid"=>'1',
+ 			"b_show_in_grid"=>'1',
 			"b_show_in_form"=>'1',
 			"str_options"=>'name|_name|rawdate|_rawdate|type|_type|size|_size|width|_width|height|_height',
 			"b_multi_options"=>'0',
-			"str_validation_rules"=>'',
-			"txt_help"=>''
-			),
+			"str_validation_rules"=>''
+ 			),
 		"cfg_media_info.path"=>array(
 			"field"=>'cfg_media_info.path',
-			"str_ui_name"=>'',
-			"b_show_in_grid"=>'1',
+ 			"b_show_in_grid"=>'1',
 			"b_show_in_form"=>'1',
 			"str_options"=>'',
 			"b_multi_options"=>'0',
 			"str_validation_rules"=>'required',
-			"txt_help"=>''
-			),
+ 			),
 		"cfg_media_info.str_types"=>array(
 			"field"=>'cfg_media_info.str_types',
-			"str_ui_name"=>'',
-			"b_show_in_grid"=>'1',
+ 			"b_show_in_grid"=>'1',
 			"b_show_in_form"=>'1',
 			"str_options"=>'',
 			"b_multi_options"=>'0',
 			"str_validation_rules"=>'required',
-			"txt_help"=>''
-			),
+ 			),
 		"cfg_media_info.str_autofill"=>array(
 			"field"=>'cfg_media_info.str_autofill',
-			"str_ui_name"=>'',
-			"b_show_in_grid"=>'1',
+ 			"b_show_in_grid"=>'1',
 			"b_show_in_form"=>'1',
 			"str_options"=>'|single upload|bulk upload|both',
 			"b_multi_options"=>'0',
-			"str_validation_rules"=>'',
-			"txt_help"=>''
-			),
+			"str_validation_rules"=>''
+ 			),
 		"cfg_img_info.path"=>array(
 			"field"=>'cfg_img_info.path',
-			"str_ui_name"=>'',
-			"b_show_in_grid"=>'1',
+ 			"b_show_in_grid"=>'1',
 			"b_show_in_form"=>'1',
 			"str_options"=>'',
 			"b_multi_options"=>'0',
 			"str_validation_rules"=>'required',
-			"txt_help"=>''
-			),
+ 			),
 		"cfg_user_groups.rights"=>array(
 			"field"=>'cfg_groups.rights',
 			"str_ui_name"=>'Rights for',
@@ -496,9 +516,8 @@ $config["CFG_"]=array(
 			"b_show_in_form"=>'1',
 			"str_options"=>'',
 			"b_multi_options"=>'0',
-			"str_validation_rules"=>'',
-			"txt_help"=>''
-			),
+			"str_validation_rules"=>''
+ 			),
 		"cfg_users.id_group"=>array(
 			"field"=>'cfg_users.id_group',
 			"str_ui_name"=>'Group',
@@ -506,9 +525,8 @@ $config["CFG_"]=array(
 			"b_show_in_form"=>'1',
 			"str_options"=>'',
 			"b_multi_options"=>'0',
-			"str_validation_rules"=>'',
-			"txt_help"=>''
-			),
+			"str_validation_rules"=>''
+ 			),
 		"cfg_users.ip_address"=>array(
 			"field"=>'cfg_users.ip_address',
 			"str_ui_name"=>'IP Address',
@@ -516,89 +534,72 @@ $config["CFG_"]=array(
 			"b_show_in_form"=>'1',
 			"str_options"=>'',
 			"b_multi_options"=>'0',
-			"str_validation_rules"=>'',
-			"txt_help"=>''
-			),
+			"str_validation_rules"=>''
+ 			),
 		"cfg_users.str_salt"=>array(
 			"field"=>'cfg_users.str_salt',
-			"str_ui_name"=>'',
-			"b_show_in_grid"=>'0',
+ 			"b_show_in_grid"=>'0',
 			"b_show_in_form"=>'0',
 			"str_options"=>'',
 			"b_multi_options"=>'0',
-			"str_validation_rules"=>'',
-			"txt_help"=>''
-			),
+			"str_validation_rules"=>''
+ 			),
 		"cfg_users.str_activation_code"=>array(
 			"field"=>'str_activation_code',
-			"str_ui_name"=>'',
-			"b_show_in_grid"=>'0',
+ 			"b_show_in_grid"=>'0',
 			"b_show_in_form"=>'0',
 			"str_options"=>'',
 			"b_multi_options"=>'0',
-			"str_validation_rules"=>'',
-			"txt_help"=>''
-			),
+			"str_validation_rules"=>''
+ 			),
 		"cfg_users.str_forgotten_password_code"=>array(
 			"field"=>'str_forgotten_password_code',
-			"str_ui_name"=>'',
-			"b_show_in_grid"=>'0',
+ 			"b_show_in_grid"=>'0',
 			"b_show_in_form"=>'0',
 			"str_options"=>'',
 			"b_multi_options"=>'0',
-			"str_validation_rules"=>'',
-			"txt_help"=>''
-			),
+			"str_validation_rules"=>''
+ 			),
 		"cfg_users.str_remember_code"=>array(
 			"field"=>'str_remember_code',
-			"str_ui_name"=>'',
-			"b_show_in_grid"=>'0',
+ 			"b_show_in_grid"=>'0',
 			"b_show_in_form"=>'0',
 			"str_options"=>'',
 			"b_multi_options"=>'0',
-			"str_validation_rules"=>'',
-			"txt_help"=>''
-			),
+			"str_validation_rules"=>''
+ 			),
 		"cfg_users.created_on"=>array(
 			"field"=>'created_on',
-			"str_ui_name"=>'',
-			"b_show_in_grid"=>'0',
+ 			"b_show_in_grid"=>'0',
 			"b_show_in_form"=>'0',
 			"str_options"=>'',
 			"b_multi_options"=>'0',
-			"str_validation_rules"=>'',
-			"txt_help"=>''
-			),
+			"str_validation_rules"=>''
+ 			),
 		"cfg_users.last_login"=>array(
 			"field"=>'last_login',
-			"str_ui_name"=>'',
-			"b_show_in_grid"=>'0',
+ 			"b_show_in_grid"=>'0',
 			"b_show_in_form"=>'0',
 			"str_options"=>'',
 			"b_multi_options"=>'0',
-			"str_validation_rules"=>'',
-			"txt_help"=>''
-			),
+			"str_validation_rules"=>''
+ 			),
 		"cfg_users.str_filemanager_view"=>array(
 			"field"=>'cfg_users.str_filemanager_view',
-			"str_ui_name"=>'',
-			"b_show_in_grid"=>'1',
+ 			"b_show_in_grid"=>'1',
 			"b_show_in_form"=>'1',
 			"str_options"=>'icons|list|detailed',
 			"b_multi_options"=>'0',
-			"str_validation_rules"=>'',
-			"txt_help"=>''
-			),
+			"str_validation_rules"=>''
+ 			),
 		"cfg_users.str_language"=>array(
 			"field"=>'cfg_users.str_language',
-			"str_ui_name"=>'',
-			"b_show_in_grid"=>'1',
+ 			"b_show_in_grid"=>'1',
 			"b_show_in_form"=>'1',
 			"str_options"=>'nl|en',
 			"b_multi_options"=>'0',
-			"str_validation_rules"=>'',
-			"txt_help"=>''
-			)
+			"str_validation_rules"=>''
+ 			)
 	)
 );
 

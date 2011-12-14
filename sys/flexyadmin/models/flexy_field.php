@@ -332,7 +332,7 @@ class Flexy_field extends CI_Model {
 		$out["table"]			= $this->table;
 		$out["name"]			= $this->field;
 		$out["value"]			= $this->data;
-		$out["label"]			= $this->uiNames->get($this->field);
+		$out["label"]			= $this->ui->get($this->field);
 		$out["type"]			= $this->type;
 		
 		/**

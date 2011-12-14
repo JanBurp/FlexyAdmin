@@ -139,7 +139,7 @@ class Filemanager extends AdminController {
 				 * get files and info
 				 */
 				$types=$cfg['str_types'];
-				$uiName=$cfg['str_ui_name'];
+				$uiName=$this->ui->get($path);
 				
 				$files=read_map($map);
 				
@@ -191,7 +191,7 @@ class Filemanager extends AdminController {
 				if ($right<RIGHTS_DELETE)	$fileManager->show_delete_buttons(FALSE);
 				$fileManager->set_files($files);
 				if (!empty($idFile)) $fileManager->set_current($idFile);
-				$Help=$this->cfg->get("CFG_media_info",$path,"txt_help");
+				$Help=$this->ui->get_help($path);
 				if (!empty($Help)) {
 					$uiName=help($uiName,$Help);
 				}

@@ -143,9 +143,10 @@ class Show extends AdminController {
 							$where=$extraInfo['str_table_where'];
 							if (!empty($where)) {
 								$this->db->where($where,NULL,FALSE);
-								$uiTable=$extraInfo['str_ui_name'];
 							}
 						}
+						$uiTable=$this->ui->get($table);
+
 						// get information (from db) needed later...
 						$hasField=array();
 						$hasField['self_parent']=$this->db->has_field($table,"self_parent");
@@ -248,8 +249,8 @@ class Show extends AdminController {
 							}
 							$data=$this->ff->render_grid($table,$data,$right,$info);
 
-							if (empty($uiTable)) $uiTable=$this->uiNames->get($table);
-							$tableHelp=$this->cfg->get("CFG_table",$table,"txt_help");
+							if (empty($uiTable)) $uiTable=$this->ui->get($table);
+							$tableHelp=$this->ui->get_help($table);
 							if (!empty($tableHelp)) {
 								$uiShowTable=help($uiTable." ",$tableHelp);
 							}
@@ -272,7 +273,7 @@ class Show extends AdminController {
 								else
 									$grid->prepend_to_captions('&nbsp;');
 							}
-							$grid->set_headings($this->uiNames->get($keys,$table));
+							$grid->set_headings($this->ui->get($keys,$table));
 							if ($right>=RIGHTS_DELETE)
 								$grid->set_heading(PRIMARY_KEY,help(icon("select all"),lang('grid_select_all')).help(icon("delete"),lang('grid_delete'), array("class"=>"delete") ) );
 							else
@@ -372,11 +373,8 @@ class Show extends AdminController {
 				if (!empty($info)) $actionUri.='/info/'.$info;
 				$form=new form($actionUri);
 
-				if (!empty($info))
-					$uiTable=$this->cfg->get('cfg_admin_menu',$info,'str_ui_name');
-				else
-					$uiTable=$this->uiNames->get($table);
-				$tableHelp=$this->cfg->get("CFG_table",$table,"txt_help");
+				$uiTable=$this->ui->get($table);
+				$tableHelp=$this->ui->get_help($table);
 				if (!empty($tableHelp)) {
 					$uiShowTable=help($uiTable,$tableHelp);
 				}
@@ -436,11 +434,11 @@ class Show extends AdminController {
 					$keys=array_combine($keys,$keys);
 					$uiFieldNames=array();
 					foreach($keys as $key) {
-						$fieldHelp=$this->cfg->get("CFG_field",$table.".".$key,"txt_help");
+						$fieldHelp=$this->ui->get_help($table.".".$key);
 						if (!empty($fieldHelp))
-							$uiFieldNames[$key]=help($this->uiNames->get($key,$table),$fieldHelp);
+							$uiFieldNames[$key]=help($this->ui->get($key,$table),$fieldHelp);
 						else
-							$uiFieldNames[$key]=$this->uiNames->get($key,$table);
+							$uiFieldNames[$key]=$this->ui->get($key,$table);
 					}
 					$form->set_labels($uiFieldNames);
 					
@@ -507,6 +505,8 @@ class Show extends AdminController {
 			$this->load->model('queu');
 			
 			$newData=$form->get_data();
+			if (empty($newData['gpw_password'])) unset($newData['gpw_password']);
+			
 			$newData=$this->_after_update($userTable,'',$newData);
 			$resultId=$this->crud->table($userTable)->update(array('where'=>array(PRIMARY_KEY=>$userId), 'data'=>$newData));
 			
