@@ -21,11 +21,11 @@ class Comments extends Module {
 		$this->CI->lang->load('comments');
 		$this->CI->load->library('form');
 		$this->CI->load->library('spam');
-		$this->foreign_table=foreign_table_from_key( $this->config['key_id'] );
+		$this->foreign_table=foreign_table_from_key( $this->config('key_id') );
 	}
 
 	public function index($page) {
-		if ( $this->CI->db->table_exists($this->config['table'])) {
+		if ( $this->CI->db->table_exists($this->config('table'))) {
 			// Get id for current item where comments belong to
 			$id=$page['id'];
 			if (isset($page['int_id']) and isset($page['str_table']) and $page['str_table']==$this->foreign_table) {
@@ -41,10 +41,10 @@ class Comments extends Module {
 			$formData=$this->_setform_fields();
 			// Set id
 			$suffix='__'.$id;
-			$formData[$this->config['key_id']]=array('type'=>'hidden','value'=>$id);
-			$formData[$this->config['key_id'].$suffix]=$formData[$this->config['key_id']];
-			unset($formData[$this->config['key_id']]);
-			$formData[$this->config['field_date']]['class']='hidden';
+			$formData[$this->config('key_id')]=array('type'=>'hidden','value'=>$id);
+			$formData[$this->config('key_id').$suffix]=$formData[$this->config('key_id')];
+			unset($formData[$this->config('key_id')]);
+			$formData[$this->config('field_date')]['class']='hidden';
 			// extra textarea to fake spammers
 			$formData['spambody']=array('label'=>'','type'=>'textarea','value'=>'', 'class'=>'hidden');  
 			unset($formData['int_spamscore']);
@@ -56,21 +56,21 @@ class Comments extends Module {
 	
 			// Validate form, if succes, add comment
 
-			$belongs_to_this=($id== $this->CI->input->post($this->config['key_id'].$suffix) );
+			$belongs_to_this=($id== $this->CI->input->post($this->config('key_id').$suffix) );
 
 			if ($form->validation() and $belongs_to_this) {
 				$data=$form->get_data();
-				$data[$this->config['key_id']]=$data[$this->config['key_id'].$suffix];
-				unset($data[$this->config['key_id'].$suffix]);
+				$data[$this->config('key_id')]=$data[$this->config('key_id').$suffix];
+				unset($data[$this->config('key_id').$suffix]);
 			
-				$data[$this->config['field_date']]=date(DATE_ISO8601);
+				$data[$this->config('field_date')]=date(DATE_ISO8601);
 
 				// Check for spam
 				$spam=FALSE;
 				// Check if a robot has filled the empty textarea 'body' (which is hidden)
 				if (!$spam and $this->_check_if_robot($data)) $spam=TRUE;
 				// Check if the message is double
-				if (!$spam and $this->_check_if_double($data,$this->config['table']))	$spam=TRUE;
+				if (!$spam and $this->_check_if_double($data,$this->config('table')))	$spam=TRUE;
 				// Check the text with FlexyAdmins spam checker
 				if (!$spam and $this->_check_if_spamtext($data))	$spam=TRUE;
 
@@ -80,29 +80,29 @@ class Comments extends Module {
 				else {
 					// Place comment in databas
 					foreach ($data as $field => $value) {$this->CI->db->set($field,$value);}
-					$this->CI->db->insert($this->config['table']);
+					$this->CI->db->insert($this->config('table'));
 					// Clean form
 					$form->set_data($formData,langp('comments_'.'title'));
 
 					// send email that a comment has been placed to the sites owner
-					if ($this->config['mail_owner'] or $this->config['mail_others']) $this->CI->load->library('email');
+					if ($this->config('mail_owner') or $this->config('mail_others')) $this->CI->load->library('email');
 
-					if ($this->config['mail_owner']) {
+					if ($this->config('mail_owner')) {
 						$this->CI->email->to( $this->CI->site['email_email'] );
 						$this->CI->email->from( $this->CI->site['email_email'] );
 						$this->CI->email->subject( langp('comments_'.'mail_to_owner_subject',$this->CI->site['url_url']) );
-						$this->CI->email->message( langp('comments_'.'mail_to_owner_body', site_url().$this->CI->uri->get())."\n\n".$data[$this->config['field_text']] );
+						$this->CI->email->message( langp('comments_'.'mail_to_owner_body', site_url().$this->CI->uri->get())."\n\n".$data[$this->config('field_text')] );
 						if ( ! $this->CI->email->send() )	$errorHtml.=$this->CI->email->print_debugger();
 						$this->CI->email->clear();
 					}
-					if ($this->config['mail_others']) {
+					if ($this->config('mail_others')) {
 						$subject=langp('comments_'.'mail_to_others_subject',$this->CI->site['url_url']);
-						$body=langp('comments_'.'mail_to_others_body', site_url().$this->CI->uri->get())."\n\n".$data[$this->config['field_text']];
-						$this->CI->db->select( $this->config['field_email'] );
-						$this->CI->db->where( $this->config['key_id'], $id );
-						$emails=$this->CI->db->get_results( $this->config['table'] );
+						$body=langp('comments_'.'mail_to_others_body', site_url().$this->CI->uri->get())."\n\n".$data[$this->config('field_text')];
+						$this->CI->db->select( $this->config('field_email') );
+						$this->CI->db->where( $this->config('key_id'), $id );
+						$emails=$this->CI->db->get_results( $this->config('table') );
 						foreach ($emails as $key => $value) {
-							$this->CI->email->to( $value[$this->config['field_email']] );
+							$this->CI->email->to( $value[$this->config('field_email')] );
 							$this->CI->email->from( $this->CI->site['email_email'] );
 							$this->CI->email->subject( $subject );
 							$this->CI->email->message( $body );
@@ -127,11 +127,11 @@ class Comments extends Module {
 			$formHtml=$form->render();
 	
 			// Get comments
-			$this->CI->db->where($this->config['key_id'],$id);
-			$comments=$this->CI->db->get_results($this->config['table']);
+			$this->CI->db->where($this->config('key_id'),$id);
+			$comments=$this->CI->db->get_results($this->config('table'));
 			// make nice date format
 			foreach ($comments as $id => $comment) {
-				$comments[$id]['niceDate']=strftime('%a %e %b %Y %R',mysql_to_unix($comment[$this->config['field_date']]));
+				$comments[$id]['niceDate']=strftime('%a %e %b %Y %R',mysql_to_unix($comment[$this->config('field_date')]));
 			}
 
 			// Show all
@@ -143,7 +143,7 @@ class Comments extends Module {
 
 
 	private function _setform_fields() {
-		$fields=$this->CI->db->list_fields($this->config['table']);
+		$fields=$this->CI->db->list_fields($this->config('table'));
 		$formData=array();
 		foreach ($fields as $field) {
 			// standard attributes
@@ -156,7 +156,7 @@ class Comments extends Module {
 			if (empty($label)) $label=nice_string(remove_prefix($field));
 			
 			// special attributes for some fields
-			if ($field==$this->config['field_date']) $type='';
+			if ($field==$this->config('field_date')) $type='';
 			
 			switch (get_prefix($field)) {
 				case 'id':
@@ -189,17 +189,17 @@ class Comments extends Module {
 	}
 	private function _check_if_double($data) {
 		unset($data['spambody']);
-		unset($data[$this->config['field_date']]);
+		unset($data[$this->config('field_date')]);
 		foreach ($data as $field => $value) $this->CI->db->where($field,$value);
-		$double=$this->CI->db->get_row($this->config['table']);
+		$double=$this->CI->db->get_row($this->config('table'));
 		if ($double) return TRUE;
 		return FALSE;
 	}
 	private function _check_if_spamtext(&$data) {
 		unset($data['spambody']);
 		$spam=new Spam();
-		$spam->check_text($this->config['field_text']);
-		$data[$this->config['field_spamscore']]=$spam->get_score();
+		$spam->check_text($this->config('field_text'));
+		$data[$this->config('field_spamscore')]=$spam->get_score();
 		if ($spam->get_action()>=2) return true;
 		return false;
 	}

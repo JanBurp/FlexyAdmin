@@ -23,9 +23,9 @@ class Submenu extends Module {
 	}
 
 	public function index($page) {
-		$level=$this->config['level'];
+		$level=$this->config('level');
 		if ($level>0) {
-			$uri=$this->CI->uri->get_to($this->config['level']);
+			$uri=$this->CI->uri->get_to($this->config('level'));
 			$submenu=$this->CI->menu->render_branch($uri);
 		}
 		else {

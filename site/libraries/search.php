@@ -12,34 +12,34 @@ class Search extends Module {
 		
 		if ($search) {
 			$fields=array();
-			$fields[]=$this->config['title_field'];
-			$fields[]=$this->config['text_field'];
-			$fields=array_merge($fields,$this->config['extra_fields']);
+			$fields[]=$this->config('title_field');
+			$fields[]=$this->config('text_field');
+			$fields=array_merge($fields,$this->config('extra_fields'));
 
 			$this->CI->db->search( $this->_create_search_array_for_db($search, $fields ) );
-			if ($this->config['show_full_title'])
-				$this->CI->db->uri_as_full_uri(TRUE, $this->config['title_field'] );
+			if ($this->config('show_full_title'))
+				$this->CI->db->uri_as_full_uri(TRUE, $this->config('title_field') );
 			else
 				$this->CI->db->uri_as_full_uri();
-			$results=$this->CI->db->get_results( $this->config['table'] );
+			$results=$this->CI->db->get_results( $this->config('table') );
 
 			if ($results) {
 				foreach ($results as $id => $result) {
 					// add pre uri
-					if (!empty($this->config['pre_uri'])) {
-						$results[$id]['uri']=$this->config['pre_uri'].'/'.$result['uri'];
+					if (!empty($this->config('pre_uri'))) {
+						$results[$id]['uri']=$this->config('pre_uri').'/'.$result['uri'];
 					}
 					// smaller results messages
-					if ($this->config['result_max_length']==0) {
+					if ($this->config('result_max_length')==0) {
 						$results[$id]['txt_text']='';
 					}
-					elseif (!empty($this->config['result_max_type']) and !empty($result[$this->config['text_field']])) {
-						$results[$id]['txt_text']=add_before_last_tag(intro_string($result[$this->config['text_field']], $this->config['result_max_length'], $this->config['result_max_type'],''), $this->config['result_max_ellipses']);
+					elseif (!empty($this->config('result_max_type')) and !empty($result[$this->config('text_field')])) {
+						$results[$id]['txt_text']=add_before_last_tag(intro_string($result[$this->config('text_field')], $this->config('result_max_length'), $this->config('result_max_type'),''), $this->config('result_max_ellipses'));
 					}
 				}
 
-				if ($this->config['order_as_tree']) $results=$this->_order_as_menu($results);
-				if (isset($this->config['group_result_by_uris']) and $this->config['group_result_by_uris']) $results=$this->_group_by_uri($results,$this->config['group_result_by_uris']);
+				if ($this->config('order_as_tree')) $results=$this->_order_as_menu($results);
+				if (isset($this->config('group_result_by_uris')) and $this->config('group_result_by_uris')) $results=$this->_group_by_uri($results,$this->config('group_result_by_uris'));
 			}
 
 			return $this->CI->show('search_results',array('search'=>$search,'items'=>$results,'config'=>$this->config),true);
@@ -49,10 +49,10 @@ class Search extends Module {
 	
 	public function form() {
 		// set form action uri
-		$action=$this->config['result_page_uri'];
-		if (empty($action) and !empty($this->config['result_page_where'])) {
+		$action=$this->config('result_page_uri');
+		if (empty($action) and !empty($this->config('result_page_where'))) {
 			$this->CI->db->uri_as_full_uri();
-			$this->CI->db->where($this->config['result_page_where'][0],$this->config['result_page_where'][1]);
+			$this->CI->db->where($this->config('result_page_where')[0],$this->config('result_page_where')[1]);
 			$page=$this->CI->db->get_result( get_menu_table() );
 			if ($page) {
 				$page=reset($page);
@@ -88,7 +88,7 @@ class Search extends Module {
 		// get full table with tree order, match with search_result
 		$this->CI->db->select('id,order,self_parent');
 		$this->CI->db->order_as_tree();
-		$tree=$this->CI->db->get_result( $this->config['table']);
+		$tree=$this->CI->db->get_result( $this->config('table'));
 		
 		foreach ($tree as $id => $row) {
 			if (isset($result[$id]))
@@ -103,7 +103,7 @@ class Search extends Module {
 	private function _group_by_uri($result,$uris) {
 		foreach ($uris as $key => $uri) {
 			$uris[$key]=array('uri'=>$uri);
-			$uris[$key]['title']=$this->CI->db->get_field_where(get_menu_table(),$this->config['title_field'],'uri',$uri,TRUE);
+			$uris[$key]['title']=$this->CI->db->get_field_where(get_menu_table(),$this->config('title_field'),'uri',$uri,TRUE);
 			$uris[$key]['result']=find_row_by_value($result,$uri,'uri',true);
 		}
 		return $uris;

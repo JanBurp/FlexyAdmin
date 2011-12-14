@@ -38,6 +38,10 @@ class Flexy_library {
 		}
 		return $this->config;
 	}
+	
+	public function config($item,$default=NULL) {
+		return el($item,$this->config,$default);
+	}
 
 }
 

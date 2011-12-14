@@ -178,12 +178,12 @@ class Plugin_automenu extends Plugin_ {
 						}
 						if (!isset($item['order'])) $item['order']=$order++;
 						if (isset($autoValue['b_keep_parent_modules']) and $autoValue['b_keep_parent_modules']) {
-							if (isset($this->newMenu[$item['self_parent']][$this->config['module_field']])) {
-								$parentModule=$this->newMenu[$item['self_parent']][$this->config['module_field']];
-								if (isset($item[$this->config['module_field']]))
-									$item[$this->config['module_field']].=' '.$parentModule;
+							if (isset($this->newMenu[$item['self_parent']][$this->config('module_field')])) {
+								$parentModule=$this->newMenu[$item['self_parent']][$this->config('module_field')];
+								if (isset($item[$this->config('module_field')]))
+									$item[$this->config('module_field')].=' '.$parentModule;
 								else
-									$item[$this->config['module_field']]=$parentModule;
+									$item[$this->config('module_field')]=$parentModule;
 							}
 						}
 						$item=$this->_insertItem($item);
@@ -238,12 +238,12 @@ class Plugin_automenu extends Plugin_ {
 							$item['str_uri']=$item['uri'];
 							$item['int_id']=$item['id'];
 							if (isset($autoValue['b_keep_parent_modules']) and $autoValue['b_keep_parent_modules']) {
-								if (isset($this->newMenu[$item['self_parent']][$this->config['module_field']])) {
-									$parentModule=$this->newMenu[$item['self_parent']][$this->config['module_field']];
-									if (isset($item[$this->config['module_field']]))
-										$item[$this->config['module_field']].=' '.$parentModule;
+								if (isset($this->newMenu[$item['self_parent']][$this->config('module_field')])) {
+									$parentModule=$this->newMenu[$item['self_parent']][$this->config('module_field')];
+									if (isset($item[$this->config('module_field')]))
+										$item[$this->config('module_field')].=' '.$parentModule;
 									else
-										$item[$this->config['module_field']]=$parentModule;
+										$item[$this->config('module_field')]=$parentModule;
 								}
 							}
 							$this->_insertItem($item);
@@ -329,12 +329,12 @@ class Plugin_automenu extends Plugin_ {
 									// trace_('Add subpage ['.$page.']');
 									$subItem=array('uri'=>$page, $groupData[$titleField]=>$page, 'order'=>$subOrder++, 'self_parent'=>$subSelfParent);
 									if (isset($autoValue['b_keep_parent_modules']) and $autoValue['b_keep_parent_modules']) {
-										if (isset($this->newMenu[$subItem['self_parent']][$this->config['module_field']])) {
-											$parentModule=$this->newMenu[$subItem['self_parent']][$this->config['module_field']];
-											if (isset($subItem[$this->config['module_field']]))
-												$subItem[$this->config['module_field']].=' '.$parentModule;
+										if (isset($this->newMenu[$subItem['self_parent']][$this->config('module_field')])) {
+											$parentModule=$this->newMenu[$subItem['self_parent']][$this->config('module_field')];
+											if (isset($subItem[$this->config('module_field')]))
+												$subItem[$this->config('module_field')].=' '.$parentModule;
 											else
-												$subItem[$this->config['module_field']]=$parentModule;
+												$subItem[$this->config('module_field')]=$parentModule;
 										}
 									}
 									$self=$this->_insertItem( $subItem );
@@ -348,12 +348,12 @@ class Plugin_automenu extends Plugin_ {
 								$item['str_uri']=$item['uri'];
 								$item['int_id']=$item['id'];
 								if (isset($autoValue['b_keep_parent_modules']) and $autoValue['b_keep_parent_modules']) {
-									if (isset($this->newMenu[$item['self_parent']][$this->config['module_field']])) {
-										$parentModule=$this->newMenu[$item['self_parent']][$this->config['module_field']];
-										if (isset($item[$this->config['module_field']]))
-											$item[$this->config['module_field']].=' '.$parentModule;
+									if (isset($this->newMenu[$item['self_parent']][$this->config('module_field')])) {
+										$parentModule=$this->newMenu[$item['self_parent']][$this->config('module_field')];
+										if (isset($item[$this->config('module_field')]))
+											$item[$this->config('module_field')].=' '.$parentModule;
 										else
-											$item[$this->config['module_field']]=$parentModule;
+											$item[$this->config('module_field')]=$parentModule;
 									}
 								}
 								$this->_insertItem($item);
@@ -404,15 +404,15 @@ class Plugin_automenu extends Plugin_ {
 								$order=0;
 								$parent=$this->_get_where_parent($autoValue);
 								if (isset($autoValue['b_keep_parent_modules']) and $autoValue['b_keep_parent_modules']) {
-									if (isset($this->newMenu[$parent][$this->config['module_field']])) {
-										$parentModule=$this->newMenu[$parent][$this->config['module_field']];
+									if (isset($this->newMenu[$parent][$this->config('module_field')])) {
+										$parentModule=$this->newMenu[$parent][$this->config('module_field')];
 									}
 								}
 								foreach ($items as $item) {
 									$item['self_parent']=$parent;
 									$item['order']=$order;
 									$order++;
-									if (isset($parentModule)) $item[$this->config['module_field']]=$parentModule;
+									if (isset($parentModule)) $item[$this->config('module_field')]=$parentModule;
 									$this->_insertItem($item);
 								}
 							}
