@@ -21,7 +21,34 @@ $(document).ready(function() {
 	//
 
 	if (isGrid || isFile) doGrid();
-	if (isForm) 					doForm();
+
+	// plugin to prepare html form for ui-tabs
+	(function($) {
+		$.fn.formTabs = function(opts) {
+			return this.each(function() {
+				var fieldsets=$(this).find('fieldset:not(.formbuttons):not(.flexyFormButtons)');
+				var tablist='<ul>';
+				fieldsets.each(function(){
+					// add tab
+					var title=$(this).find('legend').html();
+					var set_id='tab_'+$(this).attr('id');
+					tablist+='<li><a href="#'+set_id+'">'+title+'</a></li>';
+					// div around fieldset
+					$(this).find('legend').remove();
+					$(this).replaceWith('<div id="'+set_id+'">'+$(this).html()+'</div>');
+				});
+				tablist+='</ul>';
+				// put buttons fieldset before tabpanes
+				var buttons=$(this).find('.formbuttons').add('.flexyFormButtons');
+				$(this).prepend(buttons);
+				// add ul
+				$(this).prepend(tablist);
+			});
+		};
+	})(jQuery);
+	$('#content form').formTabs().tabs();
+
+	if (isForm) doForm();
 
 	//
 	// Vertical Text

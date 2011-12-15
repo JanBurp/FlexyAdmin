@@ -3,13 +3,13 @@ function doForm() {
 	//
 	// Make sure media fields with selects are good height
 	//
-	// $('.form_field select').each(function(){
+	// $('.flexyFormField select').each(function(){
 	// 	selHeight=$(this).outerHeight();
-	// 	imgList=$(this).parent('.form_field:first').children('ul.multiple:first');
+	// 	imgList=$(this).parent('.flexyFormField:first').children('ul.multiple:first');
 	// 	if (imgList.length>0) { selHeight+=$(imgList).outerHeight(); }
-	// 	$(this).parent('.form_field:first').css({height:selHeight});
+	// 	$(this).parent('.flexyFormField:first').css({height:selHeight});
 	// });
-	$('.form_field.image_dragndrop').each(function(){
+	$('.flexyFormField.image_dragndrop').each(function(){
 		selHeight=$(this).children('ul.choices').outerHeight();
 		selHeight+=$(this).children('ul.values').outerHeight();
 		$(this).css({height:selHeight+4});
@@ -19,7 +19,7 @@ function doForm() {
 	// conditional formfield showing
 	//
 	if (typeof(formFieldWhen)!="undefined") {
-		var fields=$('.form_field');
+		var fields=$('.flexyFormField');
 		$(fields).each(function(){
 			var name=$(this).attr('class');
 			name=name.split(' ');
@@ -30,19 +30,19 @@ function doForm() {
 				$('#'+when.actor).change(function(){
 					var val=$(this).val();
 					// first hide, and then check if it can be shown
-					$('.form_field.'+when.field).add('#'+name).addClass('hidden');
+					$('.flexyFormField.'+when.field).add('#'+name).addClass('hidden');
 					switch (when.operator) {
 						case '=':
-							if (val==when.value) $('.form_field.'+when.field).add('#'+name).removeClass('hidden');
+							if (val==when.value) $('.flexyFormField.'+when.field).add('#'+name).removeClass('hidden');
 							break;
 						case '>':
-							if (val>when.value) $('.form_field.'+when.field).add('#'+name).removeClass('hidden');
+							if (val>when.value) $('.flexyFormField.'+when.field).add('#'+name).removeClass('hidden');
 							break;
 						case '<':
-							if (val<when.value) $('.form_field.'+when.field).add('#'+name).removeClass('hidden');
+							if (val<when.value) $('.flexyFormField.'+when.field).add('#'+name).removeClass('hidden');
 							break;
 					}
-					if ( ! $('.form_field.'+when.field).hasClass('hidden')) $('.form_field.'+when.field).css({'min-height':'27px'});
+					if ( ! $('.flexyFormField.'+when.field).hasClass('hidden')) $('.flexyFormField.'+when.field).css({'min-height':'27px'});
 				});
 			}
 		});
@@ -50,17 +50,17 @@ function doForm() {
 	
 
 	//
-	// Nice Select styling #BUSY: also the multiple and media
+	// Nice Select styling
 	//
 	if (config.form_nice_dropdowns) {
-		$('.form_field select:not(.multiple)').multiselect({header:false,multiple:false,selectedList:4,height:'auto'}).bind('multiselectclick', function(event,ui){
+		$('.flexyFormField select:not(.multiple)').multiselect({header:false,multiple:false,selectedList:4,height:'auto'}).bind('multiselectclick', function(event,ui){
 			if ($(event.target).hasClass('image_dropdown')) {
 				var values = $(event.target).multiselect("getChecked").map(function(){return this.value;}).get();
 				update_image_dropdown(event.target,values);
 			}
 		});
-		$('.form_field select.multiple:not(.image_dropdown)').multiselect({header:false,selectedList:4,height:'auto',noneSelectedText:''});
-		$('.form_field select.multiple.image_dropdown').multiselect({header:false,height:'auto',minWidth:'auto',selectedList:false,selectedText:'',noneSelectedText:''}).bind('multiselectclick', function(event,ui){
+		$('.flexyFormField select.multiple:not(.image_dropdown)').multiselect({header:false,selectedList:4,height:'auto',noneSelectedText:''});
+		$('.flexyFormField select.multiple.image_dropdown').multiselect({header:false,height:'auto',minWidth:'auto',selectedList:false,selectedText:'',noneSelectedText:''}).bind('multiselectclick', function(event,ui){
 			// make sure optgroups are all same checked/unchecked
 			var checked=ui.checked;
 			var text=ui.text;
@@ -75,8 +75,10 @@ function doForm() {
 			update_image_dropdown(event.target,values);
 		});
 		// styling of multiple
-		$('.form_field.image_dropdown.multiple ul.values').css({width:392,'float':'left',position:'relative'});
-		$('.form_field.image_dropdown.multiple button.ui-multiselect').css({width:460,height:38,'float':'right','margin-top':-42});
+		$('.flexyFormField.dropdown button').css({width:460});
+		$('.flexyFormField.dropdown .ui-multiselect-menu').css({width:430});
+		$('.flexyFormField.image_dropdown.multiple ul.values').css({width:425,'float':'left',position:'relative'});
+		$('.flexyFormField.image_dropdown.multiple button.ui-multiselect').css({width:420,height:38,'float':'right','margin-top':-42});
 	}
 
 		
@@ -255,7 +257,7 @@ function doForm() {
 				}
 			});
 			value=value.substr(1);
-			$(obj).parent('.form_field:first').children('input:first').attr('value',value);
+			$(obj).parent('.flexyFormField:first').children('input:first').attr('value',value);
 		}
 	}
 	
@@ -287,7 +289,7 @@ function doForm() {
 					value+='|'+id;
 				});
 				value=value.substr(1);
-				$(this).parent('.form_field').children('input:first').attr('value',value);
+				$(this).parent('.flexyFormField').children('input:first').attr('value',value);
 			}
 		}
 	});	

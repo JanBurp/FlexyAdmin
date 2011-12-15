@@ -166,6 +166,7 @@ class Form {
 	}
 	
 	public function set_fieldsets($fieldsets=array('fieldset')) {
+		if (!is_array($fieldsets)) $fieldsets=array($fieldsets);
 		$this->fieldsets=$fieldsets;
 	}
 	public function add_fieldset($fieldset='',$class='') {
@@ -396,16 +397,19 @@ class Form {
 		$out=form_open_multipart($this->action,array("class"=>$class));
 		
 		// fieldsets && fields
+		$nr=1;
 		foreach ($this->fieldsets as $fieldset) {
-			$fieldSetClass='fieldSet_'.$fieldset;
+			$fieldset=trim($fieldset);
+			$fieldSetClass='fieldset fieldSet_'.$fieldset.' fieldset_'.$nr;
+			$fieldSetId='fieldset_'.$nr++;
 			if (isset($this->fieldsetClasses[$fieldset])) $fieldSetClass.=' '.$this->fieldsetClasses[$fieldset];
 			$caption=$fieldset;
 			if ($caption=='fieldset') $caption=$this->caption;
 
-			$out.=form_fieldset($caption,array("class"=>$fieldSetClass));
+			$out.=form_fieldset($caption,array("class"=>$fieldSetClass,'id'=>$fieldSetId));
 			foreach($data as $name => $field) {
-				if ($field['fieldset']==$fieldset)
-					$out.=$this->render_field($field['name'],$field,$class);
+				$fieldFieldset=$field['fieldset'];
+				if ($fieldset==$fieldFieldset)	$out.=$this->render_field($field['name'],$field,$class);
 			}
 			$out.=form_fieldset_close();
 		}

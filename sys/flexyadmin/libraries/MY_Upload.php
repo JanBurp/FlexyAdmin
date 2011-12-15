@@ -153,7 +153,7 @@ class MY_Upload extends CI_Upload {
 					$cfg["int_height_$nr"]=$currentSizes[1];
 				}
 				$pre=$cfg["str_prefix_$nr"];
-				$post=$cfg["str_postfix_$nr"];
+				$post=$cfg["str_suffix_$nr"];
 				$ext=get_file_extension($this->file_name);
 				$name=str_replace(".$ext","",$this->file_name);
 				$copyName=$pre.$name.$post.".".$ext;
