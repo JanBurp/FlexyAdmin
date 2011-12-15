@@ -26,20 +26,20 @@ class Search extends Module {
 			if ($results) {
 				foreach ($results as $id => $result) {
 					// add pre uri
-					if (!empty($this->config('pre_uri'))) {
+					if ($this->config('pre_uri')) {
 						$results[$id]['uri']=$this->config('pre_uri').'/'.$result['uri'];
 					}
 					// smaller results messages
 					if ($this->config('result_max_length')==0) {
 						$results[$id]['txt_text']='';
 					}
-					elseif (!empty($this->config('result_max_type')) and !empty($result[$this->config('text_field')])) {
+					elseif ($this->config('result_max_type') and $result[$this->config('text_field')]) {
 						$results[$id]['txt_text']=add_before_last_tag(intro_string($result[$this->config('text_field')], $this->config('result_max_length'), $this->config('result_max_type'),''), $this->config('result_max_ellipses'));
 					}
 				}
 
 				if ($this->config('order_as_tree')) $results=$this->_order_as_menu($results);
-				if (isset($this->config('group_result_by_uris')) and $this->config('group_result_by_uris')) $results=$this->_group_by_uri($results,$this->config('group_result_by_uris'));
+				if ($this->config('group_result_by_uris')) $results=$this->_group_by_uri($results,$this->config('group_result_by_uris'));
 			}
 
 			return $this->CI->show('search_results',array('search'=>$search,'items'=>$results,'config'=>$this->config),true);
@@ -50,9 +50,10 @@ class Search extends Module {
 	public function form() {
 		// set form action uri
 		$action=$this->config('result_page_uri');
-		if (empty($action) and !empty($this->config('result_page_where'))) {
+		if (empty($action) and $this->config('result_page_where')) {
 			$this->CI->db->uri_as_full_uri();
-			$this->CI->db->where($this->config('result_page_where')[0],$this->config('result_page_where')[1]);
+			$where=$this->config['result_page_where'];
+			$this->CI->db->where($where[0],$where[1]);
 			$page=$this->CI->db->get_result( get_menu_table() );
 			if ($page) {
 				$page=reset($page);
