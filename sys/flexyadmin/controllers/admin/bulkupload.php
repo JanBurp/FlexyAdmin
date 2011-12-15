@@ -55,7 +55,6 @@ class Bulkupload extends AdminController {
 												// "do_autofill"	=> array("label"=>'Auto fill fields','type'=>'checkbox','value'=>'1')
 												);
 					$form->set_data($data,'Bulk upload settings');
-					$form->set_old_templates();
 					$this->_add_content($form->render());			
 					$this->_add_content(p().nbs()._p().p().nbs()._p());
 				}

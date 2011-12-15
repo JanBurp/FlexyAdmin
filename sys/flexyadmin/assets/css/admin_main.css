@@ -41,7 +41,7 @@ h1 {
 	margin:0px 0px 10px 0px;
 	padding:6px 6px 2px;
 	height: 19px;
-	width:590px;
+	width:765px;
 	text-align:center;
 }
 h2 {
@@ -804,32 +804,36 @@ tfoot tr.pagination .pagination_total {float:right;}
 
 /* ============== form ================== */
 
-form {}
+form {
+/*	float:left;*/
+}
 
 #formmessage {
 	color:#F00;
 	font-weight: bold;
 	}
-fieldset.formfields {
+	
+fieldset {
 	float:left;
-	width:600px;
+	width:620px;
 	border:solid 1px #DDEEAA;
 	border-radius: 4px;
--o-border-radius: 4px;
--moz-border-radius: 4px;
+	-o-border-radius: 4px;
+	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 	margin:0px;
 	padding:0px;
 }
-fieldset.formbuttons {
-	float:left;
+
+
+fieldset.flexyFormButtons {
+	float:right;
 	width:130px;
 	border:none;
-	margin:0px 4px 0px;
-	margin-top:14px;
+	margin:10px;
 	padding:0px;
 }
-legend {
+/*legend {
 	font-size:15px;
 	font-weight:bold;
 	margin:0px 0px 4px 7px;
@@ -843,26 +847,30 @@ legend {
 	background-image: url("../img/inset.png");
 	background-position: 50% 50%;
 }
+*/
 
-div.form_field {
-	clear:both;
+div.flexyFormField {
 	margin:0px;
 	padding:5px 5px 5px 5px;
 	min-height:27px;
+	width:610px;
 }
-div.form_field:hover {
+div.flexyFormField:hover {
 	background-color: #DDEEAA;
 	border-radius: 4px;
--o-border-radius: 4px;
--moz-border-radius: 4px;
+	-o-border-radius: 4px;
+	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 }
 
-div.form_field>label {
+div.flexyFormField>label {
 	float:left;
-	width:125px;
+	width:145px;
+	max-height:20px;
 	padding:5px 0px 0px 4px;
+	overflow:hidden;
 }
+
 label.required {font-weight:bold;}
 label span.required {color:#FF0000;}
 
@@ -913,8 +921,8 @@ span.button {
 	color:#669966;
 	border:solid 1px #DDEEAA;
 	border-radius: 4px;
--o-border-radius: 4px;
--moz-border-radius: 4px;
+	-o-border-radius: 4px;
+	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 	cursor:pointer;
 }
@@ -922,6 +930,7 @@ span.button:hover {
 	background-color:#fff;
 	background-position:50% 0%;
 	color:#669966;
+	border-color:#DEA;
 }
 input.datetime {width:150px;}
 input.date {width:95px;margin-right:5px;}
@@ -930,6 +939,8 @@ input.time {width:75px;}
 input.checkbox {
 	border:none;
 	width: auto;
+	position:relative;
+	top:5px;
 	}
 textarea, .mceEditor {
 	line-height: 1.4em;
@@ -938,14 +949,15 @@ textarea, .mceEditor {
 .mceEditor table {
 	width:450px;
 }
+li textarea {width:100%;}
 
-div.form_field.htmleditor.wide label,
-div.form_field.htmleditor.big label {float:none;}
+div.flexyFormField.htmleditor.wide label,
+div.flexyFormField.htmleditor.big label {float:none;}
 
-div.form_field.wide .mceEditor,
-div.form_field.big .mceEditor {margin:4px 0px 4px;}
+div.flexyFormField.wide .mceEditor,
+div.flexyFormField.big .mceEditor {margin:4px 0px 4px;}
 textarea.wide,
-textarea.big {width:580px;}
+textarea.big {width:600px;}
 textarea.high,
 textarea.big {height:450px;}
 form.tbl_site textarea {height:auto;}
@@ -984,13 +996,13 @@ select.media, select.medias {
 select.image_dropdown {
 	width:400px;
 }
-.form_field.medias select.image_dropdown {	width:460px;}
+.flexyFormField.medias select.image_dropdown {	width:460px;}
 
-.form_field.media {min-height:35px;}
-.form_field.medias {height:36px;}
+.flexyFormField.media {min-height:35px;}
+.flexyFormField.medias {height:36px;}
 
-.form_field .flash,
-.form_field img {
+.flexyFormField .flash,
+.flexyFormField img {
 	float:left;
 	width: 25px;
 	height: 25px;
@@ -1030,22 +1042,22 @@ input.button {
 	width:125px;
 	height:30px;
 	font-size:15px;
-	padding-bottom:8px;
+	padding:5px 0px 6px;
 	margin:0px 5px 15px 0px;
 	background-color:#DDEEAA;
 	background-image:url("../img/inset.png");
 	background-position:50% 50%;
 	color:#669966;
-	border:none;
+	border:solid 1px #DEA;
 	border-radius: 4px;
--o-border-radius: 4px;
--moz-border-radius: 4px;
+	-o-border-radius: 4px;
+	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 }
 input.button:hover {
-	background-color:#BBCC88;
 	background-position:50% 0%;
-	color:#336633;
+	color:#696;
+	border-color:#696;
 	cursor: pointer;
 }
 
@@ -1064,12 +1076,12 @@ input.button:hover {
 	width:50px;
 	}
 
-.form_field div.buttons {
+.flexyFormField div.buttons {
 	width:450px;
 	margin:2px 5px 5px;
 	float:right;
 }
-.form_field>ul {
+.flexyFormField>ul {
 	float:left;
 	display:block;
 	min-width:29px;
@@ -1083,13 +1095,13 @@ input.button:hover {
 	-webkit-border-radius: 4px;
 	background-color:#FFF;
 }
-.form_field .ui-multiselect {
+.flexyFormField .ui-multiselect {
 /*	float:right;*/
 	margin-right:1px;
 }
 
-.form_field ul.multiple,
-.form_field ul.choices {
+.flexyFormField ul.multiple,
+.flexyFormField ul.choices {
 	max-width:none;
 	float:right;
 	width:450px;
@@ -1098,18 +1110,18 @@ input.button:hover {
 	padding:3px 3px 4px 4px;
 	margin-right:1px;
 }
-.form_field.media.image_dragndrop ul.values {
+.flexyFormField.media.image_dragndrop ul.values {
 	float:right;
 	margin-right:424px;
 }
-.form_field.image_dragndrop.wide ul.choices,
-.form_field.image_dragndrop.big  ul.choices {
+.flexyFormField.image_dragndrop.wide ul.choices,
+.flexyFormField.image_dragndrop.big  ul.choices {
 	width:578px;
 }
 
 
 
-.form_field>ul li {
+.flexyFormField>ul li {
 	list-style:none;
 	display:block;
 	float:left;
@@ -1121,13 +1133,13 @@ input.button:hover {
 	cursor:pointer;
 	background-color:transparent;
 }
-.form_field ul li.ui-selected {
+.flexyFormField ul li.ui-selected {
 	border-color:#F00;
 	background-color:#F00;
 }
 
-div.form_field.ordered_list {height:132px;}
-.form_field ul.list {
+div.flexyFormField.ordered_list {height:132px;}
+.flexyFormField ul.list {
 	width:205px;
 	height:125px;
 	overflow:auto;
@@ -1138,13 +1150,13 @@ div.form_field.ordered_list {height:132px;}
 	border:solid 1px #DDEEAA;
 	background-color:transparent;
 }
-.form_field:hover ul.list {
+.flexyFormField:hover ul.list {
 	border-color:#FFF;
 }
-.form_field ul.list_values {
+.flexyFormField ul.list_values {
 	margin-left:11px;
 }
-.form_field ul.list li {
+.flexyFormField ul.list li {
 	list-style:disc;
 	max-width:none;
 	font-size:12px;
@@ -1160,7 +1172,7 @@ div.form_field.ordered_list {height:132px;}
 	padding:2px 4px;
 	margin:2px;
 }
-.form_field ul.list li:hover {
+.flexyFormField ul.list li:hover {
 	border-color:#696;
 }
 
@@ -1238,11 +1250,7 @@ input.filter.busy {
 	}
 
 
-.after_form {
-	clear:both;
-	position:relative;
-	width:600px;
-}
+.after_form {margin:20px 0px 0px;}
 
 p.error, div.error p {
 	color:#f00;
@@ -1393,10 +1401,11 @@ div#help_messages {
 #content {
 	margin-top:5px;
 	margin-left:225px;
+	width:775px;
 	z-index:1;
 }
-#content.form {
-	width:800px;
+#content.grid {
+	width:auto;
 }
 #content.info {
 	width:590px;

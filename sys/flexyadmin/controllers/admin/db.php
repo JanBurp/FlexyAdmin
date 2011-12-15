@@ -60,7 +60,6 @@ class Db extends AdminController {
 								"filename"	=> array("label"=>"Filename","value"=>$name)
 								);
 		$form->set_data($data,"Choose tables to export");
-		$form->set_old_templates();
 		$this->_add_content($form->render());
 	}
 
@@ -167,7 +166,6 @@ class Db extends AdminController {
 				$data=array( "userfile"	=> array("type"=>"file","label"=>lang('file')) );
 										 // "sure"=> array("type"=>"hidden","value"=>$this->cfg->get('CFG_configurations','key')) );
 				$form->set_data($data,lang('db_restore'));
-				$form->set_old_templates();
 				$this->_add_content($form->render());
 			}
 			else {
@@ -231,7 +229,6 @@ class Db extends AdminController {
 			$data['update']=array('label'=>'Update DB from r');
 		}
 		$form->set_data($data,"Choose File to upload and import");
-		$form->set_old_templates();
 		$this->_add_content($form->render());
 	}
 
@@ -275,7 +272,6 @@ class Db extends AdminController {
 					 							"sure"=> array("type"=>"hidden","value"=>$this->cfg->get('CFG_configurations','key')) // insert license here!!
 											);
 					$form->set_data($data,"Are you sure to run this Query?");
-					$form->set_old_templates();
 					$this->_add_content($form->render());
 				}
 			}

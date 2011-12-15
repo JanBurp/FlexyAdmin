@@ -85,7 +85,6 @@ class Flexy_field extends CI_Model {
 		 */
 		$specials=$this->config->item('FIELDS_special');
 		if (isset($specials[$this->field][$this->action])) {
-			//trace_($this->field." - special");
 			$type=$specials[$this->field][$this->action];
 			$validation=el("validation",$specials[$this->field]);
 			$this->_set_type($type);
@@ -216,7 +215,7 @@ class Flexy_field extends CI_Model {
 		$this->extraInfoId=$extraInfoId;
 		$this->init_field($field,$data,$right);
 		// Must field be shown?
-		if (isset($this->fieldCfg[$field]) and (!$this->fieldCfg[$field]["b_show_in_grid"])) {
+		if ( ! el('b_show_in_grid', el($field,$this->fieldCfg,array()) ,true) ) {
 			return FALSE;
 		}
 		// How to show? Function or replace?
@@ -279,7 +278,7 @@ class Flexy_field extends CI_Model {
 		// Must field be shown?
 		$when=array();
 		if (isset($this->fieldCfg[$field]))	{
-		 	if (!$this->fieldCfg[$field]["b_show_in_form"]) {
+		 	if (!el('b_show_in_form',$this->fieldCfg[$field],true)) {
 				return FALSE;
 			}
 			if (isset($this->fieldCfg[$field]["str_show_in_form_where"]) and !empty($this->fieldCfg[$field]["str_show_in_form_where"])) {
@@ -332,9 +331,10 @@ class Flexy_field extends CI_Model {
 		$out["table"]			= $this->table;
 		$out["name"]			= $this->field;
 		$out["value"]			= $this->data;
-		$out["label"]			= $this->ui->get($this->field);
+		$out["label"]			= $this->ui->get($this->field,$this->table);
 		$out["type"]			= $this->type;
-		
+		$out["fieldset"]	= el('str_fieldset', el($this->field,$this->fieldCfg), $this->ui->get($this->table) );
+
 		/**
 		 * Dropdown fields, if there are options.
 		 */
@@ -697,6 +697,26 @@ class Flexy_field extends CI_Model {
 		return $out;
 	}
 
+	function _dropdown_fieldsets_form() {
+		$table=get_prefix(el('field_field',$this->formData,''),'.');
+		if ($table) {
+			$fieldsets=$this->cfg->get('cfg_table_info',$table,'str_fieldsets');
+			if (!empty($fieldsets)) {
+				$fieldsets=explode(',',$fieldsets);
+				if (!in_array($this->ui->get($table),$fieldsets)) array_unshift($fieldsets,$this->ui->get($table));
+				array_unshift($fieldsets,'');
+				$options=array_combine($fieldsets,$fieldsets);
+				$out=$this->_standard_form_field($options);
+				$out["type"]="dropdown";
+				unset($out["button"]);
+				return $out;
+			}
+		}
+		$out=$this->_standard_form_field();
+		return $out;
+	}
+
+
 	function _dropdown_field_form() {
 		$tables=$this->db->list_tables();
 		$thisRights=$this->user->get_rights();
@@ -706,7 +726,7 @@ class Flexy_field extends CI_Model {
 		$normal_tables=array_merge($result_tables,$normal_tables);
 		$specialFields=array_keys($this->config->item('FIELDS_special'));
 		$options=array();
-		$options[""]="";
+		// $options[""]="";
 		foreach ($normal_tables as $table) {
 			$fields=$this->db->list_fields($table);
 			foreach ($fields as $field) {

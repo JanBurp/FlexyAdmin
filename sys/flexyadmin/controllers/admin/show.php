@@ -381,10 +381,10 @@ class Show extends AdminController {
 				}
 				else
 					$uiShowTable=$uiTable;
+
 				$form->set_data($ffData,$uiShowTable);
 				$form->add_password_match();
 				$form->hash_passwords();
-				$form->set_old_templates();
 
 				/**
 				 * Validate form, if succes, update/insert data
@@ -443,6 +443,14 @@ class Show extends AdminController {
 					}
 					$form->set_labels($uiFieldNames);
 					
+					// Fieldsets?
+					$fieldsets=$this->cfg->get('cfg_table_info',$table,'str_fieldsets');
+					if (empty($fieldsets)) $fieldsets=array();
+					elseif (is_string($fieldsets)) $fieldsets=explode(',',$fieldsets);
+					// add default fieldset with name of table
+					array_unshift($fieldsets,$this->ui->get($table));
+					$form->set_fieldsets($fieldsets);
+					
 					if ($right<RIGHTS_EDIT) $form->no_submit();
 					$html=$form->render("html ".$table,$table);
 					if ($form->has_htmlfield()) $this->use_editor();
@@ -483,8 +491,13 @@ class Show extends AdminController {
 		/**
 		 * Init user form
 		 */
+		$title=ucwords($userData["str_username"]);
+		$fieldset=$title;
 		
 		$formData=$this->ff->render_form($userTable,$userData,$options);
+		foreach ($formData as $key => $value) {
+			$formData[$key]['fieldset']=$title;
+		}
 
 		$this->lang->load("update_delete");
 		$this->lang->load("form");
@@ -495,10 +508,10 @@ class Show extends AdminController {
 		$this->load->library("form");
 		$form=new form(api_uri('API_user'));
 		$form->set_data($formData,$userData["str_username"]);
+		$form->set_fieldsets($title);
 		$form->add_password_match();
 		$form->hash_passwords();
-		$form->set_old_templates();
-		$form->set_caption(ucwords($userData["str_username"]));
+		$form->set_caption($title);
 		/**
 		 * Validate form, if succes, make form do an update
 		 */

@@ -2,7 +2,7 @@
 	font-family:"American Typewriter",Verdana,Arial,Helvetica, sans-serif;
 	background-image:none;
 	border-color:#DEA;
-	background-color:#FFF;
+	background-color:transparent;
 	color:#696;
 }
 .ui-multiselect { padding:5px 0px 2px 6px; text-align:left;}
@@ -20,7 +20,7 @@
 
 .ui-multiselect-menu { display:none; padding:0px; position:absolute; z-index:10000; border-color:#DEA;}
 .ui-multiselect-checkboxes { position:relative /* fixes bug in IE6/7 */; overflow-y:auto; max-height:275px;}
-.ui-multiselect-checkboxes label { height:18px; width:auto;cursor:default; display:block; border:none; padding:3px 1px }
+.ui-multiselect-checkboxes label { height:18px; width:auto; cursor:default; display:block; border:none; padding:3px 1px }
 .ui-multiselect-checkboxes label input { width:18px; position:relative; top:1px}
 .ui-multiselect-checkboxes li { clear:both; padding-right:3px; border:none; max-height:22px; overflow:hidden;}
 .ui-multiselect-checkboxes li.ui-multiselect-optgroup-label { text-align:left; font-weight:bold;}

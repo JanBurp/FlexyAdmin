@@ -127,7 +127,7 @@ class File_manager Extends CI_Model {
 				$names=array();
 				while (isset($info["str_prefix_$nr"])) {
 					if (!empty($info["str_prefix_$nr"])) $names[]=$info["str_prefix_$nr"].$file;
-					if (!empty($info["str_postfix_$nr"])) $names[]=get_file_without_extension($file).$info["str_postfix_$nr"].get_file_extension($file);
+					if (!empty($info["str_suffix_$nr"])) $names[]=get_file_without_extension($file).$info["str_suffix_$nr"].get_file_extension($file);
 					$nr++;
 				}
 				$names=filter_by($names,"_");

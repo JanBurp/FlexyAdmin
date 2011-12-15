@@ -57,7 +57,6 @@ class Plugin_export extends Plugin_ {
 		$form=new form($this->CI->uri->get());
 		$form->set_data($formData,"Export");
 		$form->set_buttons($formButtons);
-		$form->set_old_templates();
 
 		// Is form validation ok?
 		if ($form->validation()) {
