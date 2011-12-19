@@ -249,7 +249,7 @@ class Db extends AdminController {
 					$updates=array_keys($updates);
 					$updates=filter_by($updates,'update_');
 					foreach ($updates as $key=>$file) {
-						$fileRev=(int) substr($file,8,3);
+						$fileRev=(int) substr($file,8,4);
 						if ($fileRev<=$update)
 							unset($updates[$key]);
 						else {
