@@ -78,7 +78,9 @@ class Plugin_automenu extends Plugin_ {
 	 * Make sure that data has newData!!
 	 */
 	private function _get_current_data($table,$where='',$limit=0) {
-		if (!empty($where)) $this->CI->db->where($where);
+		if (!empty($where)) {
+			$this->CI->db->where($where);	
+		}
 		$data=$this->CI->db->get_results($table,$limit);
 		if ($table==$this->table and isset($this->newData['id'])) {
 			$id=$this->newData['id'];
@@ -137,7 +139,7 @@ class Plugin_automenu extends Plugin_ {
 				case 'from submenu table':
 					$where='';
 					if (isset($autoValue['str_where']) and !empty($autoValue['str_where'])) {
-						$where=$this->CI->db->where($autoValue['str_where']);
+						$where=$autoValue['str_where'];
 					}
 					$limit=0;
 					if (isset($autoValue['int_limit'])) {
