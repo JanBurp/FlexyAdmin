@@ -29,6 +29,19 @@ $config['group_id']=4;	// 4 is visitors which can't login to the backend
 
 /*
 |--------------------------------------------------------------------------
+| Admin needs to activate first
+|--------------------------------------------------------------------------
+|
+| If this is false, a user gets an activate mail and can activate itself when clicking on the link in de mail
+| if this is true, a user gets an activate email, when the administrator sends it. (Needs plugin_login_activate.php)
+|
+*/
+$config['admin_activation']=false;
+
+
+
+/*
+|--------------------------------------------------------------------------
 | Login uri settings
 |--------------------------------------------------------------------------
 |
