@@ -177,6 +177,9 @@ class User Extends Ion_auth {
 	public function register($username, $password, $email, $additional_data=array(), $group_name = false, $subject='Account Activation', $uri='') {
 		if (empty($uri)) $uri=$this->CI->uri->get();
 		$email_activation = $this->CI->config->item('email_activation', 'ion_auth');
+		$admin_activation = $this->CI->config->item('admin_activation', 'ion_auth');
+		if ($admin_activation) $email_activation=true;
+
 		if (!$email_activation)	{
 			$id = $this->CI->ion_auth_model->register($username, $password, $email, $additional_data, $group_name);
 			if ($id !== FALSE) {
@@ -202,46 +205,83 @@ class User Extends Ion_auth {
 				return FALSE;
 			}
 
-			$activation_code = $this->CI->ion_auth_model->activation_code;
-			$identity        = $this->CI->config->item('identity', 'ion_auth');
-			$user            = $this->CI->ion_auth_model->get_user($id)->row();
-
-			$data = array(
-				'identity'   	=> $user->{$identity},
-				'uri'					=> $uri,
-				'id'         	=> $user->id,
-				'email'      	=> $email,
-				'activation' 	=> $activation_code,
-			);
-
-			$message = $this->CI->load->view($this->CI->config->item('email_templates', 'ion_auth').$this->CI->config->item('email_activate', 'ion_auth'), $data, true);
-
-			$this->CI->email->clear();
-			$config['mailtype'] = $this->CI->config->item('email_type', 'ion_auth');
-			$this->CI->email->initialize($config);
-			$this->CI->email->from($this->CI->config->item('admin_email', 'ion_auth'), $this->CI->config->item('site_title', 'ion_auth'));
-			$this->CI->email->to($email);
-			$this->CI->email->subject($this->CI->config->item('site_title', 'ion_auth') . ' - '.$subject);
-			$this->CI->email->message($message);
-
-			if ($this->CI->email->send() == TRUE)	{
-				$this->set_message('activation_email_successful');
-				return $id;
+			if (!$admin_activation) {
+				return $this->send_activation_mail($id,$subject,$uri);
 			}
-
-			$this->set_error('activation_email_unsuccessful');
-			return FALSE;
+			else {
+				return $this->send_admin_new_register_mail($id);
+			}
 		}
 	}
 	
+	public function send_activation_mail($id,$subject='Account Activation',$uri) {
+		$user       = $this->CI->ion_auth_model->get_user($id)->row();
+		$data = array(
+			'uri'					=> $uri,
+			'activation' 	=> $user->str_activation_code,
+		);
+		return $this->send_mail($id,'email_activate',$subject,$data);
+	}
+
+	public function send_admin_new_register_mail($id) {
+		return $this->send_mail($id,'email_admin_new_register','',array(),true);
+	}
+
+	public function send_accepted_mail($id,$subject='Account accepted and activated') {
+		return $this->send_mail($id,'email_accepted',$subject);
+	}
+
+	public function send_deny_mail($id,$subject='Account denied') {
+		return $this->send_mail($id,'email_deny',$subject);
+	}
+
+	private function send_mail($id,$template,$subject,$additional_data=array(),$to_admin=false) {
+		$identity   = $this->CI->config->item('identity', 'ion_auth');
+		$user       = $this->CI->ion_auth_model->get_user($id)->row();
+		if ($to_admin)
+			$email = $this->CI->config->item('admin_email','ion_auth');
+		else
+			$email = $user->email_email;
+
+		$data = array(
+			'identity'   	=> $user->{$identity},
+			'id'         	=> $user->id,
+			'email'      	=> $email,
+		);
+		$data=array_merge($data,$additional_data);
+
+		$message = $this->CI->load->view($this->CI->config->item('email_templates', 'ion_auth').$this->CI->config->item($template, 'ion_auth'), $data, true);
+
+		$this->CI->email->clear();
+		$config['mailtype'] = $this->CI->config->item('email_type', 'ion_auth');
+		$this->CI->email->initialize($config);
+		$this->CI->email->from($this->CI->config->item('admin_email', 'ion_auth'), $this->CI->config->item('site_title', 'ion_auth'));
+		$this->CI->email->to($email);
+		$this->CI->email->subject($this->CI->config->item('site_title', 'ion_auth') . ' - '.$subject);
+		$this->CI->email->message($message);
+
+		if ($this->CI->email->send() == TRUE)	{
+			return $id;
+		}
+		$this->set_error('activation_email_unsuccessful');
+		return FALSE;
+	}
+
+
 	
-	
-	
+	public function activate_user($user_id) {
+		$data=array('str_activation_code'=>'','b_active'=>true);
+		$this->update_user($user_id,$data);
+	}
 
 	function is_super_admin() {
 		return ($this->rights["rights"]=="*");
 	}
-
+	
+	function can_activate_users() {
+		return $this->has_rights('cfg_users');
+	}
+	
 	function can_backup() {
 		if ($this->rights['b_backup']) return TRUE;
 		return FALSE;

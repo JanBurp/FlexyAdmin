@@ -78,6 +78,12 @@
 	$config['email_activation']    = true;
 	
 	/**
+	 * Email activation: but send by Admin (plugin_login_activation)
+	 **/
+	$config['admin_activation']   = false;
+	
+	
+	/**
 	 * Allow users to be remembered and enable auto-login
 	 **/
 	$config['remember_users']      = true;
@@ -109,6 +115,22 @@
      * Default : activate.tpl.php
 	 **/
 	$config['email_activate']   = 'activate.tpl.php';
+
+	/**
+	 * accepted activation
+	 **/
+	$config['email_accepted']   = 'accepted.tpl.php';
+
+	/**
+	 * Deny activation
+	 **/
+	$config['email_deny']   = 'deny.tpl.php';
+
+	/**
+	 * Mail for administrator when new registered
+	 **/
+	$config['email_admin_new_register']   = 'admin_new_register.tpl.php';
+
 	
 	/**
 	 * Forgot Password Email Template
