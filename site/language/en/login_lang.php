@@ -10,6 +10,7 @@ $lang['email']									= 'Emailadress';
 $lang['email_used']							= 'This emailadress is in use.';
 $lang['register_submit']				= 'Register!';
 $lang['register_completed']			= 'You will receive an email with a link to activete the registration.';
+$lang['register_wait']					= 'Your registration will be evaluated. Soon you will receive an email.';
 $lang['register_succes']				= "You're registration is succeeded. <a href=\"%s\">Login now.</a>.";
 $lang['register_fail']					= "You're registration didn't succeed.";
 $lang['register_mail_subject']	= 'Registration.';
@@ -35,5 +36,18 @@ $lang['forgot_password_mail_subject']	= 'Forgotten password reset.';
 $lang['reset_password_succes'] 				= 'Ressetting you\'re password is succeeded.<br/>Per email you will receive a new password.<br/><br/><a href="%s">Login</a>';
 $lang['reset_password_error'] 				= 'Ressetting you\'re password failed or has succeeded before.';
 $lang['reset_password_mail_subject']	= 'New password.';
+
+// ADMIN ACTIVATION
+$lang['activate_users']								= 'Activate users';
+$lang['show_inactive_users']					= 'Inactive users';
+$lang['no_inactive_users']						= 'There are no in-active users at this moment.';
+$lang['deny']													= 'Deny this user';
+$lang['accept']												= 'Accept this user';
+$lang['user_removed']									= 'User %s is deleted and en deny email is send.';
+$lang['user_accepted']								= 'User %s is activated and an accept email is send.';
+$lang['mail_denied_subject']					= 'Account registration denied.';
+$lang['mail_accepted_subject']				= 'Account registration accepted.';
+
+
 
 ?>
