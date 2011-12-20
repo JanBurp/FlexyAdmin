@@ -534,7 +534,7 @@ tr.caption td.filter {
 .grid th {
 	text-align: left;
 	vertical-align: top;
-	padding:3px 5px 3px 5px;
+	padding:4px 5px 3px 5px;
 	border: solid 1px #DDEEAA;
 	border-top:none;
 	border-right:none;
@@ -1037,6 +1037,19 @@ div.zoomThumb p {
 	font-size:12px;
 }
 
+.button {
+	padding:2px 3px;
+	background-color:#DDEEAA;
+	background-image:url("../img/inset.png");
+	background-position:50% 30%;
+	color:#669966;
+	border:solid 1px #DEA;
+	border-radius: 4px;
+	-o-border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	text-decoration:none;
+}
 input.button {
 	float:right;
 	width:125px;
@@ -1044,22 +1057,16 @@ input.button {
 	font-size:15px;
 	padding:5px 0px 6px;
 	margin:0px 5px 15px 0px;
-	background-color:#DDEEAA;
-	background-image:url("../img/inset.png");
 	background-position:50% 50%;
-	color:#669966;
-	border:solid 1px #DEA;
-	border-radius: 4px;
-	-o-border-radius: 4px;
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
 }
-input.button:hover {
+.button:hover {
 	background-position:50% 0%;
 	color:#696;
 	border-color:#696;
 	cursor: pointer;
+	text-decoration:none;
 }
+
 
 .upload img {
 	float:left;
