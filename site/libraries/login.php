@@ -26,6 +26,8 @@ class Login extends Module {
 		
 		// redirect ion_auth to other email_templates
 		$this->CI->config->set_item('email_templates','login/'.$this->CI->site['language'].'/','ion_auth');
+		// if admin activation tell user/ion_auth
+		$this->CI->config->set_item('admin_activation',$this->config('admin_activation'),'ion_auth');
 	}
 	
 	
@@ -95,13 +97,13 @@ class Login extends Module {
 			}
 		}
 		
-		return $content;
+		return $this->_output($page,$content);
 	}
 	
 	
 	public function logout($page) {
 		$this->CI->user->logout();
-		return lang('logout_done');
+		return $this->_output($page,lang('logout_done'));
 	}
 	
 	
@@ -146,7 +148,8 @@ class Login extends Module {
 				$content .= $this->form->render();
 			}
 		}
-		return $content;
+		
+		return $this->_output($page,$content);
 	}
 
 
@@ -194,7 +197,10 @@ class Login extends Module {
 						if ($errors!='') {
 							$content="<div class='error'>".$errors."</div>";
 						} else {
-							$content=lang('register_completed');
+							if ($this->config('admin_activation'))
+								$content=lang('register_wait');
+							else
+								$content=lang('register_completed');
 						}
 					}
 				}
@@ -206,7 +212,7 @@ class Login extends Module {
 			}
 		}
 
-		return $content;
+		return $this->_output($page,$content);
 	}
 
 
@@ -246,10 +252,16 @@ class Login extends Module {
 		}
 	}
 	
+	private function _output($page,$content) {
+		$content='<div id="login">'.$content.'</div>';
+		return $this->CI->view('login/main', array('content'=>$content),true);
+	}
+	
+	
 	private function _find_uris() {
-		$this->config('login_uri')=$this->CI->find_module_uri('login.login');
-		$this->config('register_uri')=$this->CI->find_module_uri('login.register');
-		$this->config('forgotten_password_uri')=$this->CI->find_module_uri('login.forgot_password');
+		$this->config['login_uri']=$this->CI->find_module_uri('login.login');
+		$this->config['register_uri']=$this->CI->find_module_uri('login.register');
+		$this->config['forgotten_password_uri']=$this->CI->find_module_uri('login.forgot_password');
 	}
 	
 
