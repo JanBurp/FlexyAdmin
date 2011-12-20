@@ -7,6 +7,7 @@ class Flexy_library {
 	var $CI;
 	var $config=array();
 	var $name='';
+	var $shortname='';
 
 	public function __construct($name='') {
 		$this->CI=&get_instance();
@@ -19,6 +20,7 @@ class Flexy_library {
 
 	public function set_name($name) {
 		$this->name=$name;
+		$this->shortname=str_replace('plugin_','',$name);
 	}
 
 	public function load_config($name='') {
