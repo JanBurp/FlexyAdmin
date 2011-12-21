@@ -486,6 +486,7 @@ function thumb($attr,$index=FALSE) {
 		$offset=0;
 
 		$grid=new grid();
+		$grid->set_current($current);
 
 		if ($pagination) {
 			$pagination=array('base_url'=>api_url('API_filemanager_view',$this->path),'per_page'=>$pagination,'total_rows'=>count($renderData));
@@ -506,7 +507,6 @@ function thumb($attr,$index=FALSE) {
 		$grid->prepend_to_captions($buttons);
 		$grid->set_heading("edit",help(icon("select all"),lang('grid_select_all')).help(icon("delete"),lang('grid_delete'), array("class"=>"delete") ));
 		$grid->set_heading("thumb","");
-		$grid->set_current($current);
 		$out=$grid->render("html","","grid files");
 
 		log_('info',"filemaneger: rendering");

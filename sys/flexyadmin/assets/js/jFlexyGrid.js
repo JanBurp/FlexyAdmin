@@ -270,7 +270,7 @@ function doGrid() {
 				var filedate=$(fileObj).find('.date:first .hidden').text();
 				filedate=filedate.replace(/ /g,'-');
 				
-				var dialogHtml=	'<form method="post" action="'+site_url()+'admin/filemanager/rename/'+pathencode(path)+'/'+filename+'">'+
+				var dialogHtml=	'<form method="post" action="'+site_url()+'admin/filemanager/rename/'+pathencode(path)+'/current/'+filename + get_current_grid_page_uri() +'">'+
 												'<input id="name" name="name" value="'+shortName+'" />.'+ext+'<br/>'+
 												'<input type="hidden" name="ext" value="'+ext+'"/>'+
 												'<input type="hidden" name="path" value="'+path+'"/>';
@@ -290,7 +290,7 @@ function doGrid() {
 																	newName=$('.ui-dialog input#name').attr('value')+'.'+ext;
 																	var newdate=$('.ui-dialog input#date').attr('value');
 																	if (newdate!=undefined && newdate!='') {filedate=newdate;}
-																	location.replace(site_url('admin/filemanager/edit/'+pathencode(path)+'/'+filename+'/'+newName+'/'+filedate));
+																	location.replace(site_url('admin/filemanager/edit/'+pathencode(path)+'/current/'+filename+'/new/'+newName+'/date/'+filedate+get_current_grid_page_uri() ));
 																}
 									 }),
 					close: function(){$(dialog).dialog("destroy");}
@@ -582,7 +582,9 @@ function doGrid() {
 
 };
 
-
+function get_current_grid_page_uri() {
+	return '/offset/'+$(grid).attr('offset')+ '/order/'+$(grid).attr('order')+ '/search/'+$(grid).attr('search');
+}
 
 function hide_branches(parent_id) {
 	var id;
