@@ -112,7 +112,7 @@ class Filemanager extends AdminController {
 		}
 		else {
 			$path=el('show',$args);
-			$id=el('current',$args);
+			$idFile=el('current',$args);
 			$info=el('info',$args);
 			// $sub=el('sub',$args);
 			$offset=el('offset',$args,0);
@@ -371,7 +371,17 @@ class Filemanager extends AdminController {
 
 
 
-	function edit($path="",$file='',$new='',$newDate='') {
+	// function edit($path="",$file='',$new='',$newDate='') {
+	function edit($args) {
+		$args=$this->uri->uri_to_assoc();
+
+		$path=el('edit',$args);
+		$file=el('current',$args);
+		$new=el('new',$args);
+		$offset=el('offset',$args,0);
+		$order=el('order',$args,'name');
+		$search=el('search',$args,'');
+
 		if (empty($new)) {
 			$ext=$this->input->post('ext');
 			$new=$this->input->post('name').'.'.$ext;
@@ -468,7 +478,7 @@ class Filemanager extends AdminController {
 			$this->set_message(langp("rename_succes",$new));
 		else
 			$this->set_message(langp("rename_error",$file));
-		redirect(api_uri('API_filemanager_view',pathencode($path),$new));
+		redirect(api_uri('API_filemanager_view',pathencode($path),'/current/'.$new.'/offset/'.$offset.'/order/'.$order.'/search/'.$search));
 	}
 
 }
