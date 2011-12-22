@@ -1,4 +1,4 @@
-== FLEXYADMIN 2009/2011 ==
+== FLEXYADMIN ==
 (c) Jan den Besten
 www.flexyadmin.com
 

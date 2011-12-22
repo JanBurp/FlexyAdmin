@@ -9,10 +9,10 @@
 <?=$specificHelp?>
 <? endif ?>
 
-<h1>FlexyAdmin 2009</h2>
+<h1>FlexyAdmin</h2>
 
 <h2>Door</h2>
-<p><a href="http://www.jandenbesten.net" target="_blank">Jan den Besten</a> (c) 2009-2011</p>
+<p><a href="http://www.jandenbesten.net" target="_blank">Jan den Besten</a> (c) 2009-2012</p>
 
 <h2>Welke browser?</h2>
 Het admin gedeelte van FlexyAdmin werkt op moderne browsers.<br/>
