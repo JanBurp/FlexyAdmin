@@ -35,6 +35,7 @@ class Plugin_automenu extends Plugin_ {
 			$checkTables[]=$this->automationTable;
 			$checkTables[]=$this->resultMenu;
 			// get tables from automation data
+			$this->CI->db->order_as_tree();
 			$this->automationData=$this->CI->db->get_results($this->automationTable);
 			foreach ($this->automationData as $aData) {
 				if (!in_array($aData['table'], $checkTables))	$checkTables[]=$aData['table'];
@@ -490,8 +491,10 @@ class Plugin_automenu extends Plugin_ {
 	private function _get_where_parent($autoValue) {
 		// parse where...
 		$whenParser=preg_split('/\s*(<>|!=|=|>|<)\s*/',$autoValue['str_parent_where'],-1,PREG_SPLIT_DELIM_CAPTURE);
+		$whenParser[2]=trim($whenParser[2],'"');
+		$whenParser[2]=trim($whenParser[2],"'");
 		// TODO: only '=' operator works now
-		$parent=find_row_by_value($this->newMenu,str_replace(array('"',"'"),'',$whenParser[2]),$whenParser[0]);
+		$parent=find_row_by_value($this->newMenu,$whenParser[2],$whenParser[0]);
 		if ($parent) {
 			$parent=current($parent);
 			$parent=$parent['id'];
