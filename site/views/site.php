@@ -4,10 +4,10 @@
  *
  * A Flexible Database based CMS
  *
- * @package		FlexyAdmin 2009
+ * @package		FlexyAdmin
  * @author		Jan den Besten
- * @copyright	Copyright (c) 2009, Jan den Besten
- * @link		http://flexyadmin.com
+ * @copyright	Copyright (c) 2009-2012, Jan den Besten
+ * @link			http://www.flexyadmin.com
  */
 
 // ------------------------------------------------------------------------

@@ -5,7 +5,7 @@
  *
  * @package		FlexyAdmin
  * @author		Jan den Besten
- * @copyright	Copyright (c) 2009-2011, Jan den Besten
+ * @copyright	Copyright (c) 2009-2012, Jan den Besten
  * @link			http://www.flexyadmin.com
  */
 

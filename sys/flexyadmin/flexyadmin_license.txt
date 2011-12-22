@@ -1,4 +1,4 @@
-Copyright (c) 2009-2011, Jan den Besten, www.jandenbesten.net
+Copyright (c) 2009-2012, Jan den Besten, www.jandenbesten.net
 All rights reserved.
 
 This license is a legal agreement between you and Jan den Besten for the use
