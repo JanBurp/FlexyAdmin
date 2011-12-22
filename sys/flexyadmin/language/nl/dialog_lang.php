@@ -15,6 +15,8 @@ $lang['dialog_title_edit']			= "Pas naam of datum van '<i>%s</i>' aan";
 $lang['dialog_delete_sure']			= "Weet je zeker dat je <strong>%s</strong> wilt verwijderen?";
 $lang['dialog_delete_more']			= "%s items";
 
+$lang['dialog_beforeunload']		= "LET OP!\nJe hebt je aanpassingen nog niet bewaard!\nDruk eerst op invoeren.";
+
 
 $lang['form_random_password']		= "Willekeurig Wachtwoord";
 

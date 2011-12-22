@@ -1,5 +1,19 @@
 function doForm() {
 
+	// prevent leaving form page when not saved
+	var saved=true;
+	$('input').add('textarea').change(function(){
+		saved=false;
+	});
+	$('form').submit(function(){
+		saved=true;
+	});
+	$(window).bind('beforeunload', function(){ 
+		if (!saved) return lang('dialog_beforeunload');
+	});
+
+
+
 	//
 	// Make sure media fields with selects are good height
 	//
