@@ -1,16 +1,39 @@
 function doForm() {
 
+
 	// prevent leaving form page when not saved
-	var saved=true;
-	$('input').add('textarea').change(function(){
-		saved=false;
-	});
-	$('form').submit(function(){
-		saved=true;
-	});
-	$(window).bind('beforeunload', function(){ 
-		if (!saved) return lang('dialog_beforeunload');
-	});
+	(function($) {
+		$.prevent_leaving_unsaved_page = function(options) {
+			var saved=true;
+			$('input').add('textarea').change(function(){ saved=false; });
+			$('form').submit(function(){ saved=true; });
+			// Links can have nice dialog
+			// $('a').add('input.cancel').add('input.reset').click(function(){
+			// 	if (!saved) {
+			// 		var url=$(this).attr('href');
+			// 		// see if it moves away from page
+			// 		if (typeof(url)=='undefined' || url.substr(0,1)!='#') {
+			// 			// ui dialog
+			// 			dialog.html(lang('dialog_beforeunload'));
+			// 			$(dialog).dialog({
+			// 				title:lang('dialog_title_confirm'),
+			// 				modal:true,
+			// 				width:300,
+			// 				close: function(){$(dialog).dialog("destroy");}
+			// 			});
+			// 			return false;
+			// 		}
+			// 	}
+			// 	return true;
+			// });
+			// Other ways of leaving the page have standard browsers dialog
+			$(window).bind('beforeunload', function(){ 
+				if (!saved) return lang('dialog_beforeunload');
+			});
+
+		};
+	})(jQuery);
+	$.prevent_leaving_unsaved_page();
 
 
 
