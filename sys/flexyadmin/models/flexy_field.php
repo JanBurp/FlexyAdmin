@@ -285,7 +285,7 @@ class Flexy_field extends CI_Model {
 				$when=trim($this->fieldCfg[$field]["str_show_in_form_where"]);
 				$when=preg_split('/([=|<|>])/',$when,-1,PREG_SPLIT_DELIM_CAPTURE);
 				if (count($when)==3) {
-					foreach ($when as $key => $value) {$when[$key]=trim($value);}
+					foreach ($when as $key => $value) {$when[$key]=trim(trim(trim($value),'"'),"'");}
 					$when= array('field'=>$this->field,'actor'=>$when[0],'operator'=>$when[1],'value'=>$when[2]);
 					$class='hidden';
 					switch ($when['operator']) {
