@@ -46,11 +46,11 @@ function doForm() {
 	// 	if (imgList.length>0) { selHeight+=$(imgList).outerHeight(); }
 	// 	$(this).parent('.flexyFormField:first').css({height:selHeight});
 	// });
-	$('.flexyFormField.image_dragndrop').each(function(){
-		selHeight=$(this).children('ul.choices').outerHeight();
-		selHeight+=$(this).children('ul.values').outerHeight();
-		$(this).css({height:selHeight+4});
-	});	
+	// $('.flexyFormField.image_dragndrop').each(function(){
+	// 	selHeight=$(this).children('ul.choices').outerHeight();
+	// 	selHeight+=$(this).children('ul.values').outerHeight();
+	// 	$(this).css({height:selHeight+4});
+	// });	
 
 	//
 	// conditional formfield showing

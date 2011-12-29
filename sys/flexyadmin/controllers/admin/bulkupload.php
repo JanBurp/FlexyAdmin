@@ -83,9 +83,9 @@ class Bulkupload extends AdminController {
 				$grid->set_data($gridFiles,'Files');
 				$grid->set_heading('id','');
 				if (empty($map))
-					$renderData=$grid->render("html",'bulkupload',"grid");
+					$renderData=$grid->render("html",'bulkupload',"grid home");
 				else
-					$renderData=$grid->render("html",'bulkupload',"grid actionGrid");
+					$renderData=$grid->render("html",'bulkupload',"grid actionGrid home");
 				$this->_add_content($this->load->view("admin/grid",$renderData,true));
 				$this->session->set_userdata('fileRenameCount',-1);
 			}
