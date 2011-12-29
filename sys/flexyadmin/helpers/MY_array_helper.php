@@ -667,6 +667,13 @@ function array_add_before($a,$key,$row) {
 	return array_merge($firstslice,$row,$a);
 }
 
+function implode_attributes($array) {
+	$out='';
+	foreach ($array as $key => $value) {
+		$out.=$key.'="'.$value.'" ';
+	}
+	return $out;
+}
 
 
 ?>
