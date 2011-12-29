@@ -54,7 +54,7 @@ class Plugin_login_activate extends Plugin_ {
 		if ($users) {
 			$show_users=array();
 			foreach ($users as $key => $u) {
-				$show_users[$key]=array( $this->CI->ui->get('str_username')=>$u['str_username'], $this->CI->ui->get('email_email')=>$u['email_email'], $this->CI->ui->get('group')=>$u['group']);
+				$show_users[$key]=array( $this->CI->ui->get('str_username')=>$u['str_username'], $this->CI->ui->get('email_email')=>'<a href="mailto:'.$u['email_email'].'">'.$u['email_email'].'</a>', $this->CI->ui->get('group')=>$u['group']);
 				$show_users[$key]['']=anchor('admin/plugin/'.$this->shortname.'/deny/'.$u['id'],lang('deny'),array('class'=>'button')).' | '.anchor('admin/plugin/'.$this->shortname.'/accept/'.$u['id'],lang('accept'),array('class'=>'button'));
 			}
 			$this->CI->load->model('grid');
