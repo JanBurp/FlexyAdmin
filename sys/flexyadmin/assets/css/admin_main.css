@@ -999,7 +999,7 @@ select.image_dropdown {
 .flexyFormField.medias select.image_dropdown {	width:460px;}
 
 .flexyFormField.media {min-height:35px;}
-.flexyFormField.medias {height:36px;}
+.flexyFormField.medias {min-height:36px;}
 
 .flexyFormField .flash,
 .flexyFormField img {
