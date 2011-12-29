@@ -493,8 +493,8 @@ table.grid {
 	border: solid 1px #DDEEAA;
 	border-left:none;
 	border-radius: 4px;
--o-border-radius: 4px;
--moz-border-radius: 4px;
+	-o-border-radius: 4px;
+	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 	margin:0px;
 	padding:0px;
@@ -1089,11 +1089,10 @@ input.button {
 	float:right;
 }
 .flexyFormField>ul {
-	float:left;
 	display:block;
-	min-width:29px;
+	width:29px;
 	min-height:29px;
-	margin: 0px 23px 4px 0px;
+	margin: 0px 23px 4px 149px;
 	padding:2px 2px 4px 2px;
 	border:solid 1px #DDEEAA;
 	border-radius: 4px;
@@ -1103,24 +1102,23 @@ input.button {
 	background-color:#FFF;
 }
 .flexyFormField .ui-multiselect {
-/*	float:right;*/
 	margin-right:1px;
 }
 
 .flexyFormField ul.multiple,
 .flexyFormField ul.choices {
 	max-width:none;
-	float:right;
-	width:450px;
 	max-height:125px;
 	overflow:auto;
 	padding:3px 3px 4px 4px;
 	margin-right:1px;
+	margin-left:149px;
 }
-.flexyFormField.media.image_dragndrop ul.values {
-	float:right;
-	margin-right:424px;
+.flexyFormField ul.multiple,
+.flexyFormField ul.choices {
+	width:450px;
 }
+
 .flexyFormField.image_dragndrop.wide ul.choices,
 .flexyFormField.image_dragndrop.big  ul.choices {
 	width:578px;
@@ -1413,6 +1411,9 @@ div#help_messages {
 }
 #content.grid {
 	width:auto;
+}
+#content.form {
+	width:775px;
 }
 #content.info {
 	width:590px;
