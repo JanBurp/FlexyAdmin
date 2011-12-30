@@ -956,8 +956,9 @@ div.flexyFormField.htmleditor.big label {float:none;}
 
 div.flexyFormField.wide .mceEditor,
 div.flexyFormField.big .mceEditor {margin:4px 0px 4px;}
+/* These are also set in header.php, the tinyMCE call */
 textarea.wide,
-textarea.big {width:600px;}
+textarea.big {width:608px;}
 textarea.high,
 textarea.big {height:450px;}
 form.tbl_site textarea {height:auto;}
@@ -1121,7 +1122,8 @@ input.button {
 
 .flexyFormField.image_dragndrop.wide ul.choices,
 .flexyFormField.image_dragndrop.big  ul.choices {
-	width:578px;
+	width:599px;
+	margin-left:0px;
 }
 
 
@@ -1304,7 +1306,8 @@ p.error, div.error p {
 	color:#669966;
 	border:none;
 }
-#dialog input {width:350px;}
+#dialog input {width:340px;}
+#dialog input.button {width:350px;}
 
 #dialog a.button:hover {
 	background-color:#BBCC88;

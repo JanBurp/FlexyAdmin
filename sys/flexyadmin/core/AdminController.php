@@ -76,6 +76,7 @@ class AdminController extends BasicController {
 		if ($this->config->item('LOCAL'))	$title=' # '.$title; else $title=' - '.$title;
 		$url=str_replace('http://','',$site['url_url']);
 		$editor=($this->showEditor and $this->cfg->get('CFG_configurations',"b_use_editor"));
+		$editorClass=$this->cfg->get('CFG_configurations',"str_class");
 		$type="";
 		if (isset($this->showType)) $type=$this->showType;
 		$buttons1=$this->cfg->get('CFG_configurations',"str_buttons1");
@@ -90,7 +91,7 @@ class AdminController extends BasicController {
 		}
 		$formats=$this->cfg->get('CFG_configurations',"str_formats");
 		$styles=$this->cfg->get('CFG_configurations',"str_styles");
-		$this->load->view('admin/header', array("title"=>$title,"url"=>$url,"jsVars"=>$this->js,"show_type"=>$type,"show_editor"=>$editor,"buttons1"=>$buttons1,"buttons2"=>$buttons2,"buttons3"=>$buttons3,'preview_width'=>$previewWidth,'preview_height'=>$previewHeight,"formats"=>$formats,"styles"=>$styles,"language"=>$this->language));
+		$this->load->view('admin/header', array("title"=>$title,"url"=>$url,"jsVars"=>$this->js,"show_type"=>$type,"show_editor"=>$editor,"editor_class"=>$editorClass,"buttons1"=>$buttons1,"buttons2"=>$buttons2,"buttons3"=>$buttons3,'preview_width'=>$previewWidth,'preview_height'=>$previewHeight,"formats"=>$formats,"styles"=>$styles,"language"=>$this->language));
 	}
 
 	function _show_table_menu($tables,$type) {
