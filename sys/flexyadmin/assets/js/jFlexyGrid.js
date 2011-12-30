@@ -260,6 +260,8 @@ function doGrid() {
 					fileObj=$(this).parents('div.file:first');
 				else
 					fileObj=$(this).parents('tr:first');
+				// console.log(isThumbs);
+				// console.log(fileObj);
 				var filename=$(fileObj).children('.name:first').text();
 				path=$(fileObj).children('.thumb:first').children('.path:first').text();
 				ext=get_ext(filename);
@@ -583,6 +585,7 @@ function doGrid() {
 };
 
 function get_current_grid_page_uri() {
+	var grid=$('table.grid');
 	return '/offset/'+$(grid).attr('offset')+ '/order/'+$(grid).attr('order')+ '/search/'+$(grid).attr('search');
 }
 

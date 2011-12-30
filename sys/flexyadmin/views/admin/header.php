@@ -91,6 +91,19 @@ $isForm=has_string('form',$show_type);
 						docs_language : "<?=$language?>",
 						theme : "advanced",
 						skin : "flexyadmin",
+						<?
+						switch ($editor_class) {
+							case 'wide':
+								echo 'width:"608",';
+								break;
+							case 'high':
+								echo 'height:"450",';
+								break;
+							case 'big':
+								echo 'width:"608",height:"450",';
+								break;
+						}
+						?>
 						theme_advanced_toolbar_location : "top",
 						theme_advanced_toolbar_align : "left",
 						theme_advanced_statusbar_location: "bottom",
