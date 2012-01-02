@@ -48,6 +48,5 @@ update.txt													- how to update FlexyAdmin to the latest version
 /site/helpers/ 											- here you can put your own CodeIgniter helpers
 /site/models/ 											- here you can put your own CodeIgniter models
 /site/libraries/										- here you can put your own CodeIgniter libraries and frontend modules (which are special libraries)
-/site/plugins/											- here you can put admin plugins (models for the backend)
 /site/views/												- folder with all your views, where the html sits with some php
 /site/views/site.php								- this is you main view
