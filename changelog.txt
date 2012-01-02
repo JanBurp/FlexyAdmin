@@ -1,3 +1,45 @@
+> 1413
+
+UPDATES:
+- CodeIgniter 2.1
+- jQuery 1.7.1
+- tinyMCE 3.4.7
+
+CLEANUP:
+- Lot of cfg_ tables are changed/cleaned up:
+	- cfg_editor is removed and put into cfg_configurations
+	- all str_ui_name and txt_help fields from cfg_table_info, cfg_field_info and cfg_media_info are moved to a new table: cfg_ui
+	- removed cfg_table_info.b_single_row, just set int_max_rows to 1 for same result.
+	
+NEW:
+- controller is changed: no need to change code for standard options: just set the options in config (see the userguide)
+- change the variable name $item to $page (in controller and all standard modules): just for easthetics and reflecting more what it is
+- new standard modules:
+	- submenu
+	- login and its views (for authentication in frontend sites, uses the ion_auth/user class)
+- changes to modules:
+	- search: results can be grouped by uri (set in its config)
+- autoload_modules_if option in config: to load modules with a simple if statement (see userguide and config.php)
+- modules and plugins have now the method ->config() to get own config item, second argument is default value (standard NULL)
+- if a form in FlexyAdmin has changed and not saved and the browser leaves the page: a warning will popup to prevent lost changes
+- Admin UI names and help can be in more languages now (see cfg_ui), standard englisch and nederlands.
+- Forms can have tabs (which reflects fieldsets). You can add fieldsets per table at cfg_table_info, and set per field in which fieldset it sits at cfg_field_info (no fieldsets means the standard fieldset)
+	- Where to use?:
+		- With mult-language sites: put every language under a tab
+		- With tables with lots of fields (and options): put the extra's under another tab, or group them logically with tabs.
+- some performance ...
+- you can set FORM_NICE_DROPDOWNS in flexyadmin_config to FALSE if the nice dropdowns has performance issues (if there are realy a lot of options), this will fall back to standard dropdown fields
+- remove the class fields from tinyMCE links popup (is realy not needed since you can use the styles dropdown): if you need it, set in on in site/assets/css/admin.css
+- My_text_helper: added function highlight_code_if_needed()
+- db->get_field_where() can search also with LIKE instead of a normal WHERE = statement
+BUGS:
+- some bugs in the plugin_handler
+- some bugs in plugin_automenu
+- some styling bugs
+- bug in form with password fields
+
+
+
 > 1332
 
 NEW:
