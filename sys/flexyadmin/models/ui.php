@@ -126,7 +126,7 @@ class ui extends CI_Model {
 		$s=str_replace("__","-",$s);
 		$s=str_replace("_"," ",$s);
 		$s=ucwords($s);
-		if ($p=='medias' and substr($s,strlen($s))!='s') $s.="s";
+		// if ($p=='medias' and substr($s,strlen($s))!='s') $s.="s";
 		return $s;
 	}
 	
