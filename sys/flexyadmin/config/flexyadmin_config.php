@@ -266,7 +266,7 @@ $config["CFG_"]=array(
 			'str_fieldsets'=>'English',
 			"b_grid_add_many"=>'0',
 			"str_abstract_fields"=>'',
-			"str_order_by"=>'',
+			"str_order_by"=>'field_field,table,path',
 			),
 		"cfg_configurations"=>array(
 			"order"=>'101',
