@@ -359,12 +359,7 @@ class Menu {
 	}
 
 	
-	function render_branch($branchUri,$attr="",$level=1,$preUri="",$nobranchUri=FALSE) {
-		$out='';
-		if ($nobranchUri)
-			$preUri=ltrim($preUri.'/');
-		else
-			$preUri=ltrim(add_string($preUri,$branchUri,'/'),'/');
+  function get_branch($branchUri) {
 		$branchUri=ltrim($branchUri,'/');
 		$uris=explode('/',$branchUri);
 		$branch=$this->menu;
@@ -381,6 +376,16 @@ class Menu {
 			}
 			else $branch=false;
 		}
+    return $branch;
+  }
+  
+	function render_branch($branchUri,$attr="",$level=1,$preUri="",$nobranchUri=FALSE) {
+		$out='';
+		if ($nobranchUri)
+			$preUri=ltrim($preUri.'/');
+		else
+			$preUri=ltrim(add_string($preUri,$branchUri,'/'),'/');
+    $branch=$this->get_branch($branchUri,$preUri,$nobranchUri);
 		if ($branch) {
 			$out=$this->render($branch,$attr,$level,$preUri);
 		}
@@ -450,7 +455,6 @@ class Menu {
 							$showName=ascii_to_entities($item['name']);
 						else
 							$showName=trim(ascii_to_entities($name),'_');
-						// trace_($showName);
 						$pre=get_prefix($showName,"__");
 						if (!empty($pre)) $showName=$pre;
 						if (isset($item["help"])) $showName=help($showName,$item["help"]);
