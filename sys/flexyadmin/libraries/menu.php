@@ -148,7 +148,7 @@ class Menu {
 		if ($foreign) $CI->db->add_foreigns($foreign);
 		if (in_array("self_parent",$fields)) {
 			$CI->db->uri_as_full_uri('full_uri');	
-			$CI->db->order_as_tree();	
+      $CI->db->order_as_tree();  
 		}
 		$data=$CI->db->get_result($table);
 		return $this->set_menu_from_table_data($data,$foreign);
@@ -516,6 +516,17 @@ class Menu {
 		return $item;
 	}
 	
+  
+  function get_first_sub_uri($uri='') {
+    $sub_uri=FALSE;
+		if (empty($uri)) $uri=$this->current;
+		$submenu=$this->_get_submenu($uri,false);
+		if ($submenu) {
+      $sub=current($submenu);
+      if ($sub) $sub_uri=$sub['full_uri'];
+		}
+		return $sub_uri;
+  }
 	
 	function get_prev($uri='') {
 		$prev=false;
@@ -645,9 +656,9 @@ class Menu {
 	}
 
 	
-	function _get_submenu($uri) {
+	function _get_submenu($uri,$current=TRUE) {
 		$parts=explode('/',$uri);
-		array_pop($parts);
+		if ($current) array_pop($parts);
 		$submenu=$this->menu;
 		foreach ($parts as $part) {
 			if (isset($submenu[$part]['sub']))
