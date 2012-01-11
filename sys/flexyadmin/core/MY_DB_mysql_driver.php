@@ -741,7 +741,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 					if (is_string($fullUri)) $uriField=$fullUri;
 					if (!empty($extraFullField)) $extra=$row[$extraFullField];
 					if ( $this->_test_if_full_path($result,$row) ) {
-						$parentUri=$result[$row["self_parent"]]["uri"];
+						$parentUri=$result[$row["self_parent"]][$uriField];
 						$result[$key][$uriField]=$parentUri."/".$uri;
 						if (!empty($extraFullField)) {
 							$parentExtra=$result[$row["self_parent"]][$extraFullField];
@@ -750,7 +750,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 					}
 					else {
 						$parent=$this->get_parent($table,$uri,$extraFullField);
-						$result[$key][$uriField]=$parent['uri'];
+						$result[$key][$uriField]=$parent[$uriField];
 						if (!empty($extraFullField)) {
 							$result[$key][$extraFullField]=$parent[$extraFullField];
 						}
