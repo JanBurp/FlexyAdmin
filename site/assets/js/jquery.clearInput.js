@@ -7,6 +7,7 @@
 (function($) {
 	$.fn.clearInput = function(opts) {
 		return this.each(function() {
+      $(this).attr('value',$(this).attr('empty_value'));
 			$(this).focus(function(){
 				$(this).val('');
 			}).focusout(function(){

@@ -87,6 +87,13 @@ class Form {
 		$this->set_caption($caption);
 	}
 
+  public function prepare_for_clearinput() {
+    foreach ($this->data as $key=>$data) {
+      $label=$data['label'];
+      $this->data[$key]['attr']['empty_value']=$label;
+    }
+  }
+
 	public function add_password_match($args=TRUE) {
 		$opts=array('fields'=>array('gpw','pwd'),'label'=>' (2x)','name'=>'matches','class'=>'matches');
 		if (is_array($args)) $opts=array_merge($opts,$args);
