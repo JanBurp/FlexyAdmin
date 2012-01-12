@@ -334,6 +334,7 @@ class Flexy_field extends CI_Model {
 		$out["label"]			= $this->ui->get($this->field,$this->table);
 		$out["type"]			= $this->type;
 		$out["fieldset"]	= el('str_fieldset', el($this->field,$this->fieldCfg), $this->ui->get($this->table) );
+    $out['class']     = '';
 
 		/**
 		 * Dropdown fields, if there are options.
@@ -362,6 +363,7 @@ class Flexy_field extends CI_Model {
 			else {
 				// add a 'new' item button
 				$out["button"]=api_uri('API_view_form',trim(foreign_table_from_key($this->field),'_').':-1');
+        $out['class'].='has_button ';
 			}
 			if (!empty($multiOptions)) $out["multiple"]="multiple";
 		}
@@ -381,7 +383,7 @@ class Flexy_field extends CI_Model {
 		 * Wide?
 		 */
 		if ($this->type=="htmleditor" or $this->type=="function_dropdown_media" or $this->type=='function_dropdown_medias') {
-			$out['class'] = $this->cfg->get('CFG_configurations','str_class');
+			$out['class'].= $this->cfg->get('CFG_configurations','str_class').' ';
 		}
 		
 		/**

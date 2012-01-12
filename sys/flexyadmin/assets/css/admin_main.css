@@ -358,6 +358,7 @@ div.add_button {
 	float:right;
 	width:20px;
 	height:20px;
+  margin:6px 2px 0px 0px;
 }
 .multiple div.add_button {
 /*	margin-top:153px;*/

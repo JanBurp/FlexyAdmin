@@ -113,7 +113,9 @@ function doForm() {
 		});
 		// styling of multiple
 		$('.flexyFormField.dropdown button').css({width:460});
-		$('.flexyFormField.dropdown .ui-multiselect-menu').css({width:430});
+		$('.flexyFormField.dropdown .ui-multiselect-menu').css({width:458});
+		$('.flexyFormField.dropdown.has_button button').css({width:430});
+		$('.flexyFormField.dropdown.has_button .ui-multiselect-menu').css({width:428});
 		$('.flexyFormField.image_dropdown.multiple ul.values').css({width:425,'float':'left',position:'relative'});
 		$('.flexyFormField.image_dropdown.multiple button.ui-multiselect').css({width:420,height:38,'float':'right','margin-top':-42});
 	}
