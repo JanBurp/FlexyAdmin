@@ -349,7 +349,7 @@ class Flexy_field extends CI_Model {
 			}
 			// no empty option needed with jquery.multiselect if multiple
 			if (!empty($multiOptions) and isset($options[''])) unset($options['']);
-			// trace_($options);
+      // strace_($options);
 			$out["options"] = $options;
 			// type?
 			if ($this->type!="dropdown") {
