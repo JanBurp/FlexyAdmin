@@ -614,9 +614,9 @@ table.grid th.hiddenCell {
 	overflow:hidden;
 	padding:0px;
 	margin:0px;
-	border:none;
+  border-left:none;
 	color:transparent;
-	font-size:0px;
+  font-size:0px;
 }
 table.grid td.hiddenCell *,
 table.grid th.hiddenCell * {
