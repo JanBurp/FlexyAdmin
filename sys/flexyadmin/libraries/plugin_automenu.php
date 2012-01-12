@@ -13,6 +13,8 @@ class Plugin_automenu extends Plugin_ {
 	var $automationTable;
 	var $resultMenu;
 	var $delete=FALSE;
+  var $pass_twice=FALSE;
+  var $pass=0;
 	
 	var $newMenu;
 	var $lastId;
@@ -55,6 +57,7 @@ class Plugin_automenu extends Plugin_ {
 
 	public function _after_update() {
 		$this->delete=FALSE;
+    $this->pass_twice=TRUE;
 		$this->_create_auto_menu();
 		return $this->newData;
 	}
@@ -78,24 +81,30 @@ class Plugin_automenu extends Plugin_ {
 	/**
 	 * Make sure that data has newData!!
 	 */
-	private function _get_current_data($table,$where='',$limit=0) {
+	private function _get_current_data($table,$where='',$limit=0, $insert_check='') {
 		if (!empty($where)) {
 			$this->CI->db->where($where);	
 		}
 		$data=$this->CI->db->get_results($table,$limit);
-		if ($table==$this->table and isset($this->newData['id'])) {
-			$id=$this->newData['id'];
-			$data[$id]=$this->newData;
-			if ($id==-1) {
-				// new item, maybe it needs a new order
-				if (isset($this->newData['order'])) {
-					$this->CI->load->model('order','order_model');
-					if (isset($this->newData["self_parent"])) 
-						$data[$id]["order"]=$this->CI->order_model->get_next_order($this->table,$this->newData["self_parent"]);
-					else
-						$data[$id]["order"]=$this->CI->order_model->get_next_order($this->table);
-				}
-			}
+    // trace_(array('table'=>$table,'this->table'=>$this->table,'check'=>$insert_check));
+    
+		if ($table==$this->table and isset($this->newData['id']) and $this->pass==1) {
+      if (empty($insert_check) or $this->newData[$insert_check['field']]==$insert_check['value']) {
+  			$id=$this->newData['id'];
+  			$data[$id]=$this->newData;
+  			if ($id==-1) {
+  				// new item, maybe it needs a new order
+  				if (isset($this->newData['order'])) {
+  					$this->CI->load->model('order','order_model');
+  					if (isset($this->newData["self_parent"])) 
+  						$data[$id]["order"]=$this->CI->order_model->get_next_order($this->table,$this->newData["self_parent"]);
+  					else
+  						$data[$id]["order"]=$this->CI->order_model->get_next_order($this->table);
+  				}
+          // else it is probably a date or string... # BUSY
+          // strace_($data);
+  			}
+      }
 		}
 		if ($this->delete) {
 			if ($this->table==$table)	unset($data[$this->oldData['id']]);
@@ -104,6 +113,9 @@ class Plugin_automenu extends Plugin_ {
 	}
 	
 	private function _create_auto_menu() {
+    $this->pass++;
+    // strace_(array('pass'=>$this->pass));
+    
 		$lastOrder=0;
 		$this->newMenu=array();
 		$this->parentIDs=array();
@@ -256,7 +268,6 @@ class Plugin_automenu extends Plugin_ {
 		
 		
 				case 'from table group by category':
-					// trace_($autoValue);
 					$pagination=(int)$autoValue['str_parameters'];
 					// check if table is many table
 					$fromRel=false;
@@ -277,8 +288,8 @@ class Plugin_automenu extends Plugin_ {
 					}
 					$groupData=$this->_get_current_data($groupTable);
 					
-					// trace_($autoValue);
-					// trace_($groupTable);
+          // strace_($autoValue);
+          // strace_($groupTable);
 					
 					foreach ($groupData as $groupId=>$groupData) {
 						$titleField='str_title';
@@ -289,18 +300,14 @@ class Plugin_automenu extends Plugin_ {
 						}
 						if ($fromRel) {
 							$this->CI->db->add_many();
-							$this->CI->db->where($autoValue['field_group_by'],$groupId);
 						}
-						else {
-							$this->CI->db->where($autoValue['field_group_by'],$groupId);
-						}
-						$data=$this->_get_current_data($autoValue['table']);
+            $where=$autoValue['field_group_by'].' = '.$groupId;
+						$data=$this->_get_current_data($autoValue['table'], $where,0,array('field'=>get_postfix($autoValue['field_group_by'],'.'),'value'=>$groupId) );
 						
-						// trace_('#SHOW# '.$this->CI->db->ar_last_query);
-						// trace_($groupId);
-						// trace_($groupData);
-						// trace_($data);
-						
+            // trace_('#SHOW# '.$this->CI->db->ar_last_query);
+            // trace_($groupId);
+            // trace_($groupData);
+            // trace_($data);
 						
 						if ($data) {
 							// trace_('Pagination: '.$pagination);
@@ -483,8 +490,13 @@ class Plugin_automenu extends Plugin_ {
 		}
 
 		// update linklist etc
-		if (!isset($this->CI->editor_lists)) $this->CI->load->library('editor_lists');
-		$this->CI->queu->add_call(@$this->CI->editor_lists,'create_list','links');
+    if ($this->pass_twice and $this->pass==1) {
+  		$this->CI->queu->add_call(@$this,'_admin_api',NULL,'top');
+    }
+    else {
+  		if (!isset($this->CI->editor_lists)) $this->CI->load->library('editor_lists');
+  		$this->CI->queu->add_call(@$this->CI->editor_lists,'create_list','links');
+    }
 	}
 
 

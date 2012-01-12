@@ -18,9 +18,18 @@ class Queu extends CI_Model {
 		$this->remove_calls();
 	}
 
-	public function add_call($object,$method,$args='') {
+	public function add_call($object,$method,$args='',$place='') {
 		$call=array('object'=>$object,'method'=>$method,'args'=>$args);
-		if (!in_array($call,$this->calls)) $this->calls[]=$call;
+		if (!in_array($call,$this->calls)) {
+      switch ($place) {
+        case 'top':
+          array_unshift($this->calls,$call);
+          break;
+        default:
+          $this->calls[]=$call;
+          break;
+      }
+    }
 	}
 	
 	public function run_calls() {
