@@ -360,7 +360,7 @@ class Show extends AdminController {
 				$multiOptions=el("multi_options",$data);
 				$data=current($data);
 			}
-			// strace_($options);
+      // strace_($options);
 			// strace_($multiOptions);
 
 			/**

@@ -1252,7 +1252,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			$res=$this->_set_key_to($res,PRIMARY_KEY);
 			foreach($res as $row) {
 				$options[$row[$this->pk]]=$row[$CI->config->item('ABSTRACT_field_name')];
-				if ($asTree and $row['self_parent']!=0) $options[$row[$this->pk]]=$res[$row['self_parent']][$CI->config->item('ABSTRACT_field_name')].' / '.$options[$row[$this->pk]];
+        if ($asTree and $row['self_parent']!=0 and isset($options[$row[$this->pk]]) and isset($res[$row['self_parent']])) $options[$row[$this->pk]]=$res[$row['self_parent']][$CI->config->item('ABSTRACT_field_name')].' / '.$options[$row[$this->pk]];
 			}
 			return $options;
 		}
