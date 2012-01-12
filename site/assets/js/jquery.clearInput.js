@@ -7,14 +7,29 @@
 (function($) {
 	$.fn.clearInput = function(opts) {
 		return this.each(function() {
-      $(this).attr('value',$(this).attr('empty_value'));
+      // init
+      $(this).addClass('clearInput');
+      if ($(this).attr('value')==$(this).attr('empty_value') || $(this).attr('value')=='') {
+				$(this).val($(this).attr('empty_value'));
+        $(this).addClass('empty_value');
+      }
 			$(this).focus(function(){
 				$(this).val('');
 			}).focusout(function(){
 				if ($(this).val()=='') {
 					$(this).val($(this).attr('empty_value'));
+          $(this).addClass('empty_value');
 				}
+        else {
+          $(this).removeClass('empty_value');
+        }
 			});
+      // Make sure all values are cleaned if they are at start value after submit
+      $(this).parents('form').submit(function(){
+        $(this).find('.clearInput').each(function(){
+          if ($(this).attr('value')==$(this).attr('empty_value')) $(this).val('');
+        });
+      });
 		});
 	};
 })(jQuery);

@@ -33,11 +33,6 @@ $route['(?!admin|rss|file)(.*)'] = "";
 $route['file/(.*)/(.*)'] = "file/download/this/$1/$2";
 
 /**
- * This routing makes sure all validation callbacks are not reachable
- */
-// $route['admin/show/valid_(.*)'] = "admin/show";
-
-/**
  * This routing reroutes plugin calls
  */
 $route['admin/plugin/(.+)'] = "admin/plugin/call/$1";
