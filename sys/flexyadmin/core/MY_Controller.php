@@ -77,7 +77,6 @@ class MY_Controller extends CI_Controller {
 
 	/**
 	 * Here are some own form validation callback functions
-	 * Routings are set so that admin/show/valid_* is routed to admin/show, so these callbacks are not reached by url
 	 */
 
 		function valid_rgb($rgb) {
@@ -101,6 +100,7 @@ class MY_Controller extends CI_Controller {
 				return FALSE;
 			}
 		}
+
 	
 	
 
