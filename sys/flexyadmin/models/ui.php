@@ -122,6 +122,7 @@ class ui extends CI_Model {
 			return $this->get(foreign_table_from_key($s));
 		}
 		$p=get_prefix($s);
+    $s=remove_prefix($s,'.');
 		$s=remove_prefix($s);
 		$s=str_replace("__","-",$s);
 		$s=str_replace("_"," ",$s);
