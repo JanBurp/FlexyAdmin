@@ -390,7 +390,7 @@ class AdminController extends BasicController {
 			else
 				$name=safe_string($name);
 			$name='help_'.$counter++.'_'.$name;
-			$this->helpTexts[$name]=$help;
+			$this->helpTexts[$name]=ascii_to_entities($help);
 			return $name;
 		}
 		return $found;
