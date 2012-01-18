@@ -95,7 +95,7 @@ class ui extends CI_Model {
 					$fields=filter_by_key($fieldHelp,$key);
 					if (!empty($fields)) {
 						foreach ($fields as $fkey => $fvalue) {
-							$fkey=remove_prefix($fkey,'.');
+              // $fkey=remove_prefix($fkey,'.');
 							$help.=div('helpField')."<h3>".$this->get($key)." - ".$this->get($fkey)."</h3>".$fvalue._div();
 						}
 					}

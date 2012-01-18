@@ -170,7 +170,7 @@ function safe_string($s,$c=0) {
 	$s=strtolower($s);
 	$s=trim($s);
 	$s=preg_replace("/\s/","_",$s);
-	$s=str_replace(array('"',"'","`",'.'),'',$s);
+	$s=str_replace(array('"',"'","`",'.','(',')'),'',$s);
 	if ($c>0) $s=substr($s,0,$c);
 	$e=explode('_',$s);
 	if (!empty($e) and count($e)>1) {
