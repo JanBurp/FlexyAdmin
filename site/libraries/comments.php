@@ -18,7 +18,6 @@ class Comments extends Module {
 	
 	public function __construct() {
 		parent::__construct();
-		$this->CI->lang->load('comments');
 		$this->CI->load->library('form');
 		$this->CI->load->library('spam');
 		$this->foreign_table=foreign_table_from_key( $this->config('key_id') );

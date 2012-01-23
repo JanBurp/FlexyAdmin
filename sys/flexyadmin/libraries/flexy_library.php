@@ -14,6 +14,7 @@ class Flexy_library {
 		if (empty($name)) $name=strtolower(get_class($this));
 		if (!in_array($name, array('flexy_library','module','plugin_'))) {
 			$this->set_name($name);
+  		$this->CI->lang->load($name);
 			$this->load_config();
 		}
 	}

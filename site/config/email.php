@@ -14,7 +14,7 @@
 
 
 
-// $config['mailtype'] = 'html';
+$config['mailtype'] = 'html';
 // $config['protocol'] = 'smtp';
 // $config['smtp_host'] = 'smtp.yourhost.nl';
 
