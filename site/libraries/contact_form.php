@@ -10,20 +10,15 @@ class Contact_form extends Module {
 	}
 
 	public function index($page) {
-		
 		$content='';
 		
-		// Form Fields
-		$formData=array("str_name"		=>array("label"=>"Naam","validation"=>"required"),
-										"email_email"	=>array("label"=>"Email","validation"	=>  "required|valid_email"),
-										"str_subject"	=>array("label"=>"Onderwerp","validation"	=>  "required"),																				
-										"txt_text"		=>array("type"=>"textarea","label"=>"Vraag","validation"=>"required"));
-		// Form Buttons
-		$formButtons=array('submit'=>array("submit"=>"submit","value"=>lang('contact_submit')));
+		// Form
+    $formData=$this->config('form_fields');
+    $formButtons=$this->config('form_buttons');
 
-		// Create form object and set fields and buttons
 		$form=new form($this->CI->uri->get());
-		$form->set_data($formData,"Contact");
+		$form->set_data($formData, $this->config('form_name') );
+    $form->prepare_for_clearinput();
 		$form->set_buttons($formButtons);
 
 		// Is form validation ok?
@@ -38,8 +33,20 @@ class Contact_form extends Module {
 			// Setup mail
 			$this->CI->email->to($siteMail,$siteAuthor);
 			$this->CI->email->from($formData["email_email"]);
-			$this->CI->email->subject("Email van site: '".$formData["str_subject"]."'");
-			$this->CI->email->message($formData["txt_text"]);
+			$this->CI->email->subject("Email van site");
+      
+			$body='';
+			foreach ($formData as $key => $value) {
+				if (substr($key,0,1)!='_') {
+					$showKey=ucfirst(remove_prefix($key));
+					$body.="<b>$showKey:&nbsp;</b>";
+					$body.="$value<br/><br/>";
+					if (isset($formData[$key]['options'][$value])) {
+						$value=strip_tags($formData[$key]['options'][$value]);
+					}
+				}
+			}
+			$this->CI->email->message($body);
 			$this->CI->email->send();
 		
 			// Show Send message
