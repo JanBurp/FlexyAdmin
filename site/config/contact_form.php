@@ -9,9 +9,9 @@
 */
 
 $config['form_fields'] = array(
-                                'str_naam'		  => array('label'=>'naam','validation'=>'required'),
-              									'email_email'	  => array('label'=>'email','validation'	=>  'required|valid_email'),
-              									'txt_text'	    => array('label'=>'opmerking:','type'=>'textarea','validation'=>'required'));
+                                'str_name'		  => array( 'label'=>lang('field__str_name'), 'validation'=>'required' ),
+              									'email_email'	  => array( 'label'=>lang('field__email_email'), 'validation'	=>  'required|valid_email' ),
+              									'txt_text'	    => array( 'label'=>lang('field__txt_text'), 'type'=>'textarea', 'validation'=>'required' )
                           );
                           
 
@@ -27,10 +27,11 @@ $config['form_buttons'] = array( 'submit'=>array('submit'=>'submit', 'value'=>la
 
 /*
 |--------------------------------------------------------------------------
-| Form name
+| From address field
 |--------------------------------------------------------------------------
 |
 */
 
-$config['form_name'] = 'Contact';
+$config['from_address_field'] = 'email_email';
+
 

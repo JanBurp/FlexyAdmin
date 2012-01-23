@@ -4,7 +4,6 @@ class Search extends Module {
 
 	public function __construct() {
 		parent::__construct();
-		$this->CI->lang->load('search');
 	}
 
 	public function index($page) {

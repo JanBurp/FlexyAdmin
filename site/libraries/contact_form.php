@@ -4,7 +4,6 @@ class Contact_form extends Module {
 
 	public function __construct() {
 		parent::__construct();
-		$this->CI->lang->load('contact_form');
 		$this->CI->load->library('form');
 		$this->CI->load->library('email');
 	}
@@ -17,7 +16,7 @@ class Contact_form extends Module {
     $formButtons=$this->config('form_buttons');
 
 		$form=new form($this->CI->uri->get());
-		$form->set_data($formData, $this->config('form_name') );
+		$form->set_data($formData, lang('form_name') );
     $form->prepare_for_clearinput();
 		$form->set_buttons($formButtons);
 
@@ -32,8 +31,8 @@ class Contact_form extends Module {
 
 			// Setup mail
 			$this->CI->email->to($siteMail,$siteAuthor);
-			$this->CI->email->from($formData["email_email"]);
-			$this->CI->email->subject("Email van site");
+			$this->CI->email->from($formData[$this->config('from_address_field')]);
+			$this->CI->email->subject(lang('contact_mail_subject'));
       
 			$body='';
 			foreach ($formData as $key => $value) {
