@@ -16,10 +16,11 @@ class MY_Upload extends CI_Upload {
 	}
 
 
-	function config($config) {
+	function config($config='') {
 		if (!isset($config['upload_path'])) 	$config['upload_path'] = assets();
 		if (!isset($config['allowed_types']))	$config['allowed_types'] = "jpg|jpeg|gif|png|mp3|wav|ogg|wma|pdf";
 		$this->config=$config;
+    // strace_($this->config);
 		$this->resized=FALSE;
 	}
 
@@ -58,8 +59,8 @@ class MY_Upload extends CI_Upload {
 		$this->initialize($config);
 		$this->do_upload($file);
 		$this->error=$this->display_errors();
-		// strace_($this->error);
-		// strace_($_FILES);
+    // trace_($this->error);
+    // trace_($_FILES);
 		if (empty($this->error)) {
 			$this->result=$this->data();
 			$this->file_name=$this->result["file_name"];
@@ -68,7 +69,7 @@ class MY_Upload extends CI_Upload {
 				rename($config["upload_path"]."/".$this->file_name, $config["upload_path"]."/".$cleanName);
 				$this->file_name=$cleanName;
 			}
-			// trace_($this->file_name);
+      // trace_($this->file_name);
 			$goodluck=empty($this->error);
 			if (!$goodluck) {
 				log_("info","[UPLOAD] error while uploaded: '$this->file_name' [$this->error]");
