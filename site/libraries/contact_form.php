@@ -23,7 +23,7 @@ class Contact_form extends Module {
 		// Is form validation ok?
 		if ($form->validation()) {
 			// Yes, form is validated: Send mail
-		
+      
 			// Get formdata and site email
 			$formData=$form->get_data();
 			$siteMail=$this->CI->site['email_email'];
@@ -36,7 +36,24 @@ class Contact_form extends Module {
       
 			$body='';
 			foreach ($formData as $key => $value) {
-				if (substr($key,0,1)!='_') {
+        
+        // Attachment?
+        if (get_prefix($key)=='file') {
+					if (isset($_FILES[$key]['name']) and !empty($_FILES[$key]['name']) ) {
+						$this->CI->load->library('upload');
+						$this->CI->load->model('file_manager');
+						$this->CI->file_manager->init( $this->config('attachment_folder'), $this->config('attachment_types') );
+						$result=$this->CI->file_manager->upload_file($key);
+						if (!empty($result['file'])) {
+              $file=SITEPATH.'assets/'.$this->config('attachment_folder').'/'.$result['file'];
+							$formData[$key]=$result['file'];
+              $value=$result['file'];
+						}
+					}
+        }
+        
+        // Create body
+				if (substr($key,0,1)!='_' and !empty($value)) {
 					$showKey=ucfirst(remove_prefix($key));
 					$body.="<b>$showKey:&nbsp;</b>";
 					$body.="$value<br/><br/>";
@@ -44,10 +61,13 @@ class Contact_form extends Module {
 						$value=strip_tags($formData[$key]['options'][$value]);
 					}
 				}
+        
 			}
+
 			$this->CI->email->message($body);
+      if (isset($file) and !empty($file)) $this->CI->email->attach($file);
 			$this->CI->email->send();
-		
+
 			// Show Send message
 			$content=lang('contact_send_text');
 		}

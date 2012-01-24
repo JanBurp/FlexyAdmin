@@ -35,3 +35,14 @@ $config['form_buttons'] = array( 'submit'=>array('submit'=>'submit', 'value'=>la
 $config['from_address_field'] = 'email_email';
 
 
+/*
+|--------------------------------------------------------------------------
+| Attachment folder
+|--------------------------------------------------------------------------
+|
+*/
+
+$config['attachment_folder'] = 'downloads';
+$config['attachment_types'] = 'gif|jpg|png|doc|docx|xls|xlsx|pdf|zip';
+
+
