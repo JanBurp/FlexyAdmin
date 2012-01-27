@@ -1,7 +1,7 @@
 <?
 // Minimized versions of Javascript & CSS files (see http://refresh-sf.com/yui/)
 $minimize=FALSE;
-$minimize=TRUE;
+// $minimize=TRUE;
 
 if ($minimize) {
 	$js='.min.js';
@@ -54,7 +54,7 @@ $isForm=has_string('form',$show_type);
 	<script language="javascript" type="text/javascript" src="sys/jquery/jquery-1.7.1.min.js"></script>
 	<!-- jQuery UI -->
 	<link rel="stylesheet" type="text/css" href="sys/jquery/ui/custom-theme/jquery-ui-1.8.7.custom<?=$css?>" />
-	<script language="javascript" type="text/javascript" src="sys/jquery/ui/jquery-ui-1.8.16.custom.min.js"></script>
+	<script language="javascript" type="text/javascript" src="sys/jquery/ui/jquery-ui-1.8.17.custom.min.js"></script>
 	<!-- jQuery plugins-->
 	<link rel="stylesheet" type="text/css" href="sys/jquery/plugins/fullsize/fullsize.css" />
 	<script language="javascript" type="text/javascript" src="sys/jquery/plugins/fullsize/jquery.fullsize<?=$js?>"></script>
