@@ -86,6 +86,29 @@ class MY_Upload extends CI_Upload {
 		return $goodluck;
 	}
 	
+  // Check if image is big enough
+  function check_size($file,$map) {
+    $ok=FALSE;
+    $size=getimagesize($map.'/'.$file);
+    if (isset($size[0]) and isset($size[1])) {
+  		if (!isset($this->CI)) {
+  			$this->CI =& get_instance();
+  			$this->CI->load->library('image_lib');
+  		}
+  		$CI=$this->CI;
+  		$uPath=str_replace($CI->config->item('ASSETS'),"",$map);
+  		$cfg=$CI->cfg->get('CFG_img_info',$uPath);
+      if (isset($cfg['int_min_width']) and $cfg['int_min_width']>0 and isset($cfg['int_min_height']) and $cfg['int_min_height']>0) {
+        $ok=($size[0]>=$cfg['int_min_width'] and $size[1]>=$cfg['int_min_height'] );
+      }
+      else {
+        $ok=TRUE;
+      }
+    }
+    return $ok;
+  }
+  
+  
 	function auto_fill_fields($image,$path) {
 		if (!isset($this->CI)) {
 			$this->CI =& get_instance();
