@@ -241,12 +241,21 @@ class File_manager Extends CI_Model {
 				if (rename($this->map.'/'.$file, $this->map.'/'.$saveName))
 					$file=$saveName;
 			}
+
+			// is image?
 			if (in_array(strtolower($ext),$this->config->item('FILE_types_img'))) {
-				// is image, maybe resizing
-				$ok=$this->upload->resize_image($file,$this->map);
-				if (!($ok)) {
-					$error=$this->upload->get_error();
-				}
+        // check minimal size
+        if ($this->upload->check_size($file,$this->map)) {
+          // if ok: resizing
+  				$ok=$this->upload->resize_image($file,$this->map);
+  				if (!($ok)) {
+  					$error=$this->upload->get_error();
+  				}
+        }
+        else {
+          $this->delete_file($file);
+          $error=langp('upload_img_too_small',$file);
+        }
 			}
 			if ($ok) {
 				// auto fill
