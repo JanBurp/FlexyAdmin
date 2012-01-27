@@ -23,6 +23,7 @@ class ui extends CI_Model {
 	function __construct() 	{
 		parent::__construct();
 		$this->load();
+    $this->lang->load('field_names');
 	}
 
 	/**
@@ -62,11 +63,12 @@ class ui extends CI_Model {
 		}
 	}
 
-	function get($name,$table="") {
+	function get($name,$table="",$create=TRUE) {
 		if (!is_array($name)) {
 			$out=el($name,$this->uiNames,"");
 			if (empty($out) and !empty($table)) $out=el($table.".".$name,$this->uiNames,"");
-			if (empty($out)) $out=$this->create($name);
+      if (empty($out)) $out=$this->get_standard($name);
+			if (empty($out) and $create) $out=$this->create($name);
 		}
 		else {
 			$out=array();
@@ -76,6 +78,10 @@ class ui extends CI_Model {
 		}
 		return $out;
 	}
+
+  function get_standard($name) {
+    return lang($name);
+  }
 
 	function get_help($name='',$table='') {
 		if (empty($name)) {
@@ -132,9 +138,15 @@ class ui extends CI_Model {
 	}
 	
 	function replace_ui_names($s) {
-		foreach($this->uiNames as $key=>$name) {
-			$s=str_replace($key,$this->get($key),$s);
-		}
+    $s=explode(' ',$s);
+    foreach ($s as $key => $word) {
+      // only replace if word has a undescore
+      if (has_string('_',$word)) {
+        $newword=$this->get($word);
+        if (!empty($newword)) $s[$key]=$newword;
+      }
+    }
+    $s=implode(' ',$s);
 		return $s;
 	}
 	
