@@ -296,6 +296,10 @@ class Plugin_automenu extends Plugin_ {
 						if (!isset($groupData[$titleField])) {
 							$possibleFields=array_keys($groupData);
 							$possibleFields=filter_by($possibleFields,'str_title');
+							if (!$possibleFields) {
+								$possibleFields=array_keys($groupData);
+								$possibleFields=filter_by($possibleFields,'str_');
+							}
 							$titleField=current($possibleFields);
 						}
 						if ($fromRel) {
@@ -308,6 +312,7 @@ class Plugin_automenu extends Plugin_ {
             // trace_($groupId);
             // trace_($groupData);
             // trace_($data);
+						// trace_($titleField);
 						
 						if ($data) {
 							// trace_('Pagination: '.$pagination);
@@ -316,6 +321,7 @@ class Plugin_automenu extends Plugin_ {
 							if (count($parentData)>1) {
 								$parentData=find_row_by_value($parentData,$groupTable,'str_table');
 							}
+							// trace_($parentData);
 							$parentData=current($parentData);
 							$selfParent=$parentData['id'];
 							$lastOrder=0;

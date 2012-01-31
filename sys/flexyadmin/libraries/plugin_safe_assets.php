@@ -9,6 +9,11 @@
 
 class Plugin_safe_assets extends Plugin_ {
 
+	
+	function __construct() {
+		parent::__construct();
+	}
+
 
 	function _admin_logout() {
 		$logout=true;
@@ -28,7 +33,7 @@ class Plugin_safe_assets extends Plugin_ {
 	function _after_update() {
 		$types=$this->newData['str_types'];
 		$map=$this->newData['path'];
-		$this->_make_map_safe($map,$types);
+		if ($this->config('create_htacces')) $this->_make_map_safe($map,$types);
 		return $this->newData;
 	}
 
@@ -66,8 +71,10 @@ class Plugin_safe_assets extends Plugin_ {
 		}
 		// Loop though all maps and make them safe and clen
 		foreach ($mapsToClean as $path => $allowed) {
-			$this->_make_map_safe($path,$allowed);
-			$this->add_content('<p>Created : '.$path.'/.htaccess ('.$allowed.')</p>');
+			if ($this->config('create_htacces')) {
+				$this->_make_map_safe($path,$allowed);
+				$this->add_content('<p>Created : '.$path.'/.htaccess ('.$allowed.')</p>');
+			}
 			$removed=$this->_remove_forbidden_files($path,$allowed);
 			if ($removed) {
 				$removed=implode(',',$removed);
