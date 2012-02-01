@@ -14,10 +14,12 @@ $lang['medias_photos']    = "Foto's";
 $lang['b_visible']        = "Zichtbaar";
 $lang['dat_date']         = "Datum";
 $lang['tme_datetime']     = "Datum &amp; Tijd";
+$lang['self_parent']      = "Submenu van";
+$lang['str_keywords']     = "Zoektermen"substr;
 
 // Fields in tbl_site
 $lang['str_author']       = "Auteur";
 $lang['stx_description']  = "Korte omschrijving";
-$lang['stx_keywords']     = "Zoektermen";
+$lang['stx_keywords']     = $lang['str_keywords'];
 
 ?>
