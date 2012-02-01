@@ -15,7 +15,7 @@ $lang['b_visible']        = "Zichtbaar";
 $lang['dat_date']         = "Datum";
 $lang['tme_datetime']     = "Datum &amp; Tijd";
 $lang['self_parent']      = "Submenu van";
-$lang['str_keywords']     = "Zoektermen"substr;
+$lang['str_keywords']     = "Zoektermen";
 
 // Fields in tbl_site
 $lang['str_author']       = "Auteur";

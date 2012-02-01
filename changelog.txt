@@ -1,3 +1,22 @@
+> 1437
+
+UPDATES:
+- jQuery UI 1.8.17
+
+BUGS:
+- some bugs in plugin_automenu
+- some styling issues
+- bugs in Help system
+
+NEW:
+- Minimal img size in cfg_img_info: if set and a image is uploaded which is too small: a messages comes and image is not uploaded
+- jquery.clearInput.js rewritten
+- added form->prepare_for_clearinput()
+- rewritten module contact_form: now possible to add attachments
+- language settings for standard fieldnames
+- modules and plugins tries to load language files with same name
+
+
 > 1413
 
 UPDATES:
