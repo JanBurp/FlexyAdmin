@@ -1,3 +1,10 @@
+UPDATE to 1437
+==============
+
+- Replace current sys map with new sys map
+- Run update queries: update_r1432.sql
+
+
 UPDATE to 1413
 ==============
 

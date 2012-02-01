@@ -37,10 +37,10 @@
 $active_group = "local";
 $active_record = TRUE;
 
-$db['local']['hostname'] = "localhost";
-$db['local']['username'] = "root";
-$db['local']['password'] = "eonisme";
-$db['local']['database'] = "flexyadmin_demo";
+$db['local']['hostname'] = "";
+$db['local']['username'] = "";
+$db['local']['password'] = "";
+$db['local']['database'] = "";
 $db['local']['dbdriver'] = "mysql";
 $db['local']['dbprefix'] = "";
 $db['local']['pconnect'] = TRUE;
