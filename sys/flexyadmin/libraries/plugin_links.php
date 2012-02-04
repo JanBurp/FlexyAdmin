@@ -64,8 +64,13 @@ class Plugin_links extends Plugin_ {
 	}
 
 	private function _getFullUri($id) {
-		$this->CI->db->select('id,self_parent,uri');
-		$this->CI->db->uri_as_full_uri();
+		$this->CI->db->select('id,uri');
+    if ($this->CI->db->field_exists('self_parent',$this->table)) {
+  		$this->CI->db->select('self_parent');
+  		$this->CI->db->uri_as_full_uri();
+  		$this->CI->db->where('id',$id);
+  		$full=$this->CI->db->get_row($this->table);
+    }
 		$this->CI->db->where('id',$id);
 		$full=$this->CI->db->get_row($this->table);
 		return $full['uri'];
