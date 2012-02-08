@@ -19,7 +19,7 @@ $lang['str_keywords']     = "Zoektermen";
 
 // Fields in tbl_site
 $lang['str_author']       = "Auteur";
-$lang['stx_description']  = "Korte omschrijving";
+$lang['stx_description']  = "Omschrijving";
 $lang['stx_keywords']     = $lang['str_keywords'];
 
 ?>
