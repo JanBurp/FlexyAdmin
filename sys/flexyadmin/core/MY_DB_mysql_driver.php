@@ -27,7 +27,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	var $uriAsFullUri;
 	var $extraFullField;
 	var $orderAsTree;
-	var $order;
+  var $last_order;
 	var $orderByForeign;
 	var $orderByMany;
 	var $ar_dont_select;
@@ -236,13 +236,14 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				if ($set) $this->order_by($order);
 			}
 		}
-		if ($set) $this->order=$this->ar_orderby;
+    // if ($set) $this->order=$this->ar_orderby;
 		return $order;
 	}
 
-	function order_by($args) {
-		$this->order=$args;
-		return parent::order_by($args);
+	function order_by($orderby,$direction='') {
+    parent::order_by($orderby,$direction);
+    $this->last_order=$this->ar_orderby;
+    return $this;
 	}
 
 	function order_by_foreign($args=FALSE) {
@@ -258,8 +259,9 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	}
 
 	function get_last_order() {
-		$order=$this->order;
+		$order=$this->last_order;
 		if (is_array($order)) $order=current($order);
+    $order=remove_suffix($order,',');
 		return str_replace('`','',$order);
 	}
 
@@ -895,7 +897,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 					}
 				}
 			}
-			$this->order=$last_order;
+      // $this->order=$last_order;
 		}
 
 
