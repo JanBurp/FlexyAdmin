@@ -118,22 +118,20 @@ class Editor_lists {
 			// Media files (for download links)
 			$mediaTbl=$CI->config->item('CFG_table_prefix')."_".$CI->config->item('CFG_media_info');
 			if ($CI->db->table_exists($mediaTbl)) {
-				$data['-- downloads ----------']=NULL;
 				$CI->db->select('path');
 				if (!empty($boolField))	$CI->db->where($boolField,1);
-				$query=$CI->db->get($mediaTbl);
-				$files=array();
-				foreach($query->result_array() as $row) {
-					$path=$row["path"];
+				$downloadPaths=$CI->db->get_result($mediaTbl);
+				foreach($downloadPaths as $downloadPath) {
+					$files=array();
+					$path=$downloadPath["path"];
 					$map=$CI->config->item('ASSETS').$path;
-					$subFiles=read_map($map);
-					$subFiles=not_filter_by($subFiles,"_");
-					$files=$files + $subFiles;
+					$files=read_map($map);
+					$files=not_filter_by($files,"_");
+					ignorecase_ksort($files);
+					$data['-- '.$CI->ui->get($path).' ----------']=NULL;
+					$data=$data + $files;
 				}
-				$query->free_result();
-				ignorecase_ksort($files);
 			}
-			$data=$data + $files;
 		}
 
 		// ignorecase_ksort($data);
