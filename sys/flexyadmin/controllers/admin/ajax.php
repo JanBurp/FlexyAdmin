@@ -31,6 +31,7 @@ class Ajax extends BasicController {
 
 	function __construct() {
 		parent::__construct();
+		$this->load->model('ui');
 	}
 
 	function index() {
@@ -117,9 +118,8 @@ class Ajax extends BasicController {
 
 					if ($plugins) {
 						$this->queu->run_calls();
-						delete_all_cache();
 					}
-
+					delete_all_cache();
 				}
 				else $result='ajax_error_no_rights';		 		
 	 		}
