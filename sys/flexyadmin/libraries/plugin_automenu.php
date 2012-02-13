@@ -81,11 +81,12 @@ class Plugin_automenu extends Plugin_ {
 	/**
 	 * Make sure that data has newData!!
 	 */
-	private function _get_current_data($table,$where='',$limit=0, $insert_check='') {
+	private function _get_current_data($table,$where='',$limit=0, $offset=0, $insert_check='') {
 		if (!empty($where)) {
 			$this->CI->db->where($where);	
 		}
-		$data=$this->CI->db->get_results($table,$limit);
+		if ($offset>0 and $limit==0) $limit=10000;
+		$data=$this->CI->db->get_results($table,$limit,$offset);
     // trace_(array('table'=>$table,'this->table'=>$this->table,'check'=>$insert_check));
     
 		if ($table==$this->table and isset($this->newData['id']) and $this->pass==1) {
@@ -155,10 +156,14 @@ class Plugin_automenu extends Plugin_ {
 						$where=$autoValue['str_where'];
 					}
 					$limit=0;
+					$offset=0;
 					if (isset($autoValue['int_limit'])) {
 						$limit=$autoValue['int_limit'];
+						if (isset($autoValue['str_parameters']) and !empty($autoValue['str_parameters'])) {
+							$offset=(int)$autoValue['str_parameters'];
+						}
 					}
-					$data=$this->_get_current_data($autoValue['table'],$where,$limit);
+					$data=$this->_get_current_data($autoValue['table'],$where,$limit,$offset);
 					
 					$order=0;
 					$parent=0;
@@ -306,7 +311,7 @@ class Plugin_automenu extends Plugin_ {
 							$this->CI->db->add_many();
 						}
             $where=$autoValue['field_group_by'].' = '.$groupId;
-						$data=$this->_get_current_data($autoValue['table'], $where,0,array('field'=>get_postfix($autoValue['field_group_by'],'.'),'value'=>$groupId) );
+						$data=$this->_get_current_data($autoValue['table'], $where,0,0,array('field'=>get_postfix($autoValue['field_group_by'],'.'),'value'=>$groupId) );
 						
             // trace_('#SHOW# '.$this->CI->db->ar_last_query);
             // trace_($groupId);
