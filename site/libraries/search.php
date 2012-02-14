@@ -21,6 +21,10 @@ class Search extends Module {
 			else
 				$this->CI->db->uri_as_full_uri();
 			$results=$this->CI->db->get_results( $this->config('table') );
+			
+			// remove double (uri)
+			$results=$this->CI->db->_set_key_to($results,'uri');
+			
 
 			if ($results) {
 				foreach ($results as $id => $result) {
