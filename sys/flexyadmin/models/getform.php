@@ -28,6 +28,7 @@
 	
 	function _get_form() {
 		$form=false;
+    $lang=$this->site['language'];
 		if ($this->db->table_exists('tbl_forms') and $this->db->table_exists('tbl_formfields')) {
 			$form=array();
 			$form['form']=$this->db->get_row('tbl_forms');
@@ -40,7 +41,7 @@
 				if ($fields) {
 					$options=false;
 					$optionsKey='';
-					$fieldset=$form['form']['str_title'];
+					$fieldset=$form['form']['str_title_'.$lang];
 					foreach ($fields as $key => $value) {
 						// Check if a fieldset
 						if ($value['str_type']=='fieldset') {
@@ -56,7 +57,7 @@
 								$value[remove_prefix($k)]=$v;
 								unset($value[$k]);
 							}
-							$value['label']=$value['label'];
+              if (isset($value['label_'.$lang])) $value['label']=$value['label_'.$lang];
 							$name=str_replace(' ','_',$value['label']).'_'.$key;
 							$value['name']=$name;
 							$value['fieldset']=$fieldset;
