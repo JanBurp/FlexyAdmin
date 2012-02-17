@@ -1,4 +1,4 @@
-<? if (!$break): ?>
+<? if ($show_page): ?>
   <h1><?=ascii_to_entities($str_title);?></h1>
   <div class="text"><?=$txt_text?></div>
 
