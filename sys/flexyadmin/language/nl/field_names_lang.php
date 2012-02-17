@@ -4,9 +4,13 @@
 $lang['str_title']        = "Titel";
 $lang['str_title_nl']     = $lang['str_title']. ' NL';
 $lang['str_title_en']     = $lang['str_title']. ' EN';
+$lang['str_label_nl']     = 'Label NL';
+$lang['str_label_en']     = 'Label EN';
 $lang['txt_text']         = "Tekst";
 $lang['txt_text_nl']      = $lang['txt_text']. ' NL';
 $lang['txt_text_en']      = $lang['txt_text']. ' EN';
+$lang['txt_error_nl']     = 'Error NL';
+$lang['txt_error_en']     = 'Error EN';
 
 // Most used extra fields
 $lang['media_photo']      = "Foto";

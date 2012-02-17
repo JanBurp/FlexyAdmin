@@ -9,7 +9,8 @@ class Contact_form extends Module {
 	}
 
 	public function index($page) {
-		$content='';
+		$viewForm='';
+    $viewErrors='';
 		
 		// Form
     $formData=$this->config('form_fields');
@@ -69,22 +70,16 @@ class Contact_form extends Module {
 			$this->CI->email->send();
 
 			// Show Send message
-			$content=lang('contact_send_text');
+			$viewForm=lang('contact_send_text');
 		}
 	
 		else {
-			// Form isn't filled or validated: show form
-		
-			// Show validation errors if any
-			$validationErrors=validation_errors('<p class="error">', '</p>');
-			if (!empty($validationErrors)) $content.=($validationErrors);
-		
-			// Show form
-			$content.=$form->render();
+			// Form isn't filled or validated: show form and validation errors
+			$viewErrors=validation_errors('<p class="error">', '</p>');
+			$viewForm.=$form->render();
 		}
 		
-		return $content;
-		
+		return $this->CI->view('contact_form',array('form'=>$viewForm,'errors'=>$viewErrors),true);
 	}
 
 }

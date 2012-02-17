@@ -5,7 +5,7 @@
 		If they don't exists, add them by running the sql file: add_flexy_forms.sql
 */
 
-class Contact_formulier extends Module {
+class Flexy_form extends Module {
 
 	public function __construct() {
 		parent::__construct();
@@ -15,11 +15,11 @@ class Contact_formulier extends Module {
 	}
 
 	public function index($page) {
-		
-		$content='';
+		$viewForm='';
+    $viewErrors='';
 		
 		// Form Fields
-		$formData=$this->CI->getform->by_module('contact_formulier');
+		$formData=$this->CI->getform->by_module('flexy_form');
 	
 		if ($formData) {
 		
@@ -74,29 +74,23 @@ class Contact_formulier extends Module {
 				$succes=$this->CI->email->send();
 				if (!$succes) {
 					// Show Error message
-					$content.=$formData['form']['txt_error'];
+					$viewForm.=$formData['form']['txt_error'];
 				}
 				else {
 					// Show Send message
 					// $this->CI->add_content($formData['form']['txt_text'].'<p>&nbsp;</p>'.trace_($error,false).'<p>&nbsp;</p>'.$body.'<p>&nbsp;</p>'.trace_($formValues,false));
-					$content.=$formData['form']['txt_text'];
+					$viewForm.=$formData['form']['txt_text'];
 				}
 
 			}
-			else {
-				// Form isn't filled or validated: show form
-
-				// Show validation errors if any
-				$validationErrors=validation_errors('<p class="error">', '</p>');
-				if (!empty($validationErrors)) $content.=$validationErrors;
-
-				// Show form
-				$content.=$form->render();
-			}
-		
+  		else {
+  			// Form isn't filled or validated: show form and validation errors
+  			$viewErrors=validation_errors('<p class="error">', '</p>');
+  			$viewForm.=$form->render();
+  		}
 		}
 		
-		return $content;
+		return $this->CI->view('flexy_form',array('form'=>$viewForm,'errors'=>$viewErrors),true);
 	}
 
 }

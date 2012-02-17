@@ -137,10 +137,8 @@ class Main extends FrontEndController {
 		$page=$this->_module($page);
 
 		// Add page content (if no break)
-		if (!$this->site['break']) { $this->add_content( $this->view('page',$page,true) ); }
-		// Add module content
-		if (isset($page['module_content'])) $this->add_content($page['module_content']);
-
+    $page['break']=$this->site['break'];
+    $this->add_content( $this->view('page',$page,true) );
 		return $page;
 	}
 
