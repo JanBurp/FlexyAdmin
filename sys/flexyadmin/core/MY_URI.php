@@ -103,6 +103,15 @@ class MY_URI extends CI_URI {
 		$u=ltrim($u,'/');
 		return $u;
 	}
+
+  function get_from_part($parameter,$include=false) {
+		$uri=$this->segment_array();
+    $segment=array_search($parameter,$uri);
+    if ($include) $segment--;
+    $u=array_slice($uri,$segment);
+		return $u;
+  }
+
 	
 	function get_last() {
 		$u=explode('/',$this->_uri_string());
@@ -123,6 +132,7 @@ class MY_URI extends CI_URI {
 		$parameter=$CI->pagination->auto_uripart;
 		return (int) $this->get_parameter($parameter,0);
 	}
+  
 
 }
 
