@@ -107,6 +107,9 @@ class MY_URI extends CI_URI {
   function get_from_part($parameter,$include=false) {
 		$uri=$this->segment_array();
     $segment=array_search($parameter,$uri);
+    if (!$segment) {
+      return false;
+    }
     if ($include) $segment--;
     $u=array_slice($uri,$segment);
 		return $u;
