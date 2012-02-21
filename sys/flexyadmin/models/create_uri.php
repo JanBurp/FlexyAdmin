@@ -24,7 +24,7 @@ class Create_uri extends CI_Model {
  		$replaceSpace=$this->config->item('PLUGIN_URI_REPLACE_CHAR');
     
     // Need to create an uri?
- 		$uri=$this->data['uri'];
+ 		$uri=el('uri',$this->data,'');
  		if (isset($this->data[$this->source_field]))
  			$uri_source=$this->data[$this->source_field];
  		else
