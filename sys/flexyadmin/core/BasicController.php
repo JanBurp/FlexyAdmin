@@ -29,6 +29,7 @@ class BasicController extends MY_Controller {
 
 		// ok move on...
 		$this->load->model('plugin_handler');
+    $this->load->model('create_uri');
 		$this->load->helper("language");
 
 		$lang=$this->language."_".strtoupper($this->language);
