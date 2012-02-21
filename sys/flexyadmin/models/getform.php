@@ -41,7 +41,10 @@
 				if ($fields) {
 					$options=false;
 					$optionsKey='';
-					$fieldset=$form['form']['str_title_'.$lang];
+          if (isset($form['form']['str_title_'.$lang]))
+            $fieldset=$form['form']['str_title_'.$lang];
+          else
+            $fieldset=$form['form']['str_title'];
 					foreach ($fields as $key => $value) {
 						// Check if a fieldset
 						if ($value['str_type']=='fieldset') {
