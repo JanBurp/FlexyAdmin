@@ -21,10 +21,23 @@ class Module extends Flexy_library {
 	}
 
 
+  // If this is called, no more modules and content are shown and loaded by the controller
 	public function break_content() {
 		$this->CI->site['content']='';
 		$this->CI->site['break']=true;
 	}
+  
+  
+  // Methods for using uri parts as arguments for the module
+  public function set_module_uri() {
+    if (!isset($this->config['module_uri'])) $this->config['module_uri']=$this->CI->find_module_uri($this->name).'/'.$this->CI->config->item('PLUGIN_URI_ARGS_CHAR');
+    return $this->config['module_uri'];
+  }
+  public function get_uri_args() {
+    if (!isset($this->config['uri_args'])) $this->config['uri_args']=$this->CI->uri->get_from_part($this->CI->config->item('PLUGIN_URI_ARGS_CHAR'));
+    return $this->config['uri_args'];
+  }
+  
 
 }
 

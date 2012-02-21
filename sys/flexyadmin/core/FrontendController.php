@@ -111,11 +111,17 @@ class FrontEndController extends MY_Controller {
 			$this->site[$variable]='';
 		}
 
+
+		/**
+		 * Make sure that uri's after ':' are removed when trying to load a page. And so modules van use all uri-parts after ':'
+		 */
+     $this->uri->set_remove( $this->config->item('PLUGIN_URI_ARGS_CHAR') );
+  
 		
 		/**
 		 * Set home uri (top from tbl_menu) if content comes from database
 		 */
-		if ( $this->config->item('menu_autoset_home')) {
+     if ( $this->config->item('menu_autoset_home')) {
 			$menuTable=get_menu_table();
 			if ( ! empty($menuTable)) {
 				if ($this->db->has_field($menuTable,'self_parent')) $this->db->order_as_tree();
