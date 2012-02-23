@@ -90,13 +90,13 @@ class Comments extends Module {
 						$this->CI->email->to( $this->CI->site['email_email'] );
 						$this->CI->email->from( $this->CI->site['email_email'] );
 						$this->CI->email->subject( langp('comments_'.'mail_to_owner_subject',$this->CI->site['url_url']) );
-						$this->CI->email->message( langp('comments_'.'mail_to_owner_body', site_url().$this->CI->uri->get())."\n\n".$data[$this->config('field_text')] );
+						$this->CI->email->message( langp('comments_'.'mail_to_owner_body', site_url($this->CI->uri->get())."\n\n".$data[$this->config('field_text')]) );
 						if ( ! $this->CI->email->send() )	$errorHtml.=$this->CI->email->print_debugger();
 						$this->CI->email->clear();
 					}
 					if ($this->config('mail_others')) {
 						$subject=langp('comments_'.'mail_to_others_subject',$this->CI->site['url_url']);
-						$body=langp('comments_'.'mail_to_others_body', site_url().$this->CI->uri->get())."\n\n".$data[$this->config('field_text')];
+						$body=langp('comments_'.'mail_to_others_body', site_url($this->CI->uri->get())."\n\n".$data[$this->config('field_text')) ];
 						$this->CI->db->select( $this->config('field_email') );
 						$this->CI->db->where( $this->config('key_id'), $id );
 						$emails=$this->CI->db->get_results( $this->config('table') );

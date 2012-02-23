@@ -40,7 +40,7 @@ class Main extends FrontEndController {
 					$siteInfo=$this->db->get_row('tbl_site');
 					$data['encoding'] = 'utf-8';
 					$data['feed_name'] = $siteInfo['str_title'];
-					$data['feed_url'] = site_url();//$siteInfo['url_url'];
+					$data['feed_url'] = site_url();
 					$data['page_description'] = 'RSS: '.$siteInfo['stx_description'];
 					$data['page_language'] = 'nl'; //$config['language'].'_'.$config['language'];
 					$data['creator_email'] = str_replace(array('@','.'),array('-at-','-dot-'),$siteInfo['email_email']);
