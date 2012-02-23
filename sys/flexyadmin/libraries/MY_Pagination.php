@@ -59,7 +59,7 @@ class MY_Pagination extends CI_Pagination {
 		if ( ! $segment) $segment=count($uri)+1;
 		// create base_url
 		$base_url=array_slice($uri,0,$segment-1);
-		$base_url=site_url().implode('/',$base_url).'/'.$this->auto_uripart;
+		$base_url=site_url(implode('/',$base_url).'/'.$this->auto_uripart);
 		// we need the uri part after the auto_uripart
 		$segment++; 
 		$this->uri_segment=$segment;
