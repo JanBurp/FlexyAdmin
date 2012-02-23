@@ -87,10 +87,9 @@ class Plugin_automenu extends Plugin_ {
 		}
 		if ($offset>0 and $limit==0) $limit=10000;
 		$data=$this->CI->db->get_results($table,$limit,$offset);
-    // trace_(array('table'=>$table,'this->table'=>$this->table,'check'=>$insert_check));
     
 		if ($table==$this->table and isset($this->newData['id']) and $this->pass==1) {
-      if (empty($insert_check) or $this->newData[$insert_check['field']]==$insert_check['value']) {
+      if (empty($insert_check) or (isset($this->newData[$insert_check['field']]) and $this->newData[$insert_check['field']]==$insert_check['value'])) {
   			$id=$this->newData['id'];
   			$data[$id]=$this->newData;
   			if ($id==-1) {
