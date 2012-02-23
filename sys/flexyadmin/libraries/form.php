@@ -459,8 +459,8 @@ class Form {
 			$out.=$this->tmp($this->tmpFieldStart,$class);
 			if ($field["type"]=='captcha') {
 				$vals = array(
-								'img_path'	 	=> assets().'captcha/',
-								'img_url'	 		=> site_url().assets().'captcha/',
+								'img_path'	 	=> assets('captcha/'),
+								'img_url'	 		=> site_url(assets().'captcha/'),
 								'img_width'	 	=> '125',
 								'img_height' 	=> '25',
 								'expiration' => '600',
