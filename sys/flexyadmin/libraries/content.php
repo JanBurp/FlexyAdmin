@@ -117,26 +117,27 @@ class Content {
 			if (preg_match_all("/<a(.*?)href=\"mailto:(.*?)\"(.*?)>(.*?)<\/a>/",$txt,$matches)) { 	//<a[\s]*href="(.*)">(.*)</a>
 				$search=array();
 				$replace=array();
-				// trace_($matches);
 				foreach ($matches[2] as $key=>$adres) {
-					$adres=explode("@",$adres);
-					foreach ($adres as $k => $value) {
-						$adres[$k]=str_replace(array('"',"'",'<','>'),'',$value);
-					}
 					$show=str_replace('"',"'",$matches[4][$key]);
-					$search[]=$matches[0][$key];
-					if (!isset($adres[1])) $adres[1]='';
+          $search[]=$matches[0][$key];
 					// classes, id's etc
 					$extra='';
 					if (isset($matches[1][$key])) $extra.=$matches[1][$key];
 					if (isset($matches[3][$key])) $extra.=$matches[3][$key];
-					$extra=addslashes($extra);
-					$replace[]='<script language="JavaScript" type="text/javascript">nospam("'.str_reverse($adres[0]).'","'.str_reverse($adres[1]).'","'.str_reverse($show).'","'.$extra.'");</script>';
+          $extra=trim($extra);
+          $extra=explode(' ',$extra);
+          $attr=array();
+          foreach ($extra as $value) {
+            $value=explode('=',$value);
+            if (is_array($value)) {
+              $attr[$value[0]]=trim($value[1],'"');
+            }
+          }
+          $replace[]=safe_mailto($adres,$show,$attr);
 				}
 				$txt=str_replace($search,$replace,$txt);
 			}
 		}
-		
 		return $txt;
 	}
 	

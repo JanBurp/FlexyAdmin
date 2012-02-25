@@ -1,3 +1,5 @@
+// Only for old sites
+
 // reverse string
 function str_reverse(s) {var l=s.length-1;var r="";for (var x=l;x>=0;x--) {r+=s.charAt(x);}return r;}
 
