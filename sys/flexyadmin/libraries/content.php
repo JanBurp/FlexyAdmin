@@ -128,9 +128,11 @@ class Content {
           $extra=explode(' ',$extra);
           $attr=array();
           foreach ($extra as $value) {
-            $value=explode('=',$value);
-            if (is_array($value)) {
-              $attr[$value[0]]=trim($value[1],'"');
+            if (!empty($value)) {
+              $value=explode('=',$value);
+              if (is_array($value)) {
+                $attr[$value[0]]=trim($value[1],'"');
+              }
             }
           }
           $replace[]=safe_mailto($adres,$show,$attr);
