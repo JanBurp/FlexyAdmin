@@ -32,7 +32,8 @@ class Contact_form extends Module {
 
 			// Setup mail
 			$this->CI->email->to($siteMail,$siteAuthor);
-			$this->CI->email->from($formData[$this->config('from_address_field')]);
+      if ($this->config('send_copy_to_sender')) $this->CI->email->cc($formData[$this->config('from_address_field')]);
+      $this->CI->email->from($formData[$this->config('from_address_field')]);
 			$this->CI->email->subject(lang('contact_mail_subject'));
       
 			$body='';
