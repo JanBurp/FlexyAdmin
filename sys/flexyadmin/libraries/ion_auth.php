@@ -368,6 +368,10 @@ class Ion_auth
 	 **/
 	public function logout()
 	{
+    // JdB: update last login not at login, but at logout!
+    $user_id=$this->CI->session->userdata('user_id');
+    $this->CI->ion_auth_model->update_last_login($user_id);
+    
 		$identity = $this->CI->config->item('identity', 'ion_auth');
 		$this->CI->session->unset_userdata($identity);
 		$this->CI->session->unset_userdata('group');

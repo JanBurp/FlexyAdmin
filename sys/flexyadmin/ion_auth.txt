@@ -38,7 +38,7 @@
 - renamed controller to auth_controller - we don't use this
 - there is a new library: user, which extends the ion_auth library
 - views, changed...
--
+- model & library: update last_login field not at login, but at logout
 
 
 Changes to ion_auth_model and user table so it works like tables in flexyadmin:
