@@ -18,7 +18,9 @@
       }
       // focus events
 			$(this).focus(function(){
-				$(this).val('');
+				if ($(this).val()==$(this).attr('empty_value')) {
+          $(this).val('');
+        }
 			}).focusout(function(){
 				if ($(this).val()=='') {
 					$(this).val($(this).attr('empty_value'));
