@@ -22,8 +22,10 @@ class Plugin_sitemap extends Plugin_ {
 		// create Sitemap
 		$url=trim($this->CI->db->get_field('tbl_site','url_url'),'/');
 		if ($this->CI->db->field_exists('self_parent',$menuTable)) $this->CI->db->uri_as_full_uri();
-		$this->CI->db->order_as_tree();
+    if ($this->CI->db->field_exists('b_restricted',$menuTable)) $this->CI->db->where('b_restricted',false);
+    $this->CI->db->order_as_tree();
 		$menu=$this->CI->db->get_result($menuTable);
+
 		$urlset=array();
 		$pageCount=count($menu);
 		foreach ($menu as $id => $item) {
