@@ -2,7 +2,7 @@
 /**
  * FlexyAdmin V1
  *
- * frontend_menu.php Created on 9-dec-2008
+ * Parses content
  *
  * @author Jan den Besten
  */
@@ -15,22 +15,32 @@
 
 class Content {
 
-	var $safeEmail;
-	var $addClasses;
-	var $addPopups;
-	var $prePopup;
-	var $replaceLanguageLinks;
+	var $safeEmail=TRUE;
+	var $addClasses=TRUE;
+	var $addPopups=FALSE;
+	var $prePopup='popup_';
+	var $replaceLanguageLinks=FALSE;
+  var $replaceSoftHyphens=FALSE;
+  var $replaceHyphen='[-]';
+  var $config_array=array('safe_emails'=>'safeEmail','add_classes'=>'addClasses','add_popups'=>'addPopups','replace_language_links'=>'replaceLanguageLinks','replace_soft_hyphens'=>'replaceSoftHyphens');
 	
 	var $div_count;
 	var $img_count;
 	var $p_count;
 	var $h_count;
 
-	function __construct() {
-		$this->option_safe_email();
-		$this->add_classes();
-		$this->add_popups("popup_",FALSE);
+	function __construct($config=array()) {
+    $this->initialize($config);
 	}
+  
+  function initialize($config=array()) {
+    foreach ($config as $key => $value) {
+      if (isset($this->config_array[$key])) {
+        $thisVar=$this->config_array[$key];
+        if (isset($this->$thisVar)) $this->$thisVar=$value;
+      }
+    }
+  }
 
 	function option_safe_email($safe=TRUE) {
 		$this->safeEmail=$safe;
@@ -41,7 +51,7 @@ class Content {
 	}
 	
 	// example: $this->content->replace_language_links( array('search'=>'nl','replace'=>'en') );
-	function replace_language_links($replace=FALSE) {
+	function replace_language_links($replace=TRUE) {
 		$this->replaceLanguageLinks=$replace;
 	}
 	
@@ -49,6 +59,13 @@ class Content {
 		$this->prePopup=$pre;
 		$this->addPopups=$popups;
 	}
+  
+  function replace_soft_hyphens($hyphens=TRUE) {
+    $this->replaceSoftHyphens=$hyphens;
+  }
+
+
+
 
 	// callback for class replacing
 	function _countCallBack($matches) {
@@ -97,8 +114,11 @@ class Content {
 		$this->h_count=array(1=>1,2=>1,3=>1,4=>1,5=>1,6=>1,7=>1);
 	}
 
+  function parse($txt) {
+    return $this->render($txt);
+  }
+
 	function render($txt) {
-		
 		$this->reset_counters();
 		
 		if ($this->addClasses) {
@@ -140,6 +160,11 @@ class Content {
 				$txt=str_replace($search,$replace,$txt);
 			}
 		}
+    
+    if ($this->replaceSoftHyphens) {
+      $txt=str_replace($this->replaceHyphen,'&#173;',$txt);
+    }
+    
 		return $txt;
 	}
 	

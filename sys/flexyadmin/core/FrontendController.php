@@ -26,7 +26,7 @@ class FrontEndController extends MY_Controller {
 		$this->load->helper("html_helper");
 		$this->load->helper("language");
 		$this->load->library("menu");
-		$this->load->library("content");
+		$this->load->library("content",$this->config->item('parse_content'));
 		$this->load->library('form_validation');
 		/**
 		 * Load standard Module Class
