@@ -162,10 +162,10 @@ class MY_Upload extends CI_Upload {
 		$cfg=$CI->cfg->get('CFG_img_info',$uPath);
 		$currentSizes=getimagesize($path."/".$this->file_name);
 
-		// trace_($currentSizes);
-		// trace_($uPath);
-		// trace_($cfg);
-		// trace_($CI->cfg->data);
+    // strace_($currentSizes);
+    // strace_($uPath);
+    // strace_($cfg);
+    // trace_($CI->cfg->data);
 
 		// first resize copies
 		$nr=1;
