@@ -54,9 +54,10 @@ class Show extends AdminController {
 		return $set;
 	}
 	
-	private function _open_grid_set_uri() {
+	private function _open_grid_set_uri($table='') {
 		$set=$this->_open_grid_set();
-		$uri=api_uri('API_view_grid',$set['table']);
+		if (empty($table)) $table=$set['table'];
+		$uri=api_uri('API_view_grid',$table);
 		unset($set['table']);
 		foreach ($set as $key => $value) {
 			if (!empty($value)) $uri.="/$key/$value";
@@ -301,6 +302,9 @@ class Show extends AdminController {
  */
 
 	function form($table='') {
+
+		$this->_open_grid_set_uri();
+
 		if (isset($this->form_args)) {
 			$args=$this->form_args;
 		}
@@ -372,6 +376,7 @@ class Show extends AdminController {
 				
 				$actionUri=api_uri('API_view_form',$table.':'.$id);
 				if (!empty($info)) $actionUri.='/info/'.$info;
+				
 				$form=new form($actionUri);
 
 				$uiTable=$this->ui->get($table);
@@ -411,7 +416,8 @@ class Show extends AdminController {
 					// Remove all cached files
 					delete_all_cache();
 
-					$redirectUri=$this->_open_grid_set_uri();
+					$redirectUri=$this->_open_grid_set_uri($table);
+					// trace_($redirectUri);
 					if (!empty($info)) $redirectUri.='/info/'.$info;
 					
 					if ( $id===FALSE ) {
