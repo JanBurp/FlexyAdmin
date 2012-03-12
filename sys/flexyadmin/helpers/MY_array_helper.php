@@ -543,10 +543,10 @@ function sort_by($a,$keys,$desc=FALSE,$case=FALSE,$max=0) {
 
 function in_array_like($v,$a) {
 	$in=false;
-	$i=array_shift($a);
-	while (!empty($i) and !$in) {
-		if (strpos($i,$v)!==false) $in=true;
-		$i=array_shift($a);
+	$i=each($a);
+	while (!empty($i['value']) and !$in) {
+		if (strpos($i['value'],$v)!==false) $in=$i['key'];
+		$i=each($a);
 	}
 	return $in;
 }

@@ -758,7 +758,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 						}
 					}
 				}
-				elseif (is_string($fullUri)) {
+				elseif (!is_array($fullUri)) {
 					$result[$key][$fullUri]=$result[$key]['uri'];
 				}
 			}

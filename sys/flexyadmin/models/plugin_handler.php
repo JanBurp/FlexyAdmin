@@ -61,7 +61,7 @@ class Plugin_handler extends CI_Model {
 			}
 			
 			// add to trigger methods
-			$methods=array('admin_api_method','ajax_api_method','logout_method','after_update_method','after_delete_method');
+			$methods=array('admin_api_method','ajax_api_method','logout_method','before_update_method','after_update_method','after_delete_method');
 			foreach ($methods as $method) {
 				if (isset($this->plugins[$pluginName]['config'][$method])) {
 					$this->trigger_methods[$method][$pluginName] = $this->plugins[$pluginName]['config'][$method];
@@ -76,8 +76,8 @@ class Plugin_handler extends CI_Model {
 			$this->plugins[$pluginName]['is_loaded']=false;
 		}
 
-		// trace_($this->plugins);
-		// trace_($this->trigger_methods);
+    // trace_($this->plugins);
+    // trace_($this->trigger_methods);
 	}
 
 	private function _set_triggers($plugin,$add_triggers=array()) {
@@ -107,7 +107,7 @@ class Plugin_handler extends CI_Model {
 		if (is_object($this->$plugin)) {
 			$this->plugins[$plugin]['is_loaded']=true;
 		}
-		$this->$plugin->set_config( $this->plugins[$plugin] );
+    // $this->$plugin->set_config( $this->plugins[$plugin] ); // Not needed anymore
 		return $this->plugins[$plugin]['is_loaded'];
 	}
 
@@ -179,6 +179,23 @@ class Plugin_handler extends CI_Model {
 	private function _give_data_to_plugin($plugin) {
 		$this->call_plugin($plugin,'set_data',$this->data);
 	}
+
+  // public function call_plugins_before_update_trigger() {
+  //   $this->_set_additional_data();
+  //   // strace_($this->data);
+  //   if (isset($this->trigger_methods['before_update_method'])) {
+  //     foreach ($this->trigger_methods['before_update_method'] as $plugin => $method) {
+  //       if ($this->is_triggered($plugin)) {
+  //         $this->_give_data_to_plugin($plugin);
+  //         $this->data['new']=$this->call_plugin($plugin,$method);
+  //       }
+  //     }
+  //   }
+  //   if (!isset($this->data['new'])) return NULL;
+  //   // strace_($this->data);
+  //   return $this->data['new'];
+  // }
+
 
 	public function call_plugins_after_update_trigger() {
 		$this->_set_additional_data();
