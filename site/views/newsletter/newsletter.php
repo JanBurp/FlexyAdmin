@@ -1,0 +1,2 @@
+<div class="newsletter">
+</div>
