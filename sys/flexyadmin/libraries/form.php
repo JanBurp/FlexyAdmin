@@ -239,11 +239,12 @@ class Form {
 
 		log_('info',"form: validation");
 		$this->isValidated=$this->CI->form_validation->run();
+
 		// validate captcha
 		if ($hasCaptcha!=FALSE) {
 			$value=$this->CI->input->post($hasCaptcha);
 			$code=str_reverse($this->CI->input->post($hasCaptcha.'__captcha'));
-			$this->isValidated=($value==$code);
+			$this->isValidated=(($value) and ($value==$code));
 		}
 
 		if ($this->isValidated) {
@@ -458,22 +459,23 @@ class Form {
 		if ($field["type"]!="hidden") {
 			$out.=$this->tmp($this->tmpFieldStart,$class);
 			if ($field["type"]=='captcha') {
+        $this->CI->load->helper('captcha');
 				$vals = array(
-								'img_path'	 	=> assets('captcha/'),
-								'img_url'	 		=> site_url(assets().'captcha/'),
+								'img_path'	 	=> assets('_thumbcache').'/',
+								'img_url'	 		=> site_url(assets().'_thumbcache').'/',
 								'img_width'	 	=> '125',
 								'img_height' 	=> '25',
 								'expiration' => '600',
 							);
 				if ($this->captchaWords!=NULL) $vals['word']=random_element($this->captchaWords);
 				$cap = create_captcha($vals);
-				$out.=div('captcha').$cap['image'].form_hidden($name.'__captcha',str_reverse($cap['word']))._div();
+        $out.=div('captcha').$cap['image'].form_hidden($name.'__captcha',str_reverse($cap['word']))._div();
 			}
 			else {
 				$out.=form_label($field["label"],$name);
 			}
 		}
-
+    
 		// When (javascript triggers)
 		if (!empty($field['when'])) $this->when($field['when'],$name);
 

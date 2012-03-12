@@ -32,7 +32,7 @@ Class MY_Config extends CI_Config {
 	/**
 	 * Load Config File in all paths and override them
 	 */
-	function load($file = '', $use_sections = FALSE, $fail_gracefully = FALSE)	{
+	function load($file = '', $use_sections = FALSE, $fail_gracefully = FALSE )	{
 		
 		$file = ($file == '') ? 'config' : str_replace('.php', '', $file);
 		$loaded = FALSE;
@@ -53,12 +53,12 @@ Class MY_Config extends CI_Config {
 			// echo "$file_path<br/>";
 
 			// Allready loaded?
-			if ( ! in_array($file_path, $this->is_loaded, TRUE))	{
+			if ( !in_array($file_path, $this->is_loaded, TRUE))	{
 
 				// Exists?
 				if (file_exists($file_path)) {
 
-					// echo "FOUND: $file_path<br/>";
+          // echo "FOUND: $file_path<br/>";
 
 					// Load
 					include($file_path);
@@ -106,8 +106,11 @@ Class MY_Config extends CI_Config {
 		return $loaded;
 	}
 
-
-
+  function unload($name) {
+    unset($this->config[$name]);
+    $key=in_array_like($name,$this->is_loaded);
+    unset($this->is_loaded[$key]);
+  }
 
 
 // --------------------------------------------------------------------

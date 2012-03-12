@@ -57,3 +57,37 @@ function add_validation_parameters($rules,$params) {
 	return implode($validation,'|');
 }
 
+
+function array2formfields($array) {
+	$formData=array();
+	foreach ($array as $field=>$value) {
+		// standard attributes
+		$type='input';
+		$options=array();
+		$validation='required';
+    $label=lang($field);
+    if (empty($label)) $label=nice_string(remove_prefix($field));
+		switch (get_prefix($field)) {
+			case 'id':
+				$type='hidden';
+				break;
+			case 'txt':
+				$type='htmleditor';
+				break;
+			case 'stx':
+				$type='textarea';
+				break;
+			case 'email':
+				$validation='required|valid_email';
+				break;
+			case 'b':
+				$type='checkbox';
+				$validation='';
+				break;
+		}
+		if (!empty($type)) $formData[$field]=array('type'=>$type,'label'=>$label,'value'=>$value,'options'=>$options,'validation'=>$validation);
+	}
+	return $formData;
+}
+
+

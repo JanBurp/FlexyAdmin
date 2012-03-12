@@ -14,8 +14,13 @@ class Flexy_library {
 		if (empty($name)) $name=strtolower(get_class($this));
 		if (!in_array($name, array('flexy_library','module','plugin_'))) {
 			$this->set_name($name);
-      if (file_exists(SITEPATH.'language/'.$this->CI->config->item('language').'/'.$name.'_lang.php')) $this->CI->lang->load($name);
-			$this->load_config();
+      if (file_exists(SITEPATH.'language/'.$this->CI->config->item('language').'/'.$name.'_lang.php')) {
+        $this->CI->lang->load($name);
+        if (substr($name,0,6)=='plugin') {
+          $this->CI->config->unload($name);
+        }
+      }
+      $this->load_config();
 		}
 	}
 
@@ -26,7 +31,7 @@ class Flexy_library {
 
 	public function load_config($name='') {
 		if (empty($name)) $name=$this->name;
-		if ( $this->CI->config->load($name,true) ) {
+		if ( $this->CI->config->load($name,true,false) ) {
 			$this->set_config( $this->CI->config->item($name) );
 		}
 		return $this->config;
