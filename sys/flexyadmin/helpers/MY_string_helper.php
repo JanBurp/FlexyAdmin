@@ -225,7 +225,7 @@ function intro_string($txt,$len=50,$type='WORDS',$strip_tags='<br/><strong><ital
 	}
 	// no intro class found, pick an intro by length
 	if ($intro=='') {
-		$intro=max_length(str_replace('&nbsp;',' ',strip_tags($txt,$strip_tags)),$len,$type,true);
+		$intro=max_length(str_replace('&nbsp;',' ',strip_tags($txt,$strip_tags)),$len,$type,true,$strip_tags);
 	}
 	// make sure all tags are closed
 	$intro=restore_tags($intro);
@@ -242,11 +242,11 @@ function add_before_last_tag($txt,$more,$tag='</p>') {
 	return $rtxt;
 }
 
-function max_length($txt,$len=100,$type='LINES',$closetags=false) {
+function max_length($txt,$len=100,$type='LINES',$closetags=false,$strip_tags='') {
 	$out='';
 	switch ($type) {
 		case 'CHARS':
-			$out=substr(strip_tags($txt),0,$len);
+			$out=substr(strip_tags($txt,$strip_tags),0,$len);
 			break;
 		case 'WORDS':
 				$words=explode(' ',$txt);
