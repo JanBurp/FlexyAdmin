@@ -21,7 +21,7 @@ $config['after_update_method'] = '_after_update';
 */
 
 $config['trigger'] = array(
-	'field_types'		=> array('txt','stx'),
+	'field_types'		=> array('txt','stx')
 );
 
 
