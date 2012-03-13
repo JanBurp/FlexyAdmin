@@ -50,7 +50,7 @@ Class MY_Config extends CI_Config {
 
 			$file_path = $location.'/'.$file.'.php';
 
-			// echo "$file_path<br/>";
+      // echo "$file_path<br/>";
 
 			// Allready loaded?
 			if ( !in_array($file_path, $this->is_loaded, TRUE))	{
@@ -87,7 +87,7 @@ Class MY_Config extends CI_Config {
 					unset($config);
 					$loaded=TRUE;
 
-					// echo "LOADED: $file_path<br/>";
+          // echo "LOADED: $file_path<br/>";
 
 					log_message('debug', 'Config file loaded: '.$file_path);
 				}

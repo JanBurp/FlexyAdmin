@@ -16,7 +16,7 @@ class Plugin_ extends Flexy_library {
 	}
 	
 	public function set_config($config=array()) {
-		if (!isset($config['config'])) $config=array('config'=>$config);
+    if (!isset($config['config'])) $config=array('config'=>$config);
 		if (isset($config['config'])) parent::set_config($config['config']);
 		if (isset($config['trigger'])) $this->trigger=$config['trigger'];
 	}
