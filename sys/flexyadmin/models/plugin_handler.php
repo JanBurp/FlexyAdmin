@@ -107,7 +107,13 @@ class Plugin_handler extends CI_Model {
 		if (is_object($this->$plugin)) {
 			$this->plugins[$plugin]['is_loaded']=true;
 		}
-    // $this->$plugin->set_config( $this->plugins[$plugin] ); // Not needed anymore
+    // Not needed anymore, config will be loaded by the plugin itself, but need to load trigger
+    // $this->$plugin->set_config( $this->plugins[$plugin] ); 
+    if (isset($this->plugins[$plugin]['trigger'])) {
+      $config['trigger']=$this->plugins[$plugin]['trigger'];
+      $config['config']=array();
+      $this->$plugin->set_config( $config ); 
+    }
 		return $this->plugins[$plugin]['is_loaded'];
 	}
 
