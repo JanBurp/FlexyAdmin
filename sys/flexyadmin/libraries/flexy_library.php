@@ -31,8 +31,10 @@ class Flexy_library {
 
 	public function load_config($name='') {
 		if (empty($name)) $name=$this->name;
-		$this->CI->config->load($name,true,false);
-		$this->set_config( $this->CI->config->item($name) );
+    if (!is_array($name)) { // Hack, want hoe komt het dat $name soms de $config is???
+  		$this->CI->config->load($name,true,false);
+  		$this->set_config( $this->CI->config->item($name) );
+    }
 		return $this->config;
 	}
 	
