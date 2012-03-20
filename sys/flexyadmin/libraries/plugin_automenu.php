@@ -83,7 +83,8 @@ class Plugin_automenu extends Plugin_ {
 	 */
 	private function _get_current_data($table,$where='',$limit=0, $offset=0, $insert_check='') {
 		if (!empty($where)) {
-			$this->CI->db->where($where);	
+      $this->CI->db->where($where);  
+      if (has_string('rel_',$where)) $this->CI->db->add_many();
 		}
 		if ($offset>0 and $limit==0) $limit=10000;
 		$data=$this->CI->db->get_results($table,$limit,$offset);
@@ -292,7 +293,7 @@ class Plugin_automenu extends Plugin_ {
 					}
 					$groupData=$this->_get_current_data($groupTable);
 					
-          // strace_($autoValue);
+          // trace_($autoValue);
           // strace_($groupTable);
 					
 					foreach ($groupData as $groupId=>$groupData) {
