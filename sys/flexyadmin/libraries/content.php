@@ -71,7 +71,7 @@ class Content {
 	function _countCallBack($matches) {
 		$class="";
 		// is there a class allready?
-		if (preg_match("/class=\"(.*?)\"/",$matches[3],$cMatch))
+		if (preg_match("/class=\"([^<]*)\"/",$matches[3],$cMatch))
 			$class=$cMatch[1]." ";
 		if ($matches[1]=="p") {
 			$class.="p$this->p_count";
@@ -122,7 +122,7 @@ class Content {
 		$this->reset_counters();
 		
 		if ($this->addClasses) {
-			$txt=preg_replace_callback("/<(div|img|p|h(\d))(.*?)>/",array($this,"_countCallBack"),$txt);
+			$txt=preg_replace_callback("/<(div|img|p|h(\d))([^<]*)>/",array($this,"_countCallBack"),$txt);
 		}
 
 		if ($this->replaceLanguageLinks) {
@@ -130,11 +130,11 @@ class Content {
 		}
 		
 		if ($this->addPopups) {
-			$txt=preg_replace_callback("/<img(.*?)src=['|\"](.*?)['|\"](.*?)>/",array($this,"_popupCallBack"),$txt);
+			$txt=preg_replace_callback("/<img([^<]*)src=['|\"](.*?)['|\"]([^>]*)>/",array($this,"_popupCallBack"),$txt);
 		}
 		
 		if ($this->safeEmail) {
-			if (preg_match_all("/<a(.*?)href=\"mailto:(.*?)\"(.*?)>(.*?)<\/a>/",$txt,$matches)) { 	//<a[\s]*href="(.*)">(.*)</a>
+			if (preg_match_all("/<a([^<]*)href=\"mailto:(.*?)\"([^>]*)>(.*?)<\/a>/",$txt,$matches)) { 	//<a[\s]*href="(.*)">(.*)</a>
 				$search=array();
 				$replace=array();
 				foreach ($matches[2] as $key=>$adres) {
