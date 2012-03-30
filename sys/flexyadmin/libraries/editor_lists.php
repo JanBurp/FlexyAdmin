@@ -151,7 +151,6 @@ class Editor_lists {
 				}
 				else {
 					if ($type=="downloads" and isset($link['type']))
-						// $list.='["'.$link['type'].': '.$link["name"].'","'.$link["path"].'"],';
 						$list.='["'.$link['type'].': '.$link["name"].'","file'.str_replace(SITEPATH.'assets','',$link["path"]).'"],';
 					else
 						$list.='["'.$link["name"].'","'.$link["url"].'"],';
