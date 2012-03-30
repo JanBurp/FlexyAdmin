@@ -22,19 +22,23 @@ class Main extends FrontEndController {
 
 				$feeds=array();
 				foreach ($rssCfg as $id => $rssInfo) {
-					if (!empty($rssInfo['str_where'])) $this->db->where($rssInfo['str_where']);
-					if (isset($rssInfo['b_full_uris']) and $rssInfo['b_full_uris']) $this->db->uri_as_full_uri();
+          if (!empty($rssInfo['str_where'])) $this->db->where($rssInfo['str_where']);
+          if (isset($rssInfo['b_full_uris']) and $rssInfo['b_full_uris']) $this->db->uri_as_full_uri('full_uri');
+          $this->db->set_key('uri'); // This will make the results unique if some pages are doubled in menu tree.
 					$subFeeds=$this->db->get_result($rssInfo['table'],$rssInfo['int_limit']);
+          // trace_($subFeeds);
 					
 					foreach ($subFeeds as $feed) {
 						$feeds[]=array( 'title'	=> trim($rssInfo['str_pre_title'].' '.$this->_get_field($feed,$rssInfo['field_title'])),
-														'url'		=> trim($rssInfo['str_pre_uri'].'/'.$this->_get_field($feed,$rssInfo['field_uri']),'/'),
+														'url'		=> trim($rssInfo['str_pre_uri'].'/'.$this->_get_field($feed,'full_uri'),'/'),
 														'date'	=> $this->_get_field($feed,$rssInfo['field_date']),
-														'body'	=> max_length(strip_tags($this->_get_field($feed,$rssInfo['field_body'])),$rssInfo['int_max_length'],'CHARS')
+                            // 'body'  => max_length(strip_tags($this->_get_field($feed,$rssInfo['field_body'])),$rssInfo['int_max_length'],'CHARS')
+                            'body'  => ''
 														);
 					}
 				}
 				$feeds=sort_by($feeds,'date',TRUE);
+        // trace_($feeds);
 				
 				if ($feeds) {
 					$siteInfo=$this->db->get_row('tbl_site');

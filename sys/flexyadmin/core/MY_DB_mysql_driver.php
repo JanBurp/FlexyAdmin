@@ -640,18 +640,32 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	}
 
 	
-	function get_parent($table,$uri="",$field='') {
-		if (!empty($uri))	$id=$this->get_field_where($table,"id","uri",$uri);
-		$this->order_as_tree();
-		$this->uri_as_full_uri(TRUE,$field);
+  // function get_parent($table,$uri="",$field='') {
+  //   if (!empty($uri))  $id=$this->get_field_where($table,"id","uri",$uri);
+  //   $this->order_as_tree();
+  //   $this->uri_as_full_uri(TRUE,$field);
+  //   $this->select("id,order,uri,self_parent");
+  //   if (!empty($field)) $this->select($field);
+  //   $result=$this->get_result($table);
+  //   if (!empty($uri))
+  //     return $result[$id];
+  //   else
+  //     return $result;
+  // }
+
+	function get_parent($table,$row,$extraField='',$full=true) {
+    $this->where('id',$row['self_parent']);
 		$this->select("id,order,uri,self_parent");
-		if (!empty($field)) $this->select($field);
-		$result=$this->get_result($table);
-		if (!empty($uri))
-			return $result[$id];
-		else
-			return $result;
+		if (!empty($extraField)) $this->select($extraField);
+		$parent=$this->get_row($table);
+    if ($full and $parent['self_parent']!=0) {
+      $parentParent=$this->get_parent($table,$parent,$extraField,$full);
+      $parent['uri']=$parentParent['uri'].'/'.$parent['uri'];
+      if ($extraField) $parent[$extraField]=$parentParent[$extraField].' / '.$parent[$extraField];
+    }
+    return $parent;
 	}
+
 
 	function get_unique_id_from_fulluri($table,$uriParts,$parent=0) {
 		$foundID=-1;
@@ -736,31 +750,34 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		
 		// Full uris if asked for
 		if ($fullUri) {
+			$uriField='uri';
+			if (is_string($fullUri)) $uriField=$fullUri;
+      if (is_array($fullUri)) {
+        trace_(array('BUG? :: fullUri=>'=>$fullUri));
+      }
 			foreach ($result as $key => $row) {
 				if ($row["self_parent"]!=0) {
-					$uri=$row["uri"];
-					$uriField='uri';
-					if (is_string($fullUri)) $uriField=$fullUri;
 					if (!empty($extraFullField)) $extra=$row[$extraFullField];
+          // Get parent
 					if ( $this->_test_if_full_path($result,$row) ) {
 						$parentUri=$result[$row["self_parent"]][$uriField];
-						$result[$key][$uriField]=$parentUri."/".$uri;
-						if (!empty($extraFullField)) {
-							$parentExtra=$result[$row["self_parent"]][$extraFullField];
-							$result[$key][$extraFullField]=$parentExtra." / ".$extra;
-						}
+						if (!empty($extraFullField)) {$parentExtra=$result[$row["self_parent"]][$extraFullField];}
 					}
 					else {
-						$parent=$this->get_parent($table,$uri,$extraFullField);
-						$result[$key][$uriField]=$parent[$uriField];
-						if (!empty($extraFullField)) {
-							$result[$key][$extraFullField]=$parent[$extraFullField];
-						}
+						$parent=$this->get_parent($table,$row,$extraFullField,true);
+            $parentUri=$parent['uri'];
+						if (!empty($extraFullField)) {$parentExtra=$parent[$extraFullField];}
+					}
+          // Set
+					$result[$key][$uriField]=$parentUri."/".$row['uri'];
+					if (!empty($extraFullField)) {
+						$result[$key][$extraFullField]=$parentExtra." / ".$extra;
 					}
 				}
-				elseif (!is_array($fullUri)) {
-					$result[$key][$fullUri]=$result[$key]['uri'];
-				}
+        // Although no parent, still need to set another uri field if set
+        elseif (is_string($fullUri)) {
+          $result[$key][$fullUri]=$result[$key]['uri'];
+        }
 			}
 		}
 		return $result;
