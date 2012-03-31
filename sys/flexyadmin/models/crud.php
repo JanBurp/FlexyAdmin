@@ -213,69 +213,79 @@ class Crud extends CI_Model {
 		$is_deleted=FALSE;
 		$this->_set_args(array('where'=>$where));
 
-		if (is_array($this->where)) {
+    $wheres=$this->where;
+		if (is_array($wheres)) {
+      $first=current($wheres);
+      if (!is_array($first)) $wheres[]=$wheres;
 
-			// Get id
-			$id=$this->_get_id();
+      $isTree=$this->db->has_field($this->table,'self_parent');
+      if ($isTree) {$this->load->model('order','order_model');}
+      
+      foreach ($wheres as $key => $where) {
+        // Get id
+        $id=$this->_get_id($where);
+        
+  			/**
+  			 * Check if it is a tree, if so, get branches (to move them up later)
+  			 */
+        if ($isTree) {
+          $branches=array();
+  				// get info from current
+  				$this->db->where($where);
+  				$this->db->select('id,order,self_parent');
+  				$result=$this->db->get_result($this->table);
+          foreach ($result as $id => $row) {
+    				$parent=$row['self_parent'];
+    				$order=$row['order'];
+    				// get branches
+    				$this->db->where('self_parent',$id);
+    				$this->db->select(PRIMARY_KEY);
+    				$branches=$this->db->get_result($this->table);
+          }
+        }
+
+  			/**
+  			 * Remove database entry('s)
+  			 */
+  			$this->db->trans_start();			
 			
-			/**
-			 * Check if it is a tree, if so, get branches (to move them up later)
-			 */
-			$branches=FALSE;
-			if ($this->db->has_field($this->table,'self_parent')) {
-				$this->load->model('order','order_model');
-				// get info from current
-				$this->db->where(PRIMARY_KEY,$id);
-				$this->db->select('id,order,self_parent');
-				$row=$this->db->get_row($this->table);
-				$parent=$row['self_parent'];
-				$order=$row['order'];
-				// get branches
-				$this->db->where('self_parent',$id);
-				$this->db->select(PRIMARY_KEY);
-				$branches=$this->db->get_result($this->table);
-			}
-
-			/**
-			 * Remove database entry('s)
-			 */
-			$this->db->trans_start();			
+  			$this->db->where($where);
+  			$is_deleted=$this->db->delete($this->table);
 			
-			$this->db->where($this->where);
-			$is_deleted=$this->db->delete($this->table);
-			
-			if ($is_deleted) {
+  			if ($is_deleted) {
 
-				/**
-				 * Move branches up if any
-				 */
-				if ($branches) {
-					$count=count($branches);
-					$this->order_model->shift_up($this->table,$parent,$count,$order);
-					foreach($branches as $branch=>$value) {
-						$this->db->set('self_parent',$parent);
-						$this->db->set('order',$order++);
-						$this->db->where(PRIMARY_KEY,$value[PRIMARY_KEY]);
-						$this->db->update($this->table);
-					}
-				}
+  				/**
+  				 * Move branches up if any
+  				 */
+  				if ($isTree and $branches) {
+  					$count=count($branches);
+  					$this->order_model->shift_up($this->table,$parent,$count,$order);
+  					foreach($branches as $branch=>$value) {
+  						$this->db->set('self_parent',$parent);
+  						$this->db->set('order',$order++);
+  						$this->db->where(PRIMARY_KEY,$value[PRIMARY_KEY]);
+  						$this->db->update($this->table);
+  					}
+  				}
 
 
-				/**
-				 * Check if some data set in rel tables (if exists), if so delete them also
-				 */
-				$jTables=$this->db->get_many_tables($this->table);
-				if (!empty($jTables)) {
-					foreach ($jTables as $jt=>$jItem) {
-						$this->db->where($jItem['id_this'],$id);
-						$this->db->delete($jt);
-					}
-				}
+  				/**
+  				 * Check if some data set in rel tables (if exists), if so delete them also
+  				 */
+  				$jTables=$this->db->get_many_tables($this->table);
+  				if (!empty($jTables)) {
+  					foreach ($jTables as $jt=>$jItem) {
+  						$this->db->where($jItem['id_this'],$id);
+  						$this->db->delete($jt);
+  					}
+  				}
 				
-				log_message('debug', 'Model: Crud->Delete() from table "'.$this->table.'"');
-			}
+  				log_message('debug', 'Model: Crud->Delete('.$id.') from table "'.$this->table.'"');
+  			}
 
-			$this->db->trans_complete();
+  			$this->db->trans_complete();
+      }
+      
 		}
 		return $is_deleted;
 	}
@@ -296,11 +306,12 @@ class Crud extends CI_Model {
 		if (!is_array($this->order)) $this->order=array($this->order=>'DESC');
 	}
 
-	private function _get_id() {
-		$id = element(PRIMARY_KEY,$this->where,FALSE);
+	private function _get_id($where='') {
+    if (empty($where)) $where=$this->where;
+		$id = element(PRIMARY_KEY,$where,FALSE);
 		if (!$id) {
 			$this->db->select(PRIMARY_KEY);
-			$this->db->where($this->where);
+			$this->db->where($where);
 			$row=$this->db->get_row($this->table);
 			$id=$row[PRIMARY_KEY];
 		}
