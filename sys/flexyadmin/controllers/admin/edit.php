@@ -82,32 +82,39 @@ class Edit extends AdminController {
 			
 			$this->lang->load("update_delete");
 			$this->load->model('queu');
-			
+			$message="";
+      
 			if (!is_array($ids)) $ids=array($ids);
-			foreach ($ids as $id) {
-				if ($this->user->has_rights($table,$id)>=RIGHTS_DELETE) {
-					$message="";
-					if ($confirmed) {
 
-						$this->db->where(PRIMARY_KEY,$id);
-						$oldData=$this->db->get_row($table);
-
-						if ($this->_after_delete($table,$oldData)) {
-							$this->crud->table($table)->delete( array(PRIMARY_KEY=>$id) );	
-
-							/**
-							 * End messages
-							 */
-							$this->load->model("login_log");
-							$this->login_log->update($table);
-							$this->set_message(langp("delete_succes",$table) . $message);
-						}
-					}
-				}
-				else {
-					$this->lang->load("rights");
-					$this->set_message(lang("rights_no_rights"));
-				}
+			if ($confirmed) {
+        
+        // Set items to delete
+        $items=array();
+        $where='';
+  			foreach ($ids as $id) {
+  				if ($this->user->has_rights($table,$id)>=RIGHTS_DELETE) {
+            $items[]=$id;
+            $where[]=array(PRIMARY_KEY=>$id);
+          }
+        }
+      
+        // Start Delete
+        // Call _after_delete just for one (last) item (more is not needed)
+				$this->db->where(PRIMARY_KEY,$id);
+				$oldData=$this->db->get_row($table);
+        if ($this->_after_delete($table,$oldData)) {
+        // if (true) {
+          // Delete all items
+          $this->crud->table($table)->delete( $where );  
+          // End messages
+          $this->load->model("login_log");
+          $this->login_log->update($table);
+          $this->set_message(langp("delete_succes",$table) . $message);
+        }
+        else {
+          $this->lang->load("rights");
+          $this->set_message(lang("rights_no_rights"));
+        }
 			}
 
 			$this->queu->run_calls();
