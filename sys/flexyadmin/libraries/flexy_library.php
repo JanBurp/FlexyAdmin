@@ -14,10 +14,11 @@ class Flexy_library {
 		if (empty($name)) $name=strtolower(get_class($this));
 		if (!in_array($name, array('flexy_library','module','plugin_'))) {
 			$this->set_name($name);
-      if (file_exists(SITEPATH.'language/'.$this->CI->config->item('language').'/'.$name.'_lang.php')) {
+      $langfile='language/'.$this->CI->config->item('language').'/'.$name.'_lang.php';
+      if (file_exists(APPPATH.$langfile) or file_exists(SITEPATH.$langfile)) {
         $this->CI->lang->load($name);
         if (substr($name,0,6)=='plugin') {
-          $this->CI->config->unload($name);
+          $this->CI->config->unload($name); // Will be reloaded later
         }
       }
       $this->load_config();

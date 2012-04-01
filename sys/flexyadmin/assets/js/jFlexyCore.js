@@ -22,6 +22,13 @@ $(document).ready(function() {
 
 	if (isGrid || isFile) doGrid();
 
+  // Message & error boxes
+  $('#messages').delay(5000).fadeOut(2000);
+  $('#errors').each(function(){
+    var html=$('#errors').html();
+    info_dialog(html);
+  }).hide();
+
 	// plugin to prepare html form for ui-tabs
 	(function($) {
 		$.fn.formTabs = function(opts) {
@@ -116,6 +123,19 @@ function confirm_dialog(uri,name,id) {
 	changeButt("cancel",lang("dialog_cancel"));
 	changeButt("yes",lang("dialog_yes"));
 }
+
+function info_dialog(info) {
+  dialog.html(info);
+	$(dialog).dialog({
+    title:lang("dialog_title_warning"),
+		modal:true,
+    minWidth:500,
+    buttons: ({ ok  : function(){  $(dialog).dialog("destroy"); } }),
+    close: function(){$(dialog).dialog("destroy");}
+	});
+	changeButt("ok",lang("dialog_ok"));
+}
+
 function clean_message() {$("#message").html("");}
 
 function showHelpItems() {
@@ -124,7 +144,7 @@ function showHelpItems() {
 	$("span.help").children().removeAttr("title");
 	$("span.help").mouseenter(function() {
 		var obj=$(this);
-		var helpName=get_subclass("help_",$(this));
+		var helpName=get_subclass("help_",obj);
 		if (helpName!='') {
 			ShowDelay=setTimeout( function() {		
 				var helpTxt=$("#help_messages span#help_"+helpName).html();

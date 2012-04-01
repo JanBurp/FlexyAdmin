@@ -68,7 +68,7 @@ class Edit extends AdminController {
 				$this->delete($table,$ids,$info);
 			}
 			else {
-				$this->set_message("Not confirmed... ".anchor(api_uri('API_confirm',$table),"confirm"));
+				$this->message->add_error("Not confirmed... ".anchor(api_uri('API_confirm',$table),"confirm"));
 				redirect(api_uri('API_view_grid',$table));
 			}
 		}
@@ -108,11 +108,11 @@ class Edit extends AdminController {
           // End messages
           $this->load->model("login_log");
           $this->login_log->update($table);
-          $this->set_message(langp("delete_succes",$table) . $message);
+          $this->message->add(langp("delete_succes",$table) . $message);
         }
         else {
           $this->lang->load("rights");
-          $this->set_message(lang("rights_no_rights"));
+          $this->message->add_error(lang("rights_no_rights"));
         }
 			}
 

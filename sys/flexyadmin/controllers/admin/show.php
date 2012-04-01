@@ -87,7 +87,7 @@ class Show extends AdminController {
 			$this->lang->load("update_delete");
 			$this->load->model("order");
 			$this->order->set_to($table,$id,$newOrder);
-			$this->set_message(langp("order_has_changed",$table));
+			$this->message->add(langp("order_has_changed",$table));
 			$this->load->model("login_log");
 			$this->login_log->update($table);
 			redirect(api_uri('API_view_grid',$table,$id));
@@ -407,11 +407,11 @@ class Show extends AdminController {
 					$this->crud->table($table,$restrictedToUser);
 					if ($id==-1) {
 						$id=$this->crud->insert(array('data'=>$newData));
-						$this->set_message(langp("insert_new",$table));
+						$this->message->add(langp("insert_new",$table));
 					}
 					else {
 						$id=$this->crud->update(array('where'=>array(PRIMARY_KEY=>$id), 'data'=>$newData));
-						$this->set_message(langp("update_succes",$table));
+						$this->message->add(langp("update_succes",$table));
 					}
 					
 					// Make calls that plugins might have put in the queu
@@ -424,7 +424,7 @@ class Show extends AdminController {
 					if (!empty($info)) $redirectUri.='/info/'.$info;
 					
 					if ( $id===FALSE ) {
-						$this->set_message(langp("update_error",$table));
+						$this->message->add_error(langp("update_error",$table));
 						redirect($redirectUri);
 					}
 					else {
@@ -536,10 +536,10 @@ class Show extends AdminController {
 			$this->queu->run_calls();
 			
 			if ($resultId===FALSE) {
-				$this->set_message(langp("update_error",$userTable,$resultId));
+				$this->message->add_error(langp("update_error",$userTable,$resultId));
 			}
 			else {
-				$this->set_message(lang("update_user_changed"));
+				$this->message->add(lang("update_user_changed"));
 				$this->load->model("login_log");
 				$this->login_log->update($userTable);
 			}

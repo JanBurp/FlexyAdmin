@@ -251,5 +251,10 @@ class MY_Upload extends CI_Upload {
 	}
 
 
+	public function display_errors($open = '', $close = '') {
+		return parent::display_errors($open,$close);
+	}
+
+
 }
 ?>

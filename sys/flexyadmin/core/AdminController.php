@@ -51,11 +51,6 @@ class AdminController extends BasicController {
 		return ($this->user_group_id<4); // restrict admin use only to users that ar at least a user (visitors are not allowed)
 	}
 
-
-	function set_message($message) {
-		$this->session->set_userdata("message",$message);
-	}
-
 	function use_editor() {
 		$this->showEditor=true;
 	}
@@ -279,12 +274,9 @@ class AdminController extends BasicController {
 
 
 	function _show_message() {
-		$message=$this->session->userdata("message");
-		if ($message!="") {
-			$message=$this->ui->replace_ui_names($message);
-			$this->load->view('admin/message', array("message"=>$message));
-		}
-		$this->session->unset_userdata("message");
+    $this->message->show();
+    $this->message->reset();
+    $this->message->reset_errors();
 	}
 
 	function _show_content() {

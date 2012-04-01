@@ -6,6 +6,7 @@ $lang['dialog_ok']				= "Ok";
 $lang['dialog_cancel']		= "Annuleer";
 $lang['dialog_upload']		= "Upload";
 
+$lang['dialog_title_warning']		= "Let op";
 $lang['dialog_title_help']			= "Help voor '%s'";
 $lang['dialog_title_confirm']		= "Weet je het zeker?";
 $lang['dialog_title_upload']		= "Bestand uploaden.";
