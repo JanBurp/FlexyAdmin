@@ -103,7 +103,6 @@ class Edit extends AdminController {
 				$this->db->where(PRIMARY_KEY,$id);
 				$oldData=$this->db->get_row($table);
         if ($this->_after_delete($table,$oldData)) {
-        // if (true) {
           // Delete all items
           $this->crud->table($table)->delete( $where );  
           // End messages

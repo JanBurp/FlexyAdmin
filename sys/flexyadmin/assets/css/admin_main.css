@@ -564,8 +564,11 @@ tr.caption td				{ border:none; }
 .grid th.order,
 .grid td.order			{ width:10px;	padding:3px 7px 3px 0px;border-left:none; }
 
+.grid td.dat,
+.grid td.date,
+.grid td.tme,
 .grid td.str,
-.grid td.txt				{ max-width:250px; overflow:hidden;}
+.grid td.txt				{ max-width:250px; height:25px;overflow:hidden;white-space:nowrap;}
 .grid td.str_title	{ max-width:none;}
 .grid td.media,
 .grid td.rgb				{ text-align: center;	width:52px;	max-width:52px; }
@@ -605,6 +608,7 @@ tr.caption td				{ border:none; }
 	background-color:#EFB;
 }
 
+table.res_menu_result .order {display:none;}
 
 /* Safari hack for hidden cells in grid in combo with jQuery sortable & selectable */
 table.grid td.hiddenCell,

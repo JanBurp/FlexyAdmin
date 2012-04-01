@@ -10,6 +10,7 @@
 */
 
 $config['admin_api_method'] = '_admin_api';
+$config['before_grid_method'] = '_before_grid';
 $config['after_update_method'] = '_after_update';
 $config['after_delete_method'] = '_after_delete';
 
@@ -34,8 +35,8 @@ $config['trigger_method'] = '_trigger';
 |--------------------------------------------------------------------------
 |
 */
-
 $config['module_field']='str_module';
+$config['update_fields']=array('id','order','self_parent','uri',$config['module_field']);
 
 
 ?>

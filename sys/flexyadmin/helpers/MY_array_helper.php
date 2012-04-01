@@ -575,7 +575,9 @@ function find_row_by_value($a,$v,$key='',$like=false) {
 	return $found;
 }
 
-
+function array_preg_search($val,$array) {
+  return array_ereg_search($val,$array);
+}
 function array_ereg_search($val, $array) {
 	$i = 0;
 	$return = array();
@@ -673,6 +675,21 @@ function implode_attributes($array) {
 		$out.=$key.'="'.$value.'" ';
 	}
 	return $out;
+}
+
+
+function array_keep_keys($a,$keep) {
+  foreach ($a as $key => $value) {
+    if (!in_array($key,$keep)) unset($a[$key]);
+  }
+  return $a;
+}
+
+function array_unset_keys($a,$unset) {
+  foreach ($a as $key => $value) {
+    if (in_array($key,$unset)) unset($a[$key]);
+  }
+  return $a;
 }
 
 

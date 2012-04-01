@@ -140,5 +140,11 @@ function get_menu_table() {
 	return $table;
 }
 
+function is_editable_table($table) {
+  $pre=get_prefix($table);
+  return !in_array($pre,array('res','log'));
+}
+
+
 
 ?>
