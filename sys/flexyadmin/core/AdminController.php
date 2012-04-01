@@ -402,25 +402,7 @@ class AdminController extends BasicController {
 	
 	
 
-	function _before_grid($table,&$data) {
-		// First check a specific table
-		$func="_before_grid_$table";
-		if (method_exists($this,$func)) {
-			$this->$func($data);
-		}
-		// common table function
-	}
-
-	function _before_grid_tbl_links(&$data) {
-		/**
-		 * Reset link list
-		 */
-		$this->load->library("editor_lists");
-		$result=$this->editor_lists->create_list("links");
-		if (!$result) $this->set_message("Could not update Links List. Check file rights.");
-		return $result;
-	}
-
+  // TODO: Move to plugin...
 	function _before_filemanager($path,&$files) {
 		/**
 		 * Reset img/media list

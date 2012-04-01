@@ -104,6 +104,11 @@ class BasicController extends MY_Controller {
 		$this->plugin_handler->set_data('table',$table);
 	}
 
+	function _before_grid($table) {
+		$this->_init_plugin($table,NULL,NULL);
+		return $this->plugin_handler->call_plugins_before_grid_trigger();
+	}
+
 	function _after_delete($table,$oldData=NULL) {
 		$this->_init_plugin($table,$oldData,NULL);
 		return $this->plugin_handler->call_plugins_after_delete_trigger();

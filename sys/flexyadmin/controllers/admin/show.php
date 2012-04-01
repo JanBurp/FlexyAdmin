@@ -115,6 +115,10 @@ class Show extends AdminController {
 			// strace_($args);
 
 			if (!empty($table) and $this->db->table_exists($table)) {
+        
+        $this->load->model('queu');
+        $this->_before_grid($table);
+        
 				$singleRow=( $this->cfg->get('CFG_table',$table,"int_max_rows") == 1);
 				if ($singleRow) {
 					$this->db->select("id");
@@ -224,9 +228,7 @@ class Show extends AdminController {
 							$this->form();
 							return;
 						}
-						else
-						{
-							$this->_before_grid($table,$data);
+						else 	{
 
 							$grid=new grid();
 
@@ -266,7 +268,8 @@ class Show extends AdminController {
 								$keys=array_keys(current($data));
 								$keys=array_combine($keys,$keys);
 							}
-							if ($right>=RIGHTS_ADD) {
+							$grid->set_headings($this->ui->get($keys,$table));
+              if (is_editable_table($table) AND $right>=RIGHTS_ADD) {
 								$newUri=api_uri('API_view_form',$table.':-1');
 								if (!empty($info)) $newUri.='/info/'.$info;
 								$newIcon=anchor($newUri,help(icon("new"),langp('grid_new',$uiTable)) );
@@ -275,11 +278,11 @@ class Show extends AdminController {
 								else
 									$grid->prepend_to_captions('&nbsp;');
 							}
-							$grid->set_headings($this->ui->get($keys,$table));
-							if ($right>=RIGHTS_DELETE)
+              if (is_editable_table($table) AND $right>=RIGHTS_DELETE)
 								$grid->set_heading(PRIMARY_KEY,help(icon("select all"),lang('grid_select_all')).help(icon("delete"),lang('grid_delete'), array("class"=>"delete") ) );
-							else
-								$grid->set_heading(PRIMARY_KEY,'');
+							else {
+                // $grid->set_heading(PRIMARY_KEY,'');
+              }
 							
 							if (!empty($id)) $grid->set_current($id);
 							$html=$grid->view("html",$table,"grid");

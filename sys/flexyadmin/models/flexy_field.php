@@ -469,20 +469,21 @@ class Flexy_field extends CI_Model {
 		$this->id=$this->data;
 		$class=$this->table." id".$this->id;
 		$out="";
-		if ($this->fieldRight>=RIGHTS_EDIT) 	{
-			if (isset($this->extraInfoId))
-				$uri=api_uri('API_view_form',$this->table.':'.$this->data,'info',$this->extraInfoId);
-			else
-				$uri=api_uri('API_view_form',$this->table.':'.$this->data);
-			$out.=anchor( $uri, help(icon("edit"),lang('grid_edit')), array("class"=>"edit $class"));
-		}
-		if ($this->fieldRight>=RIGHTS_DELETE)	{
-			// if (isset($this->extraInfoId))
-			// 	$uri=api_uri('API_confirm',$this->table.':'.$this->data,'info',$this->extraInfoId);
-			// else
-			// 	$uri=api_uri('API_confirm',$this->table.':'.$this->data);
-			$out.=help(icon("select"),lang('grid_select')).help(icon("delete item"),lang('grid_delete'));
-		}
+    if (is_editable_table($this->table)) {
+      if ($this->fieldRight>=RIGHTS_EDIT)   {
+        if (isset($this->extraInfoId))
+          $uri=api_uri('API_view_form',$this->table.':'.$this->data,'info',$this->extraInfoId);
+        else
+          $uri=api_uri('API_view_form',$this->table.':'.$this->data);
+        $out.=anchor( $uri, help(icon("edit"),lang('grid_edit')), array("class"=>"edit $class"));
+      }
+      if ($this->fieldRight>=RIGHTS_DELETE)  {
+        $out.=help(icon("select"),lang('grid_select')).help(icon("delete item"),lang('grid_delete'));
+      }
+    }
+    else {
+      $out=$this->id;
+    }
 		return $out;
 	}
 
@@ -613,7 +614,7 @@ class Flexy_field extends CI_Model {
 	function _order_grid() {
 		$out="";
 		$data=$this->data;
-		if ($this->fieldRight>=RIGHTS_EDIT) {
+    if (is_editable_table($this->table) AND $this->fieldRight>=RIGHTS_EDIT) {
 			$out=	anchor(api_uri('API_view_order',$this->table,$this->id,"up"),help(icon("up"),lang('grid_order'))).
 						anchor(api_uri('API_view_order',$this->table,$this->id,"down"),help(icon("down"),lang('grid_order')));
 		}
