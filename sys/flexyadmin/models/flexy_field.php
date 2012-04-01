@@ -20,6 +20,8 @@ class Flexy_field extends CI_Model {
 	var $field;
 	var $formData;
 	var $data;
+  var $rowdata;
+  var $title_field;
 	var $id;
 	var $action;
 	var $pre;
@@ -44,6 +46,7 @@ class Flexy_field extends CI_Model {
 
 	function init_table($table,$action,$formData=array()) {
 		$this->table=$table;
+    $this->title_field=$this->db->get_first_field($this->table,'str');
 		$this->action=$action;
 		$this->formData=$formData;
 		if (!isset($vars)) $this->set_variables();
@@ -197,8 +200,8 @@ class Flexy_field extends CI_Model {
 	function render_grid_row($table,$row,$right=RIGHTS_ALL,$extraInfoId=NULL) {
 		$out=array();
 		// first create one field from foreign data
-		$row=$this->concat_foreign_fields($row);
-		foreach ($row as $field=>$data) {
+		$this->rowdata=$this->concat_foreign_fields($row);
+		foreach ($this->rowdata as $field=>$data) {
 			$renderedField=$this->render_grid_field($table,$field,$data,$right,$extraInfoId);
 			if ($renderedField!==FALSE)	$out[$field]=$renderedField;
 		}
@@ -540,25 +543,26 @@ class Flexy_field extends CI_Model {
 		return $out;
 	}
 
-	function _get_tree($id,$branch="",$tree="") {
-		if (!empty($tree)) $tree="/$tree";
-		$this->db->select(array(PRIMARY_KEY));
-		if ($this->db->field_exists('uri',$this->table)) $this->db->select('uri');
-		if ($this->db->field_exists('self_parent',$this->table)) $this->db->select('self_parent');
-		$this->db->where(PRIMARY_KEY,$id);
-		$res=$this->db->get_row($this->table);
-		if (empty($branch) and isset($res["uri"])) $tree=$res["uri"].$tree;
-		if (isset($res["self_parent"]) and $res["self_parent"]>0) {
-			$tree=$branch.$tree;
-			$tree=$this->_get_tree($res["self_parent"],$branch,$tree);
-		}
-		return $tree;
-	}
+  // function _get_tree($id,$branch="",$tree="") {
+  //   if (!empty($tree)) $tree="/$tree";
+  //   $this->db->select(array(PRIMARY_KEY));
+  //   if ($this->db->field_exists('uri',$this->table)) $this->db->select('uri');
+  //   if ($this->db->field_exists('self_parent',$this->table)) $this->db->select('self_parent');
+  //   $this->db->where(PRIMARY_KEY,$id);
+  //   $res=$this->db->get_row($this->table);
+  //   if (empty($branch) and isset($res["uri"])) $tree=$res["uri"].$tree;
+  //   if (isset($res["self_parent"]) and $res["self_parent"]>0) {
+  //     $tree=$branch.$tree;
+  //     $tree=$this->_get_tree($res["self_parent"],$branch,$tree);
+  //   }
+  //   return $tree;
+  // }
 
 	function _self_grid() {
-		$out=$this->_get_tree($this->data);
-		if (!empty($out)) $out="[$this->data] ".$out;
-		return $out;		
+    if ($this->table=='res_menu_result') return $this->data;
+    $tree=$this->rowdata[$this->title_field];
+    $tree="[$this->data] ".$tree;
+    return $tree;
 	}
 
 	// TODO: Meer self_ velden mogelijk (nu alleen nog self_parent)

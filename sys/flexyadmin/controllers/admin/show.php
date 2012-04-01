@@ -163,6 +163,8 @@ class Show extends AdminController {
 						// How to order?
 						if ($hasField['self_parent']) {
 							$this->db->order_as_tree();
+              $titleField=$this->db->get_first_field($table,'str');
+              $this->db->uri_as_full_uri('uri',$titleField);
 						}
 						elseif ($order) {
 							$orderArr=explode(':',$order);
@@ -212,7 +214,6 @@ class Show extends AdminController {
 							}
 							$this->db->search($searchArr);
 						}
-
 
 						$data=$this->db->get_result($table,$pagination,$offset);
 						$total_rows=$this->db->last_num_rows_no_limit();
