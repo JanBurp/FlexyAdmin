@@ -3,7 +3,7 @@
 $lang['upload_userfile_not_set'] = "Post variabele genaamd userfile niet gevonden.";
 $lang['upload_file_exceeds_limit'] = "Het geuploade bestand is groter dan de toegestane limiet.";
 $lang['upload_file_partial'] = "Het bestand is gedeeltelijke geupload.";
-$lang['upload_no_file_selected'] = "U heeft geen bestand geselecteed om up te loaden.";
+$lang['upload_no_file_selected'] = "U heeft geen bestand geselecteerd.";
 $lang['upload_invalid_filetype'] = "Het bestandstype welke u probeert te uploaden is niet toegestaan.";
 $lang['upload_invalid_filesize'] = "Het bestand welke u probeert te uploaden is groter dan toegestaan.";
 $lang['upload_invalid_dimensions'] = "De afbeelding die u probeert te uploaden overschrijdt de toegestane hoogte of breedte";

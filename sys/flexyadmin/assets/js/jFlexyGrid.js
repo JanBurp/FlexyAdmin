@@ -346,9 +346,11 @@ function doGrid() {
 		if ($("table.grid .order").length>0) {
 			// change ui: remove normal order arrows, and place one item
 			help=$("table.grid tbody td.order:first span.help");
-			help='help_'+get_subclass("help_",$(help));
-			$("table.grid tbody td.order").empty().append('<span class="help '+help+'"><div class="icon order" title="order"></div></span>');
-			$("table.grid thead th.order").empty();
+      if (help.length>0) {
+  			help='help_'+get_subclass("help_",$(help));
+  			$("table.grid tbody td.order").empty().append('<span class="help '+help+'"><div class="icon order" title="order"></div></span>');
+  			$("table.grid thead th.order").empty();
+      }
  				
 			// set width and height of cells!
 			$("table.grid tbody tr:first td").each(function() {

@@ -554,7 +554,7 @@ tr.caption td				{ border:none; }
 /*	vertical-align:middle;*/
 }
 
-.grid .caption td		{padding:2px 0px}
+.grid .caption td		{padding:2px 0px; min-width:100px;}
 
 .grid td.id,
 .grid td.edit,
@@ -1266,8 +1266,9 @@ input.filter.busy {
 .after_form {margin:20px 0px 0px;}
 
 p.error, div.error p {
-	color:#f00;
-	font-weight:bold;
+	color:#F00;
+  font-size:15px;
+  margin:0px;
 }
 
 
@@ -1374,15 +1375,27 @@ div#help_messages {
 	padding:0px;
 	}
 
-#message
-{
+.messages {
 	position:absolute;
-	color:#FF0000;
-	font-size:15px;
-	font-weight:bold;
-	top:15px;
+  padding:10px 10px 0px;
+	z-index:5000;
+  border:solid 1px #DEA;
+	-o-border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+  box-shadow: 2px 2px 2px #CCC;
+  background-color:#FFF;
+}
+/*.messages p {margin:0px;}*/
+#messages {
+	top:0px;
 	left:430px;
-	z-index:50;
+}
+#errors {
+	top:115px;
+	left:430px;
+  color:#C00;
 }
 
 #header {

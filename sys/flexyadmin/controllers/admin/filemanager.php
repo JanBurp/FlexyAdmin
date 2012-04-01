@@ -241,17 +241,6 @@ class Filemanager extends AdminController {
 	 * FileManager controller
 	 */
 
-	// function confirm($files="",$confirmed="") {
-	// 	if ($confirmed=="confirmed") {
-	// 		$this->session->set_userdata("confirmed",true);
-	// 		$this->delete($files);
-	// 	}
-	// 	else {
-	// 		$this->set_message("Not confirmed... ".anchor(api_uri('API_filemanager_confirm',$file,"confirm"),"confirm"));
-	// 		redirect(api_uri('API_filemanager_view',$files));
-	// 	}
-	// }
-
 	function confirm($path='') {
 		$confirmed=$this->input->post('confirm');
 		$files=$this->input->post('items');
@@ -260,7 +249,7 @@ class Filemanager extends AdminController {
 			$this->delete($path,$files);
 		}
 		else {
-			$this->set_message("Not confirmed... ".anchor(api_uri('API_filemanager_confirm'),"confirm"));
+			$this->message->add("Not confirmed... ".anchor(api_uri('API_filemanager_confirm'),"confirm"));
 			redirect(api_uri('API_filemanager_view'));
 		}
 	}
@@ -302,23 +291,22 @@ class Filemanager extends AdminController {
 								$this->load->model("login_log");
 								$this->login_log->update($path);
 								$deletedFiles.=', '.$file;
-								// $this->set_message(langp("delete_file_succes",$file));
 							}
 							else {
-								$this->set_message(langp("delete_file_error",$file));
+								$this->message->add_error(langp("delete_file_error",$file));
 							}
 						}
 						else {
 							$this->lang->load("rights");
-							$this->set_message(lang("rights_no_rights"));
+							$this->message->add_error(lang("rights_no_rights"));
 						}
-						if (!empty($deletedFiles)) $this->set_message(langp("delete_file_succes",substr($deletedFiles,2)));
 					}
+					if (!empty($deletedFiles)) $this->message->add(langp("delete_file_succes",substr($deletedFiles,2)));
 				}
 			}
 			else {
 				$this->lang->load("rights");
-				$this->set_message(lang("rights_no_rights"));
+				$this->message->add_error(lang("rights_no_rights"));
 			}
 		}
 		redirect(api_uri('API_filemanager_view',$path));
@@ -338,9 +326,9 @@ class Filemanager extends AdminController {
 				$file=$result["file"];
 				if (!empty($error)) {
 					if (is_string($error))
-						$this->set_message($error,$file);
+						$this->message->add_error($error."<p><br/><i>".preg_replace('/(.*)(\..*)/','$1<b>$2</b>',$file)."</i></p>");
 					else
-						$this->set_message(langp("upload_error",$file));
+						$this->message->add_error(langp("upload_error",$file));
 				}
 				else {
 					// autofill
@@ -355,7 +343,7 @@ class Filemanager extends AdminController {
 						$this->db->insert('cfg_media_files');
 					}
 					// message
-					$this->set_message(langp("upload_succes",$file));
+					$this->message->add(langp("upload_succes",$file));
 					$this->load->model("login_log");
 					$this->login_log->update($path);
 					redirect(api_uri('API_filemanager_view',pathencode($path),$file));
@@ -363,7 +351,7 @@ class Filemanager extends AdminController {
 			}
 			else {
 				$this->lang->load("rights");
-				$this->set_message(lang("rights_no_rights"));
+				$this->message->add_error(lang("rights_no_rights"));
 			}
 		}
 		redirect(api_uri('API_filemanager_view',pathencode($path)));
@@ -475,9 +463,9 @@ class Filemanager extends AdminController {
 			}
 		}
 		if ($succes)
-			$this->set_message(langp("rename_succes",$new));
+			$this->message->add(langp("rename_succes",$new));
 		else
-			$this->set_message(langp("rename_error",$file));
+			$this->message->add_error(langp("rename_error",$file));
 		redirect(api_uri('API_filemanager_view',pathencode($path),'/current/'.$new.'/offset/'.$offset.'/order/'.$order.'/search/'.$search));
 	}
 

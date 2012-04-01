@@ -57,21 +57,20 @@ class Plugin_automenu extends Plugin_ {
   public function _before_grid() {
     if ($this->table=='res_menu_result') {
   		$this->_create_auto_menu();
+      $this->CI->message->add(lang('result_changed'));
     }
   }
 
 	public function _after_update() {
     if ($this->table==$this->automationTable) {
-      // strace_('no change in res_menu_result');
+      $this->CI->message->add(lang('cfg_changed'));
     }
     else {
       if ($this->_needs_create()) {
-        // strace_('Full create');
         $this->pass_twice=TRUE;
     		$this->_create_auto_menu();
       }
       else {
-        // strace_('Only change data');
         // just change the new data in res_menu_result instead of creating it new.
         $this->pass_twice=FALSE;
         $this->_only_change_data();
@@ -82,7 +81,7 @@ class Plugin_automenu extends Plugin_ {
 
 	public function _after_delete() {
     if ($this->table==$this->automationTable) {
-      // strace_('no change in res_menu_result');
+      $this->CI->message->add(lang('cfg_changed'));
       $delete=TRUE;
     }
     else {
@@ -95,9 +94,9 @@ class Plugin_automenu extends Plugin_ {
 	}
 
 	public function _admin_api($args=NULL) {
-		$this->add_content(h($this->name,1));
+		$this->add_content(h(lang($this->name),1));
 		$this->_create_auto_menu();
-		$this->add_content('<p>Menu reset ready.');
+		$this->add_content('<p>'.lang('result_changed').'</p>');
 	}
 	
   
@@ -188,7 +187,6 @@ class Plugin_automenu extends Plugin_ {
 	
 	private function _create_auto_menu() {
     $this->pass++;
-    // strace_(array('pass'=>$this->pass));
 
     // Check pass
     if ($this->pass_twice and $this->pass==1) {

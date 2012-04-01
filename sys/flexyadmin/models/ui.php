@@ -140,8 +140,8 @@ class ui extends CI_Model {
 	function replace_ui_names($s) {
     $s=explode(' ',$s);
     foreach ($s as $key => $word) {
-      // only replace if word has a undescore
-      if (has_string('_',$word)) {
+      // only replace if word has a undescore and no dot
+      if (has_string('_',$word) and !has_string('.',$word)) {
         $newword=$this->get($word);
         if (!empty($newword)) $s[$key]=$newword;
       }

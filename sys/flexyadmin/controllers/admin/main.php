@@ -39,8 +39,9 @@ class Main extends AdminController {
 
 
 		// messages:
-		$message=$this->session->flashdata("message");
-		if ($message) $this->set_message($message);
+    // $messages=$this->session->flashdata("messages");
+    // if ($message) $this->set_message($message);
+    // Moved to BasicController...
 
 		// last login info
 		$user=$this->user->get_user();
