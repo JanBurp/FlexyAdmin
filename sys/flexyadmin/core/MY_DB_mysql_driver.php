@@ -661,7 +661,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
     if ($full and $parent['self_parent']!=0) {
       $parentParent=$this->get_parent($table,$parent,$extraField,$full);
       $parent['uri']=$parentParent['uri'].'/'.$parent['uri'];
-      if ($extraField) $parent[$extraField]=$parentParent[$extraField].' / '.$parent[$extraField];
+      if ($extraField) $parent[$extraField]=$parentParent[$extraField].'&nbsp;/&nbsp;'.$parent[$extraField];
     }
     return $parent;
 	}
@@ -771,7 +771,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
           // Set
 					$result[$key][$uriField]=$parentUri."/".$row['uri'];
 					if (!empty($extraFullField)) {
-						$result[$key][$extraFullField]=$parentExtra." / ".$extra;
+						$result[$key][$extraFullField]=$parentExtra."&nbsp;/&nbsp;".$extra;
 					}
 				}
         // Although no parent, still need to set another uri field if set

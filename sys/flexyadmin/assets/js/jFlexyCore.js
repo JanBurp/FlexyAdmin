@@ -11,7 +11,7 @@ $(document).ready(function() {
 	dialog=$("#ui");
 	Popup=$("#popup");
 	isForm=$("#content").hasClass("form");
-	isGrid=$("#content").hasClass("grid");
+	isGrid=($("#content").hasClass("grid") && !$('.grid').hasClass('res_menu_result'));
 	isGridAction=$(".grid").hasClass("actionGrid");
 	// isTree=$("#content").hasClass("tree");
 	isFile=$("#content").hasClass("filemanager");

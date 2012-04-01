@@ -49,29 +49,23 @@ function doGrid() {
 		//
 		// if 'self_parent' is there hide that column, add parent_id class to row, and visual nodes to next (str) column
 		//
-		$("table.grid td.self_parent").each(function(){
-			html=$(this).html();
-			if (html.length>0) {
-				// get parent_id
-				parent_id=html.substring(1,html.indexOf(" ")-1);
-				$(this).parent("tr").addClass("parent_id_"+parent_id);
-				// create new html
-				if (html.indexOf("/")<0)
-					newHtml='<span class="emptynode">&nbsp;</span>';
-				else {
-					newHtml='<span class="emptynode">&nbsp;</span>'+html;
-					newHtml=newHtml.replace(/[^\/]*\//g,'<span class="emptynode">&nbsp;</span>');
-					newHtml=newHtml.substr(0,newHtml.lastIndexOf('>')+1);
-				}
+    $("table.grid td.self_parent").each(function(){
+			var html=$(this).html();
+      var parent_id=html.substring(1,html.indexOf(" ")-1);
+      if (parent_id!=0) {
+        $(this).parent("tr").addClass("parent_id_"+parent_id);
+  			var title=$(this).nextAll("td.str:first");
+        var titleHtml=$(title).html();
+        var tree=titleHtml.split('/');
+        var treeDepth=tree.length-1;
+        // create new html
+        var newHtml='';
+        for (var i=0; i<treeDepth-1; i++) {
+          newHtml+='<span class="emptynode">&nbsp;</span>';
+        };
+        newHtml+='<span class="lastnode">&nbsp;</span>' + tree[treeDepth];
+  			$(title).html(newHtml);
 			}
-			next=$(this).parent("tr").children("td.str:first");
-			if (html.length>0) {			
-				newHtml=newHtml+'<span class="lastnode">&nbsp;</span>'+$(next).html();
-			}
-			else {
-				newHtml=$(next).html();
-			}
-			$(next).html(newHtml);
 		});
 		
 		if ($.browser.safari)
@@ -315,7 +309,7 @@ function doGrid() {
 		// Editable boolean fields
 		//
 		bFields=$(".grid td.b");
-		$(bFields).click(function() {
+    $(bFields).click(function() {
 			obj=this;
 			cell=get_cell($(this));
 			id=cell.id;
