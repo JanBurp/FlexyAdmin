@@ -145,7 +145,7 @@ class Plugin_automenu extends Plugin_ {
         $this->CI->db->where($id_field,$key);
         $this->CI->db->set( key($row), current($row) );
         $this->CI->db->update('res_menu_result');
-        trace_($this->CI->db->last_query());
+        // trace_($this->CI->db->last_query());
       }
     }
   }
