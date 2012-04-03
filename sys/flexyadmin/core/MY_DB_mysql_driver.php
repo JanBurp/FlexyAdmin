@@ -156,6 +156,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				// trace_($rel_table);
 				$desc=explode(' ',$rel_table);
 				$rel_table=$desc[0];
+        $rel_table=remove_postfix($rel_table,'.');
 				// to get good order for SQL, ASC/DESC must be swapped.
 				if (isset($desc[1])) $desc='DESC'; else $desc='';
 				$foreign_table=join_table_from_rel_table($rel_table);
