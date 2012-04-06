@@ -112,7 +112,7 @@ class Plugin_automenu extends Plugin_ {
   private function _only_change_data() {
     $id=$this->newData['id'];
     $changedFields=array_diff_assoc($this->newData,$this->oldData);
-    // trace_($changedFields);
+    // strace_($changedFields);
     // set update fields
     $set=array();
     foreach ($changedFields as $field => $value) {
@@ -142,13 +142,15 @@ class Plugin_automenu extends Plugin_ {
         }
       }
     }
-    // trace_($set);
+    // strace_($set);
     foreach ($set as $id_field => $subset) {
       foreach ($subset as $key => $row) {
         $this->CI->db->where($id_field,$key);
-        $this->CI->db->set( key($row), current($row) );
+        foreach ($row as $field => $value) {
+          $this->CI->db->set( $field, $value );
+        }
         $this->CI->db->update('res_menu_result');
-        // trace_($this->CI->db->last_query());
+        // trace_('#show# '.$this->CI->db->last_query());
       }
     }
   }
