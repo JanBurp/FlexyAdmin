@@ -101,9 +101,12 @@ class Plugin_automenu extends Plugin_ {
 	
   
   private function _needs_create() {
-    $old=array_keep_keys($this->oldData,$this->config('update_fields'));
-    $new=array_keep_keys($this->newData,$this->config('update_fields'));
-    return ($new!=$old);
+    if (!empty($this->newData) and !empty($this->oldData)) {
+      $old=array_keep_keys($this->oldData,$this->config('update_fields'));
+      $new=array_keep_keys($this->newData,$this->config('update_fields'));
+      return ($new!=$old);
+    }
+    return TRUE;
   }
 
   private function _only_change_data() {
