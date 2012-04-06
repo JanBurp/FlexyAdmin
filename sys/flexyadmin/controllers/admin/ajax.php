@@ -71,7 +71,7 @@ class Ajax extends BasicController {
 					$this->load->model('queu');
 					
 					$this->order->set_all($table,$ids);
-					$this->_after_update($table);
+          $this->_after_update($table);
 					
 					$this->queu->run_calls();
 					delete_all_cache();
