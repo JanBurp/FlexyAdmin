@@ -174,10 +174,8 @@ class Editor_lists {
 		if (substr($list,strlen($list)-1)==',') $list=substr($list,0,strlen($list)-1);
 		$list.=");";
 		$ListFile=SITEPATH."assets/lists/$jsFile.js";
+    $list=str_replace('&nbsp;',' ',$list);
 		$result=write_file($ListFile, $list);
-		// trace_($result);
-		// strace_($list);
-		// strace_($ListFile);
 		return $result;
 	}
 
