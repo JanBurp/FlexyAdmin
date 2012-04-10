@@ -1,3 +1,42 @@
+> 1490
+
+UPDATES:
+- jQuery 1.7.2
+- jQuery UI 1.8.18
+
+BUGS:
+- $this->db->order_by(); Works now as expected according to CodeIgniter
+- db->uri_as_full_uri()
+- a bug in RSS
+- several styling bugs
+- plugin_links (when a table has no 'self_parent' field)
+- bug in ajax-editing (not deleting cache and uinames not loaded)
+- remove double results in search
+- site_url() was not used properly in grid pagination (for hosts where index.php must be used in url)
+- ion_auth/user: last_login field now updated at logout instead of login
+- several bugs and performance isseus with plugin_automenu
+- bug in language helper
+
+NEW:
+- Deleting multiple items much much faster!
+- every module has it's own view
+- nicer way of showing modules: in the page view
+- modules have now methods to grab there own part of the uri (split by ':')
+- flexy_forms now are multi-language
+- plugin_automenu: a limit can have an offset now
+- if there are multiple downloads maps sets, those are nicely split in the linkLlist
+- added: content->replace_soft_hyphens() and changed the config settings
+- safe_emails (content) are now created by CodeIgniters build in safe_emailto() function
+- plugin_sitemap doesn't show restricted pages in sitemap.xml
+- forum module (beta)
+- newsletter module (beta) rewritten
+- My_Array_helper: in_array_like() now returns FALSE or the key when something is found (instead of just TRUE)
+- Added Wizard class and Message class
+- plugins can now load languages like modules (language before config so config can hold language specifics)
+- new plugin method: _before_grid()
+- Faster showing of log_ and res_ tables and they are not editable anymore
+
+
 > 1437
 
 UPDATES:
