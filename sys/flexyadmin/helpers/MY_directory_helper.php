@@ -50,7 +50,10 @@ function read_map($path,$types='',$recursive=FALSE,$getInfo=TRUE,$getMetaData=FA
 							$data['date']=date("j M Y",filemtime($data['path']));
 							if (in_array($data["type"],$CI->config->item('FILE_types_img'))) {
 								// add img dimensions
+  							$errorReporting=error_reporting(E_ALL);
+  							error_reporting($errorReporting - E_WARNING - E_NOTICE);
 								$size=getimagesize($path."/".$file);
+  							error_reporting($errorReporting);
 								$data["width"]=$size[0];
 								$data["height"]=$size[1];
 							}
