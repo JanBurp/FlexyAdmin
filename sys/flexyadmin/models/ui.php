@@ -52,10 +52,12 @@ class ui extends CI_Model {
 			
 		if (isset($key)) {
 			$lang='';
-			if (isset($this->language))
-        $lang=$this->language;
-      elseif (isset($this->site))
+      if (isset($this->site)) {
         $lang=$this->site['language'];
+      }
+			else {
+        $lang=$this->language;
+      }
 			if (isset($row['str_title_'.$lang])) {
 				$title=$row['str_title_'.$lang];
 				if (!empty($title))	$this->uiNames[$key]=$row['str_title_'.$lang];
