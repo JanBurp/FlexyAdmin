@@ -150,7 +150,7 @@ class Content {
           foreach ($extra as $value) {
             if (!empty($value)) {
               $value=explode('=',$value);
-              if (is_array($value)) {
+              if (is_array($value) and isset($value[1])) {
                 $attr[$value[0]]=trim($value[1],'"');
               }
             }
