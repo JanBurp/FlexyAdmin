@@ -47,7 +47,12 @@ function show_thumb($attr) {
 
 function get_img_size($i) {
 	$size=FALSE;
-	if (file_exists($i) and is_file($i)) $size=getimagesize($i);
+	if (file_exists($i) and is_file($i)) {
+		$errorReporting=error_reporting(E_ALL);
+		error_reporting($errorReporting - E_WARNING - E_NOTICE);
+		$size=getimagesize($i);
+		error_reporting($errorReporting);
+  }
 	return $size;
 }
 
