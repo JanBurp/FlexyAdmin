@@ -30,46 +30,17 @@ require_once(APPPATH."core/AdminController.php");
 class Show extends AdminController {
 	
 	var $form_args;
-	// var $grid_set;	// array that contains current table/offset/order/search
 
 	function __construct() {
 		parent::__construct();
 		$this->load->model("flexy_field","ff");
+    $this->load->model('grid_set');
 	}
 
 	function index() {
 		$this->_show_all();
 	}
 
-
-	
-	private function _save_grid_set($set=array()) {
-		$default=array('table'=>'','offset'=>'','order'=>'','search'=>'');
-		$set=array_merge($default,$set);
-		$this->session->set_userdata('grid_set',$set);
-	}
-	
-	private function _open_grid_set() {
-		$set=$this->grid_set=$this->session->userdata('grid_set');
-		return $set;
-	}
-	
-	private function _open_grid_set_uri($table='') {
-		$set=$this->_open_grid_set();
-		if (empty($table)) $table=$set['table'];
-		$uri=api_uri('API_view_grid',$table);
-		unset($set['table']);
-		foreach ($set as $key => $value) {
-			if (!empty($value)) $uri.="/$key/$value";
-		}
-		return $uri;
-	}
-	
-	private function _reset_grid_set() {
-		$this->session->unset_userdata('grid_set');
-	}
-	
-	
 
 /**
  * This controls the order of a table
@@ -111,7 +82,7 @@ class Show extends AdminController {
 			$offset=el('offset',$args,0);
 			$order=el('order',$args);
 			$search=el('search',$args);
-			$this->_save_grid_set(array('table'=>$table,'offset'=>$offset,'order'=>$order,'search'=>$search));
+			$this->grid_set->save(array('table'=>$table,'offset'=>$offset,'order'=>$order,'search'=>$search));
 			// strace_($args);
 
 			if (!empty($table) and $this->db->table_exists($table)) {
@@ -307,8 +278,6 @@ class Show extends AdminController {
 
 	function form($table='') {
 
-		$this->_open_grid_set_uri();
-
 		if (isset($this->form_args)) {
 			$args=$this->form_args;
 		}
@@ -420,7 +389,7 @@ class Show extends AdminController {
 					// Remove all cached files
 					delete_all_cache();
 
-					$redirectUri=$this->_open_grid_set_uri($table);
+					$redirectUri=$this->grid_set->open_uri($table);
 					// trace_($redirectUri);
 					if (!empty($info)) $redirectUri.='/info/'.$info;
 					

@@ -31,6 +31,8 @@ class Filemanager extends AdminController {
 
 	function __construct() {
 		parent::__construct();
+    $this->load->model('grid_set');
+    $this->grid_set->set_api('API_filemanager_view');
 	}
 
 	function index() {
@@ -80,17 +82,6 @@ class Filemanager extends AdminController {
 					}
 				}
 			}
-			// trace_($files);
-
-			// if ($restrictedToUser) {
-			// 	$unrestrictedFiles=$this->_get_unrestricted_files($restrictedToUser);
-			// 	$unrestrictedFiles=array_keys($unrestrictedFiles);
-			// 	$assetsPath=assets();
-			// 	foreach ($files as $name => $file) {
-			// 		$file=str_replace($assetsPath,"",$file['path']);
-			// 		if (!in_array($file,$unrestrictedFiles)) unset($files[$name]);
-			// 	}
-			// }
 		}
 		return $files;
 	}
@@ -119,6 +110,7 @@ class Filemanager extends AdminController {
 			$order=el('order',$args,'name');
 			$search=el('search',$args,'');
 		}
+    $this->grid_set->save(array('table'=>$path,'offset'=>$offset,'order'=>$order,'search'=>$search));
 		
 		if (!empty($path)) {
 			$path=pathdecode($path,TRUE);
@@ -233,7 +225,10 @@ class Filemanager extends AdminController {
 			$this->db->update('cfg_users');
 			$this->session->set_userdata("fileview",$viewType);
 		}
-		$this->show($path);
+    
+		$redirectUri=$this->grid_set->open_uri();
+    redirect($redirectUri);
+    // redirect(api_uri('API_filemanager_view',$path));
 	}
 
 
@@ -309,7 +304,9 @@ class Filemanager extends AdminController {
 				$this->message->add_error(lang("rights_no_rights"));
 			}
 		}
-		redirect(api_uri('API_filemanager_view',$path));
+		$redirectUri=$this->grid_set->open_uri();
+		if (!empty($info)) $redirectUri.='/info/'.$info;
+		redirect($redirectUri);
 	}
 
 	function upload($path="",$file="") {

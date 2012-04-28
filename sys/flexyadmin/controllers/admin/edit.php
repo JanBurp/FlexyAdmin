@@ -31,26 +31,11 @@ class Edit extends AdminController {
 
 	function __construct() {
 		parent::__construct();
+    $this->load->model('grid_set');
 	}
 
 	function index() {
 		$this->_show_all();
-	}
-
-
-	private function _open_grid_set() {
-		$set=$this->grid_set=$this->session->userdata('grid_set');
-		return $set;
-	}
-	
-	private function _open_grid_set_uri() {
-		$set=$this->_open_grid_set();
-		$uri=api_uri('API_view_grid',$set['table']);
-		unset($set['table']);
-		foreach ($set as $key => $value) {
-			if (!empty($value)) $uri.="/$key/$value";
-		}
-		return $uri;
 	}
 
 
@@ -121,7 +106,7 @@ class Edit extends AdminController {
 		}
 		
 
-		$redirectUri=$this->_open_grid_set_uri();
+		$redirectUri=$this->grid_set->open_uri();
 		if (!empty($info)) $redirectUri.='/info/'.$info;
 		redirect($redirectUri);
 	}
