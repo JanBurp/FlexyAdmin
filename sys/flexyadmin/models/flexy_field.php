@@ -543,21 +543,6 @@ class Flexy_field extends CI_Model {
 		return $out;
 	}
 
-  // function _get_tree($id,$branch="",$tree="") {
-  //   if (!empty($tree)) $tree="/$tree";
-  //   $this->db->select(array(PRIMARY_KEY));
-  //   if ($this->db->field_exists('uri',$this->table)) $this->db->select('uri');
-  //   if ($this->db->field_exists('self_parent',$this->table)) $this->db->select('self_parent');
-  //   $this->db->where(PRIMARY_KEY,$id);
-  //   $res=$this->db->get_row($this->table);
-  //   if (empty($branch) and isset($res["uri"])) $tree=$res["uri"].$tree;
-  //   if (isset($res["self_parent"]) and $res["self_parent"]>0) {
-  //     $tree=$branch.$tree;
-  //     $tree=$this->_get_tree($res["self_parent"],$branch,$tree);
-  //   }
-  //   return $tree;
-  // }
-
 	function _self_grid() {
     if ($this->table=='res_menu_result') return $this->data;
     $tree=$this->rowdata[$this->title_field];
@@ -727,22 +712,21 @@ class Flexy_field extends CI_Model {
 	function _dropdown_field_form() {
 		$tables=$this->db->list_tables();
 		$thisRights=$this->user->get_rights();
-		// if ($thisRights['rights']!='*')
 		$normal_tables=filter_by($tables,"tbl_");
 		$result_tables=filter_by($tables,"res_");
 		$normal_tables=array_merge($result_tables,$normal_tables);
 		$specialFields=array_keys($this->config->item('FIELDS_special'));
 		$options=array();
-		$options[""]="";
+
+    $commonFields=array();
 		foreach ($normal_tables as $table) {
 			$fields=$this->db->list_fields($table);
 			foreach ($fields as $field) {
-				// if (!in_array($field,$specialFields)) {
-					$pre=get_prefix($field);
-					if ( ($this->table!='cfg_media_info') or ($pre=='media') or ($pre=='medias') ) {
-						$options["$table.$field"]="$table . $field";
-					}
-				// }
+        if (!in_array($field,$commonFields)) $commonFields[]=$field;
+				$pre=get_prefix($field);
+				if ( ($this->table!='cfg_media_info') or ($pre=='media') or ($pre=='medias') ) {
+					$options[]="$table.$field";
+				}
 			}
 			// join fields?
 			$jt="rel_".remove_prefix($table).$this->config->item('REL_table_split');
@@ -750,10 +734,19 @@ class Flexy_field extends CI_Model {
 			foreach($rel_tables as $key=>$jtable) {
 				if (strncmp($jt,$jtable,strlen($jt))==0) {
 					$field=$jtable;
-					$options["$table.$field"]="$table . $field";
+					$options[]="$table.$field";
 				}
 			}
 		}
+    $commonFields=array_reverse($commonFields);
+    foreach ($commonFields as $field ) {
+      array_unshift($options,'*.'.$field);
+    }
+    array_unshift($options,"");
+    foreach ($options as $key => $value) {
+      $options[$value]=$value;
+      unset($options[$key]);
+    }
 		$out=$this->_standard_form_field($options);
 		$out["type"]="dropdown";
 		unset($out["button"]);
