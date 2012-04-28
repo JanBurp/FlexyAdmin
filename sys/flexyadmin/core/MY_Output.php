@@ -16,6 +16,8 @@ class MY_Output extends CI_OUTPUT {
 	}
 
 	function _can_cache() {
+    global $CFG;
+    if (isset($CFG->config['dont_cache_this_page']) and $CFG->config['dont_cache_this_page']) return FALSE;
 		return (empty($_POST) and empty($_GET));
 	}
 
