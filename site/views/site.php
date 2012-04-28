@@ -64,22 +64,15 @@
 
 <body class="<?=$class?>">
 
-	<div id="container">
-		<div id="title">
-		<p><a href="./"><?=$title?></a></p>
-		</div>
+	<div id="container" class="corners">
+		<a href="./"><div id="header"><?=$title?></div></a>
 
-		<div id="menu">
-		<?=$menu;?>
-		</div>
+		<div id="menu"><?=$menu;?></div>
 
-		<div id="content">
-		<?=$content;?>
-		</div>
-				
+		<div id="content"><?=$content;?></div>
+    
+    <div id="footer" class="corners-bottom small">a flexyadmin site</div>
 	</div>
-
-	<div id="benchmark"><p>Time: <?php echo $this->benchmark->elapsed_time(); ?><br />Mem: <?php echo $this->benchmark->memory_usage(); ?></p></div>
 
 </body>
 </html>
