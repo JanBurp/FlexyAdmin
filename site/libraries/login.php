@@ -20,6 +20,8 @@ class Login extends Module {
 	
 	public function __construct() {
 		parent::__construct();
+    $this->CI->config->set_item('dont_cache_this_page',TRUE);
+
 		$this->CI->load->library('user');
 		$this->CI->load->language('login');
 		if ($this->config('auto_uris')) $this->_find_uris();
