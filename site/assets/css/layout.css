@@ -1,52 +1,42 @@
 /* Compositie ********************************************/
 
-body {background:#F4FFE0;}
+body {background:#DEA;}
 
 #container {
-	margin:0px auto;
+	margin:10px auto;
 	width:760px;
-	min-height:600px;
 	background-color:#FFF;
 }
 
-#title {
+#header {
 	float:left;
 	width:100%;
-	height:50px;
-	background-color:#CCDD99;
+  height:20px;
+  padding:10px 0px;
+  text-align:center;
+  font-size:16px;
+  color:#000;
 }
-#title p { color:#000; padding:10px; font-size:1.5em;}
-#title a { color:#000; text-decoration:none;}
-
 
 #menu {
 	float:left;
 	width:100%;
 	height:30px;
-	background-color:#DDEEAA;
-	border-bottom:solid 1px #CCDD99;
+	background-color:#696;
 	margin-bottom:20px;
 }
 
 #content {
 	padding:20px 10px;
-	height:100%;
+	min-height:300px;
 }
 
-
-
-/* Usefull for testing with caching */
-#benchmark {
-/*	display:none;*/
-	position:fixed;
-	bottom:0px; left:0px;
-	background-color:#EEE;
-	padding:2px;
-	border:solid 1px #CCC;
+#footer {
+  width:100%;
+  padding:5px 0px;
+  text-align:center;
+  background-color:#696;
 }
-#benchmark * {color:#999;font-size:8px;margin:0px;padding:0px;}
-
-
 
 /* Menu ********************************************/
 
@@ -76,8 +66,6 @@ body {background:#F4FFE0;}
 	position:absolute;
 	left:0px; top:100%;
 	width:auto;
-	background-color:#DDEEAA;
-	border-bottom:solid 1px #CCDD99;
 }
 
 /* li */
@@ -88,11 +76,8 @@ body {background:#F4FFE0;}
 	float:left;
 	margin-left:0px;
 	padding:5px;
-	background-color:#DDEEAA;
+	background-color:#696;
 	white-space:nowrap;
-}
-#menu ul.lev2 li.sub {
-	border-right:double #CCDD99;
 }
 #menu li:hover {
 	position:relative;
@@ -104,16 +89,13 @@ body {background:#F4FFE0;}
 	display:block;
 	width:auto;
 	padding:5px;
-	border:solid 1px #CCDD99;
-	border-top:none;
-	border-bottom:none;
 }
 
 
 /* a */
 
 #menu li a {color:#000;text-decoration:none;}
-#menu li a:hover, #menu li a.active {text-decoration:underline;}
+#menu li a:hover, #menu li a.current, #menu li a.active {text-decoration:underline;}
 
 
 
@@ -126,6 +108,7 @@ legend {display:none;}
 label {font-weight:bold;}
 input,textarea {display:block;}
 input,textarea{padding:2px;border:solid 1px #CCC;cursor:pointer;}
+input:hover, textarea:hover {border-color:#000;}
 .radioOption {margin-left:15px;}
 input.radio, input.checkbox {float:left;margin:5px 10px 0px 0px;}
 input.checkbox {margin-top:4px;}
