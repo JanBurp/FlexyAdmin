@@ -71,8 +71,10 @@ class ui extends CI_Model {
 
 	function get($name,$table="",$create=TRUE) {
 		if (!is_array($name)) {
-			$out=el($name,$this->uiNames,"");
+      $out='';
+      if (empty($out) and !empty($table)) $out=el("*.".$name,$this->uiNames,"");
 			if (empty($out) and !empty($table)) $out=el($table.".".$name,$this->uiNames,"");
+      if (empty($out)) $out=el($name,$this->uiNames,"");
       if (empty($out)) $out=$this->get_standard($name);
 			if (empty($out) and $create) $out=$this->create($name);
 		}
@@ -117,8 +119,12 @@ class ui extends CI_Model {
 			$out=$help;
 		}
 		elseif (!is_array($name)) {
-			$out=el($name,$this->help,'');
+      $table=get_prefix($name,'.');
+      if (!empty($table)) $name=remove_prefix($name,'.');
+      $out='';
 			if (empty($out) and !empty($table)) $out=el($table.".".$name,$this->help,"");
+      if (empty($out)) $out=el("*.".$name,$this->help,"");
+			if (empty($out)) $out=el($name,$this->help,'');
 		}
 		else {
 			$out=array();
