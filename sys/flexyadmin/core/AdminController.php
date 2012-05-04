@@ -403,7 +403,7 @@ class AdminController extends BasicController {
 		$result=$this->editor_lists->create_list("img");
 		if ($result) $result=$this->editor_lists->create_list("media");
 		if ($result) $result=$this->editor_lists->create_list("downloads");
-		if (!$result) $this->set_message("Could not update img/media List. Check file rights.");
+    if (!$result) $this->message->add_error("Could not update img/media List. Check file rights.");
 		return $result;
 	}
 
