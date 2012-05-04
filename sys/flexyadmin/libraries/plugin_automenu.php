@@ -405,15 +405,14 @@ class Plugin_automenu extends Plugin_ {
   							// trace_('Pagination: '.$pagination);
   							// trace_('Count Data:'.count($data));
 
-                // $parentData=find_row_by_value($this->newMenu,$groupData[$titleField],$titleField);
-                // if (count($parentData)>1) {
-                //   $parentData=find_row_by_value($parentData,$groupTable,'str_table');
-                //                   if (count($parentData)>1) {
-                //                   }
-                // }
-
-                // Mostly it is an foreign key to id
-								$parentData=find_row_by_value($parentData,$groupId,'int_id');
+                $parentData=find_row_by_value($this->newMenu,$groupData[$titleField],$titleField);
+                if (count($parentData)>1) {
+                  $parentData=find_row_by_value($parentData,$groupTable,'str_table');
+                  if (count($parentData)>1) {
+                    // Mostly it is an foreign key to id
+    								$parentData=find_row_by_value($parentData,$groupId,'int_id');
+                  }
+                }
 
                 // trace_('#SHOW# '.$this->CI->db->ar_last_query);
                 // trace_($groupId);
