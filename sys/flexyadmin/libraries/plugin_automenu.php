@@ -380,7 +380,7 @@ class Plugin_automenu extends Plugin_ {
   					$groupData=$this->_get_current_data($groupTable);
 					
             // trace_($autoValue);
-            // strace_($groupTable);
+            // trace_($groupTable);
 					
   					foreach ($groupData as $groupId=>$groupData) {
   						$titleField='str_title';
@@ -398,21 +398,28 @@ class Plugin_automenu extends Plugin_ {
   						}
               $where=$autoValue['field_group_by'].' = '.$groupId;
   						$data=$this->_get_current_data($autoValue['table'], $where,0,0,array('field'=>get_postfix($autoValue['field_group_by'],'.'),'value'=>$groupId) );
-						
-              // trace_('#SHOW# '.$this->CI->db->ar_last_query);
-              // trace_($groupId);
-              // trace_($groupData);
-              // trace_($data);
-  						// trace_($titleField);
+
 						
   						if ($data) {
+
   							// trace_('Pagination: '.$pagination);
   							// trace_('Count Data:'.count($data));
-  							$parentData=find_row_by_value($this->newMenu,$groupData[$titleField],$titleField);
-  							if (count($parentData)>1) {
-  								$parentData=find_row_by_value($parentData,$groupTable,'str_table');
-  							}
-  							// trace_($parentData);
+
+                // $parentData=find_row_by_value($this->newMenu,$groupData[$titleField],$titleField);
+                // if (count($parentData)>1) {
+                //   $parentData=find_row_by_value($parentData,$groupTable,'str_table');
+                //                   if (count($parentData)>1) {
+                //                   }
+                // }
+
+                // Mostly it is an foreign key to id
+								$parentData=find_row_by_value($parentData,$groupId,'int_id');
+
+                // trace_('#SHOW# '.$this->CI->db->ar_last_query);
+                // trace_($groupId);
+                // trace_($data);
+                // trace_($parentData);
+
   							$parentData=current($parentData);
   							$selfParent=$parentData['id'];
   							$lastOrder=0;
