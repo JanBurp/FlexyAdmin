@@ -1,2 +1,2 @@
 tinyMCE version:
-3.4.7 jQuery
+3.5 jQuery
