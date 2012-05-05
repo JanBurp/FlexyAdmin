@@ -51,7 +51,7 @@ $isForm=has_string('form',$show_type);
 	</script>
 
 	<!-- jQuery -->
-	<script language="javascript" type="text/javascript" src="sys/jquery/jquery-1.7.1.min.js"></script>
+	<script language="javascript" type="text/javascript" src="sys/jquery/jquery-1.7.2.min.js"></script>
 	<!-- jQuery UI -->
 	<link rel="stylesheet" type="text/css" href="sys/jquery/ui/custom-theme/jquery-ui-1.8.7.custom<?=$css?>" />
 	<script language="javascript" type="text/javascript" src="sys/jquery/ui/jquery-ui-1.8.18.custom.min.js"></script>
@@ -90,7 +90,8 @@ $isForm=has_string('form',$show_type);
 						language : "<?=$language?>",
 						docs_language : "<?=$language?>",
 						theme : "advanced",
-						skin : "flexyadmin",
+            skin : "flexyadmin",
+            // skin : "default",
 						<?
 						switch ($editor_class) {
 							case 'wide':
