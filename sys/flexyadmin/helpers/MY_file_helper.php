@@ -105,15 +105,15 @@ function file_types_are_flash($types) {
 	return file_types_in_array($types,$CI->config->item('FILE_types_flash'));
 }
 
-function file_types_in_array($types,$array) {
-	$in = TRUE;
+function file_types_in_array($types,$config_types) {
+	$in = FALSE;
 	if (!empty($types)) {
 		if (is_string($types)) $types=explode(',',$types);
-		foreach ($types as $type) {
-			$in = $in OR in_array($type,$array);
+    $in = TRUE;
+		foreach ($config_types as $c) {
+			$in = ($in AND in_array($c,$types));
 		}
 	}
-	else return FALSE;
 	return $in;
 }
 

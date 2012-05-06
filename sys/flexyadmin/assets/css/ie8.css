@@ -9,5 +9,9 @@
 	margin:3px 5px 12px 5px;
 }
 
-.zoomThumb img {min-width:100px;min-height:80px;}
+.zoomThumb img {
+  min-width:100px;
+  min-height:80px;
+  max-height:100px;
+}
 

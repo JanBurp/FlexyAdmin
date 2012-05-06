@@ -729,18 +729,22 @@ class Flexy_field extends CI_Model {
 				}
 			}
 			// join fields?
-			$jt="rel_".remove_prefix($table).$this->config->item('REL_table_split');
-			$rel_tables=filter_by($tables,"rel_");
-			foreach($rel_tables as $key=>$jtable) {
-				if (strncmp($jt,$jtable,strlen($jt))==0) {
-					$field=$jtable;
-					$options[]="$table.$field";
-				}
+			if ($this->table!='cfg_media_info') {
+  			$jt="rel_".remove_prefix($table).$this->config->item('REL_table_split');
+  			$rel_tables=filter_by($tables,"rel_");
+  			foreach($rel_tables as $key=>$jtable) {
+  				if (strncmp($jt,$jtable,strlen($jt))==0) {
+  					$field=$jtable;
+  					$options[]="$table.$field";
+  				}
+  			}
 			}
 		}
-    $commonFields=array_reverse($commonFields);
-    foreach ($commonFields as $field ) {
-      array_unshift($options,'*.'.$field);
+    if ($this->table!='cfg_media_info') {    
+      $commonFields=array_reverse($commonFields);
+      foreach ($commonFields as $field ) {
+        array_unshift($options,'*.'.$field);
+      }
     }
     array_unshift($options,"");
     foreach ($options as $key => $value) {
@@ -775,16 +779,19 @@ class Flexy_field extends CI_Model {
 		if (!empty($this->data)) {
 			$info=$this->cfg->get('CFG_media_info',$this->table.".".$this->field);
 			$path=$this->config->item('ASSETS').el("path",$info)."/";
+  		$filetypes=el("str_types",$info);
+      $are_images=file_types_are_images($filetypes);
+      $are_flash=file_types_are_flash($filetypes);
+      $thumbs = $are_images or $are_flash;
 			$data=explode("|",$this->data);
-			$out.='<ul>';
-			foreach($data as $img) {
-				$ext=get_file_extension($img);
-				if (in_array($ext,$this->config->item('FILE_types_img')) or in_array($ext,$this->config->item('FILE_types_flash')) )
-					$out.='<li>'.show_thumb($path.$img).'</li>';
+      if ($thumbs) $out.='<ul>';
+			foreach($data as $file) {
+        if ($thumbs)
+					$out.='<li>'.show_thumb($path.$file).'</li>';
 				else
-					$out.='<li>'.$img.'</li>';
+					$out=add_string($out,$file,'&nbsp;| ');
 			}
-			$out.='</ul>';
+      if ($thumbs) $out.='</ul>';
 		}
 		return $out;
 	}
@@ -816,6 +823,7 @@ class Flexy_field extends CI_Model {
 	function _create_media_options($files,$types) {
 		$options=array();
 		foreach($files as $file) {
+      
 			if ($file["type"]!="dir") {
 				$ext=strtolower(get_file_extension($file["name"]));
 				if (in_array($ext,$types)) {
@@ -837,14 +845,27 @@ class Flexy_field extends CI_Model {
 			$types=explode("|",$types);
 			$path=el("path",$info);
 			$map=$this->config->item('ASSETS').$path;
+      
+      // Determine fieldtype first
+  		$filetypes=el("str_types",$info);
+      $are_images=file_types_are_images($filetypes);
+      $are_flash=file_types_are_flash($filetypes);
+      
+      $fieldType=$this->type;
+  		if ( file_types_are_images($types) or file_types_are_flash($types) ) {
+        $fieldType="image_dropdown";
+    		if (el('b_dragndrop',$info)) $fieldType="image_dragndrop";
+      }
+      else {
+        $fieldType='dropdown';
+      }
+      
+      // Get Options
 			$files=read_map($map,$types);
-			
 			if ($this->restrictedToUser) {
 				$files=$this->_filter_restricted_files($files,$this->restrictedToUser);
 			}
-
 			$files=not_filter_by($files,"_");
-
 			$order='_rawdate';
 			if (isset($info['str_order'])) {
 				$order=$info['str_order'];
@@ -857,8 +878,7 @@ class Flexy_field extends CI_Model {
 				$desc=FALSE;
 			}
 
-
-			if (el('b_dragndrop',$info)) {
+			if ($fieldType=='image_dragndrop') {
 				$options=sort_by($files,$order,$desc);
 				if ($this->cfg->get('CFG_media_info',$path,'b_add_empty_choice') and ($this->pre!='medias'))	array_unshift($options,'');
 			}
@@ -881,12 +901,11 @@ class Flexy_field extends CI_Model {
 				}
 			}
 		}
+    
 		$out=$this->_standard_form_field($options);
+    $out['type']=$fieldType;
 		$out["path"]=$map;
 		if ($this->pre=="medias") $out["multiple"]="multiple";
-		$types=el("str_types",$info);
-		if ( file_types_are_images($types) or file_types_are_flash($types) ) $out["type"]="image_dropdown";
-		if (el('b_dragndrop',$info)) $out["type"]="image_dragndrop";
 		unset($out["button"]);
 		return $out;
 	}
