@@ -1,3 +1,28 @@
+> 1512
+
+UPDATES
+- jQuery UI 1.8.20
+- tinyMCE 5.3 jQuery
+
+BUGS:
+- download list didn't use site_url()
+- Content->safe_email had a small bug when a tags had more attributes
+- Filemaneger had an old call to the old message system
+- Bug in plugin_automenu
+- (Styling) issues with multiple dropdown with other than images
+- UI didn't get proper language setting
+
+NEW:
+- don't display Warnings/Notices when getimagesize() can't read for some reasen
+- New model: grid_set, which handels all the uri's for the grid
+- Added grid_set to Filemanager
+- Show trees in res_menu_result (again)
+- UI/field: global settings now possible
+- module_login works now together with caching
+- new template for frontend
+
+
+
 > 1490
 
 UPDATES:
