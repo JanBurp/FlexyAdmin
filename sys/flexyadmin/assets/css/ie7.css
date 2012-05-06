@@ -21,7 +21,9 @@
 /* ============== zoomThumb ============ */
 div.zoomThumb img {
 	margin-bottom:4px;
-	min-width:100px;min-height:80px;
+  min-width:100px;
+  min-height:80px;
+  max-height:100px;
 }
 
 .icon.add {margin-top:-23px;}

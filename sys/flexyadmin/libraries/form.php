@@ -530,6 +530,7 @@ class Form {
 			case 'ordered_list':
 			case 'image_dropdown':
 			case 'image_dragndrop':
+      
 				//
 				// set classes etc
 				//
@@ -548,7 +549,6 @@ class Form {
 						$value=explode("|",$value);
 				}
 				$extra.="class=\"".$attr["class"]."\" id=\"".$name."\"";
-				
 				
 				
 				//

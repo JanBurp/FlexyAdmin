@@ -591,6 +591,8 @@ tr.caption td				{ border:none; }
 .grid td ul li {
 	list-style:none;
 	display:inline;
+  float:left;
+  margin-right:2px;
 }
 
 .grid tbody tr.evenrow td {
