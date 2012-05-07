@@ -1264,6 +1264,11 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			if (!empty($optionsWhere)) {
 				$this->ar_where[]=$optionsWhere;
 			}
+      // Hard coded usersgroup options
+      if ($table=='cfg_user_groups') {
+        $this->where('id >=',$CI->user_group_id);
+      }
+        
 			// $res=$this->get_results($cleanTable);
 			$query=$this->get($cleanTable);
 			$res=$query->result_array();
