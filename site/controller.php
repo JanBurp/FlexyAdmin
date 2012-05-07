@@ -256,6 +256,7 @@ class Main extends FrontEndController {
 		setlocale(LC_ALL, $lang.'_'.strtoupper($lang));
 		$this->site['language']=$lang;
 		$this->add_class('language_'.$lang);
+    $this->config->set_item('language',$lang);
 		return $lang;
 	}
 	
