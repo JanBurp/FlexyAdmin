@@ -1,15 +1,17 @@
-> 1512
+> 1517
 
 UPDATES
 - jQuery UI 1.8.20
 - tinyMCE 5.3 jQuery
 
 BUGS:
+- BUG: it was possible for lowrights usergroups to add users with higher rights!! (MY_DB_mysql_driver.php)
 - download list didn't use site_url()
 - Content->safe_email had a small bug when a tags had more attributes
 - Filemaneger had an old call to the old message system
 - Bug in plugin_automenu
 - (Styling) issues with multiple dropdown with other than images
+- Styling issue with IE7
 - UI didn't get proper language setting
 
 NEW:
