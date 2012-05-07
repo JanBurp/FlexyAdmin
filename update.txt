@@ -1,7 +1,8 @@
-UPDATE to 1512
+UPDATE to 1517
 ==============
 
 - Replace current sys map with new sys map
+- Replace site/controller.php (at least: function _set_language() )
 - If you use module_login, replace it with the new one
 
 
