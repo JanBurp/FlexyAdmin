@@ -1,5 +1,15 @@
 /* ============== IE7 specific styles ================ */
 
+#content {
+  position:absolute;
+	margin:0px;
+  top:100px;
+  left:225px;
+	z-index:1;
+}
+
+
+
 /* ============== table grid ================== */
 
 .grid {	border-collapse:collapse; }
