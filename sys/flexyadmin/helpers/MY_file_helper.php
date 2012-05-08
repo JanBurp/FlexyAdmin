@@ -110,8 +110,8 @@ function file_types_in_array($types,$config_types) {
 	if (!empty($types)) {
 		if (is_string($types)) $types=explode(',',$types);
     $in = TRUE;
-		foreach ($config_types as $c) {
-			$in = ($in AND in_array($c,$types));
+		foreach ($types as $c) {
+			$in = ($in AND in_array($c,$config_types));
 		}
 	}
 	return $in;
