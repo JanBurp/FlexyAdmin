@@ -987,7 +987,7 @@ select {
 	max-height:150px;
 	}
 select.button {
-	width:440px;
+	width:400px;
 	}
 select.date {
 	width:auto;
@@ -1003,6 +1003,7 @@ select.media, select.medias {
 	}
 select.image_dropdown {
 	width:400px;
+  margin-top:-32px;
 }
 .flexyFormField.medias select.image_dropdown {	width:460px;}
 
