@@ -35,5 +35,5 @@
 .ui-multiselect-checkboxes label.ui-state-active {background-image:none;background-color:#F4FFE0;color:#696;border:none;border-radius:0px;}
 .ui-multiselect-checkboxes label.ui-state-hover {background-image:none;background-color:#DEA;color:#696;border:none; border-radius:0px;}
 
-.media .ui-multiselect {padding-top:9px;padding-bottom:6px;float:right;margin-top:-40px;}
+.media .ui-multiselect {padding-top:9px;padding-bottom:6px;float:right;}
 .medias .ui-multiselect-menu {margin-top:-43px;margin-left:-40px;}

@@ -130,8 +130,7 @@ function doForm() {
 		$('.flexyFormField.dropdown.has_button button').css({width:430});
 		$('.flexyFormField.dropdown.has_button .ui-multiselect-menu').css({width:428});
 		$('.flexyFormField.image_dropdown.multiple ul.values').css({width:425,position:'relative'});
-		$('.flexyFormField.image_dropdown.multiple button.ui-multiselect').css({width:420,height:38,'float':'right','margin-top':-42});
-
+		$('.flexyFormField.image_dropdown button.ui-multiselect').css({width:420,height:38,'float':'right','margin-top':-42});
 	}
 
 		
@@ -228,7 +227,7 @@ function doForm() {
     $(values).each(function(){
       textValues += ' | ' + this;
     });
-    textValues=textValues.substr(4);
+    textValues=textValues.substr(3);
     var textSpan=$(select).parent('.flexyFormField').find('button span:not(.ui-icon)');
     $(textSpan).html(textValues);
   }
