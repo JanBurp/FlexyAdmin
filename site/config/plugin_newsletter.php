@@ -40,6 +40,8 @@ $config['send_to_address_table'] = 'tbl_newsletter_addresses';
 $config['send_to_address_field'] = 'email_email';
 $config['send_to_name_field']    = 'str_name';
 
+$config['send_one_by_one'] = FALSE; // SET this to TRUE if Your provider can't send bulk mail with bcc
+
 
 // Wizards
 $config['wizard_create'] = array( 'include_pages'  => array('label'=>lang('include_pages'),'method'=>'_create_include_pages'),
