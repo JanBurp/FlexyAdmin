@@ -52,6 +52,7 @@ class Plugin_newsletter extends Plugin_ {
   }
   
   function _create_include_pages($args) {
+    $this->CI->db->where('(CURDATE() - INTERVAL 1 MONTH) <= dat_date');
     $this->CI->db->select('id,order,self_parent,uri,str_title');
     $this->CI->db->uri_as_full_uri(true,'str_title');
     $this->CI->db->order_as_tree();
@@ -61,7 +62,7 @@ class Plugin_newsletter extends Plugin_ {
       $options[$page['id']]=$page['str_title'];
     }
     $formFields = array(  'str_title' => array( 'label'=>lang('subject'), 'validation'=>'required' ),
-                          'pages'     => array( 'label'=>lang('add_pages'), 'type'=>'dropdown', 'multiple'=>'multiple', 'options'=>$options, 'validation'=>'required' )  );
+                          'pages'     => array( 'label'=>lang('add_pages'), 'type'=>'dropdown', 'multiple'=>'multiple', 'options'=>$options )  );
     $formButtons = array( 'submit'=>array('submit'=>'submit', 'value'=>lang('submit')) );
 		$form=new form(uri_string());
 		$form->set_data($formFields, lang('create_newsletter') );
@@ -72,13 +73,16 @@ class Plugin_newsletter extends Plugin_ {
       $pageIDs=explode('|',$data['pages']);
       $pages=array();
       foreach ($pageIDs as $id) {
-        $this->CI->db->where('id',$id);
-        $this->CI->db->uri_as_full_uri();
-        $pages[$id]=$this->CI->db->get_row(get_menu_table());
-        $pages[$id]['txt_text']=intro_string($pages[$id]['txt_text'],$this->config('intro_length'),'CHARS',$this->config('allowed_tags'));
+        if (!empty($id)) {
+          $this->CI->db->where('id',$id);
+          $this->CI->db->uri_as_full_uri();
+          $pages[$id]=$this->CI->db->get_row(get_menu_table());
+          $pages[$id]['txt_text']=intro_string($pages[$id]['txt_text'],$this->config('intro_length'),'CHARS',$this->config('allowed_tags'));
+        }
       }
-      $unsubmit=$this->CI->find_module_uri('newsletter');
+      $unsubmit='./'; //$this->CI->find_module_uri('newsletter'); // ##
       if (!empty($unsubmit)) $unsubmit.='?unsubmit';
+      
       $body=$this->CI->load->view('newsletter/newsletter.tpl.php',array('pages'=>$pages,'base_url'=>base_url(),'unsubmit'=>$unsubmit),true);
       $this->CI->db->set('str_title',$data['str_title']);
       $this->CI->db->set('dat_date',standard_date('DATE_W3C',now()));
@@ -223,17 +227,55 @@ class Plugin_newsletter extends Plugin_ {
 
 
   private function _send_mail($mail) {
+    $rapport='<p>'.strftime('%a %d %b %Y %T',now()).' - ';
     $mail['body']=$this->_prepare_body($mail['body']);
     $this->CI->email->clear(TRUE);
-    $this->CI->email->set_mail($mail);
-		$send=$this->CI->email->send();
-    $rapport='<p>'.strftime('%a %d %b %Y %T',now()).' - ';
-		if ($send)
-			$rapport.='Send to '.$this->CI->email->get_total_send_addresses().' email-address(es)';
-		else {
-      $rapport.='ERROR sending, debug information:<br/>';
-			$rapport.=$this->CI->email->print_debugger();
+    if ($this->config('send_one_by_one')) {
+      $send_to=array();
+      $to=explode(',',$mail['to']);
+      $bcc=explode(',',$mail['bcc']);
+      unset($mail['bcc']);
+      // TO
+      foreach ($to as $to_one) {
+        $mail['to']=$to_one;
+        $this->CI->email->set_mail($mail);
+        $send=$this->CI->email->send();
+        $this->CI->email->clear(TRUE);
+    		if ($send)
+    			$send_to[]=$to_one;
+    		else {
+          $rapport.='ERROR sending ('.$to_one.'), debug information:<br/>';
+    			$rapport.=$this->CI->email->print_debugger();
+        }
+        $mail['to']='';
+      }
+      // BCC
+      foreach ($bcc as $to_one) {
+        $mail['bcc']=$to_one;
+        $this->CI->email->set_mail($mail);
+        $send=$this->CI->email->send();
+        $send=TRUE;
+        $this->CI->email->clear(TRUE);
+    		if ($send)
+    			$send_to[]=$to_one;
+    		else {
+          $rapport.='ERROR sending ('.$to_one.'), debug information:<br/>';
+    			$rapport.=$this->CI->email->print_debugger();
+        }
+      }
+      $rapport.='Send to '.count($send_to).' email-address(es)<br/>';
     }
+    else {
+      $this->CI->email->set_mail($mail);
+      $send=$this->CI->email->send();
+  		if ($send)
+  			$rapport.='Send to '.$this->CI->email->get_total_send_addresses().' email-address(es)';
+  		else {
+        $rapport.='ERROR sending, debug information:<br/>';
+  			$rapport.=$this->CI->email->print_debugger();
+      }
+    }
+    
     $rapport.='</p>';
     return $rapport;
   }
