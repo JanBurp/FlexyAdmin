@@ -1,4 +1,4 @@
-> 1517
+> 1523
 
 UPDATES
 - jQuery UI 1.8.20
@@ -21,7 +21,9 @@ NEW:
 - Show trees in res_menu_result (again)
 - UI/field: global settings now possible
 - module_login works now together with caching
+- plugin_newsletter has new config: 'send_one_by_one' for sending newsletters not in bulk.
 - new template for frontend
+- .tiff is added as image file type
 
 
 
