@@ -10,19 +10,30 @@
 | // added/changed for FlexyAdmin
 */
 
-	define("LOCALHOSTS","localhost,localhost:8888,10.37.129.2");
-	function is_local_host() {
-		$localhosts=explode(",",LOCALHOSTS);
-		$is=FALSE;
-		foreach ($localhosts as $host) {
-			if ($host==$_SERVER['HTTP_HOST']) { $is=TRUE; }
-		}
-		return $is;
+define("LOCALHOSTS","localhost,localhost:8888,10.37.129.2");
+function is_local_host() {
+	$localhosts=explode(",",LOCALHOSTS);
+	$is=FALSE;
+	foreach ($localhosts as $host) {
+		if ($host==$_SERVER['HTTP_HOST']) { $is=TRUE; }
 	}
-	if (is_local_host())
-		define("IS_LOCALHOST",TRUE);
-	else
-		define("IS_LOCALHOST",FALSE);
+	return $is;
+}
+if (is_local_host())
+	define("IS_LOCALHOST",TRUE);
+else
+	define("IS_LOCALHOST",FALSE);
+
+
+/*
+|---------------------------------------------------------------
+| IS AJAX request ?
+|---------------------------------------------------------------
+*/
+if ( !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest' )
+  define("IS_AJAX",true);
+else
+  define("IS_AJAX",false);
 
 
 
@@ -44,17 +55,15 @@
  * NOTE: If you change these, also change the error_reporting() code below
  *
  */
-
-/*
- * Set according to local // added/changed for FlexyAdmin
- */
-if (IS_LOCALHOST) {
-	define('ENVIRONMENT', 'development');
-}
-else
-	define('ENVIRONMENT', 'production');
-
-
+ 
+ /*
+  * Set according to local // added/changed for FlexyAdmin
+  */
+ if (IS_LOCALHOST) {
+ 	define('ENVIRONMENT', 'development');
+ }
+ else
+ 	define('ENVIRONMENT', 'production');
 
 
 /*
@@ -94,7 +103,7 @@ if (defined('ENVIRONMENT'))
  * as this file.
  *
  */
-	$system_path = 'sys/codeigniter'; // added/changed for FlexyAdmin
+	$system_path = 'sys/codeigniter';
 
 /*
  *---------------------------------------------------------------
@@ -110,7 +119,7 @@ if (defined('ENVIRONMENT'))
  * NO TRAILING SLASH!
  *
  */
-	$application_folder = 'sys/flexyadmin'; // added/changed for FlexyAdmin
+	$application_folder = 'sys/flexyadmin';
 
 	$site_folder = 'site'; // added/changed for FlexyAdmin
 
@@ -230,9 +239,9 @@ if (defined('ENVIRONMENT'))
 
 		define('APPPATH', BASEPATH.$application_folder.'/');
 	}
-	
+
 	define('SITEPATH', $site_folder.'/');			// added/changed for FlexyAdmin
-	
+
 
 /*
  * --------------------------------------------------------------------
