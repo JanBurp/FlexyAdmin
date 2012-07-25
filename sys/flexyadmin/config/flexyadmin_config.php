@@ -610,14 +610,14 @@ $config["CFG_"]=array(
 			"b_multi_options"=>'0',
 			"str_validation_rules"=>''
  			),
-		"cfg_users.id_group"=>array(
-			"field"=>'cfg_users.id_group',
+		"cfg_users.id_user_group"=>array(
+			"field"=>'cfg_users.id_user_group',
 			"str_ui_name"=>'Group',
 			"b_show_in_grid"=>'1',
 			"b_show_in_form"=>'1',
 			"str_options"=>'',
 			"b_multi_options"=>'0',
-			"str_validation_rules"=>''
+			"str_validation_rules"=>'required'
  			),
 		"cfg_users.ip_address"=>array(
 			"field"=>'cfg_users.ip_address',
