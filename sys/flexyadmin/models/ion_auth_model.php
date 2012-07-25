@@ -575,11 +575,11 @@ class Ion_auth_model extends CI_Model
 
 				$group_row = $this->db->select('str_name')->where('id', $result->id_user_group)->get($this->tables['groups'])->row();
 
-				$session_data = array(
+			  $session_data = array(
 													$this->identity_column => $result->{$this->identity_column},
 													'id'                   => $result->id, //kept for backwards compatibility
 													'user_id'              => $result->id, //everyone likes to overwrite id so we'll use user_id
-													'id_user_group'             => $result->id_user_group,
+													'id_user_group'        => $result->id_user_group,
 													'group'                => $group_row->str_name
 													 );
 				$this->session->set_userdata($session_data);
