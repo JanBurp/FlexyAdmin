@@ -1066,7 +1066,9 @@ class Ion_auth_model extends CI_Model
 
 	    $user = $this->get_user($id)->row();
 
-	    $salt = sha1($user->gpw_password);
+	    // $salt = sha1($user->gpw_password);
+      // Idea: Marcel vd Drift
+      $salt = random_string('alnum',40);
 
 	    $this->db->update($this->tables['users'], array('str_remember_code' => $salt), array('id' => $id));
 
