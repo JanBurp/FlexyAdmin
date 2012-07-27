@@ -5,9 +5,9 @@
  *
  * Same as MY_Controller
  *
- * @package			FlexyAdmin V1
- * @author			Jan den Besten
- * @version			V1 0.1
+ * @package FlexyAdmin V1
+ * @author Jan den Besten
+ * @version V1 0.1
  *
  */
 

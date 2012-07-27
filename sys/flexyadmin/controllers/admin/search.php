@@ -6,9 +6,9 @@ require_once(APPPATH."core/AdminController.php");
  *
  * This Controller shows a grid or form
  *
- * @package			FlexyAdmin V1
- * @author			Jan den Besten
- * @version			V1 0.1
+ * @package FlexyAdmin V1
+ * @author Jan den Besten
+ * @version V1 0.1
  *
  */
 

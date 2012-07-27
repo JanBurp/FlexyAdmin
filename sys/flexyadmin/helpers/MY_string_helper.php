@@ -5,10 +5,10 @@
  *
  * Useful for generating passwords or hashes.
  *
- * @access	public
- * @param	string 	type of random string.  Options: alunum, numeric, nozero, unique
- * @param	integer	number of characters
- * @return	string
+ * @access public
+ * @param string 	type of random string.  Options: alunum, numeric, nozero, unique
+ * @param integer	number of characters
+ * @return string
  */
 if ( ! function_exists('random_string')) {	
 	function random_string($type = 'alnum', $len = 8)	{					
@@ -71,7 +71,7 @@ function explode_pre($split,$fields,$pre) {
  *
  * @param string 	$string 	String to add to
  * @param string 	$add 			string to add
- * @param	string	$split		a split string,will be added in string has content
+ * @param string	$split		a split string,will be added in string has content
  * @return string result string after adding
  */
 function add_string($s,$add,$split="|") {

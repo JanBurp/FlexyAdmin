@@ -6,13 +6,12 @@ require_once(APPPATH."core/AdminController.php");
  *
  * A Flexible Database based CMS
  *
- * @package		FlexyAdmin V1
- * @author		Jan den Besten
- * @copyright	Copyright (c) 2008, Jan den Besten
- * @link			http://flexyadmin.com
- * @version		V1 0.1
- * @filesource
- */
+ * @package FlexyAdmin V1
+ * @author Jan den Besten
+ * @copyright Copyright (c) 2008, Jan den Besten
+ * @link http://flexyadmin.com
+ * @version V1 0.1
+ * @filesource  */
 
 // ------------------------------------------------------------------------
 
@@ -21,9 +20,9 @@ require_once(APPPATH."core/AdminController.php");
  *
  * This Controller shows a grid or form
  *
- * @package			FlexyAdmin V1
- * @author			Jan den Besten
- * @version			V1 0.1
+ * @package FlexyAdmin V1
+ * @author Jan den Besten
+ * @version V1 0.1
  *
  */
 

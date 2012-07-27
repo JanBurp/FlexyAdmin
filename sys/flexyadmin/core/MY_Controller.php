@@ -5,9 +5,9 @@
  *
  * This Controller Class handles authentication, loading basic data class
  *
- * @package			FlexyAdmin V1
- * @author			Jan den Besten
- * @version			V1 0.1
+ * @package FlexyAdmin V1
+ * @author Jan den Besten
+ * @version V1 0.1
  *
  */
 
