@@ -205,17 +205,19 @@ function reformMalformedXML($xml) {
 }
 function reformXmlArrayKey($a,$rKey) {
 	$r=$a;
-	if (isset($a[$rKey])) {
+	if (isset($a[$rKey]) and !empty($a[$rKey])) {
 		$a=$a[$rKey];
 		$r=array();
 		$c=current($a);
 		if (is_array($c)) {
 			foreach ($a as $key => $value) {
-				$newKey=$value[$rKey];
-				if (is_string($newKey) and !has_alpha($newKey))
-					$r[$value[$rKey]] = $value;
-				else
-					$r[] = $value;
+				if (isset($value[$rKey])) {
+          $newKey=$value[$rKey];
+  				if (is_string($newKey) and !has_alpha($newKey))
+  					$r[$value[$rKey]] = $value;
+  				else
+  					$r[] = $value;
+				}
 			}
 		}
 		else {
