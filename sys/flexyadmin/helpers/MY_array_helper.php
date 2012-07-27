@@ -366,11 +366,10 @@ function xml2array($contents, $get_attributes=true, $priority = 'tag') {
 
 /**
 * @param string $cvs
-* @param array $fldnames array of fields names. Leave this to null to use the first row values as fields names.
+* @param array  $fldnames array of fields names. Leave this to null to use the first row values as fields names.
 * @param string $sep string used as a field separator (default ';')
 * @param string $protect char used to protect field (generally single or double quote)
-* @param array  $filters array of regular expression that row must match to be in the returned result.
-*                        ie: array('fldname'=>'/pcre_regexp/')
+* @param array  $filters array of regular expression that row must match to be in the returned result. ie: array('fldname'=>'/pcre_regexp/')
 * @return array
 */
 function csv2array($csv,$fldnames=null,$sep=',',$protect='"',$filters=null){

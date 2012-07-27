@@ -11,9 +11,17 @@ require_once(APPPATH."core/BasicController.php");
  * @package			FlexyAdmin V1
  * @author			Jan den Besten
  * @version			V1 0.1
+ **/
+ 
+/**
+ * AdminController Class extends BasicController
  *
- */
-
+ * Adds view methods and loads/views automatic header, menu and message.
+ *
+ * @package   FlexyAdmin V1
+ * @author    Jan den Besten
+ * @version  V1 0.1
+ **/
 class AdminController extends BasicController {
 
 	var $currentTable;
