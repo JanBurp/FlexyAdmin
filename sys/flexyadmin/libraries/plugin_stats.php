@@ -12,7 +12,7 @@ class Plugin_stats extends Plugin_ {
 	var $logTable;
 	var $Data;
 	var $xmlData;
-	var $Total;
+	var $Total=0;
 	var $Year;
 	var $Month;
 	var $MonthTxt;
@@ -269,11 +269,11 @@ class Plugin_stats extends Plugin_ {
 			$xmlMonth=reformMalformedXML($xmlMonth);
 			$monthData=xml2array($xmlMonth);
 			$monthData['stats']['this_month']=reformXmlArrayKey($monthData['stats']['this_month'],'day');
-			$monthData['stats']['top_10_pages']=reformXmlArrayKey($monthData['stats']['top_10_pages'],'page');
-			$monthData['stats']['top_10_referers']=reformXmlArrayKey($monthData['stats']['top_10_referers'],'referer');
-			$monthData['stats']['top_10_google']=reformXmlArrayKey($monthData['stats']['top_10_google'],'search');
-			$monthData['stats']['top_10_browsers']=reformXmlArrayKey($monthData['stats']['top_10_browsers'],'browser');
-			$monthData['stats']['top_10_platform']=reformXmlArrayKey($monthData['stats']['top_10_platform'],'platform');
+			if (isset($monthData['stats']['top_10_pages']))     $monthData['stats']['top_10_pages']=reformXmlArrayKey($monthData['stats']['top_10_pages'],'page');
+      if (isset($monthData['stats']['top_10_referers']))  $monthData['stats']['top_10_referers']=reformXmlArrayKey($monthData['stats']['top_10_referers'],'referer');
+			if (isset($monthData['stats']['top_10_google']))    $monthData['stats']['top_10_google']=reformXmlArrayKey($monthData['stats']['top_10_google'],'search');
+			if (isset($monthData['stats']['top_10_browsers']))  $monthData['stats']['top_10_browsers']=reformXmlArrayKey($monthData['stats']['top_10_browsers'],'browser');
+			if (isset($monthData['stats']['top_10_platform']))  $monthData['stats']['top_10_platform']=reformXmlArrayKey($monthData['stats']['top_10_platform'],'platform');
 		}
 
 		$xmlData=$this->Data;
