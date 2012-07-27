@@ -12,9 +12,9 @@ class MY_DB_mysql_utility extends CI_DB_mysql_utility {
 	/**
 	 * MySQL Export
 	 *
-	 * @access	private
-	 * @param	array	Preferences
-	 * @return	mixed
+	 * @access private
+	 * @param array	Preferences
+	 * @return mixed
 	 */
 	function _backup($params = array())
 	{

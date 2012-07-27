@@ -77,8 +77,8 @@ class MY_Loader extends CI_Loader {
 		/**
 		 * Load the Utilities Class
 		 *
-		 * @access	public
-		 * @return	string		
+		 * @access public
+		 * @return string		
 		 *
 		 * Description		http://codeigniter.com/wiki/Extending_Database_Drivers/
 		 * This change makes it possible to create a database utility extension (library) by loading MY_DB_db_mysql_utility.PHP

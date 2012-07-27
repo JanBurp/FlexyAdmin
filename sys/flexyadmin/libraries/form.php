@@ -752,7 +752,7 @@ class Form {
  * function has_htmlfield()
  *
  * Checks if a field in the form needs a html editor.
- * @return	bool True if one ore more fields is a html editor
+ * @return bool True if one ore more fields is a html editor
  */
  	public function has_htmlfield() {
  		return $this->hasHtmlField;

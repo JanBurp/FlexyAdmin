@@ -28,10 +28,10 @@ class MY_Lang extends CI_Lang {
 	/**
 	 * Load a language file
 	 *
-	 * @access	public
-	 * @param	mixed	the name of the language file to be loaded. Can be an array
-	 * @param	string	the language (english, etc.)
-	 * @return	mixed
+	 * @access public
+	 * @param mixed	the name of the language file to be loaded. Can be an array
+	 * @param string	the language (english, etc.)
+	 * @return mixed
 	 */
 	function load($langfile = '', $idiom = '', $return = FALSE, $add_suffix = TRUE, $alt_path = SITEPATH )
 	{
