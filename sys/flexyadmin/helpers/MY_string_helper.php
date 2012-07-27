@@ -5,9 +5,8 @@
  *
  * Useful for generating passwords or hashes.
  *
- * @access public
- * @param string 	type of random string.  Options: alunum, numeric, nozero, unique
- * @param integer	number of characters
+ * @param string type of random string.  Options: alunum, numeric, nozero, unique
+ * @param integer number of characters
  * @return string
  */
 if ( ! function_exists('random_string')) {	
@@ -69,9 +68,9 @@ function explode_pre($split,$fields,$pre) {
  *
  * Adds a string to a string,with a split string if string has content allready
  *
- * @param string 	$string 	String to add to
- * @param string 	$add 			string to add
- * @param string	$split		a split string,will be added in string has content
+ * @param string $string String to add to
+ * @param string $add string to add
+ * @param string $split a split string,will be added in string has content
  * @return string result string after adding
  */
 function add_string($s,$add,$split="|") {
@@ -98,9 +97,24 @@ function remove_first_char($s) {
 	return $s;
 }
 
-//
-// string get_prefix( string sName )
-//
+/**
+ * Pakt eerste deel van een string
+ *
+ * @param string $s 
+ * @param string $split['_']
+ * @return string
+ * @author Jan den Besten
+ *
+ * Pakt het eerste deel van een string nadat hij de string heeft verdeeld in delen aan de hand van een scheidingskarakter.
+ * Standaard is het scheidingskarakter een underscore '_'.<br/>
+ * <br/>
+ * Voorbeeld:<br/>
+ * <code>echo get_prefix( 'str_example' );<br/>
+ * echo get_prefix( 'tbl_example.id', '.' );</code>
+ * Geeft als resultaat:
+ * <code>str<br/>
+ * tbl_example</code>
+ */
 function get_prefix($s,$split="_") {
 	$pk=PRIMARY_KEY;
 	$i=strpos($s,$split);

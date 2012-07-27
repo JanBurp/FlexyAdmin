@@ -1,50 +1,58 @@
 <?
-/**
- * FlexyAdmin V1
- *
- * frontend_menu.php Created on 9-dec-2008
- *
- * @author Jan den Besten
- */
-
-
-/**
- * Class Menu
- *
- *
- *	array("uri"=>uri, "name"=>name, "class"=>class, "sub"=>array())
- *
- */
-
+ /**
+  * Met deze class kun je eenvoudig een html menu aanmaken. De class wordt standaard geladen.
+  *
+  * @author Jan den Besten
+  *
+  * <h1>Eenvoudig menu maken</h1>
+  * 
+  * Hieronder zie je een voorbeeld om vanuit het niets een menu aan te maken.<br/>
+  * <code>$menu = new Menu();<br/>
+  * $menu->add( array( 'uri'=>'home', 'name'=>'Home' ) );<br/>
+  * $menu->add( array( 'uri'=>'een_pagina', 'name'=>'Een Pagina' ) );<br/>
+  * $menu->add_sub( array( 'uri'=>'een_pagina',<br/>
+  *                        'sub'=>array( 'uri'=>'subpagina', 'name'=>'Subpagina' ) );<br/>
+  * $menu->add( array( 'uri'=>'links', 'name'=>'Links') );<br/>
+  * $menu->add( array( 'uri'=>'contact', 'name'=>'Contact') );<br/>
+  * echo $menu->render();</code>
+  * Het resulaat is hetzelfde als het voorbeeld hieronder. Voor de uitleg van de diverse methods, zie verderop.<br/>
+  *<br/>
+  *	NB: Een menu-item bestaat uit: array("uri"=>uri, "name"=>name, "class"=>class, "sub"=>array())
+  */
 class Menu {
 
 	var $render;
 	var $menu;
 	var $current;
 
-	var $tmpUrl;
-	var $urlField;
-	var $fields;
-	var $extraFields;
-	var	$attr;
-	var $itemAttr;
-	var $currentAsActive;
+	private  $tmpUrl;
+	private  $urlField;
+	private  $fields;
+	private  $extraFields;
+	private 	$attr;
+	private  $itemAttr;
+	private  $currentAsActive;
 	
-	var $changeModules;
-	
+	private  $changeModules;
+  
+	/**
+	 * De tabel uit de database die gebruikt wordt.
+	 *
+	 * @var string
+	 */
 	var $menuTable;
 	
-	var $tmpMenuStart;
-	var $tmpMenuEnd;
-	var $tmpItemStart;
-	var $tmpItemEnd;
-	var $itemControls;
+	private $tmpMenuStart;
+	private $tmpMenuEnd;
+	private $tmpItemStart;
+	private $tmpItemEnd;
+	private $itemControls;
 
-	function __construct() {
+	public function __construct() {
 		$this->init();
 	}
 
-	function init() {
+	public function init() {
 		$this->set_templates();
 		$this->set_menu_table();
 		$this->set_current();

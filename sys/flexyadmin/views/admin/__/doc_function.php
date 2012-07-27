@@ -1,24 +1,41 @@
 <div>
-  <h2 class="doc_function_method">function <?=$name?>()</h2>
+  <h2 class="doc_function_method"><?=$name?>(
+  <? if (!empty($params)): ?>
+  <? foreach ($params as $key => $param): ?>
+    <? if (isset($param['default'])): ?>[<? endif ?>
+    <span class="doc_param_type">(<?=$param['type']?>) </span><span class="doc_param_name">$<?=str_replace(array('[',']'),array('=',''),$param['param'])?></span>
+    <? if (isset($param['default'])): ?>]<? endif ?>
+    <span class="doc_param_type">,</span>
+  <? endforeach ?>  
+  <? endif ?>
+  )</h2>
+  
+  <p class="doc_description"><?=$shortdescription?></p>
   
   <? if (!empty($params)): ?>
-  <p class="doc_label">parameters:</p>
+  <h4 class="doc_label">parameters:</h4>
   <ul class="doc_params">
-  <? foreach ($params as $key => $value): ?>
-    <li class="doc_param"><p class="doc_param"><?=$value?></p></li>
+  <? foreach ($params as $key => $param): ?>
+    <li class="doc_param"><p class="doc_param">
+      (<?=$param['type']?>) $<?=str_replace('[',' [= ',$param['param'])?> <?=$param['desc']?>
+    </p></li>
   <? endforeach ?>  
   </ul>
   <? endif ?>
 
-  <p class="doc_return">
-  <span class="doc_label">return: </span> 
+  <h4 class="doc_label">return: </h4> 
+  <ul class="doc_params">
+    <li>
   <? if (!empty($return)): ?>
-    <?=$return?>
+    (<?=$return['type']?>) <?=$return['param']?> <?=$return['desc']?>
   <? else: ?>
     (void)
   <? endif ?>
-  </p>
+    </li>
+  </ul>
+
   <p class="doc_description"><?=$description?></p>
-  <? if (!empty($author)): ?><p class="doc_info doc_author">author: <?=$author?></p><? endif ?>
+  
+  <? if (!empty($author)): ?><p class="doc_info doc_author">author: <?=$author[0]?></p><? endif ?>
   <p class="doc_info doc_lines">lines: <?=$lines?></p>
 </div>

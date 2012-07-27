@@ -22,6 +22,27 @@ class MY_Loader extends CI_Loader {
 			array_push($this->_ci_helper_paths,SITEPATH);
 			$this->_ci_plugin_paths = array(APPPATH,SITEPATH);
 		}
+    
+    /**
+     * Test if file is allready loaded
+     *
+     * @param string $type 
+     * @param string $name 
+     * @return void
+     * @author Jan den Besten
+     */
+    function exist($type,$name) {
+      $list=array();
+      switch ($type) {
+        case 'helper':
+          $list=$this->_ci_helpers;
+          break;
+        case 'models':
+          $list=$this->_ci_models;
+          break;
+      }
+      return isset($list[$name]);
+    }
 
 
 	/**
