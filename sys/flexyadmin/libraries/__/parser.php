@@ -6,8 +6,7 @@
 * $a = new Parser($string); 
 * $a->parse();
 * 
-* @author Murray Picton & Jan den Besten
-* @copyright 2010 Murray Picton
+* @author Jan den Besten & Murray Picton
 */
 class Parser {
 	
@@ -56,6 +55,7 @@ class Parser {
 			"internal"	=>	'',
 			"link"		=>	'',
 			"param"		=>	'',
+      "var"		=>	'',
 			"return"	=> 	'',
 			"see"		=>	'',
 			"since"		=>	'',
@@ -76,14 +76,16 @@ class Parser {
 	* @param array $lines An array of strings to be parsed
 	*/
 	private function parseLines($lines) {
+    $desc = array();
 		foreach($lines as $line) {
 			$parsedLine = $this->parseLine($line); //Parse the line
-			
-			if($parsedLine === false && empty($this->shortDesc)) {
-				$desc = array();
-				$this->shortDesc = implode(PHP_EOL, $desc); //Store the first line in the short description
-			} elseif($parsedLine !== false) {
-				$desc[] = $parsedLine; //Store the line in the long description
+			if ($parsedLine!==false){
+			  if (empty($this->shortDesc)) {
+          $this->shortDesc = $parsedLine; //Store the first line in the short description
+        }
+        else {
+          $desc[] = $parsedLine; //Store the line in the long description
+        }
 			}
 		}
 		$this->longDesc = implode(PHP_EOL, $desc);
@@ -115,21 +117,6 @@ class Parser {
 	}
   
 	
-	/**
-	* Parse a parameter or string to display in simple typecast display
-	*
-	* @param string $string The string to parse
-	* @return string Formatted string wiht typecast
-	*/
-	private function formatParamOrReturn($string) {
-    $words=explode(' ',$string);
-    $type=trim(el(0,$words));
-    array_shift($words);
-    $param=implode(' ',$words);
-    $out='(' . $type . ')';
-    if (!empty($param)) $out.=' '.$param;
-    return $out;
-	}
 	
 	/**
 	* Set a parameter
@@ -141,7 +128,16 @@ class Parser {
 	private function setParam($param, $value) {
 		if(!array_key_exists($param, $this->params)) return false;
 		
-		if ($param == 'param' || $param == 'return') $value = $this->formatParamOrReturn($value);
+		if ($param == 'param' || $param == 'return') {
+      $words=explode(' ',$value);
+      $value=array();
+      $value['type']=trim(array_shift($words),'()');
+      $value['param']=trim(array_shift($words),'$');
+      if (preg_match("/\[(.*?)\]/u", $value['param'],$matches)) {
+        $value['default']=trim($matches[1],'[]"\'');
+      }
+      $value['desc']=implode(' ',$words);
+		}
 
     if ($param=='return')
       $this->params[$param] = $value;

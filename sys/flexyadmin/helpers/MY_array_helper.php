@@ -229,14 +229,18 @@ function reformXmlArrayKey($a,$rKey) {
 
 
 /**
- * xml2array() will convert the given XML text to an array in the XML structure.
- * Link: http://www.bin-co.com/php/scripts/xml2array/
- * Arguments : $contents - The XML text
- *             $get_attributes - 1 or 0. If this is 1 the function will get the attributes as well as the tag values - this results in a different array structure in the return value.
- *             $priority - Can be 'tag' or 'attribute'. This will change the way the resulting array structure. For 'tag', the tags are given more importance.
- * Return: The parsed XML in an array form. Use print_r() to see the resulting array structure.
- * Examples: $array =  xml2array(file_get_contents('feed.xml'));
- *           $array =  xml2array(file_get_contents('feed.xml', 1, 'attribute'));
+ * 
+ * @link: http://www.bin-co.com/php/scripts/xml2array/
+ * @param string contents - The XML text
+ * @param bool get_attributes. If this is TRUE the function will get the attributes as well as the tag values - this results in a different array structure in the return value.
+ * @param string priority - Can be 'tag' or 'attribute'. This will change the way the resulting array structure. For 'tag', the tags are given more importance.
+ * @return array The parsed XML in an array form. Use print_r() to see the resulting array structure.
+ *
+ * xml2array() will convert the given XML text to an array in the XML structure.<br/>
+ * <code>
+ * $array =  xml2array(file_get_contents('feed.xml'));<br/>
+ * $array =  xml2array(file_get_contents('feed.xml', 1, 'attribute'));
+ * </code>
  */
 function xml2array($contents, $get_attributes=true, $priority = 'tag') {
     if(!$contents) return array();
