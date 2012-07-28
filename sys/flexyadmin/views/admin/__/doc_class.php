@@ -1,5 +1,6 @@
 <div>
   <h1 class="doc_file"><?=$file?></h1>
+  <p class="doc_info doc_path"><?=$path?></p>
   <? if ($CIparent): ?>
     Dit is een uitbreiding op CodeIgniter's <a href="<?=$CIparent?>" target="_blank"><?=str_replace('MY_','',$file)?></a>.
   <? endif ?>
