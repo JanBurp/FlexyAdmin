@@ -37,7 +37,7 @@ class Doc {
 	
   
   private $excluded_paths=array('codeigniter','__');
-  private $excluded_files=array('index.php');
+  private $excluded_files=array('index.php','sys/flexyadmin/helpers/help_helper.php','sys/flexyadmin/models/flexy_field.php','sys/flexyadmin/models/grid_set.php');
   
   
   
@@ -144,21 +144,6 @@ class Doc {
 		return str_replace('/Users/jan/Sites/FlexyAdmin/FlexyAdminDEMO/','',$filepath);
 	}
 	
-  // /**
-  // * Initialise and return object
-  // *
-  // * Singular pattern.  Initialise object on first call and return
-  // * object on subsequent calls.
-  // *
-  // * @param bool $showall true = show system & user assets, false = only user assets
-  // */
-  // public static function ApacheRequestinit($showall = false) {
-  //   if(!isset(self::$instance))
-  //     self::$instance = new Doqument($showall);
-  //   
-  //   return self::$instance;
-  // }
-	
   
   public function doc() {
     $doc=array();
@@ -196,6 +181,7 @@ class Doc {
   }
   
   private function not_excluded($file) {
+    // trace_('testfile: '.$file);
     $excluded=in_array($file,$this->excluded_files);
     if (!$excluded) {
       foreach ($this->excluded_paths as $path) {

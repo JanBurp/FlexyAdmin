@@ -1,5 +1,6 @@
 <?
 require_once(APPPATH."core/AdminController.php");
+require_once(APPPATH."core/FrontendController.php");  // Load this also, so PHP can build documentation for this one also
 
 /**
  * FlexyAdmin V1
@@ -35,37 +36,30 @@ class __ extends AdminController {
   public function doc() {
     $this->_add_content('<h1>Creating documentation</h1>');
 
-    // load all helpers, libraries, plugins, models etc to make it work
-    $helpers=read_map('sys/flexyadmin/helpers','php');
-    foreach ($helpers as $file=>$helper) {
-      $file=str_replace('_helper.php','',$file);
-      if ($this->load->exist('helper',$file)) {
-        $this->load->helper($file);
-      }
+    // Make sure everything is loaded, to make documentation for everything...
+    // Load all core libraries that are not standard loaded
+    $this->load->dbutil();
+    // load all helpers
+    $this->load->helper('video');
+    // load all libraries
+    $libraries=read_map('sys/flexyadmin/libraries','php');
+    unset($libraries['ion_auth.php']); // exclude allready inherited libraries
+    foreach ($libraries as $file=>$library) {
+      $this->load->library(str_replace('my_','',$file));
     }
+    // load all models
     $models=read_map('sys/flexyadmin/models','php');
     foreach ($models as $file=>$model) {
       $file=str_replace('.php','',$file);
-      if ($this->load->exist('model',$file)) {
+      if (!$this->load->exist('model',$file)) {
         $this->load->model($file);
-        trace_($file);
       }
     }
-    // $libraries=read_map('sys/flexyadmin/libraries','php');
-    // foreach ($libraries as $file=>$library) {
-    //   trace_($file);
-    //   trace_(class_exists($file));
-    //   if (!isset($this->$file)) {
-    //     $this->load->library($file);
-    //   }
-    // }
 
-
+    // Ok, start
     $this->load->library('__/doc');
-
     $doc=$this->doc->doc();
     $toc=array();
-    
     
     // Classes
     // $classTypes=array('core','models','libraries');
