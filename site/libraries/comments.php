@@ -96,7 +96,7 @@ class Comments extends Module {
 					}
 					if ($this->config('mail_others')) {
 						$subject=langp('comments_'.'mail_to_others_subject',$this->CI->site['url_url']);
-						$body=langp('comments_'.'mail_to_others_body', site_url($this->CI->uri->get())."\n\n".$data[$this->config('field_text')) ];
+						$body=langp('comments_'.'mail_to_others_body', site_url($this->CI->uri->get())."\n\n".$data[$this->config('field_text')]);
 						$this->CI->db->select( $this->config('field_email') );
 						$this->CI->db->where( $this->config('key_id'), $id );
 						$emails=$this->CI->db->get_results( $this->config('table') );

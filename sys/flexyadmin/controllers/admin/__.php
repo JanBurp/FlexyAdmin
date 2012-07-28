@@ -18,6 +18,8 @@ require_once(APPPATH."core/FrontendController.php");  // Load this also, so PHP 
 
 
 class __ extends AdminController {
+  
+  private $toc=array();
 
 	public function __construct() {
 		parent::__construct();
@@ -36,6 +38,9 @@ class __ extends AdminController {
   public function doc() {
     $this->_add_content('<h1>Creating documentation</h1>');
 
+    // Include HTML documents
+    $this->_add_html_docs('userguide/FlexyAdmin/__doc');
+
     // Make sure everything is loaded, to make documentation for everything...
     // Load all core libraries that are not standard loaded
     $this->load->dbutil();
@@ -44,11 +49,15 @@ class __ extends AdminController {
     // load all libraries
     $libraries=read_map('sys/flexyadmin/libraries','php');
     unset($libraries['ion_auth.php']); // exclude allready inherited libraries
+    $modules=read_map('site/libraries','php'); // Frontend libraries (modules)
+    $libraries=array_merge($libraries,$modules);
     foreach ($libraries as $file=>$library) {
       $this->load->library(str_replace('my_','',$file));
     }
     // load all models
     $models=read_map('sys/flexyadmin/models','php');
+    $frontend=read_map('site/models','php');
+    $models=array_merge($models,$frontend);
     foreach ($models as $file=>$model) {
       $file=str_replace('.php','',$file);
       if (!$this->load->exist('model',$file)) {
@@ -59,13 +68,27 @@ class __ extends AdminController {
     // Ok, start
     $this->load->library('__/doc');
     $doc=$this->doc->doc();
-    $toc=array();
     
     // Classes
-    // $classTypes=array('core','models','libraries');
     foreach ($doc['classes'] as $file => $class) {
-      $classType=explode('/',$class['file']);
-      $classType=$classType[2];
+      // determine the kind of file
+      $path=explode('/',$class['file']);
+      $classPath=$path[count($path)-2];
+      $classType=$classPath;
+      if ($path[0]=='site') {
+        if ($classType=='libraries') {
+          $classType='modules (site)';
+          if (has_string('Plugin',$file)) $classType='plugins (site)';
+        }
+        elseif ($classType=='models') {
+          $classType='models (site)';
+        }
+      }
+      else {
+        if ($classType=='libraries') {
+          if (has_string('Plugin',$file)) $classType='plugins';
+        }
+      }
 
       $content='';
       
@@ -96,6 +119,7 @@ class __ extends AdminController {
       if (substr($file,0,2)=='MY') $CIparent='../../codeigniter/'.$classType.'/'.str_replace(array('MY_','.php'),array('','.html'),$file);
       $content.=$this->load->view('admin/__/doc_class',array(
         'file'=>$file,
+        'path'=>$class['file'],
         'CIparent'=>$CIparent,
         'shortdescription'=>el('shortdescription',$class['doc']),
         'description'=>el('description',$class['doc']),
@@ -104,12 +128,12 @@ class __ extends AdminController {
       ),true);
       $fileContent=$this->load->view('admin/__/doc',array('content'=>$content),true);
       
-      $fileName='userguide/FlexyAdmin/'.$classType.'/'.$file.'.html';
+      $fileName='userguide/FlexyAdmin/'.$classPath.'/'.$file.'.html';
       write_file($fileName,$fileContent);
       // group in toc
-      $toc[$classType][$file]=$fileName;
+      $this->toc[$classType][$file]=$fileName;
       
-      $this->_add_content('Class file created ('.$classType.'): '.$fileName.'</br>');
+      $this->_add_content('Class file created ('.$classPath.'): '.$fileName.'</br>');
     }
     
     
@@ -119,6 +143,7 @@ class __ extends AdminController {
       $content='';
       $functionsHtml='';
       foreach ($functions as $name => $value) {
+        $path=$value['file'];
         $functionsHtml.=$this->load->view('admin/__/doc_function', array(
           'name'=>$name,
           'lines'=>$value['lines'],
@@ -131,24 +156,35 @@ class __ extends AdminController {
       }
       $CIparent='';
       if (substr($file,0,2)=='MY') $CIparent='../../codeigniter/helpers/'.str_replace(array('MY_','.php'),array('','.html'),$file);
-      $content.=$this->load->view('admin/__/doc_file',array('file'=>$file,'CIparent'=>$CIparent,'functions'=>$functionsHtml),true);
+      $content.=$this->load->view('admin/__/doc_file',array(
+        'file'=>$file,
+        'path'=>$path,
+        'CIparent'=>$CIparent,
+        'functions'=>$functionsHtml
+      ),true);
       $fileContent=$this->load->view('admin/__/doc',array('content'=>$content),true);
       $fileName='userguide/FlexyAdmin/helpers/'.str_replace('.php','.html',$file);
       write_file($fileName,$fileContent);
       $this->_add_content('Helper file created: '.$fileName.'</br>');
-      $toc['helpers'][$file]=$fileName;
+      $this->toc['helpers'][$file]=$fileName;
     }
 
     // trace_($doc);
-    // trace_($toc);
-    $toc_order=array('helpers','|','libraries','|','models','core');
+    // trace_($this->toc);
+
+    $this->toc_order=array('algemeen','uitbreiden','database','|','modules (site)','plugins (site)','models (site)','|','plugins','libraries','|','models','core','|','helpers');
     $otoc=array();
-    foreach ($toc_order as $key) {
+    foreach ($this->toc_order as $key) {
       if ($key=='|')
         $otoc[]='|';
       else {
-        asort($toc[$key]);
-        $otoc[$key]=$toc[$key];
+        if (!empty($this->toc[$key])) {
+          asort($this->toc[$key]);
+          $otoc[$key]=$this->toc[$key];
+        }
+        else {
+          $otoc[$key]=array();
+        }
       }
         
     }
@@ -160,6 +196,34 @@ class __ extends AdminController {
     $this->_add_content('TOC file created: '.$fileName.'</br>');
     
     $this->_show_all();
+  }
+  
+  
+  private function _add_html_docs($path) {
+    $files=read_map($path);
+    foreach ($files as $name  => $file) {
+      if ($file['type']=='dir') {
+        $dir=str_replace('__doc/','',$file['path']);
+        $dir=preg_replace("/\/(\d_)/u", "/", $dir);
+        if (!file_exists($dir)) mkdir($dir);
+        $this->_add_html_docs($path.'/'.$name);
+      }
+      else {
+        $name=ucfirst(str_replace(array('_','.html'),array(' ',''),remove_prefix($name,'-')));
+        $path=explode('/',$file['path']);
+        $path=$path[count($path)-2];
+        $type=remove_prefix($path,'_');
+        
+        $html=read_file($file['path']);
+        $fileName=str_replace('__doc/','',$file['path']);
+        $fileName=preg_replace("/\/(\d_)/u", "/", $fileName);
+        $content=$this->load->view('admin/__/doc_file',array('file'=>$name,'functions'=>$html),true);
+        $fileContent=$this->load->view('admin/__/doc',array('content'=>$content),true);
+        write_file($fileName,$fileContent);
+        $this->_add_content('DOC created: '.$fileName.'</br>');
+        $this->toc[$type][$name]=$fileName;
+      }
+    }
   }
 
 

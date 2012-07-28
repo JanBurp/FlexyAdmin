@@ -27,7 +27,7 @@ class Login extends Module {
 		if ($this->config('auto_uris')) $this->_find_uris();
 		
 		// redirect ion_auth to other email_templates
-		$this->CI->config->set_item('email_templates','login/'.$this->CI->site['language'].'/','ion_auth');
+    if (isset($this->CI->site)) $this->CI->config->set_item('email_templates','login/'.$this->CI->site['language'].'/','ion_auth');
 		// if admin activation tell user/ion_auth
 		$this->CI->config->set_item('admin_activation',$this->config('admin_activation'),'ion_auth');
 	}
