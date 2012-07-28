@@ -17,7 +17,7 @@ class AdminController extends BasicController {
 	var $currentTable;
 	var $currentId;
 	var $currentUser;
-	var $content;
+	var $contentHTML;
 	var $showEditor;
 	var $showType;
 	var $helpTexts;
@@ -37,7 +37,7 @@ class AdminController extends BasicController {
 		$this->currentId="";
 		$this->currentUser="";
 		$this->currentMenuItem="";
-		$this->content="";
+		$this->contentHTML="";
 		$this->showEditor=false;
 		$this->load->model("ui");
 		$this->load->library("menu");
@@ -278,11 +278,11 @@ class AdminController extends BasicController {
 	}
 
 	function _show_content() {
-		if (empty($this->content))
+		if (empty($this->contentHTML))
 			show_404();
 			//$this->load->view('admin/no_page_'.$this->language);
 		else
-			$this->load->view('admin/content',array("content"=> $this->content));
+			$this->load->view('admin/content',array("content"=> $this->contentHTML));
 	}
 
 	function _show_trace() {
@@ -353,7 +353,7 @@ class AdminController extends BasicController {
 	}
 
 	function _show_view($theView,$data=NULL,$bFooter=true) {
-		if ($data==NULL) $data=array("content"=>$this->content);
+		if ($data==NULL) $data=array("content"=>$this->contentHTML);
 		$this->load->view($theView,$data);
 		if ($bFooter) $this->_show_footer();
 	}
@@ -365,10 +365,10 @@ class AdminController extends BasicController {
 	// content helpers
 
 	function _set_content($content) {
-		$this->content=$content;
+		$this->contentHTML=$content;
 	}
 	function _add_content($add) {
-		$this->content.=$add;
+		$this->contentHTML.=$add;
 	}
 	
 	function _add_help($help,$name="") {

@@ -2,16 +2,13 @@
 /**
  * FlexyAdmin V1
  *
- * grid.php Created on 21-okt-2008
- *
  * @author Jan den Besten
  */
 
 
 /**
- * Class Grid (model)
  *
- * Handles grid rendering
+ * Handles graph rendering
  *
  */
 
