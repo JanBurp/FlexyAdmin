@@ -2,21 +2,14 @@
 require_once(APPPATH."core/AdminController.php");
 require_once(APPPATH."core/FrontendController.php");  // Load this also, so PHP can build documentation for this one also
 
+
 /**
- * FlexyAdmin V1
+ * Build proces, maakt automatisch documentatie.
  *
- * A Flexible Database based CMS
- *
- * @package FlexyAdmin V1
+ * @package default
  * @author Jan den Besten
- * @copyright Copyright (c) 2008, Jan den Besten
- * @link http://flexyadmin.com
- * @version V1 0.1
- * @filesource  */
-
-// ------------------------------------------------------------------------
-
-
+ */
+ 
 class __ extends AdminController {
   
   private $toc=array();
@@ -37,9 +30,6 @@ class __ extends AdminController {
    */
   public function doc() {
     $this->_add_content('<h1>Creating documentation</h1>');
-
-    // Include HTML documents
-    $this->_add_html_docs('userguide/FlexyAdmin/__doc');
 
     // Make sure everything is loaded, to make documentation for everything...
     // Load all core libraries that are not standard loaded
@@ -64,6 +54,10 @@ class __ extends AdminController {
         $this->load->model($file);
       }
     }
+    
+
+    // Include HTML documents
+    $this->_add_html_docs('userguide/FlexyAdmin/__doc');
 
     // Ok, start
     $this->load->library('__/doc');
@@ -126,7 +120,7 @@ class __ extends AdminController {
         'properties'=>$propertiesHtml,
         'methods'=>$methodsHtml
       ),true);
-      $fileContent=$this->load->view('admin/__/doc',array('content'=>$content),true);
+      $fileContent=$this->load->view('admin/__/doc',array('content'=>$content,'root'=>'../'),true);
       
       $fileName='userguide/FlexyAdmin/'.$classPath.'/'.$file.'.html';
       write_file($fileName,$fileContent);
@@ -162,7 +156,7 @@ class __ extends AdminController {
         'CIparent'=>$CIparent,
         'functions'=>$functionsHtml
       ),true);
-      $fileContent=$this->load->view('admin/__/doc',array('content'=>$content),true);
+      $fileContent=$this->load->view('admin/__/doc',array('content'=>$content,'root'=>'../'),true);
       $fileName='userguide/FlexyAdmin/helpers/'.str_replace('.php','.html',$file);
       write_file($fileName,$fileContent);
       $this->_add_content('Helper file created: '.$fileName.'</br>');
@@ -172,14 +166,14 @@ class __ extends AdminController {
     // trace_($doc);
     // trace_($this->toc);
 
-    $this->toc_order=array('algemeen','uitbreiden','database','|','modules (site)','plugins (site)','models (site)','|','plugins','libraries','|','models','core','|','helpers');
+    $this->toc_order=array('algemeen','uitbreiden','database','|','modules (site)','plugins (site)','models (site)','|','plugins','libraries','|','core','models','|','helpers');
     $otoc=array();
     foreach ($this->toc_order as $key) {
       if ($key=='|')
         $otoc[]='|';
       else {
         if (!empty($this->toc[$key])) {
-          asort($this->toc[$key]);
+          // asort($this->toc[$key]);
           $otoc[$key]=$this->toc[$key];
         }
         else {
@@ -190,9 +184,12 @@ class __ extends AdminController {
     }
     
     $content=$this->load->view('admin/__/doc_toc',array('toc'=>$otoc),true);
-    $fileContent=$this->load->view('admin/__/doc',array('content'=>$content),true);
+    $fileContent=$this->load->view('admin/__/doc',array('content'=>$content,'root'=>''),true);
     $fileName='userguide/FlexyAdmin/index.html';
     write_file($fileName,$fileContent);
+    //
+    $json_toc=$this->load->view('admin/__/doc_toc_json',array('toc'=>$otoc,'html'=>trim(str_replace(array(PHP_EOL,"\r",'../userguide/FlexyAdmin/'),'',$content))),true);
+    write_file('userguide/FlexyAdmin/js/toc.js',$json_toc);
     $this->_add_content('TOC file created: '.$fileName.'</br>');
     
     $this->_show_all();
@@ -217,8 +214,9 @@ class __ extends AdminController {
         $html=read_file($file['path']);
         $fileName=str_replace('__doc/','',$file['path']);
         $fileName=preg_replace("/\/(\d_)/u", "/", $fileName);
-        $content=$this->load->view('admin/__/doc_file',array('file'=>$name,'functions'=>$html),true);
-        $fileContent=$this->load->view('admin/__/doc',array('content'=>$content),true);
+        $fileName=preg_replace("/\/(\d-)/u", "/", $fileName);
+        $content=highlight_code_if_needed( $this->load->view('admin/__/doc_file',array('file'=>$name,'functions'=>$html),true) );
+        $fileContent=$this->load->view('admin/__/doc',array('content'=>$content,'root'=>'../'),true);
         write_file($fileName,$fileContent);
         $this->_add_content('DOC created: '.$fileName.'</br>');
         $this->toc[$type][$name]=$fileName;

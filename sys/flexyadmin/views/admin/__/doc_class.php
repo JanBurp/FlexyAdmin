@@ -1,4 +1,4 @@
-<div>
+<div id="<?=str_replace(' ','_',$file)?>" class="doc_page">
   <h1 class="doc_file"><?=$file?></h1>
   <p class="doc_info doc_path"><?=$path?></p>
   <? if ($CIparent): ?>
