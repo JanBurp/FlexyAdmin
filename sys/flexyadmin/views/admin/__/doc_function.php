@@ -1,4 +1,4 @@
-<div>
+<div class="<?=(isset($inherited))?'inherited':''?>">
   <h2 class="doc_function_method"><?=$name?>(
   <? if (!empty($params)): ?>
   <? foreach ($params as $key => $param): ?>
@@ -9,6 +9,10 @@
   <? endforeach ?>  
   <? endif ?>
   )</h2>
+  
+  <? if (isset($inherited)): ?>
+  <p class="doc_info doc_inherited">inherited from: <a href="<?=$inherited?>.html"><?=$inherited?></a></p>
+  <? endif ?>
   
   <p class="doc_description"><?=$shortdescription?></p>
   

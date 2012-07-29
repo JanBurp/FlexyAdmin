@@ -89,8 +89,10 @@ class __ extends AdminController {
       // properties
       $propertiesHtml='';
       foreach ($class['properties'] as $name => $value) {
+        $comm=el('doc',$value);
         $propertiesHtml.=$this->load->view('admin/__/doc_property', array(
           'name'=>$name,
+          'inherited'=>el('inherited',$comm),
           'type'=>el('var',$value),
           'shortdescription'=>el('shortdescription',$value),
           'description'=>el('description',$value),
@@ -101,6 +103,7 @@ class __ extends AdminController {
       foreach ($class['methods'] as $name => $value) {
         $methodsHtml.=$this->load->view('admin/__/doc_function', array(
           'name'=>$name,
+          'inherited'=>el('inherited',$value['doc']),
           'lines'=>$value['lines'],
           'params'=>el('param',$value['doc']),
           'return'=>el('return',$value['doc']),
@@ -109,12 +112,9 @@ class __ extends AdminController {
           'author'=>el('author',$value['doc'])
         ),true);
       }
-      $CIparent='';
-      if (substr($file,0,2)=='MY') $CIparent='../../codeigniter/'.$classType.'/'.str_replace(array('MY_','.php'),array('','.html'),$file);
       $content.=$this->load->view('admin/__/doc_class',array(
         'file'=>$file,
         'path'=>$class['file'],
-        'CIparent'=>$CIparent,
         'shortdescription'=>el('shortdescription',$class['doc']),
         'description'=>el('description',$class['doc']),
         'properties'=>$propertiesHtml,
@@ -152,12 +152,9 @@ class __ extends AdminController {
       }
       
       if (!empty($functionsHtml)) {
-        $CIparent='';
-        if (substr($file,0,2)=='MY') $CIparent='../../codeigniter/helpers/'.str_replace(array('MY_','.php'),array('','.html'),$file);
         $content.=$this->load->view('admin/__/doc_file',array(
           'file'=>$file,
           'path'=>$path,
-          'CIparent'=>$CIparent,
           'functions'=>$functionsHtml
         ),true);
         $fileContent=$this->load->view('admin/__/doc',array('content'=>$content,'root'=>'../'),true);

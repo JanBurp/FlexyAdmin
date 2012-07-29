@@ -1,5 +1,12 @@
 <?
 
+/**
+ * Een eenvoudige blog module
+ *
+ * @package default
+ * @author Jan den Besten
+ */
+
 class Blog extends Module {
 
 	public function __construct() {
@@ -10,6 +17,13 @@ class Blog extends Module {
 		}
 	}
 
+	/**
+	 * Deze method wordt standaard aangeroepen
+	 *
+	 * @param string $page 
+	 * @return void
+	 * @author Jan den Besten
+	 */
 	public function index($page) {
 		if ( $this->CI->db->table_exists($this->config('table'))) {
 			$blogItems=$this->CI->db->get_result( $this->config('table') );

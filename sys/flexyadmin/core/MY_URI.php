@@ -1,17 +1,12 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
 /**
- * FlexyAdmin V1
+ * Uitbreiding op <a href="http://codeigniter.com/user_guide/libraries/uri.html" target="_blank">URI class van CodeIgniter</a>
  *
- * MY_URI.php Created on 9-dec-2008
- *
+ * @package default
  * @author Jan den Besten
  */
-
-
-/**
- * URI Class extension (for frontend)
- */
-
+ 
 class MY_URI extends CI_URI {
 
 	var $home;
