@@ -1,20 +1,13 @@
 <?
 /**
- * FlexyAdmin V1
+ * handles configuration settings form cfg tables in the database
+ * It loads them on demand and reads them.
  *
- * cfg.php Created on 15-okt-2008
- *
+ * @package default
  * @author Jan den Besten
+ * @ignore
+ * @internal
  */
-
-
- /**
-  * Class Cfg extends model
-  *
-  * This class handles configuration settings from tables in database.
-  * It loads them on demand and reads them.
-  *
-  */
 
  class Cfg extends CI_Model {
 

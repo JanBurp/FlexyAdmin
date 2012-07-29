@@ -47,7 +47,13 @@ class FrontEndController extends MY_Controller {
 		$this->_init_globals();
 	}
 	
-	// For compatibility with older sites
+	/**
+	 * For compatibility with older sites
+	 *
+	 * @return void
+	 * @author Jan den Besten
+   * @ignore
+	 */
 	function FrontEndController() {
 		$this->__construct();
 	}

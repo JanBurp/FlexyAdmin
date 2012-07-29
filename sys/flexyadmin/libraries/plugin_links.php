@@ -4,8 +4,9 @@
  * FlexyAdmin Plugin
  *
  * @author Jan den Besten
+ * @ignore
+ * @internal
  */
-
 
 class Plugin_links extends Plugin_ {
 

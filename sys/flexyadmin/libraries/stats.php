@@ -1,13 +1,12 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-/**
- * FlexyAdmin V1
- * @author Jan den Besten
- */
-
 
 /**
  * Stats Class, keeping track of page statistics
  *
+ * @package default
+ * @author Jan den Besten
+ * @ignore
+ * @internal
  */
 
 class Stats {

@@ -137,30 +137,36 @@ class __ extends AdminController {
       $content='';
       $functionsHtml='';
       foreach ($functions as $name => $value) {
-        $path=$value['file'];
-        $functionsHtml.=$this->load->view('admin/__/doc_function', array(
-          'name'=>$name,
-          'lines'=>$value['lines'],
-          'params'=>el('param',$value['doc']),
-          'return'=>el('return',$value['doc']),
-          'shortdescription'=>el('shortdescription',$value['doc']),
-          'description'=>el('description',$value['doc']),
-          'author'=>el('author',$value['doc'])
-        ),true);
+        if (!isset($value['doc']['ignore'])) {
+          $path=$value['file'];
+          $functionsHtml.=$this->load->view('admin/__/doc_function', array(
+            'name'=>$name,
+            'lines'=>$value['lines'],
+            'params'=>el('param',$value['doc']),
+            'return'=>el('return',$value['doc']),
+            'shortdescription'=>el('shortdescription',$value['doc']),
+            'description'=>el('description',$value['doc']),
+            'author'=>el('author',$value['doc'])
+          ),true);
+        }
       }
-      $CIparent='';
-      if (substr($file,0,2)=='MY') $CIparent='../../codeigniter/helpers/'.str_replace(array('MY_','.php'),array('','.html'),$file);
-      $content.=$this->load->view('admin/__/doc_file',array(
-        'file'=>$file,
-        'path'=>$path,
-        'CIparent'=>$CIparent,
-        'functions'=>$functionsHtml
-      ),true);
-      $fileContent=$this->load->view('admin/__/doc',array('content'=>$content,'root'=>'../'),true);
-      $fileName='userguide/FlexyAdmin/helpers/'.str_replace('.php','.html',$file);
-      write_file($fileName,$fileContent);
-      $this->_add_content('Helper file created: '.$fileName.'</br>');
-      $this->toc['helpers'][$file]=$fileName;
+      
+      if (!empty($functionsHtml)) {
+        $CIparent='';
+        if (substr($file,0,2)=='MY') $CIparent='../../codeigniter/helpers/'.str_replace(array('MY_','.php'),array('','.html'),$file);
+        $content.=$this->load->view('admin/__/doc_file',array(
+          'file'=>$file,
+          'path'=>$path,
+          'CIparent'=>$CIparent,
+          'functions'=>$functionsHtml
+        ),true);
+        $fileContent=$this->load->view('admin/__/doc',array('content'=>$content,'root'=>'../'),true);
+        $fileName='userguide/FlexyAdmin/helpers/'.str_replace('.php','.html',$file);
+        write_file($fileName,$fileContent);
+        $this->_add_content('Helper file created: '.$fileName.'</br>');
+        $this->toc['helpers'][$file]=$fileName;
+      }
+
     }
 
     // trace_($doc);

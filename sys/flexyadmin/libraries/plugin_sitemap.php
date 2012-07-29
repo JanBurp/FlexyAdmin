@@ -1,5 +1,13 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Creates sitemap.xml
+ *
+ * @package default
+ * @author Jan den Besten
+ * @ignore
+ * @internal
+ */
 
 class Plugin_sitemap extends Plugin_ {
 

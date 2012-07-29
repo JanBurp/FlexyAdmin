@@ -1,6 +1,13 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-// Handles the state a grid is in: order,search and page
+/**
+ * Handles the state a grid is in: order,search and page
+ *
+ * @package default
+ * @author Jan den Besten
+ * @ignore
+ * @internal
+ */
 
 
 class Grid_set extends CI_Model {

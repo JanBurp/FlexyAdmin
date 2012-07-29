@@ -1,9 +1,14 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- * Crud, for any crud actions in Admin part of FlexyAdmin
+ * crud actions in admin part
+ *
+ * @package default
+ * @author Jan den Besten
+ * @todo read methods
+ * @ignore
+ * @internal
  */
-
 class Crud extends CI_Model {
 
 	private $table;

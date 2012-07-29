@@ -101,16 +101,20 @@ class Parser {
 	* that aren't valid otherwise, the line that was passed in.
 	*/
 	private function parseLine($line) {
-		
 		//Trim the whitespace from the line
 		$line = trim($line);
-		
 		if(empty($line)) return false; //Empty line
 		
 		if(strpos($line, '@') === 0) {
-			$param = substr($line, 1, strpos($line, ' ') - 1); //Get the parameter name
-			$value = substr($line, strlen($param) + 2); //Get the value
-			if($this->setParam($param, $value)) return false; //Parse the line and return false if the parameter is valid
+      $split=explode(' ',substr($line,1));
+      // trace_($split);
+      $param=array_shift($split);
+      $value=array_shift($split);
+      // $param = substr($line, 1, strpos($line, ' ')-1); //Get the parameter name
+      // $value = substr($line, strlen($param) + 2); //Get the value
+      // trace_($param);
+      // trace_($value);
+			if ($this->setParam($param, $value)) return false; //Parse the line and return false if the parameter is valid
 		}
 		
 		return $line;
@@ -126,7 +130,7 @@ class Parser {
 	* @return bool True = the parameter has been set, false = the parameter was invalid
 	*/
 	private function setParam($param, $value) {
-		if(!array_key_exists($param, $this->params)) return false;
+		if (!array_key_exists($param, $this->params)) return false;
 		
 		if ($param == 'param' || $param == 'return') {
       $words=explode(' ',$value);
@@ -143,6 +147,7 @@ class Parser {
       $this->params[$param] = $value;
     else
       $this->params[$param][] = $value;
+    
 		return true;
 	}
     

@@ -4,6 +4,8 @@
  * FlexyAdmin Plugin
  *
  * @author Jan den Besten
+ * @ignore
+ * @internal
  */
 
 

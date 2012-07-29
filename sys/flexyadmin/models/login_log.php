@@ -1,17 +1,12 @@
 <?
 /**
- * FlexyAdmin V1
+ * logs admin logins
  *
- * cfg.php Created on 15-okt-2008
- *
+ * @package default
  * @author Jan den Besten
+ * @ignore
+ * @internal
  */
-
-
- /**
-  * Class Login_log extends model
-  */
-
  class Login_log extends CI_Model {
 
 	function update($table) {

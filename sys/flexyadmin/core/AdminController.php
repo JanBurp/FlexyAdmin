@@ -11,7 +11,10 @@ require_once(APPPATH."core/BasicController.php");
  * @package FlexyAdmin V1
  * @author Jan den Besten
  * @version V1 0.1
+ * @ignore
+ * @internal
  **/
+ 
 class AdminController extends BasicController {
 
 	var $currentTable;
