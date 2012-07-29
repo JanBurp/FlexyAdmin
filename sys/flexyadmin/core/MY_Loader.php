@@ -1,14 +1,14 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-
 /**
  * extending the loader class... needs this in config file
  * $config['subclass_prefix'] = 'MY_';
  * see the docs http://codeigniter.com/user_guide/general/core_classes.html
  * 
  * @package    default
+ * @ignore
+ * @internal
  */
-
 
 class MY_Loader extends CI_Loader {
 	

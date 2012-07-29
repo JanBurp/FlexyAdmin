@@ -1,17 +1,12 @@
 <?
 /**
- * FlexyAdmin V1
- *
- * flexy_field.php Created on 21-okt-2008
- *
- * @author Jan den Besten
- */
-
-/**
  * Class Flexy_field  Model
  *
- * This class renders and validates fields
+ * @author Jan den Besten
+ * @ignore
+ * @internal
  *
+ * This class renders and validates fields
  */
 
 class Flexy_field extends CI_Model {

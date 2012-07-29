@@ -8,7 +8,8 @@
  * @package FlexyAdmin V1
  * @author Jan den Besten
  * @version V1 0.1
- *
+ * @ignore
+ * @internal
  */
 
 class MY_Controller extends CI_Controller {

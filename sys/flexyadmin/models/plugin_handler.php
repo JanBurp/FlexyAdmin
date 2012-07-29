@@ -1,5 +1,12 @@
 <?
-
+/**
+ * Handles all backed plugin loading, calling etc.
+ *
+ * @package default
+ * @author Jan den Besten
+ * @ignore
+ * @internal
+ */
 class Plugin_handler extends CI_Model {
 
 	var $plugins=array();

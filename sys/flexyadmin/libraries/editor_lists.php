@@ -1,5 +1,15 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+
+/**
+ * Creates js lists for use in html editor
+ *
+ * @package default
+ * @author Jan den Besten
+ * @ignore
+ * @internal
+ */
+ 
 class Editor_lists {
 
 	var $type;

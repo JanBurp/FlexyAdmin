@@ -37,7 +37,7 @@ class Doc {
 	
   
   private $excluded_paths=array('codeigniter','__');
-  private $excluded_files=array('index.php','sys/flexyadmin/helpers/help_helper.php','sys/flexyadmin/models/flexy_field.php','sys/flexyadmin/models/grid_set.php');
+  private $excluded_files=array('index.php');
   
   
   
@@ -151,7 +151,8 @@ class Doc {
     // Classes
     foreach ($this->classes as $class) {
       $file=$this->formatFilePath($class->getFileName());
-      if ($this->not_excluded($file)) {
+      $comm=$this->docComment($class);
+      if (!isset($comm['ignore']) and $this->not_excluded($file)) {
         $properties=$class->getProperties(ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PROTECTED);
         foreach ($properties as $key => $value) {
           $name=$value->getName();
@@ -161,7 +162,7 @@ class Doc {
         $doc['classes'][$class->getName()]=array( 
           'file'        => $file,
           'lines'       => $class->getStartLine() . " - " . $class->getEndLine(),
-          'doc'         => $this->docComment($class),
+          'doc'         => $comm,
           'properties'  => $properties,
           'methods'     => $this->docFunctions($class->getMethods(),true),
         );
@@ -181,7 +182,6 @@ class Doc {
   }
   
   private function not_excluded($file) {
-    // trace_('testfile: '.$file);
     $excluded=in_array($file,$this->excluded_files);
     if (!$excluded) {
       foreach ($this->excluded_paths as $path) {
@@ -209,12 +209,13 @@ class Doc {
   private function docFunctions($functions,$class=false) {
     foreach ($functions as $key => $value) {
       $file=$this->formatFilePath($value->getFileName());
-      if ($this->not_excluded($file) and !($class AND !$value->isPublic())) {
-        $name=$value->getName();
+      $comm=$this->docComment($value);
+      $name=$value->getName();
+      if (!isset($comm['ignore']) and $this->not_excluded($file) and (substr($name,0,1)!='_') and !($class AND !$value->isPublic())) {
         $functions[$name]=array(
           'file'        => $this->formatFilePath($file),
           'lines'       => $value->getStartLine() . " - " . $value->getEndLine(),
-          'doc'         => $this->docComment($value),
+          'doc'         => $comm,
         );
         if ($class) {
           unset($functions[$name]['file']);

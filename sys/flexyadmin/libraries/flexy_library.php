@@ -4,10 +4,34 @@
 
 class Flexy_library {
 
-	var $CI;
+  /**
+   * Instance of global CodeIgniter object
+   *
+   * @var object
+   */
+	protected $CI;
+  
+  /**
+   * Config settings of this module/plugin
+   *
+   * @var array
+   */
 	var $config=array();
+  
+  /**
+   * Name of this module/plugin, including the prefix 'plugin_' for plugins
+   *
+   * @var string
+   */
 	var $name='';
+  
+  /**
+   * Name of this module/plugin, without prefix
+   *
+   * @var string
+   */
 	var $shortname='';
+
 
 	public function __construct($name='') {
 		$this->CI=&get_instance();
