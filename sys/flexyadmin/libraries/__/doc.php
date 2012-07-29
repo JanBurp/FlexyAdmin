@@ -156,15 +156,22 @@ class Doc {
         $properties=$class->getProperties(ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PROTECTED);
         foreach ($properties as $key => $value) {
           $name=$value->getName();
+          $properties[$name]['doc']=array();
           $properties[$name]=$this->docComment($value);
+          $declareClass=$value->getDeclaringClass()->getName();
+          if ($declareClass!=$class->getName()) {
+            $properties[$name]['doc']['inherited']=$declareClass;
+            if (substr($declareClass,0,2)=='CI') unset($properties[$name]);
+          }
           unset($properties[$key]);
         }
-        $doc['classes'][$class->getName()]=array( 
+        $className=$class->getName();
+        $doc['classes'][$className]=array( 
           'file'        => $file,
           'lines'       => $class->getStartLine() . " - " . $class->getEndLine(),
           'doc'         => $comm,
           'properties'  => $properties,
-          'methods'     => $this->docFunctions($class->getMethods(),true),
+          'methods'     => $this->docFunctions($class->getMethods(),$className),
         );
       }
     }
@@ -219,6 +226,10 @@ class Doc {
         );
         if ($class) {
           unset($functions[$name]['file']);
+          $declareClass=$value->getDeclaringClass()->getName();
+          if ($declareClass!=$class) {
+            $functions[$name]['doc']['inherited']=$declareClass;
+          }
         }
       }
       unset($functions[$key]);

@@ -109,7 +109,7 @@ class Parser {
       $split=explode(' ',substr($line,1));
       // trace_($split);
       $param=array_shift($split);
-      $value=array_shift($split);
+      $value=implode(' ',$split);
       // $param = substr($line, 1, strpos($line, ' ')-1); //Get the parameter name
       // $value = substr($line, strlen($param) + 2); //Get the value
       // trace_($param);

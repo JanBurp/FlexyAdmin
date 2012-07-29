@@ -1,16 +1,23 @@
 <?
+
 /**
- * FlexyAdmin V1
- *
- * MY_file_helper.php
+ * Uitbreiding op <a href="http://codeigniter.com/user_guide/helpers/file_helper.html" target="_blank">file_helper van CodeIgniter</a>
  *
  * @author Jan den Besten
+ * @version $Id$
+ * @copyright , 29 July, 2012
+ * @package default
+ **/
+
+
+/**
+ * Kopieer een bestand
  *
- * adds some functions to the file helper
- *
+ * @param string $source bronbestand
+ * @param string $dest 
+ * @return void
+ * @author Jan den Besten
  */
-
-
 function copy_file($source,$dest) {
 	$content=@file_get_contents($source);
 	if ($content === FALSE) {
