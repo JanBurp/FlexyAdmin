@@ -1,12 +1,20 @@
 <?
 
 /**
+ * Uitbreiding op <a href="http://codeigniter.com/user_guide/helpers/string_helper.html" target="_blank">String_helper van CodeIgniter</a>.
+ * 
+ * @author Jan den Besten
+ * @link http://codeigniter.com/user_guide/helpers/string_helper.html
+ */
+
+
+/**
  * Create a Random String
  *
  * Useful for generating passwords or hashes.
  *
- * @param string type of random string.  Options: alunum, numeric, nozero, unique
- * @param integer number of characters
+ * @param string type['alnum] of random string.  Options: alnum, numeric, nozero, unique
+ * @param integer number[8] of characters
  * @return string
  */
 if ( ! function_exists('random_string')) {	
@@ -36,8 +44,13 @@ if ( ! function_exists('random_string')) {
 
 
 /**
-	* Find a character in string
-	*/ 
+ * Zoekt een karakter in een string
+ *
+ * @param string $in te zoeken karakter
+ * @param string $string string waarin gezocht wordt
+ * @return bool TRUE als karakter is gevonden
+ * @author Jan den Besten
+ */
 function in_string($in,$string) {
 	$in=str_split($in);
 	$found=FALSE;
@@ -50,6 +63,14 @@ function in_string($in,$string) {
 	return $found;
 }
 
+/**
+ * Zoekt een string in een string
+ *
+ * @param string $in te zoeken string
+ * @param string $string string waarin gezocht wordt
+ * @return bool TRUE als string is gevonden
+ * @author Jan den Besten
+ */
 function has_string($in,$string) {
 	return strpos($string,$in)!==false;
 }
@@ -64,9 +85,7 @@ function explode_pre($split,$fields,$pre) {
 }
 
 /**
- * function add_string($string,$add,$split)
- *
- * Adds a string to a string,with a split string if string has content allready
+ * Adds a string to a string, with a split string if string has content allready
  *
  * @param string $string String to add to
  * @param string $add string to add
@@ -81,6 +100,7 @@ function add_string($s,$add,$split="|") {
 	return $s;
 }
 
+
 function str_reverse($s) {
 	$o="";
 	for ($c=strlen($s); $c>=0; $c--) {
@@ -89,9 +109,6 @@ function str_reverse($s) {
 	return $o;
 }
 
-//
-// string remove_first_char( string sName )
-//
 function remove_first_char($s) {
 	if ($s!="") $s=substr($s,1);
 	return $s;
@@ -131,9 +148,6 @@ function get_postfix($s,$split="_") {
 	return get_suffix($s,$split);
 }
 
-//
-// string remove_prefix( string sName )
-//
 function remove_prefix($s,$split="_") {
 	$i=strpos($s,$split);
 	if ($i) $out=substr($s,$i+strlen($split)); else $out=$s;
@@ -152,9 +166,6 @@ function remove_postfix($s,$split="_") {
 	return remove_suffix($s,$split);
 }
 
-//
-// string replace_html( string sTag,string $sReplace,string $sSource )
-//
 function replace_html($sTag,$sReplace,$sSource) {
 	return preg_replace("/(<\/?(".$sTag."|".strtoupper($sTag).")\s\/?>)/",$sReplace,$sSource);
 }

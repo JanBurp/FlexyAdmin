@@ -1,12 +1,10 @@
 <?
 
 /**
- * Uitbreiding op <a href="http://codeigniter.com/user_guide/helpers/file_helper.html" target="_blank">file_helper van CodeIgniter</a>
+ * Uitbreiding op <a href="http://codeigniter.com/user_guide/helpers/file_helper.html" target="_blank">File_helper van CodeIgniter</a>
  *
  * @author Jan den Besten
- * @version $Id$
- * @copyright , 29 July, 2012
- * @package default
+ * @link http://codeigniter.com/user_guide/helpers/file_helper.html
  **/
 
 

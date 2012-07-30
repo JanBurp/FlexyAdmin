@@ -152,9 +152,28 @@ class __ extends AdminController {
       }
       
       if (!empty($functionsHtml)) {
+        
+        // get file docblock directly from file...
+        $description='';
+        $shortdescription='';
+        $tags='';
+        $f=read_file($path);
+        preg_match("/\/\*\*(.*)\*\//uUsm", $f,$matches);
+        if (isset($matches[0])) {
+          $docBlock=$matches[0];
+          $p = new Parser($docBlock); 
+          $p->parse();
+          $tags = $p->getParams();
+          $description=$p->getDesc();
+          $shortdescription=$p->getShortDesc();
+        }
+        
         $content.=$this->load->view('admin/__/doc_file',array(
           'file'=>$file,
           'path'=>$path,
+          'shortdescription'=>$shortdescription,
+          'description'=>$description,
+          'tags'=>$tags,
           'functions'=>$functionsHtml
         ),true);
         $fileContent=$this->load->view('admin/__/doc',array('content'=>$content,'root'=>'../'),true);
@@ -215,6 +234,14 @@ class __ extends AdminController {
         $type=remove_prefix($path,'_');
         
         $html=read_file($file['path']);
+        // if <body> exists, get only all in body tag
+        preg_match("/<body>(.*)<\/body>/", $html, $matches);
+        if (isset($matches[1])) $html=$matches[1];
+        // replace local links /3-link with /link
+        $html = preg_replace("/(href=\")(\d-)([^\"]*?)\"/us", "$1$3\"", $html);
+        $html = preg_replace("/(href=\"([^\"]*?)\\/)\\d-(.*?)\"/us", "$1$3\"", $html);
+        $html = preg_replace("/(href=\"\.\.\/)(\d_)([^\"]*)\"/us", "$1$3\"", $html);
+        
         $fileName=str_replace('__doc/','',$file['path']);
         $fileName=preg_replace("/\/(\d_)/u", "/", $fileName);
         $fileName=preg_replace("/\/(\d-)/u", "/", $fileName);

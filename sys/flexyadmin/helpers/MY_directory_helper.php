@@ -1,13 +1,21 @@
 <?
+
 /**
- * FlexyAdmin V1
- *
- * MY_directory_helper.php
- *
+ * Uitbreiding op <a href="http://codeigniter.com/user_guide/helpers/directory_helper.html" target="_blank">Directory_helper van CodeIgniter</a>.
+ * 
  * @author Jan den Besten
+ * @link http://codeigniter.com/user_guide/helpers/directory_helper.html
  */
 
-
+/**
+ * Telt aantal bestanden in meegegeven map
+ *
+ * @param string $path 
+ * @param bool $recursive[FALSE]
+ * @param int $counter[0] Als optie kun je teller een startwaarde meegeven
+ * @return int
+ * @author Jan den Besten
+ */
 function count_files($path,$recursive=FALSE,$counter=0) {
 	static $counter;
 	if(is_dir($path)) {
@@ -23,7 +31,17 @@ function count_files($path,$recursive=FALSE,$counter=0) {
 	return $counter;
 }
 
-
+/**
+ * Leest alle bestanden in meegegeven map en geeft per bestand een array met diverse info als resultaat
+ *
+ * @param string $path 
+ * @param string $types['']
+ * @param bool $recursive[FALSE] 
+ * @param bool $getInfo[TRUE]
+ * @param bool $getMetaData[FALSE] als TRUE dan worden ook metadata van afbeeldingen meegegeven
+ * @return array een multidimensinale array: een lijst van de gevonden bestanden met per bestand een array met info
+ * @author Jan den Besten
+ */
 function read_map($path,$types='',$recursive=FALSE,$getInfo=TRUE,$getMetaData=FALSE) {
 	if (!empty($types) and !is_array($types)) $types=explode(',',$types);
 	if ($getInfo) $CI =& get_instance();
@@ -77,7 +95,15 @@ function read_map($path,$types='',$recursive=FALSE,$getInfo=TRUE,$getMetaData=FA
 	return $files;
 }
 
-
+/**
+ * Maakt de meegegeven directory leeg
+ *
+ * @param string $dir 
+ * @param bool $remove[FALSE] als TRUE dan wordt ook de map zelf en alle submappen verwijderd
+ * @param bool $remove_hidden[FALSE]
+ * @return void
+ * @author Jan den Besten
+ */
 function empty_map($dir,$remove=false,$remove_hidden=false) {
   if (is_dir($dir)) {
     $objects = scandir($dir);
@@ -91,7 +117,14 @@ function empty_map($dir,$remove=false,$remove_hidden=false) {
   }
 }
 
-
+/**
+ *
+ * @param array $files 
+ * @param bool $tree 
+ * @param string $path 
+ * @return array
+ * @author Jan den Besten
+ */
 function clean_file_list($files,$tree=FALSE,$path='') {
 	$clean=array();
 	foreach ($files as $key => $value) {

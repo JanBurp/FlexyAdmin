@@ -1,12 +1,12 @@
 <div class="<?=(isset($inherited))?'inherited':''?>">
   <h2 class="doc_function_method"><?=$name?>(
-  <? if (!empty($params)): ?>
+    <? if (!empty($params)): $first=true;?>
   <? foreach ($params as $key => $param): ?>
+    <? if (!$first): ?><span class="doc_seperator"><span class="doc_param_type">, </span></span><?endif;?>
     <? if (isset($param['default'])): ?>[<? endif ?>
     <span class="doc_param_type">(<?=$param['type']?>) </span><span class="doc_param_name">$<?=str_replace(array('[',']'),array('=',''),$param['param'])?></span>
     <? if (isset($param['default'])): ?>]<? endif ?>
-    <span class="doc_param_type">,</span>
-  <? endforeach ?>  
+  <? $first=false; endforeach ?>  
   <? endif ?>
   )</h2>
   
