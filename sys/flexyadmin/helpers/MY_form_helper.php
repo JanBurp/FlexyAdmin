@@ -1,9 +1,23 @@
 <?
 
-
 /**
- * See http://codeigniter.com/forums/viewthread/49348/
+ * Uitbreiding op <a href="http://codeigniter.com/user_guide/helpers/form_helper.html" target="_blank">Form_helper van CodeIgniter</a>.
+ * 
+ * @author Jan den Besten
+ * @link http://codeigniter.com/user_guide/helpers/form_helper.html
  */
+
+ /**
+  * Aanpassing op CodeIgniter's form_dropdown
+  *
+  * @param string $name 
+  * @param array $options 
+  * @param array $selected 
+  * @param mixed $extra
+  * @return string
+  * @link http://codeigniter.com/forums/viewthread/49348/
+  */
+ 
 function form_dropdown($name = '', $options = array(), $selected = array(), $extra = '') {
 	if ( ! is_array($selected))	{
 		$selected = array($selected);

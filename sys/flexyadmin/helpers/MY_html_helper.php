@@ -1,13 +1,21 @@
 <?
 
-// function echo_if_set(&$var,$a=array(),$tag="p") {
-// 	return if_set(&$var,$a=array(),$tag="p");
-// }
-// function if_set(&$var,$a=array(),$tag="p") {
-// 	if (isset($var)) return html($tag,$a).$var._html($tag);
-//  return "";
-// }
+/**
+ * Uitbreiding op <a href="http://codeigniter.com/user_guide/helpers/html_helper.html" target="_blank">HTML_helper van CodeIgniter</a>.
+ * 
+ * @author Jan den Besten
+ * @link http://codeigniter.com/user_guide/helpers/html_helper.html
+ */
 
+/**
+ * Maakt een html tag
+ *
+ * @param string $tag de tag
+ * @param mixed $a Als $a een string is dan wordt het de class attribuut van de tag, als $a een array is dan is het een key->value paar van attributen 
+ * @param bool $end als TRUE dan maakt hij ook een close tag
+ * @return void
+ * @author Jan den Besten
+ */
 function html($tag,$a=array(),$end=FALSE) {
 	if (!is_array($a)) $a=array("class"=>$a);
 	$attr="";
@@ -19,24 +27,57 @@ function html($tag,$a=array(),$end=FALSE) {
 	$out.=">";
 	return $out;
 }
+/**
+ * Maakt een eind tag
+ *
+ * @param string $tag 
+ * @return void
+ * @author Jan den Besten
+ */
 function end_html($tag) {
 	return _html($tag);
 }
+/**
+ * Maakt een eind tag
+ *
+ * @param string $tag 
+ * @return void
+ * @author Jan den Besten
+ */
 function _html($tag) {
 	return "</$tag>";
 }
 
+/**
+ * header tag
+ *
+ * @param string $t tekst binnen de header tag
+ * @param int $h[1] header nivo 
+ * @param mixed $a attributen (of class)
+ * @return void
+ * @author Jan den Besten
+ */
 function h($t,$h=1,$a=array()) {
 	return html("h$h",$a).$t._html("h$h");
 }
 
+/**
+ * p tag
+ *
+ * @param mixed $a attributen (of class)
+ * @return void
+ * @author Jan den Besten
+ */
 function p($a=array()) {
 	return html("p",$a);
 }
+/**
+ * einde van p tag
+ *
+ * @return void
+ * @author Jan den Besten
+ */
 function _p() {
-	return _html("p");
-}
-function end_p() {
 	return _html("p");
 }
 

@@ -1,5 +1,17 @@
 <?
 
+/**
+ * Uitbreiding op <a href="http://codeigniter.com/user_guide/helpers/url_helper.html" target="_blank">URL_helper van CodeIgniter</a>.
+ * 
+ * @author Jan den Besten
+ * @link http://codeigniter.com/user_guide/helpers/url_helper.html
+ */
+
+ /**
+  * @param string $s 
+  * @return string
+  * @author Jan den Besten
+  */
 function index_url($s) {
 	return index_page()."/".$s;
 }
@@ -47,12 +59,10 @@ function api_uri() {
 }
 
 function linkencode($l) {
-	// $l=str_replace(" ","_",$l); // Kan niet als je mappen met _ erin wilt maken
 	return rawurlencode($l);
 }
 
 function linkdecode($l) {
-	// $l=str_replace("_"," ",$l);
 	return rawurldecode($l);
 }
 
@@ -67,7 +77,6 @@ function pathdecode($p,$isPath=TRUE) {
 	if ($isPath) $p=linkdecode($p);
 	return $p;
 }
-
 
 function get_path_and_file($name) {
 	$explode=explode("/",$name);

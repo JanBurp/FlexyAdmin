@@ -1,24 +1,18 @@
 <?
 /**
- * FlexyAdmin V1
- *
- * MY_array_helper.php Created on 15-okt-2008
- *
+ * Uitbreiding op <a href="http://codeigniter.com/user_guide/helpers/array_helper.html" target="_blank">Array_helper van CodeIgniter</a>.
+ * 
  * @author Jan den Besten
- *
- * adds some functions to the array helper
- *
+ * @link http://codeigniter.com/user_guide/helpers/array_helper.html
  */
 
 
 /**
- * function el($name,$arr,$default=NULL)
- *
  * Shorter version of CI's element() with NULL as default (instead of FALSE) when element doesn't exists
  *
- * @param string 	$name					Name of element
- * @param array 	$arr 					Array
- * @param mixed 	$default=NULL Default value if element not set
+ * @param string $name Name of element
+ * @param array $arr
+ * @param mixed $default[NULL] Default value if element not set
  * @return mixed Returns default value if element not set, otherwise the element's data
  */
 function el($name,$arr,$default=NULL) {

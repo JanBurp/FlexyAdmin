@@ -1,5 +1,20 @@
 <?
+/**
+ * Uitbreiding op <a href="http://codeigniter.com/user_guide/helpers/language_helper.html" target="_blank">Language_helper van CodeIgniter</a>.
+ * 
+ * @author Jan den Besten
+ * @link http://codeigniter.com/user_guide/helpers/language_helper.html
+ */
 
+
+
+ /**
+  * @param string $item
+  * @param array $fields[array('str_title','txt_text')]
+  * @param string $lang['']
+  * @return void
+  * @author Jan den Besten
+  */
 function set_language_neutral_fields($item,$fields=array('str_title','txt_text'),$lang='') {
 	// set lang
 	if (empty($lang)) {
@@ -31,7 +46,14 @@ function set_language_neutral_fields($item,$fields=array('str_title','txt_text')
 	return $item;
 }
 
-
+/**
+ * Geeft een taalwoord terug met %s vervangen door de meegegeven argumenten
+ *
+ * @param string argument(1)
+ * @param string argument(n), etc
+ * @return void
+ * @author Jan den Besten
+ */
 function langp() {
 	$args=func_get_args();
 	$line=lang($args[0]);
@@ -51,6 +73,13 @@ function langp() {
 	return $line;
 }
 
+/**
+ * Geeft een array met namen van alle landen van de wereld (op dit moment alleen nog in 'nl')
+ *
+ * @param string $language 
+ * @return array
+ * @author Jan den Besten
+ */
 function countries($language='nl') {
 	$countries=array('nl'=>array(
 											"Afghanistan",
