@@ -5,4 +5,5 @@
   <? endif ?>
   <p class="doc_description"><?=$shortdescription?></p>
   <p class="doc_description"><?=$description?></p>
+  <br />
 </div>

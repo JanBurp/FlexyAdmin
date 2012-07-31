@@ -14,7 +14,7 @@
   <p class="doc_info doc_inherited">inherited from: <a href="<?=$inherited?>.html"><?=$inherited?></a></p>
   <? endif ?>
   
-  <p class="doc_description"><?=$shortdescription?></p>
+  <p class="doc_description"><b><?=$shortdescription?></b></p>
   
   <? if (!empty($params)): ?>
   <h4 class="doc_label">parameters:</h4>
@@ -42,4 +42,5 @@
   
   <? if (!empty($author)): ?><p class="doc_info doc_author">author: <?=$author[0]?></p><? endif ?>
   <p class="doc_info doc_lines">lines: <?=$lines?></p>
+  <br />
 </div>
