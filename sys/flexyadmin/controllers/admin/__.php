@@ -13,6 +13,7 @@ require_once(APPPATH."core/FrontendController.php");  // Load this also, so PHP 
 class __ extends AdminController {
   
   private $toc=array();
+  private $tipue=array();
 
 	public function __construct() {
 		parent::__construct();
@@ -112,20 +113,22 @@ class __ extends AdminController {
           'author'=>el('author',$value['doc'])
         ),true);
       }
-      $content.=highlight_code_if_needed( $this->load->view('admin/__/doc_class',array(
+      $html=$this->load->view('admin/__/doc_class',array(
         'file'=>$file,
         'path'=>$class['file'],
         'shortdescription'=>el('shortdescription',$class['doc']),
         'description'=>el('description',$class['doc']),
         'properties'=>$propertiesHtml,
         'methods'=>$methodsHtml
-      ),true) );
+      ),true);
+      $content.=highlight_code_if_needed($html);
       $fileContent=$this->load->view('admin/__/doc',array('content'=>$content,'root'=>'../'),true);
       
       $fileName='userguide/FlexyAdmin/'.$classPath.'/'.$file.'.html';
       write_file($fileName,$fileContent);
       // group in toc
       $this->toc[$classType][$file]=$fileName;
+      $this->_add_to_tipue($fileName,$html,$fileName);
       
       $this->_add_content('Class file created ('.$classPath.'): '.$fileName.'</br>');
     }
@@ -167,20 +170,21 @@ class __ extends AdminController {
           $description=$p->getDesc();
           $shortdescription=$p->getShortDesc();
         }
-        
-        $content.=highlight_code_if_needed( $this->load->view('admin/__/doc_file',array(
+        $html=$this->load->view('admin/__/doc_file',array(
           'file'=>$file,
           'path'=>$path,
           'shortdescription'=>$shortdescription,
           'description'=>$description,
           'tags'=>$tags,
           'functions'=>$functionsHtml
-        ),true) );
+        ),true);
+        $content.=highlight_code_if_needed( $html);
         $fileContent=$this->load->view('admin/__/doc',array('content'=>$content,'root'=>'../'),true);
         $fileName='userguide/FlexyAdmin/helpers/'.str_replace('.php','.html',$file);
         write_file($fileName,$fileContent);
         $this->_add_content('Helper file created: '.$fileName.'</br>');
         $this->toc['helpers'][$file]=$fileName;
+        $this->_add_to_tipue($fileName,$html,$fileName);
       }
 
     }
@@ -211,8 +215,12 @@ class __ extends AdminController {
     write_file($fileName,$fileContent);
     //
     $json_toc=$this->load->view('admin/__/doc_toc_json',array('toc'=>$otoc,'html'=>trim(str_replace(array(PHP_EOL,"\r",'../userguide/FlexyAdmin/'),'',$content))),true);
-    write_file('userguide/FlexyAdmin/js/toc.js',$json_toc);
-    $this->_add_content('TOC file created: '.$fileName.'</br>');
+    write_file('userguide/FlexyAdmin/assets/js/toc.js',$json_toc);
+    $this->_add_content('TOC file created.</br>');
+    //
+    $tipue_search=$this->load->view('admin/__/doc_tipue_json',array('data'=>$this->tipue),true);
+    write_file('userguide/FlexyAdmin/assets/tipuedrop/data.js',$tipue_search);
+    $this->_add_content('SEARCH file created.</br>');
     
     $this->_show_all();
   }
@@ -250,8 +258,22 @@ class __ extends AdminController {
         write_file($fileName,$fileContent);
         $this->_add_content('DOC created: '.$fileName.'</br>');
         $this->toc[$type][$name]=$fileName;
+        $this->_add_to_tipue($name,$html,$fileName);
       }
     }
+  }
+
+  private function _add_to_tipue($name,$html,$fileName) {
+    $html = strip_tags($html);
+    $html = html_entity_decode($html);
+    $html = str_replace(array("\r","\n"),' ',$html); // remove linebreaks
+    $html = trim(preg_replace("/(\s+)/", " ", $html)); // remove double spaces
+    
+    $this->tipue[]=array(
+      "title"=>get_suffix(str_replace(array('.html','.php'),'',$name),'/'),
+      "text"=>addslashes($html),
+      "loc"=>str_replace('userguide/FlexyAdmin/','',$fileName)
+    );
   }
 
 
