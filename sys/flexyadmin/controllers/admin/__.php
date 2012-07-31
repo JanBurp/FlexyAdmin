@@ -112,14 +112,14 @@ class __ extends AdminController {
           'author'=>el('author',$value['doc'])
         ),true);
       }
-      $content.=$this->load->view('admin/__/doc_class',array(
+      $content.=highlight_code_if_needed( $this->load->view('admin/__/doc_class',array(
         'file'=>$file,
         'path'=>$class['file'],
         'shortdescription'=>el('shortdescription',$class['doc']),
         'description'=>el('description',$class['doc']),
         'properties'=>$propertiesHtml,
         'methods'=>$methodsHtml
-      ),true);
+      ),true) );
       $fileContent=$this->load->view('admin/__/doc',array('content'=>$content,'root'=>'../'),true);
       
       $fileName='userguide/FlexyAdmin/'.$classPath.'/'.$file.'.html';
@@ -168,14 +168,14 @@ class __ extends AdminController {
           $shortdescription=$p->getShortDesc();
         }
         
-        $content.=$this->load->view('admin/__/doc_file',array(
+        $content.=highlight_code_if_needed( $this->load->view('admin/__/doc_file',array(
           'file'=>$file,
           'path'=>$path,
           'shortdescription'=>$shortdescription,
           'description'=>$description,
           'tags'=>$tags,
           'functions'=>$functionsHtml
-        ),true);
+        ),true) );
         $fileContent=$this->load->view('admin/__/doc',array('content'=>$content,'root'=>'../'),true);
         $fileName='userguide/FlexyAdmin/helpers/'.str_replace('.php','.html',$file);
         write_file($fileName,$fileContent);

@@ -2,15 +2,23 @@
 
 
 /**
- * Login
+ * Met deze module kun je bezoekers laten inloggen
  *
- * !! When registration and password resetting needs to be active: make sure that $config['query_urls']=TRUE; in site/config/config.php
- *
- * @package default
  * @author Jan den Besten
- */
-
-
+ *
+ * De login module kan gebruikt worden om bezoekers te laten inloggen op de site.
+ * Dit kan voor de hele site, maar ook per pagina.
+ * Het is aan te raden om deze module automatisch in te laden en pagina's (in het menu) te maken voor logout en register/forgot_password.
+ * Op die manier ben je er zeker van dat de module voor elke pagina werkt!<br/>
+ * 
+ * LET OP: Als gebruikers zelf moeten kunnen registreren of hun paswoord moeten kunnen resetten, zet dan de volgende instelling in <em>site/config/config.php</em>:
+ * <code>$config['query_urls']=TRUE;</code>
+ *
+ * <h2>Views</h2>
+ * De loginmodule gebruikt enkele views die te vinden zijn in <em>site/views/login</em>.
+ * Ook zijn daar per taal een drietal email templates te vinden die de module gebruikt.
+ * 
+ **/
 
 
 class Login extends Module {
@@ -109,8 +117,17 @@ class Login extends Module {
 	}
 	
 	
-	
-	public function forgot_password($page) {
+  /**
+   * Reset wachtwoord (als gebruiker wachtwoord is vergeten)
+   *
+   * @param string $page 
+   * @return string
+   * @author Jan den Besten
+   *
+   * LET OP: deze method werkt alleen correct met de volgende instelling in <em>site/config/config.php</em>:
+   * <code> $config['query_urls']&nbsp;=&nbsp;TRUE;</code>
+   */
+   public function forgot_password($page) {
 		$content='';
 		$code=$this->CI->input->get('code');
 		
@@ -154,7 +171,16 @@ class Login extends Module {
 		return $this->_output($page,$content);
 	}
 
-
+  /**
+   * Registreer nieuwe gebruiker
+   *
+   * @param string $page 
+   * @return string
+   * @author Jan den Besten
+   *
+   * LET OP: deze method werkt alleen correct met de volgende instelling in <em>site/config/config.php</em>:
+   * <code> $config['query_urls']&nbsp;=&nbsp;TRUE;</code>
+   */
 	public function register($page) {
 		$errors		= '';
 		$content	= '';

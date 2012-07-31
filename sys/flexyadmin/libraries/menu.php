@@ -1,23 +1,22 @@
 <?
  /**
-  * Met deze class kun je eenvoudig een html menu aanmaken. De class wordt standaard geladen.
+  * Met deze class kun je eenvoudig een html menu maken.
   *
   * @author Jan den Besten
   *
   * <h1>Eenvoudig menu maken</h1>
   * 
-  * Hieronder zie je een voorbeeld om vanuit het niets een menu aan te maken.<br/>
-  * <code>$menu = new Menu();<br/>
-  * $menu->add( array( 'uri'=>'home', 'name'=>'Home' ) );<br/>
-  * $menu->add( array( 'uri'=>'een_pagina', 'name'=>'Een Pagina' ) );<br/>
-  * $menu->add_sub( array( 'uri'=>'een_pagina',<br/>
-  *                        'sub'=>array( 'uri'=>'subpagina', 'name'=>'Subpagina' ) );<br/>
-  * $menu->add( array( 'uri'=>'links', 'name'=>'Links') );<br/>
-  * $menu->add( array( 'uri'=>'contact', 'name'=>'Contact') );<br/>
+  * Hieronder zie je een voorbeeld om vanuit het niets een menu aan te maken.
+  * <code>$menu = new Menu();
+  * $menu->add( array( 'uri'=>'home', 'name'=>'Home' ) );
+  * $menu->add( array( 'uri'=>'een_pagina', 'name'=>'Een Pagina' ) );
+  * $menu->add_sub( array( 'uri'=>'een_pagina', 'sub'=>array( 'uri'=>'subpagina', 'name'=>'Subpagina' ) );
+  * $menu->add( array( 'uri'=>'links', 'name'=>'Links') );
+  * $menu->add( array( 'uri'=>'contact', 'name'=>'Contact') );
   * echo $menu->render();</code>
-  * Het resulaat is hetzelfde als het voorbeeld hieronder. Voor de uitleg van de diverse methods, zie verderop.<br/>
-  *<br/>
-  *	NB: Een menu-item bestaat uit: array("uri"=>uri, "name"=>name, "class"=>class, "sub"=>array())
+  * Het resulaat is hetzelfde als het voorbeeld hieronder. Voor de uitleg van de diverse methods, zie verderop.
+  *
+  *	NB: Een menu-item bestaat uit: <code>array( "uri"=>uri, "name"=>name, "class"=>class, "sub"=>array() )</code>
   */
 class Menu {
 
