@@ -2,10 +2,21 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html" charset="utf8" />
   <title>FlexyAdmin Documentation</title>
-  <link rel="stylesheet" href="<?=$root?>userguide.css" type="text/css" media="screen" title="no title" charset="utf-8">
-  <script src="<?=$root?>js/jquery-1.7.2.min.js" type="text/javascript" charset="utf-8"></script>
-  <script src="<?=$root?>js/toc.js" type="text/javascript" charset="utf-8"></script>
-  <script src="<?=$root?>js/doc.js" type="text/javascript" charset="utf-8"></script>
+  
+  <script type="text/javascript">
+  var root="<?=$root?>";
+  </script>
+  
+  <link rel="stylesheet" href="<?=$root?>assets/css/userguide.css" type="text/css" media="screen" title="no title" charset="utf-8">
+  <script src="<?=$root?>assets/js/jquery-1.7.2.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="<?=$root?>assets/js/toc.js" type="text/javascript" charset="utf-8"></script>
+  <script src="<?=$root?>assets/js/doc.js" type="text/javascript" charset="utf-8"></script>
+  
+  <script type="text/javascript" src="<?=$root?>assets/tipuedrop/tipuedrop_set.js"></script>
+  <script type="text/javascript" src="<?=$root?>assets/tipuedrop/data.js"></script>
+  <link rel="stylesheet" type="text/css" href="<?=$root?>assets/tipuedrop/tipuedrop.css">
+  <script type="text/javascript" src="<?=$root?>assets/tipuedrop/tipuedrop.js"></script>
+  
 </head>
 <body>
 
@@ -28,7 +39,10 @@
       <td id="breadcrumb">
         <a href="<?=$root?>index.html">Inhoud</a> <span id="breadcrumbPart"></a>
       </td>
-      <!-- <td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="example.com/user_guide/" />Search Project User Guide&nbsp; <input type="text" class="input" style="width:200px;" name="q" id="q" size="31" maxlength="255" value="" />&nbsp;<input type="submit" class="submit" name="sa" value="Go" /></form></td> -->
+      <td id="searchbox">
+        <div id="tipue"><input type="text" id="tipue_drop_input" autocomplete="off"></div>
+        <div id="tipue_drop_content"></div>
+      </td>
     </tr>
   </table>
   <!-- END BREADCRUMB -->
