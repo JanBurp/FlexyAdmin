@@ -6,16 +6,14 @@
   <p class="doc_description"><?=$description?></p>
   <br />
   
-  <div class="doc_properties">
   <h1>Properties</h1>
-  <br />
+  <div class="doc_properties accordion">
   <?=$properties?>
   <br />
   </div>
 
-  <div class="doc_functions">
   <h1>Methods</h1>
-  <br />
+  <div class="doc_functions accordion">
   <?=$methods?>
   </div>
 

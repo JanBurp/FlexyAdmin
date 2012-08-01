@@ -5,5 +5,5 @@
   <? if (isset($shortdescription)): ?><p class="doc_description"><?=$shortdescription?></p><? endif ?>
   <? if (isset($description)): ?><p class="doc_description"><?=$description?></p><? endif ?>
   
-  <div class="doc_functions"><?=$functions?></div>
+  <div class="doc_functions <? if (isset($path)): ?>accordion<? endif ?>"><?=$functions?></div>
 </div>

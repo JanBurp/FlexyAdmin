@@ -123,13 +123,13 @@ function remove_first_char($s) {
  * @author Jan den Besten
  *
  * Pakt het eerste deel van een string nadat hij de string heeft verdeeld in delen aan de hand van een scheidingskarakter.
- * Standaard is het scheidingskarakter een underscore '_'.<br/>
- * <br/>
- * Voorbeeld:<br/>
- * <code>echo get_prefix( 'str_example' );<br/>
+ * Standaard is het scheidingskarakter een underscore '_'.
+ * 
+ * Voorbeeld:
+ * <code>echo get_prefix( 'str_example' );
  * echo get_prefix( 'tbl_example.id', '.' );</code>
  * Geeft als resultaat:
- * <code>str<br/>
+ * <code>str
  * tbl_example</code>
  */
 function get_prefix($s,$split="_") {

@@ -8,6 +8,7 @@
   </script>
   
   <link rel="stylesheet" href="<?=$root?>assets/css/userguide.css" type="text/css" media="screen" title="no title" charset="utf-8">
+  
   <script src="<?=$root?>assets/js/jquery-1.7.2.min.js" type="text/javascript" charset="utf-8"></script>
   <script src="<?=$root?>assets/js/toc.js" type="text/javascript" charset="utf-8"></script>
   <script src="<?=$root?>assets/js/doc.js" type="text/javascript" charset="utf-8"></script>

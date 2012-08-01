@@ -14,6 +14,12 @@ class __ extends AdminController {
   
   private $toc=array();
   private $tipue=array();
+  
+  private $stripTagsWithClasses=array('doc_info','doc_param_type','doc_label');
+  private $stripWords=array('(string)', '(array)', '(void)', '(bool)', '(mixed)', '(object)', 
+                            'CI','CodeIgniter','PHP','FlexyAdmin','class','parameters', 'functions', 'function', '__construct', 'methods', 'properties', 'true','false', 'array','return:', 'global','instance',
+                            'en','een','&eacute;&eacute;n','of','de','het', 'dat','als','met','voor' ,'in','je','wat','over','om','is','aan','uit','die','te','ze','op','deze','kun',
+                            'if','the','and','or','name','content','config','use', 'this', 'to', 'own', 'see', 'also', 'file' ,'you','your','re', 'add', 'code', 'set', 'from', 'which');
 
 	public function __construct() {
 		parent::__construct();
@@ -264,6 +270,13 @@ class __ extends AdminController {
   }
 
   private function _add_to_tipue($name,$html,$fileName) {
+    $html = preg_replace("/(<code>(.*?)<\\/code>)/us", "", $html);  // remove <code> tags and all in it
+    foreach ($this->stripTagsWithClasses as $class) {
+      $html=preg_replace("/(<p(\s*)class=\"".$class."(.*?)\">(.*?)<\/p>)/us", "", $html); // remove <p> tags with some classes
+    }
+    foreach ($this->stripWords as $word) {
+      $html = preg_replace("/\b".$word."\b/ui", "", $html); // remove some words
+    }
     $html = strip_tags($html);
     $html = html_entity_decode($html);
     $html = str_replace(array("\r","\n"),' ',$html); // remove linebreaks

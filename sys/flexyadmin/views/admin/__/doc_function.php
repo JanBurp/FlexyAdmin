@@ -9,38 +9,42 @@
   <? $first=false; endforeach ?>  
   <? endif ?>
   )</h2>
-  
-  <? if (isset($inherited)): ?>
-  <p class="doc_info doc_inherited">inherited from: <a href="<?=$inherited?>.html"><?=$inherited?></a></p>
-  <? endif ?>
-  
-  <p class="doc_description"><b><?=$shortdescription?></b></p>
-  
-  <? if (!empty($params)): ?>
-  <h4 class="doc_label">parameters:</h4>
-  <ul class="doc_params">
-  <? foreach ($params as $key => $param): ?>
-    <li class="doc_param"><p class="doc_param">
-      (<?=$param['type']?>) $<?=str_replace('[',' [= ',$param['param'])?> <?=$param['desc']?>
-    </p></li>
-  <? endforeach ?>  
-  </ul>
-  <? endif ?>
 
-  <h4 class="doc_label">return: </h4> 
-  <ul class="doc_params">
-    <li>
-  <? if (!empty($return)): ?>
-    (<?=$return['type']?>) <?=$return['param']?> <?=$return['desc']?>
-  <? else: ?>
-    (void)
-  <? endif ?>
-    </li>
-  </ul>
-
-  <p class="doc_description"><?=$description?></p>
+  <div>
+    <? if (isset($inherited)): ?>
+    <p class="doc_info doc_inherited">inherited from: <a href="<?=$inherited?>.html"><?=$inherited?></a></p>
+    <? endif ?>
   
-  <? if (!empty($author)): ?><p class="doc_info doc_author">author: <?=$author[0]?></p><? endif ?>
-  <p class="doc_info doc_lines">lines: <?=$lines?></p>
-  <br />
+    <? if (!empty($shortdescription)): ?><p class="doc_description"><?=$shortdescription?></p><? endif ?>
+    
+    <div class="doc_param_box">
+      <? if (!empty($params)): ?>
+      <h4 class="doc_label">parameters:</h4>
+      <ul class="doc_params">
+      <? foreach ($params as $key => $param): ?>
+        <li class="doc_param"><p class="doc_param">
+          (<?=$param['type']?>) $<?=str_replace('[',' [= ',$param['param'])?> <?=$param['desc']?>
+        </p></li>
+      <? endforeach ?>  
+      </ul>
+      <? endif ?>
+
+      <h4 class="doc_label">return: </h4> 
+      <ul class="doc_params">
+        <li>
+      <? if (!empty($return)): ?>
+        (<?=$return['type']?>) <?=$return['param']?> <?=$return['desc']?>
+      <? else: ?>
+        (void)
+      <? endif ?>
+        </li>
+      </ul>
+    </div>
+
+    <? if (!empty($description)): ?><p class="doc_description"><?=$description?></p><? endif ?>
+  
+    <? if (!empty($author)): ?><p class="doc_info doc_author">author: <?=$author[0]?></p><? endif ?>
+    <p class="doc_info doc_lines">lines: <?=$lines?></p>
+    <br />
+  </div>
 </div>
