@@ -18,17 +18,6 @@ $config['class']='user_logged_in';
 
 /*
 |--------------------------------------------------------------------------
-| Usergroup for new accounts
-|--------------------------------------------------------------------------
-|
-| The id of the usergroup where new accounts belong to (see cfg_user_groups)
-|
-*/
-$config['group_id']=4;	// 4 is visitors which can't login to the backend
-
-
-/*
-|--------------------------------------------------------------------------
 | Admin needs to activate first
 |--------------------------------------------------------------------------
 |
@@ -38,6 +27,39 @@ $config['group_id']=4;	// 4 is visitors which can't login to the backend
 */
 $config['admin_activation']=false;
 
+
+/*
+|--------------------------------------------------------------------------
+| Check if double email
+|--------------------------------------------------------------------------
+|
+| If this is TRUE users can't have same emailadress (one account per emailadres)
+*/
+$config['check_double_email']=TRUE;
+
+
+/*
+|--------------------------------------------------------------------------
+| Usergroup for new accounts
+|--------------------------------------------------------------------------
+|
+| The id of the usergroup where new accounts belong to (see cfg_user_groups)
+|
+*/
+$config['group_id']=4;	// 4 is visitors which can't login to the backend
+
+
+
+/*
+|--------------------------------------------------------------------------
+| User table settings
+|--------------------------------------------------------------------------
+|
+| If you like, you can use other user tables for frontend login, set them here (they need at least all the same fields!)
+*/
+$config['tables']['groups']  = 'cfg_user_groups';
+$config['tables']['users']   = 'cfg_users';
+$config['tables']['meta']    = '';
 
 
 /*

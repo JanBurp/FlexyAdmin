@@ -130,17 +130,19 @@ class Parser {
     // Plak regels aan elkaar, en als er aan het eind nog geen HTML tag is, voeg dan een <br/> toe.
     $html='';
     foreach ($desc as $key => $line) {
-      if (substr($line,strlen($line)-1,1)!='>') {
+      $html.=$line;
+      if (empty($line) or substr($line,strlen($line)-1,1)!='>') {
         $html.='<br />';
       }
-      $html.=$line;
     }
     
+    // remove <br /><h2>
+    $html = str_replace('<br /><h','<h',$html);
     // trim <br />
-    $html = preg_replace("/^<br \/>/ui", "", $html);
-    $html = preg_replace("/<br \/>$/ui", "", $html);
+    $html = preg_replace("/^(<br \/>)*/ui", "", $html);
+    $html = preg_replace("/(<br \/>)*$/ui", "", $html);
     
-    return $html;
+    return trim($html);
   }
   
 	/**
@@ -155,7 +157,7 @@ class Parser {
 	private function parseLine($line) {
 		//Trim the whitespace from the line
     $line = trim($line);
-		if(empty($line)) return false; //Empty line
+    // if(empty($line)) return false; //Empty line
 		
 		if(strpos($line, '@') === 0) {
       $split=explode(' ',substr($line,1));

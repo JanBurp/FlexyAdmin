@@ -14,25 +14,23 @@ class User Extends Ion_auth {
 	protected $rights;
 	protected $user_id;
 	protected $siteInfo;
-	
-
-	public function __construct() {
-		parent::__construct();
+  
+	public function __construct($tables='') {
+		parent::__construct($tables);
 		// set standard configurations
 		$this->CI->db->select('url_url,str_title,email_email');
 		$this->siteInfo = $this->CI->db->get_row('tbl_site');
 		$this->CI->config->set_item('site_title', $this->siteInfo['str_title'],'ion_auth');
 		$this->CI->config->set_item('admin_email', $this->siteInfo['email_email'],'ion_auth');
 	}
-	
-	
+  
 	public function login($identity, $password, $remember=false) {
 		if ( ! $this->_check_if_userdate_ok()) {
 			$this->set_message('update_needed');
 		}
 		else {
 			if ( $this->_check_if_old_password($identity) ) {
-				$this->_update_old_passwords();
+        $this->_update_old_passwords();
 			}
 			if ($this->CI->ion_auth_model->login($identity, $password, $remember)) {
 				return TRUE;
@@ -43,20 +41,23 @@ class User Extends Ion_auth {
 	}
 	
 	private function _check_if_userdate_ok() {
-		return ($this->CI->db->field_exists('str_username','cfg_users') and $this->CI->db->field_exists('gpw_password','cfg_users') );
+		return ($this->CI->db->field_exists('str_username',$this->tables['users']) and $this->CI->db->field_exists('gpw_password',$this->tables['users']) );
 	}
 	
 	private function _check_if_old_password($identity) {
-		$new_password = FALSE;
-		// check if password field length = 40 and the password itself also 40 chars long, that should do it
-		$field_data=$this->CI->db->field_data('cfg_users');
-		foreach ($field_data as $field_info) {
-			$field_info=object2array($field_info);
-			if ($field_info['name']=='gpw_password') {
-				$password = $this->CI->db->get_field('cfg_users','gpw_password');
-				$new_password = ( $password and $field_info['max_length']==40 and strlen($password)==40 );
-			}
-		}
+		$new_password = TRUE;
+    if ($this->tables['users']=='cfg_users' and $this->tables['groups']=='cfg_user_groups') {
+      $new_password = FALSE;
+  		// check if password field length = 40 and the password itself also 40 chars long, that should do it
+  		$field_data=$this->CI->db->field_data($this->tables['users']);
+  		foreach ($field_data as $field_info) {
+  			$field_info=object2array($field_info);
+  			if ($field_info['name']=='gpw_password') {
+  				$password = $this->CI->db->get_field('cfg_users','gpw_password');
+  				$new_password = ( $password and $field_info['max_length']==40 and strlen($password)==40 );
+  			}
+  		}
+    }
 		return ! $new_password;
 	}
 	
@@ -279,7 +280,7 @@ class User Extends Ion_auth {
 	}
 	
 	function can_activate_users() {
-		return $this->has_rights('cfg_users');
+		return $this->has_rights($this->tables['users']);
 	}
 	
 	function can_backup() {
@@ -294,10 +295,9 @@ class User Extends Ion_auth {
 
 	function create_rights($userId) {
 		$this->CI->db->select('id,id_user_group');
-		$this->CI->db->where("cfg_users.id",$userId);
-		// $this->CI->db->add_foreigns(array('cfg_user_groups'=>array('rights','b_all_users','b_backup','b_tools','b_delete','b_add','b_edit','b_show')));
+		$this->CI->db->where($this->tables['users'].'.id',$userId);
 		$this->CI->db->add_foreigns();
-		$user=$this->CI->db->get_row('cfg_users');
+		$user=$this->CI->db->get_row($this->tables['users']);
 		$rights=array();
 		if ($user) {
 			foreach ($user as $key => $value) {
@@ -327,7 +327,7 @@ class User Extends Ion_auth {
 	}
 	function has_rights($item,$id="",$whatRight=0) {
 		// No rights if cfg_users and id is smaller (higher rights)
-		if ($item=='cfg_users' and !empty($id) and ($id!=-1) and ($id<$this->user_id)) return false;
+		if ($item==$this->tables['users'] and !empty($id) and ($id!=-1) and ($id<$this->user_id)) return false;
 		
 		$found=array('b_delete'=>FALSE,'b_add'=>FALSE,'b_edit'=>FALSE,'b_show'=>FALSE);
 		$pre=get_prefix($item);

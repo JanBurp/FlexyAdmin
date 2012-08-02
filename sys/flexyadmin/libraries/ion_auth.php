@@ -73,13 +73,22 @@ class Ion_auth
 	 **/
 	public $_extra_set = array();
 
+
+  /**
+   * Added by JdB
+   *
+   * @var array
+   */
+  protected $tables;
+  
+
 	/**
 	 * __construct
 	 *
 	 * @return void
 	 * @author Mathew
 	 **/
-	public function __construct()
+	public function __construct($tables='')
 	{
 		$this->CI =& get_instance();
 		$this->CI->load->config('ion_auth', TRUE);
@@ -95,6 +104,13 @@ class Ion_auth
 		$this->message_end_delimiter   = $this->CI->config->item('message_end_delimiter', 'ion_auth');
 		$this->error_start_delimiter   = $this->CI->config->item('error_start_delimiter', 'ion_auth');
 		$this->error_end_delimiter     = $this->CI->config->item('error_end_delimiter', 'ion_auth');
+
+    // Added by Jdb
+    if (empty($tables)) {
+      $tables=$this->CI->config->item('tables','ion_auth');
+    }
+    $this->tables=$tables;
+    $this->CI->ion_auth_model->tables=$this->tables;
 
 		//auto-login the user if they are remembered
 		if (!$this->logged_in() && get_cookie('identity') && get_cookie('remember_code'))
