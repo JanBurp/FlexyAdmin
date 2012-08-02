@@ -109,7 +109,12 @@ function empty_map($dir,$remove=false,$remove_hidden=false) {
     $objects = scandir($dir);
     foreach ($objects as $object) {
       if ($object != "." && $object != ".." && ($remove_hidden and substr($object,0,1)!='.')) {
-        if (filetype($dir."/".$object) == "dir") empty_map($dir."/".$object,true); else unlink($dir."/".$object);
+        if (filetype($dir."/".$object) == "dir") {
+          empty_map($dir."/".$object, $remove_hidden, $remove_hidden);
+        }
+        else {
+          unlink($dir."/".$object);
+        }
       }
     }
     reset($objects);
@@ -140,6 +145,37 @@ function clean_file_list($files,$tree=FALSE,$path='') {
 		}
 	}
 	return $clean;
+}
+
+
+
+/**
+ * Copy a directory (also creating directories if needed)
+ *
+ * @param string $source 
+ * @param string $destination 
+ * @return void
+ */
+function copy_directory( $source, $destination ) {
+  if ( is_dir( $source ) ) {
+    @mkdir( $destination );
+    $directory = dir( $source );
+    while ( FALSE !== ( $readdirectory = $directory->read() ) ) {
+      if ( $readdirectory == '.' || $readdirectory == '..' ) {
+        continue;
+      }
+      $PathDir = $source . '/' . $readdirectory; 
+      if ( is_dir( $PathDir ) ) {
+        if (!has_string('/.',$PathDir)) copy_directory( $PathDir, $destination . '/' . $readdirectory );
+        continue;
+      }
+      if (!has_string('/.',$PathDir)) copy( $PathDir, $destination . '/' . $readdirectory );  
+    }
+    $directory->close();
+  }
+  else {
+    if (!has_string('/.',$source)) copy( $source, $destination );
+  }
 }
 
 

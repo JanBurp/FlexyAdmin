@@ -15,6 +15,10 @@ class __ extends AdminController {
   private $toc=array();
   private $tipue=array();
   
+  private $path='/Users/jan/Sites/FlexyAdmin/';
+  private $work='FlexyAdminDEMO';
+  private $tags='TAGS';
+  
   private $stripTagsWithClasses=array('doc_info','doc_param_type','doc_label');
   private $stripWords=array('(string)', '(array)', '(void)', '(bool)', '(mixed)', '(object)', 
                             'CI','CodeIgniter','PHP','FlexyAdmin','class','parameters', 'functions', 'function', '__construct', 'methods', 'properties', 'true','false', 'array','return:', 'global','instance',
@@ -287,6 +291,40 @@ class __ extends AdminController {
       "text"=>addslashes($html),
       "loc"=>str_replace('userguide/FlexyAdmin/','',$fileName)
     );
+  }
+  
+  
+  /**
+   * Build an .zip package of this version
+   *
+   * @return void
+   * @author Jan den Besten
+   **/
+  public function build() {
+    $revision=$this->get_revision();
+    $tags=$this->tags.'/FlexyAdmin_r'.$revision;
+    $this->_add_content('<h1>Build: r_'.$revision.'</h1>');
+
+    // Copy alles
+    $this->_add_content('<p>Copy all</p>');
+    copy_directory( $this->path.$this->work, $this->path.$tags );
+    
+    // - verwijder alle bestanden die niet nodig meer zijn (__* van build proces en doc source) 
+    // - maak lege db instelling bestand
+
+    // - maak zip, geef dit de naam met revisie nr
+    $zip=$this->path.$this->tags.'/FlexyAdmin_r'.$revision.'.zip';
+    $this->_add_content('<p>Create:'.$zip.'</p>');
+    $this->load->library('zip');
+    $this->zip->read_dir($this->path.$tags.'/',FALSE); 
+    $this->zip->archive($zip);
+
+    // Cleanup
+    $this->_add_content('<p>Cleanup</p>');
+    empty_map($this->path.$tags,TRUE,TRUE);
+    
+    
+    $this->_show_all();
   }
 
 
