@@ -285,11 +285,10 @@ class Ion_auth_model extends CI_Model
 	 **/
 	public function username_check($username = '')
 	{
-	    if (empty($username))
-	    {
+	    if (empty($username)) {
         return FALSE;
 	    }
-
+      
 	    return $this->db->where('str_username', $username)
 			    ->where($this->user->_extra_where)
 			    ->count_all_results($this->tables['users']) > 0;
@@ -301,13 +300,15 @@ class Ion_auth_model extends CI_Model
 	 * @return bool
 	 * @author Mathew
 	 **/
-	public function email_check($email = '')
-	{
-	    if (empty($email))
-	    {
+	public function email_check($email = '') {
+	    if (empty($email)) {
         return FALSE;
 	    }
 
+      if (!$this->config->item('check_double_email','ion_auth')) {
+        return FALSE;
+      }
+      
 	    return $this->db->where('email_email', $email)
 		                  ->where($this->user->_extra_where)
 		                  ->count_all_results($this->tables['users']) > 0;
@@ -499,12 +500,12 @@ class Ion_auth_model extends CI_Model
 		$data = array(
 		'str_username'   => $username,
 		'gpw_password'   => $password,
-		'email_email'      => $email,
-		'id_user_group'   => $id_user_group,
-		'ip_address' => $ip_address,
-		'created_on' => now(),
-		'last_login' => now(),
-		'b_active'     => 1
+		'email_email'    => $email,
+		'id_user_group'  => $id_user_group,
+		'ip_address'     => $ip_address,
+		'created_on'     => now(),
+		'last_login'     => now(),
+		'b_active'       => 1
 		);
 
 		if ($this->store_salt) {

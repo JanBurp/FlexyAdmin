@@ -8,39 +8,46 @@
  *
  * De login module kan gebruikt worden om bezoekers te laten inloggen op de site.
  * Dit kan voor de hele site, maar ook per pagina.
- * Het is aan te raden om deze module automatisch in te laden en pagina's (in het menu) te maken voor logout en register/forgot_password.
- * Op die manier ben je er zeker van dat de module voor elke pagina werkt!<br/>
  * 
- * LET OP: Als gebruikers zelf moeten kunnen registreren of hun paswoord moeten kunnen resetten, zet dan de volgende instelling in <em>site/config/config.php</em>:
+ * <h2>Voorwaarden</h2>
+ * - Als inloggen voor de hele site nodig is: laadt de module dan automatisch in.
+ * - Als inloggen alleen op enkele pagina's nodig is: laadt de module dan alleen in op die pagina's
+ * - Je moet in het menu in ieder geval ergens een pagina hebben die de module login.logout aanroept.
+ * - Als gebruikers zichzelf moeten kunnen registreren dan moet ergens in het menu ook een pagina bestaan die login.register aanroept.
+ * - Als gebruikers zichzelf moeten kunnen registreren of hun paswoord moeten kunnen resetten, zet dan de volgende instelling in site/config/config.php:
  * <code>$config['query_urls']=TRUE;</code>
  *
  * <h2>Views</h2>
- * De loginmodule gebruikt enkele views die te vinden zijn in <em>site/views/login</em>.
+ * De loginmodule gebruikt enkele views die te vinden zijn in site/views/login
  * Ook zijn daar per taal een drietal email templates te vinden die de module gebruikt.
  * 
  **/
 
-
 class Login extends Module {
 	
-	var $errors = '';
-	var $form;
+	private $errors = '';
+	private $form;
 	
 	public function __construct() {
 		parent::__construct();
+		$this->CI->load->library('user',$this->config['tables']);
     $this->CI->config->set_item('dont_cache_this_page',TRUE);
-
-		$this->CI->load->library('user');
-		$this->CI->load->language('login');
 		if ($this->config('auto_uris')) $this->_find_uris();
-		
 		// redirect ion_auth to other email_templates
     if (isset($this->CI->site)) $this->CI->config->set_item('email_templates','login/'.$this->CI->site['language'].'/','ion_auth');
 		// if admin activation tell user/ion_auth
 		$this->CI->config->set_item('admin_activation',$this->config('admin_activation'),'ion_auth');
+    // Tell ion_auth if needs to check for double email
+    $this->CI->config->set_item('check_double_email',$this->config('check_double_email'),'ion_auth');
 	}
 	
-	
+  /**
+   * Hier wordt de module standaard aangeroepen: als nog niet is ingelogd dan wordt login.login aangeroepen
+   *
+   * @param string $page
+   * @return string 
+   * @author Jan den Besten
+   */
 	public function index($page) {
 		// If logged in, set class
 		if ($this->CI->user->logged_in()) $this->CI->add_class($this->config('class'));
@@ -52,7 +59,16 @@ class Login extends Module {
 		return $this->login($page,false);
 	}
 	
-	public function login($page, $show_if_allready=true) {
+  
+  /**
+   * Als nog niet is ingelogd dan wordt gevraagd om dat te doen
+   *
+   * @param string $page 
+   * @param string $show_if_allready[true]
+   * @return string
+   * @author Jan den Besten
+   */
+   public function login($page, $show_if_allready=true) {
 		$title='';
 		$content='';
 		
@@ -110,7 +126,13 @@ class Login extends Module {
 		return $this->_output($page,$content);
 	}
 	
-	
+	/**
+	 * Uitloggen van huidige gebruiker
+	 *
+	 * @param string $page 
+	 * @return string
+	 * @author Jan den Besten
+	 */
 	public function logout($page) {
 		$this->CI->user->logout();
 		return $this->_output($page,lang('logout_done'));
@@ -118,13 +140,13 @@ class Login extends Module {
 	
 	
   /**
-   * Reset wachtwoord (als gebruiker wachtwoord is vergeten)
+   * Reset wachtwoord (gebruiker krijgt een mail)
    *
    * @param string $page 
    * @return string
    * @author Jan den Besten
    *
-   * LET OP: deze method werkt alleen correct met de volgende instelling in <em>site/config/config.php</em>:
+   * LET OP: deze method werkt alleen met de volgende instelling in site/config/config.php:
    * <code> $config['query_urls']&nbsp;=&nbsp;TRUE;</code>
    */
    public function forgot_password($page) {
@@ -172,13 +194,13 @@ class Login extends Module {
 	}
 
   /**
-   * Registreer nieuwe gebruiker
+   * Registreer nieuwe gebruiker (gebruiker krijgt een mail)
    *
    * @param string $page 
    * @return string
    * @author Jan den Besten
    *
-   * LET OP: deze method werkt alleen correct met de volgende instelling in <em>site/config/config.php</em>:
+   * LET OP: deze method werkt alleen met de volgende instelling in site/config/config.php:
    * <code> $config['query_urls']&nbsp;=&nbsp;TRUE;</code>
    */
 	public function register($page) {
@@ -244,7 +266,14 @@ class Login extends Module {
 	}
 
 
-	
+	/**
+	 * Zet een formulier klaar
+	 *
+	 * @param string $type 
+	 * @return void
+	 * @author Jan den Besten
+   * @ignore
+	 */
 	private function _loadform($type) {
 		if (!$this->form) {
 			$this->CI->load->library('form');
@@ -280,13 +309,24 @@ class Login extends Module {
 		}
 	}
 	
+  /**
+   * @param string $page 
+   * @param string $content
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   */
 	private function _output($page,$content) {
 		$content='<div id="login">'.$content.'</div>';
 		return $this->CI->view('login/main', array('content'=>$content),true);
 	}
 	
-	
-	private function _find_uris() {
+  /**
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   */
+   private function _find_uris() {
 		$this->config['login_uri']=$this->CI->find_module_uri('login.login');
 		$this->config['register_uri']=$this->CI->find_module_uri('login.register');
 		$this->config['forgotten_password_uri']=$this->CI->find_module_uri('login.forgot_password');

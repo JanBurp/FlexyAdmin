@@ -62,6 +62,7 @@ Table 'groups' => 'cfg_user_groups':
 
 Table 'meta' => REMOVED (We don't need it)
 
-- in function remember_user() $salt is a random string (not using the password) 
+- in function remember_user() $salt is a random string (not using the password)
+- possible to not check if users has same email
 
 /*************************************************/
