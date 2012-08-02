@@ -10,12 +10,12 @@
 		<?=$form?>
 	</div>
 
-	<? foreach($pages as $page): ?>
-	<div id="comment<?=$page['id']?>" class="comment">
+	<? foreach($items as $item): ?>
+	<div id="comment<?=$item['id']?>" class="comment">
 		<hr/>
-		<h2><?=$page['str_title']?></h2>
-		<p><?=$page['str_name']?> | <?=$page['niceDate']?></p>
-		<p><?=$page['txt_text']?></p>
+		<h2><?=$item['str_title']?></h2>
+		<p><?=$item['str_name']?> | <?=$item['niceDate']?></p>
+		<p><?=$item['txt_text']?></p>
 	</div>
 	<? endforeach; ?>
 

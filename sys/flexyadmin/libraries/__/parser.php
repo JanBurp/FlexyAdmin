@@ -88,8 +88,60 @@ class Parser {
         }
 			}
 		}
-		$this->longDesc = implode('<br />', $desc);
+    
+		$this->longDesc = $this->parseDescription($desc);
 	}
+
+  /**
+   * Vertaald description naar mooie HTML
+   *
+   * @return void
+   * @author Jan den Besten
+   **/
+  function parseDescription($desc) {
+    // maak lijsten als aan het begin een '-' staat
+    $list=false;
+    foreach ($desc as $key => $line) {
+      
+      // Voeg mooie html classes toe:
+      $line = preg_replace("/(\b[^\s]*?\.(php|html|js|sql)\b)/ui", "<span class=\"doc_filename\">$1</span>", $line);    // filenames
+      
+      if (substr($line,0,1)=='-') {
+        $line=trim(substr($line,1));
+        if ($list) {
+          // continue list
+          $line='<li>'.$line.'</li>';
+        }
+        else {
+          // start list
+          $list=true;
+          $line='<ul><li>'.$line.'</li>';
+        }
+      }
+      elseif ($list) {
+        // end list
+        $list=false;
+        $line='</ul>'.$line;
+      }
+      $desc[$key]=$line;
+    }
+    if ($list) $desc[]='</ul>';
+    
+    // Plak regels aan elkaar, en als er aan het eind nog geen HTML tag is, voeg dan een <br/> toe.
+    $html='';
+    foreach ($desc as $key => $line) {
+      if (substr($line,strlen($line)-1,1)!='>') {
+        $html.='<br />';
+      }
+      $html.=$line;
+    }
+    
+    // trim <br />
+    $html = preg_replace("/^<br \/>/ui", "", $html);
+    $html = preg_replace("/<br \/>$/ui", "", $html);
+    
+    return $html;
+  }
   
 	/**
 	* Parse the line

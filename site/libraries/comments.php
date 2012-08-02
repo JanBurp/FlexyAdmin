@@ -1,20 +1,27 @@
 <?
 
-/*
+/**
+ * Voegt comments toe aan pagina's
+ *
+ * Deze module bestaat uit de volgende bestanden:
+ * - site/config/comments.php - Hier kun je een een aantal dingen instellen (zie hieronder)
+ * - db/add_comments.sql - database bestand met de benodigde tabel
+ * - site/views/comments.php - De view waarin de comments en het formulier geplaatst worden
+ * - site/language/##/comments_lang.php - Taalbestanden
+ *
+ * <h2>Installatie</h2>
+ * - Laad het database bestand db/add_comments.sql
+ * - Pas de configuratie aan indien nodig (zie: site/config/comments.php)
+ * - Pas de view (en styling) aan indien nodig
+ * - Maak je eigen taalbestand en/of wijzig de bestaande
+ *
+ * @author Jan den Besten
+ * @package FlexyAdmin_comments
+ *
+ */
+ class Comments extends Module {
 
-Add comments to a page
-
-Config:		site/config/comments.php
-View:			site/views/comments.php
-Database: db/add_comments.sql
-
-Change the field id_menu in db & config to something else if you use the comments on something other than the menu.
-
-*/
-
-class Comments extends Module {
-
-	var $foreign_table;
+	private $foreign_table;
 	
 	public function __construct() {
 		parent::__construct();
@@ -22,13 +29,20 @@ class Comments extends Module {
 		$this->CI->load->library('spam');
 		$this->foreign_table=foreign_table_from_key( $this->config('key_id') );
 	}
-
+  
+  /**
+   * Hier wordt de module standaard aangeroepen
+   *
+   * @param string $page
+   * @return string 
+   * @author Jan den Besten
+   */
 	public function index($page) {
 		if ( $this->CI->db->table_exists($this->config('table'))) {
-			// Get id for current item where comments belong to
+      
+			// Zet id standaard op 'id', maar als er een samengesteld menu is (res_menu_result) verander de id dan in de id van de originele tabel
 			$id=$page['id'];
 			if (isset($page['int_id']) and isset($page['str_table']) and $page['str_table']==$this->foreign_table) {
-				// trace_($page);
 				$id=$page['int_id'];
 			}
 		
@@ -140,7 +154,12 @@ class Comments extends Module {
 	}
 
 
-
+  /**
+   * Set formfields
+   *
+   * @return array formdata
+   * @author Jan den Besten
+   */
 	private function _setform_fields() {
 		$fields=$this->CI->db->list_fields($this->config('table'));
 		$formData=array();
@@ -179,8 +198,13 @@ class Comments extends Module {
 	}
 
 
-	// some extra functions to check for spam and double
-
+	/**
+	 * some extra functions to check for spam and double
+	 *
+	 * @param string $data 
+	 * @return bool
+	 * @author Jan den Besten
+	 */
 	private function _check_if_robot($data) {
 		$robot=false;
 		if (!empty($data['spambody'])) $robot=true;

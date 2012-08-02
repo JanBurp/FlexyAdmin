@@ -287,7 +287,7 @@ class Ion_auth_model extends CI_Model
 	{
 	    if (empty($username))
 	    {
-		return FALSE;
+        return FALSE;
 	    }
 
 	    return $this->db->where('str_username', $username)
@@ -305,12 +305,12 @@ class Ion_auth_model extends CI_Model
 	{
 	    if (empty($email))
 	    {
-		return FALSE;
+        return FALSE;
 	    }
 
 	    return $this->db->where('email_email', $email)
-		                ->where($this->user->_extra_where)
-		                ->count_all_results($this->tables['users']) > 0;
+		                  ->where($this->user->_extra_where)
+		                  ->count_all_results($this->tables['users']) > 0;
 	}
 
 	/**
@@ -1061,7 +1061,7 @@ class Ion_auth_model extends CI_Model
 
 	    $user = $this->get_user($id)->row();
 
-	    // $salt = sha1($user->gpw_password);
+      // $salt = sha1($user->gpw_password);
       $salt = $this->salt();
 
 	    $this->db->update($this->tables['users'], array('str_remember_code' => $salt), array('id' => $id));

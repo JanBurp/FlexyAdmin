@@ -898,7 +898,7 @@ class Flexy_field extends CI_Model {
 		}
     
 		$out=$this->_standard_form_field($options);
-    $out['type']=$fieldType;
+    if (isset($fieldType)) $out['type']=$fieldType;
 		$out["path"]=$map;
 		if ($this->pre=="medias") $out["multiple"]="multiple";
 		unset($out["button"]);

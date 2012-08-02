@@ -153,6 +153,7 @@ class Doc {
       $file=$this->formatFilePath($class->getFileName());
       $comm=$this->docComment($class);
       if (!isset($comm['ignore']) and $this->not_excluded($file)) {
+        // trace_($file);
         $properties=$class->getProperties(ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PROTECTED);
         foreach ($properties as $key => $value) {
           $name=$value->getName();

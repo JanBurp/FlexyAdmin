@@ -14,7 +14,7 @@
   * $menu->add( array( 'uri'=>'links', 'name'=>'Links') );
   * $menu->add( array( 'uri'=>'contact', 'name'=>'Contact') );
   * echo $menu->render();</code>
-  * Het resulaat is hetzelfde als het voorbeeld hieronder. Voor de uitleg van de diverse methods, zie verderop.
+  *
   *
   *	NB: Een menu-item bestaat uit: <code>array( "uri"=>uri, "name"=>name, "class"=>class, "sub"=>array() )</code>
   */
