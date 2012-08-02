@@ -13,7 +13,7 @@
  *
  * Useful for generating passwords or hashes.
  *
- * @param string type['alnum] of random string.  Options: alnum, numeric, nozero, unique
+ * @param string type['alnum'] of random string.  Options: alnum, numeric, nozero, unique
  * @param integer number[8] of characters
  * @return string
  */

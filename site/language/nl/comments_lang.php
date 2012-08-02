@@ -3,7 +3,8 @@
 $lang['comments_title']='Reacties';
 $lang['comments_submit']='Plaats reactie';
 $lang['comments_spam']='<p class="error">Je reactie is gekenmerkt als spam en wordt niet geplaatst.</p>';
-// for each field you can give an alternative label text:
+
+// Voor elk veld in de tabel kun je de naam aanpassen:
 $lang['comments_str_name']='Naam';
 $lang['comments_email_email']='Email';
 $lang['comments_str_title']='Titel';

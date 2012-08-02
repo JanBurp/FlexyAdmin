@@ -1,14 +1,23 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * 
+ *
+ * @author Jan den Besten
+ * @package FlexyAdmin_comments
+ **/
 
 /*
 |--------------------------------------------------------------------------
-| Comments Foreign key
+| Waar zijn de comments aan gekoppeld? (foreign key)
 |--------------------------------------------------------------------------
 |
-| This field sets the connection to the the table where the comments belong to
-| Change this also in you're database
-|
+| Dit veld verwijst naar de pagina waar een comment bij hoort.
+| Standaard verwijst het naar 'tbl_menu'.
+| Door dit aan te passen kun je comments koppelen aan een andere tabel (bijvoorbeeld alleen bij een blog).
+| LET OP: Als je dit veld aanpast, dan moet je het veld in de database ook aanpassen!!
+|    
+| NB er wordt vanzelf rekening gehouden met samengesteld menu (res_menu_result).
 */
 
 $config['key_id']='id_menu';
@@ -17,23 +26,21 @@ $config['key_id']='id_menu';
 
 /*
 |--------------------------------------------------------------------------
-| Send mail to site owner and other comment placers
+| Stuur mail als een comment is geplaatst
 |--------------------------------------------------------------------------
-|
-|
 */
 
-$config['mail_owner']=TRUE;
-$config['mail_others']=FALSE;
+$config['mail_owner']=TRUE;           // Stuur mail naar site owner (mail adres in tbl_site)
+$config['mail_others']=FALSE;         // Stuur mail naar alle mensen die comments hebben geplaatst op huidige pagina, zo blijven ze op de hoogte.
 
 
 /*
 |--------------------------------------------------------------------------
-| Comments table settings
+| Database instellingen
 |--------------------------------------------------------------------------
 |
-| Set the database table and field names.
-|
+| Mocht je wijzigingen aanbrengen in de comments tabel, zorg dan dat je hier de juiste koppelingen maakt.
+| Voor gevorderden!
 */
 
 $config['table']='tbl_comments';

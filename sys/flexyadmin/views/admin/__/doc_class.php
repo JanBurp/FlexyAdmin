@@ -4,7 +4,6 @@
   
   <p class="doc_description"><b><?=$shortdescription?></b></p>
   <p class="doc_description"><?=$description?></p>
-  <br />
   
   <h1>Properties</h1>
   <div class="doc_properties accordion">
