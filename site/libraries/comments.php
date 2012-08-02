@@ -3,7 +3,7 @@
 /**
  * Voegt comments toe aan pagina's
  *
- * Deze module bestaat uit de volgende bestanden:
+ * <h2>Bestanden</h2>
  * - site/config/comments.php - Hier kun je een een aantal dingen instellen (zie hieronder)
  * - db/add_comments.sql - database bestand met de benodigde tabel
  * - site/views/comments.php - De view waarin de comments en het formulier geplaatst worden

@@ -4,10 +4,13 @@
 /**
  * Met deze module kun je bezoekers laten inloggen
  *
- * @author Jan den Besten
- *
  * De login module kan gebruikt worden om bezoekers te laten inloggen op de site.
  * Dit kan voor de hele site, maar ook per pagina.
+ *
+ * <h2>Bestanden</h2>
+ * - site/config/login.php - Hier kun je een een aantal dingen instellen
+ * - site/views/login/* - Enkele views en per taal een aantal email templates
+ * - site/language/##/login_lang.php - Taalbestanden
  * 
  * <h2>Voorwaarden</h2>
  * - Als inloggen voor de hele site nodig is: laadt de module dan automatisch in.
@@ -17,10 +20,8 @@
  * - Als gebruikers zichzelf moeten kunnen registreren of hun paswoord moeten kunnen resetten, zet dan de volgende instelling in site/config/config.php:
  * <code>$config['query_urls']=TRUE;</code>
  *
- * <h2>Views</h2>
- * De loginmodule gebruikt enkele views die te vinden zijn in site/views/login
- * Ook zijn daar per taal een drietal email templates te vinden die de module gebruikt.
- * 
+ * @author Jan den Besten
+ * @package FlexyAdmin_login
  **/
 
 class Login extends Module {
