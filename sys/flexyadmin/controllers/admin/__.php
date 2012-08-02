@@ -18,7 +18,7 @@ class __ extends AdminController {
   private $stripTagsWithClasses=array('doc_info','doc_param_type','doc_label');
   private $stripWords=array('(string)', '(array)', '(void)', '(bool)', '(mixed)', '(object)', 
                             'CI','CodeIgniter','PHP','FlexyAdmin','class','parameters', 'functions', 'function', '__construct', 'methods', 'properties', 'true','false', 'array','return:', 'global','instance',
-                            'en','een','&eacute;&eacute;n','of','de','het', 'dat','als','met','voor' ,'in','je','wat','over','om','is','aan','uit','die','te','ze','op','deze','kun',
+                            'en','een','of','de','het', 'dat','als','met','voor' ,'in','je','wat','over','om','is','aan','uit','die','te','ze','op','deze','kun',
                             'if','the','and','or','name','content','config','use', 'this', 'to', 'own', 'see', 'also', 'file' ,'you','your','re', 'add', 'code', 'set', 'from', 'which');
 
 	public function __construct() {
