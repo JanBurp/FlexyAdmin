@@ -307,7 +307,7 @@ class __ extends AdminController {
 
     // Copy alles
     $this->_add_content('<p>Copy all</p>');
-    copy_directory( $this->path.$this->work, $this->path.$tags );
+    copy_directory( $this->path.$this->work, $this->path.$tags ); // maak hier toch een exclude argument erbij!!!
     
     // - verwijder alle bestanden die niet nodig meer zijn (__* van build proces en doc source) 
     // - maak lege db instelling bestand
