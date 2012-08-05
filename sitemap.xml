@@ -21,5 +21,20 @@
 		<title>Contact</title>
 		<content>Hier een voorbeeld van een eenvoudig contactformulier.</content>
 	</url>
+	<url>
+		<loc>http://www.flexyadmin.com/login</loc>
+		<title>Login</title>
+		<content></content>
+	</url>
+	<url>
+		<loc>http://www.flexyadmin.com/login/register</loc>
+		<title>register</title>
+		<content></content>
+	</url>
+	<url>
+		<loc>http://www.flexyadmin.com/login/logout</loc>
+		<title>logout</title>
+		<content></content>
+	</url>
 </urlset>
 
