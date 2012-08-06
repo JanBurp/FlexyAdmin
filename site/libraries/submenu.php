@@ -1,19 +1,20 @@
 <?
 
 /**
- * Submenu
+ * Maakt een submenu
  *
- * Use this module if you need a submenu.
- * - In views/site.php add somewhere this code:	<div id="submenu"><?=$submenu?></div>
- * - Set the level from which the submenu is renderd in config/submenu.php
- * - In config.php:
- *	- $config['autoload_modules'] = array('submenu');
- *  - $config['site_variables']	= array('submenu');
+ * <h2>Bestanden</h2>
+ * - site/config/submenu.php - Hier kun je een een aantal dingen instellen
+ *
+ * <h2>Installatie</h2>
+ * - Voerg ergens in een view (bv views/site.php) de code <div id="submenu"><?=$submenu?></div> toe
+ * - Stel het level in in config/submenu.php
+ * - Laad de module altijd in: $config['autoload_modules'] = array('submenu');
+ * - Voeg een variabele 'submenu' toe aan $this->site: $config['site_variables']	= array('submenu');
  *
  * @package default
  * @author Jan den Besten
  */
-
 
 class Submenu extends Module {
 
@@ -22,6 +23,13 @@ class Submenu extends Module {
 		parent::__construct();
 	}
 
+  /**
+   * Hier wordt de module aangeroepen
+   *
+   * @param string $page
+   * @return string 
+   * @author Jan den Besten
+   */
 	public function index($page) {
 		$level=$this->config('level');
 		if ($level>0) {
