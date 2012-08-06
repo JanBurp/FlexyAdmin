@@ -156,7 +156,7 @@ function clean_file_list($files,$tree=FALSE,$path='') {
  * @param string $destination 
  * @return void
  */
-function copy_directory( $source, $destination ) {
+function copy_directory( $source,$destination, $exclude=array('/.') ) {
   if ( is_dir( $source ) ) {
     @mkdir( $destination );
     $directory = dir( $source );
@@ -166,15 +166,15 @@ function copy_directory( $source, $destination ) {
       }
       $PathDir = $source . '/' . $readdirectory; 
       if ( is_dir( $PathDir ) ) {
-        if (!has_string('/.',$PathDir)) copy_directory( $PathDir, $destination . '/' . $readdirectory );
+        if (!has_string($exclude,$PathDir)) copy_directory( $PathDir, $destination . '/' . $readdirectory, $exclude );
         continue;
       }
-      if (!has_string('/.',$PathDir)) copy( $PathDir, $destination . '/' . $readdirectory );  
+      if (!has_string($exclude,$PathDir)) copy( $PathDir, $destination . '/' . $readdirectory );  
     }
     $directory->close();
   }
   else {
-    if (!has_string('/.',$source)) copy( $source, $destination );
+    if (!has_string($exclude,$source)) copy( $source, $destination );
   }
 }
 
