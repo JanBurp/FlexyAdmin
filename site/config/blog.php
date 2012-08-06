@@ -3,13 +3,11 @@
 
 /*
 |--------------------------------------------------------------------------
-| Blog table settings
+| Blog database instellingen
 |--------------------------------------------------------------------------
 |
-| Set the database table and field names.
-|
+| Stel hier de naam van de tabel en de velden in
 */
-
 $config['table']='tbl_blog';
 
 $config['field_date']='dat_date';
@@ -23,8 +21,8 @@ $config['field_text']='txt_text';
 | Blog comments
 |--------------------------------------------------------------------------
 |
-| Set comment settings
-|
+| Als TRUE dan heeft het blog ook comments, de module comments moet dan wel worden geladen
+| Mocht de comments tabel aangepast zijn dan kun je daar hier ook instellen.
 */
 
 

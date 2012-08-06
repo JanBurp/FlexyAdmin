@@ -1,11 +1,21 @@
 <?
 
 /**
- * Een eenvoudige blog module
- *
- * @package default
- * @author Jan den Besten
- */
+  * Eenvoudige blog module, kun je ook gebruiken voor niews of andere actualiteiten
+  *
+  * <h2>Bestanden</h2>
+  * - site/config/blog.php - Hier kun je een een aantal dingen instellen
+  * - db/add_simple_blog.sql - database bestand met de benodigde tabel
+  * - site/views/blog.php - De view waarin de blog geplaatst worden
+  *
+  * <h2>Installatie</h2>
+  * - Laad het database bestand db/add_simple_blog.sql
+  * - Pas de configuratie aan indien nodig (zie: site/config/blog.php)
+  * - Pas de view (en styling) aan indien nodig
+  *
+  * @author Jan den Besten
+  * @package FlexyAdmin_blog
+  */
 
 class Blog extends Module {
 
@@ -18,7 +28,7 @@ class Blog extends Module {
 	}
 
 	/**
-	 * Deze method wordt standaard aangeroepen
+	 * Zorgt ervoor dat de blog wordt getoond.
 	 *
 	 * @param string $page 
 	 * @return void
@@ -38,7 +48,5 @@ class Blog extends Module {
 	}
 
 }
-
-
 
 ?>
