@@ -30,8 +30,18 @@ class __ extends AdminController {
 	}
 
 	public function index() {
-    $this->doc();
+    $this->_add_content('<h1>Build processes</h1>');
+    $menuArray=array(
+      array( 'uri'=>'admin/__/doc', 'name' => 'Create Documentation' ),
+      array( 'uri'=>'admin/__/minify', 'name' => 'Minify JS & CSS' ),
+      array( 'uri'=>'admin/__/build', 'name' => 'Build revision: '.$this->get_revision() ),
+    );
+    $menu = new Menu();
+    $menu->set_menu($menuArray);
+    $this->_add_content($menu->render());
+    $this->_show_all();
 	}
+
 
   /**
    * Create documentation of the FlexyAdmin API
@@ -327,6 +337,65 @@ class __ extends AdminController {
     
     $this->_show_all();
   }
+  
+  
+  /**
+   * Minify all JavaScript and CSS files (admin)
+   *
+   * @return void
+   * @author Jan den Besten
+   **/
+  public function minify() {
+    $this->_add_content('<h1>Minify</h1>');
+    
+    $this->load->library('__/jsmin');
+
+    $path = $this->path.'FlexyAdminDEMO/sys/flexyadmin/assets/';
+    
+    $jsFiles=read_map($path.'js','js');
+    $cssFiles=read_map($path.'css','css');
+    $files=array_merge($cssFiles,$jsFiles);
+    // exclude some
+    foreach ($files as $key => $value) {
+      if (has_string(array('.min.','ie','__','nospam','swfobject'),$key)) unset($files[$key]);
+    }
+
+    foreach ($files as $file) {
+      if ($file['type']=='js') {
+        $minFile=str_replace('.js','.min.js',$file['path']);
+        $minified = JSMin::minify(file_get_contents($file['path']));
+      }
+      elseif ($file['type']=='css') {
+        $minFile=str_replace('.css','.min.css',$file['path']);
+        $minified = $this->minimize_css(file_get_contents($file['path']));
+      }
+      write_file($minFile,$minified);
+      $this->_add_content('<p>'.$minFile.'</p>');
+    }
+    
+    $this->_show_all();
+  }
+  
+  /**
+   * See http://stackoverflow.com/questions/1379277/minify-css-using-preg-replace
+   *
+   * @param string $input 
+   * @return string
+   * @author Jan den Besten
+   */
+  private function minimize_css($input) {
+    // Remove comments
+    $output = preg_replace('#/\*.*?\*/#s', '', $input);
+    // Remove whitespace
+    $output = preg_replace('/\s*([{}|:;,])\s+/', '$1', $output);
+    // Remove trailing whitespace at the start
+    $output = preg_replace('/\s\s+(.*)/', '$1', $output);
+    // Remove unnecesairy ;'s
+    $output = str_replace(';}', '}', $output);
+    return $output;
+  }
+  
+    
 
 
 }
