@@ -312,14 +312,23 @@ function trim(s) {
 }
 
 function randomPassword(length) {
-	var chars,pass,x,i;
-  chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-  pass = "";
-  for(x=0;x<length;x++) {
-     i = Math.floor(Math.random() * 62);
-     pass += chars.charAt(i);
+  var s='';
+  while (s.length<length) {
+    s=s+(((1+Math.random())*0x10000)|0).toString(36);
   }
-  return pass;
+  return s.substr(0,length);
+  // };
+  // return (S4()+S4()+S4()+S4()+S4()+S4()+S4()+S4());
+  // 
+  // // var chars,pass,x,i;
+  // //   chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+  // //   pass = "";
+  // //   for(x=0;x<length;x++) {
+  // //      i = Math.floor(Math.random() * 62);
+  // //      pass += chars.charAt(i);
+  // //   }
+  // var randomstring = Math.random().toString(36).slice(-length);
+  // return randomstring;
 }
 
 function serialize(sel) {

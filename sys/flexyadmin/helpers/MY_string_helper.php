@@ -36,7 +36,12 @@ if ( ! function_exists('random_string')) {
 					}
 					return $str;
 			  break;
-			case 'unique' : return md5(uniqid(mt_rand()));
+			case 'unique' : 
+        $str='';
+        while (strlen($str)<$len) {
+          $str.=md5(uniqid(mt_rand()));
+        }
+        return substr($str,0,$len);
 			  break;
 		}
 	}

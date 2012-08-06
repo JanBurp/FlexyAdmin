@@ -197,7 +197,7 @@ function doForm() {
 	//
 	$("form input.password:not(.matches)").after('<span class="button">'+lang('form_random_password')+'</span>');
 	$("form span.button").click(function() {
-		pwd=randomPassword(10);
+		pwd=randomPassword(12);
 		$(this).prev("input.password").attr("value",pwd);
 	});
 	
