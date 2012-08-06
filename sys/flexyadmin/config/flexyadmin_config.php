@@ -618,6 +618,12 @@ $config["CFG_"]=array(
 			"b_multi_options"=>'0',
 			"str_validation_rules"=>'required'
  			),
+		"cfg_users.gpw_password"=>array(
+			"field"=>'cfg_users.gpw_password',
+			"b_show_in_grid"=>'0',
+			"b_show_in_form"=>'1',
+			"str_validation_rules"=>'required|min_length[5]'
+ 			),
 		"cfg_users.ip_address"=>array(
 			"field"=>'cfg_users.ip_address',
 			"str_ui_name"=>'IP Address',
