@@ -66,13 +66,22 @@ function in_string($in,$string) {
 /**
  * Zoekt een string in een string
  *
- * @param string $in te zoeken string
+ * @param mixed $in te zoeken string, of array van strings
  * @param string $string string waarin gezocht wordt
- * @return bool TRUE als string is gevonden
+ * @return bool TRUE als (één van de) string(s) is gevonden
  * @author Jan den Besten
  */
 function has_string($in,$string) {
-	return strpos($string,$in)!==false;
+  if (!is_array($in)) $in=array($in);
+  $has=FALSE;
+  foreach ($in as $s) {
+    if (strpos($string,$s)!==FALSE) {
+      $has=TRUE;
+      break;
+    }
+  }
+  // trace_(array('in'=>$in,'str'=>$string,'has'=>$has));
+	return $has;
 }
 
 

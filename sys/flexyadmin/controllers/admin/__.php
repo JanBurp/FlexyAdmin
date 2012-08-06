@@ -305,12 +305,13 @@ class __ extends AdminController {
     $tags=$this->tags.'/FlexyAdmin_r'.$revision;
     $this->_add_content('<h1>Build: r_'.$revision.'</h1>');
 
-    // Copy alles
+    // Copy alles behalve hidden files en files/mappen met __ (dat zijn build processen en autodoc bronbestanden)
     $this->_add_content('<p>Copy all</p>');
-    copy_directory( $this->path.$this->work, $this->path.$tags ); // maak hier toch een exclude argument erbij!!!
+    copy_directory( $this->path.$this->work, $this->path.$tags, array('/.','/__') );
     
-    // - verwijder alle bestanden die niet nodig meer zijn (__* van build proces en doc source) 
     // - maak lege db instelling bestand
+    unlink($this->path.$tags.'/site/config/database_local.php');
+    rename($this->path.$tags.'/site/config/database_local_empty.php', $this->path.$tags.'/site/config/database_local.php');
 
     // - maak zip, geef dit de naam met revisie nr
     $zip=$this->path.$this->tags.'/FlexyAdmin_r'.$revision.'.zip';
