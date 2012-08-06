@@ -23,9 +23,18 @@ function _callback_highlight($matches) {
   // $code=str_replace(' ',"\t",$code);
 	$code=str_replace(array('&lt;','&gt;'),array('<','>'),$code);
 	$code=str_replace(array('<br/>','<br />','<br>'),"\n",$code);
-	$code=highlight_code($code);
+  $code=highlight_code($code);
 	return $code;
 }
+
+function _callback_highlight_span($matches) {
+  $code=_callback_highlight($matches);
+  $code=str_replace(array('<code>','</code>'),array('<span class="code">','</span>'),$code);
+  $code=preg_replace('/\s*?<\/span>/','</span>',$code);
+  $code=preg_replace('/&nbsp;<\/span><\/span>/','</span></span>',$code);
+	return $code;
+}
+
 
 /**
  * Kleurt tekst binnen HTML code tags (&lt;code&gt;)
@@ -41,6 +50,7 @@ function _callback_highlight($matches) {
 
 function highlight_code_if_needed($html) {
   $html=preg_replace_callback('/<code>(.*?)<\/code>/','_callback_highlight',$html);
+  $html=preg_replace_callback('/<span class="code">(.*?)<\/span>/','_callback_highlight_span',$html);
 	return $html;
 }
 

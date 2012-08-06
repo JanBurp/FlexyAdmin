@@ -1,9 +1,12 @@
 <?
 
-// This is an Example of a Module. A frontend library
-
-
-class Example extends Module {
+/**
+ * Voorbeeld module, gebruik dit als basis voor je eigen modules
+ *
+ * @author Jan den Besten
+ */
+ 
+ class Example extends Module {
 
 
 	public function __construct() {
@@ -11,16 +14,24 @@ class Example extends Module {
 		// $this->CI->menu->register_change_module($this); // Call this if you use the change_menu_item() method.
 	}
 
-	// index is the standard method
-	
+  /**
+   * Hier komt je eigen code
+   *
+   * @param string $page 
+   * @return void
+   * @author Jan den Besten
+   */
 	public function index($page) {
 		$content='<h1>Example Module</h1>';
 		return $content;
 	}
 
 
-	// You can call other methods from you're controller, in FlexyAdmin str_module would be 'example.other'
-
+  /**
+   * Eventueel andere methods kunnen ook 'example.other'
+   *
+   * @author Jan den Besten
+   */
 	public function other($page) {
 
 		// Do something...

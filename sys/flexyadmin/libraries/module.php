@@ -41,7 +41,7 @@ class Module extends Flexy_library {
 
 
   /**
-   * If this is called, no more modules and content are shown and loaded by the controller
+   * Als je dit aanroept ergens in je module dan laad de controller daarna geen andere modules meer.
    *
    * @return void
    * @author Jan den Besten
@@ -52,11 +52,23 @@ class Module extends Flexy_library {
 	}
   
   
-  // Methods for using uri parts as arguments for the module
+  /**
+   * Stelt de uri in van de pagina waar de module is te vinden
+   *
+   * @return void
+   * @author Jan den Besten
+   */
   public function set_module_uri() {
     if (!isset($this->config['module_uri'])) $this->config['module_uri']=$this->CI->find_module_uri($this->name).'/'.$this->CI->config->item('PLUGIN_URI_ARGS_CHAR');
     return $this->config['module_uri'];
   }
+  
+  /**
+   * Haalt eventuele argumenten voor deze specifieke module op uit de URI
+   *
+   * @return void
+   * @author Jan den Besten
+   */
   public function get_uri_args() {
     if (!isset($this->config['uri_args'])) $this->config['uri_args']=$this->CI->uri->get_from_part($this->CI->config->item('PLUGIN_URI_ARGS_CHAR'));
     return $this->config['uri_args'];
