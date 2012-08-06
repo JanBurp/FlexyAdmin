@@ -1,5 +1,25 @@
 <?
 
+/**
+ * Zoeken
+ *
+ * <h2>Bestanden</h2>
+ * - site/config/search.php - Hier kun je een een aantal dingen instellen (zie hieronder)
+ * - site/views/search_*.php - De views
+ * - site/language/##/search_lang.php - Taalbestanden
+ *
+ * <h2>Installatie</h2>
+ * - Pas de configuratie aan indien nodig (zie: site/config/search.php)
+ * - Pas de view (en styling) aan indien nodig
+ * - Maak je eigen taalbestand en/of wijzig de bestaande
+ * - TODO
+ *
+ * @author Jan den Besten
+ * @package FlexyAdmin_comments
+ *
+ */
+
+
 class Search extends Module {
 
 	public function __construct() {
