@@ -1,6 +1,15 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Forum_model extends CI_Model {
+/**
+ * Forum model
+ *
+ * Beta!
+ * Onderdeel van de forum module
+ *
+ * @package default
+ * @author Jan den Besten
+ */
+ class Forum_model extends CI_Model {
 
   var $last_time;
   var $limit=10;

@@ -4,13 +4,13 @@
  * Maakt een submenu
  *
  * <h2>Bestanden</h2>
- * - site/config/submenu.php - Hier kun je een een aantal dingen instellen
+ * - site/config/submenu.php - Hier kun je instellen op welk level het submenu begint
  *
  * <h2>Installatie</h2>
- * - Voerg ergens in een view (bv views/site.php) de code <div id="submenu"><?=$submenu?></div> toe
+ * - Voeg ergens in een view (bv views/site.php) de code &lt;div id=&quot;submenu&quot;&gt;&lt;?=$submenu?&gt;&lt;/div&gt; toe
  * - Stel het level in in config/submenu.php
- * - Laad de module altijd in: $config['autoload_modules'] = array('submenu');
- * - Voeg een variabele 'submenu' toe aan $this->site: $config['site_variables']	= array('submenu');
+ * - Laad de module altijd in: <span class="code">$config['autoload_modules']=array('submenu');</span>
+ * - Voeg een variabele 'submenu' toe aan $this->site: <span class="code">$config['site_variables']=array('submenu');</span>
  *
  * @package default
  * @author Jan den Besten

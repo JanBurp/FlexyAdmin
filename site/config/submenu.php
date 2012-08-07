@@ -3,11 +3,10 @@
 
 /*
 |--------------------------------------------------------------------------
-| Submenu settings
+| Submenu level
 |--------------------------------------------------------------------------
 |
-| Set the database table and field names where the search must take place
-|
+| Level waar het submenu begint
 */
 
 $config['level']=1;

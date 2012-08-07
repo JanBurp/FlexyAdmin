@@ -1,6 +1,15 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 
+/**
+ * Aanmaken en versturen van nieuwsbrieven
+ *
+ * Onderdeel van de module newsletter
+ *
+ * @author Jan den Besten
+ * @package FlexyAdmin_newsletter
+ **/
+
 class Plugin_newsletter extends Plugin_ {
 
   var $wizard;

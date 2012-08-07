@@ -3,13 +3,11 @@
 /**
  * Plugin_template
  *
- * Use this template to build your own Plugin. See also the config file plugin_template.php
+ * Gebruik dit als basis voor je eigen plugins
  *
  * @author Jan den Besten
  */
-
-class Plugin_template extends Plugin_ {
-
+ class Plugin_template extends Plugin_ {
 
 	/**
 	 * _trigger
@@ -19,7 +17,6 @@ class Plugin_template extends Plugin_ {
 	 * @return array
 	 * @author Jan den Besten
 	 */
-
 	public function _trigger() {
 		$trigger=array();
 		return $trigger;
@@ -34,7 +31,6 @@ class Plugin_template extends Plugin_ {
 	 * @return boolean (TRUE if FlexyAdmin may continue with the logout process / false will stop the process )
 	 * @author Jan den Besten
 	 */
-
 	public function _admin_logout() {
 		return TRUE;
 	}
@@ -48,7 +44,6 @@ class Plugin_template extends Plugin_ {
 	 * @return void
 	 * @author Jan den Besten
 	 */
-
 	public function _admin_api($args=NULL) {
 		$this->add_content(h($this->name,1));
 	}
@@ -62,7 +57,6 @@ class Plugin_template extends Plugin_ {
 	 * @return array with changed data
 	 * @author Jan den Besten
 	 */
-
 	public function _after_update() {
 		return $this->newData;
 	}
@@ -76,7 +70,6 @@ class Plugin_template extends Plugin_ {
 	 * @return array with changed data
 	 * @author Jan den Besten
 	 */
-
 	public function _after_delete() {
 		return false;
 	}
