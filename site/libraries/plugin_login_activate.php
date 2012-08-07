@@ -1,6 +1,18 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Plugin_login_activate extends Plugin_ {
+
+/**
+ * Verzorgt het activeren van gebruikers
+ *
+ * Is een onderdeel van de login module
+ *
+ * <h2>Bestanden</h2>
+ * - site/libraries/login.php - De login module, kijk daar voor meer info.
+ *
+ * @author Jan den Besten
+ * @package FlexyAdmin_login
+ **/
+ class Plugin_login_activate extends Plugin_ {
 
 
 	public function __construct() {

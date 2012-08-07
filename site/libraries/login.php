@@ -9,6 +9,7 @@
  *
  * <h2>Bestanden</h2>
  * - site/config/login.php - Hier kun je een een aantal dingen instellen
+ * - site/libraries/plugin_login_activate.php - Plugin die het aactiveren van nieuwe gebruikers in het admin deel verzorgd
  * - site/views/login/* - Enkele views en per taal een aantal email templates
  * - site/language/##/login_lang.php - Taalbestanden
  * 

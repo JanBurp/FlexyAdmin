@@ -23,30 +23,29 @@
 
   <!-- START NAVIGATION -->
   <div id="nav"><div id="nav_inner"></div></div>
-  <div id="nav_button">Inhoud</div>
+  <? if (!empty($root)): ?><div id="nav_button">inhoud</div><? endif ?>
   <div id="nav2"><a name="top">&nbsp;</a></div>
   <div id="masthead">
     <table cellpadding="0" cellspacing="0" border="0" style="width:100%">
       <tr>
-        <td><a href="<?=$root?>index.html"><h1 class="logo">FlexyAdmin</h1></a></td>
+        <td width="50%"><a href="<?=$root?>index.html"><h1 class="logo">FlexyAdmin</h1></a></td>
+        <td id="searchbox" width="50%">
+          <div id="tipue"><input type="text" id="tipue_drop_input" autocomplete="off"></div>
+          <div id="tipue_drop_content"></div>
+        </td>
       </tr>
     </table>
   </div>
-  <!-- END NAVIGATION -->
+  <div id="nav3">
+    <table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+      <tr>
+        <td align="left" width="25%"><a class="prev" href="">Vorige</a></td>
+        <td align="right" width="25%"><a class="next" href="">Volgende</a></td>
+      </tr>
+    </table>
+  </div>
 
-  <!-- START BREADCRUMB -->
-  <table cellpadding="0" cellspacing="0" border="0" style="width:100%">
-    <tr>
-      <td id="breadcrumb">
-        <a href="<?=$root?>index.html">Inhoud</a> <span id="breadcrumbPart"></a>
-      </td>
-      <td id="searchbox">
-        <div id="tipue"><input type="text" id="tipue_drop_input" autocomplete="off"></div>
-        <div id="tipue_drop_content"></div>
-      </td>
-    </tr>
-  </table>
-  <!-- END BREADCRUMB -->
+  <!-- END NAVIGATION -->
 
   <br clear="all" />
 
@@ -56,7 +55,7 @@
   <!-- END CONTENT -->
 
   <div id="footer">
-    <p><a class="prev" href="">Vorige</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#top">Naar boven</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a class="next" href="">Volgende</a></p>
+    <p><a href="#top">Naar boven</a></p>
     <p><a href="http://flexyadmin.com" target="_blank">FlexyAdmin</a> | Copyright &#169;  <a href="http://www.jandenbesten.net/"  target="_blank">Jan den Besten</a></p>
   </div>
 

@@ -102,7 +102,6 @@ class Parser {
     // maak lijsten als aan het begin een '-' staat
     $list=false;
     foreach ($desc as $key => $line) {
-      
       // Voeg mooie html classes toe:
       $line = preg_replace("/(\b[^\s]*?\.(php|html|js|sql)\b)/ui", "<span class=\"doc_filename\">$1</span>", $line);    // filenames
       
@@ -155,8 +154,10 @@ class Parser {
 	* that aren't valid otherwise, the line that was passed in.
 	*/
 	private function parseLine($line) {
-		//Trim the whitespace from the line
-    $line = trim($line);
+		// Trim the whitespace from the line (only one at beginning, so indenting is possible)
+    $line = rtrim($line);
+    $line = preg_replace("/^(\\s)/uism", "", $line);
+    
     // if(empty($line)) return false; //Empty line
 		
 		if(strpos($line, '@') === 0) {
