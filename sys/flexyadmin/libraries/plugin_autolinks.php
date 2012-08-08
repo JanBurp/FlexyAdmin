@@ -9,7 +9,7 @@
  */
 
 
-class Plugin_autolinks extends Plugin_ {
+class Plugin_autolinks extends Plugin {
 
 	var $needToRender;
 	var $tagsPlus;

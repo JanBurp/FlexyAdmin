@@ -1,7 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 
-class Plugin_add_relation_table extends Plugin_ {
+class Plugin_add_relation_table extends Plugin {
 	
 	
 	function _admin_api($args=false) {

@@ -8,7 +8,7 @@
  * @internal
  */
 
-class Plugin_striptags extends Plugin_ {
+class Plugin_striptags extends Plugin {
 
 	function init($init=array()) {
 		parent::init($init);

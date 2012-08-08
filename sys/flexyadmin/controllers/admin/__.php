@@ -23,7 +23,8 @@ class __ extends AdminController {
   private $stripWords=array('(string)', '(array)', '(void)', '(bool)', '(mixed)', '(object)', 
                             'CI','CodeIgniter','PHP','FlexyAdmin','class','parameters', 'functions', 'function', '__construct', 'methods', 'properties', 'true','false', 'array','return:', 'global','instance',
                             'en','een','of','de','het', 'dat','als','met','voor' ,'in','je','wat','over','om','is','aan','uit','die','te','ze','op','deze','kun',
-                            'if','the','and','or','name','content','config','use', 'this', 'to', 'own', 'see', 'also', 'file' ,'you','your','re', 'add', 'code', 'set', 'from', 'which');
+                            'if','the','and','or','name','content','config','use', 'this', 'to', 'own', 'see', 'also', 'file' ,'you','your','re', 'code', 'from', 'which');
+  private $allTags='';
 
 	public function __construct() {
 		parent::__construct();
@@ -101,7 +102,7 @@ class __ extends AdminController {
       }
       else {
         if ($classType=='libraries') {
-          if (has_string('Plugin',$file)) $classType='plugins';
+          if (has_string('Plugin',$file) and $file!='Plugin') $classType='plugins';
         }
       }
 
@@ -135,6 +136,7 @@ class __ extends AdminController {
       }
       $html=$this->load->view('admin/__/doc_class',array(
         'file'=>$file,
+        'parent'=>$class['parent'],
         'path'=>$class['file'],
         'shortdescription'=>el('shortdescription',$class['doc']),
         'description'=>el('description',$class['doc']),
@@ -237,7 +239,17 @@ class __ extends AdminController {
     $json_toc=$this->load->view('admin/__/doc_toc_json',array('toc'=>$otoc,'html'=>trim(str_replace(array(PHP_EOL,"\r",'../userguide/FlexyAdmin/'),'',$content))),true);
     write_file('userguide/FlexyAdmin/assets/js/toc.js',$json_toc);
     $this->_add_content('TOC file created.</br>');
-    //
+
+    // remove tags from normal search texts
+    // $tags=$this->_clean_tags($this->allTags);
+    // $tags=explode(' ',$tags);
+    // $tags=array_unique($tags);
+    // foreach ($this->tipue as $key => $value) {
+    //   foreach ($tags as $tag) {
+    //     $tag=str_replace(array('(',')'),'',$tag);
+    //     $this->tipue[$key]['text'] = preg_replace("/".$tag."/ui", "", $value['text']); // remove tags
+    //   }
+    // }
     $tipue_search=$this->load->view('admin/__/doc_tipue_json',array('data'=>$this->tipue),true);
     write_file('userguide/FlexyAdmin/assets/tipuedrop/data.js',$tipue_search);
     $this->_add_content('SEARCH file created.</br>');
@@ -245,6 +257,20 @@ class __ extends AdminController {
     $this->_show_all();
   }
   
+  private function _clean_tags($tags) {
+    foreach ($this->stripWords as $word) {
+      $tags = preg_replace("/\b".$word."\b/ui", "", $tags); // remove some words
+    }
+    $tags=explode(' ',$tags);
+    // remove tags shorter than 3 and without () and the end
+    foreach ($tags as $key => $tag) {
+      $len=strlen($tag);
+      if (substr($tag,$len-2,2)!='()' or $len<3)
+        unset($tags[$key]);
+    }
+    $tags=implode(' ',$tags);
+    return $tags;
+  }
   
   private function _add_html_docs($path) {
     $files=read_map($path);
@@ -284,22 +310,67 @@ class __ extends AdminController {
   }
 
   private function _add_to_tipue($name,$html,$fileName) {
-    $html = preg_replace("/(<code>(.*?)<\\/code>)/us", "", $html);  // remove <code> tags and all in it
+    $tags='';
+    // if (preg_match_all("/<h[1-3]([^>]*)>(.*?)<\/h\d>/uis", $html, $matches)) {
+    //   if (isset($matches[2])) {
+    //     foreach ($matches[2] as $key => $match) {
+    //       $match=strip_tags($match);
+    //       $match = str_replace(array("\r","\n"),' ',$match); // remove linebreaks
+    //       $match = trim(preg_replace("/(\s+)/", " ", $match)); // remove double spaces
+    //       foreach ($this->stripWords as $word) {
+    //         $match = preg_replace("/\b".$word."\b/ui", " ", $match); // remove some words
+    //       }
+    //       $match = preg_replace("/\(.*?\)/uiUs", "()", $match);
+    //       $match = trim($match);
+    //       if (!empty($match)) {
+    //         $tags=add_string($tags,$match,' ');
+    //         $tags=$this->_clean_tags($tags);
+    //         $this->allTags=add_string($this->allTags,$tags,' ');
+    //       }
+    //     }
+    //   }
+    // }
+    
+    $html = preg_replace("/(<code>(.*?)<\\/code>)/us", " ", $html);  // remove <code> tags and all in it
     foreach ($this->stripTagsWithClasses as $class) {
-      $html=preg_replace("/(<p(\s*)class=\"".$class."(.*?)\">(.*?)<\/p>)/us", "", $html); // remove <p> tags with some classes
+      $html=preg_replace("/(<p(\s*)class=\"".$class."(.*?)\">(.*?)<\/p>)/us", " ", $html); // remove <p> tags with some classes
     }
-    foreach ($this->stripWords as $word) {
-      $html = preg_replace("/\b".$word."\b/ui", "", $html); // remove some words
+    // Only get imported text (headers)
+    if (preg_match_all("/<h[1-3]([^>]*)>(.*?)<\/h\d>/uis", $html, $matches)) {
+      if (isset($matches[2])) {
+        $html='';
+        foreach ($matches[2] as $key => $match) {
+          // $match=strip_tags($match);
+          $match = str_replace(array("\r","\n"),' ',$match); // remove linebreaks
+          // $match = trim(preg_replace("/(\s+)/", " ", $match)); // remove double spaces
+          foreach ($this->stripWords as $word) {
+            $match = preg_replace("/\b".$word."\b/ui", " ", $match); // remove some words
+          }
+          $match = preg_replace("/\(.*?\)/uiUs", "", $match); // remove all between ()
+          $match = trim($match);
+          if (!empty($match)) {
+            $html=add_string($html,$match," ");
+          }
+        }
+      }
     }
-    $html = strip_tags($html);
-    $html = html_entity_decode($html);
-    $html = str_replace(array("\r","\n"),' ',$html); // remove linebreaks
+    else {
+      $html='';
+    }
+
+    // foreach ($this->stripWords as $word) {
+    //   $html = preg_replace("/\b".$word."\b/ui", " ", $html); // remove some words
+    // }
+    // $html = strip_tags($html);
+    // $html = html_entity_decode($html);
+    // $html = str_replace(array("\r","\n"),' ',$html); // remove linebreaks
     $html = trim(preg_replace("/(\s+)/", " ", $html)); // remove double spaces
     
     $this->tipue[]=array(
       "title"=>get_suffix(str_replace(array('.html','.php'),'',$name),'/'),
       "text"=>addslashes($html),
-      "loc"=>str_replace('userguide/FlexyAdmin/','',$fileName)
+      "loc"=>str_replace('userguide/FlexyAdmin/','',$fileName),
+      "tags"=>$tags
     );
   }
   

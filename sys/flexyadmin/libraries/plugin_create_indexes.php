@@ -7,7 +7,7 @@
  */
 
 
-class Plugin_create_indexes extends Plugin_ {
+class Plugin_create_indexes extends Plugin {
 
 	public function _admin_api($args=NULL) {
 		if ($this->CI->user->is_super_admin()) {

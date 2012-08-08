@@ -8,7 +8,7 @@
  * @internal
  */
 
-class Plugin_uri extends Plugin_ {
+class Plugin_uri extends Plugin {
 
 	function _admin_api($args=NULL) {
 		$this->add_content(h($this->name,1));

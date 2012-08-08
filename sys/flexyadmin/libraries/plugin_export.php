@@ -7,7 +7,7 @@
  */
 
 
-class Plugin_export extends Plugin_ {
+class Plugin_export extends Plugin {
 
 
 	public function _admin_api($args=NULL) {

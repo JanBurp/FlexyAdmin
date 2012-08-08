@@ -42,9 +42,6 @@
     </div>
 
     <? if (!empty($description)): ?><p class="doc_description"><?=$description?></p><? endif ?>
-  
-    <? if (!empty($author)): ?><p class="doc_info doc_author">author: <?=$author[0]?></p><? endif ?>
-    <p class="doc_info doc_lines">lines: <?=$lines?></p>
     <br />
   </div>
 </div>
