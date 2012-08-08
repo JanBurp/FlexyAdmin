@@ -8,7 +8,7 @@
  * @internal
  */
 
-class Plugin_links extends Plugin_ {
+class Plugin_links extends Plugin {
 
 
 	function __construct() {

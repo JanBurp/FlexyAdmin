@@ -7,7 +7,7 @@
  */
 
 
-class Plugin_safe_assets extends Plugin_ {
+class Plugin_safe_assets extends Plugin {
 
 	
 	function __construct() {

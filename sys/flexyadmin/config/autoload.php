@@ -51,7 +51,7 @@ $autoload['packages'] = array();
 |	$autoload['libraries'] = array('database', 'session', 'xmlrpc');
 */
 
-$autoload['libraries'] = array('flexy_library','database');
+$autoload['libraries'] = array('parent_module_plugin','database');
 
 
 /*

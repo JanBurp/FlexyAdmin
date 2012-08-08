@@ -15,7 +15,7 @@ class Plugin_handler extends CI_Model {
 
 	public function __construct() {
 		parent::__construct();
-		$this->load_plugin('plugin_');
+		$this->load_plugin('plugin');
 	}
 
 	

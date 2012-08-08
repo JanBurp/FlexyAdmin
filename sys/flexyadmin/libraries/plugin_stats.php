@@ -9,7 +9,7 @@
  */
 
 
-class Plugin_stats extends Plugin_ {
+class Plugin_stats extends Plugin {
 
 	var $logTable;
 	var $Data;

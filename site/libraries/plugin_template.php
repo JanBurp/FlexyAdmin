@@ -7,7 +7,7 @@
  *
  * @author Jan den Besten
  */
- class Plugin_template extends Plugin_ {
+ class Plugin_template extends Plugin {
 
 	/**
 	 * _trigger

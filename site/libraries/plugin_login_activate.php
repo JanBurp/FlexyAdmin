@@ -12,7 +12,7 @@
  * @author Jan den Besten
  * @package FlexyAdmin_login
  **/
- class Plugin_login_activate extends Plugin_ {
+ class Plugin_login_activate extends Plugin {
 
 
 	public function __construct() {

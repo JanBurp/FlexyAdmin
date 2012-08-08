@@ -161,13 +161,17 @@ class Doc {
           $properties[$name]=$this->docComment($value);
           $declareClass=$value->getDeclaringClass()->getName();
           if ($declareClass!=$class->getName()) {
-            $properties[$name]['doc']['inherited']=$declareClass;
-            if (substr($declareClass,0,2)=='CI') unset($properties[$name]);
+            unset($properties[$name]);
+            // $properties[$name]['doc']['inherited']=$declareClass;
+            // if (substr($declareClass,0,2)=='CI') unset($properties[$name]);
           }
           unset($properties[$key]);
         }
         $className=$class->getName();
-        $doc['classes'][$className]=array( 
+        $parent=$class->getParentClass();
+        if ($parent) $parent=$parent->getName();
+        $doc['classes'][$className]=array(
+          'parent'      => $parent,
           'file'        => $file,
           'lines'       => $class->getStartLine() . " - " . $class->getEndLine(),
           'doc'         => $comm,
@@ -185,7 +189,6 @@ class Doc {
       $file=basename($value['file']);
       $doc['functions'][$file][$key]=$value;
     }
-
     return $doc;
   }
   
@@ -219,7 +222,7 @@ class Doc {
       $file=$this->formatFilePath($value->getFileName());
       $comm=$this->docComment($value);
       $name=$value->getName();
-      if (!isset($comm['ignore']) and $this->not_excluded($file) and (substr($name,0,1)!='_') and !($class AND !$value->isPublic())) {
+      if (!isset($comm['ignore']) and $this->not_excluded($file) and (substr($name,0,1)!='_')) { // and !($class AND !$value->isPublic())) {
         $functions[$name]=array(
           'file'        => $this->formatFilePath($file),
           'lines'       => $value->getStartLine() . " - " . $value->getEndLine(),
@@ -229,7 +232,8 @@ class Doc {
           unset($functions[$name]['file']);
           $declareClass=$value->getDeclaringClass()->getName();
           if ($declareClass!=$class) {
-            $functions[$name]['doc']['inherited']=$declareClass;
+            unset($functions[$name]);
+            // $functions[$name]['doc']['inherited']=$declareClass;
           }
         }
       }

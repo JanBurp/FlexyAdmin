@@ -9,7 +9,7 @@
  * @internal
  */
 
-class Plugin_sitemap extends Plugin_ {
+class Plugin_sitemap extends Plugin {
 
 	function _admin_logout() {
 		$this->add_content(h($this->name,1));

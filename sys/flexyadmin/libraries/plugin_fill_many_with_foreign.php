@@ -1,7 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 
-class Plugin_fill_many_with_foreign extends Plugin_ {
+class Plugin_fill_many_with_foreign extends Plugin {
 
 	function _admin_api($args=false) {
 		if ($this->CI->user->is_super_admin()) {

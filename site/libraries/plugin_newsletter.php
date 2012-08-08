@@ -10,7 +10,7 @@
  * @package FlexyAdmin_newsletter
  **/
 
-class Plugin_newsletter extends Plugin_ {
+class Plugin_newsletter extends Plugin {
 
   var $wizard;
 

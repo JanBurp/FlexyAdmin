@@ -9,7 +9,7 @@
  */
 
 
-class Plugin_automenu extends Plugin_ {
+class Plugin_automenu extends Plugin {
 
 	var $menuTable;
 	var $automationTable;

@@ -9,7 +9,7 @@
  */
 
 
-class Plugin_embed extends Plugin_ {
+class Plugin_embed extends Plugin {
 
 	function _after_update() {
 		$this->_create_embed_list();
