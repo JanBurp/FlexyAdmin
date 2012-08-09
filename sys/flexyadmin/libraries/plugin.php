@@ -15,6 +15,7 @@ class Plugin extends Parent_module_plugin {
    *
    * @var string
    * @ignore
+   * @depricated
    */
 	protected $content;
   
@@ -98,6 +99,7 @@ class Plugin extends Parent_module_plugin {
    * @author Jan den Besten
    * @internal
    * @ignore
+   * @depricated
    */
 	public function get_content() {
 		return $this->content;
@@ -109,6 +111,7 @@ class Plugin extends Parent_module_plugin {
    * @param string $content 
    * @return string $content Huidige output
    * @author Jan den Besten
+   * @depricated
    */
 	protected function add_content($content) {
 		$this->content.=$content;

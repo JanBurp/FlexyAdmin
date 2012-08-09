@@ -31,7 +31,7 @@ class Plugin_export extends Plugin {
 			
 			if (in_array($table,$tables)) {
 				$this->export($table,$type);
-				return;
+				return $this->content;
 			}
 		}
 
@@ -70,7 +70,8 @@ class Plugin_export extends Plugin {
 			if (!empty($validationErrors)) $this->add_content($validationErrors);
 			$this->add_content( $form->render() );
 		}
-		
+
+    return $this->content;
 	}
 
 

@@ -39,6 +39,7 @@ class Plugin_newsletter extends Plugin {
         $menu->add(array('uri'=>uri_string().'/export','name'=>'Export adresses'));
         $this->add_content(h('Newsletter').$menu->render());
     }
+    return $this->content;
   }
    
   private function _wizard($type,$args) {

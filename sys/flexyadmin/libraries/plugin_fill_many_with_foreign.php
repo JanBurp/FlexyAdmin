@@ -32,6 +32,7 @@ class Plugin_fill_many_with_foreign extends Plugin {
 				$this->add_content('<p>Which many table and foreign key?</br></br>Give: /rel_xxxx__xxxx/tbl_xxx.id_xxx</p>');
 			}
 		}
+    return $this->content;
 	}
 
 
