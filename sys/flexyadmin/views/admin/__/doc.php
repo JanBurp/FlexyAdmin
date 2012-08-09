@@ -17,7 +17,6 @@
   <script type="text/javascript" src="<?=$root?>assets/tipuedrop/data.js"></script>
   <link rel="stylesheet" type="text/css" href="<?=$root?>assets/tipuedrop/tipuedrop.css">
   <script type="text/javascript" src="<?=$root?>assets/tipuedrop/tipuedrop.js"></script>
-  
 </head>
 <body>
 
@@ -30,7 +29,7 @@
       <tr>
         <td width="50%"><a href="<?=$root?>index.html"><h1 class="logo">FlexyAdmin</h1></a></td>
         <td id="searchbox" width="50%">
-          <div id="tipue"><input type="text" id="tipue_drop_input" autocomplete="off"></div>
+          <div id="tipue"><input type="text" id="tipue_drop_input" autocomplete="off" placeholder="search (focus at keypress)"></div>
           <div id="tipue_drop_content"></div>
         </td>
       </tr>
