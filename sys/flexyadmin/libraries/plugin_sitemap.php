@@ -12,15 +12,13 @@
 class Plugin_sitemap extends Plugin {
 
 	function _admin_logout() {
-		$this->add_content(h($this->name,1));
 		$this->_create_sitemap();
-		return true;
 	}
 	
-	
 	function _admin_api($args=NULL) {
-		$this->add_content(h($this->name,1));
+		$this->add_content('<h1>Sitemap</h1>');
 		$this->_create_sitemap();
+    return $this->content;
 	}
 
 

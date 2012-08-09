@@ -1269,7 +1269,7 @@ input.filter.busy {
 
 .after_form {margin:20px 0px 0px;}
 
-p.error, div.error p {
+.error, div.error p {
 	color:#F00;
   font-size:15px;
   margin:0px;

@@ -26,6 +26,7 @@ class Plugin_add_relation_table extends Plugin {
 			if (!$goodArgs) {
 				$this->add_content('<p>Add relation table, for which table(s)?</br></br>Give: /tbl_xxx/tbl_xxx</p>');
 			}
+      return $this->content;
 		}
 	}
 	

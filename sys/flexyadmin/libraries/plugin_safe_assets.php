@@ -9,7 +9,10 @@
 
 class Plugin_safe_assets extends Plugin {
 
-	
+  private $checked=array();
+  private $removed=array();
+  
+  
 	function __construct() {
 		parent::__construct();
 	}
@@ -17,17 +20,22 @@ class Plugin_safe_assets extends Plugin {
 
 	function _admin_logout() {
 		$logout=true;
-		$this->add_content(h($this->name,1));
-		$logout=!$this->_safe_and_clean_all();
-		return $logout;
+		$this->_safe_and_clean_all();
+    if (!empty($this->removed)) return $this->_show();
+    return FALSE;
 	}
 	
 	function _admin_api($args=NULL) {
 		if ($this->CI->user->is_super_admin()) {
-			$this->add_content(h($this->name,1));
 			$this->_safe_and_clean_all();
+      return $this->_show();
 		}
 	}
+
+  private function _show() {
+    return $this->CI->load->view('admin/plugins/safe_assets',array('checked'=>$this->checked,'removed'=>$this->removed), true);
+  }
+
 
 
 	function _after_update() {
@@ -69,16 +77,15 @@ class Plugin_safe_assets extends Plugin {
 				$mapsToClean[$path]=$filetypes;
 			}
 		}
-		// Loop though all maps and make them safe and clen
+		// Loop through all maps and make them safe and clen
 		foreach ($mapsToClean as $path => $allowed) {
 			if ($this->config('create_htacces')) {
 				$this->_make_map_safe($path,$allowed);
-				$this->add_content('<p>Created : '.$path.'/.htaccess ('.$allowed.')</p>');
+        $this->checked[$path]=$allowed;
 			}
 			$removed=$this->_remove_forbidden_files($path,$allowed);
 			if ($removed) {
-				$removed=implode(',',$removed);
-				$this->add_content('<p class="error">Removed forbidden files ('.$removed.') from: '.$path.'</p>');
+        $this->removed[$path]=$removed;
 				$someRemoved = true;
 			}
 		}
@@ -96,18 +103,14 @@ class Plugin_safe_assets extends Plugin {
 		write_file($path.'/.htaccess',$htaccess);
 	}
 	
-	// remove forbidden files
+	// remove not allowed files
 	function _remove_forbidden_files($path,$allowed,$forbidden='') {
 		$removed=false;
-		if ($forbidden=='') $forbidden=$this->CI->config->item('FILE_types_forbidden');
 		$allowed=explode('|',$allowed);
-		foreach ($forbidden as $key=>$value) {
-			if (in_array($value,$allowed)) unset($forbidden[$key]);
-		}
 		$files=read_map($path);
 		foreach ($files as $file => $value) {
-			if (in_array($value['type'],$forbidden)) {
-				unlink($path.'/'.$file);
+      if (!is_dir($path.'/'.$file) and !in_array($value['type'],$allowed)) {
+        unlink($path.'/'.$file);
 				$removed[]=$file;
 			}
 		}

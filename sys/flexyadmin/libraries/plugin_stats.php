@@ -129,6 +129,8 @@ class Plugin_stats extends Plugin {
 		// Delete data from DB older than current month
 		$this->CI->db->where('tme_date_time <',date('Y-m'));
 		$this->CI->db->delete($this->logTable);
+    
+    return $this->content;
 	}
 
 	function _lang($stats) {

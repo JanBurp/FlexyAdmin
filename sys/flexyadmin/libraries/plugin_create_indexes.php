@@ -14,6 +14,7 @@ class Plugin_create_indexes extends Plugin {
 			$this->add_content(h($this->name,1));
 			$this->_create_indexes();
 	 	}
+    return $this->content;
 	}
 
 

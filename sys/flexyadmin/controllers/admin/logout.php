@@ -24,10 +24,10 @@ class Logout extends AdminController {
 	}
 
 	function index() {
-		$logout=$this->plugin_handler->call_plugins_logout();
+		$logoutMessages=$this->plugin_handler->call_plugins_logout();
 		
 		// logout
-		if ($logout) {
+		if (!$logoutMessages) {
 			$this->user->logout();
 			$this->session->sess_destroy();
 			if ($this->config->item('logout_to_site'))
@@ -38,6 +38,7 @@ class Logout extends AdminController {
 		else {
 			$this->_add_content(h('Logout',1));
 			$this->_add_content(p('error').'Stopped logout, because there are important messages.<br/>Try to logout for a second time. If the messages are still there, contact you\'re webmaster.'._p());
+      $this->_add_content($logoutMessages);
 			$this->_show_all();
 		}
 	}

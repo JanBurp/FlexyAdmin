@@ -28,11 +28,11 @@
 	 *
 	 * The standard function which will be called when a user is logging out of FlexyAdmin ($config['logout_method'] must be set in the config)
 	 *
-	 * @return boolean (TRUE if FlexyAdmin may continue with the logout process / false will stop the process )
+	 * @return string if the return string is empty login is successfull, if not return the messages that will be shows on logout
 	 * @author Jan den Besten
 	 */
 	public function _admin_logout() {
-		return TRUE;
+    // return '';
 	}
 
 
@@ -41,11 +41,11 @@
 	 *
 	 * The standard function which is called in admin with this urr: 'admin/plugin/_name_/_args..' where _name_ is the name of you're plugin and args can be extra uri segments. ($config['admin_api_method'] must be set in the config)
 	 *
-	 * @return void
+	 * @return string Return the HTML the plugin needs to show (use views for it!)
 	 * @author Jan den Besten
 	 */
 	public function _admin_api($args=NULL) {
-		$this->add_content(h($this->name,1));
+    return $this->CI->load->view('plugin_template',array(),true);
 	}
 
 

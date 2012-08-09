@@ -41,6 +41,7 @@
 			}
 			$this->_show_inactive_users();
 		}
+    return $this->content;
 	}
 	
 	private function _deny_user($user_id) {

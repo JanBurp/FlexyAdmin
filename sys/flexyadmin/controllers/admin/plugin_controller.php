@@ -24,7 +24,7 @@ class Plugin_controller extends AdminController {
    * @author Jan den Besten
    */
 	function call() {
-		$this->load->model('queu');
+    $this->load->model('queu');
 		
 		$args=func_get_args();
 		$ajax=false;
@@ -43,9 +43,8 @@ class Plugin_controller extends AdminController {
 				// first arg is plugin name
 				$plugin='plugin_'.$args[0];
 				array_shift($args);
-				$this->plugin_handler->call_plugin_admin_api($plugin,$args);
+				$this->_add_content( $this->plugin_handler->call_plugin_admin_api($plugin,$args) );
 				$show_type=$this->plugin_handler->get_plugin_showtype($plugin);
-				$this->_add_content($this->plugin_handler->get_plugin_content($plugin));
 			}
 		}
 		// output

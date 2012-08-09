@@ -24,7 +24,7 @@ class Plugin_handler extends CI_Model {
 		$plugin_config_files_site=read_map(SITEPATH.'config','php',FALSE,FALSE,FALSE);
 		$plugin_config_files=array_merge($plugin_config_files,$plugin_config_files_site);
 		$plugin_config_files=filter_by($plugin_config_files,'plugin');
-		unset($plugin_config_files['plugin_template.php']);
+    // unset($plugin_config_files['plugin_template.php']);
 
 		// set first order
 		$plugins_ordered=array();
@@ -127,15 +127,18 @@ class Plugin_handler extends CI_Model {
 
 	public function call_plugin($plugin,$method,$args=NULL) {
 		$return = FALSE;
-		// load if needed
-		if (!$this->plugins[$plugin]['is_loaded']) {
-			$this->load_plugin($plugin);
-		}
-		// call
-		if (method_exists($plugin,$method)) {
-			// strace_("Call Plugin: $plugin->$method");
-			$return = $this->$plugin->$method($args);
-		}
+		// Plugin exists?
+		if (isset($this->plugins[$plugin])) {
+  		// load if needed
+  		if (!isset($this->plugins[$plugin]['is_loaded']) or !$this->plugins[$plugin]['is_loaded']) {
+  			$this->load_plugin($plugin);
+  		}
+  		// call
+  		if (method_exists($plugin,$method)) {
+        // strace_("Call Plugin: $plugin->$method");
+  			$return = $this->$plugin->$method($args);
+  		}
+    }
 		return $return;
 	}
 
@@ -143,7 +146,7 @@ class Plugin_handler extends CI_Model {
 		if (isset($this->plugins[$plugin]['config']['admin_api_method'])) {
 			return $this->call_plugin($plugin,$this->plugins[$plugin]['config']['admin_api_method'],$args);
 		}
-		return false;
+		return '';
 	}
 
 	public function call_plugin_ajax_api($plugin,$args) {
@@ -157,7 +160,7 @@ class Plugin_handler extends CI_Model {
 		if (isset($this->plugins[$plugin]['config']['logout_method'])) {
 			return $this->call_plugin($plugin,$this->plugins[$plugin]['config']['logout_method'],$args);
 		}
-		return false;
+		return '';
 	}
 
 
@@ -167,9 +170,9 @@ class Plugin_handler extends CI_Model {
 	}
 
 
-	public function get_plugin_content($plugin) {
-		return $this->call_plugin($plugin,'get_content');
-	}
+  // public function get_plugin_content($plugin) {
+  //   return $this->call_plugin($plugin,'get_content');
+  // }
 
 
 	public function set_data($type,$data) {
@@ -241,16 +244,16 @@ class Plugin_handler extends CI_Model {
 	}
 
 	public function call_plugins_logout() {
-		$logout=TRUE;
+		$logoutMessages='';
 		$this->_set_additional_data();
 		if (isset($this->trigger_methods['logout_method'])) {
 			foreach ($this->trigger_methods['logout_method'] as $plugin => $method) {
 				$this->_give_data_to_plugin($plugin);
 				$return = $this->call_plugin($plugin,$method);
-				$logout = $logout && $return;
+				$logoutMessages.=$return;
 			}
 		}
-		return $logout;
+		return $logoutMessages;
 	}
 
 

@@ -97,8 +97,14 @@ class Plugin_automenu extends Plugin {
 
 	public function _admin_api($args=NULL) {
 		$this->add_content(h(lang($this->name),1));
-		$this->_create_auto_menu();
-		$this->add_content('<p>'.lang('result_changed').'</p>');
+    if ($this->CI->db->table_exists('res_menu_result')) {
+  		$this->_create_auto_menu();
+  		$this->add_content('<p>'.lang('result_changed').'</p>');
+    }
+    else {
+      $this->add_content('<p class="error">No res_menu_result present in database</p>');
+    }
+    return $this->content;
 	}
 	
   
