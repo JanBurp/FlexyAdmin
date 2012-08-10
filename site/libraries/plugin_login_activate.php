@@ -8,12 +8,13 @@
  *
  * <h2>Bestanden</h2>
  * - site/libraries/login.php - De login module, kijk daar voor meer info.
+ * - site/views/plugin_login_activate.php
  *
  * @author Jan den Besten
  * @package FlexyAdmin_login
  **/
  class Plugin_login_activate extends Plugin {
-
+   
 
 	public function __construct() {
 		parent::__construct();
@@ -22,15 +23,11 @@
 	
 	public function _admin_api($args=NULL) {
 		if ($this->CI->user->can_activate_users()) {
-			$this->add_content(h(lang('activate_users'),1));
-			
 			// redirect ion_auth to other email_templates
 			$this->CI->config->set_item('email_templates','login/'.$this->CI->language.'/','ion_auth');
-			
 			// $args holds action (deny/activate) and user_id
 			$action=el('0',$args);
 			$user_id=el('1',$args);
-			
 			switch ($action) {
 				case 'deny':
 					$this->_deny_user($user_id);
@@ -39,15 +36,15 @@
 					$this->_accept_user($user_id);
 					break;
 			}
-			$this->_show_inactive_users();
+			$grid=$this->_show_inactive_users();
+      return $this->view('',array('title'=>lang('title'),'grid'=>$grid));
 		}
-    return $this->content;
 	}
 	
 	private function _deny_user($user_id) {
 		$user=$this->CI->user->get_user($user_id);
 		if ($user) {
-			$this->add_content(p().langp('user_removed',$user->str_username)._p());
+			$this->add_message(langp('user_removed',$user->str_username));
 			$this->CI->user->send_deny_mail($user_id,lang('mail_denied_subject'));
 			$this->CI->user->delete_user($user_id);
 		}
@@ -56,7 +53,7 @@
 	private function _accept_user($user_id) {
 		$user=$this->CI->user->get_user($user_id);
 		if ($user and !$user->b_active) {
-			$this->add_content(p().langp('user_accepted',$user->str_username)._p());
+			$this->add_message(langp('user_accepted',$user->str_username));
 			$this->CI->user->send_accepted_mail($user_id,lang('mail_accepted_subject'));
 			$this->CI->user->activate_user($user_id);
 		}
@@ -73,11 +70,10 @@
 			$this->CI->load->model('grid');
 			$grid=new grid();
 			$grid->set_data($show_users,lang('show_inactive_users'));
-			$html=$grid->view("html",'',"grid");
-			$this->add_content($html);
+			return $grid->view("html",'',"grid");
 		}
 		else {
-			$this->add_content(lang('no_inactive_users'));
+			$this->add_message(lang('no_inactive_users'));
 		}
 	}
 

@@ -20,6 +20,13 @@ class Plugin extends Parent_module_plugin {
 	protected $content;
   
   /**
+   * Messages that will be shown
+   *
+   * @var array
+   */
+  protected $messages=array();
+  
+  /**
    * Oorspronkelijke data van het huidige record. Deze data kan de plugin aanpassen en in newData zetten.
    *
    * @var string
@@ -118,6 +125,44 @@ class Plugin extends Parent_module_plugin {
 		return $this->content;
 	}
 	
+  /**
+   * Voegt een bericht toe wat naar de output kan worden gestuurd
+   *
+   * @param string $message 
+   * @return void
+   * @author Jan den Besten
+   */
+  protected function add_message($message) {
+    $this->messages[]=$message;
+  }
+  
+  /**
+   * Geeft alle berichten terug in een array
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+  protected function get_messages() {
+    return $this->messages;
+  }
+  
+  /**
+   * Laad de view van de plugin en voegt standaard de berichten toe in de argumenten
+   *
+   * @param string $view[''] De view die geladen moet worden, als leeg, dan wordt de (volledige) naam van de plugin gebruikt: 'plugin_template' bijvoorbeeld.
+   * @param array $args[NULL] Alle argumenten, alle berichten worden standaard meegegeven onder de naam 'messages' en als 'title' niet wordt meegegeven dan wordt die ingesteld op de (korte) naam van de plugin.
+   * @param bool $hide[TRUE] Als waar dan wordt de view niet meteen naar de output gestuurd, maar allen als return waarde gegeven
+   * @return string het HTML resultaat van de view
+   * @author Jan den Besten
+   */
+  protected function view($view='',$args=array(),$hide=TRUE) {
+    if (empty($view)) $view=$this->name;
+    $args=array_merge($args,array('messages'=>$this->get_messages()));
+    if (!isset($args['title'])) $args['title']=ucfirst($this->shortname);
+    return $this->CI->load->view($view,$args,$hide);
+  }
+  
+  
 	/**
 	 * Depricated
 	 *

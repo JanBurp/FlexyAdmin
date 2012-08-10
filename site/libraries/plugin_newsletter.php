@@ -12,34 +12,52 @@
 
 class Plugin_newsletter extends Plugin {
 
-  var $wizard;
+  /**
+   * Wizard object
+   *
+   * @ignore
+   */
+  private $wizard;
 
   public function __construct() {
     parent::__construct();
+    $this->CI->load->language('newsletter');
 		$this->CI->load->library('form');
 		$this->CI->load->library('wizard');
+
+    $this->set_config(array(
+      'wizard_create' => array(
+        'include_pages'  => array('label'=>lang('include_pages'),'method'=>'_create_include_pages'),
+        'edit_text'      => array('label'=>lang('edit_text'),'method'=>'_create_edit_text'),
+        'send_test'      => array('label'=>lang('send_test'),'method'=>'_create_send_test')
+      ),
+      'wizard_send'   => array(
+        'send_select'    => array('label'=>lang('send_select'),'method'=>'_send_select'),
+        'send_it'        => array('label'=>lang('send_it'),'method'=>'_send_it')
+      )
+    ));
+
   }
 
 	public function _admin_api($args=NULL) {
     $action=array_shift($args);
     switch($action) {
       case 'create':
-        $this->_create_newsletter($args);
+        return $this->_create_newsletter($args);
         break;
       case 'send':
-        $this->_send_newsletter($args);
+        return $this->_send_newsletter($args);
         break;
       case 'export':
-        $this->_export_addresses($args);
+        return $this->_export_addresses($args);
         break;
       default:
         $menu=new Menu();
-        $menu->add(array('uri'=>uri_string().'/create','name'=>'Create a newsletter'));
-        $menu->add(array('uri'=>uri_string().'/send','name'=>'Send a newsletter'));
-        $menu->add(array('uri'=>uri_string().'/export','name'=>'Export adresses'));
-        $this->add_content(h('Newsletter').$menu->render());
+        $menu->add(array('uri'=>uri_string().'/create','name'=>lang('create_newsletter')));
+        $menu->add(array('uri'=>uri_string().'/send','name'=>lang('send_newsletter')));
+        $menu->add(array('uri'=>uri_string().'/export','name'=>lang('export_adresses')));
+        return $this->view('newsletter/plugin_main',array('title'=>lang('title'),'content'=>$menu->render()) );
     }
-    return $this->content;
   }
    
   private function _wizard($type,$args) {
@@ -50,9 +68,8 @@ class Plugin_newsletter extends Plugin {
       $wizard_config['object']=$this;
       $wizard_config['title']=lang($type.'_newsletter');
       $this->wizard=new Wizard($wizard_config);
-      $this->add_content($this->wizard->render());
       array_shift($args);
-      return $this->wizard->call_step($args);
+      return $this->wizard->render().$this->wizard->call_step($args);
     }
     return false;
   }
@@ -62,11 +79,12 @@ class Plugin_newsletter extends Plugin {
   }
   
   function _create_include_pages($args) {
-    $this->CI->db->where('(CURDATE() - INTERVAL 1 MONTH) <= dat_date');
-    $this->CI->db->select('id,order,self_parent,uri,str_title');
+    if ($this->CI->db->field_exists('dat_date',get_menu_table())) $this->CI->db->where('(CURDATE() - INTERVAL 1 MONTH) <= dat_date');
+    $this->CI->db->select('id,order,self_parent,uri,str_title,txt_text');
     $this->CI->db->uri_as_full_uri(true,'str_title');
     $this->CI->db->order_as_tree();
     $pages=$this->CI->db->get_result(get_menu_table());
+
     $options=array();
     foreach ($pages as $page) {
       $options[$page['id']]=$page['str_title'];
@@ -81,14 +99,11 @@ class Plugin_newsletter extends Plugin {
     if ($form->validation()) {
       $data=$form->get_data();
       $pageIDs=explode('|',$data['pages']);
-      $pages=array();
-      foreach ($pageIDs as $id) {
-        if (!empty($id)) {
-          $this->CI->db->where('id',$id);
-          $this->CI->db->uri_as_full_uri();
-          $pages[$id]=$this->CI->db->get_row(get_menu_table());
+      foreach ($pages as $id=>$page) {
+        if (in_array($id,$pageIDs))
           $pages[$id]['txt_text']=intro_string($pages[$id]['txt_text'],$this->config('intro_length'),'CHARS',$this->config('allowed_tags'));
-        }
+        else
+          unset($pages[$id]);
       }
       $unsubmit='./'; //$this->CI->find_module_uri('newsletter'); // ##
       if (!empty($unsubmit)) $unsubmit.='?unsubmit';
@@ -104,7 +119,7 @@ class Plugin_newsletter extends Plugin {
       redirect($redirect);
     }
     else {
-      $this->add_content(validation_errors('<p class="error">', '</p>').$form->render());
+      return $this->view('newsletter/plugin_main',array('title'=>lang('create_newsletter'),'content'=>validation_errors('<p class="error">', '</p>').$form->render()));
     }
   }
 
@@ -131,8 +146,7 @@ class Plugin_newsletter extends Plugin {
       }
       else {
         $errors=validation_errors('<p class="error">', '</p>');
-        if (!empty($errors)) $this->add_content($errors);
-        $this->add_content($form->render());
+        return $this->view('newsletter/plugin_main',array('title'=>lang('create_newsletter'),'content'=>$errors.$form->render() ));
       }
     }
 	}
@@ -157,13 +171,12 @@ class Plugin_newsletter extends Plugin {
         $mail['body']=$mail['txt_body'];
         unset($mail['txt_body']);
         $rapport=$this->_send_mail($mail);
-        $this->add_content($rapport);
         $this->add_to_rapport($id,$rapport);
+        return $this->view('newsletter/plugin_main',array('title'=>lang('send_newsletter'),'content'=>$rapport ));
       }
       else {
         $errors=validation_errors('<p class="error">', '</p>');
-        if (!empty($errors)) $this->add_content($errors);
-        $this->add_content($form->render());
+        return $this->view('newsletter/plugin_main',array('title'=>lang('send_newsletter'),'content'=>$errors.$form->render() ));
       }
     }
   }
@@ -191,8 +204,7 @@ class Plugin_newsletter extends Plugin {
     }
     else {
       $errors=validation_errors('<p class="error">', '</p>');
-      if (!empty($errors)) $this->add_content($errors);
-      $this->add_content($form->render());
+      return $this->view('newsletter/plugin_main',array('title'=>lang('send_newsletter'),'content'=>$errors.$form->render() ));
     }
   }
 
@@ -217,21 +229,20 @@ class Plugin_newsletter extends Plugin {
         $mail['body']=$mail['txt_body'];
         unset($mail['txt_body']);
         $rapport=$this->_send_mail($mail);
-        $this->add_content('<h2>Result</h2>'.$rapport);
         $this->add_to_rapport($id,$rapport);
+        return $this->view('newsletter/plugin_main',array('title'=>lang('send_newsletter'),'content'=>'<h2>Result</h2>'.$rapport ));
       }
       else {
         $errors=validation_errors('<p class="error">', '</p>');
-        if (!empty($errors)) $this->add_content($errors);
-        $this->add_content($form->render());
+        return $this->view('newsletter/plugin_main',array('title'=>lang('send_newsletter'),'content'=>$errors.$form->render() ));
       }
     }
   }
 
 
   private function _export_addresses($args) {
-		$this->add_content(h('Exporteer Nieuwsbrief Adressen',1).p().'Kopier alle adressen van hieronder naar je emailprogramma.'._p());
-		$adressen=$this->_get_adresses();
+    $this->add_message('Kopier alle adressen van hieronder naar je emailprogramma.');
+    return $this->view('newsletter/plugin_export',array('title'=>lang('export_adresses'),'adresses'=>$this->_get_adresses()));
 		$this->add_content('<p><textarea style="width:590px" rows="20">'.$adressen.'</textarea></p>');
   }
 

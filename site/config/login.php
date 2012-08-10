@@ -25,7 +25,7 @@ $config['class']='user_logged_in';
 | if this is true, a user gets an activate email, when the administrator sends it. (Needs plugin_login_activate.php)
 |
 */
-$config['admin_activation']=false;
+$config['admin_activation']=FALSE;
 
 
 /*

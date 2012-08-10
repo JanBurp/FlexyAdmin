@@ -53,6 +53,15 @@ class __ extends AdminController {
   public function doc() {
     $this->_add_content('<h1>Creating documentation</h1>');
 
+
+    // Cleanup current doc folders
+    $folders=array('algemeen','core','database','helpers','libraries','models','uitbreiden');
+    foreach ($folders as $folder) {
+      $map=$this->path.$this->work.'/userguide/FlexyAdmin/'.$folder;
+      empty_map($map);
+      $this->_add_content('Emptied: '.$map.'<br/>');
+    }
+
     // Make sure everything is loaded, to make documentation for everything...
     // Load all core libraries that are not standard loaded
     $this->load->dbutil();

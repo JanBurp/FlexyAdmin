@@ -3,3 +3,5 @@
 <? if (!empty($messages)): ?><? foreach ($messages as $message): ?>
   <p><?=$message?></p>  
 <? endforeach ?><? endif ?>
+
+<?=$content?>
