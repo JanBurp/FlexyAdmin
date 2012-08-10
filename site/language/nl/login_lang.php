@@ -38,6 +38,7 @@ $lang['reset_password_error'] 				= 'Het resseten van je wachtwoord is mislukt o
 $lang['reset_password_mail_subject']	= 'Nieuw wachtwoord.';
 
 // ADMIN ACTIVATION
+$lang['title']                        = 'Gebruikers Activeren';
 $lang['activate_users']								= 'Activeer gebruikers';
 $lang['show_inactive_users']					= 'Inactieve gebruikers';
 $lang['no_inactive_users']						= 'Er zijn geen in-actieve gebruikers op dit moment.';

@@ -45,7 +45,8 @@
 	 * @author Jan den Besten
 	 */
 	public function _admin_api($args=NULL) {
-    return $this->CI->load->view('plugin_template',array(),true);
+    $this->add_message('Use this template as a base for your plugins.');
+    return $this->view();
 	}
 
 

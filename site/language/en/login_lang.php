@@ -38,6 +38,7 @@ $lang['reset_password_error'] 				= 'Ressetting you\'re password failed or has s
 $lang['reset_password_mail_subject']	= 'New password.';
 
 // ADMIN ACTIVATION
+$lang['title']                        = 'Activate users';
 $lang['activate_users']								= 'Activate users';
 $lang['show_inactive_users']					= 'Inactive users';
 $lang['no_inactive_users']						= 'There are no in-active users at this moment.';

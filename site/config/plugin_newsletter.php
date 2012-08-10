@@ -42,14 +42,4 @@ $config['send_to_name_field']    = 'str_name';
 
 $config['send_one_by_one'] = FALSE; // SET this to TRUE if Your provider can't send bulk mail with bcc
 
-
-// Wizards
-$config['wizard_create'] = array( 'include_pages'  => array('label'=>lang('include_pages'),'method'=>'_create_include_pages'),
-                                  'edit_text'      => array('label'=>lang('edit_text'),'method'=>'_create_edit_text'),
-                                  'send_test'      => array('label'=>lang('send_test'),'method'=>'_create_send_test') );
-$config['wizard_send']  = array(  'send_select'    => array('label'=>lang('send_select'),'method'=>'_send_select'),
-                                  'send_it'        => array('label'=>lang('send_it'),'method'=>'_send_it') );
-
-
-
 ?>
