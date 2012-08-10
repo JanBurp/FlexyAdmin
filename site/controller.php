@@ -111,7 +111,6 @@ class Main extends FrontEndController {
 		 * If $_POST or $_GET data are set (not empty) the page is not loaded from cache. So don't worry about forms etc.
 		 */
 		if ($this->config->item('caching')) $this->output->cache( $this->config->item('caching_time') );
-		
 	}
 
 
