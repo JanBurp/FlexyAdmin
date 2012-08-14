@@ -70,6 +70,8 @@ class __ extends AdminController {
     // load all libraries
     $libraries=read_map('sys/flexyadmin/libraries','php');
     unset($libraries['ion_auth.php']); // exclude allready inherited libraries
+    unset($libraries['gmap.php']); // exclude allready inherited libraries
+	// trace_($libraries);
     $modules=read_map('site/libraries','php'); // Frontend libraries (modules)
     $libraries=array_merge($libraries,$modules);
     foreach ($libraries as $file=>$library) {
@@ -428,7 +430,7 @@ class __ extends AdminController {
   public function minify() {
     $this->_add_content('<h1>Minify</h1>');
     
-    $this->load->library('__/jsmin');
+    $this->load->library('jsmin');
 
     $path = $this->path.'FlexyAdminDEMO/sys/flexyadmin/assets/';
     

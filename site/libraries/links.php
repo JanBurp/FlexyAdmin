@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * Toont een lijst met links
@@ -18,17 +18,17 @@
 
 class Links extends Module {
 
-  /**
-   * Hier wordt de module aangeroepen
-   *
-   * @param string $page
-   * @return string 
-   * @author Jan den Besten
-   */
-	public function index($page) {
-		if ( $this->CI->db->table_exists('tbl_links')) {
-			$links=$this->CI->db->get_results('tbl_links');
-			return $this->CI->view('links',array('links'=>$links),true);
+	/**
+	 * Hier wordt de module aangeroepen
+	 *
+	 * @param string  $page
+	 * @return string
+	 * @author Jan den Besten
+	 */
+	public function index( $page ) {
+		if ( $this->CI->db->table_exists( 'tbl_links' ) ) {
+			$links=$this->CI->db->get_results( 'tbl_links' );
+			return $this->CI->view( 'links', array( 'links'=>$links ), true );
 		}
 		return FALSE;
 	}
