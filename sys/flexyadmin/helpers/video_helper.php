@@ -55,7 +55,7 @@ function get_vimeo_info($id,$var='') {
 function get_video_code_from_url($url,$type='youtube') {
 	$type=strtolower($type);
 	$code=$url;
-	if (has_string('www.',$url) or has_string('http:',$url)) {
+	if (has_string('www.',$url) or has_string('http',$url)) {
 		// is an Url
 		$match=array();
 		switch ($type) {
