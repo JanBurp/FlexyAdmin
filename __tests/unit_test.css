@@ -111,3 +111,12 @@ padding:			20px 20px 12px 20px;
 	height:15px;
 	vertical-align:middle;
 }
+
+
+/* by JDB */
+.main {border-top:solid 1px #CCC;}
+.main h3 {margin:5px;}
+.test {margin:0px 5px;}
+.test.pass {display:none;}
+.test.fail h3 {display:none;}
+

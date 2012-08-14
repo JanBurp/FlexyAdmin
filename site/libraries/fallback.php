@@ -18,7 +18,7 @@ class Fallback extends Module {
    * @author Jan den Besten
    */
 	public function index($page) {
-		$content='<h1>Fallback Module: '.$this->name.'</h1>';
+		$content='<h1 id="fallback_module">Fallback Module: '.$this->name.'</h1>';
 		return $content;
 	}
 
