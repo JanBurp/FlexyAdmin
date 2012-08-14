@@ -1,4 +1,13 @@
 <?php
+
+
+/**
+ * undocumented class
+ *
+ * @package default
+ * @author Jan den Besten
+ * @link http://www.simpletest.org/en/web_tester_documentation.html
+ */
 class site extends CodeIgniterWebTestCase {
 
   var $browser;
@@ -23,6 +32,7 @@ class site extends CodeIgniterWebTestCase {
 
 
   public function test_menu() {
+    $this->_show_head('Test Menu &amp; content');
     $this->_menu( $this->menu );
   }
 
@@ -38,12 +48,13 @@ class site extends CodeIgniterWebTestCase {
 
   private function _menu_item( $uri, $parentUri='' ) {
     if ( !empty( $parentUri ) ) $uri=$parentUri.'/'.$uri;
-    echo "<h3>$uri</h3>";
+    $this->_show_item($uri);
     // $this->setMaximumRedirects(0);
     $this->assertTrue( $this->get( $this->root.$uri ) );
     // $this->assertResponse('200');
     // $this->assertNoPattern("/id=\"error404\">/",'404');
-    $this->assertNoPattern( "/<div class=\"FlexyAdminTrace\"/", 'TRACES?' );
+    $this->assertNoPattern( "/<div class=\"FlexyAdminTrace\"/", 'TRACE_?' );
+    $this->assertNoPattern( "/id=\"fallback_module\"/", 'FALLBACK MODULE' );
 
     $this->_find_links( $uri );
   }
@@ -55,6 +66,7 @@ class site extends CodeIgniterWebTestCase {
   }
 
   public function test_links() {
+    $this->_show_head('Links');
     $this->links=array_unique( $this->links );
     $internal=array();
     $external=array();
@@ -64,9 +76,34 @@ class site extends CodeIgniterWebTestCase {
       else
         $external[]=$link;
     }
-    trace_( $internal );
-    trace_( $external );
+    
+    $this->_show_head('External links:',2);
+    $list=array();
+    foreach ($external as $url) {
+      // $this->assertTrue( $this->get( $url ) );
+      // $this->assertNoPattern("/id=\"error404\">/",'NOT FOUND: '.$url.' ---- ');
+      $list[]='<a href="'.$url.'" target="_blank">'.$url.'</a>';
+    }
+    echo ul($list);
 
+    $this->_show_head('Internal links:',2);
+    $list=array();
+    foreach ($internal as $url) {
+      $this->assertTrue( $this->get( $url ) );
+      $this->assertNoPattern("/id=\"error404\">/",'NOT FOUND: '.$url.' ---- ');
+      $list[]='<a href="'.$url.'" target="_blank">'.$url.'</a>';
+    }
+    echo ul($list);
+
+  }
+
+
+  private function _show_head($head,$h=1) {
+    echo '<h'.$h.'>'.$head.'</h'.$h.'>';
+  }
+
+  private function _show_item($head) {
+    echo '<div class="main"><h3>'.$head.'</h3></div>';
   }
 
 
