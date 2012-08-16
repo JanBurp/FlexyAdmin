@@ -1,22 +1,26 @@
 <?
 
 /**
- * Standaard contact formulier
- *
- * <h2>Bestanden</h2>
- * - site/config/contact_form.php - Hier kun je een een aantal dingen instellen (zie hieronder)
- * - site/views/contact_form.php - De view waarin de comments en het formulier geplaatst worden
- * - site/language/##/contact_form_lang.php - Taalbestanden
- *
- * <h2>Installatie</h2>
- * - Pas de configuratie aan indien nodig (zie: site/config/contact_form.php)
- * - Pas de view (en styling) aan indien nodig
- * - Maak je eigen taalbestand en/of wijzig de bestaande
- *
- * @author Jan den Besten
- * @package FlexyAdmin_comments
- *
- */
+	* Standaard contact formulier
+	*
+	* Bestanden
+	* ----------------
+	*
+	* - site/config/contact_form.php - Hier kun je een een aantal dingen instellen (zie hieronder)
+	* - site/views/contact_form.php - De view waarin de comments en het formulier geplaatst worden
+	* - site/language/##/contact_form_lang.php - Taalbestanden
+	*
+	* Installatie
+	* ----------------
+	*
+	* - Pas de configuratie aan indien nodig (zie: site/config/contact_form.php)
+	* - Pas de view (en styling) aan indien nodig
+	* - Maak je eigen taalbestand en/of wijzig de bestaande
+	*
+	* @author Jan den Besten
+	* @package FlexyAdmin_comments
+	*
+	*/
 class Contact_form extends Module {
 
 	public function __construct() {
@@ -26,12 +30,12 @@ class Contact_form extends Module {
 	}
 
   /**
-   * Hier wordt het formulier toegevoegd aan de huidige pagina
-   *
-   * @param string $page 
-   * @return void
-   * @author Jan den Besten
-   */
+  	* Hier wordt het formulier toegevoegd aan de huidige pagina
+  	*
+  	* @param string $page 
+  	* @return void
+  	* @author Jan den Besten
+  	*/
 	public function index($page) {
 		$viewForm='';
     $viewErrors='';

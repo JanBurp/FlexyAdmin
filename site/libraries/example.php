@@ -1,10 +1,10 @@
 <?
 
 /**
- * Voorbeeld module, gebruik dit als basis voor je eigen modules
- *
- * @author Jan den Besten
- */
+	* Voorbeeld module, gebruik dit als basis voor je eigen modules
+	*
+	* @author Jan den Besten
+	*/
  
  class Example extends Module {
 
@@ -15,12 +15,12 @@
 	}
 
   /**
-   * Hier komt je eigen code
-   *
-   * @param string $page 
-   * @return void
-   * @author Jan den Besten
-   */
+  	* Hier komt je eigen code
+  	*
+  	* @param string $page 
+  	* @return void
+  	* @author Jan den Besten
+  	*/
 	public function index($page) {
 		$content='<h1>Example Module</h1>';
 		return $content;
@@ -28,10 +28,10 @@
 
 
   /**
-   * Eventueel andere methods kunnen ook 'example.other'
-   *
-   * @author Jan den Besten
-   */
+  	* Eventueel andere methods kunnen ook 'example.other'
+  	*
+  	* @author Jan den Besten
+  	*/
 	public function other($page) {
 
 		// Do something...

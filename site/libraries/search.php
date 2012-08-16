@@ -1,27 +1,33 @@
 <?
 
 /**
- * Zoeken
- *
- * <h2>Bestanden</h2>
- * - site/config/search.php - Hier kun je een een aantal dingen instellen
- * - site/views/search_*.php - De views
- * - site/language/##/search_lang.php - Taalbestanden
- *
- * <h2>Installatie</h2>
- * - Pas de configuratie aan indien nodig (zie: site/config/search.php)
- * - Pas de view (en styling) aan indien nodig
- * - Maak je eigen taalbestand en/of wijzig de bestaande
- *
- * <h2>Meest gebruikte manier</h2>
- * - Laad op elke pagine de module search.form: <span class="code">$config['autoload_modules'] = array('search.form');</span>
- * - Maak een plekje in de hoofdview waar je het zoekformulier toont: &lt;?=$search_form?&gt;
- * - Maak een pagina aan waar het zoekresultaat getoond moet worden en koppel aan deze pagina de module search.
- *
- * @author Jan den Besten
- * @package FlexyAdmin_comments
- *
- */
+	* Zoeken
+	*
+	* Bestanden
+	* ----------------
+	*
+	* - site/config/search.php - Hier kun je een een aantal dingen instellen
+	* - site/views/search_*.php - De views
+	* - site/language/##/search_lang.php - Taalbestanden
+	*
+	* Installatie
+	* ----------------
+	*
+	* - Pas de configuratie aan indien nodig (zie: site/config/search.php)
+	* - Pas de view (en styling) aan indien nodig
+	* - Maak je eigen taalbestand en/of wijzig de bestaande
+	*
+	* Meest gebruikte manier
+	* ----------------
+	*
+	* - Laad op elke pagine de module search.form: <span class="code">$config['autoload_modules'] = array('search.form');</span>
+	* - Maak een plekje in de hoofdview waar je het zoekformulier toont: &lt;?=$search_form?&gt;
+	* - Maak een pagina aan waar het zoekresultaat getoond moet worden en koppel aan deze pagina de module search.
+	*
+	* @author Jan den Besten
+	* @package FlexyAdmin_comments
+	*
+	*/
 
 
 class Search extends Module {
@@ -31,12 +37,12 @@ class Search extends Module {
 	}
 
   /**
-   * Hier wordt de module standaard aangeroepen. Genereerd een zoekpagina met meegegeven zoekterm (POST)
-   *
-   * @param string $page
-   * @return string 
-   * @author Jan den Besten
-   */
+  	* Hier wordt de module standaard aangeroepen. Genereerd een zoekpagina met meegegeven zoekterm (POST)
+  	*
+  	* @param string $page
+  	* @return string 
+  	* @author Jan den Besten
+  	*/
 	public function index($page) {
 		$search=$this->CI->input->post( lang('search_term') );
 		
@@ -81,11 +87,11 @@ class Search extends Module {
 	}
 	
 	/**
-	 * Voegt zoekformulier toe aan $site in $site['search_form']
-	 *
-	 * @return void
-	 * @author Jan den Besten
-	 */
+		* Voegt zoekformulier toe aan $site in $site['search_form']
+		*
+		* @return void
+		* @author Jan den Besten
+		*/
 	public function form() {
 		// set form action uri
 		$action=$this->config('result_page_uri');
@@ -111,14 +117,14 @@ class Search extends Module {
 	
 
 	/**
-	 * Maakt een zoekarray aan
-	 *
-	 * @param mixed $term 
-	 * @param mixed $fields 
-	 * @return array
-	 * @author Jan den Besten
-   * @ignore
-	 */
+		* Maakt een zoekarray aan
+		*
+		* @param mixed $term 
+		* @param mixed $fields 
+		* @return array
+		* @author Jan den Besten
+  	* @ignore
+		*/
 	private function _create_search_array_for_db($term,$fields) {
 		if (!is_array($term)) $term=array($term);
 		if (!is_array($fields)) $fields=array($fields);
@@ -133,13 +139,13 @@ class Search extends Module {
 	}
 	
   /**
-   * Sorteert zoekresulaat als een menu
-   *
-   * @param array $result 
-   * @return array
-   * @author Jan den Besten
-   * @igore
-   */
+  	* Sorteert zoekresulaat als een menu
+  	*
+  	* @param array $result 
+  	* @return array
+  	* @author Jan den Besten
+  	* @igore
+  	*/
 	private function _order_as_menu($result) {
 		// get full table with tree order, match with search_result
 		$this->CI->db->select('id,order,self_parent');
@@ -157,14 +163,14 @@ class Search extends Module {
 	}
 
   /**
-   * Groupeerd zoekresulaat
-   *
-   * @param array $result 
-   * @param array $uris 
-   * @return array
-   * @author Jan den Besten
-   * @ignore
-   */
+  	* Groupeerd zoekresulaat
+  	*
+  	* @param array $result 
+  	* @param array $uris 
+  	* @return array
+  	* @author Jan den Besten
+  	* @ignore
+  	*/
 	private function _group_by_uri($result,$uris) {
 		foreach ($uris as $key => $uri) {
 			$uris[$key]=array('uri'=>$uri);

@@ -1,24 +1,28 @@
 <?
 
 /**
- * Voegt comments toe aan pagina's
- *
- * <h2>Bestanden</h2>
- * - site/config/comments.php - Hier kun je een een aantal dingen instellen (zie hieronder)
- * - db/add_comments.sql - database bestand met de benodigde tabel
- * - site/views/comments.php - De view waarin de comments en het formulier geplaatst worden
- * - site/language/##/comments_lang.php - Taalbestanden
- *
- * <h2>Installatie</h2>
- * - Laad het database bestand db/add_comments.sql
- * - Pas de configuratie aan indien nodig (zie: site/config/comments.php)
- * - Pas de view (en styling) aan indien nodig
- * - Maak je eigen taalbestand en/of wijzig de bestaande
- *
- * @author Jan den Besten
- * @package FlexyAdmin_comments
- *
- */
+	* Voegt comments toe aan pagina's
+	*
+	* Bestanden
+	* ----------------
+	*
+	* - site/config/comments.php - Hier kun je een een aantal dingen instellen (zie hieronder)
+	* - db/add_comments.sql - database bestand met de benodigde tabel
+	* - site/views/comments.php - De view waarin de comments en het formulier geplaatst worden
+	* - site/language/##/comments_lang.php - Taalbestanden
+	*
+	* Installatie
+	* ----------------
+	*
+	* - Laad het database bestand db/add_comments.sql
+	* - Pas de configuratie aan indien nodig (zie: site/config/comments.php)
+	* - Pas de view (en styling) aan indien nodig
+	* - Maak je eigen taalbestand en/of wijzig de bestaande
+	*
+	* @author Jan den Besten
+	* @package FlexyAdmin_comments
+	*
+	*/
  class Comments extends Module {
 
 	private $foreign_table;
@@ -31,12 +35,12 @@
 	}
   
   /**
-   * Hier wordt de module standaard aangeroepen
-   *
-   * @param string $page
-   * @return string 
-   * @author Jan den Besten
-   */
+  	* Hier wordt de module standaard aangeroepen
+  	*
+  	* @param string $page
+  	* @return string 
+  	* @author Jan den Besten
+  	*/
 	public function index($page) {
 		if ( $this->CI->db->table_exists($this->config('table'))) {
       
@@ -155,11 +159,11 @@
 
 
   /**
-   * Set formfields
-   *
-   * @return array formdata
-   * @author Jan den Besten
-   */
+  	* Set formfields
+  	*
+  	* @return array formdata
+  	* @author Jan den Besten
+  	*/
 	private function _setform_fields() {
 		$fields=$this->CI->db->list_fields($this->config('table'));
 		$formData=array();
@@ -199,12 +203,12 @@
 
 
 	/**
-	 * some extra functions to check for spam and double
-	 *
-	 * @param string $data 
-	 * @return bool
-	 * @author Jan den Besten
-	 */
+		* some extra functions to check for spam and double
+		*
+		* @param string $data 
+		* @return bool
+		* @author Jan den Besten
+		*/
 	private function _check_if_robot($data) {
 		$robot=false;
 		if (!empty($data['spambody'])) $robot=true;

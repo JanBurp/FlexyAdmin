@@ -2,17 +2,19 @@
 
 
 /**
- * Verzorgt het activeren van gebruikers
- *
- * Is een onderdeel van de login module
- *
- * <h2>Bestanden</h2>
- * - site/libraries/login.php - De login module, kijk daar voor meer info.
- * - site/views/plugin_login_activate.php
- *
- * @author Jan den Besten
- * @package FlexyAdmin_login
- **/
+	* Verzorgt het activeren van gebruikers
+	*
+	* Is een onderdeel van de login module
+	*
+	* Bestanden
+	* ----------------
+	*
+	* - site/libraries/login.php - De login module, kijk daar voor meer info.
+	* - site/views/plugin_login_activate.php
+	*
+	* @author Jan den Besten
+	* @package FlexyAdmin_login
+	**/
  class Plugin_login_activate extends Plugin {
    
 

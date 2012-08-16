@@ -2,28 +2,32 @@
 
 
 /**
- * Met deze module kun je bezoekers laten inloggen
- *
- * De login module kan gebruikt worden om bezoekers te laten inloggen op de site.
- * Dit kan voor de hele site, maar ook per pagina.
- *
- * <h2>Bestanden</h2>
- * - site/config/login.php - Hier kun je een een aantal dingen instellen
- * - site/libraries/plugin_login_activate.php - Plugin die het aactiveren van nieuwe gebruikers in het admin deel verzorgd
- * - site/views/login/* - Enkele views en per taal een aantal email templates
- * - site/language/##/login_lang.php - Taalbestanden
- * 
- * <h2>Voorwaarden</h2>
- * - Als inloggen voor de hele site nodig is: laadt de module dan automatisch in.
- * - Als inloggen alleen op enkele pagina's nodig is: laadt de module dan alleen in op die pagina's
- * - Je moet in het menu in ieder geval ergens een pagina hebben die de module login.logout aanroept.
- * - Als gebruikers zichzelf moeten kunnen registreren dan moet ergens in het menu ook een pagina bestaan die login.register aanroept.
- * - Als gebruikers zichzelf moeten kunnen registreren of hun paswoord moeten kunnen resetten, zet dan de volgende instelling in site/config/config.php:
- * <code>$config['query_urls']=TRUE;</code>
- *
- * @author Jan den Besten
- * @package FlexyAdmin_login
- **/
+	* Met deze module kun je bezoekers laten inloggen
+	*
+	* De login module kan gebruikt worden om bezoekers te laten inloggen op de site.
+	* Dit kan voor de hele site, maar ook per pagina.
+	*
+	* Bestanden
+	* ----------------
+	*
+	* - site/config/login.php - Hier kun je een een aantal dingen instellen
+	* - site/libraries/plugin_login_activate.php - Plugin die het aactiveren van nieuwe gebruikers in het admin deel verzorgd
+	* - site/views/login/* - Enkele views en per taal een aantal email templates
+	* - site/language/##/login_lang.php - Taalbestanden
+	* 
+	* Voorwaarden
+	* ----------------
+	*
+	* - Als inloggen voor de hele site nodig is: laadt de module dan automatisch in.
+	* - Als inloggen alleen op enkele pagina's nodig is: laadt de module dan alleen in op die pagina's
+	* - Je moet in het menu in ieder geval ergens een pagina hebben die de module login.logout aanroept.
+	* - Als gebruikers zichzelf moeten kunnen registreren dan moet ergens in het menu ook een pagina bestaan die login.register aanroept.
+	* - Als gebruikers zichzelf moeten kunnen registreren of hun paswoord moeten kunnen resetten,
+  * zet dan de volgende instelling in site/config/config.php: `$config['query_urls']=TRUE;`
+	*
+	* @author Jan den Besten
+	* @package FlexyAdmin_login
+	**/
 
 class Login extends Module {
 	
@@ -44,12 +48,12 @@ class Login extends Module {
 	}
 	
   /**
-   * Hier wordt de module standaard aangeroepen: als nog niet is ingelogd dan wordt login.login aangeroepen
-   *
-   * @param string $page
-   * @return string 
-   * @author Jan den Besten
-   */
+  	* Hier wordt de module standaard aangeroepen: als nog niet is ingelogd dan wordt login.login aangeroepen
+  	*
+  	* @param string $page
+  	* @return string 
+  	* @author Jan den Besten
+  	*/
 	public function index($page) {
 		// If logged in, set class
 		if ($this->CI->user->logged_in()) $this->CI->add_class($this->config('class'));
@@ -63,13 +67,13 @@ class Login extends Module {
 	
   
   /**
-   * Als nog niet is ingelogd dan wordt gevraagd om dat te doen
-   *
-   * @param string $page 
-   * @param string $show_if_allready[true]
-   * @return string
-   * @author Jan den Besten
-   */
+  	* Als nog niet is ingelogd dan wordt gevraagd om dat te doen
+  	*
+  	* @param string $page 
+  	* @param string $show_if_allready[true]
+  	* @return string
+  	* @author Jan den Besten
+  	*/
    public function login($page, $show_if_allready=true) {
 		$title='';
 		$content='';
@@ -129,12 +133,12 @@ class Login extends Module {
 	}
 	
 	/**
-	 * Uitloggen van huidige gebruiker
-	 *
-	 * @param string $page 
-	 * @return string
-	 * @author Jan den Besten
-	 */
+		* Uitloggen van huidige gebruiker
+		*
+		* @param string $page 
+		* @return string
+		* @author Jan den Besten
+		*/
 	public function logout($page) {
 		$this->CI->user->logout();
 		return $this->_output($page,lang('logout_done'));
@@ -142,15 +146,15 @@ class Login extends Module {
 	
 	
   /**
-   * Reset wachtwoord (gebruiker krijgt een mail)
-   *
-   * @param string $page 
-   * @return string
-   * @author Jan den Besten
-   *
-   * LET OP: deze method werkt alleen met de volgende instelling in site/config/config.php:
-   * <code> $config['query_urls']&nbsp;=&nbsp;TRUE;</code>
-   */
+  	* Reset wachtwoord (gebruiker krijgt een mail)
+  	*
+  	* @param string $page 
+  	* @return string
+  	* @author Jan den Besten
+  	*
+  	* LET OP: deze method werkt alleen met de volgende instelling in site/config/config.php:
+  	* <code> $config['query_urls']&nbsp;=&nbsp;TRUE;</code>
+  	*/
    public function forgot_password($page) {
 		$content='';
 		$code=$this->CI->input->get('code');
@@ -196,15 +200,15 @@ class Login extends Module {
 	}
 
   /**
-   * Registreer nieuwe gebruiker (gebruiker krijgt een mail)
-   *
-   * @param string $page 
-   * @return string
-   * @author Jan den Besten
-   *
-   * LET OP: deze method werkt alleen met de volgende instelling in site/config/config.php:
-   * <code> $config['query_urls']&nbsp;=&nbsp;TRUE;</code>
-   */
+  	* Registreer nieuwe gebruiker (gebruiker krijgt een mail)
+  	*
+  	* @param string $page 
+  	* @return string
+  	* @author Jan den Besten
+  	*
+  	* LET OP: deze method werkt alleen met de volgende instelling in site/config/config.php:
+  	* <code> $config['query_urls']&nbsp;=&nbsp;TRUE;</code>
+  	*/
 	public function register($page) {
 		$errors		= '';
 		$content	= '';
@@ -269,13 +273,13 @@ class Login extends Module {
 
 
 	/**
-	 * Zet een formulier klaar
-	 *
-	 * @param string $type 
-	 * @return void
-	 * @author Jan den Besten
-   * @ignore
-	 */
+		* Zet een formulier klaar
+		*
+		* @param string $type 
+		* @return void
+		* @author Jan den Besten
+  	* @ignore
+		*/
 	private function _loadform($type) {
 		if (!$this->form) {
 			$this->CI->load->library('form');
@@ -312,22 +316,22 @@ class Login extends Module {
 	}
 	
   /**
-   * @param string $page 
-   * @param string $content
-   * @return void
-   * @author Jan den Besten
-   * @ignore
-   */
+  	* @param string $page 
+  	* @param string $content
+  	* @return void
+  	* @author Jan den Besten
+  	* @ignore
+  	*/
 	private function _output($page,$content) {
 		$content='<div id="login">'.$content.'</div>';
 		return $this->CI->view('login/main', array('content'=>$content),true);
 	}
 	
   /**
-   * @return void
-   * @author Jan den Besten
-   * @ignore
-   */
+  	* @return void
+  	* @author Jan den Besten
+  	* @ignore
+  	*/
    private function _find_uris() {
 		$this->config['login_uri']=$this->CI->find_module_uri('login.login');
 		$this->config['register_uri']=$this->CI->find_module_uri('login.register');

@@ -1,23 +1,27 @@
 <?
 
 /**
- * Formulier dat de gebruiker zelf kan instellen
- *
- * In de database zijn twee extra tabellen waarin de gebruiker formulieren kan maken en aanpassen.
- *
- * <h2>Bestanden</h2>
- * - site/config/flexy_form.php - Hier kun je een een aantal dingen instellen (zie hieronder)
- * - db/add_flexy_forms.sql - database bestand met de benodigde tabel
- * - site/views/flexy_form.php - De view waarin de comments en het formulier geplaatst worden
- *
- * <h2>Installatie</h2>
- * - Laad het database bestand db/add_flexy_forms.sql
- * - Pas de configuratie aan indien nodig (zie: site/config/flexy_form.php)
- * - Pas de view (en styling) aan indien nodig
- *
- * @author Jan den Besten
- * @package FlexyAdmin_contact_formulier
- */
+	* Formulier dat de gebruiker zelf kan instellen
+	*
+	* In de database zijn twee extra tabellen waarin de gebruiker formulieren kan maken en aanpassen.
+	*
+	* Bestanden
+	* ---------
+	*
+	* - site/config/flexy_form.php - Hier kun je een een aantal dingen instellen (zie hieronder)
+	* - db/add_flexy_forms.sql - database bestand met de benodigde tabel
+	* - site/views/flexy_form.php - De view waarin de comments en het formulier geplaatst worden
+	*
+	* Installatie
+	* -----------
+	*
+	* - Laad het database bestand db/add_flexy_forms.sql
+	* - Pas de configuratie aan indien nodig (zie: site/config/flexy_form.php)
+	* - Pas de view (en styling) aan indien nodig
+	*
+	* @author Jan den Besten
+	* @package FlexyAdmin_contact_formulier
+	*/
 
 class Flexy_form extends Module {
 
@@ -29,12 +33,12 @@ class Flexy_form extends Module {
 	}
 
   /**
-   * Hier wordt de module aangeroepen
-   *
-   * @param string $page
-   * @return string 
-   * @author Jan den Besten
-   */
+  	* Hier wordt de module aangeroepen
+  	*
+  	* @param string $page
+  	* @return string 
+  	* @author Jan den Besten
+  	*/
 	public function index($page) {
 		$viewForm='';
     $viewErrors='';
