@@ -1,4 +1,8 @@
 <?php
+
+require("markdown.php");
+
+
 /**
 * PHPDoc parser for use in Doqumentor
 *
@@ -93,55 +97,15 @@ class Parser {
 	}
 
   /**
-   * Vertaald description naar mooie HTML
+   * Vertaald description naar mooie HTML (parse Markdown)
    *
    * @return void
    * @author Jan den Besten
    **/
   function parseDescription($desc) {
-    // maak lijsten als aan het begin een '-' staat
-    $list=false;
-    foreach ($desc as $key => $line) {
-      // Voeg mooie html classes toe:
-      $line = preg_replace("/(\b[^\s]*?\.(php|html|js|sql)\b)/ui", "<span class=\"doc_filename\">$1</span>", $line);    // filenames
-      
-      if (substr($line,0,1)=='-') {
-        $line=trim(substr($line,1));
-        if ($list) {
-          // continue list
-          $line='<li>'.$line.'</li>';
-        }
-        else {
-          // start list
-          $list=true;
-          $line='<ul><li>'.$line.'</li>';
-        }
-      }
-      elseif ($list) {
-        // end list
-        $list=false;
-        $line='</ul>'.$line;
-      }
-      $desc[$key]=$line;
-    }
-    if ($list) $desc[]='</ul>';
-    
-    // Plak regels aan elkaar, en als er aan het eind nog geen HTML tag is, voeg dan een <br/> toe.
-    $html='';
-    foreach ($desc as $key => $line) {
-      $html.=$line;
-      if (empty($line) or substr($line,strlen($line)-1,1)!='>') {
-        $html.='<br />';
-      }
-    }
-    
-    // remove <br /><h2>
-    $html = str_replace('<br /><h','<h',$html);
-    // trim <br />
-    $html = preg_replace("/^(<br \/>)*/ui", "", $html);
-    $html = preg_replace("/(<br \/>)*$/ui", "", $html);
-    
-    return trim($html);
+    $desc=implode("\n",$desc);
+    $html = Markdown($desc);
+    return $html;
   }
   
 	/**

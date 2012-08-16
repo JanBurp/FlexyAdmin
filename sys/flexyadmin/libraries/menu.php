@@ -4,61 +4,96 @@
   *
   * @author Jan den Besten
   *
-  * <h1>Eenvoudig menu maken</h1>
-  * Hieronder zie je een voorbeeld om vanuit het niets een menu aan te maken.
-  * <code>$menu = new Menu();
-  * $menu->add( array( 'uri'=>'home', 'name'=>'Home' ) );
-  * $menu->add( array( 'uri'=>'een_pagina', 'name'=>'Een Pagina' ) );
-  * $menu->add_sub( array( 'uri'=>'een_pagina', 'sub'=>array( 'uri'=>'subpagina', 'name'=>'Subpagina' ) );
-  * $menu->add( array( 'uri'=>'links', 'name'=>'Links') );
-  * $menu->add( array( 'uri'=>'contact', 'name'=>'Contact') );
-  * echo $menu->render();</code>
-  * Het resultaat in HTML is dan:
-  * <code>
-  * &lt;ul&gt;
-  *   &lt;li&gt;&lt;a href="home"&gt;Home&lt;/a&gt;&lt;/li&gt;
-  *   &lt;li&gt;&lt;a href="een_pagina"&gt;Een pagina&lt;/a&gt;
-  *     &lt;ul&gt;
-  *       &lt;li&gt;&lt;a href="een_pagina/subpagina"&gt;Subpagina&lt;/a&gt;&lt;/li&gt;
-  *     &lt;/ul&gt;
-  *     &lt;/li&gt;
-  *   &lt;li&gt;&lt;a href="links"&gt;Links&lt;/a&gt;&lt;/li&gt;
-  *   &lt;li&gt;&lt;a href="contact"&gt;Contact&lt;/a&gt;&lt;/li&gt;
-  * &lt;/ul&gt;</code>
+  * Eenvoudig menu maken
+  * ========================
   *
-  * <h1>Menu aanmaken vanuit een menu tabel</h1>
-  * Hieronder zie je hoe je een menu aanmaakt vanuit een tabel. Het is vergelijkbaar als de standaard manier die je in de controller.php vindt. Behalve dat daar de variabel <span class="code">$menu</span> al bestaat in de vorm van <span class="code">$this->menu</span>.
-  * <code>$menu = new Menu();<br/>$menu-&gt;set_current('home');<br />$menu-&gt;set_menu_from_table('tbl_menu');<br />echo $menu-&gt;render();</code>
+  * Hieronder zie je een voorbeeld om vanuit het niets een menu aan te maken.
+  *
+  *     $menu = new Menu();
+  *     $menu->add( array( 'uri'=>'home', 'name'=>'Home' ) );
+  *     $menu->add( array( 'uri'=>'een_pagina', 'name'=>'Een Pagina' ) );
+  *     $menu->add_sub( array( 'uri'=>'een_pagina', 'sub'=>array( 'uri'=>'subpagina', 'name'=>'Subpagina' ) );
+  *     $menu->add( array( 'uri'=>'links', 'name'=>'Links') );
+  *     $menu->add( array( 'uri'=>'contact', 'name'=>'Contact') );
+  *     echo $menu->render();
+  *
+  * Het resultaat in HTML is dan:
+  *
+  *     <ul>
+  *       <li><a href="home">Home</a></li>
+  *       <li><a href="een_pagina">Een pagina</a>
+  *         <ul>
+  *           <li><a href="een_pagina/subpagina">Subpagina</a></li>
+  *         </ul>
+  *         </li>
+  *       <li><a href="links">Links</a></li>
+  *       <li><a href="contact">Contact</a></li>
+  *     </ul>
+  *
+  * Menu aanmaken vanuit een menu tabel
+  * =======================================
+  *
+  * Hieronder zie je hoe je een menu aanmaakt vanuit een tabel.
+  * Het is vergelijkbaar als de standaard manier die je in de *controller.php* vindt.
+  * Behalve dat daar de variabele `$menu` al bestaat in de vorm van `$this->menu`.
+  *
+  *     $menu = new Menu();
+  *     $menu->set_current('home');
+  *     $menu->set_menu_from_table('tbl_menu');
+  *     echo $menu->render();
+  *
   * Heeft hetzelfde resultaat als het voorbeeld hierboven.
   *
-  * <h1>Classes en id's van menu elementen</h1>
+  * Classes en id's van menu elementen
+  * ======================================
+  *
   * Bovenstaande HTML voorbeelden zijn sterk vereenvoudigd omdat er nog classes en id's meegegeven worden aan de ul, li en a elementen.
-  * <h2>ul</h2>
+  *
+  * ul
+  * ------
+  *
   * Aan het ul element worden alleen een tweetal classes meegegeven:
-  * - 'lev#' (waar # staat voor het level, beginnend bij 1)
+  *
+  * - `lev#` (waar # staat voor het level, beginnend bij 1)
   * - als het een submenu is (lev2 of hoger) komt de uri van de pagina waar het een submenu van is erbij.
+  *
   * In bovenstaand voorbeeld ziet de eerste ul er dus zo uit:
-  * <code>&lt;ul class="lev1"&gt;</code>
+  *
+  *     <ul class="lev1">;
+  *
   * En de tweede ul (onderdeel van de tweede li):
-  * <code>&lt;ul class="lev1 een_pagina"&gt;</code>
-  * <h2>li</h2>
+  *
+  *     <ul class="lev1 een_pagina">;
+  *
+  * li
+  * ------
+  * 
   * Classes meegegeven aan een li element:
-  * -'lev#' (net als bij ul)
-  * -'pos#' (positie binnen bovenliggende ul, beginnend bij 1)
-  * -'first' alleen als pos1, dus de eerste li binnen de ul
-  * -'last' alleen voor de laatste li binnen de ul
-  * -'current' als dit de huidige pagina is, dit is er altijd maar &eacute;&eacute;n in het hele menu
-  * -'active' als de huidige pagina een onderliggende pagina is (dus als class 'current' heeft). Dit is de hele tak van li's naar boven toe. Maar altijd maar &eacute;&eacute;n tak
-  * -de uri van dit menu-item. Dus bijvoorbeeld 'een_pagina'.
+  *
+  * - `lev#` (net als bij ul)
+  * - `pos#` (positie binnen bovenliggende ul, beginnend bij 1)
+  * - `first` alleen als pos1, dus de eerste li binnen de ul
+  * - `last` alleen voor de laatste li binnen de ul
+  * - `current` als dit de huidige pagina is, dit is er altijd maar één in het hele menu
+  * - `active` als de huidige pagina een onderliggende pagina is (dus als class `current` heeft). Dit is de hele tak van li's naar boven toe. Maar altijd maar één tak
+  * - de uri van dit menu-item. Dus bijvoorbeeld `een_pagina`.
+  *
   * De id die meegegeven wordt aan een li element is alsvolgt samengesteld:
-  * -menu_
-  * -uri van de huidige pagina, met daarachter een '_'
-  * -pos#_lev#
+  *
+  * - `menu_`
+  * - uri van de huidige pagina, met daarachter een '_'
+  * - `pos#_lev#`
+  *
   * In bovenstaand voorbeeld ziet de eerste li er dus zo uit:
-  * <code>&lt;li id="menu_home_pos1_lev1" class="lev1 pos1 first current home"&gt;</code>
-  * <h2>a</h2>
+  *
+  *     <li id="menu_home_pos1_lev1" class="lev1 pos1 first current home">
+  *
+  * a
+  * ------
   * Aan het a element wordt precies dezelfde id en class meegegeven als aan het li element.
+  *
   */
+  
 class Menu {
 
   /**
@@ -272,6 +307,7 @@ class Menu {
    * Zet attributen of class
    *
    * Hiermee kun je een vast attribuut aan alle menu-items meegeven:
+   *
    * - Als je een array meegeeft zijn de keys de attribuut namen en de values de waarden van die attributen.
    * - Als je een string meegeeft wordt de waarde van de string aan het class attribuut meegegeven. Zo kun je dus alle menu-items van eenzelfde css class voorzien
    *
@@ -620,7 +656,7 @@ class Menu {
    * Zet de templates voor het menu en submenus
    *
    * Hiermee kun je de standaard gebruikte HTML tags aanpassen
-   * Standaard worden hier de &lt;ul&gt; en &lt;/ul&gt; tags gebruikt
+   * Standaard worden hier de `<ul>` en `</ul>` tags gebruikt
    *
    * @param string $start['&lt;ul&gt;']
    * @param string $end['&lt;/ul&gt;']
@@ -636,7 +672,7 @@ class Menu {
    * Zet de templates voor de menu item's
    *
    * Hiermee kun je de standaard gebruikte HTML tags en plek van de attributen aanpassen
-   * Standaard worden hier de &lt;li&gt; en &lt;/li&gt; tags gebruikt
+   * Standaard worden hier de `<li>` en `</li>` tags gebruikt
    * %s wordt vervangen door de attributen (class, id etc.)
    *
    * @param string $start['&lt;li %s&gt;']
@@ -993,19 +1029,22 @@ class Menu {
    * Geeft uri van vorige pagina op hetzelfde nivo
    *
    * Hiermee kun je de uri krijgen van de vorige pagina op hetzelfde nivo. Standaard krijg je alleen het uri part van het huidige nivo.
-   * Als eerste argument geef je de huidige (volledige) uri mee. Als je deze leeglaat en je hebt al eerder <em>set_current()</em> aangeroepen, dan wordt de huidige uri gebruikt.
+   * Als eerste argument geef je de huidige (volledige) uri mee. Als je deze leeglaat en je hebt al eerder *set_current()* aangeroepen, dan wordt de huidige uri gebruikt.
    * Als het 2e argument TRUE is zal de hele uri (met alle nivo's) teruggegeven worden.
    * Als er geen vorige uri bestaat zal het resultaat FALSE zijn.
-   * <code>$menu-&gt;set_current('een_pagina');
-   * echo $menu-&gt;get_prev_uri();
-   * echo $menu-&gt;get_prev_uri('een_pagina/tweede_sub_pagina', TRUE);
-   * echo $menu-&gt;get_prev_uri('links');
-   * echo $menu-&gt;get_prev_uri('home');</code>
+   *
+   *    $menu->set_current('een_pagina');
+   *    echo $menu->get_prev_uri();
+   *    echo $menu->get_prev_uri('een_pagina/tweede_sub_pagina', TRUE);
+   *    echo $menu->get_prev_uri('links');
+   *    echo $menu->get_prev_uri('home');
+   *
    * Geeft als resultaat:
-   * <code>home
-   * een_pagina/eerste_sub_pagina
-   * een_pagina
-   * FALSE</code>
+   *
+   *    home
+   *    een_pagina/eerste_sub_pagina
+   *    een_pagina
+   *    FALSE
    *
    * @param string $uri[''] 
    * @param bool $full[TRUE] als TRUE dan worden full_uri's meegegeven die het hele uri pad representeren

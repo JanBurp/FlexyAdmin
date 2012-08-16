@@ -24,6 +24,10 @@ function _callback_highlight($matches) {
 	$code=str_replace(array('&lt;','&gt;'),array('<','>'),$code);
 	$code=str_replace(array('<br/>','<br />','<br>'),"\n",$code);
   $code=highlight_code($code);
+  // no newlines within <code>, remove last <br /> and last &nbsp;
+  $code=str_replace("\n",'',$code);
+  $code = preg_replace("/\<br \/>(?!.*\<br \/>)/uU", "", $code);
+  $code = preg_replace("/&nbsp;((?!.*&nbsp;).*\<\/code>\z)/uU", "$1", $code);
 	return $code;
 }
 
@@ -49,8 +53,8 @@ function _callback_highlight_span($matches) {
  */
 
 function highlight_code_if_needed($html) {
-  $html=preg_replace_callback('/<code>(.*?)<\/code>/','_callback_highlight',$html);
-  $html=preg_replace_callback('/<span class="code">(.*?)<\/span>/','_callback_highlight_span',$html);
+  $html=preg_replace_callback('/<code>(.*?)<\/code>/usm','_callback_highlight',$html);
+  $html=preg_replace_callback('/<span class="code">(.*?)<\/span>/usm','_callback_highlight_span',$html);
 	return $html;
 }
 
