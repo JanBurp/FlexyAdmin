@@ -73,7 +73,7 @@ class __ extends AdminController {
     $libraries=read_map('sys/flexyadmin/libraries','php');
     unset($libraries['ion_auth.php']); // exclude allready inherited libraries
     unset($libraries['gmap.php']); // exclude allready inherited libraries
-	// trace_($libraries);
+    // trace_($libraries);
     $modules=read_map('site/libraries','php'); // Frontend libraries (modules)
     $libraries=array_merge($libraries,$modules);
     foreach ($libraries as $file=>$library) {
@@ -322,42 +322,42 @@ class __ extends AdminController {
     }
   }
   
-  private function _add_html_docs($path) {
-    $files=read_map($path);
-    foreach ($files as $name  => $file) {
-      if ($file['type']=='dir') {
-        $dir=str_replace('__doc/','',$file['path']);
-        $dir=preg_replace("/\/(\d_)/u", "/", $dir);
-        if (!file_exists($dir)) mkdir($dir);
-        $this->_add_html_docs($path.'/'.$name);
-      }
-      else {
-        $name=ucfirst(str_replace(array('_','.html'),array(' ',''),remove_prefix($name,'-')));
-        $path=explode('/',$file['path']);
-        $path=$path[count($path)-2];
-        $type=remove_prefix($path,'_');
-        
-        $html=read_file($file['path']);
-        // if <body> exists, get only all in body tag
-        preg_match("/<body>(.*)<\/body>/", $html, $matches);
-        if (isset($matches[1])) $html=$matches[1];
-        // replace local links /3-link with /link
-        $html = preg_replace("/(href=\")(\d-)([^\"]*?)\"/us", "$1$3\"", $html);
-        $html = preg_replace("/(href=\"([^\"]*?)\\/)\\d-(.*?)\"/us", "$1$3\"", $html);
-        $html = preg_replace("/(href=\"\.\.\/)(\d_)([^\"]*)\"/us", "$1$3\"", $html);
-        
-        $fileName=str_replace('__doc/','',$file['path']);
-        $fileName=preg_replace("/\/(\d_)/u", "/", $fileName);
-        $fileName=preg_replace("/\/(\d-)/u", "/", $fileName);
-        $content=highlight_code_if_needed( $this->load->view('admin/__/doc_file',array('file'=>$name,'functions'=>$html),true) );
-        $fileContent=$this->load->view('admin/__/doc',array('content'=>$content,'root'=>'../'),true);
-        write_file($fileName,$fileContent);
-        $this->_add_content('DOC created: '.$fileName.'</br>');
-        $this->toc[$type][$name]=$fileName;
-        $this->_add_to_tipue($name,$html,$fileName);
-      }
-    }
-  }
+  // private function _add_html_docs($path) {
+  //   $files=read_map($path);
+  //   foreach ($files as $name  => $file) {
+  //     if ($file['type']=='dir') {
+  //       $dir=str_replace('__doc/','',$file['path']);
+  //       $dir=preg_replace("/\/(\d_)/u", "/", $dir);
+  //       if (!file_exists($dir)) mkdir($dir);
+  //       $this->_add_html_docs($path.'/'.$name);
+  //     }
+  //     else {
+  //       $name=ucfirst(str_replace(array('_','.html'),array(' ',''),remove_prefix($name,'-')));
+  //       $path=explode('/',$file['path']);
+  //       $path=$path[count($path)-2];
+  //       $type=remove_prefix($path,'_');
+  //       
+  //       $html=read_file($file['path']);
+  //       // if <body> exists, get only all in body tag
+  //       preg_match("/<body>(.*)<\/body>/", $html, $matches);
+  //       if (isset($matches[1])) $html=$matches[1];
+  //       // replace local links /3-link with /link
+  //       $html = preg_replace("/(href=\")(\d-)([^\"]*?)\"/us", "$1$3\"", $html);
+  //       $html = preg_replace("/(href=\"([^\"]*?)\\/)\\d-(.*?)\"/us", "$1$3\"", $html);
+  //       $html = preg_replace("/(href=\"\.\.\/)(\d_)([^\"]*)\"/us", "$1$3\"", $html);
+  //       
+  //       $fileName=str_replace('__doc/','',$file['path']);
+  //       $fileName=preg_replace("/\/(\d_)/u", "/", $fileName);
+  //       $fileName=preg_replace("/\/(\d-)/u", "/", $fileName);
+  //       $content=highlight_code_if_needed( $this->load->view('admin/__/doc_file',array('file'=>$name,'functions'=>$html),true) );
+  //       $fileContent=$this->load->view('admin/__/doc',array('content'=>$content,'root'=>'../'),true);
+  //       write_file($fileName,$fileContent);
+  //       $this->_add_content('DOC created: '.$fileName.'</br>');
+  //       $this->toc[$type][$name]=$fileName;
+  //       $this->_add_to_tipue($name,$html,$fileName);
+  //     }
+  //   }
+  // }
 
   private function _add_to_tipue($name,$html,$fileName) {
     $tags='';
