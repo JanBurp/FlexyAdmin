@@ -82,11 +82,11 @@ class Menu {
    */
 	var $current;
 
-	private  $tmpUrl;
+  private  $tmpUrl;
 	private  $urlField;
 	private  $fields;
 	private  $extraFields;
-	private 	$attr;
+  private  $attr;
 	private  $itemAttr;
 	private  $currentAsActive;
 	
