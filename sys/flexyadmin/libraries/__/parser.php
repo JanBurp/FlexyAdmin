@@ -1,6 +1,6 @@
 <?php
 
-require("markdown.php");
+require_once("markdown.php");
 
 
 /**
