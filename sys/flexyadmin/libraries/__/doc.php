@@ -167,6 +167,7 @@ class Doc {
           }
           unset($properties[$key]);
         }
+        ksort($properties);
         $className=$class->getName();
         $parent=$class->getParentClass();
         if ($parent) $parent=$parent->getName();
@@ -184,11 +185,12 @@ class Doc {
     // Helper functions
     $doc['functions']=array();
     $functions=$this->docFunctions($this->functions);
-    $functions=sort_by($functions,'file');
+
     foreach ($functions as $key => $value) {
       $file=basename($value['file']);
       $doc['functions'][$file][$key]=$value;
     }
+    ksort($doc['functions']);
     return $doc;
   }
   
@@ -239,6 +241,7 @@ class Doc {
       }
       unset($functions[$key]);
     }
+    ksort($functions);
     return $functions;
   }
   
