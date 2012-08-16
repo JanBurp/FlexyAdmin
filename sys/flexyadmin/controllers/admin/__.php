@@ -1,6 +1,8 @@
 <?
 require_once(APPPATH."core/AdminController.php");
 require_once(APPPATH."core/FrontendController.php");  // Load this also, so PHP can build documentation for this one also
+require_once(APPPATH."libraries/__/markdown.php");
+
 
 
 /**
@@ -89,8 +91,8 @@ class __ extends AdminController {
     }
     
 
-    // Include HTML documents
-    $this->_add_html_docs('userguide/FlexyAdmin/__doc');
+    // Include general documents
+    $this->_add_markdown_docs('userguide/FlexyAdmin/__doc');
 
     // Ok, start
     $this->load->library('__/doc');
@@ -281,6 +283,43 @@ class __ extends AdminController {
     }
     $tags=implode(' ',$tags);
     return $tags;
+  }
+
+  private function _add_markdown_docs($path) {
+    $files=read_map($path);
+    foreach ($files as $name  => $file) {
+      if ($file['type']=='dir') {
+        $dir=str_replace('__doc/','',$file['path']);
+        $dir=preg_replace("/\/(\d_)/u", "/", $dir);
+        if (!file_exists($dir)) mkdir($dir);
+        $this->_add_markdown_docs($path.'/'.$name);
+      }
+      elseif ($file['type']=='md')  {
+        $name=ucfirst(str_replace(array('_','.html','.md'),array(' ',''),remove_prefix($name,'-')));
+        $path=explode('/',$file['path']);
+        $path=$path[count($path)-2];
+        $type=remove_prefix($path,'_');
+        
+        $markdown=read_file($file['path']);
+        $html = Markdown($markdown);
+        // replace local links /3-link with /link
+        $html = preg_replace("/(href=\")(\d-)([^\"]*?)\"/us", "$1$3\"", $html);
+        $html = preg_replace("/(href=\"([^\"]*?)\\/)\\d-(.*?)\"/us", "$1$3\"", $html);
+        $html = preg_replace("/(href=\"\.\.\/)(\d_)([^\"]*)\"/us", "$1$3\"", $html);
+        
+        $fileName=str_replace('__doc/','',$file['path']);
+        $fileName=str_replace('.md','.html',$fileName);
+        $fileName=preg_replace("/\/(\d_)/u", "/", $fileName);
+        $fileName=preg_replace("/\/(\d-)/u", "/", $fileName);
+        
+        $content=highlight_code_if_needed( $this->load->view('admin/__/doc_file',array('file'=>$name,'functions'=>$html),true) );
+        $fileContent=$this->load->view('admin/__/doc',array('content'=>$content,'root'=>'../'),true);
+        write_file($fileName,$fileContent);
+        $this->_add_content('DOC created: '.$fileName.'</br>');
+        $this->toc[$type][$name]=$fileName;
+        $this->_add_to_tipue($name,$html,$fileName);
+      }
+    }
   }
   
   private function _add_html_docs($path) {
