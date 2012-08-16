@@ -157,6 +157,7 @@ img {
 	padding-left: 20px;
 	}
 #menu li .API_plugin_stats,
+#menu li .log_geocode_cache,
 #menu li .log_login,
 #menu li .log_stats {
 	background-image: url("../icons/stats.gif");
