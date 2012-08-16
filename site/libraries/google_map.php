@@ -1,23 +1,27 @@
 <?
 
 /**
- * Laat een Google Map zien
- *
- * <h2>Bestanden</h2>
- * - site/config/google_map.php - Hier kun je een een aantal dingen instellen
- * - db/add_google_map.sql - database bestand, altijd nodig!
- * - site/views/google_map.php - De view waarin de map komt
- * - site/views/google_map_popup.php - view waarin de popup gemaakt wordt
- *
- * <h2>Installatie</h2>
- * - Laad het database bestand db/add_google_map.sql
- * - Pas de configuratie aan
- * - Pas de view (en styling) aan indien nodig
- *
- * @author Jan den Besten
- * @package FlexyAdmin_comments
- *
- */
+	* Laat een Google Map zien
+	*
+	* Bestanden
+	* ----------------
+	*
+	* - site/config/google_map.php - Hier kun je een een aantal dingen instellen
+	* - db/add_google_map.sql - database bestand, altijd nodig!
+	* - site/views/google_map.php - De view waarin de map komt
+	* - site/views/google_map_popup.php - view waarin de popup gemaakt wordt
+	*
+	* Installatie
+	* ----------------
+	*
+	* - Laad het database bestand db/add_google_map.sql
+	* - Pas de configuratie aan
+	* - Pas de view (en styling) aan indien nodig
+	*
+	* @author Jan den Besten
+	* @package FlexyAdmin_comments
+	*
+	*/
  
  class Google_map extends Module {
 
@@ -28,12 +32,12 @@
 	}
 
   /**
-   * Module
-   *
-   * @param string $page 
-   * @return void
-   * @author Jan den Besten
-   */
+  	* Module
+  	*
+  	* @param string $page 
+  	* @return void
+  	* @author Jan den Besten
+  	*/
 	public function index($page) {
 		$this->CI->gmap->GoogleMapAPI();
 	

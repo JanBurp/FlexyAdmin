@@ -1,22 +1,24 @@
 <?
 
 /**
- * Eenvoudig forum
- *
- * Beta!
- *
- * <h2>Bestanden</h2>
- * - site/config/forum.php - Hier kun je een een aantal dingen instellen
- * - site/models/forum.php - Model
- * - db/add_forum.sql - database bestand met de benodigde tabellen (TODO)
- * - site/views/forum - De views
- * - site/language/##/forum_lang.php - Taalbestanden
- *
- *
- * @author Jan den Besten
- * @package FlexyAdmin_comments
- *
- */
+	* Eenvoudig forum
+	*
+	* Beta!
+	*
+	* Bestanden
+	* ----------------
+	*
+	* - site/config/forum.php - Hier kun je een een aantal dingen instellen
+	* - site/models/forum.php - Model
+	* - db/add_forum.sql - database bestand met de benodigde tabellen (TODO)
+	* - site/views/forum - De views
+	* - site/language/##/forum_lang.php - Taalbestanden
+	*
+	*
+	* @author Jan den Besten
+	* @package FlexyAdmin_comments
+	*
+	*/
 
 class Forum extends Module {
 
@@ -53,13 +55,13 @@ class Forum extends Module {
 	}
 
   /**
-   * Maakt forum menu
-   *
-   * @param bool $add 
-   * @return string
-   * @author Jan den Besten
-   * @ignore
-   */
+  	* Maakt forum menu
+  	*
+  	* @param bool $add 
+  	* @return string
+  	* @author Jan den Besten
+  	* @ignore
+  	*/
   private function forum_menu($add=false) {
     $menu=new Menu();
     $menu->set_current($this->CI->uri->uri_string());
@@ -71,15 +73,15 @@ class Forum extends Module {
   }
 
   /**
-   * Roept juiste view aan
-   *
-   * @param string $view 
-   * @param array $data 
-   * @param bool $nop 
-   * @return string
-   * @author Jan den Besten
-   * @ignore
-   */
+  	* Roept juiste view aan
+  	*
+  	* @param string $view 
+  	* @param array $data 
+  	* @param bool $nop 
+  	* @return string
+  	* @author Jan den Besten
+  	* @ignore
+  	*/
   private function view($view,$data,$nop=true) {
     if (!isset($this->config['menu'])) $this->forum_menu();
     $html=$this->CI->view('forum/top',array('config'=>$this->config),true);
@@ -89,12 +91,12 @@ class Forum extends Module {
   }
 
   /**
-   * Hier wordt de module aangeroepen
-   *
-   * @param string $page
-   * @return string 
-   * @author Jan den Besten
-   */
+  	* Hier wordt de module aangeroepen
+  	*
+  	* @param string $page
+  	* @return string 
+  	* @author Jan den Besten
+  	*/
 	public function index($page) {
     // is there some action?
     if ($this->action) {
@@ -113,13 +115,13 @@ class Forum extends Module {
 	}
 
   /**
-   * Laat overzicht zien
-   *
-   * @param string $page 
-   * @param string $form[''] 
-   * @return string
-   * @author Jan den Besten
-   */
+  	* Laat overzicht zien
+  	*
+  	* @param string $page 
+  	* @param string $form[''] 
+  	* @return string
+  	* @author Jan den Besten
+  	*/
   public function show_index($page,$form='') {
     $recent=$this->CI->fm->get_recent_messages();
     $index=$this->CI->fm->get_index();
@@ -127,14 +129,14 @@ class Forum extends Module {
   }
 
   /**
-   * Laat thread zien
-   *
-   * @param string $categorie_uri 
-   * @param string $thread_uri 
-   * @return string
-   * @author Jan den Besten
-   * @ignore
-   */
+  	* Laat thread zien
+  	*
+  	* @param string $categorie_uri 
+  	* @param string $thread_uri 
+  	* @return string
+  	* @author Jan den Besten
+  	* @ignore
+  	*/
   public function show_thread($categorie_uri,$thread_uri) {
     $thread=$this->CI->fm->get_thread_by_uri($thread_uri);
     $pagination='';
@@ -170,14 +172,14 @@ class Forum extends Module {
   }
 
   /**
-   * Toont gevraagde form
-   *
-   * @param string $name 
-   * @param int $id[0]
-   * @return string
-   * @author Jan den Besten
-   * @ignore
-   */
+  	* Toont gevraagde form
+  	*
+  	* @param string $name 
+  	* @param int $id[0]
+  	* @return string
+  	* @author Jan den Besten
+  	* @ignore
+  	*/
   private function form($name,$id=0) {
 		$this->CI->load->library('form');
     $content='';
@@ -268,13 +270,13 @@ class Forum extends Module {
   }
 
   /**
-   * undocumented function
-   *
-   * @param string $page 
-   * @return bool
-   * @author Jan den Besten
-   * @ignore
-   */
+  	* undocumented function
+  	*
+  	* @param string $page 
+  	* @return bool
+  	* @author Jan den Besten
+  	* @ignore
+  	*/
   private function _call_action($page) {
     $method='_action_'.$this->action;
     if (method_exists($this,$method)) {
@@ -284,28 +286,28 @@ class Forum extends Module {
   }
 
   /**
-   * undocumented function
-   *
-   * @param string $page 
-   * @return string
-   * @author Jan den Besten
-   * @ignore
-   */
+  	* undocumented function
+  	*
+  	* @param string $page 
+  	* @return string
+  	* @author Jan den Besten
+  	* @ignore
+  	*/
   private function _action_newthread($page) {
     $form=$this->form('Thread');
     return $this->view('forum/new_thread',array('form'=>$form));
   }
 
   /**
-   * Verzorgt het versturen van emails na een nieuwe post
-   *
-   * @param string $thread_id 
-   * @param string $user_id 
-   * @param string $message['']
-   * @return bool
-   * @author Jan den Besten
-   * @ignore
-   */
+  	* Verzorgt het versturen van emails na een nieuwe post
+  	*
+  	* @param string $thread_id 
+  	* @param string $user_id 
+  	* @param string $message['']
+  	* @return bool
+  	* @author Jan den Besten
+  	* @ignore
+  	*/
 	private function _email_updates($thread_id,$user_id,$message='') {
 		$addresses=$this->CI->fm->get_email_adresses_for_thread($thread_id,$this->config('send_mail_to_admin'),$this->config('send_mail_to_thread_users'));
 		

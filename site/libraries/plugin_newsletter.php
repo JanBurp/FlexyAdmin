@@ -2,21 +2,21 @@
 
 
 /**
- * Aanmaken en versturen van nieuwsbrieven
- *
- * Onderdeel van de module newsletter
- *
- * @author Jan den Besten
- * @package FlexyAdmin_newsletter
- **/
+	* Aanmaken en versturen van nieuwsbrieven
+	*
+	* Onderdeel van de module newsletter
+	*
+	* @author Jan den Besten
+	* @package FlexyAdmin_newsletter
+	**/
 
 class Plugin_newsletter extends Plugin {
 
   /**
-   * Wizard object
-   *
-   * @ignore
-   */
+  	* Wizard object
+  	*
+  	* @ignore
+  	*/
   private $wizard;
 
   public function __construct() {

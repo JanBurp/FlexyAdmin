@@ -2,7 +2,8 @@
 
 /**
  * Basis class voor alle backend plugins. Zo begint je eigen plugin:
- * <code>class Plugin_mijn_plugin extends Plugin</code>
+ *
+ *      class Plugin_mijn_plugin extends Plugin
  *
  * @package default
  * @author Jan den Besten

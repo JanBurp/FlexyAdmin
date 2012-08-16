@@ -2,7 +2,8 @@
 
 /**
  * Basis class voor alle frontend modules. Zo begint je eigen module dus:
- * <code>class Mijn_module extends Module</code>
+ *
+ *      class Mijn_module extends Module
  *
  * @package default
  * @author Jan den Besten
