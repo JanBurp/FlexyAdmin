@@ -1,5 +1,21 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+
+/**
+ * Uitbreiding op CodeIgniters Pagination class
+ *
+ * @author Jan den Besten
+ * @version $Id$
+ * @copyright , 17 August, 2012
+ * @package default
+ **/
+
+ /**
+  * Uitbreiding op CodeIgniters Pagination class
+  *
+  * @package default
+  * @author Jan den Besten
+  */
 class MY_Pagination extends CI_Pagination {
 
 	// auto pagination

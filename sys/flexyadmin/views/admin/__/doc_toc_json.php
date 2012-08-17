@@ -10,4 +10,15 @@ var toc = {
 <? endforeach ?>
 };
 
-var index = '<?=$html?>';
+var links = {
+  'Index' : root+'index.html',
+<? foreach ($toc as $key => $files): ?>
+<? if ($files!='|'): ?>
+<? foreach ($files as $name=>$link): ?>
+'<?=$name?>' : root+'<?=str_replace('userguide/FlexyAdmin/','',$link)?>',
+<? endforeach ?>
+<? endif ?>
+<? endforeach ?>
+};
+
+var index = '<?= preg_replace("/>(\s*)</uUs", "><", $html) ?>';
