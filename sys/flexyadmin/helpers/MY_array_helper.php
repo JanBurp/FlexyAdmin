@@ -122,7 +122,14 @@ function array2json($arr) {
 	return '{' . $json . '}';//Return associative JSON
 }
 
-
+function json2array($json) {
+  $array=array();
+  if (preg_match("/{(.*?)}/uUs", $json,$matches)) {
+    $props=$matches[1];
+    trace_($props);
+  }
+  return $array;
+}
 
 function array2xml($array,$keys=NULL,$attr=NULL,$tabs=0) {
 	if ($tabs<=0)

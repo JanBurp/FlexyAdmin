@@ -205,8 +205,9 @@ class __ extends AdminController {
           $description=$p->getDesc();
           $shortdescription=$p->getShortDesc();
         }
+        $name=str_replace('.php','',$file);
         $html=$this->load->view('admin/__/doc_file',array(
-          'file'=>$file,
+          'file'=>$name,
           'path'=>$path,
           'shortdescription'=>$shortdescription,
           'description'=>$description,
@@ -218,7 +219,7 @@ class __ extends AdminController {
         $fileName='userguide/FlexyAdmin/helpers/'.str_replace('.php','.html',$file);
         write_file($fileName,$fileContent);
         $this->_add_content('Helper file created: '.$fileName.'</br>');
-        $this->toc['helpers'][$file]=$fileName;
+        $this->toc['helpers'][$name]=$fileName;
         $this->_add_to_tipue($fileName,$html,$fileName);
       }
 

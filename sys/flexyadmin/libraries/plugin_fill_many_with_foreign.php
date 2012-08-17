@@ -1,6 +1,23 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 
+/**
+ * Vult een relatie tabel met inhoud van een foreign tabel
+ * 
+ * Deze plugin komt van pas als je een tabel hebt die met een _foreign key_
+ * verwijst naar een andere tabel en je wilt de _foreign key_ verwijzing
+ * vervangen door een relatie tabel om zo meerdere keuzes mogelijk te maken.
+ * 
+ * Stel bijvoorbeeld dat in _tbl_menu_ het veld _id_links _bestaat:
+ * 
+ * - Maak (met de plugin **add_relation_table**) een relatie tabel aan: _rel_menu__links_
+ * - Roep met `.../admin/plugin/fill_many_with_foreign/rel_menu_links/tbl_menu.id_links` deze plugin aan.
+ * - _rel_menu_links_ is nu automatisch gevuld met verwijzingen die overeenkomen met de al bestaande foreign key verwijzingen van _tbl_menu.id_links_
+ * - Nu kun je zonder problemen het veld _tbl_menu.id_links_ verwijderen.
+ * 
+ * @package default
+ * @author Jan den Besten
+ */
 class Plugin_fill_many_with_foreign extends Plugin {
 
 	function _admin_api($args=false) {
