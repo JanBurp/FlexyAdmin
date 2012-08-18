@@ -30,15 +30,6 @@ class site extends CodeIgniterWebTestCase {
   public function tearDown() {
   }
 
-  public function test_userguide() {
-    $this->_show_head('Test Userguide');
-    $toc=read_file('/Users/Jan/Sites/FlexyAdmin/FlexyAdminDEMO/userguide/FlexyAdmin/assets/js/toc.js');
-    $index=json2array($toc);
-    trace_($index);
-  }
-
-
-
   public function test_menu() {
     $this->_show_head('Test Menu &amp; content');
     $this->_menu( $this->menu );
@@ -54,7 +45,7 @@ class site extends CodeIgniterWebTestCase {
     }
   }
 
-  private function _menu_item( $uri, $parentUri='' ) {
+  private function _menu_item( $uri, $parentUri='', $userguide=FALSE ) {
     if ( !empty( $parentUri ) ) $uri=$parentUri.'/'.$uri;
     $this->_show_item($uri);
     // $this->setMaximumRedirects(0);
