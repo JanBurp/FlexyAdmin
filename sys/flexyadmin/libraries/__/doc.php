@@ -224,7 +224,7 @@ class Doc {
       $file=$this->formatFilePath($value->getFileName());
       $comm=$this->docComment($value);
       $name=$value->getName();
-      if (!isset($comm['ignore']) and $this->not_excluded($file) and (substr($name,0,1)!='_')) { // and !($class AND !$value->isPublic())) {
+      if (!isset($comm['ignore']) and $this->not_excluded($file)) { // and (substr($name,0,1)!='_')) { // and !($class AND !$value->isPublic())) {
         $functions[$name]=array(
           'file'        => $this->formatFilePath($file),
           'lines'       => $value->getStartLine() . " - " . $value->getEndLine(),
