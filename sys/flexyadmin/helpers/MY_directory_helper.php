@@ -104,7 +104,7 @@ function read_map($path,$types='',$recursive=FALSE,$getInfo=TRUE,$getMetaData=FA
  * @return void
  * @author Jan den Besten
  */
-function empty_map($dir,$remove=false,$remove_hidden=true) {
+function empty_map($dir,$remove=false,$remove_hidden=false) {
   if (is_dir($dir)) {
     $objects = scandir($dir);
     foreach ($objects as $object) {
@@ -118,7 +118,9 @@ function empty_map($dir,$remove=false,$remove_hidden=true) {
       }
     }
     reset($objects);
-		if ($remove) rmdir($dir);
+		if ($remove) {
+      if (substr($object,0,1)!='.' or $remove_hidden) rmdir($dir);
+    }
   }
 }
 
