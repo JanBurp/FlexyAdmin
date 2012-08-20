@@ -103,6 +103,15 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		return (in_array($field,$f));
 	}
 	
+  function has_row($table,$data,$unset_fields=array('id','uri')) {
+    foreach ($unset_fields as $field) {
+      unset($data[$field]);
+    }
+		foreach ($data as $field => $value) $this->where($field,$value);
+    $row=$this->get_row($table);
+		return !empty($row);
+  }
+  
 	function get_first_field($table,$pre="str") {
 		$f=$this->list_fields($table);
 		$found=FALSE;

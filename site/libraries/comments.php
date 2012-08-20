@@ -86,22 +86,20 @@
 			
 				$data[$this->config('field_date')]=date(DATE_ISO8601);
 
-				// Check for spam
-				$spam=FALSE;
-				// Check if a robot has filled the empty textarea 'body' (which is hidden)
-				if (!$spam and $this->_check_if_robot($data)) $spam=TRUE;
-				// Check if the message is double
-				if (!$spam and $this->_check_if_double($data,$this->config('table')))	$spam=TRUE;
-				// Check the text with FlexyAdmins spam checker
-				if (!$spam and $this->_check_if_spamtext($data))	$spam=TRUE;
+				// Check for spam/double
+				$isSpam=$this->CI->spam->check($data);
+				$exists=$this->CI->db->has_row($this->config('table'),$data, array('id','spambody',$this->config('field_date')));
 
-				if ($spam) {
+				if ($isSpam or $exists) {
 					$errorHtml.=langp('comments_'.'spam');
 				}
 				else {
-					// Place comment in databas
+					// Place comment in database
+          unset($data['spambody']);
+          $data['int_spamscore']=$this->CI->spam->get_score();
 					foreach ($data as $field => $value) {$this->CI->db->set($field,$value);}
 					$this->CI->db->insert($this->config('table'));
+          
 					// Clean form
 					$form->set_data($formData,langp('comments_'.'title'));
 
@@ -205,35 +203,6 @@
 		return $formData;
 	}
 
-
-	/**
-		* some extra functions to check for spam and double
-		*
-		* @param string $data 
-		* @return bool
-		* @author Jan den Besten
-		*/
-	private function _check_if_robot($data) {
-		$robot=false;
-		if (!empty($data['spambody'])) $robot=true;
-		return $robot;
-	}
-	private function _check_if_double($data) {
-		unset($data['spambody']);
-		unset($data[$this->config('field_date')]);
-		foreach ($data as $field => $value) $this->CI->db->where($field,$value);
-		$double=$this->CI->db->get_row($this->config('table'));
-		if ($double) return TRUE;
-		return FALSE;
-	}
-	private function _check_if_spamtext(&$data) {
-		unset($data['spambody']);
-		$spam=new Spam();
-		$spam->check_text($this->config('field_text'));
-		$data[$this->config('field_spamscore')]=$spam->get_score();
-		if ($spam->get_action()>=2) return true;
-		return false;
-	}
 
 }
 
