@@ -25,7 +25,9 @@
  
  class Google_map extends Module {
 
-
+   /**
+    * @ignore
+    */
 	public function __construct() {
 		parent::__construct();
 		$this->CI->load->library('GMap');
@@ -37,6 +39,7 @@
   	* @param string $page 
   	* @return void
   	* @author Jan den Besten
+  	* @ignore
   	*/
 	public function index($page) {
 		$this->CI->gmap->GoogleMapAPI();

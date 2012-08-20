@@ -23,6 +23,9 @@
 	*/
 class Contact_form extends Module {
 
+  /**
+   * @ignore
+   */
 	public function __construct() {
 		parent::__construct();
 		$this->CI->load->library('form');
@@ -35,6 +38,7 @@ class Contact_form extends Module {
   	* @param string $page 
   	* @return void
   	* @author Jan den Besten
+  	* @ignore
   	*/
 	public function index($page) {
 		$viewForm='';

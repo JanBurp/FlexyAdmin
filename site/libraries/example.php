@@ -8,17 +8,27 @@
  
  class Example extends Module {
 
-
-	public function __construct() {
-		parent::__construct();
-		// $this->CI->menu->register_change_module($this); // Call this if you use the change_menu_item() method.
-	}
+  /**
+    * Initialiseer module
+    *
+    * @author Jan den Besten
+    */
+  public function __construct() {
+    parent::__construct();
+    // $this->CI->menu->register_change_module($this); // Als je change_menu_item() wilt gebruiken moet je dat hiermee aankondigen
+  }
 
   /**
-  	* Hier komt je eigen code
+  	* Standaard wordt index() aangeroepen
+  	* 
+  	* Je kunt op 3 manieren met je module iets aan de inhoud van de site veranderen:
+  	* 
+  	* - return een string met de extra content die je wilt toevoegen aan de huidige pagina
+  	* - return $page en pas dingen aan in $page
+  	* - return niets en doe heel wat anders, bijvoorbeeld $this->CI->site aanpassen
   	*
   	* @param string $page 
-  	* @return void
+  	* @return mixed
   	* @author Jan den Besten
   	*/
 	public function index($page) {
@@ -28,25 +38,26 @@
 
 
   /**
-  	* Eventueel andere methods kunnen ook 'example.other'
+  	* Eventueel andere methods kunnen ook worden aangeroepen 'example.other'
   	*
+  	* @param string $page 
+  	* @return mixed
   	* @author Jan den Besten
   	*/
 	public function other($page) {
-
-		// Do something...
 		$page['module_content']='<h1>Example Module.Other</h1>';
-		
-		// There are two ways to return something. Just a string wich will be added to the content after page, see index()
-		// Or return $page with 'module_content' as an extra field (which will result in the same), 
-		// or just change $page or even $this->CI->site.
-		// Offcourse you can use views with $this->view();
 		return $page;
 	}
 
 
 
-	// This is a method that will be called by Menu. Use it to change menu items
+  // /**
+   // * Deze method wordt aangeroepen door Menu zodat je eventueel een menu-item kunt aanpassen
+   // *
+   // * @param string $menu_item 
+   // * @return void
+   // * @author Jan den Besten
+   // */
 	// public function change_menu_item($menu_item) {
 	// 	if ($menu_item['full_uri']==$this->CI->uri->get()) {
 	// 		$menu_item['name']='EXAMPLE';

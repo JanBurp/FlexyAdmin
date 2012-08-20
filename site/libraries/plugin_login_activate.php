@@ -17,12 +17,21 @@
 	**/
  class Plugin_login_activate extends Plugin {
    
-
+   /**
+    * @ignore
+    */
 	public function __construct() {
 		parent::__construct();
 		$this->CI->load->language('login');
 	}
 	
+  /**
+   * Toont een lijst met niet geactiveerde gebruikers en knoppen om die gebruikers toe te staan of te weigeren
+   *
+   * @param string $args 
+   * @return string
+   * @author Jan den Besten
+   */
 	public function _admin_api($args=NULL) {
 		if ($this->CI->user->can_activate_users()) {
 			// redirect ion_auth to other email_templates
@@ -43,6 +52,14 @@
 		}
 	}
 	
+  /**
+   * Weiger gebruiker
+   *
+   * @param string $user_id 
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   */
 	private function _deny_user($user_id) {
 		$user=$this->CI->user->get_user($user_id);
 		if ($user) {
@@ -52,6 +69,14 @@
 		}
 	}
 
+  /**
+   * Accepteer gebruiker
+   *
+   * @param string $user_id 
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   */
 	private function _accept_user($user_id) {
 		$user=$this->CI->user->get_user($user_id);
 		if ($user and !$user->b_active) {
@@ -61,6 +86,13 @@
 		}
 	}
 	
+  /**
+   * Toont de lijst met inactieve gebruikers en opties in een grid
+   *
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   */
 	private function _show_inactive_users() {
 		$users=$this->CI->user->get_inactive_users_array();
 		if ($users) {

@@ -22,7 +22,9 @@
 
 class Submenu extends Module {
 
-
+  /**
+   * @ignore
+   */
 	public function __construct() {
 		parent::__construct();
 	}
@@ -33,6 +35,7 @@ class Submenu extends Module {
   	* @param string $page
   	* @return string 
   	* @author Jan den Besten
+  	* @ignore
   	*/
 	public function index($page) {
 		$level=$this->config('level');

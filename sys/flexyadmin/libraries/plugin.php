@@ -64,6 +64,9 @@ class Plugin extends Parent_module_plugin {
 	protected $trigger=array();
 
 
+  /**
+   * @ignore
+   */
 	public function __construct($name='') {
 		parent::__construct($name);
 	}
@@ -120,6 +123,7 @@ class Plugin extends Parent_module_plugin {
    * @return string $content Huidige output
    * @author Jan den Besten
    * @depricated
+   * @ignore
    */
 	protected function add_content($content) {
 		$this->content.=$content;
@@ -151,7 +155,7 @@ class Plugin extends Parent_module_plugin {
    * Laad de view van de plugin en voegt standaard de berichten toe in de argumenten
    *
    * @param string $view[''] De view die geladen moet worden, als leeg, dan wordt de (volledige) naam van de plugin gebruikt: 'plugin_template' bijvoorbeeld.
-   * @param array $args[NULL] Alle argumenten, alle berichten worden standaard meegegeven onder de naam 'messages' en als 'title' niet wordt meegegeven dan wordt die ingesteld op de (korte) naam van de plugin.
+   * @param array $args[NULL] Alle argumenten. Alle berichten worden standaard meegegeven onder de naam 'messages' en als 'title' niet wordt meegegeven dan wordt die ingesteld op de (korte) naam van de plugin.
    * @param bool $hide[TRUE] Als waar dan wordt de view niet meteen naar de output gestuurd, maar allen als return waarde gegeven
    * @return string het HTML resultaat van de view
    * @author Jan den Besten

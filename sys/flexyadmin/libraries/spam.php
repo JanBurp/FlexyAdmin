@@ -1,8 +1,10 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
-*	Thanks to Dr. Peter J. Meyers
-*/
+ * Controleer hiermee of een ingevuld formulier spam bevat
+ *
+ * @author Dr. Peter J. Meyers, Jan den Besten
+ */
 
 class Spam {
 
@@ -11,7 +13,10 @@ class Spam {
 	var $text_no_html;
 	var $rapport;
 
-	function __construct() {
+  /**
+   * @ignore
+   */
+  function __construct() {
 		$this->init();
 	}
 

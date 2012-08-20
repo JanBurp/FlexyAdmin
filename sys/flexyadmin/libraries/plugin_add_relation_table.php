@@ -14,8 +14,10 @@
  
 class Plugin_add_relation_table extends Plugin {
 	
-	
-	function _admin_api($args=false) {
+  /**
+   * @ignore
+   */
+   function _admin_api($args=false) {
 		if ($this->CI->user->is_super_admin()) {
 			$this->add_content(h($this->name,1));
 			$goodArgs=false;

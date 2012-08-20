@@ -6,12 +6,12 @@
   * Deze plugin zal alle tabellen waar het zinvol is voorzien van indexen op zinvollen velden. 
   * In alle tabellen worden de volgende velden van indexen voorzien:
   * 
-  * - _id_..._
+  * - _id_...
   * - _self_parent_ 
   * - _uri_
   * - _order_
   * 
-  * In de tabel _res_menu_result_ (zie [Samengesteld menu's][8]) zullen ook deze velden worden voorzien van een index:
+  * In de tabel _res_menu_result_ (zie [Samengesteld menu]({Samengesteld-menu})) zullen ook deze velden worden voorzien van een index:
   * 
   * - _int_id_
   * - _str_uri_
@@ -22,6 +22,9 @@
   */
 class Plugin_create_indexes extends Plugin {
 
+  /**
+   * @ignore
+   */
 	public function _admin_api($args=NULL) {
 		if ($this->CI->user->is_super_admin()) {
 			$this->add_content(h($this->name,1));
@@ -30,7 +33,13 @@ class Plugin_create_indexes extends Plugin {
     return $this->content;
 	}
 
-
+  /**
+   * Doe het eigenlijke werk: maak indexen aan
+   *
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   */
 	private function _create_indexes() {
 		$tables=$this->CI->db->list_tables();
 
@@ -72,9 +81,6 @@ class Plugin_create_indexes extends Plugin {
 					}
 				}
 				
-				
-				
-
 				
 				switch ($pre) {
 					case 'tbl':

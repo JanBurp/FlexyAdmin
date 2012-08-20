@@ -20,6 +20,9 @@
  */
 class Plugin_fill_many_with_foreign extends Plugin {
 
+  /**
+   * @ignore
+   */
 	function _admin_api($args=false) {
 		if ($this->CI->user->is_super_admin()) {
 			$this->add_content(h($this->name,1));

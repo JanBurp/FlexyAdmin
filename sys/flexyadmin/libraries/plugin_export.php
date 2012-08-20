@@ -1,15 +1,20 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- * FlexyAdmin Plugin template
+ * Exporteer een tabel
+ * 
+ * Je kunt de tabel kiezen en het formaat van de export.
+ * Daarna start een download van de export
  *
+ * @package default
  * @author Jan den Besten
  */
-
-
 class Plugin_export extends Plugin {
 
 
+  /**
+   * @ignore
+   */
 	public function _admin_api($args=NULL) {
 		$this->add_content(h('Export',1));
 
@@ -74,7 +79,9 @@ class Plugin_export extends Plugin {
     return $this->content;
 	}
 
-
+  /**
+   * @ignore
+   */
 	private function export($table,$type='csv') {
 		
 		if ($this->config('add_foreigns')) {

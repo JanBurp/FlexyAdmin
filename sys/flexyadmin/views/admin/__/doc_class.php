@@ -10,9 +10,15 @@
   <? endif ?>
   <h1 class="doc_file"><?=$file?></h1>
   <p class="doc_path"><?=$path?></p>
+
+  <? if (isset($doc['author'])): ?>
+  <p class="doc_author"><?=implode(' ',$doc['author'])?></p>
+  <? endif ?>
+  
   
   <p class="doc_description"><b><?=$shortdescription?></b></p>
   <p class="doc_description"><?=$description?></p>
+  
   
   <? if (!empty($properties)): ?>
   <h1>Properties</h1>

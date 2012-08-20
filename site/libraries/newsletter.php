@@ -27,6 +27,12 @@
 	*/
 class Newsletter extends Module {
 
+  /**
+   * @ignore
+   */
+  public function __construct() {
+    parent::__construct();
+  }
 
   /**
   	* Roept newsletter.submit aan, maar als er een unsubmit waarde bekend is dan wordt newsletter.unsubmit aangeroepen
@@ -34,6 +40,7 @@ class Newsletter extends Module {
   	* @param string $page
   	* @return string 
   	* @author Jan den Besten
+  	* @ignore
   	*/
    public function index($page) {
     $unsubmit=$this->CI->input->get('unsubmit');

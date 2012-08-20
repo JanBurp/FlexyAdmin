@@ -12,7 +12,9 @@
 	/**
 		* _trigger
 		*
-		* If you need dynamic triggers (see in the config: $config['trigger'] and $config['trigger_method']) use this function and return a trigger array. That will be merged $config['trigger'] in the config.
+		* Mochten de triggers voor het activeren van de plugin niet vastliggen, dan kun je met deze method de triggers zelf aanmaken
+		* (Zie in de config: $config['trigger'] en $config['trigger_method']).
+		* Het resultaat van deze method wordt toegevoegd aan $config['trigger'].
 		*
 		* @return array
 		* @author Jan den Besten
@@ -26,9 +28,9 @@
 	/**
 		* _admin_logout
 		*
-		* The standard function which will be called when a user is logging out of FlexyAdmin ($config['logout_method'] must be set in the config)
+		* Standaard method die wordt aangeroepen als de plugin actief moet worden bij uitloggen
 		*
-		* @return string if the return string is empty login is successfull, if not return the messages that will be shows on logout
+		* @return string Als leeg (of void) dan kan de loguit procedure verder gaan. Zoniet geef dan een string terug met de melding die getoond moet worden.
 		* @author Jan den Besten
 		*/
 	public function _admin_logout() {
@@ -39,9 +41,10 @@
 	/**
 		* _admin_api
 		*
-		* The standard function which is called in admin with this urr: 'admin/plugin/_name_/_args..' where _name_ is the name of you're plugin and args can be extra uri segments. ($config['admin_api_method'] must be set in the config)
+		* Standaard method die wordt aangeroepen als de plugin actief wordt via een URL (of menu-item) in het admin deel.
+		* De url is: /admin/plugin/NAAM_PLUGIN/EVENTUELE_PARAMETERS
 		*
-		* @return string Return the HTML the plugin needs to show (use views for it!)
+		* @return string HTML output van de plugin
 		* @author Jan den Besten
 		*/
 	public function _admin_api($args=NULL) {
@@ -53,9 +56,11 @@
 	/**
 		* _after_update()
 		*
-		* This is called when $config['after_update_method'] and the appropriate triggers are set in config and offcourse when a soma data is being updated in FlexyAdmin
+		* Dit wordt aangeroepen als aan de bij triggers ingestelde voorwaarden wordt voldaan.
+		* Je kunt de data van het huidige record dat net door de gebruiker is aangepast met deze method aanpassen en teruggeven.
+		* De data kun je vinden in $this->newData
 		*
-		* @return array with changed data
+		* @return array met aangepaste data (van $this->newData)
 		* @author Jan den Besten
 		*/
 	public function _after_update() {
@@ -66,9 +71,9 @@
 	/**
 		* _after_delete()
 		*
-		* Same as _after_update(), but now it will be called after some data has been deleted in FlexyAdmin (according to the trigger settings offcourse)
+		* Dit wordt aangeroepen als aan de bij triggers ingestelde voorwaarden wordt voldaan.
 		*
-		* @return array with changed data
+		* @return bool FALSE als delete kan doorgaan
 		* @author Jan den Besten
 		*/
 	public function _after_delete() {
