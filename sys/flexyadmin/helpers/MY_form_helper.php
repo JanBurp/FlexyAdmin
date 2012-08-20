@@ -81,6 +81,7 @@ function array2formfields($array) {
 		$validation='required';
     $label=lang($field);
     if (empty($label)) $label=nice_string(remove_prefix($field));
+
 		switch (get_prefix($field)) {
 			case 'id':
 				$type='hidden';
@@ -94,6 +95,10 @@ function array2formfields($array) {
 			case 'email':
 				$validation='required|valid_email';
 				break;
+      case 'dat':
+      case 'tme':
+        $validation='';
+        break;
 			case 'b':
 				$type='checkbox';
 				$validation='';

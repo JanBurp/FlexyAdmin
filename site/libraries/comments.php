@@ -58,8 +58,11 @@
 			$errorHtml='';
 
 			// Prepare form fields
-			$formData=array();
-			$formData=$this->_setform_fields();
+      $fields=$this->CI->db->list_fields($this->config('table'));
+      $fields=array_combine($fields,array_fill_keys($fields,''));
+			$formData=array2formfields($fields,'comments_');
+      unset($formData['id']);
+
 			// Set id
 			$suffix='__'.$id;
 			$formData[$this->config('key_id')]=array('type'=>'hidden','value'=>$id);
@@ -69,6 +72,7 @@
 			// extra textarea to fake spammers
 			$formData['spambody']=array('label'=>'','type'=>'textarea','value'=>'', 'class'=>'hidden');  
 			unset($formData['int_spamscore']);
+
 
 			// Create form
 			$form=new form($this->CI->uri->get());
@@ -157,50 +161,6 @@
 			return $this->CI->view('comments',array('errors'=>$errorHtml,'form'=>$formHtml,'items'=>$comments),true);
 		}
 		return FALSE;
-	}
-
-
-  /**
-  	* Set formfields
-  	*
-  	* @return array formdata
-  	* @author Jan den Besten
-  	*/
-	private function _setform_fields() {
-		$fields=$this->CI->db->list_fields($this->config('table'));
-		$formData=array();
-		foreach ($fields as $field) {
-			// standard attributes
-			$type='input';
-			$value='';
-			$options=array();
-			$validation='required';
-			// label
-			$label=langp('comments_'.$field);
-			if (empty($label)) $label=nice_string(remove_prefix($field));
-			
-			// special attributes for some fields
-			if ($field==$this->config('field_date')) $type='';
-			
-			switch (get_prefix($field)) {
-				case 'id':
-					$type='';
-					break;
-				case 'txt':
-					$type='textarea';
-					break;
-				case 'email':
-					$validation='required|valid_email';
-					break;
-				case 'b':
-					$type='checkbox';
-					$validation='';
-					break;
-			}
-			
-			if (!empty($type)) $formData[$field]=array('type'=>$type,'label'=>$label,'value'=>$value,'options'=>$options,'validation'=>$validation);
-		}
-		return $formData;
 	}
 
 
