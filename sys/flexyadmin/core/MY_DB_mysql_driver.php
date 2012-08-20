@@ -7,8 +7,6 @@
 * With first some easy methods for retrieving results.
 * And some methods to include abstract fields or all fields from foreign tables (joins)
 * And some methods to include and where data from one to many relations (rel)
-*
-* TODO: for other databases, put non driver restricted methods in an include file and include it in every driver
 */
 
 class MY_DB_mysql_driver extends CI_DB_mysql_driver {
