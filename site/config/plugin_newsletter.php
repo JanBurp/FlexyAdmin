@@ -10,7 +10,6 @@
 */
 
 $config['admin_api_method'] = '_admin_api';
-$config['before_update_method'] = '_before_update';
 
 /*
 |--------------------------------------------------------------------------
