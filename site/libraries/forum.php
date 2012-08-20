@@ -214,12 +214,11 @@ class Forum extends Module {
   		if ($form->validation()) {
         $data=$form->get_data();
     		$this->CI->load->library('spam');
-				// Check for spam
-				$spam=FALSE;
-				// Check if a robot has filled the empty textarea 'body' (which is hidden)
-				if (!$spam and $this->_check_if_robot($data)) $spam=TRUE;
-				// Check the text with FlexyAdmins spam checker
-				if (!$spam and $this->_check_if_spamtext($data))	$spam=TRUE;
+        
+				// Check for spam/double
+				$spam=$this->CI->spam->check($data,'txt_spambody');
+        // $exists=$this->CI->db->has_row($this->config('table'),$data, array('id','txt_spambody'));
+        // add spamscore somewhere???
 
 				if ($spam) {
 					$content.='<p class="error">SPAM!</p>';
@@ -332,28 +331,20 @@ class Forum extends Module {
 
 
 
-	private function _check_if_robot($data) {
-		$robot=false;
-		if (!empty($data['txt_spambody'])) $robot=true;
-		return $robot;
-	}
-  // private function _check_if_double($data) {
-  //   unset($data['spambody']);
-  //   unset($data[$this->config['field_date']]);
-  //   foreach ($data as $field => $value) $this->CI->db->where($field,$value);
-  //   $double=$this->CI->db->get_row($this->config['table']);
-  //   if ($double) return TRUE;
-  //   return FALSE;
+  // private function _check_if_robot($data) {
+  //   $robot=false;
+  //   if (!empty($data['txt_spambody'])) $robot=true;
+  //   return $robot;
   // }
-	private function _check_if_spamtext(&$data) {
-		unset($data['txt_spambody']);
-		$spam=new Spam();
-    if (isset($data['txt_text'])) $spam->check_text('txt_text');
-    if (isset($data['str_thread'])) $spam->check_text('str_thread');
-    // $data[$this->config['field_spamscore']]=$spam->get_score();
-		if ($spam->get_action()>=2) return true;
-		return false;
-	}
+  // private function _check_if_spamtext(&$data) {
+  //   unset($data['txt_spambody']);
+  //   $spam=new Spam();
+  //     if (isset($data['txt_text'])) $spam->check_text('txt_text');
+  //     if (isset($data['str_thread'])) $spam->check_text('str_thread');
+  //     // $data[$this->config['field_spamscore']]=$spam->get_score();
+  //   if ($spam->get_action()>=2) return true;
+  //   return false;
+  // }
 
 
 
