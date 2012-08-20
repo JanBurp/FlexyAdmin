@@ -12,7 +12,6 @@
 $config['admin_api_method']        = '_admin_api';
 // $config['logout_method']        = '_admin_logout';
 // $config['ajax_api_method']      = '_ajax_api';
-// $config['before_update_method'] = '_before_update';
 // $config['after_update_method']  = '_after_update';
 // $config['after_delete_method']  = '_after_delete';
 
