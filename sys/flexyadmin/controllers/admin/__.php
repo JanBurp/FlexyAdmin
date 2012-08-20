@@ -55,12 +55,14 @@ class __ extends AdminController {
   public function doc() {
     $this->_add_content('<h1>Creating documentation</h1>');
 
-
     // Cleanup current doc folders
     $folders=array('algemeen','core','database','helpers','libraries','models','uitbreiden');
     foreach ($folders as $folder) {
       $map=$this->path.$this->work.'/userguide/FlexyAdmin/'.$folder;
-      empty_map($map);
+      $files=read_map($map,'html');
+      foreach ($files as $file => $info) {
+        unlink($info['path']);
+      }
       $this->_add_content('Emptied: '.$map.'<br/>');
     }
 
