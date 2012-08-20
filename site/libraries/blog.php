@@ -23,6 +23,9 @@
 
 class Blog extends Module {
 
+  /**
+   * @ignore
+   */
 	public function __construct() {
 		parent::__construct();
 		if ($this->config('comments')) {
@@ -37,6 +40,7 @@ class Blog extends Module {
 		* @param string $page 
 		* @return void
 		* @author Jan den Besten
+    * @ignore
 		*/
 	public function index($page) {
 		if ( $this->CI->db->table_exists($this->config('table'))) {

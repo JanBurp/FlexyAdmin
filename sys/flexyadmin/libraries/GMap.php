@@ -20,7 +20,6 @@
  * ORIGINAL INFO
  * @link http://www.phpinsider.com/php/code/GoogleMapAPI/
  * @copyright 2005 New Digital Group, Inc.
- * @author Monte Ohrt <monte at ohrt dot com> & Jan den Besten
  * @package GoogleMapAPI
  * @version 2.5
  * 
@@ -30,7 +29,7 @@
  * NOTE: Some changes are made by JdB to fit it in FlexyAdmin
  * @link http://code.google.com/p/phpgooglemapapiv3/
  * @copyright 2010 Brad wedell
- * @author Brad Wedell
+ * @author Monte Ohrt, Brad Wedell, Jan den Besten
  * @package GoogleMapAPI (version 3)
  * @version 3.0beta
  * To view the full CHANGELOG, visit 

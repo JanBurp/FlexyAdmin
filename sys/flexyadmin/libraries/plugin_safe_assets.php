@@ -1,30 +1,68 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- * FlexyAdmin Plugin template
+ * Verwijderd onwenselijke bestanden in assets mappen
+ * 
+ * - Maakt voor elke assets map een .htaccess aan die alleen toegestane bestanden toont
+ * - Verwijderd alle bestanden die niet zijn toegestaan
+ * 
+ * Is actief:
+ * 
+ * - bij uitloggen
+ * - bij aanpassingen aan instellingen van een assets map
+ * - met de hand dmv een URL aanroep
  *
+ * @package default
  * @author Jan den Besten
  */
-
-
 class Plugin_safe_assets extends Plugin {
 
+  /**
+   * Alle bestanden die zijn gecontroleerd
+   *
+   * @var array
+   * @ignore
+   */
   private $checked=array();
+  
+  /**
+   * Alle bestanden die zijn verwijderd
+   *
+   * @var array
+   * @ignore
+   */
   private $removed=array();
   
-  
-	function __construct() {
+  /**
+   * @ignore
+   */
+   function __construct() {
 		parent::__construct();
 	}
 
 
-	function _admin_logout() {
+  /**
+   * Plugin werkt altijd bij logout
+   *
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   */
+  function _admin_logout() {
 		$logout=true;
 		$this->_safe_and_clean_all();
     if (!empty($this->removed)) return $this->_show();
     return FALSE;
 	}
 	
+  /**
+   * Plugin kan ook met een URL worden aangeroepen
+   *
+   * @param string $args 
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   */
 	function _admin_api($args=NULL) {
 		if ($this->CI->user->is_super_admin()) {
 			$this->_safe_and_clean_all();
@@ -32,19 +70,39 @@ class Plugin_safe_assets extends Plugin {
 		}
 	}
 
+  /**
+   * Laat output zien dmv view
+   *
+   * @return string
+   * @author Jan den Besten
+   * @ignore
+   */
   private function _show() {
     return $this->CI->load->view('admin/plugins/safe_assets',array('checked'=>$this->checked,'removed'=>$this->removed), true);
   }
 
 
-
+  /**
+   * Plugin wordt ook aangeroepen als instellingen van een assets map wijzigen
+   *
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   */
 	function _after_update() {
 		$types=$this->newData['str_types'];
 		$map=$this->newData['path'];
 		if ($this->config('create_htacces')) $this->_make_map_safe($map,$types);
 		return $this->newData;
 	}
-
+  
+  /**
+   * De kern van de plugin
+   *
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   */
 	function _safe_and_clean_all() {
 		$someRemoved=false;
 		$assets=$this->CI->config->item('ASSETS');
@@ -93,7 +151,12 @@ class Plugin_safe_assets extends Plugin {
 	}
 
 
-	// Change safety .htaccess
+  /**
+   * Maak .htacces aan
+   *
+   * @author Jan den Besten
+   * @ignore
+   */
 	function _make_map_safe($path,$types) {
 		$types=strtolower($types).'|'.strtoupper($types);
 		$htaccess="Order Allow,Deny\nDeny from all\n<Files ~ \"\.(".$types.")$\">\nAllow from all\n</Files>\n";
@@ -103,7 +166,12 @@ class Plugin_safe_assets extends Plugin {
 		write_file($path.'/.htaccess',$htaccess);
 	}
 	
-	// remove not allowed files
+  /**
+   * Verwijderd ongewenste bestanden
+   *
+   * @author Jan den Besten
+   * @ignore
+   */
 	function _remove_forbidden_files($path,$allowed,$forbidden='') {
 		$removed=false;
 		$allowed=explode('|',$allowed);

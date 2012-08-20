@@ -19,6 +19,9 @@ class Plugin_newsletter extends Plugin {
   	*/
   private $wizard;
 
+  /**
+   * @ignore
+   */
   public function __construct() {
     parent::__construct();
     $this->CI->load->language('newsletter');
@@ -39,6 +42,13 @@ class Plugin_newsletter extends Plugin {
 
   }
 
+  /**
+   * Toont menu met opties voor het maken, en verzenden van een nieuwsletter en het exporteren van mailadressen
+   *
+   * @param string $args 
+   * @return void
+   * @author Jan den Besten
+   */
 	public function _admin_api($args=NULL) {
     $action=array_shift($args);
     switch($action) {
@@ -60,6 +70,15 @@ class Plugin_newsletter extends Plugin {
     }
   }
    
+  /**
+   * Maakt en roept de wizard aan
+   *
+   * @param string $type 
+   * @param string $args 
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   */
   private function _wizard($type,$args) {
     $steps=$this->config('wizard_'.$type);
     if (isset($steps) and is_array($steps)) {
@@ -73,11 +92,27 @@ class Plugin_newsletter extends Plugin {
     }
     return false;
   }
-   
+  
+  /**
+   * Roep juiste stap aan voor het aanmaken van nieuwsbrief
+   *
+   * @param string $args 
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   */
 	private function _create_newsletter($args) {
     return $this->_wizard('create',$args);
   }
   
+  /**
+   * Stap 1 voor het maken van een niewsbrief: kies de inhoud
+   *
+   * @param string $args 
+   * @return string
+   * @author Jan den Besten
+   * @ignore
+   */
   function _create_include_pages($args) {
     if ($this->CI->db->field_exists('dat_date',get_menu_table())) $this->CI->db->where('(CURDATE() - INTERVAL 1 MONTH) <= dat_date');
     $this->CI->db->select('id,order,self_parent,uri,str_title,txt_text');
@@ -123,6 +158,14 @@ class Plugin_newsletter extends Plugin {
     }
   }
 
+  /**
+   * Stap 2 van nieuwsbrief maken: Pas tekst aan
+   *
+   * @param string $args 
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   */
   function _create_edit_text($args) {
     $id=element(0,$args);
     if ($id) {
@@ -151,7 +194,15 @@ class Plugin_newsletter extends Plugin {
     }
 	}
 
-  public function _create_send_test($args) {
+  /**
+   * Stap 3 voor maken van nieuwsbrief: stuur een test
+   *
+   * @param string $args 
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   */
+   public function _create_send_test($args) {
     $id=element(0,$args);
     if ($id) {
   		$this->CI->db->where('id',$id);
@@ -181,11 +232,26 @@ class Plugin_newsletter extends Plugin {
     }
   }
    
-   
+  /**
+   * Roept juiste stap aan voor verzenden van nieuwsbrief
+   *
+   * @param string $args 
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   */
   private function _send_newsletter($args) { 
     return $this->_wizard('send',$args);
   }
   
+  /**
+   * Stap 1 voor verzending: Selecteer de nieuwsbrief
+   *
+   * @param string $args 
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   */
   public function _send_select($args) {
     $newsletters=$this->CI->db->get_result('tbl_newsletters');
     $options=array();
@@ -208,6 +274,14 @@ class Plugin_newsletter extends Plugin {
     }
   }
 
+  /**
+   * Stap 2 voor verzending nieuwsbrief: verstuur
+   *
+   * @param string $args 
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   */
   public function _send_it($args) {
     $id=element(0,$args);
     if ($id) {
@@ -240,6 +314,14 @@ class Plugin_newsletter extends Plugin {
   }
 
 
+  /**
+   * Exporteer adressen
+   *
+   * @param string $args 
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   */
   private function _export_addresses($args) {
     $this->add_message('Kopier alle adressen van hieronder naar je emailprogramma.');
     return $this->view('newsletter/plugin_export',array('title'=>lang('export_adresses'),'adresses'=>$this->_get_adresses()));
@@ -247,6 +329,14 @@ class Plugin_newsletter extends Plugin {
   }
 
 
+  /**
+   * Verstuur een mail
+   *
+   * @param string $mail 
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   */
   private function _send_mail($mail) {
     $rapport='<p>'.strftime('%a %d %b %Y %T',now()).' - ';
     $mail['body']=$this->_prepare_body($mail['body']);
@@ -301,6 +391,15 @@ class Plugin_newsletter extends Plugin {
     return $rapport;
   }
   
+  /**
+   * Voegt tekst aan rapportage toe
+   *
+   * @param string $id 
+   * @param string $rapport 
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   */
   private function add_to_rapport($id,$rapport) {
     $old_rapport=$this->CI->db->get_field('tbl_newsletters','txt_rapport',$id);
     $rapport=$old_rapport.$rapport;
@@ -310,6 +409,14 @@ class Plugin_newsletter extends Plugin {
   }
 
 	
+  /**
+   * Zorgt voor juiste verwijzingingen in de tekst van een mailbody
+   *
+   * @param string $body 
+   * @return string
+   * @author Jan den Besten
+   * @ignore
+   */
   private function _prepare_body($body) {
     // good paths to local images
 		$body=str_replace('src="','src="'.base_url(),$body);
@@ -322,6 +429,13 @@ class Plugin_newsletter extends Plugin {
     return $body;
   }
 
+  /**
+   * Haalt alle adressen op
+   *
+   * @return array
+   * @author Jan den Besten
+   * @ignore
+   */
   private function _get_adresses() {
     $adresses=$this->CI->db->get_result( $this->config('send_to_address_table') );
     $to='';
@@ -338,8 +452,11 @@ class Plugin_newsletter extends Plugin {
   }
 
 
-	
-	public function get_show_type() {
+  /**
+   * @ignore
+   * @depricated
+   */
+   public function get_show_type() {
 		return 'form';
 	}
   

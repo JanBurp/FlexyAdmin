@@ -14,6 +14,11 @@
     <? if (isset($inherited)): ?>
     <p class="doc_info doc_inherited">inherited from: <a href="<?=$inherited?>.html"><?=$inherited?></a></p>
     <? endif ?>
+    
+    <? if (isset($doc['author'])): ?>
+    <p class="doc_author"><?=implode(' ',$doc['author'])?></p>
+    <? endif ?>
+    
   
     <? if (!empty($shortdescription)): ?><p class="doc_description"><?=$shortdescription?></p><? endif ?>
     

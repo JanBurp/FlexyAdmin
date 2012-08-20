@@ -22,12 +22,20 @@
 
 class Links extends Module {
 
+  /**
+   * @ignore
+   */
+  public function __construct() {
+    parent::__construct();
+  }
+
 	/**
 		* Hier wordt de module aangeroepen
 		*
 		* @param string  $page
 		* @return string
 		* @author Jan den Besten
+		* @ignore
 		*/
 	public function index( $page ) {
 		if ( $this->CI->db->table_exists( 'tbl_links' ) ) {

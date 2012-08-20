@@ -27,7 +27,10 @@
 
 	private $foreign_table;
 	
-	public function __construct() {
+  /**
+   * @ignore
+   */
+   public function __construct() {
 		parent::__construct();
 		$this->CI->load->library('form');
 		$this->CI->load->library('spam');
@@ -40,6 +43,7 @@
   	* @param string $page
   	* @return string 
   	* @author Jan den Besten
+  	* @ignore
   	*/
 	public function index($page) {
 		if ( $this->CI->db->table_exists($this->config('table'))) {

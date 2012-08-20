@@ -156,7 +156,8 @@ class __ extends AdminController {
         'shortdescription'=>el('shortdescription',$class['doc']),
         'description'=>el('description',$class['doc']),
         'properties'=>$propertiesHtml,
-        'methods'=>$methodsHtml
+        'methods'=>$methodsHtml,
+        'doc'=>$class['doc']
       ),true);
       $content.=highlight_code_if_needed($html);
       $fileContent=$this->load->view('admin/__/doc',array('content'=>$content,'root'=>'../'),true);
@@ -186,7 +187,7 @@ class __ extends AdminController {
             'return'=>el('return',$value['doc']),
             'shortdescription'=>el('shortdescription',$value['doc']),
             'description'=>el('description',$value['doc']),
-            'author'=>el('author',$value['doc'])
+            'doc'=>$value['doc']
           ),true);
         }
       }
@@ -213,7 +214,7 @@ class __ extends AdminController {
           'path'=>$path,
           'shortdescription'=>$shortdescription,
           'description'=>$description,
-          'tags'=>$tags,
+          'doc'=>$tags,
           'functions'=>$functionsHtml
         ),true);
         $content.=highlight_code_if_needed( $html);

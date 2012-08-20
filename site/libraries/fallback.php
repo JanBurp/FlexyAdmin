@@ -9,9 +9,17 @@
 	* @author Jan den Besten
 	*/
 class Fallback extends Module {
+  
+  /**
+   * @ignore
+   */
+  public function __construct() {
+    parent::__construct();
+  }
+  
 
   /**
-  	* Geeft standaard de naam van de module weer
+  	* De fallback module geeft standaard de naam van de module weer, pas aan naar wens
   	*
   	* @param string $page 
   	* @return void

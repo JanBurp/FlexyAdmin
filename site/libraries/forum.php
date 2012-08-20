@@ -27,7 +27,10 @@ class Forum extends Module {
   var $user;
   var $offset;
 
-	public function __construct() {
+  /**
+   * @ignore
+   */
+  public function __construct() {
 		parent::__construct();
     $this->CI->load->library('pagination');
     $this->offset=$this->CI->uri->get_pagination();
@@ -96,6 +99,7 @@ class Forum extends Module {
   	* @param string $page
   	* @return string 
   	* @author Jan den Besten
+  	* @ignore
   	*/
 	public function index($page) {
     // is there some action?

@@ -32,6 +32,9 @@
 
 class Search extends Module {
 
+  /**
+   * @ignore
+   */
 	public function __construct() {
 		parent::__construct();
 	}
@@ -42,6 +45,7 @@ class Search extends Module {
   	* @param string $page
   	* @return string 
   	* @author Jan den Besten
+  	* @ignore
   	*/
 	public function index($page) {
 		$search=$this->CI->input->post( lang('search_term') );
@@ -144,7 +148,7 @@ class Search extends Module {
   	* @param array $result 
   	* @return array
   	* @author Jan den Besten
-  	* @igore
+  	* @ignore
   	*/
 	private function _order_as_menu($result) {
 		// get full table with tree order, match with search_result

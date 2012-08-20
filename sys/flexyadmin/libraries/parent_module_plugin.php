@@ -37,6 +37,11 @@ class Parent_module_plugin {
 	protected $shortname='';
 
 
+  /**
+   * @param string $name 
+   * @author Jan den Besten
+   * @ignore
+   */
 	public function __construct($name='') {
 		$this->CI=&get_instance();
 		if (empty($name)) $name=strtolower(get_class($this));

@@ -34,7 +34,10 @@ class Login extends Module {
 	private $errors = '';
 	private $form;
 	
-	public function __construct() {
+  /**
+   * @ignore
+   */
+   public function __construct() {
 		parent::__construct();
 		$this->CI->load->library('user',$this->config['tables']);
     $this->CI->config->set_item('dont_cache_this_page',TRUE);
@@ -53,6 +56,7 @@ class Login extends Module {
   	* @param string $page
   	* @return string 
   	* @author Jan den Besten
+  	* @ignore
   	*/
 	public function index($page) {
 		// If logged in, set class
