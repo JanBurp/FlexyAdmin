@@ -48,13 +48,13 @@ class User Extends Ion_auth {
 		$new_password = TRUE;
     if ($this->tables['users']=='cfg_users' and $this->tables['groups']=='cfg_user_groups') {
       $new_password = FALSE;
-  		// check if password field length = 40 and the password itself also 40 chars long, that should do it
+  		// check if password field length = 40 and the password itself is 32 chars or longer long, that should do it
   		$field_data=$this->CI->db->field_data($this->tables['users']);
   		foreach ($field_data as $field_info) {
   			$field_info=object2array($field_info);
   			if ($field_info['name']=='gpw_password') {
   				$password = $this->CI->db->get_field('cfg_users','gpw_password');
-  				$new_password = ( $password and $field_info['max_length']==40 and strlen($password)==40 );
+  				$new_password = ( $password and $field_info['max_length']==40 and strlen($password)>=32 );
   			}
   		}
     }
