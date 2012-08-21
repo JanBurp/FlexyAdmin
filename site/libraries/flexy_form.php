@@ -24,7 +24,7 @@
 	*/
 
 class Flexy_form extends Module {
-
+  
 
   /**
    * @ignore
@@ -40,16 +40,17 @@ class Flexy_form extends Module {
   	* Hier wordt de module aangeroepen
   	*
   	* @param string $page
+  	* @param string $form_name['flexy_form'] Naam van formulier.
   	* @return string 
   	* @author Jan den Besten
   	* @ignore
   	*/
-	public function index($page) {
+	public function index($page,$form_name='flexy_form') {
 		$viewForm='';
     $viewErrors='';
 		
 		// Form Fields
-		$formData=$this->CI->getform->by_module('flexy_form');
+		$formData=$this->CI->getform->by_module($form_name);
 	
 		if ($formData) {
 		
