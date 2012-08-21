@@ -2407,7 +2407,7 @@ class Gmap {
 		
 		$this->CI->load->database();
 
-		$this->CI->db->insert('geocode_cache',$data);
+		$this->CI->db->insert($this->_db_cache_table,$data);
 		
 		return true;       
     }
