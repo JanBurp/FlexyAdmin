@@ -34,20 +34,43 @@
 	}
 
   /**
-  	* Module
+  	* Laat een google map zien van normale omvang
   	*
   	* @param string $page 
-  	* @return void
+  	* @return string
   	* @author Jan den Besten
-  	* @ignore
   	*/
 	public function index($page) {
+    return $this->_showmap($page);
+	}
+  
+  /**
+   * Laat een kleine google map zien (in de config kun je de omvang instellen)
+   *
+   * @param string $page 
+   * @return string
+   * @author Jan den Besten
+   */
+  public function small($page) {
+    return $this->_showmap($page,'small');
+  }
+  
+  /**
+   * Laat map zien, kies de omvang
+   *
+   * @param string $page 
+   * @param string $size 'normal' of 'small' (je kunt meerdere aanmaken in de config)
+   * @return string
+   * @author Jan den Besten
+   */
+  private function _showmap($page,$size='normal') {
+    $config=$this->config($size);
 		$this->CI->gmap->GoogleMapAPI();
 	
-		$this->CI->gmap->setMapType( $this->config('type') );
-		$this->CI->gmap->setHeight( $this->config('height') );
-		$this->CI->gmap->setWidth( $this->config('width') );
-		$this->CI->gmap->setZoomLevel( $this->config('zoomlevel') );
+		$this->CI->gmap->setMapType( $config['type'] );
+		$this->CI->gmap->setHeight( $config['height'] );
+		$this->CI->gmap->setWidth( $config['width'] );
+		$this->CI->gmap->setZoomLevel( $config['zoomlevel'] );
 		
 		if ($this->config('multiple')) {
 			$this->CI->gmap->disableZoomEncompass();
@@ -73,7 +96,7 @@
 		$data['sidebar'] 		= $this->CI->gmap->printSidebar();
 		
 		return $this->CI->view('google_map', $data,true);
-	}
+  }
 
 
 }
