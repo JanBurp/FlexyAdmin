@@ -14,9 +14,9 @@ $config['normal']['height']=500;
 $config['normal']['zoomlevel']=8;
 
 $config['small']['type']='map';
-$config['small']['width']=250;
-$config['small']['height']=250;
-$config['small']['zoomlevel']=8;
+$config['small']['width']=200;
+$config['small']['height']=200;
+$config['small']['zoomlevel']=6;
 
 
 
