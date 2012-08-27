@@ -31,6 +31,7 @@
 	public function __construct() {
 		parent::__construct();
 		$this->CI->load->library('GMap');
+		$this->CI->gmap->GoogleMapAPI();
 	}
 
   /**
@@ -52,7 +53,9 @@
    * @author Jan den Besten
    */
   public function small($page) {
-    return $this->_showmap($page,'small');
+    $this->CI->gmap->disableTypeControls();
+    $this->CI->gmap->disableScaleControl();
+    $this->CI->site['map']=$this->_showmap($page,'small');
   }
   
   /**
@@ -65,7 +68,6 @@
    */
   private function _showmap($page,$size='normal') {
     $config=$this->config($size);
-		$this->CI->gmap->GoogleMapAPI();
 	
 		$this->CI->gmap->setMapType( $config['type'] );
 		$this->CI->gmap->setHeight( $config['height'] );
