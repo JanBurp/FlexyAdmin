@@ -12,12 +12,13 @@ class site extends CodeIgniterWebTestCase {
 
   var $browser;
 
-  var $root='http://localhost/FlexyAdmin/FlexyAdminDEMO/';
+  var $root;
   var $menu;
   var $links=array();
 
   public function __construct() {
     $this->browser = new SimpleBrowser();
+    $this->root=str_replace('__test.php/','',site_url());
   }
 
   public function setUp() {
