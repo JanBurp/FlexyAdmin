@@ -5,12 +5,19 @@
 |--------------------------------------------------------------------------
 | Map instellingen
 |--------------------------------------------------------------------------
-|
+| Je kunt meerdere omvangen weergeven, standaard bestaan er twee
 */
-$config['type']='map';
-$config['width']=350;
-$config['height']=350;
-$config['zoomlevel']=8;
+
+$config['normal']['type']='map';
+$config['normal']['width']=575;
+$config['normal']['height']=500;
+$config['normal']['zoomlevel']=8;
+
+$config['small']['type']='map';
+$config['small']['width']=250;
+$config['small']['height']=250;
+$config['small']['zoomlevel']=8;
+
 
 
 /*
@@ -21,7 +28,7 @@ $config['zoomlevel']=8;
 | Bij één adres moet het adres staan in tbl_site.str_adress
 | Bij meerdere in een andere tabel, zie hieronder
 */
-$config['multiple'] = FALSE;
+$config['multiple'] = TRUE;
 
 /*
 |--------------------------------------------------------------------------
