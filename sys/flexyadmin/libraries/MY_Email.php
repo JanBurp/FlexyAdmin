@@ -1,8 +1,6 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- * Je kunt hiermee in één keer de email instellen
- * 
  * Uitbreiding op [CI_Email](http://codeigniter.com/user_guide/libraries/email.html)
  *
  * @package default

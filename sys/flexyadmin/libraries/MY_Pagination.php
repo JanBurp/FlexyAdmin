@@ -1,9 +1,7 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
  /**
-  * Onder meer automatisch pagination
-  * 
-  * Uitbreiding op [CodeIgniters Pagination class](http://codeigniter.com/user_guide/libraries/pagination.html)
+  * Uitbreiding op [CI_Pagination](http://codeigniter.com/user_guide/libraries/pagination.html)
   * 
   * Dit zijn de uitbreidingen:
   * 
