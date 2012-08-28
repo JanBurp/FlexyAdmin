@@ -1,7 +1,9 @@
 <?
 
 /**
-	* Voorbeeld module, gebruik dit als basis voor je eigen modules
+  * Example
+  *  
+	* Voorbeeld module, gebruik dit als basis voor je eigen modules. Lees ook [Modules maken]({Modules-maken}).
 	*
 	* @author Jan den Besten
 	*/
