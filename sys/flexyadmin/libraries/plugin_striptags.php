@@ -9,12 +9,7 @@
  */
 
 class Plugin_striptags extends Plugin {
-
-	function init($init=array()) {
-		parent::init($init);
-		$this->act_on(array('changedTypes'=>'txt'));
-	}
-	
+  
 	function _after_update() {
 		$validHTML=$this->CI->cfg->get('CFG_configurations','str_valid_html');
 		if (!empty($validHTML)) {

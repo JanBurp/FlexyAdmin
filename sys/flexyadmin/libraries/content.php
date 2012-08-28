@@ -1,39 +1,52 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
 /**
- * FlexyAdmin V1
- *
- * Parses content
+ * Content
  *
  * @author Jan den Besten
- */
-
+ * @version $Id$
+ * @copyright , 28 August, 2012
+ * @package default
+ **/
 
 /**
- * Content Class
+ * Content
+ * 
+ * Deze class kan het volgende doen met HTML:
+ * 
+ * - Standaard emaillinks vervangen door spambot veilige emaillinks
+ * - Aan div, p, en img tags worden extra classes meegegeven: een nr en een 'odd' of 'even' class
+ * - Links die beginnen met een taal, bijvoorbeeld _nl/contact_ kunnen vervangen worden door links met de juiste taal bv: _en/contact_
+ * - Soft Hyphens karakters (standaard [-]) worden vervangen door een echte HTML entity daarvoor: &#173;
+ * 
+ * Deze class is standaard geladen in de frontend en wordt door de controller gebruikt bij het renderen van de tekst van een pagina.
+ * Zo roep je deze class aan:
+ * 
+ *      $text = $this->content->render($text);
  *
+ * @package default
+ * @author Jan den Besten
  */
-
 class Content {
 
-	var $safeEmail=TRUE;
-	var $addClasses=TRUE;
-	var $addPopups=FALSE;
-	var $prePopup='popup_';
-	var $replaceLanguageLinks=FALSE;
-  var $replaceSoftHyphens=FALSE;
-  var $replaceHyphen='[-]';
-  var $config_array=array('safe_emails'=>'safeEmail','add_classes'=>'addClasses','add_popups'=>'addPopups','replace_language_links'=>'replaceLanguageLinks','replace_soft_hyphens'=>'replaceSoftHyphens');
+	private $safeEmail=TRUE;
+	private $addClasses=TRUE;
+	private $addPopups=FALSE;
+	private $prePopup='popup_';
+	private $replaceLanguageLinks=FALSE;
+  private $replaceSoftHyphens=FALSE;
+  private $replaceHyphen='[-]';
+  private $config_array=array('safe_emails'=>'safeEmail','add_classes'=>'addClasses','add_popups'=>'addPopups','replace_language_links'=>'replaceLanguageLinks','replace_soft_hyphens'=>'replaceSoftHyphens');
 	
-	var $div_count;
-	var $img_count;
-	var $p_count;
-	var $h_count;
+	private $div_count;
+	private $img_count;
+	private $p_count;
+	private $h_count;
 
-	function __construct($config=array()) {
-    $this->initialize($config);
-	}
-  
-  function initialize($config=array()) {
+  /**
+   * @ignore
+   */
+	public function __construct($config=array()) {
     foreach ($config as $key => $value) {
       if (isset($this->config_array[$key])) {
         $thisVar=$this->config_array[$key];
@@ -42,33 +55,81 @@ class Content {
     }
   }
 
-	function option_safe_email($safe=TRUE) {
+  /**
+   * Zet het vervangen van email adressen in spambot veilige emailadressen aan of uit
+   *
+   * @param bool $safe[TRUE] TRUE is aan, FALSE is UIT
+   * @return void
+   * @author Jan den Besten
+   */
+	public function option_safe_email($safe=TRUE) {
 		$this->safeEmail=$safe;
 	}
 	
-	function add_classes($classes=TRUE) {
+  /**
+   * Zet het toevoegen van extra classes aan div,p en img tags aan/uit
+   *
+   * @param bool $classes[TRUE] TRUE is aan, FALSE is UIT
+   * @return void
+   * @author Jan den Besten
+   */
+	public function add_classes($classes=TRUE) {
 		$this->addClasses=$classes;
 	}
 	
-	// example: $this->content->replace_language_links( array('search'=>'nl','replace'=>'en') );
-	function replace_language_links($replace=TRUE) {
+  /**
+   * Hiermee kunnen links worden vervangen
+   * 
+   * Voorbeeld om alle links (nederlandstalige) te verwijzen naar de engelstalige pagina's: 
+   * 
+   *    $this->content->replace_language_links( array('search'=>'nl','replace'=>'en') );
+   *
+   * @param array $replace[TRUE]
+   * @return void
+   * @author Jan den Besten
+   */
+	public function replace_language_links($replace=TRUE) {
 		$this->replaceLanguageLinks=$replace;
 	}
 	
-	function add_popups($pre="popup_",$popups=TRUE) {
+  /**
+   * Voegt een popup link aan img tags toe
+   *
+   * @param string $pre['popup_'] 
+   * @param bool $popups[TRUE]
+   * @return void
+   * @author Jan den Besten
+   * @depricated
+   * @ignore
+   */
+	public function add_popups($pre="popup_",$popups=TRUE) {
 		$this->prePopup=$pre;
 		$this->addPopups=$popups;
 	}
   
+  /**
+   * Zet het vervangen van hyphen karakters aan/ui
+   *
+   * @param bool $hyphens[TRUE] TRUE is aan, FALSE is UIT
+   * @return void
+   * @author Jan den Besten
+   */
   function replace_soft_hyphens($hyphens=TRUE) {
     $this->replaceSoftHyphens=$hyphens;
   }
 
 
 
-
-	// callback for class replacing
-	function _countCallBack($matches) {
+  /**
+   * Callback voor het vervangen van classes
+   *
+   * @param array $matches 
+   * @return string
+   * @author Jan den Besten
+   * @internal
+   * @ignore
+   */
+	private function _countCallBack($matches) {
 		$class="";
 		// is there a class allready?
 		if (preg_match("/class=\"([^<]*)\"/",$matches[3],$cMatch))
@@ -94,8 +155,16 @@ class Content {
 		return $result;
 	}
 
-	// callback for popup adding replacing
-	function _popupCallBack($matches) {
+  /**
+   * 	Callback voor popup
+   *
+   * @param array $matches 
+   * @return string
+   * @author Jan den Besten
+   * @internal
+   * @ignore
+   */
+	private function _popupCallBack($matches) {
 		$src=$matches[2];
 		$info=get_path_and_file($src);
 		$popup=$info['path']."/popup_".$info["file"];
@@ -107,18 +176,40 @@ class Content {
 		return $result;
 	}
 
-	function reset_counters() {
+  /**
+   * Reset tellers voor classes
+   *
+   * @return void
+   * @author Jan den Besten
+   * @internal
+   * @ignore
+   */
+	private function reset_counters() {
 		$this->div_count=1;
 		$this->img_count=1;
 		$this->p_count=1;
 		$this->h_count=array(1=>1,2=>1,3=>1,4=>1,5=>1,6=>1,7=>1);
 	}
 
-  function parse($txt) {
+  /**
+   * Zelfde als render()
+   *
+   * @param string $txt 
+   * @return string
+   * @author Jan den Besten
+   */
+  public function parse($txt) {
     return $this->render($txt);
   }
 
-	function render($txt) {
+  /**
+   * Dit voert alle acties uit met meegegeven (HTML) tekst
+   *
+   * @param string $txt De HTML waarop de acties moeten worden uitgevoerd
+   * @return string De HTML waarop de acties zijn uitgevoerd
+   * @author Jan den Besten
+   */
+	public function render($txt) {
 		$this->reset_counters();
 		
 		if ($this->addClasses) {

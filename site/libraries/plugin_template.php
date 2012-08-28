@@ -9,6 +9,7 @@
 	*/
  class Plugin_template extends Plugin {
 
+
 	/**
 		* _trigger
 		*

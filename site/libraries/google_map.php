@@ -23,7 +23,8 @@
 	*
 	*/
  
- class Google_map extends Module {
+ 
+class Google_map extends Module {
 
    /**
     * @ignore
@@ -65,6 +66,7 @@
    * @param string $size 'normal' of 'small' (je kunt meerdere aanmaken in de config)
    * @return string
    * @author Jan den Besten
+   * @ignore
    */
   private function _showmap($page,$size='normal') {
     $config=$this->config($size);
