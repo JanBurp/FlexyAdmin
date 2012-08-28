@@ -3,7 +3,8 @@
 /**
 	* Plugin_template
 	*
-	* Gebruik dit als basis voor je eigen plugins
+	* Gebruik dit als basis voor je eigen plugins.
+	* Lees ook [Plugins maken]({Plugins-maken})
 	*
 	* @author Jan den Besten
 	*/
@@ -29,7 +30,8 @@
 	/**
 		* _admin_logout
 		*
-		* Standaard method die wordt aangeroepen als de plugin actief moet worden bij uitloggen
+		* Standaard method die wordt aangeroepen als de plugin actief moet worden bij uitloggen.
+		* De return waarde beinvloed of het uitloggen door mag gaan of dat er een melding wordt getoond.
 		*
 		* @return string Als leeg (of void) dan kan de loguit procedure verder gaan. Zoniet geef dan een string terug met de melding die getoond moet worden.
 		* @author Jan den Besten
@@ -59,7 +61,7 @@
 		*
 		* Dit wordt aangeroepen als aan de bij triggers ingestelde voorwaarden wordt voldaan.
 		* Je kunt de data van het huidige record dat net door de gebruiker is aangepast met deze method aanpassen en teruggeven.
-		* De data kun je vinden in $this->newData
+		* De data kun je vinden in $this->newData en moet je aangepast teruggeven.
 		*
 		* @return array met aangepaste data (van $this->newData)
 		* @author Jan den Besten
@@ -73,6 +75,7 @@
 		* _after_delete()
 		*
 		* Dit wordt aangeroepen als aan de bij triggers ingestelde voorwaarden wordt voldaan.
+		* Je kunt met de return waarde beinvloeden of het item daadwerkelijk verwijderd mag worden.
 		*
 		* @return bool FALSE als delete kan doorgaan
 		* @author Jan den Besten

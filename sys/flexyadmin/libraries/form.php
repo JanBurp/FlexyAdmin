@@ -1,46 +1,62 @@
 <?
+
 /**
- * FlexyAdmin V1
- *
- * form.php Created on 22-okt-2008
+ * Form
+ * 
+ * Met deze class kun je formulieren maken, valideren en uitlezen
  *
  * @author Jan den Besten
- */
+ * @version $Id$
+ * @copyright , 28 August, 2012
+ * @package default
+ **/
 
 
 /**
- * Class Form (model)
+ * Form
+ * 
+ * Met deze class kun je formulieren maken, valideren en uitlezen.
  *
- * Handles form rendering
- *
+ * @package default
+ * @author Jan den Besten
  */
-
 class Form {
 
-	var $CI;
+	private $CI;
 
-	var $caption;
-	var $action;
-	var $data=array();
-	var $postdata=array();
-	var $add_password_match=array();
-	var $hash_passwords=false;
-	var $hasHtmlField;
-	var $isValidated;
-	var $captchaWords;
-	var $fieldsets;
-	var $fieldsetClasses;
-	var $when;  // javascript
-	var $buttons;
+	private $caption;
+	private $action;
+	private $data=array();
+	private $postdata=array();
+	private $add_password_match=array();
+	private $hash_passwords=false;
+	private $hasHtmlField;
+	private $isValidated;
+	private $captchaWords;
+	private $fieldsets;
+	private $fieldsetClasses;
+	private $when;  // javascript
+	private $buttons;
 	
 
+  /**
+   * @ignore
+   */
 	function __construct($action="") {
 		$this->CI = &get_instance();
 		$this->CI->load->library('form_validation');
 		$this->init($action);
 	}
 
-	function init($action="") {
+  /**
+   * (Her)initialiseer het formulier
+   *
+   * @param string $action[''] 
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   */
+	public function init($action="") {
 		$this->set_action($action);
 		$this->set_caption();
 		$this->set_labels();
@@ -58,14 +74,36 @@ class Form {
 		// $this->show_submit();
 	}
 
+  /**
+   * set_action()
+   *
+   * @param string $action 
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   */
 	public function set_action($action="") {
 		$this->action=$action;
 	}
 
+  /**
+   * Stel formulier kop in
+   *
+   * @param string $caption De kop 
+   * @return void
+   * @author Jan den Besten
+   */
 	public function set_caption($caption="") {
 		$this->caption=$caption;
 	}
 
+  /**
+   * Hiermee kun je in één keer alle ingesteld labels vervangen
+   *
+   * @param array $labels 
+   * @return void
+   * @author Jan den Besten
+   */
 	public function set_labels($labels=NULL) {
 		if (isset($labels) and !empty($labels)) {
 			foreach($labels as $name=>$label) {
@@ -74,10 +112,26 @@ class Form {
 		}
 	}
 
+  /**
+   * Vervang een bestaande label
+   *
+   * @param string $name Naam van het veld waar je de label van wilt aanpassen
+   * @param string $label Nieuwe label
+   * @return void
+   * @author Jan den Besten
+   */
 	public function set_label($name,$label) {
 		$this->data[$name]["label"]=$label;
 	}
 
+  /**
+   * Hiermee stel je alle formuliervelden in en eventueel een kop
+   *
+   * @param array $data[NULL]
+   * @param string $caption['']
+   * @return void
+   * @author Jan den Besten
+   */
 	public function set_data($data=NULL,$caption="") {
 		if (isset($data) and !empty($data)) {
 			foreach ($data as $name => $field) {
@@ -87,6 +141,14 @@ class Form {
 		$this->set_caption($caption);
 	}
 
+  /**
+   * Geef alle formuliervelden een empty_value mee voor het placeholder attribuut
+   *
+   * @return void
+   * @author Jan den Besten
+   * @depricated
+   * @ignore
+   */
   public function prepare_for_clearinput() {
     foreach ($this->data as $key=>$data) {
       $label=$data['label'];
@@ -94,6 +156,13 @@ class Form {
     }
   }
 
+  /**
+   * Voeg een extra wachtwoord veld toe zodat een wachtwoord dubbel moet worden ingevoerd. Checkt automatisch of ze overeenkomen.
+   *
+   * @param array $args[TRUE] Als TRUE dan worden automatisch alle pwd en gpw (paswoord) velden gedubbeld. Geef anders een array met de opties
+   * @return void
+   * @author Jan den Besten
+   */
 	public function add_password_match($args=TRUE) {
 		$opts=array('fields'=>array('gpw','pwd'),'label'=>' (2x)','name'=>'matches','class'=>'matches');
 		if (is_array($args)) $opts=array_merge($opts,$args);
@@ -102,14 +171,37 @@ class Form {
 		if ($this->add_password_match) $this->data=$this->_add_matching_password($this->data);
 	}
 	
-	public function hash_passwords($hash=true) {
+	/**
+	 * Stel in dat alle passwords moeten worden gehashed
+	 *
+	 * @param bool $hash[TRUE]
+	 * @return void
+	 * @author Jan den Besten
+	 */
+  public function hash_passwords($hash=true) {
 		$this->hash_passwords=$hash;
 	}
 
+  /**
+   * Stel hier de mogelijke captcha woorden in voor het captcha veld
+   *
+   * @param string $words 
+   * @return void
+   * @author Jan den Besten
+   */
 	public function set_captcha_words($words=NULL) {
 		$this->captchaWords=$words;
 	}
 
+  /**
+   * Voorwaarde wanneer een veld wordt getoond
+   *
+   * @param string $when 
+   * @param string $field 
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   */
 	public function when($when='',$field='') {
 		if (empty($when))
 			$this->when=array();
@@ -118,6 +210,16 @@ class Form {
 		}
 	}
 
+  /**
+   * undocumented function
+   *
+   * @param string $name 
+   * @param string $field 
+   * @return void
+   * @author Jan den Besten
+   * @internal
+   * @ignore
+   */
 	private function _check_default_field($name, $field) {
 		if (!isset($field['type']))				$field['type']="input";
 		if (!isset($field['name']))				$field['name']=$name;
@@ -129,9 +231,25 @@ class Form {
 		return $field;
 	}
 
+  /**
+   * Zelfde als set_buttons()
+   *
+   * @param array $buttons 
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   */
 	public function show_buttons($buttons=NULL) {
 		$this->set_buttons($buttons);
 	}
+  
+  /**
+   * Stel de buttons in de getoond moeten worden
+   *
+   * @param array $buttons[NULL] als dit leeg is dan worden de drie standaard buttons getoond (cancel,reset,submit)
+   * @return void
+   * @author Jan den Besten
+   */
 	public function set_buttons($buttons=NULL) {
 		if (empty($buttons)) {
 			$buttons=array(	'cancel'	=> array( "value" => lang("form_cancel"), "class"=>"button cancel", "onClick" => "window.history.back()"),
@@ -146,43 +264,99 @@ class Form {
 		$this->buttons=$buttons;
 	}
 
+  /**
+   * Verwijderd de submit button uit de buttonlijst
+   *
+   * @return void
+   * @author Jan den Besten
+   */
 	public function no_submit() {
 		foreach ($this->buttons as $name => $button) {
 			if (isset($button['submit'])) unset($this->buttons[$name]);
 		}
 	}
 
-/**
- * Template functions
- */
+  /**
+   * Zelfde als set_field_templates()
+   *
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   */
 	public function set_templates() {
 		$this->set_field_templates();
 	}
+  
+  /**
+   * Oude templates
+   * 
+   * @return void
+   * @author Jan den Besten
+   * @depricated
+   * @ignore
+   */
 	public function set_old_templates() {
 		$this->set_field_templates("<div class=\"form_field %s\">","</div>");
 		$this->set_fieldset_classes(array('fieldset'=>'formfields','buttons'=>'formbuttons'));
 	}
 
+  /**
+   * Stel template in voor een veld
+   *
+   * @param string $start['&lt;div&nbsp;class&quot;flexyFormField&nbsp;%s&quot;&gt;']
+   * @param string $end['&lt;/div&gt;']
+   * @author Jan den Besten
+   */
 	public function set_field_templates($start="<div class=\"flexyFormField %s\">",$end="</div>") {
 		$this->tmpFieldStart=$start;
 		$this->tmpFieldEnd=$end;
 	}
 
+  /**
+   * Stel de classes in voor de fieldsets
+   *
+   * @param array $fieldsetClasses[array('fieldset'=>'flexyFormFieldset','buttons'=>'flexyFormButtons')]
+   * @author Jan den Besten
+   * @ignore
+   */
 	public function set_fieldset_classes($fieldsetClasses=array('fieldset'=>'flexyFormFieldset','buttons'=>'flexyFormButtons')) {
 		$this->fieldsetClasses=$fieldsetClasses;
 	}
 	
+  /**
+   * Stel de fieldsets in
+   *
+   * @param string $fieldsets[array('fieldset')]
+   * @return void
+   * @author Jan den Besten
+   */
 	public function set_fieldsets($fieldsets=array('fieldset')) {
 		if (!is_array($fieldsets)) $fieldsets=array($fieldsets);
 		$this->fieldsets=$fieldsets;
 	}
+  
+  /**
+   * Voeg een fieldset toe
+   *
+   * @param string $fieldset['']
+   * @param string $class['']
+   * @author Jan den Besten
+   */
 	public function add_fieldset($fieldset='',$class='') {
 		$this->fieldsets[]=$fieldset;
 		if (empty($class)) $class=$this->fieldsetClasses['fieldset'];
 		$this->fieldsetClasses[$fieldset]=$class;
 	}
 
-
+  /**
+   * Voegt de matching passwords toe
+   *
+   * @param string $data 
+   * @return void
+   * @author Jan den Besten
+   * @internal
+   * @ignore
+   */
 	private function _add_matching_password($data) {
 		foreach ($data as $name => $field) {
 			$pre=get_prefix($name);
@@ -200,19 +374,23 @@ class Form {
 		return $data;
 	}
 
+  /**
+   * Template
+   *
+   * @author Jan den Besten
+   * @internal
+   * @ignore
+   */
 	private function tmp($tmp,$class="") {
 		return str_replace("%s",$class,$tmp);
 	}
 
-/**
- * function validation()
- *
- * Returns TRUE if validation passed
- *
- *TODO: ! multi options Validation
- *
- * @return bool	Validation succes
- */
+  /**
+   * Kijkt of het formulier goed is gevalideerd, geeft TRUE als dat zo is, anders FALSE
+   *
+   * @return boolean TRUE als formulier door validatie is gekomen
+   * @author Jan den Besten
+   */
 	public function validation() {
 		$data=$this->data;
 		// trace_($data);
@@ -256,9 +434,23 @@ class Form {
 		return $this->isValidated;
 	}
 
+  /**
+   * Zelfde als reset()
+   *
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   */
 	public function reset_data() {
 		$this->reset();
 	}
+  
+  /**
+   * Reset alle data (maakt de _value_ en _repopulate_  velden leeg)
+   *
+   * @return void
+   * @author Jan den Besten
+   */
 	public function reset() {
 		foreach ($this->data as $key => $field) {
 			$this->data[$key]["value"]="";
@@ -267,16 +459,17 @@ class Form {
 	}
 
 
-/**
- * function prepare_field($name,$value)
- *
- * This functions prepares data coming from a form. Some fields needs to be adjusted, ie: checkboxes for example
- *
- * @param string $name Name of field
- * @param mixed	$value Data to prepare
- * @return mixed The prepped data
- *
- */
+  /**
+   * function prepare_field($name,$value)
+   *
+   * This functions prepares data coming from a form. Some fields needs to be adjusted, ie: checkboxes for example
+   *
+   * @param string $name Name of field
+   * @param mixed	$value Data to prepare
+   * @return mixed The prepped data
+   * @internal
+   * @ignore
+   */
 	private function prepare_field($name,$value) {
 		$out=$value;
 		$value=$this->_value_from_hidden($name,$value);
@@ -294,6 +487,16 @@ class Form {
 		return $out;
 	}
 
+  /**
+   * Get value from hidden fields
+   *
+   * @param string $name 
+   * @param string $value 
+   * @return mixed value
+   * @author Jan den Besten
+   * @internal
+   * @ignore
+   */
 	private function _value_from_hidden($name,$value) {
 		if (is_array($value) or empty($value)) {
 			// multi options (string)
@@ -309,13 +512,15 @@ class Form {
 	}
 
 
-/**
- * function get_postdata$table)
- *
- * Update the data in form
- * @param string $table Table to update
- * @return bool	Validation succes
- */
+  /**
+   * function get_postdata$table)
+   *
+   * Update the data in form
+   * @param string $table Table to update
+   * @return bool	Validation succes
+   * @internal
+   * @ignore
+   */
 	private function get_postdata() {
 
 		$data=array();
@@ -369,6 +574,12 @@ class Form {
 		return $this->post_data;
 	}
 
+  /**
+   * Geeft de ingevulde data van het formulier
+   *
+   * @return array Ingevulde data
+   * @author Jan den Besten
+   */
 	public function get_data() {
 		$data=array();
 		if (!empty($this->post_data))
@@ -386,16 +597,12 @@ class Form {
 		return $data;
 	}
 
-/**
- * function render()
- *
- * Returns form output (a table) according to template
- *
- * @param string $type html or other format
- * @param string $class extra attributes such as class
- * @return string	grid output
- */
-
+  /**
+   * Geeft het gerenderde formulier terug (HTML)
+   *
+   * @param string $class['flexyForm'] eventueel mee te geven CSS class dat aan formulier wordt gegeven
+   * @return string	formulier
+   */
 	public function render($class='flexyForm') {
 		$this->CI->lang->load("form");
 		// if (!empty($type)) $this->set_type($type);
@@ -442,6 +649,13 @@ class Form {
 		return $out;
 	}
 
+  /**
+   * Rendered een veld
+   *
+   * @author Jan den Besten
+   * @internal
+   * @ignore
+   */
 	private function render_field($name,$field,$class="") {
 		$out="";
 		$pre=get_prefix($name);
@@ -748,12 +962,13 @@ class Form {
 	}
 
 
-/**
- * function has_htmlfield()
- *
- * Checks if a field in the form needs a html editor.
- * @return bool True if one ore more fields is a html editor
- */
+  /**
+   * Kijkt of een veld in het formulier een HTML editor nodig heeft
+   *
+   * @return bool True if one ore more fields is a html editor
+   * @internal
+   * @ignore
+   */
  	public function has_htmlfield() {
  		return $this->hasHtmlField;
 	}
