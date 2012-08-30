@@ -31,6 +31,15 @@ function _callback_highlight($matches) {
 	return $code;
 }
 
+/**
+ * Wordt gebruikt door highlight_code_if_needed()
+ *
+ * @param string $matches 
+ * @return void
+ * @author Jan den Besten
+ * @ignore
+ */
+
 function _callback_highlight_span($matches) {
   $code=_callback_highlight($matches);
   $code=str_replace(array('<code>','</code>'),array('<span class="code">','</span>'),$code);

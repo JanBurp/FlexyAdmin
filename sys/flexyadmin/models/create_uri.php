@@ -1,22 +1,76 @@
 <?
+
+/**
+ * Hiermee kunnen uri's worden gecreeërd uit andere velden van een database rij
+ *
+ * @package default
+ * @author Jan den Besten
+ */
+
 class Create_uri extends CI_Model {
 
-  var $table;
-  var $source_field='';
-  var $data;
-  var $fields;
+  /**
+   * Tabel
+   *
+   * @var string
+   */
+  private $table;
+  
+  /**
+   * Velden waar de uri mogelijk gecreerd van kan worden
+   *
+   * @var string
+   */
+  private $source_field='';
+  
+  /**
+   * data uit tabel
+   *
+   * @var string
+   */
+  private $data;
+  
+  /**
+   * veldnamen an tabel
+   *
+   * @var string
+   */
+  private $fields;
 
+  /**
+   * Zet de database tabel waar de uri('s) gecreerd moeten worden
+   *
+   * @param string $table 
+   * @return object $this
+   * @author Jan den Besten
+   */
   public function set_table($table) {
     $this->table=$table;
     return $this;
   }
   
+  /**
+   * Zet het veld waar de uri vanuit gecreerd wordt, meestal een *str_* veld zoals *str_title*
+   * 
+   * Als dit niet wordt ingesteld zal automatisch een geschikt bron-veld worden gezocht
+   *
+   * @param string $source_field 
+   * @return object $this
+   * @author Jan den Besten
+   */
   public function set_source_field($source_field) {
     $this->source_field=$source_field;
     return $this;
   }
 
- 	public function create($data) {
+ 	/**
+ 	 * Maak uri vanuit meegegeven data (rij uit een tabel)
+ 	 *
+ 	 * @param array $data 
+ 	 * @return string
+ 	 * @author Jan den Besten
+ 	 */
+  public function create($data) {
     // init
     $this->data=$data;
     $this->fields=array_keys($data);
@@ -50,6 +104,14 @@ class Create_uri extends CI_Model {
  		return $uri;
  	}
 
+  /**
+   * Zoek mooi veld waar uri van gemaakt kan worden
+   *
+   * @return void
+   * @author Jan den Besten
+   * @internal
+   * @ignore
+   */
  	private function _find_source_field() {
 		$fields=$this->fields;
     
@@ -84,6 +146,15 @@ class Create_uri extends CI_Model {
  		return $uriField;
  	}
 	
+  /**
+   * Checkt of de uri al bestaat
+   *
+   * @param string $uri
+   * @return mixed
+   * @author Jan den Besten
+   * @internal
+   * @ignore
+   */
  	private function _is_existing_uri($uri) {
  		if ($this->db->field_exists('self_parent',$this->table) and isset($this->data['self_parent'])) {
  			$this->db->select('self_parent');
