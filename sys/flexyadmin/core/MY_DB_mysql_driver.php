@@ -7,8 +7,71 @@
  * Belangrijkste doelen:
  * 
  * - Resultaten meteen in een array
- * - Eenvoudig samenvoegen van tabellen (dus geen eigen joins SQL's te hoeven maken)
+ * - Eenvoudig samenvoegen van tabellen via foreign keys en relatie tabellen (dus niet meer nodig om zelf joins te schrijven)
+ * - Zoeken kan ook samengevoegde data
  * - Automatische bepalen van de volgorde als dat niet wordt meegegeven
+ * - Opties en default waarden kunnen meegegeven worden
+ * 
+ * Aanroepen
+ * =========
+ * 
+ * Omdat dit een uitbreiding is op CodeIgniters [Active Record Class](http://codeigniter.com/user_guide/database/active_record.html) kun je de methods zo aanroepen:
+ * 
+ *      $res = $this->db->get_results('tbl_links');
+ * 
+ * En je kunt de aanroepen ook aan elkaar knopen:
+ * 
+ *      $res = $this->db->select('url_url')->get_results('tbl_links');
+ * 
+ * Resultaten
+ * ==========
+ * 
+ * Resultaten komen in de vorm van een array terug.
+ * Voorbeeld voor een array die `get_row()` teruggeeft:
+ * 
+ *      array(
+ *        [id] => '1',
+ *        [uri] => 'home',
+ *        [order] => '0',
+ *        [self_parent] => '0',
+ *        [str_title] => 'Home',
+ *        [txt_text] => 'Welkom!'
+ *      )
+ * 
+ * Voorbeeld van een array die `get_result()` teruggeeft:
+ * 
+ *      array(
+ *        [1] => (
+ *              [id] => '1',
+ *              [str_title] => 'Jan den Besten - webontwerp en geluidsontwerp',
+ *              [url_url] => 'http://www.jandenbesten.net'
+ *             ),
+ *        [2] => (
+ *               [id] => '2',
+ *               [str_title] => 'FlexyAdmin',
+ *               [url_url] => 'http://www.flexyadmin.com'
+ *              ),
+ *        [3] => (
+ *              [id] => '3',
+ *              [str_title] => 'Muziek van Jan',
+ *              [url_url] => 'http://www.jandegeluidenman.nl',
+ *             )
+ *        )
+ * 
+ * 
+ * Zoeken op samengevoegde data
+ * ============================
+ * 
+ * Onderstaand voorbeeld geeft:
+ * 
+ * - rijen van *tbl_menu* en de samengevoegde (many) data van *tbl_links*
+ * - waarvoor geld dat *tbl_links.str_title* = 'FlexyAdmin'
+ * 
+ * Voorbeeld:
+ * 
+ *      $this->add_many();
+ *      $this->db->where( 'rel_menu__links.str_title', 'FlexyAdmin' );
+ *      $result = $this->db->get_result( 'tbl_menu' ); 
  *
  * @package default
  * @author Jan den Besten
@@ -196,6 +259,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
     * @param string $table Tabel
     * @return void
     * @author Jan den Besten
+    * @ignore
     */
 	private function _set_order_by_foreign($order_by_foreign=FALSE,$table) {
 		if ($order_by_foreign) {
@@ -225,6 +289,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
     * @param string $table 
     * @return void
     * @author Jan den Besten
+    * @ignore
     */
 	private function _set_order_by_many($order_by_many=FALSE,$table) {
 		if ($order_by_many) {
@@ -286,6 +351,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
     * @param string $set[TRUE]
     * @return void
     * @author Jan den Besten
+    * @ignore
     */
 	private function _set_standard_order($table,$fallbackOrder="",$tree_possible=TRUE,$set=TRUE) {
 		$order="";
@@ -589,6 +655,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
     * @param string $offset[0]
     * @return object CI-Query-object
     * @author Jan den Besten
+    * @ignore
     */
 	private function _get($table="",$limit=0,$offset=0) {
 		log_("info","[DB+] Get/create query:");
@@ -917,6 +984,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
    * @param string $self_parent
    * @return bool
    * @author Jan den Besten
+   * @ignore
    */
 	private function _check_fulluri($table,$uriParts,$self_parent) {
 		$check=FALSE;
@@ -1018,6 +1086,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
    * @param string $row te testen item
    * @return bool
    * @author Jan den Besten
+   * @ignore
    */
   private function _test_if_full_path($result,$row) {
 		$test=FALSE;
@@ -1035,6 +1104,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
    * @param array $result
    * @return array $result
    * @author Jan den Besten
+   * @ignore
    */
 	private function _make_tree_result($result) {
 		$test=current($result);
@@ -1051,6 +1121,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		}
 		return $result;
 	}
+  
   /**
    * Wordt gebruikt door _make_tree_result()
    *
@@ -1058,6 +1129,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
    * @param string $parent 
    * @return void
    * @author Jan den Besten
+   * @ignore
    */
 	private function _groups_to_tree($grouped,$parent) {
 		$tree=array();
@@ -1077,12 +1149,13 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	
   
   /**
-   * Stelt key in van resultaat array
+   * Veranderd de key van een resultaat array
    *
    * @param array $a 
    * @param string $key 
    * @return array
    * @author Jan den Besten
+   * @ignore
    */
 	private function _set_key_to($a,$key="") {
 		$n=0;
@@ -1109,6 +1182,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
    * @param string $offset[0]
    * @return array
    * @author Jan den Besten
+   * @ignore
    */
 	private function _get_result($table,$limit=0,$offset=0) {
 		// init
@@ -1310,7 +1384,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
   
   
   /**
-   * Geeft waarde van een veld en kiets een willekeurig rij
+   * Geeft waarde van een veld en kiest die een willekeurig rij
    *
    * @param string $table 
    * @param string $field
@@ -1407,19 +1481,13 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	}
 
 
-/**
-	*	Some functions to include foreign data
-	*/
-
 	/**
-	 * function get_foreign_tables([$table])
+	 * Geeft alle foreign tables die naar de gegeven tabel verwijzen
 	 *
-	 * Retrieves foreigntables from the foreign key from table.
-	 *
-	 * @param string $table Tablename for which to search, if empty, the current table is used.
-	 * @return array Foreign table names
+	 * @param string $table Table
+	 * @return array
 	 */
-	function get_foreign_tables($table="") {
+	public function get_foreign_tables($table="") {
 		$fields=$this->list_fields($table);
 		foreach ($fields as $f) {
 			if (is_foreign_key($f)) {
@@ -1430,7 +1498,20 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		return $this->foreignTables;
 	}
 
-	function add_foreigns($foreigns=true) {
+  
+  /**
+   * Voegt foreign tabeldata toe aan resultaat
+   * 
+   * Je kunt ook een array meegeven (ipv TRUE) om een deel van de foreign data te selecteren, bijvoorbeeld:
+   * 
+   *    // Neem alleen data mee uit de tabel *tbl_links* en daarvan alleen het veld *str_title*
+   *    $this->db->add_foreigns( array( 'tbl_links'=>array('str_title') ) ); 
+   *
+   * @param mixed $foreigns[TRUE]
+   * @return object $this
+   * @author Jan den Besten
+   */
+	public function add_foreigns($foreigns=true) {
 		$this->foreigns=$foreigns;
 		if (is_array($foreigns)) {
 			$this->foreigns=array();
@@ -1444,26 +1525,58 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			}
 		}
 		$this->foreignTables=array();
+    return $this;
 	}
 
-	function add_foreigns_as_abstracts($foreigns=true) {
+  /**
+   * Zelfde als add_foreigns() maar dan worden de velden van de foreign data samengevoegd tot een abstract veld
+   *
+   * @param mixed $foreigns[TRUE]
+   * @return object $this
+   * @author Jan den Besten
+   */
+	public function add_foreigns_as_abstracts($foreigns=true) {
 		$this->add_foreigns($foreigns);
 		$this->add_abstracts();
+    return $this;
 	}
 
-	function add_abstracts($abstracts=true) {
+  /**
+   * Zelfde als add_foreigns_as_abstracts() met dit verschil dat alleen als meegegeven argument TRUE is of een array automatisch add_foreigns() wordt aangeroepen
+   *
+   * @param mixed $abstracts[TRUE] 
+   * @return object $this
+   * @author Jan den Besten
+   */
+	public function add_abstracts($abstracts=true) {
 		$this->abstracts=$abstracts;
 		if ($abstracts!=false) $this->add_foreigns();
+    return $this;
 	}
 	
-	function as_abstracts($as=true) {
+  /**
+   * Resultaat wordt teruggegeven als een abstract
+   *
+   * @param bool $as[TRUE] 
+   * @return object $this
+   * @author Jan den Besten
+   */
+	public function as_abstracts($as=true) {
 		$this->asAbstracts=$as;
+    return $this;
 	}
 	
-	/**
-		* Functions for getting the abstract fieds / sql for a table
-	 */
-	function get_abstract_fields($table,$asPre='') {
+  /**
+   * Geeft de abstract velden terug van een tabel
+   * 
+   * Zal eerst checken in *cfg_table_info* of daar abstract velden zijn ingesteld, anders wordt er iets aanneemlijks gecreeërd.
+   *
+   * @param string $table
+   * @param string $asPre[''] 
+   * @return array
+   * @author Jan den Besten
+   */
+	public function get_abstract_fields($table,$asPre='') {
 		$cleanTable=rtrim($table,'_'); // make sure self relation is possible
 		$CI=& get_instance();
 		$abFields=array();
@@ -1523,36 +1636,57 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		return $abFields;
 	}
 
-	function get_abstract_fields_sql($table,$asPre='') {
+	/**
+	 * Geeft SQL terug met abstractfields
+	 *
+	 * @param string $table 
+	 * @param string $asPre['']
+	 * @return string
+	 * @author Jan den Besten
+	 */
+  public function get_abstract_fields_sql($table,$asPre='') {
 		$abFields=$this->get_abstract_fields($table,$asPre);
 		$CI=& get_instance();
 		return $this->concat($abFields)." AS ".$asPre.$CI->config->item('ABSTRACT_field_name');
 	}
 
-	// This one is for old sites, same as get_abstract_fields_sql()
-	function get_abstract_field($table,$asPre="") {
+  
+	/**
+	 * Zelfde als get_abstract_fields_sql()
+	 *
+	 * @param string $table 
+	 * @param string $asPre 
+	 * @return string
+	 * @author Jan den Besten
+	 * @depricated
+	 * @ignore
+	 */
+	public function get_abstract_field($table,$asPre="") {
 		return $this->get_abstract_fields_sql($table, $asPre);
 	}
 
-/**
-	*	Some functions to include and filter one to many tables
-	*/
-
-	function get_tables() {
+  /**
+   * Geeft alle tables terug met gegeven prefix
+   *
+   * @param string $prefix['tbl_']
+   * @return array
+   * @author Jan den Besten
+   */
+	public function get_tables($prefix='tbl_') {
 		$tables = $this->list_tables();
-		$tables = filter_by($tables,"tbl_");
+		$tables = filter_by($tables,$prefix);
 		return $tables;
 	}
 
-	/**
-	 * function get_many_tables([$table])
-	 *
-	 * Retrieves manytables from table name.
-	 *
-	 * @param string $table Tablename for which to search, if empty, the current table is used.
-	 * @return array Join table array
-	 */
-		function get_many_tables($table,$tables='') {
+   /**
+    * Geeft alle tabellen (en meer info) die een many-many relatie hebben met gegeven tabel (dus via een rel_ tabel)
+    *
+    * @param string $table 
+    * @param array $tables[''] hier kun je een voorselectie meegeven
+    * @return array
+    * @author Jan den Besten
+    */
+		public function get_many_tables($table,$tables='') {
 			$out=array();
 			$CI=& get_instance();
 			if (empty($tables) or !is_array($tables)) {
@@ -1584,28 +1718,44 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			return $out;
 		}
 
-	function add_many($many=true) {
+  /**
+   * Neem alle many-many data ook mee, dus data van tabellen die met een relatietabel gekoppeld zijn
+   * 
+   * Je kunt ook een deel van de many-tabellen filteren, onderstaand voorbeeld neemt alleen het veld *str_title* van de tabel *tbl_links* mee.
+   * 
+   *    $this->db->add_many( array( 'rel_menu__links'=>array('str_title') ) );
+   *
+   * @param mixed $many[true]
+   * @return object $this
+   * @author Jan den Besten
+   */
+	public function add_many($many=true) {
 		if (is_string($many)) $many=array($many);
 		$this->many=$many;
+    return $this;
 	}
 	
-	function add_options($options=true) {
+  /**
+   * Voeg opties (van velden die in een formulier meerkeuze zijn) toe aan het resultaat
+   *
+   * @param bool $options[true]
+   * @return object $this
+   * @author Jan den Besten
+   */
+	public function add_options($options=true) {
 		$this->options=$options;
+    return $this;
 	}
 
-/**
-	*	Some functions to include options (for forms etc)
-	*/
-
-	/**
-	 * function get_options($table)
-	 *
-	 * Gets options from given table
-	 *
-	 * @param string $table
-	 * @return array Result array with all options id=>abstract;
-	 */
-		function get_options($table,$optionsWhere="") {
+  /**
+   * Geeft alle opties van meerkeuze velden uit een gegeven tabel
+   *
+   * @param string $table
+   * @param string $optionsWhere['']
+   * @return array
+   * @author Jan den Besten
+   */
+	public function get_options($table,$optionsWhere="") {
 			$options=array();
 			$cleanTable=rtrim($table,'_');
 			$CI=&get_instance();
@@ -1641,14 +1791,15 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		}
 
 	/**
-	 * function _add_foreign_options($out,$foreignTables)
-	 *
-	 * Adds option arrays to current result array
-	 * @param array	$out						Current result array
-	 * @param array	$foreignTables	Tables from the options to be added
-	 * @return array	Resultarray with options
+	 * Voegt opties toe van foreign tables
+	 * 
+	 * @param array	$out Huidig resultaat
+	 * @param array	$foreignTables de foreigntabellen waarvan de opties moeten worden toegevoegd
+	 * @param string $table['']
+	 * @return array
+	 * @ignore
 	 */
-	 function _add_foreign_options($out,$foreignTables,$table='') {
+	 private function _add_foreign_options($out,$foreignTables,$table='') {
 			$options=array();
 			if (isset($foreignTables)) {
 				$CI=&get_instance();
@@ -1674,14 +1825,14 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		}
 
 	/**
-	 * function _add_many_options($out,$joinTables)
-	 *
-	 * Adds option arrays to current result array
-	 * @param array	$out						Current result array
-	 * @param array	$joinTables			joinTables from which the options wille be added
-	 * @return array	Resultarray with options
+	 * Voegt opties van many-tables toe aan huidige resultaat
+	 * 
+	 * @param array	$out huidig resultaat
+	 * @param array	$joinTables
+	 * @return array
+	 * @ignore
 	 */
-	 function _add_many_options($out,$manyTables) {
+	 private function _add_many_options($out,$manyTables) {
 			$options=array();
 			if (isset($manyTables)) {
 				$CI=&get_instance();
@@ -1700,13 +1851,14 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		}
 
 	/**
-	 * function _add_field_options($out)
+	 * Voeg opties toe van alle velden in de tabel waarvan opties ingesteld zijn in cfg_field_info
 	 *
-	 * Adds option arrays to current result array if options are set in cfg_field
-	 * @param array	$out						Current result array
-	 * @return array	Resultarray with options
+	 * @param array	$out huidige resultaat
+	 * @param string $table
+	 * @return array
+	 * @ignore
 	 */
-	 function _add_field_options($out,$table) {
+	 private function _add_field_options($out,$table) {
 			$CI=& get_instance();
 			// search options in cfg_field_info for every field, if found, give the options
 			$fields=$this->list_fields($table);
@@ -1724,16 +1876,13 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		}
 
 
-
 	/**
-	 * function defaults($table="")
+	 * Geeft default waarden terug van velden in een tabel
 	 *
-	 * This functions gives a default data set back
-	 *
-	 * @param string $table Tablename, maybe set before
-	 * @return array Result array ( [-1] => array( data ) )
+	 * @param string $table
+	 * @return array
 	 */
-	function defaults($table) {
+	public function defaults($table) {
 		$CI=& get_instance();
 		log_("info","[DB+] Get default data:");
 		$out=array();

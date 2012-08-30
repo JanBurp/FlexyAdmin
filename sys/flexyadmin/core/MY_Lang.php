@@ -1,36 +1,48 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
 /**
- * FlexyAdmin V1
- *
+ * Uitbreiding op [CI_Lang](http://codeigniter.com/user_guide/libraries/language.html)
+ * 
+ * @package default
  * @author Jan den Besten
  */
-
-
-/**
- * Language Class extension
- */
-
 class MY_Lang extends CI_Lang {
 
-	var $setLanguage;
-	var $idiom;
+	private $setLanguage;
+  
+  /**
+   * Ingestelde taal
+   *
+   * @var string
+   */
+	private $idiom;
 
-	function __construct() {
+  /**
+   * @ignore
+   */
+	public function __construct() {
 		parent::__construct();
 		$this->set();
 	}
 	
-	function set($lang="") {
+  /**
+   * Zet standaard taal
+   *
+   * @param string $lang[''] 
+   * @return object $this;
+   * @author Jan den Besten
+   */
+	public function set($lang="") {
 		$this->setLanguage=$lang;
+    return $this;
 	}
 
 
 	/**
-	 * Load a language file
+	 * Laad een taalbestand
 	 *
-	 * @access public
-	 * @param mixed	the name of the language file to be loaded. Can be an array
-	 * @param string	the language (english, etc.)
+	 * @param mixed	$langfile Naam van language bestand
+	 * @param string $idiom	de taal (nl,en etc.)
 	 * @return mixed
 	 */
 	function load($langfile = '', $idiom = '', $return = FALSE, $add_suffix = TRUE, $alt_path = SITEPATH )
@@ -116,7 +128,16 @@ class MY_Lang extends CI_Lang {
 		return TRUE;
 	}
 
-	function overrule_with_config() {
+
+  /**
+   * Kan weg?
+   *
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   * @depricated
+   */
+	public function overrule_with_config() {
 		$CI=&get_instance();
 		if (isset($CI->config->config['lang'][$this->idiom])) {
 			$this->language=array_merge($this->language,$CI->config->config['lang'][$this->idiom]);
@@ -124,7 +145,13 @@ class MY_Lang extends CI_Lang {
 	}
 
 	
-	function get_all() {
+  /**
+   * Geeft alle taal instellingen terug
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+	public function get_all() {
 		return $this->language;
 	}
 

@@ -1,12 +1,14 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- * Changes by Jan den Besten, for the utility driver
+ * Uitbreiding op [CodeIgniters Database Utility](http://codeigniter.com/user_guide/database/utilities.html) class
+ * 
+ * Zorgt ervoor dat TEXT en BLOB velden van een SQL Export als HEX-data in de dump zitten ipv als letterlijke tekst.
  *
  * @package default
- * @author Jan den Besten
+ * @internal
+ * @ignore
  */
-
 class MY_DB_mysql_utility extends CI_DB_mysql_utility {
 	
 	/**
@@ -15,11 +17,10 @@ class MY_DB_mysql_utility extends CI_DB_mysql_utility {
 	 * @access private
 	 * @param array	Preferences
 	 * @return mixed
+	 * @ignore
 	 */
-	function _backup($params = array())
-	{
-		if (count($params) == 0)
-		{
+	public function _backup($params = array()) {
+		if (count($params) == 0) {
 			return FALSE;
 		}
 
@@ -28,11 +29,9 @@ class MY_DB_mysql_utility extends CI_DB_mysql_utility {
 	
 		// Build the output
 		$output = '';
-		foreach ((array)$tables as $table)
-		{
+		foreach ((array)$tables as $table) {
 			// Is the table in the "ignore" list?
-			if (in_array($table, (array)$ignore, TRUE))
-			{
+			if (in_array($table, (array)$ignore, TRUE)) {
 				continue;
 			}
 
@@ -40,40 +39,34 @@ class MY_DB_mysql_utility extends CI_DB_mysql_utility {
 			$query = $this->db->query("SHOW CREATE TABLE `".$this->db->database.'`.'.$table);
 			
 			// No result means the table name was invalid
-			if ($query === FALSE)
-			{
+			if ($query === FALSE) {
 				continue;
 			}
 			
 			// Write out the table schema
 			$output .= '#'.$newline.'# TABLE STRUCTURE FOR: '.$table.$newline.'#'.$newline.$newline;
 
- 			if ($add_drop == TRUE)
- 			{
+ 			if ($add_drop == TRUE) {
 				$output .= 'DROP TABLE IF EXISTS '.$table.';'.$newline.$newline;
 			}
 			
 			$i = 0;
 			$result = $query->result_array();
-			foreach ($result[0] as $val)
-			{
-				if ($i++ % 2)
-				{ 					
+			foreach ($result[0] as $val) {
+				if ($i++ % 2) { 					
 					$output .= $val.';'.$newline.$newline;
 				}
 			}
 			
 			// If inserts are not needed we're done...
-			if ($add_insert == FALSE)
-			{
+			if ($add_insert == FALSE) {
 				continue;
 			}
 
 			// Grab all the data from the current table
 			$query = $this->db->query("SELECT * FROM $table");
 			
-			if ($query->num_rows() == 0)
-			{
+			if ($query->num_rows() == 0) {
 				continue;
 			}
 		
@@ -85,8 +78,7 @@ class MY_DB_mysql_utility extends CI_DB_mysql_utility {
 			$field_str = '';
 			$is_int = array();
 			$is_blob = array();	// added by JdB
-			while ($field = mysql_fetch_field($query->result_id))
-			{
+			while ($field = mysql_fetch_field($query->result_id)) {
 				// Most versions of MySQL store timestamp as a string
 				$is_int[$i] = (in_array(
 										strtolower(mysql_field_type($query->result_id, $i)),
@@ -110,20 +102,16 @@ class MY_DB_mysql_utility extends CI_DB_mysql_utility {
 			
 			
 			// Build the insert string
-			foreach ($query->result_array() as $row)
-			{
+			foreach ($query->result_array() as $row) {
 				$val_str = '';
 			
 				$i = 0;
-				foreach ($row as $v)
-				{
+				foreach ($row as $v) {
 					// Is the value NULL?
-					if ($v === NULL)
-					{
+					if ($v === NULL) {
 						$val_str .= 'NULL';
 					}
-					else
-					{
+					else {
 						// Hex the data if it's a blob (Added by JdB)
 						if ($is_blob[$i])
 						{

@@ -1,6 +1,20 @@
 <?
 
+/**
+ * Een aantal handige functies om met YouTube en Vimeo filmpjes om te gaan
+ *
+ * @author Jan den Besten
+ **/
 
+ /**
+  * Haalt url van de thumbnail van een video op
+  *
+  * @param string $code De YouTube of Vimeo code voor de video
+  * @param string $size['small'] de maat [small|medium|big]
+  * @param string $type['youtube'] 'youtube' of 'vimeo'
+  * @return string Url van de thumb
+  * @author Jan den Besten
+  */
 function get_video_thumb($code,$size='small',$type='youtube') {
 	$type=strtolower($type);
 	$thumb_url='';
@@ -28,7 +42,12 @@ function get_video_thumb($code,$size='small',$type='youtube') {
 }
 
 
-// http://www.soapboxdave.com/2010/04/getting-the-vimeo-thumbnail/
+/**
+ * Geeft info over vimeo video (o.a. thumb)
+ *
+ * @author Jan den Besten
+ * @link http://www.soapboxdave.com/2010/04/getting-the-vimeo-thumbnail/
+ */
 function get_vimeo_info($id,$var='') {
 	if (!function_exists('curl_init')) die('CURL is not installed!');
 	if (!empty($id)) {
@@ -51,7 +70,17 @@ function get_vimeo_info($id,$var='') {
 	return '';
 }
 
-
+/**
+ * Haalt code van een video uit de link
+ * 
+ * - Stel je hebt de volgende youtube link: http://www.youtube.com/watch?v=ICFELTZcON0
+ * - Dan geeft deze functie als resultaat: ICFELTZcON0
+ *
+ * @param string $url
+ * @param string $type['youtube'] 'youtube' of 'vimeo' 
+ * @return string
+ * @author Jan den Besten
+ */
 function get_video_code_from_url($url,$type='youtube') {
 	$type=strtolower($type);
 	$code=$url;

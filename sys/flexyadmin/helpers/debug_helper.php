@@ -1,36 +1,41 @@
 <?
 /**
- * FlexyAdmin V1
- *
- * debug_helper.php Created on 15-okt-2008
- *
+ * Handige PHP debug tools
  * @author Jan den Besten
  */
 
 
 /**
- * Sends message to logfile
+ * Voegt regel aan logbestand toe
+ * 
+ * Gebruikt CodeIgniters `log_message()` en voegt aan begin van $message: 'FlexyAdmin: '
  *
- * @param string $type 		Type of message: 'info','error' or 'debug'
- * @param string $message The message to send
+ * @param string $type type: 'info','error' or 'debug'
+ * @param string $message
  */
 function log_($type,$message) {
 	log_message($type,"FlexyAdmin: $message");
 }
 
 /**
- * function err_($message)
+ * Laat foutmelding zien en stuur de foutmelding naar de logfile
  *
- * Sends message to logfile as error and gives error message
- *
- * @param string $message The message to send
+ * @param string $message
  */
-
-function err_($message) {
+ function err_($message) {
 	show_error($message);
 	log_('error',$message);
 }
 
+/**
+ * Geeft een backtrace van laatste functie/method aanroepen (zie PHP's debug_backtrace())
+ *
+ * @param string $offset[0] Hoeveel stappen terug worden getoond
+ * @param string $limit[10] Aantal stappen dat wordt getooond
+ * @param bool $echo[TRUE]
+ * @return string resultaat
+ * @author Jan den Besten
+ */
 function backtrace_($offset=0,$limit=10,$echo=true) {
 	if ($echo) return trace_(NULL,$echo,$offset+1);
 	$dbgTrace = debug_backtrace();
@@ -68,10 +73,31 @@ function backtrace_($offset=0,$limit=10,$echo=true) {
 	return $out;
 }
 
+/**
+ * Conditionele trace_()
+ * 
+ * @param bool $condition de conditie die bepaald of de trace getoond wordt (bij TRUE)
+ * @param mixed $a 
+ * @param bool $echo[TRUE] 
+ * @param int $backtraceOffset[1]
+ * @return string
+ * @author Jan den Besten
+ */
 function trace_if($condition,$a=NULL,$echo=true,$backtraceOffset=1) {
 	if ($condition) return trace_($a,$echo,$backtraceOffset);
 }
 
+/**
+ * Als trace_() maar dan wordt het resultaat in een sessie variabel gestopt
+ * 
+ * - Werkt alleen als de session class is geladen.
+ * - De gebruikte sessie variabele is 'trace'
+ * - In het ADMIN deel wordt de eerstvolgende keer dat een pagina getoond wordt de sessie uitgelezen en getoond
+ *
+ * @param mixed $a
+ * @return void
+ * @author Jan den Besten
+ */
 function strace_($a=NULL) {
 	$CI=&get_instance();
 	$trace=trace_($a,false);
@@ -80,6 +106,20 @@ function strace_($a=NULL) {
 	$CI->session->set_userdata('trace',$all);
 }
 
+/**
+ * Geeft een mooie dump van meegegeven variabele
+ * 
+ * - Als het kan worden achterhaald geeft het het type variabele
+ * - Array's worden genest getoond
+ * - Lange strings worden getoond als ... (met een hover wordt hele tekst getoond)
+ * - Als een lege string wordt meegegeven dan wordt backtrace_() aangeroepen
+ *
+ * @param mixed $a Variabele waar je een dump van wilt
+ * @param bool $echo[TRUE] Moet de dump meteen worden getoond?
+ * @param int $backtraceOffset[1]
+ * @return string Geeft het resulaat (ook nog) als een string
+ * @author Jan den Besten
+ */
 function trace_($a=NULL,$echo=true,$backtraceOffset=1) {
 	static $c=0;
 	$show="Trace";
@@ -107,6 +147,13 @@ function trace_($a=NULL,$echo=true,$backtraceOffset=1) {
 	return $out;
 }
 
+/**
+ * Geeft een trace van een string-waarde
+ *
+ * @param string $value 
+ * @return string
+ * @author Jan den Besten
+ */
 function tr_string($value) {
 	$s="";
 	$value=(string) $value;
@@ -120,6 +167,13 @@ function tr_string($value) {
 	return $s;
 }
 
+/**
+ * Geeft deel van een array trace
+ *
+ * @param string $a array
+ * @return string
+ * @author Jan den Besten
+ */
 function array_($a) {
 	$out=array();
 	foreach($a as $key=>$value) {
@@ -133,6 +187,15 @@ function array_($a) {
 	return $out;
 }
 
+/**
+ * Geeft een trace van een array
+ *
+ * @param string $array 
+ * @param string $return[FALSE]
+ * @param string $tabs[0]
+ * @return string
+ * @author Jan den Besten
+ */
 function print_ar($array,$return=false,$tabs=0) {
 	$out="";
 	$out.=" (<br/>";
@@ -160,7 +223,14 @@ function print_ar($array,$return=false,$tabs=0) {
 	return $out;
 }
 
-
+/**
+ * Geeft aantal tab karakters terug
+ *
+ * @param string $t aantal
+ * @param string $tab[&nbsp;] tab-string
+ * @return string
+ * @author Jan den Besten
+ */
 function tabs($t,$tab="&nbsp;") {
 	return repeater($tab,$t);
 }
