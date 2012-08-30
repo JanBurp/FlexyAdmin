@@ -235,7 +235,7 @@ class Plugin_handler extends CI_Model {
 			foreach ($this->trigger_methods['after_delete_method'] as $plugin => $method) {
 				if ($this->is_triggered($plugin)) {
 					$this->_give_data_to_plugin($plugin);
-					$return = $this->call_plugin($plugin,$method,$this->data['new']);
+					$return = $this->call_plugin($plugin,$method);
 					$delete = $delete && $return;
 				}
 			}

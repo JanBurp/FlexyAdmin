@@ -1,24 +1,99 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Met deze class kun je een wizard maken
+ * 
+ * Een wizard is een aantal stappen die een gebruiker moet nemen, je ziet het veel bij het uitchecken van een webshop.
+ * 
+ * Een Wizard moet aangemaakt worden door een array mee te geven aan de construct (of init):
+ * 
+ *     array(
+ *       [title] => 'Titel van de Wizard',
+ *       [object] => '{object}',                 // Object waar de methods die de Wizard moet aanroepen in staan  
+ *       [uri_segment] => '3',                   // Uri segment waar de wizard uri begint
+ *       [steps] => (                            // Array met alle stappen van de Wizard
+ *          [stap_1] => (                        // Naam en uri van de stap (geen spaties!)
+ *             [label] =>  'Stap 1',             // Titel van de stap (wordt getoond)
+ *             [method] => 'first_step'          // Method die deze stap aanroept
+ *           ),
+ *           [laatste_stap] => (
+ *             [label] => 'Bijna klaar',
+ *             [method] => 'final'
+ *           )
+ *       )
+ *     )
+ *
+ * @package default
+ * @author Jan den Besten
+ */
 class Wizard {
 
-  var $steps=array();
-  var $step=false;
-  var $uri_segment=3;
-  var $object=null;
-  var $title='Wizard';
+  /**
+   * Stappen van de wizard
+   *
+   * @var array
+   */
+  private $steps=array();
+  
+  /**
+   * Huidige stap
+   *
+   * @var string
+   */
+  private $step=false;
+  
+  /**
+   * Uri segment waar de step begint
+   *
+   * @var string
+   */
+  private $uri_segment=3;
+  
+  /**
+   * undocumented variable
+   *
+   * @var string
+   */
+  private $object=null;
+  
+  /**
+   * Titel van de Wizard
+   *
+   * @var string
+   */
+  private $title='Wizard';
 
 
+  /**
+   * Construct & init
+   *
+   * @param array $config 
+   * @author Jan den Besten
+   * @ignore
+   */
 	public function __construct($config=array()) {
     $this->initialize($config);
 	}
   
+  /**
+   * Initialiseer de wizard
+   *
+   * @param array $config Instellingen van de wizard
+   * @return void
+   * @author Jan den Besten
+   */
   public function initialize($config=array()) {
     foreach ($config as $key => $value) {
       $this->$key=$value;
     }
   }
 
+  /**
+   * Render huidige step
+   *
+   * @return string
+   * @author Jan den Besten
+   */
   public function render() {
     $this->get_step();
     $out='';
@@ -31,6 +106,12 @@ class Wizard {
     return $out;
   }
 
+  /**
+   * Geeft huidige step
+   *
+   * @return array
+   * @author Jan den Besten
+   */
   public function get_step() {
     $uri=explode('/',uri_string());
     $step=element($this->uri_segment,$uri);
@@ -42,6 +123,12 @@ class Wizard {
     return $this->step;
   }
   
+  /**
+   * Geeft volgende step
+   *
+   * @return array
+   * @author Jan den Besten
+   */
   public function get_next_step() {
     $steps=$this->steps;
     reset($steps);
@@ -53,6 +140,13 @@ class Wizard {
     return $step['key'];
   }
   
+  /**
+   * Geeft uri van volgende step
+   *
+   * @param string $extra[''] eventuele argumenten (extra uri-parts)
+   * @return string
+   * @author Jan den Besten
+   */
   public function get_next_step_uri($extra='') {
     $step=$this->get_next_step();
     $uri=explode('/',uri_string());
@@ -63,6 +157,13 @@ class Wizard {
     return $uri;
   }
   
+  /**
+   * Roept huidige step aan
+   *
+   * @param string $args Argumenten die mee worden geven aan de step method
+   * @return mixed return van de step method
+   * @author Jan den Besten
+   */
   public function call_step($args) {
     $step=$this->get_step();
     if ($step) {
