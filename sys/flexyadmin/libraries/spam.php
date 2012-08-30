@@ -47,7 +47,7 @@ class Spam {
    *
    * @var array
    */
-	public $rapport=array();
+	private $rapport=array();
   
 
   /**
@@ -60,7 +60,7 @@ class Spam {
   /**
    * Controleer de tekst op spam en maakt rapport
    *
-   * @param string de tekst die gecontroleerd moet worden
+   * @param string $txt tekst die gecontroleerd moet worden
    * @return array rapportage
    * @author Jan den Besten
    */
@@ -83,7 +83,7 @@ class Spam {
   /**
    * Controleer of de invoer spam is
    *
-   * @param array data van een formulier
+   * @param array $data Data van een formulier
    * @param string $spamBody['spambody'] Veld wat een spambot ws automatisch vult 
    * @return bool TRUE dan is hoogstwaarschijnlijk spam.
    * @author Jan den Besten
@@ -245,8 +245,8 @@ class Spam {
    * Je kunt een (textarea) veld toevoegen aan je formulier dat je voor bezoekers onzichtbaar maakt.
    * Spambots zullen dit onzichtbare veld hoogstwaarschijnlijk automatisch gaan invullen omdat ze niet weten dat het leeg moet blijven.
    *
-   * @param array Ingevulde data dat door formulier teruggeven wordt.
-   * @param string['spambody'] te controleren veld
+   * @param array $data Ingevulde data dat door formulier teruggeven wordt.
+   * @param string $field['spambody'] te controleren veld
    * @return bool TRUE als veld niet leeg is en dus hoogstwaarschijnlijk een robot
    * @author Jan den Besten
    */

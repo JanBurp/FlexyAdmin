@@ -4,18 +4,53 @@ require_once(APPPATH."libraries/ion_auth.php");
 
 
 /**
-* Name:  User
-*
-* Exends ion_auth for FlexyAdmin use, make sure ion_auth is loaded before
-*/
-
+ * Class voor het inloggen, aanmaken etc van gebruikers
+ * 
+ * Is een uitbreiding op [Ion Auth]({Ion_auth}), dus kijk ook zeker daar voor te gebruiken methods!
+ * In de map userguide/ionAuth vindt je ook een handleiding.
+ *
+ * Bepaalde methods geven rechten terug, deze zijn samengesteld uit de volgende constanten:
+ *  
+ * - RIGHTS_ALL    = 15 (RIGHTS_DELETE + RIGHTS_ADD + RIGHTS_EDIT + RIGHTS_SHOW)
+ * - RIGHTS_DELETE = 8
+ * - RIGHTS_ADD    = 4
+ * - RIGHTS_EDIT   = 2
+ * - RIGHTS_SHOW   = 1
+ * - RIGHTS_NO     = 0
+ * - Allerlei combinaties van bovenstaande zijn mogelijk (net zoals RIGHTS_ALL een combinatie is)
+ *
+ * @package default
+ * @author Jan den Besten
+ */
+ 
 class User Extends Ion_auth {
 	
-	protected $rights;
-	protected $user_id;
-	protected $siteInfo;
+  /**
+   * Rechten van huidige gebruiker
+   *
+   * @var array
+   */
+	private $rights;
+
+  /**
+   * id van huidige gebruiker
+   *
+   * @var int
+   */
+	private $user_id;
   
-	public function __construct($tables='') {
+  /**
+   * Array van tbl_site
+   *
+   * @var array
+   */
+	private $siteInfo;
+  
+	
+  /**
+    * @ignore
+    */
+  public function __construct($tables='') {
 		parent::__construct($tables);
 		// set standard configurations
 		$this->CI->db->select('url_url,str_title,email_email');
@@ -24,6 +59,16 @@ class User Extends Ion_auth {
 		$this->CI->config->set_item('admin_email', $this->siteInfo['email_email'],'ion_auth');
 	}
   
+  
+  /**
+   * Login
+   *
+   * @param string $identity
+   * @param string $password 
+   * @param string $remember 
+   * @return bool TRUE als login is gelukt
+   * @author Jan den Besten
+   */
 	public function login($identity, $password, $remember=false) {
 		if ( ! $this->_check_if_userdate_ok()) {
 			$this->set_message('update_needed');
@@ -40,10 +85,28 @@ class User Extends Ion_auth {
 		return FALSE;
 	}
 	
+  /**
+   * _check_if_userdate_ok()
+   *
+   * @return bool
+   * @author Jan den Besten
+   * @internal
+   * @ignore
+   */
 	private function _check_if_userdate_ok() {
 		return ($this->CI->db->field_exists('str_username',$this->tables['users']) and $this->CI->db->field_exists('gpw_password',$this->tables['users']) );
 	}
 	
+  /**
+   * Check of systeem nog gebruik maakt van oude passwords, nodig voor updaten naar r1280
+   *
+   * @param string $identity 
+   * @return bool
+   * @author Jan den Besten
+   * @internal
+   * @ignore
+   * @depricated
+   */
 	private function _check_if_old_password($identity) {
 		$new_password = TRUE;
     if ($this->tables['users']=='cfg_users' and $this->tables['groups']=='cfg_user_groups') {
@@ -61,6 +124,15 @@ class User Extends Ion_auth {
 		return ! $new_password;
 	}
 	
+  /**
+   * Update oude passwords naar nieuwe, nodig voor updaten naar r1280
+   *
+   * @return void
+   * @author Jan den Besten
+   * @internal
+   * @ignore
+   * @depricated
+   */
 	private function _update_old_passwords() {
 		// update all users:
 		$this->CI->db->select('id,gpw_password,id_user_group');
@@ -83,7 +155,12 @@ class User Extends Ion_auth {
 	}
 	
 	
-	
+	/**
+	 * Check of er al ingelogd is
+	 *
+	 * @return bool TRUE als er al is ingelogd
+	 * @author Jan den Besten
+	 */
 	public function logged_in() {
 		$logged_in = parent::logged_in();
 		if ($logged_in) {
@@ -95,7 +172,17 @@ class User Extends Ion_auth {
 	}
 	
 	
-	
+	/**
+	 * Verzorgt het proces als een gebruiker het paswoord is vergeten
+	 * 
+	 * Verstuurt een mail naar gebruiker met link voor nieuw wachtwoord
+	 *
+	 * @param string $email Emailadres van gebruiker
+	 * @param string $uri URI van pagina waar gebruiker naartoe wordt geleid door de email
+	 * @param string $subject['Forgotten Password Verification'] Onderwerp van de te sturen email 
+	 * @return bool TRUE als proces is gelukt, FALS als gebruiker niet bekent is
+	 * @author Jan den Besten
+	 */
 	public function forgotten_password($email,$uri,$subject='Forgotten Password Verification') {
 		$user = $this->get_user_by_email($email);
 		// User not found?
@@ -134,7 +221,14 @@ class User Extends Ion_auth {
 		}
 	}
 	
-	
+	/**
+	 * Rond het proces van vergeten wachtwoord af
+	 *
+	 * @param string $code Code die gebruiker heeft gekregen
+	 * @param string $subject['New Password']
+	 * @return bool TRUE als geslaagd
+	 * @author Jan den Besten
+	 */
 	public function forgotten_password_complete($code,$subject='New Password') {
 		$identity = $this->CI->config->item('identity', 'ion_auth');
 		$profile  = $this->CI->ion_auth_model->profile($code, true);
@@ -174,7 +268,19 @@ class User Extends Ion_auth {
 
 
 	
-	
+	/**
+	 * Registreer een nieuwe gebruiker
+	 *
+	 * @param string $username 
+	 * @param string $password 
+	 * @param string $email 
+	 * @param string $additional_data 
+	 * @param string $group_name 
+	 * @param string $subject 
+	 * @param string $uri 
+	 * @return bool TRUE als geslaagd
+	 * @author Jan den Besten
+	 */
 	public function register($username, $password, $email, $additional_data=array(), $group_name = false, $subject='Account Activation', $uri='') {
 		if (empty($uri)) $uri=$this->CI->uri->get();
 		$email_activation = $this->CI->config->item('email_activation', 'ion_auth');
@@ -215,6 +321,15 @@ class User Extends Ion_auth {
 		}
 	}
 	
+  /**
+   * Stuur een mail waarmee nieuw geregistreede gebruiker zichzelf kan activeren
+   *
+   * @param string $id 
+   * @param string $subject
+   * @param string $uri 
+   * @return void
+   * @author Jan den Besten
+   */
 	public function send_activation_mail($id,$subject='Account Activation',$uri) {
 		$user       = $this->CI->ion_auth_model->get_user($id)->row();
 		$data = array(
@@ -224,18 +339,52 @@ class User Extends Ion_auth {
 		return $this->send_mail($id,'email_activate',$subject,$data);
 	}
 
+  /**
+   * Stuur administrater een mail dat een nieuwe gebruiker zich heeft geregistreerd
+   *
+   * @param string $id 
+   * @return void
+   * @author Jan den Besten
+   */
 	public function send_admin_new_register_mail($id) {
 		return $this->send_mail($id,'email_admin_new_register','',array(),true);
 	}
 
+  /**
+   * Stuur gebruiker mail dat registratie is geaccepteerd
+   *
+   * @param string $id 
+   * @param string $subject 
+   * @return void
+   * @author Jan den Besten
+   */
 	public function send_accepted_mail($id,$subject='Account accepted and activated') {
 		return $this->send_mail($id,'email_accepted',$subject);
 	}
 
+  /**
+   * Stuur gebruiker mail dat registratie niet is toegestaan
+   *
+   * @param string $id 
+   * @param string $subject 
+   * @return void
+   * @author Jan den Besten
+   */
 	public function send_deny_mail($id,$subject='Account denied') {
 		return $this->send_mail($id,'email_deny',$subject);
 	}
 
+  /**
+   * Stuur mail
+   *
+   * @param string $id 
+   * @param string $template 
+   * @param string $subject 
+   * @param string $additional_data 
+   * @param string $to_admin 
+   * @return void
+   * @author Jan den Besten
+   */
 	private function send_mail($id,$template,$subject,$additional_data=array(),$to_admin=false) {
 		$identity   = $this->CI->config->item('identity', 'ion_auth');
 		$user       = $this->CI->ion_auth_model->get_user($id)->row();
@@ -269,31 +418,70 @@ class User Extends Ion_auth {
 	}
 
 
-	
+	/**
+	 * Maak gebruiker (nieuw geregistreerd) actief
+	 *
+	 * @param string $user_id 
+	 * @return void
+	 * @author Jan den Besten
+	 */
 	public function activate_user($user_id) {
 		$data=array('str_activation_code'=>'','b_active'=>true);
 		$this->update_user($user_id,$data);
 	}
 
-	function is_super_admin() {
+  /**
+   * Test of huidige gebruiker super admin rechten heeft
+   *
+   * @return bool TRUE als dat zo is
+   * @author Jan den Besten
+   */
+	public function is_super_admin() {
 		return ($this->rights["rights"]=="*");
 	}
 	
-	function can_activate_users() {
+  /**
+   * Test of huidige gebruiker genoeg rechten heeft om nieuwe gebruikers te mogen activeren
+   *
+   * @return bool TRUE als dat zo is
+   * @author Jan den Besten
+   */
+	public function can_activate_users() {
 		return $this->has_rights($this->tables['users']);
 	}
 	
-	function can_backup() {
+  /**
+   * Test of huidige gebruiker genoeg rechten heeft om backup van database te maken
+   *
+   * @return bool TRUE als dat zo is
+   * @author Jan den Besten
+   */
+	public function can_backup() {
 		if ($this->rights['b_backup']) return TRUE;
 		return FALSE;
 	}
 
-	function can_use_tools() {
+  /**
+   * Test of huidige gebruiker genoeg rechten heeft om admin tools te mogen gebruiken (search/replace, bulk_upload, Automatisch vullen)
+   *
+   * @return bool TRUE als dat zo is
+   * @author Jan den Besten
+   */
+	public function can_use_tools() {
 		if ($this->rights['b_tools']) return TRUE;
 		return FALSE;
 	}
 
-	function create_rights($userId) {
+  /**
+   * Checkt welke rechten de gebruiker heeft en maakt daar mooie variabel van
+   *
+   * @param int $userId 
+   * @return array
+   * @author Jan den Besten
+   * @internal
+   * @ignore
+   */
+	private function create_rights($userId) {
 		$this->CI->db->select('id,id_user_group');
 		$this->CI->db->where($this->tables['users'].'.id',$userId);
 		$this->CI->db->add_foreigns();
@@ -310,22 +498,42 @@ class User Extends Ion_auth {
 	}
 
 
-	/**
-		* Returns rights:
-		*		RIGHTS_ALL		= 15 (all added)
-		*		RIGHTS_DELETE	= 8
-		*		RIGHTS_ADD		= 4
-		*		RIGHTS_EDIT		= 2
-		*		RIGHTS_SHOW		= 1
-		*		RIGHTS_NO			= 0 
-		* Or FALSE/TRUE if it has minimal these rights
-		*/
-	function _change_rights(&$found,$rights) {
+  /**
+   * Deze functie wordt alleen gebruikt door has_rights()
+   *
+   * @param string $&found 
+   * @param string $rights 
+   * @return void
+   * @author Jan den Besten
+   * @internal
+   * @ignore
+   */
+	private function _change_rights(&$found,$rights) {
 		foreach ($found as $key => $value) {
 			if ($rights[$key]) $found[$key]=TRUE;
 		}
 	}
-	function has_rights($item,$id="",$whatRight=0) {
+  
+  /**
+   * Test of gebruiker rechten heeft voor bepaald item (en row)
+   * 
+   * Mogelijke uitkomsten:
+   * 
+   * - RIGHTS_ALL    = 15 (RIGHTS_DELETE + RIGHTS_ADD + RIGHTS_EDIT + RIGHTS_SHOW)
+   * - RIGHTS_DELETE = 8
+   * - RIGHTS_ADD    = 4
+   * - RIGHTS_EDIT   = 2
+   * - RIGHTS_SHOW   = 1
+   * - RIGHTS_NO     = 0 
+   * - Of een combinatie van bovenstaande (een optelling)
+   *
+   * @param string $item tabel of media map waar de rechten voor getest worden
+   * @param string $id[0] Alleen nodig als rows/bestanden aan gebruikers gekoppeld zijn, hiermee kan dat getest worden
+   * @param string $whatRight[0] Eventueel checken op welke rechten getest wordt
+   * @return int Rechten zie boven
+   * @author Jan den Besten
+   */
+	public function has_rights($item,$id="",$whatRight=0) {
 		// No rights if cfg_users and id is smaller (higher rights)
 		if ($item==$this->tables['users'] and !empty($id) and ($id!=-1) and ($id<$this->user_id)) return false;
 		
@@ -359,8 +567,14 @@ class User Extends Ion_auth {
 			return ($foundRights>=$whatRight);
 	}
 	
-	// returns NULL if no user restrictions, else it gives back the user_id
-	function restricted_id($table) {
+  /**
+   * Test of de rows van tabel/media_map gekoppeld zijn aan gebruikers
+   *
+   * @param string $table
+   * @return bool TRUE als dat zo is
+   * @author Jan den Besten
+   */
+	public function restricted_id($table) {
 		$restricted=TRUE;
 		$pre=get_prefix($table);
 		$preAll=$pre."_*";
@@ -376,7 +590,15 @@ class User Extends Ion_auth {
 			return FALSE;
 	}
 
-	function get_table_rights($atLeast=RIGHTS_ALL) {
+
+  /**
+   * Geeft array terug van alle tabellen waar gebruiker rechten voor heeft
+   *
+   * @param string $atLeast[RIGTS_ALL] Minimal rechten die een tabel moet hebben om in her resultaat te komen 
+   * @return array Tabellen waar de gebruiker de gevraagde rechten voor heeft.
+   * @author Jan den Besten
+   */
+	public function get_table_rights($atLeast=RIGHTS_ALL) {
 		$tables=$this->CI->db->list_tables();
 		$tableRights=array();
 		foreach ($tables as $key => $table) {
@@ -393,28 +615,25 @@ class User Extends Ion_auth {
 		return $tableRights;
 	}
 	
-	function get_rights() {
+  /**
+   * Geeft rechten van huidige gebruiker
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+	public function get_rights() {
 		return $this->rights;
 	}
 
-
-
-
 	/**
-	 * get_inactive_old_users
+	 * Geeft alle inactieve gebruikers die langer dan bepaalde tijd geleden geregistreerd zijn
 	 *
-	 * time as seconds since today
-	 *  
-	 * @return object
+	 * @param string $group_name[FALSE]
+	 * @param int $time[1209600] tijd geleden in sec (dag=86400, week=604800, 2 weken=1209600, 4 weken=2419200)
+	 * @return object met alle inactieve gebruikers
 	 * @author Jan den Besten
 	 **/
-	public function get_inactive_old_users($group_name = false, $time=1209600)
-		// day     86400
-		// week    604800
-		// 2 weeks 1209600
-		// 4 weeks 2419200
-	
-	{
+	public function get_inactive_old_users($group_name = false, $time=1209600) {
 		return $this->CI->ion_auth_model->get_inactive_old_users($group_name,$time)->result();
 	}
 

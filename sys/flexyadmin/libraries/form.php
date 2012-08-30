@@ -3,20 +3,60 @@
 /**
  * Form
  * 
- * Met deze class kun je formulieren maken, valideren en uitlezen
- *
- * @author Jan den Besten
- * @version $Id$
- * @copyright , 28 August, 2012
- * @package default
- **/
-
-
-/**
- * Form
- * 
  * Met deze class kun je formulieren maken, valideren en uitlezen.
- *
+ * Het combineerd de standaard CodeIgniter [Form Helper](http://codeigniter.com/user_guide/helpers/form_helper.html) en [Form Validation](http://codeigniter.com/user_guide/libraries/form_validation.html) en nog wat extra's. 
+ * 
+ * Voorbeeld
+ * =========
+ * 
+ * Hieronder een voorbeeld voor een eenvoudig contactformulier:
+ * 
+ *  
+ *     // Maak array met de velden voor het formulier
+ *     $form_fields = array(
+ *       'str_name'		=> array(
+ *                         'label'       => 'Naam',
+ *                         'validation'  => 'required'
+ *                        ),
+ *       'email_email'	=> array(
+ *                         'label'       => 'Email',
+ *                         'validation'  => 'required|valid_email'
+ *                        ),
+ *       'txt_text'	  => array(
+ *                         'label'       => 'Vraag',
+ *                         'type'        => 'textarea',
+ *                         'validation'=>'required'
+ *                        ),
+ *     );
+ *  
+ *     // Maak formulier
+ *     $form=new form( 'contact' );                      // Geef de uri van de action pagina mee
+ *     $form->set_data( $form_fields, 'Contact' );       // Stel de velden en de naam van het formulier in
+ *  
+ *     // Kijk of formulier is ingevuld en goed door de validatie is gekomen
+ *     if ( $form->validation() ) {
+ *      // Ja, lees de formulier data uit en doe er iets mee
+ *      $data=$form->get_data();
+ *      ...
+ *     }
+ *     else {
+ *      // Zo niet, toon dan het formulier, eventueel met validation errors
+ *      $validation_errors=validation_errors('<p class="error">', '</p>');
+ *      $htmlForm=$form->render();
+ *      echo $validation_errors . $htmlForm;
+ *     }
+ * 
+ * Velden instellen
+ * ================
+ * 
+ * Wat je iig per veld kunt instellen:
+ * 
+ * - label - Het label dat voor het veld komt, als dit niet wordt meegegeven dan wordt een label gemaakt aan de hand van de naam van het veld (zonder prefix)
+ * - type - Type veld, mogelijk zijn de standaard HTML velden: input,textarea,select, etc. (defaultwaarde is 'input')
+ * - options - als het type _select_ is moet je hier een array meegeven van de mogelijke opties
+ * - validation - validatie van het veld. Zie de [Form Validation van CodeIgniter](http://codeigniter.com/user_guide/libraries/form_validation.html) voor mogelijke waarden.
+ * 
+ * 
  * @package default
  * @author Jan den Besten
  */

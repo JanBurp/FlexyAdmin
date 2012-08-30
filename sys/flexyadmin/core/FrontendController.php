@@ -1,25 +1,46 @@
 <?
 
-
 /**
- * FrontEndController Class extends MY_Controller
+ * Dit is de basis voor de controller aan de frontend (site/controller.php)
  *
- * Same as MY_Controller
- *
- * @package FlexyAdmin V1
+ * @package default
  * @author Jan den Besten
- * @version V1 0.1
- *
  */
-
 class FrontEndController extends MY_Controller {
 
-	var $site;
+  /**
+   * Array waar alle onderdelen van de site terechtkomen (zie [Frontend Controller](Frontend-controller))
+   * 
+   * Standaard worden de volgende onderdelen klaargezet:
+   * 
+   *     $this->site              = array(
+   *      ['title']                => 'Titel',                          // Titel van de site (= tbl_site.str_title)
+   *      ['author']               => 'Jan den Besten',                 // Auteur van de site (= tbl_site.str_author)
+   *      ['url']                  => 'http://www.flexyadmin.com',      // Url van de site (= tbl_site.url_url)
+   *      ['email']                => 'info@flexyadmin.com',            // Email van de site (= tbl_site.email_email) (Deze wordt standaard gebruikt bij de modules contact_form en comments)
+   *      ['description']          => '',                               // Description (= tbl_site.stx_description)
+   *      ['keywords']             => '',                               // Keywords (= tbl_site.stx_keywords)
+   *      ['str_google_analytics'] => '',                               // Wordt gebruikt voor Google Analytics. (= tbl_site.str_google_analytics)
+   *      ['assets']               => 'site/assets',                    // verwijzing naar de assets map
+   *      ['admin_assets']         => 'sys/flexyadmin/assets',          // verwijzing naar de flexyadmin assets map
+   *      ['languages']            => array('nl'),                      // array met mogelijke talen. Zoals ingesteld in _site/config/config.php_
+   *      ['uri']                  => '',                               // Uri van huidige pagina
+   *      ['menu']                 => '',                               // Bij aanvang leeg, wordt gevuld met het menu (HTML)
+   *      ['content']              => '',                               // Bij aanvang leeg. Wordt gevuld met alle HTML content
+   *      ['class']                => '',                               // Bij aanvang leeg. Wordt gebruikt om een class mee te geven aan de body tag
+   *      ['break']                => FALSE                             // Als TRUE dan heeft een module aangegeven dat er verder geen content en modules mogen worden geladen en getoond
+   *     )
+   *
+   * @var array
+   */
+	public $site;
 
-	function __construct() {
-		/**
-		 * Init controller, and load all libraries
-		 */
+
+  /**
+    * @ignore
+    */
+	public function __construct() {
+		// Init controller, and load all libraries
 		parent::__construct();
 		$this->load->library('user_agent');
 		$this->load->helper('date');
@@ -28,22 +49,15 @@ class FrontEndController extends MY_Controller {
 		$this->load->library("menu");
 		$this->load->library("content",$this->config->item('parse_content'));
 		$this->load->library('form_validation');
-		/**
-		 * Load standard Module Class
-		 */
+		// Load standard Module Class
 		$this->load->library('module');
-				
 
-		/**
-			*	Set $_GET if asked for
-			* See http://www.askaboutphp.com/tutorials/58/codeigniter-mixing-segment-based-url-with-querystrings.html
-			* For this to work, config.php: $config['uri_protocol']	= "PATH_INFO";
-			*/
+    // Set $_GET if asked for
+    // See http://www.askaboutphp.com/tutorials/58/codeigniter-mixing-segment-based-url-with-querystrings.html
+    // For this to work, config.php: $config['uri_protocol']  = "PATH_INFO";
 		if ($this->config->item('query_urls'))	parse_str($_SERVER['QUERY_STRING'],$_GET);
 
-		/**
-		 * Init global site data
-		 */
+		// Init global site data
 		$this->_init_globals();
 	}
 	
@@ -52,21 +66,23 @@ class FrontEndController extends MY_Controller {
 	 *
 	 * @return void
 	 * @author Jan den Besten
+	 * @depricated
    * @ignore
 	 */
-	function FrontEndController() {
+	public function FrontEndController() {
 		$this->__construct();
 	}
 	
 
 	/**
-	 * _init_globals()
+	 * Stop alle globale variabelen in $site
 	 *
-	 * Here are all global site parameters set.
-	 * - asset folder
-	 * - all fields from tbl_site (the not standard with prefix)
+	 * @return void
+	 * @author Jan den Besten
+	 * @internal
+	 * @ignore
 	 */
-	function _init_globals() {
+  private function _init_globals() {
 		$this->site=array();
 
 		/**
@@ -147,52 +163,130 @@ class FrontEndController extends MY_Controller {
 		
 	}
 
-	function add_keywords($words) {
+  /**
+   * Voeg keywords toe
+   *
+   * @param string $words 
+   * @return void
+   * @author Jan den Besten
+   */
+	public function add_keywords($words) {
 		$this->site["keywords"]=add_string($this->site["keywords"],$words,",");
 	}
 	
-	function add_title($title) {
+  /**
+   * Voeg achter de titel nog een extra tekst toe (gescheiden door -)
+   *
+   * @param string $title 
+   * @return void
+   * @author Jan den Besten
+   */
+	public function add_title($title) {
 		$this->site["title"].=" - ".$title;
 	}
 
-	function set_uri($uri) {
+  /**
+   * Zet huidige uri in $site['uri']
+   *
+   * @param string $uri 
+   * @return void
+   * @author Jan den Besten
+   */
+	public function set_uri($uri) {
 		$this->site["uri"]=$uri;
 	}
-	function get_uri($max=0) {
+  
+  /**
+   * Pakt huidige uri uit $site['uri']
+   *
+   * @param string $max[0] Aantal parts 
+   * @return void
+   * @author Jan den Besten
+   */
+	public function get_uri($max=0) {
 		if ($max==0) return $this->site["uri"];
 		$u=explode("/",$this->site["uri"]);
 		$u=array_slice($u,0,$max);
 		return implode("/",$u);
 	}
 
-	function add_content($c) {
+  /**
+   * Voegt meer content toe (aan $site['content'])
+   *
+   * @param string $c Extra content
+   * @return void
+   * @author Jan den Besten
+   */
+	public function add_content($c) {
 		if (!isset($this->site["content"]))
 			$this->site["content"]=$c;
 		else
 			$this->site["content"].=$c;
 	}
 	
-	function has_content() {
+  /**
+   * Test of er wel content is
+   *
+   * @return bool FALSE als $site['content'] leeg is
+   * @author Jan den Besten
+   */
+	public function has_content() {
 		return (isset($this->site["content"]) and !empty($this->site["content"]));
 	}
 	
-	function no_content() {
+  /**
+   * Zelfde als has_content() maar dan omgekeerd
+   *
+   * @return bool TRUE als er geen content is
+   * @author Jan den Besten
+   */
+	public function no_content() {
 		return !$this->has_content();
 	}
 	
-	function add_class($class) {
+  /**
+   * Voegt een class toe aan de body tag ($site['class'])
+   *
+   * @param string $class
+   * @author Jan den Besten
+   */
+	public function add_class($class) {
 		$this->site['class']=add_string($this->site['class'],$class,' ');
 	}
 	
-	function add($key,$value) {
+  /**
+   * Voegt een variabel aan $site toe
+   *
+   * @param string $key 
+   * @param string $value 
+   * @return void
+   * @author Jan den Besten
+   */
+	public function add($key,$value) {
 		$this->site[$key]=$value;
 	}
 
-	function get($key) {
+  /**
+   * Pakt bepaalde waarde van $site
+   *
+   * @param string $key 
+   * @return mixed
+   * @author Jan den Besten
+   */
+	public function get($key) {
 		return el($key,$this->site);
 	}
 
-	function view($view='',$data='',$return=FALSE) {
+  /**
+   * Laad een view, praktisch hetzelfde als standaard CodeIgniter $this->load->view()
+   *
+   * @param string $view[''] Als leeg dan wordt de main view geladen die ingesteld is in de config
+   * @param string $data[''] Als leeg dan wordt $site meegegeven
+   * @param string $return[FALSE]
+   * @return string
+   * @author Jan den Besten
+   */
+	public function view($view='',$data='',$return=FALSE) {
 		if (empty($view)) {
 			$view=$this->config->item('main_view');
 			if ( ! $view) $view='home'; // for backwards compatibility
@@ -200,37 +294,68 @@ class FrontEndController extends MY_Controller {
 		if (empty($data)) $data=$this->site;
 		return $this->load->view($view,$data,$return);
 	}
-	function show($view='home',$data='',$return=FALSE) {
+  
+  /**
+   * Zelfde als view()
+   *
+   * @param string $view 
+   * @param string $data 
+   * @param string $return 
+   * @return void
+   * @author Jan den Besten
+   */
+	public function show($view='',$data='',$return=FALSE) {
 		return $this->view($view,$data,$return);
 	}
 	
 	
-	function find_modules_in_item($item) {
+  /**
+   * Geeft de modules die bij huidige pagina horen
+   *
+   * @param string $page
+   * @return mixed string als één module, array als meerdere modules
+   * @author Jan den Besten
+   */
+	public function find_modules_in_item($page) {
 		if (get_prefix($this->config->item('module_field'))=='id') {
 			// Modules from foreign table
 			$foreign_key=$this->config->item('module_field');
 			$foreign_field='str_'.get_suffix($this->config->item('module_field'));
 			$foreign_table=foreign_table_from_key($foreign_key);
-			$modules=$this->db->get_field_where($foreign_table,$foreign_field,'id',$item[$foreign_key]);
+			$modules=$this->db->get_field_where($foreign_table,$foreign_field,'id',$page[$foreign_key]);
 		}
 		else {
 			// Modules direct from field
-			$modules=$item[$this->config->item('module_field')];
+			$modules=$page[$this->config->item('module_field')];
 		}
 		return $modules;
 	}
 	
 	
-	// These are just here for backward compability... ##DEPRICATED
-	function getFormByModule($module) {
+  /**
+   * @author Jan den Besten
+   * @depricated
+   * @ignore
+   */
+	public function getFormByModule($module) {
 		$this->load->module('getform');
 		return $this->getform->by_module($module);
 	}
-	function getFormByTitle($title) {
+  /**
+   * @author Jan den Besten
+   * @depricated
+   * @ignore
+   */
+	public function getFormByTitle($title) {
 		$this->load->module('getform');
 		return $this->getform->by_title($module);
 	}
-	function getFormById($id) {
+  /**
+   * @author Jan den Besten
+   * @depricated
+   * @ignore
+   */
+	public function getFormById($id) {
 		$this->load->module('getform');
 		return $this->getform->by_id($module);
 	}

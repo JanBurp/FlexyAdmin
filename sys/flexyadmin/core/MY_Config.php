@@ -1,25 +1,33 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-
+/**
+ * Uitbreiding op [CI_Config](http://codeigniter.com/user_guide/libraries/config.html)
+ * 
+ * Grootste aanpassing is het kunnen onderverdelen van config items in secties, zie deze [thread](http://codeigniter.com/forums/viewthread/175199/)
+ * 
+ * @author Jan den Besten
+ */
 
 Class MY_Config extends CI_Config {
 
-	function __construct() {
+  /**
+   * @author Jan den Besten
+   * @ignore
+   */
+	public function __construct() {
 		parent::__construct();
 		array_push($this->_config_paths,SITEPATH);
 	}
 
-	/**
-	* Set a config file item
-  * See http://codeigniter.com/forums/viewthread/175199/
+/**
+	* Zet een config item, eventueel met een sectie
 	*
-	* @access    public
-	* @param    string    the config item key
-	* @param    string    the config item value
-	* @param   string  an optional section to save the item 
-	* @return    void
+	* @param string $item Naam van het item
+	* @param string $value Waarde van het item
+	* @param string $section an optional section to save the item 
+	* @return void
 	*/
-	function set_item($item, $value, $section="") {
+	public function set_item($item, $value, $section="") {
 		if( $section === "" )
 			$this->config[$item] = $value;    
 		else
@@ -27,12 +35,18 @@ Class MY_Config extends CI_Config {
 	}
 
 
-
-
-	/**
-	 * Load Config File in all paths and override them
-	 */
-	function load($file = '', $use_sections = FALSE, $fail_gracefully = FALSE )	{
+  /**
+   * Laad een config bestand.
+   * Als hetzelfde bestand in sys en in site/config bestaat:
+   * Laad eerst de sys config,dan de site config en merge deze samen (zo kunnen site specifieke instellingen standaard instellingen overrulen)
+   *
+   * @param string $file 
+   * @param string $use_sections[FALSE]
+   * @param string $fail_gracefully[FALSE]
+   * @return void
+   * @author Jan den Besten
+   */
+	public function load($file = '', $use_sections = FALSE, $fail_gracefully = FALSE )	{
 		
 		$file = ($file == '') ? 'config' : str_replace('.php', '', $file);
 		$loaded = FALSE;
@@ -106,7 +120,14 @@ Class MY_Config extends CI_Config {
 		return $loaded;
 	}
 
-  function unload($name) {
+  /**
+   * Verwijder een item uit de config
+   *
+   * @param string $name Item
+   * @return void
+   * @author Jan den Besten
+   */
+  public function unload($name) {
     unset($this->config[$name]);
     $key=in_array_like($name,$this->is_loaded);
     unset($this->is_loaded[$key]);
