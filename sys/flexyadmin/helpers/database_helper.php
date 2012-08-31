@@ -1,21 +1,16 @@
 <?
+
 /**
- * FlexyAdmin V1
- *
- * database_helper.php Created on 15-okt-2008
+ * Functies die handig zijn voor tabel en veldnamen van de database
  *
  * @author Jan den Besten
- */
-
-
+ **/
 
 /**
- * function is_foreign_key($field)
+ * Test of veld een foreign key is (beginnen met id_)
  *
- * Checks if this field is a foreign key, according to its name and how the name should be (see flexyadmin_config)
- *
- * @param string $field The fieldname to check
- * @return bool true if this field is a foreign key
+ * @param string $field
+ * @return bool
  */
 function is_foreign_key($field) {
 	$CI =& get_instance();
@@ -25,12 +20,13 @@ function is_foreign_key($field) {
 }
 
 /**
- * function is_foreign_field($field)
+ * Test of veld een foriegn veld is
+ * 
+ * Deze veldnamen komen voor in database resultaten waar met `add_foreigns()` foreign data is toegevoegd
+ * Deze veldnamen zien er zo uit: `foreign_key__field`
  *
- * Checks if this field is a foreign field (foreign_key__field), according to its name and how the name should be (see flexyadmin_config)
- *
- * @param string $field The fieldname to check
- * @return bool true if this field is a foreign key
+ * @param string $field
+ * @return bool
  */
 function is_foreign_field($field) {
 	$key=get_prefix($field,"__");
@@ -38,12 +34,10 @@ function is_foreign_field($field) {
 }
 
 /**
- * function foreign_table_from_key($key)
+ * Geeft foreign tabel van gegeven foreign key, en checkt of tabel werkelijk bestaat
  *
- * Gives foreign tablename from given foreign key and checks if it realy exists
- *
- * @param string $key Name of foreign key
- * @return string foreign table name
+ * @param string $key Bijvoorbeeld id_links
+ * @return string Bijvoorbeeld tbl_links
  */
 function foreign_table_from_key($key,$give_clean=false) {
 	$CI =& get_instance();
@@ -63,12 +57,10 @@ function foreign_table_from_key($key,$give_clean=false) {
 }
 
 /**
- * function join_table_from_rel_table($rel)
+ * Geeft many (rechter) tabel van gegeven relatie tabel, en checkt of de tabel bestaat
  *
- * Gives join tablename from given rel_table name
- *
- * @param string $rel Name of relation table
- * @return string join table name
+ * @param string $rel Bijvoorbeeld rel_menu__links
+ * @return string Bijvoorbeeld tbl_links
  */
 function join_table_from_rel_table($rel) {
 	$CI =& get_instance();
@@ -78,10 +70,10 @@ function join_table_from_rel_table($rel) {
 }
 
 /**
- * Gives main tablename from given rel_table name
+ * Geeft linker tabel van gegeven relatie tabel en checkt of de tavel bestaat
  *
- * @param string $rel Name of relation table
- * @return string join table name
+ * @param string $rel Bijvoorbeeld rel_menu__links
+ * @return string Bijvoorbeeld tbl_menu
  */
 function table_from_rel_table($rel) {
 	$CI =& get_instance();
@@ -94,12 +86,10 @@ function table_from_rel_table($rel) {
 
 
 /**
- * function this_key_from_rel_table($rel)
+ * Geeft linker key van gegeven relatie tabel
  *
- * Gives this key name from given rel_table name
- *
- * @param string $rel Name of relation table
- * @return string this key name (id_...)
+ * @param string $rel Bijvoorbeeld rel_menu__links
+ * @return string Bijvoorbeeld id_menu
  */
 function this_key_from_rel_table($rel) {
 	$CI =& get_instance();
@@ -108,12 +98,10 @@ function this_key_from_rel_table($rel) {
 }
 
 /**
- * function join_key_from_rel_table($rel)
+ * Geeft many (rechter) key van gegeven relatie tabel
  *
- * Gives join key name from given rel_table name
- *
- * @param string $rel Name of relation table
- * @return string join key name (id_...)
+ * @param string $rel Bijvoorbeeld rel_menu__links
+ * @return string Bijvoorbeeld id_links
  */
 function join_key_from_rel_table($rel) {
 	$CI =& get_instance();
@@ -122,8 +110,16 @@ function join_key_from_rel_table($rel) {
 }
 
 
-
-function get_menu_table() {
+/**
+ * Geeft menu tabel
+ * 
+ * - = tbl_menu
+ * - = res_menu_result als deze bestaat
+ *
+ * @return string
+ * @author Jan den Besten
+ */
+ function get_menu_table() {
 	static $table='';
 	if (empty($table)) {
 		$CI =& get_instance();
@@ -140,6 +136,13 @@ function get_menu_table() {
 	return $table;
 }
 
+/**
+ * Test of tabel een tabel is die aangepast mag worden (geen log_ of res_)
+ *
+ * @param string $table 
+ * @return bool
+ * @author Jan den Besten
+ */
 function is_editable_table($table) {
   $pre=get_prefix($table);
   return !in_array($pre,array('res','log'));

@@ -3,17 +3,24 @@
 /**
  * Uitbreiding op <a href="http://codeigniter.com/user_guide/helpers/html_helper.html" target="_blank">HTML_helper van CodeIgniter</a>.
  * 
+ * Aan veel van onderstaande funties kunnen attributen worden meegegeven: $a
+ * 
+ * - Als $a een string is dan wordt het attribuut class="$a" toegevoegd, met $a als megegeven class dus
+ * - Als $a een array is, dan wordt de key->value paren van de array omgezet in attributen en hun waarde
+ * 
+ * NB Maak bij voorkeur gebruikt van Views, als het niet anders kan, gebruik dan deze functies in je PHP code ipv letterlijke HTML strings
+ * 
  * @author Jan den Besten
  * @link http://codeigniter.com/user_guide/helpers/html_helper.html
  */
 
 /**
- * Maakt een html tag
+ * Maakt een gegeven html tag
  *
  * @param string $tag de tag
- * @param mixed $a Als $a een string is dan wordt het de class attribuut van de tag, als $a een array is dan is het een key->value paar van attributen 
+ * @param mixed $a
  * @param bool $end als TRUE dan maakt hij ook een close tag
- * @return void
+ * @return string
  * @author Jan den Besten
  */
 function html($tag,$a=array(),$end=FALSE) {
@@ -27,21 +34,25 @@ function html($tag,$a=array(),$end=FALSE) {
 	$out.=">";
 	return $out;
 }
+
 /**
- * Maakt een eind tag
+ * Zelfde als _html()
  *
  * @param string $tag 
- * @return void
+ * @return string
  * @author Jan den Besten
+ * @depricated
+ * @ignore
  */
 function end_html($tag) {
 	return _html($tag);
 }
+
 /**
  * Maakt een eind tag
  *
  * @param string $tag 
- * @return void
+ * @return string
  * @author Jan den Besten
  */
 function _html($tag) {
@@ -49,12 +60,12 @@ function _html($tag) {
 }
 
 /**
- * header tag
+ * &lt;h#&gt; tag
  *
  * @param string $t tekst binnen de header tag
  * @param int $h[1] header nivo 
- * @param mixed $a attributen (of class)
- * @return void
+ * @param mixed $a
+ * @return string
  * @author Jan den Besten
  */
 function h($t,$h=1,$a=array()) {
@@ -62,53 +73,116 @@ function h($t,$h=1,$a=array()) {
 }
 
 /**
- * p tag
+ * &lt;p&gt; tag
  *
- * @param mixed $a attributen (of class)
- * @return void
+ * @param mixed $a
+ * @return string
  * @author Jan den Besten
  */
 function p($a=array()) {
 	return html("p",$a);
 }
+
 /**
- * einde van p tag
+ * &lt;/p&gt; tag
  *
- * @return void
+ * @return string
  * @author Jan den Besten
  */
 function _p() {
 	return _html("p");
 }
 
+/**
+ * &lt;span&gt; tag
+ *
+ * @param mixed $a 
+ * @return string
+ * @author Jan den Besten
+ */
 function span($a=array()) {
 	return html("span",$a);
 }
+
+/**
+ * &lt;/span&gt; tag
+ *
+ * @return string
+ * @author Jan den Besten
+ */
 function _span() {
 	return _html("span");
 }
 
+/**
+ * &lt;div&gt; tag
+ *
+ * @param mixed $a 
+ * @return string
+ * @author Jan den Besten
+ */
 function div($a=array()) {
 	return html("div",$a);
 }
+
+/**
+ * &lt;/div&gt; tag
+ *
+ * @return string
+ * @author Jan den Besten
+ */
 function _div() {
 	return _html("div");
 }
+
+/**
+ * Zelfde als _div()
+ *
+ * @return string
+ * @author Jan den Besten
+ * @depricated
+ * @ignore
+ */
 function end_div() {
 	return _html("div");
 }
 
+/**
+ * &lt;hr/&gt; tag
+ *
+ * @param mixed $a 
+ * @return string
+ * @author Jan den Besten
+ */
 function hr($a=array()) {
 	if (!isset($a['class'])) $a['class']='';
 	$a['class'].=' hr';
 	return div($a)._div(); // this is better cross browser!
 }
 
+/**
+ * Maakt een veilig email link
+ *
+ * @param string $adres Emailadres
+ * @param string $text Tekst die in de link moet komen
+ * @return string
+ * @author Jan den Besten
+ * @depricated
+ * @ignore
+ */
 function safe_email($adres,$text) {
 	$adres=explode("@",$adres);
 	return '<script language="JavaScript" type="text/javascript">email("'.$adres[0].'","'.$adres[1].'","'.$text.'");</script>';
 }
 
+/**
+ * Maakt een flash object
+ *
+ * @param string $swf Flashfile
+ * @param string $attr 
+ * @return string
+ * @author Jan den Besten
+ */
 function flash($swf,$attr="") {
 	if (is_array($attr)) {
 		$a="";
@@ -129,7 +203,15 @@ function flash($swf,$attr="") {
 	return $object;
 }
 
-
+/**
+ * Maakt een div en een a tag aan met class="button"
+ *
+ * @param string $url
+ * @param string $text
+ * @param string $class['']
+ * @author Jan den Besten
+ * @ignore
+ */
 function button($url,$text,$class="") {
 	$out="";
 	$a=array("class"=>"button ".$class);

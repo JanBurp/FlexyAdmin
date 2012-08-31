@@ -1,34 +1,9 @@
 <?
 require_once(APPPATH."core/AdminController.php");
 
-/**
- * FlexyAdmin V1
- *
- * A Flexible Database based CMS
- *
- * @package FlexyAdmin V1
- * @author Jan den Besten
- * @copyright Copyright (c) 2008, Jan den Besten
- * @link http://flexyadmin.com
- * @version V1 0.1
- * @filesource  */
-
-// ------------------------------------------------------------------------
-
-/**
- * Filemanager Controller
- *
- * This Controller shows files and handles actions
- *
- * @package FlexyAdmin V1
- * @author Jan den Besten
- * @version V1 0.1
- *
- */
-
 class Filemanager extends AdminController {
 
-	function __construct() {
+	public function __construct() {
 		parent::__construct();
     $this->load->model('grid_set');
     $this->grid_set->set_api('API_filemanager_view');

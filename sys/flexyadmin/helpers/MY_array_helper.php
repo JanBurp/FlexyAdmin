@@ -1,6 +1,6 @@
 <?
 /**
- * Uitbreiding op <a href="http://codeigniter.com/user_guide/helpers/array_helper.html" target="_blank">Array_helper van CodeIgniter</a>.
+ * Uitbreiding op [Array_helper van CodeIgniter](http://codeigniter.com/user_guide/helpers/array_helper.html)
  * 
  * @author Jan den Besten
  * @link http://codeigniter.com/user_guide/helpers/array_helper.html
@@ -8,19 +8,24 @@
 
 
 /**
- * Shorter version of CI's element() with NULL as default (instead of FALSE) when element doesn't exists
+ * Net als element() (van CodeIgniter) maar nu met NULL als default (ipv FALSE)
  *
- * @param string $name Name of element
+ * @param string $name
  * @param array $arr
- * @param mixed $default[NULL] Default value if element not set
- * @return mixed Returns default value if element not set, otherwise the element's data
+ * @param mixed $default[NULL]
+ * @return mixed
  */
 function el($name,$arr,$default=NULL) {
 	return element($name,$arr,$default);
 }
 
 /**
- * function array2object($array)
+ * Maakt een object van een array
+ *
+ * @param string $array 
+ * @param string $recursive[TRUE]
+ * @return object
+ * @author Jan den Besten
  */
 function array2object($array,$recursive=TRUE) {
 	$obj = new StdClass();
@@ -32,7 +37,12 @@ function array2object($array,$recursive=TRUE) {
 }
 
 /**
- * function object2array($object)
+ * Maakt een array van een object
+ *
+ * @param string $object 
+ * @param string $recursive[TRUE]
+ * @return array
+ * @author Jan den Besten
  */
 function object2array($object,$recursive=TRUE) {
 	$array=array();
@@ -43,6 +53,14 @@ function object2array($object,$recursive=TRUE) {
 	return $array;
 }
 
+/**
+ * Maakt van een array een PHP string
+ *
+ * @param string $array 
+ * @param string $tabs[1]
+ * @return string
+ * @author Jan den Besten
+ */
 function array2php($array,$tabs=1) {
 	$php="array(\n";
 	$sub='';
@@ -57,6 +75,14 @@ function array2php($array,$tabs=1) {
 	return $php;
 }
 
+/**
+ * Maakt een CSV (Comma Seperated Values) string van een array
+ *
+ * @param string $array 
+ * @param string $eol["\r\n"]
+ * @return string
+ * @author Jan den Besten
+ */
 function array2csv($array,$eol="\r\n") {
 	$csv="";
 	$comma=',';
@@ -78,7 +104,13 @@ function array2csv($array,$eol="\r\n") {
 
 
 
-// http://www.bin-co.com/php/scripts/array2json/
+/**
+ * Maakt JSON van een array
+ *
+ * @param string $arr
+ * @return string JSON
+ * @link http://www.bin-co.com/php/scripts/array2json/
+ */
 function array2json($arr) {
 	if(function_exists('json_encode')) return json_encode($arr); //Lastest versions of PHP already has this functionality.
 	$parts = array();
@@ -122,15 +154,32 @@ function array2json($arr) {
 	return '{' . $json . '}';//Return associative JSON
 }
 
+
+/**
+ * Maakt een array van gegeven JSON string
+ *
+ * @param string $json 
+ * @return array
+ * @author Jan den Besten
+ */
 function json2array($json) {
   $array=array();
   if (preg_match("/{(.*?)}/uUs", $json,$matches)) {
     $props=$matches[1];
-    trace_($props);
   }
   return $array;
 }
 
+/**
+ * Maakt XML van meegegeven array
+ *
+ * @param string $array 
+ * @param string $keys[NULL]
+ * @param string $attr[NULL]
+ * @param string $tabs[0]
+ * @return string XML
+ * @author Jan den Besten
+ */
 function array2xml($array,$keys=NULL,$attr=NULL,$tabs=0) {
 	if ($tabs<=0)
 		$xml='<?xml version="1.0" encoding="UTF-8"?>'."\n\n";
@@ -166,44 +215,29 @@ function array2xml($array,$keys=NULL,$attr=NULL,$tabs=0) {
 	return $xml;
 }
 
-// function xml2arraySimple($xml) {
-// 	$xmlary = array();
-// 	$xmlArray=array();
-// 	$reels = '/<(\w+)\s*([^\/>]*)\s*(?:\/>|>(.*)<\/\s*\\1\s*>)/s';
-// 	$reattrs = '/(\w+)=(?:"|\')([^"\']*)(:?"|\')/';
-// 	preg_match_all($reels, $xml, $elements);
-// 	foreach ($elements[1] as $ie => $xx) {
-// 		$key=$elements[1][$ie];
-// 		// TODO: xml attributes in xml2array
-// 		// if ($attributes = trim($elements[2][$ie])) {
-// 		// 	preg_match_all($reattrs, $attributes, $att);
-// 		// 	foreach ($att[1] as $ia => $xx)	$xmlary[$ie]["attributes"][$att[1][$ia]] = $att[2][$ia];
-// 		// }
-// 		// $cdend = strpos($elements[3][$ie], "<");
-// 		// if ($cdend > 0) {
-// 		// 	$xmlary[$ie]["text"] = substr($elements[3][$ie], 0, $cdend - 1);
-// 		// }
-// 		
-// 		if (preg_match($reels, $elements[3][$ie]))
-// 			$value=xml2array($elements[3][$ie]);
-// 		elseif (isset($elements[3][$ie])) {
-// 			$value=$elements[3][$ie];
-// 			$value=str_replace(array('<![CDATA[',']]>'),'',$value);
-// 		}
-// 		else
-// 			$value='';
-// 		$xmlArray[$key]=$value;
-// 	}
-// 
-// 	return $xmlArray;
-// }
 
 
-// These function are used to reform a malformed XML (before r804)
-
+/**
+ * Repareert verkeerde XML (ivm oude r805 code)
+ *
+ * @param string $xml 
+ * @return string
+ * @author Jan den Besten
+ * @ignore
+ */
 function reformMalformedXML($xml) {
 	return preg_replace('/<(\d+)>([^<]*)<(.*?)>(.*?)<\/(\d+)>/s','<$3>$2<$3>$4</$3>',$xml);
 }
+
+/**
+ * Repareert XML Array Keys (ivm oude r805 code)
+ *
+ * @param array $a 
+ * @param string $rKey 
+ * @return array
+ * @author Jan den Besten
+ * @ignore
+ */
 function reformXmlArrayKey($a,$rKey) {
 	$r=$a;
 	if (isset($a[$rKey]) and !empty($a[$rKey])) {
@@ -231,17 +265,19 @@ function reformXmlArrayKey($a,$rKey) {
 
 /**
  * 
+ * Maakt een array van meegegeven XML
+ * 
+ * @param string $contents XML
+ * @param bool get_attributes[TRUE] If this is TRUE the function will get the attributes as well as the tag values - this results in a different array structure in the return value.
+ * @param string priority['tag'] - Can be 'tag' or 'attribute'. This will change the way the resulting array structure. For 'tag', the tags are given more importance.
+ * @return array The parsed XML in an array form.
  * @link: http://www.bin-co.com/php/scripts/xml2array/
- * @param string contents - The XML text
- * @param bool get_attributes. If this is TRUE the function will get the attributes as well as the tag values - this results in a different array structure in the return value.
- * @param string priority - Can be 'tag' or 'attribute'. This will change the way the resulting array structure. For 'tag', the tags are given more importance.
- * @return array The parsed XML in an array form. Use print_r() to see the resulting array structure.
  *
- * xml2array() will convert the given XML text to an array in the XML structure.<br/>
- * <code>
- * $array =  xml2array(file_get_contents('feed.xml'));<br/>
- * $array =  xml2array(file_get_contents('feed.xml', 1, 'attribute'));
- * </code>
+ * Voorbeeld:
+ * 
+ *    $array =  xml2array(file_get_contents('feed.xml'));
+ *    $array =  xml2array(file_get_contents('feed.xml', 1, 'attribute'));
+ * 
  */
 function xml2array($contents, $get_attributes=true, $priority = 'tag') {
     if(!$contents) return array();
@@ -370,13 +406,15 @@ function xml2array($contents, $get_attributes=true, $priority = 'tag') {
 
 
 /**
-* @param string $cvs
-* @param array  $fldnames array of fields names. Leave this to null to use the first row values as fields names.
-* @param string $sep string used as a field separator (default ';')
-* @param string $protect char used to protect field (generally single or double quote)
-* @param array  $filters array of regular expression that row must match to be in the returned result. ie: array('fldname'=>'/pcre_regexp/')
-* @return array
-*/
+ * Maakt een array van meegegeven CSV
+ * 
+ * @param string $cvs
+ * @param array $fldnames[NULL] array of fields names. Leave this to null to use the first row values as fields names.
+ * @param string $sep[','] string used as a field separator
+ * @param string $protect['"'] char used to protect field (generally single or double quote)
+ * @param array  $filters[NULL] array of regular expression that row must match to be in the returned result. ie: array('fldname'=>'/pcre_regexp/')
+ * @return array
+ */
 function csv2array($csv,$fldnames=null,$sep=',',$protect='"',$filters=null){
 	$csv=explode("\n",$csv);
 	# use the first line as fields names
@@ -413,13 +451,13 @@ function csv2array($csv,$fldnames=null,$sep=',',$protect='"',$filters=null){
 }
 
 
-
-
-
 /**
- * function filter_by($array,$prefix)
+ * Geeft alle elementen uit de associatieve array die het meegegeven prefix in hun key hebben
  *
- * Filters all (string) elements out that don't have the given prefix
+ * @param string $a Array 
+ * @param string $p Prefix
+ * @return array
+ * @author Jan den Besten
  */
 function filter_by($a,$p) {
 	foreach($a as $k=>$i) {
@@ -432,6 +470,15 @@ function filter_by($a,$p) {
 	}
 	return $a;
 }
+
+/**
+ * Geeft alle elementen uit de associatieve array die NIET de meegegeven prefix in hun key hebben
+ *
+ * @param string $a Array
+ * @param string $ap Prefix
+ * @return array
+ * @author Jan den Besten
+ */
 function not_filter_by($a,$ap) {
 	if (!is_array($ap)) $ap=array($ap);
 	foreach ($ap as $p) {
@@ -447,6 +494,15 @@ function not_filter_by($a,$ap) {
 	return $a;
 }
 
+/**
+ * Geeft alle elementen uit de associatieve array met de gegeven key. De key kan tegelijkertijd vervangen worden door een nieuwe.
+ *
+ * @param string $a Array
+ * @param string $preKey Key
+ * @param string $replaceKey[FALSE] Geef hier eventueel een nieuwe key 
+ * @return array
+ * @author Jan den Besten
+ */
 function filter_by_key($a,$preKey,$replaceKey=FALSE) {
 	$arr=array();
 	$len=strlen($preKey);
@@ -458,6 +514,14 @@ function filter_by_key($a,$preKey,$replaceKey=FALSE) {
 	return $arr;
 }
 
+/**
+ * Als array_merge() maar waarden worden niet overschreven
+ *
+ * @param string $a 
+ * @param string $b 
+ * @return void
+ * @author Jan den Besten
+ */
 function array_merge_strict($a,$b) {
 	$m=$a;
 	foreach ($b as $key => $value) {
@@ -466,6 +530,15 @@ function array_merge_strict($a,$b) {
 	return $m;
 }
 
+/**
+ * Vervangt gegevens key in de array in nieuwe key
+ *
+ * @param string $orig Te zoeken key
+ * @param string $new Te vervangen key
+ * @param string $&array Array
+ * @return array
+ * @author Jan den Besten
+ */
 function array_change_key_name($orig,$new, &$array) {
 	foreach ($array as $k => $v)
 		$return[($k===$orig) ? $new:$k]=$v;
@@ -474,9 +547,13 @@ function array_change_key_name($orig,$new, &$array) {
 
 
 /**
- * function ignorecase_sort(&$array)
+ * Sorteert een array, niet lettend op case
  *
- * Sorts an array, case ignoring case
+ * @param array $&array 
+ * @return void
+ * @author Jan den Besten
+ * @ignore
+ * @depricated
  */
 function ignorecase_sort(&$array) {
   for ($i = 0; $i < sizeof($array); $array[$i] = strtolower($array[$i]).$array[$i], $i++);
@@ -487,6 +564,13 @@ function ignorecase_sort(&$array) {
   }
 }
 
+/**
+ * Als ksort() Maar dan niet case gevoelig
+ *
+ * @param array $&a 
+ * @return void
+ * @author Jan den Besten
+ */
 function ignorecase_ksort(&$a) {
 	$n=array();
 	foreach($a as $k=>$v) {$n[strtolower($k)]=array("key"=>$k,"value"=>$v);}
@@ -496,8 +580,19 @@ function ignorecase_ksort(&$a) {
 }
 
 
+
 /**
- * Sort an assoc array by its value, can be used to sort a db return array by another field than its 'id'key
+ * Sorteerd een associatieve array met de values van een bepaalde key
+ * 
+ * Hiermee kun je het een resultaat array van de database opnieuw sorteren (anders dan op de key)
+ *
+ * @param array $a 
+ * @param array $keys array van keys waarvan de values moeten worden gesorteerd
+ * @param bool $desc[FALSE] Als TRUE dan wordt de volgorde andersom
+ * @param bool $case[FALSE] case-gevoeligheid
+ * @param int $max[0] 
+ * @return array
+ * @author Jan den Besten
  */
 function sort_by($a,$keys,$desc=FALSE,$case=FALSE,$max=0) {
 	if (!is_array($keys)) $keys=array($keys);
@@ -547,6 +642,14 @@ function sort_by($a,$keys,$desc=FALSE,$case=FALSE,$max=0) {
 	return $a;
 }
 
+/**
+ * Zoekt in associatieve array eerst gevonden waarde die lijkt op meegegeven waarde
+ *
+ * @param string $v Te zoeken waarde
+ * @param string $a Array
+ * @return mixed FALSE of gevonde key
+ * @author Jan den Besten
+ */
 function in_array_like($v,$a) {
 	$in=false;
 	$i=each($a);
@@ -557,6 +660,16 @@ function in_array_like($v,$a) {
 	return $in;
 }
 
+/**
+ * Zoekt alle rijen waarbinnen een waarde voorkomt (eventueel in specifieke keys)
+ *
+ * @param string $a array waarin gezocht wordt
+ * @param string $v waarde die gezocht wordt
+ * @param string $key[''] Eventueel mee te geven key waarin gezoch moet worden
+ * @param string $like[FALSE] als TRUE dan wordt gezocht naar een waarde die erop lijkt ipv precies gelijk is
+ * @return array
+ * @author Jan den Besten
+ */
 function find_row_by_value($a,$v,$key='',$like=false) {
 	$found=array();
 	foreach ($a as $id=>$row) {
@@ -581,27 +694,61 @@ function find_row_by_value($a,$v,$key='',$like=false) {
 	return $found;
 }
 
+/**
+ * Zelfde als array_ereg_search()
+ *
+ * @param string $val 
+ * @param string $array 
+ * @return array
+ * @author Jan den Besten
+ * @ignore
+ * @depricated
+ */
 function array_preg_search($val,$array) {
   return array_ereg_search($val,$array);
 }
+
+/**
+ * Geeft array terug van keys waar de meegegeven (regex) zoekterm gevonden is
+ *
+ * @param string $val (regex) zoekterm
+ * @param array $array 
+ * @return array
+ * @author Jan den Besten
+ */
 function array_ereg_search($val, $array) {
-	$i = 0;
 	$return = array();
-	foreach($array as $v) {
+	foreach($array as $i=>$v) {
   	if(preg_match("/$val/i", $v)) $return[] = $i;
-	  $i++;
 	}
 	return $return;
 }
 
+/**
+ * Zoekt of een waarde van de ene array in de andere array voorkomt
+ *
+ * @param array $a 
+ * @param array $b 
+ * @return bool
+ * @author Jan den Besten
+ */
 function one_of_array_in_array($a,$b) {
 	$in=false;
 	foreach ($a as $k=>$v) {
 		$in=$in || in_array($v,$b);
+    if ($in) break;
 	}
 	return $in;
 }
 
+/**
+ * Geeft array terug met alleen de keys gespecificeerd in de 2e array
+ *
+ * @param array $a Array
+ * @param array $fields Array van keys die meegenomen worden
+ * @return array
+ * @author Jan den Besten
+ */
 function select_fields($a,$fields) {
 	if (!is_array($fields)) { $fields=array($fields); }
 	$out=array();
@@ -613,12 +760,29 @@ function select_fields($a,$fields) {
 	return $out;
 }
 
+/**
+ * Als implode() maar plakt voor elk element een prefix
+ *
+ * @param string $i Implode karakter
+ * @param string $a Array
+ * @param string $pre Prefix
+ * @return string
+ * @author Jan den Besten
+ */
 function implode_pre($i,$a,$pre) {
 	$out=implode($i.$pre,$a);
 	$out=$pre.$out;
 	return $out;
 }
 
+/**
+ * Vind de maximale waarde binnen de array (in eventueel meegegeven key)
+ *
+ * @param array $a 
+ * @param string $k[NULL]  
+ * @return int
+ * @author Jan den Besten
+ */
 function find_max($a,$k=NULL) {
 	$max=NULL;
 	foreach ($a as $key => $value) {
@@ -634,13 +798,28 @@ function find_max($a,$k=NULL) {
 	return $max;
 }
 
+/**
+ * Geeft laatste element van array
+ *
+ * @param array $a 
+ * @return mixed
+ * @author Jan den Besten
+ */
 function array_last($a) {
 	$l=count($a);
 	$s=array_slice($a,$l-1,1);
 	return current($s);
 }
 
-
+/**
+ * Voegt een item toe aan een array, na een array element met gegeven key
+ *
+ * @param array $a Array
+ * @param string $key Key
+ * @param mixed $row Toe te voegen item
+ * @return array
+ * @author Jan den Besten
+ */
 function array_add_after($a,$key,$row) {
 	if (!is_array($row)) $row=array($row);
 	$firstslice=array();
@@ -658,6 +837,15 @@ function array_add_after($a,$key,$row) {
 	return array_merge($firstslice,$row,$a);
 }
 
+/**
+ * Voegt element toe voor een item met gegeven key
+ *
+ * @param string $a Array
+ * @param string $key Key
+ * @param string $row Toe te voegen item
+ * @return array
+ * @author Jan den Besten
+ */
 function array_add_before($a,$key,$row) {
 	if (!is_array($row)) $row=array($row);
 	$firstslice=array();
@@ -675,6 +863,19 @@ function array_add_before($a,$key,$row) {
 	return array_merge($firstslice,$row,$a);
 }
 
+/**
+ * Maakt van associatieve array een string van attributen
+ * 
+ *      array( 'class'=>'red', title=>'rood' );
+ * 
+ * Wordt:
+ * 
+ *      class="red" title="rood"
+ *
+ * @param array $array 
+ * @return string
+ * @author Jan den Besten
+ */
 function implode_attributes($array) {
 	$out='';
 	foreach ($array as $key => $value) {
@@ -683,7 +884,14 @@ function implode_attributes($array) {
 	return $out;
 }
 
-
+/**
+ * Geeft een array terug met alleen de key/value paren die meegegeven zijn
+ *
+ * @param array $a 
+ * @param arra $keep array van te bewaren keys
+ * @return array
+ * @author Jan den Besten
+ */
 function array_keep_keys($a,$keep) {
   foreach ($a as $key => $value) {
     if (!in_array($key,$keep)) unset($a[$key]);
@@ -691,6 +899,14 @@ function array_keep_keys($a,$keep) {
   return $a;
 }
 
+/**
+ * Geeft een array zonder de meegegeven key/value paren
+ *
+ * @param array $a 
+ * @param array $unset array van keys die verwijderd worden
+ * @return array
+ * @author Jan den Besten
+ */
 function array_unset_keys($a,$unset) {
   foreach ($a as $key => $value) {
     if (in_array($key,$unset)) unset($a[$key]);

@@ -5,15 +5,15 @@
  *
  * Utility functions for working with CodeIgniter's output cache.
  * All code based on or directly copied from CodeIgniter.
- *
- * @category Helpers
+ * 
+ * See <http://stevenbenner.com/2010/12/caching-with-codeigniter-zen-headaches-and-perfomance/>
+ * And <https://bitbucket.org/stevenbenner/codeigniter-cache-helper>
+ * 
  * @author Steven Benner, Jan den Besten
  * @link http://stevenbenner.com/2010/12/caching-with-codeigniter-zen-headaches-and-perfomance/
  * @link https://bitbucket.org/stevenbenner/codeigniter-cache-helper
  * @version 1.4
  */
-
-// NOTE: This code is for CodeIgniter 2.0. For CI 1.7 or older replace APPPATH with BASEPATH
 
 /**
  * Get Cache Folder
@@ -110,10 +110,9 @@ if ( ! function_exists('delete_cache'))
  * Delete All Cache
  *
  * Evicts the output cache for all pages currently cached.
+ * Changes made by Jan den Besten: First check if $cache_files exists, before deleting them
  *
  * @author Steven Benner & Jan den Besten
- * Changes made by Jan den Besten: First check if $cache_files exists, before deleting them
- * 
  * @return void
  */
 if ( ! function_exists('delete_all_cache'))

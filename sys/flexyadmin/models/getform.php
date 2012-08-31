@@ -1,32 +1,69 @@
 <?
 
-	// Loads a form from the flexyform tables
+/**
+ * Dit model wordt gebruikt om een formulier te creeren aan de hand van Flexy Form tabellen, zie ook de module [Flexy Form]({Flexy_form})
+ *
+ * @package default
+ * @author Jan den Besten
+ */
 
  class Getform extends CI_Model {
 
- 	function __construct() {
-		$this->lang->load('update_delete');
-		$this->lang->load('form');
-		$this->lang->load('form_validation');
- 		parent::__construct();
- 	}
+   /**
+    * @ignore
+    */
+  public	function __construct() {
+    $this->lang->load('update_delete');
+    $this->lang->load('form');
+    $this->lang->load('form_validation');
+    parent::__construct();
+  }
 
-	function by_module($module) {
+  /**
+   * Kiest formulier aan de hand van module in moduleveld ('str_module') in tbl_forms
+   *
+   * @param string $module
+   * @return string
+   * @author Jan den Besten
+   */
+	public function by_module($module) {
 		$this->db->where('str_module',$module);
 		return $this->_get_form();
 	}
 	
-	function by_title($title) {
+  /**
+   * Kiest formulier aan de hand van titel ('str_title') in tbl_forms
+   *
+   * @param string $module
+   * @return string
+   * @author Jan den Besten
+   */
+	public function by_title($title) {
 		$this->db->where('str_title',$title);
 		return $this->_get_form();
 	}
 
-	function by_id($id) {
+  /**
+   * Kiest formulier aan de hand van id in tbl_forms
+   *
+   * @param string $module
+   * @return string
+   * @author Jan den Besten
+   */
+	public function by_id($id) {
 		$this->db->where('id',$id);
 		return $this->_get_form();
 	}
 	
-	function _get_form() {
+  /**
+   * Kiest gewenste formulier en geeft alle formulier data terug
+   *
+   * @return array
+   * @author Jan den Besten
+   * @internal
+   * @ignore
+   */
+	private function _get_form() {
 		$form=false;
     $lang=$this->site['language'];
 		if ($this->db->table_exists('tbl_forms') and $this->db->table_exists('tbl_formfields')) {
