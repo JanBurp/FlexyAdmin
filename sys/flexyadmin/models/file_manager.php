@@ -1,41 +1,109 @@
 <?
+
 /**
- * FlexyAdmin V1
+ * Met dit model kun je bestanden tonen (in een grid), uploaden, verwijderen etc.
  *
- * grid.php Created on 21-okt-2008
- *
+ * @package default
  * @author Jan den Besten
  */
-
-
-/**
- * Class File_manager (model)
- *
- * Handles File Manager rendering, deleting, uploading etc
- *
- */
-
+ 
 class File_manager Extends CI_Model {
 
-	var $caption;
-	var $files;
-	var $path;
-	var $map;
-	var $view;
-	var $pagin;
-	var $fileTypes;
-	var $currentId;
-	var $showUploadButton;
-	var $showDeleteButtons;
+  /**
+   * Titel in het grid
+   *
+   * @var string
+   */
+  private $caption;
+  
+  /**
+   * Bestanden
+   *
+   * @var array
+   */
+  private $files;
+  
+  /**
+   * Huidig pad
+   *
+   * @var string
+   */
+  private $path;
+  
+  /**
+   * Map
+   *
+   * @var string
+   */
+  private $map;
+  
+  /**
+   * View
+   *
+   * @var string
+   */
+  private $view;
+  
+  /**
+   * Pagination
+   *
+   * @var string
+   */
+  private $pagin;
+  
+  /**
+   * Bestandsoorten
+   *
+   * @var string
+   */
+  private $fileTypes;
+  
+  /**
+   * id
+   *
+   * @var int
+   */
+  private $currentId;
+  
+  /**
+   * Moet upload knop getoont worden?
+   *
+   * @var bool
+   */
+  private $showUploadButton;
+  
+  /**
+   * Moet delete knop getoont worden?
+   *
+   * @var string
+   */
+  private $showDeleteButtons;
+  
+  /**
+   * Soort output
+   *
+   * @var string
+   */
+  private $type;
 
-	var $type;
-
-	function __construct($path="",$types="",$view="list") {
+  /**
+   * @ignore
+   */
+	public function __construct($path="",$types="",$view="list") {
 		parent::__construct();
 		$this->init($path,$types,$view);
 	}
 
-	function init($path="",$types="",$view="list") {
+	/**
+	 * Initialiseer
+	 *
+	 * @param string $path['']
+	 * @param string $types[''] Bestandstypen
+	 * @param string $view['list]
+	 * @return object $this
+	 * @author Jan den Besten
+	 */
+  public function init($path="",$types="",$view="list") {
 		$this->set_caption($path);
 		$this->files=array();
 		$this->set_path($path);
@@ -45,66 +113,149 @@ class File_manager Extends CI_Model {
 		$this->set_current();
 		$this->show_upload_button();
 		$this->show_delete_buttons();
+    return $this;
 	}
 
-	function set_caption($caption="") {
+  /**
+   * Stel titel in
+   *
+   * @param string $caption[''] 
+   * @return object $this
+   * @author Jan den Besten
+   */
+	public function set_caption($caption="") {
 		$this->caption=$caption;
+    return $this;
 	}
 
-	function set_path($path="") {
+  /**
+   * Stel pad in
+   *
+   * @param string $path['']
+   * @return object $this
+   * @author Jan den Besten
+   */
+	public function set_path($path="") {
 		$this->path=$path;
 		$this->map=$this->config->item('ASSETS').$path;
+    return $this;
 	}
 
-	function set_types($types="") {
+  /**
+   * Stel bestandstypen in
+   *
+   * @param string $types['']
+   * @return object $this
+   * @author Jan den Besten
+   */
+	public function set_types($types="") {
 		if (!is_array($types)) {
 			$types=str_replace(",","|",$types);
 			$types=explode("|",$types);
 		}
 		$this->fileTypes=$types;
+    return $this;
 	}
 
-
-	function set_view($view="list") {
+  /**
+   * Stel viewsoort in
+   *
+   * @param string $view['list']
+   * @return object $this
+   * @author Jan den Besten
+   */
+	public function set_view($view="list") {
 		$this->view=$view;
+    return $this;
 	}
 
-	function set_heading($name,$heading) {
+  /**
+   * Stel heading in
+   *
+   * @param string $name Welke heading?
+   * @param string $heading
+   * @return object $this
+   * @author Jan den Besten
+   */
+	public function set_heading($name,$heading) {
 		$this->headings[$name]=$heading;
+    return $this;
 	}
 
-	function set_type($type="html") {
+  /**
+   * Type output
+   *
+   * @param string $type 
+   * @return object $this
+   * @author Jan den Besten
+   * @ignore
+   * @internal
+   */
+	public function set_type($type="html") {
 		$this->type=$type;
+    return $this;
 	}
 
-	function set_current($current="") {
+  /**
+   * Stel huidig bestand in
+   *
+   * @param string $current 
+   * @return object $this
+   * @author Jan den Besten
+   */
+	public function set_current($current="") {
 		$this->currentId=$current;
+    return $this;
 	}
 
-	function show_upload_button($show=TRUE) {
+  /**
+   * Moet upload button getoond worden?
+   *
+   * @param bool $show[TRUE]
+   * @return object $this
+   * @author Jan den Besten
+   */
+	public function show_upload_button($show=TRUE) {
 		$this->showUploadButton=$show;
+    return $this;
 	}
 
-	function show_delete_buttons($show=TRUE) {
+  /**
+   * Moet delete buttons getoond worden?
+   *
+   * @param bool $show[TRUE]
+   * @return object $this
+   * @author Jan den Besten
+   */
+	public function show_delete_buttons($show=TRUE) {
 		$this->showDeleteButtons=$show;
+    return $this;
 	}
 
-	function set_files($files=NULL,$name="") {
+	/**
+	 * Geeft bestanden
+	 *
+	 * @param array $files[NULL]
+	 * @param string $name[''] Geef ook eventueel de titel mee
+	 * @return object $this
+	 * @author Jan den Besten
+	 */
+  public function set_files($files=NULL,$name="") {
 		if (isset($files) and !empty($files)) {
 			$this->files=$files;
 		}
 		$this->set_caption($name);
+    return $this;
 	}
 
-/**
- * function delete_file($file)
- *
- * Delelet given file
- *
- * @param string $file
- * @return result
- */
-	function delete_file($file) {
+	/**
+	 * Verwijder meegegeven bestand, en alle eventuele varianten (thumbs etc)
+	 *
+	 * @param string $file 
+	 * @return array $result
+	 * @author Jan den Besten
+	 */
+  public function delete_file($file) {
 		$name=$this->map."/".$file;
 		if (is_dir($name))
 			$result=rmdir($name);
@@ -198,14 +349,15 @@ class File_manager Extends CI_Model {
 		return $result;
 	}
 
-/**
- * function upload_file()
- *
- * Uploads a file from information given by filemanager form
- *
- * @return result
- */
-	function upload_file($file_field='file') {
+
+  /**
+   * Upload file van meegegeven file-veld, ook worden meteen thumbs etc. aangemaakt voor geuploade bestanden en wordt de minimale omvang gecheckt
+   *
+   * @param string $file_field 
+   * @return array $result
+   * @author Jan den Besten
+   */
+	public function upload_file($file_field='file') {
 		$error='';
 		// UPLOAD 
 		$config['upload_path'] = $this->map;
@@ -266,16 +418,14 @@ class File_manager Extends CI_Model {
 		return array("error"=>$error,"file"=>$file);
 	}
 
-/**
- * function file_sort($files,$order)
- *
- * Returns sorted array of files
- *
- * @param string $files array of files and maps
- * @param string $order order type (name|type|size|date)
- * @return string	ordered array
- */
-	function file_sort($f,$order="name") {
+  /**
+   * Geeft gesorteerde array van bestandsnamen terug
+   *
+   * @param array $files files/bestanden
+   * @param string $order hoe moet er worden gesorteerd?: (name|type|size|date)
+   * @return array
+   */
+	public function file_sort($f,$order="name") {
 		// name
 		ksort($f);
 		$maps=array();
@@ -291,56 +441,66 @@ class File_manager Extends CI_Model {
 		return array_merge($files,$maps);
 	}
 
-function thumb($attr,$index=FALSE) {
-	if (is_array($attr))
-		$a=$attr;
-	else {
-		$a['src']=$attr;
-		$a['alt']=$attr;
-		// $a['title']=$attr;
-	}
-	$a['src']=$a['path'].'/'.$a['src'];
-	if (empty($a['alt'])) $a['alt']=$a['src'];
-	$a['longdesc']=$a['src'];
+  
+  /**
+   * Geeft HTML img tag terug voor een Thumbnail, als thumbnail niet bestaat dan wordt die aangemaakt
+   *
+   * @param mixed $attr/$src
+   * @param bool $index[FALSE]
+   * @return string
+   * @author Jan den Besten
+   */
+  public function thumb($attr,$index=FALSE) {
+  	if (is_array($attr))
+  		$a=$attr;
+  	else {
+  		$a['src']=$attr;
+  		$a['alt']=$attr;
+  		// $a['title']=$attr;
+  	}
+  	$a['src']=$a['path'].'/'.$a['src'];
+  	if (empty($a['alt'])) $a['alt']=$a['src'];
+  	$a['longdesc']=$a['src'];
 
-	$thumbPath=$this->config->item('THUMBCACHE');
-	$thumb=$thumbPath.pathencode($a['src']);
-	if (file_exists($thumb)) {
-		$a['src']=$thumb;
-	}
-	elseif (file_exists($thumbPath)) {
-		/**
-		 * Create new thumb, if its bigger, else make a copy with thumb name
-		 */
-		$thumbSize=$this->config->item('THUMBSIZE');
-		$config['width'] = $thumbSize[0];
-		$config['height'] = $thumbSize[1];
-		// $config['image_library'] = 'gd2';
-		$config['source_image'] = $a['src'];
-		$config['maintain_ratio'] = TRUE;
-		$config['new_image'] = $thumb;
-		$config['master_dim'] = 'auto';
-		$this->image_lib->initialize($config);
-		$this->image_lib->resize();
-		if (file_exists($thumb)) {
-			$a['src']=$thumb;
-		}
-	}
-	$a['width']='';
-	$a['height']='';
-	return img($a,$index);
-}
+  	$thumbPath=$this->config->item('THUMBCACHE');
+  	$thumb=$thumbPath.pathencode($a['src']);
+  	if (file_exists($thumb)) {
+  		$a['src']=$thumb;
+  	}
+  	elseif (file_exists($thumbPath)) {
+  		/**
+  		 * Create new thumb, if its bigger, else make a copy with thumb name
+  		 */
+  		$thumbSize=$this->config->item('THUMBSIZE');
+  		$config['width'] = $thumbSize[0];
+  		$config['height'] = $thumbSize[1];
+  		// $config['image_library'] = 'gd2';
+  		$config['source_image'] = $a['src'];
+  		$config['maintain_ratio'] = TRUE;
+  		$config['new_image'] = $thumb;
+  		$config['master_dim'] = 'auto';
+  		$this->image_lib->initialize($config);
+  		$this->image_lib->resize();
+  		if (file_exists($thumb)) {
+  			$a['src']=$thumb;
+  		}
+  	}
+  	$a['width']='';
+  	$a['height']='';
+  	return img($a,$index);
+  }
 
 
-/**
- * function _create_render_data($details)
- *
- * Returns array from files in map with info, ready for rendering.
- *
- * @return array
- */
-
-	function _create_render_data($details=TRUE) {
+  /**
+   * function _create_render_data($details)
+   *
+   * Returns array from files in map with info, ready for rendering.
+   *
+   * @return array
+   * @internal
+   * @ignore
+   */
+	private function _create_render_data($details=TRUE) {
 		$data=array();
 		$files=$this->files;
 		// $files=$this->file_sort($files);
@@ -451,21 +611,26 @@ function thumb($attr,$index=FALSE) {
 	}
 
 
-	function set_pagination($pagin=NULL) {
+  /**
+   * Zet pagination
+   *
+   * @param mixed $pagin
+   * @return object $this
+   * @author Jan den Besten
+   */
+	public function set_pagination($pagin=NULL) {
 		$this->pagin=$pagin;
+    return $this;
 	}
 
-/**
- * function render()
- *
- * Returns output according to template
- *
- * @param string $type html or other format
- * @param string $class extra attributes such as class
- * @return string	output
- */
-
-	function render($type="", $class="") {
+  /**
+   * Geeft grid met bestanden (en knoppen)
+   *
+   * @param string $type['']
+   * @param string $class['']
+   * @return string	output
+   */
+	public function render($type="", $class="") {
 		$out="";
 		$class.=" ".$this->view;
 		$current=$this->currentId;

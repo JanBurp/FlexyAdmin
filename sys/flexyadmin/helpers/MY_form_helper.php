@@ -8,7 +8,7 @@
  */
 
  /**
-  * Aanpassing op CodeIgniter's form_dropdown
+  * Aanpassing op CodeIgniter's form_dropdown, zie [hier](http://codeigniter.com/forums/viewthread/49348/)
   *
   * @param string $name 
   * @param array $options 
@@ -17,7 +17,6 @@
   * @return string
   * @link http://codeigniter.com/forums/viewthread/49348/
   */
- 
 function form_dropdown($name = '', $options = array(), $selected = array(), $extra = '') {
 	if ( ! is_array($selected))	{
 		$selected = array($selected);
@@ -59,7 +58,14 @@ function form_dropdown($name = '', $options = array(), $selected = array(), $ext
 	return $form;
 }
 
-
+/**
+ * Voegt validation parameters bij elkaar
+ *
+ * @param string $rules 
+ * @param string $params 
+ * @return string
+ * @author Jan den Besten
+ */
 function add_validation_parameters($rules,$params) {
 	$validation=array();
 	$rules=explode('|',$rules);
@@ -71,7 +77,13 @@ function add_validation_parameters($rules,$params) {
 	return implode($validation,'|');
 }
 
-
+/**
+ * Maakt van een array (een row resultaat array uit de database) form-data dat naar form gestuurd kan worden
+ *
+ * @param string $array 
+ * @return array
+ * @author Jan den Besten
+ */
 function array2formfields($array) {
 	$formData=array();
 	foreach ($array as $field=>$value) {

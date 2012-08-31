@@ -9,9 +9,7 @@
 
 
 /**
- * Create a Random String
- *
- * Useful for generating passwords or hashes.
+ * Maak een Random String
  *
  * @param string type['alnum'] of random string.  Options: alnum, numeric, nozero, unique
  * @param integer number[8] of characters
@@ -89,7 +87,15 @@ function has_string($in,$string) {
 	return $has;
 }
 
-
+/**
+ * Als explode() maar voegt aan elke value een prefix toe
+ *
+ * @param string $split 
+ * @param array $fields 
+ * @param string $pre 
+ * @return array
+ * @author Jan den Besten
+ */
 function explode_pre($split,$fields,$pre) {
 	$fields=explode($split,$fields);
 	foreach($fields as $key=>$field) {
@@ -114,7 +120,13 @@ function add_string($s,$add,$split="|") {
 	return $s;
 }
 
-
+/**
+ * Keert een string om
+ *
+ * @param string $s 
+ * @return string
+ * @author Jan den Besten
+ */
 function str_reverse($s) {
 	$o="";
 	for ($c=strlen($s); $c>=0; $c--) {
@@ -123,6 +135,13 @@ function str_reverse($s) {
 	return $o;
 }
 
+/**
+ * Verwijderd eerste karakter van een string
+ *
+ * @param string $s 
+ * @return string
+ * @author Jan den Besten
+ */
 function remove_first_char($s) {
 	if ($s!="") $s=substr($s,1);
 	return $s;
@@ -140,11 +159,15 @@ function remove_first_char($s) {
  * Standaard is het scheidingskarakter een underscore '_'.
  * 
  * Voorbeeld:
- * <code>echo get_prefix( 'str_example' );
- * echo get_prefix( 'tbl_example.id', '.' );</code>
+ * 
+ *      echo get_prefix( 'str_example' );
+ *      echo get_prefix( 'tbl_example.id', '.' );
+ * 
  * Geeft als resultaat:
- * <code>str
- * tbl_example</code>
+ * 
+ *      str
+ *      tbl_example
+ * 
  */
 function get_prefix($s,$split="_") {
 	$pk=PRIMARY_KEY;
@@ -154,20 +177,54 @@ function get_prefix($s,$split="_") {
 	return $out;
 }
 
+/**
+ * Geeft suffix van een string
+ *
+ * @param string $s 
+ * @param string $split['_'] 
+ * @return string
+ * @author Jan den Besten
+ */
 function get_suffix($s,$split="_") {
 	$e=explode($split,$s);
 	return $e[count($e)-1];
 }
+/**
+ * Zelfde als get_suffix()
+ *
+ * @param string $s 
+ * @param string $split 
+ * @return string
+ * @author Jan den Besten
+ * @depricated
+ * @ignore
+ */
 function get_postfix($s,$split="_") {
 	return get_suffix($s,$split);
 }
 
+/**
+ * Verwijderd een prefix van een string
+ *
+ * @param string $s 
+ * @param string $split['_']
+ * @return string
+ * @author Jan den Besten
+ */
 function remove_prefix($s,$split="_") {
 	$i=strpos($s,$split);
 	if ($i) $out=substr($s,$i+strlen($split)); else $out=$s;
 	return $out;
 }
 
+/**
+ * Verwijderd de suffix van een string
+ *
+ * @param string $s 
+ * @param string $split['_']
+ * @return string
+ * @author Jan den Besten
+ */
 function remove_suffix($s,$split="_") {
 	$e=explode($split,$s);
 	$e=array_slice($e,0,count($e)-1);
@@ -176,24 +233,72 @@ function remove_suffix($s,$split="_") {
 	else
 		return $s;
 }
+
+/**
+ * Zelfde als remove_suffix()
+ *
+ * @param string $s 
+ * @param string $split 
+ * @return string
+ * @author Jan den Besten
+ * @depricated
+ * @ignore
+ */
 function remove_postfix($s,$split="_") {
 	return remove_suffix($s,$split);
 }
 
+/**
+ * Vervangt html tag door een andere html tag
+ *
+ * @param string $sTag Te zoeken tag
+ * @param string $sReplace Nieuwe tag
+ * @param string $sSource Tekst
+ * @return string
+ * @author Jan den Besten
+ */
 function replace_html($sTag,$sReplace,$sSource) {
 	return preg_replace("/(<\/?(".$sTag."|".strtoupper($sTag).")\s\/?>)/",$sReplace,$sSource);
 }
 
+/**
+ * Verwijderd niet ASCII tekens
+ *
+ * @param string $s 
+ * @return string
+ * @author Jan den Besten
+ */
 function strip_nonascii($s) {
 	$s=preg_replace('/[^(\x20-\x7F)\x0A]*/','', $s);
 	return $s;
 }
 
+/**
+ * Vervangt linefeeds
+ *
+ * @param string $s
+ * @param string $r[' '] vervangen door 
+ * @return string
+ * @author Jan den Besten
+ */
 function replace_linefeeds($s,$r=' ') {
 	$s=preg_replace('/\n+/',' ', $s);
 	return $s;
 }
 
+/**
+ * Maakt een schone string
+ * 
+ * - &amp; wordt vervangen door &
+ * - & wordt vervangen door 'en'
+ * - Alle niet letters, en cijfers en _- worden verwijderd
+ * - Meer dan één - wordt vervangen door één -
+ *
+ * @param string $s 
+ * @param string $c[0] Als groter dan 0 dan wordt de string ingekort tot deze lengte
+ * @return string
+ * @author Jan den Besten
+ */
 function clean_string($s,$c=0) {
 	$s=str_replace('&amp;','&',$s);
 	$s=str_replace('&','en',$s);
@@ -204,6 +309,20 @@ function clean_string($s,$c=0) {
 	return $s;
 }
 
+/**
+ * Maak een veilig string, te gebruiken in uri's
+ * 
+ * - Verwijderd HTML tags
+ * - Maakt lowercase
+ * - Verwijderd spaties aan begin & eind
+ * - Vervangt spaties door '_'
+ * - Verwijderd quotes
+ *
+ * @param string $s 
+ * @param string $c[0] Maximale lengte
+ * @return string
+ * @author Jan den Besten
+ */
 function safe_string($s,$c=0) {
 	$s=strip_tags($s);
 	$s=strtolower($s);
@@ -220,6 +339,14 @@ function safe_string($s,$c=0) {
 	return $s;
 }
 
+/**
+ * Als strip_tags() maar vervangt eerst alle <br /> en &nbsp; door normale spaties
+ *
+ * @param string $s 
+ * @param string $c[0] Maximale lengte
+ * @return string
+ * @author Jan den Besten
+ */
 function strip_string($s,$c=0) {
 	$srch	=array("<br />","&nbsp;");
 	$rplc=array(" "," ");
@@ -230,10 +357,27 @@ function strip_string($s,$c=0) {
 	return $s;
 }
 
+/**
+ * Maakt mooie naam
+ * 
+ * - Vervang _ door spatie
+ * - Begin met een hoofdletter
+ *
+ * @param string $s 
+ * @return string
+ * @author Jan den Besten
+ */
 function nice_string($s) {
 	return ucfirst(str_replace("_"," ",$s));
 }
 
+/**
+ * Hexadecimale waarde wordt een string
+ *
+ * @param string $hexstr 
+ * @return string
+ * @author Jan den Besten
+ */
 function hex2str($hexstr) {
 	if (substr($hexstr,0,2)=="0x") $hexstr=substr($hexstr,2);
   $hexstr = str_replace(' ','',$hexstr);
@@ -242,6 +386,13 @@ function hex2str($hexstr) {
   return $retstr;
 }
 
+/**
+ * String naar hex string
+ *
+ * @param string $string 
+ * @return string
+ * @author Jan den Besten
+ */
 function str2hex($string) {
   $hexstr = unpack('H*',$string);
 	$hexstr=array_shift($hexstr);
@@ -251,6 +402,16 @@ function str2hex($string) {
 		return "";
 }
 
+/**
+ * Maakt een header tekst van een lange tekst
+ * 
+ * @param string $txt 
+ * @param string $len[50] Maximale lengte
+ * @param string $type['WORDS] CHARS|WORDS|LINES
+ * @param string $strip_tags['&lt;br/&gt;&lt;strong&gt;&lt;italic&gt;&lt;em&gt;&lt;b&gt;&lt;a&gt;&lt;p&gt;']
+ * @return string
+ * @author Jan den Besten
+ */
 function intro_string($txt,$len=50,$type='WORDS',$strip_tags='<br/><strong><italic><em><b><a><p>') {
 	// first check if there's an intro set by class: intro
 	$matches=array();
@@ -271,6 +432,15 @@ function intro_string($txt,$len=50,$type='WORDS',$strip_tags='<br/><strong><ital
 	return $intro;
 }
 
+/**
+ * Voeg tekst toe voor (bepaalde) laatste HTML tag
+ *
+ * @param string $txt 
+ * @param string $more Toe te voegen tekst
+ * @param string $tag['&lt;/p&gt;']
+ * @return string
+ * @author Jan den Besten
+ */
 function add_before_last_tag($txt,$more,$tag='</p>') {
 	$stag=str_replace('/','\/',$tag);
 	$rtxt=preg_replace('/(.*)'.$stag.'\z/','$1'.$more.$tag,$txt);
@@ -281,6 +451,17 @@ function add_before_last_tag($txt,$more,$tag='</p>') {
 	return $rtxt;
 }
 
+/**
+ * Geeft een string van een maximale lengte
+ *
+ * @param string $txt 
+ * @param string $len[100]
+ * @param string $type[LINES] [CHARS|WORDS|LINES]
+ * @param string $closetags[FALSE]
+ * @param string $strip_tags['']
+ * @return string
+ * @author Jan den Besten
+ */
 function max_length($txt,$len=100,$type='LINES',$closetags=false,$strip_tags='') {
 	$out='';
 	switch ($type) {
@@ -307,6 +488,13 @@ function max_length($txt,$len=100,$type='LINES',$closetags=false,$strip_tags='')
 	return $out;
 }
 
+/**
+ * Zorgt ervoor dat alle tags gesloten worden in de tekst
+ *
+ * @param string $input 
+ * @return string
+ * @author Jan den Besten
+ */
 function restore_tags($input) {
 	$opened = array();
 	// loop through opened and closed tags in order
@@ -329,9 +517,24 @@ function restore_tags($input) {
 	return $input;
 }
 
+/**
+ * Test of string heeft letters
+ *
+ * @param string $s 
+ * @return bool
+ * @author Jan den Besten
+ */
 function has_alpha($s) {
 	return preg_match('/[a-zA-Z]/',$s);
 }
+
+/**
+ * Test of string getallen heeft
+ *
+ * @param string $s 
+ * @return bool
+ * @author Jan den Besten
+ */
 function has_digits($s) {
 	return preg_match('/\d/',$s);
 }

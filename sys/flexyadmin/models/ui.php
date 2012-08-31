@@ -1,38 +1,37 @@
 <?
+
 /**
- * FlexyAdmin V1
+ * Verzorgt de naamgeving van tabellen en velden
+ * 
+ * Alle tabellen en velden kunnen in het admin deel een voor de gebruiker vriendelijkere naam krijgen, eventueel zelfs meertalig.
+ * Die mooie namen kunnen samen met helpteksten ingesteld in de tabe: **cfg_ui**. Zie ook [Help Teksten]({Help-teksten})
  *
- * cfg.php Created on 15-okt-2008
- *
+ * @package default
  * @author Jan den Besten
  */
-
-
- /**
-  * Class ui extends model
-  *
-  * This class handles all the UI-names and help for tables and fields
-  *
-  */
-
+ 
 class ui extends CI_Model {
 
-	var $uiNames = array();
-	var $help = array();
+  private $uiNames = array();
+  private $help = array();
 
-	function __construct() 	{
+
+  /**
+   * @ignore
+   */
+	public function __construct() 	{
 		parent::__construct();
 		$this->load();
     $this->lang->load('field_names');
 	}
 
-	/**
-	 * function load()
-	 *
-	 * Loads all ui names from cfg tables into $uiNames array
-	 *
-	 */
-	function load() {
+  /**
+   * Laad alle ui-names in van de tabel **cfg_ui**
+   *
+   * @return object $this;
+   * @author Jan den Besten
+   */
+	public function load() {
 		log_('info',"ui_names: loading");
 		
 		$ui=$this->cfg->get('cfg_ui');
@@ -40,8 +39,18 @@ class ui extends CI_Model {
 		foreach ($ui as $ui_row) {
 			$this->_load_row($ui_row);
 		}
+    return $this;
 	}
 
+  /**
+   * Laad rij 
+   *
+   * @param string $row 
+   * @return void
+   * @author Jan den Besten
+   * @internal
+   * @ignore
+   */
 	private function _load_row($row) {
 		if (!empty($row['path']))
 			$key=$row['path'];
@@ -69,7 +78,22 @@ class ui extends CI_Model {
 		}
 	}
 
-	function get($name,$table="",$create=TRUE) {
+  /**
+   * Geeft een mooie UI-name terug
+   * 
+   * Hieronder de volgorde hoe een naam wordt gevonden/gemaakt:
+   * 
+   * - Uit **cfg_ui**
+   * - Een standaard (in config bestand ingesteld)
+   * - Maak er zelf iets moois van
+   *
+   * @param string $name Item (kan een tabel, veld of media-pad zijn)
+   * @param string $table[''] Als je bij $name een veld geeft kun je hier een tabel specificeren
+   * @param string $create[TRUE] Als niet gevonden in **cfg_ui** dan wordt bij TRUE eentje gemaakt
+   * @return string
+   * @author Jan den Besten
+   */
+	public function get($name,$table="",$create=TRUE) {
 		if (!is_array($name)) {
       $out='';
       if (empty($out) and !empty($table)) $out=el("*.".$name,$this->uiNames,"");
@@ -87,11 +111,26 @@ class ui extends CI_Model {
 		return $out;
 	}
 
-  function get_standard($name) {
+  /**
+   * Geef de standaard naam, als die bestaat
+   *
+   * @param string $name 
+   * @return string
+   * @author Jan den Besten
+   */
+  public function get_standard($name) {
     return lang($name);
   }
 
-	function get_help($name='',$table='') {
+  /**
+   * Geeft helptekst behorend bij dit item zoals het in **cfg_ui** staat
+   *
+   * @param string $name['']
+   * @param string $table['']
+   * @return string
+   * @author Jan den Besten
+   */
+	public function get_help($name='',$table='') {
 		if (empty($name)) {
 			$tableHelp=array();
 			$fieldHelp=array();
@@ -135,7 +174,19 @@ class ui extends CI_Model {
 		return $out;
 	}
 
-	function create($s) {
+  /**
+   * Maak een mooie naam
+   * 
+   * - Verwijder prefix
+   * - Vervang __ door -
+   * - Vervang _ door -
+   * - Begin elk woord met een hoofdletter
+   *
+   * @param string $s 
+   * @return string
+   * @author Jan den Besten
+   */
+	public function create($s) {
 		if (is_foreign_key($s)) {
 			return $this->get(foreign_table_from_key($s));
 		}
@@ -149,7 +200,14 @@ class ui extends CI_Model {
 		return $s;
 	}
 	
-	function replace_ui_names($s) {
+  /**
+   * Vervang in meegegeven tekst alle woorden (die gevonden worden en op z'n minste één _ in de naam hebben) door een mooie UI name
+   *
+   * @param string $s 
+   * @return string
+   * @author Jan den Besten
+   */
+	public function replace_ui_names($s) {
     $s=explode(' ',$s);
     foreach ($s as $key => $word) {
       // only replace if word has a undescore and no dot

@@ -13,7 +13,7 @@
  *
  * @param string $source bronbestand
  * @param string $dest 
- * @return void
+ * @return bool status
  * @author Jan den Besten
  */
 function copy_file($source,$dest) {
@@ -30,18 +30,40 @@ function copy_file($source,$dest) {
 	return $status;
 }
 
-
+/**
+ * Geeft extensie van bestandsnaam
+ *
+ * @param string $f 
+ * @return string
+ * @author Jan den Besten
+ */
 function get_file_extension($f) {
 	$p=strrpos($f,".");
 	if ($p===FALSE) return "";
 	return strtolower(substr($f,$p+1));
 }
 
+/**
+ * Geeft bestandsnaam zonder extensie
+ *
+ * @param string $f 
+ * @return string
+ * @author Jan den Besten
+ */
 function get_file_without_extension($f) {
 	$p=strrpos($f,".");
 	if ($p===FALSE) return $f;
 	return substr($f,0,$p);
 }
+
+/**
+ * Voegt een prefix toe aan bestandsnaam in een heel pad
+ *
+ * @param string $f Bestandsnaam met pad 
+ * @param string $pre prefix
+ * @return string
+ * @author Jan den Besten
+ */
 function add_file_prefix($f,$pre) {
 	$p=strrpos($f,"/");
 	if ($p===false) {
@@ -54,6 +76,15 @@ function add_file_prefix($f,$pre) {
 	}
 	return $path.$pre.$file;
 }
+
+/**
+ * Voegt suffix aan bestandsnaa (in pad) toe (voor extentie)
+ *
+ * @param string $f Bestandsnaam (met pad)
+ * @param string $post Suffix 
+ * @return string
+ * @author Jan den Besten
+ */
 function add_file_suffix($f,$post) {
 	$p=strrpos($f,"/");
 	if ($p===false) {
@@ -68,6 +99,16 @@ function add_file_suffix($f,$post) {
 	$file=get_file_without_extension($file);
 	return $path.$file.$post.'.'.$ext;
 }
+
+/**
+ * Voegt een prefix en suffix toe aan bestandsnaam (in pad)
+ *
+ * @param string $f bestandsnaam
+ * @param string $pre prefix
+ * @param string $post suffix
+ * @return string
+ * @author Jan den Besten
+ */
 function add_file_presuffix($f,$pre='',$post='') {
 	$p=strrpos($f,"/");
 	if ($p===false) {
@@ -83,6 +124,17 @@ function add_file_presuffix($f,$pre='',$post='') {
 	return $path.$pre.$file.$post.'.'.$ext;
 }
 
+/**
+ * Maakt van gegeven naam een schone bestandsnaam
+ * 
+ * - Spaties worden vervangen door '_'
+ * - Geen underscores aan begin van de naam
+ * - Vervang meer dan dubbele underscores met dubbele underscores
+ *
+ * @param string $f 
+ * @return string
+ * @author Jan den Besten
+ */
 function clean_file_name($f) {
 	$ext=get_file_extension($f);
 	if (!empty($ext))
@@ -100,17 +152,39 @@ function clean_file_name($f) {
 	return $name;
 }
 
+/**
+ * Test of file-types afbeeldingen zijn
+ *
+ * @param array $types 
+ * @return bool
+ * @author Jan den Besten
+ */
 function file_types_are_images($types) {
 	$CI=&get_instance();
 	return file_types_in_array($types,$CI->config->item('FILE_types_img'));
 }
 
+/**
+ * Test of file-types flash-bestanden zijn
+ *
+ * @param array $types 
+ * @return bool
+ * @author Jan den Besten
+ */
 function file_types_are_flash($types) {
 	$CI=&get_instance();
 	return file_types_in_array($types,$CI->config->item('FILE_types_flash'));
 }
 
-function file_types_in_array($types,$config_types) {
+/**
+ * Test of file-types van bepaalde types zijn
+ *
+ * @param array $types
+ * @param array $config_types types
+ * @return bool
+ * @author Jan den Besten
+ */
+ function file_types_in_array($types,$config_types) {
 	$in = FALSE;
 	if (!empty($types)) {
 		if (is_string($types)) $types=explode(',',$types);
@@ -122,5 +196,19 @@ function file_types_in_array($types,$config_types) {
 	return $in;
 }
 
+/**
+ * Geeft een array met pad en bestandsnaam
+ *
+ * @param string $name 
+ * @return array
+ * @author Jan den Besten
+ */
+function get_path_and_file($name) {
+	$explode=explode("/",$name);
+	$file=$explode[count($explode)-1];
+	array_pop($explode);
+	$path=implode("/",$explode);
+	return array("path"=>$path,"file"=>$file);
+}
 
 ?>

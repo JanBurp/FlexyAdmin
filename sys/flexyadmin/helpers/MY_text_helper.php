@@ -52,8 +52,9 @@ function _callback_highlight_span($matches) {
 /**
  * Kleurt tekst binnen HTML code tags (&lt;code&gt;)
  * 
- * Maakt gebruik van CodeIgniter's highlight_code():<br/>
- * - werkt alleen binnen de code tags.<br/>
+ * Maakt gebruik van CodeIgniter's highlight_code():
+ * 
+ * - werkt alleen binnen de code tags.
  * - haalt eerst (eventueel eerder geplaatst) kleurcodes weg en schoont alles binnen de code tags nog wat verder op (trimmen etc).
  * 
  * @param string $txt mee te geven HTML

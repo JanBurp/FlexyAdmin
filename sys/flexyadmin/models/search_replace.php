@@ -1,18 +1,25 @@
 <?
 
-// ## TODO: also for images/files...
-
+/**
+ * Zoekt/vervangt items in de database
+ *
+ * @package default
+ * @author Jan den Besten
+ * @todo Ook voor images etc...
+ */
+ 
 class Search_replace Extends CI_Model {
 
-	var $table_types = array('tbl','res');
-	var $field_types = array('txt');
-	var $langRegex = '';
+   private $table_types = array('tbl','res');
+   private $field_types = array('txt');
+   private $langRegex = '';
 	
 	
-	
-	public function __construct() {
+   /**
+    * @ignore
+    */
+   public function __construct() {
 		parent::__construct();
-		
 		// This is for sites with uri's to different languages
 		$languages=$this->config->item('languages');
 		if (count($languages)>1) {
@@ -30,7 +37,15 @@ class Search_replace Extends CI_Model {
 	}
 	
 	
-	public function links($search,$replace='') {
+  /**
+   * Vervangt alle links in alle teksten van de database (in alle content tabellen)
+   *
+   * @param string $search Te zoeken link
+   * @param string $replace Te vervangen in...
+   * @return array Resultaat
+   * @author Jan den Besten
+   */
+   public function links($search,$replace='') {
 		$result=FALSE;
 		$tables=$this->db->list_tables();
 		foreach($tables as $table) {
@@ -51,6 +66,16 @@ class Search_replace Extends CI_Model {
 	}
 
 
+  /**
+   * Vervangt alle links in een bepaald veld van een bepaalde tabel
+   *
+   * @param string $table Tabel waar wordt vervangen
+   * @param string $field Veld waar wordt vervangen
+   * @param string $search Gezochte link
+   * @param string $replace Vervangen door..
+   * @return array Resultaat rij
+   * @author Jan den Besten
+   */
 	public function links_in($table,$field,$search,$replace='') {
 		$result=FALSE;
 		$this->db->select("id,$field");

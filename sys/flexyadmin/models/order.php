@@ -1,61 +1,107 @@
 <?
+
 /**
- * FlexyAdmin V1
+ * Verzorgt het (her)sorteren van items in een tabel (ook met boomstructuur)
  *
- * cfg.php Created on 15-okt-2008
- *
+ * @package default
  * @author Jan den Besten
  */
-
-
- /**
-  * Class order extends model
-  *
-  * This class handles all re-ordering of tables in database
-  *
-  *TODO: multi level ordering (tree)
-  *
-  */
-
 class order extends CI_Model {
 
-	var $table;
-	var $order;
+  private $table;
+  private $order;
 
-	function __construct($table="") {
+	/**
+	 * @ignore
+	 */
+  public function __construct($table="") {
 		parent::__construct();
 		$this->init($table);
 	}
 
-	function init($table="") {
+  /**
+   * @ignore
+   */
+	public function init($table="") {
 		$this->set_table($table);
 		$this->order=$this->config->item('ORDER_field_name');
+    return $this;
 	}
 
-	function set_table($table="") {
+	/**
+	 * Zet de tabel
+	 *
+	 * @param string $table 
+	 * @return object $this;
+	 * @author Jan den Besten
+	 */
+  public function set_table($table="") {
 		$this->table=$table;
+    return $this;
 	}
 
-	function is_a_tree($table) {
+  /**
+   * Test of tabel een boomstructuur heeft
+   *
+   * @param string $table 
+   * @return bool
+   * @author Jan den Besten
+   */
+	public function is_a_tree($table) {
 		$fields=$this->db->list_fields($table);
 		return (in_array("self_parent",$fields));
 	}
 
-	function get_order($table,$id) {
+	/**
+	 * Pakt inhoud van order veld
+	 *
+	 * @param string $table 
+	 * @param int $id 
+	 * @return int
+	 * @author Jan den Besten
+	 * @ignore
+	 */
+  private function get_order($table,$id) {
 		return $this->db->get_field($table,$this->order,$id);
 	}
 
-	function get_parent($table,$id) {
+  /**
+   * Pakt parent
+   *
+   * @param string $table 
+   * @param int $id 
+   * @return init
+   * @author Jan den Besten
+   * @ignore
+   */
+	private function get_parent($table,$id) {
 		return $this->db->get_field($table,"self_parent",$id);
 	}
 
-	function get_bottom($table) {
+  /**
+   * Pakt eind
+   *
+   * @param string $table 
+   * @return mixed
+   * @author Jan den Besten
+   * @ignore
+   */
+	private function get_bottom($table) {
 		$this->db->select(PRIMARY_KEY);
 		$query = $this->db->get($table);
 		return $query->num_rows();
 	}
-	
-	function get_next_order($table,$parent="") {
+  
+  
+	/**
+	 * Geeft volgende order
+	 *
+	 * @param string $table
+	 * @param int $parent[''] 
+	 * @return int
+	 * @author Jan den Besten
+	 */
+	public function get_next_order($table,$parent="") {
 		if (!empty($parent)) $this->db->where("self_parent",$parent);
 		$this->db->select("order");
 		$this->db->order_by("order DESC");
@@ -63,18 +109,35 @@ class order extends CI_Model {
 		return $row["order"]+1;
 	} 
 
-	/**
-		* Reset order, gives them a new fresh order, but ordering stays same
-		*/
-	function reset($table,$shift=0) {
+  /**
+   * Reset volgorde nummering. Volgorde blijft hetzelde, alleen de nummering wordt ververst
+   *
+   * @param string $table 
+   * @param int $shift[0]
+   * @return object $this;
+   * @author Jan den Besten
+   */
+	public function reset($table,$shift=0) {
 		if ($this->is_a_tree($table))	$this->db->order_as_tree();
 		$this->db->select(PRIMARY_KEY);
 		$result=$this->db->get_result($table);
 		$ids=array();
 		foreach($result as $id=>$v) $ids[]=$id;
 		$this->set_all($table,$ids,$shift);
+    return $this;
 	}
-	function shift_up($table,$parent=0,$up=1,$from=0) {
+  
+  /**
+   * Schuift item op naar boven
+   *
+   * @param string $table 
+   * @param int $parent[0]
+   * @param int $up[1]
+   * @param int $from[0] 
+   * @return object $this;
+   * @author Jan den Besten
+   */
+	public function shift_up($table,$parent=0,$up=1,$from=0) {
 		if ($this->is_a_tree($table)) {
 			$this->db->where("self_parent",$parent);
 			if ($from!=0) $this->db->where("order >",$from);
@@ -86,11 +149,21 @@ class order extends CI_Model {
 		}
 		else
 			$this->reset($table,$up);
+    return $this;
 	}
+  
+
 	/**
-		* Gives all items a new order according to the order of $ids array
-		*/
-	function set_all($table,$ids,$shift=0,$from=0) {
+	 * Geeft alle items een nieuwe volgorde zoals meegegeven in de $ids array
+	 *
+	 * @param string $table
+	 * @param array $ids Array met nieuwe volgorde
+	 * @param int $shift[0]
+	 * @param int $from[0]
+	 * @return object $this;
+	 * @author Jan den Besten
+	 */
+  public function set_all($table,$ids,$shift=0,$from=0) {
 		$isTree=$this->is_a_tree($table);
 		$orders=array();
 		foreach($ids as $id) {
@@ -105,20 +178,20 @@ class order extends CI_Model {
 			$this->db->where(PRIMARY_KEY,$id);
 			$this->db->update($table, array($this->order => $orders[$parent] ));
 		}
+    return $this;
 	}
 
-	/**
-		* Inserts a new item after id
-		*/
-	// function insert_after_id($table,$id,$before_id) {
-	// 	$before_order=$this->get_order($table,$before_id);
-	// 	return $this->set($table,$id,$before_order+1);
-	// }
 
-	/**
-		* Move given item to new place (give the new order nr)
-		*/
-	function set($table,$id,$new) {
+  /**
+   * Verplaatst item naar nieuwe plek, en geeft de nieuwe order terug
+   *
+   * @param string $table 
+   * @param int $id 
+   * @param int $new 
+   * @return int $new
+   * @author Jan den Besten
+   */
+	public function set($table,$id,$new) {
 		$old=$this->get_order($table,$id);
 		if ($old!=$new) {
 			// Set new order to given id
@@ -144,10 +217,16 @@ class order extends CI_Model {
 		return $new;
 	}
 
-	/**
-		* Move given item to new place in order (give "direction" or new order nr)
-		*/
-	function set_to($table,$id,$newOrder) {
+  /**
+   * Verschuift item in een meegegeven richting en geeft nieuwe order terug
+   *
+   * @param string $table 
+   * @param int $id 
+   * @param string $newOrder ['up'|'down']
+   * @return int
+   * @author Jan den Besten
+   */
+  public function set_to($table,$id,$newOrder) {
 		$out="";
 		switch($newOrder) {
 			// case "top" 		:
@@ -168,20 +247,39 @@ class order extends CI_Model {
 		}
 		return $out;
 	}
-	// function to_top($table,$id) {
+	
+  // public function to_top($table,$id) {
 	// 	return $this->set($table,$id,0);
 	// }
-	// function to_bottom($table,$id) {
+	// public function to_bottom($table,$id) {
 	// 	$bottom=$this->get_bottom($table);
 	// 	return $this->set($table,$id,$bottom);
 	// }
-	function up($table,$id) {
+  
+  /**
+   * Verplaats item naar boven en geeft nieuwe order terug
+   *
+   * @param string $table 
+   * @param int $id 
+   * @return int
+   * @author Jan den Besten
+   */
+	public function up($table,$id) {
 		$o=$this->get_order($table,$id);
 		$o--;
 		if ($o<1) $o=1;
 		return $this->set($table,$id,$o);
 	}
-	function down($table,$id) {
+  
+  /**
+   * Verplaats item naar beneden en geeft nieuwe order terug
+   *
+   * @param string $table 
+   * @param int $id 
+   * @return int
+   * @author Jan den Besten
+   */
+	public function down($table,$id) {
 		$o=$this->get_order($table,$id);
 		$o++;
 		$bottom=$this->get_bottom($table);

@@ -1,89 +1,142 @@
 <?
 /**
- * FlexyAdmin V1
+ * Maakt grafieken, zoals bij de statistieken
  *
+ * @package default
  * @author Jan den Besten
  */
-
-
-/**
- *
- * Handles graph rendering
- *
- */
-
 class Graph Extends CI_Model {
 
-	var $captions=array();
-	var $headings=array();
-	var $rows=array();
-	var $max;
+  private $captions=array();
+  private $headings=array();
+  private $rows=array();
+  private $max;
+	private $type;			// html | files
 
-	var $type;			// html | files
-
-	function __construct() {
+  /**
+   * @ignore
+   */
+	public function __construct() {
 		parent::__construct();
 		$this->init();
 	}
 
-	function init() {
+  /**
+   * Initialiseren
+   *
+   * @return void
+   * @author Jan den Besten
+   * @internal
+   * @ignore
+   */
+	public function init() {
 		$this->renderExtraClass=array();
 		$this->set_captions();
 		$this->set_headings();
 		$this->rows=array();
 		$this->set_type();
 		$this->set_max();
+    return $this;
 	}
 
-	function set_captions($caption="") {
+  /**
+   * Stelt titel in
+   *
+   * @param string $caption 
+   * @return object $this
+   * @author Jan den Besten
+   */
+	public function set_captions($caption="") {
 		$this->captions=NULL;
 		$this->captions[]=array("class"=>get_prefix(strip_tags($caption)," "),"cell"=>$caption);
+    return $this;
 	}
 
-	function set_headings($headings=NULL) {
+  /**
+   * Stelt kopjes in
+   *
+   * @param array $headings 
+   * @return object $this
+   * @author Jan den Besten
+   */
+	public function set_headings($headings=NULL) {
 		if (isset($headings) and !empty($headings)) {
 			foreach($headings as $name=>$heading) {
 				if (is_numeric($name)) $name=$heading;
 				$this->set_heading($name,$heading);
 			}
 		}
+    return $this;
 	}
 
-	function set_heading($name,$heading) {
+  /**
+   * Past kop aan
+   *
+   * @param string $name 
+   * @param string $heading 
+   * @return object $this;
+   * @author Jan den Besten
+   */
+	public function set_heading($name,$heading) {
 		$this->headings[$name]=$heading;
+    return $this;
 	}
 
-	function set_type($type="html") {
+  /**
+   * Type output
+   *
+   * @param string $type 
+   * @return object $this;
+   * @author Jan den Besten
+   * @ignore
+   * @depricated
+   */
+	public function set_type($type="html") {
 		$this->type=$type;
+    return $this;
 	}
 
-	function set_current($currentId=NULL) {
-		$this->currentId=$currentId;
-	}
+  // public function set_current($currentId=NULL) {
+  //   $this->currentId=$currentId;
+  // }
 
-	function set_data($data=NULL,$name="") {
+  /**
+   * Zet de data die getoond moet worden
+   *
+   * @param string $data 
+   * @param string $name 
+   * @return object $this;
+   * @author Jan den Besten
+   */
+	public function set_data($data=NULL,$name="") {
 		if (isset($data) and !empty($data)) {
 			$this->rows=$data;
 			$this->set_headings(array_keys(current($data)));
 		}
 		$this->set_captions($name);
+    return $this;
 	}
 	
-	function set_max($max=100) {
+  /**
+   * Stelt maximun in van bar
+   *
+   * @param string $max 
+   * @return object $this;
+   * @author Jan den Besten
+   */
+	public function set_max($max=100) {
 		$this->max=$max;
+    return $this;
 	}
 
-/**
- * function render()
- *
- * Returns grid output (a table) according to template
- *
- * @param string $type html or other format
- * @param string $class extra attributes such as class
- * @return string	grid output
- */
-
-	function render($type="", $tableClass="", $extraClass="") {
+  /**
+   * Geeft de HTML output van de grafiek
+   *
+   * @param string $type['']
+   * @param string $class['']
+   * @return string
+   */
+	public function render($type="", $tableClass="", $extraClass="") {
 		if (!empty($type)) $this->set_type($type);
 		
 		$table=array();

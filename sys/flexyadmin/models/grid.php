@@ -1,40 +1,40 @@
 <?
+
 /**
- * FlexyAdmin V1
+ * Maakt een mooie tabel met opties zoals zoeken, sorteren etc.
  *
- * grid.php Created on 21-okt-2008
- *
+ * @package default
  * @author Jan den Besten
  */
-
-
-/**
- * Class Grid (model)
- *
- * Handles grid rendering
- *
- */
-
 class Grid Extends CI_Model {
 
-	var $captions=array();
-	var $headings=array();
-	var $rows=array();
-	var $rowId;
-	var $order;
-	var $search;
-	var $currentId;
-	var $renderData;
-	var $pagin;
+  private $captions=array();
+  private $headings=array();
+  private $rows=array();
+  private $rowId;
+  private $order;
+  private $search;
+  private $currentId;
+  private $renderData;
+  private $pagin;
+	private $type;			// html | files
 
-	var $type;			// html | files
-
-	function __construct() {
+	/**
+	 * @ignore
+	 */
+  public function __construct() {
 		parent::__construct();
 		$this->init();
 	}
 
-	function init() {
+  /**
+   * Initialiseer
+   *
+   * @return object $this;
+   * @author Jan den Besten
+   * @ignore
+   */
+	public function init() {
 		$this->renderExtraClass=array();
 		$this->set_captions();
 		$this->set_headings();
@@ -44,39 +44,99 @@ class Grid Extends CI_Model {
 		$this->set_search();
 		$this->set_current();
 		$this->set_pagination();
+    return $this;
 	}
 
-	function set_captions($caption="") {
+  /**
+   * Stel koppen in
+   *
+   * @param array $caption 
+   * @return object $this;
+   * @author Jan den Besten
+   */
+	public function set_captions($caption="") {
 		$this->captions=NULL;
 		$this->captions[]=array("class"=>get_prefix(strip_tags($caption)," "),"cell"=>$caption);
+    return $this;
 	}
 
-	function prepend_to_captions($add,$class="") {
+  /**
+   * Voeg een kop aan het begin toe
+   *
+   * @param array $add toe te voegen cel
+   * @param string $class
+   * @return object $this;
+   * @author Jan den Besten
+   **/
+  public function prepend_to_captions($add,$class="") {
 		array_unshift($this->captions, array("class"=>$class,"cell"=>$add));
+    return $this;
 	}
 
-	function append_to_captions($add,$class="") {
+  /**
+   * Voeg een kop aan het eind toe
+   *
+   * @param array $add toe te voegen cel
+   * @param string $class
+   * @return object $this;
+   * @author Jan den Besten
+   **/
+	public function append_to_captions($add,$class="") {
 		array_push($this->captions, array("class"=>$class,"cell"=>$add));
+    return $this;
 	}
 
-	function set_headings($headings=NULL) {
+  /**
+   * Stel de koppen in
+   *
+   * @param array $headings 
+   * @return object $this;
+   * @author Jan den Besten
+   */
+	public function set_headings($headings=NULL) {
 		if (isset($headings) and !empty($headings)) {
 			foreach($headings as $name=>$heading) {
 				if (is_numeric($name)) $name=$heading;
 				$this->set_heading($name,$heading);
 			}
 		}
+    return $this;
 	}
 
-	function set_heading($name,$heading) {
+  /**
+   * Pas heading aan
+   *
+   * @param string $name 
+   * @param string $heading 
+   * @return object $this;
+   * @author Jan den Besten
+   */
+	public function set_heading($name,$heading) {
 		$this->headings[$name]=$heading;
+    return $this;
 	}
 
-	function set_type($type="html") {
+  /**
+   * Zet output type
+   *
+   * @param string $type 
+   * @return object $this;
+   * @author Jan den Besten
+   * @ignore
+   */
+	public function set_type($type="html") {
 		$this->type=$type;
+    return $this;
 	}
 
-	function set_order($order='id') {
+  /**
+   * Stelt volgorde in
+   *
+   * @param string $order['id']
+   * @return object $this;
+   * @author Jan den Besten
+   */
+	public function set_order($order='id') {
 		$orderArr=explode(',',$order);
 		foreach ($orderArr as $key=>$order) {
 			$post=get_suffix($order,' ');
@@ -85,17 +145,41 @@ class Grid Extends CI_Model {
 			$orderArr[$key]=trim($order);
 		}
 		$this->order=$orderArr;
+    return $this;
 	}
 	
-	function set_search($search='') {
+  /**
+   * Stel zoekterm in
+   *
+   * @param string $search['']
+   * @return object $this;
+   * @author Jan den Besten
+   */
+	public function set_search($search='') {
 		$this->search=$search;
+    return $this;
 	}
 
-	function set_current($currentId=NULL) {
+  /**
+   * Stel huidig item in
+   *
+   * @param string $currentId 
+   * @return object $this;
+   * @author Jan den Besten
+   */
+	public function set_current($currentId=NULL) {
 		$this->currentId=$currentId;
+    return $this;
 	}
 
-	function set_pagination($pagin=false) {
+	/**
+	 * Zet pagination
+	 *
+	 * @param bool $pagin[FALSE]
+	 * @return object $this;
+	 * @author Jan den Besten
+	 */
+  public function set_pagination($pagin=false) {
 		if ($pagin) {
 			if (!empty($this->currentId))
 				$pagin['base_url'].='/current/'.$this->currentId.'/offset';
@@ -106,18 +190,42 @@ class Grid Extends CI_Model {
 			$pagin=array_merge($default,$pagin);
 		}
 		$this->pagin=$pagin;
+    return $this;
 	}
 
-	function set_rows($rows=NULL) {
+  /**
+   * Stel rijen in
+   *
+   * @param array $rows 
+   * @return object $this;
+   * @author Jan den Besten
+   */
+	public function set_rows($rows=NULL) {
 		$this->rows=$rows;
 		$this->rowId=0;
+    return $this;
 	}
 
-	function next_row_id() {
+  /**
+   * Geeft volgende row
+   *
+   * @return int
+   * @author Jan den Besten
+   * @ignore
+   */
+	public function next_row_id() {
 		return $this->rowId++;
 	}
 
-	function add_row($row=NULL,$rowId="") {
+  /**
+   * Voegt rij toe
+   *
+   * @param array $row 
+   * @param int $rowId 
+   * @return int $rowId
+   * @author Jan den Besten
+   */
+	public function add_row($row=NULL,$rowId="") {
 		if (!empty($row))	{
 			if (empty($rowId))
 				$rowId=$this->next_row_id();
@@ -126,25 +234,31 @@ class Grid Extends CI_Model {
 		return $rowId;
 	}
 
-	function set_data($data=NULL,$name="") {
+  /**
+   * Stelt de grid data in
+   *
+   * @param array $data 
+   * @param string $name Titel
+   * @return object $this;
+   * @author Jan den Besten
+   */
+	public function set_data($data=NULL,$name="") {
 		if (isset($data) and !empty($data)) {
 			$this->rows=$data;
 			if (is_array($data)) $this->set_headings(array_keys(current($data)));
 		}
 		$this->set_captions($name);
+    return $this;
 	}
 
-/**
- * function render()
- *
- * Returns grid output (a table) according to template
- *
- * @param string $type html or other format
- * @param string $class extra attributes such as class
- * @return string	grid output
- */
-
-	function render($type="", $tableClass="", $extraClass="") {
+  /**
+   * Geeft de gegenereeerde Grid als Array data
+   *
+   * @param string $type['']
+   * @param string $class['']
+   * @return mixed
+   */
+	public function render($type="", $tableClass="", $extraClass="") {
 		if (!empty($type)) $this->set_type($type);
 
 		$table=array();
@@ -205,7 +319,16 @@ class Grid Extends CI_Model {
 	}
 	
 	
-	function view($type="", $tableClass="", $extraClass="") {
+  /**
+   * Geeft GRID als HTML terug
+   *
+   * @param string $type 
+   * @param string $tableClass 
+   * @param string $extraClass 
+   * @return string
+   * @author Jan den Besten
+   */
+	public function view($type="", $tableClass="", $extraClass="") {
 		if (empty($this->renderData)) $this->render($type, $tableClass, $extraClass);
 		$html=$this->load->view("admin/grid",$this->renderData,true);
 		return $html;

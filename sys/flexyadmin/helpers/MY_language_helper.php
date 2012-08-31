@@ -9,10 +9,12 @@
 
 
  /**
-  * @param string $item
+  * Maakt van velden in een array die een language suffix hebben, neutrale velden (verwijderd de suffix)
+  * 
+  * @param array $item
   * @param array $fields[array('str_title','txt_text')]
-  * @param string $lang['']
-  * @return void
+  * @param string $lang[''] Als geen taal wordt meegegeven, dan wordt de standaard taal genomen
+  * @return array
   * @author Jan den Besten
   */
 function set_language_neutral_fields($item,$fields=array('str_title','txt_text'),$lang='') {

@@ -7,30 +7,38 @@
  * @link http://codeigniter.com/user_guide/helpers/url_helper.html
  */
 
- /**
-  * @param string $s 
+
+/**
+  * Geeft pad naar assets map van de site en voegt meegegeven map toe
+  *
+  * @param string $s['']
   * @return string
   * @author Jan den Besten
   */
-function index_url($s) {
-	return index_page()."/".$s;
-}
-
 function assets($s="") {
 	$CI =& get_instance();
 	return $CI->config->item('ASSETS').$s;
 }
 
+/**
+ * Geeft pad naar assets map van admin
+ *
+ * @param string $s[''] 
+ * @return string
+ * @author Jan den Besten
+ */
 function admin_assets($s="") {
 	$CI =& get_instance();
 	return $CI->config->item('ADMINASSETS').$s;
 }
 
-function front_uri() {
-	$uri=base_url();
-	return $uri;
-}
-
+/**
+ * Maakt van gegeven parameters een site_url()
+ *
+ * @param string,string,string,...
+ * @return string
+ * @author Jan den Besten
+ */
 function api_url() {
 	$CI =& get_instance();
 	$aParams=func_get_args();
@@ -42,6 +50,13 @@ function api_url() {
 	return reduce_double_slashes(site_url($uri));
 }
 
+/**
+ * Maakt van gegeven parameters een uri
+ *
+ * @param string,string,string,...
+ * @return string
+ * @author Jan den Besten
+ */
 function api_uri() {
 	$aParams=func_get_args();
 	if (substr($aParams[0],0,3)=='API') {
@@ -58,30 +73,57 @@ function api_uri() {
 	return reduce_double_slashes($uri);
 }
 
+/**
+ * Zelfde als rawurlencode()
+ *
+ * @param string $l 
+ * @return string
+ * @author Jan den Besten
+ * @depricated
+ * @ignore
+ */
 function linkencode($l) {
 	return rawurlencode($l);
 }
 
+/**
+ * Zelfde als  rawurldecode()
+ *
+ * @param string $l 
+ * @return string
+ * @author Jan den Besten
+ * @depricated
+ * @ignore
+ */
 function linkdecode($l) {
 	return rawurldecode($l);
 }
 
+/**
+ * Encode een pad zodat het geschikt is voor een uri
+ *
+ * @param string $p 
+ * @param string $isPath[TRUE] 
+ * @return string
+ * @author Jan den Besten
+ */
 function pathencode($p,$isPath=TRUE) {
 	$p=str_replace("/","___",$p);
 	if ($isPath) $p=linkencode($p);
 	return $p;
 }
 
+/**
+ * Decode een pad (uit een uri)
+ *
+ * @param string $p 
+ * @param string $isPath[TRUE]
+ * @return string
+ * @author Jan den Besten
+ */
 function pathdecode($p,$isPath=TRUE) {
 	$p=str_replace("___","/",$p);
 	if ($isPath) $p=linkdecode($p);
 	return $p;
 }
 
-function get_path_and_file($name) {
-	$explode=explode("/",$name);
-	$file=$explode[count($explode)-1];
-	array_pop($explode);
-	$path=implode("/",$explode);
-	return array("path"=>$path,"file"=>$file);
-}
