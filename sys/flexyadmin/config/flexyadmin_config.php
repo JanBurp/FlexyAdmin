@@ -271,7 +271,7 @@ $config["CFG_"]=array(
 		"cfg_configurations"=>array(
 			"order"=>'101',
 			"table"=>'cfg_configurations',
-			'str_fieldsets'=>'Editor,Version',
+			'str_fieldsets'=>'Editor',
 			"b_grid_add_many"=>'0',
 			"str_abstract_fields"=>'',
 			"str_order_by"=>'',
@@ -450,7 +450,8 @@ $config["CFG_"]=array(
 			"str_fieldset"=>'Editor'
  			),
 		"cfg_configurations.str_revision"=>array(
-			"str_fieldset"=>'Version'
+      'b_show_in_form'=>'0',
+      'b_show_in_grid'=>'0'
  			),
 
 		"cfg_field_info.field_field"=>array(
