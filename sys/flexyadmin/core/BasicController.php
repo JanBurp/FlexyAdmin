@@ -101,9 +101,9 @@ class BasicController extends MY_Controller {
 	}
 
 
-	function _init_plugin($table,$oldData,$newData) {
-		if (isset($oldData)) $this->plugin_handler->set_data('old',$oldData);
-		if (isset($newData)) $this->plugin_handler->set_data('new',$newData);
+	function _init_plugin($table,$oldData=NULL,$newData=NULL) {
+		$this->plugin_handler->set_data('old',$oldData);
+		$this->plugin_handler->set_data('new',$newData);
 		$this->plugin_handler->set_data('table',$table);
 	}
 
