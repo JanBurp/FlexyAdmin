@@ -39,7 +39,7 @@
 	<meta name="robots" content="index,follow" />
 	<meta name="revisit-after" content="7 days" />
 
-	<!-- <script language="javascript" type="text/javascript" src="sys/jquery/jquery-1.7.2.min.js"></script> -->
+	<!-- <script language="javascript" type="text/javascript" src="sys/jquery/jquery-1.8.1.min.js"></script> -->
 	<!-- <script language="javascript" type="text/javascript" src="<?=$assets?>js/site.js"></script> -->
 	
 	<link href="<?=$assets;?>css/text.css" rel="stylesheet" type="text/css" />
