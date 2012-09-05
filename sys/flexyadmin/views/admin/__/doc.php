@@ -55,7 +55,7 @@
 
   <div id="footer">
     <p><a href="#top">Naar boven</a></p>
-    <p><a href="http://flexyadmin.com" target="_blank">FlexyAdmin</a> | Copyright &#169;  <a href="http://www.jandenbesten.net/"  target="_blank">Jan den Besten</a></p>
+    <p><a href="http://flexyadmin.com" target="_blank">FlexyAdmin r<?=$revision?></a> | Copyright &#169;  <a href="http://www.jandenbesten.net/"  target="_blank">Jan den Besten</a></p>
   </div>
 
 </body>
