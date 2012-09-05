@@ -20,6 +20,7 @@ class __ extends AdminController {
   private $path='/Users/jan/Sites/FlexyAdmin/';
   private $work='FlexyAdminDEMO';
   private $tags='TAGS';
+  private $revision;
   
   private $stripTagsWithClasses=array('doc_info','doc_param_type','doc_label');
   private $stripWords=array('(string)', '(array)', '(void)', '(bool)', '(mixed)', '(object)', 
@@ -30,6 +31,7 @@ class __ extends AdminController {
 
 	public function __construct() {
 		parent::__construct();
+    $this->revision=$this->get_revision();
 	}
 
 	public function index() {
@@ -37,7 +39,7 @@ class __ extends AdminController {
     $menuArray=array(
       array( 'uri'=>'admin/__/doc', 'name' => 'Create Documentation' ),
       array( 'uri'=>'admin/__/minify', 'name' => 'Minify JS & CSS' ),
-      array( 'uri'=>'admin/__/build', 'name' => 'Build revision: '.$this->get_revision() ),
+      array( 'uri'=>'admin/__/build', 'name' => 'Build revision: '.$this->revision ),
     );
     $menu = new Menu();
     $menu->set_menu($menuArray);
@@ -160,7 +162,7 @@ class __ extends AdminController {
         'doc'=>$class['doc']
       ),true);
       $content.=highlight_code_if_needed($html);
-      $fileContent=$this->load->view('admin/__/doc',array('content'=>$content,'root'=>'../'),true);
+      $fileContent=$this->load->view('admin/__/doc',array('content'=>$content,'root'=>'../','revision'=>$this->revision),true);
       
       $fileName='userguide/FlexyAdmin/'.$classPath.'/'.$file.'.html';
       write_file($fileName,$fileContent);
@@ -218,7 +220,7 @@ class __ extends AdminController {
           'functions'=>$functionsHtml
         ),true);
         $content.=highlight_code_if_needed( $html);
-        $fileContent=$this->load->view('admin/__/doc',array('content'=>$content,'root'=>'../'),true);
+        $fileContent=$this->load->view('admin/__/doc',array('content'=>$content,'root'=>'../','revision'=>$this->revision),true);
         $fileName='userguide/FlexyAdmin/helpers/'.str_replace('.php','.html',$file);
         write_file($fileName,$fileContent);
         $this->_add_content('Helper file created: '.$fileName.'</br>');
@@ -249,7 +251,7 @@ class __ extends AdminController {
     }
     
     $content=$this->load->view('admin/__/doc_toc',array('toc'=>$otoc),true);
-    $fileContent=$this->load->view('admin/__/doc',array('content'=>$content,'root'=>''),true);
+    $fileContent=$this->load->view('admin/__/doc',array('content'=>$content,'root'=>'','revision'=>$this->revision),true);
     $fileName='userguide/FlexyAdmin/index.html';
     write_file($fileName,$fileContent);
     //
@@ -317,7 +319,7 @@ class __ extends AdminController {
         $fileName=preg_replace("/\/(\d-)/u", "/", $fileName);
         
         $content=highlight_code_if_needed( $this->load->view('admin/__/doc_file',array('file'=>$name,'functions'=>$html),true) );
-        $fileContent=$this->load->view('admin/__/doc',array('content'=>$content,'root'=>'../'),true);
+        $fileContent=$this->load->view('admin/__/doc',array('content'=>$content,'root'=>'../','revision'=>$this->revision),true);
         write_file($fileName,$fileContent);
         $this->_add_content('DOC created: '.$fileName.'</br>');
         $this->toc[$type][$name]=$fileName;
@@ -354,7 +356,7 @@ class __ extends AdminController {
   //       $fileName=preg_replace("/\/(\d_)/u", "/", $fileName);
   //       $fileName=preg_replace("/\/(\d-)/u", "/", $fileName);
   //       $content=highlight_code_if_needed( $this->load->view('admin/__/doc_file',array('file'=>$name,'functions'=>$html),true) );
-  //       $fileContent=$this->load->view('admin/__/doc',array('content'=>$content,'root'=>'../'),true);
+  //       $fileContent=$this->load->view('admin/__/doc',array('content'=>$content,'root'=>'../','revision'=>$this->revision),true);
   //       write_file($fileName,$fileContent);
   //       $this->_add_content('DOC created: '.$fileName.'</br>');
   //       $this->toc[$type][$name]=$fileName;
