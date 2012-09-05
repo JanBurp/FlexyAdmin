@@ -35,9 +35,25 @@ class Search extends AdminController {
 		
 			if ($search) {
 				$htmlTest=h(lang('sr_result'),1);
-				foreach ($fields as $field) {
-					$table=get_prefix($field,'.');
-					$field=get_suffix($field,'.');
+        $testFields=array();
+				foreach ($fields as $key=>$value) {
+					$table=get_prefix($value,'.');
+					$field=get_suffix($value,'.');
+          if ($table=='*') {
+            $tables=$this->db->list_tables();
+            $tables=filter_by($tables,'tbl');
+            foreach ($tables as $table) {
+              if ($this->db->field_exists($field,$table)) $testFields[]=array('table'=>$table,'field'=>$field);
+            }
+          }
+          else {
+            $testFields[]=array('table'=>$table,'field'=>$field);
+          }
+        }
+        
+				foreach ($testFields as $f) {
+					$table=$f['table'];
+					$field=$f['field'];
 					$this->db->select(PRIMARY_KEY);
 					$this->db->select($field);
 					$result=$this->db->get_result($table);
