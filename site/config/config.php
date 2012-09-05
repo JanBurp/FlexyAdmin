@@ -88,8 +88,8 @@ $config['auto_pagination']	= FALSE;
 | Usefull if you need to do something on every page and don't won't to change the controller.
 | You can also autoload a module with a simple test on a field in $page
 */
-// $config['autoload_modules'] = array('comments');
-// $config['autoload_modules_if'] = array( 'comments'=>array('b_allow_comments'=>true) );
+$config['autoload_modules'] = array('kolom');
+// $config['autoload_modules_if'] = array( 'blog'=>array('str_module'=>'blog') );
 
 
 /*
@@ -143,6 +143,17 @@ $config['menu_autoset_home']=TRUE;
 |
 */
 $config['main_view']='site';
+
+
+/*
+|--------------------------------------------------------------------------
+| Page view
+|--------------------------------------------------------------------------
+|
+| The name of the view that the frontend controller will load for a page
+|
+*/
+$config['page_view']='page';
 
 /*
 |--------------------------------------------------------------------------
