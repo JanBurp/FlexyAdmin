@@ -50,3 +50,4 @@ update.txt													- how to update FlexyAdmin to the latest version
 /site/libraries/										- here you can put your own CodeIgniter libraries and frontend modules (which are special libraries)
 /site/views/												- folder with all your views, where the html sits with some php
 /site/views/site.php								- this is you main view
+/userguide                          - here you can find all the info you need
