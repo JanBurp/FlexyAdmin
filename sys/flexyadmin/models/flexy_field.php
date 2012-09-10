@@ -470,9 +470,9 @@ class Flexy_field extends CI_Model {
     if (is_editable_table($this->table)) {
       if ($this->fieldRight>=RIGHTS_EDIT)   {
         if (isset($this->extraInfoId))
-          $uri=api_uri('API_view_form',$this->table.':'.$this->data,'info',$this->extraInfoId);
+          $uri=api_uri('API_view_form',$this->table.$this->config->item('URI_HASH').$this->data,'info',$this->extraInfoId);
         else
-          $uri=api_uri('API_view_form',$this->table.':'.$this->data);
+          $uri=api_uri('API_view_form',$this->table.$this->config->item('URI_HASH').$this->data);
         $out.=anchor( $uri, help(icon("edit"),lang('grid_edit')), array("class"=>"edit $class"));
       }
       if ($this->fieldRight>=RIGHTS_DELETE)  {

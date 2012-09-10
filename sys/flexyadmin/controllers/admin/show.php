@@ -241,7 +241,7 @@ class Show extends AdminController {
 							}
 							$grid->set_headings($this->ui->get($keys,$table));
               if (is_editable_table($table) AND $right>=RIGHTS_ADD) {
-								$newUri=api_uri('API_view_form',$table.':-1');
+								$newUri=api_uri('API_view_form',$table.$this->config->item('URI_HASH').'-1');
 								if (!empty($info)) $newUri.='/info/'.$info;
 								$newIcon=anchor($newUri,help(icon("new"),langp('grid_new',$uiTable)) );
 								if ($this->cfg->get('CFG_table',$table,'int_max_rows')<count($data))
@@ -286,7 +286,7 @@ class Show extends AdminController {
 
 		$table=el('form',$args);
 		$info=el('info',$args);
-		$table=explode(':',$table);
+		$table=explode($this->config->item('URI_HASH'),$table);
 		$id=el(1,$table);
 		$table=el(0,$table);
 

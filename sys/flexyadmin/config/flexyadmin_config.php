@@ -60,7 +60,8 @@ $config['FORM_NICE_DROPDOWNS']		= TRUE;
 
 $config['PLUGIN_ORDER']							= array('first'=>array('uri','links','striptags'),'last' =>array('automenu'));
 $config['PLUGIN_URI_REPLACE_CHAR']	= '_';
-$config['PLUGIN_URI_ARGS_CHAR']     = ':';
+$config['URI_HASH']                 = '-';
+$config['PLUGIN_URI_ARGS_CHAR']     = $config['URI_HASH'];
   
 
 /*
