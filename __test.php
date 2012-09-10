@@ -15,10 +15,17 @@ if (isset($argv))
  * Configure your paths here:
  */
 define('MAIN_PATH', realpath(dirname(__FILE__)).'/');
-define('SIMPLETEST', MAIN_PATH.'__tests/simpletest/'); // Directory of simpletest
+define('SIMPLETEST', MAIN_PATH.'__test/simpletest/'); // Directory of simpletest
 define('ROOT', MAIN_PATH); // Directory of codeigniter index.php
-define('TESTS_DIR', MAIN_PATH.'__tests/'); // Directory of your tests.
-define('APP_DIR', MAIN_PATH.'sys/flexyadmin'); // CodeIgniter Application directory
+define('TESTS_DIR', MAIN_PATH.'__test/'); // Directory of your tests.
+define('APP_DIR', MAIN_PATH.'sys/flexyadmin/'); // CodeIgniter Application directory
+
+// 
+// echo MAIN_PATH.'<br/>';
+// echo SIMPLETEST.'<br/>';
+// echo ROOT.'<br/>';
+// echo TESTS_DIR.'<br/>';
+// echo APP_DIR.'<br/>';
 
 //do not use autorun as it output ugly report upon no test run
 require_once SIMPLETEST.'unit_tester.php';
