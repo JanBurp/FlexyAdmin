@@ -1,3 +1,44 @@
+> 1740
+
+UPDATES
+- CodeIgniter 2.1.2 (IPv6)
+- jQuery 1.8.1
+- jQuery UI 1.8.23
+- tinyMCE 3.5.6 (jQuery)
+
+BUGS
+- bug when creating new user
+- bug in plugin_stats when empty data
+- bug in module comments
+- bug in module login
+- bug in plugin_newsletter
+- bug in MY_directory_helper empty_map()
+- creating a build is now bugfree and much much faster
+
+NEW
+- FlexyAdmin userguide:
+  - All Modules, Plugins and other libraries and helpers are documented
+  - A lot of extra documentation on how to use FlexyAdmin as a developer
+  - Nice lay-out, index and searching for the documentation
+- plugins can use views (and all frontend pulgins use them now)
+- added rewrite_short_tags to config.php
+- hidden & passwords types added to flexy_forms
+- added .ogg and .aiff mimetypes for sound files
+- video_helper can now get code also from https sites
+- added google_map module (and API)
+- added robot test to Spam and make Spam more general (and changes modules which use Spam)
+- added has_row() to DB
+- added copy_directory to MY_directory_helper
+- IonAuth:
+  - remember_code is now a random_string (thanks to Marcel vd Drift)
+  - salt changed in ion_auth
+- Module login has new config:
+  - can use another user table
+  - check existing email can turned off
+- has_string() fro MY_string_helper can now search an array of strings
+
+
+
 > 1525
 
 UPDATES

@@ -1,3 +1,11 @@
+UPDATE to 1740
+==============
+
+- Replace current sys map with new sys map
+- Replace index.php with new one
+- Run db/update_r1610.sql (for IPv6)
+
+
 UPDATE to 1525
 ==============
 
