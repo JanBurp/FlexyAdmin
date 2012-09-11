@@ -862,7 +862,7 @@ class Flexy_field extends CI_Model {
 			}
 			$files=not_filter_by($files,"_");
 			$order='_rawdate';
-			if (isset($info['str_order'])) {
+			if (isset($info['str_order']) and !empty($info['str_order'])) {
 				$order=$info['str_order'];
 			}
 			if (substr($order,0,1)=='_') {
