@@ -149,7 +149,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
    */
 	private function _repair_ar() {
 		// splits ar_where by OR/AND
-		$where=implode($this->ar_where);
+		$where=implode(' ',$this->ar_where);
 		$split=preg_split("/\s(OR|AND)\s/", $where,-1,PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
 		if ( ! empty($split)) {
 			// Make sure, first one is OR
@@ -783,24 +783,29 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		 * if many, find if a where or like part is referring to a many table
 		 */
 		if ($this->many) {
+      // trace_($this->ar_where);
 			$manyTables=$this->get_many_tables($table,$this->many);
 			$manyWhere=FALSE;
 			$manyLike=FALSE;
-			// $this->_repair_ar();
-			// trace_($this->ar_where);
-			// trace_($manyTables);
+      // $this->_repair_ar();
+      // remove back-ticks
+      // foreach ($this->ar_where as $key => $ar_where) {
+      //   $this->ar_where[$key]=str_replace('`','',$ar_where);
+      // }
+      // trace_($this->ar_where);
+      // trace_($manyTables);
 			foreach($manyTables as $mTable) {
 				$jTable=$mTable["join"];
 				$relTable=$mTable['rel'];
-				// trace_($mTable);
+        // trace_($mTable['rel']);
 				// WHERE
 				$foundKeysArray=array_ereg_search($mTable['rel'], $this->ar_where);
-				// trace_($this->ar_where);
-				// trace_($foundKeysArray);
+        // trace_($this->ar_where);
+        // trace_(!empty($foundKeysArray));
 				foreach($foundKeysArray as $key) {
 					$manyWhere=TRUE;
 					$mWhere=$this->ar_where[$key];
-					// trace_($mWhere);
+          // trace_($mWhere);
 					$AndOr=trim(substr($mWhere,0,3));
 					if (!in_array($AndOr,array("AND","OR")))
 						$AndOr='';
@@ -831,7 +836,8 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 						// 	$this->ar_where[$key]=' ';
 					}
 				}
-				$this->_repair_ar();
+        $this->_repair_ar();
+        // trace_($this->ar_where);
 				
 				// LIKE
 				$foundKeysArray=array_ereg_search($jTable, $this->ar_like);
