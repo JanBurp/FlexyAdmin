@@ -344,8 +344,9 @@ class Show extends AdminController {
 			 */
 			if (!empty($data)) {
 				$this->ff->set_restricted_to_user($restrictedToUser,$this->user_id);
+        
 				$ffData=$this->ff->render_form($table,$data,$options,$multiOptions);
-				
+        
 				$actionUri=api_uri('API_view_form',$table.':'.$id);
 				if (!empty($info)) $actionUri.='/info/'.$info;
 				
