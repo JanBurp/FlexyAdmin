@@ -220,12 +220,13 @@ function doForm() {
 
   function update_dropdown(select) {
     // update selectlist and counting
-    var allvalues = $(select).multiselect("getChecked").map(function(){return this.value;}).get();
+    var checkedItems=$(select).multiselect("getChecked");
+    var allvalues = checkedItems.map(function(){return this.value;}).get();
     var values=new Array();
 		for (i=0;i<allvalues.length;i++) { if ( $.inArray(allvalues[i],values)==-1 ) values.push(allvalues[i]); }
     var textValues='';
-    $(values).each(function(){
-      textValues += ' | ' + this;
+    $(checkedItems).each(function(){
+      textValues += ' | ' + $(this).attr('title');
     });
     textValues=textValues.substr(3);
     var textSpan=$(select).parent('.flexyFormField').find('button span:not(.ui-icon)');
