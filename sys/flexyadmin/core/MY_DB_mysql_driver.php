@@ -1240,27 +1240,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 						}
 					}
 					// insert many results at right place
-					foreach ($manyResult as $rel => $relData) {
-						$manyOrder='last';
-						if (isset($CI->cfg)) $manyOrder=$CI->cfg->get('CFG_table',$rel,'str_form_many_order');
-						switch ($manyOrder) {
-							case 'first':
-								// always first: id, uri, order, self_parent
-								$firstResult=$result[$id];
-								$lastResult=$result[$id];
-								unset($lastResult[PRIMARY_KEY]);
-								unset($lastResult['uri']);
-								unset($lastResult['order']);
-								unset($lastResult['self_parent']);
-								$firstResult=array_diff_assoc($firstResult,$lastResult);
-								$result[$id]=array_merge($firstResult,array($rel=>$relData),$lastResult); // first many fields
-								break;
-							case 'last':
-							default:
-								$result[$id]=array_merge($result[$id],array($rel=>$relData)); // normal order
-								break;
-						}
-					}
+          $result=$this->_insert_many_at_set_place($result,$manyResult,$id);
 				}
 			}
       // $this->order=$last_order;
@@ -1303,6 +1283,45 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		return $result;
 	}
 	
+  /**
+   * Plaatst many velden op goede volgorde in resultaat
+   *
+   * @param array $result 
+   * @param array $manyResult 
+   * @param int $id 
+   * @return array
+   * @author Jan den Besten
+   * @internal
+   * @ignore
+   */
+  private function _insert_many_at_set_place($result,$manyResult,$id) {
+    $CI=& get_instance();
+		foreach ($manyResult as $rel => $relData) {
+      $manyOrder='';
+			if (isset($CI->cfg)) $manyOrder=$CI->cfg->get('CFG_table',$rel,'str_form_many_order');
+      if (empty($manyOrder)) $manyOrder='last';
+			switch ($manyOrder) {
+				case 'first':
+					// always first: id, uri, order, self_parent
+					$firstResult=$result[$id];
+					$lastResult=$result[$id];
+					unset($lastResult[PRIMARY_KEY]);
+					unset($lastResult['uri']);
+					unset($lastResult['order']);
+					unset($lastResult['self_parent']);
+					$firstResult=array_diff_assoc($firstResult,$lastResult);
+					$result[$id]=array_merge($firstResult,array($rel=>$relData),$lastResult); // first many fields
+					break;
+				case 'last':
+				default:
+					$result[$id]=array_merge($result[$id],array($rel=>$relData)); // normal order
+					break;
+			}
+		}
+    return $result;
+  }
+  
+  
   /**
    * Geeft resultaat als PHP array string
    *
@@ -1908,6 +1927,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				foreach($jt as $rel=>$jTable) {
 					$out[$id][$rel]=array();
 				}
+        $out=$this->_insert_many_at_set_place($out,$jt,$id);
 			}
 		}
 
