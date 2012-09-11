@@ -49,7 +49,8 @@ class AdminController extends BasicController {
 	}
 
 	private function _user_can_use_admin() {
-		return ($this->user_group_id<4); // restrict admin use only to users that ar at least a user (visitors are not allowed)
+    $rights=$this->user->get_rights();
+    return (($rights['b_edit'] or $rights['b_add'] or $rights['b_delete'] or $rights['b_all_users']) and !empty($rights['rights']));
 	}
 
 	function use_editor() {
