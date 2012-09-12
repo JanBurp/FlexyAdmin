@@ -172,12 +172,10 @@ class Show extends AdminController {
 							}
 							// search in many_tables if any
 							if ($this->db->many) {
-								if ($this->db->many) {
-									if (!is_array($this->db->many))
-										$many_tables=$this->db->get_many_tables($table);
-									else
-										$many_tables=$many;
-								}
+								if (!is_array($this->db->many))
+									$many_tables=$this->db->get_many_tables($table);
+								else
+									$many_tables=$many;
 								foreach ($many_tables as $many_table => $value) {
 									$searchArr[]=array('field'=>$many_table,'search'=>$search,'or'=>'OR','table'=>$table);
 								}
