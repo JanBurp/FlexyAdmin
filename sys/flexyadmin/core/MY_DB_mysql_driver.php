@@ -84,10 +84,24 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	private $maxTextLen;
 	private $eachResult;
   private $foreignTables;
-  private $foreigns;
+
+  /**
+   * FALSE als er geen foreigndata meegenomen moet worden. TRUE of een array van tabellen waarvan de foreign data megegenomen moet worden in het resultaat.
+   *
+   * @var mixed
+   */
+  public $foreigns;
+
   private $abstracts;
   private $asAbstracts;
-  private $many;
+  
+  /**
+   * FALSE als er geen relatietabellen moeten worden gekoppeld. TRUE of een array van tabellen die gekoppeld moeten worden in het resultaat.
+   *
+   * @var mixed
+   */
+  public $many;
+
   private $options;
   private $whereUri;
   private $uriAsFullUri;
