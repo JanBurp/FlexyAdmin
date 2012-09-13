@@ -1,3 +1,17 @@
+Array.prototype.unique = function(){
+	var r = new Array();
+	o:for(var i = 0; i < this.length; i++) {
+		for(var x = 0; x < r.length; x++) {
+			if(r[x]==this[i]) {
+				continue o;	
+			}
+		}
+		r[r.length] = this[i];
+	}
+	return r;
+};
+
+
 function doForm() {
 
 
@@ -16,22 +30,6 @@ function doForm() {
 	})(jQuery);
 	$.prevent_leaving_unsaved_page();
 
-
-
-	//
-	// Make sure media fields with selects are good height
-	//
-	// $('.flexyFormField select').each(function(){
-	// 	selHeight=$(this).outerHeight();
-	// 	imgList=$(this).parent('.flexyFormField:first').children('ul.multiple:first');
-	// 	if (imgList.length>0) { selHeight+=$(imgList).outerHeight(); }
-	// 	$(this).parent('.flexyFormField:first').css({height:selHeight});
-	// });
-	// $('.flexyFormField.image_dragndrop').each(function(){
-	// 	selHeight=$(this).children('ul.choices').outerHeight();
-	// 	selHeight+=$(this).children('ul.values').outerHeight();
-	// 	$(this).css({height:selHeight+4});
-	// });	
 
 	//
 	// conditional formfield showing
@@ -87,10 +85,10 @@ function doForm() {
 		$('.flexyFormField select:not(.multiple)').multiselect({
       multiple:false,
       click:    function(event,ui){
-            			if ($(event.target).hasClass('image_dropdown')) {
-                    var values = $(event.target).multiselect("getChecked").map(function(){return this.value;}).get();
-            				update_image_dropdown(event.target,values);
-            			}
+                  if ($(event.target).hasClass('image_dropdown')) {
+                                      var values = $(event.target).multiselect("getChecked").map(function(){return this.value;}).get();
+                    update_image_dropdown(event.target,values);
+                  }
                 }
 		});
 		$('.flexyFormField select.multiple.dropdown').multiselect({
@@ -239,21 +237,48 @@ function doForm() {
 		var multiple=$(select).hasClass('medias');
 		var path=$(select).attr("path")+"/";
 
+    // get current values (in current order)
+    var current_values=[];
+    $(list).find('li img').each(function(){
+      var src=$(this).attr('src');
+      var split=src.lastIndexOf('/');
+      if (split>0) src=src.substr(split+1);
+      var split=src.lastIndexOf('___');
+      if (split>0) src=src.substr(split+3);
+      current_values.push(src);
+    });
+    
+    
+    if (typeof(values)=='undefined') {
+      var values = current_values;
+    }
+    else {
+  		// remove doubles
+      values = values.unique();
+    
+      // add values that are not present, and remove values that need to be removed
+      var len=current_values.length;
+      var new_values=current_values;
+      for (var i=0; i<len; i++) {
+        var found=$.inArray(current_values[i],values);
+        if (found>=0) {
+          // keep value in place by removing the new value
+          values.splice(found,1);
+        }
+        else {
+          // remove from current
+          new_values.splice(i,1);
+        }
+      };
+
+      // merge current values with new values
+      values=new_values.concat(values);
+      values=values.unique();
+    }
+
 		// remove old thumb & clean value
 		$(list).find('li').remove();
 		if (multiple) $(select).prevAll('input').attr('value','');
-    
-		// remove doubles
-		if (typeof(values)=='undefined') {
-			var medias=$(select).find('option:selected');
-			var allvalues =  new Array;
-			var values = new Array;
-			$(medias).each(function(){
-				allvalues.push($(this).attr("value"));
-			});
-			// Remove double
-			for (i=0;i<allvalues.length;i++) { if ( $.inArray(allvalues[i],values)==-1 ) values.push(allvalues[i]); }
-		}
 
     // show new thumbs
 		var value='';
@@ -280,7 +305,7 @@ function doForm() {
 
 		
 	// Media(s) select by click
-	$('div.media ul.choices').add('div.medias ul.choices').add('div.medias ul.values').click(function(e){
+	$('div.media ul.choices').add('div.medias ul.choices').add('div.medias:not(.image_dropdown) ul.values').click(function(e){
 		var target=e.target; // img tag
 		var type='media';
 		if ($(target).parents('div:first').hasClass('medias')) type='medias';
@@ -304,6 +329,18 @@ function doForm() {
 			$('.zoomThumb').hide();
 			update_values_list($(values));
 		}
+    // if ($(this).hasClass('image_dropdown')) {
+    //   
+    //   var select=$(this).closest('div.image_dropdown').children('select');
+    //   // console.log('NEEDS UPDATE');
+    //   // console.log(select);
+    //   
+    //   // var values = $(select).multiselect("getChecked").map(function(){return this.value;}).get();
+    //   update_image_dropdown(select);
+    //   
+    //   
+    //   
+    // }
 	});
 	// Media, empty by a click
 	$('div.media ul.values').click(function(){
