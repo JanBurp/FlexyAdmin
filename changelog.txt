@@ -1,4 +1,17 @@
-> 1740
+Changes r1754
+===============
+
+BUGS:
+- : in URL gives problems on some providers, changed to ~ (made it a setting)
+- bug if cfg_media_info.str_order = empty
+- bug in db->_repair_ar()
+- bug multiple dropdown ordering (js)
+- bug in grid search
+- bug in checking rights of user to use admin
+
+
+Changes r1740
+===============
 
 UPDATES
 - CodeIgniter 2.1.2 (IPv6)
@@ -39,7 +52,8 @@ NEW
 
 
 
-> 1525
+Changes r1525
+===============
 
 UPDATES
 - jQuery UI 1.8.20
@@ -68,7 +82,8 @@ NEW:
 
 
 
-> 1490
+Changes r1490
+===============
 
 UPDATES:
 - jQuery 1.7.2
@@ -107,7 +122,8 @@ NEW:
 - Faster showing of log_ and res_ tables and they are not editable anymore
 
 
-> 1437
+Changes r1437
+===============
 
 UPDATES:
 - jQuery UI 1.8.17
@@ -126,7 +142,8 @@ NEW:
 - modules and plugins tries to load language files with same name
 
 
-> 1413
+Changes r1413
+===============
 
 UPDATES:
 - CodeIgniter 2.1
@@ -168,7 +185,8 @@ BUGS:
 
 
 
-> 1332
+Changes r1332
+===============
 
 NEW:
 - Added plugin_export (tables can be easy exported to csv,json,xml and as php array)
@@ -201,7 +219,8 @@ BUGS:
 
 
 
-> 1314
+Changes r1314
+===============
 
 NEW:
 	- a module can register itself to Menu and can change menu items on the fly (see example.php)
@@ -218,7 +237,8 @@ BUGS:
 
 
 
-> 1297
+Changes r1297
+===============
 
 CHANGED:
 - form is now a library instead of a model (better for multiple forms on one page). UPDATE YOU'RE LOAD STATEMENT!
@@ -237,7 +257,8 @@ BUGS:
 - menu name now always as html entities (menu)
 
 
-> 1280
+Changes r1280
+===============
 
 UPDATE:
 - CodeIgniter 2.0.3
@@ -280,7 +301,8 @@ BUGS:
 
 
 
-> 1068
+Changes r1068
+===============
 
 UPDATE:
 - jQuery 1.6.1
@@ -306,7 +328,8 @@ NEW:
 - tinyMCE charmap: more exotic chars
 - SafeAssets: added .ico for assets/img
 
-> 1017
+Changes r1017
+===============
 
 BUGS:
 - flexy_field: media_dropdown, add_empty_choice
@@ -314,7 +337,8 @@ NEW:
 - menu->get_next_uri() and menu->get_prev_uri()
   
 
-> 1014
+Changes r1014
+===============
 
 NEW:
 - site: redirect code in controller
@@ -336,7 +360,8 @@ BUGS:
 
 
 
-> 998
+Changes r998
+===============
 
 NEW:
 - plugin->safe_assets: now also for bulk_upload and site/stats
@@ -347,7 +372,8 @@ UPDATE:
 - jQuery UI 1.8.11
 
 
-> 990
+Changes r990
+===============
 
 NEW:
 - Safer upload directories:
@@ -364,7 +390,8 @@ BUGS:
 - Search&Replace: sometimes a bug when no results
 
 
-> 981 
+Changes r981
+=============== 
 
 UPDATE:
 - jQuery UI 1.8.9
@@ -388,8 +415,9 @@ BUGS:
 
 
 
-> 940
------
+Changes r940
+===============
+
 
 BUGS:
 - Sitemap order
@@ -398,8 +426,9 @@ BUGS:
 - user restriction in file-manager
 
 
-> 931
------
+Changes r931
+===============
+
 
 BUGS:
 - Backup DB
@@ -418,8 +447,9 @@ NEW:
 
 
 
-> 899
------
+Changes r899
+===============
+
 
 BUGS:
 - .htacces didn't show sitemap.xml
@@ -429,8 +459,9 @@ NEW:
 - more complete sitemap.xml
 
 
-> 887
------
+Changes r887
+===============
+
 
 BUGS:
 - some menu bugs (new code for class generating)
@@ -441,7 +472,8 @@ UPDATE:
 - jQuery 1.4.4
 
 
-> 848
+Changes r848
+===============
 
 NEW:
 - more modules can be set in a page and they can also be ordered
@@ -452,8 +484,9 @@ BUGS:
 
 
 
-> 840
------
+Changes r840
+===============
+
 
 NEW:
 - sitemap.xml automatic creation on logout
@@ -488,8 +521,9 @@ UPDATE:
 
 
 
-> 801
------
+Changes r801
+===============
+
 
 BUGS:
 - Problems with PHP 5.3 (CI database extending), Solved, works still on PHP 4
@@ -501,8 +535,9 @@ UPDATE:
 
 
 
->788
-----
+Changes r788
+===============
+
 
 BUGS:
 - tinyMCE styles dropdown didn't work
@@ -529,8 +564,9 @@ UPDATES:
 
 
 
->766
-----
+Changes r766
+===============
+
 
 BUGS:
 - small bugs in automenu
@@ -542,9 +578,9 @@ NEW:
 - added sql for standard newsletter table
 
 
+Changes r758
+===============
 
->r758
------
 
 BUGS:
 - bug if multiple deleting of items/files.
@@ -557,9 +593,8 @@ NEW:
 - it's now possible to freeze individual uri's (needs: b_freeze_uri in same table as uri)
 - added some standard sql files to add extra functionality (ie rss_feeds etc)
 
-
->r745
------
+Changes r745
+===============
 
 - updated to tinyMCE 3.2.8
 - better MY_string_helper get_suffix()
@@ -567,9 +602,8 @@ NEW:
 - bug in importing SQL (since removing license key from db)
 
 
-
->r740
------
+Changes r740
+===============
 
 - CodeIgniter 1.7.2 security patch for Upload class
 - updated to jQuery UI 1.8
@@ -581,9 +615,8 @@ NEW:
 
 
 
-
-r622>r723
----------
+Update from r622 to r723
+========================
 
 BUGS/CHANGES:
 - some styling (table, thumbs, hoverthumbs etc.)
