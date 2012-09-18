@@ -114,16 +114,21 @@ class Plugin_newsletter extends Plugin {
    * @ignore
    */
   function _create_include_pages($args) {
-    if ($this->CI->db->field_exists('dat_date',get_menu_table())) $this->CI->db->where('(CURDATE() - INTERVAL 1 MONTH) <= dat_date');
+    if ($this->CI->db->field_exists('dat_date',get_menu_table())) {
+      $this->CI->db->where('(CURDATE() - INTERVAL 1 MONTH) <= dat_date');
+    }
+    else {
+      $this->CI->db->order_as_tree();
+    }
     $this->CI->db->select('id,order,self_parent,uri,str_title,txt_text');
     $this->CI->db->uri_as_full_uri(true,'str_title');
-    $this->CI->db->order_as_tree();
     $pages=$this->CI->db->get_result(get_menu_table());
 
     $options=array();
     foreach ($pages as $page) {
       $options[$page['id']]=$page['str_title'];
     }
+    
     $formFields = array(  'str_title' => array( 'label'=>lang('subject'), 'validation'=>'required' ),
                           'pages'     => array( 'label'=>lang('add_pages'), 'type'=>'dropdown', 'multiple'=>'multiple', 'options'=>$options )  );
     $formButtons = array( 'submit'=>array('submit'=>'submit', 'value'=>lang('submit')) );
@@ -136,7 +141,7 @@ class Plugin_newsletter extends Plugin {
       $pageIDs=explode('|',$data['pages']);
       foreach ($pages as $id=>$page) {
         if (in_array($id,$pageIDs))
-          $pages[$id]['txt_text']=intro_string($pages[$id]['txt_text'],$this->config('intro_length'),'CHARS',$this->config('allowed_tags'));
+          $pages[$id]['txt_text']=intro_string($pages[$id]['txt_text'],$this->config('intro_length'),'LINES',$this->config('allowed_tags'));
         else
           unset($pages[$id]);
       }
