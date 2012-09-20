@@ -94,7 +94,7 @@ class Show extends AdminController {
 					$this->db->select("id");
 					$row=$this->db->get_row($table,1);
 					$id=$row["id"];
-					$this->form_args['form']=$table.':'.$id;
+					$this->form_args['form']=$table.$this->config->item('URI_HASH').$id;
 					$this->form();
 					return;
 				}
@@ -345,7 +345,7 @@ class Show extends AdminController {
         
 				$ffData=$this->ff->render_form($table,$data,$options,$multiOptions);
         
-				$actionUri=api_uri('API_view_form',$table.':'.$id);
+				$actionUri=api_uri('API_view_form',$table.$this->config->item('URI_HASH').$id);
 				if (!empty($info)) $actionUri.='/info/'.$info;
 				
 				$form=new form($actionUri);
