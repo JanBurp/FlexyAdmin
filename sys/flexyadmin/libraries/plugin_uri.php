@@ -10,8 +10,11 @@
 
 class Plugin_uri extends Plugin {
 
-	function _admin_api($args=NULL) {
-		$this->add_content(h($this->name,1));
+  public function __construct() {
+    parent::__construct();
+  }
+
+	public function _admin_api($args=NULL) {
 		if (isset($args)) {
 			if (isset($args[0])) {
 				$this->table=$args[0];
@@ -33,15 +36,19 @@ class Plugin_uri extends Plugin {
 									$this->CI->db->update($this->table);
 								}
 					}
-					$this->add_content("<p>All uri's in $this->table are (re)set.</p><p>Just change one in this table to make sure all other plugins did there work.</p>");
+          $this->add_message("All uri's in <b>$this->table</b> are (re)set.</p><p>Just change one in this table to make sure all other plugins did there work.");
 				}
 			}
 			else
-				$this->add_content('<p>Which table?</p>');
+				$this->add_message('Which table?');
 		}
+    
+    return $this->view('admin/plugins/plugin');
 	}
 
-	function _after_update() {
+
+
+	public function _after_update() {
     $this->CI->create_uri->set_table($this->table);
 		$uri=$this->CI->create_uri->create($this->newData);
 		$this->newData['uri']=$uri;

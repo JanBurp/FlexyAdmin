@@ -150,6 +150,7 @@ class Plugin extends Parent_module_plugin {
   protected function get_messages() {
     return $this->messages;
   }
+
   
   /**
    * Laad de view van de plugin en voegt standaard de berichten toe in de argumenten
@@ -162,7 +163,7 @@ class Plugin extends Parent_module_plugin {
    */
   protected function view($view='',$args=array(),$hide=TRUE) {
     if (empty($view)) $view=$this->name;
-    $args=array_merge($args,array('messages'=>$this->get_messages()));
+    $args=array_merge($args,array( 'messages'=>$this->get_messages()) );
     if (!isset($args['title'])) $args['title']=ucfirst($this->shortname);
     return $this->CI->load->view($view,$args,$hide);
   }
