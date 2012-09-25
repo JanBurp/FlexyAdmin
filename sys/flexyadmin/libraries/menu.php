@@ -365,7 +365,7 @@ class Menu {
    * Zet menu tabel en laad menu in vanuit die tabel en creert het menu
    *
    * @param string $table[''] Als je dit leeglaat dan wordt de standaard menu tabel gekozen (tbl_menu of res_menu_result)
-   * @param string $foreign[false] TODO
+   * @param string $foreign[false] Eventuele foreign data die meegenomen moet worden in resultaat (zie bij db->add_foreign())
    * @return array het menu als de interne menu array
    * @author Jan den Besten
    */
