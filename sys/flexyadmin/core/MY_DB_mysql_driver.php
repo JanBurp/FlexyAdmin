@@ -1745,6 +1745,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				if (!empty($tables)) $tables=array_combine($tables,$tables);
 				if (isset($tablesWithInfo) and !empty($tablesWithInfo)) $tables=array_merge($tablesWithInfo,$tables);
 			}
+
 			foreach ($tables as $rel=>$row) {
 				$relFields=$this->list_fields($rel);
 				$out[$rel]["this"]=$table;
@@ -1754,16 +1755,18 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				$out[$rel]["id_this"]=$relFields[1];
 				$out[$rel]["id_join"]=$relFields[2];
 			}
-			// trace_($out);
 			return $out;
 		}
 
   /**
    * Neem alle many-many data ook mee, dus data van tabellen die met een relatietabel gekoppeld zijn
    * 
-   * Je kunt ook een deel van de many-tabellen filteren, onderstaand voorbeeld neemt alleen het veld *str_title* van de tabel *tbl_links* mee.
+   * Je kunt ook een deel van de many-tabellen filteren:
    * 
-   *    $this->db->add_many( array( 'rel_menu__links'=>array('str_title') ) );
+   *    $this->db->add_many( );   // Neemt van alle tabellen alle velden mee.
+   *    $this->db->add_many( array( 'rel_menu__links' ) );   // Neemt van de tabel *tbl_links* alle velden mee.
+   *    $this->db->add_many( array( 'rel_menu__links'=>array('uri','str_title') ) ); // Neemt van de tabel *tbl_links* de velden *uri* en *str_title* mee.
+   *    $this->db->add_many( array( 'rel_menu__links'=>array('uri','str_title') ) ); // Neemt van de tabel *tbl_links* de velden *uri* en *str_title* mee.
    *
    * @param mixed $many[true]
    * @return object $this
@@ -1771,6 +1774,16 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
    */
 	public function add_many($many=true) {
 		if (is_string($many)) $many=array($many);
+    // Make sure tables has right format
+    if ($many) {
+      $test=current($many);
+      if (!is_array($test)) {
+        $many=array_combine($many,$many);
+        foreach ($many as $key => $value) {
+          $many[$key]=array();
+        }
+      }
+    }
 		$this->many=$many;
     return $this;
 	}
