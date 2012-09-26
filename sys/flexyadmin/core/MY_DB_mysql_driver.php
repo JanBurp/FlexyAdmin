@@ -1178,7 +1178,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
    * @author Jan den Besten
    * @ignore
    */
-	private function _set_key_to($a,$key="") {
+	public function _set_key_to($a,$key="") {
 		$n=0;
 		$out=array();
 		$first=current($a);
