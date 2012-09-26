@@ -531,7 +531,7 @@ function array_merge_strict($a,$b) {
 }
 
 /**
- * Vervangt gegevens key in de array in nieuwe key
+ * Vervangt gegeven key in de array in nieuwe key
  *
  * @param string $orig Te zoeken key
  * @param string $new Te vervangen key
