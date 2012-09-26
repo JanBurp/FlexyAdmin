@@ -1775,7 +1775,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	public function add_many($many=true) {
 		if (is_string($many)) $many=array($many);
     // Make sure tables has right format
-    if ($many) {
+    if (is_array($many)) {
       $test=current($many);
       if (!is_array($test)) {
         $many=array_combine($many,$many);
