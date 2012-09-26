@@ -454,21 +454,21 @@ function csv2array($csv,$fldnames=null,$sep=',',$protect='"',$filters=null){
 /**
  * Geeft alle elementen uit de associatieve array die het meegegeven prefix in hun key hebben
  *
- * @param string $a Array 
- * @param string $p Prefix
+ * @param string $arr Array 
+ * @param string $prefix Prefix
  * @return array
  * @author Jan den Besten
  */
-function filter_by($a,$p) {
-	foreach($a as $k=>$i) {
+function filter_by($arr,$prefix) {
+	foreach($arr as $k=>$i) {
 		if (is_array($i)) {
-			if (strncmp($k,$p,strlen($p))) unset($a[$k]);
+			if (strncmp($k,$prefix,strlen($prefix))) unset($arr[$k]);
 		}
 		else {
-		 if (strncmp($i,$p,strlen($p))) unset($a[$k]);
+		 if (strncmp($i,$prefix,strlen($prefix))) unset($arr[$k]);
 		}
 	}
-	return $a;
+	return $arr;
 }
 
 /**
