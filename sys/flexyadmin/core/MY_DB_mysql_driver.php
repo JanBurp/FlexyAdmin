@@ -811,7 +811,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			foreach($manyTables as $mTable) {
 				$jTable=$mTable["join"];
 				$relTable=$mTable['rel'];
-        // trace_($mTable['rel']);
+        // trace_($mTable['join']);
 				// WHERE
 				$foundKeysArray=array_ereg_search($mTable['rel'], $this->ar_where);
         // trace_($this->ar_where);
@@ -821,21 +821,22 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 					$mWhere=$this->ar_where[$key];
           // trace_($mWhere);
 					$AndOr=trim(substr($mWhere,0,3));
-					if (!in_array($AndOr,array("AND","OR")))
-						$AndOr='';
-					else
-						$AndOr.=' ';
-					$mWhere=' AND '.str_replace(array('AND','OR'),'',$mWhere);
-					// trace_($AndOr);
-					// trace_($mWhere);
+					if (!in_array($AndOr,array("AND","OR"))) $AndOr=''; else $AndOr.=' ';
+          $mValue=get_suffix($mWhere,'=');
+          $mField=remove_suffix($mWhere,'=');
+          $mField=str_replace('`','',get_suffix($mField,'.'));
+          // $mWhere=' AND '.str_replace(array('AND','OR'),'',$mWhere);
+          $mWhere = ' AND '.$mTable['join'].'.'.$mField.' = '.$mValue;
+          // trace_($AndOr);
+          // trace_($mWhere);
 					$sql="SELECT ".$mTable["rel"].".".$mTable["id_this"]." AS id  
 								FROM ".$mTable["rel"].",".trim($mTable["join"],'_')." 
 								WHERE ".$mTable["rel"].".".$mTable["id_join"]."=".trim($mTable["join"],'_').".id ".$mWhere;
-					// trace_('#SHOW# '.$sql);
+          // trace_('#SHOW# '.$sql);
 					$query=$this->query($sql);
 					$manyResults=$query->result_array();
 					$query->free_result();
-					// trace_($manyResults);
+          // trace_($manyResults);
 					// replace current where and add new 'WHERE IN' to active record which selects the id where the many field is right
 					if (!empty($manyResults)) {
 						$whereIn='';
