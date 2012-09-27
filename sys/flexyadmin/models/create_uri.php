@@ -92,7 +92,7 @@ class Create_uri extends CI_Model {
  			$uri=trim(strip_tags(strtolower($uri_source)),' -_');
  			$uri=str_replace(" ",$replaceSpace,$uri);
  			$uri=clean_string($uri);
- 			$forbidden=array("site","sys","admin","rss","file",'offset',':');
+ 			$forbidden=array("site","sys","admin","rss","file",'offset',$this->config->item('URI_HASH'));
  			$forbidden=array_merge($forbidden,$this->config->item('LANGUAGES'));
  			$postSpace=$replaceSpace.$replaceSpace;
  			while ($this->_is_existing_uri($uri) or in_array($uri,$forbidden)) {

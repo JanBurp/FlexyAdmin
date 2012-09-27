@@ -586,13 +586,14 @@ class Menu {
    * @author Jan den Besten
    */
 	function set_current($current="") {
+    $CI =& get_instance();
 		$current=str_replace(index_page(),"",$current);
 		if (substr($current,0,1)=="/") $current=substr($current,1);
 		// remove query's
 		$current=explode('?',$current);
 		$current=current($current);
 		// remove everything after :
-		if (strpos($current,':')>0) $current=get_prefix($current,':');
+		if (strpos($current,$CI->config->item('URI_HASH'))>0) $current=get_prefix($current,$CI->config->item('URI_HASH'));
 		$this->current=$current;
 	}
 
@@ -839,6 +840,7 @@ class Menu {
    * @author Jan den Besten
    */
 	function render($menu=NULL,$attr="",$level=1,$preUri="") {
+    $CI =& get_instance();
 		if (empty($attr)) $attr=$this->attr;
 		if (!is_array($attr)) $attr=array("class"=>$attr);
 		if (empty($attr["class"])) $attr["class"]="";
@@ -876,8 +878,8 @@ class Menu {
 					$last=($pos==count($menu))?' last':'';
 					$sub=(isset($item['sub']))?' sub':'';
 					// trace_(array('current'=>$this->current,'link'=>$link));
-					if (strpos($link,':')>0)
-						$checklink=get_prefix($link,':');
+					if (strpos($link,$CI->config->item('URI_HASH'))>0)
+						$checklink=get_prefix($link,$CI->config->item('URI_HASH'));
 					else
 						$checklink=$link;
 					$current='';
