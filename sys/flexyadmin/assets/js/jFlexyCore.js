@@ -76,7 +76,46 @@ $(document).ready(function() {
 	// Help
 	//
 	showHelpItems();
-	
+
+  //
+  // Submenu
+  //
+  $('#subitems').each(function(){
+    var headers=$(this).children('h1');
+    var menu='<ul class="submenu">';
+    var nr=0;
+    $(headers).each(function(){
+      $(this).addClass('item_'+nr);
+      $(this).next('.content').addClass('item_'+nr);
+      menu+='<li class="item_'+nr+'">'+$(this).html()+'</li>';
+      nr++;
+    });
+    menu+='</ul>';
+    $(this).before(menu);
+    $('.submenu li').click(function(){
+      $('.submenu li').removeClass('current');
+      var item=$(this).attr('class');
+      $('#subitems>*').hide();
+      $('#subitems .'+item).show();
+      $(this).addClass('current');
+    });
+    $('.submenu li:first').trigger('click');
+    
+  });
+  
+  
+  // //
+  // // Help Dialog
+  // //
+  // $('#menu a.API_help').click(function(){
+  //   var href=$(this).attr('href');
+  //   $('#footer').after('<div id="help"></div>');
+  //   $('div#help').load(href+' #content',function(){
+  //     help_dialog();
+  //   });
+  //   return false;
+  // });
+  
 	//
 	// some styling
 	//
@@ -135,6 +174,24 @@ function info_dialog(info) {
 	});
 	changeButt("ok",lang("dialog_ok"));
 }
+
+// function help_dialog() {
+//   dialog.html($('#help #content').html());
+//   $(dialog).dialog({
+//     title:"Help",
+//     modal:true,
+//     minWidth:550,
+//     height:650,
+//     create:function(){
+//       $('.ui-dialog-content h1').click(function(){
+//         var content=$(this).next('.content');
+//         $('.ui-dialog-content .content').not(content).slideUp().removeClass('open');
+//         if (!$(content).hasClass('open')) $(content).slideDown().addClass('open');
+//       });
+//     },
+//     close: function(){$(dialog).dialog("destroy");}
+//   });
+// }
 
 function clean_message() {$("#message").html("");}
 

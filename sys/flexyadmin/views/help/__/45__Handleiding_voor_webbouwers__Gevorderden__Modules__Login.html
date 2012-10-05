@@ -1,0 +1,42 @@
+<p>De login module kan gebruikt worden om bezoekers te laten inloggen op de site en aan de hand daarvan extra content te laten zien of een deel van de site afgeschermd te maken.</p>
+<p>Het is aan te raden om deze module automatisch in te laden en enkele losse pagina's te maken voor logout en register/forgot_password.<br />
+Op die manier ben je er zeker van dat de module voor elke pagina werkt!</p>
+<h2>Instellingen</h2>
+<p>Een CSS class die aan de body tag wordt toegevoegd als een user is ingelogd:</p>
+<p><code><span style="color: #000000">
+<span style="color: #0000BB">$config</span><span style="color: #007700">[</span><span style="color: #DD0000">'class'</span><span style="color: #007700">]=</span><span style="color: #DD0000">'user_logged_in'</span><span style="color: #007700">;&nbsp;</span>
+</span>
+</code></p>
+<p>De user_group (laten staan als je niet weer waarom je dit zou aanpassen):</p>
+<p><code><span style="color: #000000">
+<span style="color: #0000BB">$config</span><span style="color: #007700">[</span><span style="color: #DD0000">'group_id'</span><span style="color: #007700">]=</span><span style="color: #0000BB">4</span><span style="color: #007700">;</span><span style="color: #FF8000">//&nbsp;4&nbsp;is&nbsp;visitors&nbsp;which&nbsp;can't&nbsp;login&nbsp;to&nbsp;the&nbsp;backend&nbsp;</span>
+</span>
+</code></p>
+<p>Uri's van de diverse onderdelen (login/register/forgot_password). Je kunt de module de uri's ook zelf laten zoeken ('auto_uris'):</p>
+<p><code><span style="color: #000000">
+<span style="color: #0000BB">$config</span><span style="color: #007700">[</span><span style="color: #DD0000">'auto_uris'</span><span style="color: #007700">]=</span><span style="color: #0000BB">true</span><span style="color: #007700">;<br />
+</span><span style="color: #FF8000">//&nbsp;$config['login_uri']='';<br />
+//&nbsp;$config['register_uri']='';<br />
+//&nbsp;$config['forgotten_password_uri']='';&nbsp;</span>
+</span>
+</code></p>
+<h2>Views</h2>
+<p>De loginmodule gebruikt enkele views die te vinden zijn in <em>site/views/login</em>. Ook zijn daar per taal een drietal email templates te vinden die de module gebruikt.</p>
+<p>&nbsp;</p>
+<h2>Methods</h2>
+<p>&nbsp;</p>
+<h3>login</h3>
+<h3>login.login</h3>
+<h3>login.logout</h3>
+<h3>login.register</h3>
+<p>LET OP: deze method werkt alleen correct met de volgende instelling in <em>site/config/config.php</em>:</p>
+<p><code><span style="color: #000000">
+<span style="color: #0000BB">$config</span><span style="color: #007700">[</span><span style="color: #DD0000">'query_urls'</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #0000BB">TRUE</span><span style="color: #007700">;&nbsp;</span>
+</span>
+</code></p>
+<h3>login.forgot_password</h3>
+<p>LET OP: deze method werkt alleen correct met de volgende instelling in&nbsp;<em>site/config/config.php</em>:</p>
+<p><code><span style="color: #000000">
+<span style="color: #0000BB">$config</span><span style="color: #007700">[</span><span style="color: #DD0000">'query_urls'</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #0000BB">TRUE</span><span style="color: #007700">;&nbsp;</span>
+</span>
+</code></p>

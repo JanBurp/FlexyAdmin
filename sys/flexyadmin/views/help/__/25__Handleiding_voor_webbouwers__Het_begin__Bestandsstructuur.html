@@ -1,0 +1,193 @@
+<h2>Bestanden en mappen in de root</h2>
+<p>Onderstaande mappen en bestanden zie je als FlexyAdmin in een lege map heb ge&iuml;nstalleerd:</p>
+<table>
+<tbody>
+<tr>
+<td>.htaccess</td>
+<td>-</td>
+<td>Niet aanpassen</td>
+</tr>
+<tr>
+<td>htaccess.htaccess</td>
+<td>-</td>
+<td>Backup van <em>.htaccess</em></td>
+</tr>
+<tr>
+<td>temp.htaccess</td>
+<td>-&nbsp;</td>
+<td>Hernoem deze tijdelijk naar <em>.htaccess</em> en de tijdelijke pagina <em>index_temp.html</em> is actief. Handig tijdens grote updates.</td>
+</tr>
+<tr>
+<td>index_temp.html</td>
+<td>-</td>
+<td>Dit kun je gebruiken als een tijdelijke startpagina.&nbsp;Eventueel zelf aan te passen naar wens.</td>
+</tr>
+<tr>
+<td>index.php</td>
+<td>-</td>
+<td>De start van alles. Niet aankomen.</td>
+</tr>
+<tr>
+<td>readme.txt</td>
+<td>-</td>
+<td>Zeer globale info</td>
+</tr>
+<tr>
+<td>robots.txt</td>
+<td>-</td>
+<td>Zorgt ervoor dat zoekrobots niet in alle mappen kijkt en heeft een verwijzing naar <em>sitemap.xml</em></td>
+</tr>
+<tr>
+<td class="rood">changelog.txt</td>
+<td>-</td>
+<td>Globale informatie over laatste wijzigingen van FlexyAdmin</td>
+</tr>
+<tr>
+<td class="rood">todo.txt</td>
+<td>-</td>
+<td>Dit bestand kun je gebruiken als kladblok.</td>
+</tr>
+<tr>
+<td class="rood">update.txt</td>
+<td>-</td>
+<td>Hierin staat sumier hoe je eventueel kunt updaten naar nieuwere versies van FlexyAdmin</td>
+</tr>
+<tr>
+<td>sitemap.xml</td>
+<td>-</td>
+<td>Hierin staat de menustructuur van de site. Wordt automatisch aangepast. Zorg ervoor dat dit bestand beschrijfbaar is.</td>
+</tr>
+<tr>
+<td class="map rood">bulk_upload</td>
+<td>-</td>
+<td>Map waarin met FTP bestanden kunnen worden gezet die allemaal tegelijk aan de site moeten worden toegevoegd. Bijvoorbeeld honderden foto's tegelijk.</td>
+</tr>
+<tr>
+<td class="map rood">db</td>
+<td>-</td>
+<td>Map met demo databases en database updates voor FlexyAdmin. Gebruik deze map ook om je database backups in te bewaren.</td>
+</tr>
+<tr>
+<td class="map">site</td>
+<td>-</td>
+<td>Dit is de map waar je als bouwer veel mee te maken hebt. Zie hieronder.</td>
+</tr>
+<tr>
+<td class="map">sys</td>
+<td>-</td>
+<td>De map met FlexyAdmin. Niets aandoen! In geval van updates zul je meestal deze map moeten vervangen.</td>
+</tr>
+<tr>
+<td class="map rood">userguide</td>
+<td>-</td>
+<td>(URL's naar) handleidingen van de basiselementen van FlexyAdmin (CodeIgniter, jQuery (UI), tinyMCE en FlexyAdmin zelf)</td>
+</tr>
+</tbody>
+</table>
+<p>De <span class="rood">rode</span> mappen en bestanden zijn niet nodig voor de online site. Pas nooit wat aan in de map <em>sys</em>!</p>
+<h2>Bestanden en mappen in Site</h2>
+<p>Hier zie je de bestanden en mappen in de map Site:</p>
+<table>
+<tbody>
+<tr>
+<td>index.html</td>
+<td>-</td>
+<td>Om te voorkomen dat hier per ongeluk rechtstreeks in gekeken kan worden. Dit zul je in meerdere submappen tegenkomen. Gewoon laten staan.</td>
+</tr>
+<tr>
+<td>controller.php</td>
+<td>-</td>
+<td>Hierin zul je als gevorderde webbouwer veel kunnen aanpassen. Hier wordt bepaald wat er gebeurt bij welke URL en worden eventuele modules en views geladen en aangeroepen.</td>
+</tr>
+<tr>
+<td class="map">assets</td>
+<td>-</td>
+<td>In deze map komen alle bestanden die de site verder nodig heeft en die de browser moet kunnen benaderen. Zoals foto's, downloads, maar ook javascript bestanden.</td>
+</tr>
+<tr>
+<td class="map">cache</td>
+<td>-</td>
+<td>Map met cachebestanden als je caching gebruikt voor je site.</td>
+</tr>
+<tr>
+<td class="map">config</td>
+<td>-</td>
+<td>Hierin vind je config bestanden, bijvoorbeeld voor de database.<br />
+Enkelen hebben een <em>_local</em> suffix. Deze worden gebruikt voor lokale instellingen. Zo kun je eenvoudig een scheiding maken tussen je lokale en online instellingen.<br />
+Je vindt hier ook eventuele config bestanden voor modules en noodzakelijke config bestanden voor plugins.</td>
+</tr>
+<tr>
+<td class="map">helpers</td>
+<td>-</td>
+<td>Hier kun je eigen helpers in plaatsen voor ondersteuning van je eigen modules of plugins. <a href="http://codeigniter.com/user_guide/general/helpers.html" target="_blank">Hier lees je meer over CodeIgniter helpers</a>.</td>
+</tr>
+<tr>
+<td class="map">languages</td>
+<td>-</td>
+<td>Hierin vind je language bestanden gegroepeerd per taal. Standaard vind je hier de talen <em>nl</em> (Nederlands) en <em>en</em>&nbsp;(Engels). Je kunt zelf talen en taalbestanden toevoegen voor je modules. Of de bestaande taalbestanden aanpassen.</td>
+</tr>
+<tr>
+<td class="map">libraries</td>
+<td>-</td>
+<td>Map met eigen libraries (classes). Hierin vind je modules en plugins. Deze kun je zelf aanpassen of nieuwe toevoegen. Er zitten al een aantal voorbeeld modules in.</td>
+</tr>
+<tr>
+<td class="map">models</td>
+<td>-</td>
+<td>Map met CodeIgniter models voor je site. Lees hier meer over <a href="http://codeigniter.com/user_guide/general/models.html" target="_blank">models</a>.</td>
+</tr>
+<tr>
+<td class="map">stats</td>
+<td>-</td>
+<td>Map met xml bestanden voor de statistieken van de site.</td>
+</tr>
+<tr>
+<td class="map">views</td>
+<td>-</td>
+<td>De map met de views: de eigenlijke HTML bestanden met PHP code waar de data komt. Zelf aan te maken en aan te passen.<br />
+De belangrijkste is <em>site.php</em>, dit is de view waarin alles samen komt. Verder zijn standaard <em>page.php</em> (een pagina), <em>links.php</em> (voor de links module) en <em>error.php</em> (foutmelding voor als een pagina niet gevonden kon worden)</td>
+</tr>
+</tbody>
+</table>
+<h2>Bestanden en mappen in Site/Assets</h2>
+<p>Hier zie je de bestanden en mappen in de map Assets:</p>
+<table>
+<tbody>
+<tr>
+<td class="map">css</td>
+<td>-</td>
+<td>Plaats hier je stylesheets, en zorg voor een goede link vanuit de view <em>site.php</em>.<br />
+Standaard staan hier: <em>text.css</em>, <em>layout.css</em>, <em>ie*.css</em> en <em>admin.css</em>. Zie de comments van elke stylesheets.</td>
+</tr>
+<tr>
+<td class="map">img</td>
+<td>-</td>
+<td>Plaats hier de afbeeldingen die nodig zijn voor de styling. Dus geen afbeeldingen die de gebruiker moet kunnen uploaden.</td>
+</tr>
+<tr>
+<td class="map">js</td>
+<td>-</td>
+<td>Plaats hier javascript bestanden. Standaard staat er al een <em>site.js</em> (begin van je js code) en een jQuery template. Zorg net als bij stylesheets dat je bestanden worden geladen vanaf de <em>site.php</em> view.</td>
+</tr>
+<tr>
+<td class="map">lists</td>
+<td>-</td>
+<td>FlexyAdmin gebruikt deze map om lijsten in te plaatsen die gebruikt worden door tinyMCE. Niet aankomen of zelf aanpassen.</td>
+</tr>
+<tr>
+<td class="map">pictures</td>
+<td>-</td>
+<td>Dit is de standaard map waar gebruikers hun Foto's in kunnen uploaden. Je kunt zelf meerdere mappen aanmaken voor diverse soorten afbeeldingen.</td>
+</tr>
+<tr>
+<td class="map">downloads</td>
+<td>-</td>
+<td>Dit is de standaard map waar gebruikers hun downloadbare bestanden in kunnen uploaden.</td>
+</tr>
+<tr>
+<td class="map">_thumbcache</td>
+<td>-</td>
+<td>Deze map gebruikt FlexyAdmin voor het opslaan van thumbnails van alle afbeeldingen. Hoef je niets zelf aan te doen.</td>
+</tr>
+</tbody>
+</table>

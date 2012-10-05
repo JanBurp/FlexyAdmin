@@ -1,0 +1,29 @@
+<p>Na de standaard installatie zijn er een aantal dingen die aangepast kunnen worden. Zeker bij een afwijkende server kan dat nodig zijn.</p>
+<h2>Localhost</h2>
+<p>FlexyAdmin kan herkennen of het zich in een lokale testomgeving bevindt of op de productieserver. In het geval van de lokale testomgeving zal FlexyAdmin de volgende config bestanden extra inladen. De instellingen zullen de &nbsp;normale instellingen overschrijven.</p>
+<ul>
+<li><em>site/config/database_local.php</em>&nbsp;- Stel hier je lokale database gegevens in.</li>
+<li><em>site/config/config_local.php</em>&nbsp;- Als de server instellingen van de productiesite afwijken van de lokale testomgeving kun je hier de lokale instellingen instellen.</li>
+</ul>
+<p>Voor de mogelijke instellingen zie bij <a href="http://codeigniter.com/user_guide/database/configuration.html" target="_blank">CodeIginters database instellingen</a>&nbsp;en <a href="http://codeigniter.com/user_guide/installation/troubleshooting.html" target="_blank">CodeIgniter troubleshooting</a> over <em>config.php</em>.</p>
+<h3>Afwijkende localhost</h3>
+<p>Als jouw lokale testomgeving niet wordt herkend (kun je zien als in FlexyAdmin helemaal onderaan naast User:... geen [LOCAL] staat) dan kan het zijn dat je je localhost moet instellen. Dat doe je in <em>index.php</em>&nbsp;met de regel:</p>
+<p><code><span style="color: #000000">
+<span style="color: #0000BB">define</span><span style="color: #007700">(</span><span style="color: #DD0000">"LOCALHOSTS"</span><span style="color: #007700">,</span><span style="color: #DD0000">"localhost,localhost:8888,10.37.129.2"</span><span style="color: #007700">);&nbsp;</span>
+</span>
+</code></p>
+<p>Voeg je eigen localhost toe aan bovenstaande.</p>
+<h2>Server problemen</h2>
+<p>Mocht je site niet goed reageren op de standaard uri's. Bijvoorbeeld dat welke pagina je ook kiest hij altijd met de startpagina begint ook al zie je in de url meer dan alleen de root. Probeer dan in <em>site/config.php </em>of <em>site/config_local.php</em>&nbsp;enkele alternatieve instellingen uit.</p>
+<p>Lees bij de <a href="http://codeigniter.com/user_guide/installation/troubleshooting.html" target="_blank">CodeIgniter troubleshooting</a> voor meer info.&nbsp;Het komt neer op de volgende stappen:</p>
+<ul>
+<li>Probeer alternatieven voor<span style="font-family: courier;"><span style="font-family: courier;">&nbsp;</span></span><span class="code">$config['uri_protocol']</span></li>
+<li>Pas&nbsp;<span class="code">$config['index_page']</span> aan: &nbsp;<span class="code">$config['index_page'] = "index.php";</span></li>
+<li>Pas&nbsp;<span class="code">$config['index_page']</span> aan: &nbsp;<span class="code">$config['index_page'] = "index.php?";</span></li>
+</ul>
+<h2>Sub url</h2>
+<p>Als je op een (test)server niet met de root url werkt maar met een suburl, bijvoorbeeld: <em>www.mijndomein.nl/test</em> in plaats van&nbsp;<em>www.mijndomein.nl</em>, dan moet je de volledige url in <em>site/config/config(_local).php</em> ingeven op de volgende regel:</p>
+<p><code><span style="color: #000000">
+<span style="color: #0000BB">$config</span><span style="color: #007700">[</span><span style="color: #DD0000">'base_url'</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #DD0000">"http://www.mijndomein.nl/test"</span><span style="color: #007700">;&nbsp;</span>
+</span>
+</code></p>

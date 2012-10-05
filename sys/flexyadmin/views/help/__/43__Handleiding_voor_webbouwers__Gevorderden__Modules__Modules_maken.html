@@ -1,0 +1,107 @@
+<h2>Een module bestaat uit de volgende onderdelen:</h2>
+<ul>
+<li>De module zelf (de code in een PHP Class te vinden in&nbsp;<em>site/libraries</em>)</li>
+<li>Eventueel een config bestand</li>
+<li>Eventueel &eacute;&eacute;n of meerdere views</li>
+<li>Eventueel &eacute;&eacute;n of meerdere language bestanden</li>
+</ul>
+<div>&nbsp;
+<div>Als je zelf modules of plugins gaat maken is het handig om wat meer te weten van de mogelijkheden van <a href="http://codeigniter.com/user_guide/toc.html" target="_blank">CodeIgniter</a>&nbsp;(zie bij Class Reference en verder)&nbsp;en de <a href="handleiding_voor_webbouwers/classes">extra Classes van FlexyAdmin</a>.
+<div>&nbsp;
+<h2>Voorbeelden</h2>
+<div>Er worden een aantal&nbsp;<a href="handleiding_voor_webbouwers/gevorderden/modules_maken/standaard_modules">standaard modules</a>&nbsp;meegeleverd met FlexyAdmin. Als je deze bekijkt worden de mogelijkheden snel duidelijk. Bijvoorbeeld de module&nbsp;<a href="handleiding_voor_webbouwers/gevorderden/modules_maken/links"><em>links</em></a>&nbsp;of&nbsp;<a href="handleiding_voor_webbouwers/gevorderden/modules_maken/submenu"><em>submenu</em></a>.
+<div>&nbsp;
+<h2>De Module zelf</h2>
+<p>Een module is een PHP Class die overerft van de Class Module. Het is in feite een standaard&nbsp;<a href="http://codeigniter.com/user_guide/general/creating_libraries.html" target="_blank">CodeIgniter Library</a>&nbsp;met wat extra's. Zo ziet een zeer eenvoudige module eruit (zie ook&nbsp;<em>site/libraries/example.php)</em>:</p>
+<p><code><span style="color: #000000">
+<span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">Example&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">Module&nbsp;</span><span style="color: #007700">{<br />
+<br />
+&nbsp;&nbsp;public&nbsp;function&nbsp;</span><span style="color: #0000BB">__construct</span><span style="color: #007700">()&nbsp;{<br />
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">parent</span><span style="color: #007700">::</span><span style="color: #0000BB">__construct</span><span style="color: #007700">();<br />
+&nbsp;&nbsp;}<br />
+<br />
+&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;index&nbsp;is&nbsp;the&nbsp;standard&nbsp;method<br />
+&nbsp;&nbsp;</span><span style="color: #007700">public&nbsp;function&nbsp;</span><span style="color: #0000BB">index</span><span style="color: #007700">(</span><span style="color: #0000BB">$page</span><span style="color: #007700">)&nbsp;{<br />
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$content</span><span style="color: #007700">=</span><span style="color: #DD0000">'&lt;h1&gt;Example&nbsp;Module&lt;/h1&gt;'</span><span style="color: #007700">;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$content</span><span style="color: #007700">;<br />
+&nbsp;&nbsp;}<br />
+<br />
+}&nbsp;</span>
+</span>
+</code></p>
+<p>Je ziet dat er minstens &eacute;&eacute;n method nodig is, de&nbsp;<span class="code">index</span>&nbsp;method.</p>
+<p>Een method krijgt altijd &eacute;&eacute;n variabele mee:&nbsp;<span class="code">$page</span>. Dit is de huidige pagina met al z'n standaard geladen velden.</p>
+<p>De method kan twee soorten variabele teruggeven of op een alternatieve manier aanpassingen doen aan de pagina:</p>
+<ol>
+<li>Het aangepaste&nbsp;<span class="code">$page</span>&nbsp;(je kunt aanpassen en toevoegen wat je wilt).</li>
+<li>Een string variabele met daarin extra content gegenereerd door de module.</li>
+<li>Een derde manier is om een lege string terug te geven, of de onveranderde&nbsp;<span class="code">$page</span>&nbsp;variabele. Er wordt dan geen extra content toegevoegd aan de pagina. In plaatst daarvan kan de module aanpassingen doen aan de in de controller bekende&nbsp;<span class="code">$this-&gt;site</span>&nbsp;variabele. In de module bekend als&nbsp;<span class="code">$this-&gt;CI-&gt;site</span>. Zo kan bijvoorbeeld een submenu worden toegevoegd.</li>
+</ol>
+<div>&nbsp;
+<h2>Meer methods</h2>
+<p>Standaard wordt de <span class="code">index() </span>method aangeroepen. Maar je kunt een module ook meerdere aanroepbare methods geven. Bijvoorbeeld zoals hieronder met als extra de method <em>other</em>&nbsp;die als <em>example.other</em> wordt aangeroepen:</p>
+<p><code><span style="color: #000000">
+<span style="color: #007700">class&nbsp;</span><span style="color: #0000BB">Example&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">Module&nbsp;</span><span style="color: #007700">{<br />
+<br />
+&nbsp;&nbsp;public&nbsp;function&nbsp;</span><span style="color: #0000BB">__construct</span><span style="color: #007700">()&nbsp;{<br />
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">parent</span><span style="color: #007700">::</span><span style="color: #0000BB">__construct</span><span style="color: #007700">();<br />
+&nbsp;&nbsp;}<br />
+<br />
+&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;index&nbsp;is&nbsp;the&nbsp;standard&nbsp;method<br />
+&nbsp;&nbsp;</span><span style="color: #007700">public&nbsp;function&nbsp;</span><span style="color: #0000BB">index</span><span style="color: #007700">(</span><span style="color: #0000BB">$page</span><span style="color: #007700">)&nbsp;{<br />
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$content</span><span style="color: #007700">=</span><span style="color: #DD0000">'&lt;h1&gt;Example&nbsp;Module&lt;/h1&gt;'</span><span style="color: #007700">;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$content</span><span style="color: #007700">;<br />
+&nbsp;&nbsp;}<br />
+<br />
+&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;example.other<br />
+&nbsp;&nbsp;</span><span style="color: #007700">public&nbsp;function&nbsp;</span><span style="color: #0000BB">other</span><span style="color: #007700">(</span><span style="color: #0000BB">$page</span><span style="color: #007700">)&nbsp;{<br />
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;Do&nbsp;something...<br />
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$page</span><span style="color: #007700">[</span><span style="color: #DD0000">'module_content'</span><span style="color: #007700">]=</span><span style="color: #DD0000">'&lt;h1&gt;Example&nbsp;Module.Other&lt;/h1&gt;'</span><span style="color: #007700">;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$page</span><span style="color: #007700">;<br />
+&nbsp;&nbsp;}<br />
+<br />
+}&nbsp;</span>
+</span>
+</code></p>
+<h2>Views</h2>
+<div>Het mooiste is natuurlijk om de PHP code te scheiden van je html. Daarvoor gebruik je een eigen view. Deze plaats je in de map&nbsp;<em>site/views.<br />
+</em>Je kunt zelf een naam verzinnen, maar het is handig om als dat kan de naam van de module zelf te gebruiken. Of als je meerdere views gebruikt de module naam als prefix te gebruiken of ze allemaal in een submap te zetten.
+<div>Lees meer over&nbsp;<a href="http://codeigniter.com/user_guide/general/views.html" target="_blank">views in de CodeIgniter handleiding</a>.
+<p>&nbsp;</p>
+<h2>Config</h2>
+<p>Als er in&nbsp;<em>site/config&nbsp;</em>een bestand staat met dezelfde naam als de module, dan worden de instellingen in dat bestand automatisch geladen in de module en zijn dan op te halen met:</p>
+<p><code><span style="color: #000000">
+<span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">config</span><span style="color: #007700">(</span><span style="color: #DD0000">'item_naam'</span><span style="color: #007700">);&nbsp;</span>
+</span>
+</code></p>
+<p>In het config bestand correspondeerd dit dan met:</p>
+<p><code><span style="color: #000000">
+<span style="color: #0000BB">$config</span><span style="color: #007700">[</span><span style="color: #DD0000">'item_naam'</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #DD0000">'test'</span><span style="color: #007700">;&nbsp;</span>
+</span>
+</code></p>
+<p>Als je globale instellingen wilt ophalen doe je dat met de standaard <a href="http://codeigniter.com/user_guide/libraries/config.html" target="_blank">CodeIgniter config class</a>:</p>
+<p><code><span style="color: #000000">
+<span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">CI</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">config</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">item</span><span style="color: #007700">(&nbsp;</span><span style="color: #DD0000">'language'&nbsp;</span><span style="color: #007700">);&nbsp;</span>
+</span>
+</code></p>
+<h2>De Class Module</h2>
+<p>Zoals hierboven al eerder gemeld erven modules over (extend) van de Class Module. Wat doet deze nou?</p>
+<ul>
+<li>Automatisch inladen van het eventuele config bestand en de instellingen bekend maken in de variabele&nbsp;<span class="code">$this-&gt;config.</span></li>
+<li>De naam van de Module instellen in de variabele&nbsp;<span class="code">$this-&gt;name</span>.</li>
+<li>Een CodeIgniter object bekendmaken als&nbsp;<span class="code">$this-&gt;CI</span>. (Omdat een Module niet meer is dan een&nbsp;<a href="http://codeigniter.com/user_guide/general/creating_libraries.html" target="_blank">CodeIgniter library</a>&nbsp;is de het CodeIgniter super-object niet bekend.) Als je bijvoorbeeld de database class wilt aanroepen zul je dat zo moeten doen:&nbsp;<span class="code">$this-&gt;CI-&gt;db-&gt;...</span></li>
+</ul>
+<p>De Class module voorziet ook in een aantal standaard methods, de meeste zul je weinig nodig hebben:</p>
+<h3>index()</h3>
+<p>Elke module moet deze method hebben. Als een module wordt aangeroepen en er is geen method naam gespecificeerd dan zal index() worden aangeroepen. Standaard is die al bekend en doet die niet meer dan het tonen van de naam van de module.</p>
+<h3>set_name()</h3>
+<p>Hiermee wordt de naam van de module ingesteld.</p>
+<h3>config()</h3>
+<p>Hiermee haal je een item uit het config bestand van de module. Als het item niet bestaat is het resultaat NULL.</p>
+<h3>load_config()</h3>
+<p>Dit laad het eventuele config bestand dat bij de module hoort en stopt alle config variabelen in&nbsp;<span class="code">$this-&gt;config</span>.</p>
+<h3>set_config()</h3>
+<p>Hiermee kun je eventueel extra config items zetten, of bestaande config items overrulen.</p>
+<h3>break_content()</h3>
+<p>Als je dit aanroept ergens in je module zullen er verder geen andere modules meer worden geladen en aangeroepen door de controller. Ook zal de controller variabele&nbsp;<span class="code">$this-&gt;site['content']&nbsp;</span>(dit de inhoud van de pagina bevat) leeggemaakt worden.<br />
+Dit wordt bijvoorbeeld gebruikt in de login module om waar nodig te voorkomen dat bezoekers alleen de pagina kunnen zien als ze zijn ingelogd.&nbsp;</p>

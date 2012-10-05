@@ -1,0 +1,319 @@
+<p>De velden die gebruikt worden door FlexyAdmin hebben prefixen in hun namen. Om twee redenen:</p>
+<ul>
+<li>Aan de naam is meteen te zien wat voor gegevens er in het veld zit.</li>
+<li>FlexyAdmin gebruikt de prefix om te bepalen hoe het veld in het admin deel wordt getoond en werkt.</li>
+</ul>
+<p>In de tabel hieronder staan alle prefixen op een rij, wat ze doen in de CMS en hoe ze in MySQL moeten worden aangemaakt.</p>
+<p>Als een veld geen prefix heeft wordt het als een <em>str_</em> gezien.</p>
+<h2>Prefixen voor database velden</h2>
+<table>
+<tbody>
+<tr>
+<td>
+<p><strong>Prefix</strong></p>
+</td>
+<td>
+<p><strong>MySQL</strong></p>
+</td>
+<td>
+<p><strong>CMS veld</strong></p>
+</td>
+<td>
+<p><strong>Voorbeeld</strong></p>
+</td>
+</tr>
+<tr>
+<td>
+<p>id_</p>
+</td>
+<td>
+<p>INT</p>
+</td>
+<td>
+<p>Foreign key. Is een verwijzing naar een rij in een andere tabel. Komt in de CMS tevoorschijn als keuzelijst. Voorbeeld: <em>id_links</em> verwijst naar een rij in <em>tbl_links</em>. Zie bij <a href="handleiding_voor_webbouwers/database/relaties_met_ander_tabellen">Relaties met andere tabellen</a>.</p>
+</td>
+<td>
+<p>id_link</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>self_</p>
+</td>
+<td>
+<p>INT</p>
+</td>
+<td>
+<p>Een verwijzing naar een rij in dezelfde tabel. Zie bijvoorbeeld <a href="handleiding_voor_webbouwers/database/speciale_velden"><em>self_parent</em></a>.</p>
+</td>
+<td>
+<p>self_parent</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>int_</p>
+</td>
+<td>
+<p>INT</p>
+</td>
+<td>
+<p>Een getal, komt als normaal veld tevoorschijn in CMS</p>
+</td>
+<td>
+<p>int_number</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>dec_</p>
+</td>
+<td>
+<p>DECodeIgniterMAL</p>
+</td>
+<td>
+<p>Voor getallen met decimalen zoals een prijs.</p>
+</td>
+<td>
+<p>dec_price</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>b_<br />
+is_&nbsp;</p>
+</td>
+<td>
+<p>TINYINT 1</p>
+</td>
+<td>
+<p>Boolean. Komt in CMS tevoorschijn als vink (aan/uit).</p>
+</td>
+<td>
+<p>b_visible&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>dat_<br />
+date_&nbsp;</p>
+</td>
+<td>
+<p>DATE</p>
+</td>
+<td>
+<p>Datumveld. Komt in CMS tevoorschijn als datum widget. Vult standaard huidige datum in bij nieuw item.</p>
+</td>
+<td>
+<p>dat_date</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>tme_<br />
+datetime_</p>
+</td>
+<td>
+<p>DATETIME</p>
+</td>
+<td>
+<p>Zie &lsquo;dat_&rsquo;, maar nu ook velden voor tijd.</p>
+</td>
+<td>
+<p>tme_time</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>time_</p>
+</td>
+<td>
+<p>TIME_</p>
+</td>
+<td>
+<p>Idem maar dan alleen maar tijd</p>
+</td>
+<td>
+<p>time_time</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>str_</p>
+</td>
+<td>
+<p>VARCHAR</p>
+</td>
+<td>
+<p>Een stringveld, komt tevoorschijn als lang veld in CMS</p>
+</td>
+<td>
+<p>str_title</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>url_</p>
+</td>
+<td>
+<p>VARCHAR</p>
+</td>
+<td>
+<p>Een veld met URL (http://).</p>
+</td>
+<td>
+<p>url_link</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>email_</p>
+</td>
+<td>
+<p>VARCHAR</p>
+</td>
+<td>
+<p>Een veld met een emailadres</p>
+</td>
+<td>
+<p>email_email</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>txt_</p>
+</td>
+<td>
+<p>TEXT</p>
+</td>
+<td>
+<p>Een groot tekst veld. In CMS als HTML editor te zien.</p>
+</td>
+<td>
+<p>txt_text</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>stx_</p>
+</td>
+<td>
+<p>TEXT</p>
+</td>
+<td>
+<p>Een groot teksveld (geen HTML editor).</p>
+</td>
+<td>
+<p>stx_description</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>pwd_</p>
+</td>
+<td>
+<p>VARCHAR</p>
+</td>
+<td>
+<p>Paswoord veld. Geen zichtbare tekens.</p>
+</td>
+<td>
+<p>pwd_password</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>gpw_</p>
+</td>
+<td>
+<p>VARCHAR</p>
+</td>
+<td>
+<p>Idem, maar met een knop ernaast om automatisch paswoord te genereren.</p>
+</td>
+<td>
+<p>gpw_password</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>media_</p>
+</td>
+<td>
+<p>VARCHAR</p>
+</td>
+<td>
+<p>Een bestandsnaam. Via <strong>Media Info </strong>gekoppeld aan een assets map.</p>
+<p>FlexyAdmin toont dit als een keuzeveld, met als keuze alle bestanden in de assets map.</p>
+<p>Als het om afbeeldingen gaat kan het ook getoond worden als thumbnails.</p>
+<p>Zie bij <a href="handleiding_voor_webbouwers/het_begin/afbeeldingen_en_bestanden">Afbeeldingen en bestanden</a>.</p>
+</td>
+<td>
+<p>media_foto</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>medias_</p>
+</td>
+<td>
+<p>VARCHAR&nbsp;</p>
+</td>
+<td>
+<p>idem, maar nu kunnen er meerdere gekozen worden&nbsp;</p>
+</td>
+<td>
+<p>medias_fotos&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>rgb_</p>
+</td>
+<td>
+<p>VARCHAR(7)</p>
+</td>
+<td>
+<p>Een HTML kleurcode. FlexyAdmin toont een kleurkiezer.</p>
+</td>
+<td>
+<p>rgb_color</p>
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>list_</p>
+</td>
+<td>
+<p>VARCHAR</p>
+</td>
+<td>
+<p>Dit veld verwijst naar een keuze uit uit &eacute;&eacute;n van de javascript list bestanden die FlexyAdmin genereerd. Als je een veld <em>list_link</em>&nbsp;maakt toont FlexyAdmin een keuzeveld met alle links uit <em>link_list.js.</em></p>
+<p>Zie bij <a href="handleiding_voor_webbouwers/het_begin/links">Links</a>.</p>
+</td>
+<td>
+<p>list_link<br />
+list_img<br />
+list_media&nbsp;</p>
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>ip_</p>
+</td>
+<td>
+<p>VARCHAR(15)</p>
+</td>
+<td>
+<p>Bevat een ip adres</p>
+</td>
+<td>
+<p>ip_ip</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><br />
+Voor alle velden geld dat de lengte en in sommige gevallen het type van het MySQL data type zelf gekozen&nbsp;kan worden. Dus ipv INT kan ook SMALLINT of BIGINT worden gebruikt. Of ipv VARCHAR kan ook TEXT worden gebruikt.</p>
