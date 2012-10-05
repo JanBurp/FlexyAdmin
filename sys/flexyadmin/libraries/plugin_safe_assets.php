@@ -125,6 +125,7 @@ class Plugin_safe_assets extends Plugin {
 												$assets.'img'						=> $images.'|'.$flash.'|ico', 
 												$assets.'js'						=> 'js|css|html|swf|'.$images, 
 												);
+    $noRecursion=array($assets);
 		// set user maps
 		$maps=read_map($assets,'dir');
 		$mapsToClean=$specialMaps;
@@ -141,7 +142,7 @@ class Plugin_safe_assets extends Plugin {
 				$this->_make_map_safe($path,$allowed);
         $this->checked[$path]=$allowed;
 			}
-			$removed=$this->_remove_forbidden_files($path,$allowed);
+			$removed=$this->_remove_forbidden_files($path,$allowed,'',!in_array($path,$noRecursion));
 			if ($removed) {
         $this->removed[$path]=$removed;
 				$someRemoved = true;
@@ -167,21 +168,33 @@ class Plugin_safe_assets extends Plugin {
 	}
 	
   /**
-   * Verwijderd ongewenste bestanden
+   * Verwijderd ongewenste bestanden (recursief)
    *
    * @author Jan den Besten
    * @ignore
    */
-	function _remove_forbidden_files($path,$allowed,$forbidden='') {
+	function _remove_forbidden_files($path,$allowed,$forbidden='',$recursive=FALSE) {
 		$removed=false;
-		$allowed=explode('|',$allowed);
+    if (!is_array($allowed)) $allowed=explode('|',$allowed);
+    $thisAllowed=$allowed;
+    array_unshift($thisAllowed,'dir');      // Make sure maps are not deleted
 		$files=read_map($path);
 		foreach ($files as $file => $value) {
-      if (!is_dir($path.'/'.$file) and !in_array($value['type'],$allowed)) {
+      if (!is_dir($path.'/'.$file) and !in_array($value['type'],$thisAllowed)) {
         unlink($path.'/'.$file);
-				$removed[]=$file;
+				$removed[]=$value['path'];
 			}
+      if ($recursive and $value['type']=='dir') {
+        $subRemoved=$this->_remove_forbidden_files($path.'/'.$file,$allowed,$forbidden,$recursive);
+        if (is_array($subRemoved)) {
+          if (is_array($removed))
+            $removed=array_merge($removed,$subRemoved);
+          else
+            $removed=$subRemoved;
+        }
+      }
 		}
+    // if ($removed) trace_($removed);
 		return $removed;
 	}
 	
