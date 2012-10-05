@@ -1,0 +1,28 @@
+<p>FlexyAdmin ondersteund relaties tussen tabellen. Hier volgt de uitleg van twee relatievormen en hoe FlexyAdmin ze behandeld.</p>
+<h2>Veel op &eacute;&eacute;n relaties (keuzetabel)</h2>
+<p>Dit kun je zien als het maken van een keuzetabel.</p>
+<p>Stel je hebt een tabel met allemaal links erin: <em>tbl_links</em>&nbsp;en je wilt deze gebruiken als een keuzetabel vanuit een tabel met alle pagina's van je site: <em>tbl_menu</em>.<br />
+Je maakt dan in <em>tbl_menu</em>&nbsp;een foreign key aan: <em>id_links.</em>&nbsp;Vanuit een rij in <em>tbl_menu </em>kan nu verwezen worden naar een rij in <em>tbl_links</em>.</p>
+<p>FlexyAdmin zal in het admin deel bij het tonen van een rij uit&nbsp;<em>tbl_menu</em>&nbsp;op de plaats van het veld <em>id_links</em>&nbsp;een keuzeveld laten zien waarin &eacute;&eacute;n keuze gemaakt kan worden uit <em>tbl_links</em>.&nbsp;</p>
+<h2>Veel op veel relaties (meerkeuzetabel)</h2>
+<p>Dit kun je zien als een keuzetabel waar het mogelijk is om meerdere keuzes te selecteren.</p>
+<p>Stel je wilt in plaats van bij bovenstaand voorbeeld niet &eacute;&eacute;n maar meerdere links kunnen koppelen aan een pagina. Dan heb je een tussentabel nodig om meerdere relaties te kunnen leggen. Deze relatie tabel zou in ons voorbeeld zo gaan heten: <em>rel_menu__links.</em>&nbsp;In deze tabel bestaan naast een primary key (<em>id</em>) twee foreign keys: <em>id_menu</em>&nbsp;en <em>id_links.</em></p>
+<p>FlexyAdmin zal nu bij het tonen van een rij uit&nbsp;<em>tbl_menu</em>&nbsp;een keuzeveld laten zien waar het mogelijk is om meerdere keuzes te maken uit <em>tbl_links</em>.</p>
+<h2>Naamgeving foreign keys en relatietabellen</h2>
+<p>FlexyAdmin kan tabellen automatisch koppelen als de foreign keys voldoen aan de volgende naamgeving:&nbsp;<em>id_tabel</em>. Waar <em>tabel</em> staat voor de naam van tabel waarnaar verwezen wordt zonder de eigen prefix van die tabel. Dus een foreign key die moet verwijzen naar <em>tbl_links</em>&nbsp;heet <em>id_links</em>. En een foreign key die verwijst naar <em>tbl_menu</em>&nbsp;heet <em>id_menu</em>.</p>
+<p>FlexyAdmin kan de koppeling van veel op veel relaties ook automatisch leggen als de relatietabellen die daarvoor nodig zijn op de volgende manier worden genoemd: <em>rel_tabel1__tabel2</em>. Waar <em>tabel1</em> en <em>tabel2</em> de namen van de tabellen zijn waar de relatie tussen wordt gelegd, zonder hun eigen prefixen.</p>
+<p>Zoals hierboven al is genoemd bevat een relatietabel drie velden: een primary key en twee foreign keys.</p>
+<h2>Database class functies om relaties te koppelen</h2>
+<p>FlexyAdmin heeft een uitbreiding op de standaard CodeIgniter Database class. Een deel van die uitbreiding zorgt voor de automatische koppeling van tabellen als daar een relatie tussen bestaat.</p>
+<p>Zie #### voor meer informatie. Hier twee eenvoudige voorbeelden:</p>
+<p><code>// Combineer alle veel op &eacute;&eacute;n relaties van tbl_menu<br />
+// En stop het resultaat in een associatieve array<br />
+<br />
+$this-&gt;db-&gt;add_foreigns();<br />
+$result = $this-&gt;db-&gt;get_result( 'tbl_menu' );</code></p>
+<p><code>// Combineer alle veel op veel relaties van tbl_menu<br />
+// En stop het resultaat in een associatieve array<br />
+<br />
+$this-&gt;db-&gt;add_many();<br />
+$result = $this-&gt;db-&gt;get_result( 'tbl_menu' );<br />
+</code></p>

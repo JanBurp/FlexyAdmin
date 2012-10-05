@@ -1,0 +1,28 @@
+<p>Standaard verwijzen delen van de url in CodeIgniter naar een eigen controllers. Dat is aan de frontend van FlexyAdmin niet zo. Daar is maar &eacute;&eacute;n controller die alle url's krijgt en daarmee zorgt dat de gevraagde wordt getoond. De frontend controller vind je hier:&nbsp;<em>site/controller.php.</em></p>
+<h2>Belangrijkste kenmerken van de controller</h2>
+<ul>
+<li>Alle uri's komen terecht bij de frontend controller. Behalve uri's beginnend met <em>admin</em>, <em>rss</em> of <em>file</em>.</li>
+<li>Er is standaard &eacute;&eacute;n variabele bekend, de associatieve array: <span class="code">$this-&gt;site</span>.</li>
+<li>Aan het eind van de controller wordt de hoofd view (<em>site/views/site.php)</em>&nbsp;geladen met <span class="code">$this-&gt;site</span> als meegegeven array.</li>
+<li>De controller heeft al een aantal method's die het leven veraangenamen. Bijvoorbeeld om de taal van je site te selecteren. Of om naar dieper gelegen pagina's te redirecten in geval van een lege pagina.</li>
+<li>In de meeste gevallen hoef je zelf niets aan de controller te veranderen. Met een aantal <a href="handleiding_voor_webbouwers/gevorderden/configuratie_van_de_controller">instellingen</a> in <em>site/config/config.php</em> en eigen modules kun je praktisch alle aanpassingen doen die je zou willen.</li>
+</ul>
+<div>&nbsp;
+<h2>$this-&gt;site</h2>
+<p>De associatieve array <span class="code">$this-&gt;site</span> is standaard al bekend in de controller. Het heeft al een aantal standaard waarden in zich, onder andere alle velden die te vinden zijn bij&nbsp;<strong>Site</strong>&nbsp;(tbl_site). Als je bepaalde informatie altijd nodig hebt in de controller of in je hoofd view dan hoef je alleen maar een veld toe te voegen aan tbl_site.</p>
+<p>Hier een overzicht van <span class="code">$this-&gt;site['naam']</span>:</p>
+<ul>
+<li>title (en str_title) -&nbsp;Titel van de site&nbsp;zoals ingesteld bij site.</li>
+<li>author (en&nbsp;str_author) - Auteur van de site&nbsp;zoals ingesteld bij site.</li>
+<li>url (en&nbsp;url_url) - Url van de site zoals ingesteld bij site.</li>
+<li>email (en&nbsp;email_email) - Email van de site zoals ingesteld bij site. (Deze wordt standaard gebruikt bij de modules contact_form en comments.)</li>
+<li>description (en&nbsp;stx_description) - Description&nbsp;zoals ingesteld bij site.</li>
+<li>keywords (en&nbsp;stx_keywords) - Keywords&nbsp;zoals ingesteld bij site.</li>
+<li>str_google_analytics - Wordt gebruikt voor Google Analytics.&nbsp;Ingesteld bij site.</li>
+<li>assets - verwijzing naar de assets map, standaard: <em>site/assets/</em></li>
+<li>admin_assets - verwijzing naar de flexyadmin assets map, standaard <em>sys/flexyadmin/assets/</em></li>
+<li>languages - array met mogelijke talen. Zoals ingesteld in <em>site/config/config.php</em></li>
+<li>menu - Standaard leeg. Wordt gebruikt voor het gerenderde menu.</li>
+<li>content - Standaard leeg. Wordt gebruikt om alle HTML content in te stoppen.</li>
+<li>class - Standaard leeg. Wordt gebruikt om een class mee te geven aan de body tag van de hoofd view.</li>
+</ul>

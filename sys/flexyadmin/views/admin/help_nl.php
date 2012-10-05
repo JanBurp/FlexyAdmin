@@ -1,19 +1,29 @@
 <? if (!empty($commonHelp)): ?>
 <h1>Help</h1>
-<?=$commonHelp?>
+<div class="content">
+  <?=$commonHelp?>
+</div>
 <? endif ?>
 
-<? if (!empty($specificHelp)): ?>
-<h1>Help per onderdeel</h1>
-<p>Deze help teksten krijg je ook te zien als je met de muis op de naam van een onderdeel gaat staan en even wacht.<br/><br/></p>
-<?=$specificHelp?>
-<? endif ?>
 
-<h1>FlexyAdmin</h2>
+<div id="subitems">
+  <? if (!empty($help)): ?>
+  <?=$help?>
+  <? endif ?>
 
-<h2>Door</h2>
-<p><a href="http://www.jandenbesten.net" target="_blank">Jan den Besten</a> (c) 2009-2012</p>
+  <!-- <? if (!empty($specificHelp)): ?>
+  <h1>Help per onderdeel</h1>
+  <div class="content">
+    <p>Deze help teksten krijg je ook te zien als je met de muis op de naam van een onderdeel gaat staan en even wacht.<br/><br/></p>
+    <?=$specificHelp?>
+  </div>
+  <? endif ?> -->
 
-<h2>Welke browser?</h2>
-Het admin gedeelte van FlexyAdmin werkt op moderne browsers.<br/>
-Mocht je problemen ondervinden, gebruik dan de gratis en veilige <a href="http://www.mozilla.org/firefox">Firefox</a> browser.
+  <!-- <h1>Welke browser?</h1>
+  <div class="content">
+    <p>Het admin gedeelte van FlexyAdmin werkt op moderne browsers.<br/>
+    Mocht je problemen ondervinden, gebruik dan de gratis en veilige <a href="http://www.mozilla.org/firefox">Firefox</a> browser.</p>
+  </div> -->
+
+</div>
+

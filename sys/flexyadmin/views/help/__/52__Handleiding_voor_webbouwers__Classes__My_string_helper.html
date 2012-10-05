@@ -1,0 +1,70 @@
+<p>Uitbreiding van de standaard CodeIgniter helper: <strong>string_helper</strong>. Wordt standaard geladen.</p>
+<h2>Functies om delen van strings te selecteren</h2>
+<h3>get_prefix()</h3>
+<p><code><span style="color: #000000">
+<span style="color: #007700">(string)&nbsp;</span><span style="color: #0000BB">get_prefix</span><span style="color: #007700">(&nbsp;(string)&nbsp;</span><span style="color: #0000BB">$string&nbsp;</span><span style="color: #007700">[,&nbsp;(string)&nbsp;</span><span style="color: #0000BB">$split</span><span style="color: #007700">=</span><span style="color: #DD0000">'_'&nbsp;</span><span style="color: #007700">]&nbsp;)&nbsp;</span>
+</span>
+</code></p>
+<p>Pakt het eerste deel van een string nadat hij de string heeft verdeeld in delen aan de hand van een scheidingskarakter. Standaard is het scheidingskarakter een underscore '_'.</p>
+<p><code><span style="color: #000000">
+<span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">get_prefix</span><span style="color: #007700">(&nbsp;</span><span style="color: #DD0000">'str_example'&nbsp;</span><span style="color: #007700">);<br />
+echo&nbsp;</span><span style="color: #0000BB">get_prefix</span><span style="color: #007700">(&nbsp;</span><span style="color: #DD0000">'tbl_example.id'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'.'&nbsp;</span><span style="color: #007700">);&nbsp;</span>
+</span>
+</code></p>
+<p>Geeft als resultaat:</p>
+<p><code><span style="color: #000000">
+<span style="color: #0000BB">str<br />
+tbl_example&nbsp;</span>
+</span>
+</code></p>
+<h3>get_suffix()</h3>
+<p><code><span style="color: #000000">
+<span style="color: #007700">(string)&nbsp;</span><span style="color: #0000BB">get_suffix</span><span style="color: #007700">(&nbsp;(string)&nbsp;</span><span style="color: #0000BB">$string&nbsp;</span><span style="color: #007700">[,&nbsp;(string)&nbsp;</span><span style="color: #0000BB">$split</span><span style="color: #007700">=</span><span style="color: #DD0000">'_'&nbsp;</span><span style="color: #007700">]&nbsp;)&nbsp;</span>
+</span>
+</code></p>
+<p>Zelfde als <em>get_prefix()</em> maar dan het laatste deel van de string verdeeld door een scheidingskarakter.</p>
+<p><code><span style="color: #000000">
+<span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">get_suffix</span><span style="color: #007700">(&nbsp;</span><span style="color: #DD0000">'str_example'&nbsp;</span><span style="color: #007700">);<br />
+echo&nbsp;</span><span style="color: #0000BB">get_suffix</span><span style="color: #007700">(&nbsp;</span><span style="color: #DD0000">'home/pagina/sub_pagina'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'/'&nbsp;</span><span style="color: #007700">);&nbsp;</span>
+</span>
+</code></p>
+<p>Geeft als resultaat:</p>
+<p><code><span style="color: #000000">
+<span style="color: #0000BB">example<br />
+home&nbsp;</span>
+</span>
+</code></p>
+<h3>remove_prefix()</h3>
+<p><code><span style="color: #000000">
+<span style="color: #007700">(string)&nbsp;</span><span style="color: #0000BB">remove_prefix</span><span style="color: #007700">(&nbsp;(string)&nbsp;</span><span style="color: #0000BB">$string&nbsp;</span><span style="color: #007700">[,&nbsp;(string)&nbsp;</span><span style="color: #0000BB">$split</span><span style="color: #007700">=</span><span style="color: #DD0000">'_'&nbsp;</span><span style="color: #007700">]&nbsp;)&nbsp;</span>
+</span>
+</code></p>
+<p>Verwijderd eerste deel van een string.</p>
+<p><code><span style="color: #000000">
+<span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">remove_prefix</span><span style="color: #007700">(&nbsp;</span><span style="color: #DD0000">'str_example'&nbsp;</span><span style="color: #007700">);<br />
+echo&nbsp;</span><span style="color: #0000BB">remove_prefix</span><span style="color: #007700">(&nbsp;</span><span style="color: #DD0000">'tbl_example.id'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'.'&nbsp;</span><span style="color: #007700">);&nbsp;</span>
+</span>
+</code></p>
+<p>Geeft als resultaat:</p>
+<p><code><span style="color: #000000">
+<span style="color: #0000BB">example<br />
+id&nbsp;</span>
+</span>
+</code></p>
+<h3>remove_suffix()</h3>
+<p><code><span style="color: #000000">
+<span style="color: #007700">(string)&nbsp;</span><span style="color: #0000BB">remove_suffix</span><span style="color: #007700">(&nbsp;(string)&nbsp;</span><span style="color: #0000BB">$string&nbsp;</span><span style="color: #007700">[,&nbsp;(string)&nbsp;</span><span style="color: #0000BB">$split&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'_'&nbsp;</span><span style="color: #007700">]&nbsp;)&nbsp;</span>
+</span>
+</code></p>
+<p>Verwijderd laatste deel van een string.</p>
+<p><code><span style="color: #000000">
+<span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">remove_suffix</span><span style="color: #007700">(&nbsp;</span><span style="color: #DD0000">'str_example'&nbsp;</span><span style="color: #007700">);<br />
+echo&nbsp;</span><span style="color: #0000BB">remove_suffix</span><span style="color: #007700">(&nbsp;</span><span style="color: #DD0000">'home/pagina/sub_pagina'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'/'&nbsp;</span><span style="color: #007700">);&nbsp;</span>
+</span>
+</code></p>
+<p>Geeft als resultaat:</p>
+<p><code><span style="color: #000000">
+<span style="color: #0000BB">str<br />
+home</span><span style="color: #007700">/</span><span style="color: #0000BB">pagina&nbsp;</span>
+</span>
+</code></p>

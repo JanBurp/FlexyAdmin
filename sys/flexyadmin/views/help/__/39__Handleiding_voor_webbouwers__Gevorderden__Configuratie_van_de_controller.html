@@ -1,0 +1,103 @@
+<p>Het gedrag van de frontend controller kan door een aantal instellingen worden aangepast. De instellingen vindt je in het bestand <em>site/config/config.php.</em></p>
+<p>Hieronder een overzicht.</p>
+<h2>Caching</h2>
+<p>Je kunt het tonen van de pagina's aanzienlijk versnellen (en je server veel minder belasten!) door caching aan te zetten (TRUE). Caching in FlexyAdmin maakt gebruik van de standaard <a href="http://codeigniter.com/user_guide/general/caching.html" target="_blank">output caching</a>&nbsp;van CodeIgniter met een aantal aanpassingen.</p>
+<p>Standaard staat caching uit (FALSE):</p>
+<p><code><span style="color: #000000">
+<span style="color: #0000BB">$config</span><span style="color: #007700">[</span><span style="color: #DD0000">'caching'</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #0000BB">FALSE</span><span style="color: #007700">;&nbsp;</span>
+</span>
+</code></p>
+<p>Na een bepaalde tijd wordt een pagina automatisch opnieuw gerenderd. Deze tijd kun je hier instellen in minuten (standaard 1440 wat 24 uur is).</p>
+<p><code><span style="color: #000000">
+<span style="color: #0000BB">$config</span><span style="color: #007700">[</span><span style="color: #DD0000">'caching_time'</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #0000BB">1440</span><span style="color: #007700">;&nbsp;</span>
+</span>
+</code></p>
+<p>Enkele opmerkingen en aanpassingen op de standaard CodeIgniter caching:</p>
+<ul>
+<li>Als de $_POST en $_GET variabelen inhoud bevatten dan wordt de pagina niet uit de cache geladen. Op deze manier zullen formulieren en pagina's et uri-queries altijd blijven werken.</li>
+<li>Als een gebruiker iets aanpast in FlexyAdmin zal de gehele cache leeg worden gemaakt.</li>
+<li>Als een pagina door een gebruiker wordt aangepast (bijvoorbeeld bij het plaatsen van reacties) dan moet die pagina opnieuw worden gerenderd (en dus uit de cache worden verwijderd). Gebruik daarvoor de functies van de&nbsp;<em>cache_helper</em>&nbsp;(####). De module <em>comments</em>&nbsp;doet dit bijvoorbeeld elke keer als een bezoeker een reactie heeft geplaatst. Als dat niet zou gebeuren zou de reactie pas getoond worden als de cache na de standaard tijd wordt gerefreshed (standaard is dat dus een hele dag!)</li>
+</ul>
+<div>&nbsp;
+<h2>Talen</h2>
+<div>Je kunt je site meertalig maken (zie ####). Dit vergt onder andere enkele instellingen voor de controller.
+<div>&nbsp;
+<div>Je moet alle talen die de site gebruikt instellen (standaard alleen 'nl'):
+<p><code><span style="color: #000000">
+<span style="color: #0000BB">$config</span><span style="color: #007700">[</span><span style="color: #DD0000">'languages'</span><span style="color: #007700">]&nbsp;=&nbsp;array(</span><span style="color: #DD0000">'nl'</span><span style="color: #007700">,</span><span style="color: #DD0000">'en'</span><span style="color: #007700">);&nbsp;</span>
+</span>
+</code></p>
+<p><br />
+De standaard taal. Hier begint de site mee als nog geen taal gekozen is:</p>
+<p><code><span style="color: #000000">
+<span style="color: #0000BB">$config</span><span style="color: #007700">[</span><span style="color: #DD0000">'language'</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #DD0000">"nl"</span><span style="color: #007700">;&nbsp;</span>
+</span>
+</code></p>
+<h2>Nieuwe variabelen toekennen aan $this-&gt;site</h2>
+<p>Je kunt zonder da in de code van de controller te hoeven doen variabelen toevoegen en initialiseren (als een lege string) aan $this-&gt;site. Dit is bijvoorbeeld handig als je een module hebt gemaakt die een variabele aan $this-&gt;site toevoegd maar niet altijd wordt aangeroepen.</p>
+<p>Standaard is de array leeg, hieronder een voorbeeld:</p>
+<p><code><span style="color: #000000">
+<span style="color: #0000BB">$config</span><span style="color: #007700">[</span><span style="color: #DD0000">'site_variables'</span><span style="color: #007700">]&nbsp;=&nbsp;array(</span><span style="color: #DD0000">'prev'</span><span style="color: #007700">,</span><span style="color: #DD0000">'next'</span><span style="color: #007700">,</span><span style="color: #DD0000">'comments'</span><span style="color: #007700">);&nbsp;</span>
+</span>
+</code></p>
+<h2>Redirect</h2>
+<p>Als je een site hebt met pagina's in meerdere niveau's en je wilt dat bij een lege pagina vanzelf naar de eerste pagina wordt gesprongen op een niveau lager (als die bestaat) zet deze optie dan aan (TRUE). Standaard staat de optie uit (FALSE).</p>
+<p><code><span style="color: #000000">
+<span style="color: #0000BB">$config</span><span style="color: #007700">[</span><span style="color: #DD0000">'redirect'</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #0000BB">FALSE</span><span style="color: #007700">;&nbsp;</span>
+</span>
+</code></p>
+<p>&nbsp;</p>
+<h2>Pagination</h2>
+<p>De standaard CodeIgniter <a href="http://codeigniter.com/user_guide/libraries/pagination.html" target="_blank">Pagination class</a>&nbsp;is zo uitgebreid (zie ####) dat er een aantal dingen geautomatiseerd worden. Als je site hier gebruik van maakt (bijvoorbeeld een blog of een agenda over meerdere pagina's) dan kun je dat de controller hiermee laten weten. (Standaard FALSE).</p>
+<p><code><span style="color: #000000">
+<span style="color: #0000BB">$config</span><span style="color: #007700">[</span><span style="color: #DD0000">'auto_pagination'</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #0000BB">FALSE</span><span style="color: #007700">;&nbsp;</span>
+</span>
+</code></p>
+<p>&nbsp;</p>
+<h2>Modules</h2>
+<p>De controller zorgt ook voor het laden en aanroepen van <a href="handleiding_voor_webbouwers/gevorderden/modules">Modules</a>. Hieronder een aantal instellingen daarvoor.</p>
+<p>Als je modules hebt die op elke pagina moeten worden aangeroepen kun je dat hier instellen, bijvoorbeeld de submenu module. (Standaard is de array leeg).</p>
+<p><code><span style="color: #000000">
+<span style="color: #0000BB">$config</span><span style="color: #007700">[</span><span style="color: #DD0000">'autoload_modules'</span><span style="color: #007700">]=array(</span><span style="color: #DD0000">'submenu'</span><span style="color: #007700">);<br />
+&nbsp;</span>
+</span>
+</code></p>
+<p>Als een module moet worden geladen afhankelijk van een eenvoudige voorwaarde vanuit de inhoud van de huidige pagina ($page), dan kun je dat hiermee instellen. Bijvoorbeeld als de module submenu alleen maar op pagina's getoond mag worden waar het veld <em>b_submenu</em> waar is.</p>
+<p><code><span style="color: #000000">
+<span style="color: #0000BB">$config</span><span style="color: #007700">[</span><span style="color: #DD0000">'autoload_modules_if'</span><span style="color: #007700">]=array(&nbsp;</span><span style="color: #DD0000">'submenu'</span><span style="color: #007700">=&gt;array(</span><span style="color: #DD0000">'b_submenu'</span><span style="color: #007700">=&gt;</span><span style="color: #0000BB">true</span><span style="color: #007700">)&nbsp;);&nbsp;</span>
+</span>
+</code></p>
+<p>&nbsp;</p>
+<p>Als de controller onverhoopt een module probeert te laden die niet bestaat kan de controller in plaats van dat er een foutmelding komt een zogenaamde fallback module laden. Die module kun je dan aanpassen naar wens.</p>
+<p><code><span style="color: #000000">
+<span style="color: #0000BB">$config</span><span style="color: #007700">[</span><span style="color: #DD0000">'fallback_module'</span><span style="color: #007700">]=</span><span style="color: #DD0000">'fallback'</span><span style="color: #007700">;&nbsp;</span>
+</span>
+</code></p>
+<p>&nbsp;</p>
+<p>In de standaard demo database van FlexyAdmin heeft de <em>tbl_menu</em> een veld <em>str_module </em>waar de gebruiker een module kan kiezen voor die pagina.<br />
+Als je wilt dat de controller niet naar het veld <em>str_module</em>&nbsp;kijkt om een module te laden maar naar een ander veld (bijvoorbeeld <em>uri </em>of <em>id_module</em>) dan kun je dat hier instellen. (Standaard 'str_module')</p>
+<p><code><span style="color: #000000">
+<span style="color: #0000BB">$config</span><span style="color: #007700">[</span><span style="color: #DD0000">'module_field'</span><span style="color: #007700">]=</span><span style="color: #DD0000">'str_module'</span><span style="color: #007700">;&nbsp;</span>
+</span>
+</code></p>
+<p>&nbsp;</p>
+<h2>Homepage instellen</h2>
+<p>Als de site wordt aangeroepen met een kale url (bijvoorbeeld www.flexyadmin.com en niet www.flexyadmin.com/contact) dan moet FlexyAdmin weten welke pagina dan getoond moet worden. Dit is de homepage.</p>
+<p>Je kunt FlexyAdmin vertellen dat dat automatisch gebeurt (standaard). Dan zal de allereerste pagina in het menu worden gekozen.</p>
+<p><code><span style="color: #000000">
+<span style="color: #0000BB">$config</span><span style="color: #007700">[</span><span style="color: #DD0000">'menu_autoset_home'</span><span style="color: #007700">]=</span><span style="color: #0000BB">TRUE</span><span style="color: #007700">;&nbsp;</span>
+</span>
+</code></p>
+<p>&nbsp;</p>
+<p>Als je dat niet automatisch wilt (FALSE) dan kun je met de hand de uri instellen voor de homepage (standaard staat dit uit):&nbsp;</p>
+<p><code><span style="color: #000000">
+<span style="color: #FF8000">//&nbsp;$config['menu_homepage_uri']='home';&nbsp;</span>
+</span>
+</code></p>
+<p>&nbsp;</p>
+<h2>Hoofdview</h2>
+<p>De controller zal aan het eind de hoofdview van de site laden (met $this-&gt;site als megegeven data). Standaard heet deze hoofdview <em>site.php. </em>Als je om wat voor reden ook een andere view als hoofdview wilt of een andere naamgeving prefereert kun je dat hier instellen (standaard 'site').</p>
+<p><code><span style="color: #000000">
+<span style="color: #0000BB">$config</span><span style="color: #007700">[</span><span style="color: #DD0000">'main_view'</span><span style="color: #007700">]=</span><span style="color: #DD0000">'site'</span><span style="color: #007700">;&nbsp;</span>
+</span>
+</code></p>

@@ -88,17 +88,19 @@ img {
 	z-index:10;
 }
 
-#menu li
+#menu li, .submenu li
 {
 	list-style:none;
 	font-size:15px;
 	margin:0px;
 	padding:3px 5px 7px 30px;
 	height:17px;
+  overflow:hidden;
 }
-#menu li.current,
+.submenu li {padding-left:3px;}
+#menu li.current, .submenu li.current,
 #menu li.active,
-#menu li:hover {
+#menu li:hover, .submenu li.current:hover {
 	background-color:#DDEEAA;
 	background-image:url("../img/inset.png");
 	background-position:50% 50%;
@@ -107,15 +109,16 @@ img {
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 }
+
 #menu li.home {background-color:transparent; background-image:none;}
 #menu li.seperator:hover {
 	background-color:transparent;
 	background-image:none;
 }
 
-
 #menu li a {
 	display:block;
+  text-decoration:none;
 	width:100%;
 	height:100%;
 	}
@@ -1361,15 +1364,10 @@ div.zoom .ui-dialog-content img {
 	cursor:pointer;
 }
 
-div#ui {
-	display:none;
-}
-div#ui_messages {
-	display:none;
-}
-div#help_messages {
-	display:none;
-}
+div#help {display:none;}
+div#ui {display:none;}
+div#ui_messages {display:none;}
+div#help_messages {display:none;}
 
 #ui-timepicker-div {width:22em;}
 .ui-timepicker-close {float:right;cursor:pointer;margin-top:4px;}
@@ -1445,6 +1443,36 @@ div#help_messages {
 #content.info {
 	width:590px;
 }
+
+
+.submenu {
+  width:206px;
+  float:left;
+  margin:0px;
+  padding:0px;
+	border: solid 1px #DEA;
+/*  border-right:none;*/
+	border-radius: 4px 0px 4px 4px;
+	-o-border-radius: 4px 0px 4px 4px;
+	-moz-border-radius: 4px 0px 4px 4px;
+	-webkit-border-radius: 4px 0px 4px 4px;
+}
+.submenu li {cursor:pointer;}
+
+#subitems {
+  width:560px;
+  float:right;
+  margin-left:-1px;
+  padding:0px 3px 4px;
+	border: solid 1px #DEA;
+	border-radius: 0px 4px 4px 4px;
+	-o-border-radius: 0px 4px 4px 4px;
+	-moz-border-radius: 0px 4px 4px 4px;
+	-webkit-border-radius: 0px 4px 4px 4px;
+}
+#subitems h1 {display:none;width:556px;margin-left:-3px;}
+#subitems>* {display:none;}
+
 
 #trace {
 	float:left;

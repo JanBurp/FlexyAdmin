@@ -1,0 +1,128 @@
+<p>Met deze class kun je eenvoudig een html menu aanmaken. De class wordt standaard geladen.</p>
+<h2>Eenvoudig menu maken</h2>
+<p>Hieronder zie je een voorbeeld om vanuit het niets een menu aan te maken.</p>
+<p><code><span style="color: #000000">
+<span style="color: #0000BB">$menu&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Menu</span><span style="color: #007700">();<br />
+</span><span style="color: #0000BB">$menu</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">add</span><span style="color: #007700">(&nbsp;array(&nbsp;</span><span style="color: #DD0000">'uri'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">'home'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'name'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">'Home'&nbsp;</span><span style="color: #007700">)&nbsp;);<br />
+</span><span style="color: #0000BB">$menu</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">add</span><span style="color: #007700">(&nbsp;array(&nbsp;</span><span style="color: #DD0000">'uri'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">'een_pagina'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'name'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">'Een&nbsp;Pagina'&nbsp;</span><span style="color: #007700">)&nbsp;);<br />
+</span><span style="color: #0000BB">$menu</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">add_sub</span><span style="color: #007700">(&nbsp;array(&nbsp;</span><span style="color: #DD0000">'uri'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">'een_pagina'</span><span style="color: #007700">,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'sub'</span><span style="color: #007700">=&gt;array(&nbsp;</span><span style="color: #DD0000">'uri'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">'subpagina'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'name'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">'Subpagina'&nbsp;</span><span style="color: #007700">)&nbsp;);<br />
+</span><span style="color: #0000BB">$menu</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">add</span><span style="color: #007700">(&nbsp;array(&nbsp;</span><span style="color: #DD0000">'uri'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">'links'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'name'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">'Links'</span><span style="color: #007700">)&nbsp;);<br />
+</span><span style="color: #0000BB">$menu</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">add</span><span style="color: #007700">(&nbsp;array(&nbsp;</span><span style="color: #DD0000">'uri'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">'contact'</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'name'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">'Contact'</span><span style="color: #007700">)&nbsp;);<br />
+echo&nbsp;</span><span style="color: #0000BB">$menu</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">render</span><span style="color: #007700">();&nbsp;</span>
+</span>
+</code></p>
+<p>Het resulaat is hetzelfde als het voorbeeld hieronder. Voor de uitleg van de diverse methods, zie verderop.</p>
+<h2>Menu aanmaken vanuit een menu tabel</h2>
+<p>Hieronder zie je hoe je een menu aanmaakt vanuit een tabel. Het is vergelijkbaar als de standaard manier die je in de controller.php vindt. Behalve dat daar al een property menu bestaat (dus $this-&gt;menu ipv $menu, en is de regel $menu = new Menu(); niet nodig).</p>
+<p><code><span style="color: #000000">
+<span style="color: #0000BB">$menu&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Menu</span><span style="color: #007700">();</span><span style="color: #0000BB">$menu</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">set_current</span><span style="color: #007700">(</span><span style="color: #DD0000">'home'</span><span style="color: #007700">);<br />
+</span><span style="color: #0000BB">$menu</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">set_menu_from_table</span><span style="color: #007700">(</span><span style="color: #DD0000">'tbl_menu'</span><span style="color: #007700">);<br />
+echo&nbsp;</span><span style="color: #0000BB">$menu</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">render</span><span style="color: #007700">();&nbsp;</span>
+</span>
+</code></p>
+<p>Geeft als (vereenvoudigd) resultaat bijvoorbeeld:</p>
+<p><code><span style="color: #000000">
+<span style="color: #007700">&lt;</span><span style="color: #0000BB">ul</span><span style="color: #007700">&gt;<br />
+&nbsp;&nbsp;&lt;</span><span style="color: #0000BB">li</span><span style="color: #007700">&gt;&lt;</span><span style="color: #0000BB">a&nbsp;href</span><span style="color: #007700">=</span><span style="color: #DD0000">"home"</span><span style="color: #007700">&gt;</span><span style="color: #0000BB">Home</span><span style="color: #007700">&lt;/</span><span style="color: #0000BB">a</span><span style="color: #007700">&gt;&lt;/</span><span style="color: #0000BB">li</span><span style="color: #007700">&gt;<br />
+&nbsp;&nbsp;&lt;</span><span style="color: #0000BB">li</span><span style="color: #007700">&gt;&lt;</span><span style="color: #0000BB">a&nbsp;href</span><span style="color: #007700">=</span><span style="color: #DD0000">"een_pagina"</span><span style="color: #007700">&gt;</span><span style="color: #0000BB">Een&nbsp;pagina</span><span style="color: #007700">&lt;/</span><span style="color: #0000BB">a</span><span style="color: #007700">&gt;<br />
+&nbsp;&nbsp;&nbsp;&lt;</span><span style="color: #0000BB">ul</span><span style="color: #007700">&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;</span><span style="color: #0000BB">li</span><span style="color: #007700">&gt;&lt;</span><span style="color: #0000BB">a&nbsp;href</span><span style="color: #007700">=</span><span style="color: #DD0000">"een_pagina/subpagina"</span><span style="color: #007700">&gt;</span><span style="color: #0000BB">Subpagina</span><span style="color: #007700">&lt;/</span><span style="color: #0000BB">a</span><span style="color: #007700">&gt;&lt;/</span><span style="color: #0000BB">li</span><span style="color: #007700">&gt;<br />
+&nbsp;&nbsp;&nbsp;&lt;/</span><span style="color: #0000BB">ul</span><span style="color: #007700">&gt;<br />
+&nbsp;&nbsp;&lt;/</span><span style="color: #0000BB">li</span><span style="color: #007700">&gt;<br />
+&nbsp;&nbsp;&lt;</span><span style="color: #0000BB">li</span><span style="color: #007700">&gt;&lt;</span><span style="color: #0000BB">a&nbsp;href</span><span style="color: #007700">=</span><span style="color: #DD0000">"links"</span><span style="color: #007700">&gt;</span><span style="color: #0000BB">Links</span><span style="color: #007700">&lt;/</span><span style="color: #0000BB">a</span><span style="color: #007700">&gt;&lt;/</span><span style="color: #0000BB">li</span><span style="color: #007700">&gt;<br />
+&nbsp;&nbsp;&lt;</span><span style="color: #0000BB">li</span><span style="color: #007700">&gt;&lt;</span><span style="color: #0000BB">a&nbsp;href</span><span style="color: #007700">=</span><span style="color: #DD0000">"contact"</span><span style="color: #007700">&gt;</span><span style="color: #0000BB">Contact</span><span style="color: #007700">&lt;/</span><span style="color: #0000BB">a</span><span style="color: #007700">&gt;&lt;/</span><span style="color: #0000BB">li</span><span style="color: #007700">&gt;<br />
+&lt;/</span><span style="color: #0000BB">ul</span><span style="color: #007700">&gt;&nbsp;</span>
+</span>
+</code><em>voorbeeld van vereenvoudigde html</em></p>
+<p>Sterk vereenvoudigd omdat er nog classes en id's meegegeven worden aan de ul, li en a elementen.</p>
+<h2>Classes en id's van menu elementen</h2>
+<p>Aan elk html element van het gegenereerde menu worden classes meegegeven die het mogelijk maken om het menu op diverse manieren te stylen met een stylesheet.</p>
+<h3>ul</h3>
+<p>Aan het ul element worden alleen een tweetal classes meegegeven:</p>
+<ul>
+<li>'lev#' (waar # staat voor het level, beginnend bij 1)</li>
+<li>als het een submenu is (lev2 of hoger) komt de uri van de pagina waar het een submenu van is erbij.</li>
+</ul>
+<p>In bovenstaand voorbeeld ziet de eerste ul er dus zo uit:</p>
+<p><code><span style="color: #000000">
+<span style="color: #007700">&lt;</span><span style="color: #0000BB">ul&nbsp;</span><span style="color: #007700">class=</span><span style="color: #DD0000">"lev1"</span><span style="color: #007700">&gt;&nbsp;</span>
+</span>
+</code></p>
+<p>En de tweede ul (onderdeel van de tweede li):</p>
+<p><code><span style="color: #000000">
+<span style="color: #007700">&lt;</span><span style="color: #0000BB">ul&nbsp;</span><span style="color: #007700">class=</span><span style="color: #DD0000">"lev1&nbsp;een_pagina"</span><span style="color: #007700">&gt;&nbsp;</span>
+</span>
+</code></p>
+<h3>li</h3>
+<p>Classes meegegeven aan een li element:</p>
+<ul>
+<li>'lev#' (net als bij ul)</li>
+<li>'pos#' (positie binnen bovenliggende ul, beginnend bij 1)</li>
+<li>'first' alleen als pos1, dus de eerste li binnen de ul.</li>
+<li>'last' alleen voor de laatste li binnen de ul.</li>
+<li>'current' als dit de huidige pagina is, dit is er altijd maar &eacute;&eacute;n in het hele menu.</li>
+<li>'active' als de huidige pagina een onderliggende pagina is (dus als class 'current' heeft). Dit is de hele tak van li's naar boven toe. Maar altijd maar &eacute;&eacute;n tak</li>
+<li>de uri van dit menu-item. Dus bijvoorbeeld 'een_pagina'.</li>
+</ul>
+<p>De id die meegegeven wordt aan een li element is alsvolgt samengesteld:</p>
+<ul>
+<li>menu_</li>
+<li>uri van de huidige pagina, met daarachter een '_'</li>
+<li>pos#_lev#</li>
+</ul>
+<p>In bovenstaand voorbeeld ziet de eerste li er dus zo uit:</p>
+<p><code><span style="color: #000000">
+<span style="color: #007700">&lt;</span><span style="color: #0000BB">li&nbsp;id</span><span style="color: #007700">=</span><span style="color: #DD0000">"menu_home_pos1_lev1"&nbsp;</span><span style="color: #007700">class=</span><span style="color: #DD0000">"lev1&nbsp;pos1&nbsp;first&nbsp;current&nbsp;home"</span><span style="color: #007700">&gt;&nbsp;</span>
+</span>
+</code></p>
+<h3>a</h3>
+<p>Aan het a element wordt precies dezelfde id en class meegegeven als aan het li element.</p>
+<h2>Methods om een menu te maken</h2>
+<h3>add()</h3>
+<h3>add_to_top()</h3>
+<h3>add_after()</h3>
+<h3>add_to_bottom()</h3>
+<h3>add_sub()</h3>
+<h3>remove_item()</h3>
+<h2>Methods om een menu met een tabel te maken</h2>
+<h3>set_menu()</h3>
+<h3>set_menu_table()</h3>
+<h2>Methods om het menu te renderen</h2>
+<h3>set_current()</h3>
+<h3>render()</h3>
+<h3>render_branch()</h3>
+<h3>set_menu_templates()</h3>
+<h3>set_item_templates()</h3>
+<h2>Diverse methods</h2>
+<h3>get_prev_uri()</h3>
+<p><code><span style="color: #000000">
+<span style="color: #007700">(string)&nbsp;</span><span style="color: #0000BB">get_prev_uri</span><span style="color: #007700">(&nbsp;[(string)&nbsp;</span><span style="color: #0000BB">$uri</span><span style="color: #007700">,&nbsp;(bool)&nbsp;</span><span style="color: #0000BB">$full&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">FALSE&nbsp;</span><span style="color: #007700">]&nbsp;)&nbsp;</span>
+</span>
+</code></p>
+<p>Hiermee kun je de uri krijgen van de vorige pagina op hetzelfde nivo. Standaard krijg je alleen het uri part van het huidige nivo.<br />
+Als eerste argument geef je de huidige (volledige) uri mee. Als je deze leeglaat en je hebt al eerder <em>set_current()</em> aangeroepen, dan wordt de huidige uri gebruikt.<br />
+Als het 2e argument TRUE is zal de hele uri (met alle nivo's) teruggegeven worden.<br />
+Als er geen vorige uri bestaat zal het resultaat FALSE zijn.</p>
+<p><code><span style="color: #000000">
+<span style="color: #0000BB">$menu</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">set_current</span><span style="color: #007700">(</span><span style="color: #DD0000">'een_pagina'</span><span style="color: #007700">);<br />
+echo&nbsp;</span><span style="color: #0000BB">$menu</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">get_prev_uri</span><span style="color: #007700">();<br />
+echo&nbsp;</span><span style="color: #0000BB">$menu</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">get_prev_uri</span><span style="color: #007700">(&nbsp;</span><span style="color: #DD0000">'een_pagina/tweede_sub_pagina'</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">TRUE&nbsp;</span><span style="color: #007700">);<br />
+echo&nbsp;</span><span style="color: #0000BB">$menu</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">get_prev_uri</span><span style="color: #007700">(&nbsp;</span><span style="color: #DD0000">'links'&nbsp;</span><span style="color: #007700">);<br />
+echo&nbsp;</span><span style="color: #0000BB">$menu</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">get_prev_uri</span><span style="color: #007700">(&nbsp;</span><span style="color: #DD0000">'home'&nbsp;</span><span style="color: #007700">);&nbsp;</span>
+</span>
+</code></p>
+<p>Geeft als resultaat:</p>
+<p><code><span style="color: #000000">
+<span style="color: #0000BB">home<br />
+een_pagina</span><span style="color: #007700">/</span><span style="color: #0000BB">eerste_sub_pagina<br />
+een_pagina<br />
+FALSE&nbsp;</span>
+</span>
+</code></p>
+<h3>get_next_uri()</h3>
+<p><code><span style="color: #000000">
+<span style="color: #007700">(string)&nbsp;</span><span style="color: #0000BB">get_next_uri</span><span style="color: #007700">(&nbsp;[(string)&nbsp;</span><span style="color: #0000BB">$uri&nbsp;</span><span style="color: #007700">,&nbsp;(bool)&nbsp;</span><span style="color: #0000BB">$full&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">FALSE&nbsp;</span><span style="color: #007700">]&nbsp;)&nbsp;</span>
+</span>
+</code></p>
+<p>Zelfde als get_prev_uri() maar dan de volgende.</p>
