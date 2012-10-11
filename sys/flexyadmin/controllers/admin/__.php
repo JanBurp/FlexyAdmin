@@ -1,9 +1,6 @@
 <?
 require_once(APPPATH."core/AdminController.php");
 require_once(APPPATH."core/FrontendController.php");  // Load this also, so PHP can build documentation for this one also
-require_once(APPPATH."libraries/__/markdown.php");
-
-
 
 /**
  * Build proces, maakt automatisch documentatie.
@@ -32,6 +29,7 @@ class __ extends AdminController {
 	public function __construct() {
 		parent::__construct();
     $this->revision=$this->get_revision();
+    $this->load->helper('markdown');
 	}
 
 	public function index() {
@@ -210,22 +208,24 @@ class __ extends AdminController {
           $description=$p->getDesc();
           $shortdescription=$p->getShortDesc();
         }
-        $name=str_replace('.php','',$file);
-        $html=$this->load->view('admin/__/doc_file',array(
-          'file'=>$name,
-          'path'=>$path,
-          'shortdescription'=>$shortdescription,
-          'description'=>$description,
-          'doc'=>$tags,
-          'functions'=>$functionsHtml
-        ),true);
-        $content.=highlight_code_if_needed( $html);
-        $fileContent=$this->load->view('admin/__/doc',array('content'=>$content,'root'=>'../','revision'=>$this->revision),true);
-        $fileName='userguide/FlexyAdmin/helpers/'.str_replace('.php','.html',$file);
-        write_file($fileName,$fileContent);
-        $this->_add_content('Helper file created: '.$fileName.'</br>');
-        $this->toc['helpers'][$name]=$fileName;
-        $this->_add_to_tipue($fileName,$html,$fileName);
+        if (!isset($tags['ignore'])) {
+          $name=str_replace('.php','',$file);
+          $html=$this->load->view('admin/__/doc_file',array(
+            'file'=>$name,
+            'path'=>$path,
+            'shortdescription'=>$shortdescription,
+            'description'=>$description,
+            'doc'=>$tags,
+            'functions'=>$functionsHtml
+          ),true);
+          $content.=highlight_code_if_needed( $html);
+          $fileContent=$this->load->view('admin/__/doc',array('content'=>$content,'root'=>'../','revision'=>$this->revision),true);
+          $fileName='userguide/FlexyAdmin/helpers/'.str_replace('.php','.html',$file);
+          write_file($fileName,$fileContent);
+          $this->_add_content('Helper file created: '.$fileName.'</br>');
+          $this->toc['helpers'][$name]=$fileName;
+          $this->_add_to_tipue($fileName,$html,$fileName);
+        }
       }
 
     }

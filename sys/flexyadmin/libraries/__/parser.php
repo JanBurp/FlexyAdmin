@@ -1,7 +1,5 @@
 <?php
 
-require_once("markdown.php");
-
 
 /**
 * PHPDoc parser for use in Doqumentor

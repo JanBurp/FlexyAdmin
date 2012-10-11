@@ -83,24 +83,30 @@ $(document).ready(function() {
   $('#subitems').each(function(){
     var headers=$(this).children('h1');
     var menu='<ul class="submenu">';
-    var nr=0;
     $(headers).each(function(){
-      $(this).addClass('item_'+nr);
-      $(this).next('.content').addClass('item_'+nr);
-      menu+='<li class="item_'+nr+'">'+$(this).html()+'</li>';
-      nr++;
+      var uri=$(this).html();
+      uri=uri.toLowerCase().replace(/ /g,'_');
+      $(this).addClass(uri);
+      $(this).next('.content').addClass(uri);
+      menu+='<li class="'+uri+'">'+$(this).html()+'</li>';
     });
     menu+='</ul>';
     $(this).before(menu);
     $('.submenu li').click(function(){
       $('.submenu li').removeClass('current');
-      var item=$(this).attr('class');
+      var uri=$(this).attr('class');
       $('#subitems>*').hide();
-      $('#subitems .'+item).show();
+      $('#subitems .'+uri).show();
       $(this).addClass('current');
+      window.history.pushState("", "", "admin/help/"+uri);
     });
-    $('.submenu li:first').trigger('click');
-    
+    var page=$(this).attr('page');
+    if (page=='') {
+      $('.submenu li:first').trigger('click');
+    }
+    else {
+      $('.submenu li.'+page).trigger('click');
+    }
   });
   
   
