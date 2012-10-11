@@ -1,15 +1,15 @@
-<h1>Help</h1>
-<p>Here you find common help.<br/><br/></p>
-<?=$commonHelp?>
+<div id="subitems" page="<?=$page?>">
 
-<h1>Help for each item</h1>
-<p>Here you find help for each item.<br/>These help texts will popup if you move the mouse over an item and wait a moment.<br/><br/></p>
-<?=$specificHelp?>
+  <? if (!empty($commonHelp)): ?>
+  <h1>Help</h1>
+  <div class="content">
+    <?=$commonHelp?>
+  </div>
+  <? endif ?>
 
-<h1>FlexyAdmin</h2>
-<h2>By</h2>
-<p><a href="http://www.jandenbesten.net" target="_blank">Jan den Besten</a> (c) 2009-2012</p>
+  <? if (!empty($help)): ?>
+  <?=$help?>
+  <? endif ?>
 
-<h2>Which browser?</h2>
-The backend of FlexyAdmin works on modern browsers.<br/>
-If you have some problems, use the free and safe <a href="http://www.mozilla.org/firefox">Firefox</a> browser.
+</div>
+

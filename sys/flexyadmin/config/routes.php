@@ -37,6 +37,10 @@ $route['file/(.*)/(.*)'] = "file/download/this/$1/$2";
  */
 $route['admin/plugin/(.+)'] = "admin/plugin_controller/call/$1";
 
+/**
+ * This routing reroutes help subpages
+ */
+$route['admin/help/(.+)'] = "admin/help/index/$1";
 
 
 // Reserved routes
