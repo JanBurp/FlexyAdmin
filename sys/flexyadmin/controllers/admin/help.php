@@ -30,6 +30,7 @@ class Help extends AdminController {
 
     $map='sys/flexyadmin/views/help';
     $helpFiles=read_map($map);
+    ksort($helpFiles);
     $helpHTML='';
     foreach ($helpFiles as $file => $item) {
       $title=str_replace('_',' ',get_suffix(str_replace('.html','',$item['name']),'__'));
