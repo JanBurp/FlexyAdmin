@@ -27,15 +27,14 @@ class Help extends AdminController {
     $this->load->helper('markdown');
     
 		$commonHelp=$this->cfg->get('CFG_configurations','txt_help');
-    // $specificHelp=$this->ui->get_help();
 
-    $map='sys/flexyadmin/views/help/';
+    $map='sys/flexyadmin/views/help';
     $helpFiles=read_map($map);
     $helpHTML='';
     foreach ($helpFiles as $file => $item) {
       $title=str_replace('_',' ',get_suffix(str_replace('.html','',$item['name']),'__'));
       if (!empty($title)) {
-        $html=read_file($map.$file);
+        $html=read_file($item['path']);
         $matches=array();
         if (preg_match_all("/\[(.*)\]/uiUsm", $html,$matches)) {
           foreach ($matches[1] as $match) {
