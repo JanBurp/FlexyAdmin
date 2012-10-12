@@ -79,16 +79,20 @@ function doGrid() {
 		//
 		filter=$("table.grid:first");
 		if (filter.length>0 && !isGridAction) {
+      
 			if ($(filter).hasClass('pagination')) {
 				// add filter input
 				var search=$(filter).attr('search');
 				$("tr.caption:first tr").append('<td class="filter"><span class="help '+config.help_filter+'"><input class="filter" type="text" value="'+search+'"/></span></div>');
-				// bind action on change
-				$('input.filter').change(function(){
-					var search=$(this).val();
-					// ok now reload the page, starting from page 0, with this search and current order
-					var url=$(filter).attr('url')+'/0/order/'+$(filter).attr('order')+'/search/'+search;
-					location.href=url;
+				// bind action
+        var filterBox=$('input.filter');
+				$(filterBox).keypress(function(e){
+          if (e.which==keyEnter) {
+  					var search=$(this).val();
+  					// ok now reload the page, starting from page 0, with this search and current order
+  					var url=$(filter).attr('url')+'/0/order/'+$(filter).attr('order')+'/search/'+search;
+  					location.href=url;
+          }
 				});
 			}
 			else {
@@ -125,6 +129,7 @@ function doGrid() {
 							setCurrent('first');
 					}
 				});
+        
 				// place filter input on other place
 				filter_input=$("div.filter:first input");
 				$(filter_input).addClass("filter").attr({title:'search / filter'});
