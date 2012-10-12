@@ -179,6 +179,8 @@ class Plugin_safe_assets extends Plugin {
     $thisAllowed=$allowed;
     array_unshift($thisAllowed,'dir');      // Make sure maps are not deleted
 		$files=read_map($path);
+    $lowerFiles=read_map(strtolower($path));
+    $files=array_merge($files,$lowerFiles);
 		foreach ($files as $file => $value) {
       if (!is_dir($path.'/'.$file) and !in_array($value['type'],$thisAllowed)) {
         unlink($path.'/'.$file);
