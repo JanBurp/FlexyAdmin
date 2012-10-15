@@ -1,3 +1,25 @@
+Changes r1802
+=============
+
+UPDATE:
+- jQuery UI 1.8.23
+
+BUGS:
+- MY_DB->add_many(), now works as manuel says
+- Searchbox in mediagrid in IE
+- plugin_newsletters
+- plugin_uri
+- MY_string_helper:intro_string()
+
+NEW:
+- Help voor gebruikers
+- plugin_safe_assets: Submaps of media maps are kept, and checked for forbidden files
+- plugin_safe_assets: Submaps of assets maps (not set in cfg_media) are left alone
+- plugin_automenu now triggers changed also on dat_date/tme_date fields (for news/blog etc)
+- standard view of plugins
+- .cur extension added for image files
+
+
 Changes r1754
 ===============
 
