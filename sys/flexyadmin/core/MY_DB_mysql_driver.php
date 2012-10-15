@@ -498,11 +498,11 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
    * 
    * Search set array ziet er alsvolgt uit:
    * 
-   *    array(  "search" => "",                             // Zoekterm
-   *            "field"  => "",                             // In welk veld gezocht wordt
-   *            "or"     => "[AND|OR]",                     // AND of OR, default OR
-   *            "table"  => ''                              // In welke tabel (default huidige tabel)
-   *          )
+   *      array(  "search" => "",                             // Zoekterm
+   *              "field"  => "",                             // In welk veld gezocht wordt
+   *              "or"     => "[AND|OR]",                     // AND of OR, default OR
+   *              "table"  => ''                              // In welke tabel (default huidige tabel)
+   *            )
    *
    * @param array $search 
    * @param string $set_sql[TRUE] Als TRUE dan wordt de SQL hiermee opgebouwd 
