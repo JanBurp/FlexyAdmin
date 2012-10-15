@@ -79,6 +79,8 @@
 
 class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	
+  private $CI;
+  
 	private $pk;
 	private $key;
 	private $maxTextLen;
@@ -91,6 +93,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
    * @var mixed
    */
   public $foreigns;
+  private $foreign_trees=FALSE;
 
   private $abstracts;
   private $asAbstracts;
@@ -123,6 +126,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
    */
 	public function __construct($params) {
 		parent::__construct($params);
+    $this->CI=& get_instance();
 		$this->reset();
 	}
 
@@ -278,8 +282,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	private function _set_order_by_foreign($order_by_foreign=FALSE,$table) {
 		if ($order_by_foreign) {
 			if (!is_array($order_by_foreign)) $order_by_foreign=array($order_by_foreign);
-			$CI=& get_instance();
-			foreach ($order_by_foreign as $key => $foreign_order_id) {
+						foreach ($order_by_foreign as $key => $foreign_order_id) {
 				$desc=explode(' ',$foreign_order_id);
 				$foreign_order_id=$desc[0];
 				// to get good order for SQL, ASC/DESC must be swapped.
@@ -308,8 +311,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	private function _set_order_by_many($order_by_many=FALSE,$table) {
 		if ($order_by_many) {
 			if (!is_array($order_by_many)) $order_by_many=array($order_by_many);
-			$CI=& get_instance();
-			foreach ($order_by_many as $rel_table) {
+						foreach ($order_by_many as $rel_table) {
 				// trace_($rel_table);
 				$desc=explode(' ',$rel_table);
 				$rel_table=$desc[0];
@@ -375,16 +377,15 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			$order="self_parent";
 		}
 		else {
-			$CI=& get_instance();
 			// find in table info
-			if (isset($CI->cfg)) {
-				$order=$CI->cfg->get('CFG_table',$table,'str_order_by');
+			if (isset($this->CI->cfg)) {
+				$order=$this->CI->cfg->get('CFG_table',$table,'str_order_by');
 				// or first standard order field
 				if (empty($order) and !empty($table)) {
 					if (!empty($fallbackOrder))
 						$order=$fallbackOrder;
 					else {
-						$stdFields=$CI->config->item('ORDER_default_fields');
+						$stdFields=$this->CI->config->item('ORDER_default_fields');
 						$fields=$this->list_fields($table);
 						do {
 							$curr=current($stdFields);
@@ -748,8 +749,14 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 						$this->join($joinTable.' '.$joinAsTable, $joinAsTable.".$this->pk = ".$table.".".$item["key"], 'left');
 						// add abstract or all foreign fields?
 						if ($this->abstracts) {
-							$abstractField=$this->get_abstract_fields_sql($joinAsTable,$field."__");
-							$selectFields[]=$abstractField;
+              // Test if foreign table has a tree order, if so, it's not a simple question of adding some SQL, data needs to be created...
+              if ($this->has_field($joinAsTable,'self_parent')) {
+                $this->foreign_trees[]=$joinAsTable;
+              }
+              else {
+  							$abstractField=$this->get_abstract_fields_sql($joinAsTable,$field."__");
+  							$selectFields[]=$abstractField;
+              }
 						}
 						else {
 							if (isset($item['fields']) and !empty($item['fields']))
@@ -910,7 +917,14 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 
 		// Stop caching the query
 		// $this->stop_cache();
-		
+
+    // Where statement, later if tree
+    if ($this->orderAsTree) {
+      $this->last_where=$this->ar_where;
+      $this->ar_where=array();
+    }
+    
+    
 		/**
 		 * get the query
 		 */
@@ -1059,9 +1073,25 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			$multiOptions=el("multi_options",$result);
 			unset($result["options"]);
 			unset($result["multi_options"]);
+
 			$result=$this->_make_tree_result($result);
+
+      // No normal WHERE statement possible with a tree order, but this is a hack to make it possible
+      if (!empty($this->last_where)) {
+        $this->ar_where=$this->last_where;
+        $this->select('id');
+        $query=$this->get($table);
+        $whereResult=$query->result_array();
+        $whereResult=$this->_set_key_to($whereResult,'id');
+        foreach ($result as $id => $row) {
+          if (!isset($whereResult[$id])) unset($result[$id]);
+        }
+      }
+
 			if ($options) $result["options"]=$options;
 			if ($multiOptions) $result["multi_options"]=$multiOptions;
+      
+      
 		}
 		
 		// Full uris if asked for
@@ -1225,7 +1255,6 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			$manyTables=$this->get_many_tables($table,$this->many);
 			if (count($manyTables)>0) {
 				// loop through all results to add the add_many data
-				$CI=& get_instance();
 				$manyResult=array();
 				foreach($result as $id=>$row) {
 					// loop throught all many tables to add the many data
@@ -1277,10 +1306,19 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			// trace_($result);
 		}
 
+    
+    /**
+     * RESET ALL, but keep settings for last addings
+     */
+		$this->ar_last_count=count($result);
+    $options=$this->options;
+    $foreign_trees=$this->foreign_trees;
+		$this->reset();
+
 		/**
 		 * add options if asked for
 		 */
-		if ($this->options and !empty($result)) {
+		if ($options and !empty($result)) {
 			$result=$this->_add_field_options($result,$table);
 			// options of foreigntables
 			$result=$this->_add_foreign_options($result,$this->get_foreign_tables($table),$table);
@@ -1290,11 +1328,28 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			}
 			$result=$this->_add_many_options($result,$manyTables);
 		}
+    
+    /**
+     * If foreign data is tree, add these data
+     */
+    if ($foreign_trees) {
+      foreach ($foreign_trees as $foreign_table ) {
+        $foreign_key=foreign_key_from_table($foreign_table);
+        $foreign_key_abstract=$foreign_key.'__'.$this->CI->config->item('ABSTRACT_field_name');
+        $abstract_fields=$this->get_abstract_fields($foreign_table);
+        $abstract_field=get_suffix(current($abstract_fields),'.');
+        // get all foreign tree data
+        $this->select('id,uri,order,self_parent');
+        $this->select($abstract_field)->order_as_tree()->uri_as_full_uri(TRUE,$abstract_field);
+        $foreign_data=$this->get_results($foreign_table);
+        // put tree abstract in result
+        foreach ($result as $id => $row) {
+          $result[$id][$foreign_key_abstract]=$foreign_data[$row[$foreign_key]][$abstract_field];
+        }
+      }
+    }
+    
 		log_("info","[DB+] data ready");
-		
-		$this->ar_last_count=count($result);
-		
-		$this->reset();
 		return $result;
 	}
 	
@@ -1310,10 +1365,9 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
    * @ignore
    */
   private function _insert_many_at_set_place($result,$manyResult,$id) {
-    $CI=& get_instance();
-		foreach ($manyResult as $rel => $relData) {
+    		foreach ($manyResult as $rel => $relData) {
       $manyOrder='';
-			if (isset($CI->cfg)) $manyOrder=$CI->cfg->get('CFG_table',$rel,'str_form_many_order');
+			if (isset($this->CI->cfg)) $manyOrder=$this->CI->cfg->get('CFG_table',$rel,'str_form_many_order');
       if (empty($manyOrder)) $manyOrder='last';
 			switch ($manyOrder) {
 				case 'first':
@@ -1553,6 +1607,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
    */
 	public function add_foreigns($foreigns=true) {
 		$this->foreigns=$foreigns;
+    $this->foreign_trees=FALSE;
 		if (is_array($foreigns)) {
 			$this->foreigns=array();
 			foreach ($foreigns as $table => $value) {
@@ -1618,20 +1673,19 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
    */
 	public function get_abstract_fields($table,$asPre='') {
 		$cleanTable=rtrim($table,'_'); // make sure self relation is possible
-		$CI=& get_instance();
 		$abFields=array();
 		/**
 		 * First check if abstract fields are set for this table
 		 */
-		$f=$CI->cfg->get('CFG_table',$cleanTable,"str_abstract_fields");
+		$f=$this->CI->cfg->get('CFG_table',$cleanTable,"str_abstract_fields");
 		if (isset($f)) $abFields=explode_pre(",",$f,$cleanTable.".");
 		/**
 		 * If not set: Auto abstract fields according to prefixes
 		 */
 		if (empty($abFields)) {
 			$allFields=$this->list_fields($cleanTable);
-			$preTypes=$CI->config->item('ABSTRACT_field_pre_types');
-			$nr=$CI->config->item('ABSTRACT_field_max');
+			$preTypes=$this->CI->config->item('ABSTRACT_field_pre_types');
+			$nr=$this->CI->config->item('ABSTRACT_field_max');
 			$loop=true;
 			while ($loop) {
 				$field=current($allFields);
@@ -1648,8 +1702,8 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		 */
 		if (empty($abFields)) {
 			$fieldData=$this->field_data($cleanTable);
-			$types=$CI->config->item('ABSTRACT_field_types');
-			$nr=$CI->config->item('ABSTRACT_field_max');
+			$types=$this->CI->config->item('ABSTRACT_field_types');
+			$nr=$this->CI->config->item('ABSTRACT_field_max');
 			$loop=true;
 			while ($loop) {
 				$fieldInfo=current($fieldData);
@@ -1668,7 +1722,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		 */
 		if (empty($abFields)) {
 			$allFields=$this->list_fields($cleanTable);
-			$nr=$CI->config->item('ABSTRACT_field_max');
+			$nr=$this->CI->config->item('ABSTRACT_field_max');
 			for ($n=0; $n<$nr; $n++) {
 				array_push($abFields,$table.".".each($allFields));
 			}
@@ -1686,8 +1740,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 */
   public function get_abstract_fields_sql($table,$asPre='') {
 		$abFields=$this->get_abstract_fields($table,$asPre);
-		$CI=& get_instance();
-		return $this->concat($abFields)." AS ".$asPre.$CI->config->item('ABSTRACT_field_name');
+		return $this->concat($abFields)." AS ".$asPre.$this->CI->config->item('ABSTRACT_field_name');
 	}
 
   
@@ -1728,13 +1781,12 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
     */
 		public function get_many_tables($table,$tables='') {
 			$out=array();
-			$CI=& get_instance();
-			if (empty($tables) or !is_array($tables)) {
+						if (empty($tables) or !is_array($tables)) {
 				// list all tables with right name
-				$like=$CI->config->item('REL_table_prefix')."_".remove_prefix($table).$CI->config->item('REL_table_split');
-				if (isset($CI->cfg)) {
+				$like=$this->CI->config->item('REL_table_prefix')."_".remove_prefix($table).$this->CI->config->item('REL_table_split');
+				if (isset($this->CI->cfg)) {
 					// first table with info (for order)
-					$tablesWithInfo=$CI->cfg->get('CFG_table');
+					$tablesWithInfo=$this->CI->cfg->get('CFG_table');
 					$tablesWithInfo=array_keys($tablesWithInfo);
 					$tablesWithInfo=filter_by($tablesWithInfo,$like);
 					if (!empty($tablesWithInfo)) $tablesWithInfo=array_combine($tablesWithInfo,$tablesWithInfo);
@@ -1811,34 +1863,42 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	public function get_options($table,$optionsWhere="") {
 			$options=array();
 			$cleanTable=rtrim($table,'_');
-			$CI=&get_instance();
 			$asTree=$this->has_field($cleanTable,'self_parent');
+      
 			$this->select($this->pk);
 			if ($asTree) $this->select('uri,order,self_parent');
-			$this->select($this->get_abstract_fields_sql($cleanTable));
+      $abstract_field=$this->get_abstract_fields($cleanTable);
+      $abstract_field=remove_prefix(current($abstract_field),'.');
+      $this->select($abstract_field);
 			if ($asTree) {
-				$this->order_as_tree();
+        $this->order_as_tree();
+        $this->uri_as_full_uri(TRUE,$abstract_field);
 			}
 			else {
-				$this->_set_standard_order($cleanTable,$CI->config->item('ABSTRACT_field_name'));
+				$this->_set_standard_order($cleanTable,$this->CI->config->item('ABSTRACT_field_name'));
 			}
-			if (!empty($optionsWhere)) {
-				$this->ar_where[]=$optionsWhere;
-			}
+      
+			if (!empty($optionsWhere)) $this->ar_where[]=$optionsWhere;
+      
       // Hard coded usersgroup options
-      if ($table=='cfg_user_groups') {
-        $this->where('id >=',$CI->user_group_id);
-      }
+      if ($table=='cfg_user_groups') $this->where('id >=',$this->CI->user_group_id);
         
-			// $res=$this->get_results($cleanTable);
-			$query=$this->get($cleanTable);
-			$res=$query->result_array();
-			$query->free_result();
-			// set id as key
-			$res=$this->_set_key_to($res,PRIMARY_KEY);
+      // Get results
+      if ($asTree) {
+        $res=$this->get_results($cleanTable);
+        // strace_(count($res));
+        // strace_($res);
+      }
+      else {
+        $query=$this->get($cleanTable);
+        $res=$query->result_array();
+        $query->free_result();
+        // set id as key
+        $res=$this->_set_key_to($res,PRIMARY_KEY);
+      }
 			foreach($res as $row) {
-				$options[$row[$this->pk]]=$row[$CI->config->item('ABSTRACT_field_name')];
-        if ($asTree and $row['self_parent']!=0 and isset($options[$row[$this->pk]]) and isset($res[$row['self_parent']])) $options[$row[$this->pk]]=$res[$row['self_parent']][$CI->config->item('ABSTRACT_field_name')].' / '.$options[$row[$this->pk]];
+        $options[$row[$this->pk]]=$row[$abstract_field];
+        // if ($asTree and $row['self_parent']!=0 and isset($options[$row[$this->pk]]) and isset($res[$row['self_parent']])) $options[$row[$this->pk]]=$res[$row['self_parent']][$abstract_field].' / '.$options[$row[$this->pk]];
 			}
 			return $options;
 		}
@@ -1855,14 +1915,13 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 private function _add_foreign_options($out,$foreignTables,$table='') {
 			$options=array();
 			if (isset($foreignTables)) {
-				$CI=&get_instance();
 				foreach ($foreignTables as $key => $forTable) {
 					$cleanTable=rtrim($forTable['table'],'_');
-					$optionsWhere=$CI->cfg->get('CFG_table',$cleanTable,'str_options_where');
+					$optionsWhere=$this->CI->cfg->get('CFG_table',$cleanTable,'str_options_where');
 					// override options Where with Field Info, if there is any
 					if (!empty($table)) {
 						$cfgKey=$table.'.'.$forTable['key'];
-						$optWhere=$CI->cfg->get('CFG_field',$cfgKey,'str_options_where');
+						$optWhere=$this->CI->cfg->get('CFG_field',$cfgKey,'str_options_where');
 						if (!empty($optWhere)) $optionsWhere=$optWhere;
 					}
 					$options[$key]=$this->get_options($cleanTable,$optionsWhere);
@@ -1888,9 +1947,8 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 private function _add_many_options($out,$manyTables) {
 			$options=array();
 			if (isset($manyTables)) {
-				$CI=&get_instance();
-				foreach ($manyTables as $rel => $jTable) {
-					$optionsWhere=$CI->cfg->get('CFG_table',$jTable["rel"],'str_options_where');
+								foreach ($manyTables as $rel => $jTable) {
+					$optionsWhere=$this->CI->cfg->get('CFG_table',$jTable["rel"],'str_options_where');
 					$options[$rel]=$this->get_options($jTable["join"],$optionsWhere);
 				}
 			}
@@ -1912,14 +1970,13 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 * @ignore
 	 */
 	 private function _add_field_options($out,$table) {
-			$CI=& get_instance();
-			// search options in cfg_field_info for every field, if found, give the options
+						// search options in cfg_field_info for every field, if found, give the options
 			$fields=$this->list_fields($table);
 			foreach($fields as $field) {
-				$options=$CI->cfg->get('CFG_field',$table.".".$field,'str_options');
+				$options=$this->CI->cfg->get('CFG_field',$table.".".$field,'str_options');
 				if (isset($options) and !empty($options))	{
 					$options=explode("|",$options);
-					if ($CI->cfg->get('CFG_field',$table.".".$field,'b_multi_options'))
+					if ($this->CI->cfg->get('CFG_field',$table.".".$field,'b_multi_options'))
 						$out["multi_options"][$field]=array_combine($options,$options);
 					else
 						$out["options"][$field]=array_combine($options,$options);
@@ -1936,13 +1993,12 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 * @return array
 	 */
 	public function defaults($table) {
-		$CI=& get_instance();
-		log_("info","[DB+] Get default data:");
+				log_("info","[DB+] Get default data:");
 		$out=array();
 		$id=-1;
 		$fields=$this->list_fields($table);
 		foreach ($fields as $field) {
-			$out[$id][$field]=$CI->cfg->field_data($table,$field,'default');
+			$out[$id][$field]=$this->CI->cfg->field_data($table,$field,'default');
 			if ($out[$id][$field]==NULL) $out[$id][$field]="";
 		}
 
