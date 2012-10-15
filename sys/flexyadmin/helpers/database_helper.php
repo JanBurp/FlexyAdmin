@@ -34,6 +34,17 @@ function is_foreign_field($field) {
 }
 
 /**
+ * Geeft foreign key van gegeven foreign table
+ *
+ * @param string $table
+ * @return string
+ */
+function foreign_key_from_table($table) {
+	return 'id_'.remove_prefix($table);
+}
+
+
+/**
  * Geeft foreign tabel van gegeven foreign key, en checkt of tabel werkelijk bestaat
  *
  * @param string $key Bijvoorbeeld id_links

@@ -186,6 +186,9 @@ class Show extends AdminController {
 						$data=$this->db->get_result($table,$pagination,$offset);
 						$total_rows=$this->db->last_num_rows_no_limit();
 
+            // trace_($data);
+
+
 						$last_order=$this->db->get_last_order();
 						if (substr($last_order,0,1)!='(') $order=$last_order;
 
@@ -329,13 +332,13 @@ class Show extends AdminController {
 				}
 				$data=$this->db->get_result($table);
 				// trace_('#show#'.$this->db->last_query());
-				// strace_($data);
+        // strace_($data);
 				$options=el("options",$data);
 				$multiOptions=el("multi_options",$data);
 				$data=current($data);
 			}
       // strace_($options);
-			// strace_($multiOptions);
+      // strace_($multiOptions);
 
 			/**
 			 * if data: first render data for the form class, then put data in form
