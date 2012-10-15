@@ -106,6 +106,29 @@ class Search_replace Extends CI_Model {
 		$query->free_result();
 		return $result;
 	}
+  
+  
+  /**
+   * Test if text is found
+   *
+   * @param string $text 
+   * @param array $fields[''] Fields to find in
+   * @return bool TRUE if found
+   * @author Jan den Besten
+   */
+  public function has_text($text,$fields='') {
+    $found=FALSE;
+    if (!is_array($fields)) $fields=array($fields);
+    foreach ($fields as $field) {
+      $table=get_prefix($field,'.');
+      $field=remove_prefix($field,'.');
+      $this->db->search(array('search'=>$text,'field'=>$field))->select($field);
+      $row=$this->db->get_row($table);
+      $found=(!empty($row));
+      if ($found) break;
+    }
+    return $found;
+  }
 
 
 

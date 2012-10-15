@@ -26,4 +26,7 @@ $lang['str_author']       = "Auteur";
 $lang['stx_description']  = "Omschrijving";
 $lang['stx_keywords']     = $lang['str_keywords'];
 
+// MEDIA GRID fields
+$lang['USED']             = 'Gebruikt';
+
 ?>

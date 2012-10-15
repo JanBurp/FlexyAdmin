@@ -503,7 +503,8 @@ class File_manager Extends CI_Model {
 	private function _create_render_data($details=TRUE) {
 		$data=array();
 		$files=$this->files;
-		// $files=$this->file_sort($files);
+    $used_field=lang('USED');
+    
 		$imgTypes=$this->config->item('FILE_types_img');
 		$flashTypes=$this->config->item('FILE_types_flash');
 		$mp3Types=$this->config->item('FILE_types_mp3');
@@ -590,6 +591,15 @@ class File_manager Extends CI_Model {
 						$fileData["filesize"]=$file["size"];
 						$fileData["date"]=span('hidden').$file['rawdate']._span().str_replace(' ','&nbsp;',$file["date"]);
 					}
+
+          // Check if file is used somewhere
+          if (isset($file[$used_field])) {
+            if ($file[$used_field])
+              $fileData[$used_field]=icon('yes');
+            else
+              $fileData[$used_field]=icon('no');
+          }
+          
 					$nr++;
 					$data[$name]=$fileData;
 				}
