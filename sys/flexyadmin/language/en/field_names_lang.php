@@ -11,4 +11,7 @@ $lang['txt_text_en']      = $lang['txt_text']. ' EN';
 // Most used extra fields
 $lang['tme_datetime']     = "Date &amp; Time";
 
+// MEDIA GRID fields
+$lang['USED']             = 'Used';
+
 ?>

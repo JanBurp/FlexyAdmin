@@ -555,6 +555,9 @@ $config["CFG_"]=array(
 		"cfg_media_info.int_last_uploads"=>array(
 			'str_fieldset'=>'More'
  			),
+		"cfg_media_info.fields_check_if_used_in"=>array(
+			'str_fieldset'=>'More'
+ 			),
 		"cfg_media_info.b_in_media_list"=>array(
 			'str_fieldset'=>'More'
  			),
