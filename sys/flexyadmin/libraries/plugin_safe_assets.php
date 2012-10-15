@@ -138,15 +138,17 @@ class Plugin_safe_assets extends Plugin {
 		}
 		// Loop through all maps and make them safe and clen
 		foreach ($mapsToClean as $path => $allowed) {
-			if ($this->config('create_htacces')) {
-				$this->_make_map_safe($path,$allowed);
-        $this->checked[$path]=$allowed;
-			}
-			$removed=$this->_remove_forbidden_files($path,$allowed,'',!in_array($path,$noRecursion));
-			if ($removed) {
-        $this->removed[$path]=$removed;
-				$someRemoved = true;
-			}
+      if (!empty($allowed)) {
+  			if ($this->config('create_htacces')) {
+  				$this->_make_map_safe($path,$allowed);
+          $this->checked[$path]=$allowed;
+  			}
+  			$removed=$this->_remove_forbidden_files($path,$allowed,'',!in_array($path,$noRecursion));
+  			if ($removed) {
+          $this->removed[$path]=$removed;
+  				$someRemoved = true;
+  			}
+      }
 		}
 		return $someRemoved;
 	}
