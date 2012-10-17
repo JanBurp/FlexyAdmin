@@ -62,6 +62,7 @@
  * Zoeken op samengevoegde data
  * ============================
  * 
+ * Je kunt in je 'where' statement ook zoeken in tabellen die met een relatietabel gekoppeld zijn.
  * Onderstaand voorbeeld geeft:
  * 
  * - rijen van *tbl_menu* en de samengevoegde (many) data van *tbl_links*
@@ -71,7 +72,15 @@
  * 
  *      $this->add_many();
  *      $this->db->where( 'rel_menu__links.str_title', 'FlexyAdmin' );
- *      $result = $this->db->get_result( 'tbl_menu' ); 
+ *      $result = $this->db->get_result( 'tbl_menu' );
+ * 
+ * Als je op id_ velden zoekt zal in de relatietabel zelf worden gezocht:
+ * 
+ *      $this->add_many();
+ *      $this->db->where( 'rel_menu__links.id_link', 3 );
+ *      $result = $this->db->get_result( 'tbl_menu' );
+ * 
+ * 
  *
  * @package default
  * @author Jan den Besten
@@ -831,14 +840,21 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 					if (!in_array($AndOr,array("AND","OR"))) $AndOr=''; else $AndOr.=' ';
           $mValue=get_suffix($mWhere,'=');
           $mField=remove_suffix($mWhere,'=');
-          $mField=str_replace('`','',get_suffix($mField,'.'));
-          // $mWhere=' AND '.str_replace(array('AND','OR'),'',$mWhere);
-          $mWhere = ' AND '.$mTable['join'].'.'.$mField.' = '.$mValue;
-          // trace_($AndOr);
-          // trace_($mWhere);
-					$sql="SELECT ".$mTable["rel"].".".$mTable["id_this"]." AS id  
-								FROM ".$mTable["rel"].",".trim($mTable["join"],'_')." 
-								WHERE ".$mTable["rel"].".".$mTable["id_join"]."=".trim($mTable["join"],'_').".id ".$mWhere;
+          $mField=trim(str_replace('`','',get_suffix($mField,'.')));
+          // trace_($mField);
+          $justInRel=($mField==$mTable['id_this'] OR $mField==$mTable['id_join']);
+          if ($justInRel) {
+            $mWhere = $mField.' = '.$mValue;
+  					$sql="SELECT ".$mTable["rel"].".".$mTable["id_this"]." AS id  
+  								FROM ".$mTable["rel"]." 
+  								WHERE ".$mWhere;
+          }
+          else {
+            $mWhere = ' AND '.$mTable['join'].'.'.$mField.' = '.$mValue;
+  					$sql="SELECT ".$mTable["rel"].".".$mTable["id_this"]." AS id  
+  								FROM ".$mTable["rel"].",".trim($mTable["join"],'_')." 
+  								WHERE ".$mTable["rel"].".".$mTable["id_join"]."=".trim($mTable["join"],'_').".id ".$mWhere;
+          }
           // trace_('#SHOW# '.$sql);
 					$query=$this->query($sql);
 					$manyResults=$query->result_array();
@@ -1875,7 +1891,8 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
         $this->uri_as_full_uri(TRUE,$abstract_field);
 			}
 			else {
-				$this->_set_standard_order($cleanTable,$this->CI->config->item('ABSTRACT_field_name'));
+        // $this->_set_standard_order($cleanTable,$this->CI->config->item('ABSTRACT_field_name'));
+        $this->_set_standard_order($cleanTable,$abstract_field);
 			}
       
 			if (!empty($optionsWhere)) $this->ar_where[]=$optionsWhere;
