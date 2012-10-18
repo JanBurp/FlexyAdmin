@@ -67,7 +67,7 @@ Class MY_Config extends CI_Config {
       // echo "$file_path<br/>";
 
 			// Allready loaded?
-			if ( !in_array($file_path, $this->is_loaded, TRUE))	{
+      if ( !in_array($file_path, $this->is_loaded, TRUE))  {
 
 				// Exists?
 				if (file_exists($file_path)) {
@@ -76,9 +76,11 @@ Class MY_Config extends CI_Config {
 
 					// Load
 					include($file_path);
-
+          
 					// Add to config
 					if ( isset($config) AND is_array($config))	{
+            
+            // echo"<pre>";  print_r($config); echo "</pre>";
 
 						if ($use_sections === TRUE)	{
 							if (isset($this->config[$file])) {
@@ -130,7 +132,10 @@ Class MY_Config extends CI_Config {
   public function unload($name) {
     unset($this->config[$name]);
     $key=in_array_like($name,$this->is_loaded);
-    unset($this->is_loaded[$key]);
+    while ($key) {
+      unset($this->is_loaded[$key]);
+      $key=in_array_like($name,$this->is_loaded);
+    }
   }
 
 
