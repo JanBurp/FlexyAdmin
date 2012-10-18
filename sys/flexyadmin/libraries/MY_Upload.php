@@ -108,7 +108,7 @@ class MY_Upload extends CI_Upload {
    */
 	public function upload_file($file="userfile") {
 		$config=$this->config;
-		// strace_($config);
+    // trace_($config);
 		$goodluck=FALSE;
 		$this->initialize($config);
 		$this->do_upload($file);
