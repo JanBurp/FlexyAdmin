@@ -36,7 +36,7 @@ $config['trigger_method'] = '_trigger';
 |
 */
 $config['module_field']='str_module';
-$config['update_fields']=array('id','order','dat_date','tme_date','self_parent','uri',$config['module_field']);
+$config['update_fields']=array('id','order','self_parent','uri',$config['module_field']);
 
 
 ?>
