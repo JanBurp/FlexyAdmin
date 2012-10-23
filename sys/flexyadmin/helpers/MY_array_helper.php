@@ -663,10 +663,10 @@ function in_array_like($v,$a) {
 /**
  * Zoekt alle rijen waarbinnen een waarde voorkomt (eventueel in specifieke keys)
  *
- * @param string $a array waarin gezocht wordt
- * @param string $v waarde die gezocht wordt
+ * @param array $a array waarin gezocht wordt
+ * @param mixed $v waarde die gezocht wordt
  * @param string $key[''] Eventueel mee te geven key waarin gezoch moet worden
- * @param string $like[FALSE] als TRUE dan wordt gezocht naar een waarde die erop lijkt ipv precies gelijk is
+ * @param bool $like[FALSE] als TRUE dan wordt gezocht naar een waarde die erop lijkt ipv precies gelijk is
  * @return array
  * @author Jan den Besten
  */
