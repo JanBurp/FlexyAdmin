@@ -16,8 +16,12 @@
   * @author Jan den Besten
   */
 function assets($s="") {
-	$CI =& get_instance();
-	return $CI->config->item('ASSETS').$s;
+  static $assets;
+  if (empty($assets)) {
+  	$CI =& get_instance();
+  	$assets=$CI->config->item('ASSETS').$s;
+  }
+  return $assets;
 }
 
 /**
@@ -28,9 +32,36 @@ function assets($s="") {
  * @author Jan den Besten
  */
 function admin_assets($s="") {
-	$CI =& get_instance();
-	return $CI->config->item('ADMINASSETS').$s;
+  static $assets;
+  if (empty($assets)) {
+  	$CI =& get_instance();
+  	$assets=$CI->config->item('ADMINASSETS').$s;
+  }
+  return $assets;
 }
+
+/**
+ * Remove assets path from path
+ *
+ * @param string $path 
+ * @return string $path
+ * @author Jan den Besten
+ */
+function remove_assets($path) {
+  return str_replace(assets(),'',$path);
+}
+
+/**
+ * Add assets path to path
+ *
+ * @param string $path 
+ * @return string $path
+ * @author Jan den Besten
+ */
+function add_assets($path) {
+  return assets().remove_assets($path);
+}
+
 
 /**
  * Maakt van gegeven parameters een site_url()

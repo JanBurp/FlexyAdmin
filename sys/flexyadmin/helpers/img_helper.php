@@ -109,3 +109,16 @@ function portrait_or_landscape($i) {
 		$c='unknown';
 	return $c;
 }
+
+/**
+ * Zoekt title bij afbeelding, of als niet gevonden, maakt het zelf
+ *
+ * @param string $file Complete pad naar bestand (eventueel zonder hele asset map)
+ * @return string
+ * @author Jan den Besten
+ */
+function get_img_title($file) {
+  $CI=&get_instance();
+  $CI->load->model('mediatable');
+  return $CI->mediatable->get_img_title($file);
+}

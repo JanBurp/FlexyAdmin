@@ -306,7 +306,7 @@ $config["CFG_"]=array(
 			"b_grid_add_many"=>'0',
 			"str_abstract_fields"=>'',
 			"str_order_by"=>'',
-			),
+    ),
 		"cfg_img_info"=>array(
 			"order"=>'106',
 			"table"=>'cfg_img_info',
@@ -567,6 +567,15 @@ $config["CFG_"]=array(
 		"cfg_media_info.b_in_link_list"=>array(
 			'str_fieldset'=>'More'
  			),
+
+		"cfg_media_files.file"=>array(
+			'b_show_in_form'=>'0'
+ 			),
+		"cfg_media_files.path"=>array(
+			'b_show_in_form'=>'0'
+ 			),
+
+
 
 		"cfg_img_info.path"=>array(
 			"field"=>'cfg_img_info.path',

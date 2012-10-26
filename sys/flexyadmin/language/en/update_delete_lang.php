@@ -21,7 +21,10 @@ $lang['upload_error']				= "Error uploading file '%s'. ";
 $lang['upload_img_too_small']	= "The image '%s' is too small and not uploaded. ";
 
 $lang['rename_succes']			= "File renamed to '%s'.";
+$lang['rename_exists']			= "File '%s' allready exists, choose another name.";
 $lang['rename_error']				= "Error while renaming '%s'.";
+$lang['rename_no_file']			= "'%s' doesn't exist, or no rights.";
+
 
 $lang['order_has_changed']= "The order of %s is changed.";
 

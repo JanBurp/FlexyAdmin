@@ -12,6 +12,7 @@ class Search_replace Extends CI_Model {
 
    private $table_types = array('tbl','res');
    private $field_types = array('txt');
+   private $media_types = array('media','medias');
    private $langRegex = '';
 	
 	
@@ -98,8 +99,8 @@ class Search_replace Extends CI_Model {
 
 			// Update in database if changed
 			if ($txt!=$newtxt) {
-				$res=$this->db->update($table,array($field=>$newtxt),"id = $id");
-				$result[$id]=$id;
+				$this->db->update($table,array($field=>$newtxt),"id = $id");
+				$result[]=array('table'=>$table,'id'=>$id,'field'=>$field);
 			}
 		}
 
@@ -131,6 +132,116 @@ class Search_replace Extends CI_Model {
   }
 
 
+  /**
+   * Vervangt alle bestandsnamen
+   *
+   * @param array $search Te zoeken bestandsnaam, of een array van meerdere te zoeken/vervangen bestanden
+   * @param string $replace['']
+   * @return array Resultaten
+   * @author Jan den Besten
+   */
+  public function media($search,$replace='') {
+    $result=FALSE;
+		$tables=$this->db->list_tables();
+		foreach($tables as $table) {
+			$type=get_prefix($table);
+			// Only in set table types
+			if (in_array($type,$this->table_types)) {
+				$fields=$this->db->list_fields($table);
+				foreach ($fields as $field) {
+					$pre=get_prefix($field);
+					// Only in set field types
+					if (in_array($pre,$this->field_types) or in_array($pre,$this->media_types)) {
+						$result[$table] = $this->media_in( $table, $field, $search, $replace);
+					}
+				}
+			}
+		}
+		return $result;
+  }
+
+  /**
+   * Vervangt bestandsnamen in specifieke tabel/veld
+   *
+   * @param string $table 
+   * @param string $field 
+   * @param string $search 
+   * @param string $replace['']
+   * @return array resultaat
+   * @author Jan den Besten
+   */
+  public function media_in($table,$field,$search,$replace='') {
+		$result=array();
+    $path=$this->cfg->get('cfg_media_info',$table.'.'.$field,'path');
+    if (!empty($path)) $path.='/';
+    // strace_($path);
+    
+    if (!is_array($search)) {
+      $search=array($search=>$replace);
+    }
+    foreach ($search as $s => $r) {
+      unset($search[$s]);
+      $s=str_replace($path,'', remove_assets($s) );
+      if (!empty($r)) $r=str_replace($path,'', remove_assets($r) );
+      $search[$s]=$r;
+    }
+    
+    // strace_($search);
+    
+		$this->db->select("id,$field");
+    $this->db->where("$field !=","");
+		$query=$this->db->get($table);
+    
+		foreach($query->result_array() as $row) {
+			$id=$row["id"];
+			$data=$row[$field];
+      $newData=$data;
+      $fieldType=get_prefix($field);
+      
+      switch ($fieldType) {
+        case 'media':
+        case 'medias':
+          // strace_($search);
+          // strace_($newData);
+          $newData=str_replace(array_keys($search),array_values($search),$newData);
+          $newData=str_replace('||','|',$newData);
+          $newData=trim($newData,'|');
+          // strace_($newData);
+          break;
+        case 'txt':
+          foreach ($search as $s => $r) {
+            $s=assets().$path.$s;
+            $s=str_replace('/','\/',$s);
+            if (empty($r)) {
+              // remove
+              $regex='/<img(.*)?src=\"'.$s.'\"(.*)?\/\>/uiUsm';
+              // strace_(array('regex_s'=>$regex,'regex_r'=>''));
+              $newData = preg_replace($regex, '', $newData);
+            }
+            else {
+              // replace
+              $r=assets().$path.$r;
+              $regex='/<img(.*)?src=\"'.$s.'\"(.*)?\/\>/uiUsm';
+              $regex_r='<img$1src="'.$r.'"$3/>';
+              // strace_(array('regex_s'=>$regex,'regex_r'=>$regex_r));
+              $newData = preg_replace($regex, $regex_r, $newData);
+            }
+          }
+          break;
+      }
+
+			// Update in database if changed
+			if ($data!=$newData) {
+        // trace_('CHANGED');
+				$this->db->update($table,array($field=>$newData),"id = $id");
+        // trace_($this->db->last_query());
+				$result[]=array('table'=>$table,'id'=>$id,'field'=>$field);
+			}
+		}
+
+		$query->free_result();
+		return $result;
+  }
 
 }
 

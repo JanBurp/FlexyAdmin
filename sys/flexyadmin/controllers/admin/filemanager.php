@@ -5,6 +5,7 @@ class Filemanager extends AdminController {
 
 	public function __construct() {
 		parent::__construct();
+    $this->load->model('mediatable');
     $this->load->model('grid_set');
     $this->grid_set->set_api('API_filemanager_view');
 	}
@@ -19,46 +20,6 @@ class Filemanager extends AdminController {
 		return $this->user->has_rights("media_".$mediaName,"",$whatRight);
 	}
 
-	// A (older) copy of underlying methods sits in flexy_field
-	function _get_unrestricted_files($restrictedToUser) {
-		$this->db->where('user',$restrictedToUser);
-		$this->db->set_key('file'); 
-		return $this->db->get_result("cfg_media_files");
-	}
-	
-	function _get_user_files() {
-		$this->db->set_key('file');
-		return $this->db->get_result("cfg_media_files");
-	}
-	
-	function _filter_restricted_files($files,$restrictedToUser) {
-		if ($this->db->table_exists("cfg_media_files")) {
-			$assetsPath=assets();
-			$userFiles=$this->_get_user_files();
-			ksort($userFiles);
-			// trace_($userFiles);
-			foreach ($files as $name => $file) {
-				if (substr($name,0,1)!="_") {
-					$file=str_replace($assetsPath,"",$file['path']);
-					if ($restrictedToUser) {
-						if ( (!isset($userFiles[$file]['user'])) or
-								 (isset($userFiles[$file]['user']) and $userFiles[$file]['user']!=$restrictedToUser) ) unset($files[$name]);
-					}
-					else {
-						if (isset($userFiles[$file]['user'])) {
-							$this->db->where('id',$userFiles[$file]['user']);
-							$this->db->select('str_user_name');
-							$user=$this->db->get_row('cfg_users');
-							$files[$name]['user']=$user['str_user_name'];
-						}
-						else
-							$files[$name]['user']='';
-					}
-				}
-			}
-		}
-		return $files;
-	}
 
 /**
  * This controls the filemanager view
@@ -107,7 +68,10 @@ class Filemanager extends AdminController {
 				$types=$cfg['str_types'];
 				$uiName=$this->ui->get($path);
 				
-				$files=read_map($map);
+        if ($this->mediatable->exists())
+          $files=$this->mediatable->get_files($map);
+        else
+          $files=read_map($map);
 				
 				/**
 				 * update img/media_lists
@@ -119,20 +83,9 @@ class Filemanager extends AdminController {
 					*/
 				if (isset($cfg['b_user_restricted']) and $cfg['b_user_restricted']) {
 					$restrictedToUser=$this->user->restricted_id($path);
-					$files=$this->_filter_restricted_files($files,$restrictedToUser);
+					$files=$this->mediatable->filter_restricted_files($files,$restrictedToUser);
 				}
 
-				// Include extra data from cfg_media_files if any
-				// if ($this->db->table_exists('cfg_media_files')) {
-				// 	foreach ($files as $name => $file) {
-				// 		$this->db->where('file', str_replace(SITEPATH.'assets/','',$file['path']));
-				// 		$info=$this->db->get_row('cfg_media_files');
-				// 		if ($info) {
-				// 			$files[$name]=array_merge($file,$info);
-				// 		}
-				// 	}
-				// }
-        
         // Check if file is used somewhere
         if (isset($cfg['fields_check_if_used_in']) and !empty($cfg['fields_check_if_used_in'])) {
           $used_field=lang('USED');
@@ -235,7 +188,14 @@ class Filemanager extends AdminController {
 	}
 
 
-
+  /**
+   * Delete a file
+   *
+   * @param string $path 
+   * @param string $files 
+   * @return void
+   * @author Jan den Besten
+   */
 	function delete($path,$files="") {
 		$files=explode(':',$files);
 		// $path=array_shift($files);
@@ -247,12 +207,11 @@ class Filemanager extends AdminController {
 					$deletedFiles='';
 					foreach ($files as $file) {
 						$DoDelete=TRUE;
-						$mediaTableExists=$this->db->table_exists("cfg_media_files");
-						if ($mediaTableExists) {
-							$restrictedToUser=$this->user->restricted_id($path);
-							if ($restrictedToUser>0) {
+						if ($this->mediatable->exists()) {
+							if ($this->mediatable->is_user_restricted($path)) {
+                $restrictedToUser=$this->user->restricted_id($path);
 								$DoDelete=FALSE;
-								$unrestrictedFiles=$this->_get_unrestricted_files($restrictedToUser);
+								$unrestrictedFiles=$this->mediatable->get_unrestricted_files($restrictedToUser);
 								if (array_key_exists($path."/".$file,$unrestrictedFiles)) {
 									$DoDelete=TRUE;
 								}
@@ -264,9 +223,8 @@ class Filemanager extends AdminController {
 							$fileManager=new file_manager(pathdecode($path,TRUE));
 							$result=$fileManager->delete_file($file);
 							if ($result) {
-								if ($mediaTableExists) {
-									$this->db->where('file',$path."/".$file);
-									$this->db->delete('cfg_media_files');
+								if ($this->mediatable->exists()) {
+                  $this->mediatable->delete($file,$path);
 								}
 								$this->load->model("login_log");
 								$this->login_log->update($path);
@@ -294,6 +252,14 @@ class Filemanager extends AdminController {
 		redirect($redirectUri);
 	}
 
+  /**
+   * Upload a file
+   *
+   * @param string $path 
+   * @param string $file 
+   * @return void
+   * @author Jan den Besten
+   */
 	function upload($path="",$file="") {
 		if (!empty($path)) {
 			if ($this->_has_rights($path)>=RIGHTS_ADD) {
@@ -319,10 +285,11 @@ class Filemanager extends AdminController {
 					}
 					// fill in media table if any
 					$userRestricted=$this->cfg->get('CFG_media_info',$path,'b_user_restricted');
-					if ($userRestricted and $this->db->table_exists("cfg_media_files")) {
-						$this->db->set('user',$this->user_id);
-						$this->db->set('file',$path."/".$file);
-						$this->db->insert('cfg_media_files');
+					if ($this->mediatable->exists()) {
+            if ($userRestricted)
+              $this->mediatable->add($file,$path,$this->user_id);
+            else
+              $this->mediatable->add($file,$path);
 					}
 					// message
 					$this->message->add(langp("upload_succes",$file));
@@ -341,114 +308,102 @@ class Filemanager extends AdminController {
 
 
 
-	// function edit($path="",$file='',$new='',$newDate='') {
-	function edit($args) {
-		$args=$this->uri->uri_to_assoc();
+  /**
+   * Edit file properties by an AJAX post request
+   *
+   * @return void
+   * @author Jan den Besten
+   */
+	function edit() {
+    $path=$this->input->post('path');
+    $ext=$this->input->post('ext');
+    $file=$this->input->post('file').'.'.$ext;
+    $newName=$this->input->post('name').'.'.$ext;
+    $newDate=$this->input->post('date');
+    $newTitle=$this->input->post('title');
 
-		$path=el('edit',$args);
-		$file=el('current',$args);
-		$new=el('new',$args);
-		$offset=el('offset',$args,0);
-		$order=el('order',$args,'name');
-		$search=el('search',$args,'');
-
-		if (empty($new)) {
-			$ext=$this->input->post('ext');
-			$new=$this->input->post('name').'.'.$ext;
-		}
-
-		$map=$this->config->item('ASSETS').pathdecode($path);
+		$map=assets().$path;
 		$this->lang->load("update_delete");
-		$succes=false;
 		
 		$oldFile=$map.'/'.$file;
-		if (file_exists($oldFile)) {
-			$new=clean_file_name($new);
-			$newFile=$map.'/'.$new;
-			// rename
-			$succes=rename($oldFile,$newFile);
-			
-			if ($succes) {
-				// new date if set
-				if (!empty($newDate)) {
-					$this->load->helper('date');
-					$newDate=strtotime($newDate);
-					touch($newFile,$newDate);
-				}
+    
+    $returndata=array(
+      'ajax'    =>IS_AJAX,
+      'file'    =>$oldFile,
+    );
+    
+		if (file_exists($oldFile) and $this->_has_rights($path,RIGHTS_EDIT)) {
 
-				// remove from thumbcache if exists
-				if (file_exists($this->config->item('THUMBCACHE')) ) {
-					$thumbName=$this->config->item('THUMBCACHE').pathencode(SITEPATH.'assets/'.$path.'/'.$file);
-					if (file_exists($thumbName)) unlink($thumbName);
-				}
-				// put file in sr array
-				$sr=array();
-				$sr[$file]=$new;
-
-				// rename other size of same file
-				$cfg=$this->cfg->get('cfg_img_info',str_replace(SITEPATH.'assets/','',$map));
-				if (!empty($cfg)) {
-					$sizes=1;
-					while(isset($cfg['b_create_'.$sizes]) and $cfg['b_create_'.$sizes]) {
-						$thisFile=add_file_presuffix($file,$cfg['str_prefix_'.$sizes],$cfg['str_suffix_'.$sizes]);
-						$thisNewFile=add_file_presuffix($new,$cfg['str_prefix_'.$sizes],$cfg['str_suffix_'.$sizes]);
-						rename($map.'/'.$thisFile, $map.'/'.$thisNewFile);
-						$sr[$thisFile]=$thisNewFile;
-						$sizes++;
-					}
-				}
-
-				// replace all filenames in media(s) and txt_ etc
-				$tables=$this->db->get_tables();
-				if (!empty($tables)) {
-					foreach ($tables as $table) {
-						$fields=$this->db->list_fields($table);
-						$selectFields=array();
-						$selectFields[]=PRIMARY_KEY;
-						foreach ($fields as $field) {
-							$pre=get_prefix($field);
-							if (in_array($pre,array('txt','stx','media','medias'))) $selectFields[]=$field;
-						}
-						if (!empty($selectFields)) {
-							$selectFields[]=PRIMARY_KEY;
-							$this->db->select($selectFields);
-							$currentData=$this->db->get_result($table);
-							foreach ($currentData as $row) {
-								foreach ($row as $field=>$data) {
-									if ($field==PRIMARY_KEY)
-										$id=$data;
-									else {
-										// replace filenames
-										$pre=get_prefix($field);
-										if (in_array($pre,array('txt','stx'))) {
-											// make sure it replaces only filenames
-											if (!isset($txtsr)) {
-												$txtsr=array();
-												foreach ($sr as $key => $value) {$txtsr['/'.$key]='/'.$value;}
-											}
-											$newData=str_replace(array_keys($txtsr),array_values($txtsr) ,$data);
-										}
-										else {
-											$newData=str_replace(array_keys($sr),array_values($sr) ,$data);
-										}
-										$this->db->set($field,$newData);
-										$this->db->where(PRIMARY_KEY,$id);
-										$this->db->update($table);
-									}
-								}
-							}
-						}
-					}
-				}
-				// new media list
-				// will go automatic after redirect
+      // new title if set
+      if (!empty($newTitle)) {
+        $returndata['newTitle']=$newTitle;
+        $this->mediatable->edit_info($oldFile,'str_title',$newTitle);
+      }
+        
+			// new date if set
+			if (!empty($newDate)) {
+        $returndata['newDate']=$newDate;
+        $this->mediatable->edit_info($oldFile,'dat_date',$newDate);
+				$this->load->helper('date');
+				$newDate=strtotime($newDate);
+				touch($oldFile,$newDate);
 			}
-		}
-		if ($succes)
-			$this->message->add(langp("rename_succes",$new));
-		else
-			$this->message->add_error(langp("rename_error",$file));
-		redirect(api_uri('API_filemanager_view',pathencode($path),'/current/'.$new.'/offset/'.$offset.'/order/'.$order.'/search/'.$search));
+
+      if ($newName!=$file) {
+  			$newName=clean_file_name($newName);
+  			$newFile=$map.'/'.$newName;
+        if (file_exists($newFile)) {
+          $this->message->add_error(langp("rename_exists",$newName));
+        }
+        else {
+    			$succes=rename($oldFile,$newFile);
+          if (!$succes) {
+            $this->message->add_error(langp("rename_error",$file));
+          }
+          else {
+            $this->message->add(langp("rename_succes",$newName));
+            $returndata['newFile']=$newFile;
+            // Rename in table
+            $this->mediatable->edit_info($oldFile,'file',$newName);
+            // remove from thumbcache if exists
+    				if (file_exists($this->config->item('THUMBCACHE')) ) {
+    					$thumbName=$this->config->item('THUMBCACHE').pathencode(SITEPATH.'assets/'.$path.'/'.$file);
+    					if (file_exists($thumbName)) {
+                unlink($thumbName);
+                $returndata['thumbRemoved']=$thumbName;
+              }
+    				}
+    				// put file in sr array
+    				$sr=array();
+    				$sr[$file]=$newName;
+
+    				// rename other size of same file
+    				$cfg=$this->cfg->get('cfg_img_info',str_replace(SITEPATH.'assets/','',$map));
+    				if (!empty($cfg)) {
+    					$sizes=1;
+    					while(isset($cfg['b_create_'.$sizes]) and $cfg['b_create_'.$sizes]) {
+    						$thisFile=add_file_presuffix($file,$cfg['str_prefix_'.$sizes],$cfg['str_suffix_'.$sizes]);
+    						$thisNewFile=add_file_presuffix($new,$cfg['str_prefix_'.$sizes],$cfg['str_suffix_'.$sizes]);
+    						rename($map.'/'.$thisFile, $map.'/'.$thisNewFile);
+    						$sr[$thisFile]=$thisNewFile;
+                $returndata['size_'.$sizes]=$thisNewFile;
+    						$sizes++;
+    					}
+    				}
+
+            // Search Replace in db
+            $this->load->model('search_replace');
+            $returndata['sr']=$this->search_replace->media($oldFile,$newFile);
+    			}
+        }
+		  }
+
+    }
+    else {
+      $this->message->add_error(langp("rename_error",$file));
+    }
+    $json=array2json($returndata);
+    echo $json;
 	}
 
 }
