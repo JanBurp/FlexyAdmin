@@ -1,7 +1,8 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- *
+ * Refresh cfg_media_files, als die bestaat.
+ * 
  * @package default
  * @author Jan den Besten
  */
