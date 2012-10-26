@@ -30,6 +30,58 @@ function copy_file($source,$dest) {
 	return $status;
 }
 
+
+/**
+ * Geef file informatie terug in een array
+ *
+ * @param string $file (hele pad naar bestand) 
+ * @param bool $getInfo[TRUE] 
+ * @return array $info
+ * @author Jan den Besten
+ */
+function get_file_info($file,$getInfo=TRUE,$metaInfo=FALSE) {
+  $name=get_suffix($file,'/');
+	if (is_dir($file))
+    $type="dir";
+  else
+    $type=strtolower(get_file_extension($file));  
+  $info=array(
+    'path'    => $file,
+    'name'    => $name,
+    'type'    => $type
+  );
+
+  if (strpos($file,'sys/flexyadmin')===FALSE) $file=add_assets($file);
+
+  if ($type!='dir' AND $getInfo) {
+    $info['alt']     = get_prefix($name,".");
+  	$info['size']    = sprintf("%d k",filesize($file)/1024);
+  	$info['rawdate'] = date("Y m d",filemtime($file));
+  	$info['date']    = date("j M Y",filemtime($file));
+  
+  	// add img dimensions
+  	$CI =& get_instance();
+  	if (in_array($info["type"],$CI->config->item('FILE_types_img'))) {
+  		$errorReporting=error_reporting(E_ALL);
+  		error_reporting($errorReporting - E_WARNING - E_NOTICE);
+  		$size=getimagesize($file);
+  		error_reporting($errorReporting);
+  		$info["width"]=$size[0];
+  		$info["height"]=$size[1];
+      // meta info
+			if ($metaInfo and in_array($info['type'],array('jpg','tiff'))) {
+				// set warnings off...
+				$errorReporting=error_reporting(E_ALL);
+				error_reporting($errorReporting - E_WARNING);
+				$exif=exif_read_data($file);
+				error_reporting($errorReporting);
+				if ($exif) $info['meta']=$exif;
+			}
+  	}
+  };
+  return $info;
+}
+
 /**
  * Geeft extensie van bestandsnaam
  *

@@ -124,8 +124,8 @@ class Show extends AdminController {
 
 						// get information (from db) needed later...
 						$hasField=array();
-						$hasField['self_parent']=$this->db->has_field($table,"self_parent");
-						$hasField['user']=$this->db->has_field($table,"user");
+						$hasField['self_parent']=$this->db->field_exists('self_parent',$table);
+						$hasField['user']=$this->db->field_exists('user',$table);
 
 						$pagination=$this->cfg->get("CFG_table",$table,'b_pagination');
 						if ($pagination) $pagination=$this->cfg->get('cfg_configurations','int_pagination');
@@ -294,6 +294,7 @@ class Show extends AdminController {
 		if (!empty($table) and ($id!="")
 				and $this->db->table_exists($table)
 				and $right=$this->user->has_rights($table,$id)) {
+          
 			$restrictedToUser=$this->user->restricted_id($table);
 			
 			$this->load->library('form_validation');
@@ -323,7 +324,8 @@ class Show extends AdminController {
 				$data[PRIMARY_KEY]="-1";
 			}
 			else {
-				if ($restrictedToUser>0 and $this->db->has_field($table,"user")) {
+				if ($restrictedToUser>0 and $this->db->field_exists('user',$table)) {
+          $this->ff->set_restricted_to_user($restrictedToUser,$this->user_id);
 					$this->db->where("user",$restrictedToUser);
 					$this->db->dont_select("user");
 				}
@@ -344,7 +346,6 @@ class Show extends AdminController {
 			 * if data: first render data for the form class, then put data in form
 			 */
 			if (!empty($data)) {
-				$this->ff->set_restricted_to_user($restrictedToUser,$this->user_id);
         
 				$ffData=$this->ff->render_form($table,$data,$options,$multiOptions);
         

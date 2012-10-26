@@ -577,6 +577,9 @@ class File_manager Extends CI_Model {
 
 					$fileData["edit"]=$edit;
 					$fileData["thumb"]=$icon;
+          
+          if (isset($file['str_title'])) $fileData['str_title']=$file['str_title'];
+          
 					$fileData["name"]=$name;
 					// details
 					if ($details) {
@@ -696,6 +699,7 @@ class File_manager Extends CI_Model {
 		$grid->prepend_to_captions($buttons);
 		$grid->set_heading("edit",help(icon("select all"),lang('grid_select_all')).help(icon("delete"),lang('grid_delete'), array("class"=>"delete") ));
 		$grid->set_heading("thumb","");
+    $grid->set_heading('str_title',$this->ui->get('str_title'));
 		$out=$grid->render("html","","grid files");
 
 		log_('info',"filemaneger: rendering");

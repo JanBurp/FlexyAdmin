@@ -222,16 +222,17 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	}
 
   /**
-   * Test of het veld bestaat in een bepaalde tabel
+   * Test of het veld bestaat in een bepaalde tabel DEPRICATED!!
    *
    * @param string $table Tabel waar het veld in wordt gecheckt
    * @param string $field Te checken veldnaam
    * @return bool TRUE als veld bestaat, anders FALSE
    * @author Jan den Besten
+   * @depricated
+   * @ignore
    */
 	public function has_field($table,$field) {
-		$f=$this->list_fields($table);
-		return (in_array($field,$f));
+    return $this->field_exists($field,$table);
 	}
   
 	
@@ -759,7 +760,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 						// add abstract or all foreign fields?
 						if ($this->abstracts) {
               // Test if foreign table has a tree order, if so, it's not a simple question of adding some SQL, data needs to be created...
-              if ($this->has_field($joinAsTable,'self_parent')) {
+              if ($this->field_exists('self_parent',$joinAsTable)) {
                 $this->foreign_trees[]=$joinAsTable;
               }
               else {
@@ -1879,7 +1880,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	public function get_options($table,$optionsWhere="") {
 			$options=array();
 			$cleanTable=rtrim($table,'_');
-			$asTree=$this->has_field($cleanTable,'self_parent');
+			$asTree=$this->field_exists('self_parent',$cleanTable);
       
 			$this->select($this->pk);
 			if ($asTree) $this->select('uri,order,self_parent');

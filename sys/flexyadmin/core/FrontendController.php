@@ -146,8 +146,8 @@ class FrontEndController extends MY_Controller {
      if ( $this->config->item('menu_autoset_home')) {
 			$menuTable=get_menu_table();
 			if ( ! empty($menuTable)) {
-				if ($this->db->has_field($menuTable,'self_parent')) $this->db->order_as_tree();
-				if ($this->db->has_field($menuTable,'uri')) {
+				if ($this->db->field_exists('self_parent',$menuTable)) $this->db->order_as_tree();
+				if ($this->db->field_exists('uri',$menuTable)) {
 					$this->db->select('uri');
 					$top=$this->db->get_row($menuTable);
 					$this->uri->set_home($top['uri']);

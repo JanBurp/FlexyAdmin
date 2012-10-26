@@ -223,7 +223,7 @@ class Crud extends CI_Model {
       $first=current($wheres);
       if (!is_array($first)) $wheres[]=$wheres;
 
-      $isTree=$this->db->has_field($this->table,'self_parent');
+      $isTree=$this->db->field_exists('self_parent',$this->table);
       if ($isTree) {$this->load->model('order','order_model');}
       
       foreach ($wheres as $key => $where) {

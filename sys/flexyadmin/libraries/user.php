@@ -579,10 +579,9 @@ class User Extends Ion_auth {
 		$pre=get_prefix($table);
 		$preAll=$pre."_*";
 		$rights=$this->rights;
-		if ($rights['rights']=="")
-			$restricted=FALSE;
-		if ($rights['rights']=="*" or (strpos($rights['rights'],$preAll)!==FALSE) or (strpos($rights['rights'],$table)!==FALSE) )
-			$restricted=$restricted and TRUE;
+    
+		if ($rights['rights']=="") $restricted=FALSE;
+		if ($rights['rights']=="*" or (strpos($rights['rights'],$preAll)!==FALSE) or (strpos($rights['rights'],$table)!==FALSE) ) $restricted=$restricted and TRUE;
 		if ($restricted) {
 			return $this->user_id;
 		}

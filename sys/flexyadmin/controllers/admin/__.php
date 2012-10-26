@@ -59,7 +59,7 @@ class __ extends AdminController {
     $folders=array('algemeen','core','database','helpers','libraries','models','uitbreiden');
     foreach ($folders as $folder) {
       $map=$this->path.$this->work.'/userguide/FlexyAdmin/'.$folder;
-      $files=read_map($map,'html');
+      $files=read_map($map,'html',FALSE,FALSE);
       foreach ($files as $file => $info) {
         unlink($info['path']);
       }
@@ -72,18 +72,18 @@ class __ extends AdminController {
     // load all helpers
     $this->load->helper('video');
     // load all libraries
-    $libraries=read_map('sys/flexyadmin/libraries','php');
+    $libraries=read_map('sys/flexyadmin/libraries','php',FALSE,FALSE);
     unset($libraries['ion_auth.php']); // exclude allready inherited libraries
     unset($libraries['gmap.php']); // exclude allready inherited libraries
     // trace_($libraries);
-    $modules=read_map('site/libraries','php'); // Frontend libraries (modules)
+    $modules=read_map('site/libraries','php',FALSE,FALSE); // Frontend libraries (modules)
     $libraries=array_merge($libraries,$modules);
     foreach ($libraries as $file=>$library) {
       $this->load->library(str_replace('my_','',$file));
     }
     // load all models
-    $models=read_map('sys/flexyadmin/models','php');
-    $frontend=read_map('site/models','php');
+    $models=read_map('sys/flexyadmin/models','php',FALSE,FALSE);
+    $frontend=read_map('site/models','php',FALSE,FALSE);
     $models=array_merge($models,$frontend);
     foreach ($models as $file=>$model) {
       $file=str_replace('.php','',$file);
@@ -292,7 +292,7 @@ class __ extends AdminController {
   }
 
   private function _add_markdown_docs($path) {
-    $files=read_map($path);
+    $files=read_map($path,'',TRUE,FALSE);
     foreach ($files as $name  => $file) {
       if ($file['type']=='dir') {
         $dir=str_replace('__doc/','',$file['path']);
@@ -479,8 +479,8 @@ class __ extends AdminController {
 
     $path = $this->path.'FlexyAdminDEMO/sys/flexyadmin/assets/';
     
-    $jsFiles=read_map($path.'js','js');
-    $cssFiles=read_map($path.'css','css');
+    $jsFiles=read_map($path.'js','js',TRUE,FALSE);
+    $cssFiles=read_map($path.'css','css',TRUE,FALSE);
     $files=array_merge($cssFiles,$jsFiles);
     // exclude some
     foreach ($files as $key => $value) {

@@ -50,41 +50,11 @@ function read_map($path,$types='',$recursive=FALSE,$getInfo=TRUE,$getMetaData=FA
 		if($dh = opendir($path)) {
 			while(($file = readdir($dh)) !== false) {
 				if ($file!='.' and $file!='..' and substr($file,0,1)!='.') {
-					$data=array();
-					$data['path']=$path.'/'.$file;
-					if (is_dir($data['path'])) {
-						$data['name']=$file;
-						$data['type']="dir";
-						// $data['alt']=$file;
-						if ($recursive) $data["."]=read_map($path."/".$data['name'],$types,$recursive);
-					}
-					else {
-						$data['name']=$file;
-						$data['type']=strtolower(get_file_extension($file));
-						$data['alt']=get_prefix($file,".");
-						if ($getInfo) {
-							$data['size']=sprintf("%d k",filesize($data['path'])/1024);
-							$data['rawdate']=date("Y m d",filemtime($data['path']));
-							$data['date']=date("j M Y",filemtime($data['path']));
-							if (in_array($data["type"],$CI->config->item('FILE_types_img'))) {
-								// add img dimensions
-  							$errorReporting=error_reporting(E_ALL);
-  							error_reporting($errorReporting - E_WARNING - E_NOTICE);
-								$size=getimagesize($path."/".$file);
-  							error_reporting($errorReporting);
-								$data["width"]=$size[0];
-								$data["height"]=$size[1];
-							}
-						}
-						if ($getMetaData and in_array($data['type'],array('jpg','tiff'))) {
-							// set warnings off...
-							$errorReporting=error_reporting(E_ALL);
-							error_reporting($errorReporting - E_WARNING);
-							$exif=exif_read_data($path.'/'.$file);
-							error_reporting($errorReporting);
-							if ($exif) $data['meta']=$exif;
-						}
-						
+
+					$data=get_file_info($path.'/'.$file, $getInfo, $getMetaData);
+
+          if ($data['type']=='dir') {
+						if ($recursive) $data["."]=read_map($path."/".$data['name'],$types,$recursive,$getInfo,$getMetaData);
 					}
 					if (empty($types) or in_array($data['type'],$types))	$files[strtolower($data['name'])]=$data;
 				}

@@ -791,30 +791,6 @@ class Flexy_field extends CI_Model {
 		return $out;
 	}
 
-
-
-	/* This came form file_manager */
-
-	function _get_unrestricted_files($restrictedToUser) {
-		$this->db->where('user',$restrictedToUser);
-		$this->db->set_key('file'); 
-		return $this->db->get_result("cfg_media_files");
-	}
-	function _filter_restricted_files($files,$restrictedToUser) {
-		if ($this->db->table_exists("cfg_media_files")) {
-			if ($restrictedToUser) {
-				$unrestrictedFiles=$this->_get_unrestricted_files($restrictedToUser);
-				$unrestrictedFiles=array_keys($unrestrictedFiles);
-				$assetsPath=assets();
-				foreach ($files as $name => $file) {
-					$file=str_replace($assetsPath,"",$file['path']);
-					if (!in_array($file,$unrestrictedFiles)) unset($files[$name]);
-				}
-			}
-		}
-		return $files;
-	}
-
 	function _create_media_options($files,$types) {
 		$options=array();
 		foreach($files as $file) {
@@ -858,7 +834,8 @@ class Flexy_field extends CI_Model {
       // Get Options
 			$files=read_map($map,$types);
 			if ($this->restrictedToUser) {
-				$files=$this->_filter_restricted_files($files,$this->restrictedToUser);
+        $this->load->model('mediatable');
+				$files=$this->mediatable->filter_restricted_files($files,$this->restrictedToUser);
 			}
 			$files=not_filter_by($files,"_");
 			$order='_rawdate';
