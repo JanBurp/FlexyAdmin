@@ -1,7 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- * Refresh cfg_media_files, als die bestaat.
+ * Refresh res_media_files, als die bestaat.
  * 
  * @package default
  * @author Jan den Besten
@@ -25,9 +25,14 @@ class Plugin_refresh_media extends Plugin {
    * @ignore
    */
 	function _admin_api($args=NULL) {
-    $paths=$this->CI->mediatable->refresh();
-    foreach ($paths as $path) {
-      $this->add_message($path.' Refreshed.');
+    if ($this->CI->mediatable->exists()) {
+      $paths=$this->CI->mediatable->refresh();
+      foreach ($paths as $path) {
+        $this->add_message($path.' Refreshed.');
+      }
+    }
+    else {
+      $this->add_message('`res_media_files` doesn\'t exist.');
     }
     return $this->view();
 	}

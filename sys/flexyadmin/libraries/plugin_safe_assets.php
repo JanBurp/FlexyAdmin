@@ -127,7 +127,7 @@ class Plugin_safe_assets extends Plugin {
 												);
     $noRecursion=array($assets);
 		// set user maps
-		$maps=read_map($assets,'dir');
+		$maps=read_map($assets,'dir',FALSE,FALSE);
 		$mapsToClean=$specialMaps;
 		foreach ($maps as $map => $value) {
 			$path=$assets.$map;
@@ -180,8 +180,8 @@ class Plugin_safe_assets extends Plugin {
     if (!is_array($allowed)) $allowed=explode('|',$allowed);
     $thisAllowed=$allowed;
     array_unshift($thisAllowed,'dir');      // Make sure maps are not deleted
-		$files=read_map($path);
-    $lowerFiles=read_map(strtolower($path));
+		$files=read_map($path,'',FALSE,FALSE);
+    $lowerFiles=read_map(strtolower($path),'',FALSE,FALSE);
     $files=array_merge($files,$lowerFiles);
 		foreach ($files as $file => $value) {
       if (!is_dir($path.'/'.$file) and !in_array($value['type'],$thisAllowed)) {

@@ -25,7 +25,7 @@ class MY_Controller extends CI_Controller {
 			$succes=false;
 			// try to load latest demodatabase
 			if (file_exists('db')) {
-				$demoDB=read_map('db','sql');
+				$demoDB=read_map('db','sql',FALSE,FALSE);
 				$demoDB=filter_by($demoDB,'flexyadmin_demo_');
 				if ($demoDB) {
 					$demoDB=current($demoDB);
