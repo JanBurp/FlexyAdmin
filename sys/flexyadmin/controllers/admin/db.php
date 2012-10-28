@@ -244,7 +244,7 @@ class Db extends AdminController {
 					$latestRev=(int) $this->get_revision();
 					$this->_add_content(h('Update from r'.$update.' to r'.$latestRev));
 					// load all update sql files
-					$updates=read_map('db','sql');
+					$updates=read_map('db','sql',FALSE,FALSE);
 					$updates=array_keys($updates);
 					$updates=filter_by($updates,'update_');
 					foreach ($updates as $key=>$file) {

@@ -291,7 +291,7 @@ class Show extends AdminController {
 		$id=el(1,$table);
 		$table=el(0,$table);
 
-		if (!empty($table) and ($id!="")
+		if (!empty($table) and get_prefix($table)!='res' and ($id!="")
 				and $this->db->table_exists($table)
 				and $right=$this->user->has_rights($table,$id)) {
           
@@ -445,6 +445,7 @@ class Show extends AdminController {
 		 */
 		
 		if (!isset($uiTable)) $uiTable="";
+    if (get_prefix($table)=='res') $this->_add_content('(empty)');
 		$this->_show_all($uiTable);
 	}
 

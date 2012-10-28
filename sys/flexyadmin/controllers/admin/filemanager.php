@@ -72,7 +72,7 @@ class Filemanager extends AdminController {
           $files=$this->mediatable->get_files($map);
         else
           $files=read_map($map);
-				
+        
 				/**
 				 * update img/media_lists
 				 */

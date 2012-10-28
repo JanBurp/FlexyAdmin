@@ -235,8 +235,9 @@ class MY_Upload extends CI_Upload {
 		}
 		$CI=$this->CI;
 		
-		$uPath=str_replace($CI->config->item('ASSETS'),"",$path);
+		$uPath=remove_assets($path);
 		$cfg=$CI->cfg->get('CFG_img_info',$uPath);
+    
 		$currentSizes=getimagesize($path."/".$this->file_name);
 
     // strace_($currentSizes);

@@ -1,7 +1,7 @@
 <?
 
 /**
- * Met dit model kunnen bestanden worden toegevoegd of verwijderd aan de media tabel (cfg_media_files)
+ * Met dit model kunnen bestanden worden toegevoegd of verwijderd aan de media tabel (res_media_files)
  *
  * @package default
  * @author Jan den Besten
@@ -15,7 +15,7 @@ class Mediatable Extends CI_Model {
    * @var string
    * @ignore
    */
-  private $table='cfg_media_files';
+  private $table='res_media_files';
   
   /**
    * Hier wordt bijgehouden of de mediatabel wel bestaat
@@ -99,7 +99,7 @@ class Mediatable Extends CI_Model {
       $file=get_suffix($file,'/');
     }
     $this->db->where('file',$file)->where('path',$path);
-    $this->db->delete('cfg_media_files');
+    $this->db->delete($this->table);
     return $this;
   }
   

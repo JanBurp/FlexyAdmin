@@ -129,7 +129,7 @@ img {
 	}
 #menu li.current .media {	background-image: url("../icons/folder_files.gif");	}
 
-#menu li .cfg_media_files,
+#menu li .res_media_files,
 #menu li .cfg_img_info {
 	background-image: url("../icons/image.gif");
 	background-repeat: no-repeat;

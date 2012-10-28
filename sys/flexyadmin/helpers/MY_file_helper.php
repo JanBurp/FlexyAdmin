@@ -51,7 +51,7 @@ function get_file_info($file,$getInfo=TRUE,$metaInfo=FALSE) {
     'type'    => $type
   );
 
-  if (strpos($file,'sys/flexyadmin')===FALSE) $file=add_assets($file);
+  if (strpos($file,'sys/flexyadmin')===FALSE and strpos($file,'bulk_upload')===FALSE) $file=add_assets($file);
 
   if ($type!='dir' AND $getInfo) {
     $info['alt']     = get_prefix($name,".");
