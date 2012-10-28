@@ -1,0 +1,140 @@
+/*
+   Plupload
+ */
+
+.plupload_button {cursor: pointer;}
+
+.plupload_wrapper {width: 100%;}
+.plupload_wrapper td {font-size:1em;}
+
+#uploader_container {border:none;}
+.plupload_content {
+  border:solid 1px #DEA;
+  -webkit-border-radius:4px;
+  -moz-border-radius:4px;
+  border-radius:4px;
+}
+
+
+.plupload .plupload_container input {width: 98%;}
+.plupload .plupload_filelist_footer {border-width: 1px 0 0 0}
+.plupload .plupload_filelist_header {border-width: 0 0 1px 0}
+div.plupload .plupload_file {border-width: 0 0 1px 0}
+div.plupload div.plupload_header {
+  border:none;
+  position: relative;
+  padding-bottom:10px;
+  
+}
+
+.plupload_file .ui-icon {cursor:pointer;}
+.plupload_header_content {position:relative;}
+.plupload_header_title {display:none;}
+.plupload_header_text {font: normal 12px sans-serif;}
+
+.plupload_filelist,
+.plupload_filelist_content {
+	border-collapse: collapse;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	-moz-user-select:none;
+	-webkit-user-select:none;
+	user-select:none;
+}
+
+.plupload_cell {padding: 8px 6px;}
+
+.plupload_file {
+	border-left: none;
+	border-right: none;
+}
+
+.plupload .ui-sortable-helper,
+.plupload .ui-sortable .plupload_file {
+	cursor:move;	
+}
+
+.plupload_scroll {
+	max-height: 180px;
+	min-height: 168px;
+	_height: 168px;
+	overflow-y: auto;
+}
+
+.plupload_file_size, .plupload_file_status {text-align: right;}
+.plupload_file_size, .plupload_file_status {width: 52px;}
+.plupload_file_action {width: 16px;}
+.plupload_file_name {
+	overflow: hidden;
+	padding-left: 10px;
+}
+
+.plupload_file_rename {
+	width:95%;	
+}
+
+.plupload_progress {width: 60px;}
+.plupload_progress_container {padding: 1px;}
+
+
+/* Floats */
+
+.plupload_right {float: right;}
+.plupload_left {float: left;}
+.plupload_clear,.plupload_clearer {clear: both;}
+.plupload_clearer, .plupload_progress_bar {
+	display: block;
+	font-size: 0;
+	line-height: 0;
+}
+.plupload_clearer {height: 0;}
+
+/* Misc */
+.plupload_hidden {display: none;}
+.plupload_droptext {
+	background: transparent;
+	text-align: center;
+	vertical-align: middle;
+	border: 0;
+	line-height: 165px;
+}
+
+.plupload_buttons, .plupload_upload_status {float: left}
+.plupload_buttons a {padding:4px;width:170px;}
+.plupload_buttons a .ui-icon {float:left;}
+
+.plupload_message, .ui-widget-header .ui-state-error {
+  background-image:none;
+  background-color:#FFFß;
+  margin-top:10px;
+}
+
+.plupload_message p {
+	padding:0.7em;
+	margin:0;
+  border:solid 1px #F00;
+  -webkit-border-radius:4px;
+  -moz-border-radius:4px;
+  border-radius:4px;
+}
+
+/*.plupload_message strong {font-weight: normal;}*/
+/*.plupload_message i {font-style: italic;}*/
+/*.plupload_message p .ui-icon {display:none;}*/
+
+.plupload_header_content .ui-state-error,
+.plupload_header_content .ui-state-highlight {
+	border:none;	
+}
+
+.plupload_message_close {
+	position:absolute;
+	top:25px;
+	right:5px;
+	cursor:pointer;	
+}
+
+.plupload .ui-sortable-placeholder {
+	height:35px;
+}
