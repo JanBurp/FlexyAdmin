@@ -266,11 +266,12 @@ class MY_Upload extends CI_Upload {
 				$configResize['new_image']			= $path."/".$copyName;
 				$configResize['master_dim']			= 'auto';
 				$this->_setMemory($currentSizes);
-				// trace_($configResize);
+        // trace_($configResize);
 				$CI->image_lib->initialize($configResize);
 				if (!$CI->image_lib->resize()) {
 					$this->error=$CI->image_lib->display_errors();
-					// trace_($this->error);
+          // strace_($this->error);
+          // strace_($configResize);
 					$goodluck=FALSE;
 				}
 				$CI->image_lib->clear();

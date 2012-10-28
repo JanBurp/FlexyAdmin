@@ -55,6 +55,8 @@ $isForm=has_string('form',$show_type);
 	<!-- jQuery UI -->
 	<link rel="stylesheet" type="text/css" href="sys/jquery/ui/custom-theme/jquery-ui-1.8.7.custom<?=$css?>" />
 	<script language="javascript" type="text/javascript" src="sys/jquery/ui/jquery-ui-1.8.23.custom.min.js"></script>
+  <script src="sys/jquery/ui/jquery.ui.progressbar.min.js" type="text/javascript" charset="utf-8"></script>
+  
 	<!-- jQuery plugins-->
 	<link rel="stylesheet" type="text/css" href="sys/jquery/plugins/fullsize/fullsize.css" />
 	<script language="javascript" type="text/javascript" src="sys/jquery/plugins/fullsize/jquery.fullsize<?=$js?>"></script>
@@ -65,6 +67,13 @@ $isForm=has_string('form',$show_type);
 		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/tablesorter/jquery.tablesorter.min.js"></script>
 		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/flipv/cvi_text_lib<?=$js?>"></script>
 		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/flipv/jquery.flipv<?=$js?>"></script>
+    
+    <!-- Load plupload  -->
+    <script src="sys/jquery/plugins/plupload/js/plupload.full.js" type="text/javascript" charset="utf-8"></script>
+    <script src="sys/jquery/plugins/plupload/js/jquery.ui.plupload/jquery.ui.plupload.js" type="text/javascript" charset="utf-8"></script>
+    <? if ($language!='en'): ?><script src="sys/jquery/plugins/plupload/js/i18n/<?=$language?>.js" type="text/javascript" charset="utf-8"></script><? endif ?>
+    <link rel="stylesheet" href="sys/jquery/plugins/plupload/js/jquery.ui.plupload/css/jquery.ui.plupload.css" type="text/css" media="screen" title="no title" charset="utf-8" />
+    
 	<? endif; ?>
 	<? if ($isForm): ?>
 		<!-- form Scripts -->

@@ -61,6 +61,7 @@ class Filemanager extends AdminController {
 				$this->load->model("grid");
 				$this->lang->load("help");
 				$this->_add_js_variable("help_filter",$this->_add_help(langp('grid_filter')));
+        $this->_add_js_variable("file_types",$cfg['str_types']);
 
 				/**
 				 * get files and info
