@@ -433,7 +433,6 @@ class Form {
    */
 	public function validation() {
 		$data=$this->data;
-		// trace_($data);
 		$hasCaptcha=FALSE;
 
 		foreach($data as $name=>$field) {
@@ -449,6 +448,14 @@ class Form {
 			}
 
 			// set validation rules
+      if ($field['type']=='password' and !isset($field['matches']) and !empty($field['value'])) {
+        // if password has a value, new value can be empty..
+        $validation=$field['validation'];
+        $validation=str_replace('required','',$validation);
+        $validation=str_replace('||','|',$validation);
+        $field['validation']=$validation;
+      }
+
 			$this->CI->form_validation->set_rules($field["name"], $field["label"], $field["validation"]);
 			
 			if ($field['type']=='captcha') $hasCaptcha=$name;
