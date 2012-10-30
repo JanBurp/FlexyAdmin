@@ -123,7 +123,7 @@ class Mediatable Extends CI_Model {
       $paths[$key]=$path;
       $files=read_map($path);
       foreach ($files as $file => $info) {
-        $this->add($info);
+        if (is_visible_file($file)) $this->add($info);
       }
     }
     return $paths;
@@ -216,7 +216,6 @@ class Mediatable Extends CI_Model {
       $title=remove_suffix(get_suffix($file,'/'),'.');
     return $title;
   }
-  
   
   
   /**

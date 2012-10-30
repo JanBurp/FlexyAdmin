@@ -15,6 +15,13 @@ class MY_Upload extends CI_Upload {
 	private $CI;
   
   /**
+   * Array met extra gecreerde bestanden door resizen
+   *
+   * @var string
+   */
+  private $extraFiles=array();
+  
+  /**
    * file_name
    *
    * @var string
@@ -247,6 +254,7 @@ class MY_Upload extends CI_Upload {
 
 		// first resize copies
 		$nr=1;
+    $this->extraFiles=array();
 		while (isset($cfg["b_create_$nr"])) {
 			if ($cfg["b_create_$nr"]!=FALSE) {
 				// check if resize is not bigger than original (that would be strange)
@@ -274,6 +282,10 @@ class MY_Upload extends CI_Upload {
           // strace_($configResize);
 					$goodluck=FALSE;
 				}
+        else {
+          // add extra files and set if they are visible or not
+          $this->extraFiles[$copyName]=array('file'=>$copyName,'path'=>$path,'hidden'=>substr($pre,0,1)=='_');
+        }
 				$CI->image_lib->clear();
 				// trace_('Resized nr_'.$nr.' '.$configResize['new_image']);
 			}
@@ -328,6 +340,25 @@ class MY_Upload extends CI_Upload {
 		}
 		return $goodluck;
 	}
+
+
+  /**
+   * Geeft array met alle afbeeldingen bestanden die door resize_image() extra zijn aangemaakt
+   *
+   * @param bool $include_hidden[FALSE] Als TRUE dan worden ook de bestanden gegeven die 'hidden' zijn (beginnen met '_')
+   * @return array array('file'=>bestandsnaam, 'path'=>map binnen assets, 'hidden'=>TRUE/FALSE als bestand hidden)
+   * @author Jan den Besten
+   */
+  public function get_created_files($include_hidden=FALSE) {
+    $return=$this->extraFiles;
+    if (!$include_hidden and !empty($return)) {
+      foreach ($return as $key => $file) {
+        if ($file['hidden']) unset($return[$key]);
+      }
+    }
+    return $return;
+  }
+
 
   /**
    * @param string $open 

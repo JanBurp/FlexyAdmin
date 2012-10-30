@@ -415,7 +415,7 @@ class File_manager Extends CI_Model {
 			}
 			
 		}
-		return array("error"=>$error,"file"=>$file);
+		return array("error"=>$error,"file"=>$file, 'extra_files'=>$this->upload->get_created_files() );
 	}
 
   /**
