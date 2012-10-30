@@ -30,13 +30,14 @@
 class Content {
 
 	private $safeEmail=TRUE;
+  private $auto_target_links=TRUE;
 	private $addClasses=TRUE;
 	private $addPopups=FALSE;
 	private $prePopup='popup_';
 	private $replaceLanguageLinks=FALSE;
   private $replaceSoftHyphens=FALSE;
   private $replaceHyphen='[-]';
-  private $config_array=array('safe_emails'=>'safeEmail','add_classes'=>'addClasses','add_popups'=>'addPopups','replace_language_links'=>'replaceLanguageLinks','replace_soft_hyphens'=>'replaceSoftHyphens');
+  private $config_array=array('safe_emails'=>'safeEmail','auto_target_links'=>'auto_target_links','add_classes'=>'addClasses','add_popups'=>'addPopups','replace_language_links'=>'replaceLanguageLinks','replace_soft_hyphens'=>'replaceSoftHyphens');
 	
 	private $div_count;
 	private $img_count;
@@ -118,6 +119,28 @@ class Content {
     $this->replaceSoftHyphens=$hyphens;
   }
 
+
+  /**
+   * Maakt automatisch het juiste target attribuut aan in een link tag <a>
+   *
+   * @param string $match 
+   * @return string
+   * @author Jan den Besten
+   * @internal
+   * @ignore
+   */
+  private function _auto_target_links($match) {
+    $res='<a'.preg_replace("/target=\"(.*)?\"/uiUsm", "", $match[1]);
+    $url=$match[2];
+    $target='_self';
+    if (substr($url,0,4)=='http') $target='_blank';
+    if (substr($url,0,4)=='mail') $target='';
+    $res.='href="'.$url.'"';
+    if (isset($match[3])) $res.=preg_replace("/target=\"(.*)?\"/uiUsm", "", $match[3]);
+    if (!empty($target)) $res.=' target="'.$target.'" ';
+    $res.='>';
+    return $res;
+  }
 
 
   /**
@@ -212,6 +235,10 @@ class Content {
 	public function render($txt) {
 		$this->reset_counters();
 		
+    if ($this->auto_target_links) {
+      $txt=preg_replace_callback("/<a(.*)?href=\"(.*)?\"(.*)?>/uiUsm",array($this,"_auto_target_links"),$txt);
+    }
+    
 		if ($this->addClasses) {
 			$txt=preg_replace_callback("/<(div|img|p|h(\d))([^<]*)>/",array($this,"_countCallBack"),$txt);
 		}
