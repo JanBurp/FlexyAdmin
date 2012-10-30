@@ -21,6 +21,7 @@ class Grid_set extends CI_Model {
 	public function save($set=array()) {
 		$default=array('table'=>'','offset'=>'','order'=>'','search'=>'');
 		$set=array_merge($default,$set);
+    // strace_($set);
 		$this->session->set_userdata('grid_set',$set);
 	}
 	
@@ -32,11 +33,13 @@ class Grid_set extends CI_Model {
 	public function open_uri($table='') {
 		$set=$this->open();
 		if (empty($table)) $table=$set['table'];
+    // strace_($set);
 		$uri=api_uri($this->api,$table);
 		unset($set['table']);
 		foreach ($set as $key => $value) {
 			if (!empty($value)) $uri.="/$key/$value";
 		}
+    // strace_($uri);
 		return $uri;
 	}
 	

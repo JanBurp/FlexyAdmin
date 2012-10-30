@@ -29,6 +29,12 @@ class Filemanager extends AdminController {
 
 	function show() {
 		$args=$this->uri->uri_to_assoc();
+    // IE hack...
+    if (isset($args['show']) and $args['show']=='sys') {
+      return;
+    };
+    // strace_($this->uri->get());
+    // strace_($args);
 		$keys=array_keys($args);
 		if ($keys[0]=='setview') {
 			$path=$keys[1];
@@ -250,7 +256,8 @@ class Filemanager extends AdminController {
 		}
 		$redirectUri=$this->grid_set->open_uri();
 		if (!empty($info)) $redirectUri.='/info/'.$info;
-		redirect($redirectUri);
+    redirect($redirectUri);
+    // trace_($redirectUri);
 	}
 
   /**
@@ -291,6 +298,14 @@ class Filemanager extends AdminController {
               $this->mediatable->add($file,$path,$this->user_id);
             else
               $this->mediatable->add($file,$path);
+            if (!empty($result['extra_files'])) {
+              foreach ($result['extra_files'] as $key => $value) {
+                if ($userRestricted)
+                  $this->mediatable->add($value['file'],$path,$this->user_id);
+                else
+                  $this->mediatable->add($value['file'],$path);
+              }
+            }
 					}
 					// message
 					$this->message->add(langp("upload_succes",$file));

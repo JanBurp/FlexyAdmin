@@ -3,79 +3,76 @@ function doGrid() {
 	//
 	// Upload button and dialog (one file upload)
 	//
-  // $(".upload").click(function() {
-  //   path=get_subclass("path_",$(this));
-  //   dialog.html('<form class="upload" method="post" action="'+site_url("admin/filemanager/upload/"+path)+'" enctype="multipart/form-data">'+
-  //               '<input type="file" name="file" value="" class="filemanager" /></form>');
-  //   $(dialog).dialog({
-  //     title:langp("dialog_title_upload"),
-  //     modal:true,
-  //     width:400,
-  //     buttons: ({ cancel  : function(){  $(dialog).dialog("close"); },
-  //                 upload  : function(){
-  //                             uploadFile=$('.ui-dialog input.filemanager').val();
-  //                             // prevent the 'fakedisk' in name of IE8
-  //                             backslash=uploadFile.lastIndexOf('\\');
-  //                             if (backslash>0) uploadFile=uploadFile.substr(backslash+1);
-  //                             $('.ui-dialog .ui-dialog-buttonpane').add('.ui-dialog a').add('.ui-dialog form').hide();
-  //                             $('.ui-dialog .ui-dialog-content').prepend("Uploading '<i>"+uploadFile+"</i>' <img src='"+site_url("sys/flexyadmin/assets/icons/wait.gif")+"' align='right' />");
-  //                             $("form.upload").submit();
-  //                             // $(dialog).dialog("destroy");
-  //                             // alert('Hups');
-  //                           }
-  //              }),
-  //     close: function(){$(dialog).dialog("destroy"); }
-  //   });
-  //   changeButt("cancel",lang("dialog_cancel"));
-  //   changeButt("upload",lang("dialog_upload"));
-  // });
+  $(".upload").click(function() {
+    path=get_subclass("path_",$(this));
+    dialog.html('<form class="upload" method="post" action="'+site_url("admin/filemanager/upload/"+path)+'" enctype="multipart/form-data">'+
+                '<input type="file" name="file" value="" class="filemanager" /></form>');
+    $(dialog).dialog({
+      title:langp("dialog_title_upload"),
+      modal:true,
+      width:400,
+      buttons: ({ cancel  : function(){  $(dialog).dialog("close"); },
+                  upload  : function(){
+                              uploadFile=$('.ui-dialog input.filemanager').val();
+                              // prevent the 'fakedisk' in name of IE8
+                              backslash=uploadFile.lastIndexOf('\\');
+                              if (backslash>0) uploadFile=uploadFile.substr(backslash+1);
+                              $('.ui-dialog .ui-dialog-buttonpane').add('.ui-dialog a').add('.ui-dialog form').hide();
+                              $('.ui-dialog .ui-dialog-content').prepend("Uploading '<i>"+uploadFile+"</i>' <img src='"+site_url("sys/flexyadmin/assets/icons/wait.gif")+"' align='right' />");
+                              $("form.upload").submit();
+                              // $(dialog).dialog("destroy");
+                              // alert('Hups');
+                            }
+               }),
+      close: function(){$(dialog).dialog("destroy"); }
+    });
+    changeButt("cancel",lang("dialog_cancel"));
+    changeButt("upload",lang("dialog_upload"));
+  });
   
   //
   // pupload, mutlipe upload
   //
-  $(".upload").click(function() {
-    var path=get_subclass("path_",$(this));
-    
-    // 1- First show dialog
-    dialog.html('<div id="uploader"></div>');
-    $(dialog).dialog({
-      title:langp("dialog_title_upload"),
-      modal:true,
-      width:600,
-      close: function(){$(dialog).dialog("destroy"); }
-    });
-    
-    // 2- Init uploader
-    var uploader=$("#uploader").plupload({
-      // General settings
-      runtimes : 'html5,flash,silverlight',
-      url : site_url("admin/filemanager/upload/"+path),
-      max_file_size : '100mb',
-      chunk_size : '1mb',
-      unique_names : true,
-     
-      // Resize images on clientside if we can
-      // resize : {width : 320, height : 240, quality : 90},
-     
-      // Specify what files to browse for
-      filters : [
-          {title : "--", extensions : config.file_types},
-      ],
-      
-      // Flash settings
-      flash_swf_url : 'sys/jquery/plugins/plupload/js/plupload.flash.swf',
-      // Silverlight settings
-      silverlight_xap_url : 'sys/jquery/plugins/plupload/js/plupload.silverlight.xap',
-      
-      // Reload page after all files are uploaded
-      init : {
-        UploadComplete: function(obj,files) {
-          window.location.reload();
-        }
-      }
-    });
-    
-  });
+  // $(".upload").click(function() {
+  //   var path=get_subclass("path_",$(this));
+  //   
+  //   // 1- First show dialog
+  //   dialog.html('<div id="uploader"></div>');
+  //   $(dialog).dialog({
+  //     title:langp("dialog_title_upload"),
+  //     modal:true,
+  //     width:600,
+  //     close: function(){$(dialog).dialog("destroy"); }
+  //   });
+  //   
+  //   // 2- Init uploader
+  //   var uploader=$("#uploader").plupload({
+  //     // General settings
+  //     runtimes : 'html5,flash,silverlight',
+  //     url : site_url("admin/filemanager/upload/"+path),
+  //     max_file_size : '100mb',
+  //     // chunk_size : '1mb',
+  //     // unique_names : true,
+  //    
+  //     // Specify what files to browse for
+  //     filters : [
+  //         {title : "--", extensions : config.file_types},
+  //     ],
+  //     
+  //     // Flash settings
+  //     flash_swf_url : 'sys/jquery/plugins/plupload/js/plupload.flash.swf',
+  //     // Silverlight settings
+  //     silverlight_xap_url : 'sys/jquery/plugins/plupload/js/plupload.silverlight.xap',
+  //     
+  //     // Reload page after all files are uploaded
+  //     init : {
+  //       UploadComplete: function(obj,files) {
+  //         window.location.reload();
+  //       }
+  //     }
+  //   });
+  //   
+  // });
   
   
 	

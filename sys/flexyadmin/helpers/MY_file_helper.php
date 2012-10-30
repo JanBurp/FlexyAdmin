@@ -82,6 +82,32 @@ function get_file_info($file,$getInfo=TRUE,$metaInfo=FALSE) {
   return $info;
 }
 
+
+/**
+ * Test of bestand is een verborgen bestand (beginnend met '_')
+ *
+ * @param string $filename Kan met of zonder pad zijn
+ * @return bool TRUE als het een verborgen bestand is
+ * @author Jan den Besten
+ */
+function is_hidden_file($filename) {
+  $filename=get_suffix($filename,'/');
+  return substr($filename,0,1)=='_';
+}
+
+/**
+ * Test of bestand niet verborgen is (zie is_hidden_file)
+ *
+ * @param string $filename Kan met of zonder pad zijn
+ * @return bool TRUE als het een zichtbaar bestand
+ * @author Jan den Besten
+ */
+function is_visible_file($filename) {
+  return !is_hidden_file($filename);
+}
+
+
+
 /**
  * Geeft extensie van bestandsnaam
  *
