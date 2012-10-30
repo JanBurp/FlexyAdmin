@@ -382,7 +382,6 @@ class Show extends AdminController {
               unset($newData[$key]);
             }
           }
-          strace_($newData);
 
 					$this->crud->table($table,$restrictedToUser);
 					if ($id==-1) {
