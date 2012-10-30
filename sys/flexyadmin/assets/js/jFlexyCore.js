@@ -1,5 +1,7 @@
 $(document).ready(function() {
 
+  oldIE=($.browser.msie && $.browser.version<9);
+
 	// define
 	keyEnter=13;
 	keyUp=38;
