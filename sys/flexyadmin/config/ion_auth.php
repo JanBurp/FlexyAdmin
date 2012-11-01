@@ -140,14 +140,14 @@
 
 	/**
 	 * Forgot Password Complete Email Template
-     * Default : new_password.tpl.php
+   * Default : new_password.tpl.php
 	 **/
 	$config['email_forgot_password_complete']   = 'new_password.tpl.php';
 	
 	/**
-	 * Salt Length
+	 * Salt Length (never as long as password!!!!)
 	 **/
-	$config['salt_length'] = 40;
+	$config['salt_length'] = 10;
 
 	/**
 	 * Should the salt be stored in the database?

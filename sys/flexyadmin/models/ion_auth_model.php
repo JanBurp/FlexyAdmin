@@ -113,36 +113,33 @@ class Ion_auth_model extends CI_Model
 	 * @return void
 	 * @author Mathew
 	 **/
-	public function hash_password_db($identity, $password)
-	{
-	   if (empty($identity) || empty($password))
-	   {
-		return FALSE;
+	public function hash_password_db($identity, $password) {
+	   if (empty($identity) || empty($password)) {
+       return FALSE;
 	   }
 
 	   $query = $this->db->select('gpw_password')
-			     ->select('str_salt')
-			     ->where($this->identity_column, $identity)
-			     ->where($this->user->_extra_where)
-			     ->limit(1)
-			     ->get($this->tables['users']);
+			       ->select('str_salt')
+			       ->where($this->identity_column, $identity)
+			       ->where($this->user->_extra_where)
+			       ->limit(1)
+			       ->get($this->tables['users']);
 
 	    $result = $query->row();
+      
+      // trace_(array('function'=>'ion_auth->hash_password_db','sql'=>$this->db->last_query(),'result'=>object2array($result)));
+      
 
-	    if ($query->num_rows() !== 1)
-	    {
-		return FALSE;
+	    if ($query->num_rows() !== 1) {
+        return FALSE;
 	    }
 
-	    if ($this->store_salt)
-	    {
-		return sha1($password . $result->salt);
+	    if ($this->store_salt) {
+        return sha1($password . $result->salt);
 	    }
-	    else
-	    {
-		$salt = substr($result->gpw_password, 0, $this->salt_length);
-
-		return $salt . substr(sha1($salt . $password), 0, -$this->salt_length);
+	    else {
+        $salt = substr($result->gpw_password, 0, $this->salt_length);
+        return $salt . substr(sha1($salt . $password), 0, - $this->salt_length);
 	    }
 	}
 
@@ -559,13 +556,14 @@ class Ion_auth_model extends CI_Model
 		   								->get($this->tables['users']);
 
 		$result = $query->row();
+    
+    // trace_(array('function'=>'ion_auth->login','sql'=>$this->db->last_query(),'result'=>object2array($result)));
 
 		if ($query->num_rows() == 1)
 		{
 			$password = $this->hash_password_db($identity, $password);
-			
-			if ($result->gpw_password === $password)
-			{
+      
+			if ($result->gpw_password === $password) {
         // JdB: update last login not at login, but at logout!
         // $this->update_last_login($result->id);
 
@@ -580,8 +578,7 @@ class Ion_auth_model extends CI_Model
 													 );
 				$this->session->set_userdata($session_data);
 
-				if ($remember && $this->config->item('remember_users', 'ion_auth'))
-				{
+				if ($remember && $this->config->item('remember_users', 'ion_auth')) {
 					$this->remember_user($result->id);
 				}
 
