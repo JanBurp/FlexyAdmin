@@ -178,6 +178,7 @@ img {
 	padding-left: 20px;
 	}
 #menu li .cfg_auto_menu,
+#menu li .res_menu_result,
 #menu li .cfg_admin_menu  {
 	background-image: url("../icons/menu.jpg");
 	background-repeat: no-repeat;
