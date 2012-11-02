@@ -268,7 +268,7 @@ class Filemanager extends AdminController {
    * @return void
    * @author Jan den Besten
    */
-	function upload($path="",$file="") {
+	function upload($path="",$ajax="") {
 		if (!empty($path)) {
 			if ($this->_has_rights($path)>=RIGHTS_ADD) {
 				$this->lang->load("update_delete");
@@ -278,11 +278,13 @@ class Filemanager extends AdminController {
 				$types=$mediaCfg[$path]['str_types'];
 				$fileManager=new file_manager($path,$types);
 				$result=$fileManager->upload_file();
+        // trace_($result);
 				$error=$result["error"];
 				$file=$result["file"];
 				if (!empty($error)) {
+          // strace_($error);
 					if (is_string($error))
-						$this->message->add_error($error."<p><br/><i>".preg_replace('/(.*)(\..*)/','$1<b>$2</b>',$file)."</i></p>");
+						$this->message->add_error($error);//."<p><br/><i>".preg_replace('/(.*)(\..*)/','$1<b>$2</b>',$file)."</i></p>");
 					else
 						$this->message->add_error(langp("upload_error",$file));
 				}
@@ -311,7 +313,7 @@ class Filemanager extends AdminController {
 					$this->message->add(langp("upload_succes",$file));
 					$this->load->model("login_log");
 					$this->login_log->update($path);
-					redirect(api_uri('API_filemanager_view',pathencode($path),$file));
+          // redirect(api_uri('API_filemanager_view',pathencode($path),$file));
 				}
 			}
 			else {
@@ -319,7 +321,20 @@ class Filemanager extends AdminController {
 				$this->message->add_error(lang("rights_no_rights"));
 			}
 		}
-		redirect(api_uri('API_filemanager_view',pathencode($path)));
+    
+    
+    if ($ajax=='ajax') {
+      $out=array('path'=>$path,'file'=>$file,'message'=>$this->message->get(),'error'=>$this->message->get_errors(),'ajax'=>$ajax);
+      $this->message->reset()->reset_errors();
+      $json=array2json($out);
+      echo $json;
+    }
+    else {
+      if (isset($file) and !empty($file))
+        redirect(api_uri('API_filemanager_view',pathencode($path),$file));
+      else
+        redirect(api_uri('API_filemanager_view',pathencode($path)));
+    }
 	}
 
 

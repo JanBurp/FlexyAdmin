@@ -276,9 +276,11 @@ class AdminController extends BasicController {
 
 
 	function _show_message() {
-    $this->message->show();
-    $this->message->reset();
-    $this->message->reset_errors();
+    if (!IS_AJAX) {
+      $this->message->show();
+      $this->message->reset();
+      $this->message->reset_errors();
+    }
 	}
 
 	function _show_content() {

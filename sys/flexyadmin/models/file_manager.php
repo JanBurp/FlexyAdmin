@@ -380,6 +380,7 @@ class File_manager Extends CI_Model {
 		$this->upload->config($config);
 		$ok=$this->upload->upload_file($file_field);
 		$file=$this->upload->get_file();
+    // strace_($file);
 		$ext=get_file_extension($file);
 		if (!$ok) {
 			log_("info","[FM] error while uploading: '$file' [$error]");
@@ -395,6 +396,7 @@ class File_manager Extends CI_Model {
 			}
 
 			// is image?
+      // strace_($ext);
 			if (in_array(strtolower($ext),$this->config->item('FILE_types_img'))) {
         // check minimal size
         if ($this->upload->check_size($file,$this->map)) {
