@@ -168,6 +168,9 @@ class MY_Upload extends CI_Upload {
   		$uPath=str_replace($CI->config->item('ASSETS'),"",$map);
   		$cfg=$CI->cfg->get('CFG_img_info',$uPath);
       if (isset($cfg['int_min_width']) and $cfg['int_min_width']>0 and isset($cfg['int_min_height']) and $cfg['int_min_height']>0) {
+        // strace_($size);
+        // strace_($cfg);
+        // strace_($size[0]>=$cfg['int_min_width']);
         $ok=($size[0]>=$cfg['int_min_width'] and $size[1]>=$cfg['int_min_height'] );
       }
       else {

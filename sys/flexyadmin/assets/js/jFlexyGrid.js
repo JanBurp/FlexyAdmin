@@ -44,21 +44,32 @@ function doGrid() {
         title:langp("dialog_title_upload"),
         modal:true,
         width:600,
-
         open: function() {
           // 2- Init uploader
           var uploader=$("#uploader").plupload({
             // General settings
             runtimes : 'html5,html4',
-            url : site_url("admin/filemanager/upload/"+path),
+            url : site_url("admin/filemanager/upload/"+path+'/ajax'),
             max_file_size : '10mb',
             // chunk_size : '1mb',
             // unique_names : true,
             filters : [ {title : "--", extensions : config.file_types} ],
             // Reload page after all files are uploaded
             init : {
+              FileUploaded: function(up, file, info) {
+                var response=$.parseJSON(info.response);
+                if (response.error!='') {
+                  var div=$('.plupload_message.ui-state-error');
+                  if (div.length==0) {
+                    $('.plupload_header_content').append('<div class="plupload_message ui-state-error"></div>');
+                    div=$('.plupload_message.ui-state-error');
+                  }
+                  $(div).append('<p>'+response.error+'</p>');
+                  file.status=4;
+                }
+              },
               UploadComplete: function(obj,files) {
-                window.location.reload();
+                // window.location.reload();
               }
             }
           });
@@ -68,8 +79,10 @@ function doGrid() {
             $('#uploader > div.plupload').trigger('click');
           });
         },
-        
-        close: function(){$(dialog).dialog("destroy"); }
+        close: function(){
+          $(dialog).dialog("destroy");
+          window.location.reload();
+        }
       });
     });
     

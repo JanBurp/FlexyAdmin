@@ -53,7 +53,7 @@ $isForm=has_string('form',$show_type);
 	<!-- jQuery NB 1.8.2 gaat niet in combi met tinyMCE 3.5.7 (styledropdown) -->
 	<script language="javascript" type="text/javascript" src="sys/jquery/jquery-1.7.2.min.js"></script>
 	<!-- jQuery UI -->
-	<link rel="stylesheet" type="text/css" href="sys/jquery/ui/custom-theme/jquery-ui-1.8.7.custom<?=$css?>" />
+	<link rel="stylesheet" type="text/css" href="sys/jquery/ui/custom-theme/jquery-ui-1.8.7.custom.css" />
 	<script language="javascript" type="text/javascript" src="sys/jquery/ui/jquery-ui-1.8.23.custom.min.js"></script>
   <script src="sys/jquery/ui/jquery.ui.progressbar.min.js" type="text/javascript" charset="utf-8"></script>
   

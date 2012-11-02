@@ -1,6 +1,7 @@
 $(document).ready(function() {
 
   oldIE=($.browser.msie && $.browser.version<9);
+  // oldIE=true;
 
 	// define
 	keyEnter=13;
