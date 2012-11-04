@@ -213,7 +213,7 @@ class Mediatable Extends CI_Model {
     if ($info)
       $title=$info['str_title'];
     else
-      $title=remove_suffix(get_suffix($file,'/'),'.');
+      $title=nice_string(remove_suffix(get_suffix($file,'/'),'.'));
     return $title;
   }
   

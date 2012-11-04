@@ -109,7 +109,7 @@ $autoload['language'] = array();
 |
 */
 
-$autoload['model'] = array('crud');
+$autoload['model'] = array('crud','mediatable');
 
 
 /* End of file autoload.php */
