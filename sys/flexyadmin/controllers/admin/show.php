@@ -241,6 +241,7 @@ class Show extends AdminController {
 								$keys=array_combine($keys,$keys);
 							}
 							$grid->set_headings($this->ui->get($keys,$table));
+              
               if (is_editable_table($table) AND $right>=RIGHTS_ADD) {
 								$newUri=api_uri('API_view_form',$table.$this->config->item('URI_HASH').'-1');
 								if (!empty($info)) $newUri.='/info/'.$info;

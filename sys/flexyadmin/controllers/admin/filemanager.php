@@ -338,103 +338,159 @@ class Filemanager extends AdminController {
 	}
 
 
-
   /**
-   * Edit file properties by an AJAX post request
+   * Edit file properties by showing and reacting to a form
    *
    * @return void
    * @author Jan den Besten
    */
-	function edit() {
-    $path=$this->input->post('path');
-    $ext=$this->input->post('ext');
-    $file=$this->input->post('file').'.'.$ext;
-    $newName=$this->input->post('name').'.'.$ext;
-    $newDate=$this->input->post('date');
-    $newTitle=$this->input->post('title');
-
-		$map=assets().$path;
-		$this->lang->load("update_delete");
-		
-		$oldFile=$map.'/'.$file;
+	function edit($path,$file) {
+    $this->lang->load("form");
+    $this->load->library('form');
     
-    $returndata=array(
-      'ajax'    =>IS_AJAX,
-      'file'    =>$oldFile,
-    );
+    $path=pathdecode($path);
+    $data=$this->mediatable->get_info($path.'/'.$file);
+    unset($data['int_size']);
+    unset($data['int_img_width']);
+    unset($data['int_img_height']);
     
-		if (file_exists($oldFile) and $this->_has_rights($path,RIGHTS_EDIT)) {
+    // Geen ID, maar filenaam als unieke id (in combi met path)
+    $data['id']=$file;
+    
+    $formData=array2formfields($data);
+    $formData['path']['type']='hidden';
+    $formData['str_type']['type']='hidden';
+    $formData['dat_date']['type']='date';
+    
+    // strace_($formData);
 
-      // new title if set
-      if (!empty($newTitle)) {
-        $returndata['newTitle']=$newTitle;
-        $this->mediatable->edit_info($oldFile,'str_title',$newTitle);
-      }
-        
-			// new date if set
-			if (!empty($newDate)) {
-        $returndata['newDate']=$newDate;
-        $this->mediatable->edit_info($oldFile,'dat_date',$newDate);
-				$this->load->helper('date');
-				$newDate=strtotime($newDate);
-				touch($oldFile,$newDate);
-			}
+		$actionUri=api_uri('API_filemanager_edit',pathencode($path),'/'.$file);
+		$form=new form($actionUri);
 
-      if ($newName!=$file) {
-  			$newName=clean_file_name($newName);
-  			$newFile=$map.'/'.$newName;
-        if (file_exists($newFile)) {
-          $this->message->add_error(langp("rename_exists",$newName));
+    // Ui & Help
+		$uiPath=$this->ui->get($path);
+		$help=$this->ui->get_help($path);
+		if (!empty($help)) $uiShowPath=help($uiPath,$help); else $uiShowPath=$uiPath;
+    $keys=array_keys($formData);
+    $keys=array_combine($keys,$keys);
+    $uiFieldNames=array();
+    foreach($keys as $key) {
+      $fieldHelp=$this->ui->get_help($path.".".$key);
+      if (!empty($fieldHelp))
+        $uiFieldNames[$key]=help($this->ui->get($key,$path),$fieldHelp);
+      else
+        $uiFieldNames[$key]=$this->ui->get($key,$path);
+    }
+    $form->set_labels($uiFieldNames);
+    
+    // Create form
+		$form->set_data($formData,$uiShowPath);
+
+		/**
+		 * Validate form, if succes, update/insert data
+		 */
+		if ($form->validation()) {
+      $this->lang->load("update_delete");
+      
+      $data=$form->get_data();
+      // strace_($data);
+      // Yo! Nu alles doen!
+      $newName=$data['file'];
+      $newName=str_replace('.'.$data['str_type'],'',$newName).'.'.$data['str_type'];
+      $newDate=$data['dat_date'];
+      $newTitle=$data['str_title'];
+      
+      $map=assets().$path;
+      $oldFile=$map.'/'.$file;
+      if (file_exists($oldFile) and $this->_has_rights($path,RIGHTS_EDIT)) {
+
+        // new title if set
+        if (!empty($newTitle)) {
+          $returndata['newTitle']=$newTitle;
+          $this->mediatable->edit_info($oldFile,'str_title',$newTitle);
         }
-        else {
-    			$succes=rename($oldFile,$newFile);
-          if (!$succes) {
-            $this->message->add_error(langp("rename_error",$file));
+              
+        // new date if set
+        if (!empty($newDate)) {
+          $returndata['newDate']=$newDate;
+          $this->mediatable->edit_info($oldFile,'dat_date',$newDate);
+          $this->load->helper('date');
+          $newDate=strtotime($newDate);
+          touch($oldFile,$newDate);
+        }
+      
+        if ($newName!=$file) {
+          $newName=clean_file_name($newName);
+          $newFile=$map.'/'.$newName;
+          if (file_exists($newFile)) {
+            $this->message->add_error(langp("rename_exists",$newName));
           }
           else {
-            $this->message->add(langp("rename_succes",$newName));
-            $returndata['newFile']=$newFile;
-            // Rename in table
-            $this->mediatable->edit_info($oldFile,'file',$newName);
-            // remove from thumbcache if exists
-    				if (file_exists($this->config->item('THUMBCACHE')) ) {
-    					$thumbName=$this->config->item('THUMBCACHE').pathencode(SITEPATH.'assets/'.$path.'/'.$file);
-    					if (file_exists($thumbName)) {
-                unlink($thumbName);
-                $returndata['thumbRemoved']=$thumbName;
+            $succes=rename($oldFile,$newFile);
+            if (!$succes) {
+              $this->message->add_error(langp("rename_error",$file));
+            }
+            else {
+              $this->message->add(langp("rename_succes",$newName));
+              // Rename in table
+              $this->mediatable->edit_info($oldFile,'file',$newName);
+              // remove from thumbcache if exists
+              if (file_exists($this->config->item('THUMBCACHE')) ) {
+                $thumbName=$this->config->item('THUMBCACHE').pathencode(SITEPATH.'assets/'.$path.'/'.$file);
+                if (file_exists($thumbName)) {
+                  unlink($thumbName);
+                  $returndata['thumbRemoved']=$thumbName;
+                }
               }
-    				}
-    				// put file in sr array
-    				$sr=array();
-    				$sr[$file]=$newName;
-
-    				// rename other size of same file
-    				$cfg=$this->cfg->get('cfg_img_info',str_replace(SITEPATH.'assets/','',$map));
-    				if (!empty($cfg)) {
-    					$sizes=1;
-    					while(isset($cfg['b_create_'.$sizes]) and $cfg['b_create_'.$sizes]) {
-    						$thisFile=add_file_presuffix($file,$cfg['str_prefix_'.$sizes],$cfg['str_suffix_'.$sizes]);
-    						$thisNewFile=add_file_presuffix($new,$cfg['str_prefix_'.$sizes],$cfg['str_suffix_'.$sizes]);
-    						rename($map.'/'.$thisFile, $map.'/'.$thisNewFile);
-    						$sr[$thisFile]=$thisNewFile;
-                $returndata['size_'.$sizes]=$thisNewFile;
-    						$sizes++;
-    					}
-    				}
-
-            // Search Replace in db
-            $this->load->model('search_replace');
-            $returndata['sr']=$this->search_replace->media($oldFile,$newFile);
-    			}
+              // put file in sr array
+              $sr=array();
+              $sr[$file]=$newName;
+      
+              // rename other size of same file
+              $cfg=$this->cfg->get('cfg_img_info',str_replace(SITEPATH.'assets/','',$map));
+              if (!empty($cfg)) {
+                $sizes=1;
+                while(isset($cfg['b_create_'.$sizes]) and $cfg['b_create_'.$sizes]) {
+                  $thisFile=add_file_presuffix($file,$cfg['str_prefix_'.$sizes],$cfg['str_suffix_'.$sizes]);
+                  $thisNewFile=add_file_presuffix($new,$cfg['str_prefix_'.$sizes],$cfg['str_suffix_'.$sizes]);
+                  rename($map.'/'.$thisFile, $map.'/'.$thisNewFile);
+                  $sr[$thisFile]=$thisNewFile;
+                  $returndata['size_'.$sizes]=$thisNewFile;
+                  $sizes++;
+                }
+              }
+      
+              // Search Replace in db
+              $this->load->model('search_replace');
+              $returndata['sr']=$this->search_replace->media($oldFile,$newFile);
+            }
+          }
         }
-		  }
+        
+      }
+      else {
+        $this->message->add_error(langp("rename_error",$file));
+      }
+      
+      // redirect naar show
+			$redirectUri=$this->grid_set->open_uri($path);
+      // trace_($redirectUri);
+      redirect($redirectUri);
+    }
+		/**
+		 * Validate form, no succes: show form, maybe with validation errors
+		 */
+		else {
+			$this->_add_content(validation_errors());
+					
+			$html=$form->render();
+			if ($form->has_htmlfield()) $this->use_editor();
+			$this->_add_content($html);
+		}
 
-    }
-    else {
-      $this->message->add_error(langp("rename_error",$file));
-    }
-    $json=array2json($returndata);
-    echo $json;
+
+		$this->_show_type("form");
+    $this->_show_all($path);
 	}
 
 }
