@@ -85,6 +85,7 @@ $config['API_view_form']						= "/admin/show/form/";
 $config['API_filemanager']					= "/admin/filemanager/";
 $config['API_filemanager_set_view']	= "/admin/filemanager/setview";
 $config['API_filemanager_view']			= "/admin/filemanager/show/";
+$config['API_filemanager_edit']			= "/admin/filemanager/edit/";
 $config['API_filemanager_delete']		= "/admin/filemanager/delete/";
 $config['API_filemanager_confirm']	= "/admin/filemanager/confirm/";
 $config['API_filemanager_upload']		= "/admin/filemanager/upload/";

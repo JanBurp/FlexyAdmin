@@ -313,62 +313,62 @@ function doGrid() {
 		//
 		// Edit file
 		//
-		if (isFile) {
-			$('tbody div.icon.edit').click(function(){
-				if (isThumbs)
-					fileObj=$(this).parents('div.file:first');
-				else
-					fileObj=$(this).parents('tr:first');
-				// console.log(isThumbs);
-				// console.log(fileObj);
-				var filename=$(fileObj).children('.name:first').text();
-				path=$(fileObj).children('.thumb:first').children('.path:first').text();
-				ext=get_ext(filename);
-				// console.log(path);
-				// console.log(filename);
-				// console.log(ext);
-				shortName=filename.replace('.'+ext,'');
-        
-				var filedate=$(fileObj).find('.date:first .hidden').text();
-				filedate=filedate.replace(/ /g,'-');
-
-				var title=$(fileObj).find('.str_title:first').text();
-				
-				var dialogHtml=	'<form id="dialogform" method="post" action="'+site_url()+'admin/filemanager/rename/'+pathencode(path)+'/current/'+filename + get_current_grid_page_uri() +'">';
-        if (title!='') dialogHtml+= '<input id="title" name="title" value="'+title+'" /><br/><br/>';
-        dialogHtml+=		'<input id="name" name="name" value="'+shortName+'" />.'+ext+'<br/>'+
-												'<input type="hidden" name="ext" value="'+ext+'"/>'+
-												'<input type="hidden" name="path" value="'+path+'"/>'+
-                        '<input type="hidden" name="file" value="'+shortName+'"/>';
-				if (filedate!='') dialogHtml+='<br/><input id="date" name="date" value="'+filedate+'"/>';
-				dialogHtml	+='</form>';
-				dialog.html(dialogHtml);
-				$('input#date').datepicker({ dateFormat: 'yy-mm-dd' });
-				$('#ui-datepicker-div').css({'z-index':2000});
-				$(dialog).dialog({
-					title:langp('dialog_title_rename',filename),
-					modal:true,
-					width:500,
-					buttons: ({ cancel	: function(){	$(dialog).dialog("destroy"); },
-											ok			: function(){
-																	$('.ui-dialog .ui-dialog-buttonpane').add('.ui-dialog a').hide();
-																	$('.ui-dialog .ui-dialog-content').append("<img src='"+site_url("sys/flexyadmin/assets/icons/wait.gif")+"' align='right' />");
-                                  // Post AJAX
-                                  var data=$("#dialogform").serialize();
-                                  // console.log(data);
-                                  $.post("admin/filemanager/edit/", data, function(data,status){
-                                    // console.log(data,status);
-                                    window.location.reload()
-                                  });
-																}
-									 }),
-					close: function(){$(dialog).dialog("destroy");}
-				});
-				changeButt("cancel",lang("dialog_cancel"));
-				changeButt("ok",lang("dialog_ok"));
-				
-			});
-		}
+    // if (isFile) {
+    //   $('tbody div.icon.edit').click(function(){
+    //     if (isThumbs)
+    //       fileObj=$(this).parents('div.file:first');
+    //     else
+    //       fileObj=$(this).parents('tr:first');
+    //     // console.log(isThumbs);
+    //     // console.log(fileObj);
+    //     var filename=$(fileObj).children('.name:first').text();
+    //     path=$(fileObj).children('.thumb:first').children('.path:first').text();
+    //     ext=get_ext(filename);
+    //     // console.log(path);
+    //     // console.log(filename);
+    //     // console.log(ext);
+    //     shortName=filename.replace('.'+ext,'');
+    //         
+    //     var filedate=$(fileObj).find('.date:first .hidden').text();
+    //     filedate=filedate.replace(/ /g,'-');
+    // 
+    //     var title=$(fileObj).find('.str_title:first').text();
+    //     
+    //     var dialogHtml=  '<form id="dialogform" method="post" action="'+site_url()+'admin/filemanager/rename/'+pathencode(path)+'/current/'+filename + get_current_grid_page_uri() +'">';
+    //         if (title!='') dialogHtml+= '<input id="title" name="title" value="'+title+'" /><br/><br/>';
+    //         dialogHtml+=    '<input id="name" name="name" value="'+shortName+'" />.'+ext+'<br/>'+
+    //                     '<input type="hidden" name="ext" value="'+ext+'"/>'+
+    //                     '<input type="hidden" name="path" value="'+path+'"/>'+
+    //                         '<input type="hidden" name="file" value="'+shortName+'"/>';
+    //     if (filedate!='') dialogHtml+='<br/><input id="date" name="date" value="'+filedate+'"/>';
+    //     dialogHtml  +='</form>';
+    //     dialog.html(dialogHtml);
+    //     $('input#date').datepicker({ dateFormat: 'yy-mm-dd' });
+    //     $('#ui-datepicker-div').css({'z-index':2000});
+    //     $(dialog).dialog({
+    //       title:langp('dialog_title_rename',filename),
+    //       modal:true,
+    //       width:500,
+    //       buttons: ({ cancel  : function(){  $(dialog).dialog("destroy"); },
+    //                   ok      : function(){
+    //                               $('.ui-dialog .ui-dialog-buttonpane').add('.ui-dialog a').hide();
+    //                               $('.ui-dialog .ui-dialog-content').append("<img src='"+site_url("sys/flexyadmin/assets/icons/wait.gif")+"' align='right' />");
+    //                                   // Post AJAX
+    //                                   var data=$("#dialogform").serialize();
+    //                                   // console.log(data);
+    //                                   $.post("admin/filemanager/edit/", data, function(data,status){
+    //                                     // console.log(data,status);
+    //                                     window.location.reload()
+    //                                   });
+    //                             }
+    //                }),
+    //       close: function(){$(dialog).dialog("destroy");}
+    //     });
+    //     changeButt("cancel",lang("dialog_cancel"));
+    //     changeButt("ok",lang("dialog_ok"));
+    //     
+    //   });
+    // }
 
 	}
 
