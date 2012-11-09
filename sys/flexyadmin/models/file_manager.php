@@ -516,35 +516,49 @@ class File_manager Extends CI_Model {
 		$xlsTypes=$this->config->item('FILE_types_xls');
 
 		$nr=1;
-		// trace_($files);
+    // strace_($files);
 		$showImgSize=false;
 		foreach($files as $id=>$file) {
 			$fileData=array();
-			$name=$file["name"];
+      
+      // First standard grid-fields (edit,thumb,name,type,filesize,date)
+			
+      $name=$file["name"];
+      
+      // If not hidden file, go on..
 			if (substr($name,0,1)!="_") {
 				$type=$file["type"];
+        
+        // Is file a possible file in this path?
 				if (in_array($type,$this->fileTypes)) {
+
+          // Is Image/Flash?
 					$isImg=in_array($type,$imgTypes);
 					$isFlash=in_array($type,$flashTypes);
-
-					// size types (images, flash)
-					if ($isImg or $isFlash) {
-						if (isset($file["width"]) and isset($file["height"]))
-							$imgSize=array($file["width"],$file["height"]);
-						else {
-							$errorReporting=error_reporting(E_ALL);
-							error_reporting($errorReporting - E_WARNING - E_NOTICE);
+          if ($isImg or $isFlash) {
+            // get size
+  					if (isset($file["width"]) and isset($file["height"]))
+  						$imgSize=array($file["width"],$file["height"]);
+  					else {
+  						$errorReporting=error_reporting(E_ALL);
+  						error_reporting($errorReporting - E_WARNING - E_NOTICE);
               $imgSize=getimagesize($this->map."/".$name);
-							error_reporting($errorReporting);
+  						error_reporting($errorReporting);
             }
-							
+          }
+          
+          // EDIT ACTIONS
+					$edit="";
+					if ($this->showDeleteButtons)	{
+            $uri=api_uri('API_filemanager_edit',pathencode($this->path).'/'.$name);
+            $edit.= anchor( $uri, help(icon("edit"),lang('grid_edit')), array("class"=>"edit"));
+            $edit.= help(icon("select"),lang('grid_select')).help(icon("delete item"),lang('grid_delete'));
 					}
-
-					// icon
+					if (empty($edit)) $edit="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+					$fileData["edit"]=$edit;
+          
+					// THUMB
 					if ($isImg) {
-						// $img=$this->map."/".$name;
-						// $cachedThumb=$this->config->item('THUMBCACHE').pathencode($img);
-						// if (file_exists($cachedThumb)) $img=$cachedThumb;
 						$icon=div(array("class"=>"thumb")).$this->thumb(array("src"=>$name,"path"=>$this->map,"alt"=>$name,"title"=>$name,"class"=>"zoom","zwidth"=>$imgSize[0],"zheight"=>$imgSize[1])).end_div();
 					} elseif ($isFlash) {
 						$icon=div(array("class"=>"flash")).icon("flash $name",$name,"zoom","src=\"".$this->map."/".$name."\" zwidth=\"".$imgSize[0]."\" zheight=\"".$imgSize[1]."\"")._div(); //flash($this->map."/".$name).end_div();
@@ -552,7 +566,6 @@ class File_manager Extends CI_Model {
 						$icon=div(array("class"=>"sound")).icon("sound $name")._div();
 					} elseif (in_array($type,$movTypes)) {
 						$icon=div(array("class"=>"movie")).icon("movie $name")._div();
-
 					} elseif (in_array($type,$docTypes)) {
 						$downloadFile=$this->map."/".$name;
 						$icon=div(array("class"=>"doc")).'<a href="'.$downloadFile.'" target="_blank">'.icon("doc $name").'</a>'._div();
@@ -562,47 +575,54 @@ class File_manager Extends CI_Model {
 					} elseif (in_array($type,$pdfTypes)) {
 						$downloadFile=$this->map."/".$name;
 						$icon=div(array("class"=>"pdf")).'<a href="'.$downloadFile.'" target="_blank">'.icon("pdf $name").'</a>'._div();
-
 					} elseif ($file["type"]=="dir") {
 						$icon=div(array("class"=>"image")).img(array("src" => admin_assets("icons/folder.gif"),"alt"=>$name,"title"=>$name))._div();
 					} 
-					// default
+					// default icon
 					else {
 						$icon=div(array("class"=>"file")).icon("file $name")._div();;
 					}
-					// path
+          // icon path
 					$icon.=div('hidden path').pathencode($this->path)._div();
-
-					$edit="";
-          // if ($this->showDeleteButtons)  $edit.=help(icon("edit"),lang('grid_edit')).help(icon("select"),lang('grid_select')).help(icon("delete item"),lang('grid_delete'));
-					if ($this->showDeleteButtons)	{
-            $uri=api_uri('API_filemanager_edit',pathencode($this->path).'/'.$name);
-            $edit.= anchor( $uri, help(icon("edit"),lang('grid_edit')), array("class"=>"edit"));
-            $edit.= help(icon("select"),lang('grid_select')).help(icon("delete item"),lang('grid_delete'));
-					}
-					if (empty($edit)) $edit="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-
-					$fileData["edit"]=$edit;
 					$fileData["thumb"]=$icon;
           
-          if (isset($file['str_title'])) $fileData['str_title']=$file['str_title'];
           
-					$fileData["name"]=$name;
-					// details
+          // FILENAME
+					$fileData["filename"]=$name;
+          
+					// FILE DETAILS (type,size,user)
 					if ($details) {
-						// show user if needed
-						if (isset($file['user'])) $fileData['user']=$file['user'];
-						$fileData["type"]=$type;
-						// size types (images, flash)
+            
+            // TYPE
+						$fileData["filetype"]=$type;
+            
+            // FILESIZE
+						$fileData["filesize"]=$file["size"];
+            
+            // DATE
+						$fileData["dat_date"]=span('hidden').$file['rawdate']._span().str_replace(' ','&nbsp;',$file["date"]);
+            
+						// IMAGE/FLASH WIDTH/HEIGHT
 						if ($isImg or $isFlash) {
 							$fileData["size"]="(".$imgSize[0]."&nbsp;x&nbsp;".$imgSize[1].")";
 							$showImgSize=true;
 						}
-						$fileData["filesize"]=$file["size"];
-						$fileData["date"]=span('hidden').$file['rawdate']._span().str_replace(' ','&nbsp;',$file["date"]);
-					}
 
-          // Check if file is used somewhere
+						// USER
+						if (isset($file['user'])) $fileData['user']=$file['user'];
+					}
+          
+
+          // OTHERS
+          $others=array_unset_keys($file,array('path','name','type','alt','size','rawdate','date','width','height',$used_field));
+          if (!empty($others)) {
+            foreach ($others as $key => $value) {
+              $fileData[$key]=$value;
+            }
+          }
+          
+
+          // USED ELSEWHERE?
           if (isset($file[$used_field])) {
             if ($file[$used_field])
               $fileData[$used_field]=icon('yes');
@@ -615,6 +635,7 @@ class File_manager Extends CI_Model {
 				}
 			}
 		}
+
 		if ($showImgSize) {
 			foreach ($data as $name => $info) {
 				if (!isset($info['size'])) {
@@ -627,6 +648,7 @@ class File_manager Extends CI_Model {
 				}
 			}
 		}
+    
 		return $data;
 	}
 
@@ -664,9 +686,11 @@ class File_manager Extends CI_Model {
 		 * Header (caption and buttons)
 		 */
 		if (empty($this->caption))	$this->set_caption($this->path);
+    
 		// Buttons (with Viewtype switcher)
 		$buttons="";
 		if ($this->showUploadButton) $buttons=help(icon("new","upload","upload path_".$this->path),lang("file_upload"));
+    
 		// view types
 		$types=$this->config->item('FILES_view_types');
 		foreach($types as $view) {
@@ -675,15 +699,18 @@ class File_manager Extends CI_Model {
 			if ($this->view==$view) $extra="current"; else $extra="";
 			$buttons.=anchor(api_uri('API_filemanager_set_view',$view,$this->path),help(icon($icon,$view,$extra),lang("file_list_$view")) );
 		}
+    
 		// delete?
 		if ($this->view=='icons') {
 			$buttons.=div('seperator')._div().help(icon("select all"),lang('grid_select_all')).help(icon("delete"),lang('grid_delete'));
 		}
 		
+    // Pagination
 		$pagination=$this->cfg->get("CFG_media_info",$this->path,'b_pagination');
 		if ($pagination) $pagination=$this->cfg->get('cfg_configurations','int_pagination');
 		$offset=0;
 
+    // Grid
 		$grid=new grid();
 		$grid->set_current($current);
 
@@ -707,9 +734,17 @@ class File_manager Extends CI_Model {
 		$grid->set_heading("edit",help(icon("select all"),lang('grid_select_all')).help(icon("delete"),lang('grid_delete'), array("class"=>"delete") ));
 		$grid->set_heading("thumb","");
     $firstRow=current($renderData);
-    if (isset($firstRow['str_title'])) $grid->set_heading('str_title',$this->ui->get('str_title'));
-		$out=$grid->render("html","","grid files");
+    
+    // UI names
+    if (!empty($firstRow)) {
+  		$keys=array_keys($firstRow);
+  		$keys=array_combine($keys,$keys);
+      unset($keys['edit']);
+      unset($keys['thumb']);
+      $grid->set_headings($this->ui->get($keys,$this->path));
+    }
 
+		$out=$grid->render("html","","grid files");
 		log_('info',"filemaneger: rendering");
 		return $out;
 	}

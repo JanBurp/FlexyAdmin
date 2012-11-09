@@ -27,6 +27,11 @@ $lang['stx_description']  = "Omschrijving";
 $lang['stx_keywords']     = $lang['str_keywords'];
 
 // MEDIA GRID fields
+$lang['filename']         = 'Bestandsnaam';
+$lang['file']             = $lang['filename'];
+$lang['filetype']         = 'Soort';
+$lang['filesize']         = 'Omvang';
+$lang['size']             = 'Breedte x Hoogte';
 $lang['USED']             = 'Gebruikt';
 
 ?>
