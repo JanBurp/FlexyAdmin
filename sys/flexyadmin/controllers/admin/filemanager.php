@@ -122,7 +122,6 @@ class Filemanager extends AdminController {
 				 * Start file manager
 				 */
 	 			$fileManagerView=$this->session->userdata("fileview");
-			
 				$fileManager=new file_manager($path,$types,$fileManagerView);
 				if ($right<RIGHTS_ADD) 		$fileManager->show_upload_button(FALSE);
 				if ($right<RIGHTS_DELETE)	$fileManager->show_delete_buttons(FALSE);
@@ -133,6 +132,7 @@ class Filemanager extends AdminController {
 					$uiName=help($uiName,$Help);
 				}
 				if (!empty($uiName)) $fileManager->set_caption($uiName);
+        
 				$fileManager->set_pagination(array('offset'=>$offset,'order'=>$order,'search'=>$search));
 				$renderData=$fileManager->render();
 
@@ -350,18 +350,25 @@ class Filemanager extends AdminController {
     
     $path=pathdecode($path);
     $data=$this->mediatable->get_info($path.'/'.$file);
+    if (!$data) {
+      $data=get_file_info($path.'/'.$file,FALSE);
+      $data['file']=$data['name'];
+      unset($data['name']);
+      $data['str_type']=$data['type'];
+      unset($data['type']);
+    }
     unset($data['int_size']);
     unset($data['int_img_width']);
     unset($data['int_img_height']);
     
     // Geen ID, maar filenaam als unieke id (in combi met path)
     $data['id']=$file;
+    $data['file']=remove_suffix($data['file'],'.');
     
     $formData=array2formfields($data);
     $formData['path']['type']='hidden';
-    $formData['str_type']['type']='hidden';
     $formData['dat_date']['type']='date';
-    
+    $formData['str_type']['type']='hidden';
     // strace_($formData);
 
 		$actionUri=api_uri('API_filemanager_edit',pathencode($path),'/'.$file);
@@ -398,16 +405,20 @@ class Filemanager extends AdminController {
       $newName=$data['file'];
       $newName=str_replace('.'.$data['str_type'],'',$newName).'.'.$data['str_type'];
       $newDate=$data['dat_date'];
-      $newTitle=$data['str_title'];
+      // strace_($newName);
       
       $map=assets().$path;
       $oldFile=$map.'/'.$file;
       if (file_exists($oldFile) and $this->_has_rights($path,RIGHTS_EDIT)) {
 
-        // new title if set
-        if (!empty($newTitle)) {
-          $returndata['newTitle']=$newTitle;
-          $this->mediatable->edit_info($oldFile,'str_title',$newTitle);
+        // other fields
+        $others=array_unset_keys($data,array('id','file','path','str_type','dat_date'));
+        // strace_($others);
+        if (!empty($others)) {
+          foreach ($others as $key => $value) {
+            $returndata[$key]=$value;
+            $this->mediatable->edit_info($oldFile,$key,$value);
+          }
         }
               
         // new date if set

@@ -90,13 +90,14 @@ function array2formfields($array) {
 		// standard attributes
 		$type='input';
 		$options=array();
-		$validation='required';
+		$validation='';
     $label=lang($field);
     if (empty($label)) $label=nice_string(remove_prefix($field));
 
 		switch (get_prefix($field)) {
 			case 'id':
 				$type='hidden';
+        $validation='required';
 				break;
 			case 'txt':
 				$type='htmleditor';

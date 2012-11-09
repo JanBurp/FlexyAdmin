@@ -711,6 +711,10 @@ table.grid thead .headerSortDown {
 table.grid thead .order, table.grid thead .edit {
 	background-image: none;
 }
+table.files thead .edit {
+  padding-right:0px;
+  padding-left:31px;
+}
 
 
 /** drag helper: for sorting **/

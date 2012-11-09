@@ -12,6 +12,9 @@ $lang['txt_text_en']      = $lang['txt_text']. ' EN';
 $lang['tme_datetime']     = "Date &amp; Time";
 
 // MEDIA GRID fields
+$lang['filetype']         = 'Type';
+$lang['filesize']         = 'Size';
+$lang['size']             = 'Width x Height';
 $lang['USED']             = 'Used';
 
 ?>
