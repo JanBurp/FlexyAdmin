@@ -378,23 +378,13 @@ function trim(s) {
 }
 
 function randomPassword(length) {
-  var s='';
-  while (s.length<length) {
-    s=s+(((1+Math.random())*0x10000)|0).toString(36);
-  }
-  return s.substr(0,length);
-  // };
-  // return (S4()+S4()+S4()+S4()+S4()+S4()+S4()+S4());
-  // 
-  // // var chars,pass,x,i;
-  // //   chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-  // //   pass = "";
-  // //   for(x=0;x<length;x++) {
-  // //      i = Math.floor(Math.random() * 62);
-  // //      pass += chars.charAt(i);
-  // //   }
-  // var randomstring = Math.random().toString(36).slice(-length);
-  // return randomstring;
+  var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz"+"@#^<>()-/+=[]{\|}$%!?";
+	var randomstring = '';
+	for (var i=0; i<length; i++) {
+		var rnum = Math.floor(Math.random() * chars.length);
+		randomstring += chars.substring(rnum,rnum+1);
+	}
+  return randomstring;
 }
 
 function serialize(sel) {
