@@ -105,10 +105,21 @@ class Mediatable Extends CI_Model {
       $set['int_img_height']  = $info['height'];
     }
     if ($userId and $this->db->field_exists('user',$this->table)) $set['user']=$userId;
-
-    $this->db->set($set);
-    $this->db->where('file',$set['file'])->where('path',$set['path']);
-    $this->db->update($this->table);
+    
+    // now get old info, and only set empty old info
+    $old=$this->get_info($info['path']);
+    if ($old) {
+      $old=array_unset_keys($old,array('id','file','path'));
+      foreach ($old as $key => $value) {
+        if (!empty($value)) unset($set[$key]);
+      }
+    }
+    // Only update if more fiels are in set than file and path
+    if (count($set)>2) {
+      $this->db->set($set);
+      $this->db->where('file',$set['file'])->where('path',$set['path']);
+      $this->db->update($this->table);
+    }
     return $this;
   }
   
@@ -163,9 +174,7 @@ class Mediatable Extends CI_Model {
           else {
             $this->add_info($info);
           }
-            
         }
-          
       }
     }
     return $paths;
