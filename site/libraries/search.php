@@ -59,8 +59,10 @@ class Search extends Module {
 			$this->CI->db->search( $this->_create_search_array_for_db($search, $fields ) );
 			if ($this->config('show_full_title'))
 				$this->CI->db->uri_as_full_uri(TRUE, $this->config('title_field') );
-			else
+			elseif ($this->config('order_as_tree'))
 				$this->CI->db->uri_as_full_uri();
+      elseif ($this->config('order_by'))
+        $this->CI->db->order_by($this->config('order_by'));
 			$results=$this->CI->db->get_results( $this->config('table') );
 			
 			// remove double (uri)
