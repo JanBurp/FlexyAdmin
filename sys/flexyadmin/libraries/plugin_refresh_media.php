@@ -25,8 +25,10 @@ class Plugin_refresh_media extends Plugin {
    * @ignore
    */
 	function _admin_api($args=NULL) {
+    $clean=TRUE;
+    if (isset($args[0]) and $args[0]=='reset') $clean=FALSE;
     if ($this->CI->mediatable->exists()) {
-      $paths=$this->CI->mediatable->refresh();
+      $paths=$this->CI->mediatable->refresh('',$clean);
       foreach ($paths as $path) {
         $this->add_message($path.' Refreshed.');
       }

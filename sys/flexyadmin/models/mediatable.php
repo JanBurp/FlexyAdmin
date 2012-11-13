@@ -82,6 +82,37 @@ class Mediatable Extends CI_Model {
     return $this->db->insert_id();
   }
   
+
+  /**
+   * Voeg info toe aan bestand in de tabel
+   *
+   * @param string $info Complte info van de file
+   * @param int $userId[FALSE] if restricted to users, give the user id here.
+   * @return object $this
+   * @author Jan den Besten
+   */
+  public function add_info($info,$userId=FALSE) {
+    $set=array(
+      'file'      => $info['name'],
+      'path'      => remove_assets(remove_suffix($info['path'],'/')),
+      'str_type'  => $info['type'],
+      'dat_date'  => str_replace(' ','-',$info['rawdate']),
+      'int_size'  => $info['size'],
+      'str_title' => $info['alt']
+    );
+    if (isset($info['width'])) {
+      $set['int_img_width']   = $info['width'];
+      $set['int_img_height']  = $info['height'];
+    }
+    if ($userId and $this->db->field_exists('user',$this->table)) $set['user']=$userId;
+
+    $this->db->set($set);
+    $this->db->where('file',$set['file'])->where('path',$set['path']);
+    $this->db->update($this->table);
+    return $this;
+  }
+  
+  
   
   
   /**
@@ -107,23 +138,34 @@ class Mediatable Extends CI_Model {
    * Refresh de hele mediatabel
    *
    * @param string $paths['']
+   * @param bool $clean[TRUE] Als TRUE dan wordt tabel helemaal leeggehaald, anders wordt gekeken wat er al bestaat en daar de data van aangevuld
    * @return array $paths
    * @author Jan den Besten
    */
-  public function refresh($paths='') {
+  public function refresh($paths='',$clean=TRUE) {
     if (empty($paths)) {
       $paths=$this->cfg->get('cfg_media_info');
       $paths=array_keys($paths);
     }
     if (!is_array($paths)) $paths=array($paths);
 
-    $this->db->truncate($this->table);
+    if ($clean) $this->db->truncate($this->table);
+    
     foreach ($paths as $key=>$path) {
       $path=add_assets($path);
       $paths[$key]=$path;
       $files=read_map($path);
       foreach ($files as $file => $info) {
-        if (is_visible_file($file)) $this->add($info);
+        if (is_visible_file($file)) {
+          if ($clean) {
+            $this->add($info);
+          }
+          else {
+            $this->add_info($info);
+          }
+            
+        }
+          
       }
     }
     return $paths;
