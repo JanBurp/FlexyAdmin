@@ -3,7 +3,7 @@ function doGrid() {
 	//
 	// Upload button and dialog (one file upload)
 	//
-  if (oldIE) {
+  if (oldIE || !config.multiple_upload) {
     $(".upload").click(function() {
       path=get_subclass("path_",$(this));
       dialog.html('<form class="upload" method="post" action="'+site_url("admin/filemanager/upload/"+path)+'" enctype="multipart/form-data">'+

@@ -1,5 +1,13 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/*
+|--------------------------------------------------------------------------
+| Multi file-upload for modern browsers (HTML5 browsers and IE9 and up)
+|--------------------------------------------------------------------------
+|
+*/
+$config['MULTIPLE_UPLOAD'] = TRUE;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -11,7 +19,7 @@
 | Other nice options: '-' or ''.
 |
 */
-#$config['PLUGIN_URI_REPLACE_CHAR']	= '_';
+// $config['PLUGIN_URI_REPLACE_CHAR']  = '_';
 
 
 

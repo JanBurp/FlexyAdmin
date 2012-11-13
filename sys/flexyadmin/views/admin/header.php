@@ -39,6 +39,7 @@ $isForm=has_string('form',$show_type);
 	var config = new Object;
 	config.site_url = "<?=site_url()?>/";
 	config.form_nice_dropdowns = "<?=$this->config->item('FORM_NICE_DROPDOWNS')?>";
+  config.multiple_upload = "<?=$this->config->item('MULTIPLE_UPLOAD')?>";
 	<?
 	if (isset($jsVars) && !empty($jsVars)) {
 		foreach ($jsVars as $key => $value) {
