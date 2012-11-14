@@ -120,6 +120,7 @@ class Menu {
   private  $tmpUrl;
 	private  $urlField;
 	private  $fields;
+  private  $ordered_titles=FALSE;
 	private  $extraFields;
   private  $attr;
 	private  $itemAttr;
@@ -187,9 +188,25 @@ class Menu {
    * @return void
    * @author Jan den Besten
    */
-	function set_title_field($title="str_title") {
+	public function set_title_field($title="str_title") {
 		$this->fields["title"]=$title;
 	}
+
+  /**
+   * Titels van menu worden nummers, of andere tekens op volgorde
+   * 
+   *   - NUMBERS geeft 1,2,3,4 etc.
+   *   - ALFA geeft A,B,C,D etc.
+   *   - ROMAN geeft I,II,III,IV etc.
+   *
+   * @param string $order[FALSE] Mogelijke waarden: FALSE|'NUMBERS'|'ALFA'|'ROMAN' 
+   * @return void
+   * @author Jan den Besten
+   */
+  public function set_title_field_as_order($order=FALSE) {
+    $this->ordered_titles=$order;
+  }
+  
   
   /**
    * Zet extra velden die binnen de menu tags terechtkomen
@@ -903,6 +920,15 @@ class Menu {
 							$showName=ascii_to_entities($item['name']);
 						else
 							$showName=trim(ascii_to_entities($name),'_');
+            
+            if ($this->ordered_titles) {
+              switch ($this->ordered_titles) {
+                case 'NUMBERS': $showName=$pos; break;
+                case 'ALFA': $showName=chr($pos+64); break;
+                case 'ROMAN': $showName=numberToRoman($pos); break;
+              }
+            }
+              
 						$pre=get_prefix($showName,"__");
 						if (!empty($pre)) $showName=$pre;
 						if (isset($item["help"])) $showName=help($showName,$item["help"]);
@@ -914,7 +940,7 @@ class Menu {
 						$itemAttr=array_merge($itemAttr,$extraAttr);
 						// if (isset($item['target'])) $itemAttr['target']=$item['target'];
 						if (isset($itemAttr['title'])) $itemAttr['title']=strip_tags($itemAttr['title']);
-						// trace_($showName);
+            // trace_($showName);
 						if (empty($link)) {
 							$itemAttr['class'].=' nonClickable';
 							$itemOut.=span($itemAttr).$showName._span();
