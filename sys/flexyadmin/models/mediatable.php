@@ -193,6 +193,11 @@ class Mediatable Extends CI_Model {
     $path=remove_assets($path);
     if ($asReadMap) $this->db->set_key('file');
     $files=$this->db->where('path',$path)->get_result($this->table);
+    if (empty($files)) {
+      $this->refresh();
+      if ($asReadMap) $this->db->set_key('file');
+      $files=$this->db->where('path',$path)->get_result($this->table);
+    }
     if ($asReadMap) {
       foreach ($files as $file => $info) {
         unset($files[$file]['id']);
