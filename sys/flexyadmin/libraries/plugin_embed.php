@@ -13,12 +13,12 @@ class Plugin_embed extends Plugin {
 
 	function _after_update() {
 		$this->_create_embed_list();
-		return FALSE;
+		return $this->newData;
 	}
 	
 	function _after_delete() {
 		$this->_create_embed_list();
-		return FALSE;
+		return TRUE;
 	}
 	
 	function _create_embed_list() {
