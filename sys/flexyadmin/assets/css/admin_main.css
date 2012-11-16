@@ -1377,7 +1377,7 @@ div#help_messages {display:none;}
   float:left;
   width:20px;
   height:20px;
-  margin:0px 10px 10px 0px;
+  margin:0px 2px;
   background-image: url('../../../tinymce/jscripts/tiny_mce/themes/advanced/img/icons.gif');
 }
 .tinyMCEicon.icon_cut       {background-position:-300px 0px;}
@@ -1466,6 +1466,7 @@ div#help_messages {display:none;}
 	width:590px;
 }
 
+#content li {min-height:22px;}
 
 .submenu {
   width:206px;
@@ -1491,11 +1492,31 @@ div#help_messages {display:none;}
 	-o-border-radius: 0px 4px 4px 4px;
 	-moz-border-radius: 0px 4px 4px 4px;
 	-webkit-border-radius: 0px 4px 4px 4px;
+  overflow:hidden;
 }
 #subitems h1 {display:none;width:556px;margin-left:-3px;}
+#subitems h2 {width:100%;border-bottom:solid 1px #DEA;margin:0px;}
+#subitems h3 {width:100%;border-bottom:dashed 1px #DEA;margin:20px 0px 20px 20px;}
+#subitems p, #subitems ul,#subitems table {margin:20px 0px 20px 40px;}
+
+#subitems a {text-decoration:underline;}
 #subitems>* {display:none;}
+#subitems li {margin-bottom:5px;}
 #subitems th {display:none;}
-#subitems td {font-size:14px;}
+#subitems td {font-size:14px;vertical-align:top;margin-bottom:10px;}
+#subitems img {
+  display:block;
+  margin:20px auto;
+  border:solid 1px #696;
+	-o-border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+  -o-box-shadow: 5px 5px 5px #888;
+  -moz-box-shadow: 5px 5px 5px #888;
+  -webkit-box-shadow: 5px 5px 5px #888;
+  box-shadow: 5px 5px 5px #888;
+}
 
 
 #trace {
