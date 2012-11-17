@@ -18,7 +18,7 @@ These sites/maps needs to be writeable
 - site/cache
 - site/assets/lists
 - site/assets/_thumbcache
-- site/assets/* (all the maps that have uploadable files)
+- site/assets/... (all the maps that have uploadable files)
 
 == DATABASE ==
 Use the latest demo database from /db/ if you start.

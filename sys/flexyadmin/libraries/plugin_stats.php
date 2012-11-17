@@ -130,6 +130,8 @@ class Plugin_stats extends Plugin {
 		$this->CI->db->where('tme_date_time <',date('Y-m'));
 		$this->CI->db->delete($this->logTable);
     
+    // $this->_download_links($year,$month);
+    
     return $this->content;
 	}
 
@@ -209,6 +211,14 @@ class Plugin_stats extends Plugin {
 		}
 		
 	}
+
+  // function _download_links($year,$month) {
+  //   $this->add_content(h('Download XML',2));
+  //   $xmlYear='site/stats/'.$year.'.xml';
+  //   $xmlMonth='site/stats/'.$year.'-'.$month.'.xml';
+  //   $this->add_content(anchor($xmlYear));
+  //   $this->add_content(anchor($xmlMonth));
+  // }
 
 	function _xmlYearFile($year='') {
 		if (empty($year)) $year=$this->Data['year'];
