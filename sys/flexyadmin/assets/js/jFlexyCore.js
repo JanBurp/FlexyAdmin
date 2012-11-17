@@ -99,7 +99,7 @@ $(document).ready(function() {
       $('.submenu li').removeClass('current');
       var uri=$(this).attr('class');
       $('#subitems>*').hide();
-      $('#subitems .'+uri).show();
+      $('#subitems .content.'+uri).show();
       $(this).addClass('current');
       window.history.pushState("", "", "admin/help/"+uri);
     });

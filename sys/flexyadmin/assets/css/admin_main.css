@@ -247,12 +247,16 @@ div.helpField p 		{padding-left:25px;}
 	display:none;
 	border: solid 2px #BBCC88;
 	border-radius: 4px;
--o-border-radius: 4px;
--moz-border-radius: 4px;
+  -o-border-radius: 4px;
+  -moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 	filter:alpha(opacity=90);
 	opacity: 0.9;
 	-moz-opacity:0.9;
+  -o-box-shadow: 5px 5px 5px #888;
+  -moz-box-shadow: 5px 5px 5px #888;
+  -webkit-box-shadow: 5px 5px 5px #888;
+  box-shadow: 5px 5px 5px #888;
 }
 
 /* ============== icons ================== */
@@ -1466,8 +1470,6 @@ div#help_messages {display:none;}
 	width:590px;
 }
 
-#content li {min-height:22px;}
-
 .submenu {
   width:206px;
   float:left;
@@ -1494,20 +1496,23 @@ div#help_messages {display:none;}
 	-webkit-border-radius: 0px 4px 4px 4px;
   overflow:hidden;
 }
+#subitems .content {padding:20px 10px;}
+#subitems li {min-height:22px;}
 #subitems h1 {display:none;width:556px;margin-left:-3px;}
 #subitems h2 {width:100%;border-bottom:solid 1px #DEA;margin:0px;}
 #subitems h3 {width:100%;border-bottom:dashed 1px #DEA;margin:20px 0px 20px 20px;}
-#subitems p, #subitems ul,#subitems table {margin:20px 0px 20px 40px;}
+#subitems .content>p, #subitems .content>table {margin:20px 0px 20px 40px;}
+#subitems .content>ul {margin:20px 0px 20px 20px;}
 
 #subitems a {text-decoration:underline;}
 #subitems>* {display:none;}
-#subitems li {margin-bottom:5px;}
+#subitems li {margin:0px 0px 5px;}
 #subitems th {display:none;}
 #subitems td {font-size:14px;vertical-align:top;margin-bottom:10px;}
-#subitems img {
+#subitems img, #subitems iframe {
   display:block;
-  margin:20px auto;
-  border:solid 1px #696;
+  margin:20px 0px;
+  border:solid 1px #DEA;
 	-o-border-radius: 4px;
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
@@ -1516,6 +1521,9 @@ div#help_messages {display:none;}
   -moz-box-shadow: 5px 5px 5px #888;
   -webkit-box-shadow: 5px 5px 5px #888;
   box-shadow: 5px 5px 5px #888;
+}
+#subitems img.border {
+  border:solid 2px #DEA;
 }
 
 
