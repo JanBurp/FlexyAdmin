@@ -387,15 +387,15 @@ class Flexy_field extends CI_Model {
 		/**
 		 * Add validation rules:
 		 * -first the standard validation rules set in flexyadmin_config.php
-		 * -validation rules depended on database field
 		 * -then add validation rules set in cfg_field_info
+		 * -validation rules depended on database field
 		 */
 		
 		$out['validation']='';
 		$validation[]=array('rules'=>$this->validation,'params'=>'');
 		if (!empty($out['table'])) {
-			$validation[]=$this->_get_db_validation($out['table'],$out['name']);
 			$validation[]=$this->_get_set_validation($out['table'],$out['name']);
+			$validation[]=$this->_get_db_validation($out['table'],$out['name']);
 			$validations=$this->_combine_validations($validation);
 		}
 		if (!empty($validations)) $out['validation']=$this->_set_validation_params($validations);

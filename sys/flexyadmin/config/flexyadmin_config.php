@@ -64,6 +64,18 @@ $config['PLUGIN_URI_REPLACE_CHAR']	= '_';
 $config['URI_HASH']                 = ':';  // possible other value: ~
 $config['PLUGIN_URI_ARGS_CHAR']     = $config['URI_HASH'];
   
+/*
+|--------------------------------------------------------------------------
+| Custom form validation rules (found in MY_Controller)
+|--------------------------------------------------------------------------
+|
+*/
+
+$config['CUSTOM_VALIDATION_RULES']            = 'valid_rgb|valid_google_analytics';
+$config['CUSTOM_VALIDATION_RULES_CALLBACKS']  = 'callback_valid_rgb|callback_valid_google_analytics';
+
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -469,7 +481,7 @@ $config["CFG_"]=array(
 
 		"cfg_field_info.str_validation_rules"=>array(
 			'str_fieldset'=>'Validation',
-			"str_options"=>'|required|matches|min_length[]|max_length[]|exact_length[]|greater_than[]|less_than[]|alpha|alpha_numeric|alpha_dash|numeric|integer|decimal|is_natural|is_natural_no_zero|valid_email|valid_emails|valid_ip|valid_base64|callback_valid_rgb|prep_url',
+			"str_options"=>'|required|matches|min_length[]|max_length[]|exact_length[]|greater_than[]|less_than[]|alpha|alpha_numeric|alpha_dash|numeric|integer|decimal|is_natural|is_natural_no_zero|valid_email|valid_emails|valid_ip|valid_base64|prep_url|'.$config['CUSTOM_VALIDATION_RULES_CALLBACKS'],
 			"b_multi_options"=>'1',
  			),
 		"cfg_field_info.str_validation_parameters"=>array(

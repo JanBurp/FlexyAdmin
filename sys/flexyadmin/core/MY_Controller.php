@@ -100,31 +100,59 @@ class MY_Controller extends CI_Controller {
   
 	
 
-	/**
-	 * Here are some own form validation callback functions
-	 */
-
-		function valid_rgb($rgb) {
-			$rgb=trim($rgb);
-			if (empty($rgb)) {
-				return TRUE;
-			}
-			$rgb=str_replace("#","",$rgb);
-			$len=strlen($rgb);
-			if ($len!=3 and $len!=6) {
-				$this->lang->load("form_validation");
-				$this->form_validation->set_message('valid_rgb', lang('valid_rgb'));
-				return FALSE;
-			}
-			$rgb=strtoupper($rgb);
-			if (ctype_xdigit($rgb))
-				return "#$rgb";
-			else {
-				$this->lang->load("form_validation");
-				$this->form_validation->set_message('valid_rgb', lang('valid_rgb'));
-				return FALSE;
-			}
+   /**
+    * Form validation rule voor rgb_ velden. Controleert of er echt een kleurcode in staat
+    *
+    * @param string $rgb 
+    * @return mixed
+    * @author Jan den Besten
+    */
+	public function valid_rgb($rgb) {
+		$rgb=trim($rgb);
+		if (empty($rgb)) {
+			return TRUE;
 		}
+		$rgb=str_replace("#","",$rgb);
+		$len=strlen($rgb);
+		if ($len!=3 and $len!=6) {
+			$this->lang->load("form_validation");
+			$this->form_validation->set_message('valid_rgb', lang('valid_rgb'));
+			return FALSE;
+		}
+		$rgb=strtoupper($rgb);
+		if (ctype_xdigit($rgb))
+			return "#$rgb";
+		else {
+			$this->lang->load("form_validation");
+			$this->form_validation->set_message('valid_rgb', lang('valid_rgb'));
+			return FALSE;
+		}
+	}
+  
+  /**
+   * Form validation rule voor str_google_analytics. Controleert of een goede code, en als het een javascript is, haal de code eruit.
+   *
+   * @param string $code 
+   * @return mixed
+   * @author Jan den Besten
+   */
+
+  public function valid_google_analytics($code) {
+    $match=array();
+    // Empty is ok
+    if ($code=='') {
+      return $code;
+    }
+    // Or a match is ok
+    elseif (preg_match("/UA-\\d{8}-\\d/uiUsm", $code,$match)) {
+      return $match[0];
+    }
+    // Not ok!
+    else {
+      $this->form_validation->set_message('valid_google_analytics',lang('valid_google_analytics'));
+      return FALSE;
+    }
+  }
 
 	
 	
