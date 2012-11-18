@@ -55,8 +55,9 @@ class Plugin_sitemap extends Plugin {
 			$this->add_content('<p>sitemap.xml created</p>');
 			$this->_create_robots();
 		}
-		else
+		else {
 			$this->add_content('<p>could not create sitemap.xml: '.$err.'</p>');
+    }
 	}
 	
 	function _create_robots() {
