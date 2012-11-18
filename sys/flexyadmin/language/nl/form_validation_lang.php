@@ -23,7 +23,9 @@ $lang['decimal']					= "'%s' mag alleen decimale getallen bevatten.";
 $lang['less_than']				= "'%s' moet kleiner zijn dan %s.";
 $lang['greater_than']			= "'%s' moet groter zijn dan %s.";
 
-$lang['valid_rgb']				= "Geen juiste kleurcode in '%s'";
+$lang['valid_rgb']				       = "Geen juiste kleurcode in '%s'";
+$lang['valid_google_analytics']	 = "'%s' bevat geen juiste code voor Google Analytics";
+
 
 
 /* End of file form_validation_lang.php */
