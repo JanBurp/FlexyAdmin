@@ -312,7 +312,7 @@
       // - binnen wordboundaries, maar geen '".- er voor of na
       // - en niet binnen een a of h tag
       // - case insensitive over meerdere regels
-      $pattern='/([^\"|^\'|^\.])\b(##)\b([^\"|^\'|^\.|^-])(?![^>]*<\/[a|h])/uism';
+      $pattern='/([^\"|^\'|^\.])\b(##)\b([^\"|^\'|^-])(?![^>]*<\/[a|h])/uism';
 			foreach ($tags as $key => $value) {
 				$uri=$value['uri'];
 				$tag=$value['str_tag'];
