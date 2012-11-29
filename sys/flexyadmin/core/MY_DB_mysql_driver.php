@@ -598,7 +598,8 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				}
 			}
 		}
-		$sql='('.substr($sql,3).')'; // remove first AND and put between ()
+		$sql='('.substr($sql,3).')';                // remove first AND and put between ()
+    $sql=str_replace('AND', ') AND (',$sql);    // Make sure AND works like AND by putting terms between ()
 		if ($set_sql) {
 		  $this->where($sql,NULL,FALSE);
       return $this;
