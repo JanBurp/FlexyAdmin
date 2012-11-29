@@ -2,6 +2,14 @@
 
 /**
 	* Zoeken
+	* 
+	* Met deze module kan gezocht worden in de database.
+	* De volgende zoektermen zijn mogelijk:
+	* 
+	*     - een enkel woord - resultaat bestaat uit items waar het woord in voorkomt
+	*     - meerdere lossen woorden - resultaat bestaat uit items waar alle woord in voorkomen
+	*     - "woorden tussen quotes" - resultaat bestaat uit items waar de tekst tussen qoutes letterlijk in voorkomt
+	*     - een combinatie van bovenstaand
 	*
 	* Bestanden
 	* ----------------
@@ -132,13 +140,19 @@ class Search extends Module {
   	* @ignore
 		*/
 	private function _create_search_array_for_db($term,$fields) {
+    $terms=array();
+    if (preg_match_all("/('.*?'|\".*?\"|\b\S+\b)/", $term, $terms)) $term=current($terms);
+    
 		if (!is_array($term)) $term=array($term);
 		if (!is_array($fields)) $fields=array($fields);
 		
 		$search=array();
 		foreach ($term as $t) {
+      $t=trim($t,"\"'");
+      $or='and';
 			foreach ($fields as $field) {
-				$search[]=array('search'=>$t,'field'=>$field,'or'=>'or');
+				$search[]=array('search'=>$t,'field'=>$field,'or'=>$or);
+        $or='or';
 			}
 		}
 		return $search;
