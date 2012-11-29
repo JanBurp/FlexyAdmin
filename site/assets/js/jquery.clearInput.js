@@ -1,6 +1,6 @@
 /*!
  * jQuery clearInput: for a nice compact input field.
- * Clears the inputfield it has focus.
+ * Clears the inputfield when it has focus (and its the placeholder).
  * Author: Jan den Besten
  */
 
