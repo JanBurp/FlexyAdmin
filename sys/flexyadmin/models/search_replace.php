@@ -5,7 +5,6 @@
  *
  * @package default
  * @author Jan den Besten
- * @todo Ook voor images etc...
  */
  
 class Search_replace Extends CI_Model {

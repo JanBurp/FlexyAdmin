@@ -6,10 +6,10 @@
 	* Met deze module kan gezocht worden in de database.
 	* De volgende zoektermen zijn mogelijk:
 	* 
-	*     - een enkel woord - resultaat bestaat uit items waar het woord in voorkomt
-	*     - meerdere lossen woorden - resultaat bestaat uit items waar alle woord in voorkomen
-	*     - "woorden tussen quotes" - resultaat bestaat uit items waar de tekst tussen qoutes letterlijk in voorkomt
-	*     - een combinatie van bovenstaand
+	* - een enkel woord - resultaat bestaat uit items waar het woord in voorkomt
+	* - meerdere lossen woorden - resultaat bestaat uit items waar alle woord in voorkomen
+	* - "woorden tussen quotes" - resultaat bestaat uit items waar de tekst tussen qoutes letterlijk in voorkomt
+	* - een combinatie van bovenstaand
 	*
 	* Bestanden
 	* ----------------

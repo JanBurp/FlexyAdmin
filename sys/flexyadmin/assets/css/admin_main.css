@@ -51,7 +51,7 @@ h2 {
 
 h3 {
 	margin:10px 0px 0px;
-	font-size:1em;
+/*  font-size:1.1em;*/
 }
 
 p {margin:0px 0px 10px;}
@@ -1500,9 +1500,11 @@ div#help_messages {display:none;}
 #subitems li {min-height:22px;}
 #subitems h1 {display:none;width:556px;margin-left:-3px;}
 #subitems h2 {width:100%;border-bottom:solid 1px #DEA;margin:0px;}
-#subitems h3 {width:100%;border-bottom:dashed 1px #DEA;margin:20px 0px 20px 20px;}
+#subitems h3 {width:90%;border-bottom:dashed 1px #DEA;margin:20px 0px 20px 30px;}
+#subitems h4 {width:90%;border-bottom:dotted 1px #DEA;margin:20px 0px 20px 30px;}
+
 #subitems .content>p, #subitems .content>table {margin:20px 0px 20px 40px;}
-#subitems .content>ul {margin:20px 0px 20px 20px;}
+#subitems .content>ul, #subitems .content>ol {margin:20px 0px 20px 20px;}
 
 #subitems a {text-decoration:underline;}
 #subitems>* {display:none;}
@@ -1524,6 +1526,27 @@ div#help_messages {display:none;}
 }
 #subitems img.border {
   border:solid 2px #DEA;
+}
+
+#subitems ol {
+  counter-reset:li; /* Initiate a counter */
+  padding-left:20px;
+}
+#subitems ol > li {
+  position:relative; /* Create a positioning context */
+  list-style:none; /* Disable the normal item numbering */
+}
+#subitems ol > li:before {
+  content:counter(li); /* Use the counter as content */
+  counter-increment:li; /* Increment the counter by 1 */
+  margin-right:5px;
+  font-weight:bold;
+  background-color:#DEA;
+  padding:2px 4px;
+  margin-top:-2px;
+  display:block;
+  min-width:10px;
+  float:left;
 }
 
 
