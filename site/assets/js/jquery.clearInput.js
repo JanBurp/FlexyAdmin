@@ -21,6 +21,7 @@
 				if ($(this).val()==$(this).attr('empty_value')) {
           $(this).val('');
         }
+        $(this).select();
 			}).focusout(function(){
 				if ($(this).val()=='') {
 					$(this).val($(this).attr('empty_value'));
