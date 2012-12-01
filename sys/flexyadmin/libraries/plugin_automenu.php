@@ -120,7 +120,6 @@ class Plugin_automenu extends Plugin {
   private function _only_change_data() {
     $id=$this->newData['id'];
     $changedFields=array_diff_assoc($this->newData,$this->oldData);
-    // strace_($changedFields);
     // set update fields
     $set=array();
     foreach ($changedFields as $field => $value) {
@@ -150,15 +149,18 @@ class Plugin_automenu extends Plugin {
         }
       }
     }
-    // strace_($set);
+
+    // Then all other fields
     foreach ($set as $id_field => $subset) {
       foreach ($subset as $key => $row) {
+        // always start with WHERE str_table AND int_id
+        $this->CI->db->where('str_table',$this->table);
         $this->CI->db->where($id_field,$key);
         foreach ($row as $field => $value) {
           $this->CI->db->set( $field, $value );
         }
         $this->CI->db->update('res_menu_result');
-        // trace_('#show# '.$this->CI->db->last_query());
+        // strace_('#show# '.$this->CI->db->last_query());
       }
     }
   }
