@@ -42,3 +42,13 @@ div.zoomThumb img {
 div.rgbColor {
 	margin:-29px 0px 0px 230px;
 }
+
+
+
+
+
+.submenu li {letter-spacing:0px;}
+
+#subitems .content ul, #subitems .content ol {margin:20px 0px 20px 20px;}
+#subitems ol, #subitems ul {padding-left:45px;}
+#subitems ol li {list-style:disc;}

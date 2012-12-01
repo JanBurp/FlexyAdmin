@@ -15,3 +15,13 @@
   max-height:100px;
 }
 
+.submenu li {letter-spacing:0px;}
+
+#subitems ol {padding-left:45px;}
+#subitems ol > li {list-style:decimal;}
+#subitems ol > li:before {
+  content:'';
+  margin:0px;
+  padding:0px;
+  min-width:0px;
+}
