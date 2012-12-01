@@ -101,7 +101,7 @@ $(document).ready(function() {
       $('#subitems>*').hide();
       $('#subitems .content.'+uri).show();
       $(this).addClass('current');
-      window.history.pushState("", "", "admin/help/"+uri);
+      if (!oldIE) window.history.pushState("", "", "admin/help/"+uri);
     });
     var page=$(this).attr('page');
     if (page=='') {

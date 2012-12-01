@@ -1535,10 +1535,10 @@ div#help_messages {display:none;}
 #subitems ol > li {
   position:relative; /* Create a positioning context */
   list-style:none; /* Disable the normal item numbering */
+  counter-increment:li; /* Increment the counter by 1 */
 }
 #subitems ol > li:before {
   content:counter(li); /* Use the counter as content */
-  counter-increment:li; /* Increment the counter by 1 */
   margin-right:5px;
   font-weight:bold;
   background-color:#DEA;
