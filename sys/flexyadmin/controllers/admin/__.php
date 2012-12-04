@@ -15,9 +15,15 @@ class __ extends AdminController {
   private $tipue=array();
   
   private $path='/Users/jan/Sites/FlexyAdmin/';
+  private $tinyMCElibs='../FlexyAdmin_DocsLibs/Libraries/tinyMCE';
   private $work='FlexyAdminDEMO';
   private $tags='TAGS';
   private $revision;
+  
+  private $tinyMCEkeep=array(
+    'maps'  => array('plugins/advhr','plugins/advlink','plugins/advlist','plugins/autolink','plugins/autoresize','plugins/autosave','plugins/bbcode','plugins/contextmenu','plugins/directionality','plugins/emotions','plugins/example','plugins/fullpage','plugins/iespell','plugins/insertdatetime','plugins/layer','plugins/legacyoutput','plugins/lists','plugins/nonbreaking','plugins/noneditable','plugins/pagebreak','plugins/print','plugins/save','plugins/searchreplace','plugins/spellchecker','plugins/tabfocus','plugins/template','plugins/visualblocks','plugins/visualchars','plugins/wordcount','plugins/xhtmlxtras'),
+    'files' => array('advimage.css','advimage/image.htm','template.htm')
+  );
   
   private $stripTagsWithClasses=array('doc_info','doc_param_type','doc_label');
   private $stripWords=array('(string)', '(array)', '(void)', '(bool)', '(mixed)', '(object)', 
@@ -37,6 +43,7 @@ class __ extends AdminController {
     $menuArray=array(
       array( 'uri'=>'admin/__/doc', 'name' => 'Create Documentation' ),
       array( 'uri'=>'admin/__/minify', 'name' => 'Minify JS & CSS' ),
+      array( 'uri'=>'admin/__/tinymce', 'name' => 'Update tinyMCE' ),
       array( 'uri'=>'admin/__/build', 'name' => 'Build revision: '.$this->revision ),
     );
     $menu = new Menu();
@@ -428,6 +435,91 @@ class __ extends AdminController {
       "loc"=>str_replace('userguide/FlexyAdmin/','',$fileName),
       "tags"=>$tags
     );
+  }
+  
+  
+  
+  /**
+   * Update the tinyMCE editor
+   *
+   * @return void
+   * @author Jan den Besten
+   */
+  public function tinymce() {
+    $versionFile='sys/tinymce/version.txt';
+    $currentVersion=read_file($versionFile);
+    $match=array();
+    if (preg_match("/\\s(.*)\\s/uiU", $currentVersion,$match)) {
+      $currentVersion=$match[1];
+      $tinyMCEversions=read_map($this->tinyMCElibs,'dir',FALSE,FALSE,FALSE);
+      $versionText=str_replace('.','_',$currentVersion);
+      foreach ($tinyMCEversions as $key => $value) {
+        if (preg_match("/tinymce_(.*)?_jquery/uiU", $key,$match)) {
+          if ($match[1]<=$versionText) unset($tinyMCEversions[$key]);
+        }
+        else {
+          unset($tinyMCEversions[$key]);
+        }
+      }
+      $newVersion=current($tinyMCEversions);
+      $newVersionMap=$newVersion['name'];
+      if (preg_match("/tinymce_(.*)?_jquery/uiU", $newVersionMap,$match)) {
+        $newVersion=$match[1];
+        if ($newVersion>$currentVersion) {
+          $this->_add_content('<h1>Update tinyMCE: from '.$currentVersion.' to '.$newVersion.'</h1>');
+          $currentPath='sys/tinymce/jscripts/tiny_mce';
+          $files=read_map($this->tinyMCElibs.'/'.$newVersionMap.'/jscripts','',TRUE,FALSE,FALSE,FALSE);
+          $changedFiles=array();
+          $newFiles=array();
+          foreach ($files as $key => $value) {
+            $oldName=str_replace(array(strtolower($this->tinyMCElibs.'/'.$newVersionMap)),array('sys/tinymce'),$key);
+            if (file_exists($oldName)) {
+              if (!has_string($this->tinyMCEkeep['files'],$oldName)) {
+                if (is_newer_than($key,$oldName)) {
+                  // Ok filedate is newer, but is file realy changed?
+                  if (is_different($key,$oldName)) {
+                    $changedFiles[]=array('current'=>$oldName,'new'=>$key);
+                  }
+                }
+              }
+            }
+            else {
+              if (!has_string($this->tinyMCEkeep['maps'],$key)) {
+                $newFiles[]=array('new'=>$key);  
+              }
+            }
+          }
+
+          if ($newFiles) {
+            // move them
+            $this->_show_files($newFiles,'New Files:');
+            $this->_add_content('<p class="error">TODO: Moving new files</p>');
+          }
+          
+          if ($changedFiles) {
+            // copy them
+            $this->_show_files($changedFiles,'Changed Files:');
+            foreach ($changedFiles as $key => $value) {
+              if (!copy($value['new'],$value['current'])) $this->_add_content('<p class="error">Error moving "'.$value['new'].'"</p>');
+            }
+          }
+
+        }
+        
+      }
+    }
+    $this->_show_all();
+  }
+  
+
+  function _show_files($files,$title) {
+    $this->_add_content('<h3>'.$title.'</h3><ul>');
+    foreach ($files as $key => $value) {
+      $file=$value['new'];
+      $file=str_replace(array(strtolower($this->tinyMCElibs)),array(''),$file);
+      $this->_add_content('<li>'.$file.'</li>');
+    }
+    $this->_add_content('</ul><p>['.count($files).']</p>');
   }
   
   

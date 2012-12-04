@@ -104,6 +104,7 @@ function explode_pre($split,$fields,$pre) {
 	return $fields;
 }
 
+
 /**
  * Adds a string to a string, with a split string if string has content allready
  *
