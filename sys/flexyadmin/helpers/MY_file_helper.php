@@ -107,6 +107,35 @@ function is_visible_file($filename) {
 }
 
 
+/**
+ * Test of (tekst)bestanden verschillend zijn
+ *
+ * @param string $newfile 
+ * @param string $oldfile 
+ * @return bool TRUE als bestanden verschillden zijn wat inhoud betreft
+ * @author Jan den Besten
+ */
+function is_different($newfile,$oldfile) {
+  $new=read_file($newfile);
+  $old=read_file($oldfile);
+  return ($new!=$old);
+}
+
+
+/**
+ * Test of een bestand is nieuwer dan een ander bestand
+ *
+ * @param string $newfile 
+ * @param string $oldfile 
+ * @return bool TRUE als $newfile nieuwer dan $oldfile
+ * @author Jan den Besten
+ */
+function is_newer_than($newfile,$oldfile) {
+  $newStamp=filemtime($newfile);
+  $oldStamp=filemtime($oldfile);
+  return ($newStamp>$oldStamp);
+}
+
 
 /**
  * Geeft extensie van bestandsnaam

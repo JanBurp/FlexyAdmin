@@ -39,10 +39,11 @@ function count_files($path,$recursive=FALSE,$counter=0) {
  * @param bool $recursive[FALSE] 
  * @param bool $getInfo[TRUE]
  * @param bool $getMetaData[FALSE] als TRUE dan worden ook metadata van afbeeldingen meegegeven
+ * @param bool $resultAsTree[TRUE] als TRUE dan wordt het resultaat ook als een tree weergegeven, anders als een platte array met als key het hele pad
  * @return array een multidimensinale array: een lijst van de gevonden bestanden met per bestand een array met info
  * @author Jan den Besten
  */
-function read_map($path,$types='',$recursive=FALSE,$getInfo=TRUE,$getMetaData=FALSE) {
+function read_map($path,$types='',$recursive=FALSE,$getInfo=TRUE,$getMetaData=FALSE,$resultAsTree=TRUE) {
 	if (!empty($types) and !is_array($types)) $types=explode(',',$types);
 	if ($getInfo) $CI =& get_instance();
 	$files=array();
@@ -54,9 +55,24 @@ function read_map($path,$types='',$recursive=FALSE,$getInfo=TRUE,$getMetaData=FA
 					$data=get_file_info($path.'/'.$file, $getInfo, $getMetaData);
 
           if ($data['type']=='dir') {
-						if ($recursive) $data["."]=read_map($path."/".$data['name'],$types,$recursive,$getInfo,$getMetaData);
+						if ($recursive) {
+              $subfiles=read_map($path."/".$data['name'],$types,$recursive,$getInfo,$getMetaData,$resultAsTree);
+              if ($resultAsTree) {
+                $data["."]=$subfiles;
+              }
+              else {
+                $files=array_merge($files,$subfiles);
+              }
+						}
 					}
-					if (empty($types) or in_array($data['type'],$types))	$files[strtolower($data['name'])]=$data;
+					if (empty($types) or in_array($data['type'],$types)) {
+            if ($resultAsTree) {
+              $files[strtolower($data['name'])]=$data;
+            }
+            else {
+              $files[strtolower($data['path'])]=$data;
+            }
+					}
 				}
 			}
 			closedir($dh);
