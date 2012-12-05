@@ -1989,10 +1989,14 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 * @ignore
 	 */
 	 private function _add_field_options($out,$table) {
-						// search options in cfg_field_info for every field, if found, give the options
+			// search options in cfg_field_info for every field, if found, give the options
 			$fields=$this->list_fields($table);
 			foreach($fields as $field) {
+        // specifiek veld
 				$options=$this->CI->cfg->get('CFG_field',$table.".".$field,'str_options');
+        // of generiek veld
+        if (empty($options)) $options=$this->CI->cfg->get('CFG_field',"*.".$field,'str_options');
+        
 				if (isset($options) and !empty($options))	{
 					$options=explode("|",$options);
 					if ($this->CI->cfg->get('CFG_field',$table.".".$field,'b_multi_options'))
