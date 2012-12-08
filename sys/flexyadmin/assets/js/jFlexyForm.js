@@ -310,6 +310,8 @@ function doForm() {
 		var type='media';
 		if ($(target).parents('div:first').hasClass('medias')) type='medias';
 		var thumbsrc=$(target).attr('src');
+    console.log(type);
+    
 		if (type=='media') {
 			var src=pathdecode(thumbsrc);
 			src=src.substr(src.lastIndexOf('/')+1);
@@ -319,15 +321,16 @@ function doForm() {
 			$(target).parents('div.media').children('input:first').attr('value',src);
 		}
 		else {
-			var item=$(target).parent('li:first').clone(true);
-			var values=$(target).parents('div.medias').children('ul.values');
-			if ($(target).parents('ul:first').hasClass('choices'))
-				$(target).parents('div.medias').children('ul.values').append(item);
-			else
-				$(target).parents('div.medias').children('ul.choices').append(item);
-			$(target).parent('li:first').remove();
-			$('.zoomThumb').hide();
-			update_values_list($(values));
+      // Hier verschil herkennen tussen click en drag 'n drop... Alleen doorgaan als géén drag 'n drop
+      var item=$(target).parent('li:first').clone(true);
+      var values=$(target).parents('div.medias').children('ul.values');
+      if ($(target).parents('ul:first').hasClass('choices'))
+        $(target).parents('div.medias').children('ul.values').append(item);
+      else
+        $(target).parents('div.medias').children('ul.choices').append(item);
+      $(target).parent('li:first').remove();
+      $('.zoomThumb').hide();
+      update_values_list($(values));
 		}
     // if ($(this).hasClass('image_dropdown')) {
     //   

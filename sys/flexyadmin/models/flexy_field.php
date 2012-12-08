@@ -150,22 +150,27 @@ class Flexy_field extends CI_Model {
 	/**
 	 * function concat_foreign_fields($row)
 	 *
-	 * Creates one field from all foreign fields and foreign key
+	 * Maakt een veld van alle foreign velden and foreign keys
 	 * @param array $row Row of all data
 	 * @return array	Returns a new row
 	 */
 	function concat_foreign_fields($row) {
-		$newRow=array();
-		$fkey="";
+    $fields=array_keys($row);
+    $newRow=array();
 		foreach ($row as $field=>$data) {
-			if (is_foreign_field($field) and !empty($fkey)) {
-				$newRow[$fkey]=add_string($newRow[$fkey],$data);
-			} elseif (is_foreign_key($field)) {
-				$fkey=$field;
-				$newRow[$field]="";
-			}
-			else
-			 $newRow[$field]=$data;
+      if (is_foreign_key($field) and !is_foreign_field($field)) {
+        // pakt alle foreign fields van deze foreign key
+        $ffields=filter_by($fields,$field.'__');
+        // combineer alle data en verwijder de foreignfields
+        $foreigndata='';
+        foreach ($ffields as $ffield) {
+          $foreigndata=add_string($foreigndata,$row[$ffield]);
+        }
+        $newRow[$field]=$foreigndata;
+      }
+      elseif (!is_foreign_field($field)) {
+        $newRow[$field]=$data;
+      }
 		}
 		return $newRow;
 	}
@@ -590,8 +595,9 @@ class Flexy_field extends CI_Model {
 			else
 				$out=implode("|",$data);
 		}
-		else
-			$out=$data;
+		else {
+		  $out=$data;
+		}
 		return $out;
 	}
 
