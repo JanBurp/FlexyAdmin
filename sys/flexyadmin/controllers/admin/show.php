@@ -188,7 +188,6 @@ class Show extends AdminController {
 
             // trace_($data);
 
-
 						$last_order=$this->db->get_last_order();
 						if (substr($last_order,0,1)!='(') $order=$last_order;
 
@@ -224,7 +223,7 @@ class Show extends AdminController {
 								foreach ($data as $id => $row) unset($data[$id]['order']);
 							}
 							$data=$this->ff->render_grid($table,$data,$right,$info);
-
+              
 							if (empty($uiTable)) $uiTable=$this->ui->get($table);
 							$tableHelp=$this->ui->get_help($table);
 							if (!empty($tableHelp)) {

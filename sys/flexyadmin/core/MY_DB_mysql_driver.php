@@ -1108,10 +1108,8 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 
 			if ($options) $result["options"]=$options;
 			if ($multiOptions) $result["multi_options"]=$multiOptions;
-      
-      
 		}
-		
+    
 		// Full uris if asked for
 		if ($fullUri) {
 			$uriField='uri';
@@ -1362,7 +1360,10 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
         $foreign_data=$this->get_results($foreign_table);
         // put tree abstract in result
         foreach ($result as $id => $row) {
-          $result[$id][$foreign_key_abstract]=$foreign_data[$row[$foreign_key]][$abstract_field];
+          if (isset($foreign_data[$row[$foreign_key]][$abstract_field]))
+            $result[$id][$foreign_key_abstract]=$foreign_data[$row[$foreign_key]][$abstract_field];
+          else
+            $result[$id][$foreign_key_abstract]='';
         }
       }
     }

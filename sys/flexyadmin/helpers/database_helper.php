@@ -19,8 +19,9 @@ function is_foreign_key($field) {
 	return $out;
 }
 
+
 /**
- * Test of veld een foriegn veld is
+ * Test of veld een foreign veld is
  * 
  * Deze veldnamen komen voor in database resultaten waar met `add_foreigns()` foreign data is toegevoegd
  * Deze veldnamen zien er zo uit: `foreign_key__field`
