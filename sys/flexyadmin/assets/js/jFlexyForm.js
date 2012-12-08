@@ -306,45 +306,36 @@ function doForm() {
 		
 	// Media(s) select by click
 	$('div.media ul.choices').add('div.medias ul.choices').add('div.medias:not(.image_dropdown) ul.values').click(function(e){
-		var target=e.target; // img tag
-		var type='media';
-		if ($(target).parents('div:first').hasClass('medias')) type='medias';
-		var thumbsrc=$(target).attr('src');
-    console.log(type);
-    
-		if (type=='media') {
-			var src=pathdecode(thumbsrc);
-			src=src.substr(src.lastIndexOf('/')+1);
-			$(target).parents('div.media').children('ul.values').empty();
-			$(target).parents('div.media').children('ul.values').append('<li><img class="zoom" src="'+thumbsrc+'" alt="'+src+'" title="'+src+'" /></li>');
-			// change the hidden input value
-			$(target).parents('div.media').children('input:first').attr('value',src);
-		}
-		else {
-      // Hier verschil herkennen tussen click en drag 'n drop... Alleen doorgaan als géén drag 'n drop
-      var item=$(target).parent('li:first').clone(true);
-      var values=$(target).parents('div.medias').children('ul.values');
-      if ($(target).parents('ul:first').hasClass('choices'))
-        $(target).parents('div.medias').children('ul.values').append(item);
-      else
-        $(target).parents('div.medias').children('ul.choices').append(item);
-      $(target).parent('li:first').remove();
-      $('.zoomThumb').hide();
-      update_values_list($(values));
-		}
-    // if ($(this).hasClass('image_dropdown')) {
-    //   
-    //   var select=$(this).closest('div.image_dropdown').children('select');
-    //   // console.log('NEEDS UPDATE');
-    //   // console.log(select);
-    //   
-    //   // var values = $(select).multiselect("getChecked").map(function(){return this.value;}).get();
-    //   update_image_dropdown(select);
-    //   
-    //   
-    //   
-    // }
+    if (!$(this).hasClass('sorting')) {
+  		var target=e.target; // img tag
+  		var type='media';
+  		if ($(target).parents('div:first').hasClass('medias')) type='medias';
+  		var thumbsrc=$(target).attr('src');
+
+  		if (type=='media') {
+  			var src=pathdecode(thumbsrc);
+  			src=src.substr(src.lastIndexOf('/')+1);
+  			$(target).parents('div.media').children('ul.values').empty();
+  			$(target).parents('div.media').children('ul.values').append('<li><img class="zoom" src="'+thumbsrc+'" alt="'+src+'" title="'+src+'" /></li>');
+  			// change the hidden input value
+  			$(target).parents('div.media').children('input:first').attr('value',src);
+  		}
+  		else {
+        // Hier verschil herkennen tussen click en drag 'n drop... Alleen doorgaan als géén drag 'n drop
+        var item=$(target).parent('li:first').clone(true);
+        var values=$(target).parents('div.medias').children('ul.values');
+        if ($(target).parents('ul:first').hasClass('choices'))
+          $(target).parents('div.medias').children('ul.values').append(item);
+        else
+          $(target).parents('div.medias').children('ul.choices').append(item);
+        $(target).parent('li:first').remove();
+        $('.zoomThumb').hide();
+        update_values_list($(values));
+  		}
+    }
+    $(this).removeClass('sorting');
 	});
+
 	// Media, empty by a click
 	$('div.media ul.values').click(function(){
 		$(this).empty();
@@ -371,6 +362,10 @@ function doForm() {
 	// dragndrop ordering of medias
 	$('div.medias ul').sortable({
 		connectWith: 'div.medias ul',
+    start: function(event,ui) {
+      // make sure clicking can detect if sorting is in progress...
+      $(this).addClass('sorting');
+    },
 		update: function(event,ui) {
 			update_values_list($(this));
 		}
