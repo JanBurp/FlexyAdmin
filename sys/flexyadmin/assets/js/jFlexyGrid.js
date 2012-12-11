@@ -150,16 +150,18 @@ function doGrid() {
       
 			if ($(filter).hasClass('pagination')) {
 				// add filter input
-				var search=$(filter).attr('search');
+				var search=unescape($(filter).attr('search').replace(/~/,'%'));
 				$("tr.caption:first tr").append('<td class="filter"><span class="help '+config.help_filter+'"><input class="filter" type="text" value="'+search+'"/></span></div>');
 				// bind action
         var filterBox=$('input.filter');
 				$(filterBox).keypress(function(e){
           if (e.which==keyEnter) {
   					var search=$(this).val();
+            search=escape(search);
+            search=search.replace(/%/,'~');
   					// ok now reload the page, starting from page 0, with this search and current order
   					var url=$(filter).attr('url')+'/0/order/'+$(filter).attr('order')+'/search/'+search;
-  					location.href=url;
+            location.href=url;
           }
 				});
 			}
