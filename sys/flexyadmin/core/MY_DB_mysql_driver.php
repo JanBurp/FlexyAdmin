@@ -514,12 +514,13 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
    *              "table"  => ''                              // In welke tabel (default huidige tabel)
    *            )
    *
-   * @param array $search 
-   * @param string $set_sql[TRUE] Als TRUE dan wordt de SQL hiermee opgebouwd 
+   * @param array $search
+   * @param bool $word_boundaries[FALSE] Als True dan worden de zoektermen als volledige woorden gezocht 
+   * @param bool $set_sql[TRUE] Als TRUE dan wordt de SQL hiermee opgebouwd 
    * @return mixed als $set_sql=TRUE dan wordt $this teruggegeven, anders de seacrh SQL
    * @author Jan den Besten
    */
-	public function search($search,$set_sql=TRUE) {
+	public function search($search,$word_boundaries=FALSE,$set_sql=TRUE) {
 		// if $search is one dimensial array, make more dimensonal
 		if (isset($search['search'])) $search=array($search);
 		$default=array('search'=>'','field'=>'id','or'=>'AND','table'=>'');
@@ -542,7 +543,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 						$in=array();
 						$ab_field=remove_prefix($ab_field,'.');
 						$foreign_search['field']=$ab_field;
-						$sub_sql="SELECT `id` FROM `".$foreign_search['table']."` WHERE ".$this->search($foreign_search,FALSE);
+						$sub_sql="SELECT `id` FROM `".$foreign_search['table']."` WHERE ".$this->search($foreign_search,$word_boundaries,FALSE);
 						$sub_query=$this->query($sub_sql);
 						$foreign_ids=array();
 						foreach ($sub_query->result_array() as $row) {array_push($in,$row['id']);}
@@ -564,7 +565,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 						$in=array();
 						$ab_field=remove_prefix($ab_field,'.');
 						$foreign_search['field']=$ab_field;
-						$sub_sql="SELECT `id` FROM `".$foreign_search['table']."` WHERE ".$this->search($foreign_search,FALSE);
+						$sub_sql="SELECT `id` FROM `".$foreign_search['table']."` WHERE ".$this->search($foreign_search,$word_boundaries,FALSE);
 						$sub_query=$this->query($sub_sql);
 						$foreign_ids=array();
 						foreach ($sub_query->result_array() as $row) {$foreign_ids[$row['id']]=$row;}
@@ -594,7 +595,10 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				}
 				else {
 					// LIKE
-					$sql.=$s['table'].$s['field'].' LIKE \'%'.$s['search'].'%\' ';
+          if ($word_boundaries)
+            $sql.=$s['table'].$s['field'].' REGEXP \'[[:<:]]'.$s['search'].'[[:>:]]\' ';
+          else
+            $sql.=$s['table'].$s['field'].' LIKE \'%'.$s['search'].'%\' ';
 				}
 			}
 		}

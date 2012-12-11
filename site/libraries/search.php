@@ -57,14 +57,14 @@ class Search extends Module {
   	*/
 	public function index($page) {
 		$search=$this->CI->input->post( lang('search_term') );
-		
+
 		if ($search) {
 			$fields=array();
 			$fields[]=$this->config('title_field');
 			$fields[]=$this->config('text_field');
 			$fields=array_merge($fields,$this->config('extra_fields'));
 
-			$this->CI->db->search( $this->_create_search_array_for_db($search, $fields ) );
+			$this->CI->db->search( $this->_create_search_array_for_db($search, $fields ), $this->config('word_boundaries') );
 			if ($this->config('show_full_title'))
 				$this->CI->db->uri_as_full_uri(TRUE, $this->config('title_field') );
 			elseif ($this->config('order_as_tree'))
@@ -126,7 +126,7 @@ class Search extends Module {
 		// set search term
 		$search=$this->CI->input->post( lang('search_term') );
 		if (empty($search)) $search=lang('search_empty_value');
-		$this->CI->site['search_form']=$this->CI->show('search_form',array('action'=>$action, 'value'=>$search, 'empty'=>lang('search_empty_value')),true);
+		return $this->CI->show('search_form',array('action'=>$action, 'value'=>$search, 'empty'=>lang('search_empty_value')),true);
 	}
 	
 
@@ -149,6 +149,7 @@ class Search extends Module {
 		$search=array();
 		foreach ($term as $t) {
       $t=trim($t,"\"'");
+      $t=htmlentities($t,ENT_COMPAT,'UTF-8');
       $or='and';
 			foreach ($fields as $field) {
 				$search[]=array('search'=>$t,'field'=>$field,'or'=>$or);
