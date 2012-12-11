@@ -21,7 +21,7 @@ class Grid_set extends CI_Model {
 	public function save($set=array()) {
 		$default=array('table'=>'','offset'=>'','order'=>'','search'=>'');
 		$set=array_merge($default,$set);
-    // strace_($set);
+    $set['search']=str_replace('~','%',$set['search']);
 		$this->session->set_userdata('grid_set',$set);
 	}
 	

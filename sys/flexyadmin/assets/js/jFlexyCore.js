@@ -445,6 +445,7 @@ function site_url(s) {
 	return s;
 }
 
+
 // regex callback, makes bold
 function regBoldReplace(all,match) {return '<b>'+match+'</b>';}
 
