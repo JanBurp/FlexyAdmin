@@ -34,6 +34,7 @@ $config['result_page_where']=array('str_module','search');
 |
 | Hier bepaal je hoe het zoekresultaat eruit komt te zien
 */
+$config['word_boundaries']=FALSE;          // Als TRUE zoek dan met word-boundaries
 $config['order_as_tree']=FALSE;				    // Gesorteerd als een menu, kan alleen als gezocht wordt in een menu tabel
 $config['order_by']=FALSE;                // Eventuele volgorde aangeven hier (zoals db->order_by(..))
 $config['show_full_title']=FALSE;			    // Laat titel helemaal zien
