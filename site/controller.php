@@ -210,7 +210,7 @@ class Main extends FrontEndController {
 	 * This functions loads the given library and calls it.
 	 * Used for loading and calling modules
 	 */
-	private function _call_library($library,$method='index',$args=NULL) {
+	public function _call_library($library,$method='index',$args=NULL) {
 		if (is_array($library)) {
 			$args=array_slice($library,2);
 			$method=el(2,$library,'index');
