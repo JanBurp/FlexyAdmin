@@ -490,6 +490,36 @@ function max_length($txt,$len=100,$type='LINES',$closetags=false,$strip_tags='')
 }
 
 /**
+ * Vind eerste HTML tag en geeft array met allerlei informatie
+ *
+ * @param string $txt Tekst waarin gezocht moet worden
+ * @param string $tag HTML tag die gezocht wordt
+ * @param mixed $max_pos[FALSE] Maximaal aantal karakters waar de tag gevonden moet worden vanaf het begin van de tekst. Als FALSE dan is er geen begrenzing.
+ * @return array ( 'tag'=> '', 'inner' => '', ['pos'=> ''] )
+ * @author Jan den Besten
+ */
+function find_first_tag($txt,$tag,$max_pos=FALSE) {
+  $match=FALSE;
+  if (preg_match("/<".$tag."(.*)?>(.*)?<\\/".$tag.">/uiU", $txt,$match)) {
+    $tag=$match[0];
+    if (isset($match[2])) {
+      $inner=$match[2];
+      if ($max_pos) {
+        $pos=strpos($txt,$tag);
+        if ($pos>$max_pos) {
+          $match=FALSE;
+        }
+      }
+    }
+  };
+  if ($match) {
+    $match=array('tag'=>$tag,'inner'=>$inner);
+    if (isset($pos)) $match['pos']=$pos;
+  }
+  return $match;
+}
+
+/**
  * Zorgt ervoor dat alle tags gesloten worden in de tekst
  *
  * @param string $input 
