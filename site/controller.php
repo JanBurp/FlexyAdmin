@@ -196,7 +196,7 @@ class Main extends FrontEndController {
 					$page=$return;
 				else
 					$page['module_content'].=$return;
-				$this->add_class('module_'.$module);
+				$this->add_class('module_'.str_replace('.','_',$module));
 			}
 			if ($this->site['break']) break;	// stop loading more modules if break is set
 		}
