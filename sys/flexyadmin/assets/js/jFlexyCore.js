@@ -88,7 +88,7 @@ $(document).ready(function() {
     var menu='<ul class="submenu">';
     $(headers).each(function(){
       var uri=$(this).html();
-      uri=uri.toLowerCase().replace(/ /g,'_');
+      uri=uri.toLowerCase().replace(/ /g,'_').replace(/\'/,'');
       $(this).addClass(uri);
       $(this).next('.content').addClass(uri);
       menu+='<li class="'+uri+'">'+$(this).html()+'</li>';
