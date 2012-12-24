@@ -6,7 +6,7 @@
 |--------------------------------------------------------------------------
 |
 */
-$config['MULTIPLE_UPLOAD'] = FALSE;
+$config['MULTIPLE_UPLOAD'] = TRUE;
 
 
 /*
