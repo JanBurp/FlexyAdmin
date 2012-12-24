@@ -2,9 +2,14 @@
 
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" >
 	<url>
-		<loc>http://www.voorbeeldsite.nl/start</loc>
-		<title>Start</title>
-		<content>Welkom! </content>
+		<loc>http://www.voorbeeldsite.nl/home</loc>
+		<title>Home</title>
+		<content></content>
+	</url>
+	<url>
+		<loc>http://www.voorbeeldsite.nl/contact</loc>
+		<title>Contact</title>
+		<content>Hier een voorbeeld van een eenvoudig contactformulier.</content>
 	</url>
 	<url>
 		<loc>http://www.voorbeeldsite.nl/een_pagina</loc>
@@ -15,11 +20,6 @@
 		<loc>http://www.voorbeeldsite.nl/een_pagina/subpagina_met_module_links</loc>
 		<title>Subpagina met module Links</title>
 		<content>Een subpagina</content>
-	</url>
-	<url>
-		<loc>http://www.voorbeeldsite.nl/contact</loc>
-		<title>Contact</title>
-		<content>Hier een voorbeeld van een eenvoudig contactformulier.</content>
 	</url>
 </urlset>
 
