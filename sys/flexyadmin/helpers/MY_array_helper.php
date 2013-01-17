@@ -915,4 +915,33 @@ function array_unset_keys($a,$unset) {
 }
 
 
+/**
+ * Verwijderd dubbele items uit een multidimensionale array (een array met arrays dus)
+ *
+ * @param string $input De array met mogelijk dubbele items
+ * @param array $keys[''] Geef hier eventueel een array van keys waarop gecheckt moet worden (je kunt zo bepalen welke keys wel/niet dubbel mogen zijn) 
+ * @return array De array met alle dubbele items verwijderd
+ * @author Jan den Besten
+ */
+function array_unique_multi($input, $keys='') {
+  $array=$input;
+  if (!empty($keys)) {
+    $keys=array_combine($keys,$keys);
+    // remove the keys wich are not checked for
+    foreach ($array as $id => $row) {
+      $array[$id]=array_intersect_key($row,$keys);
+    }
+  }
+  $serialized = array_map('serialize', $array);
+  $unique = array_unique($serialized);
+  $unique = array_intersect_key($array, $unique);
+  if (!empty($keys)) {
+    // return array with full keys
+    foreach ($unique as $key => $value) {
+      $unique[$key]=$input[$key];
+    }
+  }
+  return $unique;
+}
+
 ?>
