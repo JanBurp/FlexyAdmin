@@ -399,6 +399,7 @@ class Flexy_field extends CI_Model {
 		$out['validation']='';
 		$validation[]=array('rules'=>$this->validation,'params'=>'');
 		if (!empty($out['table'])) {
+      $validation[]=$this->_get_global_set_validation($out['name']);
 			$validation[]=$this->_get_set_validation($out['table'],$out['name']);
 			$validation[]=$this->_get_db_validation($out['table'],$out['name']);
 			$validations=$this->_combine_validations($validation);
@@ -423,9 +424,22 @@ class Flexy_field extends CI_Model {
 	}
 
 	function _get_set_validation($table,$field) {
-		return array(	'rules'		=> $this->cfg->get('CFG_field',$table.".".$field,'str_validation_rules'),
-									'params'	=> $this->cfg->get('CFG_field',$table.".".$field,'str_validation_parameters'));
+    $validation = array(
+      'rules'		=> $this->cfg->get('CFG_field',$table.".".$field,'str_validation_rules'),
+			'params'	=> $this->cfg->get('CFG_field',$table.".".$field,'str_validation_parameters')
+    );
+    return $validation;
 	}
+
+	function _get_global_set_validation($field) {
+    $global_validation = array(
+      'rules'		=> $this->cfg->get('CFG_field',"*.".$field,'str_validation_rules'),
+			'params'	=> $this->cfg->get('CFG_field',"*.".$field,'str_validation_parameters')
+    );
+    return $global_validation;
+	}
+
+
 	
 	function _combine_validations($validations) {
 		$validation=array();
