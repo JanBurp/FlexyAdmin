@@ -357,7 +357,7 @@ class Filemanager extends AdminController {
     $path=pathdecode($path);
     $data=$this->mediatable->get_info($path.'/'.$file);
     if (!$data) {
-      $data=get_file_info($path.'/'.$file,FALSE);
+      $data=get_full_file_info($path.'/'.$file,FALSE);
       $data['file']=$data['name'];
       unset($data['name']);
       $data['str_type']=$data['type'];
