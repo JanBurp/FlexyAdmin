@@ -52,7 +52,7 @@ function read_map($path,$types='',$recursive=FALSE,$getInfo=TRUE,$getMetaData=FA
 			while(($file = readdir($dh)) !== false) {
 				if ($file!='.' and $file!='..' and substr($file,0,1)!='.') {
 
-					$data=get_file_info($path.'/'.$file, $getInfo, $getMetaData);
+					$data=get_full_file_info($path.'/'.$file, $getInfo, $getMetaData);
 
           if ($data['type']=='dir') {
 						if ($recursive) {

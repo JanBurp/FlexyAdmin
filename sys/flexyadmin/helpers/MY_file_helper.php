@@ -39,7 +39,7 @@ function copy_file($source,$dest) {
  * @return array $info
  * @author Jan den Besten
  */
-function get_file_info($file,$getInfo=TRUE,$metaInfo=FALSE) {
+function get_full_file_info($file,$getInfo=TRUE,$metaInfo=FALSE) {
   $name=get_suffix($file,'/');
 	if (is_dir($file))
     $type="dir";
@@ -51,7 +51,7 @@ function get_file_info($file,$getInfo=TRUE,$metaInfo=FALSE) {
     'type'    => $type
   );
 
-  if (strpos($file,'sys/flexyadmin')===FALSE and strpos($file,'bulk_upload')===FALSE) $file=add_assets($file);
+  if (strpos($file,'sys/flexyadmin')===FALSE and strpos($file,'bulk_upload')===FALSE and strpos($file,'site/cache')===FALSE) $file=add_assets($file);
 
   if ($type!='dir' AND $getInfo) {
     $info['alt']     = get_prefix($name,".");

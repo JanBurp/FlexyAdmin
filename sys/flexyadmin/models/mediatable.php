@@ -63,7 +63,7 @@ class Mediatable Extends CI_Model {
    * @author Jan den Besten
    */
   public function add($file,$path='',$userId=FALSE) {
-    if (!is_array($file)) $file=get_file_info($path.'/'.$file);
+    if (!is_array($file)) $file=get_full_file_info($path.'/'.$file);
     $set=array(
       'file'      => $file['name'],
       'path'      => remove_assets(remove_suffix($file['path'],'/')),
