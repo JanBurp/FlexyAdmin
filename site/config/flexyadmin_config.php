@@ -24,4 +24,3 @@ $config['MULTIPLE_UPLOAD'] = TRUE;
 
 
 /* End of file flexyadmin_config.php */
-/* Location: ./system/application/config/flexyadmin_config.php */
