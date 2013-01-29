@@ -67,12 +67,12 @@ class Search extends Module {
 			$this->CI->db->search( $this->_create_search_array_for_db($search, $fields ), $this->config('word_boundaries') );
 			if ($this->config('show_full_title'))
 				$this->CI->db->uri_as_full_uri(TRUE, $this->config('title_field') );
-			elseif ($this->config('order_as_tree'))
+			elseif ($this->config('order_as_tree') or $this->CI->db->field_exists('self_parent',$this->config('table')))
 				$this->CI->db->uri_as_full_uri();
       elseif ($this->config('order_by'))
         $this->CI->db->order_by($this->config('order_by'));
 			$results=$this->CI->db->get_results( $this->config('table') );
-			
+      
 			// remove double (uri)
 			$results=$this->CI->db->_set_key_to($results,'uri');
 			
@@ -126,7 +126,7 @@ class Search extends Module {
 		// set search term
 		$search=$this->CI->input->post( lang('search_term') );
 		if (empty($search)) $search=lang('search_empty_value');
-		return $this->CI->show('search_form',array('action'=>$action, 'value'=>$search, 'empty'=>lang('search_empty_value')),true);
+		$this->CI->site['search_form']=$this->CI->show('search_form',array('action'=>$action, 'value'=>$search, 'empty'=>lang('search_empty_value')),true);
 	}
 	
 
