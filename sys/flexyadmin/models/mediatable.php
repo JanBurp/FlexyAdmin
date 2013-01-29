@@ -59,27 +59,30 @@ class Mediatable Extends CI_Model {
    * @param mixed $file een array met alle file info, of de naam van de file 
    * @param string $path[''] als geen info is meegegeven, moet hier het complete path meegegeven worden 
    * @param int $userId[FALSE] if restricted to users, give the user id here.
-   * @return int $id id van bestand in de database
+   * @return mixed $id id van bestand in de database (of FALSE bij een error of een directory)
    * @author Jan den Besten
    */
   public function add($file,$path='',$userId=FALSE) {
     if (!is_array($file)) $file=get_full_file_info($path.'/'.$file);
-    $set=array(
-      'file'      => $file['name'],
-      'path'      => remove_assets(remove_suffix($file['path'],'/')),
-      'str_type'  => $file['type'],
-      'dat_date'  => str_replace(' ','-',$file['rawdate']),
-      'int_size'  => $file['size'],
-      'str_title' => $file['alt']
-    );
-    if (isset($file['width'])) {
-      $set['int_img_width']   = $file['width'];
-      $set['int_img_height']  = $file['height'];
+    if ($file['type']!='dir') {
+      $set=array(
+        'file'      => $file['name'],
+        'path'      => remove_assets(remove_suffix($file['path'],'/')),
+        'str_type'  => $file['type'],
+        'dat_date'  => str_replace(' ','-',$file['rawdate']),
+        'int_size'  => $file['size'],
+        'str_title' => $file['alt']
+      );
+      if (isset($file['width'])) {
+        $set['int_img_width']   = $file['width'];
+        $set['int_img_height']  = $file['height'];
+      }
+      if ($userId and $this->db->field_exists('user',$this->table)) $set['user']=$userId;
+      $this->db->set($set);
+      $this->db->insert($this->table);
+      return $this->db->insert_id();
     }
-    if ($userId and $this->db->field_exists('user',$this->table)) $set['user']=$userId;
-    $this->db->set($set);
-    $this->db->insert($this->table);
-    return $this->db->insert_id();
+    return false;
   }
   
 
