@@ -913,6 +913,7 @@ class Flexy_field extends CI_Model {
     }
 		$list_file=$list.'_list.js';
 		$site_url=site_url();
+    $links=array();
 		if (file_exists(SITEPATH.'assets/lists/'.$list_file)) {
 			$c=read_file(SITEPATH.'assets/lists/'.$list_file);
 			$c=str_replace(array('var tinyMCE'.ucfirst($list).'List = new Array(',');'),'',$c);
