@@ -906,27 +906,39 @@ class Flexy_field extends CI_Model {
 		$options=array();
 		$field=$this->field;
 		$list=remove_prefix($field);
+    $multiple=false;
+    if (substr($list,strlen($list)-1,1)=='s') {
+      $multiple=true;
+      $list=substr($list,0,strlen($list)-1);
+    }
 		$list_file=$list.'_list.js';
 		$site_url=site_url();
 		if (file_exists(SITEPATH.'assets/lists/'.$list_file)) {
 			$c=read_file(SITEPATH.'assets/lists/'.$list_file);
-			$c=str_replace(array('var tinyMCELinkList = new Array(',');'),'',$c);
-			$links=explode('],[',$c);
-			foreach ($links as $key => $link) {
-				if ( ($link=='""') or (substr($link,0,1)=='[') or (substr($link,0,4)=='"-- ') )
-					unset($links[$key]);
-				else
-					$links[$key]=str_replace($site_url,'',$link);
-			}
+			$c=str_replace(array('var tinyMCE'.ucfirst($list).'List = new Array(',');'),'',$c);
+      $mathes=array();
+      if (preg_match_all("/\\[(.*)?\\]/uiU", $c,$matches)) {
+        $links=$matches[1];
+  			foreach ($links as $key => $link) {
+  				if ( ($link=='""') or (substr($link,0,1)=='[') or (substr($link,0,4)=='"-- ') )
+  					unset($links[$key]);
+  				else
+  					$links[$key]=str_replace($site_url,'',$link);
+  			}
+      }
 		}
 		$options[""]="";
 		foreach($links as $link) {
 			$lopt=explode(',',$link);
-			if (isset($lopt[1])) {
+			if ($list=='links' and isset($lopt[1]))
 				$options[str_replace('"','',$lopt[1])]=str_replace('"','',$lopt[0]);
-			}
+      else
+        $options[str_replace('"','',get_suffix($lopt[1],'/'))]=str_replace('"','',get_suffix($lopt[1],'/'));
 		}
-		$out=$this->_standard_form_field($options);
+    if ($multiple)
+  		$out=$this->_standard_form_field(NULL,$options);
+    else
+      $out=$this->_standard_form_field($options);
 		unset($out["button"]);
 		return $out;
 	}
