@@ -84,6 +84,7 @@ class Form {
    */
 	function __construct($action="") {
 		$this->CI = &get_instance();
+    $this->CI->lang->load('form');
 		$this->CI->load->library('form_validation');
 		$this->init($action);
 	}
