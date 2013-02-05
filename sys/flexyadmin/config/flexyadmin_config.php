@@ -63,6 +63,8 @@ $config['PLUGIN_ORDER']							= array('first'=>array('uri','links','striptags'),
 $config['PLUGIN_URI_REPLACE_CHAR']	= '_';
 $config['URI_HASH']                 = ':';  // possible other value: ~
 $config['PLUGIN_URI_ARGS_CHAR']     = $config['URI_HASH'];
+$config['FORBIDDEN_URIS']           = array("site","sys","admin","rss","file",'offset');
+
   
 /*
 |--------------------------------------------------------------------------
