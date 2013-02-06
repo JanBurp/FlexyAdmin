@@ -3,6 +3,7 @@
  */
 
 .plupload_button {cursor: pointer;}
+.plupload_button.ui-button-disabled {display:none;}
 
 .plupload_wrapper {width: 100%;}
 .plupload_wrapper td {font-size:.95em;}
@@ -17,7 +18,7 @@
 
 
 .plupload .plupload_container input {width: 98%;}
-.plupload .plupload_filelist_footer {border-width: 1px 0 0 0}
+.plupload .plupload_filelist_footer {border-width: 1px 0 0 0;}
 .plupload .plupload_filelist_header {border-width: 0 0 1px 0}
 div.plupload .plupload_file {border-width:0px 0px 1px 0px;}
 div.plupload div.plupload_header {
@@ -43,7 +44,7 @@ div.plupload div.plupload_header {
 	user-select:none;
 }
 
-.plupload_cell {padding: 8px 6px;}
+.plupload_cell {padding: 4px 2px;}
 
 .plupload_file {
 	border-left: none;
@@ -74,7 +75,7 @@ div.plupload div.plupload_header {
 	width:95%;	
 }
 
-.plupload_progress {width: 60px;}
+.plupload_progress {width: 60px;display:none;}
 .plupload_progress_container {padding: 1px;}
 
 
@@ -101,7 +102,10 @@ div.plupload div.plupload_header {
 }
 
 .plupload_buttons, .plupload_upload_status {float: left}
-.plupload_buttons a {padding:4px;width:170px;}
+.plupload_upload_status {padding:6px 4px;}
+.plupload_buttons a {padding:6px 4px 4px;width:80px;}
+#uploader_browse {width:120px;}
+
 .plupload_buttons a .ui-icon {float:left;}
 
 .plupload_message, .ui-widget-header .ui-state-error {
