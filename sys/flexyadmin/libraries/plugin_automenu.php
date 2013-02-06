@@ -112,7 +112,8 @@ class Plugin_automenu extends Plugin {
     if (!empty($this->newData) and !empty($this->oldData)) {
       $old=array_keep_keys($this->oldData,$this->config('update_fields'));
       $new=array_keep_keys($this->newData,$this->config('update_fields'));
-      return ($new!=$old);
+      $changed=($new!=$old);
+      return $changed;
     }
     return TRUE;
   }
