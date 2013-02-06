@@ -92,7 +92,10 @@ function get_video_code_from_url($url,$type='youtube') {
 				preg_match('/vimeo.com\/([0-9a-z_-]+)/i',$url,$match);
 				break;
 			case 'youtube':
-				preg_match('/v=([0-9a-z_-]+)/i',$url,$match);
+        if (has_string('youtube.',$url))
+  				preg_match('/v=([0-9a-z_-]+)/i',$url,$match);
+        else
+          $match[1]=get_suffix($url,'/');
 			default:
 				break;
 		}
