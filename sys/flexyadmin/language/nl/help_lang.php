@@ -39,7 +39,7 @@ $lang['fill_tables']				= 'In tabel';
 $lang['fill_fields']				= 'Te vullen velden';
 $lang['fill_where']					= 'WHERE ...';
 $lang['fill_with']					= 'Vullen met';
-$lang['fill_use_random']		= 'Random code';
+$lang['fill_use_random']		= 'Random';
 
 
 $lang['bad_regex']					= 'Fout in reguliere expressie.';

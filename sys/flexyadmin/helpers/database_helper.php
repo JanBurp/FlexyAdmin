@@ -161,5 +161,35 @@ function is_editable_table($table) {
 }
 
 
+/**
+ * Geeft een array van veldnamen (table.field) met als input veldnamen waarin wildcards zijn verwerkt
+ *
+ * @param mixed $wildfields 
+ * @param mixed $tables[''] Eventuele selectie van tabellen
+ * @return array
+ * @author Jan den Besten
+ */
+function get_fields_from_input($wildfields,$tables='') {
+  $CI =& get_instance();
+  if (!is_array($wildfields)) $wildfields=explode('|',$wildfields);
+  if (!$tables) $tables=$CI->db->list_tables();
+  if (!is_array($tables)) $tables=explode('|',$tables);
+  $fields=array();
+  foreach ($wildfields as $field) {
+    $table=get_prefix($field,'.');
+    $field=remove_prefix($field,'.');
+    if ($table=='*') {
+      foreach ($tables as $table) {
+        $fields[]=$table.'.'.$field;
+      }
+    }
+    else $fields[]=$table.'.'.$field;
+  }
+  // trace_($wildfields);
+  // trace_($tables);
+  // trace_($fields);
+  return $fields;
+}
+
 
 ?>
