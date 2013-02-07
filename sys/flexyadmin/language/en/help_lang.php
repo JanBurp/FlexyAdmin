@@ -40,7 +40,7 @@ $lang['fill_tables']				= 'In table';
 $lang['fill_fields']				= 'Fields to fill';
 $lang['fill_where']					= 'WHERE ...';
 $lang['fill_with']					= 'Fill with';
-$lang['fill_use_random']		= 'Random code';
+$lang['fill_use_random']		= 'Random';
 
 
 $lang['bad_regex']					= 'Error in regular expression.';
