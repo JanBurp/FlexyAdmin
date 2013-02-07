@@ -58,6 +58,7 @@ class Fill extends AdminController {
 					$this->db->select('id');
 					if (!empty($where)) $this->db->where($where);
 					$items=$this->db->get_result($table);
+          $year=(int) date('Y');
 					foreach ($items as $id => $item) {
 						$result=$fill;
             if ($random) {
@@ -69,18 +70,20 @@ class Fill extends AdminController {
                   preg_match_all("/\<h2\>(.*)\<\/p\>/uiUs", $html,$matches);
                   if ($pre=='txt')
                     $result=random_element($matches[0]);
-                  else
-                    $result=random_element($matches[1]);
+                  else {
+                    $lines=explode('.',random_element($matches[1]));
+                    $result=random_element($lines);
+                  }
                   break;
                 case 'int':
                   $result=rand(0,100);
                   break;
                 case 'date':
                 case 'dat':
-                  $result=rand(2000,2020).'-'.rand(1,12).'-'.rand(1,31);
+                  $result=rand($year,$year+1).'-'.rand(1,12).'-'.rand(1,31);
                   break;
                 case 'tme':
-                  $result=rand(2000,2020).'-'.rand(1,12).'-'.rand(1,31). ' '.rand(0,23).':'.rand(0,59).':'.rand(0,59);
+                  $result=rand($year,$year+1).'-'.rand(1,12).'-'.rand(1,31). ' '.rand(0,23).':'.rand(0,59).':'.rand(0,59);
                   break;
                 case 'time':
                   $result=rand(0,23).':'.rand(0,59).':'.rand(0,59);
