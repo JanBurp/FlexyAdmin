@@ -113,7 +113,7 @@ class Filemanager extends AdminController {
 				// Sort files
 				if (!empty($order)) {
 					$sorder=$order;
-					$sorder=str_replace(array('size','filewidth'),array('width','size'),$order);
+					$sorder=str_replace(array('size','filewidth','dat_date'),array('width','size','rawdate'),$order);
 					$desc=(substr($order,0,1)=='_');
 					$files=sort_by($files,ltrim($sorder,'_'),$desc);
 				}
