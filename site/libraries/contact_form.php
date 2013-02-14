@@ -100,10 +100,15 @@ class Contact_form extends Module {
 
 			$this->CI->email->message($body);
       if (isset($file) and !empty($file)) $this->CI->email->attach($file);
-			$this->CI->email->send();
+			if (!$this->CI->email->send()) {
+		    $errors=$this->CI->email->print_debugger();
+        $viewForm=div('message').$errors._div();
+			}
+      else {
+  			// Show Send message
+  			$viewForm=div('message').lang('contact_send_text')._div();
+      }
 
-			// Show Send message
-			$viewForm=lang('contact_send_text');
 		}
 	
 		else {
@@ -112,7 +117,7 @@ class Contact_form extends Module {
 			$viewForm.=$form->render();
 		}
 		
-		return $this->CI->view('contact_form',array('form'=>$viewForm,'errors'=>$viewErrors),true);
+    return $this->CI->view('contact_form',array('form'=>$viewForm,'errors'=>$viewErrors),true);
 	}
 
 }
