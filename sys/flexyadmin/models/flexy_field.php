@@ -921,9 +921,9 @@ class Flexy_field extends CI_Model {
       if (preg_match_all("/\\[(.*)?\\]/uiU", $c,$matches)) {
         $links=$matches[1];
   			foreach ($links as $key => $link) {
-  				if ( ($link=='""') or (substr($link,0,1)=='[') or (substr($link,0,4)=='"-- ') )
-  					unset($links[$key]);
-  				else
+          if ( ($link=='""') )
+            unset($links[$key]);
+          else
   					$links[$key]=str_replace($site_url,'',$link);
   			}
       }
@@ -931,10 +931,14 @@ class Flexy_field extends CI_Model {
 		$options[""]="";
 		foreach($links as $link) {
 			$lopt=explode(',',$link);
-			if ($list=='links' and isset($lopt[1]))
-				$options[str_replace('"','',$lopt[1])]=str_replace('"','',$lopt[0]);
-      else
-        $options[str_replace('"','',get_suffix($lopt[1],'/'))]=str_replace('"','',get_suffix($lopt[1],'/'));
+      if (isset($lopt[1])) {
+        $url=str_replace('"','',$lopt[1]);
+        $name=str_replace('"','',$lopt[0]).' - '.$url;
+        $options[$url]=$name;
+      }
+      else {
+        $options[$link]=str_replace('"','',$link);
+      }
 		}
     if ($multiple)
   		$out=$this->_standard_form_field(NULL,$options);

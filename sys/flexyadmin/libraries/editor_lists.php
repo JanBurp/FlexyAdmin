@@ -51,7 +51,7 @@ class Editor_lists {
 		if ($type=="downloads") {
 			
 			// add special links from tbl_site
-			$data['-- info -----------------']=NULL;
+			$data['-- INFO -----------------']=NULL;
 			$tblSite=$this->CI->db->get_row('tbl_site');
 			if (isset($tblSite['url_url'])) {
 				$name=str_replace('http://','',$tblSite['url_url']);
@@ -66,7 +66,7 @@ class Editor_lists {
 			if ($this->CI->cfg->get('CFG_configurations','b_add_internal_links')) {
 				$menuTable=get_menu_table();
 				if ($this->CI->db->table_exists($menuTable)) {
-					$data['-- site links -----------']=NULL;
+					$data['-- SITE LINKS -----------']=NULL;
 					$titleField=$this->CI->db->get_first_field($menuTable,'str');
 					$menuFields=$this->CI->db->list_fields($menuTable);
 					$menuFields=array_combine($menuFields,$menuFields);
@@ -98,7 +98,7 @@ class Editor_lists {
 			// add links from links table
 			$table=$this->CI->cfg->get('CFG_configurations','table');
 			if ($this->CI->db->table_exists($table)) {
-				$data['-- links ----------------']=NULL;
+				$data['-- LINKS ----------------']=NULL;
 				$titleField=$this->CI->db->get_first_field($table,'str');
 				if ($this->CI->db->table_exists($table)) {
 		 			$this->CI->db->select($titleField.",url_url");
@@ -138,7 +138,7 @@ class Editor_lists {
 					$files=read_map($map);
 					$files=not_filter_by($files,"_");
 					ignorecase_ksort($files);
-					$data['-- '.$this->CI->ui->get($path).' ----------']=NULL;
+					$data['-- '.strtoupper($this->CI->ui->get($path)).' ----------']=NULL;
 					$data=$data + $files;
 				}
 			}

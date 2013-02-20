@@ -72,8 +72,17 @@ class MY_Controller extends CI_Controller {
 		$this->cfg->set_if_admin($isAdmin);
 	}
 	
-	
+
+
   
+  /**
+   * Geeft de uri van een pagina met de gevraagde module
+   *
+   * @param string $module 
+   * @param bool $full_uri[true]
+   * @return string uri
+   * @author Jan den Besten
+   */
 	function find_module_uri($module,$full_uri=true) {
 		$this->db->select('id,uri');
 		if ($full_uri) {
