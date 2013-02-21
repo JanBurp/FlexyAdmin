@@ -100,7 +100,7 @@ class Wizard {
 		foreach ($this->steps as $key=>$s) {
       $thisOut=$s['label'];
 			if ($this->step==$key) $thisOut='<strong>'.$thisOut.'</strong>';
-      $out=add_string($out,$thisOut,'|');
+      $out=add_string($out,$thisOut,' | ');
 		}
 		$out=h($this->title,1).p().$out._p();
     return $out;

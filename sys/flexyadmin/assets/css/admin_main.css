@@ -74,6 +74,9 @@ img {
 
 /* =============== menu ===================== */
 
+#content ul li.seperator {margin-bottom:20px;}
+
+
 #menu ul
 {
 	padding-left:0px;
