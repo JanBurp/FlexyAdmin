@@ -43,9 +43,14 @@ class Newsletter extends Module {
   	* @ignore
   	*/
    public function index($page) {
+    $out='';
     $unsubmit=$this->CI->input->get('unsubmit');
-    if ($unsubmit!==FALSE) return $this->unsubmit($page);
-		return $this->submit($page);
+    if ($unsubmit!==FALSE)
+      $out=$this->unsubmit($page);
+    else
+      $out=$this->submit($page);
+    $this->CI->site['newsletter']=$out;
+    // return $out;
 	}
 
   /**
@@ -61,13 +66,14 @@ class Newsletter extends Module {
     $message='';
 		$this->CI->load->library('form');
     $form=new Form();
-    $formFields = array('str_name'    => array( 'label'=>lang('str_name'), 'validation'=>'required' ),
+    $formFields = array('str_name'    => array( 'label'=>lang('str_name'),    'validation'=>'required' ),
                         'email_email' => array( 'label'=>lang('email_email'), 'validation'=>'required|valid_email' ),
                         'body'        => array( 'type'=>'hidden')
                        );
     $formButtons = array( 'submit'=>array('submit'=>'submit', 'value'=>lang('submit')) );
     $form->set_data($formFields,lang('submit_to_newsletter'));
 		$form->set_buttons($formButtons);
+    $form->prepare_for_clearinput();
     if ($form->validation()) {
       $data=$form->get_data();
       $data['tme_added']=standard_date('DATE_W3C',now());

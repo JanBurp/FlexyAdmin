@@ -1,7 +1,9 @@
-<? foreach ($pages as $id => $page): ?>
-<h1><?=$page['str_title']?></h1>
-<?=$page['txt_text']?>
-<p><a href="<?=$page['uri']?>">lees meer</a></p>
+<? foreach ($items as $id => $item): ?>
+<h1><?=$item['str_title']?></h1>
+<?=$item['txt_text']?>
+<? if (isset($item['uri'])): ?>
+<p><a href="<?=$item['uri']?>">lees meer</a></p>  
+<? endif ?>
 <hr/>
 <? endforeach ?>
 
