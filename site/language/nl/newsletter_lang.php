@@ -1,6 +1,6 @@
 <?php
 
-$lang['title']                = 'Niewsbrief';
+$lang['title']                = 'Niewsbrieven';
 
 // Module
 $lang['submit_to_newsletter']    = 'Aanmelding nieuwsbrief';
@@ -15,14 +15,16 @@ $lang['thanks_for_submit_long']  = 'Bedankt voor het aanmelden op de nieuwsbrief
 $lang['unsubmit_succes']         = 'Je bent nu afgemeld van de nieuwsbrief.';
 
 // Plugin
-$lang['create_newsletter']    = 'Nieuwsbrief maken';
+$lang['create_newsletter']    = 'Nieuwe nieuwsbrief maken';
+$lang['show_newsletters']     = 'Oude nieuwsbrieven bekijken';
 $lang['edit_newsletter']      = 'Nieuwsbrief aanpassen';
+$lang['show_adresses']        = 'Adressen bekijken/aanpassen';
 $lang['export_adresses']      = 'Exporteer adressen';
 $lang['send_test']            = 'Test verzenden';
 $lang['send_newsletter']      = 'Nieuwsbrief versturen';
 $lang['choose_newsletter']    = 'Kies Nieuwsbrief';
 
-$lang['include_pages']        = "Pagina's toevoegen";
+$lang['include_pages']        = "Teksten toevoegen";
 $lang['edit_text']            = "Tekst aanpassen";
 $lang['send_test']            = "Test verzenden";
 $lang['send_select']          = 'Kies nieuwsbrief';
@@ -32,11 +34,11 @@ $lang['to']                   = 'Aan';
 $lang['from']                 = 'Afzender';
 $lang['subject']              = 'Onderwerp';
 $lang['txt_body']             = 'Tekst';
-$lang['add_pages']            = "Pagina's";
+$lang['add_items']            = "Teksten";
 
 $lang['send']                 = 'Verstuur';
 
-$lang['copy_adresses']        = 'Kopiee&euml;r alle adressen van hieronder naar je emailprogramma.'
+$lang['copy_adresses']        = "Hieronder vind je alle adressen gescheiden door komma's.<br />Je kunt ze kopie&euml;ren en zo gebruiken in een ander bestand of emailprogramma."
 
 
 ?>

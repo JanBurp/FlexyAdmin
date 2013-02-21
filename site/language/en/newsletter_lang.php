@@ -15,9 +15,11 @@ $lang['thanks_for_submit_long']  = 'Thanks for submitting to the newsletter of %
 $lang['unsubmit_succes']         = 'Unsubmitting succesfull.';
 
 // Plugin
-$lang['create_newsletter']    = 'Create Newsletter';
-$lang['edit_newsletter']      = 'Edit Newsletter';
-$lang['export_adresses']      = 'Export Adresses';
+$lang['create_newsletter']    = 'Create a new newsletter';
+$lang['show_newsletters']     = 'Show old newsletters';
+$lang['edit_newsletter']      = 'Edit newsletter';
+$lang['show_adresses']        = 'Show/Edit adresses';
+$lang['export_adresses']      = 'Export adresses';
 $lang['send_test']            = 'Send a test';
 $lang['send_newsletter']      = 'Send Newsletter';
 $lang['choose_newsletter']    = 'Choose Newsletter';

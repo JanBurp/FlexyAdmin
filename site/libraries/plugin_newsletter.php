@@ -58,6 +58,9 @@ class Plugin_newsletter extends Plugin {
       case 'send':
         return $this->_send_newsletter($args);
         break;
+      case 'show':
+        return $this->_show($args);
+        break;
       case 'export':
         return $this->_export_addresses($args);
         break;
@@ -65,6 +68,8 @@ class Plugin_newsletter extends Plugin {
         $menu=new Menu();
         $menu->add(array('uri'=>uri_string().'/create','name'=>lang('create_newsletter')));
         $menu->add(array('uri'=>uri_string().'/send','name'=>lang('send_newsletter')));
+        $menu->add(array('uri'=>uri_string().'/show/newsletters','name'=>lang('show_newsletters'),'class'=>'seperator'));
+        $menu->add(array('uri'=>uri_string().'/show/adresses','name'=>lang('show_adresses')));
         $menu->add(array('uri'=>uri_string().'/export','name'=>lang('export_adresses')));
         return $this->view('newsletter/plugin_main',array('title'=>lang('title'),'content'=>$menu->render()) );
     }
@@ -92,6 +97,32 @@ class Plugin_newsletter extends Plugin {
     }
     return false;
   }
+
+  /**
+   * Tonen van tabel (nieuwsbrieven of adressen)
+   *
+   * @param string $args 
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   */
+	private function _show($args) {
+    $table='';
+    switch ($args[0]) {
+      case 'newsletters':
+        $table='tbl_newsletters';
+        break;
+      case 'adresses':
+        $table=$this->config('send_to_address_table');
+        break;
+    }
+    if ($table!='') {
+      $redirect=$this->CI->config->item('API_view_grid').$table;
+      redirect($redirect);
+    }
+    return $this->_admin_api(); // startmenu
+  }
+
   
   /**
    * Roep juiste stap aan voor het aanmaken van nieuwsbrief
@@ -114,23 +145,26 @@ class Plugin_newsletter extends Plugin {
    * @ignore
    */
   function _create_include_pages($args) {
-    if ($this->CI->db->field_exists('dat_date',get_menu_table())) {
-      $this->CI->db->where('(CURDATE() - INTERVAL 1 MONTH) <= dat_date');
+    $table=$this->config('content_table',get_menu_table());
+    
+    $tree=$this->CI->db->field_exists('self_parent',$table);
+    $date=$this->CI->db->field_exists('dat_date',$table);
+    
+    // $this->CI->db->select('id,order,self_parent,uri,str_title,txt_text');
+    if ($date) $this->CI->db->where('(CURDATE() - INTERVAL 1 MONTH) <= dat_date');
+    if ($tree) {
+       $this->CI->db->order_as_tree();
+       $this->CI->db->uri_as_full_uri(true,'str_title');
     }
-    else {
-      $this->CI->db->order_as_tree();
-    }
-    $this->CI->db->select('id,order,self_parent,uri,str_title,txt_text');
-    $this->CI->db->uri_as_full_uri(true,'str_title');
-    $pages=$this->CI->db->get_result(get_menu_table());
+    $items=$this->CI->db->get_result($table);
 
     $options=array();
-    foreach ($pages as $page) {
-      $options[$page['id']]=$page['str_title'];
+    foreach ($items as $item) {
+      $options[$item['id']]=$item['str_title'];
     }
     
     $formFields = array(  'str_title' => array( 'label'=>lang('subject'), 'validation'=>'required' ),
-                          'pages'     => array( 'label'=>lang('add_pages'), 'type'=>'dropdown', 'multiple'=>'multiple', 'options'=>$options )  );
+                          'items'     => array( 'label'=>lang('add_items'), 'type'=>'dropdown', 'multiple'=>'multiple', 'options'=>$options )  );
     $formButtons = array( 'submit'=>array('submit'=>'submit', 'value'=>lang('submit')) );
 		$form=new form(uri_string());
 		$form->set_data($formFields, lang('create_newsletter') );
@@ -138,17 +172,17 @@ class Plugin_newsletter extends Plugin {
     
     if ($form->validation()) {
       $data=$form->get_data();
-      $pageIDs=explode('|',$data['pages']);
-      foreach ($pages as $id=>$page) {
-        if (in_array($id,$pageIDs))
-          $pages[$id]['txt_text']=intro_string($pages[$id]['txt_text'],$this->config('intro_length'),'LINES',$this->config('allowed_tags'));
+      $itemIDs=explode('|',$data['items']);
+      foreach ($items as $id=>$item) {
+        if (in_array($id,$itemIDs))
+          $items[$id]['txt_text']=intro_string($items[$id]['txt_text'],$this->config('intro_length'),'LINES',$this->config('allowed_tags'));
         else
-          unset($pages[$id]);
+          unset($items[$id]);
       }
       $unsubmit='./'; //$this->CI->find_module_uri('newsletter'); // ##
       if (!empty($unsubmit)) $unsubmit.='?unsubmit';
       
-      $body=$this->CI->load->view('newsletter/newsletter.tpl.php',array('pages'=>$pages,'base_url'=>base_url(),'unsubmit'=>$unsubmit),true);
+      $body=$this->CI->load->view('newsletter/newsletter.tpl.php',array('items'=>$items,'base_url'=>base_url(),'unsubmit'=>$unsubmit),true);
       $this->CI->db->set('str_title',$data['str_title']);
       $this->CI->db->set('dat_date',standard_date('DATE_W3C',now()));
       $this->CI->db->set('txt_text',$body);
@@ -328,7 +362,7 @@ class Plugin_newsletter extends Plugin {
    * @ignore
    */
   private function _export_addresses($args) {
-    $this->add_message('Kopier alle adressen van hieronder naar je emailprogramma.');
+    $this->add_message(lang('copy_adresses'));
     return $this->view('newsletter/plugin_export',array('title'=>lang('export_adresses'),'adresses'=>$this->_get_adresses()));
 		$this->add_content('<p><textarea style="width:590px" rows="20">'.$adressen.'</textarea></p>');
   }
