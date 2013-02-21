@@ -19,6 +19,7 @@ $lang['medias_photos']    = "Foto's";
 $lang['b_visible']        = "Zichtbaar";
 $lang['dat_date']         = "Datum";
 $lang['tme_datetime']     = "Datum &amp; Tijd";
+$lang['tme_added']        = "Toegevoegd op";
 $lang['self_parent']      = "Submenu van";
 $lang['str_keywords']     = "Zoektermen";
 

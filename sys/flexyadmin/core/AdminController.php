@@ -101,12 +101,13 @@ class AdminController extends BasicController {
 		// trace_($cfgTables);
 		$cfgTables=filter_by($cfgTables,$type);
 		$cfgTables=sort_by($cfgTables,"order");
-		// trace_($cfgTables);
+    // order and show tables according to cfg_table_info
 		$oTables=array();
 		foreach ($cfgTables as $row) {
 			if (in_array($row["table"],$tables)) {
-				$oTables[]=$row["table"];
 				unset($tables[array_search($row["table"],$tables)]);
+        if (!isset($row['b_visible']) or $row['b_visible'])
+          $oTables[]=$row["table"];
 			}
 		}
 		$oTables=array_merge($oTables,$tables);
@@ -203,7 +204,6 @@ class AdminController extends BasicController {
 					
 				case 'all_tbl_tables' :
 					$tables=$this->db->list_tables();
-					// trace_($tables);
 					$menu=array_merge($menu,$this->_show_table_menu($tables,$this->config->item('TABLE_prefix')));
 					break;
 
