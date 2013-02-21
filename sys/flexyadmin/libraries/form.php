@@ -64,6 +64,7 @@ class Form {
 
 	private $CI;
 
+  private $form_id;
 	private $caption;
 	private $action;
 	private $data=array();
@@ -82,11 +83,11 @@ class Form {
   /**
    * @ignore
    */
-	function __construct($action="") {
+	function __construct($action="",$form_id='') {
 		$this->CI = &get_instance();
     $this->CI->lang->load('form');
 		$this->CI->load->library('form_validation');
-		$this->init($action);
+		$this->init($action,$form_id);
 	}
 
   /**
@@ -97,7 +98,8 @@ class Form {
    * @author Jan den Besten
    * @ignore
    */
-	public function init($action="") {
+	public function init($action="",$form_id='') {
+    $this->set_form_id($form_id);
 		$this->set_action($action);
 		$this->set_caption();
 		$this->set_labels();
@@ -114,6 +116,19 @@ class Form {
 		$this->when();
 		// $this->show_submit();
 	}
+
+  /**
+   * Stelt de id in van deze form. Dit is nodig om meerdere formulieren op eenzelfde pagina te onderscheiden
+   *
+   * @param string $form_id 
+   * @return void
+   * @author Jan den Besten
+   */
+	public function set_form_id($form_id='') {
+		$this->form_id=$form_id;
+	}
+
+
 
   /**
    * set_action()
@@ -426,14 +441,36 @@ class Form {
 		return str_replace("%s",$class,$tmp);
 	}
 
+
+  /**
+   * Checkt of formulier matched met juiste POST data
+   *
+   * @param string $form_id 
+   * @return bool
+   * @author Jan den Besten
+   * @internal
+   * @ignore
+   */
+  private function _this_form($form_id='') {
+    if (!empty($form_id)) {
+      if (!isset($_POST['__form_id'])) return FALSE;
+      if ($_POST['__form_id']!=$form_id) return FALSE;
+    }
+    return TRUE;
+  }
+
   /**
    * Kijkt of het formulier goed is gevalideerd, geeft TRUE als dat zo is, anders FALSE
    *
+   * @param string form_id['']
    * @return boolean TRUE als formulier door validatie is gekomen
    * @author Jan den Besten
    */
-	public function validation() {
+	public function validation($form_id='') {
 		$data=$this->data;
+
+    if (!$this->_this_form($form_id)) return FALSE;
+    
 		$hasCaptcha=FALSE;
 
 		foreach($data as $name=>$field) {
@@ -481,6 +518,22 @@ class Form {
 		
 		return $this->isValidated;
 	}
+
+  
+  /**
+   * Geeft validation errors van gegeven form id
+   *
+   * @param string $form_id 
+   * @param string $open_tag[''] 
+   * @param string $close_tag[''] 
+   * @return string
+   * @author Jan den Besten
+   */
+  public function validation_errors($form_id,$open_tag='',$close_tag='') {
+    if (!$this->_this_form($form_id)) return '';
+    return validation_errors($open_tag,$close_tag);
+  }
+
 
   /**
    * Zelfde als reset()
@@ -633,7 +686,7 @@ class Form {
 		if (!empty($this->post_data))
 			$data=$this->post_data;
 		else
-			$data=$this->get_postdata();	
+			$data=$this->get_postdata();
 		if (empty($data)) {
 			foreach($this->data as $name=>$field) {
 				if (isset($field['repopulate']))
@@ -657,7 +710,7 @@ class Form {
 		
 		$data=$this->data;
 		
-		$out=form_open_multipart($this->action,array("class"=>$class));
+		$out=form_open_multipart($this->action,array("class"=>$class,'form_id'=>$this->form_id));
 		
 		// fieldsets && fields
 		$nr=1;
@@ -670,6 +723,12 @@ class Form {
 			if ($caption=='fieldset') $caption=$this->caption;
 
 			$out.=form_fieldset($caption,array("class"=>$fieldSetClass,'id'=>$fieldSetId));
+
+      if (!empty($this->form_id)) {
+        $formID=array('name'=>'__form_id','type'=>'hidden','value'=>$this->form_id,'class'=>'');
+        $out.=$this->render_field('__form_id',$formID);
+      }
+
 			foreach($data as $name => $field) {
 				$fieldFieldset=$field['fieldset'];
 				if ($fieldset==$fieldFieldset)	$out.=$this->render_field($field['name'],$field,$class);
