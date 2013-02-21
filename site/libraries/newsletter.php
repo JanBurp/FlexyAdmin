@@ -49,8 +49,7 @@ class Newsletter extends Module {
       $out=$this->unsubmit($page);
     else
       $out=$this->submit($page);
-    $this->CI->site['newsletter']=$out;
-    // return $out;
+    return $out;
 	}
 
   /**
