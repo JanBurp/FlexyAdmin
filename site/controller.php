@@ -32,6 +32,20 @@ class Main extends FrontEndController {
 	 */
 	public function index() {
 		
+    /********************************************
+     * Als een AJAX request binnenkomt, stuur deze door naar de desbetreffende ajax module en roep de desbetreffende method aan.
+     * De naam van de AJAX module komt overeen met 'ajax_' + het eerste deel van de uri. Het tweede deel bepaald eventueel de aan te roepen method.
+     */
+    if (IS_AJAX) {
+      $uri=$this->uri->segment_array();
+      $ajax_module='ajax_'.array_shift($uri);
+      $ajax_method=array_shift($uri);
+      if (empty($ajax_method)) $ajax_method='index';
+      $ajax_args=$uri;
+      die($this->_call_library($ajax_module,$ajax_method,$ajax_args));
+    }
+    
+    
 		/***********************************************
 		 * Set Language for localisation (set possible languages at the start of the controller, near line 30)
 		 * See config.php for language settings
