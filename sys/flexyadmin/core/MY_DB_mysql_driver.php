@@ -142,7 +142,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
   /**
    * Reset alles tot default en maak huidige query leeg
    *
-   * @return void
+   * @return object this
    * @author Jan den Besten
    */
 	public function reset() {
@@ -163,6 +163,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		$this->order_by_many(FALSE);
 		$this->ar_dont_select=array();
 		$this->select_first();
+    return $this;
 	}
 
 	
@@ -203,22 +204,24 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
    * Zet primary key, standaard 'id'
    *
    * @param string $pk['id']
-   * @return void
+   * @return object this
    * @author Jan den Besten
    */
 	public function primary_key($pk="id") {
 		$this->pk=$pk;
-	}
+    return $this;
+  }
 
   /**
    * Zet key van de resultaat arrays.
    *
    * @param string $key['id'] Moet een unieke waarde bevatten, velden die zich ervoor lenen zijn id, uri etc.
-   * @return void
+   * @return object this
    * @author Jan den Besten
    */
 	public function set_key($key="id") {
 		$this->key=$key;
+    return $this;
 	}
 
   /**

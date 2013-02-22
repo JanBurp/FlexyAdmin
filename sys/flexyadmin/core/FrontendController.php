@@ -42,23 +42,32 @@ class FrontEndController extends MY_Controller {
 	public function __construct() {
 		// Init controller, and load all libraries
 		parent::__construct();
-		$this->load->library('user_agent');
-		$this->load->helper('date');
-		$this->load->helper("html_helper");
-		$this->load->helper("language");
-		$this->load->library("menu");
-		$this->load->library("content",$this->config->item('parse_content'));
-		$this->load->library('form_validation');
-		// Load standard Module Class
-		$this->load->library('module');
 
     // Set $_GET if asked for
     // See http://www.askaboutphp.com/tutorials/58/codeigniter-mixing-segment-based-url-with-querystrings.html
     // For this to work, config.php: $config['uri_protocol']  = "PATH_INFO";
 		if ($this->config->item('query_urls'))	parse_str($_SERVER['QUERY_STRING'],$_GET);
 
-		// Init global site data
-		$this->_init_globals();
+    
+    if (IS_AJAX) {
+  		// Load standard Ajax Module Class
+  		$this->load->library('ajax_module');
+    }
+    else {
+  		// Load standard Module Class
+  		$this->load->library('module');
+      // Load frontend helpers, libraries and so on
+  		$this->load->library('user_agent');
+  		$this->load->helper('date');
+  		$this->load->helper("html_helper");
+  		$this->load->helper("language");
+  		$this->load->library("menu");
+  		$this->load->library("content",$this->config->item('parse_content'));
+  		$this->load->library('form_validation');
+  		// Init global site data
+  		$this->_init_globals();
+    }
+    
 	}
 	
 	/**
