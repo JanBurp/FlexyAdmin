@@ -183,7 +183,7 @@
 				}
  			}
  		}
-		log_("info","[Cfg] Getting data '$table','$key','$field' = '$out'");
+		log_("info","[Cfg] Getting data '$table','$key','$field'");
  		return $out;
  	}
 
