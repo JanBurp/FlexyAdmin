@@ -10,6 +10,10 @@
 
 class Plugin_striptags extends Plugin {
   
+  public function __construct() {
+    parent::__construct();
+  }
+  
 	function _after_update() {
 		$validHTML=$this->CI->cfg->get('CFG_configurations','str_valid_html');
 		if (!empty($validHTML)) {
