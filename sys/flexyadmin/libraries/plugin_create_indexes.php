@@ -22,6 +22,10 @@
   */
 class Plugin_create_indexes extends Plugin {
 
+	public function __construct() {
+		parent::__construct();
+	}
+
   /**
    * @ignore
    */

@@ -11,6 +11,10 @@
 
 class Plugin_embed extends Plugin {
 
+	public function __construct() {
+		parent::__construct();
+	}
+
 	function _after_update() {
 		$this->_create_embed_list();
 		return $this->newData;
