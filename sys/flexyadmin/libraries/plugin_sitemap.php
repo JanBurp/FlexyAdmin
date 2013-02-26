@@ -11,6 +11,11 @@
 
 class Plugin_sitemap extends Plugin {
 
+	public function __construct() {
+		parent::__construct();
+	}
+
+
 	function _admin_logout() {
 		$this->_create_sitemap();
 	}

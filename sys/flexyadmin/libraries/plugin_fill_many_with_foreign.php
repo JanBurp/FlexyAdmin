@@ -20,6 +20,10 @@
  */
 class Plugin_fill_many_with_foreign extends Plugin {
 
+	public function __construct() {
+		parent::__construct();
+	}
+
   /**
    * @ignore
    */
