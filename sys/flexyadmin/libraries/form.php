@@ -835,6 +835,7 @@ class Form {
           // $out.=div('radioOption '.$option).form_radio($attr).span('optionLabel').$optLabel._span()._div();
           $for=$attr['id'];
           $labelAttr=$attr;
+          $labelAttr['class'].=' optionLabel';
           unset($labelAttr['id']);
           $out.=div('radioOption '.$option).form_radio($attr).form_label($optLabel,$for,$labelAttr)._div();
 				}
