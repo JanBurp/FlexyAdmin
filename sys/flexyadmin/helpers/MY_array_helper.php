@@ -944,4 +944,32 @@ function array_unique_multi($input, $keys='') {
   return $unique;
 }
 
+
+/**
+ * Berekend het verschil van een multidimensionale array. Gaat er wel vanuit dat de arrays dezelfde keys hebben
+ *
+ * @param array $a 
+ * @param array $b 
+ * @return array het vershil
+ * @author Jan den Besten
+ */
+function array_diff_multi($a,$b) {
+  $diff = array();
+  foreach ($a as $akey => $avalue) {
+    if (!isset($b[$akey])) {
+      $diff[$akey]=$avalue;
+    }
+    else {
+      if (!is_array($avalue)) {
+        if ($avalue!=$b[$akey]) $diff[$akey]=$b[$akey];
+      }
+      else {
+        $diff[$akey]=array_diff_multi($avalue,$b[$akey]);
+      }
+    }
+  }
+  return $diff;
+}
+
+
 ?>

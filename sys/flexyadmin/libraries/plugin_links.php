@@ -40,7 +40,7 @@ class Plugin_links extends Plugin {
 		
 	function _update_links_in_text() {
 		// what is changed?
-		$changedFields=array_diff($this->oldData,$this->newData);
+    $changedFields=array_diff_multi($this->oldData,$this->newData);
 		foreach ($changedFields as $field => $value) {
 			$pre=get_prefix($field);
 			if (!in_array($field,$this->trigger['fields']) and !in_array($pre,$this->trigger['field_types'])) unset($changedFields[$field]);
