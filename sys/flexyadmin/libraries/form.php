@@ -832,7 +832,11 @@ class Form {
 					if ($value==$option) $attr['checked']='checked'; else $attr['checked']='';
 					$attr['id']=str_replace('.','_',$name.'__'.$option);
 					// $out.=div('radioOption '.$option).span('optionLabel').$optLabel._span().form_radio($attr)._div();
-					$out.=div('radioOption '.$option).form_radio($attr).span('optionLabel').$optLabel._span()._div();
+          // $out.=div('radioOption '.$option).form_radio($attr).span('optionLabel').$optLabel._span()._div();
+          $for=$attr['id'];
+          $labelAttr=$attr;
+          unset($labelAttr['id']);
+          $out.=div('radioOption '.$option).form_radio($attr).form_label($optLabel,$for,$labelAttr)._div();
 				}
 				break;
 
