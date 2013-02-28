@@ -193,13 +193,30 @@ class Mediatable Extends CI_Model {
    * @author Jan den Besten
    */
   public function get_files($path='',$asReadMap=TRUE) {
+    return $this->_get_files($path,$asReadMap);
+  }
+
+  /**
+   * Geeft alle recente bestanden en info in een map terug als een array
+   *
+   * @param string $path 
+   * @param int $nr[10] aantal
+   * @param bool $asReadMap[TRUE] als TRUE dan wordt het resultaat nog wat opgeleukt zodat het hetzelfde is als een read_map() resultaat
+   * @return array $files
+   * @author Jan den Besten
+   */
+  public function get_recent_files($path='',$nr=10, $asReadMap=TRUE) {
+    return $this->_get_files($path,$asReadMap,$nr);
+  }
+    
+  private function _get_files($path='',$asReadMap=TRUE,$recent_numbers=0) {
     $path=remove_assets($path);
     if ($asReadMap) $this->db->set_key('file');
-    $files=$this->db->where('path',$path)->get_result($this->table);
+    $files=$this->db->where('path',$path)->get_result($this->table,$recent_numbers);
     if (empty($files)) {
       $this->refresh();
       if ($asReadMap) $this->db->set_key('file');
-      $files=$this->db->where('path',$path)->get_result($this->table);
+      $files=$this->db->where('path',$path)->get_result($this->table,$recent_numbers);
     }
     if ($asReadMap) {
       foreach ($files as $file => $info) {
