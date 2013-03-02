@@ -163,11 +163,7 @@ function array2json($arr) {
  * @author Jan den Besten
  */
 function json2array($json) {
-  $array=array();
-  if (preg_match("/{(.*?)}/uUs", $json,$matches)) {
-    $props=$matches[1];
-  }
-  return $array;
+  return json_decode($json,true);
 }
 
 /**
