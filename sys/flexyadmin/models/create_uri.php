@@ -74,7 +74,7 @@ class Create_uri extends CI_Model {
     // init
     $this->data=$data;
     $this->fields=array_keys($data);
-    if (empty($this->source_field)) $this->set_source_field( $this->_find_source_field() );
+    if (empty($this->source_field)) $this->set_source_field( $this->_find_source_field($data) );
  		$replaceSpace=$this->config->item('PLUGIN_URI_REPLACE_CHAR');
     
     // Need to create an uri?
@@ -114,26 +114,25 @@ class Create_uri extends CI_Model {
    * @internal
    * @ignore
    */
- 	private function _find_source_field() {
+ 	private function _find_source_field($data=false) {
 		$fields=$this->fields;
     
  		$uriField="";
  		/**
  		 * Auto uri field according to prefixes
  		 */
- 		if (empty($uriField)) {
- 			$preTypes=$this->config->item('URI_field_pre_types');
- 			$loop=true;
- 			while ($loop) {
- 				$field=current($fields);
- 				$pre=get_prefix($field);
- 				if (in_array($pre,$preTypes)) {
- 					$uriField=$field;
- 				}
- 				$field=next($fields);
- 				$loop=(empty($uriField) and $field!==FALSE);
- 			}
- 		}
+		$preTypes=$this->config->item('URI_field_pre_types');
+		$loop=true;
+		while ($loop) {
+			$field=current($fields);
+			$pre=get_prefix($field);
+			if (in_array($pre,$preTypes)) {
+				$uriField=$field;
+        if (isset($data[$uriField]) and empty($data[$uriField])) $uriField='';
+			}
+			$field=next($fields);
+			$loop=(empty($uriField) and $field!==FALSE);
+		}
  		/**
  		 * If still nothing set... just get the first field (after id,order and uri)
  		 */
