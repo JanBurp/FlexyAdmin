@@ -28,7 +28,7 @@ class AdminController extends BasicController {
 
 	function __construct() {
 		parent::__construct(true);
-		
+    
 		if ( ! $this->_user_logged_in() ) {
 			redirect($this->config->item('API_login'));
 		}
