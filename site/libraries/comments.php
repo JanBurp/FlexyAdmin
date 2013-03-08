@@ -75,7 +75,8 @@
 
 
 			// Create form
-			$form=new form($this->CI->uri->get());
+      $form_id='comments_form';
+  		$form=new form($this->CI->uri->get(),$form_id);
 			$form->set_data($formData,langp('comments_'.'title'));
 			$form->set_buttons(array('submit'=>array("submit"=>"submit","value"=>langp('comments_'.'submit'))));
 	
@@ -83,7 +84,7 @@
 
 			$belongs_to_this=($id== $this->CI->input->post($this->config('key_id').$suffix) );
 
-			if ($form->validation() and $belongs_to_this) {
+			if ($form->validation($form_id) and $belongs_to_this) {
 				$data=$form->get_data();
 				$data[$this->config('key_id')]=$data[$this->config('key_id').$suffix];
 				unset($data[$this->config('key_id').$suffix]);
