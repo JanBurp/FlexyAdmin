@@ -1,56 +1,63 @@
-// Hieronder een template voor een jQuery Plugin (met de naam highlight)
+//
+// jQuery plugin template
+// 
+// - Replace PLUGIN_NAME with the name of your plugin
+// - Create your onw methods, if needed
+// - Set your default options if needed
+// - Put your main code in the init method
+//
+// See: http://docs.jquery.com/Plugins/Authoring
 
-//
-// create closure for plugin
-//
+
 (function($) {
-	//
-	// plugin definition
-	//
-	$.fn.hilight = function(options) {
-		debug(this);
-		// build main options before element iteration
-		var opts = $.extend({}, $.fn.hilight.defaults, options);
-		// iterate and reformat each matched element
-		return this.each(function() {
-			$this = $(this);
-			// build element specific options
-			var o = $.meta ? $.extend({}, opts, $this.data()) : opts;
-			// update element styles
-			$this.css({
-				backgroundColor: o.background,
-				color: o.foreground
-			});
-			var markup = $this.html();
-			// call our format function
-			markup = $.fn.hilight.format(markup);
-			$this.html(markup);
-		});
-	};
+  
+  // Object with default values of all the options
+  var defaults = {
+  };
+  
+  // Object that holds all the options (extending defaults and given options)
+  var opts;
+  
+  // Element(s) where the plugin is called for
+  var self;
+  
+  //
+  // All the methods of the plugin, can be called like this: $(element).pluginName('method-name',[options]);
+  // Or internal like this: methods.init.apply( self, [options] );
+  //
+  var methods = {
 
-	//
-	// private function for debugging
-	//
-	function debug($obj) {
-		if (window.console && window.console.log)	window.console.log('hilight selection count: ' + $obj.size());
-	};
-	
-	//
-	// define and expose our format function
-	//
-	$.fn.hilight.format = function(txt) {
-		return '<strong>' + txt + '</strong>';
-	};
-	
-	//
-	// plugin defaults
-	//
-	$.fn.hilight.defaults = {
-		foreground: 'red',
-		background: 'yellow'
-	};
+    // init method, will be called if no methods are given
+    init : function( options ) {
+      // initialise self and options
+      self=this;
+   		opts = $.extend({}, defaults, options);
+        
+      //
+      // Put you're initialise code here...
+      //
 
-//
-// end of closure
-//
+      // return the element
+      return self;
+    },
+    
+    // put more methods here if needed
+    test : function() {
+      
+      return self;
+    }
+    
+  };
+  
+  
+  // Decide if a method is called, or just the main (init)
+  $.fn.PLUGIN_NAME = function(methodOrOptions) {
+     if ( methods[methodOrOptions] ) {
+       return methods[ methodOrOptions ].apply( this, Array.prototype.slice.call( arguments, 1 ));
+     } else if ( typeof methodOrOptions === 'object' || ! methodOrOptions ) {
+       return methods.init.apply( this, arguments );
+     } else {
+       $.error( 'Method "' +  methodOrOptions + '" does not exist on jQuery.PLUGIN_NAME' );
+     }    
+   };  
 })(jQuery);
