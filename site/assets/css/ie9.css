@@ -1,1 +1,8 @@
 /* === Styles specific for IE9 =============================  */
+
+/* CCS3 Pie is used to have css3 capable rendering on ie 6-9 */
+/*
+#example {
+  behavior:url("site/assets/css/pie.htc");
+}
+*/

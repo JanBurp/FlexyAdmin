@@ -2,3 +2,8 @@
 
 /* IE 6 hover hack */
 body { behavior:url("site/assets/css/csshover.htc"); }
+
+/* CCS3 Pie is used to have css3 capable rendering on ie 6-9 */
+.corners, .corners-top, .corners-bottom {
+  behavior:url("site/assets/css/pie.htc");
+}
