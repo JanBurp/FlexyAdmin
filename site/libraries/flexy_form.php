@@ -61,13 +61,14 @@ class Flexy_form extends Module {
 			$formButtons=$formData['buttons'];
 
 			// Create form object and set fields and buttons
-			$form=new form($this->CI->uri->get());
+      $form_id=$form_name;
+  		$form=new form($this->CI->uri->get(),$form_id);
 			$form->set_fieldsets($formFieldSets);
 			$form->set_data($formFields,"Contact");
 			$form->set_buttons($formButtons);
 
 			// Is form validation ok?
-			if ($form->validation()) {
+			if ($form->validation($form_id)) {
 				// Yes, form is validated: Send mail
 
 				// Get formdata and site email

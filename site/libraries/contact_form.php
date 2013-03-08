@@ -48,13 +48,14 @@ class Contact_form extends Module {
     $formData=$this->config('form_fields');
     $formButtons=$this->config('form_buttons');
 
-		$form=new form($this->CI->uri->get());
+    $form_id='contact_form';
+		$form=new form($this->CI->uri->get(),$form_id);
 		$form->set_data($formData, lang('form_name') );
     $form->prepare_for_clearinput();
 		$form->set_buttons($formButtons);
 
 		// Is form validation ok?
-		if ($form->validation()) {
+		if ($form->validation($form_id)) {
 			// Yes, form is validated: Send mail
       
 			// Get formdata and site email

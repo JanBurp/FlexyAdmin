@@ -208,10 +208,11 @@ class Forum extends Module {
     if (isset($formData)) {
       $formData['txt_spambody']=array("type"=>"textarea",'class'=>'hidden'); // anti spam field
   		$formButtons=array('submit'=>array("submit"=>"submit","value"=>lang('form_submit')));
-  		$form=new form($this->CI->uri->uri_string());
+      $form_id='forum_'.$name;
+  		$form=new form($this->CI->uri->uri_string(),$form_id);
   		$form->set_data($formData,$name);
   		$form->set_buttons($formButtons);
-  		if ($form->validation()) {
+  		if ($form->validation($form_id)) {
         $data=$form->get_data();
     		$this->CI->load->library('spam');
         
