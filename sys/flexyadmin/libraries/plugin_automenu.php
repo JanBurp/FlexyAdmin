@@ -120,7 +120,7 @@ class Plugin_automenu extends Plugin {
 
   private function _only_change_data() {
     $id=$this->newData['id'];
-    $changedFields=array_diff_assoc($this->newData,$this->oldData);
+    $changedFields=array_diff_multi($this->newData,$this->oldData);
     // set update fields
     $set=array();
     foreach ($changedFields as $field => $value) {
