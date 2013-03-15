@@ -113,7 +113,7 @@ class Parent_module_plugin {
    * @return mixed config item of de default waarde
    * @author Jan den Besten
    */
-	protected function config($item,$default=NULL) {
+	public function config($item,$default=NULL) {
 		return el($item,$this->config,$default);
 	}
 

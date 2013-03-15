@@ -78,7 +78,6 @@ class Module extends Parent_module_plugin {
     if (!isset($this->config['uri_args'])) $this->config['uri_args']=$this->CI->uri->get_from_part($this->CI->config->item('PLUGIN_URI_ARGS_CHAR'));
     return $this->config['uri_args'];
   }
-  
 
 }
 

@@ -1,5 +1,14 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/*
+|--------------------------------------------------------------------------
+| Output routing of module
+|--------------------------------------------------------------------------
+*/
+
+// $config['__return']='';
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +36,20 @@ $config['form_fields'] = array(
 */
 
 $config['form_buttons'] = array( 'submit'=>array('submit'=>'submit', 'value'=>lang('contact_submit')) );
+
+
+/*
+|--------------------------------------------------------------------------
+| Form action
+|--------------------------------------------------------------------------
+|
+| Naar welke model wordt de actie doorgestuurd, standaard de email
+*/
+
+$config['formaction'] = 'formaction_mail';
+
+
+
 
 
 /*

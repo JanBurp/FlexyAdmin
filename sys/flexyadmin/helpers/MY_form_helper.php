@@ -86,13 +86,24 @@ function add_validation_parameters($rules,$params) {
  */
 function array2formfields($array) {
 	$formData=array();
+  $assoc=is_assoc($array);
 	foreach ($array as $field=>$value) {
+    if (!$assoc) {
+       $field=$value;
+       $value='';
+    }
 		// standard attributes
 		$type='input';
 		$options=array();
 		$validation='';
     $label=lang($field);
-    if (empty($label)) $label=nice_string(remove_prefix($field));
+    if (empty($label)) {
+      if (isset($value['label']))
+        $label=$value['label'];
+      else
+        $label=remove_prefix($field);
+      $label=nice_string($label);
+    }
 
 		switch (get_prefix($field)) {
 			case 'id':

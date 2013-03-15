@@ -54,8 +54,9 @@ class FrontEndController extends MY_Controller {
   		$this->load->library('ajax_module');
     }
     else {
-  		// Load standard Module Class
+  		// Load standard Module Class & Formaction model
   		$this->load->library('module');
+      $this->load->model('formaction');
       // Load frontend helpers, libraries and so on
   		$this->load->library('user_agent');
   		$this->load->helper('date');
