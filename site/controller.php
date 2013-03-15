@@ -195,7 +195,7 @@ class Main extends FrontEndController {
 			$modules=array_merge($modules,$user_modules);
 		}
 		// Keep it so modules can check what other modules are called
-		$this->site['modules']=$modules;
+    $this->site['modules']=array_fill_keys($modules,'');
 		// Loop trough all possible modules, load them, call them, and process return value
 		$page['module_content']='';
 		foreach ($modules as $module) {
@@ -203,16 +203,29 @@ class Main extends FrontEndController {
 			$library=remove_suffix($module,'.');
 			$method=get_suffix($module,'.');
 			if ($module==$library) $method='index';
-			// Load and call the module and process the return value
+			// Load and call the module
 			$return=$this->_call_library($library,$method,$page);
+      // Process the return value according to module settings
 			if ($return) {
-				if (is_array($return))
-					$page=$return;
-				else
-					$page['module_content'].=$return;
-				$this->add_class('module_'.str_replace('.','_',$module));
-			}
-			if ($this->site['break']) break;	// stop loading more modules if break is set
+        $to='';
+        if ($method=='index') $to=$this->$library->config('__return','');
+        if (empty($to)) $to=$this->$library->config('__return'.'.'.$method,'page');
+        $to=explode('|',$to);
+        // put result in site
+        if (in_array('site',$to)) {
+          $this->site['modules'][$module]=$return;
+        }
+        // put result in page (default)
+        if (in_array('page',$to)) {
+  				if (is_array($return))
+  					$page=$return;
+  				else
+  					$page['module_content'].=$return;
+        }
+      }
+			$this->add_class('module_'.str_replace('.','_',$module));
+      // stop loading more modules if break is set
+			if ($this->site['break']) break;
 		}
 		return $page;
 	}

@@ -40,7 +40,7 @@ class Ajax_module extends Parent_module_plugin {
    * @ignore
    */
 	public function __call($function, $args) {
-		return $this->return(array('_error'=>'Method: `'.ucfirst($function)."()` doesn't exists.", '_success'=>false));
+		return $this->result(array('_error'=>'Method: `'.ucfirst($function)."()` doesn't exists.", '_success'=>false));
 	}
 
 	/**

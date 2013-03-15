@@ -968,4 +968,17 @@ function array_diff_multi($a,$b) {
 }
 
 
+/**
+ * Test of een array associatieve keys heeft 
+ *
+ * @param array $array
+ * @return bool TRUE als de array associatieve keys heeft
+ * @author Jan den Besten
+ */
+function is_assoc($a){
+  $a = array_keys($a);
+  return ($a != array_keys($a));
+}
+
+
 ?>

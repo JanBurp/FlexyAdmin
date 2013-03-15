@@ -23,11 +23,23 @@
   /**
   	* Standaard wordt index() aangeroepen
   	* 
-  	* Je kunt op 3 manieren met je module iets aan de inhoud van de site veranderen:
-  	* 
-  	* - return een string met de extra content die je wilt toevoegen aan de huidige pagina
-  	* - return $page en pas dingen aan in $page
-  	* - return niets en doe heel wat anders, bijvoorbeeld $this->CI->site aanpassen
+    * De module method kan twee soorten variabele teruggeven:
+    * 
+    * 1. Een string variabele met daarin HTML gegenereerd door de module (bijvoorbeeld met een eigen view). Dit wordt automatisch aan de pagina toegevoegd. (`$page['module_content']`).
+    * 2. De complete array `$page` die later wordt gebruikt in de view `page.php`. Je kunt hiermee dus je pagina op allerlei manieren aanpassen.
+    * 
+    * In sommige gevallen wil je met je module geen aanpassingen doen aan de huidige pagina maar bijvoorbeeld een extra stuk content toevoegen in een kolom op de site.
+    * Via een instelling kun je dan zorgen dat de output van de module aan `$site` wordt gegeven.
+    * 
+    * De instelling ziet er zo uit:
+    * 
+    *     $config['__return']='';
+    * 
+    * Dit zijn de mogelijk waarden:
+    * 
+    * - '' of 'page - dit is de standaard manier: de output wordt aan de pagina gegeven zoals hierboven beschreven.
+    * - 'site' - geeft de returnwaarde aan `$this->site[module_naam.method]` (of als method index is: `$this->site[module_naam]`)
+    * - Een combinatie is ook mogelijk, gescheiden door een pipe: 'page|site'
   	*
   	* @param string $page 
   	* @return mixed
@@ -47,8 +59,8 @@
   	* @author Jan den Besten
   	*/
 	public function other($page) {
-		$page['module_content']='<h1>Example Module.Other</h1>';
-		return $page;
+		$content='<h1>Example Module.Other</h1>';
+		return $content;
 	}
 
 
