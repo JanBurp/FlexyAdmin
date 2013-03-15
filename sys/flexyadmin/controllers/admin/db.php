@@ -11,7 +11,8 @@ require_once(APPPATH."core/AdminController.php");
  * @copyright Copyright (c) 2008, Jan den Besten
  * @link http://flexyadmin.com
  * @version V1 0.1
- * @filesource  */
+ * @filesource
+ */
 
 // ------------------------------------------------------------------------
 
@@ -27,6 +28,16 @@ require_once(APPPATH."core/AdminController.php");
  */
 
 class Db extends AdminController {
+
+  var $types = array(
+    'data'      => array('name'=>'All Tables & Data, except log & session Tables','data'=>'*,-cfg_sessions,-log_login,-log_stats','structure'=>''),
+    'all'       => array('name'=>'All Tables & Data, except log & session Data','data'=>'*,-cfg_sessions,-log_login,-log_stats','structure'=>'cfg_sessions,log_login,log_stats'),
+    'complete'  => array('name'=>'All Tables & Data','data'=>'*','structure'=>''),
+    'tbl'       => array('name'=>'Normal Tables & Data','data'=>'tbl_*,res_*','structure'=>''),
+    'cfg_clean' => array('name'=>'Config Tables & Data, except session table','data'=>'cfg_*,-cfg_sessions','structure'=>''),
+    'cfg'       => array('name'=>'Config Tables & Data','data'=>'cfg_*','structure'=>''),
+    'select'    => array('name'=>'Select Tables to export','data'=>'','structure'=>'')
+  );
 
 	function __construct() {
 		parent::__construct();
@@ -50,47 +61,100 @@ class Db extends AdminController {
 		unset($valuesData['log_login']);
 		unset($valuesData['log_stats']);
 		$valuesStructure=array_diff($options,$valuesData);
+    
+    $types=$this->types;
+    $types=array_flatten($types);
 
-		$name="export_".$this->_filename()."_".date("Y-m-d");
-		$data=array(
-								"data"			=> array("label"=>"Tables (with data)","type"=>"dropdown","multiple"=>"multiple","options"=>$options,"value"=>$valuesData),
-								"structure"	=> array("label"=>"Tables (structure)","type"=>"dropdown","multiple"=>"multiple","options"=>$options,"value"=>$valuesStructure),
-								// "type"			=> array("type"=>"dropdown","options"=>array("txt"=>"txt","gz"=>"gz")),
-								"filename"	=> array("label"=>"Filename","value"=>$name)
-								);
-		$form->set_data($data,"Choose tables to export");
-		$this->_add_content($form->render());
+    $name="export_".$this->_filename()."_".date("Y-m-d").'.data';
+    $data=array(
+      "type"        => array('label'=>'Selection','type'=>'dropdown','options'=>$types,'value'=>'data'),
+      "data"        => array("label"=>"Tables (with data)","type"=>"dropdown","multiple"=>"multiple","options"=>$options,"value"=>'','class'=>'hidden'),
+      "structure"   => array("label"=>"Tables (structure)","type"=>"dropdown","multiple"=>"multiple","options"=>$options,"value"=>'','class'=>'hidden'),
+      "filename"    => array('label'=>"Filename",'value'=>$name)
+    );
+		$form->set_data($data,"Export");
+		$this->_add_content($form->render('db_export'));
 	}
 
 	function export() {
 		if ($this->user->is_super_admin()) {
-			$dataTables=$this->input->post('data');
-			$structureTables=$this->input->post('structure');
-			// $type=$this->input->post('type');
-			$type="txt";
+      $type=$this->input->post('type');
+			$ext="txt";
 			$name=$this->input->post('filename');
-			if (!$dataTables) {
+			if (!$type) {
 				$this->_export();
 			}
 			else {
+        if ($type=='select') {
+          $dataTables=$this->input->post('data');
+          $structureTables=$this->input->post('structure');
+        }
+        else {
+          $dataTables=$this->_set_tables( $this->types[$type]['data'] );
+          $structureTables=$this->_set_tables( $this->types[$type]['structure'] );
+        }
+        
 				$this->load->dbutil();
 				$this->load->helper('download');
+        
+        $backup="#\r\n";
+        $backup.='# FlexyAdmin DB-Export '.date("Y-m-d"). "\r\n";
+        $backup.="#\r\n";
+        if (is_array($dataTables))      $backup.='# DATA TABLES: '.implode(', ',$dataTables)."\r\n";
+        if (is_array($structureTables)) $backup.='# STRUCTURE TABLES: '.implode(', ',$structureTables)."\r\n";
+        $backup.="#\r\n\r\n\r\n";
 
 				$prefs = array('tables'=> $dataTables,'format'=>'txt');
-				$backup=$this->dbutil->backup($prefs);
-				if ($structureTables) {
-					$prefs = array('tables'=> $structureTables,'format'=>'txt','add_insert'  => FALSE);
-					$backup=$backup.$this->dbutil->backup($prefs);				
-				}
-			
-				if ($type=="gzip") {
+				$backup.=$this->dbutil->backup($prefs);
+        if ($structureTables) {
+          $prefs = array('tables'=> $structureTables,'format'=>'txt','add_insert'  => FALSE);
+          $backup.=$this->dbutil->backup($prefs);
+        }
+				if ($ext=="gzip") {
 					$backup=gzencode($backup);
 				}
-				force_download($name.'.'.$type, $backup);
+				force_download($name.'.'.$ext, $backup);
 			}
 		}
 		$this->_show_all();
 	}
+
+  private function _set_tables($expressions) {
+    if (empty($expressions)) return '';
+    $tables=array();
+    $expressions=explode(',',$expressions);
+    foreach ($expressions as $expression) {
+      switch ($expression) {
+        case '*':
+          $add=$this->db->list_tables();
+          $add=array_combine($add,$add);
+          $tables=array_merge($tables,$add);
+          break;
+        case 'tbl_*':
+          $add=$this->db->list_tables();
+          $add=filter_by($add,'tbl_');
+          $add=array_combine($add,$add);
+          $tables=array_merge($tables,$add);
+          break;
+        case 'cfg_*':
+          $add=$this->db->list_tables();
+          $add=filter_by($add,'cfg_');
+          $add=array_combine($add,$add);
+          $tables=array_merge($tables,$add);
+          break;
+        default:
+          if (substr($expression,0,1)=='-') {
+            $table=substr($expression,1);
+            unset($tables[$table]);
+          }
+          else {
+            $tables[$expression]=$expression;
+          }
+          break;
+      }
+    }
+    return array_keys($tables);
+  }
 
 	function _clean_sql($sql) {
 		// Clean up comments

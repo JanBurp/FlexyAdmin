@@ -70,6 +70,35 @@ $(document).ready(function() {
 		}
 	});
 
+
+  //
+  // DB Export FORM
+  //
+  $('form.db_export').each(function(){
+    var form=this;
+    $('select#type').change(function(){
+      var type=$(this).attr('value');
+      if (type=='select') {
+        $('.flexyFormField').add('select').removeClass('hidden');
+      }
+      else {
+        $('.flexyFormField.data').add('.flexyFormField.structure').addClass('hidden');
+      }
+      $(form).find('input.filename').each(function(){
+        var name=$(this).attr('value');
+        var split=name.indexOf('.');
+        if (split>0) {
+          name=name.substr(0,split);
+        }
+        name=name + '.' + type;
+        $(this).attr('value',name);
+      });
+      
+    });
+  });
+  
+
+
 	//
 	// IMG zoom
 	//
