@@ -44,6 +44,7 @@ class __ extends AdminController {
       array( 'uri'=>'admin/__/doc', 'name' => 'Create Documentation' ),
       array( 'uri'=>'admin/__/minify', 'name' => 'Minify JS & CSS' ),
       array( 'uri'=>'admin/__/tinymce', 'name' => 'Update tinyMCE' ),
+      array( 'uri'=>'admin/__/clean_assets', 'name' => 'Clean assets' ),
       array( 'uri'=>'admin/__/build', 'name' => 'Build revision: '.$this->revision ),
     );
     $menu = new Menu();
@@ -520,6 +521,27 @@ class __ extends AdminController {
       $this->_add_content('<li>'.$file.'</li>');
     }
     $this->_add_content('</ul><p>['.count($files).']</p>');
+  }
+  
+  /**
+   * Remove all files from assets
+   *
+   * @return void
+   * @author Jan den Besten
+   */
+  public function clean_assets() {
+    $this->_add_content('<h1>Clean assets</h1>');
+
+		$assets=$this->config->item('ASSETS');
+		// set user maps
+		$maps=read_map($assets,'dir',FALSE,FALSE);
+    $maps=array_unset_keys($maps,array('css','js','img','lists'));
+		foreach ($maps as $map => $value) {
+			$path=$assets.$map;
+      $this->_add_content('<p>'.$path.'</p>');
+      empty_map($path);
+		}
+    $this->_show_all();
   }
   
   
