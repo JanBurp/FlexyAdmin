@@ -39,18 +39,18 @@ class Plugin_sitemap extends Plugin {
 
 		$urlset=array();
 		$pageCount=count($menu);
-    $maxchars=10000-($pageCount*100);
-    if ($maxchars<100) $maxchars=0;
+    $maxlines=5000-($pageCount*10);
+    if ($maxlines<=3) $maxlines=3;
 		foreach ($menu as $id => $item) {
 			$set=array();
 			$set['loc']=$url.'/'.htmlentities($item['uri']);
 			if (isset($item['str_title'])) $set['title']=$item['str_title'];
 			if (isset($item['txt_text'])) $set['content']=preg_replace('/\s\s+/si',' ',htmlentities(replace_linefeeds(strip_nonascii(strip_tags(str_replace(array('<br />','&nbsp;'),' ',$item['txt_text'])))),ENT_QUOTES));
 			// prevent very big sitemap.xml
-      if ($maxchars==0)
+      if ($maxlines==0)
         unset($set['content']);
       else
-			  $set['content']=max_length($set['content'],$maxchars,'CHARS');
+			  $set['content']=max_length($set['content'],$maxlines);
 			$urlset[]=$set;
 		}
 		$sitemap['urlset']=$urlset;
