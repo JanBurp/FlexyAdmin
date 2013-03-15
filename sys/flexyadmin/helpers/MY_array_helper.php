@@ -900,12 +900,14 @@ function array_keep_keys($a,$keep) {
  *
  * @param array $a 
  * @param array $unset array van keys die verwijderd worden
+ * @param bool $recursive[FALSE] als TRUE dan word de array gezien als een multidimensionale array en kijkt die in elke tak
  * @return array
  * @author Jan den Besten
  */
-function array_unset_keys($a,$unset) {
+function array_unset_keys($a,$unset,$recursive=FALSE) {
   foreach ($a as $key => $value) {
     if (in_array($key,$unset)) unset($a[$key]);
+    if (is_array($value)) $a[$key]=array_unset_keys($value,$unset);
   }
   return $a;
 }
@@ -980,5 +982,20 @@ function is_assoc($a){
   return ($a != array_keys($a));
 }
 
+
+/**
+ * Maakt van een multidimensionale array een 'platte' array door de subarray te vervangen door de 1e waarde ervan
+ *
+ * @param array $a 
+ * @return array
+ * @author Jan den Besten
+ */
+function array_flatten($a) {
+  foreach ($a as $key => $value) {
+    $value=current($value);
+    $a[$key]=$value;
+  }
+  return $a;
+}
 
 ?>

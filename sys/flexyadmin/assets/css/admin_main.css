@@ -998,6 +998,9 @@ select {
 	width:460px;
 	max-height:150px;
 	}
+select.multiple {
+  height:150px;
+}
 select.button {
 	width:400px;
 	}
