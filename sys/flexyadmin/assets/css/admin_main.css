@@ -204,6 +204,13 @@ img {
 	background-position:0px 2px;
 	padding-left: 20px;
 	}
+  
+#menu li .cfg_lang {
+	background-image: url("../icons/lang_set.png");
+	background-repeat: no-repeat;
+	background-position:0px 2px;
+	padding-left: 20px;
+	}
 	
 #menu li .cfg_users {
 	background-image: url("../icons/user.gif");

@@ -97,19 +97,22 @@ class Db extends AdminController {
 				$this->load->dbutil();
 				$this->load->helper('download');
         
-        $backup="#\r\n";
-        $backup.='# FlexyAdmin DB-Export '.date("Y-m-d"). "\r\n";
-        $backup.="#\r\n";
-        if (is_array($dataTables))      $backup.='# DATA TABLES: '.implode(', ',$dataTables)."\r\n";
-        if (is_array($structureTables)) $backup.='# STRUCTURE TABLES: '.implode(', ',$structureTables)."\r\n";
-        $backup.="#\r\n\r\n\r\n";
-
-				$prefs = array('tables'=> $dataTables,'format'=>'txt');
-				$backup.=$this->dbutil->backup($prefs);
+        $backup="#\n";
+        $backup.='# FlexyAdmin DB-Export '.date("Y-m-d"). "\n";
+        $backup.="#\n";
+        if (is_array($dataTables))      $backup.='# DATA TABLES: '.implode(', ',$dataTables)."\n";
+        if (is_array($structureTables)) $backup.='# STRUCTURE TABLES: '.implode(', ',$structureTables)."\n";
+        $backup.="#\n\n\n";
+        
+        if ($dataTables) {
+  				$prefs = array('tables'=> $dataTables,'format'=>'txt');
+  				$backup.=$this->dbutil->backup($prefs);
+        }
         if ($structureTables) {
           $prefs = array('tables'=> $structureTables,'format'=>'txt','add_insert'  => FALSE);
           $backup.=$this->dbutil->backup($prefs);
         }
+
 				if ($ext=="gzip") {
 					$backup=gzencode($backup);
 				}

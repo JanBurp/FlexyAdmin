@@ -34,7 +34,19 @@ $config['languages'] = array('nl');
 |
 */
 $config['language']	= "nl";
-// $config['language']	= "en";
+// $config['language']  = "en";
+
+
+/*
+|--------------------------------------------------------------------------
+| Language table
+|--------------------------------------------------------------------------
+|
+| Standard are CodeIgniter language files used.
+| If you set a language table here, the table will be checked first, and if the language key doesn't exists (or is empty), the language files will be used as normal
+*/
+// $config['language_table']  = "cfg_lang";
+
 
 /*
 |--------------------------------------------------------------------------

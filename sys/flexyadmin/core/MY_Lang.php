@@ -8,14 +8,21 @@
  */
 class MY_Lang extends CI_Lang {
 
-	private $setLanguage;
-  
   /**
    * Ingestelde taal
    *
    * @var string
    */
 	private $idiom;
+  private $setLanguage;
+  
+  /**
+   * Als ingesteld, dan wordt in de frontend taal eerst geprobeerd te laden van lang_table
+   *
+   * @var string
+   */
+  private $lang_table='';
+  
 
   /**
    * @ignore
@@ -23,6 +30,11 @@ class MY_Lang extends CI_Lang {
 	public function __construct() {
 		parent::__construct();
 		$this->set();
+    // check if a language table is set
+    $config =& get_config();
+    if (isset($config['language_table']) and !empty($config['language_table'])) {
+      $this->lang_table=$config['language_table'];
+    }
 	}
 	
   /**
@@ -154,6 +166,27 @@ class MY_Lang extends CI_Lang {
 	public function get_all() {
 		return $this->language;
 	}
+
+
+	/**
+	 * Fetch a single line of text from the language array
+	 *
+	 * @access	public
+	 * @param	string	$line	the language line
+	 * @return	string
+	 */
+	function line($line = '') {
+    $value='';
+    if (!empty($this->lang_table) and !empty($this->idiom)) {
+      $CI=&get_instance();
+      // Only frontend
+      if ($CI->uri->segment(1)!='admin') $value=$CI->db->get_field_where($this->lang_table,'lang_'.$this->idiom,'key',$line);
+    }
+    if (empty($value)) $value=parent::line($line);
+		return $value;
+	}
+
+
 
 
 }
