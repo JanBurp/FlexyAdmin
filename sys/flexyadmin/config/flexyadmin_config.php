@@ -324,8 +324,12 @@ $config["CFG_"]=array(
 			"str_abstract_fields"=>'',
 			"str_order_by"=>'',
 			),
-		"cfg_table_info"=>array(
+		"cfg_lang"=>array(
 			"order"=>'107',
+			"table"=>'cfg_lang'
+    ),
+		"cfg_table_info"=>array(
+			"order"=>'108',
 			"table"=>'cfg_table_info',
 			'str_fieldsets'=>'Dropdown,More',
 			"b_grid_add_many"=>'0',
@@ -333,7 +337,7 @@ $config["CFG_"]=array(
 			"str_order_by"=>'',
 			),
 		"cfg_field_info"=>array(
-			"order"=>'108',
+			"order"=>'109',
 			"table"=>'cfg_field_info',
 			'str_fieldsets'=>'Options,Validation',
 			"b_grid_add_many"=>'0',
