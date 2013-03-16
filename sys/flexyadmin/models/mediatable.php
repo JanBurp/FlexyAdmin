@@ -63,7 +63,7 @@ class Mediatable Extends CI_Model {
    * @author Jan den Besten
    */
   public function add($file,$path='',$userId=FALSE) {
-    if (!is_array($file)) $file=get_full_file_info($path.'/'.$file);
+    if (!is_array($file)) $file=get_full_file_info($path.'/'.$file,TRUE,TRUE);
     if ($file['type']!='dir') {
       $set=array(
         'file'      => $file['name'],
@@ -77,6 +77,7 @@ class Mediatable Extends CI_Model {
         $set['int_img_width']   = $file['width'];
         $set['int_img_height']  = $file['height'];
       }
+      if (isset($file['meta'])) $set['stx_meta']=exif2string($file['meta']);
       if ($userId and $this->db->field_exists('user',$this->table)) $set['user']=$userId;
       $this->db->set($set);
       $this->db->insert($this->table);
@@ -107,6 +108,7 @@ class Mediatable Extends CI_Model {
       $set['int_img_width']   = $info['width'];
       $set['int_img_height']  = $info['height'];
     }
+    if (isset($info['meta'])) $set['stx_meta']=$info['meta'];
     if ($userId and $this->db->field_exists('user',$this->table)) $set['user']=$userId;
     
     // now get old info, and only set empty old info
@@ -117,7 +119,7 @@ class Mediatable Extends CI_Model {
         if (!empty($value)) unset($set[$key]);
       }
     }
-    // Only update if more fiels are in set than file and path
+    // Only update if more fields are in set than file and path
     if (count($set)>2) {
       $this->db->set($set);
       $this->db->where('file',$set['file'])->where('path',$set['path']);
@@ -168,7 +170,8 @@ class Mediatable Extends CI_Model {
     foreach ($paths as $key=>$path) {
       $path=add_assets($path);
       $paths[$key]=$path;
-      $files=read_map($path);
+      $files=read_map($path,'',FALSE,TRUE,TRUE); // Get header info for jpg
+      // trace_($files);
       foreach ($files as $file => $info) {
         if (is_visible_file($file)) {
           if ($clean) {
@@ -221,6 +224,7 @@ class Mediatable Extends CI_Model {
     if ($asReadMap) {
       foreach ($files as $file => $info) {
         unset($files[$file]['id']);
+        unset($files[$file]['stx_meta']);
         $files[$file]['name']=$info['file'];      unset($files[$file]['file']);
         $files[$file]['path']=add_assets($info['path']);
         $files[$file]['type']=$info['str_type'];  unset($files[$file]['str_type']);
@@ -260,6 +264,8 @@ class Mediatable Extends CI_Model {
 
   /**
    * Geeft alle info van een afbeelding uit de tabel
+   * 
+   * Als er meta/exif data bekend is van een afbeelding, dan komt dat terug in het veld stx_meta als een JSON, met json2array() is dat eenvoudig om te zetten naar een PHP array
    *
    * @param string $file 
    * @return array
@@ -276,6 +282,8 @@ class Mediatable Extends CI_Model {
     }
     return $this->info[$file];
   }
+  
+  
   
   /**
    * Haalt title van image op uit tabel of maakt die zelf
