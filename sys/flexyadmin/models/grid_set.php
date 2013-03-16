@@ -36,9 +36,13 @@ class Grid_set extends CI_Model {
     // strace_($set);
 		$uri=api_uri($this->api,$table);
 		unset($set['table']);
-		foreach ($set as $key => $value) {
-			if (!empty($value)) $uri.="/$key/$value";
-		}
+
+    if ($set) {
+  		foreach ($set as $key => $value) {
+  			if (!empty($value)) $uri.="/$key/$value";
+  		}
+    }
+    
     // strace_($uri);
 		return $uri;
 	}
