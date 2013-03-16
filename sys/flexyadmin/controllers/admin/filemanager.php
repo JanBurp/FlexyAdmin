@@ -278,7 +278,7 @@ class Filemanager extends AdminController {
 				$types=$mediaCfg[$path]['str_types'];
 				$fileManager=new file_manager($path,$types);
 				$result=$fileManager->upload_file();
-        // trace_($result);
+        // strace_($result);
 				$error=$result["error"];
 				$file=$result["file"];
 				if (!empty($error)) {

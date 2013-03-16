@@ -196,9 +196,9 @@ function array_($a) {
  * @return string
  * @author Jan den Besten
  */
-function print_ar($array,$return=false,$tabs=0) {
+function print_ar($array,$return=false,$tabs=0,$eol='<br/>') {
 	$out="";
-	$out.=" (<br/>";
+	$out.=" (".$eol;
 	foreach($array as $key=>$value) {
 		$out.=tabs($tabs);
 		$thisOut="[".$key."] => ";
@@ -213,12 +213,12 @@ function print_ar($array,$return=false,$tabs=0) {
 					$thisOut.="'False'";
 			}
 			else
-				$thisOut.="'$value'<br/>";
+				$thisOut.="'$value'".$eol;
 		}
 		$out.=$thisOut;
-		if ($tabs==0) $out.="<br/>";
+		if ($tabs==0) $out.=$eol;
 	}
-	$out.=tabs($tabs-1).')<br/>';
+	$out.=tabs($tabs-1).')'.$eol;
 	if (!$return) echo $out;
 	return $out;
 }

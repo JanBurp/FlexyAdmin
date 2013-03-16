@@ -82,6 +82,18 @@ function get_full_file_info($file,$getInfo=TRUE,$metaInfo=FALSE) {
   return $info;
 }
 
+/**
+ * Convert image exif data to an readible string
+ *
+ * @param string $exif 
+ * @return string
+ * @author Jan den Besten
+ */
+function exif2string($exif) {
+  $s=array2json($exif);
+  return $s;
+}
+
 
 /**
  * Test of bestand is een verborgen bestand (beginnend met '_')
