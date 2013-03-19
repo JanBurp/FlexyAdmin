@@ -436,8 +436,9 @@ function str2hex($string) {
 function intro_string($txt,$len=50,$type='WORDS',$strip_tags='<br/><strong><italic><em><b><a><p>') {
 	// first check if there's an intro set by class: intro
 	$matches=array();
-	preg_match_all('/<[p|h1|h2|div|span|img]([^>]*)class=\"([^\"]*)intro([^\"]*)\"[^>]*>(.*)<\\/[p|h1|h2|div|span|img]>/uiUsm',$txt,$matches);
+	preg_match_all('/<([\w]+)([^>]*)class=\"([^\"]*)intro([^\"]*)\"[^>]*>(.*)<\/\1>/uiUsm',$txt,$matches);
 	$intro='';
+  trace_($matches);
 	if (isset($matches[0]) and !empty($matches[0])) {
 		foreach ($matches[0] as $match) {
 			$intro.=$match;
