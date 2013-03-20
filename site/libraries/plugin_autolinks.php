@@ -31,10 +31,12 @@
 				$this->_resetTags();
 				break;
 			case 'render':
+        $this->_resetTags();
 			  $this->_render($args);
         break;
       default:
         array_unshift($args,$action);
+        $this->_resetTags();
 				$this->_render($args);
 				break;
 		}
@@ -181,14 +183,21 @@
 				}
 				$res=$this->CI->db->get_results($table);
 				foreach ($res as $key => $value) {
-					if (!empty($this->cfg[$table]))
-						$uri=$this->cfg[$table].'/'.$value['uri'];
+					if (!empty($this->config[$table]))
+						$uri=$this->config[$table].'/'.$value['uri'];
 					else
 						$uri=$value['uri'];
 					$theseTags=$this->_trimExplode($value['str_tags']);
 					foreach ($theseTags as $tag) {
 						$tag=strtoupper(trim($tag));
-						if (!empty($tag) and !isset($tags[$tag])) $tags[$tag]=array('uri'=>$uri, 'tag'=>$tag, 'len'=>strlen($tag));
+						if (!empty($tag) and !isset($tags[$tag])) {
+						  $tags[$tag]=array('uri'=>$uri, 'tag'=>$tag, 'len'=>strlen($tag));
+              $etag=htmlentities($tag);
+              // tag met htmlentities...
+              if ($etag!=$tag) {
+                $tags[$etag]=array('uri'=>$uri, 'tag'=>$etag, 'len'=>strlen($tag));
+              }
+						}
 					}
 				}
 			}
@@ -238,6 +247,7 @@
   			$articles=$this->CI->db->get_results($table);
   			$article=current($articles);
   			$txt=$this->_doRender($article['txt_text'],$article['uri']);
+        $this->_putRenderedDB($table,$id,$txt);
   			$this->CI->_add_content('<h1>'.$article['str_title'].'</h1>');
   			$this->CI->_add_content($txt);
       }
@@ -288,9 +298,7 @@
 			else
 				$uri='';
 			$renderedTxt=$this->_doRender($txt,$uri);
-			$this->CI->db->set('txt_rendered',$renderedTxt);
-			$this->CI->db->where('id',$id);
-			$this->CI->db->update($table);
+      $this->_putRenderedDB($table,$id,$renderedTxt);
 		}
 		else echo 'ajaxRender Error';
 	}
@@ -309,10 +317,10 @@
 			$pattern='/\b(##)\b(?!([\w\d\s]*?)<\/a\s?>)(?=[^>]*<)/i'; */
       
       // Regex:
-      // - binnen wordboundaries, maar geen '".- er voor of na
-      // - en niet binnen een a of h tag
+      // - binnen wordboundaries, maar geen '".- er voor
+      // - en niet binnen een a of h tag (erna)
       // - case insensitive over meerdere regels
-      $pattern='/([^\"|^\'|^\.])\b(##)\b([^\"|^\'|^-])(?![^>]*<\/[a|h])/uism';
+      $pattern='/([^\"|^\'|^\.|^-])\b(##)\b(?![^>]*<\/[a|h])/uism';
 			foreach ($tags as $key => $value) {
 				$uri=$value['uri'];
 				$tag=$value['str_tag'];
@@ -325,7 +333,7 @@
 
 	private function _doRender($txt,$uri='') {
 		// make sure txt is in embedded in <p> tags
-		if (substr($txt,1,3)!='<p>') $txt=p().$txt._p();
+		if (substr($txt,0,3)!='<p>') $txt=p().$txt._p();
 		// get all tags & uris
 		$tags=$this->_getTags();
     // trace_($tags);
@@ -344,6 +352,12 @@
 		$txt=preg_replace($tags['search'],$tags['replace'],$txt,$this->config('limit'));
 		return $txt;
 	}
+  
+  private function _putRenderedDB($table,$id,$txt) {
+		$this->CI->db->set('txt_rendered',$txt);
+		$this->CI->db->where('id',$id);
+		$this->CI->db->update($table);
+  }
 	
 }
 
