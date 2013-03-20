@@ -64,7 +64,7 @@ class __ extends AdminController {
     $this->_add_content('<h1>Creating documentation</h1>');
 
     // Cleanup current doc folders
-    $folders=array('algemeen','core','database','helpers','libraries','models','uitbreiden');
+    $folders=array('algemeen','core','database','helpers','libraries','meer','models','tutorials','uitbreiden');
     foreach ($folders as $folder) {
       $map=$this->path.$this->work.'/userguide/FlexyAdmin/'.$folder;
       $files=read_map($map,'html',FALSE,FALSE);
@@ -241,7 +241,7 @@ class __ extends AdminController {
     // trace_($doc);
     // trace_($this->toc);
 
-    $this->toc_order=array('algemeen','uitbreiden','database','|','modules (site)','plugins (site)','models (site)','|','plugins','libraries','|','core','models','|','helpers');
+    $this->toc_order=array('algemeen','meer','tutorials','|','uitbreiden','database','|','modules (site)','plugins (site)','models (site)','|','plugins','libraries','|','core','models','helpers');
     $otoc=array();
     foreach ($this->toc_order as $key) {
       if ($key=='|')

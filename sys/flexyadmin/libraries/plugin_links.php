@@ -45,6 +45,8 @@ class Plugin_links extends Plugin {
 			$pre=get_prefix($field);
 			if (!in_array($field,$this->trigger['fields']) and !in_array($pre,$this->trigger['field_types'])) unset($changedFields[$field]);
 		}
+    
+    // strace_($changedFields);
 		
 		// loop through all changed fields, and replace all links with new
 		foreach ($changedFields as $field => $value) {
@@ -55,8 +57,8 @@ class Plugin_links extends Plugin {
 				}
 				else
 					$newUrl='';
-				if ($field=='uri') {
-					$oldUrl=$this->_getFullUri($this->oldData['id']);
+				if ($field=='uri' and isset($this->oldData['self_parent'])) {
+					$oldUrl=$this->_getFullParentUri($this->oldData);
 					$newUrl=remove_suffix($oldUrl,'/').'/'.$newUrl;
 				}
 				$this->CI->search_replace->links($oldUrl,$newUrl);
@@ -64,17 +66,11 @@ class Plugin_links extends Plugin {
 		}
 	}
 
-	private function _getFullUri($id) {
-		$this->CI->db->select('id,uri');
-    if ($this->CI->db->field_exists('self_parent',$this->table)) {
-  		$this->CI->db->select('self_parent');
-  		$this->CI->db->uri_as_full_uri();
-  		$this->CI->db->where('id',$id);
-  		$full=$this->CI->db->get_row($this->table);
-    }
-		$this->CI->db->where('id',$id);
+	private function _getFullParentUri($data) {
+    $this->CI->db->uri_as_full_uri();
+    $this->CI->db->where('id',$data['id']);
 		$full=$this->CI->db->get_row($this->table);
-		return $full['uri'];
+    return $full['uri'];
 	}
 	
 
