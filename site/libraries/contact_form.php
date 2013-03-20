@@ -58,7 +58,7 @@ class Contact_form extends Module {
       $data=$form->get_data();
 
       // Action
-      $this->CI->load->model($this->config('formaction'),'action');
+      $this->CI->load->model($this->config('formaction','formaction_mail'),'action');
       $this->CI->action->initialize($this->config)->fields($formData);
 			if (!$this->CI->action->go( $data )) {
 		    $errors=$this->CI->action->get_errors();
