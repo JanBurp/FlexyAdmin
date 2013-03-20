@@ -126,7 +126,7 @@ class Search extends Module {
 		// set search term
 		$search=$this->CI->input->post( lang('search_term') );
 		if (empty($search)) $search=lang('search_empty_value');
-		$this->CI->site['search_form']=$this->CI->show('search_form',array('action'=>$action, 'value'=>$search, 'empty'=>lang('search_empty_value')),true);
+		return $this->CI->show('search_form',array('action'=>$action, 'value'=>$search, 'empty'=>lang('search_empty_value')),true);
 	}
 	
 
