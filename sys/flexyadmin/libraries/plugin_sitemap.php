@@ -45,12 +45,14 @@ class Plugin_sitemap extends Plugin {
 			$set=array();
 			$set['loc']=$url.'/'.htmlentities($item['uri']);
 			if (isset($item['str_title'])) $set['title']=$item['str_title'];
-			if (isset($item['txt_text'])) $set['content']=preg_replace('/\s\s+/si',' ',htmlentities(replace_linefeeds(strip_nonascii(strip_tags(str_replace(array('<br />','&nbsp;'),' ',$item['txt_text'])))),ENT_QUOTES));
-			// prevent very big sitemap.xml
-      if ($maxlines==0)
-        unset($set['content']);
-      else
-			  $set['content']=max_length($set['content'],$maxlines);
+			if (isset($item['txt_text'])) {
+        $set['content']=preg_replace('/\s\s+/si',' ',htmlentities(replace_linefeeds(strip_nonascii(strip_tags(str_replace(array('<br />','&nbsp;'),' ',$item['txt_text'])))),ENT_QUOTES));
+  			// prevent very big sitemap.xml
+        if ($maxlines==0)
+          unset($set['content']);
+        else
+  			  $set['content']=max_length($set['content'],$maxlines);
+			}
 			$urlset[]=$set;
 		}
 		$sitemap['urlset']=$urlset;
