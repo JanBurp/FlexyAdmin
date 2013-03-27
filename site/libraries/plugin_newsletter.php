@@ -72,7 +72,7 @@ class Plugin_newsletter extends Plugin {
         $menu->add(array('uri'=>uri_string().'/show/adresses','name'=>lang('show_adresses')));
         $menu->add(array('uri'=>uri_string().'/export','name'=>lang('export_adresses')));
         $menu->add(array('uri'=>'admin/plugin/export/'.$this->config('send_to_address_table'),'name'=>lang('export_table')));
-        return $this->view('newsletter/plugin_main',array('title'=>lang('title'),'content'=>$menu->render()) );
+        return $this->view('newsletter/newsletter_main',array('title'=>lang('title'),'content'=>$menu->render()) );
     }
   }
    
@@ -194,7 +194,7 @@ class Plugin_newsletter extends Plugin {
       redirect($redirect);
     }
     else {
-      return $this->view('newsletter/plugin_main',array('title'=>lang('create_newsletter'),'content'=>validation_errors('<p class="error">', '</p>').$form->render()));
+      return $this->view('newsletter/newsletter_main',array('title'=>lang('create_newsletter'),'content'=>validation_errors('<p class="error">', '</p>').$form->render()));
     }
   }
 
@@ -229,7 +229,7 @@ class Plugin_newsletter extends Plugin {
       }
       else {
         $errors=validation_errors('<p class="error">', '</p>');
-        return $this->view('newsletter/plugin_main',array('title'=>lang('create_newsletter'),'content'=>$errors.$form->render() ));
+        return $this->view('newsletter/newsletter_main',array('title'=>lang('create_newsletter'),'content'=>$errors.$form->render() ));
       }
     }
 	}
@@ -263,11 +263,11 @@ class Plugin_newsletter extends Plugin {
         unset($mail['txt_body']);
         $rapport=$this->_send_mail($mail);
         $this->add_to_rapport($id,$rapport);
-        return $this->view('newsletter/plugin_main',array('title'=>lang('send_newsletter'),'content'=>$rapport ));
+        return $this->view('newsletter/newsletter_main',array('title'=>lang('send_newsletter'),'content'=>$rapport ));
       }
       else {
         $errors=validation_errors('<p class="error">', '</p>');
-        return $this->view('newsletter/plugin_main',array('title'=>lang('send_newsletter'),'content'=>$errors.$form->render() ));
+        return $this->view('newsletter/newsletter_main',array('title'=>lang('send_newsletter'),'content'=>$errors.$form->render() ));
       }
     }
   }
@@ -310,7 +310,7 @@ class Plugin_newsletter extends Plugin {
     }
     else {
       $errors=validation_errors('<p class="error">', '</p>');
-      return $this->view('newsletter/plugin_main',array('title'=>lang('send_newsletter'),'content'=>$errors.$form->render() ));
+      return $this->view('newsletter/newsletter_main',array('title'=>lang('send_newsletter'),'content'=>$errors.$form->render() ));
     }
   }
 
@@ -344,11 +344,11 @@ class Plugin_newsletter extends Plugin {
         unset($mail['txt_body']);
         $rapport=$this->_send_mail($mail);
         $this->add_to_rapport($id,$rapport);
-        return $this->view('newsletter/plugin_main',array('title'=>lang('send_newsletter'),'content'=>'<h2>Result</h2>'.$rapport ));
+        return $this->view('newsletter/newsletter_main',array('title'=>lang('send_newsletter'),'content'=>'<h2>Result</h2>'.$rapport ));
       }
       else {
         $errors=validation_errors('<p class="error">', '</p>');
-        return $this->view('newsletter/plugin_main',array('title'=>lang('send_newsletter'),'content'=>$errors.$form->render() ));
+        return $this->view('newsletter/newsletter_main',array('title'=>lang('send_newsletter'),'content'=>$errors.$form->render() ));
       }
     }
   }
@@ -364,7 +364,7 @@ class Plugin_newsletter extends Plugin {
    */
   private function _export_addresses($args) {
     $this->add_message(lang('copy_adresses'));
-    return $this->view('newsletter/plugin_export',array('title'=>lang('export_adresses'),'adresses'=>$this->_get_adresses()));
+    return $this->view('newsletter/export',array('title'=>lang('export_adresses'),'adresses'=>$this->_get_adresses()));
 		$this->add_content('<p><textarea style="width:590px" rows="20">'.$adressen.'</textarea></p>');
   }
 
