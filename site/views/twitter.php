@@ -1,34 +1,21 @@
 <div id="twitter">
-  <a id="twitter_head" href="http://www.twitter.com/<?=$user?>" target="_blank"><img src="site/assets/img/twitter.gif" width="188" height="50" alt="Twitter" /></a>
-  <script charset="utf-8" src="http://widgets.twimg.com/j/2/widget.js"></script>
-  <script>
-    new TWTR.Widget({
-      version: 2,
-      // type: 'profile',
-      // type: 'search',
-      search: 'from:<?=$user?>',
-      // interval: 500,
-      title: 'Twitter',
-      subject: "Twitter",
-      width: 188,
-      height: 353,
-      theme: {
-        shell: {
-          background: '#A9A183',
-          color: '#000000'
-        },
-        tweets: {
-          background: '#A9A183',
-          color: '#000',
-          links: '#983588'
-        }
-      },
-      features: {
-        scrollbar: false,
-        loop: true,
-        live: true,
-        behavior: 'default'
-      }
-    }).render().start()
-  </script>
-  </div>
+<h1 class="small">Twitter:</h1>
+
+<!-- Hier komt de emded code die je hier kunt krijgen: https://twitter.com/settings/widgets -->
+<!-- Aanpassingen zie: https://dev.twitter.com/docs/embedded-timelines -->
+<!-- Meer aanpassingen kan met de jquery.styleTwitter.js plugin -->
+
+<a class="twitter-timeline"  href="https://twitter.com/jan_db"  data-widget-id="316527795184467971"
+height="260"
+width=""
+data-chrome="noheader nofooter noborders"
+data-link-color="#cc0000">Tweets van @jan_db</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+<!-- Embed code tot hier -->
+
+</div>
+
+
+
+
