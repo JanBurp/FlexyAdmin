@@ -1,3 +1,50 @@
+Changes r1975
+=============
+
+UPDATE:
+- CodeIgniter 2.1.3
+- jQuery 1.9.1
+- jQuery 1.8.24
+- tinyMCE 3.5.8 (jQuery)
+
+NEW:
+- PHP 5.4 notices/warnings have a solution now
+- Help for users (a lot!)
+- Module twitter and jquery.styleTwitter.js
+- Table 'res_media_files' added for keeping all information of all media files, including jpg metadata
+- Multiple Fileupload widget
+- AJAX Modules (and an example)
+- Possibility of using a language table: add 'add_language_table.sql' and set $config['language_table']  = "cfg_lang";
+- Added new plugin_flatten_table
+- modules can now return there data to different places, set in the config of a module (see Module for more info)
+- modules with forms can now send there data to prefab action models
+- two action models added: formaction_mail (sending form data in email), formaction_database (put formdata in table in database)
+- Reservation example module added
+- pie.htc added for css3 in old ie's
+- New jquery plugin template
+- Forms can have a form_id now, so mulitple forms on one page is now an easy job
+- Option to make tables invisible in cfg_table_info
+- added module: upload_demo
+- added option that replaces the target of links automatically (internal links: '_self' external links: '_blank')
+
+UPDATE:
+- More options and nicer plugin_newsletter
+- plugin_sitemap creates smaller sitemap.xml (speed improvement)
+- Improved search module
+- Improved plugin contact_form
+- Improved plugin_autolinks
+- Better recognising intro strings in intro_string()
+- DB export option simplified for faster working with it
+- form, radiolabel is now a normal label field
+- video_helper get_video_code_from_url() works now also with short youtube urls: http://youtu.be/xxxxxxx
+
+BUGS:
+- a very lot of small bugs
+- several bugs in plugin_sitemap
+- bug in plugin_links (replacing renamed pages)
+- SAFETY BUG FROM 1657
+
+
 Changes r1802
 =============
 
