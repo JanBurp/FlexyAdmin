@@ -1,3 +1,21 @@
+UPDATE to r1975
+===============
+
+- Replace current sys map with new sys map
+- Replace index.php with new one
+- Run all db/update_r1804 - r1957sql
+
+Only if you need the new options (AJAX modules, newer plugins/modules):
+
+- Replace site/controller.php or at least the changes:
+  - line 35:46 - for AJAX module loading
+  - function _module()
+  - function _call_library()
+  - function _redirect()
+- Replace all standard modules/plugins in site/libraries and there views in views/
+- Add new modules/plugins and there views
+
+
 UPDATE to 1802
 ==============
 
