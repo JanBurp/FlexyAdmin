@@ -1,4 +1,4 @@
-<div class="newsletter_submit open_in_popup">
+<div class="newsletter_submit">
   <h2><?=$title?></h2>
   <?=$errors?>
   <? if (!empty($message)): ?>
