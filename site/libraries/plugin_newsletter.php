@@ -71,6 +71,7 @@ class Plugin_newsletter extends Plugin {
         $menu->add(array('uri'=>uri_string().'/show/newsletters','name'=>lang('show_newsletters'),'class'=>'seperator'));
         $menu->add(array('uri'=>uri_string().'/show/adresses','name'=>lang('show_adresses')));
         $menu->add(array('uri'=>uri_string().'/export','name'=>lang('export_adresses')));
+        $menu->add(array('uri'=>'admin/plugin/export/'.$this->config('send_to_address_table'),'name'=>lang('export_table')));
         return $this->view('newsletter/plugin_main',array('title'=>lang('title'),'content'=>$menu->render()) );
     }
   }
@@ -475,7 +476,10 @@ class Plugin_newsletter extends Plugin {
    * @author Jan den Besten
    * @ignore
    */
-  private function _get_adresses() {
+  private function _get_adresses($check_send=true) {
+    if ($check_send and $this->CI->db->field_exists('b_send',$this->config('send_to_address_table'))) {
+      $this->CI->db->where('b_send',true);
+    }
     $adresses=$this->CI->db->get_result( $this->config('send_to_address_table') );
     $to='';
 		foreach ($adresses as $adres) {

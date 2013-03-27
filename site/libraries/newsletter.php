@@ -49,7 +49,8 @@ class Newsletter extends Module {
       $out=$this->unsubmit($page);
     else
       $out=$this->submit($page);
-    return $out;
+    $this->CI->site['newsletter']=$out;
+    // return $out;
 	}
 
   /**
@@ -64,7 +65,8 @@ class Newsletter extends Module {
     $errors='';
     $message='';
 		$this->CI->load->library('form');
-    $form=new Form();
+    $form_id='newsletter';
+    $form=new Form($this->CI->uri->get(),$form_id);
     $formFields = array('str_name'    => array( 'label'=>lang('str_name'),    'validation'=>'required' ),
                         'email_email' => array( 'label'=>lang('email_email'), 'validation'=>'required|valid_email' ),
                         'body'        => array( 'type'=>'hidden')
@@ -73,8 +75,8 @@ class Newsletter extends Module {
     $form->set_data($formFields,lang('submit_to_newsletter'));
 		$form->set_buttons($formButtons);
     $form->prepare_for_clearinput();
-    if ($form->validation()) {
-      $data=$form->get_data();
+    if ($form->validation($form_id)) {
+      $data=$form->get_data($form_id);
       $data['tme_added']=standard_date('DATE_W3C',now());
 			// Check for spam
 			$spam=FALSE;
@@ -96,7 +98,7 @@ class Newsletter extends Module {
       }
     }
     else {
-      $errors=validation_errors('<p class="error">', '</p>');
+      $errors=$form->validation_errors($form_id,'<p class="error">', '</p>');
       $formOut=$form->render();
     }
     return $this->CI->view('newsletter/newsletter_submit.php',array('title'=>lang('submit_to_newsletter'), 'form'=>$formOut,'errors'=>$errors,'message'=>$message),true);
@@ -119,7 +121,13 @@ class Newsletter extends Module {
     if ($id!==FALSE) {
       $this->CI->db->where('id',$id);
       $this->CI->db->where('tme_added',urldecode($date));
-      $this->CI->db->delete('tbl_newsletter_addresses');
+      if ($this->CI->db->field_exists('b_send',$this->config('send_to_address_table'))) {
+        $this->CI->db->set('b_send',FALSE);
+        $this->CI->db->update('tbl_newsletter_addresses');
+      }
+      else {
+        $this->CI->db->delete('tbl_newsletter_addresses');
+      }
       $message=lang('unsubmit_succes');
     }
     else {
@@ -132,6 +140,7 @@ class Newsletter extends Module {
       $formButtons = array( 'submit'=>array('submit'=>'submit', 'value'=>lang('submit')) );
       $form->set_data($formFields,lang('unsubmit_to_newsletter'));
   		$form->set_buttons($formButtons);
+      $form->prepare_for_clearinput();
       if ($form->validation()) {
         $data=$form->get_data();
   			// Check for spam
@@ -139,12 +148,19 @@ class Newsletter extends Module {
   			if (!$spam and $this->_check_if_robot($data)) $spam=TRUE;
         if (!$spam) {
           $this->CI->db->where('email_email',$data['email_email']);
-          $this->CI->db->delete('tbl_newsletter_addresses');
+          if ($this->CI->db->field_exists('b_send','tbl_newsletter_addresses')) {
+            $this->CI->db->set('b_send',FALSE);
+            $this->CI->db->update('tbl_newsletter_addresses');
+          }
+          else {
+            $this->CI->db->delete('tbl_newsletter_addresses');
+          }
           $message=lang('unsubmit_succes');
         }
       }
       else {
         $errors=validation_errors('<p class="error">', '</p>');
+        $message=lang('unsubmit_info');
         $formOut=$form->render();
       }
     }

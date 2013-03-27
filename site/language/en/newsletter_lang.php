@@ -12,6 +12,7 @@ $lang['submit']                  = 'Submit';
 
 $lang['thanks_for_submit']       = 'Thanks for submitting.';
 $lang['thanks_for_submit_long']  = 'Thanks for submitting to the newsletter of %s.';
+$lang['unsubmit_info']           = 'Fill in your emailadres to unsubmit.';
 $lang['unsubmit_succes']         = 'Unsubmitting succesfull.';
 
 // Plugin
@@ -20,6 +21,7 @@ $lang['show_newsletters']     = 'Show old newsletters';
 $lang['edit_newsletter']      = 'Edit newsletter';
 $lang['show_adresses']        = 'Show/Edit adresses';
 $lang['export_adresses']      = 'Export adresses';
+$lang['export_table']         = 'Exporteer adressestable for Excel';
 $lang['send_test']            = 'Send a test';
 $lang['send_newsletter']      = 'Send Newsletter';
 $lang['choose_newsletter']    = 'Choose Newsletter';
@@ -38,7 +40,7 @@ $lang['add_pages']            = "Pages";
 
 $lang['send']                 = 'Send';
 
-$lang['copy_adresses']        = 'Copy all adresses from the area below.'
+$lang['copy_adresses']        = 'Copy all adresses which are used for sending from the area below.'
 
 
 ?>
