@@ -418,7 +418,11 @@ class Flexy_field extends CI_Model {
 					$validation['rules']='max_length[]';
 					$validation['params']=$info['max_length'];
 				}
-				break;
+        break;
+			case 'decimal':
+				$validation['rules']='decimal';
+				$validation['params']='';
+        break;
 		}
 		return $validation;
 	}

@@ -22,6 +22,8 @@ class Fill extends AdminController {
 		if ($this->user->can_use_tools()) {
 			$this->lang->load('help');
 			$this->lang->load('form');
+      $this->load->library('lorem');
+      $lorem = new Lorem();
 		
 			$aantal=$this->input->post('aantal');
 			$addtable=$this->input->post('addtable');
@@ -65,20 +67,34 @@ class Fill extends AdminController {
               $pre=get_prefix($field);
               switch($pre) {
                 case 'txt':
+                  $result=$lorem->getContent(rand(50,500),'html');
+                  break;
                 case 'stx':
-                  $html=$this->load->view('admin/html_lorum',array(),true);
-                  preg_match_all("/\<h2\>(.*)\<\/p\>/uiUs", $html,$matches);
-                  if ($pre=='txt')
-                    $result=random_element($matches[0]);
+                  $result=$lorem->getContent(rand(10,50),'plain');
+                  break;
+                case 'medias':
+                case 'media':
+                  $path=$this->cfg->get('cfg_media_info',$table.'.'.$field,'path');
+                  $files=$this->mediatable->get_files($path,FALSE);
+                  if ($pre=='media') {
+                    $result=random_element($files);
+                    $result=$result['file'];
+                  }
                   else {
-                    $lines=explode('.',random_element($matches[1]));
-                    $result=random_element($lines);
+                    $result='';
+                    for ($i=0; $i < rand(1,4); $i++) { 
+                      $media=random_element($files);
+                      $result=add_string($result,$media['file'],'|');
+                    }
                   }
                   break;
                 case 'int':
                   $result=rand(0,100);
                   break;
-                case 'date':
+                case 'dec':
+                  $result=rand(10,99).'.'.rand(10,99);
+                  break;
+                  case 'date':
                 case 'dat':
                   $result=rand($year,$year+1).'-'.rand(1,12).'-'.rand(1,31);
                   break;
@@ -89,6 +105,8 @@ class Fill extends AdminController {
                   $result=rand(0,23).':'.rand(0,59).':'.rand(0,59);
                   break;
                 case 'str':
+                  $result=$lorem->getContent(rand(1,5),'plain');
+                  break;
                 default:
                   $result=random_string();
                   break;
