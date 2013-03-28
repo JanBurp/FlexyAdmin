@@ -849,7 +849,7 @@ class Menu {
    *
    * Er moet al eerder een menu aangemaakt zijn of van een menu-tabel zijn ingeladen
    *
-   * @param string $menu[NULL] Je kunt een menu-array meegeven, als dit leeg is wordt de interne menu-array gebruikt
+   * @param array $menu[NULL] Je kunt een menu-array meegeven, als dit leeg is wordt de interne menu-array gebruikt
    * @param string $attr[''] eventueel standaard mee te geven attributen voor menu-items
    * @param string $level[1] level
    * @param string $preUri[''] een uri die aan de voorkant van alle uri's wordt geplakt
