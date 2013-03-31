@@ -3,6 +3,7 @@
   * Met deze class kun je eenvoudig een html menu maken.
   *
   * @author Jan den Besten
+  * @revision $Revision$
   *
   * Eenvoudig menu maken
   * ========================
@@ -43,7 +44,24 @@
   *     echo $menu->render();
   *
   * Heeft hetzelfde resultaat als het voorbeeld hierboven.
-  *
+  * 
+  * Velden van een menu tabel
+  * =========================
+  * 
+  * Als je een menu rechtstreeks vanuit een database tabel aanmaakt zoals hierboven, dan zijn de volgende velden nodig in die tabel:
+  * 
+  * - `id`
+  * - `order` - bepaald de volgorde van een item in het menu
+  * - `uri` - de uri van het item
+  * - `str_title` - de titel die zichtbaar wordt in het menu
+  * 
+  * Optionele velden en hun effect:
+  * 
+  * - `self_parent` - voor menu's met meerdere levels
+  * - `str_class` -  CSS class die meegegeven wordt aan het menu-item
+  * - `b_visible` - Als TRUE dan wordt het item getoond, anders niet
+  * - `b_clickable` - Als TRUE dan wordt het item aanklikbaar, anders bestaat het puur uit tekst
+  * 
   * Classes en id's van menu elementen
   * ======================================
   *

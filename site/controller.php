@@ -138,6 +138,9 @@ class Main extends FrontEndController {
 	 */
 	
 	private function _page($page) {
+		// Load and call modules
+		$page=$this->_module($page);
+
 		// Process the text fields (make safe email links, put classes in p/img/h tags)
 		foreach($page as $f=>$v) {if (get_prefix($f)=='txt') $page[$f]=$this->content->render($v);}
 
@@ -145,9 +148,6 @@ class Main extends FrontEndController {
 		if (isset($page['str_title'])) $this->add_title($page['str_title']);
 		if (isset($page['str_keywords'])) $this->add_keywords($page['str_keywords']);
 		if (isset($page['stx_description']) and !empty($page['stx_description'])) $this->site['description']=$page['stx_description'];
-
-		// Load and call modules
-		$page=$this->_module($page);
 
 		// Add page content (if no break)
     $page['show_page']=!$this->site['break'];
