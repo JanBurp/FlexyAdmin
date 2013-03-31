@@ -3,7 +3,7 @@
   * Met deze class kun je eenvoudig een html menu maken.
   *
   * @author Jan den Besten
-  * @revision $Revision$
+  * @revision $Rev$
   *
   * Eenvoudig menu maken
   * ========================
