@@ -2,7 +2,7 @@
  /**
   * Met deze class kun je eenvoudig een html menu maken.
   *
-  * @author Jan den Besten / $Revision:$ @ $Date:$
+  * @author Jan den Besten
   *
   * Eenvoudig menu maken
   * ========================
