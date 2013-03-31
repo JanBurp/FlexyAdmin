@@ -17,6 +17,8 @@
  */
 class Plugin_safe_assets extends Plugin {
 
+  private $forbidden=array();
+
   /**
    * Alle bestanden die zijn gecontroleerd
    *
@@ -38,6 +40,7 @@ class Plugin_safe_assets extends Plugin {
    */
    function __construct() {
 		parent::__construct();
+    $this->forbidden=$this->CI->config->item('FILE_types_forbidden');
 	}
 
 
@@ -92,7 +95,7 @@ class Plugin_safe_assets extends Plugin {
 	function _after_update() {
 		$types=$this->newData['str_types'];
 		$map=$this->newData['path'];
-		if ($this->config('create_htacces')) $this->_make_map_safe($map,$types);
+		if ($this->config('create_htaccess')) $this->_make_map_safe($map,$types);
 		return $this->newData;
 	}
   
@@ -139,11 +142,11 @@ class Plugin_safe_assets extends Plugin {
 		// Loop through all maps and make them safe and clen
 		foreach ($mapsToClean as $path => $allowed) {
       if (!empty($allowed)) {
-  			if ($this->config('create_htacces')) {
+  			if ($this->config('create_htaccess')) {
   				$this->_make_map_safe($path,$allowed);
           $this->checked[$path]=$allowed;
   			}
-  			$removed=$this->_remove_forbidden_files($path,$allowed,'',!in_array($path,$noRecursion));
+  			$removed=$this->_remove_forbidden_files($path,$allowed,!in_array($path,$noRecursion));
   			if ($removed) {
           $this->removed[$path]=$removed;
   				$someRemoved = true;
@@ -175,7 +178,7 @@ class Plugin_safe_assets extends Plugin {
    * @author Jan den Besten
    * @ignore
    */
-	function _remove_forbidden_files($path,$allowed,$forbidden='',$recursive=FALSE) {
+	function _remove_forbidden_files($path,$allowed=array(),$recursive=FALSE) {
 		$removed=false;
     if (!is_array($allowed)) $allowed=explode('|',$allowed);
     $thisAllowed=$allowed;
@@ -184,12 +187,12 @@ class Plugin_safe_assets extends Plugin {
     $lowerFiles=read_map(strtolower($path),'',FALSE,FALSE);
     $files=array_merge($files,$lowerFiles);
 		foreach ($files as $file => $value) {
-      if (!is_dir($path.'/'.$file) and !in_array($value['type'],$thisAllowed)) {
-        unlink($path.'/'.$file);
+      if (!is_dir($path.'/'.$file) and in_array($value['type'],$this->forbidden) and !in_array($value['type'],$thisAllowed)) {
+        // unlink($path.'/'.$file);
 				$removed[]=$value['path'];
 			}
       if ($recursive and $value['type']=='dir') {
-        $subRemoved=$this->_remove_forbidden_files($path.'/'.$file,$allowed,$forbidden,$recursive);
+        $subRemoved=$this->_remove_forbidden_files($path.'/'.$file,$allowed,$recursive);
         if (is_array($subRemoved)) {
           if (is_array($removed))
             $removed=array_merge($removed,$subRemoved);

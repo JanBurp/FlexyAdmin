@@ -34,7 +34,7 @@ $config['trigger'] = array(
 |
 */
 
-$config['create_htacces'] = TRUE;
+$config['create_htaccess'] = TRUE;
 
 
 ?>
