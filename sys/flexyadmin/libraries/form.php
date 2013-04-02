@@ -23,6 +23,7 @@
  *                         'validation'  => 'required|valid_email'
  *                        ),
  *       'txt_text'	  => array(
+ *                         'fieldset'    => 'volgende',
  *                         'label'       => 'Vraag',
  *                         'type'        => 'textarea',
  *                         'validation'=>'required'
@@ -192,6 +193,12 @@ class Form {
 		if (isset($data) and !empty($data)) {
 			foreach ($data as $name => $field) {
 				$this->data[$name]=$this->_check_default_field($name,$field);
+        if (isset($field['fieldset'])) {
+          $fieldset=$field['fieldset'];
+          if (!in_array($fieldset,$this->fieldsets)) {
+            $this->fieldsets[]=$fieldset;
+          }
+        }
 			}
 		}
 		$this->set_caption($caption);
