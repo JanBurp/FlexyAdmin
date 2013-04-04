@@ -1,3 +1,21 @@
+Changes r1987
+=============
+
+NEW:
+- added Lorum library for random text
+
+CHANGED:
+- faster jquery.styleTwitter.js
+- Nicer autofill option (for administrators)
+- plugin_assets:
+  - renamed setting
+  - only remove executables
+- plugin_sitemap: don't include invisible menu-items in sitemap.xml
+- form: autocreate fieldsets if a fieldset is set in the fielddata
+- some documentation addons (menu, form)
+
+
+
 Changes r1975
 =============
 

@@ -1,3 +1,13 @@
+UPDATE to r1987
+===============
+
+- Replace current sys map with new sys map
+
+Only if you need to load modules before anything else:
+- Replace site/controller.php or at least replace the _page() method.
+
+
+
 UPDATE to r1975
 ===============
 

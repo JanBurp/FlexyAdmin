@@ -12,5 +12,5 @@ Read userguide/FlexyAdmin/algemeen/snelstart.html
 Read userguide/FlexyAdmin/algemeen/bestandsstructuur.html
 
 == LOGIN ==
-Log in as admin/admin or user/user
+Log in as admin/admin or user/user with the default database
 
