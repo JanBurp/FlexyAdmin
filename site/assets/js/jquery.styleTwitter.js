@@ -25,7 +25,8 @@
     remove:['.load-more'],
     style:{'.timeline .stream' : {'overflow':'hidden'} },
      scrolltime:5000,
-     slidetime:2000
+     slidetime:2000,
+     checktime:250
   };
   var opts;
   var self;
@@ -44,7 +45,7 @@
             content=$(content).contents();
             methods.style.apply(this,arguments);
           }
-        },1000);
+        },opts.checktime);
         return this;
       },
       style : function() {
