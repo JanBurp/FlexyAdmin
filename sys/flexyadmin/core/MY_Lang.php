@@ -180,7 +180,9 @@ class MY_Lang extends CI_Lang {
     if (!empty($this->lang_table) and !empty($this->idiom)) {
       $CI=&get_instance();
       // Only frontend
-      if ($CI->uri->segment(1)!='admin') $value=$CI->db->get_field_where($this->lang_table,'lang_'.$this->idiom,'key',$line);
+      if ($CI->uri->segment(1)!='admin') {
+        if ($CI->db->field_exists('lang_'.$this->idiom,$this->lang_table)) $value=$CI->db->get_field_where($this->lang_table,'lang_'.$this->idiom,'key',$line);
+      }
     }
     if (empty($value)) $value=parent::line($line);
 		return $value;
