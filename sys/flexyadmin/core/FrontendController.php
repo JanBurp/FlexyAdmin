@@ -254,6 +254,26 @@ class FrontEndController extends MY_Controller {
 		return !$this->has_content();
 	}
 	
+  
+  /**
+   * Laad een error 404 pagina zien, met alle modules geladen
+   *
+   * @return void
+   * @author Jan den Besten
+   */
+  public function show_404() {
+    $this->site['title'].=' - Error 404';
+    $page=array();
+    $page['str_title']='';
+    $page['txt_text']=$this->view('error','',true);
+      
+  	// Load and call modules
+    $page=$this->_module($page);
+		// Add page content (if no break)
+    $page['show_page']=!$this->site['break'];
+    $this->add_content( $this->view($this->config->item('page_view'),$page,true) );
+	}
+  
   /**
    * Voegt een class toe aan de body tag ($site['class'])
    *

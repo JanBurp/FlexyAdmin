@@ -92,7 +92,7 @@ class Main extends FrontEndController {
 
 
 		/***********************************************
-		 * If item exists call _page (which calls modules and loads views if set)
+		 * If item exists call _page
 		 */
 		if ($page) $page=$this->_page($page);
 
@@ -106,8 +106,7 @@ class Main extends FrontEndController {
 		/**********************************************
 		 * No Content? Show error page.
 		 */
-		if ($this->no_content()) $this->add_content($this->view('error','',true));
-
+    if ($this->no_content()) $this->show_404();
 
 		/**
 		 * Send the site view to the browser
@@ -139,7 +138,7 @@ class Main extends FrontEndController {
 	
 	private function _page($page) {
 		// Load and call modules
-		$page=$this->_module($page);
+    $page=$this->_module($page);
 
 		// Process the text fields (make safe email links, put classes in p/img/h tags)
 		foreach($page as $f=>$v) {if (get_prefix($f)=='txt') $page[$f]=$this->content->render($v);}
@@ -151,10 +150,10 @@ class Main extends FrontEndController {
 
 		// Add page content (if no break)
     $page['show_page']=!$this->site['break'];
+    
     $this->add_content( $this->view($this->config->item('page_view'),$page,true) );
 		return $page;
 	}
-
 
 
 	/*
@@ -163,8 +162,7 @@ class Main extends FrontEndController {
 	 * This functions collects all the modules which need to be loaded and called. Then calls them.
 	 * If modules have a return value it will be added to $page['module_content'].
 	 */
-	private function _module($page) {
-		
+	protected function _module($page) {
 		// See what modules to load
 		$modules=array();
 		// First autoload modules
@@ -249,6 +247,7 @@ class Main extends FrontEndController {
 			$library_name=str_replace(' ','_',$library);
 			if (file_exists(SITEPATH.'libraries/'.$library_name.'.php')) {
 				$this->load->library($library_name);
+        $this->$library_name->set_name($library);
 				return $this->$library_name->$method($args);
 			}
 			elseif ($this->config->item('fallback_module')) {
@@ -256,6 +255,7 @@ class Main extends FrontEndController {
 				$fallback_name=str_replace(' ','_',$fallback);
 				if (file_exists(SITEPATH.'libraries/'.$fallback_name.'.php')) {
 					$this->load->library($fallback_name);
+          $this->$fallback_name->set_name($library);
 					return $this->$fallback_name->index($args);
 				}
 			}

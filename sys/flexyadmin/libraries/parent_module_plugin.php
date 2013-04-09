@@ -65,7 +65,7 @@ class Parent_module_plugin {
    * @return void
    * @author Jan den Besten
    */
-	protected function set_name($name) {
+	public function set_name($name) {
 		$this->name=$name;
 		$this->shortname=str_replace('plugin_','',$name);
 	}
