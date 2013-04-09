@@ -1495,7 +1495,10 @@ div#help_messages {display:none;}
 	-moz-border-radius: 4px 0px 4px 4px;
 	-webkit-border-radius: 4px 0px 4px 4px;
 }
-.submenu li {cursor:pointer;}
+.submenu li {
+  cursor:pointer;
+  letter-spacing:0px;
+}
 
 #subitems {
   width:560px;
