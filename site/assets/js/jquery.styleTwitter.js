@@ -24,9 +24,12 @@
   var settings = {
     remove:['.load-more'],
     style:{'.timeline .stream' : {'overflow':'hidden'} },
-     scrolltime:5000,
-     slidetime:2000,
-     checktime:250
+    scrolltime:5000,
+    slidetime:2000,
+    checktime:250
+     // scrolltime:500,
+     // slidetime:200,
+     // checktime:25
   };
   var opts;
   var self;
@@ -65,20 +68,24 @@
       },
       scroll : function() {
         var h=$(self).height();
-        var th=$(content).find('.stream ol').height();
+        var stream=$(content).find('.stream ol');
+        var th=$(stream).height();
         // scroll when needed
         if (th>h) {
           var item;
           $(content).find('.stream ol li').addClass('visible');
           opts.timer=setInterval(function(){
-            // find first visible item, scroll up
-            item=$(content).find('.stream ol li.visible:first');
-            if (item.length>0) {
-              $(item).slideUp(opts.slidetime).removeClass('visible');
+            var height=$(stream).height();
+            if (height>h) {
+              // find first visible item, scroll up
+              item=$(content).find('.stream ol li.visible:first');
+              if (item.length>0) {
+                $(item).slideUp(opts.slidetime).removeClass('visible');
+              }
             }
             else {
               // reset
-              $(content).find('.stream ol li').addClass('visible').show();
+              $(content).find('.stream ol li').addClass('visible').slideDown(opts.slidetime);
             }
           },opts.scrolltime);
         }
