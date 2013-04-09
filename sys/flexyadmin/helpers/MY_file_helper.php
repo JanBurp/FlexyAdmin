@@ -70,12 +70,14 @@ function get_full_file_info($file,$getInfo=TRUE,$metaInfo=FALSE) {
   		$info["height"]=$size[1];
       // meta info
 			if ($metaInfo and in_array($info['type'],array('jpg','tiff'))) {
-				// set warnings off...
-				$errorReporting=error_reporting(E_ALL);
-				error_reporting($errorReporting - E_WARNING);
-				$exif=exif_read_data($file);
-				error_reporting($errorReporting);
-				if ($exif) $info['meta']=$exif;
+        if (function_exists('exif_read_data')) {
+          // set warnings off...
+          $errorReporting=error_reporting(E_ALL);
+          error_reporting($errorReporting - E_WARNING);
+          $exif=exif_read_data($file);
+          error_reporting($errorReporting);
+          if ($exif) $info['meta']=$exif;
+        }
 			}
   	}
   };
