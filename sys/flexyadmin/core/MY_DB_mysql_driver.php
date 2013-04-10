@@ -1893,9 +1893,13 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
       
 			$this->select($this->pk);
 			if ($asTree) $this->select('uri,order,self_parent');
-      $abstract_field=$this->get_abstract_fields($cleanTable);
-      $abstract_field=remove_prefix(current($abstract_field),'.');
-      $this->select($abstract_field);
+      $abstract_fields=$this->get_abstract_fields($cleanTable);
+      foreach ($abstract_fields as $key => $value) {
+        $abstract_fields[$key]=remove_prefix($value,'.');
+      }
+      // $abstract_field=remove_prefix(current($abstract_field),'.');
+      $this->select($abstract_fields);
+      $abstract_field=current($abstract_fields);
 			if ($asTree) {
         $this->order_as_tree();
         $this->uri_as_full_uri(TRUE,$abstract_field);
@@ -1924,7 +1928,11 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
         $res=$this->_set_key_to($res,PRIMARY_KEY);
       }
 			foreach($res as $row) {
-        $options[$row[$this->pk]]=$row[$abstract_field];
+        $options[$row[$this->pk]]='';
+        foreach ($abstract_fields as $field) {
+          $options[$row[$this->pk]]=add_string($options[$row[$this->pk]], $row[$field], ' | ');
+        }
+        // $options[$row[$this->pk]]=$row[$abstract_field];
         // if ($asTree and $row['self_parent']!=0 and isset($options[$row[$this->pk]]) and isset($res[$row['self_parent']])) $options[$row[$this->pk]]=$res[$row['self_parent']][$abstract_field].' / '.$options[$row[$this->pk]];
 			}
 			return $options;
