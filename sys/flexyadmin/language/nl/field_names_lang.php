@@ -23,6 +23,19 @@ $lang['tme_added']        = "Toegevoegd op";
 $lang['self_parent']      = "Submenu van";
 $lang['str_keywords']     = "Zoektermen";
 
+$lang['str_gender']       = "Geslacht";
+$lang['str_first_name']   = "Voornaam";
+$lang['str_insertion']    = "Tussenvoegsel";
+$lang['str_surname']      = "Achternaam";
+$lang['str_address']      = "Adres";
+$lang['str_zipcode']      = "Postcode";
+$lang['str_city']         = "Plaatsnaam";
+$lang['str_country']      = "Land";
+
+$lang['tme_date_time']    = "Datum &amp; Tijd";
+$lang['dec_price']        = "Prijs";
+
+
 // Fields in tbl_site
 $lang['str_author']       = "Auteur";
 $lang['stx_description']  = "Omschrijving";

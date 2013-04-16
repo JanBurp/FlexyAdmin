@@ -1753,6 +1753,9 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				array_push($abFields,$table.".".each($allFields));
 			}
 		}
+    foreach ($abFields as $key => $field) {
+      $abFields[$key]=trim($field);
+    }
 		return $abFields;
 	}
 
@@ -1895,7 +1898,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			if ($asTree) $this->select('uri,order,self_parent');
       $abstract_fields=$this->get_abstract_fields($cleanTable);
       foreach ($abstract_fields as $key => $value) {
-        $abstract_fields[$key]=remove_prefix($value,'.');
+        $abstract_fields[$key]=trim(remove_prefix($value,'.'));
       }
       // $abstract_field=remove_prefix(current($abstract_field),'.');
       $this->select($abstract_fields);
