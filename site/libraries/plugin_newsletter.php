@@ -402,6 +402,7 @@ class Plugin_newsletter extends Plugin {
       }
       // BCC
       foreach ($bcc as $to_one) {
+        $mail['to']=$mail['from'];
         $mail['bcc']=$to_one;
         $this->CI->email->set_mail($mail);
         $send=$this->CI->email->send();
@@ -463,7 +464,7 @@ class Plugin_newsletter extends Plugin {
     // good internal links
 		$body=str_replace('href="mailto:','##MAIL##',$body);
 		$body=str_replace('href="undefined/','href="'.base_url(),$body);
-		$body=preg_replace('/href=\"(?!http:\/\/).*?/','href="'.base_url(),$body);
+		$body=preg_replace('/href=\"(?!https?:\/\/).*?/','href="'.base_url(),$body);
 		$body=str_replace('##MAIL##','href="mailto:',$body);
     //
     return $body;
