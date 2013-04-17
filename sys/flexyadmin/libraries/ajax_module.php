@@ -50,7 +50,7 @@ class Ajax_module extends Parent_module_plugin {
 	 * @return string
 	 * @author Jan den Besten
 	 */
-  public function index($page) {
+  public function index($args) {
     return $this->result(array('_message'=>__CLASS__));
   }
 
