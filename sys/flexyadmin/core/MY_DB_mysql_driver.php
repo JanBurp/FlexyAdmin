@@ -416,14 +416,19 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 					}
 				}
 				$order=trim($order);
-				// check if it is not id, add id to it to prefent dubious sort results
-				if ($order!=PRIMARY_KEY) $order.=','.PRIMARY_KEY;
+				// check if it is not id, add id to it to prefent dubious sort results (if id exists)
+				if ($order!=PRIMARY_KEY) {
+          if ($this->field_exists(PRIMARY_KEY,$table)) {
+            $order=add_string($order,PRIMARY_KEY,',');   
+          }
+				}
 				// trace_($order);
 				
-				if ($set) $this->order_by($order);
+				if ($set and $order) $this->order_by($order);
 			}
 		}
     // if ($set) $this->order=$this->ar_orderby;
+    // trace_(array('table'=>$table,'order'=>$order));
 		return $order;
 	}
 
@@ -1561,17 +1566,21 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 
 		$match=array();
 		$table='';
+    $tablePlus='';
 		if ( preg_match('/FROM\s(.*?)\s/si',$sql,$match) ) {
 			$table=trim($match[1],'()`"');
 			$tablePlus="`$table`.";
 		}
-		
-		$sql=preg_replace('/SELECT(.*)?FROM/si','SELECT '.$tablePlus.'`id` FROM',$sql);
-		$sql=preg_replace('/ORDER BY(.*)?/si','',$sql);
 
-		$query=$this->query($sql);
-		$num_rows=$query->num_rows();
-		$query->free_result();
+    $num_rows=0;
+    if (!empty($tablePlus)) {
+      $sql=preg_replace('/SELECT(.*)?FROM/si','SELECT '.$tablePlus.'`id` FROM',$sql);
+  		$sql=preg_replace('/ORDER BY(.*)?/si','',$sql);
+  		$query=$this->query($sql);
+  		$num_rows=$query->num_rows();
+  		$query->free_result();
+    }
+
 		return $num_rows;
 	}
 
