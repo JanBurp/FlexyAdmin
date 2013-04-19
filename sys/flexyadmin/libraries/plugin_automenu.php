@@ -120,7 +120,7 @@ class Plugin_automenu extends Plugin {
 
   private function _only_change_data() {
     $id=$this->newData['id'];
-    $changedFields=array_diff_multi($this->newData,$this->oldData);
+    $changedFields=array_diff_multi($this->oldData,$this->newData);
     // set update fields
     $set=array();
     foreach ($changedFields as $field => $value) {
@@ -150,6 +150,8 @@ class Plugin_automenu extends Plugin {
         }
       }
     }
+
+    // strace_($set);
 
     // Then all other fields
     foreach ($set as $id_field => $subset) {
