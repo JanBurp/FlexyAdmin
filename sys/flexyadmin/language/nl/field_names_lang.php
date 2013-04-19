@@ -27,6 +27,7 @@ $lang['str_gender']       = "Geslacht";
 $lang['str_first_name']   = "Voornaam";
 $lang['str_insertion']    = "Tussenvoegsel";
 $lang['str_surname']      = "Achternaam";
+$lang['str_telephone']    = "Telefoon";
 $lang['str_address']      = "Adres";
 $lang['str_zipcode']      = "Postcode";
 $lang['str_city']         = "Plaatsnaam";
