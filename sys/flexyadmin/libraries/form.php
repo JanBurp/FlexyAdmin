@@ -718,29 +718,33 @@ class Form {
 		$data=$this->data;
 		
 		$out=form_open_multipart($this->action,array("class"=>$class,'form_id'=>$this->form_id));
+    if (!empty($this->form_id)) {
+      $formID=array('name'=>'__form_id','type'=>'hidden','value'=>$this->form_id,'class'=>'');
+      $out.=$this->render_field('__form_id',$formID);
+    }
 		
 		// fieldsets && fields
 		$nr=1;
 		foreach ($this->fieldsets as $fieldset) {
 			$fieldset=trim($fieldset);
-			$fieldSetClass='fieldset fieldSet_'.$fieldset.' fieldset_'.$nr;
+			$fieldSetClass='fieldset fieldSet_'.str_replace(' ','_',$fieldset).' fieldset_'.$nr;
 			$fieldSetId='fieldset_'.$nr++;
 			if (isset($this->fieldsetClasses[$fieldset])) $fieldSetClass.=' '.$this->fieldsetClasses[$fieldset];
 			$caption=$fieldset;
 			if ($caption=='fieldset') $caption=$this->caption;
+      
+			$htmlFieldset=form_fieldset($caption,array("class"=>$fieldSetClass,'id'=>$fieldSetId));
 
-			$out.=form_fieldset($caption,array("class"=>$fieldSetClass,'id'=>$fieldSetId));
-
-      if (!empty($this->form_id)) {
-        $formID=array('name'=>'__form_id','type'=>'hidden','value'=>$this->form_id,'class'=>'');
-        $out.=$this->render_field('__form_id',$formID);
-      }
-
+      $htmlFieldsetFields='';
 			foreach($data as $name => $field) {
 				$fieldFieldset=$field['fieldset'];
-				if ($fieldset==$fieldFieldset)	$out.=$this->render_field($field['name'],$field,$class);
+				if ($fieldset==$fieldFieldset)	$htmlFieldsetFields.=$this->render_field($field['name'],$field,$class);
 			}
-			$out.=form_fieldset_close();
+      if (!empty($htmlFieldsetFields)) {
+        $out.=$htmlFieldset.$htmlFieldsetFields;
+        $out.=form_fieldset_close();  
+      }
+
 		}
 
 		// Buttons
