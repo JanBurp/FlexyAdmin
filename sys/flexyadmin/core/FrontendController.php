@@ -99,7 +99,6 @@ class FrontEndController extends MY_Controller {
 		 * Set global site info from tbl_site (if it doesn't exist, put some standard info)
 		 */
 		if ($this->db->table_exists("tbl_site")) {
-			// $fields = $this->db->list_fields("tbl_site");
 			$stdFields=array("str_title","str_author","url_url","email_email","stx_description","stx_keywords");
 			$query=$this->db->get("tbl_site");
 			$this->site=$query->row_array();

@@ -1130,7 +1130,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
         trace_(array('BUG? :: fullUri=>'=>$fullUri));
       }
 			foreach ($result as $key => $row) {
-				if ($row["self_parent"]!=0) {
+				if (isset($row['self_parent']) and $row["self_parent"]!=0) {
 					if (!empty($extraFullField)) $extra=$row[$extraFullField];
           // Get parent
 					if ( $this->_test_if_full_path($result,$row) ) {
@@ -1929,7 +1929,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
       // Get results
       if ($asTree) {
         $res=$this->get_results($cleanTable);
-        // strace_(count($res));
+        unset($res['options']);
         // strace_($res);
       }
       else {
@@ -1947,7 +1947,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
         // $options[$row[$this->pk]]=$row[$abstract_field];
         // if ($asTree and $row['self_parent']!=0 and isset($options[$row[$this->pk]]) and isset($res[$row['self_parent']])) $options[$row[$this->pk]]=$res[$row['self_parent']][$abstract_field].' / '.$options[$row[$this->pk]];
 			}
-			return $options;
+      return $options;
 		}
 
 	/**
