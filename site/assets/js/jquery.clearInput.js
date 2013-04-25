@@ -34,7 +34,7 @@
       // Make sure all values are cleaned after submit
       $(this).parents('form').submit(function(){
         $(this).find('.clearInput').each(function(){
-          if ($(this).attr('value')==$(this).attr('empty_value')) $(this).val('');
+          if ($(this).val()==$(this).attr('empty_value')) $(this).val('');
         });
       });
 		});
