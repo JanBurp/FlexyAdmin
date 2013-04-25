@@ -24,6 +24,7 @@ $lang['self_parent']      = "Submenu van";
 $lang['str_keywords']     = "Zoektermen";
 
 $lang['str_gender']       = "Geslacht";
+$lang['str_name']         = "Naam";
 $lang['str_first_name']   = "Voornaam";
 $lang['str_insertion']    = "Tussenvoegsel";
 $lang['str_surname']      = "Achternaam";
