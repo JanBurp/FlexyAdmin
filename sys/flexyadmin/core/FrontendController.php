@@ -65,10 +65,9 @@ class FrontEndController extends MY_Controller {
   		$this->load->library("menu");
   		$this->load->library("content",$this->config->item('parse_content'));
   		$this->load->library('form_validation');
-  		// Init global site data
-  		$this->_init_globals();
     }
-    
+		// Init global site data
+		$this->_init_globals();
 	}
 	
 	/**
@@ -133,44 +132,47 @@ class FrontEndController extends MY_Controller {
 		 */
 		$this->site['languages']=$this->config->item('languages');
 
-		/**
-		 * Declare and init some variables
-		 */
-		$declare=array('menu','content','break','class');
-		if ($this->config->item('site_variables')) $declare=array_merge($declare,$this->config->item('site_variables'));	
-		foreach ($declare as $variable) {
-			$this->site[$variable]='';
-		}
 
+    if (!IS_AJAX) {
 
-		/**
-		 * Make sure that uri's after ':' are removed when trying to load a page. And so modules van use all uri-parts after ':'
-		 */
-     $this->uri->set_remove( $this->config->item('PLUGIN_URI_ARGS_CHAR') );
-  
-		
-		/**
-		 * Set home uri (top from tbl_menu) if content comes from database
-		 */
-     if ( $this->config->item('menu_autoset_home')) {
-			$menuTable=get_menu_table();
-			if ( ! empty($menuTable)) {
-				if ($this->db->field_exists('self_parent',$menuTable)) $this->db->order_as_tree();
-				if ($this->db->field_exists('uri',$menuTable)) {
-					$this->db->select('uri');
-					$top=$this->db->get_row($menuTable);
-					$this->uri->set_home($top['uri']);
-				}
-				else {
-					$this->uri->set_home('');
-				}
-			}
-		}
-		elseif ($this->config->item('menu_homepage_uri')) {
-			$this->uri->set_home($this->config->item('menu_homepage_uri'));
-		}
-		
+  		/**
+  		 * Declare and init some variables
+  		 */
+  		$declare=array('menu','content','break','class');
+  		if ($this->config->item('site_variables')) $declare=array_merge($declare,$this->config->item('site_variables'));	
+  		foreach ($declare as $variable) {
+  			$this->site[$variable]='';
+  		}
+
+  		/**
+  		 * Make sure that uri's after ':' are removed when trying to load a page. And so modules van use all uri-parts after ':'
+  		 */
+       $this->uri->set_remove( $this->config->item('PLUGIN_URI_ARGS_CHAR') );
+
+   		/**
+   		 * Set home uri (top from tbl_menu) if content comes from database
+   		 */
+        if ( $this->config->item('menu_autoset_home')) {
+   			$menuTable=get_menu_table();
+   			if ( ! empty($menuTable)) {
+   				if ($this->db->field_exists('self_parent',$menuTable)) $this->db->order_as_tree();
+   				if ($this->db->field_exists('uri',$menuTable)) {
+   					$this->db->select('uri');
+   					$top=$this->db->get_row($menuTable);
+   					$this->uri->set_home($top['uri']);
+   				}
+   				else {
+   					$this->uri->set_home('');
+   				}
+   			}
+   		}
+   		elseif ($this->config->item('menu_homepage_uri')) {
+   			$this->uri->set_home($this->config->item('menu_homepage_uri'));
+   		}
+      
+    }
 	}
+
 
   /**
    * Voeg keywords toe
