@@ -52,7 +52,10 @@ function backtrace_($offset=0,$limit=10,$echo=true) {
 			if ($len>5)	$explode=array_slice($explode,$len-4);
 			$file=implode('/',$explode);
 			if (isset($val['line'])) {
-				$val['file']='#show#<a style="color:#000;text-decoration:underline;" href="txmt://open?url=file:///'.$val['file'].'&amp;line='.$val['line'].'">'.$file.' at '.$val['line'].'</a>';
+        if (!IS_AJAX)
+          $val['file']='#show#<a style="color:#000;text-decoration:underline;" href="txmt://open?url=file:///'.$val['file'].'&amp;line='.$val['line'].'">'.$file.' at '.$val['line'].'</a>';
+        else
+          $val['file']='#show#'.$val['file'].'&amp;line='.$val['line'].'">'.$file.' at '.$val['line'];
 				unset($val['line']);
 			}
 		}
@@ -122,6 +125,7 @@ function strace_($a=NULL) {
  */
 function trace_($a=NULL,$echo=true,$backtraceOffset=1) {
 	static $c=0;
+  $out='';
 	$show="Trace";
 	if (!isset($a)) {
 		$a=backtrace_($backtraceOffset,10,false);
@@ -132,7 +136,7 @@ function trace_($a=NULL,$echo=true,$backtraceOffset=1) {
 	else {
 		$type="[".gettype($a)."]";
 	}
-	$out="<div class=\"FlexyAdminTrace\" style=\"position:relative;font-family:courier,serif;font-size:10px;z-index:99999;margin:2px;padding:5px;background-color:#efe;color:#000;border:solid 1px #666;opacity:.8;\"><span style=\"font-weight:bold;color:#696;\">$show #$c $type:</span>\n";
+  if (!IS_AJAX) $out.="<div class=\"FlexyAdminTrace\" style=\"position:relative;font-family:courier,serif;font-size:10px;z-index:99999;margin:2px;padding:5px;background-color:#efe;color:#000;border:solid 1px #666;opacity:.8;\"><span style=\"font-weight:bold;color:#696;\">$show #$c $type:</span>\n";
 	if (is_bool($a)) {
 		if ($a) $out.="'True'";
 		else		$out.="'False'";
@@ -142,7 +146,7 @@ function trace_($a=NULL,$echo=true,$backtraceOffset=1) {
 	else
 		$out.=print_r(tr_string($a),true);
 	$c++;
-	$out.="</div>";
+  if (!IS_AJAX) $out.="</div>";
 	if ($echo) echo $out."<br/>";
 	return $out;
 }
@@ -160,7 +164,10 @@ function tr_string($value) {
 	$html=in_string("<>",$value);
 	if ((strtoupper(substr($value,0,6))!="#SHOW#") and ($html or (strlen($value)>200)) ) {
 		$s.=strip_tags(substr($value,0,80));
-		$s.=" <span title=\"".htmlentities($value)."\" style=\"cursor:help;color:#696;\">...</span>";
+    if (!IS_AJAX)
+      $s.=" <span title=\"".htmlentities($value)."\" style=\"cursor:help;color:#696;\">...</span>";
+    else
+      $s.=htmlentities($value)."...";
 	}
 	else
 		$s=str_replace("#show#","",$value);
@@ -197,6 +204,7 @@ function array_($a) {
  * @author Jan den Besten
  */
 function print_ar($array,$return=false,$tabs=0,$eol='<br/>') {
+  if (IS_AJAX) $eol="\n";
 	$out="";
 	$out.=" (".$eol;
 	foreach($array as $key=>$value) {
@@ -232,6 +240,7 @@ function print_ar($array,$return=false,$tabs=0,$eol='<br/>') {
  * @author Jan den Besten
  */
 function tabs($t,$tab="&nbsp;") {
+  if (IS_AJAX) $tab="\t";
 	return repeater($tab,$t);
 }
 
