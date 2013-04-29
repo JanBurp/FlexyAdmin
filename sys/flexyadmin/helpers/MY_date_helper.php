@@ -8,6 +8,23 @@
  */
 
 
+
+/**
+ * Give an array from a datestring
+ *
+ * @param string $date (format: yyyy-mm-dd)
+ * @return array ('year'=>yyyy, 'month'=>mm, 'day'=>dd)
+ * @author Jan den Besten
+ */
+function date_to_array($date) {
+  return array(
+    'year'  =>substr($date,0,4),
+    'month' =>substr($date,5,2),
+    'day'   =>substr($date,8,2)
+  );
+}
+
+
 /**
  * Tel een dag bij een unix-timestamp op
  *
@@ -109,4 +126,6 @@ function get_holidays($country='') {
   }
   return $holidays;
 }
+
+
 
