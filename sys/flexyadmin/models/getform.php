@@ -25,11 +25,26 @@
    * @param string $module
    * @return string
    * @author Jan den Besten
+   * @ignore
+   * @depricated
    */
 	public function by_module($module) {
 		$this->db->where('str_module',$module);
 		return $this->_get_form();
 	}
+
+  /**
+   * Kiest formulier aan de hand van de naam ('str_name') in tbl_forms
+   *
+   * @param string $module
+   * @return string
+   * @author Jan den Besten
+   */
+	public function by_name($title) {
+		$this->db->where('str_name',$title);
+		return $this->_get_form();
+	}
+
 	
   /**
    * Kiest formulier aan de hand van titel ('str_title') in tbl_forms
@@ -68,10 +83,10 @@
     $lang=$this->site['language'];
 		if ($this->db->table_exists('tbl_forms') and $this->db->table_exists('tbl_formfields')) {
 			$form=array();
-			$form['form']=$this->db->get_row('tbl_forms');
-			
-			if ($form['form']) {
-				$this->db->where('id_form',$form['form']['id']);
+      $row=$this->db->get_row('tbl_forms');
+			if ($row) {
+        $form['form']=$row;
+        $this->db->where('id_form',$form['form']['id']);
 				$fields=$this->db->get_result('tbl_formfields');
 				array_push($fields,array('str_type'=>'##END##','str_label'=>'##END##','str_name'=>'','str_validation'=>'','str_validation_parameters'=>''));
 				// trace_($fields);

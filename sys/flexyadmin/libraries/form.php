@@ -205,6 +205,19 @@ class Form {
 	}
 
   /**
+   * Geeft alle formuliervelden een placeholder attribuut mee als die er nog niet is
+   *
+   * @return void
+   * @author Jan den Besten
+   */
+  public function add_placeholders() {
+    foreach ($this->data as $key=>$data) {
+      $label=$data['label'];
+      $this->data[$key]['attr']['placeholder']=$label;
+    }
+  }
+
+  /**
    * Geef alle formuliervelden een empty_value mee voor het placeholder attribuut
    *
    * @return void
@@ -216,8 +229,11 @@ class Form {
     foreach ($this->data as $key=>$data) {
       $label=$data['label'];
       $this->data[$key]['attr']['empty_value']=$label;
+      $this->data[$key]['attr']['placeholder']=$label;
     }
   }
+  
+  
 
   /**
    * Voeg een extra wachtwoord veld toe zodat een wachtwoord dubbel moet worden ingevoerd. Checkt automatisch of ze overeenkomen.

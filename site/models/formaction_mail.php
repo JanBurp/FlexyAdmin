@@ -47,7 +47,13 @@
     // FROM
     $this->email->from($data[$this->config['from_address_field']]);
     // SUBJECT
-    $this->email->subject($this->config['subject']);
+    $subject=$this->config['subject'];
+    if (isset($this->site['url_url'])) {
+      $siteURL=trim(str_replace('http://','',$this->site['url_url']),'/');
+      $subject=str_replace('%URL%', $siteURL, $subject);
+    }
+    $this->email->subject($subject);
+    
     // BODY
     $body='';
     foreach ($data as $key => $value) {
@@ -65,14 +71,19 @@
     			}
     		}
       }
+
       // Create body
     	if (substr($key,0,1)!='_' and !empty($value)) {
-    		$showKey=ucfirst(remove_prefix($key));
-    		$body.="<b>$showKey:&nbsp;</b>";
-    		$body.="$value<br/><br/>";
-    		if (isset($data[$key]['options'][$value])) {
-    			$value=strip_tags($data[$key]['options'][$value]);
-    		}
+        // if (isset($data[$key]['type']) and $data[$key]['type']=='checkbox') {
+        //           if ($value) $value=strip_tags($data[$key]['html']); else $value='Nee';
+        //         }
+				$showKey=ucfirst(remove_suffix($key));
+				$body.="<b>$showKey:&nbsp;</b>";
+        // if (isset($data[$key]['type']) and $data[$key]['type']=='textarea') $body.="<br/>";
+				$body.="$value<br/><br/>";
+				if (isset($data[$key]['options'][$value])) {
+					$value=strip_tags($data[$key]['options'][$value]);
+				}
     	}
         
     }
