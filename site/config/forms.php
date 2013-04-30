@@ -1,0 +1,79 @@
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+
+/*
+|--------------------------------------------------------------------------
+| Alle formulieren worden ingesteld met een eigen config array.
+| De key is de naam van het formulier.
+| 
+| Hieronder de instellingen voor het formulier 'contact'
+|--------------------------------------------------------------------------
+*/
+
+
+$config['contact'] = array(
+  
+  // Titel van het formulier
+  'title'                   => lang('contact_title'),
+  
+  // Velden van het formulier. De labels kunnen een verwijzing naar de taalbestanden bevatten.
+  'fields'                  => array(
+                                'str_name'		  => array( 'label'=>lang('field__str_name'),     'validation'=>'required' ),
+                                'email_email'	  => array( 'label'=>lang('field__email_email'),  'validation'	=>  'required|valid_email' ),
+                                'txt_text'	    => array( 'label'=>lang('field__txt_text'),     'type'=>'textarea', 'validation'=>'required' )
+                              ),
+                            
+  // Voegt placeholders toe aan de velden, deze zijn hetzelfde als de labels
+  'placeholders_as_labels'  => true,
+                  
+  // Knoppen van het formulier                
+  'buttons'                 => array( 'submit'=>array('submit'=>'submit', 'value'=>lang('submit')) ),
+  
+  // Welk model doet de afhandeling van dit formulier? Standaard de email
+  'formaction'              => 'formaction_mail',
+  
+  // Specifieke instellingen voor: formaction_mail
+  'subject'                 => lang('subject'),                          // Onderwerp van de email
+  'send_copy_to_sender'     => FALSE,                                    // Als TRUE dan krijgt de bezoeker die het formulier invult zelf ook een exemplaar toegestuurd.
+  'from_address_field'      => 'email_email',                            // Veld in het formulier met het emailadres van de bezoeker
+  'attachment_folder'       => 'downloads',                              // Als er files velden in het formulier bestaan is die de map waar de bestanden/attachments naar worden geupload
+  'attachment_types'        => 'gif|jpg|png|doc|docx|xls|xlsx|pdf|zip',  // En dit zijn dan de toegestane bestandsoorten
+
+  // Tekst die op de plek van het formulier komt als het formulier is verzonden en behandeld
+  'thanks'                  => lang('contact_send_text'),
+
+  // Output routing van dit formulier (zie bij de example.php module voor uitleg)
+  '__return'                => ''
+  
+);
+
+
+/*
+|--------------------------------------------------------------------------
+| Instellingen voor het formulier 'reservation'
+|--------------------------------------------------------------------------
+*/
+
+$config['reservation'] = array(
+  
+  // De velden worden voor dit formulier uit een tabel gegenereerd en in dezelfde tabel toegevoegd
+  'table'         => 'tbl_example',
+  
+  'title'         => 'Voorbeeld reservering',                
+  'buttons'       => array( 'submit'=>array('submit'=>'submit', 'value'=>lang('submit')) ),
+  'formaction'    => array('formaction_database','formaction_mail'),
+  '__return'      => ''
+);
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Instellingen voor een FlexyForm
+|--------------------------------------------------------------------------
+*/
+
+$config['flexyform_contact'] = array(
+  'formaction'    => 'formaction_mail',
+  '__return'      => ''
+);
