@@ -138,7 +138,10 @@ class Forms extends Module {
 		}
 		else {
 			// Form isn't filled or validated: show form and validation errors
-			$errors=validation_errors('<p class="error">', '</p>');
+      if ($this->config('validation_place','form')=='form')
+        $errors=validation_errors('<p class="error">', '</p>');
+      else
+        $form->show_validation_errors(true);
 			$html.=$form->render();
 		}
 		

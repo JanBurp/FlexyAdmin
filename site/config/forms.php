@@ -25,6 +25,9 @@ $config['contact'] = array(
                             
   // Voegt placeholders toe aan de velden, deze zijn hetzelfde als de labels
   'placeholders_as_labels'  => true,
+
+  // Geef aan waar de validation errors komen: 'form' of 'field'
+  'validation_place'        => 'field',
                   
   // Knoppen van het formulier                
   'buttons'                 => array( 'submit'=>array('submit'=>'submit', 'value'=>lang('submit')) ),
@@ -57,12 +60,13 @@ $config['contact'] = array(
 $config['reservation'] = array(
   
   // De velden worden voor dit formulier uit een tabel gegenereerd en in dezelfde tabel toegevoegd
-  'table'         => 'tbl_example',
+  'table'             => 'tbl_example',
   
-  'title'         => 'Voorbeeld reservering',                
-  'buttons'       => array( 'submit'=>array('submit'=>'submit', 'value'=>lang('submit')) ),
-  'formaction'    => array('formaction_database','formaction_mail'),
-  '__return'      => ''
+  'title'             => 'Voorbeeld reservering',                
+  'buttons'           => array( 'submit'=>array('submit'=>'submit', 'value'=>lang('submit')) ),
+  'validation_place'  => 'field',
+  'formaction'        => array('formaction_database','formaction_mail'),
+  '__return'          => ''
 );
 
 
@@ -74,6 +78,7 @@ $config['reservation'] = array(
 */
 
 $config['flexyform_contact'] = array(
+  'validation_place'  => 'field',
   'formaction'    => 'formaction_mail',
   '__return'      => ''
 );

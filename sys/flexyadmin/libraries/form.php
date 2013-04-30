@@ -79,7 +79,8 @@ class Form {
 	private $fieldsetClasses;
 	private $when;  // javascript
 	private $buttons;
-	
+  private $validation_error = false;
+  private $validation_error_class = 'error';
 
   /**
    * @ignore
@@ -203,6 +204,24 @@ class Form {
 		}
 		$this->set_caption($caption);
 	}
+  
+  /**
+   * Laat validation error zien bij de velden zelf
+   *
+   * @param mixed $class['error'], als TRUE, of een stringwaarde, dan worden de errors bij de velden getoond. De stringwaarde wordt de meegegeven class.
+   * @return object this
+   * @author Jan den Besten
+   */
+  public function show_validation_errors($class='error') {
+    if (empty($class)) {
+      $this->validation_error=false;
+    }
+    else {
+      $this->validation_error=true;
+      if (is_string($class)) $this->validation_error_class=$class;
+    }
+    return $this;
+  }
 
   /**
    * Geeft alle formuliervelden een placeholder attribuut mee als die er nog niet is
@@ -823,6 +842,9 @@ class Form {
 				$out.=form_label($field["label"],$name);
 			}
 		}
+    
+    // Validation error
+    if ($this->validation_error) $out.=form_error($field['name'],'<span class="'.$this->validation_error_class.'"> ','</span>');
     
 		// When (javascript triggers)
 		if (!empty($field['when'])) $this->when($field['when'],$name);
