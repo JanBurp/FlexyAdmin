@@ -105,6 +105,7 @@ form {margin-top:10px;}
 fieldset {border:none;margin:0px;padding:0px;}
 legend {display:none;}
 .flexyFormField {margin-bottom:10px;}
+.flexyFormField.required label:after { content:" *"; color:#F66;}
 label {font-weight:bold;}
 input,textarea {display:block;}
 input,textarea{padding:2px;border:solid 1px #CCC;cursor:pointer;}
