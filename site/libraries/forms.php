@@ -73,9 +73,17 @@ class Forms extends Module {
   	* @author Jan den Besten
   	*/
 	public function index($page) {
+    // Test if allready submitted (and testing for that is possible)
+    if ($this->config('prevend_double_submit') and $this->CI->config->item('query_urls')) {
+      $isSubmit=$this->CI->input->get('__submit');
+      if ($isSubmit) {
+        return $this->_view_thanks();
+      }
+    }
+    
 		$html='';
     $errors='';
-		
+    
 		// Welke velden (en buttons): zijn ze los ingesteld?
     $formFields=$this->config('fields');
     $formButtons=$this->config('buttons');
@@ -103,50 +111,80 @@ class Forms extends Module {
         }
       }
     }
-    
+  
     if (!$formFields) {
       echo '<div class="warning">'.langp('error_no_fields',$this->name).'<div>';
       return false;
     }
+  
+    // Extra veld toevoegen om op spamrobot te testen (die zal dit veld meestal automatisch vullen)
+    if ($this->config('check_for_spam')) $formFields['__test__']=array('type'=>'textarea', 'class'=>'hidden');
 
     $form_id=$this->name;
-		$form=new form($this->CI->uri->get(),$form_id);
+    $formAction=$this->CI->uri->get();
+		$form=new form($formAction,$form_id);
 		$form->set_data($formFields, $this->config('title',$form_id) );
     if ($this->config('placeholders_as_labels')) $form->add_placeholders();
 		if (isset($formFieldSets)) $form->set_fieldsets($formFieldSets);
     if ($formButtons) $form->set_buttons($formButtons);
 
-		// Is form validated?
-		if ($form->validation($form_id)) {
+		// Validate, and test filled form
+    $isValidated=$form->validation($form_id);
+    $isSpam=false;
+  
+		if ($isValidated) {
       $data=$form->get_data();
-
-      // Do the set Action(s)
-      $formaction=$this->config('formaction');
-      if (!is_array($formaction)) $formaction=array($formaction);
-      foreach ($formaction as $faction) {
-        $action='action_'.$faction;
-        $this->CI->load->model($faction,$action);
-        $this->CI->$action->initialize($this->config)->fields( $formFields );
-  			if (!$this->CI->$action->go( $data )) {
-  		    $errors.=$this->CI->$action->get_errors();
-          $html.=div('message').$errors._div();
-  			}
-        else {
-    			$html=div('message').$this->config('thanks','Thank you!')._div();
+    
+      // Spamcheck?
+      if ($this->config('check_for_spam')) {
+        $this->CI->load->library('spam');
+        $isSpam=$this->CI->spam->check($data,'__test__');
+        // trace_($this->CI->spam->get_rapport());
+      }
+    
+      if (!$isSpam) {
+        // Do the Action(s)
+        $formaction=$this->config('formaction');
+        if (!is_array($formaction)) $formaction=array($formaction);
+        foreach ($formaction as $faction) {
+          $action='action_'.$faction;
+          $this->CI->load->model($faction,$action);
+          $this->CI->$action->initialize($this->config)->fields( $formFields );
+    			if (!$this->CI->$action->go( $data )) {
+    		    $errors.=$this->CI->$action->get_errors();
+            $html.=div('message').$errors._div();
+    			}
+          else {
+            if ($this->config('prevend_double_submit')  and $this->CI->config->item('query_urls')) {
+              redirect($formAction.'?__submit=true');
+            }
+            return $this->_view_thanks();
+          }
         }
       }
+      else {
+        $errors='<p class="error">'.lang('error_spam').'</p>';
+      }
 		}
-		else {
-			// Form isn't filled or validated: show form and validation errors
+    if (!$isValidated or $isSpam)	{
+			// Form isn't filled or validated or regarded as spam: show form and validation errors
       if ($this->config('validation_place','form')=='form')
-        $errors=validation_errors('<p class="error">', '</p>');
+        $errors.=validation_errors('<p class="error">', '</p>');
       else
         $form->show_validation_errors(true);
 			$html.=$form->render();
 		}
-		
+    
     return $this->CI->view('forms',array('title'=>$this->config['title'],'form'=>$html,'errors'=>$errors),true);
 	}
+  
+  
+  
+  private function _view_thanks($errors='') {
+    $html=div('message').$this->config('thanks','Thank you!')._div();
+    return $this->CI->view('forms',array('title'=>$this->config['title'],'form'=>$html,'errors'=>$errors),true);
+  }
+  
 
 }
 

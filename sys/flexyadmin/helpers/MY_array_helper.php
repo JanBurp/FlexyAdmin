@@ -448,7 +448,7 @@ function csv2array($csv,$fldnames=null,$sep=',',$protect='"',$filters=null){
 
 
 /**
- * Geeft alle elementen uit de associatieve array die het meegegeven prefix in hun key hebben
+ * Geeft alle elementen uit de associatieve array die het meegegeven prefix in hun value hebben
  *
  * @param string $arr Array 
  * @param string $prefix Prefix

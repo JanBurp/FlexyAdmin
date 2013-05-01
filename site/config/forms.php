@@ -29,6 +29,13 @@ $config['contact'] = array(
   // Geef aan waar de validation errors komen: 'form' of 'field'
   'validation_place'        => 'field',
                   
+  // Controleer op spam (Voegt een extra (hidden) veld toe om op spamrobots te testen (veld heeft class='hidden', dit moet je in je stylesheet ook daadwerkelijk onzichtbaar maken))
+  'check_for_spam'          => true,
+  
+  // Voorkom dat het formulier meerdere keren kan worden verzonden door een pagina refresh.
+  // LET OP dit maakt gebruikt van $_GET dus in config.php moet $config['query_urls']=TRUE zijn 
+  'prevend_double_submit'   => false,
+  
   // Knoppen van het formulier                
   'buttons'                 => array( 'submit'=>array('submit'=>'submit', 'value'=>lang('submit')) ),
   
@@ -36,7 +43,7 @@ $config['contact'] = array(
   'formaction'              => 'formaction_mail',
   
   // Specifieke instellingen voor: formaction_mail
-  'subject'                 => lang('subject'),                          // Onderwerp van de email
+  'subject'                 => lang('subject'),                          // Onderwerp van de email. Je kunt er codes inzetten die vervangen worden: %URL% = Url van de site, %MAIL% = 1e email veld, of een willekeurig veld %veldnaam%.
   'send_copy_to_sender'     => FALSE,                                    // Als TRUE dan krijgt de bezoeker die het formulier invult zelf ook een exemplaar toegestuurd.
   'from_address_field'      => 'email_email',                            // Veld in het formulier met het emailadres van de bezoeker
   'attachment_folder'       => 'downloads',                              // Als er files velden in het formulier bestaan is die de map waar de bestanden/attachments naar worden geupload
@@ -65,6 +72,7 @@ $config['reservation'] = array(
   'title'             => 'Voorbeeld reservering',                
   'buttons'           => array( 'submit'=>array('submit'=>'submit', 'value'=>lang('submit')) ),
   'validation_place'  => 'field',
+  'check_for_spam'    => true,
   'formaction'        => array('formaction_database','formaction_mail'),
   '__return'          => ''
 );
@@ -79,6 +87,7 @@ $config['reservation'] = array(
 
 $config['flexyform_contact'] = array(
   'validation_place'  => 'field',
-  'formaction'    => 'formaction_mail',
-  '__return'      => ''
+  'check_for_spam'    => true,
+  'formaction'        => 'formaction_mail',
+  '__return'          => ''
 );
