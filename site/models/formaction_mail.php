@@ -4,6 +4,16 @@
  *
  * Verstuurd formdata naar het standaard emailadres
  * 
+ * Met `$formaction_mail->initialize()` kun je meegegeven onderstaande velden (hieronder met hun defaults):
+ * 
+ * - to_field             => Het database veld waar het mailadres in staat ('tbl_site.email_email')
+ * - subject              => Onderwerp van de mail: Je kunt er codes inzetten die vervangen worden: %URL% = Url van de site, %MAIL% = 1e email veld, of een willekeurig veld %veldnaam%
+ * - send_copy_to_sender  => Of er een kopie naar de afzender moet gaan (FALSE)
+ * - from_address_field   => Veld in de formulierdata waar het emailadres van de afzender in staat ('email_email')
+ * - attachment_folder    => 'downloads'
+ * - attachment_types     => 'gif|jpg|png|doc|docx|xls|xlsx|pdf|zip'
+ * 
+ * 
  * @package default
  * @author Jan den Besten
  */
@@ -46,12 +56,16 @@
     if ($this->config['send_copy_to_sender']) $this->email->cc($data[$this->config['from_address_field']]);
     // FROM
     $this->email->from($data[$this->config['from_address_field']]);
-    // SUBJECT
+    
+    // SUBJECT - vervang keys
     $subject=$this->config['subject'];
-    if (isset($this->site['url_url'])) {
-      $siteURL=trim(str_replace('http://','',$this->site['url_url']),'/');
-      $subject=str_replace('%URL%', $siteURL, $subject);
+    $replace['/%URL%/uiUsm']=trim(str_replace('http://','',$this->site['url_url']),'/');
+    $emailfields=filter_by_key($data,'email');
+    if ($emailfields) $replace['/%MAIL%/uiUsm']=current($emailfields);
+    foreach ($data as $key => $value) {
+      $replace['/%'.$key.'%/uiUsm']=$value;
     }
+    $subject = preg_replace(array_keys($replace),array_values($replace), $subject);
     $this->email->subject($subject);
     
     // BODY

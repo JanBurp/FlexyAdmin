@@ -16,13 +16,13 @@ class Spam {
 	private $settings=array(
     'score_low'=>5,
     'score_high'=>10,
-    'trigger_words'=>'buy,cheap,offer,discount,viagra,cialis,$,free,f r e e,amazing,billion,cash,cheap,credit,earn,sales,order now',
+    'trigger_words'=>'buy,cheap,offer,discount,viagra,cialis,$,free,f r e e,amazing,billion,cash,cheap,credit,earn,sales,order now,sex,sell',
 		'trigger_word_weight'=>5,
-		'link_http_weight'=>5,
+		'link_http_weight'=>10,
 		'link_url_weight'=>10,
 		'text_density_limit'=>70,
 		'text_density_weight'=>10,
-		'vowel_density_limit'=>15,
+		'vowel_density_limit'=>10,
 		'vowel_density_weight'=>5,
     'spambody_weight'=>5
   );
@@ -94,7 +94,7 @@ class Spam {
     $fields=filter_by($fields,'txt');
     if (!empty($fields)) {
       $textField=current($fields);
-  		$this->check_text($textField);
+  		$this->check_text($data[$textField]);
     }
     // check if robot
     $this->check_if_robot($data,$spamBody);
