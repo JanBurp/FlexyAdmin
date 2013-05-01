@@ -29,12 +29,13 @@
 	*/
 class Forms extends Module {
   
+  var $form_id='';
+  
   /**
    * @ignore
    */
 	public function __construct() {
 		parent::__construct();
-		$this->CI->load->library('form');
 	}
 
 
@@ -55,6 +56,9 @@ class Forms extends Module {
       if (isset($this->config['__return'])) {
         $this->config['__return.'.$function]=$this->config['__return'];
       }
+      // Laad eventueel benodigde libraries
+  		$this->CI->load->library('form');
+      if ($this->config('prevend_double_submit')) $this->CI->load->library('session');
       return $this->index($args);
     }
     else {
@@ -73,16 +77,17 @@ class Forms extends Module {
   	* @author Jan den Besten
   	*/
 	public function index($page) {
+    $this->form_id=$this->name;
+		$html='';
+    $errors='';
+    
     // Test if allready submitted (and testing for that is possible)
-    if ($this->config('prevend_double_submit') and $this->CI->config->item('query_urls')) {
-      $isSubmit=$this->CI->input->get('__submit');
+    if ($this->config('prevend_double_submit')) {
+      $isSubmit=$this->CI->session->userdata($this->form_id.'__submit');
       if ($isSubmit) {
         return $this->_view_thanks();
       }
     }
-    
-		$html='';
-    $errors='';
     
 		// Welke velden (en buttons): zijn ze los ingesteld?
     $formFields=$this->config('fields');
@@ -120,16 +125,15 @@ class Forms extends Module {
     // Extra veld toevoegen om op spamrobot te testen (die zal dit veld meestal automatisch vullen)
     if ($this->config('check_for_spam')) $formFields['__test__']=array('type'=>'textarea', 'class'=>'hidden');
 
-    $form_id=$this->name;
     $formAction=$this->CI->uri->get();
-		$form=new form($formAction,$form_id);
-		$form->set_data($formFields, $this->config('title',$form_id) );
+		$form=new form($formAction,$this->form_id);
+		$form->set_data($formFields, $this->config('title',$this->form_id) );
     if ($this->config('placeholders_as_labels')) $form->add_placeholders();
 		if (isset($formFieldSets)) $form->set_fieldsets($formFieldSets);
     if ($formButtons) $form->set_buttons($formButtons);
 
 		// Validate, and test filled form
-    $isValidated=$form->validation($form_id);
+    $isValidated=$form->validation($this->form_id);
     $isSpam=false;
   
 		if ($isValidated) {
@@ -155,8 +159,9 @@ class Forms extends Module {
             $html.=div('message').$errors._div();
     			}
           else {
-            if ($this->config('prevend_double_submit')  and $this->CI->config->item('query_urls')) {
-              redirect($formAction.'?__submit=true');
+            if ($this->config('prevend_double_submit')) {
+              $this->CI->session->set_userdata($this->form_id.'__submit',true);
+              redirect($formAction);
             }
             return $this->_view_thanks();
           }
@@ -181,6 +186,9 @@ class Forms extends Module {
   
   
   private function _view_thanks($errors='') {
+    if ($this->config('prevend_double_submit')) {
+      $this->CI->session->unset_userdata($this->form_id.'__submit');
+    }
     $html=div('message').$this->config('thanks','Thank you!')._div();
     return $this->CI->view('forms',array('title'=>$this->config['title'],'form'=>$html,'errors'=>$errors),true);
   }

@@ -33,8 +33,8 @@ $config['contact'] = array(
   'check_for_spam'          => true,
   
   // Voorkom dat het formulier meerdere keren kan worden verzonden door een pagina refresh.
-  // LET OP dit maakt gebruikt van $_GET dus in config.php moet $config['query_urls']=TRUE zijn 
-  'prevend_double_submit'   => false,
+  // NB deze optie maakt gebruik van sessions (de session library wordt automatisch geladen).
+  'prevend_double_submit'   => true,
   
   // Knoppen van het formulier                
   'buttons'                 => array( 'submit'=>array('submit'=>'submit', 'value'=>lang('submit')) ),
