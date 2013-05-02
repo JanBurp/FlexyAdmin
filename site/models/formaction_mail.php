@@ -44,7 +44,7 @@
     */
   public function go($data) {
     parent::go($data);
-
+    
     // TO
     if (!isset($this->config['to']) or empty($this->config['to'])) {
      $table=get_prefix($this->config['to_field'],'.');
@@ -70,7 +70,8 @@
     
     // BODY
     $body='';
-    foreach ($data as $key => $value) {
+    foreach ($this->fields as $key => $field) {
+      $value=$data[$key];
       // Attachment?
       if (get_prefix($key)=='file') {
     		if (isset($_FILES[$key]['name']) and !empty($_FILES[$key]['name']) ) {
@@ -88,7 +89,7 @@
 
       // Create body
     	if (substr($key,0,1)!='_' and !empty($value)) {
-				$showKey=ucfirst(remove_prefix($key));
+				$showKey=ucfirst($field['label']);
 				$body.="<b>$showKey:&nbsp;</b>";
 				$body.="$value<br/><br/>";
 				if (isset($data[$key]['options'][$value])) {
