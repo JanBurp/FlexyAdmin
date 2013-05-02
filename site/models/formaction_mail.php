@@ -88,12 +88,8 @@
 
       // Create body
     	if (substr($key,0,1)!='_' and !empty($value)) {
-        // if (isset($data[$key]['type']) and $data[$key]['type']=='checkbox') {
-        //           if ($value) $value=strip_tags($data[$key]['html']); else $value='Nee';
-        //         }
-				$showKey=ucfirst(remove_suffix($key));
+				$showKey=ucfirst(remove_prefix($key));
 				$body.="<b>$showKey:&nbsp;</b>";
-        // if (isset($data[$key]['type']) and $data[$key]['type']=='textarea') $body.="<br/>";
 				$body.="$value<br/><br/>";
 				if (isset($data[$key]['options'][$value])) {
 					$value=strip_tags($data[$key]['options'][$value]);
