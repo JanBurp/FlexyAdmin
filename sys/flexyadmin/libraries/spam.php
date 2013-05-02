@@ -110,10 +110,12 @@ class Spam {
    */
 	private function create_action() {
 		$this->rapport['action']=0;
-		if ($this->rapport['score'] >= $this->settings['score_high'])
-		  $this->rapport['action'] = 2;
-		elseif ($this->rapport['score'] >= $this->settings['score_low'])
-			$this->rapport['action'] = 1;
+    if (isset($this->rapport['score'])) {
+  		if ($this->rapport['score'] >= $this->settings['score_high'])
+  		  $this->rapport['action'] = 2;
+  		elseif ($this->rapport['score'] >= $this->settings['score_low'])
+  			$this->rapport['action'] = 1;
+    }
 		return $this->rapport['action'];
 	}
   
