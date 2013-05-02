@@ -823,6 +823,7 @@ class Form {
 		if (isset($field['attributes'])) {$attr=array_merge($attr,$field['attributes']);}
 		if (isset($field['id'])) $attr['id']=$field['id'];
     if (isset($field['placeholder'])) $attr['placeholder']=$field['placeholder'];
+    if (isset($field['readonly'])) $attr['readonly']=$field['readonly'];
     
 
 		// Label or Captcha
