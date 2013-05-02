@@ -98,6 +98,14 @@ class Forms extends Module {
       $formFields=array2formfields($fields);
       unset($formFields['id']);
     }
+    // Geen velden ingesteld, maar wel een model: vraag de model.method naar de velden
+    if (!$formFields and $this->config('model')) {
+      $model=$this->config('model');
+      $method=get_suffix($model,'.');
+      $model=get_prefix($model,'.');
+      if (!isset($this->CI->$model)) $this->CI->load->model($model);
+      $formFields=$this->CI->$model->$method();
+    }
     // Geen velden en geen tabel, maar een flexyform
     if (!$formFields) {
       $this->CI->load->model('getform');

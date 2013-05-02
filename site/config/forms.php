@@ -78,6 +78,26 @@ $config['reservation'] = array(
 );
 
 
+/*
+|--------------------------------------------------------------------------
+| Voorbeeld waarbij velden van een model komen
+|--------------------------------------------------------------------------
+*/
+
+$config['shop'] = array(
+  
+  // De velden worden nu opgehaald uit een model.method, deze geeft een array van formfields terug
+  'model'             => 'shop.fields',
+  
+  'title'             => 'Voorbeeld reservering',                
+  'buttons'           => array( 'submit'=>array('submit'=>'submit', 'value'=>lang('submit')) ),
+  'validation_place'  => 'field',
+  'check_for_spam'    => true,
+  'formaction'        => array('formaction_database','formaction_mail'),
+  '__return'          => ''
+);
+
+
 
 /*
 |--------------------------------------------------------------------------
