@@ -26,7 +26,7 @@ $config['contact'] = array(
   // Voegt placeholders toe aan de velden, deze zijn hetzelfde als de labels
   'placeholders_as_labels'  => true,
 
-  // Geef aan waar de validation errors komen: 'form' of 'field'
+  // Geef aan waar de validation errors komen: 'form' of 'field' of een algemene tekst.
   'validation_place'        => 'field',
                   
   // Controleer op spam (Voegt een extra (hidden) veld toe om op spamrobots te testen (veld heeft class='hidden', dit moet je in je stylesheet ook daadwerkelijk onzichtbaar maken))
@@ -71,7 +71,7 @@ $config['reservation'] = array(
   
   'title'             => 'Voorbeeld reservering',                
   'buttons'           => array( 'submit'=>array('submit'=>'submit', 'value'=>lang('submit')) ),
-  'validation_place'  => 'field',
+  'validation_place'  => 'Niet alle noodzakelijke velden zijn (goed) ingevuld.',
   'check_for_spam'    => true,
   'formaction'        => array('formaction_database','formaction_mail'),
   '__return'          => ''
