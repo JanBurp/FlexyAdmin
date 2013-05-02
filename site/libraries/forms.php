@@ -181,10 +181,12 @@ class Forms extends Module {
 		}
     if (!$isValidated or $isSpam)	{
 			// Form isn't filled or validated or regarded as spam: show form and validation errors
-      if ($this->config('validation_place','form')=='form')
+      if ($this->config('validation_place','form')=='field')
+        $form->show_validation_errors(true);
+      elseif ($this->config('validation_place','form')=='form')
         $errors.=validation_errors('<p class="error">', '</p>');
       else
-        $form->show_validation_errors(true);
+        $errors.='<p class="error">'.$this->config('validation_place','').'</p>';
 			$html.=$form->render();
 		}
     
