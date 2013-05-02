@@ -821,6 +821,9 @@ class Form {
 		$attr=array("name"=>$name,"id"=>$name,"value"=>$field["value"], "class"=>$class);
 		if (isset($field['attr'])) {$attr=array_merge($attr,$field['attr']);}
 		if (isset($field['attributes'])) {$attr=array_merge($attr,$field['attributes']);}
+		if (isset($field['id'])) $attr['id']=$field['id'];
+    if (isset($field['placeholder'])) $attr['placeholder']=$field['placeholder'];
+    
 
 		// Label or Captcha
 		if ($field["type"]!="hidden") {
