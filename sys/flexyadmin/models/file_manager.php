@@ -516,7 +516,6 @@ class File_manager Extends CI_Model {
 		$xlsTypes=$this->config->item('FILE_types_xls');
 
 		$nr=1;
-    // strace_($files);
 		$showImgSize=false;
 		foreach($files as $id=>$file) {
 			$fileData=array();
@@ -603,10 +602,11 @@ class File_manager Extends CI_Model {
 						$fileData["dat_date"]=span('hidden').$file['rawdate']._span().str_replace(' ','&nbsp;',$file["date"]);
             
 						// IMAGE/FLASH WIDTH/HEIGHT
-						if ($isImg or $isFlash) {
-							$fileData["size"]="(".$imgSize[0]."&nbsp;x&nbsp;".$imgSize[1].")";
-							$showImgSize=true;
-						}
+            $fileData['size']='';
+            if ($isImg or $isFlash) {
+              $fileData["size"]="(".$imgSize[0]."&nbsp;x&nbsp;".$imgSize[1].")";
+              $showImgSize=true;
+            }
 
 						// USER
 						if (isset($file['user'])) $fileData['user']=$file['user'];
@@ -681,7 +681,7 @@ class File_manager Extends CI_Model {
 		 * Prepare file data
 		 */
 		$renderData=$this->_create_render_data();
-
+    
 		/**
 		 * Header (caption and buttons)
 		 */

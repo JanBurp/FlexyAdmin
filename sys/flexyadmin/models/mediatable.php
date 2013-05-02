@@ -234,8 +234,10 @@ class Mediatable Extends CI_Model {
         $date=explode('-',$info['dat_date']);
         $files[$file]['date']=date('j M Y',mktime(0,0,0,$date[1],$date[2],$date[0]));
         unset($files[$file]['dat_date']);
-        $files[$file]['width']=$info['int_img_width'];  unset($files[$file]['int_img_width']);
-        $files[$file]['height']=$info['int_img_height'];unset($files[$file]['int_img_height']);
+        $files[$file]['width']=$info['int_img_width'];
+        unset($files[$file]['int_img_width']);
+        $files[$file]['height']=$info['int_img_height'];
+        unset($files[$file]['int_img_height']);
       }
     }
     return $files;
