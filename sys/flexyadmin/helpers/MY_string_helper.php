@@ -360,6 +360,22 @@ function safe_string($s,$c=0) {
 	return $s;
 }
 
+
+
+/**
+ * Vervangt alle 'gevaarlijke' quotes (' en ") in een string met ongevaarlijke ` quotes
+ *
+ * @param string $s
+ * @return string $s
+ * @author Jan den Besten
+ */
+function safe_quotes($s) {
+  $s=str_replace("'",'`',$s);
+  $s=str_replace('"','``',$s);
+  return $s;
+}
+
+
 /**
  * Als strip_tags() maar vervangt eerst alle <br /> en &nbsp; door normale spaties
  *

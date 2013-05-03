@@ -897,6 +897,11 @@ div.flexyFormField>label {
 	overflow:hidden;
 }
 
+body.action_db label {width:100px;}
+body.action_db div.flexyFormHtml {float:right;margin-top:4px;margin-left:15px;width:470px;}
+div.warning div.flexyFormHtml {color:#F00;}
+body.action_db input.checkbox {float:left;top:3px;}
+
 label.required {font-weight:bold;}
 label span.required {color:#FF0000;}
 
