@@ -300,9 +300,29 @@ class Db extends AdminController {
 
 	function import() {
 		if ($this->user->is_super_admin()) {
+      // What form is filled?
 			$sql=$this->input->post('sql');
 			if (!isset($_FILES["userfile"]) and !$sql) {
-				$this->_import();
+        // Maybe some update sqls?
+        $update=$this->input->post('update');
+        if (!$update) {
+          // Show start form
+          $this->_import();
+        }
+        else {
+          // Do the actual update
+          $data=$_POST;
+          unset($data['submit']);
+          unset($data['update']);
+          $sql='';
+          foreach ($data as $rev => $nop) {
+						// load SQL
+            $file='update_r'.$rev.'.sql';
+						$usql=read_file('db/'.$file);
+            $sql.="\n".$usql;
+          }
+          $this->_sql($sql,'Updating...','updated');
+        }
 			}
 			else {
 				$update=(int) $this->input->post('update');
@@ -321,10 +341,37 @@ class Db extends AdminController {
 						else {
 							// load SQL
 							$usql=read_file('db/'.$file);
-							$sql.="# $file\n".$usql."\n\n";
+              // $usql.="# $file\n".$usql."\n\n";
+              $lines=explode("\n",$usql);
+              $info=current($lines);
+              $info=trim(trim($info,'#'));
+              $updates[$key]=array(
+                'rev'   =>$fileRev,
+                'file'  =>$file,
+                'sql'   =>$usql,
+                'info'  =>$info,
+                'value' =>true,
+                'class' =>''
+              );
+              $question=next($lines);
+              if (has_string('UPDATE_IF:',$question)) {
+                $question=substr($question,strpos($question,':')+1);
+                $updates[$key]['value']=false;
+                $updates[$key]['info']=$question;
+                $updates[$key]['class']="warning";
+              }
 						}
 					}
-				}
+          // show update form selections
+					$this->load->library('form');
+					$form=new form($this->config->item('API_db_import'));
+          $data['update']=array('type'=>'hidden','value'=>'update');
+          foreach ($updates as $key => $file) {
+            $data[$file['rev']]=array('type'=>'checkbox','label'=>'update '.$file['rev'],'html'=>'<span class="help" title="'.safe_quotes($file['sql']).'">'.$file['info'].'</span>','value'=>$file['value'],'class'=>$file['class']);
+          }
+					$form->set_data($data,"Select the updates you wan't");
+					$this->_add_content($form->render());
+        }
 				else {
 					if (!$sql) $sql=$this->_upload_sql();
 				}
@@ -361,6 +408,7 @@ class Db extends AdminController {
 		}
 		if ($safe) {
 			$lines=explode("\n",$sql);
+      // remove comments
 			$comments="";
 			foreach ($lines as $k=>$l) {
 				if (substr($l,0,1)=="#")	{
@@ -372,7 +420,7 @@ class Db extends AdminController {
 			$lines=preg_split('/;\n+/',$sql); // split at ; with EOL
 			
 			$this->_add_content(p().$action.br(2));//.$comments);
-			
+
 			foreach ($lines as $key => $line) {
 				$line=trim($line);
 				if (!empty($line)) {
