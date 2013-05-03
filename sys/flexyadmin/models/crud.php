@@ -58,6 +58,7 @@ class Crud extends CI_Model {
 
 	/**
 	 * Maakt item in database, inclusief many tables (join/rel)
+	 * Zelfde als ->create()
 	 *
 	 * @param array $args : array( 'data'=>array() )
 	 * @return int : id van inserted item
@@ -68,6 +69,15 @@ class Crud extends CI_Model {
 		$this->_set_args($args);
 		return $this->_update_insert(TRUE);
 	}
+  
+	/**
+	 * Maakt item in database, inclusief many tables (join/rel)
+	 * Zelfde als ->insert()
+	 *
+	 * @param array $args : array( 'data'=>array() )
+	 * @return int : id van inserted item
+	 * @author Jan den Besten
+	 */
 	public function create($args='') {
 		return $this->insert($args);
 	}
