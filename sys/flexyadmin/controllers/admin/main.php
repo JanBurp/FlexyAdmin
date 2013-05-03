@@ -35,12 +35,7 @@ class Main extends AdminController {
 	function index() {
 		$this->load->model("grid");
 		$this->lang->load("home");
-
-
-		// messages:
-    // $messages=$this->session->flashdata("messages");
-    // if ($message) $this->set_message($message);
-    // Moved to BasicController...
+    $this->_show_type("grid");
 
     // homepage plugin?
     $data['homeplugins']=$this->plugin_handler->call_plugins_homepage();
@@ -74,6 +69,8 @@ class Main extends AdminController {
 		$this->_set_content($this->load->view("admin/home",$data,true));
 		$this->_show_all();
 	}
+
+
 
 }
 
