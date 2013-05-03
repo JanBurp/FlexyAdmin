@@ -1,13 +1,11 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- * crud actions in admin part
+ * Met dit model kun je de basis database handelingen uitvoeren (CRUD)
  *
  * @package default
  * @author Jan den Besten
  * @todo read methods
- * @ignore
- * @internal
  */
 class Crud extends CI_Model {
 
@@ -25,7 +23,7 @@ class Crud extends CI_Model {
 	}
 
 	/**
-	 * table()
+	 * Stel tabel in waarvoor de acties gelden
 	 *
 	 * @param string $table : table name
 	 * @return object $this
@@ -59,10 +57,10 @@ class Crud extends CI_Model {
 
 
 	/**
-	 * create(), create item in database, including many tables (join/rel)
+	 * Maakt item in database, inclusief many tables (join/rel)
 	 *
 	 * @param array $args : array( 'data'=>array() )
-	 * @return int : id of inserted item
+	 * @return int : id van inserted item
 	 * @author Jan den Besten
 	 */
 	public function insert($args='') {
@@ -76,10 +74,10 @@ class Crud extends CI_Model {
 
 
 	/**
-	 * update(), update item(s) in database, including many tables (join/rel)
+	 * Update item(s) in database, inclusief many tables (join/rel)
 	 *
 	 * @param array $args : array( 'where'=>array(), 'data'=>array() )
-	 * @return boolean : TRUE on succes
+	 * @return bool : TRUE als gelukt
 	 * @author Jan den Besten
 	 */
 	public function update($args='') {
@@ -92,6 +90,8 @@ class Crud extends CI_Model {
 	/**
 	 * private _update_insert, does the actual updateing/inserting for create/update
 	 * @author Jan den Besten
+	 * @ignore
+	 * @internal
 	 */
 	private function _update_insert($insert=FALSE) {
 		$id=FALSE;
@@ -205,7 +205,9 @@ class Crud extends CI_Model {
 
 
 	/**
-	 * delete(), Deletes item from table. And if exists its relations from other tables. And if it is part of a tree, put its children a level up.
+	 * Verwijderd item van een tabel.
+	 * Als ze bestaan worden ook relaties vanuit andere tabellen naar dit item verwijderd.
+	 * Als dit item in een tree tabel zit, worden de onderliggende takken omhoog geplaatst. (menu tabellen)
 	 *
 	 * @param array $where : array( 'key'=> 'value' [, ...])
 	 * @return boolean : TRUE if succes, FALSE if not
@@ -297,10 +299,15 @@ class Crud extends CI_Model {
 
 
 
-	/**
-	 * Some helper functions
-	 */
-
+  /**
+   * Stelt alle standaard argumenten in
+   *
+   * @param string $args[NULL]
+   * @return void
+   * @author Jan den Besten
+   * @internal
+   * @ignore
+   */
 	private function _set_args($args=NULL) {
 		$this->data   = element('data',$args,FALSE);
 		$this->where  = element('where',$args,FALSE);
@@ -311,6 +318,15 @@ class Crud extends CI_Model {
 		if (!is_array($this->order)) $this->order=array($this->order=>'DESC');
 	}
 
+  /**
+   * Geeft id van een where statement
+   *
+   * @param string $where[''] 
+   * @return int $id
+   * @author Jan den Besten
+   * @internal
+   * @ignore
+   */
 	private function _get_id($where='') {
     if (empty($where)) $where=$this->where;
 		$id = element(PRIMARY_KEY,$where,FALSE);
@@ -323,12 +339,28 @@ class Crud extends CI_Model {
 		return $id;
 	}
 
+  /**
+   * Stelt order_by in ad hand van $this->order
+   *
+   * @return void
+   * @author Jan den Besten
+   * @internal
+   * @ignore
+   */
 	private function _set_order() {
 		foreach ($this->order as $order_by => $direction) {
 			$this->db->order_by($order_by,$direction);
 		}
 	}
 	
+  /**
+   * LIMIT
+   *
+   * @return void
+   * @author Jan den Besten
+   * @internal
+   * @ignore
+   */
 	private function _set_limit() {
 		if ($this->limit) {
 			$this->db->limit($limit,$offset);
