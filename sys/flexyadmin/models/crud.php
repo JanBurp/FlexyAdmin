@@ -195,8 +195,9 @@ class Crud extends CI_Model {
 					// insert new selection
 					if (!is_array($value)) $value=explode('|',$value);
 					foreach ($value as $jdata) {
+            if (is_array($jdata)) $jid=$jdata[PRIMARY_KEY]; else $jid=$jdata;
 						$this->db->set($thisKey,$id);
-						$this->db->set($joinKey,$jdata[PRIMARY_KEY]);
+						$this->db->set($joinKey,$jid);
 						$this->db->insert($relTable);
 						$inId=$this->db->insert_id();
 					}
