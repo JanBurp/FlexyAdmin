@@ -42,6 +42,9 @@ class Main extends AdminController {
     // if ($message) $this->set_message($message);
     // Moved to BasicController...
 
+    // homepage plugin?
+    $data['homeplugins']=$this->plugin_handler->call_plugins_homepage();
+
 		// last login info
 		$user=$this->user->get_user();
 		$data["username"]=$user->str_username;
@@ -52,7 +55,6 @@ class Main extends AdminController {
 		$query=$this->db->get($this->config->item('LOG_table_prefix')."_".$this->config->item('LOG_login'),5);
 		$userData=$query->result_array();
 		$query->free_result();
-		
 		// in grid
 		$grid=new grid();
 		foreach($userData as $k=>$d) {

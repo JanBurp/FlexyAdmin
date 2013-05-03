@@ -1,3 +1,4 @@
+<?=$homeplugins;?>
 <?=$logindata;?>
 
 <? if (isset($message)): ?>

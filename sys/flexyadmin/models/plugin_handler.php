@@ -68,7 +68,7 @@ class Plugin_handler extends CI_Model {
 			}
 			
 			// add to trigger methods
-			$methods=array('admin_api_method','ajax_api_method','logout_method','before_grid_method','after_update_method','after_delete_method');
+			$methods=array('home_method','admin_api_method','ajax_api_method','logout_method','before_grid_method','after_update_method','after_delete_method');
 			foreach ($methods as $method) {
 				if (isset($this->plugins[$pluginName]['config'][$method])) {
 					$this->trigger_methods[$method][$pluginName] = $this->plugins[$pluginName]['config'][$method];
@@ -140,6 +140,13 @@ class Plugin_handler extends CI_Model {
   		}
     }
 		return $return;
+	}
+
+	public function call_plugin_homepage($plugin,$args) {
+		if (isset($this->plugins[$plugin]['config']['home_method'])) {
+			return $this->call_plugin($plugin,$this->plugins[$plugin]['config']['home_method'],$args);
+		}
+		return '';
 	}
 
 	public function call_plugin_admin_api($plugin,$args) {
@@ -254,6 +261,19 @@ class Plugin_handler extends CI_Model {
 			}
 		}
 		return $logoutMessages;
+	}
+
+	public function call_plugins_homepage() {
+		$homepageMessages='';
+		$this->_set_additional_data();
+		if (isset($this->trigger_methods['home_method'])) {
+			foreach ($this->trigger_methods['home_method'] as $plugin => $method) {
+				$this->_give_data_to_plugin($plugin);
+				$return = $this->call_plugin($plugin,$method);
+				$homepageMessages.=$return;
+			}
+		}
+		return $homepageMessages;
 	}
 
 
