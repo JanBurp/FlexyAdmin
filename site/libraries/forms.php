@@ -185,10 +185,15 @@ class Forms extends Module {
 			// Form isn't filled or validated or regarded as spam: show form and validation errors
       if ($this->config('validation_place','form')=='field')
         $form->show_validation_errors(true);
-      elseif ($this->config('validation_place','form')=='form')
-        $errors.=validation_errors('<p class="error">', '</p>');
-      else
-        $errors.='<p class="error">'.$this->config('validation_place','').'</p>';
+      else {
+        $error=validation_errors('<p class="error">', '</p>');
+        if (!empty($error)) {
+          if ($this->config('validation_place','form')=='form')
+            $errors.=$error;
+          else
+            $errors.='<p class="error">'.$this->config('validation_place','').'</p>';
+        }
+      }
 			$html.=$form->render();
 		}
     
@@ -200,6 +205,12 @@ class Forms extends Module {
   private function _view_thanks($errors='') {
     if ($this->config('prevend_double_submit')) {
       $this->CI->session->unset_userdata($this->form_id.'__submit');
+    }
+    if ($this->config('thanks_model')) {
+      $model=get_prefix($this->config('thanks_model'),'.');
+      $method=get_suffix($this->config('thanks_model'),'.');
+      if (!isset($this->CI->$model)) $this->CI->load->model($model);
+      return $this->CI->$model->$method();
     }
     $html=div('message').$this->config('thanks','Thank you!')._div();
     return $this->CI->view('forms',array('title'=>$this->config['title'],'form'=>$html,'errors'=>$errors),true);

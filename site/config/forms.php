@@ -94,6 +94,8 @@ $config['shop'] = array(
   'validation_place'  => 'field',
   'check_for_spam'    => true,
   'formaction'        => array('formaction_database','formaction_mail'),
+  // In plaats van een 'thank you' tekst na het invullen, kan ook naar een model.method worden verwezen
+  'thanks_model'      => 'payment',
   '__return'          => ''
 );
 
