@@ -71,7 +71,7 @@ class MY_URI extends CI_URI {
 	public function set_remove($remove="") {
 		if (!is_array($remove)) $remove=array($remove);
 		$this->remove=$remove;
-	}
+  }
 	
   /**
    * Zet de standaard remove part van pagination in
@@ -118,6 +118,7 @@ class MY_URI extends CI_URI {
 			foreach ($this->remove as $remove) {
 				if (!empty($remove)) {
 					$pos=strpos($s,$remove);
+          if (substr($s,$pos-1,1)=='/') $pos-=1;
 					if ($pos>0) $s=substr($s,0,$pos);
 				}
 			}
