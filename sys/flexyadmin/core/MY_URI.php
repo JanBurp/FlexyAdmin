@@ -118,7 +118,7 @@ class MY_URI extends CI_URI {
 			foreach ($this->remove as $remove) {
 				if (!empty($remove)) {
 					$pos=strpos($s,$remove);
-					if ($pos>0) $s=substr($s,0,$pos-1);
+					if ($pos>0) $s=substr($s,0,$pos);
 				}
 			}
 		}
