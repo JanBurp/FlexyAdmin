@@ -60,4 +60,12 @@ hr,.hr {width: 100%;height:1px;background-color:#CCC;margin:10px 0px;border:soli
 /* tinyMCE specific styles, only for admin  */
 body#tinymce  { margin:4px; }
 body#tinymce a { text-decoration: underline; }
+/* show embeds in editor */
+body#tinymce iframe, body#tinymce embed, body#tinymce object, body#tinymce .mceItemMedia, body#tinymce .mceItemIframe {
+  background-color:#CCC;
+  background-image: url('../../../sys/flexyadmin/assets/icons/movie.gif');
+  background-position:center center;
+  background-repeat:no-repeat;
+  border:dotted 1px #F00;
+}
 
