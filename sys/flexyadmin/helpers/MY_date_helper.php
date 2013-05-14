@@ -51,6 +51,28 @@ function unixdate_is_weekend($unix) {
 }
 
 
+/**
+ * Test of een datum (unix-timestamp) een bepaalde dag is
+ *
+ * @param int $unix 
+ * @param int $day[0] - 0=zondag etc. 
+ * @return bool
+ * @author Jan den Besten
+ */
+function unixdate_is_day($unix,$day=0) {
+  $weekday = date('w', $unix);
+  return ($weekday==$day);
+}
+
+
+/**
+ * Geeft volgende werkdag (geen weekend, en geen vakantie)
+ *
+ * @param string $unix 
+ * @param string $holidays 
+ * @return void
+ * @author Jan den Besten
+ */
 function get_next_workday($unix,$holidays) {
   while (unixdate_is_weekend($unix) or unixdate_is_holiday($unix,$holidays)) {
     $unix=unixdate_add_days($unix,1);
