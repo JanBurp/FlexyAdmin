@@ -573,6 +573,9 @@ tr.caption td				{ border:none; }
 .grid td.id,
 .grid td.edit,
 .files td.edit			{ width:66px; min-width:63px; padding-right:0px; }
+
+.grid td.id_        { min-width:100px; max-width:none; }
+
 .grid th.uri,
 .grid td.uri				{ display:none; }
 .grid th.order,

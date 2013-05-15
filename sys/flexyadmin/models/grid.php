@@ -283,7 +283,9 @@ class Grid Extends CI_Model {
 			if ($this->order[0]==$name) $orderClass=' headerSortDown';
 			if ($this->order[0]=='_'.$name) $orderClass=' headerSortUp';
 			if ($name=='id') $orderClass.=' edit';
-			$table["heading"]["row"][]=array(	"class"	=>"$tableClass $name ".get_prefix($name)." $extraClass ".alternator("oddcol","evencol").$orderClass, "cell"	=> $heading );
+      $prefix=get_prefix($name);
+      if ($prefix=='id' and $name!='id') $prefix='id_';
+			$table["heading"]["row"][]=array(	"class"	=>"$tableClass $name ".$prefix." $extraClass ".alternator("oddcol","evencol").$orderClass, "cell"	=> $heading );
 		}
 
 		$data=$this->rows;
@@ -302,6 +304,7 @@ class Grid Extends CI_Model {
 					// if (empty($cell)) $cell="&nbsp;";
 					$pre=get_prefix($name);
 					if ($pre==$name) $pre="";
+          if ($pre=='id' and $pre!=$name) $pre='id_';
 					$tableCells[]=array(	"class"	=> "$tableClass id$id $name $pre $extraClass $currClass nr$cn ".alternator("oddcol","evencol"),
 																"cell"	=> $cell );
 					$cn++;
