@@ -924,11 +924,15 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		*	If TEXT maxlength, replace these in ar_where
 		*/
 		if ($this->maxTextLen>0) {
-			$foundKeysArray=array_ereg_search("txt_", $this->ar_select);
-			foreach($foundKeysArray as $key) {
-				$field=$this->ar_select[$key];
-				$this->ar_select[$key]="SUBSTRING(".$field.",1,".$this->maxTextLen.") AS `".remove_prefix($field,".")."`";
-			}
+      $foundKeysArray=array_ereg_search("txt_", $this->ar_select);
+      foreach($foundKeysArray as $key) {
+        $field=$this->ar_select[$key];
+        if (!has_string('CONCAT',$field))
+          $this->ar_select[$key]="SUBSTRING(".$field.",1,".$this->maxTextLen.") AS `".remove_prefix($field,".")."`";
+        else {
+          $this->ar_select[$key]=preg_replace("/(CONCAT(.*)\\))/uiUsm", "SUBSTRING($1,1,".$this->maxTextLen.")", $this->ar_select[$key]);
+        }
+      }
 		}
 		
 		//
@@ -1593,7 +1597,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
    * @author Jan den Besten
    */
 	private function concat($fields) {
-		$sql="CONCAT_WS(';',".implode(",",$fields)." )";
+		$sql="CONCAT_WS('|',".implode(",",$fields)." )";
 		return $sql;
 	}
 
