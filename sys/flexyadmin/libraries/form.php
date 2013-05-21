@@ -920,7 +920,7 @@ class Form {
 				if (isset($button))	$attr["class"].=" button";
 				if (isset($field["path"])) 	$extra.=" path=\"".$field["path"]."\"";
 				if (isset($field["multiple"]) or is_array($value)) {
-					$extra.=" multiple=\"multipe\"";
+					$extra.=" multiple=\"multipe\" ";
 					$name.="[]";
 					if (is_array($value)) 
 						$value=array_keys($value);
@@ -928,7 +928,6 @@ class Form {
 						$value=explode("|",$value);
 				}
 				$extra.="class=\"".$attr["class"]."\" id=\"".$name."\"";
-				
 				
 				//
 				// Show images if it is an image dropdown
