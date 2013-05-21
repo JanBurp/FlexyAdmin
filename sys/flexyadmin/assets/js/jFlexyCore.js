@@ -317,8 +317,16 @@ function ajaxError(error) {
 		title:"Error",
 		modal:true,
 		width:500,
-		buttons: ({ ok	: function(){	$(dialog).dialog("destroy"); $(obj).attr({"href":href});}	 	}),
-		close: function(){$(dialog).dialog("destroy"); $(obj).attr({"href":href});}
+		buttons: ({
+      ok	: function(){
+        $(dialog).dialog("destroy");
+        // $(obj).attr({"href":href});
+        }
+      }),
+		close: function(){
+      $(dialog).dialog("destroy");
+      // $(obj).attr({"href":href});
+    }
 	});
 }
 

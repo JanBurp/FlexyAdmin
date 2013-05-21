@@ -1129,7 +1129,7 @@ input.button {
 }
 .flexyFormField>ul {
 	display:block;
-	width:29px;
+/*  width:29px;*/
 	min-height:29px;
 	margin: 0px 23px 4px 149px;
 	padding:2px 2px 4px 2px;
@@ -1155,7 +1155,7 @@ input.button {
 }
 .flexyFormField ul.multiple,
 .flexyFormField ul.choices {
-	width:450px;
+	width:450px!important;
 }
 
 .flexyFormField.image_dragndrop.wide ul.choices,
