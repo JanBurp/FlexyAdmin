@@ -59,10 +59,11 @@ class Message extends CI_Model {
    * @return object $this;
    * @author Jan den Besten
    */
-  public function add($message,$type='messages') {
+  public function add($message,$type='messages',$ui=true) {
     $messages=$this->get();
     if (!is_array($messages)) $messages=array();
-    array_unshift($messages, $this->ui->replace_ui_names($message) );
+    if ($ui) $message=$this->ui->replace_ui_names($message);
+    array_unshift($messages, $message );
 		$this->session->set_userdata($type,$messages);
     return $this;
   }

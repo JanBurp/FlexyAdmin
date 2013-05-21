@@ -18,6 +18,7 @@
  * - Aan div, p, en img tags worden extra classes meegegeven: een nr en een 'odd' of 'even' class
  * - Links die beginnen met een taal, bijvoorbeeld _nl/contact_ kunnen vervangen worden door links met de juiste taal bv: _en/contact_
  * - Soft Hyphens karakters (standaard [-]) worden vervangen door een echte HTML entity daarvoor: &#173;
+ * - width en height tags verwijderen (zodat styling makkelijker kan)
  * 
  * Deze class is standaard geladen in de frontend en wordt door de controller gebruikt bij het renderen van de tekst van een pagina.
  * Zo roep je deze class aan:
@@ -33,11 +34,12 @@ class Content {
   private $auto_target_links=TRUE;
 	private $addClasses=TRUE;
 	private $addPopups=FALSE;
+  private $removeSizes=FALSE;
 	private $prePopup='popup_';
 	private $replaceLanguageLinks=FALSE;
   private $replaceSoftHyphens=FALSE;
   private $replaceHyphen='[-]';
-  private $config_array=array('safe_emails'=>'safeEmail','auto_target_links'=>'auto_target_links','add_classes'=>'addClasses','add_popups'=>'addPopups','replace_language_links'=>'replaceLanguageLinks','replace_soft_hyphens'=>'replaceSoftHyphens');
+  private $config_array=array('safe_emails'=>'safeEmail','auto_target_links'=>'auto_target_links','add_classes'=>'addClasses','add_popups'=>'addPopups','replace_language_links'=>'replaceLanguageLinks','replace_soft_hyphens'=>'replaceSoftHyphens','remove_sizes'=>'removeSizes');
 	
 	private $div_count;
 	private $img_count;
@@ -281,6 +283,11 @@ class Content {
     
     if ($this->replaceSoftHyphens) {
       $txt=str_replace($this->replaceHyphen,'&#173;',$txt);
+    }
+    
+    if ($this->removeSizes) {
+      $txt = preg_replace("/(width=\"\\d*\")/uiUsm", "", $txt);
+      $txt = preg_replace("/(height=\"\\d*\")/uiUsm", "", $txt);
     }
     
 		return $txt;
