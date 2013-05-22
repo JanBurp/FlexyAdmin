@@ -60,11 +60,12 @@ else
  /*
   * Set according to local // added/changed for FlexyAdmin
   */
- if (IS_LOCALHOST) {
- 	define('ENVIRONMENT', 'development');
- }
+ if (IS_LOCALHOST)
+   define('ENVIRONMENT', 'development');
  else
- 	define('ENVIRONMENT', 'production');
+   define('ENVIRONMENT', 'production');
+ 
+  // define('ENVIRONMENT','testing');   // This sets logging on
   
   
   
@@ -82,11 +83,12 @@ if (defined('ENVIRONMENT'))
 {
 	switch (ENVIRONMENT)
 	{
-		case 'development':
+		
+    case 'development':
+    case 'testing':
 			error_reporting(E_ALL);
 		break;
-	
-		case 'testing':
+		
 		case 'production':
 			error_reporting(0);
 		break;

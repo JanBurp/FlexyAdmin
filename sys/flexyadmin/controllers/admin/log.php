@@ -16,7 +16,7 @@ class Log extends AdminController {
 	function show() {
 		if (IS_LOCALHOST) {
 			// list logfiles
-			$files=read_map('sys/codeigniter/logs','php');
+			$files=read_map($this->config->item('log_path'),'php');
 			
 			$this->load->library('form_validation');
 			$this->lang->load("form");
@@ -33,9 +33,9 @@ class Log extends AdminController {
 				$key=sprintf('%02d:00',$key).' - '.sprintf('%02d:59',$key);
 				$fromOpts[$key]=$key;
 			}
-			$data=array( 	"logfiles"	=> array("label"=>'Logfiles:','type'=>'dropdown','options'=>$options,'value'=>$file),
-										"from"			=> array('label'=>'time','type'=>'dropdown','options'=>$fromOpts),
-										"search"		=> array('type'=>'dropdown','options'=>array(''=>'','FlexyAdmin'=>'FlexyAdmin','[Cfg]'=>'[Cfg]','[Plugin]'=>'[Plugin]'),'value'=>$search));
+			$data=array( 	"logfiles"	=> array("label"=>'Logfiles','type'=>'dropdown','options'=>$options,'value'=>$file),
+										"from"			=> array('label'=>'Timewindow','type'=>'dropdown','options'=>$fromOpts),
+										"search"		=> array('label'=>'Filter'));//,'type'=>'dropdown','options'=>array(''=>'','DEBUG'=>'DEBUG','INFO'=>'INFO','ERROR'=>'ERROR','FlexyAdmin'=>'FlexyAdmin','[Cfg]'=>'[Cfg]','[Plugin]'=>'[Plugin]'),'value'=>$search));
 			$form=new form('admin/log');
 			$form->set_data($data,'Logfiles');
 			if ($form->validation()) {
@@ -46,7 +46,7 @@ class Log extends AdminController {
 				$search=$this->input->post('search');
 				$data['search']['value']=$search;
 			}
-			$currentLog=read_file('sys/codeigniter/logs/'.$file);
+			$currentLog=read_file($this->config->item('log_path').$file);
 			$logArr=explode(chr(10),$currentLog);
 			foreach ($logArr as $key => $value) {
 				if (!empty($search)) 	{if (strpos($value, $search)===FALSE) unset($logArr[$key]);}
