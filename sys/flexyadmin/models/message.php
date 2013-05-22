@@ -9,12 +9,15 @@
  */
 
 class Message extends CI_Model {
+  
+  var $ui=FALSE;
 	
   /**
    * @ignore
    */
 	public function __construct() {
 		parent::__construct();
+    if ($this->uri->get(1)=='admin') $this->ui=TRUE;
 	}
 
   /**
@@ -59,10 +62,10 @@ class Message extends CI_Model {
    * @return object $this;
    * @author Jan den Besten
    */
-  public function add($message,$type='messages',$ui=true) {
+  public function add($message,$type='messages') {
     $messages=$this->get();
     if (!is_array($messages)) $messages=array();
-    if ($ui) $message=$this->ui->replace_ui_names($message);
+    if ($this->ui) $message=$this->ui->replace_ui_names($message);
     array_unshift($messages, $message );
 		$this->session->set_userdata($type,$messages);
     return $this;
