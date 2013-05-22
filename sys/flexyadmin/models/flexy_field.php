@@ -822,7 +822,7 @@ class Flexy_field extends CI_Model {
 			if ($file["type"]!="dir") {
 				$ext=strtolower(get_file_extension($file["name"]));
 				if (in_array($ext,$types)) {
-					$options[$file["name"]]=$file["name"]." (".trim(strftime("%e %B %Y",strtotime($file["date"]))).")";
+					$options[$file["name"]]=str_replace('_','_&#173;',$file["name"])." (".trim(strftime("%e %B %Y",strtotime($file["date"]))).")";
 				}
 			}
 		}
