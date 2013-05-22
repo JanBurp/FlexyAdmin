@@ -65,10 +65,9 @@ $config['language']	= "nl";
 | Parse content
 |--------------------------------------------------------------------------
 |
-| Set how the content must be parsed, possible settings: 'safe_emails', 'auto_target_links', 'add_classes', 'add_popups', 'replace_language_links', 'replace_soft_hyphens'.
-| Defaults are all FALSE except for 'safe_emails' and 'add_classes'.
+| Set how the content must be parsed, possible settings: 'safe_emails', 'auto_target_links', 'add_classes', 'remove_sizes', 'replace_language_links', 'replace_soft_hyphens'.
 */
-$config['parse_content']  = array( 'safe_emails'=>TRUE, 'auto_target_links'=> TRUE );
+$config['parse_content']  = array( 'safe_emails'=>FALSE, 'auto_target_links'=> TRUE, 'add_classes'=>FALSE, 'remove_sizes'=>TRUE );
 
 
 /*
