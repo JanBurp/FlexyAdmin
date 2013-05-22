@@ -1469,7 +1469,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	}
 	
   /**
-   * Geeft waarde van een veld uit een tabel aan de hand van een waarde in een ander veld
+   * Geeft waarde van een veld uit een tabel aan de hand van een waarde in een ander veld, als veld niet bestaat: FALSE
    *
    * @param string $table
    * @param string $field 
