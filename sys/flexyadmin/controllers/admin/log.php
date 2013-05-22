@@ -14,7 +14,7 @@ class Log extends AdminController {
 	}
 
 	function show() {
-		if (IS_LOCALHOST) {
+		if ($this->user->is_super_admin()) {
 			// list logfiles
 			$files=read_map($this->config->item('log_path'),'php');
 			
