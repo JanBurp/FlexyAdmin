@@ -10,20 +10,24 @@
  **/
 
 /**
- * Content
+ * Hiermee kun je HTML bewerken zodat ze geschikter zijn voor je site.
+ * Hieronder staan alle opties met hun default waarden:
  * 
- * Deze class kan het volgende doen met HTML:
- * 
- * - Standaard emaillinks vervangen door spambot veilige emaillinks
- * - Aan div, p, en img tags worden extra classes meegegeven: een nr en een 'odd' of 'even' class
- * - Links die beginnen met een taal, bijvoorbeeld _nl/contact_ kunnen vervangen worden door links met de juiste taal bv: _en/contact_
- * - Soft Hyphens karakters (standaard [-]) worden vervangen door een echte HTML entity daarvoor: &#173;
- * - width en height tags verwijderen (zodat styling makkelijker kan)
+ * - safe_emails            - [TRUE] emaillinks worden vervangen door spambot veilige emaillinks
+ * - auto_target_links      - [TRUE] alle link-tags naar externe adressen krijgen de attributen `target="_blank"` en `rel="external"` mee.
+ * - add_classes            - [TRUE] alle div, p, en img tags krijgen extra classes: een nr en 'odd' of 'even'
+ * - remove_sizes           - [FALSE] width en height attributen van img tags worden verwijderd (zodat met css styling kan worden ingegrepen)
+ * - replace_language_links - [FALSE] Links die beginnen met een taal, bijvoorbeeld _nl/contact_ worden vervangen worden door links met de juiste taal bv: _en/contact_
+ * - replace_soft_hyphens   - [FALSE] Soft Hyphens karakters (standaard [-]) worden vervangen door de HTML entity: &#173;
  * 
  * Deze class is standaard geladen in de frontend en wordt door de controller gebruikt bij het renderen van de tekst van een pagina.
  * Zo roep je deze class aan:
  * 
  *      $text = $this->content->render($text);
+ * 
+ * En zo kun je de instellingen aanpassen:
+ * 
+ *      $this->content->initialize( array('remove_sizes'=>TRUE, 'replace_soft_hyphens' => TRUE ) );
  *
  * @package default
  * @author Jan den Besten
@@ -50,12 +54,25 @@ class Content {
    * @ignore
    */
 	public function __construct($config=array()) {
+    $this->initialize($config);
+  }
+  
+
+  /**
+   * Initialiseer alle opties, zie boven voor alle opties
+   *
+   * @param array $config 
+   * @return this
+   * @author Jan den Besten
+   */
+  public function initialize($config=array()) {
     foreach ($config as $key => $value) {
       if (isset($this->config_array[$key])) {
         $thisVar=$this->config_array[$key];
         if (isset($this->$thisVar)) $this->$thisVar=$value;
       }
     }
+    return $this;
   }
 
   /**
@@ -64,6 +81,8 @@ class Content {
    * @param bool $safe[TRUE] TRUE is aan, FALSE is UIT
    * @return void
    * @author Jan den Besten
+   * @depricated
+   * @ignore
    */
 	public function option_safe_email($safe=TRUE) {
 		$this->safeEmail=$safe;
@@ -75,6 +94,8 @@ class Content {
    * @param bool $classes[TRUE] TRUE is aan, FALSE is UIT
    * @return void
    * @author Jan den Besten
+   * @depricated
+   * @ignore
    */
 	public function add_classes($classes=TRUE) {
 		$this->addClasses=$classes;
@@ -116,6 +137,8 @@ class Content {
    * @param bool $hyphens[TRUE] TRUE is aan, FALSE is UIT
    * @return void
    * @author Jan den Besten
+   * @depricated
+   * @ignore
    */
   function replace_soft_hyphens($hyphens=TRUE) {
     $this->replaceSoftHyphens=$hyphens;
@@ -140,7 +163,7 @@ class Content {
     $res.='href="'.$url.'"';
     if (isset($match[3])) $res.=preg_replace("/target=\"(.*)?\"/uiUsm", "", $match[3]);
     if (!empty($target)) $res.=' target="'.$target.'" ';
-    $res.='>';
+    $res.=' rel="external">';
     return $res;
   }
 
@@ -286,8 +309,8 @@ class Content {
     }
     
     if ($this->removeSizes) {
-      $txt = preg_replace("/(width=\"\\d*\")/uiUsm", "", $txt);
-      $txt = preg_replace("/(height=\"\\d*\")/uiUsm", "", $txt);
+      $txt = preg_replace("/<img(.*)(\swidth=\"\d*\")/uiUsm", "<img$1", $txt);
+      $txt = preg_replace("/<img(.*)(\sheight=\"\d*\")/uiUsm", "<img$1", $txt);
     }
     
 		return $txt;
