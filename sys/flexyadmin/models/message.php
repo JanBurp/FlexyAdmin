@@ -10,14 +10,14 @@
 
 class Message extends CI_Model {
   
-  var $ui=FALSE;
+  var $uiNames=FALSE;
 	
   /**
    * @ignore
    */
 	public function __construct() {
 		parent::__construct();
-    if ($this->uri->get(1)=='admin') $this->ui=TRUE;
+    if ($this->uri->get(1)=='admin') $this->uiNames=TRUE;
 	}
 
   /**
@@ -65,7 +65,7 @@ class Message extends CI_Model {
   public function add($message,$type='messages') {
     $messages=$this->get();
     if (!is_array($messages)) $messages=array();
-    if ($this->ui) $message=$this->ui->replace_ui_names($message);
+    if ($this->uiNames) $message=$this->ui->replace_ui_names($message);
     array_unshift($messages, $message );
 		$this->session->set_userdata($type,$messages);
     return $this;
