@@ -1141,7 +1141,7 @@ input.button {
 	background-color:#FFF;
 }
 .flexyFormField .ui-multiselect {
-	margin-right:1px;
+  margin-right:1px;
 }
 
 .flexyFormField ul.multiple,
@@ -1155,7 +1155,7 @@ input.button {
 }
 .flexyFormField ul.multiple,
 .flexyFormField ul.choices {
-	width:450px!important;
+	width:450px;
 }
 
 .flexyFormField.image_dragndrop.wide ul.choices,

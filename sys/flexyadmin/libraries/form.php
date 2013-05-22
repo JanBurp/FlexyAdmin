@@ -815,7 +815,7 @@ class Form {
 		if ($pre==$name) $pre="";
 		$class="$pre $name ".$field['type']." ".$field['class'];
 		if (isset($field['multiple'])) $class.=" ".$field['multiple'];
-    if (isset($field['validation']) and has_string('required',$field['validation'])) $class=" required";
+    if (isset($field['validation']) and has_string('required',$field['validation'])) $class.=" required";
 		
 		if (!empty($field["repopulate"])) $field["value"]=$field["repopulate"];
 		$attr=array("name"=>$name,"id"=>$name,"value"=>$field["value"], "class"=>$class);
@@ -824,7 +824,6 @@ class Form {
 		if (isset($field['id'])) $attr['id']=$field['id'];
     if (isset($field['placeholder'])) $attr['placeholder']=$field['placeholder'];
     if (isset($field['readonly'])) $attr['readonly']=$field['readonly'];
-    
 
 		// Label or Captcha
 		if ($field["type"]!="hidden") {
@@ -1016,6 +1015,7 @@ class Form {
 				if (isset($button)) {
 					$out.=div("add_button").anchor($button,icon("add"))._div();
 				}
+        
 				break;
 				
 			// #BUSY Form->Subfields
