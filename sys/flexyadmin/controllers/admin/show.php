@@ -417,7 +417,11 @@ class Show extends AdminController {
 				 * Validate form, no succes: show form, maybe with validation errors
 				 */
 				else {
-					$this->_add_content(validation_errors());
+          $errors=validation_errors();
+          if ($errors) {
+            $this->message->add(lang('validation_warning').$errors);
+          }
+					
 
 					$keys=array_keys($ffData);
 					$keys=array_combine($keys,$keys);
