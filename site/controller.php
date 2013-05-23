@@ -45,7 +45,6 @@ class Main extends FrontEndController {
       die($this->_call_library($ajax_module,$ajax_method,$ajax_args));
     }
     
-    
 		/***********************************************
 		 * Set Language for localisation (set possible languages at the start of the controller, near line 30)
 		 * See config.php for language settings
