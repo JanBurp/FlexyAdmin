@@ -905,7 +905,7 @@ body.action_db div.flexyFormHtml {float:right;margin-top:4px;margin-left:15px;wi
 div.warning div.flexyFormHtml {color:#F00;}
 body.action_db input.checkbox {float:left;top:3px;}
 
-.required label:after { content:" *"; color:#F00;}
+.required>label:after { content:" *"; color:#F00;}
 
 input, textarea, select {
 	width:450px;
@@ -1436,7 +1436,7 @@ div#help_messages {display:none;}
   box-shadow: 4px 4px 4px #999;
   background-color:#FFF;
 }
-.messages * {font-size:15px;font-weight:bold;}
+.messages * {font-size:15px;}
 #messages {
 	top:4px;
 	left:225px;
