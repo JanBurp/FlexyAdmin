@@ -1,5 +1,7 @@
 <?php
 
+$lang['validation_warning']= 'LET OP: Invoeren is niet gelukt omdat één of meer velden niet goed zijn ingevuld.';
+
 $lang['required']         = "'%s' is verplicht.";
 $lang['isset']            = "'%s' moet een waarde hebben.";
 $lang['valid_email']    	= "'%s' moet een geldig emailadres bevatten.";

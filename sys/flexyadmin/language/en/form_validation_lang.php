@@ -1,5 +1,7 @@
 <?php
 
+$lang['validation_warning']= 'CAUTION: Submitting did not succeed: one or more fields are not filled properly.';
+
 $lang['required']			= "The %s field is required.";
 $lang['isset']				= "The %s field must have a value.";
 $lang['valid_email']		= "The %s field must contain a valid email address.";

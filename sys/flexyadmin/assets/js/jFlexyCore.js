@@ -27,6 +27,9 @@ $(document).ready(function() {
 
   // Message & error boxes
   $('#messages').delay(5000).fadeOut(2000);
+  $('#header').mouseenter(function(){
+    $('#messages').show().delay(5000).fadeOut(2000);
+  });
   $('#errors').each(function(){
     var html=$('#errors').html();
     info_dialog(html);
