@@ -1,6 +1,6 @@
 <?php
 
-$lang['validation_warning']= 'LET OP: Invoeren is niet gelukt omdat één of meer velden niet goed zijn ingevuld.';
+$lang['validation_warning']= 'LET OP: Invoeren is niet gelukt; één of meer velden zijn niet goed ingevuld.';
 
 $lang['required']         = "'%s' is verplicht.";
 $lang['isset']            = "'%s' moet een waarde hebben.";

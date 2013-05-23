@@ -865,7 +865,7 @@ $config['FIELDS_prefix'] = array (
 	"self"			=> array(
 												"grid"				=> "function_self",
 												"form"				=> "function_self",
-												"validation"	=> "trim|integer|required",
+												"validation"	=> "trim|integer",
 											),
 	"rel"				=> array (
 											"grid"				=> "function_join",
