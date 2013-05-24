@@ -53,7 +53,7 @@ function backtrace_($offset=0,$limit=10,$echo=true) {
 			$file=implode('/',$explode);
 			if (isset($val['line'])) {
         if (!IS_AJAX)
-          $val['file']='#show#<a style="color:#000;text-decoration:underline;" href="txmt://open?url=file:///'.$val['file'].'&amp;line='.$val['line'].'">'.$file.' at '.$val['line'].'</a>';
+          $val['file']='#show#<a style="color:#000;font-family:courier,serif;font-size:10px;line-height:14px;text-decoration:underline;" href="txmt://open?url=file:///'.$val['file'].'&amp;line='.$val['line'].'">'.$file.' at '.$val['line'].'</a>';
         else
           $val['file']='#show#'.$val['file'].'&amp;line='.$val['line'].'">'.$file.' at '.$val['line'];
 				unset($val['line']);
@@ -125,29 +125,36 @@ function strace_($a=NULL) {
  */
 function trace_($a=NULL,$echo=true,$backtraceOffset=1) {
 	static $c=0;
-  $out='';
-	$show="Trace";
-	if (!isset($a)) {
-		$a=backtrace_($backtraceOffset,10,false);
-		$show="Variable is empty, do a Backtrace";
-		// $show="ERROR: Variable doesn't exist or is NULL.";
-		$type="";
-	}
-	else {
-		$type="[".gettype($a)."]";
-	}
-  if (!IS_AJAX) $out.="<div class=\"FlexyAdminTrace\" style=\"position:relative;font-family:courier,serif;font-size:10px;z-index:99999;margin:2px;padding:5px;background-color:#efe;color:#000;border:solid 1px #666;opacity:.8;\"><span style=\"font-weight:bold;color:#696;\">$show #$c $type:</span>\n";
-	if (is_bool($a)) {
-		if ($a) $out.="'True'";
-		else		$out.="'False'";
-	}
-	elseif (is_array($a) or is_object($a))
-		$out.=print_ar(array_($a,true),true);
-	else
-		$out.=print_r(tr_string($a),true);
+  $styling='';
+  if (!IS_AJAX) $styling=" style=\"position:relative;font-family:courier,serif;font-size:10px;line-height:14px;z-index:99999;margin:2px;padding:5px;background-color:#efe;color:#000;border:solid 1px #666;opacity:.8;\"";
+  $out="<pre class=\"FlexyAdminTrace\" $styling>";
+  if ($c>=20) {
+    if ($c==20) $out.="TOO MANY TRACES, MAYBE A LOOP BUG...";
+  }
+  else {
+  	$show="";
+  	if (!isset($a)) {
+  		$a=backtrace_($backtraceOffset,10,false);
+  		$show="NULL -> BACKTRACE ";
+  		$type="";
+  	}
+  	else {
+  		$type="[".gettype($a)."]";
+  	}
+    $out.="$show#$c$type:";
+  	if (is_bool($a)) {
+  		if ($a) $out.="'True'";
+  		else		$out.="'False'";
+  	}
+  	elseif (is_array($a) or is_object($a))
+  		$out.=print_ar(array_($a,true),true,strlen($show.$type)+3);
+  	else
+  		$out.=print_r(tr_string($a),true);
+  }
+  $out.='</pre>';
+  if ($c>20) $out='';
+	if ($echo) echo $out;
 	$c++;
-  if (!IS_AJAX) $out.="</div>";
-	if ($echo) echo $out."<br/>";
 	return $out;
 }
 
@@ -161,16 +168,16 @@ function trace_($a=NULL,$echo=true,$backtraceOffset=1) {
 function tr_string($value) {
 	$s="";
 	$value=(string) $value;
-	$html=in_string("<>",$value);
-	if ((strtoupper(substr($value,0,6))!="#SHOW#") and ($html or (strlen($value)>200)) ) {
-		$s.=strip_tags(substr($value,0,80));
-    if (!IS_AJAX)
-      $s.=" <span title=\"".htmlentities($value)."\" style=\"cursor:help;color:#696;\">...</span>";
-    else
-      $s.=htmlentities($value)."...";
-	}
-	else
-		$s=str_replace("#show#","",$value);
+	$html=($value!=strip_tags($value));
+  if (has_string('#show#',$value)) {
+    $value=str_replace('#show#','',$value);
+    $s=$value;
+  }
+  elseif ($html) {
+    $s='[HTML]<div style="display:none;">'."\n<!-- START HTML -->\n".$value."\n<!-- END HTML -->\n</div>";
+  } else {
+    $s="'".$value."'";
+  }
 	return $s;
 }
 
@@ -186,8 +193,10 @@ function array_($a) {
 	foreach($a as $key=>$value) {
 		if (is_array($value))
 			$out[$key]=array_($value);
-		elseif (is_object($value))
-			$out[$key]="{object}";
+		elseif (is_object($value)) {
+        $size=count($value);
+  			$out[$key]="{OBJECT[$size]}";
+      }
 		else
 			$out[$key]=tr_string($value);
 	}
@@ -203,30 +212,37 @@ function array_($a) {
  * @return string
  * @author Jan den Besten
  */
-function print_ar($array,$return=false,$tabs=0,$eol='<br/>') {
-  if (IS_AJAX) $eol="\n";
-	$out="";
-	$out.=" (".$eol;
-	foreach($array as $key=>$value) {
-		$out.=tabs($tabs);
-		$thisOut="[".$key."] => ";
-		$len=strlen($thisOut)+1;
-		if (is_array($value))
-			$thisOut.=print_ar($value,$return,$tabs+$len);
-		else {
-			if (is_bool($value)) {
-				if ($value)
-					$thisOut.="'True'";
-				else
-					$thisOut.="'False'";
-			}
-			else
-				$thisOut.="'$value'".$eol;
-		}
-		$out.=$thisOut;
-		if ($tabs==0) $out.=$eol;
-	}
-	$out.=tabs($tabs-1).')'.$eol;
+function print_ar($array,$return=false,$tabs=0,$brackets="()") {
+  $eol="\n";
+  $bl=substr($brackets,0,1);
+  $br=substr($brackets,1,1);
+  if (empty($array)) {
+    $out=$bl.'EMPTY ARRAY'.$br.$eol;
+  }
+  else {
+  	$out=$bl.$eol;
+  	foreach($array as $key=>$value) {
+  		$out.=tabs($tabs);
+  		$thisOut="[".$key."] => ";
+  		$len=strlen($thisOut)+1;
+  		if (is_array($value)) {
+  			$thisOut.=print_ar($value,$return,$tabs+$len);
+  		}
+  		else {
+  			if (is_bool($value)) {
+  				if ($value)
+  					$thisOut.="'True'";
+  				else
+  					$thisOut.="'False'";
+  			}
+  			else {
+  				$thisOut.="$value".$eol;
+  			}
+  		}
+  		$out.=$thisOut;
+  	}
+    $out.=tabs($tabs-1).$br.$eol;
+  }
 	if (!$return) echo $out;
 	return $out;
 }
@@ -239,8 +255,8 @@ function print_ar($array,$return=false,$tabs=0,$eol='<br/>') {
  * @return string
  * @author Jan den Besten
  */
-function tabs($t,$tab="&nbsp;") {
-  if (IS_AJAX) $tab="\t";
+function tabs($t,$tab=" ") {
+  // if (IS_AJAX) $tab="\t";
 	return repeater($tab,$t);
 }
 
