@@ -803,14 +803,14 @@ class Flexy_field extends CI_Model {
       $are_flash=file_types_are_flash($filetypes);
       $thumbs = $are_images or $are_flash;
 			$data=explode("|",$this->data);
-      if ($thumbs) $out.='<ul>';
+      // if ($thumbs) $out.='<ul>';
 			foreach($data as $file) {
         if ($thumbs)
-					$out.='<li>'.show_thumb($path.$file).'</li>';
+					$out.=show_thumb($path.$file);
 				else
 					$out=add_string($out,$file,'&nbsp;| ');
 			}
-      if ($thumbs) $out.='</ul>';
+      // if ($thumbs) $out.='</ul>';
 		}
 		return $out;
 	}

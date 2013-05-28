@@ -589,7 +589,7 @@ tr.caption td				{ border:none; }
 .grid td.str_title	{ max-width:none;}
 .grid td.media,
 .grid td.rgb				{ text-align: center;	width:52px;	max-width:52px; }
-.grid td.medias			{ min-width:160px;max-width:500px;}
+.grid td.medias			{ min-width:120px; max-width:600px;}
 .grid td.tme				{ max-width:none; width:130px;}
 
 .grid img,
