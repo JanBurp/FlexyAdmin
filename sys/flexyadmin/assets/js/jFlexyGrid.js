@@ -372,7 +372,7 @@ function doGrid() {
 			$("table.grid tbody tr:first td").each(function() {
 				if ($(this).css("display")=="none") w=0; else	w=$(this).width()+"px";
 				nr=get_nr($(this));
-				$("table.grid tbody tr td.nr"+nr).css({ width:w });
+        // $("table.grid tbody tr td.nr"+nr).css({ width:w });
 			});
 		
 			// make sortable
