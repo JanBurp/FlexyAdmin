@@ -41,7 +41,7 @@
 
 	<link href="<?=$assets;?>css/text.css" rel="stylesheet" type="text/css" />
 	<link href="<?=$assets;?>css/layout.css" rel="stylesheet" type="text/css" />
-	<!--[if lte IE 6]><style type="text/css" media="screen">@import url(<?=$assets;?>css/ie6.css);</style><![endif]-->
+ 	<!--[if lte IE 6]><style type="text/css" media="screen">@import url(<?=$assets;?>css/ie6.css);</style><![endif]-->
 	<!--[if IE 7]><style type="text/css" media="screen">@import url(<?=$assets;?>css/ie7.css);</style><![endif]-->
 	<!--[if IE 8]><style type="text/css" media="screen">@import url(<?=$assets;?>css/ie8.css);</style><![endif]-->
 	<!--[if IE 9]><style type="text/css" media="screen">@import url(<?=$assets;?>css/ie9.css);</style><![endif]-->
@@ -66,7 +66,7 @@
 	</div>
 
 <!-- Hier alle JavaScript -->
-<script language="javascript" type="text/javascript" src="sys/jquery/jquery-1.9.1.min.js"></script>
+<script language="javascript" type="text/javascript" src="sys/jquery/jquery-1.10.1.min.js"></script>
 <script language="javascript" type="text/javascript" src="<?=$assets?>js/site.js"></script>
 <!-- Eind van JavaScript -->
 
