@@ -9,6 +9,39 @@
 
 
 /**
+ * Hiermee kun je een tekstbestand lezen waarvan alleen de regels worden teruggegeven die getest worden door de meegegeven functie
+ *
+ * @param string $filename De te laden bestandsnaam 
+ * @param mixed $function De functie die elke regel test. De functie krijgt een string mee (de regel) en geeft FALSE als de regel niet moet worden meegenomen, of TRUE als dat wel moet.
+ * @param string $max_length[65536] Eventueel mee te geven maximale lengte
+ * @return string Het gelezen en gefilterde bestand
+ * @author Jan den Besten
+ */
+function read_file_filter($file,$function,$max_length=65536) {
+  $out='';
+  $handle = @fopen($file, "r");
+  if ($handle) {
+    while (($line=fgets($handle))!==false and strlen($out)<$max_length) {
+      if(is_array($function))
+        $keepline=$function[0]->{$function[1]}($line);
+      else
+        $keepline=$function($line);
+      if ($keepline) $out.=$line;
+    }
+    if (!feof($handle)) {
+      $out.="\n".'function read_file_filter() - ERROR: ';
+      if (strlen($out)>=$max_length)
+        $out.='MAX_LENGHT['.$max_length.'] EXCEEDED';
+      else
+        $out.='NOT EOF';
+    }
+    fclose($handle);
+  }
+  return $out;
+}
+
+
+/**
  * Kopieer een bestand
  *
  * @param string $source bronbestand
