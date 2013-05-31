@@ -14,7 +14,9 @@
  * Zie [CodeIgniter Error handling](http://ellislab.com/codeigniter/user-guide/general/errors.html) bij `log_message()`.
  * 
  * - Standaard worden logfiles in de map site/cache geplaatst. Deze moet schrijfbaar zijn.
- * - Logging staat standaard uit en kun je aanzetten door in de index.php deze code te uncommenten: `define('ENVIRONMENT','testing');`
+ * - Logging staat standaard uit en kun je aanzetten door:
+ *    - in de index.php deze code te uncommenten: `define('ENVIRONMENT','testing');`
+ *    - of in site/config/config.php de `log_threshold` in te stellen op 4: `$config['log_threshold'] = 4;`
  *
  * @package default
  * @author Jan den Besten
