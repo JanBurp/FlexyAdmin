@@ -99,7 +99,7 @@ $config['auto_pagination']	= FALSE;
 | Usefull if you need to do something on every page and don't won't to change the controller.
 | You can also autoload a module with a simple test on a field in $page
 */
-$config['autoload_modules'] = array('submenu');
+// $config['autoload_modules'] = array('submenu');
 // $config['autoload_modules_if'] = array( 'blog'=>array('str_module'=>'blog') );
 
 
