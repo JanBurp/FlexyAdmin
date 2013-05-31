@@ -172,11 +172,12 @@ class MY_Lang extends CI_Lang {
 	 * Fetch a single line of text from the language array
 	 *
 	 * @access	public
-	 * @param	string	$line	the language line
+	 * @param	  string	$line	the language line
+	 * @param   bool $logging[TRUE]
 	 * @return	string
 	 */
-	function line($line = '') {
-    $value='';
+	function line($line='', $logging=TRUE) {
+    $value=FALSE;
     if (!empty($this->lang_table) and !empty($this->idiom)) {
       $CI=&get_instance();
       // Only frontend
@@ -184,12 +185,18 @@ class MY_Lang extends CI_Lang {
         if ($CI->db->field_exists('lang_'.$this->idiom,$this->lang_table)) $value=$CI->db->get_field_where($this->lang_table,'lang_'.$this->idiom,'key',$line);
       }
     }
-    if (empty($value)) $value=parent::line($line);
+    if ($value===FALSE) {
+  		$value = ($line == '' OR ! isset($this->language[$line])) ? FALSE : $this->language[$line];
+    }
+
+		// Because killer robots like unicorns!
+		if ($value===FALSE and $logging)
+		{
+			log_message('error', 'Could not find the language line "'.$line.'"');
+		}
+
 		return $value;
 	}
-
-
-
 
 }
 

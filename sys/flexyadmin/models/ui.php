@@ -122,7 +122,7 @@ class ui extends CI_Model {
    * @author Jan den Besten
    */
   public function get_standard($name) {
-    return lang($name);
+    return $this->lang->line($name,FALSE);
   }
 
   /**
