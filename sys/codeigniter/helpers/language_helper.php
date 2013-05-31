@@ -39,10 +39,10 @@
  */
 if ( ! function_exists('lang'))
 {
-	function lang($line, $id = '')
+	function lang($line, $id = '', $logging=TRUE)
 	{
 		$CI =& get_instance();
-		$line = $CI->lang->line($line);
+		$line = $CI->lang->line($line,$logging);
 
 		if ($id != '')
 		{
