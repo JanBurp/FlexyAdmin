@@ -122,7 +122,7 @@ class Filemanager extends AdminController {
 				 * Start file manager
 				 */
 	 			$fileManagerView=$this->session->userdata("fileview");
-				$fileManager=new file_manager($path,$types,$fileManagerView);
+				$fileManager=new file_manager(array('upload_path'=>$path,'allowed_types'=>$types,'view_type'=>$fileManagerView));
 				if ($right<RIGHTS_ADD) 		$fileManager->show_upload_button(FALSE);
 				if ($right<RIGHTS_DELETE)	$fileManager->show_delete_buttons(FALSE);
 				$fileManager->set_files($files);
@@ -276,7 +276,7 @@ class Filemanager extends AdminController {
 				$this->load->model("file_manager");
 				$mediaCfg=$this->cfg->get('CFG_media_info');
 				$types=$mediaCfg[$path]['str_types'];
-				$fileManager=new file_manager($path,$types);
+				$fileManager=new file_manager(array('upload_path'=>$path,'allowed_types'=>$types));
 				$result=$fileManager->upload_file();
         // strace_($result);
 				$error=$result["error"];

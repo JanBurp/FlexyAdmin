@@ -10,6 +10,13 @@
 class File_manager Extends CI_Model {
 
   /**
+   * config instellingen, worden ook doorgegeven aan File Upload Class
+   *
+   * @var array
+   */
+  private $settings=array();
+
+  /**
    * Titel in het grid
    *
    * @var string
@@ -89,10 +96,24 @@ class File_manager Extends CI_Model {
   /**
    * @ignore
    */
-	public function __construct($path="",$types="",$view="list") {
+	public function __construct($config=array()) {
 		parent::__construct();
-		$this->init($path,$types,$view);
+		$this->initialize($config);
 	}
+
+
+  /**
+   * Zelfde als init, maar dan alleen met een $config array
+   *
+   * @param array $config 
+   * @return object $this
+   * @author Jan den Besten
+   */
+  public function initialize($config) {
+    $this->init($config);
+    return $this;
+  }
+
 
 	/**
 	 * Initialiseer
@@ -104,11 +125,24 @@ class File_manager Extends CI_Model {
 	 * @author Jan den Besten
 	 */
   public function init($path="",$types="",$view="list") {
-		$this->set_caption($path);
+    if (!is_array($path)) {
+      $this->settings=array(
+        'upload_path'   => $path,
+        'allowed_types' => $types,
+        'view_type'     => $view
+        );
+    }
+    else {
+      $this->settings=$path;
+    }
+    
+		if (isset($this->settings['upload_path'])) {
+      $this->set_caption($this->settings['upload_path']);
+  		$this->set_path($this->settings['upload_path']);
+		}
+    if (isset($this->settings['allowed_types'])) $this->set_types($this->settings['allowed_types']);
+    if (isset($this->settings['view_type'])) $this->set_view($this->settings['view_type']);
 		$this->files=array();
-		$this->set_path($path);
-		$this->set_types($types);
-		$this->set_view($view);
 		$this->set_type();
 		$this->set_current();
 		$this->show_upload_button();
@@ -359,9 +393,11 @@ class File_manager Extends CI_Model {
    */
 	public function upload_file($file_field='file') {
 		$error='';
-		// UPLOAD 
-		$config['upload_path'] = $this->map;
-		$config['allowed_types'] = implode("|",$this->fileTypes);
+		// UPLOAD
+    $config=$this->settings;
+    $config['upload_path'] = $this->map;
+    $config['allowed_types'] = implode("|",$this->fileTypes);
+    
 		// CI bug work around, make sure all imagesfiletypes are at the end
 		$types=explode('|',$config['allowed_types']);
 		$imgtypes=array();

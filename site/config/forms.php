@@ -57,6 +57,33 @@ $config['contact'] = array(
   
 );
 
+/*
+|--------------------------------------------------------------------------
+| Instellingen voor het upload demo formulier
+|--------------------------------------------------------------------------
+*/
+
+$config['upload_demo'] = array(
+  
+  'title'             => 'Upload DEMO',
+  'fields'            => array(
+                                'file_upload'	=> array( 'type'=>'file')
+                              ),
+  'buttons'           => array( 'submit'=>array('submit'=>'submit', 'value'=>lang('submit')) ),
+  'validation_place'  => 'field',
+  'check_for_spam'    => true,
+  
+  'formaction'        => array('formaction_upload'),
+  'upload_path'       => 'downloads',
+  // 'allowed_types'     => 'gif|jpg|png|doc|docx|xls|xlsx|pdf|zip',
+  // 'encrypt_name'      => TRUE,
+  
+  'thanks'            => 'Uploaden is gelukt!',
+  
+  '__return'          => ''
+);
+
+
 
 /*
 |--------------------------------------------------------------------------

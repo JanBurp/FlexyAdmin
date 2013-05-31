@@ -67,7 +67,7 @@ $config['language']	= "nl";
 |
 | Set how the content must be parsed, possible settings: 'safe_emails', 'auto_target_links', 'add_classes', 'remove_sizes', 'replace_language_links', 'replace_soft_hyphens'.
 */
-$config['parse_content']  = array( 'safe_emails'=>FALSE, 'auto_target_links'=> TRUE, 'add_classes'=>FALSE, 'remove_sizes'=>TRUE );
+$config['parse_content']  = array( 'safe_emails'=>TRUE, 'auto_target_links'=> TRUE, 'add_classes'=>FALSE, 'remove_sizes'=>TRUE );
 
 
 /*
@@ -99,7 +99,7 @@ $config['auto_pagination']	= FALSE;
 | Usefull if you need to do something on every page and don't won't to change the controller.
 | You can also autoload a module with a simple test on a field in $page
 */
-// $config['autoload_modules'] = array('submenu');
+$config['autoload_modules'] = array('submenu');
 // $config['autoload_modules_if'] = array( 'blog'=>array('str_module'=>'blog') );
 
 
@@ -207,10 +207,10 @@ $config['add_to_statistics']=TRUE;
 |	http://example.com/
 |
 */
+
 if (!isset($config['base_url'])) {
-	// If no automatic base_url, comment this:
+	// If not set automatic: comment this die() statement and set $config['base_url'] manually
 	die("sorry no automatic 'base_url', edit '".SITEPATH."config.php'.");
-	// And uncomment this with right base_url if needed
 	// $config['base_url']	= "http://www.flexyadmin.com/";
 }
 
