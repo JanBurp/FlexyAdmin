@@ -1,10 +1,9 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- *
- * Verstuurd formdata naar het standaard emailadres
+ * Dit is een Formaction die de data verstuurd formdata naar het standaard emailadres
  * 
- * Met `$formaction_mail->initialize()` kun je meegegeven onderstaande velden (hieronder met hun defaults):
+ * Hieronder config velden (met hun defaults):
  * 
  * - to_field             => Het database veld waar het mailadres in staat ('tbl_site.email_email')
  * - subject              => Onderwerp van de mail: Je kunt er codes inzetten die vervangen worden: %URL% = Url van de site, %MAIL% = 1e email veld, of een willekeurig veld %veldnaam%
