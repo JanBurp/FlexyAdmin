@@ -1,8 +1,10 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- *
- * Upload een bestand
+ * Dit is een Formaction voor een eenvoudig upload formulier (forms.upload_demo)
+ * 
+ * Je kunt de standaard config velden gebruiken van de CodeIgniter File Uploading Class.
+ * Als 'allowed_types' leeg is wordt gekeken naar de instellingen van 'Media Info' van het pad. ('upload_path').
  * 
  * @package default
  * @author Jan den Besten
