@@ -310,6 +310,19 @@ class FrontEndController extends MY_Controller {
 	}
 
   /**
+   * Stelt de standaard view in van een pagina
+   * Staat standaard ingesteld in 'site/config/config.php' bij `$config['page_view']='page';`, maar hiermee kun je dat in een module aanpassen
+   *
+   * @param string $page_view['page]
+   * @return object $this
+   * @author Jan den Besten
+   */
+  public function set_page_view($page_view='page') {
+    $this->config->set_item('page_view',$page_view);
+    return $this;
+  }
+
+  /**
    * Laad een view, praktisch hetzelfde als standaard CodeIgniter $this->load->view()
    *
    * @param string $view[''] Als leeg dan wordt de main view geladen die ingesteld is in de config
