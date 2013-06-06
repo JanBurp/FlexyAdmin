@@ -98,6 +98,11 @@ $config['auto_pagination']	= FALSE;
 | You can autoload and call modules from the controller.
 | Usefull if you need to do something on every page and don't won't to change the controller.
 | You can also autoload a module with a simple test on a field in $page
+| You can also autoload a module, examples
+| - $config['autoload_modules_if'] = array( 'homepage'=>array('uri'=>'home') );         // Loads module 'homepage' when uri='home'
+| - $config['autoload_modules_if'] = array( 'submenu'=>array('str_module'=>'page') );   // Loads module 'submenu' when str_module='page'
+| - $config['autoload_modules_if'] = array( 'page'=>array('str_module'=>'') );          // Loads module 'page' when str_module=''
+| - $config['autoload_modules_if'] = array( 'page'=>array('str_module'=>''), 'submenu'=>array('str_module'=>'page') );          // Combination
 */
 // $config['autoload_modules'] = array('submenu');
 // $config['autoload_modules_if'] = array( 'blog'=>array('str_module'=>'blog') );
