@@ -579,7 +579,7 @@ tr.caption td				{ border:none; }
 .grid th.uri,
 .grid td.uri				{ display:none; }
 .grid th.order,
-.grid td.order			{ width:10px;	padding:3px 7px 3px 0px;border-left:none; }
+.grid td.order			{ padding:3px 7px 3px 0px;border-left:none; }
 
 .grid td.dat,
 .grid td.date,
