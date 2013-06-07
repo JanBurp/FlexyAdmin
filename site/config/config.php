@@ -215,7 +215,7 @@ $config['add_to_statistics']=TRUE;
 
 if (!isset($config['base_url'])) {
 	// If not set automatic: comment this die() statement and set $config['base_url'] manually
-	die("sorry no automatic 'base_url', edit '".SITEPATH."config.php'.");
+	die("<h3 style=\"color:#F00;\">FlexyAdmin could not set the 'base_url' automatic.</h3><p>See at line #".__LINE__." in '".__FILE__."'.</p>");
 	// $config['base_url']	= "http://www.flexyadmin.com/";
 }
 
