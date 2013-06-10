@@ -24,7 +24,8 @@
   var settings = {
     remove:['.load-more'],
     style:{'.timeline .stream' : {'overflow':'hidden'} },
-    style_times:3,
+    ready:null,
+    style_times:4,
     scrolltime:5000,
     slidetime:2000,
     checktime:250
@@ -45,6 +46,7 @@
         opts.timer=setInterval(function(){
           opts.iframe=$(self).find('iframe');
           if (opts.iframe.length>0) {
+            if (typeof(opts.ready)=='function') opts.ready();
             content=$(opts.iframe);
             content=$(content).contents();
             methods.style.apply(this,arguments);
