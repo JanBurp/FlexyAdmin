@@ -25,8 +25,7 @@ class Twitter extends Module {
   }
 
 	public function index($page) {
-    $this->CI->site['module__twitter'] = $this->CI->show('twitter',array('user'=>$this->config('user')),true);
-    return $page;
+    return $this->CI->show('twitter',array(),true);
 	}
 
 
