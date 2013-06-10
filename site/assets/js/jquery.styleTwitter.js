@@ -24,6 +24,7 @@
   var settings = {
     remove:['.load-more'],
     style:{'.timeline .stream' : {'overflow':'hidden'} },
+    style_times:3,
     scrolltime:5000,
     slidetime:2000,
     checktime:250
@@ -62,9 +63,12 @@
         }
         // show & scroll
         $(self).show();
-        clearInterval(opts.timer);
-        // start scrolling
-        methods.scroll.apply(this,arguments);
+        opts.style_times--;
+        if (opts.style_times<=0) {
+          clearInterval(opts.timer);
+          // start scrolling
+          methods.scroll.apply(this,arguments);
+        }
       },
       scroll : function() {
         var h=$(self).height();
