@@ -8,7 +8,6 @@
  */
 
 
-
 /**
  * Give an array from a datestring
  *

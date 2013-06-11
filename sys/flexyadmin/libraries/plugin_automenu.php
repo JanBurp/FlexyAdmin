@@ -224,328 +224,338 @@ class Plugin_automenu extends Plugin {
   		// Loop through all options in Auto Menu
 		
   		foreach ($this->automationData as $autoKey => $autoValue) {
-
-  			switch($autoValue['str_type']) {
+        
+        if (!isset($autoValue['b_active']) or isset($autoValue['b_active']) and $autoValue['b_active']) {
+          
+    			switch($autoValue['str_type']) {
 				
 
-  				case 'menu item':
-  					$name=$autoValue['str_description'];
-  					$uri=safe_string($name);
-  					$item=array('uri'=>$uri,'str_title'=>$name);
-  					$this->_insertItem($item);
-  					// $this->_moveChildren();
-  					break;
+    				case 'menu item':
+    					$name=$autoValue['str_description'];
+    					$uri=safe_string($name);
+    					$item=array('uri'=>$uri,'str_title'=>$name);
+    					$this->_insertItem($item);
+    					// $this->_moveChildren();
+    					break;
 
 				
-  				case 'from menu table':
-  					$data=$this->_get_current_data($autoValue['table']);
-  					foreach ($data as $item) {
-  						$item['str_table']=$autoValue['table'];
-  						$item['str_uri']=$item['uri'];
-  						$item['int_id']=$item['id'];
-  						$this->_insertItem($item);
-  					}
-  					$this->_moveChildren();
-  					break;
+    				case 'from menu table':
+    					$data=$this->_get_current_data($autoValue['table']);
+    					foreach ($data as $item) {
+    						$item['str_table']=$autoValue['table'];
+    						$item['str_uri']=$item['uri'];
+    						$item['int_id']=$item['id'];
+    						$this->_insertItem($item);
+    					}
+    					$this->_moveChildren();
+    					break;
 		
 		
-  				case 'from submenu table':
-  					$where='';
-  					if (isset($autoValue['str_where']) and !empty($autoValue['str_where'])) {
-  						$where=$autoValue['str_where'];
-  					}
-  					$limit=0;
-  					$offset=0;
-  					if (isset($autoValue['int_limit'])) {
-  						$limit=$autoValue['int_limit'];
-  						if (isset($autoValue['str_parameters']) and !empty($autoValue['str_parameters'])) {
-  							$offset=(int)$autoValue['str_parameters'];
-  						}
-  					}
-  					$data=$this->_get_current_data($autoValue['table'],$where,$limit,$offset);
+    				case 'from submenu table':
+    					$where='';
+    					if (isset($autoValue['str_where']) and !empty($autoValue['str_where'])) {
+    						$where=$autoValue['str_where'];
+    					}
+    					$limit=0;
+    					$offset=0;
+    					if (isset($autoValue['int_limit'])) {
+    						$limit=$autoValue['int_limit'];
+    						if (isset($autoValue['str_parameters']) and !empty($autoValue['str_parameters'])) {
+    							$offset=(int)$autoValue['str_parameters'];
+    						}
+    					}
+    					$data=$this->_get_current_data($autoValue['table'],$where,$limit,$offset);
 					
-  					$order=0;
-  					$parent=0;
-  					if (!empty($autoValue['str_parent_where'])) {
-  						$parent=$this->_get_where_parent($autoValue);
-  					}
-  					// trace_($autoValue);
-  					// trace_($parent);
-  					// trace_($data);
-  					// is er al een sub? Gebruik die order
-  					$sub=$this->newMenu;
-  					$sub=find_row_by_value($sub,$parent,'self_parent');
-  					if ($sub) {
-  						$sub=current($sub);
-  						$order=$sub['order']+1;
-  					} 
+    					$order=0;
+    					$parent=0;
+    					if (!empty($autoValue['str_parent_where'])) {
+    						$parent=$this->_get_where_parent($autoValue);
+    					}
+    					// trace_($autoValue);
+    					// trace_($parent);
+    					// trace_($data);
+    					// is er al een sub? Gebruik die order
+    					$sub=$this->newMenu;
+    					$sub=find_row_by_value($sub,$parent,'self_parent');
+    					if ($sub) {
+    						$sub=current($sub);
+    						$order=$sub['order']+1;
+    					} 
 
-  					// stop ze er eerst allemaal in met zelfde parent en onthou ondertussen dat ze eventueel andere parent moeten krijgen
-  					$parIDs=array(); // array met id's die andere parent moeten krijgen
-  					$oldIDs=array(); // onthou hier de originele id's
-  					foreach ($data as $item) {
-  						$item['str_table']=$autoValue['table'];
-  						$item['str_uri']=$item['uri'];
-  						$item['int_id']=$item['id'];
-  						if (!isset($item['self_parent'])) $item['self_parent']=0;
-  						if (isset($parent) and $item['self_parent']==0) {
-  							$item['self_parent']=$parent;
-  						}
-  						elseif ($item['self_parent']>0) {
-  							$item['old_parent']=$item['self_parent'];
-  							$item['self_parent']=$parent;
-  						}
-  						if (!isset($item['order'])) $item['order']=$order++;
-  						if (isset($autoValue['b_keep_parent_modules']) and $autoValue['b_keep_parent_modules']) {
-  							if (isset($this->newMenu[$item['self_parent']][$this->config('module_field')])) {
-  								$parentModule=$this->newMenu[$item['self_parent']][$this->config('module_field')];
-  								if (isset($item[$this->config('module_field')]))
-  									$item[$this->config('module_field')].=' '.$parentModule;
-  								else
-  									$item[$this->config('module_field')]=$parentModule;
-  							}
-  						}
-  						$item=$this->_insertItem($item);
-  						if (isset($item['old_parent'])) {
-  							$parIDs[$item['id']]=$item['old_parent'];
-  							unset($item['old_parent']);
-  						}
-  						$oldIDs[$item['int_id']]=$item['id'];
-  					}
-  					// ok, verplaats nu naar goede parents nu ze allemaal bekend zijn
-  					foreach ($parIDs as $id => $oldParent) {
-  						$newParent=$oldIDs[$oldParent];
-  						$this->newMenu[$id]['self_parent']=$newParent;
-  					}
-  					break;
+    					// stop ze er eerst allemaal in met zelfde parent en onthou ondertussen dat ze eventueel andere parent moeten krijgen
+    					$parIDs=array(); // array met id's die andere parent moeten krijgen
+    					$oldIDs=array(); // onthou hier de originele id's
+    					foreach ($data as $item) {
+    						$item['str_table']=$autoValue['table'];
+    						$item['str_uri']=$item['uri'];
+    						$item['int_id']=$item['id'];
+    						if (!isset($item['self_parent'])) $item['self_parent']=0;
+    						if (isset($parent) and $item['self_parent']==0) {
+    							$item['self_parent']=$parent;
+    						}
+    						elseif ($item['self_parent']>0) {
+    							$item['old_parent']=$item['self_parent'];
+    							$item['self_parent']=$parent;
+    						}
+    						if (!isset($item['order'])) $item['order']=$order++;
+    						if (isset($autoValue['b_keep_parent_modules']) and $autoValue['b_keep_parent_modules']) {
+    							if (isset($this->newMenu[$item['self_parent']][$this->config('module_field')])) {
+    								$parentModule=$this->newMenu[$item['self_parent']][$this->config('module_field')];
+    								if (isset($item[$this->config('module_field')]))
+    									$item[$this->config('module_field')].=' '.$parentModule;
+    								else
+    									$item[$this->config('module_field')]=$parentModule;
+    							}
+    						}
+    						$item=$this->_insertItem($item);
+    						if (isset($item['old_parent'])) {
+    							$parIDs[$item['id']]=$item['old_parent'];
+    							unset($item['old_parent']);
+    						}
+    						$oldIDs[$item['int_id']]=$item['id'];
+    					}
+    					// ok, verplaats nu naar goede parents nu ze allemaal bekend zijn
+    					foreach ($parIDs as $id => $oldParent) {
+    						$newParent=$oldIDs[$oldParent];
+    						$this->newMenu[$id]['self_parent']=$newParent;
+    					}
+    					break;
 		
 		
-  				case 'from category table':
-  					$data=$this->_get_current_data($autoValue['table']);
-  					$self_parents=array();
-  					if (!empty($autoValue['str_parent_uri'])) {
-  						// On multiple places?
-  						if (strpos($autoValue['str_parent_uri'],'/*')!==false) {
-  							$topUri=str_replace('/*','',$autoValue['str_parent_uri']);
-  							$topItem=find_row_by_value($this->newMenu,$topUri,'uri');
-  							$topItem=current($topItem);
-  							$parentItems=find_row_by_value($this->newMenu,$topItem['id'],'self_parent');
-  						}
-  						else {
-  							$parentItems=find_row_by_value($this->newMenu,$autoValue['str_parent_uri'],'uri');
-  						}
-  						$self_parents=array_keys($parentItems);
-  					}
-  					$lastOrder=0;
-  					if (empty($self_parents)) {
-  						$self_parents[]=0;
-  						$last=find_row_by_value($this->newMenu,0,'self_parent');
-  						if ($last) {
-  							$last=sort_by($last,'order',TRUE);
-  							$last=current($last);
-  							$lastOrder=$last['order']+1;
-  						}
-  						else {
-  							$lastOrder=0;
-  						}
-  					}
-  					foreach ($data as $key=>$item) {
-  						foreach ($self_parents as $self_parent) {
-  							$item['order']=$lastOrder++;
-  							$item['self_parent']=$self_parent;
-  							$item['str_table']=$autoValue['table'];
-  							$item['str_uri']=$item['uri'];
-  							$item['int_id']=$item['id'];
-  							if (isset($autoValue['b_keep_parent_modules']) and $autoValue['b_keep_parent_modules']) {
-  								if (isset($this->newMenu[$item['self_parent']][$this->config('module_field')])) {
-  									$parentModule=$this->newMenu[$item['self_parent']][$this->config('module_field')];
-  									if (isset($item[$this->config('module_field')]))
-  										$item[$this->config('module_field')].=' '.$parentModule;
-  									else
-  										$item[$this->config('module_field')]=$parentModule;
-  								}
-  							}
-  							$this->_insertItem($item);
-  						}
-  					}
-  					break;
+    				case 'from category table':
+    					$data=$this->_get_current_data($autoValue['table']);
+    					$self_parents=array();
+    					if (!empty($autoValue['str_parent_uri'])) {
+    						// On multiple places?
+    						if (strpos($autoValue['str_parent_uri'],'/*')!==false) {
+    							$topUri=str_replace('/*','',$autoValue['str_parent_uri']);
+    							$topItem=find_row_by_value($this->newMenu,$topUri,'uri');
+    							$topItem=current($topItem);
+    							$parentItems=find_row_by_value($this->newMenu,$topItem['id'],'self_parent');
+    						}
+    						else {
+    							$parentItems=find_row_by_value($this->newMenu,$autoValue['str_parent_uri'],'uri');
+    						}
+    						$self_parents=array_keys($parentItems);
+    					}
+    					$lastOrder=0;
+    					if (empty($self_parents)) {
+    						$self_parents[]=0;
+    						$last=find_row_by_value($this->newMenu,0,'self_parent');
+    						if ($last) {
+    							$last=sort_by($last,'order',TRUE);
+    							$last=current($last);
+    							$lastOrder=$last['order']+1;
+    						}
+    						else {
+    							$lastOrder=0;
+    						}
+    					}
+    					foreach ($data as $key=>$item) {
+    						foreach ($self_parents as $self_parent) {
+    							$item['order']=$lastOrder++;
+    							$item['self_parent']=$self_parent;
+    							$item['str_table']=$autoValue['table'];
+    							$item['str_uri']=$item['uri'];
+    							$item['int_id']=$item['id'];
+    							if (isset($autoValue['b_keep_parent_modules']) and $autoValue['b_keep_parent_modules']) {
+    								if (isset($this->newMenu[$item['self_parent']][$this->config('module_field')])) {
+    									$parentModule=$this->newMenu[$item['self_parent']][$this->config('module_field')];
+    									if (isset($item[$this->config('module_field')]))
+    										$item[$this->config('module_field')].=' '.$parentModule;
+    									else
+    										$item[$this->config('module_field')]=$parentModule;
+    								}
+    							}
+    							$this->_insertItem($item);
+    						}
+    					}
+    					break;
 		
 		
-  				case 'from table group by category':
-  					$pagination=(int)$autoValue['str_parameters'];
-  					// check if table is many table
-  					$fromRel=false;
+    				case 'from table group by category':
+    					$pagination=(int)$autoValue['str_parameters'];
+    					// check if table is many table
+    					$fromRel=false;
 					
-  					$preTable=get_prefix( remove_prefix($autoValue['field_group_by'],'.') );
-  					if ($preTable=='rel') {
-  						// yes many table
-  						$fromRel=true;
-  						$autoValue['field_group_by']=remove_prefix($autoValue['field_group_by'],'.');
-  						$groupField=get_suffix( $autoValue['field_group_by'],'.' ,'__' );
-  						$groupTable='tbl_'.remove_prefix($groupField,'__');
-  						$autoValue['field_group_by'].='.id_'.remove_prefix($groupTable);
-  					}
-  					else {
-  						// foreign table
-  						$groupField=remove_prefix($autoValue['field_group_by'],'.');
-  						$groupTable=foreign_table_from_key($groupField);
-  					}
-  					$groupData=$this->_get_current_data($groupTable);
+    					$preTable=get_prefix( remove_prefix($autoValue['field_group_by'],'.') );
+    					if ($preTable=='rel') {
+    						// yes many table
+    						$fromRel=true;
+    						$autoValue['field_group_by']=remove_prefix($autoValue['field_group_by'],'.');
+    						$groupField=get_suffix( $autoValue['field_group_by'],'.' ,'__' );
+    						$groupTable='tbl_'.remove_prefix($groupField,'__');
+    						$autoValue['field_group_by'].='.id_'.remove_prefix($groupTable);
+    					}
+    					else {
+    						// foreign table
+    						$groupField=remove_prefix($autoValue['field_group_by'],'.');
+    						$groupTable=foreign_table_from_key($groupField);
+    					}
+    					$groupData=$this->_get_current_data($groupTable);
 					
-            // trace_($autoValue);
-            // trace_($groupTable);
+              // trace_($autoValue);
+              // trace_($groupTable);
 					
-  					foreach ($groupData as $groupId=>$groupData) {
-  						$titleField='str_title';
-  						if (!isset($groupData[$titleField])) {
-  							$possibleFields=array_keys($groupData);
-  							$possibleFields=filter_by($possibleFields,'str_title');
-  							if (!$possibleFields) {
-  								$possibleFields=array_keys($groupData);
-  								$possibleFields=filter_by($possibleFields,'str_');
-  							}
-  							$titleField=current($possibleFields);
-  						}
-  						if ($fromRel) {
-  							$this->CI->db->add_many();
-  						}
-              $where=$autoValue['field_group_by'].' = '.$groupId;
-  						$data=$this->_get_current_data($autoValue['table'], $where,0,0,array('field'=>get_postfix($autoValue['field_group_by'],'.'),'value'=>$groupId) );
+    					foreach ($groupData as $groupId=>$groupData) {
+    						$titleField='str_title';
+    						if (!isset($groupData[$titleField])) {
+    							$possibleFields=array_keys($groupData);
+    							$possibleFields=filter_by($possibleFields,'str_title');
+    							if (!$possibleFields) {
+    								$possibleFields=array_keys($groupData);
+    								$possibleFields=filter_by($possibleFields,'str_');
+    							}
+    							$titleField=current($possibleFields);
+    						}
+    						if ($fromRel) {
+    							$this->CI->db->add_many();
+    						}
+                $where=$autoValue['field_group_by'].' = '.$groupId;
+    						$data=$this->_get_current_data($autoValue['table'], $where,0,0,array('field'=>get_postfix($autoValue['field_group_by'],'.'),'value'=>$groupId) );
 
 						
-  						if ($data) {
+    						if ($data) {
 
-  							// trace_('Pagination: '.$pagination);
-  							// trace_('Count Data:'.count($data));
+                  // trace_('Pagination: '.$pagination);
+                  // trace_('Count Data:'.count($data));
 
-                $parentData=find_row_by_value($this->newMenu,$groupData[$titleField],$titleField);
-                if (count($parentData)>1) {
-                  $parentData=find_row_by_value($parentData,$groupTable,'str_table');
+                  // trace_($titleField);
+                  // trace_($groupData[$titleField]);
+                  // trace_($this->newMenu);
+
+                  $parentData=find_row_by_value($this->newMenu,$groupData[$titleField],$titleField);
                   if (count($parentData)>1) {
-                    // Mostly it is an foreign key to id
-    								$parentData=find_row_by_value($parentData,$groupId,'int_id');
+                    $parentData=find_row_by_value($parentData,$groupTable,'str_table');
+                    if (count($parentData)>1) {
+                      // Mostly it is an foreign key to id
+      								$parentData=find_row_by_value($parentData,$groupId,'int_id');
+                    }
                   }
-                }
 
-                // trace_('#SHOW# '.$this->CI->db->ar_last_query);
-                // trace_($groupId);
-                // trace_($data);
-                // trace_($parentData);
+                  // trace_('#SHOW# '.$this->CI->db->ar_last_query);
+                  // trace_($groupId);
+                  // trace_($groupData);
+                  // trace_($data);
+                  // trace_($parentData);
 
-  							$parentData=current($parentData);
-  							$selfParent=$parentData['id'];
-  							$lastOrder=0;
-  							$subData=find_row_by_value($this->newMenu,$selfParent,'self_parent');
-  							if ($subData) {
-  								// lastOrder is not 0
-  								$subData=array_slice($subData,count($subData)-1);
-  								$subData=current($subData);
-  								$lastOrder=$subData['order']+1;
-  							}
-  							if ($pagination) {
-  								$subOrder=$lastOrder;
-  								$lastOrder=0;
-  								$subSelfParent=$selfParent;
-  							}
-  							$nr=0;
-  							foreach ($data as $item) {
-  								if ($pagination and ($nr%$pagination==0)) {
-  									// add subpage if needed
-  									$page=round($nr/$pagination)+1;
-  									// trace_('Add subpage ['.$page.']');
-  									$subItem=array('uri'=>$page, $groupData[$titleField]=>$page, 'order'=>$subOrder++, 'self_parent'=>$subSelfParent);
-  									if (isset($autoValue['b_keep_parent_modules']) and $autoValue['b_keep_parent_modules']) {
-  										if (isset($this->newMenu[$subItem['self_parent']][$this->config('module_field')])) {
-  											$parentModule=$this->newMenu[$subItem['self_parent']][$this->config('module_field')];
-  											if (isset($subItem[$this->config('module_field')]))
-  												$subItem[$this->config('module_field')].=' '.$parentModule;
-  											else
-  												$subItem[$this->config('module_field')]=$parentModule;
-  										}
-  									}
-  									$self=$this->_insertItem( $subItem );
-  									$selfParent=$self['id'];
-  								}
-  								$nr++;
+    							$parentData=current($parentData);
+    							$selfParent=$parentData['id'];
+    							$lastOrder=0;
+    							$subData=find_row_by_value($this->newMenu,$selfParent,'self_parent');
+    							if ($subData) {
+    								// lastOrder is not 0
+    								$subData=array_slice($subData,count($subData)-1);
+    								$subData=current($subData);
+    								$lastOrder=$subData['order']+1;
+    							}
+    							if ($pagination) {
+    								$subOrder=$lastOrder;
+    								$lastOrder=0;
+    								$subSelfParent=$selfParent;
+    							}
+    							$nr=0;
+    							foreach ($data as $item) {
+    								if ($pagination and ($nr%$pagination==0)) {
+    									// add subpage if needed
+    									$page=round($nr/$pagination)+1;
+    									// trace_('Add subpage ['.$page.']');
+    									$subItem=array('uri'=>$page, $groupData[$titleField]=>$page, 'order'=>$subOrder++, 'self_parent'=>$subSelfParent);
+    									if (isset($autoValue['b_keep_parent_modules']) and $autoValue['b_keep_parent_modules']) {
+    										if (isset($this->newMenu[$subItem['self_parent']][$this->config('module_field')])) {
+    											$parentModule=$this->newMenu[$subItem['self_parent']][$this->config('module_field')];
+    											if (isset($subItem[$this->config('module_field')]))
+    												$subItem[$this->config('module_field')].=' '.$parentModule;
+    											else
+    												$subItem[$this->config('module_field')]=$parentModule;
+    										}
+    									}
+    									$self=$this->_insertItem( $subItem );
+    									$selfParent=$self['id'];
+    								}
+    								$nr++;
 								
-  								$item['order']=$lastOrder++;
-  								$item['self_parent']=$selfParent;
-  								$item['str_table']=$autoValue['table'];
-  								$item['str_uri']=$item['uri'];
-  								$item['int_id']=$item['id'];
-  								if (isset($autoValue['b_keep_parent_modules']) and $autoValue['b_keep_parent_modules']) {
-  									if (isset($this->newMenu[$item['self_parent']][$this->config('module_field')])) {
-  										$parentModule=$this->newMenu[$item['self_parent']][$this->config('module_field')];
-  										if (isset($item[$this->config('module_field')]))
-  											$item[$this->config('module_field')].=' '.$parentModule;
-  										else
-  											$item[$this->config('module_field')]=$parentModule;
-  									}
-  								}
-  								$this->_insertItem($item);
-  							}
-  						}
-  					}
-  					break;
+    								$item['order']=$lastOrder++;
+    								$item['self_parent']=$selfParent;
+    								$item['str_table']=$autoValue['table'];
+    								$item['str_uri']=$item['uri'];
+    								$item['int_id']=$item['id'];
+    								if (isset($autoValue['b_keep_parent_modules']) and $autoValue['b_keep_parent_modules']) {
+    									if (isset($this->newMenu[$item['self_parent']][$this->config('module_field')])) {
+    										$parentModule=$this->newMenu[$item['self_parent']][$this->config('module_field')];
+    										if (isset($item[$this->config('module_field')]))
+    											$item[$this->config('module_field')].=' '.$parentModule;
+    										else
+    											$item[$this->config('module_field')]=$parentModule;
+    									}
+    								}
+    								$this->_insertItem($item);
+    							}
+    						}
+    					}
+    					break;
 					
 					
-  				case 'split by language':
-  					$this->languages=$autoValue['str_parameters'];
-  					$this->languages=explode('|',$this->languages);
-  					$order=0;
-  					$beforeMenu=$this->newMenu;
-  					foreach ($this->languages as $lang) {
-  						// add language
-  						$item=array('uri'=>$lang,'order'=>$order++,'self_parent'=>-1,'str_title'=>$lang,'str_title_'.$lang=>$lang);
-  						if ($order==1) {
-  							$item=$this->_insertItem($item,1);
-  							$langID=$item['id'];
-  							// first language, just move current menu under it
-  							foreach ($this->newMenu as $id => $item) {
-  								if ($id!=$langID and $item['self_parent']==0)	{
-  									$this->newMenu[$id]['self_parent']=$langID;
-  								}
-  							}
-  						}
-  						else {
-  							$item=$this->_insertItem($item);
-  							$langID=$item['id'];
-  						 	$this->_addBranch($item,$beforeMenu);
-  						}
-  					}
-  					break;
+    				case 'split by language':
+    					$this->languages=$autoValue['str_parameters'];
+    					$this->languages=explode('|',$this->languages);
+    					$order=0;
+    					$beforeMenu=$this->newMenu;
+    					foreach ($this->languages as $lang) {
+    						// add language
+    						$item=array('uri'=>$lang,'order'=>$order++,'self_parent'=>-1,'str_title'=>$lang,'str_title_'.$lang=>$lang);
+    						if ($order==1) {
+    							$item=$this->_insertItem($item,1);
+    							$langID=$item['id'];
+    							// first language, just move current menu under it
+    							foreach ($this->newMenu as $id => $item) {
+    								if ($id!=$langID and $item['self_parent']==0)	{
+    									$this->newMenu[$id]['self_parent']=$langID;
+    								}
+    							}
+    						}
+    						else {
+    							$item=$this->_insertItem($item);
+    							$langID=$item['id'];
+    						 	$this->_addBranch($item,$beforeMenu);
+    						}
+    					}
+    					break;
 					
 				
-  				case 'by module':
-  					// call module
-  					$module=$autoValue['str_parameters'];
-  					$moduleFile=SITEPATH.'libraries/'.$module.'.php';
-  					if (file_exists($moduleFile)) {
-  						include_once($moduleFile);						// if function exists, call it
-  						$moduleFunction=$module;
-  						if (function_exists($moduleFunction)) {
-  							$items=$moduleFunction($autoValue);
-  							// Produce menu from returned items
-  							if ($items) {
-  								$order=0;
-  								$parent=$this->_get_where_parent($autoValue);
-  								if (isset($autoValue['b_keep_parent_modules']) and $autoValue['b_keep_parent_modules']) {
-  									if (isset($this->newMenu[$parent][$this->config('module_field')])) {
-  										$parentModule=$this->newMenu[$parent][$this->config('module_field')];
-  									}
-  								}
-  								foreach ($items as $item) {
-  									$item['self_parent']=$parent;
-  									$item['order']=$order;
-  									$order++;
-  									if (isset($parentModule)) $item[$this->config('module_field')]=$parentModule;
-  									$this->_insertItem($item);
-  								}
-  							}
-  						}
-  					}
-  					break;	
-  			}
+    				case 'by module':
+    					// call module
+    					$module=$autoValue['str_parameters'];
+    					$moduleFile=SITEPATH.'libraries/'.$module.'.php';
+    					if (file_exists($moduleFile)) {
+    						include_once($moduleFile);						// if function exists, call it
+    						$moduleFunction=$module;
+    						if (function_exists($moduleFunction)) {
+    							$items=$moduleFunction($autoValue);
+    							// Produce menu from returned items
+    							if ($items) {
+    								$order=0;
+    								$parent=$this->_get_where_parent($autoValue);
+    								if (isset($autoValue['b_keep_parent_modules']) and $autoValue['b_keep_parent_modules']) {
+    									if (isset($this->newMenu[$parent][$this->config('module_field')])) {
+    										$parentModule=$this->newMenu[$parent][$this->config('module_field')];
+    									}
+    								}
+    								foreach ($items as $item) {
+    									$item['self_parent']=$parent;
+    									$item['order']=$order;
+    									$order++;
+    									if (isset($parentModule)) $item[$this->config('module_field')]=$parentModule;
+    									$this->_insertItem($item);
+    								}
+    							}
+    						}
+    					}
+    					break;	
+    			}
+          
+        }
+
 			
   		}
 
