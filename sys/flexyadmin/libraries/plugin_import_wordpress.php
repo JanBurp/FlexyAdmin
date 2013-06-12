@@ -5,6 +5,7 @@ class Plugin_import_wordpress extends Plugin {
   public function __construct() {
     parent::__construct();
     $this->CI->load->library('form');
+    $this->CI->load->library('upload');
   }
 
 	public function _admin_api($args=NULL) {
@@ -47,7 +48,10 @@ class Plugin_import_wordpress extends Plugin {
     $commments_table='tbl_comments';
     $foreign_key='id_'.remove_prefix($table);
     $comments=$items['comments'];
+    $imgcount=0;
     foreach ($items['posts'] as $old_id => $post) {
+      $post['txt_text']=$this->add_images($post['txt_text']);
+      if ($post['txt_text']!=$items['posts'][$old_id]) $imgcount++;
       unset($post['id']);
       $this->CI->db->set($post);
       $this->CI->db->insert($table);
@@ -64,10 +68,9 @@ class Plugin_import_wordpress extends Plugin {
           $this->CI->db->insert($commments_table);
         }
       }
-      $this->add_message('<p>Added: "'.$post['str_title'].'" with '.$commcount.' comments.');
+      $this->add_message('<p>Added: "'.$post['str_title'].'" with '.$commcount.' comments and '.$imgcount.' images.');
     }
   }
-
 
 
   /**
@@ -114,8 +117,8 @@ class Plugin_import_wordpress extends Plugin {
         $item['uri']=$this->get_uri($item['str_redirect']);
         $item['str_title']=$XMLitem['title'];
         $item['tme_date']=$XMLitem['wp:post_date'];
-        $item['txt_text']=$XMLitem['content:encoded'];
-        $item['str_type']='blog';
+        $item['txt_text']=p().$XMLitem['content:encoded']._p();
+        // $item['id_nieuws_type']=3;
         switch($XMLitem['wp:post_type']) {
           case 'page':
             $pages[]=$item;
@@ -154,7 +157,7 @@ class Plugin_import_wordpress extends Plugin {
                   $comment['email_email']=$c['wp:comment_author_email'];
                   if (!is_array($c['wp:comment_author_url'])) $comment['url_url']=$c['wp:comment_author_url'];
                   $comment['tme_date']=$c['wp:comment_date'];
-                  $comment['txt_text']=$c['wp:comment_content'];
+                  $comment['txt_text']=p().$c['wp:comment_content']._p();
                   $comments[]=$comment;
                 }
               }
@@ -168,6 +171,36 @@ class Plugin_import_wordpress extends Plugin {
     $items['posts']=$posts;
     $items['comments']=$comments;
     return $items;
+  }
+  
+  
+
+  public function image_callback($matches) {
+    $defaults=array('src'=>'','alt'=>'','title'=>'');
+    $img=$matches[0];
+    $attributes=xml2array($img);
+    $attributes=$attributes['img_attr'];
+    $attributes=array_merge($defaults,$attributes);
+    // keep simple
+    $attributes=array_keep_keys($attributes,array_keys($defaults));
+    if (empty($attributes['alt'])) $attributes['alt']=$attributes['title'];
+    if (empty($attributes['title'])) $attributes['title']=$attributes['alt'];
+    // upload image
+    $src=$attributes['src'];
+    // first get the image
+    $name=$this->CI->upload->download_and_add_file($src,'pictures','wp_');
+    $newsrc=$this->CI->config->item('ASSETS').'pictures/'.$name;
+    $attributes['src']=$newsrc;
+    $newimg='<img ';
+    foreach ($attributes as $key => $value) {
+      $newimg.=' '.$key.'="'.$value.'"';
+    }
+    $newimg.='/>';
+    return $newimg;
+  }
+  private function add_images($txt) {
+    $txt = preg_replace_callback("/<img([^>]*)\/>/uiUsm", array($this,'image_callback'), $txt);
+    return $txt;
   }
   
   
