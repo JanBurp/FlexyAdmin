@@ -106,6 +106,50 @@ class MY_Upload extends CI_Upload {
 		return true;
 	}
 
+
+
+  /**
+   * Download een bestand van een andere site (url) en stop die in de meegegeven map van je eigen site. Als het een afbeelding is wordt ook gecheckt of er meerdere formaten moeten worden gemaakt.
+   * Wordt bijvoorbeeld gebruikt door de plugin die een wordpress site importeert om de afbeeldingen ook te importeren.
+   *
+   * @param string $url De url van het externe bestand
+   * @param string $path assets map waar bestand in moet komen
+   * @param string $prefix['downloaded_'] Prefix die aan het bestand moet worden toegevoegd.
+   * @return string Nieuwe naam van bestand
+   * @author Jan den Besten
+   */
+  public function download_and_add_file($url,$path,$prefix='downloaded_') {
+		if (!isset($this->CI)) {
+			$this->CI =& get_instance();
+			$this->CI->load->library('image_lib');
+		}
+		$CI=$this->CI;
+
+    $name=$prefix.get_suffix($url,'/');
+    $name=clean_file_name($name);
+    $fullpath=$CI->config->item('ASSETS').$path;
+    $fullname=$fullpath.'/'.$name;
+    
+    $file = fopen ($url, "rb");
+    if ($file) {
+      $newf = fopen ($fullname, "wb");
+      if ($newf)
+      while(!feof($file)) {
+        fwrite($newf, fread($file, 1024 * 8 ), 1024 * 8 );
+      }
+    }
+    
+    if ($file) { fclose($file); }
+    if ($newf) { fclose($newf); }
+    
+    // if file exists, and more sizez needed, make them
+    if (file_exists($fullname)) {
+      $this->resize_image($name,$fullpath);
+    }
+    return $name;
+  }
+
+
   /**
    * Upload een bestand
    *
