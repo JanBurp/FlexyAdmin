@@ -113,7 +113,8 @@
 								unset($value[$k]);
 							}
               if (isset($value['label_'.$lang])) $value['label']=$value['label_'.$lang];
-							$name=str_replace(' ','_',$value['label']);//.'_'.$key;
+							$name=str_replace(' ','_',$value['label']);
+              if (empty($name)) $name.='_'.$key;
 							$value['name']=$name;
 							$value['fieldset']=$fieldset;
 							$value['validation']=add_validation_parameters($value['validation'],$value['validation_parameters']);
