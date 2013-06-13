@@ -907,7 +907,7 @@ function array_keep_keys($a,$keep) {
 function array_unset_keys($a,$unset,$recursive=FALSE) {
   foreach ($a as $key => $value) {
     if (in_array($key,$unset)) unset($a[$key]);
-    if (is_array($value)) $a[$key]=array_unset_keys($value,$unset);
+    if ($recursive and is_array($value)) $a[$key]=array_unset_keys($value,$unset);
   }
   return $a;
 }
