@@ -9,8 +9,7 @@
  */
  class Formaction_database extends Formaction {
 
-   var $config = array(
-   );
+   var $settings = array();
 
    /**
     * @author Jan den Besten
@@ -31,12 +30,29 @@
   public function go($data) {
     parent::go($data);
 
+    // Which table?
+    if (isset($this->settings['formaction_table']))
+      $table=$this->settings['formaction_table'];
+    else
+      $table=$this->settings['table'];
+    
+    // tme_ of dat_ field zonder inhoud? Voeg die toe
+    $fields=$this->db->list_fields($table);
+    $fields=array_values($fields);
+    $date_fields=array();
+    foreach ($fields as $key => $field) {
+      if (in_array(get_prefix($field),$this->config->item('FIELDS_date_fields'))) $date_fields[]=$field;
+    }
+    foreach ($date_fields as $field) {
+      $data[$field]=unix_to_mysql();
+    }
+    
     // set
     foreach ($data as $key => $value) {
-      if ($this->db->field_exists( $key, $this->config['table'] )) $this->db->set($key,$value);
+      if ($this->db->field_exists( $key, $table )) $this->db->set($key,$value);
     }
     // insert in db
-    $this->db->insert($this->config['table']);
+    $this->db->insert( $table );
     $id=$this->db->insert_id();
     
     return $id;

@@ -773,6 +773,7 @@ $config['URI_field_pre_types']			= array("str","url","dat","date","datetime","tm
 */
 
 $config['FIELDS_media_fields']		= array( "file", "img", "mp3", "mov" );
+$config['FIELDS_date_fields']		  = array( "dat", "date", "tme", "datetime" );
 
 $config['FIELDS_default'] = array(
 																		"grid"				=> "%s",
