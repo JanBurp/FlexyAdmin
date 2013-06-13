@@ -752,7 +752,7 @@ class Form {
 		
 		$data=$this->data;
 		
-		$out=form_open_multipart($this->action,array("class"=>$class,'form_id'=>$this->form_id));
+		$out=form_open_multipart($this->action,array("class"=>$class,'id'=>$this->form_id,'form_id'=>$this->form_id));
     if (!empty($this->form_id)) {
       $formID=array('name'=>'__form_id','type'=>'hidden','value'=>$this->form_id,'class'=>'');
       $out.=$this->render_field('__form_id',$formID);
