@@ -41,7 +41,7 @@
    * @author Jan den Besten
    */
 	public function by_name($title) {
-		$this->db->where('str_name',$title);
+		$this->db->where('LOWER(`str_name`) = LOWER("'.$title.'")');
 		return $this->_get_form();
 	}
 
@@ -54,7 +54,7 @@
    * @author Jan den Besten
    */
 	public function by_title($title) {
-		$this->db->where('str_title',$title);
+		$this->db->where('LOWER(`str_title`) = LOWER("'.$title.'")');
 		return $this->_get_form();
 	}
 
@@ -113,7 +113,7 @@
 								unset($value[$k]);
 							}
               if (isset($value['label_'.$lang])) $value['label']=$value['label_'.$lang];
-							$name=str_replace(' ','_',$value['label']).'_'.$key;
+							$name=str_replace(' ','_',$value['label']);//.'_'.$key;
 							$value['name']=$name;
 							$value['fieldset']=$fieldset;
 							$value['validation']=add_validation_parameters($value['validation'],$value['validation_parameters']);
