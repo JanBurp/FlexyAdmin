@@ -9,6 +9,19 @@
 
 
 /**
+ * Geeft datum/tijd in MySQL formaat, klaar om in de database te stoppen
+ *
+ * @param int $unix[''] Unix timestamp, als leeg dan wordt huidig moment genomen.
+ * @return string
+ * @author Jan den Besten
+ */
+function unix_to_mysql($unix='') {
+  if (empty($unix)) $unix=time();
+  return date('Y-m-d H:i',$unix);
+}
+
+
+/**
  * Give an array from a datestring
  *
  * @param string $date (format: yyyy-mm-dd)

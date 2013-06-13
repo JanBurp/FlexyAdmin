@@ -18,7 +18,7 @@
  */
  class Formaction_mail extends Formaction {
    
-   var $config = array(
+   var $settings = array(
      'to_field'             => 'tbl_site.email_email',
      'subject'              => 'Mail from site',
      'send_copy_to_sender'  => FALSE,
@@ -45,19 +45,19 @@
     parent::go($data);
     
     // TO
-    if (!isset($this->config['to']) or empty($this->config['to'])) {
-     $table=get_prefix($this->config['to_field'],'.');
-     $field=get_suffix($this->config['to_field'],'.');
-     $this->config['to']=$this->db->get_field($table,$field);
+    if (!isset($this->settings['to']) or empty($this->settings['to'])) {
+     $table=get_prefix($this->settings['to_field'],'.');
+     $field=get_suffix($this->settings['to_field'],'.');
+     $this->settings['to']=$this->db->get_field($table,$field);
     }
-    $this->email->to($this->config['to']);
+    $this->email->to($this->settings['to']);
     // CC
-    if ($this->config['send_copy_to_sender']) $this->email->cc($data[$this->config['from_address_field']]);
+    if ($this->settings['send_copy_to_sender']) $this->email->cc($data[$this->settings['from_address_field']]);
     // FROM
     $this->email->from($this->get_from_addres($data));
     
     // SUBJECT - vervang keys
-    $subject=$this->config['subject'];
+    $subject=$this->settings['subject'];
     $replace['/%URL%/uiUsm']=trim(str_replace('http://','',$this->site['url_url']),'/');
     $emailfields=filter_by_key($data,'email');
     if (empty($emailfields)) $emailfields=filter_by_key($data,'Email');
@@ -77,7 +77,7 @@
     		if (isset($_FILES[$key]['name']) and !empty($_FILES[$key]['name']) ) {
     			$this->load->library('upload');
     			$this->load->model('file_manager');
-    			$this->file_manager->init( $this->config['attachment_folder'], $this->config['attachment_types'] );
+    			$this->file_manager->init( $this->settings['attachment_folder'], $this->settings['attachment_types'] );
     			$result=$this->file_manager->upload_file($key);
     			if (!empty($result['file'])) {
             $file=SITEPATH.'assets/'.$this->attachment_folder.'/'.$result['file'];
@@ -111,8 +111,8 @@
   
   private function get_from_addres($data) {
     $from='';
-    if (isset($this->config['from_address_field']) and !empty($this->config['from_address_field'])) {
-      $field=$this->config['from_address_field'];
+    if (isset($this->settings['from_address_field']) and !empty($this->settings['from_address_field'])) {
+      $field=$this->settings['from_address_field'];
       if (!isset($data[$field])) {
         // niet gevonden, zoek eerste email veld
         $email_fields=filter_by_key($data,'email');

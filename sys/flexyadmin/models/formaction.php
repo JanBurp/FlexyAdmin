@@ -14,8 +14,7 @@
     *
     * @var string
     */
-   var $config = array(
-   );
+   var $settings = array();
    
    /**
     * Velden van het formulier, zodat de labels etc bekend zijn
@@ -48,12 +47,12 @@
     /**
      * Initialiseer met alle meegegeven config waarden
      *
-     * @param string $config 
+     * @param string $settings 
      * @return object self
      * @author Jan den Besten
      */
-    public function initialize($config) {
-      $this->config=array_merge($this->config,$config);
+    public function initialize($settings) {
+      $this->settings=array_merge($this->settings,$settings);
       return $this;
     }
    

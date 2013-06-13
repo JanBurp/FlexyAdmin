@@ -11,7 +11,7 @@
  */
  class Formaction_upload extends Formaction {
    
-   var $config = array(
+   var $settings = array(
      'upload_path'       => 'downloads',
      'allowed_types'     => ''
    );
@@ -39,16 +39,16 @@
         // En is de naam van het bestand bekend?
 				if (isset($_FILES[$key]['name']) and !empty($_FILES[$key]['name']) ) {
           // Upload het bestand
-          if (empty($this->config['allowed_types'])) {
-    				$mediaCfg=$this->cfg->get('CFG_media_info',$this->config['upload_path']);
-    				$this->config['allowed_types']=$mediaCfg['str_types'];
+          if (empty($this->settings['allowed_types'])) {
+    				$mediaCfg=$this->cfg->get('CFG_media_info',$this->settings['upload_path']);
+    				$this->settings['allowed_types']=$mediaCfg['str_types'];
           }
-					$this->file_manager->initialize( $this->config );
+					$this->file_manager->initialize( $this->settings );
 					$result=$this->file_manager->upload_file($key);
           // Gelukt?
 					if (!empty($result['file'])) {
             // Zo ja pas formdata aan, voeg bestand toe aan mediatable, en geef bericht
-            $path=SITEPATH.'assets/'.$this->config['upload_path'];
+            $path=SITEPATH.'assets/'.$this->settings['upload_path'];
             $file=$path.'/'.$result['file'];
 						$formData[$key]=$result['file'];
             $value=$result['file'];
