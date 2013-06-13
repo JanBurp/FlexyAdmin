@@ -44,7 +44,7 @@
       if (in_array(get_prefix($field),$this->config->item('FIELDS_date_fields'))) $date_fields[]=$field;
     }
     foreach ($date_fields as $field) {
-      $data[$field]=unix_to_mysql();
+      if (!isset($data[$field]) or $data[$field]=='') $data[$field]=unix_to_mysql();
     }
     
     // set
