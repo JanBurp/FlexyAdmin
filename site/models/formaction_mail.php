@@ -54,12 +54,13 @@
     // CC
     if ($this->config['send_copy_to_sender']) $this->email->cc($data[$this->config['from_address_field']]);
     // FROM
-    $this->email->from($data[$this->config['from_address_field']]);
+    $this->email->from($this->get_from_addres($data));
     
     // SUBJECT - vervang keys
     $subject=$this->config['subject'];
     $replace['/%URL%/uiUsm']=trim(str_replace('http://','',$this->site['url_url']),'/');
     $emailfields=filter_by_key($data,'email');
+    if (empty($emailfields)) $emailfields=filter_by_key($data,'Email');
     if ($emailfields) $replace['/%MAIL%/uiUsm']=current($emailfields);
     foreach ($data as $key => $value) {
       $replace['/%'.$key.'%/uiUsm']=$value;
@@ -105,6 +106,21 @@
       return false;
     }
     return true;
+  }
+  
+  
+  private function get_from_addres($data) {
+    $from='';
+    if (isset($this->config['from_address_field']) and !empty($this->config['from_address_field'])) {
+      $field=$this->config['from_address_field'];
+      if (!isset($data[$field])) {
+        // niet gevonden, zoek eerste email veld
+        $email_fields=filter_by_key($data,'email');
+        if (empty($email_fields)) $email_fields=filter_by_key($data,'Email');
+        $field=key($email_fields);
+      }
+    }
+    return $data[$field];
   }
 
 }
