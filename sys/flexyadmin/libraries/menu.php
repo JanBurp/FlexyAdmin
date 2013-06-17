@@ -1026,8 +1026,9 @@ class Menu {
 		return $item;
 	}
 	
+  
   /**
-   * Geeft uri van eerstvolgde item in submenu
+   * Geeft uri van eerstvolgende item in submenu
    *
    * @param string $uri uri van submenu
    * @return string uri van eerstvolgend item in submenu of FALSE als deze niet bestaat
@@ -1044,6 +1045,28 @@ class Menu {
 		return $sub_uri;
   }
 	
+
+  /**
+   * Geeft item één tak hoger in menu, of false als al op hoogste niveau
+   * Als niets wordt meegegeven wordt uitgegaan van huidige pagina.
+   *
+   * @param string $uri[''] Als leeg, dan wordt huidige pagina gebruikt
+   * @return array Menu-item
+   * @author Jan den Besten
+   */
+  public function get_up($uri='') {
+    $up=false;
+    if (empty($uri)) $uri=$this->current;
+    $up_uri=remove_suffix($uri,'/');
+    if ($up_uri==$uri) $up_uri=false;
+    if ($up_uri) {
+      $up=$this->get_item($up_uri);
+    }
+    return $up;
+  }
+  
+  
+  
   /**
    * Geeft vorig menu-item op hetzelfde nivo
    *
