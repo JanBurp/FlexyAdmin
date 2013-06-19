@@ -175,7 +175,7 @@ class Main extends FrontEndController {
 				foreach ($where as $field => $value) {
           if (!is_array($value)) $value=array($value);
 					foreach ($value as $val) {
-						$load_if = $load_if || $page[$field]==$val;
+            if (isset($page[$field])) $load_if = $load_if || $page[$field]==$val;
 					}
 				}
 				if ($load_if) $modules[]=$module_if;
