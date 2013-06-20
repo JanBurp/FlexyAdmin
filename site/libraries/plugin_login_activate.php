@@ -48,7 +48,7 @@
 					break;
 			}
 			$grid=$this->_show_inactive_users();
-      return $this->view('',array('title'=>lang('title'),'grid'=>$grid));
+      return $this->view('plugin_login_activate',array('title'=>lang('title'),'grid'=>$grid));
 		}
 	}
 	
