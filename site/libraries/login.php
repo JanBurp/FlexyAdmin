@@ -20,10 +20,11 @@
 	*
 	* - Als inloggen voor de hele site nodig is: laadt de module dan automatisch in.
 	* - Als inloggen alleen op enkele pagina's nodig is: laadt de module dan alleen in op die pagina's
-	* - Je moet in het menu in ieder geval ergens een pagina hebben die de module login.logout aanroept.
-	* - Als gebruikers zichzelf moeten kunnen registreren dan moet ergens in het menu ook een pagina bestaan die login.register aanroept.
-	* - Als gebruikers zichzelf moeten kunnen registreren of hun paswoord moeten kunnen resetten,
-  * zet dan de volgende instelling in site/config/config.php: `$config['query_urls']=TRUE;`
+	* - Je moet in het menu in ieder geval een pagina hebben met de module 'login.logout'.
+	* - Een pagina met de module 'login.login' is niet noodzakelijk omdat die automatisch wordt getoond indien nodig.
+	* - Als gebruikers zichzelf moeten kunnen registreren dan moet ergens in het menu een pagina bestaan met de module 'login.register'.
+	* - Als gebruikers zelf hun paswoord moeten kunnen resetten dan moet ergens in het menu een pagina bestaan met de module 'login.forgot_password'.
+	* - Als gebruikers zichzelf moeten kunnen registreren of hun paswoord moeten kunnen resetten, zet dan de volgende instelling in site/config/config.php: `$config['query_urls']=TRUE;`
 	*
 	* @author Jan den Besten
 	* @package FlexyAdmin_login
@@ -40,14 +41,17 @@ class Login extends Module {
    public function __construct() {
 		parent::__construct();
 		$this->CI->load->library('user',$this->config['tables']);
+    $this->CI->load->library('session');
+
+    // Set config to don't cache this page
     $this->CI->config->set_item('dont_cache_this_page',TRUE);
-		if ($this->config('auto_uris')) $this->_find_uris();
-		// redirect ion_auth to other email_templates
+    
+    // Automatic find login pages in menu
+    if ($this->config('auto_uris')) $this->_find_uris();
+    // Set ion_auth config (email templates, check for double email, admin activation)
     if (isset($this->CI->site)) $this->CI->config->set_item('email_templates','login/'.$this->CI->site['language'].'/','ion_auth');
-		// if admin activation tell user/ion_auth
-		$this->CI->config->set_item('admin_activation',$this->config('admin_activation'),'ion_auth');
-    // Tell ion_auth if needs to check for double email
     $this->CI->config->set_item('check_double_email',$this->config('check_double_email'),'ion_auth');
+		$this->CI->config->set_item('admin_activation',$this->config('admin_activation'),'ion_auth');
 	}
 	
   /**
@@ -59,8 +63,8 @@ class Login extends Module {
   	* @ignore
   	*/
 	public function index($page) {
-		// If logged in, set class
-		if ($this->CI->user->logged_in()) $this->CI->add_class($this->config('class'));
+    $this->check();
+
 		// If Login is called also with other methods, don't go on with this call
 		$modules=$this->CI->site['modules'];
 		if (in_array('login.login',$modules) or in_array('login.logout',$modules) or in_array('login.register',$modules) or in_array('login.forgot_password',$modules) or in_array('login.reset_password',$modules)) {
@@ -68,6 +72,23 @@ class Login extends Module {
 		}
 		return $this->login($page,false);
 	}
+  
+  /**
+   * Checks if user is logged in, sets class and username
+   *
+   * @param array $page 
+   * @return array $page
+   * @author Jan den Besten
+   */
+  public function username($page) {
+    $this->remember_current_page();
+		if ($this->CI->user->logged_in()) {
+  		$this->CI->add_class($this->config('class'));
+      return $this->CI->user->user_name;
+		}
+    return '';
+  }
+  
 	
   
   /**
@@ -79,6 +100,8 @@ class Login extends Module {
   	* @author Jan den Besten
   	*/
    public function login($page, $show_if_allready=true) {
+    $redirect=$this->get_current_page();
+     
 		$title='';
 		$content='';
 		
@@ -127,12 +150,13 @@ class Login extends Module {
 				unset($_POST['gpw_login_password']);
 				if (isset($_POST['submit']) and $_POST['submit']==lang('login_submit')) unset($_POST['submit']);
 			}
-			// Show message if a dedicated login page
+			// Redirect naar vorige pagina, of Show message if a dedicated login page
+      if ($redirect) redirect($redirect);
 			if ($show_if_allready) {
 				$content=langp('login_already',$this->CI->user->user_name);
 			}
 		}
-		
+    
 		return $this->_output($page,$content);
 	}
 	
@@ -144,8 +168,10 @@ class Login extends Module {
 		* @author Jan den Besten
 		*/
 	public function logout($page) {
+    $redirect=$this->get_current_page();
 		$this->CI->user->logout();
-		return $this->_output($page,lang('logout_done'));
+    if ($redirect) redirect($redirect);
+    return $this->_output($page,lang('logout_done'));
 	}
 	
 	
@@ -276,6 +302,32 @@ class Login extends Module {
 	}
 
 
+
+  /**
+   * Onthoud huidige pagina
+   *
+   * @return void
+   * @author Jan den Besten
+   */
+  private function remember_current_page() {
+    $current=$this->CI->uri->get();
+    if ($current!=$this->config['login_uri'] and $current!=$this->config['logout_uri'] and $current!=$this->config['register_uri'] and $current!=$this->config['forgotten_password_uri']) {
+      $this->CI->session->set_userdata('login_current_page',$current);
+    }
+  }
+  
+  /**
+   * Geeft onthouden pagina op
+   *
+   * @return mixed De uri van de pagina, of FALSE
+   * @author Jan den Besten
+   */
+  private function get_current_page() {
+    $current=$this->CI->session->userdata('login_current_page');
+    return $current;
+  }
+  
+
 	/**
 		* Zet een formulier klaar
 		*
@@ -338,6 +390,7 @@ class Login extends Module {
   	*/
    private function _find_uris() {
 		$this->config['login_uri']=$this->CI->find_module_uri('login.login');
+		$this->config['logout_uri']=$this->CI->find_module_uri('login.logout');
 		$this->config['register_uri']=$this->CI->find_module_uri('login.register');
 		$this->config['forgotten_password_uri']=$this->CI->find_module_uri('login.forgot_password');
 	}
