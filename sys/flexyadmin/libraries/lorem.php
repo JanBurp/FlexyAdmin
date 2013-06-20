@@ -358,7 +358,7 @@ class Lorem {
         for ($i=0; $i < rand(1,3); $i++) { 
           $header.=random_element($title).' ';
         }
-        $header='<h'.$h.'>'.ucfirst(str_replace('.','',strtolower(trim($header)))).'</h'.$h.'>';
+        $header='<h'.$h.'>'.ucfirst(str_replace(array('.',','),'',strtolower(trim($header)))).'</h'.$h.'>';
       }
 			$paragraphStr[] = $header."<p>\n" . $this->paragraphToString($p, true) . '</p>';
 		}
