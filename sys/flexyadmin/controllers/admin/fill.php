@@ -74,17 +74,41 @@ class Fill extends AdminController {
                   break;
                 case 'medias':
                 case 'media':
+                  $result='';
                   $path=$this->cfg->get('cfg_media_info',$table.'.'.$field,'path');
-                  $files=$this->mediatable->get_files($path,FALSE);
+                  if (!isset($files[$path])) $files[$path]=$this->mediatable->get_files($path,FALSE);
                   if ($pre=='media') {
-                    $result=random_element($files);
-                    $result=$result['file'];
+                    if (rand(1,4)>2) {
+                      $result=random_element($files[$path]);
+                      $result=$result['file'];
+                    }
                   }
                   else {
                     $result='';
-                    for ($i=0; $i < rand(1,4); $i++) { 
-                      $media=random_element($files);
+                    for ($i=0; $i < rand(0,4); $i++) { 
+                      $media=random_element($files[$path]);
                       $result=add_string($result,$media['file'],'|');
+                    }
+                  }
+                  break;
+                case 'url' :
+                  $result='';
+                  if (rand(1,4)>2) {
+                    if ($field=='url_video') {
+                      // Get youtube homepage, and alle the youtube links from them
+                      if (!isset($YouTubeHTML)) {
+                        $YouTubeHTML=file_get_contents('https://www.youtube.com/');
+                        if (preg_match_all("/href=\"\\/watch\\?v=(.*)\"/uiUsm", $YouTubeHTML,$matches)) {
+                          $YouTubeCodes=$matches[1];
+                        }
+                      }
+                      $result='https://www.youtube.com/watch?v='.random_element($YouTubeCodes);
+                    }
+                    else {
+                      // Link from link table
+                      if (!isset($links_table)) $links_table=$this->db->get_result('tbl_links');
+                      $url=random_element($links_table);
+                      $result=$url['url_url'];
                     }
                   }
                   break;
