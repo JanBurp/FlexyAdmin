@@ -131,7 +131,14 @@ class Fill extends AdminController {
                     }
                   }
                   else {
-                    $result=$lorem->getContent(rand(1,5),'plain');
+                    $options=$this->cfg->get('cfg_field_info',$table.'.'.$field,'str_options');
+                    if (!empty($options)) {
+                      $options=explode('|',$options);
+                      $result=random_element($options);
+                    }
+                    else {
+                      $result=str_replace(array('.',','),'',$lorem->getContent(rand(1,5),'plain'));  
+                    }
                   }
                   break;
                 default:
