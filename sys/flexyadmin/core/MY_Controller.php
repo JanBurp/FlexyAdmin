@@ -102,7 +102,10 @@ class MY_Controller extends CI_Controller {
 			$like_field=$this->config->item('module_field');
 		}
 		$this->db->like($this->config->item('module_field'),$module);
-		$item=$this->db->get_row(get_menu_table());
+    $this->db->order_by('id');
+		$items=$this->db->get_result(get_menu_table());
+    reset($items);
+    $item=current($items);
 		return $item['uri'];
 	}
   
