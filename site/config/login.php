@@ -3,6 +3,21 @@
 
 // !! When registration and password resetting needs to be active: make sure that $config['query_urls']=TRUE; in site/config/config.php
 
+/*
+|--------------------------------------------------------------------------
+| Output routing of module
+|--------------------------------------------------------------------------
+|
+| Stel hier in wat er met de return waarden van de module (methods) moet gebeuren:
+|
+| - Als er niets staat wordt het aan de pagina teruggegeven (zelfde als 'page')
+| - 'page' - geeft de returnwaarde terug aan de pagina ($page)
+| - 'site' - geeft de returnwaarde aan $this->site[module_naam.method]
+| - Een combinatie is ook mogelijk, gescheiden door een pipe: 'page|site'
+*/
+
+$config['__return']='page';
+$config['__return.username']='site';
 
 
 /*
@@ -25,7 +40,7 @@ $config['class']='user_logged_in';
 | if this is true, a user gets an activate email, when the administrator sends it. (Needs plugin_login_activate.php)
 |
 */
-$config['admin_activation']=FALSE;
+$config['admin_activation']=TRUE;
 
 
 /*
@@ -74,6 +89,7 @@ $config['tables']['meta']    = '';
 
 $config['auto_uris']=true;
 // $config['login_uri']='';
+// $config['logout_uri']='';
 // $config['register_uri']='';
 // $config['forgotten_password_uri']='';
 
