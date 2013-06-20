@@ -117,16 +117,21 @@ class Fill extends AdminController {
                   $result=rand(0,23).':'.rand(0,59).':'.rand(0,59);
                   break;
                 case 'str':
-                  $result=$lorem->getContent(rand(1,5),'plain');
+                  $result='';
                   if ($field=='str_video') {
-                    // Get youtube homepage, and alle the youtube links from them
-                    if (!isset($YouTubeHTML)) {
-                      $YouTubeHTML=file_get_contents('https://www.youtube.com/');
-                      if (preg_match_all("/href=\"\\/watch\\?v=(.*)\"/uiUsm", $YouTubeHTML,$matches)) {
-                        $YouTubeCodes=$matches[1];
+                    if (rand(1,4)>2) {
+                      // Get youtube homepage, and alle the youtube links from them
+                      if (!isset($YouTubeHTML)) {
+                        $YouTubeHTML=file_get_contents('https://www.youtube.com/');
+                        if (preg_match_all("/href=\"\\/watch\\?v=(.*)\"/uiUsm", $YouTubeHTML,$matches)) {
+                          $YouTubeCodes=$matches[1];
+                        }
                       }
+                      $result=random_element($YouTubeCodes);
                     }
-                    $result=random_element($YouTubeCodes);
+                  }
+                  else {
+                    $result=$lorem->getContent(rand(1,5),'plain');
                   }
                   break;
                 default:
