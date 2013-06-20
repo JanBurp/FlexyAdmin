@@ -66,6 +66,14 @@ class Fill extends AdminController {
             if ($random) {
               $pre=get_prefix($field);
               switch($pre) {
+                case 'id' :
+                  if (!isset($data[$field])) {
+                    $ftable=foreign_table_from_key($field);
+                    $data[$field]=$this->db->get_result($ftable);
+                  }
+                  $result=random_element($data[$field]);
+                  $result=$result['id'];
+                  break;
                 case 'txt':
                   $result=$lorem->getContent(rand(50,500),'html');
                   break;
