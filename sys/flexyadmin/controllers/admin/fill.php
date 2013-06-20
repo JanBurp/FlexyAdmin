@@ -94,22 +94,10 @@ class Fill extends AdminController {
                 case 'url' :
                   $result='';
                   if (rand(1,4)>2) {
-                    if ($field=='url_video') {
-                      // Get youtube homepage, and alle the youtube links from them
-                      if (!isset($YouTubeHTML)) {
-                        $YouTubeHTML=file_get_contents('https://www.youtube.com/');
-                        if (preg_match_all("/href=\"\\/watch\\?v=(.*)\"/uiUsm", $YouTubeHTML,$matches)) {
-                          $YouTubeCodes=$matches[1];
-                        }
-                      }
-                      $result='https://www.youtube.com/watch?v='.random_element($YouTubeCodes);
-                    }
-                    else {
-                      // Link from link table
-                      if (!isset($links_table)) $links_table=$this->db->get_result('tbl_links');
-                      $url=random_element($links_table);
-                      $result=$url['url_url'];
-                    }
+                    // Link from link table
+                    if (!isset($links_table)) $links_table=$this->db->get_result('tbl_links');
+                    $url=random_element($links_table);
+                    $result=$url['url_url'];
                   }
                   break;
                 case 'int':
@@ -130,6 +118,16 @@ class Fill extends AdminController {
                   break;
                 case 'str':
                   $result=$lorem->getContent(rand(1,5),'plain');
+                  if ($field=='str_video') {
+                    // Get youtube homepage, and alle the youtube links from them
+                    if (!isset($YouTubeHTML)) {
+                      $YouTubeHTML=file_get_contents('https://www.youtube.com/');
+                      if (preg_match_all("/href=\"\\/watch\\?v=(.*)\"/uiUsm", $YouTubeHTML,$matches)) {
+                        $YouTubeCodes=$matches[1];
+                      }
+                    }
+                    $result=random_element($YouTubeCodes);
+                  }
                   break;
                 default:
                   $result=random_string();
