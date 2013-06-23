@@ -59,6 +59,13 @@ class MY_Pagination extends CI_Pagination {
 	var $last_link       = '&gt;&gt;';
 
   /**
+   * full_tag_open  = '&lt;ul&gt;'
+   *
+   * @var string
+   */
+	var $full_tag_open  = '<ul>';
+
+  /**
    * full_tag_close  = '&lt;/ul&gt;'
    *
    * @var string
