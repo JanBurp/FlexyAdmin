@@ -77,7 +77,7 @@ class Mediatable Extends CI_Model {
         $set['int_img_width']   = $file['width'];
         $set['int_img_height']  = $file['height'];
       }
-      if (isset($file['meta'])) $set['stx_meta']=exif2string($file['meta']);
+      if (isset($file['meta']) and $this->db->field_exists('stx_meta',$this->table)) $set['stx_meta']=exif2string($file['meta']);
       if ($userId and $this->db->field_exists('user',$this->table)) $set['user']=$userId;
       $this->db->set($set);
       $this->db->insert($this->table);
