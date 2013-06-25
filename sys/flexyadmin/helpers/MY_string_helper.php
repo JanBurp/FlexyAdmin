@@ -12,12 +12,12 @@
  /**
   * Geeft de string terug met een nummer erachter dat bij elke aanroep wordt opgehoogd
   *
-  * @param string $string
+  * @param string $string['']
   * @param string $start[0] 
   * @return string
   * @author Jan den Besten
   */
-function count_string($string,$start=0) {
+function count_string($string='',$start=0) {
  static $strings=array();
  if (!isset($strings[$string])) {
    $strings[$string]=$start;
