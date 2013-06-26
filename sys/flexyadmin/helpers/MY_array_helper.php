@@ -643,7 +643,7 @@ function sort_by($a,$keys,$desc=FALSE,$case=FALSE,$max=0) {
  *
  * @param string $v Te zoeken waarde
  * @param string $a Array
- * @return mixed FALSE of gevonde key
+ * @return mixed FALSE of gevonden key
  * @author Jan den Besten
  */
 function in_array_like($v,$a) {

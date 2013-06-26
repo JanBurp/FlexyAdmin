@@ -91,16 +91,25 @@ function in_string($in,$string) {
  *
  * @param mixed $in te zoeken string, of array van strings
  * @param string $string string waarin gezocht wordt
+ * @param bool $case_sensitive[TRUE]
  * @return bool TRUE als (één van de) string(s) is gevonden
  * @author Jan den Besten
  */
-function has_string($in,$string) {
+function has_string($in,$string,$case_sensitive=TRUE) {
   if (!is_array($in)) $in=array($in);
   $has=FALSE;
   foreach ($in as $s) {
-    if (strpos($string,$s)!==FALSE) {
-      $has=TRUE;
-      break;
+    if ($case_sensitive) {
+      if (strpos($string,$s)!==FALSE) {
+        $has=TRUE;
+        break;
+      }
+    }
+    else {
+      if (strripos($string,$s)!==FALSE) {
+        $has=TRUE;
+        break;
+      }
     }
   }
   // trace_(array('in'=>$in,'str'=>$string,'has'=>$has));
