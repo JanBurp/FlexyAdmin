@@ -45,6 +45,7 @@ class __ extends AdminController {
       array( 'uri'=>'admin/__/minify', 'name' => 'Minify JS & CSS' ),
       array( 'uri'=>'admin/__/tinymce', 'name' => 'Update tinyMCE' ),
       array( 'uri'=>'admin/__/clean_assets', 'name' => 'Clean assets' ),
+      array( 'uri'=>'admin/__/process_svnlog', 'name' => 'Process SVN log' ),
       array( 'uri'=>'admin/__/build', 'name' => 'Build revision: '.$this->revision ),
     );
     $menu = new Menu();
@@ -541,6 +542,107 @@ class __ extends AdminController {
       $this->_add_content('<p>'.$path.'</p>');
       empty_map($path);
 		}
+    $this->_show_all();
+  }
+  
+  
+  public function process_svnlog() {
+    $this->_add_content('<h1>Process SVN log</h1>');
+    $log=read_file('svnlog.txt');
+    
+    // Fetch
+    $svn=array();
+    if (preg_match_all("/(\\d.\\d\\d\\d)\\n((.*)\\ncopy\\nchanges(\\d*)\\n)(.*)\\n/uiUsmx", $log,$matches)) {
+      foreach ($matches[1] as $key => $value) {
+        $rev=str_replace('.','',$value);
+        $log=$matches[3][$key];
+        $log=explode("\n",$log);
+        // Clean logs
+        foreach ($log as $key => $value) {
+          $log[$key]=trim(ltrim($value,'-'));
+        }
+        // Combine some logs with :
+        if ($keys=array_ereg_search(':$',$log)) {
+          // trace_($keys);
+          // trace_($log);
+          $newlog=$log;
+          foreach ($keys as $kk) {
+            $combined=$log[$kk];
+            $k=$kk+1;
+            $end=false;
+            while (isset($log[$k]) and !$end) {
+              $line=$log[$k];
+              if (in_array(substr($line,0,1),array('-','.','*'))) {
+                $combined.="\n  * ".trim(substr($line,1));
+                unset($log[$k]);
+              }
+              else {
+                $end=true;
+              }
+              $k++;
+            }
+            // trace_($combined);
+            $log[$kk]=$combined;
+          }
+        }
+        $svn[$rev]=array(
+          'rev'=>$rev,
+          'date'=>$matches[5][$key],
+          'log'=>$log
+        );
+      }
+    }
+    // trace_($svn);
+    // Combi
+
+    // Auto create new Changelog
+    $changes=array(
+      'MYSQL'=>array('sql'),
+      'UPDATE'=>array('update','updated'),
+      'FRONTEND'=>array('controller','module'),
+      'NEW'=>array('new','added','add'),
+      'BUGS'=>array('bug','bugs','problem','problems','error'),
+      'OTHERS'=>array(),
+    );
+
+    $newchangelog=$changes;
+    foreach ($newchangelog as $key => $value) {
+      $newchangelog[$key]=array();
+    }
+    if ($svn) {
+      foreach ($svn as $rev => $item) {
+        foreach ($item['log'] as $log) {
+          $fit=FALSE;
+          foreach ($changes as $key => $triggers) {
+            if (!$fit) {
+              if (has_string($triggers,$log,FALSE)) {
+                if (!in_array($log,$newchangelog[$key])) {
+                  $newchangelog[$key][]=$log;
+                }
+                $fit=TRUE;
+              }
+            }
+          }
+          if (!$fit and !in_array($log,$newchangelog['OTHERS'])) $newchangelog['OTHERS'][]=$log;
+        }
+      }
+    }
+    
+    $this->_add_content('<h1>New Changelog - Added</h1>');
+    $changelog='Changes '.$this->get_revision()."\n============\n\n";
+    foreach ($newchangelog as $key => $value) {
+      $changelog.=$key.":\n";
+      foreach ($value as $entry) {
+        $changelog.='- '.$entry."\n";
+      }
+      $changelog.="\n";
+    }
+    $this->_add_content('<pre>'.htmlentities($changelog).'</pre>');
+    
+    $old_changelog=read_file('changelog.txt');
+    $new_changelog=$changelog."\n\n".$old_changelog;
+    write_file('changelog.txt',$new_changelog);
+    
     $this->_show_all();
   }
   
