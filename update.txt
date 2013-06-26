@@ -1,3 +1,14 @@
+UPDATE to r2108
+===============
+
+- Replace current sys map with new sys map
+- Replace controller.php or at least:
+  * Line 109: if ($this->no_content()) $this->show_404();
+  * replace: function _module()
+  * replace: function _call_library()
+- Run DB updates (from FlexyAdmin)
+
+
 UPDATE to r1987
 ===============
 

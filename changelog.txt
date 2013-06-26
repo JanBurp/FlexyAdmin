@@ -1,3 +1,67 @@
+Changes 2108
+============
+
+MYSQL:
+- update_r2015.sql (_flexy_forms) and new demo database
+
+UPDATE:
+- update to jQuery 1.10.1
+
+FRONTEND:
+- Changes in controller.php:
+  * Line 109: if ($this->no_content()) $this->show_404();
+  * replace: function _module()
+  * replace: function _call_library()
+- Login module remembers page
+- Changed: Twitter module
+- new jquery.styleTwitter plugin
+- Added: ->set_page_view() so the page view can be changed within a module
+- new Forms module: a flexible module for all possible forms, all modules with forms can use this
+- all current form modules removed and replaced with forms
+- Added ajax_module.php
+- Improved search module
+- javascript to bottom of site.php
+- added css/ie10.css
+- jquery.clearInput removed, jquery.placeholder added
+
+NEW:
+- New helper: MY_date_helper()
+- add id to form
+- Added plugin: plugin_import_wordpress, you can import a wordpress XML with this
+- added read_file_filter() to MY_file_helper()
+- added MY_string_helper -> safe_quotes()
+- new mime types for .ppt
+- added new plugin_flatten_table
+- added meta/exif data field to res_media_files
+
+BUGS:
+- Bug in mediatable if stx_meta doesn't exist
+- bug in MY_pagination (open <ul>)
+- Some bugs in login and plugin_login_activate
+- bug in MY_array_helper array_unset_keys()
+- bug in auto-opening item in userguide
+- Bug in MY_URI when using :parts
+- Bug in SPAM
+- BUG in MY_array_helper (filter_by)
+- BUG in Spam
+- debug_helper recognises AJAX calls
+
+OTHERS:
+- form can now show inline validation errors
+- count_string() can have empty string now
+- plugin_import_wordpress now load and adss images as well
+- in config base_url is now automatically set
+- file_manager passes config through file upload class, so extra settings are possible
+- plugin_log:
+  * reading and filtering file is per line, so large files can be loaded
+  * more timewindow options
+- nicer/simpler trace
+- open most probable method in userguide when searched
+- message box nicer, and will be shown when hovering over the header
+- content - remove width/height tags
+
+
+
 Changes r1987
 =============
 
