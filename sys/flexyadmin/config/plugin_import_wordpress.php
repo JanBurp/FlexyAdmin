@@ -12,5 +12,9 @@
 $config['admin_api_method'] = '_admin_api';
 
 
+$config['posts_table']      = 'tbl_blog';
+$config['comments_table']   = 'tbl_comments';
+
+
 
 ?>

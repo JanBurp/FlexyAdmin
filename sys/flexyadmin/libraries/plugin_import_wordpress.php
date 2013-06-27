@@ -44,8 +44,8 @@ class Plugin_import_wordpress extends Plugin {
     // Put in DB
 
     // posts
-    $table='tbl_nieuws';
-    $commments_table='tbl_comments';
+    $table=$this->config['posts_table'];
+    $commments_table=$this->config['comments_table'];
     $foreign_key='id_'.remove_prefix($table);
     $comments=$items['comments'];
     $imgcount=0;
