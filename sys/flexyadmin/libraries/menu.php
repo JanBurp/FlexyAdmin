@@ -441,6 +441,16 @@ class Menu {
 		return $this->table;
 	}
 	
+  /**
+   * Geeft alle huidige menu-items
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+  function get_items() {
+    return $this->menu;
+  }
+  
 	/**
 	 * Maakt menu van array uit database resultaat
 	 *
