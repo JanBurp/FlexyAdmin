@@ -585,8 +585,8 @@ tr.caption td				{ border:none; }
 .grid td.date,
 .grid td.tme,
 .grid td.str,
-.grid td.txt				{ max-width:250px; height:25px;overflow:hidden;white-space:nowrap;}
-.grid td.str_title	{ max-width:none;}
+.grid td.txt				{ max-width:250px; height:25px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;}
+.grid td.str_title  { max-width:300px;}
 .grid td.media,
 .grid td.rgb				{ text-align: center;	width:52px;	max-width:52px; }
 .grid td.medias			{ min-width:120px; max-width:600px;}
