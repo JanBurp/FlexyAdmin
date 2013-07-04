@@ -13,7 +13,9 @@
 */
 
 if (!isset($config['base_url'])) {
+	// If no automatic base_url, comment this:
 	die("sorry no automatic 'base_url', edit '".SITEPATH."config_local.php'.");
+	// And uncomment this with right base_url
 	// $config['base_url']	= "http://localhost/";
 }
 
