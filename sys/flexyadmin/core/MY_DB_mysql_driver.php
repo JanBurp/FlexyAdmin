@@ -127,6 +127,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
   private $ar_dont_select;
   private $ar_last_query=FALSE;
   private $ar_last_count=FALSE;
+  private $remember_query=TRUE;
 
   /**
    * @param string $params 
@@ -163,6 +164,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		$this->order_by_many(FALSE);
 		$this->ar_dont_select=array();
 		$this->select_first();
+    $this->remember_query=TRUE;
     return $this;
 	}
 
@@ -966,8 +968,8 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			$query=$this->get($table,$limit,$offset);
 		else
 			$query=$this->get($table);
-		$this->ar_last_query=$this->last_query();
-		// trace_('#show#'.$this->ar_last_query);
+    if ($this->remember_query) $this->ar_last_query=$this->last_query();
+    // trace_('#show#'.$this->ar_last_query);
 		return $query;
 	}
 
@@ -1100,7 +1102,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		$extraFullField=$this->extraFullField;
 		
 		$result=$this->_get_result($table,$limit,$offset);
-		
+    
 		// order results as tree if asked for
 		if ($orderAsTree and !empty($result)) {
 			$options=el("options",$result);
@@ -1273,7 +1275,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		
 		// fetch data
 		$query=$this->_get($table,$limit,$offset);
-		
+    
 		log_("info","[DB+] Get data from query:");
 		$res=$query->result_array();
 		$query->free_result();
@@ -1338,7 +1340,6 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			// trace_($result);
 		}
 
-    
     /**
      * RESET ALL, but keep settings for last addings
      */
@@ -1346,7 +1347,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
     $options=$this->options;
     $foreign_trees=$this->foreign_trees;
 		$this->reset();
-
+    
 		/**
 		 * add options if asked for
 		 */
@@ -1360,7 +1361,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			}
 			$result=$this->_add_many_options($result,$manyTables);
 		}
-    
+
     /**
      * If foreign data is tree, add these data
      */
@@ -1373,7 +1374,9 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
         // get all foreign tree data
         $this->select('id,uri,order,self_parent');
         $this->select($abstract_field)->order_as_tree()->uri_as_full_uri(TRUE,$abstract_field);
-        $foreign_data=$this->get_results($foreign_table);
+        $this->remember_query=FALSE;
+        $foreign_data=$this->get_results($foreign_table,0,0);
+        $this->remember_query=TRUE;
         // put tree abstract in result
         foreach ($result as $id => $row) {
           if (isset($foreign_data[$row[$foreign_key]][$abstract_field]))
@@ -1567,7 +1570,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			return FALSE;
 		}
 		$sql=$this->ar_last_query;
-
+    
 		$match=array();
 		$table='';
     $tablePlus='';
@@ -1587,7 +1590,6 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 
 		return $num_rows;
 	}
-
 
   /**
    * Maakt CONCAT sql van velden
