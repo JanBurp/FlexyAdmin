@@ -159,9 +159,9 @@ class Show extends AdminController {
 						}
 						if ($table=="cfg_users") $this->db->where('cfg_users.id >=',$this->user_id);
 							
-						$this->db->add_foreigns_as_abstracts();
+            $this->db->add_foreigns_as_abstracts();
 						if (isset($tableInfo['b_grid_add_many']) and $tableInfo['b_grid_add_many']) $this->db->add_many();
-						$this->db->max_text_len(250);
+            $this->db->max_text_len(250);
 						
 						// search?
 						if ($search) {
@@ -187,6 +187,7 @@ class Show extends AdminController {
 						$total_rows=$this->db->last_num_rows_no_limit();
 
             // trace_($data);
+            // trace_($total_rows);
 
 						$last_order=$this->db->get_last_order();
 						if (substr($last_order,0,1)!='(') $order=$last_order;
