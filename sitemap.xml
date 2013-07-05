@@ -2,24 +2,54 @@
 
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" >
 	<url>
-		<loc>http://www.flexyadmin.com/start</loc>
-		<title>Start</title>
-		<content>Welkom! .</content>
+		<loc>http://www.balancescene.eu/nl</loc>
+		<title>nl</title>
+		<content>.</content>
 	</url>
 	<url>
-		<loc>http://www.flexyadmin.com/een_pagina</loc>
-		<title>Een pagina</title>
-		<content><![CDATA[Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus in width=&quot;100&quot; augue ac justo posuere luctus sodales vel justo. .]]></content>
+		<loc>http://www.balancescene.eu/nl/home</loc>
+		<title>home</title>
+		<content>home.</content>
 	</url>
 	<url>
-		<loc>http://www.flexyadmin.com/een_pagina/subpagina_met_module_links</loc>
-		<title>Subpagina met module Links</title>
-		<content>Een subpagina.</content>
+		<loc>http://www.balancescene.eu/nl/categorie</loc>
+		<title>categorie</title>
+		<content>.</content>
 	</url>
 	<url>
-		<loc>http://www.flexyadmin.com/contact</loc>
-		<title>Contact</title>
-		<content>Hier een voorbeeld van een eenvoudig contactformulier..</content>
+		<loc>http://www.balancescene.eu/nl/categorie/fashion</loc>
+		<title>Fashion</title>
+		<content>.</content>
+	</url>
+	<url>
+		<loc>http://www.balancescene.eu/nl/hot_or_not</loc>
+		<title>hot or not</title>
+		<content>.</content>
+	</url>
+	<url>
+		<loc>http://www.balancescene.eu/en</loc>
+		<title>en</title>
+		<content>.</content>
+	</url>
+	<url>
+		<loc>http://www.balancescene.eu/en/home</loc>
+		<title>home</title>
+		<content>home.</content>
+	</url>
+	<url>
+		<loc>http://www.balancescene.eu/en/categorie</loc>
+		<title>category</title>
+		<content>.</content>
+	</url>
+	<url>
+		<loc>http://www.balancescene.eu/en/categorie/fashion</loc>
+		<title>Fashion</title>
+		<content>.</content>
+	</url>
+	<url>
+		<loc>http://www.balancescene.eu/en/hot_or_not</loc>
+		<title>hot or not</title>
+		<content>.</content>
 	</url>
 </urlset>
 
