@@ -1,1 +1,1 @@
-User-agent: *Disallow: /sysSitemap: http://www.flexyadmin.com//sitemap.xml
+User-agent: *Disallow: /sysSitemap: http://www.balancescene.eu/sitemap.xml
