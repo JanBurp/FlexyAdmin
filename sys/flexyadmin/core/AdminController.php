@@ -230,18 +230,20 @@ class AdminController extends BasicController {
 						$this->db->order_by("order");
 						$query=$this->db->get($mediaInfoTbl);
 						foreach($query->result_array() as $mediaInfo) {
-							if (!isset($mediaInfo['path']) and isset($mediaInfo['str_path'])) $mediaInfo['path']=$mediaInfo['str_path'];
-							$menuName=$this->ui->get($mediaInfo['path']);
-							while (isset($a[$menuName])) {$menuName.=" ";}
-							$rightsName=el('path',$mediaInfo);
-							$uri=api_uri('API_filemanager',"show",pathencode(el('path',$mediaInfo)));
-							if (!empty($menuName) and $this->user->has_rights("media_".$rightsName)) {
-								$menu[$uri]=array("uri"=>$uri,'name'=>$menuName,"class"=>"media");
-							}
-							$mediaHelp=$this->ui->get_help($mediaInfo["path"]);
-							if (!empty($mediaHelp)) {
-								$menu[$uri]["help"]=$mediaHelp;
-							}
+              if (!isset($mediaInfo['b_visible']) or $mediaInfo['b_visible']) {
+  							if (!isset($mediaInfo['path']) and isset($mediaInfo['str_path'])) $mediaInfo['path']=$mediaInfo['str_path'];
+  							$menuName=$this->ui->get($mediaInfo['path']);
+  							while (isset($a[$menuName])) {$menuName.=" ";}
+  							$rightsName=el('path',$mediaInfo);
+  							$uri=api_uri('API_filemanager',"show",pathencode(el('path',$mediaInfo)));
+  							if (!empty($menuName) and $this->user->has_rights("media_".$rightsName)) {
+  								$menu[$uri]=array("uri"=>$uri,'name'=>$menuName,"class"=>"media");
+  							}
+  							$mediaHelp=$this->ui->get_help($mediaInfo["path"]);
+  							if (!empty($mediaHelp)) {
+  								$menu[$uri]["help"]=$mediaHelp;
+  							}
+              }
 						}
 						$query->free_result();
 					}
