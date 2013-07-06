@@ -11,22 +11,28 @@
   * 
   * ## Snelle manier om pagination in een eigen module toe te passen
   * 
-  * - In 'site/config/config.php' de volgende instelling de waarde TRUE geven:
+  * 1. In 'site/config/config.php' de volgende instelling de waarde TRUE geven:
   * 
-  *     $config['auto_pagination']	= TRUE;
+  *         $config['auto_pagination']	= TRUE;
   * 
-  * - In je module de volgende code plaatsen om de pagination library te laden en 'offset' uit de URI te halen:
+  * 2. In je module de volgende code plaatsen om de pagination library te laden en 'offset' uit de URI te halen:
   * 
-  *     $this->CI->load->library('pagination');
-  *     $offset=$this->CI->uri->get_pagination();
+  *         $this->CI->load->library('pagination');
+  *         $offset = $this->CI->uri->get_pagination();           // $offset is het item waarmee je lijst begint
+  *         $per_page = 10;                                       // Het aantal items per pagina
   * 
-  * - In je code (in een module) de pagination links genereren:
+  * 3. Je items, een voorbeeld
   * 
-  *     $config['total_rows'] = 100;                          // Totaal aantal items, kun je na een `db->get_result()` ook met `$this->CI->db->last_num_rows_no_limit()` verkrijgen.
-  *     $config['per_page'] = 10;                             // Aantal items per pagina
-  *     $this->CI->pagination->initialize($config);
-  *     $this->CI->pagination->auto(); 
-  *     $pagination = $this->CI->pagination->create_links();  // $pagination bevat nu de HTML met pagination links
+  *         $items = $this->CI->db->get_result( 'tbl_links', $per_page, $offset );
+  *         $total_rows = $this->CI->db->last_num_rows_no_limit();
+  * 
+  * 4. In je module de pagination links genereren:
+  * 
+  *         $config['total_rows'] = $total_rows;                  // Totaal aantal items
+  *         $config['per_page'] = $per_page;                      // Aantal items per pagina
+  *         $this->CI->pagination->initialize($config);
+  *         $this->CI->pagination->auto(); 
+  *         $pagination = $this->CI->pagination->create_links();  // $pagination bevat nu de HTML met pagination links
   * 
   *
   * @package default
