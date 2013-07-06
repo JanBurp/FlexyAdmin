@@ -146,8 +146,8 @@ function doGrid() {
 		// Filter/Search rows
 		//
 		filter=$("table.grid:first");
-		if (filter.length>0 && !isGridAction) {
-      
+		if (filter.length>0 && !isGridAction && !$(filter).hasClass('home')) {
+
 			if ($(filter).hasClass('pagination')) {
 				// add filter input
 				var search=unescape($(filter).attr('search').replace(/~/,'%'));
