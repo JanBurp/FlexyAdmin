@@ -600,6 +600,7 @@ class __ extends AdminController {
       'MYSQL'=>array('sql'),
       'UPDATE'=>array('update','updated'),
       'FRONTEND'=>array('controller','module'),
+      'USERGUIDE'=>array('userguide','docs'),
       'NEW'=>array('new','added','add'),
       'BUGS'=>array('bug','bugs','problem','problems','error'),
       'OTHERS'=>array(),
