@@ -3,11 +3,31 @@
  /**
   * Uitbreiding op [CI_Pagination](http://codeigniter.com/user_guide/libraries/pagination.html)
   * 
-  * Dit zijn de uitbreidingen:
+  * ##Dit zijn de uitbreidingen op CodeIgniter:
   * 
   * - tags hebben een mooiere default config (list-items)
   * - extra tags: _total_tag_open_ en _total_tag_close_ waarin het totaal aantal items terecht komt
   * - automatisch pagination met in de uri een 'offset' deel waarachter de start van de volgende pagina komt.
+  * 
+  * ## Snelle manier om pagination in een eigen module toe te passen
+  * 
+  * - In 'site/config/config.php' de volgende instelling de waarde TRUE geven:
+  * 
+  *     $config['auto_pagination']	= TRUE;
+  * 
+  * - In je module de volgende code plaatsen om de pagination library te laden en 'offset' uit de URI te halen:
+  * 
+  *     $this->CI->load->library('pagination');
+  *     $offset=$this->CI->uri->get_pagination();
+  * 
+  * - In je code (in een module) de pagination links genereren:
+  * 
+  *     $config['total_rows'] = 100;                          // Totaal aantal items, kun je na een `db->get_result()` ook met `$this->CI->db->last_num_rows_no_limit()` verkrijgen.
+  *     $config['per_page'] = 10;                             // Aantal items per pagina
+  *     $this->CI->pagination->initialize($config);
+  *     $this->CI->pagination->auto(); 
+  *     $pagination = $this->CI->pagination->create_links();  // $pagination bevat nu de HTML met pagination links
+  * 
   *
   * @package default
   * @author Jan den Besten
