@@ -142,6 +142,7 @@ class Menu {
   private  $attr;
 	private  $itemAttr;
 	private  $currentAsActive;
+  private  $nested=TRUE;
 	
 	private  $changeModules;
   
@@ -240,6 +241,18 @@ class Menu {
 		else
 			$this->extraFields[$extra]=array("name"=>$extra,"start"=>$startTag,"close"=>$closeTag);
 	}
+  
+  /**
+   * Maak een genest menu, of niet.
+   *
+   * @param bool $nested 
+   * @return object self
+   * @author Jan den Besten
+   */
+  public function as_nested($nested=TRUE) {
+    $this->nested=$nested;
+    return $this;
+  }
 	
   /**
    * TODO
@@ -976,16 +989,20 @@ class Menu {
 							$itemOut.=anchor($link, $showName, $itemAttr);
 						}
 					}
+
+          $subOut='';
 					if (isset($item["sub"])) {
 						$subOut=$this->render($item["sub"],"$cName",$level+1,$thisUri);
 						// check if needs to add active class
 						if (strpos($subOut,'current')>0) {
-							$itemOut=preg_replace("/<li([^>]*)class=\"([^\"]*)\"/","<li$1class=\"$2 active\"",$itemOut);
-							$itemOut=preg_replace("/<a([^>]*)class=\"([^\"]*)\"/","<a$1class=\"$2 active\"",$itemOut);
+              $itemOut=preg_replace("/class=\"([^\"]*)\"/","class=\"$2 active\"",$itemOut);
+              $itemOut=preg_replace("/<a([^>]*)class=\"([^\"]*)\"/","<a$1class=\"$2 active\"",$itemOut);
 						}
-						$itemOut.=$subOut;
 					}
-					$out.=$itemOut.$this->tmp($this->tmpItemEnd);
+          if ($this->nested)
+            $out.=$itemOut.$subOut.$this->tmp($this->tmpItemEnd);
+          else
+					  $out.=$itemOut.$this->tmp($this->tmpItemEnd).$subOut;
 					$pos++;
 				}
 			}
