@@ -63,13 +63,13 @@ class Login extends Module {
   	* @ignore
   	*/
 	public function index($page) {
-    $this->check();
+    // $this->check();
 
 		// If Login is called also with other methods, don't go on with this call
-		$modules=$this->CI->site['modules'];
-		if (in_array('login.login',$modules) or in_array('login.logout',$modules) or in_array('login.register',$modules) or in_array('login.forgot_password',$modules) or in_array('login.reset_password',$modules)) {
-			return $page;
-		}
+    $modules=$this->CI->site['modules'];
+    if (in_array('login.login',$modules) or in_array('login.logout',$modules) or in_array('login.register',$modules) or in_array('login.forgot_password',$modules) or in_array('login.reset_password',$modules)) {
+      return $page;
+    }
 		return $this->login($page,false);
 	}
   
@@ -141,7 +141,6 @@ class Login extends Module {
 				$view['register_uri']=$this->config('register_uri');
 			}
 			$content=$this->CI->show('login/login',$view,true);
-			
 		}
 		else {
 			// make sure that POSTdata is empty, so other modules with a form start fresh
@@ -151,7 +150,7 @@ class Login extends Module {
 				if (isset($_POST['submit']) and $_POST['submit']==lang('login_submit')) unset($_POST['submit']);
 			}
 			// Redirect naar vorige pagina, of Show message if a dedicated login page
-      if ($redirect) redirect($redirect);
+      // if ($redirect) redirect($redirect);
 			if ($show_if_allready) {
 				$content=langp('login_already',$this->CI->user->user_name);
 			}
