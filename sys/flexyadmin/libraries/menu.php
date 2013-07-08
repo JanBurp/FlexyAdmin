@@ -995,8 +995,7 @@ class Menu {
 						$subOut=$this->render($item["sub"],"$cName",$level+1,$thisUri);
 						// check if needs to add active class
 						if (strpos($subOut,'current')>0) {
-              $itemOut=preg_replace("/class=\"([^\"]*)\"/","class=\"$2 active\"",$itemOut);
-              $itemOut=preg_replace("/<a([^>]*)class=\"([^\"]*)\"/","<a$1class=\"$2 active\"",$itemOut);
+              $itemOut=preg_replace("/class=\"([^\"]*)\"/","class=\"$1 active\"",$itemOut);
 						}
 					}
           if ($this->nested)
