@@ -112,22 +112,20 @@ function array2csv($array,$eol="\r\n") {
  * @link http://www.bin-co.com/php/scripts/array2json/
  */
 function array2json($arr) {
-	if(function_exists('json_encode')) return json_encode($arr); //Lastest versions of PHP already has this functionality.
+  // if(function_exists('json_encode')) return json_encode($arr); //Lastest versions of PHP already has this functionality.
 	$parts = array();
 	$is_list = false;
 
 	//Find out if the given array is a numerical array
 	$keys = array_keys($arr);
 	$max_length = count($arr)-1;
-	if(($keys[0] == 0) and ($keys[$max_length] == $max_length)) {//See if the first key is 0 and last key is length - 1
-		$is_list = true;
-		for($i=0; $i<count($keys); $i++) { //See if each key correspondes to its position
-			if($i != $keys[$i]) { //A key fails at position check.
-				$is_list = false; //It is an associative array.
-				break;
-			}
-		}
-	}
+  $is_list=TRUE;
+  for($i=0; $i<count($keys); $i++) {
+    if(!is_integer($keys[0])) {
+      $is_list = FALSE; //It is an associative array.
+      break;
+    }
+  }
 
 	foreach($arr as $key=>$value) {
 		if(is_array($value)) { //Custom handling for arrays
