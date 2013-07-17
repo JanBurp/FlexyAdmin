@@ -25,7 +25,7 @@
 	<div id="content">
 		<? if (empty($heading)) $heading='Database Error'?>
 		<h1><? echo $heading; ?></h1>
-		<? echo $message; ?>
+    <? if (IS_LOCALHOST) echo $message; ?>
 		<?
 		$error=explode(' ',$message);
 		$error=substr($error[2],0,4);
@@ -47,7 +47,7 @@
 
 			default:
 				echo "Error: '".$error."'<br/>";
-				if (IS_LOCALHOST) backtrace_(3);
+        if (IS_LOCALHOST) backtrace_(3);
 			break;
 		}
 		?>
