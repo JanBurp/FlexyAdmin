@@ -122,6 +122,12 @@
 	$config['email_accepted']   = 'accepted.tpl.php';
 
 	/**
+	 * New account send
+	 **/
+	$config['email_new_account']   = 'new_account.tpl.php';
+
+
+	/**
 	 * Deny activation
 	 **/
 	$config['email_deny']   = 'deny.tpl.php';
