@@ -25,6 +25,7 @@ $lang['tme_added']        = "Toegevoegd op";
 $lang['self_parent']      = "Submenu van";
 $lang['str_keywords']     = "Zoektermen";
 
+$lang['str_username']     = "Gebruikersnaam";
 $lang['str_gender']       = "Geslacht";
 $lang['str_name']         = "Naam";
 $lang['str_first_name']   = "Voornaam";
