@@ -46,8 +46,17 @@
 				case 'accept':
 					$this->_accept_user($user_id);
 					break;
+				case 'accept_send':
+					$this->_accept_user_and_send($user_id);
+					break;
+				case 'all':
+					$this->_all($user_id); // $user_id is action in this case
+					break;
 			}
 			$grid=$this->_show_inactive_users();
+      if (!empty($grid)) {
+        $this->add_message('<p>Alle gebruikers: <a class="button" href="admin/plugin/'.$this->shortname.'/all/deny">weigeren</a> | <a class="button" href="admin/plugin/'.$this->shortname.'/all/accept">accepteren</a> | <a class="button" href="admin/plugin/'.$this->shortname.'/all/accept_send">accepteren en inlog sturen</a>');
+      }
       return $this->view('plugin_login_activate',array('title'=>lang('title'),'grid'=>$grid));
 		}
 	}
@@ -85,6 +94,45 @@
 			$this->CI->user->activate_user($user_id);
 		}
 	}
+
+  /**
+   * Accepteer gebruiker en stuur de inlog
+   *
+   * @param string $user_id 
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   */
+	private function _accept_user_and_send($user_id) {
+		$user=$this->CI->user->get_user($user_id);
+		if ($user and !$user->b_active) {
+      $this->add_message(langp('user_accepted_send',$user->str_username));
+      $this->CI->user->send_new_account_mail($user_id,lang('mail_accepted_subject'));
+      $this->CI->user->activate_user($user_id);
+		}
+	}
+  
+  private function _all($action) {
+		$users=$this->CI->user->get_inactive_users_array();
+		if ($users) {
+      foreach ($users as $user) {
+  			switch ($action) {
+  				case 'deny':
+  					$this->_deny_user($user['id']);
+  					break;
+  				case 'accept':
+  					$this->_accept_user($user['id']);
+  					break;
+  				case 'accept_send':
+  					$this->_accept_user_and_send($user['id']);
+  					break;
+  			}
+      }
+		}
+		else {
+			$this->add_message(lang('no_inactive_users'));
+		}
+	}
 	
   /**
    * Toont de lijst met inactieve gebruikers en opties in een grid
@@ -99,7 +147,9 @@
 			$show_users=array();
 			foreach ($users as $key => $u) {
 				$show_users[$key]=array( $this->CI->ui->get('str_username')=>$u['str_username'], $this->CI->ui->get('email_email')=>'<a href="mailto:'.$u['email_email'].'">'.$u['email_email'].'</a>', $this->CI->ui->get('group')=>$u['group']);
-				$show_users[$key]['']=anchor('admin/plugin/'.$this->shortname.'/deny/'.$u['id'],lang('deny'),array('class'=>'button')).' | '.anchor('admin/plugin/'.$this->shortname.'/accept/'.$u['id'],lang('accept'),array('class'=>'button'));
+				$show_users[$key]['']=anchor('admin/plugin/'.$this->shortname.'/deny/'.$u['id'],lang('deny'),array('class'=>'button')).' | '.
+                              anchor('admin/plugin/'.$this->shortname.'/accept/'.$u['id'],lang('accept'),array('class'=>'button')).' | '.
+                              anchor('admin/plugin/'.$this->shortname.'/accept_send/'.$u['id'],lang('accept_send'),array('class'=>'button'));
 			}
 			$this->CI->load->model('grid');
 			$grid=new grid();

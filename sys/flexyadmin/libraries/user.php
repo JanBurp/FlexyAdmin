@@ -285,7 +285,6 @@ class User Extends Ion_auth {
 	public function register($username, $password, $email, $additional_data=array(), $group_name = false, $subject='Account Activation', $uri='') {
 		if (empty($uri)) $uri=$this->CI->uri->get();
 		$email_activation = $this->CI->config->item('email_activation', 'ion_auth');
-		$admin_activation = $this->CI->config->item('admin_activation', 'ion_auth');
 		if ($admin_activation) $email_activation=true;
 
 		if (!$email_activation)	{
@@ -362,6 +361,25 @@ class User Extends Ion_auth {
 	public function send_accepted_mail($id,$subject='Account accepted and activated') {
 		return $this->send_mail($id,'email_accepted',$subject);
 	}
+
+  /**
+   * Stuur gebruiker mail dat account is aangemaakt, met (nieuwe) inloggegevens
+   *
+   * @param string $id 
+   * @param string $subject
+   * @param array $data Array met extra gegevens die in de mail worden gestuurd (inloggegevens bv)
+   * @return void
+   * @author Jan den Besten
+   */
+	public function send_new_account_mail($id,$subject='New account') {
+		$user  = $this->CI->ion_auth_model->get_user($id)->row();
+		$email = $user->email_email;
+    $code=$this->CI->ion_auth_model->forgotten_password($email);
+    $password=$this->CI->ion_auth_model->forgotten_password_complete($code);
+    // trace_(array('code'=>$code,'password'=>$password));
+		return $this->send_mail($id,'email_new_account',$subject,array('password'=>$password));
+	}
+
 
   /**
    * Stuur gebruiker mail dat registratie niet is toegestaan

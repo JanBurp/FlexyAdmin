@@ -338,22 +338,17 @@ class Ion_auth_model extends CI_Model
 	 * @return bool
 	 * @author Mathew
 	 **/
-	public function forgotten_password($email = '')
-	{
-	    if (empty($email))
-	    {
-		return FALSE;
-	    }
-
-	    $key = $this->hash_password(microtime().$email);
-
-	    $this->forgotten_password_code = $key;
-
-	    $this->db->where($this->user->_extra_where);
-
-	    $this->db->update($this->tables['users'], array('str_forgotten_password_code' => $key), array('email_email' => $email));
-
-	    return $this->db->affected_rows() == 1;
+	public function forgotten_password($email = '') {
+    if (empty($email)) {
+      return FALSE;
+    }
+    $key = $this->hash_password(microtime().$email);
+    $this->forgotten_password_code = $key;
+    $this->db->where($this->user->_extra_where);
+    $this->db->update($this->tables['users'], array('str_forgotten_password_code' => $key), array('email_email' => $email));
+    // Changed by JdB
+    if ($this->db->affected_rows() == 1) return $key;
+    return FALSE;
 	}
 
 	/**
@@ -362,31 +357,24 @@ class Ion_auth_model extends CI_Model
 	 * @return string
 	 * @author Mathew
 	 **/
-	public function forgotten_password_complete($code, $salt=FALSE)
-	{
-	    if (empty($code))
-	    {
-		return FALSE;
-	    }
+	public function forgotten_password_complete($code, $salt=FALSE) {
+    if (empty($code)) {
+      return FALSE;
+    }
 
-	    $this->db->where('str_forgotten_password_code', $code);
+    $this->db->where('str_forgotten_password_code', $code);
+    if ($this->db->count_all_results($this->tables['users']) > 0) {
+      $password = $this->salt();
+      $data = array(
+          'gpw_password'			=> $this->hash_password($password, $salt),
+          'str_forgotten_password_code'   => '0',
+          'b_active'			=> 1,
+           );
+      $this->db->update($this->tables['users'], $data, array('str_forgotten_password_code' => $code));
+      return $password;
+    }
 
-	    if ($this->db->count_all_results($this->tables['users']) > 0)
-	    {
-		$password = $this->salt();
-
-		$data = array(
-			    'gpw_password'			=> $this->hash_password($password, $salt),
-			    'str_forgotten_password_code'   => '0',
-			    'b_active'			=> 1,
-			     );
-
-		$this->db->update($this->tables['users'], $data, array('str_forgotten_password_code' => $code));
-
-		return $password;
-	    }
-
-	    return FALSE;
+    return FALSE;
 	}
 
 	/**
