@@ -15,7 +15,6 @@ $lang['register_succes']				= 'Je aanmelding is gelukt. Je kunt nu <a href="%s">
 $lang['register_fail']					= 'Je aanmelding is mislukt.';
 $lang['register_mail_subject']	= 'Aanmelding.';
 
-
 // LOGIN
 $lang['forgot_password']				= 'Wachtwoord vergeten.';
 $lang['register']								= 'Maak account aan.';
@@ -42,10 +41,13 @@ $lang['title']                        = 'Gebruikers Activeren';
 $lang['activate_users']								= 'Activeer gebruikers';
 $lang['show_inactive_users']					= 'Inactieve gebruikers';
 $lang['no_inactive_users']						= 'Er zijn geen in-actieve gebruikers op dit moment.';
-$lang['deny']													= 'Weiger deze gebruiker';
-$lang['accept']												= 'Accepteer deze gebruiker';
-$lang['user_removed']									= 'Gebruiker %s verwijderd en een afwijzings email gestuurd.';
-$lang['user_accepted']								= 'Gebruiker %s is geactiveerd en heeft een accepterings email gekregen.';
+$lang['all_users']                    = 'Alle gebruikers';
+$lang['deny']													= 'Weiger';
+$lang['accept']												= 'Accepteer';
+$lang['accept_send']									= 'Accepteer & Stuur inlog';
+$lang['user_removed']									= 'Gebruiker "%s" verwijderd en een afwijzings email gestuurd.';
+$lang['user_accepted']								= 'Gebruiker "%s" is geactiveerd en heeft een accepterings email gekregen.';
+$lang['user_accepted_send']						= 'Gebruiker "%s" is geactiveerd en heeft een email met inloggegevens gekregen.';
 $lang['mail_denied_subject']					= 'Account aanvraag afgewezen.';
 $lang['mail_accepted_subject']				= 'Account aanvraag geaccepteerd.';
 
