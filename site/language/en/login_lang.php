@@ -42,12 +42,16 @@ $lang['title']                        = 'Activate users';
 $lang['activate_users']								= 'Activate users';
 $lang['show_inactive_users']					= 'Inactive users';
 $lang['no_inactive_users']						= 'There are no in-active users at this moment.';
-$lang['deny']													= 'Deny this user';
-$lang['accept']												= 'Accept this user';
+$lang['all_users']                    = 'All users';
+$lang['deny']													= 'Deny';
+$lang['accept']												= 'Accept';
+$lang['accept_send']									= 'Accept & Send login';
 $lang['user_removed']									= 'User %s is deleted and en deny email is send.';
 $lang['user_accepted']								= 'User %s is activated and an accept email is send.';
+$lang['user_accepted_send']						= 'User %s is activated and an email with login is send.';
 $lang['mail_denied_subject']					= 'Account registration denied.';
 $lang['mail_accepted_subject']				= 'Account registration accepted.';
+
 
 
 
