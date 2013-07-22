@@ -56,10 +56,10 @@ function doGrid() {
             // chunk_size : '1mb',
             // unique_names : true,
             filters : [ {title : "--", extensions : config.file_types} ],
-
             init : {
               FileUploaded: function(up, file, info) {
-                var response=$.parseJSON(info.response);
+                response=info.response;
+                response=$.parseJSON(response);
                 if (response.error!='') {
                   var div=$('.plupload_message.ui-state-error');
                   if (div.length==0) {
@@ -73,7 +73,6 @@ function doGrid() {
                 //   // no error, show thumb
                 //   var thumb=response.thumb;
                 //   console.log(thumb);
-                //   
                 // }
               },
               UploadComplete: function(obj,files) {

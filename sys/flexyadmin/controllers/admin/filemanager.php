@@ -324,13 +324,18 @@ class Filemanager extends AdminController {
     
     
     if ($ajax=='ajax') {
+      $messages=$this->message->get();
+      if (is_array($messages)) $messages=implode('|',$messages);
+      $errors=$this->message->get_errors();
+      if (is_array($errors)) $errors=implode('|',$errors);
       $out=array(
         'path'=>$path,
         'file'=>$file,
-        // 'thumb'=>$this->config->item('THUMBCACHE').pathencode(add_assets($path.'/'.$file)),
-        'message'=>$this->message->get(),
-        'error'=>$this->message->get_errors(),
-        'ajax'=>$ajax);
+        'thumb'=>$this->config->item('THUMBCACHE').pathencode(add_assets($path.'/'.$file)),
+        'message'=>$messages,
+        'error'=>$errors,
+        'ajax'=>$ajax
+      );
       $this->message->reset()->reset_errors();
       $json=array2json($out);
       echo $json;
