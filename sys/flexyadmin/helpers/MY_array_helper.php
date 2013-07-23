@@ -466,10 +466,10 @@ function filter_by($arr,$prefix) {
 }
 
 /**
- * Geeft alle elementen uit de associatieve array die NIET de meegegeven prefix in hun key hebben
+ * Geeft alle elementen uit de associatieve array die NIET de meegegeven prefix(en) in hun key hebben
  *
- * @param string $a Array
- * @param string $ap Prefix
+ * @param array $a Array
+ * @param array $ap Prefix(en) eentje als een string, of meerdere als een array van strings
  * @return array
  * @author Jan den Besten
  */
