@@ -22,8 +22,8 @@ $config['after_delete_method'] = '_after_delete';
 */
 
 $config['trigger'] = array(
-	'field_types'			=> array('url','email'),
-	'fields'					=> array('uri','self_parent')
+	'field_types'			=> array('uri','str','url','email'),
+	'fields'					=> array('uri','order','self_parent')
 );
 
 
