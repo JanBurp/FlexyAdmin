@@ -27,6 +27,7 @@ $lang['greater_than']		= "The %s field must contain a number greater than %s.";
 
 $lang['valid_rgb']	             = "Wrong color code in the '%s' field";
 $lang['valid_google_analytics']	 = "'%s' has a wrong code for Google Analytics";
+$lang['valid_regex']	           = "'%s' has a wrong value";
 
 /* End of file form_validation_lang.php */
 /* Location: ./system/language/english/form_validation_lang.php */

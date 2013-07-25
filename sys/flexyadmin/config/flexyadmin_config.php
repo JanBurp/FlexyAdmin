@@ -73,8 +73,8 @@ $config['FORBIDDEN_URIS']           = array("site","sys","admin","rss","file",'o
 |
 */
 
-$config['CUSTOM_VALIDATION_RULES']            = 'valid_rgb|valid_google_analytics';
-$config['CUSTOM_VALIDATION_RULES_CALLBACKS']  = 'callback_valid_rgb|callback_valid_google_analytics';
+$config['CUSTOM_VALIDATION_RULES']            = 'valid_rgb|valid_google_analytics|valid_regex';
+$config['CUSTOM_VALIDATION_RULES_CALLBACKS']  = 'callback_valid_rgb|callback_valid_google_analytics|callback_valid_regex';
 
 
 
