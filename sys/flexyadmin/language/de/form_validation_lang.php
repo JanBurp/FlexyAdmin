@@ -26,6 +26,10 @@ $lang['decimal']			= "Das Feld %s muss eine Dezimalzahl enthalten.";
 $lang['less_than']			= "Das Feld %s muss eine Zahl kleiner als %s enthalten.";
 $lang['greater_than']		= "Das Feld %s muss eine Zahl gr&ouml;&szlig; als %s enthalten.";
 
+$lang['valid_rgb']	             = "Wrong color code in the '%s' field";
+$lang['valid_google_analytics']	 = "'%s' has a wrong code for Google Analytics";
+$lang['valid_regex']	           = "'%s' has a wrong value";
+
 
 /* End of file form_validation_lang.php */
 /* Location: ./system/language/german/form_validation_lang.php */

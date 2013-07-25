@@ -8,7 +8,6 @@
 */
 $config['MULTIPLE_UPLOAD'] = TRUE;
 
-
 /*
 |--------------------------------------------------------------------------
 | URI Plugin: Replace spaces with character
