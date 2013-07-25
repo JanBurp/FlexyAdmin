@@ -1612,3 +1612,12 @@ iframe {
 .mceEditor iframe {
 	overflow:auto;
 }
+
+#plugin_db_scheme table {
+  float:left;
+  border:solid 1px;
+  background-color:#DEA;
+  margin:0px 20px 20px 0px;
+}
+#plugin_db_scheme thead td {border-bottom:solid 1px;}
+#plugin_db_scheme tbody td {background-color:#FFF;
