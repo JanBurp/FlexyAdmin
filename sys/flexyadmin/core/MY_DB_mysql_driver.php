@@ -1936,6 +1936,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
       if ($asTree) {
         $res=$this->get_results($cleanTable);
         unset($res['options']);
+        unset($res['multi_options']);
         // strace_($res);
       }
       else {
@@ -2050,7 +2051,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 * @return array
 	 */
 	public function defaults($table) {
-				log_("info","[DB+] Get default data:");
+		log_("info","[DB+] Get default data:");
 		$out=array();
 		$id=-1;
 		$fields=$this->list_fields($table);
