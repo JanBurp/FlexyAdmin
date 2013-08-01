@@ -1,7 +1,7 @@
 <?
 // Minimized versions of Javascript & CSS files (see http://refresh-sf.com/yui/)
 $minimize=FALSE;
-$minimize=TRUE;
+// $minimize=TRUE;
 
 if ($minimize) {
 	$js='.min.js';
@@ -173,7 +173,7 @@ $isForm=has_string('form',$show_type);
 	<script language="javascript" type="text/javascript" src="<?=assets()?>js/admin.js"></script>
 </head>
 
-<body class="action_<?=$this->uri->get(2);?> method_<?=$this->uri->get(3);?>">
+<body class="action_<?=$this->uri->get(2);?> method_<?=$this->uri->get(3);?> <? if (!$this->config->item('FORM_NICE_DROPDOWNS')) echo "normal_dropdowns";?>">
 <div id="header">
 	<a id="flexyadmin" href="<?=api_url('API_home');?>"><span class="hide">FlexyAdmin - HOME</span></a>
 </div>

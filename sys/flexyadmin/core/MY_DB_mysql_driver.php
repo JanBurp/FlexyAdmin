@@ -1964,10 +1964,20 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
         // set id as key
         $res=$this->_set_key_to($res,PRIMARY_KEY);
       }
+      // Deep foreigns?
+      $cfgDeep=$this->CI->config->item('DEEP_FOREIGNS');
 			foreach($res as $row) {
         $options[$row[$this->pk]]='';
         foreach ($abstract_fields as $field) {
-          $options[$row[$this->pk]]=add_string($options[$row[$this->pk]], $row[$field], ' | ');
+          $thisOption=$row[$field];
+          if ($cfgDeep) {
+            if (isset($cfgDeep[$field])) {
+              $query=$this->query('SELECT `'.$cfgDeep[$field]['abstract'].'` FROM `'.$cfgDeep[$field]['table'].'` WHERE id='.$row[$field].' LIMIT 1');
+              $temp = $query->row();
+              if ($temp) $thisOption = $temp->$cfgDeep[$field]['abstract'];
+            }
+          }
+          $options[$row[$this->pk]]=add_string($options[$row[$this->pk]], $thisOption, ' | ');
         }
         // $options[$row[$this->pk]]=$row[$abstract_field];
         // if ($asTree and $row['self_parent']!=0 and isset($options[$row[$this->pk]]) and isset($res[$row['self_parent']])) $options[$row[$this->pk]]=$res[$row['self_parent']][$abstract_field].' / '.$options[$row[$this->pk]];
