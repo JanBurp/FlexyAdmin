@@ -1789,11 +1789,18 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 */
   public function get_abstract_fields_sql($table,$asPre='') {
 		$abFields=$this->get_abstract_fields($table,$asPre);
-    // Is er een taalveld? Plaats de taal key erachter
-    if ($nr=in_array_like('id_lang',$abFields)) {
-      $lang_field=$abFields[$nr];
-      $abFields[$nr]="(SELECT `key` FROM `cfg_lang` WHERE cfg_lang.id=".$lang_field.")";
+    // Deep foreigns?
+    $cfgDeep=$this->CI->config->item('DEEP_FOREIGNS');
+    if ($cfgDeep) {
+      foreach ($cfgDeep as $deepKey => $deepInfo) {
+        // Is er een deep foreing field? Plaats de abstract daarvan
+        if ($nr=in_array_like($deepKey,$abFields)) {
+          $deep_field=$abFields[$nr];
+          $abFields[$nr]="(SELECT `".$deepInfo['abstract']."` FROM `".$deepInfo['table']."` WHERE ".$deepInfo['table'].".id=".$deep_field.")";
+        }
+      }
     }
+    // Maak de SQL
     $sql=$this->concat($abFields)." AS ".$asPre.$this->CI->config->item('ABSTRACT_field_name');
     return $sql;
 	}
