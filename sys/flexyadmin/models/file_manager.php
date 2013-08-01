@@ -98,6 +98,7 @@ class File_manager Extends CI_Model {
    */
 	public function __construct($config=array()) {
 		parent::__construct();
+    $this->lang->load('update_delete');
 		$this->initialize($config);
 	}
 
@@ -416,43 +417,43 @@ class File_manager Extends CI_Model {
 		$this->upload->config($config);
 		$ok=$this->upload->upload_file($file_field);
 		$file=$this->upload->get_file();
-    // strace_($file);
 		$ext=get_file_extension($file);
 		if (!$ok) {
 			log_("info","[FM] error while uploading: '$file' [$error]");
 			$error=$this->upload->get_error();
 		}
 		// RESIZING and AUTO FILL
-		else {
-			log_("info","[FM] uploaded: '$file'");
-			$saveName=clean_file_name($file);
-			if ($file!=$saveName) {
-				if (rename($this->map.'/'.$file, $this->map.'/'.$saveName))
-					$file=$saveName;
-			}
+    else {
+      log_("info","[FM] uploaded: '$file'");
+      $saveName=clean_file_name($file);
+      if ($file!=$saveName) {
+        if (rename($this->map.'/'.$file, $this->map.'/'.$saveName));
+      }
+      $file=$saveName;
 
-			// is image?
-      // strace_($ext);
-			if (in_array(strtolower($ext),$this->config->item('FILE_types_img'))) {
+      // is image?
+      if (in_array(strtolower($ext),$this->config->item('FILE_types_img'))) {
+        
         // check minimal size
         if ($this->upload->check_size($file,$this->map)) {
           // if ok: resizing
-  				$ok=$this->upload->resize_image($file,$this->map);
-  				if (!($ok)) {
-  					$error=$this->upload->get_error();
-  				}
+          $ok=$this->upload->resize_image($file,$this->map);
+          if (!($ok)) {
+            $error=$this->upload->get_error();
+          }
         }
         else {
           $this->delete_file($file);
           $error=langp('upload_img_too_small',$file);
         }
-			}
-			if ($ok) {
-				// auto fill
-				// $this->upload->auto_fill_fields($file,$this->map);
-			}
-			
-		}
+      }
+      if ($ok) {
+        // auto fill
+        // $this->upload->auto_fill_fields($file,$this->map);
+      }
+      
+    }
+    if (!empty($error)) $file='';
 		return array("error"=>$error,"file"=>$file, 'extra_files'=>$this->upload->get_created_files() );
 	}
 
