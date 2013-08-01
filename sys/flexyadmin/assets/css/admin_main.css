@@ -1034,10 +1034,16 @@ select.image_dropdown {
 	width:400px;
   margin-top:-32px;
 }
+body.normal_dropdowns select.image_dropdown {margin-top:0px;}
+
 .flexyFormField.medias select.image_dropdown {	width:460px;}
 
 .flexyFormField.media {min-height:35px;}
 .flexyFormField.medias {min-height:36px;}
+body.normal_dropdowns .flexyFormField.medias {
+/*  float:left;*/
+  height:200px;
+}
 
 .flexyFormField .flash,
 .flexyFormField img {

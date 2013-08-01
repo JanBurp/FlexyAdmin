@@ -916,7 +916,7 @@ class Form {
 				$options=el("options",$field);
 				$value=$attr["value"];
 				$button=el("button",$field);
-				if (isset($button))	$attr["class"].=" button";
+        // if (isset($button))  $attr["class"].=" button";
 				if (isset($field["path"])) 	$extra.=" path=\"".$field["path"]."\"";
 				if (isset($field["multiple"]) or is_array($value)) {
 					$extra.=" multiple=\"multipe\" ";
