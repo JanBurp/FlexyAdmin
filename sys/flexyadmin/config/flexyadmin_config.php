@@ -77,6 +77,19 @@ $config['CUSTOM_VALIDATION_RULES']            = 'valid_rgb|valid_google_analytic
 $config['CUSTOM_VALIDATION_RULES_CALLBACKS']  = 'callback_valid_rgb|callback_valid_google_analytics|callback_valid_regex';
 
 
+/*
+|--------------------------------------------------------------------------
+| Wich foreign keys will show a level deeper
+|--------------------------------------------------------------------------
+|
+*/
+$config['DEEP_FOREIGNS']  = array(
+  'id_lang'       => array(
+                          'table'     => 'cfg_lang',
+                          'abstract'  => 'key'
+                          )
+);
+
 
 
 /*
