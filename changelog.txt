@@ -1,3 +1,32 @@
+Changes 2148
+============
+
+UPDATE:
+- UPDATE: jQuery 1.10.2
+
+FRONTEND:
+- CHANGED: config of search module, so search.form is added to site
+- Module login & plugin_login_active had some bugs & new features
+
+USERGUIDE:
+- USERGUIDE: MY_pagination
+
+NEW:
+- [NEW] MY_DB Replaces deep foreign keys with abstract, to be set in flexyadmin_config: DEEP_FOREIGNS
+- [NEW] - add_title() has now a format argument for a more flexible title - Idea Dirk Kokx
+- [NEW] plugin_db_scheme
+- [BETA] - New validaition rule: valid_regex[] - Idea Dirk Kokx
+- NEW: Menu can be rendered without nesting
+- CHANGES to Menu, added get_items() - Geeft alle menu items
+
+BUGS:
+- Styling of form when FORM_NICE_DROPDOWNS = FALSE
+- Some bugs in db...
+- Uploading - didn't show errors
+- Mediatable if stx_meta doesn't exist
+- MY_pagination (open <ul>)
+- Some bugs in login and plugin_login_activate
+
 Changes 2108
 ============
 
