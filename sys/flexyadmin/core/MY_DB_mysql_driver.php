@@ -1571,6 +1571,10 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		}
 		$sql=$this->ar_last_query;
     
+    // Remove sub SELECTS
+    $sql = preg_replace("/,?\(SELECT.*\)/uiU", "", $sql);
+    
+    // Find table
 		$match=array();
 		$table='';
     $tablePlus='';
@@ -1579,6 +1583,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			$tablePlus="`$table`.";
 		}
 
+    // Cleanup Query
     $num_rows=0;
     if (!empty($tablePlus)) {
       $sql=preg_replace('/SELECT(.*)?\sFROM\s/si','SELECT '.$tablePlus.'`id` FROM',$sql);
@@ -1784,7 +1789,13 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 */
   public function get_abstract_fields_sql($table,$asPre='') {
 		$abFields=$this->get_abstract_fields($table,$asPre);
-		return $this->concat($abFields)." AS ".$asPre.$this->CI->config->item('ABSTRACT_field_name');
+    // Is er een taalveld? Plaats de taal key erachter
+    if ($nr=in_array_like('id_lang',$abFields)) {
+      $lang_field=$abFields[$nr];
+      $abFields[$nr]="(SELECT `key` FROM `cfg_lang` WHERE cfg_lang.id=".$lang_field.")";
+    }
+    $sql=$this->concat($abFields)." AS ".$asPre.$this->CI->config->item('ABSTRACT_field_name');
+    return $sql;
 	}
 
   
