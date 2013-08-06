@@ -1,3 +1,14 @@
+Changes 2151
+============
+
+BUGS:
+- Error messages not showing when uploading files, this gave strange effects because flexyadmin tried to check the filesize etc.
+- plugin_newsletter, when no adresses are selected
+
+CHANGED:
+- plugin_newsletter, nicer dutcht translation in submenu
+
+
 Changes 2148
 ============
 
