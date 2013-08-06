@@ -16,14 +16,14 @@ $lang['unsubmit_info']           = 'Voer je emailadres in om je af te melden.';
 $lang['unsubmit_succes']         = 'Je bent nu afgemeld van de nieuwsbrief.';
 
 // Plugin
-$lang['create_newsletter']    = 'Nieuwe nieuwsbrief maken';
-$lang['show_newsletters']     = 'Oude nieuwsbrieven bekijken';
+$lang['create_newsletter']    = 'Nieuwsbrief aanmaken en test-verzenden';
+$lang['send_newsletter']      = 'Een nieuwsbrief versturen naar addressenlijst';
+$lang['show_newsletters']     = 'Nieuwsbrieven bekijken/aanpassen';
 $lang['edit_newsletter']      = 'Nieuwsbrief aanpassen';
 $lang['show_adresses']        = 'Adressen bekijken/aanpassen';
 $lang['export_adresses']      = 'Exporteer adressen';
-$lang['export_table']         = 'Exporteer adressentabel voor Excel';
+$lang['export_table']         = 'Exporteer adressentabel naar csv-bestand/Excel';
 $lang['send_test']            = 'Test verzenden';
-$lang['send_newsletter']      = 'Nieuwsbrief versturen';
 $lang['choose_newsletter']    = 'Kies Nieuwsbrief';
 
 $lang['include_pages']        = "Teksten toevoegen";

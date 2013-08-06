@@ -384,8 +384,10 @@ class Plugin_newsletter extends Plugin {
     if ($this->config('send_one_by_one')) {
       $send_to=array();
       $to=explode(',',$mail['to']);
-      $bcc=explode(',',$mail['bcc']);
-      unset($mail['bcc']);
+      if (isset($mail['bcc'])){
+        $bcc=explode(',',$mail['bcc']);
+        unset($mail['bcc']);
+      }
       // TO
       foreach ($to as $to_one) {
         $mail['to']=$to_one;
@@ -401,18 +403,20 @@ class Plugin_newsletter extends Plugin {
         $mail['to']='';
       }
       // BCC
-      foreach ($bcc as $to_one) {
-        $mail['to']=$mail['from'];
-        $mail['bcc']=$to_one;
-        $this->CI->email->set_mail($mail);
-        $send=$this->CI->email->send();
-        $send=TRUE;
-        $this->CI->email->clear(TRUE);
-    		if ($send)
-    			$send_to[]=$to_one;
-    		else {
-          $rapport.='ERROR sending ('.$to_one.'), debug information:<br/>';
-    			$rapport.=$this->CI->email->print_debugger();
+      if (isset($bcc)) {
+        foreach ($bcc as $to_one) {
+          $mail['to']=$mail['from'];
+          $mail['bcc']=$to_one;
+          $this->CI->email->set_mail($mail);
+          $send=$this->CI->email->send();
+          $send=TRUE;
+          $this->CI->email->clear(TRUE);
+      		if ($send)
+      			$send_to[]=$to_one;
+      		else {
+            $rapport.='ERROR sending ('.$to_one.'), debug information:<br/>';
+      			$rapport.=$this->CI->email->print_debugger();
+          }
         }
       }
       $rapport.='Send to '.count($send_to).' email-address(es)<br/>';
