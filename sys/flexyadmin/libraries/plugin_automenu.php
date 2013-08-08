@@ -438,59 +438,61 @@ class Plugin_automenu extends Plugin {
                   // trace_($groupData);
                   // trace_($data);
                   // trace_($parentData);
-
-    							$parentData=current($parentData);
-    							$selfParent=$parentData['id'];
-    							$lastOrder=0;
-    							$subData=find_row_by_value($this->newMenu,$selfParent,'self_parent');
-    							if ($subData) {
-    								// lastOrder is not 0
-    								$subData=array_slice($subData,count($subData)-1);
-    								$subData=current($subData);
-    								$lastOrder=$subData['order']+1;
-    							}
-    							if ($pagination) {
-    								$subOrder=$lastOrder;
-    								$lastOrder=0;
-    								$subSelfParent=$selfParent;
-    							}
-    							$nr=0;
-    							foreach ($data as $item) {
-    								if ($pagination and ($nr%$pagination==0)) {
-    									// add subpage if needed
-    									$page=round($nr/$pagination)+1;
-    									// trace_('Add subpage ['.$page.']');
-    									$subItem=array('uri'=>$page, $groupData[$titleField]=>$page, 'order'=>$subOrder++, 'self_parent'=>$subSelfParent);
-    									if (isset($autoValue['b_keep_parent_modules']) and $autoValue['b_keep_parent_modules']) {
-    										if (isset($this->newMenu[$subItem['self_parent']][$this->config('module_field')])) {
-    											$parentModule=$this->newMenu[$subItem['self_parent']][$this->config('module_field')];
-    											if (isset($subItem[$this->config('module_field')]))
-    												$subItem[$this->config('module_field')].=' '.$parentModule;
-    											else
-    												$subItem[$this->config('module_field')]=$parentModule;
-    										}
-    									}
-    									$self=$this->_insertItem( $subItem );
-    									$selfParent=$self['id'];
-    								}
-    								$nr++;
+                  
+                  if ($parentData) {
+      							$parentData=current($parentData);
+      							$selfParent=$parentData['id'];
+      							$lastOrder=0;
+      							$subData=find_row_by_value($this->newMenu,$selfParent,'self_parent');
+      							if ($subData) {
+      								// lastOrder is not 0
+      								$subData=array_slice($subData,count($subData)-1);
+      								$subData=current($subData);
+      								$lastOrder=$subData['order']+1;
+      							}
+      							if ($pagination) {
+      								$subOrder=$lastOrder;
+      								$lastOrder=0;
+      								$subSelfParent=$selfParent;
+      							}
+      							$nr=0;
+      							foreach ($data as $item) {
+      								if ($pagination and ($nr%$pagination==0)) {
+      									// add subpage if needed
+      									$page=round($nr/$pagination)+1;
+      									// trace_('Add subpage ['.$page.']');
+      									$subItem=array('uri'=>$page, $groupData[$titleField]=>$page, 'order'=>$subOrder++, 'self_parent'=>$subSelfParent);
+      									if (isset($autoValue['b_keep_parent_modules']) and $autoValue['b_keep_parent_modules']) {
+      										if (isset($this->newMenu[$subItem['self_parent']][$this->config('module_field')])) {
+      											$parentModule=$this->newMenu[$subItem['self_parent']][$this->config('module_field')];
+      											if (isset($subItem[$this->config('module_field')]))
+      												$subItem[$this->config('module_field')].=' '.$parentModule;
+      											else
+      												$subItem[$this->config('module_field')]=$parentModule;
+      										}
+      									}
+      									$self=$this->_insertItem( $subItem );
+      									$selfParent=$self['id'];
+      								}
+      								$nr++;
 								
-    								$item['order']=$lastOrder++;
-    								$item['self_parent']=$selfParent;
-    								$item['str_table']=$autoValue['table'];
-    								$item['str_uri']=$item['uri'];
-    								$item['int_id']=$item['id'];
-    								if (isset($autoValue['b_keep_parent_modules']) and $autoValue['b_keep_parent_modules']) {
-    									if (isset($this->newMenu[$item['self_parent']][$this->config('module_field')])) {
-    										$parentModule=$this->newMenu[$item['self_parent']][$this->config('module_field')];
-    										if (isset($item[$this->config('module_field')]))
-    											$item[$this->config('module_field')].=' '.$parentModule;
-    										else
-    											$item[$this->config('module_field')]=$parentModule;
-    									}
-    								}
-    								$this->_insertItem($item);
-    							}
+      								$item['order']=$lastOrder++;
+      								$item['self_parent']=$selfParent;
+      								$item['str_table']=$autoValue['table'];
+      								$item['str_uri']=$item['uri'];
+      								$item['int_id']=$item['id'];
+      								if (isset($autoValue['b_keep_parent_modules']) and $autoValue['b_keep_parent_modules']) {
+      									if (isset($this->newMenu[$item['self_parent']][$this->config('module_field')])) {
+      										$parentModule=$this->newMenu[$item['self_parent']][$this->config('module_field')];
+      										if (isset($item[$this->config('module_field')]))
+      											$item[$this->config('module_field')].=' '.$parentModule;
+      										else
+      											$item[$this->config('module_field')]=$parentModule;
+      									}
+      								}
+      								$this->_insertItem($item);
+      							}
+                  }
     						}
     					}
     					break;
