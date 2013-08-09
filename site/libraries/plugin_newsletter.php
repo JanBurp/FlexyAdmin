@@ -175,8 +175,13 @@ class Plugin_newsletter extends Plugin {
       $data=$form->get_data();
       $itemIDs=explode('|',$data['items']);
       foreach ($items as $id=>$item) {
-        if (in_array($id,$itemIDs))
-          $items[$id]['txt_text']=intro_string($items[$id]['txt_text'],$this->config('intro_length'),'LINES',$this->config('allowed_tags'));
+        $items[$id]['str_title']= trim(get_suffix($items[$id]['str_title'],'/'));
+        if (in_array($id,$itemIDs)) {
+          if ($this->config('intro_length')>0)
+            $items[$id]['txt_text']=intro_string($items[$id]['txt_text'],$this->config('intro_length'),'LINES',$this->config('allowed_tags'));
+          else
+            $items[$id]['txt_text']=strip_tags($items[$id]['txt_text'],$this->config('allowed_tags'));
+        }
         else
           unset($items[$id]);
       }
@@ -455,7 +460,7 @@ class Plugin_newsletter extends Plugin {
 
 	
   /**
-   * Zorgt voor juiste verwijzingingen in de tekst van een mailbody
+   * Zorgt voor juiste verwijzingingen in de tekst van een mailbody en de juiste styling
    *
    * @param string $body 
    * @return string
@@ -471,6 +476,12 @@ class Plugin_newsletter extends Plugin {
 		$body=preg_replace('/href=\"(?!https?:\/\/).*?/','href="'.base_url(),$body);
 		$body=str_replace('##MAIL##','href="mailto:',$body);
     //
+    $styles=$this->config('styles');
+    if ($styles) {
+      foreach ($styles as $tag => $style) {
+        $body = preg_replace("/<".$tag."/uiU", "<".$tag." style=\"".$style."\"", $body);
+      }
+    }
     return $body;
   }
 
