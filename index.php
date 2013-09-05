@@ -1,6 +1,5 @@
 <?php
 
-
 /*
 |---------------------------------------------------------------
 | IS LOCAL ?
@@ -38,6 +37,7 @@ else
 
 
 
+
 /*
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT
@@ -57,18 +57,16 @@ else
  *
  */
 
- /*
-  * Set according to local // added/changed for FlexyAdmin
-  */
- if (IS_LOCALHOST)
-   define('ENVIRONMENT', 'development');
- else
-   define('ENVIRONMENT', 'production');
+/*
+ * Set according to local // added/changed for FlexyAdmin
+ */
+if (IS_LOCALHOST)
+  define('ENVIRONMENT', 'development');
+else
+  define('ENVIRONMENT', 'production');
+
+ // define('ENVIRONMENT','testing');   // This sets logging on
  
-  // define('ENVIRONMENT','testing');   // This sets logging on
-  
-  
-  
   
 /*
  *---------------------------------------------------------------
@@ -83,12 +81,11 @@ if (defined('ENVIRONMENT'))
 {
 	switch (ENVIRONMENT)
 	{
-		
-    case 'development':
-    case 'testing':
+		case 'development':
 			error_reporting(E_ALL);
 		break;
-		
+	
+		case 'testing':
 		case 'production':
 			error_reporting(0);
 		break;
@@ -108,7 +105,6 @@ if (defined('ENVIRONMENT'))
  * as this file.
  *
  */
-
 $system_path = 'sys/codeigniter';
 
 /*
@@ -125,7 +121,6 @@ $system_path = 'sys/codeigniter';
  * NO TRAILING SLASH!
  *
  */
-
 $application_folder = 'sys/flexyadmin';
 
 $site_folder = 'site'; // added/changed for FlexyAdmin
