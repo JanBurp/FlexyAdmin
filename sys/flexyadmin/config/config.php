@@ -274,6 +274,18 @@ $config['cookie_path']		= "/";
 */
 $config['global_xss_filtering'] = FALSE;
 
+
+/*
+|--------------------------------------------------------------------------
+| Regex form_validation_rules for valid_regex($s, $regex_name)
+|--------------------------------------------------------------------------
+|
+| Set validation rules for the valid_regex form validation
+*/
+$config['valid_regex_rules'] = array();
+
+
+
 /*
 |--------------------------------------------------------------------------
 | Output Compression
