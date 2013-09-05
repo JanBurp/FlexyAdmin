@@ -447,7 +447,7 @@ class Flexy_field extends CI_Model {
 	
 	function _combine_validations($validations) {
 		$validation=array();
-		// trace_($validations);
+    // trace_($validations);
 		foreach ($validations as $val) {
 			if (!empty($val) and !empty($val['rules'])) {
 				$rules=explode('|',$val['rules']);

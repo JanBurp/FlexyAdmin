@@ -285,6 +285,21 @@ if (!isset($config['base_url'])) {
 $config['global_xss_filtering'] = FALSE;
 
 
+/*
+|--------------------------------------------------------------------------
+| Regex form_validation_rules for valid_regex($s, $regex_name)
+|--------------------------------------------------------------------------
+|
+| Set validation rules for the valid_regex form validation, error_key is een language key die verwijst naar regex_validation_lang.php
+*/
+$config['valid_regex_rules'] = array(
+  'postcode' => array(
+    'regex'     => '/^[1-9][0-9]{3}[\s]?[A-Za-z]{2}$/i',
+    'error_key' => 'valid_zipcode'
+  )
+);
+
+
 
 /*
 |--------------------------------------------------------------------------

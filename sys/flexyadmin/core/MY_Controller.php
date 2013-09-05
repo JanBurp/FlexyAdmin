@@ -168,18 +168,26 @@ class MY_Controller extends CI_Controller {
 
 	
   /**
-   * Form validation rule die de invoer in het formulier checkt tegen een custom regex waarde.
-   * Gebruik hiervoor de volgende validatie regel: callback_valid_regex[regexstring] (LET OP, de regex wordt getest met preg_match(), dus de regex moet daarvoor werken.)
+   * Form validation rule die de invoer in het formulier checkt tegen een regex waarde.
+   * De regex waarden moeten worden ingesteld in de config bij $config['valid_regex_rules'].
+   * De error_key verwijst naar een key in de language file regex_validation_lang
    * @param  string $str
-   * @param  string $regex
+   * @param  string $regex_rule
    * @return mixed
    */
-  public function valid_regex($str, $regex) {
+  public function valid_regex($str, $regex_rule) {
+    $this->lang->load("regex_validation");
+    $regexs=$this->config->item('valid_regex_rules');
+    if (!isset($regexs[$regex_rule])) {
+       $this->form_validation->set_message('valid_regex', langp('valid_regex_rule',$regex_rule));
+       return FALSE;
+    }
+    $regex=$regexs[$regex_rule]['regex'];
   	$result = preg_match($regex, $str);
     if ($result == 1) {
       return TRUE;
     } else {
-		  $this->form_validation->set_message('valid_regex', lang('valid_regex'));
+		  $this->form_validation->set_message('valid_regex', lang($regexs[$regex_rule]['error_key']));
 		  return FALSE;
 	  }
   }

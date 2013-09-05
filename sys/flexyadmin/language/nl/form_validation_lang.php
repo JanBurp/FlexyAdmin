@@ -27,8 +27,9 @@ $lang['greater_than']			= "'%s' moet groter zijn dan %s.";
 
 $lang['valid_rgb']				       = "Geen juiste kleurcode in '%s'";
 $lang['valid_google_analytics']	 = "'%s' bevat geen juiste code voor Google Analytics";
-$lang['valid_regex']	           = "'%s' bevat geen juiste waarde";
 
+$lang['valid_regex_rule']        = "Regex rule '%s' bestaat niet.";
+$lang['valid_regex']	           = "'%s' bevat geen juiste waarde";
 
 /* End of file form_validation_lang.php */
 /* Location: ./system/language/english/form_validation_lang.php */
