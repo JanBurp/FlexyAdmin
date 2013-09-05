@@ -893,10 +893,11 @@ class Menu {
    * @param string $attr[''] eventueel standaard mee te geven attributen voor menu-items
    * @param string $level[1] level
    * @param string $preUri[''] een uri die aan de voorkant van alle uri's wordt geplakt
+   * @param string $max_level[0] tot welk level gerenderd wordt (bij 0 is er geen limiet)
    * @return string
    * @author Jan den Besten
    */
-	function render($menu=NULL,$attr="",$level=1,$preUri="") {
+	function render($menu=NULL,$attr="",$level=1,$preUri="",$max_level=0) {
     $CI =& get_instance();
 		if (empty($attr)) $attr=$this->attr;
 		if (!is_array($attr)) $attr=array("class"=>$attr);
@@ -991,8 +992,8 @@ class Menu {
 					}
 
           $subOut='';
-					if (isset($item["sub"])) {
-						$subOut=$this->render($item["sub"],"$cName",$level+1,$thisUri);
+					if (isset($item["sub"]) and ($max_level==0 or ($level+1)<$max_level) ) {
+            $subOut=$this->render($item["sub"],"$cName",$level+1,$thisUri);
 						// check if needs to add active class
 						if (strpos($subOut,'current')>0) {
               $itemOut=preg_replace("/class=\"([^\"]*)\"/","class=\"$1 active\"",$itemOut);
