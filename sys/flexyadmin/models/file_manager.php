@@ -411,7 +411,10 @@ class File_manager Extends CI_Model {
 		}
 		$types=array_merge($types,$imgtypes);
 		$config['allowed_types']=implode('|',$types);
-		// trace_($config);
+    $CI=&get_instance();
+    $encrypt=$CI->cfg->get('cfg_media_info',$this->path,'b_encrypt_name');
+    if (isset($encrypt)) $config['encrypt_name'] = $encrypt;
+    // strace_($config);
 		// trace_($_FILES);
 		//
 		$this->upload->config($config);
