@@ -16,5 +16,16 @@ $config['actions'] = array(
 
 
 
+/**
+ * De minimale user_group die deze plugin mag aanroepen
+ * 1 - super_admin
+ * 2 - admin
+ * 3 - user
+ * 4 - visiter
+ */
+
+$config['user_group'] = 1;
+
+
 
 ?>
