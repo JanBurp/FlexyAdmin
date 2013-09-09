@@ -41,7 +41,7 @@
    * @author Jan den Besten
    */
 	public function _admin_api($args=NULL) {
-		if ($this->CI->user->can_activate_users()) {
+		if ($this->_can_activate_users()) {
 			// redirect ion_auth to other email_templates
 			$this->CI->config->set_item('email_templates','login/'.$this->CI->language.'/','ion_auth');
 			// $args holds action (deny/activate) and user_id
@@ -182,6 +182,13 @@
 			$this->add_message(lang('no_inactive_users'));
 		}
 	}
+
+
+  private function _can_activate_users() {
+    $user_group = $this->config('user_group','super_admin');
+    $rights=$this->CI->user->get_rights();
+    return ($rights['id_user_group']<=$user_group);
+  }
 
 
 }

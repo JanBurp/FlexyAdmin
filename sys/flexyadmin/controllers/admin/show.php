@@ -157,7 +157,8 @@ class Show extends AdminController {
 							$this->db->where($table.".user",$restrictedToUser);
 							$this->db->dont_select("user");
 						}
-						if ($table=="cfg_users") $this->db->where('cfg_users.id >=',$this->user_id);
+            // trace_($this);
+						if ($table=="cfg_users") $this->db->where('cfg_users.id_user_group >=',$this->user_group_id);
 							
             $this->db->add_foreigns_as_abstracts();
 						if (isset($tableInfo['b_grid_add_many']) and $tableInfo['b_grid_add_many']) $this->db->add_many();
