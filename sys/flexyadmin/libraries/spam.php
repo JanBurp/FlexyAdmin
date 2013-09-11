@@ -16,7 +16,7 @@ class Spam {
 	private $settings=array(
     'score_low'=>5,
     'score_high'=>10,
-    'trigger_words'=>'buy,cheap,offer,discount,viagra,cialis,$,free,f r e e,amazing,billion,cash,cheap,credit,earn,sales,order now,sex,sell',
+    'trigger_words'=>'buy,cheap,offer,discount,viagra,cialis,$,money,free,f r e e,amazing,billion,cash,cheap,credit,earn,sales,order now,sex,sell,partyhardcore,hardcord,party,cum,sex,download,pictures,movies,masturbating,penis,vagina,enhancement,weight loss',
 		'trigger_word_weight'=>5,
 		'link_http_weight'=>10,
 		'link_url_weight'=>10,
