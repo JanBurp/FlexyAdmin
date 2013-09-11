@@ -7,7 +7,7 @@
  */
 
 class Spam {
-
+  
   /**
    * Instellingen
    *
@@ -55,6 +55,16 @@ class Spam {
    */
   public function __construct($settings=array()) {
 		$this->settings=array_merge($this->settings,$settings);
+    $this->rapport = array(
+      'score' =>  0,
+      'action' => 0,
+      'word_count' => 0,
+      'link_count_url'  => 0,
+      'link_count_http' => 0,
+      'vowel_density' => 0,
+      'text_density'  => 0,
+      'robot' => 0
+    );
 	}
 
   /**
