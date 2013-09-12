@@ -128,6 +128,8 @@ class AdminController extends BasicController {
 	}
 
 	function _show_menu($currentMenuItem="") {
+    $user=$this->user->get_user();
+    $user_group=$user->id_user_group;
 		$this->lang->load('help');
 		$menu=array();
 		if ($this->db->table_exists('cfg_admin_menu')) {
@@ -155,14 +157,16 @@ class AdminController extends BasicController {
 		foreach ($adminMenu as $item) {
 			switch($item['str_type']) {
 				case 'api' :
-					$uiName=$item['str_ui_name'];
-					$args=array($item['path'],$item['table'],$item['str_table_where']);
-					$args=implode('/',$args);
-					if ($args=='/') $args='';
-					$args=str_replace('//','/',$args);
-					if (substr($uiName,0,1)=="_") $uiName=lang(substr($uiName,1));
-					$uri=api_uri($item['api']).$args;
-					$menu[$uri]=array('uri'=>$uri,'name'=>$uiName,'class'=>str_replace('/','_',$item['api']) );
+          if (!isset($item['id_user_group']) or $item['id_user_group']>=$user_group) {
+  					$uiName=$item['str_ui_name'];
+  					$args=array($item['path'],$item['table'],$item['str_table_where']);
+  					$args=implode('/',$args);
+  					if ($args=='/') $args='';
+  					$args=str_replace('//','/',$args);
+  					if (substr($uiName,0,1)=="_") $uiName=lang(substr($uiName,1));
+  					$uri=api_uri($item['api']).$args;
+  					$menu[$uri]=array('uri'=>$uri,'name'=>$uiName,'class'=>str_replace('/','_',$item['api']) );
+          }
 					break;
 					
 				case 'seperator' :
