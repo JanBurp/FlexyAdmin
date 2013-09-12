@@ -285,6 +285,7 @@ class User Extends Ion_auth {
 	public function register($username, $password, $email, $additional_data=array(), $group_name = false, $subject='Account Activation', $uri='') {
 		if (empty($uri)) $uri=$this->CI->uri->get();
 		$email_activation = $this->CI->config->item('email_activation', 'ion_auth');
+    $admin_activation = $this->CI->config->item('admin_activation', 'ion_auth');
 		if ($admin_activation) $email_activation=true;
 
 		if (!$email_activation)	{
@@ -322,7 +323,7 @@ class User Extends Ion_auth {
 	}
 	
   /**
-   * Stuur een mail waarmee nieuw geregistreede gebruiker zichzelf kan activeren
+   * Stuur een mail waarmee nieuw geregistreerde gebruiker zichzelf kan activeren
    *
    * @param string $id 
    * @param string $subject

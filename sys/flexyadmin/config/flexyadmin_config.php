@@ -655,6 +655,10 @@ $config["CFG_"]=array(
 			"b_show_in_form"=>'1',
 			"str_validation_rules"=>'required|min_length[5]'
  			),
+    // "cfg_users.email_email"=>array(
+    //   "field"=>'cfg_users.email_email',
+    //   "str_validation_rules"=>'valid_emails'
+    //        ),
 		"cfg_users.ip_address"=>array(
 			"field"=>'cfg_users.ip_address',
 			"str_ui_name"=>'IP Address',
