@@ -11,7 +11,7 @@
  *  style:{
  *      'a' : {'color':'#FF0000'},
  *      '.header' : {'float':'left','min-height':'0px','padding-left':'0px'},
- *      '.timeline .stream' : {'overflow':'hidden'},
+ *      '.timeline .stream' : {'overflow':'hidden','overflow-y':'hidden','overflow-x':'hidden'},
  *      '.tweet' : {'padding':'5px 0px','border-bottom':'dotted 1px #FF0000'}
  *     }
  *  });
