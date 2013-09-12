@@ -364,6 +364,8 @@ class Show extends AdminController {
 				else
 					$uiShowTable=$uiTable;
 
+        // trace_($ffData);
+
 				$form->set_data($ffData,$uiShowTable);
 				$form->add_password_match();
 				$form->hash_passwords();

@@ -470,6 +470,14 @@ class Flexy_field extends CI_Model {
 				}
 			}
 		}
+    // Cleanup double
+    foreach ($validation as $rule => $param) {
+      switch ($rule) {
+        case 'valid_emails':
+          if (isset($validation['valid_email'])) unset($validation['valid_email']);
+          break;
+      }
+    }
 		return $validation;
 	}
 
