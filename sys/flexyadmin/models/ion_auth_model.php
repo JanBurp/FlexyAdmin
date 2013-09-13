@@ -649,8 +649,7 @@ class Ion_auth_model extends CI_Model
 	 **/
 	public function get_active_users($group_name = false)
 	{
-	    $this->db->where($this->tables['users'].'.active', 1);
-
+	    $this->db->where($this->tables['users'].'.b_active', 1);
 	    return $this->get_users($group_name);
 	}
 

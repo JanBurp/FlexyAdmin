@@ -1,7 +1,7 @@
 <h1><?=$title?></h1>
 
 <p>Voor deze pagina moet u ingelogd zijn.<br />
-	Als u geen account hebt maak dan een account aan (zie de link onderaan).</p>
+Als u geen account hebt en u hebt kinderen op de Bussumse Montessorischool, neem dan even contact op met de school.</p>
 
 <div class="loginErrors"><?=$errors?></div>
 <div class="loginForm"><?=$form?></div>

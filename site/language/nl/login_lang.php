@@ -18,7 +18,7 @@ $lang['register_mail_subject']	= 'Aanmelding.';
 // LOGIN
 $lang['forgot_password']				= 'Wachtwoord vergeten.';
 $lang['register']								= 'Maak account aan.';
-$lang['remember']								= 'Laat me ingelogd';
+$lang['remember']								= 'Laat me ingelogd blijven';
 $lang['login_submit']						= 'Inloggen';
 $lang['login_error']						= 'Verkeerde gebruikersnaam/wachtwoord combinatie.';
 $lang['login_already']					= 'Je bent (al) ingelogd, %s.';
@@ -38,7 +38,7 @@ $lang['reset_password_mail_subject']	= 'Nieuw wachtwoord.';
 
 // ADMIN ACTIVATION
 $lang['title']                        = 'Gebruikers Activeren';
-$lang['activate_users']								= 'Activeer gebruikers';
+$lang['activate_users']								= 'Activeer nieuwe gebruikers';
 $lang['show_inactive_users']					= 'Inactieve gebruikers';
 $lang['no_inactive_users']						= 'Er zijn geen in-actieve gebruikers op dit moment.';
 $lang['all_users']                    = 'Alle gebruikers';
@@ -50,6 +50,12 @@ $lang['user_accepted']								= 'Gebruiker "%s" is geactiveerd en heeft een acce
 $lang['user_accepted_send']						= 'Gebruiker "%s" is geactiveerd en heeft een email met inloggegevens gekregen.';
 $lang['mail_denied_subject']					= 'Account aanvraag afgewezen.';
 $lang['mail_accepted_subject']				= 'Account aanvraag geaccepteerd.';
+
+$lang['active_users']				          = 'Stuur nieuw wachtwoord naar bestaande gebruikers';
+$lang['send_new_password']            = 'Stuur nieuw wachtwoord';
+$lang['user_send_password']           = 'Gebruiker %s heeft een nieuw wachtwoord opgestuurd gekregen.';
+$lang['new_password']                 = 'Nieuw wachtwoord.';
+
 
 
 ?>
