@@ -42,11 +42,17 @@ $lang['str_country']      = "Land";
 $lang['tme_date_time']    = "Datum &amp; Tijd";
 $lang['dec_price']        = "Prijs";
 
-
 // Fields in tbl_site
 $lang['str_author']       = "Auteur";
 $lang['stx_description']  = "Omschrijving";
 $lang['stx_keywords']     = $lang['str_keywords'];
+
+// Fields in cfg_users
+$lang['id_user_group']    = 'Gebruikers groep';
+$lang['gpw_password']     = 'Wachtwoord';
+$lang['ip_address']       = 'IP Adres';
+$lang['str_language']     = 'Taal';
+
 
 // MEDIA GRID fields
 $lang['filename']         = 'Bestandsnaam';

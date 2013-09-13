@@ -265,6 +265,18 @@ $config["CFG_"]=array(
 			"txt_help_nl"=>'<p>Instellingen voor RSS feeds.</p>',
 			"txt_help_en"=>'<p>Settings for RSS feeds.</p>',
 			),
+
+		"cfg_users"=>array(
+			"table"=>'cfg_users',
+			"txt_help_nl"=>'<p>Maak hier gebruikers aan.</p>',
+			"txt_help_en"=>'<p>Create users here.</p>'
+			),
+		"cfg_users.id_user_group"=>array(
+			"field_field"=>'cfg_users.id_user_group',
+			"txt_help_nl"=>'<p>Kies hier de groep. Dit bepaald welke rechten een gebruiker heeft.</p>',
+			"txt_help_en"=>'<p>Choose e group. This will determine the rights of a user.</p>'
+			),
+
 		"cfg_user_groups"=>array(
 			"table"=>'cfg_user_groups',
 			"txt_help_nl"=>'<p>Maak hier usergroups aan voor gebruik bij Users.</p>',
@@ -649,11 +661,17 @@ $config["CFG_"]=array(
 			"b_multi_options"=>'0',
 			"str_validation_rules"=>'required'
  			),
+		"cfg_users.str_username"=>array(
+			"field"=>'cfg_users.str_username',
+			"b_show_in_grid"=>'1',
+			"b_show_in_form"=>'1',
+			"str_validation_rules"=>'required|min_length[4]'
+ 			),
 		"cfg_users.gpw_password"=>array(
 			"field"=>'cfg_users.gpw_password',
 			"b_show_in_grid"=>'0',
 			"b_show_in_form"=>'1',
-			"str_validation_rules"=>'required|min_length[5]'
+			"str_validation_rules"=>'required|callback_valid_password'
  			),
     // "cfg_users.email_email"=>array(
     //   "field"=>'cfg_users.email_email',
@@ -662,8 +680,8 @@ $config["CFG_"]=array(
 		"cfg_users.ip_address"=>array(
 			"field"=>'cfg_users.ip_address',
 			"str_ui_name"=>'IP Address',
-			"b_show_in_grid"=>'1',
-			"b_show_in_form"=>'1',
+			"b_show_in_grid"=>'0',
+			"b_show_in_form"=>'0',
 			"str_options"=>'',
 			"b_multi_options"=>'0',
 			"str_validation_rules"=>''
@@ -718,8 +736,8 @@ $config["CFG_"]=array(
  			),
 		"cfg_users.str_filemanager_view"=>array(
 			"field"=>'cfg_users.str_filemanager_view',
- 			"b_show_in_grid"=>'1',
-			"b_show_in_form"=>'1',
+ 			"b_show_in_grid"=>'0',
+			"b_show_in_form"=>'0',
 			"str_options"=>'icons|list|detailed',
 			"b_multi_options"=>'0',
 			"str_validation_rules"=>''

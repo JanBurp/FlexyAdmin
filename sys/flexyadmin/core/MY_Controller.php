@@ -166,6 +166,25 @@ class MY_Controller extends CI_Controller {
     }
   }
 
+  /**
+   * Wachtwoord moet tussen 8-40 tekens lang zijn,
+   * - minimaal 1 letter
+   * - minimaal 1 hoofdletter
+   * - minimaal 1 nummer
+   * @param  string $str
+   * @return mixed
+   */
+  public function valid_password($password) {
+    $match=array();
+    // Match
+    if (preg_match("#.*^(?=.{8,20})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$#",$password,$match)) {
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+
+
 	
   /**
    * Form validation rule die de invoer in het formulier checkt tegen een regex waarde.
@@ -176,7 +195,7 @@ class MY_Controller extends CI_Controller {
    * @return mixed
    */
   public function valid_regex($str, $regex_rule) {
-    $this->lang->load("regex_validation");
+    // $this->lang->load("regex_validation");
     $regexs=$this->config->item('valid_regex_rules');
     if (!isset($regexs[$regex_rule])) {
        $this->form_validation->set_message('valid_regex', langp('valid_regex_rule',$regex_rule));
