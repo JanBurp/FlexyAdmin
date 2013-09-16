@@ -230,7 +230,7 @@ class User Extends Ion_auth {
 	 * @return bool TRUE als geslaagd
 	 * @author Jan den Besten
 	 */
-	public function forgotten_password_complete($code,$subject='New Password') {
+	public function forgotten_password_complete($code,$subject='New Password',$extra_email='') {
 		$identity = $this->CI->config->item('identity', 'ion_auth');
 		$profile  = $this->CI->ion_auth_model->profile($code, true);
 		if (!is_object($profile))	{
@@ -250,6 +250,7 @@ class User Extends Ion_auth {
 			$this->CI->email->initialize($config);
 			$this->CI->email->from($this->CI->config->item('admin_email', 'ion_auth'), $this->CI->config->item('site_title', 'ion_auth'));
 			$this->CI->email->to($profile->email_email);
+      if ($extra_email) $this->CI->email->cc($extra_email);
 			$this->CI->email->subject($this->CI->config->item('site_title', 'ion_auth') . ' - '.$subject);
 			$this->CI->email->message($message);
 
@@ -359,8 +360,8 @@ class User Extends Ion_auth {
    * @return void
    * @author Jan den Besten
    */
-	public function send_accepted_mail($id,$subject='Account accepted and activated') {
-		return $this->send_mail($id,'email_accepted',$subject);
+	public function send_accepted_mail($id,$subject='Account accepted and activated',$extra_email='') {
+		return $this->send_mail($id,'email_accepted',$subject,array('extra_email'=>$extra_email));
 	}
 
   /**
@@ -372,13 +373,13 @@ class User Extends Ion_auth {
    * @return void
    * @author Jan den Besten
    */
-	public function send_new_account_mail($id,$subject='New account') {
+	public function send_new_account_mail($id,$subject='New account',$extra_email='') {
 		$user  = $this->CI->ion_auth_model->get_user($id)->row();
 		$email = $user->email_email;
     $code=$this->CI->ion_auth_model->forgotten_password($email);
     $password=$this->CI->ion_auth_model->forgotten_password_complete($code);
     // trace_(array('code'=>$code,'password'=>$password));
-		return $this->send_mail($id,'email_new_account',$subject,array('password'=>$password));
+		return $this->send_mail($id,'email_new_account',$subject,array('password'=>$password,'extra_email'=>$extra_email));
 	}
 
 
@@ -390,8 +391,8 @@ class User Extends Ion_auth {
    * @return void
    * @author Jan den Besten
    */
-	public function send_deny_mail($id,$subject='Account denied') {
-		return $this->send_mail($id,'email_deny',$subject);
+	public function send_deny_mail($id,$subject='Account denied',$extra_email='') {
+		return $this->send_mail($id,'email_deny',$subject,array('extra_email'=>$extra_email));
 	}
 
   /**
@@ -419,6 +420,7 @@ class User Extends Ion_auth {
 			'email'      	=> $email,
 		);
 		$data=array_merge($data,$additional_data);
+    if (isset($additional_data['extra_email'])) $extra_email=$additional_data['extra_email'];
 
 		$message = $this->CI->load->view($this->CI->config->item('email_templates', 'ion_auth').$this->CI->config->item($template, 'ion_auth'), $data, true);
 
@@ -427,6 +429,7 @@ class User Extends Ion_auth {
 		$this->CI->email->initialize($config);
 		$this->CI->email->from($this->CI->config->item('admin_email', 'ion_auth'), $this->CI->config->item('site_title', 'ion_auth'));
 		$this->CI->email->to($email);
+    if ($extra_email) $this->CI->email->cc($extra_email);
 		$this->CI->email->subject($this->CI->config->item('site_title', 'ion_auth') . ' - '.$subject);
 		$this->CI->email->message($message);
 
