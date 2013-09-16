@@ -15,6 +15,19 @@ $config['actions'] = array(
 );
 
 
+$config['active_actions'] = array(
+  'send_new_password'  => TRUE,
+);
+
+
+
+/**
+ * Als een inlog meerdere emailadressen heeft, in welke tabel is die dan te vinden?
+ * - Die tabel moet een veld id_user hebben
+ * - De emailadressen zijn te vinden in alle velden die met email_ beginnen
+ */
+$config['extra_email_table'] = '';
+
 
 /**
  * De minimale user_group die deze plugin mag aanroepen

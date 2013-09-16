@@ -43,6 +43,14 @@ $config['class']='user_logged_in';
 $config['admin_activation']=TRUE;
 
 
+/**
+ * Als een inlog meerdere emailadressen heeft, in welke tabel is die dan te vinden?
+ * - Die tabel moet een veld id_user hebben
+ * - De emailadressen zijn te vinden in alle velden die met email_ beginnen
+ */
+$config['extra_email_table'] = '';
+
+
 /*
 |--------------------------------------------------------------------------
 | Check if double email
