@@ -90,8 +90,9 @@
 	private function _deny_user($user_id) {
 		$user=$this->CI->user->get_user($user_id);
 		if ($user) {
+      $extra_emails=$this->_extra_emails($user_id);
 			$this->add_message(langp('user_removed',$user->str_username));
-			$this->CI->user->send_deny_mail($user_id,lang('mail_denied_subject'));
+			$this->CI->user->send_deny_mail($user_id,lang('mail_denied_subject'),$extra_emails);
 			$this->CI->user->delete_user($user_id);
 		}
 	}
@@ -107,8 +108,9 @@
 	private function _accept_user($user_id) {
 		$user=$this->CI->user->get_user($user_id);
 		if ($user and !$user->b_active) {
+      $extra_emails=$this->_extra_emails($user_id);
 			$this->add_message(langp('user_accepted',$user->str_username));
-			$this->CI->user->send_accepted_mail($user_id,lang('mail_accepted_subject'));
+			$this->CI->user->send_accepted_mail($user_id,lang('mail_accepted_subject'),$extra_emails);
 			$this->CI->user->activate_user($user_id);
 		}
 	}
@@ -124,8 +126,9 @@
 	private function _accept_user_and_send($user_id) {
 		$user=$this->CI->user->get_user($user_id);
 		if ($user and !$user->b_active) {
+      $extra_emails=$this->_extra_emails($user_id);
       $this->add_message(langp('user_accepted_send',$user->str_username));
-      $this->CI->user->send_new_account_mail($user_id,lang('mail_accepted_subject'));
+      $this->CI->user->send_new_account_mail($user_id,lang('mail_accepted_subject'),$extra_emails);
       $this->CI->user->activate_user($user_id);
 		}
 	}
@@ -155,9 +158,10 @@
   private function _send_new_password($user_id) {
 		$user=$this->CI->user->get_user($user_id);
 		if ($user) {
+      $extra_emails=$this->_extra_emails($user_id);
       $this->add_message(langp('user_send_password',$user->str_username));
       $code=$this->CI->ion_auth_model->forgotten_password($user->email_email);
-      $this->CI->user->forgotten_password_complete($code,lang('new_password'));
+      $this->CI->user->forgotten_password_complete($code,lang('new_password'),$extra_emails);
 		}
   }
 	
@@ -183,10 +187,14 @@
       $html.=$top_menu;
 			$show_users=array();
 			foreach ($users as $key => $u) {
+        $extra_emails=$this->_extra_emails($u['id']);
+        $all_mail=add_string($u['email_email'],$extra_emails,',');
+        $all_mail=explode(',',$all_mail);
+        $all_mail=array_unique($all_mail);
+        $all_mail=implode(',',$all_mail);
 				$show_users[$key]=array(
           $this->CI->ui->get('str_username')=>$u['str_username'],
-          $this->CI->ui->get('email_email')=>'<a href="mailto:'.$u['email_email'].'">'.$u['email_email'].'</a>'
-          // $this->CI->ui->get('group')=>$u['group']
+          $this->CI->ui->get('email_email')=>'<a href="mailto:'.$all_mail.'">'.$all_mail.'</a>'
         );
         $menu='';
         foreach ($this->config['actions'] as $action => $active) {
@@ -222,9 +230,14 @@
   		if ($users) {
   			$show_users=array();
   			foreach ($users as $key => $u) {
+          $extra_emails=$this->_extra_emails($u['id']);
+          $all_mail=add_string($u['email_email'],$extra_emails,',');
+          $all_mail=explode(',',$all_mail);
+          $all_mail=array_unique($all_mail);
+          $all_mail=implode(',',$all_mail);
   				$show_users[$key]=array(
             $this->CI->ui->get('str_username')=>$u['str_username'],
-            $this->CI->ui->get('email_email')=>'<a href="mailto:'.$u['email_email'].'">'.$u['email_email'].'</a>'
+            $this->CI->ui->get('email_email')=>'<a href="mailto:'.$all_mail.'">'.$all_mail.'</a>'
           );
           $menu='';
           foreach ($this->config['active_actions'] as $action => $active) {
@@ -246,6 +259,28 @@
     return $html;
 	}
 
+  
+  /**
+   * Geeft extra email van gebruiker
+   *
+   * @param string $user_id 
+   * @return string
+   * @author Jan den Besten
+   */
+  private function _extra_emails($user_id) {
+    $extra_emails='';
+    if (isset($this->config['extra_email_table']) and !empty($this->config['extra_email_table'])) {
+      $table=$this->config['extra_email_table'];
+      $fields=$this->CI->db->list_fields($table);
+      $fields=filter_by($fields,'email');
+
+      $this->CI->db->select($fields);
+      $this->CI->db->where('id_user',$user_id);
+      $u=$this->CI->db->get_row($table);
+      if ($u) $extra_emails=trim(implode(',',$u),',');
+    }
+    return $extra_emails;
+  }
 
 
   private function _can_activate_users() {

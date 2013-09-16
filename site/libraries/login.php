@@ -190,7 +190,9 @@ class Login extends Module {
 		
 		if ($code) {
 			// reset password
-			$reset = $this->CI->user->forgotten_password_complete($code,lang('reset_password_mail_subject'));
+      $user_id=$this->CI->db->get_field_where('cfg_users','id','str_forgotten_password_code',$code);
+      $extra_emails=$this->_extra_emails($user_id);
+			$reset = $this->CI->user->forgotten_password_complete($code,lang('reset_password_mail_subject'),$extra_emails);
 			if ($reset) {
 				$content=langp('reset_password_succes',$this->config('login_uri'));
 			}
@@ -326,6 +328,29 @@ class Login extends Module {
     return $current;
   }
   
+
+  /**
+   * Geeft extra email van gebruiker
+   *
+   * @param string $user_id 
+   * @return string
+   * @author Jan den Besten
+   */
+  private function _extra_emails($user_id) {
+    $extra_emails='';
+    if (isset($this->config['extra_email_table']) and !empty($this->config['extra_email_table'])) {
+      $table=$this->config['extra_email_table'];
+      $fields=$this->CI->db->list_fields($table);
+      $fields=filter_by($fields,'email');
+
+      $this->CI->db->select($fields);
+      $this->CI->db->where('id_user',$user_id);
+      $u=$this->CI->db->get_row($table);
+      if ($u) $extra_emails=trim(implode(',',$u),',');
+    }
+    return $extra_emails;
+  }
+
 
 	/**
 		* Zet een formulier klaar
