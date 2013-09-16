@@ -299,6 +299,7 @@ class Plugin_automenu extends Plugin {
     						}
     						if (!isset($item['order'])) $item['order']=$order++;
     						if (isset($autoValue['b_keep_parent_modules']) and $autoValue['b_keep_parent_modules']) {
+                  // module
     							if (isset($this->newMenu[$item['self_parent']][$this->config('module_field')])) {
     								$parentModule=$this->newMenu[$item['self_parent']][$this->config('module_field')];
     								if (isset($item[$this->config('module_field')]))
@@ -306,8 +307,19 @@ class Plugin_automenu extends Plugin {
     								else
     									$item[$this->config('module_field')]=$parentModule;
     							}
-    						}
-    						$item=$this->_insertItem($item);
+                }
+                // if invisible (then all subpages are alos invisible)
+                if (isset($this->newMenu[$item['self_parent']]['b_visible'])) {
+                  $parentVisible=$this->newMenu[$item['self_parent']]['b_visible'];
+                  if (!$parentVisible) $item['b_visible']=$parentVisible;
+                }
+                // restricted (then all subpages are also resctriced)
+                if (isset($this->newMenu[$item['self_parent']]['b_restricted'])) {
+                  $parentRestricted=$this->newMenu[$item['self_parent']]['b_restricted'];
+                  if ($parentRestricted) $item['b_restricted']=$parentRestricted;
+                }
+                
+                $item=$this->_insertItem($item);
     						if (isset($item['old_parent'])) {
     							$parIDs[$item['id']]=$item['old_parent'];
     							unset($item['old_parent']);
