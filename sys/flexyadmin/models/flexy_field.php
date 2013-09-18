@@ -402,7 +402,7 @@ class Flexy_field extends CI_Model {
       $validation[]=$this->_get_global_set_validation($out['name']);
 			$validation[]=$this->_get_set_validation($out['table'],$out['name']);
 			$validation[]=$this->_get_db_validation($out['table'],$out['name']);
-			$validations=$this->_combine_validations($validation);
+			$validations=combine_validations($validation,TRUE);
 		}
 		if (!empty($validations)) $out['validation']=$this->_set_validation_params($validations);
 		return $out;
@@ -441,44 +441,6 @@ class Flexy_field extends CI_Model {
 			'params'	=> $this->cfg->get('CFG_field',"*.".$field,'str_validation_parameters')
     );
     return $global_validation;
-	}
-
-
-	
-	function _combine_validations($validations) {
-		$validation=array();
-    // trace_($validations);
-		foreach ($validations as $val) {
-			if (!empty($val) and !empty($val['rules'])) {
-				$rules=explode('|',$val['rules']);
-				$params=explode('|',$val['params']);
-				foreach ($rules as $key => $rule) {
-					$param='';
-					if (isset($validation[$rule])) 	$param=$validation[$rule];
-					if (isset($params[$key])) 			$param=$params[$key];
-					if (isset($validation[$rule])) {
-						switch($rule) {
-							case 'max_length':
-								if ($validation[$rule]<$param) $param=$validation[$rule]; // get smallest
-								break;
-							case 'min_length':
-								if ($validation[$rule]>$param) $param=$validation[$rule]; // get biggest
-								break;
-						}
-					}
-					$validation[$rule]=$param;
-				}
-			}
-		}
-    // Cleanup double
-    foreach ($validation as $rule => $param) {
-      switch ($rule) {
-        case 'valid_emails':
-          if (isset($validation['valid_email'])) unset($validation['valid_email']);
-          break;
-      }
-    }
-		return $validation;
 	}
 
 	function _set_validation_params($validations) {

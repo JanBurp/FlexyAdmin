@@ -317,7 +317,7 @@ class Login extends Module {
       $this->CI->load->model($edit_model);
       $result=$this->CI->$edit_model->edit($page);
       if (isset($result['view'])) {
-				$result=$this->CI->view('login/register',array('result'=>$result),true);
+				$result=$this->CI->view($result['view'],$result,true);
       }
     }
 		return $this->_output($page,$result);
