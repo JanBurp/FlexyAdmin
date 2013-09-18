@@ -302,6 +302,27 @@ class Login extends Module {
 		return $this->_output($page,$content);
 	}
 
+  /**
+   * Hier kan de gebruiker dingen aanpassen, via een model waarvan de naam in de config kan worden ingesteld.
+   *
+   * @param string $page 
+   * @return string $page
+   * @author Jan den Besten
+   */
+  public function edit($page) {
+    $result='';
+    if (isset($this->config['edit_model']) and !empty($this->config['edit_model'])) {
+      $edit_model=$this->config['edit_model'];
+      // Handel alles af via het model, en stuur de output door naar meegegeven view (als die er is)
+      $this->CI->load->model($edit_model);
+      $result=$this->CI->$edit_model->edit($page);
+      if (isset($result['view'])) {
+				$result=$this->CI->view('login/register',array('result'=>$result),true);
+      }
+    }
+		return $this->_output($page,$result);
+  }
+
 
 
   /**
