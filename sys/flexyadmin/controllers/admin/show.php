@@ -336,11 +336,13 @@ class Show extends AdminController {
 				}
 				$data=$this->db->get_result($table);
 				// trace_('#show#'.$this->db->last_query());
-        // strace_($data);
+        // trace_($data);
 				$options=el("options",$data);
 				$multiOptions=el("multi_options",$data);
 				$data=current($data);
 			}
+      
+      // trace_($data);
       // strace_($options);
       // strace_($multiOptions);
 
@@ -495,7 +497,7 @@ class Show extends AdminController {
 		foreach ($formData as $key => $value) {
 			$formData[$key]['fieldset']=$title;
 		}
-
+    
 		$this->lang->load("update_delete");
 		$this->lang->load("form");
 

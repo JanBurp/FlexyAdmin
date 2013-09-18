@@ -17,6 +17,13 @@
    var $settings = array();
    
    /**
+    * het Form id
+    *
+    * @var int
+    */
+   var $form_id = FALSE;
+   
+   /**
     * Velden van het formulier, zodat de labels etc bekend zijn
     *
     * @var string
@@ -56,6 +63,17 @@
       return $this;
     }
    
+    /**
+     * Steld form id in
+     *
+     * @param int $form_id 
+     * @return void
+     * @author Jan den Besten
+     */
+    public function set_form_id($form_id) {
+      $this->form_id=$form_id;
+      return $this;
+    }
    
 
     /**
