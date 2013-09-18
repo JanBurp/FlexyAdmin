@@ -129,13 +129,18 @@ class Forms extends Module {
       echo '<div class="warning">'.langp('error_no_fields',$this->name).'<div>';
       return false;
     }
-  
+    
     // Extra veld toevoegen om op spamrobot te testen (die zal dit veld meestal automatisch vullen)
     if ($this->config('check_for_spam')) $formFields['__test__']=array('type'=>'textarea', 'class'=>'hidden');
-
+    
     $formAction=$this->CI->uri->get();
 		$form=new form($formAction,$this->form_id);
 		$form->set_data($formFields, $this->config('title',$this->form_id) );
+    // Is er een wachtwoord wat een extra check verlangt?
+    if ($this->config('add_password_match')) {
+  		$form->add_password_match();
+  		$form->hash_passwords();
+    }
     if ($this->config('placeholders_as_labels')) $form->add_placeholders();
 		if (isset($formFieldSets)) $form->set_fieldsets($formFieldSets);
     if ($formButtons) $form->set_buttons($formButtons);
