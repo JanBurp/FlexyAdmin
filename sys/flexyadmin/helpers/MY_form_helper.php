@@ -97,11 +97,12 @@ function array2formfields($array,$validation_rules_prefixes=array(),$validation_
 
 	$formData=array();
   $assoc=is_assoc($array);
+  
 	foreach ($array as $field=>$value) {
-    if (!$assoc) {
-       $field=$value;
-       $value='';
-    }
+    // if (!$assoc) {
+    //    $field=$value;
+    //    $value='';
+    // }
 		// standard attributes
 		$type='input';
 		$options=array();
