@@ -347,6 +347,7 @@ class Flexy_field extends CI_Model {
 			// empty option on top?
 			$key=foreign_table_from_key($this->field,true);
 			$optCfg=$this->cfg->get('CFG_table',$key);
+      $fieldOpts=$this->cfg->get('CFG_field',$out['table'].'.'.$out['name']);
 			if (isset($optCfg['b_add_empty_choice']) and $optCfg['b_add_empty_choice']) {
 				$options=array(''=>'') + $options;
 			}
@@ -368,7 +369,7 @@ class Flexy_field extends CI_Model {
 				$out["button"]=api_uri('API_view_form',trim(foreign_table_from_key($this->field),'_').':-1');
         $out['class'].='has_button ';
 			}
-			if (!empty($multiOptions)) $out["multiple"]="multiple";
+			if (!empty($multiOptions) ) $out["multiple"]="multiple";
 		}
 		/**
 		 * Upload field
