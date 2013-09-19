@@ -173,13 +173,31 @@
  				$out=$data;
  			}
  			else {
+        // Combine all data for this key
+        $key_data=NULL;
+        $key_table=get_prefix($key,'.');
+        $key_field=get_suffix($key,'.');
+        $key2='';$key2_data=NULL;
+        if (!empty($key_table) and !empty($key_field)) $key2='*.'.$key_field;
+        if ($key==$key2) $key2='';
+        
+        $key_data=el($key,$data);
+        if (!empty($key2)) {
+          $key2_data=el($key2,$data);
+          if (!empty($key2_data)) {
+            if (empty($key_data))
+              $key_data=$key2_data;
+            else
+              $key_data=array_merge($key2_data,$key_data);
+          }
+        }
  				if (empty($field)) {
- 					$out=el($key,$data);
- 					if (!isset($out)) $out=el($key,current($data));
+ 					$out=$key_data;
+           // if (!isset($out)) $out=el($key,current($data));
  				}
  				else {
- 					$data=el($key,$data);
-					$out=el($field,$data);
+           // $data=el($key,$data);
+					$out=el($field,$key_data);
 				}
  			}
  		}
