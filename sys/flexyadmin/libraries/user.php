@@ -381,6 +381,22 @@ class User Extends Ion_auth {
     // trace_(array('code'=>$code,'password'=>$password));
 		return $this->send_mail($id,'email_new_account',$subject,array('password'=>$password,'extra_email'=>$extra_email));
 	}
+  
+  
+  /**
+   * Stuur gebruiker mail met nieuwe inloggegevens (met nieuw wachtwoord)
+   *
+   * @param string $id 
+   * @param string $subject
+   * @param array $data Array met extra gegevens die in de mail worden gestuurd (inloggegevens bv)
+   * @return void
+   * @author Jan den Besten
+   */
+	public function send_new_password_mail($id,$subject='New account',$password,$extra_email='') {
+		$user  = $this->CI->ion_auth_model->get_user($id)->row();
+		$email = $user->email_email;
+		return $this->send_mail($id,'email_new_login',$subject,array('password'=>$password,'extra_email'=>$extra_email));
+	}
 
 
   /**

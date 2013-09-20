@@ -27,7 +27,7 @@ $lang['greater_than']			= "'%s' moet groter zijn dan %s.";
 
 $lang['valid_rgb']				       = "Geen juiste kleurcode in '%s'";
 $lang['valid_google_analytics']	 = "'%s' bevat geen juiste code voor Google Analytics";
-$lang['valid_password']	         = "'%s' moet minimaal 8 karakters lang zijn met minimaal één hoofletter, één kleine letter en één nummer.";
+$lang['valid_password']	         = "'%s' moet minimaal 8 karakters lang zijn met minimaal één hoofletter, één kleine letter en één cijfer.";
 
 $lang['valid_regex_rule']        = "Regex rule '%s' bestaat niet.";
 $lang['valid_regex']	           = "'%s' bevat geen juiste waarde";

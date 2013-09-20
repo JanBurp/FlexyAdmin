@@ -126,6 +126,11 @@
 	 **/
 	$config['email_new_account']   = 'new_account.tpl.php';
 
+	/**
+	 * New login/password send
+	 **/
+	$config['email_new_login']   = 'new_login.tpl.php';
+
 
 	/**
 	 * Deny activation
