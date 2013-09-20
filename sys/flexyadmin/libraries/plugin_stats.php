@@ -200,12 +200,16 @@ class Plugin_stats extends Plugin {
 				}
 				else {
 					foreach ($data as $key => $value) {
-						$data[$key]['page']=anchor($value['page'],$value['page'],array('target'=>'_blank'));
+            if (!is_string($value['page'])) $value['page']='';
+            $data[$key]['page']=anchor($value['page'],$value['page'],array('target'=>'_blank'));
 					}
 				}
 			case 'top_10_google':
 			case 'top_10_browsers':
 			case 'top_10_platform':
+        foreach ($data as $key => $value) {
+          if (isset($value['search']) and !is_string($value['search'])) $data[$key]['search']='';
+        }
 				$this->_add_table($data,$type,$this->MonthTxt);
 				break;
 		}
