@@ -173,6 +173,10 @@
  				$out=$data;
  			}
  			else {
+        if ($table=='cfg_configurations' and empty($field)) {
+          $field=$key;
+          $key=1;
+        }
         // Combine all data for this key
         $key_data=NULL;
         $key_table=get_prefix($key,'.');
@@ -201,6 +205,9 @@
 				}
  			}
  		}
+    // trace_if($key=='b_use_editor',$key);
+    // trace_if($key=='b_use_editor',$data);
+    // trace_if($key=='b_use_editor',$out);
 		log_("info","[Cfg] Getting data '$table','$key','$field'");
  		return $out;
  	}

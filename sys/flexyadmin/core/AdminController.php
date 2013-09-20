@@ -98,7 +98,7 @@ class AdminController extends BasicController {
 		$excluded=$this->config->item('MENU_excluded');
 		// trace_($this->cfg);
 		$cfgTables=$this->cfg->get("CFG_table");
-		// trace_($cfgTables);
+    // trace_($cfgTables);
 		$cfgTables=filter_by($cfgTables,$type);
 		$cfgTables=sort_by($cfgTables,"order");
     // order and show tables according to cfg_table_info
