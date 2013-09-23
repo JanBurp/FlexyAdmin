@@ -1,7 +1,7 @@
 <?
 // Minimized versions of Javascript & CSS files (see http://refresh-sf.com/yui/)
 $minimize=FALSE;
-$minimize=TRUE;
+// $minimize=TRUE;
 
 if ($minimize) {
 	$js='.min.js';
@@ -37,9 +37,6 @@ $isForm=has_string('form',$show_type);
 	<script language="javascript" type="text/javascript">
 	<!--
 	var config = new Object;
-	config.site_url = "<?=site_url()?>/";
-	config.form_nice_dropdowns = "<?=$this->config->item('FORM_NICE_DROPDOWNS')?>";
-  config.multiple_upload = "<?=$this->config->item('MULTIPLE_UPLOAD')?>";
 	<?
 	if (isset($jsVars) && !empty($jsVars)) {
 		foreach ($jsVars as $key => $value) {

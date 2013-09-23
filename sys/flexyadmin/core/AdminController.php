@@ -29,6 +29,16 @@ class AdminController extends BasicController {
 	function __construct() {
 		parent::__construct(true);
     
+    // default js variables
+    $this->js['site_url'] = site_url();
+    $this->js['form_nice_dropdowns'] = $this->config->item('FORM_NICE_DROPDOWNS');
+    $multiple_upload = $this->config->item('MULTIPLE_UPLOAD');
+    if (is_array($multiple_upload)) {
+      $user_group=$this->user->get_user()->id_user_group;
+      $multiple_upload=$multiple_upload[$user_group];
+    }
+    $this->js['multiple_upload'] = $multiple_upload;
+    
 		if ( ! $this->_user_logged_in() ) {
 			redirect($this->config->item('API_login'));
 		}
