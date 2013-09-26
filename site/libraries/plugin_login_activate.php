@@ -160,7 +160,7 @@
 		if ($user) {
       $extra_emails=$this->_extra_emails($user_id);
       $this->add_message(langp('user_send_password',$user->str_username));
-      $code=$this->CI->ion_auth_model->forgotten_password($user->email_email);
+      $code=$this->CI->ion_auth_model->forgotten_password_by_id($user_id);
       $this->CI->user->forgotten_password_complete($code,lang('new_password'),$extra_emails);
 		}
   }
@@ -234,7 +234,7 @@
           $all_mail=add_string($u['email_email'],$extra_emails,',');
           $all_mail=explode(',',$all_mail);
           $all_mail=array_unique($all_mail);
-          $all_mail=implode(',',$all_mail);
+          $all_mail=trim(implode(',',$all_mail),', ');
   				$show_users[$key]=array(
             $this->CI->ui->get('str_username')=>$u['str_username'],
             $this->CI->ui->get('email_email')=>'<a href="mailto:'.$all_mail.'">'.$all_mail.'</a>'
@@ -277,7 +277,7 @@
       $this->CI->db->select($fields);
       $this->CI->db->where('id_user',$user_id);
       $u=$this->CI->db->get_row($table);
-      if ($u) $extra_emails=trim(implode(',',$u),',');
+      if ($u) $extra_emails=trim(implode(', ',$u),', ');
     }
     return $extra_emails;
   }

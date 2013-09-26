@@ -140,7 +140,6 @@ class Forms extends Module {
     // Is er een wachtwoord wat een extra check verlangt?
     if ($this->settings('add_password_match')) {
   		$form->add_password_match();
-  		$form->hash_passwords();
     }
     if ($this->settings('placeholders_as_labels')) $form->add_placeholders();
 		if (isset($formFieldSets)) $form->set_fieldsets($formFieldSets);
@@ -180,7 +179,7 @@ class Forms extends Module {
               $this->CI->session->set_userdata($this->form_id.'__submit',true);
               redirect($formAction);
             }
-            return $this->_view_thanks();
+            $html.=$this->_view_thanks();
           }
         }
       }
@@ -188,7 +187,8 @@ class Forms extends Module {
         $errors='<p class="error">'.lang('error_spam').'</p>';
       }
 		}
-    if (!$isValidated or $isSpam)	{
+
+    if (!$isValidated or $isSpam or $this->settings('always_show_form',false))	{
 			// Form isn't filled or validated or regarded as spam: show form and validation errors
       if ($this->settings('validation_place','form')=='field')
         $form->show_validation_errors(true);
@@ -220,7 +220,8 @@ class Forms extends Module {
       return $this->CI->$model->$method();
     }
     $html=div('message').$this->settings('thanks','Thank you!')._div();
-    return $this->CI->view('forms',array('title'=>$this->settings['title'],'form'=>$html,'errors'=>$errors),true);
+    return $html;
+    // return $this->CI->view('forms',array('title'=>$this->settings['title'],'form'=>$html,'errors'=>$errors),true);
   }
   
   
