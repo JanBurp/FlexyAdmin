@@ -350,6 +350,32 @@ class Ion_auth_model extends CI_Model
     if ($this->db->affected_rows() == 1) return $key;
     return FALSE;
 	}
+  
+	/**
+	 * Insert a forgotten password key (by user id)
+	 *
+	 * @return string email
+	 * @author Jan den Besten
+	 **/
+	public function forgotten_password_by_id($id = '') {
+    if (empty($id)) {
+      return FALSE;
+    }
+    $email=$this->db->get_field_where($this->tables['users'],'email_email','id',$id);
+    if (empty($email)) {
+      return FALSE;
+    }
+    $key = $this->hash_password(microtime().$email);
+    $this->forgotten_password_code = $key;
+    $this->db->where($this->user->_extra_where);
+    $this->db->update($this->tables['users'], array('str_forgotten_password_code' => $key), array('id' => $id));
+    // Changed by JdB
+    if ($this->db->affected_rows() == 1) return $key;
+    return FALSE;
+	}
+  
+  
+  
 
 	/**
 	 * Forgotten Password Complete
