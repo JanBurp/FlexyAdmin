@@ -292,88 +292,64 @@ class File_manager Extends CI_Model {
 	 */
   public function delete_file($file) {
 		$name=$this->map."/".$file;
-		if (is_dir($name))
-			$result=rmdir($name);
-		else {
-			$result=unlink($name);
-			// $result=true;
-			if ($result) {
-				/**
-				 * Check if cached thumb exists, if so, delete it
-				 */
-				$cachedThumb=$this->config->item('THUMBCACHE').pathencode($name);
-				if (file_exists($cachedThumb)) {
-					unlink($cachedThumb);
-				}
-				/**
-				 * Check if other sizes exists and if they are hidden, delete them
-				 */
-				$info=$this->cfg->get('CFG_img_info',$this->path);
-				$nr=1;
-				$names=array();
-				while (isset($info["str_prefix_$nr"])) {
-					if (!empty($info["str_prefix_$nr"])) $names[]=$info["str_prefix_$nr"].$file;
-					if (!empty($info["str_suffix_$nr"])) $names[]=get_file_without_extension($file).$info["str_suffix_$nr"].get_file_extension($file);
-					$nr++;
-				}
-				$names=filter_by($names,"_");
-				foreach($names as $name) {
-					if (file_exists($this->map."/".$name)) unlink($this->map."/".$name);
-				}
-				
-				/**
-				 * Check if some data has this mediafile as content, remove it
-				 */
-				$tables=$this->db->get_tables();
-				if (!empty($tables)) {
-					foreach ($tables as $table) {
-						$fields=$this->db->list_fields($table);
-						$selectFields=array();
-						$selectFields[]=PRIMARY_KEY;
-						foreach ($fields as $field) {
-							$pre=get_prefix($field);
-							if (in_array($pre,array("txt","media","medias"))) $selectFields[]=$field;
-						}
-						$this->db->select($selectFields);
-						$currentData=$this->db->get_result($table);
-						foreach ($currentData as $row) {
-							foreach ($row as $field=>$data) {
-								if ($field==PRIMARY_KEY)
-									$id=$data;
-								else {
-									$newdata=$data;
-									$pre=get_prefix($field);
-									switch ($pre) {
-										case 'media':
-											if ($data==$file) $newdata='';
-											break;
-										case 'medias':
-											$arrData=explode('|',$data);
-											foreach ($arrData as $key => $value) {if ($value==$file) unset($arrData[$key]);}
-											$newdata=implode('|',$arrData);
-											break;
-										case 'txt':
-											$preg_name=str_replace("/","\/",$name);
-											// remove all img tags with this media
-											$newdata=preg_replace("/<img(.*)".$preg_name."(.*)>/","",$data);
-											// remove all flash objects with this media
-											$newdata=preg_replace("/<object(.*)".$preg_name."(.*)<\/object>/","",$newdata);
-											break;
-									}
-									// if changed, put in db
-									if ($newdata!=$data) {
-										$this->db->set($field,$newdata);
-										$this->db->where(PRIMARY_KEY,$id);
-										$this->db->update($table);
-									}
+    $result=true;
+    
+    if (is_dir($name)) {
+      $result=rmdir($name);
+    }
+    else {
+      $result=unlink($name);
 
-								}
-							}
-						}
-					}
-				}				
-			}			
-		}
+  		if ($result) {
+  			/**
+  			 * Check if cached thumb exists, if so, delete it
+  			 */
+  			$cachedThumb=$this->config->item('THUMBCACHE').pathencode($name);
+  			if (file_exists($cachedThumb)) {
+          unlink($cachedThumb);
+  			}
+  			/**
+  			 * Check if other sizes exists and if they are hidden, delete them
+  			 */
+  			$info=$this->cfg->get('CFG_img_info',$this->path);
+  			$nr=1;
+  			$names=array();
+  			while (isset($info["str_prefix_$nr"])) {
+  				if (!empty($info["str_prefix_$nr"])) $names[]=$info["str_prefix_$nr"].$file;
+  				if (!empty($info["str_suffix_$nr"])) $names[]=get_file_without_extension($file).$info["str_suffix_$nr"].get_file_extension($file);
+  				$nr++;
+  			}
+  			$names=filter_by($names,"_");
+  			foreach($names as $name) {
+          if (file_exists($this->map."/".$name)) unlink($this->map."/".$name);
+  			}
+			
+  			/**
+  			 * Check if some data has this mediafile as content, remove it
+  			 */
+        $searchedFields=array();
+      
+        // txt fields
+        $tables=$this->db->get_tables();
+  			foreach ($tables as $table) {
+  				$fields=$this->db->list_fields($table);
+  				foreach ($fields as $field) {
+  					$pre=get_prefix($field);
+  					if ($pre=="txt") $searchedFields[]=$table.'.'.$field;
+  				}
+        }
+        // media fields
+        $mediaInfo=$this->cfg->get('cfg_media_info',$this->path);
+        if (isset($mediaInfo['fields_media_fields'])) {
+          $fields=explode('|',$mediaInfo['fields_media_fields']);
+          foreach ($fields as $field) {
+            $searchedFields[]=$field;
+          }
+        }
+
+        $this->remove_file_from_fields($searchedFields,$this->map,$file);
+      }      
+    }
 
 		if ($result) {
 			log_("info","[FM] delete file/dir '$name'");
@@ -384,6 +360,63 @@ class File_manager Extends CI_Model {
 		return $result;
 	}
 
+
+  /**
+   * Verwijderd bestand(snaam) van het velden uit tabellen
+   *
+   * @param string $fields table.field
+   * @param string $path
+   * @param string $file
+   * @return void
+   * @author Jan den Besten
+   */
+  private function remove_file_from_fields($fields,$path,$file) {
+    $name=$path."/".$file;
+    // trace_($path);
+    // trace_($file);
+    // trace_($fields);
+    foreach ($fields as $fieldname) {
+      // trace_($fieldname);
+      $table=get_prefix($fieldname,'.');
+      $fieldname=remove_prefix($fieldname,'.');
+			$this->db->select(PRIMARY_KEY);
+			$this->db->select($fieldname);
+			$currentData=$this->db->get_result($table);
+			foreach ($currentData as $row) {
+				foreach ($row as $field=>$data) {
+					if ($field==PRIMARY_KEY)
+						$id=$data;
+					else {
+						$newdata=$data;
+						$pre=get_prefix($field);
+						switch ($pre) {
+							case 'media':
+								if ($data==$file) $newdata='';
+								break;
+							case 'medias':
+								$arrData=explode('|',$data);
+								foreach ($arrData as $key => $value) {if ($value==$file) unset($arrData[$key]);}
+								$newdata=implode('|',$arrData);
+								break;
+							case 'txt':
+								$preg_name=str_replace("/","\/",$name);
+								// remove all img tags with this media
+								$newdata=preg_replace("/<img(.*)".$preg_name."(.*)>/","",$data);
+								// remove all flash objects with this media
+								$newdata=preg_replace("/<object(.*)".$preg_name."(.*)<\/object>/","",$newdata);
+								break;
+						}
+            // if changed, put in db
+            if ($newdata!=$data) {
+              $this->db->set($field,$newdata);
+              $this->db->where(PRIMARY_KEY,$id);
+              $this->db->update($table);
+            }
+					}
+				}
+			}
+    }
+  }
 
   /**
    * Upload file van meegegeven file-veld, ook worden meteen thumbs etc. aangemaakt voor geuploade bestanden en wordt de minimale omvang gecheckt

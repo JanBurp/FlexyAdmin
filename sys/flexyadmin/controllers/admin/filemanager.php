@@ -113,7 +113,7 @@ class Filemanager extends AdminController {
 				// Sort files
 				if (!empty($order)) {
 					$sorder=$order;
-					$sorder=str_replace(array('size','filewidth','dat_date'),array('width','size','rawdate'),$order);
+					$sorder=str_replace(array('size','filewidth','dat_date','filename'),array('width','size','rawdate','name'),$order);
 					$desc=(substr($order,0,1)=='_');
 					$files=sort_by($files,ltrim($sorder,'_'),$desc);
 				}
@@ -474,7 +474,7 @@ class Filemanager extends AdminController {
                 $sizes=1;
                 while(isset($cfg['b_create_'.$sizes]) and $cfg['b_create_'.$sizes]) {
                   $thisFile=add_file_presuffix($file,$cfg['str_prefix_'.$sizes],$cfg['str_suffix_'.$sizes]);
-                  $thisNewFile=add_file_presuffix($new,$cfg['str_prefix_'.$sizes],$cfg['str_suffix_'.$sizes]);
+                  $thisNewFile=add_file_presuffix($newName,$cfg['str_prefix_'.$sizes],$cfg['str_suffix_'.$sizes]);
                   rename($map.'/'.$thisFile, $map.'/'.$thisNewFile);
                   $sr[$thisFile]=$thisNewFile;
                   $returndata['size_'.$sizes]=$thisNewFile;
