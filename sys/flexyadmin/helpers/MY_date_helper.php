@@ -12,12 +12,16 @@
  * Geeft datum/tijd in MySQL formaat, klaar om in de database te stoppen
  *
  * @param int $unix[''] Unix timestamp, als leeg dan wordt huidig moment genomen.
+ * @param bool $with_time[TRUE]
  * @return string
  * @author Jan den Besten
  */
-function unix_to_mysql($unix='') {
+function unix_to_mysql($unix='',$with_time=TRUE) {
   if (empty($unix)) $unix=time();
-  return date('Y-m-d H:i',$unix);
+  if ($with_time)
+    return date('Y-m-d H:i',$unix);
+  else
+    return date('Y-m-d',$unix);
 }
 
 
