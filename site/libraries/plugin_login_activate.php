@@ -75,6 +75,8 @@
       // Send new password to user(s)
       $active_users=$this->_show_active_users();
 
+			$this->CI->_show_type("plugin grid");
+
       return $this->view('plugin_login_activate',array('title'=>lang('title'),'inactive_users'=>$inactive_users,'active_users'=>$active_users));
 		}
 	}
@@ -288,8 +290,7 @@
     $rights=$this->CI->user->get_rights();
     return ($rights['id_user_group']<=$user_group);
   }
-
-
+  
 }
 
 ?>
