@@ -1,3 +1,11 @@
+UPDATE to r2192
+===============
+
+- Replace current sys map with new sys map
+- Replace index.php with new one
+- Run DB updates (from FlexyAdmin)
+
+
 UPDATE to r2151
 ===============
 
