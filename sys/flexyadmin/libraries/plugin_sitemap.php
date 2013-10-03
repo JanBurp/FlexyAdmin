@@ -42,10 +42,20 @@ class Plugin_sitemap extends Plugin {
 		$pageCount=count($menu);
     $maxlines=5000-($pageCount*10);
     if ($maxlines<=3) $maxlines=3;
+    $first=true;
 		foreach ($menu as $id => $item) {
 			$set=array();
+      // loc
 			$set['loc']=$url.'/'.htmlentities($item['uri']);
-			if (isset($item['str_title'])) $set['title']=$item['str_title'];
+      // priority
+      $level=substr_count($item['uri'],'/');
+      $priority=(.8-$level*0.16);
+      if ($priority<.16) $priority=.16;
+      if ($first) $priority=1;
+      $set['priority']=str_replace(',','.',sprintf('%1.2f',$priority));
+      $first=false;
+      // title & content
+      if (isset($item['str_title'])) $set['title']=$item['str_title'];
 			if (isset($item['txt_text'])) {
         $set['content']=preg_replace('/\s\s+/si',' ',htmlentities(replace_linefeeds(strip_nonascii(strip_tags(str_replace(array('<br />','&nbsp;'),' ',$item['txt_text'])))),ENT_QUOTES));
   			// prevent very big sitemap.xml
