@@ -1,3 +1,45 @@
+Changes 2192
+============
+
+MYSQL:
+- New demo database
+
+UPDATE:
+- UPDATE: CI 2.1.4 & Userguide
+
+FRONTEND:
+- NEW: login module has a new method edit, and a new formaction_login_edit to couple with tha
+- NEW: sitemap.xml now with priorities
+- NEW: menu->render() has new parameter max_level
+
+NEW:
+- NEW: regex_validation via config
+- NEW: in Media Info you can set if filenames are encrypted during upload
+- NEW: user_group specific MUTLI_UPLOAD setting
+- NEW: forms/formaction sets the form_id
+- NEW: user->send_new_password_mail()
+- NEW: plugin_login_activate can now send new password to existing users
+- NEW: plugin_login_activate , set the minimal user group that can call this plugin (default = super_admin)
+- NEW: callback_valid_password(), password will be checked everywhere
+- NEW: Admin menu items can have a user_group, so the item will only be shown for minimal this group
+- NEW: combine validation rules valid_email and valid_emails
+- NEW: nicer plugin_newsletter, with styling options
+- NEW: MY_DB Deep foreign keys now also shown in options (dropdowns etc.)
+- NEW: plugin_automenu, if parent is not b_visible, then also children are not visible, and same for b_restricted
+
+BUGS:
+- BUG: plugin_newsletter, when no adresses are selected / Nicer dutch translation of submenu
+- BUG: renaming/deteling files will rename/delete files in other wrong fields
+- BUG: wrong config for plugin_links
+- BUG: better default styling of styleTwitter
+- BUG: in spam.php
+- BUG: showing cfg_users
+- BUG: plugin_auto_menu - Als er veel WHERE statemenst worden gebruikt...
+- BUG: error messages not shown when uploading
+- BUG: Styling of form when FORM_NICE_DROPDOWNS = FALSE
+- BUG: db->last_num_rows_no_limit()
+
+
 Changes 2151
 ============
 
