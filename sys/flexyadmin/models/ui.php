@@ -211,7 +211,7 @@ class ui extends CI_Model {
    * @author Jan den Besten
    */
 	public function replace_ui_names($s) {
-    $s=explode(' ',$s);
+    $s=preg_split("/\b/",$s);
     foreach ($s as $key => $word) {
       // only replace if word has a undescore and no dot
       if (has_string('_',$word) and !has_string('.',$word)) {
@@ -220,6 +220,7 @@ class ui extends CI_Model {
       }
     }
     $s=implode(' ',$s);
+    $s=str_replace(' .','.',$s);
 		return $s;
 	}
 	
