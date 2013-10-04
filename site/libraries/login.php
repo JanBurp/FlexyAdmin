@@ -310,6 +310,9 @@ class Login extends Module {
    * @author Jan den Besten
    */
   public function edit($page) {
+		if (!$this->CI->user->logged_in()) {
+      return $this->login($page);
+    }
     $result='';
     if (isset($this->config['edit_model']) and !empty($this->config['edit_model'])) {
       $edit_model=$this->config['edit_model'];
