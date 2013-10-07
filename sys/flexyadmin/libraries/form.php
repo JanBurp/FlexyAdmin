@@ -535,22 +535,28 @@ class Form {
         $validation=str_replace('||','|',$validation);
         $field['validation']=$validation;
       }
+      
+      // captcha
+			if ($field['type']=='captcha') {
+			  $hasCaptcha=$name; 
+  			$code=str_reverse($this->CI->input->post($hasCaptcha.'__captcha'));
+        $field['validation']='required|callback_valid_same['.$code.']';
+			}
 
 			$this->CI->form_validation->set_rules($field["name"], $field["label"], $field["validation"]);
 			
-			if ($field['type']=='captcha') $hasCaptcha=$name;
 			$this->data[$name]["repopulate"]=$this->CI->input->post($name);
 		}
 
 		log_('info',"form: validation");
 		$this->isValidated=$this->CI->form_validation->run();
 
-		// validate captcha
-		if ($hasCaptcha!=FALSE) {
-			$value=$this->CI->input->post($hasCaptcha);
-			$code=str_reverse($this->CI->input->post($hasCaptcha.'__captcha'));
-			$this->isValidated=(($value) and ($value==$code));
-		}
+    // // validate captcha
+    // if ($hasCaptcha!=FALSE) {
+    //   $value=$this->CI->input->post($hasCaptcha);
+    //   $code=str_reverse($this->CI->input->post($hasCaptcha.'__captcha'));
+    //   $this->isValidated=(($value) and ($value==$code));
+    // }
 
 		if ($this->isValidated) {
 			foreach ($data as $name => $field) {
@@ -737,6 +743,7 @@ class Form {
 					$data[$name]=$field['value'];
 			}
 		}
+    unset($data['captcha']);
 		return $data;
 	}
 
@@ -831,7 +838,7 @@ class Form {
 			if ($field["type"]=='captcha') {
         $this->CI->load->helper('captcha');
 				$vals = array(
-								'img_path'	 	=> assets('_thumbcache').'/',
+								'img_path'	 	=> assets().'_thumbcache/',
 								'img_url'	 		=> site_url(assets().'_thumbcache').'/',
 								'img_width'	 	=> '125',
 								'img_height' 	=> '25',

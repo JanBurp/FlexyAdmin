@@ -167,6 +167,18 @@ class MY_Controller extends CI_Controller {
   }
 
   /**
+   * Input moet hetzelfde zijn als...
+   * @param  string $str
+   * @return mixed
+   */
+  public function valid_same($input,$same) {
+    $is_same=($input==$same);
+    if (!$is_same) $this->form_validation->set_message('valid_same',lang('valid_same'));
+    return $is_same;
+  }
+
+
+  /**
    * Wachtwoord moet tussen 8-40 tekens lang zijn,
    * - minimaal 1 letter
    * - minimaal 1 hoofdletter
@@ -182,8 +194,6 @@ class MY_Controller extends CI_Controller {
     }
     return FALSE;
   }
-
-
 
 	
   /**
