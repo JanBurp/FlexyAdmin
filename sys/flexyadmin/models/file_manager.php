@@ -376,45 +376,47 @@ class File_manager Extends CI_Model {
     // trace_($file);
     // trace_($fields);
     foreach ($fields as $fieldname) {
-      // trace_($fieldname);
-      $table=get_prefix($fieldname,'.');
-      $fieldname=remove_prefix($fieldname,'.');
-			$this->db->select(PRIMARY_KEY);
-			$this->db->select($fieldname);
-			$currentData=$this->db->get_result($table);
-			foreach ($currentData as $row) {
-				foreach ($row as $field=>$data) {
-					if ($field==PRIMARY_KEY)
-						$id=$data;
-					else {
-						$newdata=$data;
-						$pre=get_prefix($field);
-						switch ($pre) {
-							case 'media':
-								if ($data==$file) $newdata='';
-								break;
-							case 'medias':
-								$arrData=explode('|',$data);
-								foreach ($arrData as $key => $value) {if ($value==$file) unset($arrData[$key]);}
-								$newdata=implode('|',$arrData);
-								break;
-							case 'txt':
-								$preg_name=str_replace("/","\/",$name);
-								// remove all img tags with this media
-								$newdata=preg_replace("/<img(.*)".$preg_name."(.*)>/","",$data);
-								// remove all flash objects with this media
-								$newdata=preg_replace("/<object(.*)".$preg_name."(.*)<\/object>/","",$newdata);
-								break;
-						}
-            // if changed, put in db
-            if ($newdata!=$data) {
-              $this->db->set($field,$newdata);
-              $this->db->where(PRIMARY_KEY,$id);
-              $this->db->update($table);
-            }
-					}
-				}
-			}
+      if (!empty($fieldname) and $fieldname!='0') {
+        // trace_($fieldname);
+        $table=get_prefix($fieldname,'.');
+        $fieldname=remove_prefix($fieldname,'.');
+  			$this->db->select(PRIMARY_KEY);
+  			$this->db->select($fieldname);
+  			$currentData=$this->db->get_result($table);
+  			foreach ($currentData as $row) {
+  				foreach ($row as $field=>$data) {
+  					if ($field==PRIMARY_KEY)
+  						$id=$data;
+  					else {
+  						$newdata=$data;
+  						$pre=get_prefix($field);
+  						switch ($pre) {
+  							case 'media':
+  								if ($data==$file) $newdata='';
+  								break;
+  							case 'medias':
+  								$arrData=explode('|',$data);
+  								foreach ($arrData as $key => $value) {if ($value==$file) unset($arrData[$key]);}
+  								$newdata=implode('|',$arrData);
+  								break;
+  							case 'txt':
+  								$preg_name=str_replace("/","\/",$name);
+  								// remove all img tags with this media
+  								$newdata=preg_replace("/<img(.*)".$preg_name."(.*)>/","",$data);
+  								// remove all flash objects with this media
+  								$newdata=preg_replace("/<object(.*)".$preg_name."(.*)<\/object>/","",$newdata);
+  								break;
+  						}
+              // if changed, put in db
+              if ($newdata!=$data) {
+                $this->db->set($field,$newdata);
+                $this->db->where(PRIMARY_KEY,$id);
+                $this->db->update($table);
+              }
+  					}
+  				}
+  			}
+      }
     }
   }
 
