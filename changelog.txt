@@ -1,3 +1,17 @@
+Changes 2198
+============
+
+BUGS:
+- BUG: Small ui bug when adding new item
+- BUG: captcha not working -> made better with form validation message
+- BUG filemanager remove files from fields
+
+NEW:
+- NEW: form validation callback_valid_same
+- NEW: form captcha with validation
+- NEW: MY_captcha_helper, changed captcha filenames and removing of them
+
+
 Changes 2192
 ============
 
