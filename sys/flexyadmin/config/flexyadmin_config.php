@@ -28,6 +28,8 @@
 
 $config['PHP_version']						= substr(phpversion(),0,1);
 $config['LOCAL']									= IS_LOCALHOST;
+$config['IS_AJAX']								= IS_AJAX;
+$config['AJAX_MODULE']						= IS_AJAX;
 $config['LANGUAGES']							= array('nl','en','de','es','fr');
 $config['MENU_TABLES']						= array('res_menu_result','tbl_menu');
 

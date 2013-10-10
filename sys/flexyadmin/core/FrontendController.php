@@ -34,6 +34,8 @@ class FrontEndController extends MY_Controller {
    * @var array
    */
 	public $site;
+  
+  var $ajax_module = false;
 
 
   /**
@@ -48,10 +50,11 @@ class FrontEndController extends MY_Controller {
     // For this to work, config.php: $config['uri_protocol']  = "PATH_INFO";
 		if ($this->config->item('query_urls'))	parse_str($_SERVER['QUERY_STRING'],$_GET);
 
+    $this->ajax_module = $this->config->item('AJAX_MODULE');
     
-    if (IS_AJAX) {
-  		// Load standard Ajax Module Class
-  		$this->load->library('ajax_module');
+    if ($this->ajax_module) {
+      // Load standard Ajax Module Class
+      $this->load->library('ajax_module');
     }
     else {
   		// Load standard Module Class & Formaction model
@@ -134,8 +137,7 @@ class FrontEndController extends MY_Controller {
 		$this->site['languages']=$this->config->item('languages');
 
 
-    if (!IS_AJAX) {
-
+    if (!$this->ajax_module) {
   		/**
   		 * Declare and init some variables
   		 */
