@@ -588,6 +588,7 @@ class Ion_auth_model extends CI_Model
 													'id'                   => $result->id, //kept for backwards compatibility
 													'user_id'              => $result->id, //everyone likes to overwrite id so we'll use user_id
 													'id_user_group'        => $result->id_user_group,
+                          'language'             => $result->str_language,
 													'group'                => $group_row->str_name
 													 );
 				$this->session->set_userdata($session_data);

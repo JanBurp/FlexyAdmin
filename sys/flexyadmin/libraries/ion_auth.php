@@ -388,6 +388,7 @@ class Ion_auth
 		$this->CI->session->unset_userdata('group');
 		$this->CI->session->unset_userdata('id');
 		$this->CI->session->unset_userdata('user_id');
+    $this->CI->session->unset_userdata('language');
 
 		//delete the remember me cookies if they exist
 		if (get_cookie('identity'))
@@ -414,7 +415,6 @@ class Ion_auth
 	public function logged_in()
 	{
 		$identity = $this->CI->config->item('identity', 'ion_auth');
-
 		return (bool) $this->CI->session->userdata($identity);
 	}
 

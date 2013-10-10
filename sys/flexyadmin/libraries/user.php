@@ -167,6 +167,7 @@ class User Extends Ion_auth {
 		if ($logged_in) {
 			$this->user_id = $this->CI->session->userdata("user_id");
 			$this->user_name = $this->CI->session->userdata("str_username");
+			$this->language= $this->CI->session->userdata("language");
 			$this->rights = $this->create_rights( $this->user_id );
 		}
 		return (bool) $logged_in;
