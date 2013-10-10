@@ -36,7 +36,7 @@ class Main extends FrontEndController {
      * Als een AJAX request binnenkomt, stuur deze door naar de desbetreffende ajax module en roep de desbetreffende method aan.
      * De naam van de AJAX module komt overeen met 'ajax_' + het eerste deel van de uri. Het tweede deel bepaald eventueel de aan te roepen method.
      */
-    if (IS_AJAX) {
+    if ($this->ajax_module) {
       $uri=$this->uri->segment_array();
       $ajax_module='ajax_'.array_shift($uri);
       $ajax_method=array_shift($uri);
