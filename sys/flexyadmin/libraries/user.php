@@ -573,8 +573,14 @@ class User Extends Ion_auth {
    * @author Jan den Besten
    */
 	public function has_rights($item,$id="",$whatRight=0) {
-		// No rights if cfg_users and id is smaller (higher rights)
-		if ($item==$this->tables['users'] and !empty($id) and ($id!=-1) and ($id<$this->user_id)) return false;
+    if ($item==$this->tables['users'] and !empty($id) and ($id!=-1)) {
+      $user_info=$this->get_user();
+      // Do not delete self
+      if ($id==$user_info->id) return false;
+      // No rights to delete a user with more rights
+      $deleted_group=$this->CI->db->get_field_where('cfg_users','id_user_group','id',$id);
+      if ($user_info->id_user_group > $deleted_group) return false;
+    }
 		
 		$found=array('b_delete'=>FALSE,'b_add'=>FALSE,'b_edit'=>FALSE,'b_show'=>FALSE);
 		$pre=get_prefix($item);

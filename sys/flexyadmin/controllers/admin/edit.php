@@ -81,22 +81,24 @@ class Edit extends AdminController {
             $where[]=array(PRIMARY_KEY=>$id);
           }
         }
-      
-        // Start Delete
-        // Call _after_delete just for one (last) item (more is not needed)
-				$this->db->where(PRIMARY_KEY,$id);
-				$oldData=$this->db->get_row($table);
-        if ($this->_after_delete($table,$oldData)) {
-          // Delete all items
-          $this->crud->table($table)->delete( $where );  
-          // End messages
-          $this->load->model("login_log");
-          $this->login_log->update($table);
-          $this->message->add(langp("delete_succes",$table) . $message);
-        }
-        else {
-          $this->lang->load("rights");
-          $this->message->add_error(lang("rights_no_rights"));
+        
+        if (!empty($where)) {
+          // Start Delete
+          // Call _after_delete just for one (last) item (more is not needed)
+  				$this->db->where(PRIMARY_KEY,$id);
+  				$oldData=$this->db->get_row($table);
+          if ($this->_after_delete($table,$oldData)) {
+            // Delete all items
+            $this->crud->table($table)->delete( $where );  
+            // End messages
+            $this->load->model("login_log");
+            $this->login_log->update($table);
+            $this->message->add(langp("delete_succes",$table) . $message);
+          }
+          else {
+            $this->lang->load("rights");
+            $this->message->add_error(lang("rights_no_rights"));
+          }
         }
 			}
 

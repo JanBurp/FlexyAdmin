@@ -305,7 +305,7 @@ class Show extends AdminController {
 			$this->load->helper('html');
 			$this->lang->load("form");
 
-			$this->form_validation->set_error_delimiters('<div id="formmessage">', '</div>');
+			$this->form_validation->set_error_delimiters('<span class="error">', '<br/></span>');
 			$this->load->library("form");
 
 			/**
@@ -425,9 +425,9 @@ class Show extends AdminController {
 				else {
           $errors=validation_errors();
           if ($errors) {
-            $this->message->add(lang('validation_warning').$errors);
+            $this->message->add($errors);
+            $this->message->add(lang('validation_warning'));
           }
-					
 
 					$keys=array_keys($ffData);
 					$keys=array_combine($keys,$keys);
@@ -503,7 +503,7 @@ class Show extends AdminController {
 
 		$this->load->library('form_validation');
 		$this->load->helper('html');
-		$this->form_validation->set_error_delimiters('<div id="formmessage">', '</div>');
+		$this->form_validation->set_error_delimiters('<span class="error">', '<br/></span>');
 		$this->load->library("form");
 		$form=new form(api_uri('API_user'));
 		$form->set_data($formData,$userData["str_username"]);
