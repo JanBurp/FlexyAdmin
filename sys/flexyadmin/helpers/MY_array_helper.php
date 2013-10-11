@@ -910,6 +910,24 @@ function array_unset_keys($a,$unset,$recursive=FALSE) {
   return $a;
 }
 
+/**
+ * Hernoemt de meegegeven keys
+ *
+ * @param array $a 
+ * @param array $rename 
+ * @return array
+ * @author Jan den Besten
+ */
+function array_rename_keys($a,$rename=array()) {
+  foreach ($a as $key => $value) {
+    if (isset($rename[$key])) {
+      $a[$rename[$key]]=$a[$key];
+      unset($a[$key]);
+    }
+  }
+  return $a;
+}
+
 
 /**
  * Verwijderd dubbele items uit een multidimensionale array (een array met arrays dus)
