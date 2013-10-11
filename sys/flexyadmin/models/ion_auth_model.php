@@ -562,7 +562,7 @@ class Ion_auth_model extends CI_Model
 			return FALSE;
 		}
 
-		$query = $this->db->select($this->identity_column.', id, gpw_password, id_user_group')
+		$query = $this->db->select($this->identity_column.', id, gpw_password, id_user_group, str_language')
 		   								->where($this->identity_column, $identity)
 		   								->where('b_active', 1)
 		   								->where($this->user->_extra_where)
