@@ -525,7 +525,7 @@ function max_length($txt,$len=100,$type='LINES',$closetags=false,$strip_tags='')
 		default;
 				$lines=explode('. ',$txt);
 				$lines=array_slice($lines,0,$len);
-				$out=implode('. ',$lines).'.';
+				$out=implode('. ',$lines);
 			break;
 	}
 	if ($closetags) {
