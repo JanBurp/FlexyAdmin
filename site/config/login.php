@@ -72,6 +72,17 @@ $config['check_double_email']=TRUE;
 $config['group_id']=4;	// 4 is visitors which can't login to the backend
 
 
+/*
+|--------------------------------------------------------------------------
+| User edit model
+|--------------------------------------------------------------------------
+|
+| Model waarmee de gebruiker dingen kan aanpassen.
+|
+*/
+$config['edit_model'] = 'formaction_login_edit';
+
+
 
 /*
 |--------------------------------------------------------------------------
