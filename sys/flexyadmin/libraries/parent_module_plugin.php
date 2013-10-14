@@ -96,7 +96,7 @@ class Parent_module_plugin {
    * @author Jan den Besten
    */
 	protected function set_config($config=array(),$merge=TRUE) {
-		if (!empty($config)) {
+		if (!empty($config) and is_array($config)) {
 			if ($merge)
 				$this->config=array_merge($this->config,$config);
 			else

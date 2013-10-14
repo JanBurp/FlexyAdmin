@@ -52,6 +52,15 @@ class Fill extends AdminController {
 				}
 			}
 
+      if (!empty($addtable) and (empty($fields) or (count($fields)==1 and $fields[0]=='.'))) {
+        // Voeg alle velden van gekozen tabel toe
+        $fields=$this->db->list_fields($addtable);
+        foreach ($fields as $key => $field) {
+          $fields[$key]=$addtable.'.'.$field;
+          if ($field=='id') unset($fields[$key]);
+        }
+      }
+
 			// fill fields
 			if ($fields and $addtable) {
 				foreach($fields as $field) {
