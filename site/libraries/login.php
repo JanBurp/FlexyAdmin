@@ -100,33 +100,32 @@ class Login extends Module {
   	* @author Jan den Besten
   	*/
    public function login($page, $show_if_allready=true) {
-    $redirect=$this->get_current_page();
-     
 		$title='';
 		$content='';
-		
-		if (!$this->CI->user->logged_in()) {
-			$this->_loadform('login');
-			$title=lang('login_submit');
 
-			if ($this->form->validation()) {
-				$data = $this->form->get_data();
-				$u = $data['str_login_username'];
-				$p = $data['gpw_login_password'];
-				if (!empty($u) && !empty($p)) {
-					$result	= $this->CI->user->login($u, $p, $data['b_login_remember']);
-					if (!$result) {
-						$this->form->reset();
-						$this->errors='<p class="error">'.lang('login_error').'</p>';
-					}
-				}
-			}
-			else {
-				// Show validation errors if any
-				$validationErrors=validation_errors('<p class="error">', '</p>');
-				if (!empty($validationErrors)) $this->errors=$validationErrors;
-			}
-		}
+    // Test if user logged in
+    if (!$this->CI->user->logged_in()) {
+      $this->_loadform('login');
+      $title=lang('login_submit');
+    
+      if ($this->form->validation()) {
+        $data = $this->form->get_data();
+        $u = $data['str_login_username'];
+        $p = $data['gpw_login_password'];
+        if (!empty($u) && !empty($p)) {
+          $result  = $this->CI->user->login($u, $p, $data['b_login_remember']);
+          if (!$result) {
+            $this->form->reset();
+            $this->errors='<p class="error">'.lang('login_error').'</p>';
+          }
+        }
+      }
+      else {
+        // Show validation errors if any
+        $validationErrors=validation_errors('<p class="error">', '</p>');
+        if (!empty($validationErrors)) $this->errors=$validationErrors;
+      }
+    }
 		
 		if (!$this->CI->user->logged_in()) {
 			// Show login form and nothing else
@@ -148,12 +147,12 @@ class Login extends Module {
 				unset($_POST['str_login_username']);
 				unset($_POST['gpw_login_password']);
 				if (isset($_POST['submit']) and $_POST['submit']==lang('login_submit')) unset($_POST['submit']);
+  			// Redirect to current page
+        redirect( $this->get_current_page() );
 			}
-			// Redirect naar vorige pagina, of Show message if a dedicated login page
-      // if ($redirect) redirect($redirect);
-			if ($show_if_allready) {
-				$content=langp('login_already',$this->CI->user->user_name);
-			}
+      if ($show_if_allready) {
+        $content=langp('login_already',$this->CI->user->user_name);
+      }
 		}
     
 		return $this->_output($page,$content);
