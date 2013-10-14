@@ -56,11 +56,8 @@ class Blog extends Module {
       $per_page   = $this->config('pagination');
     }
     
-    // Haal data op
-    $this->CI->db->uri_as_full_uri();
-    $this->CI->db->where('str_table',$this->config('table'));
-		$items=$this->CI->db->get_result( get_menu_table(), $per_page, $offset );
-    
+    $items=$this->_get_items($per_page,$offset);
+
     // Pagination settings
     if ($per_page) {
       $config['total_rows'] = $this->CI->db->last_num_rows_no_limit();
@@ -69,6 +66,36 @@ class Blog extends Module {
       $this->CI->pagination->auto();
       $pagination_links = $this->CI->pagination->create_links();
     }
+    
+		return $this->CI->view('blog',array('items'=>$items,'read_more'=>$this->config('read_more'),'pagination'=>$pagination_links),true);
+	}
+  
+  /**
+   * Laat alleen de laatste paar zien
+   *
+   * @param string $page 
+   * @return string
+   * @author Jan den Besten
+   */
+  public function latest($page) {
+    $items=$this->_get_items($this->config('latest_items'));
+    return $this->CI->view('blog_latest',array('items'=>$items,'read_more'=>$this->config('read_more')),true);
+  }
+  
+  
+  /**
+   * Haalt de items op en bewerkt de data nog even
+   *
+   * @param string $limit 
+   * @param string $offset 
+   * @return array
+   * @author Jan den Besten
+   */
+  private function _get_items($limit=0,$offset=0) {
+    // Haal data op
+    $this->CI->db->uri_as_full_uri();
+    $this->CI->db->where('str_table',$this->config('table'));
+		$items=$this->CI->db->get_result( get_menu_table(), $limit, $offset );
     
     // Bewerk data
 		foreach ($items as $id => $item) {
@@ -83,8 +110,10 @@ class Blog extends Module {
       }
 			if ($this->config('comments')) $items[$id]['comments'] = $this->CI->comments->module($item);
 		}
-		return $this->CI->view('blog',array('items'=>$items,'read_more'=>$this->config('read_more'),'pagination'=>$pagination_links),true);
-	}
+    return $items;
+  }
+  
+  
 
 }
 
