@@ -88,7 +88,7 @@ $config['redirect']	= FALSE;
 | Set this to true, if you need auto pagination somewhere on you're site
 |
 */
-$config['auto_pagination']	= FALSE;
+$config['auto_pagination']	= TRUE;
 
 /*
 |--------------------------------------------------------------------------
@@ -104,7 +104,7 @@ $config['auto_pagination']	= FALSE;
 | - $config['autoload_modules_if'] = array( 'page'=>array('str_module'=>'') );          // Loads module 'page' when str_module=''
 | - $config['autoload_modules_if'] = array( 'page'=>array('str_module'=>''), 'submenu'=>array('str_module'=>'page') );          // Combination
 */
-// $config['autoload_modules'] = array('submenu');
+$config['autoload_modules'] = array('blog.latest');
 // $config['autoload_modules_if'] = array( 'blog'=>array('str_module'=>'blog') );
 
 
