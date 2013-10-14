@@ -27,6 +27,7 @@ $config['replace'] = array(
   'Ã©'  => '&eacute;',
   'Ã«'  => '&euml;',
   'â‚¬' => '&euro;',
+  'Ã¶'  => '&ouml;',
   
 
   'â€˜' => "'",
