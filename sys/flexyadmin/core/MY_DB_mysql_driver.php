@@ -984,6 +984,8 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 * @author Jan den Besten
 	 */
   private function get_parent($table,$row,$extraField='',$full=true) {
+    $remember=$this->remember_query;
+    $this->remember_query=false;
     $this->where('id',$row['self_parent']);
 		$this->select("id,order,uri,self_parent");
 		if (!empty($extraField)) $this->select($extraField);
@@ -993,6 +995,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
       $parent['uri']=$parentParent['uri'].'/'.$parent['uri'];
       if ($extraField) $parent[$extraField]=$parentParent[$extraField].'&nbsp;/&nbsp;'.$parent[$extraField];
     }
+    $this->remember_query=$remember;
     return $parent;
 	}
 
