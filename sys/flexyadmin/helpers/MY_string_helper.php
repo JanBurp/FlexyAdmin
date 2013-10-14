@@ -502,7 +502,7 @@ function add_before_last_tag($txt,$more,$tag='</p>') {
  *
  * @param string $txt 
  * @param string $len[100]
- * @param string $type[LINES] [CHARS|WORDS|LINES]
+ * @param string $type[LINES] Waar op wordt gesplitst [CHARS|WORDS|LINES]
  * @param string $closetags[FALSE]
  * @param string $strip_tags['']
  * @return string
@@ -515,17 +515,21 @@ function max_length($txt,$len=100,$type='LINES',$closetags=false,$strip_tags='')
 			$out=substr(strip_tags($txt,$strip_tags),0,$len);
 			break;
 		case 'WORDS':
-				$words=explode(' ',$txt);
-				$line='';
-				$w=0;
-				while (strlen($line)<$len and isset($words[$w+1])) { $line.=$words[$w++].' ';	}
-				$out=$line;
+			$words=explode(' ',$txt);
+			$line='';
+			$w=0;
+			while (strlen($line)<$len and isset($words[$w+1])) { $line.=$words[$w++].' ';	}
+			$out=$line;
 			break;
 		case 'LINES':
 		default;
-				$lines=explode('. ',$txt);
-				$lines=array_slice($lines,0,$len);
-				$out=implode('. ',$lines);
+			$lines=explode('. ',$txt);
+      $out='';
+      foreach ($lines as $line) {
+        $out.=$line.'. ';
+        if (strlen($out)>$len) break;
+      }
+      $out=trim($out);
 			break;
 	}
 	if ($closetags) {
