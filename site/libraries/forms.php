@@ -163,7 +163,7 @@ class Forms extends Module {
       if ($this->settings('check_for_spam')) {
         $this->CI->load->library('spam');
         $isSpam=$this->CI->spam->check($data,'__test__');
-        // trace_($this->CI->spam->get_rapport());
+        $this->settings['spam_rapport']=$this->CI->spam->get_rapport();
         unset($formFields['__test__']);
         unset($data['__test__']);
       }
