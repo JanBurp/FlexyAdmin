@@ -57,6 +57,10 @@ class Forms extends Module {
       if (isset($this->settings['__return'])) {
         $this->config['__return.'.$function]=$this->settings['__return'];
       }
+      // Extra settings instellen
+      if (isset($args[0])) {
+        $this->settings=array_merge($this->settings,$args[0]);
+      }
       // Laad eventueel benodigde libraries
   		$this->CI->load->library('form');
       if ($this->settings('prevend_double_submit')) $this->CI->load->library('session');
