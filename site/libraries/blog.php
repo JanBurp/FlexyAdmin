@@ -50,25 +50,33 @@ class Blog extends Module {
     * @ignore
 		*/
 	public function index($page) {
+    // First check if this is the main blog page or a blog item
+    if ($page['str_table']==$this->config('table')) {
+      return $this->blog_item($page);
+    }
+    
     $pagination_links='';
     if ($this->config('pagination')) {
       $offset     = $this->CI->uri->get_pagination();
       $per_page   = $this->config('pagination');
     }
     
-    $items=$this->_get_items($per_page,$offset);
-
+    $items=$this->_get_items($page,$per_page,$offset);
+    
     // Pagination settings
     if ($per_page) {
-      $config['total_rows'] = $this->CI->db->last_num_rows_no_limit();
+      $config['total_rows'] = $this->total_rows;
       $config['per_page'] = $per_page;
-      $this->CI->pagination->initialize($config);
-      $this->CI->pagination->auto();
-      $pagination_links = $this->CI->pagination->create_links();
+      if ($config['total_rows']>$config['per_page']) {
+        $this->CI->pagination->initialize($config);
+        $this->CI->pagination->auto();
+        $pagination_links = $this->CI->pagination->create_links();
+      }
     }
     
 		return $this->CI->view('blog',array('items'=>$items,'read_more'=>$this->config('read_more'),'pagination'=>$pagination_links),true);
 	}
+  
   
   /**
    * Laat alleen de laatste paar zien
@@ -78,8 +86,23 @@ class Blog extends Module {
    * @author Jan den Besten
    */
   public function latest($page) {
-    $items=$this->_get_items($this->config('latest_items'));
+    $items=$this->_get_items($page,$this->config('latest_items'));
     return $this->CI->view('blog_latest',array('items'=>$items,'read_more'=>$this->config('read_more')),true);
+  }
+  
+  
+  
+  /**
+   * Laat alleen een blog item zien, en eventueel de comments
+   *
+   * @param string $page 
+   * @return string
+   * @author Jan den Besten
+   */
+  public function blog_item($page) {
+    $this->CI->set_page_view('blog_page');
+    if ($this->config('comments')) $page['comments'] = $this->CI->_call_library('comments','index',$page);
+    return $page;
   }
   
   
@@ -91,11 +114,12 @@ class Blog extends Module {
    * @return array
    * @author Jan den Besten
    */
-  private function _get_items($limit=0,$offset=0) {
+  private function _get_items($page,$limit=0,$offset=0) {
     // Haal data op
     $this->CI->db->uri_as_full_uri();
     $this->CI->db->where('str_table',$this->config('table'));
 		$items=$this->CI->db->get_result( get_menu_table(), $limit, $offset );
+    $this->total_rows = $this->CI->db->last_num_rows_no_limit();
     
     // Bewerk data
 		foreach ($items as $id => $item) {
@@ -108,7 +132,7 @@ class Blog extends Module {
         $items[$id]['read_more_url']=$item['uri'];
         $items[$id][$this->config('field_text')]=$intro;
       }
-			if ($this->config('comments')) $items[$id]['comments'] = $this->CI->comments->module($item);
+      if ($this->config('comments')) $items[$id]['comments_count'] = $this->CI->_call_library('comments','count',$item);
 		}
     return $items;
   }

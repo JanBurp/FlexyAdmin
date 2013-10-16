@@ -2,7 +2,7 @@
 
 $lang['comments_title']='Reacties';
 $lang['comments_submit']='Plaats reactie';
-$lang['comments_spam']='<p class="error">Je reactie is gekenmerkt als spam en wordt niet geplaatst.</p>';
+$lang['comments_count']='Aantal reacties';
 
 // Voor elk veld in de tabel kun je de naam aanpassen:
 $lang['str_name']='Naam';

@@ -2,7 +2,7 @@
 
 $lang['comments_title']='Comments';
 $lang['comments_submit']='Place comments';
-$lang['comments_spam']='<p class="error">This comment is recognised as spam.</p>';
+$lang['comments_count']='Number of comments';
 
 // for each field you can give an alternative label text:
 $lang['str_name']='Naam';

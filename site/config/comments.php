@@ -1,11 +1,20 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/**
- * 
- *
- * @author Jan den Besten
- * @package FlexyAdmin_comments
- **/
+/*
+|--------------------------------------------------------------------------
+| Output routing of module
+|--------------------------------------------------------------------------
+|
+| Stel hier in wat er met de return waarden van de module (methods) moet gebeuren:
+|
+| - Als er niets staat wordt het aan de pagina teruggegeven (zelfde als 'page')
+| - 'page' - geeft de returnwaarde terug aan de pagina ($page)
+| - 'site' - geeft de returnwaarde aan $this->site[module_naam.method]
+| - Een combinatie is ook mogelijk, gescheiden door een pipe: 'page|site'
+*/
+
+$config['__return']='site';
+
 
 /*
 |--------------------------------------------------------------------------
@@ -20,8 +29,7 @@
 | NB er wordt vanzelf rekening gehouden met samengesteld menu (res_menu_result).
 */
 
-$config['key_id']='id_menu';
-// $config['key_id']='id_blog';
+$config['key_id']='id_blog';
 
 
 /*
@@ -52,6 +60,17 @@ $config['field_title']='str_title';
 $config['field_text']='txt_text';
 
 $config['field_spamscore']='int_spamscore';
+
+
+/*
+|--------------------------------------------------------------------------
+| Date format
+|--------------------------------------------------------------------------
+|
+| Uses php strftime()
+*/
+
+$config['date_format'] = '%A %e %b %Y %R';
 
 
 /* End of file config.php */

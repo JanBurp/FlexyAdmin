@@ -87,20 +87,19 @@ $config['upload_demo'] = array(
 
 /*
 |--------------------------------------------------------------------------
-| Instellingen voor het formulier 'reservation'
+| Instellingen voor het formulier 'comments'
 |--------------------------------------------------------------------------
 */
 
-$config['reservation'] = array(
-  
+$config['comments'] = array(
   // De velden worden voor dit formulier uit een tabel gegenereerd en in dezelfde tabel toegevoegd
-  'table'             => 'tbl_example',
-  
-  'title'             => 'Voorbeeld reservering',                
-  'buttons'           => array( 'submit'=>array('submit'=>'submit', 'value'=>lang('submit')) ),
-  'validation_place'  => 'Niet alle noodzakelijke velden zijn (goed) ingevuld.',
+  'model'             => 'formaction_comments.get_fields',
+  'table'             => 'tbl_comments',
+  'title'             => lang('comments_title'),
+  'buttons'           => array( 'submit'=>array('submit'=>'submit', 'value'=>lang('comments_submit')) ),
+  'validation_place'  => 'field',
   'check_for_spam'    => true,
-  'formaction'        => array('formaction_database','formaction_mail'),
+  'formaction'        => array('formaction_comments'),
   '__return'          => ''
 );
 
