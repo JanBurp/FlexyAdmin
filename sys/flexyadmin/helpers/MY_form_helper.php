@@ -78,9 +78,9 @@ function add_validation_parameters($rules,$params) {
 }
 
 /**
- * Maakt van een array (een row resultaat array uit de database) form-data dat naar form gestuurd kan worden
+ * Maakt van een array form-data die naar form gestuurd kan worden.
  *
- * @param string $array 
+ * @param string $array kan een resultaat zijn uit de database, of een array met velden (zoals door db->list_fields())
  * @return array
  * @author Jan den Besten
  */
@@ -99,10 +99,11 @@ function array2formfields($array,$validation_rules_prefixes=array(),$validation_
   $assoc=is_assoc($array);
   
 	foreach ($array as $field=>$value) {
-    // if (!$assoc) {
-    //    $field=$value;
-    //    $value='';
-    // }
+    if (!$assoc) {
+       $field=$value;
+       $value='';
+    }
+    
 		// standard attributes
 		$type='input';
 		$options=array();
