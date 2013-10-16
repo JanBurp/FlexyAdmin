@@ -93,19 +93,22 @@ class Forms extends Module {
 		// Welke velden (en buttons): zijn ze los ingesteld?
     $formFields=$this->settings('fields');
     $formButtons=$this->settings('buttons');
-    // Geen velden ingesteld, maar wel een tabel: haal ze uit de tabel
-    if (!$formFields and $this->settings('table')) {
-      $fields=$this->CI->db->list_fields( $this->settings('table') );
-      $formFields=array2formfields($fields);
-      unset($formFields['id']);
-    }
     // Geen velden ingesteld, maar wel een model: vraag de model.method naar de velden
     if (!$formFields and $this->settings('model')) {
       $model=$this->settings('model');
       $method=get_suffix($model,'.');
       $model=get_prefix($model,'.');
-      if (!isset($this->CI->$model)) $this->CI->load->model($model);
+      if (!isset($this->CI->$model)) {
+         $this->CI->load->model($model);
+         $this->CI->$model->initialize($this->settings);
+      }
       $formFields=$this->CI->$model->$method();
+    }
+    // Geen velden ingesteld, maar wel een tabel: haal ze uit de tabel
+    if (!$formFields and $this->settings('table')) {
+      $fields=$this->CI->db->list_fields( $this->settings('table') );
+      $formFields=array2formfields($fields);
+      unset($formFields['id']);
     }
     // Geen velden en geen tabel, maar een flexyform
     if (!$formFields) {
