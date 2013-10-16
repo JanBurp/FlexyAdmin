@@ -80,16 +80,17 @@ class __ extends AdminController {
     $this->load->dbutil();
     // load all helpers
     $this->load->helper('video');
+
     // load all libraries
     $libraries=read_map('sys/flexyadmin/libraries','php',FALSE,FALSE);
     unset($libraries['ion_auth.php']); // exclude allready inherited libraries
     unset($libraries['gmap.php']); // exclude allready inherited libraries
-    // trace_($libraries);
     $modules=read_map('site/libraries','php',FALSE,FALSE); // Frontend libraries (modules)
     $libraries=array_merge($libraries,$modules);
     foreach ($libraries as $file=>$library) {
       $this->load->library(str_replace('my_','',$file));
     }
+
     // load all models
     $models=read_map('sys/flexyadmin/models','php',FALSE,FALSE);
     $frontend=read_map('site/models','php',FALSE,FALSE);
@@ -100,7 +101,7 @@ class __ extends AdminController {
         $this->load->model($file);
       }
     }
-    
+
 
     // Include general documents
     $this->_add_markdown_docs('userguide/FlexyAdmin/__doc');
