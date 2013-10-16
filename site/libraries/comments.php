@@ -32,6 +32,7 @@
    */
    public function __construct() {
 		parent::__construct();
+    $this->CI->load->model('formaction');
     $this->CI->load->model('formaction_comments');
     $this->CI->formaction_comments->initialize($this->config);
     $this->foreign_table=foreign_table_from_key( $this->config('key_id') );
