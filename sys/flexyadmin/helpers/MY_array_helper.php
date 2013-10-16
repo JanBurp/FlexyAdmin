@@ -994,8 +994,7 @@ function array_diff_multi($a,$b) {
  * @author Jan den Besten
  */
 function is_assoc($a){
-  $a = array_keys($a);
-  return ($a != array_keys($a));
+  return (bool)count(array_filter(array_keys($a), 'is_string'));
 }
 
 
