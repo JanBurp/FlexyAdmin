@@ -1,17 +1,9 @@
 <div id="comments">
 	<hr/>
-	<h1><?=lang('comments_title')?></h1>
-
-	<div id="commentErrors">
-		<?=$errors?>
-	</div>
-
-	<div id="commentForm">
-		<?=$form?>
-	</div>
+	<div id="comment_form"><?=$form?></div>
 
 	<? foreach($items as $item): ?>
-	<div id="comment<?=$item['id']?>" class="comment">
+	<div id="comment_<?=$item['id']?>" class="comment">
 		<hr/>
 		<h2><?=$item['str_title']?></h2>
 		<p><?=$item['str_name']?> | <?=$item['niceDate']?></p>

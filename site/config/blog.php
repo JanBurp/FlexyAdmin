@@ -75,7 +75,7 @@ $config['latest_items'] = 5;
 */
 
 
-$config['comments']=FALSE;
+$config['comments']=TRUE;
 
 // Override comments settings
 // $config['comments']= array(

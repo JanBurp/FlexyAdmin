@@ -98,6 +98,16 @@ body {background:#DEA;}
 #menu li a:hover, #menu li a.current, #menu li a.active {text-decoration:underline;}
 
 
+/* Pagination */
+
+.pagination li {
+  display:inline;
+  margin:0px;
+  margin-right:10px;
+}
+.pagination_total {display:none;}
+
+
 /* FORMS */
 .error {color:#F00;margin:0px;padding:0px;}
 form {margin-top:10px;}

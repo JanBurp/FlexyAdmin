@@ -102,10 +102,8 @@ class Forms extends Module {
       $model=$this->settings('model');
       $method=get_suffix($model,'.');
       $model=get_prefix($model,'.');
-      if (!isset($this->CI->$model)) {
-         $this->CI->load->model($model);
-         $this->CI->$model->initialize($this->settings);
-      }
+      if (!isset($this->CI->$model)) $this->CI->load->model($model);
+      $this->CI->$model->initialize($this->settings);
       $formFields=$this->CI->$model->$method();
     }
     // Geen velden ingesteld, maar wel een tabel: haal ze uit de tabel
