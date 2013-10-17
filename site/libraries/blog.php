@@ -15,11 +15,12 @@
 	* ----------------
 	*
 	* - Als er nog geen samengesteld menu is geladen, laad dan het database bestand db/add_auto_menu.sql
-	* - Voeg aan 'cfg_auto_menu' een regel toe met de volgende gegevens: Type => from submenu table | Table => tbl_blog | Parent Where => str_module = "blog"
+	* - Voeg aan 'cfg_auto_menu' een regel toe met de volgende gegevens: Type => from submenu table | Table => tbl_blog | Keep Parent Modules => TRUE | Parent Where => str_module = "blog" 
 	* - Maak een menu item aan met de module 'blog'
  	* - Laad het database bestand db/add_simple_blog.sql
- 	* - Pas de configuratie aan indien nodig (zie: site/config/blog.php)
- 	* - Pas de view (en styling) aan indien nodig
+	* - Zorg ervoor dat in 'res_menu_result' alle velden van 'tbl_blog' worden overgenomen (standaard is het extra toevoegen van dat_date voldoende)
+ 	* - Pas eventueel de configuratie aan indien nodig (zie: site/config/blog.php)
+ 	* - Pas eventueel de view (en styling) aan indien nodig
  	*
  	* @author Jan den Besten
  	* @package FlexyAdmin_blog
@@ -113,6 +114,7 @@ class Blog extends Module {
    * @param string $offset 
    * @return array
    * @author Jan den Besten
+   * @ignore
    */
   private function _get_items($page,$limit=0,$offset=0) {
     // Haal data op

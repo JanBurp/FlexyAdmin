@@ -7,7 +7,25 @@
 	* 
 	* - Er kunnen meerdere formulieren worden gemaakt
 	* - Met de config kun je de diverse formulieren aanmaken, instellen welke velden ze hebben, en wat de afhandeling van een formulier is
-	* - De verschillende formulieren kunnen aangeroepen worden met hun naam als een submodule bv: forms.contact en forms.reservation. 
+	* - De verschillende formulieren kunnen aangeroepen worden met hun naam als een submodule bv: forms.contact en forms.reservation.
+	* 
+	* Aanroepen
+	* ----------------
+	* 
+	* Je roept een formulier aan zoals een andere module, met als method de naam van je formulier zoals je die hebt ingesteld in de config, bijvoorbeeld:
+	* 
+	* - forms.contact
+	* - forms.upload_demo
+	* 
+	* Je kunt forms ook vanuit een andere module aanroepen, je krijgt dan de HTML terug van het formulier, inclusief validatie fouten etc.:
+	* 
+	* - `$this->CI->_call_library('forms','comments');`
+	* 
+	* Instellingen
+	* ----------------
+	* 
+	* Er zijn veel verschillende instellingen mogelijk. In _site/config/forms.php_ vindt je diverse voorbeelden en uitleg bij de diverse instellingen.
+	* Mocht het formulier gebruik maken van een formaction, dan worden alle instellingen ook naar het formaction gestuurd.
 	*
 	* Bestanden
 	* ----------------
@@ -29,8 +47,9 @@
 	*/
 class Forms extends Module {
   
-  var $form_id='';
-  var $settings=array();
+  private $form_id='';
+
+  private $settings=array();
   
   /**
    * @ignore
@@ -47,6 +66,7 @@ class Forms extends Module {
    * @param array $args 
    * @return mixed
    * @author Jan den Besten
+   * @ignore
    */
 	public function __call($function, $args) {
     // Test of gevraagd formulier bestaat
@@ -80,6 +100,7 @@ class Forms extends Module {
   	* @param string $page 
   	* @return mixed
   	* @author Jan den Besten
+  	* @ignore
   	*/
 	public function index($page) {
     $this->form_id=$this->name;
@@ -213,7 +234,14 @@ class Forms extends Module {
 	}
   
   
-  
+  /**
+   * Toont melding als formulier is ingevuld
+   *
+   * @param string $errors 
+   * @return string
+   * @author Jan den Besten
+   * @ignore
+   */
   private function _view_thanks($errors='') {
     if ($this->settings('prevend_double_submit')) {
       $this->CI->session->unset_userdata($this->form_id.'__submit');
@@ -230,6 +258,15 @@ class Forms extends Module {
   }
   
   
+  /**
+   * Geeft instelling
+   *
+   * @param string $item 
+   * @param string $default[NULL]
+   * @return mixed
+   * @author Jan den Besten
+   * @ignore
+   */
 	private function settings($item,$default=NULL) {
 		return el($item,$this->settings,$default);
 	}
