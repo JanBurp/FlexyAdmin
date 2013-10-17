@@ -1,5 +1,25 @@
+Changes 2226
+============
 
+FRONTEND:
+- NEW: breadcrumb module
+- NEW: Totaly rewritten modules blog & comments
+- NEW: login module reloads page after login
+- NEW: setting to use ajax for modules or not
 
+NEW:
+- NEW: plugin_strange_chars
+- NEW: MY_array_helper array_rename_keys()
+- CHANGED: forms - Voeg spamrapport toe aan settings, bekend in formaction->go()
+- CHANGED: forms - Extra settings can be set when loading
+- CHANGED: forms - Fields from a model has priority over fields from a table, so the table config setting can be used for the model.
+- CHANGED: better max_length()
+
+BUGS:
+- BUG: MY_array_helper is_assoc()
+- BUG: $this->CI->db->last_num_rows_no_limit(); didn't count well when full_uris asked
+- BUG: user can't edit self
+- BUG: user language settings in admin
 
 Changes 2198
 ============
