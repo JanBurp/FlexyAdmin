@@ -193,7 +193,13 @@ class Form {
 	public function set_data($data=NULL,$caption="") {
 		if (isset($data) and !empty($data)) {
 			foreach ($data as $name => $field) {
+        // Default name
 				$this->data[$name]=$this->_check_default_field($name,$field);
+        // Password always empty value
+        if ($field['table']=='cfg_users' and $field['type']=='password') {
+          $this->data[$name]['value']='';
+        }
+        // Fieldset
         if (isset($field['fieldset'])) {
           $fieldset=$field['fieldset'];
           if (!in_array($fieldset,$this->fieldsets)) {
@@ -527,13 +533,20 @@ class Form {
 				// trace_($field);
 			}
 
-			// set validation rules
-      if ($field['type']=='password' and !isset($field['matches']) and !empty($field['value'])) {
-        // if password has a value, new value can be empty..
-        $validation=$field['validation'];
-        $validation=str_replace('required','',$validation);
-        $validation=str_replace('||','|',$validation);
-        $field['validation']=$validation;
+			// set validation rules for passwords
+      if ($field['type']=='password' and !isset($field['matches'])) {
+        if ($data['id']['value']>0) {
+          // if not a new 'user', password maybe empty for no change
+          if (isset($_POST[$field['name']]) and empty($_POST[$field['name']])) {
+            // $validation=$field['validation'];
+            // $validation=str_replace('required','',$validation);
+            // $validation=str_replace('||','|',$validation);
+            // $field['validation']=$validation;
+            $field['validation']='';
+          }
+        }
+        // strace_($field);
+        // strace_($data);
       }
       
       // captcha
