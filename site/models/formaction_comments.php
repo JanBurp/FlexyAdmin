@@ -8,6 +8,10 @@
  */
  class Formaction_comments extends Formaction {
    
+   /**
+    * @author Jan den Besten
+    * @ignore
+    */
    public function __construct() {
      parent::__construct();
    }
@@ -94,7 +98,7 @@
       $this->email->from( $this->site['email_email'] );
       $this->email->subject( langp('comments_'.'mail_to_owner_subject',$this->site['url_url']) );
       $this->email->message( langp('comments_'.'mail_to_owner_body', site_url($this->uri->get())."\n\n".$data[$this->settings['field_text']]) );
-      if ( ! $this->email->send() )  $errorHtml.=$this->email->print_debugger();
+      if ( ! $this->email->send() ) log_message('error', $this->email->print_debugger() );
       $this->email->clear();
     }
     if ($this->settings['mail_others']) {
