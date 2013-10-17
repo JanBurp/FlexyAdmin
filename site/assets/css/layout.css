@@ -107,6 +107,9 @@ body {background:#DEA;}
 }
 .pagination_total {display:none;}
 
+/* Breadcrumb */
+#breadcrumb li {display:inline;margin:0px;}
+
 
 /* FORMS */
 .error {color:#F00;margin:0px;padding:0px;}

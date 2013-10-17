@@ -104,7 +104,7 @@ $config['auto_pagination']	= TRUE;
 | - $config['autoload_modules_if'] = array( 'page'=>array('str_module'=>'') );          // Loads module 'page' when str_module=''
 | - $config['autoload_modules_if'] = array( 'page'=>array('str_module'=>''), 'submenu'=>array('str_module'=>'page') );          // Combination
 */
-$config['autoload_modules'] = array('blog.latest');
+// $config['autoload_modules'] = array('breadcrumb');
 // $config['autoload_modules_if'] = array( 'blog'=>array('str_module'=>'blog') );
 
 
