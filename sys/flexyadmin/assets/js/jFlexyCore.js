@@ -418,12 +418,26 @@ function trim(s) {
 }
 
 function randomPassword(length) {
+  if (length<8) length=8;
   var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz"+"@#^<>()-/+=[]{\|}$%!?";
-	var randomstring = '';
-	for (var i=0; i<length; i++) {
-		var rnum = Math.floor(Math.random() * chars.length);
-		randomstring += chars.substring(rnum,rnum+1);
-	}
+  var nr=0;
+  do {
+    var randomstring = '';
+    var caps=false;
+    var smallcaps=false;
+    var number=false;
+  	for (var i=0; i<length; i++) {
+  		var rnum = Math.floor(Math.random() * chars.length);
+      caps = caps || (rnum>9 && rnum<=35);
+      smallcaps = smallcaps || (rnum>35 && rnum<=61);
+      number = number || (rnum>=0 && rnum<=9);
+  		randomstring += chars.substring(rnum,rnum+1);
+  	}
+    nr++;
+  }
+  // at least one CAPS, one smallcaps and one number:
+  while (!caps || !smallcaps || !number);
+
   return randomstring;
 }
 
