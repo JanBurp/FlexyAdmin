@@ -113,6 +113,25 @@
   
 class Menu {
 
+  // BUSY
+  // private $settings = array(
+  //   'current'           => '',
+  //   'uri_field'         => 'uri',
+  //   'title_field'       => 'str_title',
+  //   'class_field'       => 'str_class',
+  //   'bool_class_fields' => array(),
+  //   'visible_field'     => 'b_visible',
+  //   'clickable_field'   => 'b_clickable',
+  //   'parent_field'      => 'self_parent',
+  //   'extra_field'       => '',
+  //   'attributes'        => array('class'=>''),
+  //   'menu_table'        => ''
+  //   'menu_templates'    => array('<ul %s>','</ul>'),
+  //   'item_templates'    => array('<li %s>','</li>'),
+  //   'url_template'      => '%s'
+  // )
+  
+
   /**
    * HTML output
    *
@@ -152,7 +171,7 @@ class Menu {
 	 * @var string
 	 */
 	var $menuTable;
-	
+  
 	private $tmpMenuStart;
 	private $tmpMenuEnd;
 	private $tmpItemStart;
@@ -160,9 +179,45 @@ class Menu {
 	private $itemControls;
 
 
+  /**
+   * @author Jan den Besten
+   * @ignore
+   */
 	public function __construct() {
 		$this->init();
 	}
+
+  // BUSY
+  // /**
+  //  * Initialiseer (override defaults)
+  //  *
+  //  * @param array $settings[]
+  //  * @return this
+  //  * @author Jan den Besten
+  //  */
+  // public function initialize($settings=array()) {
+  //   foreach ($settings as $name => $value) {
+  //     $this->set($name,$value);
+  //   }
+  //   return $this;
+  // }
+  // 
+  // /**
+  //  * Stelt één setting in
+  //  *
+  //  * @param string $name 
+  //  * @param string $value 
+  //  * @return this
+  //  * @author Jan den Besten
+  //  */
+  // public function set($name,$value) {
+  //   if (method_exists($this,'set_'.$name))
+  //     $this->'set_'.$name($value);
+  //   else
+  //     $this->settings[$name]=$value;
+  //   return $this;
+  // }
+  
 
   /**
    * Init
@@ -266,10 +321,10 @@ class Menu {
    */
 	function remove_extra_fields($fields='',$menu='',$level=0) {
 		$this->set_extra_field();
-		if (empty($menu)) {$menu=$this->menu;}
+		if (empty($menu)) $menu=$this->menu;
 		foreach ($menu as $uri => $item) {
 			unset($menu[$uri]['extra']);
-			if (isset($item['sub']) and !empty($item['sub'])) {$menu[$uri]['sub']=$this->remove_extra_fields($fields,$item['sub'],$level+1);}
+			if (isset($item['sub']) and !empty($item['sub'])) $menu[$uri]['sub']=$this->remove_extra_fields($fields,$item['sub'],$level+1);
 		}
 		if ($level==0) $this->menu=$menu;
 		return $menu;
@@ -642,7 +697,7 @@ class Menu {
    * @return void
    * @author Jan den Besten
    */
-	function set_current($current="") {
+	public function set_current($current="") {
     $CI =& get_instance();
 		$current=str_replace(index_page(),"",$current);
 		if (substr($current,0,1)=="/") $current=substr($current,1);
