@@ -549,13 +549,38 @@ class __ extends AdminController {
   
   public function process_svnlog() {
     $this->_add_content('<h1>Process SVN log</h1>');
-    $log=read_file('svnlog.txt');
+    
+    $log=$this->input->post('svnlog');
+    $from=(int)$this->input->post('from');
+    if (empty($log) or empty($from)) {
+      $this->load->library('form');
+      $fields=array('svnlog'=>array('type'=>'textarea'), 'from'=>array());
+      $form=new Form();
+      $form->set_data($fields);
+      $this->_add_content($form->render('Log'));
+      $this->_show_all();
+      return;
+    }
     
     // Fetch
     $svn=array();
     if (preg_match_all("/(\\d.\\d\\d\\d)\\n((.*)\\ncopy\\nchanges(\\d*)\\n)(.*)\\n/uiUsmx", $log,$matches)) {
+      // trace_($matches);
       foreach ($matches[1] as $key => $value) {
-        $rev=str_replace('.','',$value);
+        $value = (int)str_replace('.','',$value);
+        $matches[1][$key]=$value;
+        if ($value<=$from) {
+          unset($matches[0][$key]);
+          unset($matches[1][$key]);
+          unset($matches[2][$key]);
+          unset($matches[3][$key]);
+          unset($matches[4][$key]);
+          unset($matches[5][$key]);
+        }
+      }
+      
+      foreach ($matches[1] as $key => $value) {
+        $rev=$value;
         $log=$matches[3][$key];
         $log=explode("\n",$log);
         // Clean logs
@@ -656,7 +681,7 @@ class __ extends AdminController {
    * @author Jan den Besten
    **/
   public function build() {
-    $revision=$this->get_revision();
+    $revision=$this->get_revision() + 1;
     $tags=$this->tags.'/FlexyAdmin_r'.$revision;
     $this->_add_content('<h1>Build: r_'.$revision.'</h1>');
 
