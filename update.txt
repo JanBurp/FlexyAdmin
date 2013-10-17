@@ -1,6 +1,11 @@
 UPDATE to r2227
 ===============
 
+- Replace current sys map with new sys map
+- Change controller.php[39] if ($this->ajax_module) {
+- Update all files for plugins and modules: forms, blog, comments, login (if you need them)
+
+
 UPDATE to r2198
 ===============
 
