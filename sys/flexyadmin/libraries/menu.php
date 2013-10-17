@@ -1378,6 +1378,19 @@ class Menu {
 		}
 		return $submenu;
 	}
+  
+  
+  /**
+   * Geeft home item terug
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_home() {
+    $home=current($this->menu);
+    return $home;
+  }
+  
 
 }
 
