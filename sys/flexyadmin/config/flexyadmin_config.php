@@ -43,6 +43,8 @@ $config['PLUGINS']								= $config['SITE'].'plugins';
 $config['BULKUPLOAD']							= 'bulk_upload';
 
 $config['THUMBSIZE']							= array(100,100);
+$config['IGNORE_MIME']						= FALSE;
+
 
 
 /*

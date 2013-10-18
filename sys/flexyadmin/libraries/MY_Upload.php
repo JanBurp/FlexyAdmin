@@ -417,6 +417,21 @@ class MY_Upload extends CI_Upload {
 	public function display_errors($open = '', $close = '') {
 		return parent::display_errors($open,$close);
 	}
+  
+  
+	/**
+	 * Verify that the filetype is allowed, defualt: not check Mime
+	 *
+	 * @return	bool
+	 */
+	public function is_allowed_filetype($ignore_mime=FALSE) {
+		if (!isset($this->CI)) {
+			$this->CI =& get_instance();
+		}
+    $ignore_mime=$this->CI->config->item('IGNORE_MIME');
+    return parent::is_allowed_filetype($ignore_mime);
+	}
+  
 
 
 }
