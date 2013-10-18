@@ -96,9 +96,11 @@ class Filemanager extends AdminController {
         // Check if file is used somewhere
         if (isset($cfg['fields_check_if_used_in']) and !empty($cfg['fields_check_if_used_in'])) {
           $used_field=lang('USED');
+          $this->load->model('search_replace');
+          $fields=explode('|',$cfg['fields_check_if_used_in']);
+          strace_($fields);
           foreach ($files as $name => $file) {
-            $this->load->model('search_replace');
-            $found=$this->search_replace->has_text($name,$cfg['fields_check_if_used_in']);
+            $found=$this->search_replace->has_text($name,$fields);
             $files[$name][$used_field]=$found;
           }
         }
