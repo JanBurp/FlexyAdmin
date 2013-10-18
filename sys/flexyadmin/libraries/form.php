@@ -196,7 +196,7 @@ class Form {
         // Default name
 				$this->data[$name]=$this->_check_default_field($name,$field);
         // Password always empty value
-        if ($field['table']=='cfg_users' and $field['type']=='password') {
+        if (isset($field['table']) and $field['table']=='cfg_users' and $field['type']=='password') {
           $this->data[$name]['value']='';
         }
         // Fieldset
