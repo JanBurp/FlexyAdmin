@@ -283,10 +283,8 @@ class MY_Upload extends CI_Upload {
 	function resize_image($image,$path) {
 		$this->file_name=$image;
 		$goodluck=TRUE;
-		if (!isset($this->CI)) {
-			$this->CI =& get_instance();
-			$this->CI->load->library('image_lib');
-		}
+		if (!isset($this->CI)) $this->CI =& get_instance();
+		$this->CI->load->library('image_lib');
 		$CI=$this->CI;
 		
 		$uPath=remove_assets($path);
@@ -415,12 +413,12 @@ class MY_Upload extends CI_Upload {
    * @ignore
    */
 	public function display_errors($open = '', $close = '') {
-		return parent::display_errors($open,$close);
+		return trim(parent::display_errors($open,$close));
 	}
   
   
 	/**
-	 * Verify that the filetype is allowed, defualt: not check Mime
+	 * Verify that the filetype is allowed, set checking of mime in config
 	 *
 	 * @return	bool
 	 */
