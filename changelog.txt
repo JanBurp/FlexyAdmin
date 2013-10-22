@@ -1,3 +1,22 @@
+Changes 2238
+============
+
+
+NEW:
+- MY_array_helper: array_unshift_assoc() and array_push_assoc()
+
+CHANGED:
+- plugin_safe_assets: the file_types per map are configurable (standard added .less files in css map)
+- added mimetype for docx & config hack to override mime-check
+- passwords are required when new, and not valudated when empty and not new
+- random password button now creates always a good password
+- disclaimer
+
+BUGS:
+- BUG: Small styling bug fullsize
+- BUG: filemanager doesn't look for used files in multiple fields
+
+
 Changes 2226
 ============
 

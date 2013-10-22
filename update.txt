@@ -1,3 +1,9 @@
+UPDATE to r2238
+===============
+
+- Replace current sys map with new sys map
+- Replace current userguide map with new userguide map
+
 UPDATE to r2227
 ===============
 
