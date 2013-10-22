@@ -55,7 +55,12 @@ class Info extends AdminController {
 	}
 
 	function license() {
-		$this->_set_content('<p class="small">'.str_replace("\n","<br/>",read_file('sys/flexyadmin/flexyadmin_license.txt'))."</p>");
+    $license_file='sys/flexyadmin/flexyadmin_license';
+    $lang=$this->user->language;
+    if (file_exists($license_file.'_'.$lang.'.txt')) {
+      $license_file.='_'.$lang;
+    }
+		$this->_set_content('<p class="small">'.str_replace("\n","<br/>",read_file($license_file.'.txt'))."</p>");
 		$this->_show_type("info");
 		$this->_show_all();
 	}
