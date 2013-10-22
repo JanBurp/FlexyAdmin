@@ -857,6 +857,39 @@ function array_add_before($a,$key,$row) {
 	return array_merge($firstslice,$row,$a);
 }
 
+
+
+/**
+ * Voegt een associatief array element toe aan het begin van een array
+ *
+ * @param array $arr 
+ * @param string $key 
+ * @param mixed $val 
+ * @return array
+ * @author Jan den Besten
+ */
+function array_unshift_assoc($arr,$key,$val) {
+  $arr = array_reverse($arr, true);
+  $arr[$key] = $val;
+  return array_reverse($arr, true);
+}
+
+/**
+ * Voegt een associatief array element toe aan het eind van een array
+ *
+ * @param array $arr 
+ * @param string $key 
+ * @param mixed $val 
+ * @return array
+ * @author Jan den Besten
+ */
+function array_push_assoc($arr,$key,$val) {
+  $arr[$key]=$val;
+  return $arr;
+}
+
+
+
 /**
  * Maakt van associatieve array een string van attributen
  * 

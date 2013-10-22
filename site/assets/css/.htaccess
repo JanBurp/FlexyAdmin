@@ -1,6 +1,6 @@
 Order Allow,Deny
 Deny from all
-<Files ~ "\.(css|htc|php|eot|svg|ttf|woff|otf|CSS|HTC|PHP|EOT|SVG|TTF|WOFF|OTF)$">
+<Files ~ "\.(css|htc|php|eot|svg|ttf|woff|otf|less|CSS|HTC|PHP|EOT|SVG|TTF|WOFF|OTF|LESS)$">
 Allow from all
 </Files>
 
