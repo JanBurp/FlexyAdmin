@@ -3,8 +3,9 @@
 /**
  * Verwijderd onwenselijke bestanden in assets mappen
  * 
- * - Maakt voor elke assets map een .htaccess aan die alleen toegestane bestanden toont
+ * - Maakt voor elke assets map een .htaccess aan die alleen toegestane bestanden toelaat
  * - Verwijderd alle bestanden die niet zijn toegestaan
+ * - Wil je andere bestandstypen toelaten dan standaard? Maak een kopie van sys/flexyadmin/config/plugin_safe_assets.php in site/config en pas aan naar wens.
  * 
  * Is actief:
  * 
@@ -109,8 +110,8 @@ class Plugin_safe_assets extends Plugin {
 	function _safe_and_clean_all() {
 		$someRemoved=false;
 		$assets=$this->CI->config->item('ASSETS');
-		$images=implode('|',$this->CI->config->item('FILE_types_img'));
-		$flash=implode('|',$this->CI->config->item('FILE_types_flash'));
+    // $images=implode('|',$this->CI->config->item('FILE_types_img'));
+    // $flash=implode('|',$this->CI->config->item('FILE_types_flash'));
 		$allCfg=object2array($this->CI->config);
 		$allCfg=filter_by_key($allCfg['config'],'FILE_types_');
 		unset($allCfg['FILE_types_forbidden']);
@@ -118,16 +119,10 @@ class Plugin_safe_assets extends Plugin {
 		foreach ($allCfg as $key => $value) {
 			$all=add_string($all,implode('|',$value),'|');
 		}
-		// set static maps
-		$specialMaps=array(	'bulk_upload'						=> $all,
-												SITEPATH.'stats'				=> 'xml',
-												$assets									=> 'css|img|js',
-												$assets.'_thumbcache'		=> $images,
-												$assets.'lists'					=> 'js',
-												$assets.'css'						=> 'css|htc|php|eot|svg|ttf|woff|otf',
-												$assets.'img'						=> $images.'|'.$flash.'|ico', 
-												$assets.'js'						=> 'js|css|html|swf|'.$images, 
-												);
+    
+    $specialMaps = $this->config('file_types');
+    $specialMaps = array_unshift_assoc($specialMaps,'bulk_upload',$all);
+
     $noRecursion=array($assets);
 		// set user maps
 		$maps=read_map($assets,'dir',FALSE,FALSE);
