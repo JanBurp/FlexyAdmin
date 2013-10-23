@@ -534,26 +534,40 @@ class Flexy_field extends CI_Model {
 
 	function _self_grid() {
     if ($this->table=='res_menu_result') return $this->data;
-    $tree=$this->rowdata[$this->title_field];
-    $tree="[$this->data] ".$tree;
-    return $tree;
+    if ($this->field=='self_parent') {
+      $tree=$this->rowdata[$this->title_field];
+      return "[$this->data] ".$tree;
+    }
+    else {
+      $this->db->select('id');
+      $this->db->select($this->title_field);
+      $this->db->where('id',$this->data);
+      $self=$this->db->get_row($this->table);
+      if ($self) {
+        return $self[$this->title_field];
+      }
+      return '';
+    }
+    return $this->data;
 	}
 
-	// TODO: Meer self_ velden mogelijk (nu alleen nog self_parent)
 	function _self_form() {
+    // Kies veld dat getoond wordt
 		if ($this->table=='cfg_auto_menu') {
 			$strField=$this->cfg->get('cfg_table_info','cfg_auto_menu','str_abstract_fields');
 		}
 		else {
-			$strField=$this->db->get_first_field($this->table,'str');
+      $strField=$this->db->get_first_field($this->table,'str');
 		}
 		$this->db->select(array(PRIMARY_KEY));
 		if ($strField) $this->db->select($strField);
 		if ($this->db->field_exists('uri',$this->table)) $this->db->select('uri');
 		if ($this->db->field_exists('self_parent',$this->table)) $this->db->select('self_parent');
 		if ($this->db->field_exists('order',$this->table)) $this->db->select('order');
-		$this->db->where(PRIMARY_KEY." !=", $this->id);
-		$this->db->order_as_tree();
+    // self_parent kan niet naar zichzelf verwijzen
+    if ($this->field=='self_parent') $this->db->where(PRIMARY_KEY." !=", $this->id);
+    // Als self_parent bestaat, dan moet het op volgorde van de tree
+    if ($this->db->field_exists('self_parent',$this->table)) $this->db->order_as_tree();
 		if ($strField)
 			$this->db->uri_as_full_uri(TRUE,$strField);
 		else
