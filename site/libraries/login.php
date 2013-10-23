@@ -129,7 +129,22 @@ class Login extends Module {
 		
 		if (!$this->CI->user->logged_in()) {
 			// Show login form and nothing else
-			$this->break_content();
+      $this->remember_current_page();
+      $dont_break=$this->config('dont_break');
+      if ($dont_break) {
+        if (is_array($dont_break)) {
+          $key=key($dont_break);
+          $value=current($dont_break);
+          if (!isset($page[$key])) {
+            $dont_break=FALSE;
+          }
+          else {
+            $dont_break = ($page[$key]==$value);  
+          }
+        }
+      }
+      if (!$dont_break) $this->break_content();
+      
 			$view=array('title'=>$title,'errors'=>$this->errors,'form'=> $this->form->render());
 			if ($this->config('forgotten_password_uri')) {
 				$view['forgotten_password']=lang('forgot_password');
