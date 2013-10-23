@@ -535,7 +535,8 @@ class Form {
 
 			// set validation rules for passwords
       if ($field['type']=='password' and !isset($field['matches'])) {
-        if ($data['id']['value']>0) {
+        $thisdata=current($data);
+        if ($thisdata['value']>0) {
           // if not a new 'user', password maybe empty for no change
           if (isset($_POST[$field['name']]) and empty($_POST[$field['name']])) {
             // $validation=$field['validation'];
