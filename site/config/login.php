@@ -20,6 +20,21 @@ $config['__return']='page';
 $config['__return.username']='site';
 
 
+
+/*
+|--------------------------------------------------------------------------
+| Standard the rest of a page is not loaded/shown when not logged in
+|--------------------------------------------------------------------------
+|
+| Put here a test (for a field in $page) when the rest of the page/modules will show.
+| TRUE will never break, or an array with a test.
+|
+*/
+
+// $config['dont_break'] = TRUE;
+// $config['dont_break'] = array('str_module'=>'show_allways');
+
+
 /*
 |--------------------------------------------------------------------------
 | Login css class
@@ -43,14 +58,6 @@ $config['class']='user_logged_in';
 $config['admin_activation']=TRUE;
 
 
-/**
- * Als een inlog meerdere emailadressen heeft, in welke tabel is die dan te vinden?
- * - Die tabel moet een veld id_user hebben
- * - De emailadressen zijn te vinden in alle velden die met email_ beginnen
- */
-$config['extra_email_table'] = '';
-
-
 /*
 |--------------------------------------------------------------------------
 | Check if double email
@@ -70,17 +77,6 @@ $config['check_double_email']=TRUE;
 |
 */
 $config['group_id']=4;	// 4 is visitors which can't login to the backend
-
-
-/*
-|--------------------------------------------------------------------------
-| User edit model
-|--------------------------------------------------------------------------
-|
-| Model waarmee de gebruiker dingen kan aanpassen.
-|
-*/
-$config['edit_model'] = 'formaction_login_edit';
 
 
 
