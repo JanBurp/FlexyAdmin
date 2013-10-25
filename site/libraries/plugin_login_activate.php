@@ -186,7 +186,7 @@
         }
       }
       if (!empty($top_menu)) $top_menu=lang('all_users').': '.$top_menu.br().br();
-      $html.=$top_menu;
+      $html.=p().$top_menu._p();
 			$show_users=array();
 			foreach ($users as $key => $u) {
         $extra_emails=$this->_extra_emails($u['id']);
