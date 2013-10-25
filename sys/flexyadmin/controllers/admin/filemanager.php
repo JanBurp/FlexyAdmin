@@ -84,7 +84,7 @@ class Filemanager extends AdminController {
 				 * update img/media_lists
 				 */
 				$this->_before_filemanager($path,$files);
-
+        
 				/**
 					* Exclude files that are not owned by user
 					*/
@@ -118,7 +118,7 @@ class Filemanager extends AdminController {
 					$desc=(substr($order,0,1)=='_');
 					$files=sort_by($files,ltrim($sorder,'_'),$desc);
 				}
-
+        
 				/**
 				 * Start file manager
 				 */
