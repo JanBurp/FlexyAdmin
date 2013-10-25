@@ -4,4 +4,6 @@
   <p><?=$message?></p>  
 <? endforeach ?><? endif ?>
 
-<?=$grid?>
+<?=$inactive_users?>
+<p>&nbsp;</p>
+<?=$active_users?>

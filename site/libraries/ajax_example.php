@@ -64,22 +64,6 @@
 	}
 
 
-
-  // /**
-   // * Deze method wordt aangeroepen door Menu zodat je eventueel een menu-item kunt aanpassen
-   // *
-   // * @param string $menu_item 
-   // * @return void
-   // * @author Jan den Besten
-   // */
-	// public function change_menu_item($menu_item) {
-	// 	if ($menu_item['full_uri']==$this->CI->uri->get()) {
-	// 		$menu_item['name']='EXAMPLE';
-	// 	}
-	// 	return $menu_item;
-	// }
-
-
 }
 
 ?>
