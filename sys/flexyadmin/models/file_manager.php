@@ -604,7 +604,7 @@ class File_manager Extends CI_Model {
 				$type=$file["type"];
         
         // Is file a possible file in this path?
-				if (in_array($type,$this->fileTypes)) {
+				if ($this->fileTypes='*' or in_array($type,$this->fileTypes)) {
 
           // Is Image/Flash?
 					$isImg=in_array($type,$imgTypes);
