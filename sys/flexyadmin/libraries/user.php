@@ -453,7 +453,7 @@ class User Extends Ion_auth {
 		if ($this->CI->email->send() !== TRUE)	{
   		$this->set_error('activation_email_unsuccessful');
 		}
-		return id;
+		return $id;
 	}
 
 
