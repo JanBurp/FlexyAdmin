@@ -30,7 +30,7 @@ class AdminController extends BasicController {
 		parent::__construct(true);
     
     // default js variables
-    $this->js['site_url'] = site_url();
+    $this->js['site_url'] = rtrim(site_url(),'/').'/';
     $this->js['form_nice_dropdowns'] = $this->config->item('FORM_NICE_DROPDOWNS');
     $multiple_upload = $this->config->item('MULTIPLE_UPLOAD');
     if (is_array($multiple_upload)) {
