@@ -450,11 +450,10 @@ class User Extends Ion_auth {
 		$this->CI->email->subject($this->CI->config->item('site_title', 'ion_auth') . ' - '.$subject);
 		$this->CI->email->message($message);
 
-		if ($this->CI->email->send() == TRUE)	{
-			return $id;
+		if ($this->CI->email->send() !== TRUE)	{
+  		$this->set_error('activation_email_unsuccessful');
 		}
-		$this->set_error('activation_email_unsuccessful');
-		return FALSE;
+		return id;
 	}
 
 
