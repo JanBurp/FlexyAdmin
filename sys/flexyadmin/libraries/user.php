@@ -446,7 +446,7 @@ class User Extends Ion_auth {
 		$this->CI->email->initialize($config);
 		$this->CI->email->from($this->CI->config->item('admin_email', 'ion_auth'), $this->CI->config->item('site_title', 'ion_auth'));
 		$this->CI->email->to($email);
-    if ($extra_email) $this->CI->email->cc($extra_email);
+    if (isset($extra_email) and $extra_email) $this->CI->email->cc($extra_email);
 		$this->CI->email->subject($this->CI->config->item('site_title', 'ion_auth') . ' - '.$subject);
 		$this->CI->email->message($message);
 
