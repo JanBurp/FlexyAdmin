@@ -1,3 +1,11 @@
+UPDATE to r2248
+===============
+
+- Replace current sys map with new sys map
+- Replace current userguide map with new userguide map
+- Replace site/libraries/login.php 
+- Replace site/libraries/plugin_login_activate.php
+
 UPDATE to r2238
 ===============
 
