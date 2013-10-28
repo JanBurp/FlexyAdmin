@@ -1,3 +1,19 @@
+Changes 2248
+============
+
+FRONTEND:
+
+NEW:
+- in Media Info you can use a wildcard '*' to use all possible files.
+- a plugin to create plugin/module .zip file for easy exchange with others
+- er zijn nu ook andere self_ velden mogelijk dan self_parent
+- module login now has a config for not breaking the content
+
+BUGS:
+- plugin_login_active
+- module login didn't remember the current page allways
+- form pakt niet altijd goede data
+
 Changes 2238
 ============
 
