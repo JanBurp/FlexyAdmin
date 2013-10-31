@@ -94,6 +94,28 @@ $config['tables']['meta']    = '';
 
 /*
 |--------------------------------------------------------------------------
+| Extra fields settings
+|--------------------------------------------------------------------------
+|
+| If you like, you can add extra fields to the register form
+| These data will be stored in the table you specify below
+| Be aware not to use different fieldnames then cfg_users
+| addition & example by Deka Webdesign 
+ */
+
+$config['extra_data'] = true;
+$config['extra']['table'] = 'tbl_leden';
+$config['extra']['formdata'] = array(
+  'str_voornaam'   => array( 'label'=>'voornaam', 'validation'=>'required|min_length[4]|max_length[40]'), 
+  'str_achternaam'   => array( 'label'=>'achternaam', 'validation'=>'min_length[4]|max_length[40]'),
+  'str_adres'   => array( 'label'=>'adres', 'validation'=>'min_length[4]|max_length[60]'),     
+  'str_postcode'   => array( 'label'=>'postcode', 'validation'=>'min_length[4]|max_length[7]'),     
+  'str_woonplaats'   => array( 'label'=>'woonplaats', 'validation'=>'min_length[4]|max_length[40]'),     
+);
+
+
+/*
+|--------------------------------------------------------------------------
 | Login uri settings
 |--------------------------------------------------------------------------
 |
