@@ -36,6 +36,7 @@ $mimes = array(
 				'gif'		=>	'image/gif',
 				'gtar'	=>	'application/x-gtar',
 				'gz'		=>	'application/x-gzip',
+        'gpx'   =>  array('text/xml','application/octet-stream','application/gpx','application/gpx+xml'),
 				'hqx'		=>	'application/mac-binhex40',
 				'htm'		=>	'text/html',
 				'html'	=>	'text/html',
