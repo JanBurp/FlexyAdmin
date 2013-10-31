@@ -25,11 +25,5 @@
 		<title>Contact</title>
 		<content>Hier een voorbeeld van een eenvoudig contactformulier..</content>
 	</url>
-	<url>
-		<loc>http://www.flexyadmin.com/register</loc>
-		<priority>0.80</priority>
-		<title>REGISTER</title>
-		<content>.</content>
-	</url>
 </urlset>
 
