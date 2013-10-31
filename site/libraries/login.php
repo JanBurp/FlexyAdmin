@@ -293,7 +293,18 @@ class Login extends Module {
 					}
 					else {
 						// d. Register
-						$this->CI->user->register($data['str_login_username'], $data['gpw_login_password'],	$data['email_login_email'],array('id_user_group'=>$this->config('group_id')),false, lang('register_mail_subject'));
+						$user_id = $this->CI->user->register($data['str_login_username'], $data['gpw_login_password'],	$data['email_login_email'],array('id_user_group'=>$this->config('group_id')),false, lang('register_mail_subject'));
+						// Store extra fields. Addition by Deka Webdesign
+						if ($this->config['extra']) {
+							unset($data['str_login_username']);
+							unset($data['gpw_login_password']);
+							unset($data['gpw_login_password2']);
+							unset($data['email_login_email']);
+							$data['id_user'] = $user_id;
+							// insert in db
+							$this->CI->db->insert( $this->config['extra']['table'], $data );
+						}
+            
 						$errors = $this->CI->user->errors();
 						if ($errors!='') {
 							$content="<div class='error'>".$errors."</div>";
@@ -420,7 +431,10 @@ class Login extends Module {
 																				"gpw_login_password"=>array("type"=>'password', "label"=>lang('password'), "validation"	=>  "required"),
 																				"gpw_login_password2"=>array("type"=>'password', "label"=>lang('password2'), "validation"	=>  "required"),
 																				"email_login_email"	=>array("label"=>lang('email'),"validation"	=>  "required|valid_email"));
-											// $caption	= lang('register_caption');
+											// Addition by Deka Webdesign
+											if ($this->config['extra_data']){
+												$data = array_merge($this->config['extra']['formdata'], $data);
+											}
 											$buttons	= array('submit'=>array("submit"=>"submit","value"=>lang('register_submit')));
 											break;
 
