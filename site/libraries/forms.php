@@ -151,7 +151,7 @@ class Forms extends Module {
         }
       }
     }
-  
+    
     if (!$formFields) {
       echo '<div class="warning">'.langp('error_no_fields',$this->name).'<div>';
       return false;
@@ -161,6 +161,7 @@ class Forms extends Module {
     if ($this->settings('check_for_spam')) $formFields['__test__']=array('type'=>'textarea', 'class'=>'hidden');
     
     $formAction=$this->CI->uri->get();
+    if (isset($this->settings['action_query'])) $formAction.=$this->settings('action_query');
 		$form=new form($formAction,$this->form_id);
 		$form->set_data($formFields, $this->settings('title',$this->form_id) );
     // Is er een wachtwoord wat een extra check verlangt?
@@ -198,7 +199,6 @@ class Forms extends Module {
           $this->CI->$action->set_form_id($this->form_id);
     			if (!$this->CI->$action->go( $data )) {
     		    $errors.=$this->CI->$action->get_errors();
-            $html.=div('message').$errors._div();
     			}
           else {
             if ($this->settings('prevend_double_submit')) {
