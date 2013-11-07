@@ -163,7 +163,7 @@ class Login extends Module {
 				unset($_POST['gpw_login_password']);
 				if (isset($_POST['submit']) and $_POST['submit']==lang('login_submit')) unset($_POST['submit']);
   			// Redirect to current page
-        redirect( $this->get_current_page() );
+        if (!$this->config('dont_redirect')) redirect( $this->get_current_page() );
 			}
       if ($show_if_allready) {
         $content=langp('login_already',$this->CI->user->user_name);
