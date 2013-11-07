@@ -35,6 +35,20 @@ $config['__return.username']='site';
 // $config['dont_break'] = array('str_module'=>'show_allways');
 
 
+
+/*
+|--------------------------------------------------------------------------
+| Dont Redirect to current page after login
+|--------------------------------------------------------------------------
+|
+| Set to true if using forms and uri queries
+|
+*/
+// $config['dont_redirect'] = FALSE;
+
+
+
+
 /*
 |--------------------------------------------------------------------------
 | Login css class
