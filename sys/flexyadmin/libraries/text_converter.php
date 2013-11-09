@@ -14,9 +14,8 @@ class Text_converter {
       // 'Indented Text'   => array('find'=>'^\s{4}(.*)$','replace'=>'  $1','regex'=>true),
       'bold'            => array('find'=>'__(.*?)__','replace'=>'**$1**','regex'=>true),
       'italic'            => array('find'=>'_(.*?)_','replace'=>'//$1//','regex'=>true),
-      'italic'            => array('find'=>'\*(.*?)\*','replace'=>'//$1//','regex'=>true),
-      
-    );
+      'italic'            => array('find'=>'\*(.*?)\*','replace'=>'//$1//','regex'=>true)
+    )
   );
   
   var $settings = array(
