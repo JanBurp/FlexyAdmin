@@ -1583,10 +1583,11 @@ class Gmap {
     }
 
     /**
-     * return js to set onload function
+     * return js to set onload function. Jdb: removed 'debugger'
      */
     function getOnLoad() {
-        return '<script language="javascript" type="text/javascript" charset="utf-8">debugger;window.onload=onLoad'.$this->map_id.';</script>';                       
+      // return '<script language="javascript" type="text/javascript" charset="utf-8">debugger;window.onload=onLoad'.$this->map_id.';</script>';                       
+        return '<script language="javascript" type="text/javascript" charset="utf-8">window.onload=onLoad'.$this->map_id.';</script>';                       
     }
     
     /**
