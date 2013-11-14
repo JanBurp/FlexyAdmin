@@ -575,14 +575,12 @@ class Plugin_automenu extends Plugin {
 
   		// $trace=$this->newMenu; foreach ($trace as $id => $row) {foreach ($row as $field => $value) {if (!in_array($field,array('uri','self_parent'))) unset($trace[$id][$field]);}} strace_($trace);
 
-  		// change some things
+  		// Set language items in place
+			$languages=$this->languages;
+			if (empty($languages)) $languages[]='';
   		foreach ($this->newMenu as $id => $item) {
   			// if self_parent -1 (language) replace with 0
   			if (isset($item['self_parent']) and $item['self_parent']==-1) $item['self_parent']=0;
-  			$languages=$this->languages;
-  			if (empty($languages)) {
-  				$languages[]='';
-  			}
   			foreach ($languages as $lang) {
   				if (!empty($lang)) $lang='_'.$lang;
   				if (!isset($item['str_title'.$lang])) $item['str_title'.$lang]='';
@@ -602,8 +600,10 @@ class Plugin_automenu extends Plugin {
 		
   		foreach ($this->newMenu as $row) {
 
+        // Set language tree
   			if (isset($row['self_parent']) and isset($this->languages) and in_array($row['uri'],$this->languages)) $lang=$row['uri'];
-  			// strace_($lang);
+        // Set language item
+        if (isset($row['self_parent']) and isset($this->languages)) $row['str_lang']=$lang;
 
   			foreach ($row as $field => $value) {
   				if (in_array($field,$fields)) {
