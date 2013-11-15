@@ -1,6 +1,5 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-
 /*
 |--------------------------------------------------------------------------
 | Alle formulieren worden ingesteld met een eigen config array.
@@ -54,43 +53,35 @@ $config['contact'] = array(
 
   // Output routing van dit formulier (zie bij de example.php module voor uitleg)
   '__return'                => ''
-  
 );
+
 
 /*
 |--------------------------------------------------------------------------
-| Instellingen voor het upload demo formulier
+| DEMO: upload demo
 |--------------------------------------------------------------------------
 */
 
 $config['upload_demo'] = array(
-  
   'title'             => 'Upload DEMO',
-  'fields'            => array(
-                                'file_upload'	=> array( 'type'=>'file')
-                              ),
+  'fields'            => array( 'file_upload'	=> array( 'type'=>'file') ),
   'buttons'           => array( 'submit'=>array('submit'=>'submit', 'value'=>lang('submit')) ),
   'validation_place'  => 'field',
   'check_for_spam'    => true,
-  
   'formaction'        => array('formaction_upload'),
   'upload_path'       => 'downloads',
   // 'allowed_types'     => 'gif|jpg|png|doc|docx|xls|xlsx|pdf|zip',
   // 'encrypt_name'      => TRUE,
-  
   'thanks'            => 'Uploaden is gelukt!',
-  
   '__return'          => ''
 );
 
 
-
 /*
 |--------------------------------------------------------------------------
-| Instellingen voor het formulier 'comments'
+| MODULE COMMENTS
 |--------------------------------------------------------------------------
 */
-
 $config['comments'] = array(
   // De velden worden voor dit formulier uit een tabel gegenereerd en in dezelfde tabel toegevoegd
   'model'             => 'formaction_comments.get_fields',
@@ -103,15 +94,12 @@ $config['comments'] = array(
   '__return'          => ''
 );
 
-
 /*
 |--------------------------------------------------------------------------
-| Voorbeeld waarbij velden van een model komen
+| DEMO, niet werkend, puur een voorbeeld waarbij velden van een model komen
 |--------------------------------------------------------------------------
 */
-
 $config['shop'] = array(
-  
   // De velden worden nu opgehaald uit een model.method, deze geeft een array van formfields terug
   'model'             => 'shop.fields',
   'buttons'           => array( 'submit'=>array('submit'=>'submit', 'value'=>lang('submit')) ),
@@ -123,14 +111,11 @@ $config['shop'] = array(
   '__return'          => ''
 );
 
-
-
 /*
 |--------------------------------------------------------------------------
-| Instellingen voor een FlexyForm
+| Instellingen voor een FlexyForm (flexy_forms.sql moet geinstalleerd zijn)
 |--------------------------------------------------------------------------
 */
-
 $config['flexyform_contact'] = array(
   'validation_place'  => 'field',
   'check_for_spam'    => true,
