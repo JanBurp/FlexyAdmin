@@ -1,5 +1,12 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * undocumented class
+ *
+ * @package default
+ * @author Jan den Besten
+ * @ignore
+ */
 class Text_converter {
 
   var $workflows = array(

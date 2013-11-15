@@ -53,7 +53,7 @@ class Plugin_create_plugin extends Plugin {
         <li>The config file with the same name in 'site/config'</li>
         <li>All language files with the name and the suffix '_lang' in 'site/language/xx/'</li>
         <li>The module/plugin file in 'site/libraries'</li>
-        <li>The view file with the same name in 'site/config'</li>
+        <li>The view file with the same name in 'site/views'</li>
         </ul><p>If you need more files:</p><ul>
         <li>Make sure a config file for the plugin/module file exists</li>
         <li>Add these lines (with the filenames you like to add):</li>
