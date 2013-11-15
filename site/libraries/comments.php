@@ -6,8 +6,8 @@
 	* Bestanden
 	* ----------------
 	*
-	* - site/config/comments.php - Hier kun je een een aantal dingen instellen (zie hieronder)
-	* - db/add_comments.sql - database bestand met de benodigde tabel
+	* - site/config/comments.php - Hier kun je diverse dingen instellen (uitleg staat erbij)
+	* - db/add_comments.sql - database bestand met de benodigde tabel (eventueel ook aan te passen)
 	* - site/views/comments.php - De view waarin de comments en het formulier geplaatst worden
 	* - site/language/##/comments_lang.php - Taalbestanden
 	*
