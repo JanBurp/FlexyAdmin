@@ -1,5 +1,20 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/*
+|--------------------------------------------------------------------------
+| Files belonging to this module/plugin
+| (views,config and language files with same name not needed)
+|--------------------------------------------------------------------------
+*/
+
+$config['_files']=array(
+  'db/add_google_map.sql',
+  'site/views/google_map_popup.php'
+);
+
+
+
+
 
 /*
 |--------------------------------------------------------------------------

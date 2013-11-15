@@ -1,5 +1,22 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/*
+|--------------------------------------------------------------------------
+| Files belonging to this module/plugin
+| (views,config and language files with same name not needed)
+|--------------------------------------------------------------------------
+*/
+
+$config['_files']=array(
+  'site/config/plugin_login_activate.php',
+  'site/libraries/plugin_login_activate.php',
+  'site/models/formaction_login_edit.php',
+  'site/views/login/*'
+);
+
+
+
+
 
 // !! When registration and password resetting needs to be active: make sure that $config['query_urls']=TRUE; in site/config/config.php
 
