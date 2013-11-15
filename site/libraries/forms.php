@@ -93,6 +93,19 @@ class Forms extends Module {
     return false;
 	}
 
+  /**
+   * Voegt een formulier toe
+   *
+   * @param string $form Naam van het formulier dat later met ->forms->naam() kan worden aangeroepen.
+   * @param array $config De instellingen voor het formulier, eenzelfde array als in de config file per formulier.
+   * @return this
+   * @author Jan den Besten
+   */
+  public function initialize($form,$config) {
+    $this->config[$form]=$config;
+    return $this;
+  }
+
 
   /**
   	* Hier wordt het formulier gegenereerd

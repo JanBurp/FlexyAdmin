@@ -79,23 +79,6 @@ $config['upload_demo'] = array(
 
 /*
 |--------------------------------------------------------------------------
-| MODULE COMMENTS
-|--------------------------------------------------------------------------
-*/
-$config['comments'] = array(
-  // De velden worden voor dit formulier uit een tabel gegenereerd en in dezelfde tabel toegevoegd
-  'model'             => 'formaction_comments.get_fields',
-  'table'             => 'tbl_comments',
-  'title'             => lang('comments_title'),
-  'buttons'           => array( 'submit'=>array('submit'=>'submit', 'value'=>lang('comments_submit')) ),
-  'validation_place'  => 'field',
-  'check_for_spam'    => true,
-  'formaction'        => array('formaction_comments'),
-  '__return'          => ''
-);
-
-/*
-|--------------------------------------------------------------------------
 | DEMO, niet werkend, puur een voorbeeld waarbij velden van een model komen
 |--------------------------------------------------------------------------
 */

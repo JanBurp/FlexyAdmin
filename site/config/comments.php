@@ -25,7 +25,7 @@ $config['_files']=array(
 | - Een combinatie is ook mogelijk, gescheiden door een pipe: 'page|site'
 */
 
-$config['__return']='site';
+$config['__return']='page|site';
 
 
 /*
@@ -42,6 +42,25 @@ $config['__return']='site';
 */
 
 $config['key_id']='id_blog';
+
+
+/*
+|--------------------------------------------------------------------------
+| Formulier config (voor module forms)
+|--------------------------------------------------------------------------
+*/
+
+$config['form']= array(
+  'model'             => 'formaction_comments.get_fields',
+  'table'             => 'tbl_comments',
+  'title'             => lang('comments_title'),
+  'buttons'           => array( 'submit'=>array('submit'=>'submit', 'value'=>lang('comments_submit')) ),
+  'validation_place'  => 'field',
+  'check_for_spam'    => true,
+  'formaction'        => array('formaction_comments'),
+  '__return'          => ''
+);
+
 
 
 /*
