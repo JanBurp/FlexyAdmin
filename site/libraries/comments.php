@@ -32,6 +32,8 @@
    */
    public function __construct() {
 		parent::__construct();
+    $this->CI->load->library('forms');
+    $this->CI->forms->initialize('comments',$this->config['form']);
     $this->CI->load->model('formaction');
     $this->CI->load->model('formaction_comments');
     $this->CI->formaction_comments->initialize($this->config);
@@ -65,7 +67,7 @@
 	public function index($page) {
     $id=$this->_set_id($page);
     // Genereer formulier, en geef extra settings mee aan formaction
-    $formHtml=$this->CI->_call_library('forms','comments', array_merge($this->config,array('id'=>$id)) );
+    $formHtml=$this->CI->forms->comments(array_merge($this->config,array('id'=>$id)) );
 		// Get comments
     $comments=$this->CI->formaction_comments->get_comments($id);
 		// Show all
