@@ -15,7 +15,7 @@
 	* ----------------
 	*
 	* - site/config/search.php - Hier kun je een een aantal dingen instellen
-	* - site/views/search_*.php - De views
+	* - site/views/search/*.php - De views
 	* - site/language/##/search_lang.php - Taalbestanden
 	*
 	* Installatie
@@ -96,7 +96,7 @@ class Search extends Module {
 				if ($this->config('group_result_by_uris')) $results=$this->_group_by_uri($results,$this->config('group_result_by_uris'));
 			}
 
-			return $this->CI->show('search_results',array('search'=>$search,'items'=>$results,'config'=>$this->config),true);
+			return $this->CI->show('search/results',array('search'=>$search,'items'=>$results,'config'=>$this->config),true);
 		}
 	}
 	
@@ -126,7 +126,7 @@ class Search extends Module {
 		// set search term
 		$search=$this->CI->input->post( lang('search_term') );
 		if (empty($search)) $search=lang('search_empty_value');
-		return $this->CI->show('search_form',array('action'=>$action, 'value'=>$search, 'empty'=>lang('search_empty_value')),true);
+		return $this->CI->show('search/form',array('action'=>$action, 'value'=>$search, 'empty'=>lang('search_empty_value')),true);
 	}
 	
 

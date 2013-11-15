@@ -98,6 +98,7 @@ class File_manager Extends CI_Model {
    */
 	public function __construct($config=array()) {
 		parent::__construct();
+    $this->load->library('upload');
     $this->lang->load('update_delete');
 		$this->initialize($config);
 	}
