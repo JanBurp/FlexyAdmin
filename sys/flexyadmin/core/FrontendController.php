@@ -192,12 +192,12 @@ class FrontEndController extends MY_Controller {
    * Voeg achter de titel nog een extra tekst toe
    *
    * @param string $page_title
-   * @param string $format["s - p"] Hiermee bepaal je hoe de titel wordt toegevoegd: s=site titel, p=page titel
+   * @param string $format["%s - %p"] Hiermee bepaal je hoe de titel wordt toegevoegd: s=site titel, p=page titel
    * @return void
    * @author Jan den Besten
    */
-	public function add_title($page_title,$format="s - p") {
-		$this->site["title"]=str_replace(array('s','p'),array($this->site["title"],$page_title),$format);
+	public function add_title($page_title,$format="%s - %p") {
+		$this->site["title"]=str_replace(array('%s','%p'),array($this->site["title"],$page_title),$format);
 	}
 
   /**
