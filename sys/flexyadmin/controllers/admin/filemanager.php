@@ -92,6 +92,27 @@ class Filemanager extends AdminController {
 					$restrictedToUser=$this->user->restricted_id($path);
 					$files=$this->mediatable->filter_restricted_files($files,$restrictedToUser);
 				}
+        
+        /**
+         * Hide files (set in cfg_field_info)
+         */
+        $hideFields=array();
+        $fieldInfo=$this->cfg->get('cfg_field_info');
+        $fieldInfo=filter_by($fieldInfo,'res_media_files.');
+        if ($fieldInfo) {
+          foreach ($fieldInfo as $field => $info) {
+            if (isset($info['b_show_in_grid']) and $info['b_show_in_grid']==false) {
+              $hideFields[]=get_suffix($field,'.');
+            }
+          }
+          if ($hideFields) {
+            foreach ($hideFields as $hideField) {
+              foreach ($files as $file => $info) {
+                unset($files[$file][$hideField]);
+              }
+            }
+          }
+        }
 
         // Check if file is used somewhere
         if (isset($cfg['fields_check_if_used_in']) and !empty($cfg['fields_check_if_used_in'])) {
@@ -373,14 +394,21 @@ class Filemanager extends AdminController {
     unset($data['int_img_width']);
     unset($data['int_img_height']);
     
+    // Hide hidden fields:
+    foreach ($data as $field => $value) {
+      $fieldInfo=$this->cfg->get('cfg_field_info','res_media_files.'.$field);
+      if (isset($fieldInfo['b_show_in_form']) and !$fieldInfo['b_show_in_form']) unset($data[$field]);
+    }
+    
     // Geen ID, maar filenaam als unieke id (in combi met path)
     $data['id']=$file;
-    $data['file']=remove_suffix($data['file'],'.');
+    
+    if (isset($data['file'])) $data['file']=remove_suffix($data['file'],'.');
     
     $formData=array2formfields($data);
-    $formData['path']['type']='hidden';
-    $formData['dat_date']['type']='date';
-    $formData['str_type']['type']='hidden';
+    if (isset($formData['path'])) $formData['path']['type']='hidden';
+    if (isset($formData['dat_date'])) $formData['dat_date']['type']='date';
+    if (isset($formData['str_type'])) $formData['str_type']['type']='hidden';
     // strace_($formData);
 
 		$actionUri=api_uri('API_filemanager_edit',pathencode($path),'/'.$file);
