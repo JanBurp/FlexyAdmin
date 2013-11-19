@@ -1,7 +1,13 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- * Refresh res_media_files, als die bestaat.
+ * Met deze plugin kan de mediatabel gereset worden.
+ * Handig in het geval van handmatig toevoegen van bestanden of als er fouten zijn opgetreden
+ * 
+ * Gebruik:
+ * 
+ * - ../admin/plugins/refresh_media : De res_media_files wordt gereset: alles blijft bestaan, alleen de info data wordt gereset (width & height etc.)
+ * - ../admin/plugins/refresh_media/reset : Idem, maar eerst wordt res_media_files helemaal geleegd, dus alle info data zijn verloren.
  * 
  * @package default
  * @author Jan den Besten
@@ -25,8 +31,8 @@ class Plugin_refresh_media extends Plugin {
    * @ignore
    */
 	function _admin_api($args=NULL) {
-    $clean=TRUE;
-    if (isset($args[0]) and $args[0]=='reset') $clean=FALSE;
+    $clean=FALSE;
+    if (isset($args[0]) and $args[0]=='reset') $clean=TRUE;
     if ($this->CI->mediatable->exists()) {
       $paths=$this->CI->mediatable->refresh('',$clean);
       foreach ($paths as $path) {
