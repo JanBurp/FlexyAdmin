@@ -268,30 +268,34 @@ function showAutoZoom() {
 	$('img.zoom').add('.flash .zoom').not('.thumbs img.zoom').not('.thumbs .flash .zoom').mouseenter(function(){
 		obj=$(this);
 		ShowDelay=setTimeout( function() {		
-			zoomThumb=$(obj).clone().addClass('autoZoom');
+			var zoomThumb=$(obj).clone().addClass('autoZoom');
 			// check size
 			$('body').append(zoomThumb);
-			widthThumb=$('.autoZoom').width();
+			var widthThumb=$('.autoZoom').width();
 			if (widthThumb<100) widthThumb=100;
 			if (widthThumb>250) widthThumb=250; // max width
-			heightThumb=$('.autoZoom').height();
+			var heightThumb=$('.autoZoom').height();
 			if (heightThumb<100) heightThumb=100;
+      // if (heightThumb>250) heightThumb=250; // max height
 			$('.autoZoom').remove(); // size now determined, clone can be removed
 			// name and place
-			imgName=$(zoomThumb).attr('alt');
+			var imgName=$(zoomThumb).attr('alt');
 			imgName=imgName.substr(imgName.lastIndexOf('/')+1);
 			// place it
-			offsetThumb=$(obj).offset();
-			leftThumb=offsetThumb.left-(widthThumb/2)+13 + 'px';
+			var offsetThumb=$(obj).offset();
+			var leftThumb=offsetThumb.left-(widthThumb/2)+13 + 'px';
 			$('body').append('<div class="zoomThumb"><p>'+imgName+'</p></div>');
 			if ($(obj).parent('li').parent('ul.values').length>0) {
-				topThumb=offsetThumb.top-(heightThumb+34) + 'px';
+				var topThumb=offsetThumb.top-(heightThumb+34);
 				$('div.zoomThumb').append(zoomThumb);
 			}
 			else {
-				topThumb=offsetThumb.top+30 + 'px';
+				var topThumb=offsetThumb.top+30;
 				$('div.zoomThumb').prepend(zoomThumb);
 			}
+      if (topThumb<10) topThumb=10;
+      topThumb=topThumb + 'px';
+
 			// set and show
 			$('.zoomThumb').css({left:leftThumb, top:topThumb}).fadeIn(150).mouseleave(function(){
 				$('.zoomThumb').fadeOut(150,function(){
