@@ -1,10 +1,11 @@
 /**
- * Met deze jQuery Plugin kun je een Twitter Embedded Timeline stylen
- * Dat kan helaas niet met een eenvoudige stylesheet omdat het in een iframe wordt geplaatst. Vandaar deze jQuery plugin.
+ * With this jQuery plugin it's possibe to style a twitter timeline
  *
- * Gebruik:
+ * Simple example:
  * 
  * $('#twitter').styleTwitter();
+ * 
+ * Example with own styling options:
  * 
  * $('#twitter').styleTwitter({
  *  remove:['.avatar','.p-nickname','.footer','.load-more'],
@@ -15,6 +16,8 @@
  *      '.tweet' : {'padding':'5px 0px','border-bottom':'dotted 1px #FF0000'}
  *     }
  *  });
+ * 
+ * License MIT
  * 
  * @package default
  * @author Jan den Besten
