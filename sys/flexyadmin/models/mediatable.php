@@ -73,6 +73,9 @@ class Mediatable Extends CI_Model {
         'int_size'  => $file['size'],
         'str_title' => $file['alt']
       );
+      if (isset($info['b_exists'])) {
+        $set['b_exists']   = $info['b_exists'];
+      }
       if (isset($file['width'])) {
         $set['int_img_width']   = $file['width'];
         $set['int_img_height']  = $file['height'];
@@ -104,6 +107,9 @@ class Mediatable Extends CI_Model {
       'int_size'  => $info['size'],
       'str_title' => $info['alt']
     );
+    if (isset($info['b_exists'])) {
+      $set['b_exists']   = $info['b_exists'];
+    }
     if (isset($info['width'])) {
       $set['int_img_width']   = $info['width'];
       $set['int_img_height']  = $info['height'];
@@ -165,7 +171,13 @@ class Mediatable Extends CI_Model {
     }
     if (!is_array($paths)) $paths=array($paths);
 
-    if ($clean) $this->db->truncate($this->table);
+    if ($clean) {
+      $this->db->truncate($this->table);
+    }
+    else {
+      $this->db->set('b_exists',false);
+      $this->db->update($this->table);
+    }
     
     foreach ($paths as $key=>$path) {
       $path=add_assets($path);
@@ -174,6 +186,7 @@ class Mediatable Extends CI_Model {
       // trace_($files);
       foreach ($files as $file => $info) {
         if (is_visible_file($file)) {
+          $info['b_exists']=true;
           if ($clean) {
             $this->add($info);
           }
@@ -183,6 +196,7 @@ class Mediatable Extends CI_Model {
         }
       }
     }
+    
     return $paths;
   }
   
@@ -215,10 +229,12 @@ class Mediatable Extends CI_Model {
   private function _get_files($path='',$asReadMap=TRUE,$recent_numbers=0) {
     $path=remove_assets($path);
     if ($asReadMap) $this->db->set_key('file');
+    $this->db->where('b_exists',true);
     $files=$this->db->where('path',$path)->get_result($this->table,$recent_numbers);
     if (empty($files)) {
       $this->refresh();
       if ($asReadMap) $this->db->set_key('file');
+      $this->db->where('b_exists',true);
       $files=$this->db->where('path',$path)->get_result($this->table,$recent_numbers);
     }
     if ($asReadMap) {

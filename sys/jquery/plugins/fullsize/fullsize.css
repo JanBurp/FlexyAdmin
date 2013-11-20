@@ -48,14 +48,15 @@
 .fullsize-title-text {
 	text-align: center;
 	margin: 0 auto;
-	width: 100%;
+	width: 50%;
+  height:20px;
 }
 
 a.fullsize-close {
 	position: absolute;
 	right:0px;
 	display: block;
-	margin: 0px 6px 0px 0px;
+	margin: -20px 6px 0px 0px;
 	width: 16px;
 	height: 16px;
 	text-decoration: none;
