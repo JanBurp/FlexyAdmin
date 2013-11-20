@@ -64,6 +64,7 @@ img {
 }
 .fullsize-wrapper img {margin:0px;}
 
+
 .img_text {
 	margin:0px;
 	padding:0px;
@@ -655,8 +656,13 @@ table.grid th.hiddenCell * {
 .weekend				{ font-weight:bold; }
 
 img.zoom,
-img.empty				{ border:1px solid #DEA; cursor:pointer; background-color:#FFF;}
+img.empty				{ border:1px solid #DEA; cursor:pointer; background-color:#FFF; }
 img.zoom:hover	{ border-color:#696; }
+
+.thumb_title {float:right;position:relative;top:-22px;left:5px;}
+.thumb_title img {height:25px;}
+
+
 
 /* =============== Graph ===================== */
 

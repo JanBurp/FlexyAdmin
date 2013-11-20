@@ -96,7 +96,7 @@ class Filemanager extends AdminController {
         /**
          * Hide files (set in cfg_field_info)
          */
-        $hideFields=array();
+        $hideFields=array('b_exists');
         $fieldInfo=$this->cfg->get('cfg_field_info');
         $fieldInfo=filter_by($fieldInfo,'res_media_files.');
         if ($fieldInfo) {
@@ -383,6 +383,7 @@ class Filemanager extends AdminController {
     
     $path=pathdecode($path);
     $data=$this->mediatable->get_info($path.'/'.$file);
+    unset($data['b_exists']);
     if (!$data) {
       $data=get_full_file_info($path.'/'.$file,FALSE);
       $data['file']=$data['name'];
@@ -431,7 +432,12 @@ class Filemanager extends AdminController {
     $form->set_labels($uiFieldNames);
     
     // Create form
-		$form->set_data($formData,$uiShowPath);
+    $formTitle=$uiShowPath.': '.$file;
+    $img_types=$this->config->item('FILE_types_img');
+    if (in_array(get_suffix($file,'.'),$img_types)) {
+      $formTitle.=div('thumb_title').show_thumb('site/assets/'.$path.'/'.$file)._div();
+    }
+		$form->set_data($formData,$formTitle);
 
 		/**
 		 * Validate form, if succes, update/insert data
@@ -442,10 +448,13 @@ class Filemanager extends AdminController {
       $data=$form->get_data();
       // strace_($data);
       // Yo! Nu alles doen!
-      $newName=$data['file'];
-      $newName=str_replace('.'.$data['str_type'],'',$newName).'.'.$data['str_type'];
-      $newDate=$data['dat_date'];
-      // strace_($newName);
+      if (isset($data['file'])) {
+        $newName=$data['file'];
+        $newName=str_replace('.'.$data['str_type'],'',$newName).'.'.$data['str_type'];
+      }
+      if (isset($data['dat_date'])) {
+        $newDate=$data['dat_date'];
+      }
       
       $map=assets().$path;
       $oldFile=$map.'/'.$file;
@@ -462,7 +471,7 @@ class Filemanager extends AdminController {
         }
               
         // new date if set
-        if (!empty($newDate)) {
+        if (isset($newDate) and !empty($newDate)) {
           $returndata['newDate']=$newDate;
           $this->mediatable->edit_info($oldFile,'dat_date',$newDate);
           $this->load->helper('date');
@@ -470,7 +479,8 @@ class Filemanager extends AdminController {
           touch($oldFile,$newDate);
         }
       
-        if ($newName!=$file) {
+        // new filename
+        if (isset($newName) and $newName!=$file) {
           $newName=clean_file_name($newName);
           $newFile=$map.'/'.$newName;
           if (file_exists($newFile)) {
