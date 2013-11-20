@@ -41,24 +41,39 @@ class Plugin_install_plugin extends Plugin {
             $file=$path.'/'.$result['file'];
 
             $this->add_content(h("Unpacking '".$result['file']."'",2));
+            $readmeName='';
+            $readme='';
+            $skipped=array();
+            $installed=array();
             $zip = new ZipArchive;
             if ($zip->open($file) === true) {
               for($i = 0; $i < $zip->numFiles; $i++) {
                 $name=$zip->getNameIndex($i);
-                if (has_string('readme.md',$name)) {
-                  // Readme
-                  $this->add_content("- ".$name." - skipped".br());
-                }
-                else {
-                  // File to install
-                  $zip->extractTo('./', array($name));
-                  $this->add_content("- <b>".$name."</b> - installed".br());
+                // If not hidden or dir
+                if (!(substr($name,0,1)=='_' or !substr($name,0,1)=='.' or !substr($name,-1)=='/')) {
+                  if (has_string('readme',$name)) {
+                    $readme=$zip->getFromName($name);
+                    $readmeName=get_suffix($name,'/');
+                  }
+                  // Safe to install?
+                  if (!has_string($this->config['safe_paths'],$name)) {
+                    $skipped[]=$name;
+                  }
+                  else {
+                    $zip->extractTo('./', array($name));
+                    $installed[]=$name;
+                  }
                 }
               }
               $zip->close();
             } else {
               $this->add_content('Error installing Module/Plugin.');
             }
+            
+            $this->add_content(h($readmeName.':',2).'<textarea rows="15" style="width:100%;">'.$readme.'</textarea>');
+            $this->add_content(h('Installed files:',2).ul($installed));
+            $this->add_content(h('Skipped files:',2).ul($skipped));
+            
             unlink($file);
             $this->add_content('<p><br/><a href="'.$this->CI->uri->get().'">Install another...</a></p>');
             
