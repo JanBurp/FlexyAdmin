@@ -114,19 +114,20 @@ class Mediatable Extends CI_Model {
       $set['int_img_width']   = $info['width'];
       $set['int_img_height']  = $info['height'];
     }
-    if (isset($info['meta'])) $set['stx_meta']=$info['meta'];
-    if ($userId and $this->db->field_exists('user',$this->table)) $set['user']=$userId;
-    
-    // now get old info, and only set empty old info
-    $old=$this->get_info($info['path']);
-    if ($old) {
-      $old=array_unset_keys($old,array('id','file','path'));
-      foreach ($old as $key => $value) {
-        if (!empty($value)) unset($set[$key]);
+    if (isset($info['meta'])) {
+      $set['stx_meta']=$info['meta'];
+      if (is_array($set['stx_meta'])) {
+        $set['stx_meta']=array2json($set['stx_meta']);
       }
     }
-    // Only update if more fields are in set than file and path
-    if (count($set)>2) {
+      
+    if ($userId and $this->db->field_exists('user',$this->table)) $set['user']=$userId;
+
+    // Update!
+    foreach ($set as $field => $value) {
+      if (!$this->db->field_exists($field,$this->table)) unset($set[$field]);
+    }
+    if ($set) {
       $this->db->set($set);
       $this->db->where('file',$set['file'])->where('path',$set['path']);
       $this->db->update($this->table);
