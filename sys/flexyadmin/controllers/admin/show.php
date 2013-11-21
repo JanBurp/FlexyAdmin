@@ -82,7 +82,7 @@ class Show extends AdminController {
 			$order=el('order',$args);
 			$search=el('search',$args);
 			$this->grid_set->save(array('table'=>$table,'offset'=>$offset,'order'=>$order,'search'=>$search));
-			// strace_($args);
+      // trace_($args);
 
 			if (!empty($table) and $this->db->table_exists($table)) {
         
@@ -189,6 +189,7 @@ class Show extends AdminController {
 
             // trace_($data);
             // trace_($total_rows);
+            // trace_($search);
 
 						$last_order=$this->db->get_last_order();
 						if (substr($last_order,0,1)!='(') $order=$last_order;
@@ -197,7 +198,7 @@ class Show extends AdminController {
 							/**
 							 * if no data, start an input form
 							 */
-							$this->form_args['form']=$table.':-1';
+							$this->form_args['form']=$table.$this->config->item('URI_HASH').'-1';
 							$this->form();
 							return;
 						}
