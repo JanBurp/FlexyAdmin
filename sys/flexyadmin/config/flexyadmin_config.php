@@ -552,6 +552,14 @@ $config["CFG_"]=array(
 		"cfg_table_info.b_freeze_uris"=>array(
 			'str_fieldset'=>'More'
  			),
+      
+    'res_media_files.b_exists' => array(
+      'b_show_in_grid' => false,
+      'b_show_in_form' => false
+    ),
+    'res_media_files.file' => array(
+      'b_show_in_form' => false
+    ),
 
 
 		"cfg_media_info.str_order"=>array(
