@@ -953,6 +953,10 @@ $config['FIELDS_prefix'] = array (
 											"grid"				=> "function_text",
 											"form"				=> "textarea"
 											),
+	"md"				=> array (
+											"grid"				=> "function_text",
+											"form"				=> "textarea"
+											),
 	"txt"				=> array (
 											"grid"				=> "function_text",
 											"form"				=> "htmleditor",

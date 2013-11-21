@@ -985,7 +985,8 @@ input.checkbox {
 textarea, .mceEditor {
 	line-height: 1.4em;
 	width:450px;
-	}
+}
+textarea.md {height:400px;}
 .mceEditor table {
 	width:450px;
 }
