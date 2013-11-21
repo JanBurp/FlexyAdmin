@@ -309,7 +309,7 @@ class AdminController extends BasicController {
 
 	function _show_trace() {
 		$trace=$this->session->userdata('trace');
-		if (IS_LOCALHOST and !empty($trace)) {
+		if (!empty($trace)) {
 			$this->load->view('admin/trace',array('trace'=>$trace));
 		}
 		$this->session->unset_userdata('trace');
