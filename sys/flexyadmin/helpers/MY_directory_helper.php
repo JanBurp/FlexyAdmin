@@ -152,7 +152,7 @@ function copy_directory( $source,$destination, $exclude=array('/.') ) {
       if ( $readdirectory == '.' || $readdirectory == '..' ) {
         continue;
       }
-      $PathDir = $source . '/' . $readdirectory; 
+      $PathDir = $source . '/' . $readdirectory;
       if ( is_dir( $PathDir ) ) {
         if (!has_string($exclude,$PathDir)) copy_directory( $PathDir, $destination . '/' . $readdirectory, $exclude );
         continue;
