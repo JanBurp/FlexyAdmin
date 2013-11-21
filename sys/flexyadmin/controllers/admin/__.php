@@ -720,7 +720,7 @@ class __ extends AdminController {
     
     $this->load->library('jsmin');
 
-    $path = $this->path.'FlexyAdminDEMO/sys/flexyadmin/assets/';
+    $path = str_replace('index.php','',$_SERVER['SCRIPT_FILENAME']).'sys/flexyadmin/assets/';
     
     $jsFiles=read_map($path.'js','js',TRUE,FALSE);
     $cssFiles=read_map($path.'css','css',TRUE,FALSE);
