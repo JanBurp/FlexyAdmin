@@ -12,6 +12,6 @@
 $config['admin_api_method'] = '_admin_api';
 
 
-$config['exclude']          = array('example.php','ajax_example.php','fallback.php','forms.php','plugin_template.php');
+$config['exclude']          = array('fallback.php','forms.php');
 
 ?>

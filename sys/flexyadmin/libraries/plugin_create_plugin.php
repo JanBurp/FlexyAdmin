@@ -49,12 +49,20 @@ class Plugin_create_plugin extends Plugin {
                     );
       $this->wizard = new Wizard($wizard);
       array_shift($args);
-      $this->add_content("<p>These files are added:</p><ul>
+      $this->add_content("<h3>These files are added:</h3><ul>
         <li>The config file with the same name in 'site/config'</li>
         <li>All language files with the name and the suffix '_lang' in 'site/language/xx/'</li>
         <li>The module/plugin file in 'site/libraries'</li>
         <li>The view file with the same name in 'site/views'</li>
-        </ul><p>If you need more files:</p><ul>
+        </ul>
+        <h3>readme.md</h3>
+        <p>A 'readme.md' file is also generated and added. It contains:<ul>
+        <li>The documentation that exists before the class definition in the core plugin/module file</li>
+        <li>A list of all added files</li>
+        <li>Before the zipfile will be created you can add more text if you like</li>
+        <li>NB You may use <a href=\"https://en.wikipedia.org/wiki/Markdown\" target=\"_blank\">Markdown</a> in the documentation</li>
+        </uL>
+        <h3>If you need more files:</h3><ul>
         <li>Make sure a config file for the plugin/module file exists</li>
         <li>Add these lines (with the filenames you like to add):</li>
         </ul>
