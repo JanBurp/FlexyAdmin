@@ -1,3 +1,15 @@
+UPDATE 2289
+===========
+
+- Replace current sys map with new sys map
+- Run DB updates update_r2277.sql
+- Replace current userguide map with new userguide map
+- Replace site/libraries/forms.php
+
+NB: Allmost all modules/plugins and thrid part jquery plugins are removed.
+The modules/plugins are now seperate .zip files that can be installend with plugin_install_plugin
+
+
 UPDATE to r2248
 ===============
 

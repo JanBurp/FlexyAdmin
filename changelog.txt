@@ -1,3 +1,158 @@
+Changes 2289
+============
+
+MYSQL:
+- update_r2277.sql
+
+USERGUIDE:
+- updated tinyMCE buttons link
+- Meer uitleg over - plugin_refresh_media
+- more help in samengestelde menu (Emanuel Nervo)
+
+FRONTEND:
+- REMOVED all modules & plugins, these are now external .zips which can be installed
+- REMOVED all third party jquery plugins
+- module forms has a new method: initialize() you can add a form on the fly with this (not needing the config file)
+- module forms: forms dont' need to have a titel now (Dirk Kokx)
+
+NEW & CHANGED:
+- Plugins for creating & installing plugins: plugin_create_plugin & plugin_install_plugin
+- user->register always returns id of new user (except when user errors)
+- plugin_refresh_media keeps extra data (as default)
+- Show thumb of image in image edit form
+- Possible to hide media fields (from res_media_files) in FlexyAdmin with cfg_field_info
+- plugin_auto_menu fills the field 'res_menu_result.str_lang' with language code of that page (if the field exists)
+- default value of cfg_auto_menu.b_active =  TRUE
+- mime-types (gpx)
+
+BUGS:
+- show.grid -> form didn't use URI_HASH (so on some sites this page is not reachable)
+- Styling issue fullsize view
+- Frontend title did'n format well
+- Gmap didn't pass a debugger
+- forms showed double errors from formactions
+- when using index.php on some servers, site_url was not given good as js variable (backend)
+
+
+Changes 2289
+============
+
+MYSQL:
+
+UPDATE:
+- update text
+- USERGUIDE: updated tinyMCE buttons link
+
+FRONTEND:
+- REMOVED all modules & plugins, these are now external .zips which can be installed
+- module forms has a new method: initialize() you can add a form on the fly with this (not needing the config file)
+- module comments uses now forms without the forms config, but with the comments config
+- added files in some plugins/modules config for creating the plugin
+- ADDED: missing plugins/modules files
+- NEW: module choose_language, een eevoudige module om een taal te kiezen in een 2-talige site
+- login module, redirectting to current page can ben turned off (dont_redirect config)
+- module login, method register can show and store fields from other tables (Dirk Kokx)
+- NEW: module forms: forms dont' need to have a titel now (Dirk Kokx)
+
+USERGUIDE:
+- USERGUIDE: Meer uitleg over - plugin_refresh_media
+
+NEW:
+- DB: add b_exist to res_media_files
+- NEW: Plugins for creating & installing plugins: plugin_create_plugin & plugin_install_plugin
+- NEW: more help in samengestelde menu (Emanuel Nervo)
+- user->register always returns id of new user (except when user errors)
+
+BUGS:
+- BUG: show.grid -> form didn't use URI_HASH (so on some sites this page is not reachable)
+- BUG: Styling issue fullsize view
+- BUG: title did'n format well
+- BUG: Gmap didn't pass a debugger
+- BUG: forms showed double errors from formactions
+- BUG: when using index.php on some servers, site_url was not given good as js variable (backend)
+
+OTHERS:
+- reset media is now safe and set options for not showing system fields
+- plugin_install_plugin, more robust, doesn't install on bad places
+- reset media is now safe
+- Show thumb of image in image edit form
+- 
+- Possible to hide media fields (from res_media_files) in FlexyAdmin with cfg_field_info.
+- CLEANUP: Removed all third party jquery plugins
+- CLEANUP: Moved all own jquery plugins to own map
+- CLEANUP: Removed third party jquery plugins
+- DOC
+- removed plugin views
+- removed login views
+- plugin autolinks complete
+- cleaned up a bit
+- plugin_auto_menu fills the field 'res_menu_result.str_lang' with language code of that page (if the field exists)
+- default value of cfg_auto_menu.b_active =  TRUE
+- mime-types (gpx)
+
+
+
+>>>>>>> External Changes
+=======
+Changes 2289
+============
+
+MYSQL:
+
+UPDATE:
+- update text
+- USERGUIDE: updated tinyMCE buttons link
+
+FRONTEND:
+- REMOVED all modules & plugins, these are now external .zips which can be installed
+- module forms has a new method: initialize() you can add a form on the fly with this (not needing the config file)
+- module comments uses now forms without the forms config, but with the comments config
+- added files in some plugins/modules config for creating the plugin
+- ADDED: missing plugins/modules files
+- NEW: module choose_language, een eevoudige module om een taal te kiezen in een 2-talige site
+- login module, redirectting to current page can ben turned off (dont_redirect config)
+- module login, method register can show and store fields from other tables (Dirk Kokx)
+- NEW: module forms: forms dont' need to have a titel now (Dirk Kokx)
+
+USERGUIDE:
+- USERGUIDE: Meer uitleg over - plugin_refresh_media
+
+NEW:
+- DB: add b_exist to res_media_files
+- NEW: Plugins for creating & installing plugins: plugin_create_plugin & plugin_install_plugin
+- NEW: more help in samengestelde menu (Emanuel Nervo)
+- user->register always returns id of new user (except when user errors)
+
+BUGS:
+- BUG: show.grid -> form didn't use URI_HASH (so on some sites this page is not reachable)
+- BUG: Styling issue fullsize view
+- BUG: title did'n format well
+- BUG: Gmap didn't pass a debugger
+- BUG: forms showed double errors from formactions
+- BUG: when using index.php on some servers, site_url was not given good as js variable (backend)
+
+OTHERS:
+- reset media is now safe and set options for not showing system fields
+- plugin_install_plugin, more robust, doesn't install on bad places
+- reset media is now safe
+- Show thumb of image in image edit form
+- 
+- Possible to hide media fields (from res_media_files) in FlexyAdmin with cfg_field_info.
+- CLEANUP: Removed all third party jquery plugins
+- CLEANUP: Moved all own jquery plugins to own map
+- CLEANUP: Removed third party jquery plugins
+- DOC
+- removed plugin views
+- removed login views
+- plugin autolinks complete
+- cleaned up a bit
+- plugin_auto_menu fills the field 'res_menu_result.str_lang' with language code of that page (if the field exists)
+- default value of cfg_auto_menu.b_active =  TRUE
+- mime-types (gpx)
+
+
+
+>>>>>>> External Changes
 Changes 2248
 ============
 
@@ -45,10 +200,10 @@ FRONTEND:
 NEW:
 - NEW: plugin_strange_chars
 - NEW: MY_array_helper array_rename_keys()
-- CHANGED: forms - Voeg spamrapport toe aan settings, bekend in formaction->go()
-- CHANGED: forms - Extra settings can be set when loading
-- CHANGED: forms - Fields from a model has priority over fields from a table, so the table config setting can be used for the model.
-- CHANGED: better max_length()
+- forms - Voeg spamrapport toe aan settings, bekend in formaction->go()
+- forms - Extra settings can be set when loading
+- forms - Fields from a model has priority over fields from a table, so the table config setting can be used for the model.
+- better max_length()
 
 BUGS:
 - BUG: MY_array_helper is_assoc()
@@ -130,7 +285,7 @@ UPDATE:
 - UPDATE: jQuery 1.10.2
 
 FRONTEND:
-- CHANGED: config of search module, so search.form is added to site
+- config of search module, so search.form is added to site
 - Module login & plugin_login_active had some bugs & new features
 
 USERGUIDE:
@@ -167,7 +322,7 @@ FRONTEND:
   * replace: function _module()
   * replace: function _call_library()
 - Login module remembers page
-- Changed: Twitter module
+- Twitter module
 - new jquery.styleTwitter plugin
 - Added: ->set_page_view() so the page view can be changed within a module
 - new Forms module: a flexible module for all possible forms, all modules with forms can use this
