@@ -36,6 +36,69 @@ class Search_replace Extends CI_Model {
 		}
 	}
 	
+  
+  /**
+   * Vervangt tekst in de hele database in bepaald veldsoorten
+   *
+   * @param string $search 
+   * @param string $replace 
+   * @param string $types 
+   * @return void
+   * @author Jan den Besten
+   */
+  public function replace_all($search,$replace,$types='txt') {
+    if (!is_array($types)) $types=array($types);
+		$result=FALSE;
+		$tables=$this->db->list_tables();
+		foreach($tables as $table) {
+			$type=get_prefix($table);
+			if (in_array($type,$this->table_types)) {
+				$fields=$this->db->list_fields($table);
+				foreach ($fields as $field) {
+					$pre=get_prefix($field);
+					// Only in set field types
+					if (in_array($pre,$types)) {
+						$result[$table] = $this->replace_in( $table, $field, $search, $replace);
+					}
+				}
+			}
+		}
+    return $result;
+  }
+  
+
+  /**
+   * Vervangt tekst in bepaald veld van bepaalde tabel
+   *
+   * @param string $table 
+   * @param string $field 
+   * @param string $search 
+   * @param string $replace 
+   * @return array
+   * @author Jan den Besten
+   */
+  public function replace_in($table,$field,$search,$replace) {
+		$result=FALSE;
+		$this->db->select("id,$field");
+		$this->db->where("$field !=","");
+		$query=$this->db->get($table);
+		foreach($query->result_array() as $row) {
+			$id=$row["id"];
+			$txt=$row[$field];
+      $newtxt=str_replace($search,$replace,$txt);
+			// Update in database if changed
+			if ($txt!=$newtxt) {
+				$this->db->update($table,array($field=>$newtxt),"id = $id");
+				$result[]=array('table'=>$table,'id'=>$id,'field'=>$field);
+			}
+		}
+		$query->free_result();
+		return $result;
+  }
+  
+  
+  
+  
 	
   /**
    * Vervangt alle links in alle teksten van de database (in alle content tabellen)
