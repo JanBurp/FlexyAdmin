@@ -651,7 +651,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
   /**
    * Zelfde als dons_select()
    *
-   * @param string $dont_select[''] 
+   * @param mixed $dont_select[''] 
    * @return object $this
    * @author Jan den Besten
    */
@@ -662,13 +662,19 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
   /**
    * de-selecteer een veld uit de SELECT lijst
    *
-   * @param string $dont_select[''] Veldnaam die uit de selectlijst gehaald moet worden
+   * @param mixed $dont_select[''] Veldnaam die uit de selectlijst gehaald moet worden, of een string met veldnamen gescheiden door komma's of een array van veldnamen
    * @return object $this
    * @author Jan den Besten
    */
 	public function dont_select($dont_select="") {
 		if (!empty($dont_select)) {
-			$this->ar_dont_select[]=$dont_select;
+      if (is_string($dont_select)) {
+        $dont_select=str_replace(' ','',$dont_select);
+        $dont_select=explode(',',$dont_select);
+      }
+      foreach ($dont_select as $value) {
+  			$this->ar_dont_select[]=$value;
+      }
 		}
     return $this;
 	}
