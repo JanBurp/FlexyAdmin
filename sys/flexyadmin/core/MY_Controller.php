@@ -221,7 +221,28 @@ class MY_Controller extends CI_Controller {
 	  }
   }
   
-	
+
+  /**
+   * Valideerd een veld aan de hand van meegegeven model.method
+   *
+   * @param string $str 
+   * @param string $model_method 
+   * @return bool
+   * @author Jan den Besten
+   */
+  public function valid_model_method($str, $model_method) {
+    $model=get_prefix($model_method,'.');
+    $method=get_suffix($model_method,'.');
+    $this->load->model($model);
+    $result=$this->$model->$method($str);
+    if (is_string($result)) {
+      $this->form_validation->set_message('valid_model_method',lang($result));
+      return FALSE;
+    }
+    return TRUE;
+  }
+  
+  
 
 }
 
