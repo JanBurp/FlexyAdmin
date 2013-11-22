@@ -89,15 +89,9 @@ class Create_uri extends CI_Model {
  		if (empty($uri)) $createUri=true;
     // If needs to create an uri
  		if ($createUri) {
- 			$uri=trim(strip_tags(strtolower($uri_source)),' -_');
- 			$uri=str_replace(" ",$replaceSpace,$uri);
- 			$uri=clean_string($uri);
-      $forbidden=$this->config->item('FORBIDDEN_URIS');
-      if (!$forbidden) $forbidden=array("site","sys","admin","rss","file",'offset');
-      $forbidden[]=$this->config->item('URI_HASH');
- 			$forbidden=array_merge($forbidden,$this->config->item('LANGUAGES'));
+      $uri=$this->cleanup($uri_source);
  			$postSpace=$replaceSpace.$replaceSpace;
- 			while ($this->_is_existing_uri($uri) or in_array($uri,$forbidden)) {
+ 			while ($this->_is_existing_uri($uri) or $this->is_forbidden($uri)) {
  				$currUri=remove_suffix($uri,$postSpace);
  				$countUri=(int) get_suffix($uri,$postSpace);
  				$uri=$currUri.$postSpace.($countUri+1);
@@ -105,6 +99,21 @@ class Create_uri extends CI_Model {
  		}
  		return $uri;
  	}
+  
+  /**
+   * Maakt van een gegeven string een uri veilige string
+   *
+   * @param string $uri 
+   * @return string
+   * @author Jan den Besten
+   */
+  public function cleanup($uri) {
+    $replaceSpace=$this->config->item('PLUGIN_URI_REPLACE_CHAR');
+		$uri=trim(strip_tags(strtolower($uri)),' -_');
+		$uri=str_replace(" ",$replaceSpace,$uri);
+		$uri=clean_string($uri);
+    return $uri;
+  }
 
   /**
    * Zoek mooi veld waar uri van gemaakt kan worden
@@ -147,6 +156,23 @@ class Create_uri extends CI_Model {
  		return $uriField;
  	}
 	
+  
+  /**
+   * Test of een gegeven uri een verboden uri is
+   *
+   * @param string $uri 
+   * @return bool
+   * @author Jan den Besten
+   */
+  public function is_forbidden($uri) {
+    $forbidden=$this->config->item('FORBIDDEN_URIS');
+    if (!$forbidden) $forbidden=array("site","sys","admin","rss","file",'offset');
+    $forbidden[]=$this->config->item('URI_HASH');
+  	$forbidden=array_merge($forbidden,$this->config->item('LANGUAGES'));
+    return in_array($uri,$forbidden);
+  }
+  
+  
   /**
    * Checkt of de uri al bestaat
    *
