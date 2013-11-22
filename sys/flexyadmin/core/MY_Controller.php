@@ -227,7 +227,7 @@ class MY_Controller extends CI_Controller {
    *
    * @param string $str 
    * @param string $model_method 
-   * @return bool
+   * @return mixed
    * @author Jan den Besten
    */
   public function valid_model_method($str, $model_method) {
@@ -239,7 +239,7 @@ class MY_Controller extends CI_Controller {
       $this->form_validation->set_message('valid_model_method',lang($result));
       return FALSE;
     }
-    return TRUE;
+    return $result;
   }
   
   
