@@ -795,7 +795,10 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 							else
 								$forFields=$this->list_fields($joinTable);
 							foreach($forFields as $key=>$f) {
-								$selectFields[]= $joinAsTable.".".$f." AS ".$joinAsTable."__".$f;
+                if (!has_string('AS',$f)) {
+                  $f.=" AS ".$joinAsTable."__".$f;
+                }
+								$selectFields[]= $joinAsTable.".".$f;
 							}
 						}
 					}
@@ -1654,7 +1657,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
    * Je kunt ook een array meegeven (ipv TRUE) om een deel van de foreign data te selecteren, bijvoorbeeld:
    * 
    *    // Neem alleen data mee uit de tabel *tbl_links* en daarvan alleen het veld *str_title*
-   *    $this->db->add_foreigns( array( 'tbl_links'=>array('str_title') ) ); 
+   *    $this->db->add_foreigns( array( 'tbl_links'=>array('str_title','txt_text AS txt_text') ) ); 
    *
    * @param mixed $foreigns[TRUE]
    * @return object $this
