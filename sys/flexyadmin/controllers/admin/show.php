@@ -141,7 +141,6 @@ class Show extends AdminController {
 								if (substr($ord,0,1)=='_') $ord=substr($ord,1).' DESC';
                 $ord=trim($ord);
 								$ordPre=get_prefix($ord);
-                trace_($ord);
 								if ($ord!='') {
 									if ($ordPre=='id' and $ord!='id')
 										$this->db->order_by_foreign($ord);
