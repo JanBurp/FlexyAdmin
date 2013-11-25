@@ -82,7 +82,6 @@ class Show extends AdminController {
 			$order=el('order',$args);
 			$search=el('search',$args);
 			$this->grid_set->save(array('table'=>$table,'offset'=>$offset,'order'=>$order,'search'=>$search));
-      // trace_($args);
 
 			if (!empty($table) and $this->db->table_exists($table)) {
         
@@ -140,7 +139,9 @@ class Show extends AdminController {
 							$orderArr=explode(':',$order);
 							foreach ($orderArr as $key => $ord) {
 								if (substr($ord,0,1)=='_') $ord=substr($ord,1).' DESC';
+                $ord=trim($ord);
 								$ordPre=get_prefix($ord);
+                trace_($ord);
 								if ($ord!='') {
 									if ($ordPre=='id' and $ord!='id')
 										$this->db->order_by_foreign($ord);
@@ -151,6 +152,7 @@ class Show extends AdminController {
 								}
 							}
 						}
+            
 						
 						// has rights?
 						if ($restrictedToUser>0 and $hasField['user']) {
