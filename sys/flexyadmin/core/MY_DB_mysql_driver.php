@@ -727,7 +727,6 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			}
 		}
 		
-
 		/**
 			* As abstracts if asked for
 			*/
@@ -821,7 +820,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		}
 		$this->select($select);
 
-		/**
+    /**
 		 * Set Order
 		 */
 		if ($this->order_by_foreign) {
@@ -832,6 +831,8 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		}
 		elseif (empty($this->ar_orderby))
 			$this->_set_standard_order($table);
+    
+    
 
 
 		/**
@@ -968,7 +969,6 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
       $this->last_where=$this->ar_where;
       $this->ar_where=array();
     }
-    
     
 		/**
 		 * get the query
