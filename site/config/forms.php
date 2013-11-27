@@ -85,6 +85,8 @@ $config['upload_demo'] = array(
 $config['shop'] = array(
   // De velden worden nu opgehaald uit een model.method, deze geeft een array van formfields terug
   'model'             => 'shop.fields',
+  // Een model.method die de velden een beginwaarde kan meegeven
+  'populate_fields'   => 'shop.populate',
   'buttons'           => array( 'submit'=>array('submit'=>'submit', 'value'=>lang('submit')) ),
   'validation_place'  => 'field',
   'check_for_spam'    => true,
