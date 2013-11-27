@@ -659,9 +659,9 @@ img.zoom,
 img.empty				{ border:1px solid #DEA; cursor:pointer; background-color:#FFF; }
 img.zoom:hover	{ border-color:#696; }
 
-.thumb_title {float:right;position:relative;top:-22px;left:5px;}
-.thumb_title img {height:25px;}
 
+.ui-tabs-nav li {white-space:normal!important;}
+.ui-tabs-nav li img {float:right;height:25px;margin:-5px 0px 0px 10px;}
 
 
 /* =============== Graph ===================== */
