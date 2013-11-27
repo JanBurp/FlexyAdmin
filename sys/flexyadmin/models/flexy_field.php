@@ -535,7 +535,10 @@ class Flexy_field extends CI_Model {
 	function _self_grid() {
     if ($this->table=='res_menu_result') return $this->data;
     if ($this->field=='self_parent') {
-      $tree=$this->rowdata[$this->title_field];
+      if (isset($this->rowdata[$this->title_field]))
+        $tree=$this->rowdata[$this->title_field];
+      else
+        $tree=$this->rowdata[PRIMARY_KEY];
       return "[$this->data] ".$tree;
     }
     else {
