@@ -391,6 +391,7 @@ $config["CFG_"]=array(
 		"cfg_users"=>array(
 			"order"=>'120',
 			"table"=>'cfg_users',
+      'b_pagination'=>true,
 			"b_grid_add_many"=>'1',
 			"str_abstract_fields"=>'str_username',
 			"str_order_by"=>'id',

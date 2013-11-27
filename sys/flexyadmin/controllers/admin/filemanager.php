@@ -416,9 +416,14 @@ class Filemanager extends AdminController {
 		$form=new form($actionUri);
 
     // Ui & Help
-		$uiPath=$this->ui->get($path);
 		$help=$this->ui->get_help($path);
+		$uiPath=$this->ui->get($path);
+    $img_types=$this->config->item('FILE_types_img');
+    if (in_array(get_suffix($file,'.'),$img_types)) {
+      $uiPath.=': '.$file.show_thumb('site/assets/'.$path.'/'.$file);
+    }
 		if (!empty($help)) $uiShowPath=help($uiPath,$help); else $uiShowPath=$uiPath;
+    
     $keys=array_keys($formData);
     $keys=array_combine($keys,$keys);
     $uiFieldNames=array();
@@ -431,13 +436,7 @@ class Filemanager extends AdminController {
     }
     $form->set_labels($uiFieldNames);
     
-    // Create form
-    $formTitle=$uiShowPath.': '.$file;
-    $img_types=$this->config->item('FILE_types_img');
-    if (in_array(get_suffix($file,'.'),$img_types)) {
-      $formTitle.=div('thumb_title').show_thumb('site/assets/'.$path.'/'.$file)._div();
-    }
-		$form->set_data($formData,$formTitle);
+		$form->set_data($formData,$uiShowPath);
 
 		/**
 		 * Validate form, if succes, update/insert data
