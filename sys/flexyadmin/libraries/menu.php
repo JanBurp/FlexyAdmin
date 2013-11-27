@@ -155,6 +155,7 @@ class Menu {
 
   private  $tmpUrl;
 	private  $urlField;
+  private  $createUriTree=TRUE;
 	private  $fields;
   private  $ordered_titles=FALSE;
 	private  $extraFields;
@@ -253,6 +254,17 @@ class Menu {
 	public function set_uri_field($uri="uri") {
 		$this->fields["uri"]=$uri;
 	}
+  
+  /**
+   * Bepaalt of de uri's in het menu fulluris moeten worden (dus de tree volgend), of 'as is'.
+   *
+   * @param string $createUriTree[TRUE]
+   * @return void
+   * @author Jan den Besten
+   */
+  public function set_create_uri_tree($createUriTree=TRUE) {
+    $this->createUriTree=$createUriTree;
+  }
   
   /**
    * Zet titel veld van menu tabel
@@ -584,7 +596,6 @@ class Menu {
 			}
 			$item=prev($menu);
 		}
-		// trace_($menu);
 		
 		// set first
 		reset($menu);
@@ -1048,7 +1059,10 @@ class Menu {
 
           $subOut='';
 					if (isset($item["sub"]) and ($max_level==0 or ($level+1)<$max_level) ) {
-            $subOut=$this->render($item["sub"],"$cName",$level+1,$thisUri);
+            if ($this->createUriTree)
+              $subOut=$this->render($item["sub"],"$cName",$level+1,$thisUri);
+            else
+              $subOut=$this->render($item["sub"],"$cName",$level+1);
 						// check if needs to add active class
 						if (strpos($subOut,'current')>0) {
               $itemOut=preg_replace("/class=\"([^\"]*)\"/","class=\"$1 active\"",$itemOut);
