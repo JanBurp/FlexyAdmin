@@ -1,3 +1,26 @@
+Changes 2305
+============
+
+FRONTEND:
+- CHANGED: module forms can now populate fields
+
+NEW:
+- plugin_remove_plugin
+- Niewe flexibele validatie: valid_model_method[model.method]
+- create_uri -> is_forbidden()
+- CHANGED: db->add_foreigns(), you can now specify an ' AS fieldname'
+- md_field
+
+BUGS:
+- BUG: MY_directory_helper count_files()
+- BUG: plugin_install_plugin - Fout als er mappen nog niet bestaan
+- BUG: Styling of edit image thumb
+
+OTHERS:
+- CHANGED: cfg_users => pagination
+- CHANGED: db->unselect() now can have more fields in a comma seperated string or an array of strings
+
+
 Changes 2290
 ============
 
@@ -49,18 +72,18 @@ FRONTEND:
 - module comments uses now forms without the forms config, but with the comments config
 - added files in some plugins/modules config for creating the plugin
 - ADDED: missing plugins/modules files
-- NEW: module choose_language, een eevoudige module om een taal te kiezen in een 2-talige site
+- module choose_language, een eevoudige module om een taal te kiezen in een 2-talige site
 - login module, redirectting to current page can ben turned off (dont_redirect config)
 - module login, method register can show and store fields from other tables (Dirk Kokx)
-- NEW: module forms: forms dont' need to have a titel now (Dirk Kokx)
+- module forms: forms dont' need to have a titel now (Dirk Kokx)
 
 USERGUIDE:
 - USERGUIDE: Meer uitleg over - plugin_refresh_media
 
 NEW:
 - DB: add b_exist to res_media_files
-- NEW: Plugins for creating & installing plugins: plugin_create_plugin & plugin_install_plugin
-- NEW: more help in samengestelde menu (Emanuel Nervo)
+- Plugins for creating & installing plugins: plugin_create_plugin & plugin_install_plugin
+- more help in samengestelde menu (Emanuel Nervo)
 - user->register always returns id of new user (except when user errors)
 
 BUGS:
@@ -109,18 +132,18 @@ FRONTEND:
 - module comments uses now forms without the forms config, but with the comments config
 - added files in some plugins/modules config for creating the plugin
 - ADDED: missing plugins/modules files
-- NEW: module choose_language, een eevoudige module om een taal te kiezen in een 2-talige site
+- module choose_language, een eevoudige module om een taal te kiezen in een 2-talige site
 - login module, redirectting to current page can ben turned off (dont_redirect config)
 - module login, method register can show and store fields from other tables (Dirk Kokx)
-- NEW: module forms: forms dont' need to have a titel now (Dirk Kokx)
+- module forms: forms dont' need to have a titel now (Dirk Kokx)
 
 USERGUIDE:
 - USERGUIDE: Meer uitleg over - plugin_refresh_media
 
 NEW:
 - DB: add b_exist to res_media_files
-- NEW: Plugins for creating & installing plugins: plugin_create_plugin & plugin_install_plugin
-- NEW: more help in samengestelde menu (Emanuel Nervo)
+- Plugins for creating & installing plugins: plugin_create_plugin & plugin_install_plugin
+- more help in samengestelde menu (Emanuel Nervo)
 - user->register always returns id of new user (except when user errors)
 
 BUGS:
@@ -192,14 +215,14 @@ Changes 2226
 ============
 
 FRONTEND:
-- NEW: breadcrumb module
-- NEW: Totaly rewritten modules blog & comments
-- NEW: login module reloads page after login
-- NEW: setting to use ajax for modules or not
+- breadcrumb module
+- Totaly rewritten modules blog & comments
+- login module reloads page after login
+- setting to use ajax for modules or not
 
 NEW:
-- NEW: plugin_strange_chars
-- NEW: MY_array_helper array_rename_keys()
+- plugin_strange_chars
+- MY_array_helper array_rename_keys()
 - forms - Voeg spamrapport toe aan settings, bekend in formaction->go()
 - forms - Extra settings can be set when loading
 - forms - Fields from a model has priority over fields from a table, so the table config setting can be used for the model.
@@ -220,9 +243,9 @@ BUGS:
 - BUG filemanager remove files from fields
 
 NEW:
-- NEW: form validation callback_valid_same
-- NEW: form captcha with validation
-- NEW: MY_captcha_helper, changed captcha filenames and removing of them
+- form validation callback_valid_same
+- form captcha with validation
+- MY_captcha_helper, changed captcha filenames and removing of them
 
 
 Changes 2192
@@ -235,24 +258,24 @@ UPDATE:
 - UPDATE: CI 2.1.4 & Userguide
 
 FRONTEND:
-- NEW: login module has a new method edit, and a new formaction_login_edit to couple with tha
-- NEW: sitemap.xml now with priorities
-- NEW: menu->render() has new parameter max_level
+- login module has a new method edit, and a new formaction_login_edit to couple with tha
+- sitemap.xml now with priorities
+- menu->render() has new parameter max_level
 
 NEW:
-- NEW: regex_validation via config
-- NEW: in Media Info you can set if filenames are encrypted during upload
-- NEW: user_group specific MUTLI_UPLOAD setting
-- NEW: forms/formaction sets the form_id
-- NEW: user->send_new_password_mail()
-- NEW: plugin_login_activate can now send new password to existing users
-- NEW: plugin_login_activate , set the minimal user group that can call this plugin (default = super_admin)
-- NEW: callback_valid_password(), password will be checked everywhere
-- NEW: Admin menu items can have a user_group, so the item will only be shown for minimal this group
-- NEW: combine validation rules valid_email and valid_emails
-- NEW: nicer plugin_newsletter, with styling options
-- NEW: MY_DB Deep foreign keys now also shown in options (dropdowns etc.)
-- NEW: plugin_automenu, if parent is not b_visible, then also children are not visible, and same for b_restricted
+- regex_validation via config
+- in Media Info you can set if filenames are encrypted during upload
+- user_group specific MUTLI_UPLOAD setting
+- forms/formaction sets the form_id
+- user->send_new_password_mail()
+- plugin_login_activate can now send new password to existing users
+- plugin_login_activate , set the minimal user group that can call this plugin (default = super_admin)
+- callback_valid_password(), password will be checked everywhere
+- Admin menu items can have a user_group, so the item will only be shown for minimal this group
+- combine validation rules valid_email and valid_emails
+- nicer plugin_newsletter, with styling options
+- MY_DB Deep foreign keys now also shown in options (dropdowns etc.)
+- plugin_automenu, if parent is not b_visible, then also children are not visible, and same for b_restricted
 
 BUGS:
 - BUG: plugin_newsletter, when no adresses are selected / Nicer dutch translation of submenu
@@ -296,7 +319,7 @@ NEW:
 - [NEW] - add_title() has now a format argument for a more flexible title - Idea Dirk Kokx
 - [NEW] plugin_db_scheme
 - [BETA] - New validaition rule: valid_regex[] - Idea Dirk Kokx
-- NEW: Menu can be rendered without nesting
+- Menu can be rendered without nesting
 - CHANGES to Menu, added get_items() - Geeft alle menu items
 
 BUGS:
