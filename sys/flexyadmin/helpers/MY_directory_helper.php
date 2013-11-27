@@ -17,12 +17,11 @@
  * @author Jan den Besten
  */
 function count_files($path,$recursive=FALSE,$counter=0) {
-	static $counter;
 	if(is_dir($path)) {
 		if($dh = opendir($path)) {
 			while(($file = readdir($dh)) !== false) {
 				if ($file!='.' and $file!='..' and substr($file,0,1)!='.') {
-					$counter=(is_dir($path."/".$file)) ? count_files($path.'/'.$file,$types,$recursive,$counter) : $counter+1;
+					$counter=(is_dir($path."/".$file)) ? count_files($path.'/'.$file,$recursive,$counter) : $counter+1;
 				}
 			}
 			closedir($dh);

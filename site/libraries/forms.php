@@ -165,6 +165,14 @@ class Forms extends Module {
       }
     }
     
+    // Populate fields
+    if (isset($this->settings['populate_fields'])) {
+      $method=get_suffix($this->settings['populate_fields'],'.');
+      $model=get_prefix($this->settings['populate_fields'],'.');
+      if (!isset($this->CI->$model)) $this->CI->load->model($model);
+      $formFields=$this->CI->$model->$method($formFields);
+    }
+    
     if (!$formFields) {
       echo '<div class="warning">'.langp('error_no_fields',$this->name).'<div>';
       return false;
