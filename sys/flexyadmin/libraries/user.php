@@ -281,7 +281,7 @@ class User Extends Ion_auth {
 	 * @param string $group_name 
 	 * @param string $subject 
 	 * @param string $uri 
-	 * @return bool TRUE als geslaagd
+	 * @return mixed $id als geslaagd, FALSE als niet geslaagd
 	 * @author Jan den Besten
 	 */
 	public function register($username, $password, $email, $additional_data=array(), $group_name = false, $subject='Account Activation', $uri='') {
