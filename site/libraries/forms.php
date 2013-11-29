@@ -150,7 +150,7 @@ class Forms extends Module {
     if (!$formFields) {
       $this->CI->load->model('getform');
       $flexyform=str_replace('flexyform_','',$this->name);
-      $formData=$this->CI->getform->by_title($flexyform);
+      $formData=$this->CI->getform->by_name($flexyform);
       if ($formData) {
   			$formFieldSets=$formData['fieldsets'];
   			$formFields=$formData['fields'];
