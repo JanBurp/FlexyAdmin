@@ -25,7 +25,7 @@ class MY_Email extends CI_Email {
    *        'to'      => 'the@receiver.com',
    *        'cc'      => '',
    *        'bcc'     => '',
-   *        'subject  => 'Subject of the email',
+   *        'subject' => 'Subject of the email',
    *        'body'    => 'Hi, I think you get the picture now, are you?'
    *      );
    *
