@@ -35,10 +35,12 @@ class MY_Email extends CI_Email {
    */
 	public function set_mail($mail) {
     $this->total_send_addresses=0;
-    if (isset($mail['name']))
-      $this->from($mail['from'], $from['name']);
-    else
-      $this->from($mail['from']);
+    if (isset($mail['from'])) {
+      if (isset($mail['name']))
+        $this->from($mail['from'], $mail['name']);
+      else
+        $this->from($mail['from']);
+    }
     if (isset($mail['to']))	{
       $this->to($mail['to']);
       $this->total_send_addresses += $this->_count_addresses($mail['to']);
