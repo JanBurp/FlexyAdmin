@@ -126,8 +126,13 @@ function strace_($a=NULL) {
 function trace_($a=NULL,$echo=true,$backtraceOffset=1) {
 	static $c=0;
   $styling='';
-  if (!IS_AJAX) $styling=" style=\"position:relative;font-family:courier,serif;font-size:10px;line-height:14px;z-index:99999;margin:2px;padding:5px;background-color:#efe;color:#000;border:solid 1px #666;opacity:.8;\"";
-  $out="<pre class=\"FlexyAdminTrace\" $styling>";
+  if (IS_AJAX) {
+    $out='';
+  }
+  else {
+    $styling=" style=\"position:relative;font-family:courier,serif;font-size:10px;line-height:14px;z-index:99999;margin:2px;padding:5px;background-color:#efe;color:#000;border:solid 1px #666;opacity:.8;\"";
+    $out="<pre class=\"FlexyAdminTrace\" $styling>";
+  }
   if ($c>=20) {
     if ($c==20) $out.="TOO MANY TRACES, MAYBE A LOOP BUG...";
   }
@@ -151,7 +156,10 @@ function trace_($a=NULL,$echo=true,$backtraceOffset=1) {
   	else
   		$out.=print_r(tr_string($a),true);
   }
-  $out.='</pre>';
+  if (IS_AJAX)
+    $out.="\n";
+  else
+    $out.='</pre>';
   if ($c>20) $out='';
 	if ($echo) echo $out;
 	$c++;
