@@ -45,6 +45,7 @@ class Parent_module_plugin {
 	public function __construct($name='') {
 		$this->CI=&get_instance();
 		if (empty($name) or is_array($name)) $name=strtolower(get_class($this));
+    if (IS_AJAX) $name=str_replace('ajax_','',$name);
 		if (!in_array($name, array('parent_module_plugin','module','plugin','plugin_'))) {
 			$this->set_name($name);
       $langfile='language/'.$this->CI->config->item('language').'/'.$name.'_lang.php';
