@@ -1,3 +1,21 @@
+Changes 2315
+============
+
+FRONTEND:
+- ajax_modules load automatically config with same name (without the ajax_ prefix)
+
+NEW:
+- Menu->set_create_uri_tree()
+
+BUGS:
+- forms didn't work well with flexy_forms
+- MY_Email.php typfout in variabele naam
+
+CHANGED:
+- flexy_forms has a field 'options' now
+- trace_() nicer output if IS_AJAX
+
+
 Changes 2305
 ============
 
