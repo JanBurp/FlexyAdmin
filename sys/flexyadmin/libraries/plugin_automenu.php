@@ -28,6 +28,7 @@ class Plugin_automenu extends Plugin {
 
 	public function __construct() {
 		parent::__construct();
+    $this->CI->load->model('create_uri');
 		$this->automationTable='cfg_auto_menu';
 		$this->resultMenu='res_menu_result';
 	}
@@ -598,7 +599,15 @@ class Plugin_automenu extends Plugin {
   		$fields=$this->CI->db->list_fields($this->resultMenu);
   		$lang='';
 		
-  		foreach ($this->newMenu as $row) {
+      if ($this->config('multi_lang_uris') and isset($this->languages)) {
+        // reset all uris
+        foreach ($this->newMenu as $key => $value) {
+          if ($value['self_parent']!=0) $this->newMenu[$key]['uri']='';
+        }
+        // trace_($this->newMenu);
+      }
+    
+  		foreach ($this->newMenu as $key=>$row) {
 
         // Set language tree
   			if (isset($row['self_parent']) and isset($this->languages) and in_array($row['uri'],$this->languages)) $lang=$row['uri'];
@@ -606,6 +615,17 @@ class Plugin_automenu extends Plugin {
         if (isset($row['self_parent']) and isset($this->languages)) $row['str_lang']=$lang;
 
   			foreach ($row as $field => $value) {
+          // Create new uri's??
+          if ($field=='uri' and isset($this->languages) and !in_array($value,$this->languages) and $this->config('multi_lang_uris') and isset($row['str_title_'.$lang])) {
+            $uri=$value;
+            $title=$row['str_title_'.$lang];
+            $this->CI->create_uri->set_existing_class($this);
+            $this->CI->create_uri->set_source_field('str_title_'.$lang);
+            $value=$this->CI->create_uri->create($row);
+            $this->newMenu[$key]['uri']=$value;
+            // trace_(array('old_uri'=>$uri,'title'=>$title,'new_uri'=>$value));
+          }
+          
   				if (in_array($field,$fields)) {
   					$this->CI->db->set($field,$value);
   				}
@@ -631,6 +651,16 @@ class Plugin_automenu extends Plugin {
   		$this->CI->queu->add_call(@$this->CI->editor_lists,'create_list','links');
     }
 	}
+
+
+  public function _is_existing_uri($uri,$data) {
+    $existings=find_row_by_value($this->newMenu,$uri,'uri');
+    if ($existings) {
+      unset($existings[$data['id']]);
+    }
+    if (count($existings)==0) return FALSE;
+    return $existings;
+  }
 
 
 	private function _get_where_parent($autoValue) {

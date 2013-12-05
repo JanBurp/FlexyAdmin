@@ -424,19 +424,12 @@ $config["CFG_"]=array(
 	),
 
 	"cfg_field_info" => array(
-		// "cfg_ui.str_title_nl"=>array(
-		// 	"str_fieldset"=>'Nederlands'
-		// 	),
-		// "cfg_ui.txt_help_nl"=>array(
-		// 	"str_fieldset"=>'Nederlands'
-		// 	),
 		"cfg_ui.str_title_en"=>array(
 			"str_fieldset"=>'English'
 			),
 		"cfg_ui.txt_help_en"=>array(
 			"str_fieldset"=>'English'
 			),
-
 
 		"cfg_admin_menu.str_type"=>array(
 			"field"=>'cfg_admin_menu.str_type',
