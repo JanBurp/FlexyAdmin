@@ -64,7 +64,7 @@ class Create_uri extends CI_Model {
   }
 
  	/**
- 	 * Maak uri vanuit meegegeven data (rij uit een tabel)
+ 	 * Maak uri vanuit meegegeven data (rij uit een tabel, of string)
  	 *
  	 * @param array $data 
  	 * @return string
@@ -84,14 +84,15 @@ class Create_uri extends CI_Model {
  		else
  			$uri_source=$this->data['id'];
  		$createUri=true;
- 		if ($this->cfg->get('CFG_table',$this->table,'b_freeze_uris')) $createUri=false;
- 		if (isset($this->data['b_freeze_uri']) and $this->data['b_freeze_uri']) $createUri=false;
- 		if (empty($uri)) $createUri=true;
+    // if ($this->cfg->get('CFG_table',$this->table,'b_freeze_uris')) $createUri=false;
+    // if (isset($this->data['b_freeze_uri']) and $this->data['b_freeze_uri']) $createUri=false;
+    // if (empty($uri)) $createUri=true;
+    
     // If needs to create an uri
  		if ($createUri) {
       $uri=$this->cleanup($uri_source);
  			$postSpace=$replaceSpace.$replaceSpace;
- 			while ($this->_is_existing_uri($uri) or $this->is_forbidden($uri)) {
+ 			while ($this->_is_existing_uri($uri,$data) or $this->is_forbidden($uri)) {
  				$currUri=remove_suffix($uri,$postSpace);
  				$countUri=(int) get_suffix($uri,$postSpace);
  				$uri=$currUri.$postSpace.($countUri+1);
@@ -174,6 +175,19 @@ class Create_uri extends CI_Model {
   
   
   /**
+   * Geef een alternatieve class die de functie _is_existing_uri zelf heeft
+   *
+   * @param string $class
+   * @return this
+   * @author Jan den Besten
+   */
+  public function set_existing_class($class) {
+    $this->existing_class=$class;
+    return $this;
+  }
+  
+  
+  /**
    * Checkt of de uri al bestaat
    *
    * @param string $uri
@@ -182,18 +196,26 @@ class Create_uri extends CI_Model {
    * @internal
    * @ignore
    */
- 	private function _is_existing_uri($uri) {
- 		if ($this->db->field_exists('self_parent',$this->table) and isset($this->data['self_parent'])) {
- 			$this->db->select('self_parent');
- 			$this->db->where('self_parent',$this->data['self_parent']);
- 		}
- 		$this->db->select("uri");
- 		$this->db->where("uri",$uri);
- 		if (isset($this->data['id'])) $this->db->where("id !=",$this->data['id']);
- 		$uris=$this->db->get_result($this->table);
- 		if (empty($uris))
- 			return FALSE;
- 		return current($uris);
+ 	private function _is_existing_uri($uri,$data) {
+    if (isset($this->existing_class)) {
+      // Alternative function to test
+      $class=$this->existing_class;
+      return call_user_func(array($class, '_is_existing_uri'),$uri,$data);
+    }
+    else {
+      // Normal function to test
+   		if ($this->db->field_exists('self_parent',$this->table) and isset($this->data['self_parent'])) {
+   			$this->db->select('self_parent');
+   			$this->db->where('self_parent',$this->data['self_parent']);
+   		}
+   		$this->db->select("uri");
+   		$this->db->where("uri",$uri);
+   		if (isset($this->data['id'])) $this->db->where("id !=",$this->data['id']);
+   		$uris=$this->db->get_result($this->table);
+   		if (empty($uris))
+   			return FALSE;
+   		return current($uris);
+    }
  	}
 	
 

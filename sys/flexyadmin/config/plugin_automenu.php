@@ -39,4 +39,15 @@ $config['module_field']='str_module';
 $config['update_fields']=array('id','order','self_parent','uri',$config['module_field']);
 
 
+/*
+|--------------------------------------------------------------------------
+| Create new uri's for multilanguage sites
+|--------------------------------------------------------------------------
+|
+*/
+$config['multi_lang_uris']=TRUE;
+
+
+
+
 ?>

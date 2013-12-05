@@ -4,26 +4,32 @@
 	<url>
 		<loc>http://www.flexyadmin.com/start</loc>
 		<priority>1.00</priority>
-		<title>Start</title>
-		<content>Welkom! .</content>
+		<title>start</title>
+		<content>.</content>
 	</url>
 	<url>
 		<loc>http://www.flexyadmin.com/een_pagina</loc>
 		<priority>0.80</priority>
-		<title>Een pagina</title>
-		<content>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus in augue ac justo posuere luctus sodales vel justo. Integer blandit, quam id porttitor consequat, lorem libero bibendum ipsum, non auctor sem ipsum eu mauris. Vestibulum condimentum, lectus sed aliquam rutrum, est velit pellentesque mauris, sed mattis sapien ante vitae enim. Quisque cursus facilisis molestie. Sed rhoncus lacus ac nunc interdum in laoreet mi rhoncus. Suspendisse ultrices fringilla felis, in porta mi pretium ut. Nunc nisl nulla, varius in lobortis a, dictum a purus. Sed consequat felis ut erat lobortis hendrerit. Donec bibendum lorem lorem. Fusce suscipit sapien id lorem mollis vel placerat nunc congue. Aenean non nunc tortor. Curabitur rhoncus neque eget nulla adipiscing euismod..</content>
+		<title>een_pagina</title>
+		<content>.</content>
 	</url>
 	<url>
-		<loc>http://www.flexyadmin.com/een_pagina/subpagina_met_module_links</loc>
+		<loc>http://www.flexyadmin.com/een_pagina/subpagina</loc>
 		<priority>0.64</priority>
-		<title>Subpagina met module Links</title>
-		<content>Een subpagina.</content>
+		<title>subpagina</title>
+		<content>.</content>
 	</url>
 	<url>
-		<loc>http://www.flexyadmin.com/contact</loc>
+		<loc>http://www.flexyadmin.com/een_pagina/een_pagina__2</loc>
+		<priority>0.64</priority>
+		<title>een_pagina__2</title>
+		<content>.</content>
+	</url>
+	<url>
+		<loc>http://www.flexyadmin.com/adressen</loc>
 		<priority>0.80</priority>
-		<title>Contact</title>
-		<content>Hier een voorbeeld van een eenvoudig contactformulier..</content>
+		<title>adressen</title>
+		<content>.</content>
 	</url>
 </urlset>
 
