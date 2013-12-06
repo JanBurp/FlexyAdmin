@@ -1496,7 +1496,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
    */
 	public function get_field_where($table,$field,$where="",$what="",$like=FALSE) {
 		$sql="SELECT `$field` FROM `$table` ";
-		if (empty($where) or empty($what))
+		if ($where=='' or $what=='')
 			$sql.=" LIMIT 1";
 		else {
 			if ($like)
