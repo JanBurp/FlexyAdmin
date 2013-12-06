@@ -269,8 +269,8 @@ function reformXmlArrayKey($a,$rKey) {
  *
  * Voorbeeld:
  * 
- *    $array =  xml2array(file_get_contents('feed.xml'));
- *    $array =  xml2array(file_get_contents('feed.xml', 1, 'attribute'));
+ *     $array =  xml2array(file_get_contents('feed.xml'));
+ *     $array =  xml2array(file_get_contents('feed.xml', 1, 'attribute'));
  * 
  */
 function xml2array($contents, $get_attributes=true, $priority = 'tag') {

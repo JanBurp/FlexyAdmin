@@ -1197,18 +1197,18 @@ class Menu {
    * Als het 2e argument TRUE is zal de hele uri (met alle nivo's) teruggegeven worden.
    * Als er geen vorige uri bestaat zal het resultaat FALSE zijn.
    *
-   *    $menu->set_current('een_pagina');
-   *    echo $menu->get_prev_uri();
-   *    echo $menu->get_prev_uri('een_pagina/tweede_sub_pagina', TRUE);
-   *    echo $menu->get_prev_uri('links');
-   *    echo $menu->get_prev_uri('home');
+   *     $menu->set_current('een_pagina');
+   *     echo $menu->get_prev_uri();
+   *     echo $menu->get_prev_uri('een_pagina/tweede_sub_pagina', TRUE);
+   *     echo $menu->get_prev_uri('links');
+   *     echo $menu->get_prev_uri('home');
    *
    * Geeft als resultaat:
    *
-   *    home
-   *    een_pagina/eerste_sub_pagina
-   *    een_pagina
-   *    FALSE
+   *     home
+   *     een_pagina/eerste_sub_pagina
+   *     een_pagina
+   *     FALSE
    *
    * @param string $uri[''] 
    * @param bool $full[TRUE] als TRUE dan worden full_uri's meegegeven die het hele uri pad representeren

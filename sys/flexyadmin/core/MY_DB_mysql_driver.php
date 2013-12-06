@@ -1656,8 +1656,8 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
    * 
    * Je kunt ook een array meegeven (ipv TRUE) om een deel van de foreign data te selecteren, bijvoorbeeld:
    * 
-   *    // Neem alleen data mee uit de tabel *tbl_links* en daarvan alleen het veld *str_title*
-   *    $this->db->add_foreigns( array( 'tbl_links'=>array('str_title','txt_text AS txt_text') ) ); 
+   *     // Neem alleen data mee uit de tabel *tbl_links* en daarvan alleen het veld *str_title*
+   *     $this->db->add_foreigns( array( 'tbl_links'=>array('str_title','txt_text AS txt_text') ) ); 
    *
    * @param mixed $foreigns[TRUE]
    * @return object $this
@@ -1889,10 +1889,10 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
    * 
    * Je kunt ook een deel van de many-tabellen filteren:
    * 
-   *    $this->db->add_many( );   // Neemt van alle tabellen alle velden mee.
-   *    $this->db->add_many( array( 'rel_menu__links' ) );   // Neemt van de tabel *tbl_links* alle velden mee.
-   *    $this->db->add_many( array( 'rel_menu__links'=>array('uri','str_title') ) ); // Neemt van de tabel *tbl_links* de velden *uri* en *str_title* mee.
-   *    $this->db->add_many( array( 'rel_menu__links'=>array('uri','str_title') ) ); // Neemt van de tabel *tbl_links* de velden *uri* en *str_title* mee.
+   *     $this->db->add_many( );   // Neemt van alle tabellen alle velden mee.
+   *     $this->db->add_many( array( 'rel_menu__links' ) );   // Neemt van de tabel *tbl_links* alle velden mee.
+   *     $this->db->add_many( array( 'rel_menu__links'=>array('uri','str_title') ) ); // Neemt van de tabel *tbl_links* de velden *uri* en *str_title* mee.
+   *     $this->db->add_many( array( 'rel_menu__links'=>array('uri','str_title') ) ); // Neemt van de tabel *tbl_links* de velden *uri* en *str_title* mee.
    *
    * @param mixed $many[true]
    * @return object $this
