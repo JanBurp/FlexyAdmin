@@ -106,7 +106,7 @@ class Content {
    * 
    * Voorbeeld om alle links (nederlandstalige) te verwijzen naar de engelstalige pagina's: 
    * 
-   *    $this->content->replace_language_links( array('search'=>'nl','replace'=>'en') );
+   *     $this->content->replace_language_links( array('search'=>'nl','replace'=>'en') );
    *
    * @param array $replace[TRUE]
    * @return void
