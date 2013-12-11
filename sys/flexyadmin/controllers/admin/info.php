@@ -30,13 +30,14 @@ class Info extends AdminController {
 
 	function __construct() {
 		parent::__construct();
+    $this->load->model('svn');
 	}
 
 	function index() {
 		// last login info
 		$data["username"]=$this->session->userdata("user");
 		$data["language"]=$this->session->userdata('language');
-		$data["revision"]=$this->get_revision();
+		$data["revision"]=$this->svn->get_revision();
 		$this->_set_content($this->load->view("admin/info_".$data["language"],$data,true));
 		$this->_show_type("info");
 		$this->_show_all();
