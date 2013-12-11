@@ -28,6 +28,7 @@ class AdminController extends BasicController {
 
 	function __construct() {
 		parent::__construct(true);
+    $this->load->model('svn');
     
     // default js variables
     $this->js['site_url'] = rtrim(site_url(),'/').'/';
@@ -329,36 +330,9 @@ class AdminController extends BasicController {
 										"local"		=> $this->config->item('LOCAL'),
 										"site"		=> rtrim($siteInfo["url_url"],'/'),
 										"user"		=> ucwords($this->user_name),
-										"revision"=> $this->get_revision()
+										"revision"=> $this->svn->get_revision()
 									);
 		$this->load->view('admin/footer',$footer);
-	}
-
-	function get_revision() {
-		$rev="";
-		$svnfile="sys/.svn/entries";
-		$revfile="sys/build.txt";
-		if (file_exists($svnfile)) {
-			$svn = read_file($svnfile);
-			// trace_($svn);
-			$svn=explode("\n",$svn);
-			$matches=array_keys($svn,"jan");
-			$fileKey=$matches[count($matches)-1];
-			$fileKey=$matches[0];
-			// trace_($matches);
-			// trace_($fileKey);
-			$revKey=$fileKey-1;
-			$rev = $svn[$revKey];
-			// trace_($rev);
-			if (!empty($rev)) write_file($revfile, $rev);
-			// $this->db->set('str_revision',$rev);
-			// $this->db->update('cfg_configurations');
-		}
-		if (empty($rev) and file_exists($revfile)) {
-			$rev = read_file($revfile);
-		}
-		if (empty($rev)) $rev="#";
-		return $rev;
 	}
 
 	function _show_type($type) {

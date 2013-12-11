@@ -41,6 +41,7 @@ class Db extends AdminController {
 
 	function __construct() {
 		parent::__construct();
+    $this->load->model('svn');
 	}
 
 	function index() {
@@ -328,7 +329,7 @@ class Db extends AdminController {
 				$update=(int) $this->input->post('update');
 				if ($update) {
 					$sql='';
-					$latestRev=(int) $this->get_revision();
+					$latestRev=(int) $this->svn->get_revision();
 					$this->_add_content(h('Update from r'.$update.' to r'.$latestRev));
 					// load all update sql files
 					$updates=read_map('db','sql',FALSE,FALSE);
