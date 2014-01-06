@@ -1,3 +1,14 @@
+WARNING:
+Relative old sites (say 500 revisions less) could best be updated like this:
+- Install  a fresh FlexyAdmin site and start with a fresh demo database
+- Copy all the assets from the old site to the new install
+- Copy all the views,models,libraries and helpers from the old site to the new install. Update modules/plugins if they have newer versions
+- Import all you're tbl_ and rel_ tables from the old to the new site
+- Import the values from tbl_site and cfg_ tables. Make sure all the current fields are kept!
+- Test and adjust the new install as if it is a new site.
+
+For recent sites the update processes described below should work:
+
 UPDATE 2315
 ===========
 
