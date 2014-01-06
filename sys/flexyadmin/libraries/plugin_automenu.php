@@ -122,6 +122,8 @@ class Plugin_automenu extends Plugin {
   private function _only_change_data() {
     $id=$this->newData['id'];
     $changedFields=array_diff_multi($this->oldData,$this->newData);
+    // trace_($this->newData);
+    // trace_($changedFields);
     // set update fields
     $set=array();
     foreach ($changedFields as $field => $value) {
@@ -144,7 +146,10 @@ class Plugin_automenu extends Plugin {
             if (substr($branch['full_uri'],0,2)!=$lang) unset($branches[$key]);
           }
           if ($branches) {
+            reset($branches);
+            // trace_($branches);
             $branch=current($branches);
+            // trace_($branch);
             $langid=$branch['id'];
             $set['id'][$langid][$langfield]=$value;
           }
@@ -152,7 +157,7 @@ class Plugin_automenu extends Plugin {
       }
     }
 
-    // strace_($set);
+    // trace_($set);
 
     // Then all other fields
     foreach ($set as $id_field => $subset) {
@@ -164,7 +169,7 @@ class Plugin_automenu extends Plugin {
           $this->CI->db->set( $field, $value );
         }
         $this->CI->db->update('res_menu_result');
-        // strace_('#show# '.$this->CI->db->last_query());
+        // trace_('#show# '.$this->CI->db->last_query());
       }
     }
   }
