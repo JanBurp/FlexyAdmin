@@ -681,6 +681,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 
   /**
    * Zorgt ervoor dat alle uri velden in het resultaat volledige uri-paden zijn, dus ook met de uri velden van de parents ervoor.
+   * LET OP: de velden id, uir, order en self_parent dienen in het resultaat te zitten!
    *
    * @param bool $fullUri[TRUE]
    * @param string $extraFullField[''] Hier kun je meerdere velden meegeven die hetzelfde worden behandeld, bijvoorbeeld str_title
