@@ -78,7 +78,9 @@ function api_url() {
 	if (count($aParams)>0) {
 		foreach ($aParams as $p) $uri.="/$p";
 	}
-	return reduce_double_slashes(site_url($uri));
+  $url=reduce_double_slashes(site_url($uri));
+  $url=str_replace($CI->config->item('url_suffix'),'',$url);
+	return $url;
 }
 
 /**

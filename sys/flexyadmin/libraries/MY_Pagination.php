@@ -198,12 +198,15 @@ class MY_Pagination extends CI_Pagination {
    * @author Jan den Besten
    */
 	public function create_links() 	{
+  	$CI =& get_instance();
 		// auto pagination?
 		if ($this->auto) {
 			$this->_auto_set();
 		}
 		// go on with normal method
 		$output = parent::create_links();
+    $output = str_replace($CI->config->item('url_suffix'),'',$output);
+
 		// voorkom lege uri
 		$output=str_replace('/'.$this->auto_uripart.'/"','/'.$this->auto_uripart.'/0"',$output);
 		// extra info
