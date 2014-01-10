@@ -64,9 +64,10 @@ class Stats {
 				// standard PHP database connect
 				include(SITEPATH.'/config/database.php');
 				$db=$db[$active_group];
-				$con = mysql_connect($db['hostname'],$db['username'],$db['password']);
-				if (!$con) { die('Could not connect to database for stats: ' . mysql_error()); }
-				mysql_select_db($db['database'], $con);
+        $mysqli = new mysqli($db['hostname'], $db['username'], $db['password'], $db['database']);
+        if ($mysqli->connect_errno) {
+            echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+        }
 				$sql="INSERT INTO `$this->table` (";
 				$values='VALUES (';
 				foreach ($set as $key => $value) {
@@ -74,13 +75,7 @@ class Stats {
 					$values.="'$value',";
 				}
 				$sql=substr($sql,0,strlen($sql)-1).') '.substr($values,0,strlen($values)-1).')';
-				mysql_query($sql);
-				mysql_close($con);
-				// echo "<pre>";
-				// echo $sql;
-				// echo "\n";
-				// print_r($db);
-				// echo "</pre>";
+        $mysqli->query($sql);
 			}
 		}
 	}
