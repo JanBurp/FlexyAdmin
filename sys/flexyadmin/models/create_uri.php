@@ -110,9 +110,10 @@ class Create_uri extends CI_Model {
    */
   public function cleanup($uri) {
     $replaceSpace=$this->config->item('PLUGIN_URI_REPLACE_CHAR');
-		$uri=trim(strip_tags(strtolower($uri)),' -_');
-		$uri=str_replace(" ",$replaceSpace,$uri);
+    $uri=trim(strip_tags($uri),' -_');
+    $uri=str_replace(" ",$replaceSpace,$uri);
 		$uri=clean_string($uri);
+    $uri=strtolower($uri);
     return $uri;
   }
 

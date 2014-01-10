@@ -21,7 +21,7 @@ $isForm=has_string('form',$show_type);
 <html>
 <head>
 	<title>FlexyAdmin <?=$title?></title>
-	<meta http-equiv="content-type"	content="text/html;charset=utf-8" />
+	<meta http-equiv="Content-Type" content="text/html" charset="utf8" />
 	<meta http-equiv="Content-Style-Type" content="text/css" />
 	<base href="<?=base_url()?>" />
 	
