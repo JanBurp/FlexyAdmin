@@ -380,7 +380,7 @@ if ( ! function_exists('convert_accented_characters'))
 			return $str;
 		}
 
-		return preg_replace(array_keys($foreign_characters), array_values($foreign_characters), $str);
+    return preg_replace(array_keys($foreign_characters), array_values($foreign_characters), $str);
 	}
 }
 

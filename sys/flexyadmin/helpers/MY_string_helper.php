@@ -330,12 +330,12 @@ function replace_linefeeds($s,$r=' ') {
  * @author Jan den Besten
  */
 function clean_string($s,$c=0) {
-	$s=str_replace('&amp;','&',$s);
-	$s=str_replace('&','en',$s);
-	$s=convert_accented_characters($s);
-	$s=preg_replace("/[^A-Za-z0-9_-]/","",$s);
-	$s=preg_replace(array("/-+/","/ +/"),array('-',' '),$s);
-	if ($c>0) $s=substr($s,0,$c);
+  $s=str_replace('&amp;','&',$s);
+  $s=str_replace('&','en',$s);
+  $s=convert_accented_characters($s);
+  $s=preg_replace("/[^A-Za-z0-9_-]/","",$s);
+  $s=preg_replace(array("/-+/","/ +/"),array('-',' '),$s);
+  if ($c>0) $s=substr($s,0,$c);
 	return $s;
 }
 
