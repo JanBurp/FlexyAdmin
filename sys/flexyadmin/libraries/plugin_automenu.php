@@ -619,11 +619,16 @@ class Plugin_automenu extends Plugin {
         // Set language item
         if (isset($row['self_parent']) and isset($this->languages)) $row['str_lang']=$lang;
 
+        // Set table
+        $table='';
+        if (isset($row['str_table'])) $table=$row['str_table'];
+
   			foreach ($row as $field => $value) {
           // Create new uri's??
           if ($field=='uri' and isset($this->languages) and !in_array($value,$this->languages) and $this->config('multi_lang_uris') and isset($row['str_title_'.$lang])) {
             $uri=$value;
             $title=$row['str_title_'.$lang];
+            $this->CI->create_uri->set_table($table);
             $this->CI->create_uri->set_existing_class($this);
             $this->CI->create_uri->set_source_field('str_title_'.$lang);
             $value=$this->CI->create_uri->create($row);

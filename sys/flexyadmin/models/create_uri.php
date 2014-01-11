@@ -67,10 +67,11 @@ class Create_uri extends CI_Model {
  	 * Maak uri vanuit meegegeven data (rij uit een tabel, of string)
  	 *
  	 * @param array $data 
+ 	 * @param bool $overrule[FALSE] als TRUE dan wordt altijd een nieuwe uri gecreeerd
  	 * @return string
  	 * @author Jan den Besten
  	 */
-  public function create($data) {
+  public function create($data,$overrule=FALSE) {
     // init
     $this->data=$data;
     $this->fields=array_keys($data);
@@ -84,9 +85,11 @@ class Create_uri extends CI_Model {
  		else
  			$uri_source=$this->data['id'];
  		$createUri=true;
-    // if ($this->cfg->get('CFG_table',$this->table,'b_freeze_uris')) $createUri=false;
-    // if (isset($this->data['b_freeze_uri']) and $this->data['b_freeze_uri']) $createUri=false;
-    // if (empty($uri)) $createUri=true;
+
+    if ($this->cfg->get('CFG_table',$this->table,'b_freeze_uris')) $createUri=false;
+    if (isset($this->data['b_freeze_uri']) and $this->data['b_freeze_uri']) $createUri=false;
+    if (empty($uri)) $createUri=true;
+    if ($overrule) $createUri=true;
     
     // If needs to create an uri
  		if ($createUri) {
