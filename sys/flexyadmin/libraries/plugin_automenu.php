@@ -666,7 +666,10 @@ class Plugin_automenu extends Plugin {
   public function _is_existing_uri($uri,$data) {
     $existings=find_row_by_value($this->newMenu,$uri,'uri');
     if ($existings) {
+      // remove self
       unset($existings[$data['id']]);
+      // remove in other branches
+      $existings=find_row_by_value($existings,$data['self_parent'],'self_parent');
     }
     if (count($existings)==0) return FALSE;
     return $existings;
