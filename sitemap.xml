@@ -38,6 +38,12 @@
 		<content>Hier een voorbeeld van een eenvoudig contactformulier..</content>
 	</url>
 	<url>
+		<loc>http://www.flexyadmin.com/nl/dit_is_mijn_testpagina</loc>
+		<priority>0.64</priority>
+		<title>Dît is mijn téstpågina</title>
+		<content>.</content>
+	</url>
+	<url>
 		<loc>http://www.flexyadmin.com/en</loc>
 		<priority>0.80</priority>
 		<title>en</title>
@@ -71,6 +77,12 @@
 		<loc>http://www.flexyadmin.com/en/adresses</loc>
 		<priority>0.64</priority>
 		<title>Adresses</title>
+		<content>.</content>
+	</url>
+	<url>
+		<loc>http://www.flexyadmin.com/en/my_testing_page</loc>
+		<priority>0.64</priority>
+		<title>My Testing Page</title>
 		<content>.</content>
 	</url>
 </urlset>
