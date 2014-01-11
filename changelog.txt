@@ -78,12 +78,6 @@ BUGS:
 Changes 2289
 ============
 
-MYSQL:
-
-UPDATE:
-- update text
-- USERGUIDE: updated tinyMCE buttons link
-
 FRONTEND:
 - REMOVED all modules & plugins, these are now external .zips which can be installed
 - module forms has a new method: initialize() you can add a form on the fly with this (not needing the config file)
@@ -97,6 +91,7 @@ FRONTEND:
 
 USERGUIDE:
 - USERGUIDE: Meer uitleg over - plugin_refresh_media
+- USERGUIDE: updated tinyMCE buttons link
 
 NEW:
 - DB: add b_exist to res_media_files
@@ -117,7 +112,6 @@ OTHERS:
 - plugin_install_plugin, more robust, doesn't install on bad places
 - reset media is now safe
 - Show thumb of image in image edit form
-- 
 - Possible to hide media fields (from res_media_files) in FlexyAdmin with cfg_field_info.
 - CLEANUP: Removed all third party jquery plugins
 - CLEANUP: Moved all own jquery plugins to own map
@@ -131,69 +125,6 @@ OTHERS:
 - default value of cfg_auto_menu.b_active =  TRUE
 - mime-types (gpx)
 
-
-
->>>>>>> External Changes
-=======
-Changes 2289
-============
-
-MYSQL:
-
-UPDATE:
-- update text
-- USERGUIDE: updated tinyMCE buttons link
-
-FRONTEND:
-- REMOVED all modules & plugins, these are now external .zips which can be installed
-- module forms has a new method: initialize() you can add a form on the fly with this (not needing the config file)
-- module comments uses now forms without the forms config, but with the comments config
-- added files in some plugins/modules config for creating the plugin
-- ADDED: missing plugins/modules files
-- module choose_language, een eevoudige module om een taal te kiezen in een 2-talige site
-- login module, redirectting to current page can ben turned off (dont_redirect config)
-- module login, method register can show and store fields from other tables (Dirk Kokx)
-- module forms: forms dont' need to have a titel now (Dirk Kokx)
-
-USERGUIDE:
-- USERGUIDE: Meer uitleg over - plugin_refresh_media
-
-NEW:
-- DB: add b_exist to res_media_files
-- Plugins for creating & installing plugins: plugin_create_plugin & plugin_install_plugin
-- more help in samengestelde menu (Emanuel Nervo)
-- user->register always returns id of new user (except when user errors)
-
-BUGS:
-- BUG: show.grid -> form didn't use URI_HASH (so on some sites this page is not reachable)
-- BUG: Styling issue fullsize view
-- BUG: title did'n format well
-- BUG: Gmap didn't pass a debugger
-- BUG: forms showed double errors from formactions
-- BUG: when using index.php on some servers, site_url was not given good as js variable (backend)
-
-OTHERS:
-- reset media is now safe and set options for not showing system fields
-- plugin_install_plugin, more robust, doesn't install on bad places
-- reset media is now safe
-- Show thumb of image in image edit form
-- 
-- Possible to hide media fields (from res_media_files) in FlexyAdmin with cfg_field_info.
-- CLEANUP: Removed all third party jquery plugins
-- CLEANUP: Moved all own jquery plugins to own map
-- CLEANUP: Removed third party jquery plugins
-- DOC
-- removed plugin views
-- removed login views
-- plugin autolinks complete
-- cleaned up a bit
-- plugin_auto_menu fills the field 'res_menu_result.str_lang' with language code of that page (if the field exists)
-- default value of cfg_auto_menu.b_active =  TRUE
-- mime-types (gpx)
-
-
-
->>>>>>> External Changes
 Changes 2248
 ============
 
@@ -212,7 +143,6 @@ BUGS:
 
 Changes 2238
 ============
-
 
 NEW:
 - MY_array_helper: array_unshift_assoc() and array_push_assoc()
