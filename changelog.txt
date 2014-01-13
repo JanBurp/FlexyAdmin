@@ -1,3 +1,21 @@
+Changes 2330
+============
+
+UPDATE:
+- Make it work for PHP 5.5.3
+
+BUGS:
+- BUG: plugin_automenu didn't update (only field) res_menu_result with language split options
+- BUG: when using 'url_suffix' some admin links (pagination) gave problems
+- BUG: Freeze_uri's didn't work since multi language uri's. Now it does for normal and multilanguage sites
+- BUG: create_uri's: now convert_accented_characters() will work!!! (wrong order of strtolower()....)
+- BUG: MY_DB_mysql_driver->get_field_where() when empty what or where
+
+OTHERS:
+- CHANGED: checking same uri's is now restricted to same branch in plugin_automenu
+- CHANGED: svn is now a model, to get revision nr
+
+
 Changes 2315
 ============
 

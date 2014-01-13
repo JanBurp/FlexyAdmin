@@ -18,6 +18,16 @@ For recent sites the update processes described below should work:
 - check your version
 - perform all the steps from your version to the latest:
 
+
+UPDATE 2330
+===========
+
+- Replace current sys map with new sys map
+- If you don't wan't to change uri's, set b_freeze_uri in those tables.
+- Run ../admin/plugin/uri/... for alle tables with uri's
+- Refresh res_menu_result if it exists.
+
+
 UPDATE 2315
 ===========
 
