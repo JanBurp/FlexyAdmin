@@ -26,22 +26,16 @@
 		<content>Een subpagina.</content>
 	</url>
 	<url>
-		<loc>http://www.flexyadmin.com/nl/een_pagina/een_pagina__1</loc>
+		<loc>http://www.flexyadmin.com/nl/een_pagina/een_pagina</loc>
 		<priority>0.48</priority>
 		<title>Een Pagina</title>
 		<content>.</content>
 	</url>
 	<url>
-		<loc>http://www.flexyadmin.com/nl/adressen</loc>
+		<loc>http://www.flexyadmin.com/nl/test</loc>
 		<priority>0.64</priority>
-		<title>Adressen</title>
+		<title>TEST</title>
 		<content>Hier een voorbeeld van een eenvoudig contactformulier..</content>
-	</url>
-	<url>
-		<loc>http://www.flexyadmin.com/nl/dit_is_mijn_testpagina</loc>
-		<priority>0.64</priority>
-		<title>Dît is mijn téstpågina</title>
-		<content>.</content>
 	</url>
 	<url>
 		<loc>http://www.flexyadmin.com/en</loc>
@@ -68,21 +62,15 @@
 		<content>.</content>
 	</url>
 	<url>
-		<loc>http://www.flexyadmin.com/en/a_page/a_page__1</loc>
+		<loc>http://www.flexyadmin.com/en/a_page/a_page</loc>
 		<priority>0.48</priority>
 		<title>A Page</title>
 		<content>.</content>
 	</url>
 	<url>
-		<loc>http://www.flexyadmin.com/en/adresses</loc>
+		<loc>http://www.flexyadmin.com/en/testjes</loc>
 		<priority>0.64</priority>
-		<title>Adresses</title>
-		<content>.</content>
-	</url>
-	<url>
-		<loc>http://www.flexyadmin.com/en/my_testing_page</loc>
-		<priority>0.64</priority>
-		<title>My Testing Page</title>
+		<title>testjes</title>
 		<content>.</content>
 	</url>
 </urlset>

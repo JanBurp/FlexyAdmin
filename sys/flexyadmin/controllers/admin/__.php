@@ -35,7 +35,7 @@ class __ extends AdminController {
 	public function __construct() {
 		parent::__construct();
     $this->load->model('svn');
-    $this->revision=$this->get_revision();
+    $this->revision=$this->svn->get_revision();
 	}
 
 	public function index() {
@@ -656,7 +656,7 @@ class __ extends AdminController {
     }
     
     $this->_add_content('<h1>New Changelog - Added</h1>');
-    $changelog='Changes '.$this->get_revision()."\n============\n\n";
+    $changelog='Changes '.$this->svn->get_revision()."\n============\n\n";
     foreach ($newchangelog as $key => $value) {
       $changelog.=$key.":\n";
       foreach ($value as $entry) {
@@ -681,7 +681,8 @@ class __ extends AdminController {
    * @author Jan den Besten
    **/
   public function build() {
-    $revision=$this->get_revision()->svn->get_revision()$this->tags.'/FlexyAdmin_r'.$revision;
+    $revision=$this->svn->get_revision() + 1;
+    $tags=$this->tags.'/FlexyAdmin_r'.$revision;
     $this->_add_content('<h1>Build: r_'.$revision.'</h1>');
 
     // Copy alles behalve hidden files en files/mappen met __ (dat zijn build processen en autodoc bronbestanden)
@@ -693,7 +694,7 @@ class __ extends AdminController {
     rename($this->path.$tags.'/site/config/database_local_empty.php', $this->path.$tags.'/site/config/database_local.php');
 
     // - maak zip, geef dit de naam met revisie nr
-    $zip=$this->pa->svn->get_revision()/FlexyAdmin_r'.$revision.'.zip';
+    $zip=$this->path.$this->tags.'/FlexyAdmin_r'.$revision.'.zip';
     $this->_add_content('<p>Create:'.$zip.'</p>');
     $this->load->library('zip');
     $this->zip->read_dir($this->path.$tags.'/',FALSE); 
@@ -702,7 +703,6 @@ class __ extends AdminController {
     // Cleanup
     $this->_add_content('<p>Cleanup</p>');
     empty_map($this->path.$tags,TRUE,TRUE);
-    
     
     $this->_show_all();
   }
