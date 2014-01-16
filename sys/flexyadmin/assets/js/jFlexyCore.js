@@ -16,6 +16,8 @@ $(document).ready(function() {
 	isForm=$("#content").hasClass("form");
 	isGrid=($("#content").hasClass("grid")); // && !$('.grid').hasClass('res_menu_result'));
 	isGridAction=$(".grid").hasClass("actionGrid");
+  
+  
   // isTree=$("#content").hasClass("tree");
 	isFile=$("#content").hasClass("filemanager");
 	if (!isGrid && isFile)	{	isGrid=$("#content").hasClass("list"); }

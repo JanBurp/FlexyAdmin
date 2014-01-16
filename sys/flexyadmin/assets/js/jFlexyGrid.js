@@ -558,6 +558,7 @@ function doGrid() {
 
 	if (isGridAction) {
 		totalActions=$('.actionGrid td.id').html('<div class="icon no" /></div').length;
+    console.log('ACTIONS',totalActions);
 		actionNr=0;
 		$('.actionGrid thead table tr:first td:first').before('<td>&nbsp;</td>').after('<td id="actionCounter"></td>');
 		$('#actionCounter').html(actionNr/totalActions*100+' %');
@@ -569,14 +570,22 @@ function doGrid() {
 	function doAction(obj) {
 		$(obj).children('td.id:first').html('<div class="icon wait" /></div>');
 		uri=$(obj).children('td.uri').html();
+    console.log(uri);
 		if (uri!='') {
 			$.ajax({
 				type: "POST",
 				url: uri,
 				async:'false',
 				success: function(data){
-					if (data!="") {ajaxError(data);}
+					if (data!="" && data.indexOf('_message')<0) {
+            ajaxError(data);
+          }
 					else {
+            if (data.indexOf('_message')>=0) {
+              data=$.parseJSON(data);
+              console.log(data._message);
+              $(obj).children('td._message').text(data._message);
+            }
 						$(obj).children('td.id:first').html('<div class="icon yes" /></div');
 						$(obj).next('tr:first').each(function(){
 							actionNr++;
