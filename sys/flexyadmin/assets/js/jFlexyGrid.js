@@ -581,7 +581,7 @@ function doGrid() {
 					else {
             if (data.indexOf('_message')>=0) {
               data=$.parseJSON(data);
-              $(obj).children('td._message').text(data._message);
+              $(obj).children('td._message').html(data._message);
             }
 						$(obj).children('td.id:first').html('<div class="icon yes" /></div');
 						$(obj).next('tr:first').each(function(){
