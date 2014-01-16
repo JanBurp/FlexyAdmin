@@ -146,7 +146,7 @@ function trace_($a=NULL,$echo=true,$backtraceOffset=1) {
   	else {
   		$type="[".gettype($a)."]";
   	}
-    $out.="$show#$c$type:";
+    $out.="TRACE $show#$c$type:";
   	if (is_bool($a)) {
   		if ($a) $out.="'True'";
   		else		$out.="'False'";
