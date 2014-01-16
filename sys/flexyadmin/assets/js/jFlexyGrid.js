@@ -575,7 +575,7 @@ function doGrid() {
 				url: uri,
 				async:'false',
 				success: function(data){
-					if (data!="" && data.indexOf('_message')<0) {
+					if (data!="" && data.indexOf('TRACE')>=0) {
             ajaxError(data);
           }
 					else {
