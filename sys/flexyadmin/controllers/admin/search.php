@@ -2,9 +2,6 @@
 require_once(APPPATH."core/AdminController.php");
 
 /**
- * Special Controller Class
- *
- * This Controller shows a grid or form
  *
  * @package FlexyAdmin V1
  * @author Jan den Besten
@@ -112,29 +109,8 @@ class Search extends AdminController {
 						$type=get_prefix($field);
 					}
 				}
-				
-				// table options/value
-				// $tablesOptions=$this->ff->_dropdown_tables_form();
-				// $tablesOptions=$tablesOptions["options"];
-				// unset($tablesOptions[""]);
-				// if (!$tables) {
-				// 	$tables[]=$this->cfg->get('CFG_configurations','str_menu_table');
-				// }
-				// $tables=array_combine($tables,$tables);
-				// // types options/value
-				// $typesOptions=$this->config->item('FIELDS_prefix');
-				// $typesOptions=array_keys($typesOptions);
-				// sort($typesOptions);
-				// $typesOptions=array_combine($typesOptions,$typesOptions);
-				// unset($typesOptions['id']);
-				// unset($typesOptions['self']);
-				// unset($typesOptions['rel']);
-				// unset($typesOptions['b']);
-				// if (!$types) {
-				// 	$types=array('txt','stx');
-				// }
-				// $types=array_combine($types,$types);
-				// create form
+        ksort($fields);
+        
 				$data=array( 	"search"	=> array("label"=>lang('sr_search'),"value"=>$search),
 											"replace"	=> array("label"=>lang('sr_replace'),"value"=>$replace),
 											"regex"		=> array("label"=>lang('sr_regex'),"type"=>"checkbox","value"=>$regex),
