@@ -183,8 +183,7 @@ class Mediatable Extends CI_Model {
     foreach ($paths as $key=>$path) {
       $path=add_assets($path);
       $paths[$key]=$path;
-      $files=read_map($path,'',FALSE,TRUE,TRUE); // Get header info for jpg
-      // trace_($files);
+      $files=read_map($path,'',FALSE,TRUE,$this->db->field_exists('stx_meta',$this->table)); // Get header info for jpg
       foreach ($files as $file => $info) {
         if (is_visible_file($file)) {
           $info['b_exists']=true;
