@@ -42,6 +42,11 @@ class Db extends AdminController {
 	function __construct() {
 		parent::__construct();
     $this->load->model('svn');
+    $extra_export_types=$this->config->item('extra_export_types','plugin_db_export');
+    if ($extra_export_types) {
+      $this->types['-']=array();
+      $this->types=array_merge($this->types,$extra_export_types);
+    }
 	}
 
 	function index() {
@@ -150,6 +155,13 @@ class Db extends AdminController {
           if (substr($expression,0,1)=='-') {
             $table=substr($expression,1);
             unset($tables[$table]);
+          }
+          elseif (has_string('*',$expression)) {
+            $like=get_prefix($expression,'*');
+            $add=$this->db->list_tables();
+            $add=filter_by($add,$like);
+            $add=array_combine($add,$add);
+            $tables=array_merge($tables,$add);
           }
           else {
             $tables[$expression]=$expression;
