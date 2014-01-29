@@ -61,9 +61,4 @@ $lang['send_new_password']            = 'Send new password';
 $lang['user_send_password']           = 'User %s has a new password';
 $lang['new_password']                 = 'New password';
 
-// EDIT
-$lang['edit_submit']                  = 'Change';
-$lang['edit_changed']                 = "You're account is changed.";
-
-
 ?>
