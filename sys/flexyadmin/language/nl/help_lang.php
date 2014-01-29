@@ -61,8 +61,4 @@ $lang['send_new_password']            = 'Stuur nieuw wachtwoord';
 $lang['user_send_password']           = 'Gebruiker "<strong>%s</strong>" heeft een nieuw wachtwoord opgestuurd gekregen.';
 $lang['new_password']                 = 'Nieuw wachtwoord.';
 
-// EDIT
-$lang['edit_submit']                  = 'Pas aan';
-$lang['edit_changed']                 = 'Uw gegevens zijn aangepast';
-
 ?>
