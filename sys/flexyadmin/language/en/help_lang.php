@@ -42,6 +42,28 @@ $lang['fill_where']					= 'WHERE ...';
 $lang['fill_with']					= 'Fill with';
 $lang['fill_use_random']		= 'Random';
 
-
 $lang['bad_regex']					= 'Error in regular expression.';
+
+// ADMIN ACTIVATION
+$lang['inactive_users']					      = 'Inactive users';
+$lang['all_inactive_users']						= 'all inactive users.';
+$lang['deny']													= 'Deny';
+$lang['accept']												= 'Accept';
+
+$lang['user_removed']									= 'User %s is deleted and en deny email is send.';
+$lang['user_accepted']								= 'User %s is activated and an accept email is send.';
+$lang['user_accepted_send']						= 'User %s is activated and an email with login is send.';
+$lang['mail_denied_subject']					= 'Account registration denied.';
+$lang['mail_accepted_subject']				= 'Account registration accepted.';
+
+$lang['active_users']				          = 'Send new password to existing users';
+$lang['send_new_password']            = 'Send new password';
+$lang['user_send_password']           = 'User %s has a new password';
+$lang['new_password']                 = 'New password';
+
+// EDIT
+$lang['edit_submit']                  = 'Change';
+$lang['edit_changed']                 = "You're account is changed.";
+
+
 ?>

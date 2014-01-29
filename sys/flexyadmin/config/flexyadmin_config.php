@@ -394,7 +394,7 @@ $config["CFG_"]=array(
       'b_pagination'=>true,
 			"b_grid_add_many"=>'1',
 			"str_abstract_fields"=>'str_username',
-			"str_order_by"=>'id',
+			"str_order_by"=>'b_active,str_username',
 			),
 		"cfg_user_groups"=>array(
 			"order"=>'121',
@@ -854,6 +854,11 @@ $config['FIELDS_special'] = array(
 												"form"				=> "function_dropdown_plugin",
 												"validation"	=> "trim",
 											),
+  "actions"   => array(
+                    		"grid"				=> "function_actions",
+                    		"form"				=> "",
+                    		"validation"	=> "",
+                      ),
 	"order"			=> array(
 												"grid"				=> "function_order",
 												"form"				=> "hidden",

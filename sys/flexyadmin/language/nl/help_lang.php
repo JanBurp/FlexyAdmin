@@ -41,10 +41,28 @@ $lang['fill_where']					= 'WHERE ...';
 $lang['fill_with']					= 'Vullen met';
 $lang['fill_use_random']		= 'Random';
 
-
 $lang['bad_regex']					= 'Fout in reguliere expressie.';
 
 
+// ADMIN ACTIVATION
+$lang['inactive_users']               = 'Inactieve gebruikers';
+$lang['all_inactive_users']           = 'alle inactieve gebruikers';
+$lang['deny']													= 'Weiger';
+$lang['accept']												= 'Accepteer';
 
+$lang['user_removed']									= 'Gebruiker "<strong>%s</strong>" verwijderd en een afwijzings email gestuurd.';
+$lang['user_accepted']								= 'Gebruiker "<strong>%s</strong>" is geactiveerd en heeft een accepterings email gekregen.';
+$lang['user_accepted_send']						= 'Gebruiker "<strong>%s</strong>" is geactiveerd en heeft een email met inloggegevens gekregen.';
+$lang['mail_denied_subject']					= 'Account aanvraag afgewezen.';
+$lang['mail_accepted_subject']				= 'Account aanvraag geaccepteerd.';
+
+$lang['active_users']				          = 'Stuur nieuw wachtwoord naar bestaande gebruikers';
+$lang['send_new_password']            = 'Stuur nieuw wachtwoord';
+$lang['user_send_password']           = 'Gebruiker "<strong>%s</strong>" heeft een nieuw wachtwoord opgestuurd gekregen.';
+$lang['new_password']                 = 'Nieuw wachtwoord.';
+
+// EDIT
+$lang['edit_submit']                  = 'Pas aan';
+$lang['edit_changed']                 = 'Uw gegevens zijn aangepast';
 
 ?>

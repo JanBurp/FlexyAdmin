@@ -635,6 +635,15 @@ class Flexy_field extends CI_Model {
 		}
 		return $out;
 	}
+  
+  function _actions_grid() {
+		$out="";
+		$data=$this->data;
+    foreach ($data as $key => $value) {
+      $out.=anchor(api_uri('API_home',$value),lang($key),array('class' => 'button')).' ';
+    }
+		return $out;
+  }
 
 	function _join_form($options) {
 		$out=$this->_standard_form_field($options);

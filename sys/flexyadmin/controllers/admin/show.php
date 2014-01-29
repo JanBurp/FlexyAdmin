@@ -207,7 +207,7 @@ class Show extends AdminController {
 							return;
 						}
 						else 	{
-
+              $html='';
 							$grid=new grid();
 
 							if ($pagination) {
@@ -216,19 +216,37 @@ class Show extends AdminController {
 								$grid->set_pagination($pagination);
 							}
 
-							// if (empty($id) and !empty($data)) {
-							// 	$id=current($data);
-							// 	$id=$id['id'];
-							// }
-
-
 							/**
 							 * if data: first render data, then put data in grid and render as html
 							 */
+
 							if ($right<RIGHTS_EDIT) {
 								// remove order fields
 								foreach ($data as $id => $row) unset($data[$id]['order']);
 							}
+              
+              /**
+               * ADD ACTIONS for cfg_users
+               */
+              if ($table=='cfg_users') {
+                $inactive=0;
+                foreach ($data as $id => $row) {
+                  if ($right['id_user_group']<=$row['id_user_group']) {
+                    if ($row['b_active']) {
+                      $data[$id]['actions'] = array('send_new_password'=>'cfg_users/send_new_password/'.$id);
+                    }
+                    else {
+                      $inactive++;
+                      $data[$id]['actions'] = array('deny'=>'cfg_users/deny/'.$id,'accept'=>'cfg_users/accept/'.$id);
+                    }
+                  }
+                }
+                if ($inactive>0) {
+                  $html.=h(lang('inactive_users'));
+                  $html.=p() . anchor(api_uri('API_home','cfg_users/accept'),lang('accept'),array('class' => 'button')) .' | '. anchor(api_uri('API_home','cfg_users/deny'),lang('deny'),array('class' => 'button')) .' '. lang('all_inactive_users').' ('.$inactive.')'._p();
+                }
+              }
+              
 							$data=$this->ff->render_grid($table,$data,$right,$info);
               
 							if (empty($uiTable)) $uiTable=$this->ui->get($table);
@@ -264,7 +282,7 @@ class Show extends AdminController {
               }
 							
 							if (!empty($id)) $grid->set_current($id);
-							$html=$grid->view("html",$table,"grid");
+							$html.=$grid->view("html",$table,"grid");
 							$this->_set_content($html);
 						}
 					}
