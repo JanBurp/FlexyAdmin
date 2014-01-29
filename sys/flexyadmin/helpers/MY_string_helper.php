@@ -29,44 +29,6 @@ function count_string($string='',$start=0) {
 
 
 /**
- * Maak een Random String
- *
- * @param string type['alnum'] of random string.  Options: alnum, numeric, nozero, unique
- * @param integer number[8] of characters
- * @return string
- */
-if ( ! function_exists('random_string')) {	
-	function random_string($type = 'alnum', $len = 8)	{					
-		switch($type)		{
-			case 'alnum'	:
-			case 'alfa'		:
-			case 'numeric':
-			case 'nozero'	:
-					switch ($type)	{
-						case 'alnum'	:	$pool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';	break;
-						case 'alfa'		:	$pool = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';	break;
-						case 'numeric':	$pool = '0123456789';	break;
-						case 'nozero'	:	$pool = '123456789';	break;
-					}
-					$str = '';
-					for ($i=0; $i < $len; $i++)	{
-						$str .= substr($pool, mt_rand(0, strlen($pool) -1), 1);
-					}
-					return $str;
-			  break;
-			case 'unique' : 
-        $str='';
-        while (strlen($str)<$len) {
-          $str.=md5(uniqid(mt_rand()));
-        }
-        return substr($str,0,$len);
-			  break;
-		}
-	}
-}
-
-
-/**
  * Zoekt een karakter in een string
  *
  * @param string $in te zoeken karakter

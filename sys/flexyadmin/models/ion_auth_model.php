@@ -149,7 +149,7 @@ class Ion_auth_model extends CI_Model
 	 * @return void
 	 * @author Mathew
 	 **/
-	public function salt()
+	public function salt() 
 	{
 	    return substr(md5(uniqid(rand(), true)), 0, $this->salt_length);
 	}
@@ -374,8 +374,6 @@ class Ion_auth_model extends CI_Model
     return FALSE;
 	}
   
-  
-  
 
 	/**
 	 * Forgotten Password Complete
@@ -391,6 +389,20 @@ class Ion_auth_model extends CI_Model
     $this->db->where('str_forgotten_password_code', $code);
     if ($this->db->count_all_results($this->tables['users']) > 0) {
       $password = $this->salt();
+
+      // JDB, make sure password reflect rules: Wachtwoord' moet minimaal 8 karakters lang zijn met minimaal één hoofletter, één kleine letter en één cijfer
+      do {
+        $len=strlen($password);
+        $up=rand(0,$len);
+        $down=rand(0,$len);
+        $number=rand(0,$len);
+        $password=str_split($password);
+        $password[$up]=strtoupper(random_string('alpha', 1));
+        $password[$down]=strtolower(random_string('alpha',1));
+        $password[$number]=strtolower(random_string('numeric',1));
+        $password=implode($password);
+      } while (!preg_match("#.*^(?=.{8,20})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$#",$password,$match));
+      
       $data = array(
           'gpw_password'			=> $this->hash_password($password, $salt),
           'str_forgotten_password_code'   => '0',
