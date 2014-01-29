@@ -335,6 +335,7 @@ class Db extends AdminController {
             $sql.="\n".$usql;
           }
           $this->_sql($sql,'Updating...','updated');
+          $this->_add_content(form_textarea('output',$sql));
         }
 			}
 			else {
