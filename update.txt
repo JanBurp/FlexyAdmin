@@ -19,6 +19,16 @@ For recent sites the update processes described below should work:
 - perform all the steps from your version to the latest:
 
 
+UPDATE 2347
+===========
+
+- Replace current sys map with new sys map
+- Replace site/libraries/forms/php & site/views/forms.php
+- If you use the login module:
+  - install version 005
+  - remove site/libraries/plugin_login_activate (also from cfg_admin_menu). This is replaced with actions when showing cfg_users
+
+
 UPDATE 2330
 ===========
 
