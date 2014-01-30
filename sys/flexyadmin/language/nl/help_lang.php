@@ -49,12 +49,16 @@ $lang['inactive_users']               = 'Inactieve gebruikers';
 $lang['all_inactive_users']           = 'alle inactieve gebruikers';
 $lang['deny']													= 'Weiger';
 $lang['accept']												= 'Accepteer';
+$lang['new_users']                    = 'Nieuwe gebruikers (nog nooit ingelogd)';
+$lang['all_new_users']                = 'aan alle nieuwe gebruikers';
+$lang['invite']												= 'Stuur (nogmaals) login gegevens';
 
 $lang['user_removed']									= 'Gebruiker "<strong>%s</strong>" verwijderd en een afwijzings email gestuurd.';
 $lang['user_accepted']								= 'Gebruiker "<strong>%s</strong>" is geactiveerd en heeft een accepterings email gekregen.';
-$lang['user_accepted_send']						= 'Gebruiker "<strong>%s</strong>" is geactiveerd en heeft een email met inloggegevens gekregen.';
+$lang['send_invitation']   						= 'Gebruiker "<strong>%s</strong>" is geactiveerd en heeft een email met inloggegevens gekregen.';
 $lang['mail_denied_subject']					= 'Account aanvraag afgewezen.';
 $lang['mail_accepted_subject']				= 'Account aanvraag geaccepteerd.';
+$lang['mail_new_subject']				      = 'U krijgt inloggegevens.';
 
 $lang['active_users']				          = 'Stuur nieuw wachtwoord naar bestaande gebruikers';
 $lang['send_new_password']            = 'Stuur nieuw wachtwoord';

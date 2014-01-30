@@ -379,7 +379,6 @@ class User Extends Ion_auth {
 		$email = $user->email_email;
     $code=$this->CI->ion_auth_model->forgotten_password($email);
     $password=$this->CI->ion_auth_model->forgotten_password_complete($code);
-    // trace_(array('code'=>$code,'password'=>$password));
 		return $this->send_mail($id,'email_new_account',$subject,array('password'=>$password,'extra_email'=>$extra_email));
 	}
   

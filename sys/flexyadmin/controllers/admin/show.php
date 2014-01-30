@@ -230,6 +230,7 @@ class Show extends AdminController {
                */
               if ($table=='cfg_users') {
                 $inactive=0;
+                $unused=0;
                 foreach ($data as $id => $row) {
                   if ($right['id_user_group']<=$row['id_user_group']) {
                     if ($row['b_active']) {
@@ -239,11 +240,19 @@ class Show extends AdminController {
                       $inactive++;
                       $data[$id]['actions'] = array('deny'=>'cfg_users/deny/'.$id,'accept'=>'cfg_users/accept/'.$id);
                     }
+                    if ($row['last_login']=='') {
+                      $unused++;
+                      $data[$id]['actions']['invite'] = 'cfg_users/invite/'.$id;
+                    }
                   }
                 }
                 if ($inactive>0) {
                   $html.=h(lang('inactive_users'));
                   $html.=p() . anchor(api_uri('API_home','cfg_users/accept'),lang('accept'),array('class' => 'button')) .' | '. anchor(api_uri('API_home','cfg_users/deny'),lang('deny'),array('class' => 'button')) .' '. lang('all_inactive_users').' ('.$inactive.')'._p();
+                }
+                if ($unused>0) {
+                  $html.=h(lang('new_users'));
+                  $html.=p() . anchor(api_uri('API_home','cfg_users/send_invitation'),lang('invite'),array('class' => 'button')) .' '. lang('all_new_users').' ('.$unused.')'._p();
                 }
               }
               

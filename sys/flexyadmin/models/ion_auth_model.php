@@ -347,7 +347,7 @@ class Ion_auth_model extends CI_Model
     $this->db->where($this->user->_extra_where);
     $this->db->update($this->tables['users'], array('str_forgotten_password_code' => $key), array('email_email' => $email));
     // Changed by JdB
-    if ($this->db->affected_rows() == 1) return $key;
+    if ($this->db->affected_rows() >= 1) return $key;
     return FALSE;
 	}
   
