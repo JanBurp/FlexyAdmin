@@ -2,75 +2,51 @@
 
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" >
 	<url>
-		<loc>http://www.flexyadmin.com/nl</loc>
+		<loc>http://www.flexyadmin.com/start</loc>
 		<priority>1.00</priority>
-		<title>nl</title>
+		<title>start</title>
 		<content>.</content>
 	</url>
 	<url>
-		<loc>http://www.flexyadmin.com/nl/start</loc>
-		<priority>0.64</priority>
-		<title>Start</title>
-		<content>Welkom!.</content>
-	</url>
-	<url>
-		<loc>http://www.flexyadmin.com/nl/een_pagina</loc>
-		<priority>0.64</priority>
-		<title>Een pagina</title>
-		<content>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus in augue ac justo posuere luctus sodales vel justo. Integer blandit, quam id porttitor consequat, lorem libero bibendum ipsum, non auctor sem ipsum eu mauris. Vestibulum condimentum, lectus sed aliquam rutrum, est velit pellentesque mauris, sed mattis sapien ante vitae enim. Quisque cursus facilisis molestie. Sed rhoncus lacus ac nunc interdum in laoreet mi rhoncus. Suspendisse ultrices fringilla felis, in porta mi pretium ut. Nunc nisl nulla, varius in lobortis a, dictum a purus. Sed consequat felis ut erat lobortis hendrerit. Donec bibendum lorem lorem. Fusce suscipit sapien id lorem mollis vel placerat nunc congue. Aenean non nunc tortor. Curabitur rhoncus neque eget nulla adipiscing euismod..</content>
-	</url>
-	<url>
-		<loc>http://www.flexyadmin.com/nl/een_pagina/subpagina</loc>
-		<priority>0.48</priority>
-		<title>Subpagina</title>
-		<content>Een subpagina.</content>
-	</url>
-	<url>
-		<loc>http://www.flexyadmin.com/nl/een_pagina/een_pagina</loc>
-		<priority>0.48</priority>
-		<title>Een Pagina</title>
-		<content>.</content>
-	</url>
-	<url>
-		<loc>http://www.flexyadmin.com/nl/test</loc>
-		<priority>0.64</priority>
-		<title>TEST</title>
-		<content>Hier een voorbeeld van een eenvoudig contactformulier..</content>
-	</url>
-	<url>
-		<loc>http://www.flexyadmin.com/en</loc>
+		<loc>http://www.flexyadmin.com/een_pagina</loc>
 		<priority>0.80</priority>
-		<title>en</title>
+		<title>een_pagina</title>
 		<content>.</content>
 	</url>
 	<url>
-		<loc>http://www.flexyadmin.com/en/home</loc>
+		<loc>http://www.flexyadmin.com/een_pagina/subpagina</loc>
 		<priority>0.64</priority>
-		<title>Home</title>
+		<title>subpagina</title>
 		<content>.</content>
 	</url>
 	<url>
-		<loc>http://www.flexyadmin.com/en/a_page</loc>
+		<loc>http://www.flexyadmin.com/user</loc>
+		<priority>0.80</priority>
+		<title>user</title>
+		<content>.</content>
+	</url>
+	<url>
+		<loc>http://www.flexyadmin.com/user/login</loc>
 		<priority>0.64</priority>
-		<title>A Page</title>
+		<title>login</title>
 		<content>.</content>
 	</url>
 	<url>
-		<loc>http://www.flexyadmin.com/en/a_page/subpage</loc>
-		<priority>0.48</priority>
-		<title>Subpage</title>
-		<content>.</content>
-	</url>
-	<url>
-		<loc>http://www.flexyadmin.com/en/a_page/a_page</loc>
-		<priority>0.48</priority>
-		<title>A Page</title>
-		<content>.</content>
-	</url>
-	<url>
-		<loc>http://www.flexyadmin.com/en/testjes</loc>
+		<loc>http://www.flexyadmin.com/user/register</loc>
 		<priority>0.64</priority>
-		<title>testjes</title>
+		<title>Register</title>
+		<content>.</content>
+	</url>
+	<url>
+		<loc>http://www.flexyadmin.com/user/password</loc>
+		<priority>0.64</priority>
+		<title>Password</title>
+		<content>.</content>
+	</url>
+	<url>
+		<loc>http://www.flexyadmin.com/user/loguit</loc>
+		<priority>0.64</priority>
+		<title>loguit</title>
 		<content>.</content>
 	</url>
 </urlset>
