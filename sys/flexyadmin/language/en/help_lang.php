@@ -5,7 +5,7 @@ $lang['file']								= "File";
 $lang['help_no_help']				= 'Sorry, no help found. Please contact your webmaster.';
 
 
-$lang['grid_new'] 					= '<p>Add new item to %s.</p>';
+$lang['grid_new'] 					= '<p>Add new item to "%s".</p>';
 $lang['grid_filter'] 				= '<p>Fast search</p>';
 $lang['grid_edit']					= '<p>Edit</p>';
 $lang['grid_delete']				= '<p>Delete this item</p>';
@@ -49,16 +49,20 @@ $lang['inactive_users']					      = 'Inactive users';
 $lang['all_inactive_users']						= 'all inactive users.';
 $lang['deny']													= 'Deny';
 $lang['accept']												= 'Accept';
+$lang['new_users']                    = 'New users (never logged in)';
+$lang['all_new_users']                = 'to all new users';
+$lang['invite']												= 'Send login (again)';
 
-$lang['user_removed']									= 'User %s is deleted and en deny email is send.';
-$lang['user_accepted']								= 'User %s is activated and an accept email is send.';
-$lang['user_accepted_send']						= 'User %s is activated and an email with login is send.';
+$lang['user_removed']									= 'User "%s" is deleted and en deny email is send.';
+$lang['user_accepted']								= 'User "%s" is activated and an accept email is send.';
+$lang['send_invitation']   						= 'User "%s" is activated and has an email with login.';
+$lang['user_accepted_send']						= 'User "%s" is activated and an email with login is send.';
 $lang['mail_denied_subject']					= 'Account registration denied.';
 $lang['mail_accepted_subject']				= 'Account registration accepted.';
 
 $lang['active_users']				          = 'Send new password to existing users';
 $lang['send_new_password']            = 'Send new password';
-$lang['user_send_password']           = 'User %s has a new password';
+$lang['user_send_password']           = 'User "%s" has a new password';
 $lang['new_password']                 = 'New password';
 
 ?>
