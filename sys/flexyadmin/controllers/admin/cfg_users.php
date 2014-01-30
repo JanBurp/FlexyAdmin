@@ -18,7 +18,10 @@ class cfg_users extends AdminController {
 		parent::__construct();
     $this->load->language('help');
     $this->config->load('login');
-		$this->config->set_item('email_templates','login/'.$this->language.'/','ion_auth');
+    if (file_exists(SITEPATH.'views/login'))
+      $this->config->set_item('email_templates','login/'.$this->language.'/','ion_auth');
+    else
+      $this->config->set_item('email_templates','cfg_users/'.$this->language.'/','ion_auth');
 	}
 	
   /**
