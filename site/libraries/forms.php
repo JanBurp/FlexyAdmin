@@ -240,7 +240,7 @@ class Forms extends Module {
       if ($this->settings('validation_place','form')=='field')
         $form->show_validation_errors(true);
       else {
-        $error=validation_errors('<p class="error">', '</p>');
+        $error=$form->validation_errors($this->form_id,'<p class="error">', '</p>');
         if (!empty($error)) {
           if ($this->settings('validation_place','form')=='form')
             $errors.=$error;

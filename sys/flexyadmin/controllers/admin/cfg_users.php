@@ -46,16 +46,16 @@ class cfg_users extends AdminController {
 	}
 
   /**
-   * Accepteer gebruiker(s) en stuur de inlog
+   * Stuur een uitnodiging (eerste mail)
    *
    * @param string $user_id 
    * @return void
    * @author Jan den Besten
    * @ignore
    */
-  // public function accept_user_and_send($user_id) {
-  //     return $this->_do_action('accept_and_send',$user_id);
-  // }
+  public function invite($user_id) {
+      return $this->_do_action('invite',$user_id);
+  }
 
 
   /**
@@ -92,22 +92,18 @@ class cfg_users extends AdminController {
       			$this->user->send_accepted_mail($user_id,lang('mail_accepted_subject'),$extra_emails);
       			$this->user->activate_user($user_id);
             break;
-          // case 'accept_and_send':
-          //   $message='user_accepted_send';
-          //   $this->user->send_new_account_mail($user_id,lang('mail_accepted_subject'),$extra_emails);
-          //   $this->user->activate_user($user_id);
-          //   break;
+          case 'invite':
+            $message='send_invitation';
+            $this->user->send_new_account_mail($user_id,lang('mail_new_subject'),$extra_emails);
+            $this->user->activate_user($user_id);
+            break;
           case 'send_new_password':
             $message='user_send_password';
             $code=$this->ion_auth_model->forgotten_password_by_id($user_id);
             $this->user->forgotten_password_complete($code,lang('new_password'),$extra_emails);
             break;
-          
-          default:
-            # code...
-            break;
         }
-        $this->message->add(langp($message,$user->str_username.'('.$user->email_email.','.$extra_emails.')'));
+        if (isset($message)) $this->message->add(langp($message,$user->str_username.'('.$user->email_email.','.$extra_emails.')'));
       }
 		}
     redirect(api_uri('API_view_grid','cfg_users'));
