@@ -1,3 +1,21 @@
+Changes 2347
+============
+
+FRONTEND:
+- BUG: libraries/forms/php & views/forms.php
+
+NEW:
+- NEW: cfg_users has now options to actions for users (new password, activation etc)
+- NEW: actiongrid model
+
+BUGS:
+- BUG: ordering of grid, test if field exists
+- BUG: mediatable tries loading exifdate if not needed
+- BUG: forms didn't work well with flexy_forms
+- BUG: MY_directory_helper count_files()
+- BUG: ordering with more fieds gives a bug when a spaces is between comma and fieldname
+
+
 Changes 2330
 ============
 
