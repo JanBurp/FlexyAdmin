@@ -53,16 +53,16 @@ $lang['new_users']                    = 'Nieuwe gebruikers (nog nooit ingelogd)'
 $lang['all_new_users']                = 'aan alle nieuwe gebruikers';
 $lang['invite']												= 'Stuur (nogmaals) login gegevens';
 
-$lang['user_removed']									= 'Gebruiker "<strong>%s</strong>" verwijderd en een afwijzings email gestuurd.';
-$lang['user_accepted']								= 'Gebruiker "<strong>%s</strong>" is geactiveerd en heeft een accepterings email gekregen.';
-$lang['send_invitation']   						= 'Gebruiker "<strong>%s</strong>" is geactiveerd en heeft een email met inloggegevens gekregen.';
+$lang['user_removed']									= 'Gebruiker "%s" verwijderd en een afwijzings email gestuurd.';
+$lang['user_accepted']								= 'Gebruiker "%s" is geactiveerd en heeft een accepterings email gekregen.';
+$lang['send_invitation']   						= 'Gebruiker "%s" is geactiveerd en heeft een email met inloggegevens gekregen.';
 $lang['mail_denied_subject']					= 'Account aanvraag afgewezen.';
 $lang['mail_accepted_subject']				= 'Account aanvraag geaccepteerd.';
 $lang['mail_new_subject']				      = 'U krijgt inloggegevens.';
 
 $lang['active_users']				          = 'Stuur nieuw wachtwoord naar bestaande gebruikers';
 $lang['send_new_password']            = 'Stuur nieuw wachtwoord';
-$lang['user_send_password']           = 'Gebruiker "<strong>%s</strong>" heeft een nieuw wachtwoord opgestuurd gekregen.';
+$lang['user_send_password']           = 'Gebruiker "%s" heeft een nieuw wachtwoord opgestuurd gekregen.';
 $lang['new_password']                 = 'Nieuw wachtwoord.';
 
 ?>
