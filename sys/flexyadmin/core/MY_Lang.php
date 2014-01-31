@@ -190,8 +190,8 @@ class MY_Lang extends CI_Lang {
     }
 
 		// Because killer robots like unicorns!
-		if ($value===FALSE and $logging)
-		{
+		if ($value===FALSE and $logging) {
+      $value='['.$line.']';
 			log_message('error', 'Could not find the language line "'.$line.'"');
 		}
 
