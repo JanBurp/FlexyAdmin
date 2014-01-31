@@ -547,6 +547,11 @@ $config["CFG_"]=array(
 			'str_fieldset'=>'More'
  			),
       
+    'cfg_lang.key'=>array(
+			"field"=>'cfg_media_info.str_order',
+			"str_validation_rules"=>'required|is_unique[cfg_lang.key]'
+    ),
+      
     'res_media_files.b_exists' => array(
       'b_show_in_grid' => false,
       'b_show_in_form' => false
