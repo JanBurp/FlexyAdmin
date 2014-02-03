@@ -53,6 +53,7 @@ $config['IGNORE_MIME']						= FALSE;
 
 $config['FORM_NICE_DROPDOWNS']		= TRUE;
 $config['MULTIPLE_UPLOAD']		    = FALSE;
+$config['PAGINATION']              = FALSE;
 
 
 
