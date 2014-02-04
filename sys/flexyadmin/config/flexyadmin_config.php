@@ -73,13 +73,12 @@ $config['FORBIDDEN_URIS']           = array("site","sys","admin","rss","file",'o
   
 /*
 |--------------------------------------------------------------------------
-| Custom form validation rules (found in MY_Controller)
+| Custom form validation rules (in MY_Form_validation)
 |--------------------------------------------------------------------------
 |
 */
 
 $config['CUSTOM_VALIDATION_RULES']            = 'valid_rgb|valid_google_analytics|valid_password|valid_regex|valid_model_method';
-$config['CUSTOM_VALIDATION_RULES_CALLBACKS']  = 'callback_valid_rgb|callback_valid_google_analytics|callback_valid_password|callback_valid_regex[]|callback_valid_model_method[]';
 
 
 /*
@@ -200,7 +199,7 @@ $config['LOG_login']									= "login";
 $config['LOG_stats']									= "stats";
 
 
-$config['FILE_types_forbidden']				= array('php','php3','php4','phtml','pl','py','jsp','asp','htm','html','shtml','sh','cgi','js','exe','dmg','app');
+$config['FILE_types_forbidden']				= array('php','php3','php4','phtml','pl','py','jsp','asp','shtml','sh','cgi','js','exe','dmg','app');
 $config['FILE_types_img']							= array('jpg','jpeg','gif','png','tiff','cur');
 $config['FILE_types_mp3']							= array('mp3','wav','wma','aiff','ogg');
 $config['FILE_types_flash']						= array('swf','flv');
@@ -511,7 +510,7 @@ $config["CFG_"]=array(
 
 		"cfg_field_info.str_validation_rules"=>array(
 			'str_fieldset'=>'Validation',
-			"str_options"=>'|required|matches|min_length[]|max_length[]|exact_length[]|greater_than[]|less_than[]|alpha|alpha_numeric|alpha_dash|numeric|integer|decimal|is_natural|is_natural_no_zero|valid_email|valid_emails|valid_ip|valid_base64|prep_url|'.$config['CUSTOM_VALIDATION_RULES_CALLBACKS'],
+			"str_options"=>'|required|matches|min_length[]|max_length[]|exact_length[]|greater_than[]|less_than[]|alpha|alpha_numeric|alpha_dash|numeric|integer|decimal|is_natural|is_natural_no_zero|valid_email|valid_emails|valid_ip|valid_base64|prep_url|'.$config['CUSTOM_VALIDATION_RULES'],
 			"b_multi_options"=>'1',
  			),
 		"cfg_field_info.str_validation_parameters"=>array(
@@ -550,7 +549,7 @@ $config["CFG_"]=array(
       
     'cfg_lang.key'=>array(
 			"field"=>'cfg_media_info.str_order',
-			"str_validation_rules"=>'required|is_unique[cfg_lang.key]'
+			"str_validation_rules"=>'required|is_unique[cfg_lang.key.id]'
     ),
       
     'res_media_files.b_exists' => array(
@@ -677,17 +676,17 @@ $config["CFG_"]=array(
 			"field"=>'cfg_users.str_username',
 			"b_show_in_grid"=>'1',
 			"b_show_in_form"=>'1',
-			"str_validation_rules"=>'required|min_length[4]'
+			"str_validation_rules"=>'required|min_length[4]|alpha_dash|is_unique[cfg_users.str_username]'
  			),
 		"cfg_users.gpw_password"=>array(
 			"field"=>'cfg_users.gpw_password',
 			"b_show_in_grid"=>'0',
 			"b_show_in_form"=>'1',
-			"str_validation_rules"=>'required|callback_valid_password'
+			"str_validation_rules"=>'required|valid_password'
  			),
     "cfg_users.email_email"=>array(
       "field"=>'cfg_users.email_email',
-      "str_validation_rules"=>'valid_email|is_unique[cfg_users.email_email]'
+      "str_validation_rules"=>'valid_email|is_unique[cfg_users.email_email.id]'
     ),
 		"cfg_users.ip_address"=>array(
 			"field"=>'cfg_users.ip_address',
@@ -1051,12 +1050,14 @@ $config['FIELDS_prefix'] = array (
 	"ip"				=> array (
 											"grid"				=> "%s",
 											"form"				=> "",
-											"validation"	=> "trim|callback_valid_ip"
+											"validation"	=> "trim| 
+valid_ip"
 											),
 	"rgb"				=> array (
 											"grid"				=> "<div class=\"rgb\" style=\"background-color:%s;\" title=\"%s\"><span class=\"hide\">%s</span></div>",
 											"form"				=> "",
-											"validation"	=> "trim|callback_valid_rgb"
+											"validation"	=> "trim| 
+valid_rgb"
 											),
 	"b"					=> array (
 											"grid"				=> "function_boolean",
