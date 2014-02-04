@@ -676,7 +676,7 @@ $config["CFG_"]=array(
 			"field"=>'cfg_users.str_username',
 			"b_show_in_grid"=>'1',
 			"b_show_in_form"=>'1',
-			"str_validation_rules"=>'required|min_length[4]|alpha_dash|is_unique[cfg_users.str_username]'
+			"str_validation_rules"=>'required|min_length[4]|alpha_dash|is_unique[cfg_users.str_username.id]'
  			),
 		"cfg_users.gpw_password"=>array(
 			"field"=>'cfg_users.gpw_password',
