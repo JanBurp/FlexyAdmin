@@ -554,7 +554,7 @@ class Form {
 			if ($field['type']=='captcha') {
 			  $hasCaptcha=$name; 
   			$code=str_reverse($this->CI->input->post($hasCaptcha.'__captcha'));
-        $field['validation']='required|callback_valid_same['.$code.']';
+        $field['validation']='required|valid_same['.$code.']';
 			}
 
 			$this->CI->form_validation->set_rules($field["name"], $field["label"], $field["validation"]);
