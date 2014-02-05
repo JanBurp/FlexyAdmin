@@ -4,50 +4,26 @@
 	<url>
 		<loc>http://www.flexyadmin.com/start</loc>
 		<priority>1.00</priority>
-		<title>start</title>
-		<content>.</content>
+		<title>Start</title>
+		<content>Welkom! .</content>
 	</url>
 	<url>
 		<loc>http://www.flexyadmin.com/een_pagina</loc>
 		<priority>0.80</priority>
-		<title>een_pagina</title>
-		<content>.</content>
+		<title>Een pagina</title>
+		<content>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus in augue ac justo posuere luctus sodales vel justo. Integer blandit, quam id porttitor consequat, lorem libero bibendum ipsum, non auctor sem ipsum eu mauris. Vestibulum condimentum, lectus sed aliquam rutrum, est velit pellentesque mauris, sed mattis sapien ante vitae enim. Quisque cursus facilisis molestie. Sed rhoncus lacus ac nunc interdum in laoreet mi rhoncus. Suspendisse ultrices fringilla felis, in porta mi pretium ut. Nunc nisl nulla, varius in lobortis a, dictum a purus. Sed consequat felis ut erat lobortis hendrerit. Donec bibendum lorem lorem. Fusce suscipit sapien id lorem mollis vel placerat nunc congue. Aenean non nunc tortor. Curabitur rhoncus neque eget nulla adipiscing euismod..</content>
 	</url>
 	<url>
-		<loc>http://www.flexyadmin.com/een_pagina/subpagina</loc>
+		<loc>http://www.flexyadmin.com/een_pagina/subpagina_met_module_links</loc>
 		<priority>0.64</priority>
-		<title>subpagina</title>
-		<content>.</content>
+		<title>Subpagina met module Links</title>
+		<content>Een subpagina.</content>
 	</url>
 	<url>
-		<loc>http://www.flexyadmin.com/user</loc>
+		<loc>http://www.flexyadmin.com/contact</loc>
 		<priority>0.80</priority>
-		<title>user</title>
-		<content>.</content>
-	</url>
-	<url>
-		<loc>http://www.flexyadmin.com/user/login</loc>
-		<priority>0.64</priority>
-		<title>login</title>
-		<content>.</content>
-	</url>
-	<url>
-		<loc>http://www.flexyadmin.com/user/register</loc>
-		<priority>0.64</priority>
-		<title>Register</title>
-		<content>.</content>
-	</url>
-	<url>
-		<loc>http://www.flexyadmin.com/user/password</loc>
-		<priority>0.64</priority>
-		<title>Password</title>
-		<content>.</content>
-	</url>
-	<url>
-		<loc>http://www.flexyadmin.com/user/loguit</loc>
-		<priority>0.64</priority>
-		<title>loguit</title>
-		<content>.</content>
+		<title>Contact</title>
+		<content>Hier een voorbeeld van een eenvoudig contactformulier..</content>
 	</url>
 </urlset>
 
