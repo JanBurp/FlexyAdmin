@@ -1,3 +1,20 @@
+Changes 2359
+============
+
+MYSQL:
+- new demo database
+- update_r2354.sql
+
+UPDATE:
+- UPDATE: jQuery 1.11.0
+
+CHANGED:
+- CHANGED: Moved validation rules from controller to MY_Form_validation
+- CHANGED: vaidation rule is_unique() so that it works on updates too, for checking not on own row example [cgf_users.str_username.id] where .id is the unique field for testing the row. It must be present in $_POST
+- CHANGED: lang: if language key doesn't exist:  [key] is returned instead of FALSE
+- CHANGED: standard PAGINATION for admin can be set in flexyadmin_config 'PAGINATION' TRUE/FALSE default is FALSE
+
+
 Changes 2348
 ============
 
