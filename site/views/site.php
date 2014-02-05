@@ -66,7 +66,7 @@
 	</div>
 
 <!-- Hier alle JavaScript -->
-<script language="javascript" type="text/javascript" src="sys/jquery/jquery-1.10.2.min.js"></script>
+<script language="javascript" type="text/javascript" src="sys/jquery/jquery-1.11.0.min.js"></script>
 <script language="javascript" type="text/javascript" src="<?=$assets?>js/site.js"></script>
 <!-- Eind van JavaScript -->
 
