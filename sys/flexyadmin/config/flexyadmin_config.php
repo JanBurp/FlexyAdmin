@@ -26,6 +26,8 @@
  * @version			V1 0.1
 **/
 
+$config['PROFILER']               = FALSE;
+
 $config['PHP_version']						= substr(phpversion(),0,1);
 $config['LOCAL']									= IS_LOCALHOST;
 $config['IS_AJAX']								= IS_AJAX;
