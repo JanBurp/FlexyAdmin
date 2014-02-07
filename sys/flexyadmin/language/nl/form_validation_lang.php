@@ -27,6 +27,7 @@ $lang['less_than']				= "'%s' moet kleiner zijn dan %s.";
 $lang['greater_than']			= "'%s' moet groter zijn dan %s.";
 
 $lang['valid_rgb']				       = "Geen juiste kleurcode in '%s'";
+$lang['valid_date']              = "'%s' moet een datum bevatten in dit formaat dd-mm-yyyy";
 $lang['valid_google_analytics']	 = "'%s' bevat geen juiste code voor Google Analytics";
 $lang['valid_same']	             = "'%s' is niet juist.";
 $lang['valid_password']	         = "'%s' moet minimaal 8 karakters lang zijn met minimaal één hoofletter, één kleine letter en één cijfer.";

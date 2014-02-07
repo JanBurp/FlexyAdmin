@@ -57,6 +57,31 @@ class MY_Form_validation extends CI_Form_validation {
   	}
   }
  
+ 
+  /**
+    * Check if given date is valid dd-mm-yyyy
+    *
+    * Excepts dashes, spaces, forward slashes and dots as seperators.
+    * Leadings zeroes for days and months are optional.
+    * Excepts a format parameter, turning this method into a prepper.
+    * Use standard php date formats (ie. Y-m-d) for this.
+    *
+    * @param    string
+    * @param    string
+    * @return    bool / obj
+    */
+  function valid_date($str, $format=FALSE) {
+    $pattern = '/^(?<day>0?[1-9]|[12][0-9]|3[01])[- \/.](?<month>0?[1-9]|1[012])[- \/.](?<year>(19|20)[0-9]{2})$/';
+    if( preg_match($pattern, $str, $match) && checkdate($match['month'], $match['day'], $match['year']) ) {
+      if ( $format ) {
+        // prep date
+        return date($format, mktime(0, 0, 0, $match['month'], $match['day'], $match['year']));
+      }
+      return TRUE;
+    }
+    return FALSE;        
+  }  
+  
  /**
   * Form validation rule voor str_google_analytics. Controleert of een goede code, en als het een javascript is, haal de code eruit.
   *
@@ -155,7 +180,6 @@ class MY_Form_validation extends CI_Form_validation {
    }
    return $result;
  }
-  
   
 }
 // END MY Form Validation Class
