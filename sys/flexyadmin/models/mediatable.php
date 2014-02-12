@@ -103,10 +103,12 @@ class Mediatable Extends CI_Model {
       'file'      => $info['name'],
       'path'      => remove_assets(remove_suffix($info['path'],'/')),
       'str_type'  => $info['type'],
-      'dat_date'  => str_replace(' ','-',$info['rawdate']),
       'int_size'  => $info['size'],
       'str_title' => $info['alt']
     );
+    if (isset($info['rawdate'])) {
+      $set['dat_date'] = str_replace(' ','-',$info['rawdate']);
+    }
     if (isset($info['b_exists'])) {
       $set['b_exists']   = $info['b_exists'];
     }
