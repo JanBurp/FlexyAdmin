@@ -421,7 +421,12 @@ $config["CFG_"]=array(
 			"b_grid_add_many"=>'0',
 			"str_abstract_fields"=>'',
 			"str_order_by"=>'',
-			)
+			),
+        
+    "res_menu_result"=>array(
+      'table'=>'res_menu_result',
+      'b_pagination'=>0
+    )
 		
 	),
 

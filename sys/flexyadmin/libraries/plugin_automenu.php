@@ -22,6 +22,8 @@ class Plugin_automenu extends Plugin {
 	var $lastId;
 	var $parentIDs;
 	var $languages;
+  
+  var $root_order = 0;
 	
 	var $automationData;
 
@@ -246,12 +248,13 @@ class Plugin_automenu extends Plugin {
 
 				
     				case 'from menu table':
-    					$data=$this->_get_current_data($autoValue['table']);
+              $data=$this->_get_current_data($autoValue['table']);
     					foreach ($data as $item) {
     						$item['str_table']=$autoValue['table'];
     						$item['str_uri']=$item['uri'];
     						$item['int_id']=$item['id'];
-    						$this->_insertItem($item);
+                if ($item['self_parent']==0) $item['order']=$this->root_order++;
+    						$this->_insertItem($item,$item['id']);
     					}
     					$this->_moveChildren();
     					break;
@@ -575,7 +578,6 @@ class Plugin_automenu extends Plugin {
     			}
           
         }
-
 			
   		}
 
