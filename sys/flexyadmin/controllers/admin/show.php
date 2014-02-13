@@ -127,7 +127,7 @@ class Show extends AdminController {
 						$hasField['user']=$this->db->field_exists('user',$table);
 
 						$pagination=$this->cfg->get("CFG_table",$table,'b_pagination');
-            if ($pagination===FALSE) $pagination=$this->config->item('PAGINATION');
+            if ($pagination===NULL) $pagination=$this->config->item('PAGINATION');
 						if ($pagination) $pagination=$this->cfg->get('cfg_configurations','int_pagination');
 						
 						// How to order?
