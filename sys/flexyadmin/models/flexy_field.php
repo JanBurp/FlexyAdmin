@@ -767,6 +767,8 @@ class Flexy_field extends CI_Model {
       $options[$value]=$value;
       unset($options[$key]);
     }
+    ksort($options);
+    
 		$out=$this->_standard_form_field($options);
 		$out["type"]="dropdown";
 		unset($out["button"]);
