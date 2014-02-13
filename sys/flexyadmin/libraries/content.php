@@ -159,6 +159,7 @@ class Content {
     $url=$match[2];
     $target='_self';
     if (substr($url,0,4)=='http') $target='_blank';
+    if (substr($url,0,4)=='file') $target='';
     if (substr($url,0,4)=='mail') $target='';
     $res.='href="'.$url.'"';
     if (isset($match[3])) $res.=preg_replace("/target=\"(.*)?\"/uiUsm", "", $match[3]);
