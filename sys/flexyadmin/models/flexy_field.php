@@ -217,10 +217,12 @@ class Flexy_field extends CI_Model {
 	function render_grid_field($table,$field,$data,$right=RIGHTS_ALL,$extraInfoId=NULL) {
 		$this->extraInfoId=$extraInfoId;
 		$this->init_field($field,$data,$right);
-		// Must field be shown?
-		if ( ! el('b_show_in_grid', el($field,$this->fieldCfg,array()) ,true) ) {
-			return FALSE;
+    
+		// Hide field?
+		if (isset($this->fieldCfg[$field]['b_show_in_grid']) and ($this->fieldCfg[$field]['b_show_in_grid']==false or $this->fieldCfg[$field]['b_show_in_grid']<0)) {
+      return FALSE;
 		}
+
 		// How to show? Function or replace?
 		$func=$this->_is_function();
 		if ($func!==false) {

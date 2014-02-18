@@ -1086,4 +1086,27 @@ function array_flatten($a) {
   return $a;
 }
 
+
+
+/**
+ * Set a value in a multidimensional array with an array of keys given
+ *
+ * @param array &$a 
+ * @param array $multikey 
+ * @param string $value 
+ * @return array
+ * @author Jan den Besten
+ */
+function array_set_multi_key(&$a,$multikey,$value) {
+  switch (count($multikey)) {
+    case '1': $a[$multikey[0]] = $value; break;
+    case '2': $a[$multikey[0]][$multikey[1]] = $value; break;
+    case '3': $a[$multikey[0]][$multikey[1]][$multikey[2]] = $value; break;
+    case '4': $a[$multikey[0]][$multikey[1]][$multikey[2]][$multikey[3]] = $value; break;
+    case '5': $a[$multikey[0]][$multikey[1]][$multikey[2]][$multikey[3]][$multikey[4]] = $value; break;
+    case '6': $a[$multikey[0]][$multikey[1]][$multikey[2]][$multikey[3]][$multikey[4]][$multikey[5]] = $value; break;
+  }
+  return $a;
+}
+
 ?>
