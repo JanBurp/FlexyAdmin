@@ -27,6 +27,11 @@
 
  	function __construct() {
  		parent::__construct();
+    $this->reset();
+		$this->isAdmin=FALSE;
+ 	}
+  
+  function reset() {
  		$this->hasData=false;
  		$this->data=array();
 		$this->keys=array(
@@ -36,8 +41,7 @@
 			'cfg_'.$this->config->item('CFG_img_info')			=> array( 'key' => 'path' ),
 			'cfg_'.$this->config->item('cfg_admin_menu')		=> array( 'key' => 'id' )		
 		);
-		$this->isAdmin=FALSE;
- 	}
+  }
 
 
 	function set_if_admin($isAdmin) {
@@ -126,6 +130,7 @@
 		if (isset($cfg[$table])) {
 			$this->data[$table]=array_merge($this->data[$table],$cfg[$table]);
 		}
+
 		return $out;
 	}
 
@@ -205,9 +210,6 @@
 				}
  			}
  		}
-    // trace_if($key=='b_use_editor',$key);
-    // trace_if($key=='b_use_editor',$data);
-    // trace_if($key=='b_use_editor',$out);
 		log_("info","[Cfg] Getting data '$table','$key','$field'");
  		return $out;
  	}

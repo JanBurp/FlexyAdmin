@@ -284,7 +284,6 @@ class AdminController extends BasicController {
 		$this->menu->set_current($uri);
 		$this->menu->set_current_name($currentMenuItem); // ??
 		$menu=$this->menu->render();
-		// trace_($this->menu);
 		$this->load->view('admin/menu',array("menu"=>$menu));
 	}
 

@@ -79,6 +79,7 @@ class User Extends Ion_auth {
         $this->_update_old_passwords();
 			}
 			if ($this->CI->ion_auth_model->login($identity, $password, $remember)) {
+        $this->load_user_cfg();
 				return TRUE;
 			}
 		}
@@ -169,10 +170,31 @@ class User Extends Ion_auth {
 			$this->user_name = $this->CI->session->userdata("str_username");
 			$this->language= $this->CI->session->userdata("language");
 			$this->rights = $this->create_rights( $this->user_id );
+      $this->load_user_cfg();
 		}
 		return (bool) $logged_in;
 	}
 	
+  
+  private function load_user_cfg() {
+    $rights=$this->get_rights();
+    if (isset($rights['stx_extra_config']) and !empty($rights['stx_extra_config'])) {
+      $extra_cfg=$rights['stx_extra_config'];
+      $extra_cfg=str_replace(array(' ','"',"'"),'',$extra_cfg);
+      $extra_cfg=explode(';',$extra_cfg);
+      foreach ($extra_cfg as $cfg) {
+        $cfg=trim($cfg);
+        if (!empty($cfg)) {
+          $key=get_prefix($cfg,'=');
+          $key=trim(trim($key,'['),']');
+          $keys=explode('][',$key);
+          $value=trim(get_suffix($cfg,'='));
+          array_set_multi_key($this->CI->config->config,$keys,$value);
+        }
+      }
+    }
+    
+  }
 	
 	/**
 	 * Verzorgt het proces als een gebruiker het paswoord is vergeten
@@ -591,17 +613,33 @@ class User Extends Ion_auth {
 		// trace_if($condition,array('item'=>$item,'pre'=>$pre,'preAll'=>$preAll));
 
 		$rights=$this->rights;
-		if ($rights['rights']=="*" or (strpos($rights['rights'],$preAll)!==FALSE) or (strpos($rights['rights'],$item)!==FALSE) ) {
-			$this->_change_rights($found,$rights);
-		}
-		// trace_if($condition,$found);
-		if (!empty($found['b_delete'])	and $found['b_delete'])	$foundRights+=RIGHTS_DELETE;
-		if (!empty($found['b_add']) 		and $found['b_add'])		$foundRights+=RIGHTS_ADD;
-		if (!empty($found['b_edit'])		and $found['b_edit'])		$foundRights+=RIGHTS_EDIT;
-		if (!empty($found['b_show'])		and $found['b_show'])		$foundRights+=RIGHTS_SHOW;
-
-		// trace_if($condition,$foundRights);
-		// trace_if($condition,$whatRight);
+    
+    if (isset($rights['stx_specific_rights']) and preg_match("/".$item."=\[(.*)\]/uiUsm", $rights['stx_specific_rights'],$match)) {
+      $keys=explode(',',$match[1]);
+      foreach ($keys as $key) {
+        $name=get_prefix($key,'=');
+        $value=get_suffix($key,'=');
+        switch ($name) {
+          case 'delete':  if ($value) $foundRights+=RIGHTS_DELETE;break;
+          case 'add':     if ($value) $foundRights+=RIGHTS_ADD;break;
+          case 'edit':    if ($value) $foundRights+=RIGHTS_EDIT;break;
+          case 'show':    if ($value) $foundRights+=RIGHTS_SHOW;break;
+        }
+      }
+    }
+    else {
+  		if ($rights['rights']=="*" or (strpos($rights['rights'],$preAll)!==FALSE) or (strpos($rights['rights'],$item)!==FALSE) ) {
+  			$this->_change_rights($found,$rights);
+  		}
+  		// trace_if($condition,$found);
+  		if (!empty($found['b_delete'])	and $found['b_delete'])	$foundRights+=RIGHTS_DELETE;
+  		if (!empty($found['b_add']) 		and $found['b_add'])		$foundRights+=RIGHTS_ADD;
+  		if (!empty($found['b_edit'])		and $found['b_edit'])		$foundRights+=RIGHTS_EDIT;
+  		if (!empty($found['b_show'])		and $found['b_show'])		$foundRights+=RIGHTS_SHOW;
+    }
+    
+    // trace_($foundRights);
+    // trace_($whatRight);
 
 		if ($whatRight==0)
 			return $foundRights;
