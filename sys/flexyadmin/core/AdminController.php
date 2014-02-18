@@ -162,8 +162,6 @@ class AdminController extends BasicController {
 				"7"=>array( "id"=>'7', "order"=>'12', "str_ui_name"=>'# all config tables (if user has rights)', "b_visible"=>'1', "str_type"=>'all_cfg_tables', "api"=>'', "path"=>'', "table"=>'', "str_table_where"=>'' ) );
 		}
 		
-		// trace_($adminMenu);
-
 		foreach ($adminMenu as $item) {
 			switch($item['str_type']) {
 				case 'api' :
@@ -213,7 +211,7 @@ class AdminController extends BasicController {
 				case 'table' :
 					$uri=api_uri('API_view_grid',$item['table']);
 					$uri.='/info/'.$item['id'];
-					$menu[$uri]=array("uri"=>$uri,'name'=>$item['str_ui_name'],"class"=>'tbl ');
+					$menu[$uri]=array("uri"=>$uri,'name'=>$item['str_ui_name'],"class"=>'tbl '.$item['table']);
 					break;
 					
 				case 'all_tbl_tables' :
