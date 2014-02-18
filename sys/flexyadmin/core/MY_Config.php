@@ -67,7 +67,7 @@ Class MY_Config extends CI_Config {
   /**
    * Laad een config bestand.
    * Als hetzelfde bestand in sys en in site/config bestaat:
-   * Laad eerst de sys config,dan de site config en merge deze samen (zo kunnen site specifieke instellingen standaard instellingen overrulen)
+   * Laad eerst de sys config, dan de site config en merge deze samen (zo kunnen site specifieke instellingen standaard instellingen overrulen)
    *
    * @param string $file 
    * @param string $use_sections[FALSE]
@@ -113,14 +113,14 @@ Class MY_Config extends CI_Config {
 
 						if ($use_sections === TRUE)	{
 							if (isset($this->config[$file])) {
-								$this->config[$file] = array_merge($this->config[$file], $config);
+								$this->config[$file] = $this->_array_merge_recursive_distinct($this->config[$file], $config);
 							}
 							else {
 								$this->config[$file] = $config;
 							}
 						}
 						else {
-							$this->config = array_merge($this->config, $config);
+							$this->config = $this->_array_merge_recursive_distinct($this->config, $config);
 						}
 
 					}
@@ -166,6 +166,31 @@ Class MY_Config extends CI_Config {
       $key=in_array_like($name,$this->is_loaded);
     }
   }
+  
+  
+  
+  /**
+   * Same as in array_helper, but that one isn't loaded yet.
+   *
+   * @param string $array1 
+   * @param string $array2 
+   * @return void
+   * @author Jan den Besten
+   */
+  private function _array_merge_recursive_distinct(array &$array1, array &$array2 ) {
+    $merged = $array1;
+    foreach ( $array2 as $key => &$value ) {
+      if ( is_array ( $value ) && isset ( $merged [$key] ) && is_array ( $merged [$key] ) ) {
+        $merged [$key] = $this->_array_merge_recursive_distinct ( $merged [$key], $value );
+      }
+      else {
+        $merged [$key] = $value;
+      }
+    }
+    return $merged;
+  }
+  
+  
 
 
 // --------------------------------------------------------------------
