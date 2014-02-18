@@ -769,7 +769,6 @@ class Form {
    */
 	public function render($class='flexyForm') {
 		$this->CI->lang->load("form");
-		// if (!empty($type)) $this->set_type($type);
 		
 		$data=$this->data;
 		
