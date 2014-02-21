@@ -139,7 +139,7 @@ class Show extends AdminController {
 						elseif ($order) {
 							$orderArr=explode(':',$order);
 							foreach ($orderArr as $key => $ord) {
-                $ordField=trim($ord);
+                $ordField=trim(trim($ord),'_');
                 if ($this->db->field_exists($ordField,$table)) {
   								if (substr($ord,0,1)=='_') $ord=substr($ord,1).' DESC';
                   $ordField=trim($ord);
@@ -195,6 +195,7 @@ class Show extends AdminController {
             // trace_($data);
             // trace_($total_rows);
             // trace_($search);
+            // trace_($this->db->queries);
 
 						$last_order=$this->db->get_last_order();
 						if (substr($last_order,0,1)!='(') $order=$last_order;

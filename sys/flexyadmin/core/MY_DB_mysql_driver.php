@@ -297,19 +297,19 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	private function _set_order_by_foreign($order_by_foreign=FALSE,$table) {
 		if ($order_by_foreign) {
 			if (!is_array($order_by_foreign)) $order_by_foreign=array($order_by_foreign);
-						foreach ($order_by_foreign as $key => $foreign_order_id) {
-				$desc=explode(' ',$foreign_order_id);
-				$foreign_order_id=$desc[0];
-				// to get good order for SQL, ASC/DESC must be swapped.
-				if (isset($desc[1])) $desc=''; else $desc='DESC';
-				$foreign_table=foreign_table_from_key($foreign_order_id);
-				$abstract_fields=$this->get_abstract_fields_sql($foreign_table);
-				$sql="SELECT `id`,$abstract_fields FROM `$foreign_table` ORDER BY `abstract` $desc";
-				$query=$this->query($sql);
-				$foreign_order_ids=array();
-				foreach ($query->result_array() as $row) {$foreign_order_ids[$row['id']]=$row['id'];}
-				$query->free_result();
-				foreach ($foreign_order_ids as $id => $row) {$this->order_by('('.$table.'.'.$foreign_order_id.' = '.$id.')');}
+			foreach ($order_by_foreign as $key => $foreign_order_id) {
+        $field=explode(' ',$foreign_order_id);
+        $foreign_id=$field[0];
+        $desc='';
+        if (isset($field[1])) $desc=$field[1];
+        $abstract_field=$foreign_id.'__abstract '.$desc;
+        $this->order_by($abstract_field);
+        // $sql="SELECT `id`,$abstract_fields FROM `$foreign_table` ORDER BY `abstract` $desc";
+        // $query=$this->query($sql);
+        // $foreign_order_ids=array();
+        // foreach ($query->result_array() as $row) {$foreign_order_ids[$row['id']]=$row['id'];}
+        // $query->free_result();
+        // foreach ($foreign_order_ids as $id => $row) {$this->order_by('('.$table.'.'.$foreign_order_id.' = '.$id.')');}
 			}
 		}
 	}
@@ -825,7 +825,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		 * Set Order
 		 */
 		if ($this->order_by_foreign) {
-			$this->_set_order_by_foreign($this->order_by_foreign,$table);
+      $this->_set_order_by_foreign($this->order_by_foreign,$table);
 		}
 		elseif ($this->order_by_many) {
 			$this->_set_order_by_many($this->order_by_many,$table);
