@@ -278,10 +278,11 @@ class Grid Extends CI_Model {
 		$table["caption"]["row"]=$this->captions;
 
 		$table["heading"]["class"]="$tableClass $extraClass";
+    $firstOrder=remove_suffix($this->order[0],'__');
 		foreach($this->headings as $name=>$heading) {
 			$orderClass='';
-			if ($this->order[0]==$name) $orderClass=' headerSortDown';
-			if ($this->order[0]=='_'.$name) $orderClass=' headerSortUp';
+			if ($firstOrder==$name) $orderClass=' headerSortDown';
+			if ($firstOrder=='_'.$name) $orderClass=' headerSortUp';
 			if ($name=='id') $orderClass.=' edit';
       $prefix=get_prefix($name);
       if ($prefix=='id' and $name!='id') $prefix='id_';
