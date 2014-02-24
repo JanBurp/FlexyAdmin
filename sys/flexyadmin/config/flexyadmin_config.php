@@ -55,8 +55,10 @@ $config['IGNORE_MIME']						= FALSE;
 
 $config['FORM_NICE_DROPDOWNS']		= TRUE;
 $config['MULTIPLE_UPLOAD']		    = FALSE;
-$config['PAGINATION']              = FALSE;
+$config['PAGINATION']             = FALSE;
 
+$config['GRID_EDIT']              = TRUE;
+$config['GRID_EDIT_FIELD_TYPES']  = array( 'b','lang');
 
 
 /*

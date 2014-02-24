@@ -211,6 +211,9 @@ class Show extends AdminController {
 						else 	{
               $html='';
 							$grid=new grid();
+              if ($this->config->item('GRID_EDIT')) {
+                $grid->edit_field_types($this->config->item('GRID_EDIT_FIELD_TYPES'));
+              }
 
 							if ($pagination) {
 								$base_url=api_url('API_view_grid',$table);
@@ -267,6 +270,7 @@ class Show extends AdminController {
 							}
 							else
 								$uiShowTable=$uiTable;
+              
 							$grid->set_data($data,$uiShowTable);
 							$grid->set_order($order);
 							$grid->set_search($search);

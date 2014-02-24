@@ -18,6 +18,7 @@ class Grid Extends CI_Model {
   private $renderData;
   private $pagin;
 	private $type;			// html | files
+  private $edit_fields=FALSE;
 
 	/**
 	 * @ignore
@@ -46,6 +47,10 @@ class Grid Extends CI_Model {
 		$this->set_pagination();
     return $this;
 	}
+
+  public function edit_field_types($types=false) {
+    $this->edit_fields=$types;
+  }
 
   /**
    * Stel koppen in
@@ -273,6 +278,9 @@ class Grid Extends CI_Model {
 		$table["class"]="$tableClass $extraClass";
 		$table['order']=implode(':',$this->order);
 		$table['search']=$this->search;
+    if ($this->edit_fields) {
+      $table['edit_types']=implode($this->edit_fields,',');
+    }
 
 		$table["caption"]["class"]="$tableClass $extraClass";
 		$table["caption"]["row"]=$this->captions;

@@ -322,38 +322,78 @@ function doGrid() {
 
 
 	//
-	// Grid only (Edit Bool fields & Order editing)
+	// Grid only (Edit Fields & Order editing)
 	//
 	if (isGrid && !isFile) {
 
 		//
-		// Editable boolean fields
+		// Editable Fields
 		//
-		bFields=$(".grid td.b");
-    $(bFields).click(function() {
-			obj=this;
-			cell=get_cell($(this));
-			id=cell.id;
-			if ($(this).children("div:first").hasClass("no")) {	value="1"; } else {	value="0"; }
-			url=site_url("admin/ajax/edit/"+cell.table+"/"+cell.id+"/"+cell.field+"/"+value);
-			// ajax request
-			$(this).css('cursor','wait');
-			$.post(url,"",function(data) {
-					if (data!="") {
-						ajaxError(data);
-					}
-					else {
-						// change the status
-						html=$(obj).html();
-						if (value=="1")
-							html=html.replace(/no/g,"yes");
-						else
-							html=html.replace(/yes/g,"no");
-						$(obj).html(html);
-						$(obj).css('cursor','pointer');
-					}
-				});
-		})
+    var gridEl=$('.grid table');
+    var edit_types=$(gridEl).attr('data-edit_types');
+    if (edit_types) {
+      var edit_types_classes=edit_types.split(',');
+      $.each(edit_types_classes, function(i,val) {
+        var editable_cells=$('td.'+val,gridEl);
+        $(editable_cells).addClass('editable_cell')
+        
+        switch (val) {
+          // EDIT Boolean fields
+          case 'b':
+          case 'is':
+          case 'has':
+            $(editable_cells).click(function() {
+        			var obj=this;
+        			var cell=get_cell($(this));
+        			var id=cell.id;
+              var value=0;
+        			if ($(this).children("div:first").hasClass("no")) value="1";
+        			var url=site_url("admin/ajax/edit/"+cell.table+"/"+cell.id+"/"+cell.field+"/"+value);
+        			// ajax request
+        			$(this).css('cursor','wait');
+        			$.post(url,"",function(data) {
+        					if (data!="") {	ajaxError(data); }
+        					else {
+        						var html=$(obj).html();
+        						if (value=="1")
+        							html=html.replace(/no/g,"yes");
+        						else
+        							html=html.replace(/yes/g,"no");
+        						$(obj).html(html);
+        					}
+      						$(obj).css('cursor','pointer');
+        				});
+        		})
+          break;
+          
+          // EDIT Normal input fields (str,int)
+          default:
+            $(editable_cells).attr('contenteditable','true');
+            $(editable_cells).focusin(function(){
+              var obj=this;
+              var old_value=$(this).text();
+              $(this).focusout(function(){
+                var new_value=$(this).text();
+                if (new_value!=old_value) {
+            			var cell=get_cell($(this));
+            			var url=site_url("admin/ajax/edit/"+cell.table+"/"+cell.id+"/"+cell.field+"/"+new_value);
+            			// ajax request
+            			$(obj).css('cursor','wait');
+            			$.post(url,"",function(data) {
+          					if (data!="") {
+                      ajaxError(data);
+                      $(obj).text(old_value);
+                    }
+        						$(obj).css('cursor','pointer');
+          				});
+                }
+              });
+            });
+          break;
+            
+        } // End Switch
+      });
+    }
 
 		//
 		// Setting order by drag 'n drop
