@@ -578,6 +578,17 @@ tr.caption td				{ border:none; }
 
 .grid td.id_        { min-width:100px; max-width:none; }
 
+.grid td.editable_cell {
+  background-image: url('../icons/arrow_next.gif');
+  background-repeat:no-repeat;
+  background-position:-11px 6px;
+  cursor:pointer;
+}
+.grid td.editable_cell:focus {
+  background-color:#FFF;
+  color:#000;
+}
+
 .grid th.uri,
 .grid td.uri				{ display:none; }
 .grid .res_menu_result th.uri,
