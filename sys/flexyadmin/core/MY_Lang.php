@@ -177,7 +177,7 @@ class MY_Lang extends CI_Lang {
 	 * @param   bool $logging[TRUE]
 	 * @return	string
 	 */
-	function line($line='', $logging=TRUE) {
+	function line($line='', $logging=TRUE, $give_key_on_false_result=TRUE) {
     $value=FALSE;
     if (!empty($this->lang_table) and !empty($this->idiom)) {
       $CI=&get_instance();
@@ -192,7 +192,7 @@ class MY_Lang extends CI_Lang {
 
 		// Because killer robots like unicorns!
 		if ($value===FALSE) {
-      $value='['.$line.'.'.$this->idiom.']';
+      if ($give_key_on_false_result) $value='['.$line.'.'.$this->idiom.']';
       if ($logging) log_message('error', 'Could not find the language line "'.$line.'"');
 		}
 
