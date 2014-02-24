@@ -31,6 +31,7 @@ class Ajax extends BasicController {
 	function __construct() {
 		parent::__construct();
 		$this->load->model('ui');
+    $this->load->model("login_log");
 	}
 
 	function index() {
@@ -71,6 +72,7 @@ class Ajax extends BasicController {
 					
 					$this->order->set_all($table,$ids);
           $this->_after_update($table);
+          $this->login_log->update($table);
 					
 					$this->queu->run_calls();
 					delete_all_cache();
@@ -114,6 +116,7 @@ class Ajax extends BasicController {
 
 					$this->crud->table($table);
 					$this->crud->update(array('where'=>array(PRIMARY_KEY=>$id), 'data'=>$newData));
+          $this->login_log->update($table);
 
 					if ($plugins) {
 						$this->queu->run_calls();
