@@ -986,7 +986,6 @@ class Menu {
 				
 				$itemOut='';
 				if (isset($item['name']))	$name=$item['name']; else $name='';
-        if (empty($item['name'])) $item['name']=$uri;
 				if (empty($item)) {
 					// seperator
 					$itemOut.=$this->tmp($this->tmpItemStart,array("class"=>"seperator pos$pos lev$level"));
@@ -994,6 +993,8 @@ class Menu {
 					$out.=$itemOut;
 					$pos++;
 				}
+        if (empty($item['name'])) $item['name']=$uri;
+        
 				if (isset($item[$this->urlField])) {
 					$thisUri=$item[$this->urlField];
 					if (!empty($preUri) and !empty($thisUri) and $this->urlField=="uri" and !(isset($item['unique_uri']) and $item['unique_uri'])) $thisUri=$preUri."/".$thisUri;
