@@ -557,10 +557,12 @@ class Menu {
 				if (isset($item['full_uri']))	$thisItem["full_uri"]=$item['full_uri'];
 				
 				if (empty($thisItem['name'])) {
-					if (isset($item[$this->fields["title"]]))
-						$thisItem['name']=$item[$this->fields["title"]];
-					else
-						$thisItem['name']=$uri;
+					if (isset($item[$this->fields["title"]])) {
+					  $thisItem['name']=$item[$this->fields["title"]];
+					}
+					else {
+					  $thisItem['name']=$uri;
+					}
 				}
 				if (isset($item[$this->fields["class"]])) 	$thisItem["class"]=str_replace('|',' ',$item[$this->fields["class"]]);
 				if (isset($item[$this->fields["parent"]])) 	$parent=$item[$this->fields["parent"]]; else $parent="";
@@ -984,6 +986,7 @@ class Menu {
 				
 				$itemOut='';
 				if (isset($item['name']))	$name=$item['name']; else $name='';
+        if (empty($item['name'])) $item['name']=$uri;
 				if (empty($item)) {
 					// seperator
 					$itemOut.=$this->tmp($this->tmpItemStart,array("class"=>"seperator pos$pos lev$level"));
@@ -1023,10 +1026,13 @@ class Menu {
 					$itemOut.=$this->tmp($this->tmpItemStart,array("class"=>$itemAttr["class"],'id'=>$itemAttr['id']));  // <li ... >
 					
 					if (isset($item["uri"])) {
-						if (isset($item['name']))
-							$showName=ascii_to_entities($item['name']);
-						else
+						if (isset($item['name'])) {
+						  $showName=ascii_to_entities($item['name']);
+						}
+						else {
+              if (empty($name)) $name=$uri;
 							$showName=trim(ascii_to_entities($name),'_');
+            }
             
             if ($this->ordered_titles) {
               switch ($this->ordered_titles) {
@@ -1047,7 +1053,6 @@ class Menu {
 						$itemAttr=array_merge($itemAttr,$extraAttr);
 						// if (isset($item['target'])) $itemAttr['target']=$item['target'];
 						if (isset($itemAttr['title'])) $itemAttr['title']=strip_tags($itemAttr['title']);
-            // trace_($showName);
 						if (empty($link)) {
 							$itemAttr['class'].=' nonClickable';
 							$itemOut.=span($itemAttr).$showName._span();

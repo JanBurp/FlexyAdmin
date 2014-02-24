@@ -78,17 +78,17 @@ class MY_Lang extends CI_Lang {
 		// Changed by JdB
 		if ($idiom == '')
 		{
-			if (!empty($this->setLanguage)) {
-				$deft_lang=$this->setLanguage;
-			}
-			else {
-				$CI =& get_instance();
-				if (isset($CI->session))	$deft_lang=$CI->session->userdata("language");
-				if (!empty($deft_lang))
-					$this->set($deft_lang);
-				else	
-					$deft_lang = $CI->config->item('language');
-			}
+      if (!empty($this->setLanguage)) {
+        $deft_lang=$this->setLanguage;
+      }
+      else {
+        $CI =& get_instance();
+        if (isset($CI->session)) $deft_lang=$CI->session->userdata("language");
+        if (!empty($deft_lang))
+          $this->set($deft_lang);
+        else  
+          $deft_lang = $CI->config->item('language');
+      }
 			$idiom = ($deft_lang == '') ? 'en' : $deft_lang;
 			$this->idiom=$idiom;
 		}
@@ -116,7 +116,8 @@ class MY_Lang extends CI_Lang {
 
 			if ($found !== TRUE)
 			{
-				show_error('Unable to load the requested language file: language/'.$idiom.'/'.$langfile);
+        log_message('error', 'Unable to load the requested language file: language/'.$idiom.'/'.$langfile);
+        // show_error('Unable to load the requested language file: language/'.$idiom.'/'.$langfile);
 			}
 		}
 
@@ -191,7 +192,7 @@ class MY_Lang extends CI_Lang {
 
 		// Because killer robots like unicorns!
 		if ($value===FALSE and $logging) {
-      $value='['.$line.']';
+      $value='['.$line.'.'.$this->idiom.']';
 			log_message('error', 'Could not find the language line "'.$line.'"');
 		}
 
