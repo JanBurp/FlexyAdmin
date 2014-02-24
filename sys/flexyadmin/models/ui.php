@@ -103,7 +103,7 @@ class ui extends CI_Model {
 			if (empty($out) and !empty($table)) $out=el($table.".".$name,$this->uiNames,"");
       if (empty($out)) $out=el($name,$this->uiNames,"");
       if (empty($out)) $out=$this->get_standard($name);
-			if (empty($out) and $create) $out=$this->create($name);
+      if (empty($out) and $create) $out=$this->create($name);
 		}
 		else {
 			$out=array();
@@ -122,7 +122,7 @@ class ui extends CI_Model {
    * @author Jan den Besten
    */
   public function get_standard($name) {
-    return $this->lang->line($name,FALSE);
+    return $this->lang->line($name,FALSE,FALSE);
   }
 
   /**
