@@ -64,13 +64,26 @@ class MY_URI extends CI_URI {
    * 
    * Wordt bijvoorbeeld gebruikt door auto-pagination met de standaard remove part 'offset'
    *
-   * @param mixed $remove 
+   * @param mixed $remove
    * @return void
    * @author Jan den Besten
    */
 	public function set_remove($remove="") {
 		if (!is_array($remove)) $remove=array($remove);
 		$this->remove=$remove;
+    return $this;
+  }
+  
+  /**
+   * Voeg een uripart toe waarachter de uri niet wordt 'gezien'
+   *
+   * @param string $remove 
+   * @return void
+   * @author Jan den Besten
+   */
+  public function add_remove($remove='') {
+    $this->remove[]=$remove;
+    return $this;
   }
 	
   /**
