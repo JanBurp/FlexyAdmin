@@ -304,12 +304,6 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
         if (isset($field[1])) $desc=$field[1];
         $abstract_field=$foreign_id.'__abstract '.$desc;
         $this->order_by($abstract_field);
-        // $sql="SELECT `id`,$abstract_fields FROM `$foreign_table` ORDER BY `abstract` $desc";
-        // $query=$this->query($sql);
-        // $foreign_order_ids=array();
-        // foreach ($query->result_array() as $row) {$foreign_order_ids[$row['id']]=$row['id'];}
-        // $query->free_result();
-        // foreach ($foreign_order_ids as $id => $row) {$this->order_by('('.$table.'.'.$foreign_order_id.' = '.$id.')');}
 			}
 		}
 	}
@@ -531,8 +525,8 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
    * @author Jan den Besten
    */
 	public function search($search,$word_boundaries=FALSE,$set_sql=TRUE) {
-		// if $search is one dimensial array, make more dimensonal
 		if (isset($search['search'])) $search=array($search);
+    // trace_($search);
 		$default=array('search'=>'','field'=>'id','or'=>'AND','table'=>'');
 		$sql='';
 		foreach ($search as $k => $s) {
@@ -543,14 +537,15 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				$sql.=$s['or'].' ';
 				
 				$fieldPre=get_prefix($s['field']);
+        
 				// search in foreign table, with abstract
 				if ($fieldPre=='id' and $s['field']!='id') {
+					$in=array();
 					$foreign_search=$s;
 					$foreign_search['table']=foreign_table_from_key($s['field']);
 					$foreign_search['or']='OR';
 					$ab_fields=$this->get_abstract_fields($foreign_search['table']);
 					foreach ($ab_fields as $ab_field) {
-						$in=array();
 						$ab_field=remove_prefix($ab_field,'.');
 						$foreign_search['field']=$ab_field;
 						$sub_sql="SELECT `id` FROM `".$foreign_search['table']."` WHERE ".$this->search($foreign_search,$word_boundaries,FALSE);
@@ -564,6 +559,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 
 				// search in many table, with abstract
 				if ($fieldPre=='rel') {
+					$in=array();
 					$foreign_search=$s;
 					$rel_table=$s['field'];
 					$foreign_search['table']=join_table_from_rel_table($rel_table);
@@ -572,7 +568,6 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 					$join_key=join_key_from_rel_table($rel_table);
 					$ab_fields=$this->get_abstract_fields($foreign_search['table']);
 					foreach ($ab_fields as $ab_field) {
-						$in=array();
 						$ab_field=remove_prefix($ab_field,'.');
 						$foreign_search['field']=$ab_field;
 						$sub_sql="SELECT `id` FROM `".$foreign_search['table']."` WHERE ".$this->search($foreign_search,$word_boundaries,FALSE);
@@ -615,6 +610,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		$sql='('.substr($sql,3).')';                // remove first AND and put between ()
     $sql=str_replace('AND', ') AND (',$sql);    // Make sure AND works like AND by putting terms between ()
 		if ($set_sql) {
+      // trace_('#show#'.$sql);
 		  $this->where($sql,NULL,FALSE);
       return $this;
 		}
