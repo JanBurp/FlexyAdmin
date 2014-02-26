@@ -171,7 +171,7 @@ class Show extends AdminController {
 						
 						// search?
 						if ($search) {
-							$fields=$this->db->list_fields($table);	
+							$fields=$this->db->list_fields($table);
 							$searchArr=array();
 							foreach ($fields as $field) {
 								$searchArr[]=array('field'=>$field,'search'=>$search,'or'=>'OR','table'=>$table);
