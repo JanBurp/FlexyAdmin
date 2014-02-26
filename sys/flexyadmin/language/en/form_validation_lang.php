@@ -26,6 +26,8 @@ $lang['decimal']			= "The %s field must contain a decimal number.";
 $lang['less_than']			= "The %s field must contain a number less than %s.";
 $lang['greater_than']		= "The %s field must contain a number greater than %s.";
 
+$lang['valid_option']			= "'%s' needs to be one of the following values: ";
+
 $lang['valid_rgb']	             = "Wrong color code in the '%s' field";
 $lang['valid_date']              = "'%s' must be a date in this format: dd-mm-yyyy";
 $lang['valid_google_analytics']	 = "'%s' has a wrong code for Google Analytics";

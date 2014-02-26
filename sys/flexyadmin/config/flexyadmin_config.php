@@ -56,9 +56,7 @@ $config['IGNORE_MIME']						= FALSE;
 $config['FORM_NICE_DROPDOWNS']		= TRUE;
 $config['MULTIPLE_UPLOAD']		    = FALSE;
 $config['PAGINATION']             = FALSE;
-
 $config['GRID_EDIT']              = TRUE;
-$config['GRID_EDIT_FIELD_TYPES']  = array( 'b','lang');
 
 
 /*
@@ -557,8 +555,43 @@ $config["CFG_"]=array(
  			),
       
     'cfg_lang.key'=>array(
-			"field"=>'cfg_media_info.str_order',
 			"str_validation_rules"=>'required|is_unique[cfg_lang.key.id]'
+    ),
+    'cfg_lang.lang_uk'=>array(
+      'b_editable_in_grid' => true
+    ),
+    'cfg_lang.lang_en'=>array(
+      'b_editable_in_grid' => true
+    ),
+    'cfg_lang.lang_nl'=>array(
+      'b_editable_in_grid' => true
+    ),
+    'cfg_lang.lang_de'=>array(
+      'b_editable_in_grid' => true
+    ),
+    'cfg_lang.lang_fr'=>array(
+      'b_editable_in_grid' => true
+    ),
+    'cfg_lang.lang_it'=>array(
+      'b_editable_in_grid' => true
+    ),
+    'cfg_lang.lang_es'=>array(
+      'b_editable_in_grid' => true
+    ),
+    'cfg_lang.lang_fi'=>array(
+      'b_editable_in_grid' => true
+    ),
+    'cfg_lang.lang_pl'=>array(
+      'b_editable_in_grid' => true
+    ),
+    'cfg_lang.lang_dk'=>array(
+      'b_editable_in_grid' => true
+    ),
+    'cfg_lang.lang_pt'=>array(
+      'b_editable_in_grid' => true
+    ),
+    'cfg_lang.lang_no'=>array(
+      'b_editable_in_grid' => true
     ),
       
     'res_media_files.b_exists' => array(
@@ -1059,14 +1092,12 @@ $config['FIELDS_prefix'] = array (
 	"ip"				=> array (
 											"grid"				=> "%s",
 											"form"				=> "",
-											"validation"	=> "trim| 
-valid_ip"
+											"validation"	=> "trim|valid_ip"
 											),
 	"rgb"				=> array (
 											"grid"				=> "<div class=\"rgb\" style=\"background-color:%s;\" title=\"%s\"><span class=\"hide\">%s</span></div>",
 											"form"				=> "",
-											"validation"	=> "trim| 
-valid_rgb"
+											"validation"	=> "trim|valid_rgb"
 											),
 	"b"					=> array (
 											"grid"				=> "function_boolean",

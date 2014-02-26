@@ -2,6 +2,13 @@
 
 class MY_Form_validation extends CI_Form_validation {
    
+   
+   
+  public function get_error_messages() {
+    return $this->_error_messages;
+  }
+  
+  
   /**
    * You can use this as normal (cfg_users.str_user_name) for example.
    * Or you can use this to not test on update ()

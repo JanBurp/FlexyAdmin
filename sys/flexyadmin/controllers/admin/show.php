@@ -211,9 +211,7 @@ class Show extends AdminController {
 						else 	{
               $html='';
 							$grid=new grid();
-              if ($this->config->item('GRID_EDIT')) {
-                $grid->edit_field_types($this->config->item('GRID_EDIT_FIELD_TYPES'));
-              }
+              $grid->set_editable($this->config->item('GRID_EDIT'));
 
 							if ($pagination) {
 								$base_url=api_url('API_view_grid',$table);
@@ -262,6 +260,7 @@ class Show extends AdminController {
               }
               
 							$data=$this->ff->render_grid($table,$data,$right,$info);
+              // trace_($data);
               
 							if (empty($uiTable)) $uiTable=$this->ui->get($table);
 							$tableHelp=$this->ui->get_help($table);

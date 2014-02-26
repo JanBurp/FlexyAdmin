@@ -18,7 +18,7 @@ class Grid Extends CI_Model {
   private $renderData;
   private $pagin;
 	private $type;			// html | files
-  private $edit_fields=FALSE;
+  private $editable=FALSE;
 
 	/**
 	 * @ignore
@@ -48,8 +48,8 @@ class Grid Extends CI_Model {
     return $this;
 	}
 
-  public function edit_field_types($types=false) {
-    $this->edit_fields=$types;
+  public function set_editable($editable=true) {
+    $this->editable=$editable;
   }
 
   /**
@@ -276,11 +276,9 @@ class Grid Extends CI_Model {
 		}
 
 		$table["class"]="$tableClass $extraClass";
+    if ($this->editable) $table["class"].=' editable';
 		$table['order']=implode(':',$this->order);
 		$table['search']=$this->search;
-    if ($this->edit_fields) {
-      $table['edit_types']=implode($this->edit_fields,',');
-    }
 
 		$table["caption"]["class"]="$tableClass $extraClass";
 		$table["caption"]["row"]=$this->captions;
@@ -310,12 +308,18 @@ class Grid Extends CI_Model {
 				$tableCells=array();
 				$cn=0;
 				foreach($row as $name=>$cell) {
+          $cellClass='';
 					// if (empty($cell)) $cell="&nbsp;";
 					$pre=get_prefix($name);
 					if ($pre==$name) $pre="";
           if ($pre=='id' and $pre!=$name) $pre='id_';
-					$tableCells[]=array(	"class"	=> "$tableClass id$id $name $pre $extraClass $currClass nr$cn ".alternator("oddcol","evencol"),
-																"cell"	=> $cell );
+          $cell_value=$cell;
+          if (is_array($cell)) {
+            $cell_value=$cell['value'];
+            if (el('editable',$cell)) $cellClass.=' editable';
+          }
+					$tableCells[]=array(	"class"	=> "$tableClass id$id $name $pre $extraClass $currClass nr$cn $cellClass ".alternator("oddcol","evencol"), 
+																"cell"	=> $cell_value );
 					$cn++;
 				}
 
