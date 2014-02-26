@@ -231,6 +231,17 @@ class Flexy_field extends CI_Model {
 		else {
 			$out=$this->_replace();
 		}
+    
+    // Editable?
+    if ($this->pre=='b' or (isset($this->fieldCfg[$field]['b_editable_in_grid']) and $this->fieldCfg[$field]['b_editable_in_grid'])) {
+      $out=array(
+        'value'             =>$out,
+        'editable'          =>$this->config->item('GRID_EDIT')
+      );
+      if (isset($this->fieldCfg[$field]['str_options']))      $out['options']=$this->fieldCfg[$field]['str_options'];
+      if (isset($this->fieldCfg[$field]['b_multi_options']))  $out['multiple_options']=$this->fieldCfg[$field]['b_multi_options'];
+    }
+    
 		return $out;
 	}
 
@@ -392,24 +403,29 @@ class Flexy_field extends CI_Model {
 			$out['class'].= $this->cfg->get('CFG_configurations','str_class').' ';
 		}
 		
-		/**
-		 * Add validation rules:
-		 * -first the standard validation rules set in flexyadmin_config.php
-		 * -then add validation rules set in cfg_field_info
-		 * -validation rules depended on database field
-		 */
-		
 		$out['validation']='';
 		$validation[]=array('rules'=>$this->validation,'params'=>'');
 		if (!empty($out['table'])) {
-      $validation[]=$this->_get_global_set_validation($out['name']);
-			$validation[]=$this->_get_set_validation($out['table'],$out['name']);
-			$validation[]=$this->_get_db_validation($out['table'],$out['name']);
-			$validations=combine_validations($validation,TRUE);
+			$validations=$this->get_validations($out['table'],$out['name'],$validation);
 		}
 		if (!empty($validations)) $out['validation']=$this->_set_validation_params($validations);
+    // trace_(array('start'=>$this->validation,'result'=>$out['validation']));
 		return $out;
 	}
+
+	/**
+	 * Add validation rules:
+	 * -first the standard validation rules set in flexyadmin_config.php
+	 * -then add validation rules set in cfg_field_info
+	 * -validation rules depended on database field
+	 */
+  function get_validations($table,$field,$validation=array()) {
+    $validation[]=$this->_get_global_set_validation($field);
+		$validation[]=$this->_get_set_validation($table,$field);
+		$validation[]=$this->_get_db_validation($table,$field);
+		$validations=combine_validations($validation,TRUE);
+    return $validations;
+  }
 
 	function _get_db_validation($table,$field) {
 		$validation='';

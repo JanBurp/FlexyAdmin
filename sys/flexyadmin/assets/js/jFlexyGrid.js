@@ -150,7 +150,7 @@ function doGrid() {
 			if ($(filter).hasClass('pagination')) {
 				// add filter input
 				var search=unescape($(filter).attr('search').replace(/~/,'%'));
-				$("tr.caption:first tr").append('<td class="filter"><span class="help '+config.help_filter+'"><input class="filter" type="text" value="'+search+'"/></span></div>');
+				$("tr.caption:first tr td:first").append('<span class="filter"><span class="help '+config.help_filter+'"><input class="filter" type="text" value="'+search+'"/></span></span>');
 				// bind action
         var filterBox=$('input.filter');
 				$(filterBox).keypress(function(e){
@@ -202,9 +202,9 @@ function doGrid() {
 				// place filter input on other place
 				filter_input=$("div.filter:first input");
 				$(filter_input).addClass("filter").attr({title:'search / filter'});
-				$("tr.caption:first tr").append('<td class="filter">');
-				$("td.filter:first").html(filter_input);
-				$("td.filter:first input").wrap('<span class="help '+config.help_filter+'"></span>');
+				$("tr.caption:first tr td:first").append('<span class="filter">');
+				$("span.filter:first").html(filter_input);
+				$("span.filter:first input").wrap('<span class="help '+config.help_filter+'"></span>');
 			}
 		}
 
@@ -330,68 +330,62 @@ function doGrid() {
 		// Editable Fields
 		//
     var gridEl=$('.grid table');
-    var edit_types=$(gridEl).attr('data-edit_types');
-    if (edit_types) {
-      var edit_types_classes=edit_types.split(',');
-      $.each(edit_types_classes, function(i,val) {
-        var editable_cells=$('td.'+val,gridEl);
-        $(editable_cells).addClass('editable_cell')
-        
-        switch (val) {
-          // EDIT Boolean fields
-          case 'b':
-          case 'is':
-          case 'has':
-            $(editable_cells).click(function() {
-        			var obj=this;
-        			var cell=get_cell($(this));
-        			var id=cell.id;
-              var value=0;
-        			if ($(this).children("div:first").hasClass("no")) value="1";
-        			var url=site_url("admin/ajax/edit/"+cell.table+"/"+cell.id+"/"+cell.field+"/"+value);
-        			// ajax request
-        			$(this).css('cursor','wait');
-        			$.post(url,"",function(data) {
-        					if (data!="") {	ajaxError(data); }
-        					else {
-        						var html=$(obj).html();
-        						if (value=="1")
-        							html=html.replace(/no/g,"yes");
-        						else
-        							html=html.replace(/yes/g,"no");
-        						$(obj).html(html);
-        					}
-      						$(obj).css('cursor','pointer');
-        				});
-        		})
-          break;
-          
-          // EDIT Normal input fields (str,int)
-          default:
-            $(editable_cells).attr('contenteditable','true');
-            $(editable_cells).focusin(function(){
-              var obj=this;
-              var old_value=$(this).text();
-              $(this).focusout(function(){
-                var new_value=$(this).text();
-                if (new_value!=old_value) {
-            			var cell=get_cell($(this));
-            			var url=site_url("admin/ajax/edit/"+cell.table+"/"+cell.id+"/"+cell.field+"/"+new_value);
-            			// ajax request
-            			$(obj).css('cursor','wait');
-            			$.post(url,"",function(data) {
-          					if (data!="") {
-                      ajaxError(data);
-                      $(obj).text(old_value);
-                    }
-        						$(obj).css('cursor','pointer');
-          				});
-                }
-              });
-            });
-          break;
-            
-        } // End Switch
+    if ($(gridEl).hasClass('editable')) {
+
+      // EDIT Boolean fields
+      $('td.editable.b',gridEl).unbind('click').click(function() {
+        var obj=this;
+        var cell=get_cell($(this));
+        var id=cell.id;
+        var value=0;
+        if ($(this).children("div:first").hasClass("no")) value="1";
+        // var url=site_url("admin/ajax/edit/"+cell.table+"/"+cell.id+"/"+cell.field+"/"+value);
+        var url=site_url("admin/ajax/edit/");
+        var data={'table':cell.table,'id':cell.id,'field':cell.field,'value':value};
+        // ajax request
+        $(this).css('cursor','wait');
+        $.post(url,data,function(data) {
+          // console.log(data);
+          if (data._error) {
+            ajaxError(data._error);
+          }
+          else {
+            var html=$(obj).html();
+            if (value=="1")
+              html=html.replace(/no/g,"yes");
+            else
+              html=html.replace(/yes/g,"no");
+            $(obj).html(html);
+          }
+          $(obj).css('cursor','pointer');
+        },'json');
+      });
+      
+      // EDIT NORMAL fields
+      $('td.editable:not(.b)').attr('contenteditable','true').unbind('focusin').focusin(function(){
+        var obj=this;
+        var old_value=$(this).text();
+        $(this).unbind('focusout').focusout(function(){
+          var new_value=$(this).text();
+          if (new_value!=old_value) {
+            var cell=get_cell($(this));
+            var url=site_url("admin/ajax/edit");
+            var data={'table':cell.table,'id':cell.id,'field':cell.field,'value':new_value};
+            // ajax request
+            $(obj).css('cursor','wait');
+            $.post(url,data,function(data) {
+              if (data._error) {
+                ajaxError(data._error);
+                $(obj).text(old_value);
+              }
+              if (data._validation_error) {
+                info_dialog(data._validation_error);
+                $(obj).text(old_value).focus();
+              }
+              $(obj).css('cursor','pointer');
+            },'json');
+          }
+        });
       });
     }
 
@@ -448,6 +442,7 @@ function doGrid() {
 					table=$("table.grid").attr("class");
 					table=table.replace("grid","");
 					table=table.replace("pagination","");
+					table=table.replace("editable","");
 					table=$.trim(table);
 					id=get_id($(ui.item));
 					
@@ -493,13 +488,13 @@ function doGrid() {
 									shiftNodes(id,nextSpanNodes.length-SpanNodes.length,newParentId);
 								}
 							}
-							// Set own parent and reset order
-							url=site_url("admin/ajax/edit/"+table+"/"+id+"/self_parent/"+newParentId+"/0");
-							$.get(url,"",function(data) {
-										if (data!="") {
-											ajaxError(data);
-										}
-									});
+              
+							// Set own parent (and reset order)
+							var url=site_url("admin/ajax/edit/");
+              var data={'table':table,'id':id,'field':'self_parent','value':newParentId};
+							$.post(url,data,function(data) {
+                if (data._error) ajaxError(data._error);
+							},'json');
 						}
 					}
 					
@@ -508,17 +503,16 @@ function doGrid() {
 					$(ui.item).addClass("current");
 					
 					// prepare ajax request to re-order the table in the database
-					ser=serialize("table.grid tbody tr");
-					url=site_url("admin/ajax/order/"+table);
+					var url=site_url("admin/ajax/order/");
+          var ser=serialize("table.grid tbody tr");
+          var data={'table':table,'ids':ser};
 					// ajax request
-					$.post(url,ser,function(data) {
-						if (data!="") {
-							ajaxError(data);
-						}
-						else {
-							rowsEvenOdd();
-						}
-					});
+					$.post(url,data,function(data) {
+            if (data._error)
+              ajaxError(data._error);
+            else
+              rowsEvenOdd();
+					},'json');
 				}
 			});
 			// reset style
@@ -614,13 +608,14 @@ function doGrid() {
 				type: "POST",
 				url: uri,
 				async:'false',
+        dataType: 'json',
 				success: function(data){
-					if (data!="" && data.indexOf('TRACE')>=0) {
-            ajaxError(data);
+          console.log(data);
+          if (data._error) {
+            ajaxError(data._error);
           }
 					else {
-            if (data.indexOf('_message')>=0) {
-              data=$.parseJSON(data);
+            if (data._message) {
               $(obj).children('td._message').html(data._message);
             }
 						$(obj).children('td.id:first').html('<div class="icon yes" /></div');

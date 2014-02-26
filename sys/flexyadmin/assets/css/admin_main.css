@@ -537,13 +537,16 @@ tr.caption td td {
 	font-weight:bold;
 	font-size: 16px;
 	padding:3px 0px 2px;
-	width: 33%;
-	text-align: center;
+	text-align: left;
 }
-tr.caption td.filter {
-	text-align:right;
+tr.caption td td.new {
+  width:300px;
+  max-width:300px;
+}
+tr.caption div.filter {
+  float:left;
 	padding-top:0px;
-	width:33%;
+/*  width:33%;*/
 	font-size:15px;
 }
 
@@ -578,13 +581,13 @@ tr.caption td				{ border:none; }
 
 .grid td.id_        { min-width:100px; max-width:none; }
 
-.grid td.editable_cell {
+.grid td.editable {
   background-image: url('../icons/arrow_next.gif');
   background-repeat:no-repeat;
   background-position:-11px 6px;
   cursor:pointer;
 }
-.grid td.editable_cell:focus {
+.grid td.editable:not(b):focus {
   background-color:#FFF;
   color:#000;
 }

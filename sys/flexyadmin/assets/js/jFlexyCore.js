@@ -326,12 +326,10 @@ function ajaxError(error) {
 		buttons: ({
       ok	: function(){
         $(dialog).dialog("destroy");
-        // $(obj).attr({"href":href});
-        }
+      }
       }),
 		close: function(){
       $(dialog).dialog("destroy");
-      // $(obj).attr({"href":href});
     }
 	});
 }
@@ -446,13 +444,13 @@ function randomPassword(length) {
 
 function serialize(sel) {
 	var s,sel,i;
-	s="";
+	var obj=new Array;
 	sel=$(sel);
 	$(sel).each(function() {
 		i=get_id($(this));
-		s+="&id[]="+i;
+    obj.push(i);
 	});
-	return s.substr(1);
+	return obj;
 }
 
 function rowsEvenOdd() {
