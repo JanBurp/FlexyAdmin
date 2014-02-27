@@ -57,6 +57,7 @@ $config['FORM_NICE_DROPDOWNS']		= TRUE;
 $config['MULTIPLE_UPLOAD']		    = FALSE;
 $config['PAGINATION']             = FALSE;
 $config['GRID_EDIT']              = TRUE;
+$config['GRID_WHERE']             = FALSE;
 
 
 /*
