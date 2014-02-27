@@ -81,6 +81,7 @@ class Show extends AdminController {
 			$offset=el('offset',$args,0);
 			$order=el('order',$args);
 			$search=el('search',$args);
+      $where=el('where',$args);
 			$this->grid_set->save(array('table'=>$table,'offset'=>$offset,'order'=>$order,'search'=>$search));
 
 			if (!empty($table) and $this->db->table_exists($table)) {
@@ -188,6 +189,15 @@ class Show extends AdminController {
 							}
 							$this->db->search($searchArr);
 						}
+            
+            if ($this->config->item('GRID_WHERE') and $where) {
+              $where=explode('___',$where);
+              foreach ($where as $wh) {
+                $wfield=get_prefix($wh,'-');
+                $wvalue=get_suffix($wh,'-');
+                $this->db->where($wfield,$wvalue);
+              }
+            }
 
 						$data=$this->db->get_result($table,$pagination,$offset);
 						$total_rows=$this->db->last_num_rows_no_limit();
