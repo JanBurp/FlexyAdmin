@@ -378,9 +378,15 @@ function doGrid() {
                 ajaxError(data._error);
                 $(obj).text(old_value);
               }
-              if (data._validation_error) {
-                info_dialog(data._validation_error);
-                $(obj).text(old_value).focus();
+              else {
+                if (data._validation_error) {
+                  info_dialog(data._validation_error);
+                  $(obj).text(old_value).focus();
+                }
+                else {
+                  new_value=data.new_value;
+                  $(obj).text(new_value);
+                }
               }
               $(obj).css('cursor','pointer');
             },'json');

@@ -170,6 +170,9 @@ class Ajax extends AjaxController {
     						$this->queu->run_calls();
     					}
     					delete_all_cache();
+              
+              // Fetch new value from database as double check and feedback to user
+              $value=$this->db->get_field_where($table,$field,PRIMARY_KEY,$id);
             }
           }
 				}
