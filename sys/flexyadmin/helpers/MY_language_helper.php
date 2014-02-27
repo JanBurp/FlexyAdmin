@@ -58,21 +58,24 @@ function set_language_neutral_fields($item,$fields=array('str_title','txt_text')
  */
 function langp() {
 	$args=func_get_args();
-	$line=lang($args[0]);
-	if (func_num_args()>1) {
-		array_shift($args);
-		if (count($args)<=1) {
-			$line=str_replace("%s",$args[0],$line);
-		}
-		else {
-			$nr=0;
-			foreach ($args as $value) {
-				$line=str_replace("%".$nr,$value,$line);
-        $nr++;
-			}
-		}
-	}
-	return $line;
+	$line=array_shift($args);
+  $line=lang($line);
+  $numArgs=count($args);
+  $out='';
+  switch ($numArgs) {
+    case 1:
+      $out=sprintf($line,$args[0]);
+      break;
+    case 2:
+      $out=sprintf($line,$args[0],$args[1]);
+      break;
+    case 3:
+      $out=sprintf($line,$args[0],$args[1],$args[2]);
+      break;
+    default:
+      $out=$line;
+  }
+	return $out;
 }
 
 /**

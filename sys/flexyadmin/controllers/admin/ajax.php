@@ -140,7 +140,10 @@ class Ajax extends AjaxController {
             foreach ($validations as $rule => $param) {
               $rule=str_replace(array('[',']'),'',$rule);
               if (!$this->form_validation->$rule($value,$param)) {
-                $validation_error=langp($rule,$field);
+                if (empty($param))
+                  $validation_error=langp($rule,$field);
+                else
+                  $validation_error=langp($rule,$field,$param);
                 break;
               }
             }

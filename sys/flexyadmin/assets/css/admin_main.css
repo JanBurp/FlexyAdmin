@@ -590,6 +590,7 @@ tr.caption td				{ border:none; }
 .grid td.editable:not(b):focus {
   background-color:#FFF;
   color:#000;
+  overflow:auto;
 }
 
 .grid th.uri,
