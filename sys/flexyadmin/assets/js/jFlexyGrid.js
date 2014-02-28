@@ -150,7 +150,8 @@ function doGrid() {
 			if ($(filter).hasClass('pagination')) {
 				// add filter input
 				var search=unescape($(filter).attr('search').replace(/~/,'%'));
-				$("tr.caption:first tr td:first").append('<span class="filter"><span class="help '+config.help_filter+'"><input class="filter" type="text" value="'+search+'"/></span></span>');
+        
+        $("tr.caption:first tr td:first").append('<span class="filter"><span class="help '+config.help_filter+'"><input class="filter" type="text" value="'+search+'"/></span></span>');
 				// bind action
         var filterBox=$('input.filter');
 				$(filterBox).keypress(function(e){
@@ -534,6 +535,18 @@ function doGrid() {
 			}
 	}
 	
+  
+	// replace pagination links with current order & search field
+	$("table.grid").find('li.pager a').each(function(){
+		grid=$("table.grid");
+		var order=$(grid).attr('order');
+    var search=$(grid).attr('search');
+		if (order=='') order='name';
+		var url=$(this).attr('href')+'/order/'+order+'/search/'+search;
+		$(this).attr('href',url);
+	});
+  
+  
 	//
 	// Sortable columns in Grid or File (list) modes / Pagination
 	//
@@ -555,13 +568,6 @@ function doGrid() {
 						location.href=url;
 					});
 				}
-			});
-			// replace pagination links with current order & search field
-			$(grid).find('li.pager a').each(function(){
-				var order=$(grid).attr('order');
-				if (order=='') order='name';
-				var url=$(this).attr('href')+'/order/'+order+'/search/'+$(grid).attr('search');
-				$(this).attr('href',url);
 			});
 		}
 		else {

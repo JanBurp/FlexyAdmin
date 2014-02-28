@@ -279,7 +279,7 @@ class Grid Extends CI_Model {
     if ($this->editable) $table["class"].=' editable';
 		$table['order']=implode(':',$this->order);
 		$table['search']=$this->search;
-
+    
 		$table["caption"]["class"]="$tableClass $extraClass";
 		$table["caption"]["row"]=$this->captions;
 
