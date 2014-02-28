@@ -57,8 +57,6 @@ function set_language_neutral_fields($item,$fields=array('str_title','txt_text')
  * @author Jan den Besten
  */
 function langp() {
-  xdebug_break();
-  
 	$args=func_get_args();
 	$line=array_shift($args);
   $line=lang($line);
