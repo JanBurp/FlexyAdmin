@@ -57,6 +57,8 @@ function set_language_neutral_fields($item,$fields=array('str_title','txt_text')
  * @author Jan den Besten
  */
 function langp() {
+  xdebug_break();
+  
 	$args=func_get_args();
 	$line=array_shift($args);
   $line=lang($line);
@@ -71,6 +73,9 @@ function langp() {
       break;
     case 3:
       $out=sprintf($line,$args[0],$args[1],$args[2]);
+      break;
+    case 4:
+      $out=sprintf($line,$args[0],$args[1],$args[2],$args[3]);
       break;
     default:
       $out=$line;
