@@ -253,7 +253,7 @@ class Plugin_automenu extends Plugin {
     						$item['str_table']=$autoValue['table'];
     						$item['str_uri']=$item['uri'];
     						$item['int_id']=$item['id'];
-                if ($item['self_parent']==0) $item['order']=$this->root_order++;
+                if (!isset($item['self_parent']) or $item['self_parent']==0) $item['order']=$this->root_order++;
     						$this->_insertItem($item,$item['id']);
     					}
     					$this->_moveChildren();
@@ -699,6 +699,10 @@ class Plugin_automenu extends Plugin {
 			if (!isset($item['id'])) $item['id']=$this->lastId;
 			$this->parentIDs[$item['id']]=$id;
 		}
+    while (isset($this->newMenu[$id])) {
+      $this->lastId++;
+      $id=$this->lastId;
+    }
 		$item['id']=$id;
 		$this->newMenu[$id]=$item;
 		return $item;
