@@ -240,7 +240,23 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
     return $this->field_exists($field,$table);
 	}
   
-	
+
+  /**
+   * Test of een rij bestaat in een tabel
+   *
+   * @param string $table 
+   * @param string $test 
+   * @param string $field['id']
+   * @return boolean
+   * @author Jan den Besten
+   */
+  public function row_exists($table,$test,$field=PRIMARY_KEY) {
+    $sql="SELECT EXISTS(SELECT 1 FROM `".$table."` WHERE `".$field."` ='".$test."' LIMIT 1)";
+    $query=$this->query($sql);
+    $row=$query->row_array();
+    return current($row);
+  }
+  
   
   /**
    * Test of een rij in een tabel bestaat afhankelijk van meegegeven data
