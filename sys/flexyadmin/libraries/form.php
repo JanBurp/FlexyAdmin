@@ -867,7 +867,9 @@ class Form {
 		}
     
     // Validation error
-    if ($this->validation_error) $out.=form_error($field['name'],'<span class="'.$this->validation_error_class.'"> ','</span>');
+    if ($this->validation_error) {
+      $out.=form_error($field['name'],'<span class="'.$this->validation_error_class.'"> ','</span>');
+    }
     
 		// When (javascript triggers)
 		if (!empty($field['when'])) $this->when($field['when'],$name);

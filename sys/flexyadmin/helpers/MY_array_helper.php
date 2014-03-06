@@ -1109,4 +1109,31 @@ function array_set_multi_key(&$a,$multikey,$value) {
   return $a;
 }
 
+
+
+/**
+ * Group an array by its keys
+ *
+ * @param string $a 
+ * @param string $split['']
+ * @return void
+ * @author Jan den Besten
+ */
+function array_group_by($a,$split='') {
+  ksort($a);
+  $groups = array();
+  foreach ($a as $key=>$val) {
+    if ($split) {
+      $group=get_prefix($key,$split);
+      $key=remove_prefix($key,$split);
+      $groups[$group][$key]=$val;
+    }
+    else {
+      $groups[$key][]=$val;  
+    }
+  }
+  return $groups;
+}
+
+
 ?>
