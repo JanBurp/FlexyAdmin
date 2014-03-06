@@ -181,7 +181,7 @@ $config['function_trigger'] = 'm';
 */
 if (ENVIRONMENT=='testing')
 	$config['log_threshold'] = 4;
-else 
+else
   $config['log_threshold'] = 0;
 
 /*
