@@ -269,7 +269,7 @@ class Forms extends Module {
    * @author Jan den Besten
    * @ignore
    */
-  private function _view_thanks($errors='') {
+  private function _view_thanks($result,$errors='') {
     if ($this->settings('prevend_double_submit')) {
       $this->CI->session->unset_userdata($this->form_id.'__submit');
     }
@@ -277,7 +277,7 @@ class Forms extends Module {
       $model=get_prefix($this->settings('thanks_model'),'.');
       $method=get_suffix($this->settings('thanks_model'),'.');
       if (!isset($this->CI->$model)) $this->CI->load->model($model);
-      return $this->CI->$model->$method();
+      return $this->CI->$model->$method($result);
     }
     $html=div('message').$this->settings('thanks','Thank you!')._div();
     return $html;
