@@ -218,7 +218,8 @@ class Forms extends Module {
           $this->CI->load->model($faction,$action);
           $this->CI->$action->initialize($this->settings)->fields( $formFields );
           $this->CI->$action->set_form_id($this->form_id);
-    			if (!$this->CI->$action->go( $data )) {
+          $result=$this->CI->$action->go( $data );
+    			if (!$result) {
     		    $errors.=$this->CI->$action->get_errors();
     			}
           else {
@@ -226,7 +227,7 @@ class Forms extends Module {
               $this->CI->session->set_userdata($this->form_id.'__submit',true);
               redirect($formAction);
             }
-            $html.=$this->_view_thanks();
+            $html.=$this->_view_thanks($result);
           }
         }
       }
