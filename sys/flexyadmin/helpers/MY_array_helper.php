@@ -10,13 +10,18 @@
 /**
  * Net als element() (van CodeIgniter) maar nu met NULL als default (ipv FALSE)
  *
- * @param string $name
+ * @param mixed $name
  * @param array $arr
  * @param mixed $default[NULL]
  * @return mixed
  */
 function el($name,$arr,$default=NULL) {
-	return element($name,$arr,$default);
+  if (!is_array($name)) $name=array($name);
+  foreach ($name as $key) {
+    $arr=element($key,$arr,$default);
+    if (!is_array($arr)) break;
+  }
+	return $arr;
 }
 
 /**
