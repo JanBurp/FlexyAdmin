@@ -130,7 +130,7 @@ function trace_($a=NULL,$echo=true,$backtraceOffset=1) {
     $out='';
   }
   else {
-    $styling=" style=\"position:relative;overflow:auto;overflow-x:hidden;max-height:400px;font-family:courier,serif;font-size:10px;line-height:14px;z-index:99999;margin:2px;padding:5px;background-color:#efe;color:#000;border:solid 1px #666;opacity:.8;\"";
+    $styling=" style=\"position:relative;overflow:auto;overflow-x:hidden;font-family:courier,serif;font-size:10px;line-height:14px;z-index:99999;margin:2px;padding:5px;background-color:#efe;color:#000;border:solid 1px #666;opacity:.8;\"";
     $out="<pre class=\"FlexyAdminTrace\" $styling>";
   }
   if ($c>=20) {
