@@ -1531,11 +1531,11 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
    *
    * @param string $table 
    * @param string $field 
-   * @param string $id[''] id van de rij in de tabel
+   * @param string $id[1] id van de rij in de tabel (standaard de eerste)
    * @return mixed
    * @author Jan den Besten
    */
-	public function get_field($table,$field,$id="") {
+	public function get_field($table,$field,$id=1) {
 		return $this->get_field_where($table,$field,$this->pk,$id);
 	}
   

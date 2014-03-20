@@ -17,6 +17,15 @@ class MY_Email extends CI_Email {
   private $total_send_addresses=0;
 
   /**
+   * Taal voor het verzenden van emails uit cfg_email
+   *
+   * @var string
+   */
+  private $lang='';
+  
+  private $default_data = array();
+
+  /**
    * Stel de email class in één keer in met een array ipv losse methods aanroepen, bijvoorbeeld:
    * 
    *      $this->email->set_mail(
@@ -84,5 +93,95 @@ class MY_Email extends CI_Email {
     return $this->total_send_addresses;
   }
   
+  
+  
+  
+  /**
+   * Stel taal in (voordat je een mail stuurt met vanuit cfg_email)
+   * Standaard wordt de taal ingesteld op de taal in de sessie (als die bestaat), of de taal die in de config is ingesteld
+   *
+   * @param string $lang 
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function set_language($lang='') {
+    if (empty($lang)) {
+      $CI = &get_instance();
+      if (isset($CI->session->userdata['language'])) {
+        // is set in session?
+        $lang=$CI->session->userdata['language'];
+      }
+      else {
+        // default from config
+        $lang=$CI->config->item('language');
+      }
+    }
+    $this->lang=$lang;
+    return $this;
+  }
+  
+  
+  
+  /**
+   * Send a mail from cfg_emails
+   * 
+   * Standaard parse data:
+   * site_url        => url zoals ingesteld in tbl_site
+   * site_title      => title zoals ingesteld in tbl_site
+   *
+   * @param string $key The key in cfg_email to find the subject and body 
+   * @param array $data Array of values that will be parsed in the subject and body, example: {name} $data=array('name'=>'My Name')
+   * @return bool
+   * @author Jan den Besten
+   */
+  public function send_lang($key,$data=array()) {
+    if (empty($this->lang)) $this->set_language();
+    
+    // Get subject & body
+    $CI = &get_instance();
+    $CI->db->where('key',$key);
+    $mail=$CI->db->get_row('cfg_email');
+    if (!$mail) {
+      $this->_set_error_message('email_key_not_found', $key);
+      return false;
+    }
+    
+    // Get mail info
+    $subject=el('str_subject_'.$this->lang,$mail,'');
+    $body=el('txt_email_'.$this->lang,$mail,'');
+    if (empty($subject) or empty($body)) {
+      $this->_set_error_message('email_subject_text_empty', $key);
+      return false;
+    }
+    
+    // Parse values in subject or body
+    $this->_set_default_data();
+    $data=array_merge($this->default_data,$data);
+    $CI->load->library('parser');
+    $subject = $CI->parser->parse_string($subject,$data);
+    $body = $CI->parser->parse_string($body,$data);
+
+    // Set email
+    $this->subject($subject);
+    $this->message($body);
+    
+    // Send email
+    return $this->send();
+  }
+  
+  /**
+   * Sets default data for send_lang()
+   *
+   * @return void
+   * @author Jan den Besten
+   */
+  private function _set_default_data() {
+    $CI = &get_instance();
+    if (!isset($this->default_data['site_url']))    $this->default_data['site_url'] = $CI->db->get_field('tbl_site','url_url');
+    if (!isset($this->default_data['site_title']))  $this->default_data['site_title'] = $CI->db->get_field('tbl_site','str_title');
+    return $this;
+  }
+  
+
 	
 }
