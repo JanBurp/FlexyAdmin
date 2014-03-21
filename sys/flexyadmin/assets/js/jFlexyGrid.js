@@ -622,7 +622,6 @@ function doGrid() {
 				async:'false',
         dataType: 'json',
 				success: function(data){
-          console.log(data);
           if (data._error) {
             ajaxError(data._error);
           }
