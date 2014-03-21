@@ -144,7 +144,7 @@ function trace_($a=NULL,$echo=true,$backtraceOffset=1) {
   		$type="";
   	}
   	else {
-  		$type="[".gettype($a)."]";
+  		$type="[".gettype($a).(is_array($a)?'-'.count($a):'')."]";
   	}
     $out.="TRACE $show#$c$type:";
   	if (is_bool($a)) {
