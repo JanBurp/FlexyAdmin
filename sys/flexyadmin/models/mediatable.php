@@ -234,7 +234,7 @@ class Mediatable Extends CI_Model {
     $this->db->where('b_exists',true);
     $files=$this->db->where('path',$path)->get_result($this->table,$recent_numbers);
     if (empty($files)) {
-      $this->refresh();
+      // $this->refresh();
       if ($asReadMap) $this->db->set_key('file');
       $this->db->where('b_exists',true);
       $files=$this->db->where('path',$path)->get_result($this->table,$recent_numbers);

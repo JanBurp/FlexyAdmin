@@ -74,11 +74,12 @@ class Filemanager extends AdminController {
 				 */
 				$types=$cfg['str_types'];
 				$uiName=$this->ui->get($path);
-				
-        if ($this->mediatable->exists())
+        
+        if ($this->mediatable->exists()) 
           $files=$this->mediatable->get_files($map);
         else
           $files=read_map($map);
+        
         
 				/**
 				 * update img/media_lists
