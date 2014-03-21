@@ -131,7 +131,7 @@ class Bulkupload extends AdminController {
 	}
 
 
-	function ajaxUpload($args) {
+	public function ajaxUpload($args) {
 		$args=func_get_args();
 		$path=pathdecode($args[0]);
     $map=add_assets($path);
@@ -173,10 +173,16 @@ class Bulkupload extends AdminController {
 				// delete original from Bulk map
 				unlink($bulkMap.'/'.$file);
 			}
-			else {
-				echo "Couldn't move '$file'.";
-			}
 		}
+    
+    $args=array();
+    $args['filename']=$file;
+    $args['_success']=true;
+    if (isset($args['_error']) and !empty($args['_error'])) $args['_success']=false;
+    ksort($args);
+    $json=array2json($args);
+    echo $json;
+    return $json;
 	}
 	
 	
