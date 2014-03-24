@@ -56,7 +56,7 @@ class cfg_users extends AdminController {
    * @author Jan den Besten
    * @ignore
    */
-  public function invite($user_id) {
+  public function invite($user_id=false) {
       return $this->_do_action('invite',$user_id);
   }
 
@@ -137,9 +137,9 @@ class cfg_users extends AdminController {
 
   private function _get_inactive_user_ids() {
     $user_ids=array();
-    $users=$this->user->get_inactive_users_array();
+    $users=$this->user->get_users();
     foreach ($users as $user) {
-      $user_ids[$user['id']]=$user['id'];
+      if (!$user->b_active or empty($user->last_login)) $user_ids[$user->id]=$user->id;
     }
     return $user_ids;
   }

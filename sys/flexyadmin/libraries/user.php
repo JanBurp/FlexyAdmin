@@ -46,6 +46,11 @@ class User Extends Ion_auth {
    */
 	private $siteInfo;
   
+  /**
+   * Is er een tabel met emails?
+   */
+  private $mail_table=false;
+  
 	
   /**
     * @ignore
@@ -57,6 +62,7 @@ class User Extends Ion_auth {
 		$this->siteInfo = $this->CI->db->get_row('tbl_site');
 		$this->CI->config->set_item('site_title', $this->siteInfo['str_title'],'ion_auth');
 		$this->CI->config->set_item('admin_email', $this->siteInfo['email_email'],'ion_auth');
+    if ($this->CI->db->table_exists('cfg_email')) $this->mail_table='cfg_email';
 	}
   
   
@@ -263,28 +269,11 @@ class User Extends Ion_auth {
 		$new_password = $this->CI->ion_auth_model->forgotten_password_complete($code, $profile->str_salt);
 		if ($new_password) {
 			$data = array(
-				'identity'     => $profile->{$identity},
-				'new_password' => $new_password
+				'identity' => $profile->{$identity},
+				'password' => $new_password
 			);
-			$message = $this->CI->load->view($this->CI->config->item('email_templates', 'ion_auth').$this->CI->config->item('email_forgot_password_complete', 'ion_auth'), $data, true);
-
-			$this->CI->email->clear();
-			$config['mailtype'] = $this->CI->config->item('email_type', 'ion_auth');
-			$this->CI->email->initialize($config);
-			$this->CI->email->from($this->CI->config->item('admin_email', 'ion_auth'), $this->CI->config->item('site_title', 'ion_auth'));
-			$this->CI->email->to($profile->email_email);
-      if ($extra_email) $this->CI->email->cc($extra_email);
-			$this->CI->email->subject($this->CI->config->item('site_title', 'ion_auth') . ' - '.$subject);
-			$this->CI->email->message($message);
-
-			if ($this->CI->email->send())	{
-				$this->set_message('password_change_successful');
-				return TRUE;
-			}
-			else {
-				$this->set_error('password_change_unsuccessful');
-				return FALSE;
-			}
+      
+      return $this->send_mail($profile->id,'email_new_password',$this->CI->config->item('site_title', 'ion_auth') . ' - '.$subject,$data);
 		}
 
 		$this->set_error('password_change_unsuccessful');
@@ -417,6 +406,7 @@ class User Extends Ion_auth {
 	public function send_new_password_mail($id,$subject='New account',$password,$extra_email='') {
 		$user  = $this->CI->ion_auth_model->get_user($id)->row();
 		$email = $user->email_email;
+    strace_($email);
 		return $this->send_mail($id,'email_new_login',$subject,array('password'=>$password,'extra_email'=>$extra_email));
 	}
 
@@ -460,18 +450,25 @@ class User Extends Ion_auth {
 		$data=array_merge($data,$additional_data);
     if (isset($additional_data['extra_email'])) $extra_email=$additional_data['extra_email'];
 
-		$message = $this->CI->load->view($this->CI->config->item('email_templates', 'ion_auth').$this->CI->config->item($template, 'ion_auth'), $data, true);
 
+    // Send mail
 		$this->CI->email->clear();
 		$config['mailtype'] = $this->CI->config->item('email_type', 'ion_auth');
 		$this->CI->email->initialize($config);
 		$this->CI->email->from($this->CI->config->item('admin_email', 'ion_auth'), $this->CI->config->item('site_title', 'ion_auth'));
 		$this->CI->email->to($email);
     if (isset($extra_email) and $extra_email) $this->CI->email->cc($extra_email);
-		$this->CI->email->subject($this->CI->config->item('site_title', 'ion_auth') . ' - '.$subject);
-		$this->CI->email->message($message);
 
-		if ($this->CI->email->send() !== TRUE)	{
+    if ($this->mail_table) {
+      $key='login_'.str_replace('email_','',$template);
+      $send=$this->CI->email->send_lang($key,$data);
+    }
+    else {
+  		$message = $this->CI->load->view($this->CI->config->item('email_templates', 'ion_auth').$this->CI->config->item($template, 'ion_auth'), $data, true);
+  		$this->CI->email->subject($this->CI->config->item('site_title', 'ion_auth') . ' - '.$subject);
+  		$send=$this->CI->email->message($message);
+    }
+		if ($send !== TRUE)	{
   		$this->set_error('activation_email_unsuccessful');
 		}
 		return $id;

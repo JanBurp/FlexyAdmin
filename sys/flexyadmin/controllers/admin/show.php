@@ -265,12 +265,11 @@ class Show extends AdminController {
                 }
                 if ($unused>0) {
                   $html.=h(lang('new_users'));
-                  $html.=p() . anchor(api_uri('API_home','cfg_users/send_invitation'),lang('invite'),array('class' => 'button')) .' '. lang('all_new_users').' ('.$unused.')'._p();
+                  $html.=p() . anchor(api_uri('API_home','cfg_users/invite'),lang('invite'),array('class' => 'button')) .' '. lang('all_new_users').' ('.$unused.')'._p();
                 }
               }
               
 							$data=$this->ff->render_grid($table,$data,$right,$info);
-              // trace_($data);
               
 							if (empty($uiTable)) $uiTable=$this->ui->get($table);
 							$tableHelp=$this->ui->get_help($table);
