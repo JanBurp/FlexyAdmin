@@ -712,7 +712,7 @@ function in_array_like($v,$a) {
 function find_row_by_value($a,$v,$key='',$like=false) {
 	$found=array();
 	foreach ($a as $id=>$row) {
-		if (empty($key)) {
+		if (empty($key) and is_array($row)) {
 			if ($like) {
 				if (in_array_like($v,$row)) $found[$id]=$row;
 			}
@@ -720,7 +720,7 @@ function find_row_by_value($a,$v,$key='',$like=false) {
 				if (in_array($v,$row)) $found[$id]=$row;
 			}
 		}
-		else {
+		elseif (is_array($row)) {
 			if ($like) {
 				if (isset($row[$key]) and has_string($v,$row[$key])) $found[$id]=$row;
 			}
@@ -728,6 +728,14 @@ function find_row_by_value($a,$v,$key='',$like=false) {
 				if (isset($row[$key]) and $row[$key]==$v) $found[$id]=$row;
 			}
 		}
+    else {
+			if ($like) {
+				if (has_string($v,$row)) $found[$id]=$row;
+			}
+			else {
+				if ($row==$v) $found[$id]=$row;
+			}
+    }
 	}
 	if (empty($found)) $found=FALSE;
 	return $found;
