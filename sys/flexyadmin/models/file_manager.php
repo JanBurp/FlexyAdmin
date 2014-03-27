@@ -296,10 +296,11 @@ class File_manager Extends CI_Model {
     $result=true;
     
     if (is_dir($name)) {
-      $result=rmdir($name);
+      if (file_exists($name)) $result=rmdir($name);
     }
     else {
-      $result=unlink($name);
+      $result=false;
+      if (file_exists($name)) $result=unlink($name);
 
   		if ($result) {
   			/**
