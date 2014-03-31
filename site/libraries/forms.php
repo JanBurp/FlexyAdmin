@@ -150,7 +150,7 @@ class Forms extends Module {
     if (!$formFields) {
       $this->CI->load->model('getform');
       $flexyform=str_replace('flexyform_','',$this->name);
-      $formData=$this->CI->getform->by_name($flexyform);
+      $formData=$this->CI->getform->by_title($flexyform);
       if ($formData) {
   			$formFieldSets=$formData['fieldsets'];
   			$formFields=$formData['fields'];
@@ -205,6 +205,7 @@ class Forms extends Module {
         $this->CI->load->library('spam');
         $isSpam=$this->CI->spam->check($data,'__test__');
         $this->settings['spam_rapport']=$this->CI->spam->get_rapport();
+        $data['int_spamscore']=$this->CI->spam->get_score();
         unset($formFields['__test__']);
         unset($data['__test__']);
       }
