@@ -1148,5 +1148,21 @@ function array_group_by($a,$split='') {
   return $groups;
 }
 
+/**
+ * Transform multidimensional array to one dimensional array
+ *
+ * @param array $a 
+ * @param string $field 
+ * @return array
+ * @author Jan den Besten
+ */
+function flatten_array_by_field($a,$field) {
+  $flatten=array();
+  foreach ($a as $key=>$row) {
+    $flatten[$key]=$row[$field];
+  }
+  return $flatten;
+}
+
 
 ?>
