@@ -158,8 +158,8 @@ class MY_Email extends CI_Email {
     $this->_set_default_data();
     $data=array_merge($this->default_data,$data);
     $CI->load->library('parser');
-    $subject = $CI->parser->parse_string($subject,$data);
-    $body = $CI->parser->parse_string($body,$data);
+    $subject = $CI->parser->parse_string($subject,$data,true);
+    $body = $CI->parser->parse_string($body,$data,true);
 
     // Set email
     $this->subject($subject);
