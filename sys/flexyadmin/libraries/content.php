@@ -15,6 +15,7 @@
  * 
  * - safe_emails            - [TRUE] emaillinks worden vervangen door spambot veilige emaillinks
  * - auto_target_links      - [TRUE] alle link-tags naar externe adressen krijgen de attributen `target="_blank"` en `rel="external"` mee.
+ * - site_links             - [TRUE] alle link-tags naar interne adressen worden aangepast met site_url(), zodat eventueel index.php ervoor wordt gezet.
  * - add_classes            - [TRUE] alle div, p, en img tags krijgen extra classes: een nr en 'odd' of 'even'
  * - remove_sizes           - [FALSE] width en height attributen van img tags worden verwijderd (zodat met css styling kan worden ingegrepen)
  * - replace_language_links - [FALSE] Links die beginnen met een taal, bijvoorbeeld _nl/contact_ worden vervangen worden door links met de juiste taal bv: _en/contact_
@@ -36,6 +37,7 @@ class Content {
 
 	private $safeEmail=TRUE;
   private $auto_target_links=TRUE;
+  private $site_links=TRUE;
 	private $addClasses=TRUE;
 	private $addPopups=FALSE;
   private $removeSizes=FALSE;
@@ -43,7 +45,7 @@ class Content {
 	private $replaceLanguageLinks=FALSE;
   private $replaceSoftHyphens=FALSE;
   private $replaceHyphen='[-]';
-  private $config_array=array('safe_emails'=>'safeEmail','auto_target_links'=>'auto_target_links','add_classes'=>'addClasses','add_popups'=>'addPopups','replace_language_links'=>'replaceLanguageLinks','replace_soft_hyphens'=>'replaceSoftHyphens','remove_sizes'=>'removeSizes');
+  private $config_array=array('safe_emails'=>'safeEmail','auto_target_links'=>'auto_target_links','site_links'=>'site_links','add_classes'=>'addClasses','add_popups'=>'addPopups','replace_language_links'=>'replaceLanguageLinks','replace_soft_hyphens'=>'replaceSoftHyphens','remove_sizes'=>'removeSizes');
 	
 	private $div_count;
 	private $img_count;
@@ -116,6 +118,9 @@ class Content {
 		$this->replaceLanguageLinks=$replace;
 	}
 	
+  
+  
+  
   /**
    * Voegt een popup link aan img tags toe
    *
@@ -142,6 +147,27 @@ class Content {
    */
   function replace_soft_hyphens($hyphens=TRUE) {
     $this->replaceSoftHyphens=$hyphens;
+  }
+
+
+  /**
+   * Behandelt interne links met site_url()
+   *
+   * @param string $match 
+   * @return string
+   * @author Jan den Besten
+   * @internal
+   * @ignore
+   */
+  private function _site_links($match) {
+    $res=$match[0];
+    $url=$match[2];
+    if (substr($url,1,4)!='http') {
+      $url=site_url($url);
+      if (!isset($match[3])) $match[3]='';
+      $res='<a '.$match[1].' href="'.$url.'" '.$match[3].'>';
+    }
+    return $res;
   }
 
 
@@ -261,6 +287,10 @@ class Content {
 	public function render($txt) {
 		$this->reset_counters();
 		
+    if ($this->site_links) {
+      $txt=preg_replace_callback("/<a(.*)?href=\"(.*)?\"(.*)?>/uiUsm",array($this,"_site_links"),$txt);
+    }
+
     if ($this->auto_target_links) {
       $txt=preg_replace_callback("/<a(.*)?href=\"(.*)?\"(.*)?>/uiUsm",array($this,"_auto_target_links"),$txt);
     }
@@ -272,6 +302,7 @@ class Content {
 		if ($this->replaceLanguageLinks) {
 			$txt=preg_replace('/<a[\s]*href=\"'.$this->replaceLanguageLinks['search'].'\/(.*)\">(.*)<\/a>/','<a href="'.$this->replaceLanguageLinks['replace'].'/$1">$2</a>',$txt);
 		}
+
 		
 		if ($this->addPopups) {
 			$txt=preg_replace_callback("/<img([^<]*)src=['|\"](.*?)['|\"]([^>]*)>/",array($this,"_popupCallBack"),$txt);
