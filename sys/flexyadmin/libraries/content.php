@@ -149,28 +149,6 @@ class Content {
     $this->replaceSoftHyphens=$hyphens;
   }
 
-
-  /**
-   * Behandelt interne links met site_url()
-   *
-   * @param string $match 
-   * @return string
-   * @author Jan den Besten
-   * @internal
-   * @ignore
-   */
-  private function _site_links($match) {
-    $res=$match[0];
-    $url=$match[2];
-    if (substr($url,1,4)!='http') {
-      $url=site_url($url);
-      if (!isset($match[3])) $match[3]='';
-      $res='<a '.$match[1].' href="'.$url.'" '.$match[3].'>';
-    }
-    return $res;
-  }
-
-
   /**
    * Maakt automatisch het juiste target attribuut aan in een link tag <a>
    *
@@ -194,6 +172,27 @@ class Content {
     return $res;
   }
 
+
+
+  /**
+   * Behandelt interne links met site_url()
+   *
+   * @param string $match 
+   * @return string
+   * @author Jan den Besten
+   * @internal
+   * @ignore
+   */
+  private function _site_links($match) {
+    $res=$match[0];
+    $url=$match[2];
+    if (substr($url,1,4)!='http') {
+      $url=site_url($url);
+      if (!isset($match[3])) $match[3]='';
+      $res='<a '.$match[1].' href="'.$url.'" '.$match[3].'>';
+    }
+    return $res;
+  }
 
   /**
    * Callback voor het vervangen van classes
@@ -287,22 +286,21 @@ class Content {
 	public function render($txt) {
 		$this->reset_counters();
 		
-    if ($this->site_links) {
-      $txt=preg_replace_callback("/<a(.*)?href=\"(.*)?\"(.*)?>/uiUsm",array($this,"_site_links"),$txt);
-    }
-
+		if ($this->replaceLanguageLinks) {
+			$txt=preg_replace('/<a[\s]*href=\"'.$this->replaceLanguageLinks['search'].'\/(.*)\">(.*)<\/a>/','<a href="'.$this->replaceLanguageLinks['replace'].'/$1">$2</a>',$txt);
+		}
+    
     if ($this->auto_target_links) {
       $txt=preg_replace_callback("/<a(.*)?href=\"(.*)?\"(.*)?>/uiUsm",array($this,"_auto_target_links"),$txt);
+    }
+
+    if ($this->site_links) {
+      $txt=preg_replace_callback("/<a(.*)?href=\"(.*)?\"(.*)?>/uiUsm",array($this,"_site_links"),$txt);
     }
     
 		if ($this->addClasses) {
 			$txt=preg_replace_callback("/<(div|img|p|h(\d))([^<]*)>/",array($this,"_countCallBack"),$txt);
 		}
-
-		if ($this->replaceLanguageLinks) {
-			$txt=preg_replace('/<a[\s]*href=\"'.$this->replaceLanguageLinks['search'].'\/(.*)\">(.*)<\/a>/','<a href="'.$this->replaceLanguageLinks['replace'].'/$1">$2</a>',$txt);
-		}
-
 		
 		if ($this->addPopups) {
 			$txt=preg_replace_callback("/<img([^<]*)src=['|\"](.*?)['|\"]([^>]*)>/",array($this,"_popupCallBack"),$txt);
