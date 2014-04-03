@@ -115,9 +115,9 @@ class Show extends AdminController {
 						if (!empty($info)) {
 							// yes, get extra query info
 							$extraInfo=$this->cfg->get('cfg_admin_menu',$info);
-							$where=$extraInfo['str_table_where'];
-							if (!empty($where)) {
-								$this->db->where($where,NULL,FALSE);
+							$extra_where=$extraInfo['str_table_where'];
+							if (!empty($extra_where)) {
+                $this->db->where($extra_where,NULL,FALSE);
 							}
 						}
 						$uiTable=$this->ui->get($table);
@@ -222,7 +222,7 @@ class Show extends AdminController {
               $html='';
 							$grid=new grid();
               $grid->set_editable($this->config->item('GRID_EDIT'));
-
+              
 							if ($pagination) {
 								$base_url=api_url('API_view_grid',$table);
 								$pagination=array('base_url'=>$base_url,'per_page'=>$pagination,'total_rows'=>$total_rows,'offset'=>$offset);
