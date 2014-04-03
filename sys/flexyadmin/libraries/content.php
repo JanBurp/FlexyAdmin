@@ -186,7 +186,7 @@ class Content {
   private function _site_links($match) {
     $res=$match[0];
     $url=$match[2];
-    if (substr($url,1,4)!='http') {
+    if ((substr($url,0,4)!='http') and (substr($url,0,6)!='mailto')) {
       $url=site_url($url);
       if (!isset($match[3])) $match[3]='';
       $res='<a '.$match[1].' href="'.$url.'" '.$match[3].'>';
