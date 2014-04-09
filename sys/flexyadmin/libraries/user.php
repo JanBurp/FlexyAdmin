@@ -182,6 +182,12 @@ class User Extends Ion_auth {
 	}
 	
   
+  /**
+   * Add user cfg from user groups to config
+   *
+   * @return void
+   * @author Jan den Besten
+   */
   private function load_user_cfg() {
     $rights=$this->get_rights();
     if (isset($rights['stx_extra_config']) and !empty($rights['stx_extra_config'])) {
