@@ -226,6 +226,11 @@ $config['CFG_field_name']							= "field_field";
 
 
 $config["CFG_"]=array(
+  
+/**
+ * UI
+ */
+  
 	"cfg_ui" => array(
 		"cfg_ui"=>array(
 			"table"=>'cfg_ui',
@@ -307,6 +312,9 @@ $config["CFG_"]=array(
 			)
 	),
 
+/**
+ * TABLE INFO
+ */
 	
 	"cfg_table_info" => array(
 		"cfg_ui"=>array(
@@ -430,17 +438,48 @@ $config["CFG_"]=array(
       'table'=>'res_menu_result',
       'b_pagination'=>0
     )
-		
 	),
 
+
+/**
+ * FIELD INFO
+ */
+
 	"cfg_field_info" => array(
+    
+		"cfg_ui.path"=>array(
+			"b_editable_in_grid"=>1
+			),
+		"cfg_ui.table"=>array(
+			"b_editable_in_grid"=>1
+			),
+		"cfg_ui.field_field"=>array(
+			"b_editable_in_grid"=>1
+			),
+		"cfg_ui.str_title_nl"=>array(
+			"b_editable_in_grid"=>1
+			),
 		"cfg_ui.str_title_en"=>array(
+			"b_editable_in_grid"=>1,
 			"str_fieldset"=>'English'
 			),
 		"cfg_ui.txt_help_en"=>array(
 			"str_fieldset"=>'English'
 			),
 
+
+		"cfg_admin_menu.str_ui_name"=>array(
+			"b_editable_in_grid"=>1,
+    ),
+		"cfg_admin_menu.path"=>array(
+			"b_editable_in_grid"=>1,
+    ),
+		"cfg_admin_menu.table"=>array(
+			"b_editable_in_grid"=>1,
+    ),
+		"cfg_admin_menu.str_table_where"=>array(
+			"b_editable_in_grid"=>1,
+    ),
 		"cfg_admin_menu.str_type"=>array(
 			"field"=>'cfg_admin_menu.str_type',
  			"b_show_in_grid"=>'1',
@@ -449,6 +488,7 @@ $config["CFG_"]=array(
 			"b_multi_options"=>'0',
 			"str_validation_rules"=>''
  			),
+
 		"cfg_auto_menu.str_type"=>array(
 			"field"=>'cfg_auto_menu.str_type',
  			"b_show_in_grid"=>'1',
@@ -457,6 +497,7 @@ $config["CFG_"]=array(
 			"b_multi_options"=>'0',
 			"str_validation_rules"=>''
  			),
+
 		"cfg_configurations.b_use_editor"=>array(
 			"str_fieldset"=>'Editor'
  			),
@@ -502,10 +543,18 @@ $config["CFG_"]=array(
  			),
 
 		"cfg_field_info.field_field"=>array(
+			"b_editable_in_grid"=>1,
 			"b_multi_options"=>'1',
 			"str_validation_rules"=>'required',
  			),
+		"cfg_field_info.str_show_in_form_where"=>array(
+			"b_editable_in_grid"=>1,
+    ),
+		"cfg_field_info.str_fieldset"=>array(
+			"b_editable_in_grid"=>1,
+    ),
 		"cfg_field_info.str_options"=>array(
+			"b_editable_in_grid"=>1,
 			'str_fieldset'=>'Options'
  			),
 		"cfg_field_info.b_multi_options"=>array(
@@ -515,39 +564,54 @@ $config["CFG_"]=array(
 			'str_fieldset'=>'Options'
  			),
 		"cfg_field_info.str_options_where"=>array(
+			"b_editable_in_grid"=>1,
 			'str_fieldset'=>'Options'
  			),
 
 		"cfg_field_info.str_validation_rules"=>array(
+			"b_editable_in_grid"=>1,
 			'str_fieldset'=>'Validation',
 			"str_options"=>'|required|matches|min_length[]|max_length[]|exact_length[]|greater_than[]|less_than[]|alpha|alpha_numeric|alpha_dash|numeric|integer|decimal|is_natural|is_natural_no_zero|valid_email|valid_emails|valid_ip|valid_base64|prep_url|'.$config['CUSTOM_VALIDATION_RULES'],
 			"b_multi_options"=>'1',
  			),
 		"cfg_field_info.str_validation_parameters"=>array(
+			"b_editable_in_grid"=>1,
 			'str_fieldset'=>'Validation'
  			),
 
 		"cfg_table_info.table"=>array(
+			"b_editable_in_grid"=>1,
 			"str_validation_rules"=>'required',
  			),
+		"cfg_table_info.str_order_by"=>array(
+			"b_editable_in_grid"=>1,
+    ),
+		"cfg_table_info.str_fieldsets"=>array(
+			"b_editable_in_grid"=>1,
+    ),
 		"cfg_table_info.str_abstract_fields"=>array(
+			"b_editable_in_grid"=>1,
 			'str_fieldset'=>'Dropdown'
  			),
 		"cfg_table_info.str_options_where"=>array(
+			"b_editable_in_grid"=>1,
 			'str_fieldset'=>'Dropdown'
  			),
 		"cfg_table_info.b_add_empty_choice"=>array(
 			'str_fieldset'=>'Dropdown'
  			),
 		"cfg_table_info.str_form_many_type"=>array(
+			"b_editable_in_grid"=>1,
 			'str_fieldset'=>'Dropdown',
 			"str_options"=>'dropdown|ordered_list', //'|subfields',
  			),
 		"cfg_table_info.str_form_many_order"=>array(
+			"b_editable_in_grid"=>1,
 			'str_fieldset'=>'Dropdown',
 			"str_options"=>'first|last',
  			),
 		"cfg_table_info.int_max_rows"=>array(
+			"b_editable_in_grid"=>1,
 			'str_fieldset'=>'More'
  			),
 		"cfg_table_info.b_grid_add_many"=>array(
@@ -610,6 +674,7 @@ $config["CFG_"]=array(
 			"field"=>'cfg_media_info.str_order',
  			"b_show_in_grid"=>'1',
 			"b_show_in_form"=>'1',
+			"b_editable_in_grid"=>1,
 			'str_fieldset'=>'More',
 			"str_options"=>'name|_name|rawdate|_rawdate|type|_type|size|_size|width|_width|height|_height',
 			"b_multi_options"=>'0',
@@ -619,6 +684,7 @@ $config["CFG_"]=array(
 			"field"=>'cfg_media_info.path',
  			"b_show_in_grid"=>'1',
 			"b_show_in_form"=>'1',
+			"b_editable_in_grid"=>1,
 			"str_options"=>'',
 			"b_multi_options"=>'0',
 			"str_validation_rules"=>'required',
@@ -627,6 +693,7 @@ $config["CFG_"]=array(
 			"field"=>'cfg_media_info.str_types',
  			"b_show_in_grid"=>'1',
 			"b_show_in_form"=>'1',
+			"b_editable_in_grid"=>1,
 			"str_options"=>'',
 			"b_multi_options"=>'0',
 			"str_validation_rules"=>'required',
@@ -635,21 +702,28 @@ $config["CFG_"]=array(
 			"field"=>'cfg_media_info.str_autofill',
  			"b_show_in_grid"=>'1',
 			"b_show_in_form"=>'1',
+			"b_editable_in_grid"=>1,
 			'str_fieldset'=>'More',
 			"str_options"=>'|single upload|bulk upload|both',
 			"b_multi_options"=>'0',
 			"str_validation_rules"=>''
  			),
+		"cfg_media_info.fields_media_fields"=>array(
+			"b_editable_in_grid"=>1,
+    ),
 		"cfg_media_info.b_user_restricted"=>array(
 			'str_fieldset'=>'More'
  			),
 		"cfg_media_info.fields_autofill_fields"=>array(
+			"b_editable_in_grid"=>1,
 			'str_fieldset'=>'More'
  			),
 		"cfg_media_info.int_last_uploads"=>array(
+			"b_editable_in_grid"=>1,
 			'str_fieldset'=>'More'
  			),
 		"cfg_media_info.fields_check_if_used_in"=>array(
+			"b_editable_in_grid"=>1,
 			'str_fieldset'=>'More'
  			),
 		"cfg_media_info.b_in_media_list"=>array(
@@ -664,36 +738,58 @@ $config["CFG_"]=array(
 
 		"cfg_img_info.path"=>array(
 			"field"=>'cfg_img_info.path',
+			"b_editable_in_grid"=>1,
 			"str_validation_rules"=>'required',
  			),
 		"cfg_img_info.b_create_1"=>array(
 			'str_fieldset'=>'Size 1'
  			),
+		"cfg_img_info.int_min_width"=>array(
+			"b_editable_in_grid"=>1,
+    ),
+		"cfg_img_info.int_min_height"=>array(
+			"b_editable_in_grid"=>1,
+    ),
+		"cfg_img_info.int_img_width"=>array(
+			"b_editable_in_grid"=>1,
+    ),
+		"cfg_img_info.int_img_height"=>array(
+			"b_editable_in_grid"=>1,
+    ),
 		"cfg_img_info.int_width_1"=>array(
+			"b_editable_in_grid"=>1,
 			'str_fieldset'=>'Size 1'
  			),
 		"cfg_img_info.int_height_1"=>array(
+			"b_editable_in_grid"=>1,
 			'str_fieldset'=>'Size 1'
  			),
 		"cfg_img_info.str_prefix_1"=>array(
+			"b_editable_in_grid"=>1,
 			'str_fieldset'=>'Size 1'
  			),
 		"cfg_img_info.str_suffix_1"=>array(
+			"b_editable_in_grid"=>1,
 			'str_fieldset'=>'Size 1'
  			),
 		"cfg_img_info.b_create_2"=>array(
+			"b_editable_in_grid"=>1,
 			'str_fieldset'=>'Size 2'
  			),
 		"cfg_img_info.int_width_2"=>array(
+			"b_editable_in_grid"=>1,
 			'str_fieldset'=>'Size 2'
  			),
 		"cfg_img_info.int_height_2"=>array(
+			"b_editable_in_grid"=>1,
 			'str_fieldset'=>'Size 2'
  			),
 		"cfg_img_info.str_prefix_2"=>array(
+			"b_editable_in_grid"=>1,
 			'str_fieldset'=>'Size 2'
  			),
 		"cfg_img_info.str_suffix_2"=>array(
+			"b_editable_in_grid"=>1,
 			'str_fieldset'=>'Size 2'
  			),
 
