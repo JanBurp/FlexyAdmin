@@ -112,5 +112,14 @@ $autoload['language'] = array();
 $autoload['model'] = array('crud','mediatable');
 
 
+
+/*
+ * Check if site autoload.php exists, load those settings.
+ */
+if (file_exists(SITEPATH.'config/autoload.php')) {
+	require(SITEPATH.'config/autoload.php');
+}
+
+
 /* End of file autoload.php */
 /* Location: ./system/application/config/autoload.php */
