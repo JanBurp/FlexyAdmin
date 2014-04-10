@@ -167,6 +167,17 @@ class MY_URI extends CI_URI {
 	}
 
   /**
+   * Test of URI in admin deel (CMS)
+   *
+   * @return bool
+   * @author Jan den Besten
+   */
+  public function is_admin() {
+    return $this->is('admin',1);
+  }
+
+
+  /**
    * Test of uri langer dan $n part(s) is
    *
    * @param string $n[1]
