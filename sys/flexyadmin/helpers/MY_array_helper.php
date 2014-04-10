@@ -143,7 +143,7 @@ function array2json($arr) {
 			$str = '';
 			if(!$is_list) $str = '"' . $key . '":';
 			//Custom handling for multiple data types
-			if(is_numeric($value)) $str .= $value; //Numbers
+			if(is_numeric($value)) $str .= '"'.$value.'"'; //Numbers
 			elseif($value === false) $str .= 'false'; //The booleans
 			elseif($value === true) $str .= 'true';
 			else $str .= '"' . addslashes($value) . '"'; //All other things
