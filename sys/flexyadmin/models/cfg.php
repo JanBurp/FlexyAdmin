@@ -1,5 +1,4 @@
-<?
-/**
+<?php /**
  * handles configuration settings form cfg tables in the database
  * It loads them on demand and reads them.
  *

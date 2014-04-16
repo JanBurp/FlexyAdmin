@@ -1,5 +1,4 @@
-<?
-// Minimized versions of Javascript & CSS files (see http://refresh-sf.com/yui/)
+<?php // Minimized versions of Javascript & CSS files (see http://refresh-sf.com/yui/)
 $minimize=FALSE;
 $minimize=TRUE;
 
@@ -37,14 +36,11 @@ $isForm=has_string('form',$show_type);
 	<script language="javascript" type="text/javascript">
 	<!--
 	var config = new Object;
-	<?
-	if (isset($jsVars) && !empty($jsVars)) {
-		foreach ($jsVars as $key => $value) {
-			?>config.<?=$key?>="<?=$value?>";<?
-		}
-	}
-	?>
-	
+	<?php if (isset($jsVars) && !empty($jsVars)) : ?>
+		<?php foreach ($jsVars as $key => $value) : ?>
+			config.<?=$key?>="<?=$value?>";
+		<?php endforeach; ?>
+  <?php endif; ?>
 	-->
 	</script>
 
@@ -61,7 +57,7 @@ $isForm=has_string('form',$show_type);
 	<script language="javascript" type="text/javascript" src="sys/jquery/plugins/flipv/cvi_text_lib<?=$js?>"></script>
 	<script language="javascript" type="text/javascript" src="sys/jquery/plugins/flipv/jquery.flipv<?=$js?>"></script>
 	
-	<? if ($isGrid): ?>
+	<?php if ($isGrid): ?>
 		<!-- grid Scripts -->
 		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/filterable/jquery.filterable<?=$js?>"></script>
 		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/tablesorter/jquery.tablesorter.min.js"></script>
@@ -69,11 +65,11 @@ $isForm=has_string('form',$show_type);
     <!-- Load plupload  -->
     <script src="sys/jquery/plugins/plupload/js/plupload.full.js" type="text/javascript" charset="utf-8"></script>
     <script src="sys/jquery/plugins/plupload/js/jquery.ui.plupload/jquery.ui.plupload.js" type="text/javascript" charset="utf-8"></script>
-    <? if ($language!='en'): ?><script src="sys/jquery/plugins/plupload/js/i18n/<?=$language?>.js" type="text/javascript" charset="utf-8"></script><? endif ?>
+    <?php if ($language!='en'): ?><script src="sys/jquery/plugins/plupload/js/i18n/<?=$language?>.js" type="text/javascript" charset="utf-8"></script><?php endif ?>
     <link rel="stylesheet" href="sys/jquery/plugins/plupload/js/jquery.ui.plupload/css/jquery.ui.plupload.css" type="text/css" media="screen" title="no title" charset="utf-8" />
     
-	<? endif; ?>
-	<? if ($isForm): ?>
+	<?php endif; ?>
+	<?php if ($isForm): ?>
 		<!-- form Scripts -->
 		<script language="javascript" type="text/javascript" src="sys/jquery/ui/i18n/ui.datepicker-nl.js"></script>
 		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/timepicker/jquery.ui.timepicker<?=$js?>"></script>
@@ -81,7 +77,7 @@ $isForm=has_string('form',$show_type);
 		<link rel="stylesheet" href="sys/jquery/plugins/multiselect/jquery.multiselect.css" type="text/css" media="screen" title="no title" charset="utf-8" />
 		<script src="sys/jquery/plugins/colorpicker/js/colorpicker.js" type="text/javascript" charset="utf-8"></script>
 		<link rel="stylesheet" href="sys/jquery/plugins/colorpicker/css/colorpicker.css" type="text/css" media="screen" title="no title" charset="utf-8" />
-		<? if ($show_editor): ?>
+		<?php if ($show_editor): ?>
 			<!-- editor Scripts -->
 			<script language="javascript" type="text/javascript" src="sys/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
 			<script language="javascript" type="text/javascript" src="sys/tinymce/jscripts/tiny_mce/jquery.tinymce.js"></script>
@@ -118,11 +114,11 @@ $isForm=has_string('form',$show_type);
 						theme_advanced_resizing : true,
 						theme_advanced_resize_horizontal : false,
 						content_css : "<?=assets()?>css/text.css",
-						<? if (isset($formats)): ?>
+						<?php if (isset($formats)): ?>
 						theme_advanced_blockformats : "<?=$formats?>",
-						<? else: ?>
+						<?php else: ?>
 						theme_advanced_blockformats : "h1,h2,h3",
-						<? endif; ?>
+						<?php endif; ?>
 						theme_advanced_styles : "<?=$styles;?>",
 						extended_valid_elements : "iframe[align<bottom?left?middle?right?top|class|frameborder|height|id|longdesc|marginheight|marginwidth|name|scrolling<auto?no?yes|src|style|title|width]",
 						external_image_list_url : "<?=assets()?>/lists/img_list.js?"+new Date().getTime(),
@@ -157,20 +153,20 @@ $isForm=has_string('form',$show_type);
 			   });
 			});
 			</script>
-		<? endif; ?>
-	<? endif; ?>
+		<?php endif; ?>
+	<?php endif; ?>
 	<!-- FlexyAdmin Scripts -->
 	<script language="javascript" type="text/javascript" src="<?=admin_assets()?>js/jFlexyCore<?=$js?>"></script>
-	<? if ($isGrid): ?>
+	<?php if ($isGrid): ?>
 		<script language="javascript" type="text/javascript" src="<?=admin_assets()?>js/jFlexyGrid<?=$js?>"></script>
-	<? endif; ?>
-	<? if ($isForm): ?>
+	<?php endif; ?>
+	<?php if ($isForm): ?>
 		<script language="javascript" type="text/javascript" src="<?=admin_assets()?>js/jFlexyForm<?=$js?>"></script>
-	<? endif; ?>
+	<?php endif; ?>
 	<script language="javascript" type="text/javascript" src="<?=assets()?>js/admin.js"></script>
 </head>
 
-<body class="action_<?=$this->uri->get(2);?> method_<?=$this->uri->get(3);?> <? if (!$this->config->item('FORM_NICE_DROPDOWNS')) echo "normal_dropdowns";?>">
+<body class="action_<?=$this->uri->get(2);?> method_<?=$this->uri->get(3);?> <?php if (!$this->config->item('FORM_NICE_DROPDOWNS')) echo "normal_dropdowns";?>">
 <div id="header">
 	<a id="flexyadmin" href="<?=api_url('API_home');?>"><span class="hide">FlexyAdmin - HOME</span></a>
 </div>

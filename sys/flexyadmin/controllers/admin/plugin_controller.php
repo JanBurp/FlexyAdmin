@@ -1,5 +1,4 @@
-<?
-require_once(APPPATH."core/AdminController.php");
+<?php require_once(APPPATH."core/AdminController.php");
 
 /**
  * This Controller loads a plugin and calls the method

@@ -1,5 +1,4 @@
-<?
-
+<?php 
 $lang['insert_new'] 			    = "Nieuw item toegevoegd aan %s.";
 
 $lang['update_succes']		    = "Het item van %s is aangepast.";

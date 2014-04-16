@@ -1,9 +1,9 @@
 <h1><?=$title?></h1>
 
-<? if (isset($messages)): ?>
-  <? foreach ($messages as $message): ?>
+<?php if (isset($messages)): ?>
+  <?php foreach ($messages as $message): ?>
   <p><?=$message?></p>
-  <? endforeach ?>
-<? endif ?>
+  <?php endforeach ?>
+<?php endif ?>
 
-<? if (isset($content)): ?><?=$content?><? endif ?>
+<?php if (isset($content)): ?><?=$content?><?php endif ?>

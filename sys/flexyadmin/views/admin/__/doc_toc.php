@@ -1,18 +1,18 @@
 <h1>Inhoud</h1>
 <div class="doc_column">
-<? foreach ($toc as $key => $files): ?>
+<?php foreach ($toc as $key => $files): ?>
 
-<? if ($files=='|'): ?>
+<?php if ($files=='|'): ?>
   </div>
   <div class="doc_column">
-<? else: ?>
+<?php else: ?>
   <h4><?=ucfirst($key)?></h4>
   <ul>
-  <? foreach ($files as $name=>$link): ?>
+  <?php foreach ($files as $name=>$link): ?>
     <li><a href="../../<?=$link?>"><?=$name?></a></li>
-  <? endforeach ?>
+  <?php endforeach ?>
   </ul>
-<? endif; ?>
+<?php endif; ?>
 
-<? endforeach ?>
+<?php endforeach ?>
 </div>

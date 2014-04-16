@@ -1,4 +1,4 @@
-<table class="<?=$class?>" order="<?=$order?>" search="<?=$search?>" <?if (isset($pagination['offset'])):?>offset="<?=$pagination['offset']?>" url="<?=$pagination['base_url']?>"<?endif;?>>
+<table class="<?=$class?>" order="<?=$order?>" search="<?=$search?>" <?php if (isset($pagination['offset'])):?>offset="<?=$pagination['offset']?>" url="<?=$pagination['base_url']?>"<?php endif;?>>
 
 	<thead>
 		<tr class="caption <?=$caption["class"];?>">
@@ -6,39 +6,39 @@
 				<table>
 					<thead>
 						<tr>
-							<? foreach($caption["row"] as $cell): ?>
+							<?php foreach($caption["row"] as $cell): ?>
 								<td class="<?=$cell["class"];?>"><?=$cell["cell"];?></td>
-							<? endforeach; ?>
+							<?php endforeach; ?>
 						</tr>
 					</thead>
 				</table>
 			</td>
 		</tr>
 
-		<? if (isset($heading["row"])): ?>
+		<?php if (isset($heading["row"])): ?>
 			<tr class="heading <?=$heading["class"];?>">
-			<? foreach($heading["row"] as $cell): ?>
+			<?php foreach($heading["row"] as $cell): ?>
 				<th class="<?=$cell["class"];?>"><?=$cell["cell"];?></th>
-			<? endforeach; ?>
+			<?php endforeach; ?>
 			</tr>
-		<? endif; ?>
+		<?php endif; ?>
 
 	</thead>
 
 
 	<tbody>
-	<? if (isset($rows) and !empty($rows)):
+	<?php if (isset($rows) and !empty($rows)):
 	 		foreach($rows as $row): ?>
 			<tr id="<?=$row["id"]?>" class="<?=$row["class"];?>">
-				<? foreach($row["row"] as $cell): ?>
+				<?php foreach($row["row"] as $cell): ?>
 				<td class="<?=$cell["class"];?>"><?=$cell["cell"];?></td>
-				<? endforeach; ?>
+				<?php endforeach; ?>
 			</tr>
-	<? endforeach;
-		endif; ?>
+	<?php endforeach; ?>
+  <?php endif; ?>
 	</tbody>
 	
-	<? if (isset($pagination['links'])): ?>
+	<?php if (isset($pagination['links'])): ?>
 	<tfoot>
 		<tr class="pagination">
 			<td colspan="100">
@@ -46,6 +46,6 @@
 			</td>
 		</tr>
 	</tfoot>
-	<? endif; ?>
+	<?php endif; ?>
 	
-	</table>
+</table>

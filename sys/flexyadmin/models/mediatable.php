@@ -1,5 +1,4 @@
-<?
-
+<?php 
 /**
  * Met dit model kunnen bestanden worden toegevoegd of verwijderd aan de media tabel (res_media_files)
  *

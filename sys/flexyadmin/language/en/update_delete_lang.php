@@ -1,5 +1,4 @@
-<?
-
+<?php 
 $lang['insert_new'] 			= "New item added to %s.";
 
 $lang['update_succes']		= "The item from %s is updated.";

@@ -1,5 +1,4 @@
-<?
-
+<?php 
 /**
  * BasicController Class extends MY_Controller
  *

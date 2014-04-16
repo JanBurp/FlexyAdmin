@@ -1,5 +1,4 @@
-<?
-require_once(APPPATH."core/BasicController.php");
+<?php require_once(APPPATH."core/BasicController.php");
 
 
 /**

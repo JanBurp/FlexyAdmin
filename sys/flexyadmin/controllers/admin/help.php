@@ -1,5 +1,4 @@
-<?
-require_once(APPPATH."core/AdminController.php");
+<?php require_once(APPPATH."core/AdminController.php");
 
 /**
  * FlexyAdmin V1

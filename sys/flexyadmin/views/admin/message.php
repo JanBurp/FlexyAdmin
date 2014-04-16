@@ -1,3 +1,3 @@
 <div id="message">
-<? if (isset($message)) echo $message; ?>
+<?php if (isset($message)) echo $message; ?>
 </div>

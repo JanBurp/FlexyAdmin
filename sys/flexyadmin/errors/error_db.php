@@ -23,9 +23,9 @@
 </head>
 <body>
 	<div id="content">
-		<? if (empty($heading)) $heading='Database Error'?>
+		<?php if (empty($heading)) $heading='Database Error'?>
 		<h1><? echo $heading; ?></h1>
-    <? if (IS_LOCALHOST) echo $message; ?>
+    <?php if (IS_LOCALHOST) echo $message; ?>
 		<?
 		$error=explode(' ',$message);
 		$error=substr($error[2],0,4);

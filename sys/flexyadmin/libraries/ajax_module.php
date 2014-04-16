@@ -1,5 +1,4 @@
-<?
-
+<?php 
 /**
  * Basis class voor alle frontend ajax modules. Zo begint je eigen module dus:
  *

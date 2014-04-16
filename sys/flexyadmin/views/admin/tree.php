@@ -6,9 +6,9 @@
 				<table>
 					<thead>
 						<tr>
-							<? foreach($caption["row"] as $cell): ?>
+							<?php foreach($caption["row"] as $cell): ?>
 								<td class="<?=$cell["class"];?>"><?=$cell["cell"];?></td>
-							<? endforeach; ?>
+							<?php endforeach; ?>
 						</tr>
 					</thead>
 				</table>

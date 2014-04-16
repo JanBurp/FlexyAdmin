@@ -1,5 +1,4 @@
-<?
-
+<?php 
 $lang['dialog_yes'] 			= "Yes";
 $lang['dialog_no']				= "No";
 $lang['dialog_ok']				= "Ok";

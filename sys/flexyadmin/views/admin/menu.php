@@ -1,5 +1,5 @@
 <div id="menu">
-<? if (isset($menu)):?>
+<?php if (isset($menu)):?>
 	<?=$menu?>
-<? endif; ?>
+<?php endif; ?>
 </div>

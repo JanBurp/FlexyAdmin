@@ -6,9 +6,9 @@
 				<table>
 					<thead>
 						<tr>
-							<? foreach($caption["row"] as $cell): ?>
+							<?php foreach($caption["row"] as $cell): ?>
 								<td class="<?=$cell["class"];?>"><?=$cell["cell"];?></td>
-							<? endforeach; ?>
+							<?php endforeach; ?>
 						</tr>
 					</thead>
 				</table>
@@ -19,19 +19,19 @@
 	<tbody>
 	<tr><td colspan="100">
 
-	<? if (isset($rows) and !empty($rows)):
+	<?php if (isset($rows) and !empty($rows)):
 			foreach($rows as $row): ?>
 				<div class="file <?=$row["class"]?>">
 					<div  class="toolbar"><?=$row["row"][0]["cell"];?></div>
 					<div class="thumb"><?=$row["row"][1]["cell"];?></div>
 					<div  class="name"><?=$row["id"];?></div>
 				</div>
-	<? endforeach;
+	<?php endforeach;
 		endif; ?>
 	</td></tr>
 	</tbody>
 	
-	<? if (isset($pagination['links'])): ?>
+	<?php if (isset($pagination['links'])): ?>
 	<tfoot>
 		<tr class="pagination">
 			<td colspan="100">
@@ -39,6 +39,6 @@
 			</td>
 		</tr>
 	</tfoot>
-	<? endif; ?>
+	<?php endif; ?>
 	
 </table>

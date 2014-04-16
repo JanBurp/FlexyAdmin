@@ -1,7 +1,7 @@
 <?=$homeplugins;?>
 <?=$logindata;?>
 
-<? if (isset($message)): ?>
+<?php if (isset($message)): ?>
 <br /><br />
 <p><?=$m?></p>
-<? endif ?>
+<?php endif ?>

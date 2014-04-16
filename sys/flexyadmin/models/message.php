@@ -1,5 +1,4 @@
-<?
-
+<?php 
 /**
  * Wordt gebruikt voor interne messages in het admin deel
  *

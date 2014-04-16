@@ -1,5 +1,4 @@
-<?
-/**
+<?php /**
  * Uitbreiding op [Array_helper van CodeIgniter](http://codeigniter.com/user_guide/helpers/array_helper.html)
  * 
  * @author Jan den Besten

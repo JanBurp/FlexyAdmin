@@ -1,5 +1,4 @@
-<?
-/**
+<?php /**
  * Class Flexy_field  Model
  *
  * @author Jan den Besten

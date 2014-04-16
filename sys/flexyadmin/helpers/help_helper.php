@@ -1,5 +1,4 @@
-<?
-/**
+<?php /**
  * Only for internal use
  *
  * @author Jan den Besten

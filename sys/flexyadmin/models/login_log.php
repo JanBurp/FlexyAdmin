@@ -1,5 +1,4 @@
-<?
-/**
+<?php /**
  * logs admin logins
  *
  * @package default

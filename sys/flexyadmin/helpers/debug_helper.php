@@ -1,5 +1,4 @@
-<?
-/**
+<?php /**
  * Handige PHP debug tools
  * @author Jan den Besten
  */

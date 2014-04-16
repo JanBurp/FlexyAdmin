@@ -1,5 +1,4 @@
-<?
-
+<?php 
 /**
  * Verzorgt het (her)sorteren van items in een tabel (ook met boomstructuur)
  *

@@ -22,7 +22,7 @@
 
   <!-- START NAVIGATION -->
   <div id="nav"><div id="nav_inner"></div></div>
-  <? if (!empty($root)): ?><div id="nav_button">inhoud</div><? endif ?>
+  <?php if (!empty($root)): ?><div id="nav_button">inhoud</div><?php endif ?>
   <div id="nav2"><a name="top">&nbsp;</a></div>
   <div id="masthead">
     <table cellpadding="0" cellspacing="0" border="0" style="width:100%">

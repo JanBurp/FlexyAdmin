@@ -1,5 +1,4 @@
-<?
-
+<?php 
 /**
  * De basis Class voor Modules en Plugins
  *

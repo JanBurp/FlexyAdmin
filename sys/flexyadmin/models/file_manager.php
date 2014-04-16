@@ -1,5 +1,4 @@
-<?
-
+<?php 
 /**
  * Met dit model kun je bestanden tonen (in een grid), uploaden, verwijderen etc.
  *

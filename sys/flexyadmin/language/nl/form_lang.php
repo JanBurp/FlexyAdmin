@@ -1,5 +1,4 @@
-<?
-
+<?php 
 $lang['form_cancel'] 			= "Annuleer";
 $lang['form_reset'] 			= "Beginwaarden";
 $lang['form_submit'] 			= "Invoeren";

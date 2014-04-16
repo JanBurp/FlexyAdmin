@@ -1,16 +1,16 @@
 	<div id="footer">
 		<div>
 			<p id="user">User: <a href="<?=api_url('API_user')?>"><?=$user?>
-			<? if (IS_LOCALHOST): ?>
+			<?php if (IS_LOCALHOST): ?>
 				&nbsp;[LOCAL]
-			<? endif; ?>
+			<?php endif; ?>
 			</a></p>
 			<p id="site"><a href="<?=$site;?>" target="_blank"><?=str_replace("http://","",$site);?></a></p>
 			<p id="copyright"><a href="admin/info">FlexyAdmin <span class="small">r<?=$revision?></span></a>|<a href="admin/info/license"><span class="small">disclaimer</a></span></p>
 		</div>
 	</div>
 
-	<? if ($view!="") $this->load->view($view,$data); ?>
+	<?php if ($view!="") $this->load->view($view,$data); ?>
 
 	<div id="ui">
 	</div>
@@ -19,15 +19,15 @@
 	</div>
 	
 	<div id="help_messages">
-		<? foreach ($help as $key => $value) : ?>
+		<?php foreach ($help as $key => $value) : ?>
 			<span id="<?=$key?>"><?=$value;?></span>
-		<? endforeach; ?>
+    <?php endforeach; ?>
 	</div>
 
 	<div id="ui_messages">
-		<? foreach ($dialog as $key => $value) : ?>
+		<?php foreach ($dialog as $key => $value) : ?>
 			<span id="<?=$key?>"><?=$value;?></span>
-		<? endforeach; ?>
+    <?php endforeach; ?>
 	</div>
 
 </body>
