@@ -280,6 +280,7 @@ class CI_Form_validation {
 	 */
 	public function run($group = '')
 	{
+    
 		// Do we even have any data to process?  Mm?
 		if (count($_POST) == 0)
 		{
