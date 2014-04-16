@@ -1,5 +1,4 @@
-<?
-
+<?php 
 /**
  * Zoekt/vervangt items in de database
  *

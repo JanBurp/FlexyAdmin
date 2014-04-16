@@ -1,5 +1,4 @@
-<?
-/**
+<?php /**
  * FlexyAdmin V1
  *
  * A Flexible Database based CMS

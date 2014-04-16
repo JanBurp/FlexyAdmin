@@ -1,5 +1,4 @@
-<?
-
+<?php 
 $lang['form_cancel'] 			= "Cancel";
 $lang['form_reset'] 			= "Reset";
 $lang['form_submit'] 			= "Submit";

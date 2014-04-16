@@ -1,5 +1,4 @@
-<?
-
+<?php 
 /**
  * MY_Controller Class
  *

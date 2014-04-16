@@ -11,9 +11,9 @@
 	<p id="question"><?=$question?></p>
 	<p id="text"><?=$text?></p>
 
-	<? foreach ($buttons as $name=>$uri): ?>
+	<?php foreach ($buttons as $name=>$uri): ?>
 	<a class="button" id="button_<?=$name?>" href="<?=site_url($uri)?>"><?=$name;?></a>
-	<? endforeach; ?>
+	<?php endforeach; ?>
 
 </div>
 

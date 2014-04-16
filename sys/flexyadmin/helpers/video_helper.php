@@ -1,5 +1,4 @@
-<?
-
+<?php 
 /**
  * Een aantal handige functies om met YouTube en Vimeo filmpjes om te gaan
  *

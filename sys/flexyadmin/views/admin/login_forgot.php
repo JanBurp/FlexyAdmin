@@ -18,9 +18,9 @@
 		<form action="<?=site_url("admin/login/forgot_password")?>" method="post" class="login">
 			<h2>FlexyAdmin login</h2>
 			<p>Type you're email address and you will get an email to reset you're password</p>
-			<? if (isset($message) and !empty($message)): ?>
+			<?php if (isset($message) and !empty($message)): ?>
 				<div class="error message"><br/><?=$message?></div>
-			<? endif ?>
+			<?php endif ?>
 			<p class="str"><label for="email">Email</label><input type="text" name="email" value="" id="email" class="email" /></p>
 			<input type="submit" name="" value="Send" submit="submit" class="button submit"  />
 		</form>

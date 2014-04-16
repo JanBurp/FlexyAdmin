@@ -1,5 +1,4 @@
-<?
-
+<?php 
 /**
  * Maakt een mooie tabel met opties zoals zoeken, sorteren etc.
  *

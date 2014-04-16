@@ -1,4 +1,4 @@
-<? require_once(APPPATH."core/FrontendController.php");
+<?php require_once(APPPATH."core/FrontendController.php");
 
 // - zie http://www.derekallard.com/blog/post/building-an-rss-feed-in-code-igniter/
 

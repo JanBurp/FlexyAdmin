@@ -1,5 +1,8 @@
-<?
-require_once(APPPATH."core/AjaxController.php");
+<<<<<<< .mine
+<?php require_once(APPPATH."core/AdminController.php");
+=======
+<?php require_once(APPPATH."core/AjaxController.php");
+>>>>>>> .r2419
 
 /**
  * FlexyAdmin V1

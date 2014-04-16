@@ -1,4 +1,4 @@
-<?
+<?php 
 $colNr=1;
 $rowNr=1;
 
@@ -17,22 +17,22 @@ function url($url,$page,$order) {
 <table <?=$attributes?>>
 
 <thead>
-	<? if (!empty($title)): ?>
+	<?php if (!empty($title)): ?>
 	<tr class="flexyCaption">
 		<td class="flexyTitle" colspan="<?=$nrColumns?>"><?=$title?></td>
 	</tr>
-	<? endif; ?>
+	<?php endif; ?>
 
-	<? if (!empty($pagination)): ?>
+	<?php if (!empty($pagination)): ?>
 	<tr class="flexyPagination">
 		<td colspan="<?=$nrColumns?>"><?=$pagination['render']?></td>
 	</tr>
-	<? endif; ?>
+	<?php endif; ?>
 
 
-	<? if (!empty($headings)): $colNr=1; ?>
+	<?php if (!empty($headings)): $colNr=1; ?>
 	<tr class="flexyHeadings">
-	<? foreach ($headings as $key=>$heading) {
+	<?php foreach ($headings as $key=>$heading) {
 			$class='flexyOrder';
 			$newOrder=$key;
 			if ($order=='_'.$key) {
@@ -46,27 +46,27 @@ function url($url,$page,$order) {
 		<th class="col<?=$colNr++?> <?=$key?> <?=pre($key)?> <?=$class?>"><a href="<?=url($url,$page,$newOrder)?>"><?=$heading?></a></th>
 	<? } ?>
 	</tr>
-	<? endif; ?>
+	<?php endif; ?>
 	
 </thead>
 
 <tbody class="flexyBody">
-<? foreach ($data as $rowKey => $row): $colNr=1; ?>
+<?php foreach ($data as $rowKey => $row): $colNr=1; ?>
 	<tr id="<?=$rowKey?>" class="row<?=$rowNr++?> ">
-	<? foreach ($row as $colKey => $col) : ?>
+	<?php foreach ($row as $colKey => $col) : ?>
 		<td class="col<?=$colNr++?> <?=$colKey?> <?=pre($colKey)?>" title="<?=$col;?>"><?=$col;?></td>
-	<? endforeach; ?>
+	<?php endforeach; ?>
 	</tr>
-<? endforeach; ?>
+<?php endforeach; ?>
 </tbody>
 
-<? if (!empty($pagination)): ?>
+<?php if (!empty($pagination)): ?>
 <tfoot>
 <tr class="flexyPagination">
 	<td colspan="<?=$nrColumns?>"><?=$pagination['render']?></td>
 </tr>
 </tfoot>
-<? endif; ?>
+<?php endif; ?>
 
 
 </table>

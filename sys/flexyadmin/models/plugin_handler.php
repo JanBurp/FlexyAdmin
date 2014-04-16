@@ -1,5 +1,4 @@
-<?
-/**
+<?php /**
  * Handles all backed plugin loading, calling etc.
  *
  * @package default

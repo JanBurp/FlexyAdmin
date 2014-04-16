@@ -1,15 +1,15 @@
-<? if ($messages): ?>
+<?php if ($messages): ?>
 <div id="messages" class="messages">
-  <? foreach ($messages as $message): ?>
+  <?php foreach ($messages as $message): ?>
     <p class="message"><?=$message?></p>
-  <? endforeach ?>
+  <?php endforeach ?>
 </div>
-<? endif ?>
+<?php endif ?>
 
-<? if ($errors): ?>
+<?php if ($errors): ?>
 <div id="errors" class="messages">
-  <? foreach ($errors as $error): ?>
+  <?php foreach ($errors as $error): ?>
     <p class="error"><?=$error?></p>
-  <? endforeach ?>
+  <?php endforeach ?>
 </div>
-<? endif ?>
+<?php endif ?>

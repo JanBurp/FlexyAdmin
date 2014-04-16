@@ -1,5 +1,4 @@
-<?
-
+<?php 
 /**
  * Verzorgt de naamgeving van tabellen en velden
  * 

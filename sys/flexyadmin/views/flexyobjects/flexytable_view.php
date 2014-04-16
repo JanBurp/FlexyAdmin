@@ -1,29 +1,29 @@
 <table <?=$attributes?>>
 
 <thead>
-	<? if (!empty($title)): ?>
+	<?php if (!empty($title)): ?>
 	<tr class="flexyCaption">
 		<td class="flexyTitle" colspan="<?=$nrColumns?>"><?=$title?></td>
 	</tr>
-	<? endif; ?>
+	<?php endif; ?>
 
-	<? if (!empty($headings)): ?>
+	<?php if (!empty($headings)): ?>
 	<tr class="flexyHeadings">
-	<? foreach ($headings as $key=>$heading) : ?>
+	<?php foreach ($headings as $key=>$heading) : ?>
 		<th class="<?=$key?>"><?=$heading?></th>
-	<? endforeach; ?>
+	<?php endforeach; ?>
 	</tr>
-	<? endif; ?>	
+	<?php endif; ?>	
 </thead>
 
 <tbody>
-<? foreach ($data as $rowKey => $row): ?>
+<?php foreach ($data as $rowKey => $row): ?>
 	<tr id="<?=$rowKey?>">
-	<? foreach ($row as $colKey => $col) : ?>
+	<?php foreach ($row as $colKey => $col) : ?>
 		<td class="<?=$colKey?>"><?=$col;?></td>
-	<? endforeach; ?>
+	<?php endforeach; ?>
 	</tr>
-<? endforeach; ?>
+<?php endforeach; ?>
 </tbody>
 
 </table>

@@ -1,35 +1,35 @@
 var toc = {
-<? foreach ($toc as $key => $files): ?>
-<? if ($files!='|'): ?>
-<? foreach ($files as $name=>$link): ?>
+<?php foreach ($toc as $key => $files): ?>
+<?php if ($files!='|'): ?>
+<?php foreach ($files as $name=>$link): ?>
 "<?=$link?>" : { "name" : "<?=$name?>", "type" : "<?=ucfirst($key)?>", "keywords" : "" },
-<? endforeach ?>
-<? else: ?>
+<?php endforeach ?>
+<?php else: ?>
 "|" : "|",
-<? endif; ?>
-<? endforeach ?>
+<?php endif; ?>
+<?php endforeach ?>
 };
 
 var links = {
 "Index" : root+'index.html',
-<? foreach ($toc as $key => $files): ?>
-<? if ($files!='|'): ?>
-<? foreach ($files as $name=>$link): ?>
+<?php foreach ($toc as $key => $files): ?>
+<?php if ($files!='|'): ?>
+<?php foreach ($files as $name=>$link): ?>
 "<?=$name?>" : root+'<?=str_replace('userguide/FlexyAdmin/','',$link)?>',
-<? endforeach ?>
-<? endif ?>
-<? endforeach ?>
+<?php endforeach ?>
+<?php endif ?>
+<?php endforeach ?>
 };
 
 var test = {
 "Index" : "index.html",
-<? foreach ($toc as $key => $files): ?>
-<? if ($files!='|'): ?>
-<? foreach ($files as $name=>$link): ?>
+<?php foreach ($toc as $key => $files): ?>
+<?php if ($files!='|'): ?>
+<?php foreach ($files as $name=>$link): ?>
 "<?=$name?>" : "<?=str_replace('userguide/FlexyAdmin/','',$link)?>",
-<? endforeach ?>
-<? endif ?>
-<? endforeach ?>
+<?php endforeach ?>
+<?php endif ?>
+<?php endforeach ?>
 };
 
 

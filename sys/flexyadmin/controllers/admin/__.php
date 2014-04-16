@@ -1,4 +1,4 @@
-<?
+<?php 
 require_once(APPPATH."core/AdminController.php");
 require_once(APPPATH."core/FrontendController.php");  // Load this also, so PHP can build documentation for this one also
 

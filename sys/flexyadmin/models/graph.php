@@ -1,5 +1,4 @@
-<?
-/**
+<?php /**
  * Maakt grafieken, zoals bij de statistieken
  *
  * @package default

@@ -1,11 +1,11 @@
 <div <?=$attributes?>>
 
-	<? if (!empty($title)): ?>
+	<?php if (!empty($title)): ?>
 	<h1><?=$title?></h1>
-	<? endif; ?>
+	<?php endif; ?>
 	
-	<? foreach ($data as $key => $value):?>
+	<?php foreach ($data as $key => $value):?>
 	<h2><?=$key?></h2><p><?=$value?></p>
-	<? endforeach; ?>
+	<?php endforeach; ?>
 
 </div>

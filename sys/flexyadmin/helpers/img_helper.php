@@ -1,5 +1,4 @@
-<?
-
+<?php 
 /**
  * Aantal handige functies voor het omgaan met afbeeldingen
  *

@@ -25,7 +25,7 @@
 	<div id="content">
 		<h1><? echo $heading; ?></h1>
 		<? echo $message; ?>
-		<? if (IS_LOCALHOST) backtrace_(3); ?>
+		<?php if (IS_LOCALHOST) backtrace_(3); ?>
 	</div>
 </body>
 </html>

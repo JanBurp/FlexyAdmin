@@ -1,13 +1,13 @@
 <div id="<?=str_replace(array('.php',' '),array('','_'),$file);?>" class="doc_page">
   <h1 class="doc_file"><?=$file?></h1>
-  <? if (isset($path)): ?><p class="doc_info doc_path"><?=$path?></p><? endif ?>
+  <?php if (isset($path)): ?><p class="doc_info doc_path"><?=$path?></p><?php endif ?>
   
-  <? if (isset($doc['author'])): ?>
+  <?php if (isset($doc['author'])): ?>
   <p class="doc_author"><?=implode(' ',$doc['author'])?></p>
-  <? endif ?>
+  <?php endif ?>
   
-  <? if (isset($shortdescription)): ?><p class="doc_description"><?=$shortdescription?></p><? endif ?>
-  <? if (isset($description)): ?><p class="doc_description"><?=$description?></p><? endif ?>
+  <?php if (isset($shortdescription)): ?><p class="doc_description"><?=$shortdescription?></p><?php endif ?>
+  <?php if (isset($description)): ?><p class="doc_description"><?=$description?></p><?php endif ?>
   
-  <div class="doc_functions <? if (isset($path)): ?>accordion<? endif ?>"><?=$functions?></div>
+  <div class="doc_functions <?php if (isset($path)): ?>accordion<?php endif ?>"><?=$functions?></div>
 </div>

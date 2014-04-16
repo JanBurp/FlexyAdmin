@@ -1,5 +1,4 @@
-<?
-
+<?php 
 /**
  * Functies die handig zijn voor tabel en veldnamen van de database
  *

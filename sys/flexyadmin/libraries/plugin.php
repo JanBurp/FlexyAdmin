@@ -1,5 +1,4 @@
-<?
-
+<?php 
 /**
  * Basis class voor alle backend plugins. Zo begint je eigen plugin:
  *

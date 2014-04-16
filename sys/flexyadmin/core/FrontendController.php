@@ -1,4 +1,4 @@
-<?
+<?php 
 
 /**
  * Dit is de basis voor de controller aan de frontend (site/controller.php)

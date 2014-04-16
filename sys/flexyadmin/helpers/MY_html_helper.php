@@ -1,5 +1,4 @@
-<?
-
+<?php 
 /**
  * Uitbreiding op <a href="http://codeigniter.com/user_guide/helpers/html_helper.html" target="_blank">HTML_helper van CodeIgniter</a>.
  * 
