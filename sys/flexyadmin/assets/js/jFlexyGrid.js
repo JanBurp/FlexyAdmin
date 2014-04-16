@@ -572,20 +572,31 @@ function doGrid() {
 		}
 		else {
 			// live sorting, first find ordered col
-			if ($(grid).find('tbody tr').length>0) {
-				var cols=$(grid).find('tr.heading th');
-				var sortcol=0;
-				var desc=0;
-				for (var i=0; i<cols.length; i++) {
-					if ( ($(cols[i]).hasClass('headerSortUp')) || ($(cols[i]).hasClass('headerSortDown')) ) {
-						sortcol=i;
-						if ($(cols[i]).hasClass('headerSortUp')) desc=1;
-					}
-				};
-				$(grid).tablesorter({sortList:[[sortcol,desc]]});
-			}
+      var order=$(grid).attr('order');
+      if (order!='') {
+        var desc=false;
+        if (order.substr(0,1)=='_') {
+          order=order.substr(1);
+          desc=true;
+        }
+        var sortcol=$(grid).find('tr.heading th.'+order).index();
+        $(grid).tablesorter({sortList:[[sortcol,desc]]});
+      }
+      // if ($(grid).find('tbody tr').length>0) {
+      //   var cols=$(grid).find('tr.heading th');
+      //   var sortcol=0;
+      //   var desc=0;
+      //   for (var i=0; i<cols.length; i++) {
+      //     if ( ($(cols[i]).hasClass('headerSortUp')) || ($(cols[i]).hasClass('headerSortDown')) ) {
+      //       sortcol=i;
+      //       if ($(cols[i]).hasClass('headerSortUp')) desc=1;
+      //     }
+      //   };
+      //         console.log(sortcol,desc);
+      //         $(grid).tablesorter({sortList:[[sortcol,desc]]});
+      // }
 			else
-				$(grid).tablesorter();
+        $(grid).tablesorter();
 			
 			$(grid).bind("sortStart",function() {
 				$(grid).css("cursor","wait");
