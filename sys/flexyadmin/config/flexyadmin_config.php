@@ -54,7 +54,7 @@ $config['IGNORE_MIME']						= FALSE;
 */
 
 $config['FORM_NICE_DROPDOWNS']		= TRUE;
-$config['MULTIPLE_UPLOAD']		    = FALSE;
+$config['MULTIPLE_UPLOAD']		    = TRUE;
 $config['PAGINATION']             = FALSE;
 $config['GRID_EDIT']              = TRUE;
 $config['GRID_WHERE']             = FALSE;
