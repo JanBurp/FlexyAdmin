@@ -299,7 +299,11 @@ class File_manager Extends CI_Model {
     }
     else {
       $result=false;
-      if (file_exists($name)) $result=unlink($name);
+      if (file_exists($name)) {
+        chmod($name,0777);
+        $result=unlink($name);
+      }
+        
 
   		if ($result) {
   			/**
@@ -307,6 +311,7 @@ class File_manager Extends CI_Model {
   			 */
   			$cachedThumb=$this->config->item('THUMBCACHE').pathencode($name);
   			if (file_exists($cachedThumb)) {
+          chmod($cachedThumb,0777);
           unlink($cachedThumb);
   			}
   			/**
@@ -322,7 +327,10 @@ class File_manager Extends CI_Model {
   			}
   			$names=filter_by($names,"_");
   			foreach($names as $name) {
-          if (file_exists($this->map."/".$name)) unlink($this->map."/".$name);
+          if (file_exists($this->map."/".$name)) {
+            chmod($this->map."/".$name,0777);
+            unlink($this->map."/".$name);
+          }
   			}
 			
   			/**
