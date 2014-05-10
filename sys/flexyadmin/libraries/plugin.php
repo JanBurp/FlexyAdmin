@@ -162,7 +162,7 @@ class Plugin extends Parent_module_plugin {
    */
   protected function view($view='',$args=array(),$hide=TRUE) {
     if (empty($view)) $view='admin/plugins/plugin';
-    $args=array_merge($args,array( 'messages'=>$this->get_messages()) );
+    $args=array_merge($args,array( 'messages'=>$this->get_messages(),'content'=>$this->content) );
     if (!isset($args['title'])) $args['title']=ucfirst($this->shortname);
     return $this->CI->load->view($view,$args,$hide);
   }
