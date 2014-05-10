@@ -13,7 +13,7 @@ class Plugin_resize_images extends Plugin {
    */
   function __construct() {
 		parent::__construct();
-    $this->CI->load->library('upload');
+    $this->CI->load->model('actiongrid');
 	}
 
   /**
@@ -35,20 +35,24 @@ class Plugin_resize_images extends Plugin {
     
     foreach ($maps as $map) {
       $this->add_message(h('Resize images in `'.$map.'`'));
-      $files=read_map(assets().$map);
-      foreach ($files as $key => $value) {
-        if ($this->CI->upload->resize_image($key,assets().$map)) {
-          $this->add_message($key.' resized...');  
-        }
-        else {
-          $this->add_message('ERROR while resizing '.$key);  
-        }
+      $files=read_map(assets().$map,FALSE,FALSE,FALSE);
+      
+      $actiondata=array();
+      foreach ($files as $key => $file) {
+        if (substr($key,0,1)!='_') $actiondata[$key]=array('action_url'=>'admin/ajax/resize_image/'.$map.'/'.$file['name'], 'title'=>$map.'/'.$file['name']);
       }
+      
+      $this->CI->actiongrid->add_actions($actiondata);
+      $this->add_content( $this->CI->actiongrid->view() );
+
     }
     return $this->view();
 	}
 
 
+	function get_show_type() {
+		return 'grid actiongrid';
+	}
 	
 }
 
