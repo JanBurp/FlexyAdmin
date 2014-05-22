@@ -109,18 +109,16 @@ function array2csv($array,$eol="\r\n") {
 
 
 /**
- * Maakt JSON van een array
+ * Maakt JSON van een array. Is net anders dan de standaard PHP functie json_encode(), ook arrays worden meegegeven.
  *
  * @param string $arr
  * @return string JSON
  * @link http://www.bin-co.com/php/scripts/array2json/
  */
 function array2json($arr) {
-  // if(function_exists('json_encode')) return json_encode($arr); //Lastest versions of PHP already has this functionality.
 	$parts = array();
 	$is_list = false;
-
-	//Find out if the given array is a numerical array
+	// Find out if the given array is a numerical array
 	$keys = array_keys($arr);
 	$max_length = count($arr)-1;
   $is_list=TRUE;
@@ -142,11 +140,10 @@ function array2json($arr) {
 			$str = '';
 			if(!$is_list) $str = '"' . $key . '":';
 			//Custom handling for multiple data types
-			if(is_numeric($value)) $str .= '"'.$value.'"'; //Numbers
-			elseif($value === false) $str .= 'false'; //The booleans
+			if(is_numeric($value)) $str .= '"'.$value.'"';  // Numbers
+			elseif($value === false) $str .= 'false';       // The booleans
 			elseif($value === true) $str .= 'true';
-			else $str .= '"' . addslashes($value) . '"'; //All other things
-			// :TODO: Is there any more datatype we should be in the lookout for? (Object?)
+      else $str .= '"' . str_replace("'","\'",$value) . '"'; // All other things: escape single quotes
 			$parts[] = $str;
 		}
 	}
