@@ -6,7 +6,7 @@
     <?php if (isset($param['default'])): ?>[<?php endif ?>
     <span class="doc_param_type">(<?=$param['type']?>) </span><span class="doc_param_name">$<?=str_replace(array('[',']'),array('=',''),$param['param'])?></span>
     <?php if (isset($param['default'])): ?>]<?php endif ?>
-  <? $first=false; endforeach ?>  
+  <?php $first=false; endforeach ?>  
   <?php endif ?>
   )</h2>
 
@@ -34,7 +34,7 @@
         <li>
       <?php if (!empty($return)): ?>
         (<?=$return['type']?>) <?=$return['param']?> <?=$return['desc']?>
-      <? else: ?>
+      <?php else: ?>
         (void)
       <?php endif ?>
         </li>

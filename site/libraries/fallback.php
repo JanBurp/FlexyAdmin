@@ -1,5 +1,4 @@
-<?
-
+<?php 
 /**
 	* Als de controller een gevraagde module niet kan vinden, dan wordt standaard deze module geladen
 	*

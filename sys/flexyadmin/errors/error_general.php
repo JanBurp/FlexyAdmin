@@ -23,8 +23,8 @@
 </head>
 <body>
 	<div id="content">
-		<h1><? echo $heading; ?></h1>
-		<? echo $message; ?>
+		<h1><?php echo $heading; ?></h1>
+		<?php echo $message; ?>
 		<?php if (IS_LOCALHOST) backtrace_(3); ?>
 	</div>
 </body>

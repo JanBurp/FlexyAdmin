@@ -1,5 +1,5 @@
 <h1><?=$title?></h1>
 
-<? if (!empty($messages)): ?><? foreach ($messages as $message): ?>
+<?php if (!empty($messages)): ?><?php foreach ($messages as $message): ?>
   <p><?=$message?></p>  
-<? endforeach ?><? endif ?>
+<?php endforeach ?><?php endif ?>

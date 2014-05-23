@@ -44,7 +44,7 @@ function url($url,$page,$order) {
 			}
 	 ?>
 		<th class="col<?=$colNr++?> <?=$key?> <?=pre($key)?> <?=$class?>"><a href="<?=url($url,$page,$newOrder)?>"><?=$heading?></a></th>
-	<? } ?>
+	<?php } ?>
 	</tr>
 	<?php endif; ?>
 	
