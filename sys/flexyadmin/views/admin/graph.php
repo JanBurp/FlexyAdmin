@@ -17,9 +17,9 @@
 	</thead>
 
 	<tbody>
-	<?
+	<?php 
 	if (isset($rows) and !empty($rows)) {
-		?><tr><?
+		?><tr><?php 
 		foreach ($rows as $key => $value) {
 			$row=$value['row'];
 			?><td class='bar <?=$value['class']?>'>
@@ -28,15 +28,15 @@
 				<div class="graphBar" style="height:<?=$row[1]['percentage']?>px">
 					<span class="verticalText" title="<?=$row[1]['value'];?>"><?=$row[1]['value'];?></span>
 				</div>
-			</td><?
+			</td><?php 
 		}
 		?></tr>
-		<tr><?
+		<tr><?php 
 		foreach ($rows as $key => $value) {
 			$row=$value['row'];
-			?><td class='<?=$value['class']?>'><?=$row[0]['value'];?></td><?
+			?><td class='<?=$value['class']?>'><?=$row[0]['value'];?></td><?php 
 		}
-		?></tr><?
+		?></tr><?php 
 	}
 	?>
 	</tbody>

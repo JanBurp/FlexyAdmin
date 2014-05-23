@@ -95,8 +95,7 @@ $isForm=has_string('form',$show_type);
 						theme : "advanced",
             skin : "flexyadmin",
             theme_advanced_font_sizes : "9px,10px,11px,12px,14px,16px,20px,24px,32px",
-						<?
-						switch ($editor_class) {
+						<?php 						switch ($editor_class) {
 							case 'wide':
 								echo 'width:"608",';
 								break;
