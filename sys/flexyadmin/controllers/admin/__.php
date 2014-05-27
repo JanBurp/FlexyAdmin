@@ -455,10 +455,12 @@ class __ extends AdminController {
     if (preg_match("/\\s(.*)\\s/uiU", $currentVersion,$match)) {
       $currentVersion=$match[1];
       $tinyMCEversions=read_map($this->tinyMCElibs,'dir',FALSE,FALSE,FALSE);
-      $versionText=str_replace('.','_',$currentVersion);
+      krsort($tinyMCEversions);
+      $versionText=str_replace('.','',$currentVersion);
       foreach ($tinyMCEversions as $key => $value) {
         if (preg_match("/tinymce_(.*)?_jquery/uiU", $key,$match)) {
-          if ($match[1]<=$versionText) unset($tinyMCEversions[$key]);
+          $v=str_replace('_','',$match[1]);
+          if ($v<=$versionText) unset($tinyMCEversions[$key]);
         }
         else {
           unset($tinyMCEversions[$key]);
@@ -466,10 +468,12 @@ class __ extends AdminController {
       }
       $newVersion=current($tinyMCEversions);
       $newVersionMap=$newVersion['name'];
+      
       if (preg_match("/tinymce_(.*)?_jquery/uiU", $newVersionMap,$match)) {
         $newVersion=$match[1];
         if ($newVersion>$currentVersion) {
           $this->_add_content('<h1>Update tinyMCE: from '.$currentVersion.' to '.$newVersion.'</h1>');
+
           $currentPath='sys/tinymce/jscripts/tiny_mce';
           $files=read_map($this->tinyMCElibs.'/'.$newVersionMap.'/jscripts','',TRUE,FALSE,FALSE,FALSE);
           $changedFiles=array();
