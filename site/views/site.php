@@ -9,7 +9,6 @@
  * @copyright Copyright (c) 2009-2012, Jan den Besten
  * @link http://www.flexyadmin.com
  */
-
 // ------------------------------------------------------------------------
 
 /**
@@ -66,7 +65,7 @@
 	</div>
 
 <!-- Hier alle JavaScript -->
-<script language="javascript" type="text/javascript" src="sys/jquery/jquery-1.11.0.min.js"></script>
+<script language="javascript" type="text/javascript" src="sys/jquery/jquery-1.11.1.min.js"></script>
 <script language="javascript" type="text/javascript" src="<?=$assets?>js/site.js"></script>
 <!-- Eind van JavaScript -->
 
