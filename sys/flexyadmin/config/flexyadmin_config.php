@@ -369,8 +369,12 @@ $config["CFG_"]=array(
 			"order"=>'107',
 			"table"=>'cfg_lang'
     ),
-		"cfg_table_info"=>array(
+		"cfg_email"=>array(
 			"order"=>'108',
+			"table"=>'cfg_email'
+    ),
+		"cfg_table_info"=>array(
+			"order"=>'110',
 			"table"=>'cfg_table_info',
 			'str_fieldsets'=>'Dropdown,More',
 			"b_grid_add_many"=>'0',
@@ -379,7 +383,7 @@ $config["CFG_"]=array(
 			"str_order_by"=>'',
 			),
 		"cfg_field_info"=>array(
-			"order"=>'109',
+			"order"=>'111',
 			"table"=>'cfg_field_info',
 			'str_fieldsets'=>'Options,Validation',
 			"b_grid_add_many"=>'0',
@@ -387,7 +391,7 @@ $config["CFG_"]=array(
 			"str_order_by"=>'field_field',
 			),
 		"cfg_rss"=>array(
-			"order"=>'110',
+			"order"=>'112',
 			"table"=>'cfg_rss',
 			"b_grid_add_many"=>'0',
 			"str_abstract_fields"=>'',
