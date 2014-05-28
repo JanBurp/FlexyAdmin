@@ -207,13 +207,14 @@ img {
 	padding-left: 20px;
 	}
   
-#menu li .cfg_lang {
+#menu li .cfg_lang,
+#menu li .cfg_email {
 	background-image: url("../icons/lang_set.png");
 	background-repeat: no-repeat;
 	background-position:0px 2px;
 	padding-left: 20px;
 	}
-	
+
 #menu li .cfg_users {
 	background-image: url("../icons/user.gif");
 	background-repeat: no-repeat;
