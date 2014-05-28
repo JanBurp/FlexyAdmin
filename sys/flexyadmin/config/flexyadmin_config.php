@@ -726,6 +726,9 @@ $config["CFG_"]=array(
 			"b_editable_in_grid"=>1,
 			'str_fieldset'=>'More'
  			),
+		"cfg_media_info.b_in_database"=>array(
+			'str_fieldset'=>'More'
+ 			),
 		"cfg_media_info.b_in_media_list"=>array(
 			'str_fieldset'=>'More'
  			),

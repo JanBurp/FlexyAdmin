@@ -182,19 +182,26 @@ class Mediatable Extends CI_Model {
     }
     
     foreach ($paths as $key=>$path) {
-      $path=add_assets($path);
-      $paths[$key]=$path;
-      $files=read_map($path,'',FALSE,TRUE,$this->db->field_exists('stx_meta',$this->table)); // Get header info for jpg
-      foreach ($files as $file => $info) {
-        if (is_visible_file($file)) {
-          $info['b_exists']=true;
-          if ($clean) {
-            $this->add($info);
-          }
-          else {
-            $this->add_info($info);
+      $info=$this->cfg->get('cfg_media_info',$path);
+      $in_database=el('b_in_database',$info,true);
+      if ($in_database) {
+        $path=add_assets($path);
+        $paths[$key]=$path;
+        $files=read_map($path,'',FALSE,TRUE,$this->db->field_exists('stx_meta',$this->table)); // Get header info for jpg
+        foreach ($files as $file => $info) {
+          if (is_visible_file($file)) {
+            $info['b_exists']=true;
+            if ($clean) {
+              $this->add($info);
+            }
+            else {
+              $this->add_info($info);
+            }
           }
         }
+      }
+      else {
+        unset($paths[$key]);
       }
     }
     
@@ -227,16 +234,23 @@ class Mediatable Extends CI_Model {
     return $this->_get_files($path,$asReadMap,$nr);
   }
     
-  private function _get_files($path='',$asReadMap=TRUE,$recent_numbers=0) {
-    $path=remove_assets($path);
+  private function _get_files($map='',$asReadMap=TRUE,$recent_numbers=0) {
+    $path=remove_assets($map);
     if ($asReadMap) $this->db->set_key('file');
     $this->db->where('b_exists',true);
     $files=$this->db->where('path',$path)->get_result($this->table,$recent_numbers);
     if (empty($files)) {
-      // $this->refresh();
       if ($asReadMap) $this->db->set_key('file');
       $this->db->where('b_exists',true);
       $files=$this->db->where('path',$path)->get_result($this->table,$recent_numbers);
+    }
+    if (empty($files)) {
+      // not in database, read from filesystem if set so
+      $info=$this->cfg->get('cfg_media_info',$path);
+      if (!el('b_in_database',$info,true)) {
+        $files=read_map($map,$info['str_types'],FALSE,TRUE,FALSE,FALSE);
+        $asReadMap=false;
+      }
     }
     if ($asReadMap) {
       foreach ($files as $file => $info) {
