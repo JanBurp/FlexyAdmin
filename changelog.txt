@@ -1,3 +1,70 @@
+Changes 2434
+============
+
+MYSQL:
+- update_r2431.sql
+- add_email_table.sql
+- flexyadmin_demo_r2434.sql
+
+UPDATE:
+- UPDATE: TinyMCE 3.5.11
+- UPDATE: jQuery 1.11.1
+
+NEW:
+- possible to not include media files (per map) in res_media_files: set cfg_media_info.b_in_database to false
+- email address for bug reports can be set in index.php: // define("ERROR_EMAIL","error@flexyadmin.com");
+- in grid edit (can be set in cfg_field_info)
+- Added extra rights and options per user_group
+- MY_Uri->is_admin() // Test if uri is in admin (CMS) part
+- MY_Uri->add_remove() adds a new uripart
+- MY_array_helper flatten_array_by_field($a,$field)
+- MY_array_helper array_group_by()
+- MY_array_helper new function: array_merge_recursive_distinct()
+- MY_Email -> multi language and variable parsing sending from cfg_email
+- MY_Input gives nicer errors
+- db->row_exists()
+- Form_validation: valid_date()
+- CI Profiler can be set on by adding $config['PROFILER'] = TRUE; to site/config/flexyadmin_config.php
+
+BUGS:
+- MY_array_helper: array2json() not single-quotes
+- Setting viewmode in filegrid
+- set rights before deleting file
+- Ajax (while sorting)
+- forms didn't get flexyform right
+- Bulkupload didn't work
+- Slow loading of empty maps (called refresh...)
+- plugin_automenu, when only on item
+- pagination/search bug in grid
+- db->search in foreigns and many
+- login_log didn't set changed item with ajax edit
+- grid column ordering when DESC
+- in mediatable when 'rawdate' is not present
+
+OTHERS:
+- All <? are changed to <?php
+- content, site_links automatically replaced with links processed with site_links() ea added index.php
+- debug_helper length of arrays are shown
+- debug_helper styling and max string length of trace_()
+- standard PAGINATION for admin can be set in flexyadmin_config 'PAGINATION' TRUE/FALSE default is FALSE
+- Multiple upload standard on
+- MY_array_helper find_row_by_value() works now also with one-dimensional arrays
+- MY_array_helper el() can now iterate e multidimensional array
+- file_manager allways checks if a file existst
+- user/cfg_users work now with cfg_email
+- MY_lang empty results will also give the key
+- db->get_field() default $id=1 instead of ''
+- site/libraries/forms thanks_model gets return value of go method
+- More robust language/menu
+- Performance boost when grid ordering on foreign keys
+- Admin menu special items have better classname
+- better merging of config items
+- ordering of fields_
+- res_menu_result never pagination
+- plugin_automenu: keeps order of more menu's (WARNING: keep id's different!)
+
+
+
 Changes 2359
 ============
 
@@ -9,28 +76,28 @@ UPDATE:
 - UPDATE: jQuery 1.11.0
 
 CHANGED:
-- CHANGED: Moved validation rules from controller to MY_Form_validation
-- CHANGED: vaidation rule is_unique() so that it works on updates too, for checking not on own row example [cgf_users.str_username.id] where .id is the unique field for testing the row. It must be present in $_POST
-- CHANGED: lang: if language key doesn't exist:  [key] is returned instead of FALSE
-- CHANGED: standard PAGINATION for admin can be set in flexyadmin_config 'PAGINATION' TRUE/FALSE default is FALSE
+- Moved validation rules from controller to MY_Form_validation
+- vaidation rule is_unique() so that it works on updates too, for checking not on own row example [cgf_users.str_username.id] where .id is the unique field for testing the row. It must be present in $_POST
+- lang: if language key doesn't exist:  [key] is returned instead of FALSE
+- standard PAGINATION for admin can be set in flexyadmin_config 'PAGINATION' TRUE/FALSE default is FALSE
 
 
 Changes 2348
 ============
 
 FRONTEND:
-- BUG: libraries/forms/php & views/forms.php
+- libraries/forms/php & views/forms.php
 
 NEW:
-- NEW: cfg_users has now options to actions for users (new password, activation etc)
-- NEW: actiongrid model
+- cfg_users has now options to actions for users (new password, activation etc)
+- actiongrid model
 
 BUGS:
-- BUG: ordering of grid, test if field exists
-- BUG: mediatable tries loading exifdate if not needed
-- BUG: forms didn't work well with flexy_forms
-- BUG: MY_directory_helper count_files()
-- BUG: ordering with more fieds gives a bug when a spaces is between comma and fieldname
+- ordering of grid, test if field exists
+- mediatable tries loading exifdate if not needed
+- forms didn't work well with flexy_forms
+- MY_directory_helper count_files()
+- ordering with more fieds gives a bug when a spaces is between comma and fieldname
 
 
 Changes 2330
@@ -40,15 +107,15 @@ UPDATE:
 - Make it work for PHP 5.5.3
 
 BUGS:
-- BUG: plugin_automenu didn't update (only field) res_menu_result with language split options
-- BUG: when using 'url_suffix' some admin links (pagination) gave problems
-- BUG: Freeze_uri's didn't work since multi language uri's. Now it does for normal and multilanguage sites
-- BUG: create_uri's: now convert_accented_characters() will work!!! (wrong order of strtolower()....)
-- BUG: MY_DB_mysql_driver->get_field_where() when empty what or where
+- plugin_automenu didn't update (only field) res_menu_result with language split options
+- when using 'url_suffix' some admin links (pagination) gave problems
+- Freeze_uri's didn't work since multi language uri's. Now it does for normal and multilanguage sites
+- create_uri's: now convert_accented_characters() will work!!! (wrong order of strtolower()....)
+- MY_DB_mysql_driver->get_field_where() when empty what or where
 
 OTHERS:
-- CHANGED: checking same uri's is now restricted to same branch in plugin_automenu
-- CHANGED: svn is now a model, to get revision nr
+- checking same uri's is now restricted to same branch in plugin_automenu
+- svn is now a model, to get revision nr
 
 
 Changes 2315
@@ -73,23 +140,23 @@ Changes 2305
 ============
 
 FRONTEND:
-- CHANGED: module forms can now populate fields
+- module forms can now populate fields
 
 NEW:
 - plugin_remove_plugin
 - Niewe flexibele validatie: valid_model_method[model.method]
 - create_uri -> is_forbidden()
-- CHANGED: db->add_foreigns(), you can now specify an ' AS fieldname'
+- db->add_foreigns(), you can now specify an ' AS fieldname'
 - md_field
 
 BUGS:
-- BUG: MY_directory_helper count_files()
-- BUG: plugin_install_plugin - Fout als er mappen nog niet bestaan
-- BUG: Styling of edit image thumb
+- MY_directory_helper count_files()
+- plugin_install_plugin - Fout als er mappen nog niet bestaan
+- Styling of edit image thumb
 
 OTHERS:
-- CHANGED: cfg_users => pagination
-- CHANGED: db->unselect() now can have more fields in a comma seperated string or an array of strings
+- cfg_users => pagination
+- db->unselect() now can have more fields in a comma seperated string or an array of strings
 
 
 Changes 2290
@@ -153,12 +220,12 @@ NEW:
 - user->register always returns id of new user (except when user errors)
 
 BUGS:
-- BUG: show.grid -> form didn't use URI_HASH (so on some sites this page is not reachable)
-- BUG: Styling issue fullsize view
-- BUG: title did'n format well
-- BUG: Gmap didn't pass a debugger
-- BUG: forms showed double errors from formactions
-- BUG: when using index.php on some servers, site_url was not given good as js variable (backend)
+- show.grid -> form didn't use URI_HASH (so on some sites this page is not reachable)
+- Styling issue fullsize view
+- title did'n format well
+- Gmap didn't pass a debugger
+- forms showed double errors from formactions
+- when using index.php on some servers, site_url was not given good as js variable (backend)
 
 OTHERS:
 - reset media is now safe and set options for not showing system fields
@@ -208,8 +275,8 @@ CHANGED:
 - disclaimer
 
 BUGS:
-- BUG: Small styling bug fullsize
-- BUG: filemanager doesn't look for used files in multiple fields
+- Small styling bug fullsize
+- filemanager doesn't look for used files in multiple fields
 
 
 Changes 2226
@@ -230,17 +297,17 @@ NEW:
 - better max_length()
 
 BUGS:
-- BUG: MY_array_helper is_assoc()
-- BUG: $this->CI->db->last_num_rows_no_limit(); didn't count well when full_uris asked
-- BUG: user can't edit self
-- BUG: user language settings in admin
+- MY_array_helper is_assoc()
+- $this->CI->db->last_num_rows_no_limit(); didn't count well when full_uris asked
+- user can't edit self
+- user language settings in admin
 
 Changes 2198
 ============
 
 BUGS:
-- BUG: Small ui bug when adding new item
-- BUG: captcha not working -> made better with form validation message
+- Small ui bug when adding new item
+- captcha not working -> made better with form validation message
 - BUG filemanager remove files from fields
 
 NEW:
@@ -279,16 +346,16 @@ NEW:
 - plugin_automenu, if parent is not b_visible, then also children are not visible, and same for b_restricted
 
 BUGS:
-- BUG: plugin_newsletter, when no adresses are selected / Nicer dutch translation of submenu
-- BUG: renaming/deteling files will rename/delete files in other wrong fields
-- BUG: wrong config for plugin_links
-- BUG: better default styling of styleTwitter
-- BUG: in spam.php
-- BUG: showing cfg_users
-- BUG: plugin_auto_menu - Als er veel WHERE statemenst worden gebruikt...
-- BUG: error messages not shown when uploading
-- BUG: Styling of form when FORM_NICE_DROPDOWNS = FALSE
-- BUG: db->last_num_rows_no_limit()
+- plugin_newsletter, when no adresses are selected / Nicer dutch translation of submenu
+- renaming/deteling files will rename/delete files in other wrong fields
+- wrong config for plugin_links
+- better default styling of styleTwitter
+- in spam.php
+- showing cfg_users
+- plugin_auto_menu - Als er veel WHERE statemenst worden gebruikt...
+- error messages not shown when uploading
+- Styling of form when FORM_NICE_DROPDOWNS = FALSE
+- db->last_num_rows_no_limit()
 
 
 Changes 2151
@@ -544,7 +611,7 @@ UPDATES
 - tinyMCE 5.3 jQuery
 
 BUGS:
-- BUG: it was possible for lowrights usergroups to add users with higher rights!! (MY_DB_mysql_driver.php)
+- it was possible for lowrights usergroups to add users with higher rights!! (MY_DB_mysql_driver.php)
 - download list didn't use site_url()
 - Content->safe_email had a small bug when a tags had more attributes
 - Filemaneger had an old call to the old message system

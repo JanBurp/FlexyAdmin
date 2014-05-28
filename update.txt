@@ -19,7 +19,13 @@ For recent sites the update processes described below should work:
 - perform all the steps from your version to the latest:
 
 
+UPDATE 2434
+===========
 
+- Replace current sys map with new sys map
+- Run update_r2380.sql
+- Run update_r2432.sql
+- If needed for server: replace all <? in <?php in .php files in site (with regular expression: "<\?\s" replaced with "<?php " )
 
 
 UPDATE 2359
