@@ -46,7 +46,7 @@ $isForm=has_string('form',$show_type);
 
 	<!-- jQuery NB 1.9 gaat niet in combi met tinyMCE 3.5 -->
 	<script language="javascript" type="text/javascript" src="sys/jquery/jquery-1.8.3.min.js"></script>
-	<!-- jQuery UI -->
+	<!-- jQuery UI, 1.9 vraag nieuwe UI/classes, dus voorlopig niet -->
 	<link rel="stylesheet" type="text/css" href="sys/jquery/ui/custom-theme/jquery-ui-1.8.7.custom.css" />
 	<script language="javascript" type="text/javascript" src="sys/jquery/ui/jquery-ui-1.8.24.custom.min.js"></script>
   <script src="sys/jquery/ui/jquery.ui.progressbar.min.js" type="text/javascript" charset="utf-8"></script>
