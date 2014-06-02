@@ -20,6 +20,11 @@
 	* 
 	* - `$this->CI->_call_library('forms','comments');`
 	* 
+	* Of:
+	* 
+	*         $this->CI->load->library('forms');
+  *         $this->CI->forms->contact();
+	*        
 	* Instellingen
 	* ----------------
 	* 
