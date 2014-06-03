@@ -526,22 +526,23 @@ class Plugin_automenu extends Plugin {
     					$beforeMenu=$this->newMenu;
     					foreach ($this->languages as $lang) {
     						// add language
-    						$item=array('uri'=>$lang,'order'=>$order++,'self_parent'=>-1,'str_title'=>$lang,'str_title_'.$lang=>$lang);
-    						if ($order==1) {
-    							$item=$this->_insertItem($item,1);
-    							$langID=$item['id'];
-    							// first language, just move current menu under it
+    						$item=array('uri'=>$lang,'order'=>$order,'self_parent'=>-1,'str_title'=>$lang,'str_title_'.$lang=>$lang,'str_lang'=>$lang);
+  							$item=$this->_insertItem($item);
+  							$langID=$item['id'];
+    						if ($order==0) {
+    							// first language, just move current menu under it and give lang
     							foreach ($this->newMenu as $id => $item) {
-    								if ($id!=$langID and $item['self_parent']==0)	{
+    								if ($item['self_parent']==0)	{
     									$this->newMenu[$id]['self_parent']=$langID;
     								}
+                    $this->newMenu[$id]['str_lang']=$lang;
     							}
     						}
     						else {
-    							$item=$this->_insertItem($item);
-    							$langID=$item['id'];
-    						 	$this->_addBranch($item,$beforeMenu);
+                  // next languages, create new branch under it
+                  $this->_addBranch($item,$beforeMenu,$lang);
     						}
+                $order++;
     					}
     					break;
 					
@@ -586,19 +587,20 @@ class Plugin_automenu extends Plugin {
   		// Set language items in place
 			$languages=$this->languages;
 			if (empty($languages)) $languages[]='';
-  		foreach ($this->newMenu as $id => $item) {
-  			// if self_parent -1 (language) replace with 0
-  			if (isset($item['self_parent']) and $item['self_parent']==-1) $item['self_parent']=0;
-  			foreach ($languages as $lang) {
-  				if (!empty($lang)) $lang='_'.$lang;
-  				if (!isset($item['str_title'.$lang])) $item['str_title'.$lang]='';
-  				if (isset($item['uri']) and empty($item['str_title'.$lang])) $item['str_title'.$lang]=$item['uri'];
-  			}
-  			$this->newMenu[$id]=$item;
-  		}
+      foreach ($this->newMenu as $id => $item) {
+        // if self_parent -1 (language) replace with 0
+        if (isset($item['self_parent']) and $item['self_parent']==-1) $item['self_parent']=0;
+        // Make sure a title and uri exists
+        foreach ($languages as $lang) {
+          if (!empty($lang)) $lang='_'.$lang;
+          if (!isset($item['str_title'.$lang])) $item['str_title'.$lang]='';
+          if (isset($item['uri']) and empty($item['str_title'.$lang])) $item['str_title'.$lang]=$item['uri'];
+        }
+        $this->newMenu[$id]=$item;
+      }
 
   		ksort($this->newMenu);
-
+      
   		// put in db
   		$this->CI->db->trans_start();
   		$this->CI->db->truncate($this->resultMenu);
@@ -614,13 +616,20 @@ class Plugin_automenu extends Plugin {
         // trace_($this->newMenu);
       }
     
+      if (isset($this->languages)) {
+        // $languages=$this->languages;
+        $lang=current($this->languages);
+      }
+    
   		foreach ($this->newMenu as $key=>$row) {
 
-        // Set language tree
-  			if (isset($row['self_parent']) and isset($this->languages) and in_array($row['uri'],$this->languages)) $lang=$row['uri'];
-        // Set language item
-        if (isset($row['self_parent']) and isset($this->languages)) $row['str_lang']=$lang;
-
+        // Set language
+        $lang=$row['str_lang'];
+        // if (isset($row['self_parent']) and isset($this->languages)) {
+        //   if (in_array($row['uri'],$this->languages)) $lang=$row['uri'];
+        //   $row['str_lang']=$lang;
+        // }
+        
         // Set table
         $table='';
         if (isset($row['str_table'])) $table=$row['str_table'];
@@ -718,11 +727,12 @@ class Plugin_automenu extends Plugin {
 		$this->parentIDs=array();
 	}
 	
-	private function _addBranch($topItem,$branch) {
+	private function _addBranch($topItem,$branch,$lang='') {
 		$fromId=$this->lastId;
 		$parentIDs=array();
 		foreach ($branch as $oldId => $item) {
 			if ($item['self_parent']==0) $item['self_parent']=$topItem['id'];
+      if (!empty($lang)) $item['str_lang']=$lang;
 			$newItem=$this->_insertItem($item);
 		}
 		$this->_moveChildren($fromId);
