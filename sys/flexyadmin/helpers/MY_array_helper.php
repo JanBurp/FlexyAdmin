@@ -143,7 +143,7 @@ function array2json($arr) {
 			if(is_numeric($value)) $str .= '"'.$value.'"';  // Numbers
 			elseif($value === false) $str .= 'false';       // The booleans
 			elseif($value === true) $str .= 'true';
-      else $str .= '"' . str_replace("'","\'",$value) . '"'; // All other things: escape single quotes
+      else $str .= '"' . str_replace(array("'","\n"),array("\'","\\n"),$value) . '"'; // All other things: escape single quotes and linefeeds
 			$parts[] = $str;
 		}
 	}
