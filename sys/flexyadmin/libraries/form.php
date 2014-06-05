@@ -636,16 +636,16 @@ class Form {
 		$out=$value;
 		$value=$this->_value_from_hidden($name,$value);
 		$data=$this->data[$name];
-
-		$type=el("type",$data);
-		switch ($type) {
-			case "checkbox" :
-				if ($value=="true")
-					$out=1;
-				else
-					$out=0;
-				break;
-		}
+    // $type=el("type",$data);
+    // switch ($type) {
+    //   case "checkbox" :
+    //         // trace_($data);
+    //         // if ($value=="true")
+    //         //   $out=1;
+    //         // else
+    //         //   $out=0;
+    //     break;
+    // }
 		return $out;
 	}
 
@@ -892,7 +892,7 @@ class Form {
 					$attr["checked"]="checked";
 				else
 					$attr["checked"]="";
-				$attr["value"]="true";
+        if (empty($attr['value'])) $attr['value']=1;
 				$out.=form_checkbox($attr);
 				if (isset($field['html'])) $out.=div('flexyFormHtml').$field['html']._div();
 				break;
