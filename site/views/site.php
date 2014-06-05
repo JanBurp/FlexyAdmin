@@ -38,13 +38,11 @@
 	<meta name="robots" content="index,follow" />
 	<meta name="revisit-after" content="7 days" />
 
-	<link href="<?=$assets;?>css/text.css" rel="stylesheet" type="text/css" />
-	<link href="<?=$assets;?>css/layout.css" rel="stylesheet" type="text/css" />
- 	<!--[if lte IE 6]><style type="text/css" media="screen">@import url(<?=$assets;?>css/ie6.css);</style><![endif]-->
-	<!--[if IE 7]><style type="text/css" media="screen">@import url(<?=$assets;?>css/ie7.css);</style><![endif]-->
+	<link href="<?=$assets;?>css/text.css?<?=time()?>" rel="stylesheet" type="text/css" />
+	<link href="<?=$assets;?>css/layout.css?<?=time()?>" rel="stylesheet" type="text/css" />
+	<!--[if lte IE 7]><style type="text/css" media="screen">@import url(<?=$assets;?>css/ie7.css);</style><![endif]-->
 	<!--[if IE 8]><style type="text/css" media="screen">@import url(<?=$assets;?>css/ie8.css);</style><![endif]-->
 	<!--[if IE 9]><style type="text/css" media="screen">@import url(<?=$assets;?>css/ie9.css);</style><![endif]-->
-	<!--[if IE 10]><style type="text/css" media="screen">@import url(<?=$assets;?>css/ie10.css);</style><![endif]-->
 	
 	<?php if (isset($str_google_analytics) and !empty($str_google_analytics)): ?><script type="text/javascript">
 	// Google Analytics
@@ -66,7 +64,7 @@
 
 <!-- Hier alle JavaScript -->
 <script language="javascript" type="text/javascript" src="sys/jquery/jquery-1.11.1.min.js"></script>
-<script language="javascript" type="text/javascript" src="<?=$assets?>js/site.js"></script>
+<script language="javascript" type="text/javascript" src="<?=$assets?>js/site.js?<?=time()?>"></script>
 <!-- Eind van JavaScript -->
 
 </body>
