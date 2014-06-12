@@ -129,7 +129,9 @@
 	/**
 	 * New login/password send
 	 **/
-	$config['email_new_login']   = 'new_login.tpl.php';
+	$config['email_new_login']      = 'new_login.tpl.php';
+  
+  $config['email_new_password']   = 'new_password.tpl.php';
 
 
 	/**
