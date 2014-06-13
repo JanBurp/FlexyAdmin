@@ -1,8 +1,8 @@
-Copyright (c) 2009-2013, Jan den Besten, www.jandenbesten.net
+Copyright (c) 2009-2014, Jan den Besten, www.jandenbesten.net
 All rights reserved.
 
 Disclaimer
-De voorwaarden van deze disclaimer zijn van toepassing op het Content Management Systeem ‘FlexyAdmin’ (www.flexyadmin.nl hierna te noemen ‘CMS’) ontwikkeld door Jan den Besten.
+De voorwaarden van deze disclaimer zijn van toepassing op het Content Management Systeem ‘FlexyAdmin’ (hierna te noemen ‘CMS’) ontwikkeld door Jan den Besten.
 Door het CMS te gebruiken stemt u (hierna te noemen ‘gebruiker’) in met deze disclaimer.
 
 De rechten op de inhoud van het CMS waaronder de rechten van intellectuele eigendom berusten bij Jan den Besten. Onder de inhoud van dit CMS wordt onder meer verstaan: functionaliteit, ontwerpstructuur, database-structuur, teksten, lay-out, afbeeldingen, logo's, (beeld)merken, geluids- en/of videofragmenten, foto's, hulpdocumenten en andere artikelen exclusief alle inhoud die de gebruiker toevoegd. Het maken van kopieën, aanpassingen, bewerkingen, wijzigingen van het geheel of van een gedeelte van het CMS in welke vorm of op welke manier dan ook zonder voorafgaande schriftelijke toestemming van Jan den Besten, is niet toegestaan.
@@ -14,4 +14,4 @@ Aanvullend biedt het CMS de mogelijkheid om te werken met profielen en persoonsi
 Dit CMS kan links bevatten naar websites of naar webpagina’s van derden. Jan den Besten heeft geen zeggenschap over de inhoud of over andere kenmerken van deze websites en -pagina’s van derden en is in geen geval aansprakelijk of verantwoordelijk voor de inhoud ervan.
 
 Alle rechten worden voorbehouden. Op deze disclaimer is het Nederlands recht van toepassing.
-Laatst bijgewerkt: september 2013
+Laatst bijgewerkt: juni 2014

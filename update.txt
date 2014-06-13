@@ -19,6 +19,9 @@ For recent sites the update processes described below should work:
 - perform all the steps from your version to the latest:
 
 
+
+
+
 UPDATE 2434
 ===========
 
