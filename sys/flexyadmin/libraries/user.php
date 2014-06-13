@@ -472,7 +472,8 @@ class User Extends Ion_auth {
     else {
   		$message = $this->CI->load->view($this->CI->config->item('email_templates', 'ion_auth').$this->CI->config->item($template, 'ion_auth'), $data, true);
   		$this->CI->email->subject($this->CI->config->item('site_title', 'ion_auth') . ' - '.$subject);
-  		$send=$this->CI->email->message($message);
+  		$this->CI->email->message($message);
+      $send=$this->CI->email->send();
     }
 		if ($send !== TRUE)	{
   		$this->set_error('activation_email_unsuccessful');
