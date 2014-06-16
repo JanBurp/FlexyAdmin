@@ -807,8 +807,8 @@ class File_manager Extends CI_Model {
 		// strace_($pagination);
 		
 		$grid->set_data($renderData,$this->caption);
-		$grid->set_order($pagination['order']);
-		$grid->set_search($pagination['search']);
+		$grid->set_order(el('order',$pagination,''));
+		$grid->set_search(el('search',$pagination,''));
 		
 		if (!empty($renderData)) {
 			$keys=array_keys(current($renderData));
