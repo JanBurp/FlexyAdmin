@@ -624,7 +624,7 @@ class Plugin_automenu extends Plugin {
   		foreach ($this->newMenu as $key=>$row) {
 
         // Set language
-        $lang=$row['str_lang'];
+        $lang=el('str_lang',$row,'');
         // if (isset($row['self_parent']) and isset($this->languages)) {
         //   if (in_array($row['uri'],$this->languages)) $lang=$row['uri'];
         //   $row['str_lang']=$lang;
