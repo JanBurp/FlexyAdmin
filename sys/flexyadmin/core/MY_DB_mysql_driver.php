@@ -824,14 +824,18 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		// trace_($this->ar_join);
 		
 		/**
-			* Select, but first unselect the dont select fields
+			* Select, but first unselect the dont select fields AND Make sure to select PRIMARY KEY
 			*/
 		foreach ($this->ar_dont_select as $dont) {
 			foreach ($select as $key => $value) {
 				if ($value==$dont or $value=="$table.$dont") unset($select[$key]);
 			}
 		}
+    if (!in_array(PRIMARY_KEY,$this->ar_select) and !in_array(PRIMARY_KEY,$select) and !in_array($table.'.'.PRIMARY_KEY,$this->ar_select) and !in_array($table.'.'.PRIMARY_KEY,$select)) {
+      array_unshift($select,$table.'.'.PRIMARY_KEY);
+    }
 		$this->select($select);
+    
 
     /**
 		 * Set Order
