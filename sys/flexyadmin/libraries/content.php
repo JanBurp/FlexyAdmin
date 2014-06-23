@@ -69,6 +69,7 @@ class Content {
    * @author Jan den Besten
    */
   public function initialize($config=array()) {
+    if (empty($config)) $config=$this->config_array;
     foreach ($config as $key => $value) {
       if (isset($this->config_array[$key])) {
         $thisVar=$this->config_array[$key];
@@ -287,7 +288,7 @@ class Content {
 	public function render($txt) {
 		$this->reset_counters();
 		
-		if ($this->replaceLanguageLinks) {
+		if ($this->replaceLanguageLinks and isset($this->replaceLanguageLinks['search']) and isset($this->replaceLanguageLinks['replace'])) {
 			$txt=preg_replace('/<a[\s]*href=\"'.$this->replaceLanguageLinks['search'].'\/(.*)\">(.*)<\/a>/','<a href="'.$this->replaceLanguageLinks['replace'].'/$1">$2</a>',$txt);
 		}
     
