@@ -209,7 +209,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
    * @return object this
    * @author Jan den Besten
    */
-	public function primary_key($pk="id") {
+	public function primary_key($pk=PRIMARY_KEY) {
 		$this->pk=$pk;
     return $this;
   }
@@ -221,7 +221,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
    * @return object this
    * @author Jan den Besten
    */
-	public function set_key($key="id") {
+	public function set_key($key=PRIMARY_KEY) {
 		$this->key=$key;
     return $this;
 	}
@@ -1122,6 +1122,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
    * @author Jan den Besten
    */
 	public function get_result($table,$limit=0,$offset=0) {
+    $setKey=$this->key;
 		$orderAsTree=$this->orderAsTree;
 		$fullUri=$this->uriAsFullUri;
 		$extraFullField=$this->extraFullField;
@@ -1164,20 +1165,20 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				if (isset($row['self_parent']) and $row["self_parent"]!=0) {
 					if (!empty($extraFullField)) $extra=$row[$extraFullField];
           // Get parent
-					if ( $this->_test_if_full_path($result,$row) ) {
-						$parentUri=$result[$row["self_parent"]][$uriField];
-						if (!empty($extraFullField)) {$parentExtra=$result[$row["self_parent"]][$extraFullField];}
-					}
-					else {
-						$parent=$this->get_parent($table,$row,$extraFullField,true);
+          if ( $this->_test_if_full_path($result,$row) ) {
+            $parentUri=$result[$row["self_parent"]][$uriField];
+            if (!empty($extraFullField)) {$parentExtra=$result[$row["self_parent"]][$extraFullField];}
+          }
+          else {
+            $parent=$this->get_parent($table,$row,$extraFullField,true);
             $parentUri=$parent['uri'];
-						if (!empty($extraFullField)) {$parentExtra=$parent[$extraFullField];}
-					}
+            if (!empty($extraFullField)) {$parentExtra=$parent[$extraFullField];}
+          }
           // Set
-					$result[$key][$uriField]=$parentUri."/".$row['uri'];
-					if (!empty($extraFullField)) {
-						$result[$key][$extraFullField]=$parentExtra."&nbsp;/&nbsp;".$extra;
-					}
+          $result[$key][$uriField]=$parentUri."/".$row['uri'];
+          if (!empty($extraFullField)) {
+            $result[$key][$extraFullField]=$parentExtra."&nbsp;/&nbsp;".$extra;
+          }
 				}
         // Although no parent, still need to set another uri field if set
         elseif (is_string($fullUri)) {
@@ -1185,6 +1186,10 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
         }
 			}
 		}
+    
+    if ($setKey!='id') {
+      $result=$this->_set_key_to($result,$setKey);
+    }
 		return $result;
 	}
 	
@@ -1268,6 +1273,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
    * @ignore
    */
 	public function _set_key_to($a,$key="") {
+    $out=$a;
 		$n=0;
 		$out=array();
 		$first=current($a);
@@ -1279,9 +1285,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 					$out[$row[$key]]=$row;
 			}
 		}
-		else
-			$out=$a;
-		return $out;
+    return $out;
 	}
 	
   /**
@@ -1304,8 +1308,8 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		log_("info","[DB+] Get data from query:");
 		$res=$query->result_array();
 		$query->free_result();
-		$result=$this->_set_key_to($res,$this->key);
-
+    $result=$this->_set_key_to($res,PRIMARY_KEY);
+    
 		/**
 		 * add (one to) many data if asked for
 		 */
