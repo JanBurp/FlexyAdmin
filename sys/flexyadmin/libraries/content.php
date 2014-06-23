@@ -56,6 +56,7 @@ class Content {
    * @ignore
    */
 	public function __construct($config=array()) {
+    if (empty($config)) $config=$this->config_array;
     $this->initialize($config);
   }
   
