@@ -295,7 +295,7 @@ class Main extends FrontEndController {
 	 */
 	private function _redirect($page) {
 		if (empty($page['txt_text'])) {
-			$this->db->select('uri');
+			$this->db->select('id,uri');
 			$this->db->where('self_parent',$page['id']);
 			if (isset($page['b_visible'])) $this->db->where('b_visible','1');
 			$subItem=$this->db->get_row(get_menu_table());
