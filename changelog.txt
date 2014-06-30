@@ -1,4 +1,4 @@
-Changes 2457
+Changes 2459
 ============
 
 BUGS:
@@ -7,7 +7,7 @@ BUGS:
 - not existing 'email_new_password' template in ion_auth config
 - db->set_key() in combination with db->uri_as_full_uri() gave problems
 - plugin_automenu, bug in language split
-- MY_array_helper() array2json(), escape "\n"
+- MY_array_helper() array2json() escape bugs
 
 Changes 2434
 ============
