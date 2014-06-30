@@ -66,6 +66,7 @@ class Ajax_module extends Parent_module_plugin {
     if (!isset($args['_success'])) $args['_success']=true;
     ksort($args);
     return array2json($args);
+    // return json_encode($args)
   }
   
 

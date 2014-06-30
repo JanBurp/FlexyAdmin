@@ -134,23 +134,23 @@ function array2json($arr) {
 			if($is_list)
 				$parts[] = array2json($value); /* :RECURSION: */
 			else
-				$parts[] = '"' . $key . '":' . array2json($value); /* :RECURSION: */
+				$parts[] = '"'.$key.'":'.array2json($value); /* :RECURSION: */
 			}
 		else {
 			$str = '';
 			if(!$is_list) $str = '"' . $key . '":';
 			//Custom handling for multiple data types
-			if(is_numeric($value)) $str .= '"'.$value.'"';  // Numbers
-			elseif($value === false) $str .= 'false';       // The booleans
-			elseif($value === true) $str .= 'true';
-      else $str .= '"' . str_replace(array("'","\n"),array("\'","\\n"),$value) . '"'; // All other things: escape single quotes and linefeeds
+			if(is_numeric($value)) $str.= '"'.$value.'"';  // Numbers
+			elseif($value === false) $str.= 'false';       // The booleans
+			elseif($value === true) $str.= 'true';
+      else $str.='"'.str_replace(array('"',chr(92),"\n","\r"),array('\"',chr(92).chr(92),"\\n","\\r"),$value) . '"'; // All other things: escape double quotes etc.
 			$parts[] = $str;
 		}
 	}
 	$json = implode(',',$parts);
 
-	if($is_list) return '[' . $json . ']';//Return numerical JSON
-	return '{' . $json . '}';//Return associative JSON
+	if($is_list) return '[' . $json . ']'; //Return numerical JSON
+	return '{' . $json . '}'; //Return associative JSON
 }
 
 
