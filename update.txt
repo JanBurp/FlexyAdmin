@@ -19,7 +19,11 @@ For recent sites the update processes described below should work:
 - perform all the steps from your version to the latest:
 
 
+UPDATE 2457
+===========
 
+- Replace current sys map with new sys map
+- If you're site has forms with checkboxes and javascript events for them: test them. The checkbox is a bit changed (to normal and expected behavior)
 
 
 UPDATE 2434
