@@ -1,3 +1,10 @@
+Changes 2461
+============
+
+BUGS:
+- MY_array_helper() array2json() escape bugs
+
+
 Changes 2459
 ============
 
