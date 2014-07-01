@@ -19,6 +19,12 @@ For recent sites the update processes described below should work:
 - perform all the steps from your version to the latest:
 
 
+UPDATE 2461
+===========
+
+- Replace current sys map with new sys map
+
+
 UPDATE 2459
 ===========
 
