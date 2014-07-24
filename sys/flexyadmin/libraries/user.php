@@ -278,7 +278,6 @@ class User Extends Ion_auth {
 				'identity' => $profile->{$identity},
 				'password' => $new_password
 			);
-      
       return $this->send_mail($profile->id,'email_new_password',$this->CI->config->item('site_title', 'ion_auth') . ' - '.$subject,$data);
 		}
 
@@ -455,7 +454,14 @@ class User Extends Ion_auth {
 		);
 		$data=array_merge($data,$additional_data);
     if (isset($additional_data['extra_email'])) $extra_email=$additional_data['extra_email'];
-
+    
+    // meta data from meta tables?
+    $tables=$this->CI->config->item('tables', 'ion_auth');
+    if (isset($tables['meta']) and !empty($tables['meta'])) {
+      $this->CI->db->where($this->CI->config->item('join', 'ion_auth'),$id);
+      $meta_data=$this->CI->db->get_row($tables['meta']);
+      if (!empty($meta_data)) $data=array_merge($data,$meta_data);
+    }
 
     // Send mail
 		$this->CI->email->clear();
