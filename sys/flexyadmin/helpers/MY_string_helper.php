@@ -311,22 +311,38 @@ function clean_string($s,$c=0) {
  *
  * @param string $s 
  * @param string $c[0] Maximale lengte
+ * @param string $case['lower'] [lower|upper|ucwords|ucfirst]
  * @return string
  * @author Jan den Besten
  */
-function safe_string($s,$c=0) {
+function safe_string($s,$c=0,$case='lower') {
 	$s=strip_tags($s);
-	$s=strtolower($s);
+  switch ($case) {
+    case 'ucfirst':
+  	  $s=ucfirst($s);
+      break;
+    case 'ucwords':
+  	  $s=ucwords($s);
+      break;
+    case 'upper':
+  	  $s=strtoupper($s);
+      break;
+    case 'lower':
+    default:
+  	  $s=strtolower($s);
+      break;
+  }
 	$s=trim($s);
 	$s=preg_replace("/\s/","_",$s);
-	$s=str_replace(array('"',"'","`",'.',',','(',')'),'',$s);
+	$s=str_replace(array('"',"'","`",'.',',','&','(',')'),'',$s);
 	if ($c>0) $s=substr($s,0,$c);
-	$e=explode('_',$s);
-	if (!empty($e) and count($e)>1) {
-		$s=$e;
-		array_pop($s);
-		$s=implode('_',$s);
-	}
+  // laatste onderdeel eraf... waarom??
+  // $e=explode('_',$s);
+  // if (!empty($e) and count($e)>1) {
+  //   $s=$e;
+  //   array_pop($s);
+  //   $s=implode('_',$s);
+  // }
 	return $s;
 }
 
