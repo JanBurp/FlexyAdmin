@@ -6,7 +6,7 @@
 * 	  ben.edmunds@gmail.com
 *         @benedmunds
 *          
-* Added Awesomeness: Phil Sturgeon
+* Added Awesomeness: Phil Sturgeon & Jan den Besten
 * 
 * Location: http://github.com/benedmunds/CodeIgniter-Ion-Auth/
 *          
@@ -194,6 +194,13 @@
   // Added by JdB
   $config['check_double_email'] = true;
 	
+  
+/*
+ * Check if site specific settings exist, if so load them
+ */
+if (file_exists('site/config/ion_auth.php')) {
+	include("site/config/ion_auth.php");
+}
   
 /* End of file ion_auth.php */
 /* Location: ./system/application/config/ion_auth.php */
