@@ -94,6 +94,7 @@ $mimes = array(
 				'tif'		=>	'image/tiff',
 				'tiff'	=>	'image/tiff',
 				'txt'		=>	array('text/plain','text/x-lisp'),
+        'vcf'   =>  array('text/vcard','text/x-vcard'),
 				'wav'		=>	array('audio/x-wav', 'audio/wave', 'audio/wav'),
 				'wbxml'	=>	'application/wbxml',
 				'wmlc'	=>	'application/wmlc',
