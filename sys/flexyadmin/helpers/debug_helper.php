@@ -122,7 +122,7 @@ function strace_($a=NULL) {
  * @return string Geeft het resulaat (ook nog) als een string
  * @author Jan den Besten
  */
-function trace_($a=NULL,$echo=true,$backtraceOffset=1) {
+function trace_($a=NULL,$echo=true,$backtraceOffset=1,$max=50) {
 	static $c=0;
   $styling='';
   if (IS_AJAX) {
@@ -132,8 +132,8 @@ function trace_($a=NULL,$echo=true,$backtraceOffset=1) {
     $styling=" style=\"position:relative;overflow:auto;overflow-x:hidden;font-family:courier,serif;font-size:10px;line-height:14px;z-index:99999;margin:2px;padding:5px;background-color:#efe;color:#000;border:solid 1px #666;opacity:.8;\"";
     $out="<pre class=\"FlexyAdminTrace\" $styling>";
   }
-  if ($c>=20) {
-    if ($c==20) $out.="TOO MANY TRACES, MAYBE A LOOP BUG...";
+  if ($c>=$max) {
+    if ($c==$max) $out.="TOO MANY TRACES, MAYBE A LOOP BUG...";
   }
   else {
   	$show="";
@@ -159,7 +159,7 @@ function trace_($a=NULL,$echo=true,$backtraceOffset=1) {
     $out.="\n";
   else
     $out.='</pre>';
-  if ($c>20) $out='';
+  if ($c>$max) $out='';
 	if ($echo) echo $out;
 	$c++;
 	return $out;

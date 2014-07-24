@@ -88,22 +88,18 @@ class Ion_auth_model extends CI_Model
 	 * @return void
 	 * @author Mathew
 	 **/
-	public function hash_password($password, $salt=false)
-	{
-	    if (empty($password))
-	    {
-	    	return FALSE;
-	    }
+	public function hash_password($password, $salt=false) {
+    if (empty($password)) {
+	    return FALSE;
+	   }
 
-	    if ($this->store_salt && $salt)
-	    {
-		    return  sha1($password . $salt);
-	    }
-	    else
-	    {
-		$salt = $this->salt();
-		return  $salt . substr(sha1($salt . $password), 0, -$this->salt_length);
-	    }
+	   if ($this->store_salt && $salt) {
+		   return  sha1($password . $salt);
+	   }
+	   else   {
+       $salt = $this->salt();
+       return  $salt . substr(sha1($salt . $password), 0, -$this->salt_length);
+	   }
 	}
 
 	/**
@@ -153,6 +149,29 @@ class Ion_auth_model extends CI_Model
 	{
 	    return substr(md5(uniqid(rand(), true)), 0, $this->salt_length);
 	}
+
+  /**
+   * Genereert random password volgens de regels
+   *
+   * @return void
+   * @author Jan den Besten
+   */
+  public function create_password() {
+    $password = $this->salt();
+    do {
+      $len=strlen($password);
+      $up=rand(0,$len);
+      $down=rand(0,$len);
+      $number=rand(0,$len);
+      $password=str_split($password);
+      $password[$up]=strtoupper(random_string('alpha', 1));
+      $password[$down]=strtolower(random_string('alpha',1));
+      $password[$number]=strtolower(random_string('numeric',1));
+      $password=implode($password);
+    } while (!preg_match("#.*^(?=.{8,20})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$#",$password,$match));
+    return $password;
+  }
+
 
 	/**
 	 * Activation functions
@@ -388,20 +407,7 @@ class Ion_auth_model extends CI_Model
 
     $this->db->where('str_forgotten_password_code', $code);
     if ($this->db->count_all_results($this->tables['users']) > 0) {
-      $password = $this->salt();
-
-      // JDB, make sure password reflect rules: Wachtwoord' moet minimaal 8 karakters lang zijn met minimaal één hoofletter, één kleine letter en één cijfer
-      do {
-        $len=strlen($password);
-        $up=rand(0,$len);
-        $down=rand(0,$len);
-        $number=rand(0,$len);
-        $password=str_split($password);
-        $password[$up]=strtoupper(random_string('alpha', 1));
-        $password[$down]=strtolower(random_string('alpha',1));
-        $password[$number]=strtolower(random_string('numeric',1));
-        $password=implode($password);
-      } while (!preg_match("#.*^(?=.{8,20})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$#",$password,$match));
+      $password = $this->create_password();
       
       $data = array(
           'gpw_password'			=> $this->hash_password($password, $salt),
