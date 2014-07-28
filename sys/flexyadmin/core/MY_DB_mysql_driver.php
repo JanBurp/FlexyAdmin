@@ -2145,10 +2145,10 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		 * add options if asked for
 		 */
 		if ($this->options) {
-			$out=$this->_add_field_options($out,$table,$options);
+			$out=$this->_add_field_options($out,$table,$this->options);
 			// foreign table options
 			$ft=$this->get_foreign_tables($table);
-			$out=$this->_add_foreign_options($out,$ft,$table,$options);
+			$out=$this->_add_foreign_options($out,$ft,$table,$this->options);
 			// join table options
 			if (!isset($jt)) $jt=$this->get_many_tables($table);
 			$out=$this->_add_many_options($out,$jt);

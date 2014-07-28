@@ -84,7 +84,7 @@ function add_validation_parameters($rules,$params) {
  * @return array
  * @author Jan den Besten
  */
-function array2formfields($array,$validation_rules_prefixes=array(),$validation_rules_fields=array(),$extra=array()) {
+function array2formfields($array,$validation_rules_prefixes=array(),$validation_rules_fields=array(),$extra=array(),$field_options=array()) {
   $default_validation_rules_prefixes=array(
     'email'  => 'required|valid_email|max_length[255]',
     'str'    => 'max_length[255]'
@@ -106,7 +106,13 @@ function array2formfields($array,$validation_rules_prefixes=array(),$validation_
     
 		// standard attributes
 		$type='input';
-		$options=array();
+		
+    $options=array();
+    if (isset($field_options[$field])) {
+      $options=$field_options[$field];
+      $type='dropdown';
+    }
+    
 		$validation='';
     $label=lang($field);
     if (empty($label)) {
@@ -135,6 +141,7 @@ function array2formfields($array,$validation_rules_prefixes=array(),$validation_
 				$type='checkbox';
 				break;
 		}
+    
 		if (!empty($type)) $formData[$field]=array_merge(array('type'=>$type,'label'=>$label,'value'=>$value,'options'=>$options,'validation'=>$validation),$extra);
 	}
 	return $formData;
