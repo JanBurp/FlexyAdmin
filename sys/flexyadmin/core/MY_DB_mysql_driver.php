@@ -1385,9 +1385,9 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		 * add options if asked for
 		 */
 		if ($options and !empty($result)) {
-			$result=$this->_add_field_options($result,$table);
+			$result=$this->_add_field_options($result,$table,$options);
 			// options of foreigntables
-			$result=$this->_add_foreign_options($result,$this->get_foreign_tables($table),$table);
+			$result=$this->_add_foreign_options($result,$this->get_foreign_tables($table),$table,$options);
 			// options of many tables
 			if (!isset($manyTables)) {
 				$manyTables=$this->get_many_tables($table);
@@ -1937,8 +1937,9 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	
   /**
    * Voeg opties (van velden die in een formulier meerkeuze zijn) toe aan het resultaat
+   * Als $options een array bevat dan worden alleen de opties meegegeven van de veldnamen in die array.
    *
-   * @param bool $options[true]
+   * @param mixed $options[true] Kan ook een array van velden bevatten.
    * @return object $this
    * @author Jan den Besten
    */
@@ -2024,22 +2025,25 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 * @param array	$out Huidig resultaat
 	 * @param array	$foreignTables de foreigntabellen waarvan de opties moeten worden toegevoegd
 	 * @param string $table['']
+	 * @param array $select_fields[false]
 	 * @return array
 	 * @ignore
 	 */
-	 private function _add_foreign_options($out,$foreignTables,$table='') {
+	 private function _add_foreign_options($out,$foreignTables,$table='',$select_fields=false) {
 			$options=array();
 			if (isset($foreignTables)) {
 				foreach ($foreignTables as $key => $forTable) {
-					$cleanTable=rtrim($forTable['table'],'_');
-					$optionsWhere=$this->CI->cfg->get('CFG_table',$cleanTable,'str_options_where');
-					// override options Where with Field Info, if there is any
-					if (!empty($table)) {
-						$cfgKey=$table.'.'.$forTable['key'];
-						$optWhere=$this->CI->cfg->get('CFG_field',$cfgKey,'str_options_where');
-						if (!empty($optWhere)) $optionsWhere=$optWhere;
-					}
-					$options[$key]=$this->get_options($cleanTable,$optionsWhere);
+          if (!is_array($select_fields) or in_array($key,$select_fields)) {
+  					$cleanTable=rtrim($forTable['table'],'_');
+  					$optionsWhere=$this->CI->cfg->get('CFG_table',$cleanTable,'str_options_where');
+  					// override options Where with Field Info, if there is any
+  					if (!empty($table)) {
+  						$cfgKey=$table.'.'.$forTable['key'];
+  						$optWhere=$this->CI->cfg->get('CFG_field',$cfgKey,'str_options_where');
+  						if (!empty($optWhere)) $optionsWhere=$optWhere;
+  					}
+  					$options[$key]=$this->get_options($cleanTable,$optionsWhere);
+          }
 				}
 			}
 			if (count($options)>0) {
@@ -2081,12 +2085,15 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	 *
 	 * @param array	$out huidige resultaat
 	 * @param string $table
+	 * @param array $select_fields[false]
 	 * @return array
 	 * @ignore
 	 */
-	 private function _add_field_options($out,$table) {
+	 private function _add_field_options($out,$table,$select_fields=false) {
 			// search options in cfg_field_info for every field, if found, give the options
 			$fields=$this->list_fields($table);
+      if (is_array($select_fields)) $fields=array_intersect($fields,$select_fields);
+      
 			foreach($fields as $field) {
         // specifiek veld
 				$options=$this->CI->cfg->get('CFG_field',$table.".".$field,'str_options');
@@ -2138,10 +2145,10 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		 * add options if asked for
 		 */
 		if ($this->options) {
-			$out=$this->_add_field_options($out,$table);
+			$out=$this->_add_field_options($out,$table,$options);
 			// foreign table options
 			$ft=$this->get_foreign_tables($table);
-			$out=$this->_add_foreign_options($out,$ft,$table);
+			$out=$this->_add_foreign_options($out,$ft,$table,$options);
 			// join table options
 			if (!isset($jt)) $jt=$this->get_many_tables($table);
 			$out=$this->_add_many_options($out,$jt);
