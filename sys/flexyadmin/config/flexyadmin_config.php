@@ -371,7 +371,8 @@ $config["CFG_"]=array(
     ),
 		"cfg_email"=>array(
 			"order"=>'108',
-			"table"=>'cfg_email'
+			"table"=>'cfg_email',
+      "str_order_by"=>'key'
     ),
 		"cfg_table_info"=>array(
 			"order"=>'110',
