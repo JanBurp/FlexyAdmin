@@ -1690,15 +1690,24 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		if (is_array($foreigns)) {
 			$this->foreigns=array();
 			foreach ($foreigns as $table => $value) {
+        // value array of fields
+        $fields=array();
+        foreach ($value as $key => $this_fields) {
+          $this_fields=explode(',',$this_fields);
+          $fields=array_merge($fields,$this_fields);
+        }
+        $value=$fields;
+        //
 				$key='id_'.remove_prefix($table);
-				$this->foreigns[$key]=array('key'=>$key,'table'=>$table,'fields'=>$value);
+				$this->foreigns[$key]=array('key'=>$key,'table'=>$table,'fields'=>$fields);
 				if (substr($key,strlen($key)-1,1)=='s') {
 					$key=substr($key,0,strlen($key)-1);
-					$this->foreigns[$key]=array('key'=>$key,'table'=>$table,'fields'=>$value);
+					$this->foreigns[$key]=array('key'=>$key,'table'=>$table,'fields'=>$fields);
 				}
 			}
 		}
 		$this->foreignTables=array();
+    // trace_($this->foreigns);
     return $this;
 	}
 
