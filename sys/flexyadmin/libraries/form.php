@@ -210,6 +210,20 @@ class Form {
 		$this->set_caption($caption);
 	}
   
+  // /**
+  //  * Stel data opnieuw in (verder zijn alle velden etc al ingesteld)
+  //  *
+  //  * @param string $data
+  //  * @return object this
+  //  * @author Jan den Besten
+  //  */
+  // public function repopulate($data) {
+  //   foreach ($data as $key => $value) {
+  //     if (isset($this->postdata[$key])) $this->postdata[$key]=$value;
+  //   }
+  //   return $this;
+  // }
+  
   /**
    * Laat validation error zien bij de velden zelf
    *
@@ -636,16 +650,16 @@ class Form {
 		$out=$value;
 		$value=$this->_value_from_hidden($name,$value);
 		$data=$this->data[$name];
-    // $type=el("type",$data);
-    // switch ($type) {
-    //   case "checkbox" :
-    //         // trace_($data);
-    //         // if ($value=="true")
-    //         //   $out=1;
-    //         // else
-    //         //   $out=0;
-    //     break;
-    // }
+    $type=el("type",$data);
+    switch ($type) {
+      case "checkbox" :
+        $out=true;
+        if ($value==false) {
+           $out='';
+        }
+        $this->data[$name]['value']=$out;
+        break;
+    }
 		return $out;
 	}
 
@@ -888,7 +902,7 @@ class Form {
 				break;
 
 			case "checkbox":
-				if ($attr["value"])
+				if (!empty($attr["value"]))
 					$attr["checked"]="checked";
 				else
 					$attr["checked"]="";
