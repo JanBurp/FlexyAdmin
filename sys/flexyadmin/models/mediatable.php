@@ -121,6 +121,10 @@ class Mediatable Extends CI_Model {
         $set['stx_meta']=array2json($set['stx_meta']);
       }
     }
+    
+    // Preserve title
+    $oldTitle=$this->db->get_field_where($this->table,'str_title','file',$set['file']);
+    if (!empty($oldTitle)) unset($set['str_title']);
       
     if ($userId and $this->db->field_exists('user',$this->table)) $set['user']=$userId;
 
