@@ -53,6 +53,23 @@ class Mediatable Extends CI_Model {
   }
 
   /**
+   * Test of bestand in media tabel bestaat
+   *
+   * @param string $file 
+   * @param string $path=''
+   * @return bool
+   * @author Jan den Besten
+   */
+  public function exists_in_table($file,$path='') {
+    $path=str_replace($this->config->item('ASSETS'),'',$path);
+    $file=get_suffix($file,'/');
+    $this->db->where('path',$path)->where('file',$file);
+    $row=$this->db->get_result($this->table);
+    return (!empty($row));
+  }
+
+
+  /**
    * Voeg file toe aan mediatabel
    *
    * @param mixed $file een array met alle file info, of de naam van de file 
@@ -195,7 +212,7 @@ class Mediatable Extends CI_Model {
         foreach ($files as $file => $info) {
           if (is_visible_file($file)) {
             $info['b_exists']=true;
-            if ($clean) {
+            if ($clean or !$this->exists_in_table($file,$path)) {
               $this->add($info);
             }
             else {
