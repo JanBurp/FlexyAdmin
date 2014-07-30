@@ -186,9 +186,8 @@
         $key_table=get_prefix($key,'.');
         $key_field=get_suffix($key,'.');
         $key2='';$key2_data=NULL;
-        if (!empty($key_table) and !empty($key_field)) $key2='*.'.$key_field;
+        if (!empty($key_field)) $key2='*.'.$key_field;
         if ($key==$key2) $key2='';
-        
         $key_data=el($key,$data);
         if (!empty($key2)) {
           $key2_data=el($key2,$data);
@@ -199,6 +198,7 @@
               $key_data=array_merge($key2_data,$key_data);
           }
         }
+        
  				if (empty($field)) {
  					$out=$key_data;
            // if (!isset($out)) $out=el($key,current($data));

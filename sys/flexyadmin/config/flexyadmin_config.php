@@ -309,6 +309,11 @@ $config["CFG_"]=array(
 			"field_field"=>'cfg_field_info.str_validation_parameters',
 			"str_title_nl"=>'Val. Parameters',
 			"str_title_en"=>'Val. Parameters'
+			),
+		"cfg_field_info.table"=>array(
+			"field_field"=>'cfg_field_info.table',
+			"str_title_nl"=>'Foreigntable',
+			"str_title_en"=>'Foreigntable'
 			)
 	),
 

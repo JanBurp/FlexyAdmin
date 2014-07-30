@@ -52,17 +52,20 @@ function foreign_key_from_table($table) {
  */
 function foreign_table_from_key($key,$give_clean=false) {
 	$CI =& get_instance();
-	$sFid=rtrim($key,"_"); // make sure id_item_ is cleaned to id_item for self relations
-	$s=$CI->config->item('TABLE_prefix')."_".remove_prefix($sFid);
-	if (!$CI->db->table_exists($s)) {
-		$s=$s."s";
-		if (!$CI->db->table_exists($s)) {
-			$s=$CI->config->item('CFG_table_prefix')."_".remove_prefix($sFid);
-			if (!$CI->db->table_exists($s)) {
-				$s=$s."s";
-			}
-		}
-	}
+	$sFid=rtrim($key,"_");
+  $s=$CI->cfg->get('cfg_field_info',$key,'table','');
+  if (empty($s)) {
+  	$s=$CI->config->item('TABLE_prefix')."_".remove_prefix($sFid);
+  	if (!$CI->db->table_exists($s)) {
+  		$s=$s."s";
+  		if (!$CI->db->table_exists($s)) {
+  			$s=$CI->config->item('CFG_table_prefix')."_".remove_prefix($sFid);
+  			if (!$CI->db->table_exists($s)) {
+  				$s=$s."s";
+  			}
+  		}
+  	}
+  }
 	if (strcmp($key,$sFid)!=0 and !$give_clean) $s.="_";		// for self relations add a _
 	return $s;
 }
