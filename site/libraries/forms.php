@@ -228,7 +228,7 @@ class Forms extends Module {
     		    $errors.=$this->CI->$action->get_errors();
     			}
           else {
-            if ($this->settings('prevend_double_submit')) {
+            if ($this->settings('prevend_double_submit') or $this->settings('always_show_form',false)) {
               $this->CI->session->set_userdata($this->form_id.'__submit',true);
               redirect($formAction);
             }
@@ -286,7 +286,6 @@ class Forms extends Module {
     }
     $html=div('message').$this->settings('thanks','Thank you!')._div();
     return $html;
-    // return $this->CI->view('forms',array('title'=>$this->settings['title'],'form'=>$html,'errors'=>$errors),true);
   }
   
   
