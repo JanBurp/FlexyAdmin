@@ -1337,6 +1337,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				// loop through all results to add the add_many data
 				$manyResult=array();
 				foreach($result as $id=>$row) {
+          $pid=$row[PRIMARY_KEY];
 					// loop throught all many tables to add the many data
 					foreach($manyTables as $rel=>$jTable) {
 						$manyResult[$rel]=array();
@@ -1353,7 +1354,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 							$this->select($relSelect);
 						}
 						$this->from($rel);
-						$this->where($jTable['rel'].'.'.$jTable["id_this"],$id);
+						$this->where($jTable['rel'].'.'.$jTable["id_this"],$pid);
 						$this->join($join,$join.".".PRIMARY_KEY."=".$rel.".".$jTable["id_join"],"left");
 						$this->order_by($rel.'.id');
 						$query=$this->get();
