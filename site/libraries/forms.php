@@ -230,6 +230,7 @@ class Forms extends Module {
           else {
             if ($this->settings('prevend_double_submit') or $this->settings('always_show_form',false)) {
               $this->CI->session->set_userdata($this->form_id.'__submit',true);
+              $this->CI->session->set_flashdata($this->form_id.'__message',$this->_view_thanks($result));
               redirect($formAction);
             }
             $html.=$this->_view_thanks($result);
@@ -255,6 +256,7 @@ class Forms extends Module {
             $errors.='<p class="error">'.$this->settings('validation_place','').'</p>';
         }
       }
+      $html.=$this->CI->session->flashdata($this->form_id.'__message');
 			$html.=$form->render();
 		}
     
