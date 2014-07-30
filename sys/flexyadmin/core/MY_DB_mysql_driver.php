@@ -773,6 +773,17 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			else
 				$foreignTables=$this->get_foreign_tables($table);
 			if (!empty($foreignTables)) {
+        
+        // More foreign keys to same table possible
+        $as=array();
+        foreach ($foreignTables as $field => $item) {
+          $foreignTables[$field]['as']=$foreignTables[$field]['table'];
+          if (in_array($foreignTables[$field]['as'],$as)) {
+            $foreignTables[$field]['as']=count_string($foreignTables[$field]['as']."___",1);
+          }
+          $as[]=$foreignTables[$field]['as'];
+        }
+        
 				// loop through fields, add them to select array and see if it is a foreignfield with known foreigntables
 				$selectFields=array();
 				foreach($select as $field) {
@@ -780,21 +791,23 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 						$selectFields[]=$table.".".$field;
 					else 
 						$selectFields[]=$field;
-					
 					// is it a foreign key? Yes: add join and selectfield(s)
 					/**
 					 * TODO: check if this join allready exists: set by db->join();
 					 */
 					if (isset($foreignTables[$field])) {
 						$item=$foreignTables[$field];
-						$joinTable=rtrim($item["table"],'_'); // Make sure self relations are possible
-						$joinAsTable=$item["table"];
+            // Make sure self relations are possible
+						$joinTable=rtrim($item["table"],'_');
+            // More foreign keys to same table possible
+						$joinAsTable=$item["as"];
+            // Create the JOIN
 						$this->join($joinTable.' '.$joinAsTable, $joinAsTable.".$this->pk = ".$table.".".$item["key"], 'left');
 						// add abstract or all foreign fields?
 						if ($this->abstracts) {
               // Test if foreign table has a tree order, if so, it's not a simple question of adding some SQL, data needs to be created...
-              if ($this->field_exists('self_parent',$joinAsTable)) {
-                $this->foreign_trees[]=$joinAsTable;
+              if ($this->field_exists('self_parent',$item['table'])) {
+                $this->foreign_trees[]=$item['table'];
               }
               else {
   							$abstractField=$this->get_abstract_fields_sql($joinAsTable,$field."__");
@@ -1761,6 +1774,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
    */
 	public function get_abstract_fields($table,$asPre='') {
 		$cleanTable=rtrim($table,'_'); // make sure self relation is possible
+    $cleanTable=remove_suffix($cleanTable,'___');
 		$abFields=array();
 		/**
 		 * First check if abstract fields are set for this table
