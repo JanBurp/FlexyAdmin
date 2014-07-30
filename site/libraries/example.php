@@ -16,7 +16,6 @@
     */
   public function __construct() {
     parent::__construct();
-    // $this->CI->menu->register_change_module($this); // Als je change_menu_item() wilt gebruiken moet je dat hiermee aankondigen
   }
 
   /**
@@ -61,23 +60,6 @@
 		$content='<h1>Example Module.Other</h1>';
 		return $content;
 	}
-
-
-
-  // /**
-   // * Deze method wordt aangeroepen door Menu zodat je eventueel een menu-item kunt aanpassen
-   // *
-   // * @param string $menu_item 
-   // * @return void
-   // * @author Jan den Besten
-   // */
-	// public function change_menu_item($menu_item) {
-	// 	if ($menu_item['full_uri']==$this->CI->uri->get()) {
-	// 		$menu_item['name']='EXAMPLE';
-	// 	}
-	// 	return $menu_item;
-	// }
-
 
 }
 

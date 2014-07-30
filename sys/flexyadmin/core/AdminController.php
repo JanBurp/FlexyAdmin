@@ -281,7 +281,7 @@ class AdminController extends BasicController {
 		$this->uri->set_remove(array('current','offset'));
 		$uri=$this->uri->get();
 		$this->menu->set_current($uri);
-		$this->menu->set_current_name($currentMenuItem); // ??
+    // $this->menu->set_current_name($currentMenuItem); // ??
 		$menu=$this->menu->render();
 		$this->load->view('admin/menu',array("menu"=>$menu));
 	}

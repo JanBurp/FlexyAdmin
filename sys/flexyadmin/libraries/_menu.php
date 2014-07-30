@@ -111,29 +111,25 @@
   */
   
 class Menu {
-  
-  private $CI;
 
-  private $settings = array(
-    'current'         => '',
-    'menu_table'      => '',
-    'fields'          => array(
-      'uri'         => 'uri',
-      'url'         => '',
-      'title'       => 'str_title',
-      'class'       => 'str_class',
-      'visible'     => 'b_visible',
-      'clickable'   => 'b_clickable',
-      'parent'      => 'self_parent',
-      'bool_class'  => array(),
-      'extra'       => array(),
-    ),
-    'attributes'      => array('class'=>''),
-    'full_uris'       => false,
-    'ordered_titles'  => '',                              // NUMBERS geeft 1,2,3,4 etc., ALFA geeft A,B,C,D etc, ROMAN geeft I,II,III,IV etc.
-  );
+  // BUSY
+  // private $settings = array(
+  //   'current'           => '',
+  //   'uri_field'         => 'uri',
+  //   'title_field'       => 'str_title',
+  //   'class_field'       => 'str_class',
+  //   'bool_class_fields' => array(),
+  //   'visible_field'     => 'b_visible',
+  //   'clickable_field'   => 'b_clickable',
+  //   'parent_field'      => 'self_parent',
+  //   'extra_field'       => '',
+  //   'attributes'        => array('class'=>''),
+  //   'menu_table'        => ''
+  //   'menu_templates'    => array('<ul %s>','</ul>'),
+  //   'item_templates'    => array('<li %s>','</li>'),
+  //   'url_template'      => '%s'
+  // )
   
-  private $field_set_methods = array();
 
   /**
    * HTML output
@@ -148,50 +144,154 @@ class Menu {
    * @var array
    */
 	var $menu;
+  
+  /**
+   * url van huidige pagina
+   *
+   * @var string
+   */
+	var $current;
+
+  private  $tmpUrl;
+	private  $urlField;
+  private  $createUriTree=TRUE;
+	private  $fields;
+  private  $ordered_titles=FALSE;
+	private  $extraFields;
+  private  $attr;
+	private  $itemAttr;
+	private  $currentAsActive;
+  private  $nested=TRUE;
+	
+	private  $changeModules;
+  
+	/**
+	 * De tabel uit de database die gebruikt wordt.
+	 *
+	 * @var string
+	 */
+	var $menuTable;
+  
+	private $tmpMenuStart;
+	private $tmpMenuEnd;
+	private $tmpItemStart;
+	private $tmpItemEnd;
+	private $itemControls;
+
 
   /**
    * @author Jan den Besten
    * @ignore
    */
 	public function __construct() {
-		$this->CI=& get_instance();
-    $this->field_set_methods=array_keys($this->settings['fields']);
-    foreach ($this->field_set_methods as $key => $value) {
-      $this->field_set_methods[$key]='set_'.$value.'_field';
-    }
+		$this->init();
+	}
+
+  // BUSY
+  // /**
+  //  * Initialiseer (override defaults)
+  //  *
+  //  * @param array $settings[]
+  //  * @return this
+  //  * @author Jan den Besten
+  //  */
+  // public function initialize($settings=array()) {
+  //   foreach ($settings as $name => $value) {
+  //     $this->set($name,$value);
+  //   }
+  //   return $this;
+  // }
+  // 
+  // /**
+  //  * Stelt één setting in
+  //  *
+  //  * @param string $name 
+  //  * @param string $value 
+  //  * @return this
+  //  * @author Jan den Besten
+  //  */
+  // public function set($name,$value) {
+  //   if (method_exists($this,'set_'.$name))
+  //     $this->'set_'.$name($value);
+  //   else
+  //     $this->settings[$name]=$value;
+  //   return $this;
+  // }
+  
+
+  /**
+   * Init
+   *
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   */
+	public function init() {
+		$this->set_templates();
+		$this->set_menu_table();
+		$this->set_current();
+		$this->set_uri_field();
+		$this->set_title_field();
+		$this->set_class_field();
+		$this->set_visible_field();
+		$this->set_clickable_field();
+		$this->set_parent_field();
+		$this->set_extra_field();
+		$this->set_attributes();
+		$this->add_controls();
+		$this->set_current_class_active(false);
+		$this->register_change_module();
 	}
 
   /**
-   * Initialiseer (override defaults)
+   * Zet uri veld van menu tabel
    *
-   * @param array $settings[]
-   * @return this
+   * @param string $uri['uri']
+   * @return void
    * @author Jan den Besten
    */
-  public function initialize($settings=array()) {
-    foreach ($settings as $name => $value) {
-      $this->set($name,$value);
-    }
-    return $this;
+	public function set_uri_field($uri="uri") {
+		$this->fields["uri"]=$uri;
+	}
+  
+  /**
+   * Bepaalt of de uri's in het menu fulluris moeten worden (dus de tree volgend), of 'as is'.
+   *
+   * @param string $createUriTree[TRUE]
+   * @return void
+   * @author Jan den Besten
+   */
+  public function set_create_uri_tree($createUriTree=TRUE) {
+    $this->createUriTree=$createUriTree;
   }
+  
+  /**
+   * Zet titel veld van menu tabel
+   *
+   * @param string $title['str_title]
+   * @return void
+   * @author Jan den Besten
+   */
+	public function set_title_field($title="str_title") {
+		$this->fields["title"]=$title;
+	}
 
   /**
-   * Stelt één setting in
+   * Titels van menu worden nummers, of andere tekens op volgorde
+   * 
+   *   - NUMBERS geeft 1,2,3,4 etc.
+   *   - ALFA geeft A,B,C,D etc.
+   *   - ROMAN geeft I,II,III,IV etc.
    *
-   * @param string $name
-   * @param string $value
-   * @return this
+   * @param string $order[FALSE] Mogelijke waarden: FALSE|'NUMBERS'|'ALFA'|'ROMAN' 
+   * @return void
    * @author Jan den Besten
    */
-  public function set($name,$value) {
-    if (method_exists($this,'set_'.$name)) {
-      $method='set_'.$name;
-      return $this->$method($value);
-    }
-    $this->settings[$name]=$value;
-    return $this;
+  public function set_title_field_as_order($order=FALSE) {
+    $this->ordered_titles=$order;
   }
-
+  
+  
   /**
    * Zet extra velden die binnen de menu tags terechtkomen
    *
@@ -201,13 +301,58 @@ class Menu {
    * @return void
    * @author Jan den Besten
    */
-  public function set_extra_field($extra="",$startTag="<p>",$closeTag="</p>"){
-    if (empty($extra))
-      $this->settings['fields']['extra']=array();
-    else
-      $this->settings['fields']['extra'][$extra]=array("name"=>$extra,"start"=>$startTag,"close"=>$closeTag);
+	function set_extra_field($extra="",$startTag="<p>",$closeTag="</p>"){
+		if (empty($extra))
+			$this->extraFields=array();
+		else
+			$this->extraFields[$extra]=array("name"=>$extra,"start"=>$startTag,"close"=>$closeTag);
+	}
+  
+  /**
+   * Maak een genest menu, of niet.
+   *
+   * @param bool $nested 
+   * @return object self
+   * @author Jan den Besten
+   */
+  public function as_nested($nested=TRUE) {
+    $this->nested=$nested;
     return $this;
   }
+	
+  /**
+   * TODO
+   *
+   * @param string $fields 
+   * @param string $menu 
+   * @param string $level 
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   */
+	function remove_extra_fields($fields='',$menu='',$level=0) {
+		$this->set_extra_field();
+		if (empty($menu)) $menu=$this->menu;
+		foreach ($menu as $uri => $item) {
+			unset($menu[$uri]['extra']);
+			if (isset($item['sub']) and !empty($item['sub'])) $menu[$uri]['sub']=$this->remove_extra_fields($fields,$item['sub'],$level+1);
+		}
+		if ($level==0) $this->menu=$menu;
+		return $menu;
+	}
+  
+  /**
+   * Zet class veld
+   *
+   * Als dit veld bestaat in de menutabel, dan wordt de inhoud van dit veld toegevoegd aan de css class van het menu-item.
+   * Zo kun je menu-items eenvoudige classes meegeven die invloed hebben op het uiterlijk. Bijvoorbeeld een andere kleur.
+   *
+   * @param string $class['str_class']
+   * @author Jan den Besten
+   */
+	function set_class_field($class="str_class") {
+		$this->fields["class"]=$class;
+	}
   
   /**
    * Zet boolean veld van een menu tabel
@@ -218,22 +363,115 @@ class Menu {
    * @package default
    * @author Jan den Besten
    */
-  public function add_bool_class_field($boolClass='') {
-    $this->settings['fields']['bool_class']=$boolClass;
-    return $this;
+  function add_bool_class_field($boolClass='') {
+		$this->fields[$boolClass]=$boolClass;
   }
-
+  
   /**
-   * Stelt menu tabel in
+   * TODO
    *
-   * @param string $table[''] Als je dit leeglaat dan wordt de standaard menu tabel gekozen (tbl_menu of res_menu_result)
-   * @return object this
+   * @package default
+   * @author Jan den Besten
+   * @ignore
+   */
+	function set_current_class_active($currentAsActive=true) {
+		$this->currentAsActive=$currentAsActive;
+	}
+  
+  /**
+   * Zet visble veld
+   *
+   * Dit veld bepaald of een menu-item wordt getoond of niet
+   *
+   * @param string $visible['b_visible'] 
+   * @return void
    * @author Jan den Besten
    */
-	public function set_menu_table($table='') {
-		if (empty($table)) $table=get_menu_table();
-		$this->settings['menu_table']=$table;
-		return $this;
+	function set_visible_field($visible="b_visible") {
+		$this->fields["visible"]=$visible;
+	}
+  
+  /**
+   * Zet clickable veld
+   *
+   * Dit veld bepaald of een menu-item aanklikbaar is of niet
+   *
+   * @param string $clickable['b_clickable']
+   * @return void
+   * @author Jan den Besten
+   */
+	function set_clickable_field($clickable="b_clickable") {
+		$this->fields["clickable"]=$clickable;
+	}
+  
+  /**
+   * Zet parent veld
+   *
+   * @param string $parent['self_parent']
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   */
+	function set_parent_field($parent="self_parent") {
+		$this->fields["parent"]=$parent;
+	}
+
+  /**
+   * Zet attributen of class
+   *
+   * Hiermee kun je een vast attribuut aan alle menu-items meegeven:
+   *
+   * - Als je een array meegeeft zijn de keys de attribuut namen en de values de waarden van die attributen.
+   * - Als je een string meegeeft wordt de waarde van de string aan het class attribuut meegegeven. Zo kun je dus alle menu-items van eenzelfde css class voorzien
+   *
+   * @param array $attr[''] 
+   * @return void
+   * @author Jan den Besten
+   */
+	function set_attributes($attr="") {
+		if (!is_array($attr)) $attr=array("class"=>$attr);
+		$this->attr=$attr;
+	}
+
+  /**
+   * TODO
+   *
+   * @param string $attr 
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   */
+	function set_item_attributes($attr="") {
+		if (!is_array($attr)) $attr=array("class"=>$attr);
+		$this->itemAttr=$attr;
+	}
+
+  /**
+   * TODO
+   *
+   * @param string $module 
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   */
+	function register_change_module($module=false) {
+		if ($module)
+			$this->changeModules[]=$module;
+		else
+			$this->changeModules=NULL;
+	}
+
+  /**
+   * Zet menu tabel
+   *
+   * @param string $table[''] Als je dit leeglaat dan wordt de standaard menu tabel gekozen (tbl_menu of res_menu_result)
+   * @return void
+   * @author Jan den Besten
+   */
+	function set_menu_table($table='') {
+		if (empty($table)) $table = get_menu_table();
+		$this->menuTable=$table;
+		return $table;
 	}
 
   /**
@@ -244,14 +482,13 @@ class Menu {
    * @return array het menu als de interne menu array
    * @author Jan den Besten
    */
-	public function set_menu_from_table($table="",$foreign=false) {
-		$this->set('menu_table',$table);
-    $table=$this->settings['menu_table'];
-		
+	function set_menu_from_table($table="",$foreign=false) {
+		$table=$this->set_menu_table($table);
+		$CI =& get_instance();
 		// select fields
-		$fields=$this->CI->db->list_fields($table);
+		$fields=$CI->db->list_fields($table);
 		foreach ($fields as $key=>$f) {
-			if (!in_array($f,$this->settings['fields']) and !isset($this->settings['fields']['extra'][$f])) unset($fields[$key]);
+			if (!in_array($f,$this->fields) and !isset($this->extraFields[$f])) unset($fields[$key]);
 		}
 		if (is_array($foreign)) {
 			foreach ($foreign as $t => $ff) {
@@ -262,15 +499,25 @@ class Menu {
 			}
 		}
 		// get data from table
-		$this->CI->db->select(PRIMARY_KEY);
-		$this->CI->db->select($fields);
-		if ($foreign) $this->CI->db->add_foreigns($foreign);
-		if (in_array($this->settings['fields']['parent'],$fields)) {
-			$this->CI->db->uri_as_full_uri('full_uri');	
-      $this->CI->db->order_as_tree();  
+		$CI->db->select(PRIMARY_KEY);
+		$CI->db->select($fields);
+		if ($foreign) $CI->db->add_foreigns($foreign);
+		if (in_array("self_parent",$fields)) {
+			$CI->db->uri_as_full_uri('full_uri');	
+      $CI->db->order_as_tree();  
 		}
-		$data=$this->CI->db->get_result($table);
+		$data=$CI->db->get_result($table);
 		return $this->set_menu_from_table_data($data,$foreign);
+	}
+	
+  /**
+   * Geeft huidige menu tabel
+   *
+   * @return string
+   * @author Jan den Besten
+   */
+	function get_table() {
+		return $this->table;
 	}
 	
   /**
@@ -279,7 +526,7 @@ class Menu {
    * @return array
    * @author Jan den Besten
    */
-  public function get_items() {
+  function get_items() {
     return $this->menu;
   }
   
@@ -291,32 +538,34 @@ class Menu {
 	 * @return array het menu als de interne menu array
 	 * @author Jan den Besten
 	 */
-	public function set_menu_from_table_data($items="",$foreign=false) {
+	function set_menu_from_table_data($items="",$foreign=false) {
 		$counter=1;
+		$CI =& get_instance();
+
 		$menu=array();
 		
-		$boolFields=$this->settings['fields'];
+		$boolFields=$this->fields;
 		$boolFields=filter_by_key($boolFields,'b_');
 
 		foreach($items as $item) {
-			if (!isset($item[$this->settings['fields']["visible"]]) or ($item[$this->settings['fields']["visible"]]) ) {
+			if (!isset($item[$this->fields["visible"]]) or ($item[$this->fields["visible"]]) ) {
 				$thisItem=array();
 				$thisItem["id"]=$item[PRIMARY_KEY];
-				$uri=$item[$this->settings['fields']["uri"]];
+				$uri=$item[$this->fields["uri"]];
 				$thisItem["uri"]=$uri;
 				if (isset($item['full_uri']))	$thisItem["full_uri"]=$item['full_uri'];
 				
 				if (empty($thisItem['name'])) {
-					if (isset($item[$this->settings['fields']["title"]])) {
-					  $thisItem['name']=$item[$this->settings['fields']["title"]];
+					if (isset($item[$this->fields["title"]])) {
+					  $thisItem['name']=$item[$this->fields["title"]];
 					}
 					else {
 					  $thisItem['name']=$uri;
 					}
 				}
-				if (isset($item[$this->settings['fields']["class"]])) 	$thisItem["class"]=str_replace('|',' ',$item[$this->settings['fields']["class"]]);
-				if (isset($item[$this->settings['fields']["parent"]])) 	$parent=$item[$this->settings['fields']["parent"]]; else $parent="";
-				if (isset($item[$this->settings['fields']["clickable"]]) && !$item[$this->settings['fields']["clickable"]]) $thisItem["uri"]='';
+				if (isset($item[$this->fields["class"]])) 	$thisItem["class"]=str_replace('|',' ',$item[$this->fields["class"]]);
+				if (isset($item[$this->fields["parent"]])) 	$parent=$item[$this->fields["parent"]]; else $parent="";
+				if (isset($item[$this->fields["clickable"]]) && !$item[$this->fields["clickable"]]) $thisItem["uri"]='';
 				// classbooleans
 				if (!empty($boolFields)) {
 					foreach ($boolFields as $boolField) {
@@ -363,37 +612,34 @@ class Menu {
    * Hiermee kun je in één keer een menu maken door een array mee te geven. (ipv met add etc)
    *
    * @param array $menu array volgens de interne menu representatie
-   * @return object this
+   * @return void
    * @author Jan den Besten
    */
-	public function set_menu($menu=NULL) {
+	function set_menu($menu=NULL) {
 		$this->menu=$menu;
-    return $this;
 	}
 
   /**
    * Voeg een menu item toe aan het eind van het huidige menu
    *
    * @param array $item array( "uri"=>uri, "name"=>name, "class"=>class ) 
-   * @return object this
+   * @return void
    * @author Jan den Besten
    */
-	public function add($item) {
+	function add($item) {
 		$this->menu[$item['uri']]=$item;
-    return $this;
 	}
 
   /**
    * Voegt een menu item toe aan het begin van het huidige menu
    *
    * @param array $item array( "uri"=>uri, "name"=>name, "class"=>class ) 
-   * @return object this
+   * @return void
    * @author Jan den Besten
    */
-	public function add_to_top($item) {
+	function add_to_top($item) {
 		$menu=array_merge(array($item['uri']=>$item),$this->menu);
 		$this->set_menu($menu);
-    return $this;
 	}
 
   /**
@@ -401,10 +647,10 @@ class Menu {
    *
    * @param string $item  array( "uri"=>uri, "name"=>name, "class"=>class ) 
    * @param string $after uri van item waarachter het nieuwe item moet komen
-   * @return object this
+   * @return void
    * @author Jan den Besten
    */
-	public function add_after($item,$after) {
+	function add_after($item,$after) {
 		if (array_key_exists($after,$this->menu)) {
 				$new=array();
 				foreach($this->menu as $k=>$i) {
@@ -412,67 +658,180 @@ class Menu {
 					if ($k==$after) $new[$item['uri']]=$item;
 				}
 			$this->menu=$new;
+			return TRUE;
 		}
-    return $this;
+		else return FALSE;
 	}
 
   /**
    * Voegt een menu item toe aan het eind van het huidige menu
    *
    * @param array $item array( "uri"=>uri, "name"=>name, "class"=>class ) 
-   * @return object this
+   * @return void
    * @author Jan den Besten
    */
-	public function add_to_bottom($item) {
+	function add_to_bottom($item) {
 		$menu=array_merge($this->menu,array($item['uri']=>$item));
 		$this->set_menu($menu);
-    return $this;
 	}
 
   /**
    * Voegt submenu toe aan bestaand item
    *
    * @param array $sub  array( "uri"=>uri, sub=>  array( "uri"=>uri, "name"=>name, "class"=>class )  ) 
-   * @return object this
+   * @return bool TRUE als gelukt is, FALSE als niet gelukt (niet bestaand)
    * @author Jan den Besten
    */
-	public function add_sub($sub) {
+	function add_sub($sub) {
 		if (array_key_exists($sub['uri'],$this->menu)) {
 			$item=$this->menu[$sub['uri']];
 			$this->menu[$sub['uri']]['sub'][$sub['sub']['uri']]=$sub['sub'];
+			return TRUE;
 		}
-    return $this;
+		return FALSE;
  	}
 
   /**
    * Verwijderd menu item
    *
    * @param string $uri uri van te verwijderen item
-   * @return object this
+   * @return void
    * @author Jan den Besten
    */
-	public function remove_item($uri) {
+	function remove_item($uri) {
 		unset($this->menu[$uri]);
-    return $this;
 	}
 
   /**
    * Stelt de huidige pagina in
    *
    * @param string $current[''] 
-   * @return object this
+   * @return void
    * @author Jan den Besten
    */
 	public function set_current($current="") {
+    $CI =& get_instance();
 		$current=str_replace(index_page(),"",$current);
 		if (substr($current,0,1)=="/") $current=substr($current,1);
-		// remove query's in uri
+		// remove query's
 		$current=explode('?',$current);
 		$current=current($current);
-		// remove everything after URI_HASH (:)
-		if (strpos($current,$this->CI->config->item('URI_HASH'))>0) $current=get_prefix($current,$this->CI->config->item('URI_HASH'));
-    $this->settings['current']=$current;
-    return $this;
+		// remove everything after :
+		if (strpos($current,$CI->config->item('URI_HASH'))>0) $current=get_prefix($current,$CI->config->item('URI_HASH'));
+		$this->current=$current;
+	}
+
+  /**
+   * TODO
+   *
+   * @param string $current 
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   */
+	function set_current_name($current="") {
+		if (isset($this->menu[$current]["uri"])) {
+			$this->set_current("/".$this->menu[$current]["uri"]);
+			return $this->current;
+		}
+		else
+			return false;
+	}
+
+  /**
+   * TODO
+   *
+   * @param string $tmpUrl 
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   */
+	function set_url_template($tmpUrl="%s") {
+		$this->tmpUrl=$tmpUrl;
+	}
+
+  /**
+   * TODO
+   *
+   * @param string $tmpUrl 
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   */
+	function set_url_field($urlField="uri") {
+		$this->urlField=$urlField;
+	}
+
+  /**
+   * Init alle templates
+   *
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   * @internal
+   */
+	private function set_templates() {
+		$this->set_menu_templates();
+		$this->set_item_templates();
+		$this->set_url_template();
+		$this->set_url_field();
+	}
+
+  /**
+   * Zet de templates voor het menu en submenus
+   *
+   * Hiermee kun je de standaard gebruikte HTML tags aanpassen
+   * Standaard worden hier de `<ul>` en `</ul>` tags gebruikt
+   *
+   * @param string $start['&lt;ul&gt;']
+   * @param string $end['&lt;/ul&gt;']
+   * @return void
+   * @author Jan den Besten
+   */
+	function set_menu_templates($start="<ul %s>",$end="</ul>") {
+		$this->tmpMenuStart=$start;
+		$this->tmpMenuEnd=$end;
+	}
+
+  /**
+   * Zet de templates voor de menu item's
+   *
+   * Hiermee kun je de standaard gebruikte HTML tags en plek van de attributen aanpassen
+   * Standaard worden hier de `<li>` en `</li>` tags gebruikt
+   * %s wordt vervangen door de attributen (class, id etc.)
+   *
+   * @param string $start['&lt;li %s&gt;']
+   * @param string $end['&lt;/li&gt;']
+   * @return void
+   * @author Jan den Besten
+   */
+	function set_item_templates($start="<li %s>",$end="</li>") {
+		$this->tmpItemStart=$start;
+		$this->tmpItemEnd=$end;
+	}
+	
+  /**
+   * tmp
+   *
+   * @param string $tmp 
+   * @param string $attr['']
+   * @return string
+   * @author Jan den Besten
+   * @ignore
+   * @internal
+   */
+	private function tmp($tmp,$attr="") {
+		if (!empty($attr)) {
+			if (is_string($attr)) {
+				return str_replace("%s",$attr,$tmp);
+			}
+			else {
+				$a="";	
+				foreach ($attr as $key => $value) $a.=$key.'="'.$value.'" ';
+				return str_replace("%s",$a,$tmp);
+			}
+		}
+		return str_replace("%s","",$tmp);
 	}
 
   /**
@@ -482,7 +841,7 @@ class Menu {
    * @return string HTML output
    * @author Jan den Besten
    */
-	public function render_from_table($table) {
+	function render_from_table($table) {
 		$menu=$this->set_menu_from_table($table);
 		$this->set_menu($menu);
 		return $this->render($menu);
@@ -498,7 +857,7 @@ class Menu {
    * @ignore
    * @internal
    */
-	private function inUri($in,$uri) {
+	function inUri($in,$uri) {
 		// remove query's from $in
 		$in=explode('?',$in);
 		$in=current($in);
@@ -521,12 +880,26 @@ class Menu {
    * @return string
    * @author Jan den Besten
    */
-	public function get_home_uri() {
+	function get_home_uri() {
 		reset($this->menu);
 		$home=current($this->menu);
 		return $home['uri'];
 	}
 
+  /**
+   * TODO
+   *
+   * @param string $controls['']
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   * @internal
+   */
+	function add_controls($controls="") {
+		$this->itemControls=$controls;
+	}
+
+	
   /**
    * Geeft submenu als menu array
    *
@@ -534,7 +907,7 @@ class Menu {
    * @return array submenu array
    * @author Jan den Besten
    */
-  public function get_branch($branchUri) {
+  function get_branch($branchUri) {
 		$branchUri=ltrim($branchUri,'/');
 		$uris=explode('/',$branchUri);
 		$branch=$this->menu;
@@ -565,7 +938,7 @@ class Menu {
    * @return string
    * @author Jan den Besten
    */
-	public function render_branch($branchUri,$attr="",$level=1,$preUri="",$nobranchUri=FALSE) {
+	function render_branch($branchUri,$attr="",$level=1,$preUri="",$nobranchUri=FALSE) {
 		$out='';
 		if ($nobranchUri)
 			$preUri=ltrim($preUri.'/');
@@ -591,80 +964,147 @@ class Menu {
    * @return string
    * @author Jan den Besten
    */
-	public function render($menu=NULL,$attr="",$level=1,$preUri="",$max_level=0) {
-		if (!isset($menu)) $menu=$this->menu;
+	function render($menu=NULL,$attr="",$level=1,$preUri="",$max_level=0) {
+    $CI =& get_instance();
+		if (empty($attr)) $attr=$this->attr;
 		if (!is_array($attr)) $attr=array("class"=>$attr);
+		if (empty($attr["class"])) $attr["class"]="";
 		if ($level>1) unset($attr["id"]);
+		$ULattr=$attr;
+		$ULattr['class']=trim("lev$level ".$ULattr['class']);
+
+		$branch=array();
+		$out=$this->tmp($this->tmpMenuStart,$ULattr); // <ul .. >
+		if (!isset($menu)) $menu=$this->menu;
     
-    $html='';
+		$pos=1;
 		if ($menu) {
-  		$pos=1;
 			foreach($menu as $uri=>$item) {
+				// Change item before rendering, if some other classes has request so
+				$item=$this->_change_item($item);
+				
+				$itemOut='';
+				if (isset($item['name']))	$name=$item['name']; else $name='';
+				if (empty($item)) {
+					// seperator
+					$itemOut.=$this->tmp($this->tmpItemStart,array("class"=>"seperator pos$pos lev$level"));
+					$itemOut.=$this->tmp($this->tmpItemEnd);
+					$out.=$itemOut;
+					$pos++;
+				}
+        if (empty($item['name'])) $item['name']=$uri;
         
-        // create uri
-        $thisUri=el($this->settings['fields']['url'],$item,$uri);
-        if (!empty($preUri) and !empty($thisUri)) $thisUri=$preUri."/".$thisUri;
-        $thisUri=el('unique_uri',$item,$thisUri);
-				$cleanUri=remove_suffix($thisUri,$this->CI->config->item('URI_HASH'));
-        $full_uri=trim($preUri.'/'.$thisUri,'/');
-        
-        // title
-        $title=ascii_to_entities(trim(el('name',$item,$uri),'_'));
-        // title as ordered chars
-        if ($this->settings['ordered_titles']) {
-          switch ($this->ordered_titles) {
-            case 'NUMBERS': $title=$pos; break;
-            case 'ALFA':    $title=chr($pos+64); break;
-            case 'ROMAN':   $title=numberToRoman($pos); break;
-          }
-        }
-        // help in title?
-				if (isset($item["help"])) $title=help($title,$item["help"]);
-        // extra strings in title
-				if (isset($item['extra'])) {foreach ($item['extra'] as $extra) {$title.=$extra;}}
-        
-        // extra attr
-				$anchor_attr=$item;
-				unset($anchor_attr['class'],$anchor_attr['uri'],$anchor_attr['full_uri'],$anchor_attr['id'],$anchor_attr['sub'],$anchor_attr['unique_uri']);
-				if (isset($anchor_attr['title'])) $anchor_attr['title']=strip_tags($anchor_attr['title']);
-				if (empty($thisUri)) $anchor_attr['class'].=' nonClickable';
+				if (isset($item[$this->urlField])) {
+					$thisUri=$item[$this->urlField];
+					if (!empty($preUri) and !empty($thisUri) and $this->urlField=="uri" and !(isset($item['unique_uri']) and $item['unique_uri'])) $thisUri=$preUri."/".$thisUri;
+					$link='';
+					if (!empty($thisUri))	$link=trim($this->tmp($this->tmpUrl,$thisUri),'/');
+					// set class
+					$cName=get_suffix($item[$this->urlField],'/');
+					$first=($pos==1)?' first':'';
+					$last=($pos==count($menu))?' last':'';
+					$sub=(isset($item['sub']))?' sub':'';
+					// trace_(array('current'=>$this->current,'link'=>$link));
+					if (strpos($link,$CI->config->item('URI_HASH'))>0)
+						$checklink=get_prefix($link,$CI->config->item('URI_HASH'));
+					else
+						$checklink=$link;
+					$current='';
+					if ($this->current==$checklink) {
+						$current=' current';
+						if ($this->currentAsActive) $current.=' active';
+					}
+					$class="lev$level pos$pos $first$last$sub ".$attr['class']." $cName$current";
+					if (isset($this->itemAttr['class']) and !empty($this->itemAttr['class'])) $class.=' '.$this->itemAttr['class'];
+					if (isset($item['class']) and !empty($item['class'])) $class.=' '.$item['class'];
+					
+					$itemAttr['class']=trim($class);
+					// set id
+					$itemAttr['id']="menu_$cName"."_pos$pos"."_lev$level";
 
-        // heeft submenu?
-        $submenu='';
-        if (isset($item['sub']) and ($max_level==0 or $level<$max_level)) {
-          $submenu=$this->render($item['sub'],$attr,$level+1,$thisUri,$max_level);
-        }
+					// render item/subitem
+					$itemOut.=$this->tmp($this->tmpItemStart,array("class"=>$itemAttr["class"],'id'=>$itemAttr['id']));  // <li ... >
+					
+					if (isset($item["uri"])) {
+						if (isset($item['name'])) {
+						  $showName=ascii_to_entities($item['name']);
+						}
+						else {
+              if (empty($name)) $name=$uri;
+							$showName=trim(ascii_to_entities($name),'_');
+            }
+            
+            if ($this->ordered_titles) {
+              switch ($this->ordered_titles) {
+                case 'NUMBERS': $showName=$pos; break;
+                case 'ALFA': $showName=chr($pos+64); break;
+                case 'ROMAN': $showName=numberToRoman($pos); break;
+              }
+            }
+              
+						$pre=get_prefix($showName,"__");
+						if (!empty($pre)) $showName=$pre;
+						if (isset($item["help"])) $showName=help($showName,$item["help"]);
+						if (isset($item['extra'])) {foreach ($item['extra'] as $extra) {$showName.=$extra;}	}
+						// extra attributes set?
+						$extraAttr=array();
+						$extraAttr=$item;
+						unset($extraAttr['class'],$extraAttr['uri'],$extraAttr['id'],$extraAttr['sub'],$extraAttr['unique_uri']);
+						$itemAttr=array_merge($itemAttr,$extraAttr);
+						// if (isset($item['target'])) $itemAttr['target']=$item['target'];
+						if (isset($itemAttr['title'])) $itemAttr['title']=strip_tags($itemAttr['title']);
+						if (empty($link)) {
+							$itemAttr['class'].=' nonClickable';
+							$itemOut.=span($itemAttr).$showName._span();
+						}
+						else {
+							$itemOut.=anchor($link, $showName, $itemAttr);
+						}
+					}
 
-        // item of seperator
-        $view=(empty($item)?'seperator':'item');
-        
-        // render item
-        $item_html=$this->CI->view('menu/'.$view.'.php',array(
-          'title'       => el('name',$item,$uri),
-          'uri'         => $thisUri,
-          'full_uri'    => $full_uri,
-          'lev'         => $level,
-          'pos'         => $pos,
-					'first'       => ($pos==1)?' first':'',
-					'last'        => ($pos==count($menu))?' last':'',
-					'sub'         => (isset($item['sub']))?' sub':'',
-          'current'     => ($this->settings['current']==$cleanUri?' current':''),
-          'class'       => ' '.trim($attr['class']),
-          'anchor_attr' => attributes($anchor_attr),
-          'submenu'     => $submenu
-        ),true);
-				// active?
-				if (strpos($submenu,'current')>0) $item_html=preg_replace("/class=\"([^\"]*)\"/","class=\"$1 active\"",$item_html);
-
-        $html.=$item_html;
-				$pos++;
+          $subOut='';
+					if (isset($item["sub"]) and ($max_level==0 or ($level+1)<$max_level) ) {
+            if ($this->createUriTree)
+              $subOut=$this->render($item["sub"],"$cName",$level+1,$thisUri);
+            else
+              $subOut=$this->render($item["sub"],"$cName",$level+1);
+						// check if needs to add active class
+						if (strpos($subOut,'current')>0) {
+              $itemOut=preg_replace("/class=\"([^\"]*)\"/","class=\"$1 active\"",$itemOut);
+						}
+					}
+          if ($this->nested)
+            $out.=$itemOut.$subOut.$this->tmp($this->tmpItemEnd);
+          else
+					  $out.=$itemOut.$this->tmp($this->tmpItemEnd).$subOut;
+					$pos++;
+				}
 			}
 		}
-    
-    $html=$this->CI->view('menu/menu.php',array('lev'=>$level,'uri'=>$uri,'menu'=>$html),true);
-		return $html;
+		$out.=$this->tmp($this->tmpMenuEnd); // </ul>
+		return $out;
 	}
 	
+  /**
+   * 	This function checks if other classes needs to change something...
+   *
+   * @param string $item 
+   * @return string
+   * @author Jan den Besten
+   * @ignore
+   * @internal
+   */
+	private function _change_item($item) {
+		if ($this->changeModules) {
+			foreach ($this->changeModules as $key => $module) {
+				if (method_exists($module,'change_menu_item')) {
+					$give_item=$item;
+					$item=$module->change_menu_item($item);
+				}
+			}
+		}
+		return $item;
+	}
 	
   /**
    * Geeft item aan de hand van meegegeven uri (of huidige pagina) als database resultaat
@@ -677,12 +1117,13 @@ class Menu {
    * @return array database item
    * @author Jan den Besten
    */
-	public function get_item($uri='',$foreigns=false,$many=false) {
-		if (empty($uri)) $uri=$this->settings['current'];
-		$this->CI->db->where_uri($uri);
-		if ($foreigns) $this->CI->db->add_foreigns();
-		if ($many) $this->CI->db->add_many();
-		$item=$this->CI->db->get_row($this->settings['menu_table']);
+	function get_item($uri='',$foreigns=false,$many=false) {
+		if (empty($uri)) $uri=$this->current;
+		$CI =& get_instance();
+		$CI->db->where_uri($uri);
+		if ($foreigns) $CI->db->add_foreigns();
+		if ($many) $CI->db->add_many();
+		$item=$CI->db->get_row($this->menuTable);
 		return $item;
 	}
 	
@@ -694,9 +1135,9 @@ class Menu {
    * @return string uri van eerstvolgend item in submenu of FALSE als deze niet bestaat
    * @author Jan den Besten
    */
-  public function get_first_sub_uri($uri='') {
+  function get_first_sub_uri($uri='') {
     $sub_uri=FALSE;
-		if (empty($uri)) $uri=$this->settings['current'];
+		if (empty($uri)) $uri=$this->current;
 		$submenu=$this->_get_submenu($uri,false);
 		if ($submenu) {
       $sub=current($submenu);
@@ -716,7 +1157,7 @@ class Menu {
    */
   public function get_up($uri='') {
     $up=false;
-    if (empty($uri)) $uri=$this->settings['current'];
+    if (empty($uri)) $uri=$this->current;
     $up_uri=remove_suffix($uri,'/');
     if ($up_uri==$uri) $up_uri=false;
     if ($up_uri) {
@@ -725,6 +1166,8 @@ class Menu {
     return $up;
   }
   
+  
+  
   /**
    * Geeft vorig menu-item op hetzelfde nivo
    *
@@ -732,9 +1175,9 @@ class Menu {
    * @return array
    * @author Jan den Besten
    */
-	public function get_prev($uri='') {
+	function get_prev($uri='') {
 		$prev=false;
-		if (empty($uri)) $uri=$this->settings['current'];
+		if (empty($uri)) $uri=$this->current;
 		$submenu=$this->_get_submenu($uri);
 		if ($submenu) {
 			$thisUri=get_suffix($uri,'/');
@@ -777,7 +1220,7 @@ class Menu {
    * @return string
    * @author Jan den Besten
    */
-	public function get_prev_uri($uri='',$full=true) {
+	function get_prev_uri($uri='',$full=true) {
 		$prev=$this->get_prev($uri);
 		if ($prev) {
 			if ($full)
@@ -795,9 +1238,9 @@ class Menu {
    * @return array
    * @author Jan den Besten
    */
-	public function get_next($uri='') {
+	function get_next($uri='') {
 		$next=false;
-		if (empty($uri)) $uri=$this->settings['current'];
+		if (empty($uri)) $uri=$this->current;
 		$submenu=$this->_get_submenu($uri);
 		if ($submenu) {
  			$submenu=array_reverse($submenu,true);
@@ -823,7 +1266,7 @@ class Menu {
    * @return string
    * @author Jan den Besten
    */
-	public function get_next_uri($uri='',$full=true) {
+	function get_next_uri($uri='',$full=true) {
 		$next=$this->get_next($uri);
 		if ($next) {
 			if ($full)
@@ -841,9 +1284,9 @@ class Menu {
    * @return array
    * @author Jan den Besten
    */
-	public function get_prev_branch($uri='') {
+	function get_prev_branch($uri='') {
 		$branch=FALSE;
-		if (empty($uri)) $uri=$this->settings['current'];
+		if (empty($uri)) $uri=$this->current;
 		$ParentUri=remove_suffix($uri,'/');
 		if ($ParentUri) {
 			$ParentMenu=$this->_get_submenu($ParentUri);
@@ -873,7 +1316,7 @@ class Menu {
    * @return string
    * @author Jan den Besten
    */
-	public function get_prev_branch_uri($uri='',$full_uri=true) {
+	function get_prev_branch_uri($uri='',$full_uri=true) {
 		$prev=$this->get_prev_branch($uri);
 		if ($prev) {
 			if ($full_uri)
@@ -891,9 +1334,9 @@ class Menu {
    * @return array
    * @author Jan den Besten
    */
-	public function get_next_branch($uri='') {
+	function get_next_branch($uri='') {
 		$branch=FALSE;
-		if (empty($uri)) $uri=$this->settings['current'];
+		if (empty($uri)) $uri=$this->current;
 		$ParentUri=remove_suffix($uri,'/');
 		if ($ParentUri) {
 			$ParentMenu=$this->_get_submenu($ParentUri);
@@ -921,7 +1364,7 @@ class Menu {
    * @return string
    * @author Jan den Besten
    */
-   public function get_next_branch_uri($uri='',$full_uri=true) {
+   function get_next_branch_uri($uri='',$full_uri=true) {
 		$next=$this->get_next_branch($uri);
 		if ($next) {
 			if ($full_uri)
@@ -955,6 +1398,7 @@ class Menu {
 		return $submenu;
 	}
   
+  
   /**
    * Geeft home item terug
    *
@@ -965,6 +1409,7 @@ class Menu {
     $home=current($this->menu);
     return $home;
   }
+  
 
 }
 

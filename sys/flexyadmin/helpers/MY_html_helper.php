@@ -24,14 +24,27 @@
  */
 function html($tag,$a=array(),$end=FALSE) {
 	if (!is_array($a)) $a=array("class"=>$a);
-	$attr="";
-	foreach ($a as $k=>$v ) {
-		$attr.=" ".$k."=\"$v\"";
-	}
+	$attr=attributes($a);
 	$out="<$tag $attr";
 	if ($end) $out.=" /";
 	$out.=">";
 	return $out;
+}
+
+/**
+ * Maak een attributen lijst van array
+ *
+ * @param array $a 
+ * @return string
+ * @author Jan den Besten
+ */
+function attributes($a=array()) {
+	$attr="";
+	foreach ($a as $k=>$v ) {
+		$attr.=" ".$k."=\"$v\"";
+	}
+  return $attr;
+  
 }
 
 /**
