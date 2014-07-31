@@ -130,7 +130,7 @@ class AdminController extends BasicController {
 				$sub=array($subUri=>array('uri'=>$subUri,'name'=>$menuName,'unique_uri'=>true));
 				$a[$uri]=array("uri"=>$uri,'unique_uri'=>true,'name'=>$menuName,"class"=>$type,'sub'=>$sub);
 				$tableHelp=$this->ui->get_help($name);
-				if (!empty($tableHelp)) $a[$uri]["help"]=$tableHelp;
+				if (!empty($tableHelp)) $a[$uri]["attr"]['help']=$tableHelp;
 			}
 		}
 		return $a;
@@ -251,9 +251,7 @@ class AdminController extends BasicController {
   								$menu[$uri]=array("uri"=>$uri,'name'=>$menuName,"class"=>"media");
   							}
   							$mediaHelp=$this->ui->get_help($mediaInfo["path"]);
-  							if (!empty($mediaHelp)) {
-  								$menu[$uri]["help"]=$mediaHelp;
-  							}
+        				if (!empty($tableHelp)) $a[$uri]["attr"]['help']=$tableHelp;
               }
 						}
 						$query->free_result();
@@ -278,10 +276,12 @@ class AdminController extends BasicController {
 		}
 		
 		$this->menu->set_menu($menu);
+    // trace_($menu);
+    
 		$this->uri->set_remove(array('current','offset'));
 		$uri=$this->uri->get();
 		$this->menu->set_current($uri);
-    // $this->menu->set_current_name($currentMenuItem); // ??
+    $this->menu->set_view_path('admin/menu');
 		$menu=$this->menu->render();
 		$this->load->view('admin/menu',array("menu"=>$menu));
 	}

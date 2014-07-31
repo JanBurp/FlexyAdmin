@@ -73,6 +73,7 @@ class Main extends FrontEndController {
 		/***********************************************
 		 * Init Menu
 		 */
+    if ($this->config->item('menu')) $this->menu->initialize($this->config->item('menu'));
 		$this->menu->set_current($this->site['uri']);
 		$this->menu->set_menu_from_table();
 

@@ -16,7 +16,7 @@ class MY_Loader extends CI_Loader {
 
  		function __construct() {
 			parent::__construct();
-			$this->_ci_view_paths[SITEPATH.'views/']=0;
+			$this->_ci_view_paths=array(SITEPATH.'views/'=>1,APPPATH.'views/'=>1);
 			array_push($this->_ci_model_paths,SITEPATH);
 			array_push($this->_ci_library_paths,SITEPATH);
 			array_push($this->_ci_helper_paths,SITEPATH);
