@@ -53,7 +53,8 @@ function foreign_key_from_table($table) {
 function foreign_table_from_key($key,$give_clean=false) {
 	$CI =& get_instance();
 	$sFid=rtrim($key,"_");
-  $s=$CI->cfg->get('cfg_field_info',$key,'table','');
+  $s='';
+  if (isset($CI->cfg)) $s=$CI->cfg->get('cfg_field_info',$key,'table','');
   if (empty($s)) {
   	$s=$CI->config->item('TABLE_prefix')."_".remove_prefix($sFid);
   	if (!$CI->db->table_exists($s)) {
