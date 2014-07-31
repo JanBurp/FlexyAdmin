@@ -15,9 +15,10 @@ class Plugin_sitemap extends Plugin {
 		parent::__construct();
 	}
 
-
 	function _admin_logout() {
-		$this->_create_sitemap();
+    if (!$this->CI->config->item('testmode')) {
+  		$this->_create_sitemap();
+    }
 	}
 	
 	function _admin_api($args=NULL) {
