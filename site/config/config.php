@@ -2,6 +2,17 @@
 
 /*
 |--------------------------------------------------------------------------
+| Menu options
+|--------------------------------------------------------------------------
+|
+| Set menu config here (see Menu for the options). These will override defaults.
+|
+*/
+// $config['menu']=array('fields'=>array(),'view_path'=>'menu');
+// $config['use_old_menu']=true; // for backwards compatibility
+
+/*
+|--------------------------------------------------------------------------
 | Caching
 |--------------------------------------------------------------------------
 |

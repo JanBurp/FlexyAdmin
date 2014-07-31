@@ -65,7 +65,13 @@ class FrontEndController extends MY_Controller {
   		$this->load->helper('date');
   		$this->load->helper("html_helper");
   		$this->load->helper("language");
-  		$this->load->library("menu");
+      if ($this->config->item('use_old_menu')) {
+        $this->load->library("old_menu",'menu');
+        $this->menu = $this->old_menu;
+        unset($this->old_menu);
+      }
+      else
+        $this->load->library("menu");
   		$this->load->library("content");
       $this->content->initialize($this->config->item('parse_content'));
   		$this->load->library('form_validation');

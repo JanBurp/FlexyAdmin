@@ -580,7 +580,7 @@ function doGrid() {
           desc=true;
         }
         var sortcol=$(grid).find('tr.heading th.'+order).index();
-        $(grid).tablesorter({sortList:[[sortcol,desc]]});
+        if (sortcol>0) $(grid).tablesorter({sortList:[[sortcol,desc]]});
       }
       // if ($(grid).find('tbody tr').length>0) {
       //   var cols=$(grid).find('tr.heading th');

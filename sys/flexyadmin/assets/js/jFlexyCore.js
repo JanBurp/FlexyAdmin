@@ -17,7 +17,6 @@ $(document).ready(function() {
 	isGrid=($("#content").hasClass("grid")); // && !$('.grid').hasClass('res_menu_result'));
 	isGridAction=$(".grid").hasClass("actionGrid");
   
-  
   // isTree=$("#content").hasClass("tree");
 	isFile=$("#content").hasClass("filemanager");
 	if (!isGrid && isFile)	{	isGrid=$("#content").hasClass("list"); }
@@ -25,7 +24,7 @@ $(document).ready(function() {
 	isSortable=false;
 	//
 
-	if (isGrid || isFile) doGrid();
+  if (isGrid || isFile) doGrid();
 
   // Message & error boxes
   $('#messages').delay(5000).fadeOut(2000);
@@ -242,24 +241,30 @@ function showHelpItems() {
 	var ShowDelay;
 	var HideDelay;
 	$("span.help").children().removeAttr("title");
-	$("span.help").mouseenter(function() {
+	$("span.help").add('[help]').mouseover(function(){
 		var obj=$(this);
+    var helpTxt='';
+    if ($(obj).is("[help]")) {
+			helpTxt=$(obj).attr('help');
+    }
+    else {
+  		var helpName=get_subclass("help_",obj);
+  		if (helpName!='') helpTxt=$("#help_messages span#help_"+helpName).html();
+    }
 		var helpName=get_subclass("help_",obj);
-		if (helpName!='') {
-			ShowDelay=setTimeout( function() {		
-				var helpTxt=$("#help_messages span#help_"+helpName).html();
-				var html=helpTxt;
-				$(Popup).html(html).fadeIn(150);
+		if (helpTxt!='') {
+			ShowDelay=setTimeout( function() {
+				$(Popup).html(helpTxt).fadeIn(150);
 				HideDelay=setTimeout( function(){
 					$(Popup).fadeOut(1000);
 				},5000 );
 			},1000);
 		}
 	}).mouseout(function() {
-		clearTimeout(ShowDelay);
-		$(Popup).fadeOut(150);
+    clearTimeout(ShowDelay);
+    $(Popup).fadeOut(150);
 	}).mousemove(function(e){
-		clearTimeout(HideDelay);
+    clearTimeout(HideDelay);
     $(Popup).css({left:e.pageX+8,top:e.pageY+18});
   });
 };

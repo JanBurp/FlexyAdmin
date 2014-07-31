@@ -241,6 +241,7 @@ img {
 
 /* =========== */
 
+*[help], *[help] * {cursor:help;}
 span.help {
 	cursor:help;
 	margin:0px;
