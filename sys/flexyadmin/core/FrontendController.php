@@ -45,6 +45,18 @@ class FrontEndController extends MY_Controller {
 		// Init controller, and load all libraries
 		parent::__construct();
 
+    // In testmode a temp message will be shown (if not logged in as administrator) and sitemap.xml is deleted
+    if ($this->config->item('testmode')) {
+      $this->load->library('user');
+      if (!$this->user->is_super_admin()) {
+        $temp=read_file('index_temp.html');
+        echo $temp;
+        unlink('sitemap.xml');
+        die();
+      }
+    }
+    
+
     // Set $_GET if asked for
     // See http://www.askaboutphp.com/tutorials/58/codeigniter-mixing-segment-based-url-with-querystrings.html
     // For this to work, config.php: $config['uri_protocol']  = "PATH_INFO";

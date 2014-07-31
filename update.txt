@@ -19,6 +19,16 @@ For recent sites the update processes described below should work:
 - perform all the steps from your version to the latest:
 
 
+UPDATE xxxx
+===========
+
+- Replace current sys map with new sys map
+- Replace controller.php (or add line 76)
+- Add lines 3-14 to config.php (testmode option)
+- Add lines 17-26 to config.php (new menu options)
+- If you're site has problems with the new menu set (this is depricated for the future): $config['use_old_menu']=true;
+
+
 UPDATE 2461
 ===========
 

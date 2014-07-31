@@ -2,6 +2,20 @@
 
 /*
 |--------------------------------------------------------------------------
+| Testmode
+|--------------------------------------------------------------------------
+|
+| If set to true and if not logged in as super_admin:
+| - frontend is invisible
+| - and sitemap.xml is removed
+| - sitemap.xml will be created after a logout from backend when testmode=false
+|
+*/
+// $config['testmode'] = true;
+
+
+/*
+|--------------------------------------------------------------------------
 | Menu options
 |--------------------------------------------------------------------------
 |
