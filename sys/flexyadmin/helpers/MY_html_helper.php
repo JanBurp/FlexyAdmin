@@ -40,9 +40,11 @@ function html($tag,$a=array(),$end=FALSE) {
  */
 function attributes($a=array()) {
 	$attr="";
-	foreach ($a as $k=>$v ) {
-		$attr.=" ".$k."=\"$v\"";
-	}
+  if (!empty($a)) {
+  	foreach ($a as $k=>$v ) {
+  		$attr.=" ".$k."=\"$v\"";
+  	}
+  }
   return $attr;
   
 }
