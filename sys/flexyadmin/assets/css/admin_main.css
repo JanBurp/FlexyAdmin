@@ -120,115 +120,114 @@ img {
 	width:100%;
 	height:100%;
 	}
-#menu li a.cfg {	color:#966; }
-#menu li a.res {	color:#999; }
-#menu li a.log {	color:#696; }
-#menu li a.rel {	color:#669; }
+#menu li.cfg a {	color:#966; }
+#menu li.res a {	color:#999; }
+#menu li.log a {	color:#696; }
+#menu li.rel a {	color:#669; }
 
-#menu li .media,
-#menu li .cfg_media_info {
+#menu li.media a,
+#menu li.cfg_media_info a {
 	background-image: url("../icons/folder.gif");
 	background-repeat: no-repeat;
 	background-position:0px 2px;
 	padding-left: 20px;
 	}
-#menu li.current .media {	background-image: url("../icons/folder_files.gif");	}
+#menu li.current.media a {	background-image: url("../icons/folder_files.gif");	}
 
-#menu li .res_media_files,
-#menu li .cfg_img_info {
+#menu li.res_media_files a,
+#menu li.cfg_img_info a {
 	background-image: url("../icons/image.gif");
 	background-repeat: no-repeat;
 	background-position:0px 2px;
 	padding-left: 20px;
 	}
-#menu li .db {
+#menu li.db a {
 	background-image: url("../icons/time.gif");
 	background-repeat: no-repeat;
 	background-position:0px 2px;
 	padding-left: 20px;
 	}
-#menu li .sr {
+#menu li.sr a {
 	background-image: url("../icons/search.gif");
 	background-repeat: no-repeat;
 	background-position:0px 2px;
 	padding-left: 20px;
 	}
-#menu li .db_fill {
+#menu li.db_fill a {
 	background-image: url("../icons/edit.gif");
 	background-repeat: no-repeat;
 	background-position:0px 2px;
 	padding-left: 20px;
 	}
-#menu li .API_plugin_stats,
-#menu li .log_geocode_cache,
-#menu li .log_login,
-#menu li .log_stats {
+#menu li.API_plugin_stats a,
+#menu li.log_geocode_cache a,
+#menu li.log_login a,
+#menu li.log_stats a {
 	background-image: url("../icons/stats.gif");
 	background-repeat: no-repeat;
 	background-position:0px 2px;
 	padding-left: 20px;
 	}
-#menu li .cfg_ui {
+#menu li.cfg_ui a {
 	background-image: url("../icons/comments.gif");
 	background-repeat: no-repeat;
 	background-position:0px 2px;
 	padding-left: 20px;
 }
 
-#menu li .cfg_configurations,
-#menu li .cfg_plugins {
+#menu li.cfg_configurations a,
+#menu li.cfg_plugins a {
 	background-image: url("../icons/config.gif");
 	background-repeat: no-repeat;
 	background-position:0px 2px;
 	padding-left: 20px;
 	}
-#menu li .cfg_auto_menu,
-#menu li .res_menu_result,
-#menu li .cfg_admin_menu  {
+#menu li.cfg_auto_menu a,
+#menu li.res_menu_result a,
+#menu li.cfg_admin_menu a  {
 	background-image: url("../icons/menu.jpg");
 	background-repeat: no-repeat;
 	background-position:0px 2px;
 	padding-left: 20px;
 	}
 
-#menu li .cfg_table_info,
-#menu li .cfg_field_info {
+#menu li.cfg_table_info a,
+#menu li.cfg_field_info a {
 	background-image: url("../icons/table_info.gif");
 	background-repeat: no-repeat;
 	background-position:0px 2px;
 	padding-left: 20px;
 }
 
-
-#menu li .cfg_rss {
+#menu li.cfg_rss a {
 	background-image: url("../icons/rss.gif");
 	background-repeat: no-repeat;
 	background-position:0px 2px;
 	padding-left: 20px;
 	}
   
-#menu li .cfg_lang,
-#menu li .cfg_email {
+#menu li.cfg_lang a,
+#menu li.cfg_email a{
 	background-image: url("../icons/lang_set.png");
 	background-repeat: no-repeat;
 	background-position:0px 2px;
 	padding-left: 20px;
 	}
 
-#menu li .cfg_users {
+#menu li.cfg_users a {
 	background-image: url("../icons/user.gif");
 	background-repeat: no-repeat;
 	background-position:0px 2px;
 	padding-left: 20px;
 	}
-#menu li .cfg_user_groups {
+#menu li.cfg_user_groups a {
 	background-image: url("../icons/login.gif");
 	background-repeat: no-repeat;
 	background-position:0px 2px;
 	padding-left: 20px;
 	}
 	
-#menu li .rel {
+#menu li.rel a {
 	background-image: url("../icons/relation.gif");
 	background-repeat: no-repeat;
 	background-position:0px 2px;
