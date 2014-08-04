@@ -682,15 +682,13 @@ class Menu {
           'pos'         => $pos,
 					'order'       => ($pos==1)?'first':($pos==count($menu)?'last':''),
 					'sub'         => (isset($item['sub']))?'sub':'',
-          'current'     => ($this->settings['current']==$cleanUri?'current':''),
+          'current'     => ($this->settings['current']==$cleanUri?'current':'').((strpos($submenu,'current')>0?' active':'')),
           'class_uri'   => $classUri,
           'class'       => el('class',$item,''),
           'attr'        => attributes(el('attr',$item,'')),
           'clickable'   => (!empty($thisUri)),
           'submenu'     => $submenu
         ),true);
-				// active?
-				if (strpos($submenu,'current')>0) $item_html=preg_replace("/class=\"([^\"]*)\"/","class=\"$1 active\"",$item_html);
 
         $html.=$item_html;
 				$pos++;
