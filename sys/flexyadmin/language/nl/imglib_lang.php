@@ -17,5 +17,6 @@ $lang['imglib_writing_failed_gif'] = "GIF afbeelding ";
 $lang['imglib_invalid_path'] = "Het opgegeven pad van het afbeelding is incorrect.";
 $lang['imglib_copy_failed'] = "De afbeeldings kopiëer routine is mislukt.";
 $lang['imglib_missing_font'] = "Kon geen font(lettertype) vinden om te gebruiken.";
+$lang['imglib_save_failed'] = "Kon het bestand niet bewaren. Zorg ervoor dat de mappen beschrijfbaar zijn";
 
 ?>
