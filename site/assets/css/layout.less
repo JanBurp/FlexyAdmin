@@ -1,0 +1,64 @@
+/*
+  layout.css
+  - please make the changes in layout.less
+  - and compile by /admin/compile (or with grunt)
+  - or override in style.css
+*/
+
+
+//////////////////////////////////////////////////////
+// LAYOUT                        /////////////////////
+//////////////////////////////////////////////////////
+
+// Import variables from text.less (colors etc.)
+@import (reference) "text.less";
+
+// MAIN LAYOUT
+body {background:@light_color;}
+#container {
+  float: right;
+  position: relative;
+  left:-50%;
+}
+#wrapper {
+  float:left;
+  position: relative;
+  left: 50%;  
+	margin:1rem;
+	width:960px;
+  background-color:@back_color;
+}
+#wrapper>div {
+  float:left;
+  width:100%;
+  padding:1rem;
+	background-color:transparent;
+}
+div#header {padding:1rem;}
+div#header h1 {margin:0;}
+div#header h1 a {text-decoration:none}
+div#menu {background-color:@link_color;}
+div#content {min-height:300px;}
+div#footer {padding:.25rem;text-align:center;background-color:@link_color;color:@back_color;}
+
+
+//////////////////////////////////////////////////////
+// RESPONSIVE                    /////////////////////
+//////////////////////////////////////////////////////
+@media (max-width: 980px) {
+  #container {width:100%;}
+  #wrapper {width:98%;margin:1%;}
+}
+@media (max-width: 800px) {
+  // Font a bit smaller, and all fonts (and more) will resize because of the rem units.
+  html { font-size: 14px; }
+}
+@media (max-width: 480px) {
+  html { font-size: 12px; }
+  // At this point the menu always will be mobile and the form will be vertical
+  .mobile_menu(~'.menu');
+  .vertical_form(~'');
+}
+@media (max-width: 320px) {
+  #container {min-width:320px}
+}

@@ -1,127 +1,167 @@
-/* Compositie ********************************************/
-
-body {background:#DEA;}
-
+/*
+  layout.css
+  - please make the changes in layout.less
+  - and compile by /admin/compile (or with grunt)
+  - or override in style.css
+*/
+body {
+  background: #ddeeaa;
+}
 #container {
-	margin:10px auto;
-	width:760px;
-	background-color:#FFF;
+  float: right;
+  position: relative;
+  left: -50%;
 }
-
-#header {
-	float:left;
-	width:100%;
-  height:20px;
-  padding:10px 0px;
-  text-align:center;
-  font-size:16px;
-  color:#000;
+#wrapper {
+  float: left;
+  position: relative;
+  left: 50%;
+  margin: 1rem;
+  width: 960px;
+  background-color: #ffffff;
 }
-
-#menu {
-	float:left;
-	width:100%;
-	height:30px;
-	background-color:#696;
-	margin-bottom:20px;
+#wrapper > div {
+  float: left;
+  width: 100%;
+  padding: 1rem;
+  background-color: transparent;
 }
-
-#content {
-	padding:20px 10px;
-	min-height:300px;
+div#header {
+  padding: 1rem;
 }
-
-#footer {
-  width:100%;
-  padding:5px 0px;
-  text-align:center;
-  background-color:#696;
+div#header h1 {
+  margin: 0;
 }
-
-/* Menu ********************************************/
-
-/* ul */
-
-#menu ul {
-	position: relative;
-	float: left;
-	margin-left:5px;
-	z-index: 597;
+div#header h1 a {
+  text-decoration: none;
 }
-#menu ul ul {
-	display:none;
-	top: 100%;
-	left: 0px;
-	width: 100%;
-	margin-left:0px;
-	z-index:598;
+div#menu {
+  background-color: #669966;
 }
-#menu ul ul ul {
-	margin-left:100%;
-	margin-top:-30px;
+div#content {
+  min-height: 300px;
 }
-
-#menu li:hover>ul {
-	display:block;
-	position:absolute;
-	left:0px; top:100%;
-	width:auto;
+div#footer {
+  padding: .25rem;
+  text-align: center;
+  background-color: #669966;
+  color: #ffffff;
 }
-
-/* li */
-
-#menu li {
-	list-style:none;
-	display:inline;
-	float:left;
-	margin-left:0px;
-	padding:5px;
-	background-color:#696;
-	white-space:nowrap;
+@media (max-width: 980px) {
+  #container {
+    width: 100%;
+  }
+  #wrapper {
+    width: 98%;
+    margin: 1%;
+  }
 }
-#menu li:hover {
-	position:relative;
-	border-right:none;
-	z-index:599;
+@media (max-width: 800px) {
+  html {
+    font-size: 14px;
+  }
 }
-#menu li.lev1 ul li {
-	float:none;
-	display:block;
-	width:auto;
-	padding:5px;
+@media (max-width: 480px) {
+  html {
+    font-size: 12px;
+  }
+  .menu ul {
+    float: left;
+    display: block;
+  }
+  .menu ul ul {
+    display: block;
+    margin-bottom: 0;
+  }
+  .menu ul ul ul {
+    margin-top: 0;
+    margin-left: 0;
+  }
+  .menu li:hover > ul {
+    position: static;
+    width: 100%;
+    margin: 0;
+  }
+  .menu li {
+    float: left;
+    clear: both;
+    display: block;
+  }
+  .menu li.lev2 a:before {
+    content: "> ";
+  }
+  .menu li.lev3 a:before {
+    content: ">> ";
+  }
+  .menu li.lev4 a:before {
+    content: ">>> ";
+  }
+  .menu li.lev5 a:before {
+    content: "..> ";
+  }
+  .menu li:hover {
+    position: static;
+  }
+  .menu a {
+    display: none;
+  }
+  .menu a.active {
+    background-color: #669966;
+    color: #ffffff;
+  }
+  .menu a:hover {
+    background-color: #ddeeaa;
+    color: #669966;
+  }
+  .menu a.current {
+    display: block;
+  }
+  .menu {
+    height: 1.8rem;
+    padding-top: 0!important;
+    padding-bottom: 0!important;
+    overflow: hidden;
+  }
+  .menu:hover {
+    height: auto;
+  }
+  .menu:hover ul ul {
+    margin-left: 1rem;
+  }
+  .menu:hover a {
+    display: block;
+  }
+  .menu:hover li a:before {
+    content: "";
+  }
+  form label {
+    float: none;
+    width: 100%;
+  }
+  form fieldset span.error {
+    margin-top: -1.5rem;
+    max-width: 100%;
+  }
+  form input,
+  form textarea,
+  form select {
+    width: 100%;
+  }
+  form fieldset > div.checkbox label {
+    float: left;
+    width: auto;
+  }
+  form fieldset > div.checkbox input.checkbox {
+    float: left;
+    margin-left: 1rem;
+  }
+  form fieldset > div.radio > div {
+    margin-left: 0;
+    top: 0px;
+  }
 }
-
-
-/* a */
-
-#menu li a {color:#000;text-decoration:none;}
-#menu li a:hover, #menu li a.current, #menu li a.active {text-decoration:underline;}
-
-
-/* Pagination */
-
-.pagination li {
-  display:inline;
-  margin:0px;
-  margin-right:10px;
+@media (max-width: 320px) {
+  #container {
+    min-width: 320px;
+  }
 }
-.pagination_total {display:none;}
-
-/* Breadcrumb */
-#breadcrumb li {display:inline;margin:0px;}
-
-
-/* FORMS */
-.error {color:#F00;margin:0px;padding:0px;}
-form {margin-top:10px;}
-fieldset {border:none;margin:0px;padding:0px;}
-legend {display:none;}
-.flexyFormField {margin-bottom:10px;}
-.flexyFormField.required label:after { content:" *"; color:#F66;}
-label {font-weight:bold;}
-input,textarea {display:block;}
-input,textarea{padding:2px;border:solid 1px #CCC;cursor:pointer;}
-input:hover, textarea:hover {border-color:#000;}
-.radioOption {margin-left:15px;}
-input.radio, input.checkbox {float:left;margin:5px 10px 0px 0px;}
-input.checkbox {margin-top:4px;}

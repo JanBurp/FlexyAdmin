@@ -10,7 +10,7 @@ $lang['submit']               = 'Verstuur';
 $lang['subject']              = "Email van '%str_name%' via %URL% - %MAIL%";
 
 // forms.contact
-$lang['contact_title']        = 'Contact';
+$lang['contact_title']        = 'Contactformulier';
 $lang['field__str_name']      = 'Naam';
 $lang['field__email_email']   = 'Email';
 $lang['field__txt_text']      = 'Opmerking';

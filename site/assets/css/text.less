@@ -1,0 +1,211 @@
+/*
+  text.css
+  - please make the changes in layout.less
+  - and compile by /admin/compile (or with grunt)
+  - or override in style.css
+*/
+
+
+//////////////////////////////////////////////////////
+// LESS variables & basic themes /////////////////////
+//////////////////////////////////////////////////////
+
+
+// FlexyAdmin green THEME ////////////////////////////
+
+// radius of rounded borders (corner class)
+@corner-radius:10px;
+
+// Background color (of container)
+@back_color:#FFF;
+
+// Basic text color
+@text_color:#666;
+
+// Colors for standard links
+@link_color:#696;
+@hover_color:#060;
+
+// Colors of headings in text
+@head_color:#696;
+
+// Light color: body background, borders
+@light_color:#DEA;
+
+// Colors for errors and warnings
+@error_color:#F00;
+@warning_color:#C00;
+
+// colors for menu
+@menu_text_color:@back_color;
+@menu_back_color:@head_color;
+@menu_hover_text_color:@head_color;
+@menu_hover_back_color:@light_color;
+
+// Cool blue THEME ////////////////////////////
+// @corner-radius:10px;
+// @back_color:#FFF;
+// @text_color:#666;
+// @light_color:#CCF;
+// @link_color:#009;
+// @hover_color:#00F;
+// @head_color:#00F;
+// @error_color:#F00;
+// @warning_color:#C00;
+// @menu_text_color:@back_color;
+// @menu_back_color:#009;
+// @menu_hover_text_color:@head_color;
+// @menu_hover_back_color:#CCF;
+
+// Dark THEME ////////////////////////////
+// @corner-radius:0px;
+// @back_color:#000;
+// @text_color:#CCC;
+// @light_color:#666;
+// @link_color:#CCC;
+// @hover_color:#FFF;
+// @head_color:#FFF;
+// @error_color:#F00;
+// @warning_color:#C00;
+// @menu_text_color:@back_color;
+// @menu_back_color:@link_color;
+// @menu_hover_text_color:@head_color;
+// @menu_hover_back_color:@light_color;
+
+//////////////////////////////////////////////////////
+
+
+// BLOCK ELEMENT RESET
+address,article,aside,audio,blockquote,canvas,dd,details,div,dl,fieldset,figcaption,figcaption,figure,footer,footer,form,h1,h2,h3,h4,h5,h6,header,hgroup,hgroup,img,hr,main,nav,noscript,ol,output,p,pre,section,section,summary,table,tfoot,ul,video {
+  display:block;
+  box-sizing:border-box;
+  margin:0; padding:0;
+}
+
+
+// FONT SIZES
+body {
+  font-size:1rem;
+  line-height:1.5rem;
+  letter-spacing:.07rem;
+  font-family: Arial,Helvetica,sans-serif;
+  color:@text_color;
+  background-color:@back_color;
+}
+// BASIC FONT SIZE
+html {font-size:16px;}
+
+
+// PARAGRAPHS & HEADINGS
+p,ul,ol,form {margin-bottom:1rem;}
+h1,h2 {margin-bottom:1rem;}
+h1 {font-size:2rem;line-height:2.5rem;color:@head_color;}
+h2 {font-size:1.5rem;line-height:2rem;color:@head_color;}
+h3 {margin-bottom:0;color:@head_color;}
+
+
+// LINKS
+a {text-decoration:none;color:@link_color;}
+a:hover {text-decoration:underline;color:@hover_color;}
+
+
+// LISTS
+li {margin-left:15px;}
+
+
+// HR
+hr,.hr {width:100%;margin:1rem 0px;border:solid 1px @link_color;}
+
+
+// COMMON STYLES 
+.small { font-size:.75rem; }
+.color {color:@link_color;}
+.hidden { display:none;}
+.border {	border:solid 1px @text_color;}
+.error {color:@error_color;}
+.warning {color:@warning_color;}
+
+
+// MENU
+.menu ul ul {display:none;}
+.menu li {list-style:none;margin:0px;padding:0px;}
+.menu a {color:@menu_text_color;background-color:@menu_back_color;text-transform:uppercase;padding:0.2rem 0.5rem;white-space:nowrap;display:block;}
+.menu a.current, .menu a.active, .menu a:hover {background-color:@menu_hover_back_color;color:@menu_hover_text_color;text-decoration:none;}
+// horizontal
+.menu-horizontal ul {width:100%;}
+.menu-horizontal ul ul ul {margin-top:-1.9rem;margin-left:100%;}
+.menu-horizontal li:hover>ul {display:block;position:absolute;width:auto;}
+.menu-horizontal li {background-color:@menu_back_color;display:inline;float:left;}
+.menu-horizontal li.lev1 ul li {float:none;display:block;}
+// vertical
+.menu-vertical ul {float:left;}
+.menu-vertical li {float:left;clear:both;}
+.menu-vertical li:hover {position:relative;}
+.menu-vertical li:hover>ul {margin-top:-1.9rem;margin-left:100%;display:block;position:absolute;}
+// mobile
+.mobile_menu(@class) {
+  @{class} ul {float: left;display: block;}
+  @{class} ul ul {display: block;margin-bottom: 0;}
+  @{class} ul ul ul {margin-top:0;margin-left:0;}
+  @{class} li:hover>ul {position:static;width:100%;margin:0;} 
+  @{class} li {float:left;clear:both;display: block;}
+  @{class} li.lev2 a:before{content:"> "}
+  @{class} li.lev3 a:before{content:">> "}
+  @{class} li.lev4 a:before{content:">>> "}
+  @{class} li.lev5 a:before{content:"..> "}
+  @{class} li:hover {position:static;}
+  @{class} a {display:none;}
+  @{class} a.active {background-color:@menu_back_color;color:@menu_text_color;}
+  @{class} a:hover {background-color:@menu_hover_back_color;color:@menu_hover_text_color;}
+  @{class} a.current {display:block;}
+  @{class} {height:1.8rem;padding-top:0!important;padding-bottom:0!important;overflow:hidden;}
+  @{class}:hover {height:auto;}
+  @{class}:hover ul ul {margin-left: 1rem;}
+  @{class}:hover a {display:block;}
+  @{class}:hover li a:before {content:""}
+}
+.mobile_menu(~'.menu-mobile');
+
+
+// FORMS
+// labels before fields
+form {}
+fieldset {border:none;}
+legend {display:none;padding:0px 1rem;}
+fieldset>div {margin-bottom:1rem;clear:both;}
+fieldset>div.required label:after { content:" *"; color:@warning_color;}
+label {width:30%;font-weight:bold;float:left;box-sizing:border-box;}
+fieldset span.error {display:block;position:absolute;max-width:28%;background-color:@back_color;}
+input,textarea,select {width:70%;display:block;box-sizing:border-box;padding:.25rem .5rem;border:solid 1px @light_color;cursor:pointer;}
+input:hover,textarea:hover,select:hover {border-color:@link_color;}
+input.button {text-transform:uppercase;width:auto;float:right;background-color:@back_color}
+input.button:hover {background-color:@link_color;color:@back_color;}
+input.checkbox {width:1rem;height:1rem;margin-bottom:1.75rem;position:relative;top:.25rem;}
+fieldset>div.radio>div {margin-left:30%;width:100%;float:left;position:relative;top:-1rem;}
+fieldset>div.radio>div input {float:left;width:1rem;height:1rem;}
+fieldset>div.radio>div label {float:left;margin-left:1rem;margin-top:-.25rem;}
+select {-webkit-appearance: none;-moz-appearance:none;}
+select option {margin:.25rem .5rem;border:none;}
+// vertical (labels have there own line)
+.vertical_form(@class) {
+  form@{class} label {float:none;width:100%}
+  form@{class} fieldset span.error {margin-top:-1.5rem;max-width:100%}
+  form@{class} input, form@{class} textarea, form@{class} select {width:100%;}
+  form@{class} fieldset>div.checkbox label {float:left;width:auto;}
+  form@{class} fieldset>div.checkbox input.checkbox {float:left;margin-left:1rem;}
+  form@{class} fieldset>div.radio>div {margin-left:0;top:0px;}
+}
+.vertical_form(~'.vertical');
+
+
+// CORNERS
+.corners, form.corners fieldset, form.corners input, form.corners textarea, form.corners select {-o-border-radius:@corner-radius;-moz-border-radius:@corner-radius;-webkit-border-radius:@corner-radius;border-radius:@corner-radius;}
+.corners-top {-o-border-top-left-radius:@corner-radius;-o-border-top-right-radius:@corner-radius;-moz-border-top-left-radius:@corner-radius;-moz-border-top-right-radius:@corner-radius;-webkit-border-top-left-radius:@corner-radius;-webkit-border-top-right-radius:@corner-radius;border-top-left-radius:@corner-radius;border-top-right-radius:@corner-radius;}
+.corners-bottom {-o-border-bottom-left-radius:@corner-radius;-o-border-bottom-right-radius:@corner-radius;-moz-border-bottom-left-radius:@corner-radius;-moz-border-bottom-right-radius:@corner-radius;-webkit-border-bottom-left-radius:@corner-radius;-webkit-border-bottom-right-radius:@corner-radius;border-bottom-left-radius:@corner-radius;border-bottom-right-radius:@corner-radius;}
+
+
+// STYLES in TinyMCE editor (backend)
+body#tinymce  {margin:4px;}
+body#tinymce * {font-size:14px;color:#000;background-color:#FFF;}
+body#tinymce a { text-decoration: underline; }
+body#tinymce iframe, body#tinymce embed, body#tinymce object, body#tinymce .mceItemMedia, body#tinymce .mceItemIframe {background-color:#CCC;background-image: url('../../../sys/flexyadmin/assets/icons/movie.gif');background-position:center center;background-repeat:no-repeat;border:dotted 1px #F00;} // show embeds in editor
