@@ -36,6 +36,15 @@
 $config['caching'] = FALSE;
 $config['caching_time'] = 1440;	// 1440 minutes is 24 hours
 
+/*
+|--------------------------------------------------------------------------
+| Automatically use minimized css/js files on production sites
+|--------------------------------------------------------------------------
+|
+| If you use the embedded compile function (/admin/compile) or grunt to compile and minimize css and js files set this to true.
+*/
+$config['use_minimized'] = TRUE;
+
 
 /*
 |--------------------------------------------------------------------------

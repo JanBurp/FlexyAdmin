@@ -10,6 +10,4 @@
   <?php endif; ?>
 <?php endif ?>
 
-<?php if (isset($module_content)): ?>
-  <div id="module"><?=$module_content?></div>
-<?php endif ?>
+<?php if (isset($module_content)): ?><?=$module_content?><?php endif ?>

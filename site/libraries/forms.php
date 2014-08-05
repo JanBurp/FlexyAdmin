@@ -258,7 +258,7 @@ class Forms extends Module {
         }
       }
       $html.=$this->CI->session->flashdata($this->form_id.'__message');
-			$html.=$form->render();
+			$html.=$form->render($this->settings('class',''));
 		}
     
     if (isset($this->settings['title'])){

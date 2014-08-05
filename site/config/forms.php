@@ -11,6 +11,9 @@
 
 
 $config['contact'] = array(
+
+  // Class dat meegegeven wordt aan de form tag
+  'class'                   => 'corners',
   
   // Titel van het formulier
   'title'                   => lang('contact_title'),
