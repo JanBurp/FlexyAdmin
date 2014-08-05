@@ -68,7 +68,7 @@ class cfg_users extends AdminController {
    * @return void
    * @author Jan den Besten
    */
-  public function send_new_password($user_id) {
+  public function send_new_password($user_id=false) {
     return $this->_do_action('send_new_password',$user_id);
   }
 
@@ -77,6 +77,9 @@ class cfg_users extends AdminController {
 		if ($this->_can_activate_users()) {
       if (!$user_id) {
         $users_ids=$this->_get_inactive_user_ids();
+        if (!$users_ids and $action=='send_new_password') {
+          $users_ids=$this->_get_inactive_user_ids(true);
+        } 
       }
       else {
         $users_ids=array($user_id);
@@ -135,11 +138,13 @@ class cfg_users extends AdminController {
   }
 
 
-  private function _get_inactive_user_ids() {
+  private function _get_inactive_user_ids($active=false) {
     $user_ids=array();
     $users=$this->user->get_users();
+    $this_user=$this->user->get_user();
+    $this_user_id=$this_user->id;
     foreach ($users as $user) {
-      if (!$user->b_active or empty($user->last_login)) $user_ids[$user->id]=$user->id;
+      if (($active and $user->id!=$this_user_id) or (!$user->b_active or empty($user->last_login))) $user_ids[$user->id]=$user->id;
     }
     return $user_ids;
   }
