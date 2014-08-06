@@ -1,8 +1,6 @@
 RewriteEngine on
-RewriteCond $1 !^(index\.php|site/assets|sys/flexyadmin/assets|sys/tinymce|sys/jquery|sitemap\.xml|robots\.txt|sys/angular|sys/flexyadmin_js)
+RewriteCond $1 !^(index\.php|site/assets|sys/flexyadmin/assets|sys/tinymce|sys/jquery|sitemap\.xml|robots\.txt|sys/_test)
 RewriteRule ^(.*)$ index.php/$1 [L]
-
-
 
 # If you need more memory: use these lines
 # php_value upload_max_filesize 64M

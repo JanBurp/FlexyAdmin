@@ -1,0 +1,25 @@
+<div id="grid" class="grid rounded">
+  <table class="">
+    <caption class="size height-1 heading rounded">{{table}} Filter: <input type="text" data-ng-model="filter"></caption>
+    <thead class="size height-1">
+      <tr class="size height-1">
+        <th class="size height-1" data-ng-repeat="header in headers()">
+          <a href="" data-ng-click="setOrder(header)">{{header}}</a>&nbsp;
+          <span data-ng-hide="$parent.order==header" class="glyphicon"></span>
+          <span data-ng-show="$parent.order==header">
+            <span data-ng-hide="$parent.reverse" class="glyphicon glyphicon glyphicon-chevron-up"></span>
+            <span data-ng-show="$parent.reverse" class="glyphicon glyphicon glyphicon-chevron-down"></span>
+          </span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="size height-1" data-ng-repeat="row in grid.items | filter:filter | orderBy:order:reverse">
+        <td class="size height-1" data-ng-repeat="cell in row">{{cell}}</td>
+      </tr>
+    </tbody>
+    <!-- <tfoot class="rounded-top">
+      <tr class="size height-1 rounded-top"><td class="heading rounded-top" colspan="100" data-ng-click="setOrder()">Sorted by: <span>{{order}}</span> <span data-ng-show="reverse">reverse</span> Filtered by: <span>{{filter}}</span></td></tr>
+    </tfoot> -->
+  </table>
+</div>
