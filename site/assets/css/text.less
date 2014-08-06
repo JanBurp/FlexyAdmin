@@ -75,6 +75,11 @@
 //////////////////////////////////////////////////////
 
 
+/////////////////////////////////////////////////////
+
+
+
+
 // BLOCK ELEMENT RESET
 address,article,aside,audio,blockquote,canvas,dd,details,div,dl,fieldset,figcaption,figcaption,figure,footer,footer,form,h1,h2,h3,h4,h5,h6,header,hgroup,hgroup,img,hr,main,nav,noscript,ol,output,p,pre,section,section,summary,table,tfoot,ul,video {
   display:block;
@@ -148,7 +153,7 @@ hr,.hr {width:100%;margin:1rem 0px;border:solid 1px @link_color;}
   @{class} ul ul {display: block;margin-bottom: 0;}
   @{class} ul ul ul {margin-top:0;margin-left:0;}
   @{class} li:hover>ul {position:static;width:100%;margin:0;} 
-  @{class} li {float:left;clear:both;display: block;}
+  @{class} li {float:left;clear:both;display:block;}
   @{class} li.lev2 a:before{content:"> "}
   @{class} li.lev3 a:before{content:">> "}
   @{class} li.lev4 a:before{content:">>> "}
@@ -163,6 +168,7 @@ hr,.hr {width:100%;margin:1rem 0px;border:solid 1px @link_color;}
   @{class}:hover ul ul {margin-left: 1rem;}
   @{class}:hover a {display:block;}
   @{class}:hover li a:before {content:""}
+  @{class} a.current:before {content:"= "}
 }
 .mobile_menu(~'.menu-mobile');
 

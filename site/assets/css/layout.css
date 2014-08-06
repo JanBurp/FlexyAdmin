@@ -118,8 +118,8 @@ div#footer {
   }
   .menu {
     height: 1.8rem;
-    padding-top: 0!important;
-    padding-bottom: 0!important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
     overflow: hidden;
   }
   .menu:hover {
@@ -133,6 +133,9 @@ div#footer {
   }
   .menu:hover li a:before {
     content: "";
+  }
+  .menu a.current:before {
+    content: "= ";
   }
   form label {
     float: none;

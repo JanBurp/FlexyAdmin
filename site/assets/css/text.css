@@ -55,7 +55,7 @@ body {
   font-size: 1rem;
   line-height: 1.5rem;
   letter-spacing: .07rem;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Arial,Helvetica,sans-serif;
   color: #666666;
   background-color: #ffffff;
 }
@@ -234,8 +234,8 @@ hr,
 }
 .menu-mobile {
   height: 1.8rem;
-  padding-top: 0!important;
-  padding-bottom: 0!important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
   overflow: hidden;
 }
 .menu-mobile:hover {
@@ -249,6 +249,9 @@ hr,
 }
 .menu-mobile:hover li a:before {
   content: "";
+}
+.menu-mobile a.current:before {
+  content: "= ";
 }
 fieldset {
   border: none;
@@ -324,7 +327,7 @@ fieldset > div.radio > div input {
 fieldset > div.radio > div label {
   float: left;
   margin-left: 1rem;
-  margin-top: -0.25rem;
+  margin-top: -.25rem;
 }
 select {
   -webkit-appearance: none;
@@ -406,7 +409,7 @@ body#tinymce object,
 body#tinymce .mceItemMedia,
 body#tinymce .mceItemIframe {
   background-color: #CCC;
-  background-image: url('../../../sys/flexyadmin/assets/icons/movie.gif');
+  background-image: url('http://sys/flexyadmin/assets/icons/movie.gif');
   background-position: center center;
   background-repeat: no-repeat;
   border: dotted 1px #F00;
