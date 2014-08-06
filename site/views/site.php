@@ -64,8 +64,9 @@ $timestamp=filemtime('site/assets/css/styles.min.css');
   </div>
 
 <!-- Hier alle JavaScript -->
-<script language="javascript" type="text/javascript" src="sys/jquery/jquery-1.11.1.min.js"></script>
-<script language="javascript" type="text/javascript" src="<?=$assets?>js/site.js?<?=$timestamp?>"></script>
+<script src="<?=$assets?>js/rem.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/jquery/jquery-1.11.1.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="<?=$assets?>js/site.js?<?=$timestamp?>" type="text/javascript" charset="utf-8"></script>
 <!-- Eind van JavaScript -->
 
 </body>
