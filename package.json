@@ -1,7 +1,7 @@
 {
   "name": "FlexyAdmin",
   "version": "1.0.0",
-  "description": "FlexyAdmin - a cms with a focus on flexibility and (end)user-friendly",
+  "description": "FlexyAdmin - a CMS with a focus on flexibility and (end)user-friendly",
   "keywords": "CMS, Content Management System, Flexible, Userfriendly, PHP, MySQL, CodeIgniter",
   "bugs": {
     "email": "info@flexyadmin.com"
@@ -17,12 +17,14 @@
   "private": true,
   "devDependencies": {
     "grunt": "^0.4.5",
+    "grunt-autoprefixer": "^1.0.0",
     "grunt-contrib-clean": "^0.6.0",
     "grunt-contrib-concat": "^0.5.0",
     "grunt-contrib-cssmin": "^0.10.0",
     "grunt-contrib-less": "^0.11.4",
     "grunt-contrib-uglify": "^0.5.1",
-    "grunt-contrib-clean": "^0.6.0",
-    "grunt-contrib-watch": "^0.6.1"
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-contrib-yuidoc": "^0.5.2",
+    "grunt-phpdocumentor": "^0.4.1"
   }
 }
