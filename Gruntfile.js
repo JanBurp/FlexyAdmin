@@ -27,6 +27,19 @@ module.exports = function(grunt) {
         dest : 'site/assets/css/styles.css',
       }
     },
+
+    autoprefixer: {
+      options: {
+        options: {
+          browsers:  ['> 1%']
+        }
+      },
+        single_file: {
+          options: {},
+          src: 'site/assets/css/styles.css',
+          dest: 'site/assets/css/styles.css'
+      },
+    },
     
     cssmin : {
       options : {
@@ -48,13 +61,15 @@ module.exports = function(grunt) {
       styles: {
         options: { spawn: false },
         files: [ "site/assets/css/*.css","site/assets/css/*.less" ],
-        tasks: [ "less","concat", "cssmin", "clean" ],
+        tasks: [ "less","concat", "autoprefixer", "cssmin", "clean" ],
       }
-    }
+    },
+    
   });
 
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-autoprefixer');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-clean');
   // grunt.loadNpmTasks('grunt-contrib-uglify');

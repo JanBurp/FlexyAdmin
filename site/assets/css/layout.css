@@ -118,8 +118,8 @@ div#footer {
   }
   .menu {
     height: 1.8rem;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
+    padding-top: 0!important;
+    padding-bottom: 0!important;
     overflow: hidden;
   }
   .menu:hover {
