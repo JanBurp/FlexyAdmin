@@ -196,6 +196,7 @@ function doForm() {
 	$("form span.button").click(function() {
 		pwd=randomPassword(14);
 		$(this).prev("input.password").attr("value",pwd);
+    $("form input.matches").attr("value",pwd);
 	});
 	
 	
