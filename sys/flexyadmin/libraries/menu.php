@@ -638,6 +638,7 @@ class Menu {
 			foreach($menu as $uri=>$item) {
         
         // create uri
+        if (isset($item['uri'])) $uri=$item['uri'];
         $thisUri=el($this->settings['fields']['url'],$item,$uri);
         if (!el('unique_uri',$item,false) and !empty($thisUri)) $thisUri=$preUri."/".$thisUri;
         $thisUri=trim(str_replace('//','/',$thisUri),'/');
