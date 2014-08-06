@@ -66,7 +66,10 @@ class ui extends CI_Model {
 			elseif (isset($this->language)) {
         $lang=$this->language;
       }
-      else {
+      elseif ($this->uri->is_admin() and isset($this->user->language)) {
+        $lang=$this->user->language;
+      }
+      else {  
         $lang=$this->config->item('language');
       }
 			if (isset($row['str_title_'.$lang])) {
