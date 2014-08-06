@@ -2,15 +2,15 @@
 
 
 /*
-| -------------------------------------------------------------------------
-| Local Email settings for testing
-|
-| Set you're email configuration here, it will override the standard settings
-|
-| See http://codeigniter.com/user_guide/libraries/email.html
-|
-| -------------------------------------------------------------------------
-*/
+ * -------------------------------------------------------------------------
+ * Local Email settings for testing
+ *
+ * Set you're email configuration here, it will override the standard settings
+ *
+ * See http://codeigniter.com/user_guide/libraries/email.html
+ *
+ * -------------------------------------------------------------------------
+ */
 
 
 // These settings are ready for the Mac App: MockSmtp 

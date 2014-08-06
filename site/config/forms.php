@@ -1,13 +1,13 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /*
-|--------------------------------------------------------------------------
-| Alle formulieren worden ingesteld met een eigen config array.
-| De key is de naam van het formulier.
-| 
-| Hieronder de instellingen voor het formulier 'contact'
-|--------------------------------------------------------------------------
-*/
+ *--------------------------------------------------------------------------
+ * Alle formulieren worden ingesteld met een eigen config array.
+ * De key is de naam van het formulier.
+ * 
+ * Hieronder de instellingen voor het formulier 'contact'
+ *--------------------------------------------------------------------------
+ */
 
 
 $config['contact'] = array(
@@ -60,10 +60,10 @@ $config['contact'] = array(
 
 
 /*
-|--------------------------------------------------------------------------
-| DEMO: upload demo
-|--------------------------------------------------------------------------
-*/
+ *--------------------------------------------------------------------------
+ * DEMO: upload demo
+ *--------------------------------------------------------------------------
+ */
 
 $config['upload_demo'] = array(
   'title'             => 'Upload DEMO',
@@ -81,10 +81,10 @@ $config['upload_demo'] = array(
 
 
 /*
-|--------------------------------------------------------------------------
-| DEMO, niet werkend, puur een voorbeeld waarbij velden van een model komen
-|--------------------------------------------------------------------------
-*/
+ *--------------------------------------------------------------------------
+ * DEMO, niet werkend, puur een voorbeeld waarbij velden van een model komen
+ *--------------------------------------------------------------------------
+ */
 $config['shop'] = array(
   // De velden worden nu opgehaald uit een model.method, deze geeft een array van formfields terug
   'model'             => 'shop.fields',
@@ -100,10 +100,10 @@ $config['shop'] = array(
 );
 
 /*
-|--------------------------------------------------------------------------
-| Instellingen voor een FlexyForm (flexy_forms.sql moet geinstalleerd zijn)
-|--------------------------------------------------------------------------
-*/
+ *--------------------------------------------------------------------------
+ * Instellingen voor een FlexyForm (flexy_forms.sql moet geinstalleerd zijn)
+ *--------------------------------------------------------------------------
+ */
 $config['flexyform_contact'] = array(
   'validation_place'  => 'field',
   'check_for_spam'    => true,
