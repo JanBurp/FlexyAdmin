@@ -689,9 +689,9 @@ class __ extends AdminController {
     $tags=$this->tags.'/FlexyAdmin_r'.$revision;
     $this->_add_content('<h1>Build: r_'.$revision.'</h1>');
 
-    // Copy alles behalve hidden files en files/mappen met __ (dat zijn build processen en autodoc bronbestanden)
+    // Copy alles behalve hidden files en files/mappen met __ en _test (dat zijn build processen en autodoc bronbestanden) en node_modules
     $this->_add_content('<p>Copy all</p>');
-    copy_directory( $this->path.$this->work, $this->path.$tags, array('/.svn','/__') );
+    copy_directory( $this->path.$this->work, $this->path.$tags, array('/.svn','/__','/_test','/node_modules') );
     
     // - maak lege db instelling bestand
     unlink($this->path.$tags.'/site/config/database_local.php');
