@@ -394,11 +394,11 @@ form.corners select {
 }
 body#tinymce {
   margin: 4px;
+  color: #000;
+  background-color: #FFF;
 }
 body#tinymce * {
   font-size: 14px;
-  color: #000;
-  background-color: #FFF;
 }
 body#tinymce a {
   text-decoration: underline;
