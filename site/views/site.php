@@ -57,7 +57,7 @@ $timestamp=filemtime('site/assets/css/styles.min.css');
   <div id="container">
   	<div id="wrapper" class="corners">
   		<div id="header"><h1 id="title"><a href="./"><?=ascii_to_entities($str_title)?></a></h1></div>
-  		<div id="menu" class="menu menu-horizontal"><?=$menu;?></div>
+  		<div id="menu" class="menu menu-vertical"><?=$menu;?></div>
   		<div id="content"><?=$content;?></div>
       <div id="footer" class="corners-bottom small">a flexyadmin site</div>
   	</div>

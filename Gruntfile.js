@@ -1,4 +1,5 @@
 module.exports = function(grunt) {
+  // require('time-grunt')(grunt);
 
   // Project configuration.
   grunt.initConfig({
@@ -57,11 +58,20 @@ module.exports = function(grunt) {
     
     clean: ["site/assets/css/styles.css"],
     
+    notify: {
+        watch: {
+          options: {
+            title: 'Build complete at <%= grunt.template.today("HH:MM:ss") %>',
+            message: 'LESS compiled & CSS minified.',
+          }
+        },
+      },
+    
     watch: {
       styles: {
         options: { spawn: false },
         files: [ "site/assets/css/*.css","site/assets/css/*.less" ],
-        tasks: [ "less","concat", "autoprefixer", "cssmin", "clean" ],
+        tasks: [ "less","concat", "autoprefixer", "cssmin", "clean", "notify:watch" ],
       }
     },
     
@@ -73,8 +83,11 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-clean');
   // grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-notify');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
   // the default task can be run just by typing "grunt" on the command line
   grunt.registerTask('default', ['watch']);
+  // This is required if you use any options.
+  grunt.task.run('notify_hooks');
 };
