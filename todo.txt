@@ -1,2 +1,3 @@
 Keep track of you're todo's here.
 
+ALTER TABLE `tbl_site` ADD `int_version` SMALLINT  NOT NULL  DEFAULT '0'  AFTER `str_google_analytics`;

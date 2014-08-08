@@ -36,6 +36,7 @@
 $config['caching'] = FALSE;
 $config['caching_time'] = 1440;	// 1440 minutes is 24 hours
 
+
 /*
  *--------------------------------------------------------------------------
  * Automatically use minimized css/js files on production sites
