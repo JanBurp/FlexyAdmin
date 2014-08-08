@@ -44,7 +44,7 @@ class FrontEndController extends MY_Controller {
 	public function __construct() {
 		// Init controller, and load all libraries
 		parent::__construct();
-
+    
     // In testmode a temp message will be shown (if not logged in as administrator) and sitemap.xml is deleted
     if ($this->config->item('testmode')) {
       $this->load->library('user');
@@ -55,8 +55,7 @@ class FrontEndController extends MY_Controller {
         die();
       }
     }
-    
-
+        
     // Set $_GET if asked for
     // See http://www.askaboutphp.com/tutorials/58/codeigniter-mixing-segment-based-url-with-querystrings.html
     // For this to work, config.php: $config['uri_protocol']  = "PATH_INFO";
@@ -353,11 +352,15 @@ class FrontEndController extends MY_Controller {
    * @author Jan den Besten
    */
 	public function view($view='',$data='',$return=FALSE) {
+		if (empty($data)) $data=$this->site;
 		if (empty($view)) {
 			$view=$this->config->item('main_view');
-			if ( ! $view) $view='home'; // for backwards compatibility
+      // We are at the main view, check if user is logged in as a admin or user? -> show frontend admin menu
+      // $this->load->library('user');
+      // if ($this->user->logged_in()) {
+      //   $data['frontend_admin']=$this->load->view('admin/_test/frontend',$data,true);
+      // }
 		}
-		if (empty($data)) $data=$this->site;
 		return $this->load->view($view,$data,$return);
 	}
   
