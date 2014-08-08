@@ -89,6 +89,21 @@ class FrontEndController extends MY_Controller {
     }
 		// Init global site data
 		$this->_init_globals();
+    
+    // Build?
+    if ($this->config->item('use_minimized')) {
+      $this->load->config('build',true);
+      $build_settings=$this->config->item('build');
+      if ($watch=el('watch',$build_settings,false)) {
+        $build=true;
+        if ($watch=='dev') $build=$this->config->item('LOCAL');
+        if ($build) {
+          $this->load->model('builder','build');
+          $this->site['_build']=$this->build->go();
+          if (el('add_report',$build_settings,false)) $this->site['_build_report']=$this->build->report();
+        }
+      }
+    }
 	}
 	
 	/**

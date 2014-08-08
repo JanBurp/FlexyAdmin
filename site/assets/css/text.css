@@ -4,6 +4,7 @@
   - and compile by /admin/compile (or with grunt)
   - or override in style.css
 */
+/* BLOCK ELEMENT RESET */
 address,
 article,
 aside,
@@ -51,17 +52,20 @@ video {
   margin: 0;
   padding: 0;
 }
+/* BASIC FONT */
 body {
   font-size: 1rem;
   line-height: 1.5rem;
   letter-spacing: .07rem;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Arial,Helvetica,sans-serif;
   color: #666666;
   background-color: #ffffff;
 }
+/* BASIC FONT SIZE */
 html {
   font-size: 16px;
 }
+/* PARAGRAPHS & HEADINGS */
 p,
 ul,
 ol,
@@ -86,6 +90,7 @@ h3 {
   margin-bottom: 0;
   color: #669966;
 }
+/* LINKS */
 a {
   text-decoration: none;
   color: #669966;
@@ -94,6 +99,7 @@ a:hover {
   text-decoration: underline;
   color: #006600;
 }
+/* OTHERS */
 li {
   margin-left: 15px;
 }
@@ -103,6 +109,7 @@ hr,
   margin: 1rem 0px;
   border: solid 1px #669966;
 }
+/* GLOBAL CLASSES */
 .small {
   font-size: .75rem;
 }
@@ -121,6 +128,7 @@ hr,
 .warning {
   color: #cc0000;
 }
+/* MENU */
 .menu ul ul {
   display: none;
 }
@@ -144,6 +152,7 @@ hr,
   color: #669966;
   text-decoration: none;
 }
+/* horizontal menu */
 .menu-horizontal ul {
   width: 100%;
 }
@@ -165,6 +174,7 @@ hr,
   float: none;
   display: block;
 }
+/* vertical menu */
 .menu-vertical ul {
   float: left;
 }
@@ -181,6 +191,7 @@ hr,
   display: block;
   position: absolute;
 }
+/* mobile menu */
 .menu-mobile ul {
   float: left;
   display: block;
@@ -234,8 +245,8 @@ hr,
 }
 .menu-mobile {
   height: 1.8rem;
-  padding-top: 0!important;
-  padding-bottom: 0!important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
   overflow: hidden;
 }
 .menu-mobile:hover {
@@ -253,6 +264,7 @@ hr,
 .menu-mobile a.current:before {
   content: "= ";
 }
+/* FORMS, label on same line */
 fieldset {
   border: none;
 }
@@ -327,7 +339,7 @@ fieldset > div.radio > div input {
 fieldset > div.radio > div label {
   float: left;
   margin-left: 1rem;
-  margin-top: -0.25rem;
+  margin-top: -.25rem;
 }
 select {
   -webkit-appearance: none;
@@ -337,6 +349,7 @@ select option {
   margin: .25rem .5rem;
   border: none;
 }
+/* vertical form, labels on seperate line */
 form.vertical label {
   float: none;
   width: 100%;
@@ -362,6 +375,7 @@ form.vertical fieldset > div.radio > div {
   margin-left: 0;
   top: 0px;
 }
+/* CORNERS */
 .corners,
 form.corners fieldset,
 form.corners input,
@@ -392,6 +406,7 @@ form.corners select {
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
 }
+/* STYLES in TinyMCE editor (backend) */
 body#tinymce {
   margin: 4px;
   color: #000;
@@ -409,7 +424,7 @@ body#tinymce object,
 body#tinymce .mceItemMedia,
 body#tinymce .mceItemIframe {
   background-color: #CCC;
-  background-image: url('../../../sys/flexyadmin/assets/icons/movie.gif');
+  background-image: url('http://sys/flexyadmin/assets/icons/movie.gif');
   background-position: center center;
   background-repeat: no-repeat;
   border: dotted 1px #F00;
