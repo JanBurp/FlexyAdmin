@@ -39,7 +39,7 @@ class Content {
     'safe_emails'       => true,
     'auto_target_links' => true,
     'remove_sizes'      => false,
-    'compress'          => true,
+    'compress'          => false,
     'site_links'        => false,
     'add_classes'       => false,
     'add_popups'        => false,
