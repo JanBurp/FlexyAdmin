@@ -136,16 +136,11 @@ class Builder extends CI_Model {
       $this->report.=h('No Javascript file changed',2);
     }
 
-    $version=false;
-    if ($needs_compiling or $needs_uglify) {
-      try {
-        $sql="UPDATE `tbl_site` SET `int_version`=LAST_INSERT_ID(`int_version`+1)";
-        $this->db->query($sql);
-        $version=$this->db->insert_id();
-      }
-      catch (Exception $e) {
-        $version=time();
-      }
+    $version=$needs_compiling or $needs_uglify;
+    if ($version and $this->db->field_exists('int_version','tbl_site')) {
+      $sql="UPDATE `tbl_site` SET `int_version`=LAST_INSERT_ID(`int_version`+1)";
+      $this->db->query($sql);
+      $version=$this->db->insert_id();
     }
     
     $this->report.=h('Total Execution Time',2).number_format($this->execution_time(),5).' Secs'.br();

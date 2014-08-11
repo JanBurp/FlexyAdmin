@@ -424,7 +424,7 @@ body#tinymce object,
 body#tinymce .mceItemMedia,
 body#tinymce .mceItemIframe {
   background-color: #CCC;
-  background-image: url('http://sys/flexyadmin/assets/icons/movie.gif');
+  background-image: url('../../../sys/flexyadmin/assets/icons/movie.gif');
   background-position: center center;
   background-repeat: no-repeat;
   border: dotted 1px #F00;
