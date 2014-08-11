@@ -10,10 +10,6 @@
  * @copyright Copyright (c) 2009-2014, Jan den Besten
  * @link http://www.flexyadmin.com
  */
-
-// Use minimized css/js files?
-$minified=($this->config->item('use_minimized'));
-
 ?><!DOCTYPE html>
 <head>
   <meta http-equiv="Content-Type" content="text/html" charset="utf8" />
@@ -30,7 +26,7 @@ $minified=($this->config->item('use_minimized'));
   <meta name="copyright" content="Jan den Besten,<?=$author;?>" />
   <meta name="robots" content="index,follow" />
   <meta name="revisit-after" content="7 days" />
-<?php if ($minified): ?>
+<?php if ($use_minimized): ?>
   <link href="<?=$assets;?>css/styles.min.css?<?=$int_version?>" rel="stylesheet" type="text/css" />
 <?php else: ?>
   <link rel="stylesheet" href="<?=$assets;?>css/normalize.css" type="text/css" media="screen" title="no title" charset="utf-8">
@@ -61,7 +57,7 @@ $minified=($this->config->item('use_minimized'));
   	</div>
   </div>
 
-<?php if ($minified): ?>
+<?php if ($use_minimized): ?>
   <script src="<?=$assets?>js/scripts.min.js?<?=$int_version?>" type="text/javascript" charset="utf-8"></script>
 <?php else: ?>
   <script src="<?=$assets?>js/rem.min.js" type="text/javascript" charset="utf-8"></script>
