@@ -1,7 +1,7 @@
 /*
   text.css
   - please make the changes in layout.less
-  - and compile by /admin/compile (or with grunt)
+  - and compile by /admin/build
   - or override in style.css
 */
 /* BLOCK ELEMENT RESET */
@@ -307,13 +307,13 @@ textarea:hover,
 select:hover {
   border-color: #669966;
 }
-input.button {
+.button {
   text-transform: uppercase;
   width: auto;
   float: right;
   background-color: #ffffff;
 }
-input.button:hover {
+.button:hover {
   background-color: #669966;
   color: #ffffff;
 }

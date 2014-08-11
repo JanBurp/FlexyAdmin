@@ -6,6 +6,7 @@ class Builder extends CI_Model {
   
   var $settings=array();
   var $report='';
+  var $errors=array();
   
 	public function __construct($settings=false) {
 		parent::__construct();
@@ -47,7 +48,6 @@ class Builder extends CI_Model {
     $this->report=h('Compile LESS files & Minify CSS files');
     
     if ($needs_compiling) {
-
       // 1 - Compile Less files
       $this->report.=h('Compiling LESS files',2);
       $less_files=$this->settings['less_files'];
@@ -57,12 +57,19 @@ class Builder extends CI_Model {
           $parser->parseFile($less, site_url());
           $output = $parser->getCss();
           write_file($css,$output);
-          // message
       		$this->report.=$less.' => '.$css.br();
-        }catch(Exception $e){
-      		$this->report.=p('error').$less.' => Fatal error: ' . $e->getMessage()._p();
+        } catch(Exception $e){
+          $message=$e->getMessage();
+          $char=$e->index;
+          $less_=read_file($less);
+          $less_=substr($less_,0,$char);
+          $line=substr_count($less_,"\n") + 1;
+          $error='Fatal error: ' . $message. ' at line '.$line;
+      		$this->report.=p('error').$error._p();
+          $this->errors[]=$error;
         }
       }
+      
       // 2 - Combine files
       $this->report.=h('Combining CSS files',2);
       $combine='';
@@ -192,6 +199,11 @@ class Builder extends CI_Model {
   public function report() {
     return $this->report;
   }
+  
+  public function errors() {
+    return $this->errors;
+  }
+  
   
   private function execution_time($start=0) {
     if ($start==0) $start=$this->time_start;

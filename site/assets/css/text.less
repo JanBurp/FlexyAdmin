@@ -1,7 +1,7 @@
 /*
   text.css
   - please make the changes in layout.less
-  - and compile by /admin/compile (or with grunt)
+  - and compile by /admin/build
   - or override in style.css
 */
 
@@ -13,34 +13,24 @@
 
 // FlexyAdmin green THEME ////////////////////////////
 
-// radius of rounded borders (corner class)
+// elements-colors
+@body:          #DEA;
+@back:          #FFF;
+@head:          #696;
+// text-colors
+@text:          #666;
+@text_head:     @head;
+@text_link:     @head;
+@text_hover:    #060;
+@text_error:    #F00;
+@text_warning:  #C00;
+// menu-colors
+@menu_text:@back;
+@menu_back:@head;
+@menu_hover_text:@head;
+@menu_hover_back:@body;
+// radius corner class
 @corner-radius:10px;
-
-// Background color (of container)
-@back_color:#FFF;
-
-// Basic text color
-@text_color:#666;
-
-// Colors for standard links
-@link_color:#696;
-@hover_color:#060;
-
-// Colors of headings in text
-@head_color:#696;
-
-// Light color: body background, borders
-@light_color:#DEA;
-
-// Colors for errors and warnings
-@error_color:#F00;
-@warning_color:#C00;
-
-// colors for menu
-@menu_text_color:@back_color;
-@menu_back_color:@head_color;
-@menu_hover_text_color:@head_color;
-@menu_hover_back_color:@light_color;
 
 /////////////////////////////////////////////////////
 
@@ -58,8 +48,8 @@ body {
   line-height:1.5rem;
   letter-spacing:.07rem;
   font-family: Arial,Helvetica,sans-serif;
-  color:@text_color;
-  background-color:@back_color;
+  color:@text;
+  background-color:@back;
 }
 /* BASIC FONT SIZE */
 html {font-size:16px;}
@@ -67,37 +57,37 @@ html {font-size:16px;}
 /* PARAGRAPHS & HEADINGS */
 p,ul,ol,form {margin-bottom:1rem;}
 h1,h2 {margin-bottom:1rem;}
-h1 {font-size:2rem;line-height:2.5rem;color:@head_color;}
-h2 {font-size:1.5rem;line-height:2rem;color:@head_color;}
-h3 {margin-bottom:0;color:@head_color;}
+h1 {font-size:2rem;line-height:2.5rem;color:@head;}
+h2 {font-size:1.5rem;line-height:2rem;color:@head;}
+h3 {margin-bottom:0;color:@head;}
 
 /* LINKS */
-a {text-decoration:none;color:@link_color;}
-a:hover {text-decoration:underline;color:@hover_color;}
+a {text-decoration:none;color:@text_link;}
+a:hover {text-decoration:underline;color:@text_hover;}
 
 /* OTHERS */
 li {margin-left:15px;}
-hr,.hr {width:100%;margin:1rem 0px;border:solid 1px @link_color;}
+hr,.hr {width:100%;margin:1rem 0px;border:solid 1px @text_link;}
 
 /* GLOBAL CLASSES */
 .small { font-size:.75rem; }
-.color {color:@link_color;}
+.color {color:@text_link;}
 .hidden { display:none;}
-.border {	border:solid 1px @text_color;}
-.error {color:@error_color;}
-.warning {color:@warning_color;}
+.border {	border:solid 1px @text;}
+.error {color:@text_error;}
+.warning {color:@text_warning;}
 
 
 /* MENU */
 .menu ul ul {display:none;}
 .menu li {list-style:none;margin:0px;padding:0px;}
-.menu a {color:@menu_text_color;background-color:@menu_back_color;text-transform:uppercase;padding:0.2rem 0.5rem;white-space:nowrap;display:block;}
-.menu a.current, .menu a.active, .menu a:hover {background-color:@menu_hover_back_color;color:@menu_hover_text_color;text-decoration:none;}
+.menu a {color:@menu_text;background-color:@menu_back;text-transform:uppercase;padding:0.2rem 0.5rem;white-space:nowrap;display:block;}
+.menu a.current, .menu a.active, .menu a:hover {background-color:@menu_hover_back;color:@menu_hover_text;text-decoration:none;}
 /* horizontal menu */
 .menu-horizontal ul {width:100%;}
 .menu-horizontal ul ul ul {margin-top:-1.9rem;margin-left:100%;}
 .menu-horizontal li:hover>ul {display:block;position:absolute;width:auto;}
-.menu-horizontal li {background-color:@menu_back_color;display:inline;float:left;}
+.menu-horizontal li {background-color:@menu_back;display:inline;float:left;}
 .menu-horizontal li.lev1 ul li {float:none;display:block;}
 /* vertical menu */
 .menu-vertical ul {float:left;}
@@ -117,8 +107,8 @@ hr,.hr {width:100%;margin:1rem 0px;border:solid 1px @link_color;}
   @{class} li.lev5 a:before{content:"..> "}
   @{class} li:hover {position:static;}
   @{class} a {display:none;}
-  @{class} a.active {background-color:@menu_back_color;color:@menu_text_color;}
-  @{class} a:hover {background-color:@menu_hover_back_color;color:@menu_hover_text_color;}
+  @{class} a.active {background-color:@menu_back;color:@menu_text;}
+  @{class} a:hover {background-color:@menu_hover_back;color:@menu_hover_text;}
   @{class} a.current {display:block;}
   @{class} {height:1.8rem;padding-top:0!important;padding-bottom:0!important;overflow:hidden;}
   @{class}:hover {height:auto;}
@@ -135,13 +125,13 @@ form {}
 fieldset {border:none;}
 legend {display:none;padding:0px 1rem;}
 fieldset>div {margin-bottom:1rem;clear:both;}
-fieldset>div.required label:after { content:" *"; color:@warning_color;}
+fieldset>div.required label:after { content:" *"; color:@text_warning;}
 label {width:30%;font-weight:bold;float:left;box-sizing:border-box;}
-fieldset span.error {display:block;position:absolute;max-width:28%;background-color:@back_color;}
-input,textarea,select {width:70%;display:block;box-sizing:border-box;padding:.25rem .5rem;border:solid 1px @light_color;cursor:pointer;}
-input:hover,textarea:hover,select:hover {border-color:@link_color;}
-input.button {text-transform:uppercase;width:auto;float:right;background-color:@back_color}
-input.button:hover {background-color:@link_color;color:@back_color;}
+fieldset span.error {display:block;position:absolute;max-width:28%;background-color:@back;}
+input,textarea,select {width:70%;display:block;box-sizing:border-box;padding:.25rem .5rem;border:solid 1px @body;cursor:pointer;}
+input:hover,textarea:hover,select:hover {border-color:@text_link;}
+.button {text-transform:uppercase;width:auto;float:right;background-color:@back}
+.button:hover {background-color:@text_link;color:@back;}
 input.checkbox {width:1rem;height:1rem;margin-bottom:1.75rem;position:relative;top:.25rem;}
 fieldset>div.radio>div {margin-left:30%;width:100%;float:left;position:relative;top:-1rem;}
 fieldset>div.radio>div input {float:left;width:1rem;height:1rem;}

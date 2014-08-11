@@ -1,7 +1,7 @@
 /*
   layout.css
   - please make the changes in layout.less
-  - and compile by /admin/compile (or with grunt)
+  - and compile by /admin/build
   - or override in style.css
 */
 
@@ -14,7 +14,7 @@
 @import (reference) "text.less";
 
 // MAIN LAYOUT
-body {background:@light_color;}
+body {background:@body;}
 #container {
   float: right;
   position: relative;
@@ -26,7 +26,7 @@ body {background:@light_color;}
   left: 50%;  
 	margin:1rem;
 	width:960px;
-  background-color:@back_color;
+  background-color:@back;
 }
 #wrapper>div {
   float:left;
@@ -37,9 +37,9 @@ body {background:@light_color;}
 div#header {padding:1rem;}
 div#header h1 {margin:0;}
 div#header h1 a {text-decoration:none}
-div#menu {background-color:@link_color;}
+div#menu {background-color:@text_link;}
 div#content {min-height:300px;}
-div#footer {padding:.25rem;text-align:center;background-color:@link_color;color:@back_color;}
+div#footer {padding:.25rem;text-align:center;background-color:@text_link;color:@back;}
 
 
 //////////////////////////////////////////////////////
