@@ -138,9 +138,14 @@ class Builder extends CI_Model {
 
     $version=false;
     if ($needs_compiling or $needs_uglify) {
-      $sql="UPDATE `tbl_site` SET `int_version`=LAST_INSERT_ID(`int_version`+1)";
-      $this->db->query($sql);
-      $version=$this->db->insert_id();
+      try {
+        $sql="UPDATE `tbl_site` SET `int_version`=LAST_INSERT_ID(`int_version`+1)";
+        $this->db->query($sql);
+        $version=$this->db->insert_id();
+      }
+      catch (Exception $e) {
+        $version=time();
+      }
     }
     
     $this->report.=h('Total Execution Time',2).number_format($this->execution_time(),5).' Secs'.br();

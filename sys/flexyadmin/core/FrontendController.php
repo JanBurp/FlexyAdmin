@@ -104,6 +104,8 @@ class FrontEndController extends MY_Controller {
         }
       }
     }
+    // Version fallback
+    if (!isset($this->site['int_version'])) $this->site['int_version']=time();
 	}
 	
 	/**
