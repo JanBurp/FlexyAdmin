@@ -227,6 +227,7 @@ class Content {
   */
     $re = '%(?>[^\S ]\s*| \s{2,})(?=[^<]*+(?:<(?!/?(?:textarea|pre|script)\b)[^<]*+)*+(?:<(?>textarea|pre|script)\b|\z))%Six';
     $new_html = preg_replace($re," ", $html);
+    $new_html = preg_replace('~>\s+<~', '><', $new_html);
     if ($new_html === null) $new_html = $html;
     return $new_html;
   }
