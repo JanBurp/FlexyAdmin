@@ -60,6 +60,7 @@ class Content {
    */
 	public function __construct($config=array()) {
     if ($config) $this->initialize($config);
+    $this->CI=@get_instance();
   }
   
 
@@ -89,7 +90,7 @@ class Content {
    */
   private function _auto_target_links($match) {
     $res='<a'.preg_replace("/target=\"(.*)?\"/uiUsm", "", $match[1]);
-    $url=$match[2];
+    $url=str_replace($this->CI->config->item('base_url'),'',$match[2]);
     $target='_self';
     if (substr($url,0,4)=='http') $target='_blank';
     if (substr($url,0,4)=='file') $target='';
