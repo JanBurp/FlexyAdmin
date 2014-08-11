@@ -86,7 +86,7 @@ class Builder extends CI_Model {
   		$this->report.=h('CREATED',2).$this->settings['dest_file'];
     }
     else {
-      $this->report.=h('No less of css file changed',2);
+      $this->report.=h('No less or css file changed',2);
     }
     
     $js_start = microtime(true);
@@ -168,10 +168,12 @@ class Builder extends CI_Model {
   private function find_files($type) {
     $site=read_file('site/views/site.php');
     $files=array();
-    if (preg_match_all("/[src|href]=[\"|'](.*\.".$type.").*[\"|']/uiUm", $site,$matches)) {
+    $tag='src';
+    if ($type=='css') $tag='href';
+    if (preg_match_all("/".$tag."=[\"|'](.*\.".$type.").*[\"|']/uiUm", $site,$matches)) {
       foreach ($matches[1] as $file) {
         $file=str_replace(array('<?=$assets?>','<?=$assets;?>'),$this->config->item('ASSETS'),$file);
-        $files[]=$file;
+        if (substr($file,0,4)!='http') $files[]=$file;
       }
     }
     switch($type) {
