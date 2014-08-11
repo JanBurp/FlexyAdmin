@@ -19,7 +19,7 @@ class Less_Parser{
 		'compress'				    => false,			// option - whether to compress
 		'strictUnits'			    => false,			// whether units need to evaluate correctly
 		'strictMath'			    => false,			// whether math has to be within parenthesis
-		'relativeUrls'		    => true,			// option - whether to adjust URL's to be relative
+		'relativeUrls'		    => false,			// option - whether to adjust URL's to be relative
 		'urlArgs'				      => array(),		// whether to add args into url tokens
 		'numPrecision'		    => 8,
 
