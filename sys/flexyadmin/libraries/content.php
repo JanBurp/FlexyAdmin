@@ -35,17 +35,20 @@
  */
 class Content {
 
-	private $safeEmail=TRUE;
-  private $auto_target_links=TRUE;
-  private $site_links=TRUE;
-	private $addClasses=TRUE;
-	private $addPopups=FALSE;
-  private $removeSizes=FALSE;
-	private $prePopup='popup_';
-	private $replaceLanguageLinks=FALSE;
-  private $replaceSoftHyphens=FALSE;
-  private $replaceHyphen='[-]';
-  private $config_array=array('safe_emails'=>'safeEmail','auto_target_links'=>'auto_target_links','site_links'=>'site_links','add_classes'=>'addClasses','add_popups'=>'addPopups','replace_language_links'=>'replaceLanguageLinks','replace_soft_hyphens'=>'replaceSoftHyphens','remove_sizes'=>'removeSizes');
+  private $settings = array(
+    'safe_emails'       => true,
+    'auto_target_links' => true,
+    'remove_sizes'      => false,
+    'compress'          => true,
+    'site_links'        => false,
+    'add_classes'       => false,
+    'add_popups'        => false,
+    // 'add_popups'        => 'popup_',
+    'replace_language_links' => false,
+    // 'replace_language_links' => array('search'=>'','replace'=>''),
+    'replace_soft_hyphens'   => false,
+    // 'replace_soft_hyphens'   => '[-]',
+  );
 	
 	private $div_count;
 	private $img_count;
@@ -56,8 +59,7 @@ class Content {
    * @ignore
    */
 	public function __construct($config=array()) {
-    if (empty($config)) $config=$this->config_array;
-    $this->initialize($config);
+    if ($config) $this->initialize($config);
   }
   
 
@@ -69,87 +71,12 @@ class Content {
    * @author Jan den Besten
    */
   public function initialize($config=array()) {
-    if (empty($config)) $config=$this->config_array;
-    foreach ($config as $key => $value) {
-      if (isset($this->config_array[$key])) {
-        $thisVar=$this->config_array[$key];
-        if (isset($this->$thisVar)) $this->$thisVar=$value;
-      }
-    }
+    $this->settings=array_merge($this->settings,$config);
     return $this;
   }
 
-  /**
-   * Zet het vervangen van email adressen in spambot veilige emailadressen aan of uit
-   *
-   * @param bool $safe[TRUE] TRUE is aan, FALSE is UIT
-   * @return void
-   * @author Jan den Besten
-   * @depricated
-   * @ignore
-   */
-	public function option_safe_email($safe=TRUE) {
-		$this->safeEmail=$safe;
-	}
-	
-  /**
-   * Zet het toevoegen van extra classes aan div,p en img tags aan/uit
-   *
-   * @param bool $classes[TRUE] TRUE is aan, FALSE is UIT
-   * @return void
-   * @author Jan den Besten
-   * @depricated
-   * @ignore
-   */
-	public function add_classes($classes=TRUE) {
-		$this->addClasses=$classes;
-	}
-	
-  /**
-   * Hiermee kunnen links worden vervangen
-   * 
-   * Voorbeeld om alle links (nederlandstalige) te verwijzen naar de engelstalige pagina's: 
-   * 
-   *     $this->content->replace_language_links( array('search'=>'nl','replace'=>'en') );
-   *
-   * @param array $replace[TRUE]
-   * @return void
-   * @author Jan den Besten
-   */
-	public function replace_language_links($replace=TRUE) {
-		$this->replaceLanguageLinks=$replace;
-	}
-	
-  
-  
-  
-  /**
-   * Voegt een popup link aan img tags toe
-   *
-   * @param string $pre['popup_'] 
-   * @param bool $popups[TRUE]
-   * @return void
-   * @author Jan den Besten
-   * @depricated
-   * @ignore
-   */
-	public function add_popups($pre="popup_",$popups=TRUE) {
-		$this->prePopup=$pre;
-		$this->addPopups=$popups;
-	}
-  
-  /**
-   * Zet het vervangen van hyphen karakters aan/ui
-   *
-   * @param bool $hyphens[TRUE] TRUE is aan, FALSE is UIT
-   * @return void
-   * @author Jan den Besten
-   * @depricated
-   * @ignore
-   */
-  function replace_soft_hyphens($hyphens=TRUE) {
-    $this->replaceSoftHyphens=$hyphens;
-  }
+
+
 
   /**
    * Maakt automatisch het juiste target attribuut aan in een link tag <a>
@@ -243,7 +170,7 @@ class Content {
 	private function _popupCallBack($matches) {
 		$src=$matches[2];
 		$info=get_path_and_file($src);
-		$popup=$info['path']."/popup_".$info["file"];
+		$popup=$info['path'].$this->settings['pre_popup'].$info["file"];
 		if (file_exists($popup)) {
 			$result="<img".$matches[1]." longdesc=\"$popup\" src=\"".$src."\"".$matches[3]." />";
 		}
@@ -266,6 +193,43 @@ class Content {
 		$this->p_count=1;
 		$this->h_count=array(1=>1,2=>1,3=>1,4=>1,5=>1,6=>1,7=>1);
 	}
+  
+  /**
+   * Compresses HTML
+   *
+   * @param string $html 
+   * @return string
+   * @author Jan den Besten
+   */
+  private function compress($html) {
+    ini_set("pcre.recursion_limit", "16777");
+  /*
+    $re = '%# Collapse whitespace everywhere but in blacklisted elements.
+      (?>             # Match all whitespans other than single space.
+        [^\S ]\s*     # Either one [\t\r\n\f\v] and zero or more ws,
+      | \s{2,}        # or two or more consecutive-any-whitespace.
+      ) # Note: The remaining regex consumes no text at all...
+      (?=             # Ensure we are not in a blacklist tag.
+        [^<]*+        # Either zero or more non-"<" {normal*}
+        (?:           # Begin {(special normal*)*} construct
+          <           # or a < starting a non-blacklist tag.
+          (?!/?(?:textarea|pre|script)\b)
+          [^<]*+      # more non-"<" {normal*}
+        )*+           # Finish "unrolling-the-loop"
+        (?:           # Begin alternation group.
+          <           # Either a blacklist start tag.
+          (?>textarea|pre|script)\b
+        | \z          # or end of file.
+        )             # End alternation group.
+      )  # If we made it here, we are not in a blacklist tag.
+      %Six';
+  */
+    $re = '%(?>[^\S ]\s*| \s{2,})(?=[^<]*+(?:<(?!/?(?:textarea|pre|script)\b)[^<]*+)*+(?:<(?>textarea|pre|script)\b|\z))%Six';
+    $new_html = preg_replace($re," ", $html);
+    if ($new_html === null) $new_html = $html;
+    return $new_html;
+  }
+  
 
   /**
    * Zelfde als render()
@@ -287,28 +251,28 @@ class Content {
    */
 	public function render($txt) {
 		$this->reset_counters();
-		
-		if ($this->replaceLanguageLinks and isset($this->replaceLanguageLinks['search']) and isset($this->replaceLanguageLinks['replace'])) {
-			$txt=preg_replace('/<a[\s]*href=\"'.$this->replaceLanguageLinks['search'].'\/(.*)\">(.*)<\/a>/','<a href="'.$this->replaceLanguageLinks['replace'].'/$1">$2</a>',$txt);
+    
+		if ($this->settings['replace_language_links'] and isset($this->settings['replace_language_links']['search']) and isset($this->settings['replace_language_links']['replace'])) {
+			$txt=preg_replace('/<a[\s]*href=\"'.$this->settings['replace_language_links']['search'].'\/(.*)\">(.*)<\/a>/','<a href="'.$this->settings['replace_language_links']['replace'].'/$1">$2</a>',$txt);
 		}
     
-    if ($this->auto_target_links) {
+    if ($this->settings['auto_target_links']) {
       $txt=preg_replace_callback("/<a(.*)?href=\"(.*)?\"(.*)?>/uiUsm",array($this,"_auto_target_links"),$txt);
     }
 
-    if ($this->site_links) {
+    if ($this->settings['site_links']) {
       $txt=preg_replace_callback("/<a(.*)?href=\"(.*)?\"(.*)?>/uiUsm",array($this,"_site_links"),$txt);
     }
     
-		if ($this->addClasses) {
+		if ($this->settings['add_classes']) {
 			$txt=preg_replace_callback("/<(div|img|p|h(\d))([^<]*)>/",array($this,"_countCallBack"),$txt);
 		}
 		
-		if ($this->addPopups) {
+		if ($this->settings['add_popups']) {
 			$txt=preg_replace_callback("/<img([^<]*)src=['|\"](.*?)['|\"]([^>]*)>/",array($this,"_popupCallBack"),$txt);
 		}
 		
-		if ($this->safeEmail) {
+		if ($this->settings['safe_emails']) {
 			if (preg_match_all("/<a([^<]*)href=\"mailto:(.*?)\"([^>]*)>(.*?)<\/a>/",$txt,$matches)) { 	//<a[\s]*href="(.*)">(.*)</a>
 				$search=array();
 				$replace=array();
@@ -336,13 +300,17 @@ class Content {
 			}
 		}
     
-    if ($this->replaceSoftHyphens) {
-      $txt=str_replace($this->replaceHyphen,'&#173;',$txt);
+    if ($this->settings['replace_soft_hyphens']) {
+      $txt=str_replace($this->settings['replace_soft_hyphens'],'&#173;',$txt);
     }
-    
-    if ($this->removeSizes) {
+
+    if ($this->settings['remove_sizes']) {
       $txt = preg_replace("/<img(.*)(\swidth=\"\d*\")/uiUsm", "<img$1", $txt);
       $txt = preg_replace("/<img(.*)(\sheight=\"\d*\")/uiUsm", "<img$1", $txt);
+    }
+    
+    if ($this->settings['compress']) {
+      $txt = $this->compress($txt);
     }
     
 		return $txt;
