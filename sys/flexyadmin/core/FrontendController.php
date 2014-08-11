@@ -105,7 +105,10 @@ class FrontEndController extends MY_Controller {
       }
     }
     // Version fallback
-    if (!isset($this->site['int_version'])) $this->site['int_version']=time();
+    if (!isset($this->site['int_version'])) {
+      $this->site['int_version']='';
+      if (file_exists('site/assets/css/layout.css')) $this->site['int_version']=filemtime('site/assets/css/layout.css');
+    }
 	}
 	
 	/**
@@ -169,7 +172,7 @@ class FrontEndController extends MY_Controller {
 		 * Set Some Config
 		 */
 		$this->site['languages']=$this->config->item('languages');
-
+    $this->site['use_minimized']=$this->config->item('use_minimized');
 
     if (!$this->ajax_module) {
   		/**
