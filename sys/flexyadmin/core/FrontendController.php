@@ -104,10 +104,15 @@ class FrontEndController extends MY_Controller {
         }
       }
     }
-    // Version fallback
+    // Version timestamp
     if (!isset($this->site['int_version'])) {
-      $this->site['int_version']='';
-      if (file_exists('site/assets/css/layout.css')) $this->site['int_version']=filemtime('site/assets/css/layout.css');
+      $files=array('site/assets/css/layout.css','site/assets/css/text.css','site/assets/js/site.js');
+      $version=0;
+      foreach ($files as $file) {
+        if (file_exists($file)) $time=filemtime($file);
+        if ($time>$version) $version=$time;
+      }
+      $this->site['int_version']=$version;
     }
 	}
 	
