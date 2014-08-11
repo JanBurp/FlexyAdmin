@@ -102,7 +102,7 @@ $config['language']	= "nl";
  *
  * Set how the content must be parsed, possible settings: 'safe_emails', 'auto_target_links', 'add_classes', 'remove_sizes', 'replace_language_links', 'replace_soft_hyphens'.
  */
-$config['parse_content']  = array( 'safe_emails'=>TRUE, 'auto_target_links'=> TRUE, 'add_classes'=>FALSE, 'remove_sizes'=>TRUE );
+$config['parse_content']  = array( 'safe_emails'=>TRUE, 'auto_target_links'=> TRUE, 'add_classes'=>FALSE, 'remove_sizes'=>TRUE, 'compress' => TRUE );
 
 
 /*
