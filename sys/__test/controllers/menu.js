@@ -1,6 +1,6 @@
 flexyAdmin.controller('menuController', function($scope) {
   
-  $scope.root = "admin/_test";
+  $scope.root = "admin/__test";
 
   $scope.menu = [
     { href: $scope.root+"#/form/tbl_site/first", title: 'Site' },

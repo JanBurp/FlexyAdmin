@@ -5,11 +5,11 @@ flexyAdmin.config( function($routeProvider){
   $routeProvider
     .when('/grid/:table',{
       controller  : 'GridController',
-      templateUrl : 'sys/_test/views/grid.html'
+      templateUrl : 'sys/__test/views/grid.html'
     })
     .when('/form/:table/:id',{
       controller  : 'FormController',
-      templateUrl : 'sys/_test/views/form.html'
+      templateUrl : 'sys/__test/views/form.html'
     })
     .otherwise({ redirectTo: '/grid' });
 });
