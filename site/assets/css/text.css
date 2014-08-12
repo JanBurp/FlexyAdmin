@@ -56,7 +56,7 @@ video {
 body {
   font-size: 1rem;
   line-height: 1.5rem;
-  letter-spacing: .07rem;
+  letter-spacing: .03rem;
   font-family: Arial,Helvetica,sans-serif;
   color: #666666;
   background-color: #ffffff;
@@ -72,8 +72,7 @@ ol,
 form {
   margin-bottom: 1rem;
 }
-h1,
-h2 {
+h1:first-child {
   margin-bottom: 1rem;
 }
 h1 {
@@ -101,13 +100,20 @@ a:hover {
 }
 /* OTHERS */
 li {
-  margin-left: 15px;
+  margin-left: 1rem;
+  padding-left: 1rem;
 }
 hr,
 .hr {
   width: 100%;
   margin: 1rem 0px;
   border: solid 1px #669966;
+}
+code {
+  color: #ff6600;
+  background-color: #ddeeaa;
+  padding: .25rem;
+  border-radius: 5px;
 }
 /* GLOBAL CLASSES */
 .small {
@@ -127,6 +133,9 @@ hr,
 }
 .warning {
   color: #cc0000;
+}
+.special {
+  color: #ff6600;
 }
 /* MENU */
 .menu ul ul {

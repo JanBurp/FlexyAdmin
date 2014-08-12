@@ -41,6 +41,9 @@ div#menu {
 div#content {
   min-height: 300px;
 }
+div#content img {
+  max-width: 100%;
+}
 div#footer {
   padding: .25rem;
   text-align: center;

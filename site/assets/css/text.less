@@ -24,6 +24,7 @@
 @text_hover:    #060;
 @text_error:    #F00;
 @text_warning:  #C00;
+@text_special:  #F60;
 // menu-colors
 @menu_text:@back;
 @menu_back:@head;
@@ -46,7 +47,7 @@ address,article,aside,audio,blockquote,canvas,dd,details,div,dl,fieldset,figcapt
 body {
   font-size:1rem;
   line-height:1.5rem;
-  letter-spacing:.07rem;
+  letter-spacing:.03rem;
   font-family: Arial,Helvetica,sans-serif;
   color:@text;
   background-color:@back;
@@ -56,7 +57,7 @@ html {font-size:16px;}
 
 /* PARAGRAPHS & HEADINGS */
 p,ul,ol,form {margin-bottom:1rem;}
-h1,h2 {margin-bottom:1rem;}
+h1:first-child {margin-bottom:1rem;}
 h1 {font-size:2rem;line-height:2.5rem;color:@head;}
 h2 {font-size:1.5rem;line-height:2rem;color:@head;}
 h3 {margin-bottom:0;color:@head;}
@@ -66,8 +67,9 @@ a {text-decoration:none;color:@text_link;}
 a:hover {text-decoration:underline;color:@text_hover;}
 
 /* OTHERS */
-li {margin-left:15px;}
+li {margin-left:1rem;padding-left:1rem;}
 hr,.hr {width:100%;margin:1rem 0px;border:solid 1px @text_link;}
+code {color:@text_special;background-color:@body;padding:.25rem;border-radius:(@corner-radius / 2)}
 
 /* GLOBAL CLASSES */
 .small { font-size:.75rem; }
@@ -76,6 +78,7 @@ hr,.hr {width:100%;margin:1rem 0px;border:solid 1px @text_link;}
 .border {	border:solid 1px @text;}
 .error {color:@text_error;}
 .warning {color:@text_warning;}
+.special {color:@text_special;}
 
 
 /* MENU */
