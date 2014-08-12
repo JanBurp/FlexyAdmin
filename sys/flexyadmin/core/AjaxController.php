@@ -30,11 +30,18 @@ class AjaxController extends BasicController {
    */
 	protected $name='';
   
+  /**
+   * Testmodes
+   *
+   * @var bool
+   */
+  private $test = false;
+  
 
   /**
    * @ignore
    */
-	function __construct($name='') {
+	public function __construct($name='') {
 		parent::__construct();
 		if (empty($name) or is_array($name)) $name=strtolower(get_class($this));
     $this->name=$name;
@@ -54,6 +61,19 @@ class AjaxController extends BasicController {
 	public function __call($function, $args) {
 		return $this->_result(array('_error'=>'Method: `'.ucfirst($function)."()` doesn't exists."));
 	}
+  
+  /**
+   * Sets testmode, output is not echod
+   *
+   * @param string $test[true]
+   * @return object $this
+   * @author Jan den Besten
+   */
+  public function _test($test=true) {
+    $this->test=$test;
+    return $this;
+  }
+
 
   /**
    * Deze method geeft een JSON terug van de meegegeven array.
@@ -67,8 +87,8 @@ class AjaxController extends BasicController {
     $args['_success']=true;
     if (isset($args['_error']) and !empty($args['_error'])) $args['_success']=false;
     ksort($args);
+    if ($this->test) return $args;
     $json=array2json($args);
-    echo $json;
     return $json;
   }
   

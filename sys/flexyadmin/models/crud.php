@@ -9,15 +9,18 @@
  */
 class Crud extends CI_Model {
 
+  private $get_as = "array";
+
 	private $table;
 	private $user_id;
 	private $data;
+  private $select;
 	private $where;
 	private $limit;
 	private $offset;
 	private $order;
 
-	function __construct() {
+	public function __construct() {
 		parent::__construct();
 		$this->table='';
 	}
@@ -321,12 +324,13 @@ class Crud extends CI_Model {
    */
 	private function _set_args($args=NULL) {
 		$this->data   = element('data',$args,FALSE);
+    $this->select = element('select',$args,FALSE);
 		$this->where  = element('where',$args,FALSE);
-		if (!is_array($this->where)) $this->where=array(PRIMARY_KEY,$this->where);
+		if ($this->where and !is_array($this->where)) $this->where=array(PRIMARY_KEY,$this->where);
 		$this->limit  = element('limit',$args,FALSE);
 		$this->offset = element('offset',$args,0);
 		$this->order 	= element('order',$args,FALSE);
-		if (!is_array($this->order)) $this->order=array($this->order=>'DESC');
+    // if ($this->order and !is_array($this->order)) $this->order=array($this->order.' DESC');
 	}
 
   /**
@@ -377,6 +381,38 @@ class Crud extends CI_Model {
 			$this->db->limit($limit,$offset);
 		}
 	}
+  
+  
+  /**
+   * Get result as array
+   *
+   * @param string $args 
+   * @return array $result
+   * @author Jan den Besten
+   */
+  public function get_array($args=array()) {
+		if (empty($this->table)) return FALSE;
+		$this->_set_args($args);
+    if ($this->select)  $this->db->select($this->select);
+    if ($this->where)   $this->db->where($this->where);
+    if ($this->order)   $this->db->order_by($this->order);
+    if ($this->limit)   $this->db->limit($this->limit);
+    if ($this->offset)  $this->db->offset($this->offset);
+    return $this->db->get_result($this->table);
+  }
+  
+  /**
+   * get result (type is set)
+   *
+   * @param string $args 
+   * @return mixed $result
+   * @author Jan den Besten
+   */
+  public function get($args=array()) {
+    return $this->get_array($args);
+  }
+  
+  
 
 }
 

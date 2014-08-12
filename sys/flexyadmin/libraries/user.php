@@ -30,14 +30,18 @@ class User Extends Ion_auth {
    *
    * @var array
    */
-	private $rights;
+	public $rights;
 
   /**
    * id van huidige gebruiker
    *
    * @var int
    */
-	private $user_id;
+	public $user_id;
+  public $group_id;
+  public $user_name;
+  public $language;
+  
   
   /**
    * Array van tbl_site
@@ -176,6 +180,7 @@ class User Extends Ion_auth {
 			$this->user_name = $this->CI->session->userdata("str_username");
 			$this->language= $this->CI->session->userdata("language");
 			$this->rights = $this->create_rights( $this->user_id );
+      $this->group_id = $this->CI->session->userdata("id_user_group");
       $this->load_user_cfg();
 		}
 		return (bool) $logged_in;
@@ -205,7 +210,6 @@ class User Extends Ion_auth {
         }
       }
     }
-    
   }
 	
 	/**

@@ -1,17 +1,5 @@
 <?php require_once(APPPATH."core/AjaxController.php");
 
-/**
- * FlexyAdmin V1
- *
- * A Flexible Database based CMS
- *
- * @package FlexyAdmin V1
- * @author Jan den Besten
- * @copyright Copyright (c) 2008, Jan den Besten
- * @link http://flexyadmin.com
- * @version V1 0.1
- * @filesource  */
-
 // ------------------------------------------------------------------------
 
 /**
@@ -37,7 +25,6 @@ class Ajax extends AjaxController {
     $this->lang->load('form_validation');
     $this->load->helper('string');
 	}
-
 
   /**
    * Maak nieuwe volgorde in een grid
