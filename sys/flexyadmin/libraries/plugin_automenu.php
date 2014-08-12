@@ -413,7 +413,7 @@ class Plugin_automenu extends Plugin {
     						$groupField=remove_prefix($autoValue['field_group_by'],'.');
     						$groupTable=foreign_table_from_key($groupField);
     					}
-    					$groupData=$this->_get_current_data($groupTable);
+    					$groupData=$this->_get_current_data($groupTable,$autoValue['str_where'],$autoValue['int_limit']);
 					
               // trace_($autoValue);
               // trace_($groupTable);
@@ -433,8 +433,7 @@ class Plugin_automenu extends Plugin {
     							$this->CI->db->add_many();
     						}
                 $where=$autoValue['field_group_by'].' = '.$groupId;
-    						$data=$this->_get_current_data($autoValue['table'], $where,0,0,array('field'=>get_postfix($autoValue['field_group_by'],'.'),'value'=>$groupId) );
-
+    						$data=$this->_get_current_data($autoValue['table'], $where,$autoValue['int_limit'],0,array('field'=>get_postfix($autoValue['field_group_by'],'.'),'value'=>$groupId) );
 						
     						if ($data) {
 
