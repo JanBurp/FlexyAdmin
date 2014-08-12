@@ -54,6 +54,10 @@ class Plugin_safe_assets extends Plugin {
    */
   function _admin_logout() {
 		$logout=true;
+    // Cleanup captcha's
+    foreach( glob('site/assets/_thumbcache/captcha*') as $file ) {
+      unlink($file);
+    }
 		$this->_safe_and_clean_all();
     if (!empty($this->removed)) return $this->_show();
     return FALSE;
