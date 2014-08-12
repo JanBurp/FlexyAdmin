@@ -89,6 +89,7 @@ class AjaxController extends BasicController {
     ksort($args);
     if ($this->test) return $args;
     $json=array2json($args);
+    echo $json;
     return $json;
   }
   
