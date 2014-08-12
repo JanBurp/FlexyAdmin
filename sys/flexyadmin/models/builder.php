@@ -14,6 +14,9 @@ class Builder extends CI_Model {
       $this->load->config('build',true);
       $settings=$this->config->item('build');
     }
+    if (empty($settings)) {
+      show_error("site/config/build.php doesn't exists",200);
+    }
     $this->initialize($settings);
     $this->load->library('parser');
 	}
@@ -31,7 +34,7 @@ class Builder extends CI_Model {
     $this->settings['css_files']=$this->get_files('css');
     
     $needs_compiling=true;
-    if (file_exists($this->settings['dest_file'])) {
+    if (file_exists(el('dest_file',$this->settings))) {
       $needs_compiling=false;
       // Check if some file is changed, so compile is needed
       $last_changed=filemtime($this->settings['dest_file']);
@@ -81,7 +84,7 @@ class Builder extends CI_Model {
       // 3 - Minify
       $minified=$this->minimize_css($combine);
       // 4 - Add banner
-      $banner = $this->settings['banner'];
+      $banner = el('banner',$this->settings,'');
       $data=array(
         'date'           => date('j M Y'),
         'execution_time' => number_format($this->execution_time(),5)
@@ -89,8 +92,8 @@ class Builder extends CI_Model {
       $banner = $this->parser->parse_string($banner,$data,true);
       $minified=$banner.$minified;
       // 5 - Save
-      write_file($this->settings['dest_file'], $minified);
-  		$this->report.=h('CREATED',2).$this->settings['dest_file'];
+      write_file(el('dest_file',$this->settings,false), $minified);
+  		$this->report.=h('CREATED',2).el('dest_file',$this->settings,false);
     }
     else {
       $this->report.=h('No less or css file changed',2);
@@ -100,7 +103,7 @@ class Builder extends CI_Model {
     // JS
     $this->settings['js_files']=$this->get_files('js');
     $needs_uglify=true;
-    if (file_exists($this->settings['js_dest_file'])) {
+    if (file_exists(el('js_dest_file',$this->settings,''))) {
       $needs_uglify=false;
       // Check if some file is changed, so compile is needed
       $last_changed=filemtime($this->settings['js_dest_file']);
@@ -119,7 +122,7 @@ class Builder extends CI_Model {
       $this->load->library('jsmin');
       $ugly='';
       foreach ($this->settings['js_files'] as $file) {
-        $ugly.=file_get_contents($file);
+        if (file_exists($file)) $ugly.=file_get_contents($file);
       }
       $this->report.=implode('<br>',$this->settings['js_files']);
 
@@ -127,7 +130,7 @@ class Builder extends CI_Model {
       $ugly=JSMin::minify($ugly);
       
       // 8 Add banner
-      $banner = $this->settings['js_banner'];
+      $banner = el('js_banner',$this->settings,'');
       $data=array(
         'date'           => date('j M Y'),
         'execution_time' => number_format($this->execution_time($js_start),5)
@@ -136,8 +139,8 @@ class Builder extends CI_Model {
       $ugly=$banner.$ugly;
       
       // 9 SAVE
-      write_file($this->settings['js_dest_file'], $ugly);
-  		$this->report.=h('CREATED',2).$this->settings['js_dest_file'];
+      write_file(el('js_dest_file',$this->settings,false), $ugly);
+  		$this->report.=h('CREATED',2).el('js_dest_file',$this->settings);
     }
     else {
       $this->report.=h('No Javascript file changed',2);
@@ -157,7 +160,7 @@ class Builder extends CI_Model {
 	}
   
   private function get_files($type) {
-    $files=$this->settings[$type.'_files'];
+    $files=el($type.'_files',$this->settings,'auto');
     if (is_string($files)) {
       if ($files=='auto')
         $files=$this->find_files($type);
@@ -180,13 +183,13 @@ class Builder extends CI_Model {
     }
     switch($type) {
       case 'css':
-        $found=array_search($this->settings['dest_file'],$files);
+        $found=array_search(el('dest_file',$this->settings,''),$files);
         if ($found!==false) {
           unset($files[$found]);
         }
         break;
       case 'js':
-        $found=array_search($this->settings['js_dest_file'],$files);
+        $found=array_search(el('js_dest_file',$this->settings,''),$files);
         if ($found!==false) {
           unset($files[$found]);
         }
