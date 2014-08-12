@@ -6,16 +6,10 @@
  *--------------------------------------------------------------------------
  *
  * URL to your CodeIgniter root. Typically this will be your base URL,
- * WITH a trailing slash:
- *
- *	http://example.com/
- *
+ * WITH a trailing slash: http://example.com/
  */
-
 if (!isset($config['base_url'])) {
-	// If no automatic base_url, comment this:
 	die("sorry no automatic 'base_url', edit '".SITEPATH."config_local.php'.");
-	// And uncomment this with right base_url
 	// $config['base_url']	= "http://localhost/";
 }
 
@@ -47,7 +41,7 @@ if (!isset($config['base_url'])) {
  * 'ORIG_PATH_INFO'	Uses the ORIG_PATH_INFO
  *
  */
-#$config['uri_protocol']	= "AUTO";
+// $config['uri_protocol']  = "AUTO";
 
 /*
  *--------------------------------------------------------------------------
@@ -59,8 +53,7 @@ if (!isset($config['base_url'])) {
  *
  * http://codeigniter.com/user_guide/general/urls.html
  */
-
-#$config['url_suffix'] = "";
+// $config['url_suffix'] = "";
 
 /*
  *--------------------------------------------------------------------------
@@ -83,7 +76,7 @@ if (!isset($config['base_url'])) {
  * that require a character set to be provided.
  *
  */
-#$config['charset'] = "UTF-8";
+// $config['charset'] = "UTF-8";
 
 /*
  *--------------------------------------------------------------------------
@@ -95,9 +88,7 @@ if (!isset($config['base_url'])) {
  * in your view files.  Options are TRUE or FALSE (boolean)
  *
  */
-#$config['rewrite_short_tags'] = FALSE;
-
-
+// $config['rewrite_short_tags'] = FALSE;
 
 /* End of file config.php */
 /* Location: ./system/application/config/config.php */

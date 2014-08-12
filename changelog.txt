@@ -1,3 +1,54 @@
+Changes 2531
+============
+
+MYSQL: update_r2508.sql
+
+FRONTEND:
+- NEW: Automatic frontend building (compiling LESS, combine and minify CSS & JS files, see site/config/build.php and $config['use_minimized'])
+- NEW: frontend styling, with Less and very responsive
+- NEW: HTML output is compressed (see $config['parse_content'])
+- NEW: keep track of frontend build version for stamping latest css/js files
+- NEW: Added rem.min.js for using rem units in css and this will make them work on unsupported browsers (IE8)
+- NEW: Testmode: hides frontend site and deletes sitemap.xml. frontend is only visible for super admin, see $config['testm|ode'] = true;
+
+NEW:
+- NEW: complete rewrite of menu library, it has now its own views and a nice initialize method so you can set a config to change the menu
+- NEW: rewrite of content.php: settings are now CI like
+- CHANGED: .htaccess changed to enable .gzip (2 methods shown)
+- NEW: mimetypes added for vCard files .vcf
+- NEW: html_helper attributes()
+- NEW: cfg_users shows last_login
+- NEW: my_string_helper strip_qoutes()
+- CHANGED: MY_string_helper safe_string() now has new argument for setting case
+- CHANGED: MY_string_helper safe_string() now also strips comma's
+- ADDED: links module as a standard module
+- NEW: forms can add a class to a form now
+- CHANGED: MY_form_helper array2formfields() can add options now
+- NEW: db you can set a foreign table for a foreign key (this will override the automatic found one): ALTER TABLE `cfg_field_info` ADD `table` VARCHAR(255)  NOT NULL  AFTER `str_options`;
+- NEW: db for simple queries more foreign keys to same table are possible
+- CHANGED: db->add_foreigns() fields can now be a comma seperated string
+- NEW: db->add_options(); you can now give an array of fields where you want the options from
+- NEW: ion_auth_model->create_password()
+- CHANGED: in admin: random password button fills also the matching password
+- CHANGED: if exists: site/config/ion_auth.php will override ion_auth settings
+
+BUGS:
+- mediatable, not adding files when refreshing
+- mediatable->refresh did overwrite str_title, now it is always preserved if it exists
+- when frontend lang=en and user_lang=nl it gave a mix of nl & en, now it gets the user lang in admin
+- missing some keys in EN forms language file
+- db small bug when add_many and set_key
+- database_helper foreign_table_from_key() when $key is empty
+- img_lib error was er niet in NL
+- forms - session not ready when ajax call
+- js error in home grid
+- forms - when always showing form and inserting data
+- form, checkbox not rendering unchecked after first time unchecking (only when form is shown always with forms)
+
+
+
+
+
 Changes 2461
 ============
 

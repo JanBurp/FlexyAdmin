@@ -13,10 +13,11 @@
  * Hiermee kun je HTML bewerken zodat ze geschikter zijn voor je site.
  * Hieronder staan alle opties met hun default waarden:
  * 
+ * - compress               - [TRUE] de HTML output wordt gecomprimeerd (overbodige spaties en returns worden verwijderd)
  * - safe_emails            - [TRUE] emaillinks worden vervangen door spambot veilige emaillinks
  * - auto_target_links      - [TRUE] alle link-tags naar externe adressen krijgen de attributen `target="_blank"` en `rel="external"` mee.
- * - site_links             - [TRUE] alle link-tags naar interne adressen worden aangepast met site_url(), zodat eventueel index.php ervoor wordt gezet.
- * - add_classes            - [TRUE] alle div, p, en img tags krijgen extra classes: een nr en 'odd' of 'even'
+ * - site_links             - [FALSE] alle link-tags naar interne adressen worden aangepast met site_url(), zodat eventueel index.php ervoor wordt gezet.
+ * - add_classes            - [FALSE] alle div, p, en img tags krijgen extra classes: een nr en 'odd' of 'even'
  * - remove_sizes           - [FALSE] width en height attributen van img tags worden verwijderd (zodat met css styling kan worden ingegrepen)
  * - replace_language_links - [FALSE] Links die beginnen met een taal, bijvoorbeeld _nl/contact_ worden vervangen worden door links met de juiste taal bv: _en/contact_
  * - replace_soft_hyphens   - [FALSE] Soft Hyphens karakters (standaard [-]) worden vervangen door de HTML entity: &#173;
@@ -36,11 +37,11 @@
 class Content {
 
   private $settings = array(
+    'compress'          => true,
     'safe_emails'       => true,
     'auto_target_links' => true,
-    'remove_sizes'      => false,
-    'compress'          => false,
     'site_links'        => false,
+    'remove_sizes'      => false,
     'add_classes'       => false,
     'add_popups'        => false,
     // 'add_popups'        => 'popup_',

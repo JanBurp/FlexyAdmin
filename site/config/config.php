@@ -11,8 +11,7 @@
  * - sitemap.xml will be created after a logout from backend when testmode=false
  *
  */
-// $config['testm|ode'] = true;
-
+$config['testm|ode'] = false;
 
 /*
  *--------------------------------------------------------------------------
@@ -36,7 +35,6 @@
 $config['caching'] = FALSE;
 $config['caching_time'] = 1440;	// 1440 minutes is 24 hours
 
-
 /*
  *--------------------------------------------------------------------------
  * Automatically use minimized css/js files on production sites
@@ -46,6 +44,23 @@ $config['caching_time'] = 1440;	// 1440 minutes is 24 hours
  */
 $config['use_minimized'] = TRUE;
 
+/*
+ *--------------------------------------------------------------------------
+ * Parse content
+ *--------------------------------------------------------------------------
+ *
+ * Set how the content must be parsed, possible settings:
+ * 
+ * - compress               - [TRUE] de HTML output wordt gecomprimeerd (overbodige spaties en returns worden verwijderd)
+ * - safe_emails            - [TRUE] emaillinks worden vervangen door spambot veilige emaillinks
+ * - auto_target_links      - [TRUE] alle link-tags naar externe adressen krijgen de attributen `target="_blank"` en `rel="external"` mee.
+ * - site_links             - [FALSE] alle link-tags naar interne adressen worden aangepast met site_url(), zodat eventueel index.php ervoor wordt gezet.
+ * - add_classes            - [FALSE] alle div, p, en img tags krijgen extra classes: een nr en 'odd' of 'even'
+ * - remove_sizes           - [FALSE] width en height attributen van img tags worden verwijderd (zodat met css styling kan worden ingegrepen)
+ * - replace_language_links - [FALSE] Links die beginnen met een taal, bijvoorbeeld _nl/contact_ worden vervangen worden door links met de juiste taal bv: _en/contact_
+ * - replace_soft_hyphens   - [FALSE] Soft Hyphens karakters (standaard [-]) worden vervangen door de HTML entity: &#173;
+ */
+$config['parse_content']  = array( 'safe_emails'=>TRUE, 'auto_target_links'=> TRUE, 'remove_sizes'=>TRUE, 'compress' => TRUE );
 
 /*
  *--------------------------------------------------------------------------
@@ -56,7 +71,6 @@ $config['use_minimized'] = TRUE;
  *
  */
 $config['languages'] = array('nl');
-// $config['languages'] = array('en');
 // $config['languages'] = array('nl','en');
 
 /*
@@ -69,8 +83,6 @@ $config['languages'] = array('nl');
  *
  */
 $config['language']	= "nl";
-// $config['language']  = "en";
-
 
 /*
  *--------------------------------------------------------------------------
@@ -81,29 +93,6 @@ $config['language']	= "nl";
  * If you set a language table here, the table will be checked first, and if the language key doesn't exists (or is empty), the language files will be used as normal
  */
 // $config['language_table']  = "cfg_lang";
-
-
-/*
- *--------------------------------------------------------------------------
- * Declare and initialise empty variables for $this->site
- *--------------------------------------------------------------------------
- *
- * If you need more variables in $this->site which are send to the main view you need to declare them.
- * Set this array with all the names of these variables and they will be declared automatic.
- *
- */
-// $config['site_variables']	= array('submenu','comments');
-
-
-/*
- *--------------------------------------------------------------------------
- * Parse content
- *--------------------------------------------------------------------------
- *
- * Set how the content must be parsed, possible settings: 'safe_emails', 'auto_target_links', 'add_classes', 'remove_sizes', 'replace_language_links', 'replace_soft_hyphens'.
- */
-$config['parse_content']  = array( 'safe_emails'=>TRUE, 'auto_target_links'=> TRUE, 'add_classes'=>FALSE, 'remove_sizes'=>TRUE, 'compress' => TRUE );
-
 
 /*
  *--------------------------------------------------------------------------
@@ -127,6 +116,17 @@ $config['auto_pagination']	= TRUE;
 
 /*
  *--------------------------------------------------------------------------
+ * Declare and initialise empty variables for $this->site
+ *--------------------------------------------------------------------------
+ *
+ * If you need more variables in $this->site which are send to the main view you need to declare them.
+ * Set this array with all the names of these variables and they will be declared automatic.
+ *
+ */
+// $config['site_variables']	= array('submenu','comments');
+
+/*
+ *--------------------------------------------------------------------------
  * Autoload Modules
  *--------------------------------------------------------------------------
  *
@@ -141,7 +141,6 @@ $config['auto_pagination']	= TRUE;
  */
 // $config['autoload_modules'] = array('login');
 // $config['autoload_modules_if'] = array( 'blog'=>array('b_restricted'=>'login') );
-
 
 /*
  *--------------------------------------------------------------------------
@@ -195,7 +194,6 @@ $config['menu_autoset_home']=TRUE;
  */
 $config['main_view']='site';
 
-
 /*
  *--------------------------------------------------------------------------
  * Page view
@@ -205,16 +203,6 @@ $config['main_view']='site';
  *
  */
 $config['page_view']='page';
-
-/*
- *--------------------------------------------------------------------------
- * Logout to site
- *--------------------------------------------------------------------------
- *
- * If true, after logout the CMS redirects to the site
- *
- */
-$config['logout_to_site']=FALSE;
 
 /*
  *--------------------------------------------------------------------------
@@ -238,6 +226,16 @@ $config['add_to_statistics']=TRUE;
 
 /*
  *--------------------------------------------------------------------------
+ * Logout to site
+ *--------------------------------------------------------------------------
+ *
+ * If true, after logout the CMS redirects to the site
+ *
+ */
+$config['logout_to_site']=FALSE;
+
+/*
+ *--------------------------------------------------------------------------
  * Base Site URL
  *--------------------------------------------------------------------------
  *
@@ -245,15 +243,12 @@ $config['add_to_statistics']=TRUE;
  * WITH a trailing slash:
  *
  *	http://example.com/
- *
  */
-
 if (!isset($config['base_url'])) {
 	// If not set automatic: comment this die() statement and set $config['base_url'] manually
 	die("<h3 style=\"color:#F00;\">FlexyAdmin could not set the 'base_url' automatic.</h3><p>See at line #".__LINE__." in '".__FILE__."'.</p>");
 	// $config['base_url']	= "http://www.flexyadmin.com/";
 }
-
 
 /*
  *--------------------------------------------------------------------------
@@ -319,7 +314,6 @@ if (!isset($config['base_url'])) {
  */
 $config['global_xss_filtering'] = FALSE;
 
-
 /*
  *--------------------------------------------------------------------------
  * Regex form_validation_rules for valid_regex($s, $regex_name)
@@ -334,7 +328,6 @@ $config['valid_regex_rules'] = array(
   )
 );
 
-
 /*
  *--------------------------------------------------------------------------
  * Rewrite PHP Short Tags
@@ -347,15 +340,12 @@ $config['valid_regex_rules'] = array(
  */
 $config['rewrite_short_tags'] = FALSE;
 
-
-
 /*
  * Check if localhost and config_local.php exists, load local settings.
  */
 if (IS_LOCALHOST and file_exists(SITEPATH.'config/config_local.php')) {
 	require("config_local.php");
 }
-
 
 /* End of file config.php */
 /* Location: ./system/application/config/config.php */
