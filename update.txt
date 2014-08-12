@@ -24,10 +24,12 @@ UPDATE xxxx
 
 - Replace current sys map with new sys map
 - Replace controller.php (or add line 76)
-- Add lines 3-14 to config.php (testmode option)
-- Add lines 17-26 to config.php (new menu options)
-- Remove line 143-144 (render content)
+  - Add lines 3-14 to config.php (testmode option)
+  - Add lines 17-26 to config.php (new menu options)
+  - Remove line 143-144 (render content)
 - If you're site has problems with the new menu set (this is depricated for the future): $config['use_old_menu']=true;
+- Add site/config/build.php
+- If needed: add new items in site/config/config.php
 
 
 UPDATE 2461
