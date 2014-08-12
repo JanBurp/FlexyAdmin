@@ -288,6 +288,11 @@ $config["CFG_"]=array(
 			"txt_help_nl"=>'<p>Kies hier de groep. Dit bepaald welke rechten een gebruiker heeft.</p>',
 			"txt_help_en"=>'<p>Choose e group. This will determine the rights of a user.</p>'
 			),
+		"cfg_users.last_login"=>array(
+			"field_field"=>'cfg_users.last_login',
+			"str_title_nl"=>'<p>Laatste login</p>',
+			"str_title_en"=>'<p>Last login</p>'
+			),
 
 		"cfg_user_groups"=>array(
 			"table"=>'cfg_user_groups',
@@ -898,7 +903,7 @@ $config["CFG_"]=array(
  			),
 		"cfg_users.last_login"=>array(
 			"field"=>'last_login',
- 			"b_show_in_grid"=>'0',
+ 			"b_show_in_grid"=>'1',
 			"b_show_in_form"=>'0',
 			"str_options"=>'',
 			"b_multi_options"=>'0',
@@ -1057,7 +1062,11 @@ $config['FIELDS_special'] = array(
 											"grid"				=> "%s",
 											"form"				=> "function_dropdown_fieldsets",
 											"validation"	=> "trim"
-											)
+											),
+                      
+  'last_login'    => array(
+                      'grid' => 'function_date("Y-m-d H:i:s",%s)',
+                      )
 										
 );
 

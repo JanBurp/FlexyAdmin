@@ -225,7 +225,23 @@ class Flexy_field extends CI_Model {
 		// How to show? Function or replace?
 		$func=$this->_is_function();
 		if ($func!==false) {
-			$out=$this->$func();
+      if (method_exists($this,$func)) {
+  			$out=$this->$func();
+      }
+      else {
+        $func=trim(remove_suffix($func,'_'),'_');
+        $data=$this->data;
+        if (!is_numeric($data)) $data="'".$data."'";
+        $func=str_replace('%s',$data,$func);
+        $args=array();
+        if (preg_match("/\((.*)\)/uiUsx", $func,$match)) {
+          $args=$match[1];
+          $args=strip_quotes($args);
+          $args=explode(',',$args);
+        }
+        $func=get_prefix($func,'(');
+        $out=call_user_func_array($func,$args);
+      }
 		}
 		else {
 			$out=$this->_replace();
