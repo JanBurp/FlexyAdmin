@@ -361,6 +361,19 @@ function safe_quotes($s) {
   return $s;
 }
 
+/**
+ * Verwijderd alle qoutes uit een string (' en ")
+ *
+ * @param string $s 
+ * @return string $s
+ * @author Jan den Besten
+ */
+function strip_qoutes($s) {
+  $s=str_replace("'",'',$s);
+  $s=str_replace('"','',$s);
+  return $s;
+}
+
 
 /**
  * Als strip_tags() maar vervangt eerst alle <br /> en &nbsp; door normale spaties
