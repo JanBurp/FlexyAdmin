@@ -350,8 +350,10 @@ class Menu {
 					  $thisItem['name']=$uri;
 					}
 				}
-				if (isset($item[$this->settings['fields']["class"]])) 	$thisItem["class"]=str_replace('|',' ',$item[$this->settings['fields']["class"]]);
-				if (isset($item[$this->settings['fields']["parent"]])) 	$parent=$item[$this->settings['fields']["parent"]]; else $parent="";
+        $thisItem['class']='';
+				if (isset($item[$this->settings['fields']["class"]])) 	    $thisItem["class"]=str_replace('|',' ',$item[$this->settings['fields']["class"]]);
+				if (isset($item[$this->settings['fields']["bool_class"]]) and $item[$this->settings['fields']["bool_class"]])	$thisItem["class"].=' '.$item[$this->settings['fields']["bool_class"]];
+				if (isset($item[$this->settings['fields']["parent"]])) 	    $parent=$item[$this->settings['fields']["parent"]]; else $parent="";
 				if (isset($item[$this->settings['fields']["clickable"]]) && !$item[$this->settings['fields']["clickable"]]) $thisItem["uri"]='';
 				// classbooleans
 				if (!empty($boolFields)) {
@@ -685,7 +687,7 @@ class Menu {
 					'sub'         => (isset($item['sub']))?'sub':'',
           'current'     => ($this->settings['current']==$cleanUri?'current':'').((strpos($submenu,'current')>0?' active':'')),
           'class_uri'   => $classUri,
-          'class'       => el('class',$item,''),
+          'class'       => el('class',$item,' '),
           'attr'        => attributes(el('attr',$item,'')),
           'clickable'   => (!empty($thisUri)),
           'submenu'     => $submenu
