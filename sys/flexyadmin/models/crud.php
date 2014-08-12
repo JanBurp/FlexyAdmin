@@ -108,7 +108,7 @@ class Crud extends CI_Model {
 	 */
 	private function _update_insert($insert=FALSE) {
 		$id=FALSE;
-		if (is_array($this->where) && is_array($this->data)) {
+		if ((is_array($this->where) or $insert) && is_array($this->data)) {
 
 			/**
 			 * Set user (id) if needed
