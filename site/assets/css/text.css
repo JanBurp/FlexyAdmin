@@ -311,6 +311,9 @@ select {
   border: solid 1px #ddeeaa;
   cursor: pointer;
 }
+textarea {
+  resize: none;
+}
 input:hover,
 textarea:hover,
 select:hover {
