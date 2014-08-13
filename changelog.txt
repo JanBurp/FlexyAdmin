@@ -1,3 +1,15 @@
+Changes 2540
+============
+
+BUGS:
+- BUG: menu didn't show bool_class
+- BUG: AjaxController didn't echo
+- BUG: bug with 'bool_class' in new Menu
+
+CHANGED:
+- plugin_safe_assets cleansup maps (captcha's etc.)
+
+
 Changes 2531
 ============
 
