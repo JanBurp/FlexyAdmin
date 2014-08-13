@@ -310,6 +310,9 @@ class Content {
     if ($this->settings['remove_sizes']) {
       $txt = preg_replace("/<img(.*)(\swidth=\"\d*\")/uiUsm", "<img$1", $txt);
       $txt = preg_replace("/<img(.*)(\sheight=\"\d*\")/uiUsm", "<img$1", $txt);
+      $txt = preg_replace("/(<img[^>]*style=['|\"].*)(width:.*;)/uiUm", "$1", $txt);
+      $txt = preg_replace("/(<img[^>]*style=['|\"].*)(height:.*;)/uiUm", "$1", $txt);
+      $txt = preg_replace("/(<img[^>]*)(style=['|\"]\s['|\"])/uiUm", "$1", $txt);
     }
     
     if ($this->settings['compress']) {
