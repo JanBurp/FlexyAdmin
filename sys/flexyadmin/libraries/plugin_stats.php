@@ -81,6 +81,8 @@ class Plugin_stats extends Plugin {
 		// get data from XML (if exists)
 		$this->Data=$this->_stat_data_from_xml();
 
+    // trace_($this->Data);
+
 		// Get data from DB if it doesn't exists yet.
 		foreach ($statTypes as $type) {
 			if (
@@ -94,11 +96,13 @@ class Plugin_stats extends Plugin {
 		// Add current month to this_year from DB
 		$thisYearMonth=$this->_stat_data_from_db('this_year');
 		if (isset($thisYearMonth[$todayMonth])) {
-			$this->Data['this_year'][$todayMonth]=$thisYearMonth[$todayMonth];
+      // trace_($thisYearMonth[$todayMonth]);
+      $this->Data['this_year'][$todayMonth]=$thisYearMonth[$todayMonth];
 		}
 
 		
 		// show data
+    // trace_($this->Data);
 		foreach ($statTypes as $type) {
 			$this->_show_stat($type);
 		}
@@ -239,7 +243,10 @@ class Plugin_stats extends Plugin {
 		if (empty($stats)) $stats=$this->Data;
 		
 		$xmlYearFile=$this->_xmlYearFile($stats['year']);
-		$xmlYear=array2xml(array('stats'=> array('year'=>$stats['year'],'this_year'=>$stats['this_year'])) );
+    // trace_($stats);
+    $xmlYearArray=array('stats'=> array('year'=>$stats['year'],'this_year'=>$stats['this_year'])) ;
+		$xmlYear=array2xml($xmlYearArray);
+    // trace_($xmlYearArray);
 		write_file($xmlYearFile, $xmlYear);
 		
 		$xmlMonthFile=$this->_xmlMonthFile($stats['month'],$stats['year']);
@@ -257,13 +264,15 @@ class Plugin_stats extends Plugin {
 			$xmlYear=read_file($xmlYearFile);
 			$xmlYear=reformMalformedXML($xmlYear);
 			$yearData=xml2array($xmlYear);
+      // trace_($yearData);
 			$yearData['stats']['this_year']=reformXmlArrayKey($yearData['stats']['this_year'],'month');
+      // trace_($yearData['stats']['this_year']);
 		}
 		// other months of this year?
 		if (isset($yearData['stats']['this_year'])) {
 			$yearDataMonths=$yearData['stats']['this_year'];
 			$firstMonth=current($yearDataMonths);
-			$firstMonth=$firstMonth['month'];
+			$firstMonth=el('month',$firstMonth,0);
 			if ($firstMonth>1) {
 				for ($m=1; $m < $firstMonth ; $m++) { 
 					$xmlMonthFile=$this->_xmlMonthFile($m,$this->Data['year']);
@@ -295,12 +304,15 @@ class Plugin_stats extends Plugin {
 		}
 
 		$xmlData=$this->Data;
-		if (isset($yearData['stats'])) 	$xmlData=array_merge($xmlData,$yearData['stats']);
+    // trace_($yearData['stats']);
+    // trace_($xmlData);
+    if (isset($yearData['stats']))   $xmlData=array_merge($xmlData,$yearData['stats']);
 		if (isset($monthData['stats'])) $xmlData=array_merge($xmlData,$monthData['stats']);
 		return $xmlData;
 	}
 
 	function _stat_data_from_db($type,$month='',$year='') {
+    // if ($this->Total<=0) return array();
 		if (empty($month))	$month=$this->Month;
 		if (empty($year))		$year=$this->Year;
 		$data=NULL;
@@ -355,13 +367,15 @@ class Plugin_stats extends Plugin {
 				$limit=50;
 				break;
 			case 'top_10_browsers':
-				$this->CI->db->select("str_browser as browser, str_version as version, COUNT(`str_browser`) as hits, (COUNT(`str_browser`)/".$this->Total."*100) as percent");
+        $tot=$this->Total * 100;
+				$this->CI->db->select("str_browser as browser, str_version as version, COUNT(`str_browser`) as hits, (COUNT(`str_browser`)/".$tot.") as percent");
 				$this->CI->db->where(array('YEAR(tme_date_time)' => $year, 'MONTH(tme_date_time)' => $month));
 				$this->CI->db->group_by('str_browser,str_version');
 				$this->CI->db->order_by("hits DESC");
 				break;
 			case 'top_10_platform':
-				$this->CI->db->select("str_platform as platform, COUNT(`str_platform`) as hits, (COUNT(`str_platform`)/".$this->Total."*100) as percent");
+        $tot=$this->Total * 100;
+				$this->CI->db->select("str_platform as platform, COUNT(`str_platform`) as hits, (COUNT(`str_platform`)/".$tot.") as percent");
 				$this->CI->db->where(array('YEAR(tme_date_time)' => $year, 'MONTH(tme_date_time)' => $month));
 				$this->CI->db->group_by('str_platform');
 				$this->CI->db->order_by("hits DESC");
@@ -369,8 +383,18 @@ class Plugin_stats extends Plugin {
 		}
 		
 		// get data
-		if ($type!='total')
-			$data=$this->CI->db->get_results($this->logTable,$limit);
+		if ($type!='total') $data=$this->CI->db->get_results($this->logTable,$limit);
+    // if ($type=='this_year') {
+    //   trace_($type);
+    //   trace_($this->CI->db->last_query());
+    //   trace_($data);
+    //   // die();
+    // }
+    
+    // trace_(array(
+    //   'this->Total'=>$this->Total,
+    //   'data'=>$data
+    // ));
 		
 		// special data transformations
 		switch ($type) {
@@ -414,6 +438,9 @@ class Plugin_stats extends Plugin {
 				}
 				break;
 		}
+    if (is_array($data)) {
+      foreach ($data as $id => $value) unset($data[$id]['id']);
+    }
 		
 		return $data;
 	}
