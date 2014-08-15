@@ -256,6 +256,14 @@ class Plugin_stats extends Plugin {
 		write_file($xmlMonthFile, $xmlMonth);
 	}
 
+  function _clean_id_bug($a) {
+    foreach ($a as $key => $value) {
+      if ($key=='id' and count($a)==1) return $this->_clean_id_bug($value);
+      if ($key=='id' and !is_array($value)) unset($a['id']);
+      if (is_array($value)) $a[$key]=$this->_clean_id_bug($value);
+    }
+    return $a;
+  }
 
 	function _stat_data_from_xml() {
 		$xmlYearFile=$this->_xmlYearFile();
@@ -264,10 +272,11 @@ class Plugin_stats extends Plugin {
 			$xmlYear=read_file($xmlYearFile);
 			$xmlYear=reformMalformedXML($xmlYear);
 			$yearData=xml2array($xmlYear);
-      // trace_($yearData);
+      // 'id' bug voorkomen
+      $yearData=$this->_clean_id_bug($yearData);
 			$yearData['stats']['this_year']=reformXmlArrayKey($yearData['stats']['this_year'],'month');
-      // trace_($yearData['stats']['this_year']);
 		}
+    
 		// other months of this year?
 		if (isset($yearData['stats']['this_year'])) {
 			$yearDataMonths=$yearData['stats']['this_year'];
@@ -288,13 +297,14 @@ class Plugin_stats extends Plugin {
 				$yearData['stats']['this_year']=$this_year;
 			}
 		}
-		
+    
 		// this month
 		$xmlMonthFile=$this->_xmlMonthFile();
 		if (file_exists($xmlMonthFile)) {
 			$xmlMonth=read_file($xmlMonthFile);
 			$xmlMonth=reformMalformedXML($xmlMonth);
 			$monthData=xml2array($xmlMonth);
+      $monthData=$this->_clean_id_bug($monthData);
 			$monthData['stats']['this_month']=reformXmlArrayKey($monthData['stats']['this_month'],'day');
 			if (isset($monthData['stats']['top_10_pages']))     $monthData['stats']['top_10_pages']=reformXmlArrayKey($monthData['stats']['top_10_pages'],'page');
       if (isset($monthData['stats']['top_10_referers']))  $monthData['stats']['top_10_referers']=reformXmlArrayKey($monthData['stats']['top_10_referers'],'referer');
@@ -308,6 +318,7 @@ class Plugin_stats extends Plugin {
     // trace_($xmlData);
     if (isset($yearData['stats']))   $xmlData=array_merge($xmlData,$yearData['stats']);
 		if (isset($monthData['stats'])) $xmlData=array_merge($xmlData,$monthData['stats']);
+    
 		return $xmlData;
 	}
 
