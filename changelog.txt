@@ -1,3 +1,9 @@
+Changes 2543
+============
+
+BUGS:
+- plugin_stats (because id always returns from db)
+
 Changes 2540
 ============
 
