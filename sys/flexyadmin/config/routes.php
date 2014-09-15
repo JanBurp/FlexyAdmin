@@ -25,7 +25,13 @@
 /**
  * This routing makes sure all uri's go to the frontend site, except uri's beginning with 'admin' and 'rss'
  */
-$route['(?!admin|rss|file)(.*)'] = "";
+$route['(?!__api|admin|rss|file)(.*)'] = "";
+
+/**
+ * Api routing (controllers/api/class/args)
+ */
+$route['__api/([^/]*)/(.*)'] = '__api/$1';
+
 
 /**
  * This route makes a nice download path
