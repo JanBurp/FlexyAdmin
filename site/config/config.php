@@ -11,7 +11,7 @@
  * - sitemap.xml will be created after a logout from backend when testmode=false
  *
  */
-$config['testm|ode'] = false;
+$config['testmode'] = false;
 
 /*
  *--------------------------------------------------------------------------
