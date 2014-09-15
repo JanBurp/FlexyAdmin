@@ -30,14 +30,14 @@ class __test extends AjaxController {
    * @author Jan den Besten
    */
   public function ajax_test() {
-    $this->_test();
+    $this->_test(true);
     $args=func_get_args();
     $call=array_shift($args);
     $output=$this->$call($args);
-    $output['__test']=true;
-    $output['__testcall']=$call;
+    $output['_method']=$call;
     trace_($this->_result($output));
   }
+
   
   /**
    * Will return the admin_menu

@@ -43,22 +43,6 @@ class Crud extends CI_Model {
 	}
 
 
-	// args = array( where'=>array(), 'limit'=>int, 'offset'=>int, 'order'=>array() );
-	// public function retrieve($args='') {
-	// 	if (empty($this->table)) return FALSE;
-	// 
-	// 	$this->_set_args($args);
-	// 	if (is_array($this->where)) {
-	// 		$this->_set_order();
-	// 		$this->_set_limit();
-	// 		$this->db->where($this->where);
-	// 		return $this->db->get($this->table);
-	// 	}
-	// 	return FALSE;
-	// }
-
-
-
 	/**
 	 * Maakt item in database, inclusief many tables (join/rel)
 	 * Zelfde als ->create()
@@ -68,8 +52,8 @@ class Crud extends CI_Model {
 	 * @author Jan den Besten
 	 */
 	public function insert($args='') {
-		if (empty($this->table)) return FALSE;
 		$this->_set_args($args);
+		if (empty($this->table)) return FALSE;
 		return $this->_update_insert(TRUE);
 	}
   
@@ -94,8 +78,8 @@ class Crud extends CI_Model {
 	 * @author Jan den Besten
 	 */
 	public function update($args='') {
-		if (empty($this->table)) return FALSE;
 		$this->_set_args($args);
+		if (empty($this->table)) return FALSE;
 		return $this->_update_insert(FALSE);
 	}
 
@@ -229,10 +213,9 @@ class Crud extends CI_Model {
 	 */
 
 	public function delete($where=array()) {
-		if (empty($this->table)) return FALSE;
-
 		$is_deleted=FALSE;
 		$this->_set_args(array('where'=>$where));
+		if (empty($this->table)) return FALSE;
 
     $wheres=$this->where;
 		if (is_array($wheres)) {
@@ -323,6 +306,9 @@ class Crud extends CI_Model {
    * @ignore
    */
 	private function _set_args($args=NULL) {
+    $table = element('table',$args,FALSE);
+    if ($table) $this->table($table);
+
 		$this->data   = element('data',$args,FALSE);
     $this->select = element('select',$args,FALSE);
 		$this->where  = element('where',$args,FALSE);
@@ -391,8 +377,8 @@ class Crud extends CI_Model {
    * @author Jan den Besten
    */
   public function get_array($args=array()) {
-		if (empty($this->table)) return FALSE;
 		$this->_set_args($args);
+		if (empty($this->table)) return FALSE;
     if ($this->select)  $this->db->select($this->select);
     if ($this->where)   $this->db->where($this->where);
     if ($this->order)   $this->db->order_by($this->order);

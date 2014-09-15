@@ -31,6 +31,13 @@ class AjaxController extends BasicController {
 	protected $name='';
   
   /**
+   * Output
+   *
+   * @var array
+   */
+  private $result=NULL;
+  
+  /**
    * Testmodes
    *
    * @var bool
@@ -78,6 +85,7 @@ class AjaxController extends BasicController {
   /**
    * Deze method geeft een JSON terug van de meegegeven array.
    * Gebruik altijd deze method om een gestandardiseerde JSON terug te geven aan de AJAX call.
+   * In testmode wordt een trace van het resultaat gegegeven.
    *
    * @param array $args an associatieve array
    * @return string JSON
@@ -87,7 +95,11 @@ class AjaxController extends BasicController {
     $args['_success']=true;
     if (isset($args['_error']) and !empty($args['_error'])) $args['_success']=false;
     ksort($args);
-    if ($this->test) return $args;
+    if ($this->test) {
+      $args['_test']=true;
+      trace_($args);
+      return $args;
+    }
     $json=array2json($args);
     echo $json;
     return $json;
