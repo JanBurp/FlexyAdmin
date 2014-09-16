@@ -53,7 +53,7 @@
    * @author Jan den Besten
    */
 	public function by_title($title) {
-		$this->db->where('LOWER(`str_title`) = LOWER("'.$title.'")');
+		$this->db->where('LOWER(`str_title_'.$this->site['language'].'`) = LOWER("'.$title.'")');
 		return $this->_get_form();
 	}
 
