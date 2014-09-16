@@ -185,6 +185,8 @@ class Plugin_automenu extends Plugin {
       if (has_string('rel_',$where)) $this->CI->db->add_many();
 		}
 		if ($offset>0 and $limit==0) $limit=10000;
+
+    $this->CI->db->order_as_tree();
 		$data=$this->CI->db->get_results($table,$limit,$offset);
     
 		if ($table==$this->table and isset($this->newData['id']) and $this->pass==1) {
@@ -518,7 +520,7 @@ class Plugin_automenu extends Plugin {
     					break;
 					
 					
-    				case 'split by language':
+            case 'split by language':
     					$this->languages=$autoValue['str_parameters'];
     					$this->languages=explode('|',$this->languages);
     					$order=0;
@@ -716,25 +718,28 @@ class Plugin_automenu extends Plugin {
 		return $item;
 	}
 	
-	private function _moveChildren($fromID=-1) {
+	private function _moveChildren($fromID=-1,$lang='') {
 		$parentIDs=$this->parentIDs;
 		foreach ($this->newMenu as $id => $item) {
-			if ($id>$fromID and isset($item['self_parent']) and $item['self_parent']>0 and isset($parentIDs[$item['self_parent']])) {
-				$this->newMenu[$id]['self_parent']=$parentIDs[$item['self_parent']];
-			}
+      if (empty($lang) or $item['str_lang']==$lang) {
+  			if ($id>$fromID and isset($item['self_parent']) and $item['self_parent']>0 and isset($parentIDs[$item['self_parent']])) {
+  				$this->newMenu[$id]['self_parent']=$parentIDs[$item['self_parent']];
+  			}
+      }
 		}
 		$this->parentIDs=array();
 	}
 	
 	private function _addBranch($topItem,$branch,$lang='') {
 		$fromId=$this->lastId;
-		$parentIDs=array();
-		foreach ($branch as $oldId => $item) {
-			if ($item['self_parent']==0) $item['self_parent']=$topItem['id'];
+    $this->parentIDs=array();
+    foreach ($branch as $oldId => $item) {
       if (!empty($lang)) $item['str_lang']=$lang;
-			$newItem=$this->_insertItem($item);
-		}
-		$this->_moveChildren($fromId);
+      if ($item['self_parent']==0) $item['self_parent']=$topItem['id'];
+      $newItem=$this->_insertItem($item);
+      $this->parentIDs[$item['id']]=$newItem['id'];
+    }
+    $this->_moveChildren($fromId,$lang);
 	}
 }
 
