@@ -133,6 +133,21 @@ class Forms extends Module {
       }
     }
     
+    // Test set to not fill again
+    if ($this->settings('restrict_this_ip_days')) {
+      $ip=$this->CI->input->ip_address();
+      $this->CI->db->where('ip',$ip)->where('str_form',$this->form_id);
+      $filled=$this->CI->db->get_row('log_forms_submit');
+      if ($filled) {
+        $date=mysql_to_unix($filled['dat_date']);
+        $expire_date=unixdate_add_days($date,$this->settings('restrict_this_ip_days'));
+        if (time()<$expire_date) {
+          return $this->settings('restrict_message');
+        }
+      }
+    }
+    
+    
 		// Welke velden (en buttons): zijn ze los ingesteld?
     $formFields=$this->settings('fields');
     $formButtons=$this->settings('buttons');
@@ -155,7 +170,7 @@ class Forms extends Module {
     if (!$formFields) {
       $this->CI->load->model('getform');
       $flexyform=str_replace('flexyform_','',$this->name);
-      $formData=$this->CI->getform->by_title($flexyform);
+      $formData=$this->CI->getform->by_name($flexyform);
       if ($formData) {
   			$formFieldSets=$formData['fieldsets'];
   			$formFields=$formData['fields'];
@@ -217,6 +232,20 @@ class Forms extends Module {
     
       if (!$isSpam) {
         // Do the Action(s)
+
+        if ($this->settings('restrict_this_ip_days')) {
+          // remove (old) entries
+          $this->CI->db->where('ip',$ip)->where('str_form',$this->form_id);
+          $this->CI->db->delete('log_forms_submit');
+          $set=array(
+            'str_form'  => $this->form_id,
+            'ip'        => $this->CI->input->ip_address(),
+            'dat_date'  => unix_to_mysql(time())
+          );
+          $this->CI->db->set($set);
+          $this->CI->db->insert('log_forms_submit');
+        }
+        
         $formaction=$this->settings('formaction');
         if (!is_array($formaction)) $formaction=array($formaction);
         foreach ($formaction as $faction) {
