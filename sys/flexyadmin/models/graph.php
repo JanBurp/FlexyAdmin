@@ -145,9 +145,11 @@ class Graph Extends CI_Model {
 		$table["caption"]["row"]=$this->captions;
 
 		$data=$this->rows;
-		$max=$this->max;
+		$max=(int)$this->max;
+    if ($max<=0) $max=100000;
 
 		$alt="";
+    
 		foreach($data as $id=>$row) {
 			// $currClass="";
 			// if ($this->currentId!=NULL and $id==$this->currentId) $currClass="current ";
