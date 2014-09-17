@@ -80,7 +80,7 @@ class User Extends Ion_auth {
    * @author Jan den Besten
    */
 	public function login($identity, $password, $remember=false) {
-    // trace_(array('identity'=>$identity,'password'=>$password));
+    // strace_(array('identity'=>$identity,'password'=>$password));
 		if ( ! $this->_check_if_userdate_ok()) {
 			$this->set_message('update_needed');
 		}
