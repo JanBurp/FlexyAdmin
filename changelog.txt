@@ -1,3 +1,15 @@
+Changes 2551
+============
+
+MYSQL:
+- NEW: forms has a new setting for preventing the filling of a form for same ip addres within a couple of days (needs add_log_forms_submit.sql)
+
+BUGS:
+- BUG: language split in plugin_automenu.php
+- BUG: forms & getform had a bug when using flexyforms
+- BUG: bug in config (testmode) has typo
+
+
 Changes 2543
 ============
 
