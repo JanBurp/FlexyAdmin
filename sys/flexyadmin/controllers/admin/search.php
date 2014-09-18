@@ -10,25 +10,35 @@
 
 class Search extends AdminController {
 
+  private $settings=FALSE;
+
 	function __construct() {
 		parent::__construct();
+    $this->load->config('search_replace',true);
+    $this->settings=$this->config->item('search_replace');
 	}
 
 	function index() {
 		if ($this->user->can_use_tools()) {
 			$this->lang->load('help');
 			$this->lang->load('form');
-		
-			$search=$this->input->post('search');
-			$replace=$this->input->post('replace');
-			// $tables=$this->input->post('tables');
-			// $types=$this->input->post('types');
-			$fields=$this->input->post('fields');
-			$regex=$this->input->post('regex');
+
+			$settings=$this->input->post('settings');
+      if ($settings and isset($this->settings[$settings])) {
+  			$search=$this->settings[$settings]['search'];
+  			$replace=$this->settings[$settings]['replace'];
+  			$fields=$this->settings[$settings]['fields'];
+        if (!is_array($fields)) $fields=array($fields);
+        // $regex=$this->settings[$settings]['regex'];
+      }
+      else {
+  			$search=$this->input->post('search');
+  			$replace=$this->input->post('replace');
+  			$fields=$this->input->post('fields');
+        // $regex=$this->input->post('regex');
+      }
 			$test=$this->input->post('test');
 
-			// trace_($fields);
-		
 			if ($search) {
 				$htmlTest=h(lang('sr_result'),1);
         $testFields=array();
@@ -53,24 +63,32 @@ class Search extends AdminController {
 					$this->db->select(PRIMARY_KEY);
 					$this->db->select($field);
 					$result=$this->db->get_result($table);
-					$htmlTest.="<ul>";
+					$htmlTest.="";
 					foreach($result as $id=>$row) {
 						unset($row[PRIMARY_KEY]);
 						foreach ($row as $key=>$txt) {
-							if ($regex) {
-								$oldErrorHandler=set_error_handler(array($this,"myErrorHandler"));
-								$new=preg_replace("/$search/",$replace,$txt);
-								set_error_handler($oldErrorHandler);
-							}
-							else {
-								$new=str_replace($search,$replace,$txt);
-							}
+              $count=0;
+              $matches=FALSE;
+							$oldErrorHandler=set_error_handler(array($this,"myErrorHandler"));
+							$new=preg_replace("/$search/",$replace,$txt,-1,$count);
+              if ($count>0) {
+                preg_match_all("/$search/", $txt,$matches);
+              }
+							set_error_handler($oldErrorHandler);
 							if ($new!=$txt) {
 								$this->db->as_abstracts();
 								$this->db->where(PRIMARY_KEY,$id);
 								$abstract=$this->db->get_row($table);
 								$abstract=$abstract['abstract'];
-								$htmlTest.="<li>".$this->ui->get($table)." '$abstract'".' : <textarea>'.$txt.'</textarea> =&gt; <textarea>'.$new.'</textarea></li>';
+                
+								$htmlTest.="<h4>".$this->ui->get($table)." - <i>$abstract</i></h4>";
+                if ($matches) {
+                  $htmlTest.='<ol>';
+                  foreach ($matches[0] as $match) {
+                    $htmlTest.='<li><span class="searched">'.htmlentities($match).'</span> &gt;&gt; <span class="replaced">'.htmlentities(preg_replace("/$search/",$replace,$match)).'</span></li>';
+                  }
+                  $htmlTest.='</ol>';
+                }
 							}
 							if (!$test) {
 								$this->db->set($key,$new);	
@@ -82,7 +100,7 @@ class Search extends AdminController {
 						}
 						// $this->db->as_abstracts(FALSE);
 					}
-					$htmlTest.="</ul>";
+					$htmlTest.="";
 				}
 			}
 			if (!$search or $test) {
@@ -110,15 +128,18 @@ class Search extends AdminController {
 				}
         ksort($fields);
         
-				$data=array( 	"search"	=> array("label"=>lang('sr_search'),"value"=>$search),
-											"replace"	=> array("label"=>lang('sr_replace'),"value"=>$replace),
-											"regex"		=> array("label"=>lang('sr_regex'),"type"=>"checkbox","value"=>$regex),
-											"fields"	=> array("label"=>lang('sr_fields'),"type"=>"dropdown","multiple"=>"mutliple","options"=>$fields,"value"=>$selection),
-											
-											// "types"		=> array("label"=>lang('sr_field_types'),"type"=>"dropdown","multiple"=>"mutliple","options"=>$typesOptions,"value"=>$types),
-											// 				 							"tables"	=> array("label"=>lang('sr_tables'),"type"=>"dropdown","multiple"=>"mutliple","options"=>$tablesOptions,"value"=>$tables),
-											"test"		=> array("type"=>'checkbox','value'=>1)
-											);
+				$data=array();
+        if ($this->settings) {
+          $options=array_keys($this->settings);
+          $options=array_merge(array(''),$options);
+          $options=array_combine($options,$options);
+          $data["settings"] = array("label"=>lang('sr_settings'),"type"=>'dropdown', "value"=>$settings,'options'=>$options);
+        }	
+        $data["search"] = array("label"=>lang('sr_search'),"value"=>$search);
+        $data["replace"] = array("label"=>lang('sr_replace'),"value"=>$replace);
+        // $data["regex"] = array("label"=>lang('sr_regex'),"type"=>"checkbox","value"=>$regex);
+        $data["fields"] = array("label"=>lang('sr_fields'),"type"=>"dropdown","multiple"=>"mutliple","options"=>$fields,"value"=>$selection);
+        $data["test"] = array("type"=>'checkbox','value'=>1);
 				$form->set_data($data,lang('sr_search_replace'));
 				$this->_add_content($form->render());			
 			}
