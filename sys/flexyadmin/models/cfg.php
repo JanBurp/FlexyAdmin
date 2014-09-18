@@ -161,18 +161,19 @@
  * @param string 	$table 			Configuration table name
  * @param mixed 	[$key] 			Row or field of table
  * @param mixed 	[$field]		Field of table
+ * @param mixed   [$default]  [NULL]
  * @return array or string		If result is just one value it returns it as a string,
  * 														Otherwise the result is an assoc array with all elements or even an array with multiple rows and their assoc elements
  */
 
- 	function get($table,$key="",$field="") {
+ 	function get($table,$key="",$field="",$default=NULL) {
 		$table=$this->_name($table);
- 		$out=NULL;
+ 		$out=$default;
  		if (!$this->has_data($table)) {
  			$this->load($table);
  		}
  		if (isset($this->data[$table])) {
- 			$data=el($table,$this->data);
+ 			$data=el($table,$this->data,$default);
  			if (empty($key)) {
  				$out=$data;
  			}
@@ -205,7 +206,7 @@
  				}
  				else {
            // $data=el($key,$data);
-					$out=el($field,$key_data);
+					$out=el($field,$key_data,$default);
 				}
  			}
  		}
