@@ -21,6 +21,8 @@ class Plugin_stats extends Plugin {
 	var $Time;
 	var $url;
 
+  private $keep = 93; // days to keep log in database (3 months)
+
 
 	function __construct() {
 		parent::__construct();
@@ -81,8 +83,6 @@ class Plugin_stats extends Plugin {
 		// get data from XML (if exists)
 		$this->Data=$this->_stat_data_from_xml();
 
-    // trace_($this->Data);
-
 		// Get data from DB if it doesn't exists yet.
 		foreach ($statTypes as $type) {
 			if (
@@ -93,16 +93,14 @@ class Plugin_stats extends Plugin {
 				$this->Data[$type]=$this->_stat_data_from_db($type);
 		}
 		if (!is_array($this->Data['this_year'])) $this->Data['this_year']=array();
+
 		// Add current month to this_year from DB
 		$thisYearMonth=$this->_stat_data_from_db('this_year');
 		if (isset($thisYearMonth[$todayMonth])) {
-      // trace_($thisYearMonth[$todayMonth]);
       $this->Data['this_year'][$todayMonth]=$thisYearMonth[$todayMonth];
 		}
-
 		
 		// show data
-    // trace_($this->Data);
 		foreach ($statTypes as $type) {
 			$this->_show_stat($type);
 		}
@@ -111,14 +109,14 @@ class Plugin_stats extends Plugin {
 		$this->_stat2xml();
 
 		// Check if there is older data than this month (in DB and XML) create XML data for it
+    $keep_from = unixdate_add_days(time(),-$this->keep);
 		$oldMonth=$month;
 		$oldYear=$year;
 		$notReady=TRUE;
 		do {
-			$oldMonth--;
-			if ($oldMonth<1) { $oldMonth=12; $oldYear--; }
 			$xmlFile=$this->_xmlMonthFile($oldMonth,$oldYear);
-			if (!file_exists($xmlFile)) {
+      $xmlTime=mktime(0,0,0,$oldMonth,0,$oldYear);
+			if (!file_exists($xmlFile) or ($xmlTime+$keep_from>time())) {
 				$oldStats=array();
 				$oldStats['month']=$oldMonth;
 				$oldStats['year']=$oldYear;
@@ -128,10 +126,12 @@ class Plugin_stats extends Plugin {
 				if (empty($oldStats[$type])) $notReady=FALSE;
 				else $this->_stat2xml($oldStats);
 			}
+			$oldMonth--;
+			if ($oldMonth<1) { $oldMonth=12; $oldYear--; }
 		} while ($notReady);
 		
 		// Delete data from DB older than current month
-    $this->CI->db->where('tme_date_time <',date('Y-m',unixdate_add_days(time(),-64)));
+    $this->CI->db->where('tme_date_time <',date('Y-m',unixdate_add_days(time(),-$this->keep)));
     $this->CI->db->delete($this->logTable);
     
     // $this->_download_links($year,$month);
@@ -241,7 +241,7 @@ class Plugin_stats extends Plugin {
 
 	function _stat2xml($stats=NULL) {
 		if (empty($stats)) $stats=$this->Data;
-		
+
 		$xmlYearFile=$this->_xmlYearFile($stats['year']);
     // trace_($stats);
     $xmlYearArray=array('stats'=> array('year'=>$stats['year'],'this_year'=>$stats['this_year'])) ;
@@ -316,7 +316,7 @@ class Plugin_stats extends Plugin {
 		$xmlData=$this->Data;
     // trace_($yearData['stats']);
     // trace_($xmlData);
-    if (isset($yearData['stats']))   $xmlData=array_merge($xmlData,$yearData['stats']);
+    if (isset($yearData['stats']))  $xmlData=array_merge($xmlData,$yearData['stats']);
 		if (isset($monthData['stats'])) $xmlData=array_merge($xmlData,$monthData['stats']);
     
 		return $xmlData;
