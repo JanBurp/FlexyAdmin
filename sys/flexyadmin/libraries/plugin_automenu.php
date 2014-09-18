@@ -276,26 +276,28 @@ class Plugin_automenu extends Plugin {
     						}
     					}
     					$data=$this->_get_current_data($autoValue['table'],$where,$limit,$offset);
-					
+          
     					$order=0;
     					$parent=0;
     					if (!empty($autoValue['str_parent_where'])) {
     						$parent=$this->_get_where_parent($autoValue);
     					}
-    					// trace_($autoValue);
-    					// trace_($parent);
-    					// trace_($data);
-    					// is er al een sub? Gebruik die order
-    					$sub=$this->newMenu;
-    					$sub=find_row_by_value($sub,$parent,'self_parent');
-    					if ($sub) {
-    						$sub=current($sub);
-    						$order=$sub['order']+1;
-    					} 
 
-    					// stop ze er eerst allemaal in met zelfde parent en onthou ondertussen dat ze eventueel andere parent moeten krijgen
+    					// Plaats items na bestaande items in (sub)menu
+    					$select=find_row_by_value($this->newMenu,$parent,'self_parent');
+              if ($select) {
+    						$select=end($select);
+    						$order=$select['order']+1;
+              }
+              
+              // trace_($autoValue);
+              // trace_($parent);
+    					// trace_($data);
+              // trace_($order);
+
+    					// stop ze er eerst allemaal in met zelfde parent en onthoud ondertussen dat ze (eventueel) andere parent moeten krijgen
     					$parIDs=array(); // array met id's die andere parent moeten krijgen
-    					$oldIDs=array(); // onthou hier de originele id's
+    					$oldIDs=array(); // onthoud hier de originele id's
     					foreach ($data as $item) {
     						$item['str_table']=$autoValue['table'];
     						$item['str_uri']=$item['uri'];
@@ -308,7 +310,8 @@ class Plugin_automenu extends Plugin {
     							$item['old_parent']=$item['self_parent'];
     							$item['self_parent']=$parent;
     						}
-    						if (!isset($item['order'])) $item['order']=$order++;
+                // if (!isset($item['order']))
+                $item['order']=$order++;
     						if (isset($autoValue['b_keep_parent_modules']) and $autoValue['b_keep_parent_modules']) {
                   // module
     							if (isset($this->newMenu[$item['self_parent']][$this->config('module_field')])) {

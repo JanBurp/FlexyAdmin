@@ -451,7 +451,7 @@ $config["CFG_"]=array(
         
     "res_menu_result"=>array(
       'table'=>'res_menu_result',
-      'b_pagination'=>0
+      'b_pagination'=>false
     )
 	),
 
