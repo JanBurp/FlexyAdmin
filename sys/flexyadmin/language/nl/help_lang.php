@@ -25,7 +25,8 @@ $lang['db_backup']					= 'Maak backup';
 $lang['db_restore']					= 'Zet backup terug';
 
 $lang['sr_search_replace']	= 'Zoeken/Vervangen';
-$lang['sr_search']					= 'Zoek';
+$lang['sr_settings']				= 'Instellingen';
+$lang['sr_search']					= 'Zoek (mag regex)';
 $lang['sr_replace']					= 'Vervang';
 $lang['sr_tables']					= 'In tabellen';
 $lang['sr_field_types']			= 'In veld typen';

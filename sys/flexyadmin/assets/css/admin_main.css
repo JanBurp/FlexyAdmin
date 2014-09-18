@@ -1329,6 +1329,9 @@ input.filter.busy {
 
 
 .after_form {margin:20px 0px 0px;}
+.searched {background-color:#DEA;}
+.replaced {background-color:#696;color:#FFF;}
+
 
 .error, div.error p {
 	color:#F00;
