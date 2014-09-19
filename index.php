@@ -47,8 +47,6 @@ else
   define("IS_AJAX",false);
 
 
-
-
 /*
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT
@@ -78,7 +76,7 @@ else
 
  // define('ENVIRONMENT','testing');   // This sets logging on
  
-  
+   
 /*
  *---------------------------------------------------------------
  * ERROR REPORTING
@@ -254,6 +252,7 @@ $site_folder = 'site'; // added/changed for FlexyAdmin
 	}
   
   define('SITEPATH', $site_folder.'/');			// added/changed for FlexyAdmin
+
 
 /*
  * --------------------------------------------------------------------

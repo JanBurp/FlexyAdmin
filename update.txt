@@ -47,7 +47,7 @@ UPDATE 2535
   - For testmode option: $config['testmode'] = false;
   - For new Menu options: $config['menu']=array('fields'=>array(),'view_path'=>'menu');
     Or keep the old menu and add: $config['use_old_menu']=true;
-- Replace htaccess.htaccess
+- Replace .htaccess with the new htaccess.htaccess
 
 
 UPDATE 2461
