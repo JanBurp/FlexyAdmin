@@ -140,9 +140,6 @@ class Main extends FrontEndController {
 		// Load and call modules
     $page=$this->_module($page);
 
-		// Process the text fields (make safe email links, put classes in p/img/h tags)
-		foreach($page as $f=>$v) {if (get_prefix($f)=='txt') $page[$f]=$this->content->render($v);}
-
 		// Add extra title and keywords, replace description (if any)
 		if (isset($page['str_title'])) $this->add_title($page['str_title']);
 		if (isset($page['str_keywords'])) $this->add_keywords($page['str_keywords']);
