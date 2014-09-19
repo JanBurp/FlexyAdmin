@@ -137,7 +137,7 @@ class Content {
 	private function _countCallBack($matches) {
 		$class="";
 		// is there a class allready?
-		if (preg_match("/class=\"([^<]*)\"/",$matches[3],$cMatch))
+		if (preg_match("/class=\"([^<]*)\"/uiUsm",$matches[3],$cMatch))
 			$class=$cMatch[1]." ";
 		if ($matches[1]=="p") {
 			$class.="p$this->p_count";
@@ -252,71 +252,82 @@ class Content {
    * @return string De HTML waarop de acties zijn uitgevoerd
    * @author Jan den Besten
    */
-	public function render($txt) {
+	public function render($txt,$full=false) {
 		$this->reset_counters();
     
-		if ($this->settings['replace_language_links'] and isset($this->settings['replace_language_links']['search']) and isset($this->settings['replace_language_links']['replace'])) {
-			$txt=preg_replace('/<a[\s]*href=\"'.$this->settings['replace_language_links']['search'].'\/(.*)\">(.*)<\/a>/','<a href="'.$this->settings['replace_language_links']['replace'].'/$1">$2</a>',$txt);
-		}
-    
-    if ($this->settings['auto_target_links']) {
-      $txt=preg_replace_callback("/<a(.*)?href=\"(.*)?\"(.*)?>/uiUsm",array($this,"_auto_target_links"),$txt);
-    }
+    if (!$full) {
 
-    if ($this->settings['site_links']) {
-      $txt=preg_replace_callback("/<a(.*)?href=\"(.*)?\"(.*)?>/uiUsm",array($this,"_site_links"),$txt);
+      // rendering in content of page
+
+  		if ($this->settings['add_classes']) {
+  			$txt=preg_replace_callback("/<(div|img|p|h(\d))([^<]*)>/",array($this,"_countCallBack"),$txt);
+  		}
+		
+  		if ($this->settings['add_popups']) {
+  			$txt=preg_replace_callback("/<img([^<]*)src=['|\"](.*?)['|\"]([^>]*)>/",array($this,"_popupCallBack"),$txt);
+  		}
+      
+      if ($this->settings['replace_soft_hyphens']) {
+        $txt=str_replace($this->settings['replace_soft_hyphens'],'&#173;',$txt);
+      }
+
+      if ($this->settings['remove_sizes']) {
+        $txt = preg_replace("/<img(.*)(\swidth=\"\d*\")/uiUsm", "<img$1", $txt);
+        $txt = preg_replace("/<img(.*)(\sheight=\"\d*\")/uiUsm", "<img$1", $txt);
+        $txt = preg_replace("/(<img[^>]*style=['|\"].*)(width:.*;)/uiUm", "$1", $txt);
+        $txt = preg_replace("/(<img[^>]*style=['|\"].*)(height:.*;)/uiUm", "$1", $txt);
+        $txt = preg_replace("/(<img[^>]*)(style=['|\"]\s['|\"])/uiUm", "$1", $txt);
+      }
+      
     }
+    else {
+      
+      // render on full HTML page
+      
+  		if ($this->settings['replace_language_links'] and isset($this->settings['replace_language_links']['search']) and isset($this->settings['replace_language_links']['replace'])) {
+  			$txt=preg_replace('/<a[\s]*href=\"'.$this->settings['replace_language_links']['search'].'\/(.*)\">(.*)<\/a>/','<a href="'.$this->settings['replace_language_links']['replace'].'/$1">$2</a>',$txt);
+  		}
     
-		if ($this->settings['add_classes']) {
-			$txt=preg_replace_callback("/<(div|img|p|h(\d))([^<]*)>/",array($this,"_countCallBack"),$txt);
-		}
-		
-		if ($this->settings['add_popups']) {
-			$txt=preg_replace_callback("/<img([^<]*)src=['|\"](.*?)['|\"]([^>]*)>/",array($this,"_popupCallBack"),$txt);
-		}
-		
-		if ($this->settings['safe_emails']) {
-			if (preg_match_all("/<a([^<]*)href=\"mailto:(.*?)\"([^>]*)>(.*?)<\/a>/",$txt,$matches)) { 	//<a[\s]*href="(.*)">(.*)</a>
-				$search=array();
-				$replace=array();
-				foreach ($matches[2] as $key=>$adres) {
-					$show=str_replace('"',"'",$matches[4][$key]);
-          $search[]=$matches[0][$key];
-					// classes, id's etc
-					$extra='';
-					if (isset($matches[1][$key])) $extra.=$matches[1][$key];
-					if (isset($matches[3][$key])) $extra.=$matches[3][$key];
-          $extra=trim($extra);
-          $extra=explode(' ',$extra);
-          $attr=array();
-          foreach ($extra as $value) {
-            if (!empty($value)) {
-              $value=explode('=',$value);
-              if (is_array($value) and isset($value[1])) {
-                $attr[$value[0]]=trim($value[1],'"');
+      if ($this->settings['auto_target_links']) {
+        $txt=preg_replace_callback("/<a(.*)?href=\"(.*)?\"(.*)?>/uiUsm",array($this,"_auto_target_links"),$txt);
+      }
+
+      if ($this->settings['site_links']) {
+        $txt=preg_replace_callback("/<a(.*)?href=\"(.*)?\"(.*)?>/uiUsm",array($this,"_site_links"),$txt);
+      }
+    
+  		if ($this->settings['safe_emails']) {
+  			if (preg_match_all("/<a([^<]*)href=\"mailto:(.*?)\"([^>]*)>(.*?)<\/a>/",$txt,$matches)) { 	//<a[\s]*href="(.*)">(.*)</a>
+  				$search=array();
+  				$replace=array();
+  				foreach ($matches[2] as $key=>$adres) {
+  					$show=str_replace('"',"'",$matches[4][$key]);
+            $search[]=$matches[0][$key];
+  					// classes, id's etc
+  					$extra='';
+  					if (isset($matches[1][$key])) $extra.=$matches[1][$key];
+  					if (isset($matches[3][$key])) $extra.=$matches[3][$key];
+            $extra=trim($extra);
+            $extra=explode(' ',$extra);
+            $attr=array();
+            foreach ($extra as $value) {
+              if (!empty($value)) {
+                $value=explode('=',$value);
+                if (is_array($value) and isset($value[1])) {
+                  $attr[$value[0]]=trim($value[1],'"');
+                }
               }
             }
-          }
-          $replace[]=safe_mailto($adres,$show,$attr);
-				}
-				$txt=str_replace($search,$replace,$txt);
-			}
-		}
-    
-    if ($this->settings['replace_soft_hyphens']) {
-      $txt=str_replace($this->settings['replace_soft_hyphens'],'&#173;',$txt);
-    }
-
-    if ($this->settings['remove_sizes']) {
-      $txt = preg_replace("/<img(.*)(\swidth=\"\d*\")/uiUsm", "<img$1", $txt);
-      $txt = preg_replace("/<img(.*)(\sheight=\"\d*\")/uiUsm", "<img$1", $txt);
-      $txt = preg_replace("/(<img[^>]*style=['|\"].*)(width:.*;)/uiUm", "$1", $txt);
-      $txt = preg_replace("/(<img[^>]*style=['|\"].*)(height:.*;)/uiUm", "$1", $txt);
-      $txt = preg_replace("/(<img[^>]*)(style=['|\"]\s['|\"])/uiUm", "$1", $txt);
-    }
-    
-    if ($this->settings['compress']) {
-      $txt = $this->compress($txt);
+            $replace[]=safe_mailto($adres,$show,$attr);
+  				}
+  				$txt=str_replace($search,$replace,$txt);
+  			}
+  		}
+        
+      if ($this->settings['compress']) {
+        $txt = $this->compress($txt);
+      }
+      
     }
     
 		return $txt;
