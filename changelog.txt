@@ -1,3 +1,25 @@
+Changes 2559...
+============
+
+UPDATE:
+- UPDATE to CI 2.0.2
+- Better update.txt
+
+USERGUIDE:
+- UPDATE to CI 2.0.2
+
+NEW:
+- NEW: Nicer styling and results of /admin/search
+- NEW: /admin/search can nog have settings (for later use), you can add own by creating site/config/search_replace.php see sys/flexyadmin/config/search_replace.php
+- NEW: added 2 search_replace settings for cleaningup HTML (txt_text fields)
+
+BUGS:
+- BUG: res_menu_result has always pagination (settings did not work)
+- BUG: plugin_automenu, keep order of items when merging tables more tables on same level
+- BUG: plugin_stats did not get last days of previous if called next month
+- BUG: menu.php didn't show bool_class field correct (showed a 1 instead of the name)
+
+
 Changes 2551
 ============
 
