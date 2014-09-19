@@ -19,6 +19,12 @@ For recent sites the update processes described below should work:
 - perform all the steps from your version to the latest:
 
 
+UPDATE 2559...
+===========
+- Replace current sys map
+- Replace index.php
+
+
 UPDATE 2551
 ===========
 - Replace current sys map
@@ -47,6 +53,7 @@ UPDATE 2535
   - For testmode option: $config['testmode'] = false;
   - For new Menu options: $config['menu']=array('fields'=>array(),'view_path'=>'menu');
     Or keep the old menu and add: $config['use_old_menu']=true;
+- If you keep using the old menu, and if you created a menu object with $menu = new Menu(), change this to $menu = new Old_menu()
 - Replace .htaccess with the new htaccess.htaccess
 
 
