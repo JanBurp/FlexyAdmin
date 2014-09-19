@@ -379,8 +379,13 @@ class FrontEndController extends MY_Controller {
    * @author Jan den Besten
    */
 	public function view($view='',$data='',$return=FALSE) {
-		if (empty($data)) $data=$this->site;
     $main_view=(empty($view));
+		if (empty($data)) {
+      $data=$this->site;
+      if ($main_view and isset($data['content'])) {
+        $data['content']=$this->content->render($data['content']);
+      }
+    }
 		if ($main_view) {
 			$view=$this->config->item('main_view');
       // We are at the main view, check if user is logged in as a admin or user? -> show frontend admin menu
@@ -390,7 +395,7 @@ class FrontEndController extends MY_Controller {
       // }
 		}
     $html=$this->load->view($view,$data,TRUE);
-    if ($main_view) $html=$this->content->render($html);
+    if ($main_view) $html=$this->content->render($html,true);
     if (!$return) echo $html;
 		return $html;
 	}
