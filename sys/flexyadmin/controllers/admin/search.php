@@ -11,6 +11,7 @@
 class Search extends AdminController {
 
   private $settings=FALSE;
+  private $regex_error=FALSE;
 
 	function __construct() {
 		parent::__construct();
@@ -29,19 +30,25 @@ class Search extends AdminController {
   			$replace=$this->settings[$settings]['replace'];
   			$fields=$this->settings[$settings]['fields'];
         if (!is_array($fields)) $fields=array($fields);
-        // $regex=$this->settings[$settings]['regex'];
+        $regex=$this->settings[$settings]['regex'];
       }
       else {
   			$search=$this->input->post('search');
   			$replace=$this->input->post('replace');
   			$fields=$this->input->post('fields');
-        // $regex=$this->input->post('regex');
+        $regex=$this->input->post('regex');
       }
 			$test=$this->input->post('test');
 
 			if ($search) {
 				$htmlTest=h(lang('sr_result'),1);
         $testFields=array();
+        $searchTerm=$search;
+        $replaceTerm=$replace;
+        if (!$regex) {
+          $searchTerm=preg_quote($search,'/');
+          $replaceTerm=preg_quote($replaceTerm,'/');
+        }
 				foreach ($fields as $key=>$value) {
 					$table=get_prefix($value,'.');
 					$field=get_suffix($value,'.');
@@ -69,12 +76,12 @@ class Search extends AdminController {
 						foreach ($row as $key=>$txt) {
               $count=0;
               $matches=FALSE;
-							$oldErrorHandler=set_error_handler(array($this,"myErrorHandler"));
-							$new=preg_replace("/$search/",$replace,$txt,-1,$count);
+              $oldErrorHandler=set_error_handler(array($this,"myErrorHandler"));
+							$new=preg_replace("/$searchTerm/",$replaceTerm,$txt,-1,$count);
               if ($count>0) {
-                preg_match_all("/$search/", $txt,$matches);
+                preg_match_all("/$searchTerm/", $txt,$matches);
               }
-							set_error_handler($oldErrorHandler);
+              set_error_handler($oldErrorHandler);
 							if ($new!=$txt) {
 								$this->db->as_abstracts();
 								$this->db->where(PRIMARY_KEY,$id);
@@ -85,7 +92,7 @@ class Search extends AdminController {
                 if ($matches) {
                   $htmlTest.='<ol>';
                   foreach ($matches[0] as $match) {
-                    $htmlTest.='<li><span class="searched">'.htmlentities($match).'</span> &gt;&gt; <span class="replaced">'.htmlentities(preg_replace("/$search/",$replace,$match)).'</span></li>';
+                    $htmlTest.='<li><span class="searched">'.htmlentities($match).'</span> &gt;&gt; <span class="replaced">'.htmlentities(preg_replace("/$searchTerm/",$replaceTerm,$match)).'</span></li>';
                   }
                   $htmlTest.='</ol>';
                 }
@@ -137,7 +144,7 @@ class Search extends AdminController {
         }	
         $data["search"] = array("label"=>lang('sr_search'),"value"=>$search);
         $data["replace"] = array("label"=>lang('sr_replace'),"value"=>$replace);
-        // $data["regex"] = array("label"=>lang('sr_regex'),"type"=>"checkbox","value"=>$regex);
+        $data["regex"] = array("label"=>lang('sr_regex'),"type"=>"checkbox","value"=>$regex);
         $data["fields"] = array("label"=>lang('sr_fields'),"type"=>"dropdown","multiple"=>"mutliple","options"=>$fields,"value"=>$selection);
         $data["test"] = array("type"=>'checkbox','value'=>1);
 				$form->set_data($data,lang('sr_search_replace'));
@@ -151,12 +158,11 @@ class Search extends AdminController {
 		$this->_show_all();
 	}
 
-	function myErrorHandler($errno, $errstr, $errfile, $errline) 	{
-		static $WarnedAllready=FALSE;
-    if ($errno==E_WARNING and strpos($errstr,'REG_BADRPT')) {
-			if (!$WarnedAllready) {
-				$this->_add_content(p('error').lang('bad_regex')._p());
-				$WarnedAllready=TRUE;
+	private function myErrorHandler($errno, $errstr, $errfile, $errline) 	{
+    if ($errno==E_WARNING and has_string('preg',$errstr)) {
+			if (!$this->regex_error) {
+        $this->_add_content(p('error').lang('bad_regex').' : '.$errstr._p());
+				$this->regex_error=TRUE;
 			}
 			return true;
     }
