@@ -26,12 +26,12 @@ $lang['db_restore']					= 'Zet backup terug';
 
 $lang['sr_search_replace']	= 'Zoeken/Vervangen';
 $lang['sr_settings']				= 'Instellingen';
-$lang['sr_search']					= 'Zoek (mag regex)';
+$lang['sr_search']					= 'Zoek';
 $lang['sr_replace']					= 'Vervang';
 $lang['sr_tables']					= 'In tabellen';
 $lang['sr_field_types']			= 'In veld typen';
 $lang['sr_fields']					= 'In velden';
-$lang['sr_regex']						= 'Regular Expression';
+$lang['sr_regex']						= 'Reguliere Expressie';
 $lang['sr_result']					= 'Resultaat';
 
 $lang['fill_fill']					= 'Automatisch vullen';
