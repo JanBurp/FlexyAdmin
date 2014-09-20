@@ -1,5 +1,11 @@
 <?php
 
+$lang['help']               = 'Help';
+$lang['logout']             = 'Logout';
+$lang['settings']           = 'Settings';
+$lang['statistics']         = 'Statistics';
+
+
 $lang['file']								= "File";
 
 $lang['help_no_help']				= 'Sorry, no help found. Please contact your webmaster.';

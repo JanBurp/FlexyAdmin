@@ -9,9 +9,10 @@ class ApiController extends AjaxController {
    */
 	public function __construct($name='') {
 		parent::__construct();
-    $this->_test();
     $this->args=$this->uri->uri_to_assoc(3);
+    // if (!$this->args) $this->args=$_POST;
     if (!$this->args) parse_str($_SERVER['QUERY_STRING'],$this->args);
+    if (!el('_ajax',$this->args,false)) $this->_test(true);
     return $this;
 	}
   

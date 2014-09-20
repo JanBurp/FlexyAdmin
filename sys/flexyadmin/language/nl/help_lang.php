@@ -1,5 +1,10 @@
 <?php
 
+$lang['help']               = 'Help';
+$lang['logout']             = 'Loguit';
+$lang['settings']           = 'Instellingen';
+$lang['statistics']         = 'Statistieken';
+
 $lang['file']								= "Bestand";
 
 $lang['help_no_help']				= 'Sorry, er is geen help gevonden. Neem contact op met je webbouwer.';

@@ -46,7 +46,6 @@ if ( !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_RE
 else
   define("IS_AJAX",false);
 
-
 /*
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT

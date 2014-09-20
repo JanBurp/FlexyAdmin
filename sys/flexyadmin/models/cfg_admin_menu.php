@@ -6,6 +6,7 @@ class cfg_admin_menu extends Crud {
 		parent::__construct();
 		$this->table('cfg_admin_menu');
     $this->load->model('ui');
+    $this->load->helper('language');
     $this->lang->load('help');
 	}
   
@@ -20,19 +21,19 @@ class cfg_admin_menu extends Crud {
                     ),
       'order'   => 'order'
     ));
-    $main_menu=$this->_process_menu($result);
+    $sidebar=$this->_process_menu($result);
 
-    $header_menu = array(
-      'help'    => array( 'title' => lang('help'), 'type' => 'info' ),
-      'user'    => array( 'title' => $this->user->user_name, 'type' => 'form', 'args' => array('table'=>'cfg_users','id'=>$this->user->user_id)),
-      'logout'  => array( 'title' => lang('logout'), 'type' => 'logout' )
+    $header = array(
+      array( 'name' => lang('help'), 'uri'=>'help', 'type' => 'info' ),
+      array( 'name' => $this->user->user_name, 'uri'=>'user', 'type' => 'form', 'args' => array('table'=>'cfg_users','id'=>$this->user->user_id)),
+      array( 'name' => lang('logout'), 'uri'=>'logout', 'type' => 'logout' )
     );
 
-    $footer_menu = array(
-      'settings'    => array( 'title' => lang('settings'), 'type' => 'form', 'args' => array('table'=>'tbl_site')),
-      'statistics'  => array( 'title' => lang('statistics'), 'type' => 'plugin', 'args' => array('plugin'=>'stats')),
+    $footer = array(
+      array( 'name' => lang('settings'), 'uri'=>'grid/tbl_site', 'type' => 'form', 'args' => array('table'=>'tbl_site')),
+      array( 'name' => lang('statistics'), 'uri'=>'plugin/stats', 'type' => 'plugin', 'args' => array('plugin'=>'stats')),
     );
-    return array('header_menu'=>$header_menu,'main_menu'=>$main_menu,'footer_menu'=>$footer_menu);
+    return array('header'=>$header,'sidebar'=>$sidebar,'footer'=>$footer);
   }
   
   
@@ -54,10 +55,11 @@ class cfg_admin_menu extends Crud {
 				case 'api' :
           if (!isset($item['id_user_group']) or $item['id_user_group']>=$user_group) {
             // TODO
-            $menu[$item['str_ui_name']] = array(
-              'title' => lang(trim($item['str_ui_name'],'_')),
-              'type'  => 'api',
-              'args'  => array('api'=>api_uri($item['api']),'path'=>$item['path'],'table'=>$item['table'],'str_table_where'=>$item['str_table_where'])
+            $menu[] = array(
+              'name'    => lang(trim($item['str_uri']   ,'_')),
+              'uri'     => $item['str_uri']   ,
+              'type'    => 'api',
+              'args'    => array('api'=>api_uri($item['api']),'path'=>$item['path'],'table'=>$item['table'],'str_table_where'=>$item['str_table_where'])
             );
           }
 					break;
@@ -69,40 +71,46 @@ class cfg_admin_menu extends Crud {
 				case 'tools':
 					// Database import/export tools
           if ($this->user->is_super_admin()) {
-            $menu['tools-db_export'] = array(
-              'title' => lang('db_export'),
-              'type'  => 'tools',
-              'args'  => array('api'=>api_uri('API_db_export'))
+            $menu[] = array(
+              'name'    => lang('db_export'),
+              'uri'     => 'tools/db_export',
+              'type'    => 'tools',
+              'args'    => array('api'=>api_uri('API_db_export'))
             );
-            $menu['tools-db_import'] = array(
-              'title' => lang('db_import'),
-              'type'  => 'tools',
-              'args'  => array('api'=>api_uri('API_db_import'))
+            $menu[] = array(
+              'name'    => lang('db_import'),
+              'uri'     => 'tools/db_import',
+              'type'    => 'tools',
+              'args'    => array('api'=>api_uri('API_db_import'))
             );
           }
           elseif ($this->user->can_backup()) {
-            $menu['tools-db_backup'] = array(
-              'title' => lang('db_backup'),
-              'type'  => 'tools',
-              'args'  => array('api'=>api_uri('API_db_backup'))
+            $menu[] = array(
+              'name'    => lang('db_backup'),
+              'uri'     => 'tools/db_backup',
+              'type'    => 'tools',
+              'args'    => array('api'=>api_uri('API_db_backup'))
             );
-            $menu['tools-db_restore'] = array(
-              'title' => lang('db_restore'),
-              'type'  => 'tools',
-              'args'  => array('api'=>api_uri('API_db_restore'))
+            $menu[] = array(
+              'name'    => lang('db_restore'),
+              'uri'     => 'tools/db_restore',
+              'type'    => 'tools',
+              'args'    => array('api'=>api_uri('API_db_restore'))
             );
           }
           // Search&Replace AND Bulkupload tools
           if ($this->user->can_use_tools()) {
-            $menu['tools-search'] = array(
-              'title' => lang('sr_search_replace'),
-              'type'  => 'tools',
-              'args'  => array('api'=>api_uri('API_search'))
+            $menu[] = array(
+              'name'    => lang('sr_search_replace'),
+              'uri'     => 'tools/search',
+              'type'    => 'tools',
+              'args'    => array('api'=>api_uri('API_search'))
             );
-            $menu['tools-fill'] = array(
-              'title' => lang('fill_fill'),
-              'type'  => 'tools',
-              'args'  => array('api'=>api_uri('API_fill'))
+            $menu[] = array(
+              'name'    => lang('fill_fill'),
+              'uri'     => 'tools/fill',
+              'type'    => 'tools',
+              'args'    => array('api'=>api_uri('API_fill'))
             );
           }
           break;
@@ -110,7 +118,7 @@ class cfg_admin_menu extends Crud {
         // case 'table' :
         //   $uri=api_uri('API_view_grid',$item['table']);
         //   $uri.='/info/'.$item['id'];
-        //   $menu[$uri]=array("uri"=>$uri,'name'=>$item['str_ui_name'],"class"=>'tbl '.$item['table']);
+        //   $menu[$uri]=array("uri"=>$uri,'name'=>$item['str_uri']   ,"class"=>'tbl '.$item['table']);
         //   break;
 					
 				case 'all_tbl_tables' :
@@ -132,7 +140,7 @@ class cfg_admin_menu extends Crud {
 				
         // case 'media' :
         //   $uri=api_uri('API_filemanager','show',pathencode($item['path']));
-        //   $menu[$uri]=array("uri"=>$uri,'name'=>$item['str_ui_name'],"class"=>'media ');
+        //   $menu[$uri]=array("uri"=>$uri,'name'=>$item['str_uri']   ,"class"=>'media ');
         //   break;
 					
 				case 'all_media':
@@ -143,11 +151,12 @@ class cfg_admin_menu extends Crud {
 						foreach($query->result_array() as $mediaInfo) {
               if (!isset($mediaInfo['b_visible']) or $mediaInfo['b_visible']) {
   							if (!isset($mediaInfo['path']) and isset($mediaInfo['str_path'])) $mediaInfo['path']=$mediaInfo['str_path'];
-                $menu['media-'.$mediaInfo['path']] = array(
-                  'title' => $this->ui->get($mediaInfo['path']),
-                  'type'  => 'media',
-                  'args'  => array('path'=>$mediaInfo['path']),
-                  'help'  => $this->ui->get_help($mediaInfo["path"]),
+                $menu[] = array(
+                  'name'    => $this->ui->get($mediaInfo['path']),
+                  'uri'     => 'media/'.$mediaInfo['path'],
+                  'type'    => 'media',
+                  'args'    => array('path'=>$mediaInfo['path']),
+                  'help'    => $this->ui->get_help($mediaInfo["path"]),
                 );
               }
 						}
@@ -197,11 +206,12 @@ class cfg_admin_menu extends Crud {
 		$oTables=array_merge($oTables,$tables);
 		foreach ($oTables as $table) {
       if (!in_array($table,$excluded) and $this->user->has_rights($table)) {
-        $menu['grid-'.$table]=array(
-          'title' => $this->ui->get($table),
-          'type'  => 'grid',
-          'args'  => array('table' => $table),
-          'help'  => $this->ui->get_help($table) 
+        $menu[]=array(
+          'name'    => $this->ui->get($table),
+          'uri'     => 'grid/'.$table,
+          'type'    => 'grid',
+          'args'    => array('table' => $table),
+          'help'    => $this->ui->get_help($table) 
         );
       }
 		}

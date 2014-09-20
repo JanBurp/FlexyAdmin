@@ -11,18 +11,17 @@ class get_table extends ApiController {
 	}
   
   public function index() {
-    $args=$this->_defaults(array('table'=>'','limit'=>0,'offset'=>0));
+    $this->args=$this->_defaults(array('table'=>'','limit'=>0,'offset'=>0));
     
     // rights?
     if (!$this->_has_rights($args['table'])) {
-      return $this->_result(array('_error'=>'NO RIGHTS','_api'=>__CLASS__,'_args'=>$args));
+      return $this->_result(array('_error'=>'NO RIGHTS','_api'=>__CLASS__,'_args'=>$this->args));
     }
     
-    
-    $result = $this->crud->get($args);
+    $result = $this->crud->get($this->args);
     trace_($result);
     
-    return $this->_result(array('_api'=>__CLASS__,'_args'=>$args));
+    return $this->_result(array('_api'=>__CLASS__,'_args'=>$this->args));
   }
 
 }
