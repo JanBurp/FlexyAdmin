@@ -26,6 +26,7 @@
     "angular": "~1.2.25",
     "angular-route": "~1.2.25",
     "angular-bootstrap": "~0.11.0",
-    "angular-loading-bar": "~0.6.0"
+    "angular-loading-bar": "~0.6.0",
+    "trNgGrid": "git://github.com/MoonStorm/trNgGrid.git#~3.0.3"
   }
 }

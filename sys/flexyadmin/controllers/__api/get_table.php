@@ -12,16 +12,19 @@ class get_table extends ApiController {
   
   public function index() {
     $this->args=$this->_defaults(array('table'=>'','limit'=>0,'offset'=>0));
-    
     // rights?
-    if (!$this->_has_rights($args['table'])) {
+    if (!$this->_has_rights($this->args['table'])) {
       return $this->_result(array('_error'=>'NO RIGHTS','_api'=>__CLASS__,'_args'=>$this->args));
     }
+
+    // TODO more queries
+    $items = $this->crud->get($this->args);
     
-    $result = $this->crud->get($this->args);
-    trace_($result);
+    $data=array(
+      'items'=>$items
+    );
     
-    return $this->_result(array('_api'=>__CLASS__,'_args'=>$this->args));
+    return $this->_result(array('_api'=>__CLASS__,'_args'=>$this->args,'data'=>$data));
   }
 
 }
