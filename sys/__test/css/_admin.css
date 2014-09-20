@@ -1,0 +1,75 @@
+body {
+/*  background-image: url('../img/GRID.png');background-position:2px 2px;*/
+}
+
+* {
+  font-family:Arial;
+  font-size:14px;
+  letter-spacing:0.09em;
+}
+
+a {text-decoration:none;}
+a:hover {text-decoration:underline;}
+
+/* FLEXY STYLES */
+.left {float:left;}
+.right {float:right;}
+.heading {
+  padding-top:5px!important;
+  font-size:16px;
+  text-transform:uppercase;
+}
+
+/* ROUNDED */
+.flexy-block,
+.rounded {border-radius:4px;}
+.rounded-top {border-top-left-radius:4px;border-top-right-radius:4px;}
+.rounded-bottom {border-bottom-left-radius:4px;border-bottom-right-radius:4px;}
+
+/* FLEXY BLOCKS */
+.flexy-block {
+  float:left;
+  text-align:center;
+  vertical-align:center;
+  border:solid 1px #CCC;
+}
+.flexy-block.char_space {visibility:hidden;}
+
+
+/* MENU */
+.menu ul {margin:0px;padding:0px;width:100%;list-style:none;}
+.menu li {padding:0px;width:100%;}
+.menu a {width:100%;text-align:left;padding-left:12px;}
+.menu-vertical a:hover {text-decoration:none;}
+.menu-horizontal ul {margin-top:6px;}
+.menu-horizontal li {display:inline;}
+
+
+/* TABLE */
+.grid {overflow:auto;width:100%;}
+table {border-collapse:seperate;border-spacing:2px;width:100%;}
+caption {text-align:left;}
+td,th {white-space:nowrap;text-align:left;padding:5px!important;}
+thead th {text-transform:uppercase;border-right:solid 1px #CCC;}
+thead th:nth-last-child(1) {border:none;}
+tbody td {border:solid 1px #CCC;border-bottom:none;border-top:none;}
+tbody td:nth-last-child(1) {border:none;}
+tbody tr:nth-child(2n-1) td {background-color:#CCC;}
+
+
+/* GRID SYSTEM */
+p, li, h1,h2,h3,h4,h5,h6,h7, .size {box-sizing:border-box;margin:0px 2px 2px 0px;padding:0px;}
+li, h1,h2,h3,h4,h5,h6,h7 {height:30px;}
+.width-full {width:100%;}
+.no-margin-right {margin-right:0px;}
+/* more in the Less & themes files  ... */
+
+/* RESPONSIVE LAYOUT */
+#container {width:1428px;}
+#view      {
+  width:1224px;
+  overflow:auto;
+  border:solid 1px #CCC;
+}
+/* more in the Less & themes files  ... */
+

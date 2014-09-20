@@ -31,8 +31,13 @@ flexyAdmin.directive("flexyBlocks", function() {
     var html = '';
     angular.forEach(text,function(value,key){
       var c=value;
-      if (value==' ') c='space';
-      html += '<span class="size height-1 width-1 flexy-block heading char_'+c+'">'+value+'</span>';
+      var btn_style="btn-primary";
+      if (value==' ') {
+        c='space';
+        btn_style='btn-default';
+        value="&nbsp;";
+      }
+      html += '<span class="flexyblock btn '+btn_style+' char_'+c+'">'+value+'</span>';
     });
     element.html(html);
   };

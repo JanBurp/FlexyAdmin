@@ -10,37 +10,40 @@
 	<meta http-equiv="imagetoolbar" content="no" />
 	<meta http-equiv="content-language" content="nl" />
 
-  <link rel="stylesheet" href="sys/__test/css/normalize.css" type="text/css" media="screen" title="no title" charset="utf-8">
-  <link rel="stylesheet" href="sys/__test/css/bootstrap-glyphicons.css" type="text/css" media="screen" title="no title" charset="utf-8">
+  <link rel="stylesheet" href="sys/__test/public/bootstrap/dist/css/bootstrap.min.css" type="text/css" media="screen" title="no title" charset="utf-8">
+  <link rel="stylesheet" href="sys/__test/public/bootstrap/dist/css/bootstrap-theme.min.css" type="text/css" media="screen" title="no title" charset="utf-8">
   <link rel="stylesheet" href="sys/__test/css/admin.css" type="text/css" media="screen" title="no title" charset="utf-8">
-  <link rel="stylesheet" href="sys/__test/css/theme_classic.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+  <!-- <link rel="stylesheet" href="sys/__test/css/normalize.css" type="text/css" media="screen" title="no title" charset="utf-8">
+  <link rel="stylesheet" href="sys/__test/css/bootstrap-glyphicons.css" type="text/css" media="screen" title="no title" charset="utf-8">
+  <link rel="stylesheet" href="sys/__test/css/theme_classic.css" type="text/css" media="screen" title="no title" charset="utf-8"> -->
 </head>
 
 <body>
   
-  <div id="container" class="size margin-top-1 margin-right-1 margin-bottom-1 margin-left-1 ">
-  
-    <div id="header" class="size width-full height-1 margin-bottom-1 left">
-      <div class="left"><a href="./admin/__test" data-flexy-blocks="">AngularJS Test</a></div>
-      <div class="right" data-ng-include="'sys/__test/views/menu_top.html'"></div>
+  <div id="container" class="container-fluid">
+    
+    <div id="header" class="navbar navbar-default navbar-fixed-top">
+      <div class="pull-left navbar-text"><a href="./admin/__test" data-flexy-blocks="">AngularJS Test</a></div>
+      <div class="pull-right navbar-text" data-ng-include="'sys/__test/views/menu_top.html'"></div>
     </div>
 
-    <div id="content" class="size width-full margin-bottom-1 left">
-      <div id="menu" class="size width-5 margin-right-1 left" data-ng-include="'sys/__test/views/menu.html'"></div>
-      <div id="view" class="size no-margin-right left rounded" data-ng-view=""></div>
+    <div id="content" class="row">
+      <div id="menu" class="pull-left col-md-3" data-ng-include="'sys/__test/views/menu.html'"></div>
+      <div id="view" class="pull-right col-md-9" data-ng-view=""></div>
     </div>
   
-    <div id="footer" class="size width-full left">
-      <div class="left"><a href="./admin/__test" data-flexy-blocks="">FlexyAdmin</a></div>
-      <div class="right" data-ng-include="'sys/__test/views/menu_footer.html'"></div>
+    <div id="footer" class="navbar navbar-default navbar-fixed-bottom">
+      <div class="pull-left navbar-text"><a href="./admin/__test" data-flexy-blocks="">FlexyAdmin</a></div>
+      <div class="pull-right  navbar-text" data-ng-include="'sys/__test/views/menu_footer.html'"></div>
     </div>
     
   </div>
 
 
 <!-- Angular -->
-<script src="sys/__test/angular/angular.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/angular/angular-route.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/public/angular/angular.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/public/angular-route/angular-route.js" type="text/javascript" charset="utf-8"></script>
 <!--FlexyAdmin -->
 <script src="sys/__test/flexyAdmin.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/controllers/menu.js" type="text/javascript" charset="utf-8"></script>
