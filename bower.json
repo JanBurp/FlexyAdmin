@@ -1,0 +1,30 @@
+{
+  "name": "FlexyAdmin",
+  "version": "3.0.0b",
+  "description": "www.flexyadmin.com",
+  "moduleType": [
+    "node"
+  ],
+  "keywords": [
+    "cms, flexible, friendly"
+  ],
+  "authors": [
+    "Jan den Besten"
+  ],
+  "license": "MIT",
+  "homepage": "www.flexyadmin.com",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "__",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.2.0",
+    "angular": "~1.2.25",
+    "angular-route": "~1.2.25",
+    "angular-bootstrap": "~0.11.0",
+  }
+}
