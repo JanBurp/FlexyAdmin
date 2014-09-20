@@ -10,9 +10,13 @@
 	<meta http-equiv="imagetoolbar" content="no" />
 	<meta http-equiv="content-language" content="nl" />
 
+  <!--Bootsrtrap -->
   <link rel="stylesheet" href="sys/__test/public/bootstrap/dist/css/bootstrap.min.css" type="text/css" media="screen" title="no title" charset="utf-8">
   <link rel="stylesheet" href="sys/__test/public/bootstrap/dist/css/bootstrap-theme.min.css" type="text/css" media="screen" title="no title" charset="utf-8">
+  <!--Angular modules -->
   <link rel="stylesheet" href="sys/__test/public/angular-loading-bar/src/loading-bar.css" type="text/css" media="screen" title="no title" charset="utf-8">
+  <link rel="stylesheet" href="sys/__test/public/trNgGrid/release/trNgGrid.min.css" type="text/css" media="screen" title="no title" charset="utf-8">
+  <!--FlexyAdmin -->
   <link rel="stylesheet" href="sys/__test/css/admin.css" type="text/css" media="screen" title="no title" charset="utf-8">
 
   <!-- <link rel="stylesheet" href="sys/__test/css/normalize.css" type="text/css" media="screen" title="no title" charset="utf-8">
@@ -30,8 +34,8 @@
     </div>
 
     <div id="content" class="row">
-      <div id="menu" class="pull-left col-md-3"><flexy-menu type="sidebar" uiclass="nav-pills nav-stacked"></flexy-menu></div>
-      <div id="view" class="pull-right col-md-9" data-ng-view=""></div>
+      <div id="menu" class="col-md-2"><flexy-menu type="sidebar" uiclass="nav-pills nav-stacked"></flexy-menu></div>
+      <div id="view" class="col-md-10" data-ng-view=""></div>
     </div>
   
     <div id="footer" class="navbar navbar-default navbar-fixed-bottom">
@@ -42,11 +46,12 @@
   </div>
 
 
-<!-- Angular -->
+<!-- Angular JS -->
 <script src="sys/__test/public/angular/angular.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/public/angular-route/angular-route.js" type="text/javascript" charset="utf-8"></script>
+<!-- Angular Modules -->
 <script src="sys/__test/public/angular-loading-bar/src/loading-bar.js" type="text/javascript" charset="utf-8"></script>
-
+<script src="sys/__test/public/trNgGrid/release/trNgGrid.min.js" type="text/javascript" charset="utf-8"></script>
 <!--FlexyAdmin -->
 <script src="sys/__test/flexyAdmin.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/modules/flexy-blocks.js" type="text/javascript" charset="utf-8"></script>

@@ -1,8 +1,11 @@
 var flexyAdmin = angular.module( 'flexyAdmin', [
 
-  // Standard Angular Modules
+  // Angular JS
   'ngRoute',
+  
+  // Angular Modules
   'angular-loading-bar',
+  'trNgGrid',
   
   // flexyAdmin Modules
   'flexyMenu',
