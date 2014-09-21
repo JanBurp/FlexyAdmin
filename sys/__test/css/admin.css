@@ -1,15 +1,31 @@
 /* BOOTSTRAP OVERRIDES */
 
 /* BODY: paddings for fixed header/footer */
-body {padding:8rem 0;}
+body {padding:62px 0;}
+
+/* HEADER & FOOTER (navbar) kleiner */
+#header, #footer {min-height:34px;max-height:48px;}
+.navbar-text {margin-top:7px;margin-bottom:7px;height:34px;max-height:34px;}
 
 /* NAVBAR: uppercase */
 .nav > li > a {text-transform:uppercase;}
 
+/* SIDEBAR MENU: smaller items & padding glyphs */
+#menu li a {padding:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+#menu li a .glyphicon {margin-right:7px;}
+
+
+
+/* TABLE*/
 /* Scrollable table (panel) */
 .panel-content {overflow:auto;}
+/* td: fixed-height */
+table tbody td {white-space:nowrap;}
+table tbody td[tr-ng-grid-body-cell=0] {position:fixed;}
 
-
+/* LOADING BAR */
+#loading-bar-spinner {top:50%;left:50%;margin-left:-17px;margin-top:-17px;}
+#loading-bar-spinner .spinner-icon {width: 34px;height: 34px;border:solid 3px transparent;border-top-color:#CCC;border-left-color:#CCC;border-radius: 17px;}
 
 
 /* FLEXYADMIN SPECIFICS */

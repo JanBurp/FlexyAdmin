@@ -1,6 +1,8 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class cfg_admin_menu extends Crud {
+  
+  private $types=array('tbl'=>'table','cfg'=>'config','log'=>'log','res'=>'result');
 
 	public function __construct() {
 		parent::__construct();
@@ -123,6 +125,8 @@ class cfg_admin_menu extends Crud {
 					
 				case 'all_tbl_tables' :
 					$tables=$this->db->list_tables();
+          $key=array_search('tbl_site',$tables);
+          if ($key) unset($tables[$key]);
 					$menu=array_merge($menu,$this->_show_table_menu($tables,$this->config->item('TABLE_prefix')));
 					break;
 
@@ -209,7 +213,7 @@ class cfg_admin_menu extends Crud {
         $menu[]=array(
           'name'    => $this->ui->get($table),
           'uri'     => 'grid/'.$table,
-          'type'    => 'grid',
+          'type'    => $this->types[get_prefix($table)],
           'args'    => array('table' => $table),
           'help'    => $this->ui->get_help($table) 
         );

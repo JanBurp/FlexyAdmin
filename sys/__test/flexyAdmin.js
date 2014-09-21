@@ -82,5 +82,10 @@ flexyAdmin.config( function($routeProvider){
       controller  : 'FormController',
       templateUrl : 'sys/__test/views/form.html'
     })
+    // .when('/plugin/:plugin',{
+    //   controller  : 'PluginController',
+    //   templateUrl : 'sys/__test/views/html.html'
+    // })
+    
     .otherwise({ redirectTo: '/grid' });
 });
