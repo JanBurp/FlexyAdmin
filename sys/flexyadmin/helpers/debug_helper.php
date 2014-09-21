@@ -52,7 +52,7 @@ function backtrace_($offset=0,$limit=10,$echo=true) {
 			$file=implode('/',$explode);
 			if (isset($val['line'])) {
         if (!IS_AJAX)
-          $val['file']='#show#<a style="color:#000;font-family:courier,serif;font-size:10px;line-height:14px;text-decoration:underline;" href="txmt://open?url=file:///'.$val['file'].'&amp;line='.$val['line'].'">'.$file.' at '.$val['line'].'</a>';
+          $val['file']='#show#<a href="txmt://open?url=file:///'.$val['file'].'&amp;line='.$val['line'].'">'.$file.' at '.$val['line'].'</a>';
         else
           $val['file']='#show#'.$val['file'].'&amp;line='.$val['line'].'">'.$file.' at '.$val['line'];
 				unset($val['line']);
@@ -125,13 +125,10 @@ function strace_($a=NULL) {
 function trace_($a=NULL,$echo=true,$backtraceOffset=1,$max=50) {
 	static $c=0;
   $styling='';
-  if (IS_AJAX) {
+  if (IS_AJAX)
     $out='';
-  }
-  else {
-    $styling=" style=\"position:relative;overflow:auto;overflow-x:hidden;font-family:courier,serif;font-size:10px;line-height:14px;z-index:99999;margin:2px;padding:5px;background-color:#efe;color:#000;border:solid 1px #666;opacity:.8;\"";
-    $out="<pre class=\"FlexyAdminTrace\" $styling>";
-  }
+  else
+    $out='<pre class="_trace">';
   if ($c>=$max) {
     if ($c==$max) $out.="TOO MANY TRACES, MAYBE A LOOP BUG...";
   }
@@ -151,7 +148,7 @@ function trace_($a=NULL,$echo=true,$backtraceOffset=1,$max=50) {
   		else		$out.="'False'";
   	}
   	elseif (is_array($a) or is_object($a))
-  		$out.=print_ar(array_($a,true),true,strlen($show.$type)+3);
+  		$out.=print_ar(array_($a,true),true,2);//strlen($show.$type)+3);
   	else
   		$out.=print_r(tr_string($a),true);
   }
@@ -176,17 +173,13 @@ function tr_string($value) {
 	$s="";
 	$value=(string) $value;
 	$html=($value!=strip_tags($value));
-  if (has_string('#show#',$value)) {
-    $value=str_replace('#show#','',$value);
-    $s=$value;
-  }
-  elseif ($html) {
-    $s='[HTML]<div style="display:none;">'."\n<!-- START HTML -->\n".$value."\n<!-- END HTML -->\n</div>";
-  } else {
-    $s=max_length($value,250,'CHARS');
+  $s=$value;
+  if ($html) $s=preg_replace('/\s/',' ',htmlentities($value));
+  if (!has_string('#show#',$value)) {
+    $s=max_length($s,80,'CHARS');
     if ($s!=$value) $s.=' ...';
-    $s="'".$s."'";
   }
+  $s="'".$s."'";
 	return $s;
 }
 
@@ -234,6 +227,7 @@ function print_ar($array,$return=false,$tabs=0,$brackets="()") {
   		$out.=tabs($tabs);
   		$thisOut="[".$key."] => ";
   		$len=strlen($thisOut)+1;
+      $len=2;
   		if (is_array($value)) {
   			$thisOut.=print_ar($value,$return,$tabs+$len);
   		}
