@@ -1,3 +1,7 @@
 <ul class="nav {{uiclass}}" role="navigation">
-  <li class="" data-ng-repeat="item in menu[type]"><a class="" href="{{item.href}}">{{item.name}}</a></li>
+  <li class="{{item.class}}" data-ng-repeat="item in menu[type]">
+    <a class="{{item.class}}" href="{{item.href}}" title="{{item.name}}">
+      <span class="{{item.glyphicon}}"></span>{{item.name}}
+    </a>
+  </li>
 </ul>

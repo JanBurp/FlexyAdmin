@@ -58,6 +58,7 @@
 <script src="sys/__test/modules/flexy-menu.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/controllers/grid.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/controllers/form.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/controllers/plugin.js" type="text/javascript" charset="utf-8"></script>
 
 </body>
 </html>
