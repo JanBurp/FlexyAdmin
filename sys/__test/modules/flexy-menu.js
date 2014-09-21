@@ -28,7 +28,8 @@ flexyMenu.directive( "flexyMenu", function() {
       $scope.menu.header = [ { href: $scope.root+"/logout", name: 'Logout' } ];
       $scope.menu.sidebar = [];
       $scope.menu.footer = [];
-      $http.get('__api/get_admin_nav?_ajax=1',{cache:true}).success(function(result){
+      $http.get('__api/get_admin_nav',{cache:true}).success(function(result){
+        $log.log(result);
         $scope.menu.header  = flexyMenu.uris_to_href($scope.root,result.data.header);
         $scope.menu.sidebar = flexyMenu.uris_to_href($scope.root,result.data.sidebar);
         $scope.menu.footer  = flexyMenu.uris_to_href($scope.root,result.data.footer);
