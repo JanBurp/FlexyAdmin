@@ -34,8 +34,8 @@
     </div>
 
     <div id="content" class="row">
-      <div id="menu" class="col-md-2"><flexy-menu type="sidebar" uiclass="nav-pills nav-stacked"></flexy-menu></div>
-      <div id="view" class="col-md-10" data-ng-view=""></div>
+      <div id="menu" class="col-xs-2"><flexy-menu type="sidebar" uiclass="nav-pills nav-stacked"></flexy-menu></div>
+      <div id="view" class="col-xs-10" data-ng-view=""></div>
     </div>
   
     <div id="footer" class="navbar navbar-default navbar-fixed-bottom">
