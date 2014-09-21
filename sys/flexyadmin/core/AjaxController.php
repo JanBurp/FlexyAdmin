@@ -28,14 +28,14 @@ class AjaxController extends BasicController {
    *
    * @var string
    */
-	protected $name='';
+	protected $name=__CLASS__;
   
   /**
    * Output
    *
    * @var array
    */
-  private $result=NULL;
+  protected $result=array();
   
   /**
    * Testmodes
@@ -91,16 +91,17 @@ class AjaxController extends BasicController {
    * @return string JSON
    * @author Jan den Besten
    */
-  protected function _result($args) {
-    $args['_success']=true;
-    if (isset($args['_error']) and !empty($args['_error'])) $args['_success']=false;
-    ksort($args);
+  protected function _result($result) {
+    $result=array_merge($this->result,$result);
+    $result['_success']=true;
+    if (isset($result['_error']) and !empty($result['_error'])) $result['_success']=false;
+    ksort($result);
     if ($this->test) {
-      $args['_test']=true;
-      trace_($args);
-      return $args;
+      $result['_test']=true;
+      trace_($result);
+      return $result;
     }
-    $json=array2json($args);
+    $json=array2json($result);
     echo $json;
     return $json;
   }

@@ -6,8 +6,8 @@ body {padding:8rem 0;}
 /* NAVBAR: uppercase */
 .nav > li > a {text-transform:uppercase;}
 
-
-
+/* Scrollable table (panel) */
+.panel-content {overflow:auto;}
 
 
 
