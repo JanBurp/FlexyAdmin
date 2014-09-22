@@ -90,16 +90,19 @@ class Content {
    * @ignore
    */
   private function _auto_target_links($match) {
-    $res='<a'.preg_replace("/target=\"(.*)?\"/uiUsm", "", $match[1]);
-    $url=str_replace($this->CI->config->item('base_url'),'',$match[2]);
-    $target='_self';
-    if (substr($url,0,4)=='http') $target='_blank';
-    if (substr($url,0,4)=='file') $target='';
-    if (substr($url,0,4)=='mail') $target='';
-    $res.='href="'.$url.'"';
-    if (isset($match[3])) $res.=preg_replace("/target=\"(.*)?\"/uiUsm", "", $match[3]);
-    if (!empty($target)) $res.=' target="'.$target.'" ';
-    $res.=' rel="external">';
+    $res=$match[0];
+    if (isset($match[2])) {
+      $res='<a'.preg_replace("/target=\"(.*)?\"/uiUsm", "", $match[1]);
+      $url=str_replace($this->CI->config->item('base_url'),'',$match[2]);
+      $target='_self';
+      if (substr($url,0,4)=='http') $target='_blank';
+      if (substr($url,0,4)=='file') $target='';
+      if (substr($url,0,4)=='mail') $target='';
+      $res.='href="'.$url.'"';
+      if (isset($match[3])) $res.=preg_replace("/target=\"(.*)?\"/uiUsm", "", $match[3]);
+      if (!empty($target)) $res.=' target="'.$target.'" ';
+      $res.=' rel="external">';
+    }
     return $res;
   }
 

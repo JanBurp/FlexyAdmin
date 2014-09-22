@@ -177,11 +177,13 @@ function tr_string($value) {
 	$value=(string) $value;
 	$html=($value!=strip_tags($value));
   $s=$value;
-  if ($html) $s=preg_replace('/\s/',' ',htmlentities($value));
-  if (!has_string('#show#',$value)) {
+  $show=has_string('#show#',$value);
+  if ($html and !$show) $s=preg_replace('/\s/',' ',htmlentities($value));
+  if (!$show) {
     $s=max_length($s,80,'CHARS');
     if ($s!=$value) $s.=' ...';
   }
+  if ($show) $s=str_replace('#show#','',$s);
   $s="'".$s."'";
 	return $s;
 }
