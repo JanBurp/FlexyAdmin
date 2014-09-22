@@ -123,8 +123,11 @@ function strace_($a=NULL) {
  * @author Jan den Besten
  */
 function trace_($a=NULL,$echo=true,$backtraceOffset=1,$max=50) {
+	$CI=&get_instance();
 	static $c=0;
-  $styling='';
+  if ($c==0 and !IS_AJAX and !$CI->config->item('IS_ADMIN')) {
+    echo "<style>._trace {position:relative;margin:2px;padding:5px;overflow:auto;overflow-x:hidden;color:#000;font-family:courier,serif;font-size:10px;line-height:14px;border:solid 1px #666;background-color:#efe;opacity:.8;z-index:99999;}._trace a {color:#000;font-family:courier,serif;font-size:10px;line-height:14px;text-decoration:underline;}</style>";
+  }
   if (IS_AJAX)
     $out='';
   else
