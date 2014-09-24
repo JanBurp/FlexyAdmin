@@ -40,7 +40,7 @@ class Content {
     'compress'          => true,
     'safe_emails'       => true,
     'auto_target_links' => true,
-    'site_links'        => false,
+    'site_links'        => true,
     'remove_sizes'      => false,
     'add_classes'       => false,
     'add_popups'        => false,
@@ -120,7 +120,8 @@ class Content {
   private function _site_links($match) {
     $res=$match[0];
     $url=$match[2];
-    if ((substr($url,0,4)!='http') and (substr($url,0,6)!='mailto')) {
+    $index=$this->CI->config->item('index_page');
+    if ((substr($url,0,4)!='http') and (substr($url,0,6)!='mailto') and !has_string($index,$url)) {
       $url=site_url($url);
       if (!isset($match[3])) $match[3]='';
       $res='<a '.$match[1].' href="'.$url.'" '.$match[3].'>';
@@ -261,6 +262,10 @@ class Content {
     if (!$full) {
 
       // rendering in content of page
+      
+      if ($this->settings['site_links'] and $this->CI->config->item('index_page')!='') {
+        $txt=preg_replace_callback("/<a(.*)?href=\"(.*)?\"(.*)?>/uiUsm",array($this,"_site_links"),$txt);
+      }
 
   		if ($this->settings['add_classes']) {
   			$txt=preg_replace_callback("/<(div|img|p|h(\d))([^<]*)>/",array($this,"_countCallBack"),$txt);
@@ -295,10 +300,6 @@ class Content {
         $txt=preg_replace_callback("/<a(.*)?href=\"(.*)?\"(.*)?>/uiUsm",array($this,"_auto_target_links"),$txt);
       }
 
-      if ($this->settings['site_links']) {
-        $txt=preg_replace_callback("/<a(.*)?href=\"(.*)?\"(.*)?>/uiUsm",array($this,"_site_links"),$txt);
-      }
-    
   		if ($this->settings['safe_emails']) {
   			if (preg_match_all("/<a([^<]*)href=\"mailto:(.*?)\"([^>]*)>(.*?)<\/a>/",$txt,$matches)) { 	//<a[\s]*href="(.*)">(.*)</a>
   				$search=array();
