@@ -189,7 +189,7 @@ class Forms extends Module {
     }
 
     // Captcha?
-    if ($this->settings['add_captcha']) {
+    if (el('add_captcha',$this->settings)) {
       // first check if not set allready
       if (!find_row_by_value($formFields,'captcha','type')) {
         $formFields['_captcha']=array('label'=>lang('captcha'),'type'=>'captcha');
