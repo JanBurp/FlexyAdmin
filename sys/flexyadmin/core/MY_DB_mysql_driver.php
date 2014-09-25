@@ -264,7 +264,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
    * @param string $table Tabel waarin getest wordt
    * @param array $data data waarop getest wordt array('field'=>'value', ... )
    * @param array $unset_fields['id,'uri'] Velden die niet meegenomen worden in de test (mogen wel in $data staan)
-   * @return bool True als row bestaat
+   * @return mixed FALSE of de row
    * @author Jan den Besten
    */
    public function has_row($table,$data,$unset_fields=array('id','uri')) {
@@ -273,7 +273,8 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
     }
 		foreach ($data as $field => $value) $this->where($field,$value);
     $row=$this->get_row($table);
-		return !empty($row);
+    if ($row) return $row;
+    return FALSE;
   }
   
 	

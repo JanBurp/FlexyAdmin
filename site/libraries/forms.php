@@ -24,6 +24,10 @@
 	* 
 	*         $this->CI->load->library('forms');
   *         $this->CI->forms->contact();
+  * 
+  * Je kunt de instellingen ook meegeven met:
+  * 
+  *         $this->CI->forms->initialize('naam_van_form',$config_array);
 	*        
 	* Instellingen
 	* ----------------
