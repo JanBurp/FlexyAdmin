@@ -151,7 +151,6 @@ class Forms extends Module {
       }
     }
     
-    
 		// Welke velden (en buttons): zijn ze los ingesteld?
     $formFields=$this->settings('fields');
     $formButtons=$this->settings('buttons');
@@ -186,6 +185,14 @@ class Forms extends Module {
         if ($emailField) {
           $this->settings['from_address_field']=key($emailField);
         }
+      }
+    }
+
+    // Captcha?
+    if ($this->settings['add_captcha']) {
+      // first check if not set allready
+      if (!find_row_by_value($formFields,'captcha','type')) {
+        $formFields['_captcha']=array('type'=>'captcha');
       }
     }
     
