@@ -65,6 +65,62 @@ class Search_replace Extends CI_Model {
     return $result;
   }
   
+  /**
+   * Vervangt in gegeven tabellen in gegeven velden
+   *
+   * @param string $search 
+   * @param string $replace 
+   * @param array $fields[array()] als leeg dan in alle velden
+   * @param array $tables[array()] als leeg dan in alle tabellen
+   * @return void
+   * @author Jan den Besten
+   */
+  public function replace_value($search,$replace,$fields='',$tables='') {
+    if (empty($tables)) $tables=$this->db->list_tables();
+		$result=FALSE;
+		foreach($tables as $table) {
+      if (empty($fields)) $fields=$this->db->list_fields($table);
+			foreach ($fields as $field) {
+				$res = $this->replace_value_in( $table, $field, $search, $replace);
+        if ($res) {
+          if (!$result) $result=array();
+          $result[]=$res;
+        }
+			}
+		}
+    return $result;
+  }
+  
+  
+  /**
+   * Vervangt waarde in bepaald veld van bepaalde tabel
+   *
+   * @param string $table 
+   * @param string $field 
+   * @param string $search 
+   * @param string $replace 
+   * @return array
+   * @author Jan den Besten
+   */
+  public function replace_value_in($table,$field,$search,$replace) {
+		$result=FALSE;
+    if ($this->db->field_exists($field,$table)) {
+  		$this->db->select("id,$field");
+  		$this->db->where($field,$search);
+  		$query=$this->db->get($table);
+  		foreach($query->result_array() as $row) {
+  			$id=$row["id"];
+        $this->db->update($table,array($field=>$replace),"id = $id");
+  			$result[]=array('table'=>$table,'id'=>$id,'field'=>$field);
+  		}
+  		$query->free_result();
+    }
+		return $result;
+  }
+  
+  
+  
+  
 
   /**
    * Vervangt tekst in bepaald veld van bepaalde tabel
