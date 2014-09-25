@@ -5,6 +5,7 @@ $lang['error_not_exists']     = "WARNING: `forms.%s` isn't set.";
 $lang['error_no_fields']      = "WARNING: `forms.%s` has no fields.";
 $lang['error_spam']           = "You'r submit has been marked as spam.";
 $lang['submit']               = 'Submit';
+$lang['captcha']              = 'Captcha';
 
 
 // formaction_mail
