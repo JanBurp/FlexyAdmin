@@ -103,6 +103,18 @@
   }
 
 
+  /**
+   * Voegt error toe
+   *
+   * @param string $error 
+   * @return void
+   * @author Jan den Besten
+   */
+  public function add_error($error) {
+    $this->errors.=$error;
+    return $this;
+  }
+
 
   /**
     * Als de actie niet goed is verlopen, dan kun je hiermee de foutmeldingen verkrijgen.
