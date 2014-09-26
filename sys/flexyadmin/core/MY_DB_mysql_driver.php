@@ -708,16 +708,16 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 	}
 
    /**
-    * Maakt een Query-Object met alle instellingen (foreigns, abstracts, order, full etc.)
+    * Maakt een Query-Object met alle specifieke flexyadmin db instellingen (foreigns, abstracts, order, full etc.)
+    * Vergelijkbaar met get() (wat alleen de standaard CI instellingen meeneemt)
     *
     * @param string $table['']
     * @param string $limit[0]
     * @param string $offset[0]
     * @return object CI-Query-object
     * @author Jan den Besten
-    * @ignore
     */
-	private function _get($table="",$limit=0,$offset=0) {
+	public function get_query($table="",$limit=0,$offset=0) {
 		log_("info","[DB+] Get/create query:");
 
 		/**
@@ -1004,15 +1004,16 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		/**
 		 * get the query
 		 */
-		if ($limit>=1)
-			$query=$this->get($table,$limit,$offset);
-		else
-			$query=$this->get($table);
+    if ($limit>=1)
+      $query=$this->get($table,$limit,$offset);
+    else
+      $query=$this->get($table);
+
     if ($this->remember_query) $this->ar_last_query=$this->last_query();
     // trace_('#show#'.$this->ar_last_query);
 		return $query;
 	}
-
+  
 	/**
 	 * Zoekt de parent en geeft die terug
 	 *
@@ -1321,7 +1322,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		$result=array();
 		
 		// fetch data
-		$query=$this->_get($table,$limit,$offset);
+		$query=$this->get_query($table,$limit,$offset);
     
 		log_("info","[DB+] Get data from query:");
 		$res=$query->result_array();
