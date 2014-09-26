@@ -49,55 +49,6 @@ class BasicController extends MY_Controller {
 		return $logged_in;
 	}
 
-  // function _update_links_in_txt($oldUrl,$newUrl="") {
-  //   // loop through all txt fields..
-  //   $tables=$this->db->list_tables();
-  //   foreach($tables as $table) {
-  //     if (get_prefix($table)==$this->config->item('TABLE_prefix')) {
-  //       $fields=$this->db->list_fields($table);
-  //       foreach ($fields as $field) {
-  //         if (get_prefix($field)=="txt") {
-  //           $this->db->select("id,$field");
-  //           $this->db->where("$field !=","");
-  //           $query=$this->db->get($table);
-  //           foreach($query->result_array() as $row) {
-  //             $thisId=$row["id"];
-  //             $txt=$row[$field];
-  //             if (empty($newUrl)) {
-  //               // remove
-  //               $pattern='/<a(.*?)href="'.str_replace("/","\/",$oldUrl).'"(.*?)>(.*?)<\/a>/';
-  //               $txt=preg_replace($pattern,'\\3',$txt);
-  //             }
-  //             else {
-  //               $txt=str_replace("href=\"$oldUrl","href=\"$newUrl",$txt);
-  //             }
-  //             $res=$this->db->update($table,array($field=>$txt),"id = $thisId");
-  //           }
-  //           $query->free_result();
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
-
-	/**
-	 * Here are functions that hook into the grid/form/update proces.
-	 * They check if a standard hook method for the current table/field/id, if so call it
-	 */
-
-
-  // function _get_parent_uri($table,$uri,$parent) {
-  //   if ($parent!=0) {
-  //     $this->db->select('id,uri,self_parent');
-  //     $this->db->where(PRIMARY_KEY,$parent);
-  //     $parentRow=$this->db->get_row($table);
-  //     $uri=$parentRow['uri']."/".$uri;
-  //     if ($parentRow['self_parent']!=0) $uri=$this->_get_parent_uri($table,$uri,$parentRow['self_parent']);
-  //   }
-  //   return $uri;
-  // }
-
-
 	function _init_plugin($table,$oldData=NULL,$newData=NULL) {
 		$this->plugin_handler->set_data('old',$oldData);
 		$this->plugin_handler->set_data('new',$newData);
