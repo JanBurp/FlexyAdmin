@@ -9,37 +9,72 @@ class get_table extends ApiController {
   );
 
 
-	public function __construct($name='') {
+	public function __construct($field='') {
 		parent::__construct();
     $this->load->model('ui');
 	}
   
 
   public function index() {
-
-    // TODO more queries
-    $items = $this->crud->get($this->args);
+    // DEFAULTS
+    $items=FALSE;
+    $field_info=FALSE;
+    $table_info=FALSE;
     
-    // Field info
-    $first=current($items);
-    $names=array_keys($first);
-    $field_info=array();
-    foreach ($names as $name) {
-      $full_name=$this->args['table'].'.'.$name;
-      $info=$this->cfg->get('cfg_field_info',$full_name);
-      if ($info) $info=array_unset_keys($info,array('id','field_field'));
-      $field_info[$name]=array(
-        'table'     => $this->args['table'],
-        'field'     => $name,
-        'ui_name'   => $this->ui->get($name),
-        'info'      => $info
-      );
+    if ($this->args['table']) {
+      
+      // FIELD INFO
+      $fields=$this->db->list_fields($this->args['table']);
+      $field_info=array();
+      $unset_fields=array();
+      foreach ($fields as $field) {
+        $prefix=get_prefix($field);
+        $full_name=$this->args['table'].'.'.$field;
+        $info=$this->cfg->get('cfg_field_info',$full_name);
+        if (!el('b_show_in_grid',$info,true)) {
+          $unset_fields[]=$field;
+        }
+        else {
+          if ($info) $info=array_unset_keys($info,array('id','field_field'));
+          $field_info[$field]=array(
+            'table'     => $this->args['table'],
+            'field'     => $field,
+            'ui_name'   => $this->ui->get($field),
+            'info'      => $info,
+            'editable'  => !in_array($field,$this->config->item('NON_EDITABLE_FIELDS')),
+            'incomplete'=> in_array($prefix,$this->config->item('INCOMPLETE_DATA_TYPES'))
+          );
+        }
+      }
+      
+      // TABLE INFO
+      $table_info=$this->cfg->get('cfg_table_info',$this->args['table']);
+      $table_info['ui_name']  = $this->ui->get($this->args['table']);
+      $table_info['sortable'] = !in_array('order',$fields);
+      $table_info['tree']     = in_array('self_parent',$fields);
+
+      // GET DATA
+      $this->db->unselect($unset_fields);
+      $this->db->max_text_len(500);
+      $items = $this->crud->get($this->args);
+
+      // PROCESS DATA
+      if ($items) {
+        // STRIP TAGS
+        $txtKeys=array_combine($fields,$fields);
+        $txtKeys=filter_by_key($txtKeys,'txt');
+        if ($txtKeys) {
+          foreach ($items as $id => $row) {
+            foreach ($txtKeys as $key) {
+              $items[$id][$key]=strip_tags($row[$key]);
+            }
+          }
+        }
+        else $txtKeys=array();
+      }
     }
     
-    // Table info
-    $table_info=$this->cfg->get('cfg_table_info',$this->args['table']);
-    $table_info['ui_name'] = $this->ui->get($this->args['table']);
-    
+    // RESULT
     $data=array(
       'table_info'  =>$table_info,
       'field_info'  =>$field_info,

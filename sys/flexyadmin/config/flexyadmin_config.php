@@ -958,6 +958,9 @@ $config['ORDER_field_name']					= "order";
 $config['ORDER_decimals']						= 3;
 $config['ORDER_default_fields']			= array( "order","dat DESC",'date DESC',"tme DESC","str","id");
 
+$config['NON_EDITABLE_FIELDS']      = array(PRIMARY_KEY,'uri','order','self_parent');
+$config['INCOMPLETE_DATA_TYPES']    = array('txt','stx','md');
+
 $config['ABSTRACT_field_name']			= "abstract";
 $config['ABSTRACT_field_pre_types']	= array("str","url","img","dat","tme","time","int");
 $config['ABSTRACT_field_types']			= array("varchar","int","date",'datetime','time');

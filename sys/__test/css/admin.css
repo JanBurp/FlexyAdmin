@@ -34,7 +34,7 @@ body {padding:62px 0;}
 .flexygrid table {margin:0;}
 /* th */
 .flexygrid th {text-transform:uppercase;}
-.flexygrid th>span.glyphicon {display:none;float:right;}
+.flexygrid th>span.glyphicon {display:none;}
 .flexygrid th.st-sort-ascent span.glyphicon-chevron-up {display:inline;}
 .flexygrid th.st-sort-descent span.glyphicon-chevron-down {display:inline;}
 /* td: fixed-height */
@@ -47,8 +47,8 @@ body {padding:62px 0;}
 
 /* TABLE COLUMNS */
 .flexygrid th, .flexygrid td {max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.flexygrid th {white-space:normal;}
-.flexygrid th.edit, .flexygrid td.edit {min-width:80px;}
+/*.flexygrid th {white-space:normal;}*/
+.flexygrid th.edit, .flexygrid td.edit {min-width:83px;}
 .flexygrid th.id, td.id {display:none;}
 .flexygrid th.uri, td.uri {display:none;}
 .flexygrid th.str_title, .flexygrid td.str_title {max-width:none;text-overflow:inherit;}
