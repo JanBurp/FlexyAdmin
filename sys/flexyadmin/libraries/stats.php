@@ -19,8 +19,6 @@ class Stats {
 
 	function set_table($table="") {
 		if (empty($table)) {
-			// $CI =& get_instance();
-			// $table=$CI->config->item('log_stats');
 			$table='log_stats';
 		}
 		$this->table=$table;
@@ -35,7 +33,7 @@ class Stats {
 		global $URI;
 		$thisUri=$URI->uri_string();
 		$firstSegment=$URI->get(1);
-		if ( ! in_array($firstSegment,array(SITEPATH,'sys','admin','rss','file')) ) {
+		if ( ! in_array($firstSegment,array(SITEPATH,'sys','admin','rss','file','__api')) ) {
 			$this->add_uri(trim($thisUri,'/'));
 		}
 	}
