@@ -29,7 +29,7 @@
             <div class="btn-group btn-group-xs">
               <div class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></div>
               <div class="btn btn-default"><span class="glyphicon glyphicon-remove"></span></div>
-              <div class="btn btn-default"><span class="glyphicon glyphicon-resize-vertical"></span></div>
+              <div ng-if="!grid.table_info.sortable" class="btn btn-default"><span class="glyphicon glyphicon-resize-vertical"></span></div>
             </div>
           </td>
           <td ng-repeat="key in keys(row)" class="{{grid.field_info[key].type}} {{key}}">{{row[key]}}</td>
