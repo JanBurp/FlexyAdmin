@@ -1,9 +1,13 @@
 var flexyAdmin = angular.module( 'flexyAdmin', [
   // Angular JS
   'ngRoute',
+  
   // Angular Modules
+  'angular-toArrayFilter',
+  'ui.bootstrap',
   'angular-loading-bar',
-  'trNgGrid',
+  'smart-table',
+  
   // flexyAdmin Modules
   'flexyMenu',
   'flexyBlocks',
@@ -63,10 +67,6 @@ var flexyAdmin = angular.module( 'flexyAdmin', [
 
 );
   
-
-
-
-
 
 /**
  * ROUTING
