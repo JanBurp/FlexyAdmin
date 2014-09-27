@@ -15,7 +15,6 @@
   <link rel="stylesheet" href="sys/__test/public/bootstrap/dist/css/bootstrap-theme.min.css" type="text/css" media="screen" title="no title" charset="utf-8">
   <!--Angular modules -->
   <link rel="stylesheet" href="sys/__test/public/angular-loading-bar/src/loading-bar.css" type="text/css" media="screen" title="no title" charset="utf-8">
-  <link rel="stylesheet" href="sys/__test/public/trNgGrid/release/trNgGrid.min.css" type="text/css" media="screen" title="no title" charset="utf-8">
   <!--FlexyAdmin -->
   <link rel="stylesheet" href="sys/__test/css/admin.css" type="text/css" media="screen" title="no title" charset="utf-8">
 
