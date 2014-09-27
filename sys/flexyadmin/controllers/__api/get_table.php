@@ -55,7 +55,8 @@ class get_table extends ApiController {
 
       // GET DATA
       $this->db->unselect($unset_fields);
-      $this->db->max_text_len(500);
+      $this->db->max_text_len(100);
+      if ($table_info['tree']) $this->db->order_as_tree();
       $items = $this->crud->get($this->args);
 
       // PROCESS DATA
