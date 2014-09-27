@@ -27,7 +27,7 @@ class cfg_admin_menu extends Crud {
 
     $header = array(
       array( 'name' => lang('help'), 'uri'=>'help', 'type' => 'info' ),
-      array( 'name' => $this->user->user_name, 'uri'=>'user', 'type' => 'form', 'args' => array('table'=>'cfg_users','id'=>$this->user->user_id)),
+      array( 'name' => $this->user->user_name, 'uri'=>'grid/cfg_users', 'type' => 'form', 'args' => array('table'=>'cfg_users','id'=>$this->user->user_id)),
       array( 'name' => lang('logout'), 'uri'=>'logout', 'type' => 'logout' )
     );
 

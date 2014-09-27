@@ -1,5 +1,9 @@
 /* BOOTSTRAP OVERRIDES */
 
+
+/* UI-Angular */
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+
 /* BODY: paddings for fixed header/footer */
 body {padding:62px 0;}
 
@@ -17,11 +21,27 @@ body {padding:62px 0;}
 
 
 /* TABLE*/
+
+/* HEADER */
+.panel-heading {height:49px;overflow:hidden;}
+.panel-heading h2 {text-transform:uppercase;margin:0;float:left;}
+.panel-heading input {margin:0;margin-left:2rem;float:left;width:20%;}
+
 /* Scrollable table (panel) */
 .panel-content {overflow:auto;}
+.panel-content table {margin:0;}
+/* th */
+table thead th {text-transform:uppercase;}
+table thead th span.glyphicon {display:none;float:right;}
+table th.st-sort-ascent span.glyphicon-chevron-up {display:inline;}
+table th.st-sort-descent span.glyphicon-chevron-down {display:inline;}
 /* td: fixed-height */
 table tbody td {white-space:nowrap;}
 table tbody td[tr-ng-grid-body-cell=0] {position:fixed;}
+/*  pagination */
+.panel-footer {padding:2px;height:39px;}
+.pagination {margin:0;}
+.table-stats {float:right;padding:7px 14px;}
 
 /* LOADING BAR */
 #loading-bar-spinner {top:50%;left:50%;margin-left:-17px;margin-top:-17px;}

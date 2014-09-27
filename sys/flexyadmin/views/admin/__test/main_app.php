@@ -49,10 +49,13 @@
 <!-- Angular JS -->
 <script src="sys/__test/public/angular/angular.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/public/angular-route/angular-route.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/public/angular-bootstrap/ui-bootstrap-tpls.min.js" type="text/javascript" charset="utf-8"></script>
 <!-- Angular Modules -->
+<script src="sys/__test/public/angular-toArrayFilter/toArrayFilter.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/public/angular-loading-bar/src/loading-bar.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/public/trNgGrid/release/trNgGrid.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/public/angular-smart-table/dist/smart-table.min.js" type="text/javascript" charset="utf-8"></script>
 <!--FlexyAdmin -->
+<script src="sys/__test/jdb.extend.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexyAdmin.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/modules/flexy-blocks.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/modules/flexy-menu.js" type="text/javascript" charset="utf-8"></script>
