@@ -236,6 +236,21 @@ $config['logout_to_site']=FALSE;
 
 /*
  *--------------------------------------------------------------------------
+ * Cronjobs
+ *--------------------------------------------------------------------------
+ *
+ * Just get the url www.site.com/_cronjobs to run all the set cronjobs.
+ * If server is not capable of running cronjobs set 'simulate_cronjobs'=TRUE and the site will test if it needs to run cronjobs every get of a frontend page
+ *
+ */
+$config['cronjobs'] = array(
+  'cronjob_example' => array('name'=>'cronjob_example','every'=>1),
+);
+$config['simulate_cronjobs'] = FALSE;
+
+
+/*
+ *--------------------------------------------------------------------------
  * Base Site URL
  *--------------------------------------------------------------------------
  *
