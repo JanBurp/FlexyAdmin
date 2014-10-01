@@ -180,7 +180,7 @@ function tr_string($value) {
   $show=has_string('#show#',$value);
   if ($html and !$show) $s=preg_replace('/\s/',' ',htmlentities($value));
   if (!$show) {
-    $s=max_length($s,80,'CHARS');
+    $s=max_length($s,100,'CHARS');
     if ($s!=$value) $s.=' ...';
   }
   if ($show) $s=str_replace('#show#','',$s);
