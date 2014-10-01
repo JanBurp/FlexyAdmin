@@ -23,9 +23,9 @@
 
 
 /**
- * This routing makes sure all uri's go to the frontend site, except uri's beginning with 'admin' and 'rss'
+ * This routing makes sure all uri's go to the frontend site, except soms sysyem uri's
  */
-$route['(?!__api|admin|rss|file)(.*)'] = "";
+$route['(?!__api|admin|rss|file|_cronjob)(.*)'] = "";
 
 /**
  * Api routing (controllers/api/class/args)
