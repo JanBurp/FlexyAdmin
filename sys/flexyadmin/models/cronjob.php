@@ -9,14 +9,12 @@ class Cronjob extends CI_Model {
 	public function go()	{
     if ($this->db->table_exists('cfg_cronjobs')) {
       $this->jobs=$this->config->item('cronjobs');
-      
       foreach ($this->jobs as $key=>$job) {
         $this->jobs[$key] = $this->needs_run($job);
         if ($this->jobs[$key]['needs_run']) {
           $this->jobs[$key]=$this->run($this->jobs[$key]);
         }
       }
-
     }
 	}
   
