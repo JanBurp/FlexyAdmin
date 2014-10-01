@@ -34,9 +34,7 @@ class FrontEndController extends MY_Controller {
    * @var array
    */
 	public $site;
-  
   var $ajax_module = false;
-
 
   /**
     * @ignore
@@ -89,6 +87,12 @@ class FrontEndController extends MY_Controller {
     }
 		// Init global site data
 		$this->_init_globals();
+    
+    // Simulate cronjobs?
+    if ($this->config->item('simulate_cronjobs')) {
+      $this->load->model('cronjob');
+      $this->cronjob->go();
+    }
     
     // Build?
     if ($this->config->item('use_minimized')) {
@@ -414,6 +418,12 @@ class FrontEndController extends MY_Controller {
 	}
 	
 	
+  private function _cronjobs() {
+    
+    
+  }
+  
+  
   /**
    * Geeft de modules die bij huidige pagina horen
    *

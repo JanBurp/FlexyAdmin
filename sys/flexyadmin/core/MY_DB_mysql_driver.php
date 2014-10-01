@@ -870,7 +870,6 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		 * if many, find if a where or like part is referring to a many table
 		 */
 		if ($this->many) {
-      // trace_($this->ar_where);
 			$manyTables=$this->get_many_tables($table,$this->many);
 			$manyWhere=FALSE;
 			$manyLike=FALSE;
@@ -926,7 +925,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 					}
 					else {
 						// if (count($this->ar_where)==0)
-							$this->ar_where[$key]='FALSE ';
+							$this->ar_where[$key]=' ';
 						// else
 						// 	$this->ar_where[$key]=' ';
 					}
