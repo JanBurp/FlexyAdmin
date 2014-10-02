@@ -5,10 +5,16 @@
  * Add sharpen parameter for quality improvement with imagemagick
  *
  */
-class MY_image_lib extends CI_Image_lib {
+class MY_Image_lib extends CI_Image_lib {
 
   // Added by JdB, idea DirkKokx
   var $sharpen      = FALSE;
+
+
+	public function __construct($props = array()) {
+    parent::__construct($props);
+	}
+
 
 	/**
 	 * Image Process Using ImageMagick
@@ -61,6 +67,7 @@ class MY_image_lib extends CI_Image_lib {
       $sharpen='';
       if ($this->sharpen) $sharpen=' -sharpen '.$this->sharpen ;
 			$cmd .= " -resize  ".$this->width."x".$this->height." $sharpen \"$this->full_src_path\" \"$this->full_dst_path\" 2>&1";
+      // strace_($cmd);
 		}
 
 		$retval = 1;
