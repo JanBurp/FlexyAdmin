@@ -1,5 +1,16 @@
 <?php 
 
+
+/**
+ * Dit is een cronjob voorbeeld. Het stuurt een mail om de zoveel tijd.
+ * 
+ * Cronjobs kun je instellen in site/config.php, zie daar voor meer info.
+ *
+ * @package default
+ * @author Jan den Besten
+ */
+
+
 class Cronjob_example extends Module {
 
   public function __construct() {
