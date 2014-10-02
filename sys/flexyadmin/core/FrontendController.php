@@ -89,7 +89,7 @@ class FrontEndController extends MY_Controller {
 		$this->_init_globals();
     
     // Simulate cronjobs?
-    if ($this->config->item('simulate_cronjobs')) {
+    if ($this->config->item('simulate_cronjobs') and $this->uri->segment(1)!='_cronjob') {
       $this->load->model('cronjob');
       $this->cronjob->go();
     }
