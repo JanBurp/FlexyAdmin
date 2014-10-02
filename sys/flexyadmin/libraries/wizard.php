@@ -27,6 +27,8 @@
  * @author Jan den Besten
  */
 class Wizard {
+  
+  private $CI;
 
   /**
    * Stappen van de wizard
@@ -62,6 +64,13 @@ class Wizard {
    * @var string
    */
   private $title='Wizard';
+  
+  /**
+   * Data
+   *
+   * @var string
+   */
+  private $data=array();
 
 
   /**
@@ -72,6 +81,8 @@ class Wizard {
    * @ignore
    */
 	public function __construct($config=array()) {
+    $this->CI=@get_instance();
+    $this->CI->load->library('session');
     $this->initialize($config);
 	}
   
@@ -173,6 +184,30 @@ class Wizard {
       }
     }
     return false;
+  }
+
+
+
+  /**
+   * Saves data from step to step
+   *
+   * @param string $data 
+   * @return void
+   * @author Jan den Besten
+   */
+  public function save_data($data) {
+    $this->CI->session->set_userdata('wizard',$data);
+    return $this;
+  }
+  
+  /**
+   * Gets data from earlier steps
+   *
+   * @return $data array
+   * @author Jan den Besten
+   */
+  public function get_data() {
+    return $this->data=$this->CI->session->userdata('wizard');
   }
 
 
