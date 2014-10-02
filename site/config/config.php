@@ -239,8 +239,12 @@ $config['logout_to_site']=FALSE;
  * Cronjobs
  *--------------------------------------------------------------------------
  *
- * Just get the url www.site.com/_cronjobs to run all the set cronjobs.
- * If server is not capable of running cronjobs set 'simulate_cronjobs'=TRUE and the site will test if it needs to run cronjobs every get of a frontend page
+ * Hier kun je instellen welke cronjobs de site moet uitvoeren en om de hoeveel minuten, of op welk moment van de dag/week/maand/jaar.
+ * Stel je server in dat die om die bepaalde tijd www.site.com/_cronjobs aanroept, en al je cronjobs worden nagelopen of ze hun actie moeten uitvoeren.
+ * Als je op de server geen cronjobs kunt instellen, zet dan 'simulate_cronjobs'=TRUE. Dan wordt bij elke aanroep van de site gekeken of er ook een cronjob moet worden uitgevoerd.
+ * Op die manier kunnen dus ook op gezetten momenten taken worden uitgevoerd. Het kan dan niet worden gegarandeerd dat het moment precies goed is (hoe beter de site wordt bezocht hoe nauwkeuriger).
+ * 
+ * NB Zorg ervoor dat de tabel cfg_cronjobs bestaat (zie db/add_cfg_cronjobs)
  *
  */
 $config['cronjobs'] = array(
