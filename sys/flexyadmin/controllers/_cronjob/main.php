@@ -4,11 +4,11 @@ class Main extends FrontEndController {
 	
 	public function __construct()	{
 		parent::__construct();
-    // $this->load->model('cronjob');
+    $this->load->model('cronjob');
 	}
 
 	public function index()	{
-    // $this->cronjob->go();
+    $this->cronjob->go();
   }
   
 

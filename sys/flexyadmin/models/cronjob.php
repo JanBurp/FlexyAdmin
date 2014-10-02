@@ -40,11 +40,18 @@ class Cronjob extends CI_Model {
     $job['result']=$this->$name->index($job);
     $job['at']=unix_to_mysql(time());
     // store in db
-    $this->db->set(array('str_job'=>$job['name'],'tme_last_run'=>$job['at'],'stx_last_result'=>$job['result']));
-    if (empty($job['last']))
-      $this->db->insert('cfg_cronjobs');
+    if ($job['result']===TRUE) {
+      $this->db->set(array('str_job'=>$job['name'],'tme_last_run'=>$job['at']));
+      if (empty($job['last']))
+        $this->db->insert('cfg_cronjobs');
+      else
+        $this->db->where('str_job',$job['name'])->update('cfg_cronjobs');
+    }
+    // log
+    if (is_string($job['result']))
+      log_message('error', 'FlexyAdmin CRONJOB '.$job['name'].' ERROR: '.$job['result']);
     else
-      $this->db->where('str_job',$job['name'])->update('cfg_cronjobs');
+      log_message('info', 'FlexyAdmin CRONJOB '.$job['name']);
     return $job;
   }
   
