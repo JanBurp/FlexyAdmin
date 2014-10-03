@@ -13,17 +13,34 @@ flexyMenu.process = function(root,menu) {
     'rel'   :{'class':'text-muted','glyphicon':'glyphicon glyphicon-link'}
   };
   var processed = [];
+  var navbar=0;
+  var item=0;
+  processed[navbar]=[];
+  
   for (var i = 0; i < menu.length; i++) {
-    processed[i]=menu[i];
-    processed[i].href   = root + '#/' + menu[i].uri;
-    processed[i].class  = 'menu-type-'+menu[i].type;
-    processed[i].glyphicon = '';
-    var thisClass=classes[menu[i].type];
-    if (angular.isDefined(thisClass)) {
-      processed[i].class += ' '+thisClass.class;
-      processed[i].glyphicon = thisClass.glyphicon;
+    // seperator starts new navbar
+    if (menu[i].type=='seperator') {
+      // only if not the first
+      if (processed[navbar].length>0) {
+        navbar++;
+        processed[navbar]=[];
+        item=0;
+      }
+    }
+    else {
+      processed[navbar][item]=menu[i];
+      processed[navbar][item].href   = root + '#/' + menu[i].uri;
+      processed[navbar][item].class  = 'menu-type-'+menu[i].type;
+      processed[navbar][item].glyphicon = '';
+      var thisClass=classes[menu[i].type];
+      if (angular.isDefined(thisClass)) {
+        processed[navbar][item].class += ' '+thisClass.class;
+        processed[navbar][item].glyphicon = thisClass.glyphicon;
+      }
+      item++;
     }
   }
+  
   return processed;
 }    
 

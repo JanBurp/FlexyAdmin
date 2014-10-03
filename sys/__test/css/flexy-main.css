@@ -10,6 +10,7 @@ body {padding:62px 0;}
 header, footer {min-height:34px;max-height:48px;}
 .navbar-text {margin-top:7px;margin-bottom:7px;height:34px;max-height:34px;}
 .nav > li > a {text-transform:uppercase;}
+.flexy-menu.navbar {min-height:0px;}
 
 
 /* SIDEBAR MENU: smaller items & padding glyphs */
