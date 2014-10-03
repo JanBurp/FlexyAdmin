@@ -36,3 +36,17 @@
 .flexy-grid th.medias, .flexy-grid td.medias {min-width:120px;max-width:600px;}
 .flexy-grid th.tme, .flexy-grid td.tme {max-width:none; width:130px;}
 .flexy-grid th.rgb, .flexy-grid td.rgb {min-width:25px;max-width:50px;}
+
+
+/* ng-sortable css file */
+.sortable-item,.sortable-placeholder {}
+.sortable-item {}
+.sortable-handle {cursor:move}
+.sortable-placeholder{display:block;}
+.sortable-drag{
+  position:absolute;
+	pointer-events:none;
+/*  opacity:.8;*/
+	z-index:99999;
+}
+.sortable-hidden{display:none!important}

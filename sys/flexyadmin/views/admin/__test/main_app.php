@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="sys/__test/external/bootstrap/dist/css/bootstrap-theme.min.css" type="text/css" media="screen" title="no title" charset="utf-8">
   <!--Angular modules -->
   <link rel="stylesheet" href="sys/__test/external/angular-loading-bar/src/loading-bar.css" type="text/css" media="screen" title="no title" charset="utf-8">
+  <!-- <link rel="stylesheet" href="sys/__test/external/ng-sortable/dist/ng-sortable.min.css" type="text/css" media="screen" title="no title" charset="utf-8"> -->
   <!--FlexyAdmin -->
   <link rel="stylesheet" href="sys/__test/css/flexy-main.css" type="text/css" media="screen" title="no title" charset="utf-8">
   <link rel="stylesheet" href="sys/__test/css/flexy-grid.css" type="text/css" media="screen" title="no title" charset="utf-8">
@@ -48,10 +49,13 @@
 <script src="sys/__test/external/angular/angular.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/external/angular-route/angular-route.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/external/angular-bootstrap/ui-bootstrap-tpls.min.js" type="text/javascript" charset="utf-8"></script>
+
 <!-- Angular Modules -->
 <script src="sys/__test/external/angular-toArrayFilter/toArrayFilter.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/external/angular-loading-bar/src/loading-bar.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/external/angular-smart-table/dist/smart-table.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/external/ng-sortable/dist/ng-sortable.min.js" type="text/javascript" charset="utf-8"></script>
+
 <!--FlexyAdmin -->
 <script src="sys/__test/jdb.extend.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexyAdmin.js" type="text/javascript" charset="utf-8"></script>
