@@ -4,6 +4,24 @@ flexyAdmin.controller('GridController', ['$scope','$routeParams','$http', functi
   $scope.table = $routeParams.table;
   
   $scope.sortableOptions = {
+    dragStart : function(obj) {
+      // Preserve width of the elements, first get width of headers
+      var element=obj.source.itemScope.element;
+      angular.element(element).addClass('bg-primary');
+      var cells = element.find('td');
+      var header=angular.element(document.querySelector('.flexy-grid thead'));
+      var thCells = header.find('th');
+      var widths = [];
+      angular.forEach(thCells, function(cell, key) {
+        widths.push(cell.offsetWidth+"px"); // 2px less = border
+      });
+      // set cell widths
+      var i=0;
+      angular.forEach(cells, function(cell, key) {
+        angular.element(cell).css({'width':widths[i]});
+        i++;
+      });
+    },
     // accept: function (sourceItemHandleScope, destSortableScope) {return true},
     // itemMoved: function (event) {},
     // orderChanged: function(event) {},
@@ -24,6 +42,8 @@ flexyAdmin.controller('GridController', ['$scope','$routeParams','$http', functi
     'totalItems'    : 0,
     'totalPages'    : 0
   };
+  //
+  $scope.cellWidths = [];
   
   // LOAD FROM SERVER
   $scope.callServer = function(tableState) {
