@@ -1,0 +1,24 @@
+/* Needed for UI-Angular */
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+
+
+/* BODY: paddings for fixed header/footer */
+body {padding:62px 0;}
+
+
+/* NAVBAR in HEADER & FOOTER smaller-uppercase */
+header, footer {min-height:34px;max-height:48px;}
+.navbar-text {margin-top:7px;margin-bottom:7px;height:34px;max-height:34px;}
+.nav > li > a {text-transform:uppercase;}
+
+
+/* SIDEBAR MENU: smaller items & padding glyphs */
+.menu-side li a {padding:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.menu-side li a .glyphicon {margin-right:7px;}
+
+
+/* LOADING BAR */
+#loading-bar-spinner {top:50%;left:50%;margin-left:-17px;margin-top:-17px;}
+#loading-bar-spinner .spinner-icon {width: 34px;height: 34px;border:solid 3px transparent;border-top-color:#CCC;border-left-color:#CCC;border-radius: 17px;}
+
+
