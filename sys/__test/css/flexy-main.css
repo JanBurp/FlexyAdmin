@@ -23,3 +23,5 @@ header, footer {min-height:34px;max-height:48px;}
 #loading-bar-spinner .spinner-icon {width: 34px;height: 34px;border:solid 3px transparent;border-top-color:#CCC;border-left-color:#CCC;border-radius: 17px;}
 
 
+/* GENERAL */
+.action-move {cursor:move;}

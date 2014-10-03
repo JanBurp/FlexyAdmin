@@ -14,7 +14,7 @@
       
       <thead>
         <tr>
-          <th class="edit"><div class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus"></span></div></th>
+          <th class="edit"><div class="btn btn-primary btn-xs action-new"><span class="glyphicon glyphicon-plus"></span></div></th>
           <th ng-if="grid.table_info.sortable" ng-repeat="field in grid.field_info | toArray" st-sort="{{field.field}}" class="{{field.type}} {{field.field}}">{{field.ui_name}}
             <span class="glyphicon glyphicon-chevron-up"></span>
             <span class="glyphicon glyphicon-chevron-down"></span>
@@ -24,16 +24,20 @@
       </thead>
       
       <tbody data-sortable="sortableOptions" ng-model="grid.items">
+        
         <tr ng-repeat="row in grid.displayedItems" data-sortable-item>
           <td class="edit">
             <div class="btn-group btn-group-xs">
-              <div class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></div>
-              <div class="btn btn-default"><span class="glyphicon glyphicon-remove"></span></div>
-              <div ng-if="!grid.table_info.sortable" data-sortable-item-handle class="btn btn-default"><span class="glyphicon glyphicon-resize-vertical"></span></div>
+              <div class="btn btn-primary action-edit"><span class="glyphicon glyphicon-pencil"></span></div>
+              <div class="btn btn-danger action-remove"><span class="glyphicon glyphicon-remove"></span></div>
+            </div>
+            <div class="btn-group btn-group-xs" ng-if="!grid.table_info.sortable" data-sortable-item-handle>
+              <div class="btn btn-warning action-move"><span class="glyphicon glyphicon-resize-vertical"></span></div>
             </div>
           </td>
           <td ng-repeat="key in keys(row)" class="{{grid.field_info[key].type}} {{key}}">{{row[key]}}</td>
         </tr>
+        
       </tbody>
       
     </table>

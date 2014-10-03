@@ -26,7 +26,9 @@
 /* TABLE COLUMNS */
 .flexy-grid th, .flexy-grid td {max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 /*.flexy-grid th {white-space:normal;}*/
-.flexy-grid th.edit, .flexy-grid td.edit {min-width:83px;}
+.flexy-grid th.edit, .flexy-grid td.edit {min-width:87px;width:87px;text-overflow:clip;}
+.flexy-grid .table-sortable th.edit, .flexy-grid .table-sortable td.edit {min-width:58px;width:58px;}
+
 .flexy-grid th.id, td.id {display:none;}
 .flexy-grid th.uri, td.uri {display:none;}
 .flexy-grid th.str_title, .flexy-grid td.str_title {max-width:none;text-overflow:inherit;}
@@ -42,11 +44,24 @@
 .sortable-item,.sortable-placeholder {}
 .sortable-item {}
 .sortable-handle {cursor:move}
-.sortable-placeholder{display:block;}
+.sortable-placeholder {display:block;}
 .sortable-drag{
   position:absolute;
 	pointer-events:none;
-/*  opacity:.8;*/
+  overflow:hidden;
 	z-index:99999;
 }
+.sortable-drag td {
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  display:block;
+  height:34px;
+  margin:0px;
+  float:left;
+  clear:none;
+  /* from bootstrap */
+  border-right: 1px solid #DDD;
+  padding:5px;
+}
+.sortable-drag td.id, .sortable-drag td.uri {display:none;}
+
 .sortable-hidden{display:none!important}
