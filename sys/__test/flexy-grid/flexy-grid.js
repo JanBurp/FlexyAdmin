@@ -3,6 +3,13 @@ flexyAdmin.controller('GridController', ['$scope','$routeParams','$http', functi
   // URI PARAMS
   $scope.table = $routeParams.table;
   
+  $scope.sortableOptions = {
+    // accept: function (sourceItemHandleScope, destSortableScope) {return true},
+    // itemMoved: function (event) {},
+    // orderChanged: function(event) {},
+    containment: '.flexy-grid tbody'
+  };
+  
   // INIT DATA
   $scope.grid = {
     'table_info'      : {},
