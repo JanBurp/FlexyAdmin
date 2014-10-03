@@ -76,11 +76,11 @@ flexyAdmin.config( function($routeProvider){
   $routeProvider
     .when('/grid/:table',{
       controller  : 'GridController',
-      templateUrl : 'sys/__test/views/grid.html'
+      templateUrl : 'sys/__test/flexy-grid/flexy-grid.html'
     })
     .when('/form/:table/:id',{
       controller  : 'FormController',
-      templateUrl : 'sys/__test/views/form.html'
+      templateUrl : 'sys/__test/flexy-form/flexy-form.html'
     })
     // .when('/plugin/:plugin',{
     //   controller  : 'PluginController',

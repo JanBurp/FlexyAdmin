@@ -1,0 +1,38 @@
+/* FLEXY-GRID */
+
+/* HEADER */
+.flexy-grid .panel-heading {height:42px;overflow:hidden;padding:7px 5px;}
+.flexy-grid .panel-heading h3 {text-transform:uppercase;margin:0 1rem;}
+.flexy-grid .panel-heading form {margin-top:-2px;}
+.flexy-grid .panel-heading input {padding-left:30px;}
+.flexy-grid .panel-heading .glyphicon {left:0;}
+
+/* Scrollable table (panel) */
+.flexy-grid .panel-content {overflow:auto;}
+.flexy-grid table {margin:0;}
+/* th */
+.flexy-grid th {text-transform:uppercase;}
+.flexy-grid th>span.glyphicon {display:none;}
+.flexy-grid th.st-sort-ascent span.glyphicon-chevron-up {display:inline;}
+.flexy-grid th.st-sort-descent span.glyphicon-chevron-down {display:inline;}
+/* td: fixed-height */
+.flexy-grid tbody td {white-space:nowrap;}
+.flexy-grid tbody td[tr-ng-grid-body-cell=0] {position:fixed;}
+/*  pagination */
+.flexy-grid .panel-footer {padding:2px;height:39px;}
+.flexy-grid .pagination {margin:0;}
+.flexy-grid .table-stats {float:right;padding:7px 14px;}
+
+/* TABLE COLUMNS */
+.flexy-grid th, .flexy-grid td {max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+/*.flexy-grid th {white-space:normal;}*/
+.flexy-grid th.edit, .flexy-grid td.edit {min-width:83px;}
+.flexy-grid th.id, td.id {display:none;}
+.flexy-grid th.uri, td.uri {display:none;}
+.flexy-grid th.str_title, .flexy-grid td.str_title {max-width:none;text-overflow:inherit;}
+.flexy-grid th.txt, .flexy-grid td.txt {max-width:350px;}
+.flexy-grid th.media, .flexy-grid td.media,
+.flexy-grid th.rgb, .flexy-grid td.rgb {text-align:center;width:52px;max-width:52px; }
+.flexy-grid th.medias, .flexy-grid td.medias {min-width:120px;max-width:600px;}
+.flexy-grid th.tme, .flexy-grid td.tme {max-width:none; width:130px;}
+.flexy-grid th.rgb, .flexy-grid td.rgb {min-width:25px;max-width:50px;}
