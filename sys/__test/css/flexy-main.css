@@ -24,4 +24,6 @@ header, footer {min-height:34px;max-height:48px;}
 
 
 /* GENERAL */
+.hidden {display:none;}
+
 .action-move {cursor:move;}
