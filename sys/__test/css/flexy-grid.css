@@ -43,24 +43,24 @@
 .flexy-grid th.rgb, .flexy-grid td.rgb {min-width:25px;max-width:50px;}
 
 /* tree, branches & nodes */
-.flexy-grid tbody tr.flexy-tree-node[tree-level="1"] td.str_title {padding-left:2rem;}
-.flexy-grid tbody tr.flexy-tree-node[tree-level="2"] td.str_title {padding-left:3rem;}
-.flexy-grid tbody tr.flexy-tree-node[tree-level="3"] td.str_title {padding-left:4rem;}
-.flexy-grid tbody tr.flexy-tree-node[tree-level="4"] td.str_title {padding-left:5rem;}
-.flexy-grid tbody tr.flexy-tree-node[tree-level="5"] td.str_title {padding-left:6rem;}
-.flexy-grid tbody tr.flexy-tree-node[tree-level="6"] td.str_title {padding-left:7rem;}
-.flexy-grid tbody tr.flexy-tree-node[tree-level="7"] td.str_title {padding-left:8rem;}
-.flexy-grid tbody td.str_title .glyphicon {display:none;}
-.flexy-grid tbody tr.flexy-tree-branch td.str_title .flexy-grid-branch-expanded {display:inline;}
-.sortable-drag tr.flexy-tree-node[tree-level="1"] td.str_title {padding-left:2rem;}
-.sortable-drag tr.flexy-tree-node[tree-level="2"] td.str_title {padding-left:3rem;}
-.sortable-drag tr.flexy-tree-node[tree-level="3"] td.str_title {padding-left:4rem;}
-.sortable-drag tr.flexy-tree-node[tree-level="4"] td.str_title {padding-left:5rem;}
-.sortable-drag tr.flexy-tree-node[tree-level="5"] td.str_title {padding-left:6rem;}
-.sortable-drag tr.flexy-tree-node[tree-level="6"] td.str_title {padding-left:7rem;}
-.sortable-drag tr.flexy-tree-node[tree-level="7"] td.str_title {padding-left:8rem;}
-.sortable-drag td.str_title .glyphicon {display:none;}
-.sortable-drag tr.flexy-tree-branch td.str_title .flexy-grid-branch-collapsed {display:inline;}
+.flexy-grid tbody tr.flexy-tree-node td.str_title {background-image:url('../img/tree_lastnode.gif');background-repeat:no-repeat;}
+.flexy-grid tbody tr.flexy-tree-node[tree-level="1"] td.str_title {padding-left:2rem;background-position:0rem .5rem;}
+.flexy-grid tbody tr.flexy-tree-node[tree-level="2"] td.str_title {padding-left:3rem;background-position:1rem .5rem;}
+.flexy-grid tbody tr.flexy-tree-node[tree-level="3"] td.str_title {padding-left:4rem;background-position:2rem .5rem;}
+.flexy-grid tbody tr.flexy-tree-node[tree-level="4"] td.str_title {padding-left:5rem;background-position:3rem .5rem;}
+.flexy-grid tbody tr.flexy-tree-node[tree-level="5"] td.str_title {padding-left:6rem;background-position:4rem .5rem;}
+.flexy-grid tbody tr.flexy-tree-node[tree-level="6"] td.str_title {padding-left:7rem;background-position:5rem .5rem;}
+.flexy-grid tbody tr.flexy-tree-node[tree-level="7"] td.str_title {padding-left:8rem;background-position:6rem .5rem;}
+
+.sortable-drag tr.flexy-tree-node td.str_title {background-image:url('../img/tree_lastnode.gif');background-repeat:no-repeat;}
+.sortable-drag tr.flexy-tree-node[tree-level="1"] td.str_title {padding-left:2rem;background-position:0rem .5rem;}
+.sortable-drag tr.flexy-tree-node[tree-level="2"] td.str_title {padding-left:3rem;background-position:1rem .5rem;}
+.sortable-drag tr.flexy-tree-node[tree-level="3"] td.str_title {padding-left:4rem;background-position:2rem .5rem;}
+.sortable-drag tr.flexy-tree-node[tree-level="4"] td.str_title {padding-left:5rem;background-position:3rem .5rem;}
+.sortable-drag tr.flexy-tree-node[tree-level="5"] td.str_title {padding-left:6rem;background-position:4rem .5rem;}
+.sortable-drag tr.flexy-tree-node[tree-level="6"] td.str_title {padding-left:7rem;background-position:5rem .5rem;}
+.sortable-drag tr.flexy-tree-node[tree-level="7"] td.str_title {padding-left:8rem;background-position:6rem .5rem;}
+
 
 
 /* ng-sortable css file */

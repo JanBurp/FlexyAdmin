@@ -25,10 +25,13 @@ flexyAdmin.controller('GridController', ['$scope','$routeParams','$http', functi
   $scope.dragged_nodes = [];
   $scope.sortableOptions = {
     containment: '.flexy-grid tbody',
-    
+
+    /**
+     * START DRAGGING
+     * preserve width of drag handler
+     * if branch, hide nodes and remember them
+     */
     dragStart : function(obj) {
-      console.log('dragStart');
-      
       var row=obj.source.itemScope.element;
       var table=angular.element(document.querySelector('.flexy-grid.'+$scope.table+' table'));
 
@@ -67,8 +70,69 @@ flexyAdmin.controller('GridController', ['$scope','$routeParams','$http', functi
       angular.element(row).addClass('bg-primary');
     },
     
+    /**
+     * ORDER HAS CHANGED
+     * if branch, make sure nodes are on right place and determine new level & parent
+     */
+    orderChanged : function(obj) {
+      var row=obj.source.itemScope.element;
+      var new_index=obj.dest.index;
+      var needsUpdate=false;
+      var number_of_nodes = $scope.dragged_nodes.length;
+      var old_level=obj.dest.sortableScope.modelValue[new_index]._info['level'];
+      var new_level=0;
+      var new_parent_id=0;
+      
+      // if tree, UPDATE LEVEL
+      if ($scope.grid.table_info.tree) {
+        // level=0 except when the next item has a higher level: use that level and parent
+        var next_index=new_index+1;
+        var number_of_items=obj.dest.sortableScope.modelValue.length;
+        if (next_index<number_of_items) {
+          var next_item=obj.dest.sortableScope.modelValue[next_index];
+          new_level=next_item._info['level'];
+          new_parent_id=next_item._info['self_parent'];
+        }
+        // save in item
+        obj.dest.sortableScope.modelValue[new_index]._info['level']=new_level;
+        if (new_level==0) obj.dest.sortableScope.modelValue[new_index]._info['is_node']=false;
+        if (new_level>0) obj.dest.sortableScope.modelValue[new_index]._info['is_node']=true;
+        obj.dest.sortableScope.modelValue[new_index].self_parent=new_parent_id;
+        needsUpdate=true;
+      }
+      
+      // if tree, MOVE dragged NODES after new index
+      if ($scope.grid.table_info.tree && number_of_nodes>0) {
+        var level_diff = old_level-new_level;
+        var old_index=obj.source.index;
+        var old_nodes_index = old_index + 1;
+        var new_nodes_indes = new_index + 1;
+        // doit
+        var moving_node={};
+        for (var i = 0; i < number_of_nodes; i++) {
+          // copy node
+          moving_node = obj.dest.sortableScope.modelValue[old_nodes_index+i];
+          // adjust level
+          moving_node._info['level']-=level_diff;
+          // remove node from list
+          obj.dest.sortableScope.removeItem(old_nodes_index+i);
+          // add node after new index
+          obj.source.itemScope.sortableScope.insertItem(new_index+1+i, moving_node);
+        }
+        needsUpdate=true;
+      }
+      
+      if (needsUpdate) {
+        // update grid.displayedItems
+        $scope.grid.displayedItems = [].concat($scope.grid.items);
+      }
+    },
+    
+    /**
+     * DRAG END
+     * if branch show nodes again
+     */
     dragEnd: function (obj) {
-      console.log('dragEnd');
       var row=obj.source.itemScope.element;
       // Tree? show hidden nodes again
       if ($scope.grid.table_info.tree && row.hasClass('flexy-tree-branch')) {
@@ -80,31 +144,6 @@ flexyAdmin.controller('GridController', ['$scope','$routeParams','$http', functi
       }
     },
     
-    orderChanged : function(obj) {
-      console.log('orderChanged',obj);
-      var row=obj.source.itemScope.element;
-      // Tree? move dragged nodes after new index
-      if ($scope.grid.table_info.tree && row.hasClass('flexy-tree-branch')) {
-        var old_index=obj.source.index;
-        var new_index=obj.dest.index;
-        var number_of_nodes = $scope.dragged_nodes.length;
-        var old_nodes_index = old_index + 1;
-        var new_nodes_indes = new_index + 1;
-        // doit
-        console.log('MOVING',old_index,new_index,number_of_nodes);
-        var moving_node={};
-        for (var i = 0; i < number_of_nodes; i++) {
-          // copy node
-          moving_node = obj.dest.sortableScope.modelValue[old_nodes_index+i];
-          // remove node from list
-          obj.dest.sortableScope.removeItem(old_nodes_index+i);
-          // add node after new index
-          obj.source.itemScope.sortableScope.insertItem(new_index+1+i, moving_node);
-        }
-        // update grid.displayedItems
-        $scope.grid.displayedItems = [].concat($scope.grid.items);
-      }
-    },
     
     // accept: function (sourceItemHandleScope, destSortableScope) {return true},
     // orderChanged: function(event) {},
