@@ -35,7 +35,11 @@
               <div class="btn btn-warning action-move"><span class="glyphicon glyphicon-resize-vertical"></span></div>
             </div>
           </td>
-          <td ng-repeat="key in keys(row)" class="{{grid.field_info[key].type}} {{key}}">{{row[key]}}</td>
+          <td ng-repeat="key in keys(row)" class="{{grid.field_info[key].type}} {{key}}">
+            <span ng-if="grid.table_info.tree && key=='str_title'" class="flexy-grid-branch-expanded glyphicon glyphicon-chevron-down"></span>
+            <span ng-if="grid.table_info.tree && key=='str_title'" class="flexy-grid-branch-collapsed glyphicon glyphicon-chevron-right"></span>
+            <span class="flexy-grid-celldata">{{row[key]}}</span>
+          </td>
         </tr>
         
       </tbody>
