@@ -1,4 +1,4 @@
-<div class="panel panel-primary flexy-grid" st-table="grid.displayedItems" st-safe-src="grid.items">
+<div class="panel panel-primary flexy-grid {{table}}" st-table="grid.displayedItems" st-safe-src="grid.items">
 
   <div class="panel-heading panel-title">
     <h3 class="pull-left">{{grid.table_info.ui_name}}</h3>
@@ -23,15 +23,15 @@
         </tr>
       </thead>
       
-      <tbody data-sortable="sortableOptions" ng-model="grid.items">
+      <tbody sortable="sortableOptions" ng-model="grid.items">
         
-        <tr ng-repeat="row in grid.displayedItems" data-sortable-item>
+        <tr ng-repeat="row in grid.displayedItems" ng-class="{'flexy-tree-branch':row._info.is_branch, 'flexy-tree-node':row._info.is_node}" tree-level="{{row._info.level}}" id="{{row.id}}" sortable-item>
           <td class="edit">
             <div class="btn-group btn-group-xs">
               <div class="btn btn-primary action-edit"><span class="glyphicon glyphicon-pencil"></span></div>
               <div class="btn btn-danger action-remove"><span class="glyphicon glyphicon-remove"></span></div>
             </div>
-            <div class="btn-group btn-group-xs" ng-if="!grid.table_info.sortable" data-sortable-item-handle>
+            <div class="btn-group btn-group-xs" ng-if="!grid.table_info.sortable" sortable-item-handle>
               <div class="btn btn-warning action-move"><span class="glyphicon glyphicon-resize-vertical"></span></div>
             </div>
           </td>

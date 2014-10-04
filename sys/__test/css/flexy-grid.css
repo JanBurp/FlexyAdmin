@@ -24,13 +24,15 @@
 .flexy-grid .table-stats {float:right;padding:7px 14px;}
 
 /* TABLE COLUMNS */
-.flexy-grid th, .flexy-grid td {max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-/*.flexy-grid th {white-space:normal;}*/
+.flexy-grid th, .flexy-grid td {max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background-repeat:no-repeat;}
 .flexy-grid th.edit, .flexy-grid td.edit {min-width:87px;width:87px;text-overflow:clip;}
-.flexy-grid .table-sortable th.edit, .flexy-grid .table-sortable td.edit {min-width:58px;width:58px;}
+.flexy-grid .table-sortable th.edit, .flexy-grid .table-sortable td.edit {min-width:59px;width:59px;}
 
-.flexy-grid th.id, td.id {display:none;}
-.flexy-grid th.uri, td.uri {display:none;}
+.flexy-grid th.id, .flexy-grid td.id, .sortable-drag td.id,
+.flexy-grid th.uri, .flexy-grid td.uri, .sortable-drag td.uri,
+.flexy-grid th.order, .flexy-grid td.order, .sortable-drag td.order,
+.flexy-grid th.self_parent, .flexy-grid td.self_parent, .sortable-drag td.self_parent,
+.flexy-grid td._info {display:none;}
 .flexy-grid th.str_title, .flexy-grid td.str_title {max-width:none;text-overflow:inherit;}
 .flexy-grid th.txt, .flexy-grid td.txt {max-width:350px;}
 .flexy-grid th.media, .flexy-grid td.media,
@@ -39,6 +41,15 @@
 .flexy-grid th.tme, .flexy-grid td.tme {max-width:none; width:130px;}
 .flexy-grid th.rgb, .flexy-grid td.rgb {min-width:25px;max-width:50px;}
 
+/* tree, branches & nodes */
+tr.flexy-tree-node td.str_title {background-image:url('../img/tree_lastnode.gif');background-position:0px 8px;}
+tr.flexy-tree-node[tree-level="1"] td.str_title {padding-left:2rem;background-position:0rem 8px;}
+tr.flexy-tree-node[tree-level="2"] td.str_title {padding-left:3rem;background-position:1rem 8px;}
+tr.flexy-tree-node[tree-level="3"] td.str_title {padding-left:4rem;background-position:2rem 8px;}
+tr.flexy-tree-node[tree-level="4"] td.str_title {padding-left:5rem;background-position:3rem 8px;}
+tr.flexy-tree-node[tree-level="5"] td.str_title {padding-left:6rem;background-position:4rem 8px;}
+tr.flexy-tree-node[tree-level="6"] td.str_title {padding-left:7rem;background-position:5rem 8px;}
+tr.flexy-tree-node[tree-level="7"] td.str_title {padding-left:8rem;background-position:6rem 8px;}
 
 /* ng-sortable css file */
 .sortable-item,.sortable-placeholder {}
@@ -62,6 +73,4 @@
   border-right: 1px solid #DDD;
   padding:5px;
 }
-.sortable-drag td.id, .sortable-drag td.uri {display:none;}
-
 .sortable-hidden{display:none!important}
