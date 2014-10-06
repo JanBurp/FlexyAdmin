@@ -21,6 +21,7 @@
  * - remove_sizes           - [FALSE] width en height attributen van img tags worden verwijderd (zodat met css styling kan worden ingegrepen)
  * - replace_language_links - [FALSE] Links die beginnen met een taal, bijvoorbeeld _nl/contact_ worden vervangen worden door links met de juiste taal bv: _en/contact_
  * - replace_soft_hyphens   - [FALSE] Soft Hyphens karakters (standaard [-]) worden vervangen door de HTML entity: &#173;
+ * - custom                 - [FALSE] array('search'=>'','replace'=>''). Voeg hier een custom search & replace toe voor de content. Als regex.
  * 
  * Deze class is standaard geladen in de frontend en wordt door de controller gebruikt bij het renderen van de tekst van een pagina.
  * Zo roep je deze class aan:
@@ -49,6 +50,7 @@ class Content {
     // 'replace_language_links' => array('search'=>'','replace'=>''),
     'replace_soft_hyphens'   => false,
     // 'replace_soft_hyphens'   => '[-]',
+    'custom'             => false,
   );
 	
 	private $div_count;
@@ -285,6 +287,12 @@ class Content {
         $txt = preg_replace("/(<img[^>]*style=['|\"].*)(width:.*;)/uiUm", "$1", $txt);
         $txt = preg_replace("/(<img[^>]*style=['|\"].*)(height:.*;)/uiUm", "$1", $txt);
         $txt = preg_replace("/(<img[^>]*)(style=['|\"]\s['|\"])/uiUm", "$1", $txt);
+      }
+      
+      if ($this->settings['custom']) {
+        $search=$this->settings['custom']['search'];
+        $replace=$this->settings['custom']['replace'];
+        $txt=str_replace($search,$replace,$txt);
       }
       
     }
