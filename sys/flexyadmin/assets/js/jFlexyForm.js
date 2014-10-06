@@ -14,7 +14,6 @@ Array.prototype.unique = function(){
 
 function doForm() {
 
-
 	// prevent leaving form page when not saved
 	(function($) {
 		$.prevent_leaving_unsaved_page = function(options) {
@@ -128,6 +127,8 @@ function doForm() {
 		$('.flexyFormField.dropdown.has_button .ui-multiselect-menu').css({width:428});
 		$('.flexyFormField.image_dropdown.multiple ul.values').css({width:425,position:'relative'});
 		$('.flexyFormField.image_dropdown button.ui-multiselect').css({width:420,height:38,'float':'right','margin-top':-42});
+		$('.flexyFormField.rgb .ui-multiselect').css({width:100});
+		$('.flexyFormField.rgb .ui-multiselect-menu').css({width:100});
 	}
 
 		
@@ -159,7 +160,7 @@ function doForm() {
 	//
 	// ColorPicker dialog
 	//
-	$("form input.rgb").each(function(){
+	$("form input.rgb").add('form select.rgb').each(function(){
 		var color=$(this).val();
 		$(this).after('<div class="rgbColor" style="background-color:'+color+';" color="'+color+'"></div>');
 		$(this).change(function(){
@@ -185,6 +186,27 @@ function doForm() {
 				}
 			});
 		}).trigger('click');
+    
+    var options=$('option',this);
+    if (options.length>0) {
+      // color the options
+      $.each(options,function(index,option){
+        var color=$(option).val();
+        $(option).css({'background-color':color});
+      });
+      // nice dropdown options
+      var options=$('.ui-multiselect-checkboxes li');
+      $.each(options,function(index,option){
+        var color=$('label',option).attr('title');
+        $('label',option).css({'background-color':color});
+      });
+      
+      
+      
+      
+    }
+    
+    
 	});
 	
 	
