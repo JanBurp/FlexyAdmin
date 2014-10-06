@@ -132,6 +132,7 @@ class Fill extends AdminController {
                 case 'time':
                   $result=rand(0,23).':'.rand(0,59).':'.rand(0,59);
                   break;
+                case 'rgb':
                 case 'str':
                   $result='';
                   if ($field=='str_video') {
