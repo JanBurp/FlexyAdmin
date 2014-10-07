@@ -1,4 +1,6 @@
 flexyAdmin.controller('GridController', ['$scope','$routeParams','$http', function($scope,$routeParams,$http) {
+  
+  var self=this;
 
   // URI PARAMS
   $scope.table = $routeParams.table;
