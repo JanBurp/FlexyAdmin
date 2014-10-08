@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html data-ng-app="flexyAdmin">
 <head>
-	<meta http-equiv="Content-Type" content="text/html" charset="utf8" />
+	<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
 	<base href="<?=base_url()?>" />
 
 	<title>FlexyAdmin with AngularJS</title>
