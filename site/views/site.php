@@ -12,7 +12,7 @@
  */
 ?><!DOCTYPE html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html" charset="utf8" />
+  <meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
   <base href="<?=base_url()?>" />
   <title><?=ascii_to_entities($title);?></title>
   <link rel="shortcut icon" href="<?=$assets?>img/favicon.ico" type="image/x-icon" />
