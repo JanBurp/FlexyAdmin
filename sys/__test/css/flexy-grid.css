@@ -1,12 +1,10 @@
 /* FLEXY-GRID */
 
-/* HEADER */
-.flexy-grid .panel-heading {height:42px;overflow:hidden;padding:7px 5px;}
-.flexy-grid .panel-heading h3 {text-transform:uppercase;margin:0 1rem;}
+/* HEADER & PANEL */
 .flexy-grid .panel-heading form {margin-top:-2px;}
 .flexy-grid .panel-heading input {padding-left:30px;}
 .flexy-grid .panel-heading .glyphicon {left:0;}
-
+.flexy-grid .panel-content {padding:0;}
 /* Scrollable table (panel) */
 .flexy-grid .panel-content {overflow:auto;}
 .flexy-grid table {margin:0;}
@@ -96,4 +94,5 @@
   border-right: 1px solid #DDD;
   padding:5px;
 }
+.sortable-drag span.flexy-grid-unselected {display:none;}
 .sortable-hidden{display:none!important}
