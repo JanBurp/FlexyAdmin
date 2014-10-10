@@ -1,19 +1,78 @@
 flexyAdmin.controller('GridController', ['$scope','$routeParams','$http', function($scope,$routeParams,$http) {
   
+  /**
+   * GLOBAL GRID PARAMS
+   */
   var self=this;
-
-  // OVERALL PARAMS
   $scope.table = $routeParams.table;
   $scope.has_selection = false;
   
-  // INIT DATA
+  /**
+   * GRID DATA
+   */
   $scope.grid = {
+    /**
+     * Information about the table, will have:
+     *  
+     * table_info = { 
+     *  table:        'string with table name',
+     *  ui_name:      'name for table in user interface'
+     *  str_order_by: 'fieldname DESC',
+     *  sortable:     TRUE/FALSE if the data is sortable by the user   
+     *  tree:         TRUE/FALSE if the data is in a tree (with a parent id)
+     * }
+     * 
+     */
     'table_info'      : {},
+    
+    /**
+     * Information about the fields
+     * field_info = [
+     *  'field_name' : { 
+     *                  field:        'string with field name',
+     *                  table:        'string with table name where the field in de database exists',
+     *                  ui_name:      'name for field in user interface'
+     *                  editable:     TRUE/FALSE if the value in the field can be editted by the user
+     *                  incomplete:   TRUE/FALSE if the data that is loaded is incomplete (needs to be loaded before editting), for large data
+     *                  info: {
+     *                    b_show_in_grid:         TRUE/FALSE,
+     *                    b_show_in_form:         TRUE/FALSE,
+     *                    str_show_in_form_where: '',
+     *                    str_fieldset:           '',
+     *                    b_editable_in_grid:     TRUE/FALSE,
+     *                    str_options:            '',
+     *                    b_multi_options:        TRUE/FALSE,
+     *                    b_ordered_options:      TRUE/FALSE,
+     *                    str_options_where:      '',
+     *                    str_validation_rules:   '',
+     *                    str_validation_parameters: ''
+     *                  }
+     * }]
+     */
     'field_info'      : {},
+
+    /**
+     * The data rows itself = [
+     *  id  : {
+     *    [... fields : value, ]
+     *    _info : {
+     *              is_branch:  TRUE/FALSE,
+     *              is_node:    TRUE/FALSE,
+     *              level:      0
+     *            }
+     * }]
+     */
     'items'           : [],
+    
+    /**
+     * References of the data: https://lorenzofox3.github.io/smart-table-website/#section-intro stSafeSrc attribute
+     */
     'displayedItems'  : []
   };
-  // PAGINATION
+  
+  /**
+   * PAGINATION
+   */
   $scope.pagination = {
     'itemsPerPage'  : 10,
     'displayedPages': 7,
@@ -21,9 +80,16 @@ flexyAdmin.controller('GridController', ['$scope','$routeParams','$http', functi
     'totalPages'    : 0
   };
   
+  
+  
+
+
 
   /**
-   * SORTABLE
+   * METHODS FOR ngSortable
+   * 
+   * Mainly for dragging in tree's
+   * 
    */
   $scope.dragged_nodes = [];
   $scope.sortableOptions = {
@@ -31,8 +97,8 @@ flexyAdmin.controller('GridController', ['$scope','$routeParams','$http', functi
 
     /**
      * START DRAGGING
-     * preserve width of drag handler
-     * if branch, hide nodes and remember them
+     * -  preserve width of drag handler
+     * -  if branch, hide nodes and remember them
      */
     dragStart : function(obj) {
       var row=obj.source.itemScope.element;
@@ -75,9 +141,11 @@ flexyAdmin.controller('GridController', ['$scope','$routeParams','$http', functi
       angular.element(row).addClass('bg-primary');
     },
     
+    
+    
     /**
      * ORDER HAS CHANGED
-     * if branch, make sure nodes are on right place and determine new level & parent
+     * -  if branch, make sure nodes are on right place and determine new level & parent
      */
     orderChanged : function(obj) {
       var row=obj.source.itemScope.element;
@@ -138,9 +206,11 @@ flexyAdmin.controller('GridController', ['$scope','$routeParams','$http', functi
       if (needsUpdate) $scope.grid.displayedItems = [].concat($scope.grid.items);
     },
     
+    
+    
     /**
      * DRAG END
-     * if branch show nodes again
+     * -  if branch show nodes again
      */
     dragEnd: function (obj) {
       var row=obj.source.itemScope.element;
@@ -158,6 +228,10 @@ flexyAdmin.controller('GridController', ['$scope','$routeParams','$http', functi
     // accept: function (sourceItemHandleScope, destSortableScope) {return true},
     // orderChanged: function(event) {},
   };
+  
+  
+  
+  
   
   
   /**
@@ -195,8 +269,12 @@ flexyAdmin.controller('GridController', ['$scope','$routeParams','$http', functi
   callServer(); // TODO comment this when serverside pagination/order etc.
 
 
+
+
+
+
   /**
-   * Toggle Selected row
+   * SELECT ROW TOGGLE
    */
   $scope.toggleSelection = function(index) {
     if (angular.isUndefined(index)) {
@@ -224,8 +302,11 @@ flexyAdmin.controller('GridController', ['$scope','$routeParams','$http', functi
     }
   }
 
+
+
+
   /**
-   * MAKE SURE ORDER OF ROWS IS ORIGINAL (keys)
+   * MAKE SURE ORDER OF ROWS IS ORIGINAL (keys) : https://stackoverflow.com/questions/19676694/ng-repeat-directive-sort-the-data-when-using-key-value
    */
   $scope.keys = function(obj){
     if (!obj) return [];
