@@ -453,8 +453,16 @@ $config["CFG_"]=array(
         
     "res_menu_result"=>array(
       'table'=>'res_menu_result',
+      'order'=>0,
       'b_pagination'=>false
+    ),
+    
+    "res_media_files"=>array(
+      'table'=>'res_media_files',
+      'order'=>10,
+      'b_pagination'=>true,
     )
+    
 	),
 
 
