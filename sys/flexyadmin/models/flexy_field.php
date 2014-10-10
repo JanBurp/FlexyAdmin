@@ -773,7 +773,7 @@ class Flexy_field extends CI_Model {
 			foreach ($fields as $field) {
         if (!in_array($field,$commonFields)) $commonFields[]=$field;
 				$pre=get_prefix($field);
-				if ( ($this->table!='cfg_media_info') or ($pre=='media') or ($pre=='medias') ) {
+				if ( ($this->table!='cfg_media_info') or ($pre=='media') or ($pre=='medias') or ($this->field=='fields_check_if_used_in')) {
 					$options[]="$table.$field";
 				}
 			}

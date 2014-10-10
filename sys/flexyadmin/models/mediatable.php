@@ -38,6 +38,7 @@ class Mediatable Extends CI_Model {
    */
 	public function __construct() {
 		parent::__construct();
+    if ($this->db->field_exists('b_used',$this->table)) $this->load->model('search_replace');
     $this->has_table=$this->db->table_exists($this->table);
 	}
 
@@ -68,6 +69,23 @@ class Mediatable Extends CI_Model {
     return (!empty($row));
   }
 
+  /**
+   * Test of een bestand ergens wordt gebruikt
+   *
+   * @param string $file 
+   * @param string $path=''
+   * @return bool
+   * @author Jan den Besten
+   */
+  public function is_file_used($file,$path='') {
+    $path=str_replace($this->config->item('ASSETS'),'',$path);
+    $file=get_suffix($file,'/');
+		$cfg=$this->cfg->get('CFG_media_info',$path);
+    $found=false;
+    if (!empty($cfg['fields_check_if_used_in'])) $found=$this->search_replace->has_text($file,$cfg['fields_check_if_used_in']);
+    return $found;
+  }
+
 
   /**
    * Voeg file toe aan mediatabel
@@ -89,8 +107,11 @@ class Mediatable Extends CI_Model {
         'int_size'  => $file['size'],
         'str_title' => $file['alt']
       );
-      if (isset($info['b_exists'])) {
-        $set['b_exists']   = $info['b_exists'];
+      if (isset($file['b_exists'])) {
+        $set['b_exists'] = $file['b_exists'];
+      }
+      if (isset($file['b_used'])) {
+        $set['b_used']  = $file['b_used'];
       }
       if (isset($file['width'])) {
         $set['int_img_width']   = $file['width'];
@@ -127,6 +148,9 @@ class Mediatable Extends CI_Model {
     }
     if (isset($info['b_exists'])) {
       $set['b_exists']   = $info['b_exists'];
+    }
+    if (isset($info['b_used'])) {
+      $set['b_used']  = $info['b_used'];
     }
     if (isset($info['width'])) {
       $set['int_img_width']   = $info['width'];
@@ -187,7 +211,7 @@ class Mediatable Extends CI_Model {
    * @return array $paths
    * @author Jan den Besten
    */
-  public function refresh($paths='',$clean=TRUE) {
+  public function refresh($paths='',$clean=TRUE,$remove=FALSE) {
     if (empty($paths)) {
       $paths=$this->cfg->get('cfg_media_info');
       $paths=array_keys($paths);
@@ -209,8 +233,10 @@ class Mediatable Extends CI_Model {
         $path=add_assets($path);
         $paths[$key]=$path;
         $files=read_map($path,'',FALSE,TRUE,$this->db->field_exists('stx_meta',$this->table)); // Get header info for jpg
+        $files=not_filter_by($files,'_'); // remove hidden files
         foreach ($files as $file => $info) {
           if (is_visible_file($file)) {
+            if ($this->db->field_exists('b_used',$this->table)) $info['b_used']=$this->is_file_used($file,$path);
             $info['b_exists']=true;
             if ($clean or !$this->exists_in_table($file,$path)) {
               $this->add($info);
@@ -223,6 +249,22 @@ class Mediatable Extends CI_Model {
       }
       else {
         unset($paths[$key]);
+      }
+    }
+    
+    // Remove unused files?
+    if ($remove) {
+      $this->load->model('file_manager');
+      $this->db->where('b_used',false);
+      $not_used=$this->db->get_result('res_media_files');
+      foreach ($not_used as $id => $row) {
+        $path=$row['path'];
+        $file=$row['file'];
+        // remove file
+        $this->file_manager->set_path($path);
+        $result=$this->file_manager->delete_file($file);
+        // remove from db
+        $this->delete($file,$path);
       }
     }
     

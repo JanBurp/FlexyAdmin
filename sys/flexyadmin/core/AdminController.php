@@ -109,7 +109,8 @@ class AdminController extends BasicController {
     // trace_($this->cfg);
 		$cfgTables=$this->cfg->get("CFG_table");
 		$cfgTables=filter_by($cfgTables,$type);
-		$cfgTables=sort_by($cfgTables,"order");
+    $cfgTables=sort_by($cfgTables,"order");
+    
     // order and show tables according to cfg_table_info
 		$oTables=array();
 		foreach ($cfgTables as $row) {

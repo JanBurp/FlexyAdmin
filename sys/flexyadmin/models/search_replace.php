@@ -80,6 +80,7 @@ class Search_replace Extends CI_Model {
 		$result=FALSE;
 		foreach($tables as $table) {
       if (empty($fields)) $fields=$this->db->list_fields($table);
+      if (is_string($fields)) $fields=explode('|',$fields);
 			foreach ($fields as $field) {
 				$res = $this->replace_value_in( $table, $field, $search, $replace);
         if ($res) {
@@ -236,7 +237,7 @@ class Search_replace Extends CI_Model {
    */
   public function has_text($text,$fields='') {
     $found=FALSE;
-    if (!is_array($fields)) $fields=array($fields);
+    if (is_string($fields)) $fields=explode('|',$fields);
     foreach ($fields as $field) {
       $table=get_prefix($field,'.');
       $field=remove_prefix($field,'.');
