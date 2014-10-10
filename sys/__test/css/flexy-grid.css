@@ -25,8 +25,11 @@
 
 /* TABLE COLUMNS */
 .flexy-grid th, .flexy-grid td {max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background-repeat:no-repeat;}
-.flexy-grid th.edit, .flexy-grid td.edit {min-width:87px;width:87px;text-overflow:clip;}
-.flexy-grid .table-sortable th.edit, .flexy-grid .table-sortable td.edit {min-width:59px;width:59px;}
+/* EDIT BUTTONS */
+.flexy-grid th.edit, .flexy-grid td.edit {min-width:110px;width:110px;text-overflow:clip;}
+.flexy-grid .table-sortable th.edit, .flexy-grid .table-sortable td.edit {min-width:82px;width:82px;}
+.flexy-grid th.edit .action-remove {display:none;}
+.flexy-grid .flexy-grid-has-selection th.edit .action-remove {display:inline;}
 /* hidden columns */
 .flexy-grid th.id, .flexy-grid td.id, .sortable-drag td.id,
 .flexy-grid th.uri, .flexy-grid td.uri, .sortable-drag td.uri,
@@ -34,6 +37,7 @@
 .flexy-grid th.self_parent, .flexy-grid td.self_parent, .sortable-drag td.self_parent,
 .flexy-grid td._info {display:none;}
 /* specific column styling */
+.flexy-grid .flexy-grid-sortable-column {cursor:pointer;}
 .flexy-grid th.str_title, .flexy-grid td.str_title {max-width:none;text-overflow:inherit;}
 .flexy-grid th.txt, .flexy-grid td.txt {max-width:350px;}
 .flexy-grid th.media, .flexy-grid td.media,
@@ -41,6 +45,13 @@
 .flexy-grid th.medias, .flexy-grid td.medias {min-width:120px;max-width:600px;}
 .flexy-grid th.tme, .flexy-grid td.tme {max-width:none; width:130px;}
 .flexy-grid th.rgb, .flexy-grid td.rgb {min-width:25px;max-width:50px;}
+/* ROW SELECTION */
+.flexy-grid tr.flexy-grid-selected td {background-color:#D9EDF7!important;} /* TODO bg-info from bootstrap */ 
+.flexy-grid tr .action-select span.flexy-grid-selected {display:none;}
+.flexy-grid tr .action-select span.flexy-grid-unselected {display:inline;}
+.flexy-grid tr.flexy-grid-selected .action-select span.flexy-grid-unselected {display:none;}
+.flexy-grid tr.flexy-grid-selected .action-select span.flexy-grid-selected {display:inline;}
+
 
 /* tree, branches & nodes */
 .flexy-grid tbody tr.flexy-tree-node td.str_title {background-image:url('../img/tree_lastnode.gif');background-repeat:no-repeat;}
@@ -81,7 +92,7 @@
   margin:0px;
   float:left;
   clear:none;
-  /* from bootstrap */
+  /* TODO from bootstrap */
   border-right: 1px solid #DDD;
   padding:5px;
 }

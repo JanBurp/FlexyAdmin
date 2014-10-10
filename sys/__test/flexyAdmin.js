@@ -76,7 +76,7 @@ var flexyAdmin = angular.module( 'flexyAdmin', [
 flexyAdmin.config( function($routeProvider){
   $routeProvider
     .when('/grid/:table',{
-      controller  : 'GridController',
+      controller  : '',
       templateUrl : 'sys/__test/flexy-grid/flexy-grid.html'
     })
     .when('/form/:table/:id',{
