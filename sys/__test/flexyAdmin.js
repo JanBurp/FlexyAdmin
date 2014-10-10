@@ -75,6 +75,10 @@ var flexyAdmin = angular.module( 'flexyAdmin', [
 
 flexyAdmin.config( function($routeProvider){
   $routeProvider
+    .when('/home',{
+      controller  : '',
+      templateUrl : 'sys/__test/flexy-ui/flexy-home.html'
+    })
     .when('/grid/:table',{
       controller  : '',
       templateUrl : 'sys/__test/flexy-grid/flexy-grid.html'
@@ -88,5 +92,5 @@ flexyAdmin.config( function($routeProvider){
     //   templateUrl : 'sys/__test/views/html.html'
     // })
     
-    .otherwise({ redirectTo: '/grid' });
+    .otherwise({ redirectTo: '/home' });
 });

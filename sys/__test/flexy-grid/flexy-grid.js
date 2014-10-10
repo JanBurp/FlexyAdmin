@@ -48,9 +48,11 @@ flexyAdmin.controller('GridController', ['$scope','$routeParams','$http', functi
         var next=index;
         do {
           next++;
-          node_level=$scope.grid.items[next]._info['level'];
-          if (node_level>level) $scope.dragged_nodes.push($scope.grid.items[next].id);
-        } while (node_level>level);
+          if (angular.isDefined($scope.grid.items[next])) {
+            node_level=$scope.grid.items[next]._info['level'];
+            if (node_level>level) $scope.dragged_nodes.push($scope.grid.items[next].id);
+          }
+        } while (node_level>level && angular.isDefined($scope.grid.items[next]));
         // 'hide' the nodes
         angular.forEach($scope.dragged_nodes,function(node,key){
           var el=angular.element(document.querySelector('.flexy-grid.'+$scope.table+' table tbody tr[id="'+node+'"]'));
@@ -109,7 +111,6 @@ flexyAdmin.controller('GridController', ['$scope','$routeParams','$http', functi
         var level_diff = old_level-new_level;
         var old_index=obj.source.index;
         var up=(new_index<old_index);
-        console.log(old_index,new_index,up);
         var old_nodes_index = old_index;
         var new_nodes_index = new_index;
         if (up) {
@@ -117,7 +118,6 @@ flexyAdmin.controller('GridController', ['$scope','$routeParams','$http', functi
           new_nodes_index++;
         }
         // collect dragged nodes
-        // $scope.dragged_nodes=[];
         for (var i = 0; i < number_of_nodes; i++) {
           // adjust level & copy the node from dest
           obj.dest.sortableScope.modelValue[old_nodes_index]._info['level']-=level_diff;
@@ -126,7 +126,8 @@ flexyAdmin.controller('GridController', ['$scope','$routeParams','$http', functi
           obj.dest.sortableScope.removeItem(old_nodes_index);
         }
         // insert new items in dest after new index
-        if (up) $scope.dragged_nodes.reverse();
+        $scope.dragged_nodes.reverse();
+        if (!up) new_nodes_index=new_nodes_index-number_of_nodes+1;
         for (var i = 0; i < number_of_nodes; i++) {
           obj.dest.sortableScope.insertItem(new_nodes_index, $scope.dragged_nodes[i]);
         }
@@ -134,11 +135,7 @@ flexyAdmin.controller('GridController', ['$scope','$routeParams','$http', functi
         needsUpdate=true;
       }
       
-      if (needsUpdate) {
-        // update grid.displayedItems
-        $scope.grid.items=obj.dest.sortableScope.modelValue;
-        $scope.grid.displayedItems = [].concat($scope.grid.items);
-      }
+      if (needsUpdate) $scope.grid.displayedItems = [].concat($scope.grid.items);
     },
     
     /**
