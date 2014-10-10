@@ -13,7 +13,7 @@ flexyBlocks.directive("flexyBlocks", function() {
     var html = '';
     angular.forEach(text,function(value,key){
       var charClass=value;
-      var btnStyle="btn-primary";
+      var btnStyle="btn-default";
       if (value==' ') {
         value="&nbsp;";
         charClass='space';

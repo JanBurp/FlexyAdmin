@@ -2,8 +2,9 @@ flexyAdmin.controller('GridController', ['$scope','$routeParams','$http', functi
   
   var self=this;
 
-  // URI PARAMS
+  // OVERALL PARAMS
   $scope.table = $routeParams.table;
+  $scope.has_selection = false;
   
   // INIT DATA
   $scope.grid = {
@@ -107,25 +108,35 @@ flexyAdmin.controller('GridController', ['$scope','$routeParams','$http', functi
       if ($scope.grid.table_info.tree && number_of_nodes>0) {
         var level_diff = old_level-new_level;
         var old_index=obj.source.index;
-        var old_nodes_index = old_index + 1;
-        var new_nodes_indes = new_index + 1;
-        // doit
-        var moving_node={};
-        for (var i = 0; i < number_of_nodes; i++) {
-          // copy node
-          moving_node = obj.dest.sortableScope.modelValue[old_nodes_index+i];
-          // adjust level
-          moving_node._info['level']-=level_diff;
-          // remove node from list
-          obj.dest.sortableScope.removeItem(old_nodes_index+i);
-          // add node after new index
-          obj.source.itemScope.sortableScope.insertItem(new_index+1+i, moving_node);
+        var up=(new_index<old_index);
+        console.log(old_index,new_index,up);
+        var old_nodes_index = old_index;
+        var new_nodes_index = new_index;
+        if (up) {
+          old_nodes_index++;
+          new_nodes_index++;
         }
+        // collect dragged nodes
+        // $scope.dragged_nodes=[];
+        for (var i = 0; i < number_of_nodes; i++) {
+          // adjust level & copy the node from dest
+          obj.dest.sortableScope.modelValue[old_nodes_index]._info['level']-=level_diff;
+          $scope.dragged_nodes.push(obj.dest.sortableScope.modelValue[old_nodes_index]);
+          // remove node from dest
+          obj.dest.sortableScope.removeItem(old_nodes_index);
+        }
+        // insert new items in dest after new index
+        if (up) $scope.dragged_nodes.reverse();
+        for (var i = 0; i < number_of_nodes; i++) {
+          obj.dest.sortableScope.insertItem(new_nodes_index, $scope.dragged_nodes[i]);
+        }
+
         needsUpdate=true;
       }
       
       if (needsUpdate) {
         // update grid.displayedItems
+        $scope.grid.items=obj.dest.sortableScope.modelValue;
         $scope.grid.displayedItems = [].concat($scope.grid.items);
       }
     },
@@ -155,18 +166,23 @@ flexyAdmin.controller('GridController', ['$scope','$routeParams','$http', functi
   /**
    * LOAD FROM SERVER
    */
-  $scope.callServer = function(tableState) {
+  callServer = function(tableState) {
     
     // TODO server side: https://lorenzofox3.github.io/smart-table-website/#section-pipe: set st-pipe="callServer" in grid.html
     $http.post('__api/get_table',{'table':$scope.table}).success(function(result){
       
+      // Define _info on all items
+      angular.forEach( result.data.items, function(item,key) {
+        if (angular.isUndefined(result.data.items[key]._info)) result.data.items[key]._info={};
+      });
+      // keep items in Scope
       $scope.grid=result.data;
 
       // Copy the references, needed for smart-table to wacht for changes in the data
       $scope.grid.displayedItems = [].concat($scope.grid.items);
       
       // Fieldtypes
-      angular.forEach($scope.grid.field_info, function(value, key) {
+      angular.forEach( $scope.grid.field_info, function(value, key) {
         $scope.grid.field_info[key].type = value.field.prefix();
       });
       
@@ -179,9 +195,37 @@ flexyAdmin.controller('GridController', ['$scope','$routeParams','$http', functi
     });
   };
   
-  $scope.callServer(); // TODO comment this when serverside pagination/order etc.
+  callServer(); // TODO comment this when serverside pagination/order etc.
 
 
+  /**
+   * Toggle Selected row
+   */
+  $scope.toggleSelection = function(index) {
+    if (angular.isUndefined(index)) {
+      // toggle all
+      $scope.has_selection = false;
+      angular.forEach($scope.grid.items, function(item,key) {
+        var selected=$scope.grid.items[key]._info['selected'];
+        if (!selected) selected=true; else selected=false;
+        $scope.grid.items[key]._info['selected']=selected;
+        // has selection?
+        if (selected) $scope.has_selection = true;
+      });
+    }
+    else {
+      // toggle one
+      var selected=$scope.grid.items[index]._info['selected'];
+      if (!selected) selected=true; else selected=false;
+      $scope.grid.items[index]._info['selected']=selected;
+      // see if there is a selection at all
+      $scope.has_selection = false;
+      angular.forEach($scope.grid.items, function(item,key) {
+        var selected=$scope.grid.items[key]._info['selected'];
+        if (selected) $scope.has_selection = true;
+      });
+    }
+  }
 
   /**
    * MAKE SURE ORDER OF ROWS IS ORIGINAL (keys)
