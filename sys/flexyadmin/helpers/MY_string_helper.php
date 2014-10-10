@@ -448,7 +448,7 @@ function str2hex($string) {
  * @return string
  * @author Jan den Besten
  */
-function intro_string($txt,$len=50,$type='WORDS',$strip_tags='<br/><strong><italic><em><b><a><p>') {
+function intro_string($txt,$len=50,$type='WORDS',$strip_tags='<br/><strong><italic><em><b><a><p>',$ellipses='') {
 	// first check if there's an intro set by class: intro
 	$matches=array();
 	preg_match_all('/<([\w]+)([^>]*)class=\"([^\"]*)intro([^\"]*)\"[^>]*>(.*)<\/\1>/uiUsm',$txt,$matches);
@@ -464,6 +464,7 @@ function intro_string($txt,$len=50,$type='WORDS',$strip_tags='<br/><strong><ital
 		$intro=max_length(str_replace('&nbsp;',' ',strip_tags($txt,$strip_tags)),$len,$type,true,$strip_tags);
 	}
 	// make sure all tags are closed
+  if ($intro!=$txt) $intro.=$ellipses;
 	$intro=restore_tags($intro);
 	return $intro;
 }
