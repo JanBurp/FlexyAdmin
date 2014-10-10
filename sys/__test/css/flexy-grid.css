@@ -26,8 +26,8 @@
 /* TABLE COLUMNS */
 .flexy-grid th, .flexy-grid td {max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background-repeat:no-repeat;}
 /* EDIT BUTTONS */
-.flexy-grid th.edit, .flexy-grid td.edit {min-width:110px;width:110px;text-overflow:clip;}
-.flexy-grid .table-sortable th.edit, .flexy-grid .table-sortable td.edit {min-width:82px;width:82px;}
+.flexy-grid th.edit, .flexy-grid td.edit {min-width:114px;width:114px;text-overflow:clip;}
+.flexy-grid .table-sortable th.edit, .flexy-grid .table-sortable td.edit {min-width:86px;width:86px;}
 .flexy-grid th.edit .action-remove {display:none;}
 .flexy-grid .flexy-grid-has-selection th.edit .action-remove {display:inline;}
 /* hidden columns */
