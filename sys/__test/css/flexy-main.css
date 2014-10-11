@@ -33,6 +33,8 @@ header, footer {min-height:34px;max-height:48px;}
 .action-move {cursor:move;}
 
 
+/* FLEXY LOGIN */
+#login {width:50%;min-width:300px;max-width:600px;margin:5rem auto;display:none;}
 
 /* FLEXY-HOME */
 .flexy-home .btn {text-align:left;}

@@ -22,7 +22,7 @@ class BasicController extends MY_Controller {
 		$this->load->library('user');
 		
 		if ( ! $this->_user_logged_in()) {
-			redirect($this->config->item('API_login'));
+      $this->output->set_status_header('401');
 		}
 
 		// ok move on...

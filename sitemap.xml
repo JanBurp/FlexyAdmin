@@ -2,33 +2,39 @@
 
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" >
 	<url>
-		<loc>http://www.flexyadmin.com/gelukt</loc>
+		<loc>http://www.flexyadmin.com/pagina_1_begin</loc>
 		<priority>1.00</priority>
-		<title>Gelukt!</title>
+		<title>Pagina 1 (begin)</title>
 		<content><![CDATA[Als je dit ziet is het je gelukt om FlexyAdmin te installeren en werkend te krijgen. Je hebt nu een standaard-installatie van een zeer eenvoudige basis-site. Hoe verder Pas de HTML aan in de map site/views. site.php is de basis view van je site en page.php de afzonderlijke pagina&#039;s. Pas de Stylesheets aan. Deze vindt je in de map site/assets/css. Je vindt daar .less bestanden (meer over Less) die de basis kunnen vormen van je .css bestanden. Als je niet met Less wilt werken kun je ook direct de .css bestanden aanpassen. Zorg dan wel dat je in het bestand site/config/build.php deze instelling aanpast: $config[&#039;watch&#039;] = false; Standaard worden alle .css en .js bestanden gecomprimeerd om de server-load te minimaliseren. Als je dat niet wilt (bijvoorbeeld tijdens het ontwikkelen van je site) stel dan de vorige instelling in site/config/config.php in: $config[&#039;use_minimized&#039;] = FALSE; build Sinds versie r2530 zit er een volautomatisch build-systeem ingebouwd. De instellingen daarvan kun je vinden in site/config/build.php Standaard worden de volgende acties gedaan: layout.less en text.less worden gecompileerd tot .css Alle .css bestanden worden samengevoegd en gecomprimeerd tot styles.min.css Ook worden alle .js bestanden samengevoegd en gecomprimeerd tot scripts.min.js Build wordt actief als je een pagina van de site herlaadt en &amp;eacute;&amp;eacute;n of meer van de .css en .js bestanden is aangepast. Zo hoef je zelf niets te doen. Je kunt met /admin/build het build proces ook handmatig starten. In beidde gevallen zullen foutmeldingen (als die er zijn) worden getoond. .]]></content>
 	</url>
 	<url>
-		<loc>http://www.flexyadmin.com/een_pagina</loc>
+		<loc>http://www.flexyadmin.com/pagina_2_branch</loc>
 		<priority>0.80</priority>
-		<title>Een pagina</title>
+		<title>Pagina 2 (branch)</title>
 		<content>Lorem ipsum dolor sit amet Consectetur adipiscing elit. Vivamus in augue ac justo posuere luctus sodales vel justo. Integer blandit, quam id porttitor consequat, lorem libero bibendum ipsum, non auctor sem ipsum eu mauris. Vestibulum condimentum, lectus sed aliquam rutrum, est velit pellentesque mauris, sed mattis sapien ante vitae enim. Quisque cursus facilisis molestie. Sed rhoncus lacus ac nunc interdum in laoreet mi rhoncus. Suspendisse ultrices fringilla felis, in porta mi pretium ut. Nunc nisl nulla, varius in lobortis a, dictum a purus. Sed consequat felis ut erat lobortis hendrerit. Donec bibendum lorem lorem. Fusce suscipit sapien id lorem mollis vel placerat nunc congue. Aenean non nunc tortor. Curabitur rhoncus neque eget nulla adipiscing euismod. Duis tincidunt sollicitudin convallis Quisque nibh tortor, blandit a mollis vitae, euismod non nulla. Duis dui erat, interdum sit amet porttitor a, porttitor nec augue. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed quis porta turpis. Suspendisse nec mi enim, ut fringilla tellus. Nunc sollicitudin justo at leo tempus eu fringilla nisl tempus. Sed id tellus non eros tristique vehicula. Quisque sollicitudin augue id velit euismod interdum. Proin lobortis ornare magna in facilisis. Nulla vestibulum ultricies dui ut fringilla. Duis eu ante in lorem pellentesque bibendum. Praesent id velit vel nulla ullamcorper adipiscing quis quis tellus. Integer nec augue quis felis dapibus imperdiet ac et nibh..</content>
 	</url>
 	<url>
-		<loc>http://www.flexyadmin.com/een_pagina/subpagina_met_module_links</loc>
+		<loc>http://www.flexyadmin.com/pagina_2_branch/subpagina_1</loc>
 		<priority>0.64</priority>
-		<title>Subpagina met module Links</title>
+		<title>Subpagina 1</title>
 		<content>Een subpagina.</content>
 	</url>
 	<url>
-		<loc>http://www.flexyadmin.com/een_pagina/nog_een_subpagina</loc>
+		<loc>http://www.flexyadmin.com/pagina_2_branch/subpagina_2</loc>
 		<priority>0.64</priority>
-		<title>Nog een subpagina</title>
+		<title>Subpagina 2</title>
 		<content>.</content>
 	</url>
 	<url>
-		<loc>http://www.flexyadmin.com/contact</loc>
+		<loc>http://www.flexyadmin.com/pagina_2_branch/subpagina_3</loc>
+		<priority>0.64</priority>
+		<title>Subpagina 3</title>
+		<content>.</content>
+	</url>
+	<url>
+		<loc>http://www.flexyadmin.com/pagina_3_eind</loc>
 		<priority>0.80</priority>
-		<title>Contact</title>
+		<title>Pagina 3 (eind)</title>
 		<content>Hier een voorbeeld van een eenvoudig contactformulier..</content>
 	</url>
 </urlset>

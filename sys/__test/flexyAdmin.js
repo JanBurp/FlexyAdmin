@@ -3,6 +3,7 @@ var flexyAdmin = angular.module( 'flexyAdmin', [
   'ngRoute',
   
   // Angular Modules
+  'http-auth-interceptor',
   'angular-toArrayFilter',
   'angular-loading-bar',
   'ui.bootstrap',
@@ -12,60 +13,7 @@ var flexyAdmin = angular.module( 'flexyAdmin', [
   // flexyAdmin Modules
   'flexyMenu',
   'flexyBlocks',
-  ],
-  
-/**
- * Make AngularJS $http service behave like jQuery.ajax()
- * http://victorblog.com/2012/12/20/make-angularjs-http-service-behave-like-jquery-ajax/
- */
-  function($httpProvider) {
-    // Use x-www-form-urlencoded Content-Type
-    $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
-    /**
-     * The workhorse; converts an object to x-www-form-urlencoded serialization.
-     * @param {Object} obj
-     * @return {String}
-     */ 
-    var param = function(obj) {
-      var query = '', name, value, fullSubName, subName, subValue, innerObj, i;
-
-      for(name in obj) {
-        value = obj[name];
-        
-        if(value instanceof Array) {
-          for(i=0; i<value.length; ++i) {
-            subValue = value[i];
-            fullSubName = name + '[' + i + ']';
-            innerObj = {};
-            innerObj[fullSubName] = subValue;
-            query += param(innerObj) + '&';
-          }
-        }
-        else if(value instanceof Object) {
-          for(subName in value) {
-            subValue = value[subName];
-            fullSubName = name + '[' + subName + ']';
-            innerObj = {};
-            innerObj[fullSubName] = subValue;
-            query += param(innerObj) + '&';
-          }
-        }
-        else if(value !== undefined && value !== null)
-          query += encodeURIComponent(name) + '=' + encodeURIComponent(value) + '&';
-      }
-      
-      // Add _type=json& - JdB 21 september 2014
-      query+='_type=json&';
-      
-      return query.length ? query.substr(0, query.length - 1) : query;
-    };
-    
-    // Override $http service's default transformRequest
-    $httpProvider.defaults.transformRequest = [function(data) {
-      return angular.isObject(data) && String(data) !== '[object File]' ? param(data) : data;
-    }];
-  }
-
+  ]
 );
   
 
@@ -94,3 +42,37 @@ flexyAdmin.config( function($routeProvider){
     
     .otherwise({ redirectTo: '/home' });
 });
+
+
+
+/**
+* This directive will find itself inside HTML as a class,
+* and will remove that class, so CSS will remove loading image and show app content.
+* It is also responsible for showing/hiding login form.
+*/
+flexyAdmin.directive('flexyAdmin-auth', function() {
+  return {
+    restrict: 'C',
+    link: function(scope, elem, attrs) {
+      elem.removeClass('flexy-waiting-for-angular');
+      
+      var login = elem.find('#login');
+      var main = elem.find('#container');
+      console.log(login,main);
+      
+      login.hide();
+      
+      scope.$on('event:auth-loginRequired', function() {
+        login.slideDown('slow', function() {
+          main.hide();
+        });
+      });
+      
+      scope.$on('event:auth-loginConfirmed', function() {
+        main.show();
+        login.slideUp();
+      });
+    }
+  }
+});
+
