@@ -60,12 +60,11 @@ flexyMenu.directive( "flexyMenu", function() {
       $scope.menu.header = [ { href: $scope.root+"/logout", name: 'Logout' } ];
       $scope.menu.sidebar = [];
       $scope.menu.footer = [];
-      $http.get('__api/get_admin_nav?_type=json',{cache:true}).success(function(result){
-        $scope.menu.header  = flexyMenu.process($scope.root,result.data.header);
-        $scope.menu.sidebar = flexyMenu.process($scope.root,result.data.sidebar);
-        $scope.menu.footer  = flexyMenu.process($scope.root,result.data.footer);
-      }).error(function(data){
-        $log.log('AJAX error -> flexyMenu');
+      $http.get('__api/get_admin_nav?_type=json',{cache:true}).then(function(result){
+        var data=result.data.data;
+        $scope.menu.header  = flexyMenu.process( $scope.root, data.header );
+        $scope.menu.sidebar = flexyMenu.process( $scope.root, data.sidebar );
+        $scope.menu.footer  = flexyMenu.process( $scope.root, data.footer );
       });
       
     }],

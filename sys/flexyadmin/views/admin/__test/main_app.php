@@ -23,7 +23,24 @@
 
 </head>
 
-<body>
+<body class="flexyAdmin-auth flexy-waiting-for-angular">
+  
+  <div id="login" class="panel panel-primary" test-ng-controller="LoginController">
+    <div class="panel-heading panel-title"><h3>Login</h3></div>
+    <div class="panel-content">
+      <form ng-submit="submit()" role="form">
+        <div class="form-group">
+          <label for="login-username">Username</label>
+          <input id="login-username" class="form-control" placeholder="Username" ng-model="username">
+        </div>
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <input id="login-password" type="password" class="form-control" placeholder="Password" ng-model="password">
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+      </form>
+    </div>
+  </div>
   
   <div id="container" class="container-fluid">
     
@@ -50,7 +67,8 @@
 <script src="sys/__test/external/angular-route/angular-route.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/external/angular-bootstrap/ui-bootstrap-tpls.min.js" type="text/javascript" charset="utf-8"></script>
 
-<!-- Angular Modules -->
+<!-- Angular External Modules -->
+<script src="sys/__test/external/angular-http-auth/src/http-auth-interceptor.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/external/angular-toArrayFilter/toArrayFilter.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/external/angular-loading-bar/src/loading-bar.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/external/angular-smart-table/dist/smart-table.min.js" type="text/javascript" charset="utf-8"></script>
@@ -59,6 +77,9 @@
 <!--FlexyAdmin -->
 <script src="sys/__test/jdb.extend.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexyAdmin.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/flexy-http-auth/request.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/flexy-http-auth/auth-check.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/flexy-http-auth/http-logging.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-ui/flexy-blocks.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-menu/flexy-menu.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-grid/flexy-grid.js" type="text/javascript" charset="utf-8"></script>

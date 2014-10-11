@@ -15,7 +15,11 @@ class ApiController extends AjaxController {
 		parent::__construct();
     // Get arguments
     $this->args=$this->_get_args($this->args);
-    // Check rights
+
+    // Check Authentication and Rights
+		if ( ! $this->_user_logged_in()) {
+      $this->output->set_status_header('401');
+		}
     if (isset($this->args['table'])) $this->table=$this->args['table'];
     if ($this->check_rights) {
       if (!$this->_has_rights($this->table)) {
