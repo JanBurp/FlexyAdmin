@@ -997,14 +997,18 @@ function array_unset_keys($a,$unset,$recursive=FALSE) {
  *
  * @param array $a 
  * @param array $rename 
+ * @param bool $keep_all [TRUE]
  * @return array
  * @author Jan den Besten
  */
-function array_rename_keys($a,$rename=array()) {
+function array_rename_keys($a,$rename=array(),$keep_all=true) {
   foreach ($a as $key => $value) {
     if (isset($rename[$key])) {
       $a[$rename[$key]]=$a[$key];
       unset($a[$key]);
+    }
+    else {
+      if (!$keep_all) unset($a[$key]);
     }
   }
   return $a;

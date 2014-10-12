@@ -642,7 +642,7 @@ class User Extends Ion_auth {
       }
     }
     else {
-  		if ($rights['rights']=="*" or (strpos($rights['rights'],$preAll)!==FALSE) or (strpos($rights['rights'],$item)!==FALSE) ) {
+  		if ($rights and ($rights['rights']=="*" or (strpos($rights['rights'],$preAll)!==FALSE) or (strpos($rights['rights'],$item)!==FALSE)) ) {
   			$this->_change_rights($found,$rights);
   		}
   		// trace_if($condition,$found);

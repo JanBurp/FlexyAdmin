@@ -7,6 +7,8 @@ class ApiController extends AjaxController {
   protected $table=NULL;
   protected $type='trace';
   
+  protected $loggedIn=false;
+  
   
   /**
    * @ignore
@@ -16,21 +18,25 @@ class ApiController extends AjaxController {
     // Get arguments
     $this->args=$this->_get_args($this->args);
 
-    // Check Authentication and Rights
-		if ( ! $this->_user_logged_in()) {
-      $this->output->set_status_header('401');
-		}
-    if (isset($this->args['table'])) $this->table=$this->args['table'];
-    if ($this->check_rights) {
-      if (!$this->_has_rights($this->table)) {
-        unset($this->result['_args_type']);
-        $this->_result(array('_error'=>'NO RIGHTS'));
-        die();
-      }
-    }
     // Output type
     if (isset($this->args['_type'])) $this->type=$this->args['_type'];
     if ($this->type!='json') $this->_test(true);
+    
+    // Check Authentication and Rights if not api/auth
+    $auth=($this->uri->get(2)=='auth');
+    if (!$auth) {
+      // if (!$this->loggedIn || !$this->_user_logged_in()) {
+      //         $this->output->set_status_header('401');
+      //         return $this->_result(array('_status'=>401));
+      // }
+      if (isset($this->args['table'])) $this->table=$this->args['table'];
+      if ($this->check_rights) {
+        if (!$this->_has_rights($this->table)) {
+          unset($this->result['_args_type']);
+          return $this->_result(array('_error'=>'NO RIGHTS'));
+        }
+      }
+    }
     // Standard result
     $this->result['_result_type']=$this->type;
     $this->result['_args']=$this->args;

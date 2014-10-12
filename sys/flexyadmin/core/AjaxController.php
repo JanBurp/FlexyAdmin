@@ -92,15 +92,32 @@ class AjaxController extends BasicController {
    * @author Jan den Besten
    */
   protected function _result($result) {
-    $result=array_merge($this->result,$result);
-    $result['_success']=true;
-    if (isset($result['_error']) and !empty($result['_error'])) $result['_success']=false;
-    ksort($result);
+    $status = false;
+    if ( isset($result['_status'])) {
+      if ($result['_status']==401) {
+        $status="HTTP/1.1 401 Unauthorized";
+        $result=array('_status'=>401);
+      }
+    }
+    
+    if (!$status) {
+      $result=array_merge($this->result,$result);
+      $result['_success']=true;
+      if (isset($result['_error']) and !empty($result['_error'])) $result['_success']=false;
+      ksort($result);
+    }
+    
     if ($this->test) {
       $result['_test']=true;
       trace_($result);
       return $result;
     }
+
+    if ( $status )  {
+      header($status);
+      exit;
+    }
+
     $json=array2json($result);
     echo $json;
     return $json;
