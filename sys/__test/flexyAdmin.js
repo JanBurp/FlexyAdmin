@@ -3,7 +3,6 @@ var flexyAdmin = angular.module( 'flexyAdmin', [
   'ngRoute',
   
   // Angular Modules
-  'http-auth-interceptor',
   'angular-toArrayFilter',
   'angular-loading-bar',
   'ui.bootstrap',
@@ -15,7 +14,7 @@ var flexyAdmin = angular.module( 'flexyAdmin', [
   'flexyBlocks',
   ]
 );
-  
+
 
 /**
  * ROUTING
@@ -23,9 +22,25 @@ var flexyAdmin = angular.module( 'flexyAdmin', [
 
 flexyAdmin.config( function($routeProvider){
   $routeProvider
+    .when('/login',{
+      templateUrl:'sys/__test/flexy-http-auth/login-form.html'
+    })
     .when('/home',{
       controller  : '',
-      templateUrl : 'sys/__test/flexy-ui/flexy-home.html'
+      templateUrl : 'sys/__test/flexy-ui/flexy-home.html',
+      resolve     : {
+        auth : ['$q','$location','authService',
+        function($q,$location,authService) {
+          return authService.session().then(
+            function(success){},
+            function(error) {
+              $location.path('/login');
+              $location.replace();
+              return $q.reject(error);
+            }
+          );
+        }]
+      }
     })
     .when('/grid/:table',{
       controller  : '',
@@ -35,44 +50,5 @@ flexyAdmin.config( function($routeProvider){
       controller  : 'FormController',
       templateUrl : 'sys/__test/flexy-form/flexy-form.html'
     })
-    // .when('/plugin/:plugin',{
-    //   controller  : 'PluginController',
-    //   templateUrl : 'sys/__test/views/html.html'
-    // })
-    
     .otherwise({ redirectTo: '/home' });
 });
-
-
-
-/**
-* This directive will find itself inside HTML as a class,
-* and will remove that class, so CSS will remove loading image and show app content.
-* It is also responsible for showing/hiding login form.
-*/
-flexyAdmin.directive('flexyAdmin-auth', function() {
-  return {
-    restrict: 'C',
-    link: function(scope, elem, attrs) {
-      elem.removeClass('flexy-waiting-for-angular');
-      
-      var login = elem.find('#login');
-      var main = elem.find('#container');
-      console.log(login,main);
-      
-      login.hide();
-      
-      scope.$on('event:auth-loginRequired', function() {
-        login.slideDown('slow', function() {
-          main.hide();
-        });
-      });
-      
-      scope.$on('event:auth-loginConfirmed', function() {
-        main.show();
-        login.slideUp();
-      });
-    }
-  }
-});
-
