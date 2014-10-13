@@ -32,6 +32,7 @@ class ApiController extends AjaxController {
         }
       }
     }
+
     // Standard result
     $this->result['_args']=$this->args;
     $this->result['_api']=$this->name;

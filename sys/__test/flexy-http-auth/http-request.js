@@ -9,13 +9,14 @@ flexyAdmin.config(['flexyAdminGlobals','$httpProvider',function(flexyAdminGlobal
   $httpProvider.interceptors.push(function ($q) {
     return {
       'request': function (config) {
+        
         if (config.url.substr(-5)=='.html') {
           // HTML views
           config.url = flexyAdminGlobals.sys_folder + config.url;
         }
         else {
           // API calls
-          config.url = flexyAdminGlobals.api_base_url + config.url;
+          config.url = flexyAdminGlobals.api_base_url + config.url.replace(flexyAdminGlobals.api_base_url,''); // TODO hack to prevend double, why?
         }
         return config || $q.when(config);
       }
