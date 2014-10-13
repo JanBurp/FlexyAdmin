@@ -1,3 +1,5 @@
+'use strict';
+
 var flexyAdmin = angular.module( 'flexyAdmin', [
   // Angular JS
   'ngRoute',

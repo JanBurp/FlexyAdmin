@@ -1,3 +1,5 @@
+'use strict';
+
 flexyAdmin.controller('GridController', ['$scope','$routeParams','$http', function($scope,$routeParams,$http) {
   
   /**
@@ -98,8 +100,6 @@ flexyAdmin.controller('GridController', ['$scope','$routeParams','$http', functi
      * -  if branch, hide nodes and remember them
      */
     dragStart : function(obj) {
-      console.log('START');
-      
       var row=obj.source.itemScope.element;
       var table=angular.element(document.querySelector('.flexy-grid.'+$scope.table+' table'));
 
@@ -236,7 +236,7 @@ flexyAdmin.controller('GridController', ['$scope','$routeParams','$http', functi
   /**
    * LOAD FROM SERVER
    */
-  callServer = function(tableState) {
+  var callServer = function(tableState) {
     
     // TODO server side: https://lorenzofox3.github.io/smart-table-website/#section-pipe: set st-pipe="callServer" in grid.html
     $http.post('get_table',{'table':$scope.table}).success(function(result){

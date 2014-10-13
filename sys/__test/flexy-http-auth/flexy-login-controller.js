@@ -1,3 +1,5 @@
+'use strict';
+
 flexyAdmin.controller('flexyLoginController', ['flexyAuthService','authService', function(flexyAuthService,authService){
   var self=this;
   self.user = {

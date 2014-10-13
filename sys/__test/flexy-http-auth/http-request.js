@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Make AngularJS $http service behave like jQuery.ajax()
  * http://victorblog.com/2012/12/20/make-angularjs-http-service-behave-like-jquery-ajax/

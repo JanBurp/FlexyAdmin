@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Log all $http calls
  */

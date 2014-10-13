@@ -1,3 +1,5 @@
+'use strict';
+
 flexyAdmin.factory('flexyAuthService',['$http',function($http){
   var isLoggedIn = false;
   

@@ -1,3 +1,5 @@
+'use strict';
+
 flexyAdmin.controller('PluginController', ['$scope','$routeParams','$http', '$log', '$sce', function($scope,$routeParams,$http,$log,$sce) {
   
   var self = this;
