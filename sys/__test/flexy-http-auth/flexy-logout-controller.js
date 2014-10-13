@@ -1,3 +1,5 @@
+'use strict';
+
 flexyAdmin.controller('flexyLogoutController', ['flexyAuthService','authService','$location','$window', function(flexyAuthService,authService,$location,$window){
   flexyAuthService.logout().then(
     function(succes) {

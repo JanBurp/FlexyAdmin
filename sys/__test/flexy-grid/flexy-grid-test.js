@@ -1,4 +1,5 @@
 // UNIT TEST FOR flexy-grid.js
+'use strict';
 
 describe('flexy-grid', function(){
   

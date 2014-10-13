@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Extending standaard JavaScript Object prototypes en een aantal globale functies
  * 
