@@ -24,8 +24,10 @@ class get_admin_nav extends ApiController {
   
   public function index() {
     $table=$this->table;
-    $data = $this->$table->get();
-    return $this->_result(array('data'=>$data));
+    if ($this->_has_rights($table)) {
+      $data =$this->$table->get();
+      return $this->_result(array('data'=>$data));
+    }
   }
 
 }

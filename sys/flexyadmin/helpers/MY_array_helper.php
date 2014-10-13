@@ -1002,16 +1002,17 @@ function array_unset_keys($a,$unset,$recursive=FALSE) {
  * @author Jan den Besten
  */
 function array_rename_keys($a,$rename=array(),$keep_all=true) {
+  $b = array();
   foreach ($a as $key => $value) {
     if (isset($rename[$key])) {
-      $a[$rename[$key]]=$a[$key];
+      $b[$rename[$key]]=$a[$key];
       unset($a[$key]);
     }
     else {
-      if (!$keep_all) unset($a[$key]);
+      if ($keep_all) $b[$key]=$a[$key];
     }
   }
-  return $a;
+  return $b;
 }
 
 
