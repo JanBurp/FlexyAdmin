@@ -25,6 +25,8 @@ class get_table extends ApiController {
    * @author Jan den Besten
    */
   public function index() {
+    if (!$this->_has_rights($this->args['table'])) return;
+    
     // DEFAULTS
     $items=FALSE;
     $field_info=FALSE;
