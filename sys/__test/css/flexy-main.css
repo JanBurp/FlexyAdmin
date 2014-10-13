@@ -30,14 +30,15 @@ header, footer {min-height:34px;max-height:48px;}
 /* FORMS */
 label {text-transform:uppercase;}
 
-
 /* GENERAL */
 .hidden {display:none;}
 .action-move {cursor:move;}
 
 
+
 /* FLEXY LOGIN */
-#login {width:50%;min-width:300px;max-width:600px;}
+#login {width:50%;min-width:300px;max-width:600px;margin:2rem auto;}
+
 
 /* FLEXY-HOME */
 .flexy-home .btn {text-align:left;}

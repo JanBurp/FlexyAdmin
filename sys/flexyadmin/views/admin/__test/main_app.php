@@ -22,7 +22,26 @@
 
 </head>
 
-<body>
+<body class="flexy-authenticate hidden">
+  
+  
+  <div id="login" class="panel panel-primary" ng-controller="flexyLoginController as loginCtrl">
+    <div class="panel-heading panel-title"><h3>Login</h3></div>
+    <div class="panel-content">
+      <form name="loginForm" ng-submit="loginCtrl.login()" role="form">
+        <div class="form-group form-horizontal">
+          <label for="login-username">Username</label>
+          <input id="login-username" class="form-control" placeholder="" ng-model="loginCtrl.user.username">
+        </div>
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <input id="login-password" type="password" class="form-control" placeholder="" ng-model="loginCtrl.user.password">
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+      </form>
+    </div>
+  </div>
+  
     
   <div id="container" class="container-fluid">
     
@@ -50,6 +69,7 @@
 <script src="sys/__test/external/angular-bootstrap/ui-bootstrap-tpls.min.js" type="text/javascript" charset="utf-8"></script>
 
 <!-- Angular External Modules -->
+<script src="sys/__test/external/angular-http-auth/src/http-auth-interceptor.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/external/angular-toArrayFilter/toArrayFilter.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/external/angular-loading-bar/src/loading-bar.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/external/angular-smart-table/dist/smart-table.min.js" type="text/javascript" charset="utf-8"></script>
@@ -62,8 +82,9 @@
 <script src="sys/__test/flexy-http-auth/http-request.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-http-auth/http-interceptor-auth-check.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-http-auth/http-interceptor-logging.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/flexy-http-auth/auth-service.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/flexy-http-auth/auth-controller.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/flexy-http-auth/flexy-auth-service.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/flexy-http-auth/flexy-login-controller.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/flexy-http-auth/flexy-logout-controller.js" type="text/javascript" charset="utf-8"></script>
 
 <script src="sys/__test/flexy-ui/flexy-blocks.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-menu/flexy-menu.js" type="text/javascript" charset="utf-8"></script>

@@ -8,7 +8,7 @@ flexyAdmin.controller('PluginController', ['$scope','$routeParams','$http', '$lo
   $scope.title    = $scope.plugin;
   $scope.html  = '';
   
-  $http.post('__api/get_html',{'uri':$scope.uri,'name':$scope.plugin}).success(function(result){
+  $http.post('get_html',{'uri':$scope.uri,'name':$scope.plugin}).success(function(result){
     $log.log(result);
     $scope.title   = result.title;
     $scope.html = $sce.trustAsHtml(result.html);

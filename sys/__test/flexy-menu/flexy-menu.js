@@ -45,7 +45,7 @@ flexyMenu.process = function(root,menu) {
 }    
 
 
-flexyMenu.directive( "flexyMenu", function() {
+flexyMenu.directive( "flexyMenu", ['flexyAdminGlobals',function(flexyAdminGlobals) {
   return {
     restrict: "E",
     scope: {
@@ -54,20 +54,19 @@ flexyMenu.directive( "flexyMenu", function() {
     },
     templateUrl:'flexy-menu/flexy-menu.html',
 
-    controller : ['$scope', '$http', '$log', function($scope, $http, $log) {
-      $scope.root = "admin/__test";
+    controller : ['$scope', '$http', function($scope, $http) {
       $scope.menu = [];
-      $scope.menu.header = [ { href: $scope.root+"/logout", name: 'Logout' } ];
+      $scope.menu.header = [ { href: flexyAdminGlobals.base_url+"/logout", name: 'Logout' } ];
       $scope.menu.sidebar = [];
       $scope.menu.footer = [];
       $http.get('get_admin_nav',{cache:true}).then(function(result){
         var data=result.data.data;
-        $scope.menu.header  = flexyMenu.process( $scope.root, data.header );
-        $scope.menu.sidebar = flexyMenu.process( $scope.root, data.sidebar );
-        $scope.menu.footer  = flexyMenu.process( $scope.root, data.footer );
+        $scope.menu.header  = flexyMenu.process( flexyAdminGlobals.base_url, data.header );
+        $scope.menu.sidebar = flexyMenu.process( flexyAdminGlobals.base_url, data.sidebar );
+        $scope.menu.footer  = flexyMenu.process( flexyAdminGlobals.base_url, data.footer );
       });
       
     }],
     
   }
-});
+}]);

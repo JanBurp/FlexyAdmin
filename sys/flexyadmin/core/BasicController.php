@@ -21,8 +21,9 @@ class BasicController extends MY_Controller {
 		$this->load->library('session');
 		$this->load->library('user');
 		
-		if ( ! $this->_user_logged_in()) {
-      $this->output->set_status_header('401');
+		if ( !$this->_user_logged_in()) {
+      if (!$this->input->is_ajax_request()) $this->output->set_status_header('401');
+      return;
 		}
 
 		// ok move on...

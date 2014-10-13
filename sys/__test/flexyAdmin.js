@@ -3,6 +3,7 @@ var flexyAdmin = angular.module( 'flexyAdmin', [
   'ngRoute',
   
   // Angular Modules
+  'http-auth-interceptor',
   'angular-toArrayFilter',
   'angular-loading-bar',
   'ui.bootstrap',
@@ -21,8 +22,9 @@ var flexyAdmin = angular.module( 'flexyAdmin', [
  */
 
 flexyAdmin.constant('flexyAdminGlobals',{
-  sys_folder    : 'sys/__test/',
+  base_url      : 'admin/__test',  
   api_base_url  : '__api/',
+  sys_folder    : 'sys/__test/',
   log_prefix    : 'FA ',
 });
 
@@ -34,25 +36,13 @@ flexyAdmin.constant('flexyAdminGlobals',{
 
 flexyAdmin.config( function($routeProvider){
   $routeProvider
-    .when('/login',{
-      templateUrl:'flexy-http-auth/login-form.html'
-    })
     .when('/home',{
       controller  : '',
       templateUrl : 'flexy-ui/flexy-home.html',
-      resolve     : {
-        auth : ['$q','$location','authService',
-        function($q,$location,authService) {
-          return authService.session().then(
-            function(success){},
-            function(error) {
-              $location.path('/login');
-              $location.replace();
-              return $q.reject(error);
-            }
-          );
-        }]
-      }
+    })
+    .when('/logout',{
+      controller  : 'flexyLogoutController',
+      template    : '',
     })
     .when('/grid/:table',{
       controller  : '',
@@ -64,3 +54,63 @@ flexyAdmin.config( function($routeProvider){
     })
     .otherwise({ redirectTo: '/home' });
 });
+
+
+
+
+
+/**
+ * Taken from demo of: https://github.com/witoldsz/angular-http-auth
+ * 
+ * Hide/shows login-form if needed
+ * Show app if angular is ready
+ */
+flexyAdmin.directive('flexyAuthenticate', ['flexyAuthService',function(flexyAuthService) {
+
+  var login = angular.element(document.querySelector('#login'));
+  var container  = angular.element(document.querySelector('#container'));
+
+  function hide_all() {
+    login.addClass('hidden');
+    container.addClass('hidden');
+  }
+  function show_login() {
+    login.removeClass('hidden');
+    container.addClass('hidden');
+  }
+  function hide_login() {
+    login.addClass('hidden');
+    container.removeClass('hidden');
+  }
+  
+  return {
+    restrict: 'C',
+    link: function(scope, elem, attrs) {
+      hide_all();
+      flexyAuthService.check().then(
+        function(success) {
+          if (flexyAuthService.loggedIn()) {
+            hide_login();
+          }
+          else {
+            show_login();
+          }
+        },
+        function(error) {
+          show_login();
+        }
+      );
+      
+      // EVENT RESPONSE
+      scope.$on('event:auth-loginRequired', function() {
+        show_login();
+      });
+      scope.$on('event:auth-loginConfirmed', function() {
+        hide_login();
+      });
+
+      // READY LOADING ANGULAR
+      elem.removeClass('hidden');
+    }
+  }
+}]);
