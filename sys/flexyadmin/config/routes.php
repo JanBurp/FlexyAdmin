@@ -30,7 +30,7 @@ $route['(?!__api|admin|rss|file|_cronjob)(.*)'] = "";
 /**
  * Api routing (controllers/api/class/args)
  */
-$route['__api/([^/]*)/(.*)'] = '__api/$1';
+$route['__api/([^/]*)/(.*)'] = '__api/$1/$2';
 
 
 /**

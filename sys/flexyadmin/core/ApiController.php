@@ -14,16 +14,18 @@ class ApiController extends AjaxController {
    */
 	public function __construct($name='') {
 		parent::__construct();
+
     // Get arguments
     $this->args=$this->_get_args($this->args);
     
     // Check Authentication and Rights if not api/auth
     $auth=($this->uri->get(2)=='auth');
+    $this->loggedIn=$this->_user_logged_in();
     if (!$auth) {
-      // if (!$this->loggedIn || !$this->_user_logged_in()) {
-      //         $this->output->set_status_header('401');
-      //         return $this->_result(array('_status'=>401));
-      // }
+      if (!$this->loggedIn) {
+        $this->output->set_status_header('401');
+        return $this->_result(array('_status'=>401));
+      }
       if (isset($this->args['table'])) $this->table=$this->args['table'];
       if ($this->check_rights) {
         if (!$this->_has_rights($this->table)) {
@@ -37,14 +39,22 @@ class ApiController extends AjaxController {
     return $this;
 	}
   
+  
+  /**
+   * Get arguments from GET or POST
+   *
+   * @param string $defaults 
+   * @return void
+   * @author Jan den Besten
+   */
   private function _get_args($defaults) {
     $keys=array_keys($defaults);
     $args=array();
     
     // uri
-    $type='uri';
-    $args=$this->uri->uri_to_assoc(3);
-    if ($args) $args=array_merge($defaults,$args);
+    // $type='uri';
+    // $args=$this->uri->uri_to_assoc(3);
+    // if ($args) $args=array_merge($defaults,$args);
     
     // or post
     if (!$args and !empty($_POST)) {

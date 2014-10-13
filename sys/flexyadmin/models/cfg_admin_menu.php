@@ -18,7 +18,6 @@ class cfg_admin_menu extends Crud {
                     'b_visible'=>true,
                     'id_user_group >='=>$this->user->group_id,
                     'order >=' => 4,
-                    // 'str_type !=' => 'seperator',
                     'api !='=> 'API_plugin_stats'
                     ),
       'order'   => 'order'

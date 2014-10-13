@@ -12,34 +12,50 @@ class auth extends ApiController {
     $this->load->library('user');
 	}
   
-
+  public function index() {
+    return $this->check();
+  }
+  
   /**
-   * Login, or returns session
+   * Checks if a user is logged in
    *
    * @return void
    * @author Jan den Besten
    */
-  public function index() {
-    // logout?
-    if (isset($this->args['logout'])) {
-      $this->user->logout();
-      return $this->_result(array('_status'=>401));
-    }
-    
-    // If username and password given, try to login
-    if (!empty($this->args['username']) and !empty($this->args['password'])) {
-      $this->loggedIn = $this->user->login( $this->args['username'], $this->args['password'] );
-    }
-    
+  public function check() {
     // Give back user session if logged in
     if ($this->loggedIn or $this->user->logged_in()) {
       $data=$this->user->get_user();
       $data=object2array($data);
       $data=array_rename_keys($data,array('str_username'=>'username','email_email'=>'email','last_login'=>'last_login','str_language'=>'language'),false);
-      return $this->_result(array('data'=>$data,'_args'=>'***'));
+      $args=$this->args;
+      $args['password']='***';
+      return $this->_result(array('data'=>$data,'_args'=>$args));
     }
-
     // if not logged in, status 401
+    return $this->_result(array('_status'=>401));
+  }
+  
+  /**
+   * Login a user
+   *
+   * @return void
+   * @author Jan den Besten
+   */
+  public function login() {
+    $this->loggedIn = $this->user->login( $this->args['username'], $this->args['password'] );
+    return $this->check();
+  }
+  
+
+  /**
+   * Logout
+   *
+   * @return void
+   * @author Jan den Besten
+   */
+  public function logout() {
+    $this->user->logout();
     return $this->_result(array('_status'=>401));
   }
   
