@@ -52,7 +52,7 @@ flexyMenu.directive( "flexyMenu", function() {
       type   : "@",
       uiclass : "@",
     },
-    templateUrl:'sys/__test/flexy-menu/flexy-menu.html',
+    templateUrl:'flexy-menu/flexy-menu.html',
 
     controller : ['$scope', '$http', '$log', function($scope, $http, $log) {
       $scope.root = "admin/__test";
@@ -60,7 +60,7 @@ flexyMenu.directive( "flexyMenu", function() {
       $scope.menu.header = [ { href: $scope.root+"/logout", name: 'Logout' } ];
       $scope.menu.sidebar = [];
       $scope.menu.footer = [];
-      $http.get('__api/get_admin_nav?_type=json',{cache:true}).then(function(result){
+      $http.get('get_admin_nav',{cache:true}).then(function(result){
         var data=result.data.data;
         $scope.menu.header  = flexyMenu.process( $scope.root, data.header );
         $scope.menu.sidebar = flexyMenu.process( $scope.root, data.sidebar );
