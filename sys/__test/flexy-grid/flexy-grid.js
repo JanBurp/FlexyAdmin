@@ -80,9 +80,6 @@ flexyAdmin.controller('GridController', ['$scope','$routeParams','$http', functi
     'totalPages'    : 0
   };
   
-  
-  
-
 
 
   /**
@@ -101,6 +98,8 @@ flexyAdmin.controller('GridController', ['$scope','$routeParams','$http', functi
      * -  if branch, hide nodes and remember them
      */
     dragStart : function(obj) {
+      console.log('START');
+      
       var row=obj.source.itemScope.element;
       var table=angular.element(document.querySelector('.flexy-grid.'+$scope.table+' table'));
 
