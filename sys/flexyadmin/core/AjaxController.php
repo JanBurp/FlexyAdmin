@@ -70,22 +70,9 @@ class AjaxController extends BasicController {
 	}
   
   /**
-   * Sets testmode, output is not echod
-   *
-   * @param string $test[true]
-   * @return object $this
-   * @author Jan den Besten
-   */
-  public function _test($test=true) {
-    $this->test=$test;
-    return $this;
-  }
-
-
-  /**
    * Deze method geeft een JSON terug van de meegegeven array.
    * Gebruik altijd deze method om een gestandardiseerde JSON terug te geven aan de AJAX call.
-   * In testmode wordt een trace van het resultaat gegegeven.
+   * Als het geen AJAX request is wordt een trace van het resultaat gegegeven.
    *
    * @param array $args an associatieve array
    * @return string JSON
@@ -107,7 +94,7 @@ class AjaxController extends BasicController {
       ksort($result);
     }
     
-    if ($this->test) {
+    if ( ! $this->input->is_ajax_request() ) {
       $result['_test']=true;
       trace_($result);
       return $result;

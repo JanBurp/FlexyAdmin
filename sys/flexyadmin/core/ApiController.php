@@ -5,7 +5,6 @@ class ApiController extends AjaxController {
   protected $args=array();
   protected $check_rights=true;
   protected $table=NULL;
-  protected $type='trace';
   
   protected $loggedIn=false;
   
@@ -17,10 +16,6 @@ class ApiController extends AjaxController {
 		parent::__construct();
     // Get arguments
     $this->args=$this->_get_args($this->args);
-
-    // Output type
-    if (isset($this->args['_type'])) $this->type=$this->args['_type'];
-    if ($this->type!='json') $this->_test(true);
     
     // Check Authentication and Rights if not api/auth
     $auth=($this->uri->get(2)=='auth');
@@ -32,20 +27,17 @@ class ApiController extends AjaxController {
       if (isset($this->args['table'])) $this->table=$this->args['table'];
       if ($this->check_rights) {
         if (!$this->_has_rights($this->table)) {
-          unset($this->result['_args_type']);
           return $this->_result(array('_error'=>'NO RIGHTS'));
         }
       }
     }
     // Standard result
-    $this->result['_result_type']=$this->type;
     $this->result['_args']=$this->args;
     $this->result['_api']=$this->name;
     return $this;
 	}
   
   private function _get_args($defaults) {
-    $defaults['_type']=$this->type;
     $keys=array_keys($defaults);
     $args=array();
     
@@ -79,7 +71,6 @@ class ApiController extends AjaxController {
       $args=$defaults;
     }
     
-    $this->result['_args_type']=$type;
     return $args;
   }
   

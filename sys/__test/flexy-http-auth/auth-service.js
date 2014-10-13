@@ -6,7 +6,7 @@ flexyAdmin.factory('authService',['$http',function($http){
      * Check user session
      */
     session : function(){
-      return $http.get('__api/auth?_type=json').then(function(response) {
+      return $http.get('auth').then(function(response) {
         service.isLoggedIn = true;
         return response;
       });
@@ -16,7 +16,7 @@ flexyAdmin.factory('authService',['$http',function($http){
      * Try to login a user
      */
     login : function(user){
-      return $http.post('__api/auth', user).then(function(response){
+      return $http.post('auth', user).then(function(response){
         service.isLoggedIn = true;
         return response;
       });

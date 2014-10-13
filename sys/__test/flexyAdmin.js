@@ -17,17 +17,29 @@ var flexyAdmin = angular.module( 'flexyAdmin', [
 
 
 /**
+ * SOME SPARE GLOBALS as a constant
+ */
+
+flexyAdmin.constant('flexyAdminGlobals',{
+  sys_folder    : 'sys/__test/',
+  api_base_url  : '__api/',
+  log_prefix    : 'FA ',
+});
+
+
+
+/**
  * ROUTING
  */
 
 flexyAdmin.config( function($routeProvider){
   $routeProvider
     .when('/login',{
-      templateUrl:'sys/__test/flexy-http-auth/login-form.html'
+      templateUrl:'flexy-http-auth/login-form.html'
     })
     .when('/home',{
       controller  : '',
-      templateUrl : 'sys/__test/flexy-ui/flexy-home.html',
+      templateUrl : 'flexy-ui/flexy-home.html',
       resolve     : {
         auth : ['$q','$location','authService',
         function($q,$location,authService) {
@@ -44,11 +56,11 @@ flexyAdmin.config( function($routeProvider){
     })
     .when('/grid/:table',{
       controller  : '',
-      templateUrl : 'sys/__test/flexy-grid/flexy-grid.html'
+      templateUrl : 'flexy-grid/flexy-grid.html'
     })
     .when('/form/:table/:id',{
       controller  : 'FormController',
-      templateUrl : 'sys/__test/flexy-form/flexy-form.html'
+      templateUrl : 'flexy-form/flexy-form.html'
     })
     .otherwise({ redirectTo: '/home' });
 });
