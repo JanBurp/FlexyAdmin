@@ -47,6 +47,15 @@ flexyAdmin.factory('flexyAuthService',['$http',function($http){
         return response;
       });
     },
+    
+    /**
+     * Send new password to user
+     */
+    send_password : function(email) {
+      return $http.post('auth/send_new_password',{'email':email}).then(function(response){
+        return response;
+      });
+    }
 
   };
 }]);

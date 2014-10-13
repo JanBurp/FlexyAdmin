@@ -211,6 +211,55 @@ class User Extends Ion_auth {
       }
     }
   }
+  
+  
+	/**
+	 * Verstuurt een mail naar gebruiker met een nieuw wachtwoord
+	 *
+	 * @param string $email Emailadres van gebruiker
+	 * @param string $subject['Forgotten Password Verification'] Onderwerp van de te sturen email 
+	 * @return bool TRUE als proces is gelukt, FALS als gebruiker niet bekent is
+	 * @author Jan den Besten
+	 */
+	public function forgotten_password_send($email,$uri,$subject='Forgotten Password Verification') {
+		$user = $this->get_user_by_email($email);
+		// User not found?
+		if (empty($user)) {
+			$this->set_error('forgot_password_email_not_found');
+			return FALSE;
+		}
+		else if ( $this->CI->ion_auth_model->forgotten_password($email) ) {
+			$data = array(
+				'user'										=> $user->str_username,
+				'forgotten_password_uri'	=> $uri,
+				'forgotten_password_code' => $this->CI->ion_auth_model->forgotten_password_code,
+			);
+			$message = $this->CI->load->view($this->CI->config->item('email_templates', 'ion_auth').$this->CI->config->item('email_forgot_password', 'ion_auth'), $data, true);
+
+			$this->CI->email->clear();
+			$config['mailtype'] = $this->CI->config->item('email_type', 'ion_auth');
+			$this->CI->email->initialize($config);
+			$this->CI->email->from($this->CI->config->item('admin_email', 'ion_auth'), $this->CI->config->item('site_title', 'ion_auth'));
+			$this->CI->email->to($email);
+			$this->CI->email->subject($this->CI->config->item('site_title', 'ion_auth').' - '.$subject);
+			$this->CI->email->message($message);
+			
+			if ( $this->CI->email->send() ) {
+				$this->set_message('forgot_password_successful');
+				return TRUE;
+			}
+			else {
+				$this->set_error('forgot_password_unsuccessful');
+				return FALSE;
+			}
+		}
+		else {
+			$this->set_error('forgot_password_unsuccessful');
+			return FALSE;
+		}
+	}
+  
+  
 	
 	/**
 	 * Verzorgt het proces als een gebruiker het paswoord is vergeten

@@ -9,6 +9,7 @@ var flexyAdmin = angular.module( 'flexyAdmin', [
   'angular-toArrayFilter',
   'angular-loading-bar',
   'ui.bootstrap',
+  'ui.bootstrap.showErrors',
   'smart-table',
   'ui.sortable',
   

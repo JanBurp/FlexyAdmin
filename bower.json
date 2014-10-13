@@ -31,6 +31,7 @@
     "angular-toArrayFilter": "~1.0.0",
     "ng-sortable": "1.1.1",
     "angular-mocks": "~1.2.26",
-    "angular-http-auth": "git://github.com/witoldsz/angular-http-auth.git#~1.2.1"
+    "angular-http-auth": "git://github.com/witoldsz/angular-http-auth.git#~1.2.1",
+    "angular-bootstrap-show-errors": "~2.0.0"
   }
 }

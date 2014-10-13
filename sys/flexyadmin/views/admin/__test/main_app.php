@@ -28,16 +28,36 @@
   <div id="login" class="panel panel-primary" ng-controller="flexyLoginController as loginCtrl">
     <div class="panel-heading panel-title"><h3>Login</h3></div>
     <div class="panel-content">
-      <form name="loginForm" ng-submit="loginCtrl.login()" role="form">
-        <div class="form-group form-horizontal">
-          <label for="login-username">Username</label>
-          <input id="login-username" class="form-control" placeholder="" ng-model="loginCtrl.user.username">
+      <form class="form-horizontal" name="loginForm" ng-submit="loginCtrl.login()">
+        <div class="form-group">
+          <label class="col-sm-3 control-label" for="login-username">Username</label>
+          <div class="col-sm-9">
+            <input class="form-control" name="login-username" required class="form-control" placeholder="" ng-model="loginCtrl.user.username">
+          </div>
         </div>
         <div class="form-group">
-          <label for="login-password">Password</label>
-          <input id="login-password" type="password" class="form-control" placeholder="" ng-model="loginCtrl.user.password">
+          <label class="col-sm-3 control-label" for="login-password">Password</label>
+          <div class="col-sm-9">
+            <input class="form-control" name="login-password" type="password" required class="form-control" placeholder="" ng-model="loginCtrl.user.password">
+          </div>
         </div>
-        <button type="submit" class="btn btn-default">Submit</button>
+        <div class="form-group">
+          <div class="col-sm-offset-3 col-sm-9">
+            <button type="submit" class="btn btn-default" ng-disabled="loginForm.$invalid">Login</button>
+            <a class="flexy-login-forgot action-click pull-right" ng-click="loginCtrl.askMail=!loginCtrl.askMail;loginCtrl.mailSend=false">wachtwoord vergeten?</a>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="panel-footer" ng-show="loginCtrl.askMail">
+      <form class="form-inline" name="loginEmailForm" ng-submit="loginCtrl.sendNewPassword()">
+        <div class="form-group" show-errors>
+          <div class="col-sm-offset-3">
+            <input class="form-control" name="login-email" type="email" required placeholder="E-mail" ng-model="loginCtrl.user.email">
+            <button type="submit" class="btn btn-default" ng-disabled="loginEmailForm.$invalid">Stuur wachtwoord</button>
+            <div class="btn text-success" ng-show="loginCtrl.mailSend"><span class="glyphicon glyphicon-ok"></span></div>
+          </div>
+        </div>
       </form>
     </div>
   </div>
@@ -67,6 +87,7 @@
 <script src="sys/__test/external/angular/angular.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/external/angular-route/angular-route.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/external/angular-bootstrap/ui-bootstrap-tpls.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/external/angular-bootstrap-show-errors/src/showErrors.min.js" type="text/javascript" charset="utf-8"></script>
 
 <!-- Angular External Modules -->
 <script src="sys/__test/external/angular-http-auth/src/http-auth-interceptor.js" type="text/javascript" charset="utf-8"></script>
