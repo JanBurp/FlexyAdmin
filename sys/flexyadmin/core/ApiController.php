@@ -23,7 +23,6 @@ class ApiController extends AjaxController {
     $this->loggedIn=$this->_user_logged_in();
     if (!$auth) {
       if (!$this->loggedIn) {
-        $this->output->set_status_header('401');
         return $this->_result(array('_status'=>401));
       }
       if (isset($this->args['table'])) $this->table=$this->args['table'];
@@ -50,11 +49,6 @@ class ApiController extends AjaxController {
   private function _get_args($defaults) {
     $keys=array_keys($defaults);
     $args=array();
-    
-    // uri
-    // $type='uri';
-    // $args=$this->uri->uri_to_assoc(3);
-    // if ($args) $args=array_merge($defaults,$args);
     
     // or post
     if (!$args and !empty($_POST)) {
