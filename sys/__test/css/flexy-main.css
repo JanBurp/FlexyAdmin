@@ -25,19 +25,23 @@ header, footer {min-height:34px;max-height:48px;}
 /* PANELS */
 .panel-heading {height:42px;overflow:hidden;padding:7px 5px;}
 .panel-heading h3 {text-transform:uppercase;margin:0 1rem;}
-.panel-content {padding:2rem;}
+.panel-content, .panel-footer {padding:2rem;}
 
 /* FORMS */
-label {text-transform:uppercase;}
+label,button {text-transform:uppercase;}
+.form-inline .form-group {width:100%;}
 
 /* GENERAL */
 .hidden {display:none;}
+.action-click {cursor:pointer;}
 .action-move {cursor:move;}
 
 
-
 /* FLEXY LOGIN */
-#login {width:50%;min-width:300px;max-width:600px;margin:2rem auto;}
+#login {width:600px;margin:2rem auto;}
+#login .panel-content {padding-bottom:0;}
+#login .flexy-login-forgot {padding-top:1rem;}
+#login .panel-footer .form-group {width:100%;}
 
 
 /* FLEXY-HOME */
