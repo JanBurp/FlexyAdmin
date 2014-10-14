@@ -13,11 +13,20 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'sys/__test/external/angular/angular.js',
-      'sys/__test/external/angular-mocks/angular-mocks.js',
-      'sys/__test/flexyAdmin.js',
-      'sys/__test/flexy-grid/flexy-grid.js',
-      'sys/__test/flexy-grid/flexy-grid-test.js',
+      "sys/__test/external/angular/angular.js",
+      "sys/__test/external/angular-mocks/angular-mocks.js",
+      "sys/__test/external/angular-route/angular-route.js",
+      "sys/__test/external/angular-bootstrap/ui-bootstrap-tpls.min.js",
+      "sys/__test/external/angular-bootstrap-show-errors/src/showErrors.min.js",
+      "sys/__test/external/angular-http-auth/src/http-auth-interceptor.js",
+      "sys/__test/external/angular-toArrayFilter/toArrayFilter.js",
+      "sys/__test/external/angular-loading-bar/src/loading-bar.js",
+      "sys/__test/external/angular-smart-table/dist/smart-table.min.js",
+      "sys/__test/external/ng-sortable/dist/ng-sortable.min.js",
+
+      "sys/__test/jdb.extend.js",
+      "sys/__test/flexy*.js",
+      "sys/__test/flexy*/flexy*.js",
     ],
 
     // list of files to exclude
@@ -45,7 +54,7 @@ module.exports = function(config) {
 
     // level of logging
     // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-    logLevel: config.LOG_INFO,
+    logLevel: config.LOG_WARN,
 
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: true,
