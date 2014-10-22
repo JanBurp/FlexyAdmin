@@ -17,6 +17,7 @@ class get_admin_nav extends ApiController {
    * @ignore
    */
 	public function __construct($name='') {
+    $this->check_rights=false;
 		parent::__construct();
     $this->load->model($this->table);
     return $this;
@@ -24,8 +25,7 @@ class get_admin_nav extends ApiController {
   
   public function index() {
     $table=$this->table;
-    if (!$this->_has_rights($table)) return;
-
+    if (!$this->loggedIn) return;
     $data =$this->$table->get();
     return $this->_result(array('data'=>$data));
   }

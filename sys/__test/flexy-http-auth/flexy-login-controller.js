@@ -12,6 +12,7 @@ flexyAdmin.controller('flexyLoginController', ['flexyAuthService','authService',
   self.askMail  = false;
   self.mailSend = false;
   
+  
   /**
    * login
    */
