@@ -170,10 +170,13 @@ class cfg_admin_menu extends Crud {
 			}
 		}
 
+    // remove first and last seperators
+    while ($menu[0]['type']=='seperator') { array_shift($menu); }
+    while ($menu[count($menu)-1]['type']=='seperator') { array_pop($menu); }
 		// remove double seperators
 		$firstSeperator=false;
 		foreach ($menu as $key => $item) {
-			$isSeperator = empty($item);
+			$isSeperator = empty($item) or ($item['type']=='seperator');
 			if ($isSeperator) {
 				if ( ! $firstSeperator)
 					$firstSeperator=true;
@@ -183,7 +186,6 @@ class cfg_admin_menu extends Crud {
 			else
 				$firstSeperator=false;
 		}
-		
     
     return $menu;
 	}

@@ -1,6 +1,6 @@
 'use strict';
 
-flexyAdmin.factory('flexyAuthService',['$http',function($http){
+flexyAdmin.factory('flexyAuthService',['$http','$cacheFactory',function($http,$cacheFactory){
   var isLoggedIn = false;
   
   return  {
@@ -44,6 +44,7 @@ flexyAdmin.factory('flexyAuthService',['$http',function($http){
     logout : function(){
       return $http.post('auth/logout').then(function(response){
         isLoggedIn = false;
+        $cacheFactory.get('$http').removeAll(); // remove cache
         return response;
       });
     },

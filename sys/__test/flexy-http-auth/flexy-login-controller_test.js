@@ -4,7 +4,8 @@
 describe('flexy-login-controller', function(){
   beforeEach(module('flexyAdmin'));
 
-  var ctrl;
+  var ctrl, authMock;
+
   beforeEach(inject(function($controller){
     ctrl = $controller('flexyLoginController');
   }));
@@ -19,15 +20,12 @@ describe('flexy-login-controller', function(){
       password:'',
       email:''
     });
-    expect( ctrl.askMail ).toBeDefined();
-    expect( ctrl.mailSend ).toEqual(false);
   });
 
   it('flexy-login-controller: askMail & mailSend defined', function() {
     expect( ctrl.askMail ).toBeDefined();
     expect( ctrl.mailSend ).toEqual(false);
   });
-
   
   
 });

@@ -80,7 +80,8 @@ class ApiController extends AjaxController {
   }
   
   protected function _has_rights($item,$id="",$whatRight=0) {
-    return $this->user->has_rights($item,$id,$whatRight);
+    $rights=$this->user->has_rights($item,$id,$whatRight);
+    return $rights;
   }
   
   
