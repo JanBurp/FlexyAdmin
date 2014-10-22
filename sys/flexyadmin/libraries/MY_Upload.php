@@ -10,7 +10,7 @@
 class MY_Upload extends CI_Upload {
 
 	private $config;
-	private $error;
+	private $error='';
 	private $result;
 	private $CI;
   
@@ -158,15 +158,15 @@ class MY_Upload extends CI_Upload {
    * @author Jan den Besten
    */
 	public function upload_file($file="userfile") {
-		$config=$this->config;
-    // strace_($config);
 		$goodluck=FALSE;
+		$config=$this->config;
 		$this->initialize($config);
-		$this->do_upload($file);
-		$this->error=$this->display_errors();
-    // strace_($this->error);
+    // strace_($config);
+		$goodluck=$this->do_upload($file);
+    // strace_($goodluck);
     // strace_($_FILES);
-		if (empty($this->error)) {
+		if ($goodluck) {
+      $this->error='';
 			$this->result=$this->data();
 			$this->file_name=$this->result["file_name"];
 			$cleanName=clean_file_name($this->file_name);
@@ -174,20 +174,13 @@ class MY_Upload extends CI_Upload {
 				rename($config["upload_path"]."/".$this->file_name, $config["upload_path"]."/".$cleanName);
 				$this->file_name=$cleanName;
 			}
-      // trace_($this->file_name);
-			$goodluck=empty($this->error);
-			if (!$goodluck) {
-				log_("info","[UPLOAD] error while uploaded: '$this->file_name' [$this->error]");
-			}
-			else {
-				log_("info","[UPLOAD] uploaded: '$this->file_name'");
-			}
+      // strace_($this->file_name);
+			log_("info","[UPLOAD] uploaded: '$this->file_name'");
 		}
-		else {
-			// die($this->error);
-			$goodluck=FALSE;
-		}
-		
+    else {
+      $this->error=$this->display_errors();
+			log_("info","[UPLOAD] error while uploaded: '$this->file_name' [$this->error]");
+    }
 		return $goodluck;
 	}
 	

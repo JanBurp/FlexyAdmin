@@ -211,7 +211,7 @@ class Mediatable Extends CI_Model {
    * @return array $paths
    * @author Jan den Besten
    */
-  public function refresh($paths='',$clean=TRUE,$remove=FALSE) {
+  public function refresh($paths='',$clean=TRUE, $remove=FALSE) {
     if (empty($paths)) {
       $paths=$this->cfg->get('cfg_media_info');
       $paths=array_keys($paths);
