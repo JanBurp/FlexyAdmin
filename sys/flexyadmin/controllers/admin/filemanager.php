@@ -79,11 +79,10 @@ class Filemanager extends AdminController {
         else
           $files=read_map($map);
         
-        
 				/**
 				 * update img/media_lists
 				 */
-				$this->_before_filemanager($path,$files);
+        $this->_before_filemanager($path,$files);
         
 				/**
 					* Exclude files that are not owned by user
@@ -114,18 +113,6 @@ class Filemanager extends AdminController {
           }
         }
 
-        // Check if file is used somewhere
-        if (isset($cfg['fields_check_if_used_in']) and !empty($cfg['fields_check_if_used_in'])) {
-          $used_field=lang('USED');
-          $this->load->model('search_replace');
-          $fields=explode('|',$cfg['fields_check_if_used_in']);
-          foreach ($files as $name => $file) {
-            $found=$this->search_replace->has_text($name,$fields);
-            $files[$name][$used_field]=$found;
-          }
-        }
-        
-
 				// Search in files
 				if (!empty($search)) {
 					foreach ($files as $name => $file) {
@@ -139,6 +126,24 @@ class Filemanager extends AdminController {
 					$desc=(substr($order,0,1)=='_');
 					$files=sort_by($files,ltrim($sorder,'_'),$desc);
 				}
+        
+        // Pagination? Slice array
+        if ($cfg['b_pagination']) {
+          $limit=$this->cfg->get('cfg_configurations','int_pagination');
+          $show_files=array_slice($files,$offset,$limit);
+        }
+        $show_files=$files;
+
+        // Check if file is used somewhere
+        if (isset($cfg['fields_check_if_used_in']) and !empty($cfg['fields_check_if_used_in'])) {
+          $used_field=lang('USED');
+          $this->load->model('search_replace');
+          $fields=explode('|',$cfg['fields_check_if_used_in']);
+          foreach ($show_files as $name => $file) {
+            $found=$this->search_replace->has_text($name,$fields);
+            $files[$name][$used_field]=$found;
+          }
+        }
         
 				/**
 				 * Start file manager
@@ -157,7 +162,7 @@ class Filemanager extends AdminController {
         
 				$fileManager->set_pagination(array('offset'=>$offset,'order'=>$order,'search'=>$search));
 				$renderData=$fileManager->render();
-
+        
 				if ($fileManagerView=="list") {
 					// Grid
 					$html=$this->load->view("admin/grid",$renderData,true);
