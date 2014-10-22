@@ -385,10 +385,7 @@ class AdminController extends BasicController {
 	
 
   // TODO: Move to plugin...
-	function _before_filemanager($path,&$files) {
-		/**
-		 * Reset img/media list
-		 */
+	function _before_filemanager($path,$files) {
 		$this->load->library("editor_lists");
 		$result=$this->editor_lists->create_list("img");
 		if ($result) $result=$this->editor_lists->create_list("media");

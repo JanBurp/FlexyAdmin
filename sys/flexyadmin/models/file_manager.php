@@ -586,9 +586,9 @@ class File_manager Extends CI_Model {
    * @internal
    * @ignore
    */
-	private function _create_render_data($details=TRUE) {
+	private function _create_render_data($files,$details=TRUE) {
 		$data=array();
-		$files=$this->files;
+    
     $used_field=lang('USED');
     
 		$imgTypes=$this->config->item('FILE_types_img');
@@ -762,11 +762,6 @@ class File_manager Extends CI_Model {
 		$current=$this->currentId;
 
 		/**
-		 * Prepare file data
-		 */
-		$renderData=$this->_create_render_data();
-    
-		/**
 		 * Header (caption and buttons)
 		 */
 		if (empty($this->caption))	$this->set_caption($this->path);
@@ -792,17 +787,24 @@ class File_manager Extends CI_Model {
     // Pagination
 		$pagination=$this->cfg->get("CFG_media_info",$this->path,'b_pagination');
 		if ($pagination) $pagination=$this->cfg->get('cfg_configurations','int_pagination');
-		$offset=0;
+		$offset=el('offset',$this->pagin,0);
+    
+		/**
+		 * Prepare file data
+		 */
+		$renderData=$this->_create_render_data( array_slice($this->files,$offset,$pagination) );
+    // trace_([$offset,$pagination,count($this->files),count($renderData),$renderData]);
+    
 
     // Grid
 		$grid=new grid();
 		$grid->set_current($current);
 
 		if ($pagination) {
-			$pagination=array('base_url'=>api_url('API_filemanager_view',$this->path),'per_page'=>$pagination,'total_rows'=>count($renderData));
+			$pagination=array('base_url'=>api_url('API_filemanager_view',$this->path),'per_page'=>$pagination,'total_rows'=>count($this->files));
 			$pagination=array_merge($pagination,$this->pagin);
 			$grid->set_pagination($pagination);
-			$renderData=array_slice($renderData,$pagination['offset'],$pagination['per_page'],true);
+      // $renderData=array_slice($renderData,$pagination['offset'],$pagination['per_page'],true);
 		}
 		// strace_($pagination);
 		

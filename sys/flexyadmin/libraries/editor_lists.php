@@ -18,6 +18,7 @@ class Editor_lists {
 	function __construct($type="img") {
 		$this->set_type($type);
     $this->CI=& get_instance();
+    $this->CI->load->model('mediatable');
 	}
 
 	function set_type($type="img") {
@@ -135,9 +136,16 @@ class Editor_lists {
 					$files=array();
 					$path=$downloadPath["path"];
 					$map=$this->CI->config->item('ASSETS').$path;
-					$files=read_map($map);
-					$files=not_filter_by($files,"_");
-					ignorecase_ksort($files);
+          
+          if ($this->CI->mediatable->exists()) {
+            $files=$this->CI->mediatable->get_files($map);
+          }
+          else {
+  					$files=read_map($map);
+  					$files=not_filter_by($files,"_");
+  					ignorecase_ksort($files);
+          }
+
 					$data['-- '.strtoupper($this->CI->ui->get($path)).' ----------']=NULL;
 					$data=$data + $files;
 				}
