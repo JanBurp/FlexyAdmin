@@ -210,7 +210,15 @@ class Wizard {
     return $this->data=$this->CI->session->userdata('wizard');
   }
 
-
+  /**
+   * Gets data from earlier steps
+   *
+   * @return $data array
+   * @author Jan den Besten
+   */
+  public function unset_data() {
+    return $this->data=$this->CI->session->unset_userdata('wizard');
+  }
 
 	
 }

@@ -32,7 +32,7 @@ class Plugin_refresh_media extends Plugin {
    */
 	function _admin_api($args=NULL) {
     $clean=FALSE;
-    $remove=TRUE;
+    $remove=FALSE;
     if (isset($args[0]) and $args[0]=='reset') $clean=TRUE;
     if (isset($args[0]) and $args[0]=='remove') $remove=TRUE;
     if ($this->CI->mediatable->exists()) {
