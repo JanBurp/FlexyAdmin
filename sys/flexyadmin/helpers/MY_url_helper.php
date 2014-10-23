@@ -159,6 +159,27 @@ function pathdecode($p,$isPath=TRUE) {
 	return $p;
 }
 
+/**
+ * Finds emailaddresses in string
+ *
+ * @param string $str 
+ * @return mixed FALSE if no email addres is found, string when on is found, an array of strings when more are found
+ * @author Jan den Besten
+ */
+function get_emails($s) {
+  $emails = false;
+  if (preg_match_all("/[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/ui", $s, $matches)) {
+    if (count($matches[0])==1) {
+      $emails=current($matches[0]);
+    }
+    else {
+      $emails=array();
+      foreach($matches[0] as $email) array_push ($emails, strtolower($email));
+    }
+  }
+  return $emails;
+}
+
 
 /**
  * Encoded Mailto Link
