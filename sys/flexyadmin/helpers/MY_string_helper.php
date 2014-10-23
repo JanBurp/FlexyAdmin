@@ -393,6 +393,16 @@ function strip_string($s,$c=0) {
 	return $s;
 }
 
+function strip_ms_word($html) { 
+  // start by completely removing all unwanted tags 
+  $html = preg_replace("/<?(font|span|xml|del|ins|[ovwxp]:\w+)[^>]*?>/", "", $html);
+  // then run another pass over the html (twice), removing unwanted attributes 
+  $html = preg_replace("/<([^>]*)(?:class|lang|style|size|face|[ovwxp]:\w+)=(?:'[^']*'|\"[^\"]*\"|[^\s>]+)([^>]*)>/","<$1$2>", $html);
+  $html = preg_replace("/<([^>]*)(?:class|lang|style|size|face|[ovwxp]:\w+)=(?:'[^']*'|\"[^\"]*\"|[^\s>]+)([^>]*)>/","<$1$2>", $html);
+  return $html;
+}
+
+
 /**
  * Maakt mooie naam
  * 
