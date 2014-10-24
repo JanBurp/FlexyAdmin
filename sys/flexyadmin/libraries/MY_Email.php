@@ -182,6 +182,45 @@ class MY_Email extends CI_Email {
     return $this;
   }
   
+  
+  
+  /**
+   * Zorgt voor juiste verwijzingingen in de tekst van een mailbody en de juiste styling
+   *
+   * @param string $body 
+   * @return string
+   * @author Jan den Besten
+   * @ignore
+   */
+  public function prepare_body($body) {
+    // good paths to local images
+		$body=str_replace('src="','src="'.base_url(),$body);
+    // good internal links
+		$body=str_replace('href="mailto:','##MAIL##',$body);
+		$body=str_replace('href="undefined/','href="'.base_url(),$body);
+		$body=preg_replace('/href=\"(?!https?:\/\/).*?/','href="'.base_url(),$body);
+		$body=str_replace('##MAIL##','href="mailto:',$body);
+    return $body;
+  }
+  
+  /**
+   * Add styling to tags
+   *
+   * @param string $body
+   * @param array $styles 
+   * @return string
+   * @author Jan den Besten
+   */
+  public function add_styles($body,$styles) {
+    if ($styles) {
+      foreach ($styles as $tag => $style) {
+        $body = preg_replace("/<".$tag."(|\s[^>]*)>/uiU", "<".$tag." style=\"".$style."\"$1>", $body);
+      }
+    }
+    return $body;
+  }
+  
+  
 
 	
 }
