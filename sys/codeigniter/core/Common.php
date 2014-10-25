@@ -254,7 +254,7 @@ if ( ! function_exists('get_config'))
 			}
 		}
 
-    // JDB: Hack for PHP 5.6
+    // JDB: Hack for PHP 5.6 : https://ellislab.com/forums/viewthread/244510/
     // return $_config[0] =& $config;
     $_config[0] =& $config;
     return $_config[0];  
