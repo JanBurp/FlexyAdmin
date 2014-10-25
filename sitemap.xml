@@ -32,6 +32,12 @@
 		<content>.</content>
 	</url>
 	<url>
+		<loc>http://www.flexyadmin.com/pagina_2_branch/ughg</loc>
+		<priority>0.64</priority>
+		<title>ughg</title>
+		<content>.</content>
+	</url>
+	<url>
 		<loc>http://www.flexyadmin.com/pagina_3_eind</loc>
 		<priority>0.80</priority>
 		<title>Pagina 3 (eind)</title>
