@@ -169,6 +169,7 @@ class Create_uri extends CI_Model {
    * @author Jan den Besten
    */
   public function is_forbidden($uri) {
+    if (substr($uri,0,1)=='_') return true;
     $forbidden=$this->config->item('FORBIDDEN_URIS');
     if (!$forbidden) $forbidden=array("site","sys","admin","rss","file",'offset');
     $forbidden[]=$this->config->item('URI_HASH');

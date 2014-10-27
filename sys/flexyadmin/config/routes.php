@@ -25,7 +25,14 @@
 /**
  * This routing makes sure all uri's go to the frontend site, except soms sysyem uri's
  */
-$route['(?!__api|admin|rss|file|_cronjob)(.*)'] = "";
+$route['(?!__api|admin|rss|file|_cronjob|_unittest)(.*)'] = "";
+
+/**
+ * CI unit test
+ */
+$route['_unittest'] = "ciunit_controller/index";
+$route['_unittest/(.*)'] = "ciunit_controller/index/$1";
+
 
 /**
  * Api routing (controllers/api/class/args)
