@@ -4,6 +4,9 @@ class Cronjob extends CI_Model {
 	
 	public function __construct()	{
 		parent::__construct();
+    $lang=$this->config->item('language');
+		$lang=$lang."_".strtoupper($lang);
+		setlocale(LC_ALL, $lang);
 	}
 
 	public function go()	{
