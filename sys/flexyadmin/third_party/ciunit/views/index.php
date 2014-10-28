@@ -176,7 +176,7 @@
       <p class="pull-right">
         <a href="#">Back to top</a>
       </p>
-      <p>&copy; 2013 CIUnit.</p>
+      <p><a href="https://github.com/destructivecreator/ciunit-framework" target="_blank">&copy; 2013 CIUnit.</a></p>
     </footer>
     
   </div>

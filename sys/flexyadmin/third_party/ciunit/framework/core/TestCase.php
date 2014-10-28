@@ -88,7 +88,8 @@ abstract class CIUnit_Framework_TestCase extends CIUnit_Framework_Assert impleme
         else {
             $name = new ReflectionClass($this);
             $this->name = $name->getName();
-        }  
+        }
+        $this->CI=& get_instance(); // JdB
     }
 
     public function get_instance()
