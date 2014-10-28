@@ -239,13 +239,23 @@ $config['logout_to_site']=FALSE;
  * Cronjobs
  *--------------------------------------------------------------------------
  *
- * Hier kun je instellen welke cronjobs de site moet uitvoeren en om de hoeveel minuten, of op welk moment van de dag/week/maand/jaar.
- * Stel je server in dat die om die bepaalde tijd www.site.com/_cronjobs aanroept, en al je cronjobs worden nagelopen of ze hun actie moeten uitvoeren.
- * Als je op de server geen cronjobs kunt instellen, zet dan 'simulate_cronjobs'=TRUE. Dan wordt bij elke aanroep van de site gekeken of er ook een cronjob moet worden uitgevoerd.
- * Op die manier kunnen dus ook op gezetten momenten taken worden uitgevoerd. Het kan dan niet worden gegarandeerd dat het moment precies goed is (hoe beter de site wordt bezocht hoe nauwkeuriger).
+ * Just call the url www.site.com/_cronjobs to run all the set cronjobs.
+ * Every cronjob will be checked if it needs to be run at give time.
  * 
- * NB Zorg ervoor dat de tabel cfg_cronjobs bestaat (zie db/add_cfg_cronjobs)
+ * If server is not capable of running cronjobs set 'simulate_cronjobs'=TRUE and the site will test if it needs to run cronjobs every get of a frontend page
+ * 
+ * array(
+ *  'name'  => name of your cronjob
+ *  'every' => at wich moments the job should be called
+ * );
+ * 
+ * every examples:
+ * - '5'                // calls the job every 5 minutes
+ * - 'day 10:15'        // every day at 10:15
+ * - 'week 5 12:00      // every week at 12:00 on friday (day5)
+ * - 'month 1 18:00     // every first day of the month at 18:00
  *
+ * NB Zorg ervoor dat de tabel log_cronjobs bestaat (zie db/add_log_cronjobs)
  */
 $config['cronjobs'] = array(
   'cronjob_example' => array('name'=>'cronjob_example','every'=>1),
