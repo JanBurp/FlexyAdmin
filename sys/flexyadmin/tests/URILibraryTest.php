@@ -13,12 +13,12 @@ class URILibraryTest extends CIUnit_Framework_TestCase
 
 
     // Test pass when default routing configuration is used 
-    // example: http://www.example.com/index.php/ciunit/URILibraryTest or
-    // http://www.example.com/ciunit/URILibraryTest
+    // example: http://www.example.com/index.php/_unittest/URILibraryTest or
+    // http://www.example.com/_unittest/URILibraryTest
     
     public function testSegment ()
     {
-        $segmentOne = "ciunit";
+        $segmentOne = "_unittest";
         $segmentTwo = "URILibraryTest";
         
         $this->assertEquals($segmentOne, $this->uri->segment(1));
@@ -29,17 +29,17 @@ class URILibraryTest extends CIUnit_Framework_TestCase
     public function testSlashSegment ()
     { 
 
-        $this->assertEquals('ciunit/', $this->uri->slash_segment(1));
-        $this->assertEquals('/ciunit', $this->uri->slash_segment(1, 'leading'));
-        $this->assertEquals('/ciunit/', $this->uri->slash_segment(1, 'both'));
+        $this->assertEquals('_unittest/', $this->uri->slash_segment(1));
+        $this->assertEquals('/_unittest', $this->uri->slash_segment(1, 'leading'));
+        $this->assertEquals('/_unittest/', $this->uri->slash_segment(1, 'both'));
     }
 
     public function testUriToAssoc ()
     {
         $array = array(
-                'ciunit' => 'URILibraryTest'
+                '_unittest' => 'URILibraryTest'
         );
-        $uri = "index.php/ciunit/URILibraryTest";
+        $uri = "index.php/_unittest/URILibraryTest";
         
         $this->assertEquals($array, $this->uri->uri_to_assoc(1));
     }
@@ -47,16 +47,15 @@ class URILibraryTest extends CIUnit_Framework_TestCase
     public function testAssocToUri ()
     {
         $array = array(
-                'ciunit' => 'URILibraryTest'
+                '_unittest' => 'URILibraryTest'
         );
-        $uri = "ciunit/URILibraryTest";
-        
+        $uri = "_unittest/URILibraryTest";
         $this->assertEquals($uri, $this->uri->assoc_to_uri($array));
     }
 
     public function testUriString ()
     {
-        $uriAsString = "ciunit/URILibraryTest";
+        $uriAsString = "/_unittest/URILibraryTest";
         $this->assertEquals($uriAsString, $this->uri->uri_string());
     }
 
@@ -70,7 +69,7 @@ class URILibraryTest extends CIUnit_Framework_TestCase
     public function testSegmentArray ()
     {
         $segmentsArray = array(
-                1 => 'ciunit',
+                1 => '_unittest',
                 2 => 'URILibraryTest'
         );
         

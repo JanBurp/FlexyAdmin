@@ -417,13 +417,6 @@ class FrontEndController extends MY_Controller {
 		return $this->view($view,$data,$return);
 	}
 	
-	
-  private function _cronjobs() {
-    
-    
-  }
-  
-  
   /**
    * Geeft de modules die bij huidige pagina horen
    *
