@@ -1,5 +1,5 @@
 Order Allow,Deny
 Deny from all
-<Files ~ "\.(jpg|jpeg|gif|png|tiff|cur|mp3|wav|wma|aiff|ogg|swf|flv|mov|mp4|pdf|doc|docx|odt|xls|xlsx|ods|JPG|JPEG|GIF|PNG|TIFF|CUR|MP3|WAV|WMA|AIFF|OGG|SWF|FLV|MOV|MP4|PDF|DOC|DOCX|ODT|XLS|XLSX|ODS)$">
+<Files ~ "\.(jpg|jpeg|gif|png|tiff|cur|tif|tiff|mp3|wav|wma|aiff|ogg|swf|flv|mov|mp4|pdf|doc|docx|odt|xls|xlsx|ods|JPG|JPEG|GIF|PNG|TIFF|CUR|TIF|TIFF|MP3|WAV|WMA|AIFF|OGG|SWF|FLV|MOV|MP4|PDF|DOC|DOCX|ODT|XLS|XLSX|ODS)$">
 Allow from all
 </Files>
