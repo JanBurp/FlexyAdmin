@@ -163,10 +163,11 @@ function pathdecode($p,$isPath=TRUE) {
  * Finds emailaddresses in string
  *
  * @param string $str 
+ * @param bool $one[FALSE] set to TRUE if yo need just one email address
  * @return mixed FALSE if no email addres is found, string when on is found, an array of strings when more are found
  * @author Jan den Besten
  */
-function get_emails($s) {
+function get_emails($s,$one=FALSE) {
   $emails = false;
   if (preg_match_all("/[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/ui", $s, $matches)) {
     if (count($matches[0])==1) {
@@ -177,6 +178,7 @@ function get_emails($s) {
       foreach($matches[0] as $email) array_push ($emails, strtolower($email));
     }
   }
+  if ($one and is_array($emails)) $emails=current($emails);
   return $emails;
 }
 
