@@ -21,7 +21,7 @@
   <div class="navbar-wrapper">
     <div class="navbar navbar-inverse">
       <div class="navbar-inner">
-        <?php echo anchor('_unittest', 'CIUnit Framework ' . CIUNIT_VERSION, array('class' => 'brand')); ?>
+        <?php echo anchor('_unittest', 'CIUnit Framework ' . CIUNIT_VERSION. ' for FlexyAdmin', array('class' => 'brand')); ?>
       </div>
       <!-- /.navbar-inner -->
     </div>
@@ -34,20 +34,7 @@
       <div class="span3">
         <ul class="nav nav-list">
           <li class="nav-header"><i class="icon-folder-open"></i>&nbsp;Tests</li>
-          <?php
-          
-          sort($test_tree);
-          
-          foreach ($test_tree as $branch => $leaf)
-          {
-            echo '<li class="'
-                  . ( ( $this->uri->segment(2) == $leaf ) ? 'active' : '' )
-                  . '">'
-                  . anchor('_unittest/' . $leaf, $leaf)
-                  . "</li>";
-          }
-
-          ?>
+          <?=$test_menu?>
         </ul>
       </div>
       

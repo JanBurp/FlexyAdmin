@@ -42,6 +42,7 @@ function count_files($path,$recursive=FALSE,$counter=0) {
  * @author Jan den Besten
  */
 function read_map($path,$types='',$recursive=FALSE,$getInfo=TRUE,$getMetaData=FALSE,$resultAsTree=TRUE) {
+  $path=rtrim($path,'/');
 	if (!empty($types) and !is_array($types)) $types=explode(',',$types);
 	if ($getInfo) $CI =& get_instance();
 	$files=array();
