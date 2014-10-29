@@ -5,7 +5,7 @@
 	Message:	<?php echo $message; ?><br>
 	Filename:	<?php echo $filepath; ?><br>
 	Line:		<?php echo $line; ?><br>
-	<?php if ($severity!="Warning") { backtrace_(3); } ?>
+	<?php if (function_exists('backtrace_')) { backtrace_(3); } ?>
 <?php else : ?>
   <?php
 	  $to="error@flexyadmin.com";
