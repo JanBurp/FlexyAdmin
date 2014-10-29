@@ -1,7 +1,7 @@
 <?php
 
-require_once 'StringHelperTest.php';
-require_once 'ArrayHelperTest.php';
+require_once 'helpers/StringHelperTest.php';
+require_once 'helpers/ArrayHelperTest.php';
 
 class HelpersSuite extends CIUnit_Framework_TestSuite
 {

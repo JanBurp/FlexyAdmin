@@ -171,6 +171,8 @@ class Menu {
       $this->field_set_methods[$key]='set_'.$value.'_field';
     }
     if ($settings) $this->initialize($settings);
+    $current=$this->CI->uri->uri_string();
+    $this->set_current($current);
 	}
 
   /**
@@ -308,7 +310,7 @@ class Menu {
 		$data=$this->CI->db->get_result($table);
 		return $this->set_menu_from_table_data($data,$foreign);
 	}
-	
+  
   /**
    * Geeft alle huidige menu-items
    *
@@ -395,8 +397,36 @@ class Menu {
 		return $menu;
 	}
 
+
   /**
-   * Zet interne menu array
+   * Maakt een menu van een filetree resultaat van read_map()
+   *
+   * @param string $files 
+   * @param string $branchUri[''] 
+   * @return array
+   * @author Jan den Besten
+   */
+  public function set_menu_from_filetree($files=array(),$branchUri='') {
+    $menu=array();
+    foreach ($files as $key => $file) {
+      $name=remove_suffix($file['name'],'.');
+      $uri=trim($branchUri.'/'.$name,'/');
+      $menu[$name]=array(
+        'uri'   => $uri,
+        'name'  => $name,
+        'class' => get_suffix($key,'.')
+      );
+      if (isset($file['.'])) {
+        $menu[$key]['sub']=$this->set_menu_from_filetree($file['.'],$uri);
+      }
+    }
+    $this->set_menu($menu);
+    return $menu;
+  }
+
+
+  /**
+   * Zet intern menu array
    *
    * Hiermee kun je in één keer een menu maken door een array mee te geven. (ipv met add etc)
    *

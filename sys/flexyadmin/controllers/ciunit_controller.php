@@ -25,8 +25,15 @@ class CIUnit_Controller extends CI_Controller
         $this->load->library('ciunit');
         $this->load->helper('url');
         
-        $data['test_tree'] = $this->ciunit->getTestCollection();
         
+        
+        $data['test_tree'] = $this->ciunit->getTestCollection();
+
+        // Menu
+        $this->load->library('menu');
+        $menu=new Menu();
+        $menu->set_menu_from_filetree($data['test_tree'],'_unittest');
+        $data['test_menu']=$menu->render();
         $data['resources_path'] = $this->config->item('resources_path');
         $data['run_failure'] = '';
         

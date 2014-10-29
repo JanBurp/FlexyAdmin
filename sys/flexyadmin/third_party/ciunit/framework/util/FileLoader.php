@@ -62,13 +62,14 @@ class CIUnit_Util_FileLoader
 
     public static function load ($filePath)
     {
-        if (! file_exists($filePath) and is_readable($filePath))
-            throw new CIUnit_Framework_Exception_CIUnitException(
-                    sprintf("CIUnit can't open file %s for reading!", $filePath));
-        
-        include_once $filePath;
-        
-        return $filePath;
+      if (is_array($filePath)) $filePath=$filePath['path'];
+      if (! file_exists($filePath) and is_readable($filePath))
+          throw new CIUnit_Framework_Exception_CIUnitException(
+                  sprintf("CIUnit can't open file %s for reading!", $filePath));
+      
+      if (! is_dir($filePath)) include_once $filePath;
+      
+      return $filePath;
     }
 
     /**
@@ -95,28 +96,32 @@ class CIUnit_Util_FileLoader
         
         if (@$fp = @opendir($tests_path)) {
             
-            $testFiles = array(); 
-                        
-            $tests_path = rtrim($tests_path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+            // $testFiles = array();
+            //
+            // $tests_path = rtrim($tests_path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+            //
+            // while (FALSE !== ($file = readdir($fp))) {
+            //
+            //     // Remove '.', '..', and hidden files
+            //     if (! trim($file, '.') or ($hidden == FALSE && $file[0] == '.')) {
+            //         continue;
+            //     }
+            //
+            //     if (substr(strrchr($file, '.'), 1) == 'php') {
+            //         if ($fullPath) {
+            //             $testFiles[] = $tests_path . $file;
+            //         } else {
+            //             $testFiles[] = substr($file, 0, strrpos($file, '.'));
+            //         }
+            //     }
+            // }
+            //
+            // closedir($fp);
+        
+          $testFiles=read_map($tests_path,'php,dir',TRUE,FALSE,FALSE,TRUE);
+          $testFiles=not_filter_by($testFiles,'_');
             
-            while (FALSE !== ($file = readdir($fp))) {
-                
-                // Remove '.', '..', and hidden files
-                if (! trim($file, '.') or ($hidden == FALSE && $file[0] == '.')) {
-                    continue;
-                }
-                
-                if (substr(strrchr($file, '.'), 1) == 'php') {
-                    if ($fullPath) {
-                        $testFiles[] = $tests_path . $file;
-                    } else {
-                        $testFiles[] = substr($file, 0, strrpos($file, '.'));
-                    }
-                }
-            }
-            
-            closedir($fp);
-            return $testFiles;
+          return $testFiles;
         }
         
         return FALSE;
