@@ -138,10 +138,28 @@ class Menu {
       'bool_class'  => '',
       'extra'       => '',
     ),
+    'css_style'       => 'default',             // 'default', 'bootstrap'
     'attributes'      => array('class'=>''),
     'full_uris'       => false,
     'ordered_titles'  => '',   // NUMBERS geeft 1,2,3,4 etc., ALFA geeft A,B,C,D etc, ROMAN geeft I,II,III,IV etc.
     'view_path'       => 'menu'
+  );
+  
+  private $styles = array(
+    'default' => array(
+      'current' => 'current',
+      'active'  => 'active',
+      'first'   => 'first',
+      'last'    => 'last'
+    ),
+    'bootstrap' => array(
+      'current' => 'active',
+      'active'  => 'active',
+      'first'   => 'first',
+      'last'    => 'last'
+    )
+    
+    
   );
   
   private $field_set_methods = array();
@@ -664,6 +682,8 @@ class Menu {
 		if (!is_array($attr)) $attr=array("class"=>$attr);
 		if ($level>1) unset($attr["id"]);
     
+    $styles=$this->styles[$this->settings['css_style']];
+    
     $html='';
 		if ($menu) {
   		$pos=1;
@@ -713,9 +733,9 @@ class Menu {
           'full_uri'    => el('full_uri',$item,''),
           'lev'         => $level,
           'pos'         => $pos,
-					'order'       => ($pos==1)?'first':($pos==count($menu)?'last':''),
+					'order'       => ($pos==1)?$styles['first']:($pos==count($menu)?$styles['last']:''),
 					'sub'         => (isset($item['sub']))?'sub':'',
-          'current'     => ($this->settings['current']==$cleanUri?'current':'').((strpos($submenu,'current')>0?' active':'')),
+          'current'     => ($this->settings['current']==$cleanUri?$styles['current']:'').((strpos($submenu,$styles['current'])>0?' '.$styles['active']:'')),
           'class_uri'   => $classUri,
           'class'       => el('class',$item,' '),
           'attr'        => attributes(el('attr',$item,'')),
