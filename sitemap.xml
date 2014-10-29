@@ -2,46 +2,640 @@
 
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" >
 	<url>
-		<loc>http://www.flexyadmin.com/pagina_1_begin</loc>
+		<loc>http://www.avensus.nl/nl</loc>
 		<priority>1.00</priority>
-		<title>Pagina 1 (begin)</title>
-		<content><![CDATA[Als je dit ziet is het je gelukt om FlexyAdmin te installeren en werkend te krijgen. Je hebt nu een standaard-installatie van een zeer eenvoudige basis-site. Hoe verder Pas de HTML aan in de map site/views. site.php is de basis view van je site en page.php de afzonderlijke pagina&#039;s. Pas de Stylesheets aan. Deze vindt je in de map site/assets/css. Je vindt daar .less bestanden (meer over Less) die de basis kunnen vormen van je .css bestanden. Als je niet met Less wilt werken kun je ook direct de .css bestanden aanpassen. Zorg dan wel dat je in het bestand site/config/build.php deze instelling aanpast: $config[&#039;watch&#039;] = false; Standaard worden alle .css en .js bestanden gecomprimeerd om de server-load te minimaliseren. Als je dat niet wilt (bijvoorbeeld tijdens het ontwikkelen van je site) stel dan de vorige instelling in site/config/config.php in: $config[&#039;use_minimized&#039;] = FALSE; build Sinds versie r2530 zit er een volautomatisch build-systeem ingebouwd. De instellingen daarvan kun je vinden in site/config/build.php Standaard worden de volgende acties gedaan: layout.less en text.less worden gecompileerd tot .css Alle .css bestanden worden samengevoegd en gecomprimeerd tot styles.min.css Ook worden alle .js bestanden samengevoegd en gecomprimeerd tot scripts.min.js Build wordt actief als je een pagina van de site herlaadt en &amp;eacute;&amp;eacute;n of meer van de .css en .js bestanden is aangepast. Zo hoef je zelf niets te doen. Je kunt met /admin/build het build proces ook handmatig starten. In beidde gevallen zullen foutmeldingen (als die er zijn) worden getoond. .]]></content>
-	</url>
-	<url>
-		<loc>http://www.flexyadmin.com/pagina_2_branch</loc>
-		<priority>0.80</priority>
-		<title>Pagina 2 (branch)</title>
-		<content>Lorem ipsum dolor sit amet Consectetur adipiscing elit. Vivamus in augue ac justo posuere luctus sodales vel justo. Integer blandit, quam id porttitor consequat, lorem libero bibendum ipsum, non auctor sem ipsum eu mauris. Vestibulum condimentum, lectus sed aliquam rutrum, est velit pellentesque mauris, sed mattis sapien ante vitae enim. Quisque cursus facilisis molestie. Sed rhoncus lacus ac nunc interdum in laoreet mi rhoncus. Suspendisse ultrices fringilla felis, in porta mi pretium ut. Nunc nisl nulla, varius in lobortis a, dictum a purus. Sed consequat felis ut erat lobortis hendrerit. Donec bibendum lorem lorem. Fusce suscipit sapien id lorem mollis vel placerat nunc congue. Aenean non nunc tortor. Curabitur rhoncus neque eget nulla adipiscing euismod. Duis tincidunt sollicitudin convallis Quisque nibh tortor, blandit a mollis vitae, euismod non nulla. Duis dui erat, interdum sit amet porttitor a, porttitor nec augue. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed quis porta turpis. Suspendisse nec mi enim, ut fringilla tellus. Nunc sollicitudin justo at leo tempus eu fringilla nisl tempus. Sed id tellus non eros tristique vehicula. Quisque sollicitudin augue id velit euismod interdum. Proin lobortis ornare magna in facilisis. Nulla vestibulum ultricies dui ut fringilla. Duis eu ante in lorem pellentesque bibendum. Praesent id velit vel nulla ullamcorper adipiscing quis quis tellus. Integer nec augue quis felis dapibus imperdiet ac et nibh..</content>
-	</url>
-	<url>
-		<loc>http://www.flexyadmin.com/pagina_2_branch/subpagina_1</loc>
-		<priority>0.64</priority>
-		<title>Subpagina 1</title>
-		<content>Een subpagina.</content>
-	</url>
-	<url>
-		<loc>http://www.flexyadmin.com/pagina_2_branch/subpagina_2</loc>
-		<priority>0.64</priority>
-		<title>Subpagina 2</title>
+		<title>nl</title>
 		<content>.</content>
 	</url>
 	<url>
-		<loc>http://www.flexyadmin.com/pagina_2_branch/subpagina_3</loc>
+		<loc>http://www.avensus.nl/nl/home</loc>
 		<priority>0.64</priority>
-		<title>Subpagina 3</title>
+		<title>home</title>
 		<content>.</content>
 	</url>
 	<url>
-		<loc>http://www.flexyadmin.com/pagina_2_branch/ughg</loc>
+		<loc>http://www.avensus.nl/nl/avensus</loc>
 		<priority>0.64</priority>
-		<title>ughg</title>
+		<title>Avensus</title>
+		<content><![CDATA[De focus van Avensus vertaald zich in heldere thema&amp;rsquo;s: Onze klanten staan centraal. Door met hen in gesprek te zijn ervaren wij wat hen werkelijk bezigt. Welke essenti&amp;euml;le zaken ziet men in de markt en welke wensen hebben zij die wij kunnen vervullen? Deze informatie en de marktontwikkelingen die wij, met onze partners, scherp in de gaten houden geeft ons inzicht om tot de juiste oplossingen te komen , afgestemd op het strategisch beleid van onze klanten als het gaat om de rol van ICT binnen de organisatie nu en in de toekomst. Onze kracht is Cloud &amp;amp; Security Services en wij hebben dit vertaald in zes thema&amp;rsquo;s die in onze beleving de komende jaren een belangrijke rol zullen spelen en waar wij onze focus op richten. Onze klanten vragen om continu&amp;iuml;teit in termen van veiligheid, beheersbaarheid en controle, naast flexibiliteit en kostenbesparing. Met onze focus kunnen wij het gewenste resultaat bieden. Thema&amp;rsquo;s: Cloud roadmap - mobiliteit - cyber security &amp;ndash; risk mitigation &amp;ndash; compliancy &amp;ndash; IT control.]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/avensus/visie_en_missie</loc>
+		<priority>0.48</priority>
+		<title><![CDATA[Visie & Missie]]></title>
+		<content><![CDATA[ONZE VISIE Klanten werken in een turbulente, complexe, mondiale markt. Zij hebben behoefte aan realtime en betrouwbare informatie en willen totale aantoonbare controle en beheersbaarheid met als gevolg een normeerbare en veilige omgeving. ONZE MISSIE Avensus wordt door de klant gezien als d&amp;eacute; partner voor beheersbare en veilige betrouwbare ICT oplossingen. ONZE KRACHT Wij zijn gespecialiseerd in Cloud &amp;amp; Security Services en leveren daarmee een directe bijdrage aan huidige business vraagstukken als kostenbesparing, flexibiliteit en continu&amp;iuml;teit. Via Secure Outsourcing Services helpen wij onze klanten, die hierin kan vertrouwen op onze expertise en samenwerking met toonaangevende IT-partners. ONZE KERNWAARDEN Transparant, Expert en Gedreven .]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/avensus/kwaliteit</loc>
+		<priority>0.48</priority>
+		<title>Kwaliteit</title>
+		<content><![CDATA[Avensus is zich er ter dege van bewust, dat de diensten en producten die zij levert een belangrijke schakel in uw organisatie vormen. Hoewel onze dienstverlening doorgaans niet direct zichtbaar is, is het belang van betrouwbare informatie een kritische factor in uw bedrijfsvoering. Avensus staat voor veiligheid, beheersbaarheid en control. Wij besteden veel aandacht aan onze kwaliteitszorg. KENNIS Dit begint met de selectie van de allerbeste technische mensen. Onze specialisten moeten over de juiste kennis beschikken om u veilige en beheersbare IT-oplossingen te bieden. Middels trainingen en opleidingen wordt deze kennis up-to-date gehouden en zorgt Avensus dat zij over een breed gecertificeerd specialistenteam beschikt die garant staan voor de gewenste kennis en kwaliteit. Bovendien kan Avensus vanuit haar Indiase moederbedrijf Omnitech Infosolutions Ltd. de allerlaatste innovaties transformeren naar Europese IT-behoeften en normen. PARTNERMANAGEMENT Door te kiezen voor de juiste partners, kan Avensus de beoogde kwaliteit tevens doorvoeren in de systemen waarin informatie wordt verwerkt en opgeslagen. Door samenwerking met vaste partners blijft ook hier onze kwaliteitsnorm gewaarborgd. ISO-CERTIFICERING Onze diensten en leveringen worden uitgevoerd volgens de ISO-9001:2008-norm. Sinds november 2010 zijn wij hiervoor volledig gecertificeerd. Bij de ISO-norm staat het verhogen van de klanttevredenheid centraal. De certificering past in ons streven om de kwaliteit van de dienstverlening voortdurend te verbeteren. Voor Avensus gaat ISO om: &quot;zeggen wat je doet en doen wat je zegt&quot; Wij hopen dat u als klant dit telkens ervaart in onze persoonlijke service. En mocht dit onverhoopt niet het geval zijn, dan stellen wij het op prijs als u ons dit laat weten. Dit stelt ons in staat hier actie op te nemen en onze kwaliteit op een hoog niveau te houden..]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/avensus/mvo</loc>
+		<priority>0.48</priority>
+		<title>MVO</title>
+		<content>Avensus vindt de wereld om haar heen en alle talenten daarin belangijk. Samen tot resultaat komen en waarderen wat een ieder daarin betekent. Daarom steunt Avensus wisselende projecten van onze klanten waarin team-work centraal staat. Voorbeelden hiervan zijn:.</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/avensus/vacatures</loc>
+		<priority>0.48</priority>
+		<title>Vacatures</title>
+		<content><![CDATA[Om onze ambities voor een gezonde toekomst waar te maken zijn we altijd ge&amp;iuml;nteresseerd in nieuw talent dat ons bedrijf iets extra&#039;s kan bieden. Professionals zoeken professionals. Jouw CV incl. motivatie kun je sturen naar ikhebinteresse@avensus.nl Op dit moment zijn wij direct op zoek naar: - Security Engineer - Netwerk Specialist - Medewerker Servicedesk uit Almere .]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/onze_diensten</loc>
+		<priority>0.64</priority>
+		<title>Onze Diensten</title>
+		<content><![CDATA[Avensus is gespecialiseerd in Cloud &amp;amp; Security Diensten. Wij leveren een directe bijdrage aan huidige business vraagstukken als kostenbesparing, flexibiliteit en continu&amp;iuml;teit. Via Secure Outsourcing Diensten helpen wij onze klanten, die hierin kan vertrouwen op onze expertise en samenwerking met toonaangevende IT-partners. Avensus kiest voor heldere thema&#039;s als: Cyber Security; Cloud Roadmap; Risk Mitigation; Mobiliteit; Compliancy en IT-Control. Van daaruit benaderen wij IT voor onze klant om Continu&amp;iuml;teit, Veiligheid, Beheersbaarheid en Controle te realiseren.]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/onze_diensten/cloud_roadmap</loc>
+		<priority>0.48</priority>
+		<title>Cloud roadmap</title>
+		<content><![CDATA[Avensus is de innovatieve Cloud en IT-partner die uw organisatie ondersteunt bij het bepalen van de Cloud Roadmap. Waarom wilt u eigenlijk naar de Cloud? Sluit dit aan bij uw bedrijfsdoelstellingen en wat zijn deze? Gaat u voor flexibiliteit en schaalbaarheid of is kostenreductie en productiviteit prioriteit nummer 1? Veel organisaties willen vooral effici&amp;euml;nter werken. Als de &amp;ldquo;Cloud&amp;rdquo; hier een rol in kan spelen, dan is dat een logische overweging en een strategische keuze. Uw overstap naar de Cloud levert een belangrijke bijdrage aan doelstellingen als Effici&amp;euml;ntie, Continu&amp;iuml;teit en Kostenbesparing..]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/onze_diensten/cloud_roadmap/cloud_strategie</loc>
+		<priority>0.32</priority>
+		<title>Cloud Strategie</title>
+		<content>Cloud oplossingen dagen u uit om anders naar Informatievoorziening en IT te gaan kijken. Maar is de roadmap hiernaar toe anders ten opzichte van traditionele IT? Avensus adviseert organisaties door het uitvoeren van een Cloud Strategie Scan om een antwoord te geven op deze vraag en een duidelijk inzicht te geven in de Cloud diensten en oplossingen, die een toegevoegde waarde leveren aan het behalen van uw bedrijfsdoelstellingen. Vervolgens wordt ook de Cloud Architectuur hierop afgestemd: Private, Hybrid of Public Cloud. CLOUD STRATEGIE SCAN - Inventarisatie Organisatiedoelstellingen - Inventarisatie IT-Infrastructuur - Cloud Architectuur en Roadmap bepalen - Migratie naar de Cloud - Overdracht naar Secure Outsourcing Services.</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/onze_diensten/cloud_roadmap/microsoft_office_365_en_azure</loc>
+		<priority>0.32</priority>
+		<title><![CDATA[Microsoft Office 365 & Azure]]></title>
+		<content><![CDATA[Microsoft Office 365 Met Office in de Cloud kunt u met uw toepassingen voor onderweg vanaf elke locatie werken, met Word, PowerPoint, Excel, Outlook, OneNote en Publisher. Recente documenten zijn altijd meteen beschikbaar, zodat u snel aan de slag kunt. En met 1 TB onlineopslag met OneDrive voor Bedrijven, hebt u altijd de bestanden die u nodig hebt en kunt u ze gemakkelijk delen. Toegang tot uw opgeslagen bestanden vanaf elke locatie en deze eenvoudig delen met mensen van binnen en buiten uw organisatie. Uw bestanden worden automatisch gesynchroniseerd tussen uw apparaten en uw pc, zodat u onderweg online kunt werken of offline wanneer u achter uw bureau zit en u altijd up-to-date bent. Microsoft Windows Azure Wat is Azure? Azure is simpelweg het cloudplatform van Microsoft: een groeiende verzameling ge&amp;iuml;ntegreerde services, zoals hosting van Active Directory, Virtuele Servers, Backup, SQL en Sharepoint Dankzij de hybride, zakelijke cloudoplossingen van Office 365 en Azure hebt u het beste van beide, waardoor u uw IT-opties eenvoudig kunt uitbreiden. Avensus is Microsoft Gold Partner en adviseert en implementeert deze oplossingen voor uw organisatie. Avensus diensten voor U: - Inventarisatie bedrijfsdoelstellingen - Bepalen Office 365 en/of Azure diensten - Office 365 en Azure Cloud connectie (DirSync, ADFS, WAAD) - Migratie data en mailboxen naar Office 365 online en Azure - Migraties vanaf Novell Groupwise, Lotus Notes of Exchange 2003 of 2000 Avensus is: - Microsoft Gold Partner Server Platform - Microsoft Silver Partner Messaging Platform.]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/onze_diensten/cloud_roadmap/infrastructuur-as-a-service</loc>
+		<priority>0.32</priority>
+		<title>Infrastructuur-as-a-Service</title>
+		<content><![CDATA[De keuze voor een Infrastructuur-as-a-service of &quot;IaaS&quot; model is complex gezien de vele vormen en leveranciers van deze diensten. Avensus kiest samen met u de beste oplossing voor uw organisatie. Het inrichten, onderhouden en managen van een hoogwaardige IT-infrastructuur vraagt specialistische kennis en hoge initi&amp;euml;le investeringen (CAPEX). Belangrijk hierin is te bepalen wat de belangrijkste overwegingen zijn voor een Iaas model. Van CAPEX naar OPEX Avensus ondersteunt organisaties om een onderbouwde business Case te maken voor het afnemen van de IT-Infrastructuur op basis van het IaaS model tot een volledige Managed IT-omgeving. Gaat u voor kostenreductie of Flexibiliteit of zoekt u een combinatie van beide ? Avensus helpt U met het maken van deze belangrijke beslissingen. Van Traditionele IT op eigen locatie (on premise) of Co-locatie in een Datacenter tot alle mogelijke vormen van IaaS. Avensus diensten: - Inventarisatie bedrijfsdoelstellingen en IT-omgeving - Vaststellen Business Drivers: Kostenreductie/Continu&amp;iuml;teit versus Flexibiliteit/Schaalbaarheid - Opstellen &amp;ldquo;Infrastructuur as a Service&amp;rdquo; Business Case - Advies en Migratie naar een IaaS Platform - Remote Infrastructuur Managed Services - Volledige Managed IT omgeving 7/24 - Outsourcing Beheer en Overname personeel Lees meer onder Secure Outsourcing Service.]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/onze_diensten/cloud_roadmap/infrastructuur_projecten</loc>
+		<priority>0.32</priority>
+		<title>Infrastructuur Projecten</title>
+		<content><![CDATA[Als specialist op het gebied van Server-, Storage- en Netwerkinfrastructuren levert Avensus kwalitatief hoogwaardige, snelle en veilige Infrastructuur oplossingen met een hoge beschikbaarheid en betrouwbaarheid die zowel on-premise, op een co-locatie of via een IaaS model worden aangeboden. Vanuit de samenwerking met vaste, toonaangevende partners blijft de kwaliteitsnorm van Avensus gewaarborgd. SERVERS - Advies, installatie en migratie van Serversystemen - Servervirtualisatie met VMware of Microsoft Hyper-V - High Availability en Disaster Recovery Oplossingen partners: HP en Dell STORAGE - Storage Area Network: SAN of NAS systemen - ISCSI of Fibre Channel oplossingen vari&amp;euml;rend van 1 Gb tot 10 Gb - Features als: Snapshots, Deduplicatie, Compressie, Datareplicatie (Synchroon/asynchroon) - Backup en Disaster Recovery - Archivering en Storage Tiering partners: NetApp, EMC, HP en Dell NETWORKING - Advies, levering en installatie van LAN, WAN en Wireless oplossingen - Audits en metingen voor snelle en veilige draadloze netwerkoplossingen partners: Juniper, Barracuda Networks en Cisco.]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/onze_diensten/mobiliteit</loc>
+		<priority>0.48</priority>
+		<title>Mobiliteit</title>
+		<content><![CDATA[Door ontwikkelingen als &quot;Consumerization of IT&quot; en het &quot;Always Connected&quot; is IT niet alleen zakelijk maar ook priv&amp;eacute; heel belangrijk geworden. De beschikbaarheid van mobiele diensten geven gebruikers met smartphones en tablets toegang tot en gebruik van heel veel applicaties en informatie in de Cloud. Onbewust en ook bewust wordt deze levenswijze doorgetrokken naar de zakelijke markt en verwachten gebruikers en organisaties dat dit kan. Gebruikers willen Altijd, Overal en Zorgeloos werken Voor de zakelijke markt betekent dit een omslag van bestaande IT-diensten naar een gebruik op allerlei mobiele apparaten. Dit heeft gevolgen voor bestaande infrastructuren en applicaties die ontsloten moeten worden voor het Internet. Hierbij is beveiliging en beheer van nieuwe hybride oplossingen een belangrijk aandachtspunt die Avensus voor u realiseert. Avensus Mobiliteits Diensten - Werkplek Strategie en Oplossingen - Communicatie &amp;amp; Samenwerken - Enterprise Mobility Management - Werkplek 365.]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/onze_diensten/mobiliteit/de_werkplek</loc>
+		<priority>0.32</priority>
+		<title>De Werkplek</title>
+		<content><![CDATA[De nieuwe werkplek bestaat vaak uit een verzameling van meerdere devices ,die de gebruiker ondersteunt bij het uitvoeren van het werk. Functionaliteit, Performance en gebruiksgemak staan hierbij voor de gebruiker centraal waarbij applicaties op verschillende type werkplekken worden gebruikt. Avensus adviseert, ontwerpt en realiseert de best passende werkplekstrategie voor uw organisatie en kijkt hierbij naar de organisatie, de gebruikersprofielen, Applicatielandschap en keuze voor juiste inzet van devices. Avensus diensten - Gebruikersprofiel Onderzoek - Applicatie Rationalisatie - vSolutions Architectuur - VDI, Citrix, Terminal Services, Client/Server, Saas, Mobiele applicatie - Werkplek Devices - Thin Client, PC, Laptop, Tablet - Identity Management &amp;amp; Security.]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/onze_diensten/mobiliteit/communicatie_en_samenwerken</loc>
+		<priority>0.32</priority>
+		<title><![CDATA[Communicatie & Samenwerken]]></title>
+		<content><![CDATA[Onze manier van werken verandert, mensen werken niet meer op &amp;eacute;&amp;eacute;n vaste plek, maar willen wel blijven communiceren met collega&amp;rsquo;s. Hoe vinden zij snel collega&amp;rsquo;s en informatie? Communicatiemiddelen zoals Microsoft Lync zijn eenvoudig te integreren in de dagelijkse werkzaamheden zonder belemmeringen voor de eindgebruiker. Een eenvoudige uitnodiging in de Agenda is al voldoende om een directe telefoonverbinding met collega&amp;rsquo;s of relaties op te zetten zonder extra kosten te maken. Uitbreiden met een Video connectie is met een druk op de knop gelukt en allerlei informatie kan op het scherm met elkaar worden gedeeld en bewerkt. Ze kunnen direct zien via een aanwezigheidsmelding in de agenda of collega&amp;rsquo;s beschikbaar zijn en contact leggen, er wordt bespaard op reistijd, huisvesting en telefoniekosten. Samenwerken door Informatie delen Voor een goede samenwerking is het delen van Informatie van essentieel belang. Microsoft Sharepoint maakt dit mogelijk, Teams kunnen documenten opslaan in teamsites en per project een postvak bijhouden, zodat iedereen rechtstreeks vanuit zijn of haar e-mail toegang heeft tot die documenten. Avensus diensten - Microsoft Lync voor Chat, Presence en Video - Microsoft Lync als telefonieplatform - Microsoft Sharepoint voor Samenwerken, Informatie en Kennisdeling.]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/onze_diensten/mobiliteit/enterprise_mobility_management</loc>
+		<priority>0.32</priority>
+		<title>Enterprise Mobility Management</title>
+		<content><![CDATA[Mensen willen overal en op elk apparaat toegang kunnen hebben tot zakelijke toepassingen, vanaf de laptop, smartphone, tablet of pc. IT-afdelingen worden uitgedaagd om consistente en rijke ervaringen te bieden op al deze apparaatsoorten, met toegang tot systeemeigen en webtoepassingen en toepassingen op afstand of desktop. Beheer en Security IT probeert het mogelijk te maken om personen zelf een apparaat te laten kiezen, maar moet tegelijkertijd kosten en complexiteit verminderen en beveiliging en naleving behouden door gegevens te beschermen en uitgebreid instellingsbeheer op platforms te hebben. Bescherm en beheer vertrouwelijke bedrijfsinformatie, en zorg voor productieve medewerkers met de juiste beveiligde toegang voor devices, locaties en netwerken. Avensus Diensten - Mobiel Device Management - Mobiel Applicatie Management - Bedrijfs Applicatie Portal - Secure E-mail &amp;amp; Data.]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/onze_diensten/mobiliteit/werkplek_365</loc>
+		<priority>0.32</priority>
+		<title>Werkplek 365</title>
+		<content><![CDATA[Werkplek 365 is een online werkplek met de kracht van Office 365. Door de eenvoudige interface cre&amp;euml;ert Werkplek 365 meer structuur en eenvoud dan Office 365 en Hosted Exchange of SharePoint. Doordat Werkplek 365 e-mail, documenten en bedrijfsprocessen ondersteunt en op een overzichtelijke manier aan elkaar koppelt, wordt de productiviteit van gebruikers verhoogd. Vooral geschikt voor mobiele gebruikers en kiosk werkers, die niet elke minuut van de dag met de PC werkt, maar wel eenvoudig zijn email, agenda, planning wil inzien. Business Apps Stop met het gebruiken van losse spreadsheets of nog erger&amp;hellip; papieren bestanden en formulieren. Cre&amp;euml;er meer structuur door bedrijfsprocessen te integreren in Werkplek 365 met onze Business Apps. Deze krachtige Business Apps kunnen worden gekoppeld aan Office 365 waardoor je meer overzicht krijgt in je e-mail, bestanden en bedrijfsinformatie. Integreer bijvoorbeeld het aanvragen van werkkleding, ziekmeldingen of het inchecken bij een receptie, CRM, Project Management, Offertes &amp;amp; Facturen, Tijdregistratie en nog veel meer. Waarom Werkplek 365 bovenop Office 365? Werkplek 365 is een centraal startpunt voor al je medewerkers. Gebruikers hoeven nooit te zoeken naar een app want ze zien de apps die zij nodig hebben direct in hun werkplek. Daarnaast hebben veel medewerkers moeite met de complexiteit van sommige applicaties. Door een eenvoudige userinterface verhogen zij hun productiviteit. Met Werkplek 365 kun je krachtige Business Apps toevoegen waarmee je bestanden, e-mail, contacten en meer aan elkaar kunt koppelen. Met de Business Apps kun je elk bedrijfsproces in de werkplek integreren..]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/onze_diensten/cyber_security</loc>
+		<priority>0.48</priority>
+		<title>Cyber Security</title>
+		<content>Cybercriminaliteit kent vele gezichten soms bevinden deze zich dichterbij dan we vermoeden. De snelle ontwikkelingen rondom de Cloud Roadmap en Mobility vormen hierin een scherp contrast. Hechten we meer waarde aan kostenbesparing en efficiency dan aan de bescherming van onze data ofwel de digitale kroonjuwelen van een organisatie. Hoe kunnen we er, in dit post-Snowden tijdperk, zeker van zijn dat onze kritische bedrijfsgegevens veilig zijn?.</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/onze_diensten/cyber_security/data_en_ip_protection</loc>
+		<priority>0.32</priority>
+		<title>Data en IP Protection</title>
+		<content><![CDATA[Hoe kunnen we er, in dit post-Snowden tijdperk, zeker van zijn dat onze kritische bedrijfsgegevens veilig zijn? Cybercriminaliteit kent vele gezichten, soms bevinden deze zich dichterbij dan we zouden vermoeden. De snelle ontwikkelingen rondom Cloud Roadmap en Mobiliteit vormen hierin een scherp contrast: hechten we meer waarde aan kostenbesparing en efficiency, dan aan de bescherming van onze data? (onze digitale kroonjuwelen). Data &amp;amp; IP Protectie is een manier van beveiligen waarbij direct de bron beschermd wordt. Uiteindelijk moeten we onze data veilig stellen. Het is inmiddels geen geheim meer dat hackers altijd weer een nieuwe manier zullen vinden om onze systemen te breken. Juist door het direct beveiligen van onze digitale kroonjuwelen voorkomen we dat de hacker grip krijgt op die waardevolle data..]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/onze_diensten/cyber_security/payment_security</loc>
+		<priority>0.32</priority>
+		<title>Payment Security</title>
+		<content><![CDATA[Payment of Transaction Security services leveren de cryptografische diensten die worden gebruikt om financi&amp;euml;le transacties binnen de banken en de daarmee samenhangende financi&amp;euml;le instellingen te beveiligen. Organisaties die betrokken zijn bij betalingen worden steeds vaker geconfronteerd met uitdagingen, zoals de explosieve groei van het aantal transacties, het vervangen van de magneetstripkaarten door contact en/of contactless smart cards en de veiligheid van nieuwe channels zoals mobiel en internet. Organisaties moeten ook voldoen aan een uitgebreidere regelgeving en cryptografische veiligheidseisen, zoals Payment Card Industry (PCI). Avensus heeft een uitgebreide en jarenlange ervaring met het gebruik van cryptografische beveiliging van de financi&amp;euml;le infrastructuur voor Issuers, Acquirers, Transaction Switches, hun geldautomaten, betaalautomaten, interbancaire transacties, Mobile en Electronic Banking omgevingen..]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/onze_diensten/cyber_security/centralized_key_management</loc>
+		<priority>0.32</priority>
+		<title>Centralized Key Management</title>
+		<content><![CDATA[Encryptie en Sleutelbeheer zijn onlosmakelijk met elkaar verbonden. Ondernemingen worden daarbij steeds vaker geconfronteerd met het sleutelbeheer van en vooral tussen verschillende cryptografische platformen. Avensus levert gecentraliseerde key management systemen die het sleutelbeheer van en tussen de verschillende platformen aanzienlijk vereenvoudigen, beheersbaar en daardoor veiliger maken. Deze oplossingen bieden: - Lifecycle key management - Geautomatiseerde key distributie en updating - Compliancy (PCI DSS, Sarbanes-Oxley en FIPS 140-2) - Ondersteuning voor meeste HSM merken - Beheersbare en overzichtelijke (&amp;lsquo;at your desk&amp;rsquo;) key ceremonies - Role-based access - Doorzoekbare en &amp;lsquo;tamper evident&amp;rsquo; audit logs.]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/onze_diensten/risk-mitigation</loc>
+		<priority>0.48</priority>
+		<title>Risk-Mitigation</title>
+		<content><![CDATA[Risico-beperking en bewustwording hiervan: Welke risico&amp;rsquo;s bent u bereid te nemen? Weet wat er gebeurt met de continu&amp;iuml;teit van uw onderneming als kritische data en/of uw klantengegevens op straat komen te liggen. Data-protectie vormt de essentie van IT-security, maar het is belangrijk om naar de gehele keten te kijken en ervoor te zorgen dat zowel interne als externe gebruikers geen zwakke schakel vormen. De juiste identiteit en autorisaties spelen dus ook een belangrijke rol in het beveiligen van uw netwerken. Avensus helpt in dit traject om risico&#039;s te identificeren en rekening te houden met complicany-vraagstukken. Om vervolgens samen te bepalen welke maatregelen daarop aansluiten om zo optimaal mogelijk aan risico-beperking te voldoen. .]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/onze_diensten/risk-mitigation/perimeter_en_endpoint_control</loc>
+		<priority>0.32</priority>
+		<title><![CDATA[Perimeter & Endpoint Control]]></title>
+		<content><![CDATA[Het beschermen van netwerken tegen continu veranderende bedreigingen is nooit zo uitdagend geweest. De vereisten op het gebied van connectiviteit en beveiliging van ICT-infrastructuren blijven groeien. Basis security is daarom erg belangrijk. Onderwerpen zoals Identity Access Management, Next Gen netwerk beveiliging, Anti DdoS, segmentatie, Veilige en gereguleerde draadloze toegang en Certificate Management moeten topics zijn op de agenda van een security officer. Het vaststellen van de juiste identiteit en autorisaties spelen een centrale rol. Welke maatregelen komen op uw agenda te staan? Aandachtsgebieden: - Strong Authentication &amp;amp; Identity Control - Network Access &amp;amp; Remote Access - Wireless Access &amp;amp; Network Security - (S)NOC Remote Management.]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/onze_diensten/compliancy</loc>
+		<priority>0.48</priority>
+		<title>Compliancy</title>
+		<content><![CDATA[Het aantonen van wet- en regelgeving vergt de juiste security maatregelen? Bent u compliant? Alle organisaties in Nederland hebben of krijgen te maken met een verplichting vanuit een bepaalde wet en regelgeving op het gebied van informatiebeveiliging. De Wpb is al geruime tijd van kracht (overigens wel vrij interpreteerbaar). Melding van datalekken wordt een verplichting waar ook grote consequenties in de vorm van fikse boetes aan vast zitten voor Nederlandse organisaties. Daarnaast werken commerci&amp;euml;le bedrijven steeds meer vanuit ISO27001/27002. Ingegeven als eis van grote klanten of het levert een concreet concurrentievoordeel op. Overheid, semi-overheid en zorg hebben inmiddels allemaal hun eigen richtlijn waar op termijn aan voldaan zal moeten worden (NEN7510/14, BIR, BIG, BIWA, IBI enz). En als laatste de financi&amp;euml;le sector die al geruime tijd onder verscherpt toezicht van de DNB staat. Al deze normen zijn toegespitst op een bepaald sector maar vinden allen hun oorsprong in ISO27001/2. Des te belangrijker is het dus om per organisatie en per sector op basis van huidige en/of toekomstige verplichtingen passende maatregelen op het gebeid van informatiebeveiliging te nemen om aan te kunnen tonen dat de organisatie in control is en voldoet aan de opgelegde norm..]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/onze_diensten/compliancy/security_intelligence</loc>
+		<priority>0.32</priority>
+		<title>Security Intelligence</title>
+		<content><![CDATA[Meer dan ooit tevoren staan organisaties bloot aan een enorme hoeveelheid en verscheidenheid aan dreigingen en compliance risico&amp;rsquo;s. Tegelijkertijd verandert de IT-omgeving van een kasteelconcept in een hotelconcept (van een gesloten naar een open netwerk) en wisselen we met steeds meer stakeholders digitaal informatie uit (ketendigitalisering). Goede aanpak van deze uitdagingen vereist inzicht om de juiste aanpak in te zetten. We hebben geavanceerde intelligencefuncties nodig om doeltreffender dreigingen op te sporen. Bent u compliant en weet u wat er op uw netwerk gebeurt? Security Intelligence cre&amp;euml;ert inzicht. Daarmee is het mogelijk alert en adequaat te kunnen optreden bij inbreuken. Juist dit inzicht - de security informatie te loggen en monitoren &amp;ndash; stelt ons in staat de zwakke plekken in de organisatie bloot te leggen. Naast volledige implementatie van SIEM biedt Avensus ook de mogelijkheid tot Managed Siem. Onze getrainde specialisten monitoren SIEM en nemen u daarmee werk uit handen en weten op het juiste moment in te grijpen..]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/onze_diensten/it-control</loc>
+		<priority>0.48</priority>
+		<title>IT-Control</title>
+		<content><![CDATA[Continu&amp;iuml;teit, beheersbaarheid, kostenoptimalisatie en voorspelbaarheid in uw IT kosten. Als partner ondersteunen wij bij het maken van strategische beslissingen op het gebied van IT-outsourcing en IT-outtasking. Om tot gedegen partnership te komen, hebben we de Secure Outsourcing Service strategie geformuleerd: - Organisatie Strategie &amp;amp; Doelstellingen - HRM - Governance &amp;amp; Contractmanagement - Cloud Roadmap - Transitie - Secure IT-beheer - Innoveren Door onze jaren lange ervaring zijn wij in staat om Gebruikersondersteuning, Mobiliteit -, Infrastructuur - en Security vraagstukken te laten aansluiten op uw organisatie doelstellingen. Maar wie houdt dan de regie in handen?.]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/onze_diensten/it-control/secure_outsourcing_services</loc>
+		<priority>0.32</priority>
+		<title>Secure Outsourcing Services</title>
+		<content><![CDATA[Organisaties concentreren zich, meer dan ooit, op hun kerntaken. Men vereenvoudigt de bedrijfsprocessen en besteedt de IT uit. Dit omdat in een continu veranderende globale markt, organisaties onderscheidend moet blijven. Door te kiezen voor Secure Outsourcing Services, kunt u zich richten op uw kern processen en zal Avensus u begeleiden in het maken van de juiste IT keuze. Avensus heeft een strategie ontwikkeld waarin, gedurende de uitbesteding, programma management wordt ge&amp;iuml;mplementeerd welke u begeleidt bij de overgang van uw IT personeel, de inrichting van IT Governance, IT Security, Gebruikersondersteuning en de continu&amp;iuml;teit van de IT-infrastructuur..]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/onze_diensten/it-control/servicedesk</loc>
+		<priority>0.32</priority>
+		<title>Servicedesk</title>
+		<content>De Servicedesk van Avensus bestaat uit een team van specialisten uit Nederland en biedt 24/7 support. Onze medewerkers hebben de technische expertise om uw systemen werkend te houden en de sociale vaardigheden om dat op een plezierige en effectieve manier te doen. De Indiase support wordt indien nodig ingeschakeld door ons eigen team; u merkt hier niets van. Maar indirect profiteert u natuurlijk optimaal mee van deze internationale kennis en het significante kostenvoordeel. U kunt 24 uur per dag op ons rekenen! .</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/onze_diensten/it-control/workspace__en_device_services</loc>
+		<priority>0.32</priority>
+		<title><![CDATA[Workspace  & Device Services]]></title>
+		<content>Toenemende mobiliteit bij uw medewerkers maar ook een toename van het aantal devices dat een gebruiker toepast om informatie te delen, te zoeken en te verwerken. Door centraal beheer uit te voeren, blijft u in control over uw bedrijfsgegevens. Avensus beheert deze devices met de modernste software en draagt zorg dat uw eindgebruikers snel en kundig worden geholpen en uw data veilig wordt gesteld indien daarom wordt gevraagd..</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/onze_diensten/it-control/server_en_network_services</loc>
+		<priority>0.32</priority>
+		<title><![CDATA[Server & Network Services]]></title>
+		<content><![CDATA[Uw Server en Netwerk dient vandaag en in de toekomst 7/24 beschikbaar te zijn voor uw gebruikers en afhandeling van uw bedrijfsprocessen. Door een 7/24 pro actieve service dragen wij zorg voor het remote monitoren van de systemen, up to date houden van de systemen, de afhandelingen van storingen door onze specialisten en het aansturen van derden. Door de uitbesteding van deze activiteiten realiseert u continu&amp;iuml;teit, kostenoptimalisatie en kunt u zich focussen op de kern activiteiten..]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/onze_diensten/it-control/security_services</loc>
+		<priority>0.32</priority>
+		<title>Security Services</title>
+		<content><![CDATA[Cybercriminaliteit, DDoS aanvallen, bedrijfsinformatie die op straat komt te liggen; zaken die uw organisatie zomaar kunnen overkomen. Avensus zorgt voor 7/24 controle en opvolging door onze specialisten van deze IT-criminaliteit door SIEM te integreren in uw IT-Infrastructuur. De security incidenten die door het SIEM platform worden waargenomen, worden op een adequate manier opgepakt. De verantwoordelijkheid voor het up-to-date houden van de configuratie en systeemsoftware ligt volledig bij Avensus. Deze services zorgen ervoor dat uw Security Monitoring altijd geoptimaliseerd is en uw gegevens achter gesloten deuren blijven. Onze security specialisten beheren voor u: - Managed SIEM - Strong Authentication &amp;amp; Identity Control - Application / Database - Encryption - Secure Wireless access - Key Management - Payment Security.]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/onze_diensten/it-control/on_site_services</loc>
+		<priority>0.32</priority>
+		<title>On Site Services</title>
+		<content>Onze specialisten zijn gewend remoten en on-site bij onze klanten te werken. Vanuit ervaring en kennis weten zij welke support zij moeten leveren. Op locatie verzorgen wij de volgende diensten: - Werkplekbeheer Het uitrollen en beheren van IT-werkplekken - Preventief Beheer Op vaste tijdstippen uw IT-afdeling ondersteunen - Inhuur Proffesional Extra inzet en kennis wanneer u dat nodig heeft..</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/onze_diensten/it-control/datacenter_control_-_dcims</loc>
+		<priority>0.32</priority>
+		<title>Datacenter Control - DCIMS</title>
+		<content>Data Center Infrastructure Management Solutions. Binnenkort meer hierover, bekijk alvast onderstaande demo..</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/onze_klanten</loc>
+		<priority>0.64</priority>
+		<title>Onze Klanten</title>
 		<content>.</content>
 	</url>
 	<url>
-		<loc>http://www.flexyadmin.com/pagina_3_eind</loc>
-		<priority>0.80</priority>
-		<title>Pagina 3 (eind)</title>
+		<loc>http://www.avensus.nl/nl/onze_klanten/bfsi</loc>
+		<priority>0.48</priority>
+		<title>BFSI</title>
+		<content><![CDATA[De financi&amp;euml;le sector (o.a. Banken, Accountancy en Assurantie), loopt voorop als het gaat om innovatieve IT-technologie&amp;euml;n om de bedrijfsproductiviteit te verhogen. De razendsnelle digitalisering en afhankelijkheid daarvan, plus de strakke wettelijke controle; maakt de vereiste niveaus van flexibiliteit, efficiency, veiligheid en klantenservice bijzonder hoog..]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/onze_klanten/gezondheidszorg</loc>
+		<priority>0.48</priority>
+		<title>Gezondheidszorg</title>
+		<content>De gezondheidszorg is continue in beweging; veranderingen volgen elkaar steeds sneller op en de impact daarvan is steeds heviger. Hoe kunt u deze revolutie succesvol aanpakken? De grootste uitdagingen draaien om efficiency, verhogen van kwaliteit en daarbij moeten bezuinigen. De focus moet op de zorg liggen..</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/onze_klanten/overheid</loc>
+		<priority>0.48</priority>
+		<title>Overheid</title>
+		<content><![CDATA[De razendsnelle digitalisering en afhankelijkheid daarvan, veranderen de wensen van burgers en de risico&amp;rsquo;s waar overheidsinstanties mee worden geconfronteerd. Via DigiD kan de burger inloggen en zelf online wijzigingen doorvoeren en aanvragen regelen. Politici en raadsleden zijn mobiele en profileren zich op Social Media. De nieuwe realiteit van werken en communiceren &amp;iacute;n en m&amp;eacute;t de samenleving geldt als geen ander voor de overheid. .]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/onze_klanten/handel_en_industrie</loc>
+		<priority>0.48</priority>
+		<title><![CDATA[Handel & Industrie]]></title>
+		<content><![CDATA[Veranderende markten en globalisering hebben een blijvende invloed op de groeiende IT behoefte van het bedrijfsleven. Daarnaast werken commerci&amp;euml;le bedrijven steeds meer vanuit ISO27001/27002. Ingegeven als eis van grote klanten of het levert een concreet concurrentievoordeel op. Thema&amp;rsquo;s als kostenbesparing, compliancy en continu&amp;iuml;teit komen dan ook vaak terug in de vragen die klanten aan ons stellen. Met hoogwaardige kennis op het gebied van virtualisatie, storage en remote acces maakt Avensus hierbij het verschil voor haar relaties..]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/onze_klanten/case_studies</loc>
+		<priority>0.48</priority>
+		<title>Case studies</title>
+		<content>.</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/actueel</loc>
+		<priority>0.64</priority>
+		<title>Actueel</title>
+		<content><![CDATA[Agenda - welke interessante sessies staan er op onze kalender Media - boeiende verslagen, interviews en demo&#039;s Publicaties - Avensus in het nieuws en persberichten Whitepapers - uitgebreide informatie over interessante onderwerpen Met regelmaat sturen wij een NewsFlash naar onze relaties met onderwerpen die u ook aanspreken. U kunt zich eenvoudig aanmelden door een mail te sturen naar sstoetzer@avensus.nl .]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/actueel/agenda</loc>
+		<priority>0.48</priority>
+		<title>Agenda</title>
+		<content>.</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/actueel/media</loc>
+		<priority>0.48</priority>
+		<title>Media</title>
+		<content><![CDATA[Uit het nieuws Okt 2014 - VPRO Tegenlicht Hans Busstra over Zero Days en Veiligheidslekken Avensus Media Juni 2014 - Denk na over Cloud Security reportage en interview met G&amp;ouml;kmen Kiremit Nov 2013 - Cyber Attack - DdoS uit de praktijk reportage en interview met Jaap Ruijgrok Juni 2013 - Key Management moet op de agenda reportage en interview met G&amp;ouml;kmen Kiremit Gastspreker Richard Moulds over Key Management interview met Richrard Moulds Van onze partners Avocent - Datacenter Remote Management, veilig! interessante demo Thales - Richard Moulds over Key Management interview met Richrard Moulds .]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/actueel/news_flash</loc>
+		<priority>0.48</priority>
+		<title>News Flash</title>
+		<content>Ook op de hoogte blijven? Mail uw gegevens naar marketing@avensus.nl. Edities: Oktober 2014 - Lancering nieuwe website .</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/actueel/publicaties</loc>
+		<priority>0.48</priority>
+		<title>Publicaties</title>
+		<content><![CDATA[01-09-2014 SOS - Veilig Beheer uit Almere interview met Manfred Pallenca&amp;ouml;e 16-09-2014 Bescherm de Kroonjuwelen van uw bedrijf interview met G&amp;ouml;kmen Kiremit.]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/actueel/whitepapers</loc>
+		<priority>0.48</priority>
+		<title>Whitepapers</title>
+		<content>.</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/contact</loc>
+		<priority>0.64</priority>
+		<title>Contact</title>
 		<content>Hier een voorbeeld van een eenvoudig contactformulier..</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/contact/almere</loc>
+		<priority>0.48</priority>
+		<title>Almere</title>
+		<content><![CDATA[Avensus Nederland B.V. Camerastraat 9 1322 BB ALMERE Postbus 60307 1320 AJ ALMERE Tel no. +31 (0)36-5393100 Fax no. +31 (0)36-5393101 info@avensus.nl Location: +52&amp;deg; 20&#039; 53.75&quot;, +5&amp;deg; 10&#039; 56.06.]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/contact/delft</loc>
+		<priority>0.48</priority>
+		<title>Delft</title>
+		<content><![CDATA[Avensus Nederland B.V. Staalweg 46 2612 KK Delft Nederland Tel no. +31 (0)36-5393100 Fax no. +31 (0)36-5393101 info@avensus.nl Location: +52&amp;deg; 0&#039; 48.67&quot;, +4&amp;deg; 22&#039; 38.94&quot;.]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/contact/onze_partners</loc>
+		<priority>0.48</priority>
+		<title>Onze Partners</title>
+		<content>Wij verwachten wederzijds loyaliteit. Dat vertaalt zich niet alleen in de pre-sales fase, maar juist ook in de after-sales. Door ons commitment zorgen wij ervoor dat we de hoogst haalbare status behalen en behouden. U mag dan ook verwachten dat wij ruime kennis en ervaring hebben van het portfolio van onze partners. Door te kiezen voor de juiste partners, kan Avensus de beoogde kwaliteit leveren. Vanuit de samenwerking met vaste partners blijft ook hier onze kwaliteitsnorm gewaarborgd. Onze partners zijn:.</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/contact/overige_informatie</loc>
+		<priority>0.48</priority>
+		<title>Overige Informatie</title>
+		<content>Bankgegevens Avensus Nederland BV Rabobank Buitenhofdreef 2 2625 XR Delft Post box 55 2600 AB Delft Bankrekeningnr: NL34 RABO 0109 1181 38 BIC Code: RABONL2U NCAGE CODE: H1X77 D-U-N-S Number: 406609672 VAT-ID: NL 810203212B01 Kamer van Koophandel: 05068877.</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/contact/leveringsvoorwaarden</loc>
+		<priority>0.48</priority>
+		<title>Leveringsvoorwaarden</title>
+		<content><![CDATA[A. Algemene Verkoop Voorwaarden B. Bijzondere bepalingen verkoop (BB): - BB Detachering - BB Opleidingen en Trainingen - BB Advisering Consultancy Projectmanagement overige Diensten - BB Application Service Provisioning, Software as a Service en Computerservice - BB Gebruik van Programmatuur / Licenti&amp;euml;ring - BB Onderhoud Programmatuur - BB Programmatuur Ontwikkeling - BB Onderhoud van ICT-, Telecommunicatie- en Kantoorapparatuur - BB Onderhoud Apparatuur - BB Verkoop Apparatuur - BB Webhosting - BB Website Ontwikkeling en Onderhoud C. Algemene Inkoopvoorwaarden.]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/nl/servicedesk</loc>
+		<priority>0.64</priority>
+		<title>Servicedesk</title>
+		<content>Avensus is u graag van dienst. U kunt onze mensen bereiken tijdens kantooruren van 08.00 tot 17.30 uur. Per telefoon : +31 (0) 36 53 93 111 Per email : servicedesk@avensus.nl Voor telefonisch support buiten kantooruren verwijzen wij naar uw serviceovereenkomst (SLA), hierin treft u uw persoonlijke telefoonnummer. Wilt u meer weten over aanvullend support, informeert u vrijblijvend via Accountmanagement: sales@avensus.nl Service management: projectbureau@avensus.nl.</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en</loc>
+		<priority>0.80</priority>
+		<title>en</title>
+		<content>.</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/home</loc>
+		<priority>0.64</priority>
+		<title>home</title>
+		<content>.</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/avensus</loc>
+		<priority>0.64</priority>
+		<title>Avensus</title>
+		<content>.</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/avensus/vision_en_mission</loc>
+		<priority>0.48</priority>
+		<title><![CDATA[Vision & Mission]]></title>
+		<content><![CDATA[OUR VISION Customers work in a turbulent and comples global market.They need real time, reliable information and want total controle and managebility, to get a certifiable and secure environment. OUR MISSION Avensus strives to be seen by our customers as THE partner for manageable, secure and reliable ICT solutions. OUR STRENGTH Avensus is specialised in Cloud &amp;amp; Security services and thus contributes directly to the actual business issues as reduction of costs, flexibility and continuity. Through Secure Outsourcing Services we help our customers that can rely on our expert know how abd cooperation with IT partners that are leading in their fields of business. OUR CORE VALUES Transparency, Expert know How and passion for quality of service .]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/avensus/quality</loc>
+		<priority>0.48</priority>
+		<title>Quality</title>
+		<content>Avensus is definitely aware that the services and products they deliver represent a very important link in your business communication. Although our services are in general not directly visible, the importance of reliable information is a critical factor for the management of your business. Avensus stands for security, manageability and control, and therefore we invest a lot of attention in our quality care. KNOWLEDGE It begins with the selection of the very best technical people. Our specialists need to dispose of the right knowledge to be able to offer you safe and manageable ICT solutions. This knowledge, as well as the largely certified and specialized team of specialists, is maintained up to date through training and development, so that Avensus can guarantee any level of security. In addition, Avensus can transform the latest innovations to suit the European ICT norms and requirements via the parent company Omnitech InfoSolutions. PARTNER MANAGEMENT By choosing the right partners, Avensus can achieve the quality objectives in the systems where the information is handled and stored. Our quality standards are guaranteed in a well considered collaboration with known partners. ISO-CERTIFICATION Our services and deliverables are executed in accordance with norm ISO 9001:2008. We have been entirely certified since November 2010. The increase in customer satisfaction is a key issue for ISO norms. The certification is in line with our ambition to continuously improve the quality of our services. For Avensus, ISO is about: Say what you do, and do what you say. We hope that you, as a customer, will experience this in our personalized service. But should this, against all expectations, not be the case, then we would appreciate it if you could let us know. It will allow us to take action and maintain our quality at a high level..</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/avensus/csr</loc>
+		<priority>0.48</priority>
+		<title>CSR</title>
+		<content>Avensus values the world and the talented people in it. Working together to a common goal and appreciate the contributions of each individual. That is why Avensus various projects of their customers, in which it all revolves around team-work. Examples of these projects are:.</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/avensus/vacancies</loc>
+		<priority>0.48</priority>
+		<title>Vacancies</title>
+		<content>In order to achieve good future perspective, we are always intrested in meeting new talent that can contribute to our company. Professionals looking for professionals. If you feel you can contribute, you can send your Curriculum Vitae, and a letter why you would like to contribute to ikhebinteresse@avensus.nl At this particular moment in time we are looking for: - Security Engineer - Network Specialist - Supportdesk Employee.</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/our_services</loc>
+		<priority>0.64</priority>
+		<title>Our Services</title>
+		<content><![CDATA[Avensus is specialized in Cloud &amp;amp; Security Services. We help enterprise and government executives to reduce cost, implement flexibility, and ensure continuity . Through Secure Outsourcing Services we fulfill customer needs using industry best practices and working along with industry leaders..]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/our_services/cloud_roadmap</loc>
+		<priority>0.48</priority>
+		<title>Cloud roadmap</title>
+		<content>Avensus is the innovative Cloud and IT partner supporting your organisation by determining the Cloud Roadmap. Answer to the following questions will help shaping the cloud services. Why would you want to go to the Cloud? Agrees the cloud with the purposes of your Organisation? What are the purposes of your organisation? Is your primary aim flexibility, cost reduction and/or productivity? Many organisation want, above all, to work more efficiently. If this can be achieved with could services, then switching to cloud services is a logical and tactical choice. .</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/our_services/cloud_roadmap/cloud_strategy</loc>
+		<priority>0.32</priority>
+		<title>Cloud Strategy</title>
+		<content><![CDATA[Cloud solutions invite you to look at IT information in an alternate way. Is the roadmap towards cloud services different compared to traditional IT? Avensus supports organisations by performing a cloud strategy scan to find an answer to this question, and to give a clear insight into Cloud services and slolutions that have an additional contribution to achieving your organisation&amp;rsquo;s goals. This determines the Cloud architecture to be , Private, Hybrid or public. CLOUD STRATEGY SCAN - Determin the aims of the organisation - Determine the IT-Infrastructure - Determine Cloud Architecture and Roadmap. - Migration into the Cloud - Transfer to Secure Outsourcing Services.]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/our_services/cloud_roadmap/microsoft_office_365_en_azure</loc>
+		<priority>0.32</priority>
+		<title><![CDATA[Microsoft Office 365 & Azure]]></title>
+		<content>Microsoft Office 365 With Office in the cloud, you can access Word, PwoerPoint, Excel, Outlook, Onenote and Publisher from any location. Recent documents will be available so your can get directly to business. 1 TB online storage supplied by OneDrive`makes sure that you will always have your files available and can share these files within and to parties outside your cloud. Your files are automatically synchronised between the various devices and your PC so you can work online when not at the office or offline when you are in the office. You are always up to date. Microsoft Windows Azure What is Azure? Azure is a cloudplatform by Mircorsoft. A growing number of integrated services, like hosting of Active Directory, Virtual Servers, Backup, SQL and Sharepoint. Thanks to the hybrid business cloud solutions of Office 365 and Azure your organisation will have the best of both, so you can simply expand your IT options. Avensus is a Microsoft Gold Partner and gives advice about and implements these solutions for your organisation. Avensus Services are: - Determining the aims of your organisation - Determining the Office 365/Azure services needed - Making the Office 365 and Azure Cloud connections (DirSync, ADFS, WAAD) - Migrate data and mailboxes to office 365 and Azure - Migrate from Novell Groupwise, Lotus Notes or Exchange 2003 or 2000 Avensus is: - Microsoft Gold Partner Server Platform - Microsoft Silver Partner Messaging Platform Avensus diensten voor U: - Inventarisatie bedrijfsdoelstellingen - Bepalen Office 365 en/of Azure diensten - Office 365 en Azure Cloud connectie (DirSync, ADFS, WAAD) - Migratie data en mailboxen naar Office 365 online en Azure - Migraties vanaf Novell Groupwise, Lotus Notes of Exchange 2003 of 2000 Avensus is: - Microsoft Gold Partner Server Platform - Microsoft Silver Partner Messaging Platform.</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/our_services/cloud_roadmap/infrastructure-as-a-service</loc>
+		<priority>0.32</priority>
+		<title>Infrastructure-as-a-Service</title>
+		<content><![CDATA[De keuze voor een Infrastructuur-as-a-service of &quot;IaaS&quot; model is complex gezien de vele vormen en leveranciers van deze diensten. Avensus kiest samen met u de beste oplossing voor uw organisatie. Het inrichten, onderhouden en managen van een hoogwaardige IT-infrastructuur vraagt specialistische kennis en hoge initi&amp;euml;le investeringen (CAPEX). Belangrijk hierin is te bepalen wat de belangrijkste overwegingen zijn voor een Iaas model. Van CAPEX naar OPEX Avensus ondersteunt organisaties om een onderbouwde business Case te maken voor het afnemen van de IT-Infrastructuur op basis van het IaaS model tot een volledige Managed IT-omgeving. Gaat u voor kostenreductie of Flexibiliteit of zoekt u een combinatie van beide ? Avensus helpt U met het maken van deze belangrijke beslissingen. Van Traditionele IT op eigen locatie (on premise) of Co-locatie in een Datacenter tot alle mogelijke vormen van IaaS. Avensus diensten: - Inventarisatie bedrijfsdoelstellingen en IT-omgeving - Vaststellen Business Drivers: Kostenreductie/Continu&amp;iuml;teit versus Flexibiliteit/Schaalbaarheid - Opstellen &amp;ldquo;Infrastructuur as a Service&amp;rdquo; Business Case - Advies en Migratie naar een IaaS Platform - Remote Infrastructuur Managed Services - Volledige Managed IT omgeving 7/24 - Outsourcing Beheer en Overname personeel Lees meer onder Secure Outsourcing Service.]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/our_services/cloud_roadmap/infrastructure_projects</loc>
+		<priority>0.32</priority>
+		<title>Infrastructure Projects</title>
+		<content><![CDATA[Als specialist op het gebied van Server-, Storage- en Netwerkinfrastructuren levert Avensus kwalitatief hoogwaardige, snelle en veilige Infrastructuur oplossingen met een hoge beschikbaarheid en betrouwbaarheid die zowel on-premise, op een co-locatie of via een IaaS model worden aangeboden. Vanuit de samenwerking met vaste, toonaangevende partners blijft de kwaliteitsnorm van Avensus gewaarborgd. SERVERS - Advies, installatie en migratie van Serversystemen - Servervirtualisatie met VMware of Microsoft Hyper-V - High Availability en Disaster Recovery Oplossingen partners: HP en Dell STORAGE - Storage Area Network: SAN of NAS systemen - ISCSI of Fibre Channel oplossingen vari&amp;euml;rend van 1 Gb tot 10 Gb - Features als: Snapshots, Deduplicatie, Compressie, Datareplicatie (Synchroon/asynchroon) - Backup en Disaster Recovery - Archivering en Storage Tiering partners: NetApp, EMC, HP en Dell NETWORKING - Advies, levering en installatie van LAN, WAN en Wireless oplossingen - Audits en metingen voor snelle en veilige draadloze netwerkoplossingen partners: Juniper, Barracuda Networks en Cisco.]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/our_services/mobility</loc>
+		<priority>0.48</priority>
+		<title>Mobility</title>
+		<content><![CDATA[Door ontwikkelingen als &quot;Consumerization of IT&quot; en het &quot;Always Connected&quot; is IT niet alleen zakelijk maar ook priv&amp;eacute; heel belangrijk geworden. De beschikbaarheid van mobiele diensten geven gebruikers met smartphones en tablets toegang tot en gebruik van heel veel applicaties en informatie in de Cloud. Onbewust en ook bewust wordt deze levenswijze doorgetrokken naar de zakelijke markt en verwachten gebruikers en organisaties dat dit kan. Gebruikers willen Altijd, Overal en Zorgeloos werken Voor de zakelijke markt betekent dit een omslag van bestaande IT-diensten naar een gebruik op allerlei mobiele apparaten. Dit heeft gevolgen voor bestaande infrastructuren en applicaties die ontsloten moeten worden voor het Internet. Hierbij is beveiliging en beheer van nieuwe hybride oplossingen een belangrijk aandachtspunt die Avensus voor u realiseert. Avensus Mobiliteits Diensten - Werkplek Strategie en Oplossingen - Communicatie &amp;amp; Samenwerken - Enterprise Mobility Management - Werkplek 365.]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/our_services/mobility/workspace</loc>
+		<priority>0.32</priority>
+		<title>Workspace</title>
+		<content><![CDATA[De nieuwe werkplek bestaat vaak uit een verzameling van meerdere devices ,die de gebruiker ondersteunt bij het uitvoeren van het werk. Functionaliteit, Performance en gebruiksgemak staan hierbij voor de gebruiker centraal waarbij applicaties op verschillende type werkplekken worden gebruikt. Avensus adviseert, ontwerpt en realiseert de best passende werkplekstrategie voor uw organisatie en kijkt hierbij naar de organisatie, de gebruikersprofielen, Applicatielandschap en keuze voor juiste inzet van devices. Avensus diensten - Gebruikersprofiel Onderzoek - Applicatie Rationalisatie - vSolutions Architectuur - VDI, Citrix, Terminal Services, Client/Server, Saas, Mobiele applicatie - Werkplek Devices - Thin Client, PC, Laptop, Tablet - Identity Management &amp;amp; Security.]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/our_services/mobility/communicatie_en_samenwerken</loc>
+		<priority>0.32</priority>
+		<title><![CDATA[Communicatie & Samenwerken]]></title>
+		<content><![CDATA[Onze manier van werken verandert, mensen werken niet meer op &amp;eacute;&amp;eacute;n vaste plek, maar willen wel blijven communiceren met collega&amp;rsquo;s. Hoe vinden zij snel collega&amp;rsquo;s en informatie? Communicatiemiddelen zoals Microsoft Lync zijn eenvoudig te integreren in de dagelijkse werkzaamheden zonder belemmeringen voor de eindgebruiker. Een eenvoudige uitnodiging in de Agenda is al voldoende om een directe telefoonverbinding met collega&amp;rsquo;s of relaties op te zetten zonder extra kosten te maken. Uitbreiden met een Video connectie is met een druk op de knop gelukt en allerlei informatie kan op het scherm met elkaar worden gedeeld en bewerkt. Ze kunnen direct zien via een aanwezigheidsmelding in de agenda of collega&amp;rsquo;s beschikbaar zijn en contact leggen, er wordt bespaard op reistijd, huisvesting en telefoniekosten. Samenwerken door Informatie delen Voor een goede samenwerking is het delen van Informatie van essentieel belang. Microsoft Sharepoint maakt dit mogelijk, Teams kunnen documenten opslaan in teamsites en per project een postvak bijhouden, zodat iedereen rechtstreeks vanuit zijn of haar e-mail toegang heeft tot die documenten. Avensus diensten - Microsoft Lync voor Chat, Presence en Video - Microsoft Lync als telefonieplatform - Microsoft Sharepoint voor Samenwerken, Informatie en Kennisdeling.]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/our_services/mobility/enterprise_mobility_management</loc>
+		<priority>0.32</priority>
+		<title>Enterprise Mobility Management</title>
+		<content><![CDATA[Mensen willen overal en op elk apparaat toegang kunnen hebben tot zakelijke toepassingen, vanaf de laptop, smartphone, tablet of pc. IT-afdelingen worden uitgedaagd om consistente en rijke ervaringen te bieden op al deze apparaatsoorten, met toegang tot systeemeigen en webtoepassingen en toepassingen op afstand of desktop. Beheer en Security IT probeert het mogelijk te maken om personen zelf een apparaat te laten kiezen, maar moet tegelijkertijd kosten en complexiteit verminderen en beveiliging en naleving behouden door gegevens te beschermen en uitgebreid instellingsbeheer op platforms te hebben. Bescherm en beheer vertrouwelijke bedrijfsinformatie, en zorg voor productieve medewerkers met de juiste beveiligde toegang voor devices, locaties en netwerken. Avensus Diensten - Mobiel Device Management - Mobiel Applicatie Management - Bedrijfs Applicatie Portal - Secure E-mail &amp;amp; Data.]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/our_services/mobility/werkplek_365</loc>
+		<priority>0.32</priority>
+		<title>Werkplek 365</title>
+		<content><![CDATA[Werkplek 365 is een online werkplek met de kracht van Office 365. Door de eenvoudige interface cre&amp;euml;ert Werkplek 365 meer structuur en eenvoud dan Office 365 en Hosted Exchange of SharePoint. Doordat Werkplek 365 e-mail, documenten en bedrijfsprocessen ondersteunt en op een overzichtelijke manier aan elkaar koppelt, wordt de productiviteit van gebruikers verhoogd. Vooral geschikt voor mobiele gebruikers en kiosk werkers, die niet elke minuut van de dag met de PC werkt, maar wel eenvoudig zijn email, agenda, planning wil inzien. Business Apps Stop met het gebruiken van losse spreadsheets of nog erger&amp;hellip; papieren bestanden en formulieren. Cre&amp;euml;er meer structuur door bedrijfsprocessen te integreren in Werkplek 365 met onze Business Apps. Deze krachtige Business Apps kunnen worden gekoppeld aan Office 365 waardoor je meer overzicht krijgt in je e-mail, bestanden en bedrijfsinformatie. Integreer bijvoorbeeld het aanvragen van werkkleding, ziekmeldingen of het inchecken bij een receptie, CRM, Project Management, Offertes &amp;amp; Facturen, Tijdregistratie en nog veel meer. Waarom Werkplek 365 bovenop Office 365? Werkplek 365 is een centraal startpunt voor al je medewerkers. Gebruikers hoeven nooit te zoeken naar een app want ze zien de apps die zij nodig hebben direct in hun werkplek. Daarnaast hebben veel medewerkers moeite met de complexiteit van sommige applicaties. Door een eenvoudige userinterface verhogen zij hun productiviteit. Met Werkplek 365 kun je krachtige Business Apps toevoegen waarmee je bestanden, e-mail, contacten en meer aan elkaar kunt koppelen. Met de Business Apps kun je elk bedrijfsproces in de werkplek integreren..]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/our_services/cyber_security</loc>
+		<priority>0.48</priority>
+		<title>Cyber Security</title>
+		<content>Cybercriminaliteit kent vele gezichten soms bevinden deze zich dichterbij dan we vermoeden. De snelle ontwikkelingen rondom de Cloud Roadmap en Mobility vormen hierin een scherp contrast. Hechten we meer waarde aan kostenbesparing en efficiency dan aan de bescherming van onze data ofwel de digitale kroonjuwelen van een organisatie. Hoe kunnen we er, in dit post-Snowden tijdperk, zeker van zijn dat onze kritische bedrijfsgegevens veilig zijn?.</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/our_services/cyber_security/data_and_ip_protection</loc>
+		<priority>0.32</priority>
+		<title>Data and IP Protection</title>
+		<content><![CDATA[Hoe kunnen we er, in dit post-Snowden tijdperk, zeker van zijn dat onze kritische bedrijfsgegevens veilig zijn? Cybercriminaliteit kent vele gezichten, soms bevinden deze zich dichterbij dan we zouden vermoeden. De snelle ontwikkelingen rondom Cloud Roadmap en Mobiliteit vormen hierin een scherp contrast: hechten we meer waarde aan kostenbesparing en efficiency, dan aan de bescherming van onze data? (onze digitale kroonjuwelen). Data &amp;amp; IP Protectie is een manier van beveiligen waarbij direct de bron beschermd wordt. Uiteindelijk moeten we onze data veilig stellen. Het is inmiddels geen geheim meer dat hackers altijd weer een nieuwe manier zullen vinden om onze systemen te breken. Juist door het direct beveiligen van onze digitale kroonjuwelen voorkomen we dat de hacker grip krijgt op die waardevolle data..]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/our_services/cyber_security/payment_security</loc>
+		<priority>0.32</priority>
+		<title>Payment Security</title>
+		<content>Payment or Transaction Security Services supply cryptographic services used to protect financial transactions within banks and related financial institutions. Organizations that are concerned with payments are more often confronted with challenges, such as the explosive growth of the number of transactions, replacement of the magnetic stripe cards by contact and/or contactless smart cards, and the safety of new channels such as mobile and the internet. Also, organizations need to comply with more extensive regulations and cryptographic security requirements, such as the Payment Card Industry (PCI). Avensus has extensive and long-standing experience in the use of cryptographic security of Financial infrastructure for Issuers, Acquirers, Transaction Switches, cash dispensing machines, credit card terminals, inter-bank transactions, and mobile en electronic banking environments..</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/our_services/cyber_security/centralized_key_management</loc>
+		<priority>0.32</priority>
+		<title>Centralized Key Management</title>
+		<content><![CDATA[Encryption (scramble) and encryption management (management of electronic encryption material): Two subjects that are closely related. Companies are more often confronted with encryption management for and in particular between the different cryptographic platforms. Avensus supplies centralized key management systems that considerably simplify key management for and between the different platforms, rendering it controllable and therefore safer. These solutions offer: - Lifecycle Key Management - Automated key distribution and updating - Compliance (PCI DSS, Sarbanes-Oxley and FIPS 140-2) - Support for most HSM brands - Controllable and clear (&amp;lsquo;at your desk&amp;rsquo;) key ceremonies - Role-based access - Searchable and &amp;lsquo;tamper evident&amp;rsquo; audit logs.]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/our_services/risk-mitigation</loc>
+		<priority>0.48</priority>
+		<title>Risk-Mitigation</title>
+		<content><![CDATA[Risico-beperking en bewustwording hiervan: Welke risico&amp;rsquo;s bent u bereid te nemen? Weet wat er gebeurt met de continu&amp;iuml;teit van uw onderneming als kritische data en/of uw klantengegevens op straat komen te liggen. Data-protectie vormt de essentie van IT-security, maar het is belangrijk om naar de gehele keten te kijken en ervoor te zorgen dat zowel interne als externe gebruikers geen zwakke schakel vormen. De juiste identiteit en autorisaties spelen dus ook een belangrijke rol in het beveiligen van uw netwerken. Avensus helpt in dit traject om risico&#039;s te identificeren en rekening te houden met complicany-vraagstukken. Om vervolgens samen te bepalen welke maatregelen daarop aansluiten om zo optimaal mogelijk aan risico-beperking te voldoen. .]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/our_services/risk-mitigation/perimeter_en_endpoint_control</loc>
+		<priority>0.32</priority>
+		<title><![CDATA[Perimeter & Endpoint Control]]></title>
+		<content><![CDATA[Het beschermen van netwerken tegen continu veranderende bedreigingen is nooit zo uitdagend geweest. De vereisten op het gebied van connectiviteit en beveiliging van ICT-infrastructuren blijven groeien. Basis security is daarom erg belangrijk. Onderwerpen zoals Identity Access Management, Next Gen netwerk beveiliging, Anti DdoS, segmentatie, Veilige en gereguleerde draadloze toegang en Certificate Management moeten topics zijn op de agenda van een security officer. Het vaststellen van de juiste identiteit en autorisaties spelen een centrale rol. Welke maatregelen komen op uw agenda te staan? Aandachtsgebieden: - Strong Authentication &amp;amp; Identity Control - Network Access &amp;amp; Remote Access - Wireless Access &amp;amp; Network Security - (S)NOC Remote Management.]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/our_services/compliancy</loc>
+		<priority>0.48</priority>
+		<title>Compliancy</title>
+		<content><![CDATA[Het aantonen van wet- en regelgeving vergt de juiste security maatregelen? Bent u compliant? Alle organisaties in Nederland hebben of krijgen te maken met een verplichting vanuit een bepaalde wet en regelgeving op het gebied van informatiebeveiliging. De Wpb is al geruime tijd van kracht (overigens wel vrij interpreteerbaar). Melding van datalekken wordt een verplichting waar ook grote consequenties in de vorm van fikse boetes aan vast zitten voor Nederlandse organisaties. Daarnaast werken commerci&amp;euml;le bedrijven steeds meer vanuit ISO27001/27002. Ingegeven als eis van grote klanten of het levert een concreet concurrentievoordeel op. Overheid, semi-overheid en zorg hebben inmiddels allemaal hun eigen richtlijn waar op termijn aan voldaan zal moeten worden (NEN7510/14, BIR, BIG, BIWA, IBI enz). En als laatste de financi&amp;euml;le sector die al geruime tijd onder verscherpt toezicht van de DNB staat. Al deze normen zijn toegespitst op een bepaald sector maar vinden allen hun oorsprong in ISO27001/2. Des te belangrijker is het dus om per organisatie en per sector op basis van huidige en/of toekomstige verplichtingen passende maatregelen op het gebeid van informatiebeveiliging te nemen om aan te kunnen tonen dat de organisatie in control is en voldoet aan de opgelegde norm..]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/our_services/compliancy/security_intelligence</loc>
+		<priority>0.32</priority>
+		<title>Security Intelligence</title>
+		<content><![CDATA[Meer dan ooit tevoren staan organisaties bloot aan een enorme hoeveelheid en verscheidenheid aan dreigingen en compliance risico&amp;rsquo;s. Tegelijkertijd verandert de IT-omgeving van een kasteelconcept in een hotelconcept (van een gesloten naar een open netwerk) en wisselen we met steeds meer stakeholders digitaal informatie uit (ketendigitalisering). Goede aanpak van deze uitdagingen vereist inzicht om de juiste aanpak in te zetten. We hebben geavanceerde intelligencefuncties nodig om doeltreffender dreigingen op te sporen. Bent u compliant en weet u wat er op uw netwerk gebeurt? Security Intelligence cre&amp;euml;ert inzicht. Daarmee is het mogelijk alert en adequaat te kunnen optreden bij inbreuken. Juist dit inzicht - de security informatie te loggen en monitoren &amp;ndash; stelt ons in staat de zwakke plekken in de organisatie bloot te leggen. Naast volledige implementatie van SIEM biedt Avensus ook de mogelijkheid tot Managed Siem. Onze getrainde specialisten monitoren SIEM en nemen u daarmee werk uit handen en weten op het juiste moment in te grijpen..]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/our_services/it-control</loc>
+		<priority>0.48</priority>
+		<title>IT-Control</title>
+		<content><![CDATA[Continu&amp;iuml;teit, beheersbaarheid, kostenoptimalisatie en voorspelbaarheid in uw IT kosten. Als partner ondersteunen wij bij het maken van strategische beslissingen op het gebied van IT-outsourcing en IT-outtasking. Om tot gedegen partnership te komen, hebben we de Secure Outsourcing Service strategie geformuleerd: - Organisatie Strategie &amp;amp; Doelstellingen - HRM - Governance &amp;amp; Contractmanagement - Cloud Roadmap - Transitie - Secure IT-beheer - Innoveren Door onze jaren lange ervaring zijn wij in staat om Gebruikersondersteuning, Mobiliteit -, Infrastructuur - en Security vraagstukken te laten aansluiten op uw organisatie doelstellingen. Maar wie houdt dan de regie in handen?.]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/our_services/it-control/secure_outsourcing_services</loc>
+		<priority>0.32</priority>
+		<title>Secure Outsourcing Services</title>
+		<content><![CDATA[Organisaties concentreren zich, meer dan ooit, op hun kerntaken. Men vereenvoudigt de bedrijfsprocessen en besteedt de IT uit. Dit omdat in een continu veranderende globale markt, organisaties onderscheidend moet blijven. Door te kiezen voor Secure Outsourcing Services, kunt u zich richten op uw kern processen en zal Avensus u begeleiden in het maken van de juiste IT keuze. Avensus heeft een strategie ontwikkeld waarin, gedurende de uitbesteding, programma management wordt ge&amp;iuml;mplementeerd welke u begeleidt bij de overgang van uw IT personeel, de inrichting van IT Governance, IT Security, Gebruikersondersteuning en de continu&amp;iuml;teit van de IT-infrastructuur..]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/our_services/it-control/servicedesk</loc>
+		<priority>0.32</priority>
+		<title>Servicedesk</title>
+		<content>De Servicedesk van Avensus bestaat uit een team van specialisten uit Nederland en biedt 24/7 support. Onze medewerkers hebben de technische expertise om uw systemen werkend te houden en de sociale vaardigheden om dat op een plezierige en effectieve manier te doen. De Indiase support wordt indien nodig ingeschakeld door ons eigen team; u merkt hier niets van. Maar indirect profiteert u natuurlijk optimaal mee van deze internationale kennis en het significante kostenvoordeel. U kunt 24 uur per dag op ons rekenen! .</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/our_services/it-control/workspace__en_device_services</loc>
+		<priority>0.32</priority>
+		<title><![CDATA[Workspace  & Device Services]]></title>
+		<content>Toenemende mobiliteit bij uw medewerkers maar ook een toename van het aantal devices dat een gebruiker toepast om informatie te delen, te zoeken en te verwerken. Door centraal beheer uit te voeren, blijft u in control over uw bedrijfsgegevens. Avensus beheert deze devices met de modernste software en draagt zorg dat uw eindgebruikers snel en kundig worden geholpen en uw data veilig wordt gesteld indien daarom wordt gevraagd..</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/our_services/it-control/server_en_network_services</loc>
+		<priority>0.32</priority>
+		<title><![CDATA[Server & Network Services]]></title>
+		<content><![CDATA[Uw Server en Netwerk dient vandaag en in de toekomst 7/24 beschikbaar te zijn voor uw gebruikers en afhandeling van uw bedrijfsprocessen. Door een 7/24 pro actieve service dragen wij zorg voor het remote monitoren van de systemen, up to date houden van de systemen, de afhandelingen van storingen door onze specialisten en het aansturen van derden. Door de uitbesteding van deze activiteiten realiseert u continu&amp;iuml;teit, kostenoptimalisatie en kunt u zich focussen op de kern activiteiten..]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/our_services/it-control/security_services</loc>
+		<priority>0.32</priority>
+		<title>Security Services</title>
+		<content><![CDATA[Cybercriminaliteit, DDoS aanvallen, bedrijfsinformatie die op straat komt te liggen; zaken die uw organisatie zomaar kunnen overkomen. Avensus zorgt voor 7/24 controle en opvolging door onze specialisten van deze IT-criminaliteit door SIEM te integreren in uw IT-Infrastructuur. De security incidenten die door het SIEM platform worden waargenomen, worden op een adequate manier opgepakt. De verantwoordelijkheid voor het up-to-date houden van de configuratie en systeemsoftware ligt volledig bij Avensus. Deze services zorgen ervoor dat uw Security Monitoring altijd geoptimaliseerd is en uw gegevens achter gesloten deuren blijven. Onze security specialisten beheren voor u: - SIEM - Strong Authentication &amp;amp; Identity Control - Application / Database - Encryption - Secure Wireless access - Key Management - Payment Security.]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/our_services/it-control/on_site_services</loc>
+		<priority>0.32</priority>
+		<title>On Site Services</title>
+		<content>Onze specialisten zijn gewend remoten en on-site bij onze klanten te werken. Vanuit ervaring en kennis weten zij welke support zij moeten leveren. Op locatie verzorgen wij de volgende diensten: - Werkplekbeheer Het uitrollen en beheren van IT-werkplekken - Preventief Beheer Op vaste tijdstippen uw IT-afdeling ondersteunen - Inhuur Proffesional Extra inzet en kennis wanneer u dat nodig heeft..</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/our_services/it-control/datacenter_control_-_dcims</loc>
+		<priority>0.32</priority>
+		<title>Datacenter Control - DCIMS</title>
+		<content>Data Center Infrastructure Management Solutions Binnenkort meer hierover, bekijk alvast onderstaande demo..</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/our_customers</loc>
+		<priority>0.64</priority>
+		<title>Our Customers</title>
+		<content>.</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/our_customers/bfsi</loc>
+		<priority>0.48</priority>
+		<title>BFSI</title>
+		<content>The financial sector comprising Banks, Accountancy and Assurance firms, is leading edge for using innovative IT solution to increase their productivity. The speed at which these solutions are rolled out and the dependency on these solutions, combined with legal checks requires a very high level of flexibility, efficiency, security and service..</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/our_customers/healthcare</loc>
+		<priority>0.48</priority>
+		<title>Healthcare</title>
+		<content>Healthcare is in constant motion, the rate of change is increasing and the impact of the changes is getting more severe. How to deal with this revolution.? The biggest challenge is obtaining efficiency, increasing quality while economising. The focus has to remain on providing healthcare..</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/our_customers/government</loc>
+		<priority>0.48</priority>
+		<title>Government</title>
+		<content>The rapid digital revolution changes the expectations of civilians and exposes the government agencies to increased risks. Civilians are capable, through the DigiD portal, to update their personal information and enter applications. Politicians and council member are avid users of social media. The new era of working and communicating within and to the society is a reality especially for government agencies..</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/our_customers/trade_en_industry</loc>
+		<priority>0.48</priority>
+		<title><![CDATA[Trade & Industry]]></title>
+		<content>Changing markets and globalisation have a lasting effect on the ever growing IT needs of trade and industry. Cost reduction, compliancy and business continuity are recurring themes in the questions that our customers have. Avensus makes a difference in our customers IT posture through our excellent knowledge on virtualisation, storage and remote access..</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/our_customers/case_studies</loc>
+		<priority>0.48</priority>
+		<title>Case studies</title>
+		<content>.</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/current</loc>
+		<priority>0.64</priority>
+		<title>Current</title>
+		<content><![CDATA[Agenda - welke interessante sessies staan er op onze kalender Media - boeiende verslagen, interviews en demo&#039;s Publicaties - Avensus in het nieuws en persberichten Whitepapers - uitgebreide informatie over interessante onderwerpen Met regelmaat sturen wij een NewsFlash naar onze relaties met onderwerpen die u ook aanspreken. U kunt zich eenvoudig aanmelden door een mail te sturen naar sstoetzer@avensus.nl.]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/current/calendar</loc>
+		<priority>0.48</priority>
+		<title>Calendar</title>
+		<content>.</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/current/media</loc>
+		<priority>0.48</priority>
+		<title>Media</title>
+		<content><![CDATA[Uit het nieuws Okt 2014 - VPRO Tegenlicht Hans Busstra over Zero Days en Veiligheidslekken Avensus Media Juni 2014 - Denk na over Cloud Security reportage en interview met G&amp;ouml;kmen Kiremit Nov 2013 - Cyber Attack - DdoS uit de praktijk reportage en interview met Jaap Ruijgrok Juni 2013 - Key Management moet op de agenda reportage en interview met G&amp;ouml;kmen Kiremit - Gastspreker Richard Moulds over Key Management interview met Richrard Moulds Van onze partners Avocent - Datacenter Remote Management, veilig! interessante demo Thales - Richard Moulds over Key Management interview met Richrard Moulds .]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/current/news_flash</loc>
+		<priority>0.48</priority>
+		<title>News Flash</title>
+		<content>Do you want to stay informed? Send your details to marketing@avensus.nl. Editions: Oktober 2014 - Launch of our new website.</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/current/publications</loc>
+		<priority>0.48</priority>
+		<title>Publications</title>
+		<content>.</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/current/whitepapers</loc>
+		<priority>0.48</priority>
+		<title>Whitepapers</title>
+		<content>.</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/contact</loc>
+		<priority>0.64</priority>
+		<title>contact</title>
+		<content>.</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/contact/almere</loc>
+		<priority>0.48</priority>
+		<title>Almere</title>
+		<content><![CDATA[Avensus Nederland B.V. Camerastraat 9 1322 BB ALMERE Postbus 60307 1320 AJ ALMERE Tel no. +31 (0)36-5393100 Fax no. +31 (0)36-5393101 info@avensus.nl Location: +52&amp;deg; 20&#039; 53.75&quot;, +5&amp;deg; 10&#039; 56.06.]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/contact/delft</loc>
+		<priority>0.48</priority>
+		<title>Delft</title>
+		<content><![CDATA[Avensus Nederland B.V. Staalweg 46 2612 KK Delft Nederland Tel no. +31 (0)36-5393100 Fax no. +31 (0)36-5393101 info@avensus.nl Location: +52&amp;deg; 0&#039; 48.67&quot;, +4&amp;deg; 22&#039; 38.94&quot;.]]></content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/contact/our_partners</loc>
+		<priority>0.48</priority>
+		<title>Our Partners</title>
+		<content>Avensus recognizes the value of close cooperation with selected partners. They are carefully selected and continuously evaluated. Our partners must meet the high quality requirements, which we require for our customers..</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/contact/financial_information</loc>
+		<priority>0.48</priority>
+		<title>Financial Information</title>
+		<content>Bankingdetailgs Avensus Nederland BV Rabobank Post box 55 2600 AB Delft Bank Account .NL34 RABO 0109 1181 38 BIC Code: RABONL2U NCAGE CODE: H1X77 D-U-N-S Number: 406609672 VAT-ID: NL 810203212B01 Kamer van Koophandel: 05068877.</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/contact/general_provisions_of_sales_and_purchase</loc>
+		<priority>0.48</priority>
+		<title>General Provisions of Sales and Purchase</title>
+		<content>A. General Provisions of Sales B. Specail Provisions (SP) of Sales: SP regarding Advice, Consultancy, Project Management and other Services SP regarding Application Service Provisioning, Software as a Service and Computer Service SP regarding maintenance of ICT, Telecommunication and Office Hardware SP regarding Resale of ICT, Telecommunication, Office Hardware and other goods SP regarding Secondment SP regarding Software Development SP regarding Software Maintenance SP regarding the use of Software; Licensing SP regarding Training SP regarding Webhosting SP regarding Website Development and Maintanance C.Genreal Provisions of Purschase June 2014.</content>
+	</url>
+	<url>
+		<loc>http://www.avensus.nl/en/servicedeck</loc>
+		<priority>0.64</priority>
+		<title>Servicedeck</title>
+		<content>Avensus kindly offers you their assist. You can reach our staff during office hours, from 8:00 a.m. to 5:30 p.m. By telephone : +31 (0) 36 53 93 111 By email : servicedesk@avensus.nl For support by telephone outside office hours, we kindly refer to your service agreement (SLA), where you will find your personal telephone number. For further information concerning additional support or other possibilities, please contact our account managers - sales@avensus.nl service managers - projectbureau@avensus.nl .</content>
 	</url>
 </urlset>
 
