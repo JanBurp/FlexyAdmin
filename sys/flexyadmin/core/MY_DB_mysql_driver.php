@@ -1328,6 +1328,11 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		$query->free_result();
     $result=$this->_set_key_to($res,PRIMARY_KEY);
     
+    // Check for db errors
+    if (isset($result[0])) {
+      show_error('Database error: <code>`'.PRIMARY_KEY.'`=0</code> in <code>`'.$table.'`</code>.<br><br>Maybe AUTOINCREMENT is not set in <code>`'.$table.'`</code>.');
+    }
+    
 		/**
 		 * add (one to) many data if asked for
 		 */
