@@ -73,7 +73,7 @@
 		* Je kunt de data van het huidige record dat net door de gebruiker is aangepast met deze method aanpassen en teruggeven.
 		* De data kun je vinden in $this->newData en moet je aangepast teruggeven.
 		*
-		* @return array met aangepaste data (van $this->newData)
+		* @return array met aangepaste data (van $this->newData), of een error string: er wordt een melding getoond, en de waarden blijven hetzelfde als de ingevoerde waarden.
 		* @author Jan den Besten
 		*/
 	public function _after_update() {
