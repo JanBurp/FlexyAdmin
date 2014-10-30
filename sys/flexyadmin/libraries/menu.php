@@ -424,11 +424,11 @@ class Menu {
    * @return array
    * @author Jan den Besten
    */
-  public function set_menu_from_filetree($files=array(),$branchUri='') {
+  public function set_menu_from_filetree($files=array()) {
     $menu=array();
     foreach ($files as $key => $file) {
       $name=remove_suffix($file['name'],'.');
-      $uri=trim($branchUri.'/'.$name,'/');
+      $uri=trim($name);
       $menu[$name]=array(
         'uri'   => $uri,
         'name'  => $name,
