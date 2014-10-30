@@ -21,7 +21,7 @@
   <div class="navbar-wrapper">
     <div class="navbar navbar-inverse">
       <div class="navbar-inner"> 
-        <?php echo anchor('ciunit', 'CIUnit Framework ' . CIUNIT_VERSION, array('class' => 'brand')); ?>
+        <?php echo anchor('_unittest', 'CIUnit Framework ' . CIUNIT_VERSION, array('class' => 'brand')); ?>
       </div>
       <!-- /.navbar-inner -->
     </div>

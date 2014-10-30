@@ -120,6 +120,19 @@ class CIUnit_Util_FileLoader
         
           $testFiles=read_map($tests_path,'php,dir',TRUE,FALSE,FALSE,TRUE);
           $testFiles=not_filter_by($testFiles,'_');
+          // combine suits and dirs
+          foreach ($testFiles as $key => $file) {
+            if ($file['type']=='dir') {
+              $subfiles=$file['.'];
+              $suite=$key.'suite.php';
+              if (isset($subfiles[$suite])) {
+                $suiteName=remove_suffix($subfiles[$suite]['name'],'.');
+                $testFiles[$suiteName]=array_merge($file,$subfiles[$suite]);
+                unset($testFiles[$suiteName]['.'][$suite]);
+                unset($testFiles[$key]);
+              }
+            }
+          }
             
           return $testFiles;
         }
