@@ -225,7 +225,13 @@ class Plugin_handler extends CI_Model {
 			foreach ($this->trigger_methods['after_update_method'] as $plugin => $method) {
 				if ($this->is_triggered($plugin)) {
 					$this->_give_data_to_plugin($plugin);
-					$this->data['new']=$this->call_plugin($plugin,$method,$this->data['new']);
+          $result=$this->call_plugin($plugin,$method,$this->data['new']);
+          if (is_array($result)) {
+            $this->data['new']=$result;
+          }
+          else {
+            $this->message->add_error($result);
+          }
 				}
 			}
 		}

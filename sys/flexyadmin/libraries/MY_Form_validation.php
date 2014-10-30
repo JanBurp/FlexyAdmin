@@ -167,26 +167,26 @@ class MY_Form_validation extends CI_Form_validation {
     }
  
 
- /**
-  * Valideerd een veld aan de hand van meegegeven model.method
-  *
-  * @param string $str 
-  * @param string $model_method 
-  * @return mixed
-  * @author Jan den Besten
-  */
- public function valid_model_method($str, $model_method) {
-   $CI =& get_instance();
-   $model=get_prefix($model_method,'.');
-   $method=get_suffix($model_method,'.');
-   $CI->load->model($model);
-   $result=$CI->$model->$method($str);
-   if (is_string($result)) {
-     $this->set_message('valid_model_method',lang($result));
-     return FALSE;
+   /**
+    * Valideerd een veld aan de hand van meegegeven model.method
+    *
+    * @param string $str 
+    * @param string $model_method 
+    * @return mixed
+    * @author Jan den Besten
+    */
+   public function valid_model_method($str, $model_method) {
+     $CI =& get_instance();
+     $model=get_prefix($model_method,'.');
+     $method=get_suffix($model_method,'.');
+     $CI->load->model($model);
+     $result=$CI->$model->$method($str);
+     if (is_string($result)) {
+       $this->set_message('valid_model_method',lang($result));
+       return FALSE;
+     }
+     return $result;
    }
-   return $result;
- }
   
 }
 // END MY Form Validation Class
