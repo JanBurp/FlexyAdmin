@@ -48,6 +48,29 @@ class Plugin_resize_images extends Plugin {
     }
     return $this->view();
 	}
+  
+  
+  public function _after_update($data) {
+    $nr=0;
+    do {
+      $wfield='int_width_'.$nr;
+      $hfield='int_height_'.$nr;
+      if ($nr==0) {
+        $wfield='int_img_width';
+        $hfield='int_img_height';
+      }
+      $width=el($wfield,$data,0);
+      $height=el($hfield,$data,0);
+      if (($width==0 and $height>0) or ($width>0 and $height==0)) {
+        return 'Both Width/Height must be larger than 0 for resize sizes.';
+      }
+      $nr++;
+    } while (isset($data['int_width_'.$nr]));
+    return $data;
+  }
+  
+  
+  
 
 
 	function get_show_type() {
