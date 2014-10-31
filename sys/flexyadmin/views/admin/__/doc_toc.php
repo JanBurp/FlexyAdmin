@@ -1,18 +1,15 @@
 <h1>Inhoud</h1>
-<div class="doc_column">
+<div id="toc">
 <?php foreach ($toc as $key => $files): ?>
-
-<?php if ($files=='|'): ?>
-  </div>
-  <div class="doc_column">
-<?php else: ?>
-  <h4><?=ucfirst($key)?></h4>
-  <ul>
-  <?php foreach ($files as $name=>$link): ?>
-    <li><a href="../../<?=$link?>"><?=$name?></a></li>
-  <?php endforeach ?>
-  </ul>
-<?php endif; ?>
-
+  <?php if ($files!='|' and count($files)>0): ?>
+    <div class="doc_column doc__<?=safe_string($key)?>">
+      <h4><?=ucfirst($key)?></h4>
+      <ul>
+      <?php foreach ($files as $name=>$link): ?>
+        <li><a href="../../<?=$link?>"><?=$name?></a></li>
+      <?php endforeach ?>
+      </ul>
+    </div>
+  <?php endif; ?>
 <?php endforeach ?>
 </div>

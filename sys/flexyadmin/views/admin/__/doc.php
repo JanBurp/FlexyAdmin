@@ -9,7 +9,10 @@
   
   <link rel="stylesheet" href="<?=$root?>assets/css/userguide.css" type="text/css" media="screen" title="no title" charset="utf-8">
   
-  <script src="<?=$root?>assets/js/jquery-1.7.2.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="<?=$root?>assets/js/zepto.js" type="text/javascript" charset="utf-8"></script>
+  <script src="<?=$root?>assets/js/jquery-1.11.1.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="<?=$root?>assets/js/jquery.waterfall.js" type="text/javascript" charset="utf-8"></script>
+
   <script src="<?=$root?>assets/js/toc.js" type="text/javascript" charset="utf-8"></script>
   <script src="<?=$root?>assets/js/doc.js" type="text/javascript" charset="utf-8"></script>
   
@@ -21,14 +24,12 @@
 <body>
 
   <!-- START NAVIGATION -->
-  <div id="nav"><div id="nav_inner"></div></div>
-  <?php if (!empty($root)): ?><div id="nav_button">inhoud</div><?php endif ?>
-  <div id="nav2"><a name="top">&nbsp;</a></div>
   <div id="masthead">
     <table cellpadding="0" cellspacing="0" border="0" style="width:100%">
       <tr>
-        <td width="50%"><a href="<?=$root?>index.html"><h1 class="logo">FlexyAdmin</h1></a></td>
-        <td id="searchbox" width="50%">
+        <td width="40%"><a href="<?=$root?>index.html"><h1 class="logo">FlexyAdmin</h1></a></td>
+        <td width="40%" valign="bottom"><a href="http://flexyadmin.com" target="_blank">FlexyAdmin r<?=$revision?></a> &#169; <a href="http://www.jandenbesten.net/"  target="_blank">Jan den Besten</a></td>
+        <td id="searchbox" width="20%">
           <div id="tipue"><input type="text" id="tipue_drop_input" autocomplete="off" placeholder="search (focus at keypress)"></div>
           <div id="tipue_drop_content"></div>
         </td>
@@ -52,11 +53,6 @@
   <!-- START CONTENT -->
   <div id="content"><?=$content?></div>
   <!-- END CONTENT -->
-
-  <div id="footer">
-    <p><a href="#top">Naar boven</a></p>
-    <p><a href="http://flexyadmin.com" target="_blank">FlexyAdmin r<?=$revision?></a> | Copyright &#169;  <a href="http://www.jandenbesten.net/"  target="_blank">Jan den Besten</a></p>
-  </div>
 
 </body>
 </html>
