@@ -51,9 +51,7 @@ if ( ! function_exists('get_cache_file'))
 	{
 		$CI =& get_instance();
 
-		$uri =  $CI->config->item('base_url') .
-				$CI->config->item('index_page') .
-				$uri_string;
+		$uri =  $CI->config->item('base_url') .		$CI->config->item('index_page') .		$uri_string;
 
 		return get_cache_folder() . md5($uri);
 	}
