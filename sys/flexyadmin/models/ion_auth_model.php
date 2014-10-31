@@ -596,8 +596,6 @@ class Ion_auth_model extends CI_Model
 			$password = $this->hash_password_db($identity, $password);
       
 			if ($result->gpw_password === $password) {
-        // JdB: update last login not at login, but at logout!
-        // $this->update_last_login($result->id);
 
 				$group_row = $this->db->select('str_name')->where('id', $result->id_user_group)->get($this->tables['groups'])->row();
 

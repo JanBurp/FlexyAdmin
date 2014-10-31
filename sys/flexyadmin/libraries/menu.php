@@ -114,9 +114,9 @@
   * 
   * Het menu maakt gebruik van 3 views die je zelf kunt aanpassen:
   * 
-  * - views/menu/menu.php - <ul>
-  * - views/menu/item.php - <li><a>
-  * - views/menu/seperaror.php - een <li> zonder link
+  *     - views/menu/menu.php - <ul>
+  *     - views/menu/item.php - <li><a>
+  *     - views/menu/seperaror.php - een <li> zonder link
   *
   */
   
@@ -195,6 +195,27 @@ class Menu {
 
   /**
    * Initialiseer (override defaults)
+   * 
+   * Geef een array met alle instellingen, hieronder de defaults:
+   * 
+   *      'current'       => '',                   // Geef hier de huidige url als die afwijkt van standaard
+   *      'menu_table'    => '',                   // De db-tabel waar het menu uit wordt gehaald
+   *      'fields'        => array(                // Diverse tabel velden die omgezet worden in het menu
+   *        'uri'          => 'uri',               // - uri
+   *        'url'          => '',                  // - url (voor een vaste link, ipv een uri met parts)
+   *        'title'        => 'str_title',         // - naam van het menu-item
+   *        'class'        => 'str_class',         // - deze class wordt toegevoegd aan het menu-item
+   *        'visible'      => 'b_visible',         // - of dit menu-item wordt getoond of niet
+   *        'clickable'    => 'b_clickable',       // - of dit menu-item aanklikbaar is of niet
+   *        'parent'       => 'self_parent',       // - parent id
+   *        'bool_class'   => '',                  // - als dit veld TRUE is dan wordt de veldnaam toegevoegd als een class aan het menu-item
+   *        'extra'        => '',                  
+   *      ),
+   *      'css_style'     => 'default',            // 'default', 'bootstrap'
+   *      'view_path'     => 'menu'                // pad waar de menu views in staan
+   *      'attributes'    => array('class'=>''),   // extra attributen de items
+   *      'full_uris'     => false,                // of de uri's full uris zijn
+   *      'ordered_titles'=> '',                   // NUMBERS geeft 1,2,3,4 etc., ALFA geeft A,B,C,D etc, ROMAN geeft I,II,III,IV etc. voor de menu-items
    *
    * @param array $settings[]
    * @return this
