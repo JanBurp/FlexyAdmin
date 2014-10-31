@@ -214,7 +214,15 @@ class MY_Email extends CI_Email {
   public function add_styles($body,$styles) {
     if ($styles) {
       foreach ($styles as $tag => $style) {
-        $body = preg_replace("/<".$tag."(|\s[^>]*)>/uiU", "<".$tag." style=\"".$style."\"$1>", $body);
+        $class=get_suffix($tag,'.');
+        $tag=remove_suffix($tag,'.');
+        if ($class==$tag) $class='';
+        // trace_([$tag,$class]);
+        if ($class)
+          $body = preg_replace("/<".$tag."(|\s[^>]*)(class=\"".$class."\")(|\s[^>]*)>/uiU", "<".$tag." style=\"".$style."\"$1$2>", $body);
+        else
+          $body = preg_replace("/<".$tag."(|\s[^>]*)>/uiU", "<".$tag." style=\"".$style."\"$1$2>", $body);
+        
       }
     }
     return $body;

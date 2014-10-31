@@ -154,8 +154,8 @@ class Editor_lists {
 
 		// ignorecase_ksort($data);
 		
-		// trace_($type);
-		// trace_($data);
+    // trace_($type);
+    // trace_($data);
 
 		// set list
 		$list="var $jsArray = new Array(";
@@ -185,11 +185,10 @@ class Editor_lists {
       // trace_($data);
 			foreach($data as $name=>$file) {
         if (!empty($file)) {
-          $name=$this->CI->mediatable->get_img_title($file['path']);
-          // $name=nice_string(get_file_without_extension($file["name"]));
-          // trace_($name);
+          $filename=$file['path'].'/'.$name;
+          $name=$this->CI->mediatable->get_img_title($filename);
   				if (!empty($name)) {
-  					$list.='["'.$name.'","'.$file["path"].'"],';
+  					$list.='["'.$name.'","'.$filename.'"],';
   				}
         }
 			}
