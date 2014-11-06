@@ -35,8 +35,8 @@ class CronjobTest extends CIUnit_Framework_TestCase {
       $wday=$date['wday']; // 0 = sunday
       $testtime=mktime( 23,59,0, date('n'), date('j')-$wday );
       $human=unix_to_mysql($testtime);
-      $this->assertGreaterThan( $testtime, $this->CI->cronjob->_calc_next('week 6 23:59',$testtime-86400) , 'zaterdag 0:00 moet eerder zijn dan '.$human );
-      $this->assertLessThan( $testtime, $this->CI->cronjob->_calc_next('week 0 23:00',$testtime) ,    'zondag 23:00 moet eerder zijn dan '.$human );
+      $this->assertGreaterThan( $testtime, $this->CI->cronjob->_calc_next('week 6 23:59',$testtime-86400) , 'zaterdag 23:59 moet eerder zijn dan '.$human );
+      $this->assertLessThan( $testtime, $this->CI->cronjob->_calc_next('week -1 23:00',$testtime) , 'zondag 23:00 moet eerder zijn dan '.$human );
       $this->assertGreaterThanOrEqual( $testtime, $this->CI->cronjob->_calc_next('week 0 23:59',$testtime) , 'zondag 23:59 moet later/gelijk zijn dan '.$human );
       $this->assertGreaterThan( $testtime, $this->CI->cronjob->_calc_next('week 1 0:00',$testtime) , 'maandag 0:00 moet later zijn dan '.$human );
       $this->assertGreaterThan( $testtime, $this->CI->cronjob->_calc_next('week 1 12:00',$testtime) , 'maandag 12:00 moet later zijn dan '.$human );
