@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html" charset="utf8" />
+  <title>FlexyAdmin Documentation</title>
+  
+  <script type="text/javascript">
+  var root="<?=$root?>";
+  </script>
+  
+  <link rel="stylesheet" href="<?=$root?>assets/css/bootstrap.min.css" type="text/css" media="screen" title="no title" charset="utf-8">
+  <link rel="stylesheet" href="<?=$root?>assets/css/userguide.css" type="text/css" media="screen" title="no title" charset="utf-8">
+  
+  <script src="<?=$root?>assets/js/jquery-1.11.1.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="<?=$root?>assets/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="<?=$root?>assets/js/site.js" type="text/javascript" charset="utf-8"></script>
+
+</head>
+<body>
+
+  <div id="container" class="container-fluid">
+
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="./index.html">FlexyAdmin - userguide</a>
+        </div>
+        <div class="navbar-text"><a href="http://flexyadmin.com" target="_blank">FlexyAdmin r<?=$revision?></a> &#169; <a href="http://www.jandenbesten.net/"  target="_blank">Jan den Besten</a></div>
+        <form class="navbar-form navbar-right" role="search">
+          <div id="tipue" class="form-group">
+            <input id="search" type="text" class="form-control" placeholder="search (focus at keypress)">
+            <div id="search_results"></div>
+          </div>
+        </form>
+      </div>
+    </nav>
+
+    <?=$userguide?>
+    
+  </div>
+
+</body>
+</html>

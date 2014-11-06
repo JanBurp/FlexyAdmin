@@ -40,6 +40,22 @@ class Svn extends CI_Model {
 		return $this->revision;
 	}
   
+  public function get_revision_of($revfile) {
+    $path=remove_suffix($revfile,'/');
+    $file=get_suffix($revfile,'/');
+    $svnfile=$path.'/.svn/entries';
+		$rev='';
+		if (file_exists($svnfile)) {
+			$svn = read_file($svnfile);
+			$svn=explode("\n",$svn);
+      if ($line=array_search(strtolower($file),$svn)) {
+        $rev_line=$line+9;
+        if (isset($svn[$rev_line])) $rev=$svn[$rev_line];
+      }
+		}
+    return $rev;
+  }
+  
 
 }
 
