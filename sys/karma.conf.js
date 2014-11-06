@@ -13,27 +13,27 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      "sys/__test/external/angular/angular.js",
-      "sys/__test/external/angular-mocks/angular-mocks.js",
-      "sys/__test/external/angular-route/angular-route.js",
-      "sys/__test/external/angular-bootstrap/ui-bootstrap-tpls.min.js",
-      "sys/__test/external/angular-bootstrap-show-errors/src/showErrors.min.js",
-      "sys/__test/external/angular-http-auth/src/http-auth-interceptor.js",
-      "sys/__test/external/angular-toArrayFilter/toArrayFilter.js",
-      "sys/__test/external/angular-loading-bar/src/loading-bar.js",
-      "sys/__test/external/angular-smart-table/dist/smart-table.min.js",
-      "sys/__test/external/ng-sortable/dist/ng-sortable.min.js",
+      "__test/external/angular/angular.js",
+      "__test/external/angular-mocks/angular-mocks.js",
+      "__test/external/angular-route/angular-route.js",
+      "__test/external/angular-bootstrap/ui-bootstrap-tpls.min.js",
+      "__test/external/angular-bootstrap-show-errors/src/showErrors.min.js",
+      "__test/external/angular-http-auth/src/http-auth-interceptor.js",
+      "__test/external/angular-toArrayFilter/toArrayFilter.js",
+      "__test/external/angular-loading-bar/src/loading-bar.js",
+      "__test/external/angular-smart-table/dist/smart-table.min.js",
+      "__test/external/ng-sortable/dist/ng-sortable.min.js",
 
-      "sys/__test/jdb.extend.js",
-      "sys/__test/flexy*.js",
-      "sys/__test/flexy*/flexy*.js",
+      "__test/jdb.extend.js",
+      "__test/flexy*.js",
+      "__test/flexy*/flexy*.js",
     ],
 
     // list of files to exclude
     exclude: [
-      'sys/__test/img/*',
-      'sys/__test/css/*',
-      'sys/__test/fonts/*',
+      '__test/img/*',
+      '__test/css/*',
+      '__test/fonts/*',
     ],
 
     // preprocess matching files before serving them to the browser

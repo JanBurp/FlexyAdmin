@@ -4,7 +4,7 @@ var concat = require('gulp-concat');
 // var less = require('gulp-uglify');
 
 
-var base='sys/__test/';
+var base='__test/';
 
 var paths = {
   js:  [
