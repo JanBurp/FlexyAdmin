@@ -132,6 +132,9 @@ class __ extends AdminController {
           $classType='models (site)';
         }
       }
+      if ($path[0]=='sys') {
+        if (has_string('plugin',strtolower($file))) $classType='plugins (sys)';
+      }
       $toc[$classType][$file]=$class;
       $this->_add_content('Class -'.$file.'- added to toc ('.$classPath.')</br>');
     }
@@ -174,7 +177,7 @@ class __ extends AdminController {
     
     unset($toc['less']);
 
-    $this->toc_order=array('algemeen','aanpassingen','database','modules_en_plugins','libraries (site)','models (site)','helpers','libraries','models','core');
+    $this->toc_order=array('start','gevorderden','database','modules_en_plugins','libraries (site)','models (site)','helpers','plugins (sys)','libraries','models','core');
     $otoc=array();
     foreach ($this->toc_order as $key) {
       if ($key=='|')

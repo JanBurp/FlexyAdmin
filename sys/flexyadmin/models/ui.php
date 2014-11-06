@@ -7,6 +7,7 @@
  *
  * @package default
  * @author Jan den Besten
+ * @ignore
  */
  
 class ui extends CI_Model {

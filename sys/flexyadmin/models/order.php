@@ -4,6 +4,7 @@
  *
  * @package default
  * @author Jan den Besten
+ * @ignore
  */
 class order extends CI_Model {
 
