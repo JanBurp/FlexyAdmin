@@ -114,7 +114,7 @@ function strace_($a=NULL) {
  * 
  * - Als het kan worden achterhaald geeft het het type variabele
  * - Array's worden genest getoond
- * - Lange strings worden getoond als ... (met een hover wordt hele tekst getoond)
+ * - Lange strings worden getoond als ... (zonder linebreaks)
  * - Als een lege string wordt meegegeven dan wordt backtrace_() aangeroepen
  *
  * @param mixed $a Variabele waar je een dump van wilt
@@ -126,7 +126,7 @@ function strace_($a=NULL) {
 function trace_($a=NULL,$echo=true,$backtraceOffset=1,$max=50) {
 	$CI=&get_instance();
 	static $c=0;
-  if ($c==0 and !IS_AJAX and !$CI->config->item('IS_ADMIN')) {
+  if ($c==0 and !IS_AJAX) {
     echo "<style>._trace {position:relative;margin:2px;padding:5px;overflow:auto;overflow-x:hidden;color:#000;font-family:courier,serif;font-size:10px;line-height:14px;border:solid 1px #666;background-color:#efe;opacity:.8;z-index:99999;}._trace a {color:#000;font-family:courier,serif;font-size:10px;line-height:14px;text-decoration:underline;}</style>";
   }
   if (IS_AJAX)
@@ -144,7 +144,7 @@ function trace_($a=NULL,$echo=true,$backtraceOffset=1,$max=50) {
   		$type="";
   	}
   	else {
-  		$type="[".gettype($a).(is_array($a)?'-'.count($a):'')."]";
+      $type="[".gettype($a).(is_array($a)?'-'.count($a):'')."]";
   	}
     $out.="TRACE $show#$c$type:";
   	if (is_bool($a)) {
@@ -183,6 +183,8 @@ function tr_string($value) {
   if (!$show) {
     $s=max_length($s,100,'CHARS');
     if ($s!=$value) $s.=' ...';
+    $s=str_replace("\n",'\n',$s);
+    $s=str_replace("\r",'\r',$s);
   }
   if ($show) $s=str_replace('#show#','',$s);
   $s="'".$s."'";
@@ -231,7 +233,10 @@ function print_ar($array,$return=false,$tabs=0,$brackets="()") {
   	$out=$bl.$eol;
   	foreach($array as $key=>$value) {
   		$out.=tabs($tabs);
-  		$thisOut="[".$key."] => ";
+      if (IS_AJAX)
+        $thisOut="[".$key."] => ";
+      else
+        $thisOut="<b>[".$key."]</b> => ";
   		$len=strlen($thisOut)+1;
       $len=2;
   		if (is_array($value)) {

@@ -83,7 +83,8 @@ class Parser {
 			$parsedLine = $this->parseLine($line); //Parse the line
 			if ($parsedLine!==false){
 			  if (empty($this->shortDesc)) {
-          $this->shortDesc = Markdown($parsedLine); //Store the first line in the short description
+          // $this->shortDesc = Markdown($parsedLine); //Store the first line in the short description
+          $this->shortDesc = $parsedLine; //Store the first line in the short description
         }
         else {
           $desc[] = $parsedLine; //Store the line in the long description
@@ -102,8 +103,8 @@ class Parser {
    **/
   function parseDescription($desc) {
     $desc=implode("\n",$desc);
-    $html = Markdown($desc);
-    return $html;
+    // $html = Markdown($desc);
+    return $desc;
   }
   
 	/**
