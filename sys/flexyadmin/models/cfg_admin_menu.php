@@ -1,5 +1,12 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Laad het admin-menu, klaar voor Angular
+ *
+ * @package default
+ * @author Jan den Besten
+ * @ignore
+ */
 class cfg_admin_menu extends Crud {
   
   private $types=array('tbl'=>'table','cfg'=>'config','log'=>'log','res'=>'result');

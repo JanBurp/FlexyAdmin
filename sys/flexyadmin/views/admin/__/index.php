@@ -12,23 +12,22 @@
   
   <script src="<?=$root?>assets/js/jquery-1.11.1.min.js" type="text/javascript" charset="utf-8"></script>
   <script src="<?=$root?>assets/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
-  <script src="<?=$root?>assets/js/site.js" type="text/javascript" charset="utf-8"></script>
+  <script src="<?=$root?>assets/js/userguide.js" type="text/javascript" charset="utf-8"></script>
 
 </head>
 <body>
 
-  <div id="container" class="container-fluid">
+  <div id="container" class="container">
 
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-      <div class="container-fluid">
+      <div class="container">
         <div class="navbar-header">
-          <a class="navbar-brand" href="./index.html">FlexyAdmin - userguide</a>
+          <a class="navbar-brand" href="./index.html"><img src="assets/img/flexyadmin.gif" width="300" height="30" alt="Flexyadmin"></a>
         </div>
         <div class="navbar-text"><a href="http://flexyadmin.com" target="_blank">FlexyAdmin r<?=$revision?></a> &#169; <a href="http://www.jandenbesten.net/"  target="_blank">Jan den Besten</a></div>
-        <form class="navbar-form navbar-right" role="search">
+        <form id="search_form" class="navbar-form navbar-right" role="search">
           <div id="tipue" class="form-group">
-            <input id="search" type="text" class="form-control" placeholder="search (focus at keypress)">
-            <div id="search_results"></div>
+            <input id="search" type="text" class="form-control" placeholder="search">
           </div>
         </form>
       </div>

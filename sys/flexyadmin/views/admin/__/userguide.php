@@ -2,20 +2,18 @@
 
   <div class="row row1">
     
-    <?php $nr=0; foreach ($items as $head => $sub): $nr++; 
-      if ($nr==7) {
+    <?php $nr=-1; foreach ($items as $head => $sub): $nr++; 
+      if ($nr%4==0) {
         ?></div><div class="row row2"><?
       }
       ?>
-      <div class="col-sm-2">
-        <div class="panel panel-default">
-          <div class="panel-heading"><?=$head?></div>
-          <div class="panel-body">
-            <ul class="list-unstyled">
-            <?php foreach ($sub as $name => $html): ?>
-              <li><a class="" href="#section_<?=safe_string($name)?>"><?=$name?></a></li>
-            <?php endforeach ?>
-            </ul>
+      <div class="col-sm-3">
+        <div class="panel panel-primary">
+          <div class="panel-heading"><?=str_replace('_',' ',$head)?></div>
+          <div class="list-group">
+          <?php foreach ($sub as $name => $html): ?>
+            <a class="list-group-item btn btn-default" href="#section_<?=safe_string($name)?>"><?=$name?></a></li>
+          <?php endforeach ?>
           </div>
         </div>
       </div>
@@ -29,7 +27,7 @@
 
 <div class="row">
 
-  <div id="nav" class="col-sm-3">
+  <!-- <div id="nav" class="col-sm-3">
     <?php foreach ($items as $head => $sub): ?>
       <?php if (!empty($sub)): ?>
       <div class="panel panel-info">
@@ -45,9 +43,9 @@
       </div>
       <?php endif ?>
     <?php endforeach ?>
-  </div>
+  </div> -->
 
-  <div id="content" class="col-sm-9">
+  <div id="content" class="col-sm-12">
     <?php foreach ($items as $head => $sub): ?>
       <?php if (!empty($sub)): ?>
         <h1><?=$head?></h1>

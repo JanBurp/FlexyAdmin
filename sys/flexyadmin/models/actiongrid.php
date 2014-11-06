@@ -8,6 +8,7 @@
  *
  * @package default
  * @author Jan den Besten
+ * @ignore
  */
 
 class Actiongrid extends CI_Model {

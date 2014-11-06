@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Verzorgt de afhandeling van cronjobs
+ *
+ * @package default
+ * @author Jan den Besten
+ * @ignore
+ */
+
 class Cronjob extends CI_Model {
 	
 	public function __construct()	{

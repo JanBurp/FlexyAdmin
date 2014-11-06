@@ -2,6 +2,13 @@
 
 require_once(APPPATH.'libraries/less/Less.php');
 
+/**
+ * Buil tool
+ *
+ * @package default
+ * @author Jan den Besten
+ * @ignore
+ */
 class Builder extends CI_Model {
   
   var $settings=array();

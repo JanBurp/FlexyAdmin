@@ -1,5 +1,13 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Uitbreiding op CI Input
+ *
+ * @package default
+ * @author Jan den Besten
+ * @ignore
+ */
+
 class MY_Input extends CI_Input {
 
 	/**
