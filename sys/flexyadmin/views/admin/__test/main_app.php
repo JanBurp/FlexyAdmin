@@ -11,8 +11,8 @@
 	<meta http-equiv="content-language" content="nl" />
 
   <!--Bootstrap -->
-  <link rel="stylesheet" href="sys/__test/external/bootstrap/dist/css/bootstrap.min.css" type="text/css" media="screen" title="no title" charset="utf-8">
-  <link rel="stylesheet" href="sys/__test/external/bootstrap/dist/css/bootstrap-theme.min.css" type="text/css" media="screen" title="no title" charset="utf-8">
+  <link rel="stylesheet" href="sys/__test/external/bootstrap/dist/css/bootstrap.css" type="text/css" media="screen" title="no title" charset="utf-8">
+  <link rel="stylesheet" href="sys/__test/external/bootstrap/dist/css/bootstrap-theme.css" type="text/css" media="screen" title="no title" charset="utf-8">
   <!--Angular modules -->
   <link rel="stylesheet" href="sys/__test/external/angular-loading-bar/src/loading-bar.css" type="text/css" media="screen" title="no title" charset="utf-8">
   <!--FlexyAdmin -->

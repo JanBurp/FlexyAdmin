@@ -7,7 +7,7 @@
   var root="<?=$root?>";
   </script>
   
-  <link rel="stylesheet" href="<?=$root?>assets/css/bootstrap.min.css" type="text/css" media="screen" title="no title" charset="utf-8">
+  <link rel="stylesheet" href="<?=$root?>assets/css/bootstrap.css" type="text/css" media="screen" title="no title" charset="utf-8">
   <link rel="stylesheet" href="<?=$root?>assets/css/userguide.css" type="text/css" media="screen" title="no title" charset="utf-8">
   
   <script src="<?=$root?>assets/js/jquery-1.11.1.min.js" type="text/javascript" charset="utf-8"></script>
