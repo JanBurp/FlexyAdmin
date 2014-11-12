@@ -1,23 +1,60 @@
-Changes 2559...
+Changes 2715
 ============
 
 UPDATE:
 - UPDATE to CI 2.0.2
-- Better update.txt
+- CI hack for working with PHP 5.6
 
 USERGUIDE:
 - UPDATE to CI 2.0.2
+- New FlexyAdmin userguide (style)
 
 NEW:
-- NEW: Nicer styling and results of /admin/search
-- NEW: /admin/search can nog have settings (for later use), you can add own by creating site/config/search_replace.php see sys/flexyadmin/config/search_replace.php
-- NEW: added 2 search_replace settings for cleaningup HTML (txt_text fields)
+- /admin/search:
+  - NEW: Nicer styling and results of /admin/search
+  - NEW: /admin/search can nog have settings (for later use), you can add own by creating site/config/search_replace.php see sys/flexyadmin/config/search_replace.php
+  - NEW: added 2 search_replace settings for cleaningup HTML (txt_text fields)
+- rgb_fields:
+  - rgb field same as str field for autofill (so you can use options here)
+  - rgb dropdowns have background colors
+- NEW: cronjob functionality (site/_cronjob)
+- NEW: unittest functionality (site/_unittest)
+- OTHERS:  
+  - CHANGED: create_uri all uri's with a starting _ are forbidden (in future all system uri's will start with _)
+  - CHANGED: utf8 to utf-8 in all headers
+  - CHANGED: added .tif & .tiff to 'FILE_types_img'
+  - CHANGED: added to database_helper find_module_uri();
+  - ADDED: MY_Email.php prepare_body() & add_styles()
+  - ADDED: MY_string_helper strip_ms_word($html)
+  - ADDED: MY_url_helper get_emails($string,$one)
+  - CHANGED: ellipses can be added to MY_string_helper: intro_string()
+  - CHANGED: possible to remove unused files by adding b_used to res_media_files and calling plugin/refresh_media/remove
+  - NEW: Wizard can save data between steps
+  - NEW: img_lib config settins for frontend and new setting sharpen
+  - NEW: new option 'add_captcha' to forms.php
+  - CHANGED: plugin_automenu option 'from menu table' reacts now also on where
+  - CHANGED: faster file_manager
+  - CHANGED: db->has_row() now returns FALSE or the row if it was found
+  - CHANGED: content.php default of site_links = true now, is ok because it first checks if it is needed overall or not
+  - CHANGED: _trace() better for AJAX, and more compact
 
 BUGS:
 - BUG: res_menu_result has always pagination (settings did not work)
 - BUG: plugin_automenu, keep order of items when merging tables more tables on same level
 - BUG: plugin_stats did not get last days of previous if called next month
 - BUG: menu.php didn't show bool_class field correct (showed a 1 instead of the name)
+- BUG: mediatable gives an error when an empty database was selected (before filling the DEMO database)
+- BUG: img_list did not show filenames
+- BUG: DK had a bug when cfg_users.last_login is NULL, DB changed
+- BUG: plugin 'content' did not work as argument of view
+- BUG: content.php did not always turned links to site_url() if needed.
+- BUG: content.php when trying to auto target a link which has an empty href attribute
+- BUG: content.php did also removed sizes in images not within #content. Split the rendering for full site and only content
+- CHANGED: show an error when no AUTOINCREMENT is set on PRIMARY_KEY
+- CHANGED: better error-messages while uploading / resizing
+- CHANGED: an error message will be shown when not entering safe values in cfg_img_size
+- CHANGED: error_php more robust
+- CHANGED: chmod calls supress errors
 
 
 Changes 2551
