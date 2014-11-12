@@ -19,9 +19,10 @@ For recent sites the update processes described below should work:
 - perform all the steps from your version to the latest:
 
 
-UPDATE 2559...
+UPDATE 2715
 ===========
 - Replace current sys map
+- Replace site/libraries/forms.php
 - Replace index.php
 
 
