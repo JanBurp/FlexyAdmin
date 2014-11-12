@@ -44,7 +44,7 @@
 .flexy-grid th.tme, .flexy-grid td.tme {max-width:none; width:130px;}
 .flexy-grid th.rgb, .flexy-grid td.rgb {min-width:25px;max-width:50px;}
 /* ROW SELECTION */
-.flexy-grid tr.flexy-grid-selected td {background-color:#D9EDF7!important;} /* TODO bg-info from bootstrap */ 
+.flexy-grid tr.flexy-grid-selected td {background-color:#DEA!important;} /* TODO bg-info from bootstrap */ 
 .flexy-grid tr .action-select span.flexy-grid-selected {display:none;}
 .flexy-grid tr .action-select span.flexy-grid-unselected {display:inline;}
 .flexy-grid tr.flexy-grid-selected .action-select span.flexy-grid-unselected {display:none;}
