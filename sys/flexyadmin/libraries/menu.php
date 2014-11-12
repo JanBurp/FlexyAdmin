@@ -393,7 +393,7 @@ class Menu {
 				}
         $thisItem['class']='';
 				if (isset($item[$this->settings['fields']["class"]])) 	    $thisItem["class"]=str_replace('|',' ',$item[$this->settings['fields']["class"]]);
-				if (isset($item[$this->settings['fields']["bool_class"]]) and ($item[$this->settings['fields']["bool_class"]]))	$thisItem["class"].=' '.$this->settings['fields']["bool_class"];
+				if (isset($item[$this->settings['fields']["bool_class"]]) and ($item[$this->settings['fields']["bool_class"]]))	$thisItem["class"].=' '.$item[$this->settings['fields']["bool_class"]];
 				if (isset($item[$this->settings['fields']["parent"]])) 	    $parent=$item[$this->settings['fields']["parent"]]; else $parent="";
 				if (isset($item[$this->settings['fields']["clickable"]]) && !$item[$this->settings['fields']["clickable"]]) $thisItem["uri"]='';
 				// classbooleans
