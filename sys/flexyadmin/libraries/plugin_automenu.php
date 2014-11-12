@@ -250,7 +250,7 @@ class Plugin_automenu extends Plugin {
 
 				
     				case 'from menu table':
-              $data=$this->_get_current_data($autoValue['table']);
+              $data=$this->_get_current_data($autoValue['table'],$autoValue['str_where']);
     					foreach ($data as $item) {
     						$item['str_table']=$autoValue['table'];
     						$item['str_uri']=$item['uri'];
