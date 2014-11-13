@@ -61,7 +61,7 @@ class Plugin_automenu extends Plugin {
 
   public function _before_grid() {
     if ($this->table=='res_menu_result') {
-          $this->_create_auto_menu();
+      $this->_create_auto_menu();
       $this->CI->message->add(lang('result_changed'));
     }
   }
