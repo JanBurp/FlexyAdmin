@@ -8,6 +8,7 @@
  * 
  * - ../admin/plugins/refresh_media : De res_media_files wordt gereset: alles blijft bestaan, alleen de info data wordt gereset (width & height etc.)
  * - ../admin/plugins/refresh_media/reset : Idem, maar eerst wordt res_media_files helemaal geleegd, dus alle info data zijn verloren.
+ * - ../admin/plugins/refresh_media/remove : Idem én alle bestanden die niet gebruikt worden (in te stellen in media_info per map waar dat moet worden gecheckt) worden verwijderd.
  * 
  * @package default
  * @author Jan den Besten
