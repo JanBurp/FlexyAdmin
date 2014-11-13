@@ -126,7 +126,7 @@ class Show extends AdminController {
 						$hasField['self_parent']=$this->db->field_exists('self_parent',$table);
 						$hasField['user']=$this->db->field_exists('user',$table);
 
-						$pagination=$this->cfg->get("CFG_table",$table,'b_pagination',FALSE);
+						$pagination=$this->cfg->get("CFG_table",$table,'b_pagination',NULL);
             if ($pagination===NULL) $pagination=$this->config->item('PAGINATION');
 						if ($pagination) $pagination=$this->cfg->get('cfg_configurations','int_pagination');
 						
