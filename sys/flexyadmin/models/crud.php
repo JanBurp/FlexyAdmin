@@ -148,35 +148,42 @@ class Crud extends CI_Model {
 				}
 			}
 
-			
+
+      // trace_(['table'=>$this->table,'where'=>$this->where,'data'=>$data,'many'=>$many]);
+
+
 			/**
 			* Start updating the data
 			*/
 			$this->db->trans_start();
-			
+		
 			if ($insert) unset($data[PRIMARY_KEY]);
-			$this->db->set($data);
+			
+      if (!empty($data)) {
+  			$this->db->set($data);
 
-			if ($insert) {
-				$this->db->insert($this->table);
-				$id=$this->db->insert_id();
-			}
-			else {
-				$this->db->where($this->where);
-				$this->db->update($this->table);
-				$id=$this->_get_id();
-			}
+  			if ($insert) {
+  				$this->db->insert($this->table);
+  				$id=$this->db->insert_id();
+  			}
+  			else {
+  				$this->db->where($this->where);
+  				$this->db->update($this->table);
+  				$id=$this->_get_id();
+  			}
+      }
 			
 			/**
 			 * If Many, update them to
 			 */
 			if (!empty($many)) {
+        if (!$id) $id=$this->_get_id();
 				foreach($many as $relTable=>$value) {
 					// first delete current selection
 					$thisKey=this_key_from_rel_table($relTable);
 					$joinKey=join_key_from_rel_table($relTable);
 					if ($thisKey==$joinKey) $joinKey.="_";
-					// trace_(array('id'=>$id,'thisKey'=>$thisKey,'joinKey'=>$joinKey,'relTable'=>$relTable,'value'=>$value));
+          // trace_(array('id'=>$id,'thisKey'=>$thisKey,'joinKey'=>$joinKey,'relTable'=>$relTable,'value'=>$value));
 					$this->db->where($thisKey,$id);
 					$this->db->delete($relTable);
 					// insert new selection
@@ -190,12 +197,13 @@ class Crud extends CI_Model {
 					}
 				}
 			}
-			
+
 			/**
 			 * Data is updated.
 			 */
-			
+		
 			$this->db->trans_complete();
+			
 		}
 		return intval($id);
 	}
@@ -312,11 +320,12 @@ class Crud extends CI_Model {
 		$this->data   = element('data',$args,FALSE);
     $this->select = element('select',$args,FALSE);
 		$this->where  = element('where',$args,FALSE);
-		if ($this->where and !is_array($this->where)) $this->where=array(PRIMARY_KEY,$this->where);
+		if ($this->where and !is_array($this->where)) $this->where=array(PRIMARY_KEY=>$this->where);
 		$this->limit  = element('limit',$args,FALSE);
 		$this->offset = element('offset',$args,0);
 		$this->order 	= element('order',$args,FALSE);
     // if ($this->order and !is_array($this->order)) $this->order=array($this->order.' DESC');
+    // trace_(['table'=>$this->table,'data'=>$this->data]);
 	}
 
   /**
