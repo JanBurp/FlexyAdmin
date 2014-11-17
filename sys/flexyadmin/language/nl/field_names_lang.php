@@ -53,6 +53,10 @@ $lang['gpw_password']     = 'Wachtwoord';
 $lang['ip_address']       = 'IP Adres';
 $lang['str_language']     = 'Taal';
 
+// User fields
+$lang['tme_last_changed'] ='Laatste aanpassing';
+$lang['user_changed']     ='Aangepast door';
+
 
 // MEDIA GRID fields
 $lang['filename']         = 'Bestandsnaam';
