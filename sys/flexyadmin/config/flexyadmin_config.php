@@ -60,6 +60,8 @@ $config['MULTIPLE_UPLOAD']		    = TRUE;
 $config['PAGINATION']             = FALSE;
 $config['GRID_EDIT']              = TRUE;
 $config['GRID_WHERE']             = FALSE;
+$config['GRID_JUMP_TO_TODAY']     = FALSE;
+
 
 
 /*
@@ -193,7 +195,6 @@ $config['RES_table_prefix']						= "res";
 $config['TABLE_prefix']								= "tbl";
 $config['REL_table_prefix']						= "rel";
 $config['REL_table_split']						= "__";
-
 
 $config['CFG_configurations']					= "configurations";
 $config['CFG_users']									= "users";
@@ -987,6 +988,7 @@ $config['ABSTRACT_field_max']				= 2;
 $config['ABSTRACT_field_split']			= " | ";
 
 $config['URI_field_pre_types']			= array("str","url","dat","date","datetime","tme",'time',"int","media");
+$config['DATE_fields_pre']			    = array("tme","datetime","dat","date");
 
 
 

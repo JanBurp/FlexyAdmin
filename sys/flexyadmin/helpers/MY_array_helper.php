@@ -772,15 +772,18 @@ function array_ereg_search($val, $array) {
  *
  * @param array $a 
  * @param array $b 
- * @return bool
+ * @return mixed FALSE als niet gevonden, anders de eerste key
  * @author Jan den Besten
  */
 function one_of_array_in_array($a,$b) {
 	$in=false;
+  $key=false;
 	foreach ($a as $k=>$v) {
-		$in=$in || in_array($v,$b);
+    $key=array_search($v,$b);
+		$in=$in || $key;
     if ($in) break;
 	}
+  if ($in) $in=$key;
 	return $in;
 }
 

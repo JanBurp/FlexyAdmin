@@ -264,6 +264,8 @@ class Grid Extends CI_Model {
    */
 	public function render($type="", $tableClass="", $extraClass="") {
 		if (!empty($type)) $this->set_type($type);
+    
+    $current_ids=explode('_',$this->currentId);
 
 		$table=array();
 
@@ -299,7 +301,7 @@ class Grid Extends CI_Model {
 		if (is_array($data)) {
 			foreach($data as $id=>$row) {
 				$currClass="";
-				if ($this->currentId!=NULL and $id==$this->currentId) $currClass="current ";
+				if ($this->currentId!=NULL and in_array($id,$current_ids)) $currClass="current ";
 				if ($alt=="evenrow") $alt="oddrow"; else $alt="evenrow";
 				$tableRowClass="$tableClass id$id $extraClass $currClass $alt";
 				$tableRowId=$id;

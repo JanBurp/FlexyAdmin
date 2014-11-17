@@ -1008,7 +1008,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
     else
       $query=$this->get($table);
 
-    if ($this->remember_query) $this->ar_last_query=$this->last_query();
+    if ($this->remember_query) $this->ar_last_query=parent::last_query();
     // trace_('#show#'.$this->ar_last_query);
 		return $query;
 	}
@@ -1612,6 +1612,38 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		return $this->ar_last_count;
 	}
 
+
+  /**
+   * Geeft laatste query (zelfde als oorspronkelijke method in CI)
+   *
+   * @return void
+   * @author Jan den Besten
+   * @ignore
+   */
+  public function last_query() {
+		if ( !$this->ar_last_query) {
+			return parent::last_query();
+		}
+
+		$sql=$this->ar_last_query;
+    return $sql;
+  }
+  
+  /**
+   * Geeft laatste query, maar dan opgeschoont
+   *
+   * @param array $settings[array('no_limit'=>true,'no_order'=>false,'select'=>PRIMARY_KEY)]
+   * @return string
+   * @author Jan den Besten
+   */
+  public function last_query_clean($settings=array('no_limit'=>true,'no_order'=>false,'select'=>PRIMARY_KEY)) {
+    $sql=$this->last_query();
+    if ($settings['no_limit']) $sql = preg_replace("/LIMIT\s\d+/ui", " ", $sql);
+    if ($settings['select'])   $sql = preg_replace("/SELECT(.*)FROM(.*)/uis", "SELECT ".$settings['select']." FROM$2", $sql); 
+    return $sql;
+  }
+  
+
   /**
    * Geeft aantal rijen van laatste resultaat in het geval dat LIMIT op 0 zou staan
    *
@@ -1619,33 +1651,32 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
    * @author Jan den Besten
    */
 	public function last_num_rows_no_limit() {
-		if ( ! $this->ar_last_query) {
-			return FALSE;
-		}
-		$sql=$this->ar_last_query;
-    
-    // Remove sub SELECTS
-    $sql = preg_replace("/,?\(SELECT.*\)/uiU", "", $sql);
-    
-    // Find table
-		$match=array();
-		$table='';
-    $tablePlus='';
-		if ( preg_match('/\sFROM\s(.*?)\s/si',$sql,$match) ) {
-			$table=trim($match[1],'()`"');
-			$tablePlus="`$table`.";
-		}
+		$sql=$this->last_query();
+    if (!$sql) return FALSE;
+    if ($sql) {
+      
+      // Remove sub SELECTS
+      $sql = preg_replace("/,?\(SELECT.*\)/uiU", "", $sql);
+      
+      // Find table
+  		$match=array();
+  		$table='';
+      $tablePlus='';
+  		if ( preg_match('/\sFROM\s(.*?)\s/si',$sql,$match) ) {
+  			$table=trim($match[1],'()`"');
+  			$tablePlus="`$table`.";
+  		}
 
-    // Cleanup Query
-    $num_rows=0;
-    if (!empty($tablePlus)) {
-      $sql=preg_replace('/SELECT(.*)?\sFROM\s/si','SELECT '.$tablePlus.'`id` FROM',$sql);
-  		$sql=preg_replace('/ORDER BY(.*)?/si','',$sql);
-  		$query=$this->query($sql);
-  		$num_rows=$query->num_rows();
-  		$query->free_result();
+      // Cleanup Query
+      if (!empty($tablePlus)) {
+        $sql=preg_replace('/SELECT(.*)?\sFROM\s/si','SELECT '.$tablePlus.'`'.PRIMARY_KEY.'` FROM',$sql);
+    		$sql=preg_replace('/ORDER BY(.*)?/si','',$sql);
+    		$query=$this->query($sql);
+    		$num_rows=$query->num_rows();
+    		$query->free_result();
+      }
+      
     }
-
 		return $num_rows;
 	}
 
