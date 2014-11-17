@@ -419,7 +419,8 @@ class Show extends AdminController {
 				$data=current($data);
 			}
       
-      // trace_($data);
+      $data=$this->_before_form($table,$data);
+      
       // strace_($options);
       // strace_($multiOptions);
 
