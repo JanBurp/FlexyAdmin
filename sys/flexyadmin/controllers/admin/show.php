@@ -203,13 +203,44 @@ class Show extends AdminController {
             }
 
 						$data=$this->db->get_result($table,$pagination,$offset);
+            $data_query=$this->db->last_query_clean();
 						$total_rows=$this->db->last_num_rows_no_limit();
 
+            // trace_('#show#'.$data_query);
             // trace_($data);
             // trace_($total_rows);
             // trace_($search);
             // trace_($this->db->queries);
-
+            
+						$keys=array();
+						if (!empty($data)) $keys=array_keys(current($data));
+            $prekeys=get_prefix($keys);
+            $hasDateField = one_of_array_in_array($this->config->item('DATE_fields_pre'),$prekeys);
+            if ($hasDateField) $hasDateField=$keys[$hasDateField];
+            $keys=array_combine($keys,$keys);
+            
+            // if datefield and no current: select items from today and set offset of pagination
+            if ($hasDateField) {
+              $this->db->select($hasDateField);
+              $this->db->where('DATE(`'.$hasDateField.'`)=DATE(NOW())');
+              $today_ids=$this->db->get_result($table);
+              if (!empty($today_ids) and $id=='') {
+                $today_ids=array_keys($today_ids);
+                $id=implode('_',$today_ids);
+              }
+              if ($this->config->item('GRID_JUMP_TO_TODAY') and $pagination and $offset=='') {
+                $first_id=current($today_ids);
+            		$query=$this->db->query($data_query);
+            		$sub_data=$query->result_array();
+                $offset=find_row_by_value($sub_data,$first_id,$key=PRIMARY_KEY);
+                $offset=key($offset);
+                $offset=floor($offset / $pagination) * $pagination;
+          			$this->grid_set->save(array('table'=>$table,'offset'=>$offset,'order'=>$order,'search'=>$search));
+                $uri=$this->grid_set->open_uri();
+                redirect($uri);
+              }
+            }
+            
 						$last_order=$this->db->get_last_order();
 						if (substr($last_order,0,1)!='(') $order=$last_order;
 
@@ -285,11 +316,6 @@ class Show extends AdminController {
 							$grid->set_data($data,$uiShowTable);
 							$grid->set_order($order);
 							$grid->set_search($search);
-							$keys=array();
-							if (!empty($data)) {
-								$keys=array_keys(current($data));
-								$keys=array_combine($keys,$keys);
-							}
 							$grid->set_headings($this->ui->get($keys,$table));
               
               if (is_editable_table($table) AND $right>=RIGHTS_ADD) {

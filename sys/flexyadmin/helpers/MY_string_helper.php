@@ -141,9 +141,9 @@ function remove_first_char($s) {
 /**
  * Pakt eerste deel van een string
  *
- * @param string $s 
+ * @param mixed $s als $s een array is wordt van alle strings in die array de prefix teruggegeven, anders van één string
  * @param string $split['_']
- * @return string
+ * @return mixed
  * @author Jan den Besten
  *
  * Pakt het eerste deel van een string nadat hij de string heeft verdeeld in delen aan de hand van een scheidingskarakter.
@@ -161,10 +161,19 @@ function remove_first_char($s) {
  * 
  */
 function get_prefix($s,$split="_") {
-	$pk=PRIMARY_KEY;
-	$i=strpos($s,$split);
-	if ($i) $out=substr($s,0,$i);
-	elseif ($s==$pk) $out=$pk; else $out="";
+  $out='';
+  if (is_array($s)) {
+    $out=array();
+    foreach ($s as $str) {
+      $out[]=get_prefix($str,$split);
+    }
+  }
+  else {
+  	$pk=PRIMARY_KEY;
+  	$i=strpos($s,$split);
+  	if ($i) $out=substr($s,0,$i);
+  	elseif ($s==$pk) $out=$pk; else $out="";
+  }
 	return $out;
 }
 
