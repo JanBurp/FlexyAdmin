@@ -1624,7 +1624,6 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		if ( !$this->ar_last_query) {
 			return parent::last_query();
 		}
-
 		$sql=$this->ar_last_query;
     return $sql;
   }
@@ -1636,7 +1635,9 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
    * @return string
    * @author Jan den Besten
    */
-  public function last_query_clean($settings=array('no_limit'=>true,'no_order'=>false,'select'=>PRIMARY_KEY)) {
+  public function last_query_clean($settings=array()) {
+    $default=array('no_limit'=>true,'no_order'=>false,'select'=>PRIMARY_KEY);
+    $settings=array_merge($default,$settings);
     $sql=$this->last_query();
     if ($settings['no_limit']) $sql = preg_replace("/LIMIT\s\d+/ui", " ", $sql);
     if ($settings['select'])   $sql = preg_replace("/SELECT(.*)FROM(.*)/uis", "SELECT ".$settings['select']." FROM$2", $sql); 

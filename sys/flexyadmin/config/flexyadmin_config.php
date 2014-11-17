@@ -60,8 +60,6 @@ $config['MULTIPLE_UPLOAD']		    = TRUE;
 $config['PAGINATION']             = FALSE;
 $config['GRID_EDIT']              = TRUE;
 $config['GRID_WHERE']             = FALSE;
-$config['GRID_JUMP_TO_TODAY']     = FALSE;
-
 
 
 /*
