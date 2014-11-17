@@ -93,17 +93,19 @@ class Fill extends AdminController {
                   $result='';
                   $path=$this->cfg->get('cfg_media_info',$table.'.'.$field,'path');
                   if (!isset($files[$path])) $files[$path]=$this->mediatable->get_files($path,FALSE);
-                  if ($pre=='media') {
-                    if (rand(1,4)>2) {
-                      $result=random_element($files[$path]);
-                      $result=$result['file'];
+                  if (!empty($files[$path])) {
+                    if ($pre=='media') {
+                      if (rand(1,4)>2) {
+                        $result=random_element($files[$path]);
+                        $result=$result['file'];
+                      }
                     }
-                  }
-                  else {
-                    $result='';
-                    for ($i=0; $i < rand(0,4); $i++) { 
-                      $media=random_element($files[$path]);
-                      $result=add_string($result,$media['file'],'|');
+                    else {
+                      $result='';
+                      for ($i=0; $i < rand(0,4); $i++) { 
+                        $media=random_element($files[$path]);
+                        $result=add_string($result,$media['file'],'|');
+                      }
                     }
                   }
                   break;
