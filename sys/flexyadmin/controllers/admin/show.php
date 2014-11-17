@@ -203,7 +203,7 @@ class Show extends AdminController {
             }
 
 						$data=$this->db->get_result($table,$pagination,$offset);
-            $data_query=$this->db->last_query_clean();
+            $data_query=$this->db->last_query_clean(array('select'=>$table.'.'.PRIMARY_KEY));
 						$total_rows=$this->db->last_num_rows_no_limit();
 
             // trace_('#show#'.$data_query);
@@ -220,7 +220,7 @@ class Show extends AdminController {
             $keys=array_combine($keys,$keys);
             
             // if datefield and no current: select items from today and set offset of pagination
-            if ($hasDateField) {
+            if ($this->cfg->get("CFG_table",$table,'b_jump_to_today') and $hasDateField) {
               $this->db->select($hasDateField);
               $this->db->where('DATE(`'.$hasDateField.'`)=DATE(NOW())');
               $today_ids=$this->db->get_result($table);
@@ -228,16 +228,18 @@ class Show extends AdminController {
                 $today_ids=array_keys($today_ids);
                 $id=implode('_',$today_ids);
               }
-              if ($this->config->item('GRID_JUMP_TO_TODAY') and $pagination and $offset=='') {
+              if ($pagination and $offset=='') {
                 $first_id=current($today_ids);
             		$query=$this->db->query($data_query);
             		$sub_data=$query->result_array();
                 $offset=find_row_by_value($sub_data,$first_id,$key=PRIMARY_KEY);
-                $offset=key($offset);
-                $offset=floor($offset / $pagination) * $pagination;
-          			$this->grid_set->save(array('table'=>$table,'offset'=>$offset,'order'=>$order,'search'=>$search));
-                $uri=$this->grid_set->open_uri();
-                redirect($uri);
+                if (is_array($offset)) {
+                  $offset=key($offset);
+                  $offset=floor($offset / $pagination) * $pagination;
+            			$this->grid_set->save(array('table'=>$table,'offset'=>$offset,'order'=>$order,'search'=>$search));
+                  $uri=$this->grid_set->open_uri();
+                  redirect($uri);
+                }
               }
             }
             
