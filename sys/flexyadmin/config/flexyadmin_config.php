@@ -234,6 +234,7 @@ $config["CFG_"]=array(
  */
   
 	"cfg_ui" => array(
+    
 		"cfg_ui"=>array(
 			"table"=>'cfg_ui',
 			"txt_help_nl"=>'<p>Maak hier teksten en help voor de backend userinterface.</p>',
@@ -471,6 +472,16 @@ $config["CFG_"]=array(
  */
 
 	"cfg_field_info" => array(
+    
+    '*.tme_last_changed' => array(
+ 			"b_show_in_grid"=>'1',
+			"b_show_in_form"=>'0'
+    ),
+    '*.user_changed' => array(
+ 			"b_show_in_grid"=>'1',
+			"b_show_in_form"=>'0'
+    ),
+    
     
     'tbl_site.int_version'=>array(
  			"b_show_in_grid"=>'0',
@@ -1021,6 +1032,10 @@ $config['FIELDS_special'] = array(
 												"form"				=> "function_user",
 												"validation"	=> "trim|integer",
 											),
+	"user_changed" => array(
+												"grid"				=> "function_user"
+											),
+                      
 	"uri"				=> array(
 												"grid"				=> "/%s",
 												"form"				=> "hidden",

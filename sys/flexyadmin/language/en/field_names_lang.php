@@ -11,6 +11,9 @@ $lang['txt_text_en']      = $lang['txt_text']. ' EN';
 // Most used extra fields
 $lang['tme_datetime']     = "Date &amp; Time";
 
+// USER FIELDS
+$lang['user_changed']     ='Changed by';
+
 // MEDIA GRID fields
 $lang['filetype']         = 'Type';
 $lang['filesize']         = 'Size';
