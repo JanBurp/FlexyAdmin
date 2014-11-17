@@ -66,6 +66,12 @@ class BasicController extends MY_Controller {
 		return $this->plugin_handler->call_plugins_after_delete_trigger();
 	}
 	
+  function _before_form($table,$data) {
+		$this->_init_plugin($table,$data,NULL);
+		$data=$this->plugin_handler->call_plugins_before_form_trigger();
+    return $data;
+  }
+  
 	function _after_update($table,$oldData=NULL,$newData=NULL) {
 		$this->_init_plugin($table,$oldData,$newData);
 		$newData=$this->plugin_handler->call_plugins_after_update_trigger();
