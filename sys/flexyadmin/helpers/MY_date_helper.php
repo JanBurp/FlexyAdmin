@@ -7,6 +7,12 @@
  */
 
 
+function unix_to_normal($time = '', $seconds = TRUE) {
+  return unix_to_human($time,$seconds,'eur');
+}
+
+
+
 /**
  * Geeft datum/tijd in MySQL formaat, klaar om in de database te stoppen
  *
