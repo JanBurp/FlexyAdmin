@@ -27,7 +27,6 @@ class Cronjob extends CI_Model {
         }
       }
     }
-    // trace_($this->jobs);
 	}
   
   
@@ -41,7 +40,7 @@ class Cronjob extends CI_Model {
     $last=mysql_to_unix($job['last']);        // unix stamp
     $next=$this->_calc_next($job['every'],$last);
     $job['needs_run'] = ($last < $next) && (time() >= $next);
-    // trace_(['time'=>unix_to_mysql(time()),'last'=>unix_to_mysql($last),'next'=>unix_to_mysql($next),'run'=>$job['needs_run'] ]);
+    trace_(['time'=>unix_to_mysql(time()),'last'=>unix_to_mysql($last),'next'=>unix_to_mysql($next),'run'=>$job['needs_run'] ]);
     return $job;
   }
   
@@ -109,22 +108,22 @@ class Cronjob extends CI_Model {
         case 'week':
           $a_data=getdate();
           $wday=$a_data['wday']; // 0 = sunday
-          $start=mktime( 0,0,0, date('n'), date('j')-$wday );
+          $start=mktime( 0,0,0, date('n',$last), date('j')-$wday );
           $day_of_week=(int) $every[1];
-          $hour++; // Hack, don't know why...
+          $hour; // Hack, don't know why...
           break;
 
         case 'month':
           $a_data=getdate();
           $mday=$a_data['mday']-1; // 1 = 1e dag
-          $start=mktime( 0,0,0, date('n'), date('j')-$mday );
+          $start=mktime( 0,0,0, date('n',$last), date('j')-$mday );
           $day_of_month=(int) $every[1] -1;
           break;
       }
       
       $next = $start + $day_of_year*86400 + $day_of_month*86400 + $day_of_week*86400 + $hour*3600 + $min*60;
       
-      // trace_([$every,unix_to_mysql($last),unix_to_mysql($start),unix_to_mysql($next)]);
+      // trace_([$every,'last'=>unix_to_mysql($last),'start'=>unix_to_mysql($start),'next'=>unix_to_mysql($next)]);
     }
     return $next;
   }

@@ -30,7 +30,7 @@ class CronjobTest extends CIUnit_Framework_TestCase {
     }
 
     public function test_calc_next_week()  { 
-      // last sunday 23:59
+      // testtime = afgelopen sunday 23:59
       $date=getdate();
       $wday=$date['wday']; // 0 = sunday
       $testtime=mktime( 23,59,0, date('n'), date('j')-$wday );
