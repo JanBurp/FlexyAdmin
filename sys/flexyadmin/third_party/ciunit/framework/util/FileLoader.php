@@ -80,64 +80,39 @@ class CIUnit_Util_FileLoader
      * @throws CIUnit_Framework_Exception_CIUnitException
      * @return multitype:string |boolean
      */
-    public static function collectTests ($fullPath = FALSE, $hidden = FALSE)
-    {
-        
-        //Obtain test_path from config file
-        $ci = & get_instance();
-        $ci->load->add_package_path(APPPATH . 'third_party/ciunit', FALSE);
-        $ci->config->load('config');
-        $tests_path = $ci->config->item('tests_path');
-        
-          
-        if (! file_exists($tests_path) || ! is_readable($tests_path))
-            throw new CIUnit_Framework_Exception_CIUnitException(
-                    sprintf("CIUnit can't open or read '%s'", $tests_path));
-        
-        if (@$fp = @opendir($tests_path)) {
-            
-            // $testFiles = array();
-            //
-            // $tests_path = rtrim($tests_path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
-            //
-            // while (FALSE !== ($file = readdir($fp))) {
-            //
-            //     // Remove '.', '..', and hidden files
-            //     if (! trim($file, '.') or ($hidden == FALSE && $file[0] == '.')) {
-            //         continue;
-            //     }
-            //
-            //     if (substr(strrchr($file, '.'), 1) == 'php') {
-            //         if ($fullPath) {
-            //             $testFiles[] = $tests_path . $file;
-            //         } else {
-            //             $testFiles[] = substr($file, 0, strrpos($file, '.'));
-            //         }
-            //     }
-            // }
-            //
-            // closedir($fp);
-        
-          $testFiles=read_map($tests_path,'php,dir',TRUE,FALSE,FALSE,TRUE);
-          $testFiles=not_filter_by($testFiles,'_');
-          // combine suits and dirs
-          foreach ($testFiles as $key => $file) {
-            if ($file['type']=='dir') {
-              $subfiles=$file['.'];
-              $suite=$key.'suite.php';
-              if (isset($subfiles[$suite])) {
-                $suiteName=remove_suffix($subfiles[$suite]['name'],'.');
-                $testFiles[$suiteName]=array_merge($file,$subfiles[$suite]);
-                unset($testFiles[$suiteName]['.'][$suite]);
-                unset($testFiles[$key]);
-              }
+    public static function collectTests ($fullPath = FALSE, $hidden = FALSE) {
+      $ci = & get_instance();
+      $ci->load->add_package_path(APPPATH . 'third_party/ciunit', FALSE);
+      $ci->config->load('config');
+      $paths=$ci->config->item('tests_paths');
+      
+      $testFiles=array();
+      foreach ($paths as $path) {
+        if (! file_exists($path) || ! is_readable($path)) throw new CIUnit_Framework_Exception_CIUnitException(sprintf("CIUnit can't open or read '%s'", $path));
+        if (@$fp = @opendir($path)) {
+          $files=read_map($path,'php,dir',TRUE,FALSE,FALSE,TRUE);
+          $testFiles=array_merge($testFiles,$files);
+        }
+      }
+      
+      if ($testFiles) {
+        $testFiles=not_filter_by($testFiles,'_');
+        // combine suits and dirs
+        foreach ($testFiles as $key => $file) {
+          if ($file['type']=='dir') {
+            $subfiles=$file['.'];
+            $suite=$key.'suite.php';
+            if (isset($subfiles[$suite])) {
+              $suiteName=remove_suffix($subfiles[$suite]['name'],'.');
+              $testFiles[$suiteName]=array_merge($file,$subfiles[$suite]);
+              unset($testFiles[$suiteName]['.'][$suite]);
+              unset($testFiles[$key]);
             }
           }
-            
-          return $testFiles;
         }
-        
-        return FALSE;
+      }
+      // trace_($testFiles);
+      return $testFiles;
     }
 }
 

@@ -13,7 +13,10 @@ if (! defined('BASEPATH')) exit('No direct script access allowed');
  | By default CIUnit will look for a folder "tests" under the application folder.
  */
 
-$config['tests_path'] = APPPATH .'tests/';
+$config['tests_paths'] = array(
+  SITEPATH .'tests/',
+  APPPATH .'tests/',
+);
 
 /*
  |--------------------------------------------------------------------------
