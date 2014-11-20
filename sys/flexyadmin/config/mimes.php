@@ -99,6 +99,7 @@ $mimes = array(
 				'wbxml'	=>	'application/wbxml',
 				'wmlc'	=>	'application/wmlc',
 				'word'	=>	array('application/msword', 'application/octet-stream'),
+        'wmv'   =>  'video/x-ms-wmv',
 				'xht'		=>	'application/xhtml+xml',
 				'xhtml'	=>	'application/xhtml+xml',
 				'xl'		=>	'application/excel',
