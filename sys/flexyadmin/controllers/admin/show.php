@@ -304,7 +304,7 @@ class Show extends AdminController {
                   $html.=p() . anchor(api_uri('API_home','cfg_users/invite'),lang('invite'),array('class' => 'button')) .' '. lang('all_new_users').' ('.$unused.')'._p();
                 }
               }
-              
+
 							$data=$this->ff->render_grid($table,$data,$right,$info);
               
 							if (empty($uiTable)) $uiTable=$this->ui->get($table);
@@ -318,6 +318,12 @@ class Show extends AdminController {
 							$grid->set_data($data,$uiShowTable);
 							$grid->set_order($order);
 							$grid->set_search($search);
+              
+							if (!empty($data)) {
+								$keys=array_keys(current($data));
+								$keys=array_combine($keys,$keys);
+							}
+              
 							$grid->set_headings($this->ui->get($keys,$table));
               
               if (is_editable_table($table) AND $right>=RIGHTS_ADD) {
