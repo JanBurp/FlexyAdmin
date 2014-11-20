@@ -224,6 +224,11 @@ class Show extends AdminController {
               $this->db->select($hasDateField);
               $this->db->where('DATE(`'.$hasDateField.'`)=DATE(NOW())');
               $today_ids=$this->db->get_result($table);
+              if (empty($today_ids)) {
+                $this->db->select($hasDateField);
+                $this->db->where('DATE(`'.$hasDateField.'`)<=DATE(NOW())');
+                $today_ids=$this->db->get_result($table,1);
+              }
               if (!empty($today_ids) and $id=='') {
                 $today_ids=array_keys($today_ids);
                 $id=implode('_',$today_ids);
@@ -236,6 +241,7 @@ class Show extends AdminController {
                 if (is_array($offset)) {
                   $offset=key($offset);
                   $offset=floor($offset / $pagination) * $pagination;
+                  
             			$this->grid_set->save(array('table'=>$table,'offset'=>$offset,'order'=>$order,'search'=>$search));
                   $uri=$this->grid_set->open_uri();
                   redirect($uri);
