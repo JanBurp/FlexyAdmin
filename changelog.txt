@@ -2,11 +2,11 @@ Changes 2715
 ============
 
 UPDATE:
-- UPDATE to CI 2.0.2
+- UPDATE to CI 2.2.0
 - CI hack for working with PHP 5.6
 
 USERGUIDE:
-- UPDATE to CI 2.0.2
+- UPDATE to CI 2.2.0
 - New FlexyAdmin userguide (style)
 
 NEW:
