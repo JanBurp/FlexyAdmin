@@ -43,8 +43,8 @@ class Builder extends CI_Model {
     $main_view='site/views/'.$this->config->item('main_view').'.php';
     $view_changed=filemtime($main_view);
 
-    $needs_compiling=true;
-    if (file_exists(el('dest_file',$this->settings))) {
+    $needs_compiling=$this->settings['watch'];
+    if (!is_bool($this->settings['watch']) and  file_exists(el('dest_file',$this->settings))) {
       $needs_compiling=false;
       // Check if some file is changed, so compile is needed
       $last_changed=filemtime($this->settings['dest_file']);
@@ -66,12 +66,18 @@ class Builder extends CI_Model {
     $this->report=h('Compile LESS files & Minify CSS files');
     
     if ($needs_compiling) {
+      
+      $maps=array();
+      $map_counter=0;
+      
       // 1 - Compile Less files
       $this->report.=h('Compiling LESS files',2);
       $less_files=$this->settings['less_files'];
       foreach ($less_files as $less => $css) {
         try{
-          $parser = new Less_Parser();
+          $options = array('sourceMap' => true );
+          $parser = new Less_Parser($options);
+          $parser = new Less_Parser($options);
           $parser->parseFile($less, site_url());
           $output = $parser->getCss();
           write_file($css,$output);
@@ -96,8 +102,10 @@ class Builder extends CI_Model {
         $combine.=$this->minimize_css( read_file($css_file) );
       }
   		$this->report.=implode('<br>',$css_files);
+      
       // 3 - Minify
       $minified=$this->minimize_css($combine);
+      
       // 4 - Add banner
       $banner = el('banner',$this->settings,'');
       $data=array(
@@ -114,11 +122,13 @@ class Builder extends CI_Model {
       $this->report.=h('No less or css file changed',2);
     }
     
+
     $js_start = microtime(true);
     // JS
     $this->settings['js_files']=$this->get_files('js');
-    $needs_uglify=true;
-    if (file_exists(el('js_dest_file',$this->settings,''))) {
+    
+    $needs_uglify=$this->settings['watch'];
+    if (!is_bool($this->settings['watch']) and file_exists(el('js_dest_file',$this->settings,''))) {
       $needs_uglify=false;
       // Check if some file is changed, so compile is needed
       $last_changed=filemtime($this->settings['js_dest_file']);
