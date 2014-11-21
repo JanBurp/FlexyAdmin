@@ -40,18 +40,26 @@ class Builder extends CI_Model {
     $this->settings['less_files']=$this->get_files('less');
     $this->settings['css_files']=$this->get_files('css');
     
+    $main_view='site/views/'.$this->config->item('main_view').'.php';
+    $view_changed=filemtime($main_view);
+
     $needs_compiling=true;
     if (file_exists(el('dest_file',$this->settings))) {
       $needs_compiling=false;
       // Check if some file is changed, so compile is needed
       $last_changed=filemtime($this->settings['dest_file']);
-      $files_to_check=array_keys($this->settings['less_files']);
-      $files_to_check=array_merge($files_to_check,$this->settings['css_files']);
-      $files_to_check=array_combine($files_to_check,$files_to_check);
-      foreach ($files_to_check as $key => $file) {
-        $diff_time=filemtime($file)-$last_changed;
-        $files_to_check[$key]=($diff_time>0);
-        $needs_compiling=($needs_compiling or $files_to_check[$key]);
+      if ($view_changed-$last_changed>0) {
+        $needs_compiling=true;
+      }
+      else {
+        $files_to_check=array_keys($this->settings['less_files']);
+        $files_to_check=array_merge($files_to_check,$this->settings['css_files']);
+        $files_to_check=array_combine($files_to_check,$files_to_check);
+        foreach ($files_to_check as $key => $file) {
+          $diff_time=filemtime($file)-$last_changed;
+          $files_to_check[$key]=($diff_time>0);
+          $needs_compiling=($needs_compiling or $files_to_check[$key]);
+        }
       }
     }
 
@@ -114,12 +122,17 @@ class Builder extends CI_Model {
       $needs_uglify=false;
       // Check if some file is changed, so compile is needed
       $last_changed=filemtime($this->settings['js_dest_file']);
-      $files_to_check=$this->settings['js_files'];
-      $files_to_check=array_combine($files_to_check,$files_to_check);
-      foreach ($files_to_check as $key => $file) {
-        $diff_time=filemtime($file)-$last_changed;
-        $files_to_check[$key]=($diff_time>0);
-        $needs_uglify=($needs_uglify or $files_to_check[$key]);
+      if ($view_changed-$last_changed>0) {
+        $needs_uglify=true;
+      }
+      else {
+        $files_to_check=$this->settings['js_files'];
+        $files_to_check=array_combine($files_to_check,$files_to_check);
+        foreach ($files_to_check as $key => $file) {
+          $diff_time=filemtime($file)-$last_changed;
+          $files_to_check[$key]=($diff_time>0);
+          $needs_uglify=($needs_uglify or $files_to_check[$key]);
+        }
       }
     }
     
@@ -129,12 +142,12 @@ class Builder extends CI_Model {
       $this->load->library('jsmin');
       $ugly='';
       foreach ($this->settings['js_files'] as $file) {
-        if (file_exists($file)) $ugly.=file_get_contents($file);
+        if (file_exists($file)) {
+          $ugly.="\n\n/* ".$file." */";
+          $ugly.=JSMin::minify( file_get_contents($file) );
+        }
       }
       $this->report.=implode('<br>',$this->settings['js_files']);
-
-      // 7 Uglify js
-      $ugly=JSMin::minify($ugly);
       
       // 8 Add banner
       $banner = el('js_banner',$this->settings,'');
