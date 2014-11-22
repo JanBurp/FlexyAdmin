@@ -124,7 +124,7 @@ class Menu {
   
   private $CI;
 
-  private $settings = array(
+  var $settings = array(
     'current'         => '',
     'menu_table'      => '',
     'fields'          => array(
@@ -154,7 +154,7 @@ class Menu {
     ),
     'bootstrap' => array(
       'current' => 'active',
-      'active'  => 'active',
+      'active'  => 'active active-branch',
       'first'   => 'first',
       'last'    => 'last'
     )
