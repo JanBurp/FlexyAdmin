@@ -14,8 +14,10 @@
  * Build at every pageload: nice when developing, and even faster than using grunt!
  * 
  * Possible values:
- * - 'dev'  - (default) build when developing (ie: $config['use_minimized']=TRUE and IS_LOCALHOST)
- * - true   - always build (even on production site)
+ * - 'dev'  - (default) build when developing and some source file is changed (ie: IS_LOCALHOST)
+ * - 'css'  - same as 'dev' but only build css (when changed)
+ * - 'js'   - same as 'dev' but only build js (when changed)
+ * - true   - always build (even on production site and even when no file is changed)
  * - false  - never build
  * 
  * Adds the variable $_build to $this->site (true if build)
