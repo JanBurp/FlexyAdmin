@@ -241,10 +241,11 @@ class Show extends AdminController {
                 if (is_array($offset)) {
                   $offset=key($offset);
                   $offset=floor($offset / $pagination) * $pagination;
-                  
-            			$this->grid_set->save(array('table'=>$table,'offset'=>$offset,'order'=>$order,'search'=>$search));
-                  $uri=$this->grid_set->open_uri();
-                  redirect($uri);
+                  if ($offset>0) {
+              			$this->grid_set->save(array('table'=>$table,'offset'=>$offset,'order'=>$order,'search'=>$search));
+                    $uri=$this->grid_set->open_uri();
+                    redirect($uri);
+                  }
                 }
               }
             }
