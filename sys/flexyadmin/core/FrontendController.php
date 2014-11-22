@@ -100,7 +100,7 @@ class FrontEndController extends MY_Controller {
     if (el('watch',$build_settings,false)) {
       $build_settings=$this->config->item('build');
       $build=true;
-      if (el('watch',$build_settings,false)=='dev') $build=$this->config->item('LOCAL');
+      if (is_string(el('watch',$build_settings,false))) $build=$this->config->item('LOCAL');
       if ($build) {
         $this->load->model('builder','build');
         $this->site['_build']=$this->build->go();

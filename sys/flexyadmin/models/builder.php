@@ -35,16 +35,16 @@ class Builder extends CI_Model {
 	public function go() {
     $this->time_start = microtime(true);
     
-    // LESS & CSS
-    
-    $this->settings['less_files']=$this->get_files('less');
-    $this->settings['css_files']=$this->get_files('css');
-    
+    $watch=$this->settings['watch'];
     $main_view='site/views/'.$this->config->item('main_view').'.php';
     $view_changed=filemtime($main_view);
 
-    $needs_compiling=$this->settings['watch'];
-    if (!is_bool($this->settings['watch']) and  file_exists(el('dest_file',$this->settings))) {
+    // LESS & CSS
+    $this->settings['less_files']=$this->get_files('less');
+    $this->settings['css_files']=$this->get_files('css');
+
+    $needs_compiling=($watch===true or $watch==='dev' or $watch==='css');
+    if ($watch==='dev' or $watch==='css') {
       $needs_compiling=false;
       // Check if some file is changed, so compile is needed
       $last_changed=filemtime($this->settings['dest_file']);
@@ -123,12 +123,13 @@ class Builder extends CI_Model {
     }
     
 
-    $js_start = microtime(true);
     // JS
+    $js_start = microtime(true);
     $this->settings['js_files']=$this->get_files('js');
-    
-    $needs_uglify=$this->settings['watch'];
-    if (!is_bool($this->settings['watch']) and file_exists(el('js_dest_file',$this->settings,''))) {
+
+
+    $needs_uglify=($watch===true or $watch==='dev' or $watch==='js');
+    if ($watch==='dev' or $watch==='js') {
       $needs_uglify=false;
       // Check if some file is changed, so compile is needed
       $last_changed=filemtime($this->settings['js_dest_file']);
