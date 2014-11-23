@@ -81,6 +81,7 @@ class Form {
   private $validation_error = false;
   private $validation_error_class = 'error';
   private $css_style = 'default';
+  private $view_path='admin/form';
   
   private $styles=array(
     'default'   => array(
@@ -180,6 +181,20 @@ class Form {
     $this->css_style=$style;
     return $this;
   }
+  
+  /**
+   * Stel het pad in waar de views van de form staan.
+   *
+   * @param string $path 
+   * @return void
+   * @author Jan den Besten
+   */
+  public function set_view_path($path='') {
+    if (!empty($path)) {
+      $this->view_path=$path;
+    }
+    return $this;
+  }
 
   /**
    * Stel formulier kop in
@@ -190,6 +205,7 @@ class Form {
    */
 	public function set_caption($caption="") {
 		$this->caption=$caption;
+    return $this;
 	}
 
   /**
@@ -803,7 +819,7 @@ class Form {
       'fieldsets' => $fieldsets
     );
     // trace_($form);
-    $render=$this->CI->load->view('admin/form/form',$form,true);
+    $render=$this->CI->load->view($this->view_path.'/form',$form,true);
 
 		// prepare javascript for conditional field showing
 		if (!empty($this->when)) {
@@ -1117,7 +1133,7 @@ class Form {
 		if ($field["type"]=="hidden") return $field['control'];
     $field['horizontal_bootstrap']=($this->css_style=='bootstrap' and has_string('form-horizontal',$form_class));
     // trace_($field);
-		return $this->CI->load->view('admin/form/field',$field,true);
+		return $this->CI->load->view($this->view_path.'/field',$field,true);
 	}
 
 

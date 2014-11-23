@@ -81,6 +81,11 @@ class FrontEndController extends MY_Controller {
       }
       else
         $this->load->library("menu");
+      
+      $css_style=$this->config->item('css_style');
+      if (!$css_style) $css_style='default';
+      $this->menu->set('css_style',$css_style);
+      
   		$this->load->library("content");
       $this->content->initialize($this->config->item('parse_content'));
   		$this->load->library('form_validation');

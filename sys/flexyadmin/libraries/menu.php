@@ -702,7 +702,7 @@ class Menu {
 		if (!isset($menu)) $menu=$this->menu;
 		if (!is_array($attr)) $attr=array("class"=>$attr);
 		if ($level>1) unset($attr["id"]);
-    
+
     $styles=$this->styles[$this->settings['css_style']];
     
     $html='';
