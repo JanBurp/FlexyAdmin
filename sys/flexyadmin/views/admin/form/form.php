@@ -6,4 +6,4 @@
     <?=$fieldset['fields']?>
   </fieldset>
   <?php endforeach ?>
-</div>
+</form>

@@ -15,6 +15,18 @@ $config['testmode'] = false;
 
 /*
  *--------------------------------------------------------------------------
+ * Styling template
+ *--------------------------------------------------------------------------
+ *
+ * Set the default frontend framework. This setting affects menu, form and the standard template, possible options:
+ * - default - the basic and light flexyadmin template
+ * - bootstrap - use bootstrap as a start
+ */
+// $config['css_style']='bootstrap';
+
+
+/*
+ *--------------------------------------------------------------------------
  * Menu options
  *--------------------------------------------------------------------------
  *
