@@ -90,6 +90,7 @@ class Form {
       'fieldset_info'         => true,
       'field_container'       => 'flexyFormField',
       'field_container_info'  => true,
+      'label'                 => '',
       'field'                 => '',
       'field_info'            => true,
       'button'                => 'button'
@@ -101,6 +102,7 @@ class Form {
       'fieldset_info'         => false,
       'field_container'       => 'form-group',
       'field_container_info'  => false,
+      'label'                 => 'control-label',
       'field'                 => 'form-control',
       'field_info'            => false,
       'button'                => 'btn btn-primary'
@@ -133,16 +135,12 @@ class Form {
 		$this->set_labels();
 		$this->data=array();
 		$this->postdata=array();
-		// $this->set_type();
 		$this->add_password_match(FALSE);
-    // $this->set_templates();
-    // $this->set_fieldset_classes();
 		$this->set_fieldsets();
 		$this->hasHtmlField=false;
 		$this->show_buttons();
 		$this->set_captcha_words();
 		$this->when();
-		// $this->show_submit();
     return $this;
 	}
 
@@ -310,7 +308,6 @@ class Form {
       $this->data[$key]['attr']['placeholder']=$label;
     }
   }
-  
   
 
   /**
@@ -483,18 +480,6 @@ class Form {
 		}
 		return $data;
 	}
-
-  /**
-   * Template
-   *
-   * @author Jan den Besten
-   * @internal
-   * @ignore
-   */
-	private function tmp($tmp,$class="") {
-		return str_replace("%s",$class,$tmp);
-	}
-
 
   /**
    * Checkt of formulier matched met juiste POST data
@@ -843,6 +828,7 @@ class Form {
     
     // field class
     $field['container_class']=$styles['field_container'];
+    $field['label_class']=$styles['label'];
     $class=$field['class'];
     // class: field types & status
     if ($styles['field_info']) {
