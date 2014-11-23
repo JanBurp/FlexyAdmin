@@ -434,53 +434,6 @@ class Form {
 	}
 
   /**
-   * Zelfde als set_field_templates()
-   *
-   * @return void
-   * @author Jan den Besten
-   * @ignore
-   */
-  // public function set_templates() {
-  //   $this->set_field_templates();
-  // }
-  
-  /**
-   * Oude templates
-   * 
-   * @return void
-   * @author Jan den Besten
-   * @depricated
-   * @ignore
-   */
-  // public function set_old_templates() {
-  //   $this->set_field_templates("<div class=\"form_field %s\">","</div>");
-  //   $this->set_fieldset_classes(array('fieldset'=>'formfields','buttons'=>'formbuttons'));
-  // }
-
-  /**
-   * Stel template in voor een veld
-   *
-   * @param string $start['&lt;div&nbsp;class&quot;flexyFormField&nbsp;%s&quot;&gt;']
-   * @param string $end['&lt;/div&gt;']
-   * @author Jan den Besten
-   */
-  // public function set_field_templates($start="<div class=\"flexyFormField %s\">",$end="</div>") {
-  //   $this->tmpFieldStart=$start;
-  //   $this->tmpFieldEnd=$end;
-  // }
-
-  /**
-   * Stel de classes in voor de fieldsets
-   *
-   * @param array $fieldsetClasses[array('fieldset'=>'flexyFormFieldset','buttons'=>'flexyFormButtons')]
-   * @author Jan den Besten
-   * @ignore
-   */
-  // public function set_fieldset_classes($fieldsetClasses=array('fieldset'=>'flexyFormFieldset','buttons'=>'flexyFormButtons')) {
-  //   $this->fieldsetClasses=$fieldsetClasses;
-  // }
-	
-  /**
    * Stel de fieldsets in
    *
    * @param string $fieldsets[array('fieldset')]
