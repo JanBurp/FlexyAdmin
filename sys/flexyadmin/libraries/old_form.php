@@ -59,6 +59,8 @@
  * 
  * @package default
  * @author Jan den Besten
+ * @ignore
+ * @depricated
  */
 class Form {
 
