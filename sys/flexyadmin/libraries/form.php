@@ -80,6 +80,33 @@ class Form {
 	private $buttons;
   private $validation_error = false;
   private $validation_error_class = 'error';
+  private $css_style = 'default';
+  
+  private $styles=array(
+    'default'   => array(
+      'form'                  => '',
+      'fieldset'              => 'flexyFormFieldset',
+      'fieldset_buttons'      => 'flexyFormButtons',
+      'fieldset_info'         => true,
+      'field_container'       => 'flexyFormField',
+      'field_container_info'  => true,
+      'field'                 => '',
+      'field_info'            => true,
+      'button'                => 'button'
+    ),
+    'bootstrap' => array(
+      'form'                  => '',
+      'fieldset'              => '',
+      'fieldset_buttons'      => '',
+      'fieldset_info'         => false,
+      'field_container'       => 'form-group',
+      'field_container_info'  => false,
+      'field'                 => 'form-control',
+      'field_info'            => false,
+      'button'                => 'btn btn-primary'
+    ),
+    
+  );
 
   /**
    * @ignore
@@ -108,14 +135,15 @@ class Form {
 		$this->postdata=array();
 		// $this->set_type();
 		$this->add_password_match(FALSE);
-		$this->set_templates();
-		$this->set_fieldset_classes();
+    // $this->set_templates();
+    // $this->set_fieldset_classes();
 		$this->set_fieldsets();
 		$this->hasHtmlField=false;
 		$this->show_buttons();
 		$this->set_captcha_words();
 		$this->when();
 		// $this->show_submit();
+    return $this;
 	}
 
   /**
@@ -127,9 +155,8 @@ class Form {
    */
 	public function set_form_id($form_id='') {
 		$this->form_id=$form_id;
+    return $this;
 	}
-
-
 
   /**
    * set_action()
@@ -141,7 +168,20 @@ class Form {
    */
 	public function set_action($action="") {
 		$this->action=$action;
+    return $this;
 	}
+  
+  /**
+   * Stel de css styling in. Mogelijke opties zijn: default|bootstrap
+   *
+   * @param string $style['default]
+   * @return void
+   * @author Jan den Besten
+   */
+  public function set_css_style($style="default") {
+    $this->css_style=$style;
+    return $this;
+  }
 
   /**
    * Stel formulier kop in
@@ -369,13 +409,13 @@ class Form {
    */
 	public function set_buttons($buttons=NULL) {
 		if (empty($buttons)) {
-			$buttons=array(	'cancel'	=> array( "value" => lang("form_cancel"), "class"=>"button cancel", "onClick" => "window.history.back()"),
-											'reset'		=> array( "value" => lang("form_reset"), "class"=>"button reset"),
+			$buttons=array(	'cancel'	=> array( "value" => lang("form_cancel"), "class"=>$this->styles[$this->css_style]['button']." cancel", "onClick" => "window.history.back()"),
+											'reset'		=> array( "value" => lang("form_reset"), "class"=>$this->styles[$this->css_style]['button']." reset"),
 											'submit'	=> array( "submit"=>"submit", "value"=>lang("form_submit")));
 		}
 		foreach ($buttons as $name => $button) {
 			if (!isset($button['name'])) 	$buttons[$name]['name']=$name;
-			if (!isset($button['class'])) $buttons[$name]['class']="button";
+			if (!isset($button['class'])) $buttons[$name]['class']=$this->styles[$this->css_style]['button'];
 			if (isset($button['submit'])) $buttons[$name]['class'].=" submit";
 		}
 		$this->buttons=$buttons;
@@ -400,9 +440,9 @@ class Form {
    * @author Jan den Besten
    * @ignore
    */
-	public function set_templates() {
-		$this->set_field_templates();
-	}
+  // public function set_templates() {
+  //   $this->set_field_templates();
+  // }
   
   /**
    * Oude templates
@@ -412,10 +452,10 @@ class Form {
    * @depricated
    * @ignore
    */
-	public function set_old_templates() {
-		$this->set_field_templates("<div class=\"form_field %s\">","</div>");
-		$this->set_fieldset_classes(array('fieldset'=>'formfields','buttons'=>'formbuttons'));
-	}
+  // public function set_old_templates() {
+  //   $this->set_field_templates("<div class=\"form_field %s\">","</div>");
+  //   $this->set_fieldset_classes(array('fieldset'=>'formfields','buttons'=>'formbuttons'));
+  // }
 
   /**
    * Stel template in voor een veld
@@ -424,10 +464,10 @@ class Form {
    * @param string $end['&lt;/div&gt;']
    * @author Jan den Besten
    */
-	public function set_field_templates($start="<div class=\"flexyFormField %s\">",$end="</div>") {
-		$this->tmpFieldStart=$start;
-		$this->tmpFieldEnd=$end;
-	}
+  // public function set_field_templates($start="<div class=\"flexyFormField %s\">",$end="</div>") {
+  //   $this->tmpFieldStart=$start;
+  //   $this->tmpFieldEnd=$end;
+  // }
 
   /**
    * Stel de classes in voor de fieldsets
@@ -436,9 +476,9 @@ class Form {
    * @author Jan den Besten
    * @ignore
    */
-	public function set_fieldset_classes($fieldsetClasses=array('fieldset'=>'flexyFormFieldset','buttons'=>'flexyFormButtons')) {
-		$this->fieldsetClasses=$fieldsetClasses;
-	}
+  // public function set_fieldset_classes($fieldsetClasses=array('fieldset'=>'flexyFormFieldset','buttons'=>'flexyFormButtons')) {
+  //   $this->fieldsetClasses=$fieldsetClasses;
+  // }
 	
   /**
    * Stel de fieldsets in
@@ -782,57 +822,58 @@ class Form {
    */
 	public function render($class='flexyForm') {
 		$this->CI->lang->load("form");
-		
+    $styles=$this->styles[$this->css_style];
+
 		$data=$this->data;
-		
-		$out=form_open_multipart($this->action,array("class"=>$class,'id'=>$this->form_id,'form_id'=>$this->form_id));
-    if (!empty($this->form_id)) {
-      $formID=array('name'=>'__form_id','type'=>'hidden','value'=>$this->form_id,'class'=>'');
-      $out.=$this->render_field('__form_id',$formID);
-    }
-		
-		// fieldsets && fields
+    
+		// fieldsets with fields
 		$nr=1;
-		foreach ($this->fieldsets as $fieldset) {
-			$fieldset=trim($fieldset);
-			$fieldSetClass='fieldset fieldSet_'.str_replace(' ','_',$fieldset).' fieldset_'.$nr;
-			$fieldSetId='fieldset_'.$nr++;
-			if (isset($this->fieldsetClasses[$fieldset])) $fieldSetClass.=' '.$this->fieldsetClasses[$fieldset];
-			$caption=$fieldset;
-			if ($caption=='fieldset') $caption=$this->caption;
-      
-			$htmlFieldset=form_fieldset($caption,array("class"=>$fieldSetClass,'id'=>$fieldSetId));
-
-      $htmlFieldsetFields='';
+    $fieldsets=array();
+		foreach ($this->fieldsets as $title) {
+      $fieldsets[$nr]=array(
+        'title'  => ($title=='fieldset'?$this->caption:trim($title)),
+        'id'     => 'fieldset_'.$this->form_id.'_'.$nr,
+        'class'  => $styles['fieldset'],
+        'fields' => '',
+      );
 			foreach($data as $name => $field) {
-				$fieldFieldset=$field['fieldset'];
-				if ($fieldset==$fieldFieldset)	$htmlFieldsetFields.=$this->render_field($field['name'],$field,$class);
+				if ($title==$field['fieldset'])	$fieldsets[$nr]['fields'].=$this->render_field($field['name'],$field,$class);
 			}
-      if (!empty($htmlFieldsetFields)) {
-        $out.=$htmlFieldset.$htmlFieldsetFields;
-        $out.=form_fieldset_close();  
-      }
-
+      $nr++;
 		}
 
-		// Buttons
-		$out.=form_fieldset("",array("class"=>$this->fieldsetClasses['buttons']));
+		// Buttons fieldset
+    $fieldsets[$nr]=array(
+      'title'   => '',
+      'id'      => 'fieldset_'.$this->form_id.'_buttons',
+      'class'   => $styles['fieldset_buttons'],
+      'fields'  => '',
+    );
 		foreach ($this->buttons as $name => $button) {
 			if (isset($button['submit']))
-				$out.=form_submit($button);
+				$fieldsets[$nr]['fields'].=form_submit($button);
 			else
-				$out.=form_reset($button);
+				$fieldsets[$nr]['fields'].=form_reset($button);
 		}
-		$out.=form_fieldset_close();
-		$out.=form_close();
+    
+    $form=array(
+      'id'        => $this->form_id,
+      'form_id'   => $this->form_id,
+      'class'     => $class,
+      'action'    => site_url($this->action),
+      'method'    => 'POST',
+      'fieldsets' => $fieldsets
+    );
+    // trace_($form);
+    $render=$this->CI->load->view('admin/form/form',$form,true);
 
 		// prepare javascript for conditional field showing
 		if (!empty($this->when)) {
 			$json=array2json($this->when);
-			$out.="\n<script language=\"javascript\" type=\"text/javascript\">\n<!--\nvar formFieldWhen=".$json.";\n-->\n</script>\n";
+			$render.="\n<script language=\"javascript\" type=\"text/javascript\">\n<!--\nvar formFieldWhen=".$json.";\n-->\n</script>\n";
 		}
 		log_('info',"form: rendering");
-		return $out;
+		return $render;
 	}
 
   /**
@@ -842,47 +883,43 @@ class Form {
    * @internal
    * @ignore
    */
-	private function render_field($name,$field,$class="") {
-		$out="";
+	private function render_field($name,$field,$form_class="") {
 		$pre=get_prefix($name);
 		if ($pre==$name) $pre="";
-		$class="$pre $name ".$field['type']." ".$field['class'];
-		if (isset($field['multiple'])) $class.=" ".$field['multiple'];
+    $styles=$this->styles[$this->css_style];
+    
+    // field class
+    $field['container_class']=$styles['field_container'];
+    $class=$field['class'];
+    // class: field types & status
+    if ($styles['field_info']) {
+      $class.=" $pre $name ".$field['type'];
+		  if (isset($field['multiple'])) {
+        $class.=" ".$field['multiple'];
+      }
+      if (!empty($field["repopulate"])) $field["value"]=$field["repopulate"];
+    }
+    $field['container_class']=trim($field['container_class'].' '.$class);
+    $class=trim($styles['field'].$class);
+    
+    // class: validation
     if (isset($field['validation']) and has_string('required',$field['validation'])) $class.=" required";
-		
-		if (!empty($field["repopulate"])) $field["value"]=$field["repopulate"];
-		$attr=array("name"=>$name,"id"=>$name,"value"=>$field["value"], "class"=>$class);
-		if (isset($field['attr'])) {$attr=array_merge($attr,$field['attr']);}
-		if (isset($field['attributes'])) {$attr=array_merge($attr,$field['attributes']);}
-		if (isset($field['id'])) $attr['id']=$field['id'];
+    
+    // attributes
+    $attr=array_merge( el('attr',$field,array()), el('attributes',$field,array()) );
+		$attr=array(
+      "name"    =>$name,
+      "id"      =>(isset($field['id'])?$id:$name),
+      "class"   =>$class,
+      "value"   =>$field["value"]
+    );
     if (isset($field['placeholder'])) $attr['placeholder']=$field['placeholder'];
     if (isset($field['readonly'])) $attr['readonly']=$field['readonly'];
     if (isset($field['disabled'])) $attr['disabled']=$field['disabled'];
 
-		// Label or Captcha
-		if ($field["type"]!="hidden") {
-			$out.=$this->tmp($this->tmpFieldStart,$class);
-			if ($field["type"]=='captcha') {
-        $this->CI->load->helper('captcha');
-				$vals = array(
-								'img_path'	 	=> assets().'_thumbcache/',
-								'img_url'	 		=> site_url(assets().'_thumbcache').'/',
-								'img_width'	 	=> '125',
-								'img_height' 	=> '25',
-								'expiration' => '600',
-							);
-				if ($this->captchaWords!=NULL) $vals['word']=random_element($this->captchaWords);
-				$cap = create_captcha($vals);
-        $out.=div('captcha').$cap['image'].form_hidden($name.'__captcha',str_reverse($cap['word']))._div();
-			}
-			else {
-				$out.=form_label($field["label"],$name);
-			}
-		}
-    
     // Validation error
     if ($this->validation_error) {
-      $out.=form_error($field['name'],'<span class="'.$this->validation_error_class.'"> ','</span>');
+      $field['validation_error']=form_error($field['name'],'<span class="'.$this->validation_error_class.'"> ','</span>');
     }
     
 		// When (javascript triggers)
@@ -891,14 +928,26 @@ class Form {
 		switch($field["type"]):
 
 			case "hidden":
-				$out.='<input type="hidden" ';
-				foreach ($attr as $name => $value) {$out.=$name.'="'.$value.'" ';}
-				$out.='/>';
+        $field['container_class'].='hidden';
+				$field['control']='<input type="hidden" '.attributes($attr).'>';
 				break;
+        
+      case 'captcha':
+        $this->CI->load->helper('captcha');
+  			$vals = array(
+  							'img_path'	 	=> assets().'_thumbcache/',
+  							'img_url'	 		=> site_url(assets().'_thumbcache').'/',
+  							'img_width'	 	=> '125',
+  							'img_height' 	=> '25',
+  							'expiration' => '600',
+  						);
+  			if ($this->captchaWords!=NULL) $vals['word']=random_element($this->captchaWords);
+  			$cap=create_captcha($vals);
+        $field['control']=div('captcha').$cap['image'].form_hidden($name.'__captcha',str_reverse($cap['word']))._div();
+        break;
 
 			case "html":
-				$out.=$field['value'];
-				if (isset($field['html'])) $out.=div('flexyFormHtml').$field['html']._div();
+				$field['control']=$field['html'];
 				break;
 
 			case "checkbox":
@@ -907,25 +956,24 @@ class Form {
 				else
 					$attr["checked"]="";
         if (empty($attr['value'])) $attr['value']=1;
-				$out.=form_checkbox($attr);
-				if (isset($field['html'])) $out.=div('flexyFormHtml').$field['html']._div();
+				$field['control']=form_checkbox($attr);
+        // if (isset($field['html'])) $out.=div('flexyFormHtml').$field['html']._div();
 				break;
 
 			case 'radio':
-				if (isset($field['html'])) $out.=div('flexyFormHtml').$field['html']._div();
+        // if (isset($field['html'])) $out.=div('flexyFormHtml').$field['html']._div();
 				$options=$field['options'];
 				$value=$field['value'];
+        $field['control']='';
 				foreach ($options as $option => $optLabel) {
 					$attr['value']=$option;
 					if ($value==$option) $attr['checked']='checked'; else $attr['checked']='';
 					$attr['id']=str_replace('.','_',$name.'__'.$option);
-					// $out.=div('radioOption '.$option).span('optionLabel').$optLabel._span().form_radio($attr)._div();
-          // $out.=div('radioOption '.$option).form_radio($attr).span('optionLabel').$optLabel._span()._div();
           $for=$attr['id'];
           $labelAttr=$attr;
           $labelAttr['class'].=' optionLabel';
           unset($labelAttr['id']);
-          $out.=div('radioOption '.$option).form_radio($attr).form_label($optLabel,$for,$labelAttr)._div();
+          $field['control'].=div('radioOption '.$option).form_radio($attr).form_label($optLabel,$for,$labelAttr)._div();
 				}
 				break;
 
@@ -936,7 +984,7 @@ class Form {
 					$attr["rows"]=5;
 					$attr["cols"]=60;
 				}
-				$out.=form_textarea($attr);
+				$field['control']=form_textarea($attr);
 				break;
 
 			case 'select':
@@ -944,15 +992,11 @@ class Form {
 			case 'ordered_list':
 			case 'image_dropdown':
 			case 'image_dragndrop':
-      
-				//
-				// set classes etc
-				//
+        $field['control']='';
 				$extra="";
 				$options=el("options",$field);
 				$value=$attr["value"];
-				$button=el("button",$field);
-        // if (isset($button))  $attr["class"].=" button";
+        // $button=el("button",$field);
 				if (isset($field["path"])) 	$extra.=" path=\"".$field["path"]."\"";
 				if (isset($field["multiple"]) or is_array($value)) {
 					$extra.=" multiple=\"multipe\" ";
@@ -963,155 +1007,132 @@ class Form {
 						$value=explode("|",$value);
 				}
 				$extra.="class=\"".$attr["class"]."\" id=\"".$name."\"";
-				
 				//
 				// Show images if it is an image dropdown
 				//
 				if ($field["type"]=="image_dropdown" or $field["type"]=="image_dragndrop") {
 					// show values
 					if (!is_array($value)) $medias=array($value); else $medias=$value;
-					// if (empty($medias)) $medias=$this->CI->config->item('ADMINASSETS').'icons/empty.gif';
-					$out.='<ul class="values '.$attr['class'].'">';
+					$field['control'].='<ul class="values '.$attr['class'].'">';
 					$hiddenValue='';
 					foreach($medias as $media) {
 						if (!empty($media)) {
-							$out.='<li>'.show_thumb(array("src"=>$field["path"]."/".$media,"class"=>"media")).'</li>';
+							$field['control'].='<li>'.show_thumb(array("src"=>$field["path"]."/".$media,"class"=>"media")).'</li>';
 							$hiddenValue=add_string($hiddenValue,$media,'|');
 						}
 					}
-					$out.='</ul>';
+					$field['control'].='</ul>';
 					// hidden value, needed for jQuery dragndrop and sortable
 					if ($field["type"]=="image_dragndrop")
 						$hiddenName=$field['name'];
 					else
 						$hiddenName=$field['name'].'__hidden';
-					$out.=form_hidden($hiddenName,$hiddenValue);
+					$field['control'].=form_hidden($hiddenName,$hiddenValue);
 				}
-
 				//
 				// Show all possible images as images instead of a dropdown
 				//
 				if ($field["type"]=="image_dragndrop") {
 					$preName=get_prefix($field['name']);
-					$out.='<ul class="choices">';
+					$field['control'].='<ul class="choices">';
 					foreach($options as $img) {
 						if (empty($img)) {
-							$out.='<li><img src="'.$this->CI->config->item('ADMINASSETS').'icons/flexyadmin_empty_image.gif" class="media empty" /></li>';
+							$field['control'].='<li><img src="'.$this->CI->config->item('ADMINASSETS').'icons/flexyadmin_empty_image.gif" class="media empty" /></li>';
 						}
 						else {
 							$image=$img['name'];
-							if ($preName=='media' or !in_array($image,$medias)) $out.='<li>'.show_thumb(array("src"=>$field["path"]."/".$image,"class"=>"media",'alt'=>$image,'title'=>$image)).'</li>';
+							if ($preName=='media' or !in_array($image,$medias)) $field['control'].='<li>'.show_thumb(array("src"=>$field["path"]."/".$image,"class"=>"media",'alt'=>$image,'title'=>$image)).'</li>';
 						}
 					}
-					$out.='</ul>';					
+					$field['control'].='</ul>';					
 				}
-
 				//
 				// Normal dropdown (also normal image dropdown)
 				//
 				if ($field['type']=='select' or $field['type']=='dropdown' or $field['type']=='image_dropdown') {
-					$out.=form_dropdown($name,$options,$value,$extra);
+					$field['control']=form_dropdown($name,$options,$value,$extra);
 				}
-
 				//
 				// Ordered lists
 				//
 				if ($field['type']=='ordered_list') {
 					// show (ordered) choices	
-					// trace_($field);
-					// trace_($options);
-					$out.='<ul class="list list_choices">';
+					$field['control'].='<ul class="list list_choices">';
 					$value=$field['value'];
-					// trace_($options);
-					// trace_($value);
 					foreach($options as $id=>$option) {
-						// if (!in_array($id,$value)) $out.='<li id="'.$id.'">'.$option.'</li>';
-						if (!array_key_exists($id,$value)) $out.='<li id="'.$id.'">'.$option.'</li>';
-						
+						if (!array_key_exists($id,$value)) $field['control'].='<li id="'.$id.'">'.$option.'</li>';
 					}
-					$out.='</ul>';
-					// $out.=icon('right');
+					$field['control'].='</ul>';
 					// show values
 					$hiddenValue='';
 					if (!is_array($value)) $value=array($value);
-					$out.='<ul class="list list_values '.$attr['class'].'">';
-					// trace_($value);
+					$field['control'].='<ul class="list list_values '.$attr['class'].'">';
 					foreach($value as $valID => $val) {
 						if (!empty($val)) {
 							if (isset($options[$valID])) {
-								$out.='<li id="'.$valID.'">'.$options[$valID].'</li>';
+								$field['control'].='<li id="'.$valID.'">'.$options[$valID].'</li>';
 								$hiddenValue=add_string($hiddenValue,$valID,'|');
 							}
 						}
 					}
-					$out.='</ul>';
-					$out.=form_hidden($field['name'].'__hidden',$hiddenValue);				
+					$field['control'].='</ul>';
+					$field['control'].=form_hidden($field['name'].'__hidden',$hiddenValue);				
 				}
-				
-				if (isset($button)) {
-					$out.=div("add_button").anchor($button,icon("add"))._div();
-				}
-        
+        // if (isset($button)) {
+        //   $field['control'].=div("add_button").anchor($button,icon("add"))._div();
+        // }
 				break;
 				
 			// #BUSY Form->Subfields
-			case "subfields":
-				$out.=icon('new');
-				$out.=div('sub');
-				foreach ($field['value'] as $id => $subfields) {
-					$first=true;
-					foreach ($subfields as $subfieldName => $subfieldValue) {
-						$preSub=get_prefix($subfieldName);
-						$subAttr['name']=$name.'___'.$subfieldName.'[]';
-						$subAttr['value']=$subfieldValue;
-						switch ($preSub) {
-							case 'id':
-								if ($subfieldName=='id') {
-									$out.=form_hidden($subAttr['name'],$subAttr['value']);
-								}
-								break;
-							default:
-								$labelClass=array();
-								if ($first) {
-									$labelClass=array('class'=>'first');
-									$out.=icon('delete');
-									$first=FALSE;
-								}
-								$out.=form_label($this->CI->ui->get($subfieldName),$subAttr['name'],$labelClass);
-								if ($preSub=='txt') {
-									$this->hasHtmlField=true;
-									$subAttr["rows"]=5;
-									$subAttr["cols"]=60;
-									$subAttr['class']='htmleditor';
-									$out.=form_textarea($subAttr);
-								}
-								else {
-									$out.=form_input($subAttr);
-								}
-								break;
-						}
-					}
-					$out.=br(2);
-				}
-				$out.=_div();
-				break;
+      // case "subfields":
+      //   $out.=icon('new');
+      //   $out.=div('sub');
+      //   foreach ($field['value'] as $id => $subfields) {
+      //     $first=true;
+      //     foreach ($subfields as $subfieldName => $subfieldValue) {
+      //       $preSub=get_prefix($subfieldName);
+      //       $subAttr['name']=$name.'___'.$subfieldName.'[]';
+      //       $subAttr['value']=$subfieldValue;
+      //       switch ($preSub) {
+      //         case 'id':
+      //           if ($subfieldName=='id') {
+      //             $out.=form_hidden($subAttr['name'],$subAttr['value']);
+      //           }
+      //           break;
+      //         default:
+      //           $labelClass=array();
+      //           if ($first) {
+      //             $labelClass=array('class'=>'first');
+      //             $out.=icon('delete');
+      //             $first=FALSE;
+      //           }
+      //           $out.=form_label($this->CI->ui->get($subfieldName),$subAttr['name'],$labelClass);
+      //           if ($preSub=='txt') {
+      //             $this->hasHtmlField=true;
+      //             $subAttr["rows"]=5;
+      //             $subAttr["cols"]=60;
+      //             $subAttr['class']='htmleditor';
+      //             $out.=form_textarea($subAttr);
+      //           }
+      //           else {
+      //             $out.=form_input($subAttr);
+      //           }
+      //           break;
+      //       }
+      //     }
+      //     $out.=br(2);
+      //   }
+      //   $out.=_div();
+      //   break;
 
 			case "file":
 				$attr["class"].=" browse";
-				$out.=form_upload($attr);
+				$field['control']=form_upload($attr);
 				break;
-
-			// case "upload":
-			// 	if (!empty($field["value"])) $out.=popup_img($field["upload_path"]."/".$field["value"],img($field["upload_path"]."/".$field["value"]));
-			// 	$out.=form_input($attr);
-			// 	$attr["class"].=" browse";
-			// 	$out.=form_upload($attr);
-			// 	break;
-
 				
 			case "image":
 				$attr['src']=$attr['value'];
-				$out.=img($attr);
+				$field['control']=img($attr);
 				break;
 
 			case "date":
@@ -1120,7 +1141,7 @@ class Form {
 					$date=date("Y-m-d");
 				}
 				$attr["value"]=$date;
-				$out.=form_input($attr);
+				$field['control']=form_input($attr);
 				break;
 			case 'datetime':
 				$date=trim(strval($field["value"]));
@@ -1128,7 +1149,7 @@ class Form {
 					$date=date("Y-m-d H:i:s");
 				}
 				$attr["value"]=$date;
-				$out.=form_input($attr);
+				$field['control']=form_input($attr);
 				break;
 			case "time":
 				$time=trim(strval($field["value"]));
@@ -1136,29 +1157,28 @@ class Form {
 					$time=date("H:i:s");
 				}
 				$attr["value"]=$time;
-				$out.=form_input($attr);
+				$field['control']=form_input($attr);
 				break;
 
 			case "password":
 				if (substr($this->action,0,12)=='/admin/show/') {
 					$attr['value']='';
-					$out.=form_input($attr);
+					$field['control']=form_input($attr);
 				}
 				else
-					$out.=form_password($attr);
+					$field['control']=form_password($attr);
 				break;
 				
 			case "input":
 			case "default":
 			default:
-				$out.=form_input($attr);
-
+				$field['control']=form_input($attr);
 		endswitch;
 
-		if ($field["type"]!="hidden") {
-			$out.=$this->tmp($this->tmpFieldEnd);
-		}
-		return $out;
+		if ($field["type"]=="hidden") return $field['control'];
+    $field['horizontal_bootstrap']=($this->css_style=='bootstrap' and has_string('form-horizontal',$form_class));
+    // trace_($field);
+		return $this->CI->load->view('admin/form/field',$field,true);
 	}
 
 

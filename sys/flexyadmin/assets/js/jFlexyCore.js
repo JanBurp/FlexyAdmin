@@ -60,7 +60,7 @@ $(document).ready(function() {
 			});
 		};
 	})(jQuery);
-	$('#content form').formTabs().tabs();
+  // $('#content form').formTabs().tabs();
 
 	if (isForm) doForm();
 
