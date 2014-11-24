@@ -216,9 +216,8 @@ class Forms extends Module {
     if (isset($this->settings['action_query'])) $formAction.=$this->settings('action_query');
 		$form=new form($formAction,$this->form_id);
     
-    $css_style=$this->CI->config->item('css_style');
-    if (!$css_style) $css_style='default';
-    if (isset($this->settings['css_style'])) $css_style=$this->settings('css_style','default');
+    $css_style=$this->CI->config->item('framework');
+    if (isset($this->settings['framework'])) $css_style=$this->settings('framework','default');
     $form->set_css_style($css_style);
 
 		$form->set_data($formFields, $this->settings('title',$this->form_id) );

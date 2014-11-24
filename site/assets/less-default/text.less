@@ -1,0 +1,170 @@
+/*
+  text.css
+  - please make the changes in less-default/layout.less
+  - and compile by /admin/build
+  - or override in style.css
+*/
+
+
+//////////////////////////////////////////////////////
+// LESS variables & basic themes /////////////////////
+//////////////////////////////////////////////////////
+
+
+// FlexyAdmin green THEME ////////////////////////////
+
+// elements-colors
+
+@body:          #DEA;
+@back:          #FFF;
+@head:          #696;
+// text-colors
+@text:          #666;
+@text_head:     @head;
+@text_link:     @head;
+@text_hover:    #060;
+@text_error:    #F00;
+@text_warning:  #C00;
+@text_special:  #F60;
+// menu-colors
+@menu_text:@back;
+@menu_back:@head;
+@menu_hover_text:@head;
+@menu_hover_back:@body;
+// radius corner class
+@corner-radius:10px;
+
+/////////////////////////////////////////////////////
+
+
+/* BLOCK ELEMENT RESET */
+address,article,aside,audio,blockquote,canvas,dd,details,div,dl,fieldset,figcaption,figcaption,figure,footer,footer,form,h1,h2,h3,h4,h5,h6,header,hgroup,hgroup,img,hr,main,nav,noscript,ol,output,p,pre,section,section,summary,table,tfoot,ul,video {
+  display:block;
+  box-sizing:border-box;
+  margin:0; padding:0;
+}
+
+/* BASIC FONT */
+body {
+  font-size:1rem;
+  line-height:1.5rem;
+  letter-spacing:.03rem;
+  font-family: Arial,Helvetica,sans-serif;
+  color:@text;
+  background-color:@back;
+}
+/* BASIC FONT SIZE */
+html {font-size:16px;}
+
+/* PARAGRAPHS & HEADINGS */
+p,ul,ol,form {margin-bottom:1rem;}
+h1:first-child {margin-bottom:1rem;}
+h1 {font-size:2rem;line-height:2.5rem;color:@head;}
+h2 {font-size:1.5rem;line-height:2rem;color:@head;}
+h3 {margin-bottom:0;color:@head;}
+
+/* LINKS */
+a {text-decoration:none;color:@text_link;}
+a:hover {text-decoration:underline;color:@text_hover;}
+
+/* OTHERS */
+li {margin-left:1rem;padding-left:1rem;}
+hr,.hr {width:100%;margin:1rem 0px;border:solid 1px @text_link;}
+code {color:@text_special;background-color:@body;padding:.25rem;border-radius:(@corner-radius / 2)}
+
+/* GLOBAL CLASSES */
+.small { font-size:.75rem; }
+.color {color:@text_link;}
+.hidden { display:none;}
+.border {	border:solid 1px @text;}
+.error {color:@text_error;}
+.warning {color:@text_warning;}
+.special {color:@text_special;}
+
+
+/* MENU */
+.navbar ul ul {display:none;}
+.navbar li {list-style:none;margin:0px;padding:0px;}
+.navbar a {color:@menu_text;background-color:@menu_back;text-transform:uppercase;padding:0.2rem 0.5rem;white-space:nowrap;display:block;}
+.navbar a.current, .navbar a.active, .navbar a:hover {background-color:@menu_hover_back;color:@menu_hover_text;text-decoration:none;}
+/* horizontal menu */
+.navbar-default ul {width:100%;}
+.navbar-default ul ul ul {margin-top:-1.9rem;margin-left:100%;}
+.navbar-default li:hover>ul {display:block;position:absolute;width:auto;}
+.navbar-default li {background-color:@menu_back;display:inline;float:left;}
+.navbar-default li.lev1 ul li {float:none;display:block;}
+/* vertical menu */
+.navbar-stacked ul {float:left;}
+.navbar-stacked li {float:left;clear:both;}
+.navbar-stacked li:hover {position:relative;}
+.navbar-stacked li:hover>ul {margin-top:-1.9rem;margin-left:100%;display:block;position:absolute;}
+/* mobile menu */
+.mobile_menu(@class) {
+  @{class} ul {float: left;display: block;}
+  @{class} ul ul {display: block;margin-bottom: 0;}
+  @{class} ul ul ul {margin-top:0;margin-left:0;}
+  @{class} li:hover>ul {position:static;width:100%;margin:0;} 
+  @{class} li {float:left;clear:both;display:block;}
+  @{class} li.lev2 a:before{content:"> "}
+  @{class} li.lev3 a:before{content:">> "}
+  @{class} li.lev4 a:before{content:">>> "}
+  @{class} li.lev5 a:before{content:"..> "}
+  @{class} li:hover {position:static;}
+  @{class} a {display:none;}
+  @{class} a.active {background-color:@menu_back;color:@menu_text;}
+  @{class} a:hover {background-color:@menu_hover_back;color:@menu_hover_text;}
+  @{class} a.current {display:block;}
+  @{class} {height:1.8rem;padding-top:0!important;padding-bottom:0!important;overflow:hidden;}
+  @{class}:hover {height:auto;}
+  @{class}:hover ul ul {margin-left: 1rem;}
+  @{class}:hover a {display:block;}
+  @{class}:hover li a:before {content:""}
+  @{class} a.current:before {content:"= "}
+}
+.mobile_menu(~'.navbar-mobile');
+
+
+/* FORMS, label on same line */
+form {}
+fieldset {border:none;}
+legend {display:none;padding:0px 1rem;}
+fieldset>div {margin-bottom:1rem;clear:both;}
+fieldset>div.required label:after { content:" *"; color:@text_warning;}
+label {width:30%;font-weight:bold;float:left;box-sizing:border-box;}
+fieldset span.error {display:block;position:absolute;max-width:28%;background-color:@back;}
+input,textarea,select {width:70%;display:block;box-sizing:border-box;padding:.25rem .5rem;border:solid 1px @body;cursor:pointer;}
+textarea {resize:none;}
+input:hover,textarea:hover,select:hover {border-color:@text_link;}
+.button {text-transform:uppercase;width:auto;float:right;background-color:@back}
+.button:hover {background-color:@text_link;color:@back;}
+input.checkbox {width:1rem;height:1rem;margin-bottom:1.75rem;position:relative;top:.25rem;}
+fieldset>div.radio>div {margin-left:30%;width:100%;float:left;position:relative;top:-1rem;}
+fieldset>div.radio>div input {float:left;width:1rem;height:1rem;}
+fieldset>div.radio>div label {float:left;margin-left:1rem;margin-top:-.25rem;}
+select {-webkit-appearance: none;-moz-appearance:none;}
+select option {margin:.25rem .5rem;border:none;}
+/* vertical form, labels on seperate line */
+.vertical_form(@class) {
+  form@{class} label {float:none;width:100%}
+  form@{class} fieldset span.error {margin-top:-1.5rem;max-width:100%}
+  form@{class} input, form@{class} textarea, form@{class} select {width:100%;}
+  form@{class} fieldset>div.checkbox label {float:left;width:auto;}
+  form@{class} fieldset>div.checkbox input.checkbox {float:left;margin-left:1rem;}
+  form@{class} fieldset>div.radio>div {margin-left:0;top:0px;}
+}
+.vertical_form(~'.vertical');
+
+/* CORNERS */
+.corners()        {border-radius:@corner-radius;}
+.corners-top()    {border-top-left-radius:@corner-radius;border-top-right-radius:@corner-radius;}
+.corners-bottom() {border-bottom-left-radius:@corner-radius;border-bottom-right-radius:@corner-radius;}
+
+.corners, form.corners fieldset, form.corners input, form.corners textarea, form.corners select { .corners() }
+.corners-top { .corners-top() }
+.corners-bottom { .corners-bottom() }
+
+/* STYLES in TinyMCE editor (backend) */
+body#tinymce  {margin:4px;color:#000;background-color:#FFF;}
+body#tinymce * {font-size:14px;}
+body#tinymce a { text-decoration: underline; }
+body#tinymce iframe, body#tinymce embed, body#tinymce object, body#tinymce .mceItemMedia, body#tinymce .mceItemIframe {background-color:#CCC;background-image: url('../../../sys/flexyadmin/assets/icons/movie.gif');background-position:center center;background-repeat:no-repeat;border:dotted 1px #F00;} // show embeds in editor

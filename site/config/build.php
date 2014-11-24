@@ -22,23 +22,24 @@
  * 
  * Adds the variable $_build to $this->site (true if build)
  */
-$config['watch'] = 'dev';
+$config['watch'] = false;
 $config['add_report'] = false; // Adds _build_report to $this->site
-
 
 
 /**
  * An array of less files to compile to css ('auto' doesn't work here)
  */
-$config['less_files'] = array(
-  'site/assets/css/text.less'   => 'site/assets/css/text.css',
-  'site/assets/css/layout.less' => 'site/assets/css/layout.css'
+$config['less_files']['default']   = 'auto';
+$config['less_files']['bootstrap'] = array(
+  'site/assets/less-bootstrap/bootstrap.less' => 'site/assets/css/bootstrap.css'
 );
+
 /**
  * An array of css files (compiled and others) to combine to one file, in given order.
  * Instead of an array set 'auto' to find .css files used in the main view (views/site.php)
  */
 $config['css_files'] = 'auto';
+
 /**
  * Resulting css file, and banner to include
  */

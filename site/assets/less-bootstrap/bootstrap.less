@@ -1,0 +1,24 @@
+/* Importeer standaard bootstrap */
+@import "bootstrap/bootstrap.less";
+/* Override variabelen */
+@import "variables.less";
+
+/* Hieronder eigen less/css */
+
+body {background-color:#DEA;}
+
+#container {
+  background:@body-bg;
+  margin:1rem auto 4rem;
+  border-radius:@border-radius-large;
+}
+#content {padding-bottom:4rem;}
+
+/* Algemene zaken */
+img {max-width:100%;}
+.error {color:@brand-warning;}
+.navbar li li {width:100%;}
+
+/* Hack voor dropdown in menu */
+li a.dropdown-toggle.disabled {margin-right: 30px;}
+li .dropdown-caret {position:absolute!important; top:0px;right:0px;}
