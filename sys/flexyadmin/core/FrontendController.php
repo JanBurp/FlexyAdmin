@@ -82,9 +82,8 @@ class FrontEndController extends MY_Controller {
       else
         $this->load->library("menu");
       
-      $css_style=$this->config->item('css_style');
-      if (!$css_style) $css_style='default';
-      $this->menu->set('css_style',$css_style);
+      $css_style=$this->config->item('framework');
+      $this->menu->set('framework',$css_style);
       
   		$this->load->library("content");
       $this->content->initialize($this->config->item('parse_content'));
@@ -186,6 +185,7 @@ class FrontEndController extends MY_Controller {
 		/**
 		 * Set Some Config
 		 */
+    $this->site['framework']=$this->config->item('framework');
 		$this->site['languages']=$this->config->item('languages');
     $this->site['use_minimized']=$this->config->item('use_minimized');
 

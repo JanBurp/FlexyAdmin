@@ -14,6 +14,7 @@ class Builder extends CI_Model {
   var $settings=array();
   var $report='';
   var $errors=array();
+  var $css_style='default';
   
 	public function __construct($settings=false) {
 		parent::__construct();
@@ -26,6 +27,9 @@ class Builder extends CI_Model {
     }
     $this->initialize($settings);
     $this->load->library('parser');
+    
+    $css_style=$this->config->item('framework');
+    if ($css_style) $this->css_style=$css_style;
 	}
   
   public function initialize($settings) {
@@ -56,9 +60,11 @@ class Builder extends CI_Model {
         $files_to_check=array_merge($files_to_check,$this->settings['css_files']);
         $files_to_check=array_combine($files_to_check,$files_to_check);
         foreach ($files_to_check as $key => $file) {
-          $diff_time=filemtime($file)-$last_changed;
-          $files_to_check[$key]=($diff_time>0);
-          $needs_compiling=($needs_compiling or $files_to_check[$key]);
+          if (file_exists($file)) {
+            $diff_time=filemtime($file)-$last_changed;
+            $files_to_check[$key]=($diff_time>0);
+            $needs_compiling=($needs_compiling or $files_to_check[$key]);
+          }
         }
       }
     }
@@ -76,7 +82,6 @@ class Builder extends CI_Model {
       foreach ($less_files as $less => $css) {
         try{
           $options = array('sourceMap' => true );
-          $parser = new Less_Parser($options);
           $parser = new Less_Parser($options);
           $parser->parseFile($less, site_url());
           $output = $parser->getCss();
@@ -192,6 +197,9 @@ class Builder extends CI_Model {
   
   private function get_files($type) {
     $files=el($type.'_files',$this->settings,'auto');
+    if ($type=='less' and is_array($files) and isset($files['default'])) {
+      $files=$files[$this->css_style];
+    }
     if (is_string($files)) {
       if ($files=='auto')
         $files=$this->find_files($type);
@@ -202,29 +210,40 @@ class Builder extends CI_Model {
   }
   
   private function find_files($type) {
-    $site=read_file('site/views/site.php');
-    $files=array();
-    $tag='src';
-    if ($type=='css') $tag='href';
-    if (preg_match_all("/".$tag."=[\"|'](.*\.".$type.").*[\"|']/uiUm", $site,$matches)) {
-      foreach ($matches[1] as $file) {
-        $file=str_replace(array('<?=$assets?>','<?=$assets;?>'),$this->config->item('ASSETS'),$file);
-        if (substr($file,0,4)!='http') $files[]=$file;
+    if ($type=='less') {
+      $less=read_map('site/assets/css','less');
+      $less_css_style=read_map('site/assets/less-'.$this->css_style,'');
+      $less=array_merge($less,$less_css_style);
+      $files=array();
+      foreach ($less as $name => $file) {
+        $files[$file['path']]='site/assets/css/'.str_replace('.less','.css',$name);
       }
     }
-    switch($type) {
-      case 'css':
-        $found=array_search(el('dest_file',$this->settings,''),$files);
-        if ($found!==false) {
-          unset($files[$found]);
+    else {
+      $site=read_file('site/views/site.php');
+      $files=array();
+      $tag='src';
+      if ($type=='css') $tag='href';
+      if (preg_match_all("/".$tag."=[\"|'](.*\.".$type.").*[\"|']/uiUm", $site,$matches)) {
+        foreach ($matches[1] as $file) {
+          $file=str_replace(array('<?=$assets?>','<?=$assets;?>'),$this->config->item('ASSETS'),$file);
+          if (substr($file,0,4)!='http') $files[]=$file;
         }
-        break;
-      case 'js':
-        $found=array_search(el('js_dest_file',$this->settings,''),$files);
-        if ($found!==false) {
-          unset($files[$found]);
-        }
-        break;
+      }
+      switch($type) {
+        case 'css':
+          $found=array_search(el('dest_file',$this->settings,''),$files);
+          if ($found!==false) {
+            unset($files[$found]);
+          }
+          break;
+        case 'js':
+          $found=array_search(el('js_dest_file',$this->settings,''),$files);
+          if ($found!==false) {
+            unset($files[$found]);
+          }
+          break;
+      }
     }
     return $files;
   }

@@ -138,7 +138,7 @@ class Menu {
       'bool_class'  => '',
       'extra'       => '',
     ),
-    'css_style'       => 'default',             // 'default', 'bootstrap'
+    'framework'       => 'default',             // 'default', 'bootstrap'
     'attributes'      => array('class'=>''),
     'full_uris'       => false,
     'ordered_titles'  => '',   // NUMBERS geeft 1,2,3,4 etc., ALFA geeft A,B,C,D etc, ROMAN geeft I,II,III,IV etc.
@@ -150,13 +150,17 @@ class Menu {
       'current' => 'current',
       'active'  => 'active',
       'first'   => 'first',
-      'last'    => 'last'
+      'last'    => 'last',
+      'has_sub' => 'has_sub',
+      'is_sub'  => 'sub'
     ),
     'bootstrap' => array(
       'current' => 'active',
       'active'  => 'active active-branch',
       'first'   => 'first',
-      'last'    => 'last'
+      'last'    => 'last',
+      'has_sub' => 'dropdown-menu',
+      'is_sub'  => 'sub'
     )
     
     
@@ -211,7 +215,7 @@ class Menu {
    *        'bool_class'   => '',                  // - als dit veld TRUE is dan wordt de veldnaam toegevoegd als een class aan het menu-item
    *        'extra'        => '',                  
    *      ),
-   *      'css_style'     => 'default',            // 'default', 'bootstrap'
+   *      'framework'     => 'default',            // 'default', 'bootstrap'
    *      'view_path'     => 'menu'                // pad waar de menu views in staan
    *      'attributes'    => array('class'=>''),   // extra attributen de items
    *      'full_uris'     => false,                // of de uri's full uris zijn
@@ -703,7 +707,7 @@ class Menu {
 		if (!is_array($attr)) $attr=array("class"=>$attr);
 		if ($level>1) unset($attr["id"]);
 
-    $styles=$this->styles[$this->settings['css_style']];
+    $styles=$this->styles[$this->settings['framework']];
     
     $html='';
 		if ($menu) {
@@ -755,7 +759,7 @@ class Menu {
           'lev'         => $level,
           'pos'         => $pos,
 					'order'       => ($pos==1)?$styles['first']:($pos==count($menu)?$styles['last']:''),
-					'sub'         => (isset($item['sub']))?'sub':'',
+					'sub'         => (isset($item['sub']))?$styles['is_sub']:'',
           'current'     => ($this->settings['current']==$cleanUri?$styles['current']:'').((strpos($submenu,$styles['current'])>0?' '.$styles['active']:'')),
           'class_uri'   => $classUri,
           'class'       => el('class',$item,' '),
@@ -769,7 +773,7 @@ class Menu {
 			}
 		}
     
-    $html=$this->CI->load->view($this->settings['view_path'].'/menu.php',array('lev'=>$level,'uri'=>$uri,'menu'=>$html),true);
+    $html=$this->CI->load->view($this->settings['view_path'].'/menu.php',array('lev'=>$level,'uri'=>$uri, 'sub'=>($level>1)?$styles['has_sub']:'', 'menu'=>$html, 'framework' => $this->settings['framework']),true);
 		return $html;
 	}
 	

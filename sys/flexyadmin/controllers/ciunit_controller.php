@@ -32,7 +32,7 @@ class CIUnit_Controller extends CI_Controller
         // Menu
         $this->load->library('menu');
         $menu=new Menu();
-        $menu->set('css_style','bootstrap');
+        $menu->set('framework','bootstrap');
         $menu->set_menu_from_filetree($data['test_tree']);
         $data['test_menu']=$menu->render(NULL,'',1,'_unittest');
         $data['resources_path'] = $this->config->item('resources_path');

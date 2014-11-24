@@ -1,6 +1,19 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /*
+ *--------------------------------------------------------------------------
+ * Styling template
+ *--------------------------------------------------------------------------
+ *
+ * Set the default frontend framework. This setting affects menu, form and the standard template, possible options:
+ * - default - the basic and light flexyadmin template
+ * - bootstrap - use bootstrap as a start
+ */
+$config['framework']='default';
+
+
+
+/*
 |--------------------------------------------------------------------------
 | Base Site URL
 |--------------------------------------------------------------------------

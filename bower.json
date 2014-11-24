@@ -1,0 +1,22 @@
+{
+  "name": "FlexyAdmin",
+  "version": "2.7.0",
+  "description": "www.flexyadmin.com",
+  "moduleType": [
+    "node"
+  ],
+  "authors": [
+    "Jan den Besten"
+  ],
+  "license": "n/a",
+  "homepage": "www.flexyadmin.com",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "__"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.2.0"
+  }
+}

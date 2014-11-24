@@ -1,1 +1,1 @@
-<ul class="lev<?=$lev?>"><?=$menu?></ul>
+<ul class="nav navbar-nav lev<?=$lev?> <?=$sub?>" role="menu"><?=$menu?></ul>

@@ -56,35 +56,15 @@
 
 <body class="<?=$class?>">
 
-<!-- start of container -->
-<div id="container" class="container">
-
-  <!-- header -->
-  <div id="header" class="page-header">
-		<h1 id="title"><a href="./"><?=ascii_to_entities($str_title)?></a></h1>
+  <div id="container">
+  	<div id="wrapper" class="corners">
+  		<div id="header"><h1 id="title"><a href="./"><?=ascii_to_entities($str_title)?></a></h1></div>
+  		<div id="menu" class="menu menu-horizontal"><?=$menu;?></div>
+  		<div id="content"><?=$content;?></div>
+      <div id="footer" class="corners-bottom small">a flexyadmin site</div>
+  	</div>
   </div>
-  
-  <!-- main navigation -->
-  <nav id="menu" class="navbar navbar-default" role="navigation">
-    <div class="container">
-      <?=$menu?>
-    </div>
-  </nav>
 
-  <!-- content -->
-	<div id="content"><?=$content;?></div>
-
-  <!-- footer -->
-  <footer id="footer" class="navbar navbar-default">
-    <div class="container">
-      <p class="navbar-text">a flexyadmin site</p>
-    </div>
-  </footer>
-
-</div>
-<!-- end of container -->
-
-<!-- Javascript -->
 <?php if ($use_minimized): ?>
   <script src="<?=$assets?>js/scripts.min.js?<?=$int_version?>" type="text/javascript" charset="utf-8"></script>
 <?php else: ?>
@@ -93,6 +73,5 @@
   <?php if ($framework=='bootstrap'): ?><script src="<?=$assets?>js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script><?php endif ?>
   <script src="<?=$assets?>js/site.js?<?=$int_version?>" type="text/javascript" charset="utf-8"></script>
 <?php endif ?>
-
 </body>
 </html>
