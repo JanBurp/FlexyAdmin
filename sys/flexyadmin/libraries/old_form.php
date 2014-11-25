@@ -62,7 +62,7 @@
  * @ignore
  * @depricated
  */
-class Form {
+class Old_form {
 
 	private $CI;
 

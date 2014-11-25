@@ -41,7 +41,7 @@
   <link href="<?=$assets;?>css/layout.css?<?=$int_version?>" rel="stylesheet" type="text/css">
   <?php elseif ($framework=='bootstrap'): ?>
   <link href="<?=$assets;?>css/bootstrap.min.css" rel="stylesheet" type="text/css">
-<?php endif ?>
+  <?php endif ?>
   <link href="<?=$assets;?>css/style.css?<?=$int_version?>" rel="stylesheet" type="text/css">
 <?php endif ?>
   <!--[if lte IE 8]><style type="text/css" media="screen">@import url(<?=$assets;?>css/ie8.css);</style><![endif]-->
@@ -89,7 +89,7 @@
   <script src="<?=$assets?>js/scripts.min.js?<?=$int_version?>" type="text/javascript" charset="utf-8"></script>
 <?php else: ?>
   <script src="<?=$assets?>js/rem.min.js" type="text/javascript" charset="utf-8"></script>
-  <script src="sys/jquery/jquery-1.11.1.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="<?=$assets?>js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
   <?php if ($framework=='bootstrap'): ?><script src="<?=$assets?>js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script><?php endif ?>
   <script src="<?=$assets?>js/site.js?<?=$int_version?>" type="text/javascript" charset="utf-8"></script>
 <?php endif ?>

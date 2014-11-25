@@ -183,23 +183,12 @@ class Builder extends CI_Model {
     }
 
     $version=$needs_compiling or $needs_uglify;
-    if ($version and $this->db->field_exists('int_version','tbl_site')) {
-      $sql="UPDATE `tbl_site` SET `int_version`=LAST_INSERT_ID(`int_version`+1)";
-      $this->db->query($sql);
-      $version=$this->db->insert_id();
-    }
-    
     $this->report.=h('Total Execution Time',2).number_format($this->execution_time(),5).' Secs'.br();
-    if ($version) $this->report.='Version: '.$version;
-
     return $version;
 	}
   
   private function get_files($type) {
     $files=el($type.'_files',$this->settings,'auto');
-    if ($type=='less' and is_array($files) and isset($files['default'])) {
-      $files=$files[$this->css_style];
-    }
     if (is_string($files)) {
       if ($files=='auto')
         $files=$this->find_files($type);

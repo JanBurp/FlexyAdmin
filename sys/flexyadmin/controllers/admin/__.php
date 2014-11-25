@@ -88,6 +88,7 @@ class __ extends AdminController {
     // load all libraries
     $libraries=read_map('sys/flexyadmin/libraries','php',FALSE,FALSE);
     unset($libraries['ion_auth.php']); // exclude allready inherited libraries
+    unset($libraries['old_form.php']); // exclude allready inherited libraries
     
     $modules=read_map('site/libraries','php',FALSE,FALSE); // Frontend libraries (modules)
     $libraries=array_merge($libraries,$modules);

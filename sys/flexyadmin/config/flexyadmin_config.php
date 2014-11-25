@@ -481,12 +481,6 @@ $config["CFG_"]=array(
 			"b_show_in_form"=>'0'
     ),
     
-    
-    'tbl_site.int_version'=>array(
- 			"b_show_in_grid"=>'0',
-			"b_show_in_form"=>'0'
-    ),
-    
 		"cfg_ui.path"=>array(
 			"b_editable_in_grid"=>1
 			),
