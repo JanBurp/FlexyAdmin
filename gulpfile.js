@@ -37,7 +37,6 @@ var files = {
     'watchcss': [
       assets+'/less-default/*.less'
     ],
-    
   },
 
   'bootstrap' : {
@@ -71,6 +70,8 @@ var files = {
  */
 var title   = ' ['+framework+']';
 var message = '<%= file.relative %>';
+var icon    = 'sys/flexyadmin/assets/img/work.png';
+var dir     = __dirname.replace('/Users/','');
 
 
 /**
@@ -106,6 +107,16 @@ var onError = function (err) {
 };
 
 
+gulp.task('message',function(){
+  gulp.src( '' )
+  .pipe(notify({
+    'title'   : 'WATCH '+title,
+    'message' : dir,
+    'icon'    : icon,
+    'sound'   : 'Morse',
+  })); 
+});
+
 /**
  * move installed bower components to assets
  */
@@ -139,7 +150,8 @@ gulp.task('jshint',function(){
         .pipe(jshint.reporter('fail'))
         .pipe(notify({
           title:   'JS Hint OK' + title,
-          message: message 
+          message: message,
+          icon: icon 
         }));
 });
 
@@ -198,10 +210,10 @@ gulp.task('default', ['jshint','jsmin','less','cssmin'] );
 gulp.task('watch', function() {
 
   // watch for JS changes
-  gulp.watch( files[framework]['watchjs'], ['jshint','jsmin'] );
+  gulp.watch( files[framework]['watchjs'], ['jshint','jsmin','message'] );
  
   // watch for LESS/CSS changes
-  gulp.watch( files[framework]['watchcss'], ['less','cssmin'] );
+  gulp.watch( files[framework]['watchcss'], ['less','cssmin','message'] );
   
   // Watch any file for a change in assets folder and reload
   livereload.listen();
