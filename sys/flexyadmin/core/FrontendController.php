@@ -23,6 +23,8 @@ class FrontEndController extends MY_Controller {
    *      ['str_google_analytics'] => '',                               // Wordt gebruikt voor Google Analytics. (= tbl_site.str_google_analytics)
    *      ['assets']               => 'site/assets',                    // verwijzing naar de assets map
    *      ['admin_assets']         => 'sys/flexyadmin/assets',          // verwijzing naar de flexyadmin assets map
+   *      ['use_minimized']        => [true|false]                      // geeft aan of er de geminificeerde js,css bestanden moeten worden gebruikt
+   *      ['framework']            => ['default'|'bootstrap']           // welk frontend framework moet worden geladen
    *      ['languages']            => array('nl'),                      // array met mogelijke talen. Zoals ingesteld in _site/config/config.php_
    *      ['uri']                  => '',                               // Uri van huidige pagina
    *      ['menu']                 => '',                               // Bij aanvang leeg, wordt gevuld met het menu (HTML)
@@ -113,16 +115,15 @@ class FrontEndController extends MY_Controller {
         if ($errors) show_error(div(array('style'=>'color:red;')).implode('<br>',$errors)._div(),200,'A LESS error encountered while Building',FALSE);
       }
     }
+    
     // Version timestamp
-    if (!isset($this->site['int_version'])) {
-      $files=array('site/assets/css/layout.css','site/assets/css/text.css','site/assets/js/site.js');
-      $version=0;
-      foreach ($files as $file) {
-        if (file_exists($file)) $time=filemtime($file);
-        if ($time>$version) $version=$time;
-      }
-      $this->site['int_version']=$version;
+    $files=array('site/assets/css/styles.min.css','site/assets/js/scripts.min.js');
+    $version=0;
+    foreach ($files as $file) {
+      if (file_exists($file)) $time=filemtime($file);
+      if ($time>$version) $version=$time;
     }
+    $this->site['int_version']=$version;
 	}
 	
 	/**

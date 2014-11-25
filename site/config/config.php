@@ -21,6 +21,8 @@ $config['testmode'] = false;
  * Set the default frontend framework. This setting affects menu, form and the standard template, possible options:
  * - default - the basic and light flexyadmin template
  * - bootstrap - use bootstrap as a start
+ * 
+ * NB If you use gulpfile.js, change the framework there also!
  */
 // $config['framework']='bootstrap';
 
@@ -48,10 +50,11 @@ $config['caching_time'] = 1440;	// 1440 minutes is 24 hours
 
 /*
  *--------------------------------------------------------------------------
- * Automatically use minimized css/js files on production sites
+ * Use minimized css/js files on production sites
  *--------------------------------------------------------------------------
  *
- * If you use the embedded compile function (/admin/compile) or grunt to compile and minimize css and js files set this to true.
+ * Set to TRUE if you use LESS and/or minification of css and js files.
+ * Use gulpfile.js for that
  */
 $config['use_minimized'] = TRUE;
 

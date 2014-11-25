@@ -1,11 +1,3 @@
-/*
-  text.css
-  - please make the changes in less-default/layout.less
-  - and compile by /admin/build
-  - or override in style.css
-*/
-
-
 //////////////////////////////////////////////////////
 // LESS variables & basic themes /////////////////////
 //////////////////////////////////////////////////////
@@ -158,6 +150,8 @@ select option {margin:.25rem .5rem;border:none;}
 .corners()        {border-radius:@corner-radius;}
 .corners-top()    {border-top-left-radius:@corner-radius;border-top-right-radius:@corner-radius;}
 .corners-bottom() {border-bottom-left-radius:@corner-radius;border-bottom-right-radius:@corner-radius;}
+.corners-left()   {border-top-left-radius:@corner-radius;border-bottom-left-radius:@corner-radius;}
+.corners-right()  {border-top-right-radius:@corner-radius;border-bottom-right-radius:@corner-radius;}
 
 .corners, form.corners fieldset, form.corners input, form.corners textarea, form.corners select { .corners() }
 .corners-top { .corners-top() }
