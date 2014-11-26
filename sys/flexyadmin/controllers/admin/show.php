@@ -296,7 +296,7 @@ class Show extends AdminController {
                       $inactive++;
                       $data[$id]['actions'] = array('deny'=>'cfg_users/deny/'.$id,'accept'=>'cfg_users/accept/'.$id);
                     }
-                    if ($row['last_login']=='') {
+                    if (empty($row['last_login'])) {
                       $unused++;
                       $data[$id]['actions']['invite'] = 'cfg_users/invite/'.$id;
                     }

@@ -58,7 +58,7 @@ $lang['deny']													= 'Weiger';
 $lang['accept']												= 'Accepteer';
 $lang['new_users']                    = 'Nieuwe gebruikers (nog nooit ingelogd)';
 $lang['all_new_users']                = 'aan alle nieuwe gebruikers';
-$lang['invite']												= 'Stuur (nogmaals) login gegevens';
+$lang['invite']												= 'Stuur welkom met inloggegevens';
 
 $lang['user_removed']									= 'Gebruiker "%s" verwijderd en een afwijzings email gestuurd.';
 $lang['user_accepted']								= 'Gebruiker "%s" is geactiveerd en heeft een accepterings email gekregen.';
@@ -68,7 +68,7 @@ $lang['mail_accepted_subject']				= 'Account aanvraag geaccepteerd.';
 $lang['mail_new_subject']				      = 'U krijgt inloggegevens.';
 
 $lang['active_users']				          = 'Stuur nieuw wachtwoord naar bestaande gebruikers';
-$lang['send_new_password']            = 'Stuur nieuw wachtwoord';
+$lang['send_new_password']            = 'Stuur (nieuw) wachtwoord';
 $lang['user_send_password']           = 'Gebruiker "%s" heeft een nieuw wachtwoord opgestuurd gekregen.';
 $lang['new_password']                 = 'Nieuw wachtwoord.';
 
