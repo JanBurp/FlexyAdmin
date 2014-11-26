@@ -605,7 +605,7 @@ $config["CFG_"]=array(
 		"cfg_field_info.str_validation_rules"=>array(
 			"b_editable_in_grid"=>1,
 			'str_fieldset'=>'Validation',
-			"str_options"=>'|required|matches|min_length[]|max_length[]|exact_length[]|greater_than[]|less_than[]|alpha|alpha_numeric|alpha_dash|numeric|integer|decimal|is_natural|is_natural_no_zero|valid_email|valid_emails|valid_ip|valid_base64|prep_url|'.$config['CUSTOM_VALIDATION_RULES'],
+			"str_options"=>'|required|matches|min_length[]|max_length[]|exact_length[]|greater_than[]|less_than[]|alpha|alpha_numeric|alpha_dash|numeric|integer|decimal|is_natural|is_natural_no_zero|valid_email|valid_emails|valid_ip|valid_base64|prep_url|prep_url_mail|'.$config['CUSTOM_VALIDATION_RULES'],
 			"b_multi_options"=>'1',
  			),
 		"cfg_field_info.str_validation_parameters"=>array(

@@ -2,10 +2,25 @@
 
 class MY_Form_validation extends CI_Form_validation {
    
-   
+  public function __construct() {
+    $this->CI=@get_instance();
+    $this->CI->load->helper('email');
+  }
    
   public function get_error_messages() {
     return $this->_error_messages;
+  }
+  
+  
+  public function prep_url_mail($str,$field) {
+    $str=str_replace(array('http://','https://','mailto:'),'',$str);
+    if (valid_email($str)) {
+      $str='mailto:'.$str;
+    }
+    else {
+      $str=prep_url($str,$field);
+    }
+    return $str;
   }
   
   
