@@ -179,7 +179,7 @@ class Form {
    * @return void
    * @author Jan den Besten
    */
-  public function set_css_style($style="default") {
+  public function set_framework($style="default") {
     $this->framework=$style;
     return $this;
   }
