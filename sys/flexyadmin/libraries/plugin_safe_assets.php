@@ -1,7 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- * Verwijderd onwenselijke bestanden in assets mappen
+ * Verwijderd onwenselijke bestanden in assets mappen en past rechten van mappen aan
  * 
  * - Maakt voor elke assets map een .htaccess aan die alleen toegestane bestanden toelaat
  * - Verwijderd alle bestanden die niet zijn toegestaan
@@ -100,7 +100,7 @@ class Plugin_safe_assets extends Plugin {
 	function _after_update() {
 		$types=$this->newData['str_types'];
 		$map=$this->newData['path'];
-		if ($this->config('create_htaccess')) $this->_make_map_safe($map,$types);
+		if ($this->config('create_htaccess')) $this->_create_htaccess($map,$types);
 		return $this->newData;
 	}
   
@@ -142,7 +142,7 @@ class Plugin_safe_assets extends Plugin {
 		foreach ($mapsToClean as $path => $allowed) {
       if (!empty($allowed)) {
   			if ($this->config('create_htaccess')) {
-  				$this->_make_map_safe($path,$allowed);
+  				$this->_create_htaccess($path,$allowed);
           $this->checked[$path]=$allowed;
   			}
   			$removed=$this->_remove_forbidden_files($path,$allowed,!in_array($path,$noRecursion));
@@ -162,8 +162,11 @@ class Plugin_safe_assets extends Plugin {
    * @author Jan den Besten
    * @ignore
    */
-	function _make_map_safe($path,$types) {
+	function _create_htaccess($path,$types) {
 		$types=strtolower($types).'|'.strtoupper($types);
+    $map=get_suffix($path,'/');
+    $serve_restricted=$this->CI->cfg->get('cfg_media_info',$map,'b_serve_restricted');
+    if ($serve_restricted) $types='';
 		$htaccess="Order Allow,Deny\nDeny from all\n<Files ~ \"\.(".$types.")$\">\nAllow from all\n</Files>\n";
 		if (has_string('htc',$types)) {
 			$htaccess.="\nAddType text/x-component .htc\n";

@@ -25,6 +25,9 @@ $lang['rename_error']				= "Error while renaming %s.";
 $lang['rename_no_file']			= "%s doesn't exist, or no rights.";
 
 
-$lang['order_has_changed']= "The order of %s is changed.";
+$lang['order_has_changed']  = "The order of %s is changed.";
+
+$lang['rights_no_rights']   = "You don't have rights for this action";
+
 
 ?>

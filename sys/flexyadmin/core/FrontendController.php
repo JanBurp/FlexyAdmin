@@ -84,8 +84,8 @@ class FrontEndController extends MY_Controller {
       else
         $this->load->library("menu");
       
-      $css_style=$this->config->item('framework');
-      $this->menu->set('framework',$css_style);
+      $framework=$this->config->item('framework');
+      $this->menu->set('framework',$framework);
       
   		$this->load->library("content");
       $this->content->initialize($this->config->item('parse_content'));
