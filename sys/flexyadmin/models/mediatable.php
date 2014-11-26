@@ -299,17 +299,17 @@ class Mediatable Extends CI_Model {
     
   private function _get_files($map='',$asReadMap=TRUE,$recent_numbers=0) {
     $path=remove_assets($map);
+    $info=$this->cfg->get('cfg_media_info',$path);
+    
     if ($asReadMap) $this->db->set_key('file');
     $this->db->where('b_exists',true);
-    $files=$this->db->where('path',$path)->get_result($this->table,$recent_numbers);
-    if (empty($files)) {
-      if ($asReadMap) $this->db->set_key('file');
-      $this->db->where('b_exists',true);
-      $files=$this->db->where('path',$path)->get_result($this->table,$recent_numbers);
+    $this->db->where('path',$path);
+    if (el('b_user_restricted',$info,false) and $this->db->field_exists('user',$this->table) and !$this->user->rights['b_all_users']) {
+      $this->db->where('user',$this->user->user_id);
     }
+    $files=$this->db->get_result($this->table,$recent_numbers);
     if (empty($files)) {
       // not in database, read from filesystem if set so
-      $info=$this->cfg->get('cfg_media_info',$path);
       if (!el('b_in_database',$info,true)) {
         $files=read_map($map,$info['str_types'],FALSE,TRUE,FALSE,FALSE);
         $asReadMap=false;
@@ -332,6 +332,10 @@ class Mediatable Extends CI_Model {
         unset($files[$file]['int_img_width']);
         $files[$file]['height']=$info['int_img_height'];
         unset($files[$file]['int_img_height']);
+        if (isset($info['user'])) {
+          $files[$file]['id_user']=$this->db->get_field_where('cfg_users','str_username','id',$info['user']);
+          unset($files[$file]['user']);
+        }
       }
     }
     return $files;
@@ -424,12 +428,16 @@ class Mediatable Extends CI_Model {
    */
 	public function get_unrestricted_files($user) {
     if ($this->db->field_exists('user',$this->table)) $this->db->where('user',$user);
-		$this->db->set_key('file'); 
-		return $this->db->get_result($this->table);
+		$files=$this->db->get_result($this->table);
+    $unrestrictedFiles=array();
+    foreach ($files as $file) {
+      $unrestrictedFiles[$file['path'].'/'.$file['file']]=$file;
+    }
+    return $unrestrictedFiles;
 	}
   
   /**
-   * filters bestandsarray zo dat alleen files terugkomen van user
+   * filters bestandsarray zo dat alleen files terugkomen van meegegevenuser
    *
    * @param array $files 
    * @param int $user 
@@ -452,6 +460,22 @@ class Mediatable Extends CI_Model {
 		}
 		return $files;
 	}
+  
+  
+  public function has_serve_rights($path,$file) {
+    $map=get_suffix($path,'/');
+    $serve_restricted=$this->cfg->get('cfg_media_info',$map,'b_serve_restricted');
+    // Alleen verder testen als deze map restricted is, anders gewoon true
+    if (!$serve_restricted) return true;
+    // Heeft de user zowiezo geen rechten voor deze map: false
+    $this->load->library('user');
+    if (!$this->user->has_rights($map)) return false;
+    // Is de user gekoppeld aan dit bestand?
+    $info=$this->get_info($map.'/'.$file);
+    if (!isset($info['user'])) return true;
+    if ($this->user->user_id == $info['user']) return true;
+    return false;
+  }
 
 }
 

@@ -281,11 +281,11 @@ class __ extends AdminController {
         }
         if (isset($item['methods']))    {
           $item['methods']=$this->nice_methods($item['methods']);
-          $view_data['methods']=$this->load->view('admin/__/methods',array('title'=>$title,'methods'=>$item['methods']),true);
+          $view_data['methods']=$this->load->view('admin/__/methods',array('title'=>$name,'methods'=>$item['methods']),true);
         }
         if (isset($item['functions']))  {
           $item['functions']=$this->nice_methods($item['functions']);
-          $view_data['functions']=$this->load->view('admin/__/methods',array('title'=>$title,'methods'=>$item['functions']),true);
+          $view_data['functions']=$this->load->view('admin/__/methods',array('title'=>$name,'methods'=>$item['functions']),true);
         }
         $html=$this->load->view('admin/__/item',$view_data,true);
         $this->_add_content($name.' added.</br>');

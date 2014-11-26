@@ -748,6 +748,9 @@ $config["CFG_"]=array(
 		"cfg_media_info.b_user_restricted"=>array(
 			'str_fieldset'=>'More'
  			),
+		"cfg_media_info.b_serve_restricted"=>array(
+			'str_fieldset'=>'More'
+ 			),
 		"cfg_media_info.fields_autofill_fields"=>array(
 			"b_editable_in_grid"=>1,
 			'str_fieldset'=>'More'

@@ -216,9 +216,9 @@ class Forms extends Module {
     if (isset($this->settings['action_query'])) $formAction.=$this->settings('action_query');
 		$form=new form($formAction,$this->form_id);
     
-    $css_style=$this->CI->config->item('framework');
-    if (isset($this->settings['framework'])) $css_style=$this->settings('framework','default');
-    $form->set_css_style($css_style);
+    $framework=$this->CI->config->item('framework');
+    if (isset($this->settings['framework'])) $framework=$this->settings('framework','default');
+    $form->set_framework($framework);
 
 		$form->set_data($formFields, $this->settings('title',$this->form_id) );
     // Is er een wachtwoord wat een extra check verlangt?

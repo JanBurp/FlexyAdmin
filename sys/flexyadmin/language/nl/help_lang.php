@@ -50,6 +50,7 @@ $lang['fill_use_random']		= 'Random';
 $lang['bad_regex']					= 'Fout in reguliere expressie.';
 
 
+
 // ADMIN ACTIVATION
 $lang['inactive_users']               = 'Inactieve gebruikers';
 $lang['all_inactive_users']           = 'alle inactieve gebruikers';

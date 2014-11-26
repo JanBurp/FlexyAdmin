@@ -26,4 +26,7 @@ $lang['rename_no_file']			  = "%s bestaat niet, of je hebt geen rechten om %s aa
 
 $lang['order_has_changed']    = "Volgorde van %s is aangepast.";
 
+$lang['rights_no_rights']     = "Je hebt geen rechten voor deze actie.";
+
+
 ?>

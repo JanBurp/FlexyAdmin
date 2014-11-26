@@ -16,7 +16,8 @@ class Filemanager extends AdminController {
 	function _has_rights($path,$whatRight=0) {
 		$ok=FALSE;
 		$mediaName=$this->cfg->get('CFG_media_info',$path,"path");
-		return $this->user->has_rights("media_".$mediaName,"",$whatRight);
+    $rights=$this->user->has_rights("media_".$mediaName,"",$whatRight);
+		return $rights;
 	}
 
 
@@ -85,12 +86,14 @@ class Filemanager extends AdminController {
         $this->_before_filemanager($path,$files);
         
 				/**
-					* Exclude files that are not owned by user
+					* Exclude files that are not owned by user, build in mediateble now
 					*/
-				if (isset($cfg['b_user_restricted']) and $cfg['b_user_restricted']) {
-					$restrictedToUser=$this->user->restricted_id($path);
-					$files=$this->mediatable->filter_restricted_files($files,$restrictedToUser);
-				}
+        // if (isset($cfg['b_user_restricted']) and $cfg['b_user_restricted']) {
+        //   $restrictedToUser=$this->user->restricted_id($path);
+        //           trace_([$restrictedToUser,$path,$files]);
+        //   $files=$this->mediatable->filter_restricted_files($files,$restrictedToUser);
+        //           trace_($files);
+        // }
         
         /**
          * Hide files (set in cfg_field_info)
@@ -236,12 +239,14 @@ class Filemanager extends AdminController {
 		$path=pathdecode($path);
 		if (!empty($path) and !empty($files)) {
 			$confirmed=$this->session->userdata("confirmed");
-			if ($this->_has_rights($path)>=RIGHTS_DELETE) {
+      if ($this->_has_rights($path)>=RIGHTS_DELETE) {
 				if ($confirmed) {
 					$deletedFiles='';
 					foreach ($files as $file) {
 						$DoDelete=TRUE;
 						if ($this->mediatable->exists()) {
+              xdebug_break();
+              
 							if ($this->mediatable->is_user_restricted($path)) {
                 $restrictedToUser=$this->user->restricted_id($path);
 								$DoDelete=FALSE;
@@ -269,7 +274,7 @@ class Filemanager extends AdminController {
 							}
 						}
 						else {
-							$this->lang->load("rights");
+              $this->lang->load('update_delete');
 							$this->message->add_error(lang("rights_no_rights"));
 						}
 					}
@@ -277,7 +282,7 @@ class Filemanager extends AdminController {
 				}
 			}
 			else {
-				$this->lang->load("rights");
+        $this->lang->load('update_delete');
 				$this->message->add_error(lang("rights_no_rights"));
 			}
 		}
@@ -399,6 +404,7 @@ class Filemanager extends AdminController {
     unset($data['int_size']);
     unset($data['int_img_width']);
     unset($data['int_img_height']);
+    unset($data['user']);
     
     // Hide hidden fields:
     foreach ($data as $field => $value) {

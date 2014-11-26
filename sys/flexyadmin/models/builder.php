@@ -14,7 +14,7 @@ class Builder extends CI_Model {
   var $settings=array();
   var $report='';
   var $errors=array();
-  var $css_style='default';
+  var $framework='default';
   
 	public function __construct($settings=false) {
 		parent::__construct();
@@ -28,8 +28,8 @@ class Builder extends CI_Model {
     $this->initialize($settings);
     $this->load->library('parser');
     
-    $css_style=$this->config->item('framework');
-    if ($css_style) $this->css_style=$css_style;
+    $framework=$this->config->item('framework');
+    if ($framework) $this->framework=$framework;
 	}
   
   public function initialize($settings) {
@@ -201,7 +201,7 @@ class Builder extends CI_Model {
   private function find_files($type) {
     if ($type=='less') {
       $less=read_map('site/assets/css','less');
-      $less_css_style=read_map('site/assets/less-'.$this->css_style,'');
+      $less_css_style=read_map('site/assets/less-'.$this->framework,'');
       $less=array_merge($less,$less_css_style);
       $files=array();
       foreach ($less as $name => $file) {

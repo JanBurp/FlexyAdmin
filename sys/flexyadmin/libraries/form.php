@@ -80,7 +80,7 @@ class Form {
 	private $buttons;
   private $validation_error = false;
   private $validation_error_class = 'error';
-  private $css_style = 'default';
+  private $framework = 'default';
   private $view_path='admin/form';
   
   private $styles=array(
@@ -90,6 +90,7 @@ class Form {
       'fieldset_buttons'      => 'flexyFormButtons',
       'fieldset_info'         => true,
       'field_container'       => 'flexyFormField',
+      'field_html'            => 'flexyFormHtml',
       'field_container_info'  => true,
       'label'                 => '',
       'field'                 => '',
@@ -101,6 +102,7 @@ class Form {
       'fieldset'              => '',
       'fieldset_buttons'      => '',
       'fieldset_info'         => false,
+      'field_html'            => '',
       'field_container'       => 'form-group',
       'field_container_info'  => false,
       'label'                 => 'control-label',
@@ -178,7 +180,7 @@ class Form {
    * @author Jan den Besten
    */
   public function set_css_style($style="default") {
-    $this->css_style=$style;
+    $this->framework=$style;
     return $this;
   }
   
@@ -422,13 +424,13 @@ class Form {
    */
 	public function set_buttons($buttons=NULL) {
 		if (empty($buttons)) {
-			$buttons=array(	'cancel'	=> array( "value" => lang("form_cancel"), "class"=>$this->styles[$this->css_style]['button']." cancel", "onClick" => "window.history.back()"),
-											'reset'		=> array( "value" => lang("form_reset"), "class"=>$this->styles[$this->css_style]['button']." reset"),
+			$buttons=array(	'cancel'	=> array( "value" => lang("form_cancel"), "class"=>$this->styles[$this->framework]['button']." cancel", "onClick" => "window.history.back()"),
+											'reset'		=> array( "value" => lang("form_reset"), "class"=>$this->styles[$this->framework]['button']." reset"),
 											'submit'	=> array( "submit"=>"submit", "value"=>lang("form_submit")));
 		}
 		foreach ($buttons as $name => $button) {
 			if (!isset($button['name'])) 	$buttons[$name]['name']=$name;
-			if (!isset($button['class'])) $buttons[$name]['class']=$this->styles[$this->css_style]['button'];
+			if (!isset($button['class'])) $buttons[$name]['class']=$this->styles[$this->framework]['button'];
 			if (isset($button['submit'])) $buttons[$name]['class'].=" submit";
 		}
 		$this->buttons=$buttons;
@@ -776,7 +778,7 @@ class Form {
    */
 	public function render($class='flexyForm') {
 		$this->CI->lang->load("form");
-    $styles=$this->styles[$this->css_style];
+    $styles=$this->styles[$this->framework];
 
 		$data=$this->data;
     
@@ -840,7 +842,7 @@ class Form {
 	private function render_field($name,$field,$form_class="") {
 		$pre=get_prefix($name);
 		if ($pre==$name) $pre="";
-    $styles=$this->styles[$this->css_style];
+    $styles=$this->styles[$this->framework];
     
     // field class
     $field['container_class']=$styles['field_container'];
@@ -912,11 +914,9 @@ class Form {
 					$attr["checked"]="";
         if (empty($attr['value'])) $attr['value']=1;
 				$field['control']=form_checkbox($attr);
-        // if (isset($field['html'])) $out.=div('flexyFormHtml').$field['html']._div();
 				break;
 
 			case 'radio':
-        // if (isset($field['html'])) $out.=div('flexyFormHtml').$field['html']._div();
 				$options=$field['options'];
 				$value=$field['value'];
         $field['control']='';
@@ -1131,9 +1131,10 @@ class Form {
 		endswitch;
 
 		if ($field["type"]=="hidden") return $field['control'];
-    $field['horizontal_bootstrap']=($this->css_style=='bootstrap' and has_string('form-horizontal',$form_class));
+    $field['horizontal_bootstrap']=($this->framework=='bootstrap' and has_string('form-horizontal',$form_class));
     // trace_($field);
-		return $this->CI->load->view($this->view_path.'/field',$field,true);
+    $rendered_field=$this->CI->load->view($this->view_path.'/field',array('field'=>$field,'styles'=>$this->styles[$this->framework]),true);
+		return $rendered_field;
 	}
 
 

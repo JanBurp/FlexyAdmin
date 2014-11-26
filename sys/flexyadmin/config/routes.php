@@ -47,9 +47,11 @@ $route['__api/([^/]*)/(.*)'] = '__api/$1/$2';
 
 
 /**
- * This route makes a nice download path
+ * This route makes a nice download path and a serve (restricted) path
  */
-$route['file/(.*)/(.*)'] = "file/download/this/$1/$2";
+$route['file/serve/(.*)/(.*)']    = "file/file/serve/$1/$2";
+$route['file/download/(.*)/(.*)'] = "file/file/download/$1/$2";
+$route['file/(.*)/(.*)']          = "file/file/download/$1/$2";
 
 /**
  * This routing reroutes plugin calls

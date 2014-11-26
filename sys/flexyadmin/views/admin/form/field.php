@@ -1,7 +1,10 @@
-<div class="<?=$container_class?>">
-  <label for="<?=$name?>" class="<?=$label_class?> <?=($horizontal_bootstrap)?'col-sm-2':'';?>"><?=$label?></label>
-  <?php if (isset($validation_error)): ?><?=$validation_error?><?php endif ?>
-  <?php if ($horizontal_bootstrap): ?><div class="col-sm-10"><?php endif ?>
-  <?=$control?>
-  <?php if ($horizontal_bootstrap): ?></div><?php endif ?>
+<div class="<?=$field['container_class']?>">
+  <label for="<?=$field['name']?>" class="<?=$field['label_class']?> <?=($field['horizontal_bootstrap'])?'col-sm-2':'';?>"><?=$field['label']?></label>
+  <?php if (isset($field['validation_error'])): ?><?=$field['validation_error']?><?php endif ?>
+  <?php if ($field['horizontal_bootstrap']): ?><div class="col-sm-10"><?php endif ?>
+  <?=$field['control']?>
+  <?php if ($field['horizontal_bootstrap']): ?></div><?php endif ?>
+  <?php if (isset($field['html'])): ?>
+  <div class="<?=$styles['field_html']?>"><?=$field['html']?></div>
+  <?php endif ?>
 </div>
