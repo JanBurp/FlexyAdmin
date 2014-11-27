@@ -39,6 +39,12 @@ var framework = 'default';
 // var framework = 'bootstrap';
 
 
+/**
+ * Om de hoeveel ms gulp watch z'n taken doet (100ms in standaard, maar vraagt veel CPU)
+ */
+var watch_interval = 250;
+
+
 /** Paths (keep as is) */
 var bower     = 'bower_components';
 var assets    = 'site/assets';
@@ -134,6 +140,7 @@ var minify_css  = require('gulp-minify-css');
 var jshint      = require('gulp-jshint');
 var stylish     = require('jshint-stylish');
 var uglify      = require('gulp-uglify');
+var flatten     = require('gulp-flatten');
 
 /**
  * Calling 'gulp --build' minify the css (without sourcemaps)
@@ -218,8 +225,11 @@ gulp.task('jshint',function(){
  */
 gulp.task('jsmin',['jshint'],function(){
   return gulp.src( files[framework]['jsmin'] )
-        .pipe(uglify())
+        .pipe(flatten())
+        .pipe(sourcemaps.init({loadMaps: true}))
         .pipe(concat(files[framework]['jsdest']))
+        .pipe(uglify())
+        .pipe(sourcemaps.write('maps'))
         .pipe(gulp.dest( files[framework]['js']) )
         .pipe(notify({
           title:  'JS contact & uglify ' + title,
@@ -266,13 +276,13 @@ gulp.task('default', ['jshint','jsmin','less','cssmin'] );
 gulp.task('watch', function() {
 
   // watch for JS changes
-  gulp.watch( files[framework]['watchjs'], ['jshint','jsmin','message'] );
+  gulp.watch( files[framework]['watchjs'], { interval: watch_interval }, ['jshint','jsmin','message'] );
  
   // watch for LESS/CSS changes
-  gulp.watch( files[framework]['watchcss'], ['less','cssmin','message'] );
+  gulp.watch( files[framework]['watchcss'], { interval: watch_interval } ['less','cssmin','message'] );
   
   // Watch any file for a change in assets folder and reload
   livereload.listen();
-  gulp.watch( assets+'/**' ).on('change', livereload.changed);
+  gulp.watch( assets+'/**', { interval: watch_interval } ).on('change', livereload.changed);
   
 });
