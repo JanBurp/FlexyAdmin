@@ -40,7 +40,7 @@ class Cronjob extends CI_Model {
     $last=mysql_to_unix($job['last']);        // unix stamp
     $next=$this->_calc_next($job['every'],$last);
     $job['needs_run'] = ($last < $next) && (time() >= $next);
-    trace_(['time'=>unix_to_mysql(time()),'last'=>unix_to_mysql($last),'next'=>unix_to_mysql($next),'run'=>$job['needs_run'] ]);
+    // trace_(['time'=>unix_to_mysql(time()),'last'=>unix_to_mysql($last),'next'=>unix_to_mysql($next),'run'=>$job['needs_run'] ]);
     return $job;
   }
   
@@ -108,7 +108,7 @@ class Cronjob extends CI_Model {
         case 'week':
           $a_data=getdate();
           $wday=$a_data['wday']; // 0 = sunday
-          $start=mktime( 0,0,0, date('n',$last), date('j')-$wday );
+          $start=mktime( 0,0,0, date('n',$last), date('j',$last)-$wday );
           $day_of_week=(int) $every[1];
           $hour; // Hack, don't know why...
           break;
