@@ -279,7 +279,7 @@ gulp.task('watch', function() {
   gulp.watch( files[framework]['watchjs'], { interval: watch_interval }, ['jshint','jsmin','message'] );
  
   // watch for LESS/CSS changes
-  gulp.watch( files[framework]['watchcss'], { interval: watch_interval } ['less','cssmin','message'] );
+  gulp.watch( files[framework]['watchcss'], { interval: watch_interval }, ['less','cssmin','message'] );
   
   // Watch any file for a change in assets folder and reload
   livereload.listen();
