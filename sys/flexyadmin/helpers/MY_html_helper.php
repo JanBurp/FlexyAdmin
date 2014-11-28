@@ -185,8 +185,7 @@ function hr($a=array()) {
  * @ignore
  */
 function safe_email($adres,$text) {
-	$adres=explode("@",$adres);
-	return '<script language="JavaScript" type="text/javascript">email("'.$adres[0].'","'.$adres[1].'","'.$text.'");</script>';
+  return safe_mailto($adres,$text);
 }
 
 /**

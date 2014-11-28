@@ -21,6 +21,8 @@ class Plugin_uri extends Plugin {
 				if ($this->CI->db->table_exists($this->table) and $this->CI->db->field_exists('uri',$this->table)) {
 
           $this->CI->create_uri->set_table($this->table);
+          $prefix=el(array('prefix',$this->table),$this->config,'');
+          $this->CI->create_uri->set_prefix($prefix);
 					// reset all uris of this table
 					$allData=$this->CI->db->get_results($this->table);
 					foreach ($allData as $id => $data) {
@@ -50,6 +52,8 @@ class Plugin_uri extends Plugin {
 
 	public function _after_update() {
     $this->CI->create_uri->set_table($this->table);
+    $prefix=el(array('prefix',$this->table),$this->config,'');
+    $this->CI->create_uri->set_prefix($prefix);
 		$uri=$this->CI->create_uri->create($this->newData);
 		$this->newData['uri']=$uri;
 		return $this->newData;

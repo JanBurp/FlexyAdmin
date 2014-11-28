@@ -23,6 +23,13 @@ class Create_uri extends CI_Model {
   private $source_field='';
   
   /**
+   * Een prefix die voor elke uri wordt geplakt
+   *
+   * @var string
+   */
+  private $prefix='';
+  
+  /**
    * data uit tabel
    *
    * @var string
@@ -61,6 +68,19 @@ class Create_uri extends CI_Model {
     $this->source_field=$source_field;
     return $this;
   }
+  
+  
+  /**
+   * Stelt een prefix in die voor elke uri wordt geplakt
+   *
+   * @param string $prefix 
+   * @return object $this
+   * @author Jan den Besten
+   */
+  public function set_prefix($prefix='') {
+    $this->prefix=$prefix;
+    return $this;
+  }
 
  	/**
  	 * Maak uri vanuit meegegeven data (rij uit een tabel, of string)
@@ -92,8 +112,9 @@ class Create_uri extends CI_Model {
     
     // If needs to create an uri
  		if ($createUri) {
-      $uri=$this->cleanup($uri_source);
+      $uri=$this->prefix.$this->cleanup($uri_source);
  			$postSpace=$replaceSpace.$replaceSpace;
+      // exists? add a number
  			while ($this->_is_existing_uri($uri,$data) or $this->is_forbidden($uri)) {
  				$currUri=remove_suffix($uri,$postSpace);
  				$countUri=(int) get_suffix($uri,$postSpace);
