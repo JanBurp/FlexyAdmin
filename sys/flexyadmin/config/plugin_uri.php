@@ -28,17 +28,13 @@ $config['trigger'] = array(
 
 /*
 |--------------------------------------------------------------------------
-| Dynamic trigger method
-| If the above trigger settings needs to be dynamically set, set a method here
-| The plugin will allways be loaded!!
+| Prefix per table
 |--------------------------------------------------------------------------
-|
 */
 
-// $config['trigger_method'] = '_trigger';
-
-
-
+$config['prefix'] = array(
+  // 'tbl_menu'  => 'menu_'
+)
 
 
 ?>
