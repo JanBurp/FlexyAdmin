@@ -40,9 +40,9 @@ var framework = 'default';
 
 
 /**
- * Om de hoeveel ms gulp watch z'n taken doet (100ms in standaard, maar vraagt veel CPU)
+ * Om de hoeveel ms gulp watch z'n taken doet (100ms in standaard)
  */
-var watch_interval = 250;
+var watch_interval = 100;
 
 
 /** Paths (keep as is) */
@@ -272,6 +272,7 @@ gulp.task('cssmin',['less'],function(){
 gulp.task('default', ['jshint','jsmin','less','cssmin'] );
 
 
+
 // Watchers
 gulp.task('watch', function() {
 
@@ -281,8 +282,11 @@ gulp.task('watch', function() {
   // watch for LESS/CSS changes
   gulp.watch( files[framework]['watchcss'], { interval: watch_interval }, ['less','cssmin','message'] );
   
-  // Watch any file for a change in assets folder and reload
+  // Watch any resulting file changed
   livereload.listen();
-  gulp.watch( assets+'/**', { interval: watch_interval } ).on('change', livereload.changed);
+  gulp.watch( [
+    files[framework]['css'] + '/' + files[framework]['cssdest'],
+    files[framework]['js']  + '/' + files[framework]['jsdest'],
+  ], { interval: watch_interval } ).on('change', livereload.changed);
   
 });
