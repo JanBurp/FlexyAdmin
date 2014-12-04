@@ -88,7 +88,6 @@ var files = {
     'js'      : assets+'/js',
     'jshint'  : assets+'/js/site.js',
     'jsmin'   : [
-      assets+'/js/rem.min.js',
       assets+'/js/jquery.min.js',
       assets+'/js/bootstrap.min.js',
       assets+'/js/site.js',
