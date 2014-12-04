@@ -15,7 +15,7 @@
  * 
  * Specifieker gebruik van deze gulp:
  * - gulp less // compileer alleen de LESS bestanden tot CSS bestanden
- * - gulp cssmin // voeg de CSS bestanden samen (roept eerst 'less' aan)
+ * - gulp cssmin // voeg de CSS bestanden samen, autoprefixed browser specifieke css en voegt fallback in px toe waar rem units worden gebruikt (roept eerst 'less' aan)
  * - gulp jshint // test JS bestanden op veelvoorkomende fouten
  * - gulp jsmin // combineer en minificeer alle JS bestanden (roept eerst 'jshint' aan)
  * - gulp message // een test om te kijken of gulp werkt en er een notificatie komt
@@ -63,7 +63,6 @@ var files = {
     'js'      : assets+'/js',                             // JS map (string)
     'jshint'  : assets+'/js/site.js',                     // JS bestanden die gecontroleerd moeten worden op fouten (string of array)
     'jsmin'   : [                                         // JS bestanden die samengevoegd en gemimificeerd moeten worden (string of array)
-      assets+'/js/rem.min.js',
       assets+'/js/jquery.min.js',
       assets+'/js/site.js',
     ],
@@ -135,6 +134,7 @@ var livereload  = require('gulp-livereload');
 var less        = require('gulp-less');
 var sourcemaps  = require('gulp-sourcemaps');
 var autoprefixer= require('gulp-autoprefixer');
+var pixrem      = require('gulp-pixrem');
 var concat      = require('gulp-concat');
 var minify_css  = require('gulp-minify-css');
 var jshint      = require('gulp-jshint');
@@ -261,6 +261,7 @@ gulp.task('cssmin',['less'],function(){
   return gulp.src( files[framework]['cssmin'] )
         .pipe(sourcemaps.init({loadMaps: true}))
         .pipe(autoprefixer())
+        .pipe(pixrem())
         .pipe(concat(files[framework]['cssdest']))
         .pipe(sourcemaps.write('maps'))
         .pipe(gulp.dest( files[framework]['css']) )
