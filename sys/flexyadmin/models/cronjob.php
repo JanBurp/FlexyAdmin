@@ -108,7 +108,7 @@ class Cronjob extends CI_Model {
         case 'week':
           $a_data=getdate();
           $wday=$a_data['wday']; // 0 = sunday
-          $start=mktime( 0,0,0, date('n',$last), date('j',$last)-$wday );
+          $start=mktime( 0,0,0, date('n'), date('j')-$wday );
           $day_of_week=(int) $every[1];
           $hour; // Hack, don't know why...
           break;
@@ -116,7 +116,7 @@ class Cronjob extends CI_Model {
         case 'month':
           $a_data=getdate();
           $mday=$a_data['mday']-1; // 1 = 1e dag
-          $start=mktime( 0,0,0, date('n',$last), date('j')-$mday );
+          $start=mktime( 0,0,0, date('n'), date('j')-$mday );
           $day_of_month=(int) $every[1] -1;
           break;
       }
