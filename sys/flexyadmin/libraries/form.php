@@ -79,7 +79,7 @@ class Form {
 	private $when;  // javascript
 	private $buttons;
   private $validation_error = false;
-  private $validation_error_class = 'error';
+  // private $validation_error_class = 'error';
   private $framework = 'default';
   private $view_path='admin/form';
   
@@ -95,7 +95,8 @@ class Form {
       'label'                 => '',
       'field'                 => '',
       'field_info'            => true,
-      'button'                => 'button'
+      'button'                => 'button',
+      'validation_error_class'=> 'error'
     ),
     'bootstrap' => array(
       'form'                  => '',
@@ -108,7 +109,8 @@ class Form {
       'label'                 => 'control-label',
       'field'                 => 'form-control',
       'field_info'            => false,
-      'button'                => 'btn btn-primary'
+      'button'                => 'btn btn-primary',
+      'validation_error_class'=> 'alert alert-danger'
     ),
     
   );
@@ -877,7 +879,7 @@ class Form {
 
     // Validation error
     if ($this->validation_error) {
-      $field['validation_error']=form_error($field['name'],'<span class="'.$this->validation_error_class.'"> ','</span>');
+      $field['validation_error']=form_error($field['name'],'<span class="'.$this->styles[$this->framework]['validation_error_class'].'" role="alert"> ','</span>');
     }
     
 		// When (javascript triggers)
