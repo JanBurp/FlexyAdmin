@@ -717,6 +717,19 @@ class Plugin_automenu extends Plugin {
       $id=$this->lastId;
     }
 		$item['id']=$id;
+
+    if (isset($item['self_parent']) and $item['self_parent']>0) {
+      $parent=$item['self_parent'];
+      // restricted parent?? -> also a restricted child
+      if (isset($this->newMenu[$parent]['b_restricted'])) {
+        if ($this->newMenu[$parent]['b_restricted']) $item['b_restricted']=true;
+      }
+      // invisible parent?? -> also an invisible child
+      if (isset($this->newMenu[$parent]['b_visible'])) {
+        if (!$this->newMenu[$parent]['b_visible']) $item['b_visible']=false;
+      }
+    }
+
 		$this->newMenu[$id]=$item;
 		return $item;
 	}
