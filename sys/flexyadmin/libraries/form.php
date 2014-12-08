@@ -168,6 +168,7 @@ class Form {
    * @ignore
    */
 	public function set_action($action="") {
+    if (empty($action)) $action=$this->CI->uri->get();
 		$this->action=$action;
     return $this;
 	}
