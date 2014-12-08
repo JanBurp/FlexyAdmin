@@ -228,7 +228,6 @@ function find_module_uri($module,$full_uri=true,$table='') {
 	$CI->db->like($CI->config->item('module_field'),$module);
   $CI->db->order_by('id');
 	$items=$CI->db->get_result(get_menu_table());
-  trace_($items);
   reset($items);
   $item=current($items);
 	return $item['uri'];
