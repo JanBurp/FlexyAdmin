@@ -204,6 +204,7 @@ gulp.task('install', function() {
  */
 gulp.task('jshint',function(){
   return gulp.src( files[framework]['jshint'] )
+        .pipe(plumber({ errorHandler: onError }))
         .pipe(jshint())
         // Use gulp-notify as jshint reporter
         .pipe(notify(function (file) {
