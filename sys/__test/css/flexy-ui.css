@@ -1,3 +1,0 @@
-/* FLEXY-BLOCK: text uppercase & hide spaces */
-.flexy-block {text-transform:uppercase;}
-.flexy-block.char_space {visibility:hidden;}

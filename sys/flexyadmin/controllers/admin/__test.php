@@ -20,38 +20,8 @@ class __test extends AjaxController {
    * @author Jan den Besten
    */
 	public function index() {
-    $this->load->view('admin/__test/main_app',array(),false);
+    $this->load->view('admin/__test/main_app',array('language'=>$this->user->language),false);
 	}
-  //
-  // /**
-  //  * Test an AJAX call
-  //  *
-  //  * @return void
-  //  * @author Jan den Besten
-  //  */
-  // public function ajax_test() {
-  //   $this->_test(true);
-  //   $args=func_get_args();
-  //   $call=array_shift($args);
-  //   $output=$this->$call($args);
-  //   $output['_method']=$call;
-  //   trace_($this->_result($output));
-  // }
-
-  
-  // /**
-  //  * Will return the admin_menu
-  //  *
-  //  * @return void
-  //  * @author Jan den Besten
-  //  */
-  // public function menu() {
-  //   $this->load->model('cfg_admin_menu');
-  //   $menu=$this->cfg_admin_menu->get();
-  //   return $this->_result($menu);
-  // }
-  
-  
 
 }
 

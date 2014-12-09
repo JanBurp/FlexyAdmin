@@ -1,0 +1,98 @@
+/* FLEXY-GRID */
+
+/* HEADER & PANEL */
+.flexy-grid .panel-heading form {margin-top:-2px;}
+.flexy-grid .panel-heading input {padding-left:30px;}
+.flexy-grid .panel-heading .glyphicon {left:0;}
+.flexy-grid .panel-content {padding:0;}
+/* Scrollable table (panel) */
+.flexy-grid .panel-content {overflow:auto;}
+.flexy-grid table {margin:0;}
+/* th */
+.flexy-grid th {text-transform:uppercase;}
+.flexy-grid th>span.glyphicon {display:none;}
+.flexy-grid th.st-sort-ascent span.glyphicon-chevron-up {display:inline;}
+.flexy-grid th.st-sort-descent span.glyphicon-chevron-down {display:inline;}
+/* td: fixed-height */
+.flexy-grid tbody td {white-space:nowrap;}
+.flexy-grid tbody td[tr-ng-grid-body-cell=0] {position:fixed;}
+/*  pagination */
+.flexy-grid .panel-footer {padding:2px;height:39px;}
+.flexy-grid .pagination {margin:0;}
+.flexy-grid .table-stats {float:right;padding:7px 14px;}
+
+/* TABLE COLUMNS */
+.flexy-grid th, .flexy-grid td {max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background-repeat:no-repeat;}
+/* EDIT BUTTONS */
+.flexy-grid th.edit, .flexy-grid td.edit {min-width:114px;width:114px;text-overflow:clip;}
+.flexy-grid .table-sortable th.edit, .flexy-grid .table-sortable td.edit {min-width:86px;width:86px;}
+.flexy-grid th.edit .action-remove {display:none;}
+.flexy-grid .flexy-grid-has-selection th.edit .action-remove {display:inline;}
+/* hidden columns */
+.flexy-grid th.id, .flexy-grid td.id, .sortable-drag td.id,
+.flexy-grid th.uri, .flexy-grid td.uri, .sortable-drag td.uri,
+.flexy-grid th.order, .flexy-grid td.order, .sortable-drag td.order,
+.flexy-grid th.self_parent, .flexy-grid td.self_parent, .sortable-drag td.self_parent,
+.flexy-grid td._info {display:none;}
+/* specific column styling */
+.flexy-grid .flexy-grid-sortable-column {cursor:pointer;}
+.flexy-grid th.str_title, .flexy-grid td.str_title {max-width:none;text-overflow:inherit;}
+.flexy-grid th.txt, .flexy-grid td.txt {max-width:350px;}
+.flexy-grid th.media, .flexy-grid td.media,
+.flexy-grid th.rgb, .flexy-grid td.rgb {text-align:center;width:52px;max-width:52px; }
+.flexy-grid th.medias, .flexy-grid td.medias {min-width:120px;max-width:600px;}
+.flexy-grid th.tme, .flexy-grid td.tme {max-width:none; width:130px;}
+.flexy-grid th.rgb, .flexy-grid td.rgb {min-width:25px;max-width:50px;}
+/* ROW SELECTION */
+.flexy-grid tr.flexy-grid-selected td {background-color:@brand-info!important;}
+.flexy-grid tr .action-select span.flexy-grid-selected {display:none;}
+.flexy-grid tr .action-select span.flexy-grid-unselected {display:inline;}
+.flexy-grid tr.flexy-grid-selected .action-select span.flexy-grid-unselected {display:none;}
+.flexy-grid tr.flexy-grid-selected .action-select span.flexy-grid-selected {display:inline;}
+
+
+/* tree, branches & nodes */
+.flexy-grid tbody tr.flexy-tree-node td.str_title {background-image:url('../img/tree_lastnode.gif');background-repeat:no-repeat;}
+.flexy-grid tbody tr.flexy-tree-node[tree-level="1"] td.str_title {padding-left:2rem;background-position:0rem .5rem;}
+.flexy-grid tbody tr.flexy-tree-node[tree-level="2"] td.str_title {padding-left:3rem;background-position:1rem .5rem;}
+.flexy-grid tbody tr.flexy-tree-node[tree-level="3"] td.str_title {padding-left:4rem;background-position:2rem .5rem;}
+.flexy-grid tbody tr.flexy-tree-node[tree-level="4"] td.str_title {padding-left:5rem;background-position:3rem .5rem;}
+.flexy-grid tbody tr.flexy-tree-node[tree-level="5"] td.str_title {padding-left:6rem;background-position:4rem .5rem;}
+.flexy-grid tbody tr.flexy-tree-node[tree-level="6"] td.str_title {padding-left:7rem;background-position:5rem .5rem;}
+.flexy-grid tbody tr.flexy-tree-node[tree-level="7"] td.str_title {padding-left:8rem;background-position:6rem .5rem;}
+
+.sortable-drag tr.flexy-tree-node td.str_title {background-image:url('../img/tree_lastnode.gif');background-repeat:no-repeat;}
+.sortable-drag tr.flexy-tree-node[tree-level="1"] td.str_title {padding-left:2rem;background-position:0rem .5rem;}
+.sortable-drag tr.flexy-tree-node[tree-level="2"] td.str_title {padding-left:3rem;background-position:1rem .5rem;}
+.sortable-drag tr.flexy-tree-node[tree-level="3"] td.str_title {padding-left:4rem;background-position:2rem .5rem;}
+.sortable-drag tr.flexy-tree-node[tree-level="4"] td.str_title {padding-left:5rem;background-position:3rem .5rem;}
+.sortable-drag tr.flexy-tree-node[tree-level="5"] td.str_title {padding-left:6rem;background-position:4rem .5rem;}
+.sortable-drag tr.flexy-tree-node[tree-level="6"] td.str_title {padding-left:7rem;background-position:5rem .5rem;}
+.sortable-drag tr.flexy-tree-node[tree-level="7"] td.str_title {padding-left:8rem;background-position:6rem .5rem;}
+
+
+
+/* ng-sortable css file */
+.sortable-item,.sortable-placeholder {}
+.sortable-item {}
+.sortable-handle {cursor:move}
+.sortable-placeholder {display:block;}
+.sortable-drag{
+  position:absolute;
+	pointer-events:none;
+  overflow:hidden;
+	z-index:99999;
+}
+.sortable-drag td {
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  display:block;
+  height:34px;
+  margin:0px;
+  float:left;
+  clear:none;
+  /* TODO from bootstrap */
+  border-right: 1px solid #DDD;
+  padding:5px;
+}
+.sortable-drag span.flexy-grid-unselected {display:none;}
+.sortable-hidden{display:none!important}
