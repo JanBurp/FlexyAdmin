@@ -1,29 +1,18 @@
 <!DOCTYPE html>
-<html data-ng-app="flexyAdmin">
+<html lang="<?=$language?>" data-ng-app="flexyAdmin">
 <head>
-	<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
-	<base href="<?=base_url()?>" />
-
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html" charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>FlexyAdmin with AngularJS</title>
-
+	<base href="<?=base_url()?>" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="imagetoolbar" content="no" />
-	<meta http-equiv="content-language" content="nl" />
-
-  <!--Bootstrap -->
-  <link rel="stylesheet" href="sys/__test/external/bootstrap/dist/css/bootstrap.css" type="text/css" media="screen" title="no title" charset="utf-8">
-  <link rel="stylesheet" href="sys/__test/external/bootstrap/dist/css/bootstrap-theme.css" type="text/css" media="screen" title="no title" charset="utf-8">
-  <!--Angular modules -->
-  <link rel="stylesheet" href="sys/__test/external/angular-loading-bar/src/loading-bar.css" type="text/css" media="screen" title="no title" charset="utf-8">
-  <!--FlexyAdmin -->
-  <link rel="stylesheet" href="sys/__test/css/flexy-main.css" type="text/css" media="screen" title="no title" charset="utf-8">
-  <link rel="stylesheet" href="sys/__test/css/flexy-grid.css" type="text/css" media="screen" title="no title" charset="utf-8">
-  <link rel="stylesheet" href="sys/__test/css/flexy-ui.css" type="text/css" media="screen" title="no title" charset="utf-8">
-
+	<meta http-equiv="content-language" content="<?=$language?>" />
+  <link rel="stylesheet" href="sys/__test/css/flexyadmin.min.css" type="text/css" media="screen" title="no title" charset="utf-8">
 </head>
 
 <body class="flexy-authenticate hidden">
-  
   
   <div id="login" class="panel panel-primary" ng-controller="flexyLoginController as loginCtrl">
     <div class="panel-heading panel-title"><h3>Login</h3></div>
@@ -84,17 +73,16 @@
 
 
 <!-- Angular JS -->
-<script src="sys/__test/external/angular/angular.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/external/angular-route/angular-route.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/external/angular-bootstrap/ui-bootstrap-tpls.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/external/angular-bootstrap-show-errors/src/showErrors.min.js" type="text/javascript" charset="utf-8"></script>
-
+<script src="sys/__test/js/angular.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/js/angular-route.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/js/ui-bootstrap-tpls.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/js/showErrors.min.js" type="text/javascript" charset="utf-8"></script>
 <!-- Angular External Modules -->
-<script src="sys/__test/external/angular-http-auth/src/http-auth-interceptor.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/external/angular-toArrayFilter/toArrayFilter.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/external/angular-loading-bar/src/loading-bar.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/external/angular-smart-table/dist/smart-table.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/external/ng-sortable/dist/ng-sortable.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/js/http-auth-interceptor.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/js/toArrayFilter.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/js/loading-bar.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/js/smart-table.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/js/ng-sortable.min.js" type="text/javascript" charset="utf-8"></script>
 
 <!--FlexyAdmin -->
 <script src="sys/__test/jdb.extend.js" type="text/javascript" charset="utf-8"></script>
@@ -111,7 +99,6 @@
 <script src="sys/__test/flexy-menu/flexy-menu.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-grid/flexy-grid.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-form/flexy-form.js" type="text/javascript" charset="utf-8"></script>
-<!-- <script src="sys/__test/others/plugin.js" type="text/javascript" charset="utf-8"></script> -->
 
 </body>
 </html>
