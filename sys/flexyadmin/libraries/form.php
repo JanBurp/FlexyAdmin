@@ -860,7 +860,7 @@ class Form {
       if (!empty($field["repopulate"])) $field["value"]=$field["repopulate"];
     }
     $field['container_class']=trim($field['container_class'].' '.$class);
-    $class=trim($styles['field'].$class);
+    $class=trim($styles['field'].' '.$class);
     
     // class: validation
     if (isset($field['validation']) and has_string('required',$field['validation'])) $class.=" required";
