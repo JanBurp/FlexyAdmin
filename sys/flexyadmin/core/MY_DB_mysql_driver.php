@@ -428,20 +428,23 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 						while (empty($order) and next($stdFields));
 					}
 				}
-				$order=trim($order);
+				$order=$table.'.'.trim($order);
+        // trace_if(($table=='tbl_leerlingen'),array('table'=>$table,'order'=>$order));
+        
 				// check if it is not id, add id to it to prefent dubious sort results (if id exists)
 				if ($order!=PRIMARY_KEY) {
           if ($this->field_exists(PRIMARY_KEY,$table)) {
             $order=add_string($order,PRIMARY_KEY,',');   
           }
 				}
-				// trace_($order);
+        // trace_($order);
 				
 				if ($set and $order) $this->order_by($order);
 			}
 		}
     // if ($set) $this->order=$this->ar_orderby;
-    // trace_(array('table'=>$table,'order'=>$order));
+    // trace_if(($table=='tbl_leerlingen'),array('table'=>$table,'order'=>$order,'$this'=>$this->ar_orderby));
+    
 		return $order;
 	}
 
