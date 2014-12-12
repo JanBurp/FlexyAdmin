@@ -19,14 +19,17 @@ For recent sites the update processes described below should work:
 - perform all the steps from your version to the latest:
 
 
-UPDATE ....
+UPDATE 2777
 ===========
 - Run SQL update_r2716.sql t/m update_r2753.sql
+- Run add_cfg_email.sql als je die niet hebt toegevoegd
 - Replace current sys map
 - Replace site/libraries/forms.php
-- Add package.json, bower.json & gulpfile.js to root
-- in site/config/config.php change $config['css_style']... into $config['framework']...
-- in site.php check linking the css and js files
+- Add package.json, bower.json & gulpfile.js to root (als je ze wilt gebruiken)
+- In site/config/config.php change $config['css_style']... into $config['framework']...
+- In site/views/site.php check paths to css and js files
+- Verplaats /css/*.less bestanden naar de nieuwe map /less-default/
+- Voeg de map /assets/less-bootstrap toe (als je bootstrap wilt gebruiken)
 
 
 UPDATE 2715
