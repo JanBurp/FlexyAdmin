@@ -204,6 +204,22 @@ class MY_Lang extends CI_Lang {
 
 		return $value;
 	}
+  
+  /**
+   * Haalt een language key op voor bepaalde taal
+   *
+   * @param string $key 
+   * @param string $lang 
+   * @return string
+   * @author Jan den Besten
+   */
+  public function key($key='',$lang='') {
+    $cur_lang=$this->idiom;
+    $this->idiom=$lang;
+    $value=$this->line($key);
+    $this->idiom=$cur_lang;
+    return $value;
+  }
 
 }
 
