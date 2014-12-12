@@ -56,9 +56,10 @@ function set_language_neutral_fields($item,$fields=array('str_title','txt_text')
  * @author Jan den Besten
  */
 function langp() {
+	$CI =& get_instance();
 	$args=func_get_args();
 	$line=array_shift($args);
-  $line=lang($line);
+	$line=$CI->lang->line($line);
   $numArgs=count($args);
   $out='';
   switch ($numArgs) {
