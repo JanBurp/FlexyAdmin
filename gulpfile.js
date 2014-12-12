@@ -5,19 +5,19 @@
  * Installatie:
  * - Installeer node & npm, zie: http://nodejs.org 
  * - Ga naar je Terminal en zorg dat je in de root bent van je site
- * - type: npm install // een nieuwe map 'node_modules' wordt aangemaakt waar oa gulp en bower worden geinstalleerd, kan even duren.
- * - type: bower install // een nieuwe map 'bower_components' wordt aangemaakt met oa de laatste versies van jquery en bootstrap
- * - type: gulp install // dit zorgt ervoor dat de laatste versies van oa jquery en bootstrap naar de assets map worden verplaatst
+ * - type: npm install    // een nieuwe map 'node_modules' wordt aangemaakt waar oa gulp en bower worden geinstalleerd, kan even duren.
+ * - type: bower install  // een nieuwe map 'bower_components' wordt aangemaakt met oa de laatste versies van jquery en bootstrap
+ * - type: gulp install   // dit zorgt ervoor dat de laatste versies van oa jquery en bootstrap naar de assets map worden verplaatst
  * 
  * Gebruik van deze gulp:
- * - gulp // maak een complete build: compileren en minificeren van LESS, combineren van alle CSS in één bestand, combineren en minificeren van alle JS bestanden
+ * - gulp       // maak een complete build: compileren en minificeren van LESS, combineren van alle CSS in één bestand, combineren en minificeren van alle JS bestanden
  * - gulp watch // kijkt of er bestanden zijn veranderd, zo ja, build dat deel en doe een livereload naar de browser (installeer een livereload plugin in je browser om dat te laten werken)
  * 
  * Specifieker gebruik van deze gulp:
- * - gulp less // compileer alleen de LESS bestanden tot CSS bestanden
- * - gulp cssmin // voeg de CSS bestanden samen, autoprefixed browser specifieke css en voegt fallback in px toe waar rem units worden gebruikt (roept eerst 'less' aan)
- * - gulp jshint // test JS bestanden op veelvoorkomende fouten
- * - gulp jsmin // combineer en minificeer alle JS bestanden (roept eerst 'jshint' aan)
+ * - gulp less    // compileer alleen de LESS bestanden tot CSS bestanden
+ * - gulp cssmin  // voeg de CSS bestanden samen, autoprefixed browser specifieke css en voegt fallback in px toe waar rem units worden gebruikt (roept eerst 'less' aan)
+ * - gulp jshint  // test JS bestanden op veelvoorkomende fouten
+ * - gulp jsmin   // combineer en minificeer alle JS bestanden (roept eerst 'jshint' aan)
  * - gulp message // een test om te kijken of gulp werkt en er een notificatie komt
  * - gulp install // zie hierboven
  * 

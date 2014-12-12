@@ -1,3 +1,66 @@
+Changes 2777
+============
+
+Samenvatting:
+- Je kunt nu in plaats van de standaard FlexyAdmin css bestanden ook voor Bootstrap kiezen
+- De ingebouwde build tool (voor LESS en minificeren) is verbeterd. Maar schiet tekort voor Bootstrap->gebruik daarvoor Gulp
+- Een uitgebreide en flexibele Gulp file is toegevoegd. Deze zorgt oa voor LESS compilen (en nog veel meer). Zie gulpfile.js
+- jQuery is nu een onderdeel van de frontend in de map assets/js
+- De map assets/fonts is toegevoegd, met standaard de bootstrap glyphicons daarin http://getbootstrap.com/components/
+- Je kunt nu bestanden restricties geven zodat ze alleen door een ingelogde gebruiker te bekijken zijn.
+- Als een tabel een datumveld heeft kun je nu instellen dat die tabel standaard op de pagina begint met de datum van vandaag (of het dichtste daarbij)
+
+MYSQL:
+- MYSQL: update r2716
+- MYSQL: update r2745
+- MYSQL: update r2750
+- MYSQL: update_r2753
+- MYSQL: cfg_email is nu een standaard tabel van de Demo database
+
+FRONTEND:
+- CHANGED: site.php changed, and jquery in frontend
+- ADDED: $site adds default variables: assets & language
+- ADDED: scripts for node_modules with package.json & bower & gulp
+- ADDED: added assets/fonts
+- ADDED: assets/less-default and assets/less-bootstrap
+
+USERGUIDE:
+- USERGUIDE: setttings & rights
+- USERGUIDE: some small bugs
+- USERGUIDE: gulp, bower, bootstrap etc
+- USERGUIDE: plugin_refresh_media
+
+NEW:
+- Gulp file die alle frontend CSS & JS processing doet. Zie gulpfile.js voor meer info.
+- ADDED: MY_Form_Validation prep_url_mail()
+- ADDED: bootstrap as a framework
+- ADDED: nieuw cfg_table_info : b_jump_to_today, als aan dan springt de grid naar pagina met 1e item van vandaag (als er een datumveld in die tabel bestaat)
+- ADDED: /_ajax -> for testing frontend ajax libraries
+- ADDED: db->last_query_clean()
+- ADDED: MY_date_helper: unix_to_normal()
+- ADD: Frontend unittesting
+- ADD: 2 special database fields: tme_last_changed & user_changed this uses the new plugin: plugin_last_changed
+- CHANGED: plugin_automenu: children nemen status van parent over als !b_visible en b_restricted
+- CHANGED: some mime types
+- CHANGED: set a default css framework in config $config['css_style']
+- CHANGED: rewrite of form.php, and keep old form old_form.php
+- CHANGED: build watch setting is now more generic
+- CHANGED: build process also checks if site.php has changed
+- CHANGED: MY_string_helper get_prefix() je kunt nu ook een array van strings meegeven
+- CHANGED: MY_array_helper one_of_array_in_array() geeft nu FALSE of de key van de eerste die gevonden is
+
+BUGS:
+- BUG: db->order rare situations order_by needs a table.field instead of field
+- BUG/CHANGED: form: if no action is set, current uri is used
+- BUG: cronjob date calculation did not work perfect
+- BUGS: download files in list not ok
+- BUG: filemanager did not sort according to settings in cfg_media_info
+- BUG: db->last_query() result as expected
+- BUG: fill gave an error when random picking a file from an empty folder
+- BUG: crud did not work well with only id in where
+- BUG: global pagination setting did not work
+
+
 Changes 2715
 ============
 
