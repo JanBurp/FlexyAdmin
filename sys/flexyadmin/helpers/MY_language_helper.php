@@ -1,4 +1,6 @@
-<?php /**
+<?php
+
+/**
  * Uitbreiding op <a href="http://codeigniter.com/user_guide/helpers/language_helper.html" target="_blank">Language_helper van CodeIgniter</a>.
  * 
  * @author Jan den Besten
@@ -80,6 +82,42 @@ function langp() {
   }
 	return $out;
 }
+
+/**
+ * Geeft een taalwoord terug met %s vervangen door de meegegeven argumenten. Maar nu met als eerste argument de taal
+ *
+ * @param string argument(1)
+ * @param string argument(n), etc
+ * @return void
+ * @author Jan den Besten
+ */
+function langkey() {
+	$CI =& get_instance();
+	$args=func_get_args();
+	$line=array_shift($args);
+  $lang=array_shift($args);
+	$line=$CI->lang->key($lang,$line);
+  $numArgs=count($args);
+  $out='';
+  switch ($numArgs) {
+    case 1:
+      $out=sprintf($line,$args[0]);
+      break;
+    case 2:
+      $out=sprintf($line,$args[0],$args[1]);
+      break;
+    case 3:
+      $out=sprintf($line,$args[0],$args[1],$args[2]);
+      break;
+    case 4:
+      $out=sprintf($line,$args[0],$args[1],$args[2],$args[3]);
+      break;
+    default:
+      $out=$line;
+  }
+	return $out;
+}
+
 
 /**
  * Geeft een array met namen van alle landen van de wereld (op dit moment alleen nog in 'nl')
