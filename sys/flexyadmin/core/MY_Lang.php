@@ -29,11 +29,14 @@ class MY_Lang extends CI_Lang {
    */
 	public function __construct() {
 		parent::__construct();
-		$this->set();
     // check if a language table is set
     $config =& get_config();
     if (isset($config['language_table']) and !empty($config['language_table'])) {
       $this->lang_table=$config['language_table'];
+      $this->set($config['language']);
+    }
+    else {
+      $this->set();
     }
 	}
 	
@@ -178,9 +181,12 @@ class MY_Lang extends CI_Lang {
 	 * @return	string
 	 */
 	function line($line='', $logging=TRUE, $give_key_on_false_result=TRUE) {
+    $CI=&get_instance();
     $value=FALSE;
+    if (empty($this->idiom) and isset($CI->site['language'])) {
+      $this->idiom=$CI->site['language'];
+    }
     if (!empty($this->lang_table) and !empty($this->idiom)) {
-      $CI=&get_instance();
       // Only frontend
       if ($CI->uri->segment(1)!='admin') {
         if ($CI->db->field_exists('lang_'.$this->idiom,$this->lang_table)) $value=$CI->db->get_field_where($this->lang_table,'lang_'.$this->idiom,'key',$line);
