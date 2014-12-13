@@ -82,6 +82,47 @@ flexyAdmin.controller('GridController', ['$scope','$routeParams','$http', functi
     'totalPages'    : 0
   };
   
+  
+  
+  /**
+   * LOAD FROM SERVER
+   */
+  var callServer = function(tableState) {
+    
+    // TODO server side: https://lorenzofox3.github.io/smart-table-website/#section-pipe: set st-pipe="callServer" in grid.html
+    $http.post('get_table',{'table':$scope.table}).success(function(result){
+
+      // Define _info on all items
+      angular.forEach( result.data.items, function(item,key) {
+        if (angular.isUndefined(result.data.items[key]._info)) result.data.items[key]._info={};
+      });
+      // keep items in Scope
+      $scope.grid=result.data;
+
+      // Copy the references, needed for smart-table to wacht for changes in the data
+      $scope.grid.displayedItems = [].concat($scope.grid.items);
+      
+      // Fieldtypes
+      angular.forEach( $scope.grid.field_info, function(value, key) {
+        $scope.grid.field_info[key].type = value.field.prefix();
+      });
+      
+      // Calc stats/pagination
+      $scope.pagination.totalItems = $scope.grid.items.length;
+      $scope.pagination.totalPages = Math.ceil($scope.pagination.totalItems / $scope.pagination.itemsPerPage) ;
+      
+    }).error(function(data){
+      $log.log('AJAX error -> Grid');
+    });
+  };
+  
+  callServer(); // TODO comment this when serverside pagination/order etc.
+
+  
+  
+  
+  
+  
 
 
   /**
@@ -229,49 +270,7 @@ flexyAdmin.controller('GridController', ['$scope','$routeParams','$http', functi
   };
   
   
-  
-  
-  
-  
-  /**
-   * LOAD FROM SERVER
-   */
-  var callServer = function(tableState) {
-    
-    // TODO server side: https://lorenzofox3.github.io/smart-table-website/#section-pipe: set st-pipe="callServer" in grid.html
-    $http.post('get_table',{'table':$scope.table}).success(function(result){
-
-      // Define _info on all items
-      angular.forEach( result.data.items, function(item,key) {
-        if (angular.isUndefined(result.data.items[key]._info)) result.data.items[key]._info={};
-      });
-      // keep items in Scope
-      $scope.grid=result.data;
-
-      // Copy the references, needed for smart-table to wacht for changes in the data
-      $scope.grid.displayedItems = [].concat($scope.grid.items);
-      
-      // Fieldtypes
-      angular.forEach( $scope.grid.field_info, function(value, key) {
-        $scope.grid.field_info[key].type = value.field.prefix();
-      });
-      
-      // Calc stats/pagination
-      $scope.pagination.totalItems = $scope.grid.items.length;
-      $scope.pagination.totalPages = Math.ceil($scope.pagination.totalItems / $scope.pagination.itemsPerPage) ;
-      
-    }).error(function(data){
-      $log.log('AJAX error -> Grid');
-    });
-  };
-  
-  callServer(); // TODO comment this when serverside pagination/order etc.
-
-
-
-
-
-
+ 
   /**
    * SELECT ROW TOGGLE
    */
