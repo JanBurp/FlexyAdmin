@@ -61,7 +61,7 @@
 
     <div class="row">
       <nav class="menu-side col-xs-2"><flexy-menu type="sidebar" uiclass="nav-pills nav-stacked"></flexy-menu></nav>
-      <main class="col-xs-10" data-ng-view=""></main>
+      <main class="col-xs-10" data-ng-view="" autoscroll="true"></main>
     </div>
   
     <footer class="navbar navbar-default navbar-fixed-bottom">
