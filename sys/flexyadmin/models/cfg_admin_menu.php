@@ -202,10 +202,10 @@ class cfg_admin_menu extends Crud {
 	private function _show_table_menu($tables,$type) {
 		$menu=array();
 		$tables=filter_by($tables,$type."_");
-		// trace_($tables);
 		$excluded=$this->config->item('MENU_excluded');
 		$cfgTables=$this->cfg->get("CFG_table");
 		$cfgTables=filter_by($cfgTables,$type);
+    $cfgTables=sort_by($cfgTables,"order");
     // order and show tables according to cfg_table_info
 		$oTables=array();
 		foreach ($cfgTables as $row) {
@@ -214,8 +214,8 @@ class cfg_admin_menu extends Crud {
         if (!isset($row['b_visible']) or $row['b_visible'])
           $oTables[]=$row["table"];
 			}
-		}
-		$oTables=array_merge($oTables,$tables);
+    }
+    $oTables=array_merge($oTables,$tables);
 		foreach ($oTables as $table) {
       if (!in_array($table,$excluded) and $this->user->has_rights($table)) {
         $menu[]=array(

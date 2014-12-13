@@ -34,7 +34,7 @@
  		$this->hasData=false;
  		$this->data=array();
 		$this->keys=array(
-			'cfg_'.$this->config->item('CFG_table')					=> array( 'key' => $this->config->item('CFG_table_name'), 'fields' => '`id`,`table`,`str_order_by`' ),
+			'cfg_'.$this->config->item('CFG_table')					=> array( 'key' => $this->config->item('CFG_table_name'), 'fields' => '`id`,`order`,`table`,`str_order_by`' ),
 			'cfg_'.$this->config->item('CFG_field') 				=> array( 'key' => $this->config->item('CFG_field_name') ),
 			'cfg_'.$this->config->item('CFG_media_info')		=> array( 'key' => array('path','fields_media_fields') ),
 			'cfg_'.$this->config->item('CFG_img_info')			=> array( 'key' => 'path' ),
@@ -84,10 +84,6 @@
 				$fields='*';
 		}
 		if (!empty($key) and !is_array($key)) $key=array($key);
-		// trace_($table);
-		// trace_($key);
-		// trace_($fields);
-		// trace_($this->keys);
 		
 		$out=false;
 		$table=$this->_name($table);
