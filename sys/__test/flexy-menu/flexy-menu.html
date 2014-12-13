@@ -1,5 +1,5 @@
 <ul class="flexy-menu nav {{uiclass}}" ng-class="type=='sidebar'?'navbar navbar-default':''" role="navigation" data-ng-repeat="navbar in menu[type]">
-  <li data-ng-repeat="item in navbar" class="{{item.class}}">
+  <li data-ng-repeat="item in navbar" class="{{item.class}}" ng-class="{ active: isActive(item.href) }">
     <a class="{{item.class}}" href="{{item.href}}" title="{{item.name}}">
       <span class="{{item.glyphicon}}"></span>{{item.name}}
     </a>

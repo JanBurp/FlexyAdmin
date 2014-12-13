@@ -47,7 +47,7 @@ flexyMenu.process = function(root,menu) {
 }    
 
 
-flexyMenu.directive( "flexyMenu", ['flexyAdminGlobals',function(flexyAdminGlobals) {
+flexyMenu.directive( "flexyMenu", ['flexyAdminGlobals','$location',function(flexyAdminGlobals,$location) {
   return {
     restrict: "E",
     scope: {
@@ -55,6 +55,18 @@ flexyMenu.directive( "flexyMenu", ['flexyAdminGlobals',function(flexyAdminGlobal
       uiclass : "@",
     },
     templateUrl:'flexy-menu/flexy-menu.html',
+    
+    // Test of item is het actieve menu item
+    link: function($scope, element, attrs) {
+      $scope.isActive = function(href) {
+        if (angular.isDefined(href)) {
+          var path=$location.path();
+          href=href.substr(href.indexOf('#')+1);
+          return (href==path);
+        }
+        return false;
+      }
+    },
 
     controller : ['$scope', '$http', function($scope, $http) {
       $scope.menu = [];
