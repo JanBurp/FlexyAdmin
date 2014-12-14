@@ -19,19 +19,19 @@
     <div class="panel-content">
       <form class="form-horizontal" name="loginForm" ng-submit="loginCtrl.login()">
         <div class="form-group">
-          <label class="col-sm-3 control-label" for="login-username">Username</label>
-          <div class="col-sm-9">
+          <label class="control-label" for="login-username">Username</label>
+          <div>
             <input class="form-control" name="login-username" required class="form-control" placeholder="" ng-model="loginCtrl.user.username">
           </div>
         </div>
         <div class="form-group">
-          <label class="col-sm-3 control-label" for="login-password">Password</label>
-          <div class="col-sm-9">
+          <label class="control-label" for="login-password">Password</label>
+          <div>
             <input class="form-control" name="login-password" type="password" required class="form-control" placeholder="" ng-model="loginCtrl.user.password">
           </div>
         </div>
-        <div class="form-group">
-          <div class="col-sm-offset-3 col-sm-9">
+        <div class="form-group button-group">
+          <div class="">
             <button type="submit" class="btn btn-default" ng-disabled="loginForm.$invalid">Login</button>
             <a class="flexy-login-forgot action-click pull-right" ng-click="loginCtrl.askMail=!loginCtrl.askMail;loginCtrl.mailSend=false">wachtwoord vergeten?</a>
           </div>
@@ -41,7 +41,7 @@
     <div class="panel-footer" ng-show="loginCtrl.askMail">
       <form class="form-inline" name="loginEmailForm" ng-submit="loginCtrl.sendNewPassword()">
         <div class="form-group" show-errors>
-          <div class="col-sm-offset-3">
+          <div>
             <input class="form-control" name="login-email" type="email" required placeholder="E-mail" ng-model="loginCtrl.user.email">
             <button type="submit" class="btn btn-default" ng-disabled="loginEmailForm.$invalid">Stuur wachtwoord</button>
             <div class="btn text-success" ng-show="loginCtrl.mailSend"><span class="glyphicon glyphicon-ok"></span></div>
@@ -55,18 +55,18 @@
   <div id="container" class="container-fluid">
     
     <header class="navbar navbar-default navbar-fixed-top">
-      <div class="pull-left navbar-text"><a href="./admin/__test" data-flexy-blocks="">AngularJS Test</a></div>
-      <nav class="menu-header pull-right navbar-text"><flexy-menu type="header" uiclass="nav-pills"></flexy-menu></nav>
+      <div class="navbar-text"><a href="./admin/__test" data-flexy-blocks="">AngularJS Test</a></div>
+      <nav class="menu-header navbar-text"><flexy-menu type="header" uiclass="nav-pills"></flexy-menu></nav>
     </header>
 
-    <div class="row">
-      <nav class="menu-side col-xs-2"><flexy-menu type="sidebar" uiclass="nav-pills nav-stacked"></flexy-menu></nav>
-      <main class="col-xs-10" data-ng-view="" autoscroll="true"></main>
+    <div id="content" class="row">
+      <nav class="menu-side"><flexy-menu type="sidebar" uiclass="nav-pills nav-stacked"></flexy-menu></nav>
+      <main data-ng-view="" autoscroll="true"></main>
     </div>
   
     <footer class="navbar navbar-default navbar-fixed-bottom">
-      <div class="pull-left navbar-text"><a href="./admin/__test" data-flexy-blocks="">FlexyAdmin</a></div>
-      <nav class="menu-footer pull-right  navbar-text"><flexy-menu type="footer" uiclass="nav-pills"></flexy-menu></nav>
+      <div class="navbar-text"><a href="./admin/__test" data-flexy-blocks="">FlexyAdmin</a></div>
+      <nav class="menu-footer navbar-text"><flexy-menu type="footer" uiclass="nav-pills"></flexy-menu></nav>
     </footer>
     
   </div>
