@@ -1,20 +1,40 @@
+/* SIZES */
+@flexy-header-height      : 50px;
+@flexy-header-text-height : 34px; // ergens uit boostrap halen?
+@flexy-margins            : 12px;
+
+
+/* CALCULATED SIZES */
+@flexy-header-text-margin:  (@flexy-header-height - @flexy-header-text-height) / 2 - 1;
+
 /* Needed for UI-Angular */
 .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
-
-/* BODY: paddings for fixed header/footer */
-body {padding:62px 0;}
 a {outline:none!important;}
 
+/* BODY: paddings for fixed header/footer */
+body {padding:(@flexy-header-height + @flexy-margins) 0;}
+
 /* NAVBAR in HEADER & FOOTER smaller-uppercase */
-header, footer {min-height:34px;max-height:48px;}
-.navbar-text {margin-top:7px;margin-bottom:7px;height:34px;max-height:34px;}
+header, footer {height:@flexy-header-height;}
+.navbar>.navbar-text {
+  height:@flexy-header-text-height;
+  max-height:@flexy-header-text-height;
+  margin-top:@flexy-header-text-margin;
+  margin-bottom:@flexy-header-text-margin;
+}
+.navbar>nav {float:right}
+
+/* NAVBARS */
 .nav > li > a {text-transform:uppercase;}
 .flexy-menu.navbar {min-height:0px;}
+
+/* CONTENT SIZES */
+#content nav {.make-xs-column(2)}
+#content main {.make-xs-column(10)}
 
 /* SIDEBAR MENU: smaller items & padding glyphs */
 .menu-side li a {padding:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .menu-side li a .glyphicon {margin-right:7px;}
-
 
 /* LOADING BAR */
 #loading-bar-spinner {top:50%;left:50%;margin-left:-17px;margin-top:-17px;}
@@ -28,7 +48,11 @@ header, footer {min-height:34px;max-height:48px;}
 
 /* FORMS */
 label,button {text-transform:uppercase;}
+.form-group>label {.make-sm-column(3)}
+.form-group>div {.make-sm-column(9)}
+.form-group.button-group>div {.make-sm-column(9);.make-sm-column-offset(3);}
 .form-inline .form-group {width:100%;}
+.form-inline .form-group>div {.make-sm-column-offset(3);}
 
 /* GENERAL */
 .hidden {display:none;}
