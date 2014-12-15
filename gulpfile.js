@@ -72,6 +72,7 @@ var files = {
     'less'    : assets+'/less-default/*.less',            // LESS bestanden die gecompileerd moeten worden (string of array)
     'cssmin'  : [                                         // all CSS bestanden die samengevoegd en gemimificeerd moeten worden (string of array)
       assets+'/css/normalize.css',
+      // assets+'/css/font-awesome.min.css',
       assets+'/css/text.css',
       assets+'/css/layout.css'
     ],
@@ -98,6 +99,7 @@ var files = {
     'css'     : assets+'/css',
     'cssmin'  : [
       assets+'/css/bootstrap.css'
+      // assets+'/css/font-awesome.min.css'
     ],
     'cssdest' : 'styles.min.css',
     'watchcss': [
@@ -182,6 +184,14 @@ gulp.task('install', function() {
   gulp.src( bower+'/bootstrap/less/mixins/*' )
     .pipe(gulp.dest(assets +'/less-bootstrap/bootstrap/mixins'));
   gulp.src( '' ).pipe(notify("Bootstrap moved"));
+
+  // Verplaatst Fontawsome
+  gulp.src([
+     bower+'/components-font-awesome/fonts/*',
+    ]).pipe(gulp.dest( assets + '/fonts' ));
+  gulp.src( bower+'/components-font-awesome/css/*.min.css')
+    .pipe(gulp.dest(assets +'/css'));
+  gulp.src( '' ).pipe(notify("Fontawsome moved"));
 
   // Verplaatst en minificeer normalize.css
   gulp.src( bower+'/normalize.css/*.css')
