@@ -55,7 +55,7 @@
   <div id="container" class="container-fluid">
     
     <header class="navbar navbar-default navbar-fixed-top">
-      <div class="navbar-text"><a href="./admin/__test" data-flexy-blocks="">AngularJS Test</a></div>
+      <div class="navbar-text"><a href="./admin/__test#/home" data-flexy-blocks="">AngularJS Test</a></div>
       <nav class="menu-header navbar-text"><flexy-menu type="header" uiclass="nav-pills"></flexy-menu></nav>
     </header>
 
@@ -65,7 +65,7 @@
     </div>
   
     <footer class="navbar navbar-default navbar-fixed-bottom">
-      <div class="navbar-text"><a href="./admin/__test" data-flexy-blocks="">FlexyAdmin</a></div>
+      <div class="navbar-text"><a href="./admin/__test#/home" data-flexy-blocks="">FlexyAdmin</a></div>
       <nav class="menu-footer navbar-text"><flexy-menu type="footer" uiclass="nav-pills"></flexy-menu></nav>
     </footer>
     

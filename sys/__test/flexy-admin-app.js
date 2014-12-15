@@ -55,7 +55,9 @@ flexyAdmin.config( function($routeProvider){
       controller  : 'FormController',
       templateUrl : 'flexy-form/flexy-form.html'
     })
-    .otherwise({ redirectTo: '/home' });
+    .otherwise({
+      redirectTo: '/home'
+    });
 });
 
 
