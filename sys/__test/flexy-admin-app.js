@@ -1,13 +1,26 @@
 /**
- * $HeadURL$ 
+ * FlexyAdmin (c) Jan den Besten
+ * www.flexyadmin.com
+ * 
+ * @author: Jan den Besten
+ * @copyright: Jan den Besten
+ * @license: n/a
+ * 
  * $Author$
  * $Date$
  * $Revision$
+ * $HeadURL$ 
  */
 
 
 'use strict';
 
+/**
+ * Globale flexyAdmin angular module
+ * 
+ * @module: flexyAdmin
+ * @global
+ */
 var flexyAdmin = angular.module( 'flexyAdmin', [
   // Angular JS
   'ngRoute',
