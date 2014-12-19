@@ -379,13 +379,13 @@ class Crud extends CI_Model {
   
   
   /**
-   * Get result as array
+   * Get result
    *
    * @param string $args 
-   * @return array $result
+   * @return mixed $result
    * @author Jan den Besten
    */
-  public function get_array($args=array()) {
+  public function get($args=array()) {
 		$this->_set_args($args);
 		if (empty($this->table)) return FALSE;
     if ($this->select)  $this->db->select($this->select);
@@ -397,16 +397,27 @@ class Crud extends CI_Model {
   }
   
   /**
-   * get result (type is set)
+   * Get result as array
    *
    * @param string $args 
-   * @return mixed $result
+   * @return array $result
    * @author Jan den Besten
    */
-  public function get($args=array()) {
-    return $this->get_array($args);
+  public function get_array($args=array()) {
+    return $this->get($args);
   }
-  
+
+  /**
+   * Get result as row
+   *
+   * @param string $args 
+   * @return array $result
+   * @author Jan den Besten
+   */
+  public function get_row($args=array()) {
+    $result=$this->get($args);
+    return current($result);
+  }
   
 
 }
