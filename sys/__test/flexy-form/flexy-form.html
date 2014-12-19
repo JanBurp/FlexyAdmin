@@ -1,3 +1,10 @@
-<div id="form" class="">
-  <h2>Form will show here</h2>
+<div class="panel panel-primary flexy-form {{table}}" ng-controller="FormController">
+
+  <div class="panel-heading panel-title">
+    <h3>Formulier van {{table}}:{{id}}</h3>
+  </div>
+
+  <div class="panel-content">
+    <form sf-schema="schema" sf-form="form" sf-model="model"></form>
+  </div>
 </div>

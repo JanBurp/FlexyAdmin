@@ -136,8 +136,14 @@ gulp.task('install', function() {
     bower+"/angular-http-auth/src/http-auth-interceptor.js",
     bower+"/angular-toArrayFilter/toArrayFilter.js",
     bower+"/angular-loading-bar/src/loading-bar.js",
+    // grid
     bower+"/angular-smart-table/dist/smart-table.min.js",
     bower+"/ng-sortable/dist/ng-sortable.min.js",
+    // form
+    bower+"/angular-sanitize/*.min.js",
+    bower+"/tv4/tv4.js",
+    bower+"/objectpath/lib/ObjectPath.js",
+    bower+"/angular-schema-form/dist/*.min.js"
   ]).pipe(gulp.dest( assets+'/js' ));
   // CSS
   gulp.src([

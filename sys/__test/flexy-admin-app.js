@@ -31,8 +31,11 @@ var flexyAdmin = angular.module( 'flexyAdmin', [
   'angular-loading-bar',
   'ui.bootstrap',
   'ui.bootstrap.showErrors',
+  // Grid
   'smart-table',
   'ui.sortable',
+  // Form
+  'schemaForm',
   
   // flexyAdmin Modules
   'flexyMenu',
@@ -68,12 +71,16 @@ flexyAdmin.config( function($routeProvider){
       controller  : 'flexyLogoutController',
       template    : '',
     })
+    .when('/help/:page',{
+      controller  : 'flexyHelpController',
+      template    : '',
+    })
     .when('/grid/:table',{
       controller  : '',
       templateUrl : 'flexy-grid/flexy-grid.html'
     })
     .when('/form/:table/:id',{
-      controller  : 'FormController',
+      controller  : '',
       templateUrl : 'flexy-form/flexy-form.html'
     })
     .otherwise({

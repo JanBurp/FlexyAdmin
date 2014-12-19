@@ -8,10 +8,6 @@ class get_table extends ApiController {
     'offset'  => 0
   );
   
-  private $fields;
-  private $hidden_fields;
-
-
 	public function __construct($field='') {
 		parent::__construct();
     $this->load->model('ui');
@@ -53,53 +49,6 @@ class get_table extends ApiController {
       'items'       =>$items
     );
     return $this->_result(array('data'=>$data));
-  }
-  
-  
-  
-  /**
-   * Gets information about all fields
-   *
-   * @return array
-   * @author Jan den Besten
-   */
-  private function _get_field_info() {
-    $this->hidden_fields=array();
-    $field_info=array();
-    foreach ($this->fields as $field) {
-      $prefix=get_prefix($field);
-      $full_name=$this->args['table'].'.'.$field;
-      $info=$this->cfg->get('cfg_field_info',$full_name);
-      if (!el('b_show_in_grid',$info,true)) {
-        $this->hidden_fields[]=$field;
-      }
-      else {
-        if ($info) $info=array_unset_keys($info,array('id','field_field'));
-        $field_info[$field]=array(
-          'table'     => $this->args['table'],
-          'field'     => $field,
-          'ui_name'   => $this->ui->get($field),
-          'info'      => $info,
-          'editable'  => !in_array($field,$this->config->item('NON_EDITABLE_FIELDS')),
-          'incomplete'=> in_array($prefix,$this->config->item('INCOMPLETE_DATA_TYPES'))
-        );
-      }
-    }
-    return $field_info;
-  }
-  
-  /**
-   * Gets information about the table
-   *
-   * @return array
-   * @author Jan den Besten
-   */
-  private function _get_table_info() {
-    $table_info=$this->cfg->get('cfg_table_info',$this->args['table']);
-    $table_info['ui_name']  = $this->ui->get($this->args['table']);
-    $table_info['sortable'] = !in_array('order',$this->fields);
-    $table_info['tree']     = in_array('self_parent',$this->fields);
-    return $table_info;
   }
   
   
