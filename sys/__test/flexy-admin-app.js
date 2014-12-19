@@ -1,3 +1,11 @@
+/**
+ * $HeadURL$ 
+ * $Author$
+ * $Date$
+ * $Revision$
+ */
+
+
 'use strict';
 
 var flexyAdmin = angular.module( 'flexyAdmin', [
