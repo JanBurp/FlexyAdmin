@@ -7,10 +7,10 @@
  * @copyright: Jan den Besten
  * @license: n/a
  * 
- * $Author: jan $
- * $Date: 2014-12-20 16:43:01 +0100 (Sat, 20 Dec 2014) $
- * $Revision: 2795 $
- * $HeadURL: file:///Users/jan/Dropbox/svn/FlexyAdmin/trunk/sys/__test/flexy-form/flexy-form.js $ 
+ * $Author$
+ * $Date$
+ * $Revision$
+ * $HeadURL$ 
  */
 
 class Crud extends CI_Model {
