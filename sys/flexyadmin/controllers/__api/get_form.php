@@ -34,15 +34,15 @@ class get_form extends ApiController {
       $field_info=$this->_get_field_info();
       // TABLE INFO
       $table_info=$this->_get_table_info();
-      // GET DATA
-      $values=$this->_get_values($table_info);
+      // GET FIELDS
+      $fields=$this->_get_fields($table_info);
     }
     
     // RESULT
     $data=array(
       'table_info'  =>$table_info,
       'field_info'  =>$field_info,
-      'values'      =>$values
+      'fields'      =>$fields
     );
     return $this->_result(array('data'=>$data));
   }
@@ -55,7 +55,7 @@ class get_form extends ApiController {
    * @return array
    * @author Jan den Besten
    */
-  private function _get_values($table_info) {
+  private function _get_fields($table_info) {
     $this->db->unselect($this->hidden_fields);
     $values = $this->crud->get_row($this->args);
     return $values;

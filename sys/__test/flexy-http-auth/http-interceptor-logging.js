@@ -30,10 +30,10 @@ flexyAdmin.factory('logInterceptor',['flexyAdminGlobals','$q',function(flexyAdmi
       if ( _isHTML(config) ) message+=' HTML ';
       message+=' - ' + _url(config);
       if ( angular.isDefined(data) ) {
-        console.log(message, data );
+        console.info(message, data );
       }
       else {
-        console.log(message);
+        console.info(message);
       }
     }
   }
