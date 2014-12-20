@@ -116,7 +116,7 @@ String.method('encodePath', function() {
  */
 String.method('addPart', function (part,adder) {
   var s=this;
-  if (isUndefined(adder)) adder=',';
+  if (angular.isUndefined(adder)) adder=',';
   if (s.length>0) s+=adder;
   s+=part;
   return s;
@@ -131,9 +131,9 @@ String.method('addPart', function (part,adder) {
  * @return String
  */
 String.method('random', function(len,chars) {
-  if (isUndefined(chars)) chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+  if (angular.isUndefined(chars)) chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
   var randomstring = '';
-  for (var i=0; i < Math.random()*len ; i++) {
+  for (var i=0; i < len ; i++) {
     var rnum = Math.floor(Math.random() * chars.length);
     randomstring += chars.substring(rnum,rnum+1);
   }

@@ -15,59 +15,22 @@
 
 'use strict';
 
-flexyAdmin.controller('GridController', ['$scope','$routeParams','$http', function($scope,$routeParams,$http) {
+flexyAdmin.controller('GridController', ['flexyAdminGlobals','$scope','$routeParams','$http', function($flexyAdminGlobals,$scope,$routeParams,$http) {
   
   /**
    * GLOBAL GRID PARAMS
    */
   var self=this;
   $scope.table = $routeParams.table;
+  $scope.base_url = $flexyAdminGlobals.base_url;
   $scope.has_selection = false;
   
   /**
    * GRID DATA
    */
   $scope.grid = {
-    /**
-     * Information about the table, will have:
-     *  
-     * table_info = { 
-     *  table:        'string with table name',
-     *  ui_name:      'name for table in user interface'
-     *  str_order_by: 'fieldname DESC',
-     *  sortable:     TRUE/FALSE if the data is sortable by the user   
-     *  tree:         TRUE/FALSE if the data is in a tree (with a parent id)
-     * }
-     * 
-     */
     'table_info'      : {},
-    
-    /**
-     * Information about the fields
-     * field_info = [
-     *  'field_name' : { 
-     *                  field:        'string with field name',
-     *                  table:        'string with table name where the field in de database exists',
-     *                  ui_name:      'name for field in user interface'
-     *                  editable:     TRUE/FALSE if the value in the field can be editted by the user
-     *                  incomplete:   TRUE/FALSE if the data that is loaded is incomplete (needs to be loaded before editting), for large data
-     *                  info: {
-     *                    b_show_in_grid:         TRUE/FALSE,
-     *                    b_show_in_form:         TRUE/FALSE,
-     *                    str_show_in_form_where: '',
-     *                    str_fieldset:           '',
-     *                    b_editable_in_grid:     TRUE/FALSE,
-     *                    str_options:            '',
-     *                    b_multi_options:        TRUE/FALSE,
-     *                    b_ordered_options:      TRUE/FALSE,
-     *                    str_options_where:      '',
-     *                    str_validation_rules:   '',
-     *                    str_validation_parameters: ''
-     *                  }
-     * }]
-     */
     'field_info'      : {},
-
     /**
      * The data rows itself = [
      *  id  : {
@@ -133,10 +96,11 @@ flexyAdmin.controller('GridController', ['$scope','$routeParams','$http', functi
   
   callServer(); // TODO comment this when serverside pagination/order etc.
 
-  
-  
-  
-  
+
+
+
+
+
   
 
 

@@ -49,10 +49,24 @@ var flexyAdmin = angular.module( 'flexyAdmin', [
  */
 
 flexyAdmin.constant('flexyAdminGlobals',{
-  base_url      : 'admin/__test',  
+  base_url      : 'admin/__test',
   api_base_url  : '__api/',
   sys_folder    : 'sys/__test/',
   log_prefix    : 'FA ',
+
+  form_field_types : {
+    'default' : {
+      'data-type'   : 'string',
+      'type'        : 'string',
+    },
+    'email' : {
+      'type' : 'email',
+    },
+    'stx' : {
+      'type' : 'textarea',
+    },
+  },
+  
 });
 
 
