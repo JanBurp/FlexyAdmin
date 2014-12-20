@@ -5,13 +5,10 @@
   </div>
 
   <div class="panel-content">
-    <form novalidate class="form-horizontal"
-          name="flexyform"
-          sf-schema="schema"
-          sf-form="form"
-          sf-model="model"
-          role="form"
-          ng-submit="onSubmit(flexyform)"></form>
+    <form novalidate class="form-horizontal" name="flexyform" role="form" ng-submit="onSubmit(flexyform)">
+      <button class="btn btn-primary pull-right" type="submit">Invoeren</button>
+      <div sf-schema="schema" sf-form="form" sf-model="model"></div>
+    </form>
           
     <div ng-show="flexyform.$valid" class="bg-info">Form is valid</div>
     <div ng-show="flexyform.$invalid" class="bg-danger">Form is not valid</div>

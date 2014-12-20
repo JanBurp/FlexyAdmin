@@ -62,6 +62,9 @@ flexyAdmin.constant('flexyAdminGlobals',{
     'email' : {
       'type' : 'email',
     },
+    'txt' : {
+      'type' : 'textarea',
+    },
     'stx' : {
       'type' : 'textarea',
     },

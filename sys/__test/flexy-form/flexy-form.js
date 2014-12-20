@@ -56,6 +56,10 @@ flexyAdmin.controller('FormController', ['flexyAdminGlobals','$scope','$routePar
 
       // Create Schema properties
       $scope.schema.properties = {};
+      // Start tabs
+      var tabs = {};
+      tabs[$scope.form_data.table_info.ui_name]=[];
+      
       angular.forEach( $scope.form_data.fields, function(value, key) {
 
         // Default field
@@ -74,18 +78,33 @@ flexyAdmin.controller('FormController', ['flexyAdminGlobals','$scope','$routePar
           title   : field['title'],
           default : field['default']
         };
-        // -> form
-        $scope.form.push({
+        
+        // Tabs & items in tabs
+        field.tab = $scope.form_data.table_info.ui_name; // default tab
+        if ( angular.isDefined( $scope.form_data.field_info[key]['info']['str_fieldset']) ) {
+          if ($scope.form_data.field_info[key]['info']['str_fieldset']!=="") {
+            field.tab = $scope.form_data.field_info[key]['info']['str_fieldset'];
+          }
+        }
+        if ( angular.isUndefined( tabs[field.tab] )) tabs[field.tab]=[]; // new tab
+        tabs[field.tab].push({
           'key' : key,
           'type': field['type']
         });
       });
       
-      // Buttons
-      $scope.form.push({
-        type: "submit",
-        title: "Invoeren",
+      // -> create Tabs in form
+      var form_tabs = {
+        type: "tabs",
+        tabs: [],
+      };
+      angular.forEach( tabs, function(tab_items, tab_title) {
+        form_tabs.tabs.push({
+          title: tab_title,
+          items: tab_items
+        });
       });
+      $scope.form.push(form_tabs);
       
     }).error(function(data){
       $log.log('AJAX error -> Form');
