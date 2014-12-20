@@ -2,11 +2,17 @@
 
 /**
  * Met dit model kun je de basis database handelingen uitvoeren (CRUD)
- *
- * @package default
- * @author Jan den Besten
- * @todo read methods
+ * 
+ * @author: Jan den Besten
+ * @copyright: Jan den Besten
+ * @license: n/a
+ * 
+ * $Author: jan $
+ * $Date: 2014-12-20 16:43:01 +0100 (Sat, 20 Dec 2014) $
+ * $Revision: 2795 $
+ * $HeadURL: file:///Users/jan/Dropbox/svn/FlexyAdmin/trunk/sys/__test/flexy-form/flexy-form.js $ 
  */
+
 class Crud extends CI_Model {
 
   private $get_as = "array";
@@ -303,7 +309,6 @@ class Crud extends CI_Model {
 	}
 
 
-
   /**
    * Stelt alle standaard argumenten in
    *
@@ -319,13 +324,21 @@ class Crud extends CI_Model {
 
 		$this->data   = element('data',$args,FALSE);
     $this->select = element('select',$args,FALSE);
-		$this->where  = element('where',$args,FALSE);
-		if ($this->where and !is_array($this->where)) $this->where=array(PRIMARY_KEY=>$this->where);
 		$this->limit  = element('limit',$args,FALSE);
 		$this->offset = element('offset',$args,0);
+		$this->where  = element('where',$args,FALSE);
+		if ($this->where and !is_array($this->where)) {
+      if ($this->where=='first') {
+        $this->where=FALSE;
+        $this->limit=1;
+      }
+      else {
+		    $this->where=array(PRIMARY_KEY=>$this->where);
+      }
+		}
 		$this->order 	= element('order',$args,FALSE);
     // if ($this->order and !is_array($this->order)) $this->order=array($this->order.' DESC');
-    // trace_(['table'=>$this->table,'data'=>$this->data]);
+    // trace_(['table'=>$this->table,'where'=>$this->where]);
 	}
 
   /**
