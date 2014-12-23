@@ -36,6 +36,7 @@ var flexyAdmin = angular.module( 'flexyAdmin', [
   'ui.sortable',
   // Form
   'schemaForm',
+  'schemaForm-tinymce',
   
   // flexyAdmin Modules
   'flexyMenu',
@@ -55,19 +56,44 @@ flexyAdmin.constant('flexyAdminGlobals',{
   log_prefix    : 'FA ',
 
   form_field_types : {
-    'default' : {
+    
+    // DEFAULT TYPE
+    '[default]' : {
       'data-type'   : 'string',
+      'format'      : 'string',
       'type'        : 'string',
+      'readonly'    : false,
     },
+    
+    // SPECIAL FIELDS
+    '[id]' : {
+      'readonly'    : true,
+      'type'        : 'hidden',
+    },
+    '[order]' : {
+      'readonly'    : true,
+      'type'        : 'hidden',
+    },
+    '[self_parent]' : {
+      'readonly'    : true,
+    },
+    '[uri]' : {
+      'readonly'    : true,
+      'type'        : 'hidden',
+    },
+    
+    // TYPES (determined by prefix)
     'email' : {
       'type' : 'email',
     },
     'txt' : {
-      'type' : 'textarea',
+      'format' : 'html',
+      'type'   : 'wysiwyg',
     },
     'stx' : {
       'type' : 'textarea',
     },
+    
   },
   
 });

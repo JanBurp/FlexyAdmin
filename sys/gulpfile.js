@@ -125,7 +125,7 @@ gulp.task('install', function() {
     .pipe(gulp.dest(assets +'/less/bootstrap/mixins'));
   gulp.src( '' ).pipe(notify("Bootstrap moved"));
   
-  // Verplaats Angular JS
+  // Verplaats Angular JS etc.
   gulp.src([
     // Angular
     bower+"/angular/angular.js",
@@ -143,7 +143,12 @@ gulp.task('install', function() {
     bower+"/angular-sanitize/*.min.js",
     bower+"/tv4/tv4.js",
     bower+"/objectpath/lib/ObjectPath.js",
-    bower+"/angular-schema-form/dist/*.min.js"
+    bower+"/angular-schema-form/dist/*.min.js",
+    // form:tinymce
+    bower+"/tinymce/**/*.min.js",
+    bower+"/tinymce/**/*",
+    bower+"/tx-tinymce/tx-tinymce.js",
+    bower+"/angular-schema-form-tinymce/bootstrap-tinymce.js"
   ]).pipe(gulp.dest( assets+'/js' ));
   // CSS
   gulp.src([

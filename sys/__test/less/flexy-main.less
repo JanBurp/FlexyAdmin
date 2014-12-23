@@ -42,19 +42,26 @@ header, footer {height:@flexy-header-height;}
 
 
 /* PANELS */
-.panel-heading {height:42px;overflow:hidden;padding:7px 5px;}
-.panel-heading h3 {text-transform:uppercase;margin:0 1rem;}
+.panel-heading {height:42px;overflow:hidden;padding:7px 1rem;}
+.panel-heading h3 {text-transform:uppercase;margin:0;float:left}
+.panel-heading>div {float:right;}
+.panel-heading span.glyphicon-floppy-disk {margin-left:1rem;}
 .panel-content, .panel-footer {padding:2rem;}
 
 /* FORMS */
 label,button {text-transform:uppercase;}
+.form-group {border-radius:@border-radius-base;}
 .form-group:hover {background-color:@gray-lighter;}
 .form-group>label {.make-sm-column(3)}
 .form-group>div {.make-sm-column(9)}
+.form-group>div.mce-tinymce {.make-sm-column(8);margin-left:1.5rem}
 .form-group.button-group>div {.make-sm-column(9);.make-sm-column-offset(3);}
 .form-inline .form-group {width:100%;}
 .form-inline .form-group>div {.make-sm-column-offset(3);}
 .help-block {margin:0px}
+/* FIELDS */
+
+
 
 /* GENERAL */
 .hidden {display:none;}
