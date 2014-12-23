@@ -4,6 +4,13 @@
  */
 
 
+if (!function_exists('xdebug_break')) {
+  function xdebug_break() {
+    trace_();
+  }
+}
+
+
 /**
  * Voegt regel aan logbestand toe
  * 

@@ -245,8 +245,6 @@ class Filemanager extends AdminController {
 					foreach ($files as $file) {
 						$DoDelete=TRUE;
 						if ($this->mediatable->exists()) {
-              xdebug_break();
-              
 							if ($this->mediatable->is_user_restricted($path)) {
                 $restrictedToUser=$this->user->restricted_id($path);
 								$DoDelete=FALSE;
