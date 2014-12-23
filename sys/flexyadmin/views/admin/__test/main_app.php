@@ -88,8 +88,12 @@
 <script src="sys/__test/js/angular-sanitize.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/tv4.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/ObjectPath.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/js/tinymce.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/js/tx-tinymce.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/schema-form.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/bootstrap-decorator.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/js/bootstrap-tinymce.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/js/langs/nl.js" type="text/javascript" charset="utf-8"></script>
 
 <!--FlexyAdmin -->
 <script src="sys/__test/jdb.extend.js" type="text/javascript" charset="utf-8"></script>

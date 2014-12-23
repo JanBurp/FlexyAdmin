@@ -21,8 +21,9 @@ flexyAdmin.controller('FormController', ['flexyAdminGlobals','$scope','$routePar
    * GLOBAL FORM PARAMS
    */
   var self=this;
-  $scope.table  = $routeParams.table;
-  $scope.id     = $routeParams.id;
+  $scope.table          = $routeParams.table;
+  $scope.id             = $routeParams.id;
+  $scope.original_data  = {};
 
   /**
    * FORM DATA
@@ -44,6 +45,32 @@ flexyAdmin.controller('FormController', ['flexyAdminGlobals','$scope','$routePar
   $scope.model = {};
   
   
+  
+  /**
+   * RESET FORM
+   */
+  $scope.resetForm = function(form) {
+    // reset each field
+    angular.forEach( $scope.form_data.fields, function(value, key) {
+      $scope.model[key]=value;
+    });
+    // pristine form
+    form.$setPristine();
+  }
+  
+  /**
+   * SUBMIT FORM
+   */
+  $scope.submitForm = function(form) {
+    // First we broadcast an event so all fields validate themselves
+    $scope.$broadcast('schemaFormValidate');
+    // Then we check if the form is valid
+    if (form.$valid) {
+      alert('yes!');
+    }
+  }
+  
+  
   /**
    * LOAD FROM SERVER
    */
@@ -63,7 +90,12 @@ flexyAdmin.controller('FormController', ['flexyAdminGlobals','$scope','$routePar
       angular.forEach( $scope.form_data.fields, function(value, key) {
 
         // Default field
-        var field = angular.copy( $flexyAdminGlobals.form_field_types.default );
+        var field = angular.copy( $flexyAdminGlobals.form_field_types['[default]'] );
+        // Fieldname
+        var fieldname='['+key+']';
+        if (angular.isDefined($flexyAdminGlobals.form_field_types[fieldname])) {
+          field = angular.extend( field, $flexyAdminGlobals.form_field_types[fieldname] );
+        }
         // Field type according to prefix
         var prefix = key.prefix();
         if (angular.isDefined($flexyAdminGlobals.form_field_types[prefix])) {
@@ -88,9 +120,11 @@ flexyAdmin.controller('FormController', ['flexyAdminGlobals','$scope','$routePar
         }
         if ( angular.isUndefined( tabs[field.tab] )) tabs[field.tab]=[]; // new tab
         tabs[field.tab].push({
-          'key' : key,
-          'type': field['type']
+          'key'       : key,
+          'type'      : field['type'],
+          'readonly'  : field['readonly'],
         });
+
       });
       
       // -> create Tabs in form
@@ -105,22 +139,11 @@ flexyAdmin.controller('FormController', ['flexyAdminGlobals','$scope','$routePar
         });
       });
       $scope.form.push(form_tabs);
-      
     }).error(function(data){
       $log.log('AJAX error -> Form');
     });
   };
   
   callServer();
-  
-  
-  $scope.onSubmit = function(form) {
-    // First we broadcast an event so all fields validate themselves
-    $scope.$broadcast('schemaFormValidate');
-    // Then we check if the form is valid
-    if (form.$valid) {
-      alert('yes!');
-    }
-  }
   
 }]);
