@@ -13,9 +13,8 @@
  */
 
 
-'use strict';
-
 flexyAdmin.controller('HelpController', ['$scope','$routeParams', function($scope,$routeParams) {
+  'use strict';
   
   var self = this;
   

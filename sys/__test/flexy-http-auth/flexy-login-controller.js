@@ -12,21 +12,21 @@
  * $HeadURL$ 
  */
 
-
-'use strict';
+/*jshint -W030 */
 
 flexyAdmin.controller('flexyLoginController', ['flexyAuthService','authService', function(flexyAuthService,authService){
+  'use strict';
+  
   var self=this;
   
   self.user = {
     username:'',
     password:'',
     email:'',
-  }
+  };
   
   self.askMail  = false;
   self.mailSend = false;
-  
   
   /**
    * login
@@ -45,7 +45,6 @@ flexyAdmin.controller('flexyLoginController', ['flexyAuthService','authService',
     );
   },
   
-  
   /**
    * Send new password
    */
@@ -55,7 +54,6 @@ flexyAdmin.controller('flexyLoginController', ['flexyAuthService','authService',
         self.mailSend = true;
       }
     );
-  }
-  
+  };
   
 }]);

@@ -13,9 +13,9 @@
  */
 
 
-'use strict';
-
 flexyAdmin.controller('flexyLogoutController', ['flexyAuthService','authService','$location','$window', function(flexyAuthService,authService,$location,$window){
+  'use strict';
+  
   flexyAuthService.logout().then(
     function(succes) {
       authService.loginCancelled();
@@ -23,4 +23,5 @@ flexyAdmin.controller('flexyLogoutController', ['flexyAuthService','authService'
       flexyAuthService.check();
     }
   );
+  
 }]);

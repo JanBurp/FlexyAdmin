@@ -30,7 +30,10 @@ var assets    = '__test';
  */
 var files = {
   'js'      : assets+'/js',
-  'jshint'  : assets+'/js/site.js',
+  'jshint'  : [
+    assets+'/**/jdb*.js',
+    assets+'/**/flexy*.js',
+  ],
   'jsmin'   : [
     assets+'/js/jquery.min.js',
     assets+'/js/bootstrap.min.js',

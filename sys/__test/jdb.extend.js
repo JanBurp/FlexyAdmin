@@ -1,6 +1,5 @@
 /**
- * FlexyAdmin (c) Jan den Besten
- * www.flexyadmin.com
+ * Extending standaard JavaScript Object prototypes en een aantal globale functies
  * 
  * @author: Jan den Besten
  * @copyright: Jan den Besten
@@ -13,25 +12,16 @@
  */
 
 
-'use strict';
-
-/**
- * Extending standaard JavaScript Object prototypes en een aantal globale functies
- * 
- * @author  Jan den Besten
- * @package FlexyAdmin
- */
-
-
  /**
   * This is a convenient way to add methods to an object prototype.
   * see: 'JavaScript the Good Parts', page 4
   * @author Dougles Crockford
   */
 Function.prototype.method = function(name,func) {
+  'use strict';
   this.prototype[name]=func;
   return this;
-}
+};
 
 
 
@@ -42,6 +32,7 @@ Function.prototype.method = function(name,func) {
  * @return String
  */
 String.method('striptags', function() {
+  'use strict';
   return this.replace(/(<([^>]+)>)/ig,"");
 });
 
@@ -53,6 +44,7 @@ String.method('striptags', function() {
  * @return String
  */
 String.method('htmlentities', function() {
+  'use strict';
   return this.replace(/</g,"&lt;").replace(/>/g,"&gt;");
 });
 
@@ -64,6 +56,7 @@ String.method('htmlentities', function() {
  * @return String
  */
 String.method('prefix', function(char) {
+  'use strict';
   char = char || "_";
   return this.substr(0, this.indexOf(char)) ;
 });
@@ -75,6 +68,7 @@ String.method('prefix', function(char) {
  * @return String
  */
 String.method('suffix', function(char) {
+  'use strict';
   char = char || "_";
   return this.substr(0, this.lastIndexOf(char)) ;
 });
@@ -90,6 +84,7 @@ String.method('suffix', function(char) {
  * @return String
  */
 String.method('decodePath', function() {
+  'use strict';
   return this.replace(/\//g,"___");
 });
 
@@ -101,6 +96,7 @@ String.method('decodePath', function() {
  * @return String
  */
 String.method('encodePath', function() {
+  'use strict';
   return this.replace(/___/g,"/");
 });
 
@@ -115,6 +111,7 @@ String.method('encodePath', function() {
  * @return  String
  */
 String.method('addPart', function (part,adder) {
+  'use strict';
   var s=this;
   if (angular.isUndefined(adder)) adder=',';
   if (s.length>0) s+=adder;
@@ -131,6 +128,7 @@ String.method('addPart', function (part,adder) {
  * @return String
  */
 String.method('random', function(len,chars) {
+  'use strict';
   if (angular.isUndefined(chars)) chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
   var randomstring = '';
   for (var i=0; i < len ; i++) {

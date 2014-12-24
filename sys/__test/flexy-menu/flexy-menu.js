@@ -13,14 +13,14 @@
  */
 
 
-'use strict';
-
 /**
  * flexy-menu
  */
 var flexyMenu = angular.module( 'flexyMenu', []);
 
 flexyMenu.process = function(root,menu) {
+  'use strict';
+  
   var classes = {
     'media' :{'class':'','glyphicon':'glyphicon glyphicon-picture'},
     'tools' :{'class':'text-muted','glyphicon':'glyphicon glyphicon-wrench'},
@@ -59,10 +59,12 @@ flexyMenu.process = function(root,menu) {
   }
   
   return processed;
-}    
+};    
 
 
 flexyMenu.directive( "flexyMenu", ['flexyAdminGlobals','$location',function(flexyAdminGlobals,$location) {
+  'use strict';
+  
   return {
     restrict: "E",
     scope: {
@@ -80,7 +82,7 @@ flexyMenu.directive( "flexyMenu", ['flexyAdminGlobals','$location',function(flex
           return (href==path);
         }
         return false;
-      }
+      };
     },
 
     controller : ['$scope', '$http', function($scope, $http) {
@@ -97,5 +99,5 @@ flexyMenu.directive( "flexyMenu", ['flexyAdminGlobals','$location',function(flex
       
     }],
     
-  }
+  };
 }]);

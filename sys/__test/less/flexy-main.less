@@ -48,16 +48,18 @@ header, footer {height:@flexy-header-height;}
 .panel-heading span.glyphicon-floppy-disk {margin-left:1rem;}
 .panel-content, .panel-footer {padding:2rem;}
 
+
 /* FORMS */
 label,button {text-transform:uppercase;}
+label {display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .form-group {border-radius:@border-radius-base;}
 .form-group:hover {background-color:@gray-lighter;}
-.form-group>label {.make-sm-column(3)}
-.form-group>div {.make-sm-column(9)}
+.form-group>.control-label {.make-sm-column(2);text-align:left;}
+.form-group>div {.make-sm-column(10)}
 .form-group>div.mce-tinymce {.make-sm-column(8);margin-left:1.5rem}
-.form-group.button-group>div {.make-sm-column(9);.make-sm-column-offset(3);}
+.form-group.button-group>div {.make-sm-column(10);.make-sm-column-offset(2);}
 .form-inline .form-group {width:100%;}
-.form-inline .form-group>div {.make-sm-column-offset(3);}
+.form-inline .form-group>div {.make-sm-column-offset(2);}
 .help-block {margin:0px}
 /* FIELDS */
 
@@ -70,7 +72,7 @@ label,button {text-transform:uppercase;}
 
 
 /* FLEXY LOGIN */
-#login {width:600px;margin:2rem auto;}
+#login {width:700px;margin:2rem auto;}
 #login .panel-content {padding-bottom:0;}
 #login .flexy-login-forgot {padding-top:1rem;}
 #login .panel-footer .form-group {width:100%;}
