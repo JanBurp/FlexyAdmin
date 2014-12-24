@@ -148,16 +148,58 @@ gulp.task('install', function() {
     bower+"/objectpath/lib/ObjectPath.js",
     bower+"/angular-schema-form/dist/*.min.js",
     // form:tinymce
-    bower+"/tinymce/**/*.min.js",
-    bower+"/tinymce/**/*",
+    bower+"/tinymce/tinymce.min.js",
     bower+"/tx-tinymce/tx-tinymce.js",
     bower+"/angular-schema-form-tinymce/bootstrap-tinymce.js"
   ]).pipe(gulp.dest( assets+'/js' ));
+  // form:tinymce
+  gulp.src([
+    bower+"/tinymce/plugins/**/*",
+  ]).pipe(gulp.dest( assets+'/js/plugins' ));
+  gulp.src([
+    bower+"/tinymce/skins/**/*",
+  ]).pipe(gulp.dest( assets+'/js/skins' ));
+  gulp.src([
+    bower+"/tinymce/themes/**/*",
+  ]).pipe(gulp.dest( assets+'/js/themes' ));
   // CSS
   gulp.src([
     bower+"/angular-loading-bar/src/loading-bar.css",
   ]).pipe(gulp.dest( assets+'/css' ));
-  gulp.src( '' ).pipe(notify("Angular JS & modules moved"));
+  gulp.src( '' ).pipe(notify("Angular Modules & TinyMCE moved"));
+  
+  // Minify JS
+  gulp.src([
+    assets+"/js/angular.js",
+    assets+"/js/angular-route.js",
+    assets+"/js/ui-bootstrap-tpls.min.js",
+    assets+"/js/showErrors.min.js",
+    assets+"/js/http-auth-interceptor.js",
+    assets+"/js/toArrayFilter.js",
+    assets+"/js/loading-bar.js",
+    assets+"/js/smart-table.min.js",
+    assets+"/js/ng-sortable.min.js",
+    assets+"/js/angular-sanitize.min.js",
+    assets+"/js/tv4.js",
+    assets+"/js/ObjectPath.js",
+    assets+"/js/tinymce.min.js",
+    assets+"/js/tx-tinymce.js",
+    assets+"/js/schema-form.min.js",
+    assets+"/js/bootstrap-decorator.min.js",
+    assets+"/js/bootstrap-tinymce.js",
+  ])
+  .pipe(flatten())
+  .pipe(sourcemaps.init({loadMaps: true}))
+  .pipe(concat( 'externals.min.js' ))
+  .pipe(uglify())
+  .pipe(sourcemaps.write('maps'))
+  .pipe(gulp.dest( assets+'/js') )
+  .pipe(notify({
+    title:  'Angular & Modules concat & minified ' + title,
+    message: message
+  }));
+  
+  
 
 });
 
