@@ -1,7 +1,8 @@
 // UNIT TEST FOR flexy-admin-app.js
-'use strict';
 
 describe('flexy-admin-app', function(){
+  'use strict';
+  
   beforeEach(module('flexyAdmin'));
 
   it('flexy-admin-app: flexyAdmin - bestaat', function() {

@@ -13,8 +13,6 @@
  */
 
 
-'use strict';
-
 /**
  * Globale flexyAdmin angular module
  * 
@@ -142,6 +140,7 @@ flexyAdmin.config( function($routeProvider){
  * Show app if angular is ready
  */
 flexyAdmin.directive('flexyAuthenticate', ['flexyAuthService',function(flexyAuthService) {
+  'use strict';
 
   var login = angular.element(document.querySelector('#login'));
   var container  = angular.element(document.querySelector('#container'));
@@ -188,5 +187,5 @@ flexyAdmin.directive('flexyAuthenticate', ['flexyAuthService',function(flexyAuth
       // READY LOADING ANGULAR
       elem.removeClass('hidden');
     }
-  }
+  };
 }]);

@@ -13,8 +13,6 @@
  */
 
 
-'use strict';
-
 /**
  * flexy-blocks
  * 
@@ -24,6 +22,8 @@
 var flexyBlocks = angular.module( 'flexyBlocks', []);
 
 flexyBlocks.directive("flexyBlocks", function() {
+  'use strict';
+  
   var blocks = function(scope, element, attributes) {
     element.addClass('flexy-blocks');
     var text = element.text();

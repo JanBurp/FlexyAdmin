@@ -1,7 +1,8 @@
 // UNIT TEST FOR flexy-login-controller.js
-'use strict';
 
 describe('flexy-auth-service', function(){
+  'use strict';
+  
   beforeEach(module('flexyAdmin'));
 
   var mockHttp;

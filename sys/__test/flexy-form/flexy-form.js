@@ -13,9 +13,8 @@
  */
 
 
-'use strict';
-
 flexyAdmin.controller('FormController', ['flexyAdminGlobals','$scope','$routeParams','$http', function($flexyAdminGlobals, $scope,$routeParams,$http) {
+  'use strict';
 
   /**
    * GLOBAL FORM PARAMS
@@ -56,7 +55,7 @@ flexyAdmin.controller('FormController', ['flexyAdminGlobals','$scope','$routePar
     });
     // pristine form
     form.$setPristine();
-  }
+  };
   
   /**
    * SUBMIT FORM
@@ -68,7 +67,7 @@ flexyAdmin.controller('FormController', ['flexyAdminGlobals','$scope','$routePar
     if (form.$valid) {
       alert('yes!');
     }
-  }
+  };
   
   
   /**
@@ -107,22 +106,22 @@ flexyAdmin.controller('FormController', ['flexyAdminGlobals','$scope','$routePar
         // -> schema
         $scope.schema.properties[key] = {
           type    : field['data-type'],
-          title   : field['title'],
+          title   : field.title,
           default : field['default']
         };
         
         // Tabs & items in tabs
         field.tab = $scope.form_data.table_info.ui_name; // default tab
-        if ( angular.isDefined( $scope.form_data.field_info[key]['info']['str_fieldset']) ) {
-          if ($scope.form_data.field_info[key]['info']['str_fieldset']!=="") {
-            field.tab = $scope.form_data.field_info[key]['info']['str_fieldset'];
+        if ( angular.isDefined( $scope.form_data.field_info[key].info.str_fieldset) ) {
+          if ($scope.form_data.field_info[key].info.str_fieldset!=="") {
+            field.tab = $scope.form_data.field_info[key].info.str_fieldset;
           }
         }
         if ( angular.isUndefined( tabs[field.tab] )) tabs[field.tab]=[]; // new tab
         tabs[field.tab].push({
           'key'       : key,
-          'type'      : field['type'],
-          'readonly'  : field['readonly'],
+          'type'      : field.type,
+          'readonly'  : field.readonly,
         });
 
       });
