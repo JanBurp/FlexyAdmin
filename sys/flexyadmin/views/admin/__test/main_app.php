@@ -73,27 +73,29 @@
 
 
 <!-- Angular JS -->
-<script src="sys/__test/js/angular.js" type="text/javascript" charset="utf-8"></script>
+<!-- <script src="sys/__test/js/angular.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/angular-route.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/ui-bootstrap-tpls.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/js/showErrors.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/js/showErrors.min.js" type="text/javascript" charset="utf-8"></script> -->
 <!-- Angular External Modules -->
-<script src="sys/__test/js/http-auth-interceptor.js" type="text/javascript" charset="utf-8"></script>
+<!-- <script src="sys/__test/js/http-auth-interceptor.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/toArrayFilter.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/js/loading-bar.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/js/loading-bar.js" type="text/javascript" charset="utf-8"></script> -->
 <!--Grid -->
-<script src="sys/__test/js/smart-table.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/js/ng-sortable.min.js" type="text/javascript" charset="utf-8"></script>
+<!-- <script src="sys/__test/js/smart-table.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/js/ng-sortable.min.js" type="text/javascript" charset="utf-8"></script> -->
 <!-- Form -->
-<script src="sys/__test/js/angular-sanitize.min.js" type="text/javascript" charset="utf-8"></script>
+<!-- <script src="sys/__test/js/angular-sanitize.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/tv4.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/ObjectPath.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/tinymce.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/tx-tinymce.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/schema-form.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/bootstrap-decorator.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/js/bootstrap-tinymce.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/js/langs/nl.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/js/bootstrap-tinymce.js" type="text/javascript" charset="utf-8"></script> -->
+
+<script src="sys/__test/js/externals.min.js" type="text/javascript" charset="utf-8"></script>
+<!-- <script src="sys/__test/js/langs/nl.js" type="text/javascript" charset="utf-8"></script> -->
 
 <!--FlexyAdmin -->
 <script src="sys/__test/jdb.extend.js" type="text/javascript" charset="utf-8"></script>
