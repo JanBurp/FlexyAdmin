@@ -95,7 +95,7 @@
 <script src="sys/__test/js/bootstrap-tinymce.js" type="text/javascript" charset="utf-8"></script> -->
 
 <script src="sys/__test/js/externals.min.js" type="text/javascript" charset="utf-8"></script>
-<!-- <script src="sys/__test/js/langs/nl.js" type="text/javascript" charset="utf-8"></script> -->
+<script src="sys/__test/js/langs/nl.js" type="text/javascript" charset="utf-8"></script>
 
 <!--FlexyAdmin -->
 <script src="sys/__test/jdb.extend.js" type="text/javascript" charset="utf-8"></script>
