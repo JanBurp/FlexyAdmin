@@ -93,7 +93,9 @@ class Show extends AdminController {
           if ($this->db->has_field($table,'user')) {
             $this->db->where('user',$this->user->user_id);
           }
+          $id=$this->cfg->get('CFG_table',$table,"int_id",$id); // met dit kan de id met cfg_table_info worden ingesteld
 					$this->db->select("id");
+          if ($id) $this->db->where('id',$id);
 					$row=$this->db->get_row($table,1);
 					$id=$row["id"];
 					$this->form_args['form']=$table.$this->config->item('URI_HASH').$id;
@@ -162,8 +164,8 @@ class Show extends AdminController {
 						
 						// has rights?
 						if ($restrictedToUser>0 and $hasField['user']) {
-							$this->db->where($table.".user",$restrictedToUser);
-							$this->db->dont_select("user");
+              if (!$this->user->rights['b_all_users']) $this->db->where($table.".user",$restrictedToUser);
+              $this->db->dont_select("user");
 						}
             // trace_($this);
 						if ($table=="cfg_users") $this->db->where('cfg_users.id_user_group >=',$this->user_group_id);
@@ -391,7 +393,7 @@ class Show extends AdminController {
 				and $right=$this->user->has_rights($table,$id)) {
           
 			$restrictedToUser=$this->user->restricted_id($table);
-			
+      
 			$this->load->library('form_validation');
 			$this->load->library('upload');
 			$this->load->model("order");
@@ -422,7 +424,7 @@ class Show extends AdminController {
 			else {
 				if ($restrictedToUser>0 and $this->db->field_exists('user',$table)) {
           $this->ff->set_restricted_to_user($restrictedToUser,$this->user_id);
-					$this->db->where("user",$restrictedToUser);
+          if (!$this->user->rights['b_all_users']) $this->db->where("user",$restrictedToUser);
 					$this->db->dont_select("user");
 				}
 				if ($id!="") {
