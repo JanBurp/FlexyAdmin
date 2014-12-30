@@ -185,7 +185,8 @@ function tr_string($value) {
 	$value=(string) $value;
 	$html=($value!=strip_tags($value));
   $s=$value;
-  $show=has_string('#show#',$value);
+  // $show=has_string('#show#',$value);
+  $show=true;
   if ($html and !$show) $s=preg_replace('/\s/',' ',htmlentities($value));
   if (!$show) {
     $s=max_length($s,100,'CHARS');

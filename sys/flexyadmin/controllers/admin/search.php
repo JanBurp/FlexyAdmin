@@ -92,7 +92,7 @@ class Search extends AdminController {
                 if ($matches) {
                   $htmlTest.='<ol>';
                   foreach ($matches[0] as $match) {
-                    $htmlTest.='<li><span class="searched">'.htmlentities($match).'</span> &gt;&gt; <span class="replaced">'.htmlentities(preg_replace("/$searchTerm/",$replaceTerm,$match)).'</span></li>';
+                    $htmlTest.='<li>"<span class="searched">'.str_replace(' ','&nbsp;',htmlentities($match)).'</span>" &gt;&gt; "<span class="replaced">'.str_replace(' ','&nbsp;',htmlentities(preg_replace("/$searchTerm/",$replaceTerm,$match))).'</span>"</li>';
                   }
                   $htmlTest.='</ol>';
                 }
