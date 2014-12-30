@@ -13,8 +13,8 @@ class MY_Lang extends CI_Lang {
    *
    * @var string
    */
-	private $idiom;
-  private $setLanguage;
+	private $idiom='';
+  private $setLanguage='';
   
   /**
    * Als ingesteld, dan wordt in de frontend taal eerst geprobeerd te laden van lang_table
@@ -33,7 +33,7 @@ class MY_Lang extends CI_Lang {
     $config =& get_config();
     if (isset($config['language_table']) and !empty($config['language_table'])) {
       $this->lang_table=$config['language_table'];
-      $this->set($config['language']);
+      // $this->set($config['language']);
     }
     else {
       $this->set();
@@ -47,7 +47,7 @@ class MY_Lang extends CI_Lang {
    * @return object $this;
    * @author Jan den Besten
    */
-	public function set($lang="") {
+	public function set($lang='') {
 		$this->setLanguage=$lang;
     return $this;
 	}
@@ -81,6 +81,7 @@ class MY_Lang extends CI_Lang {
 		// Changed by JdB
 		if ($idiom == '')
 		{
+      // trace_([$idiom,$this->idiom,$this->setLanguage]);
       if (!empty($this->setLanguage)) {
         $deft_lang=$this->setLanguage;
       }
