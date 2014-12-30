@@ -87,9 +87,12 @@ class Show extends AdminController {
         
         $this->load->model('queu');
         $this->_before_grid($table);
-        
 				$singleRow=( $this->cfg->get('CFG_table',$table,"int_max_rows") == 1);
 				if ($singleRow) {
+          // Laat alleen de rij zien van de user (als die bestaat)
+          if ($this->db->has_field($table,'user')) {
+            $this->db->where('user',$this->user->user_id);
+          }
 					$this->db->select("id");
 					$row=$this->db->get_row($table,1);
 					$id=$row["id"];
@@ -401,7 +404,8 @@ class Show extends AdminController {
 			/**
 			 * get data
 			 */
-			if (get_prefix($table)!=$this->config->item('REL_table_prefix')) {
+      $add_many=$this->cfg->get('CFG_table',$table,"b_form_add_many");
+			if (get_prefix($table)!=$this->config->item('REL_table_prefix') and (is_null($add_many) or $add_many)) {
 				$this->db->add_many();
 				// $this->db->add_foreigns();
 			}

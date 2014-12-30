@@ -24,13 +24,13 @@
  	 */
  	var $fieldInfo=array();
 
- 	function __construct() {
+ 	public function __construct() {
  		parent::__construct();
     $this->reset();
 		$this->isAdmin=FALSE;
  	}
   
-  function reset() {
+  public function reset() {
  		$this->hasData=false;
  		$this->data=array();
 		$this->keys=array(
@@ -43,20 +43,19 @@
   }
 
 
-	function set_if_admin($isAdmin) {
+	public function set_if_admin($isAdmin) {
 		$this->isAdmin=$isAdmin;
 	}
 
-/**
- * function _name($table)
- *
- * Gives table name with cfg_ prefix
- *
- * @param string $table Name of config table (with or without prefix)
- * @return string Name of table with prefix(es)
- */
-
-	function _name($table) {
+  /**
+   * public function _name($table)
+   *
+   * Gives table name with cfg_ prefix
+   *
+   * @param string $table Name of config table (with or without prefix)
+   * @return string Name of table with prefix(es)
+   */
+	private function _name($table) {
 		$pre=get_prefix($table);
 		$cfg_pre=$this->config->item('CFG_table_prefix');
 		if ($pre!=$cfg_pre)
@@ -65,7 +64,7 @@
 	}
 
 /**
- * function load($table,[$key])
+ * public function load($table,[$key])
  *
  * Loads data from table into data array
  *
@@ -73,8 +72,7 @@
  * @param string $key fieldname wich will be the key to find data
  * @return bool true on succes
  */
-
-	function load($table,$key='',$fields='') {
+	public function load($table,$key='',$fields='') {
 		// set default keys/fields if not given
 		if (empty($key) and isset($this->keys[$table]['key'])) $key=$this->keys[$table]['key'];
 		if (empty($fields)) {
@@ -128,17 +126,33 @@
 
 		return $out;
 	}
+  
+  /**
+   * Stel een specifiek item in
+   *
+   * @param string $table 
+   * @param string $key 
+   * @param string $field 
+   * @param string $set 
+   * @return void
+   * @author Jan den Besten
+   */
+  public function set_item($table,$key,$field,$set) {
+    if (!$this->has_data($table)) $this->load($table);
+    $this->data[$table][$key][$field]=$set;
+    return $this;
+  }
+  
 
-/**
- * function has_data($table)
- *
- * Checks if table is loaded or not
- *
- * @param string $table Name of table
- * @return bool true if data is loaded
- */
-
-	function has_data($table) {
+  /**
+   * public function has_data($table)
+   *
+   * Checks if table is loaded or not
+   *
+   * @param string $table Name of table
+   * @return bool true if data is loaded
+   */
+	public function has_data($table) {
 		$table=$this->_name($table);
 		$out=(array_key_exists($table,$this->data));
 		if ($out)
@@ -149,20 +163,19 @@
 	}
 
 
-/**
- * function get(string $table, [$key], [$field])
- *
- * Gets data from configuration table in database.
- *
- * @param string 	$table 			Configuration table name
- * @param mixed 	[$key] 			Row or field of table
- * @param mixed 	[$field]		Field of table
- * @param mixed   [$default]  [NULL]
- * @return array or string		If result is just one value it returns it as a string,
- * 														Otherwise the result is an assoc array with all elements or even an array with multiple rows and their assoc elements
- */
-
- 	function get($table,$key="",$field="",$default=NULL) {
+  /**
+   * public function get(string $table, [$key], [$field])
+   *
+   * Gets data from configuration table in database.
+   *
+   * @param string 	$table 			Configuration table name
+   * @param mixed 	[$key] 			Row or field of table
+   * @param mixed 	[$field]		Field of table
+   * @param mixed   [$default]  [NULL]
+   * @return array or string		If result is just one value it returns it as a string,
+   * 														Otherwise the result is an assoc array with all elements or even an array with multiple rows and their assoc elements
+   */
+ 	public function get($table,$key="",$field="",$default=NULL) {
 		$table=$this->_name($table);
  		$out=$default;
  		if (!$this->has_data($table)) {
@@ -214,7 +227,7 @@
 
 	/**
 	 *
-	 * function get_field_data($table)
+	 * public function get_field_data($table)
 	 *
 	 * Use this method instead of field_data() to make sure MySql gives the right information
 	 * see http://codeigniter.com/forums/viewthread/46418/
@@ -222,7 +235,7 @@
 	 * @param string $table Tablename for which field data is asked
 	 * @return array Array of the information
 	 */
-	function field_data($table,$key="",$value="") {
+	public function field_data($table,$key="",$value="") {
 		if (!isset($this->fieldInfo[$table])) {
 			$platform=$this->db->platform();
 			if ($platform=="mysql") {
