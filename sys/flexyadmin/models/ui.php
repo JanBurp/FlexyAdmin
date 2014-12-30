@@ -21,6 +21,7 @@ class ui extends CI_Model {
    */
 	public function __construct() 	{
 		parent::__construct();
+    $this->load->model('cfg');
 		$this->load();
     $this->lang->load('field_names');
 	}
@@ -39,8 +40,23 @@ class ui extends CI_Model {
 		foreach ($ui as $ui_row) {
 			$this->_load_row($ui_row);
 		}
+    // trace_($this->uiNames);
     return $this;
 	}
+  
+  
+  /**
+   * Stel een specifiek item in
+   *
+   * @param string $item 
+   * @param string $set
+   * @return void
+   * @author Jan den Besten
+   */
+  public function set_item($item,$set) {
+    $this->uiNames[$item]=$set;
+    return $this;
+  }
 
   /**
    * Laad rij 
