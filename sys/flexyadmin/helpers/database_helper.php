@@ -208,31 +208,34 @@ function get_fields_from_input($wildfields,$tables='') {
  * @author Jan den Besten
  */
 function find_module_uri($module,$full_uri=true,$table='') {
-  $CI=&get_instance();
-	$CI->db->select('id,uri');
-  if ($table) $CI->db->where('str_table',$table);
-	if ($full_uri) {
-		$CI->db->select('order,self_parent');
-		$CI->db->uri_as_full_uri();
-	}
-	if (get_prefix($CI->config->item('module_field'))=='id') {
-		// Modules from foreign table
-		$foreign_key=$CI->config->item('module_field');
-		$foreign_field='str_'.get_suffix($CI->config->item('module_field'));
-		$foreign_table=foreign_table_from_key($foreign_key);
-		$CI->db->add_foreigns();
-		$like_field=$foreign_table.'__'.$foreign_field;
-	}
-	else {
-		// Modules direct from field
-		$like_field=$CI->config->item('module_field');
-	}
-	$CI->db->like($CI->config->item('module_field'),$module);
-  $CI->db->order_by('id');
-	$items=$CI->db->get_result(get_menu_table());
-  reset($items);
-  $item=current($items);
-	return $item['uri'];
+  if (get_menu_table()) {
+    $CI=&get_instance();
+  	$CI->db->select('id,uri');
+    if ($table) $CI->db->where('str_table',$table);
+  	if ($full_uri) {
+  		$CI->db->select('order,self_parent');
+  		$CI->db->uri_as_full_uri();
+  	}
+  	if (get_prefix($CI->config->item('module_field'))=='id') {
+  		// Modules from foreign table
+  		$foreign_key=$CI->config->item('module_field');
+  		$foreign_field='str_'.get_suffix($CI->config->item('module_field'));
+  		$foreign_table=foreign_table_from_key($foreign_key);
+  		$CI->db->add_foreigns();
+  		$like_field=$foreign_table.'__'.$foreign_field;
+  	}
+  	else {
+  		// Modules direct from field
+  		$like_field=$CI->config->item('module_field');
+  	}
+  	$CI->db->like($CI->config->item('module_field'),$module);
+    $CI->db->order_by('id');
+  	$items=$CI->db->get_result(get_menu_table());
+    reset($items);
+    $item=current($items);
+  	return $item['uri'];
+  }
+  return false;
 }
 
 
