@@ -141,14 +141,16 @@ function join_key_from_rel_table($rel) {
 	if (empty($table)) {
 		$CI =& get_instance();
 		$tables=$CI->config->item('MENU_TABLES');
-		$next=current($tables);
-		if ($next) {
-			$table=$next;
-			while ( $next and ! $CI->db ->table_exists($table)) {
-				$next=next($tables);
-				if ($next) $table=$next;
-			}
-		}
+    if ($tables) {
+  		$next=current($tables);
+  		if ($next) {
+  			$table=$next;
+  			while ( $next and ! $CI->db ->table_exists($table)) {
+  				$next=next($tables);
+  				if ($next) $table=$next;
+  			}
+  		}
+    }
 	}
 	return $table;
 }

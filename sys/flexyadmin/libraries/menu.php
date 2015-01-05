@@ -328,30 +328,34 @@ class Menu {
 	public function set_menu_from_table($table="",$foreign=false) {
 		$this->set('menu_table',$table);
     $table=$this->settings['menu_table'];
-		
-		// select fields
-		$fields=$this->CI->db->list_fields($table);
-		foreach ($fields as $key=>$f) {
-			if (!in_array($f,$this->settings['fields']) and !isset($this->settings['fields']['extra'][$f])) unset($fields[$key]);
-		}
-		if (is_array($foreign)) {
-			foreach ($foreign as $t => $ff) {
-				$fields[]='id_'.remove_prefix($t);
-				foreach ($ff as $f) {
-					$fields[]=$t.'.'.$f;
-				}
-			}
-		}
-		// get data from table
-		$this->CI->db->select(PRIMARY_KEY);
-		$this->CI->db->select($fields);
-		if ($foreign) $this->CI->db->add_foreigns($foreign);
-		if (in_array($this->settings['fields']['parent'],$fields)) {
-			$this->CI->db->uri_as_full_uri('full_uri');	
-      $this->CI->db->order_as_tree();  
-		}
-		$data=$this->CI->db->get_result($table);
-		return $this->set_menu_from_table_data($data,$foreign);
+    
+    if ($table) {
+  		// select fields
+  		$fields=$this->CI->db->list_fields($table);
+  		foreach ($fields as $key=>$f) {
+  			if (!in_array($f,$this->settings['fields']) and !isset($this->settings['fields']['extra'][$f])) unset($fields[$key]);
+  		}
+  		if (is_array($foreign)) {
+  			foreach ($foreign as $t => $ff) {
+  				$fields[]='id_'.remove_prefix($t);
+  				foreach ($ff as $f) {
+  					$fields[]=$t.'.'.$f;
+  				}
+  			}
+  		}
+  		// get data from table
+  		$this->CI->db->select(PRIMARY_KEY);
+  		$this->CI->db->select($fields);
+  		if ($foreign) $this->CI->db->add_foreigns($foreign);
+  		if (in_array($this->settings['fields']['parent'],$fields)) {
+  			$this->CI->db->uri_as_full_uri('full_uri');	
+        $this->CI->db->order_as_tree();  
+  		}
+  		$data=$this->CI->db->get_result($table);
+  		return $this->set_menu_from_table_data($data,$foreign);
+    }
+    
+    return array();
 	}
   
   /**
@@ -703,6 +707,7 @@ class Menu {
    * @author Jan den Besten
    */
 	public function render($menu=NULL,$attr="",$level=1,$preUri="",$max_level=0) {
+    $uri='';
 		if (!isset($menu)) $menu=$this->menu;
 		if (!is_array($attr)) $attr=array("class"=>$attr);
 		if ($level>1) unset($attr["id"]);
@@ -790,11 +795,12 @@ class Menu {
    * @author Jan den Besten
    */
 	public function get_item($uri='',$foreigns=false,$many=false) {
-		if (empty($uri)) $uri=$this->settings['current'];
+		$item=array('uri'=>'');
+    if (empty($uri)) $uri=$this->settings['current'];
 		$this->CI->db->where_uri($uri);
 		if ($foreigns) $this->CI->db->add_foreigns();
 		if ($many) $this->CI->db->add_many();
-		$item=$this->CI->db->get_row($this->settings['menu_table']);
+    if ($this->settings['menu_table']) $item=$this->CI->db->get_row($this->settings['menu_table']);
 		return $item;
 	}
 	
