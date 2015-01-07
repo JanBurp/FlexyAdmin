@@ -208,8 +208,10 @@ function get_fields_from_input($wildfields,$tables='') {
  * @author Jan den Besten
  */
 function find_module_uri($module,$full_uri=true,$table='') {
-  if (get_menu_table()) {
+  $menuTable=get_menu_table();
+  if ($menuTable) {
     $CI=&get_instance();
+    if ($full_uri) $full_uri = $CI->db->field_exists('self_parent',$menuTable);
   	$CI->db->select('id,uri');
     if ($table) $CI->db->where('str_table',$table);
   	if ($full_uri) {
@@ -230,7 +232,7 @@ function find_module_uri($module,$full_uri=true,$table='') {
   	}
   	$CI->db->like($CI->config->item('module_field'),$module);
     $CI->db->order_by('id');
-  	$items=$CI->db->get_result(get_menu_table());
+  	$items=$CI->db->get_result($menuTable);
     reset($items);
     $item=current($items);
   	return $item['uri'];
