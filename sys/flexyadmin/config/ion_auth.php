@@ -91,7 +91,7 @@
 	/**
 	 * How long to remember the user (seconds)
 	 **/
-	$config['user_expire']         = 86500;
+	$config['user_expire']         = 2419200; // 4 weeks
 	
 	/**
 	 * Extend the users cookies everytime they auto-login
