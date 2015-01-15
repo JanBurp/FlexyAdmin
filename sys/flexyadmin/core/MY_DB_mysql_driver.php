@@ -764,7 +764,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		else {
 			$select=$this->ar_select;
 			$this->ar_select=array();
-		}		
+		}
 
 		/**
 		 * add foreign (joins) if asked for
@@ -774,8 +774,10 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			if (is_array($this->foreigns)) {
 				$foreignTables=$this->foreigns;
 			}
-			else
+			else {
 				$foreignTables=$this->get_foreign_tables($table);
+      }
+      
 			if (!empty($foreignTables)) {
         
         // More foreign keys to same table possible
@@ -791,10 +793,15 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 				// loop through fields, add them to select array and see if it is a foreignfield with known foreigntables
 				$selectFields=array();
 				foreach($select as $field) {
-					if (strpos($field,".")===FALSE)
+          
+          // Add table before field (if not a function)
+					if (strpos($field,".")===FALSE and (!preg_match("/\(.*\)/u", $field)) ) {
 						$selectFields[]=$table.".".$field;
-					else 
+          }
+          else {
 						$selectFields[]=$field;
+          }
+          
 					// is it a foreign key? Yes: add join and selectfield(s)
 					/**
 					 * TODO: check if this join allready exists: set by db->join();
@@ -819,10 +826,12 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
               }
 						}
 						else {
-							if (isset($item['fields']) and !empty($item['fields']))
+							if (isset($item['fields']) and !empty($item['fields'])) {
 								$forFields=$item['fields'];
-							else
+              }
+							else {
 								$forFields=$this->list_fields($joinTable);
+              }
 							foreach($forFields as $key=>$f) {
                 if (!has_string('AS',$f)) {
                   $f.=" AS ".$joinAsTable."__".$f;
@@ -837,8 +846,6 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			}
 		}
 		
-		// trace_($this->ar_select);
-		// trace_($this->ar_join);
 		
 		/**
 			* Select, but first unselect the dont select fields AND Make sure to select PRIMARY KEY
@@ -853,7 +860,6 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
     }
 		$this->select($select);
     
-
     /**
 		 * Set Order
 		 */
