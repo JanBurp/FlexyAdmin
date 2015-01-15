@@ -307,9 +307,9 @@ class Forms extends Module {
 		}
     
     if (isset($this->settings['title'])){
-      return $this->CI->view('forms',array('title'=>$this->settings['title'],'form'=>$html,'errors'=>$errors),true);
+      return $this->CI->load->view('forms',array('title'=>$this->settings['title'],'form'=>$html,'errors'=>$errors),true);
     } else {
-      return $this->CI->view('forms',array('form'=>$html,'errors'=>$errors),true);
+      return $this->CI->load->view('forms',array('form'=>$html,'errors'=>$errors),true);
     }
 	}
   
@@ -332,7 +332,7 @@ class Forms extends Module {
       if (!isset($this->CI->$model)) $this->CI->load->model($model);
       return $this->CI->$model->$method($result);
     }
-    $html=div('message').$this->settings('thanks','Thank you!')._div();
+    $html=div('message').$this->settings('thanks','')._div();
     return $html;
   }
   
