@@ -56,8 +56,9 @@
 class Forms extends Module {
   
   private $form_id='';
-
   private $settings=array();
+  private $spam=false;
+  private $validated=false;
   
   /**
    * @ignore
@@ -230,23 +231,23 @@ class Forms extends Module {
     if ($formButtons) $form->set_buttons($formButtons);
 
 		// Validate, and test filled form
-    $isValidated=$form->validation($this->form_id);
-    $isSpam=false;
+    $this->validated=$form->validation($this->form_id);
+    $this->spam=false;
   
-		if ($isValidated) {
+		if ($this->validated) {
       $data=$form->get_data();
     
       // Spamcheck?
       if ($this->settings('check_for_spam')) {
         $this->CI->load->library('spam');
-        $isSpam=$this->CI->spam->check($data,'__test__');
+        $this->spam=$this->CI->spam->check($data,'__test__');
         $this->settings['spam_rapport']=$this->CI->spam->get_rapport();
         $data['int_spamscore']=$this->CI->spam->get_score();
         unset($formFields['__test__']);
         unset($data['__test__']);
       }
     
-      if (!$isSpam) {
+      if (!$this->spam) {
         // Do the Action(s)
 
         if ($this->settings('restrict_this_ip_days')) {
@@ -288,7 +289,7 @@ class Forms extends Module {
       }
 		}
 
-    if (!$isValidated or $isSpam or $this->settings('always_show_form',false))	{
+    if (!$this->validated or $this->spam or $this->settings('always_show_form',false))	{
 			// Form isn't filled or validated or regarded as spam: show form and validation errors
       if ($this->settings('validation_place','form')=='field') {
         $form->show_validation_errors(true);
@@ -336,7 +337,7 @@ class Forms extends Module {
     return $html;
   }
   
-  
+
   /**
    * Geeft instelling
    *
@@ -350,7 +351,38 @@ class Forms extends Module {
 		return el($item,$this->settings,$default);
 	}
   
-
+  
+  /**
+   * Geeft instellingen van een formulier
+   *
+   * @param string $form_id 
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_settings($form_id) {
+    return el($form_id,$this->config,false);
+  }
+  
+  /**
+   * Geeft spam status van laatst gebruikte formulier
+   *
+   * @return bool
+   * @author Jan den Besten
+   */
+  public function is_spam() {
+    return $this->spam;
+  }
+  
+  /**
+   * Geeft validation status van laatst gebruikte formulier
+   *
+   * @return bool
+   * @author Jan den Besten
+   */
+  public function is_validated() {
+    return $this->validated;
+  }
+  
 }
 
 ?>
