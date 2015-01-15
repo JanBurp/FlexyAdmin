@@ -26,13 +26,17 @@ class Ajax extends CI_Controller {
       parse_str($_SERVER['QUERY_STRING'],$_POST);
       
       // call the ajax library
-      $json  = $this->$ajax_library->$method();
+      $json  = $this->$ajax_library->$method($args);
       $array = json2array($json);
       
       $out=h('Test Frontend Ajax Module: '.$library.'->'.$method.'()');
-      $out.='<h2>JSON result:</h2><code>'.$json.'</code>';
-      $out.='<h2>As a trace</h2><pre>'.print_ar($array,true).'</pre>';
+      $out.='<h2>JSON result:</h2><code>'.htmlentities($json).'</code>';
+      $out.='<h2>As a trace</h2><pre>'.trace_($array,false).'</pre>';
       
+      echo $out;
+    }
+    else {
+      $out=h('Test Frontend Ajax Module: _ajax/...');
       echo $out;
     }
   }

@@ -134,7 +134,7 @@ function trace_($a=NULL,$echo=true,$backtraceOffset=1,$max=50) {
 	$CI=&get_instance();
 	static $c=0;
   if ($c==0 and !IS_AJAX) {
-    echo "<style>._trace {position:relative;margin:2px;padding:5px;overflow:auto;overflow-x:hidden;color:#000;font-family:courier,serif;font-size:10px;line-height:14px;border:solid 1px #666;background-color:#efe;opacity:.8;z-index:99999;}._trace a {color:#000;font-family:courier,serif;font-size:10px;line-height:14px;text-decoration:underline;}</style>";
+    echo "<style>._trace {position:relative;margin:2px;padding:5px;overflow:auto;color:#000;font-family:courier,serif;font-size:10px;line-height:14px;border:solid 1px #666;background-color:#efe;opacity:.8;z-index:99999;}._trace a {color:#000;font-family:courier,serif;font-size:10px;line-height:14px;text-decoration:underline;}</style>";
   }
   if (IS_AJAX)
     $out='';
@@ -185,11 +185,11 @@ function tr_string($value) {
 	$value=(string) $value;
 	$html=($value!=strip_tags($value));
   $s=$value;
-  // $show=has_string('#show#',$value);
-  $show=true;
+  $show=has_string('#show#',$value);
+  // $show=true;
   if ($html and !$show) $s=preg_replace('/\s/',' ',htmlentities($value));
   if (!$show) {
-    $s=max_length($s,100,'CHARS');
+    $s=max_length($s,1000,'CHARS');
     if ($s!=$value) $s.=' ...';
     $s=str_replace("\n",'\n',$s);
     $s=str_replace("\r",'\r',$s);
@@ -256,9 +256,10 @@ function print_ar($array,$return=false,$tabs=0,$brackets="()") {
   					$thisOut.="'True'";
   				else
   					$thisOut.="'False'";
+          $thisOut.=$eol;
   			}
   			else {
-  				$thisOut.="$value".$eol;
+  				$thisOut.=tr_string($value).$eol;
   			}
   		}
   		$out.=$thisOut;
