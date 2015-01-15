@@ -66,6 +66,7 @@ class FrontEndController extends MY_Controller {
     if ($this->ajax_module) {
       // Load standard Ajax Module Class
       $this->load->library('ajax_module');
+  		$this->load->helper("language"); // nodig voor lang() in config files etc.
     }
     else {
   		// Load standard Module Class & Formaction model
@@ -388,7 +389,7 @@ class FrontEndController extends MY_Controller {
    * @author Jan den Besten
    */
 	public function view($view='',$data=array(),$return=FALSE) {
-    $default=array('assets'=>assets(),'language'=>$this->site['language']);
+    $default=array('assets'=>assets(),'language'=>el('language',$this->site,$this->config->item('language')));
     $main_view=(empty($view));
 		if (empty($data)) {
       $data=$this->site;

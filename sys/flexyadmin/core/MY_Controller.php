@@ -16,7 +16,7 @@ class MY_Controller extends CI_Controller {
 
 	function __construct($isAdmin=false) {
 		parent::__construct();
-		
+    
 		if ($this->_check_if_flexy_database_exists())
 			$this->_init_flexy_admin($isAdmin);
 		else {
@@ -61,12 +61,13 @@ class MY_Controller extends CI_Controller {
 		}
 	}
 
-	function _check_if_flexy_database_exists() {
+	private function _check_if_flexy_database_exists() {
 		return $this->db->table_exists('cfg_configurations');
 	}
 
-	function _init_flexy_admin($isAdmin=false) {
+	private function _init_flexy_admin($isAdmin=false) {
     if ($this->config->item('PROFILER')) $this->output->enable_profiler(TRUE);
+    // load db config
 		$this->load->model('cfg');
 		$this->cfg->set_if_admin($isAdmin);
 	}
