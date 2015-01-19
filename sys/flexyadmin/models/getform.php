@@ -88,7 +88,6 @@
         $this->db->where('id_form',$form['form']['id']);
 				$fields=$this->db->get_result('tbl_formfields');
 				array_push($fields,array('str_type'=>'##END##','str_label'=>'##END##','str_name'=>'','str_validation'=>'','str_validation_parameters'=>''));
-				// trace_($fields);
 				if ($fields) {
 					$options=false;
 					$optionsKey='';
@@ -100,7 +99,7 @@
 					foreach ($fields as $key => $value) {
 						if ($value['str_type']=='fieldset') {
               // FIELDSET
-							$fieldset=$value['str_label'];
+							$fieldset=$value['str_label_'.$lang];
 							$form['fieldsets'][]=$fieldset;
 							unset($fields[$key]);
 						}
@@ -116,7 +115,7 @@
               // label
               if (isset($value['label_'.$lang])) $value['label']=$value['label_'.$lang];
               // name
-							$name=str_replace(' ','_',$value['label']);
+							$name=safe_string(' ','_',$value['label']);
               if (empty($name)) $name.='_'.$key;
 							$value['name']=$name;
               // fieldset
@@ -182,6 +181,7 @@
 				if (!isset($form['buttons'])) $form['buttons']=array('submit'=>array("submit"=>"submit","value"=>'submit'));
 			}
 		}
+    
 		return $form;
 	}
 
