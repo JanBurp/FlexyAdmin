@@ -27,7 +27,11 @@ function icon($class="",$s="",$extraClass="",$a="") {
 function show_thumb($attr) {
 	$a=array();
 	if (!is_array($attr)) $a["src"]=$attr; else $a=$attr;
-	$ext=get_file_extension($a["src"]);
+  $map=explode('/',$a['src']);
+  $filename=array_pop($map);
+  $map=array_pop($map);
+	$ext=get_file_extension($filename);
+  
 	$CI=& get_instance();
 	$img_types=$CI->config->item('FILE_types_img');
 	$flash_types=$CI->config->item('FILE_types_flash');
@@ -45,7 +49,7 @@ function show_thumb($attr) {
 			}
 			else {
 				if (!isset($a["alt"])) $a["alt"]=$a["src"];
-				if (!isset($a["longdesc"])) $a["longdesc"]=$a["src"];
+				if (!isset($a["longdesc"])) $a["longdesc"]='file/serve/'.$map.'/'.$filename;
 				$cachedThumb=$CI->config->item('THUMBCACHE').pathencode($a['src']);
 				if (file_exists($cachedThumb)) $a['src']=$cachedThumb;
 				return img($a);
