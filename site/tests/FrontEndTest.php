@@ -7,7 +7,7 @@ class FrontEndTest extends CIUnit_Framework_TestCase {
       // Load basic modules
       $this->CI->load->library('Module');
       $this->CI->load->library('Ajax_module');
-      // $this->CI->load->library('Forms');
+      $this->CI->load->library('Forms');
     }
 
     public function test_modules()  {
@@ -29,13 +29,30 @@ class FrontEndTest extends CIUnit_Framework_TestCase {
       $this->assertEquals( '{"_message":"Ajax_example","_method":"other","_module":"example","_success":true}', $this->CI->ajax_example->other($page) );
     }
 
-    // public function test_forms()  {
-    //   // Example module
-    //   $out=$this->CI->forms->contact();
-    //   trace_($out);
-    //
-    //
-    // }
+
+    /**
+     * Test of er nog debughelper commando's zijn
+     *
+     * @return void
+     * @author Jan den Besten
+     */
+    public function test_php_code() {
+      $files=read_map('site','php',true,false,false,false);
+      foreach ($files as $file) {
+        $lines=file($file['path']);
+        foreach ($lines as $key => $line) {
+          $found=preg_match("/\b(trace_|trace_if|strace_|backtrace_|xdebug_break)\(/u", $line);
+          $this->assertLessThan(1,$found, 'Debug helper found in `<i><b>'.$file['path'].'</i></b>` at line '.($key+1).':<br><code>'.$line.'</code>');
+        }
+      }
+    }
+    
+    
+    public function test_forms()  {
+      // Example module
+      // $out=$this->CI->forms->contact();
+
+    }
 
 
 

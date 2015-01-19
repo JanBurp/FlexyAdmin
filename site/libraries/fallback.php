@@ -25,7 +25,7 @@ class Fallback extends Module {
   	* @author Jan den Besten
   	*/
 	public function index($page) {
-		trace_('Fallback Module: '.strtoupper($this->name));
+		echo('Fallback Module: '.strtoupper($this->name));
 		return false;
 	}
 
