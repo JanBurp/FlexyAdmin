@@ -469,7 +469,7 @@ class File_manager Extends CI_Model {
 			log_("info","[FM] error while uploading: '$file' [$error]");
 			$error=$this->upload->get_error();
 		}
-		// RESIZING and AUTO FILL
+		// ORIENTATION, RESIZING and AUTO FILL
     else {
       log_("info","[FM] uploaded: '$file'");
       $saveName=clean_file_name($file);
@@ -480,6 +480,9 @@ class File_manager Extends CI_Model {
 
       // is image?
       if (in_array(strtolower($ext),$this->config->item('FILE_types_img'))) {
+        
+        // restore orientation
+        $this->upload->restore_orientation($file,$this->map);
         
         // check minimal size
         if ($this->upload->check_size($file,$this->map)) {
@@ -544,9 +547,10 @@ class File_manager Extends CI_Model {
   		$a['alt']=$attr;
   		// $a['title']=$attr;
   	}
+    $map=get_suffix($a['path'],'/');
+  	$a['longdesc']='file/serve/'.$map.'/'.$a['src'];
   	$a['src']=$a['path'].'/'.$a['src'];
   	if (empty($a['alt'])) $a['alt']=$a['src'];
-  	$a['longdesc']=$a['src'];
 
   	$thumbPath=$this->config->item('THUMBCACHE');
   	$thumb=$thumbPath.pathencode($a['src']);
