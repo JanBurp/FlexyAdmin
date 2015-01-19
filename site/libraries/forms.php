@@ -180,7 +180,7 @@ class Forms extends Module {
   			$formFields=$formData['fields'];
   			$formButtons=$formData['buttons'];
         // other settings
-        $this->settings['title']=$flexyform;
+        $this->settings['title']=$formData['form']['str_title_'.$this->CI->site['language']];
         $this->settings['thanks']=$formData['form']['txt_text_'.$this->CI->site['language']];
         $emailField=find_row_by_value($formFields,'valid_email','validation',true);
         if ($emailField) {

@@ -195,7 +195,7 @@ function tr_string($value) {
     $s=str_replace("\r",'\r',$s);
   }
   if ($show) $s=str_replace('#show#','',$s);
-  $s="'".$s."'";
+  $s="'".trim($s,"'")."'";
 	return $s;
 }
 
