@@ -34,7 +34,8 @@ class MY_Upload extends CI_Upload {
 	public function __construct($config=NULL) {
 		parent::__construct($config);
 		$this->config($config);
-		$this->CI=NULL;
+		$this->CI = & get_instance();
+		$this->CI->load->library('image_lib');
 	}
 
   /**
@@ -119,15 +120,9 @@ class MY_Upload extends CI_Upload {
    * @author Jan den Besten
    */
   public function download_and_add_file($url,$path,$prefix='downloaded_') {
-		if (!isset($this->CI)) {
-			$this->CI =& get_instance();
-			$this->CI->load->library('image_lib');
-		}
-		$CI=$this->CI;
-
     $name=$prefix.get_suffix($url,'/');
     $name=clean_file_name($name);
-    $fullpath=$CI->config->item('ASSETS').$path;
+    $fullpath=$this->CI->config->item('ASSETS').$path;
     $fullname=$fullpath.'/'.$name;
     
     $file = fopen ($url, "rb");
@@ -197,13 +192,8 @@ class MY_Upload extends CI_Upload {
     $ok=FALSE;
     $size=getimagesize($map.'/'.$file);
     if (isset($size[0]) and isset($size[1])) {
-  		if (!isset($this->CI)) {
-  			$this->CI =& get_instance();
-  			$this->CI->load->library('image_lib');
-  		}
-  		$CI=$this->CI;
-  		$uPath=str_replace($CI->config->item('ASSETS'),"",$map);
-  		$cfg=$CI->cfg->get('CFG_img_info',$uPath);
+  		$uPath=str_replace($this->CI->config->item('ASSETS'),"",$map);
+  		$cfg=$this->CI->cfg->get('CFG_img_info',$uPath);
       if (isset($cfg['int_min_width']) and $cfg['int_min_width']>0 and isset($cfg['int_min_height']) and $cfg['int_min_height']>0) {
         // strace_($size);
         // strace_($cfg);
@@ -226,13 +216,8 @@ class MY_Upload extends CI_Upload {
    * @author Jan den Besten
    */
 	public function auto_fill_fields($image,$path) {
-		if (!isset($this->CI)) {
-			$this->CI =& get_instance();
-		}
-		$CI=$this->CI;
-		
-		$uPath=str_replace($CI->config->item('ASSETS'),"",$path);
-		$cfg=$CI->cfg->get('CFG_media_info',$uPath,'fields_autofill_fields');
+		$uPath=str_replace($this->CI->config->item('ASSETS'),"",$path);
+		$cfg=$this->CI->cfg->get('CFG_media_info',$uPath,'fields_autofill_fields');
 		if (!empty($cfg)) {
 			$fields=explode('|',$cfg);
 			if (count($fields)>0) {
@@ -245,21 +230,21 @@ class MY_Upload extends CI_Upload {
 					// TODO: database model maken voor dit soort dingen
 					switch ($fieldPre) {
 						case 'user':
-							$CI->db->set('user',$CI->user_id);
+							$this->CI->db->set('user',$this->CI->user_id);
 							break;
 						case 'media':
 						case 'medias':
-							$CI->db->set($field,$image);
+							$this->CI->db->set($field,$image);
 							break;
 						case 'dat':
-							$CI->db->set($field,date("Y-m-d"));
+							$this->CI->db->set($field,date("Y-m-d"));
 							break;
 						case 'str':
-							$CI->db->set($field,$cleanName);
+							$this->CI->db->set($field,$cleanName);
 							break;
 					}
 				}
-				$CI->db->insert($table);
+				$this->CI->db->insert($table);
 			}
 		}
 		return TRUE;
@@ -273,22 +258,19 @@ class MY_Upload extends CI_Upload {
    * @return bool
    * @author Jan den Besten
    */
-	function resize_image($image,$path) {
+	public function resize_image($image,$path) {
 		$this->file_name=$image;
 		$goodluck=TRUE;
-		if (!isset($this->CI)) $this->CI =& get_instance();
-		$this->CI->load->library('image_lib');
-		$CI=$this->CI;
 		
 		$uPath=remove_assets($path);
-		$cfg=$CI->cfg->get('CFG_img_info',$uPath);
+		$cfg=$this->CI->cfg->get('CFG_img_info',$uPath);
     
 		$currentSizes=getimagesize($path."/".$this->file_name);
 
     // strace_($currentSizes);
     // strace_($uPath);
     // strace_($cfg);
-    // trace_($CI->cfg->data);
+    // trace_($this->CI->cfg->data);
 
 		// first resize copies
 		$nr=1;
@@ -313,9 +295,9 @@ class MY_Upload extends CI_Upload {
 				$configResize['master_dim']			= 'auto';
 				$this->_setMemory($currentSizes);
         // trace_($configResize);
-				$CI->image_lib->initialize($configResize);
-				if (!$CI->image_lib->resize()) {
-					$this->error=$CI->image_lib->display_errors();
+				$this->CI->image_lib->initialize($configResize);
+				if (!$this->CI->image_lib->resize()) {
+					$this->error=$this->CI->image_lib->display_errors();
           // strace_($this->error);
           // strace_($configResize);
 					$goodluck=FALSE;
@@ -324,7 +306,7 @@ class MY_Upload extends CI_Upload {
           // add extra files and set if they are visible or not
           $this->extraFiles[$copyName]=array('file'=>$copyName,'path'=>$path,'hidden'=>substr($pre,0,1)=='_');
         }
-				$CI->image_lib->clear();
+				$this->CI->image_lib->clear();
 				// trace_('Resized nr_'.$nr.' '.$configResize['new_image']);
 			}
 			$nr++;
@@ -342,42 +324,109 @@ class MY_Upload extends CI_Upload {
 				$configResize['master_dim']			= 'auto';
 				// set mem higher if needed
 				$this->_setMemory($currentSizes);
-				$CI->image_lib->initialize($configResize);
-				if (!$CI->image_lib->resize()) {
-					$this->error=$CI->image_lib->display_errors();
+				$this->CI->image_lib->initialize($configResize);
+				if (!$this->CI->image_lib->resize()) {
+					$this->error=$this->CI->image_lib->display_errors();
 					// trace_($this->error);
 					$goodluck=FALSE;
 				}
-				$CI->image_lib->clear();
+				$this->CI->image_lib->clear();
 				// trace_('Resized original');
 			}
 		}
 
 		// create cached thumb for flexyadmin if cache map exists
-		if (file_exists($CI->config->item('THUMBCACHE')) ) {
-			$thumbSize=$CI->config->item('THUMBSIZE');
+		if (file_exists($this->CI->config->item('THUMBCACHE')) ) {
+			$thumbSize=$this->CI->config->item('THUMBSIZE');
 			if ($currentSizes[0]>$thumbSize[0] or $currentSizes[1]>$thumbSize[1]) { 
 				$configResize['source_image'] 	= $path."/".$this->file_name;
 				$configResize['maintain_ratio'] = TRUE;
 				$configResize['width'] 					= $thumbSize[0];
 				$configResize['height'] 				= $thumbSize[1];
-				$configResize['new_image']			= $CI->config->item('THUMBCACHE').pathencode($path."/".$this->file_name,FALSE);
+				$configResize['new_image']			= $this->CI->config->item('THUMBCACHE').pathencode($path."/".$this->file_name,FALSE);
 				$configResize['master_dim']			= 'auto';
 				// set mem higher if needed
 				$this->_setMemory($currentSizes);
 				// trace_($configResize);
-				$CI->image_lib->initialize($configResize);
-				if (!$CI->image_lib->resize()) {
-					$this->error=$CI->image_lib->display_errors();
+				$this->CI->image_lib->initialize($configResize);
+				if (!$this->CI->image_lib->resize()) {
+					$this->error=$this->CI->image_lib->display_errors();
 					// trace_($this->error);
 					$goodluck=FALSE;
 				}
-				$CI->image_lib->clear();
+				$this->CI->image_lib->clear();
 				// trace_('Resized thumb in cache '.$configResize['new_image']);
 			}
 		}
 		return $goodluck;
 	}
+  
+  
+  /**
+   * Controleert of de orientatie van de afbeelding klopt met de meta-data, zo niet corrigeer dat (komt vooral voor bij mobiele apparaten)
+   *
+   * @param string $file 
+   * @param string $map 
+   * @return bool $success
+   * @author Jan den Besten
+   */
+  public function restore_orientation($file,$path) {
+    $fileandpath=$path.'/'.$file;
+    // Als niet bestaat, stop er dan meteen maar mee
+    // strace_($fileandpath);
+    if(!file_exists($fileandpath)) return false;
+    
+    // Get all the exif data from the file
+    $exif = read_exif_data($fileandpath, 'IFD0');
+
+    // If we dont get any exif data at all, then we may as well stop now
+    if(!$exif || !is_array($exif))  return false;
+    $exif = array_change_key_case($exif, CASE_LOWER);
+    
+    // If theres no orientation key, then we can give up
+    if(!array_key_exists('orientation', $exif)) return false;
+    
+    // strace_($exif['orientation']);
+    
+    // Start rotation
+    $rotateConfig=array(
+      'source_image' => $fileandpath,
+      'new_image' => $fileandpath,
+      'quality' => '100%',
+    );
+    
+    switch($exif['orientation']) {
+      // upside down
+      case 3:
+        $rotateConfig['rotation_angle']=180;
+        break;
+      // 90 left
+      case 6:
+        $rotateConfig['rotation_angle']=270;
+        break;
+      // 90 right
+      case 8:
+        $rotateConfig['rotation_angle']=90;
+        break;
+
+      // Orientation is ok (maybe flipped), just return true.
+      default:
+        return true;
+        break;
+    }
+    
+    $this->CI->image_lib->initialize($rotateConfig);
+    // strace_($rotateConfig['rotation_angle']);
+    if ( ! $this->CI->image_lib->rotate()) {
+      $this->error=$this->CI->image_lib->display_errors();
+      $this->CI->image_lib->clear();
+      return false;
+    }
+
+    $this->CI->image_lib->clear();
+    return true;
+  }
+  
 
 
   /**
@@ -416,9 +465,6 @@ class MY_Upload extends CI_Upload {
 	 * @return	bool
 	 */
 	public function is_allowed_filetype($ignore_mime=FALSE) {
-		if (!isset($this->CI)) {
-			$this->CI =& get_instance();
-		}
     $ignore_mime=$this->CI->config->item('IGNORE_MIME');
     return parent::is_allowed_filetype($ignore_mime);
 	}
