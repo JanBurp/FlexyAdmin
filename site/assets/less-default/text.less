@@ -16,8 +16,10 @@
 @text_link:     @head;
 @text_hover:    #060;
 @text_error:    #F00;
-@text_warning:  #C00;
+@text_warning:  #900;
+@text_success:  #060;
 @text_special:  #F60;
+
 // menu-colors
 @menu_text:@back;
 @menu_back:@head;
@@ -135,6 +137,10 @@ fieldset>div.radio>div input {float:left;width:1rem;height:1rem;}
 fieldset>div.radio>div label {float:left;margin-left:1rem;margin-top:-.25rem;}
 select {-webkit-appearance: none;-moz-appearance:none;}
 select option {margin:.25rem .5rem;border:none;}
+/* status */
+fieldset>div.has-error input {border-color:@text_error}
+fieldset>div.has-success input {border-color:@text_success}
+
 /* vertical form, labels on seperate line */
 .vertical_form(@class) {
   form@{class} label {float:none;width:100%}

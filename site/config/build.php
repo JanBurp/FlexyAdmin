@@ -25,7 +25,7 @@
  * 
  * Adds the variable $_build to $this->site (true if build)
  */
-$config['watch'] = 'dev';
+$config['watch'] = false;
 $config['add_report'] = false; // Adds _build_report to $this->site
 
 

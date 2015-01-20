@@ -96,7 +96,11 @@ class Form {
       'field'                 => '',
       'field_info'            => true,
       'button'                => 'button',
-      'validation_error_class'=> 'error'
+      'validation_error_class'=> 'error',
+      'status_default'        => '',
+      'status_success'        => 'has-success',
+      'status_warning'        => 'has-warning',
+      'status_error'          => 'has-error',
     ),
     'bootstrap' => array(
       'form'                  => '',
@@ -110,7 +114,11 @@ class Form {
       'field'                 => 'form-control',
       'field_info'            => false,
       'button'                => 'btn btn-primary',
-      'validation_error_class'=> 'alert alert-danger'
+      'validation_error_class'=> 'alert alert-danger',
+      'status_default'        => '',
+      'status_success'        => 'has-success',
+      'status_warning'        => 'has-warning',
+      'status_error'          => 'has-error',
     ),
     
   );
@@ -858,8 +866,8 @@ class Form {
 		  if (isset($field['multiple'])) {
         $class.=" ".$field['multiple'];
       }
-      if (!empty($field["repopulate"])) $field["value"]=$field["repopulate"];
     }
+    if (!empty($field["repopulate"])) $field["value"]=$field["repopulate"];
     $field['container_class']=trim($field['container_class'].' '.$class);
     $class=trim($styles['field'].' '.$class);
     
@@ -878,10 +886,14 @@ class Form {
     if (isset($field['readonly'])) $attr['readonly']=$field['readonly'];
     if (isset($field['disabled'])) $attr['disabled']=$field['disabled'];
 
-    // Validation error
+    // Status / Validation error
+    $field['status']=$this->styles[$this->framework]['status_default'];
+    if ($field['value']) $field['status']=$this->styles[$this->framework]['status_success'];
     if ($this->validation_error) {
       $field['validation_error']=form_error($field['name'],'<span class="'.$this->styles[$this->framework]['validation_error_class'].'" role="alert"> ','</span>');
+      if ($field['validation_error']) $field['status']=$this->styles[$this->framework]['status_error'];
     }
+    if (has_string('required',$field['validation'])) $field['status'].=' required';
     
 		// When (javascript triggers)
 		if (!empty($field['when'])) $this->when($field['when'],$name);
@@ -1100,6 +1112,7 @@ class Form {
 					$date=date("Y-m-d");
 				}
 				$attr["value"]=$date;
+        $attr['type']='date';
 				$field['control']=form_input($attr);
 				break;
 			case 'datetime':
@@ -1108,6 +1121,7 @@ class Form {
 					$date=date("Y-m-d H:i:s");
 				}
 				$attr["value"]=$date;
+        $attr['type']='datetime';
 				$field['control']=form_input($attr);
 				break;
 			case "time":
@@ -1116,6 +1130,7 @@ class Form {
 					$time=date("H:i:s");
 				}
 				$attr["value"]=$time;
+        $attr['type']='time';
 				$field['control']=form_input($attr);
 				break;
 
@@ -1127,10 +1142,17 @@ class Form {
 				else
 					$field['control']=form_password($attr);
 				break;
-				
+        
 			case "input":
 			case "default":
 			default:
+        switch ($pre) {
+          case 'email': $attr['type']='email'; break;
+          case 'url': $attr['type']='url'; break;
+          case 'int': $attr['type']='number'; break;
+          case 'dec': $attr['type']='number'; break;
+          case 'rgb': $attr['type']='color'; break;
+        }
 				$field['control']=form_input($attr);
 		endswitch;
 
