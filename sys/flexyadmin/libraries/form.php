@@ -853,7 +853,8 @@ class Form {
     $class=$field['class'];
     // class: field types & status
     if ($styles['field_info']) {
-      // $class.=" $pre $name ".$field['type'];
+      // $class.=" $pre $name";
+      $class.=' '.$field['type'];
 		  if (isset($field['multiple'])) {
         $class.=" ".$field['multiple'];
       }
