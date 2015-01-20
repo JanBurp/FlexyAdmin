@@ -115,7 +115,12 @@
               // label
               if (isset($value['label_'.$lang])) $value['label']=$value['label_'.$lang];
               // name
-							$name=safe_string(' ','_',$value['label']);
+              if (isset($value['name'])) {
+                $name=$value['name'];
+              }
+              else {
+  							$name=safe_string(' ','_',$value['label']);
+              }
               if (empty($name)) $name.='_'.$key;
 							$value['name']=$name;
               // fieldset
