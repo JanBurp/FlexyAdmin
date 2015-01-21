@@ -168,8 +168,13 @@ function trace_($a=NULL,$echo=true,$backtraceOffset=1,$max=50) {
   else
     $out.='</pre>';
   if ($c>$max) $out='';
-	if ($echo) echo $out;
+	if ($echo and !IS_AJAX) echo $out;
 	$c++;
+  
+  if (IS_AJAX and isset($CI->message)) {
+    $CI->message->add_ajax("\n".$out);
+  }
+  else
 	return $out;
 }
 

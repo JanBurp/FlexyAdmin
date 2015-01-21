@@ -94,6 +94,21 @@ class AjaxController extends BasicController {
       ksort($result);
     }
     
+    if ( isset($this->message)) {
+      $message=$this->message->get_ajax();
+      if ($message) {
+        $first=$message;
+        if (is_array($first)) $first=current($first);
+        if (has_string('TRACE',$first)) {
+          $result['_trace']=$message;
+        }
+        else {
+          $result['_message']=$message;          
+        }
+      }
+      $this->message->reset_ajax();
+    }
+    
     if ( ! $this->input->is_ajax_request() ) {
       $result['_test']=true;
       trace_($result);

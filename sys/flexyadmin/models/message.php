@@ -38,6 +38,12 @@ class Message extends CI_Model {
         $this->add_error($error);
       }
     }
+		$ajax=$this->session->flashdata('ajax');
+    if ($ajax) {
+      foreach ($ajax as $jx) {
+        $this->add_ajax($jx);
+      }
+    }
     return $this;
   }
 
@@ -62,7 +68,7 @@ class Message extends CI_Model {
    * @author Jan den Besten
    */
   public function add($message,$type='messages') {
-    $messages=$this->get();
+    $messages=$this->get($type);
     if (!is_array($messages)) $messages=array();
     // if ($this->uiNames) $message=$this->ui->replace_ui_names($message);
     array_unshift($messages, $message );
@@ -74,7 +80,7 @@ class Message extends CI_Model {
    * Geeft bericht
    *
    * @param string $type['message'] 
-   * @return string
+   * @return mixed
    * @author Jan den Besten
    */
   public function get($type='messages') {
@@ -111,6 +117,38 @@ class Message extends CI_Model {
   public function get_errors() {
     return $this->get('errors');
   }
+  
+  /**
+   * Voegt ajax message toe
+   *
+   * @param string $ajax 
+   * @return object $this
+   * @author Jan den Besten
+   */
+  public function add_ajax($ajax) {
+    return $this->add($ajax,'ajax');
+  }
+  
+  /**
+   * Geeft Ajax messages
+   *
+   * @return mixed
+   * @author Jan den Besten
+   */
+  public function get_ajax() {
+    return $this->get('ajax');
+  }
+  
+  /**
+   * Reset ajax messeges
+   *
+   * @return object $this
+   * @author Jan den Besten
+   */
+  public function reset_ajax() {
+    return $this->reset('ajax');
+  }
+  
   
   /**
    * Geeft alle messages/errors terug als HTML
