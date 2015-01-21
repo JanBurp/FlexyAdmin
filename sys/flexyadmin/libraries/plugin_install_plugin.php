@@ -87,7 +87,7 @@ class Plugin_install_plugin extends Plugin {
           }
 				}
         else {
-          trace_($_FILES);
+          echo trace_($_FILES,false);
         }
         
       }

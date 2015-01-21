@@ -668,7 +668,7 @@ class Plugin_automenu extends Plugin {
 		
   		$this->CI->db->trans_complete();
   		if ($this->CI->db->trans_status() === FALSE) {
-  			trace_('Sorry, transaction error');
+  			die('Sorry, transaction error');
   		}
       
       // Ready with this pass: update linklist etc
