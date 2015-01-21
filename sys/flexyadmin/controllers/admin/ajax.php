@@ -93,6 +93,8 @@ class Ajax extends AjaxController {
    * @author Jan den Besten
    */
  	public function edit($plugins=TRUE) {
+    $result=array();
+    
     $table=$this->input->post('table');
     $id=$this->input->post('id');
     $field=$this->input->post('field');
@@ -169,10 +171,14 @@ class Ajax extends AjaxController {
 		else $error='ajax_error_wrong_parameters';
 
 
-    $result=array();
     $result['_method']=__METHOD__;
     if ($error) $result['_error']=lang($error);
-    if ($validation_error) $result['_validation_error']=safe_quotes($this->ui->replace_ui_names($validation_error));
+    if ($validation_error) {
+      $result['_validation_error']=safe_quotes($this->ui->replace_ui_names($validation_error));
+    }
+    else {
+      $result['_validation_error']=false;
+    }
     if (isset($options)) $result['_opions']=$options;
     $result['old_value']=$old_value;
     $result['new_value']=$value;
