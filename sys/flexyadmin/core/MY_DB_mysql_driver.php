@@ -1186,7 +1186,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			$uriField='uri';
 			if (is_string($fullUri)) $uriField=$fullUri;
       if (is_array($fullUri)) {
-        trace_(array('BUG? :: fullUri=>'=>$fullUri));
+        echo trace_(array('BUG? :: fullUri=>'=>$fullUri),false);
       }
 			foreach ($result as $key => $row) {
 				if (isset($row['self_parent']) and $row["self_parent"]!=0) {

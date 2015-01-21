@@ -111,7 +111,7 @@ class AjaxController extends BasicController {
     
     if ( ! $this->input->is_ajax_request() ) {
       $result['_test']=true;
-      trace_($result);
+      echo trace_($result,false);
       return $result;
     }
 
