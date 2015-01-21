@@ -103,6 +103,7 @@ class Forms extends Module {
     return false;
 	}
 
+
   /**
    * Voegt een formulier toe
    *

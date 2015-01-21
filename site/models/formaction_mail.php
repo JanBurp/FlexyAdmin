@@ -33,7 +33,7 @@
      $this->load->library('email');
    }
    
-   
+
    /**
     * Voer de actie uit, in dit geval: verstuur de mail met als body de veldnamen met hun gegevens
     *
@@ -58,7 +58,7 @@
     
     // SUBJECT - vervang keys
     $subject=$this->settings['subject'];
-    $replace['/%URL%/uiUsm']=trim(str_replace('http://','',$this->site['url_url']),'/');
+    if (isset($this->site)) $replace['/%URL%/uiUsm']=trim(str_replace('http://','',$this->site['url_url']),'/');
     $emailfields=filter_by_key($data,'email');
     if (empty($emailfields)) $emailfields=filter_by_key($data,'Email');
     if ($emailfields) $replace['/%MAIL%/uiUsm']=current($emailfields);
