@@ -73,14 +73,14 @@
     foreach ($this->fields as $key => $field) {
       $value=$data[$key];
       // Attachment?
-      if (get_prefix($key)=='file') {
+      if (get_prefix($key)=='file' or get_prefix($key)=='media') {
     		if (isset($_FILES[$key]['name']) and !empty($_FILES[$key]['name']) ) {
     			$this->load->library('upload');
     			$this->load->model('file_manager');
     			$this->file_manager->init( $this->settings['attachment_folder'], $this->settings['attachment_types'] );
     			$result=$this->file_manager->upload_file($key);
     			if (!empty($result['file'])) {
-            $file=SITEPATH.'assets/'.$this->attachment_folder.'/'.$result['file'];
+            $file=SITEPATH.'assets/'.$this->settings['attachment_folder'].'/'.$result['file'];
     				$data[$key]=$result['file'];
             $value=$result['file'];
     			}
