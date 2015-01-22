@@ -186,20 +186,24 @@ function trace_($a=NULL,$echo=true,$backtraceOffset=1,$max=50) {
  * @author Jan den Besten
  */
 function tr_string($value) {
-	$s="";
-	$value=(string) $value;
-	$html=($value!=strip_tags($value));
-  $s=$value;
-  $show=has_string('#show#',$value);
-  // $show=true;
-  if ($html and !$show) $s=preg_replace('/\s/',' ',htmlentities($value));
-  if (!$show) {
-    $s=max_length($s,1000,'CHARS');
-    if ($s!=$value) $s.=' ...';
-    $s=str_replace("\n",'\n',$s);
-    $s=str_replace("\r",'\r',$s);
+	$s='';
+  if (is_string($value)) {
+    $show=preg_match("/^#show#/u", $value);
+    // $show=1;
+    // echo"<pre>";print_r(array($value,$show));echo"</pre>";
+    $s=$value;
+    if ($show===1) {
+      $s=preg_replace("/^#show#/u", "", $value);
+    }
+    else {
+      $html=($value!=strip_tags($value));
+      if ($html) $s=preg_replace('/\s/',' ',htmlentities($value));
+      $s=max_length($s,1000,'CHARS');
+      if ($s!=$value) $s.=' ...';
+      $s=str_replace("\n",'\n',$s);
+      $s=str_replace("\r",'\r',$s);
+    }
   }
-  if ($show) $s=str_replace('#show#','',$s);
   $s="'".trim($s,"'")."'";
 	return $s;
 }
@@ -221,7 +225,7 @@ function array_($a) {
   			$out[$key]="{OBJECT[$size]}";
       }
 		else
-			$out[$key]=tr_string($value);
+			$out[$key]=$value;
 	}
 	return $out;
 }
@@ -258,9 +262,9 @@ function print_ar($array,$return=false,$tabs=0,$brackets="()") {
   		else {
   			if (is_bool($value)) {
   				if ($value)
-  					$thisOut.="'True'";
+  					$thisOut.="TRUE";
   				else
-  					$thisOut.="'False'";
+  					$thisOut.="FALSE";
           $thisOut.=$eol;
   			}
   			else {

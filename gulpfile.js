@@ -142,6 +142,9 @@ var jshint      = require('gulp-jshint');
 var stylish     = require('jshint-stylish');
 var uglify      = require('gulp-uglify');
 var flatten     = require('gulp-flatten');
+var protractor  = require("gulp-protractor").protractor;
+var webdriver_standalone = require("gulp-protractor").webdriver_standalone;
+
 
 /**
  * Calling 'gulp --build' minify the css (without sourcemaps)
@@ -280,6 +283,21 @@ gulp.task('cssmin',['less'],function(){
           message: message
         }));
 });
+
+
+/**
+ * Start FrontEnd test
+ */
+gulp.task('test',function(){
+  gulp.src(["site/tests/*.js"])
+    .pipe(protractor({
+        configFile: "site/tests/conf.js",
+        args: ['--baseUrl', 'http://localhost']
+    })) 
+    .on('error', function(e) { throw e });
+});
+
+
 
 gulp.task('default', ['jshint','jsmin','less','cssmin'] );
 
