@@ -12,6 +12,7 @@
  * Gebruik van deze gulp:
  * - gulp       // maak een complete build: compileren en minificeren van LESS, combineren van alle CSS in één bestand, combineren en minificeren van alle JS bestanden
  * - gulp watch // kijkt of er bestanden zijn veranderd, zo ja, build dat deel en doe een livereload naar de browser (installeer een livereload plugin in je browser om dat te laten werken)
+ * - gulp test  // doet een End2End test met CasperJS, zie site/tests/tests.js
  * 
  * Specifieker gebruik van deze gulp:
  * - gulp less    // compileer alleen de LESS bestanden tot CSS bestanden
@@ -142,9 +143,7 @@ var jshint      = require('gulp-jshint');
 var stylish     = require('jshint-stylish');
 var uglify      = require('gulp-uglify');
 var flatten     = require('gulp-flatten');
-var protractor  = require("gulp-protractor").protractor;
-var webdriver_standalone = require("gulp-protractor").webdriver_standalone;
-
+var casperJs    = require('gulp-casperjs');
 
 /**
  * Calling 'gulp --build' minify the css (without sourcemaps)
@@ -290,11 +289,7 @@ gulp.task('cssmin',['less'],function(){
  */
 gulp.task('test',function(){
   gulp.src(["site/tests/*.js"])
-    .pipe(protractor({
-        configFile: "site/tests/conf.js",
-        args: ['--baseUrl', 'http://localhost']
-    })) 
-    .on('error', function(e) { throw e });
+  .pipe(casperJs());
 });
 
 
