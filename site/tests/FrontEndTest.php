@@ -85,7 +85,7 @@ class FrontEndTest extends CIUnit_Framework_TestCase {
         $data=$this->_random_form_data($info['fields']);
         $result=$this->CI->$formaction->go($data);
         
-        $this->assertTrue($result, el('message',$info,'Formaction `'.$formaction.'` did not give success as result.') );
+        $this->assertGreaterThanOrEqual(1,$result, el('message',$info,'Formaction `'.$formaction.'` did not give success as result.') );
       }
       error_reporting($error_reporting);
 
@@ -98,6 +98,11 @@ class FrontEndTest extends CIUnit_Framework_TestCase {
         $type=el('type',$info,get_prefix($name,'_'));
         $value='';
         switch ($type) {
+          
+          case 'b':
+            $value=false;
+            if (rand(0,1)==1) $value=true;
+            break;
           
           case 'email':
             $value=strtolower(random_string('alpha',rand(2,8)).'@'.random_string('alpha',rand(2,8)).'.'.random_string('alpha',rand(2,3)));
