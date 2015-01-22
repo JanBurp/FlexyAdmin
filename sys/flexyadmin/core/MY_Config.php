@@ -87,7 +87,7 @@ Class MY_Config extends CI_Config {
 			if (defined('ENVIRONMENT')) $locations[].=$path.'config/'.ENVIRONMENT;
 			$locations[]=$path.'config';
 		}
-
+    
 		// Load from all locations, and load and override config
 		foreach ($locations as $location) {
 
@@ -145,7 +145,9 @@ Class MY_Config extends CI_Config {
 			if ($fail_gracefully === TRUE) {
 				return FALSE;
 			}
-			// show_error('The configuration file '.$file_path.' does not exist.');
+      // echo("NOT FOUND: $file_path<br>");
+      
+      // show_error('The configuration file '.$file_path.' does not exist.');
 		}
 
 		return $loaded;

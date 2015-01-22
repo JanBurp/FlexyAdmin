@@ -2,6 +2,8 @@
 
 class FrontEndTest extends CIUnit_Framework_TestCase {
 
+  private $settings=array();
+
     protected function setUp () {
       $this->CI->load->helper('language');
       // Load basic modules
@@ -10,28 +12,10 @@ class FrontEndTest extends CIUnit_Framework_TestCase {
       $this->CI->load->library('Forms');
       $this->CI->load->library('Lorem');
       $this->CI->load->model('formaction');
+      $this->CI->config->load('unittest');
     }
-
-    public function test_modules()  {
-      $page=array(
-        'id'        => 1,
-        'uri'       => 'home',
-        'str_title' => 'Test',
-        'txt_text'  => '<h1>Test</h1>',
-      );
-
-      // Example module
-      $this->CI->load->library('Example');
-      $this->assertEquals( '<h1>Example Module</h1>', $this->CI->example->index($page) );
-      $this->assertEquals( '<h1>Example Module.Other</h1>', $this->CI->example->other($page) );
-      
-      // Ajax example module
-      $this->CI->load->library('Ajax_example');
-      $this->assertEquals( '{"_message":"Ajax_example","_module":"example","_success":true}', $this->CI->ajax_example->index($page) );
-      $this->assertEquals( '{"_message":"Ajax_example","_method":"other","_module":"example","_success":true}', $this->CI->ajax_example->other($page) );
-    }
-
-
+    
+    
     /**
      * Test of er nog debughelper commando's zijn
      *
@@ -39,18 +23,48 @@ class FrontEndTest extends CIUnit_Framework_TestCase {
      * @author Jan den Besten
      */
     public function test_debug_code() {
-      $files=read_map('site','php',true,false,false,false);
-      unset($files['sys/flexyadmin/helpers/debug_helper.php']);
-      foreach ($files as $file) {
-        $lines=file($file['path']);
-        foreach ($lines as $key => $line) {
-          $found=preg_match("/^\s*\s*(trace_|trace_if|strace_|backtrace_|xdebug_break)\(/u", $line);
-          $this->assertLessThan(1,$found, 'Debug helper found in `<i><b>'.$file['path'].'</i></b>` at line '.($key+1).':<br><code>'.$line.'</code>');
+      if ($this->CI->config->item('check_if_debug_code')) {
+        $files=read_map('site','php',true,false,false,false);
+        unset($files['sys/flexyadmin/helpers/debug_helper.php']);
+        foreach ($files as $file) {
+          $lines=file($file['path']);
+          foreach ($lines as $key => $line) {
+            $found=preg_match("/^\s*\s*(trace_|trace_if|strace_|backtrace_|xdebug_break)\(/u", $line);
+            $this->assertLessThan(1,$found, 'Debug helper found in `<i><b>'.$file['path'].'</i></b>` at line '.($key+1).':<br><code>'.$line.'</code>');
+          }
         }
+      }
+      else {
+        $this->assertTrue(true);
       }
     }
     
-    
+
+
+    /**
+     * Test (ajax)modules
+     */
+    public function test_modules()  {
+      $page=$this->CI->config->item('page');
+      $modules = $this->CI->config->item('modules');
+      
+      foreach ($modules as $name => $info) {
+        $this->CI->load->library($name);
+        // calls
+        foreach ($info as $call => $assert) {
+          $module=remove_suffix($call,'.');
+          $method=get_suffix($call,'.');
+          if (empty($method) or $method==$module) $method='index';
+          // assert##( result , call($page) )
+          $result=array_pop($assert);
+          $assert=$assert[0];
+          $this->$assert( $result, $this->CI->$module->$method($page) );
+        }
+      }
+
+    }
+
+
     /**
      * Test formactions
      *
@@ -59,20 +73,7 @@ class FrontEndTest extends CIUnit_Framework_TestCase {
      */
     public function test_formactions()  {
       
-      $formactions = array( 
-        'formaction_mail' => array(
-          'settings' => array(
-            'to' => 'test@flexyadmin.com',
-          ),
-          'fields' => array(
-            'str_name'		  => array( 'label'=> 'Name', 'validation'=>'required' ),
-            'email_email'	  => array( 'label'=> 'Email', 'validation'=>'required' ),
-            'txt_text'	    => array( 'label'=> 'Text', 'type'=>'txt', 'validation'=>'required' ),
-          ),
-          'message' => 'Formaction `formaction_mail` did not give success as result. Is a Email server ready?'
-        ),
-      );
-      
+      $formactions=$this->CI->config->item('formactions');
 
       $error_reporting=error_reporting();
       error_reporting(0);
