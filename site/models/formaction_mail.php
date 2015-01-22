@@ -58,7 +58,7 @@
     
     // SUBJECT - vervang keys
     $subject=$this->settings['subject'];
-    if (isset($this->site)) $replace['/%URL%/uiUsm']=trim(str_replace('http://','',$this->site['url_url']),'/');
+    if (isset($this->site['url_url'])) $replace['/%URL%/uiUsm']=trim(str_replace('http://','',$this->site['url_url']),'/');
     $emailfields=filter_by_key($data,'email');
     if (empty($emailfields)) $emailfields=filter_by_key($data,'Email');
     if ($emailfields) $replace['/%MAIL%/uiUsm']=current($emailfields);
