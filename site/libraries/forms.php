@@ -266,23 +266,28 @@ class Forms extends Module {
         
         $formaction=$this->settings('formaction');
         if (!is_array($formaction)) $formaction=array($formaction);
+        $result=true;
         foreach ($formaction as $faction) {
           $action='action_'.$faction;
           $this->CI->load->model($faction,$action);
           $this->CI->$action->initialize($this->settings)->fields( $formFields );
           $this->CI->$action->set_form_id($this->form_id);
-          $result=$this->CI->$action->go( $data );
-    			if (!$result) {
+          $this_result=$this->CI->$action->go( $data );
+    			if (!$this_result) {
     		    $errors.=$this->CI->$action->get_errors();
     			}
-          else {
-            if ($this->settings('prevend_double_submit') or $this->settings('always_show_form',false)) {
-              $this->CI->session->set_userdata($this->form_id.'__submit',true);
-              $this->CI->session->set_flashdata($this->form_id.'__message',$this->_view_thanks($result));
-              redirect($formAction);
-            }
-            $html.=$this->_view_thanks($result);
+          $result=($result AND $this_result);
+          if (method_exists($this->CI->$action,'return_data')) {
+            $data=$this->CI->$action->return_data();
           }
+        }
+        if ($result) {
+          if ($this->settings('prevend_double_submit') or $this->settings('always_show_form',false)) {
+            $this->CI->session->set_userdata($this->form_id.'__submit',true);
+            $this->CI->session->set_flashdata($this->form_id.'__message',$this->_view_thanks($result));
+            redirect($formAction);
+          }
+          $html.=$this->_view_thanks($result);
         }
       }
       else {

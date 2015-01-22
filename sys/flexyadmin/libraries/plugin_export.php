@@ -147,27 +147,28 @@ class Plugin_export extends Plugin {
 		// trace_($data);
 
 		$out='';
-		
-		switch ($type) {
+    if ($data) {
+  		switch ($type) {
 
-			case 'xml':
-				$out=array2xml($data);
-				break;
+  			case 'xml':
+  				$out=array2xml($data);
+  				break;
 
-			case 'json':
-				$out=array2json($data);
-				break;
+  			case 'json':
+  				$out=array2json($data);
+  				break;
 
-			case 'php':
-				$out=array2php($data);
-				break;
+  			case 'php':
+  				$out=array2php($data);
+  				break;
 				
-			case 'csv':
-			default:
-				$out=array2csv($data);
-				break;
+  			case 'csv':
+  			default:
+  				$out=array2csv($data);
+  				break;
 
-		}
+  		}
+    }
 		
 		if (!empty($out)) {
 			$this->CI->load->helper('download');
@@ -176,6 +177,9 @@ class Plugin_export extends Plugin {
 			force_download($filename.'.'.$type, $out);	
 			return $out;
 		}
+    else {
+      $this->add_content(p().'Nothing to export'._p());
+    }
 		
 		return FALSE;
 	}

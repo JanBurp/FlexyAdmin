@@ -35,7 +35,7 @@
 
     foreach ($data as $key => $value) {
       // Is er een file veld?
-      if (get_prefix($key)=='file') {
+      if (get_prefix($key)=='file' or get_prefix($key)=='media') {
         // En is de naam van het bestand bekend?
 				if (isset($_FILES[$key]['name']) and !empty($_FILES[$key]['name']) ) {
           // Upload het bestand
@@ -50,7 +50,7 @@
             // Zo ja pas formdata aan, voeg bestand toe aan mediatable, en geef bericht
             $path=SITEPATH.'assets/'.$this->settings['upload_path'];
             $file=$path.'/'.$result['file'];
-						$formData[$key]=$result['file'];
+						$data[$key]=$result['file'];
             $value=$result['file'];
             $this->mediatable->add($value,$path);
 					}
@@ -62,6 +62,19 @@
 				}
       }
     }
+    $this->return_data = $data;
     return $return;
   }
+  
+  
+  /**
+   * Data is changed, return it
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+  public function return_data() {
+    return $this->return_data;
+  }
+  
 }
