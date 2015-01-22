@@ -11,6 +11,7 @@
   "devDependencies": {
     "gulp": "^3.8.10",
     "gulp-autoprefixer": "^2.0.0",
+    "gulp-casperjs": "0.0.5",
     "gulp-concat": "^2.4.2",
     "gulp-flatten": "0.0.4",
     "gulp-jshint": "^1.9.0",
@@ -20,11 +21,9 @@
     "gulp-notify": "^2.0.1",
     "gulp-pixrem": "^0.1.1",
     "gulp-plumber": "^0.6.6",
-    "gulp-protractor": "0.0.12",
     "gulp-sourcemaps": "^1.2.8",
     "gulp-uglify": "^1.0.1",
     "gulp-util": "^3.0.1",
-    "jshint-stylish": "^1.0.0",
-    "protractor": "^1.6.1"
+    "jshint-stylish": "^1.0.0"
   }
 }
