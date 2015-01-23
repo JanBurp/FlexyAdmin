@@ -973,8 +973,7 @@ input, textarea, select {
 	letter-spacing:.04em;
 }
 
-input.gpw,
-input.pwd {width:150px;}
+.fieldtype_gpw input, .fieldtype_pwd input {width:150px;}
 
 input.rgb {width:80px;}
 div.rgbColor {
