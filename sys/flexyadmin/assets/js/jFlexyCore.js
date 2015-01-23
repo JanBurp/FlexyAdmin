@@ -41,6 +41,7 @@ $(document).ready(function() {
 		$.fn.formTabs = function(opts) {
 			return this.each(function() {
 				var fieldsets=$(this).find('fieldset:not(.formbuttons):not(.flexyFormButtons)');
+        
 				var tablist='<ul>';
 				fieldsets.each(function(){
 					// add tab
@@ -60,7 +61,7 @@ $(document).ready(function() {
 			});
 		};
 	})(jQuery);
-  // $('#content form').formTabs().tabs();
+  $('#content form').formTabs().tabs();
 
 	if (isForm) doForm();
 
