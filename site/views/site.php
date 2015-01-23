@@ -37,6 +37,7 @@
 <?php else: ?>
   <?php if ($framework=='default'): ?>
   <link href="<?=$assets;?>css/normalize.css" rel="stylesheet" type="text/css">
+  <link href="<?=$assets;?>css/font-awesome.min.css" rel="stylesheet" type="text/css">
   <link href="<?=$assets;?>css/text.css?<?=$int_version?>" rel="stylesheet" type="text/css">
   <link href="<?=$assets;?>css/layout.css?<?=$int_version?>" rel="stylesheet" type="text/css">
   <?php elseif ($framework=='bootstrap'): ?>
@@ -67,6 +68,7 @@
   <!-- main navigation -->
   <nav id="menu" class="navbar navbar-default" role="navigation">
     <div class="container">
+      <span class="fa fa-bars mobile-only"></span>
       <?=$menu?>
     </div>
   </nav>
@@ -88,7 +90,6 @@
 <?php if ($use_minimized): ?>
   <script src="<?=$assets?>js/scripts.min.js?<?=$int_version?>" type="text/javascript" charset="utf-8"></script>
 <?php else: ?>
-  <script src="<?=$assets?>js/rem.min.js" type="text/javascript" charset="utf-8"></script>
   <script src="<?=$assets?>js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
   <?php if ($framework=='bootstrap'): ?><script src="<?=$assets?>js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script><?php endif ?>
   <script src="<?=$assets?>js/site.js?<?=$int_version?>" type="text/javascript" charset="utf-8"></script>

@@ -73,7 +73,7 @@ var files = {
     'less'    : assets+'/less-default/*.less',            // LESS bestanden die gecompileerd moeten worden (string of array)
     'cssmin'  : [                                         // all CSS bestanden die samengevoegd en gemimificeerd moeten worden (string of array)
       assets+'/css/normalize.css',
-      // assets+'/css/font-awesome.min.css',
+      assets+'/css/font-awesome.min.css',
       assets+'/css/text.css',
       assets+'/css/layout.css'
     ],
@@ -99,8 +99,8 @@ var files = {
     'less'    : assets+'/less-bootstrap/bootstrap.less',
     'css'     : assets+'/css',
     'cssmin'  : [
-      assets+'/css/bootstrap.css'
-      // assets+'/css/font-awesome.min.css'
+      assets+'/css/bootstrap.css',
+      assets+'/css/font-awesome.min.css'
     ],
     'cssdest' : 'styles.min.css',
     'watchcss': [

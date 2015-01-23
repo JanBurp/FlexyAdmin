@@ -42,16 +42,19 @@ body {background:@body;}
 //////////////////////////////////////////////////////
 // RESPONSIVE                    /////////////////////
 //////////////////////////////////////////////////////
-@media (max-width: 800px) {
-  // Font a bit smaller, and all fonts (and more) will resize because of the rem units.
+@media (max-width: 760px) {
   html { font-size: 14px; }
 }
+
 @media (max-width: 480px) {
-  html { font-size: 12px; }
+  #container {margin:0;}
+  .mobile-only {display:inline}
+  div.mobile-only {display:block}
   // At this point the menu always will be mobile and the form will be vertical
-  .mobile_menu(~'.menu');
+  .navbar-mobile(~'.navbar');
   .vertical_form(~'');
 }
+
 @media (max-width: 320px) {
   #container {min-width:320px}
 }
