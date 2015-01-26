@@ -203,8 +203,10 @@ function tr_string($value) {
       $s=str_replace("\n",'\n',$s);
       $s=str_replace("\r",'\r',$s);
     }
+    $s="'".trim($s,"'")."'";
   }
-  $s="'".trim($s,"'")."'";
+  else
+    return $value;
 	return $s;
 }
 
