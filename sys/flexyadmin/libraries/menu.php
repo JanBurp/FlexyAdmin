@@ -717,6 +717,7 @@ class Menu {
     $html='';
 		if ($menu) {
   		$pos=1;
+      $_pos=count($menu);
 			foreach($menu as $uri=>$item) {
         
         // create uri
@@ -763,6 +764,7 @@ class Menu {
           'full_uri'    => el('full_uri',$item,''),
           'lev'         => $level,
           'pos'         => $pos,
+          '_pos'        => $_pos,
 					'order'       => ($pos==1)?$styles['first']:($pos==count($menu)?$styles['last']:''),
 					'sub'         => (isset($item['sub']))?$styles['is_sub']:'',
           'current'     => ($this->settings['current']==$cleanUri?$styles['current']:'').((strpos($submenu,$styles['current'])>0?' '.$styles['active']:'')),
@@ -775,6 +777,7 @@ class Menu {
 
         $html.=$item_html;
 				$pos++;
+        $_pos--;
 			}
 		}
     
