@@ -327,7 +327,7 @@ function doForm() {
 
 		
 	// Media(s) select by click
-	$('div.media ul.choices').add('div.medias ul.choices').add('div.medias:not(.image_dropdown) ul.values').click(function(e){
+	$('div.fieldtype_media ul.choices').add('div.fieldtype_medias ul.choices').add('div.fieldtype_media:not(.image_dropdown) ul.values').click(function(e){
     if (!$(this).hasClass('sorting')) {
   		var target=e.target; // img tag
   		var type='media';
@@ -337,19 +337,19 @@ function doForm() {
   		if (type=='media') {
   			var src=pathdecode(thumbsrc);
   			src=src.substr(src.lastIndexOf('/')+1);
-  			$(target).parents('div.media').children('ul.values').empty();
-  			$(target).parents('div.media').children('ul.values').append('<li><img class="zoom" src="'+thumbsrc+'" alt="'+src+'" title="'+src+'" /></li>');
+  			$(target).parents('div.fieldtype_media').children('ul.values').empty();
+  			$(target).parents('div.fieldtype_media').children('ul.values').append('<li><img class="zoom" src="'+thumbsrc+'" alt="'+src+'" title="'+src+'" /></li>');
   			// change the hidden input value
-  			$(target).parents('div.media').children('input:first').attr('value',src);
+  			$(target).parents('div.fieldtype_media').children('input:first').attr('value',src);
   		}
   		else {
         // Hier verschil herkennen tussen click en drag 'n drop... Alleen doorgaan als géén drag 'n drop
         var item=$(target).parent('li:first').clone(true);
-        var values=$(target).parents('div.medias').children('ul.values');
+        var values=$(target).parents('div.fieldtype_medias').children('ul.values');
         if ($(target).parents('ul:first').hasClass('choices'))
-          $(target).parents('div.medias').children('ul.values').append(item);
+          $(target).parents('div.fieldtype_medias').children('ul.values').append(item);
         else
-          $(target).parents('div.medias').children('ul.choices').append(item);
+          $(target).parents('div.fieldtype_medias').children('ul.choices').append(item);
         $(target).parent('li:first').remove();
         $('.zoomThumb').hide();
         update_values_list($(values));
@@ -359,9 +359,9 @@ function doForm() {
 	});
 
 	// Media, empty by a click
-	$('div.media ul.values').click(function(){
+	$('div.fieldtype_media ul.values').click(function(){
 		$(this).empty();
-		$(this).parent('div.media').children('input:first').attr('value','');
+		$(this).parent('div.fieldtype_media').children('input:first').attr('value','');
 	});
 
 	// update the hidden field with the sortable values list
@@ -382,8 +382,8 @@ function doForm() {
 	}
 	
 	// dragndrop ordering of medias
-	$('div.medias ul').sortable({
-		connectWith: 'div.medias ul',
+	$('div.fieldtype_medias ul').sortable({
+		connectWith: 'div.fieldtype_medias ul',
     start: function(event,ui) {
       // make sure clicking can detect if sorting is in progress...
       $(this).addClass('sorting');
