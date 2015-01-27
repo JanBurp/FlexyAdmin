@@ -10,7 +10,6 @@
 // define("ERROR_EMAIL","error@flexyadmin.com");
 
 
-
 /*
 |---------------------------------------------------------------
 | IS LOCAL ?
@@ -46,6 +45,8 @@ if ( !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_RE
 else
   define("IS_AJAX",false);
 
+
+
 /*
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT
@@ -75,7 +76,9 @@ else
 
  // define('ENVIRONMENT','testing');   // This sets logging on
  
-   
+
+
+
 /*
  *---------------------------------------------------------------
  * ERROR REPORTING
@@ -92,7 +95,7 @@ if (defined('ENVIRONMENT'))
 		case 'development':
 			error_reporting(E_ALL);
 		break;
-	
+
 		case 'testing':
 		case 'production':
 			error_reporting(0);
@@ -132,6 +135,7 @@ $system_path = 'sys/codeigniter';
 $application_folder = 'sys/flexyadmin';
 
 $site_folder = 'site'; // added/changed for FlexyAdmin
+
 
 /*
  * --------------------------------------------------------------------
@@ -251,7 +255,6 @@ $site_folder = 'site'; // added/changed for FlexyAdmin
 	}
   
   define('SITEPATH', $site_folder.'/');			// added/changed for FlexyAdmin
-
 
 /*
  * --------------------------------------------------------------------
