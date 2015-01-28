@@ -121,14 +121,14 @@ function doForm() {
     
 		// styling of multiple
 		$('.flexyFormField.dropdown button').css({width:460});
-    $('.flexyFormField.dropdown.rel button').css({width:430});
+    $('.flexyFormField.dropdown.fieldtype_rel button').css({width:430});
 		$('.flexyFormField.dropdown .ui-multiselect-menu').css({width:458});
 		$('.flexyFormField.dropdown.has_button button').css({width:430});
 		$('.flexyFormField.dropdown.has_button .ui-multiselect-menu').css({width:428});
-		$('.flexyFormField.image_dropdown.multiple ul.values').css({width:425,position:'relative'});
-		$('.flexyFormField.image_dropdown button.ui-multiselect').css({width:420,height:38,'float':'right','margin-top':-42});
-		$('.flexyFormField.rgb .ui-multiselect').css({width:100});
-		$('.flexyFormField.rgb .ui-multiselect-menu').css({width:100});
+    $('.flexyFormField.image_dropdown.multiple ul.values').css({width:425,position:'relative'});
+    $('.flexyFormField.image_dropdown button.ui-multiselect').css({width:460,height:38,'float':'right'});
+		$('.flexyFormField.fieldtype_rgb .ui-multiselect').css({width:100});
+		$('.flexyFormField.fieldtype_rgb .ui-multiselect-menu').css({width:100});
 	}
 
 		
@@ -200,9 +200,6 @@ function doForm() {
         var color=$('label',option).attr('title');
         $('label',option).css({'background-color':color});
       });
-      
-      
-      
       
     }
     
@@ -327,13 +324,12 @@ function doForm() {
 
 		
 	// Media(s) select by click
-	$('div.fieldtype_media ul.choices').add('div.fieldtype_medias ul.choices').add('div.fieldtype_media:not(.image_dropdown) ul.values').click(function(e){
+	$('div.fieldtype_media ul.choices').add('div.fieldtype_medias ul.choices').add('div.fieldtype_medias:not(.image_dropdown) ul.values').click(function(e){
     if (!$(this).hasClass('sorting')) {
   		var target=e.target; // img tag
   		var type='media';
-  		if ($(target).parents('div:first').hasClass('medias')) type='medias';
+  		if ($(target).parents('div:first').hasClass('fieldtype_medias')) type='medias';
   		var thumbsrc=$(target).attr('src');
-
   		if (type=='media') {
   			var src=pathdecode(thumbsrc);
   			src=src.substr(src.lastIndexOf('/')+1);
