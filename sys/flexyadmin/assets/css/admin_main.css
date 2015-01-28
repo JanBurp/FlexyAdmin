@@ -1087,11 +1087,11 @@ select.image_dropdown {
 
 body.normal_dropdowns select.image_dropdown {margin-top:0px;}
 
-.flexyFormField.medias select.image_dropdown {	width:460px;}
+.flexyFormField.fieldtype_medias select.image_dropdown {	width:460px;}
 
-.flexyFormField.media {min-height:35px;}
-.flexyFormField.medias {min-height:36px;}
-body.normal_dropdowns .flexyFormField.medias {
+.flexyFormField.fieldtype_media {min-height:35px;}
+.flexyFormField.fieldtype_medias {min-height:36px;}
+body.normal_dropdowns .flexyFormField.fieldtype_medias {
 /*  float:left;*/
   height:200px;
 }
@@ -1210,7 +1210,8 @@ input.button {
 	margin-left:149px;
 }
 .flexyFormField ul.multiple,
-.flexyFormField ul.choices {
+.flexyFormField ul.choices,
+.flexyFormField ul.values {
 	width:450px;
 }
 
