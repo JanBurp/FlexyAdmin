@@ -125,6 +125,13 @@ class FrontEndController extends MY_Controller {
       if ($time>$version) $version=$time;
     }
     $this->site['int_version']=$version;
+    
+    // Is there a library that needs to be run first??
+    if (file_exists(SITEPATH.'libraries/before_controller.php')) {
+      $this->load->library('before_controller');
+    }
+    
+    
 	}
 	
 	/**
