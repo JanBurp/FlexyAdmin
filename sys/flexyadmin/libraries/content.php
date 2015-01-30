@@ -96,14 +96,21 @@ class Content {
     if (isset($match[2])) {
       $res='<a'.preg_replace("/target=\"(.*)?\"/uiUsm", "", $match[1]);
       $url=str_replace($this->CI->config->item('base_url'),'',$match[2]);
-      $target='_self';
-      if (substr($url,0,4)=='http') $target='_blank';
-      if (substr($url,0,4)=='file') $target='';
-      if (substr($url,0,4)=='mail') $target='';
+      $target='';
+      if (isset($match[3]) and (preg_match("/target=\"([^\"]*)\"/us", $match[3],$target_match)) ) {
+        $target=$target_match[1];
+      }
+      else {
+        $target='_self';
+        if (substr($url,0,4)=='http') $target='_blank';
+      }
+      if (substr($url,0,4)=='file' or substr($url,0,4)=='mail') {
+        $target='';
+      }
       $res.='href="'.$url.'"';
       if (isset($match[3])) $res.=preg_replace("/target=\"(.*)?\"/uiUsm", "", $match[3]);
       if (!empty($target)) $res.=' target="'.$target.'" ';
-      $res.=' rel="external">';
+      $res.='>';
     }
     return $res;
   }
