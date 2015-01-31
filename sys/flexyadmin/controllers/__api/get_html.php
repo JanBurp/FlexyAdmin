@@ -2,6 +2,7 @@
 
 /**
  * API/plugin
+ * API/help
  * Roept een plugin aan en geeft output van plugin terug
  *
  * @package default

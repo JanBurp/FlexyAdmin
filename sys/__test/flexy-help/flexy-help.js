@@ -13,24 +13,21 @@
  */
 
 
-flexyAdmin.controller('HelpController', ['$scope','$routeParams', function($scope,$routeParams) {
+flexyAdmin.controller('flexyHelpController', ['$scope','$routeParams','$http','$sce', function($scope,$routeParams,$http,$sce) {
   'use strict';
   
   var self = this;
   
-  // $scope.page = $routeParams.plugin;
-  // $scope.uri = 'plugin/'+$scope.plugin;
-  //
-  // $scope.title    = $scope.plugin;
-  // $scope.html  = '';
-  //
-  // $http.post('get_html',{'uri':$scope.uri,'name':$scope.plugin}).success(function(result){
-  //   $log.log(result);
-  //   $scope.title   = result.title;
-  //   $scope.html = $sce.trustAsHtml(result.html);
-  // }).error(function(data){
-  //   $log.log('AJAX error -> Plugin');
-  // });
-  //
+  $scope.page = $routeParams.page;
+  $scope.title = '';
+  $scope.help  = '';
+
+  $http.post('get_help',{'page':$scope.page}).success(function(result){
+    $scope.title  = result.title;
+    $scope.help   = $sce.trustAsHtml(result.help);
+    // $scope.help   = result.help;
+  }).error(function(data){
+    $log.log('AJAX error -> Plugin');
+  });
   
 }]);

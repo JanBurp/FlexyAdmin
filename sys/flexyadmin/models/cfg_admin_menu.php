@@ -32,7 +32,7 @@ class cfg_admin_menu extends _crud {
     $sidebar=$this->_process_menu($result);
 
     $header = array(
-      array( 'name' => lang('help'), 'uri'=>'html/help', 'type' => 'info' ),
+      array( 'name' => lang('help'), 'uri'=>'help/index', 'type' => 'info' ),
       array( 'name' => $this->user->user_name, 'uri'=>'form/cfg_users/current', 'type' => 'form', 'args' => array('table'=>'cfg_users','id'=>$this->user->user_id)),
       array( 'name' => lang('logout'), 'uri'=>'logout', 'type' => 'logout' )
     );

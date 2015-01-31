@@ -109,6 +109,7 @@
 <script src="sys/__test/flexy-http-auth/flexy-logout-controller.js" type="text/javascript" charset="utf-8"></script>
 
 <script src="sys/__test/flexy-ui/flexy-blocks.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/flexy-help/flexy-help.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-menu/flexy-menu.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-grid/flexy-grid.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-form/flexy-form.js" type="text/javascript" charset="utf-8"></script>
