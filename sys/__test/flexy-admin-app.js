@@ -117,8 +117,8 @@ flexyAdmin.config( function($routeProvider){
       template    : '',
     })
     .when('/help/:page',{
-      controller  : 'flexyHelpController',
-      template    : '',
+      controller  : '',
+      templateUrl : 'flexy-help/help.html',
     })
     .when('/grid/:table',{
       controller  : '',
@@ -207,6 +207,5 @@ flexyAdmin.controller('WizardController', ['flexyAdminGlobals','$scope', functio
     edit_user : $flexyAdminGlobals.base_url+'#/form/cfg_users/current'
     
   };
-  
   
 }]);
