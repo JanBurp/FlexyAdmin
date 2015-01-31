@@ -27,7 +27,7 @@ class get_form extends ApiController {
     $items=FALSE;
     $field_info=FALSE;
     $table_info=FALSE;
-
+    
     if ($this->args['table']) {
       // FIELD INFO
       $this->fields = $this->db->list_fields($this->args['table']);
@@ -57,7 +57,10 @@ class get_form extends ApiController {
    */
   private function _get_fields($table_info) {
     $this->db->unselect($this->hidden_fields);
-    $values = $this->crud->get_row($this->args);
+    $args=$this->args;
+    $table=array_shift($args);
+    $this->crud->table($table);
+    $values = $this->crud->get_row($args);
     return $values;
   }
 

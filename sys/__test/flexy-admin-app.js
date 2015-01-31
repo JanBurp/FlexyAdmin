@@ -53,6 +53,10 @@ flexyAdmin.constant('flexyAdminGlobals',{
   sys_folder    : 'sys/__test/',
   log_prefix    : 'FA ',
 
+
+  /**
+   * Form fields
+   */
   form_field_types : {
     
     // DEFAULT TYPE
@@ -188,4 +192,21 @@ flexyAdmin.directive('flexyAuthenticate', ['flexyAuthService',function(flexyAuth
       elem.removeClass('hidden');
     }
   };
+}]);
+
+
+flexyAdmin.controller('WizardController', ['flexyAdminGlobals','$scope', function($flexyAdminGlobals,$scope) {
+  'use strict';
+
+  /**
+   * WIZARD PARAMS
+   */
+  var self=this;
+  $scope.uris = {
+    
+    edit_user : $flexyAdminGlobals.base_url+'#/form/cfg_users/current'
+    
+  };
+  
+  
 }]);
