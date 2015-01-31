@@ -7,7 +7,7 @@
  * @author Jan den Besten
  * @ignore
  */
-class cfg_admin_menu extends Crud {
+class cfg_admin_menu extends _crud {
   
   private $types=array('tbl'=>'table','cfg'=>'config','log'=>'log','res'=>'result');
 
@@ -33,7 +33,7 @@ class cfg_admin_menu extends Crud {
 
     $header = array(
       array( 'name' => lang('help'), 'uri'=>'html/help', 'type' => 'info' ),
-      array( 'name' => $this->user->user_name, 'uri'=>'grid/cfg_users', 'type' => 'form', 'args' => array('table'=>'cfg_users','id'=>$this->user->user_id)),
+      array( 'name' => $this->user->user_name, 'uri'=>'form/cfg_users/current', 'type' => 'form', 'args' => array('table'=>'cfg_users','id'=>$this->user->user_id)),
       array( 'name' => lang('logout'), 'uri'=>'logout', 'type' => 'logout' )
     );
 
@@ -229,13 +229,5 @@ class cfg_admin_menu extends Crud {
 		}
 		return $menu;
 	}
-  
-  
-  
 
 }
-
-
-
-/* End of file crud.php */
-/* Location: ./system/application/models/crud.php */

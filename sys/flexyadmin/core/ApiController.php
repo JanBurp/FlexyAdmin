@@ -92,6 +92,10 @@ class ApiController extends AjaxController {
    */
   protected function _has_rights($item,$id="",$whatRight=0) {
     $rights=$this->user->has_rights($item,$id,$whatRight);
+    // if no normal rights and cfg_users and current user, TODO: safety check this!!
+    if ($rights<2 and $item=='cfg_users') {
+      if (el('where',$this->args,null)=='current') $rights=2;
+    }
     return $rights;
   }
   
