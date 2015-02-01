@@ -128,6 +128,10 @@ flexyAdmin.config( function($routeProvider){
       controller  : '',
       templateUrl : 'flexy-form/flexy-form.html'
     })
+    .when('/plugin/:plugin',{
+      controller  : '',
+      templateUrl : 'flexy-plugin/plugin.html',
+    })
     .otherwise({
       redirectTo: '/home'
     });
@@ -142,10 +146,6 @@ flexyAdmin.config( function($routeProvider){
  */
 flexyAdmin.controller('stateController', ['$scope','flexyAuthService', function($scope,flexyAuthService) {
   'use strict';
-
-  // Angular is ready, so show all
-  var body = angular.element(document.querySelector('body'));
-  body.removeClass('hidden');
 
   // state variables
   $scope.isLoggedIn = false;
@@ -168,6 +168,9 @@ flexyAdmin.controller('stateController', ['$scope','flexyAuthService', function(
   $scope.$on('event:auth-loginConfirmed', function() {
     $scope.isLoggedIn = true;
   });
+  
+  // Angular is ready, so show all
+  angular.element(document.querySelector('body')).removeClass('hidden');
   
 }]);
 

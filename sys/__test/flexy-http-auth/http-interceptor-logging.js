@@ -13,24 +13,29 @@
  */
 
 
-'use strict';
-
 /**
  * Log all $http calls
  */
 
 flexyAdmin.factory('logInterceptor',['flexyAdminGlobals','$q',function(flexyAdminGlobals,$q){
+
+  'use strict';
   
   function _url(config)     { return config.url.replace(flexyAdminGlobals.sys_folder,'').replace(flexyAdminGlobals.api_base_url,''); }
   function _isHTML(config)  { return (config.url.substr(-5)=='.html'); }
   function _isPOST(config)  { return (config.method=='POST'); }
+  
   function message(config, delimeter, data) {
     if (!_isHTML(config)) {
       var message=flexyAdminGlobals.log_prefix + ' ' + delimeter + ' ' + config.method;
       if ( _isHTML(config) ) message+=' HTML ';
       message+=' - ' + _url(config);
       if ( angular.isDefined(data) ) {
-        console.info(message, data );
+        if (typeof(data)=='string') {
+          angular.element(document.querySelector('#debug')).removeClass('hidden');
+          angular.element(document.querySelector('#debug .panel-content')).html(data);
+        }
+        console.info(message, data);
       }
       else {
         console.info(message);

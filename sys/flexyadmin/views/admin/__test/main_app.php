@@ -13,6 +13,11 @@
 </head>
 
 <body class="hidden" ng-controller="stateController">
+  
+  <div id="debug" class="panel panel-danger hidden">
+    <div class="panel-heading panel-title"><h3>ERROR</h3></div>
+    <div class="panel-content"></div>
+  </div>
 
   <div id="login" class="panel panel-primary" ng-show="!isLoggedIn" ng-controller="flexyLoginController as loginCtrl">
     <div class="panel-heading panel-title"><h3>Login</h3></div>
@@ -113,6 +118,7 @@
 <script src="sys/__test/flexy-menu/flexy-menu.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-grid/flexy-grid.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-form/flexy-form.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/flexy-plugin/flexy-plugin.js" type="text/javascript" charset="utf-8"></script>
 
 </body>
 </html>

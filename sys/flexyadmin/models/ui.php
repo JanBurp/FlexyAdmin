@@ -22,8 +22,9 @@ class ui extends CI_Model {
 	public function __construct() 	{
 		parent::__construct();
     $this->load->model('cfg');
-		$this->load();
     $this->lang->load('field_names');
+    $this->load->library('lang');
+    $this->_load();
 	}
 
   /**
@@ -32,7 +33,7 @@ class ui extends CI_Model {
    * @return object $this;
    * @author Jan den Besten
    */
-	public function load() {
+	private function _load() {
 		log_('info',"ui_names: loading");
 		
 		$ui=$this->cfg->get('cfg_ui');
