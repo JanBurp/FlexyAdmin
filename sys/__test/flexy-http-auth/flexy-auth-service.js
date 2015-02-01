@@ -16,7 +16,7 @@
 flexyAdmin.factory('flexyAuthService',['$http','$cacheFactory',function($http,$cacheFactory){
   'use strict';
   
-  var isLoggedIn = false;
+  var isLoggedIn = null;
   
   return  {
 
