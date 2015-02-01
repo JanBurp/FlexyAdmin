@@ -209,20 +209,20 @@ gulp.task('install', function() {
  */
 gulp.task('jshint',function(){
   return gulp.src( files['jshint'] )
-        .pipe(plumber({ errorHandler: onError }))
-        .pipe(jshint())
-        // Use gulp-notify as jshint reporter
-        .pipe(notify(function (file) {
-          if (file.jshint.success) { return false }
-          return file.relative + " (" + file.jshint.results.length + " errors)\n";
-        }))
-        .pipe(jshint.reporter(stylish))
-        .pipe(jshint.reporter('fail'))
-        .pipe(notify({
-          title:   'JS Hint OK' + title,
-          message: message,
-          icon: icon 
-        }));
+    .pipe(plumber({ errorHandler: onError }))
+    .pipe(jshint())
+    // Use gulp-notify as jshint reporter
+    .pipe(notify(function (file) {
+      if (file.jshint.success) { return false }
+      return file.relative + " (" + file.jshint.results.length + " errors)\n";
+    }))
+    .pipe(jshint.reporter(stylish))
+    .pipe(jshint.reporter('fail'))
+    .pipe(notify({
+      title:   'JS Hint OK' + title,
+      message: message,
+      icon: icon 
+    }));
 });
 
 
@@ -231,16 +231,16 @@ gulp.task('jshint',function(){
  */
 gulp.task('jsmin',['jshint'],function(){
   return gulp.src( files['jsmin'] )
-        .pipe(flatten())
-        .pipe(sourcemaps.init({loadMaps: true}))
-        .pipe(concat(files['jsdest']))
-        .pipe(uglify())
-        .pipe(sourcemaps.write('maps'))
-        .pipe(gulp.dest( files['js']) )
-        .pipe(notify({
-          title:  'JS contact & uglify ' + title,
-          message: message
-        }));
+    .pipe(flatten())
+    .pipe(sourcemaps.init({loadMaps: true}))
+    .pipe(concat(files['jsdest']))
+    .pipe(uglify())
+    .pipe(sourcemaps.write('maps'))
+    .pipe(gulp.dest( files['js']) )
+    .pipe(notify({
+      title:  'JS contact & uglify ' + title,
+      message: message
+    }));
 });
 
 /**
