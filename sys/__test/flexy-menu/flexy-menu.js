@@ -29,6 +29,15 @@ flexyMenu.process = function(root,menu) {
     'result':{'class':'text-info','glyphicon':'glyphicon glyphicon-cloud'},
     'rel'   :{'class':'text-muted','glyphicon':'glyphicon glyphicon-link'}
   };
+  
+  var item_classes = {
+    'help/index' :{'class':'','glyphicon':'glyphicon glyphicon-question-sign'},
+    'form/cfg_users/current' :{'class':'','glyphicon':'glyphicon glyphicon-user'},
+    'logout' :{'class':'','glyphicon':'glyphicon glyphicon-off'},
+    'form/tbl_site/first' :{'class':'','glyphicon':'glyphicon glyphicon-cog'},
+    'plugin/stats' :{'class':'','glyphicon':'glyphicon glyphicon-stats'},
+  };
+  
   var processed = [];
   var navbar=0;
   var item=0;
@@ -49,7 +58,10 @@ flexyMenu.process = function(root,menu) {
       processed[navbar][item].href   = root + '#/' + menu[i].uri;
       processed[navbar][item].class  = 'menu-type-'+menu[i].type;
       processed[navbar][item].glyphicon = '';
-      var thisClass=classes[menu[i].type];
+      var thisClass=item_classes[menu[i].uri];
+      if (!thisClass) thisClass=classes[menu[i].type];
+      console.log(thisClass);
+      
       if (angular.isDefined(thisClass)) {
         processed[navbar][item].class += ' '+thisClass.class;
         processed[navbar][item].glyphicon = thisClass.glyphicon;
