@@ -135,64 +135,42 @@ flexyAdmin.config( function($routeProvider){
 
 
 
-
-
 /**
- * Taken from demo of: https://github.com/witoldsz/angular-http-auth
- * 
- * Hide/shows login-form if needed
- * Show app if angular is ready
+ * Handles state of the app:
+ * - if angular is ready show the app
+ * - checks login status and responds to the auth events, see: https://github.com/witoldsz/angular-http-auth
  */
-flexyAdmin.directive('flexyAuthenticate', ['flexyAuthService',function(flexyAuthService) {
+flexyAdmin.controller('stateController', ['$scope','flexyAuthService', function($scope,flexyAuthService) {
   'use strict';
 
-  var login = angular.element(document.querySelector('#login'));
-  var container  = angular.element(document.querySelector('#container'));
+  // Angular is ready, so show all
+  var body = angular.element(document.querySelector('body'));
+  body.removeClass('hidden');
 
-  function hide_all() {
-    login.addClass('hidden');
-    container.addClass('hidden');
-  }
-  function show_login() {
-    login.removeClass('hidden');
-    container.addClass('hidden');
-  }
-  function hide_login() {
-    login.addClass('hidden');
-    container.removeClass('hidden');
-  }
+  // state variables
+  $scope.isLoggedIn = false;
   
-  return {
-    restrict: 'C',
-    link: function(scope, elem, attrs) {
-      hide_all();
-      flexyAuthService.check().then(
-        function(success) {
-          if (flexyAuthService.loggedIn()) {
-            hide_login();
-          }
-          else {
-            show_login();
-          }
-        },
-        function(error) {
-          show_login();
-        }
-      );
-      
-      // EVENT RESPONSE
-      scope.$on('event:auth-loginRequired', function() {
-        show_login();
-      });
-      scope.$on('event:auth-loginConfirmed', function() {
-        hide_login();
-      });
-
-      // READY LOADING ANGULAR
-      elem.removeClass('hidden');
-    }
-  };
+  // check auth, wich will transmit the proper events
+  flexyAuthService.check().then(
+    function(success) {
+      $scope.isLoggedIn = false;
+      if (flexyAuthService.loggedIn()) {
+        $scope.isLoggedIn = true;
+      }
+    },
+    function(error) {}
+  );
+  
+  // EVENT RESPONSE
+  $scope.$on('event:auth-loginRequired', function() {
+    $scope.isLoggedIn = false;
+  });
+  $scope.$on('event:auth-loginConfirmed', function() {
+    $scope.isLoggedIn = true;
+  });
+  
 }]);
+
 
 
 flexyAdmin.controller('WizardController', ['flexyAdminGlobals','$scope', function($flexyAdminGlobals,$scope) {

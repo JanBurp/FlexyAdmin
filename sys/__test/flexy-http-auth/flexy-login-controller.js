@@ -19,6 +19,7 @@ flexyAdmin.controller('flexyLoginController', ['flexyAuthService','authService',
   
   var self=this;
   
+  // login form fields
   self.user = {
     username:'',
     password:'',

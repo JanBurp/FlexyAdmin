@@ -12,9 +12,9 @@
   <link rel="stylesheet" href="sys/__test/css/flexyadmin.min.css" type="text/css" media="screen" title="no title" charset="utf-8">
 </head>
 
-<body class="flexy-authenticate hidden">
-  
-  <div id="login" class="panel panel-primary" ng-controller="flexyLoginController as loginCtrl">
+<body class="hidden" ng-controller="stateController">
+
+  <div id="login" class="panel panel-primary" ng-show="!isLoggedIn" ng-controller="flexyLoginController as loginCtrl">
     <div class="panel-heading panel-title"><h3>Login</h3></div>
     <div class="panel-content">
       <form class="form-horizontal" name="loginForm" ng-submit="loginCtrl.login()">
@@ -52,7 +52,7 @@
   </div>
   
     
-  <div id="container" class="container-fluid">
+  <div id="container" class="container-fluid" ng-if="isLoggedIn">
     
     <header class="navbar navbar-default navbar-fixed-top">
       <div class="navbar-text"><a href="./admin/__test#/home" data-flexy-blocks="">AngularJS Test</a></div>
