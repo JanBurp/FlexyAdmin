@@ -326,7 +326,7 @@ class Menu {
    * @author Jan den Besten
    */
 	public function set_menu_from_table($table="",$foreign=false) {
-    if (!empty($table)) $this->set('menu_table',$table);
+    if (!empty($table) or empty($this->settings['menu_table'])) $this->set('menu_table',$table);
     $table=$this->settings['menu_table'];
     
     if ($table) {
