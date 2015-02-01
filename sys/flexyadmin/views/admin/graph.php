@@ -1,4 +1,4 @@
-<table class="<?=$class?>">
+<table class="table table-bordered <?=$class?>">
 
 	<thead>
 		<tr class="caption <?=$caption["class"];?>">

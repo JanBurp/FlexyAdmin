@@ -60,8 +60,7 @@ flexyMenu.process = function(root,menu) {
       processed[navbar][item].glyphicon = '';
       var thisClass=item_classes[menu[i].uri];
       if (!thisClass) thisClass=classes[menu[i].type];
-      console.log(thisClass);
-      
+
       if (angular.isDefined(thisClass)) {
         processed[navbar][item].class += ' '+thisClass.class;
         processed[navbar][item].glyphicon = thisClass.glyphicon;

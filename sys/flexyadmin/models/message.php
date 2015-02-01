@@ -55,7 +55,7 @@ class Message extends CI_Model {
    * @author Jan den Besten
    */
   public function reset($type='messages') {
-    $this->session->unset_userdata($type);
+    if ($this->session->userdata($type)) $this->session->unset_userdata($type);
     return $this;
   }
 

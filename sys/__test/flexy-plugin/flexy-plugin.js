@@ -1,0 +1,32 @@
+/**
+ * FlexyAdmin (c) Jan den Besten
+ * www.flexyadmin.com
+ * 
+ * @author: Jan den Besten
+ * @copyright: Jan den Besten
+ * @license: n/a
+ * 
+ * $Author$
+ * $Date$
+ * $Revision$
+ * $HeadURL$ 
+ */
+
+
+flexyAdmin.controller('flexyPluginController', ['$scope','$routeParams','$http','$sce', function($scope,$routeParams,$http,$sce) {
+  'use strict';
+  
+  var self = this;
+  
+  $scope.plugin = $routeParams.plugin;
+  $scope.title = '';
+  $scope.html  = '';
+
+  $http.post('get_plugin',{'plugin':$scope.plugin}).success(function(result){
+    $scope.title  = result.title;
+    $scope.html   = $sce.trustAsHtml(result.html);
+  }).error(function(data){
+    $log.log('AJAX error -> Plugin');
+  });
+  
+}]);

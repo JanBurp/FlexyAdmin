@@ -25,9 +25,8 @@ flexyAdmin.controller('flexyHelpController', ['$scope','$routeParams','$http','$
   $http.post('get_help',{'page':$scope.page}).success(function(result){
     $scope.title  = result.title;
     $scope.help   = $sce.trustAsHtml(result.help);
-    // $scope.help   = result.help;
   }).error(function(data){
-    $log.log('AJAX error -> Plugin');
+    $log.log('AJAX error -> Help');
   });
   
 }]);
