@@ -3,7 +3,7 @@
 describe('flexy-admin-app', function(){
   'use strict';
   
-  beforeEach(module('flexyMenu'));
+  // beforeEach(module('flexyMenu'));
 
   
 });

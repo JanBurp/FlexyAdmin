@@ -14,7 +14,7 @@ describe('flexy-login-controller', function(){
   it('flexy-login-controller: exists', function(){
     expect( ctrl ).toBeDefined();
   });
-  
+
   it('flexy-login-controller: user defined', function() {
     expect( ctrl.user ).toEqual({
       username:'',
@@ -27,6 +27,6 @@ describe('flexy-login-controller', function(){
     expect( ctrl.askMail ).toBeDefined();
     expect( ctrl.mailSend ).toEqual(false);
   });
-  
+
   
 });

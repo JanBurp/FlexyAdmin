@@ -5,7 +5,7 @@ module.exports = function(config) {
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
-    basePath: '',
+    basePath: '__test/',
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
@@ -13,27 +13,20 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      "__test/external/angular/angular.js",
-      "__test/external/angular-mocks/angular-mocks.js",
-      "__test/external/angular-route/angular-route.js",
-      "__test/external/angular-bootstrap/ui-bootstrap-tpls.min.js",
-      "__test/external/angular-bootstrap-show-errors/src/showErrors.min.js",
-      "__test/external/angular-http-auth/src/http-auth-interceptor.js",
-      "__test/external/angular-toArrayFilter/toArrayFilter.js",
-      "__test/external/angular-loading-bar/src/loading-bar.js",
-      "__test/external/angular-smart-table/dist/smart-table.min.js",
-      "__test/external/ng-sortable/dist/ng-sortable.min.js",
-
-      "__test/jdb.extend.js",
-      "__test/flexy*.js",
-      "__test/flexy*/flexy*.js",
+      'js/externals.min.js',
+      'js/angular-mocks.js',
+      'js/langs/nl.js',
+      
+      
+      "**/jdb*.js",
+      "**/flexy*.js",
     ],
 
     // list of files to exclude
     exclude: [
-      '__test/img/*',
-      '__test/css/*',
-      '__test/fonts/*',
+      'img/*',
+      'css/*',
+      'fonts/*',
     ],
 
     // preprocess matching files before serving them to the browser
@@ -44,7 +37,12 @@ module.exports = function(config) {
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress'],
+    reporters: ['progress','notify'],
+    // Optional Settings 
+    notifyReporter: {
+      reportEachFailure: true, // Default: false, Will notify on every failed sepc 
+      reportSuccess: true, // Default: true, Will notify when a suite was successful 
+    },
 
     // web server port
     port: 9876,
@@ -54,17 +52,18 @@ module.exports = function(config) {
 
     // level of logging
     // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-    logLevel: config.LOG_WARN,
+    logLevel: config.LOG_INFO,
 
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: true,
+
+    // Continuous Integration mode
+    // if true, Karma captures browsers, runs the tests and exits
+    singleRun: false,
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
     browsers: ['Safari'],
 
-    // Continuous Integration mode
-    // if true, Karma captures browsers, runs the tests and exits
-    singleRun: true
   });
 };
