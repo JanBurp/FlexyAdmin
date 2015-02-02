@@ -135,6 +135,8 @@ gulp.task('install', function() {
     bower+"/angular-route/angular-route.js",
     bower+"/angular-bootstrap/ui-bootstrap-tpls.min.js",
     bower+"/angular-bootstrap-show-errors/src/showErrors.min.js",
+    // Mock
+    bower+"/angular-mocks/angular-mocks.js",
     // Angular External Modules
     bower+"/angular-http-auth/src/http-auth-interceptor.js",
     bower+"/angular-toArrayFilter/toArrayFilter.js",
@@ -189,10 +191,10 @@ gulp.task('install', function() {
     assets+"/js/bootstrap-tinymce.js",
   ])
   .pipe(flatten())
-  .pipe(sourcemaps.init({loadMaps: true}))
+  // .pipe(sourcemaps.init({loadMaps: true}))
   .pipe(concat( 'externals.min.js' ))
-  .pipe(uglify())
-  .pipe(sourcemaps.write('maps'))
+  // .pipe(uglify())
+  // .pipe(sourcemaps.write('maps'))
   .pipe(gulp.dest( assets+'/js') )
   .pipe(notify({
     title:  'Angular & Modules concat & minified ' + title,
