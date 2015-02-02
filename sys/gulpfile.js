@@ -193,7 +193,7 @@ gulp.task('install', function() {
   .pipe(flatten())
   // .pipe(sourcemaps.init({loadMaps: true}))
   .pipe(concat( 'externals.min.js' ))
-  // .pipe(uglify())
+  .pipe(uglify())
   // .pipe(sourcemaps.write('maps'))
   .pipe(gulp.dest( assets+'/js') )
   .pipe(notify({
