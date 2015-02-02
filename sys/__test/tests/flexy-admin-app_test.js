@@ -4,36 +4,30 @@ describe('flexy-admin-app', function(){
   'use strict';
   
   beforeEach(module('flexyAdmin'));
-
+  
   /**
    * Test of flexyAdmin bestaat
    */
-  it('flexy-admin-app: flexyAdmin - bestaat', function() {
+  it('bestaat', function() {
     expect( flexyAdmin ).toBeDefined();
   });
-  it('flexy-admin-app: flexyAdmin.constant - bestaat', function() {
+  it("niet null", function() {
+    expect( flexyAdmin ).not.toEqual(null);
+  });
+  
+  it('.constant - bestaat', function() {
     expect( flexyAdmin.constant ).toBeDefined();
   });
-  it('flexy-admin-app: flexyAdmin.config - bestaat', function() {
+  
+  it('.config - bestaat', function() {
     expect( flexyAdmin.config ).toBeDefined();
   });
-  it('flexy-admin-app: flexyAdmin.directive - bestaat', function() {
+  it('.directive - bestaat', function() {
     expect( flexyAdmin.directive ).toBeDefined();
   });
-  it('flexy-admin-app: flexyAdmin.controller - bestaat', function() {
+  it('.controller - bestaat', function() {
     expect( flexyAdmin.controller ).toBeDefined();
   });
-  
-  /**
-   * Test of constanten bestaan
-   */
-  it('flexy-admin-app: flexyAdmin.constant - bestaat', function() {
-    expect( flexyAdmin.constant ).toBeDefined();
-  });
-  
-  
-  
-  
 
-  
+
 });

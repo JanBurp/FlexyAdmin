@@ -27,6 +27,7 @@ module.exports = function(config) {
       'img/*',
       'css/*',
       'fonts/*',
+      '*.png'
     ],
 
     // preprocess matching files before serving them to the browser
@@ -45,7 +46,7 @@ module.exports = function(config) {
     },
 
     // web server port
-    port: 9876,
+    port: 8080,
 
     // enable / disable colors in the output (reporters and logs)
     colors: true,
