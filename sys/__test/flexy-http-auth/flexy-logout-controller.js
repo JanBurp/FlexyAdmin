@@ -19,8 +19,8 @@ flexyAdmin.controller('flexyLogoutController', ['flexyAuthService','authService'
   flexyAuthService.logout().then(
     function(succes) {
       authService.loginCancelled();
-      $location.path('/');
       flexyAuthService.check();
+      $location.path('/');
     }
   );
   

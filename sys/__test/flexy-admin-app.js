@@ -164,14 +164,15 @@ flexyAdmin.controller('stateController', ['$scope','flexyAuthService', function(
   // EVENT RESPONSE
   $scope.$on('event:auth-loginRequired', function() {
     $scope.isLoggedIn = false;
+    angular.element(document.querySelector('#login')).removeClass('hidden');
   });
   $scope.$on('event:auth-loginConfirmed', function() {
     $scope.isLoggedIn = true;
+    angular.element(document.querySelector('#login')).addClass('hidden');
   });
   
   // Angular is ready, so show all
   angular.element(document.querySelector('body')).removeClass('hidden');
-  
 }]);
 
 
