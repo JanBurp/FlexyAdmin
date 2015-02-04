@@ -144,19 +144,18 @@ flexyAdmin.config( function($routeProvider){
  * - if angular is ready show the app
  * - checks login status and responds to the auth events, see: https://github.com/witoldsz/angular-http-auth
  */
-flexyAdmin.controller('stateController', ['$scope','flexyAuthService', function($scope,flexyAuthService) {
+flexyAdmin.controller('stateController', ['$scope','flexyAuthService','$location', function($scope,flexyAuthService,$location) {
   'use strict';
 
   // state variables
   $scope.isLoggedIn = false;
   
-  // check auth, wich will transmit the proper events
+  // check auth, wich will transmit the proper events and show/hide login dialog
   flexyAuthService.check().then(
     function(success) {
-      $scope.isLoggedIn = false;
-      if (flexyAuthService.loggedIn()) {
-        $scope.isLoggedIn = true;
-      }
+      $scope.isLoggedIn = flexyAuthService.loggedIn();
+      // Show login if needed
+      if (!$scope.isLoggedIn) loginShow();
     },
     function(error) {}
   );
@@ -164,11 +163,13 @@ flexyAdmin.controller('stateController', ['$scope','flexyAuthService', function(
   // EVENT RESPONSE
   $scope.$on('event:auth-loginRequired', function() {
     $scope.isLoggedIn = false;
-    angular.element(document.querySelector('#login')).removeClass('hidden');
+  });
+  $scope.$on('event:auth-loginCancelled', function() {
+    $scope.isLoggedIn = false;
+    $location.path('/');
   });
   $scope.$on('event:auth-loginConfirmed', function() {
     $scope.isLoggedIn = true;
-    angular.element(document.querySelector('#login')).addClass('hidden');
   });
   
   // Angular is ready, so show all

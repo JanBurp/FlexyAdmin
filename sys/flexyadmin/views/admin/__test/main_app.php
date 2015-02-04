@@ -19,7 +19,7 @@
     <div class="panel-content"></div>
   </div>
 
-  <div id="login" class="panel panel-primary hidden" ng-if="!isLoggedIn" ng-controller="flexyLoginController as loginCtrl">
+  <div id="login" class="panel panel-primary" ng-if="!isLoggedIn" ng-controller="flexyLoginController as loginCtrl">
     <div class="panel-heading panel-title"><h3>Login</h3></div>
     <div class="panel-content">
       <form class="form-horizontal" name="loginForm" ng-submit="loginCtrl.login()">

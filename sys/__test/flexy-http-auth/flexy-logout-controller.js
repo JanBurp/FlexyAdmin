@@ -13,14 +13,12 @@
  */
 
 
-flexyAdmin.controller('flexyLogoutController', ['flexyAuthService','authService','$location','$window', function(flexyAuthService,authService,$location,$window){
+flexyAdmin.controller('flexyLogoutController', ['flexyAuthService','authService', function(flexyAuthService,authService){
   'use strict';
   
   flexyAuthService.logout().then(
     function(succes) {
       authService.loginCancelled();
-      flexyAuthService.check();
-      $location.path('/');
     }
   );
   
