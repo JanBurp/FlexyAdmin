@@ -240,10 +240,15 @@ function doForm() {
     var checkedItems=$(select).multiselect("getChecked");
     var allvalues = checkedItems.map(function(){return this.value;}).get();
     var values=new Array();
-		for (i=0;i<allvalues.length;i++) { if ( $.inArray(allvalues[i],values)==-1 ) values.push(allvalues[i]); }
+		for (i=0;i<allvalues.length;i++) {
+      if ( $.inArray(allvalues[i],values)==-1 ) values.push(allvalues[i]);
+    }
     var textValues='';
-    $(checkedItems).each(function(){
-      textValues += ' | ' + $(this).attr('title');
+    // $(checkedItems).each(function(){
+    //   textValues += ' | ' + $(this).attr('title');
+    // });
+    $(values).each(function(i,title){
+      textValues += ' | ' + title;
     });
     textValues=textValues.substr(3);
     var textSpan=$(select).parent('.flexyFormField').find('button span:not(.ui-icon)');
