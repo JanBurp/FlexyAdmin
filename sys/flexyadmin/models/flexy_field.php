@@ -863,8 +863,11 @@ class Flexy_field extends CI_Model {
 	function _dropdown_media_form() {
 		$info=$this->cfg->get('CFG_media_info',$this->table.".".$this->field);
 		if (empty($info)) {
-			$options=array(""=>"ERROR: add this field in Media Info");
-			$map="";
+      $options=array(""=>"ERROR: add this field in Media Info");
+  		$out=$this->_standard_form_field($options);
+      $out['type']='input';
+      $out['value']='ERROR: add this field in Media Info';
+      return $out;
 		}
 		else {
 			$types=el("str_types",$info);
