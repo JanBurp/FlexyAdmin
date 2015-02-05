@@ -446,11 +446,7 @@ function doGrid() {
 					$(ui.item).children().removeClass("foldednode");
 				},
 				update:function(event,ui) {
-					table=$("table.grid").attr("class");
-					table=table.replace("grid","");
-					table=table.replace("pagination","");
-					table=table.replace("editable","");
-					table=$.trim(table);
+					table=$("table.grid").data("table");
 					id=get_id($(ui.item));
 					
 					endPos=ui.position.left;
