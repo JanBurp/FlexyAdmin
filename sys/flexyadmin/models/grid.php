@@ -259,32 +259,34 @@ class Grid Extends CI_Model {
    * Geeft de gegenereeerde Grid als Array data
    *
    * @param string $type['']
+   * @param string $table['']
    * @param string $class['']
    * @return mixed
    */
-	public function render($type="", $tableClass="", $extraClass="") {
+	public function render($type="", $table="", $class="") {
 		if (!empty($type)) $this->set_type($type);
     
     $current_ids=explode('_',$this->currentId);
 
-		$table=array();
+		$renderData=array();
+    $renderData['table']=$table;
 
 		if ($this->pagin) {
 			$this->pagination->initialize($this->pagin);
 			$this->pagin['links']=$this->pagination->create_links();
-			$table['pagination']=$this->pagin;
-			$extraClass.=' pagination';
+			$renderData['pagination']=$this->pagin;
+			$class.=' pagination';
 		}
 
-		$table["class"]="$tableClass $extraClass";
-    if ($this->editable) $table["class"].=' editable';
-		$table['order']=implode(':',$this->order);
-		$table['search']=$this->search;
+		$renderData["class"]="$table $class";
+    if ($this->editable) $renderData["class"].=' editable';
+		$renderData['order']=implode(':',$this->order);
+		$renderData['search']=$this->search;
     
-		$table["caption"]["class"]="$tableClass $extraClass";
-		$table["caption"]["row"]=$this->captions;
+		$renderData["caption"]["class"]="$table $class";
+		$renderData["caption"]["row"]=$this->captions;
 
-		$table["heading"]["class"]="$tableClass $extraClass";
+		$renderData["heading"]["class"]="$table $class";
     $firstOrder=remove_suffix($this->order[0],'__');
 		foreach($this->headings as $name=>$heading) {
 			$orderClass='';
@@ -293,7 +295,7 @@ class Grid Extends CI_Model {
 			if ($name=='id') $orderClass.=' edit';
       $prefix=get_prefix($name);
       if ($prefix=='id' and $name!='id') $prefix='id_';
-			$table["heading"]["row"][]=array(	"class"	=>"$tableClass $name ".$prefix." $extraClass ".alternator("oddcol","evencol").$orderClass, "cell"	=> $heading );
+			$renderData["heading"]["row"][]=array(	"class"	=>"$table $name ".$prefix." $class ".alternator("oddcol","evencol").$orderClass, "cell"	=> $heading );
 		}
 
 		$data=$this->rows;
@@ -303,7 +305,7 @@ class Grid Extends CI_Model {
 				$currClass="";
 				if ($this->currentId!=NULL and in_array($id,$current_ids)) $currClass="current ";
 				if ($alt=="evenrow") $alt="oddrow"; else $alt="evenrow";
-				$tableRowClass="$tableClass id$id $extraClass $currClass $alt";
+				$tableRowClass="$table id$id $class $currClass $alt";
 				$tableRowId=$id;
 
 				$tableCells=array();
@@ -319,20 +321,20 @@ class Grid Extends CI_Model {
             $cell_value=$cell['value'];
             if (el('editable',$cell)) $cellClass.=' editable';
           }
-					$tableCells[]=array(	"class"	=> "$tableClass id$id $name $pre $extraClass $currClass nr$cn $cellClass ".alternator("oddcol","evencol"), 
+					$tableCells[]=array(	"class"	=> "$table id$id $name $pre $class $currClass nr$cn $cellClass ".alternator("oddcol","evencol"), 
 																"cell"	=> $cell_value );
 					$cn++;
 				}
 
-				$table["rows"][]=array(	"class"	=> $tableRowClass,
+				$renderData["rows"][]=array(	"class"	=> $tableRowClass,
 																"id"		=> $tableRowId,
 																"row"	=> $tableCells );
 			}
 		}
 		
 		log_('info',"grid: rendering");
-		$this->renderData=$table;
-		return $table;
+		$this->renderData=$renderData;
+		return $this->renderData;
 	}
 	
 	
@@ -340,13 +342,13 @@ class Grid Extends CI_Model {
    * Geeft GRID als HTML terug
    *
    * @param string $type 
-   * @param string $tableClass 
-   * @param string $extraClass 
+   * @param string $table 
+   * @param string $class 
    * @return string
    * @author Jan den Besten
    */
-	public function view($type="", $tableClass="", $extraClass="") {
-		if (empty($this->renderData)) $this->render($type, $tableClass, $extraClass);
+	public function view($type="", $table="", $class="") {
+		if (empty($this->renderData)) $this->render($type, $table, $class);
 		$html=$this->load->view("admin/grid",$this->renderData,true);
 		return $html;
 	}
