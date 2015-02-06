@@ -1,1 +1,0 @@
-<li class="seperator lev<?=$lev?> pos<?=$pos?><?=$order?><?=$class?>"></li>
