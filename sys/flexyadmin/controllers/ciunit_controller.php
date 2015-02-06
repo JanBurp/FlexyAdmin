@@ -1,4 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+require_once(APPPATH."core/FrontendController.php");
   
 /**
  * CodeIgniter controller for displaying the web interface of CIUnit
@@ -6,12 +8,11 @@
  * @author     Agop Seropyan <agopseropyan@gmail.com>
  * @since      File available since Release 1.0.0
  */
-class CIUnit_Controller extends CI_Controller
+class CIUnit_Controller extends FrontendController
 {
     
-    public function __construct()
-    {
-        parent::__construct();
+    public function __construct() {
+      parent::__construct();
     }
 
     public function index () {
@@ -20,8 +21,8 @@ class CIUnit_Controller extends CI_Controller
         if ($testCase=='_unittest') $testCase='';
       
         // Add ciunit package to codeigniter path
-        $this->load->add_package_path(APPPATH.'third_party/ciunit', FALSE);
-        $this->load->config('config');
+        // $this->load->add_package_path(APPPATH.'third_party/ciunit', FALSE);
+        $this->load->config('ciunut');
 
         // Load library
         $this->load->library('ciunit');
@@ -35,30 +36,7 @@ class CIUnit_Controller extends CI_Controller
         $menu->set('framework','bootstrap');
         $menu->set_menu_from_filetree($data['test_tree']);
         $data['test_menu']=$menu->render(NULL,'',1,'_unittest');
-        $data['resources_path'] = $this->config->item('resources_path');
         $data['run_failure'] = '';
-        
-        // Version 2.0.0 has no ENVIRONMENT support
-        if(!defined('ENVIRONMENT')) {
-            // Apply hack by defining ENVIRONMENT and set it to undefined
-            define('ENVIRONMENT', 'testing');
-            $data['ciunit_warning'] = "Your version of CodeIgniter does not support environments. Simulating testing environment !";
-        }
-        
-        // Check CI version 
-         if(!defined('CI_VERSION')) {
-              $data['run_failure'] = "CIUnit can't detect the version of your CodeIgniter application.";
-              $this->load->view('error', $data);
-              
-              return;
-         }
-            
-         // Check versions 
-         if(substr(CI_VERSION, 0, 3) == '2.0') { 
-             // Apply fix for versions >= 2.0.0 && < 2.1.0
-             $orig_view_path = $this->load->_ci_view_path;
-             $this->load->_ci_view_path = APPPATH.'third_party/ciunit/views/';
-         }
         
         // Check against environment 
         if(ENVIRONMENT == 'testing' || ENVIRONMENT == 'development') { 
@@ -69,13 +47,13 @@ class CIUnit_Controller extends CI_Controller
                 if($this->ciunit->runWasSuccessful()) {
                     $data['runner'] = $this->ciunit->getRunner();  
                     
-                    $this->load->view('index', $data);
+                    $this->load->view('ciunit/index', $data);
                     return;
                 }
             }
             else {
                 if($this->ciunit->getRunFailure() == NULL) { 
-                    $this->load->view('index', $data);
+                    $this->load->view('ciunit/index', $data);
                     return;
                 }
             }  
@@ -88,7 +66,7 @@ class CIUnit_Controller extends CI_Controller
         } 
          
          
-        $this->load->view('error', $data);
+        $this->load->view('ciunit/error', $data);
         
         // Restore view path for versions < 2.1.0
         if(substr(CI_VERSION, 0, 3) == '2.0') {
@@ -96,7 +74,7 @@ class CIUnit_Controller extends CI_Controller
         }
         
         // Restore paths
-        $this->load->remove_package_path(APPPATH.'third_party/ciunit');
+        // $this->load->remove_package_path(APPPATH.'third_party/ciunit');
     }
 }
 

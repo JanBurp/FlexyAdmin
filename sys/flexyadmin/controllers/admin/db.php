@@ -41,6 +41,7 @@ class Db extends AdminController {
 	function __construct() {
 		parent::__construct();
     $this->load->model('svn');
+    $this->load->dbutil();
     $extra_export_types=$this->config->item('extra_export_types','plugin_db_export');
     if ($extra_export_types) {
       $this->types['-']=array();
@@ -180,25 +181,6 @@ class Db extends AdminController {
 		return $sql;
 	}
 	
-	function _is_safe_sql($sql) {
-		$safe=TRUE;
-		// Check on DROP/ALTER/RENAME statements ;
-		if (preg_match("/(DROP|ALTER|RENAME|REPLACE|LOAD\sDATA|SET)/i",$sql)>0)	$safe=FALSE;
-		// Check on TRUNCATE / CREATE table names, if it has rights for tables
-		if ($safe) {
-			if (preg_match_all("/(TRUNCATE\sTABLE|CREATE\sTABLE|INSERT\sINTO|DELETE\sFROM|UPDATE)\s(.*?)(;|\s)/i",$sql,$matches)>0) {
-				$tables=$matches[2];
-				$tables=array_unique($tables);
-				$tables=not_filter_by($tables,'rel');
-				// check if rights for found tables
-				foreach ($tables as $table) {
-					if ($this->user->has_rights($table) < RIGHTS_ALL) $safe=FALSE;
-				}
-			}
-		}
-		return $safe;
-	}
-
 	function _filename() {
 		$name=$this->db->get_field("tbl_site","url_url");
 		$name=str_replace(array('http://','www.'),'',$name);
@@ -263,7 +245,7 @@ class Db extends AdminController {
 	function _upload_sql() {
 		// upload (to list path, 'coz this exists!)
 		$sql=FALSE;
-		$config['upload_path'] = SITEPATH.'assets/lists';
+		$config['upload_path'] = SITEPATH.'cache';
 		$config['allowed_types'] = 'txt|sql';
 		$this->load->library('upload', $config);
 		if (!$this->upload->do_upload()) {
@@ -407,7 +389,7 @@ class Db extends AdminController {
 	
 	function _sql($sql,$title,$action) {
 		$this->_add_content(h($title));
-		$safe=$this->_is_safe_sql($sql);
+		$safe=$this->dbutil->is_safe_sql($sql);
 		if ($safe)
 			$this->_add_content(p()."Checking safety ... ok"._p());
 		else {
@@ -420,27 +402,8 @@ class Db extends AdminController {
 				$this->_add_content(p()."Checking safety ... Unsafe SQL. Import aborted."._p());
 		}
 		if ($safe) {
-			$lines=explode("\n",$sql);
-      // remove comments
-			$comments="";
-			foreach ($lines as $k=>$l) {
-				if (substr($l,0,1)=="#")	{
-					if (strlen($l)>2)	$comments.=$l.br();
-					unset($lines[$k]);
-				}
-			}
-			$sql=implode("\n",$lines);
-			$lines=preg_split('/;\n+/',$sql); // split at ; with EOL
-			
-			$this->_add_content(p().$action.br(2));//.$comments);
-
-			foreach ($lines as $key => $line) {
-				$line=trim($line);
-				if (!empty($line)) {
-					$query=$this->db->query($line);
-				}
-			}
-			$this->_add_content(_p());
+      $result=$this->dbutil->import($sql);
+			$this->_add_content(p().$action.br(2)._p());//.$comments);
 		}
 	}
 	

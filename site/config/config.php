@@ -206,7 +206,7 @@ $config['menu_autoset_home']=TRUE;
  * The name of the view that the frontend controller will load if no view was given
  *
  */
-$config['main_view']='site';
+$config['main_view']='site_full';
 
 /*
  *--------------------------------------------------------------------------

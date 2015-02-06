@@ -65,106 +65,14 @@ class Fill extends AdminController {
 				foreach($fields as $field) {
 					$table=get_prefix($field,'.');
           $field=get_suffix($field,'.');
-					$this->db->select('id');
+          // items
+          $this->db->select('id');
 					if (!empty($where)) $this->db->where($where);
 					$items=$this->db->get_result($table);
-          $year=(int) date('Y');
 					foreach ($items as $id => $item) {
 						$result=$fill;
             if ($random) {
-              $pre=get_prefix($field);
-              switch($pre) {
-                case 'id' :
-                  if (!isset($data[$field])) {
-                    $ftable=foreign_table_from_key($field);
-                    $data[$field]=$this->db->get_result($ftable);
-                  }
-                  $result=random_element($data[$field]);
-                  $result=$result['id'];
-                  break;
-                case 'txt':
-                  $result=$lorem->getContent(rand(50,500),'html');
-                  break;
-                case 'stx':
-                  $result=$lorem->getContent(rand(10,50),'plain');
-                  break;
-                case 'medias':
-                case 'media':
-                  $result='';
-                  $path=$this->cfg->get('cfg_media_info',$table.'.'.$field,'path');
-                  if (!isset($files[$path])) $files[$path]=$this->mediatable->get_files($path,FALSE);
-                  if (!empty($files[$path])) {
-                    if ($pre=='media') {
-                      if (rand(1,4)>2) {
-                        $result=random_element($files[$path]);
-                        $result=$result['file'];
-                      }
-                    }
-                    else {
-                      $result='';
-                      for ($i=0; $i < rand(0,4); $i++) { 
-                        $media=random_element($files[$path]);
-                        $result=add_string($result,$media['file'],'|');
-                      }
-                    }
-                  }
-                  break;
-                case 'url' :
-                  $result='';
-                  if (rand(1,4)>2) {
-                    // Link from link table
-                    if (!isset($links_table)) $links_table=$this->db->get_result('tbl_links');
-                    $url=random_element($links_table);
-                    $result=$url['url_url'];
-                  }
-                  break;
-                case 'int':
-                  $result=rand(0,100);
-                  break;
-                case 'dec':
-                  $result=rand(10,99).'.'.rand(10,99);
-                  break;
-                  case 'date':
-                case 'dat':
-                  $result=rand($year,$year+1).'-'.rand(1,12).'-'.rand(1,31);
-                  break;
-                case 'tme':
-                  $result=rand($year,$year+1).'-'.rand(1,12).'-'.rand(1,31). ' '.rand(0,23).':'.rand(0,59).':'.rand(0,59);
-                  break;
-                case 'time':
-                  $result=rand(0,23).':'.rand(0,59).':'.rand(0,59);
-                  break;
-                case 'rgb':
-                case 'str':
-                  $result='';
-                  if ($field=='str_video') {
-                    if (rand(1,4)>2) {
-                      // Get youtube homepage, and alle the youtube links from them
-                      if (!isset($YouTubeHTML)) {
-                        $YouTubeHTML=file_get_contents('https://www.youtube.com/');
-                        if (preg_match_all("/href=\"\\/watch\\?v=(.*)\"/uiUsm", $YouTubeHTML,$matches)) {
-                          $YouTubeCodes=$matches[1];
-                        }
-                      }
-                      $result=random_element($YouTubeCodes);
-                    }
-                  }
-                  else {
-                    $options=$this->cfg->get('cfg_field_info',$table.'.'.$field,'str_options');
-                    if (!empty($options)) {
-                      $options=explode('|',$options);
-                      $result=random_element($options);
-                    }
-                    else {
-                      $result=str_replace(array('.',','),'',$lorem->getContent(rand(1,5),'plain'));  
-                    }
-                  }
-                  break;
-                default:
-                  $result=random_string();
-                  break;
-                default:
-              }
+              $result=$this->db->random_field_value($field,array('table'=>$table));
             }
 						if (!$test) {
 							$this->db->where('id',$id);
