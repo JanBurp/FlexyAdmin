@@ -6,9 +6,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="">
   <meta name="author" content="">
+
+	<base href="<?=base_url()?>" />
+
   
   <!-- Le styles -->
-  <link type="text/css" rel="stylesheet" href="<?php echo base_url($resources_path . "css/bootstrap.css") ; ?>">
+  <link type="text/css" rel="stylesheet" href="<?=admin_assets()?>/css/bootstrap.min.css">
+  <style type="text/css">
+    ul.lev2 {border-left:solid 1px #08C;}
+    li {margin-bottom:5px;}
+    li li {margin-left:5px;margin-bottom:0px;}
+  </style>
   
   <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
   <!--[if lt IE 9]>
