@@ -49,14 +49,14 @@ class Plugin_create_plugin extends Plugin {
                     );
       $this->wizard = new Wizard($wizard);
       array_shift($args);
-      $this->add_content("<h3>These files are added:</h3><ul>
+      $this->add_content("<h3>These files are added to the plugin package:</h3><ul>
         <li>The config file with the same name in 'site/config'</li>
         <li>All language files with the name and the suffix '_lang' in 'site/language/xx/'</li>
         <li>The module/plugin file in 'site/libraries'</li>
         <li>The view file with the same name in 'site/views'</li>
         </ul>
-        <h3>readme.md</h3>
-        <p>A 'readme.md' file is also generated and added. It contains:<ul>
+        <h3>A 'readme.md' file is also generated. It will contain:</h3>
+        <ul>
         <li>The documentation that exists before the class definition in the core plugin/module file</li>
         <li>A list of all added files</li>
         <li>Before the zipfile will be created you can add more text if you like</li>
@@ -116,6 +116,7 @@ class Plugin_create_plugin extends Plugin {
     $files[]='site/libraries/'.$addon_file;
     if (file_exists('site/config/'.$addon_file)) $files[]='site/config/'.$addon_file;
     if (file_exists('site/views/'.$addon_file)) $files[]='site/views/'.$addon_file;
+    if (file_exists('site/tests/plugins/Plugin'.ucfirst($addon).'Test.php')) $files[]='site/tests/plugins/Plugin'.ucfirst($addon).'Test.php';
     // lang files
     $langs = read_map('site/language','dir',FALSE,FALSE);
     $langs = array_keys($langs);
@@ -145,7 +146,8 @@ class Plugin_create_plugin extends Plugin {
     
     // Readme
     $code=read_file('site/libraries/'.$addon_file);
-    $readme=strtoupper($addon)."\n".repeater('=',strlen($addon))."\n\n";
+    $readme='';
+    // $readme=strtoupper($addon)."\n".repeater('=',strlen($addon))."\n\n";
     if (preg_match("/\*\*(.*?)\*\//uis", $code,$matches)) {
       $help=$matches[1];
       $help=preg_replace("/^\s*\* ?/uism", "", $help);
@@ -156,15 +158,17 @@ class Plugin_create_plugin extends Plugin {
     sort($files);
     $files=array_combine($files,$files);
     
-    $readme.="\n\nfiles\n------\n\n- ".implode("\n- ",$files);
-    $readme.="\n\n".strtoupper($addon)." is a flexyadmin ".($is_plugin?'plugin':'module')." - packed at ".strftime('%d %b %Y %R')."\nwww.flexyadmin.com";
+    $filename='flexyadmin_'.$addon.'.zip';
+    
+    $readme.="\n\npacked files\n------\n\n- ".implode("\n- ",$files);
+    $readme.="\n\n'".$filename."' is a flexyadmin ".($is_plugin?'plugin':'module')." - packed at ".strftime('%d %b %Y %R')."\nwww.flexyadmin.com";
 
     // Choose files & name
     $form = new Form();
     $formdata=array(
       'readme'        =>array('label'=>'readme.md','type'=>'textarea','value'=>$readme),
       'files'         =>array('type'=>'dropdown','options'=>$files,'multiple'=>'multiple','value'=>$files),
-      'zipname'       =>array('label'=>'Name of the zipfile','value'=>'flexyadmin_'.$addon.'.zip')
+      'zipname'       =>array('label'=>'Name of the zipfile','value'=>$filename)
     );
     $form->set_data($formdata);
     

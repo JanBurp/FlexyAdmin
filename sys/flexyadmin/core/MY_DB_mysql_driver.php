@@ -2228,6 +2228,153 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		$this->reset();
 		return $out;
 	}
+  
+  /**
+   * Returns some random form data
+   *
+   * @param array $fields array('field_name'=>array(...info...));
+   * @return array
+   * @author Jan den Besten
+   */
+  public function random_data($fields) {
+    $data=array();
+    $this->CI->load->library('Lorem');
+    foreach ($fields as $field => $info) {
+      $data[$field]=$this->random_field_value($field,$info);
+    }
+    return $data;
+  }
+
+  /**
+   * Returns a random value for given field
+   *
+   * @param string $fieldname
+   * @param array $info
+   * @return mixed
+   * @author Jan den Besten
+   */
+  public function random_field_value($field,$info) {
+    $value='';
+    $type=get_prefix($field,'_');
+
+    switch($type) {
+
+      case 'id' :
+        if (!isset($data[$field])) {
+          $ftable=foreign_table_from_key($field);
+          $data[$field]=$this->get_result($ftable);
+        }
+        $value=random_element($data[$field]);
+        $value=$value['id'];
+        break;
+        
+      case 'int':
+        $value=rand(0,100);
+        break;
+      case 'dec':
+        $value=rand(10,99).'.'.rand(10,99);
+        break;
+        
+      case 'b':
+      case 'is':
+      case 'has':
+        $value=false;
+        if (rand(0,1)==1) $value=true;
+        break;
+        
+      case 'txt':
+        $value=$this->CI->lorem->getContent(rand(50,500),'html');
+        break;
+
+      case 'stx':
+        $value=$this->CI->lorem->getContent(rand(10,50),'plain');
+        break;
+
+      case 'medias':
+      case 'media':
+        $value='';
+        $path=$this->CI->cfg->get('cfg_media_info',$table.'.'.$field,'path');
+        if (!isset($files[$path])) $files[$path]=$this->CI->mediatable->get_files($path,FALSE);
+        if (!empty($files[$path])) {
+          if ($type=='media') {
+            if (rand(1,4)>2) {
+              $value=random_element($files[$path]);
+              $value=$value['file'];
+            }
+          }
+          else {
+            $value='';
+            for ($i=0; $i < rand(0,4); $i++) { 
+              $media=random_element($files[$path]);
+              $value=add_string($value,$media['file'],'|');
+            }
+          }
+        }
+        break;
+
+      case 'url' :
+        $value='';
+        if (rand(1,4)>2) {
+          // Link from link table
+          if (!isset($links_table)) $links_table=$this->get_result('tbl_links');
+          $url=random_element($links_table);
+          $value=$url['url_url'];
+        }
+        break;
+
+      case 'email':
+        $value=strtolower(random_string('alpha',rand(2,8)).'@'.random_string('alpha',rand(2,8)).'.'.random_string('alpha',rand(2,3)));
+        break;
+
+      case 'date':
+      case 'dat':
+        $year=(int) date('Y');
+        $value=rand($year,$year+1).'-'.rand(1,12).'-'.rand(1,31);
+        break;
+
+      case 'tme':
+        $year=(int) date('Y');
+        $value=rand($year,$year+1).'-'.rand(1,12).'-'.rand(1,31). ' '.rand(0,23).':'.rand(0,59).':'.rand(0,59);
+        break;
+
+      case 'time':
+        $value=rand(0,23).':'.rand(0,59).':'.rand(0,59);
+        break;
+
+      case 'rgb':
+      case 'str':
+        $value='';
+        if ($field=='str_video') {
+          if (rand(1,4)>2) {
+            // Get youtube homepage, and all the youtube links from them
+            if (!isset($YouTubeHTML)) {
+              $YouTubeHTML=file_get_contents('https://www.youtube.com/');
+              if (preg_match_all("/href=\"\\/watch\\?v=(.*)\"/uiUsm", $YouTubeHTML,$matches)) {
+                $YouTubeCodes=$matches[1];
+              }
+            }
+            $value=random_element($YouTubeCodes);
+          }
+        }
+        else {
+          $value=str_replace(array('.',','),'',$this->CI->lorem->getContent(rand(1,5),'plain'));
+          if (isset($info['table'])) {
+            $options=$this->CI->cfg->get('cfg_field_info',$info['table'].'.'.$field,'str_options');
+            if (!empty($options)) {
+              $options=explode('|',$options);
+              $value=random_element($options);
+            }
+          }
+        }
+        break;
+      default:
+        $value=random_string();
+        break;
+      default:
+    }
+    
+    return $value;
+  }
 
 
 }

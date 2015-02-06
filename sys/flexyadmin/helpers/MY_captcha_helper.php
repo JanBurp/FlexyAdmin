@@ -41,7 +41,7 @@ if ( ! function_exists('create_captcha'))
 {
 	function create_captcha($data = '', $img_path = '', $img_url = '', $font_path = '')
 	{
-		$defaults = array('word' => '', 'img_path' => '', 'img_url' => '', 'img_width' => '150', 'img_height' => '30', 'font_path' => '', 'expiration' => 7200);
+		$defaults = array('word' => '', 'img_path' => '', 'img_url' => '', 'img_width' => '150', 'img_height' => '28', 'font_path' => '', 'expiration' => 7200);
 
 		foreach ($defaults as $key => $val)
 		{
@@ -146,11 +146,11 @@ if ( ! function_exists('create_captcha'))
 		//  Assign colors
 		// -----------------------------------
 
-		$bg_color		= imagecolorallocate ($im, 255, 255, 255);
-		$border_color	= imagecolorallocate ($im, 153, 102, 102);
-		$text_color		= imagecolorallocate ($im, 204, 153, 153);
-		$grid_color		= imagecolorallocate($im, 255, 182, 182);
-		$shadow_color	= imagecolorallocate($im, 255, 240, 240);
+		$bg_color		= imagecolorallocate ($im, 255,255,255);
+		$border_color	= imagecolorallocate ($im, 255,255,255);
+		$text_color		= imagecolorallocate ($im, 128,128,64);
+		$grid_color		= imagecolorallocate($im, 192,128,192);
+		$shadow_color	= imagecolorallocate($im, 64,64,64);
 
 		// -----------------------------------
 		//  Create the rectangle
@@ -200,7 +200,7 @@ if ( ! function_exists('create_captcha'))
 			$x = rand(0, $img_width/($length/1.5));
 			$y = $font_size+2;
 		}
-
+    
 		for ($i = 0; $i < strlen($word); $i++)
 		{
 			if ($use_font == FALSE)
@@ -232,7 +232,7 @@ if ( ! function_exists('create_captcha'))
 
 		ImageJPEG($im, $img_path.$img_name);
 
-		$img = "<img src=\"$img_url$img_name\" width=\"$img_width\" height=\"$img_height\" style=\"border:0;\" alt=\" \" />";
+		$img = "<img src=\"$img_url$img_name\" width=\"$img_width\" height=\"$img_height\" alt=\" \" />";
 
 		ImageDestroy($im);
 

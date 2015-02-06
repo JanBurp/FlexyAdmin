@@ -11,6 +11,77 @@
  */
 class MY_DB_mysql_utility extends CI_DB_mysql_utility {
 	
+  
+  public function __construct() {
+    parent::__construct();
+  }
+  
+  
+  /**
+   * Test of een sql veilig is om te importeren
+   *
+   * @param string $sql 
+   * @return bool
+   * @author Jan den Besten
+   */
+	public function is_safe_sql($sql,$no_drop=false,$no_alter=false) {
+		$safe=TRUE;
+		// Check on DROP/ALTER/RENAME statements ;
+    $checks='DROP|ALTER|RENAME|REPLACE|LOAD\sDATA|SET';
+    if ($no_drop) $checks=remove_prefix($checks,'|');
+    if ($no_alter) $checks=remove_prefix($checks,'|');
+		if (preg_match("/\b(".$checks.")\b/i",$sql)>0)	$safe=FALSE;
+		// Check on TRUNCATE / CREATE table names, if it has rights for tables
+		if ($safe) {
+      $CI=&get_instance();
+			if (preg_match_all("/(TRUNCATE\sTABLE|CREATE\sTABLE|INSERT\sINTO|DELETE\sFROM|UPDATE)\s(.*?)(;|\s)/i",$sql,$matches)>0) {
+				$tables=$matches[2];
+				$tables=array_unique($tables);
+				$tables=not_filter_by($tables,'rel');
+				// check if rights for found tables
+				foreach ($tables as $table) {
+					if ($CI->user->has_rights($table) < RIGHTS_ALL) $safe=FALSE;
+				}
+			}
+		}
+		return $safe;
+	}
+
+  /**
+   * Import sql
+   *
+   * @param string $sql 
+   * @return bool
+   * @author Jan den Besten
+   */
+  public function import($sql) {
+		$lines=explode("\n",$sql);
+    // remove comments
+		$comments="";
+    $errors='';
+		foreach ($lines as $k=>$l) {
+			if (substr($l,0,1)=="#")	{
+				if (strlen($l)>2)	$comments.=$l.br();
+				unset($lines[$k]);
+			}
+		}
+		$sql=implode("\n",$lines);
+		$lines=preg_split('/;\n+/',$sql); // split at ; with EOL
+    // actual import
+		foreach ($lines as $key => $line) {
+			$line=trim($line);
+			if (!empty($line)) {
+				$query=$this->db->query($line);
+        if ($this->db->_error_message()) {
+          $errors.=$this->db->_error_message();
+        }
+			}
+		}
+    
+    return array('comments'=>$comments,'queries'=>$lines,'errors'=>$errors);
+  }
+  
+  
 	/**
 	 * MySQL Export
 	 *

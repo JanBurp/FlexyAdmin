@@ -103,84 +103,84 @@ class MY_Pagination extends CI_Pagination {
    *
    * @var string
    */
-  var $num_tag_open    = '<li class="pager">';
+  var $num_tag_open    = '<li class="pager"><span class="btn btn-default">';
   
   /**
    * num_tag_close   = '&lt;/li&gt;'
    *
    * @var string
    */
-	var $num_tag_close   = '</li>';
+	var $num_tag_close   = '</span></li>';
 
   /**
    * cur_tag_open    = '&lt;li class=&quot;current&quot;&gt;'
    *
    * @var string
    */
-  var $cur_tag_open    = '<li class="current">';
+  var $cur_tag_open    = '<li class="active"><span class="btn btn-primary">';
   
   /**
    * cur_tag_close   = '&lt;/li&gt;'
    *
    * @var string
    */
-	var $cur_tag_close   = '</li>';
+	var $cur_tag_close   = '</span></li>';
   
   /**
    * first_tag_open  = '&lt;li class=&quot;pager pagination_first&quot;&gt;'
    *
    * @var string
    */
-	var $first_tag_open  = '<li class="pager pagination_first">';
+	var $first_tag_open  = '<li class="pager pagination_first"><span class="btn btn-default">';
   
   /**
    * first_tag_close = '&lt;/li&gt;'
    *
    * @var string
    */
-	var $first_tag_close = '</li>';
+	var $first_tag_close = '</span></li>';
   
   /**
    * last_tag_open   = '&lt;li class=&quot;pager pagination_last&quot;&gt;'
    *
    * @var string
    */
-  var $last_tag_open   = '<li class="pager pagination_last">';
+  var $last_tag_open   = '<li class="pager pagination_last"><span class="btn btn-default">';
 	
   /**
    * last_tag_close  = '&lt;/li&gt;'
    *
    * @var string
    */
-  var $last_tag_close  = '</li>';
+  var $last_tag_close  = '</span></li>';
   
   /**
    * prev_tag_open   = '&lt;li class=&quot;pager pagination_prev&quot;&gt;'
    *
    * @var string
    */
-  var $prev_tag_open   = '<li class="pager pagination_prev">';
+  var $prev_tag_open   = '<li class="pager pagination_prev"><span class="btn btn-default">';
   
   /**
    * prev_tag_close  = '&lt;/li&gt;'
    *
    * @var string
    */
-	var $prev_tag_close  = '</li>';
+	var $prev_tag_close  = '</span></li>';
 
   /**
    * next_tag_open   = '&lt;li class=&quot;pager pagination_next&quot;&gt;'
    *
    * @var string
    */
-  var $next_tag_open   = '<li class="pager pagination_next">';
+  var $next_tag_open   = '<li class="pager pagination_next"><span class="btn btn-default">';
   
   /**
    * next_tag_close  = '&lt;/li&gt;'
    *
    * @var string
    */
-	var $next_tag_close  = '</li>';
+	var $next_tag_close  = '</span></li>';
 	
   /**
    * @param string $params 

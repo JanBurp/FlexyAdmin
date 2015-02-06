@@ -778,6 +778,7 @@ class Form {
 			}
 		}
     unset($data['captcha']);
+    unset($data['_captcha']);
 		return $data;
 	}
 
@@ -916,7 +917,7 @@ class Form {
   						);
   			if ($this->captchaWords!=NULL) $vals['word']=random_element($this->captchaWords);
   			$cap=create_captcha($vals);
-        $field['control']=div('captcha').$cap['image'].form_hidden($name.'__captcha',str_reverse($cap['word']))._div();
+        $field['control']=div('captcha').$cap['image'].form_hidden($name.'__captcha',str_reverse($cap['word'])).form_input($attr)._div();
         break;
 
 			case "html":
