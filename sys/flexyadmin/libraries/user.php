@@ -285,24 +285,36 @@ class User Extends Ion_auth {
 				'forgotten_password_uri'	=> $uri,
 				'forgotten_password_code' => $this->CI->ion_auth_model->forgotten_password_code,
 			);
-			$message = $this->CI->load->view($this->CI->config->item('email_templates', 'ion_auth').$this->CI->config->item('email_forgot_password', 'ion_auth'), $data, true);
-
-			$this->CI->email->clear();
-			$config['mailtype'] = $this->CI->config->item('email_type', 'ion_auth');
-			$this->CI->email->initialize($config);
-			$this->CI->email->from($this->CI->config->item('admin_email', 'ion_auth'), $this->CI->config->item('site_title', 'ion_auth'));
-			$this->CI->email->to($email);
-			$this->CI->email->subject($this->CI->config->item('site_title', 'ion_auth').' - '.$subject);
-			$this->CI->email->message($message);
-			
-			if ( $this->CI->email->send() ) {
+      
+      if ($this->send_mail($user->id,'forgot_password',$subject,$data)) {
 				$this->set_message('forgot_password_successful');
 				return TRUE;
-			}
+      }
 			else {
 				$this->set_error('forgot_password_unsuccessful');
 				return FALSE;
 			}
+      
+      // private function send_mail($id,$template,$subject,$additional_data=array(),$to_admin=false) {
+
+      // $message = $this->CI->load->view($this->CI->config->item('email_templates', 'ion_auth').$this->CI->config->item('email_forgot_password', 'ion_auth'), $data, true);
+
+      // $this->CI->email->clear();
+      // $config['mailtype'] = $this->CI->config->item('email_type', 'ion_auth');
+      // $this->CI->email->initialize($config);
+      // $this->CI->email->from($this->CI->config->item('admin_email', 'ion_auth'), $this->CI->config->item('site_title', 'ion_auth'));
+      // $this->CI->email->to($email);
+      // $this->CI->email->subject($this->CI->config->item('site_title', 'ion_auth').' - '.$subject);
+      // $this->CI->email->message($message);
+			
+      // if ( $this->CI->email->send() ) {
+      //   $this->set_message('forgot_password_successful');
+      //   return TRUE;
+      // }
+      // else {
+      //   $this->set_error('forgot_password_unsuccessful');
+      //   return FALSE;
+      // }
 		}
 		else {
 			$this->set_error('forgot_password_unsuccessful');
@@ -405,7 +417,8 @@ class User Extends Ion_auth {
 	public function send_activation_mail($id,$subject='Account Activation',$uri) {
 		$user       = $this->CI->ion_auth_model->get_user($id)->row();
 		$data = array(
-			'uri'					=> $uri,
+      'user_id'     => $user->id,
+			'activate_uri'=> $uri,
 			'activation' 	=> $user->str_activation_code,
 		);
 		return $this->send_mail($id,'email_activate',$subject,$data);

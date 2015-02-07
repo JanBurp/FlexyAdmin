@@ -761,9 +761,10 @@ class Flexy_field extends CI_Model {
 	function _dropdown_field_form() {
 		$tables=$this->db->list_tables();
 		$thisRights=$this->user->get_rights();
-		$normal_tables=filter_by($tables,"tbl_");
-		$result_tables=filter_by($tables,"res_");
-		$normal_tables=array_merge($result_tables,$normal_tables);
+    // $normal_tables=$tables;
+    $normal_tables=filter_by($tables,"tbl_");
+    $result_tables=filter_by($tables,"res_");
+    $normal_tables=array_merge($result_tables,$normal_tables);
 		$specialFields=array_keys($this->config->item('FIELDS_special'));
 		$options=array();
 

@@ -47,7 +47,7 @@ class Search extends AdminController {
         $replaceTerm=$replace;
         if (!$regex) {
           $searchTerm=preg_quote($search,'/');
-          $replaceTerm=preg_quote($replaceTerm,'/');
+          // $replaceTerm=preg_quote($replaceTerm,'/');
         }
 				foreach ($fields as $key=>$value) {
 					$table=get_prefix($value,'.');
