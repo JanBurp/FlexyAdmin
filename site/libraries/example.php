@@ -44,7 +44,7 @@
   	* @author Jan den Besten
   	*/
 	public function index($page) {
-		$content='<h1>Example Module</h1>';
+		$content='<h1>Voorbeeld Module</h1><p>Deze tekst komt uit de voorbeeld module.<br>Het is nu '.strftime('%A %e %B om %T').'.</p>';
 		return $content;
 	}
 
