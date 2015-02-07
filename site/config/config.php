@@ -154,7 +154,7 @@ $config['auto_pagination']	= TRUE;
  * - $config['autoload_modules_if'] = array( 'page'=>array('str_module'=>''), 'submenu'=>array('str_module'=>'page') );          // Combination
  */
 // $config['autoload_modules'] = array('login');
-// $config['autoload_modules_if'] = array( 'blog'=>array('b_restricted'=>'login') );
+// $config['autoload_modules_if'] = array( 'login'=>array('b_restricted'=>'true') );
 
 /*
  *--------------------------------------------------------------------------
@@ -206,7 +206,7 @@ $config['menu_autoset_home']=TRUE;
  * The name of the view that the frontend controller will load if no view was given
  *
  */
-$config['main_view']='site_full';
+$config['main_view']='site';
 
 /*
  *--------------------------------------------------------------------------

@@ -93,12 +93,10 @@ class Plugin_install_plugin extends Plugin {
                           $imported[]=$name;
                         }
                       }
-                      else {
-                        // Only install files (directories are automatically installed)
-                        if (has_string('.',$name)) {
-                          $zip->extractTo('./', array($name));
-                          $installed[]=$name;
-                        }
+                      // Only install files (directories are automatically installed)
+                      if (has_string('.',$name)) {
+                        $zip->extractTo('./', array($name));
+                        $installed[]=$name;
                       }
                     }
                   }
