@@ -528,6 +528,48 @@ div.add_button {
 		margin:0px;
 		}
 
+
+/* ============== table ================== */
+    
+table {
+	border-spacing:0px;
+	border: solid 1px #DDEEAA;
+	border-left:none;
+	border-radius: 4px;
+	-o-border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	margin:0px;
+	padding:0px;
+	min-width:600px;
+}
+tr,td,th			{ background-color:transparent; }
+td, th {
+  text-align: left;
+  vertical-align: top;
+  padding:4px 5px 3px 5px;
+  border: solid 1px #DDEEAA;
+  border-top:none;
+  border-right:none;
+  overflow:hidden;
+  min-width:20px;
+}
+thead {background-color:#DEA;text-transform:uppercase;}
+thead td, thead th {
+  font-weight: bold;
+}
+table td h1, table td h2, table td h3, table td h4 {
+  text-align:left;
+  background-color:transparent;
+  background-image:none;
+  padding:0px;
+}
+
+table.list_of_plugins td:first-child {
+  font-weight:bold;
+  font-size:16px;
+}
+
 /* ============== table grid ================== */
 
 table.grid {

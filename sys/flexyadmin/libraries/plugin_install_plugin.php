@@ -16,6 +16,7 @@ class Plugin_install_plugin extends Plugin {
     $this->CI->load->library('zip');
     $this->CI->load->dbutil();
     $this->CI->load->helper('markdown');
+    $this->CI->load->library('table');
 	}
 
 	
@@ -23,12 +24,14 @@ class Plugin_install_plugin extends Plugin {
    * @ignore
    */
    function _admin_api($args=false) {
+     
 		if ($this->CI->user->is_super_admin()) {
 			$this->add_content(h($this->name,1));
-  
+      
       $form = new Form();
       $formdata=array('file_addon'=>array('label'=>'module/plugin','type'=>'file'));
       $form->set_data($formdata);
+      $form->set_caption('Install plugin');
     
       if ($form->validation()) {
         
@@ -47,14 +50,11 @@ class Plugin_install_plugin extends Plugin {
             if ($ext=='sql') {
               $this->add_content(h("Import '".$result['file']."'",2));
               $readmeName=$result['file'];
+              $readme=$this->get_readme($file);
               $sql=read_file($file);
-              $readme='';
               if ($this->CI->dbutil->is_safe_sql($sql,true,true)) {
                 $this->CI->dbutil->import($sql);
                 $imported[]=$file;
-                $readme=$sql;
-                $readme = preg_replace("/^[^#].*\n/uUm", "", $readme);
-                $readme = preg_replace("/^#(.*\n)/uUm", "$1", $readme);
               }
             }
             
@@ -134,13 +134,61 @@ class Plugin_install_plugin extends Plugin {
         
       }
       else {
-        $this->add_content(p().'WARNING: Will overwrite existing files in module/plugin with same name!'._p());
+        $this->add_content(br().br().p().'WARNING: Will overwrite existing files in module/plugin with same name!'._p());
         $this->add_content($form->render());
       }
+      
+      /**
+       * Show list and docs of all plugins
+       */
+      $files=read_map('plugins','zip,sql', FALSE,FALSE,FALSE);
+      foreach ($files as $file => $info) {
+        $readme=$this->get_readme('plugins/'.$file);
+        $files[$file]['readme']=$readme;
+      }
+      
+      $this->add_content(h('Plugins:',2));
+      $this->CI->table->set_heading(array('Plugin', 'Readme'));
+      $this->CI->table->set_template(array('table_open'  => '<table class="list_of_plugins">')); 
+      foreach ($files as $file => $info) {
+        $this->CI->table->add_row(array($file, $info['readme']));
+      }
+      $this->add_content( $this->CI->table->generate() );
       
       return $this->content;
 		}
 	}
+  
+
+  /**
+   * Geeft readme documentation van plugin
+   *
+   * @param string $file 
+   * @return string
+   * @author Jan den Besten
+   */
+  private function get_readme($file) {
+    $readme='';
+    $ext=get_suffix($file,'.');
+    if ($ext=='sql') {
+      $sql=read_file($file);
+      $readme=$sql;
+      $readme = preg_replace("/^[^#].*\n/uUm", "", $readme);
+      $readme = preg_replace("/^#(.*\n)/uUm", "$1", $readme);
+    }
+    else {
+      $zip = new ZipArchive;
+      if ($zip->open($file) === true) {
+        $plugin=remove_suffix($file,'.');
+        $plugin=str_replace('flexyadmin_','',$plugin);
+        $readmefile=$plugin.'_readme.md';
+        $readmefile=get_suffix($readmefile,'/');
+        $readme=$zip->getFromName($readmefile);
+      }
+    }
+    $readme=Markdown($readme);
+    return $readme;
+  }
   
   
 	
