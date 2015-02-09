@@ -531,7 +531,7 @@ div.add_button {
 
 /* ============== table ================== */
     
-table {
+table.table-class {
 	border-spacing:0px;
 	border: solid 1px #DDEEAA;
 	border-left:none;
@@ -543,8 +543,8 @@ table {
 	padding:0px;
 	min-width:600px;
 }
-tr,td,th			{ background-color:transparent; }
-td, th {
+table.table-class tr, table.table-class td,table.table-class th			{ background-color:transparent; }
+table.table-class td, table.table-class th {
   text-align: left;
   vertical-align: top;
   padding:4px 5px 3px 5px;
@@ -554,18 +554,18 @@ td, th {
   overflow:hidden;
   min-width:20px;
 }
-thead {background-color:#DEA;text-transform:uppercase;}
-thead td, thead th {
+table.table-class thead {background-color:#DEA;text-transform:uppercase;}
+table.table-class thead td, table.table-class thead th {
   font-weight: bold;
 }
-table td h1, table td h2, table td h3, table td h4 {
+table.table-class td h1, table.table-class td h2, table.table-class td h3, table.table-class td h4 {
   text-align:left;
   background-color:transparent;
   background-image:none;
   padding:0px;
 }
 
-table.list_of_plugins td:first-child {
+table.table-class.list_of_plugins td:first-child {
   font-weight:bold;
   font-size:16px;
 }
