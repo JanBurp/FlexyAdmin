@@ -121,6 +121,7 @@ class FrontEndController extends MY_Controller {
     $files=array('site/assets/css/styles.min.css','site/assets/js/scripts.min.js');
     $version=0;
     foreach ($files as $file) {
+      $time=0;
       if (file_exists($file)) $time=filemtime($file);
       if ($time>$version) $version=$time;
     }
