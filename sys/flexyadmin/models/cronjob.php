@@ -25,6 +25,9 @@ class Cronjob extends CI_Model {
         if ($this->jobs[$key]['needs_run']) {
           $this->jobs[$key]=$this->run($this->jobs[$key]);
         }
+        else {
+          log_message('info', 'FlexyAdmin CRONJOB '.$job['name'].' needs no run');
+        }
       }
     }
 	}
@@ -35,12 +38,13 @@ class Cronjob extends CI_Model {
     return $job;
   }
   
-  private function needs_run($job) {
+  public function needs_run($job,$now=false) {
+    if (!$now) $now=time();
     if (!isset($job['last'])) $job=$this->get_last_run($job);
     $last=mysql_to_unix($job['last']);        // unix stamp
-    $next=$this->_calc_next($job['every'],$last);
-    $job['needs_run'] = ($last < $next) && (time() >= $next);
-    // trace_(['time'=>unix_to_mysql(time()),'last'=>unix_to_mysql($last),'next'=>unix_to_mysql($next),'run'=>$job['needs_run'] ]);
+    $next=$this->_calc_next($job['every'],$last,$now);
+    $job['needs_run'] = ($last < $next) && ($now >= $next);
+    // trace_(['time'=>unix_to_mysql($now),'last'=>unix_to_mysql($last),'next'=>unix_to_mysql($next),'run'=>$job['needs_run'] ]);
     return $job;
   }
   
@@ -81,7 +85,8 @@ class Cronjob extends CI_Model {
    * @return int $next unixstamp of next run
    * @author Jan den Besten
    */
-  public function _calc_next($every,$last) {
+  public function _calc_next($every,$last,$now=false) {
+    if (!$now) $now=time();
     $next=false;
     if (is_integer($every) or (is_numeric($every))) {
       $next = $last + (int) $every*60;
@@ -102,21 +107,32 @@ class Cronjob extends CI_Model {
       switch ($every[0]) {
         
         case 'day':
-          $start=mktime( 0,0,0 );
+          if ($now) {
+            $start=mktime( 0,0,0, date('n',$now), date('j',$now), date('Y',$now) );
+          } else {
+            $start=mktime( 0,0,0 );
+          }
           break;
           
         case 'week':
-          $a_data=getdate();
+          $a_data=getdate($now);
           $wday=$a_data['wday']; // 0 = sunday
-          $start=mktime( 0,0,0, date('n'), date('j')-$wday );
+          if ($now) {
+            $start=mktime( 0,0,0, date('n',$now), date('j',$now)-$wday, date('Y',$now) );
+          } else {
+            $start=mktime( 0,0,0, date('n'), date('j')-$wday );
+          }
           $day_of_week=(int) $every[1];
-          $hour; // Hack, don't know why...
           break;
 
         case 'month':
-          $a_data=getdate();
+          $a_data=getdate($now);
           $mday=$a_data['mday']-1; // 1 = 1e dag
-          $start=mktime( 0,0,0, date('n'), date('j')-$mday );
+          if ($now) {
+            $start=mktime( 0,0,0, date('n',$now), date('j',$now)-$mday, date('Y',$now) );
+          } else {
+            $start=mktime( 0,0,0, date('n'), date('j')-$mday );
+          }
           $day_of_month=(int) $every[1] -1;
           break;
       }
