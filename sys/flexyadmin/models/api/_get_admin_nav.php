@@ -1,28 +1,32 @@
 <?php require_once(APPPATH."core/ApiController.php");
 
 /**
- * API/plugin
- * Roept een plugin aan en geeft output van plugin terug
+ * API/get_admin_nav
+ * Geeft het admin menu terug
  *
  * @package default
  * @author Jan den Besten
  */
 
 
-class Plugin extends ApiController {
+class get_admin_nav extends ApiController {
   
-  // var $args = 'cfg_admin_menu';
+  var $table = 'cfg_admin_menu';
   
   /**
    * @ignore
    */
 	public function __construct($name='') {
+    $this->check_rights=false;
 		parent::__construct();
+    $this->load->model($this->table);
     return $this;
 	}
   
   public function index() {
-    $data = '<p>TEST</p>';
+    $table=$this->table;
+    if (!$this->loggedIn) return;
+    $data =$this->$table->get();
     return $this->_result(array('data'=>$data));
   }
 

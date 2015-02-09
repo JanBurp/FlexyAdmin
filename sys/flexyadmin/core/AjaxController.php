@@ -44,6 +44,13 @@ class AjaxController extends BasicController {
    */
   private $test = false;
   
+  /**
+   * Set type of return [''|'json']
+   *
+   * @var string
+   */
+  private $type = '';
+  
 
   /**
    * @ignore
@@ -68,6 +75,18 @@ class AjaxController extends BasicController {
 	public function __call($function, $args) {
 		return $this->_result(array('_error'=>'Method: `'.ucfirst($function)."()` doesn't exists."));
 	}
+  
+  /**
+   * Set type
+   *
+   * @param string $type[''] or 'json' 
+   * @return this
+   * @author Jan den Besten
+   */
+  public function set_type($type='') {
+    $this->type=$type;
+    return $this;
+  }
   
   /**
    * Deze method geeft een JSON terug van de meegegeven array.
@@ -111,7 +130,14 @@ class AjaxController extends BasicController {
     
     if ( ! $this->input->is_ajax_request() ) {
       $result['_test']=true;
-      echo trace_($result,false);
+      if ($this->type=='json') {
+        $json=array2json($result);
+        echo $json;
+        return $json;
+      }
+      else {
+        echo trace_($result,false);
+      }
       return $result;
     }
 
