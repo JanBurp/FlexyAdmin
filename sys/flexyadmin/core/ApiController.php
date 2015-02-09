@@ -53,29 +53,35 @@ class ApiController extends AjaxController {
     $keys=array_keys($defaults);
     $args=array();
     
-    // or post
+    // post
     if (!$args and !empty($_POST)) {
       $type='post';
-      foreach ($keys as $key) {
-        $value=$this->input->post($key);
-        if (isset($value)) $args[$key]=$value;
-      }
+      $args=$_POST;
+      // foreach ($keys as $key) {
+      //   $value=$this->input->post($key);
+      //   if (isset($value)) $args[$key]=$value;
+      // }
     }
     
     // or get
     if (!$args and !empty($_SERVER['QUERY_STRING'])) {
       $type='get';
       parse_str($_SERVER['QUERY_STRING'],$_GET);
-      foreach ($keys as $key) {
-        $value=$this->input->get($key);
-        if (isset($value)) $args[$key]=$value;
-      }
+      $args=$_GET;
+      // foreach ($keys as $key) {
+      //   $value=$this->input->get($key);
+      //   if (isset($value)) $args[$key]=$value;
+      // }
     }
     
     // or defaults
     if (!$args) {
       $type="none";
       $args=$defaults;
+    }
+    
+    if (isset($args['_type'])) {
+      $this->set_type($args['_type']);
     }
     
     return $args;
