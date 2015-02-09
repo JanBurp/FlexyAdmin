@@ -136,24 +136,24 @@ class Plugin_install_plugin extends Plugin {
       else {
         $this->add_content(br().br().p().'WARNING: Will overwrite existing files in module/plugin with same name!'._p());
         $this->add_content($form->render());
+        /**
+         * Show list and docs of all plugins
+         */
+        $files=read_map('plugins','zip,sql', FALSE,FALSE,FALSE);
+        foreach ($files as $file => $info) {
+          $readme=$this->get_readme('plugins/'.$file);
+          $files[$file]['readme']=$readme;
+        }
+      
+        $this->add_content(h('Plugins:',2));
+        $this->CI->table->set_heading(array('Plugin', 'Readme'));
+        $this->CI->table->set_template(array('table_open'  => '<table class="list_of_plugins table-class">')); 
+        foreach ($files as $file => $info) {
+          $this->CI->table->add_row(array($file, $info['readme']));
+        }
+        $this->add_content( $this->CI->table->generate() );
       }
       
-      /**
-       * Show list and docs of all plugins
-       */
-      $files=read_map('plugins','zip,sql', FALSE,FALSE,FALSE);
-      foreach ($files as $file => $info) {
-        $readme=$this->get_readme('plugins/'.$file);
-        $files[$file]['readme']=$readme;
-      }
-      
-      $this->add_content(h('Plugins:',2));
-      $this->CI->table->set_heading(array('Plugin', 'Readme'));
-      $this->CI->table->set_template(array('table_open'  => '<table class="list_of_plugins">')); 
-      foreach ($files as $file => $info) {
-        $this->CI->table->add_row(array($file, $info['readme']));
-      }
-      $this->add_content( $this->CI->table->generate() );
       
       return $this->content;
 		}
