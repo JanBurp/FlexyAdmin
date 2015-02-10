@@ -1,7 +1,6 @@
 <?
-// php require_once(APPPATH."models/api/ApiModel.php");
 
-class get_table extends CI_MODEL {
+class get_table extends ApiModel {
   
   var $args = array(
     'table'   => '',
@@ -9,16 +8,11 @@ class get_table extends CI_MODEL {
     'offset'  => 0
   );
   
-	public function __construct($field='') {
+	public function __construct() {
 		parent::__construct();
     $this->load->model('ui');
 	}
   
-
-  public function test() {
-    return array('_api'=>'get_table->test()');
-  }
-
   /**
    * Gets the data and information and returns it
    *
@@ -26,7 +20,7 @@ class get_table extends CI_MODEL {
    * @author Jan den Besten
    */
   public function index() {
-    if (!$this->_has_rights($this->args['table'])) return;
+    if (!$this->_has_rights($this->args['table'])) return $this->result;
     
     // DEFAULTS
     $items=FALSE;
@@ -53,7 +47,8 @@ class get_table extends CI_MODEL {
       'field_info'  =>$field_info,
       'items'       =>$items
     );
-    return $this->_result(array('data'=>$data));
+    $this->result['data']=$data;
+    return $this->result;
   }
   
   

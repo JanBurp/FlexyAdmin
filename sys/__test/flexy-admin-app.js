@@ -49,7 +49,7 @@ var flexyAdmin = angular.module( 'flexyAdmin', [
 
 flexyAdmin.constant('flexyAdminGlobals',{
   base_url      : 'admin/__test',
-  api_base_url  : '__api/',
+  api_base_url  : '_api/',
   sys_folder    : 'sys/__test/',
   log_prefix    : 'FA ',
 

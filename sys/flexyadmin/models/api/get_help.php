@@ -1,4 +1,4 @@
-<?php require_once(APPPATH."core/ApiController.php");
+<?
 
 /**
  * Geeft help pagina
@@ -7,8 +7,7 @@
  * @author Jan den Besten
  */
 
-
-class get_help extends ApiController {
+class get_help extends ApiModel {
   
   var $args = array(
     'page' => '',
@@ -28,6 +27,8 @@ class get_help extends ApiController {
 	}
   
   public function index() {
+    if (!$this->loggedIn) return $this->result;
+    
 		$commonHelp=$this->cfg->get('CFG_configurations','txt_help');
     $map='sys/flexyadmin/views/help';
     $helpFiles=read_map($map);
@@ -52,8 +53,11 @@ class get_help extends ApiController {
         $helpHTML.=$html;
       }
     }
-
-    return $this->_result(array('title'=>'Help','common_help'=>$commonHelp,'help'=>$helpHTML));
+    
+    $this->result['title']='Help';
+    $this->result['common_help']=$commonHelp;
+    $this->result['help']=$helpHTML;
+    return $this->result;
   }
 
 }

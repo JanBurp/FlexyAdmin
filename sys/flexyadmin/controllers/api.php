@@ -1,4 +1,4 @@
-<?php require_once(APPPATH."core/ApiController.php");
+<?php require_once(APPPATH."core/AjaxController.php");
 
 /**
  * API Controller
@@ -7,38 +7,33 @@
  * @author Jan den Besten
  */
 
-class Api extends ApiController {
+class Api extends AjaxController {
 	
 	public function __construct()	{
 		parent::__construct();
+    $this->load->model('api/ApiModel');
 	}
   
   public function index() {
     $args=func_get_args();
     $model=array_shift($args);
+    $method=array_shift($args);
+    if (!$method) $method='index';
     
     // does api model exists?
-    if (file_exists(APPPATH.'/models/api/'.$model.'.php')) {
+    if (strtolower($model)!='apimodel' and file_exists(APPPATH.'/models/api/'.$model.'.php')) {
       // Load Model
       $this->load->model('api/'.$model);
-      // Call model
-      $result=$this->$model->index($args);
+      // Call model/method
+      $result=$this->$model->$method($args);
       // Result
       $result['_api']=$model;
-      $result['_args']=$args;
       return $this->_result( $result );
     }
-    else {
-      // does not exists: just return nothing (empty page)
-      return $this->_result(
-        array(  '_api'=>$model,
-                '_error'=>'API Model: `'.ucfirst($model)."()` doesn't exists.",
-                '_args'=>$this->args)
-              );
-    }
-    
+    // does not exists: just return nothing (empty page)
+    return $this->_result( array( '_api'=>$model, '_error'=>'`_api/'.$model."` doesn't exists." ) );
   }
-  
+
 
 }
 

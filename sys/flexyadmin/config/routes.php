@@ -43,7 +43,6 @@ $route['_ajax/(.*)'] = "ajax/index/$1";
 /**
  * Api routing (controllers/api/class/args)
  */
-// $route['__api/([^/]*)/(.*)'] = '__api/$1/$2';
 $route['_api'] = 'api/index';
 $route['_api/(.*)'] = 'api/index/$1';
 

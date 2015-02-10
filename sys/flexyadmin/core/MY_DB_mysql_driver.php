@@ -2053,7 +2053,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			if (!empty($optionsWhere)) $this->ar_where[]=$optionsWhere;
       
       // Hard coded usersgroup options
-      if ($table=='cfg_user_groups') $this->where('id >=',$this->CI->user_group_id);
+      if ($table=='cfg_user_groups') $this->where('id >=',$this->CI->user->group_id);
         
       // Get results
       if ($asTree) {
