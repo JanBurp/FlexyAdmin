@@ -21,7 +21,7 @@ class BasicController extends MY_Controller {
 		$this->load->library('session');
 		$this->load->library('user');
 		
-		if ( !$this->_user_logged_in()) {
+		if ( !$this->user->logged_in()) {
       if (!$this->input->is_ajax_request()) $this->output->set_status_header('401');
       return;
 		}
@@ -37,17 +37,6 @@ class BasicController extends MY_Controller {
 		setlocale(LC_ALL, $lang);
 
 		$this->plugin_handler->init_plugins();
-	}
-
-	public function _user_logged_in() {
-		$logged_in = $this->user->logged_in();
-		if ($logged_in) {
-			$this->user_id=$this->session->userdata("user_id");
-			$this->user_name=$this->session->userdata("str_username");
-			$this->language=$this->session->userdata("language");
-			$this->user_group_id=$this->session->userdata("id_user_group");
-		}
-		return $logged_in;
 	}
 
 	function _init_plugin($table,$oldData=NULL,$newData=NULL) {

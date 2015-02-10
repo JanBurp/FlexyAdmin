@@ -1,6 +1,6 @@
-<?php require_once(APPPATH."core/ApiController.php");
+<?
 
-class auth extends ApiController {
+class auth extends ApiModel {
   
   var $args = array(
     'username'   => '',
@@ -31,10 +31,13 @@ class auth extends ApiController {
       $data=array_rename_keys($data,array('str_username'=>'username','email_email'=>'email','last_login'=>'last_login','str_language'=>'language'),false);
       $args=$this->args;
       $args['password']='***';
-      return $this->_result(array('data'=>$data,'_args'=>$args));
+      $this->result['data']=$data;
+      $this->result['_args']=$args;
+      return $this->result;
     }
     // if not logged in, status 401
-    return $this->_result(array('_status'=>401));
+    $this->result['_status']=401;
+    return $this->result;
   }
   
   /**
@@ -57,7 +60,8 @@ class auth extends ApiController {
    */
   public function logout() {
     $this->user->logout();
-    return $this->_result(array('_status'=>401));
+    $this->result['_status']=401;
+    return $this->result;
   }
   
   
@@ -71,7 +75,9 @@ class auth extends ApiController {
     $email=$this->args['email'];
     $user=$this->user->get_user_by_email($email);
     $user=object2array($user);
-    return $this->_result(array('data'=>$user));
+    
+    $this->result['data']=$user;
+    return $this->result;
   }
   
 }

@@ -1,6 +1,6 @@
-<?php require_once(APPPATH."core/ApiController.php");
+<?
 
-class get_form extends ApiController {
+class get_form extends ApiModel {
   
   var $args = array(
     'table'   => '',
@@ -21,7 +21,7 @@ class get_form extends ApiController {
    * @author Jan den Besten
    */
   public function index() {
-    if (!$this->_has_rights($this->args['table'])) return;
+    if (!$this->_has_rights($this->args['table'])) return $this->result;
     
     // DEFAULTS
     $items=FALSE;
@@ -39,12 +39,12 @@ class get_form extends ApiController {
     }
     
     // RESULT
-    $data=array(
+    $this->result['data']=array(
       'table_info'  =>$table_info,
       'field_info'  =>$field_info,
       'fields'      =>$fields
     );
-    return $this->_result(array('data'=>$data));
+    return $this->result;
   }
   
 

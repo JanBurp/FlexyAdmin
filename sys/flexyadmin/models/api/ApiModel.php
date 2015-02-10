@@ -1,8 +1,10 @@
-<?php require_once(APPPATH."core/AjaxController.php");
+<?
 
-class ApiController extends AjaxController {
+class ApiModel extends CI_Model {
   
   protected $args=array();
+  protected $result=array();
+
   protected $check_rights=true;
   protected $loggedIn=false;
 
@@ -14,7 +16,7 @@ class ApiController extends AjaxController {
   /**
    * @ignore
    */
-	public function __construct($name='') {
+	public function __construct() {
 		parent::__construct();
 
     // Get arguments
@@ -22,23 +24,25 @@ class ApiController extends AjaxController {
     
     // Check Authentication and Rights if not api/auth
     $auth=($this->uri->get(2)=='auth');
-    $this->loggedIn=$this->_user_logged_in();
+    $this->loggedIn=$this->user->logged_in();
     if (!$auth) {
       if (!$this->loggedIn) {
-        return $this->_result(array('_status'=>401));
+        $this->result['status']=401;
+        return $this->result;
       }
       if (isset($this->args['table'])) $this->table=$this->args['table'];
       if ($this->check_rights) {
         if (!$this->_has_rights($this->table)) {
-          return $this->_result(array('_error'=>'NO RIGHTS'));
+          $this->result['_error']='NO RIGHTS';
+          return $this->result;
         }
       }
     }
 
     // Standard result
     $this->result['_args']=$this->args;
-    $this->result['_api']=$this->name;
-    return $this;
+    $this->result['_api']=__CLASS__;
+    return $this->result;
 	}
   
   
@@ -57,10 +61,10 @@ class ApiController extends AjaxController {
     if (!$args and !empty($_POST)) {
       $type='post';
       $args=$_POST;
-      // foreach ($keys as $key) {
-      //   $value=$this->input->post($key);
-      //   if (isset($value)) $args[$key]=$value;
-      // }
+      foreach ($keys as $key) {
+        $value=$this->input->post($key);
+        if (isset($value)) $args[$key]=$value;
+      }
     }
     
     // or get
@@ -68,10 +72,10 @@ class ApiController extends AjaxController {
       $type='get';
       parse_str($_SERVER['QUERY_STRING'],$_GET);
       $args=$_GET;
-      // foreach ($keys as $key) {
-      //   $value=$this->input->get($key);
-      //   if (isset($value)) $args[$key]=$value;
-      // }
+      foreach ($keys as $key) {
+        $value=$this->input->get($key);
+        if (isset($value)) $args[$key]=$value;
+      }
     }
     
     // or defaults

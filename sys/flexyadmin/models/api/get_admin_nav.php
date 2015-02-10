@@ -1,15 +1,13 @@
-<?php require_once(APPPATH."core/ApiController.php");
+<?
 
 /**
- * API/get_admin_nav
  * Geeft het admin menu terug
  *
  * @package default
  * @author Jan den Besten
  */
 
-
-class get_admin_nav extends ApiController {
+class get_admin_nav extends ApiModel {
   
   var $table = 'cfg_admin_menu';
   
@@ -24,10 +22,12 @@ class get_admin_nav extends ApiController {
 	}
   
   public function index() {
+    if (!$this->loggedIn) return $this->result;
+
     $table=$this->table;
-    if (!$this->loggedIn) return;
     $data =$this->$table->get();
-    return $this->_result(array('data'=>$data));
+    $this->result['data']=$data;
+    return $this->result;
   }
 
 }

@@ -127,10 +127,10 @@ class AjaxController extends BasicController {
       }
       $this->message->reset_ajax();
     }
-    
+
     if ( ! $this->input->is_ajax_request() ) {
       $result['_test']=true;
-      if ($this->type=='json') {
+      if ($this->type=='json' or el(array('_args','type'),$result)=='json') {
         $json=array2json($result);
         echo $json;
         return $json;
