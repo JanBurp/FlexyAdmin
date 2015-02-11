@@ -66,6 +66,7 @@ class Forms extends Module {
 	public function __construct() {
 		parent::__construct();
     $this->CI->load->library('session');
+    $this->CI->load->model('formaction');
 	}
 
 

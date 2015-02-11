@@ -2,6 +2,10 @@
 
 /**
  * Maakt het mogelijk om formulieren gemaakt met forms via ajax te laten zien en te submitten.
+ * 
+ * $.post('forms',{'__form_id': 'contact', .... },function(result){
+ *   console.log(result.form);
+ * },'json');
  *
  * @package default
  * @author Jan den Besten
@@ -36,11 +40,18 @@ class Ajax_forms extends Ajax_module {
    * @author Jan den Besten
    */
   public function index($args) {
+    $form='';
+    $settings=false;
+    $is_spam=false;
+    $is_validated=false;
+
     $form_id=$this->_get_form_id();
-    $form=$this->CI->forms->$form_id();
-    $settings=$this->CI->forms->get_settings($form_id);
-    $is_spam=$this->CI->forms->is_spam();
-    $is_validated=$this->CI->forms->is_validated();
+    if ($form_id) {
+      $form=$this->CI->forms->$form_id();
+      $settings=$this->CI->forms->get_settings($form_id);
+      $is_spam=$this->CI->forms->is_spam();
+      $is_validated=$this->CI->forms->is_validated();
+    }
     return $this->result(array('_message'=>__CLASS__,'form_id'=>$form_id,'is_spam'=>$is_spam,'is_validated'=>$is_validated,'form'=>$form,'settings'=>$settings));
   }
   
