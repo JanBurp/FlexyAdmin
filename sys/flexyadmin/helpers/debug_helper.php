@@ -171,10 +171,10 @@ function trace_($a=NULL,$echo=true,$backtraceOffset=1,$max=50) {
 	if ($echo and !IS_AJAX) echo $out;
 	$c++;
   
-  if (IS_AJAX and isset($CI->message)) {
-    $CI->message->add_ajax("\n".$out);
+  if (IS_AJAX) {
+    if (isset($CI->message)) $CI->message->add_ajax("\n".$out);
+    echo $out;
   }
-  else
 	return $out;
 }
 
