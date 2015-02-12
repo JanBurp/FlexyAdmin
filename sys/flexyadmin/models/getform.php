@@ -134,8 +134,15 @@
               // validation
 							$value['validation']=add_validation_parameters($value['validation'],$value['validation_parameters']);
 							unset($value['validation_parameters']);
+              
               // value?
-							if ($this->input->post($name)) $value['value']=$this->input->post($name);
+							if ($this->input->post($name)) {
+                $value['value']=$this->input->post($name);
+              }
+              else {
+                // default value?
+                if (isset($fields[$key]['str_default']) and $fields[$key]['str_default']!='') $value['value']=$fields[$key]['str_default'];
+              }
               // save
 							$fields[$key]=$value;
 
@@ -186,6 +193,8 @@
 				if (!isset($form['buttons'])) $form['buttons']=array('submit'=>array("submit"=>"submit","value"=>'submit'));
 			}
 		}
+    
+    // trace_($form);
     
 		return $form;
 	}
