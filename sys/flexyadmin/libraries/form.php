@@ -877,12 +877,10 @@ class Form {
     
     // attributes
     $attr=array_merge( el('attr',$field,array()), el('attributes',$field,array()) );
-		$attr=array(
-      "name"    =>$name,
-      "id"      =>(isset($field['id'])?$id:$name),
-      "class"   =>$class,
-      "value"   =>$field["value"]
-    );
+    $attr["name"]  = $name;
+    $attr["id"]    = (isset($field['id'])?$id:$name);
+    $attr["class"] = $class;
+    $attr["value"] = $field["value"];
     if (isset($field['placeholder'])) $attr['placeholder']=$field['placeholder'];
     if (isset($field['readonly'])) $attr['readonly']=$field['readonly'];
     if (isset($field['disabled'])) $attr['disabled']=$field['disabled'];
@@ -898,7 +896,7 @@ class Form {
     
 		// When (javascript triggers)
 		if (!empty($field['when'])) $this->when($field['when'],$name);
-
+    
 		switch($field["type"]):
 
 			case "hidden":
@@ -1156,7 +1154,7 @@ class Form {
         }
 				$field['control']=form_input($attr);
 		endswitch;
-
+    
 		if ($field["type"]=="hidden") return $field['control'];
     $field['horizontal_bootstrap']=($this->framework=='bootstrap' and has_string('form-horizontal',$form_class));
     // trace_($field);
