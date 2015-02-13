@@ -300,8 +300,7 @@ class Mediatable Extends CI_Model {
   private function _get_files($map='',$asReadMap=TRUE,$recent_numbers=0) {
     $path=remove_assets($map);
     $info=$this->cfg->get('cfg_media_info',$path);
-    
-    if ($asReadMap) $this->db->set_key('file');
+    // if ($asReadMap) $this->db->set_key('file');
     $this->db->where('b_exists',true);
     $this->db->where('path',$path);
     if (el('b_user_restricted',$info,false) and $this->db->field_exists('user',$this->table) and !$this->user->rights['b_all_users']) {
@@ -316,27 +315,42 @@ class Mediatable Extends CI_Model {
       }
     }
     if ($asReadMap) {
+      $map_files=array();
       foreach ($files as $file => $info) {
-        unset($files[$file]['id']);
-        unset($files[$file]['stx_meta']);
-        $files[$file]['name']=$info['file'];      unset($files[$file]['file']);
-        $files[$file]['path']=add_assets($info['path']);
-        $files[$file]['type']=$info['str_type'];  unset($files[$file]['str_type']);
-        $files[$file]['alt']=$info['str_title'];
-        $files[$file]['size']=$info['int_size']. 'k';  unset($files[$file]['int_size']);
-        $files[$file]['rawdate']=str_replace('-',' ',$info['dat_date']);
         $date=explode('-',$info['dat_date']);
-        $files[$file]['date']=date('j M Y',mktime(0,0,0,$date[1],$date[2],$date[0]));
-        unset($files[$file]['dat_date']);
-        $files[$file]['width']=$info['int_img_width'];
-        unset($files[$file]['int_img_width']);
-        $files[$file]['height']=$info['int_img_height'];
-        unset($files[$file]['int_img_height']);
+        $map_files[$file]=array(
+          'name'  => $info['file'],
+          'path'  => add_assets($info['path']),
+          'type'  => $info['str_type'],
+          'alt'   => $info['str_title'],
+          'size'  => $info['int_size'],
+          'rawdate' => str_replace('-',' ',$info['dat_date']),
+          'date'    => date('j M Y',mktime(0,0,0,$date[1],$date[2],$date[0])),
+          'width'   => $info['int_img_width'],
+          'height'  => $info['int_img_height']
+        );
+        //
+        // unset($files[$file]['id']);
+        // unset($files[$file]['stx_meta']);
+        // $files[$file]['name']=$info['file'];      unset($files[$file]['file']);
+        // $files[$file]['path']=add_assets($info['path']);
+        // $files[$file]['type']=$info['str_type'];  unset($files[$file]['str_type']);
+        // $files[$file]['alt']=$info['str_title'];
+        // $files[$file]['size']=$info['int_size']. 'k';  unset($files[$file]['int_size']);
+        // $files[$file]['rawdate']=str_replace('-',' ',$info['dat_date']);
+        // $date=explode('-',$info['dat_date']);
+        // $files[$file]['date']=date('j M Y',mktime(0,0,0,$date[1],$date[2],$date[0]));
+        // unset($files[$file]['dat_date']);
+        // $files[$file]['width']=$info['int_img_width'];
+        // unset($files[$file]['int_img_width']);
+        // $files[$file]['height']=$info['int_img_height'];
+        // unset($files[$file]['int_img_height']);
         if (isset($info['user'])) {
           $files[$file]['id_user']=$this->db->get_field_where('cfg_users','str_username','id',$info['user']);
           unset($files[$file]['user']);
         }
       }
+      $files=$map_files;
     }
     return $files;
   }
