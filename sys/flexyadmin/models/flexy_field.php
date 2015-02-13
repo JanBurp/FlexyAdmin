@@ -892,12 +892,11 @@ class Flexy_field extends CI_Model {
       }
       
       // Get Options
-			$files=read_map($map,$types);
+      $this->load->model('mediatable');
+      $files=$this->mediatable->get_files($map);
 			if ($this->restrictedToUser) {
-        $this->load->model('mediatable');
 				$files=$this->mediatable->filter_restricted_files($files,$this->restrictedToUser);
 			}
-			$files=not_filter_by($files,"_");
 			$order='_rawdate';
 			if (isset($info['str_order']) and !empty($info['str_order'])) {
 				$order=$info['str_order'];
