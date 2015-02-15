@@ -384,11 +384,12 @@ class Ion_auth
     if ($user_id) $this->CI->ion_auth_model->update_last_login($user_id);
     
 		$identity = $this->CI->config->item('identity', 'ion_auth');
-		$this->CI->session->unset_userdata($identity);
-		$this->CI->session->unset_userdata('group');
-		$this->CI->session->unset_userdata('id');
-		$this->CI->session->unset_userdata('user_id');
-    $this->CI->session->unset_userdata('language');
+    
+		if ($this->CI->session->userdata($identity))  $this->CI->session->unset_userdata($identity);
+		if ($this->CI->session->userdata('group'))    $this->CI->session->unset_userdata('group');
+		if ($this->CI->session->userdata('id'))       $this->CI->session->unset_userdata('id');
+		if ($this->CI->session->userdata('user_id'))  $this->CI->session->unset_userdata('user_id');
+    if ($this->CI->session->userdata('language')) $this->CI->session->unset_userdata('language');
 
 		//delete the remember me cookies if they exist
 		if (get_cookie('identity'))
