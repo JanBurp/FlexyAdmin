@@ -851,7 +851,6 @@ class Flexy_field extends CI_Model {
 	function _create_media_options($files,$types) {
 		$options=array();
 		foreach($files as $file) {
-      
 			if ($file["type"]!="dir") {
 				$ext=strtolower(get_file_extension($file["name"]));
 				if (in_array($ext,$types)) {
@@ -908,7 +907,7 @@ class Flexy_field extends CI_Model {
 			else {
 				$desc=FALSE;
 			}
-
+      
 			if ($fieldType=='image_dragndrop') {
 				$options=sort_by($files,$order,$desc);
 				if ($this->cfg->get('CFG_media_info',$path,'b_add_empty_choice') and ($this->pre!='medias'))	array_unshift($options,'');
@@ -916,7 +915,7 @@ class Flexy_field extends CI_Model {
 			else {
 				$lastUploadMax=$this->cfg->get('CFG_media_info',$path,'int_last_uploads');
 				if ($lastUploadMax>0) {
-					$lastUploads=sort_by($files,array("rawdate"),TRUE,FALSE,$lastUploadMax);
+					$lastUploads=sort_by($files,"rawdate",TRUE,FALSE,$lastUploadMax);
 					ignorecase_ksort($files);
 					$options=array();
 					// add empty option if needed
