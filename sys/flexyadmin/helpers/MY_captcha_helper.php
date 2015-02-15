@@ -41,7 +41,7 @@ if ( ! function_exists('create_captcha'))
 {
 	function create_captcha($data = '', $img_path = '', $img_url = '', $font_path = '')
 	{
-		$defaults = array('word' => '', 'img_path' => '', 'img_url' => '', 'img_width' => '150', 'img_height' => '28', 'font_path' => '', 'expiration' => 7200);
+		$defaults = array('word' => '', 'img_path' => '', 'img_url' => '', 'img_width' => '150', 'img_height' => '28', 'font_path' => '', 'expiration' => 600);
 
 		foreach ($defaults as $key => $val)
 		{
@@ -82,23 +82,24 @@ if ( ! function_exists('create_captcha'))
 		// Remove old images
 		// -----------------------------------
 
-		list($usec, $sec) = explode(" ", microtime());
-		$now = ((float)$usec + (float)$sec);
+    $current_dir = @opendir($img_path);
+    list($usec, $sec) = explode(" ", microtime());
+    $now = ((float)$usec + (float)$sec);
 
-		$current_dir = @opendir($img_path);
-
-		while ($filename = @readdir($current_dir))
-		{
-			if ($filename != "." and $filename != ".." and $filename != "index.html" and $filename != ".htaccess") // Changed by JdB
-			{
-				$name = str_replace(".jpg", "", $filename);
-
-				if ((substr($name,0,6)=='captcha') and (($name + $expiration) < $now) )
-				{
-					@unlink($img_path.$filename);
-				}
-			}
-		}
+    while ($filename = @readdir($current_dir))
+    {
+      if ($filename != "." and $filename != ".." and $filename != "index.html" and $filename != ".htaccess") // Changed by JdB
+      {
+        $name = str_replace(".jpg", "", $filename);
+        
+        // JdbB.. this part was buggy...
+        if ((substr($name,0,8)=='captcha_') and ((substr($name,8) + $expiration) < $now) )
+        {
+            @chmod($img_path.$filename,0777);
+            @unlink($img_path.$filename);
+        }
+      }
+    }
 
 		@closedir($current_dir);
 
