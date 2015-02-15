@@ -18,6 +18,10 @@ class ApiModel extends CI_Model {
    */
 	public function __construct() {
 		parent::__construct();
+    
+    // Standard result
+    // $this->result['_args']=$this->args;
+    // $this->result['_api']=__CLASS__;
 
     // Get arguments
     $this->args=$this->_get_args($this->args);
@@ -27,7 +31,7 @@ class ApiModel extends CI_Model {
     $this->loggedIn=$this->user->logged_in();
     if (!$auth) {
       if (!$this->loggedIn) {
-        $this->result['status']=401;
+        $this->result['_status']=401;
         return $this->result;
       }
       if (isset($this->args['table'])) $this->table=$this->args['table'];
@@ -39,12 +43,9 @@ class ApiModel extends CI_Model {
       }
     }
 
-    // Standard result
-    $this->result['_args']=$this->args;
-    $this->result['_api']=__CLASS__;
     return $this->result;
 	}
-  
+
   
   /**
    * Get arguments from GET or POST
@@ -91,6 +92,24 @@ class ApiModel extends CI_Model {
     return $args;
   }
   
+  
+  /**
+   * Set arguments
+   *
+   * @param array $args 
+   * @return thi
+   * @author Jan den Besten
+   */
+  public function set_args($args) {
+    $keys=array_keys($this->args);
+    foreach ($keys as $key) {
+      if (isset($args[$key])) $this->args[$key]=$args[$key];
+    }
+    $this->args=$args;
+    return $this;
+  }
+  
+  
   /**
    * Test rights for item
    *
@@ -101,6 +120,7 @@ class ApiModel extends CI_Model {
    * @author Jan den Besten
    */
   protected function _has_rights($item,$id="",$whatRight=0) {
+    if (!$this->user->logged_in()) return FALSE;
     $rights=$this->user->has_rights($item,$id,$whatRight);
     // if no normal rights and cfg_users and current user, TODO: safety check this!!
     if ($rights<2 and $item=='cfg_users') {
@@ -155,11 +175,6 @@ class ApiModel extends CI_Model {
     $table_info['tree']     = in_array('self_parent',$this->fields);
     return $table_info;
   }
-  
-  
-  
-  
-
 
 }
 
