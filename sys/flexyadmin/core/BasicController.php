@@ -33,6 +33,7 @@ class BasicController extends MY_Controller {
     $this->load->model('create_uri');
 		$this->load->helper("language");
 
+    $this->language=$this->user->language;
 		$lang=$this->language."_".strtoupper($this->language);
 		setlocale(LC_ALL, $lang);
 

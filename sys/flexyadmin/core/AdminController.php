@@ -98,7 +98,22 @@ class AdminController extends BasicController {
 		}
 		$formats=$this->cfg->get('CFG_configurations',"str_formats");
 		$styles=$this->cfg->get('CFG_configurations',"str_styles");
-		$this->load->view('admin/header', array("title"=>$title,"url"=>$url,"jsVars"=>$this->js,"show_type"=>$type,"show_editor"=>$editor,"editor_class"=>$editorClass,"buttons1"=>$buttons1,"buttons2"=>$buttons2,"buttons3"=>$buttons3,'preview_width'=>$previewWidth,'preview_height'=>$previewHeight,"formats"=>$formats,"styles"=>$styles,"language"=>$this->language));
+		$this->load->view('admin/header', array(
+      "title"=>$title,
+      "url"=>$url,
+      "jsVars"=>$this->js,
+      "show_type"=>$type,
+      "show_editor"=>$editor,
+      "editor_class"=>$editorClass,
+      "buttons1"=>$buttons1,
+      "buttons2"=>$buttons2,
+      "buttons3"=>$buttons3,
+      'preview_width'=>$previewWidth,
+      'preview_height'=>$previewHeight,
+      "formats"=>$formats,
+      "styles"=>$styles,
+      "language"=>$this->language)
+    );
 	}
 
 	function _show_table_menu($tables,$type) {
