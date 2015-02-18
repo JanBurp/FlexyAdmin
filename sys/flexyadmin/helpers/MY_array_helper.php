@@ -963,6 +963,34 @@ function implode_attributes($array) {
 	return $out;
 }
 
+
+/**
+ * Maakt van een string met attributen een associatieve array met de attributen
+ *
+ *      class="red" title="rood"
+ * 
+ * Wordt:
+ * 
+ *      array( 'class'=>'red', title=>'rood' );
+ *
+ * @param string $s 
+ * @return array
+ * @author Jan den Besten
+ */
+function explode_attributes($s) {
+  $attributes=array();
+  if (preg_match_all("/\\s?(.*)=\"(.*)\"/uiU", $s,$matches)) {
+    if (isset($matches[2])) {
+      foreach ($matches[1] as $key => $value) {
+        $attributes[trim($value)] = $matches[2][$key];
+      }
+      return $attributes;
+    }
+  }
+  return false;
+}
+
+
 /**
  * Geeft een array terug met alleen de key/value paren die meegegeven zijn
  *
