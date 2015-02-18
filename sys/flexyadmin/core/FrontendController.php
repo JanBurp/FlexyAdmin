@@ -248,7 +248,7 @@ class FrontEndController extends MY_Controller {
    * @author Jan den Besten
    */
 	public function add_keywords($words) {
-		$this->site["keywords"]=add_string($this->site["keywords"],$words,",");
+		$this->site["keywords"]=add_string(el('keywords',$this->site,''),$words,",");
 	}
 	
   /**
