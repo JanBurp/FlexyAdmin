@@ -1768,7 +1768,6 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 			}
 		}
 		$this->foreignTables=array();
-    // trace_($this->foreigns);
     return $this;
 	}
 
