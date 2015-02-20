@@ -145,7 +145,7 @@ class Editor_lists {
   					$files=not_filter_by($files,"_");
   					ignorecase_ksort($files);
           }
-
+          
 					$data['-- '.strtoupper($this->CI->ui->get($path)).' ----------']=NULL;
 					$data=$data + $files;
 				}
@@ -185,6 +185,7 @@ class Editor_lists {
       // trace_($data);
 			foreach($data as $name=>$file) {
         if (!empty($file)) {
+          $name=$file['name'];
           $filename=$file['path'].'/'.$name;
           $name=$this->CI->mediatable->get_img_title($filename);
   				if (!empty($name)) {
