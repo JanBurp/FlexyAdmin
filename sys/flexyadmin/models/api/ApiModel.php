@@ -4,13 +4,13 @@ class ApiModel extends CI_Model {
   
   protected $args=array();
   protected $result=array();
+  protected $info=array();
 
-  protected $check_rights=true;
-  protected $loggedIn=false;
+  // protected $check_rights=true;
+  // protected $loggedIn=false;
 
   protected $table=NULL;
-  protected $fields;
-  protected $hidden_fields;
+  protected $fields=array();
   
   
   /**
@@ -25,19 +25,21 @@ class ApiModel extends CI_Model {
     $this->result['api']=__CLASS__;
     // Check Authentication and Rights if not api/auth
     $auth=($this->uri->get(2)=='auth');
-    $this->loggedIn=$this->user->logged_in();
+    $loggedIn=$this->user->logged_in();
     if (!$auth) {
-      if (!$this->loggedIn) {
+      if (!$loggedIn) {
         return $this->_result_status401();
       }
-      if (isset($this->args['table'])) $this->table=$this->args['table'];
-      if ($this->check_rights) {
-        if (!$this->_has_rights($this->table)) {
-          return $this->_result_norights();
-        }
+      if (!$this->_has_rights($this->table)) {
+        return $this->_result_norights();
       }
     }
 	}
+  
+  protected function logged_in() {
+    return $this->user->logged_in();
+  }
+
 
   /**
    * Returns a status 401 result: not existing model
@@ -49,6 +51,7 @@ class ApiModel extends CI_Model {
     $this->result=array( 'status' => 401 );
     return $this->result;
   }
+  
   
   /**
    * Returns a 'no rights' for this api.
@@ -64,13 +67,23 @@ class ApiModel extends CI_Model {
     return $this->result;
   }
   
+  
   /**
-   * Returns data if everything is ok
+   * Returns data if everything is ok, and merge data with config data if asked for
    *
    * @return void
    * @author Jan den Besten
    */
   protected function _result_ok() {
+    // Add config data if asked for
+    $this->_get_config();
+    if (!empty($this->args['config'])) {
+      $this->result['config'] = array();
+      foreach ($this->args['config'] as $cfg_key) {
+        $this->result['config'][$cfg_key] = $this->info[$cfg_key];
+      }
+    }
+    // Prepare end result
     unset($this->result['status']);
     $this->result['success'] = true;
     $this->result['args'] = $this->args;
@@ -117,8 +130,8 @@ class ApiModel extends CI_Model {
       $args=$defaults;
     }
     
-    if (isset($args['type'])) {
-      $this->set_type($args['type']);
+    if (!isset($args['config'])) {
+      $args['config'] = array();
     }
     
     return $args;
@@ -132,7 +145,7 @@ class ApiModel extends CI_Model {
    * @return thi
    * @author Jan den Besten
    */
-  public function set_args($args) {
+  public function set_args($args=array()) {
     $keys=array_keys($this->args);
     foreach ($keys as $key) {
       if (isset($args[$key])) $this->args[$key]=$args[$key];
@@ -162,36 +175,28 @@ class ApiModel extends CI_Model {
   }
   
   
+  
+  
   /**
-   * Gets information about all fields of the table in args
+   * Adds config data to result if asked for
    *
-   * @return array
+   * @return void
    * @author Jan den Besten
    */
-  protected function _get_field_info() {
-    $this->hidden_fields=array();
-    $field_info=array();
-    foreach ($this->fields as $field) {
-      $prefix=get_prefix($field);
-      $full_name=$this->args['table'].'.'.$field;
-      $info=$this->cfg->get('cfg_field_info',$full_name);
-      if (!el('b_show_in_grid',$info,true)) {
-        $this->hidden_fields[]=$field;
+  protected function _get_config( $asked_for=array() ) {
+    $asked_for = array_merge( $asked_for, el('config',$this->args,array()) );
+    foreach ($asked_for as $cfg_key) {
+      $method='_get_'.$cfg_key;
+      if (method_exists($this,$method)) {
+        $this->info[$cfg_key] = $this->$method();
       }
       else {
-        if ($info) $info=array_unset_keys($info,array('id','field_field'));
-        $field_info[$field]=array(
-          'table'     => $this->args['table'],
-          'field'     => $field,
-          'ui_name'   => $this->ui->get($field),
-          'info'      => $info,
-          'editable'  => !in_array($field,$this->config->item('NON_EDITABLE_FIELDS')),
-          'incomplete'=> in_array($prefix,$this->config->item('INCOMPLETE_DATA_TYPES'))
-        );
+        $this->info[$cfg_key] = FALSE;
       }
     }
-    return $field_info;
+    return $this->info;
   }
+  
   
   
   /**
@@ -200,13 +205,49 @@ class ApiModel extends CI_Model {
    * @return array
    * @author Jan den Besten
    */
-  protected function _get_table_info() {
+  private function _get_table_info() {
     $table_info=$this->cfg->get('cfg_table_info',$this->args['table']);
-    $table_info['ui_name']  = $this->ui->get($this->args['table']);
-    $table_info['sortable'] = !in_array('order',$this->fields);
-    $table_info['tree']     = in_array('self_parent',$this->fields);
+    $table_info['fields']   = $this->db->list_fields($this->args['table']);
+    $table_info['ui_name']  = $this->ui->get( $this->args['table'] );
+    $table_info['sortable'] = !in_array('order',$table_info['fields']);
+    $table_info['tree']     = in_array('self_parent',$table_info['fields']);
     return $table_info;
   }
+  
+  /**
+   * Gets information about all fields of the table in args
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+  private function _get_field_info() {
+    $hidden_fields=array();
+    $field_info=array();
+    foreach ($this->info['table_info']['fields'] as $field) {
+      $prefix=get_prefix($field);
+      $full_name=$this->args['table'].'.'.$field;
+      $info=$this->cfg->get('cfg_field_info',$full_name);
+      if (!el('b_show_in_grid',$info,true)) {
+        $hidden_fields[]=$field;
+      }
+      else {
+        if ($info) $info=array_unset_keys($info,array('id','field_field'));
+        $field_info[$field]=array(
+          'table'     => $this->args['table'],
+          'field'     => $field,
+          'ui_name'   => $this->ui->get($field),
+          'info'      => $info,
+          'editable'  => !in_array($field, $this->config->item('NON_EDITABLE_FIELDS') ),
+          'incomplete'=> in_array($prefix, $this->config->item('INCOMPLETE_DATA_TYPES') )
+        );
+      }
+    }
+    $field_info['hidden_fields'] = $hidden_fields;
+    return $field_info;
+  }
+  
+  
+  
 
 }
 

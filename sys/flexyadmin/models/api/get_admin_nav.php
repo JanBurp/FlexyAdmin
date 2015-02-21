@@ -15,19 +15,21 @@ class get_admin_nav extends ApiModel {
    * @ignore
    */
 	public function __construct($name='') {
-    $this->check_rights=false;
 		parent::__construct();
     $this->load->model($this->table);
     return $this;
 	}
   
   public function index() {
-    if (!$this->loggedIn) return $this->result;
+    if (!$this->logged_in()) return $this->_result_status401();
 
     $table=$this->table;
-    $data =$this->$table->get();
+    $menu =$this->$table->get();
+    $data=array(
+      'menu' =>$menu
+    );
     $this->result['data']=$data;
-    return $this->result;
+    return $this->_result_ok();
   }
 
 }

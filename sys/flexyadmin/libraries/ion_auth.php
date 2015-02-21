@@ -402,7 +402,7 @@ class Ion_auth
 		}
 
 		$this->CI->session->sess_destroy();
-    $this->CI->session->sess_create();
+    // $this->CI->session->sess_create();
 
 		$this->set_message('logout_successful');
 		return TRUE;

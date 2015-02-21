@@ -22,7 +22,7 @@ class cfg_users extends _crud {
    * @author Jan den Besten
    */
   public function get_row($args=array()) {
-    if ($args['where']=='current') {
+    if (el('where',$args)=='current') {
       $args['where']=$this->user->user_id;
     }
     return parent::get_row($args);

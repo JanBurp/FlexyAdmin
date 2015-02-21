@@ -27,7 +27,7 @@ class get_help extends ApiModel {
 	}
   
   public function index() {
-    if (!$this->loggedIn) return $this->result;
+    if (!$this->logged_in()) return $this->_result_status401();
     
 		$commonHelp=$this->cfg->get('CFG_configurations','txt_help');
     $map='sys/flexyadmin/views/help';
@@ -54,10 +54,14 @@ class get_help extends ApiModel {
       }
     }
     
-    $this->result['title']='Help';
-    $this->result['common_help']=$commonHelp;
-    $this->result['help']=$helpHTML;
-    return $this->result;
+    // RESULT
+    $data=array(
+      'title' =>'Help',
+      'common_help' => $commonHelp,
+      'help' => $helpHTML
+    );
+    $this->result['data']=$data;
+    return $this->_result_ok();
   }
 
 }
