@@ -1,5 +1,17 @@
 <?
 
+
+/**
+ * Authentication API
+ * 
+ * - _api/auth/check - gives as a result if a user is logged in, if so, returns userdata
+ * - _api/auth/login - needs username/password
+ * - _api/auth/logout - needs username/password
+ *
+ * @package default
+ * @author Jan den Besten
+ */
+
 class auth extends ApiModel {
   
   var $args = array(
