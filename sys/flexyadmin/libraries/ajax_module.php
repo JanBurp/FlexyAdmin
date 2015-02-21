@@ -39,7 +39,7 @@ class Ajax_module extends Parent_module_plugin {
    * @ignore
    */
 	public function __call($function, $args) {
-		return $this->result(array('_error'=>'Method: `'.ucfirst($function)."()` doesn't exists.", '_success'=>false));
+		return $this->result(array('error'=>'Method: `'.ucfirst($function)."()` doesn't exists.", 'success'=>false));
 	}
 
 	/**
@@ -50,7 +50,7 @@ class Ajax_module extends Parent_module_plugin {
 	 * @author Jan den Besten
 	 */
   public function index($args) {
-    return $this->result(array('_message'=>__CLASS__));
+    return $this->result(array('message'=>__CLASS__));
   }
 
   /**
@@ -63,7 +63,7 @@ class Ajax_module extends Parent_module_plugin {
    */
   public function result($args) {
     $args['_module']=str_replace('ajax_','',$this->name);
-    if (!isset($args['_success'])) $args['_success']=true;
+    if (!isset($args['success'])) $args['success']=true;
     ksort($args);
     return array2json($args);
     // return json_encode($args)

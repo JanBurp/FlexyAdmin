@@ -347,8 +347,8 @@ function doGrid() {
         $(this).css('cursor','wait');
         $.post(url,data,function(data) {
           // console.log(data);
-          if (data._error) {
-            ajaxError(data._error);
+          if (data.error) {
+            ajaxError(data.error);
           }
           else {
             var html=$(obj).html();
@@ -375,8 +375,8 @@ function doGrid() {
             // ajax request
             $(obj).css('cursor','wait');
             $.post(url,data,function(data) {
-              if (data._error) {
-                ajaxError(data._error);
+              if (data.error) {
+                ajaxError(data.error);
                 $(obj).text(old_value);
               }
               else {
@@ -496,7 +496,7 @@ function doGrid() {
 							var url=site_url("admin/ajax/edit/");
               var data={'table':table,'id':id,'field':'self_parent','value':newParentId};
 							$.post(url,data,function(data) {
-                if (data._error) ajaxError(data._error);
+                if (data.error) ajaxError(data.error);
 							},'json');
 						}
 					}
@@ -511,8 +511,8 @@ function doGrid() {
           var data={'table':table,'ids':ser};
 					// ajax request
 					$.post(url,data,function(data) {
-            if (data._error)
-              ajaxError(data._error);
+            if (data.error)
+              ajaxError(data.error);
             else
               rowsEvenOdd();
 					},'json');
@@ -629,8 +629,8 @@ function doGrid() {
 				async:'false',
         dataType: 'json',
 				success: function(data){
-          if (data._error) {
-            ajaxError(data._error);
+          if (data.error) {
+            ajaxError(data.error);
           }
 					else {
             if (data._message) {

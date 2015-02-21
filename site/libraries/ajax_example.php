@@ -45,7 +45,7 @@
 	 * @author Jan den Besten
 	 */
   public function index($args) {
-    return $this->result(array('_message'=>__CLASS__));
+    return $this->result(array('message'=>__CLASS__));
   }
 
 
@@ -59,7 +59,7 @@
   	* @author Jan den Besten
   	*/
 	public function other($args) {
-    return $this->result(array('_method'=>'other','_message'=>__CLASS__));
+    return $this->result(array('method'=>'other','message'=>__CLASS__));
 	}
 
 

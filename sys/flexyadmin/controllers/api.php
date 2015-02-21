@@ -27,11 +27,11 @@ class Api extends AjaxController {
       // Call model/method
       $result=$this->$model->$method($args);
       // Result
-      $result['_api']=$model;
+      $result['api']=$model;
       return $this->_result( $result );
     }
     // does not exists: just return nothing (empty page)
-    return $this->_result( array( '_api'=>$model, '_error'=>'`_api/'.$model."` doesn't exists." ) );
+    return $this->_result( array( 'api'=>$model, 'error'=>'`_api/'.$model."` doesn't exists." ) );
   }
 
 

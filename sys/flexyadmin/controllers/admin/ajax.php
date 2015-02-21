@@ -60,8 +60,8 @@ class Ajax extends AjaxController {
 		else {
 			$error='ajax_error_wrong_parameters';
 		}
-    if ($error) return $this->_result(array('_method'=>__METHOD__,'_error'=>lang($error)));
-    return $this->_result(array('_method'=>__METHOD__));
+    if ($error) return $this->_result(array('method'=>__METHOD__,'error'=>lang($error)));
+    return $this->_result(array('method'=>__METHOD__));
 	}
   
   /**
@@ -171,7 +171,7 @@ class Ajax extends AjaxController {
 		else $error='ajax_error_wrong_parameters';
 
 
-    $result['_method']=__METHOD__;
+    $result['method']=__METHOD__;
     if ($error) $result['_error']=lang($error);
     if ($validation_error) {
       $result['_validation_error']=safe_quotes($this->ui->replace_ui_names($validation_error));
@@ -195,15 +195,15 @@ class Ajax extends AjaxController {
    * @author Jan den Besten
    */
   public function resize_image($path,$file) {
-    $result=array('_method'=>__METHOD__,'path'=>$path,'file'=>$file,'_message'=>'-');
+    $result=array('method'=>__METHOD__,'path'=>$path,'file'=>$file,'message'=>'-');
     $this->load->library('upload');
     
     if ($this->upload->resize_image($file,assets().$path)) {
-      $result['_message']='resized';
+      $result['message']='resized';
     }
     else {
-      $result['_message']='ERROR while resizing';
-      $result['_success']=false;
+      $result['message']='ERROR while resizing';
+      $result['success']=false;
     }
     return $this->_result($result);
   }

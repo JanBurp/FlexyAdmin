@@ -20,8 +20,8 @@ class ApiModel extends CI_Model {
 		parent::__construct();
     
     // Standard result
-    // $this->result['_args']=$this->args;
-    // $this->result['_api']=__CLASS__;
+    // $this->result['args']=$this->args;
+    // $this->result['api']=__CLASS__;
 
     // Get arguments
     $this->args=$this->_get_args($this->args);
@@ -31,13 +31,13 @@ class ApiModel extends CI_Model {
     $this->loggedIn=$this->user->logged_in();
     if (!$auth) {
       if (!$this->loggedIn) {
-        $this->result['_status']=401;
+        $this->result['status']=401;
         return $this->result;
       }
       if (isset($this->args['table'])) $this->table=$this->args['table'];
       if ($this->check_rights) {
         if (!$this->_has_rights($this->table)) {
-          $this->result['_error']='NO RIGHTS';
+          $this->result['error']='NO RIGHTS';
           return $this->result;
         }
       }
@@ -85,8 +85,8 @@ class ApiModel extends CI_Model {
       $args=$defaults;
     }
     
-    if (isset($args['_type'])) {
-      $this->set_type($args['_type']);
+    if (isset($args['type'])) {
+      $this->set_type($args['type']);
     }
     
     return $args;

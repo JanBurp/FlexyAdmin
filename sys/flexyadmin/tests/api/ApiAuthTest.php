@@ -38,18 +38,18 @@ class ApiAuthTest extends CIUnit_Framework_TestCase {
   public function testLoginLogout() {
     // Check if logged out
     $result=$this->CI->auth->check();
-    $this->assertArrayHasKey( '_status', $result );
-    $this->assertEquals( 401, $result['_status'] );
+    $this->assertArrayHasKey( 'status', $result );
+    $this->assertEquals( 401, $result['status'] );
     // Login as 'admin'
     $this->CI->auth->set_args(array('username'=>'admin','password'=>'admin'));
     $result=$this->CI->auth->login();
-    $this->assertArrayHasKey( '_success', $result );
+    $this->assertArrayHasKey( 'success', $result );
     $this->assertEquals( 'admin', $result['data']['username'] );
     $this->assertEquals( 'info@flexyadmin.com', $result['data']['email'] );
     // Logout
     $result=$this->CI->auth->logout();
-    $this->assertArrayHasKey( '_status', $result );
-    $this->assertEquals( 401, $result['_status'] );
+    $this->assertArrayHasKey( 'status', $result );
+    $this->assertEquals( 401, $result['status'] );
     $this->assertArrayNotHasKey( 'data', $result );
   }
 
@@ -71,10 +71,10 @@ class ApiAuthTest extends CIUnit_Framework_TestCase {
     foreach ($attempts as $attempt) {
       $this->CI->auth->set_args(array('username'=>$attempt['username'],'password'=>$attempt['password']));
       $result=$this->CI->auth->login();
-      $this->assertArrayHasKey( '_status', $result );
-      $this->assertEquals( 401, $result['_status'] );
-      $this->assertArrayNotHasKey( '_success', $result );
-      $this->assertArrayNotHasKey( '_args', $result );
+      $this->assertArrayHasKey( 'status', $result );
+      $this->assertEquals( 401, $result['status'] );
+      $this->assertArrayNotHasKey( 'success', $result );
+      $this->assertArrayNotHasKey( 'args', $result );
       $this->assertArrayNotHasKey( 'data', $result );
     }
 
@@ -96,10 +96,10 @@ class ApiAuthTest extends CIUnit_Framework_TestCase {
     foreach ($attempts as $attempt) {
       $this->CI->auth->set_args(array('username'=>$attempt['username'],'password'=>$attempt['password']));
       $result=$this->CI->auth->login();
-      $this->assertArrayHasKey( '_status', $result );
-      $this->assertEquals( 401, $result['_status'] );
-      $this->assertArrayNotHasKey( '_success', $result );
-      $this->assertArrayNotHasKey( '_args', $result );
+      $this->assertArrayHasKey( 'status', $result );
+      $this->assertEquals( 401, $result['status'] );
+      $this->assertArrayNotHasKey( 'success', $result );
+      $this->assertArrayNotHasKey( 'args', $result );
       $this->assertArrayNotHasKey( 'data', $result );
     }
     
@@ -109,11 +109,11 @@ class ApiAuthTest extends CIUnit_Framework_TestCase {
     foreach ($this->users as $user) {
       $this->CI->auth->set_args(array('username'=>$user['username'],'password'=>$user['password']));
       $result=$this->CI->auth->login();
-      $this->assertArrayHasKey( '_success', $result );
-      $this->assertEquals( true, $result['_success'] );
-      $this->assertArrayHasKey( '_args', $result );
-      $this->assertEquals( $user['username'], $result['_args']['username'] );
-      $this->assertEquals( '***', $result['_args']['password'] );
+      $this->assertArrayHasKey( 'success', $result );
+      $this->assertEquals( true, $result['success'] );
+      $this->assertArrayHasKey( 'args', $result );
+      $this->assertEquals( $user['username'], $result['args']['username'] );
+      $this->assertEquals( '***', $result['args']['password'] );
       $this->assertArrayHasKey( 'data', $result );
       $this->assertEquals( $user['username'], $result['data']['username'] );
     }

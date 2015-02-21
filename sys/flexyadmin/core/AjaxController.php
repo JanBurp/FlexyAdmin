@@ -73,7 +73,7 @@ class AjaxController extends BasicController {
    * @ignore
    */
 	public function __call($function, $args) {
-		return $this->_result(array('_error'=>'Method: `'.ucfirst($function)."()` doesn't exists."));
+		return $this->_result(array('error'=>'Method: `'.ucfirst($function)."()` doesn't exists."));
 	}
   
   /**
@@ -99,17 +99,17 @@ class AjaxController extends BasicController {
    */
   protected function _result($result) {
     $status = false;
-    if ( isset($result['_status'])) {
-      if ($result['_status']==401) {
+    if ( isset($result['status'])) {
+      if ($result['status']==401) {
         $status="HTTP/1.1 401 Unauthorized";
-        $result=array('_status'=>401);
+        $result=array('status'=>401);
       }
     }
     
     if (!$status) {
       $result=array_merge($this->result,$result);
-      $result['_success']=true;
-      if (isset($result['_error']) and !empty($result['_error'])) $result['_success']=false;
+      $result['success']=true;
+      if (isset($result['error']) and !empty($result['error'])) $result['success']=false;
       ksort($result);
     }
     
@@ -119,10 +119,10 @@ class AjaxController extends BasicController {
         $first=$message;
         if (is_array($first)) $first=current($first);
         if (has_string('TRACE',$first)) {
-          $result['_trace']=$message;
+          $result['trace']=$message;
         }
         else {
-          $result['_message']=$message;          
+          $result['message']=$message;          
         }
       }
       $this->message->reset_ajax();
@@ -130,7 +130,7 @@ class AjaxController extends BasicController {
 
     if ( ! $this->input->is_ajax_request() ) {
       $result['_test']=true;
-      if ($this->type=='json' or el(array('_args','type'),$result)=='json') {
+      if ($this->type=='json' or el(array('args','type'),$result)=='json') {
         $json=array2json($result);
         echo $json;
         return $json;

@@ -176,8 +176,8 @@ class Bulkupload extends AdminController {
     
     $args=array();
     $args['filename']=$file;
-    $args['_success']=true;
-    if (isset($args['_error']) and !empty($args['_error'])) $args['_success']=false;
+    $args['success']=true;
+    if (isset($args['error']) and !empty($args['error'])) $args['success']=false;
     ksort($args);
     $json=array2json($args);
     echo $json;
