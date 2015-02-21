@@ -18,35 +18,67 @@ class ApiModel extends CI_Model {
    */
 	public function __construct() {
 		parent::__construct();
-    
-    // Standard result
-    // $this->result['args']=$this->args;
-    // $this->result['api']=__CLASS__;
-
     // Get arguments
     $this->args=$this->_get_args($this->args);
-    
+    // Standard result
+    $this->result['args']=$this->args;
+    $this->result['api']=__CLASS__;
     // Check Authentication and Rights if not api/auth
     $auth=($this->uri->get(2)=='auth');
     $this->loggedIn=$this->user->logged_in();
     if (!$auth) {
       if (!$this->loggedIn) {
-        $this->result['status']=401;
-        return $this->result;
+        return $this->_result_status401();
       }
       if (isset($this->args['table'])) $this->table=$this->args['table'];
       if ($this->check_rights) {
         if (!$this->_has_rights($this->table)) {
-          $this->result['error']='NO RIGHTS';
-          return $this->result;
+          return $this->_result_norights();
         }
       }
     }
-
-    return $this->result;
 	}
 
+  /**
+   * Returns a status 401 result: not existing model
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+  protected function _result_status401() {
+    $this->result=array( 'status' => 401 );
+    return $this->result;
+  }
   
+  /**
+   * Returns a 'no rights' for this api.
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+  protected function _result_norights() {
+    $this->result=array(
+      'success' => false,
+      'error' => 'NO RIGHTS',
+    );
+    return $this->result;
+  }
+  
+  /**
+   * Returns data if everything is ok
+   *
+   * @return void
+   * @author Jan den Besten
+   */
+  protected function _result_ok() {
+    unset($this->result['status']);
+    $this->result['success'] = true;
+    $this->result['args'] = $this->args;
+    if (isset($this->result['args']['password'])) $this->result['args']['password']='***';
+    return $this->result;
+  }
+  
+
   /**
    * Get arguments from GET or POST
    *
