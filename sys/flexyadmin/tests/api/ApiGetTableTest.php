@@ -6,7 +6,7 @@ class ApiGetTableTest extends CIUnit_Framework_TestCase {
     array(
       'username' => 'admin',
       'password' => 'admin',
-      'tables'   => array('tbl_site','tbl_menu','cfg_users','log_login','res_media_result')
+      'tables'   => array('tbl_site','tbl_menu','cfg_users','log_login','res_media_files')
     ),
     array(
       'username' => 'user',
@@ -14,7 +14,7 @@ class ApiGetTableTest extends CIUnit_Framework_TestCase {
       'tables'   => array('tbl_site','tbl_menu')
     )
   );
-  private $tables = array('tbl_site','tbl_menu','cfg_users','log_login','res_media_result');
+  private $tables = array('tbl_site','tbl_menu','cfg_users','log_login','res_media_files');
   
 
   public function __construct() {
@@ -42,9 +42,7 @@ class ApiGetTableTest extends CIUnit_Framework_TestCase {
       foreach ($this->tables as $table) {
         $this->CI->get_table->set_args(array('table'=>$table));
         $result=$this->CI->get_table->index();
-        $this->assertArrayNotHasKey( 'success', $result );
-        $this->assertArrayNotHasKey( 'args', $result );
-        $this->assertArrayNotHasKey( 'data', $result );
+        $this->assertCount( 1, $result );
         $this->assertArrayHasKey( 'status', $result );
         $this->assertEquals( 401, $result['status'] );
       }
@@ -53,29 +51,28 @@ class ApiGetTableTest extends CIUnit_Framework_TestCase {
 
 
   public function testWithLogin() {
-    // foreach ($this->users as $user) {
-    //   $this->CI->user->login($user['username'], $user['password']);
-    //   foreach ($this->tables as $table) {
-    //     $this->CI->get_table->set_args(array('table'=>$table));
-    //     $result=$this->CI->get_table->index();
-    //     trace_([$user,$table,$result]);
-    //     if (in_array($table,$user['tables'])) {
-    //       // user has rights for this table
-    //       $this->assertArrayHasKey( 'success', $result );
-    //       $this->assertArrayHasKey( 'args', $result );
-    //       $this->assertArrayHasKey( 'data', $result );
-    //       $this->assertArrayNotHasKey( 'status', $result );
-    //     }
-    //     else {
-    //       // user has no rights for this table
-    //       $this->assertArrayNotHasKey( 'success', $result );
-    //       $this->assertArrayNotHasKey( 'args', $result );
-    //       $this->assertArrayNotHasKey( 'data', $result );
-    //       $this->assertArrayHasKey( 'status', $result );
-    //       $this->assertEquals( 401, $result['status'] );
-    //     }
-    //   }
-    // }
+    foreach ($this->users as $user) {
+      $this->CI->user->login($user['username'], $user['password']);
+      foreach ($this->tables as $table) {
+        $this->CI->get_table->set_args(array('table'=>$table));
+        $result=$this->CI->get_table->index();
+        // trace_([$user,$table,$result]);
+        if (in_array($table,$user['tables'])) {
+          // user has rights for this table
+          $this->assertArrayNotHasKey( 'status', $result );
+          $this->assertArrayHasKey( 'success', $result );
+          $this->assertEquals( true, $result['success'] );
+          $this->assertArrayHasKey( 'args', $result );
+          $this->assertArrayHasKey( 'data', $result );
+        }
+        else {
+          // user has no rights for this table
+          $this->assertCount( 1, $result );
+          $this->assertArrayHasKey( 'status', $result );
+          $this->assertEquals( 401, $result['status'] );
+        }
+      }
+    }
   }
 
   

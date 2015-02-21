@@ -129,7 +129,7 @@ class AjaxController extends BasicController {
     }
 
     if ( ! $this->input->is_ajax_request() ) {
-      $result['_test']=true;
+      $result['test']=true;
       if ($this->type=='json' or el(array('args','type'),$result)=='json') {
         $json=array2json($result);
         echo $json;

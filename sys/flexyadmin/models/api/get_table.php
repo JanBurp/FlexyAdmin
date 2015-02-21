@@ -20,7 +20,7 @@ class get_table extends ApiModel {
    * @author Jan den Besten
    */
   public function index() {
-    if (!$this->_has_rights($this->args['table'])) return $this->result;
+    if (!$this->_has_rights($this->args['table'])) return $this->_result_status401();
     
     // DEFAULTS
     $items=FALSE;
@@ -48,7 +48,7 @@ class get_table extends ApiModel {
       'items'       =>$items
     );
     $this->result['data']=$data;
-    return $this->result;
+    return $this->_result_ok();
   }
   
   

@@ -38,26 +38,19 @@ class auth extends ApiModel {
    * @author Jan den Besten
    */
   public function check() {
-    if ($this->loggedIn or $this->user->logged_in()) {
-      // Give back user session if logged in
-      $data=$this->user->get_user();
-      $data=object2array($data);
-      $data=array_rename_keys($data,array('str_username'=>'username','email_email'=>'email','last_login'=>'last_login','str_language'=>'language'),false);
-      $args=$this->args;
-      $args['password']='***';
-      $this->result['data']=$data;
-      $this->result['args']=$args;
-      unset($this->result['status']);
+    // if not logged in status = 401
+    if (!$this->loggedIn and !$this->user->logged_in()) {
+      return $this->_result_status401();
     }
-    else {
-      // if not logged in status = 401
-      unset($this->result['success']);
-      unset($this->result['args']);
-      $this->result['status']=401;
-      unset($this->result['data']);
-    }
-    return $this->result;
+
+    // Give back user session if logged in
+    $data=$this->user->get_user();
+    $data=object2array($data);
+    $data=array_rename_keys($data,array('str_username'=>'username','email_email'=>'email','last_login'=>'last_login','str_language'=>'language'),false);
+    $this->result['data']=$data;
+    return $this->_result_ok();
   }
+  
   
   /**
    * Login a user
@@ -66,9 +59,7 @@ class auth extends ApiModel {
    * @author Jan den Besten
    */
   public function login() {
-    if ($this->user->login( $this->args['username'], $this->args['password'] )) {
-      $this->result['success']=true;
-    };
+    $this->user->login( $this->args['username'], $this->args['password'] );
     return $this->check();
   }
   
@@ -95,7 +86,6 @@ class auth extends ApiModel {
     $email=$this->args['email'];
     $user=$this->user->get_user_by_email($email);
     $user=object2array($user);
-    
     $this->result['data']=$user;
     return $this->result;
   }
