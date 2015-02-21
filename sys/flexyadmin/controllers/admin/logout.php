@@ -29,6 +29,7 @@ class Logout extends AdminController {
 		if (!$logoutMessages) {
 			$this->user->logout();
 			$this->session->sess_destroy();
+			$this->session->sess_create();
 			if ($this->config->item('logout_to_site'))
 				redirect();
 			else
