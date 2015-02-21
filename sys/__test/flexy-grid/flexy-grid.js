@@ -82,7 +82,7 @@ flexyAdmin.controller('GridController', ['flexyAdminGlobals','$scope','$routePar
       $scope.grid.table_info=result.config.table_info;
       $scope.grid.field_info=result.config.field_info;
 
-      // Copy the references, needed for smart-table to wacht for changes in the data
+      // Copy the references, needed for smart-table to watch for changes in the data
       $scope.grid.displayedItems = [].concat($scope.grid.items);
       
       // Fieldtypes

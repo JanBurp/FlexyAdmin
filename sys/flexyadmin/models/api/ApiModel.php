@@ -251,10 +251,10 @@ class ApiModel extends CI_Model {
       $prefix=get_prefix($field);
       $full_name=$this->args['table'].'.'.$field;
       $info=$this->cfg->get('cfg_field_info',$full_name);
-      if (!el('b_show_in_grid',$info,true)) {
+      // if (!el('b_show_in_grid',$info,true)) {
         $hidden_fields[]=$field;
-      }
-      else {
+      // }
+      // else {
         if ($info) $info=array_unset_keys($info,array('id','field_field'));
         $field_info[$field]=array(
           'table'     => $this->args['table'],
@@ -264,7 +264,7 @@ class ApiModel extends CI_Model {
           'editable'  => !in_array($field, $this->config->item('NON_EDITABLE_FIELDS') ),
           'incomplete'=> in_array($prefix, $this->config->item('INCOMPLETE_DATA_TYPES') )
         );
-      }
+      // }
     }
     $this->cfg_info['table_info']['hidden_fields'] = $hidden_fields;
     return $field_info;

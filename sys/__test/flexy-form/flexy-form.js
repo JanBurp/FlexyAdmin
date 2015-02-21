@@ -114,7 +114,7 @@ flexyAdmin.controller('FormController', ['flexyAdminGlobals','$scope','$routePar
         
         // Tabs & items in tabs
         field.tab = $scope.form_data.table_info.ui_name; // default tab
-        if ( angular.isDefined( $scope.form_data.field_info[key]) ) {
+        if ( angular.isDefined( $scope.form_data.field_info[key].info.str_fieldset) ) {
           if ($scope.form_data.field_info[key].info.str_fieldset!=="") {
             field.tab = $scope.form_data.field_info[key].info.str_fieldset;
           }
