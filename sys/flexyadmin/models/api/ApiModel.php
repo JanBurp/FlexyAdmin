@@ -54,7 +54,7 @@ class ApiModel extends CI_Model {
       if (!$loggedIn) {
         return $this->_result_status401();
       }
-      if (!$this->_has_rights($this->args['table'])) {
+      if (isset($this->args['table']) and !$this->_has_rights($this->args['table'])) {
         return $this->_result_norights();
       }
     }
@@ -266,7 +266,7 @@ class ApiModel extends CI_Model {
         );
       }
     }
-    $field_info['hidden_fields'] = $hidden_fields;
+    $this->cfg_info['table_info']['hidden_fields'] = $hidden_fields;
     return $field_info;
   }
   

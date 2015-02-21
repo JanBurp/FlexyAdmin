@@ -102,10 +102,10 @@ flexyMenu.directive( "flexyMenu", ['flexyAdminGlobals','$location',function(flex
       $scope.menu.sidebar = [];
       $scope.menu.footer = [];
       $http.get('get_admin_nav',{cache:true}).then(function(result){
-        var data=result.data.data;
-        $scope.menu.header  = flexyMenu.process( flexyAdminGlobals.base_url, data.header );
-        $scope.menu.sidebar = flexyMenu.process( flexyAdminGlobals.base_url, data.sidebar );
-        $scope.menu.footer  = flexyMenu.process( flexyAdminGlobals.base_url, data.footer );
+        var menu=result.data.data.menu;
+        $scope.menu.header  = flexyMenu.process( flexyAdminGlobals.base_url, menu.header );
+        $scope.menu.sidebar = flexyMenu.process( flexyAdminGlobals.base_url, menu.sidebar );
+        $scope.menu.footer  = flexyMenu.process( flexyAdminGlobals.base_url, menu.footer );
       });
       
     }],

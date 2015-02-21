@@ -75,10 +75,12 @@ flexyAdmin.controller('FormController', ['flexyAdminGlobals','$scope','$routePar
    */
   var callServer = function(tableState) {
     
-    $http.post('get_form',{'table':$scope.table,'where':$scope.id}).success(function(result){
-
+    $http.post('get_form',{'table':$scope.table,'where':$scope.id,'config':['table_info','field_info']}).success(function(result){
+      
       // keep items in Scope
-      $scope.form_data=result.data;
+      $scope.form_data.fields=result.data.fields;
+      $scope.form_data.table_info=result.config.table_info;
+      $scope.form_data.field_info=result.config.field_info;
 
       // Create Schema properties
       $scope.schema.properties = {};
@@ -101,7 +103,7 @@ flexyAdmin.controller('FormController', ['flexyAdminGlobals','$scope','$routePar
           field = angular.extend( field, $flexyAdminGlobals.form_field_types[prefix] );
         }
         // Name, Value etc.
-        field.title       = $scope.form_data.field_info[key].ui_name;
+        if (angular.isDefined($scope.form_data.field_info[key])) field.title = $scope.form_data.field_info[key].ui_name;
         field.default     = value;
         // -> schema
         $scope.schema.properties[key] = {
@@ -112,7 +114,7 @@ flexyAdmin.controller('FormController', ['flexyAdminGlobals','$scope','$routePar
         
         // Tabs & items in tabs
         field.tab = $scope.form_data.table_info.ui_name; // default tab
-        if ( angular.isDefined( $scope.form_data.field_info[key].info.str_fieldset) ) {
+        if ( angular.isDefined( $scope.form_data.field_info[key]) ) {
           if ($scope.form_data.field_info[key].info.str_fieldset!=="") {
             field.tab = $scope.form_data.field_info[key].info.str_fieldset;
           }

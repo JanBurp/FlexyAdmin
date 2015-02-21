@@ -23,8 +23,8 @@ flexyAdmin.controller('flexyPluginController', ['$scope','$routeParams','$http',
   $scope.html  = '';
 
   $http.post('get_plugin',{'plugin':$scope.plugin}).success(function(result){
-    $scope.title  = result.title;
-    $scope.html   = $sce.trustAsHtml(result.html);
+    $scope.title  = result.data.title;
+    $scope.html   = $sce.trustAsHtml(result.data.html);
   }).error(function(data){
     $log.log('AJAX error -> Plugin');
   });

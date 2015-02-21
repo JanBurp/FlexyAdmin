@@ -50,8 +50,16 @@ flexyAdmin.config(['flexyAdminGlobals','$httpProvider',function(flexyAdminGlobal
       data=JSON.parse(data);
       for (var key in data) {
         if (requestString) requestString+='&';
-        // requestString += key+'='+data[key];
-        requestString += encodeURIComponent(key)+'='+encodeURIComponent(data[key]);
+        // array
+        if (angular.isArray(data[key])) {
+          data[key].forEach(function(el,index){
+            requestString += encodeURIComponent(key) + '[]=' + encodeURIComponent(el) + '&';
+          });
+        }
+        // normal
+        else {
+          requestString += encodeURIComponent(key) + '=' + encodeURIComponent(data[key]);
+        }
       }
     }
     return requestString;
