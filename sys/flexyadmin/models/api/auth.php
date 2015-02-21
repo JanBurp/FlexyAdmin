@@ -23,15 +23,15 @@ class auth extends ApiModel {
    * If logged in returns:
    * 
    * array(
-   *  '_success' => true
-   *  '_args' => array with passed arguments
+   *  'success' => true
+   *  'args' => array with passed arguments
    *  'data' => array with userdata
    * )
    * 
    * If not:
    * 
    * array(
-   *  '_status' => 401
+   *  'status' => 401
    * )
    *
    * @return array
@@ -46,14 +46,14 @@ class auth extends ApiModel {
       $args=$this->args;
       $args['password']='***';
       $this->result['data']=$data;
-      $this->result['_args']=$args;
-      unset($this->result['_status']);
+      $this->result['args']=$args;
+      unset($this->result['status']);
     }
     else {
       // if not logged in status = 401
-      unset($this->result['_success']);
-      unset($this->result['_args']);
-      $this->result['_status']=401;
+      unset($this->result['success']);
+      unset($this->result['args']);
+      $this->result['status']=401;
       unset($this->result['data']);
     }
     return $this->result;
@@ -67,7 +67,7 @@ class auth extends ApiModel {
    */
   public function login() {
     if ($this->user->login( $this->args['username'], $this->args['password'] )) {
-      $this->result['_success']=true;
+      $this->result['success']=true;
     };
     return $this->check();
   }

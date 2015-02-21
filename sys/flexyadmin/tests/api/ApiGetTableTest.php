@@ -42,11 +42,11 @@ class ApiGetTableTest extends CIUnit_Framework_TestCase {
       foreach ($this->tables as $table) {
         $this->CI->get_table->set_args(array('table'=>$table));
         $result=$this->CI->get_table->index();
-        $this->assertArrayNotHasKey( '_success', $result );
-        $this->assertArrayNotHasKey( '_args', $result );
+        $this->assertArrayNotHasKey( 'success', $result );
+        $this->assertArrayNotHasKey( 'args', $result );
         $this->assertArrayNotHasKey( 'data', $result );
-        $this->assertArrayHasKey( '_status', $result );
-        $this->assertEquals( 401, $result['_status'] );
+        $this->assertArrayHasKey( 'status', $result );
+        $this->assertEquals( 401, $result['status'] );
       }
     }
   }
@@ -61,18 +61,18 @@ class ApiGetTableTest extends CIUnit_Framework_TestCase {
     //     trace_([$user,$table,$result]);
     //     if (in_array($table,$user['tables'])) {
     //       // user has rights for this table
-    //       $this->assertArrayHasKey( '_success', $result );
-    //       $this->assertArrayHasKey( '_args', $result );
+    //       $this->assertArrayHasKey( 'success', $result );
+    //       $this->assertArrayHasKey( 'args', $result );
     //       $this->assertArrayHasKey( 'data', $result );
-    //       $this->assertArrayNotHasKey( '_status', $result );
+    //       $this->assertArrayNotHasKey( 'status', $result );
     //     }
     //     else {
     //       // user has no rights for this table
-    //       $this->assertArrayNotHasKey( '_success', $result );
-    //       $this->assertArrayNotHasKey( '_args', $result );
+    //       $this->assertArrayNotHasKey( 'success', $result );
+    //       $this->assertArrayNotHasKey( 'args', $result );
     //       $this->assertArrayNotHasKey( 'data', $result );
-    //       $this->assertArrayHasKey( '_status', $result );
-    //       $this->assertEquals( 401, $result['_status'] );
+    //       $this->assertArrayHasKey( 'status', $result );
+    //       $this->assertEquals( 401, $result['status'] );
     //     }
     //   }
     // }

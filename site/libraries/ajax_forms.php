@@ -52,7 +52,7 @@ class Ajax_forms extends Ajax_module {
       $is_spam=$this->CI->forms->is_spam();
       $is_validated=$this->CI->forms->is_validated();
     }
-    return $this->result(array('_message'=>__CLASS__,'form_id'=>$form_id,'is_spam'=>$is_spam,'is_validated'=>$is_validated,'form'=>$form,'settings'=>$settings));
+    return $this->result(array('message'=>__CLASS__,'form_id'=>$form_id,'is_spam'=>$is_spam,'is_validated'=>$is_validated,'form'=>$form,'settings'=>$settings));
   }
   
 
