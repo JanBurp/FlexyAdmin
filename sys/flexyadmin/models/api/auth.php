@@ -39,7 +39,7 @@ class auth extends ApiModel {
    */
   public function check() {
     // if not logged in status = 401
-    if (!$this->loggedIn and !$this->user->logged_in()) {
+    if (!$this->logged_in()) {
       return $this->_result_status401();
     }
 

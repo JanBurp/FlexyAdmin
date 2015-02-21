@@ -1,6 +1,6 @@
 <?php
 
-class ApiGetTableTest extends CIUnit_Framework_TestCase {
+class ApiGetFormTest extends CIUnit_Framework_TestCase {
 
   private $users=array(
     array(
@@ -28,7 +28,7 @@ class ApiGetTableTest extends CIUnit_Framework_TestCase {
     parent::__construct();
     $this->CI->load->library('user');
     $this->CI->load->model('api/ApiModel');
-    $this->CI->load->model('api/get_table');
+    $this->CI->load->model('api/get_form');
   }
 
   private function logout() {
@@ -47,8 +47,8 @@ class ApiGetTableTest extends CIUnit_Framework_TestCase {
   public function testWithoutLogin() {
     foreach ($this->users as $user) {
       foreach ($this->tables as $table) {
-        $this->CI->get_table->set_args(array('table'=>$table));
-        $result=$this->CI->get_table->index();
+        $this->CI->get_form->set_args(array('table'=>$table));
+        $result=$this->CI->get_form->index();
         $this->assertCount( 1, $result );
         $this->assertArrayHasKey( 'status', $result );
         $this->assertEquals( 401, $result['status'] );
@@ -61,9 +61,8 @@ class ApiGetTableTest extends CIUnit_Framework_TestCase {
     foreach ($this->users as $user) {
       $this->CI->user->login($user['username'], $user['password']);
       foreach ($this->tables as $table) {
-        $this->CI->get_table->set_args(array('table'=>$table));
-        $result=$this->CI->get_table->index();
-        // trace_([$user,$table,$result]);
+        $this->CI->get_form->set_args(array('table'=>$table,'where'=>'first'));
+        $result=$this->CI->get_form->index();
         if (in_array($table,$user['tables'])) {
           // user has rights for this table
           $this->assertArrayNotHasKey( 'status', $result );
@@ -71,6 +70,8 @@ class ApiGetTableTest extends CIUnit_Framework_TestCase {
           $this->assertEquals( true, $result['success'] );
           $this->assertArrayHasKey( 'args', $result );
           $this->assertArrayHasKey( 'data', $result );
+          $this->assertInternalType( 'array', $result['data'] );
+          $this->assertArrayHasKey( 'fields', $result['data'] );
         }
         else {
           // user has no rights for this table
@@ -89,8 +90,8 @@ class ApiGetTableTest extends CIUnit_Framework_TestCase {
       $this->CI->user->login($user['username'], $user['password']);
 
       // Test config of tbl_menu
-      $this->CI->get_table->set_args( array('table'=>'tbl_menu','config'=>array('table_info','field_info')) );
-      $result=$this->CI->get_table->index();
+      $this->CI->get_form->set_args( array('table'=>'tbl_menu','where'=>'first','config'=>array('table_info','field_info')) );
+      $result=$this->CI->get_form->index();
       $this->assertArrayHasKey( 'config', $result );
       $this->assertInternalType( 'array', $result['config'] );
       $this->assertArrayHasKey( 'table_info', $result['config'] );
@@ -108,8 +109,8 @@ class ApiGetTableTest extends CIUnit_Framework_TestCase {
       // all set tables and there config
       foreach ($this->tables as $table) {
         foreach ($this->config_settings as $cfg) {
-          $this->CI->get_table->set_args( array('table'=>$table,'config'=>$cfg) );
-          $result=$this->CI->get_table->index();
+          $this->CI->get_form->set_args( array('table'=>$table,'config'=>$cfg) );
+          $result=$this->CI->get_form->index();
           if (in_array($table,$user['tables'])) {
             // user has rights for this table, test if it has config data...
             if (!empty($cfg)) {

@@ -25,7 +25,7 @@ class get_plugin extends ApiModel {
 	}
   
   public function index() {
-    if (!$this->loggedIn) return $this->result;
+    if (!$this->logged_in()) return $this->_result_status401();
     
     $args=array();
     $plugin='plugin_'.$this->args['plugin'];
@@ -33,10 +33,14 @@ class get_plugin extends ApiModel {
     $html = $this->plugin_handler->call_plugin_admin_api($plugin,$args);
     $html = str_replace(array("\r","\n","\t","'"),array('',"'"),$html);
     
-    $this->result['plugin']=$plugin;
-    $this->result['title']=$title;
-    $this->result['html']=$html;
-    return $this->result;
+    // RESULT
+    $data=array(
+      'plugin' =>$plugin,
+      'title' => $title,
+      'html' => $html
+    );
+    $this->result['data']=$data;
+    return $this->_result_ok();
   }
 
 }

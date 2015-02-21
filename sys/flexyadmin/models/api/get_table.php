@@ -24,27 +24,20 @@ class get_table extends ApiModel {
     
     // DEFAULTS
     $items=FALSE;
-    $field_info=FALSE;
-    $table_info=FALSE;
 
     if ($this->args['table']) {
-      // FIELD INFO
-      $this->fields = $this->db->list_fields($this->args['table']);
-      $field_info=$this->_get_field_info();
-      // TABLE INFO
-      $table_info=$this->_get_table_info();
+      // CFG
+      $this->_get_config(array('table_info','field_info'));
       // GET DATA
-      $items=$this->_get_data($table_info);
+      $items=$this->_get_data();
       // PROCESS DATA
       if ($items) {
-        $items = $this->_process_data($items,$table_info,$field_info);
+        $items = $this->_process_data($items);
       }
     }
     
     // RESULT
     $data=array(
-      'table_info'  =>$table_info,
-      'field_info'  =>$field_info,
       'items'       =>$items
     );
     $this->result['data']=$data;
@@ -58,10 +51,10 @@ class get_table extends ApiModel {
    * @return array
    * @author Jan den Besten
    */
-  private function _get_data($table_info) {
-    $this->db->unselect($this->hidden_fields);
+  private function _get_data() {
+    $this->db->unselect( el(array('field_info','hidden_fields'),$this->info,array()) );
     $this->db->max_text_len(100);
-    if ($table_info['tree']) $this->db->order_as_tree();
+    if ( el( array($this->args['table'],'tree'), $this->info,false) ) $this->db->order_as_tree();
     $items = $this->crud->get($this->args);
     return $items;
   }
@@ -76,7 +69,7 @@ class get_table extends ApiModel {
    * @return void
    * @author Jan den Besten
    */
-  private function _process_data($items,$table_info,$field_info) {
+  private function _process_data($items) {
 
     // init STRIP TAGS in txt fields
     $txtKeys=array_combine($this->fields,$this->fields);
@@ -94,7 +87,7 @@ class get_table extends ApiModel {
       }
       
       // TREE, BRANCHES & NODES
-      if ($table_info['tree']) {
+      if ($this->info['table_info']['tree']) {
         $parent_id = $row['self_parent'];
       
         // toplevel: no branch, no node
@@ -126,7 +119,7 @@ class get_table extends ApiModel {
     }
     
     // LOOP AGAIN TO ADD BRANCH INFO
-    if ($table_info['tree'] and !empty($parents)) {
+    if (el( array('table_info','tree'),$this->info,false) and !empty($parents)) {
       foreach ($parents as $id => $level) {
         $items[$id]['_info']['is_branch']=true;
       }
