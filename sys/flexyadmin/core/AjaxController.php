@@ -99,13 +99,14 @@ class AjaxController extends BasicController {
    */
   protected function _result($result) {
     $status = false;
-    if ( isset($result['status'])) {
-      if ($result['status']==401) {
-        $status="HTTP/1.1 401 Unauthorized";
-        $result=array('status'=>401);
-      }
+    
+    // status = 401 Unauthorized ?
+    if ( isset($result['status']) and $result['status']==401) {
+      $status="HTTP/1.1 401 Unauthorized";
+      $result=array('status'=>401);
     }
     
+    // Check result, and order it
     if (!$status) {
       $result=array_merge($this->result,$result);
       $result['success']=true;
@@ -113,6 +114,7 @@ class AjaxController extends BasicController {
       ksort($result);
     }
     
+    // If a ajax message, add to result
     if ( isset($this->message)) {
       $message=$this->message->get_ajax();
       if ($message) {
@@ -128,6 +130,7 @@ class AjaxController extends BasicController {
       $this->message->reset_ajax();
     }
 
+    // Test output - if not AJAX
     if ( ! $this->input->is_ajax_request() ) {
       $result['test']=true;
       if ($this->type=='json' or el(array('args','type'),$result)=='json') {
@@ -141,11 +144,13 @@ class AjaxController extends BasicController {
       return $result;
     }
 
+    // 401 output
     if ( $status )  {
       header($status);
       exit;
     }
 
+    // JSON output
     $json=array2json($result);
     echo $json;
     return $json;

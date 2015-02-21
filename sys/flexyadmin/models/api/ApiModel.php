@@ -1,16 +1,40 @@
 <?
 
+/**
+ * Calls the right API and returns the (ajax)result or a 401
+ * 
+ * - Arguments are set in $_POST or $_GET
+ * - See for all possible API calls the other files in sys/flexyadmin/models/api
+ * - Common arguments are:
+ *    - config[]=table_info
+ *    - config[]=field_info
+ *    - type=json
+ *    - table=  (get_table,get_form)
+ *    - where=  (get_form)
+ * - result can have these keys (same as AJAX controller returns):
+ *    - status=401 // if call is unauthorized
+ *    - success=[true|false]
+ *    - error=(string)
+ *    - message=(string)
+ *    - args=(array) given arguments
+ *    - api=(string) name of the api call
+ *    - data=(mixed) the returned data
+ * 
+ * Examples:
+ * 
+ * - _api/get_table?table=tbl_links
+ * - _api/get_table?table=tbl_links&config[]=table_info&config[]=field_info
+ * 
+ * @package default
+ * @author Jan den Besten
+ */
+
+
 class ApiModel extends CI_Model {
   
   protected $args=array();
   protected $result=array();
-  protected $info=array();
-
-  // protected $check_rights=true;
-  // protected $loggedIn=false;
-
-  protected $table=NULL;
-  protected $fields=array();
+  protected $cfg_info=array();
   
   
   /**
@@ -30,7 +54,7 @@ class ApiModel extends CI_Model {
       if (!$loggedIn) {
         return $this->_result_status401();
       }
-      if (!$this->_has_rights($this->table)) {
+      if (!$this->_has_rights($this->args['table'])) {
         return $this->_result_norights();
       }
     }
@@ -80,7 +104,7 @@ class ApiModel extends CI_Model {
     if (!empty($this->args['config'])) {
       $this->result['config'] = array();
       foreach ($this->args['config'] as $cfg_key) {
-        $this->result['config'][$cfg_key] = $this->info[$cfg_key];
+        $this->result['config'][$cfg_key] = $this->cfg_info[$cfg_key];
       }
     }
     // Prepare end result
@@ -188,13 +212,13 @@ class ApiModel extends CI_Model {
     foreach ($asked_for as $cfg_key) {
       $method='_get_'.$cfg_key;
       if (method_exists($this,$method)) {
-        $this->info[$cfg_key] = $this->$method();
+        $this->cfg_info[$cfg_key] = $this->$method();
       }
       else {
-        $this->info[$cfg_key] = FALSE;
+        $this->cfg_info[$cfg_key] = FALSE;
       }
     }
-    return $this->info;
+    return $this->cfg_info;
   }
   
   
@@ -223,7 +247,7 @@ class ApiModel extends CI_Model {
   private function _get_field_info() {
     $hidden_fields=array();
     $field_info=array();
-    foreach ($this->info['table_info']['fields'] as $field) {
+    foreach ($this->cfg_info['table_info']['fields'] as $field) {
       $prefix=get_prefix($field);
       $full_name=$this->args['table'].'.'.$field;
       $info=$this->cfg->get('cfg_field_info',$full_name);
