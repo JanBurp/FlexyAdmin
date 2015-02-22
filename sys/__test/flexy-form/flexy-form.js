@@ -78,7 +78,7 @@ flexyAdmin.controller('FormController', ['flexyAdminGlobals','$scope','$routePar
     $http.post('get_row',{'table':$scope.table,'where':$scope.id,'config':['table_info','field_info']}).success(function(result){
       
       // keep items in Scope
-      $scope.form_data.fields=result.data.row;
+      $scope.form_data.fields=result.data;
       $scope.form_data.table_info=result.config.table_info;
       $scope.form_data.field_info=result.config.field_info;
 
