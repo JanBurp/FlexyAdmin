@@ -50,7 +50,7 @@ class ApiModel extends CI_Model {
     // Standard result
     $this->result['args']=$this->args;
     $this->result['api']=__CLASS__;
-    $this->result['format']='json';
+    // $this->result['format']='json';
     // Check Authentication and Rights if not api/auth
     $auth=($this->uri->get(2)=='auth');
     $loggedIn=$this->user->logged_in();
@@ -147,12 +147,12 @@ class ApiModel extends CI_Model {
    */
   private function _get_args($defaults) {
     $keys=array_keys($defaults);
-    $keys=array_merge($keys,array('config'));
+    $keys=array_merge($keys,array('config','format'));
     $args=array();
     
-    // post
+    // POST
     if (!$args and !empty($_POST)) {
-      $type='post';
+      $args['type']='POST';
       // $args=$_POST;
       foreach ($keys as $key) {
         $value=$this->input->post($key);
@@ -160,9 +160,9 @@ class ApiModel extends CI_Model {
       }
     }
     
-    // or get
+    // GET
     if (!$args and !empty($_SERVER['QUERY_STRING'])) {
-      $type='get';
+      $args['type']='GET';
       parse_str($_SERVER['QUERY_STRING'],$_GET);
       // $args=$_GET;
       foreach ($keys as $key) {
@@ -178,6 +178,8 @@ class ApiModel extends CI_Model {
     if (!isset($args['config'])) {
       $args['config'] = array();
     }
+    
+    if (isset($args['format'])) $this->result['format']=$args['format'];
     
     return $args;
   }
@@ -209,7 +211,7 @@ class ApiModel extends CI_Model {
   protected function has_args() {
     $has_args = TRUE;
     foreach ($this->needs as $key => $value) {
-      if (!empty($value)) $has_args = ( $has_args AND isset($this->args[$key]) AND !empty($this->args[$key]) );
+      $has_args = ( $has_args AND isset($this->args[$key]) AND $this->args[$key]!=='' );
     }
     return $has_args;
   }
@@ -266,6 +268,7 @@ class ApiModel extends CI_Model {
    * @author Jan den Besten
    */
   private function _get_table_info() {
+    if (empty($this->args['table'])) return FALSE;
     $table_info=$this->cfg->get('cfg_table_info',$this->args['table']);
     $table_info['fields']   = $this->db->list_fields($this->args['table']);
     $table_info['ui_name']  = $this->ui->get( $this->args['table'] );
@@ -281,6 +284,7 @@ class ApiModel extends CI_Model {
    * @author Jan den Besten
    */
   private function _get_field_info() {
+    if (empty($this->args['table'])) return FALSE;
     $hidden_fields=array();
     $field_info=array();
     foreach ($this->cfg_info['table_info']['fields'] as $field) {

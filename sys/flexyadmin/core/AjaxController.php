@@ -133,13 +133,13 @@ class AjaxController extends BasicController {
     // Test output - if not AJAX
     if ( ! $this->input->is_ajax_request() ) {
       $result['test']=true;
-      $result['format']='trace';
       if (el('format',$result)=='json') {
         $json=array2json($result);
         echo $json;
         return $json;
       }
       else {
+        $result['format']='trace';
         echo trace_($result,false);
       }
       return $result;
