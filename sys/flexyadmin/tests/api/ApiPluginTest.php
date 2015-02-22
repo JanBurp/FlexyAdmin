@@ -17,6 +17,7 @@ class ApiPluginTest extends CIUnit_Framework_TestCase {
 
   public function __construct() {
     parent::__construct();
+    error_reporting(E_ALL - E_NOTICE); // skip session notices
     $this->CI->load->library('user');
     $this->CI->load->model('api/ApiModel');
     $this->CI->load->model('api/get_plugin');
