@@ -122,6 +122,7 @@ class ApiTestModel extends CIUnit_Framework_TestCase {
       
       foreach ($tables as $table) {
         $args=array_merge( $params['args'], array('table'=>$table) );
+        if (isset($args['table']) and $args['table']=='') unset($args['table']);
         
         $this->CI->$apiModel->set_args($args);
         $result=$this->CI->$apiModel->index();
@@ -136,7 +137,6 @@ class ApiTestModel extends CIUnit_Framework_TestCase {
           // args
           $this->assertArrayHasKey( 'args', $result );
           $this->assertInternalType( 'array', $result['args'] );
-          $this->assertEquals( $args, $result['args'] );
           
           // data
           $this->assertArrayHasKey( 'data', $result );
@@ -152,6 +152,7 @@ class ApiTestModel extends CIUnit_Framework_TestCase {
               switch ($type) {
 
                 case 'type':
+                  // trace_([$value,$keyResult,$key,$result]);
                   $this->assertInternalType(
                     $value,
                     $keyResult,

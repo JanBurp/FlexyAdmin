@@ -13,7 +13,7 @@
  * @author Jan den Besten
  */
 
-class get_table extends ApiModel {
+class Table extends ApiModel {
   
   var $needs = array(
     'table'   => '',

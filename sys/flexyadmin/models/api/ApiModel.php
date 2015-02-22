@@ -193,11 +193,13 @@ class ApiModel extends CI_Model {
    * @author Jan den Besten
    */
   public function set_args($args=array()) {
-    $keys=array_keys($this->needs);
-    foreach ($keys as $key) {
-      if (isset($args[$key])) $this->args[$key]=$args[$key];
+    foreach ($this->needs as $key => $value) {
+      if (isset($args[$key]))
+        $this->args[$key]=$args[$key];
+      else
+        $this->args[$key]=$value;
     }
-    $this->args=$args;
+    if (isset($args['config'])) $this->args['config']=$args['config'];
     return $this;
   }
   
