@@ -12,7 +12,7 @@
  * @author Jan den Besten
  */
 
-class get_form extends ApiModel {
+class get_row extends ApiModel {
   
   var $args = array(
     'table'   => '',
@@ -42,12 +42,12 @@ class get_form extends ApiModel {
       // CFG
       $this->_get_config(array('table_info','field_info'));
       // GET FIELDS
-      $fields=$this->_get_fields();
+      $row=$this->_get_row();
     }
     
     // RESULT
     $data=array(
-      'fields'       =>$fields
+      'row'       => $row
     );
     $this->result['data']=$data;
     return $this->_result_ok();
@@ -61,7 +61,7 @@ class get_form extends ApiModel {
    * @return array
    * @author Jan den Besten
    */
-  private function _get_fields() {
+  private function _get_row() {
     $this->db->unselect( el(array('field_info','hidden_fields'),$this->cfg_info,array()) );
     $args=$this->args;
     $table=array_shift($args);
