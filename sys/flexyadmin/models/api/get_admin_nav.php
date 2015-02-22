@@ -25,10 +25,7 @@ class get_admin_nav extends ApiModel {
 
     $table=$this->table;
     $menu =$this->$table->get();
-    $data=array(
-      'menu' =>$menu
-    );
-    $this->result['data']=$data;
+    $this->result['data']=$menu;
     return $this->_result_ok();
   }
 

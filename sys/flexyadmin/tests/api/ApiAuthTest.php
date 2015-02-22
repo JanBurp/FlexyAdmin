@@ -1,39 +1,10 @@
-<?php
+<?php require_once("ApiTestModel.php");
 
-class ApiAuthTest extends CIUnit_Framework_TestCase {
+class ApiAuthTest extends ApiTestModel {
 
-  private $users=array(
-    array(
-      'username' => 'admin',
-      'password' => 'admin'
-    ),
-    array(
-      'username' => 'user',
-      'password' => 'user'
-    )
-  );
-  
   public function __construct() {
-    parent::__construct();
-    error_reporting(E_ALL - E_NOTICE); // skip session notices
-    $this->CI->load->library('user');
-    $this->CI->load->model('api/ApiModel');
-    $this->CI->load->model('api/auth');
+    parent::__construct('auth');
   }
-
-  protected function setUp() {
-    $this->logout();
-  }
-
-  protected function tearDown() {
-    $this->logout();
-  }
-
-  private function logout() {
-    if ($this->CI->user->logged_in()) $this->CI->user->logout();
-  }
-
-  
 
 
   public function testLoginLogout() {
@@ -67,6 +38,7 @@ class ApiAuthTest extends CIUnit_Framework_TestCase {
       array('username'=> random_string(),               'password' => random_string() ),
       array('username'=> random_string(),               'password' => random_string() ),
       array('username'=> random_string(),               'password' => random_string() ),
+      array(),
     );
 
     foreach ($attempts as $attempt) {

@@ -35,25 +35,23 @@ class get_table extends ApiModel {
   public function index() {
     if (!$this->_has_rights($this->args['table'])) return $this->_result_status401();
     
+    if ( !$this->has_args() ) {
+      return $this->_result_wrong_args();
+    }
+    
     // DEFAULTS
     $items=FALSE;
-
-    if ($this->args['table']) {
-      // CFG
-      $this->_get_config(array('table_info','field_info'));
-      // GET DATA
-      $items=$this->_get_data();
-      // PROCESS DATA
-      if ($items) {
-        $items = $this->_process_data($items);
-      }
+    // CFG
+    $this->_get_config(array('table_info','field_info'));
+    // GET DATA
+    $items=$this->_get_data();
+    // PROCESS DATA
+    if ($items) {
+      $items = $this->_process_data($items);
     }
     
     // RESULT
-    $data=array(
-      'items'       =>$items
-    );
-    $this->result['data']=$data;
+    $this->result['data']=$items;
     return $this->_result_ok();
   }
   

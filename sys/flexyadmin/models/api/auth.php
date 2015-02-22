@@ -14,10 +14,10 @@
 
 class auth extends ApiModel {
   
-  var $args = array(
+  var $needs = array(
     'username'   => '',
     'password'   => '',
-    'email'      => ''
+    // 'email'      => ''
   );
   
 	public function __construct() {

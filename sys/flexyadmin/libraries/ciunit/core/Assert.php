@@ -348,7 +348,7 @@ abstract class CIUnit_Framework_Assert
      * @param boolean $ignoreCase            
      * @param string $message            
      */
-    public static function assertEquals ($expected, $actual, $delta = 0, $canonicalize = FALSE, $ignoreCase = FALSE, $message = '')
+    public static function assertEquals ($expected, $actual, $message = '', $delta = 0, $canonicalize = FALSE, $ignoreCase = FALSE)
     {
         $constraint = new CIUnit_Framework_Constraint_IsEqual($expected, $delta, $canonicalize, $ignoreCase);
         self::assertThat($actual, $constraint, $message);
@@ -364,7 +364,7 @@ abstract class CIUnit_Framework_Assert
      * @param boolean $ignoreCase            
      * @param string $message            
      */
-    public static function assertNotEquals ($expected, $actual, $delta = 0, $canonicalize = FALSE, $ignoreCase = FALSE, $message = '')
+    public static function assertNotEquals ($expected, $actual, $message = '', $delta = 0, $canonicalize = FALSE, $ignoreCase = FALSE)
     {
         $constraint = new CIUnit_Framework_Constraint_Not(new CIUnit_Framework_Constraint_IsEqual($expected, $delta, $canonicalize, $ignoreCase));
         self::assertThat($actual, $constraint, $message);
