@@ -1,31 +1,29 @@
 <?php require_once("ApiTestModel.php");
 
-class ApiGetTableTest extends ApiTestModel {
+class ApiTableTest extends ApiTestModel {
 
   public function __construct() {
-    parent::__construct('get_table');
+    parent::__construct('table');
   }
 
   public function testWithoutLogin() {
-    $this->_testWithoutAuth('get_table');
+    $this->_testWithoutAuth('table');
   }
 
-
   public function testWithLogin() {
-    
     // Test all tables
     $this->_testWithAuth(array(
-      'model'   => 'get_table',
+      'model'   => 'table',
       'args'    => array(),
       'asserts' => array(
-        'data'  => array( 'type'                => 'array' ),
+        'data'  => array( 'type' => 'array' ),
         'data'  => array( 'countGreaterOrEqual' => 1 ),
       )
     ));
 
     // Test tbl_site
     $this->_testWithAuth(array(
-      'model'   => 'get_table',
+      'model'   => 'table',
       'args'    => array(
         'table' => 'tbl_site'
       ),

@@ -12,7 +12,7 @@
  * @author Jan den Besten
  */
 
-class get_row extends ApiModel {
+class Row extends ApiModel {
   
   var $needs = array(
     'table'   => '',

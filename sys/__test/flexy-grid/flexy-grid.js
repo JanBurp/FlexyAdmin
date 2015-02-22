@@ -72,7 +72,7 @@ flexyAdmin.controller('GridController', ['flexyAdminGlobals','$scope','$routePar
       'config': [ 'table_info','field_info' ],
     };
     
-    $http.post('get_table',post_data).success(function(result){
+    $http.post('table',post_data).success(function(result){
 
       // Define _info on all items
       angular.forEach( result.data, function(item,key) {

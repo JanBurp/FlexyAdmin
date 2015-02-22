@@ -1,19 +1,19 @@
 <?php require_once("ApiTestModel.php");
 
-class ApiGetRowTest extends ApiTestModel {
+class ApiRowTest extends ApiTestModel {
 
   public function __construct() {
-    parent::__construct('get_row');
+    parent::__construct('row');
   }
 
   public function testWithoutLogin() {
-    $this->_testWithoutAuth('get_row');
+    $this->_testWithoutAuth('row');
   }
 
 
   public function testWithLogin() {
     $this->_testWithAuth(array(
-      'model'   => 'get_row',
+      'model'   => 'row',
       'args'    => array(
         'where' =>'first'
       ),
@@ -29,7 +29,7 @@ class ApiGetRowTest extends ApiTestModel {
     
     // Test config of tbl_menu
     $this->_testWithAuth(array(
-      'model'   => 'get_row',
+      'model'   => 'row',
       'args'    => array(
         'table' => 'tbl_menu',
         'where' =>'first',
@@ -41,7 +41,7 @@ class ApiGetRowTest extends ApiTestModel {
         'config' => array( 'hasKey' => 'field_info' ),
         'config|field_info' => array( 'type' => 'array' ),
         'config|table_info' => array( 'type' => 'array' ),
-        
+
         'config|table_info'          => array( 'hasKey' => 'tree' ),
         'config|table_info|tree'     => array( 'Equals' => true ),
         'config|table_info'          => array( 'hasKey' => 'sortable' ),
