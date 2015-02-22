@@ -20,6 +20,7 @@
 flexyMenu.factory( 'flexy-api-service', [flexyAdminGlobals,'$http',function(flexyAdminGlobals,$http) {
   'use strict';
   
+  
 
   return 
   

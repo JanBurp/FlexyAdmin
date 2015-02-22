@@ -303,10 +303,10 @@ class AssertTest extends CIUnit_Framework_TestCase
      */
     public function testAssertEqualsForIntegersWithDelta()
     {
-        $this->assertEquals(1, 3, 5);
+        $this->assertEquals(1, 3, '', 5);
          
         try {
-            $this->assertEquals(21, 3, 7);
+            $this->assertEquals(21, 3, '', 7);
         }
         catch (CIUnit_Framework_Exception_AssertionFailed $e) {
             return;
@@ -337,10 +337,10 @@ class AssertTest extends CIUnit_Framework_TestCase
      */
     public function testAssertEqualsForDoublesWithDelta()
     {
-        $this->assertEquals(1.24, 4.24, 3.001);
+        $this->assertEquals(1.24, 4.24, '', 3.001);
          
         try {
-            $this->assertEquals(1.22, 8.223, 0.123);
+            $this->assertEquals(1.22, 8.223, '', 0.123);
         }
         catch (CIUnit_Framework_Exception_AssertionFailed $e) {
             return;

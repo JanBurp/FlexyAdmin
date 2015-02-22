@@ -169,7 +169,7 @@ class ApiTestModel extends CIUnit_Framework_TestCase {
                   break;
 
                 case 'count':
-                trace_([$keys,$value,$keyResult]);
+                // trace_([$keys,$value,$keyResult]);
                   $this->assertCount(
                     $value,
                     $keyResult,
