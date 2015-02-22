@@ -67,8 +67,7 @@ class SelftestSuite extends CIUnit_Framework_TestSuite
         $suite->addTestSuite('AssertTest');  
         $suite->addTestSuite('ConstraintTest');  
         $suite->addTestSuite('SuiteTest'); 
-        // $suite->addTestSuite('FailuresTest');
-        
+        $suite->addTestSuite('FailuresTest');
         return $suite;
     } 
     
