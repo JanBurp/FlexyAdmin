@@ -65,17 +65,17 @@ function object2array($object,$recursive=TRUE) {
  * @return string
  * @author Jan den Besten
  */
-function array2php($array,$tabs=1) {
-	$php="array(\n";
+function array2php($array,$tabs=1,$eol="\n") {
+	$php="array(".$eol;
 	$sub='';
 	foreach($array as $key=>$value) {
-		if (!empty($sub)) $sub.=",\n";
+		if (!empty($sub)) $sub.=",".$eol;
 		$sub.=repeater("\t",$tabs);
 		$sub.="'".$key."'=>";
 		if (is_array($value)) $sub.=array2php($value,$tabs+1);
 		else $sub.="'$value'";
 	}
-	$php.="$sub\n".repeater("\t",$tabs).")";
+	$php.="$sub".$eol.repeater("\t",$tabs).")";
 	return $php;
 }
 
