@@ -15,7 +15,7 @@
 
 class get_table extends ApiModel {
   
-  var $args = array(
+  var $needs = array(
     'table'   => '',
     'limit'   => 0,
     'offset'  => 0

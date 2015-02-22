@@ -147,6 +147,7 @@ class ApiModel extends CI_Model {
    */
   private function _get_args($defaults) {
     $keys=array_keys($defaults);
+    $keys=array_merge($keys,array('config'));
     $args=array();
     
     // post
@@ -208,7 +209,7 @@ class ApiModel extends CI_Model {
   protected function has_args() {
     $has_args = TRUE;
     foreach ($this->needs as $key => $value) {
-      $has_args = ( $has_args AND isset($this->args[$key]) AND !empty($this->args[$key]) );
+      if (!empty($value)) $has_args = ( $has_args AND isset($this->args[$key]) AND !empty($this->args[$key]) );
     }
     return $has_args;
   }
