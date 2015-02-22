@@ -48,10 +48,7 @@ class get_row extends ApiModel {
     $row=$this->_get_row();
     
     // RESULT
-    $data=array( 
-      'row' => $row
-    );
-    $this->result['data']=$data;
+    $this->result['data']=$row;
     return $this->_result_ok();
   }
   

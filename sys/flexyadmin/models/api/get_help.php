@@ -9,7 +9,7 @@
 
 class get_help extends ApiModel {
   
-  var $args = array(
+  var $needs = array(
     'page' => '',
   );
   
@@ -55,12 +55,11 @@ class get_help extends ApiModel {
     }
     
     // RESULT
-    $data=array(
+    $this->result['data']=array(
       'title' =>'Help',
       'common_help' => $commonHelp,
       'help' => $helpHTML
     );
-    $this->result['data']=$data;
     return $this->_result_ok();
   }
 

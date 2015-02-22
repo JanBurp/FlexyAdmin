@@ -133,6 +133,7 @@ class ApiModel extends CI_Model {
     $this->result['success'] = true;
     $this->result['args'] = $this->args;
     if (isset($this->result['args']['password'])) $this->result['args']['password']='***';
+    if (empty($this->result['args']['config'])) unset($this->result['args']['config']);
     return $this->result;
   }
   

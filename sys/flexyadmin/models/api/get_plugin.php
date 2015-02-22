@@ -9,7 +9,7 @@
 
 class get_plugin extends ApiModel {
   
-  var $args = array(
+  var $needs = array(
     'plugin' => '',
   );
   
@@ -27,19 +27,23 @@ class get_plugin extends ApiModel {
   public function index() {
     if (!$this->logged_in()) return $this->_result_status401();
     
-    $args=array();
-    $plugin='plugin_'.$this->args['plugin'];
+    if ( !$this->has_args() ) {
+      return $this->_result_wrong_args();
+    }
+    
+    $args=$this->args;
+    $plugin='plugin_'.$args['plugin'];
+    unset($args['plugin']);
     $title=$plugin;
     $html = $this->plugin_handler->call_plugin_admin_api($plugin,$args);
     $html = str_replace(array("\r","\n","\t","'"),array('',"'"),$html);
     
     // RESULT
-    $data=array(
+    $this->result['data']=array(
       'plugin' =>$plugin,
       'title' => $title,
       'html' => $html
     );
-    $this->result['data']=$data;
     return $this->_result_ok();
   }
 
