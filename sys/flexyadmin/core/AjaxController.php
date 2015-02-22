@@ -49,7 +49,7 @@ class AjaxController extends BasicController {
    *
    * @var string
    */
-  private $type = '';
+  private $format = '';
   
 
   /**
@@ -83,8 +83,8 @@ class AjaxController extends BasicController {
    * @return this
    * @author Jan den Besten
    */
-  public function set_type($type='') {
-    $this->type=$type;
+  public function set_format($format='') {
+    $this->format=$format;
     return $this;
   }
   
@@ -133,7 +133,8 @@ class AjaxController extends BasicController {
     // Test output - if not AJAX
     if ( ! $this->input->is_ajax_request() ) {
       $result['test']=true;
-      if ($this->type=='json' or el(array('args','type'),$result)=='json') {
+      $result['format']='trace';
+      if (el('format',$result)=='json') {
         $json=array2json($result);
         echo $json;
         return $json;

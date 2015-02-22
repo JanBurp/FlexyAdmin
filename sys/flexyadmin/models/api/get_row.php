@@ -14,9 +14,9 @@
 
 class get_row extends ApiModel {
   
-  var $args = array(
+  var $needs = array(
     'table'   => '',
-    'where'   => NULL
+    'where'   => 'first'
   );
 
 
@@ -38,16 +38,18 @@ class get_row extends ApiModel {
     // DEFAULTS
     $fields=FALSE;
     
-    if ($this->args['table']) {
-      // CFG
-      $this->_get_config(array('table_info','field_info'));
-      // GET FIELDS
-      $row=$this->_get_row();
+    if ( !$this->has_args() ) {
+      return $this->_result_wrong_args();
     }
     
+    // CFG
+    $this->_get_config(array('table_info','field_info'));
+    // GET FIELDS
+    $row=$this->_get_row();
+    
     // RESULT
-    $data=array(
-      'row'       => $row
+    $data=array( 
+      'row' => $row
     );
     $this->result['data']=$data;
     return $this->_result_ok();

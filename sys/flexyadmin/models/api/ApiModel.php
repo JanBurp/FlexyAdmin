@@ -8,16 +8,18 @@
  * - Common arguments are:
  *    - config[]=table_info
  *    - config[]=field_info
- *    - type=json
- *    - table=  (get_table,get_form)
- *    - where=  (get_form)
+ *    - format=json
+ *    - table=(get_table,get_form)
+ *    - where=(get_form)
  * - result can have these keys (same as AJAX controller returns):
  *    - status=401 // if call is unauthorized
  *    - success=[true|false]
  *    - error=(string)
  *    - message=(string)
  *    - args=(array) given arguments
+ *    - needs=array of needed arguments (and there defaults)
  *    - api=(string) name of the api call
+ *    - format=json
  *    - data=(mixed) the returned data
  * 
  * Examples:
@@ -33,6 +35,7 @@
 class ApiModel extends CI_Model {
   
   protected $args=array();
+  protected $needs=array();
   protected $result=array();
   protected $cfg_info=array();
   
@@ -43,10 +46,11 @@ class ApiModel extends CI_Model {
 	public function __construct() {
 		parent::__construct();
     // Get arguments
-    $this->args=$this->_get_args($this->args);
+    $this->args=$this->_get_args($this->needs);
     // Standard result
     $this->result['args']=$this->args;
     $this->result['api']=__CLASS__;
+    $this->result['format']='json';
     // Check Authentication and Rights if not api/auth
     $auth=($this->uri->get(2)=='auth');
     $loggedIn=$this->user->logged_in();
@@ -93,6 +97,23 @@ class ApiModel extends CI_Model {
   
   
   /**
+   * Returns a 'no arguments' for this api.
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+  protected function _result_wrong_args() {
+    $args=$this->args;
+    if (empty($args['config'])) unset($args['config']);
+    $this->result['args']    = $args;
+    $this->result['success'] = false;
+    $this->result['error']   = 'WRONG ARGUMENTS';
+    $this->result['needs']   = $this->needs;
+    return $this->result;
+  }
+  
+  
+  /**
    * Returns data if everything is ok, and merge data with config data if asked for
    *
    * @return void
@@ -130,10 +151,10 @@ class ApiModel extends CI_Model {
     // post
     if (!$args and !empty($_POST)) {
       $type='post';
-      $args=$_POST;
+      // $args=$_POST;
       foreach ($keys as $key) {
         $value=$this->input->post($key);
-        if (isset($value)) $args[$key]=$value;
+        if ($value) $args[$key]=$value;
       }
     }
     
@@ -141,19 +162,17 @@ class ApiModel extends CI_Model {
     if (!$args and !empty($_SERVER['QUERY_STRING'])) {
       $type='get';
       parse_str($_SERVER['QUERY_STRING'],$_GET);
-      $args=$_GET;
+      // $args=$_GET;
       foreach ($keys as $key) {
         $value=$this->input->get($key);
-        if (isset($value)) $args[$key]=$value;
+        if ($value) $args[$key]=$value;
       }
     }
     
-    // or defaults
-    if (!$args) {
-      $type="none";
-      $args=$defaults;
-    }
+    // merge with defaults
+    $args=array_merge($this->needs,$args);
     
+    // config
     if (!isset($args['config'])) {
       $args['config'] = array();
     }
@@ -170,12 +189,27 @@ class ApiModel extends CI_Model {
    * @author Jan den Besten
    */
   public function set_args($args=array()) {
-    $keys=array_keys($this->args);
+    $keys=array_keys($this->needs);
     foreach ($keys as $key) {
       if (isset($args[$key])) $this->args[$key]=$args[$key];
     }
     $this->args=$args;
     return $this;
+  }
+  
+
+  /**
+   * Test if call gives needed arguments
+   *
+   * @return bool
+   * @author Jan den Besten
+   */
+  protected function has_args() {
+    $has_args = TRUE;
+    foreach ($this->needs as $key => $value) {
+      $has_args = ( $has_args AND isset($this->args[$key]) AND !empty($this->args[$key]) );
+    }
+    return $has_args;
   }
   
   
