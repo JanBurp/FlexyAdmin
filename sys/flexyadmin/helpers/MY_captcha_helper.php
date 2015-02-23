@@ -147,11 +147,11 @@ if ( ! function_exists('create_captcha'))
 		//  Assign colors
 		// -----------------------------------
 
-		$bg_color		= imagecolorallocate ($im, 255,255,255);
+		$bg_color		  = imagecolorallocate ($im, 255,255,255);
 		$border_color	= imagecolorallocate ($im, 255,255,255);
-		$text_color		= imagecolorallocate ($im, 128,128,64);
-		$grid_color		= imagecolorallocate($im, 192,128,192);
-		$shadow_color	= imagecolorallocate($im, 64,64,64);
+		$text_color		= imagecolorallocate ($im, 255,64,64);
+		$grid_color		= imagecolorallocate($im, 255,128,128);
+		$shadow_color	= imagecolorallocate($im, 255,255,255);
 
 		// -----------------------------------
 		//  Create the rectangle
@@ -191,8 +191,8 @@ if ( ! function_exists('create_captcha'))
 
 		if ($use_font == FALSE)
 		{
-			$font_size = 5;
-			$x = rand(0, $img_width/($length/3));
+			$font_size = 6;
+			$x = rand(1, $img_width/($length/2));
 			$y = 0;
 		}
 		else
@@ -206,7 +206,7 @@ if ( ! function_exists('create_captcha'))
 		{
 			if ($use_font == FALSE)
 			{
-				$y = rand(0 , $img_height/2);
+				$y = rand(0 , $img_height/3);
 				imagestring($im, $font_size, $x, $y, substr($word, $i, 1), $text_color);
 				$x += ($font_size*2);
 			}
@@ -236,10 +236,44 @@ if ( ! function_exists('create_captcha'))
 		$img = "<img src=\"$img_url$img_name\" width=\"$img_width\" height=\"$img_height\" alt=\" \" />";
 
 		ImageDestroy($im);
-
+    
 		return array('word' => $word, 'time' => $now, 'image' => $img);
 	}
 }
+
+
+/**
+ * Save captcha in session
+ *
+ * @param string $word 
+ * @param string $now 
+ * @return void
+ * @author Jan den Besten
+ */
+function save_captcha($cap) {
+  $CI=&get_instance();
+  $CI->load->library('session');
+  unset($cap['image']);
+  $CI->session->set_userdata('captcha',$cap);
+}
+
+
+/**
+ * Get saved captha
+ *
+ * @return arr
+ * @author Jan den Besten
+ */
+function get_captcha() {
+  $CI=&get_instance();
+  $CI->load->library('session');
+  $cap = $CI->session->userdata('captcha');
+  $CI->session->unset_userdata('captcha');
+  return $cap;
+}
+
+
+
 
 // ------------------------------------------------------------------------
 

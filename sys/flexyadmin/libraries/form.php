@@ -572,8 +572,11 @@ class Form {
       
       // captcha
 			if ($field['type']=='captcha') {
+        $this->CI->load->helper('captcha');
 			  $hasCaptcha=$name; 
-  			$code=str_reverse($this->CI->input->post($hasCaptcha.'__captcha'));
+        // $code=str_reverse($this->CI->input->post($hasCaptcha.'__captcha'));
+        $cap=get_captcha();
+        $code=$cap['word'];
         $field['validation']='required|valid_same['.$code.']';
 			}
 
@@ -915,7 +918,9 @@ class Form {
   						);
   			if ($this->captchaWords!=NULL) $vals['word']=random_element($this->captchaWords);
   			$cap=create_captcha($vals);
+        save_captcha($cap);
         $field['control']=div('captcha').$cap['image'].form_hidden($name.'__captcha',str_reverse($cap['word'])).form_input($attr)._div();
+        $field['control']=div('captcha').$cap['image'].form_input($attr)._div();
         break;
 
 			case "html":
