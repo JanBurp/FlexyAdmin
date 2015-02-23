@@ -20,7 +20,7 @@ class MY_Controller extends CI_Controller {
 		if ($this->_check_if_flexy_database_exists())
 			$this->_init_flexy_admin($isAdmin);
 		else {
-			// database login correct, but no database found, try to load the demodatabase
+			// Database login correct, But no database found, Try to load the demodatabase
 			$succes=false;
 			// try to load latest demodatabase
 			if (file_exists('db')) {
@@ -50,6 +50,11 @@ class MY_Controller extends CI_Controller {
 							}
 						}
 						$succes=TRUE;
+            
+            // Other Install options
+            $this->_install();
+            
+            // Redirect
 						redirect('admin');
 					}
 				}
@@ -71,8 +76,31 @@ class MY_Controller extends CI_Controller {
 		$this->load->model('cfg');
 		$this->cfg->set_if_admin($isAdmin);
 	}
-	
-
+  
+  /**
+   * This installs basic FlexyAdmin config
+   *
+   * @return void
+   * @author Jan den Besten
+   */
+  private function _install() {
+    // Replace cookiename
+    $sitename = $_SERVER['SCRIPT_FILENAME'];
+    $sitename = str_replace('/index.php','',$sitename);
+    $sitename = get_suffix($sitename,'/');
+    if (!empty($sitename)) {
+      $file=APPPATH.'config/config.php';
+      $cfg=file_get_contents($file);
+      // load config
+      if (!empty($cfg)) {
+        $new = preg_replace("/config\['sess_cookie_name'\](\s*)=(\s*)'([^']*)';/uUs", "config['sess_cookie_name']$1=$2'".$sitename."';", $cfg, 1, $count);
+        $result=file_put_contents($file,$new);
+        if ($result) {
+          log_message('info', 'FlexyAdmin Install: sess_cookie_name = '.$sitename);
+        }
+      }
+    }
+  }
 
   
   /**

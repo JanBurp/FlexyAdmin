@@ -253,7 +253,7 @@ $config['encryption_key'] = "pfny9WkeCN4pWU2wr6UsTfvzNBomWxxh";
 | 'time_to_update'		= how many seconds between CI refreshing Session Information
 |
 */
-$config['sess_cookie_name']		    = 'flexy_session';
+$config['sess_cookie_name']       = 'flexy-session';
 $config['sess_expiration']		    = 7200;
 $config['sess_encrypt_cookie']	  = TRUE;
 $config['sess_use_database']	    = TRUE;
