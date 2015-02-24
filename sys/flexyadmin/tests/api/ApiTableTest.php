@@ -9,6 +9,11 @@ class ApiTableTest extends ApiTestModel {
   public function testWithoutLogin() {
     $this->_testWithoutAuth('table');
   }
+  
+  public function testWithWrongParameters() {
+    $this->_testWithWrongParameters('table');
+  }
+  
 
   public function testWithLogin() {
     // Test all tables

@@ -24,6 +24,10 @@ class ApiRowTest extends ApiTestModel {
     ));
   }
 
+  public function testWithWrongParameters() {
+    $this->_testWithWrongParameters('row');
+  }
+
 
   public function testConfig() {
     
