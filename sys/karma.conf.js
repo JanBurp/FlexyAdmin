@@ -1,3 +1,6 @@
+// run karma start
+
+
 // Karma configuration
 // Generated on Tue Oct 07 2014 21:08:34 GMT+0200 (CEST)
 
@@ -16,7 +19,6 @@ module.exports = function(config) {
       'js/externals.min.js',
       'js/angular-mocks.js',
       'js/langs/nl.js',
-      
       
       "**/jdb*.js",
       "**/flexy*.js",
@@ -46,7 +48,7 @@ module.exports = function(config) {
     },
 
     // web server port
-    port: 8080,
+    port: 9876,
 
     // enable / disable colors in the output (reporters and logs)
     colors: true,
@@ -64,7 +66,8 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Safari'],
+    browsers: ['Chrome'],
+    browserNoActivityTimeout : 50000,
 
   });
 };
