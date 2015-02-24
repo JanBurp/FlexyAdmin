@@ -17,12 +17,10 @@
  * flexy-api-service
  */
 
-flexyMenu.factory( 'flexy-api-service', [flexyAdminGlobals,'$http',function(flexyAdminGlobals,$http) {
+flexyMenu.factory( 'flexy-api-service', ['$http',function($http) {
   'use strict';
   
   
 
-  return 
-  
-  };
+  return null;
 }]);

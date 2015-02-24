@@ -23,7 +23,5 @@ flexyMenu.factory( 'flexy-menu-service', ['flexy-api-service',function(api) {
   
   
 
-  return 
-  
-  };
+  return null;
 }]);
