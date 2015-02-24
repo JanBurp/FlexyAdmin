@@ -3,6 +3,7 @@
 class ApiTestModel extends CIUnit_Framework_TestCase {
 
   protected $apiModel=FALSE;
+  protected $numberOfWrongTests = 10;
 
   /**
    * Users for testing
@@ -95,6 +96,45 @@ class ApiTestModel extends CIUnit_Framework_TestCase {
       }
     }
   }
+  
+  
+  /**
+   * Test with wrong params
+   *
+   * @author Jan den Besten
+   */
+  protected function _testWithWrongParameters($apiModel) {
+    // test for all users
+    foreach ($this->users as $user) {
+      // login
+      $this->CI->user->login($user['username'], $user['password']);
+      for ($i=0; $i < $this->numberOfWrongTests; $i++) {
+        $args = $this->_randomArgs();
+        $this->CI->$apiModel->set_args($args);
+        $result=$this->CI->$apiModel->index();
+        
+        $this->assertArrayHasKey( 'success', $result );
+        $this->assertEquals( false, $result['success'] );
+        $this->assertArrayHasKey( 'error', $result );
+        $this->assertInternalType( string, $result['error'] );
+        $this->assertEquals( 'WRONG ARGUMENTS', $result['error'] );
+        $this->assertArrayHasKey( 'needs', $result );
+        $this->assertInternalType( 'array', $result['needs'] );
+
+      }
+    }
+  }
+  
+  private function _randomArgs() {
+    $args=array();
+    $numberOfArgs = rand(2,5);
+    for ($i=0; $i < $numberOfArgs; $i++) { 
+      $args[random_string()] = random_string();
+    }
+    return $args;
+  }
+ 
+  
   
   /**
    * Actuel testing with auth and asserts...
@@ -209,9 +249,6 @@ class ApiTestModel extends CIUnit_Framework_TestCase {
       }
     }
   }
-  
-  
-  
   
   
   

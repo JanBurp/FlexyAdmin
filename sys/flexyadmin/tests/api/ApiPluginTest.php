@@ -26,6 +26,13 @@ class ApiPluginTest extends ApiTestModel {
       )
     ));
   }
+  
+  public function testWithWrongParameters() {
+    $this->_testWithWrongParameters('get_plugin');
+  }
+  
+  
+  
 }
 
 

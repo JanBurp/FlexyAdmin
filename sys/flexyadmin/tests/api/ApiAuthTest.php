@@ -24,9 +24,7 @@ class ApiAuthTest extends ApiTestModel {
     $this->assertEquals( 401, $result['status'] );
     $this->assertArrayNotHasKey( 'data', $result );
   }
-
-
-
+  
   public function testWrongLogin() {
     $attempts = array(
       array('username'=> $this->users[0]['username'],   'password' => $this->users[1]['password'] ),
@@ -39,6 +37,8 @@ class ApiAuthTest extends ApiTestModel {
       array('username'=> random_string(),               'password' => random_string() ),
       array('username'=> random_string(),               'password' => random_string() ),
       array(),
+      array('user'=>random_string(), 'pwd'=>random_string() ),
+      array('whatu'=>random_string(), 'pass'=>random_string() ),
     );
 
     foreach ($attempts as $attempt) {

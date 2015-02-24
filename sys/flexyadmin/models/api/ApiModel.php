@@ -105,7 +105,6 @@ class ApiModel extends CI_Model {
   protected function _result_wrong_args() {
     $args=$this->args;
     if (empty($args['config'])) unset($args['config']);
-    $this->result['args']    = $args;
     $this->result['success'] = false;
     $this->result['error']   = 'WRONG ARGUMENTS';
     $this->result['needs']   = $this->needs;
