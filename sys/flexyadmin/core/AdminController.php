@@ -340,7 +340,7 @@ class AdminController extends BasicController {
 										"help"		=> $this->helpTexts,
 										"local"		=> $this->config->item('LOCAL'),
 										"site"		=> rtrim($siteInfo["url_url"],'/'),
-										"user"		=> ucwords($this->user_name),
+										"user"		=> ucwords($this->user->user_name),
 										"revision"=> $this->svn->get_revision()
 									);
 		$this->load->view('admin/footer',$footer);
