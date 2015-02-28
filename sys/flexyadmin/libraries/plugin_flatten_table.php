@@ -40,14 +40,16 @@ class Plugin_flatten_table extends Plugin {
               $foreignData=$this->CI->db->get_row($foreignTable);
               unset($foreignData['id']);
               $set=array();
-              foreach ($foreignData as $field => $value) {
-                if (isset($row[$field])) {
-                  $set[$field]=$value;
+              if ($foreignData) {
+                foreach ($foreignData as $field => $value) {
+                  if (isset($row[$field])) {
+                    $set[$field]=$value;
+                  }
                 }
-              }
-              if (!empty($set)) {
-                $this->CI->db->set($set)->where('id',$id)->update($table);
-                $this->add_content(p()."updated $table.$id"._p());
+                if (!empty($set)) {
+                  $this->CI->db->set($set)->where('id',$id)->update($table);
+                  $this->add_content(p()."updated $table.$id"._p());
+                }
               }
             }
           }
