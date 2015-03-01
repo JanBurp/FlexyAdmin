@@ -209,7 +209,7 @@ class Main extends FrontEndController {
         // put result in page (default)
         if (in_array('page',$to)) {
   				if (is_array($return))
-  					$page=$return;
+  					$page=array_merge($page,$return);
   				else
   					$page['module_content'].=$return;
         }
