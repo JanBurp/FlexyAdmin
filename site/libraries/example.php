@@ -7,7 +7,7 @@
 	* @author Jan den Besten
 	*/
  
- class Example extends Module {
+class Example extends Module {
 
   /**
     * Initialiseer module
@@ -43,10 +43,10 @@
   	* @return mixed
   	* @author Jan den Besten
   	*/
-	public function index($page) {
-		$content='<h1>Voorbeeld Module</h1><p>Deze tekst komt uit de voorbeeld module.<br>Het is nu '.strftime('%A %e %B om %T').'.</p>';
-		return $content;
-	}
+  public function index($page) {
+    $content='<h1>Voorbeeld Module</h1><p>Deze tekst komt uit de voorbeeld module.<br>Het is nu '.strftime('%A %e %B om %T').'.</p>';
+    return $content;
+  }
 
 
   /**
@@ -56,10 +56,10 @@
   	* @return mixed
   	* @author Jan den Besten
   	*/
-	public function other($page) {
-		$content='<h1>Example Module.Other</h1>';
-		return $content;
-	}
+  public function other($page) {
+    $content='<h1>Example Module.Other</h1>';
+    return $content;
+  }
 
 }
 
