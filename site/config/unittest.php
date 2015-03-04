@@ -26,12 +26,12 @@ $config['page']=array(
  */
 $config['modules'] = array(
   'Example' => array(
-    'example'       => array('assertEquals','<h1>Example Module</h1>'),
-    'example.other' => array('assertEquals','<h1>Example Module.Other</h1>'),
+    'example'       => array('assertStringStartsWith','<h1>Voorbeeld Module</h1>'),
+    'example.other' => array('assertStringStartsWith','<h1>Voorbeeld Module.Other</h1>'),
   ),
   'Ajax_example' => array(
-    'ajax_example'        => array('assertEquals','{"_message":"Ajax_example","_module":"example","_success":true}'),
-    'ajax_example.other'  => array('assertEquals','{"_message":"Ajax_example","_method":"other","_module":"example","_success":true}'),
+    'ajax_example'        => array('assertEquals','{"message":"Ajax_example","module":"example","success":true}'),
+    'ajax_example.other'  => array('assertEquals','{"message":"Ajax_example","method":"other","module":"example","success":true}'),
   ),
 );
 

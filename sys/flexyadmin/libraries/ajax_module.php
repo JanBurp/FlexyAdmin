@@ -62,7 +62,7 @@ class Ajax_module extends Parent_module_plugin {
    * @author Jan den Besten
    */
   public function result($args) {
-    $args['_module']=str_replace('ajax_','',$this->name);
+    $args['module']=str_replace('ajax_','',$this->name);
     if (!isset($args['success'])) $args['success']=true;
     ksort($args);
     return array2json($args);

@@ -1,6 +1,6 @@
 <?php
 
-class CodeTest extends CIUnit_Framework_TestCase {
+class ZZ_CodeTest extends CIUnit_Framework_TestCase {
 
   /**
    * Test of er nog debughelper commando's zijn

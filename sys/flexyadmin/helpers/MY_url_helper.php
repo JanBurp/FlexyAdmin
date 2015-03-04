@@ -286,3 +286,44 @@ $i = 0;foreach ($x as $val){ ?>l[<?php echo $i++; ?>]='<?php echo $val; ?>';<?ph
 }
 
 
+
+
+/**
+ * Test an url
+ *
+ * @param string $url 
+ * @return bool
+ * @author Jan den Besten
+ */
+function test_url($url) {
+  // Email: don't test
+  if (substr($url,0,7)=='mailto:') {
+    $email=remove_prefix($url,':');
+  	$CI =& get_instance();
+    return $CI->form_validation->valid_email($email);
+  }
+  
+  // local => add site_url()
+  if (substr($url,0,4)!=='http') {
+    $url=site_url($url);
+  }
+
+  // http(s)
+  if (substr($url,0,4)=='http') {
+    $handle = curl_init($url);
+    curl_setopt($handle,  CURLOPT_RETURNTRANSFER, TRUE);
+    $response = curl_exec($handle);
+    /* Check for 404 (file not found). */
+    $httpCode = curl_getinfo($handle, CURLINFO_HTTP_CODE);
+    if($httpCode != 200) {
+      return FALSE;
+    }
+    // trace_([$url,$httpCode,$response]);
+    curl_close($handle);
+    return TRUE;
+  }
+  
+  return FALSE;
+}
+
+
