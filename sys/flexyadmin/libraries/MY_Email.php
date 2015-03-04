@@ -24,6 +24,24 @@ class MY_Email extends CI_Email {
   private $lang='';
   
   private $default_data = array();
+  
+
+  /**
+   * Test if an email could be send (send to a testmail)
+   *
+   * @return bool
+   * @author Jan den Besten
+   */
+  public function can_send() {
+	  $to="error@flexyadmin.com";
+    if (defined("ERROR_EMAIL")) $to=ERROR_EMAIL;
+    $this->to($to);
+    $this->from($to);
+		$this->subject('THIS IS A TEST');
+		$this->message('TEST at '.date(DATE_RFC2822));
+    return $this->send();
+  }
+  
 
   /**
    * Stel de email class in één keer in met een array ipv losse methods aanroepen, bijvoorbeeld:

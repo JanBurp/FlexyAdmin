@@ -46,8 +46,6 @@ class Plugin_links extends Plugin {
 			if (!in_array($field,$this->trigger['fields']) and !in_array($pre,$this->trigger['field_types'])) unset($changedFields[$field]);
 		}
     
-    // strace_($changedFields);
-		
 		// loop through all changed fields, and replace all links with new
 		foreach ($changedFields as $field => $value) {
 			$oldUrl=$this->oldData[$field];

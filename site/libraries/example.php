@@ -57,7 +57,7 @@ class Example extends Module {
   	* @author Jan den Besten
   	*/
   public function other($page) {
-    $content='<h1>Example Module.Other</h1>';
+    $content='<h1>Voorbeeld Module.Other</h1>';
     return $content;
   }
 
