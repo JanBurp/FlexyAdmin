@@ -76,6 +76,7 @@ class ApiModel extends CI_Model {
    * @author Jan den Besten
    */
   protected function _result_status401() {
+    log_message('info', 'API 401 : '.array2json($this->args));
     $this->result=array( 'status' => 401 );
     return $this->result;
   }
@@ -88,6 +89,7 @@ class ApiModel extends CI_Model {
    * @author Jan den Besten
    */
   protected function _result_norights() {
+    log_message('info', 'API NO RIGHTS : '.array2json($this->args));
     $this->result=array(
       'success' => false,
       'error' => 'NO RIGHTS',
@@ -103,11 +105,14 @@ class ApiModel extends CI_Model {
    * @author Jan den Besten
    */
   protected function _result_wrong_args() {
+    log_message('info', 'API WRONG ARGUMENTS : '.array2json($this->args));
     $args=$this->args;
     if (empty($args['config'])) unset($args['config']);
     $this->result['success'] = false;
     $this->result['error']   = 'WRONG ARGUMENTS';
     $this->result['needs']   = $this->needs;
+    unset($this->result['status']);
+    unset($this->result['message']);
     return $this->result;
   }
   
@@ -119,6 +124,7 @@ class ApiModel extends CI_Model {
    * @author Jan den Besten
    */
   protected function _result_ok() {
+    log_message('info', 'API OK : '.array2json($this->args));
     // Add config data if asked for
     $this->_get_config();
     if (!empty($this->args['config'])) {
@@ -128,11 +134,13 @@ class ApiModel extends CI_Model {
       }
     }
     // Prepare end result
-    unset($this->result['status']);
     $this->result['success'] = true;
     $this->result['args'] = $this->args;
     if (isset($this->result['args']['password'])) $this->result['args']['password']='***';
     if (empty($this->result['args']['config'])) unset($this->result['args']['config']);
+    unset($this->result['status']);
+    unset($this->result['error']);
+    unset($this->result['message']);
     return $this->result;
   }
   
@@ -149,25 +157,28 @@ class ApiModel extends CI_Model {
     $keys=array_merge($keys,array('config','format'));
     $args=array();
     
+    // GET
+    if (!$args and (!empty($_SERVER['QUERY_STRING']) or !empty($_GET))) {
+      if (empty($_GET)) parse_str($_SERVER['QUERY_STRING'],$_GET);
+      $args=$_GET;
+      // foreach ($keys as $key) {
+      //   $value=$this->input->get($key);
+      //   if ($value) $args[$key]=$value;
+      // }
+      $args['type']='GET';
+    }
+
     // POST
     if (!$args and !empty($_POST)) {
+      $args=$_POST;
+      // foreach ($keys as $key) {
+      //   $value=$this->input->post($key);
+      //   if ($value) $args[$key]=$value;
+      // }
+      // POST can have a 'data' field
+      // $data=$this->input->post('data');
+      // if ($data) $args['data']=$data;
       $args['type']='POST';
-      // $args=$_POST;
-      foreach ($keys as $key) {
-        $value=$this->input->post($key);
-        if ($value) $args[$key]=$value;
-      }
-    }
-    
-    // GET
-    if (!$args and !empty($_SERVER['QUERY_STRING'])) {
-      $args['type']='GET';
-      parse_str($_SERVER['QUERY_STRING'],$_GET);
-      // $args=$_GET;
-      foreach ($keys as $key) {
-        $value=$this->input->get($key);
-        if ($value) $args[$key]=$value;
-      }
     }
     
     // merge with defaults
@@ -180,6 +191,8 @@ class ApiModel extends CI_Model {
     
     if (isset($args['format'])) $this->result['format']=$args['format'];
     
+    // trace_(['defaults'=>$defaults,'POST'=>$_POST,'GET'=>$_GET,'args'=>$args]);
+    
     return $args;
   }
   
@@ -188,18 +201,32 @@ class ApiModel extends CI_Model {
    * Set arguments
    *
    * @param array $args 
-   * @return thi
+   * @return this
    * @author Jan den Besten
    */
   public function set_args($args=array()) {
-    foreach ($this->needs as $key => $value) {
-      if (isset($args[$key]))
-        $this->args[$key]=$args[$key];
-      else
-        $this->args[$key]=$value;
+    unset($_GET);
+    unset($_POST);
+    $types=array('GET','POST');
+    $types_exists = FALSE;
+    foreach ($types as $type) {
+      $types_exists = ($types_exists or array_key_exists($type,$args));
     }
-    if (isset($args['config'])) $this->args['config']=$args['config'];
-    return $this;
+    if (!$types_exists) $args=array('GET'=>$args);
+    
+    // Set types
+    foreach ($args as $type => $ar) {
+      switch ($type) {
+        case 'GET':
+          $_GET = $ar;
+          break;
+        case 'POST':
+          $_POST = $ar;
+          break;
+      }
+    }
+    $this->args=$this->_get_args( $this->needs );
+    return $this-args;
   }
   
 

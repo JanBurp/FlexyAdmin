@@ -236,16 +236,20 @@ class _crud extends CI_Model {
 		if (empty($this->table)) return FALSE;
 
     $wheres=$this->where;
+
 		if (is_array($wheres)) {
-      $first=current($wheres);
-      if (!is_array($first)) $wheres[]=$wheres;
+      // $first=current($wheres);
+      // if (!is_array($first)) $wheres[]=$wheres;
 
       $isTree=$this->db->field_exists('self_parent',$this->table);
-      if ($isTree) {$this->load->model('order','order_model');}
+      if ($isTree) {
+        $this->load->model('order','order_model');
+      }
       
       foreach ($wheres as $key => $where) {
         // Get id
         $id=$this->_get_id($where);
+        
         
   			/**
   			 * Check if it is a tree, if so, get branches (to move them up later)
@@ -253,7 +257,7 @@ class _crud extends CI_Model {
         if ($isTree) {
           $branches=array();
   				// get info from current
-  				$this->db->where($where);
+  				$this->db->where($key,$where);
   				$this->db->select('id,order,self_parent');
   				$result=$this->db->get_result($this->table);
           foreach ($result as $id => $row) {
@@ -271,7 +275,7 @@ class _crud extends CI_Model {
   			 */
   			$this->db->trans_start();			
 			
-  			$this->db->where($where);
+  			$this->db->where($key,$where);
   			$is_deleted=$this->db->delete($this->table);
 			
   			if ($is_deleted) {
@@ -348,7 +352,7 @@ class _crud extends CI_Model {
   /**
    * Geeft id van een where statement
    *
-   * @param string $where[''] 
+   * @param mixed id | 'id'=>...
    * @return int $id
    * @author Jan den Besten
    * @internal
@@ -356,7 +360,13 @@ class _crud extends CI_Model {
    */
 	private function _get_id($where='') {
     if (empty($where)) $where=$this->where;
-		$id = element(PRIMARY_KEY,$where,FALSE);
+    if (!is_array($where) and is_numeric($where)) {
+      $id = $where;
+    }
+    else {
+      $id = element(PRIMARY_KEY,$where,FALSE);
+    }
+    // not in where? find in db
 		if (!$id) {
 			$this->db->select(PRIMARY_KEY);
 			$this->db->where($where);
