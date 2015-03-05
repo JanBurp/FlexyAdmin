@@ -202,6 +202,21 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		}
 	}
 
+
+  /**
+   * Geeft de status van een tabel
+   *
+   * @param string $table 
+   * @return array
+   * @author Jan den Besten
+   */
+  public function table_status($table) {
+    $query=$this->query("SHOW TABLE STATUS WHERE NAME = '".$table."'");
+    $status=current($query->result_array());
+    return array_change_key_case($status);
+  }
+
+
   /**
    * Zet primary key, standaard 'id'
    *
@@ -213,6 +228,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		$this->pk=$pk;
     return $this;
   }
+
 
   /**
    * Zet key van de resultaat arrays.

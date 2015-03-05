@@ -2,6 +2,45 @@
 
 class ApiRowTest extends ApiTestModel {
 
+  private $testData = array(
+    array(
+      'table' => 'tbl_links',
+      'insert'  => array(
+        'url_url'   => 'http://www.burp.nl',
+        'str_title' => 'Insert',
+      ),
+      'update'  => array(
+        'url_url'   => 'http://www.burp.nl2',
+        'str_title' => 'Update',
+      ),
+    ),
+    array(
+      'table' => 'tbl_links',
+      'insert'  => array(
+        'url_url'   => 'http://www.flexyadmin.com',
+        'str_title' => 'FlexyAdmin 1',
+      ),
+      'update'  => array(
+        'url_url'   => 'http://www.flexyadmin.nl',
+        'str_title' => 'FlexyAdmin 2',
+      ),
+    ),
+    
+    array(
+      'table' => 'tbl_menu',
+      'insert'  => array(
+        'str_title' => 'TEST PAGINA',
+        'txt_text'  => 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.',
+      ),
+      'update'  => array(
+        'str_title' => 'TEST PAGINA UPDATE',
+        'txt_text'  => '<h2>Lorem ipsum dolor sit amet</h2><p>Consectetur adipiscing elit. Vivamus in augue ac justo posuere luctus sodales vel justo. Integer blandit, quam id porttitor consequat, lorem libero bibendum ipsum, non auctor sem ipsum eu mauris. <b>Vestibulum condimentum,</b> lectus sed aliquam rutrum, est velit pellentesque mauris, sed mattis sapien ante vitae enim. Quisque cursus facilisis molestie. Sed rhoncus lacus ac nunc interdum in laoreet mi rhoncus. Suspendisse ultrices fringilla felis, in porta mi pretium ut. Nunc nisl nulla, varius in lobortis a, dictum a purus. Sed consequat felis ut erat lobortis hendrerit. Donec bibendum lorem lorem. Fusce suscipit sapien id lorem mollis vel placerat nunc congue. Aenean non nunc tortor. <i>Curabitur rhoncus neque eget nulla adipiscing euismod.</i></p>',
+      ),
+    )
+
+  );
+
+
   public function __construct() {
     parent::__construct('row');
   }
@@ -24,13 +63,13 @@ class ApiRowTest extends ApiTestModel {
     ));
   }
 
+
   public function testWithWrongParameters() {
     $this->_testWithWrongParameters('row');
   }
 
 
   public function testConfig() {
-    
     // Test config of tbl_menu
     $this->_testWithAuth(array(
       'model'   => 'row',
@@ -54,12 +93,149 @@ class ApiRowTest extends ApiTestModel {
         'config|table_info|fields'   => array( 'type' => 'array' ),
         'config|table_info'          => array( 'hasKey' => 'ui_name' ),
         'config|table_info|ui_name'  => array( 'type' => 'string' ),
-        
+
       )
     ));
+  }
+
+
+
+  public function testCrud() {
+    
+    foreach ($this->testData as $test) {
+      $table=$test['table'];
+      
+      // start situation
+      $status = $this->CI->db->table_status($table);
+      $auto_increment = $status['auto_increment'];
+      
+      // data
+      $data=$test['insert'];
+      $update = $test['update'];
+      
+      // TEST INSERT DATA
+      $results = $this->_testWithAuth(array(
+        'model'   => 'row',
+        'args'    => array(
+          'POST' => array(
+            'table'     => $table,
+            'data'      => $data
+          ),
+        ),
+        'asserts' => array(
+          'data'      => array( 'hasKey' => 'id' ),
+          'data|id'   => array( 'type'   => 'integer' ),
+          'data|id'   => array( 'assertGreaterThan' => 0 ),
+        )
+      ));
+
+      // IDS
+      $ids=array();
+      foreach ($results as $result) {
+        $ids[]=$result['data']['id'];
+      }
+      
+      foreach ($ids as $id) {
+        
+        // TEST IF DATA WAS INSERTED
+        $checkData = $test['insert'];
+        $checkData=array_unshift_assoc($checkData, 'id',$id);
+        $this->_testWithAuth(array(
+          'model'   => 'row',
+          'args'    => array(
+            'GET' => array(
+              'table'     => $table,
+              'where'     => $id
+            ),
+          ),
+          'asserts' => array(
+            'data'      => array( 'type'    => 'array' ),
+            'data'      => array( 'hasKey'  => 'id' ),
+            'data|id'   => array( 'equals'  => $id ),
+            'data'      => array( 'equals'  => $checkData ),
+          )
+        ));
+        
+        // UPDATE DATA
+        $this->_testWithAuth(array(
+          'model'   => 'row',
+          'args'    => array(
+            'POST' => array(
+              'table'     => $table,
+              'where'     => $id,
+              'data'      => $update
+            ),
+          ),
+          'asserts' => array(
+            'data'      => array( 'hasKey' => 'id' ),
+            'data|id'   => array( 'type'   => 'integer' ),
+            'data|id'   => array( 'assertGreaterThan' => 0 ),
+          )
+        ));
+
+        // TEST UPDATE
+        $checkData=$update;
+        $checkData=array_unshift_assoc($checkData, 'id',$id);
+        $this->_testWithAuth(array(
+          'model'   => 'row',
+          'args'    => array(
+            'GET' => array(
+              'table'     => $table,
+              'where'     => $id
+            ),
+          ),
+          'asserts' => array(
+            'data'      => array( 'type'    => 'array' ),
+            'data'      => array( 'hasKey'  => 'id' ),
+            'data|id'   => array( 'equals'  => $id ),
+            'data'      => array( 'equals'  => $checkData ),
+          )
+        ));
+
+        // DELETE DATA
+        $this->_testWithAuth(array(
+          'model'   => 'row',
+          'args'    => array(
+            'POST' => array(
+              'table'     => $table,
+              'where'     => $id,
+            ),
+          ),
+          'asserts' => array(
+            'data'   => array( 'type'    => 'bool' ),
+            'data'   => array( 'equals'  => true ),
+          )
+        ));
+
+        // TEST DELETED DATA
+        $this->_testWithAuth(array(
+          'model'   => 'row',
+          'args'    => array(
+            'GET' => array(
+              'table'     => $table,
+              'where'     => $id,
+            ),
+          ),
+          'asserts' => array(
+            'data'      => array( 'type' => 'null' ),
+          )
+        ));
+      }
+     
+     
+      // cleanup
+      $this->CI->db->where('id >=',$auto_increment);
+      $this->CI->db->delete($table);
+    }
+    
+    
+
+
+
     
   }
 
+  
 
   
 }

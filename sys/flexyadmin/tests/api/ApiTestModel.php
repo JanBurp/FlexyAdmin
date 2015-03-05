@@ -12,12 +12,12 @@ class ApiTestModel extends CIUnit_Framework_TestCase {
     array(
       'username' => 'admin',
       'password' => 'admin',
-      'tables'   => array('tbl_site','tbl_menu','cfg_users','log_login','res_media_files')
+      'tables'   => array('tbl_site','tbl_menu','tbl_links','cfg_users','log_login','res_media_files')
     ),
     array(
       'username' => 'user',
       'password' => 'user',
-      'tables'   => array('tbl_site','tbl_menu')
+      'tables'   => array('tbl_site','tbl_menu','tbl_links')
     )
   );
   
@@ -71,10 +71,11 @@ class ApiTestModel extends CIUnit_Framework_TestCase {
     $this->apiModel=$apiModel;
   }
   
-  protected function _message($message,$args=FALSE,$user=FALSE) {
+  protected function _message($message,$args=FALSE,$user=FALSE,$result=FALSE) {
     $message='<span class="text-warning">'.$message;
-    if ($args) $message.=' $args='.array2php($args,0,'');
-    if ($user) $message.=' $username=`'.$user['username'].'`';
+    if ($args) $message.="\n".'$args='.array2php($args,0,'');
+    if ($user) $message.="\n".'$username=`'.$user['username'].'`';
+    if ($result) $message.="\n".'$result='.array2php($result,0,'');
     $message.='</span>';
     return $message;
   }
@@ -135,6 +136,42 @@ class ApiTestModel extends CIUnit_Framework_TestCase {
   }
  
   
+  private function _tableFromArgs($args) {
+    if (isset($args['table'])) {
+      $tables=$args['table'];
+    }
+    elseif (isset($args['GET']['table'])) {
+      $tables=$args['GET']['table'];
+    }
+    elseif (isset($args['POST']['table'])) {
+      $tables=$args['POST']['table'];
+    }
+    else {
+      $tables=$this->tables;
+    }
+
+    if (!is_array($tables)) $tables=array($tables);
+    return $tables;
+  }
+  
+  private function _tableInArgs($args,$table) {
+    if (isset($args['GET'])) {
+      $args['GET']['table']=$table;
+      if ($args['GET']['table']=='') unset($args['GET']['table']);
+    }
+    elseif (isset($args['POST'])) {
+      $args['POST']['table']=$table;
+      if ($args['POST']['table']=='') unset($args['POST']['table']);
+    }
+    else {
+      $args['table']=$table;
+      if ($args['table']=='') unset($args['table']);
+    }
+    if (isset($args['table']) and $args['table']=='') unset($args['table']);
+    return $args;
+  }
+  
+  
   
   /**
    * Actuel testing with auth and asserts...
@@ -146,33 +183,37 @@ class ApiTestModel extends CIUnit_Framework_TestCase {
   public function _testWithAuth( $params=array('model'=>'','args'=>array(),'asserts'=>array()) ) {
     $apiModel=$params['model'];
     
+    $results = array();
+    
     // test for all users
     foreach ($this->users as $user) {
       // login
       $this->CI->user->login($user['username'], $user['password']);
       
       // which tables?
-      if (isset($params['args']['table'])) {
-        $tables=$params['args']['table'];
-        if (!is_array($tables)) $tables=array($tables);
-      }
-      else {
-        $tables=$this->tables;
-      }
+      $tables = $this->_tableFromArgs($params['args']);
       
       foreach ($tables as $table) {
-        $args=array_merge( $params['args'], array('table'=>$table) );
-        if (isset($args['table']) and $args['table']=='') unset($args['table']);
+        
+        $args=$this->_tableInArgs($params['args'],$table);
+        // trace_([$params,$table,$args]);
         
         $this->CI->$apiModel->set_args($args);
-        $result=$this->CI->$apiModel->index();
+        $result    = $this->CI->$apiModel->index();
+        $results[] = $result;
         
+        // trace_([$args,$result]);
+        
+        // trace_([$table,$user]);
         if (empty($table) or in_array($table,$user['tables'])) {
+
+          // trace_([$table,$args,$result]);
 
           // user has rights for this table
           $this->assertArrayNotHasKey( 'status', $result );
           $this->assertArrayHasKey( 'success', $result );
           $this->assertEquals( true, $result['success'] );
+          $this->assertArrayNotHasKey( 'error', $result );
 
           // args
           $this->assertArrayHasKey( 'args', $result );
@@ -180,7 +221,7 @@ class ApiTestModel extends CIUnit_Framework_TestCase {
           
           // data
           $this->assertArrayHasKey( 'data', $result );
-          $this->assertInternalType( 'array', $result['data'] );
+          // $this->assertInternalType( 'array', $result['data'] );
 
           // other asserts
           foreach ( $params['asserts'] as $key => $assert) {
@@ -201,6 +242,7 @@ class ApiTestModel extends CIUnit_Framework_TestCase {
                   break;
 
                 case 'hasKey':
+                  // trace_(['args'=>$args,'assert'=>$assert,'result'=>$result]);
                   $this->assertArrayHasKey(
                     $value,
                     $keyResult,
@@ -209,11 +251,11 @@ class ApiTestModel extends CIUnit_Framework_TestCase {
                   break;
 
                 case 'count':
-                // trace_([$keys,$value,$keyResult]);
+                  // trace_(['args'=>$args,'result'=>$result]);
                   $this->assertCount(
                     $value,
                     $keyResult,
-                    $this->_message('<b>'.$key.'</b> in <i>result</i> should have '.$value.' keys.', $args, $user)
+                    $this->_message('<b>'.$key.'</b> in <i>result</i> should have '.$value.' keys.', $args, $user, $result)
                   );
                   break;
                   
@@ -228,6 +270,7 @@ class ApiTestModel extends CIUnit_Framework_TestCase {
                   break;
                   
                 case 'Equals':
+                  // trace_([$params,$table,$args]);
                   $this->assertEquals(
                     $value,
                     $keyResult,
@@ -242,12 +285,14 @@ class ApiTestModel extends CIUnit_Framework_TestCase {
         }
         else {
           // user has no rights for this table
-          $this->assertCount( 1, $result, $this->_message('Result without AUTH is more than 1',$args,$user) );
+          $this->assertCount( 1, $result, $this->_message('Result without AUTH is more than 1 ',$args,$user) );
           $this->assertArrayHasKey( 'status', $result );
           $this->assertEquals( 401, $result['status'] );
         }
       }
     }
+    
+    return $results;
   }
   
   
