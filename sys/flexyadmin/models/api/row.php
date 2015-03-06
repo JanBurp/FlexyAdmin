@@ -54,19 +54,38 @@ class Row extends ApiModel {
     // CFG
     $this->_get_config(array('table_info','field_info'));
 
-    // INSERT/UPDATE/DELETE
-    if ($this->args['type']=='POST') {
-      $this->result['data']=$this->_update_insert_delete_row();
-    }
     // GET
-    else {
+    if ($this->args['type']=='GET') {
       $this->result['data']=$this->_get_row();
+      return $this->_result_ok();
+    }
+
+    // POST
+    if ($this->args['type']=='POST') {
+      
+      // UPDATE
+      if (isset($this->args['data']) and isset($this->args['where'])) {
+        if (!$this->_has_rights($this->args['table'])>=RIGHTS_EDIT) return $this->_result_norights();
+        $this->result['data']=$this->_update_row();;
+        return $this->_result_ok();
+      }
+      // INSERT
+      if (isset($this->args['data']) and !isset($this->args['where'])) {
+        if (!$this->_has_rights($this->args['table'])>=RIGHTS_ADD) return $this->_result_norights();
+        $this->result['data']=$this->_insert_row();
+        return $this->_result_ok();
+      }
+      // DELETE
+      if (!isset($this->args['data']) and isset($this->args['where'])) {
+        if (!$this->_has_rights($this->args['table'])>=RIGHTS_DELETE) return $this->_result_norights();
+        $this->result['data']=$this->_delete_row();
+        return $this->_result_ok();
+      }
     }
     
-    return $this->_result_ok();
+    // ERROR -> Wrong arguments
+    return $this->_result_wrong_args();
   }
-  
-
   
   /**
    * Gets the values from the table row
@@ -76,11 +95,9 @@ class Row extends ApiModel {
    */
   private function _get_row() {
     $this->db->unselect( el(array('field_info','hidden_fields'),$this->cfg_info,array()) );
-    $args=$this->args;
+    $args=$this->_clean_args(array('table','where'));
     $table=$args['table'];
     unset($args['table']);
-    unset($args['config']);
-    unset($args['type']);
     $this->crud->table($table);
     $values = $this->crud->get_row($args);
     // trace_(['_get_row'=>$values,'args'=>$this->args]);
@@ -88,38 +105,51 @@ class Row extends ApiModel {
   }
   
   /**
-   * Updates or Inserts new row
+   * Update row
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+  private function _update_row() {
+    $args=$this->_clean_args(array('table','where','data'));
+    $table=$args['table'];
+    unset($args['table']);
+    $this->crud->table($table);
+    $id = $this->crud->update($args);
+    return array('id'=>$id);
+  }
+
+
+  /**
+   * Update row
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+  private function _insert_row() {
+    $args=$this->_clean_args(array('table','data'));
+    $table=$args['table'];
+    unset($args['table']);
+    $this->crud->table($table);
+    $id = $this->crud->insert($args);
+    return array('id'=>$id);
+  }
+
+
+  /**
+   * Delete row
    *
    * @return void
    * @author Jan den Besten
    */
-  private function _update_insert_delete_row() {
-    $args=$this->args;
+  private function _delete_row() {
+    $args=$this->_clean_args(array('table','where'));
     $table=$args['table'];
     unset($args['table']);
-    unset($args['config']);
-    unset($args['type']);
     $this->crud->table($table);
-
-    // UPDATE / DELETE
-    if (isset($args['where'])) {
-
-      // DELETE
-      if (!isset($args['data']) or empty($args['data'])) {
-        return $this->crud->delete($args['where']);
-      }
-      // UPDATE
-      else {
-        $id = $this->crud->update($args);
-      }
-    }
-    // INSERT
-    else {
-      $id = $this->crud->insert($args);
-    }
-
-    return array('id'=>$id);
+    return $this->crud->delete($args['where']);
   }
+
 
 }
 

@@ -246,6 +246,19 @@ class ApiModel extends CI_Model {
   
   
   /**
+   * Gives clean args
+   *
+   * @param array of keys that needs to be kept [array('table','where','data')]
+   * @return array
+   * @author Jan den Besten
+   */
+  protected function _clean_args($keep=array('table','where','data')) {
+    return array_keep_keys($this->args,$keep);
+  }
+  
+  
+  
+  /**
    * Test rights for item
    *
    * @param string $item
@@ -254,12 +267,12 @@ class ApiModel extends CI_Model {
    * @return boolean
    * @author Jan den Besten
    */
-  protected function _has_rights($item,$id="",$whatRight=0) {
+  protected function _has_rights($item,$id="",$whatRight=RIGHTS_NO) {
     if (!$this->user->logged_in()) return FALSE;
     $rights=$this->user->has_rights($item,$id,$whatRight);
-    // if no normal rights and cfg_users and current user, TODO: safety check this!!
-    if ($rights<2 and $item=='cfg_users') {
-      if (el('where',$this->args,null)=='current') $rights=2;
+    // if no normal rights and cfg_users and current user rights are ok, TODO: safety check this!!
+    if ($rights<RIGHTS_EDIT and $item=='cfg_users') {
+      if (el('where',$this->args,null)=='current') $rights=RIGHTS_EDIT;
     }
     return $rights;
   }

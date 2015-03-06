@@ -207,7 +207,7 @@ class ApiTestModel extends CIUnit_Framework_TestCase {
         // trace_([$table,$user]);
         if (empty($table) or in_array($table,$user['tables'])) {
 
-          // trace_([$table,$args,$result]);
+          // trace_([$table,$args,$result,$user]);
 
           // user has rights for this table
           $this->assertArrayNotHasKey( 'status', $result );
@@ -233,7 +233,7 @@ class ApiTestModel extends CIUnit_Framework_TestCase {
               switch ($type) {
 
                 case 'type':
-                  // trace_([$value,$keyResult,$key,$result]);
+                  // trace_([$args,$result]);
                   $this->assertInternalType(
                     $value,
                     $keyResult,
