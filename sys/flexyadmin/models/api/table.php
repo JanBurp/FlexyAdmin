@@ -6,8 +6,9 @@
  * 
  * Arguments:
  * - table
- * - limit
- * - offset
+ * - [limit=0]
+ * - [offset=0]
+ * - [txt_as_abstract=false]  - if set to TRUE, txt_ fields will contain an abstract without HTML tags
  *
  * @package default
  * @author Jan den Besten
@@ -81,59 +82,72 @@ class Table extends ApiModel {
    * @author Jan den Besten
    */
   private function _process_data($items) {
+    
+    $txt_as_abstract = el('txt_as_abstract',$this->args,false);
+    $is_tree         = el( array('table_info','tree'),$this->cfg_info,false);
 
     // init STRIP TAGS in txt fields
-    $fields=$this->cfg_info['table_info']['fields'];
-    $txtKeys=array_combine($fields,$fields);
-    $txtKeys=filter_by_key($txtKeys,'txt');
+    if ( $txt_as_abstract ) {
+      $fields=$this->cfg_info['table_info']['fields'];
+      $txtKeys=array_combine($fields,$fields);
+      $txtKeys=filter_by_key($txtKeys,'txt');
+    }
 
     // INIT TREE
-    $parents=array();
-
-    // LOOP ROWS
-    foreach ($items as $id => $row) {
-      
-      // STRIP TAGS in txt fields
-      foreach ($txtKeys as $key) {
-        $items[$id][$key]=strip_tags($row[$key]);
-      }
-      
-      // TREE, BRANCHES & NODES
-      if ($this->cfg_info['table_info']['tree']) {
-        $parent_id = $row['self_parent'];
-      
-        // toplevel: no branch, no node
-        if ($parent_id == 0) {
-          $level=0;
-          $is_branch=false;
-          $is_node=false;
-        }
-        // find out what level
-        else {
-          $is_node=true;
-          // are we on a known level?
-          if (isset($parents[$parent_id])) {
-            $level=$parents[$parent_id];
-          }
-          else {
-            // no: remember new level
-            $level++;
-            $parents[$parent_id]=$level;
-          }
-        }
-        // add this info to this item
-        $items[$id]['_info'] = array(
-          'is_branch' => false, // this will be set later...
-          'is_node'   => $is_node,
-          'level'     => $level
-        );
-      }
+    if ($is_tree) {
+      $parents=array();
     }
+
+    // LOOP ROWS IF NEEDED
+    if ($is_tree or $txt_as_abstract) {
+      
+      foreach ($items as $id => $row) {
+      
+        // STRIP TAGS in txt fields
+        if ( $txt_as_abstract ) {
+          foreach ($txtKeys as $key) {
+            $items[$id][$key]=strip_tags($row[$key]);
+          }
+        }
+      
+        // TREE, BRANCHES & NODES
+        if ($is_tree) {
+          $parent_id = $row['self_parent'];
+      
+          // toplevel: no branch, no node
+          if ($parent_id == 0) {
+            $level=0;
+            $is_branch=false;
+            $is_node=false;
+          }
+          // find out what level
+          else {
+            $is_node=true;
+            // are we on a known level?
+            if (isset($parents[$parent_id])) {
+              $level=$parents[$parent_id];
+            }
+            else {
+              // no: remember new level
+              $level++;
+              $parents[$parent_id]=$level;
+            }
+          }
+          // add this info to this item
+          $items[$id]['_info'] = array(
+            'is_branch' => false, // this will be set later...
+            'is_node'   => $is_node,
+            'level'     => $level
+          );
+        }
+        
+      }
     
-    // LOOP AGAIN TO ADD BRANCH INFO
-    if (el( array('table_info','tree'),$this->cfg_info,false) and !empty($parents)) {
-      foreach ($parents as $id => $level) {
-        $items[$id]['_info']['is_branch']=true;
+      // LOOP AGAIN TO ADD BRANCH INFO
+      if ($is_tree and isset($parents) and !empty($parents)) {
+        foreach ($parents as $id => $level) {
+          $items[$id]['_info']['is_branch']=true;
+        }
       }
     }
     

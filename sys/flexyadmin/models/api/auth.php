@@ -17,7 +17,6 @@ class auth extends ApiModel {
   var $needs = array(
     'username'   => '',
     'password'   => '',
-    // 'email'      => ''
   );
   
 	public function __construct() {
