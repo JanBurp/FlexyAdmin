@@ -73,13 +73,12 @@ class Edit extends AdminController {
         
         // Set items to delete
         $items=array();
-        $where='';
   			foreach ($ids as $id) {
   				if ($this->user->has_rights($table,$id)>=RIGHTS_DELETE) {
             $items[]=$id;
-            $where[]=array(PRIMARY_KEY=>$id);
           }
         }
+        $where=array(PRIMARY_KEY=>$items);
         
         if (!empty($where)) {
           // Start Delete

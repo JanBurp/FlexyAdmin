@@ -238,18 +238,17 @@ class _crud extends CI_Model {
     $wheres=$this->where;
 
 		if (is_array($wheres)) {
-      // $first=current($wheres);
-      // if (!is_array($first)) $wheres[]=$wheres;
-
+      
       $isTree=$this->db->field_exists('self_parent',$this->table);
       if ($isTree) {
         $this->load->model('order','order_model');
       }
       
       foreach ($wheres as $key => $where) {
-        // Get id
+        // Key & id
         $id=$this->_get_id($where);
-        
+        // $key=key($where);
+        // $where=current($where);
         
   			/**
   			 * Check if it is a tree, if so, get branches (to move them up later)
@@ -257,7 +256,7 @@ class _crud extends CI_Model {
         if ($isTree) {
           $branches=array();
   				// get info from current
-  				$this->db->where($key,$where);
+          $this->db->where($key,$where);
   				$this->db->select('id,order,self_parent');
   				$result=$this->db->get_result($this->table);
           foreach ($result as $id => $row) {
@@ -275,7 +274,7 @@ class _crud extends CI_Model {
   			 */
   			$this->db->trans_start();			
 			
-  			$this->db->where($key,$where);
+        $this->db->where($key,$where);
   			$is_deleted=$this->db->delete($this->table);
 			
   			if ($is_deleted) {
@@ -335,14 +334,19 @@ class _crud extends CI_Model {
 		$this->limit  = element('limit',$args,FALSE);
 		$this->offset = element('offset',$args,0);
 		$this->where  = element('where',$args,FALSE);
-		if ($this->where and !is_array($this->where)) {
-      if ($this->where=='first') {
-        $this->where=FALSE;
-        $this->limit=1;
+		if ($this->where) {
+      // Make it an array of where statements
+      if (!is_array($this->where)) {
+        if ($this->where=='first') {
+          $this->where=FALSE;
+          $this->limit=1;
+        }
+        else {
+  		    $this->where=array(PRIMARY_KEY => $this->where);
+        }
       }
-      else {
-		    $this->where=array(PRIMARY_KEY=>$this->where);
-      }
+      // WHERE IN
+      // trace_($this->where);
 		}
 		$this->order 	= element('order',$args,FALSE);
     // if ($this->order and !is_array($this->order)) $this->order=array($this->order.' DESC');
@@ -360,6 +364,7 @@ class _crud extends CI_Model {
    */
 	private function _get_id($where='') {
     if (empty($where)) $where=$this->where;
+    if (is_array($where)) $where=current($where);
     if (!is_array($where) and is_numeric($where)) {
       $id = $where;
     }
