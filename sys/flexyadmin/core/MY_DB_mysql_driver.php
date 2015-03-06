@@ -530,6 +530,24 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
     $order=remove_suffix($order,',');
 		return str_replace('`','',$order);
 	}
+  
+  
+  /**
+   * Uitbreiding op standaard where.
+   * Test of tweede parameter een array is, als dat zo is roep dan where_in aan
+   *
+   * @param mixed
+   * @return object
+   * @author Jan den Besten
+   */
+  public function where() {
+    $args=func_get_args();
+    if (isset($args[1]) and is_array($args[1])) {
+      return call_user_func_array(array('parent','where_in'), $args);
+      return parent::where_in($args[0],$args[1]);
+    }
+    return call_user_func_array(array('parent','where'), $args);
+  }
 
   /**
    * Zoekt op uri
@@ -1169,7 +1187,7 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
 		$orderAsTree=$this->orderAsTree;
 		$fullUri=$this->uriAsFullUri;
 		$extraFullField=$this->extraFullField;
-		
+
 		$result=$this->_get_result($table,$limit,$offset);
     
 		// order results as tree if asked for
