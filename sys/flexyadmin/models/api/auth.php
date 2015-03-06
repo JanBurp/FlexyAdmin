@@ -4,9 +4,10 @@
 /**
  * Authentication API
  * 
- * - _api/auth/check - gives as a result if a user is logged in, if so, returns userdata
- * - _api/auth/login - needs username/password
- * - _api/auth/logout - needs username/password
+ * - _api/auth/check              - gives as a result if a user is logged in, if so, returns userdata
+ * - _api/auth/login              - needs username/password
+ * - _api/auth/logout             - needs username/password
+ * - _api/auth/send_new_password  - needs email
  *
  * @package default
  * @author Jan den Besten
@@ -15,8 +16,8 @@
 class auth extends ApiModel {
   
   var $needs = array(
-    'username'   => '',
-    'password'   => '',
+    // 'username'   => '',
+    // 'password'   => '',
   );
   
 	public function __construct() {
@@ -88,17 +89,36 @@ class auth extends ApiModel {
   
   
   /**
-   * Send a new password to the given emailadress TODO
+   * Send a new password to the given emailadress
    *
-   * @return void
+   * @return mixed
    * @author Jan den Besten
    */
   public function send_new_password() {
     $email=$this->args['email'];
     $user=$this->user->get_user_by_email($email);
-    $user=object2array($user);
-    $this->result['data']=$user;
-    return $this->result;
+    // No user found
+    if (!$user) {
+      $this->result['data']=FALSE;
+      $this->_set_error('NO USER FOUND');
+    }
+    else {
+      // User found
+      $send=$this->user->send_new_password_mail($user->id);
+      // Error when sending
+      if (!$send) {
+        $this->result['data']=FALSE;
+        $this->_set_error('COULD NOT SEND EMAIL');
+      }
+      else {
+        $data=array(
+          'username' => $user->str_username,
+          'email'    => $user->email_email
+        );
+        $this->result['data']=$data;
+      }
+    }
+    return $this->_result_ok();
   }
   
 }

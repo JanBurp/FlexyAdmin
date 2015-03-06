@@ -264,7 +264,7 @@ class Ion_auth_model extends CI_Model
 	 **/
 	public function change_password($identity, $old, $new)
 	{
-	    $query = $this->db->select('gpw_password, salt')
+	    $query = $this->db->select('gpw_password, str_salt')
 			      ->where($this->identity_column, $identity)
 			      ->where($this->user->_extra_where)
 			      ->limit(1)
@@ -274,7 +274,7 @@ class Ion_auth_model extends CI_Model
 
 	    $db_password = $result->gpw_password;
 	    $old	 = $this->hash_password_db($identity, $old);
-	    $new	 = $this->hash_password($new, $result->salt);
+	    $new	 = $this->hash_password($new, $result->str_salt);
 
 	    if ($db_password === $old)
 	    {
@@ -292,6 +292,36 @@ class Ion_auth_model extends CI_Model
 
 	    return FALSE;
 	}
+  
+  
+  /**
+   * Save password
+   *
+   * @param string $id
+   * @param string $password 
+   * @return bool
+   * @author Jan den Besten
+   */
+	public function save_password($id, $password) {
+    $query = $this->db->select('gpw_password, str_salt')
+		      ->where(PRIMARY_KEY, $id)
+          // ->where($this->user->_extra_where)
+		      ->limit(1)
+		      ->get($this->tables['users']);
+    $result = $query->row();
+    $new	 = $this->hash_password($password, $result->str_salt);
+    //store the new password and reset the remember code so all remembered instances have to re-login
+	  $data = array(
+		    'gpw_password' => $new,
+		    'str_remember_code' => '',
+		);
+    // $this->db->where($this->user->_extra_where);
+    $this->db->update($this->tables['users'], $data, array(PRIMARY_KEY => $id));
+    return $this->db->affected_rows() == 1;
+	}
+  
+  
+  
 
 	/**
 	 * Checks username

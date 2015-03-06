@@ -39,6 +39,9 @@ class ApiModel extends CI_Model {
   protected $result=array();
   protected $cfg_info=array();
   
+  private $error='';
+  private $message='';
+  
   
   /**
    * @ignore
@@ -141,8 +144,40 @@ class ApiModel extends CI_Model {
     unset($this->result['status']);
     unset($this->result['error']);
     unset($this->result['message']);
+    if ($this->error) {
+      $this->result['error']=$this->error;
+      $this->result['success']=false;
+    }
+    if ($this->message) {
+      $this->result['message']=$this->message;
+    }
     return $this->result;
   }
+  
+  /**
+   * Sets error in result
+   *
+   * @param string $error 
+   * @return this
+   * @author Jan den Besten
+   */
+  protected function _set_error($error) {
+    $this->error = $error;
+    return $this;
+  }
+
+  /**
+   * Sets message in result
+   *
+   * @param string $message 
+   * @return this
+   * @author Jan den Besten
+   */
+  protected function _set_message($message) {
+    $this->message = $message;
+    return $this;
+  }
+
   
 
   /**
@@ -205,6 +240,8 @@ class ApiModel extends CI_Model {
    * @author Jan den Besten
    */
   public function set_args($args=array()) {
+    $this->error='';
+    $this->message='';
     unset($_GET);
     unset($_POST);
     $types=array('GET','POST');
