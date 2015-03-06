@@ -474,11 +474,15 @@ class User Extends Ion_auth {
    * @return void
    * @author Jan den Besten
    */
-	public function send_new_password_mail($id,$subject='New account',$password,$extra_email='') {
+	public function send_new_password_mail($id,$subject='New account',$password='',$extra_email='') {
 		$user  = $this->CI->ion_auth_model->get_user($id)->row();
 		$email = $user->email_email;
-    // strace_($email);
-		return $this->send_mail($id,'email_new_login',$subject,array('password'=>$password,'extra_email'=>$extra_email));
+    if (empty($password)) {
+      // Create random password and save it to user
+      $password=$this->CI->ion_auth_model->create_password();
+      $this->CI->ion_auth_model->save_password($id,$password);
+    }
+		return $this->send_mail($id,'email_new_password',$subject,array('password'=>$password,'extra_email'=>$extra_email));
 	}
 
 
@@ -528,7 +532,7 @@ class User Extends Ion_auth {
       $meta_data=$this->CI->db->get_row($tables['meta']);
       if (!empty($meta_data)) $data=array_merge($data,$meta_data);
     }
-
+    
     // Send mail
 		$this->CI->email->clear();
 		$config['mailtype'] = $this->CI->config->item('email_type', 'ion_auth');
@@ -549,6 +553,7 @@ class User Extends Ion_auth {
     }
 		if ($send !== TRUE)	{
   		$this->set_error('activation_email_unsuccessful');
+      return $send;
 		}
 		return $id;
 	}

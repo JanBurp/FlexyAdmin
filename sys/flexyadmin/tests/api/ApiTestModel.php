@@ -20,6 +20,16 @@ class ApiTestModel extends CIUnit_Framework_TestCase {
       'tables'   => array('tbl_site','tbl_menu','tbl_links')
     )
   );
+  protected $test_users=array(
+    array(
+      'str_username'  => 'test',
+      'id_user_group' => 3,
+      'gpw_password'  => 'test',
+      'email_email'   => 'test@flexyadmin.com',
+    )
+  );
+  
+  
   
   /**
    * Tables for testing
