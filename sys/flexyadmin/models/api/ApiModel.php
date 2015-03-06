@@ -130,6 +130,7 @@ class ApiModel extends CI_Model {
     log_message('info', 'API OK : '.array2json($this->args));
     // Add config data if asked for
     $this->_get_config();
+    unset($this->result['config']);
     if (!empty($this->args['config'])) {
       $this->result['config'] = array();
       foreach ($this->args['config'] as $cfg_key) {
@@ -386,6 +387,29 @@ class ApiModel extends CI_Model {
     }
     $this->cfg_info['table_info']['hidden_fields'] = $hidden_fields;
     return $field_info;
+  }
+
+  /**
+   * Gets media info
+   *
+   * @return void
+   * @author Jan den Besten
+   */
+  private function _get_media_info() {
+    if (empty($this->args['path'])) return FALSE;
+    $media_info = $this->cfg->get('cfg_media_info',$this->args['path']);
+    return $media_info;
+  }
+  
+  /**
+   * Gets img info
+   *
+   * @author Jan den Besten
+   */
+  private function _get_img_info() {
+    if (empty($this->args['path'])) return FALSE;
+    $img_info = $this->cfg->get('cfg_img_info',$this->args['path']);
+    return $img_info;
   }
   
   

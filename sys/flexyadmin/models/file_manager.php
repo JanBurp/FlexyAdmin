@@ -283,11 +283,12 @@ class File_manager Extends CI_Model {
     return $this;
 	}
 
+
 	/**
 	 * Verwijder meegegeven bestand, en alle eventuele varianten (thumbs etc)
 	 *
 	 * @param string $file 
-	 * @return array $result
+	 * @return bool $result
 	 * @author Jan den Besten
 	 */
   public function delete_file($file) {

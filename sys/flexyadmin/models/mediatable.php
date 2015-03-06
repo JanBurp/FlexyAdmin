@@ -189,7 +189,7 @@ class Mediatable Extends CI_Model {
    *
    * @param string $file 
    * @param string $path 
-   * @return object $this
+   * @return bool
    * @author Jan den Besten
    */
   public function delete($file,$path='') {
@@ -200,8 +200,9 @@ class Mediatable Extends CI_Model {
     }
     $this->db->where('file',$file)->where('path',$path);
     $this->db->delete($this->table);
-    return $this;
+    return ($this->db->affected_rows()>0);
   }
+  
   
   /**
    * Refresh de hele mediatabel
@@ -343,17 +344,21 @@ class Mediatable Extends CI_Model {
    * Edit info in database
    *
    * @param string $file
-   * @param string $item
-   * @param string $data 
+   * @param mixed $item
+   * @param mixed $data 
    * @return bool TRUE als gelukt
    * @author Jan den Besten
    */
-  public function edit_info($file,$item,$data) {
+  public function edit_info($file,$item,$data='') {
     if ($this->db->table_exists($this->table)) {
       $name=get_suffix($file,'/');
       $path=remove_assets(remove_suffix($file,'/'));
-      $this->db->where('file',$name)->where('path',$path)->set($item,$data)->update($this->table);
-      return true;
+      if (!is_array($item))
+        $data=array($item=>$data);
+      else
+        $data=$item;
+      $this->db->where('file',$name)->where('path',$path)->set($data)->update($this->table);
+      return ($this->db->affected_rows()>0);
     }
     return false;
   }
