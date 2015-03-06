@@ -3,9 +3,11 @@
 class ApiMediaTest extends ApiTestModel {
 
   private $paths = array('pictures','downloads');
+  private $upload_path = '/test_afbeeldingen/test_groot';
 
   public function __construct() {
     parent::__construct('media');
+    $this->upload_path = $_SERVER['DOCUMENT_ROOT'].$this->upload_path;
   }
 
   public function testWithoutLogin() {
@@ -95,6 +97,24 @@ class ApiMediaTest extends ApiTestModel {
       $this->assertEquals( false, $result['data'] );
     }
     
+    // UPLOADING files
+    // $upload_files=scandir($this->upload_path);
+    // $upload_files=array_slice($upload_files,2,2);
+    // foreach ($upload_files as $file) {
+    //   trace_($this->upload_path,'/'.$file);
+    //   $_FILES      = array( 'file' => array(
+    //     'name'     => $file,
+    //     'tmp_name' => '/tmp/php42up23',
+    //     // 'type'     => 'text/plain',
+    //     // 'size'     => 42,
+    //     // 'error'    => 0
+    //   ));
+    // }
+    //
+    //
+    
+    
+    
     // Delete some files
     // $files=array_slice($files,0,2);
     // foreach ($files as $id => $file) {
@@ -131,33 +151,6 @@ class ApiMediaTest extends ApiTestModel {
     
     
   }
-
-
-  // public function testWithWrongParameters() {
-  //   $this->_testWithWrongParameters('media');
-  // }
-
-
-  // public function testConfig() {
-  //   // Test config of tbl_menu
-  //   $this->_testWithAuth(array(
-  //     'model'   => 'media',
-  //     'args'    => array(
-  //       'path'  => 'pictures',
-  //       'config'=>array('media_info','img_info'),
-  //     ),
-  //     'asserts' => array(
-  //       'config' => array( 'type'   => 'array' ),
-  //       'config' => array( 'hasKey' => 'media_info' ),
-  //       'config' => array( 'hasKey' => 'img_info' ),
-  //       'config|media_info' => array( 'type' => 'array' ),
-  //       'config|media_info' => array( 'type' => 'array' ),
-  //     )
-  //   ));
-  // }
-  //
-  //
-  //
   
 }
 
