@@ -295,7 +295,6 @@ class ApiTestModel extends CIUnit_Framework_TestCase {
         }
         else {
           // user has no rights for this table
-          // trace_($result);
           $this->assertCount( 1, $result, $this->_message('Result without AUTH is more than 1 ',$args,$user) );
           $this->assertArrayHasKey( 'status', $result );
           $this->assertEquals( 401, $result['status'] );
