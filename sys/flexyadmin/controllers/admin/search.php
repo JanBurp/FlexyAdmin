@@ -54,7 +54,7 @@ class Search extends AdminController {
 					$field=get_suffix($value,'.');
           if ($table=='*') {
             $tables=$this->db->list_tables();
-            $tables=filter_by($tables,'tbl');
+            $tables=not_filter_by($tables,array('cfg','log'));
             foreach ($tables as $table) {
               if ($this->db->field_exists($field,$table)) $testFields[]=array('table'=>$table,'field'=>$field);
             }
@@ -82,7 +82,7 @@ class Search extends AdminController {
                 preg_match_all("/$searchTerm/", $txt,$matches);
               }
               set_error_handler($oldErrorHandler);
-							if ($new!=$txt) {
+							if ($new!==$txt) {
 								$this->db->as_abstracts();
 								$this->db->where(PRIMARY_KEY,$id);
 								$abstract=$this->db->get_row($table);

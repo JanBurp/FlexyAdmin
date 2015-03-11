@@ -10,6 +10,14 @@
  * -------------------------------------------------------------------------
  */
 
+$config['Trim spaces'] = array(
+  'search'  => "^\s+|\s+$",
+  'replace' => "",
+  'regex'   => true,
+  'fields'  => '*.str_title'
+);
+
+
 $config['Cleanup HTML (remove double tags etc.)'] = array(
   'search'  => "(<b[^>]*>\s<\/b>|<strong[^>]*>\s<\/strong>|<i[^>]*>\s<\/i>|<em[^>]*>\s<\/em>|<h\d[^>]*>\s<\/h\d>|<span[^>]*>\s<\/span>)",
   'replace' => "",
