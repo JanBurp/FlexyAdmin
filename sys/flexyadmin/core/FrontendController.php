@@ -332,7 +332,7 @@ class FrontEndController extends MY_Controller {
   public function show_404() {
     $this->site['title'].=' - Error 404';
     $page=array();
-    $page['str_title']='';
+    $page['str_title']=' ';
     $page['txt_text']=$this->view('error','',true);
       
   	// Load and call modules
