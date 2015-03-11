@@ -442,6 +442,7 @@ class Filemanager extends AdminController {
         $uiFieldNames[$key]=help($this->ui->get($key,$path),$fieldHelp);
       else
         $uiFieldNames[$key]=$this->ui->get($key,$path);
+      $formData[$key]['label']=$this->ui->get($key);
     }
     $form->set_labels($uiFieldNames);
     

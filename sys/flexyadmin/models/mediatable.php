@@ -333,6 +333,9 @@ class Mediatable Extends CI_Model {
         if (isset($info['user'])) {
           $map_files[$file]['id_user']=$this->db->get_field_where('cfg_users','str_username','id',$info['user']);
         }
+        // extra fields
+        $extra=array_unset_keys($info,array('id','b_exists','path','file','str_type','int_size','dat_date','int_img_height','int_img_width','str_title'));
+        if ($extra) $map_files[$file]=array_merge($map_files[$file],$extra);
       }
       $files=$map_files;
     }
