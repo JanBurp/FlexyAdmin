@@ -60,6 +60,7 @@ $lang['user_changed']     ='Aangepast door';
 
 // MEDIA GRID fields
 $lang['filename']         = 'Bestandsnaam';
+$lang['alt']              = $lang['str_title'];
 $lang['file']             = $lang['filename'];
 $lang['filetype']         = 'Soort';
 $lang['filesize']         = 'Omvang';

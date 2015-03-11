@@ -672,6 +672,7 @@ tr.caption td				{ border:none; }
 .grid td.date,
 .grid td.tme,
 .grid td.str,
+.grid td.alt,
 .grid td.txt				{ max-width:250px; height:25px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;}
 .grid td.str_title  { max-width:none; white-space:nowrap;text-overflow:inherit;}
 .grid td.media,

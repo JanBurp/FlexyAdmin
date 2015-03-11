@@ -680,6 +680,9 @@ class File_manager Extends CI_Model {
           
 					// FILE DETAILS (type,size,user)
 					if ($details) {
+
+            // ALT
+            if (isset($file['alt'])) $fileData["alt"]=$file['alt'];
             
             // TYPE
 						$fileData["filetype"]=$type;
@@ -700,7 +703,6 @@ class File_manager Extends CI_Model {
 						// USER
 						if (isset($file['user'])) $fileData['user']=$file['user'];
 					}
-          
 
           // OTHERS
           $others=array_unset_keys($file,array('path','name','type','alt','size','rawdate','date','width','height',$used_field));

@@ -16,6 +16,7 @@ $lang['user_changed']     ='Changed by';
 
 // MEDIA GRID fields
 $lang['filetype']         = 'Type';
+$lang['alt']              = $lang['str_title'];
 $lang['filesize']         = 'Size';
 $lang['size']             = 'Width x Height';
 $lang['USED']             = 'Used';
