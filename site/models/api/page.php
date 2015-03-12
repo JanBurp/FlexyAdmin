@@ -1,0 +1,52 @@
+<?
+
+
+/**
+ * Example api for getting a page
+ * 
+ * Arguments:
+ * - uri
+ * 
+ * Example:
+ * - /_api/page?uri=contact
+ *
+ * @package default
+ * @author Jan den Besten
+ */
+
+class Page extends ApiModel {
+  
+  var $needs = array(
+    'uri'   => '',
+  );
+  
+	public function __construct() {
+		parent::__construct();
+	}
+  
+  /**
+   * Gets the data and information and returns it
+   *
+   * @return void
+   * @author Jan den Besten
+   */
+  public function index() {
+    if (!$this->_has_rights('tbl_menu')) return $this->_result_status401();
+    
+    if ( !$this->has_args() ) {
+      return $this->_result_wrong_args();
+    }
+    
+    // GET DATA
+    $this->load->library('menu');
+    $page=$this->menu->get_item($this->args['uri']);
+    
+    // RESULT
+    $this->result['data']=$page;
+    return $this->_result_ok();
+  }
+  
+}
+
+
+?>
