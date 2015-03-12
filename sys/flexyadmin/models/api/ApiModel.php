@@ -196,21 +196,13 @@ class ApiModel extends CI_Model {
     // GET
     if (!$args and (!empty($_SERVER['QUERY_STRING']) or !empty($_GET))) {
       if (empty($_GET)) parse_str($_SERVER['QUERY_STRING'],$_GET);
-      $args=$_GET;
-      // foreach ($keys as $key) {
-      //   $value=$this->input->get($key);
-      //   if ($value) $args[$key]=$value;
-      // }
+      $args=$this->input->get();
       $args['type']='GET';
     }
 
     // POST
     if (!$args and !empty($_POST)) {
-      $args=$_POST;
-      // foreach ($keys as $key) {
-      //   $value=$this->input->post($key);
-      //   if ($value) $args[$key]=$value;
-      // }
+      $args=$this->input->post();
       // POST can have a 'data' field
       // $data=$this->input->post('data');
       // if ($data) $args['data']=$data;
