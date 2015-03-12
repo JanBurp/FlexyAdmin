@@ -21,15 +21,20 @@ class Api extends AjaxController {
     if (!$method) $method='index';
     
     // does api model exists?
-    if (strtolower($model)!='apimodel' and file_exists(APPPATH.'/models/api/'.$model.'.php')) {
-      // Load Model
-      $this->load->model('api/'.$model);
-      // Call model/method
-      $result=$this->$model->$method($args);
-      // Result
-      $result['api']=$model;
-      return $this->_result( $result );
+    if (strtolower($model)!='apimodel') {
+
+      if (file_exists(APPPATH.'/models/api/'.$model.'.php') or file_exists(SITEPATH.'/models/api/'.$model.'.php')) {
+       // Load Model
+       $this->load->model('api/'.$model);
+       // Call model/method
+       $result=$this->$model->$method($args);
+       // Result
+       $result['api']=$model;
+       return $this->_result( $result );
+     }
+      
     }
+    
     // does not exists: just return nothing (empty page)
     return $this->_result( array( 'api'=>$model, 'error'=>'`_api/'.$model."` doesn't exists." ) );
   }

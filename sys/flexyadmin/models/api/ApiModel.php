@@ -152,6 +152,7 @@ class ApiModel extends CI_Model {
     if ($this->message) {
       $this->result['message']=$this->message;
     }
+    if (isset($this->args['format'])) $this->result['format']=$this->args['format'];
     return $this->result;
   }
   

@@ -805,7 +805,8 @@ class Menu {
 		$this->CI->db->where_uri($uri);
 		if ($foreigns) $this->CI->db->add_foreigns();
 		if ($many) $this->CI->db->add_many();
-    if ($this->settings['menu_table']) $item=$this->CI->db->get_row($this->settings['menu_table']);
+    $table=el('menu_table',$this->settings,get_menu_table());
+    $item=$this->CI->db->get_row($table);
 		return $item;
 	}
 	
