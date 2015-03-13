@@ -50,6 +50,7 @@
             <input class="form-control" name="login-email" type="email" required placeholder="E-mail" ng-model="loginCtrl.user.email">
             <button type="submit" class="btn btn-default" ng-disabled="loginEmailForm.$invalid">Stuur wachtwoord</button>
             <div class="btn text-success" ng-show="loginCtrl.mailSend"><span class="glyphicon glyphicon-ok"></span></div>
+            <div class="btn text-danger" ng-show="loginCtrl.mailError"><span class="glyphicon glyphicon-remove"></span></div>
           </div>
         </div>
       </form>

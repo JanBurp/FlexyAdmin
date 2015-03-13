@@ -65,7 +65,7 @@ class AuthTest extends CIUnit_Framework_TestCase {
   
   public function testLogin() {
     foreach ($this->users as $user) {
-      $this->assertTrue( $this->CI->user->login( $user['username'], $user['password'] ), 'Login must work with good username/password');
+      $this->assertTrue( $this->CI->user->login( $user['username'], $user['password'] ), 'Login must work with good username/password ['.$user['username'].'/'.$user['password'].']');
       $this->assertTrue( $this->CI->user->logged_in(), 'Login must work with good username/password: '.$user['username']);
       $this->assertArrayHasKey( 'rights', $this->CI->user->get_rights(), 'User must have rights');
     }

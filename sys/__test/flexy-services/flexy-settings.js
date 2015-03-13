@@ -96,6 +96,6 @@ flexyMenu.factory( 'flexySettings', [function() {
     },  // form_field_types
     
     
-  }
+  };
 
 }]);

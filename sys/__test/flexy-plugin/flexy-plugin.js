@@ -22,7 +22,7 @@ flexyAdmin.controller('flexyPluginController', ['$scope','$routeParams','$http',
   $scope.title = '';
   $scope.html  = '';
 
-  $http.post('get_plugin',{'plugin':$scope.plugin}).success(function(result){
+  $http.get('get_plugin?plugin='+$scope.plugin).success(function(result){
     $scope.title  = result.data.title;
     $scope.html   = $sce.trustAsHtml(result.data.html);
   }).error(function(data){

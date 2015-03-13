@@ -20,6 +20,9 @@ class __ extends AdminController {
   private $tags='TAGS';
   private $revision;
   
+  private $upload_path = '/test_afbeeldingen/test_groot';
+  
+  
   private $tinyMCEkeep=array(
     'maps'  => array('plugins/advhr','plugins/advlink','plugins/advlist','plugins/autolink','plugins/autoresize','plugins/autosave','plugins/bbcode','plugins/contextmenu','plugins/directionality','plugins/emotions','plugins/example','plugins/fullpage','plugins/iespell','plugins/insertdatetime','plugins/layer','plugins/legacyoutput','plugins/lists','plugins/nonbreaking','plugins/noneditable','plugins/pagebreak','plugins/print','plugins/save','plugins/searchreplace','plugins/spellchecker','plugins/tabfocus','plugins/template','plugins/visualblocks','plugins/visualchars','plugins/wordcount','plugins/xhtmlxtras'),
     'files' => array('advimage.css','advimage/image.htm','template.htm')
@@ -37,7 +40,7 @@ class __ extends AdminController {
     $this->load->model('svn');
     $this->load->helper('markdown');
     $this->revision=$this->svn->get_revision();
-    
+    $this->upload_path = $_SERVER['DOCUMENT_ROOT'].$this->upload_path;
 	}
 
 	public function index() {
@@ -49,6 +52,7 @@ class __ extends AdminController {
       array( 'uri'=>'admin/__/clean_assets', 'name' => 'Clean assets' ),
       array( 'uri'=>'admin/__/process_svnlog', 'name' => 'Process SVN log' ),
       array( 'uri'=>'admin/__/build', 'name' => 'Build revision: '.$this->revision ),
+      array( 'uri'=>'admin/__/ajax_upload_text', 'name' => 'API/Ajax upload test' ),
     );
     $menu = new Menu();
     $menu->set_menu($menuArray);
@@ -829,6 +833,31 @@ class __ extends AdminController {
     $output = str_replace(';}', '}', $output);
     return $output;
   }
+  
+  
+  
+  public function ajax_upload_text() {
+    $this->_add_content('<h1>API/Ajax upload test</h1>');
+
+    // UPLOADING files
+    // $upload_files=scandir($this->upload_path);
+    // $upload_files=array_slice($upload_files,2,2);
+    // foreach ($upload_files as $file) {
+    //   trace_($this->upload_path.'/'.$file);
+    //   $_FILES      = array( 'file' => array(
+    //     'name'     => $file,
+    //     'tmp_name' => '/tmp/php42up23',
+    //     // 'type'     => 'text/plain',
+    //     // 'size'     => 42,
+    //     // 'error'    => 0
+    //   ));
+    //
+    // };
+    
+    
+    $this->_show_all();
+  }
+  
   
     
 

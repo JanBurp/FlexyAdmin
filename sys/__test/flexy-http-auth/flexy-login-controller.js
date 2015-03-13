@@ -28,6 +28,8 @@ flexyAdmin.controller('flexyLoginController', ['flexyAuthService','authService',
   
   self.askMail  = false;
   self.mailSend = false;
+  self.mailError = false;
+  
   
   /**
    * login
@@ -52,7 +54,14 @@ flexyAdmin.controller('flexyLoginController', ['flexyAuthService','authService',
   self.sendNewPassword = function(){
     flexyAuthService.send_password(self.user.email).then(
       function(success){
-        self.mailSend = true;
+        if (success.data.data) {
+          self.mailSend = true;
+          self.mailError = false;
+        }
+        else {
+          self.mailSend = false;
+          self.mailError = true;
+        }
       }
     );
   };

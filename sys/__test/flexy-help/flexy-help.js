@@ -22,7 +22,7 @@ flexyAdmin.controller('flexyHelpController', ['$scope','$routeParams','$http','$
   $scope.title = '';
   $scope.help  = '';
 
-  $http.post('get_help',{'page':$scope.page}).success(function(result){
+  $http.get('get_help?page='+$scope.page).success(function(result){
     $scope.title  = result.data.title;
     $scope.help   = $sce.trustAsHtml(result.data.help);
   }).error(function(data){

@@ -75,7 +75,7 @@ flexyAdmin.controller('FormController', ['flexyAdminGlobals','$scope','$routePar
    */
   var callServer = function(tableState) {
     
-    $http.post('row',{'table':$scope.table,'where':$scope.id,'config':['table_info','field_info']}).success(function(result){
+    $http.get('row?table='+$scope.table+'&where='+$scope.id+'&config[]=table_info&config[]=field_info').success(function(result){
       
       // keep items in Scope
       $scope.form_data.fields=result.data;

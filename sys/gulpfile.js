@@ -40,7 +40,10 @@ var files = {
     assets+'/js/site.js',
   ],
   'jsdest'  : 'scripts.min.js',
-  'watchjs' : assets+'/js/site.js',
+  'watchjs' : [
+    assets+'/**/jdb*.js',
+    assets+'/**/flexy*.js',
+  ],
   
   'less'    : assets+'/less/flexyadmin.less',
   'css'     : assets+'/css',

@@ -67,12 +67,8 @@ flexyAdmin.controller('GridController', ['flexyAdminGlobals','$scope','$routePar
   var callServer = function(tableState) {
     
     // TODO server side: https://lorenzofox3.github.io/smart-table-website/#section-pipe: set st-pipe="callServer" in grid.html
-    var post_data = {
-      'table' : $scope.table,
-      'config': [ 'table_info','field_info' ],
-    };
     
-    $http.post('table',post_data).success(function(result){
+    $http.get('table?table='+$scope.table+'&txt_as_abstract=true&config[]=table_info&config[]=field_info').success(function(result){
 
       // Define _info on all items
       angular.forEach( result.data, function(item,key) {
