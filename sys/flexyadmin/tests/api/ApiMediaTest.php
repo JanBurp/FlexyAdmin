@@ -3,11 +3,11 @@
 class ApiMediaTest extends ApiTestModel {
 
   private $paths = array('pictures','downloads');
-  private $upload_path = '/test_afbeeldingen/test_groot';
+  // private $upload_path = '/test_afbeeldingen/test_groot';
 
   public function __construct() {
     parent::__construct('media');
-    $this->upload_path = $_SERVER['DOCUMENT_ROOT'].$this->upload_path;
+    // $this->upload_path = $_SERVER['DOCUMENT_ROOT'].$this->upload_path;
   }
 
   public function testWithoutLogin() {
@@ -100,8 +100,9 @@ class ApiMediaTest extends ApiTestModel {
     // UPLOADING files
     // $upload_files=scandir($this->upload_path);
     // $upload_files=array_slice($upload_files,2,2);
+    // $this->CI->load->view('ciunit/upload',array('files'=>$upload_files));
     // foreach ($upload_files as $file) {
-    //   trace_($this->upload_path,'/'.$file);
+    //   trace_($this->upload_path.'/'.$file);
     //   $_FILES      = array( 'file' => array(
     //     'name'     => $file,
     //     'tmp_name' => '/tmp/php42up23',
@@ -109,9 +110,10 @@ class ApiMediaTest extends ApiTestModel {
     //     // 'size'     => 42,
     //     // 'error'    => 0
     //   ));
-    // }
     //
-    //
+    // };
+
+
     
     
     

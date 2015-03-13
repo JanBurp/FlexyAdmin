@@ -14,9 +14,10 @@ class ApiAuthTest extends ApiTestModel {
     $this->assertArrayHasKey( 'status', $result );
     $this->assertEquals( 401, $result['status'] );
     // Login as 'admin'
-    $this->CI->auth->set_args(array('username'=>'admin','password'=>'admin'));
+    $this->CI->auth->set_args(array('POST'=>array('username'=>'admin','password'=>'admin')));
     $result=$this->CI->auth->login();
     $this->assertArrayHasKey( 'success', $result );
+    $this->assertEquals( true, $result['success'] );
     $this->assertEquals( 'admin', $result['data']['username'] );
     $this->assertEquals( 'info@flexyadmin.com', $result['data']['email'] );
     // Logout
@@ -43,7 +44,7 @@ class ApiAuthTest extends ApiTestModel {
     );
 
     foreach ($attempts as $attempt) {
-      $this->CI->auth->set_args(array('username'=>$attempt['username'],'password'=>$attempt['password']));
+      $this->CI->auth->set_args(array('POST'=>array('username'=>$attempt['username'],'password'=>$attempt['password'])));
       $result=$this->CI->auth->login();
       $this->assertArrayHasKey( 'status', $result );
       $this->assertEquals( 401, $result['status'] );
@@ -67,8 +68,19 @@ class ApiAuthTest extends ApiTestModel {
       array( 'username'=> "1 ORDER BY 10--",              'password' =>  "1 ORDER BY 10--" )
     );
 
+    // GET
     foreach ($attempts as $attempt) {
       $this->CI->auth->set_args(array('username'=>$attempt['username'],'password'=>$attempt['password']));
+      $result=$this->CI->auth->login();
+      $this->assertArrayHasKey( 'success', $result );
+      $this->assertEquals( false, $result['success'] );
+      $this->assertArrayNotHasKey( 'args', $result );
+      $this->assertArrayNotHasKey( 'data', $result );
+    }
+
+    // POST
+    foreach ($attempts as $attempt) {
+      $this->CI->auth->set_args(array('POST'=>array('username'=>$attempt['username'],'password'=>$attempt['password'])));
       $result=$this->CI->auth->login();
       $this->assertArrayHasKey( 'status', $result );
       $this->assertEquals( 401, $result['status'] );
@@ -76,12 +88,13 @@ class ApiAuthTest extends ApiTestModel {
       $this->assertArrayNotHasKey( 'args', $result );
       $this->assertArrayNotHasKey( 'data', $result );
     }
+
     
   }
   
   public function testLogin() {
     foreach ($this->users as $user) {
-      $this->CI->auth->set_args(array('username'=>$user['username'],'password'=>$user['password']));
+      $this->CI->auth->set_args(array('POST'=>array('username'=>$user['username'],'password'=>$user['password'])));
       $result=$this->CI->auth->login();
       $this->assertArrayHasKey( 'success', $result );
       $this->assertEquals( true, $result['success'] );

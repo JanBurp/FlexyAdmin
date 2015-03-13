@@ -154,8 +154,8 @@
         <?php
         else : ?>
           <h2>Happy testing with CIUnit</h2>
-          
           <h4>Please, select a test from the left side menu.</h4>
+          <p class="warning">Test only with the demo database! Some tests will change the database and use data in the demo database.</p>
         <?php endif;
         # END isset($runner)
         ?>

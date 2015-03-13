@@ -25,6 +25,8 @@ class cfg_users extends _crud {
     if (el('where',$args)=='current') {
       $args['where']=$this->user->user_id;
     }
+    // select only the safe fields, that user may change
+    $args['select']=array('str_username','id_user_group','email_email','str_language');
     return parent::get_row($args);
   }
   

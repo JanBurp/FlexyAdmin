@@ -37,7 +37,7 @@ flexyMenu.factory( 'flexySettingsService', ['flexySettings', function(settings) 
    */
   flexy_settings_service.item = function() {
     var args = angular.copy( Array.prototype.slice.call(arguments) );
-    var setting = undefined;
+    var setting;
     if (args.length>0) {
       if (angular.isArray(args[0])) args=args[0]; // if first arg is an array that one holds all args
       setting = settings;
@@ -66,7 +66,7 @@ flexyMenu.factory( 'flexySettingsService', ['flexySettings', function(settings) 
     if (angular.isArray(args[0])) args=args[0]; // if first arg is an array that one holds all args
     // test if exist allready
     return angular.isDefined( flexy_settings_service.item(args) );
-  }
+  };
   
 
   /**
@@ -76,7 +76,7 @@ flexyMenu.factory( 'flexySettingsService', ['flexySettings', function(settings) 
    * or
    * set_item( value, ['part','subpart' ...]) // as array
    */
-  flexy_settings_service.set_item = function(value) {
+  flexy_settings_service.set_item = function() {
     var args = angular.copy( Array.prototype.slice.call(arguments) );
     var value = args.shift();
     if (angular.isArray(args[0])) args=args[0]; // if first arg is an array that one holds all args
@@ -91,7 +91,7 @@ flexyMenu.factory( 'flexySettingsService', ['flexySettings', function(settings) 
         copy = copy[arg];
       }
       else {
-        if (args.length==0) {
+        if (args.length===0) {
           copy[arg] = value;
         }
         else {
@@ -101,7 +101,7 @@ flexyMenu.factory( 'flexySettingsService', ['flexySettings', function(settings) 
       }
     }
     return !exists;
-  }
+  };
   
   
   /**
@@ -124,7 +124,7 @@ flexyMenu.factory( 'flexySettingsService', ['flexySettings', function(settings) 
     while (args.length) {
       var arg = args.shift();
       if (arg in copy) {
-        if (args.length==0) {
+        if (args.length===0) {
           // delete it
           delete copy[arg];
         }
@@ -134,7 +134,7 @@ flexyMenu.factory( 'flexySettingsService', ['flexySettings', function(settings) 
       }
     }
     return value;
-  }
+  };
   
   
   

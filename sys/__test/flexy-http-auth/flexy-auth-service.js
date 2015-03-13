@@ -57,7 +57,7 @@ flexyAdmin.factory('flexyAuthService',['$http','$cacheFactory',function($http,$c
      * Logout
      */
     logout : function(){
-      return $http.post('auth/logout').then(function(response){
+      return $http.get('auth/logout').then(function(response){
         isLoggedIn = false;
         $cacheFactory.get('$http').removeAll(); // remove cache
         return response;
@@ -68,7 +68,7 @@ flexyAdmin.factory('flexyAuthService',['$http','$cacheFactory',function($http,$c
      * Send new password to user
      */
     send_password : function(email) {
-      return $http.post('auth/send_new_password',{'email':email}).then(function(response){
+      return $http.get('auth/send_new_password?email='+email).then(function(response){
         return response;
       });
     }

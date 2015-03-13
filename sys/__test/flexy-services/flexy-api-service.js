@@ -48,7 +48,7 @@ flexyMenu.factory( 'flexyApiService', ['flexySettingsService','$http',function(s
       }
     }
     return needs;
-  }
+  };
   
 
   
@@ -60,16 +60,16 @@ flexyMenu.factory( 'flexyApiService', ['flexySettingsService','$http',function(s
     
     var needs = flexy_api_service.needs_these_cfg( cfg );
     if (needs.length>0) {
-      params['config']=needs;
+      params.config=needs;
     }
     
-    $http.get( type,params ).then(function(result){
+    $http.get( type, params ).then(function(result){
       console.log(result);
       
     });
     
     
-  }
+  };
   
   
   

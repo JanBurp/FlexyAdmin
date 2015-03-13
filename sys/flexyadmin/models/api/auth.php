@@ -71,6 +71,11 @@ class auth extends ApiModel {
    * @author Jan den Besten
    */
   public function login() {
+    // Has POST args?
+    if ($this->args['type']!='POST' or !isset($this->args['username']) or !isset($this->args['password']) ) {
+      return $this->_result_wrong_args();
+    }
+    
     $this->user->login( $this->args['username'], $this->args['password'] );
     return $this->check();
   }

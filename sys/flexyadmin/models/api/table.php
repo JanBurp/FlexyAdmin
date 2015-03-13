@@ -64,9 +64,11 @@ class Table extends ApiModel {
    * @author Jan den Besten
    */
   private function _get_data() {
+    // UNSELECT Hidden fields
     $this->db->unselect( el(array('field_info','hidden_fields'),$this->cfg_info,array()) );
-    $this->db->max_text_len(100);
-    if ( el( array($this->args['table'],'tree'), $this->cfg_info,false) ) $this->db->order_as_tree();
+    // ABSTRACTS of txt?
+    if (el('txt_as_abstract',$this->args,false)) $this->db->max_text_len(100);
+    if ( el( array('table_info','tree'), $this->cfg_info,false) ) $this->db->order_as_tree();
     $items = $this->crud->get($this->args);
     return $items;
   }
