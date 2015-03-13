@@ -399,7 +399,7 @@ class Mediatable Extends CI_Model {
    */
   public function get_img_title($file) {
     $info=$this->get_info($file);
-    // trace_([$file,$info]);
+    // trace_([$file,$info['str_title']]);
     if ($info)
       $title=$info['str_title'];
     else
