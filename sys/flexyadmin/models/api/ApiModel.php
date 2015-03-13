@@ -267,7 +267,8 @@ class ApiModel extends CI_Model {
    * @return bool
    * @author Jan den Besten
    */
-  protected function has_args() {
+  protected function has_args($type='') {
+    if (!empty($type) and ($this->args['type']!==$type)) return FALSE;
     $has_args = TRUE;
     foreach ($this->needs as $key => $value) {
       $has_args = ( $has_args AND isset($this->args[$key]) AND $this->args[$key]!=='' );

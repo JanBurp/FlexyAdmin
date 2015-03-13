@@ -21,7 +21,20 @@ class Crud extends CI_Model {
 	}
   
   /**
-   * Wrapper for all crud methods
+   * Wrapper for _crud->table()
+   *
+   * @param string $table 
+   * @param string $user_id 
+   * @return mixed
+   * @author Jan den Besten
+   */
+	public function table($table='',$user_id=FALSE) {
+		return $this->_crud->table($table,$user_id);
+	}
+
+
+  /**
+   * Wrapper for all other crud methods
    *
    * @return mixed
    * @author Jan den Besten
@@ -29,10 +42,9 @@ class Crud extends CI_Model {
    * @ignore
    */
 	public function __call($function, $args) {
-    $table=$this->_crud->get_table();
     $args=el(0,$args,null);
+    $table=$this->_crud->get_table();
 
-    // trace_([$function,$args]);
     // Test if table has own crud model, is so call it
     if (!empty($table) and file_exists(APPPATH.'models/'.$table.'.php')) {
       // trace_('load and call '.$table);

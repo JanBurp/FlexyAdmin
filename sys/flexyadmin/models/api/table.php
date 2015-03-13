@@ -36,7 +36,7 @@ class Table extends ApiModel {
   public function index() {
     if (!$this->_has_rights($this->args['table'])) return $this->_result_status401();
     
-    if ( !$this->has_args() ) {
+    if ( !$this->has_args()) {
       return $this->_result_wrong_args();
     }
     
