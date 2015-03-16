@@ -113,7 +113,7 @@ class ApiModel extends CI_Model {
     if (empty($args['config'])) unset($args['config']);
     $this->result['success'] = false;
     $this->result['error']   = 'WRONG ARGUMENTS';
-    $this->result['needs']   = $this->needs;
+    // $this->result['needs']   = $this->needs;
     unset($this->result['status']);
     unset($this->result['message']);
     return $this->result;
@@ -193,6 +193,7 @@ class ApiModel extends CI_Model {
     $keys=array_keys($defaults);
     $keys=array_merge($keys,array('config','format'));
     $args=array();
+    $args['type']='';
     
     // GET
     if (!$args and (!empty($_SERVER['QUERY_STRING']) or !empty($_GET))) {
