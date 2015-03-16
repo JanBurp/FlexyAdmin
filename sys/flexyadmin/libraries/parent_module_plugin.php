@@ -41,20 +41,21 @@ class Parent_module_plugin {
    * @author Jan den Besten
    * @ignore
    */
-	public function __construct($name='') {
+	public function __construct($args=array()) {
 		$this->CI=&get_instance();
-		if (empty($name) or is_array($name)) $name=strtolower(get_class($this));
+    $name=el('name',$args,strtolower(get_class($this)));
+    $file=el('file',$args,$name);
     if (IS_AJAX) $name=str_replace('ajax_','',$name);
 		if (!in_array($name, array('parent_module_plugin','module','plugin','plugin_'))) {
 			$this->set_name($name);
-      $langfile='language/'.$this->CI->config->item('language').'/'.$name.'_lang.php';
+      $langfile='language/'.$this->CI->config->item('language').'/'.$file.'_lang.php';
       if (file_exists(APPPATH.$langfile) or file_exists(SITEPATH.$langfile)) {
         $this->CI->lang->load($name);
         if (substr($name,0,6)=='plugin') {
           $this->CI->config->unload($name); // Will be reloaded later
         }
       }
-      $this->load_config();
+      $this->load_config($file);
 		}
 	}
 
@@ -68,20 +69,21 @@ class Parent_module_plugin {
 	public function set_name($name) {
 		$this->name=$name;
 		$this->shortname=str_replace('plugin_','',$name);
+    return $this;
 	}
 
   /**
    * Laad het bijbehorende config bestand van de Module/Plugin (als het bestaat)
    *
-   * @param string $name[''] Als leeg, wordt de config van huidige module/plugin geladen
+   * @param string $file[''] Als leeg, wordt de config van huidige module/plugin geladen, anders de meegegeven config file
    * @return array config
    * @author Jan den Besten
    */
-	protected function load_config($name='') {
-		if (empty($name)) $name=$this->name;
-    if (!is_array($name)) { // Hack, want hoe komt het dat $name soms de $config is???
-  		$this->CI->config->load($name,true,false);
-  		$this->set_config( $this->CI->config->item($name) );
+	protected function load_config($file='') {
+		if (empty($file)) $file=$this->name;
+    if (!is_array($file)) { // Hack, want hoe komt het dat $name soms de $config is???
+  		$this->CI->config->load($file,true,false);
+  		$this->set_config( $this->CI->config->item($file) );
     }
 		return $this->config;
 	}
