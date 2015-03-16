@@ -49,16 +49,18 @@ class auth extends ApiModel {
    * @return array
    * @author Jan den Besten
    */
-  public function check() {
+  protected function _check() {
     // if not logged in status = 401
-    if (!$this->logged_in()) {
-      return $this->_result_status401();
-    }
-
+    if (!$this->logged_in()) return null;
     // Give back user session if logged in
     $data=$this->user->get_user();
     $data=object2array($data);
     $data=array_rename_keys($data,array('str_username'=>'username','email_email'=>'email','last_login'=>'last_login','str_language'=>'language'),false);
+    return $data;
+  }
+  public function check() {
+    $data=$this->_check();
+    if ($data===null) return $this->_result_status401();
     $this->result['data']=$data;
     return $this->_result_ok();
   }
