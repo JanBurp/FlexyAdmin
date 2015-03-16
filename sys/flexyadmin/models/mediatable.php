@@ -388,8 +388,7 @@ class Mediatable Extends CI_Model {
     return $this->info[$file];
   }
   
-  
-  
+
   /**
    * Haalt title van image op uit tabel of maakt die zelf
    *
@@ -405,6 +404,50 @@ class Mediatable Extends CI_Model {
     else
       $title=nice_string(remove_suffix(get_suffix($file,'/'),'.'));
     return $title;
+  }
+  
+  /**
+   * Geeft omvang van een afbeelding
+   *
+   * @param string $file 
+   * @return mixed
+   * @author Jan den Besten
+   */
+  public function get_img_size($file) {
+    $info=$this->get_info($file);
+    if (isset($info['int_img_width']) and isset($info['int_img_height'])) return array(
+      0        => $info['int_img_width'],
+      1        => $info['int_img_height'],
+      'width'  => $info['int_img_width'],
+      'height' => $info['int_img_height']
+    );
+    // not in mediatable, try on file:
+  	$size=FALSE;
+  	if (file_exists($file) and is_file($file)) {
+  		$errorReporting=error_reporting(E_ALL);
+  		error_reporting($errorReporting - E_WARNING - E_NOTICE);
+  		$size=getimagesize($i);
+  		error_reporting($errorReporting);
+    }
+  	return $size;
+  }
+
+  /**
+   * Test of een afbeelding liggen of staand is
+   *
+   * @param string $i afbeelding
+   * @return string = 'landscape', 'portrait' of 'unknown'
+   * @author Jan den Besten
+   */
+  public function portrait_or_landscape($file) {
+    $size=$this->get_img_size($file);
+  	if ($size) {
+  		if ($size['width']>$size['height'])
+  			return 'landscape';
+  		else
+  			return 'portrait';
+  	}
+  	return 'unknown';
   }
   
   

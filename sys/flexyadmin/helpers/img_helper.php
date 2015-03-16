@@ -68,15 +68,10 @@ function show_thumb($attr) {
  * @return mixed FALSE als niet bestaat of fout, anders =getimagesize($i)
  * @author Jan den Besten
  */
-function get_img_size($i) {
-	$size=FALSE;
-	if (file_exists($i) and is_file($i)) {
-		$errorReporting=error_reporting(E_ALL);
-		error_reporting($errorReporting - E_WARNING - E_NOTICE);
-		$size=getimagesize($i);
-		error_reporting($errorReporting);
-  }
-	return $size;
+function get_img_size($file) {
+  $CI=&get_instance();
+  $CI->load->model('mediatable');
+  return $CI->mediatable->get_img_size($file);
 }
 
 /**
@@ -99,18 +94,10 @@ function is_wider_than($i,$w) {
  * @return string = 'landscape', 'portrait' of 'unknown'
  * @author Jan den Besten
  */
-function portrait_or_landscape($i) {
-	$c='';
-	$s=get_img_size($i);
-	if ($s) {
-		if ($s[0]>$s[1])
-			$c='landscape';
-		else
-			$c='portrait';
-	}
-	else
-		$c='unknown';
-	return $c;
+function portrait_or_landscape($file) {
+  $CI=&get_instance();
+  $CI->load->model('mediatable');
+  return $CI->mediatable->portrait_or_landscape($file);
 }
 
 /**
