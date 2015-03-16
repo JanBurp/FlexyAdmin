@@ -193,7 +193,6 @@ class ApiModel extends CI_Model {
     $keys=array_keys($defaults);
     $keys=array_merge($keys,array('config','format'));
     $args=array();
-    $args['type']='';
     
     // GET
     if (!$args and (!empty($_SERVER['QUERY_STRING']) or !empty($_GET))) {
@@ -220,6 +219,7 @@ class ApiModel extends CI_Model {
     }
     
     if (isset($args['format'])) $this->result['format']=$args['format'];
+    if (!isset($args['type'])) $args['type']='';
     
     // trace_(['defaults'=>$defaults,'POST'=>$_POST,'GET'=>$_GET,'args'=>$args]);
     
