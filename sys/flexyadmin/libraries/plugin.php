@@ -66,8 +66,8 @@ class Plugin extends Parent_module_plugin {
   /**
    * @ignore
    */
-	public function __construct($name='') {
-		parent::__construct($name);
+	public function __construct($args=array()) {
+		parent::__construct($args);
 	}
 	
   

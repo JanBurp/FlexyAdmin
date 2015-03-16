@@ -13,8 +13,8 @@ class Module extends Parent_module_plugin {
   /**
    * @ignore
    */
-	function __construct($name='') {
-		parent::__construct($name);
+	function __construct($args=array()) {
+		parent::__construct($args);
 	}
 
   /**
