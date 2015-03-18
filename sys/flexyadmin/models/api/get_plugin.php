@@ -26,10 +26,7 @@ class get_plugin extends ApiModel {
   
   public function index() {
     if (!$this->logged_in()) return $this->_result_status401();
-    
-    if ( !$this->has_args() ) {
-      return $this->_result_wrong_args();
-    }
+    if ( !$this->has_args() ) return $this->_result_wrong_args();
     
     $args=$this->args;
     $plugin='plugin_'.$args['plugin'];
