@@ -123,15 +123,12 @@ class ApiTestModel extends CIUnit_Framework_TestCase {
         $args = $this->_randomArgs();
         $this->CI->$apiModel->set_args($args);
         $result=$this->CI->$apiModel->index();
-        
+
         $this->assertArrayHasKey( 'success', $result );
         $this->assertEquals( false, $result['success'] );
         $this->assertArrayHasKey( 'error', $result );
         $this->assertInternalType( string, $result['error'] );
         $this->assertEquals( 'WRONG ARGUMENTS', $result['error'] );
-        $this->assertArrayHasKey( 'needs', $result );
-        $this->assertInternalType( 'array', $result['needs'] );
-
       }
     }
   }
