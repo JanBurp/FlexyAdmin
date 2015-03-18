@@ -81,7 +81,7 @@ class Login extends CI_Controller {
 			if (empty($message)) $message = $this->user->errors();
 			$this->session->set_userdata('message', $message);
 		}
-		redirect($this->homePage);
+		redirect($this->homePage, 'refresh');
 	}
 
 
@@ -104,12 +104,12 @@ class Login extends CI_Controller {
 	// 		if ( $this->user->forgotten_password($email) ) {
 	// 			//if there were no errors
 	// 			$this->session->set_flashdata('message', $this->user->messages());
-	// 			redirect("admin/login");
+	// 			redirect("admin/login", 'refresh');
 	// 		}
 	// 		else {
 	// 			// else try again
 	// 			$this->session->set_flashdata('message', $this->user->errors());
-	// 			redirect("admin/login/forgot_password");
+	// 			redirect("admin/login/forgot_password", 'refresh');
 	// 		}
 	// 	}
 	// }
