@@ -102,7 +102,6 @@
 
 <!--FlexyAdmin -->
 <script src="sys/__test/jdb.extend.js" type="text/javascript" charset="utf-8"></script>
-
 <script src="sys/__test/flexy-admin-app.js" type="text/javascript" charset="utf-8"></script>
 
 <script src="sys/__test/flexy-http-auth/http-request.js" type="text/javascript" charset="utf-8"></script>

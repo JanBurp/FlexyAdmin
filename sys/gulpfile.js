@@ -195,7 +195,7 @@ gulp.task('install', function() {
     assets+"/js/ObjectPath.js",
     assets+"/js/schema-form.min.js",
     assets+"/js/bootstrap-decorator.min.js",
-    assets+"/js/bootstrap-decorator-froala.js",
+    assets+"/flexy-form/bootstrap-decorator-froala.js",
     assets+"/js/froala_editor.min.js",
     assets+"/js/angular-froala.js",
     assets+"/js/froala-sanitize.js"
