@@ -34,7 +34,8 @@ var flexyAdmin = angular.module( 'flexyAdmin', [
   'ui.sortable',
   // Form
   'schemaForm',
-  'schemaForm-tinymce',
+  'froala',
+  'schemaForm-froala',
   
   // flexyAdmin Modules
   'flexyMenu',
@@ -42,11 +43,17 @@ var flexyAdmin = angular.module( 'flexyAdmin', [
   ]
 );
 
+/**
+ * FROALA config
+ */
+flexyAdmin.value('froalaConfig', {
+  inlineMode: false,
+  placeholder: 'Enter Text Here'
+});
 
 /**
  * SOME SPARE GLOBALS as a constant
  */
-
 flexyAdmin.constant('flexyAdminGlobals',{
   base_url      : 'admin/__test',
   api_base_url  : '_api/',

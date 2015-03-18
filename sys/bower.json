@@ -37,8 +37,9 @@
     "angular-sanitize": "~1.3.7",
     "tv4": "~1.1.4",
     "objectpath": "~1.0.4",
-    "angular-schema-form-tinymce": "~0.1.0",
-    "tinymce": "~4.1.7"
+    "angular-froala":"https://github.com/froala/angular-froala.git",
+    "FroalaWysiwygEditor":"https://github.com/froala/wysiwyg-editor.git",
+    "components-font-awesome": "~4.2.0"
   },
   "resolutions": {
     "angular": "~1.3.x",
