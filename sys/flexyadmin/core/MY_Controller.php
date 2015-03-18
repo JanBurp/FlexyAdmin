@@ -50,12 +50,16 @@ class MY_Controller extends CI_Controller {
 							}
 						}
 						$succes=TRUE;
+<<<<<<< .mine
+						redirect('admin', 'refresh');
+=======
             
             // Other Install options
             $this->_install();
             
             // Redirect
 						redirect('admin');
+>>>>>>> .r2962
 					}
 				}
 			}

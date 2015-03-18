@@ -52,7 +52,7 @@ class Edit extends AdminController {
 			}
 			else {
 				$this->message->add_error("Not confirmed... ".anchor(api_uri('API_confirm',$table),"confirm"));
-				redirect(api_uri('API_view_grid',$table));
+				redirect(api_uri('API_view_grid',$table), 'refresh');
 			}
 		}
 		$this->_show_all();
@@ -107,7 +107,7 @@ class Edit extends AdminController {
 
 		$redirectUri=$this->grid_set->open_uri();
 		if (!empty($info)) $redirectUri.='/info/'.$info;
-		redirect($redirectUri);
+		redirect($redirectUri, 'refresh');
 	}
 
 

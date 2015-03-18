@@ -31,9 +31,9 @@ class Logout extends AdminController {
 			$this->session->sess_destroy();
       // $this->session->sess_create();
 			if ($this->config->item('logout_to_site'))
-				redirect();
+				redirect('','refresh');
 			else
-				redirect($this->homePage);
+				redirect($this->homePage, 'refresh');
 		}
 		else {
 			$this->_add_content(h('Logout',1));

@@ -112,7 +112,7 @@ class cfg_users extends AdminController {
         if (isset($message)) $this->message->add(langp($message,$user->str_username.'('.$user->email_email.','.$extra_emails.')'));
       }
 		}
-    redirect(api_uri('API_view_grid','cfg_users'));
+    redirect(api_uri('API_view_grid','cfg_users'), 'refresh');
   }
 	
   

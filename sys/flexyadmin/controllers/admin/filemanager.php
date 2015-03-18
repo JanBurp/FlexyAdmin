@@ -202,8 +202,8 @@ class Filemanager extends AdminController {
 		}
     
 		$redirectUri=$this->grid_set->open_uri();
-    redirect($redirectUri);
-    // redirect(api_uri('API_filemanager_view',$path));
+    redirect($redirectUri, 'refresh');
+    // redirect(api_uri('API_filemanager_view',$path), 'refresh');
 	}
 
 
@@ -220,7 +220,7 @@ class Filemanager extends AdminController {
 		}
 		else {
 			$this->message->add("Not confirmed... ".anchor(api_uri('API_filemanager_confirm'),"confirm"));
-			redirect(api_uri('API_filemanager_view'));
+			redirect(api_uri('API_filemanager_view'), 'refresh');
 		}
 	}
 
@@ -286,7 +286,7 @@ class Filemanager extends AdminController {
 		}
 		$redirectUri=$this->grid_set->open_uri();
 		if (!empty($info)) $redirectUri.='/info/'.$info;
-    redirect($redirectUri);
+    redirect($redirectUri, 'refresh');
     // trace_($redirectUri);
 	}
 
@@ -343,7 +343,7 @@ class Filemanager extends AdminController {
 					$this->message->add(langp("upload_succes",$file));
 					$this->load->model("login_log");
 					$this->login_log->update($path);
-          // redirect(api_uri('API_filemanager_view',pathencode($path),$file));
+          // redirect(api_uri('API_filemanager_view',pathencode($path),$file), 'refresh');
 				}
 			}
 			else {
@@ -372,9 +372,9 @@ class Filemanager extends AdminController {
     }
     else {
       if (isset($file) and !empty($file))
-        redirect(api_uri('API_filemanager_view',pathencode($path),$file));
+        redirect(api_uri('API_filemanager_view',pathencode($path),$file), 'refresh');
       else
-        redirect(api_uri('API_filemanager_view',pathencode($path)));
+        redirect(api_uri('API_filemanager_view',pathencode($path)), 'refresh');
     }
 	}
 
@@ -545,7 +545,7 @@ class Filemanager extends AdminController {
       // redirect naar show
 			$redirectUri=$this->grid_set->open_uri($path);
       // trace_($redirectUri);
-      redirect($redirectUri);
+      redirect($redirectUri, 'refresh');
     }
 		/**
 		 * Validate form, no succes: show form, maybe with validation errors

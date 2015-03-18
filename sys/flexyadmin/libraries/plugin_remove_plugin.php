@@ -74,7 +74,7 @@ class Plugin_remove_plugin extends Plugin {
       $addon=str_replace('.php','',$addon);
       $redirect=site_url($this->wizard->get_next_step_uri($addon));
       // trace_($redirect);
-      redirect($redirect);
+      redirect($redirect, 'refresh');
     }
     else {
       $out.=$form->render();
@@ -138,7 +138,7 @@ class Plugin_remove_plugin extends Plugin {
       $this->CI->session->set_userdata('addon_files',$files);
       $redirect=site_url($this->wizard->get_next_step_uri($addon));
       // trace_($redirect);
-      redirect($redirect);
+      redirect($redirect, 'refresh');
     }
     else {
       $out.=$form->render();

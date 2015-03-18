@@ -59,7 +59,7 @@ class Show extends AdminController {
 			$this->message->add(langp("order_has_changed",$table));
 			$this->load->model("login_log");
 			$this->login_log->update($table);
-			redirect(api_uri('API_view_grid',$table,$id));
+			redirect(api_uri('API_view_grid',$table,$id), 'refresh');
 		}
 		$this->_show_all();
 	}
@@ -249,7 +249,7 @@ class Show extends AdminController {
                   if ($offset>0) {
               			$this->grid_set->save(array('table'=>$table,'offset'=>$offset,'order'=>$order,'search'=>$search));
                     $uri=$this->grid_set->open_uri();
-                    redirect($uri);
+                    redirect($uri, 'refresh');
                   }
                 }
               }
@@ -507,12 +507,12 @@ class Show extends AdminController {
 					
 					if ( $id===FALSE ) {
 						$this->message->add_error(langp("update_error",$table));
-						redirect($redirectUri);
+						redirect($redirectUri, 'refresh');
 					}
 					else {
 						$this->load->model("login_log");
 						$this->login_log->update($table);
-						redirect($redirectUri.'/current/'.$id);
+						redirect($redirectUri.'/current/'.$id, 'refresh');
 					}
 				}
 
@@ -630,7 +630,7 @@ class Show extends AdminController {
 				$this->load->model("login_log");
 				$this->login_log->update($userTable);
 			}
-			redirect(api_uri('API_home'));
+			redirect(api_uri('API_home'), 'refresh');
 		}
 		else {
 			/**
