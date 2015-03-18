@@ -33,6 +33,7 @@ flexyMenu.factory( 'flexyApiService', ['flexySettingsService','$http',function(s
     return settings.has_item('cfg',type);
   };
 
+
   /**
    * Checks if given cfg are available. Returns the cfg that ar not available
    * 
@@ -57,18 +58,22 @@ flexyMenu.factory( 'flexyApiService', ['flexySettingsService','$http',function(s
    * 
    */
   flexy_api_service.get = function(type,params,cfg) {
-    
+
+    // Check if cfg is needed
     var needs = flexy_api_service.needs_these_cfg( cfg );
     if (needs.length>0) {
       params.config=needs;
     }
-    
-    $http.get( type, params ).then(function(result){
-      console.log(result);
-      
+    // url
+    var url = settings.item('api_base_url') + type;
+
+    // call
+    console.log('GET',url,params);
+    $http.get( url, params ).then(function(result){
+      console.log('result');
+
     });
-    
-    
+
   };
   
   
