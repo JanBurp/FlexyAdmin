@@ -58,7 +58,7 @@ class MY_Controller extends CI_Controller {
             $this->_install();
             
             // Redirect
-						redirect('admin');
+						redirect('admin', 'refresh');
 >>>>>>> .r2962
 					}
 				}
