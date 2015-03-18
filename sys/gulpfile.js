@@ -29,6 +29,7 @@ var assets    = '__test';
  * Pas dit aan (bij je framework). Bij default staat overal commentaar achter voor uitleg.
  */
 var files = {
+  // JS
   'js'      : assets+'/js',
   'jshint'  : [
     assets+'/**/jdb*.js',
@@ -45,10 +46,14 @@ var files = {
     assets+'/**/flexy*.js',
   ],
   
+  // LESS / CSS
   'less'    : assets+'/less/flexyadmin.less',
   'css'     : assets+'/css',
   'cssmin'  : [
     assets+'/css/loading-bar.css',
+    assets+'/css/font-awesome.min.css',
+    assets+'/css/froala_editor.css',
+    assets+'/css/froala_style.css',
     assets+'/css/flexyadmin.css',
   ],
   'cssdest' : 'flexyadmin.min.css',
@@ -152,29 +157,30 @@ gulp.task('install', function() {
     bower+"/tv4/tv4.js",
     bower+"/objectpath/lib/ObjectPath.js",
     bower+"/angular-schema-form/dist/*.min.js",
-    // form:tinymce
-    bower+"/tinymce/tinymce.min.js",
-    bower+"/tx-tinymce/tx-tinymce.js",
-    bower+"/angular-schema-form-tinymce/bootstrap-tinymce.js"
+    // jQuery
+    bower+"/jquery/dist/jquery.min.js",
+    // Froala editor
+    bower+"/FroalaWysiwygEditor/js/froala_editor.min.js",
+    bower+"/angular-froala/src/angular-froala.js",
+    bower+"/angular-froala/src/froala-sanitize.js",
   ]).pipe(gulp.dest( assets+'/js' ));
-  // form:tinymce
-  gulp.src([
-    bower+"/tinymce/plugins/**/*",
-  ]).pipe(gulp.dest( assets+'/js/plugins' ));
-  gulp.src([
-    bower+"/tinymce/skins/**/*",
-  ]).pipe(gulp.dest( assets+'/js/skins' ));
-  gulp.src([
-    bower+"/tinymce/themes/**/*",
-  ]).pipe(gulp.dest( assets+'/js/themes' ));
-  // CSS
+  gulp.src( '' ).pipe(notify("Angular, Angular modules, jQuery & Froala editore moved"));
+
+  // CSS - Loading bar - Fontawsome - Froala
   gulp.src([
     bower+"/angular-loading-bar/src/loading-bar.css",
+    bower+"/components-font-awesome/css/font-awesome.min.css",
+    bower+"/FroalaWysiwygEditor/css/froala_editor.css",
+    bower+"/FroalaWysiwygEditor/css/froala_style.css",
   ]).pipe(gulp.dest( assets+'/css' ));
-  gulp.src( '' ).pipe(notify("Angular Modules & TinyMCE moved"));
+  gulp.src([
+    bower+"/components-font-awesome/fonts/*",
+  ]).pipe(gulp.dest( assets+'/fonts' ));
+  gulp.src( '' ).pipe(notify("CSS Moved"));
   
   // Minify JS
   gulp.src([
+    assets+"/js/jquery.min.js",
     assets+"/js/angular.js",
     assets+"/js/angular-route.js",
     assets+"/js/ui-bootstrap-tpls.min.js",
@@ -187,11 +193,12 @@ gulp.task('install', function() {
     assets+"/js/angular-sanitize.min.js",
     assets+"/js/tv4.js",
     assets+"/js/ObjectPath.js",
-    assets+"/js/tinymce.min.js",
-    assets+"/js/tx-tinymce.js",
     assets+"/js/schema-form.min.js",
     assets+"/js/bootstrap-decorator.min.js",
-    assets+"/js/bootstrap-tinymce.js",
+    assets+"/js/bootstrap-decorator-froala.js",
+    assets+"/js/froala_editor.min.js",
+    assets+"/js/angular-froala.js",
+    assets+"/js/froala-sanitize.js"
   ])
   .pipe(flatten())
   // .pipe(sourcemaps.init({loadMaps: true}))
