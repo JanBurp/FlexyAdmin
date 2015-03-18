@@ -18,7 +18,6 @@ module.exports = function(config) {
     files: [
       'js/externals.min.js',
       'js/angular-mocks.js',
-      'js/langs/nl.js',
       
       "**/jdb*.js",
       "**/flexy*.js",
