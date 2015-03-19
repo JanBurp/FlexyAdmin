@@ -80,7 +80,8 @@ class ApiModel extends CI_Model {
    */
   protected function _result_status401() {
     log_message('info', 'API 401 : '.array2json($this->args));
-    $this->result=array( 'status' => 401 );
+    $this->result['status']=401;
+    $this->result=array_keep_keys($this->result,array('status','format'));
     return $this->result;
   }
   

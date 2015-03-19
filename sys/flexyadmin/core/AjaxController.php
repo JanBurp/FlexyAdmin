@@ -103,7 +103,8 @@ class AjaxController extends BasicController {
     // status = 401 Unauthorized ?
     if ( isset($result['status']) and $result['status']==401) {
       $status="HTTP/1.1 401 Unauthorized";
-      $result=array('status'=>401);
+      $result['status']=401;
+      $result['error']=$status;
     }
     
     // Check result, and order it
@@ -140,7 +141,7 @@ class AjaxController extends BasicController {
       header($status);
       exit;
     }
-
+    
     // Output format
     switch (el('format',$result,'default')) {
 
