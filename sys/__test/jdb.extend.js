@@ -11,6 +11,8 @@
  * $HeadURL$ 
  */
 
+/*jshint -W083 */
+
 
  /**
   * This is a convenient way to add methods to an object prototype.
@@ -25,16 +27,45 @@ Function.prototype.method = function(name,func) {
 
 
 
+var jdb = {};
+
+/**
+ * jdb.serializeJSON()
+ *
+ *
+ */
+jdb.serializeJSON = function(data) {
+  'use strict';
+  var serializeString='';
+  for (var key in data) {
+    if (serializeString) serializeString+='&';
+    // array
+    if (angular.isArray(data[key])) {
+      data[key].forEach(function(el,index) {
+        serializeString += encodeURIComponent(key) + '[]=' + encodeURIComponent(el) + '&';
+      });
+    }
+    // normal
+    else {
+      serializeString += encodeURIComponent(key) + '=' + encodeURIComponent(data[key]);
+    }
+  }
+  return serializeString;
+};
+
+
+
+
 /**
  * String.striptags()
  * 
  * Verwijderd alle tags van het String object
  * @return String
  */
-String.method('striptags', function() {
-  'use strict';
-  return this.replace(/(<([^>]+)>)/ig,"");
-});
+// String.method('striptags', function() {
+//   'use strict';
+//   return this.replace(/(<([^>]+)>)/ig,"");
+// });
 
 
 /**
@@ -43,10 +74,10 @@ String.method('striptags', function() {
  * Vervangt alle tags (<>) met HTML entities, handig als je HTML-code wilt tonen
  * @return String
  */
-String.method('htmlentities', function() {
-  'use strict';
-  return this.replace(/</g,"&lt;").replace(/>/g,"&gt;");
-});
+// String.method('htmlentities', function() {
+//   'use strict';
+//   return this.replace(/</g,"&lt;").replace(/>/g,"&gt;");
+// });
 
 
 /**
@@ -83,10 +114,11 @@ String.method('suffix', function(char) {
  * Voor de conversie van paths in een URL
  * @return String
  */
-String.method('decodePath', function() {
-  'use strict';
-  return this.replace(/\//g,"___");
-});
+// String.method('decodePath', function() {
+//   'use strict';
+//   return this.replace(/\//g,"___");
+// });
+
 
 /**
  * String.encodePath()
@@ -95,10 +127,10 @@ String.method('decodePath', function() {
  * Voor de conversie van paths in een URL
  * @return String
  */
-String.method('encodePath', function() {
-  'use strict';
-  return this.replace(/___/g,"/");
-});
+// String.method('encodePath', function() {
+//   'use strict';
+//   return this.replace(/___/g,"/");
+// });
 
 
 /**
@@ -110,14 +142,15 @@ String.method('encodePath', function() {
  * @adder   String[':'] Karakter wat tussen de strings komt
  * @return  String
  */
-String.method('addPart', function (part,adder) {
-  'use strict';
-  var s=this;
-  if (angular.isUndefined(adder)) adder=',';
-  if (s.length>0) s+=adder;
-  s+=part;
-  return s;
-});
+// String.method('addPart', function (part,adder) {
+//   'use strict';
+//   var s=this;
+//   if (angular.isUndefined(adder)) adder=',';
+//   if (s.length>0) s+=adder;
+//   s+=part;
+//   return s;
+// });
+
 
 /**
  * String.random()
@@ -127,13 +160,13 @@ String.method('addPart', function (part,adder) {
  * @param string chars["0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz"] Mogelijke karakters
  * @return String
  */
-String.method('random', function(len,chars) {
-  'use strict';
-  if (angular.isUndefined(chars)) chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
-  var randomstring = '';
-  for (var i=0; i < len ; i++) {
-    var rnum = Math.floor(Math.random() * chars.length);
-    randomstring += chars.substring(rnum,rnum+1);
-  }
-  return randomstring;
-});
+// String.method('random', function(len,chars) {
+//   'use strict';
+//   if (angular.isUndefined(chars)) chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+//   var randomstring = '';
+//   for (var i=0; i < len ; i++) {
+//     var rnum = Math.floor(Math.random() * chars.length);
+//     randomstring += chars.substring(rnum,rnum+1);
+//   }
+//   return randomstring;
+// });

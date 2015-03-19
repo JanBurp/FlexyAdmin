@@ -42,6 +42,7 @@ flexyMenu.factory( 'flexyApiService', ['flexySettingsService','$http',function(s
    * @private
    */
   flexy_api_service.needs_these_cfg = function(cfg) {
+    if (! angular.isDefined(cfg)) return false;
     var needs=[];
     for (var i = 0; i < cfg.length; i++) {
       if ( ! flexy_api_service.has_cfg(cfg[i]) ) {
@@ -66,14 +67,13 @@ flexyMenu.factory( 'flexyApiService', ['flexySettingsService','$http',function(s
     }
     // url
     var url = settings.item('api_base_url') + type;
-
     // call
     console.log('GET',url,params);
-    $http.get( url, params ).then(function(result){
-      console.log('result');
-
+    return $http.get( url, {params:params} ).then(function(response){
+      return response.data;
+    },function(errResponse){
+      return errResponse;
     });
-
   };
   
   
