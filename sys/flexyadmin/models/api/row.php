@@ -21,7 +21,7 @@
  * @author Jan den Besten
  */
 
-class Row extends ApiModel {
+class Row extends Api_Model {
   
   var $needs = array(
     'table'   => '',

@@ -13,7 +13,7 @@
  * @author Jan den Besten
  */
 
-class auth extends ApiModel {
+class auth extends Api_Model {
   
   var $needs = array(
     // 'username'   => '',

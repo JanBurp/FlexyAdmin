@@ -7,7 +7,7 @@
  * @author Jan den Besten
  */
 
-class get_plugin extends ApiModel {
+class get_plugin extends Api_Model {
   
   var $needs = array(
     'plugin' => '',

@@ -55,7 +55,7 @@ class ApiTestModel extends CIUnit_Framework_TestCase {
     parent::__construct();
     error_reporting(E_ALL - E_NOTICE); // skip session notices
     $this->CI->load->library('user');
-    $this->CI->load->model('api/ApiModel');
+    $this->CI->load->model('api/Api_Model');
     $this->apiModel=$apiModel;
     $this->CI->load->model('api/'.$apiModel);
   }

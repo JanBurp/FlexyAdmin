@@ -7,7 +7,7 @@
  * @author Jan den Besten
  */
 
-class get_help extends ApiModel {
+class get_help extends Api_Model {
   
   var $needs = array(
     'page' => '',

@@ -14,7 +14,7 @@
  * @author Jan den Besten
  */
 
-class Table extends ApiModel {
+class Table extends Api_Model {
   
   var $needs = array(
     'table'   => '',
