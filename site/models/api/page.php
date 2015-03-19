@@ -9,8 +9,10 @@
  * 
  * Example:
  * - /_api/page?uri=contact
+ * 
  *
- * @package default
+ * @params string uri Geef hier de uri van de pagina die je op wilt vragen
+ * @package example_api
  * @author Jan den Besten
  */
 

@@ -47,6 +47,7 @@ class __ extends AdminController {
     $this->_add_content('<h1>Build processes</h1>');
     $menuArray=array(
       array( 'uri'=>'admin/__/doc', 'name' => 'Create Documentation' ),
+      array( 'uri'=>'admin/__/apidoc', 'name' => 'Create API Documentation' ),
       array( 'uri'=>'admin/__/minify', 'name' => 'Minify JS & CSS' ),
       array( 'uri'=>'admin/__/tinymce', 'name' => 'Update tinyMCE' ),
       array( 'uri'=>'admin/__/clean_assets', 'name' => 'Clean assets' ),
@@ -857,6 +858,41 @@ class __ extends AdminController {
     
     $this->_show_all();
   }
+  
+  
+  
+  public function apidoc() {
+    $this->_add_content('<h1>Create API documentation</h1>');
+    
+    $apiMapBackend=APPPATH.'models/api';
+    $apiMapFrontend=SITEPATH.'models/api';
+    
+    $this->_apidoc($apiMapBackend);
+    $this->_apidoc($apiMapFrontend);
+    
+    $this->_show_all();
+  }
+  
+  private function _apidoc($map) {
+    $files=read_map($map,'php',false,false);
+    unset($files['api_model.php']);
+    
+    $doc = '';
+    foreach ($files as $name => $file) {
+      $text=file_get_contents($file['path']);
+      if (preg_match("/\/\*\*(.*)\*\//uUsm", $text,$matches)) {
+        $md=$matches[1];
+        $md = preg_replace("/^\s\* /uUsm", "", $md);
+        $api="_api/".str_replace('.php','',$name);
+        $doc.=$api."\n".repeater("=",strlen($api))."\n".$md."\n---------------------------------------\n\n";
+      }
+    }
+    
+    $filename=$map.'/api.md';
+    file_put_contents($filename,$doc);
+    $this->_add_content('<p>'.$filename.' created.</>');
+  }
+  
   
   
     
