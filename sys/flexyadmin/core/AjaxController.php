@@ -133,16 +133,6 @@ class AjaxController extends BasicController {
     // Test output - if not AJAX
     if ( ! $this->input->is_ajax_request() ) {
       $result['test']=true;
-      if (el('format',$result)=='json') {
-        $json=array2json($result);
-        echo $json;
-        return $json;
-      }
-      else {
-        $result['format']='trace';
-        echo trace_($result,false);
-      }
-      return $result;
     }
 
     // 401 output
@@ -151,10 +141,38 @@ class AjaxController extends BasicController {
       exit;
     }
 
-    // JSON output
-    $json=array2json($result);
-    echo $json;
-    return $json;
+    // Output format
+    switch (el('format',$result,'default')) {
+
+      case 'xml':
+        $output = array2xml($result);
+        break;
+
+      case 'json':
+        $output = array2json($result);
+        break;
+
+      case 'php':
+        $output = array2php($result);
+        break;
+        
+      case 'dump':
+        $output = trace_($result,false);
+        break;
+
+      default:
+        if (isset($result['test']) and $result['test']) {
+          $result['format']='dump';
+          $output = trace_($result,false);
+        }
+        else {
+          $result['format']='json';
+          $output = array2json($result);
+        }
+        break;
+    }
+    echo $output;
+    return $output;
   }
   
 
