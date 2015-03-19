@@ -238,6 +238,115 @@ class FrontEndController extends MY_Controller {
       
     }
 	}
+  
+  
+  
+	/*
+	 * function _module($page)
+	 * 
+	 * This functions collects all the modules which need to be loaded and called. Then calls them.
+	 * If modules have a return value it will be added to $page['module_content'].
+	 */
+	protected function _module($page) {
+		// See what modules to load
+		$modules=array();
+		// First autoload modules
+		$autoload=$this->config->item('autoload_modules');
+		if ($autoload) $modules=array_merge($autoload,$modules);
+		// Autoload modules if
+		$autoload_if=$this->config->item('autoload_modules_if');
+		if ($autoload_if) {
+			foreach ($autoload_if as $module_if => $where) {
+				$load_if=FALSE;
+				foreach ($where as $field => $value) {
+          if (!is_array($value)) $value=array($value);
+					foreach ($value as $val) {
+            if (isset($page[$field])) $load_if = $load_if || $page[$field]==$val;
+					}
+				}
+				if ($load_if) $modules[]=$module_if;
+			}
+		}
+		// User set modules
+		if (isset($page[$this->config->item('module_field')]) and !empty($page[$this->config->item('module_field')])) {
+			$user_modules=$this->find_modules_in_item($page);
+			$user_modules=explode('|',$user_modules);
+			$modules=array_merge($modules,$user_modules);
+		}
+		// Keep it so modules can check what other modules are called
+    $this->site['modules']=array_fill_keys($modules,'');
+		// Loop trough all possible modules, load them, call them, and process return value
+		$page['module_content']='';
+		foreach ($modules as $module) {
+			// split module and method
+			$library=remove_suffix($module,'.');
+			$method=get_suffix($module,'.');
+			if ($module==$library) $method='index';
+			// Load and call the module
+			$return=$this->_call_library($library,$method,$page);
+      $library=get_suffix(str_replace(' ','_',$library),'/');
+      // Process the return value according to module settings
+			if ($return) {
+        $to='';
+        if ($method=='index') $to=$this->$library->config('__return','');
+        if (empty($to)) $to=$this->$library->config('__return'.'.'.$method,'page');
+        $to=explode('|',$to);
+        // put result in site
+        if (in_array('site',$to)) {
+          $this->site['modules'][$module]=$return;
+        }
+        // put result in page (default)
+        if (in_array('page',$to)) {
+  				if (is_array($return))
+  					$page=array_merge($page,$return);
+  				else
+  					$page['module_content'].=$return;
+        }
+      }
+			$this->add_class('module_'.str_replace('.','_',$module));
+      // stop loading more modules if break is set
+			if ($this->site['break']) break;
+		}
+		return $page;
+	}
+
+
+	/*
+	 * function _call_library()
+	 * 
+	 * This functions loads the given library and calls it.
+	 * Used for loading and calling modules
+	 */
+	public function _call_library($library,$method='index',$args=NULL) {
+		if (is_array($library)) {
+			$args=array_slice($library,2);
+			$method=el(2,$library,'index');
+			$library=el(1,$library,'app');
+			// prevent loading hidden modules
+			if (substr($library,0,1)=='_') return FALSE;
+		}
+		if (!empty($library)) {
+			$library_file=str_replace(' ','_',$library);
+      $library_name=get_suffix($library_file,'/');
+			if (file_exists(SITEPATH.'libraries/'.$library_file.'.php')) {
+				$this->load->library($library_file,array('name'=>$library_name,'file'=>$library_file));
+        // $this->$library_name->set_name($library);
+				return $this->$library_name->$method($args);
+			}
+			elseif ($this->config->item('fallback_module')) {
+				$fallback=$this->config->item('fallback_module');
+				$fallback_name=str_replace(' ','_',$fallback);
+				if (file_exists(SITEPATH.'libraries/'.$fallback_name.'.php')) {
+					$this->load->library($fallback_name);
+          $this->$fallback_name->set_name($library);
+					return $this->$fallback_name->index($args);
+				}
+			}
+		}
+		return FALSE;
+	}
+  
+  
 
 
   /**

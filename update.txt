@@ -23,9 +23,11 @@ For recent sites the update processes described below should work:
 UPDATE ....
 ===========
 
-
 - Replace sys folder
 - Replace index.php
+- Replace controller.php (or delete methods: _call_library() & _module(), and replace method _redirect() )
+- Replace site/libraries/forms.php
+
 
 
 
