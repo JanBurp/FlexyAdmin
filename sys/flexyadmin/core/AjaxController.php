@@ -142,6 +142,9 @@ class AjaxController extends BasicController {
       exit;
     }
     
+    // Order of result
+    $result=$this->_sort_result($result);
+    
     // Output format
     switch (el('format',$result,'default')) {
 
@@ -164,16 +167,23 @@ class AjaxController extends BasicController {
       default:
         if (isset($result['test']) and $result['test']) {
           $result['format']='dump';
+          $result=$this->_sort_result($result);
           $output = trace_($result,false);
         }
         else {
           $result['format']='json';
+          $result=$this->_sort_result($result);
           $output = array2json($result);
         }
         break;
     }
     echo $output;
     return $output;
+  }
+  
+  
+  private function _sort_result($result) {
+    return sort_keys($result,array('status','success','test','error','message','format','api','args','data','config'));
   }
   
 
