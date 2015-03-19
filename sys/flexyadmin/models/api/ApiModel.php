@@ -219,7 +219,7 @@ class ApiModel extends CI_Model {
     }
     
     if (isset($args['format'])) $this->result['format']=$args['format'];
-    if (!isset($args['type'])) $args['type']='';
+    if (!isset($args['type'])) $args['type']='GET';
     
     // trace_(['defaults'=>$defaults,'POST'=>$_POST,'GET'=>$_GET,'args'=>$args]);
     
