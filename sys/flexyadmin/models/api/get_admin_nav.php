@@ -7,7 +7,7 @@
  * @author Jan den Besten
  */
 
-class get_admin_nav extends ApiModel {
+class get_admin_nav extends Api_Model {
   
   var $table = 'cfg_admin_menu';
   

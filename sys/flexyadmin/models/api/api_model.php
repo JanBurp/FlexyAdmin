@@ -32,7 +32,7 @@
  */
 
 
-class ApiModel extends CI_Model {
+class Api_Model extends CI_Model {
   
   protected $args=array();
   protected $needs=array();

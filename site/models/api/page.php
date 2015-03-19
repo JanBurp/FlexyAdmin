@@ -14,7 +14,7 @@
  * @author Jan den Besten
  */
 
-class Page extends ApiModel {
+class Page extends Api_Model {
   
   var $needs = array(
     'uri'   => '',

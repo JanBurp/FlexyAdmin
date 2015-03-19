@@ -11,7 +11,7 @@ class Api extends AjaxController {
 	
 	public function __construct()	{
 		parent::__construct();
-    $this->load->model('api/ApiModel');
+    $this->load->model('api/api_model');
 	}
   
   public function index() {

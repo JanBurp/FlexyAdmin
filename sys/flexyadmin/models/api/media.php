@@ -20,7 +20,7 @@
  * @package default
  * @author Jan den Besten
  */
-class Media extends ApiModel {
+class Media extends Api_Model {
   
   var $needs = array(
     'path'   => '',
