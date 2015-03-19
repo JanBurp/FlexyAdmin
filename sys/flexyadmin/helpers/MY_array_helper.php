@@ -687,6 +687,28 @@ function sort_by($a,$keys,$desc=FALSE,$case=FALSE,$max=0) {
 	return $a;
 }
 
+
+/**
+ * Sorteert associatieve array op volgorde van meegegeven keys, een eventueel restant komt daarachter
+ *
+ * @param array $a 
+ * @param array $keys 
+ * @return array
+ * @author Jan den Besten
+ */
+function sort_keys($a,$keys) {
+  $b=array();
+  foreach ($keys as $key) {
+    if (isset($a[$key])) {
+      $b[$key]=$a[$key];
+      unset($a[$key]);
+    }
+  }
+  $b=array_merge($b,$a);
+  return $b;
+}
+
+
 /**
  * Zoekt in associatieve array eerst gevonden waarde die lijkt op meegegeven waarde
  *
