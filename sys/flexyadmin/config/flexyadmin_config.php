@@ -175,6 +175,22 @@ define("RIGHTS_SHOW",1);
 define("RIGHTS_NO",0);
 
 
+/*
+|--------------------------------------------------------------------------
+| UNIX timestamps
+|--------------------------------------------------------------------------
+|
+*/
+define('TIME_SECOND', 1);
+define('TIME_MINUTE', TIME_SECOND * 60);
+define('TIME_HOUR',   TIME_MINUTE * 60);
+define('TIME_DAY',    TIME_HOUR * 24);
+define('TIME_WEEK',   TIME_DAY * 7);
+define('TIME_4WEEKS', TIME_WEEK * 4);
+define('TIME_MONTH',  TIME_DAY * 30);
+define('TIME_YEAR',   TIME_DAY * 365);
+
+
 
 /*
 |--------------------------------------------------------------------------
