@@ -136,7 +136,7 @@ class AjaxController extends BasicController {
     }
 
     // 401 output
-    if ( $status )  {
+    if ( $status and !el('test',$result,false))  {
       header($status);
       exit;
     }
