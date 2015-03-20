@@ -21,9 +21,9 @@ function _callback_highlight($matches) {
 	$code=strip_tags($code,'<p><br><a><div><b><strong><em><italic>');
   // $code=str_replace(' ',"\t",$code);
 	$code=str_replace(array('&lt;','&gt;'),array('<','>'),$code);
+  $code=str_replace('&amp;','&',$code);
 	$code=str_replace(array('<br/>','<br />','<br>'),"\n",$code);
   $code=highlight_code($code);
-  // no newlines within <code>, remove last <br /> and last &nbsp;
   $code=str_replace("\n",'',$code);
   $code = preg_replace("/\<br \/>(?!.*\<br \/>)/uU", "", $code);
   $code = preg_replace("/&nbsp;((?!.*&nbsp;).*\<\/code>\z)/uU", "$1", $code);

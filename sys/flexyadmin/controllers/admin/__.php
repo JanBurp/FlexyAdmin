@@ -15,6 +15,7 @@ class __ extends AdminController {
   private $tipue=array();
   
   private $path='/Users/jan/Sites/FlexyAdmin/';
+  private $userguide='userguide/FlexyAdmin/__doc/5_api/';
   private $tinyMCElibs='../FlexyAdmin_DocsLibs/Libraries/tinyMCE';
   private $work='FlexyAdminDEMO';
   private $tags='TAGS';
@@ -183,7 +184,7 @@ class __ extends AdminController {
     
     unset($toc['less']);
 
-    $this->toc_order=array('start','gevorderden','database','modules_en_plugins','libraries (site)','models (site)','helpers','plugins (sys)','libraries','models','core');
+    $this->toc_order=array('start','gevorderden','database','modules_en_plugins','api','libraries (site)','models (site)','helpers','plugins (sys)','libraries','models','core');
     $otoc=array();
     foreach ($this->toc_order as $key) {
       if ($key=='|')
@@ -306,42 +307,7 @@ class __ extends AdminController {
     
     $this->_add_content('<br>Userguide.html created.</br>');
     $this->_add_content('<br>index.html created.</br>');
-
-    // $this->toc_order=array('algemeen','meer','tutorials','uitbreiden','database','libraries (site)','models (site)','helpers','libraries','models','core');
-    // $otoc=array();
-    // foreach ($this->toc_order as $key) {
-    //   if ($key=='|')
-    //     $otoc[]='|';
-    //   else {
-    //     if (!empty($this->toc[$key])) {
-    //       // asort($this->toc[$key]);
-    //       $otoc[$key]=$this->toc[$key];
-    //     }
-    //     else {
-    //       $otoc[$key]=array();
-    //     }
-    //   }
-    //
-    // }
-
-    // $json_toc=$this->load->view('admin/__/doc_toc_json',array('toc'=>$otoc,'html'=>trim(str_replace(array(PHP_EOL,"\r",'../userguide/FlexyAdmin/'),'',$content))),true);
-    // write_file('userguide/FlexyAdmin/assets/js/toc.js',$json_toc);
-    // $this->_add_content('TOC file created.</br>');
-
-    // remove tags from normal search texts
-    // $tags=$this->_clean_tags($this->allTags);
-    // $tags=explode(' ',$tags);
-    // $tags=array_unique($tags);
-    // foreach ($this->tipue as $key => $value) {
-    //   foreach ($tags as $tag) {
-    //     $tag=str_replace(array('(',')'),'',$tag);
-    //     $this->tipue[$key]['text'] = preg_replace("/".$tag."/ui", "", $value['text']); // remove tags
-    //   }
-    // }
-    
-    // $tipue_search=$this->load->view('admin/__/doc_tipue_json',array('data'=>$this->tipue),true);
-    // write_file('userguide/FlexyAdmin/assets/tipuedrop/data.js',$tipue_search);
-    // $this->_add_content('SEARCH file created.</br>');
+ 
   }
 
   private function _clean_tags($tags) {
@@ -382,131 +348,12 @@ class __ extends AdminController {
             'description' => $markdown,
           ),
         );
-
-        // $html = Markdown($markdown);
-        // // replace local links /3-link with /link
-        // $html = preg_replace("/(href=\")(\d-)([^\"]*?)\"/us", "$1$3\"", $html);
-        // $html = preg_replace("/(href=\"([^\"]*?)\\/)\\d-(.*?)\"/us", "$1$3\"", $html);
-        // $html = preg_replace("/(href=\"\.\.\/)(\d_)([^\"]*)\"/us", "$1$3\"", $html);
-        //
-        // $fileName=str_replace('__doc/','',$file['path']);
-        // $fileName=str_replace('.md','.html',$fileName);
-        // $fileName=preg_replace("/\/(\d_)/u", "/", $fileName);
-        // $fileName=preg_replace("/\/(\d-)/u", "/", $fileName);
-        //
-        // $content=highlight_code_if_needed( $this->load->view('admin/__/doc_file',array('file'=>$name,'html'=>$html),true) );
-        // // $fileContent=$this->load->view('admin/__/doc',array('content'=>$content,'root'=>'../','revision'=>$this->revision),true);
-        // write_file($fileName,$content);
-        // $this->_add_content('DOC created: '.$fileName.'</br>');
-        // $this->toc[$type][$name]=$fileName;
-        // $this->_add_to_tipue($name,$html,$fileName);
+  
       }
     }
     return $toc;
   }
 
-  // private function _add_html_docs($path) {
-  //   $files=read_map($path);
-  //   foreach ($files as $name  => $file) {
-  //     if ($file['type']=='dir') {
-  //       $dir=str_replace('__doc/','',$file['path']);
-  //       $dir=preg_replace("/\/(\d_)/u", "/", $dir);
-  //       if (!file_exists($dir)) mkdir($dir);
-  //       $this->_add_html_docs($path.'/'.$name);
-  //     }
-  //     else {
-  //       $name=ucfirst(str_replace(array('_','.html'),array(' ',''),remove_prefix($name,'-')));
-  //       $path=explode('/',$file['path']);
-  //       $path=$path[count($path)-2];
-  //       $type=remove_prefix($path,'_');
-  //
-  //       $html=read_file($file['path']);
-  //       // if <body> exists, get only all in body tag
-  //       preg_match("/<body>(.*)<\/body>/", $html, $matches);
-  //       if (isset($matches[1])) $html=$matches[1];
-  //       // replace local links /3-link with /link
-  //       $html = preg_replace("/(href=\")(\d-)([^\"]*?)\"/us", "$1$3\"", $html);
-  //       $html = preg_replace("/(href=\"([^\"]*?)\\/)\\d-(.*?)\"/us", "$1$3\"", $html);
-  //       $html = preg_replace("/(href=\"\.\.\/)(\d_)([^\"]*)\"/us", "$1$3\"", $html);
-  //
-  //       $fileName=str_replace('__doc/','',$file['path']);
-  //       $fileName=preg_replace("/\/(\d_)/u", "/", $fileName);
-  //       $fileName=preg_replace("/\/(\d-)/u", "/", $fileName);
-  //       $content=highlight_code_if_needed( $this->load->view('admin/__/doc_file',array('file'=>$name,'functions'=>$html),true) );
-  //       $fileContent=$this->load->view('admin/__/doc',array('content'=>$content,'root'=>'../','revision'=>$this->revision),true);
-  //       write_file($fileName,$fileContent);
-  //       $this->_add_content('DOC created: '.$fileName.'</br>');
-  //       $this->toc[$type][$name]=$fileName;
-  //       $this->_add_to_tipue($name,$html,$fileName);
-  //     }
-  //   }
-  // }
-
-  // private function _add_to_tipue($name,$html,$fileName) {
-  //   $tags='';
-  //   if (preg_match_all("/<h[1-3]([^>]*)>(.*?)<\/h\d>/uis", $html, $matches)) {
-  //     if (isset($matches[2])) {
-  //       foreach ($matches[2] as $key => $match) {
-  //         $match=strip_tags($match);
-  //         $match = str_replace(array("\r","\n"),' ',$match); // remove linebreaks
-  //         $match = trim(preg_replace("/(\s+)/", " ", $match)); // remove double spaces
-  //         foreach ($this->stripWords as $word) {
-  //           $match = preg_replace("/\b".$word."\b/ui", " ", $match); // remove some words
-  //         }
-  //         $match = preg_replace("/\(.*?\)/uiUs", "()", $match);
-  //         $match = trim($match);
-  //         if (!empty($match)) {
-  //           $tags=add_string($tags,$match,' ');
-  //           $tags=$this->_clean_tags($tags);
-  //           $this->allTags=add_string($this->allTags,$tags,' ');
-  //         }
-  //       }
-  //     }
-  //   }
-  //
-  //   $html = preg_replace("/(<code>(.*?)<\\/code>)/us", " ", $html);  // remove <code> tags and all in it
-  //   foreach ($this->stripTagsWithClasses as $class) {
-  //     $html=preg_replace("/(<p(\s*)class=\"".$class."(.*?)\">(.*?)<\/p>)/us", " ", $html); // remove <p> tags with some classes
-  //   }
-  //   // Only get imported text (headers)
-  //   if (preg_match_all("/<h[1-3]([^>]*)>(.*?)<\/h\d>/uis", $html, $matches)) {
-  //     if (isset($matches[2])) {
-  //       $html='';
-  //       foreach ($matches[2] as $key => $match) {
-  //         // $match=strip_tags($match);
-  //         $match = str_replace(array("\r","\n"),' ',$match); // remove linebreaks
-  //         // $match = trim(preg_replace("/(\s+)/", " ", $match)); // remove double spaces
-  //         foreach ($this->stripWords as $word) {
-  //           $match = preg_replace("/\b".$word."\b/ui", " ", $match); // remove some words
-  //         }
-  //         $match = preg_replace("/\(.*?\)/uiUs", "", $match); // remove all between ()
-  //         $match = trim($match);
-  //         if (!empty($match)) {
-  //           $html=add_string($html,$match," ");
-  //         }
-  //       }
-  //     }
-  //   }
-  //   else {
-  //     $html='';
-  //   }
-  //
-  //   foreach ($this->stripWords as $word) {
-  //     $html = preg_replace("/\b".$word."\b/ui", " ", $html); // remove some words
-  //   }
-  //   $html = strip_tags($html);
-  //   $html = html_entity_decode($html);
-  //   $html = str_replace(array("\r","\n"),' ',$html); // remove linebreaks
-  //   $html = trim(preg_replace("/(\s+)/", " ", $html)); // remove double spaces
-  //
-  //   $this->tipue[]=array(
-  //     "title"=>get_suffix(str_replace(array('.html','.php'),'',$name),'/'),
-  //     "text"=>addslashes($html),
-  //     "loc"=>str_replace('userguide/FlexyAdmin/','',$fileName),
-  //     "tags"=>$tags
-  //   );
-  // }
-  
   
   
   /**
@@ -867,13 +714,13 @@ class __ extends AdminController {
     $apiMapBackend=APPPATH.'models/api';
     $apiMapFrontend=SITEPATH.'models/api';
     
-    $this->_apidoc($apiMapBackend);
-    $this->_apidoc($apiMapFrontend);
+    $this->_apidoc($apiMapBackend,'2-admin_api');
+    $this->_apidoc($apiMapFrontend,'3-frontend_api');
     
     $this->_show_all();
   }
   
-  private function _apidoc($map) {
+  private function _apidoc($map,$destination) {
     $files=read_map($map,'php',false,false);
     unset($files['api_model.php']);
     
@@ -883,13 +730,16 @@ class __ extends AdminController {
       if (preg_match("/\/\*\*(.*)\*\//uUsm", $text,$matches)) {
         $md=$matches[1];
         $md = preg_replace("/^\s\* /uUsm", "", $md);
+        $md = preg_replace("/- /uUsm", " - ", $md);
+        $md = preg_replace("/^@(.*)\n/um", "", $md);
         $api="_api/".str_replace('.php','',$name);
-        $doc.=$api."\n".repeater("=",strlen($api))."\n".$md."\n---------------------------------------\n\n";
+        $doc.=$api."\n".repeater("-",strlen($api))."\n".$md."\n---------------------------------------\n\n";
       }
     }
     
     $filename=$map.'/api.md';
-    file_put_contents($filename,$doc);
+    $filename=$this->userguide.$destination.'.md';
+    write_file($filename,$doc);
     $this->_add_content('<p>'.$filename.' created.</>');
   }
   
