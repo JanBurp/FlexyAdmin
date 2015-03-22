@@ -8,13 +8,13 @@ describe('flexy-api-service-http', function(){
   
   beforeEach(module('flexyAdmin'));
 
-  var service, setting, mock, mockdata;
+  var service, setting, http, mock;
   
   beforeEach(inject(function(flexyApiService,flexySettingsService, flexyApiMock, $httpBackend ) {
     service  = flexyApiService;
     setting  = flexySettingsService;
-    mockdata = flexyApiMock;
-    mock     = $httpBackend;
+    mock = flexyApiMock;
+    http     = $httpBackend;
     
     // settings
     var api = setting.item('api_base_url');
@@ -22,15 +22,23 @@ describe('flexy-api-service-http', function(){
     // Spies
     spyOn( service, 'get' ).andCallThrough();
     
-    // Good responses Mocks
-    angular.forEach(mockdata.tables(),function(table,key){
-      var url = mockdata.api_get_table_url(table);
+    // Mocking responses
+    angular.forEach(mock.tables(),function(table,key){
+      var url = mock.api_get_table_url(table);
       // console.log('MOCK', 'GET', url);
-      mock.when( 'GET', url ).respond( mockdata.api_get_table_response(table) );
+      http.when( 'GET', url ).respond( mock.api_get_table_response(table) );
     });
     
   }));
+  
 
+  /**
+   * Only test when mocking is on!
+   */
+  it('flexy-api-service: only test if mocking is on!', function() {
+    expect( setting.has_item('use_mock') ).toEqual(true);
+    expect( setting.item( 'use_mock' ) ).toEqual(true);
+  });
 
 
   /**
@@ -40,7 +48,7 @@ describe('flexy-api-service-http', function(){
     var result;
     
     // Roep alle get(table) met alle tables aan
-    angular.forEach(mockdata.tables(),function(table,key){
+    angular.forEach(mock.tables(),function(table,key){
       // Start zonder resultaat
       result=undefined;
       expect( result ).toBeUndefined();
@@ -48,7 +56,7 @@ describe('flexy-api-service-http', function(){
       service.get( 'table', {'table':table} ).then(function(response){
         result=response;
       });
-      mock.flush(1);
+      http.flush(1);
       // TEST response
       expect( result ).toBeDefined();
       expect( result.success ).toBeDefined();
@@ -59,13 +67,13 @@ describe('flexy-api-service-http', function(){
     
     // TEST Spies
     expect( service.get ).toHaveBeenCalled();
-    expect( service.get.callCount ).toEqual( mockdata.tables().length );
+    expect( service.get.callCount ).toEqual( mock.tables().length );
   });
   
   
   afterEach(function(){
-    mock.verifyNoOutstandingExpectation();
-    mock.verifyNoOutstandingRequest();
+    http.verifyNoOutstandingExpectation();
+    http.verifyNoOutstandingRequest();
   });
 
 

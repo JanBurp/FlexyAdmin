@@ -51,6 +51,7 @@ flexyAdmin.value('froalaConfig', {
   placeholder: 'Enter Text Here'
 });
 
+
 /**
  * SOME SPARE GLOBALS as a constant
  */
@@ -153,6 +154,10 @@ flexyAdmin.config( function($routeProvider){
  */
 flexyAdmin.controller('stateController', ['$scope','flexyAuthService','$location', function($scope,flexyAuthService,$location) {
   'use strict';
+  
+  // First check if mocking is on
+  // TODO!!
+  
 
   // state variables
   $scope.isLoggedIn = false;
