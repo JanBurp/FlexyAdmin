@@ -59,7 +59,6 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
    * 
    */
   flexy_api_service.get = function(type,params,cfg) {
-
     // Check if cfg is needed
     var needs = flexy_api_service.needs_these_cfg( cfg );
     if (needs.length>0) {
@@ -68,13 +67,15 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
     // url
     var url = settings.item('api_base_url') + type;
     // call
-    console.log('GET',url,params);
     return $http.get( url, {params:params} ).then(function(response){
       return response.data;
     },function(errResponse){
       return errResponse;
     });
   };
+  
+  
+  
   
   
   

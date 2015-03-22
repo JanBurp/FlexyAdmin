@@ -5,6 +5,11 @@
  * 
  * Je kunt de tabel kiezen en het formaat van de export.
  * Daarna start een download van de export
+ * 
+ * Of met de url:
+ * - table
+ * - type
+ * - full/json geeft een volledige dump
  *
  * @package default
  * @author Jan den Besten
