@@ -2,16 +2,22 @@
 
 
 /**
- * Example api for getting a page
+ * Eenvoudig voorbeeld van een frontend API.
+ * Geeft de tekst van een pagina van de site.
  * 
- * Arguments:
- * - uri
+ * Parameters:
  * 
- * Example:
- * - /_api/page?uri=contact
+ * - `uri` - Geef hier de uri van de opgevraagde pagina
  * 
- *
- * @params string uri Geef hier de uri van de pagina die je op wilt vragen
+ * Response data:
+ * 
+ * - `FALSE` - als de pagina niet is gevonden
+ * - `array` - van de gevonden pagina zoals die uit de menu tabel komt (meestal `tbl_menu` of `res_menu_result`)
+ * 
+ * Voorbeeld:
+ * 
+ * - `/_api/page?uri=contact`
+ * 
  * @package example_api
  * @author Jan den Besten
  */
