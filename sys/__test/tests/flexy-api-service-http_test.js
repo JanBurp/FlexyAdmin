@@ -1,41 +1,5 @@
 /*jshint -W083 */
 
-var mockdata = [
-
-  {
-    type:     'GET',
-    api:      'table',
-    params:   {table:'tbl_links'},
-    respond:  {
-      'success' : true,
-      'data' : [
-        { 'id':0, 'str_title': 'Burp', 'url_link': 'http://www.burp.nl' },
-        { 'id':1, 'str_title': 'Flexy', 'url_link': 'http://www.flexyadmin.com' },
-      ],
-      'args' : {
-        'table' : 'tbl_links'
-      },
-    } 
-  },
-
-  {
-    type:     'GET',
-    api:      'table',
-    params:   {table:'tbl_site'},
-    respond:  {
-      'success' : true,
-      'data' : [
-        { 'id':0, 'str_title': 'SITE', 'url_link': 'http://www.burp.nl' },
-      ],
-      'args' : {
-        'table' : 'tbl_site'
-      },
-    }
-  },
-  
-];
-
-
 /**
  * flexy-api-service $http test
  */
@@ -44,12 +8,13 @@ describe('flexy-api-service-http', function(){
   
   beforeEach(module('flexyAdmin'));
 
-  var service, setting, mock;
+  var service, setting, mock, mockdata;
   
-  beforeEach(inject(function(flexyApiService,flexySettingsService, $httpBackend ) {
-    service = flexyApiService;
-    setting = flexySettingsService;
-    mock    = $httpBackend;
+  beforeEach(inject(function(flexyApiService,flexySettingsService, flexyApiMock, $httpBackend ) {
+    service  = flexyApiService;
+    setting  = flexySettingsService;
+    mockdata = flexyApiMock;
+    mock     = $httpBackend;
     
     // settings
     var api = setting.item('api_base_url');

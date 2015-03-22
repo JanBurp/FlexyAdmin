@@ -16,7 +16,7 @@
  * $HeadURL$ 
  */
 
-flexyMenu.factory( 'flexySettings', [function() {
+flexyAdmin.factory( 'flexySettings', [function() {
   'use strict';
   return {
 

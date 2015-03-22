@@ -16,7 +16,7 @@
  * $HeadURL$ 
  */
 
-flexyMenu.factory( 'flexyApiService', ['flexySettingsService','$http',function(settings,$http) {
+flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(settings,$http) {
   'use strict';
   
   var flexy_api_service = {};
