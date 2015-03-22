@@ -18,9 +18,10 @@ module.exports = function(config) {
     files: [
       'js/externals.min.js',
       'js/angular-mocks.js',
-      
+
       "**/jdb*.js",
       "**/flexy*.js",
+      'tests/mock*.js',
     ],
 
     // list of files to exclude

@@ -30,7 +30,7 @@ class Plugin_export extends Plugin {
 		foreach ($tables as $key=>$table) {
 			if (!$this->CI->user->has_rights($table)) unset($tables[$key]);
 		}
-
+    
 		// Check if args are set, and if so, do the export
 		if (isset($args[0])) {
 			$table=$args[0];
@@ -41,6 +41,21 @@ class Plugin_export extends Plugin {
 				$this->export($table,$type);
 				return $this->content;
 			}
+      else {
+        // Specials
+        if ($table=='full' and $type=='json') {
+          $out="{\n";
+          foreach ($tables as $table) {
+            if ($table!='cfg_sessions') {
+              $out.="'$table':".$this->export($table,$type,FALSE).",\n";
+            }
+          }
+          $out.="}";
+          $this->_download('ful_dump',$type,$out);
+
+          $this->add_content(h('Fulldump!',2));
+        }
+      }
 		}
 
 		
@@ -85,7 +100,7 @@ class Plugin_export extends Plugin {
   /**
    * @ignore
    */
-	private function export($table,$type='csv') {
+	private function export($table,$type='csv',$download=true) {
 		
 		if ($this->config('add_foreigns')) {
 			$this->CI->db->add_foreigns( $this->config('add_foreigns') );	
@@ -171,11 +186,12 @@ class Plugin_export extends Plugin {
     }
 		
 		if (!empty($out)) {
-			$this->CI->load->helper('download');
-			$filename=$table;
-			if ($this->config('use_ui_names')) $filename=$this->CI->ui->get($filename);
-			force_download($filename.'.'.$type, $out);	
-			return $out;
+      if ($download) {
+  			$filename=$table;
+  			if ($this->config('use_ui_names')) $filename=$this->CI->ui->get($filename);
+        $this->_download($filename,$type,$out);
+      }
+  		return $out;
 		}
     else {
       $this->add_content(p().'Nothing to export'._p());
@@ -183,6 +199,12 @@ class Plugin_export extends Plugin {
 		
 		return FALSE;
 	}
+  
+  
+  private function _download($filename,$type,$data) {
+		$this->CI->load->helper('download');
+		force_download($filename.'.'.$type, $data);	
+  }
 
 
 }
