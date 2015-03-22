@@ -22,53 +22,45 @@ describe('flexy-api-service-http', function(){
     // Spies
     spyOn( service, 'get' ).andCallThrough();
     
-    // Mocks
-    for (var i = 0; i < mockdata.length; i++) {
-      var url=api + mockdata[i].api +'?'+ jdb.serializeJSON(mockdata[i].params);
-      console.log('MOCK', mockdata[i].type, url);
-      mock.when( mockdata[i].type, url ).respond( mockdata[i].respond );
-    }
-    
+    // Good responses Mocks
+    angular.forEach(mockdata.tables(),function(table,key){
+      var url = mockdata.api_get_table_url(table);
+      // console.log('MOCK', 'GET', url);
+      mock.when( 'GET', url ).respond( mockdata.api_get_table_response(table) );
+    });
     
   }));
 
 
 
   /**
-   * get
+   * get(table)
    */
-  it('flexy-api-service: testing get', function() {
-    var result=[];
+  it('flexy-api-service: testing get(table)', function() {
+    var result;
     
-    // Roep alle $http aan
-    for (var i = 0; i < mockdata.length; i++) {
+    // Roep alle get(table) met alle tables aan
+    angular.forEach(mockdata.tables(),function(table,key){
       // Start zonder resultaat
-      result[i]=undefined;
-      expect( result[i] ).toBeUndefined();
-      
-      // Roep de API aan, die maakt resultaat
-      service.get( mockdata[i].api, mockdata[i].params ).then(function(response){
-        result[i]=response;
+      result=undefined;
+      expect( result ).toBeUndefined();
+      // Roep de API aan
+      service.get( 'table', {'table':table} ).then(function(response){
+        result=response;
       });
-
       mock.flush(1);
-
-      // Results
-      expect( result[i] ).toBeDefined();
-      expect( result[i].success ).toBeDefined();
-      expect( result[i].success ).toEqual(true);
-      expect( result[i].args ).toBeDefined();
-      expect( result[i].data ).toBeDefined();
-    }
+      // TEST response
+      expect( result ).toBeDefined();
+      expect( result.success ).toBeDefined();
+      expect( result.success ).toEqual(true);
+      expect( result.args ).toBeDefined();
+      expect( result.data ).toBeDefined();
+    });
     
-    // Spies
+    // TEST Spies
     expect( service.get ).toHaveBeenCalled();
-    expect( service.get.callCount ).toEqual( mockdata.length );
-
+    expect( service.get.callCount ).toEqual( mockdata.tables().length );
   });
-  
-  
-  
   
   
   afterEach(function(){
