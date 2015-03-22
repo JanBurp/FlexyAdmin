@@ -312,6 +312,15 @@ class Api_Model extends CI_Model {
   }
   
   
+  /**
+   * Test if user has super admin rights
+   *
+   * @return bool
+   * @author Jan den Besten
+   */
+  protected function _is_super_admin() {
+    return $this->user->is_super_admin();
+  }
   
   
   /**
@@ -342,11 +351,12 @@ class Api_Model extends CI_Model {
    * @return array
    * @author Jan den Besten
    */
-  private function _get_table_info() {
-    if (empty($this->args['table'])) return FALSE;
-    $table_info=$this->cfg->get('cfg_table_info',$this->args['table']);
-    $table_info['fields']   = $this->db->list_fields($this->args['table']);
-    $table_info['ui_name']  = $this->ui->get( $this->args['table'] );
+  protected function _get_table_info($table='') {
+    $table=el('table',$this->args,$table);
+    if (empty($table)) return FALSE;
+    $table_info=$this->cfg->get('cfg_table_info',$table);
+    $table_info['fields']   = $this->db->list_fields($table);
+    $table_info['ui_name']  = $this->ui->get( $table );
     $table_info['sortable'] = !in_array('order',$table_info['fields']);
     $table_info['tree']     = in_array('self_parent',$table_info['fields']);
     return $table_info;
@@ -358,21 +368,23 @@ class Api_Model extends CI_Model {
    * @return array
    * @author Jan den Besten
    */
-  private function _get_field_info() {
-    if (empty($this->args['table'])) return FALSE;
+  protected function _get_field_info($table='') {
+    $table=el('table',$this->args,$table);
+    if (empty($table)) return FALSE;
     $hidden_fields=array();
     $field_info=array();
-    foreach ($this->cfg_info['table_info']['fields'] as $field) {
+    $fields=$this->db->list_fields($table);
+    foreach ($fields as $field) {
       $prefix=get_prefix($field);
-      $full_name=$this->args['table'].'.'.$field;
+      $full_name=$table.'.'.$field;
       $info=$this->cfg->get('cfg_field_info',$full_name);
-      // if (!el('b_show_in_grid',$info,true)) {
+      if (!el('b_show_in_grid',$info,true)) {
         $hidden_fields[]=$field;
-      // }
+      }
       // else {
         if ($info) $info=array_unset_keys($info,array('id','field_field'));
         $field_info[$field]=array(
-          'table'     => $this->args['table'],
+          'table'     => $table,
           'field'     => $field,
           'ui_name'   => $this->ui->get($field),
           'info'      => $info,
@@ -391,9 +403,10 @@ class Api_Model extends CI_Model {
    * @return void
    * @author Jan den Besten
    */
-  private function _get_media_info() {
-    if (empty($this->args['path'])) return FALSE;
-    $media_info = $this->cfg->get('cfg_media_info',$this->args['path']);
+  protected function _get_media_info($path='') {
+    $path=el('path',$this->args,$path);
+    if (empty($path)) return FALSE;
+    $media_info = $this->cfg->get('cfg_media_info',$path);
     return $media_info;
   }
   
@@ -402,9 +415,10 @@ class Api_Model extends CI_Model {
    *
    * @author Jan den Besten
    */
-  private function _get_img_info() {
-    if (empty($this->args['path'])) return FALSE;
-    $img_info = $this->cfg->get('cfg_img_info',$this->args['path']);
+  protected function _get_img_info($path='') {
+    $path=el('path',$this->args,$path);
+    if (empty($path)) return FALSE;
+    $img_info = $this->cfg->get('cfg_img_info',$path);
     return $img_info;
   }
   

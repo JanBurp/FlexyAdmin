@@ -66,6 +66,7 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
     }
     // url
     var url = settings.item('api_base_url') + type;
+    
     // call
     return $http.get( url, {params:params} ).then(function(response){
       return response.data;

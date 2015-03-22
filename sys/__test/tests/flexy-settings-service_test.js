@@ -62,6 +62,7 @@ describe('flexy-settings-service', function(){
     expect( service.item('api_base_url') ).toEqual('_api/');
     expect( service.item('sys_folder') ).toEqual('sys/__test/');
     expect( service.item('log_prefix') ).toEqual('FA ');
+    expect( service.has_item('use_mock') ).toEqual(true);
   });
   
   

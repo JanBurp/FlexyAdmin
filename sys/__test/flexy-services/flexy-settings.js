@@ -22,6 +22,11 @@ flexyAdmin.factory( 'flexySettings', [function() {
 
 
     /**
+     * Use mock data (for testing)
+     */
+    use_mock      : true,
+
+    /**
      * URL of app
      */
     base_url      : 'admin/__test',
