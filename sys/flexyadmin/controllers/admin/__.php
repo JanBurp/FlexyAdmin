@@ -95,6 +95,10 @@ class __ extends AdminController {
     $libraries=read_map('sys/flexyadmin/libraries','php',FALSE,FALSE);
     unset($libraries['ion_auth.php']); // exclude allready inherited libraries
     unset($libraries['old_form.php']); // exclude allready inherited libraries
+    unset($libraries['ciunit.php']);
+    unset($libraries['editor_lists.php']);
+    unset($libraries['jsmin.php']);
+    unset($libraries['old_menu.php']);
     
     $modules=read_map('site/libraries','php',FALSE,FALSE); // Frontend libraries (modules)
     $libraries=array_merge($libraries,$modules);
@@ -106,6 +110,16 @@ class __ extends AdminController {
     $models=read_map('sys/flexyadmin/models','php',FALSE,FALSE);
     $frontend=read_map('site/models','php',FALSE,FALSE);
     $models=array_merge($models,$frontend);
+    unset($models['builder.php']);
+    unset($models['crud']);
+    unset($models['flexy_field.php']);
+    unset($models['graph.php']);
+    unset($models['grid_set.php']);
+    unset($models['ion_auth_model.php']);
+    unset($models['login_log.php']);
+    unset($models['order.php']);
+    unset($models['plugin_handler.php']);
+    unset($models['svn.php']);
     foreach ($models as $file=>$model) {
       $file=str_replace('.php','',$file);
       if (!$this->load->exist('model',$file)) {
