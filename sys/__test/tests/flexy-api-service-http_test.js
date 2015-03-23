@@ -10,23 +10,43 @@ describe('flexy-api-service-http', function(){
 
   var service, setting, http, mock;
   
+  // count all $http calls
+  var callCount = 0;
+  var randomArgs=[];
+  
   beforeEach(inject(function(flexyApiService,flexySettingsService, flexyApiMock, $httpBackend ) {
     service  = flexyApiService;
     setting  = flexySettingsService;
-    mock = flexyApiMock;
+    mock     = flexyApiMock;
     http     = $httpBackend;
     
     // settings
-    var api = setting.item('api_base_url');
+    var api   = setting.item('api_base_url');
+    var url   = '';
+    var args  = {};
     
     // Spies
     spyOn( service, 'get' ).andCallThrough();
     
-    // Mocking responses
+    // Creating mocked api-service responses
     angular.forEach(mock.tables(),function(table,key){
-      var url = mock.api_get_table_url(table);
-      // console.log('MOCK', 'GET', url);
-      http.when( 'GET', url ).respond( mock.api_get_table_response(table) );
+      
+      // without config
+      args  = {'table':table};
+      url   = mock.api_get_table_url( args );
+      http.when( 'GET', url ).respond( mock.api_get_table_response( args) );
+      
+      // with config
+      args  = {'table':table,'config':['table_info','field_info']};
+      url   = mock.api_get_table_url( args );
+      http.when( 'GET', url ).respond( mock.api_get_table_response( args ) );
+      
+      // random - error
+      args  = mock.api_random_args();
+      url   = mock.api_get_table_url( args );
+      http.when( 'GET', url ).respond( mock.api_error_wrong_args( args ) );
+      randomArgs.push(args);
+      
     });
     
   }));
@@ -41,34 +61,67 @@ describe('flexy-api-service-http', function(){
   });
 
 
+
   /**
    * get(table)
    */
   it('flexy-api-service: testing get(table)', function() {
     var result;
+    var args = {};
     
     // Roep alle get(table) met alle tables aan
     angular.forEach(mock.tables(),function(table,key){
-      // Start zonder resultaat
+      
+      /**
+       * Start zonder resultaat
+       */
       result=undefined;
       expect( result ).toBeUndefined();
-      // Roep de API aan
+      
+      /**
+       * Test een foute API call
+       */
+      args = randomArgs.pop();
+      service.get( 'table', args ).then(function(response){
+        result=response;
+      });
+      http.flush(1);
+      callCount++;
+      // TEST response
+      expect( result ).toBeDefined();
+      expect( result.success ).toBeDefined();
+      expect( result.success ).toEqual(false);
+      expect( result.error ).toBeDefined();
+      expect( result.error ).toEqual('WRONG ARGUMENTS');
+      expect( result.args ).toBeDefined();
+      expect( result.data ).not.toBeDefined();
+
+
+      /**
+       * Roep de API aan, zonder config
+       */
       service.get( 'table', {'table':table} ).then(function(response){
         result=response;
       });
       http.flush(1);
+      callCount++;
+      
       // TEST response
       expect( result ).toBeDefined();
       expect( result.success ).toBeDefined();
       expect( result.success ).toEqual(true);
       expect( result.args ).toBeDefined();
       expect( result.data ).toBeDefined();
+      
+      
+      
     });
     
     // TEST Spies
     expect( service.get ).toHaveBeenCalled();
-    expect( service.get.callCount ).toEqual( mock.tables().length );
+    expect( service.get.callCount ).toEqual( callCount );
   });
+  
   
   
   afterEach(function(){

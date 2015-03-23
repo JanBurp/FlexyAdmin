@@ -31,8 +31,17 @@ var jdb = {};
 
 /**
  * jdb.serializeJSON()
+ * 
+ * Maakt van gegeven object een serialized string:
+ * 
+ *    { table: 'test', where: 10 }
+ * 
+ * Wordt:
+ * 
+ *    table=test&where=10
  *
- *
+ * @param object data het JSON object
+ * @return string
  */
 jdb.serializeJSON = function(data) {
   'use strict';
@@ -153,20 +162,35 @@ String.method('suffix', function(char) {
 
 
 /**
- * String.random()
+ * jdb.randomString()
  * 
  * Geeft een willekeurige string van gegeven lengte
- * @param int len Lengte van willekeuruge string
+ * 
+ * @param int len[8] Lengte van willekeuruge string
  * @param string chars["0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz"] Mogelijke karakters
- * @return String
+ * @return string
  */
-// String.method('random', function(len,chars) {
-//   'use strict';
-//   if (angular.isUndefined(chars)) chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
-//   var randomstring = '';
-//   for (var i=0; i < len ; i++) {
-//     var rnum = Math.floor(Math.random() * chars.length);
-//     randomstring += chars.substring(rnum,rnum+1);
-//   }
-//   return randomstring;
-// });
+jdb.randomString = function(len,chars) {
+  'use strict';
+  if (angular.isUndefined(len))   len   = 8;
+  if (angular.isUndefined(chars)) chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+  var randomstring = '';
+  for (var i=0; i < len ; i++) {
+    var rnum = Math.floor(Math.random() * chars.length);
+    randomstring += chars.substring(rnum,rnum+1);
+  }
+  return randomstring;
+};
+
+/**
+ * jdb.randomInt()
+ * 
+ * Geeft een willekeurige integer tussen min en max waarde
+ * 
+ * @param int min
+ * @param int max
+ * @return int
+ */
+jdb.randomInt = function(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
