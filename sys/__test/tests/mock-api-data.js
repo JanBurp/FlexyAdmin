@@ -150,26 +150,66 @@ flexyAdmin.factory( 'flexyApiMock', ['flexySettingsService',function(flexySettin
     return database[table];
   }
 
+
   /**
    * Create a API_GET_table URL
    */
-  flexyApiMock.api_get_table_url =  function(table) {
-    return api +'table?table='+table;
+  flexyApiMock.api_get_table_url =  function(args) {
+    return api +'table?'+ jdb.serializeJSON(args);
   }
+
+
+  /**
+   * Create a API URL with random args
+   */
+  flexyApiMock.api_random_args =  function() {
+    var args  = {};
+    var count = jdb.randomInt(1,4);
+    for (var i = 0; i < count; i++) {
+      args[i+jdb.randomString()] = jdb.randomString();
+    }
+    return args;
+  }
+  
 
   
   /**
    * Create a API_GET_table RESPONSE
    */
-  flexyApiMock.api_get_table_response =  function(table) {
-    return {
+  flexyApiMock.api_get_table_response =  function(args) {
+    var table    = args.table;
+    var response = {
       'success' : true,
       'data' : database[table],
-      'args' : {
-        'table' : table
-      },
+      'args' : args
+    };
+    // add config
+    if (angular.isDefined(args.config)) {
+      response['config']={};
+      if (angular.isDefined(args.config.table_info)) {
+        response['config']['table_info'] = config[table].table_info;
+      }
+      if (angular.isDefined(args.config.field_info)) {
+        response['config']['field_info'] = config[table].field_info;
+      }
+      // TODO media_info & img_info
+    }
+    return response;
+  }
+
+
+  /**
+   * Create a API error_wrong_arguments RESPONSE
+   */
+  flexyApiMock.api_error_wrong_args =  function(args) {
+    return {
+      'success' : false,
+      'error'   :'WRONG ARGUMENTS',
+      'args' : args,
     }
   }
+
+
   
   return flexyApiMock;
   

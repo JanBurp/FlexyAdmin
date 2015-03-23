@@ -58,17 +58,17 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
    * Core api.get call
    * 
    */
-  flexy_api_service.get = function(type,params,cfg) {
+  flexy_api_service.get = function(type,args,cfg) {
     // Check if cfg is needed
     var needs = flexy_api_service.needs_these_cfg( cfg );
     if (needs.length>0) {
-      params.config=needs;
+      args.config=needs;
     }
     // url
     var url = settings.item('api_base_url') + type;
-    
     // call
-    return $http.get( url, {params:params} ).then(function(response){
+    console.log('GET',url,args);
+    return $http.get( url, {params:args} ).then(function(response){
       return response.data;
     },function(errResponse){
       return errResponse;
