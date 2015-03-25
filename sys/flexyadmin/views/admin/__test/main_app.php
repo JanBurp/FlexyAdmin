@@ -112,12 +112,11 @@
 <script src="sys/__test/flexy-http-auth/http-request.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-http-auth/http-interceptor-auth-check.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-http-auth/http-interceptor-logging.js" type="text/javascript" charset="utf-8"></script>
-
-<script src="sys/__test/flexy-http-auth/flexy-auth-service.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-http-auth/flexy-login-controller.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-http-auth/flexy-logout-controller.js" type="text/javascript" charset="utf-8"></script>
 
 <script src="sys/__test/flexy-services/flexy-api-service.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/flexy-services/flexy-auth-service.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-services/flexy-menu-service.js" type="text/javascript" charset="utf-8"></script>
 
 <script src="sys/__test/flexy-ui/flexy-blocks.js" type="text/javascript" charset="utf-8"></script>
