@@ -41,6 +41,6 @@ flexyMenu.controller( 'flexyMenuCtrl', [ 'flexySettingsService','flexyMenuServic
       };
       $scope.menu = menu;
     });
-  };
+  }
   
 }]);
