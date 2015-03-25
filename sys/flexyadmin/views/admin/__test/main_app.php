@@ -57,7 +57,6 @@
     </div>
   </div>
   
-    
   <div id="container" class="container-fluid" ng-if="isLoggedIn" ng-controller="flexyMenuCtrl">
     
     <header class="navbar navbar-default navbar-fixed-top">
@@ -106,25 +105,30 @@
 <script src="sys/__test/jdb.extend.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-admin-app.js" type="text/javascript" charset="utf-8"></script>
 
-<script src="sys/__test/flexy-services/flexy-settings.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/flexy-services/flexy-settings-service.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/flexy-api-settings/flexy-settings.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/flexy-api-settings/flexy-settings-service.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/flexy-api-settings/flexy-api-service.js" type="text/javascript" charset="utf-8"></script>
 
-<script src="sys/__test/flexy-http-auth/http-request.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/flexy-http-auth/http-interceptor-auth-check.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/flexy-http-auth/http-interceptor-logging.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/flexy-http-auth/flexy-login-controller.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/flexy-http-auth/flexy-logout-controller.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/flexy-http/http-request.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/flexy-http/http-interceptor-auth-check.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/flexy-http/http-interceptor-logging.js" type="text/javascript" charset="utf-8"></script>
 
-<script src="sys/__test/flexy-services/flexy-api-service.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/flexy-services/flexy-auth-service.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/flexy-services/flexy-menu-service.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/flexy-auth/flexy-auth-service.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/flexy-auth/flexy-login-controller.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/flexy-auth/flexy-logout-controller.js" type="text/javascript" charset="utf-8"></script>
+
+<script src="sys/__test/flexy-menu/flexy-menu-service.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/flexy-menu/flexy-menu-controller.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/flexy-menu/flexy-menu-directive.js" type="text/javascript" charset="utf-8"></script>
+
+<script src="sys/__test/flexy-grid/flexy-grid.js" type="text/javascript" charset="utf-8"></script>
+
+<script src="sys/__test/flexy-form/flexy-form.js" type="text/javascript" charset="utf-8"></script>
+
+<script src="sys/__test/flexy-help/flexy-help.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/flexy-plugin/flexy-plugin.js" type="text/javascript" charset="utf-8"></script>
 
 <script src="sys/__test/flexy-ui/flexy-blocks.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/flexy-help/flexy-help.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/flexy-menu/flexy-menu.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/flexy-grid/flexy-grid.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/flexy-form/flexy-form.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/flexy-plugin/flexy-plugin.js" type="text/javascript" charset="utf-8"></script>
 
 </body>
 </html>
