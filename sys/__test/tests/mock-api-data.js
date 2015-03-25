@@ -155,7 +155,7 @@ flexyAdmin.factory( 'flexyApiMock', ['flexySettingsService',function(flexySettin
    * Create a API_GET_table URL
    */
   flexyApiMock.api_get_table_url =  function(args) {
-    return api +'table?'+ jdb.serializeJSON(args);
+    return encodeURI(api +'table?'+ jdb.serializeJSON(args));
   }
 
 
@@ -176,7 +176,7 @@ flexyAdmin.factory( 'flexyApiMock', ['flexySettingsService',function(flexySettin
   /**
    * Create a API_GET_table RESPONSE
    */
-  flexyApiMock.api_get_table_response =  function(args) {
+  flexyApiMock.api_get_data_response =  function(args) {
     var table    = args.table;
     var response = {
       'success' : true,
@@ -185,14 +185,17 @@ flexyAdmin.factory( 'flexyApiMock', ['flexySettingsService',function(flexySettin
     };
     // add config
     if (angular.isDefined(args.config)) {
+      
       response['config']={};
-      if (angular.isDefined(args.config.table_info)) {
+      if (args.config.indexOf('table_info')) {
         response['config']['table_info'] = config[table].table_info;
       }
-      if (angular.isDefined(args.config.field_info)) {
+      if (args.config.indexOf('field_info')) {
         response['config']['field_info'] = config[table].field_info;
       }
       // TODO media_info & img_info
+      // console.log(args,response);
+      
     }
     return response;
   }

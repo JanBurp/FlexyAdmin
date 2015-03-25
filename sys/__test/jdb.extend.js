@@ -46,12 +46,18 @@ var jdb = {};
 jdb.serializeJSON = function(data) {
   'use strict';
   var serializeString='';
-  for (var key in data) {
-    if (serializeString) serializeString+='&';
+  
+  // sort the keys, so the returned string has always same order of keys
+  var keys = Object.keys(data).sort();
+  // Loop the keys
+  for (var i = 0; i < keys.length; i++) {
+    var key=keys[i];
+    if (serializeString!=='') serializeString+='&';
     // array
     if (angular.isArray(data[key])) {
       data[key].forEach(function(el,index) {
-        serializeString += encodeURIComponent(key) + '[]=' + encodeURIComponent(el) + '&';
+        if (serializeString!=='') serializeString+='&';
+        serializeString += encodeURIComponent(key) + '[]=' + encodeURIComponent(el);
       });
     }
     // normal

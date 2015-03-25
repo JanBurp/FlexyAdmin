@@ -218,6 +218,7 @@ class Api_Model extends CI_Model {
     if (!isset($args['config'])) {
       $args['config'] = array();
     }
+    if (!is_array($args['config'])) $args['config']=array($args['config']);
     
     if (isset($args['format'])) $this->result['format']=$args['format'];
     if (!isset($args['type'])) $args['type']='GET';
@@ -330,7 +331,9 @@ class Api_Model extends CI_Model {
    * @author Jan den Besten
    */
   protected function _get_config( $asked_for=array() ) {
-    $asked_for = array_merge( $asked_for, el('config',$this->args,array()) );
+    $config = el('config',$this->args,array());
+    $asked_for = array_merge( $asked_for, $config );
+    $asked_for = array_unique($asked_for);
     foreach ($asked_for as $cfg_key) {
       $method='_get_'.$cfg_key;
       if (method_exists($this,$method)) {

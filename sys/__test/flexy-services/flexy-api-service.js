@@ -25,12 +25,12 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
    * Test if a certain cfg time is available (table_info|field_info|...).
    * Returns true/false
    * 
-   * @param string type
+   * @param string api
    * @return bool
    * @private
    */
-  flexy_api_service.has_cfg = function(type) {
-    return settings.has_item('cfg',type);
+  flexy_api_service.has_cfg = function(api) {
+    return settings.has_item('cfg',api);
   };
 
 
@@ -55,20 +55,56 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
 
   
   /**
-   * Core api.get call
+   * GET. Eenvoudige wrapper voor call()
    * 
+   * @param string api    Welke api aanroep: 'table', 'row' etc.
+   * @param object args   Object met alle mee te sturen paramaters/data
+   * @param object cfg    Object met de gevraagd config, bijvoorbeeld {table_info:true,field_info:true}
+   * @return Promise
    */
-  flexy_api_service.get = function(type,args,cfg) {
+  flexy_api_service.get = function(api,args,cfg) {
+    return flexy_api_service.call('GET',api,args,cfg);
+  };
+  
+
+  /**
+   * POST. Eenvoudige wrapper voor call()
+   * 
+   * @param string api    Welke api aanroep: 'table', 'row' etc.
+   * @param object args   Object met alle mee te sturen paramaters/data
+   * @param object cfg    Object met de gevraagd config, bijvoorbeeld {table_info:true,field_info:true}
+   * @return Promise
+   */
+  flexy_api_service.post = function(api,args,cfg) {
+   return flexy_api_service.call('POST',api,args,cfg);
+  };
+  
+  
+  /**
+   * De $htpp call gebeurt hier.
+   * Alles wordt klaargezet en uitgevoerd.
+   * 
+   * @param string method 'GET','POST'
+   * @param string api    Welke api aanroep: 'table', 'row' etc.
+   * @param object args   Object met alle mee te sturen paramaters/data
+   * @param object cfg    Object met de gevraagd config, bijvoorbeeld {table_info:true,field_info:true}
+   * @return Promise
+   */
+  flexy_api_service.call = function(method,api,args,cfg) {
+    method.toUpperCase();
     // Check if cfg is needed
     var needs = flexy_api_service.needs_these_cfg( cfg );
-    if (needs.length>0) {
-      args.config=needs;
-    }
-    // url
-    var url = settings.item('api_base_url') + type;
+    if (needs.length>0) args['config[]']=needs;
+    // setup
+    var config = {
+      method : method,
+      url    : settings.item('api_base_url') + api,
+      params : (method=='GET'?args:undefined),
+      data   : (method=='POST'?args:undefined),
+    };
+    
     // call
-    console.log('GET',url,args);
-    return $http.get( url, {params:args} ).then(function(response){
+    return $http(config).then(function(response){
       return response.data;
     },function(errResponse){
       return errResponse;
