@@ -34,12 +34,12 @@ describe('flexy-api-service-http', function(){
       // without config
       args  = {'table':table};
       url   = mock.api_get_table_url( args );
-      http.when( 'GET', url ).respond( mock.api_get_table_response( args) );
+      http.when( 'GET', url ).respond( mock.api_get_data_response( args) );
       
       // with config
       args  = {'table':table,'config':['table_info','field_info']};
       url   = mock.api_get_table_url( args );
-      http.when( 'GET', url ).respond( mock.api_get_table_response( args ) );
+      http.when( 'GET', url ).respond( mock.api_get_data_response( args ) );
       
       // random - error
       args  = mock.api_random_args();
@@ -87,7 +87,7 @@ describe('flexy-api-service-http', function(){
       });
       http.flush(1);
       callCount++;
-      // TEST response
+      // TEST ERROR response
       expect( result ).toBeDefined();
       expect( result.success ).toBeDefined();
       expect( result.success ).toEqual(false);
@@ -98,21 +98,42 @@ describe('flexy-api-service-http', function(){
 
 
       /**
-       * Roep de API aan, zonder config
+       * Roep de API aan, ZONDER CONFIG vraag
        */
       service.get( 'table', {'table':table} ).then(function(response){
         result=response;
       });
       http.flush(1);
       callCount++;
-      
-      // TEST response
+      // TEST response zonder config
       expect( result ).toBeDefined();
       expect( result.success ).toBeDefined();
       expect( result.success ).toEqual(true);
       expect( result.args ).toBeDefined();
+      expect( result.args ).toEqual({'table':table});
       expect( result.data ).toBeDefined();
-      
+      expect( result.data ).toEqual( mock.table(table) );
+      expect( result.config ).not.toBeDefined();
+
+
+      /**
+       * Roep de API aan, MET CONFIG vraag
+       */
+      service.get( 'table', {'table':table}, ['table_info','field_info'] ).then(function(response){
+        result=response;
+      });
+      http.flush(1);
+      callCount++;
+      // TEST response met config
+      expect( result ).toBeDefined();
+      expect( result.success ).toBeDefined();
+      expect( result.success ).toEqual(true);
+      expect( result.args ).toBeDefined();
+      expect( result.args.table ).toBeDefined();
+      expect( result.args.table ).toEqual(table);
+      expect( result.data ).toBeDefined();
+      expect( result.data ).toEqual( mock.table(table) );
+      expect( result.config ).toBeDefined();
       
       
     });
