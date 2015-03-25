@@ -18,7 +18,6 @@
  * $Author$
  * $Date$
  * $Revision$
- * $HeadURL$ 
  */
 
 flexyAdmin.factory( 'flexySettingsService', ['flexyConstants','flexySettings', function(constants,settings) {

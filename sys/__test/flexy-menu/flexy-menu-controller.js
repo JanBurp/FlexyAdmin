@@ -9,15 +9,12 @@
  * $Author$
  * $Date$
  * $Revision$
- * $HeadURL$ 
  */
 
 /**
  * flexy-menu
  */
 var flexyMenu = angular.module( 'flexyMenu', []);
-
-
 
 
 /**
@@ -44,6 +41,6 @@ flexyMenu.controller( 'flexyMenuCtrl', [ 'flexySettingsService','flexyMenuServic
       };
       $scope.menu = menu;
     });
-  }
+  };
   
 }]);

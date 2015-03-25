@@ -9,7 +9,6 @@
  * $Author$
  * $Date$
  * $Revision$
- * $HeadURL$ 
  */
 
 flexyMenu.directive( "flexyMenu", ['flexySettingsService','$location',function(settings,$location) {
