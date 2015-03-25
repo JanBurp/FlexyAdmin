@@ -13,7 +13,7 @@
  */
 
 
-flexyAdmin.controller('FormController', ['flexyAdminGlobals','$scope','$routeParams','$http', function($flexyAdminGlobals, $scope,$routeParams,$http) {
+flexyAdmin.controller('FormController', ['flexySettingsService','$scope','$routeParams','$http', function(settings, $scope,$routeParams,$http) {
   'use strict';
 
   /**
@@ -91,16 +91,16 @@ flexyAdmin.controller('FormController', ['flexyAdminGlobals','$scope','$routePar
       angular.forEach( $scope.form_data.fields, function(value, key) {
 
         // Default field
-        var field = angular.copy( $flexyAdminGlobals.form_field_types['[default]'] );
+        var field = angular.copy( settings.item('form_field_types','[default]') );
         // Fieldname
         var fieldname='['+key+']';
-        if (angular.isDefined($flexyAdminGlobals.form_field_types[fieldname])) {
-          field = angular.extend( field, $flexyAdminGlobals.form_field_types[fieldname] );
+        if ( settings.has_item('form_field_types',fieldname) ) {
+          field = angular.extend( field, settings.item('form_field_types',fieldname) );
         }
         // Field type according to prefix
         var prefix = key.prefix();
-        if (angular.isDefined($flexyAdminGlobals.form_field_types[prefix])) {
-          field = angular.extend( field, $flexyAdminGlobals.form_field_types[prefix] );
+        if ( settings.has_item('form_field_types',prefix)) {
+          field = angular.extend( field, settings.item('form_field_types',prefix) );
         }
         // Name, Value etc.
         if (angular.isDefined($scope.form_data.field_info[key])) field.title = $scope.form_data.field_info[key].ui_name;

@@ -20,7 +20,7 @@
 flexyAdmin.factory( 'flexyMenuService', ['flexySettingsService','flexyApiService',function(settings,api) {
   'use strict';
 
-  var loaded_menu = undefined;
+  var loaded_menu = null; loaded_menu=undefined;
   
   /**
    * Classes & glyphicons
@@ -55,7 +55,7 @@ flexyAdmin.factory( 'flexyMenuService', ['flexySettingsService','flexyApiService
    */
   flexy_menu_service.isLoaded = function() {
     return angular.isDefined(loaded_menu);
-  }
+  };
   
   
   /**

@@ -21,9 +21,9 @@
  * $HeadURL$ 
  */
 
-flexyAdmin.factory( 'flexySettingsService', ['flexySettings', function(settings) {
+flexyAdmin.factory( 'flexySettingsService', ['flexyConstants','flexySettings', function(constants,settings) {
   'use strict';
-
+  
   var flexy_settings_service = {};
   
   /**

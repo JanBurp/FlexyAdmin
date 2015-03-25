@@ -17,17 +17,17 @@
  * Log all $http calls
  */
 
-flexyAdmin.factory('logInterceptor',['flexyAdminGlobals','$q',function(flexyAdminGlobals,$q){
+flexyAdmin.factory('logInterceptor',['flexySettingsService','$q',function(settings,$q){
 
   'use strict';
   
-  function _url(config)     { return config.url.replace(flexyAdminGlobals.sys_folder,'').replace(flexyAdminGlobals.api_base_url,''); }
+  function _url(config)     { return config.url.replace(settings.item('sys_folder'),'').replace(settings.item('api_base_url'),''); }
   function _isHTML(config)  { return (config.url.substr(-5)=='.html'); }
   function _isPOST(config)  { return (config.method=='POST'); }
   
   function message(config, delimeter, data) {
     if (!_isHTML(config)) {
-      var message=flexyAdminGlobals.log_prefix + ' ' + delimeter + ' ' + config.method;
+      var message=settings.item('log_prefix') + ' ' + delimeter + ' ' + config.method;
       if ( _isHTML(config) ) message+=' HTML ';
       message+=' - ' + _url(config);
       if ( angular.isDefined(data) ) {
@@ -52,7 +52,7 @@ flexyAdmin.factory('logInterceptor',['flexyAdminGlobals','$q',function(flexyAdmi
     },
     
     requestError : function(rejection) {
-      console.error(flexyAdminGlobals.log_prefix+' Request ERROR due to', rejection);
+      console.error(settings.item('log_prefix')+' Request ERROR due to', rejection);
       return $q.reject(rejection);
     },
     
@@ -64,7 +64,7 @@ flexyAdmin.factory('logInterceptor',['flexyAdminGlobals','$q',function(flexyAdmi
     responseError : function(rejection) {
       var method=rejection.config.method;
       var url = _url(rejection.config);
-      console.error(flexyAdminGlobals.log_prefix+'ERROR '+rejection.status+' -> '+method+' - '+url, rejection);
+      console.error(settings.item('log_prefix')+'ERROR '+rejection.status+' -> '+method+' - '+url, rejection);
       return $q.reject(rejection);
     },
     

@@ -15,7 +15,7 @@
 
 'use strict';
 
-flexyAdmin.config(['flexyAdminGlobals','$httpProvider',function(flexyAdminGlobals,$httpProvider) {
+flexyAdmin.config(['flexyConstants','$httpProvider',function(constants,$httpProvider) {
   
   // Globaly sets all base URL's
   $httpProvider.interceptors.push(function ($q) {
@@ -23,11 +23,11 @@ flexyAdmin.config(['flexyAdminGlobals','$httpProvider',function(flexyAdminGlobal
       'request': function (config) {
         if (config.url.substr(-5)=='.html') {
           // HTML views
-          config.url = flexyAdminGlobals.sys_folder + config.url;
+          config.url = constants.sys_folder + config.url;
         }
         else {
           // API calls
-          config.url = flexyAdminGlobals.api_base_url + config.url.replace(flexyAdminGlobals.api_base_url,''); // TODO hack to prevend double, why?
+          config.url = constants.api_base_url + config.url.replace( constants.api_base_url ,''); // TODO hack to prevend double, why?
         }
         return config || $q.when(config);
       }

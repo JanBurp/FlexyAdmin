@@ -72,7 +72,8 @@ describe('flexy-api-service-http', function(){
    * Test get_admin_nav
    */
   it('flexy-api-service: Test admin_nav', function() {
-    var result = undefined;
+    var result = null;
+    result = undefined;
     expect( result ).toBeUndefined();
     service.get( 'get_admin_nav' ).then(function(response){
       result=response;
