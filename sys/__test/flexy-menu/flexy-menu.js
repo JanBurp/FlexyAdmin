@@ -12,15 +12,16 @@
  * $HeadURL$ 
  */
 
-
 /**
  * flexy-menu
  */
 var flexyMenu = angular.module( 'flexyMenu', []);
 
 
+
+
 /**
- * Loads menu with the flexyMenuService
+ * CONTROLLER
  */
 flexyMenu.controller( 'flexyMenuCtrl', [ 'flexySettingsService','flexyMenuService','$scope', function(settings,menuService,$scope) {
   
@@ -43,13 +44,14 @@ flexyMenu.controller( 'flexyMenuCtrl', [ 'flexySettingsService','flexyMenuServic
       };
       $scope.menu = menu;
     });
-  };
+  }
   
 }]);
 
 
-
-
+/**
+ * DIRECTIVE
+ */
 flexyMenu.directive( "flexyMenu", ['flexySettingsService','$location',function(settings,$location) {
   'use strict';
   

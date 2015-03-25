@@ -54,7 +54,7 @@ flexyAdmin.controller('flexyLoginController', ['flexyAuthService','authService',
   self.sendNewPassword = function(){
     flexyAuthService.send_password(self.user.email).then(
       function(success){
-        if (success.data.data) {
+        if (success.data) {
           self.mailSend = true;
           self.mailError = false;
         }
