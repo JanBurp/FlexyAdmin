@@ -9,7 +9,6 @@
  * $Author$
  * $Date$
  * $Revision$
- * $HeadURL$ 
  */
 
 

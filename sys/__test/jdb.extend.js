@@ -8,7 +8,6 @@
  * $Author$
  * $Date$
  * $Revision$
- * $HeadURL$ 
  */
 
 /*jshint -W083 */

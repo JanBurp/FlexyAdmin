@@ -13,7 +13,6 @@
  * $Author$
  * $Date$
  * $Revision$
- * $HeadURL$ 
  */
 
 flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(settings,$http) {
