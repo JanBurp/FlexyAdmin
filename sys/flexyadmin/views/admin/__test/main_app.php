@@ -58,21 +58,21 @@
   </div>
   
     
-  <div id="container" class="container-fluid" ng-if="isLoggedIn">
+  <div id="container" class="container-fluid" ng-if="isLoggedIn" ng-controller="flexyMenuCtrl">
     
     <header class="navbar navbar-default navbar-fixed-top">
       <div class="navbar-text"><a href="./admin/__test#/home" data-flexy-blocks="">AngularJS Test</a></div>
-      <nav class="menu-header navbar-text"><flexy-menu type="header" uiclass="nav-pills"></flexy-menu></nav>
+      <nav class="menu-header navbar-text"><flexy-menu type="header" uiclass="nav-pills" items="menu.header"></flexy-menu></nav>
     </header>
 
     <div id="content" class="row">
-      <nav class="menu-side"><flexy-menu type="sidebar" uiclass="nav-pills nav-stacked"></flexy-menu></nav>
+      <nav class="menu-side"><flexy-menu type="sidebar" uiclass="nav-pills nav-stacked" items="menu.sidebar"></flexy-menu></nav>
       <main data-ng-view="" autoscroll="true"></main>
     </div>
   
     <footer class="navbar navbar-default navbar-fixed-bottom">
       <div class="navbar-text"><a href="./admin/__test#/home" data-flexy-blocks="">FlexyAdmin</a></div>
-      <nav class="menu-footer navbar-text"><flexy-menu type="footer" uiclass="nav-pills"></flexy-menu></nav>
+      <nav class="menu-footer navbar-text"><flexy-menu type="footer" uiclass="nav-pills" items="menu.footer"></flexy-menu></nav>
     </footer>
     
   </div>
