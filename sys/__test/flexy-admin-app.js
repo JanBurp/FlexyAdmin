@@ -54,67 +54,8 @@ flexyAdmin.value('froalaConfig', {
 
 
 /**
- * SOME SPARE GLOBALS as a constant
- */
-flexyAdmin.constant('flexyAdminGlobals',{
-  base_url      : 'admin/__test',
-  api_base_url  : '_api/',
-  sys_folder    : 'sys/__test/',
-  log_prefix    : 'FA ',
-
-
-  /**
-   * Form fields
-   */
-  form_field_types : {
-    
-    // DEFAULT TYPE
-    '[default]' : {
-      'data-type'   : 'string',
-      'format'      : 'string',
-      'type'        : 'string',
-      'readonly'    : false,
-    },
-    
-    // SPECIAL FIELDS
-    '[id]' : {
-      'readonly'    : true,
-      'type'        : 'hidden',
-    },
-    '[order]' : {
-      'readonly'    : true,
-      'type'        : 'hidden',
-    },
-    '[self_parent]' : {
-      'readonly'    : true,
-    },
-    '[uri]' : {
-      'readonly'    : true,
-      'type'        : 'hidden',
-    },
-    
-    // TYPES (determined by prefix)
-    'email' : {
-      'type' : 'email',
-    },
-    'txt' : {
-      'format' : 'html',
-      'type'   : 'wysiwyg',
-    },
-    'stx' : {
-      'type' : 'textarea',
-    },
-    
-  },
-  
-});
-
-
-
-/**
  * ROUTING
  */
-
 flexyAdmin.config( function($routeProvider){
   $routeProvider
     .when('/home',{
@@ -191,7 +132,10 @@ flexyAdmin.controller('stateController', ['$scope','flexyAuthService','$location
 
 
 
-flexyAdmin.controller('WizardController', ['flexyAdminGlobals','$scope', function($flexyAdminGlobals,$scope) {
+/**
+ * Special forms?
+ */
+flexyAdmin.controller('WizardController', ['flexySettingsService','$scope', function(settings,$scope) {
   'use strict';
 
   /**
@@ -200,7 +144,7 @@ flexyAdmin.controller('WizardController', ['flexyAdminGlobals','$scope', functio
   var self=this;
   $scope.uris = {
     
-    edit_user : $flexyAdminGlobals.base_url+'#/form/cfg_users/current'
+    edit_user : settings.item('base_url')+'#/form/cfg_users/current'
     
   };
   

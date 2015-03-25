@@ -19,12 +19,12 @@
 var flexyMenu = angular.module( 'flexyMenu', []);
 
 
-flexyMenu.directive( "flexyMenu", ['flexySettingsService','$location',function(Settings,$location) {
+flexyMenu.directive( "flexyMenu", ['flexySettingsService','$location',function(settings,$location) {
   'use strict';
   
   // Default menu
   var menu = {
-    header  : [ { href: Settings.item('base_url')+"/logout", name: 'Logout' } ],
+    header  : [ { href: settings.item('base_url')+"/logout", name: 'Logout' } ],
     sidebar : [],
     footer  : [],
   };
@@ -71,7 +71,7 @@ flexyMenu.directive( "flexyMenu", ['flexySettingsService','$location',function(S
           };
           $scope.menu = menu;
         });
-      };
+      }
     }],
     
   };

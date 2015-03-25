@@ -16,37 +16,56 @@
  * $HeadURL$ 
  */
 
-flexyAdmin.factory( 'flexySettings', [function() {
+
+/**
+ * These are constants that are fixed and used all over the app, including the config parts
+ */
+flexyAdmin.constant('flexyConstants', {
+
+  /**
+   * URL of app
+   */
+  base_url      : 'admin/__test',
+
+  /**
+   * URL of api calls
+   */
+  api_base_url  : '_api/',
+
+  /**
+   * Folder from root
+   */
+  sys_folder    : 'sys/__test/',
+
+  /**
+   * A prefix that will be added to all logging messages
+   */
+  log_prefix    : 'FA ',
+  
+});
+
+
+
+/**
+ * All the settings, including the constants
+ */
+flexyAdmin.factory( 'flexySettings', ['flexyConstants', function(constants) {
   'use strict';
   return {
 
+    /**
+     * Add the constants:
+     */
+    base_url      : constants.base_url,
+    api_base_url  : constants.api_base_url,
+    sys_folder    : constants.sys_folder,
+    log_prefix    : constants.log_prefix,
 
     /**
      * Use mock data (for testing)
      */
     use_mock      : true,
 
-    /**
-     * URL of app
-     */
-    base_url      : 'admin/__test',
-    
-    /**
-     * URL of api calls
-     */
-    api_base_url  : '_api/',
-    
-    /**
-     * Folder from root
-     */
-    sys_folder    : 'sys/__test/',
-    
-    /**
-     * A prefix that will be added to all logging messages
-     */
-    log_prefix    : 'FA ',
-  
-  
     /**
      * Config that comes from database, and will grow if needed with the cfg_ methods
      */

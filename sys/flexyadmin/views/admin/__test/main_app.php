@@ -78,41 +78,45 @@
   </div>
 
 
-<!-- Angular JS -->
-<!-- <script src="sys/__test/js/angular.js" type="text/javascript" charset="utf-8"></script>
+<!-- External JS -->
+<script src="sys/__test/js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/js/angular.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/angular-route.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/ui-bootstrap-tpls.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/js/showErrors.min.js" type="text/javascript" charset="utf-8"></script> -->
-<!-- Angular External Modules -->
-<!-- <script src="sys/__test/js/http-auth-interceptor.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/js/showErrors.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/js/http-auth-interceptor.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/toArrayFilter.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/js/loading-bar.js" type="text/javascript" charset="utf-8"></script> -->
-<!--Grid -->
-<!-- <script src="sys/__test/js/smart-table.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/js/ng-sortable.min.js" type="text/javascript" charset="utf-8"></script> -->
-<!-- Form -->
-<!-- <script src="sys/__test/js/angular-sanitize.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/js/loading-bar.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/js/smart-table.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/js/ng-sortable.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/js/angular-sanitize.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/tv4.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/ObjectPath.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/schema-form.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/bootstrap-decorator.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/js/bootstrap-tinymce.js" type="text/javascript" charset="utf-8"></script> -->
+<script src="sys/__test/flexy-form/bootstrap-decorator-froala.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/js/froala_editor.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/js/angular-froala.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/js/froala-sanitize.js" type="text/javascript" charset="utf-8"></script>
 
-<script src="sys/__test/js/externals.min.js" type="text/javascript" charset="utf-8"></script>
+<!-- <script src="sys/__test/js/externals.min.js" type="text/javascript" charset="utf-8"></script> -->
 
-<!--FlexyAdmin -->
+
+<!-- FlexyAdmin -->
 <script src="sys/__test/jdb.extend.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-admin-app.js" type="text/javascript" charset="utf-8"></script>
+
+<script src="sys/__test/flexy-services/flexy-settings.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/flexy-services/flexy-settings-service.js" type="text/javascript" charset="utf-8"></script>
 
 <script src="sys/__test/flexy-http-auth/http-request.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-http-auth/http-interceptor-auth-check.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-http-auth/http-interceptor-logging.js" type="text/javascript" charset="utf-8"></script>
+
 <script src="sys/__test/flexy-http-auth/flexy-auth-service.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-http-auth/flexy-login-controller.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-http-auth/flexy-logout-controller.js" type="text/javascript" charset="utf-8"></script>
 
-<script src="sys/__test/flexy-services/flexy-settings.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/flexy-services/flexy-settings-service.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-services/flexy-api-service.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-services/flexy-menu-service.js" type="text/javascript" charset="utf-8"></script>
 

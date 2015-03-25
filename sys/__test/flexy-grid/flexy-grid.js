@@ -13,7 +13,7 @@
  */
 
 
-flexyAdmin.controller('GridController', ['flexyAdminGlobals','$scope','$routeParams','$http', function($flexyAdminGlobals,$scope,$routeParams,$http) {
+flexyAdmin.controller('GridController', ['flexySettingsService','$scope','$routeParams','$http', function(settings,$scope,$routeParams,$http) {
   'use strict';
   
   /**
@@ -21,7 +21,7 @@ flexyAdmin.controller('GridController', ['flexyAdminGlobals','$scope','$routePar
    */
   var self=this;
   $scope.table = $routeParams.table;
-  $scope.base_url = $flexyAdminGlobals.base_url;
+  $scope.base_url = settings.item('base_url');
   $scope.has_selection = false;
   
   /**
