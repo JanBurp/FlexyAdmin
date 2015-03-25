@@ -19,21 +19,46 @@
 var flexyMenu = angular.module( 'flexyMenu', []);
 
 
-flexyMenu.directive( "flexyMenu", ['flexySettingsService','$location',function(settings,$location) {
-  'use strict';
+/**
+ * Loads menu with the flexyMenuService
+ */
+flexyMenu.controller( 'flexyMenuCtrl', [ 'flexySettingsService','flexyMenuService','$scope', function(settings,menuService,$scope) {
   
   // Default menu
-  var menu = {
+  $scope.menu = {
     header  : [ { href: settings.item('base_url')+"/logout", name: 'Logout' } ],
     sidebar : [],
-    footer  : [],
+    footer  : []
   };
+  
+  /**
+   * Make sure menu data is loaded
+   */
+  if ( ! menuService.isLoaded() ) {
+    menuService.load().then(function(data){
+      var menu = {
+        header  : menuService.get_processed( 'header' ),
+        sidebar : menuService.get_processed( 'sidebar' ),
+        footer  : menuService.get_processed( 'footer' ),
+      };
+      $scope.menu = menu;
+    });
+  };
+  
+}]);
+
+
+
+
+flexyMenu.directive( "flexyMenu", ['flexySettingsService','$location',function(settings,$location) {
+  'use strict';
   
   return {
     restrict: "E",
     scope: {
       type    : "@",
       uiclass : "@",
+      items   : "="
     },
     templateUrl:'flexy-menu/flexy-menu.html',
     
@@ -51,28 +76,7 @@ flexyMenu.directive( "flexyMenu", ['flexySettingsService','$location',function(s
         }
         return false;
       };
-    },
-    
-    /**
-     * Internal menu controller
-     */
-    controller : ['$scope','flexyMenuService', function($scope,MenuService) {
-      $scope.menu = menu;
-
-      /**
-       * Make sure menu data is loaded
-       */
-      if ( ! MenuService.isLoaded() ) {
-        MenuService.load().then(function(data){
-          var menu = {
-            header  : MenuService.get_processed( 'header' ),
-            sidebar : MenuService.get_processed( 'sidebar' ),
-            footer  : MenuService.get_processed( 'footer' ),
-          };
-          $scope.menu = menu;
-        });
-      }
-    }],
+    }
     
   };
 }]);
