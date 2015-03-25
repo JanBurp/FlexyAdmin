@@ -112,13 +112,6 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
   };
   
   
-  
-  
-  
-  
-  
-  
-  
 
   return flexy_api_service;
 }]);

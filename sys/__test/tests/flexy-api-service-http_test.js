@@ -28,24 +28,30 @@ describe('flexy-api-service-http', function(){
     // Spies
     spyOn( service, 'get' ).andCallThrough();
     
-    // Creating mocked api-service responses
+    // MOCKS
+    
+    // GET_ADMIN_NAV
+    url   = mock.api_url( 'get_admin_nav' );
+    http.when( 'GET', url ).respond( mock.api_get_admin_nav_response() );
+    
+    // Multiple mocks for each table
     angular.forEach(mock.tables(),function(table,key){
       
-      // without config
-      args  = {'table':table};
-      url   = mock.api_get_table_url( args );
-      http.when( 'GET', url ).respond( mock.api_get_data_response( args) );
-      
-      // with config
-      args  = {'table':table,'config':['table_info','field_info']};
-      url   = mock.api_get_table_url( args );
-      http.when( 'GET', url ).respond( mock.api_get_data_response( args ) );
-      
-      // random - error
+      // random - ERROR
       args  = mock.api_random_args();
       url   = mock.api_get_table_url( args );
       http.when( 'GET', url ).respond( mock.api_error_wrong_args( args ) );
       randomArgs.push(args);
+      
+      // TABLE without config
+      args  = {'table':table};
+      url   = mock.api_get_table_url( args );
+      http.when( 'GET', url ).respond( mock.api_get_data_response( args) );
+      
+      // TABLE with config
+      args  = {'table':table,'config':['table_info','field_info']};
+      url   = mock.api_get_table_url( args );
+      http.when( 'GET', url ).respond( mock.api_get_data_response( args ) );
       
     });
     
@@ -59,6 +65,34 @@ describe('flexy-api-service-http', function(){
     expect( setting.has_item('use_mock') ).toEqual(true);
     expect( setting.item( 'use_mock' ) ).toEqual(true);
   });
+
+
+
+  /**
+   * Test get_admin_nav
+   */
+  it('flexy-api-service: Test admin_nav', function() {
+    var result = undefined;
+    expect( result ).toBeUndefined();
+    service.get( 'get_admin_nav' ).then(function(response){
+      result=response;
+    });
+    http.flush(1);
+    // callCount++;
+    // console.log(result);
+    expect( result ).toBeDefined();
+    expect( result.success ).toBeDefined();
+    expect( result.success ).toEqual(true);
+    expect( result.args ).toBeDefined();
+    expect( result.args ).toEqual({});
+    expect( result.config ).not.toBeDefined();
+    expect( result.data ).toBeDefined();
+    expect( result.data.header ).toBeDefined();
+    expect( result.data.sidebar ).toBeDefined();
+    expect( result.data.footer ).toBeDefined();
+    
+  });
+
 
 
 

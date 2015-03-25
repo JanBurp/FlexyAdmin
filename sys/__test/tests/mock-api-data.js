@@ -119,16 +119,21 @@ flexyAdmin.factory( 'flexyApiMock', ['flexySettingsService',function(flexySettin
     },
   };
   
+  var get_admin_nav = {
+    "header":[{"name":"Help","uri":"help/index","type":"info"},{"name":"admin","uri":"form/cfg_users/current","type":"form","args":{"table":"cfg_users","id":"1"}},{"name":"Loguit","uri":"logout","type":"logout"}],
+    "sidebar":[{"name":"Menu","uri":"grid/tbl_menu","type":"table","args":{"table":"tbl_menu"},"help":"Het menu van de site, met de onderliggende pagina's en teksten."},{"name":"Links","uri":"grid/tbl_links","type":"table","args":{"table":"tbl_links"},"help":"Een tabel met links die je in alle teksten van de site kunt gebruiken."},{"name":"Foto's","uri":"media/pictures","type":"media","args":{"path":"pictures"},"help":"Upload of verwijder hier de foto's van je site."},{"name":"Downloads","uri":"media/downloads","type":"media","args":{"path":"downloads"},"help":"Voeg hier bestanden toe die je in je tekst als download-link wilt gebruiken."},{"type":"seperator"},{"type":"seperator"},{"name":"Exporteer Database","uri":"tools/db_export","type":"tools","args":{"api":"/admin/db/export/"}},{"name":"Importeer Database","uri":"tools/db_import","type":"tools","args":{"api":"/admin/db/import/"}},{"name":"Zoeken/Vervangen","uri":"tools/search","type":"tools","args":{"api":"/admin/search/"}},{"name":"Automatisch vullen","uri":"tools/fill","type":"tools","args":{"api":"/admin/fill/"}},{"type":"seperator"},{"name":"Media Files","uri":"grid/res_media_files","type":"result","args":{"table":"res_media_files"},"help":""},{"type":"seperator"},{"name":"Ui","uri":"grid/cfg_ui","type":"config","args":{"table":"cfg_ui"},"help":"Maak hier teksten en help voor de backend userinterface."},{"name":"Configurations","uri":"grid/cfg_configurations","type":"config","args":{"table":"cfg_configurations"},"help":"Globale instellingen"},{"name":"Admin Menu","uri":"grid/cfg_admin_menu","type":"config","args":{"table":"cfg_admin_menu"},"help":"Pas het admin menu hier aan."},{"name":"Media Info","uri":"grid/cfg_media_info","type":"config","args":{"table":"cfg_media_info"},"help":"Instellingen voor bestandsmappen."},{"name":"Img Info","uri":"grid/cfg_img_info","type":"config","args":{"table":"cfg_img_info"},"help":"Instellingen voor resizen van afbeeldingen na uploaden."},{"name":"Email","uri":"grid/cfg_email","type":"config","args":{"table":"cfg_email"},"help":""},{"name":"Table Info","uri":"grid/cfg_table_info","type":"config","args":{"table":"cfg_table_info"},"help":"Instellingen voor tabellen."},{"name":"Field Info","uri":"grid/cfg_field_info","type":"config","args":{"table":"cfg_field_info"},"help":"Instellingen voor velden."},{"name":"Users","uri":"grid/cfg_users","type":"config","args":{"table":"cfg_users"},"help":"Maak hier gebruikers aan."},{"name":"User Groups","uri":"grid/cfg_user_groups","type":"config","args":{"table":"cfg_user_groups"},"help":"Maak hier usergroups aan voor gebruik bij Users."},{"name":"Login","uri":"grid/log_login","type":"log","args":{"table":"log_login"},"help":""},{"name":"Stats","uri":"grid/log_stats","type":"log","args":{"table":"log_stats"},"help":""}],
+    "footer":[{"name":"Instellingen","uri":"form/tbl_site/first","type":"form","args":{"table":"tbl_site"}},{"name":"Statistieken","uri":"plugin/stats","type":"plugin","args":{"plugin":"stats"}}],
+  };
+  
   
   var flexyApiMock = {};
-  
   
   /**
    * Return full database
    */
   flexyApiMock.database = function() {
     return database;
-  }
+  };
   
 
   /**
@@ -148,14 +153,24 @@ flexyAdmin.factory( 'flexyApiMock', ['flexySettingsService',function(flexySettin
    */
   flexyApiMock.table = function(table) {
     return database[table];
-  }
+  };
 
 
   /**
    * Create a API_GET_table URL
    */
   flexyApiMock.api_get_table_url =  function(args) {
-    return encodeURI(api +'table?'+ jdb.serializeJSON(args));
+    return flexyApiMock.api_url('table', args);
+  };
+
+
+  /**
+   * Create API
+   */
+  flexyApiMock.api_url = function(type,args) {
+    var serializedData=jdb.serializeJSON(args);
+    if (serializedData!=='') serializedData = '?'+serializedData;
+    return encodeURI(api + type + serializedData );
   }
 
 
@@ -169,36 +184,60 @@ flexyAdmin.factory( 'flexyApiMock', ['flexySettingsService',function(flexySettin
       args[i+jdb.randomString()] = jdb.randomString();
     }
     return args;
-  }
+  };
   
-
   
   /**
-   * Create a API_GET_table RESPONSE
+   * Create a API_GET_data RESPONSE
    */
   flexyApiMock.api_get_data_response =  function(args) {
-    var table    = args.table;
+    return flexyApiMock.api_response(args,database[args.table]);
+  };
+  
+  
+  /**
+   * Create response for get_admin_nav
+   */
+  flexyApiMock.api_get_admin_nav_response = function() {
+    return flexyApiMock.api_response({},get_admin_nav);
+  }
+  
+  
+  /**
+   * Create a success RESPONSE
+   */
+  flexyApiMock.api_response =  function(args,data) {
     var response = {
       'success' : true,
-      'data' : database[table],
-      'args' : args
+      'data'    : data,
+      'args'    : args
     };
     // add config
     if (angular.isDefined(args.config)) {
-      
       response['config']={};
-      if (args.config.indexOf('table_info')) {
-        response['config']['table_info'] = config[table].table_info;
+      // table_info & field_info
+      var table=args.table;
+      if (angular.isDefined(table)) {
+        if (args.config.indexOf('table_info')) {
+          response['config']['table_info'] = config[table].table_info;
+        }
+        if (args.config.indexOf('field_info')) {
+          response['config']['field_info'] = config[table].field_info;
+        }
       }
-      if (args.config.indexOf('field_info')) {
-        response['config']['field_info'] = config[table].field_info;
+      // media_info & img_info
+      var path=args.path;
+      if (angular.isDefined(path)) {
+        if (args.config.indexOf('media_info')) {
+          response['config']['media_info'] = config['media_'+path].media_info;
+        }
+        if (args.config.indexOf('img_info')) {
+          response['config']['img_info'] = config['media_'+path].img_info;
+        }
       }
-      // TODO media_info & img_info
-      // console.log(args,response);
-      
     }
     return response;
-  }
+  };
 
 
   /**
@@ -210,7 +249,7 @@ flexyAdmin.factory( 'flexyApiMock', ['flexySettingsService',function(flexySettin
       'error'   :'WRONG ARGUMENTS',
       'args' : args,
     }
-  }
+  };
 
 
   
