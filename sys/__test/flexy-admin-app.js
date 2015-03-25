@@ -43,6 +43,7 @@ var flexyAdmin = angular.module( 'flexyAdmin', [
   ]
 );
 
+
 /**
  * FROALA config
  */
