@@ -21,6 +21,8 @@
  *    - api=(string) name of the api call
  *    - format=json
  *    - data=(mixed) the returned data
+ *    - config=(array) config data if asked for
+ *    - info=(array) information about the data
  * 
  * Examples:
  * 
@@ -37,6 +39,7 @@ class Api_Model extends CI_Model {
   protected $args=array();
   protected $needs=array();
   protected $result=array();
+  protected $info=array();
   protected $cfg_info=array();
   
   private $error='';
@@ -154,6 +157,7 @@ class Api_Model extends CI_Model {
       $this->result['message']=$this->message;
     }
     if (isset($this->args['format'])) $this->result['format']=$this->args['format'];
+    if (isset($this->info) and $this->info) $this->result['info']=$this->info;
     return $this->result;
   }
   

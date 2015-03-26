@@ -46,12 +46,12 @@ describe('flexy-api-service-http', function(){
       // TABLE without config
       args  = {'table':table};
       url   = mock.api_get_table_url( args );
-      http.when( 'GET', url ).respond( mock.api_get_data_response( args) );
+      http.when( 'GET', url ).respond( mock.api_get_data_response( args, 'table' ) );
       
       // TABLE with config
       args  = {'table':table,'config':['table_info','field_info']};
       url   = mock.api_get_table_url( args );
-      http.when( 'GET', url ).respond( mock.api_get_data_response( args ) );
+      http.when( 'GET', url ).respond( mock.api_get_data_response( args, 'table' ) );
       
     });
     

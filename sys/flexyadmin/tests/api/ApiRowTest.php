@@ -59,6 +59,12 @@ class ApiRowTest extends ApiTestModel {
       'asserts' => array(
         'data'  => array( 'hasKey'                => 'id' ),
         'data'  => array( 'countGreaterOrEqual'   => 2 ),
+        'info'  => array( 'type' => 'array' ),
+        'info'  => array( 'count' => 3 ),
+        'info'  => array( 'hasKey' => 'rows' ),
+        'info'  => array( 'hasKey' => 'total_rows' ),
+        'info'  => array( 'hasKey' => 'table_rows' ),
+        'info|rows'  => array( 'Equals' => 1 ),
       )
     ));
   }
@@ -126,6 +132,10 @@ class ApiRowTest extends ApiTestModel {
           'data'      => array( 'hasKey' => 'id' ),
           'data|id'   => array( 'type'   => 'integer' ),
           'data|id'   => array( 'assertGreaterThan' => 0 ),
+          'info'      => array( 'type'  => 'array'),
+          'info'      => array( 'count' => 1),
+          'info'      => array( 'hasKey' => 'insert_id'),
+          'info|insert_id' => array( 'assertGreaterThan' => 0 ),
         )
       ));
 
@@ -170,6 +180,9 @@ class ApiRowTest extends ApiTestModel {
             'data'      => array( 'hasKey' => 'id' ),
             'data|id'   => array( 'type'   => 'integer' ),
             'data|id'   => array( 'assertGreaterThan' => 0 ),
+            'info'      => array( 'type' => 'array'),
+            'info'      => array( 'count' => 1),
+            'info'      => array( 'hasKey' => 'affected_rows'),
           )
         ));
 
@@ -204,6 +217,9 @@ class ApiRowTest extends ApiTestModel {
           'asserts' => array(
             'data'   => array( 'type'    => 'bool' ),
             'data'   => array( 'equals'  => true ),
+            'info'   => array( 'type'  => 'array' ),
+            'info'   => array( 'count'  => 1 ),
+            'info'   => array( 'hasKey'  => 'affected_rows' ),
           )
         ));
 
@@ -227,10 +243,6 @@ class ApiRowTest extends ApiTestModel {
       $this->CI->db->where('id >=',$auto_increment);
       $this->CI->db->delete($table);
     }
-    
-    
-
-
 
     
   }

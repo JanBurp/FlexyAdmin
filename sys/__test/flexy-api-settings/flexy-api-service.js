@@ -101,6 +101,7 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
       params : (method=='GET'?args:undefined),
       data   : (method=='POST'?args:undefined),
     };
+    // console.log('API service',config.url,config.params);
     
     // call
     return $http(config).then(function(response){
