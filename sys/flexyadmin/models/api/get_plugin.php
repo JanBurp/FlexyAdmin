@@ -1,8 +1,8 @@
 <?
 
 /**
- * Geeft plugin pagina
- *
+ * Geeft plugin pagina, voor backend van FlexyAdmin
+ * 
  * @package default
  * @author Jan den Besten
  */

@@ -1,8 +1,8 @@
 <?
 
 /**
- * Geeft help pagina
- *
+ * Geeft een help pagina voor in de backend van FlexyAdmin
+ * 
  * @package default
  * @author Jan den Besten
  */
