@@ -2,17 +2,69 @@
 
 
 /**
- * Authentication API
+ * API auth. Hiermee kan worden ingelogd of uitgelogd.
  * 
- * - _api/auth/check              - gives as a result if a user is logged in, if so, returns userdata
- * - _api/auth/login              - needs username/password
- * - _api/auth/logout             - needs username/password
- * - _api/auth/send_new_password  - needs email
- *
+ * ###_api/auth
+ * 
+ * Parameters: GEEN
+ * 
+ * Response data:
+ * 
+ * - `HTTP/1.1 401 Unauthorized` header als niet is ingelogd.
+ * - Een array met een aantal gegevens van de gebruiker (zie hieronder).
+ * 
+ * Voorbeeld:
+ * 
+ * - `_api/auth`
+ * 
+ * 
+ * ###_api/auth/login
+ * 
+ * POST Parameters:
+ * 
+ * - username - De gebruikersnaam van het profiel
+ * - password - Het wachtwoord van het profiel
+ * 
+ * Response data:
+ * 
+ * - `HTTP/1.1 401 Unauthorized` header als niet is ingelogd
+ * - Een array met een aantal gegevens van de gebruiker (zie hieronder).
+ * 
+ * Voorbeeld:
+ * 
+ * - `_api/auth/login`
+ * - Waarbij de POST data er zo uitziet: `username=profielnaam&password=profielwachtwoord`
+ * 
+ * 
+ * ###_api/auth/logout
+ * 
+ * Parameters: GEEN
+ * 
+ * Response data:
+ * 
+ * - `HTTP/1.1 401 Unauthorized` header.
+ * 
+ * Voorbeeld:
+ * 
+ * - `_api/auth/logout`
+ * 
+ * ###Voorbeeld response (dump) met uitleg:
+ * 
+ *      [success] => TRUE
+ *      [api] => 'auth'
+ *      [args] => (
+ *        [type] => 'GET'
+ *       )
+ *      [data] => (
+ *        [username] => 'admin'                     // Gebruikersnaam
+ *        [email] => 'info@flexyadmin.com'          // Emailadres van gebruiker
+ *        [last_login] => '1426762938'              // Laatste keer dat de gebruiker heeft ingelogd (unix timestamp)
+ *        [language] => 'nl'                        // Taal van de gebruiker
+ *       )
+ * 
  * @package default
  * @author Jan den Besten
  */
-
 class auth extends Api_Model {
   
   var $needs = array(

@@ -1,25 +1,124 @@
 <?
 
-
 /**
- * GET / UPLOAD media files
+ * API media. Geeft een lijst, bewerkt of uploade bestanden toe aan een map.
+ * De specifieke functie wordt bepaald door de (soort) parameters. Zie hieronder per functie.
  * 
- * GET files
- * - GET => array( 'path'=> ... [, limit=0, offset=0 ]  )
+ * ##GET files
  * 
- // * UPLOAD file
- // * - POST => array( 'path'=> ...  .... )
+ * Hiermee wordt een lijst opgevraagd van een map
  * 
- * UPDATE file
- * - POST => array( 'path'=> ... , 'where' => ... , 'data' => array(....)  )
+ * ###Parameters (GET):
  * 
- * DELETE file
- * - POST => array( 'path'=> ... , 'where' => ...  )
+ * - `path`                     // De map is assets waarvan de bestanden worden opgevraagd.
+ * - `[offset=0]`               // Sla de eerste bestanden in de lijst over
+ * - `[limit=0]`                // Geef een maximaal aantal bestanden terug (bij 0 worden alle bestanden teruggegeven)
+ * - `[config[]=media_info]`    // Informatie over de map kan op deze manier meegenomen worden in het resultaat.
+ * - `[config[]=img_info]`      // Informatie over de afbeeldingen in de map kan op deze manier meegenomen worden in het resultaat.
  * 
- *
+ * 
+ * ###Voorbeelden:
+ * 
+ * - `_api/media?path=pictures`
+ * - `_api/media?path=pictures&config[]=media_info`
+ * 
+ * ###Response:
+ * 
+ * Voorbeeld response (dump) van `_api/media?path=pictures`:
+ * 
+ *     [success] => TRUE
+ *      [api] => 'media'
+ *      [args] => (
+ *        [path] => 'pictures'
+ *        [type] => 'GET'
+ *       )
+ *      [data] => (
+ *        [2] => (
+ *          [id] => '2'
+ *          [b_exists] => '1'
+ *          [file] => 'test_03.jpg'
+ *          [path] => 'pictures'
+ *          [str_type] => 'jpg'
+ *          [str_title] => 'wbCYmaFZ'
+ *          [dat_date] => '2014-09-16'
+ *          [int_size] => '114'
+ *          [int_img_width] => '960'
+ *          [int_img_height] => '720'
+ *         )
+ *       )
+ *     ) 
+ * 
+ * 
+ * 
+ * ##UPDATE FILE
+ * 
+ * Hiermee wordt informatie van een bestand aangepast
+ * 
+ * ###Parameters (POST):
+ * 
+ * - `path`                     // De map waar het bestand in staat
+ * - `where`                    // Bepaal hiermee welk bestand moet worden aangepast
+ * - `data`                     // De aangepaste data (hoeft niet compleet, alleen de aan te passen velden meegeven is genoeg).
+ * - `[config[]=media_info]`    // Informatie over de map kan op deze manier meegenomen worden in het resultaat.
+ * - `[config[]=img_info]`      // Informatie over de afbeeldingen in de map kan op deze manier meegenomen worden in het resultaat.
+ * 
+ * 
+ * ###Voorbeeld:
+ * 
+ * - `_api/media` met POST data: `path=pictures&where=test_03.jpg&data[str_title]=Nieuwe titel`
+ * 
+ * ###Response:
+ * 
+ * Als response wordt in `data` TRUE gegeven als het aanpassen is gelukt:
+ * 
+ *     [success] => TRUE
+ *      [test] => TRUE
+ *      [format] => 'dump'
+ *      [api] => 'media'
+ *      [args] => (
+ *        [path] => 'pictures'
+ *        [where] => 'test_03.jpg'
+ *        [data] => (
+ *          [str_title] => 'TestTitel'
+ *         )
+ *        [type] => 'POST'
+ *       )
+ *      [data] => TRUE
+ * 
+ * ##DELETE FILE
+ * 
+ * Hiermee wordt een bestand uit een map verwijderd.
+ * 
+ * - `path`                     // De map waar het bestand in staat
+ * - `where`                    // Bepaal hiermee welk bestand moet worden verwijderd
+ * - `[config[]=media_info]`    // Informatie over de map kan op deze manier meegenomen worden in het resultaat.
+ * - `[config[]=img_info]`      // Informatie over de afbeeldingen in de map kan op deze manier meegenomen worden in het resultaat.
+ * 
+ * 
+ * ###Voorbeeld:
+ * 
+ * - `_api/media` met POST data: `path=pictures&where=test_03.jpg
+ * 
+ * ###Response:
+ * 
+ * Als response wordt in `data` TRUE gegeven als het verwijderen is gelukt:
+ * 
+ *     [success] => TRUE
+ *      [test] => TRUE
+ *      [format] => 'dump'
+ *      [api] => 'media'
+ *      [args] => (
+ *        [path] => 'pictures'
+ *        [where] => 'test_03.jpg'
+ *        [type] => 'POST'
+ *       )
+ *      [data] => TRUE
+ * 
+ * 
  * @package default
  * @author Jan den Besten
  */
+
 class Media extends Api_Model {
   
   var $needs = array(
