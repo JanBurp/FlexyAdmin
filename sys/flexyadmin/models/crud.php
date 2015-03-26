@@ -45,7 +45,7 @@ class Crud extends CI_Model {
     $args=el(0,$args,null);
     $table=$this->_crud->get_table();
 
-    // Test if table has own crud model, is so call it
+    // Test if table has own crud model, if so call it
     if (!empty($table) and file_exists(APPPATH.'models/'.$table.'.php')) {
       // trace_('load and call '.$table);
       $this->load->model($table);

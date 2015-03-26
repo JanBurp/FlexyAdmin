@@ -196,7 +196,7 @@ class Row extends Api_Model {
       // UPDATE
       if (isset($this->args['data']) and isset($this->args['where'])) {
         if (!$this->_has_rights($this->args['table'])>=RIGHTS_EDIT) return $this->_result_norights();
-        $this->result['data']=$this->_update_row();;
+        $this->result['data']=$this->_update_row();
         return $this->_result_ok();
       }
       // INSERT
@@ -230,6 +230,7 @@ class Row extends Api_Model {
     unset($args['table']);
     $this->crud->table($table);
     $values = $this->crud->get_row($args);
+    $this->info=$this->crud->get_info();
     // trace_(['_get_row'=>$values,'args'=>$this->args]);
     return $values;
   }
@@ -246,6 +247,7 @@ class Row extends Api_Model {
     unset($args['table']);
     $this->crud->table($table);
     $id = $this->crud->update($args);
+    $this->info=$this->crud->get_info();
     return array('id'=>$id);
   }
 
@@ -262,6 +264,7 @@ class Row extends Api_Model {
     unset($args['table']);
     $this->crud->table($table);
     $id = $this->crud->insert($args);
+    $this->info=$this->crud->get_info();
     return array('id'=>$id);
   }
 
@@ -277,7 +280,9 @@ class Row extends Api_Model {
     $table=$args['table'];
     unset($args['table']);
     $this->crud->table($table);
-    return $this->crud->delete($args['where']);
+    $deleted=$this->crud->delete($args['where']);
+    $this->info=$this->crud->get_info();
+    return $deleted;
   }
 
 

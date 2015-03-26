@@ -25,6 +25,7 @@ class _crud extends CI_Model {
 	private $limit;
 	private $offset;
 	private $order;
+  private $info = FALSE;
 
 	public function __construct() {
 		parent::__construct();
@@ -122,30 +123,6 @@ class _crud extends CI_Model {
 					$this->data["order"]=$this->order_model->get_next_order($this->table);
 			}
 
-			/**
-			 * Make sure all not given fields in data stays the same | #### kan dit niet gewoon weg??
-			 */
-			// $staticFields=$this->db->list_fields($this->table);
-			// $staticFields=array_combine($staticFields,$staticFields);
-			// unset($staticFields[PRIMARY_KEY]);
-			// foreach($this->data as $name=>$value) {
-			// 	unset($staticFields[$name]);
-			// }
-			// if (!empty($staticFields)) {
-			// 	$this->db->select($staticFields);
-			// 	$this->db->where(PRIMARY_KEY,$id);
-			// 	$query=$this->db->get($this->table);
-			// 	$staticData=$query->row_array();
-			// 	$query->free_result();
-			// 	foreach($staticData as $name=>$value) {
-			// 		if (!isset($value))
-			// 			$this->data[$name]='';
-			// 		else
-			// 			$this->data[$name]=$value;
-			// 	}
-			// }
-
-
 			$data=$this->data;
 
 			/**
@@ -175,10 +152,16 @@ class _crud extends CI_Model {
   			if ($insert) {
   				$this->db->insert($this->table);
   				$id=$this->db->insert_id();
+          $this->info=array(
+            'insert_id' =>$id
+          );
   			}
   			else {
   				$this->db->where($this->where);
   				$this->db->update($this->table);
+          $this->info=array(
+            'affected_rows' => $this->db->affected_rows()
+          );
   				$id=$this->_get_id();
   			}
       }
@@ -276,6 +259,10 @@ class _crud extends CI_Model {
 			
         $this->db->where($key,$where);
   			$is_deleted=$this->db->delete($this->table);
+        
+        $this->info = array(
+          'affected_rows' => $this->db->affected_rows()
+        );
 			
   			if ($is_deleted) {
 
@@ -285,12 +272,15 @@ class _crud extends CI_Model {
   				if ($isTree and $branches) {
   					$count=count($branches);
   					$this->order_model->shift_up($this->table,$parent,$count,$order);
+            $moved=0;
   					foreach($branches as $branch=>$value) {
   						$this->db->set('self_parent',$parent);
   						$this->db->set('order',$order++);
   						$this->db->where(PRIMARY_KEY,$value[PRIMARY_KEY]);
   						$this->db->update($this->table);
+              $moved++;
   					}
+            $this->info['moved_rows'] = $moved;
   				}
 
 
@@ -299,10 +289,13 @@ class _crud extends CI_Model {
   				 */
   				$jTables=$this->db->get_many_tables($this->table);
   				if (!empty($jTables)) {
+            $affected=0;
   					foreach ($jTables as $jt=>$jItem) {
   						$this->db->where($jItem['id_this'],$id);
   						$this->db->delete($jt);
+              $affected+=$this->db->affected_rows();
   					}
+            $this->info['affected_rel_rows'] = $affected;
   				}
 				
   				log_message('debug', 'Model: Crud->Delete('.$id.') from table "'.$this->table.'"');
@@ -425,7 +418,13 @@ class _crud extends CI_Model {
     if ($this->order)   $this->db->order_by($this->order);
     if ($this->limit)   $this->db->limit($this->limit);
     if ($this->offset)  $this->db->offset($this->offset);
-    return $this->db->get_result($this->table);
+    $result = $this->db->get_result($this->table);
+    $this->info = array(
+      'rows'        => count($result),
+      'total_rows'  => $this->db->last_num_rows_no_limit(),
+      'table_rows'  => $this->db->count_all($this->table)
+    );
+    return $result;
   }
   
   /**
@@ -447,10 +446,29 @@ class _crud extends CI_Model {
    * @author Jan den Besten
    */
   public function get_row($args=array()) {
+    $args['limit'] = 1;
     $result=$this->get($args);
     return current($result);
   }
   
+  
+  /**
+   * Geeft informatie over de laatste actie. De beschikbare keys hangen af van soort actie:
+   * 
+   * - rows             - Aantal records bij een get actie
+   * - total_rows       - Aantal records zonder limit, maar met where
+   * - table_rows       - Totaal aantal records van gevraagde tabel (zonder where en limit)
+   * - insert_id        - Bij een INSERT, de id van het nieuwe record
+   * - affected_rows    - Bij een UPDATE of DELETE het aantal records dat beinvloed is (aangepast of verwijderd)
+   *
+   * @param string $key['']
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_info($key='') {
+    if (empty($key)) return $this->info;
+    return el($key,$this->info,false);
+  }
 
 }
 

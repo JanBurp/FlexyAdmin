@@ -190,8 +190,8 @@ flexyAdmin.factory( 'flexyApiMock', ['flexySettingsService',function(flexySettin
   /**
    * Create a API_GET_data RESPONSE
    */
-  flexyApiMock.api_get_data_response =  function(args) {
-    return flexyApiMock.api_response(args,database[args.table]);
+  flexyApiMock.api_get_data_response =  function(args, api) {
+    return flexyApiMock.api_response(args,database[args.table], api);
   };
   
   
@@ -206,12 +206,22 @@ flexyAdmin.factory( 'flexyApiMock', ['flexySettingsService',function(flexySettin
   /**
    * Create a success RESPONSE
    */
-  flexyApiMock.api_response =  function(args,data) {
+  flexyApiMock.api_response =  function(args,data, api) {
     var response = {
       'success' : true,
       'data'    : data,
       'args'    : args
     };
+    // Add info
+    switch (api) {
+      case 'table':
+        response['info'] = {
+          'rows'        : data.length,
+          'total_rows'  : data.length,
+          'table_rows'  : data.length
+        };
+        break;
+    }
     // add config
     if (angular.isDefined(args.config)) {
       response['config']={};
