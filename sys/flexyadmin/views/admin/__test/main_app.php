@@ -26,18 +26,18 @@
         <div class="form-group">
           <label class="control-label" for="login-username">Username</label>
           <div>
-            <input class="form-control" name="login-username" required class="form-control" placeholder="" ng-model="loginCtrl.user.username">
+            <input class="form-control" id="login-username" name="login-username" required class="form-control" placeholder="" ng-model="loginCtrl.user.username">
           </div>
         </div>
         <div class="form-group">
           <label class="control-label" for="login-password">Password</label>
           <div>
-            <input class="form-control" name="login-password" type="password" required class="form-control" placeholder="" ng-model="loginCtrl.user.password">
+            <input class="form-control" id="login-password" name="login-password" type="password" required class="form-control" placeholder="" ng-model="loginCtrl.user.password">
           </div>
         </div>
         <div class="form-group button-group">
           <div class="">
-            <button type="submit" class="btn btn-default" ng-disabled="loginForm.$invalid">Login</button>
+            <button type="submit" id="login-button" class="btn btn-default" ng-disabled="loginForm.$invalid">Login</button>
             <a class="flexy-login-forgot action-click pull-right" ng-click="loginCtrl.askMail=!loginCtrl.askMail;loginCtrl.mailSend=false">wachtwoord vergeten?</a>
           </div>
         </div>
