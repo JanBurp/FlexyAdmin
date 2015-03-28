@@ -1,4 +1,11 @@
+// run webdriver-manager start
 // run protractor protractor.conf.js
+
+var baseURL = 'http://localhost/FlexyAdmin/FlexyAdminDEMO/admin/__test/';
+var user    = {
+  username : 'admin',
+  password : 'admin',
+}
 
 // Protractor configuration
 
@@ -8,7 +15,7 @@ exports.config = {
   seleniumAddress:'http://localhost:4444/wd/hub',
   
   // Our local server
-  baseUrl: 'http://localhost/FlexyAdmin/FlexyAdminDEMO/admin/__test',
+  baseUrl: baseURL,
   
   capabilities: {
     'browserName': 'chrome'
@@ -20,6 +27,9 @@ exports.config = {
   // Options
   jasmineNodeOpts: {
     showColors: true
+  },
+
+  onPrepare: function() {
   }
   
 };
