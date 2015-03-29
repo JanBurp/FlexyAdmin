@@ -152,6 +152,8 @@ gulp.task('install', function() {
     // grid
     bower+"/angular-smart-table/dist/smart-table.min.js",
     bower+"/ng-sortable/dist/ng-sortable.min.js",
+    // media
+    bower+"/angular-file-upload/angular-file-upload.js",
     // form
     bower+"/angular-sanitize/*.min.js",
     bower+"/tv4/tv4.js",
@@ -190,6 +192,7 @@ gulp.task('install', function() {
     assets+"/js/loading-bar.js",
     assets+"/js/smart-table.min.js",
     assets+"/js/ng-sortable.min.js",
+    assets+"/js/angular-file-upload.js",
     assets+"/js/angular-sanitize.min.js",
     assets+"/js/tv4.js",
     assets+"/js/ObjectPath.js",

@@ -272,7 +272,6 @@ class Mediatable Extends CI_Model {
     return $paths;
   }
   
-  
   /**
    * Geeft alle bestanden en info in een map terug als een array
    *

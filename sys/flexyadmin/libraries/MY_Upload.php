@@ -377,7 +377,10 @@ class MY_Upload extends CI_Upload {
     if(!file_exists($fileandpath)) return false;
     
     // Get all the exif data from the file
+    $exif=FALSE;
+    $errorreporting=error_reporting(E_ERROR);
     $exif = read_exif_data($fileandpath, 'IFD0');
+    error_reporting($errorreporting);
 
     // If we dont get any exif data at all, then we may as well stop now
     if(!$exif || !is_array($exif))  return false;

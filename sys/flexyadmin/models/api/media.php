@@ -1,7 +1,7 @@
 <?
 
 /**
- * API media. Geeft een lijst, bewerkt of uploade bestanden toe aan een map.
+ * API media. Geeft een lijst, bewerkt of upload bestanden toe aan een map.
  * De specifieke functie wordt bepaald door de (soort) parameters. Zie hieronder per functie.
  * 
  * ##GET files
@@ -46,8 +46,50 @@
  *          [int_img_height] => '720'
  *         )
  *       )
- *     ) 
+ *     )
  * 
+ * 
+ * ##UPLOAD FILE
+ * 
+ * Hiermee kan een bestand worden geupload
+ * 
+ * ###Parameters (POST):
+ * 
+ * - `path`                     // De map waar het bestand naartoe moet.
+ * - `file`                     // De bestandsnaam dat geupload moet worden. NB Zoals het resultaat van een HTML FORM: `<input type="file" name="file" />`. Dus ook in FILES['file'].
+ * - `[config[]=media_info]`    // Informatie over de map kan op deze manier meegenomen worden in het resultaat.
+ * - `[config[]=img_info]`      // Informatie over de afbeeldingen in de map kan op deze manier meegenomen worden in het resultaat.
+ * 
+ * 
+ * ###Voorbeeld:
+ * 
+ * - `_api/media` met POST data: `path=pictures&file=test_03.jpg` en de corresponderende FILES data.
+ * 
+ * ###Response:
+ * 
+ * Als het uploaden is gelukt komt in `data` de informatie van het bestand (NB de naam kan veranderd zijn na het uploaden!).
+ * Als het uploaden om wat voor reden niet is gelukt zal `success` FALSE zijn en komt er in `error` een foutmelding.
+ * 
+ *     [success] => TRUE
+ *      [test] => TRUE
+ *      [api] => 'media'
+ *      [args] => (
+ *        [path] => 'pictures'
+ *        [file] => 'test_03.jpg'
+ *        [type] => 'POST'
+ *       )
+ *      [data] => (
+ *        [id] => '27'
+ *        [b_exists] => '1'
+ *        [file] => 'test_03.jpg'
+ *        [path] => 'pictures'
+ *        [str_type] => 'jpg'
+ *        [str_title] => 'test_03'
+ *        [dat_date] => '2015-03-29'
+ *        [int_size] => '18'
+ *        [int_img_width] => '300'
+ *        [int_img_height] => '225'
+ *       )
  * 
  * 
  * ##UPDATE FILE
@@ -162,11 +204,11 @@ class Media extends Api_Model {
         return $this->_result_ok();
       }
       // UPLOAD
-      // if (isset($this->args['data']) and !isset($this->args['where'])) {
-      //   if (!$this->_has_rights($this->args['p'])>=RIGHTS_ADD) return $this->_result_norights();
-      //   $this->result['data']=$this->_insert_row();
-      //   return $this->_result_ok();
-      // }
+      if (!isset($this->args['data']) and !isset($this->args['where'])) {
+        if (!$this->_has_rights($this->args['path'])>=RIGHTS_ADD) return $this->_result_norights();
+        $this->result['data']=$this->_upload_file();
+        return $this->_result_ok();
+      }
       // DELETE
       if (!isset($this->args['data']) and isset($this->args['where'])) {
         if (!$this->_has_rights($this->args['path'])>=RIGHTS_DELETE) return $this->_result_norights();
@@ -206,6 +248,57 @@ class Media extends Api_Model {
       $this->_set_error('MAYBE FILE NOT FOUND');
     }
     return $result;
+  }
+
+
+  /**
+   * UPLOAD file
+   *
+   * @return bool
+   * @author Jan den Besten
+   */
+  private function _upload_file() {
+    $args=$this->args;
+    $path=$args['path'];
+		$types=$this->cfg->get('CFG_media_info',$path,'str_types');
+    
+    $this->load->model('file_manager');
+		$fileManager=new file_manager(array('upload_path'=>$path,'allowed_types'=>$types));
+		$result=$fileManager->upload_file();
+		$error=$result['error'];
+		$file=$result['file'];
+    $extra_files=$result['extra_files'];
+    
+    // Error
+    if ($error) {
+			if (is_string($error))
+				$this->_set_error($error);
+			else
+				$this->_set_error(langp("upload_error",$file));
+      return false;
+    }
+    
+    // Good, add files to media table
+    $addFiles=array();
+    $addFiles[]=$file;
+    if (!empty($extra_files)) {
+      foreach ($extra_files as $extra) {
+        $addFiles[]=$extra['file'];
+      }
+    }
+    foreach ($addFiles as $addFile) {
+      if ( $this->cfg->get('CFG_media_info',$path,'b_user_restricted') ) {
+        $this->mediatable->add($addFile,$path,$this->user_id);
+      }
+      else {
+        $this->mediatable->add($addFile,$path);
+      }
+    }
+    
+    // message
+		$this->_set_message(langp("upload_succes",$file));
+    // Return file info
+    return $this->mediatable->get_info($path.'/'.$file);
   }
 
 
