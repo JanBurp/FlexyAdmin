@@ -48,7 +48,7 @@
 
     <div id="test-current-files" class="row" nv-file-over="" uploader="uploader">
       <div class="col-sm-4 row" ng-repeat="file in files">
-        <img src="site/assets/{{file.path}}/{{file.file}}" class="img-responsive col-sm-6" alt="{{file.str_title}}" title="{{file.str_title}} | {{file.file}}" />
+        <img ng-src="site/assets/{{file.path}}/{{file.file}}" class="img-responsive col-sm-6" alt="{{file.str_title}}" title="{{file.str_title}} | {{file.file}}" />
         <div class="col-sm-6">
           <button class="btn btn-danger btn-xs" ng-click="removeFile(file.path,file.file)"><span class="glyphicon glyphicon-trash"></span></button>
           <h4 class="media-heading">{{file.str_title}}</h4>
