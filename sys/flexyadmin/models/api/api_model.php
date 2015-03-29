@@ -209,9 +209,6 @@ class Api_Model extends CI_Model {
     // POST
     if (!$args and !empty($_POST)) {
       $args=$this->input->post();
-      // POST can have a 'data' field
-      // $data=$this->input->post('data');
-      // if ($data) $args['data']=$data;
       $args['type']='POST';
     }
     

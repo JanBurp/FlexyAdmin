@@ -90,7 +90,7 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
    * @return Promise
    */
   flexy_api_service.call = function(method,api,args,cfg) {
-    method.toUpperCase();
+    method = method.toUpperCase();
     // Check if cfg is needed
     var needs = flexy_api_service.needs_these_cfg( cfg );
     if (needs.length>0) args['config[]']=needs;

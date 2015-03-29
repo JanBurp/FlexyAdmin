@@ -32,6 +32,7 @@ flexyAdmin.factory('logInterceptor',['flexySettingsService','$q',function(settin
       if ( angular.isDefined(data) ) {
         if (typeof(data)=='string') {
           angular.element(document.querySelector('#debug')).removeClass('hidden');
+          data=data.replace(/TRACE\s((.|\n)*?)ENDTRACE/gm, "<pre>TRACE $1</pre>");
           angular.element(document.querySelector('#debug .panel-content')).html(data);
         }
         console.info(message, data);

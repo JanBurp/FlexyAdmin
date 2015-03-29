@@ -164,7 +164,7 @@ function trace_($a=NULL,$echo=true,$backtraceOffset=1,$max=50) {
   		$out.=print_r(tr_string($a),true);
   }
   if (IS_AJAX)
-    $out.="\n";
+    $out.=" ENDTRACE\n";
   else
     $out.='</pre>';
   if ($c>$max) $out='';

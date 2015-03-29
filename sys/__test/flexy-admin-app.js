@@ -36,9 +36,14 @@ var flexyAdmin = angular.module( 'flexyAdmin', [
   'froala',
   'schemaForm-froala',
   
+  'angularFileUpload',
+  
+  
   // flexyAdmin Modules
   'flexyMenu',
+  // 'flexyMedia',
   'flexyBlocks',
+  
   ]
 );
 
@@ -72,6 +77,10 @@ flexyAdmin.config( function($routeProvider){
     .when('/grid/:table',{
       controller  : '',
       templateUrl : 'flexy-grid/flexy-grid.html'
+    })
+    .when('/media/:path',{
+      controller  : '',
+      templateUrl : 'flexy-media/flexy-media.html'
     })
     .when('/form/:table/:id',{
       controller  : '',

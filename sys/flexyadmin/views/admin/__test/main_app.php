@@ -88,6 +88,7 @@
 <script src="sys/__test/js/loading-bar.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/smart-table.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/ng-sortable.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/js/angular-file-upload.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/angular-sanitize.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/tv4.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/ObjectPath.js" type="text/javascript" charset="utf-8"></script>
@@ -122,6 +123,8 @@
 <script src="sys/__test/flexy-menu/flexy-menu-directive.js" type="text/javascript" charset="utf-8"></script>
 
 <script src="sys/__test/flexy-grid/flexy-grid.js" type="text/javascript" charset="utf-8"></script>
+
+<script src="sys/__test/flexy-media/flexy-media.js" type="text/javascript" charset="utf-8"></script>
 
 <script src="sys/__test/flexy-form/flexy-form.js" type="text/javascript" charset="utf-8"></script>
 
