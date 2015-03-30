@@ -12,7 +12,7 @@
     }
 }(typeof angular === 'undefined' ? null : angular, function(angular) {
 
-var module = angular.module('angularFileUpload', ['angular-loading-bar']);
+var module = angular.module('angularFileUpload', []);
 
 'use strict';
 

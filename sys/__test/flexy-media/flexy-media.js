@@ -19,7 +19,7 @@
  */
 
 
-flexyAdmin.controller('flexyMediaCtrl', ['flexySettingsService','flexyApiService','FileUploader','$routeParams','$scope', function(settings,api,FileUploader,$routeParams,$scope) {
+flexyAdmin.controller('flexyMediaCtrl', ['flexySettingsService','flexyApiService','FileUploader','cfpLoadingBar','$routeParams','$scope', function(settings,api,FileUploader,cfpLoadingBar,$routeParams,$scope) {
 
   $scope.path = $routeParams.path;
   $scope.files = [];
@@ -57,10 +57,24 @@ flexyAdmin.controller('flexyMediaCtrl', ['flexySettingsService','flexyApiService
     headers           : { "X-Requested-With" : 'XMLHttpRequest' },  // Als een AJAX Request
   };
   var uploader = $scope.uploader = new FileUploader(uploaderConfig);
+
+  /**
+   * Starts a file upload
+   */
+  uploader.onBeforeUploadItem = function(fileItem, response, status, headers) {
+    cfpLoadingBar.start();
+  };
+  /**
+   * Upload progress
+   */
+  uploader.onProgressItem = function(fileItem, progress) {
+    cfpLoadingBar.set(progress);
+  };
   /**
    * Upload file complete
    */
   uploader.onCompleteItem = function(fileItem, response, status, headers) {
+    cfpLoadingBar.complete();
     // TRACE / ERROR logging: See http-interceptor-logging.js  -> message()
     if (typeof(response)=='string' || angular.isDefined(response.trace)) {
       var trace = response;
