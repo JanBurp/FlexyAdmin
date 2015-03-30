@@ -19,7 +19,6 @@ class Plugin_uri extends Plugin {
 			if (isset($args[0])) {
 				$this->table=$args[0];
 				if ($this->CI->db->table_exists($this->table) and $this->CI->db->field_exists('uri',$this->table)) {
-
           $this->CI->create_uri->set_table($this->table);
           $prefix=el(array('prefix',$this->table),$this->config,'');
           $this->CI->create_uri->set_prefix($prefix);
@@ -31,12 +30,12 @@ class Plugin_uri extends Plugin {
 						$this->newData=$data;
             // if (!isset($field)) $field=$this->_get_uri_field();
 						$uri=$data['uri'];
-						$newUri=$this->CI->create_uri->create($data);
+						$newUri=$this->CI->create_uri->create($data,el(1,$args,false)); // reset
 						if ($uri!=$newUri) {
-									$this->CI->db->set('uri',$newUri);
-									$this->CI->db->where('id',$id);
-									$this->CI->db->update($this->table);
-								}
+							$this->CI->db->set('uri',$newUri);
+							$this->CI->db->where('id',$id);
+							$this->CI->db->update($this->table);
+						}
 					}
           $this->add_message("All uri's in <b>$this->table</b> are (re)set.</p><p>Just change one in this table to make sure all other plugins did there work.");
 				}
