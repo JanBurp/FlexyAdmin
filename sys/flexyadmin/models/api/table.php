@@ -22,6 +22,12 @@
  * 
  * ###Response:
  * 
+ * De `info` response key geeft extra informatie over het resultaat, met de volgende keys:
+ * 
+ * - `rows`       // Het aantal items in `data`.
+ * - `total_rows` // Het totaal aantal items zonder `limit`
+ * - `table_rows` // Het totaal aantal items in de gevraagde tabel
+ * 
  * Per record uit de database wordt in sommige gevallen een extra veld `_info` toegevoegd.
  * Onderstaande velden in `_info` worden meegegeven als de tabel een tree tabel is (met de velden `order` en `self_parent`):
  * 
@@ -106,6 +112,11 @@
  *          )
  *        )
  *      )
+ *     [info] => (
+ *         [rows] => 5
+ *         [total_rows] => 5
+ *         [table_rows] => 5
+ *        )
  * 
  *    
  * @package default
