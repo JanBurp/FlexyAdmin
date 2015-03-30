@@ -24,6 +24,11 @@
  * 
  * ###Response:
  * 
+ * De `info` response key geeft extra informatie over het resultaat, met de volgende keys:
+ * 
+ * - `files`        // Het aantal bestanden in `data`.
+ * - `total_files`  // Het totaal aantal bestanden van de map die opgevraagd is. (op dit moment nog hetzelfde)
+ * 
  * Voorbeeld response (dump) van `_api/media?path=pictures`:
  * 
  *     [success] => TRUE
@@ -45,6 +50,10 @@
  *          [int_img_width] => '960'
  *          [int_img_height] => '720'
  *         )
+ *       )
+ *      [info] => (
+ *        [files] => 1
+ *        [total_files] => 1
  *       )
  *     )
  * 
@@ -231,6 +240,10 @@ class Media extends Api_Model {
   private function _get_files() {
     $args=$this->args;
     $files=$this->mediatable->get_files($args['path'],false);
+    $this->info = array(
+      'files'       => count($files),
+      'total_files' => count($files),
+    );
     return $files;
   }
 
