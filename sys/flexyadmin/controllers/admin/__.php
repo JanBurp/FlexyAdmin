@@ -746,7 +746,7 @@ class __ extends AdminController {
         $md = preg_replace("/^\s\* /uUsm", "", $md);
         $md = preg_replace("/- /uUsm", " - ", $md);
         $md = preg_replace("/^@(.*)\n/um", "", $md);
-        $api="_api/".str_replace('.php','',$name);
+        $api="`_api/".str_replace('.php','',$name).'`';
         $doc.=$api."\n".repeater("-",strlen($api))."\n".$md."\n---------------------------------------\n\n";
       }
     }

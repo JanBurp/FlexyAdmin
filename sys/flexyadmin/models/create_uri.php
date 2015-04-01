@@ -28,6 +28,14 @@ class Create_uri extends CI_Model {
    * @var string
    */
   private $prefix='';
+
+  /**
+   * Een prefix kan dynamisch gegenereerd worden door een extern object.method
+   *
+   * @var string
+   */
+  private $prefix_callback=false;
+  
   
   /**
    * data uit tabel
@@ -81,6 +89,19 @@ class Create_uri extends CI_Model {
     $this->prefix=$prefix;
     return $this;
   }
+  
+  /**
+   * Geeft een object & method om de prefix dynamisch te genereren. De method krijgt de data mee.
+   *
+   * @param array $callback 
+   * @return this
+   * @author Jan den Besten
+   */
+  public function set_prefix_callback($callback) {
+    $this->prefix_callback = $callback;
+    return $this;
+  }
+  
 
  	/**
  	 * Maak uri vanuit meegegeven data (rij uit een tabel, of string)
@@ -112,9 +133,20 @@ class Create_uri extends CI_Model {
     
     // If needs to create an uri
  		if ($createUri) {
-      $uri=$this->prefix.$this->cleanup($uri_source);
+      // Prefix
+      $prefix=$this->prefix;
+      if ($this->prefix_callback) {
+        $model=$this->prefix_callback['model'];
+        $method=$this->prefix_callback['method'];
+        $this->load->model($model,'prefix_model');
+        if (method_exists($this->prefix_model,$method)) {
+          $prefix=clean_string($this->prefix_model->$method($data));
+        }
+      }
+      // Uri
+      $uri=$prefix.$this->cleanup($uri_source);
+      // Exists? add a number
  			$postSpace=$replaceSpace.$replaceSpace;
-      // exists? add a number
  			while ($this->_is_existing_uri($uri,$data) or $this->is_forbidden($uri)) {
  				$currUri=remove_suffix($uri,$postSpace);
  				$countUri=(int) get_suffix($uri,$postSpace);
