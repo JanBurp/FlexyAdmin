@@ -52,6 +52,57 @@ class MY_Upload extends CI_Upload {
 		$this->resized=FALSE;
 	}
 
+
+	/**
+	 * Set the file name
+	 *
+	 * This function takes a filename/path as input and looks for the
+	 * existence of a file with the same name. If found, it will append a
+	 * number to the end of the filename to avoid overwriting a pre-existing file.
+	 * JDB: Numbering is endless now, instead of 100.
+	 *
+	 * @param	string
+	 * @param	string
+	 * @return	string
+	 */
+	public function set_filename($path, $filename)
+	{
+		if ($this->encrypt_name == TRUE)
+		{
+			mt_srand();
+			$filename = md5(uniqid(mt_rand())).$this->file_ext;
+		}
+
+		if ( ! file_exists($path.$filename))
+		{
+			return $filename;
+		}
+
+		$filename = str_replace($this->file_ext, '', $filename);
+
+		$new_filename = '';
+    // JDB Changes here: add timestamp to filename
+    $i=(int)date('YmdHis');
+    while (file_exists($path.$filename.'_'.$i.$this->file_ext)) {
+      $i++;
+    }
+		$new_filename = $filename.'_'.$i.$this->file_ext;
+    // Jdb To here
+
+		if ($new_filename == '')
+		{
+			$this->set_error('upload_bad_filename');
+			return FALSE;
+		}
+		else
+		{
+			return $new_filename;
+		}
+	}
+
+
+
+
   /**
    * Geeft foutmelding terug
    *
