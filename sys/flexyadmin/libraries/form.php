@@ -437,7 +437,7 @@ class Form {
 		if (empty($buttons)) {
 			$buttons=array(	'cancel'	=> array( "value" => lang("form_cancel"), "class"=>$this->styles[$this->framework]['button']." cancel", "onClick" => "window.history.back()"),
 											'reset'		=> array( "value" => lang("form_reset"), "class"=>$this->styles[$this->framework]['button']." reset"),
-											'submit'	=> array( "submit"=>"submit", "value"=>lang("form_submit")));
+											'submit'	=> array( 'type'=>'submit',"value"=>lang("form_submit")));
 		}
 		foreach ($buttons as $name => $button) {
 			if (!isset($button['name'])) 	$buttons[$name]['name']=$name;

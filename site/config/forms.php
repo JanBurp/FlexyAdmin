@@ -39,7 +39,7 @@ $config['contact'] = array(
   'prevend_double_submit'   => true,
   
   // Knoppen van het formulier                
-  'buttons'                 => array( 'submit'=>array('submit'=>'submit', 'value'=>lang('submit')) ),
+  'buttons'                 => array( 'submit'=>array('type'=>'submit','value'=>lang('submit')) ),
   
   // Welk model doet de afhandeling van dit formulier? Standaard de email
   'formaction'              => 'formaction_mail',
