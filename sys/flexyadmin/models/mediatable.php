@@ -397,11 +397,16 @@ class Mediatable Extends CI_Model {
    */
   public function get_img_title($file) {
     $info=$this->get_info($file);
-    // trace_([$file,$info['str_title']]);
-    if ($info)
+    if ($info) {
       $title=$info['str_title'];
-    else
-      $title=nice_string(remove_suffix(get_suffix($file,'/'),'.'));
+    }
+    else {
+      $title=get_suffix($file,'/');
+      $title=remove_suffix($title,'.');
+      $title=preg_replace("/_\\d{8,}/usm", "", $title); // remove timestamp
+      $title=nice_string($title);
+    }
+    $title=ascii_to_entities($title);
     return $title;
   }
   
