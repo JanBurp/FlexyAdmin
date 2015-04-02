@@ -14,10 +14,7 @@
 <html lang="<?=$language?>">
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="Content-Type" content="text/html" charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="imagetoolbar" content="no">
-  <meta http-equiv="content-language" content="<?=$language?>">
   
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <base href="<?=base_url()?>">
