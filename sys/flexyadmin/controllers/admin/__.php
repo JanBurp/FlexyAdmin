@@ -314,6 +314,8 @@ class __ extends AdminController {
     }
     
     $html=$this->load->view('admin/__/userguide',array('items'=>$userguide),true);
+    // Glyphicons
+    $html = preg_replace("/\{glyphicon-(.*)\}/um", '<span class="glyphicon glyphicon-$1"></span>', $html);
     write_file('userguide/FlexyAdmin/userguide.html',$html);
     
     $index=$this->load->view('admin/__/index',array('root'=>'./','userguide'=>$html,'revision'=>$this->revision),true);
