@@ -3,15 +3,281 @@
 class MY_Form_validation extends CI_Form_validation {
    
   public function __construct() {
-    $this->CI=@get_instance();
+    $this->CI = @get_instance();
     $this->CI->load->helper('email');
   }
-   
+  
+  /**
+   * Geeft validation foutmeldingen terug
+   *
+   * @return void
+   * @author Jan den Besten
+   */ 
   public function get_error_messages() {
-    return $this->_error_messages;
+    $messages=$this->_error_messages;
+    if (empty($messages) and !empty($this->_field_data)) {
+      foreach ($this->_field_data as $key => $data) {
+        if ($data['error']) {
+          $messages[$key]=$data['error'];
+        }
+      }
+    }
+    return $messages;
+  }
+  
+  /**
+   * Validate given date for a table
+   *
+   * @param string $data 
+   * @param string $table[''] // if not given every field needs to be prefixed with a table: tbl_menu.str_title
+   * @return bool
+   * @author Jan den Besten
+   */
+  public function validate_data($data,$table='') {
+    // For fetching the labels
+    $this->CI->load->model('ui');
+    // Set POST so CI's validation run will work
+    $_POST = $data;
+    // Set rules
+		foreach($data as $field=>$value) {
+      $thisTable=$table;
+      if (has_string('.',$field)) {
+        $thisTable=get_prefix($field);
+        $field=remove_prefix($field);
+      }
+      $label      = $this->CI->ui->get($field,$thisTable);
+      $validation = $this->get_validations($thisTable,$field);
+      // trace_(['set_rules',$thisTable,$field,$validation]);
+			$this->set_rules($field, $label, $validation);
+		}
+    // Run validation
+		return $this->run();
+  }
+  
+  /**
+   * Geeft alle validation rules van een gegeven veld uit een gegeven tabel.
+   * Voegt eventueel nog custom mee te geven rules toe.
+   *
+   * @param string $table Tabel
+   * @param string $field Veld
+   * @param array $validation[=array('rules'=>'','params'=>'')] Eventueel mee te geven extra validation rules
+   * @return string
+   * @author Jan den Besten
+   */
+  public function get_validations($table,$field,$validation=array()) {
+    $validation[]=$this->_get_flexy_cfg_validation($field);
+    $validation[]=$this->_get_global_cfg_validation($field);
+		$validation[]=$this->_get_cfg_validation($table,$field);
+		$validation[]=$this->_get_db_validation($table,$field);
+		$validations=$this->combine_validations($validation);
+    // trace_(['get_validations',$table,$field,$validation,$validations]);
+    return $validations;
+  }
+
+  /**
+   * Geeft validation rules die in flexyadmin_config.php ingesteld zijn voor een veld
+   *
+   * @param string $field 
+   * @return array('rules'=>'','params'=>'') Validatie regels komen terug in deze array.
+   * @author Jan den Besten
+   */
+	private function _get_flexy_cfg_validation($field) {
+    $pre=get_prefix($field);
+    $validation=el( array($field,'validation'), $this->CI->config->item('FIELDS_special'),'');                                             // Special fields
+    if (empty($validation)) $validation=el( array($pre,  'validation'), $this->CI->config->item('FIELDS_prefix'), '');                     // By prefix
+    if (empty($validation)) $validation=el( array($field,'validation'), $this->CI->config->item('FIELDS_'.$this->CI->db->platform()), ''); // By DB Platform
+    if (empty($validation)) $validation=el( array($field,'validation'), $this->CI->config->item('FIELDS_default'), '');                    // Default
+    $validation = array(
+      'rules'   => $validation,
+      'params'  => ''
+    );
+    return $validation;
+	}
+
+  
+  /**
+   * Geeft validation rules die voor globaal voor een veld zijn ingesteld in cfg_field_info
+   *
+   * @param string $field 
+   * @return array('rules'=>'','params'=>'') Validatie regels komen terug in deze array.
+   * @author Jan den Besten
+   */
+	private function _get_global_cfg_validation($field) {
+    $global_validation = array(
+      'rules'		=> $this->CI->cfg->get('CFG_field',"*.".$field,'str_validation_rules'),
+			'params'	=> $this->CI->cfg->get('CFG_field',"*.".$field,'str_validation_parameters')
+    );
+    return $global_validation;
+	}
+  
+  /**
+   * Geeft validation rules die voor een veld ingesteld zijn in cfg_field_info
+   *
+   * @param string $table 
+   * @param string $field 
+   * @return array('rules'=>'','params'=>'') Validatie regels komen terug in deze array.
+   * @author Jan den Besten
+   */
+	private function _get_cfg_validation($table,$field) {
+    $validation = array(
+      'rules'		=> $this->CI->cfg->get('CFG_field',$table.".".$field,'str_validation_rules'),
+			'params'	=> $this->CI->cfg->get('CFG_field',$table.".".$field,'str_validation_parameters')
+    );
+    return $validation;
+	}
+  
+  /**
+   * Geeft validation rules die standaard uit de veld informatie uit database gehaald kan worden.
+   * Bijvoorbeeld een VARCHAR 255 geeft max_length[255]
+   *
+   * @param string $table 
+   * @param string $field 
+   * @return array('rules'=>'','params'=>'') Validatie regels komen terug in deze array.
+   * @author Jan den Besten
+   */
+	private function _get_db_validation($table,$field) {
+		$validation='';
+		$info=$this->CI->cfg->field_data($table,$field);
+		if (isset($info['type']))
+		switch ($info['type']) {
+			case 'varchar':
+				if (isset($info['max_length'])) {
+					$validation['rules']='max_length[]';
+					$validation['params']=$info['max_length'];
+				}
+        break;
+			case 'decimal':
+				$validation['rules']='decimal';
+				$validation['params']='';
+        break;
+		}
+		return $validation;
+	}
+  
+  /**
+   * Combineerd diverse validatieregels. Verwijderd ook de dubbelingen (op een slimme manier)
+   * 
+   * Meegegeven parameter kan de volgende formaten hebben:
+   * 
+   * - een string met een optelling van validatieregels gescheiden door |
+   * - een array waar de keys de validatieregels zijn en de values de eventuele paramaters
+   * - een array waarbij elke rij de volgende array bevat: array('rules'=>#hier de validatieregels gescheiden door |#, 'params'=>#hier de eventuele paramaters gescheiden door |#)
+   *
+   * @param mixed $validations
+   * @param bool $as_array=FALSE
+   * @return array
+   * @author Jan den Besten
+   */
+  public function combine_validations($validations,$as_array=FALSE) {
+    // trace_(array('start'=>$validations));
+  	$validation=array();
+    // Als een string meegegeven, maak er een validatiearray van
+    if (is_string($validations)) {
+      $vals=explode('|',$validations);
+      $validations=array();
+      foreach ($vals as $rule) {
+        $param='';
+  			if (preg_match("/(.*?)\[(.*)\]/", $rule, $match)) {
+  				$rule	= $match[1];
+  				$param	= $match[2];
+  			}
+        $validations[$rule]=$param;
+      }
+    }
+
+    // Splits de rules en de params als dat nodig is
+    if (!isset($validations[0]) or !is_array($validations[0])) {
+      $vals=$validations;
+      $validations=array();
+      $rules='';
+      $params='';
+      foreach ($vals as $rule => $param) {
+        $rules.=$rule.'|';
+        $params.=$param.'|';
+      }
+      $validations[]=array('rules'=>rtrim($rules,'|'),'params'=>rtrim($params,'|'));
+    }
+    
+    // trace_(['combine_validations',$validations]);
+    // Maak er rule=>param paren van
+  	foreach ($validations as $val) {
+  		if (!empty($val) and !empty($val['rules'])) {
+  			$rules=explode('|',$val['rules']);
+  			$params=explode('|',$val['params']);
+  			foreach ($rules as $key => $rule) {
+  				$param='';
+  				if (isset($validation[$rule])) 	$param=$validation[$rule];
+  				if (isset($params[$key])) 			$param=$params[$key];
+  				if (isset($validation[$rule])) {
+  					switch($rule) {
+  						case 'max_length':
+  							if ($validation[$rule]<$param) $param=$validation[$rule]; // get smallest
+  							break;
+  						case 'min_length':
+  							if ($validation[$rule]>$param) $param=$validation[$rule]; // get biggest
+  							break;
+  					}
+  				}
+  				$validation[$rule]=$param;
+  			}
+  		}
+  	}
+    // Cleanup double
+    foreach ($validation as $rule => $param) {
+      switch ($rule) {
+        case 'valid_emails':
+          if (isset($validation['valid_email'])) unset($validation['valid_email']);
+          break;
+      }
+    }
+    // trace_(['combine_validations',$validation]);
+    if (!$as_array) {
+      $vals=$validation;
+      $validation='';
+      foreach ($vals as $rule => $param) {
+        $rule=str_replace('[]','',$rule);
+        if (!empty($param)) $rule=$rule.'['.$param.']';
+        $validation=add_string($validation,$rule,'|');
+      }
+    }
+    // trace_(array('result'=>$validation));
+  	return $validation;
   }
   
   
+  
+  /**
+   * Combineerd een validations rule array('rules'=>'','params'=>'') tot een validation string.
+   *
+   * @param array $validations 
+   * @return string
+   * @author Jan den Besten
+   */
+  //   private function _set_validation_params($validations) {
+  //   $validation='';
+  //   foreach ($validations as $rule => $param) {
+  //     if (!empty($param)) $rule=str_replace('[]','['.$param.']',$rule);
+  //     $validation=add_string($validation,$rule,'|');
+  //   }
+  //   return $validation;
+  // }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  /**
+   * Prepareert een link. Plakt er mailto: voor als het een emailadres is, en anders http://
+   *
+   * @param string $str 
+   * @param string $field 
+   * @return string
+   * @author Jan den Besten
+   */
   public function prep_url_mail($str,$field) {
     $str=str_replace(array('http://','https://','mailto:'),'',$str);
     if (valid_email($str)) {

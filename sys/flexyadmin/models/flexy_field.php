@@ -125,7 +125,7 @@ class Flexy_field extends CI_Model {
 		$validation=el("validation",$default);
 		$this->_set_type($type);
 		$this->_set_validation($validation);
-		//trace_($this->field." - default");
+    // trace_([$this->field." - default",$this->validation]);
 		return $type;
 	}
 
@@ -421,70 +421,13 @@ class Flexy_field extends CI_Model {
 		$out['validation']='';
 		$validation[]=array('rules'=>$this->validation,'params'=>'');
 		if (!empty($out['table'])) {
-			$validations=$this->get_validations($out['table'],$out['name'],$validation);
+			$out['validation']=$this->form_validation->get_validations($out['table'],$out['name'],$validation);
 		}
-		if (!empty($validations)) $out['validation']=$this->_set_validation_params($validations);
+    // if (!empty($validations)) $out['validation']=$this->_set_validation_params($validations);
     // trace_(array('start'=>$this->validation,'result'=>$out['validation']));
 		return $out;
 	}
 
-	/**
-	 * Add validation rules:
-	 * -first the standard validation rules set in flexyadmin_config.php
-	 * -then add validation rules set in cfg_field_info
-	 * -validation rules depended on database field
-	 */
-  function get_validations($table,$field,$validation=array()) {
-    $validation[]=$this->_get_global_set_validation($field);
-		$validation[]=$this->_get_set_validation($table,$field);
-		$validation[]=$this->_get_db_validation($table,$field);
-		$validations=combine_validations($validation,TRUE);
-    return $validations;
-  }
-
-	function _get_db_validation($table,$field) {
-		$validation='';
-		$info=$this->cfg->field_data($table,$field);
-		if (isset($info['type']))
-		switch ($info['type']) {
-			case 'varchar':
-				if (isset($info['max_length'])) {
-					$validation['rules']='max_length[]';
-					$validation['params']=$info['max_length'];
-				}
-        break;
-			case 'decimal':
-				$validation['rules']='decimal';
-				$validation['params']='';
-        break;
-		}
-		return $validation;
-	}
-
-	function _get_set_validation($table,$field) {
-    $validation = array(
-      'rules'		=> $this->cfg->get('CFG_field',$table.".".$field,'str_validation_rules'),
-			'params'	=> $this->cfg->get('CFG_field',$table.".".$field,'str_validation_parameters')
-    );
-    return $validation;
-	}
-
-	function _get_global_set_validation($field) {
-    $global_validation = array(
-      'rules'		=> $this->cfg->get('CFG_field',"*.".$field,'str_validation_rules'),
-			'params'	=> $this->cfg->get('CFG_field',"*.".$field,'str_validation_parameters')
-    );
-    return $global_validation;
-	}
-
-	function _set_validation_params($validations) {
-		$validation='';
-		foreach ($validations as $rule => $param) {
-			if (!empty($param)) $rule=str_replace('[]','['.$param.']',$rule);
-			$validation=add_string($validation,$rule,'|');
-		}
-		return $validation;
-	}
 
 	/**
 	 * field functions

@@ -124,7 +124,7 @@ class Ajax extends AjaxController {
             $this->ff->table=$table;
             $this->ff->init_field($field,$value);
             $validation[]=array('rules'=>$this->ff->validation,'params'=>'');
-            $validations=$this->ff->get_validations($table,$field,$validation);
+            $validations=$this->form_validation->get_validations($table,$field,$validation);
             foreach ($validations as $rule => $param) {
               $rule=str_replace(array('[',']'),'',$rule);
               if (!$this->form_validation->$rule($value,$param)) {

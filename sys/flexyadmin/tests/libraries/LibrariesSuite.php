@@ -1,6 +1,7 @@
 <?php
 
 require_once 'URILibraryTest.php';
+require_once 'FormValidationTest.php';
 
 class LibrariesSuite extends CIUnit_Framework_TestSuite
 {
@@ -9,6 +10,7 @@ class LibrariesSuite extends CIUnit_Framework_TestSuite
     {
         $suite = new LibrariesSuite('CodeIgniters Libraries Suite');
         $suite->addTestSuite('URILibraryTest');
+        $suite->addTestSuite('FormValidationTest');
         
         return $suite;
     }
