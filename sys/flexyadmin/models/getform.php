@@ -132,7 +132,7 @@
                 $value['options']=$opts;
               }
               // validation
-							$value['validation']=add_validation_parameters($value['validation'],$value['validation_parameters']);
+							$value['validation']=$this->form_validation->combine_validations(array('rules'=>$value['validation'],'params'=>$value['validation_parameters']));
 							unset($value['validation_parameters']);
               
               // value?

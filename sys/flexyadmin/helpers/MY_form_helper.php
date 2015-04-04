@@ -59,25 +59,6 @@ function form_dropdown($name = '', $options = array(), $selected = array(), $ext
 }
 
 /**
- * Voegt validation parameters bij elkaar
- *
- * @param string $rules 
- * @param string $params 
- * @return string
- * @author Jan den Besten
- */
-function add_validation_parameters($rules,$params) {
-	$validation=array();
-	$rules=explode('|',$rules);
-	$params=explode('|',$params);
-	foreach ($rules as $key => $rule) {
-		$validation[$rule]=$rule;
-		if (isset($params[$key]) and !empty($params[$key])) $validation[$rule]=str_replace('[]','['.$params[$key].']',$validation[$rule]);
-	}
-	return implode($validation,'|');
-}
-
-/**
  * Maakt van een array form-data die naar form gestuurd kan worden.
  *
  * @param string $array kan een resultaat zijn uit de database, of een array met velden (zoals door db->list_fields())
@@ -85,6 +66,9 @@ function add_validation_parameters($rules,$params) {
  * @author Jan den Besten
  */
 function array2formfields($array,$validation_rules_prefixes=array(),$validation_rules_fields=array(),$extra=array(),$field_options=array()) {
+  $CI=&get_instance();
+  $CI->load->library('form_validation');
+  
   $default_validation_rules_prefixes=array(
     'email'  => 'required|valid_email|max_length[255]',
     'str'    => 'max_length[255]'
@@ -125,7 +109,7 @@ function array2formfields($array,$validation_rules_prefixes=array(),$validation_
 
     $pre=get_prefix($field);
     $validation=trim(el($pre,$validation_rules_prefixes,'').'|'.el($field,$validation_rules_fields,''),'|');
-    $validation=combine_validations($validation);
+    $validation=$CI->form_validation->combine_validations($validation);
 		switch ($pre) {
 			case 'id':
 				$type='hidden';
@@ -146,91 +130,4 @@ function array2formfields($array,$validation_rules_prefixes=array(),$validation_
 	}
 	return $formData;
 }
-
-
-/**
- * Combineerd diverse validatieregels. Verwijderd ook de dubbelingen (op een slimme manier)
- * 
- * Meegegeven parameter kan de volgende formaten hebben:
- * 
- * - een string met een optelling van validatieregels gescheiden door |
- * - een array waar de keys de validatieregels zijn en de values de eventuele paramaters
- * - een array waarbij elke rij de volgende array bevat: array('rules'=>#hier de validatieregels gescheiden door |#, 'params'=>#hier de eventuele paramaters gescheiden door |#)
- *
- * @param mixed $validations
- * @return array
- * @author Jan den Besten
- */
-function combine_validations($validations,$as_array=FALSE) {
-  // trace_(array('start'=>$validations));
-	$validation=array();
-  // Als een string meegegeven, maak er een validatiearray van
-  if (is_string($validations)) {
-    $vals=explode('|',$validations);
-    $validations=array();
-    foreach ($vals as $rule) {
-      $param='';
-			if (preg_match("/(.*?)\[(.*)\]/", $rule, $match)) {
-				$rule	= $match[1];
-				$param	= $match[2];
-			}
-      $validations[$rule]=$param;
-    }
-  }
-
-  // Splits de rules en de params als dat nodig is
-  if (!isset($validations[0]) or !is_array($validations[0])) {
-    $vals=$validations;
-    $validations=array();
-    $rules='';
-    $params='';
-    foreach ($vals as $rule => $param) {
-      $rules.=$rule.'|';
-      $params.=$param.'|';
-    }
-    $validations[]=array('rules'=>rtrim($rules,'|'),'params'=>rtrim($params,'|'));
-  }
-	foreach ($validations as $val) {
-		if (!empty($val) and !empty($val['rules'])) {
-			$rules=explode('|',$val['rules']);
-			$params=explode('|',$val['params']);
-			foreach ($rules as $key => $rule) {
-				$param='';
-				if (isset($validation[$rule])) 	$param=$validation[$rule];
-				if (isset($params[$key])) 			$param=$params[$key];
-				if (isset($validation[$rule])) {
-					switch($rule) {
-						case 'max_length':
-							if ($validation[$rule]<$param) $param=$validation[$rule]; // get smallest
-							break;
-						case 'min_length':
-							if ($validation[$rule]>$param) $param=$validation[$rule]; // get biggest
-							break;
-					}
-				}
-				$validation[$rule]=$param;
-			}
-		}
-	}
-  // Cleanup double
-  foreach ($validation as $rule => $param) {
-    switch ($rule) {
-      case 'valid_emails':
-        if (isset($validation['valid_email'])) unset($validation['valid_email']);
-        break;
-    }
-  }
-  if (!$as_array) {
-    $vals=$validation;
-    $validation='';
-    foreach ($vals as $rule => $param) {
-      if (!empty($param)) $rule=$rule.'['.$param.']';
-      $validation=add_string($validation,$rule,'|');
-    }
-  }
-  // trace_(array('result'=>$validation));
-	return $validation;
-}
-
-
 

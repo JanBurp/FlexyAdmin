@@ -124,6 +124,12 @@ class _crud extends CI_Model {
 			}
 
 			$data=$this->data;
+      
+      /**
+       * Validate data
+       */
+      // trace_($data);
+      
 
 			/**
 			 * Split many data if any
