@@ -49,12 +49,14 @@ class Crud extends CI_Model {
     if (!empty($table) and file_exists(APPPATH.'models/'.$table.'.php')) {
       // trace_('load and call '.$table);
       $this->load->model($table);
-      return $this->$table->$function($args);
+      if ($args) return $this->$table->$function($args);
+      return $this->$table->$function();
     }
 
     // No special model for this table -> normal crud action
     // trace_('crud'.$table);
-    return $this->_crud->$function($args);
+    if ($args) return $this->_crud->$function($args);
+    return $this->_crud->$function();
 	}
   
   

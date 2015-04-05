@@ -25,12 +25,26 @@ class _crud extends CI_Model {
 	private $limit;
 	private $offset;
 	private $order;
+  
+  private $validate_data = FALSE;
   private $info = FALSE;
 
 	public function __construct() {
 		parent::__construct();
 		$this->table='';
 	}
+  
+  /**
+   * Validate data bij insert/update
+   *
+   * @param bool $validate=TRUE
+   * @return this
+   * @author Jan den Besten
+   */
+  public function validate($validate=TRUE) {
+    $this->validate_data=$validate;
+    return $this;
+  }
 
 	/**
 	 * Stel tabel in waarvoor de acties gelden
@@ -73,7 +87,7 @@ class _crud extends CI_Model {
 	 * Zelfde als ->insert()
 	 *
 	 * @param array $args : array( 'data'=>array() )
-	 * @return int : id van inserted item
+	 * @return int : id van inserted item, anders FALSE
 	 * @author Jan den Besten
 	 */
 	public function create($args='') {
@@ -85,7 +99,7 @@ class _crud extends CI_Model {
 	 * Update item(s) in database, inclusief many tables (join/rel)
 	 *
 	 * @param array $args : array( 'where'=>array(), 'data'=>array() )
-	 * @return bool : TRUE als gelukt
+	 * @return bool : id als gelukt, anders FALSE
 	 * @author Jan den Besten
 	 */
 	public function update($args='') {
@@ -128,7 +142,16 @@ class _crud extends CI_Model {
       /**
        * Validate data
        */
-      // trace_($data);
+      if ($this->validate_data) {
+        $validated=$this->form_validation->validate_data($data,$this->table);
+        if (!$validated) {
+          $this->info=array(
+            'validation'        => FALSE,
+            'validation_errors' => $this->form_validation->get_error_messages()
+          );
+          return FALSE;
+        }
+      }
       
 
 			/**
