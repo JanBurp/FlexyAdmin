@@ -2,13 +2,10 @@
 <html lang="<?=$language?>" data-ng-app="flexyAdmin">
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="Content-Type" content="text/html" charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>FlexyAdmin with AngularJS</title>
 	<base href="<?=base_url()?>" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta http-equiv="imagetoolbar" content="no" />
-	<meta http-equiv="content-language" content="<?=$language?>" />
   <link rel="stylesheet" href="sys/__test/css/flexyadmin.min.css" type="text/css" media="screen" title="no title" charset="utf-8">
 </head>
 

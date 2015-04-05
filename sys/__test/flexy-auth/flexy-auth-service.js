@@ -30,7 +30,7 @@ flexyAdmin.factory('flexyAuthService',['flexyApiService',function(api){
      * Check user session
      */
     check : function(){
-      return api.get('auth/check').then(
+      return api.auth_check().then(
         function(response) {
           isLoggedIn = true;
           return response;
@@ -46,7 +46,7 @@ flexyAdmin.factory('flexyAuthService',['flexyApiService',function(api){
      * Try to login a user
      */
     login : function(user){
-      return api.post('auth/login', user ).then(function(response){
+      return api.auth_login( user ).then(function(response){
         isLoggedIn = true;
         return response;
       });
@@ -56,7 +56,7 @@ flexyAdmin.factory('flexyAuthService',['flexyApiService',function(api){
      * Logout
      */
     logout : function(){
-      return api.get('auth/logout').then(function(response){
+      return api.auth_logout().then(function(response){
         isLoggedIn = false;
         return response;
       });
@@ -66,7 +66,7 @@ flexyAdmin.factory('flexyAuthService',['flexyApiService',function(api){
      * Send new password to user
      */
     send_password : function(email) {
-      return api.get('auth/send_new_password',{'email':email}).then(function(response){
+      return api.auth_send_new_password( email ).then(function(response){
         return response;
       });
     }

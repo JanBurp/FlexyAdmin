@@ -65,7 +65,7 @@ flexyAdmin.factory( 'flexyMenuService', ['flexySettingsService','flexyApiService
    */
   flexy_menu_service.load = function(menu) {
     if (angular.isUndefined(loaded_menu)) {
-      return api.get( 'get_admin_nav' ).then(function(response){
+      return api.get_admin_nav().then(function(response){
         loaded_menu = response.data;
         return true;
       });
