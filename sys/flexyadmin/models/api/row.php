@@ -45,6 +45,7 @@
  * ##INSERT ROW
  * 
  * Hiermee wordt een record uit een tabel toegevoegd.
+ * De data wordt altijd eerst gevalideerd.
  * 
  * ###Parameters (POST):
  * 
@@ -62,7 +63,12 @@
  * ###Response:
  * 
  * Als response wordt in `data` het `id` gegeven van het nieuw aangemaakte record.
- * Voorbeeld response (dump) van bovenstaand voorbeeld:
+ * Of `FALSE` bij een validatiefout, dan komen de volgende keys in `info`:
+ * 
+ * - `validation`         // Of validatie is gelukt (TRUE|FALSE)
+ * - `validation_errors`  // Als validatie niet is gelukt komt hier een array van strings: ['veldnaam'=>'Error..']
+ * 
+ * Voorbeeld response (dump) van bovenstaand voorbeeld (als validatie is gelukt):
  * 
  *     [success] => TRUE
  *     [args] => (
@@ -82,6 +88,7 @@
  * ##UPDATE ROW
  * 
  * Hiermee wordt een record uit een tabel aangepast.
+ * De data wordt altijd eerst gevalideerd.
  * 
  * ###Parameters (POST):
  * 
@@ -100,6 +107,11 @@
  * ###Response:
  * 
  * Als response wordt in `data` het `id` gegeven van het aangepaste record.
+ * Of `FALSE` bij een validatiefout, dan komen de volgende keys in `info`:
+ * 
+ * - `validation`         // Of validatie is gelukt (TRUE|FALSE)
+ * - `validation_errors`  // Als validatie niet is gelukt komt hier een array van strings: ['veldnaam'=>'Error..']
+ * 
  * Voorbeeld response (dump) van bovenstaand voorbeeld:
  * 
  *     [success] => TRUE
@@ -246,7 +258,7 @@ class Row extends Api_Model {
     $table=$args['table'];
     unset($args['table']);
     $this->crud->table($table);
-    $id = $this->crud->update($args);
+    $id = $this->crud->validate()->update($args);
     $this->info=$this->crud->get_info();
     return array('id'=>$id);
   }
@@ -263,7 +275,7 @@ class Row extends Api_Model {
     $table=$args['table'];
     unset($args['table']);
     $this->crud->table($table);
-    $id = $this->crud->insert($args);
+    $id = $this->crud->validate()->insert($args);
     $this->info=$this->crud->get_info();
     return array('id'=>$id);
   }
