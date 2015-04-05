@@ -102,7 +102,6 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
     
     // API CALL
     return $http(config).then(function(response){
-
       // Als er config data is, bewaar die in settings
       if (angular.isDefined(response.data.config)) {
         var config = response.data.config;
@@ -116,7 +115,6 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
         }
       }
       // console.log('API has config in settings', settings.has_item('config') , angular.isDefined(response.data.config), args );
-      
       // Ga verder met Promise
       return response.data;
     },function(errResponse){

@@ -46,6 +46,7 @@ flexyAdmin.factory('flexyGridService', ['flexySettingsService','flexyApiService'
    */
   function calculate_pagination(info,args) {
     info.total_pages = 1;
+    info.limit = args.limit;
     if (angular.isDefined(info.total_rows) && angular.isDefined(args.limit) && args.limit>0) {
       info.total_pages = Math.ceil(info.total_rows / args.limit) ;
     }
@@ -95,14 +96,13 @@ flexyAdmin.factory('flexyGridService', ['flexySettingsService','flexyApiService'
     // Add more tree info (has_children)
     if (is_tree && parents!={}) {
       angular.forEach(parents,function(value,key){
-        data[key]._info.has_children = true;
+        data[value]._info.has_children = true;
       });
     }
     
-    // console.log(parents);
+    // console.log('PARENTS',parents);
     // angular.forEach( data, function(item,id) {
-    //   console.log(item.id,item.self_parent,item.order,item._info,item.uri);
-    //
+    //   console.log('ITEM',item.id,item.self_parent,item._info,item.uri);
     // });
     
     return data;
@@ -141,9 +141,11 @@ flexyAdmin.factory('flexyGridService', ['flexySettingsService','flexyApiService'
   /**
    * Geeft informatie over de tabel. De volgende keys zitten erin:
    * 
-   * - rows       - Het aantal records dat beschikbaar is
-   * - total_rows - Het totaal aantal records dat in het resultaat bestaat voor deze tabel
-   * - table_rows - Het totaal aantal records dat in de tabel bestaat
+   * - rows         - Het aantal records dat beschikbaar is
+   * - limit        - Het aantal records per pagina
+   * - total_pages  - Het totaal aantal pagina's dat beschiklaar is
+   * - total_rows   - Het totaal aantal records dat in het resultaat bestaat voor deze tabel
+   * - table_rows   - Het totaal aantal records dat in de tabel bestaat
    * 
    * @param string table De gevraagde tabel
    * @return mixed FALSE als de data/info niet beschikbaar is, anders een object met de data.
@@ -162,12 +164,10 @@ flexyAdmin.factory('flexyGridService', ['flexySettingsService','flexyApiService'
    * @return promise
    */
   flexy_grid_service.load = function(table,params) {
-    if (angular.isUndefined(params)) params = {};
-    params.table = table;
-    var args = angular.extend({}, default_args, params);
+    var args = angular.extend({}, default_args, params, {'table':table});
 
     // API
-    api.table( args ).then(function(response){
+    return api.table( args ).then(function(response){
       // Reset data
       data[table] = {};
       // Put (new) data
@@ -177,10 +177,9 @@ flexyAdmin.factory('flexyGridService', ['flexySettingsService','flexyApiService'
         info  : calculate_pagination(response.info,args),
         grid  : create_grid_data(response.data,args)
       };
+      return response;
     });
-    
   };
-  
   
   return flexy_grid_service;
 }]);
