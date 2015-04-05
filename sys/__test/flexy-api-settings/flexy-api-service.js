@@ -32,7 +32,6 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
     return settings.has_item('cfg',api);
   };
 
-
   /**
    * Checks if given cfg are available. Returns the cfg that ar not available
    * 
@@ -51,10 +50,8 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
     return needs;
   };
   
-
-  
   /**
-   * GET. Eenvoudige wrapper voor call()
+   * GET wrapper voor call()
    * 
    * @param string api    Welke api aanroep: 'table', 'row' etc.
    * @param object args   Object met alle mee te sturen paramaters/data
@@ -64,10 +61,9 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
   flexy_api_service.get = function(api,args,cfg) {
     return flexy_api_service.call('GET',api,args,cfg);
   };
-  
 
   /**
-   * POST. Eenvoudige wrapper voor call()
+   * POST wrapper voor call()
    * 
    * @param string api    Welke api aanroep: 'table', 'row' etc.
    * @param object args   Object met alle mee te sturen paramaters/data
@@ -110,6 +106,92 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
       return errResponse;
     });
   };
+  
+  
+  
+  //
+  // Hieronder de specifieke API aanroepen.
+  // Wat niet meer dan wrapper zijn voor de post en get.
+  //
+
+
+  /**
+   * API call voor get_admin_nav
+   * 
+   * @return Promise
+   */
+  flexy_api_service.get_admin_nav = function() {
+    return flexy_api_service.get( 'get_admin_nav' );
+  };
+  
+  /**
+   * API call voor auth/check
+   * 
+   * @return Promise
+   */
+  flexy_api_service.auth_check = function() {
+    return flexy_api_service.get('auth/check');
+  };
+  
+  /**
+   * API call voor auth/login
+   * 
+   * @return Promise
+   */
+  flexy_api_service.auth_login = function(user) {
+    return flexy_api_service.post('auth/login', user );
+  };
+  
+  /**
+   * API call voor auth/logout
+   * 
+   * @return Promise
+   */
+  flexy_api_service.auth_logout = function(user) {
+    return flexy_api_service.get('auth/logout');
+  };
+
+  /**
+   * API call voor auth/send_new_password
+   * 
+   * @return Promise
+   */
+  flexy_api_service.auth_send_new_password = function(email) {
+    return flexy_api_service.get('auth/send_new_password',{'email':email});
+  };
+  
+  
+  /**
+   * API call voor table
+   * 
+   * @return Promise
+   */
+  flexy_api_service.table = function(args,cfg) {
+    return flexy_api_service.get('table',args,cfg);
+  };
+
+  /**
+   * API call voor row (get)
+   * 
+   * @return Promise
+   */
+  flexy_api_service.row = function(args,cfg) {
+    return flexy_api_service.get('row',args,cfg);
+  };
+
+  // /**
+  //  * API call voor row (insert)
+  //  *
+  //  * @return Promise
+  //  */
+  // flexy_api_service.row_insert = function(args,cfg) {
+  //   return flexy_api_service.post('row',args,cfg);
+  // };
+
+  // TODO: meer api calls
+  
+  
+  
   
   
 

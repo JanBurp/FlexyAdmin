@@ -99,7 +99,7 @@ flexyAdmin.factory('flexyGridService', ['flexySettingsService','flexyApiService'
     };
     args = angular.extend({}, args, params);
     var config=['table_info','field_info'];
-    api.get('table', args, config ).then(function(response){
+    api.table( args, config ).then(function(response){
       // Reset data
       data[table] = {};
       // Put (new) data
