@@ -78,6 +78,7 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
   /**
    * De $htpp call gebeurt hier.
    * Alles wordt klaargezet en uitgevoerd.
+   * response.config data word in settings gezet.
    * 
    * @param string method 'GET','POST'
    * @param string api    Welke api aanroep: 'table', 'row' etc.
@@ -99,8 +100,24 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
     };
     // console.log('API service',config.url,config.params);
     
-    // call
+    // API CALL
     return $http(config).then(function(response){
+
+      // Als er config data is, bewaar die in settings
+      if (angular.isDefined(response.data.config)) {
+        var config = response.data.config;
+        // table_info
+        if (angular.isDefined( config.table_info )) {
+          settings.set_item( config.table_info, ['config','table_info', args.table ]);
+        }
+        // field_info
+        if (angular.isDefined( config.field_info )) {
+          settings.set_item( config.field_info, ['config','field_info', args.table ]);
+        }
+      }
+      // console.log('API has config in settings', settings.has_item('config') , angular.isDefined(response.data.config), args );
+      
+      // Ga verder met Promise
       return response.data;
     },function(errResponse){
       return errResponse;
@@ -166,8 +183,8 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
    * 
    * @return Promise
    */
-  flexy_api_service.table = function(args,cfg) {
-    return flexy_api_service.get('table',args,cfg);
+  flexy_api_service.table = function(args) {
+    return flexy_api_service.get('table', args, ['table_info','field_info'] );
   };
 
   /**
@@ -175,8 +192,8 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
    * 
    * @return Promise
    */
-  flexy_api_service.row = function(args,cfg) {
-    return flexy_api_service.get('row',args,cfg);
+  flexy_api_service.row = function(args ) {
+    return flexy_api_service.get('row',args, ['table_info','field_info'] );
   };
 
   // /**

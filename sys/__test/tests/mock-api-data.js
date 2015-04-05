@@ -228,10 +228,10 @@ flexyAdmin.factory( 'flexyApiMock', ['flexySettingsService',function(flexySettin
       // table_info & field_info
       var table=args.table;
       if (angular.isDefined(table)) {
-        if (args.config.indexOf('table_info')) {
+        if (args.config.indexOf('table_info')!=-1) {
           response['config']['table_info'] = config[table].table_info;
         }
-        if (args.config.indexOf('field_info')) {
+        if (args.config.indexOf('field_info')!=-1) {
           response['config']['field_info'] = config[table].field_info;
         }
       }
