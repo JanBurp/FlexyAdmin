@@ -64,12 +64,12 @@ class MY_Form_validation extends CI_Form_validation {
    * @return string
    * @author Jan den Besten
    */
-  public function get_validations($table,$field,$validation=array()) {
+  public function get_validations($table,$field,$validation=array(),$as_array=FALSE) {
     $validation[]=$this->_get_flexy_cfg_validation($field);
     $validation[]=$this->_get_global_cfg_validation($field);
 		$validation[]=$this->_get_cfg_validation($table,$field);
 		$validation[]=$this->_get_db_validation($table,$field);
-		$validations=$this->combine_validations($validation);
+		$validations=$this->combine_validations($validation,$as_array);
     // trace_(['get_validations',$table,$field,$validation,$validations]);
     return $validations;
   }
@@ -186,7 +186,7 @@ class MY_Form_validation extends CI_Form_validation {
     }
 
     // Splits de rules en de params als dat nodig is
-    if (!isset($validations[0]) or !is_array($validations[0])) {
+    if ( !isset($validations[0]) or !is_array($validations[0])) {
       $vals=$validations;
       $validations=array();
       $rules='';
@@ -230,7 +230,7 @@ class MY_Form_validation extends CI_Form_validation {
           break;
       }
     }
-    // trace_(['combine_validations',$validation]);
+    // trace_(['combine_validations 2',$validation]);
     if (!$as_array) {
       $vals=$validation;
       $validation='';

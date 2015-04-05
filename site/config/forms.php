@@ -105,6 +105,7 @@ $config['shop'] = array(
  *--------------------------------------------------------------------------
  */
 $config['flexyform_contact'] = array(
+  'class'             => 'corners',
   'validation_place'  => 'field',
   'check_for_spam'    => true,
   'formaction'        => 'formaction_mail',
