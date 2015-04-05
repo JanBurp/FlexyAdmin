@@ -28,13 +28,6 @@
  * - `total_rows` // Het totaal aantal items zonder `limit`
  * - `table_rows` // Het totaal aantal items in de gevraagde tabel
  * 
- * Per record uit de database wordt in sommige gevallen een extra veld `_info` toegevoegd.
- * Onderstaande velden in `_info` worden meegegeven als de tabel een tree tabel is (met de velden `order` en `self_parent`):
- * 
- * - `is_branch`    // TRUE|FALSE - Geeft aan of dit record subpagina's onder zich heeft.
- * - `is_node`      // TRUE|FALSE - Geeft aan of dit record een subpagina is.
- * - `level`        // Integer - Geeft level aan in de boomstructuur. 0 = root, 1 eerste tak etc.
- * 
  * ###Voorbeeld response (dump) van `_api/table?table=tbl_menu`:
  * 
  *     [success] => TRUE
@@ -53,11 +46,6 @@
  *         [uri] => 'gelukt'
  *         [str_title] => 'Gelukt!'
  *         [txt_text] => 'Als je dit ziet is het je gelukt om FlexyAdmin te installeren en werkend te krijgen.'
- *         [_info] => (
- *           [is_branch] => FALSE
- *           [is_node] => FALSE
- *           [level] => 0
- *          )
  *        )
  *       [2] => (
  *         [id] => '2'
@@ -66,11 +54,6 @@
  *         [uri] => 'een_pagina'
  *         [str_title] => 'Een pagina'
  *         [txt_text] => 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.'
- *         [_info] => (
- *           [is_branch] => TRUE
- *           [is_node] => FALSE
- *           [level] => 0
- *          )
  *        )
  *       [3] => (
  *         [id] => '3'
@@ -79,11 +62,6 @@
  *         [uri] => 'subpagina'
  *         [str_title] => 'Subpagina'
  *         [txt_text] => 'Een subpagina...'
- *         [_info] => (
- *           [is_branch] => FALSE
- *           [is_node] => TRUE
- *           [level] => 1
- *          )
  *        )
  *       [5] => (
  *         [id] => '5'
@@ -92,11 +70,6 @@
  *         [uri] => 'nog_een_subpagina'
  *         [str_title] => 'Nog een subpagina'
  *         [txt_text] => ''
- *         [_info] => (
- *           [is_branch] => FALSE
- *           [is_node] => TRUE
- *           [level] => 1
- *          )
  *        )
  *       [4] => (
  *         [id] => '4'
@@ -105,11 +78,6 @@
  *         [uri] => 'contact'
  *         [str_title] => 'Contact'
  *         [txt_text] => 'Hier een voorbeeld van een eenvoudig contactformulier.'
- *         [_info] => (
- *           [is_branch] => FALSE
- *           [is_node] => FALSE
- *           [level] => 0
- *          )
  *        )
  *      )
  *     [info] => (
@@ -143,11 +111,8 @@ class Table extends Api_Model {
    * @author Jan den Besten
    */
   public function index() {
-    if (!$this->_has_rights($this->args['table'])) return $this->_result_status401();
-    
-    if ( !$this->has_args()) {
-      return $this->_result_wrong_args();
-    }
+    if (!$this->_has_rights($this->args['table']))  return $this->_result_status401();
+    if (!$this->has_args())                         return $this->_result_wrong_args(); 
     
     // DEFAULTS
     $items=FALSE;
@@ -196,7 +161,6 @@ class Table extends Api_Model {
   private function _process_data($items) {
     
     $txt_as_abstract = el('txt_as_abstract',$this->args,false);
-    $is_tree         = el( array('table_info','tree'),$this->cfg_info,false);
 
     // init STRIP TAGS in txt fields
     if ( $txt_as_abstract ) {
@@ -205,60 +169,14 @@ class Table extends Api_Model {
       $txtKeys=filter_by_key($txtKeys,'txt');
     }
 
-    // INIT TREE
-    if ($is_tree) {
-      $parents=array();
-    }
-
     // LOOP ROWS IF NEEDED
-    if ($is_tree or $txt_as_abstract) {
-      
+    if ($txt_as_abstract) {
       foreach ($items as $id => $row) {
-      
         // STRIP TAGS in txt fields
         if ( $txt_as_abstract ) {
           foreach ($txtKeys as $key) {
             $items[$id][$key]=strip_tags($row[$key]);
           }
-        }
-      
-        // TREE, BRANCHES & NODES
-        if ($is_tree) {
-          $parent_id = $row['self_parent'];
-      
-          // toplevel: no branch, no node
-          if ($parent_id == 0) {
-            $level=0;
-            $is_branch=false;
-            $is_node=false;
-          }
-          // find out what level
-          else {
-            $is_node=true;
-            // are we on a known level?
-            if (isset($parents[$parent_id])) {
-              $level=$parents[$parent_id];
-            }
-            else {
-              // no: remember new level
-              $level++;
-              $parents[$parent_id]=$level;
-            }
-          }
-          // add this info to this item
-          $items[$id]['_info'] = array(
-            'is_branch' => false, // this will be set later...
-            'is_node'   => $is_node,
-            'level'     => $level
-          );
-        }
-        
-      }
-    
-      // LOOP AGAIN TO ADD BRANCH INFO
-      if ($is_tree and isset($parents) and !empty($parents)) {
-        foreach ($parents as $id => $level) {
-          $items[$id]['_info']['is_branch']=true;
         }
       }
     }
