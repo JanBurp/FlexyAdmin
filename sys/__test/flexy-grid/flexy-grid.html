@@ -34,7 +34,7 @@
       
       <tbody sortable="sortableOptions" ng-model="gridItems">
         <tr ng-repeat="row in gridItems"
-            ng-class="{'flexy-tree-branch':row._info.has_children, 'flexy-tree-node':row._info.is_child, 'flexy-grid-selected':row._info.selected}"
+            ng-class="{'flexy-tree-has_children':row._info.has_children, 'flexy-tree-child':row._info.is_child, 'flexy-grid-selected':row._info.selected}"
             tree-level="{{row._info.level}}"
             id="{{row.id}}"
             sortable-item>

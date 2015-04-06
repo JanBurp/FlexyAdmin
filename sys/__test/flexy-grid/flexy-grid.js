@@ -114,9 +114,9 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyGridServic
       var table=angular.element(document.querySelector('.flexy-grid.'+$scope.table+' table'));
 
       // Tree? 'Drag' whole branch
-      console.log('dragStart', $scope.type, row.hasClass('flexy-tree-branch'),row);
+      console.log('dragStart', $scope.type, row.hasClass('flexy-tree-has_children'),row);
       
-      if ($scope.type.is_tree && row.hasClass('flexy-tree-branch')) {
+      if ($scope.type.is_tree && row.hasClass('flexy-tree-has_children')) {
         // find all nodes
         var index=obj.source.index;
         var level=$scope.gridItems[index]._info.level;
@@ -228,7 +228,7 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyGridServic
     dragEnd: function (obj) {
       var row=obj.source.itemScope.element;
       // Tree? show hidden nodes again
-      if ($scope.type.is_tree && row.hasClass('flexy-tree-branch')) {
+      if ($scope.type.is_tree && row.hasClass('flexy-tree-has_children')) {
         angular.forEach($scope.dragged_children,function(node,key){
           var hidden=angular.element(document.querySelector('.flexy-grid.'+$scope.table+' table tbody tr[id="'+node+'"]'));
           hidden.removeClass('hidden');
