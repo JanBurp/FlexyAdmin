@@ -24,17 +24,17 @@
 /* TABLE COLUMNS */
 .flexy-grid th, .flexy-grid td {max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background-repeat:no-repeat;}
 /* EDIT BUTTONS */
-.flexy-grid th.edit, .flexy-grid td.edit {min-width:114px;width:114px;text-overflow:clip;}
-.flexy-grid .table-sortable th.edit, .flexy-grid .table-sortable td.edit {min-width:86px;width:86px;}
-.flexy-grid th.edit .action-remove {display:none;}
-.flexy-grid .flexy-grid-has-selection th.edit .action-remove {display:inline;}
-/* hidden columns */
+.flexy-grid th.actions, .flexy-grid td.actions {min-width:114px;width:114px;text-overflow:clip;}
+.flexy-grid .table-sortable th.actions, .flexy-grid .table-sortable td.actions {min-width:86px;width:86px;}
+.flexy-grid th.actions .action-remove {display:none;}
+.flexy-grid .flexy-grid-has-selection th.actions .action-remove {display:inline;}
+/* Hidden Columns */
 .flexy-grid th.id, .flexy-grid td.id, .sortable-drag td.id,
 .flexy-grid th.uri, .flexy-grid td.uri, .sortable-drag td.uri,
 .flexy-grid th.order, .flexy-grid td.order, .sortable-drag td.order,
 .flexy-grid th.self_parent, .flexy-grid td.self_parent, .sortable-drag td.self_parent,
 .flexy-grid td._info {display:none;}
-/* specific column styling */
+/* Column Styling */
 .flexy-grid .flexy-grid-sortable-column {cursor:pointer;}
 .flexy-grid th.str_title, .flexy-grid td.str_title {max-width:none;text-overflow:inherit;}
 .flexy-grid th.txt, .flexy-grid td.txt {max-width:350px;}
@@ -43,6 +43,8 @@
 .flexy-grid th.medias, .flexy-grid td.medias {min-width:120px;max-width:600px;}
 .flexy-grid th.tme, .flexy-grid td.tme {max-width:none; width:130px;}
 .flexy-grid th.rgb, .flexy-grid td.rgb {min-width:25px;max-width:50px;}
+/* ROW Actions */
+.flexy-grid .table-sortable tr .actions .sortable-handle {display:none}
 /* ROW SELECTION */
 .flexy-grid tr.flexy-grid-selected td {background-color:@brand-info!important;}
 .flexy-grid tr .action-select span.flexy-grid-selected {display:none;}
