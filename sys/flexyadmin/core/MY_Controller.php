@@ -32,23 +32,23 @@ class MY_Controller extends CI_Controller {
 					// trace_($demoDB);
 					$SQL=read_file($demoDB);
 					if ($SQL) {
-						$lines=explode("\n",$SQL);
-						$comments="";
-						foreach ($lines as $k=>$l) {
-							if (substr($l,0,1)=="#")	{
-								if (strlen($l)>2)	$comments.=$l.br();
-								unset($lines[$k]);
-							}
-						}
-						$sql=implode("\n",$lines);
-						$lines=preg_split('/;\n+/',$sql); // split at ; with EOL
+            $lines=explode("\n",$SQL);
+            $comments="";
+            foreach ($lines as $k=>$l) {
+              if (substr($l,0,1)=="#")  {
+                if (strlen($l)>2)  $comments.=$l.br();
+                unset($lines[$k]);
+              }
+            }
+            $sql=implode("\n",$lines);
+            $lines=preg_split('/;\n+/',$sql); // split at ; with EOL
 
-						foreach ($lines as $key => $line) {
-							$line=trim($line);
-							if (!empty($line)) {
-								$query=$this->db->query($line);
-							}
-						}
+            foreach ($lines as $key => $line) {
+              $line=trim($line);
+              if (!empty($line)) {
+                $query=$this->db->query($line);
+              }
+            }
 						$succes=TRUE;
             // Other Install options
             $this->_install();
@@ -86,12 +86,14 @@ class MY_Controller extends CI_Controller {
     $sitename = $_SERVER['SCRIPT_FILENAME'];
     $sitename = str_replace('/index.php','',$sitename);
     $sitename = get_suffix($sitename,'/');
+    $sitename = str_replace('.','_',$sitename);
     if (!empty($sitename)) {
-      $file=APPPATH.'config/config.php';
+      $file=SITEPATH.'config/config.php';
       $cfg=file_get_contents($file);
       // load config
       if (!empty($cfg)) {
-        $new = preg_replace("/config\['sess_cookie_name'\](\s*)=(\s*)'([^']*)';/uUs", "config['sess_cookie_name']$1=$2'".$sitename."';", $cfg, 1, $count);
+        $new = preg_replace("/config\['uri_protocol'\]\s=\s([^;]*);/uUm", "$0\n\n/*\n|--------------------------------------------------------------------------\n| Session Variables\n|--------------------------------------------------------------------------\n|\n| 'session_cookie_name' = the name you want for the cookie - automatic set at install\n|\n*/\n\$config['sess_cookie_name'] = '".$sitename."';\n", $cfg,1,$count);
+        $new = str_replace("\r",'',$new);
         $result=file_put_contents($file,$new);
         if ($result) {
           log_message('info', 'FlexyAdmin Install: sess_cookie_name = '.$sitename);
