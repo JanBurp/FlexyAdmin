@@ -944,21 +944,21 @@ class MY_DB_mysql_driver extends CI_DB_mysql_driver {
           $justInRel=($mField==$mTable['id_this'] OR $mField==$mTable['id_join']);
           if ($justInRel) {
             $mWhere = $mField.' = '.$mValue;
-  					$sql="SELECT ".$mTable["rel"].".".$mTable["id_this"]." AS id  
-  								FROM ".$mTable["rel"]." 
-  								WHERE ".$mWhere;
+  					$sql="SELECT ".$mTable["rel"].".".$mTable["id_this"]." AS id".
+  								" FROM ".$mTable["rel"].
+  								" WHERE ".$mWhere;
           }
           else {
             $mWhere = ' AND '.$mTable['join'].'.'.$mField.' = '.$mValue;
-  					$sql="SELECT ".$mTable["rel"].".".$mTable["id_this"]." AS id  
-  								FROM ".$mTable["rel"].",".trim($mTable["join"],'_')." 
-  								WHERE ".$mTable["rel"].".".$mTable["id_join"]."=".trim($mTable["join"],'_').".id ".$mWhere;
+  					$sql="SELECT ".$mTable["rel"].".".$mTable["id_this"]." AS id".  
+  							  " FROM ".$mTable["rel"].",".trim($mTable["join"],'_'). 
+  								" WHERE ".$mTable["rel"].".".$mTable["id_join"]."=".trim($mTable["join"],'_').".id ".$mWhere;
           }
-          // trace_('#SHOW# '.$sql);
+          // trace_(['manyQuery:',$sql]);
 					$query=$this->query($sql);
 					$manyResults=$query->result_array();
 					$query->free_result();
-          // trace_($manyResults);
+          // trace_(['manyResults:',$manyResults]);
 					// replace current where and add new 'WHERE IN' to active record which selects the id where the many field is right
 					if (!empty($manyResults)) {
 						$whereIn='';
