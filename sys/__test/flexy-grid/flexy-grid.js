@@ -44,9 +44,10 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyGridServic
    * Info for Pagination (changed when data is present)
    */
   $scope.info = {
-    rows         : 0,
-    limit        : 0,
-    total_pages  : 0,
+    rows            : 0,
+    limit           : 10,
+    total_pages     : 0,
+    displayed_pages : 10,
   };
   
   /**
@@ -78,8 +79,12 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyGridServic
     // table type
     $scope.type.is_tree = settings.item('config','table_info',$scope.table,'tree');
     $scope.type.is_sortable = settings.item('config','table_info',$scope.table,'sortable');
-    // info
+    // info & pagination TODO: pagination is calculated by grid-server
     $scope.info = grid.get_info($scope.table);
+    $scope.info.displayed_pages = 10;
+    $scope.info.limit = 10;
+    $scope.info.total_pages = Math.ceil($scope.info.rows / $scope.info.limit);
+    
     // field_info
     $scope.fields = settings.item('config','field_info',$scope.table);
     // data
