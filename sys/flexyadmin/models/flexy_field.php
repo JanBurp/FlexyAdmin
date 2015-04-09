@@ -958,10 +958,8 @@ class Flexy_field extends CI_Model {
 		$options=array();
 		$map=$this->config->item('ASSETS');
 		$files=read_map($map,'dir');
-		unset($files['css']);
-		unset($files['img']);
-		unset($files['js']);
-		unset($files['lists']);
+    $files=array_unset_keys($files,array('css','fonts','img','js','lists','_thumbcache','less-bootstrap','less-default'));
+    
 		$options[""]="";
 		foreach($files as $file) {
 			$options[$file["name"]]=$file["name"];
