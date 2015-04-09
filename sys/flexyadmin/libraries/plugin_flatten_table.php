@@ -4,7 +4,7 @@
  * Maakt één tabel van meerdere tabellen die aan elkaar gekoppeld zijn met een foreign key
  * 
  * Eerste argument is de tabel, de andere tabellen hoeven niet meegegeven te worden, die worden vanzelf gevonden aan de hand van de primary keys.
- * Alleen de velden die in beidde tabellen bestaan worden overgenomen. Dus maak in de meegegeven tabel de velden aan die moeten worden gevuld.
+ * Alleen de velden die in beide tabellen bestaan worden overgenomen. Dus maak in de meegegeven tabel de velden aan die moeten worden gevuld.
  *  
  *      .../admin/plugin/flatten_table/tbl_menu
  * 

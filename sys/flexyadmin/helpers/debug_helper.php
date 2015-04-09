@@ -134,7 +134,7 @@ function trace_($a=NULL,$echo=true,$backtraceOffset=1,$max=50) {
 	$CI=&get_instance();
 	static $c=0;
   if ($c==0 and !IS_AJAX) {
-    echo "<style>._trace {position:relative;margin:2px;padding:5px;overflow:auto;color:#000;font-family:courier,serif;font-size:10px;line-height:14px;border:solid 1px #666;background-color:#efe;opacity:.8;z-index:99999;}._trace a {color:#000;font-family:courier,serif;font-size:10px;line-height:14px;text-decoration:underline;}</style>";
+    echo "<style>._trace {position:relative;margin:2px;padding:5px;overflow:auto;color:#000;font-family:courier,serif;font-size:10px;line-height:14px;border:solid 1px #666;background-color:#efe;opacity:.95;z-index:99999;}._trace a {color:#000;font-family:courier,serif;font-size:10px;line-height:14px;text-decoration:underline;}</style>";
   }
   if (IS_AJAX)
     $out='';

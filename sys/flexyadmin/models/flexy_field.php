@@ -705,14 +705,14 @@ class Flexy_field extends CI_Model {
 		$tables=$this->db->list_tables();
 		$thisRights=$this->user->get_rights();
     // $normal_tables=$tables;
-    $normal_tables=filter_by($tables,"tbl_");
-    $result_tables=filter_by($tables,"res_");
-    $normal_tables=array_merge($result_tables,$normal_tables);
+    // $normal_tables=filter_by($tables,"tbl_");
+    // $result_tables=filter_by($tables,"res_");
+    // $normal_tables=array_merge($result_tables,$normal_tables);
 		$specialFields=array_keys($this->config->item('FIELDS_special'));
 		$options=array();
 
     $commonFields=array();
-		foreach ($normal_tables as $table) {
+		foreach ($tables as $table) {
 			$fields=$this->db->list_fields($table);
 			foreach ($fields as $field) {
         if (!in_array($field,$commonFields)) $commonFields[]=$field;
