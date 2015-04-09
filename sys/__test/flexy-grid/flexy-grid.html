@@ -84,12 +84,19 @@
         </tr>
       </tbody>
       
+      <tfoot>
+  			<tr>
+  				<td colspan="0" class="text-primary">
+            <div>
+              <!-- Pagination -->
+    					<div class="flexy-grid-pagination" st-pagination="" st-template="flexy-grid/flexy-grid-pagination.html" st-items-by-page="info.limit" st-displayed-pages="info.displayed_pages"></div>
+              <!-- Info -->
+              <div class="flexy-grid-stats">{{info.rows}} items on {{info.total_pages}} pages</div>
+            </div>
+  				</td>
+  			</tr>
+  		</tfoot>
+      
     </table>
-  </div>
-  
-  <div class="panel-footer text-primary">
-    <!-- Pagination -->
-    <!-- Info -->
-    <span class="table-stats">{{info.rows}} items on {{info.total_pages}} pages</span>
   </div>
 </div>
