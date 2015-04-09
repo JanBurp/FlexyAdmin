@@ -380,8 +380,8 @@ function doGrid() {
                 $(obj).text(old_value);
               }
               else {
-                if (data._validation_error) {
-                  info_dialog(data._validation_error);
+                if (data.validation_errors) {
+                  info_dialog(data.validation_errors);
                   $(obj).text(old_value).focus();
                 }
                 else {
