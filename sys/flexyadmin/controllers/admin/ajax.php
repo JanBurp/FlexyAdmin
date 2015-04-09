@@ -101,10 +101,11 @@ class Ajax extends AjaxController {
     $value=$this->input->post('value');
     
 		$error='';
-    $validation_error='';
+    $validation_errors='';
     $old_value=NULL;
 		if (!empty($table) and ($id!="") and !empty($field)) {
 			if ($this->db->table_exists($table) and $this->db->field_exists($field,$table)) {
+        
  				if ($this->user->has_rights($table,$id)>=RIGHTS_EDIT) {
 
 					if ($plugins) $this->load->model('queu');
@@ -123,29 +124,34 @@ class Ajax extends AjaxController {
             // Validate new Data
             $this->ff->table=$table;
             $this->ff->init_field($field,$value);
-            $validation[]=array('rules'=>$this->ff->validation,'params'=>'');
-            $validations=$this->form_validation->get_validations($table,$field,$validation,true);
-            foreach ($validations as $rule => $param) {
-              $rule=str_replace(array('[',']'),'',$rule);
-              if (!$this->form_validation->$rule($value,$param)) {
-                if (empty($param))
-                  $validation_error=langp($rule,$field);
-                else
-                  $validation_error=langp($rule,$field,$param);
-                break;
-              }
+            
+            if (! $this->form_validation->validate_data($newData,$table)) {
+              $validation_errors = $this->form_validation->get_error_messages();
             }
             
+            // $validation[]=array('rules'=>$this->ff->validation,'params'=>'');
+            // $validations=$this->form_validation->get_validations($table,$field,$validation,true);
+            // foreach ($validations as $rule => $param) {
+            //   $rule=str_replace(array('[',']'),'',$rule);
+            //   if (!$this->form_validation->$rule($value,$param)) {
+            //     if (empty($param))
+            //       $validation_errors=langp($rule,$field);
+            //     else
+            //       $validation_errors=langp($rule,$field,$param);
+            //     break;
+            //   }
+            // }
+            
             // Options?
-            if (!$validation_error) {
+            if (!$validation_errors) {
               $options=$this->cfg->get('cfg_field_info',$table.'.'.$field,'str_options');
               if ($options) {
                 $aOptions=explode('|',$options);
-                if (!in_array($value,$aOptions)) $validation_error=langp('valid_option',$field).str_replace('|',',',$options);
+                if (!in_array($value,$aOptions)) $validation_errors[$field]=langp('valid_option',$field).str_replace('|',',',$options);
               }
             }
 
-            if (!$validation_error) {
+            if (!$validation_errors) {
               // Call Plugins
     					if ($plugins)	$newData=$this->_after_update($table,$oldData,$newData);
 
@@ -172,16 +178,17 @@ class Ajax extends AjaxController {
 
 
     $result['method']=__METHOD__;
-    if ($error) $result['_error']=lang($error);
-    if ($validation_error) {
-      $result['_validation_error']=safe_quotes($this->ui->replace_ui_names($validation_error));
+    if ($error) $result['error']=lang($error);
+    if ($validation_errors) {
+      $result['validation_errors']=safe_quotes($this->ui->replace_ui_names($validation_errors));
     }
     else {
-      $result['_validation_error']=false;
+      $result['validation_errors']=false;
     }
-    if (isset($options)) $result['_opions']=$options;
+    if (isset($options)) $result['opions']=$options;
     $result['old_value']=$old_value;
     $result['new_value']=$value;
+    $this->message->reset_errors();
     return $this->_result($result);
  	}
   
