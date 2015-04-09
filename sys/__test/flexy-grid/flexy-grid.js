@@ -55,11 +55,6 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyGridServic
   $scope.fields = [];
   
   /**
-   * Table has selection
-   */
-  $scope.has_selection = false;
-  
-  /**
    * Search term
    */
   $scope.search = '';
@@ -99,6 +94,31 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyGridServic
     //   console.log(item.id,item.self_parent,item.order,item._info,item.uri);
     // });
   });
+  
+  
+  /**
+   * ALL SELECT TOGGLE
+   */
+  $scope.toggleSelection = function() {
+    angular.forEach($scope.gridItems, function(item,key) {
+      var selected=$scope.gridItems[key].isSelected;
+      if (!selected) selected=true; else selected=false;
+      $scope.gridItems[key].isSelected=selected;
+    });
+  };
+
+
+  /**
+   * MAKE SURE ORDER OF ROWS IS ORIGINAL (keys) : https://stackoverflow.com/questions/19676694/ng-repeat-directive-sort-the-data-when-using-key-value
+   * And remove $$hashKey & isSelected & _info
+   */
+  $scope.orderedKeys = function(obj){
+    if (!obj) return [];
+    var keys=Object.keys(obj);
+    keys.splice( keys.indexOf('_info') ,keys.length); // Remove all keys from '_info'
+    return keys;
+  };
+  
   
   
   
@@ -252,45 +272,5 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyGridServic
   // };
   //
   //
-
-  /**
-   * SELECT TOGGLE
-   */
-  $scope.toggleSelection = function(index) {
-    if (angular.isUndefined(index)) {
-      // toggle all
-      $scope.has_selection = false;
-      angular.forEach($scope.gridItems, function(item,key) {
-        var selected=$scope.gridItems[key]._info.selected;
-        if (!selected) selected=true; else selected=false;
-        $scope.gridItems[key]._info.selected=selected;
-        // has selection?
-        if (selected) $scope.has_selection = true;
-      });
-    }
-    else {
-      // toggle one
-      var selected=$scope.gridItems[index]._info.selected;
-      if (!selected) selected=true; else selected=false;
-      $scope.gridItems[index]._info.selected=selected;
-      // see if there is a selection at all
-      $scope.has_selection = false;
-      angular.forEach($scope.gridItems, function(item,key) {
-        var selected=$scope.gridItems[key]._info.selected;
-        if (selected) $scope.has_selection = true;
-      });
-    }
-  };
-
-
-  /**
-   * MAKE SURE ORDER OF ROWS IS ORIGINAL (keys) : https://stackoverflow.com/questions/19676694/ng-repeat-directive-sort-the-data-when-using-key-value
-   */
-  $scope.keys = function(obj){
-    if (!obj) return [];
-    var keys=Object.keys(obj);
-    keys.pop(); // Remove $$hashKey
-    return keys;
-  };
     
 }]);
