@@ -43,6 +43,8 @@
 
       <!-- Table Body -->
       <tbody as-sortable="sortableOptions" ng-model="gridItems">
+        
+        <!-- ROW -->
         <tr ng-repeat="row in displayedItems"
             st-select-row="row" st-select-mode="multiple"
             ng-class="{'flexy-tree-has_children':row._info.has_children, 'flexy-tree-child':row._info.is_child, 'flexy-grid-selected':row._info.selected}"
@@ -50,7 +52,7 @@
             as-sortable-item
             id="flexy-grid-row_{{row.id}}">
 
-          <!-- Row Actions -->
+          <!-- ROW Actions -->
           <td class="actions">
             <div class="btn-group btn-group-xs">
               <!-- Edit button -->
@@ -68,16 +70,18 @@
             </div>
           </td>
 
-          <!-- Field Values -->
+          <!-- ROW Fields -->
           <td ng-repeat="key in orderedKeys(row)" class="flexy-grid-field-type-{{fields[key].type}} flexy-grid-field-{{key}}">
             {{row[key]}}
           </td>
 
         </tr>
+        
       </tbody>
+      
     </table>
   </div>
-  
+
   <div class="panel-footer text-primary">
     <!-- Pagination -->
 		<div class="flexy-grid-pagination" st-pagination="" st-template="flexy-grid/flexy-grid-pagination.html" st-items-by-page="info.limit" st-displayed-pages="info.displayed_pages"></div>
