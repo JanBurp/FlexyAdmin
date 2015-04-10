@@ -54,6 +54,7 @@ var files = {
     assets+'/css/font-awesome.min.css',
     assets+'/css/froala_editor.css',
     assets+'/css/froala_style.css',
+    assets+'/css/ng-sortable.css',
     assets+'/css/flexyadmin.css',
   ],
   'cssdest' : 'flexyadmin.min.css',
@@ -120,6 +121,7 @@ gulp.task('message',function(){
   })); 
 });
 
+
 /**
  * Verplaats door bower geinstalleerde/geupdate frameworks/plugins naar juiste plaats
  */
@@ -168,9 +170,10 @@ gulp.task('install', function() {
   ]).pipe(gulp.dest( assets+'/js' ));
   gulp.src( '' ).pipe(notify("Angular, Angular modules, jQuery & Froala editore moved"));
 
-  // CSS - Loading bar - Fontawsome - Froala
+  // CSS - Loading bar - Fontawsome - Froala - etc
   gulp.src([
     bower+"/angular-loading-bar/src/loading-bar.css",
+    bower+"/ng-sortable/dist/ng-sortable.css",
     bower+"/components-font-awesome/css/font-awesome.min.css",
     bower+"/FroalaWysiwygEditor/css/froala_editor.css",
     bower+"/FroalaWysiwygEditor/css/froala_style.css",

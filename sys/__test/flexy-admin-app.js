@@ -33,6 +33,7 @@ var flexyAdmin = angular.module( 'flexyAdmin', [
   // Grid
   'smart-table',
   'ui.sortable',
+  
   // Form
   'schemaForm',
   'froala',

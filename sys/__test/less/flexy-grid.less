@@ -1,32 +1,18 @@
 /* FLEXY-GRID */
 
-/* HEADER & PANEL */
+/* HEADER-FOOTER & PANEL*/
 .flexy-grid .panel-heading form {margin-top:-2px;}
 .flexy-grid .panel-heading input {padding-left:30px;}
 .flexy-grid .panel-heading .glyphicon {left:0;}
 .flexy-grid .panel-content {padding:0;}
+.flexy-grid .panel-footer {padding:2px;height:39px;}
+.flexy-grid .flexy-grid-pagination {float:left;}
+.flexy-grid .pagination {margin:0;}
+.flexy-grid .flexy-grid-stats {float:right;padding:7px 14px;}
 
 /* Scrollable table (panel) */
 .flexy-grid .panel-content {overflow:auto;}
 .flexy-grid table {margin:0;}
-// .flexy-grid tfoot {height:51px;width:100%;}
-// .flexy-grid tfoot tr td {
-//   padding:0;
-//   position:absolute;
-//   display:inline-block;
-//   overflow:visible;
-//   border:none;
-// }
-// .flexy-grid tfoot tr td>div {
-//   width:10000%;
-//   height:51px;
-//   padding:@table-cell-padding;
-//   // background-color:@panel-footer-bg;
-// }
-// .flexy-grid .flexy-grid-pagination {float:left;margin:0;}
-// .flexy-grid .flexy-grid-stats {float:left;padding:7px 14px;}
-// /* pagination */
-// .flexy-grid .pagination {margin:0px;}
 
 /* th */
 .flexy-grid th {text-transform:uppercase;}
@@ -37,12 +23,6 @@
 .flexy-grid tbody td {white-space:nowrap;}
 .flexy-grid tbody td[tr-ng-grid-body-cell=0] {position:fixed;}
 
-/*  pagination / info*/
-.flexy-grid .panel-footer {padding:2px;height:39px;}
-.flexy-grid .flexy-grid-pagination {float:left;}
-.flexy-grid .pagination {margin:0;}
-.flexy-grid .flexy-grid-stats {float:right;padding:7px 14px;}
-
 /* TABLE COLUMNS */
 .flexy-grid th, .flexy-grid td {max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background-repeat:no-repeat;}
 /* EDIT BUTTONS */
@@ -51,22 +31,22 @@
 .flexy-grid th.actions .action-remove {display:none;}
 .flexy-grid .flexy-grid-has-selection th.actions .action-remove {display:inline;}
 /* Hidden Columns */
-.flexy-grid th.id, .flexy-grid td.id, .sortable-drag td.id,
-.flexy-grid th.uri, .flexy-grid td.uri, .sortable-drag td.uri,
-.flexy-grid th.order, .flexy-grid td.order, .sortable-drag td.order,
-.flexy-grid th.self_parent, .flexy-grid td.self_parent, .sortable-drag td.self_parent,
-.flexy-grid td._info {display:none;}
+.flexy-grid th.flexy-grid-field-id, .flexy-grid td.flexy-grid-field-id, .as-sortable-drag td.flexy-grid-field-id,
+.flexy-grid th.flexy-grid-field-uri, .flexy-grid td.flexy-grid-field-uri, .as-sortable-drag td.flexy-grid-field-uri,
+.flexy-grid th.flexy-grid-field-order, .flexy-grid td.flexy-grid-field-order, .as-sortable-drag td.flexy-grid-field-order,
+.flexy-grid th.flexy-grid-field-self_parent, .flexy-grid td.flexy-grid-field-self_parent, .as-sortable-drag td.flexy-grid-field-self_parent,
+.flexy-grid td.flexy-grid-field-_info {display:none;}
 /* Column Styling */
 .flexy-grid .flexy-grid-sortable-column {cursor:pointer;}
-.flexy-grid th.str_title, .flexy-grid td.str_title {max-width:none;text-overflow:inherit;}
-.flexy-grid th.txt, .flexy-grid td.txt {max-width:350px;}
-.flexy-grid th.media, .flexy-grid td.media,
-.flexy-grid th.rgb, .flexy-grid td.rgb {text-align:center;width:52px;max-width:52px; }
-.flexy-grid th.medias, .flexy-grid td.medias {min-width:120px;max-width:600px;}
-.flexy-grid th.tme, .flexy-grid td.tme {max-width:none; width:130px;}
-.flexy-grid th.rgb, .flexy-grid td.rgb {min-width:25px;max-width:50px;}
+.flexy-grid th.flexy-grid-field-str_title, .flexy-grid td.flexy-grid-field-str_title {max-width:none;text-overflow:inherit;}
+.flexy-grid th.flexy-grid-field-type-txt, .flexy-grid td.flexy-grid-field-type-txt {max-width:350px;}
+.flexy-grid th.flexy-grid-field-type-media, .flexy-grid td.flexy-grid-field-type-media,
+.flexy-grid th.flexy-grid-field-type-rgb, .flexy-grid td.flexy-grid-field-type-rgb {text-align:center;width:52px;max-width:52px; }
+.flexy-grid th.flexy-grid-field-type-medias, .flexy-grid td.flexy-grid-field-type-medias {min-width:120px;max-width:600px;}
+.flexy-grid th.flexy-grid-field-type-tme, .flexy-grid td.flexy-grid-field-type-tme {max-width:none; width:130px;}
+.flexy-grid th.flexy-grid-field-type-rgb, .flexy-grid td.flexy-grid-field-type-rgb {min-width:25px;max-width:50px;}
 /* ROW Actions */
-.flexy-grid .table-sortable tr .actions .sortable-handle {display:none}
+.flexy-grid .table-sortable tr .actions .as-sortable-handle {display:none}
 /* ROW SELECTION */
 .flexy-grid tr.st-selected td {background-color:@brand-info!important;}
 .flexy-grid tr .action-select span.flexy-grid-selected {display:none;}
@@ -74,49 +54,42 @@
 .flexy-grid tr.st-selected .action-select span.flexy-grid-unselected {display:none;}
 .flexy-grid tr.st-selected .action-select span.flexy-grid-selected {display:inline;}
 
-
 /* tree, branches & nodes */
-.flexy-grid tbody tr.flexy-tree-child td.str_title {background-image:url('../img/tree_lastnode.gif');background-repeat:no-repeat;}
-.flexy-grid tbody tr.flexy-tree-child[tree-level="1"] td.str_title {padding-left:2rem;background-position:0rem .5rem;}
-.flexy-grid tbody tr.flexy-tree-child[tree-level="2"] td.str_title {padding-left:3rem;background-position:1rem .5rem;}
-.flexy-grid tbody tr.flexy-tree-child[tree-level="3"] td.str_title {padding-left:4rem;background-position:2rem .5rem;}
-.flexy-grid tbody tr.flexy-tree-child[tree-level="4"] td.str_title {padding-left:5rem;background-position:3rem .5rem;}
-.flexy-grid tbody tr.flexy-tree-child[tree-level="5"] td.str_title {padding-left:6rem;background-position:4rem .5rem;}
-.flexy-grid tbody tr.flexy-tree-child[tree-level="6"] td.str_title {padding-left:7rem;background-position:5rem .5rem;}
-.flexy-grid tbody tr.flexy-tree-child[tree-level="7"] td.str_title {padding-left:8rem;background-position:6rem .5rem;}
+.flexy-grid tbody tr.flexy-tree-child td.flexy-grid-field-str_title {background-image:url('../img/tree_lastnode.gif');background-repeat:no-repeat;}
+.flexy-grid tbody tr.flexy-tree-child[tree-level="1"] td.flexy-grid-field-str_title {padding-left:2rem;background-position:0rem .5rem;}
+.flexy-grid tbody tr.flexy-tree-child[tree-level="2"] td.flexy-grid-field-str_title {padding-left:3rem;background-position:1rem .5rem;}
+.flexy-grid tbody tr.flexy-tree-child[tree-level="3"] td.flexy-grid-field-str_title {padding-left:4rem;background-position:2rem .5rem;}
+.flexy-grid tbody tr.flexy-tree-child[tree-level="4"] td.flexy-grid-field-str_title {padding-left:5rem;background-position:3rem .5rem;}
+.flexy-grid tbody tr.flexy-tree-child[tree-level="5"] td.flexy-grid-field-str_title {padding-left:6rem;background-position:4rem .5rem;}
+.flexy-grid tbody tr.flexy-tree-child[tree-level="6"] td.flexy-grid-field-str_title {padding-left:7rem;background-position:5rem .5rem;}
+.flexy-grid tbody tr.flexy-tree-child[tree-level="7"] td.flexy-grid-field-str_title {padding-left:8rem;background-position:6rem .5rem;}
 
-.sortable-drag tr.flexy-tree-child td.str_title {background-image:url('../img/tree_lastnode.gif');background-repeat:no-repeat;}
-.sortable-drag tr.flexy-tree-child[tree-level="1"] td.str_title {padding-left:2rem;background-position:0rem .5rem;}
-.sortable-drag tr.flexy-tree-child[tree-level="2"] td.str_title {padding-left:3rem;background-position:1rem .5rem;}
-.sortable-drag tr.flexy-tree-child[tree-level="3"] td.str_title {padding-left:4rem;background-position:2rem .5rem;}
-.sortable-drag tr.flexy-tree-child[tree-level="4"] td.str_title {padding-left:5rem;background-position:3rem .5rem;}
-.sortable-drag tr.flexy-tree-child[tree-level="5"] td.str_title {padding-left:6rem;background-position:4rem .5rem;}
-.sortable-drag tr.flexy-tree-child[tree-level="6"] td.str_title {padding-left:7rem;background-position:5rem .5rem;}
-.sortable-drag tr.flexy-tree-child[tree-level="7"] td.str_title {padding-left:8rem;background-position:6rem .5rem;}
+.as-sortable-drag tr.flexy-tree-child td.flexy-grid-field-str_title {background-image:url('../img/tree_lastnode.gif');background-repeat:no-repeat;}
+.as-sortable-drag tr.flexy-tree-child[tree-level="1"] td.flexy-grid-field-str_title {padding-left:2rem;background-position:0rem .5rem;}
+.as-sortable-drag tr.flexy-tree-child[tree-level="2"] td.flexy-grid-field-str_title {padding-left:3rem;background-position:1rem .5rem;}
+.as-sortable-drag tr.flexy-tree-child[tree-level="3"] td.flexy-grid-field-str_title {padding-left:4rem;background-position:2rem .5rem;}
+.as-sortable-drag tr.flexy-tree-child[tree-level="4"] td.flexy-grid-field-str_title {padding-left:5rem;background-position:3rem .5rem;}
+.as-sortable-drag tr.flexy-tree-child[tree-level="5"] td.flexy-grid-field-str_title {padding-left:6rem;background-position:4rem .5rem;}
+.as-sortable-drag tr.flexy-tree-child[tree-level="6"] td.flexy-grid-field-str_title {padding-left:7rem;background-position:5rem .5rem;}
+.as-sortable-drag tr.flexy-tree-child[tree-level="7"] td.flexy-grid-field-str_title {padding-left:8rem;background-position:6rem .5rem;}
 
 
-
-/* ng-sortable css file */
-.sortable-item,.sortable-placeholder {}
-.sortable-item {}
-.sortable-handle {cursor:move}
-.sortable-placeholder {display:block;}
-.sortable-drag{
-  position:absolute;
-	pointer-events:none;
+/* ng-sortable */
+.as-sortable-drag {
   overflow:hidden;
-	z-index:99999;
+  border:1px solid @brand-primary;
+  background-color:@gray-lighter;
 }
-.sortable-drag td {
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+.as-sortable-drag td {
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
   display:block;
   height:34px;
   margin:0px;
   float:left;
   clear:none;
-  /* TODO from bootstrap */
-  border-right: 1px solid #DDD;
-  padding:5px;
+  border-right: 1px solid @table-border-color;
+  padding:(@table-cell-padding - 1);
 }
-.sortable-drag span.flexy-grid-unselected {display:none;}
-.sortable-hidden{display:none!important}
+.as-sortable-drag span.flexy-grid-unselected {display:none;}

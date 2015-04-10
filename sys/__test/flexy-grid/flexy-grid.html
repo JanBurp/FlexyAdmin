@@ -31,23 +31,24 @@
             </div>
           </th>
           
-          <th ng-if="type.is_sortable" ng-repeat="field in fields | toArray" st-sort="{{field.field}}" class="flexy-grid-sortable-column {{field.type}} {{field.field}}">{{field.ui_name}}
+          <th ng-if="type.is_sortable" ng-repeat="field in fields | toArray" st-sort="{{field.field}}" class="flexy-grid-sortable-column flexy-grid-field-type-{{field.type}} flexy-grid-field-{{field.field}}">{{field.ui_name}}
             <span class="glyphicon glyphicon-chevron-up"></span>
             <span class="glyphicon glyphicon-chevron-down"></span>
           </th>
           
-          <th ng-if="!type.is_sortable" ng-repeat="field in fields | toArray" class="{{field.type}} {{field.field}}">{{field.ui_name}}</th>
+          <th ng-if="!type.is_sortable" ng-repeat="field in fields | toArray" class="flexy-grid-field-type-{{field.type}} flexy-grid-field-{{field.field}}">{{field.ui_name}}</th>
         </tr>
         
       </thead>
 
       <!-- Table Body -->
-      <tbody>
+      <tbody as-sortable="sortableOptions" ng-model="gridItems">
         <tr ng-repeat="row in displayedItems"
             st-select-row="row" st-select-mode="multiple"
             ng-class="{'flexy-tree-has_children':row._info.has_children, 'flexy-tree-child':row._info.is_child, 'flexy-grid-selected':row._info.selected}"
             tree-level="{{row._info.level}}"
-            id="{{row.id}}">
+            as-sortable-item
+            id="flexy-grid-row_{{row.id}}">
 
           <!-- Row Actions -->
           <td class="actions">
@@ -61,14 +62,14 @@
               <!-- Delete button -->
               <div class="btn btn-danger action-remove"><span class="glyphicon glyphicon-remove"></span></div>
             </div>
-            <div class="btn-group btn-group-xs sortable-handle">
+            <div class="btn-group btn-group-xs as-sortable-handle" as-sortable-item-handle>
               <!-- Order button -->
               <div class="btn btn-warning action-move"><span class="glyphicon glyphicon-resize-vertical"></span></div>
             </div>
           </td>
 
           <!-- Field Values -->
-          <td ng-repeat="key in orderedKeys(row)" class="{{fields[key].type}} {{key}}">
+          <td ng-repeat="key in orderedKeys(row)" class="flexy-grid-field-type-{{fields[key].type}} flexy-grid-field-{{key}}">
             {{row[key]}}
           </td>
 
