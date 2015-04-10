@@ -33,7 +33,7 @@ class Stats {
 		global $URI;
 		$thisUri=$URI->uri_string();
 		$firstSegment=$URI->get(1);
-		if ( ! in_array($firstSegment,array(SITEPATH,'sys','admin','rss','file','__api')) ) {
+		if ( ! in_array($firstSegment,array(SITEPATH,'sys','admin','rss','file','_api')) ) {
 			$this->add_uri(trim($thisUri,'/'));
 		}
 	}
