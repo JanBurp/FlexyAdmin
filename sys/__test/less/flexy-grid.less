@@ -9,18 +9,24 @@
 /* Scrollable table (panel) */
 .flexy-grid .panel-content {overflow:auto;}
 .flexy-grid table {margin:0;}
-.flexy-grid tfoot {height:45px;width:100%;}
-.flexy-grid tfoot tr td {
-  position:absolute;
-  display:inline-block;
-  overflow:visible;
-  border:none;
-}
-.flexy-grid tfoot tr td>div {width:10000%;}
-.flexy-grid .flexy-grid-pagination {float:left;margin:0;}
-.flexy-grid .flexy-grid-stats {float:left;padding:7px 14px;}
-/* pagination */
-.flexy-grid .pagination {margin:0px;}
+// .flexy-grid tfoot {height:51px;width:100%;}
+// .flexy-grid tfoot tr td {
+//   padding:0;
+//   position:absolute;
+//   display:inline-block;
+//   overflow:visible;
+//   border:none;
+// }
+// .flexy-grid tfoot tr td>div {
+//   width:10000%;
+//   height:51px;
+//   padding:@table-cell-padding;
+//   // background-color:@panel-footer-bg;
+// }
+// .flexy-grid .flexy-grid-pagination {float:left;margin:0;}
+// .flexy-grid .flexy-grid-stats {float:left;padding:7px 14px;}
+// /* pagination */
+// .flexy-grid .pagination {margin:0px;}
 
 /* th */
 .flexy-grid th {text-transform:uppercase;}
@@ -32,9 +38,10 @@
 .flexy-grid tbody td[tr-ng-grid-body-cell=0] {position:fixed;}
 
 /*  pagination / info*/
-// .flexy-grid .panel-footer {padding:2px;height:39px;}
-// .flexy-grid .pagination {margin:0;}
-// .flexy-grid .table-stats {float:right;padding:7px 14px;}
+.flexy-grid .panel-footer {padding:2px;height:39px;}
+.flexy-grid .flexy-grid-pagination {float:left;}
+.flexy-grid .pagination {margin:0;}
+.flexy-grid .flexy-grid-stats {float:right;padding:7px 14px;}
 
 /* TABLE COLUMNS */
 .flexy-grid th, .flexy-grid td {max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background-repeat:no-repeat;}
