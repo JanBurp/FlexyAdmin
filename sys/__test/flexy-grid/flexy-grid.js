@@ -127,7 +127,7 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyGridServic
    * Mainly for dragging in tree's
    *
    */
-  $scope.dragged_children = [];
+  var dragged_children = [];
   $scope.sortableOptions = {
     containment: '.flexy-grid tbody',
 
@@ -144,20 +144,18 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyGridServic
         // find all nodes
         var index=obj.source.index;
         var level=$scope.gridItems[index]._info.level;
-        $scope.dragged_children=[];
+        dragged_children=[];
         var node_level=0;
-        var next=index;
         do {
-          next++;
-          if (angular.isDefined($scope.gridItems[next])) {
-            node_level=$scope.gridItems[next]._info.level;
-            if (node_level>level) $scope.dragged_children.push($scope.gridItems[next].id);
+          index++;
+          if (angular.isDefined($scope.gridItems[index])) {
+            node_level=$scope.gridItems[index]._info.level;
+            if (node_level>level) dragged_children.push($scope.gridItems[index].id);
           }
-        } while (node_level>level && angular.isDefined($scope.gridItems[next]));
+        } while (node_level>level && angular.isDefined($scope.gridItems[index]));
         // 'hide' the nodes
-        angular.forEach($scope.dragged_children,function(node,key){
-          var el=angular.element(document.querySelector('.flexy-grid.'+$scope.table+' table tbody tr[id="'+node+'"]'));
-          el.addClass('hidden');
+        angular.forEach(dragged_children,function(node,key){
+          angular.element(document.querySelector('.flexy-grid.'+$scope.table+' table tbody tr[id="flexy-grid-row_'+node+'"]')).addClass('hidden');
         });
       }
 
@@ -188,7 +186,7 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyGridServic
       var row=obj.source.itemScope.element;
       var new_index=obj.dest.index;
       var needsUpdate=false;
-      var number_of_nodes = $scope.dragged_children.length;
+      var number_of_nodes = dragged_children.length;
       var old_level=obj.dest.sortableScope.modelValue[new_index]._info.level;
       var new_level=0;
       var new_parent_id=0;
@@ -226,15 +224,15 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyGridServic
         for (var i = 0; i < number_of_nodes; i++) {
           // adjust level & copy the node from dest
           obj.dest.sortableScope.modelValue[old_nodes_index]._info.level-=level_diff;
-          $scope.dragged_children.push(obj.dest.sortableScope.modelValue[old_nodes_index]);
+          dragged_children.push(obj.dest.sortableScope.modelValue[old_nodes_index]);
           // remove node from dest
           obj.dest.sortableScope.removeItem(old_nodes_index);
         }
         // insert new items in dest after new index
-        $scope.dragged_children.reverse();
+        dragged_children.reverse();
         if (!up) new_nodes_index=new_nodes_index-number_of_nodes+1;
         for (i = 0; i < number_of_nodes; i++) {
-          obj.dest.sortableScope.insertItem(new_nodes_index, $scope.dragged_children[i]);
+          obj.dest.sortableScope.insertItem(new_nodes_index, dragged_children[i]);
         }
 
         needsUpdate=true;
@@ -253,11 +251,10 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyGridServic
       var row=obj.source.itemScope.element;
       // Tree? show hidden nodes again
       if ($scope.type.is_tree && row.hasClass('flexy-tree-has_children')) {
-        angular.forEach($scope.dragged_children,function(node,key){
-          var hidden=angular.element(document.querySelector('.flexy-grid.'+$scope.table+' table tbody tr[id="'+node+'"]'));
-          hidden.removeClass('hidden');
+        angular.forEach(dragged_children,function(node,key){
+          angular.element(document.querySelector('.flexy-grid.'+$scope.table+' table tbody tr[id="flexy-grid-row_'+node+'"]')).removeClass('hidden');
         });
-        $scope.dragged_children=[];
+        dragged_children=[];
       }
     },
 

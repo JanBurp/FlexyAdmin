@@ -20,7 +20,11 @@ class __test extends AjaxController {
    * @author Jan den Besten
    */
 	public function index() {
-    $this->load->view('admin/__test/main_app',array('language'=>$this->user->language),false);
+    $site = $this->crud->get_row(array(
+      'table'   => 'tbl_site',
+      'select'  => 'str_title,url_url'
+    ));
+    $this->load->view('admin/__test/main_app',array('title'=>$site['str_title'],'language'=>$this->user->language),false);
 	}
 
 }

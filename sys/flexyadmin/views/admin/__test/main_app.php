@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>FlexyAdmin with AngularJS</title>
+	<title><?=$title?></title>
 	<base href="<?=base_url()?>" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="sys/__test/css/flexyadmin.min.css" type="text/css" media="screen" title="no title" charset="utf-8">
@@ -57,7 +57,7 @@
   <div id="container" class="container-fluid" ng-if="isLoggedIn" ng-controller="flexyMenuCtrl">
     
     <header class="navbar navbar-default navbar-fixed-top">
-      <div class="navbar-text"><a href="./admin/__test#/home" data-flexy-blocks="">AngularJS Test</a></div>
+      <div class="navbar-text"><a href="./admin/__test#/home" data-flexy-blocks=""><?=$title?></a></div>
       <nav class="menu-header navbar-text"><flexy-menu type="header" uiclass="nav-pills" items="menu.header"></flexy-menu></nav>
     </header>
 
