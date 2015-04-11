@@ -70,10 +70,10 @@ var files = {
 /**
  * Notify options
  */
-var title   = '';
-var message = '<%= file.relative %>';
-var icon    = 'sys/flexyadmin/assets/img/work.png';
-var dir     = __dirname.replace('/Users/','');
+var title        = '';
+var message      = '<%= file.relative %>';
+var icon         = 'sys/flexyadmin/assets/img/work.png';
+var dir          = __dirname.replace('/Users/','');
 
 
 /**
@@ -300,9 +300,29 @@ gulp.task('default', ['jshint','jsmin','less','cssmin'] );
 
 // Watchers
 gulp.task('watch', function() {
-
+  
   // watch for JS changes
-  gulp.watch( files['watchjs'], { interval: watch_interval }, ['jshint','jsmin','message'] );
+  // gulp.watch( files['watchjs'], { interval: watch_interval }, ['jshint','jsmin','message'] );
+  
+  // Watch for JS changes
+  gulp.watch( files['watchjs'], { interval: watch_interval } ).on('change', function(jsfile) {
+    gutil.log(gutil.colors.yellow('JS changed' + ' (' + jsfile.path + ')'));
+    return gulp.src( jsfile.path )
+      .pipe(plumber({ errorHandler: onError }))
+      .pipe(jshint())
+      // Use gulp-notify as jshint reporter
+      .pipe(notify(function (file) {
+        if (file.jshint.success) { return false }
+        return file.relative + " (" + file.jshint.results.length + " errors)\n";
+      }))
+      .pipe(jshint.reporter(stylish))
+      .pipe(jshint.reporter('fail'))
+      .pipe(notify({
+        title:   'JS Hint OK' + title,
+        message: message,
+        icon: icon 
+      }));
+  });
  
   // watch for LESS/CSS changes
   gulp.watch( files['watchcss'], { interval: watch_interval }, ['less','cssmin','message'] );
