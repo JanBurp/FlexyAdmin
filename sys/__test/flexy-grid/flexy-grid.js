@@ -118,15 +118,16 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyGridServic
 
   var sortable = {
     dragged_children : [],
-    table            : angular.element(document.querySelector('.flexy-grid.'+$scope.table+' table'))
+    table            : null,
   };
 
   /**
    * START DRAGGING: hide and remember children
    */
   sortable.dragStart = function(obj) {
-    // Reset dragged children
+    // Reset
     sortable.dragged_children=[];
+    sortable.table = angular.element(document.querySelector('.flexy-grid.'+$scope.table+' table'));
     // Is table a tree and row has children?
     if ($scope.type.is_tree && obj.source.itemScope.row._info.has_children) {
       // Find the children
@@ -134,15 +135,8 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyGridServic
       // Hide them
       sortable.hide_rows( sortable.dragged_children );
     }
-    // Preserve width of cells in dragged row
-    var widths = [];
-    angular.forEach( sortable.table.find('th') ,              function(cell, key) {  widths.push(cell.offsetWidth+"px");                    });
-    angular.forEach( obj.source.itemScope.element.find('td'), function(cell, key) {  angular.element(cell).css({'width':widths.shift()});   });
-    // Preserve position & size of dragged row
-    var panel = angular.element(document.querySelector('.panel.flexy-grid.'+$scope.table));
-    var pos   = panel.offset();
-    var width = panel.width()+1;
-    angular.element(document.querySelector('.as-sortable-drag',panel)).css({'margin-top':(-pos.top),'margin-left':(-pos.left+13),'max-width':width});
+    // Keep styling of dragged item intact
+    sortable.style_drag_item(obj);
   };
 
   /**
@@ -231,7 +225,7 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyGridServic
    */
   sortable.hide_rows = function(rows) {
     angular.forEach(rows,function(node,key){
-      angular.element(document.querySelector('tbody tr[id="flexy-grid-row_'+node+'"]', sortable.table )).hide();
+      angular.element(document.querySelector('tbody tr[id="flexy-grid-row_'+node+'"]', sortable.table )).addClass('hidden');
     });
   };
 
@@ -240,11 +234,32 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyGridServic
    */
   sortable.show_rows = function(rows) {
     angular.forEach(rows,function(node,key){
-      angular.element(document.querySelector('tbody tr[id="flexy-grid-row_'+node+'"]',sortable.table)).show();
+      angular.element(document.querySelector('tbody tr[id="flexy-grid-row_'+node+'"]',sortable.table)).removeClass('hidden');
     });
   };
   
-  
+  /**
+   * Preserve width of cells in dragged row (when containment is set)
+   */
+  sortable.style_drag_item = function(obj) {
+    if (angular.isDefined($scope.sortableOptions.containment)) {
+      var widths = [];
+      // get widths of headers
+      angular.forEach( sortable.table.find('th'), function(cell, key) {
+        widths.push(cell.offsetWidth+"px");
+      });
+      // set width of dragged cells
+      angular.forEach( obj.source.itemScope.element.find('td'), function(cell, key) {  
+        var w = widths.shift();
+        angular.element(cell).css({'width':w,'min-width':w,'max-width':w});
+      });
+      // Preserve position & size of dragged row
+      var panel = angular.element(document.querySelector('.panel.flexy-grid.'+$scope.table));
+      var pos   = panel.offset();
+      var width = panel.width()+1;
+      angular.element(document.querySelector('.as-sortable-drag',panel)).css({'margin-top':(-pos.top),'margin-left':(-pos.left+13),'max-width':width});
+    }
+  };
 
     
 }]);
