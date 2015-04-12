@@ -306,7 +306,6 @@ gulp.task('watch', function() {
   
   // Watch for JS changes
   gulp.watch( files['watchjs'], { interval: watch_interval } ).on('change', function(jsfile) {
-    gutil.log(gutil.colors.yellow('JS changed' + ' (' + jsfile.path + ')'));
     return gulp.src( jsfile.path )
       .pipe(plumber({ errorHandler: onError }))
       .pipe(jshint())
@@ -329,9 +328,11 @@ gulp.task('watch', function() {
   
   // Watch any resulting file changed
   livereload.listen();
+  
   gulp.watch( [
     files['css'] + '/' + files['cssdest'],
     files['js']  + '/' + files['jsdest'],
+    files['watchjs'],
   ], { interval: watch_interval } ).on('change', livereload.changed);
   
 });
