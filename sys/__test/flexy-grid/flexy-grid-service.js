@@ -62,6 +62,7 @@ flexyAdmin.factory('flexyGridService', ['flexySettingsService','flexyApiService'
     var parents = {};
 
     // Loop all items and add info
+    var level=0;
     angular.forEach( data, function(item,id) {
       // Make sure _info is set
       if ( angular.isUndefined(data[id]._info)) data[id]._info = {};
@@ -69,7 +70,6 @@ flexyAdmin.factory('flexyGridService', ['flexySettingsService','flexyApiService'
       // TREE info if needed
       if (is_tree) {
         var parent_id = item.self_parent;
-        var level=0;
         var has_children = false;
         var is_child = false;
         // if not on toplevel:
@@ -85,6 +85,10 @@ flexyAdmin.factory('flexyGridService', ['flexySettingsService','flexyApiService'
             level++;
             parents[parent_id]=level;
           }
+        }
+        else {
+          // on root, so level = 0
+          level=0;
         }
         // add this info to this item
         data[id]._info.level         = level;
@@ -104,7 +108,7 @@ flexyAdmin.factory('flexyGridService', ['flexySettingsService','flexyApiService'
     // angular.forEach( data, function(item,id) {
     //   console.log('ITEM',item.id,item.self_parent,item._info,item.uri);
     // });
-    
+    //
     return data;
   }
   

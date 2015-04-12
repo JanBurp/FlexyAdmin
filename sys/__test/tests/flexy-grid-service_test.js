@@ -68,12 +68,20 @@ describe('flexy-grid-service-http', function(){
 
     // Get the grid
     var grid = service.get_grid_data('tbl_menu');
-    expect( grid ).toBeDefined();
-    // expect( grid ).toEqual( data );
-    
     // Test the processed grid data
+    expect( grid ).toBeDefined();
+    expect( grid.length ).toEqual( data.length );
+    expect( grid[0]._info ).toEqual( {level: 0, is_child: false, has_children: false} );
+    expect( grid[1]._info ).toEqual( {level: 0, is_child: false, has_children: true} );
+    expect( grid[2]._info ).toEqual( {level: 1, is_child: true,  has_children: true} );
+    expect( grid[3]._info ).toEqual( {level: 2, is_child: true,  has_children: false} );
+    expect( grid[4]._info ).toEqual( {level: 1, is_child: true,  has_children: false} );
+    expect( grid[5]._info ).toEqual( {level: 0, is_child: false, has_children: false} );
+    expect( grid[6]._info ).toEqual( {level: 0, is_child: false, has_children: false} );
     
-    
+    // angular.forEach( grid, function(item,id) {
+    //   console.log('ITEM',item.id,item.self_parent,item._info,item.uri);
+    // });
     
   });
 
