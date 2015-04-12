@@ -119,6 +119,7 @@
 <script src="sys/__test/flexy-menu/flexy-menu-controller.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-menu/flexy-menu-directive.js" type="text/javascript" charset="utf-8"></script>
 
+<script src="sys/__test/flexy-grid/flexy-sortable.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-grid/flexy-grid-service.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-grid/flexy-grid.js" type="text/javascript" charset="utf-8"></script>
 
