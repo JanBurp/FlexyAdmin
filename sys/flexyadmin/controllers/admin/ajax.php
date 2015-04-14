@@ -143,13 +143,13 @@ class Ajax extends AjaxController {
             // }
             
             // Options?
-            if (!$validation_errors) {
-              $options=$this->cfg->get('cfg_field_info',$table.'.'.$field,'str_options');
-              if ($options) {
-                $aOptions=explode('|',$options);
-                if (!in_array($value,$aOptions)) $validation_errors[$field]=langp('valid_option',$field).str_replace('|',',',$options);
-              }
-            }
+            // if (!$validation_errors) {
+            //   $options=$this->cfg->get('cfg_field_info',$table.'.'.$field,'str_options');
+            //   if ($options) {
+            //     $aOptions=explode('|',$options);
+            //     if (!in_array($value,$aOptions)) $validation_errors[$field]=langp('valid_option',$field).str_replace('|',',',$options);
+            //   }
+            // }
 
             if (!$validation_errors) {
               // Call Plugins

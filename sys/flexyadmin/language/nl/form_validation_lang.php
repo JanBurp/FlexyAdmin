@@ -26,7 +26,7 @@ $lang['decimal']					= "'%s' mag alleen decimale getallen bevatten.";
 $lang['less_than']				= "'%s' moet kleiner zijn dan %s.";
 $lang['greater_than']			= "'%s' moet groter zijn dan %s.";
 
-$lang['valid_option']			= "'%s' moet een van de volgende waarden hebben: ";
+$lang['valid_option']			= "'%s' moet een van de volgende waarden hebben: [%s]";
 
 $lang['valid_rgb']				       = "Geen juiste kleurcode in '%s'";
 $lang['valid_date']              = "'%s' moet een datum bevatten in dit formaat dd-mm-yyyy";

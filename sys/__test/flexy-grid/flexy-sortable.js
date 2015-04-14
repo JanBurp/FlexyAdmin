@@ -23,6 +23,9 @@ flexyAdmin.directive('asSortable', [ function () {
     priority: 500,
     link: function ($scope, $element, $attrs) {
       
+      /**
+       * Here the Options & Callbacks are set
+       */
       $scope.sortableOptions = {
         containment:    '.flexy-grid tbody',
         dragStart :     function(obj) { sortable.dragStart(obj); },
@@ -30,19 +33,21 @@ flexyAdmin.directive('asSortable', [ function () {
         dragEnd:        function(obj) { sortable.dragEnd(obj); },
       };
       
+      /**
+       * Decleration of closure with all callback functions and needed data. After that the callback functions are declared
+       */
       var sortable = {
-        dragged_children : [],
-        table            : null,
+        dragged_children : [],      // The children that are dragged with the parent
+        table            : null,    // Table element
       };
 
       /**
        * START DRAGGING: hide and remember children
        */
       sortable.dragStart = function(obj) {
-        // Reset
+        // Re(set) global data to remember
         sortable.dragged_children=[];
         sortable.table = angular.element(document.querySelector('.flexy-grid.'+$scope.$parent.table+' table'));
-        
         // Is table a tree and row has children?
         if ($scope.$parent.type.is_tree && obj.source.itemScope.row._info.has_children) {
           // Find the children
@@ -113,7 +118,10 @@ flexyAdmin.directive('asSortable', [ function () {
       sortable.dragEnd = function(obj) {
         sortable.show_rows( sortable.dragged_children );
       };
-
+      
+      /**
+       * HELPER FUNCTIONS:
+       */
 
       /**
        * Find children of row object
