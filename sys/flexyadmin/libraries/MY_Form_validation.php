@@ -51,7 +51,9 @@ class MY_Form_validation extends CI_Form_validation {
 			$this->set_rules($field, $label, $validation);
 		}
     // Run validation
-		return $this->run();
+    $result=$this->run();
+    // trace_($result);
+		return $result;
   }
   
   /**
@@ -69,6 +71,7 @@ class MY_Form_validation extends CI_Form_validation {
     $validation[]=$this->_get_global_cfg_validation($field);
 		$validation[]=$this->_get_cfg_validation($table,$field);
 		$validation[]=$this->_get_db_validation($table,$field);
+    $validation[]=$this->_get_db_options_validation($table,$field);
 		$validations=$this->combine_validations($validation,$as_array);
     // trace_(['get_validations',$table,$field,$validation,$validations]);
     return $validations;
@@ -153,6 +156,26 @@ class MY_Form_validation extends CI_Form_validation {
 		}
 		return $validation;
 	}
+  
+  
+  /**
+   * Geeft validation rule 'is_option[]' als het gegeven veld opties heeft ingesteld
+   *
+   * @param string $table 
+   * @param string $field 
+   * @return string
+   * @author Jan den Besten
+   */
+  private function _get_db_options_validation($table,$field) {
+    $validation='';
+		$options=$this->CI->cfg->get('cfg_field_info',$table.'.'.$field,'str_options');
+    if ($options) {
+      $validation['rules']='valid_option';
+      $validation['params']=str_replace('|',',',$options);
+    }
+    return $validation;
+  }
+  
   
   /**
    * Combineerd diverse validatieregels. Verwijderd ook de dubbelingen (op een slimme manier)
@@ -245,31 +268,6 @@ class MY_Form_validation extends CI_Form_validation {
   }
   
   
-  
-  /**
-   * Combineerd een validations rule array('rules'=>'','params'=>'') tot een validation string.
-   *
-   * @param array $validations 
-   * @return string
-   * @author Jan den Besten
-   */
-  //   private function _set_validation_params($validations) {
-  //   $validation='';
-  //   foreach ($validations as $rule => $param) {
-  //     if (!empty($param)) $rule=str_replace('[]','['.$param.']',$rule);
-  //     $validation=add_string($validation,$rule,'|');
-  //   }
-  //   return $validation;
-  // }
-  
-  
-  
-  
-  
-  
-  
-  
-  
   /**
    * Prepareert een link. Plakt er mailto: voor als het een emailadres is, en anders http://
    *
@@ -287,6 +285,21 @@ class MY_Form_validation extends CI_Form_validation {
       $str=prep_url($str,$field);
     }
     return $str;
+  }
+  
+  
+  /**
+   * Test of de waarde een waarde is uit de lijst met opties.
+   *
+   * @param string $str
+   * @param string $options: 'opties1|optie2|optie3|....'
+   * @return bool
+   * @author Jan den Besten
+   */
+  public function valid_option($str,$options) {
+    if (!is_array($options)) $options = explode(',',$options);
+    $result=in_array($str,$options);
+    return $result;
   }
   
   
@@ -457,11 +470,10 @@ class MY_Form_validation extends CI_Form_validation {
     * @author Jan den Besten
     */
    public function valid_model_method($str, $model_method) {
-     $CI =& get_instance();
      $model=get_prefix($model_method,'.');
      $method=get_suffix($model_method,'.');
-     $CI->load->model($model);
-     $result=$CI->$model->$method($str);
+     $this->CI->load->model($model);
+     $result=$this->CI->$model->$method($str);
      if (is_string($result)) {
        $this->set_message('valid_model_method',lang($result));
        return FALSE;

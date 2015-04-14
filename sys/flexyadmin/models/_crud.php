@@ -43,6 +43,9 @@ class _crud extends CI_Model {
    */
   public function validate($validate=TRUE) {
     $this->validate_data=$validate;
+    if ($validate) {
+      $this->load->library('form_validation');
+    }
     return $this;
   }
 
