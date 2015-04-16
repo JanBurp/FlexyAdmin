@@ -46,7 +46,6 @@ else
   define("IS_AJAX",false);
 
 
-
 /*
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT
@@ -76,8 +75,6 @@ else
 
  // define('ENVIRONMENT','testing');   // This sets logging on
  
-
-
 
 /*
  *---------------------------------------------------------------
@@ -135,7 +132,6 @@ $system_path = 'sys/codeigniter';
 $application_folder = 'sys/flexyadmin';
 
 $site_folder = 'site'; // added/changed for FlexyAdmin
-
 
 /*
  * --------------------------------------------------------------------
@@ -255,6 +251,7 @@ $site_folder = 'site'; // added/changed for FlexyAdmin
 	}
   
   define('SITEPATH', $site_folder.'/');			// added/changed for FlexyAdmin
+  
 
 /*
  * --------------------------------------------------------------------
