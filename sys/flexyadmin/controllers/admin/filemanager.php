@@ -76,7 +76,7 @@ class Filemanager extends AdminController {
 				$uiName=$this->ui->get($path);
         
         if ($this->mediatable->exists()) 
-          $files=$this->mediatable->get_files($map);
+          $files=$this->mediatable->get_files($map,true,false);
         else
           $files=read_map($map);
         

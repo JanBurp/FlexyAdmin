@@ -40,9 +40,9 @@
  *      [data] => (
  *        [2] => (
  *          [id] => '2'
- *          [b_exists] => '1'
  *          [file] => 'test_03.jpg'
  *          [path] => 'pictures'
+ *          [full_path] => '_media/pictures/test_03.jpg'
  *          [str_type] => 'jpg'
  *          [str_title] => 'wbCYmaFZ'
  *          [dat_date] => '2014-09-16'

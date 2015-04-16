@@ -25,7 +25,7 @@
 /**
  * This routing makes sure all uri's go to the frontend site, except soms system uri's
  */
-$route['(?!__api|admin|rss|file|_cronjob|_unittest|_ajax|_api)(.*)'] = "";
+$route['(?!__api|admin|rss|file|_media|_cronjob|_unittest|_ajax|_api)(.*)'] = "";
 
 /**
  * CI unit test
@@ -50,6 +50,10 @@ $route['_api/(.*)'] = 'api/index/$1';
 /**
  * This route makes a nice download path and a serve (restricted) path
  */
+$route['_media/download/(.*)/(.*)'] = "file/file/download/$1/$2";
+$route['_media/serve/(.*)/(.*)']    = "file/file/serve/$1/$2";
+$route['_media/(.*)/(.*)']          = "file/file/serve/$1/$2";
+
 $route['file/serve/(.*)/(.*)']    = "file/file/serve/$1/$2";
 $route['file/download/(.*)/(.*)'] = "file/file/download/$1/$2";
 $route['file/(.*)/(.*)']          = "file/file/download/$1/$2";

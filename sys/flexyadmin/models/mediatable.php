@@ -280,8 +280,8 @@ class Mediatable Extends CI_Model {
    * @return array $files
    * @author Jan den Besten
    */
-  public function get_files($path='',$asReadMap=TRUE) {
-    return $this->_get_files($path,$asReadMap);
+  public function get_files($path='',$asReadMap=TRUE,$full_path=TRUE) {
+    return $this->_get_files($path,$asReadMap,$full_path);
   }
 
   /**
@@ -294,19 +294,29 @@ class Mediatable Extends CI_Model {
    * @author Jan den Besten
    */
   public function get_recent_files($path='',$nr=10, $asReadMap=TRUE) {
-    return $this->_get_files($path,$asReadMap,$nr);
+    return $this->_get_files($path,$asReadMap,TRUE,$nr);
   }
     
-  private function _get_files($map='',$asReadMap=TRUE,$recent_numbers=0) {
+  private function _get_files($map='',$asReadMap=TRUE,$full_path=TRUE,$recent_numbers=0) {
     $path=remove_assets($map);
     $info=$this->cfg->get('cfg_media_info',$path);
     // if ($asReadMap) $this->db->set_key('file');
+    
+    // select fields
+    $fields=$this->db->list_fields($this->table);
+    unset($fields[array_search('b_exists',$fields)]);
+    if ($full_path) array_splice($fields,array_search('path',$fields),0, 'CONCAT("_media/",`path`,"/",`file`) AS `full_path`' );
+    $this->db->select($fields);
+    // where exists and set path
     $this->db->where('b_exists',true);
     $this->db->where('path',$path);
+    // user restricted where
     if (el('b_user_restricted',$info,false) and $this->db->field_exists('user',$this->table) and !$this->user->rights['b_all_users']) {
       $this->db->where('user',$this->user->user_id);
     }
+    // get files
     $files=$this->db->get_result($this->table,$recent_numbers);
+    
     if (empty($files)) {
       // not in database, read from filesystem if set so
       if (!el('b_in_database',$info,true)) {
