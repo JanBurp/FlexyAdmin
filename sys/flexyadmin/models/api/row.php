@@ -12,6 +12,7 @@
  * 
  * - `table`                    // De tabel waar de record van wordt opgevraagd.
  * - `where`                    // Hiermee wordt bepaald welk record wordt opgevraagd.
+ * - `options`                  // Hiermee worden opties voor velden toegevoegd
  * - `[config[]=table_info]`    // Informatie over de tabel kan op deze manier meegenomen worden in het resultaat.
  * - `[config[]=field_info]`    // Informatie over de velden in de tabel kan op deze manier meegenomen worden in het resultaat.
  * 
@@ -19,11 +20,12 @@
  * ###Voorbeelden:
  * 
  * - `_api/row?table=tbl_menu&where=3`
+ * - `_api/row?table=tbl_menu&where=10&options=true`
  * - `_api/row?table=tbl_menu&where=10&config[]=table_info`
  * 
  * ###Response:
  * 
- * Voorbeeld response (dump) van `_api/table?row=tbl_menu&where=3`:
+ * Voorbeeld response (dump) van `_api/table?row=tbl_menu&where=3&options=true`:
  * 
  *     [success] => TRUE
  *     [test] => TRUE
@@ -32,6 +34,7 @@
  *       [where] => '3'
  *       [type] => 'GET'
  *      )
+ *     [options] =>
  *     [data] => (
  *       [id] => '3'
  *       [order] => '0'
@@ -95,6 +98,7 @@
  * - `table`                    // De tabel waar de record aan wordt toegevoegd.
  * - `where`                    // Bepaal hiermee welk record moet worden aangepast
  * - `data`                     // De aangepaste data (hoeft niet compleet, alleen de aan te passen velden meegeven is genoeg).
+ * - `[options=FALSE]`          // Als `TRUE`, dan worden de mogelijke waarden van velden meegegeven.
  * - `[config[]=table_info]`    // Informatie over de tabel kan op deze manier meegenomen worden in het resultaat.
  * - `[config[]=field_info]`    // Informatie over de velden in de tabel kan op deze manier meegenomen worden in het resultaat.
  * 

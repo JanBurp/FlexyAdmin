@@ -9,6 +9,8 @@
  * - `[limit=0]`                // Aantal rijen dat het resultaat moet bevatten. Als `0` dan worden alle rijen teruggegeven.
  * - `[offset=0]`               // Hoeveel rijen vanaf de start worden overgeslagen.
  * - `[txt_as_abstract=FALSE]`  // Als `TRUE`, dan bevatten velden met de `txt_` prefix een ingekorte tekst zonder HTML tags.
+ * - `[as_options=FALSE]`       // Als `TRUE`, dan wordt de data als opties teruggegeven die gebruikt kunnen worden in een dropdown field bijvoorbeeld. (`limit` en `offset` werken dan niet)
+ * - `[options=FALSE]`          // Als `TRUE`, dan worden de mogelijke waarden van velden meegegeven.
  * - `[config[]=table_info]`    // Informatie over de tabel kan op deze manier meegenomen worden in het resultaat.
  * - `[config[]=field_info]`    // Informatie over de velden in de tabel kan op deze manier meegenomen worden in het resultaat.
  * 
@@ -138,13 +140,27 @@ class Table extends Api_Model {
    * @author Jan den Besten
    */
   private function _get_data() {
-    // UNSELECT Hidden fields
-    $this->db->unselect( el(array('field_info','hidden_fields'),$this->cfg_info,array()) );
-    // ABSTRACTS of txt?
-    if (el('txt_as_abstract',$this->args,false)) $this->db->max_text_len(100);
-    if ( el( array('table_info','tree'), $this->cfg_info,false) ) $this->db->order_as_tree();
-    $items = $this->crud->get($this->args);
-    $this->info  = $this->crud->get_info();
+    // AS OPTIONS
+    if (el('as_options',$this->args,false)) {
+      $where=el('where',$this->args,'');
+      $items=$this->db->get_options($this->args['table'],$where);
+      $this->info = array(
+        'rows'        => count($items),
+        'total_rows'  => $this->db->last_num_rows_no_limit(),
+        'table_rows'  => $this->db->count_all($this->args['table']),
+      );
+    }
+    // NORMAL DATA
+    else {
+      // UNSELECT Hidden fields
+      $this->db->unselect( el(array('field_info','hidden_fields'),$this->cfg_info,array()) );
+      // ABSTRACTS of txt?
+      if (el('txt_as_abstract',$this->args,false))                $this->db->max_text_len(100);
+      // As TREE?
+      if (el( array('table_info','tree'), $this->cfg_info,false)) $this->db->order_as_tree();
+      $items = $this->crud->get($this->args);
+      $this->info  = $this->crud->get_info();
+    }
     return $items;
   }
   
