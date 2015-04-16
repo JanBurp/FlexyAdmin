@@ -328,6 +328,39 @@ if (!isset($config['base_url'])) {
 // $config['uri_protocol']	= "AUTO";
 
 /*
+|--------------------------------------------------------------------------
+| Session Variables
+|--------------------------------------------------------------------------
+|
+| 'session_cookie_name' = the name you want for the cookie - automatic set at install
+|
+*/
+$config['sess_cookie_name'] = 'FlexyAdminDEMO';
+
+
+/*
+|--------------------------------------------------------------------------
+| Session Variables
+|--------------------------------------------------------------------------
+|
+| 'session_cookie_name' = the name you want for the cookie - automatic set at install
+|
+*/
+$config['sess_cookie_name'] = 'FlexyAdminDEMO';
+
+
+/*
+|--------------------------------------------------------------------------
+| Session Variables
+|--------------------------------------------------------------------------
+|
+| 'session_cookie_name' = the name you want for the cookie - automatic set at install
+|
+*/
+$config['sess_cookie_name'] = 'FlexyAdminDEMO';
+
+
+/*
  *--------------------------------------------------------------------------
  * URL suffix
  *--------------------------------------------------------------------------
