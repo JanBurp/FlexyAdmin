@@ -158,6 +158,7 @@ class Api_Model extends CI_Model {
     }
     if (isset($this->args['format'])) $this->result['format']=$this->args['format'];
     if (isset($this->info) and $this->info) $this->result['info']=$this->info;
+    if (isset($this->args['options'])) $this->result['options']=$this->_add_options();
     return $this->result;
   }
   
@@ -425,6 +426,58 @@ class Api_Model extends CI_Model {
     if (empty($path)) return FALSE;
     $img_info = $this->cfg->get('cfg_img_info',$path);
     return $img_info;
+  }
+  
+  
+  /**
+   * Voegt opties voor velden toe (voor dropdown velden bijvoorbeeld)
+   *
+   * @return string
+   * @author Jan den Besten
+   */
+  protected function _add_options() {
+    $table=el('table',$this->args);
+    if (empty($table)) return FALSE;
+    $options=array();
+    $fields=$this->db->list_fields($table);
+    foreach ($fields as $field) {
+      // options set in cfg_field_info
+      $full_name=$table.'.'.$field;
+      $info=$this->cfg->get('cfg_field_info',$full_name);
+      if (!empty($info['str_options'])) {
+        $opts=explode('|',$info['str_options']);
+        $opts=array_combine($opts,$opts);
+        if (el('b_multi_options',$info,0)>0) {
+          $options[$field]['multiple_options']=$opts;
+        }
+        else {
+          $options[$field]['options']=$opts;
+        }
+      }
+      // options for foreign keys
+      $prefix=get_prefix($field);
+      if ($prefix==PRIMARY_KEY and $field!=PRIMARY_KEY) {
+        // get options from db
+        $foreignTable=foreign_table_from_key($field);
+        if ($foreignTable) {
+          // Zijn er teveel opties?
+          if ($this->db->count_all($foreignTable)>20) {
+            // Geef dan de api aanroep terug waarmee de opties opgehaald kunnen worden
+            $options[$field]='_api/table?table='.$foreignTable.'&as_options=true';
+          }
+          else {
+            // Anders geef gewoon de opties terug
+            $options[$field]['options']=$this->db->get_options($foreignTable);
+          }
+          
+        }
+        
+      }
+      
+      
+      
+    }
+    return $options;
   }
   
   

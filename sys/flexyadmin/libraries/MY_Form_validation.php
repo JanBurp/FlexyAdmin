@@ -297,7 +297,9 @@ class MY_Form_validation extends CI_Form_validation {
    * @author Jan den Besten
    */
   public function valid_option($str,$options) {
+    if (empty($options)) return TRUE;
     if (!is_array($options)) $options = explode(',',$options);
+    if (empty($str) and empty($options[0])) return TRUE; // mag leeg zijn
     $result=in_array($str,$options);
     return $result;
   }
