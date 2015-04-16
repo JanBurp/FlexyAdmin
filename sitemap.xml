@@ -20,21 +20,9 @@
 		<content>Een subpagina.</content>
 	</url>
 	<url>
-		<loc>http://www.flexyadmin.com/een_pagina/subpagina/sub_sub</loc>
-		<priority>0.48</priority>
-		<title>Sub Sub</title>
-		<content>.</content>
-	</url>
-	<url>
 		<loc>http://www.flexyadmin.com/een_pagina/nog_een_subpagina</loc>
 		<priority>0.64</priority>
 		<title>Nog een subpagina</title>
-		<content>.</content>
-	</url>
-	<url>
-		<loc>http://www.flexyadmin.com/onderaan</loc>
-		<priority>0.80</priority>
-		<title>Onderaan</title>
 		<content>.</content>
 	</url>
 	<url>

@@ -34,7 +34,7 @@ class FormValidationTest extends CIUnit_Framework_TestCase {
     $options=',one,two,three';
     $values=array('no'=>false,'one'=>true,'two'=>true,'three'=>true,'|'=>false,','=>false,''=>true);
     foreach ($values as $value=>$result) {
-      $validated = $this->CI->form_validation->is_option($value,$options);
+      $validated = $this->CI->form_validation->valid_option($value,$options);
       if ($result) {
         $this->assertTrue($validated);
       }
