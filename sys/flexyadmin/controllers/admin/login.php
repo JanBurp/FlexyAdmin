@@ -23,7 +23,7 @@
  *
  */
 
-class Login extends CI_Controller {
+class Login extends MY_Controller {
 
 	var $homePage;
 
@@ -83,50 +83,6 @@ class Login extends CI_Controller {
 		}
 		redirect($this->homePage, 'refresh');
 	}
-
-
-  //forgot password
-	// public function forgot_password() {
-	// 	$email=$this->input->post('email',TRUE);
-	// 	$site['title']=$this->_get_site_title();
-	// 	$site['message']=$this->session->userdata('message');
-	// 	$this->session->unset_userdata('message');
-	// 
-	// 	$user=FALSE;
-	// 	if ($email) {
-	// 		$user=$this->user->get_user_by_email($email);
-	// 	}
-	// 	
-	// 	if ( ! $user) {
-	// 		$this->load->view('admin/login_forgot', $site);
-	// 	}
-	// 	else {
-	// 		if ( $this->user->forgotten_password($email) ) {
-	// 			//if there were no errors
-	// 			$this->session->set_flashdata('message', $this->user->messages());
-	// 			redirect("admin/login", 'refresh');
-	// 		}
-	// 		else {
-	// 			// else try again
-	// 			$this->session->set_flashdata('message', $this->user->errors());
-	// 			redirect("admin/login/forgot_password", 'refresh');
-	// 		}
-	// 	}
-	// }
-
-	// public function reset_password($code) {
-	// 	$reset = $this->ion_auth->forgotten_password_complete($code);
-	// 	if ($reset) {  //if the reset worked then send them to the login page
-	// 		$this->session->set_flashdata('message', $this->ion_auth->messages());
-	// 		redirect("auth/login", 'refresh');
-	// 	}
-	// 	else { //if the reset didnt work then send them back to the forgot password page
-	// 		$this->session->set_flashdata('message', $this->ion_auth->errors());
-	// 		redirect("auth/forgot_password", 'refresh');
-	// 	}
-	// }
-
-
 
 
 }
