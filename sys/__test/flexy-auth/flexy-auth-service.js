@@ -17,6 +17,14 @@ flexyAdmin.factory('flexyAuthService',['flexyApiService',function(api){
   
   var isLoggedIn = false;
   
+  /**
+   * Test of response van een succesvolle login
+   */
+  function testResponseAuth(response) {
+    var loggedIn = (typeof(response)==='object' && response.success===true);
+    return loggedIn;
+  }
+  
   return  {
 
     /**
@@ -32,7 +40,7 @@ flexyAdmin.factory('flexyAuthService',['flexyApiService',function(api){
     check : function(){
       return api.auth_check().then(
         function(response) {
-          isLoggedIn = true;
+          isLoggedIn = testResponseAuth(response);
           return response;
         },
         function(error) {
@@ -47,7 +55,7 @@ flexyAdmin.factory('flexyAuthService',['flexyApiService',function(api){
      */
     login : function(user){
       return api.auth_login( user ).then(function(response){
-        isLoggedIn = true;
+        isLoggedIn = testResponseAuth(response);
         return response;
       });
     },

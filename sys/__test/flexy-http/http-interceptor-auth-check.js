@@ -18,22 +18,26 @@
  * Test response if user is authenticated
  */
 
-flexyAdmin.factory('authInterceptor',['$q','$location',function($q,$location){
+flexyAdmin.factory('authInterceptor',['flexySettingsService','$q','$location',function(settings,$q,$location){
   return {
     responseError : function(rejection) {
       var status=rejection.status;
-      if (status=='401') {
-        console.error('flexyAdmin ERROR ------------- AUTHENTICATION NEEDED ---------');
-      }
-      if (status=='404') {
-        console.error('flexyAdmin ERROR ------------- API/FILE NOT FOUND ---------');
-      }
-
-      // Proceed as normal
+      
+      // Proceed as normal when logout
       if ($location.path()=='/logout') {
         return(rejection);
       }
+      // Or bad login
+      if (rejection.config.url==settings.item('api_base_url')+'auth/login') {
+        return(rejection);
+      }
       
+      if (status=='401') {
+        console.error('ERROR ------------- AUTHENTICATION NEEDED ---------');
+      }
+      if (status=='404') {
+        console.error('ERROR ------------- API/FILE NOT FOUND ---------');
+      }
       return $q.reject(rejection);
     },
   };

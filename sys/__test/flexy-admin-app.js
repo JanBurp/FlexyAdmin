@@ -134,7 +134,8 @@ flexyAdmin.controller('stateController', ['$scope','flexyAuthService','$location
     $location.path('/');
   });
   $scope.$on('event:auth-loginConfirmed', function() {
-    $scope.isLoggedIn = true;
+    $scope.isLoggedIn = flexyAuthService.loggedIn();
+    $location.path('/'); // prevents hidden data (container will hide)
   });
   
   // Angular is ready, so show all
