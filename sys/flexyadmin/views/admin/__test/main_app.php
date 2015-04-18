@@ -54,7 +54,7 @@
     </div>
   </div>
   
-  <div id="container" class="container-fluid" ng-if="isLoggedIn" ng-controller="flexyMenuCtrl">
+  <div id="container" class="container-fluid" ng-show="isLoggedIn" ng-controller="flexyMenuCtrl">
     
     <header class="navbar navbar-default navbar-fixed-top">
       <div class="navbar-text"><a href="./admin/__test#/home" data-flexy-blocks=""><?=$title?></a></div>
