@@ -129,14 +129,18 @@ class Forms extends Module {
   	*/
 	public function index($page) {
     $this->form_id=$this->name;
+    $formAction=$this->get_action();
+    $thanks='';
 		$html='';
     $errors='';
     
     // Test if allready submitted (and testing for that is possible)
-    if ($this->settings('prevend_double_submit')) {
-      $isSubmit=$this->CI->session->userdata($this->form_id.'__submit');
-      if ($isSubmit) {
-        return $this->_view_thanks();
+    if ($this->settings('prevend_double_submit',false)) {
+      $thanks=$this->CI->session->flashdata($this->form_id.'__thanks');
+      if ($thanks) {
+        if (!$this->settings('always_show_form',false)) {
+          return $this->_view_thanks(true,$thanks);
+        }
       }
     }
     
@@ -215,8 +219,6 @@ class Forms extends Module {
     // Extra veld toevoegen om op spamrobot te testen (die zal dit veld meestal automatisch vullen)
     if ($this->settings('check_for_spam')) $formFields['__test__']=array('type'=>'textarea', 'class'=>'hidden');
     
-    $formAction=$this->CI->uri->get();
-    if (isset($this->settings['action_query'])) $formAction.=$this->settings('action_query');
 		$form=new form($formAction,$this->form_id);
     
     $framework=$this->CI->config->item('framework');
@@ -283,10 +285,9 @@ class Forms extends Module {
           }
         }
         if ($result) {
-          if ($this->settings('prevend_double_submit') or $this->settings('always_show_form',false)) {
-            $this->CI->session->set_userdata($this->form_id.'__submit',true);
-            $this->CI->session->set_flashdata($this->form_id.'__message',$this->_view_thanks($result));
-            redirect($formAction, 'refresh');
+          if ($this->settings('prevend_double_submit',false)) {
+            $this->CI->session->set_flashdata($this->form_id.'__thanks', $this->_view_thanks($result) );
+            redirect($formAction, 'location');
           }
           $html.=$this->_view_thanks($result);
         }
@@ -296,7 +297,7 @@ class Forms extends Module {
       }
 		}
 
-    if (!$this->validated or $this->spam or $this->settings('always_show_form',false))	{
+    if (!$this->validated or $this->spam)	{
 			// Form isn't filled or validated or regarded as spam: show form and validation errors
       if ($this->settings('validation_place','form')=='field') {
         $form->show_validation_errors(true);
@@ -310,7 +311,7 @@ class Forms extends Module {
             $errors.='<p class="error">'.$this->settings('validation_place','').'</p>';
         }
       }
-      $html.=$this->CI->session->flashdata($this->form_id.'__message');
+      $html.=$thanks;
 			$html.=$form->render($this->settings('class',''));
 		}
     
@@ -330,20 +331,35 @@ class Forms extends Module {
    * @author Jan den Besten
    * @ignore
    */
-  private function _view_thanks($result,$errors='') {
-    if ($this->settings('prevend_double_submit')) {
-      $this->CI->session->unset_userdata($this->form_id.'__submit');
+  private function _view_thanks($result='',$thanks='') {
+    if ($thanks) {
+      return $thanks;
     }
     if ($this->settings('thanks_model')) {
       $model=get_prefix($this->settings('thanks_model'),'.');
       $method=get_suffix($this->settings('thanks_model'),'.');
       if (!isset($this->CI->$model)) $this->CI->load->model($model);
-      return $this->CI->$model->$method($result);
+      $html=$this->CI->$model->$method($result);
     }
-    $html=div('message').$this->settings('thanks','')._div();
+    else {
+      $html=div('message').$this->settings('thanks','')._div();
+    }
     return $html;
   }
   
+  
+  /**
+   * Geeft form action
+   *
+   * @return string
+   * @author Jan den Besten
+   */
+  private function get_action() {
+    $action=$this->CI->uri->get();
+    if (isset($this->settings['action_query'])) $action.=$this->settings('action_query');
+    return $action;
+  }
+
 
   /**
    * Geeft instelling
