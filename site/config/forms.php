@@ -37,6 +37,7 @@ $config['contact'] = array(
   // Voorkom dat het formulier meerdere keren kan worden verzonden door een pagina refresh.
   // NB deze optie maakt gebruik van sessions (de session library wordt automatisch geladen).
   'prevend_double_submit'   => true,
+  // 'always_show_form'        => true,
   
   // Knoppen van het formulier                
   'buttons'                 => array( 'submit'=>array('type'=>'submit','value'=>lang('submit')) ),
