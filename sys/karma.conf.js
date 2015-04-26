@@ -19,7 +19,9 @@ module.exports = function(config) {
       'js/externals.min.js',
       'js/angular-mocks.js',
 
+      "jdb*.js",
       "**/jdb*.js",
+      "flexy*.js",
       "**/flexy*.js",
       'tests/mock*.js',
     ],
@@ -29,7 +31,7 @@ module.exports = function(config) {
       'img/*',
       'css/*',
       'fonts/*',
-      '*.png'
+      '*.png',
     ],
 
     // preprocess matching files before serving them to the browser
