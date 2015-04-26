@@ -54,67 +54,6 @@ flexyAdmin.factory('flexyGridService', ['flexySettingsService','flexyApiService'
   }
   
   /**
-   * Process the raw data so its ready for the grid: set tree info
-   */
-  function create_grid_data(data,args) {
-    // Process _info
-    var is_tree = settings.item('config','table_info', args.table, 'tree' );
-    var parents = {};
-
-    // Loop all items and add info
-    var level=0;
-    angular.forEach( data, function(item,id) {
-      // Make sure _info is set
-      if ( angular.isUndefined(data[id]._info)) data[id]._info = {};
-      
-      // TREE info if needed
-      if (is_tree) {
-        var parent_id = item.self_parent;
-        var has_children = false;
-        var is_child = false;
-        // if not on toplevel:
-        if (parent_id>0) {
-          is_child=true;
-          // are we on a known level?
-          if ( angular.isDefined( parents[parent_id]) ) {
-            // yes: get that level
-            level=parents[parent_id];
-          }
-          else {
-            // no: remember new level
-            level++;
-            parents[parent_id]=level;
-          }
-        }
-        else {
-          // on root, so level = 0
-          level=0;
-        }
-        // add this info to this item
-        data[id]._info.level         = level;
-        data[id]._info.is_child      = is_child;
-        data[id]._info.has_children  = false; // this will be set later...
-      }
-    });
-    
-    // Add more tree info (has_children)
-    if (is_tree && parents!={}) {
-      angular.forEach(parents,function(value,key){
-        data[value]._info.has_children = true;
-      });
-    }
-    
-    // console.log('PARENTS',parents);
-    // angular.forEach( data, function(item,id) {
-    //   console.log('ITEM',item.id,item.self_parent,item._info,item.uri);
-    // });
-    //
-    return data;
-  }
-  
-  
-  
-  /**
    * flexyGridService API
    */
   var flexy_grid_service = {};
@@ -141,6 +80,81 @@ flexyAdmin.factory('flexyGridService', ['flexySettingsService','flexyApiService'
     if (angular.isUndefined( data[table]) || angular.isUndefined( data[table].grid )) return undefined;
     return data[table].grid;
   };
+  
+ /**
+  * Maakt van ruwe data array een grid array met:
+  * - `order` wordt ingesteld op de volgorde van de meegegeven array
+  * - `_info` wordt ingesteld.
+  * Als de data aan tree zijn (en `self_parent` bestaat), dan wordt per item `_info` zo ingesteld {level:(int),is_child:(bool),has_children:(bool)}.
+  * Daarvoor wordt uitgegaan van de volgorde van de meegegeven array en het veld `self_parent` per item.
+  */
+ flexy_grid_service.add_tree_info = function(data,is_tree) {
+   // Process _info
+   var parents = {};
+
+   // Loop all items and add info
+   var level=0;
+   var order=0;
+   angular.forEach( data, function(item,key) {
+     // Make sure _info is set
+     data[key]._info = {};
+     
+     // TREE info if needed
+     if (is_tree) {
+       var parent_key = item.self_parent;
+       var has_children = false;
+       var is_child = false;
+       // if not on toplevel:
+       if (parent_key>0) {
+         is_child=true;
+         // are we on a known level?
+         if ( angular.isDefined( parents[parent_key]) ) {
+           // yes: get that level
+           level=parents[parent_key];
+         }
+         else {
+           // no: remember new level
+           level++;
+           parents[parent_key]=level;
+         }
+       }
+       else {
+         // on root, so level = 0
+         level=0;
+       }
+       // add this info to this item
+       data[key]._info.level         = level;
+       data[key]._info.is_child      = is_child;
+       data[key]._info.has_children  = false; // this will be set later...
+     }
+     
+     // Reset order
+     data[key].order = order;
+     order++;
+   });
+   
+   // Add more tree info (has_children)
+   if (is_tree && parents!={}) {
+     // console.log('PARENTS',parents);
+     angular.forEach(parents,function(level,id){
+       var key = jdb.indexOfProperty(data,'id',id);
+       data[key]._info.has_children = true;
+     });
+   }
+   // flexy_grid_service.show_grid_items(data);
+
+   return data;
+ };
+ 
+ /**
+  * Logging for grid items
+  */
+ flexy_grid_service.show_grid_items = function(items, message) {
+   if (message) console.log(message);
+   angular.forEach( items, function(item,id) {
+     console.log({'id':item.id,'order':item.order,'parent':item.self_parent,'lev':item._info.level,'has':item._info.has_children},item.uri);
+   });
+ };
   
   /**
    * Geeft informatie over de tabel. De volgende keys zitten erin:
@@ -179,7 +193,7 @@ flexyAdmin.factory('flexyGridService', ['flexySettingsService','flexyApiService'
         args  : args,
         raw   : response.data,
         info  : calculate_pagination(response.info,args),
-        grid  : create_grid_data(response.data,args)
+        grid  : flexy_grid_service.add_tree_info(response.data, settings.item('config','table_info', args.table, 'tree' ) )
       };
       return response;
     });

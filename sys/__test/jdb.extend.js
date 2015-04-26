@@ -71,6 +71,75 @@ jdb.serializeJSON = function(data) {
 };
 
 
+/**
+ * jdb.deleteItems(obj,items)
+ * 
+ * Verwijderd meerdere elementen van een array of object gespecificeerd door een array van keys
+ * 
+ * @param obj obj Het aan te passen object
+ * @param array items Array van keys (strings) die verwijderd moeten worden
+ * @return obj Opgeschoond object
+ */
+jdb.deleteItems = function(obj,items) {
+  items.forEach(function(el,index){
+    delete obj[el];
+  });
+  return obj;
+};
+
+
+/**
+ * jdb.indexOfProperty(array,property,value)
+ * 
+ * Vind de key van een array van objecten waar de waarde van een property van een object gelijkt is aan value
+ * 
+ * @param array array De array van objecten waarin gezoch wordt
+ * @param string property Naam van de property
+ * @param mixed value De waarde waarnaar gezocht wordt
+ * @return integer index De index van het gevonden object, of -1 als niet is gevonden.
+ */
+jdb.indexOfProperty = function(array,property,value) {
+  var index=-1;
+  var i=0;
+  do {
+    if (array[i][property]===value) {
+      index=i;
+    }
+    i++;
+  } while (index===-1);
+  return index;
+};
+
+
+/**
+ * jdb.moveMultipleArrayItems(array,from,many,to)
+ * 
+ * Verplaatst items in een array
+ * 
+ * @param array array De originele array
+ * @param int from Vanaf welke index
+ * @param int many Hoeveel items
+ * @param int to Naar welke index
+ */
+jdb.moveMultipleArrayItems = function(array, from, many, to) {
+  // Make sure from and to are >0 and <array.length
+  from = (from<0) ? 0 : from;
+  to = (to<0) ? 0 : to;
+  var len=array.length;
+  from = (from>len) ? len : from;
+  to = (to>len) ? len : to;
+  var newArray = array.slice(); // copy
+  // Als from=to, dan hoeft er niets te gebeuren
+  if (from!==to) {
+    var removedItems = newArray.splice(from,many);
+    // if (to>from) to-=many;  // Als de items naar hogere index gaan, vershuif `to` mee.
+    for (var i = 0; i < many; i++) {
+      newArray.splice(to+i, 0, removedItems[i]);
+    }
+  }
+  return newArray;
+};
+
 
 
 /**

@@ -17,7 +17,7 @@
  * - options
  * - callbacks
  */
-flexyAdmin.directive('asSortable', [ function () {
+flexyAdmin.directive('asSortable', [ 'flexyGridService', function (grid) {
   return {
     restrict: 'A',
     priority: 500,
@@ -34,26 +34,34 @@ flexyAdmin.directive('asSortable', [ function () {
       };
       
       /**
-       * Decleration of closure with all callback functions and needed data. After that the callback functions are declared
+       * Decleration of closure with all callback functions and needed data.
        */
       var sortable = {
-        dragged_children : [],      // The children that are dragged with the parent
-        table            : null,    // Table element
+        oldItems        : [],      // Items before moving
+        draggedChildren : [],      // The children that are dragged with the parent
+        table           : null,    // Table element
       };
+
+      /**
+       * CALLBACKS ====================================================================
+       */
 
       /**
        * START DRAGGING: hide and remember children
        */
       sortable.dragStart = function(obj) {
-        // Re(set) global data to remember
-        sortable.dragged_children=[];
+        // Remeber current items
+        sortable.oldItems = obj.source.sortableScope.modelValue.slice();
+        // Re(set) draggedChildren
+        sortable.draggedChildren=[];
+        // Set current table element
         sortable.table = angular.element(document.querySelector('.flexy-grid.'+$scope.$parent.table+' table'));
         // Is table a tree and row has children?
         if ($scope.$parent.type.is_tree && obj.source.itemScope.row._info.has_children) {
           // Find the children
-          sortable.dragged_children = sortable.find_children(obj);
+          sortable.draggedChildren = sortable.find_children(obj);
           // Hide them
-          sortable.hide_rows( sortable.dragged_children );
+          sortable.hide_rows( sortable.draggedChildren );
         }
         // Keep styling of dragged item intact
         sortable.style_drag_item(obj);
@@ -64,63 +72,53 @@ flexyAdmin.directive('asSortable', [ function () {
        */
       sortable.orderChanged = function(obj) {
         if ($scope.$parent.type.is_tree) {
-          var number_of_children = sortable.dragged_children.length;
-          var new_index          = obj.dest.index;
-      
-          // set (new) level, parent and is_child
-          var next_index    = new_index+1;
-          var nr_of_items   = obj.dest.sortableScope.modelValue.length;
-          var old_level     = obj.dest.sortableScope.modelValue[new_index]._info.level;
-          var new_level     = 0; // level = 0 except when the next item has a higher level: use that level
-          var new_parent_id = 0; // parent = 0 except when the next item has a higher level: use that parent
-          if (next_index < nr_of_items) {
-            new_level     = obj.dest.sortableScope.modelValue[next_index]._info.level;
-            new_parent_id = obj.dest.sortableScope.modelValue[next_index]._info.self_parent;
+
+          // 0) Vars
+          var oldIndex = obj.source.index;
+          var newIndex = obj.dest.index;
+          var number_of_children = sortable.draggedChildren.length;
+          
+          // 1) Kopie van oude items & nieuwe items
+          var items = sortable.oldItems;
+          var newItems = obj.dest.sortableScope.modelValue;
+
+          // 3) Pas parent van verplaatste item aan
+          // Bijna altijd 0
+          // Behalve als het volgende item een hoger level heeft: dan heeft het dezelfde parent als dat item, dus als er een item na komt, neem die parent.
+          // Check eerst of het niet de laatste is, want dan hoeven we al niet verder te kijken
+          var parent_id = 0; 
+          if (newIndex+1 < newItems.length) {
+            // Het is niet de laatste, dus pak de parent van het volgende item
+            parent_id = newItems[newIndex+1].self_parent;
           }
-          // set level, parent and is_child
-          obj.dest.sortableScope.modelValue[new_index].self_parent    = new_parent_id;
-          obj.dest.sortableScope.modelValue[new_index]._info.level    = new_level;
-          obj.dest.sortableScope.modelValue[new_index]._info.is_child = (new_level>0);  // is_child when level > 0
-      
-          // MOVE dragged NODES after new index
-          if (number_of_children>0) {
-            var level_diff = old_level - new_level;
-            var old_index = obj.source.index;
-            var up = (new_index<old_index);
-            if (up) {
-              old_index++;
-              new_index++;
-            }
-            // collect dragged nodes
-            for (var i = 0; i < number_of_children; i++) {
-              // adjust level & copy the node from dest
-              obj.dest.sortableScope.modelValue[old_index]._info.level -= level_diff;
-              sortable.dragged_children.push(obj.dest.sortableScope.modelValue[old_index]);
-              // remove node from dest
-              obj.dest.sortableScope.removeItem(old_index);
-            }
-            // insert new items in dest after new index
-            sortable.dragged_children.reverse();
-            if (!up) new_index = new_index-number_of_children + 1;
-            for (i = 0; i < number_of_children; i++) {
-              obj.dest.sortableScope.insertItem(new_index, sortable.dragged_children[i]);
-            }
-          }
-      
-          // Update Grid
+          // Bewaar nieuwe parent in oud item
+          items[oldIndex].self_parent = parent_id;
+          
+          // 4) Verplaats items
+          items = jdb.moveMultipleArrayItems(items, oldIndex, number_of_children+1, newIndex);
+          
+          // 5) Vernieuw de grid info & bewaar in grid
+          $scope.$parent.gridItems = grid.add_tree_info(items, true);
+          
+          // 7) Update sortable
+          obj.dest.sortableScope.modelValue = $scope.$parent.gridItems;
+          
+          // 8) Update grid UI
           $scope.$parent.displayedItems = [].concat($scope.$parent.gridItems);
         }
       };
+  
   
       /**
        * DRAG END -  Show hidden children again
        */
       sortable.dragEnd = function(obj) {
-        sortable.show_rows( sortable.dragged_children );
+        sortable.show_rows( sortable.draggedChildren );
       };
+
       
       /**
-       * HELPER FUNCTIONS:
+       * HELPER FUNCTIONS ====================================================================
        */
 
       /**
