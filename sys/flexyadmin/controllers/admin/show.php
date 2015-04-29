@@ -224,6 +224,9 @@ class Show extends AdminController {
             if ($hasDateField) $hasDateField=$keys[$hasDateField];
             $keys=array_combine($keys,$keys);
             
+						$last_order=$this->db->get_last_order();
+						if (substr($last_order,0,1)!='(') $order=$last_order;
+            
             // if datefield and no current: select items from today and set offset of pagination
             if ($this->cfg->get("CFG_table",$table,'b_jump_to_today') and $hasDateField) {
               $this->db->select($hasDateField);
@@ -236,13 +239,14 @@ class Show extends AdminController {
               }
               if (!empty($today_ids) and $id=='') {
                 $today_ids=array_keys($today_ids);
-                $id=implode('_',$today_ids);
+                // $id=implode('_',$today_ids);
               }
               if ($pagination and $offset=='') {
-                $first_id=current($today_ids);
+                $current_id=current($today_ids);
+                if (has_string('DESC',$order)) $current_id=end($today_ids);
             		$query=$this->db->query($data_query);
             		$sub_data=$query->result_array();
-                $offset=find_row_by_value($sub_data,$first_id,$key=PRIMARY_KEY);
+                $offset=find_row_by_value($sub_data,$current_id,$key=PRIMARY_KEY);
                 if (is_array($offset)) {
                   $offset=key($offset);
                   $offset=floor($offset / $pagination) * $pagination;
@@ -254,9 +258,6 @@ class Show extends AdminController {
                 }
               }
             }
-            
-						$last_order=$this->db->get_last_order();
-						if (substr($last_order,0,1)!='(') $order=$last_order;
 
 						if (empty($data) and empty($search)) {
 							/**
