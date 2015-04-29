@@ -842,7 +842,7 @@ table.files thead .edit {
 tfoot tr.pagination td {padding:10px;background-color:#DEA;background-image: url("../img/inset.png");background-position: 50% 50%;text-align:center;}
 tfoot tr.pagination * {padding:0px 2px;font-size:14px;}
 tfoot tr.pagination li {display:inline;}
-tfoot tr.pagination li.current {font-weight:bold;}
+tfoot tr.pagination li.active {font-weight:bold;}
 tfoot tr.pagination .pagination_total {float:right;}
 
 /* ============== filemanager ================== */
