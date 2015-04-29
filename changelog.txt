@@ -1,8 +1,78 @@
-Changes ....
+Changes 3063
 ============
 
+NEW:
+- FlexyAdmin has now a generic API (../_api) for admin and frontend purposes, see the userguide
+- All standard plugins moved to a new folder plugins and updated
+- cfg_email is now standard in de database (and login uses it always now!)
+- new routings: _media/.. & _media/download/.. (.. = path/file)
+- MY_Upload checks orientation of uploaded files and resets them if needed
+
+MYSQL:
+- cfg_email_r2883.sql & update_r2812.sql & update_r2833.sql
+
+PLUGINS:
+- All standard plugins moved to a new folder plugins and updated
+- admin/plugin/install_plugin & admin/plugin/create_plugin changed
+
 UPDATE:
-- CodeIgniter 2.2.1
+- CodeIgniter 2.2.2
+
+FRONTEND:
+- Moved module/library methods from controller to MY_frontendcontroller
+- A special module 'before_controller' is set and can be used for code to do on every page
+- mobile theme changed / Fontawsome standard included
+
+USERGUIDE:
+- Jiros aanpassingen
+- Makkelijk Glyphicons in userguide zetten: {glyphicon-type}
+- API
+
+NEW:
+- Form_validation->valid_option(), and added option validation to validate_data()
+- plugin_remove_relation_table
+- Adding MY_form_validation->validate_data() to validate a data array (before inserting/updating with API for example)
+- sort_keys() to MY_array_helper()
+- DB->where() aangepast zodat als tweede argument een array is where_in() wordt aangeroepen
+- db->table_status()
+- FILE_types_sound to config
+- cfg_table_info.b_form_add_many om te kunnen instellen of in een form van een tabel many data getoond mag worden
+- ui->set_item() om een specifiek item in cfg_ui on the fly aan te passen
+- When installing (demodatabase) also $config['sess_cookie_name'] is renamed to the sites upper path
+- Form captcha settings
+- build.cfg default watch=FALSE (was 'dev') // now depricated
+
+BUGS:
+- CI Upload standard counts max 100 same files, FA add timestamp to it so its endless
+- styling of pagination in grid
+- prevend double submit (redirect was not good)
+- form_action_email %URL% replacement was not good
+- path dropdown did show non selectable paths
+- HTML5 FORM novalidate
+- HTML5 Validated
+- plugin_uri reset didn’t work
+- Menu, bool_class
+- On windows servers, all redirect calls must end with ‘refresh’
+- better 404
+- media did not show extra fields in grid
+- media edit nicer label fields
+- image list in editor
+- small bug in views/menu/item.php
+- admin user lang not set
+- Buggy captha-helper resolved: cleanup works now!!
+- form did not always sets attributes
+- menu did not render well bool_class fields
+- User / MY_Email sending from table
+- Search/Replace some non regex was escaped to much
+- media fields did not show nice ERROR
+- updating dropdown values (also doubled last uploaded)
+- getting table from grid (results in order bug)
+- Menu->set_menu_from_table() did always override table even if not set
+- formaction_mail did not replaced URL in subject
+- multiple formactions not possible in combination with setting:   'prevend_double_submit'   => true
+- formfield requered class was not set
+- Language setting in backend was not users language
+- a xdebug_break() statement still existed...
 
 
 
@@ -782,7 +852,7 @@ Changes r1754
 ===============
 
 BUGS:
-- : in URL gives problems on some providers, changed to ~ (made it a setting)
+- in URL gives problems on some providers, changed to ~ (made it a setting)
 - bug if cfg_media_info.str_order = empty
 - bug in db->_repair_ar()
 - bug multiple dropdown ordering (js)

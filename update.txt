@@ -20,14 +20,14 @@ For recent sites the update processes described below should work:
 
 
 
-UPDATE ....
+UPDATE 3063
 ===========
 
+- Run SQL update_r2812.sql & update_r2833.sql
 - Replace sys folder
 - Replace index.php
 - Replace controller.php (or delete methods: _call_library() & _module(), and replace method _redirect() )
-- Replace site/libraries/forms.php
-
+- Delete site/libraries/forms.php & site/libraries/ajax_forms.php
 
 
 
