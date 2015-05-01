@@ -621,7 +621,7 @@ class __ extends AdminController {
 
     // Copy alles behalve hidden files en files/mappen met __ en _test (dat zijn build processen en autodoc bronbestanden) en node_modules
     $this->_add_content('<p>Copy all</p>');
-    copy_directory( $this->path.$this->work, $this->path.$tags, array('/.svn','/__','/_test','/node_modules') );
+    copy_directory( $this->path.$this->work, $this->path.$tags, array('/.svn','/__','/_test','/node_modules','/bower_components') );
     
     // - maak lege db instelling bestand
     unlink($this->path.$tags.'/site/config/database_local.php');
