@@ -101,22 +101,6 @@ class FrontEndController extends MY_Controller {
       $this->cronjob->go();
     }
     
-    // Build?
-    $this->config->load('build',true);
-    $build_settings=$this->config->item('build');
-    if (el('watch',$build_settings,false)) {
-      $build_settings=$this->config->item('build');
-      $build=true;
-      if (is_string(el('watch',$build_settings,false))) $build=$this->config->item('LOCAL');
-      if ($build) {
-        $this->load->model('builder','build');
-        $this->site['_build']=$this->build->go();
-        if (el('add_report',$build_settings,false)) $this->site['_build_report']=$this->build->report();
-        $errors=$this->build->errors();
-        if ($errors) show_error(div(array('style'=>'color:red;')).implode('<br>',$errors)._div(),200,'A LESS error encountered while Building',FALSE);
-      }
-    }
-    
     // Version timestamp
     $files=array('site/assets/css/styles.min.css','site/assets/js/scripts.min.js');
     $version=0;

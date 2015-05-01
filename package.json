@@ -11,7 +11,6 @@
   "devDependencies": {
     "gulp": "^3.8.10",
     "gulp-autoprefixer": "^2.0.0",
-    "gulp-casperjs": "0.0.5",
     "gulp-concat": "^2.4.2",
     "gulp-flatten": "0.0.4",
     "gulp-jshint": "^1.9.0",
