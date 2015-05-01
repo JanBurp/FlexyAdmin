@@ -12,7 +12,6 @@
  * Gebruik van deze gulp:
  * - gulp       // maak een complete build: compileren en minificeren van LESS, combineren van alle CSS in één bestand, combineren en minificeren van alle JS bestanden
  * - gulp watch // kijkt of er bestanden zijn veranderd, zo ja, build dat deel en doe een livereload naar de browser (installeer een livereload plugin in je browser om dat te laten werken)
- * - gulp test  // doet een End2End test met CasperJS, zie site/tests/tests.js
  * 
  * Specifieker gebruik van deze gulp:
  * - gulp less    // compileer alleen de LESS bestanden tot CSS bestanden
@@ -62,13 +61,13 @@ var files = {
    */
   'default' : {
     'js'      : assets+'/js',                             // JS map (string)
-    'jshint'  : assets+'/js/site.js',                     // JS bestanden die gecontroleerd moeten worden op fouten (string of array)
+    'jshint'  : assets+'/js/*.js',                        // JS bestanden die gecontroleerd moeten worden op fouten (string of array)
     'jsmin'   : [                                         // JS bestanden die samengevoegd en gemimificeerd moeten worden (string of array)
       assets+'/js/jquery.min.js',
       assets+'/js/site.js',
     ],
     'jsdest'  : 'scripts.min.js',                         // gemimificeerd JS bestand (string)
-    'watchjs' : assets+'/js/site.js',                     // check deze JS bestanden op veranderingen (string of array)
+    'watchjs' : assets+'/js/*.js',                        // check deze JS bestanden op veranderingen (string of array)
     'css'     : assets+'/css',                            // CSS map (string)
     'less'    : assets+'/less-default/*.less',            // LESS bestanden die gecompileerd moeten worden (string of array)
     'cssmin'  : [                                         // all CSS bestanden die samengevoegd en gemimificeerd moeten worden (string of array)
@@ -88,14 +87,14 @@ var files = {
    */
   'bootstrap' : {
     'js'      : assets+'/js',
-    'jshint'  : assets+'/js/site.js',
+    'jshint'  : assets+'/js/*.js',
     'jsmin'   : [
       assets+'/js/jquery.min.js',
       assets+'/js/bootstrap.min.js',
       assets+'/js/site.js',
     ],
     'jsdest'  : 'scripts.min.js',
-    'watchjs' : assets+'/js/site.js',
+    'watchjs' : assets+'/js/*.js',
     'less'    : assets+'/less-bootstrap/bootstrap.less',
     'css'     : assets+'/css',
     'cssmin'  : [
@@ -143,7 +142,7 @@ var jshint      = require('gulp-jshint');
 var stylish     = require('jshint-stylish');
 var uglify      = require('gulp-uglify');
 var flatten     = require('gulp-flatten');
-var casperJs    = require('gulp-casperjs');
+
 
 /**
  * Calling 'gulp --build' minify the css (without sourcemaps)
@@ -282,16 +281,6 @@ gulp.task('cssmin',['less'],function(){
           message: message
         }));
 });
-
-
-/**
- * Start FrontEnd test
- */
-gulp.task('test',function(){
-  gulp.src(["site/tests/*.js"])
-  .pipe(casperJs());
-});
-
 
 
 gulp.task('default', ['jshint','jsmin','less','cssmin'] );
