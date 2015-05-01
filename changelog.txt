@@ -1,3 +1,11 @@
+Changes ....
+============
+
+REMOVED:
+- build tool
+- less libraries
+
+
 Changes 3063
 ============
 
