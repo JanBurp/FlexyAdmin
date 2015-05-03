@@ -9,6 +9,7 @@ REMOVED:
 - less libraries
 - bulk_upload
 - old_menu & old_form
+- old jQuery files
 
 
 Changes 3063
