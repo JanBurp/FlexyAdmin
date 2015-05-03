@@ -51,12 +51,12 @@ class Update extends MY_Controller {
     
     $update_all=false;
     foreach ($this->updates as $key => $versions) {
-      $update=true;
+      $update=false;
       if (is_numeric($versions['latest']) and is_numeric($versions['current'])) {
-        $update = ($versions['latest']>$versions['current']);
+        $update = ($versions['latest']<=$versions['current']);
       }
       $this->updates[$key]['update'] = $update;
-      $update_all = $update_all or $update;
+      $update_all = ($update_all or $update);
     }
     
     // Action?
