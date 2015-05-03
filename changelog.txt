@@ -4,6 +4,8 @@ Changes ....
 REMOVED:
 - build tool
 - less libraries
+- bulk_upload
+- old_menu & old_form
 
 
 Changes 3063

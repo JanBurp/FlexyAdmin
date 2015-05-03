@@ -29,10 +29,10 @@ $config['modules'] = array(
     'example'       => array('assertStringStartsWith','<h1>Voorbeeld Module</h1>'),
     'example.other' => array('assertStringStartsWith','<h1>Voorbeeld Module.Other</h1>'),
   ),
-  'Ajax_example' => array(
-    'ajax_example'        => array('assertEquals','{"message":"Ajax_example","module":"example","success":true}'),
-    'ajax_example.other'  => array('assertEquals','{"message":"Ajax_example","method":"other","module":"example","success":true}'),
-  ),
+  // 'Ajax_example' => array(
+  //   'ajax_example'        => array('assertEquals','{"message":"Ajax_example","module":"example","success":true}'),
+  //   'ajax_example.other'  => array('assertEquals','{"message":"Ajax_example","method":"other","module":"example","success":true}'),
+  // ),
 );
 
 

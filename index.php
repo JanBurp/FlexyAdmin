@@ -1,50 +1,81 @@
 <?php
+/**
+ * CodeIgniter
+ *
+ * An open source application development framework for PHP
+ *
+ * This content is released under the MIT License (MIT)
+ *
+ * Copyright (c) 2014 - 2015, British Columbia Institute of Technology
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ * @package	CodeIgniter
+ * @author	EllisLab Dev Team
+ * @copyright	Copyright (c) 2008 - 2014, EllisLab, Inc. (http://ellislab.com/)
+ * @copyright	Copyright (c) 2014 - 2015, British Columbia Institute of Technology (http://bcit.ca/)
+ * @license	http://opensource.org/licenses/MIT	MIT License
+ * @link	http://codeigniter.com
+ * @since	Version 1.0.0
+ * @filesource
+ */
+
+/**
+ * FlexyAdmin
+ * 
+ * A flexible userfriendly CMS build on CodeIgniter
+ *
+ * @package	FlexyAdmin
+ * @author	Jan den Besten
+ * @copyright	Copyright (c) Jan den Besten
+ * @link	http://flexyadmin.com
+ */
 
 /*
-|--------------------------------------------------------------------------
-| Set the emailadress of the webmaster here, bug reports will be send to this address
-|--------------------------------------------------------------------------
-|
-*/
-
+ *------------------------------------------------------------------------------------------------
+ * FLEXYADMIN: Set the emailadress of the webmaster here, bug reports will be send to this address
+ *------------------------------------------------------------------------------------------------
+ */
 // define("ERROR_EMAIL","error@flexyadmin.com");
 
-
 /*
-|---------------------------------------------------------------
-| IS LOCAL ?
-|---------------------------------------------------------------
-|
-| Used for testing if site is localy tested, database is set accordingly in site/database.php
-| You can set several localhosts if needed.
-| // added/changed for FlexyAdmin
-*/
-
+ *---------------------------------------------------------------
+ * FLEXYADMIN: set IS_LOCALHOST, for a local enverinment
+ *---------------------------------------------------------------
+ * You can set several localhosts if needed.
+ */
 define("LOCALHOSTS","localhost,localhost:8888,10.37.129.2");
-function is_local_host() {
-	$localhosts=explode(",",LOCALHOSTS);
-	$is=FALSE;
-	foreach ($localhosts as $host) {
-		if ($host==$_SERVER['HTTP_HOST']) { $is=TRUE; }
-	}
-	return $is;
-}
+function is_local_host() { $is=FALSE; $localhosts=explode(",",LOCALHOSTS); foreach ($localhosts as $host) { if ($host==$_SERVER['HTTP_HOST']) { $is=TRUE; } } return $is; }
 if (is_local_host())
 	define("IS_LOCALHOST",TRUE);
 else
 	define("IS_LOCALHOST",FALSE);
 
-
 /*
-|---------------------------------------------------------------
-| IS AJAX request ?
-|---------------------------------------------------------------
-*/
+ *---------------------------------------------------------------
+ * FLEXYADMIN: IS AJAX request?
+ *---------------------------------------------------------------
+ */
 if ( !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest' )
   define("IS_AJAX",true);
 else
   define("IS_AJAX",false);
-
 
 /*
  *---------------------------------------------------------------
@@ -62,19 +93,17 @@ else
  *     production
  *
  * NOTE: If you change these, also change the error_reporting() code below
- *
  */
 
 /*
- * Set according to local // added/changed for FlexyAdmin
+ * FLEXYADMIN: Set according to IS_LOCALHOST
  */
 if (IS_LOCALHOST)
   define('ENVIRONMENT', 'development');
 else
   define('ENVIRONMENT', 'production');
-
- // define('ENVIRONMENT','testing');   // This sets logging on
- 
+// define('ENVIRONMENT','testing');   // This sets logging on
+  
 
 /*
  *---------------------------------------------------------------
@@ -84,23 +113,30 @@ else
  * Different environments will require different levels of error reporting.
  * By default development will show errors but testing and live will hide them.
  */
-
-if (defined('ENVIRONMENT'))
+switch (ENVIRONMENT)
 {
-	switch (ENVIRONMENT)
-	{
-		case 'development':
-			error_reporting(E_ALL);
-		break;
+	case 'development':
+		error_reporting(-1);
+		ini_set('display_errors', 1);
+	break;
 
-		case 'testing':
-		case 'production':
-			error_reporting(0);
-		break;
+	case 'testing':
+	case 'production':
+		ini_set('display_errors', 0);
+		if (version_compare(PHP_VERSION, '5.3', '>='))
+		{
+			error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT & ~E_USER_NOTICE & ~E_USER_DEPRECATED);
+		}
+		else
+		{
+			error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_USER_NOTICE);
+		}
+	break;
 
-		default:
-			exit('The application environment is not set correctly.');
-	}
+	default:
+		header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
+		echo 'The application environment is not set correctly.';
+		exit(1); // EXIT_ERROR
 }
 
 /*
@@ -109,11 +145,11 @@ if (defined('ENVIRONMENT'))
  *---------------------------------------------------------------
  *
  * This variable must contain the name of your "system" folder.
- * Include the path if the folder is not in the same  directory
+ * Include the path if the folder is not in the same directory
  * as this file.
- *
  */
-$system_path = 'sys/codeigniter';
+	$system_path = 'sys/codeigniter'; // FLEXYADMIN setting
+  $site_folder = 'site';            // FLEXYADMIN addition
 
 /*
  *---------------------------------------------------------------
@@ -121,17 +157,30 @@ $system_path = 'sys/codeigniter';
  *---------------------------------------------------------------
  *
  * If you want this front controller to use a different "application"
- * folder then the default one you can set its name here. The folder
- * can also be renamed or relocated anywhere on your server.  If
+ * folder than the default one you can set its name here. The folder
+ * can also be renamed or relocated anywhere on your server. If
  * you do, use a full server path. For more info please see the user guide:
  * http://codeigniter.com/user_guide/general/managing_apps.html
  *
  * NO TRAILING SLASH!
- *
  */
-$application_folder = 'sys/flexyadmin';
+	$application_folder = 'sys/flexyadmin';  // FLEXYADMIN setting
 
-$site_folder = 'site'; // added/changed for FlexyAdmin
+/*
+ *---------------------------------------------------------------
+ * VIEW FOLDER NAME
+ *---------------------------------------------------------------
+ *
+ * If you want to move the view folder out of the application
+ * folder set the path to the folder here. The folder can be renamed
+ * and relocated anywhere on your server. If blank, it will default
+ * to the standard location inside your application folder. If you
+ * do move this, use the full server path to this folder.
+ *
+ * NO TRAILING SLASH!
+ */
+	$view_folder = '';
+
 
 /*
  * --------------------------------------------------------------------
@@ -140,24 +189,23 @@ $site_folder = 'site'; // added/changed for FlexyAdmin
  *
  * Normally you will set your default controller in the routes.php file.
  * You can, however, force a custom routing by hard-coding a
- * specific controller class/function here.  For most applications, you
+ * specific controller class/function here. For most applications, you
  * WILL NOT set your routing here, but it's an option for those
  * special instances where you might want to override the standard
  * routing in a specific front controller that shares a common CI installation.
  *
- * IMPORTANT:  If you set the routing here, NO OTHER controller will be
+ * IMPORTANT: If you set the routing here, NO OTHER controller will be
  * callable. In essence, this preference limits your application to ONE
- * specific controller.  Leave the function name blank if you need
+ * specific controller. Leave the function name blank if you need
  * to call functions dynamically via the URI.
  *
  * Un-comment the $routing array below to use this feature
- *
  */
 	// The directory name, relative to the "controllers" folder.  Leave blank
 	// if your controller is not in a sub-folder within the "controllers" folder
 	// $routing['directory'] = '';
 
-	// The controller class file name.  Example:  Mycontroller
+	// The controller class file name.  Example:  mycontroller
 	// $routing['controller'] = '';
 
 	// The controller function you wish to be called.
@@ -177,7 +225,6 @@ $site_folder = 'site'; // added/changed for FlexyAdmin
  * config values.
  *
  * Un-comment the $assign_to_config array below to use this feature
- *
  */
 	// $assign_to_config['name_of_config_item'] = 'value of config item';
 
@@ -199,18 +246,22 @@ $site_folder = 'site'; // added/changed for FlexyAdmin
 		chdir(dirname(__FILE__));
 	}
 
-	if (realpath($system_path) !== FALSE)
+	if (($_temp = realpath($system_path)) !== FALSE)
 	{
-		$system_path = realpath($system_path).'/';
+		$system_path = $_temp.'/';
 	}
-
-	// ensure there's a trailing slash
-	$system_path = rtrim($system_path, '/').'/';
+	else
+	{
+		// Ensure there's a trailing slash
+		$system_path = rtrim($system_path, '/').'/';
+	}
 
 	// Is the system path correct?
 	if ( ! is_dir($system_path))
 	{
-		exit("Your system folder path does not appear to be set correctly. Please open the following file and correct this: ".pathinfo(__FILE__, PATHINFO_BASENAME));
+		header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
+		echo 'Your system folder path does not appear to be set correctly. Please open the following file and correct this: '.pathinfo(__FILE__, PATHINFO_BASENAME);
+		exit(3); // EXIT_CONFIG
 	}
 
 /*
@@ -221,36 +272,68 @@ $site_folder = 'site'; // added/changed for FlexyAdmin
 	// The name of THIS file
 	define('SELF', pathinfo(__FILE__, PATHINFO_BASENAME));
 
-	// The PHP file extension
-	// this global constant is deprecated.
-	define('EXT', '.php');
-
 	// Path to the system folder
-	define('BASEPATH', str_replace("\\", "/", $system_path));
+	define('BASEPATH', str_replace('\\', '/', $system_path));
 
 	// Path to the front controller (this file)
-	define('FCPATH', str_replace(SELF, '', __FILE__));
+	define('FCPATH', dirname(__FILE__).'/');
 
 	// Name of the "system folder"
 	define('SYSDIR', trim(strrchr(trim(BASEPATH, '/'), '/'), '/'));
 
-
 	// The path to the "application" folder
 	if (is_dir($application_folder))
 	{
-		define('APPPATH', $application_folder.'/');
+		if (($_temp = realpath($application_folder)) !== FALSE)
+		{
+			$application_folder = $_temp;
+		}
+
+		define('APPPATH', $application_folder.DIRECTORY_SEPARATOR);
 	}
 	else
 	{
-		if ( ! is_dir(BASEPATH.$application_folder.'/'))
+		if ( ! is_dir(BASEPATH.$application_folder.DIRECTORY_SEPARATOR))
 		{
-			exit("Your application folder path does not appear to be set correctly. Please open the following file and correct this: ".SELF);
+			header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
+			echo 'Your application folder path does not appear to be set correctly. Please open the following file and correct this: '.SELF;
+			exit(3); // EXIT_CONFIG
 		}
 
-		define('APPPATH', BASEPATH.$application_folder.'/');
+		define('APPPATH', BASEPATH.$application_folder.DIRECTORY_SEPARATOR);
 	}
+
+	// The path to the "views" folder
+	if ( ! is_dir($view_folder))
+	{
+		if ( ! empty($view_folder) && is_dir(APPPATH.$view_folder.DIRECTORY_SEPARATOR))
+		{
+			$view_folder = APPPATH.$view_folder;
+		}
+		elseif ( ! is_dir(APPPATH.'views'.DIRECTORY_SEPARATOR))
+		{
+			header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
+			echo 'Your view folder path does not appear to be set correctly. Please open the following file and correct this: '.SELF;
+			exit(3); // EXIT_CONFIG
+		}
+		else
+		{
+			$view_folder = APPPATH.'views';
+		}
+	}
+
+	if (($_temp = realpath($view_folder)) !== FALSE)
+	{
+		$view_folder = $_temp.DIRECTORY_SEPARATOR;
+	}
+	else
+	{
+		$view_folder = rtrim($view_folder, '/\\').DIRECTORY_SEPARATOR;
+	}
+
+	define('VIEWPATH', $view_folder);
   
-  define('SITEPATH', $site_folder.'/');			// added/changed for FlexyAdmin
+  define('SITEPATH', $site_folder.'/');			// FLEXYADMIN change
   
 
 /*
@@ -259,9 +342,5 @@ $site_folder = 'site'; // added/changed for FlexyAdmin
  * --------------------------------------------------------------------
  *
  * And away we go...
- *
  */
 require_once BASEPATH.'core/CodeIgniter.php';
-
-/* End of file index.php */
-/* Location: ./index.php */

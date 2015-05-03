@@ -10,10 +10,8 @@ class ModulesTest extends CIUnit_Framework_TestCase {
     // Load basic modules
     $this->CI->load->library('Menu');
     $this->CI->load->library('Forms');
-    // $this->CI->load->library('Email');
     $this->CI->load->library('Module');
-    $this->CI->load->library('Ajax_module');
-    // $this->CI->load->model('formaction');
+    // $this->CI->load->library('Ajax_module');
 
     $this->CI->config->load('unittest');
   }
