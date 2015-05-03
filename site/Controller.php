@@ -3,9 +3,13 @@
  * FlexyAdmin
  * A Flexible Database based CMS
  *
+ * $Author$
+ * $Date$
+ * $Revision$
+ * 
  * @package FlexyAdmin
- * @author Jan den Besten
- * @copyright Copyright (c) 2009-2012, Jan den Besten
+ * @author: Jan den Besten
+ * @copyright: Jan den Besten (c)
  * @link http://www.flexyadmin.com
  */
 
