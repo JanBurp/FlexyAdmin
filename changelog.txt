@@ -1,6 +1,9 @@
 Changes ....
 ============
 
+UPDATE:
+- CodeIgniter 3.0
+
 REMOVED:
 - build tool
 - less libraries
