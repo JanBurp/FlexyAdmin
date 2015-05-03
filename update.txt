@@ -19,6 +19,21 @@ For recent sites the update processes described below should work:
 - perform all the steps from your version to the latest:
 
 
+UPDATE ....
+===========
+
+- Run SQL Update update_r3067.sql
+- Update naar CI 3.x:
+  - Vervang de map `sys`
+  - Vervang `index.php`
+  - Vervang `site/language/nl/regex_validation_lang.php`
+  - Vervang `site/config/database*.php` en voer opnieuw de database instellingen in
+  - Verwijder de map `bulk_upload`
+  - Hernoem al je eigen classes in `site/libraries` en `site/models` zo dat ze beginnen met een hoofdletter.
+  - Hernoem `$active_record = TRUE;` in  `$query_builder = TRUE;` in de bestanden `site/config/database*.php`
+  
+
+
 
 UPDATE 3063
 ===========
