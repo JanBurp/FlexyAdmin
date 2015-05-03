@@ -34,9 +34,9 @@
                   <td>
                     <a href="?action=<?=$name?>">
                       <?php if ($versions['update']): ?>
-                        <span class="glyphicon glyphicon-refresh btn btn-sm btn-warning"></span>
-                      <?php else: ?>
                         <span class="glyphicon glyphicon-ok btn btn-sm btn-success"></span>
+                      <?php else: ?>
+                        <span class="glyphicon glyphicon-refresh btn btn-sm btn-warning"></span>
                       <?php endif ?>
                     </a>
                   </td>
