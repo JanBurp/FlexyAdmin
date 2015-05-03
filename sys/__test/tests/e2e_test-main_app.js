@@ -5,7 +5,7 @@ describe('Main E2E test', function(){
   
   it('App is started - not logged in', function() {
     browser.driver.manage().window().maximize();
-    browser.get('#home');
+    browser.get('#/home');
     expect( element(by.css('#login')).isDisplayed() ).toBe(true);
     expect( element(by.css('#container')).isDisplayed() ).toBe(false);
   });
@@ -22,12 +22,16 @@ describe('Main E2E test', function(){
     expect( element(by.css('#container')).isDisplayed() ).toBe(true);
   });
 
-
   it('CHECK HOMESCREEN ELEMENTS', function() {
     expect( element(by.css('#container')).isDisplayed() ).toBe(true);
     expect( element(by.css('#content')).isDisplayed() ).toBe(true);
   });
 
+  it('LOGOUT', function() {
+    browser.get('#logout');
+    expect( element(by.css('#login')).isDisplayed() ).toBe(true);
+    expect( element(by.css('#container')).isDisplayed() ).toBe(false);
+  });
 
 
 
