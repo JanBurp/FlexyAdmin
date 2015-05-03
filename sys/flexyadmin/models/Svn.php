@@ -16,6 +16,14 @@ class Svn extends CI_Model {
 		parent::__construct();
 	}
   
+  public function get_revision_of_file($file) {
+    $txt=file_get_contents($file);
+    if (preg_match('/\$Revision:\s(\d*)\s\$/u', $txt, $matches)) {
+      return (int) el(1,$matches,false);
+    };
+    return false;
+  }
+  
 	public function get_revision() {
     if (!$this->revision) {
   		$rev="";

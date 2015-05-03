@@ -25,13 +25,20 @@
 /**
  * This routing makes sure all uri's go to the frontend site, except soms system uri's
  */
-$route['(?!__api|admin|rss|file|_media|_cronjob|_unittest|_ajax|_api)(.*)'] = "";
+$route['(?!__api|admin|rss|file|_media|_cronjob|_unittest|_update|_ajax|_api)(.*)'] = "";
 
 /**
  * CI unit test
  */
 $route['_unittest'] = "ciunit_controller/index";
 $route['_unittest/(.*)'] = "ciunit_controller/index/$1";
+
+/**
+ * Update
+ */
+
+$route['_update'] = "update/index";
+
 
 /**
  * Frontend Ajax testing
