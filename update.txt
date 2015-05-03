@@ -31,7 +31,7 @@ UPDATE ....
   - Verwijder de map `bulk_upload`
   - Hernoem al je eigen classes in `site/libraries` en `site/models` zo dat ze beginnen met een hoofdletter.
   - Hernoem `$active_record = TRUE;` in  `$query_builder = TRUE;` in de bestanden `site/config/database*.php`
-  
+  - Verwijder $config['query_urls'] uit `site/config/config.php`
 
 
 
