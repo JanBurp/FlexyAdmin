@@ -29,7 +29,6 @@ class MY_Controller extends CI_Controller {
 				if ($demoDB) {
 					$demoDB=current($demoDB);
 					$demoDB=$demoDB['path'];
-					// trace_($demoDB);
 					$SQL=file_get_contents($demoDB);
 					if ($SQL) {
             $lines=explode("\n",$SQL);
