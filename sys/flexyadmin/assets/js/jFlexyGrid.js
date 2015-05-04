@@ -116,24 +116,27 @@ function doGrid() {
 		//
 		// if 'self_parent' is there hide that column, add parent_id class to row, and visual nodes to next (str) column
 		//
-    $("table.grid td.self_parent").each(function(){
-			var html=$(this).html();
-      var parent_id=html.substring(1,html.indexOf(" ")-1);
-      if (parent_id!=0) {
-        $(this).parent("tr").addClass("parent_id_"+parent_id);
-  			var title=$(this).nextAll("td.str:first");
-        var titleHtml=$(title).html();
-        var tree=titleHtml.split('/');
-        var treeDepth=tree.length-1;
-        // create new html
-        var newHtml='';
-        for (var i=0; i<treeDepth-1; i++) {
-          newHtml+='<span class="emptynode">&nbsp;</span>';
-        };
-        newHtml+='<span class="lastnode">&nbsp;</span>' + tree[treeDepth];
-  			$(title).html(newHtml);
-			}
-		});
+    function make_tree() {
+      $("table.grid td.self_parent").each(function(){
+  			var html=$(this).html();
+        var parent_id=html.substring(1,html.indexOf(" ")-1);
+        if (parent_id!=0) {
+          $(this).parent("tr").addClass("parent_id_"+parent_id);
+    			var title=$(this).nextAll("td.str:first");
+          var titleHtml=$(title).html();
+          var tree=titleHtml.split('/');
+          var treeDepth=tree.length-1;
+          // create new html
+          var newHtml='';
+          for (var i=0; i<treeDepth-1; i++) {
+            newHtml+='<span class="emptynode">&nbsp;</span>';
+          };
+          newHtml+='<span class="lastnode">&nbsp;</span>' + tree[treeDepth];
+    			$(title).html(newHtml);
+  			}
+  		});
+    }
+    make_tree();
 		
 		if ($.browser.safari)
 			$("table.grid .self_parent").add("table.grid .uri").addClass('hiddenCell').show();
@@ -443,7 +446,7 @@ function doGrid() {
 				stop: function(event,ui){
 					// show the branches again
 					show_branches(id);
-					$(ui.item).children().removeClass("foldednode");
+          $(ui.item).children().removeClass("foldednode");
 				},
 				update:function(event,ui) {
 					table=$("table.grid").data("table");
@@ -451,7 +454,7 @@ function doGrid() {
 					
 					endPos=ui.position.left;
 					shifted=(endPos-startPos)/25;
-					
+          
 					// check if there are branches
 					if ($("table.grid tr td.self_parent").length>0) {
 						
@@ -472,7 +475,7 @@ function doGrid() {
 								if (newParentId=="") newParentId=0;
 							}
 						}
-						
+            
 						if (newParentId>=0) {
 							// Yes, it has been moved to another branch
 							// Set parent_id in table
@@ -504,6 +507,23 @@ function doGrid() {
 					// show the branches again
 					show_branches(id);
 					$(ui.item).addClass("current");
+          $('.lastnode',ui.item).remove();
+          $('.emptynode',ui.item).remove();
+          // node?
+          if (newParentId!=0) {
+            $(ui.item).addClass("parent_id_"+newParentId);
+            var title=$("td.str:first",ui.item);
+            var titleHtml=$(title).html();
+            var tree=titleHtml.split('/');
+            var treeDepth=tree.length-1;
+            // create new html
+            var newHtml='';
+            for (var i=0; i<treeDepth-1; i++) {
+              newHtml+='<span class="emptynode">&nbsp;</span>';
+            };
+            newHtml+='<span class="lastnode">&nbsp;</span>' + tree[treeDepth];
+            $(title).html(newHtml);
+          }
 					
 					// prepare ajax request to re-order the table in the database
 					var url=site_url("admin/ajax/order/");
