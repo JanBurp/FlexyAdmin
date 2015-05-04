@@ -77,7 +77,7 @@ class Editor_lists {
 							$this->CI->db->select('order');
 							if (in_array('self_parent',$menuFields)) {
 								$this->CI->db->select('self_parent');
-								$this->CI->db->order_as_tree();
+                // $this->CI->db->order_as_tree();
 								$this->CI->db->uri_as_full_uri(TRUE,$titleField);
 							}
 						}

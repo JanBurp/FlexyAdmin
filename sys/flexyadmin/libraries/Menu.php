@@ -349,7 +349,7 @@ class Menu {
   		if ($foreign) $this->CI->db->add_foreigns($foreign);
   		if (in_array($this->settings['fields']['parent'],$fields)) {
   			$this->CI->db->uri_as_full_uri('full_uri');	
-        $this->CI->db->order_as_tree();  
+        // $this->CI->db->order_as_tree();  
   		}
   		$data=$this->CI->db->get_result($table);
   		return $this->set_menu_from_table_data($data,$foreign);

@@ -519,6 +519,8 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
    * @param bool $orderAsTree[TRUE]
    * @return object this
    * @author Jan den Besten
+   * @ignore
+   * @depricated
    */
 	public function order_as_tree($orderAsTree=TRUE) {
 		$this->orderAsTree=$orderAsTree;
@@ -1296,6 +1298,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
    * @return array $result
    * @author Jan den Besten
    * @ignore
+   * @depricated
    */
 	private function _make_tree_result($result) {
 		$test=current($result);
@@ -1321,6 +1324,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
    * @return void
    * @author Jan den Besten
    * @ignore
+   * @depricated
    */
 	private function _groups_to_tree($grouped,$parent) {
 		$tree=array();
