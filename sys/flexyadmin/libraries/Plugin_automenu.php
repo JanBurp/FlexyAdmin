@@ -671,6 +671,10 @@ class Plugin_automenu extends Plugin {
   			die('Sorry, transaction error');
   		}
       
+      // ok now re-order... (easy hack..)
+      $this->CI->load->model('order');
+      $this->CI->order->reset($this->resultMenu);
+      
       // Ready with this pass: update linklist etc
   		if (!isset($this->CI->editor_lists)) $this->CI->load->library('editor_lists');
   		$this->CI->queu->add_call(@$this->CI->editor_lists,'create_list','links');
