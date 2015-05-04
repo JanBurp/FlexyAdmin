@@ -138,7 +138,8 @@ class Show extends AdminController {
 						
 						// How to order?
 						if ($hasField['self_parent']) {
-							$this->db->order_as_tree();
+              // $this->db->order_as_tree();
+              $this->db->order_by('order');
               $titleField=$this->db->get_first_field($table,'str');
               $this->db->uri_as_full_uri('uri',$titleField);
 						}

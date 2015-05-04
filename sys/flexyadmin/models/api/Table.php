@@ -157,7 +157,8 @@ class Table extends Api_Model {
       // ABSTRACTS of txt?
       if (el('txt_as_abstract',$this->args,false))                $this->db->max_text_len(100);
       // As TREE?
-      if (el( array('table_info','tree'), $this->cfg_info,false)) $this->db->order_as_tree();
+      // if (el( array('table_info','tree'), $this->cfg_info,false)) $this->db->order_as_tree();
+      // if (el( array('table_info','tree'), $this->cfg_info,false)) $this->db->order_by('order');
       $items = $this->crud->get($this->args);
       $this->info  = $this->crud->get_info();
     }

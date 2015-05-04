@@ -547,7 +547,7 @@ class Flexy_field extends CI_Model {
     // self_parent kan niet naar zichzelf verwijzen
     if ($this->field=='self_parent') $this->db->where(PRIMARY_KEY." !=", $this->id);
     // Als self_parent bestaat, dan moet het op volgorde van de tree
-    if ($this->db->field_exists('self_parent',$this->table)) $this->db->order_as_tree();
+    // if ($this->db->field_exists('self_parent',$this->table)) $this->db->order_as_tree();
 		if ($strField)
 			$this->db->uri_as_full_uri(TRUE,$strField);
 		else
