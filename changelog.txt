@@ -4,6 +4,9 @@ Changes ....
 UPDATE:
 - CodeIgniter 3.0
 
+NEW:
+- Update tool: admin/update
+
 REMOVED:
 - build tool
 - less libraries
