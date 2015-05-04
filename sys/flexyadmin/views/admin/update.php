@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
   	<base href="<?=base_url()?>" />
     <title>FlexyAdmin Update</title>
-	  <link rel="stylesheet" href="sys/flexyadmin/assets/css/bootstrap.min.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	  <link rel="stylesheet" href="sys/flexyadmin/assets/css/bootstrap_update.min.css" type="text/css" media="screen" title="no title" charset="utf-8">
   </head>
   <body>
     
