@@ -48,12 +48,11 @@ class Update_3067 extends Model_updates {
   private function _cleanup_database_configs() {
     $configs=read_map('site/config','php',FALSE,FALSE);
     $configs=filter_by($configs,'database');
-    // $configs=array_keys($configs);
     foreach ($configs as $file) {
       $old=file_get_contents($file['path']);
       $new=$old;
       // Vervang active_record door query_builder
-      $new = preg_replace("/\$active_record/uUs", "\$query_builder", $new, 1);
+      $new = preg_replace("/active_record/uUs", "query_builder", $new, 1);
       if ($old!==$new) {
         // Vervang commentaar
         $new = preg_replace("/\/\*.*\*\//uUs", "/*\n * -------------------------------------------------------------------\n * DATABASE CONNECTIVITY SETTINGS\n * -------------------------------------------------------------------\n * This file will contain the settings needed to access your database.\n *\n * For complete instructions please consult the Database Connection\n * page of the User Guide.\n *\n * -------------------------------------------------------------------\n * EXPLANATION OF VARIABLES\n * -------------------------------------------------------------------\n *\n *	['hostname'] The hostname of your database server.\n *	['username'] The username used to connect to the database\n *	['password'] The password used to connect to the database\n *	['database'] The name of the database you want to connect to\n */", $new, 1);

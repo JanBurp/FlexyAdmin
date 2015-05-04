@@ -189,6 +189,12 @@ function &DB($params = '', $query_builder_override = NULL)
 		 */
 		class CI_DB extends CI_DB_driver { }
 	}
+  
+  // JdB, make sure driver is 'mysqli' & pconnect=false
+  $params['dbdriver'] = "mysqli";
+  $params['pconnect'] = FALSE;
+  // end Jdb
+  
 
 	// Load the DB driver
 	$driver_file = BASEPATH.'database/drivers/'.$params['dbdriver'].'/'.$params['dbdriver'].'_driver.php';
@@ -208,7 +214,7 @@ function &DB($params = '', $query_builder_override = NULL)
   }
 	// Instantiate the DB adapter
 	$DB = new $driver($params);
-  // JdB, changes until here.
+  // end JdB
   
 
 	// Check for a subdriver
