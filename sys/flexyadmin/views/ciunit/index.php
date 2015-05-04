@@ -9,7 +9,7 @@
   
 	<base href="<?=base_url()?>" />
 	
-  <link type="text/css" rel="stylesheet" href="<?=admin_assets()?>/css/bootstrap.min.css">
+  <link type="text/css" rel="stylesheet" href="<?=admin_assets()?>/css/bootstrap.css">
   <style type="text/css">
     ul.lev2 {border-left:solid 1px #08C;}
     li {margin-bottom:5px;}

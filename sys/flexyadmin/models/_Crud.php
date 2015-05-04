@@ -265,24 +265,15 @@ class _crud extends CI_Model {
         // $key=key($where);
         // $where=current($where);
         
-  			/**
-  			 * Check if it is a tree, if so, get branches (to move them up later)
-  			 */
-        if ($isTree) {
-          $branches=array();
-  				// get info from current
-          $this->db->where($key,$where);
-  				$this->db->select('id,order,self_parent');
-  				$result=$this->db->get_result($this->table);
-          foreach ($result as $id => $row) {
-    				$parent=$row['self_parent'];
-    				$order=$row['order'];
-    				// get branches
-    				$this->db->where('self_parent',$id);
-    				$this->db->select(PRIMARY_KEY);
-    				$branches=$this->db->get_result($this->table);
-          }
-        }
+        // /**
+        //  * Check if it is a tree, if so, get children (to move them up later)
+        //  */
+        //         if ($isTree) {
+        //           $parent=$this->db->get_field_where($this->table,'self_parent',PRIMARY_KEY,$id);
+        //   $this->db->where('self_parent',$parent);
+        //   $this->db->select(PRIMARY_KEY);
+        //   $children=$this->db->get_result($this->table);
+        //         }
 
   			/**
   			 * Remove database entry('s)
@@ -299,22 +290,14 @@ class _crud extends CI_Model {
   			if ($is_deleted) {
 
   				/**
-  				 * Move branches up if any
+  				 * Reset order of children (if any)
   				 */
-  				if ($isTree and $branches) {
-  					$count=count($branches);
-  					$this->order_model->shift_up($this->table,$parent,$count,$order);
-            $moved=0;
-  					foreach($branches as $branch=>$value) {
-  						$this->db->set('self_parent',$parent);
-  						$this->db->set('order',$order++);
-  						$this->db->where(PRIMARY_KEY,$value[PRIMARY_KEY]);
-  						$this->db->update($this->table);
-              $moved++;
-  					}
-            $this->info['moved_rows'] = $moved;
+  				if ($isTree) {
+            $parent= $this->db->get_field_where($this->table,'self_parent',PRIMARY_KEY,$id);
+            if ($parent!=0) {
+  					  $this->info['moved_rows'] = $this->order_model->reset_tree($this->table,$parent);
+            }
   				}
-
 
   				/**
   				 * Check if some data set in rel tables (if exists), if so delete them also

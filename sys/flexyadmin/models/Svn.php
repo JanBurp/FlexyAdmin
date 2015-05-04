@@ -64,6 +64,17 @@ class Svn extends CI_Model {
     return $rev;
   }
   
+  public function get_last_update_file() {
+		$updates=read_map('sys/flexyadmin/models/updates','php',FALSE,FALSE);
+		$updates=array_keys($updates);
+		$updates=filter_by($updates,'update_');
+    sort($updates);
+    $last=array_pop($updates);
+    $last=get_suffix($last,'/');
+    $rev=(int) substr($last,7,4);
+    return $rev;
+  }
+  
 
 }
 

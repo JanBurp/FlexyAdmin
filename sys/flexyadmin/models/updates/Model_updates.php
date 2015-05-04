@@ -1,5 +1,16 @@
 <?php 
 
+/**
+ * $Author$
+ * $Date$
+ * $Revision$
+ * 
+ * @package FlexyAdmin
+ * @author: Jan den Besten
+ * @copyright: Jan den Besten (c)
+ * @link http://www.flexyadmin.com
+ */
+
 class Model_updates extends CI_Model {
   
   protected $messages=array();
@@ -11,8 +22,8 @@ class Model_updates extends CI_Model {
     $this->rev=substr(get_class($this),7,4);
   }
   
-  protected function _add_message($type,$message,$glyphicon='',$class='') {
-    $this->messages[$type][]=array(
+  protected function _add_message($message,$glyphicon='',$class='') {
+    $this->messages['code'][]=array(
       'message'   => '<b>'.$this->rev.'</b> '.$message,
       'glyphicon' => $glyphicon,
       'class'     => $class
@@ -21,10 +32,10 @@ class Model_updates extends CI_Model {
   
   public function update() {
     if ($this->error) {
-      $this->_add_message('site','<b>not up to date see errors</b>','glyphicon-remove btn-danger');
+      $this->_add_message('<b>not up to date see errors</b>','glyphicon-remove btn-danger');
     }
     else {
-      $this->_add_message('site','<b>up to date</b>','glyphicon-ok btn-success');
+      $this->_add_message('<b>up to date</b>','glyphicon-ok btn-success');
     }
     return $this->messages;
   }

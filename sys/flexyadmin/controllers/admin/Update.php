@@ -19,7 +19,7 @@ class Update extends AdminController {
   
   private $updates=array();
   
-  private $actions = array('sys','site','database','all');
+  private $actions = array('sys','code','database','all');
   private $messages = array();
 	
 	public function __construct()	{
@@ -43,13 +43,13 @@ class Update extends AdminController {
         'current'  => $this->svn->get_revision(),
         'latest'   => $latest,
       ),
-      'site'      => array(
-        'name'    => 'site (controller)',
-        'current' => $this->svn->get_revision_of_file('site/controller.php'),
-        'latest'  => $latest,
+      'code'      => array(
+        'name'    => 'code (update scripts)',
+        'current' => $this->svn->get_revision(),
+        'latest'  => $this->svn->get_last_update_file(),
       ),
       'database'  => array(
-        'name'    => 'database',
+        'name'    => 'database (update sql)',
         'current' => $this->db->get_field('cfg_configurations','str_revision'),
         'latest'  => $latest_sql,
       ),
@@ -157,14 +157,14 @@ class Update extends AdminController {
     $this->_add_message('sys','<b>Up to date</b>','glyphicon-ok btn-success');
   }
 
-  private function _update_site() {
+  private function _update_code() {
     // Update models
 		$updates=read_map('sys/flexyadmin/models/updates','php',FALSE,FALSE);
 		$updates=array_keys($updates);
 		$updates=filter_by($updates,'update_');
 		foreach ($updates as $file) {
 			$fileRev=(int) substr($file,7,4);
-			if ($fileRev<=$this->updates['site']['latest'] -500)
+			if ($fileRev<=$this->updates['code']['latest'] -500)
 				unset($updates[$key]);
 			else {
         $model=remove_suffix($file,'.');
@@ -174,7 +174,7 @@ class Update extends AdminController {
       }
 		}
     if (empty($updates)) {
-      $this->_add_message('site','<b>Up to date</b>','glyphicon-ok btn-success');
+      $this->_add_message('code','<b>Up to date</b>','glyphicon-ok btn-success');
     }
   }
   

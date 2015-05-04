@@ -1,5 +1,16 @@
 <?php 
 
+/**
+ * $Author$
+ * $Date$
+ * $Revision$
+ * 
+ * @package FlexyAdmin
+ * @author: Jan den Besten
+ * @copyright: Jan den Besten (c)
+ * @link http://www.flexyadmin.com
+ */
+
 class Update_3067 extends Model_updates {
   
   public	function __construct() {
@@ -35,10 +46,10 @@ class Update_3067 extends Model_updates {
       if ($first_letter!==strtoupper($first_letter)) {
         $uppername=remove_suffix($file['path'],'/').'/'.ucfirst($file['name']);
         if (rename($file['path'],$uppername)) {
-          $this->_add_message('site','Renamed `'.$file['name'].'` to `'.$uppername.'`','glyphicon-ok btn-success');
+          $this->_add_message('Renamed `'.$file['name'].'` to `'.$uppername.'`','glyphicon-ok btn-success');
         } else {
           $this->error=true;
-          $this->_add_message('site','Could not rename `'.$file['path'].'`','glyphicon-remove btn-danger');
+          $this->_add_message('Could not rename `'.$file['path'].'`','glyphicon-remove btn-danger');
         }
       }
     }
@@ -62,13 +73,13 @@ class Update_3067 extends Model_updates {
         if ($old!=$new) {
           if (file_put_contents($file['path'],$new)===false) {
             $this->error=true;
-            $this->_add_message('site','Error replacing `'.$file['path'].'`','glyphicon-remove btn-danger');
+            $this->_add_message('Error replacing `'.$file['path'].'`','glyphicon-remove btn-danger');
           }
-          $this->_add_message('site','Replaced `'.$file['path'].'`','glyphicon-ok btn-success');
+          $this->_add_message('Replaced `'.$file['path'].'`','glyphicon-ok btn-success');
         }
         else {
           $this->error=true;
-          $this->_add_message('site','Error replacing `'.$file['path'].'`','glyphicon-remove btn-danger');
+          $this->_add_message('Error replacing `'.$file['path'].'`','glyphicon-remove btn-danger');
         }
       }
       else {

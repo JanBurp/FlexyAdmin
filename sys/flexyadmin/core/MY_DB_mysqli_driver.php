@@ -82,8 +82,14 @@
  * 
  * 
  *
- * @package default
- * @author Jan den Besten
+ * $Author$
+ * $Date$
+ * $Revision$
+ * 
+ * @package FlexyAdmin
+ * @author: Jan den Besten
+ * @copyright: Jan den Besten (c)
+ * @link http://www.flexyadmin.com
  */
 
 class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
@@ -1590,8 +1596,9 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
    */
 	public function get_field_where($table,$field,$where="",$what="",$like=FALSE) {
 		$sql="SELECT `$field` FROM `$table` ";
-		if ($where=='' or $what=='')
+		if ($where=='' or $what=='') {
 			$sql.=" LIMIT 1";
+    }
 		else {
 			if ($like)
 				$sql.="WHERE `$where` LIKE '$what%'";
