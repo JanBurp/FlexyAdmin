@@ -27,7 +27,7 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyGridServic
   /**
    * UI Name (changed when data is present)
    */
-  $scope.ui_name = $routeParams.table;
+  $scope.ui_name = '';
   /**
    * Table Type
    */
