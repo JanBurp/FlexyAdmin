@@ -25,7 +25,7 @@
 /**
  * This routing makes sure all uri's go to the frontend site, except soms system uri's
  */
-$route['(?!__api|admin|rss|file|_media|_cronjob|_unittest|_update|_ajax|_api)(.*)'] = "";
+$route['(?!__api|admin|rss|file|_media|_cronjob|_unittest|_ajax|_api)(.*)'] = "";
 
 /**
  * CI unit test
@@ -34,18 +34,10 @@ $route['_unittest'] = "ciunit_controller/index";
 $route['_unittest/(.*)'] = "ciunit_controller/index/$1";
 
 /**
- * Update
- */
-
-$route['_update'] = "update/index";
-
-
-/**
  * Frontend Ajax testing
  */
 $route['_ajax'] = "ajax/index";
 $route['_ajax/(.*)'] = "ajax/index/$1";
-
 
 /**
  * Api routing (controllers/api/class/args)
@@ -53,9 +45,8 @@ $route['_ajax/(.*)'] = "ajax/index/$1";
 $route['_api'] = 'api/index';
 $route['_api/(.*)'] = 'api/index/$1';
 
-
 /**
- * This route makes a nice download path and a serve (restricted) path
+ * This route makes a nice download path and media path (which may serve files if they are restricted, but user has rights)
  */
 $route['_media/download/(.*)/(.*)'] = "file/file/download/$1/$2";
 $route['_media/serve/(.*)/(.*)']    = "file/file/serve/$1/$2";
@@ -74,6 +65,12 @@ $route['admin/plugin/(.+)'] = "admin/plugin_controller/call/$1";
  * This routing reroutes help subpages
  */
 $route['admin/help/(.+)'] = "admin/help/index/$1";
+
+
+/**
+ * Update actions
+ */
+$route['admin/update/(.+)'] = "admin/update/index/$1";
 
 
 // Reserved routes

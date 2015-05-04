@@ -110,7 +110,7 @@ class MY_DB_mysqli_utility extends CI_DB_mysqli_utility {
 		$lines=explode("\n",$sql);
     // remove comments
 		$comments="";
-    $errors='';
+    $errors=array();
 		foreach ($lines as $k=>$l) {
 			if (substr($l,0,1)=="#")	{
 				if (strlen($l)>2)	$comments.=$l.br();
@@ -123,10 +123,10 @@ class MY_DB_mysqli_utility extends CI_DB_mysqli_utility {
 		foreach ($lines as $key => $line) {
 			$line=trim($line);
 			if (!empty($line)) {
-				$query=$this->db->query($line);
-        // if ($this->db->_error_message()) {
-        //   $errors.=$this->db->_error_message();
-        // }
+				if (!$this->db->simple_query($line)) {
+          $errors[]=$this->db->error();
+          break;
+				}
 			}
 		}
     
