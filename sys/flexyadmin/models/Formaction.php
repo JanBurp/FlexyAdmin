@@ -3,7 +3,6 @@
 /**
  * Model dat als basis dient voor formactions in de frontend
  * 
- * @package default
  * @author Jan den Besten
  */
  class Formaction extends CI_Model {

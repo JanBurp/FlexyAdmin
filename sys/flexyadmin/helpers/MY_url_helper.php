@@ -1,9 +1,15 @@
 <?php 
 /**
  * Uitbreiding op <a href="http://codeigniter.com/user_guide/helpers/url_helper.html" target="_blank">URL_helper van CodeIgniter</a>.
+ *
+ * $Author$
+ * $Date$
+ * $Revision$
  * 
- * @author Jan den Besten
- * @link http://codeigniter.com/user_guide/helpers/url_helper.html
+ * @author: Jan den Besten
+ * @copyright: (c) Jan den Besten
+ * @link http://www.flexyadmin.com
+ * @file
  */
 
 

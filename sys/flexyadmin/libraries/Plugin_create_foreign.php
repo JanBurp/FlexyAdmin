@@ -7,7 +7,6 @@
  *  
  *      .../admin/plugin/create_foreign/tbl_menu/str_link
  * 
- * @package default
  * @author Jan den Besten
  */
  

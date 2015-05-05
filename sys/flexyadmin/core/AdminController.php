@@ -7,11 +7,13 @@ require_once(APPPATH."core/BasicController.php");
  *
  * Adds view methods and loads/views automatic header, menu and message.
  *
- * @package FlexyAdmin V1
- * @author Jan den Besten
- * @version V1 0.1
- * @ignore
- * @internal
+ * $Author$
+ * $Date$
+ * $Revision$
+ * 
+ * @author: Jan den Besten
+ * @copyright: (c) Jan den Besten
+ * @link http://www.flexyadmin.com
  **/
  
 class AdminController extends BasicController {

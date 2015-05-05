@@ -3,7 +3,6 @@
 /**
  * Stats Class, keeping track of page statistics
  *
- * @package default
  * @author Jan den Besten
  * @ignore
  * @internal

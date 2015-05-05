@@ -2,11 +2,13 @@
 /**
  * BasicController Class extends MY_Controller
  *
- * @package FlexyAdmin V1
- * @author Jan den Besten
- * @version V1 0.1
- * @ignore
- * @internal
+ * $Author$
+ * $Date$
+ * $Revision$
+ * 
+ * @author: Jan den Besten
+ * @copyright: (c) Jan den Besten
+ * @link http://www.flexyadmin.com
  */
 
 class BasicController extends MY_Controller {

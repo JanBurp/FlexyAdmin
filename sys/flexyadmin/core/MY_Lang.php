@@ -3,7 +3,6 @@
 /**
  * Uitbreiding op [CI_Lang](http://codeigniter.com/user_guide/libraries/language.html)
  * 
- * @package default
  * @author Jan den Besten
  */
 class MY_Lang extends CI_Lang {

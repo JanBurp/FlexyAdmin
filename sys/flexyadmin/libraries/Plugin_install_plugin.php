@@ -3,7 +3,6 @@
 /**
  * Installeert een module/plugin (.zip bestand)
  *  
- * @package default
  * @author Jan den Besten
  */
  

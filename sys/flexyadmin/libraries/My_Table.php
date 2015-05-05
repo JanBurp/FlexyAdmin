@@ -3,7 +3,6 @@
 /**
  * Uitbreiding op [CI_Table]
  *
- * @package default
  * @author Jan den Besten
  */
 

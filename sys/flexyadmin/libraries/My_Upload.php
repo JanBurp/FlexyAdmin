@@ -4,7 +4,6 @@
 /**
  * Uitbreiding op [CI_Upload](http://codeigniter.com/user_guide/libraries/file_uploading.html)
  *
- * @package default
  * @author Jan den Besten
  */
 class MY_Upload extends CI_Upload {

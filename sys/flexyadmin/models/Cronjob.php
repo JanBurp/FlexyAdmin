@@ -3,7 +3,6 @@
 /**
  * Verzorgt de afhandeling van cronjobs
  *
- * @package default
  * @author Jan den Besten
  * @ignore
  */

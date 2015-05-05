@@ -5,7 +5,6 @@
  * Geeft alle config van alle tabellen en mappen die er bestaan.
  * 
  * 
- * @package default
  * @author Jan den Besten
  */
 

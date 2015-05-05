@@ -1,19 +1,14 @@
 <?php require_once(APPPATH."core/AdminController.php");
 
 /**
- * FlexyAdmin V1
- *
- * A Flexible Database based CMS
- *
- * @package FlexyAdmin V1
- * @author Jan den Besten
- * @copyright Copyright (c) 2008-2012, Jan den Besten
- * @link http://flexyadmin.com
- * @version V1 0.1
- * @filesource  */
-
-// ------------------------------------------------------------------------
-
+ * $Author$
+ * $Date$
+ * $Revision$
+ * 
+ * @author: Jan den Besten
+ * @copyright: (c) Jan den Besten
+ * @link http://www.flexyadmin.com
+ */
 
 class Help extends AdminController {
 

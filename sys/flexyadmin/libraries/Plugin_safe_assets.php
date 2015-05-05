@@ -13,7 +13,6 @@
  * - bij aanpassingen aan instellingen van een assets map
  * - met de hand dmv een URL aanroep
  *
- * @package default
  * @author Jan den Besten
  */
 class Plugin_safe_assets extends Plugin {

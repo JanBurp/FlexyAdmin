@@ -62,7 +62,6 @@
  *        [language] => 'nl'                        // Taal van de gebruiker
  *       )
  * 
- * @package default
  * @author Jan den Besten
  */
 class auth extends Api_Model {

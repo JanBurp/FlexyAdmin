@@ -3,7 +3,6 @@
 /**
  * Resize alle afbeeldingen (opnieuw). Geef eventueel het pad mee, als dat niet is meegegeven dan worden alle paden uit cfg_img_info gedaan. NB Kan even duren...
  * 
- * @package default
  * @author Jan den Besten
  */
 class Plugin_resize_images extends Plugin {

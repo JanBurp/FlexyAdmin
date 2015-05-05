@@ -3,7 +3,6 @@
 /**
  * Deze plugin ververst de volgorde van een tabel met 'order'
  *
- * @package default
  * @author Jan den Besten
  */
 class Plugin_reorder extends Plugin {

@@ -57,7 +57,6 @@
  * - validation - validatie van het veld. Zie de [Form Validation van CodeIgniter](http://codeigniter.com/user_guide/libraries/form_validation.html) voor mogelijke waarden.
  * 
  * 
- * @package default
  * @author Jan den Besten
  */
 class Form {

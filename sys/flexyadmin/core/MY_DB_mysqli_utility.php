@@ -5,7 +5,6 @@
  * 
  * Zorgt ervoor dat TEXT en BLOB velden van een SQL Export als HEX-data in de dump zitten ipv als letterlijke tekst.
  *
- * @package default
  * @internal
  * @ignore
  */

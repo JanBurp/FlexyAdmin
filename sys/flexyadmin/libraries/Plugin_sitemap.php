@@ -3,7 +3,6 @@
 /**
  * Creates sitemap.xml
  *
- * @package default
  * @author Jan den Besten
  * @ignore
  * @internal

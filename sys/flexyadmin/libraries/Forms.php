@@ -50,8 +50,6 @@
 	* - Maak je eigen taalbestand en/of wijzig de bestaande
 	*
 	* @author Jan den Besten
-	* @package FlexyAdmin_comments
-	*
 	*/
 class Forms extends Module {
   

@@ -3,7 +3,6 @@
 /**
  * Subversion goodies
  *
- * @package default
  * @author Jan den Besten
  * @internal
  * @ignore

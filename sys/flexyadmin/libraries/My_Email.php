@@ -3,7 +3,6 @@
 /**
  * Uitbreiding op [CI_Email](http://codeigniter.com/user_guide/libraries/email.html)
  *
- * @package default
  * @author Jan den Besten
  */
 

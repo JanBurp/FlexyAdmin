@@ -1,29 +1,13 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- * FlexyAdmin V1
- *
- * A Flexible Database based CMS
- *
- * @package		FlexyAdmin V1
- * @author		Jan den Besten
- * @copyright	Copyright (c) 2008, Jan den Besten
- * @link			http://flexyadmin.com
- * @version		V1 0.1
-**/
-
-// ------------------------------------------------------------------------
-
-/**
- * FlexyAdmin V1	Configuration
+ * FlexyAdmin	Configuration
  *
  * Here you can find FlexyAdmin configuration settings that probably won't need adjustments.
  * The settings here are needed for internal use only. Do not change them if you don't know what
  * you're doing.
  *
- * @package			FlexyAdmin V1
  * @author			Jan den Besten
- * @version			V1 0.1
 **/
 
 $config['PROFILER']               = FALSE;

@@ -29,7 +29,6 @@
  * - _api/get_table?table=tbl_links
  * - _api/get_table?table=tbl_links&config[]=table_info&config[]=field_info
  * 
- * @package default
  * @author Jan den Besten
  */
 

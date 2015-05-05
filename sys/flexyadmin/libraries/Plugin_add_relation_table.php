@@ -8,7 +8,6 @@
  * 
  *      .../admin/plugin/add_relation_table/tbl_menu/tbl_links
  * 
- * @package default
  * @author Jan den Besten
  */
  

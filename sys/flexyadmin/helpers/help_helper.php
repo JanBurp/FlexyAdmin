@@ -1,8 +1,15 @@
-<?php /**
+<?php
+
+/**
  * Only for internal use
  *
- * @author Jan den Besten
- * @package default
+ * $Author$
+ * $Date$
+ * $Revision$
+ * 
+ * @author: Jan den Besten
+ * @copyright: (c) Jan den Besten
+ * @link http://www.flexyadmin.com
  * @ignore
  **/
 

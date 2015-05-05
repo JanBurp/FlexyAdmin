@@ -3,7 +3,6 @@
 /**
  * Uitbreiding op CI Input
  *
- * @package default
  * @author Jan den Besten
  * @ignore
  */

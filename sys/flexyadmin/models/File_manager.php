@@ -2,7 +2,6 @@
 /**
  * Met dit model kun je bestanden tonen (in een grid), uploaden, verwijderen etc.
  *
- * @package default
  * @author Jan den Besten
  */
  

@@ -2,7 +2,6 @@
 /**
  * Hiermee kunnen uri's worden gecreeërd uit andere velden van een database rij
  *
- * @package default
  * @author Jan den Besten
  */
 

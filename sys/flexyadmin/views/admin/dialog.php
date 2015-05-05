@@ -1,6 +1,6 @@
 <html>
 <head>
-	<title>FlexyAdmin V1</title>
+	<title>FlexyAdmin</title>
 	<link rel="stylesheet" href="<?=admin_assets()?>/css/admin_main.css" type="text/css" />
 </head>
 

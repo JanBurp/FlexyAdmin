@@ -5,7 +5,6 @@
  * Alle tabellen en velden kunnen in het admin deel een voor de gebruiker vriendelijkere naam krijgen, eventueel zelfs meertalig.
  * Die mooie namen kunnen samen met helpteksten ingesteld in de tabe: **cfg_ui**. Zie ook [Help Teksten]({Help-teksten})
  *
- * @package default
  * @author Jan den Besten
  * @ignore
  */

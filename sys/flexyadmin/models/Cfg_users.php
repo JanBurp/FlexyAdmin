@@ -3,7 +3,6 @@
 /**
  * cfg_users
  *
- * @package default
  * @author Jan den Besten
  * @ignore
  */

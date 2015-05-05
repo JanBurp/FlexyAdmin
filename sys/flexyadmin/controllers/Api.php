@@ -3,7 +3,6 @@
 /**
  * API Controller
  *
- * @package default
  * @author Jan den Besten
  */
 

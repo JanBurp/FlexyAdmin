@@ -15,7 +15,6 @@
  * - _rel_menu_links_ is nu automatisch gevuld met verwijzingen die overeenkomen met de al bestaande foreign key verwijzingen van _tbl_menu.id_links_
  * - Nu kun je zonder problemen het veld _tbl_menu.id_links_ verwijderen.
  * 
- * @package default
  * @author Jan den Besten
  */
 class Plugin_fill_many_with_foreign extends Plugin {

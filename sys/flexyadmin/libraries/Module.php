@@ -4,7 +4,6 @@
  *
  *      class Mijn_module extends Module
  *
- * @package default
  * @author Jan den Besten
  */
 

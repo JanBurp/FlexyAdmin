@@ -2,7 +2,6 @@
 /**
  * De basis Class voor Modules en Plugins
  *
- * @package default
  * @author Jan den Besten
  */
 class Parent_module_plugin {

@@ -8,7 +8,6 @@
  * - Toevoegen van pagina's aan statistieken
  * - Checken of pagina's gecached kunnen worden
  * 
- * @package default
  * @author Jan den Besten
  */
 

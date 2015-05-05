@@ -2,7 +2,14 @@
 /**
  * Functies die handig zijn voor tabel en veldnamen van de database
  *
- * @author Jan den Besten
+ * $Author$
+ * $Date$
+ * $Revision$
+ * 
+ * @author: Jan den Besten
+ * @copyright: (c) Jan den Besten
+ * @link http://www.flexyadmin.com
+ * @file
  **/
 
 /**

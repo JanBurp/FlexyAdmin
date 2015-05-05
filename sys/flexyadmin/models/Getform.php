@@ -2,7 +2,6 @@
 /**
  * Dit model wordt gebruikt om een formulier te creeren aan de hand van Flexy Form tabellen, zie ook de module [Flexy Form]({Flexy_form})
  *
- * @package default
  * @author Jan den Besten
  */
 

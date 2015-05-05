@@ -4,7 +4,6 @@
 /**
  * Creates js lists for use in html editor
  *
- * @package default
  * @author Jan den Besten
  * @ignore
  * @internal

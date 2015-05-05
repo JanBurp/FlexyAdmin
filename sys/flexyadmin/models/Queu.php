@@ -2,7 +2,6 @@
 /**
  * With this model you can add method calls in a que which can be run later when asked for in a controller.
  *
- * @package default
  * @author Jan den Besten
  * @ignore
  * @internal

@@ -4,7 +4,6 @@
  *
  *      class Plugin_mijn_plugin extends Plugin
  *
- * @package default
  * @author Jan den Besten
  */
  
@@ -186,7 +185,6 @@ class Plugin extends Parent_module_plugin {
 /**
  * Just to make sure old plugin extensions work too
  *
- * @package default
  * @author Jan den Besten
  * @ignore
  */
