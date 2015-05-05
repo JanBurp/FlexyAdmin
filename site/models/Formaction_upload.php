@@ -10,9 +10,8 @@
  * $Date$
  * $Revision$
  * 
- * @package FlexyAdmin
  * @author: Jan den Besten
- * @copyright: Jan den Besten (c)
+ * @copyright: (c) Jan den Besten
  * @link http://www.flexyadmin.com
  */
  class Formaction_upload extends Formaction {

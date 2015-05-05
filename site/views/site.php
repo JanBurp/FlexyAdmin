@@ -1,13 +1,14 @@
 <?php 
 /**
- * FlexyAdmin
- *
  * site.php - the main view
  * All uri's are to controller.php which dicides what to do and loads this (or another) view.
  *
- * @package FlexyAdmin
- * @author Jan den Besten
- * @copyright Copyright (c) 2009-2014, Jan den Besten
+ * $Author: $
+ * $Date: $
+ * $Revision: $
+ * 
+ * @author: Jan den Besten
+ * @copyright: (c) Jan den Besten
  * @link http://www.flexyadmin.com
  */
 ?><!DOCTYPE html>
