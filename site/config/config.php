@@ -217,16 +217,6 @@ $config['main_view']='site';
  */
 $config['page_view']='page';
 
-/*
- *--------------------------------------------------------------------------
- * Query URL's
- *--------------------------------------------------------------------------
- *
- * If true, $_GET will be preserved in the frontend controller, so url queries are possible, and the use of $this->input->get()
- *
- */
-$config['query_urls']=FALSE;
-
 
 /*
  *--------------------------------------------------------------------------

@@ -13,7 +13,7 @@
 
 class Model_updates extends CI_Model {
   
-  protected $messages=array();
+  private   $messages=array();
   protected $error=false;
   protected $rev=0;
 
