@@ -39,7 +39,6 @@
  * @package	FlexyAdmin
  * @author	Jan den Besten
  * @copyright	(c) Jan den Besten
- * @link	http://flexyadmin.com
  */
 
 // ------------------------------------------------------------------------

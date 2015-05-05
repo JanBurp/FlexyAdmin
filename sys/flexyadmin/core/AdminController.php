@@ -13,7 +13,6 @@ require_once(APPPATH."core/BasicController.php");
  * 
  * @author: Jan den Besten
  * @copyright: (c) Jan den Besten
- * @link http://www.flexyadmin.com
  **/
  
 class AdminController extends BasicController {

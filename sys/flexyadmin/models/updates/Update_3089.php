@@ -7,7 +7,6 @@
  * 
  * @author: Jan den Besten
  * @copyright: (c) Jan den Besten
- * @link http://www.flexyadmin.com
  */
 
 class Update_3089 extends Model_updates {
