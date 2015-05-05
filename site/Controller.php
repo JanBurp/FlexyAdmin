@@ -1,26 +1,53 @@
 <?php
 /**
  * FlexyAdmin
- * A Flexible Database based CMS
- *
+ * 
+ * A flexible userfriendly CMS build on CodeIgniter
+ * 
+ * Copyright (c) 2009-2015, Jan den Besten, www.flexyadmin.com
+ * All rights reserved.
+ * 
+ * Disclaimer
+ * 
+ * De voorwaarden van deze disclaimer zijn van toepassing op het Content Management Systeem ‘FlexyAdmin’ (hierna te noemen ‘CMS’) ontwikkeld door Jan den Besten.
+ * Door het CMS te gebruiken stemt u (hierna te noemen ‘gebruiker’) in met deze disclaimer.
+ * 
+ * De rechten op de inhoud van het CMS waaronder de rechten van intellectuele eigendom berusten bij Jan den Besten.
+ * Onder de inhoud van dit CMS wordt onder meer verstaan: functionaliteit, ontwerpstructuur, database-structuur, teksten, lay-out, afbeeldingen, logo's, (beeld)merken, geluids- en/of videofragmenten, foto's, hulpdocumenten en andere artikelen exclusief alle inhoud die de gebruiker toevoegd.
+ * Het maken van kopieën, aanpassingen, bewerkingen, wijzigingen van het geheel of van een gedeelte van het CMS in welke vorm of op welke manier dan ook zonder voorafgaande schriftelijke toestemming van Jan den Besten, is niet toegestaan.
+ * 
+ * Jan den Besten besteedt de uiterste zorg aan het zo actueel, toegankelijk, correct en compleet mogelijk maken en houden van de inhoud en de werking van het CMS.
+ * De inhoud van het CMS houdt geen aanbieding in en er kunnen geen rechten aan worden ontleend.
+ * 
+ * Aanvullend biedt het CMS de mogelijkheid om te werken met profielen en persoonsinformatie.
+ * Jan den Besten besteedt de uiterste zorg aan het zo veilig mogelijk maken en houden van deze informatie.
+ * Door het CMS te gebruiken stemt u ermee in dat Jan den Besten op geen enkele wijze verantwoordelijk kan worden gehouden voor eventuele misstanden betreffende deze gegevens en/of voor eventuele gevolgschade.
+ * Indien er zich een probleem voordoet, dient de gebruiker het probleem eerst en tijdig aan Jan den Besten aan te bieden, zodat naar een passende oplossing kan worden gezocht.
+ * 
+ * Dit CMS kan links bevatten naar websites of naar webpagina’s van derden.
+ * Jan den Besten heeft geen zeggenschap over de inhoud of over andere kenmerken van deze websites en -pagina’s van derden en is in geen geval aansprakelijk of verantwoordelijk voor de inhoud ervan.
+ * 
+ * Alle rechten worden voorbehouden.
+ * Op deze disclaimer is het Nederlands recht van toepassing.
+ * 
+ * Laatst bijgewerkt: mei 2015
+ * 
  * $Author$
  * $Date$
  * $Revision$
  * 
- * @package FlexyAdmin
- * @author: Jan den Besten
- * @copyright: Jan den Besten (c)
- * @link http://www.flexyadmin.com
+ * @package	FlexyAdmin
+ * @author	Jan den Besten
+ * @copyright	(c) Jan den Besten
+ * @link	http://flexyadmin.com
  */
 
 // ------------------------------------------------------------------------
 
 /**
- * main Frontend Controller
+ * Frontend Controller
  * This Controller handles the url and loads views of the site accordingly
- *
  */
-
 
 class Main extends FrontEndController {
 
