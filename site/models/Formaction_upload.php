@@ -12,7 +12,6 @@
  * 
  * @author: Jan den Besten
  * @copyright: (c) Jan den Besten
- * @link http://www.flexyadmin.com
  */
  class Formaction_upload extends Formaction {
    

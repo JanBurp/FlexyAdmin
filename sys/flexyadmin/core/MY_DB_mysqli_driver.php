@@ -88,7 +88,6 @@
  * 
  * @author: Jan den Besten
  * @copyright: (c) Jan den Besten
- * @link http://www.flexyadmin.com
  */
 
 class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {

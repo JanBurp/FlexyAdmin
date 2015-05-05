@@ -7,7 +7,6 @@
  * 
  * @author: Jan den Besten
  * @copyright: (c) Jan den Besten
- * @link http://www.flexyadmin.com
  */
 
 class Model_updates extends CI_Model {

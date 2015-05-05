@@ -9,7 +9,6 @@
  * 
  * @author: Jan den Besten
  * @copyright: (c) Jan den Besten
- * @link http://www.flexyadmin.com
  */
 class FrontEndController extends MY_Controller {
 
