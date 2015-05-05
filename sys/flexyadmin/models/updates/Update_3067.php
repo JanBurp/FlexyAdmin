@@ -20,9 +20,9 @@ class Update_3067 extends Model_updates {
   public function update() {
     $this->_classes_to_ucfirst();
     $this->_cleanup_database_configs();
+    $this->_change_config();
 
-    parent::update();
-    return $this->messages;
+    return parent::update();
   }
   
   // For CI3.0 all class filenames must start with CAPITAL
@@ -84,6 +84,26 @@ class Update_3067 extends Model_updates {
       }
       else {
         // Allready done
+      }
+    }
+  }
+  
+  private function _change_config() {
+    $file='site/config/config.php';
+    $old=file_get_contents($file);
+    $new=$old;
+
+    // Verwijder Query URL's
+    // $result = preg_replace("/\\/\\*\\n\\s\\*-*\\n\\s\\*\\sQuery URL's\\s.*;/uUs", "", $searchText);
+    $new = preg_replace("/\/\*\n\s\*-*\n\s\*\sQuery URL's\s.*;/uUs", "", $new);
+    $new = str_replace("\r",'',$new);
+    if ($new!==$old) {
+      if (file_put_contents($file,$new)===false) {
+        $this->error=true;
+        $this->_add_message('Error removing Query URL\'s from `'.$file.'`','glyphicon-remove btn-danger');
+      }
+      else {
+        $this->_add_message('Removed Query URL\'s from `'.$file.'`','glyphicon-ok btn-success');
       }
     }
   }

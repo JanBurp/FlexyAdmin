@@ -6,6 +6,7 @@ UPDATE:
 
 NEW:
 - Update tool: admin/update
+- $_GET is always on now
 
 REMOVED:
 - build tool

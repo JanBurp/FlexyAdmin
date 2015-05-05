@@ -31,8 +31,7 @@ class Update_3089 extends Model_updates {
       }
     }
 
-    parent::update();
-    return $this->messages;
+    return parent::update();
   }
 
  }

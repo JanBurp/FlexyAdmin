@@ -162,15 +162,15 @@ class Update extends AdminController {
 		$updates=read_map('sys/flexyadmin/models/updates','php',FALSE,FALSE);
 		$updates=array_keys($updates);
 		$updates=filter_by($updates,'update_');
-		foreach ($updates as $file) {
+		foreach ($updates as $key=>$file) {
 			$fileRev=(int) substr($file,7,4);
-			if ($fileRev<=$this->updates['code']['latest'] -500)
+			if ($fileRev<=$this->updates['code']['latest'])
 				unset($updates[$key]);
 			else {
         $model=remove_suffix($file,'.');
         $this->load->model('updates/'.$model);
         $messages=$this->$model->update();
-        $this->messages=array_merge($this->messages,$messages);
+        $this->messages=array_merge_recursive($this->messages,$messages);
       }
 		}
     if (empty($updates)) {
