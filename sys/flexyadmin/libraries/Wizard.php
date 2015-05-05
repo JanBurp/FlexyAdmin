@@ -23,7 +23,6 @@
  *       )
  *     )
  *
- * @package default
  * @author Jan den Besten
  */
 class Wizard {

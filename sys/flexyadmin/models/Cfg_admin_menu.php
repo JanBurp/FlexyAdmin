@@ -3,7 +3,6 @@
 /**
  * Laad het admin-menu, klaar voor Angular
  *
- * @package default
  * @author Jan den Besten
  * @ignore
  */

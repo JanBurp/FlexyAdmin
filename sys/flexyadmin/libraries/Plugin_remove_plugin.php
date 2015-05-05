@@ -3,7 +3,6 @@
 /**
  * Verwijderd een plugin
  *  
- * @package default
  * @author Jan den Besten
  */
  

@@ -15,7 +15,6 @@
  * 
  * - _method
  *
- * @package default
  * @author Jan den Besten
  */
 

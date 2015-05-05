@@ -7,7 +7,6 @@
  *   console.log(result.form);
  * },'json');
  *
- * @package default
  * @author Jan den Besten
  */
 class Ajax_forms extends Ajax_module {

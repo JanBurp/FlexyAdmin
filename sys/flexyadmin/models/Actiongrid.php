@@ -6,7 +6,6 @@
  * - action_url : url van aan ajax aanroep (inclusief query url)
  * - title      : titel die in het grid zichtbaar is
  *
- * @package default
  * @author Jan den Besten
  * @ignore
  */

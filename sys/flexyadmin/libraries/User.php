@@ -19,7 +19,6 @@ require_once(APPPATH."libraries/ion_auth.php");
  * - RIGHTS_NO     = 0
  * - Allerlei combinaties van bovenstaande zijn mogelijk (net zoals RIGHTS_ALL een combinatie is)
  *
- * @package default
  * @author Jan den Besten
  */
  

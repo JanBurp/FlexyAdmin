@@ -8,7 +8,6 @@
  * 
  *      .../admin/plugin/remove_relation_table/rel_menu__links
  * 
- * @package default
  * @author Jan den Besten
  */
  

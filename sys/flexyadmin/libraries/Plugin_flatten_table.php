@@ -8,7 +8,6 @@
  *  
  *      .../admin/plugin/flatten_table/tbl_menu
  * 
- * @package default
  * @author Jan den Besten
  */
  

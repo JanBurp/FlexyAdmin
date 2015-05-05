@@ -9,8 +9,14 @@
  * 
  * NB Maak bij voorkeur gebruikt van Views, als het niet anders kan, gebruik dan deze functies in je PHP code ipv letterlijke HTML strings
  * 
- * @author Jan den Besten
- * @link http://codeigniter.com/user_guide/helpers/html_helper.html
+ * $Author$
+ * $Date$
+ * $Revision$
+ * 
+ * @author: Jan den Besten
+ * @copyright: (c) Jan den Besten
+ * @link http://www.flexyadmin.com
+ * @file
  */
 
 

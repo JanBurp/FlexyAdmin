@@ -1,7 +1,6 @@
 <?php /**
  * Maakt grafieken, zoals bij de statistieken
  *
- * @package default
  * @author Jan den Besten
  */
 class Graph Extends CI_Model {

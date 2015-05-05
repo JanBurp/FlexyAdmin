@@ -1,8 +1,15 @@
-<?php /**
+<?php
+/**
  * Uitbreiding op [Array_helper van CodeIgniter](http://codeigniter.com/user_guide/helpers/array_helper.html)
  * 
- * @author Jan den Besten
- * @link http://codeigniter.com/user_guide/helpers/array_helper.html
+ * $Author$
+ * $Date$
+ * $Revision$
+ * 
+ * @author: Jan den Besten
+ * @copyright: (c) Jan den Besten
+ * @link http://www.flexyadmin.com
+ * @file
  */
 
 

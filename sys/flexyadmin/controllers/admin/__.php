@@ -5,7 +5,6 @@ require_once(APPPATH."core/FrontendController.php");  // Load this also, so PHP 
 /**
  * Build proces, maakt automatisch documentatie.
  *
- * @package default
  * @author Jan den Besten
  */
  

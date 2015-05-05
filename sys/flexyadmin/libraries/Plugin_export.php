@@ -11,7 +11,6 @@
  * - type
  * - full/json geeft een volledige dump
  *
- * @package default
  * @author Jan den Besten
  */
 class Plugin_export extends Plugin {

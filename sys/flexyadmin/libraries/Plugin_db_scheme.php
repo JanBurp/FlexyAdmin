@@ -1,7 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- * @package default
  * @author Jan den Besten
  */
  class Plugin_db_scheme extends Plugin {

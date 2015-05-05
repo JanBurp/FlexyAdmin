@@ -1,9 +1,15 @@
 <?php 
 /**
  * Uitbreiding op <a href="http://codeigniter.com/user_guide/helpers/text_helper.html" target="_blank">Text_helper van CodeIgniter</a>.
+ *
+ * $Author$
+ * $Date$
+ * $Revision$
  * 
- * @author Jan den Besten
- * @link http://codeigniter.com/user_guide/helpers/text_helper.html
+ * @author: Jan den Besten
+ * @copyright: (c) Jan den Besten
+ * @link http://www.flexyadmin.com
+ * @file
  */
 
 
@@ -15,8 +21,7 @@
   * @author Jan den Besten
   * @ignore
   */
-
-function _callback_highlight($matches) {
+ function _callback_highlight($matches) {
 	$code=$matches[1];
 	$code=strip_tags($code,'<p><br><a><div><b><strong><em><italic>');
   // $code=str_replace(' ',"\t",$code);

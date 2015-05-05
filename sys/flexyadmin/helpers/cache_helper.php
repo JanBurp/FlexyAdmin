@@ -13,6 +13,7 @@
  * @link http://stevenbenner.com/2010/12/caching-with-codeigniter-zen-headaches-and-perfomance/
  * @link https://bitbucket.org/stevenbenner/codeigniter-cache-helper
  * @version 1.4
+ * @file
  */
 
 /**

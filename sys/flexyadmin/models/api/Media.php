@@ -166,7 +166,6 @@
  *      [data] => TRUE
  * 
  * 
- * @package default
  * @author Jan den Besten
  */
 

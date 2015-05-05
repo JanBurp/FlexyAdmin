@@ -2,7 +2,6 @@
 /**
  * Maakt een mooie tabel met opties zoals zoeken, sorteren etc.
  *
- * @package default
  * @author Jan den Besten
  */
 class Grid Extends CI_Model {

@@ -3,7 +3,6 @@
 /**
  * Laad Main Angular
  *
- * @package default
  * @author Jan den Besten
  */
 

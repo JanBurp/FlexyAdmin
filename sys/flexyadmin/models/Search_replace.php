@@ -2,7 +2,6 @@
 /**
  * Zoekt/vervangt items in de database
  *
- * @package default
  * @author Jan den Besten
  */
  

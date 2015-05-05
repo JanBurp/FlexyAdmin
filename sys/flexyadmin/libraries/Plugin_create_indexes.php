@@ -17,8 +17,7 @@
   * - _str_uri_
   * - _str_table_
   *
-  * @package default
-  * @author Jan den Besten
+   * @author Jan den Besten
   */
 class Plugin_create_indexes extends Plugin {
 

@@ -296,8 +296,7 @@ class Menu {
    * Als dit veld bestaat en TRUE is dan zal de naam van het veld aan de css class van het menu-item worden toegevoegd
    *
    * @param string $boolClass['']
-   * @package default
-   * @author Jan den Besten
+     * @author Jan den Besten
    */
   public function add_bool_class_field($boolClass='') {
     $this->settings['fields']['bool_class']=$boolClass;

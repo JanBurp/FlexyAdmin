@@ -2,8 +2,14 @@
 /**
  * Uitbreiding op <a href="http://codeigniter.com/user_guide/helpers/string_helper.html" target="_blank">String_helper van CodeIgniter</a>.
  * 
- * @author Jan den Besten
- * @link http://codeigniter.com/user_guide/helpers/string_helper.html
+ * $Author$
+ * $Date$
+ * $Revision$
+ * 
+ * @author: Jan den Besten
+ * @copyright: (c) Jan den Besten
+ * @link http://www.flexyadmin.com 
+ * @file
  */
 
 
@@ -189,19 +195,6 @@ function get_suffix($s,$split="_") {
 	$e=explode($split,$s);
 	return $e[count($e)-1];
 }
-/**
- * Zelfde als get_suffix()
- *
- * @param string $s 
- * @param string $split 
- * @return string
- * @author Jan den Besten
- * @depricated
- * @ignore
- */
-function get_postfix($s,$split="_") {
-	return get_suffix($s,$split);
-}
 
 /**
  * Verwijderd een prefix van een string
@@ -232,20 +225,6 @@ function remove_suffix($s,$split="_") {
 		return implode($split,$e);
 	else
 		return $s;
-}
-
-/**
- * Zelfde als remove_suffix()
- *
- * @param string $s 
- * @param string $split 
- * @return string
- * @author Jan den Besten
- * @depricated
- * @ignore
- */
-function remove_postfix($s,$split="_") {
-	return remove_suffix($s,$split);
 }
 
 /**

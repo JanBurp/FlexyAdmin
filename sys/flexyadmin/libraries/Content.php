@@ -4,9 +4,7 @@
  * Content
  *
  * @author Jan den Besten
- * @version $Id$
  * @copyright , 28 August, 2012
- * @package default
  **/
 
 /**
@@ -32,7 +30,6 @@
  * 
  *      $this->content->initialize( array('remove_sizes'=>TRUE, 'replace_soft_hyphens' => TRUE ) );
  *
- * @package default
  * @author Jan den Besten
  */
 class Content {

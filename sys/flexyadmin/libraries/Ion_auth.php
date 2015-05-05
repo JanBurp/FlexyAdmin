@@ -3,7 +3,6 @@
 /**
  * Ion Auth
  *
- * @package default
  * @author Ben Edmunds, Phil Sturgeon, Jan den Besten
  * @link http://github.com/benedmunds/CodeIgniter-Ion-Auth
  * @version 10.01.2009

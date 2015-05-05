@@ -2,8 +2,14 @@
 /**
  * Uitbreiding op <a href="http://codeigniter.com/user_guide/helpers/file_helper.html" target="_blank">File_helper van CodeIgniter</a>
  *
- * @author Jan den Besten
- * @link http://codeigniter.com/user_guide/helpers/file_helper.html
+ * $Author$
+ * $Date$
+ * $Revision$
+ * 
+ * @author: Jan den Besten
+ * @copyright: (c) Jan den Besten
+ * @link http://www.flexyadmin.com
+ * @file
  **/
 
 

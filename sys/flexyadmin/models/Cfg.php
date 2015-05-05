@@ -2,7 +2,6 @@
  * handles configuration settings form cfg tables in the database
  * It loads them on demand and reads them.
  *
- * @package default
  * @author Jan den Besten
  * @ignore
  * @internal

@@ -35,8 +35,7 @@
   *         $pagination = $this->CI->pagination->create_links();  // $pagination bevat nu de HTML met pagination links
   * 
   *
-  * @package default
-  * @author Jan den Besten
+   * @author Jan den Besten
   */
 class MY_Pagination extends CI_Pagination {
 

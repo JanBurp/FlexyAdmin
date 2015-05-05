@@ -2,7 +2,6 @@
 /**
  * Wordt gebruikt voor interne messages in het admin deel
  *
- * @package default
  * @author Jan den Besten
  * @ignore
  */

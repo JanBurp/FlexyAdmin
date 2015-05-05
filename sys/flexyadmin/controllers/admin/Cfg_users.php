@@ -7,7 +7,6 @@ require_once(APPPATH."core/AdminController.php");
 	* Verzorgt het activeren van gebruikers
 	*
 	* @author Jan den Besten
-	* @package FlexyAdmin_login
 	**/
 class cfg_users extends AdminController {
    

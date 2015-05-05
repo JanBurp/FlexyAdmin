@@ -7,10 +7,13 @@
  *
  * This Controller handles all AJAX requests
  *
- * @package FlexyAdmin V1
- * @author Jan den Besten
- * @version V1 0.1
- *
+ * $Author$
+ * $Date$
+ * $Revision$
+ * 
+ * @author: Jan den Besten
+ * @copyright: (c) Jan den Besten
+ * @link http://www.flexyadmin.com
  */
 
 class Ajax extends AjaxController {

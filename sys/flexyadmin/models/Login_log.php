@@ -1,7 +1,6 @@
 <?php /**
  * logs admin logins
  *
- * @package default
  * @author Jan den Besten
  * @ignore
  * @internal

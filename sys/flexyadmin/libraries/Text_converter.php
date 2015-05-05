@@ -3,7 +3,6 @@
 /**
  * undocumented class
  *
- * @package default
  * @author Jan den Besten
  * @ignore
  */

@@ -2,7 +2,6 @@
 /**
  * For testing frontend ajax calls
  *
- * @package default
  * @author Jan den Besten
  */
 

@@ -2,7 +2,14 @@
 /**
  * Een aantal handige functies om met YouTube en Vimeo filmpjes om te gaan
  *
- * @author Jan den Besten
+ * $Author$
+ * $Date$
+ * $Revision$
+ * 
+ * @author: Jan den Besten
+ * @copyright: (c) Jan den Besten
+ * @link http://www.flexyadmin.com
+ * @file
  **/
 
  /**

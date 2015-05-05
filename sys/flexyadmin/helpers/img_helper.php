@@ -2,7 +2,15 @@
 /**
  * Aantal handige functies voor het omgaan met afbeeldingen
  *
- * @author Jan den Besten
+ *
+ * $Author$
+ * $Date$
+ * $Revision$
+ * 
+ * @author: Jan den Besten
+ * @copyright: (c) Jan den Besten
+ * @link http://www.flexyadmin.com
+ * @file
  **/
 
 /**

@@ -3,7 +3,6 @@
 /**
  * Uitbreiding op [URI class van CodeIgniter](http://codeigniter.com/user_guide/libraries/uri.html)
  *
- * @package default
  * @author Jan den Besten
  */
  

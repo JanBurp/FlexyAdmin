@@ -4,7 +4,6 @@
  * Maakt een zipbestand van de gekozen module of plugin.
  * Met dit zipbestand kan de module/plugin geïnstalleerd worden met de plugin_install_plugin
  *  
- * @package default
  * @author Jan den Besten
  */
  

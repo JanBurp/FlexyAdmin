@@ -3,8 +3,14 @@
 /**
  * Uitbreiding op <a href="http://codeigniter.com/user_guide/helpers/language_helper.html" target="_blank">Language_helper van CodeIgniter</a>.
  * 
- * @author Jan den Besten
- * @link http://codeigniter.com/user_guide/helpers/language_helper.html
+ * $Author$
+ * $Date$
+ * $Revision$
+ * 
+ * @author: Jan den Besten
+ * @copyright: (c) Jan den Besten
+ * @link http://www.flexyadmin.com
+ * @file
  */
 
 
