@@ -1,6 +1,6 @@
 <?php
 
-/**
+/** \ingroup helpers
  * Uitbreiding op <a href="http://codeigniter.com/user_guide/helpers/language_helper.html" target="_blank">Language_helper van CodeIgniter</a>.
  * 
  * $Author$

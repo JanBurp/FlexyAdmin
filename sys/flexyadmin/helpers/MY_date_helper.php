@@ -1,5 +1,5 @@
 <?php 
-/**
+/** \ingroup helpers
  * Uitbreiding op <a href="http://codeigniter.com/user_guide/helpers/date_helper.html" target="_blank">Date_helper van CodeIgniter</a>.
  *
  * $Author$

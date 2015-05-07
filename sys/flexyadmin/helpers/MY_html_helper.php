@@ -1,5 +1,5 @@
 <?php 
-/**
+/** \ingroup helpers
  * Uitbreiding op <a href="http://codeigniter.com/user_guide/helpers/html_helper.html" target="_blank">HTML_helper van CodeIgniter</a>.
  * 
  * Aan veel van onderstaande funties kunnen attributen worden meegegeven: $a

@@ -14,14 +14,14 @@
  	 * 		$table 	=> array ()
  	 * 							)
  	 */
- 	var $data=array();
-	var $keys=array();
-	var $isAdmin;
+ 	private $data=array();
+	private $keys=array();
+	private $isAdmin;
 
  	/**
  	 * Information for database fields
  	 */
- 	var $fieldInfo=array();
+ 	private $fieldInfo=array();
 
  	public function __construct() {
  		parent::__construct();
