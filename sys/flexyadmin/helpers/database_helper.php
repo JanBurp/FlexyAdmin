@@ -1,5 +1,5 @@
 <?php 
-/**
+/** \ingroup helpers
  * Functies die handig zijn voor tabel en veldnamen van de database
  *
  * $Author$

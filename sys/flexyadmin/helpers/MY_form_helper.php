@@ -1,6 +1,6 @@
 <?php 
 
-/**
+/** \ingroup helpers
  * Uitbreiding op <a href="http://codeigniter.com/user_guide/helpers/form_helper.html" target="_blank">Form_helper van CodeIgniter</a>.
  *
  * $Author$

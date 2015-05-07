@@ -1,5 +1,5 @@
 <?php
-/**
+/** \ingroup helpers
  * Handige PHP debug tools
  *
  * $Author$

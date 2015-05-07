@@ -1,5 +1,5 @@
 <?php 
-/**
+/** \ingroup helpers
  * Aantal handige functies voor het omgaan met afbeeldingen
  *
  *

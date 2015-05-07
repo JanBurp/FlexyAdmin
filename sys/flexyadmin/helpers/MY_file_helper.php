@@ -1,5 +1,5 @@
 <?php 
-/**
+/** \ingroup helpers
  * Uitbreiding op <a href="http://codeigniter.com/user_guide/helpers/file_helper.html" target="_blank">File_helper van CodeIgniter</a>
  *
  * $Author$

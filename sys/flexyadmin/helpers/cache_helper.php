@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/**
+/** \ingroup helpers
  * Output Cache Helper
  *
  * Utility functions for working with CodeIgniter's output cache.
