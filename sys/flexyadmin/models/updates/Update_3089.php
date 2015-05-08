@@ -1,12 +1,9 @@
 <?php 
 
 /**
- * $Author$
- * $Date$
+ * @author Jan den Besten
  * $Revision$
- * 
- * @author: Jan den Besten
- * @copyright: (c) Jan den Besten
+ * @copyright (c) Jan den Besten
  */
 
 class Update_3089 extends Model_updates {

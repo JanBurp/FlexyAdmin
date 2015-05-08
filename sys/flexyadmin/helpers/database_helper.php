@@ -2,12 +2,9 @@
 /** \ingroup helpers
  * Functies die handig zijn voor tabel en veldnamen van de database
  *
- * $Author$
- * $Date$
+ * @author Jan den Besten
  * $Revision$
- * 
- * @author: Jan den Besten
- * @copyright: (c) Jan den Besten
+ * @copyright (c) Jan den Besten
  * @file
  **/
 

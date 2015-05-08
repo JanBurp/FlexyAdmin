@@ -4,11 +4,8 @@
  * All uri's are to controller.php which dicides what to do and loads this (or another) view.
  *
  * $Author: $
- * $Date: $
- * $Revision: $
- * 
- * @author: Jan den Besten
- * @copyright: (c) Jan den Besten
+ * $Revision:  $
+ * @copyright (c) Jan den Besten
  */
 ?><!DOCTYPE html>
 <html lang="<?=$language?>">

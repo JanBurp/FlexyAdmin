@@ -2,12 +2,9 @@
 /** \ingroup helpers
  * Uitbreiding op <a href="http://codeigniter.com/user_guide/helpers/text_helper.html" target="_blank">Text_helper van CodeIgniter</a>.
  *
- * $Author$
- * $Date$
+ * @author Jan den Besten
  * $Revision$
- * 
- * @author: Jan den Besten
- * @copyright: (c) Jan den Besten
+ * @copyright (c) Jan den Besten
  * @file
  */
 

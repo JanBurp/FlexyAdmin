@@ -4,12 +4,9 @@
  * Dit is een Formaction die de meegegeven data in een tabel in de database stop.
  * Zie bij config/forms.php het voorbeeld 'reservation' en 'shop'
  * 
- * $Author$
- * $Date$
+ * @author Jan den Besten
  * $Revision$
- * 
- * @author: Jan den Besten
- * @copyright: (c) Jan den Besten
+ * @copyright (c) Jan den Besten
  */
  class Formaction_database extends Formaction {
 

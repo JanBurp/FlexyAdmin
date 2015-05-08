@@ -18,12 +18,9 @@
  * 
  * - `/_api/page?uri=contact`
  * 
- * $Author$
- * $Date$
+ * @author Jan den Besten
  * $Revision$
- * 
- * @author: Jan den Besten
- * @copyright: (c) Jan den Besten
+ * @copyright (c) Jan den Besten
  */
 
 class Page extends Api_Model {

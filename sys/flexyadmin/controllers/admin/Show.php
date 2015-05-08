@@ -3,12 +3,9 @@
 /**
  * This Controller shows a grid or form
  *
- * $Author$
- * $Date$
+ * @author Jan den Besten
  * $Revision$
- * 
- * @author: Jan den Besten
- * @copyright: (c) Jan den Besten
+ * @copyright (c) Jan den Besten
  */
 
 class Show extends AdminController {

@@ -2,12 +2,9 @@
 /**
  * Updating FlexyAdmin
  *
- * $Author$
- * $Date$
+ * @author Jan den Besten
  * $Revision$
- * 
- * @author: Jan den Besten
- * @copyright: (c) Jan den Besten
+ * @copyright (c) Jan den Besten
  */
 
 class Update extends AdminController {

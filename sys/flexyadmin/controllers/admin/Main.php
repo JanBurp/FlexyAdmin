@@ -5,12 +5,9 @@
  *
  * This Controller shows the startscreen
  * 
- * $Author$
- * $Date$
+ * @author Jan den Besten
  * $Revision$
- * 
- * @author: Jan den Besten
- * @copyright: (c) Jan den Besten
+ * @copyright (c) Jan den Besten
  */
 
 class Main extends AdminController {
