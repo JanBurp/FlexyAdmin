@@ -2342,7 +2342,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
       case 'medias':
       case 'media':
         $value='';
-        $path=$this->CI->cfg->get('cfg_media_info',$table.'.'.$field,'path');
+        $path=$this->CI->cfg->get('cfg_media_info',$info['table'].'.'.$field,'path');
         if (!isset($files[$path])) $files[$path]=$this->CI->mediatable->get_files($path,FALSE);
         if (!empty($files[$path])) {
           if ($type=='media') {
