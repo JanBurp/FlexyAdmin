@@ -2,14 +2,13 @@
 
 /**
  * Met dit model kun je de basis database handelingen uitvoeren (CRUD)
- * 
- * @author: Jan den Besten
- * @copyright: Jan den Besten
+
+ * @copyright Jan den Besten
  * @license: n/a
  * 
- * $Author$
- * $Date$
+ * @author Jan den Besten
  * $Revision$
+ * @copyright (c) Jan den Besten
  * $HeadURL$ 
  */
 

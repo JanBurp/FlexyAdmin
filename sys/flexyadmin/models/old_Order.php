@@ -3,12 +3,9 @@
 /**
  * Verzorgt het (her)sorteren van items in een tabel (ook met boomstructuur)
  * 
- * $Author$
- * $Date$
+ * @author Jan den Besten
  * $Revision$
- * 
- * @author: Jan den Besten
- * @copyright: (c) Jan den Besten
+ * @copyright (c) Jan den Besten
  */
 
 class order extends CI_Model {

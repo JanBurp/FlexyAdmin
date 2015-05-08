@@ -6,12 +6,9 @@
  * Je kunt de standaard config velden gebruiken van de CodeIgniter File Uploading Class.
  * Als 'allowed_types' leeg is wordt gekeken naar de instellingen van 'Media Info' van het pad. ('upload_path').
  * 
- * $Author$
- * $Date$
+ * @author Jan den Besten
  * $Revision$
- * 
- * @author: Jan den Besten
- * @copyright: (c) Jan den Besten
+ * @copyright (c) Jan den Besten
  */
  class Formaction_upload extends Formaction {
    

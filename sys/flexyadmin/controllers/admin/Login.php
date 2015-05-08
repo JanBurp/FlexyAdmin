@@ -3,12 +3,9 @@
 /**
  * This Controller logs user in or out
  *
- * $Author$
- * $Date$
+ * @author Jan den Besten
  * $Revision$
- * 
- * @author: Jan den Besten
- * @copyright: (c) Jan den Besten
+ * @copyright (c) Jan den Besten
  */
 
 class Login extends MY_Controller {

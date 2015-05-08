@@ -3,12 +3,9 @@
 /**
  * Dit is de basis voor de controller aan de frontend (site/controller.php)
  *
- * $Author$
- * $Date$
+ * @author Jan den Besten
  * $Revision$
- * 
- * @author: Jan den Besten
- * @copyright: (c) Jan den Besten
+ * @copyright (c) Jan den Besten
  */
 class FrontEndController extends MY_Controller {
 

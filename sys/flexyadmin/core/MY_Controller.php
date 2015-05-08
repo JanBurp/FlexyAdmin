@@ -4,12 +4,9 @@
  *
  * This Controller Class handles authentication, loading basic data class
  *
- * $Author$
- * $Date$
+ * @author Jan den Besten
  * $Revision$
- * 
- * @author: Jan den Besten
- * @copyright: (c) Jan den Besten
+ * @copyright (c) Jan den Besten
  */
 
 class MY_Controller extends CI_Controller {

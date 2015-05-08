@@ -7,12 +7,9 @@ require_once(APPPATH."core/BasicController.php");
  *
  * Adds view methods and loads/views automatic header, menu and message.
  *
- * $Author$
- * $Date$
+ * @author Jan den Besten
  * $Revision$
- * 
- * @author: Jan den Besten
- * @copyright: (c) Jan den Besten
+ * @copyright (c) Jan den Besten
  **/
  
 class AdminController extends BasicController {

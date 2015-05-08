@@ -2,12 +2,9 @@
 /** \ingroup helpers
  * Een aantal handige functies om met YouTube en Vimeo filmpjes om te gaan
  *
- * $Author$
- * $Date$
+ * @author Jan den Besten
  * $Revision$
- * 
- * @author: Jan den Besten
- * @copyright: (c) Jan den Besten
+ * @copyright (c) Jan den Besten
  * @file
  **/
 

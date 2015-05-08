@@ -1,8 +1,6 @@
 <?php  /**
   * Met deze class kun je eenvoudig een html menu maken.
   *
-  * @author Jan den Besten
-  *
   * Eenvoudig menu maken
   * ========================
   *
@@ -117,7 +115,10 @@
   *     - views/menu/menu.php - <ul>
   *     - views/menu/item.php - <li><a>
   *     - views/menu/seperaror.php - een <li> zonder link
-  *
+  * 
+  * @author: Jan den Besten
+  * $Revision$
+  * @copyright: (c) Jan den Besten
   */
   
 class Menu {

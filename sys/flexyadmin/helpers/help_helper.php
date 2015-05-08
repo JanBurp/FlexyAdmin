@@ -3,12 +3,9 @@
 /**
  * Only for internal use
  *
- * $Author$
- * $Date$
+ * @author Jan den Besten
  * $Revision$
- * 
- * @author: Jan den Besten
- * @copyright: (c) Jan den Besten
+ * @copyright (c) Jan den Besten
  * @ignore
  **/
 

@@ -12,12 +12,9 @@
  * - attachment_folder    => 'downloads'
  * - attachment_types     => 'gif|jpg|png|doc|docx|xls|xlsx|pdf|zip'
  * 
- * $Author$
- * $Date$
+ * @author Jan den Besten
  * $Revision$
- * 
- * @author: Jan den Besten
- * @copyright: (c) Jan den Besten
+ * @copyright (c) Jan den Besten
  */
  class Formaction_mail extends Formaction {
    

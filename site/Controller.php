@@ -32,13 +32,10 @@
  * 
  * Laatst bijgewerkt: mei 2015
  * 
- * $Author$
- * $Date$
- * $Revision$
- * 
  * @package	FlexyAdmin
- * @author	Jan den Besten
- * @copyright	(c) Jan den Besten
+ * @author Jan den Besten
+ * $Revision$
+ * @copyright (c) Jan den Besten
  */
 
 // ------------------------------------------------------------------------

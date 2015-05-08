@@ -3,7 +3,9 @@
 /**
  * API Controller
  *
- * @author Jan den Besten
+ * @author: Jan den Besten
+ * $Revision$
+ * @copyright: (c) Jan den Besten
  */
 
 class Api extends AjaxController {
