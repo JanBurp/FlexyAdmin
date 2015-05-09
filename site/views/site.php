@@ -7,7 +7,7 @@
  * $Revision:  $
  * @copyright (c) Jan den Besten
  */
-?><!DOCTYPE html>
+?><!DOCTYPE HTML>
 <html lang="<?=$language?>">
 <head>
   <meta charset="utf-8">

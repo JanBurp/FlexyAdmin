@@ -27,7 +27,6 @@ class __ extends AdminController {
 	public function __construct() {
 		parent::__construct();
     $this->load->model('svn');
-
     $this->revision=$this->svn->get_revision();
     $this->upload_path = $_SERVER['DOCUMENT_ROOT'].$this->upload_path;
 	}
