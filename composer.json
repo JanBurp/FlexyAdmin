@@ -1,0 +1,6 @@
+{
+    "require": {
+      "codeigniter/framework": "dev-master",
+      "mikey179/vfsStream": "1.5.*@dev"
+    }
+}
