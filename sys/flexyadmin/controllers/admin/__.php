@@ -1,23 +1,19 @@
 <?php 
 require_once(APPPATH."core/AdminController.php");
-require_once(APPPATH."core/FrontendController.php");  // Load this also, so PHP can build documentation for this one also
+// require_once(APPPATH."core/FrontendController.php");  // Load this also, so PHP can build documentation for this one also
 
 /**
- * Build proces, maakt automatisch documentatie.
+ * Build proces
  *
  * @author Jan den Besten
  */
  
 class __ extends AdminController {
   
-  private $toc=array();
-  private $tipue=array();
-  
   private $path='/Users/jan/Sites/FlexyAdmin/';
-  private $userguide='userguide/FlexyAdmin/__doc/5_api/';
   private $tinyMCElibs='../FlexyAdmin_DocsLibs/Libraries/tinyMCE';
   private $work='FlexyAdminDEMO';
-  private $tags='TAGS';
+  private $tags='zips';
   private $revision;
   
   private $upload_path = '/test_afbeeldingen/test_groot';
@@ -28,17 +24,10 @@ class __ extends AdminController {
     'files' => array('advimage.css','advimage/image.htm','template.htm')
   );
   
-  private $stripTagsWithClasses=array('doc_info','doc_param_type','doc_label');
-  private $stripWords=array('(string)', '(array)', '(void)', '(bool)', '(mixed)', '(object)',
-                            'CI','CodeIgniter','PHP','FlexyAdmin','class','parameters', 'functions', 'function', '__construct', 'methods', 'properties', 'true','false', 'array','return:', 'global','instance',
-                            'en','een','of','de','het', 'dat','als','met','voor' ,'in','je','wat','over','om','is','aan','uit','die','te','ze','op','deze','kun',
-                            'if','the','and','or','name','content','config','use', 'this', 'to', 'own', 'see', 'also', 'file' ,'you','your','re', 'code', 'from', 'which');
-  private $allTags='';
-
 	public function __construct() {
 		parent::__construct();
     $this->load->model('svn');
-    $this->load->helper('markdown');
+
     $this->revision=$this->svn->get_revision();
     $this->upload_path = $_SERVER['DOCUMENT_ROOT'].$this->upload_path;
 	}
@@ -46,8 +35,6 @@ class __ extends AdminController {
 	public function index() {
     $this->_add_content('<h1>Build processes</h1>');
     $menuArray=array(
-      array( 'uri'=>'admin/__/doc', 'name' => 'Create Documentation' ),
-      array( 'uri'=>'admin/__/apidoc', 'name' => 'Create API Documentation' ),
       array( 'uri'=>'admin/__/minify', 'name' => 'Minify JS & CSS' ),
       array( 'uri'=>'admin/__/tinymce', 'name' => 'Update tinyMCE' ),
       array( 'uri'=>'admin/__/clean_assets', 'name' => 'Clean assets' ),
@@ -61,314 +48,6 @@ class __ extends AdminController {
     $this->_show_all();
 	}
 
-
-  /**
-   * Create documentation of the FlexyAdmin API
-   *
-   * @return void
-   * @author Jan den Besten
-   */
-  public function doc($actions='toc|render') {
-    $actions=explode('|',$actions);
-    foreach ($actions as $action) {
-      switch ($action) {
-        case 'toc':
-          $this->doc_toc();
-          break;
-        case 'render':
-          $this->doc_render();
-          break;
-      }
-    }
-    $this->_show_all();
-  }
-  
-  private function doc_toc() {
-    // Make sure everything is loaded, to make documentation for everything...
-    // Load all core libraries that are not standard loaded
-    $this->load->dbutil();
-    // load all helpers
-    $this->load->helper('video');
-
-    // load all libraries
-    $libraries=read_map('sys/flexyadmin/libraries','php',FALSE,FALSE);
-    unset($libraries['ion_auth.php']); // exclude allready inherited libraries
-    unset($libraries['ciunit.php']);
-    unset($libraries['editor_lists.php']);
-    unset($libraries['jsmin.php']);
-    unset($libraries['old_menu.php']);
-    
-    $modules=read_map('site/libraries','php',FALSE,FALSE); // Frontend libraries (modules)
-    $libraries=array_merge($libraries,$modules);
-    foreach ($libraries as $file=>$library) {
-      $this->load->library(str_replace('my_','',$file));
-    }
-
-    // load all models
-    $models=read_map('sys/flexyadmin/models','php',FALSE,FALSE);
-    $frontend=read_map('site/models','php',FALSE,FALSE);
-    $models=array_merge($models,$frontend);
-    unset($models['builder.php']);
-    unset($models['crud']);
-    unset($models['flexy_field.php']);
-    unset($models['graph.php']);
-    unset($models['grid_set.php']);
-    unset($models['ion_auth_model.php']);
-    unset($models['login_log.php']);
-    unset($models['order.php']);
-    unset($models['plugin_handler.php']);
-    unset($models['svn.php']);
-    foreach ($models as $file=>$model) {
-      $file=str_replace('.php','',$file);
-      if (!$this->load->exist('model',$file)) {
-        $this->load->model($file);
-      }
-    }
-    
-    // Ok, start
-    $this->load->library('__/doc');
-    $doc=$this->doc->doc();
-    
-    // Now create toc
-    // Start with general documents
-    $toc=$this->_add_markdown_docs('userguide/FlexyAdmin/__doc');
-
-    // Classes
-    foreach ($doc['classes'] as $file => $class) {
-      // revision of file
-      $revision=$this->svn->get_revision_of($class['file']);
-      if ($revision) $class['revision']=$revision;
-      
-      // determine the kind of file
-      $path=explode('/',$class['file']);
-      $classPath=$path[count($path)-2];
-      $classType=$classPath;
-      if ($path[0]=='site') {
-        if ($classType=='libraries') {
-          $classType='libraries (site)';
-        }
-        elseif ($classType=='models') {
-          $classType='models (site)';
-        }
-      }
-      if ($path[0]=='sys') {
-        if (has_string('plugin',strtolower($file))) $classType='plugins (sys)';
-      }
-      $toc[$classType][$file]=$class;
-      $this->_add_content('Class -'.$file.'- added to toc ('.$classPath.')</br>');
-    }
-    
-    // Helpers (functions)
-    foreach ($doc['functions'] as $file => $functions) {
-      if (!empty($functions)) {
-        // get file docblock directly from file...
-        $first_func=current($functions);
-        $full_file=$first_func['file'];
-        // revision of file
-        $revision=$this->svn->get_revision_of($full_file);
-        // file
-        $f=file_get_contents($full_file);
-        preg_match("/\/\*\*(.*)\*\//uUsm", $f,$matches);
-        if (isset($matches[0])) {
-          $docBlock=$matches[0];
-          $p = new Parser($docBlock);
-          $p->parse();
-          $tags = $p->getParams();
-          $description = $p->getDesc();
-          $shortdescription = $p->getShortDesc();
-          if (!isset($tags['ignore'])) {
-            $name=str_replace('.php','',$file);
-            $toc['helpers'][$name]=array(
-              'file' => $file,
-              'revision' => $revision,
-              'doc' => array(
-                'shortdescription'=>$shortdescription,
-                'description'=>$description,
-                'tags'=>$tags,
-              ),
-              'functions'=>$functions
-            );
-            $this->_add_content('Helper -'.$name.'- added to toc</br>');
-          }
-        }
-      }
-    }
-    
-    unset($toc['less']);
-
-    $this->toc_order=array('start','gevorderden','database','modules_en_plugins','api','libraries (site)','models (site)','helpers','plugins (sys)','libraries','models','core');
-    $otoc=array();
-    foreach ($this->toc_order as $key) {
-      if ($key=='|')
-        $otoc[]='|';
-      else {
-        if (!empty($toc[$key])) {
-          $otoc[$key]=$toc[$key];
-        }
-        else {
-          $otoc[$key]=array();
-        }
-      }
-    }
-    
-    // Markdown all (short(description))
-    $otoc=$this->markdown_descriptions($otoc);
-
-    $json_toc=array2json($otoc);
-    $json_toc=json_encode($otoc);
-    $tocfile='userguide/FlexyAdmin/toc.json';
-    write_file($tocfile,$json_toc);
-    $this->_add_content('TOC file created.</br>');
-  }
-  
-  private function nice_methods($methods) {
-    foreach ($methods as $name => $method) {
-      $nice_name='<code>'.$name.'(';
-      $first=true;
-      if (isset($method['doc']['param'])) {
-        foreach ($method['doc']['param'] as $key => $param) {
-          // nice param
-          $methods[$name]['doc']['param'][$key]['nice_param']=$this->nice_param($param);
-          // nice name
-          if (!$first) $nice_name.=', ';
-          if (isset($param['default'])) $nice_name.='[';
-          $nice_name.='('.$param['type'].') $'.str_replace(array('[',']'),array('=',''),$param['param']);
-          if (isset($param['default'])) $nice_name.=']';
-          $first=false;
-        }
-      }
-      $nice_name.=')</code>';
-      $methods[$name]['nice_name']=highlight_code_if_needed($nice_name);
-      if (empty($methods[$name]['return']))
-        $methods[$name]['nice_return']=highlight_code_if_needed('<code>(void)</code>');
-      else
-        $methods[$name]['nice_return']=$this->nice_param($methods[$name]['return']);
-    }
-    return $methods;
-  }
-  private function nice_param($param) {
-    $nice='<code>('.$param['type'].') $'.$param['param'].' // '.$param['desc'].'</code>';
-    return highlight_code_if_needed($nice);
-  }
-  private function nice_properties($properties) {
-    foreach ($properties as $name => $property) {
-      $nice='<code>';
-      if (isset($property['var'][0])) $nice.='('.trim(strip_tags($property['var'][0])).')';
-      $nice.=' '.$name.'</code>';
-      $properties[$name]['nice_property']=highlight_code_if_needed($nice);
-    }
-    return $properties;
-  }
-  
-  private function markdown_descriptions($items) {
-    foreach ($items as $key => $value) {
-      if (is_array($value)) {
-        $items[$key]=$this->markdown_descriptions($value);
-      }
-      else {
-        if ($key=='description' or $key=='shortdescription') {
-          $items[$key]=highlight_code_if_needed(Markdown($value));
-        }
-      }
-    }
-    return $items;
-  }
-  
-  private function doc_render() {
-    // Load toc
-    $json_toc=file_get_contents('userguide/FlexyAdmin/toc.json');
-    $toc=json_decode($json_toc,true);
-    
-    // Render as big HTML file
-    $userguide=array();
-    // $toc=array_slice($toc,0,4);
-    foreach ($toc as $head => $sub) {
-      $title=ucfirst($head);
-      $userguide[$title]=array();
-      foreach ($sub as $name => $item) {
-        $doc=$item['doc'];
-        $view_data=$item;
-        $view_data['id']=safe_string($name);
-        $view_data['name']=$name;
-        $view_data['properties']=null;
-        $view_data['methods']=null;
-        $view_data['functions']=null;
-        if (isset($item['properties'])) {
-          $item['properties']=$this->nice_properties($item['properties']);
-          $view_data['properties']=$this->load->view('admin/__/properties',array('title'=>$title,'properties'=>$item['properties']),true);
-        }
-        if (isset($item['methods']))    {
-          $item['methods']=$this->nice_methods($item['methods']);
-          $view_data['methods']=$this->load->view('admin/__/methods',array('title'=>$name,'methods'=>$item['methods']),true);
-        }
-        if (isset($item['functions']))  {
-          $item['functions']=$this->nice_methods($item['functions']);
-          $view_data['functions']=$this->load->view('admin/__/methods',array('title'=>$name,'methods'=>$item['functions']),true);
-        }
-        $html=$this->load->view('admin/__/item',$view_data,true);
-        $this->_add_content($name.' added.</br>');
-        $userguide[$title][$name]=$html;
-      }
-    }
-    
-    $html=$this->load->view('admin/__/userguide',array('items'=>$userguide),true);
-    // Glyphicons
-    $html = preg_replace("/\{glyphicon-(.*)\}/um", '<span class="glyphicon glyphicon-$1"></span>', $html);
-    write_file('userguide/FlexyAdmin/userguide.html',$html);
-    
-    $index=$this->load->view('admin/__/index',array('root'=>'./','userguide'=>$html,'revision'=>$this->revision),true);
-    write_file('userguide/FlexyAdmin/index.html',$index);
-    
-    $this->_add_content('<br>Userguide.html created.</br>');
-    $this->_add_content('<br>index.html created.</br>');
- 
-  }
-
-  private function _clean_tags($tags) {
-    foreach ($this->stripWords as $word) {
-      $tags = preg_replace("/\b".$word."\b/ui", "", $tags); // remove some words
-    }
-    $tags=explode(' ',$tags);
-    // remove tags shorter than 3 and without () and the end
-    foreach ($tags as $key => $tag) {
-      $len=strlen($tag);
-      if (substr($tag,$len-2,2)!='()' or $len<3)
-        unset($tags[$key]);
-    }
-    $tags=implode(' ',$tags);
-    return $tags;
-  }
-
-  private function _add_markdown_docs($path) {
-    $files=read_map($path,'',TRUE,FALSE);
-    $toc=array();
-    foreach ($files as $name  => $file) {
-      if ($file['type']=='dir') {
-        $dir=str_replace('__doc/','',$file['path']);
-        $dir=preg_replace("/\/(\d_)/u", "/", $dir);
-        // if (!file_exists($dir)) mkdir($dir);
-        $fname=remove_prefix($name,'_');
-        $toc[$fname]=$this->_add_markdown_docs($path.'/'.$name);
-      }
-      elseif ($file['type']=='md')  {
-        $name=ucfirst(str_replace(array('_','.html','.md'),array(' ',''),remove_prefix($name,'-')));
-        $path=explode('/',$file['path']);
-        $path=$path[count($path)-2];
-        $type=remove_prefix($path,'_');
-        $markdown=file_get_contents($file['path']);
-        $toc[$name]=array(
-          'file'=> $file['path'],
-          'doc' => array(
-            'description' => $markdown,
-          ),
-        );
-  
-      }
-    }
-    return $toc;
-  }
-
-  
   
   /**
    * Update the tinyMCE editor
@@ -719,47 +398,6 @@ class __ extends AdminController {
     
     $this->_show_all();
   }
-  
-  
-  
-  public function apidoc() {
-    $this->_add_content('<h1>Create API documentation</h1>');
-    
-    $apiMapBackend=APPPATH.'models/api';
-    $apiMapFrontend=SITEPATH.'models/api';
-    
-    $this->_apidoc($apiMapBackend,'2-admin_api');
-    $this->_apidoc($apiMapFrontend,'3-frontend_api');
-    
-    $this->_show_all();
-  }
-  
-  private function _apidoc($map,$destination) {
-    $files=read_map($map,'php',false,false);
-    unset($files['api_model.php']);
-    
-    $doc = '';
-    foreach ($files as $name => $file) {
-      $text=file_get_contents($file['path']);
-      if (preg_match("/\/\*\*(.*)\*\//uUsm", $text,$matches)) {
-        $md=$matches[1];
-        $md = preg_replace("/^\s\* /uUsm", "", $md);
-        $md = preg_replace("/- /uUsm", " - ", $md);
-        $md = preg_replace("/^@(.*)\n/um", "", $md);
-        $api="`_api/".str_replace('.php','',$name).'`';
-        $doc.=$api."\n".str_repeat("-",strlen($api))."\n".$md."\n---------------------------------------\n\n";
-      }
-    }
-    
-    $filename=$map.'/api.md';
-    $filename=$this->userguide.$destination.'.md';
-    write_file($filename,$doc);
-    $this->_add_content('<p>'.$filename.' created.</>');
-  }
-  
-  
-  
-    
 
 
 }
