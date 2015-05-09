@@ -1,5 +1,14 @@
 <?php require_once(APPPATH."core/AdminController.php");
 
+/**
+ * Controller voor de Filemanager
+ *
+ * @author: Jan den Besten
+ * $Revision$
+ * @copyright: (c) Jan den Besten
+ */
+
+
 class Filemanager extends AdminController {
 
 	public function __construct() {
@@ -9,25 +18,23 @@ class Filemanager extends AdminController {
     $this->grid_set->set_api('API_filemanager_view');
 	}
 
-	function index() {
+  public function index() {
 		$this->_show_all();
 	}
 
-	function _has_rights($path,$whatRight=0) {
+  private function _has_rights($path,$whatRight=0) {
 		$ok=FALSE;
 		$mediaName=$this->cfg->get('CFG_media_info',$path,"path");
     $rights=$this->user->has_rights("media_".$mediaName,"",$whatRight);
 		return $rights;
 	}
 
-
 /**
  * This controls the filemanager view
  *
  * @param string $path Path name
  */
-
-	function show() {
+  public function show($path) {
 		$args=$this->uri->uri_to_assoc();
     // IE hack...
     if (isset($args['show']) and $args['show']=='sys') {
@@ -187,13 +194,15 @@ class Filemanager extends AdminController {
 		$this->_show_all($name);
 	}
 
-/**
- * This controls the filemanager view
- *
- * @param string $path Path name
- */
-
-	function setview($viewType="",$path="") {
+  /**
+   * This controls the filemanager view
+   *
+   * @param string $viewType  default='
+   * @param string $path  default=''
+   * @return void
+   * @author Jan den Besten
+   */
+  public function setview($viewType="",$path="") {
 		if (!empty($viewType) and in_array($viewType,$this->config->item('FILES_view_types'))) {
 			$this->db->set("str_filemanager_view",$viewType);
 			$this->db->where("str_username",$this->session->userdata("str_username"));
@@ -211,7 +220,7 @@ class Filemanager extends AdminController {
 	 * FileManager controller
 	 */
 
-	function confirm($path='') {
+  public function confirm($path='') {
 		$confirmed=$this->input->post('confirm');
 		$files=$this->input->post('items');
 		if ($confirmed=="confirmed") {
@@ -233,7 +242,7 @@ class Filemanager extends AdminController {
    * @return void
    * @author Jan den Besten
    */
-	function delete($path,$files="") {
+  public function delete($path,$files="") {
 		$files=explode(':',$files);
 		// $path=array_shift($files);
 		$path=pathdecode($path);
@@ -293,12 +302,12 @@ class Filemanager extends AdminController {
   /**
    * Upload a file
    *
-   * @param string $path 
-   * @param string $file 
+   * @param string $path  default='' 
+   * @param string $ajax  default='' 
    * @return void
    * @author Jan den Besten
    */
-	function upload($path="",$ajax="") {
+	public function upload($path="",$ajax="") {
 		if (!empty($path)) {
 			if ($this->_has_rights($path)>=RIGHTS_ADD) {
 				$this->lang->load("update_delete");
@@ -385,7 +394,7 @@ class Filemanager extends AdminController {
    * @return void
    * @author Jan den Besten
    */
-	function edit($path,$file) {
+  public function edit($path,$file) {
     $this->lang->load("form");
     $this->load->library('form');
     

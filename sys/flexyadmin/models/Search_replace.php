@@ -1,11 +1,13 @@
 <?php 
-/**
+/** \ingroup models
  * Zoekt/vervangt items in de database
  *
- * @author Jan den Besten
+ * @author: Jan den Besten
+ * $Revision$
+ * @copyright: (c) Jan den Besten
  */
  
-class Search_replace Extends CI_Model {
+class Search_replace extends CI_Model {
 
    private $table_types = array('tbl','res');
    private $field_types = array('txt');
@@ -14,8 +16,7 @@ class Search_replace Extends CI_Model {
 	
 	
    /**
-    * @ignore
-    */
+     */
    public function __construct() {
 		parent::__construct();
 		// This is for sites with uri's to different languages
@@ -69,8 +70,8 @@ class Search_replace Extends CI_Model {
    *
    * @param string $search 
    * @param string $replace 
-   * @param array $fields[array()] als leeg dan in alle velden
-   * @param array $tables[array()] als leeg dan in alle tabellen
+   * @param array $fields default='' als leeg dan in alle velden
+   * @param array $tables default='' als leeg dan in alle tabellen
    * @return void
    * @author Jan den Besten
    */

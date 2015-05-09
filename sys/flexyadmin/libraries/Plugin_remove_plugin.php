@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/**
+/** \ingroup plugins
  * Verwijderd een plugin
  *  
  * @author Jan den Besten
@@ -18,7 +18,6 @@ class Plugin_remove_plugin extends Plugin {
 
 	
   /**
-   * @ignore
    */
    function _admin_api($args=false) {
 		if ($this->CI->user->is_super_admin()) {

@@ -6,6 +6,7 @@
  * @author Jan den Besten
  * $Revision$
  * @copyright (c) Jan den Besten
+ * @deprecated
  */
 
 class order extends CI_Model {
@@ -13,17 +14,11 @@ class order extends CI_Model {
   private $table;
   private $order;
 
-	/**
-	 * @ignore
-	 */
   public function __construct($table="") {
 		parent::__construct();
 		$this->initialize($table);
 	}
 
-  /**
-   * @ignore
-   */
 	public function initialize($table="") {
 		$this->set_table($table);
 		$this->order=$this->config->item('ORDER_field_name');
@@ -61,8 +56,7 @@ class order extends CI_Model {
 	 * @param int $id 
 	 * @return int
 	 * @author Jan den Besten
-	 * @ignore
-	 */
+		 */
   private function get_order($table,$id) {
 		return $this->db->get_field($table,$this->order,$id);
 	}
@@ -74,7 +68,6 @@ class order extends CI_Model {
    * @param int $id 
    * @return init
    * @author Jan den Besten
-   * @ignore
    */
 	private function get_parent($table,$id) {
 		return $this->db->get_field($table,"self_parent",$id);
@@ -86,7 +79,6 @@ class order extends CI_Model {
    * @param string $table 
    * @return mixed
    * @author Jan den Besten
-   * @ignore
    */
 	private function get_bottom($table) {
 		$this->db->select(PRIMARY_KEY);
@@ -115,7 +107,7 @@ class order extends CI_Model {
    * Reset volgorde nummering. Volgorde blijft hetzelde, alleen de nummering wordt ververst
    *
    * @param string $table 
-   * @param int $shift[0]
+   * @param int $shift default=0
    * @return object $this;
    * @author Jan den Besten
    */
@@ -133,9 +125,9 @@ class order extends CI_Model {
    * Schuift item op naar boven
    *
    * @param string $table 
-   * @param int $parent[0]
-   * @param int $up[1]
-   * @param int $from[0] 
+   * @param int $parent default=0
+   * @param int $up default=1
+   * @param int $from default=0 
    * @return object $this;
    * @author Jan den Besten
    */
@@ -160,8 +152,8 @@ class order extends CI_Model {
 	 *
 	 * @param string $table
 	 * @param array $ids Array met nieuwe volgorde
-	 * @param int $shift[0]
-	 * @param int $from[0]
+	 * @param int $shift default=0
+	 * @param int $from default=0
 	 * @return object $this;
 	 * @author Jan den Besten
 	 */

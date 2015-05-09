@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/**
+/** \ingroup plugins
  * Maakt van één tabel twee tabellen door een veld te verhuizen naar een foreign table gekoppeld met een foreignkey
  * 
  * Eerste argument is de tabel, tweede argument is het veld wat moet verhuizen.
@@ -19,7 +19,6 @@ class Plugin_create_foreign extends Plugin {
 
 	
   /**
-   * @ignore
    */
    function _admin_api($args=false) {
 		if ($this->CI->user->is_super_admin()) {

@@ -9,7 +9,6 @@
 class Fallback extends Module {
   
   /**
-   * @ignore
    */
   public function __construct() {
     parent::__construct();

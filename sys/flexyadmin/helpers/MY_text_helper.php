@@ -15,8 +15,7 @@
   * @param string $matches 
   * @return void
   * @author Jan den Besten
-  * @ignore
-  */
+   */
  function _callback_highlight($matches) {
 	$code=$matches[1];
 	$code=strip_tags($code,'<p><br><a><div><b><strong><em><italic>');
@@ -37,7 +36,6 @@
  * @param string $matches 
  * @return void
  * @author Jan den Besten
- * @ignore
  */
 
 function _callback_highlight_span($matches) {
@@ -57,7 +55,7 @@ function _callback_highlight_span($matches) {
  * - werkt alleen binnen de code tags.
  * - haalt eerst (eventueel eerder geplaatst) kleurcodes weg en schoont alles binnen de code tags nog wat verder op (trimmen etc).
  * 
- * @param string $txt mee te geven HTML
+ * @param string $html mee te geven HTML
  * @return string
  * @author Jan den Besten
  */

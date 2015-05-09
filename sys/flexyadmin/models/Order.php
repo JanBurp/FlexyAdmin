@@ -1,6 +1,6 @@
 <?php 
 
-/**
+/** \ingroup models
  * Verzorgt het (her)sorteren van items in een tabel (ook met boomstructuur)
  * 
  * @author Jan den Besten
@@ -13,17 +13,11 @@ class order extends CI_Model {
   private $table;
   private $order;
 
-	/**
-	 * @ignore
-	 */
   public function __construct($table="") {
 		parent::__construct();
 		$this->initialize(array('table'=>$table));
 	}
 
-  /**
-   * @ignore
-   */
 	public function initialize($settings=array()) {
 		$this->set_table(el('table',$settings,''));
 		$this->order=$this->config->item('ORDER_field_name');
@@ -61,8 +55,7 @@ class order extends CI_Model {
 	 * @param int $id 
 	 * @return int
 	 * @author Jan den Besten
-	 * @ignore
-	 */
+		 */
   private function _get_order($table,$id) {
 		return $this->db->get_field($table,$this->order,$id);
 	}
@@ -74,7 +67,6 @@ class order extends CI_Model {
    * @param int $id 
    * @return init
    * @author Jan den Besten
-   * @ignore
    */
 	private function _get_parent($table,$id) {
 		return $this->db->get_field($table,"self_parent",$id);
@@ -86,7 +78,6 @@ class order extends CI_Model {
    * @param string $table
    * @return mixed
    * @author Jan den Besten
-   * @ignore
    */
   private function _get_bottom($table) {
     $this->db->select(PRIMARY_KEY);
@@ -117,8 +108,9 @@ class order extends CI_Model {
    * Reset volgorde nummering. Volgorde blijft hetzelde, alleen de nummering wordt ververst
    *
    * @param string $table 
-   * @param int $from[0], eventueel kan alles worden opgeschoven
-   * @return int Aantal verschoven items, meestal alle items;
+   * @param int $from default=0, eventueel kan alles worden opgeschoven
+   * @param int $old default=FALSE
+   * @return int Aantal geresette items
    * @author Jan den Besten
    */
 	public function reset($table,$from=0,$old=FALSE) {
@@ -138,7 +130,7 @@ class order extends CI_Model {
    * (Wordt gebruikt in Crud)
    *
    * @param string $table 
-   * @param int $parent[0]
+   * @param int $parent default=0
    * @return int Aantal verschoven items;
    * @author Jan den Besten
    */
@@ -166,7 +158,7 @@ class order extends CI_Model {
 	 *
 	 * @param string $table
 	 * @param array $ids Array met nieuwe volgorde
-	 * @param int $from[0] Begin te tellen vanaf... ??
+	 * @param int $from default=0 Begin te tellen vanaf... ??
 	 * @return object $this;
 	 * @author Jan den Besten
 	 */

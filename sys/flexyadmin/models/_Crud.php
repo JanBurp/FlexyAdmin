@@ -1,6 +1,6 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/**
+/** \ingroup models
  * Met dit model kun je de basis database handelingen uitvoeren (CRUD)
 
  * @copyright Jan den Besten
@@ -114,8 +114,7 @@ class _crud extends CI_Model {
 	/**
 	 * private _update_insert, does the actual updateing/inserting for create/update
 	 * @author Jan den Besten
-	 * @ignore
-	 * @internal
+		 * @internal
 	 */
 	private function _update_insert($insert=FALSE) {
 		$id=FALSE;
@@ -326,11 +325,10 @@ class _crud extends CI_Model {
   /**
    * Stelt alle standaard argumenten in
    *
-   * @param string $args[NULL]
+   * @param string $args default=NULL
    * @return void
    * @author Jan den Besten
    * @internal
-   * @ignore
    */
 	private function _set_args($args=array()) {
     $table = element('table',$args,FALSE);
@@ -367,7 +365,6 @@ class _crud extends CI_Model {
    * @return int $id
    * @author Jan den Besten
    * @internal
-   * @ignore
    */
 	private function _get_id($where='') {
     if (empty($where)) $where=$this->where;
@@ -394,7 +391,6 @@ class _crud extends CI_Model {
    * @return void
    * @author Jan den Besten
    * @internal
-   * @ignore
    */
 	private function _set_order() {
 		foreach ($this->order as $order_by => $direction) {
@@ -408,7 +404,6 @@ class _crud extends CI_Model {
    * @return void
    * @author Jan den Besten
    * @internal
-   * @ignore
    */
 	private function _set_limit() {
 		if ($this->limit) {

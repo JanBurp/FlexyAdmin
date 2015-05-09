@@ -1,6 +1,6 @@
 <?
 
-/**
+/** \ingroup models
  * API row. Geeft, bewerkt of voegt een record toe aan een tabel.
  * De specifieke functie wordt bepaald door de (soort) parameters. Zie hieronder per functie.
  * 

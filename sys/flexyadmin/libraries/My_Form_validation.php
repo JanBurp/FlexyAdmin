@@ -1,5 +1,13 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/** \ingroup libraries
+ * Uitbreiding op Form Validation van CodeIgniter
+ *
+ * @author: Jan den Besten
+ * $Revision$
+ * @copyright: (c) Jan den Besten
+ */
+
 class MY_Form_validation extends CI_Form_validation {
    
   public function __construct() {
@@ -16,7 +24,6 @@ class MY_Form_validation extends CI_Form_validation {
    * @param string $errors 
    * @return void
    * @author Jan den Besten
-   * @ignore
    */
 	public function set_rules($field, $label = '', $rules = array(), $errors = array()) {
     if (is_string($rules)) {
@@ -85,7 +92,8 @@ class MY_Form_validation extends CI_Form_validation {
    *
    * @param string $table Tabel
    * @param string $field Veld
-   * @param array $validation[=array('rules'=>'','params'=>'')] Eventueel mee te geven extra validation rules
+   * @param array $validation =array('rules'=>'','params'=>'') Eventueel mee te geven extra validation rules
+   * @param bool $as_array default=FALSE
    * @return string
    * @author Jan den Besten
    */
@@ -207,10 +215,10 @@ class MY_Form_validation extends CI_Form_validation {
    * 
    * - een string met een optelling van validatieregels gescheiden door |
    * - een array waar de keys de validatieregels zijn en de values de eventuele paramaters
-   * - een array waarbij elke rij de volgende array bevat: array('rules'=>#hier de validatieregels gescheiden door |#, 'params'=>#hier de eventuele paramaters gescheiden door |#)
+   * - een array waarbij elke rij de volgende array bevat: array('rules'=>hier de validatieregels gescheiden door |, 'params'=>hier de eventuele paramaters gescheiden door |)
    *
    * @param mixed $validations
-   * @param bool $as_array=FALSE
+   * @param bool $as_array default=FALSE
    * @return array
    * @author Jan den Besten
    */
@@ -392,8 +400,8 @@ class MY_Form_validation extends CI_Form_validation {
     * Excepts a format parameter, turning this method into a prepper.
     * Use standard php date formats (ie. Y-m-d) for this.
     *
-    * @param    string
-    * @param    string
+    * @param    string $str
+    * @param    mixed $format default=FALSE
     * @return    bool / obj
     */
   function valid_date($str, $format=FALSE) {
@@ -434,7 +442,9 @@ class MY_Form_validation extends CI_Form_validation {
 
    /**
     * Input moet hetzelfde zijn als...
-    * @param  string $str
+    * 
+    * @param  string $input
+    * @param string $same
     * @return mixed
     */
    public function valid_same($input,$same) {
@@ -448,7 +458,8 @@ class MY_Form_validation extends CI_Form_validation {
     * - minimaal 1 letter
     * - minimaal 1 hoofdletter
     * - minimaal 1 nummer
-    * @param  string $str
+    * 
+    * @param  string $password
     * @return mixed
     */
    public function valid_password($password) {

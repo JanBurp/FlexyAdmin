@@ -1,10 +1,9 @@
-<?php /**
- * handles configuration settings form cfg tables in the database
- * It loads them on demand and reads them.
+<?php
+
+/** \ingroup models
+ * Voor alle cfg_ tabellen
  *
  * @author Jan den Besten
- * @ignore
- * @internal
  */
 
  class Cfg extends CI_Model {
@@ -47,8 +46,6 @@
 	}
 
   /**
-   * public function _name($table)
-   *
    * Gives table name with cfg_ prefix
    *
    * @param string $table Name of config table (with or without prefix)
@@ -63,12 +60,11 @@
 	}
 
 /**
- * public function load($table,[$key])
- *
  * Loads data from table into data array
  *
  * @param string $table Name of config table
- * @param string $key fieldname wich will be the key to find data
+ * @param string $key  default='' fieldname wich will be the key to find data
+ * @param string $fields default=''
  * @return bool true on succes
  */
 	public function load($table,$key='',$fields='') {
@@ -163,14 +159,12 @@
 
 
   /**
-   * public function get(string $table, [$key], [$field])
-   *
    * Gets data from configuration table in database.
    *
    * @param string 	$table 			Configuration table name
-   * @param mixed 	[$key] 			Row or field of table
-   * @param mixed 	[$field]		Field of table
-   * @param mixed   [$default]  [NULL]
+   * @param mixed 	$key 			  default='' Row or field of table
+   * @param mixed 	$field		  default='' Field of table
+   * @param mixed   $default    default=NULL
    * @return array or string		If result is just one value it returns it as a string,
    * 														Otherwise the result is an assoc array with all elements or even an array with multiple rows and their assoc elements
    */
@@ -225,13 +219,12 @@
 
 
 	/**
-	 *
-	 * public function get_field_data($table)
-	 *
 	 * Use this method instead of field_data() to make sure MySql gives the right information
 	 * see http://codeigniter.com/forums/viewthread/46418/
 	 *
 	 * @param string $table Tablename for which field data is asked
+	 * @param string $key  default=''
+	 * @param string $value default=''
 	 * @return array Array of the information
 	 */
 	public function field_data($table,$key="",$value="") {
@@ -239,10 +232,6 @@
 			$sql = "SHOW COLUMNS FROM `$table`";
 			$query = $this->db->query($sql);
 			foreach ($query->result() as $field) {
-				/** Explanation of the ugly regex:
-					*   match until first non '('
-					*   then optionally match numbers '\d' inside brackets '\(', '\)
-					*/
 				preg_match('/([^(]+)(\((\d+)\))?/', $field->Type, $matches);
 				$type           = sizeof($matches) > 1 ? $matches[1] : null;
 				$max_length     = sizeof($matches) > 3 ? $matches[3] : null;

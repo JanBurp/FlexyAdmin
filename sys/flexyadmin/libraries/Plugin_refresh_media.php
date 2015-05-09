@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/**
+/** \ingroup plugins
  * Met deze plugin kan de mediatabel gereset worden.
  * Handig in het geval van handmatig toevoegen van bestanden of als er fouten zijn opgetreden
  * 
@@ -15,7 +15,6 @@
 class Plugin_refresh_media extends Plugin {
 
   /**
-   * @ignore
    */
   function __construct() {
 		parent::__construct();
@@ -28,7 +27,6 @@ class Plugin_refresh_media extends Plugin {
    * @param string $args 
    * @return void
    * @author Jan den Besten
-   * @ignore
    */
 	function _admin_api($args=NULL) {
     $clean=FALSE;

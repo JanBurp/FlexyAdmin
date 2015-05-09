@@ -1,5 +1,6 @@
 <?php 
-/**
+
+/** \ingroup models
  * Hiermee kunnen uri's worden gecreeërd uit andere velden van een database rij
  *
  * @author Jan den Besten
@@ -9,44 +10,32 @@ class Create_uri extends CI_Model {
 
   /**
    * Tabel
-   *
-   * @var string
    */
   private $table;
   
   /**
    * Velden waar de uri mogelijk gecreerd van kan worden
-   *
-   * @var string
    */
   private $source_field='';
   
   /**
    * Een prefix die voor elke uri wordt geplakt
-   *
-   * @var string
    */
   private $prefix='';
 
   /**
    * Een prefix kan dynamisch gegenereerd worden door een extern object.method
-   *
-   * @var string
    */
   private $prefix_callback=false;
   
   
   /**
    * data uit tabel
-   *
-   * @var string
    */
   private $data;
   
   /**
    * veldnamen an tabel
-   *
-   * @var string
    */
   private $fields;
 
@@ -106,7 +95,7 @@ class Create_uri extends CI_Model {
  	 * Maak uri vanuit meegegeven data (rij uit een tabel, of string)
  	 *
  	 * @param array $data 
- 	 * @param bool $overrule[FALSE] als TRUE dan wordt altijd een nieuwe uri gecreeerd
+ 	 * @param bool $overrule default=FALSE als TRUE dan wordt altijd een nieuwe uri gecreeerd
  	 * @return string
  	 * @author Jan den Besten
  	 */
@@ -177,7 +166,6 @@ class Create_uri extends CI_Model {
    * @return void
    * @author Jan den Besten
    * @internal
-   * @ignore
    */
  	private function _find_source_field($data=false) {
 		$fields=$this->fields;
@@ -250,7 +238,6 @@ class Create_uri extends CI_Model {
    * @return mixed
    * @author Jan den Besten
    * @internal
-   * @ignore
    */
  	private function _is_existing_uri($uri,$data) {
     if (isset($this->existing_class)) {

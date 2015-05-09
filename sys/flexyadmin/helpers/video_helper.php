@@ -12,8 +12,8 @@
   * Haalt url van de thumbnail van een video op
   *
   * @param string $code De YouTube of Vimeo code voor de video
-  * @param string $size['small'] de maat [small|medium|big]
-  * @param string $type['youtube'] 'youtube' of 'vimeo'
+  * @param string $size default='small' de maat [small|medium|big]
+  * @param string $type default='youtube' 'youtube' of 'vimeo'
   * @return string Url van de thumb
   * @author Jan den Besten
   */
@@ -46,9 +46,10 @@ function get_video_thumb($code,$size='small',$type='youtube') {
 
 /**
  * Geeft info over vimeo video (o.a. thumb)
+ * 
+ * Zie http://www.soapboxdave.com/2010/04/getting-the-vimeo-thumbnail/
  *
  * @author Jan den Besten
- * @link http://www.soapboxdave.com/2010/04/getting-the-vimeo-thumbnail/
  */
 function get_vimeo_info($id,$var='') {
 	if (!function_exists('curl_init')) die('CURL is not installed!');
@@ -79,7 +80,7 @@ function get_vimeo_info($id,$var='') {
  * - Dan geeft deze functie als resultaat: ICFELTZcON0
  *
  * @param string $url
- * @param string $type['youtube'] 'youtube' of 'vimeo' 
+ * @param string $type default='youtube' 'youtube' of 'vimeo' 
  * @return string
  * @author Jan den Besten
  */

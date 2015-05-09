@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/**
+/** \ingroup plugins
  * Maakt een zipbestand van de gekozen module of plugin.
  * Met dit zipbestand kan de module/plugin geïnstalleerd worden met de plugin_install_plugin
  *  
@@ -20,7 +20,6 @@ class Plugin_create_plugin extends Plugin {
 
 	
   /**
-   * @ignore
    */
    function _admin_api($args=false) {
 		if ($this->CI->user->is_super_admin()) {

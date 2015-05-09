@@ -1,7 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 
-/**
+/** \ingroup plugins
  * Met deze plugin kun je logfiles (deels) bekijken.
  * Het grote voordeel, ten opzichte van een logfile in z'n geheel bekijken is:
  * 
@@ -31,7 +31,6 @@ class Plugin_log extends Plugin {
   /**
    * @author Jan den Besten
    * @internal
-   * @ignore
    */
 	public function __construct() {
 		parent::__construct();
@@ -40,7 +39,6 @@ class Plugin_log extends Plugin {
   /**
    * @author Jan den Besten
    * @internal
-   * @ignore
    */
 	public function _admin_api() {
 		if ($this->CI->user->is_super_admin()) {
@@ -101,7 +99,6 @@ class Plugin_log extends Plugin {
    * 
    * @author Jan den Besten
    * @internal
-   * @ignore
    */
   public function _log_filter($line) {
     if (!empty($this->search)) {

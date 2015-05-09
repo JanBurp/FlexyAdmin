@@ -24,35 +24,26 @@ class AjaxController extends BasicController {
   
   /**
    * Naam van deze Ajax Controller
-   *
-   * @var string
    */
 	protected $name=__CLASS__;
   
   /**
    * Output
-   *
-   * @var array
    */
   protected $result=array();
   
   /**
    * Testmodes
-   *
-   * @var bool
    */
   private $test = false;
   
   /**
    * Set type of return [''|'json']
-   *
-   * @var string
    */
   private $format = '';
   
 
   /**
-   * @ignore
    */
 	public function __construct($name='') {
 		parent::__construct();
@@ -69,7 +60,6 @@ class AjaxController extends BasicController {
    * @return void
    * @author Jan den Besten
    * @internal
-   * @ignore
    */
 	public function __call($function, $args) {
 		return $this->_result(array('error'=>'Method: `'.ucfirst($function)."()` doesn't exists."));
@@ -78,7 +68,7 @@ class AjaxController extends BasicController {
   /**
    * Set type
    *
-   * @param string $type[''] or 'json' 
+   * @param string $format  default='' or 'json' 
    * @return this
    * @author Jan den Besten
    */
@@ -92,7 +82,7 @@ class AjaxController extends BasicController {
    * Gebruik altijd deze method om een gestandardiseerde JSON terug te geven aan de AJAX call.
    * Als het geen AJAX request is wordt een trace van het resultaat gegegeven.
    *
-   * @param array $args an associatieve array
+   * @param array $result an associatieve array
    * @return string JSON
    * @author Jan den Besten
    */

@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/**
+/** \ingroup plugins
  * Installeert een module/plugin (.zip bestand)
  *  
  * @author Jan den Besten
@@ -20,7 +20,6 @@ class Plugin_install_plugin extends Plugin {
 
 	
   /**
-   * @ignore
    */
    function _admin_api($args=false) {
      

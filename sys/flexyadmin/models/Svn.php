@@ -1,11 +1,10 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/**
- * Subversion goodies
+/** \ingroup models
+ * Handige tools voor versiebeheer
  *
  * @author Jan den Besten
  * @internal
- * @ignore
  */
 class Svn extends CI_Model {
   

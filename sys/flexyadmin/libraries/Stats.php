@@ -4,31 +4,25 @@
  * Stats Class, keeping track of page statistics
  *
  * @author Jan den Besten
- * @ignore
  * @internal
  */
 
 class Stats {
 
-	var $table;
+	private $table;
 
-	function __construct() {
+	public function __construct() {
 		$this->set_table();
 	}
 
-	function set_table($table="") {
+	public function set_table($table="") {
 		if (empty($table)) {
 			$table='log_stats';
 		}
 		$this->table=$table;
 	}
 
-/**
- *
- */
-
-
-	function add_current_uri() {
+	public function add_current_uri() {
 		global $URI;
 		$thisUri=$URI->uri_string();
     $queryStr=el('QUERY_STRING',$_SERVER,'');
@@ -39,7 +33,7 @@ class Stats {
 		}
 	}
 
-	function add_uri($uri=NULL) {
+	public function add_uri($uri=NULL) {
 		if ($uri==NULL) $uri="";
 		// only insert page uri's (no images, css etc).
 		if (strpos($uri,'.')===FALSE) {
@@ -79,7 +73,7 @@ class Stats {
 		}
 	}
 
-	function get_top($nr=10) {
+	public function get_top($nr=10) {
 		$CI =& get_instance();
 		$results=$CI->fd->get_results($this->table,$nr);
 		return $results;

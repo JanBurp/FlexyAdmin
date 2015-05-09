@@ -54,7 +54,7 @@
   	* 
     *   $.post('example/other');
   	*
-  	* @param string $page 
+  	* @param array $args 
   	* @return mixed
   	* @author Jan den Besten
   	*/

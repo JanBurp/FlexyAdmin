@@ -4,7 +4,6 @@
  * Ion Auth
  *
  * @author Ben Edmunds, Phil Sturgeon, Jan den Besten
- * @link http://github.com/benedmunds/CodeIgniter-Ion-Auth
  * @version 10.01.2009
  *
  * Modified auth system based on redux_auth with extensive customization.  This is basically what Redux Auth 2 should be.
@@ -17,65 +16,47 @@ class Ion_auth
 {
 	/**
 	 * CodeIgniter global
-	 *
-	 * @var string
 	 **/
 	protected $CI;
 
 	/**
 	 * account status ('not_activated', etc ...)
-	 *
-	 * @var string
 	 **/
 	protected $status;
 
 	/**
 	 * message (uses lang file)
-	 *
-	 * @var string
 	 **/
 	protected $messages;
 
 	/**
 	 * error message (uses lang file)
-	 *
-	 * @var string
 	 **/
 	protected $errors = array();
 
 	/**
 	 * error start delimiter
-	 *
-	 * @var string
 	 **/
 	protected $error_start_delimiter;
 
 	/**
 	 * error end delimiter
-	 *
-	 * @var string
 	 **/
 	protected $error_end_delimiter;
 
 	/**
 	 * extra where
-	 *
-	 * @var array
 	 **/
 	public $_extra_where = array();
 
 	/**
 	 * extra set
-	 *
-	 * @var array
 	 **/
 	public $_extra_set = array();
 
 
   /**
    * Added by JdB
-   *
-   * @var array
    */
   protected $tables;
   

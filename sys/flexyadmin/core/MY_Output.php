@@ -1,6 +1,6 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/**
+/** \ingroup core
  * Uitbreiding op [CodeIgniters Output Class](http://codeigniter.com/user_guide/libraries/output.html)
  *
  * Heeft twee doelen:
@@ -19,7 +19,6 @@ class MY_Output extends CI_OUTPUT {
    * @param string $output['']
    * @return void
    * @author Jan den Besten
-   * @ignore
    */
 	public function _display($output = '')	{
 		parent::_display($output);
@@ -48,7 +47,6 @@ class MY_Output extends CI_OUTPUT {
    *
    * @return bool
    * @author Jan den Besten
-   * @ignore
    */
 	public function _can_cache() {
     global $CFG;
@@ -63,7 +61,6 @@ class MY_Output extends CI_OUTPUT {
    * @param string $URI 
    * @return mixed
    * @author Jan den Besten
-   * @ignore
    */
 	public function _display_cache(&$CFG, &$URI) {
 		if ($this->_can_cache())

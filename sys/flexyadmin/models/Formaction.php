@@ -1,6 +1,6 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/**
+/** \ingroup models
  * Model dat als basis dient voor formactions in de frontend
  * 
  * @author Jan den Besten
@@ -10,40 +10,30 @@
    
    /**
     * Alle instellingen voor deze formactie, hier de defaults
-    *
-    * @var string
     */
    var $settings = array();
    
    /**
     * het Form id
-    *
-    * @var int
     */
    var $form_id = FALSE;
    
    /**
     * Velden van het formulier, zodat de labels etc bekend zijn
-    *
-    * @var string
     */
    var $fields=array();
    
    /**
     * Eventuel gegenereerde errorteksten komen hier
-    *
-    * @var string
     */
     var $errors='';
    
-
 
     /**
      * __construct
      *
      * @author Jan den Besten
      * @internal
-     * @ignore
      */
     public function __construct() {
       parent::__construct();

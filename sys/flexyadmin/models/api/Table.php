@@ -1,6 +1,6 @@
 <?
 
-/**
+/** \ingroup models
  * API table. Geeft de data van een tabel uit de database.
  * 
  * ###Parameters:

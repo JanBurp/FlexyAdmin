@@ -1,6 +1,6 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/**
+/** \ingroup libraries
  * Uitbreiding op [CI_Email](http://codeigniter.com/user_guide/libraries/email.html)
  *
  * @author Jan den Besten
@@ -10,15 +10,11 @@ class MY_Email extends CI_Email {
 
   /**
    * Houdt bij naar hoeveel adressen 
-   *
-   * @var string
    */
   private $total_send_addresses=0;
 
   /**
    * Taal voor het verzenden van emails uit cfg_email
-   *
-   * @var string
    */
   private $lang='';
   
@@ -91,7 +87,6 @@ class MY_Email extends CI_Email {
    * @return void
    * @author Jan den Besten
    * @internal
-   * @ignore
    */
   private function _count_addresses($addresses) {
     $addresses=explode(',',$addresses);
@@ -207,7 +202,6 @@ class MY_Email extends CI_Email {
    * @param string $body 
    * @return string
    * @author Jan den Besten
-   * @ignore
    */
   public function prepare_body($body) {
     // good paths to local images

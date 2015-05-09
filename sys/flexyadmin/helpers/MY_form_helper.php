@@ -12,12 +12,11 @@
  /**
   * Aanpassing op CodeIgniter's form_dropdown, zie [hier](http://codeigniter.com/forums/viewthread/49348/)
   *
-  * @param string $name 
-  * @param array $options 
-  * @param array $selected 
-  * @param mixed $extra
+  * @param string $name  default=''
+  * @param array $options  default=array()
+  * @param array $selected  default=array()
+  * @param mixed $extra  default=''
   * @return string
-  * @link http://codeigniter.com/forums/viewthread/49348/
   */
 function form_dropdown($name = '', $options = array(), $selected = array(), $extra = '') {
 	if ( ! is_array($selected))	{
@@ -62,8 +61,12 @@ function form_dropdown($name = '', $options = array(), $selected = array(), $ext
 
 /**
  * Maakt van een array form-data die naar form gestuurd kan worden.
- *
- * @param string $array kan een resultaat zijn uit de database, of een array met velden (zoals door db->list_fields())
+ * 
+ * @param array $array kan een resultaat zijn uit de database, of een array met velden (zoals door db->list_fields())
+ * @param array $validation_rules_prefixes  default=array()
+ * @param array $validation_rules_fields  default=array()
+ * @param array $extra  default=array()
+ * @param array $field_options  default=array()
  * @return array
  * @author Jan den Besten
  */

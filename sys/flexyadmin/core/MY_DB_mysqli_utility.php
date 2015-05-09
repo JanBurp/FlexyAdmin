@@ -1,20 +1,17 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/**
+/** \ingroup core
  * Uitbreiding op [CodeIgniters Database Utility](http://codeigniter.com/user_guide/database/utilities.html) class
  * 
  * Zorgt ervoor dat TEXT en BLOB velden van een SQL Export als HEX-data in de dump zitten ipv als letterlijke tekst.
  *
  * @internal
- * @ignore
  */
 class MY_DB_mysqli_utility extends CI_DB_mysqli_utility {
 	
 
   /**
    * for add_flexy_field()
-   *
-   * @var string
    */
   private $flexy_types = array(
     'id'     => array('type' => 'INT','constraint' => 11, 'unsigned' => TRUE,'auto_increment' => TRUE),
@@ -72,6 +69,8 @@ class MY_DB_mysqli_utility extends CI_DB_mysqli_utility {
    * Test of een sql veilig is om te importeren
    *
    * @param string $sql 
+   * @param string $no_drop default=FALSE
+   * @param string $no_alter default=FALSE
    * @return bool
    * @author Jan den Besten
    */

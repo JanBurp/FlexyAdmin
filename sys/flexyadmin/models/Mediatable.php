@@ -1,39 +1,31 @@
 <?php 
-/**
+/** \ingroup models
  * Met dit model kunnen bestanden worden toegevoegd of verwijderd aan de media tabel (res_media_files)
  *
- * @author Jan den Besten
+ * @author: Jan den Besten
+ * $Revision$
+ * @copyright: (c) Jan den Besten
  */
  
-class Mediatable Extends CI_Model {
+class Mediatable extends CI_Model {
   
   /**
    * Media table
-   *
-   * @var string
-   * @ignore
    */
   private $table='res_media_files';
   
   /**
    * Hier wordt bijgehouden of de mediatabel wel bestaat
-   *
-   * @var boolean
-   * @ignore
    */
   private $has_table=FALSE;
   
   /**
    * cache van reeds opgevraagde info uit tabel
-   *
-   * @var string
-   * @ignore
    */
   private $info=array();
   
 
   /**
-   * @ignore
    */
 	public function __construct() {
 		parent::__construct();
@@ -91,7 +83,7 @@ class Mediatable Extends CI_Model {
    *
    * @param mixed $file een array met alle file info, of de naam van de file 
    * @param string $path[''] als geen info is meegegeven, moet hier het complete path meegegeven worden 
-   * @param int $userId[FALSE] if restricted to users, give the user id here.
+   * @param int $userId default=FALSE if restricted to users, give the user id here.
    * @return mixed $id id van bestand in de database (of FALSE bij een error of een directory)
    * @author Jan den Besten
    */
@@ -130,7 +122,7 @@ class Mediatable Extends CI_Model {
    * Voeg info toe aan bestand in de tabel
    *
    * @param string $info Complte info van de file
-   * @param int $userId[FALSE] if restricted to users, give the user id here.
+   * @param int $userId default=FALSE if restricted to users, give the user id here.
    * @return object $this
    * @author Jan den Besten
    */
@@ -206,8 +198,9 @@ class Mediatable Extends CI_Model {
   /**
    * Refresh de hele mediatabel
    *
-   * @param string $paths['']
-   * @param bool $clean[TRUE] Als TRUE dan wordt tabel helemaal leeggehaald, anders wordt gekeken wat er al bestaat en daar de data van aangevuld
+   * @param string $paths default=''
+   * @param bool $clean default=TRUE Als TRUE dan wordt tabel helemaal leeggehaald, anders wordt gekeken wat er al bestaat en daar de data van aangevuld
+   * @param bool $remove  default=FALSE
    * @return array $paths
    * @author Jan den Besten
    */
@@ -274,8 +267,9 @@ class Mediatable Extends CI_Model {
   /**
    * Geeft alle bestanden en info in een map terug als een array
    *
-   * @param string $path 
-   * @param bool $asReadMap[TRUE] als TRUE dan wordt het resultaat nog wat opgeleukt zodat het hetzelfde is als een read_map() resultaat
+   * @param string $path  default=''
+   * @param bool $asReadMap default=TRUE als TRUE dan wordt het resultaat nog wat opgeleukt zodat het hetzelfde is als een read_map() resultaat
+   * @param bool $full_path default=TRUE
    * @return array $files
    * @author Jan den Besten
    */
@@ -286,9 +280,9 @@ class Mediatable Extends CI_Model {
   /**
    * Geeft alle recente bestanden en info in een map terug als een array
    *
-   * @param string $path 
-   * @param int $nr[10] aantal
-   * @param bool $asReadMap[TRUE] als TRUE dan wordt het resultaat nog wat opgeleukt zodat het hetzelfde is als een read_map() resultaat
+   * @param string $path  default=''
+   * @param int $nr default=10 aantal
+   * @param bool $asReadMap default=TRUE als TRUE dan wordt het resultaat nog wat opgeleukt zodat het hetzelfde is als een read_map() resultaat
    * @return array $files
    * @author Jan den Besten
    */
@@ -448,7 +442,7 @@ class Mediatable Extends CI_Model {
   /**
    * Test of een afbeelding liggen of staand is
    *
-   * @param string $i afbeelding
+   * @param string $file afbeelding
    * @return string = 'landscape', 'portrait' of 'unknown'
    * @author Jan den Besten
    */
@@ -471,7 +465,6 @@ class Mediatable Extends CI_Model {
    * @return bool
    * @author Jan den Besten
    * @internal
-   * @ignore
    */
   public function is_user_restricted($path) {
     return $this->cfg->get('cfg_media_info',$path,'b_user_restricted');
@@ -485,7 +478,6 @@ class Mediatable Extends CI_Model {
    * @return array
    * @author Jan den Besten
    * @internal
-   * @ignore
    */
 	public function get_unrestricted_files($user) {
     if ($this->db->field_exists('user',$this->table)) $this->db->where('user',$user);
@@ -505,7 +497,6 @@ class Mediatable Extends CI_Model {
    * @return array
    * @author Jan den Besten
    * @internal
-   * @ignore
    */
 	public function filter_restricted_files($files,$user) {
 		if ($this->exists()) {
@@ -522,7 +513,14 @@ class Mediatable Extends CI_Model {
 		return $files;
 	}
   
-  
+  /**
+   * Checkt of een bestand rechten heeft om getoond te mogen worden
+   *
+   * @param string $path 
+   * @param string $file 
+   * @return bool
+   * @author Jan den Besten
+   */
   public function has_serve_rights($path,$file) {
     $map=get_suffix($path,'/');
     $serve_restricted=$this->cfg->get('cfg_media_info',$map,'b_serve_restricted');

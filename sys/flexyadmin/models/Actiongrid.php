@@ -7,7 +7,6 @@
  * - title      : titel die in het grid zichtbaar is
  *
  * @author Jan den Besten
- * @ignore
  */
 
 class Actiongrid extends CI_Model {

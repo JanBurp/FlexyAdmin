@@ -1,5 +1,5 @@
 <?php 
-/**
+/** \ingroup libraries
 	* Formulieren
 	* 
 	* Deze module maakt formulieren voor je website en regelt meteen de afhandeling.
@@ -61,7 +61,6 @@ class Forms extends Module {
   private $validated=false;
   
   /**
-   * @ignore
    */
 	public function __construct() {
 		parent::__construct();
@@ -77,7 +76,6 @@ class Forms extends Module {
    * @param array $args 
    * @return mixed
    * @author Jan den Besten
-   * @ignore
    */
 	public function __call($function, $args) {
     // Test of gevraagd formulier bestaat
@@ -125,7 +123,6 @@ class Forms extends Module {
   	* @param string $page 
   	* @return mixed
   	* @author Jan den Besten
-  	* @ignore
   	*/
 	public function index($page) {
     $this->form_id=$this->name;
@@ -329,7 +326,6 @@ class Forms extends Module {
    * @param string $errors 
    * @return string
    * @author Jan den Besten
-   * @ignore
    */
   private function _view_thanks($result='',$thanks='') {
     if ($thanks) {
@@ -365,10 +361,9 @@ class Forms extends Module {
    * Geeft instelling
    *
    * @param string $item 
-   * @param string $default[NULL]
+   * @param string $default default=NULL
    * @return mixed
    * @author Jan den Besten
-   * @ignore
    */
 	private function settings($item,$default=NULL) {
 		return el($item,$this->settings,$default);

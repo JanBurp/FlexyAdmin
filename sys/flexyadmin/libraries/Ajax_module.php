@@ -1,5 +1,5 @@
 <?php 
-/**
+/** \ingroup libraries
  * Basis class voor alle frontend ajax modules. Zo begint je eigen module dus:
  *
  *      class Mijn_ajax_module extends Ajax_module
@@ -21,7 +21,6 @@
 class Ajax_module extends Parent_module_plugin {
 
   /**
-   * @ignore
    */
 	function __construct($name='') {
 		parent::__construct($name);
@@ -35,7 +34,6 @@ class Ajax_module extends Parent_module_plugin {
    * @return void
    * @author Jan den Besten
    * @internal
-   * @ignore
    */
 	public function __call($function, $args) {
 		return $this->result(array('error'=>'Method: `'.ucfirst($function)."()` doesn't exists.", 'success'=>false));

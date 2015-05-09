@@ -1,6 +1,6 @@
 <?php 
 
-/**
+/** \ingroup libraries
  * Maakt het mogelijk om formulieren gemaakt met forms via ajax te laten zien en te submitten.
  * 
  * $.post('forms',{'__form_id': 'contact', .... },function(result){

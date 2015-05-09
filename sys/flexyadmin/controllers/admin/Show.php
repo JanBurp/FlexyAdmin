@@ -1,6 +1,6 @@
 <?php require_once(APPPATH."core/AdminController.php");
 
-/**
+/** \ingroup controllers
  * This Controller shows a grid or form
  *
  * @author Jan den Besten
@@ -10,29 +10,28 @@
 
 class Show extends AdminController {
 	
-	var $form_args;
+	private $form_args;
 
-	function __construct() {
+	public function __construct() {
 		parent::__construct();
 		$this->load->model("flexy_field","ff");
     $this->load->model('grid_set');
 	}
 
-	function index() {
+	public function index() {
 		$this->_show_all();
 	}
 
-
-/**
- * This controls the order of a table.
- * 
- * Wordt gebruikt in de grid als JavaScript niet aan staat.
- *
- * @param string $table Table name
- * @param int $id maybe an id, the last that changed
- * @param mixed $newOrder (top|bottom|up|down|(number))
- */
-	function order($table="",$id="",$newOrder="") {
+  /**
+   * This controls the order of a table.
+   * 
+   * Wordt gebruikt in de grid als JavaScript niet aan staat.
+   *
+   * @param string $table Table name
+   * @param int $id maybe an id, the last that changed
+   * @param mixed $newOrder (top|bottom|up|down|(number))
+   */
+	public function order($table="",$id="",$newOrder="") {
 		if (!empty($table) and ($id!="") and !empty($newOrder) and $this->user->has_rights($table,$id)>=RIGHTS_EDIT) {
 			/**
 			 * re-order data
@@ -49,13 +48,13 @@ class Show extends AdminController {
 	}
 
 
-	/**
-	 * This controls the grid view
-	 *
-	 * @param string $table Table name
-	 * @param mixed $id maybe an id, the last that changed
-	 */
-		function grid() {
+  	/**
+  	 * This controls the grid view
+  	 *
+  	 * @param string $table Table name
+  	 * @param mixed $id maybe an id, the last that changed
+  	 */
+	public function grid($table='',$id=false) {
 			$args=$this->uri->uri_to_assoc();
 			$table=el('grid',$args);
 			$id=el('current',$args);
@@ -358,8 +357,7 @@ class Show extends AdminController {
  * @param string 	$table 	Table name
  * @param mixed 	$id 		id
  */
-
-	function form($table='') {
+	public function form($table='',$id=false) {
 
 		if (isset($this->form_args)) {
 			$args=$this->form_args;
@@ -557,7 +555,7 @@ class Show extends AdminController {
  * @param mixed 	$id 		id
  */
 
-	function user() {
+	public function user($table='',$id=false) {
 		/**
 		 * get user data
 		 */

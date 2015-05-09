@@ -1,15 +1,11 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/**
+/** \ingroup models
  * Met dit model kun je de basis database handelingen uitvoeren (CRUD)
 
- * @copyright Jan den Besten
- * @license: n/a
- * 
  * @author Jan den Besten
  * $Revision$
  * @copyright (c) Jan den Besten
- * $HeadURL$ 
  */
 
 class Crud extends CI_Model {
@@ -38,7 +34,6 @@ class Crud extends CI_Model {
    * @return mixed
    * @author Jan den Besten
    * @internal
-   * @ignore
    */
 	public function __call($function, $args) {
     $args=el(0,$args,null);

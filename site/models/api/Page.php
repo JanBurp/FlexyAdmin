@@ -2,6 +2,8 @@
 
 
 /**
+ * \ingroup models
+ * 
  * Eenvoudig voorbeeld van een frontend API.
  * Geeft de tekst van een pagina van de site.
  * 

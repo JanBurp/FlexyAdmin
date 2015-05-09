@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/**
+/** \ingroup plugins
  * Maakt een relatie tabel
  *  
  * Deze plugin maakt een relatie tabel tussen de twee meegegeven tabellen.
@@ -19,7 +19,6 @@ class Plugin_add_relation_table extends Plugin {
 
 	
   /**
-   * @ignore
    */
    function _admin_api($args=false) {
 		if ($this->CI->user->is_super_admin()) {

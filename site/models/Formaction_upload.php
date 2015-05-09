@@ -1,6 +1,8 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
+ * \ingroup models
+ * 
  * Dit is een Formaction voor een eenvoudig upload formulier (forms.upload_demo)
  * 
  * Je kunt de standaard config velden gebruiken van de CodeIgniter File Uploading Class.

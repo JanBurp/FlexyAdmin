@@ -1,11 +1,9 @@
-<?php /**
- * Class Flexy_field  Model
+<?php
+/**
+ * This class renders and validates fields
  *
  * @author Jan den Besten
- * @ignore
  * @internal
- *
- * This class renders and validates fields
  */
 
 class Flexy_field extends CI_Model {

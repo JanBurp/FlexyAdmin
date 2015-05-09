@@ -12,9 +12,9 @@
 /**
  * Hiermee kun je een tekstbestand lezen waarvan alleen de regels worden teruggegeven die getest worden door de meegegeven functie
  *
- * @param string $filename De te laden bestandsnaam 
+ * @param string $file De te laden bestandsnaam 
  * @param mixed $function De functie die elke regel test. De functie krijgt een string mee (de regel) en geeft FALSE als de regel niet moet worden meegenomen, of TRUE als dat wel moet.
- * @param string $max_length[65536] Eventueel mee te geven maximale lengte
+ * @param string $max_length default=65536 Eventueel mee te geven maximale lengte
  * @return string Het gelezen en gefilterde bestand
  * @author Jan den Besten
  */
@@ -69,7 +69,8 @@ function copy_file($source,$dest) {
  * Geef file informatie terug in een array
  *
  * @param string $file (hele pad naar bestand) 
- * @param bool $getInfo[TRUE] 
+ * @param bool $getInfo default=TRUE 
+ * @param bool $metaInfo  default=FALSE
  * @return array $info
  * @author Jan den Besten
  */

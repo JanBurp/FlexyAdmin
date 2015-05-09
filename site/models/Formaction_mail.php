@@ -1,6 +1,8 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
+ * \ingroup models
+ * 
  * Dit is een Formaction die de data verstuurd formdata naar het standaard emailadres
  * 
  * Hieronder config velden (met hun defaults):

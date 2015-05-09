@@ -3,11 +3,10 @@
 require_once(APPPATH."libraries/ion_auth.php");
 
 
-/**
+/** \ingroup libraries
  * Class voor het inloggen, aanmaken etc van gebruikers
  * 
- * Is een uitbreiding op [Ion Auth]({Ion_auth}), dus kijk ook zeker daar voor te gebruiken methods!
- * In de map userguide/ionAuth vindt je ook een handleiding.
+ * Is een uitbreiding op Ion Auth dus kijk ook zeker daar voor te gebruiken methods!
  *
  * Bepaalde methods geven rechten terug, deze zijn samengesteld uit de volgende constanten:
  *  
@@ -19,22 +18,21 @@ require_once(APPPATH."libraries/ion_auth.php");
  * - RIGHTS_NO     = 0
  * - Allerlei combinaties van bovenstaande zijn mogelijk (net zoals RIGHTS_ALL een combinatie is)
  *
- * @author Jan den Besten
+ * @author: Jan den Besten
+ * $Revision$
+ * @copyright: (c) Jan den Besten
  */
  
-class User Extends Ion_auth {
+class User extends Ion_auth {
 	
+
   /**
    * Rechten van huidige gebruiker
-   *
-   * @var array
    */
 	public $rights;
 
   /**
    * id van huidige gebruiker
-   *
-   * @var int
    */
 	public $user_id;
   public $group_id;
@@ -44,8 +42,6 @@ class User Extends Ion_auth {
   
   /**
    * Array van tbl_site
-   *
-   * @var array
    */
 	private $siteInfo;
   
@@ -56,8 +52,7 @@ class User Extends Ion_auth {
   
 	
   /**
-    * @ignore
-    */
+     */
   public function __construct($tables='') {
 		parent::__construct($tables);
 		// set standard configurations
@@ -102,7 +97,6 @@ class User Extends Ion_auth {
    * @return bool
    * @author Jan den Besten
    * @internal
-   * @ignore
    */
 	private function _check_if_userdate_ok() {
 		return ($this->CI->db->field_exists('str_username',$this->tables['users']) and $this->CI->db->field_exists('gpw_password',$this->tables['users']) );
@@ -115,8 +109,7 @@ class User Extends Ion_auth {
    * @return bool
    * @author Jan den Besten
    * @internal
-   * @ignore
-   * @depricated
+   * @deprecated
    */
 	private function _check_if_old_password($identity) {
 		$new_password = TRUE;
@@ -141,8 +134,7 @@ class User Extends Ion_auth {
    * @return void
    * @author Jan den Besten
    * @internal
-   * @ignore
-   * @depricated
+   * @deprecated
    */
 	private function _update_old_passwords() {
 		// update all users:
@@ -216,7 +208,8 @@ class User Extends Ion_auth {
 	 * Verstuurt een mail naar gebruiker met een nieuw wachtwoord
 	 *
 	 * @param string $email Emailadres van gebruiker
-	 * @param string $subject['Forgotten Password Verification'] Onderwerp van de te sturen email 
+	 * @param string $uri 
+	 * @param string $subject default='Forgotten Password Verification' Onderwerp van de te sturen email 
 	 * @return bool TRUE als proces is gelukt, FALS als gebruiker niet bekent is
 	 * @author Jan den Besten
 	 */
@@ -267,7 +260,7 @@ class User Extends Ion_auth {
 	 *
 	 * @param string $email Emailadres van gebruiker
 	 * @param string $uri URI van pagina waar gebruiker naartoe wordt geleid door de email
-	 * @param string $subject['Forgotten Password Verification'] Onderwerp van de te sturen email 
+	 * @param string $subject default='Forgotten Password Verification' Onderwerp van de te sturen email 
 	 * @return bool TRUE als proces is gelukt, FALS als gebruiker niet bekent is
 	 * @author Jan den Besten
 	 */
@@ -305,7 +298,8 @@ class User Extends Ion_auth {
 	 * Rond het proces van vergeten wachtwoord af
 	 *
 	 * @param string $code Code die gebruiker heeft gekregen
-	 * @param string $subject['New Password']
+	 * @param string $subject  default='New Password'
+	 * @param $extra_email=''
 	 * @return bool TRUE als geslaagd
 	 * @author Jan den Besten
 	 */
@@ -418,7 +412,8 @@ class User Extends Ion_auth {
    * Stuur gebruiker mail dat registratie is geaccepteerd
    *
    * @param string $id 
-   * @param string $subject 
+   * @param string $subject  default='Account accepted and activated'
+   * @param $extra_email default=''
    * @return void
    * @author Jan den Besten
    */
@@ -430,8 +425,8 @@ class User Extends Ion_auth {
    * Stuur gebruiker mail dat account is aangemaakt, met (nieuwe) inloggegevens
    *
    * @param string $id 
-   * @param string $subject
-   * @param array $data Array met extra gegevens die in de mail worden gestuurd (inloggegevens bv)
+   * @param string $subject  default='New account'
+   * @param string $extra_email  default=''
    * @return void
    * @author Jan den Besten
    */
@@ -448,9 +443,10 @@ class User Extends Ion_auth {
    * Stuur gebruiker mail met nieuwe inloggegevens (met nieuw wachtwoord)
    *
    * @param string $id 
-   * @param string $subject
-   * @param array $data Array met extra gegevens die in de mail worden gestuurd (inloggegevens bv)
-   * @return void
+   * @param string $subject  default='New account'
+   * @param string $password  default=''
+   * @param string $extra_email  default=''
+   * @return bool
    * @author Jan den Besten
    */
 	public function send_new_password_mail($id,$subject='New account',$password='',$extra_email='') {
@@ -469,8 +465,9 @@ class User Extends Ion_auth {
    * Stuur gebruiker mail dat registratie niet is toegestaan
    *
    * @param string $id 
-   * @param string $subject 
-   * @return void
+   * @param string $subject default='Account denied'
+   * @param string $extra_email  default=''
+   * @return bool
    * @author Jan den Besten
    */
 	public function send_deny_mail($id,$subject='Account denied',$extra_email='') {
@@ -599,7 +596,6 @@ class User Extends Ion_auth {
    * @return array
    * @author Jan den Besten
    * @internal
-   * @ignore
    */
 	private function create_rights($userId) {
 		$this->CI->db->select('id,id_user_group');
@@ -626,7 +622,6 @@ class User Extends Ion_auth {
    * @return void
    * @author Jan den Besten
    * @internal
-   * @ignore
    */
 	private function _change_rights(&$found,$rights) {
 		foreach ($found as $key => $value) {
@@ -648,8 +643,8 @@ class User Extends Ion_auth {
    * - Of een combinatie van bovenstaande (een optelling)
    *
    * @param string $item tabel of media map waar de rechten voor getest worden
-   * @param string $id[0] Alleen nodig als rows/bestanden aan gebruikers gekoppeld zijn, hiermee kan dat getest worden
-   * @param string $whatRight[0] Eventueel checken op welke rechten getest wordt
+   * @param string $id default=0 Alleen nodig als rows/bestanden aan gebruikers gekoppeld zijn, hiermee kan dat getest worden
+   * @param string $whatRight default=0 Eventueel checken op welke rechten getest wordt
    * @return int Rechten zie boven
    * @author Jan den Besten
    */
@@ -733,7 +728,7 @@ class User Extends Ion_auth {
   /**
    * Geeft array terug van alle tabellen waar gebruiker rechten voor heeft
    *
-   * @param string $atLeast[RIGTS_ALL] Minimal rechten die een tabel moet hebben om in her resultaat te komen 
+   * @param string $atLeast default=RIGHTS_ALL Minimal rechten die een tabel moet hebben om in her resultaat te komen 
    * @return array Tabellen waar de gebruiker de gevraagde rechten voor heeft.
    * @author Jan den Besten
    */
@@ -767,8 +762,8 @@ class User Extends Ion_auth {
 	/**
 	 * Geeft alle inactieve gebruikers die langer dan bepaalde tijd geleden geregistreerd zijn
 	 *
-	 * @param string $group_name[FALSE]
-	 * @param int $time[1209600] tijd geleden in sec (dag=86400, week=604800, 2 weken=1209600, 4 weken=2419200)
+	 * @param string $group_name default=FALSE
+	 * @param int $time default=1209600 tijd geleden in sec (dag=86400, week=604800, 2 weken=1209600, 4 weken=2419200)
 	 * @return object met alle inactieve gebruikers
 	 * @author Jan den Besten
 	 **/

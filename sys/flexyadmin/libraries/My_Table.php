@@ -1,6 +1,6 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/**
+/** \ingroup libraries
  * Uitbreiding op [CI_Table]
  *
  * @author Jan den Besten
@@ -16,7 +16,7 @@ class MY_Table extends CI_Table {
 	/**
 	 * Default Template
 	 *
-	 * @access	private
+	 * @private
 	 * @return	void
 	 */
 	function _default_template()

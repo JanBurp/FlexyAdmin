@@ -1,12 +1,13 @@
 <?php 
-/**
+/** \ingroup models
  * Verzorgt de naamgeving van tabellen en velden
  * 
  * Alle tabellen en velden kunnen in het admin deel een voor de gebruiker vriendelijkere naam krijgen, eventueel zelfs meertalig.
  * Die mooie namen kunnen samen met helpteksten ingesteld in de tabe: **cfg_ui**. Zie ook [Help Teksten]({Help-teksten})
  *
- * @author Jan den Besten
- * @ignore
+ * @author: Jan den Besten
+ * $Revision$
+ * @copyright: (c) Jan den Besten
  */
  
 class ui extends CI_Model {
@@ -16,7 +17,6 @@ class ui extends CI_Model {
 
 
   /**
-   * @ignore
    */
 	public function __construct() 	{
 		parent::__construct();
@@ -65,7 +65,6 @@ class ui extends CI_Model {
    * @return void
    * @author Jan den Besten
    * @internal
-   * @ignore
    */
 	private function _load_row($row) {
 		if (!empty($row['path']))
@@ -111,11 +110,11 @@ class ui extends CI_Model {
    *
    * @param string $name Item (kan een tabel, veld of media-pad zijn)
    * @param string $table[''] Als je bij $name een veld geeft kun je hier een tabel specificeren
-   * @param string $create[TRUE] Als niet gevonden in **cfg_ui** dan wordt bij TRUE eentje gemaakt
+   * @param string $create default=true Als niet gevonden in **cfg_ui** dan wordt bij TRUE eentje gemaakt
    * @return string
    * @author Jan den Besten
    */
-	public function get($name,$table="",$create=TRUE) {
+	public function get($name,$table="",$create=true) {
 		if (!is_array($name)) {
       $out='';
       if (empty($out) and !empty($table)) $out=el("*.".$name,$this->uiNames,"");

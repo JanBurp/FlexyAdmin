@@ -1,6 +1,6 @@
 <?php 
 
-/**
+/** \ingroup core
  * Dit is de basis voor de controller aan de frontend (site/controller.php)
  *
  * @author Jan den Besten
@@ -33,17 +33,14 @@ class FrontEndController extends MY_Controller {
    *      ['class']                => '',                               // Bij aanvang leeg. Wordt gebruikt om een class mee te geven aan de body tag
    *      ['break']                => FALSE                             // Als TRUE dan heeft een module aangegeven dat er verder geen content en modules mogen worden geladen en getoond
    *     )
-   *
-   * @var array
    */
 	public $site;
   var $ajax_module = false;
 
   /**
-    * @ignore
+    * __construct
     */
 	public function __construct() {
-		// Init controller, and load all libraries
 		parent::__construct();
     
     // In testmode a temp message will be shown (if not logged in as administrator) and sitemap.xml is deleted
@@ -125,8 +122,7 @@ class FrontEndController extends MY_Controller {
 	 *
 	 * @return void
 	 * @author Jan den Besten
-	 * @depricated
-   * @ignore
+	 * @deprecated
 	 */
 	public function FrontEndController() {
 		$this->__construct();
@@ -139,8 +135,7 @@ class FrontEndController extends MY_Controller {
 	 * @return void
 	 * @author Jan den Besten
 	 * @internal
-	 * @ignore
-	 */
+		 */
   private function _init_globals() {
 		$this->site=array();
 
@@ -349,7 +344,7 @@ class FrontEndController extends MY_Controller {
    * Voeg achter de titel nog een extra tekst toe
    *
    * @param string $page_title
-   * @param string $format["%s - %p"] Hiermee bepaal je hoe de titel wordt toegevoegd: s=site titel, p=page titel
+   * @param string $format default="%s - %p" Hiermee bepaal je hoe de titel wordt toegevoegd: s=site titel, p=page titel
    * @return void
    * @author Jan den Besten
    */
@@ -371,7 +366,7 @@ class FrontEndController extends MY_Controller {
   /**
    * Pakt huidige uri uit $site['uri']
    *
-   * @param string $max[0] Aantal parts 
+   * @param string $max default=0 Aantal parts 
    * @return void
    * @author Jan den Besten
    */
@@ -473,7 +468,7 @@ class FrontEndController extends MY_Controller {
    * Stelt de standaard view in van een pagina
    * Staat standaard ingesteld in 'site/config/config.php' bij `$config['page_view']='page';`, maar hiermee kun je dat in een module aanpassen
    *
-   * @param string $page_view['page]
+   * @param string $page_view default='page
    * @return object $this
    * @author Jan den Besten
    */
@@ -487,7 +482,7 @@ class FrontEndController extends MY_Controller {
    *
    * @param string $view[''] Als leeg dan wordt de main view geladen die ingesteld is in de config
    * @param string $data[''] Als leeg dan wordt $site meegegeven
-   * @param string $return[FALSE]
+   * @param string $return default=FALSE
    * @return string
    * @author Jan den Besten
    */
@@ -549,8 +544,7 @@ class FrontEndController extends MY_Controller {
 	
   /**
    * @author Jan den Besten
-   * @depricated
-   * @ignore
+   * @deprecated
    */
 	public function getFormByModule($module) {
 		$this->load->module('getform');
@@ -558,8 +552,7 @@ class FrontEndController extends MY_Controller {
 	}
   /**
    * @author Jan den Besten
-   * @depricated
-   * @ignore
+   * @deprecated
    */
 	public function getFormByTitle($title) {
 		$this->load->module('getform');
@@ -567,8 +560,7 @@ class FrontEndController extends MY_Controller {
 	}
   /**
    * @author Jan den Besten
-   * @depricated
-   * @ignore
+   * @deprecated
    */
 	public function getFormById($id) {
 		$this->load->module('getform');

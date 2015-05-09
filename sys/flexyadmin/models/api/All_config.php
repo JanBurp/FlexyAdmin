@@ -2,10 +2,11 @@
 
 
 /**
- * Geeft alle config van alle tabellen en mappen die er bestaan.
+ * interne API: Geeft alle config van alle tabellen en mappen die er bestaan.
  * 
- * 
- * @author Jan den Besten
+ * @author: Jan den Besten
+ * $Revision$
+ * @copyright: (c) Jan den Besten
  */
 
 class All_config extends Api_Model {
