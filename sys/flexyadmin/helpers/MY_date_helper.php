@@ -19,7 +19,7 @@ function unix_to_normal($time = '', $seconds = TRUE) {
  * Geeft datum/tijd in MySQL formaat, klaar om in de database te stoppen
  *
  * @param int $unix[''] Unix timestamp, als leeg dan wordt huidig moment genomen.
- * @param bool $with_time[TRUE]
+ * @param bool $with_time default=TRUE
  * @return string
  * @author Jan den Besten
  */
@@ -52,7 +52,7 @@ function date_to_array($date) {
  * Tel een dag bij een unix-timestamp op
  *
  * @param int $unix unix timestamp
- * @param int $days[1] aantal dagen
+ * @param int $days default=1 aantal dagen
  * @return int unix timestamp
  * @author Jan den Besten
  */
@@ -78,7 +78,7 @@ function unixdate_is_weekend($unix) {
  * Test of een datum (unix-timestamp) een bepaalde dag is
  *
  * @param int $unix 
- * @param int $day[0] - 0=zondag etc. 
+ * @param int $day default=0 - 0=zondag etc. 
  * @return bool
  * @author Jan den Besten
  */
@@ -127,7 +127,7 @@ function unixdate_is_holiday($unix,$holidays=array()) {
  * Geeft een array van alle (vrije) feestdagen van een land.
  * NB Op dit moment alleen nog maar van Nederland 'nl'.
  *
- * @param string $country, bijvoorbeeld 'nl'
+ * @param string $country  default='' bijvoorbeeld 'nl'
  * @return array
  * @author Jan den Besten
  */

@@ -1,10 +1,12 @@
 <?php 
-/**
+/** \ingroup models
  * Maakt een mooie tabel met opties zoals zoeken, sorteren etc.
  *
- * @author Jan den Besten
+ * @author: Jan den Besten
+ * $Revision$
+ * @copyright: (c) Jan den Besten
  */
-class Grid Extends CI_Model {
+class Grid extends CI_Model {
 
   private $captions=array();
   private $headings=array();
@@ -19,7 +21,7 @@ class Grid Extends CI_Model {
   private $editable=FALSE;
 
 	/**
-	 * @ignore
+	 * __construct
 	 */
   public function __construct() {
 		parent::__construct();
@@ -31,7 +33,6 @@ class Grid Extends CI_Model {
    *
    * @return object $this;
    * @author Jan den Besten
-   * @ignore
    */
 	public function init() {
 		$this->renderExtraClass=array();
@@ -46,6 +47,13 @@ class Grid Extends CI_Model {
     return $this;
 	}
 
+  /**
+   * Stelt in of de grid editable is of niet
+   *
+   * @param bool $editable 
+   * @return void
+   * @author Jan den Besten
+   */
   public function set_editable($editable=true) {
     $this->editable=$editable;
   }
@@ -125,7 +133,6 @@ class Grid Extends CI_Model {
    * @param string $type 
    * @return object $this;
    * @author Jan den Besten
-   * @ignore
    */
 	public function set_type($type="html") {
 		$this->type=$type;
@@ -135,7 +142,7 @@ class Grid Extends CI_Model {
   /**
    * Stelt volgorde in
    *
-   * @param string $order['id']
+   * @param string $order default='id'
    * @return object $this;
    * @author Jan den Besten
    */
@@ -178,7 +185,7 @@ class Grid Extends CI_Model {
 	/**
 	 * Zet pagination
 	 *
-	 * @param bool $pagin[FALSE]
+	 * @param bool $pagin default=FALSE
 	 * @return object $this;
 	 * @author Jan den Besten
 	 */
@@ -214,7 +221,6 @@ class Grid Extends CI_Model {
    *
    * @return int
    * @author Jan den Besten
-   * @ignore
    */
 	public function next_row_id() {
 		return $this->rowId++;

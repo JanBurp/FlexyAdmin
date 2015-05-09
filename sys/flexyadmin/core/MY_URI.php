@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/**
+/** \ingroup core
  * Uitbreiding op [URI class van CodeIgniter](http://codeigniter.com/user_guide/libraries/uri.html)
  *
  * @author Jan den Besten
@@ -10,34 +10,25 @@ class MY_URI extends CI_URI {
 
 	/**
 	 * home pagina
-	 *
-	 * @var string
 	 */
   private $home;
   
   /**
    * uri part van home
-   *
-   * @var string
    */
 	private $homePart;
 
   /**
    * XDEBUG tekst in uri_query (wordt eruit gefilterd)
-   *
-   * @var string
    */
 	private $xdebug='XDEBUG_SESSION_START';
 
   /**
    * array van uri delen waarna de uri niet meer bekeken wordt (verwijderd)
-   *
-   * @var array
    */
 	private $remove;
 
   /**
-   * @ignore
    */
 	public function __construct() {
 		parent::__construct();
@@ -49,13 +40,14 @@ class MY_URI extends CI_URI {
    * Stel uri van homepage in
    *
    * @param string $home[''] 
-   * @param string $p[1] Part van de uri
-   * @return void
+   * @param string $p default=1 Part van de uri
+   * @return this
    * @author Jan den Besten
    */
 	public function set_home($home="",$p=1) {
 		$this->home=$home;
 		$this->homePart=$p;
+    return $this;
 	}
 
   /**
@@ -106,7 +98,6 @@ class MY_URI extends CI_URI {
    * @return string
    * @author Jan den Besten
    * @internal
-   * @ignore
    */
 	protected function _segment($s) {
 		$s=$this->segment($s);
@@ -120,7 +111,6 @@ class MY_URI extends CI_URI {
    *
    * @return void
    * @author Jan den Besten
-   * @ignore
    */
 	protected function _uri_string() {
 		$s=$this->uri_string();
@@ -142,7 +132,7 @@ class MY_URI extends CI_URI {
    * Test een uripart
    *
    * @param string $is Waarop het uripart wordt getest 
-   * @param int $s[1] Uripart (1 of hoger) 
+   * @param int $s default=1 Uripart (1 of hoger) 
    * @return bool TRUE als uripart zelfde is als $is
    * @author Jan den Besten
    */
@@ -179,7 +169,7 @@ class MY_URI extends CI_URI {
   /**
    * Test of uri langer dan $n part(s) is
    *
-   * @param string $n[1]
+   * @param string $n default=1
    * @return bool
    * @author Jan den Besten
    */
@@ -190,7 +180,7 @@ class MY_URI extends CI_URI {
   /**
    * Geeft uri part (waarbij de remove parts verwijderd zijn)
    *
-   * @param int $s[0] Part
+   * @param int $s default=0 Part
    * @return string
    * @author Jan den Besten
    */
@@ -210,7 +200,7 @@ class MY_URI extends CI_URI {
   /**
    * Geeft alle uri-parts tot en met gegeven part (waarbij de remove parts verwijderd zijn)
    *
-   * @param int $s[0] tot part
+   * @param int $s default=0 tot part
    * @return string
    * @author Jan den Besten
    */
@@ -226,7 +216,7 @@ class MY_URI extends CI_URI {
    * Geef all uri-parts vanaf gegeven part (waarbij de remove parts verwijderd zijn)
    *
    * @param string $parameter gegeven uripart (geen nr, maar daadwerkijke uri, bijvoorbeeld 'offset')
-   * @param string $include[FALSE] moet gegeven uripart zelf meegenomen worden?
+   * @param string $include default=FALSE moet gegeven uripart zelf meegenomen worden?
    * @return mixed FALSE als niet gevonden, anders een array van parts
    * @author Jan den Besten
    */
@@ -259,7 +249,7 @@ class MY_URI extends CI_URI {
    *      $offset = $this->uri->get_parameter('offset'); // Geeft 10
    *
    * @param string $parameter 
-   * @param string $default[FALSE] eventueel mee te geven default waarde als er geen parameter (of waarde) gevonden is
+   * @param string $default default=FALSE eventueel mee te geven default waarde als er geen parameter (of waarde) gevonden is
    * @return string
    * @author Jan den Besten
    */

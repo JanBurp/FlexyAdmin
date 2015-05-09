@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/**
+/** \ingroup libraries
  * Content
  *
  * @author Jan den Besten
@@ -56,7 +56,6 @@ class Content {
 	private $h_count;
 
   /**
-   * @ignore
    */
 	public function __construct($config=array()) {
     if ($config) $this->initialize($config);
@@ -86,7 +85,6 @@ class Content {
    * @return string
    * @author Jan den Besten
    * @internal
-   * @ignore
    */
   private function _auto_target_links($match) {
     $res=$match[0];
@@ -121,7 +119,6 @@ class Content {
    * @return string
    * @author Jan den Besten
    * @internal
-   * @ignore
    */
   private function _site_links($match) {
     $res=$match[0];
@@ -142,7 +139,6 @@ class Content {
    * @return string
    * @author Jan den Besten
    * @internal
-   * @ignore
    */
 	private function _countCallBack($matches) {
 		$class="";
@@ -177,7 +173,6 @@ class Content {
    * @return string
    * @author Jan den Besten
    * @internal
-   * @ignore
    */
 	private function _popupCallBack($matches) {
 		$src=$matches[2];
@@ -197,7 +192,6 @@ class Content {
    * @return void
    * @author Jan den Besten
    * @internal
-   * @ignore
    */
 	private function reset_counters() {
 		$this->div_count=1;
@@ -259,6 +253,7 @@ class Content {
    * Dit voert alle acties uit met meegegeven (HTML) tekst
    *
    * @param string $txt De HTML waarop de acties moeten worden uitgevoerd
+   * @param $full  default=false
    * @return string De HTML waarop de acties zijn uitgevoerd
    * @author Jan den Besten
    */

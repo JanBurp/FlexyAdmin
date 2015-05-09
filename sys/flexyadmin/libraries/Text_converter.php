@@ -1,10 +1,12 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- * undocumented class
- *
- * @author Jan den Besten
- * @ignore
+ * Kan teksten omzetten (beta)
+ * 
+ * 
+ * @author: Jan den Besten
+ * $Revision$
+ * @copyright: (c) Jan den Besten
  */
 class Text_converter {
 
@@ -29,7 +31,6 @@ class Text_converter {
   );
 
   /**
-   * @ignore
    */
   public function __construct($settings=array()) {
     $this->initialize($settings);
@@ -39,7 +40,7 @@ class Text_converter {
   /**
    * Initialiseer alle opties, zie boven voor alle opties
    *
-   * @param array $config 
+   * @param array $settings 
    * @return this
    * @author Jan den Besten
    */

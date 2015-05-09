@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/**
+/** \ingroup plugins
  * Verwijderd een relatie tabel.
  * 
  * Deze plugin verwijderd de meegegeven relatie tabel.
@@ -19,7 +19,6 @@ class Plugin_remove_relation_table extends Plugin {
 
 	
   /**
-   * @ignore
    */
    function _admin_api($args=false) {
 		if ($this->CI->user->is_super_admin()) {

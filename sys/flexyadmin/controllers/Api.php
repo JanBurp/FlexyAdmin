@@ -1,6 +1,6 @@
 <?php require_once(APPPATH."core/AjaxController.php");
 
-/**
+/** \ingroup controllers
  * API Controller
  *
  * @author: Jan den Besten

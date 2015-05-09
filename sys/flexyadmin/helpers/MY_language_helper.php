@@ -15,8 +15,8 @@
   * Maakt van velden in een array die een language suffix hebben, neutrale velden (verwijderd de suffix)
   * 
   * @param array $item
-  * @param array $fields[array('str_title','txt_text')]
-  * @param string $lang[''] Als geen taal wordt meegegeven, dan wordt de standaard taal genomen
+  * @param array $fields default=array('str_title','txt_text')
+  * @param string $lang default='' Als geen taal wordt meegegeven, dan wordt de standaard taal genomen
   * @return array
   * @author Jan den Besten
   */
@@ -54,12 +54,12 @@ function set_language_neutral_fields($item,$fields=array('str_title','txt_text')
 /**
  * Geeft een taalwoord terug met %s vervangen door de meegegeven argumenten
  *
- * @param string argument(1)
- * @param string argument(n), etc
+ * @param string $s1 argument(1)
+ * @param string $sn argument(n), etc
  * @return void
  * @author Jan den Besten
  */
-function langp() {
+function langp($s1="",$sn="") {
 	$CI =& get_instance();
 	$args=func_get_args();
 	$line=array_shift($args);
@@ -88,12 +88,12 @@ function langp() {
 /**
  * Geeft een taalwoord terug met %s vervangen door de meegegeven argumenten. Maar nu met als eerste argument de taal
  *
- * @param string argument(1)
- * @param string argument(n), etc
+ * @param string $s1 argument(1)
+ * @param string $sn argument(n), etc
  * @return void
  * @author Jan den Besten
  */
-function langkey() {
+function langkey($s1="",$sn="") {
 	$CI =& get_instance();
 	$args=func_get_args();
 	$line=array_shift($args);

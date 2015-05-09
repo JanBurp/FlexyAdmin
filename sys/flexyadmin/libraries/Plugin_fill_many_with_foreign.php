@@ -1,7 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 
-/**
+/** \ingroup plugins
  * Vult een relatie tabel met inhoud van een foreign tabel
  * 
  * Deze plugin komt van pas als je een tabel hebt die met een _foreign key_
@@ -24,7 +24,6 @@ class Plugin_fill_many_with_foreign extends Plugin {
 	}
 
   /**
-   * @ignore
    */
 	function _admin_api($args=false) {
 		if ($this->CI->user->is_super_admin()) {

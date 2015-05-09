@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/**
+/** \ingroup plugins
  * Resize alle afbeeldingen (opnieuw). Geef eventueel het pad mee, als dat niet is meegegeven dan worden alle paden uit cfg_img_info gedaan. NB Kan even duren...
  * 
  * @author Jan den Besten
@@ -8,7 +8,6 @@
 class Plugin_resize_images extends Plugin {
 
   /**
-   * @ignore
    */
   function __construct() {
 		parent::__construct();
@@ -21,7 +20,6 @@ class Plugin_resize_images extends Plugin {
    * @param string $args 
    * @return void
    * @author Jan den Besten
-   * @ignore
    */
 	function _admin_api($args=NULL) {
     if (isset($args[0])) {

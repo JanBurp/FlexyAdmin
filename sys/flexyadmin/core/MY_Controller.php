@@ -12,7 +12,7 @@
 class MY_Controller extends CI_Controller {
 
 
-	function __construct($isAdmin=false) {
+	public function __construct($isAdmin=false) {
 		parent::__construct();
     
 		if ($this->_check_if_flexy_database_exists())
@@ -110,7 +110,7 @@ class MY_Controller extends CI_Controller {
    * Geeft de uri van een pagina met de gevraagde module
    *
    * @param string $module 
-   * @param bool $full_uri[true]
+   * @param bool $full_uri default=true
    * @return string uri
    * @author Jan den Besten
    */

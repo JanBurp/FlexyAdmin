@@ -1,7 +1,7 @@
 <?
 
-/**
- * Calls the right API and returns the (ajax)result or a 401
+/** \ingroup models
+ * Core API model: Roept de opgevraagde API aan en verzorgt het resultaat
  * 
  * - Arguments are set in $_POST or $_GET
  * - See for all possible API calls the other files in sys/flexyadmin/models/api
@@ -24,12 +24,14 @@
  *    - config=(array) config data if asked for
  *    - info=(array) information about the data
  * 
- * Examples:
+ * Voorbeelden:
  * 
  * - _api/get_table?table=tbl_links
  * - _api/get_table?table=tbl_links&config[]=table_info&config[]=field_info
  * 
- * @author Jan den Besten
+ * @author: Jan den Besten
+ * $Revision$
+ * @copyright: (c) Jan den Besten
  */
 
 
@@ -46,7 +48,6 @@ class Api_Model extends CI_Model {
   
   
   /**
-   * @ignore
    */
 	public function __construct() {
 		parent::__construct();
@@ -284,7 +285,7 @@ class Api_Model extends CI_Model {
   /**
    * Gives clean args
    *
-   * @param array of keys that needs to be kept [array('table','where','data')]
+   * @param array $keep  default=array('table','where','data') of keys that needs to be kept
    * @return array
    * @author Jan den Besten
    */
@@ -298,8 +299,8 @@ class Api_Model extends CI_Model {
    * Test rights for item
    *
    * @param string $item
-   * @param string $id['] 
-   * @param string $whatRight[0] 
+   * @param string $id default=''
+   * @param string $whatRight default=RIGHTS_NO 
    * @return boolean
    * @author Jan den Besten
    */

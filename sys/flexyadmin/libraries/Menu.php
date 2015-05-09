@@ -1,4 +1,4 @@
-<?php  /**
+<?php  /** \ingroup libraries
   * Met deze class kun je eenvoudig een html menu maken.
   *
   * Eenvoudig menu maken
@@ -171,21 +171,16 @@ class Menu {
 
   /**
    * HTML output
-   *
-   * @var string
    */
 	var $render;
   
   /**
    * Interne representatie van een menu
-   *
-   * @var array
    */
 	var $menu;
 
   /**
    * @author Jan den Besten
-   * @ignore
    */
 	public function __construct($settings=array()) {
 		$this->CI=& get_instance();
@@ -261,7 +256,6 @@ class Menu {
    * @return void
    * @author Jan den Besten
    * @internal
-   * @ignore
    */
   public function __call($function, $args) {
     if (substr($function,0,4)=='set_') {
@@ -276,9 +270,9 @@ class Menu {
   /**
    * Zet extra velden die binnen de menu tags terechtkomen
    *
-   * @param string $extra[''] 
-   * @param string $startTag['&lt;p&gt;'] 
-   * @param string $closeTag['&lt;/p&gt;']
+   * @param string $extra default=''
+   * @param string $startTag default='&lt;p&gt;'
+   * @param string $closeTag default='&lt;/p&gt;'
    * @return void
    * @author Jan den Besten
    */
@@ -320,8 +314,8 @@ class Menu {
   /**
    * Zet menu tabel en laad menu in vanuit die tabel en creert het menu
    *
-   * @param string $table[''] Als je dit leeglaat dan wordt de standaard menu tabel gekozen (tbl_menu of res_menu_result)
-   * @param string $foreign[false] Eventuele foreign data die meegenomen moet worden in resultaat (zie bij db->add_foreign())
+   * @param string $table default='' Als je dit leeglaat dan wordt de standaard menu tabel gekozen (tbl_menu of res_menu_result)
+   * @param string $foreign default=false Eventuele foreign data die meegenomen moet worden in resultaat (zie bij db->add_foreign())
    * @return array het menu als de interne menu array
    * @author Jan den Besten
    */
@@ -372,7 +366,7 @@ class Menu {
 	 * Maakt menu van array uit database resultaat
 	 *
 	 * @param array $items database resultaat
-	 * @param string $foreign[false] TODO
+	 * @param string $foreign default=false TODO
 	 * @return array het menu als de interne menu array
 	 * @author Jan den Besten
 	 */
@@ -451,7 +445,6 @@ class Menu {
    * Maakt een menu van een filetree resultaat van read_map()
    *
    * @param string $files 
-   * @param string $branchUri[''] 
    * @return array
    * @author Jan den Besten
    */
@@ -612,7 +605,6 @@ class Menu {
    * @param string $uri 
    * @return bool
    * @author Jan den Besten
-   * @ignore
    * @internal
    */
 	private function inUri($in,$uri) {
@@ -675,10 +667,10 @@ class Menu {
    * Renderer een submenu
    *
    * @param string $branchUri uri van het submenu
-   * @param string $attr[''] eventueel standaard mee te geven attributen voor menu-items
-   * @param string $level[1] level
-   * @param string $preUri[''] een uri die aan de voorkant van alle uri's wordt geplakt
-   * @param string $nobranchUri[FALSE] 
+   * @param string $attr default='' eventueel standaard mee te geven attributen voor menu-items
+   * @param string $level default=1 level
+   * @param string $preUri default='' een uri die aan de voorkant van alle uri's wordt geplakt
+   * @param string $nobranchUri default=FALSE 
    * @return string
    * @author Jan den Besten
    */
@@ -700,11 +692,11 @@ class Menu {
    *
    * Er moet al eerder een menu aangemaakt zijn of van een menu-tabel zijn ingeladen
    *
-   * @param array $menu[NULL] Je kunt een menu-array meegeven, als dit leeg is wordt de interne menu-array gebruikt
-   * @param string $attr[''] eventueel standaard mee te geven attributen voor menu-items
-   * @param string $level[1] level
-   * @param string $preUri[''] een uri die aan de voorkant van alle uri's wordt geplakt
-   * @param string $max_level[0] tot welk level gerenderd wordt (bij 0 is er geen limiet)
+   * @param array $menu default=NULL Je kunt een menu-array meegeven, als dit leeg is wordt de interne menu-array gebruikt
+   * @param string $attr default='' eventueel standaard mee te geven attributen voor menu-items
+   * @param string $level default=1 level
+   * @param string $preUri default='' een uri die aan de voorkant van alle uri's wordt geplakt
+   * @param string $max_level default=0 tot welk level gerenderd wordt (bij 0 is er geen limiet)
    * @return string
    * @author Jan den Besten
    */
@@ -794,8 +786,8 @@ class Menu {
    * Als je het menu aanmaakt vanuit een menu tabel dan kun je dit gebruiken om niet nogmaals de database aan te spreken als je een item uit die menu tabel wilt. Dat kun je dan hiermee doen.
    *
    * @param string $uri[''] Uri van te verkrijgen item, als leeg dan wordt current uri gebruikt
-   * @param string $foreigns[FALSE] Moeten foreign tabels ook meegenomen worden
-   * @param string $many[FALSE] Idem voor Many relaties
+   * @param string $foreigns default=FALSE Moeten foreign tabels ook meegenomen worden
+   * @param string $many default=FALSE Idem voor Many relaties
    * @return array database item
    * @author Jan den Besten
    */
@@ -897,7 +889,7 @@ class Menu {
    *     FALSE
    *
    * @param string $uri[''] 
-   * @param bool $full[TRUE] als TRUE dan worden full_uri's meegegeven die het hele uri pad representeren
+   * @param bool $full default=TRUE als TRUE dan worden full_uri's meegegeven die het hele uri pad representeren
    * @return string
    * @author Jan den Besten
    */
@@ -942,8 +934,8 @@ class Menu {
   /**
    * Geeft uri van volgende pagina op hetzelfde nivo
    *
-   * @param string $uri[''] Als leeg dan wordt current gebruikt
-   * @param bool $full[true] als TRUE dan worden full_uri's meegegeven
+   * @param string $uri default='' Als leeg dan wordt current gebruikt
+   * @param bool $full default=true als TRUE dan worden full_uri's meegegeven
    * @return string
    * @author Jan den Besten
    */
@@ -993,7 +985,7 @@ class Menu {
    * Geeft uri van vorig submenu
    *
    * @param string $uri[''] Als leeg dan wordt current gebruikt 
-   * @param string $full_uri[TRUE] Als TRUE dan worden full_uri's meegegeven
+   * @param string $full_uri default=TRUE Als TRUE dan worden full_uri's meegegeven
    * @return string
    * @author Jan den Besten
    */
@@ -1041,7 +1033,7 @@ class Menu {
    * Geeft uri van volgend submenu
    *
    * @param string $uri[''] Als leeg dan wordt current gebruikt 
-   * @param string $full_uri[TRUE] Als TRUE dan worden full_uri's meegegeven
+   * @param string $full_uri default=TRUE Als TRUE dan worden full_uri's meegegeven
    * @return string
    * @author Jan den Besten
    */
@@ -1060,10 +1052,9 @@ class Menu {
 	 * Pakt submenu
 	 *
 	 * @param string $uri 
-	 * @param bool $current[TRUE]
+	 * @param bool $current default=TRUE
 	 * @return array
 	 * @author Jan den Besten
-   * @ignore
    * @internal
 	 */
 	private function _get_submenu($uri,$current=TRUE) {

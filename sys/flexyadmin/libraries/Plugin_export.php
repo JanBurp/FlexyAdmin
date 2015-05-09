@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/**
+/** \ingroup plugins
  * Exporteer een tabel
  * 
  * Je kunt de tabel kiezen en het formaat van de export.
@@ -20,7 +20,6 @@ class Plugin_export extends Plugin {
 	}
 
   /**
-   * @ignore
    */
 	public function _admin_api($args=NULL) {
 		$this->add_content(h('Export',1));
@@ -102,7 +101,6 @@ class Plugin_export extends Plugin {
 	}
 
   /**
-   * @ignore
    */
 	private function export($table,$type='csv',$download=true) {
 		

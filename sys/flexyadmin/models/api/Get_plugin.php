@@ -1,9 +1,11 @@
 <?
 
 /**
- * Geeft plugin pagina, voor backend van FlexyAdmin
+ * API: Geeft plugin pagina, voor backend van FlexyAdmin
  * 
- * @author Jan den Besten
+ * @author: Jan den Besten
+ * $Revision$
+ * @copyright: (c) Jan den Besten
  */
 
 class get_plugin extends Api_Model {
@@ -13,7 +15,6 @@ class get_plugin extends Api_Model {
   );
   
   /**
-   * @ignore
    */
 	public function __construct($name='') {
 		parent::__construct();

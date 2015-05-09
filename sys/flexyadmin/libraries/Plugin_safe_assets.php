@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/**
+/** \ingroup plugins
  * Verwijderd onwenselijke bestanden in assets mappen en past rechten van mappen aan
  * 
  * - Maakt voor elke assets map een .htaccess aan die alleen toegestane bestanden toelaat
@@ -21,22 +21,15 @@ class Plugin_safe_assets extends Plugin {
 
   /**
    * Alle bestanden die zijn gecontroleerd
-   *
-   * @var array
-   * @ignore
    */
   private $checked=array();
   
   /**
    * Alle bestanden die zijn verwijderd
-   *
-   * @var array
-   * @ignore
    */
   private $removed=array();
   
   /**
-   * @ignore
    */
    function __construct() {
 		parent::__construct();
@@ -49,7 +42,6 @@ class Plugin_safe_assets extends Plugin {
    *
    * @return void
    * @author Jan den Besten
-   * @ignore
    */
   function _admin_logout() {
 		$logout=true;
@@ -68,7 +60,6 @@ class Plugin_safe_assets extends Plugin {
    * @param string $args 
    * @return void
    * @author Jan den Besten
-   * @ignore
    */
 	function _admin_api($args=NULL) {
 		if ($this->CI->user->is_super_admin()) {
@@ -82,7 +73,6 @@ class Plugin_safe_assets extends Plugin {
    *
    * @return string
    * @author Jan den Besten
-   * @ignore
    */
   private function _show() {
     return $this->CI->load->view('admin/plugins/safe_assets',array('checked'=>$this->checked,'removed'=>$this->removed), true);
@@ -94,7 +84,6 @@ class Plugin_safe_assets extends Plugin {
    *
    * @return void
    * @author Jan den Besten
-   * @ignore
    */
 	function _after_update() {
 		$types=$this->newData['str_types'];
@@ -108,7 +97,6 @@ class Plugin_safe_assets extends Plugin {
    *
    * @return void
    * @author Jan den Besten
-   * @ignore
    */
 	function _safe_and_clean_all() {
 		$someRemoved=false;
@@ -159,7 +147,6 @@ class Plugin_safe_assets extends Plugin {
    * Maak .htacces aan
    *
    * @author Jan den Besten
-   * @ignore
    */
 	function _create_htaccess($path,$types) {
 		$types=strtolower($types).'|'.strtoupper($types);
@@ -177,7 +164,6 @@ class Plugin_safe_assets extends Plugin {
    * Verwijderd ongewenste bestanden (recursief)
    *
    * @author Jan den Besten
-   * @ignore
    */
 	function _remove_forbidden_files($path,$allowed=array(),$recursive=FALSE) {
 		$removed=false;

@@ -6,7 +6,6 @@
  * @author Jan den Besten
  * $Revision$
  * @copyright (c) Jan den Besten
- * @ignore
  **/
 
  /**
@@ -16,8 +15,7 @@
   * @param string $help 
   * @return void
   * @author Jan den Besten
-  * @ignore
-  * @internal
+   * @internal
   */
 function help($s,$help) {
 	$CI =& get_instance();

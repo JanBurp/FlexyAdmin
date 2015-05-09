@@ -1,5 +1,5 @@
 <?php 
-/**
+/** \ingroup libraries
  * Form
  * 
  * Met deze class kun je formulieren maken, valideren en uitlezen.
@@ -123,7 +123,6 @@ class Form {
   );
 
   /**
-   * @ignore
    */
 	function __construct($action="",$form_id='') {
 		$this->CI = &get_instance();
@@ -135,10 +134,10 @@ class Form {
   /**
    * (Her)initialiseer het formulier
    *
-   * @param string $action[''] 
+   * @param string $action default=''
+   * @param string $form_id='
    * @return void
    * @author Jan den Besten
-   * @ignore
    */
 	public function init($action="",$form_id='') {
     $this->set_form_id($form_id);
@@ -174,7 +173,6 @@ class Form {
    * @param string $action 
    * @return void
    * @author Jan den Besten
-   * @ignore
    */
 	public function set_action($action="") {
     if (empty($action)) $action=$this->CI->uri->get();
@@ -185,7 +183,7 @@ class Form {
   /**
    * Stel de css styling in. Mogelijke opties zijn: default|bootstrap
    *
-   * @param string $style['default]
+   * @param string $style default='default
    * @return void
    * @author Jan den Besten
    */
@@ -250,7 +248,7 @@ class Form {
   /**
    * Hiermee stel je alle formuliervelden in en eventueel een kop
    *
-   * @param array $data[NULL]
+   * @param array $data default=NULL
    * @param string $caption['']
    * @return void
    * @author Jan den Besten
@@ -276,24 +274,10 @@ class Form {
 		$this->set_caption($caption);
 	}
   
-  // /**
-  //  * Stel data opnieuw in (verder zijn alle velden etc al ingesteld)
-  //  *
-  //  * @param string $data
-  //  * @return object this
-  //  * @author Jan den Besten
-  //  */
-  // public function repopulate($data) {
-  //   foreach ($data as $key => $value) {
-  //     if (isset($this->postdata[$key])) $this->postdata[$key]=$value;
-  //   }
-  //   return $this;
-  // }
-  
   /**
    * Laat validation error zien bij de velden zelf
    *
-   * @param mixed $class['error'], als TRUE, of een stringwaarde, dan worden de errors bij de velden getoond. De stringwaarde wordt de meegegeven class.
+   * @param mixed $class default='error', als TRUE, of een stringwaarde, dan worden de errors bij de velden getoond. De stringwaarde wordt de meegegeven class.
    * @return object this
    * @author Jan den Besten
    */
@@ -326,8 +310,7 @@ class Form {
    *
    * @return void
    * @author Jan den Besten
-   * @depricated
-   * @ignore
+   * @deprecated
    */
   public function prepare_for_clearinput() {
     foreach ($this->data as $key=>$data) {
@@ -341,7 +324,7 @@ class Form {
   /**
    * Voeg een extra wachtwoord veld toe zodat een wachtwoord dubbel moet worden ingevoerd. Checkt automatisch of ze overeenkomen.
    *
-   * @param array $args[TRUE] Als TRUE dan worden automatisch alle pwd en gpw (paswoord) velden gedubbeld. Geef anders een array met de opties
+   * @param array $args default=TRUE Als TRUE dan worden automatisch alle pwd en gpw (paswoord) velden gedubbeld. Geef anders een array met de opties
    * @return void
    * @author Jan den Besten
    */
@@ -356,7 +339,7 @@ class Form {
 	/**
 	 * Stel in dat alle passwords moeten worden gehashed
 	 *
-	 * @param bool $hash[TRUE]
+	 * @param bool $hash default=TRUE
 	 * @return void
 	 * @author Jan den Besten
 	 */
@@ -382,7 +365,6 @@ class Form {
    * @param string $field 
    * @return void
    * @author Jan den Besten
-   * @ignore
    */
 	public function when($when='',$field='') {
 		if (empty($when))
@@ -400,7 +382,6 @@ class Form {
    * @return void
    * @author Jan den Besten
    * @internal
-   * @ignore
    */
 	private function _check_default_field($name, $field) {
 		if (!isset($field['type']))				$field['type']="input";
@@ -419,7 +400,6 @@ class Form {
    * @param array $buttons 
    * @return void
    * @author Jan den Besten
-   * @ignore
    */
 	public function show_buttons($buttons=NULL) {
 		$this->set_buttons($buttons);
@@ -428,7 +408,7 @@ class Form {
   /**
    * Stel de buttons in de getoond moeten worden
    *
-   * @param array $buttons[NULL] als dit leeg is dan worden de drie standaard buttons getoond (cancel,reset,submit)
+   * @param array $buttons default=NULL als dit leeg is dan worden de drie standaard buttons getoond (cancel,reset,submit)
    * @return void
    * @author Jan den Besten
    */
@@ -461,7 +441,7 @@ class Form {
   /**
    * Stel de fieldsets in
    *
-   * @param string $fieldsets[array('fieldset')]
+   * @param string $fieldsets default=array('fieldset')
    * @return void
    * @author Jan den Besten
    */
@@ -490,7 +470,6 @@ class Form {
    * @return void
    * @author Jan den Besten
    * @internal
-   * @ignore
    */
 	private function _add_matching_password($data) {
 		foreach ($data as $name => $field) {
@@ -516,7 +495,6 @@ class Form {
    * @return bool
    * @author Jan den Besten
    * @internal
-   * @ignore
    */
   private function _this_form($form_id='') {
     if (!empty($form_id)) {
@@ -529,7 +507,7 @@ class Form {
   /**
    * Kijkt of het formulier goed is gevalideerd, geeft TRUE als dat zo is, anders FALSE
    *
-   * @param string form_id['']
+   * @param string $form_id default=''
    * @return boolean TRUE als formulier door validatie is gekomen
    * @author Jan den Besten
    */
@@ -624,7 +602,6 @@ class Form {
    *
    * @return void
    * @author Jan den Besten
-   * @ignore
    */
 	public function reset_data() {
 		$this->reset();
@@ -653,7 +630,6 @@ class Form {
    * @param mixed	$value Data to prepare
    * @return mixed The prepped data
    * @internal
-   * @ignore
    */
 	private function prepare_field($name,$value) {
 		$out=$value;
@@ -680,7 +656,6 @@ class Form {
    * @return mixed value
    * @author Jan den Besten
    * @internal
-   * @ignore
    */
 	private function _value_from_hidden($name,$value) {
 		if (is_array($value) or empty($value)) {
@@ -704,7 +679,6 @@ class Form {
    * @param string $table Table to update
    * @return bool	Validation succes
    * @internal
-   * @ignore
    */
 	private function get_postdata() {
 
@@ -787,7 +761,7 @@ class Form {
   /**
    * Geeft het gerenderde formulier terug (HTML)
    *
-   * @param string $class['flexyForm'] eventueel mee te geven CSS class dat aan formulier wordt gegeven
+   * @param string $class default='flexyForm' eventueel mee te geven CSS class dat aan formulier wordt gegeven
    * @return string	formulier
    */
 	public function render($class='flexyForm') {
@@ -855,7 +829,6 @@ class Form {
    *
    * @author Jan den Besten
    * @internal
-   * @ignore
    */
 	private function render_field($name,$field,$form_class="") {
 		$pre=get_prefix($name);
@@ -1176,7 +1149,6 @@ class Form {
    *
    * @return bool True if one ore more fields is a html editor
    * @internal
-   * @ignore
    */
  	public function has_htmlfield() {
  		return $this->hasHtmlField;

@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
- /**
+ /** \ingroup plugins
   * Voorziet tabellen van indexen
   * 
   * Deze plugin zal alle tabellen waar het zinvol is voorzien van indexen op zinvollen velden. 
@@ -26,7 +26,6 @@ class Plugin_create_indexes extends Plugin {
 	}
 
   /**
-   * @ignore
    */
 	public function _admin_api($args=NULL) {
 		if ($this->CI->user->is_super_admin()) {
@@ -41,7 +40,6 @@ class Plugin_create_indexes extends Plugin {
    *
    * @return void
    * @author Jan den Besten
-   * @ignore
    */
 	private function _create_indexes() {
 		$tables=$this->CI->db->list_tables();

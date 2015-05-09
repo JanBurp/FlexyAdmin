@@ -5,7 +5,6 @@
  * @author Jan den Besten
  * $Revision$
  * @copyright (c) Jan den Besten
- * @link http://www.flexyadmin.com 
  * @file
  */
 
@@ -14,8 +13,8 @@
  /**
   * Geeft de string terug met een nummer erachter dat bij elke aanroep wordt opgehoogd
   *
-  * @param string $string['']
-  * @param string $start[0] 
+  * @param string $string default=''
+  * @param string $start default=0
   * @return string
   * @author Jan den Besten
   */
@@ -55,7 +54,7 @@ function in_string($in,$string) {
  *
  * @param mixed $in te zoeken string, of array van strings
  * @param string $string string waarin gezocht wordt
- * @param bool $case_sensitive[TRUE]
+ * @param bool $case_sensitive default=TRUE
  * @return bool TRUE als (één van de) string(s) is gevonden
  * @author Jan den Besten
  */
@@ -101,9 +100,9 @@ function explode_pre($split,$fields,$pre) {
 /**
  * Adds a string to a string, with a split string if string has content allready
  *
- * @param string $string String to add to
+ * @param string $s String to add to
  * @param string $add string to add
- * @param string $split a split string,will be added in string has content
+ * @param string $split default='|' a split string,will be added in string has content
  * @return string result string after adding
  */
 function add_string($s,$add,$split="|") {
@@ -145,7 +144,7 @@ function remove_first_char($s) {
  * Pakt eerste deel van een string
  *
  * @param mixed $s als $s een array is wordt van alle strings in die array de prefix teruggegeven, anders van één string
- * @param string $split['_']
+ * @param string $split default='_'
  * @return mixed
  * @author Jan den Besten
  *
@@ -184,7 +183,7 @@ function get_prefix($s,$split="_") {
  * Geeft suffix van een string
  *
  * @param string $s 
- * @param string $split['_'] 
+ * @param string $split default='_'
  * @return string
  * @author Jan den Besten
  */
@@ -197,7 +196,7 @@ function get_suffix($s,$split="_") {
  * Verwijderd een prefix van een string
  *
  * @param string $s 
- * @param string $split['_']
+ * @param string $split default='_'
  * @return string
  * @author Jan den Besten
  */
@@ -211,7 +210,7 @@ function remove_prefix($s,$split="_") {
  * Verwijderd de suffix van een string
  *
  * @param string $s 
- * @param string $split['_']
+ * @param string $split default='_'
  * @return string
  * @author Jan den Besten
  */
@@ -271,7 +270,7 @@ function replace_linefeeds($s,$r=' ') {
  * - Meer dan één - wordt vervangen door één -
  *
  * @param string $s 
- * @param string $c[0] Als groter dan 0 dan wordt de string ingekort tot deze lengte
+ * @param string $c default=0 Als groter dan 0 dan wordt de string ingekort tot deze lengte
  * @return string
  * @author Jan den Besten
  */
@@ -295,8 +294,8 @@ function clean_string($s,$c=0) {
  * - Verwijderd quotes
  *
  * @param string $s 
- * @param string $c[0] Maximale lengte
- * @param string $case['lower'] [lower|upper|ucwords|ucfirst]
+ * @param string $c default=0 Maximale lengte
+ * @param string $case default='lower' [lower|upper|ucwords|ucfirst]
  * @return string
  * @author Jan den Besten
  */
@@ -364,7 +363,7 @@ function strip_qoutes($s) {
  * Als strip_tags() maar vervangt eerst alle <br /> en &nbsp; door normale spaties
  *
  * @param string $s 
- * @param string $c[0] Maximale lengte
+ * @param string $c default=0 Maximale lengte
  * @return string
  * @author Jan den Besten
  */
@@ -437,9 +436,10 @@ function str2hex($string) {
  * Maakt een header tekst van een lange tekst
  * 
  * @param string $txt 
- * @param string $len[50] Maximale lengte
- * @param string $type['WORDS] CHARS|WORDS|LINES
- * @param string $strip_tags['&lt;br/&gt;&lt;strong&gt;&lt;italic&gt;&lt;em&gt;&lt;b&gt;&lt;a&gt;&lt;p&gt;']
+ * @param string $len default=50 Maximale lengte
+ * @param string $type default='WORDS CHARS|WORDS|LINES
+ * @param string $strip_tags default='&lt;br/&gt;&lt;strong&gt;&lt;italic&gt;&lt;em&gt;&lt;b&gt;&lt;a&gt;&lt;p&gt;'
+ * @param string $ellipses  default=''
  * @return string
  * @author Jan den Besten
  */
@@ -469,7 +469,7 @@ function intro_string($txt,$len=50,$type='WORDS',$strip_tags='<br/><strong><ital
  *
  * @param string $txt 
  * @param string $more Toe te voegen tekst
- * @param string $tag['&lt;/p&gt;']
+ * @param string $tag default='&lt;/p&gt;'
  * @return string
  * @author Jan den Besten
  */
@@ -487,10 +487,10 @@ function add_before_last_tag($txt,$more,$tag='</p>') {
  * Geeft een string van een maximale lengte
  *
  * @param string $txt 
- * @param string $len[100]
- * @param string $type[LINES] Waar op wordt gesplitst [CHARS|WORDS|LINES]
- * @param string $closetags[FALSE]
- * @param string $strip_tags['']
+ * @param string $len default=100
+ * @param string $type default=LINES Waar op wordt gesplitst [CHARS|WORDS|LINES]
+ * @param string $closetags default=FALSE
+ * @param string $strip_tags default=''
  * @return string
  * @author Jan den Besten
  */
@@ -529,7 +529,7 @@ function max_length($txt,$len=100,$type='LINES',$closetags=false,$strip_tags='')
  *
  * @param string $txt Tekst waarin gezocht moet worden
  * @param string $tag HTML tag die gezocht wordt
- * @param mixed $max_pos[FALSE] Maximaal aantal karakters waar de tag gevonden moet worden vanaf het begin van de tekst. Als FALSE dan is er geen begrenzing.
+ * @param mixed $max_pos default=FALSE Maximaal aantal karakters waar de tag gevonden moet worden vanaf het begin van de tekst. Als FALSE dan is er geen begrenzing.
  * @return array ( 'tag'=> '', 'attributes' => '', 'inner' => '', ['pos'=> ''] )
  * @author Jan den Besten
  */

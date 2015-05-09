@@ -1,7 +1,7 @@
 <?php
 
 class Lorem {
-	/**
+	/** \ingroup libraries
 	*	Copyright (c) 2009, Mathew Tinsley (tinsley@tinsology.net)
 	*	All rights reserved.
 	*
@@ -28,9 +28,11 @@ class Lorem {
 	*	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	*/
 	
-	private $words, $wordsPerParagraph, $wordsPerSentence;
+	private $words;
+  private $wordsPerParagraph
+  private $wordsPerSentence;
 	
-	function __construct($wordsPer = 100)
+	public function __construct($wordsPer = 100)
 	{
 		$this->wordsPerParagraph = $wordsPer;
 		$this->wordsPerSentence = 24.460;
@@ -215,7 +217,7 @@ class Lorem {
 		'cras' );
 	}
 		
-	function getContent($count, $format = 'html', $loremipsum = false)
+	public function getContent($count, $format = 'html', $loremipsum = false)
 	{
 		$format = strtolower($format);
 		

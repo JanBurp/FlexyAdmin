@@ -4,7 +4,6 @@
  * Extending the loader class
  * see the docs http://codeigniter.com/user_guide/general/core_classes.html
  * 
- * @ignore
  * @internal
  */
 

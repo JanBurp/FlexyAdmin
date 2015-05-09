@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/**
+/** \ingroup plugins
  * Deze plugin ververst de volgorde van een tabel met 'order'
  *
  * @author Jan den Besten

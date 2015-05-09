@@ -1,7 +1,7 @@
 <?
 
 
-/**
+/** \ingroup models
  * API auth. Hiermee kan worden ingelogd of uitgelogd.
  * 
  * ###_api/auth

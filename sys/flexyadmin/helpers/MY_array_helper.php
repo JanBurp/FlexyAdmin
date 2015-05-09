@@ -14,7 +14,7 @@
  * 
  * @param mixed $name
  * @param array $arr
- * @param mixed $default[NULL]
+ * @param mixed $default default=NULL
  * @return mixed
  */
 function el($name,$arr,$default=NULL) {
@@ -30,7 +30,7 @@ function el($name,$arr,$default=NULL) {
  * Maakt een object van een array
  *
  * @param string $array 
- * @param string $recursive[TRUE]
+ * @param string $recursive default=TRUE
  * @return object
  * @author Jan den Besten
  */
@@ -47,7 +47,7 @@ function array2object($array,$recursive=TRUE) {
  * Maakt een array van een object
  *
  * @param string $object 
- * @param string $recursive[TRUE]
+ * @param string $recursive default=TRUE
  * @return array
  * @author Jan den Besten
  */
@@ -64,7 +64,8 @@ function object2array($object,$recursive=TRUE) {
  * Maakt van een array een PHP string
  *
  * @param string $array 
- * @param string $tabs[1]
+ * @param string $tabs default=1
+ * @param string $eol  default="\n"
  * @return string
  * @author Jan den Besten
  */
@@ -86,7 +87,7 @@ function array2php($array,$tabs=1,$eol="\n") {
  * Maakt een CSV (Comma Seperated Values) string van een array
  *
  * @param string $array 
- * @param string $eol["\r\n"]
+ * @param string $eol default="\r\n"
  * @return string
  * @author Jan den Besten
  */
@@ -113,10 +114,10 @@ function array2csv($array,$eol="\r\n") {
 
 /**
  * Maakt JSON van een array. Is net anders dan de standaard PHP functie json_encode(), ook arrays worden meegegeven.
+ * Zie http://www.bin-co.com/php/scripts/array2json/
  *
  * @param string $arr
  * @return string JSON
- * @link http://www.bin-co.com/php/scripts/array2json/
  */
 function array2json($arr) {
 	$parts = array();
@@ -172,9 +173,9 @@ function json2array($json) {
  * Maakt XML van meegegeven array
  *
  * @param string $array 
- * @param string $keys[NULL]
- * @param string $attr[NULL]
- * @param string $tabs[0]
+ * @param string $keys default=NULL
+ * @param string $attr default=NULL
+ * @param string $tabs default=0
  * @return string XML
  * @author Jan den Besten
  */
@@ -221,7 +222,6 @@ function array2xml($array,$keys=NULL,$attr=NULL,$tabs=0) {
  * @param string $xml 
  * @return string
  * @author Jan den Besten
- * @ignore
  */
 function reformMalformedXML($xml) {
 	return preg_replace('/<(\d+)>([^<]*)<(.*?)>(.*?)<\/(\d+)>/s','<$3>$2<$3>$4</$3>',$xml);
@@ -234,7 +234,6 @@ function reformMalformedXML($xml) {
  * @param string $rKey 
  * @return array
  * @author Jan den Besten
- * @ignore
  */
 function reformXmlArrayKey($a,$rKey) {
 	$r=$a;
@@ -262,20 +261,18 @@ function reformXmlArrayKey($a,$rKey) {
 
 
 /**
- * 
  * Maakt een array van meegegeven XML
+ * Zie http://www.bin-co.com/php/scripts/xml2array/
  * 
- * @param string $contents XML
- * @param bool get_attributes[TRUE] If this is TRUE the function will get the attributes as well as the tag values - this results in a different array structure in the return value.
- * @param string priority['tag'] - Can be 'tag' or 'attribute'. This will change the way the resulting array structure. For 'tag', the tags are given more importance.
- * @return array The parsed XML in an array form.
- * @link: http://www.bin-co.com/php/scripts/xml2array/
- *
  * Voorbeeld:
  * 
  *     $array =  xml2array(file_get_contents('feed.xml'));
  *     $array =  xml2array(file_get_contents('feed.xml', 1, 'attribute'));
  * 
+ * @param string $contents XML
+ * @param bool $get_attributes default=TRUE If this is TRUE the function will get the attributes as well as the tag values - this results in a different array structure in the return value.
+ * @param string $priority  default='tag' - Can be 'tag' or 'attribute'. This will change the way the resulting array structure. For 'tag', the tags are given more importance.
+ * @return array The parsed XML in an array form.
  */
 function xml2array($contents, $get_attributes=true, $priority = 'tag') {
   
@@ -416,11 +413,11 @@ function xml2array($contents, $get_attributes=true, $priority = 'tag') {
 /**
  * Maakt een array van meegegeven CSV
  * 
- * @param string $cvs
- * @param array $fldnames[NULL] array of fields names. Leave this to null to use the first row values as fields names.
- * @param string $sep[','] string used as a field separator
- * @param string $protect['"'] char used to protect field (generally single or double quote)
- * @param array  $filters[NULL] array of regular expression that row must match to be in the returned result. ie: array('fldname'=>'/pcre_regexp/')
+ * @param string $csv
+ * @param array $fldnames default=NULL array of fields names. Leave this to null to use the first row values as fields names.
+ * @param string $sep default=',' string used as a field separator
+ * @param string $protect default='"' char used to protect field (generally single or double quote)
+ * @param array  $filters default=NULL array of regular expression that row must match to be in the returned result. ie: array('fldname'=>'/pcre_regexp/')
  * @return array
  */
 function csv2array($csv,$fldnames=null,$sep=',',$protect='"',$filters=null){
@@ -507,7 +504,7 @@ function not_filter_by($a,$ap) {
  *
  * @param string $a Array
  * @param string $preKey Key
- * @param string $replaceKey[FALSE] Geef hier eventueel een nieuwe key 
+ * @param string $replaceKey default=FALSE Geef hier eventueel een nieuwe key 
  * @return array
  * @author Jan den Besten
  */
@@ -583,7 +580,7 @@ function array_merge_recursive_distinct(array &$array1, array &$array2 ) {
  *
  * @param string $orig Te zoeken key
  * @param string $new Te vervangen key
- * @param string $&array Array
+ * @param array &$array Array
  * @return array
  * @author Jan den Besten
  */
@@ -597,11 +594,10 @@ function array_change_key_name($orig,$new, &$array) {
 /**
  * Sorteert een array, niet lettend op case
  *
- * @param array $&array 
+ * @param array &$array 
  * @return void
  * @author Jan den Besten
- * @ignore
- * @depricated
+ * @deprecated
  */
 function ignorecase_sort(&$array) {
   for ($i = 0; $i < sizeof($array); $array[$i] = strtolower($array[$i]).$array[$i], $i++);
@@ -615,7 +611,7 @@ function ignorecase_sort(&$array) {
 /**
  * Als ksort() Maar dan niet case gevoelig
  *
- * @param array $&a 
+ * @param array &$a 
  * @return void
  * @author Jan den Besten
  */
@@ -636,9 +632,9 @@ function ignorecase_ksort(&$a) {
  *
  * @param array $a 
  * @param array $keys array van keys waarvan de values moeten worden gesorteerd
- * @param bool $desc[FALSE] Als TRUE dan wordt de volgorde andersom
- * @param bool $case[FALSE] case-gevoeligheid
- * @param int $max[0] 
+ * @param bool $desc default=FALSE Als TRUE dan wordt de volgorde andersom
+ * @param bool $case default=FALSE case-gevoeligheid
+ * @param int $max default=0
  * @return array
  * @author Jan den Besten
  */
@@ -736,7 +732,7 @@ function in_array_like($v,$a) {
  * @param array $a array waarin gezocht wordt
  * @param mixed $v waarde die gezocht wordt
  * @param string $key[''] Eventueel mee te geven key waarin gezoch moet worden
- * @param bool $like[FALSE] als TRUE dan wordt gezocht naar een waarde die erop lijkt ipv precies gelijk is
+ * @param bool $like default=FALSE als TRUE dan wordt gezocht naar een waarde die erop lijkt ipv precies gelijk is
  * @return array
  * @author Jan den Besten
  */
@@ -779,8 +775,7 @@ function find_row_by_value($a,$v,$key='',$like=false) {
  * @param string $array 
  * @return array
  * @author Jan den Besten
- * @ignore
- * @depricated
+ * @deprecated
  */
 function array_preg_search($val,$array) {
   return array_ereg_search($val,$array);
@@ -860,7 +855,7 @@ function implode_pre($i,$a,$pre) {
  * Vind de maximale waarde binnen de array (in eventueel meegegeven key)
  *
  * @param array $a 
- * @param string $k[NULL]  
+ * @param string $k default=NULL  
  * @return int
  * @author Jan den Besten
  */
@@ -1046,7 +1041,7 @@ function array_keep_keys($a,$keep) {
  *
  * @param array $a 
  * @param array $unset array van keys die verwijderd worden
- * @param bool $recursive[FALSE] als TRUE dan word de array gezien als een multidimensionale array en kijkt die in elke tak
+ * @param bool $recursive default=FALSE als TRUE dan word de array gezien als een multidimensionale array en kijkt die in elke tak
  * @return array
  * @author Jan den Besten
  */
@@ -1063,7 +1058,7 @@ function array_unset_keys($a,$unset,$recursive=FALSE) {
  *
  * @param array $a 
  * @param array $rename 
- * @param bool $keep_all [TRUE]
+ * @param bool $keep_all  default=TRUE
  * @return array
  * @author Jan den Besten
  */
@@ -1142,7 +1137,7 @@ function array_diff_multi($a,$b) {
 /**
  * Test of een array associatieve keys heeft 
  *
- * @param array $array
+ * @param array $a
  * @return bool TRUE als de array associatieve keys heeft
  * @author Jan den Besten
  */

@@ -44,7 +44,6 @@
  * @license http://opensource.org/licenses/mit-license.php MIT License
  * @version 1.1.2 (2012-05-01)
  * @link https://github.com/rgrove/jsmin-php
- * @ignore
  */
 
 class JSMin {
@@ -388,7 +387,6 @@ class JSMin {
 /**
  * undocumented class
  *
- * @ignore
  */
 class JSMinException extends Exception {}
 ?>

@@ -10,26 +10,25 @@ define('CIUNIT_VERSION', '1.2 Beta');
  *
  * @author     Agop Seropyan <agopseropyan@gmail.com>
  * @copyright  2012, Agop Seropyan <agopseropyan@gmail.com>
- * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
  * @since      File available since Release 1.0.0
  */
 
 class Ciunit
 {
     /** 
-     * @var CIUnit_Framework_TestRunner
+     * CIUnit_Framework_TestRunner
      */
     private $runner;
 
     /**
      * Exception message thrown during run
-     * @var String
+     * String
      */
     private $runFailure = NULL;
 
     /**
      * Instantiates a CIUnit_Framework_TestRunner with a testcase class
-     * @param string $testCase
+     * string $testCase
      */
     public function run ($testCase)
     {

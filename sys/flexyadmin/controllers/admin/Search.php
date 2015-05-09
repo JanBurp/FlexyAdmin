@@ -1,6 +1,6 @@
 <?php require_once(APPPATH."core/AdminController.php");
 
-/**
+/** \ingroup controllers
  * @author Jan den Besten
  * $Revision$
  * @copyright (c) Jan den Besten

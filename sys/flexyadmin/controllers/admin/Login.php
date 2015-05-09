@@ -1,6 +1,6 @@
 <?php
 
-/**
+/** \ingroup controllers
  * This Controller logs user in or out
  *
  * @author Jan den Besten

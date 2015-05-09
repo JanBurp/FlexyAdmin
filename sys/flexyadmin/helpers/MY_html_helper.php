@@ -92,8 +92,7 @@ function attributes($a=array()) {
  * @param string $tag 
  * @return string
  * @author Jan den Besten
- * @depricated
- * @ignore
+ * @deprecated
  */
 function end_html($tag) {
 	return _html($tag);
@@ -114,8 +113,8 @@ function _html($tag) {
  * &lt;h#&gt; tag
  *
  * @param string $t tekst binnen de header tag
- * @param int $h[1] header nivo 
- * @param mixed $a
+ * @param int $h default=1 header nivo 
+ * @param mixed $a  default=array()
  * @return string
  * @author Jan den Besten
  */
@@ -191,8 +190,7 @@ function _div() {
  *
  * @return string
  * @author Jan den Besten
- * @depricated
- * @ignore
+ * @deprecated
  */
 function end_div() {
 	return _html("div");
@@ -218,8 +216,7 @@ function hr($a=array()) {
  * @param string $text Tekst die in de link moet komen
  * @return string
  * @author Jan den Besten
- * @depricated
- * @ignore
+ * @deprecated
  */
 function safe_email($adres,$text) {
   return safe_mailto($adres,$text);
@@ -260,7 +257,6 @@ function flash($swf,$attr="") {
  * @param string $text
  * @param string $class['']
  * @author Jan den Besten
- * @ignore
  */
 function button($url,$text,$class="") {
 	$out="";

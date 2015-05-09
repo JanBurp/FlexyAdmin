@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/**
+/** \ingroup plugins
  * Maakt één tabel van meerdere tabellen die aan elkaar gekoppeld zijn met een foreign key
  * 
  * Eerste argument is de tabel, de andere tabellen hoeven niet meegegeven te worden, die worden vanzelf gevonden aan de hand van de primary keys.
@@ -19,7 +19,6 @@ class Plugin_flatten_table extends Plugin {
 
 	
   /**
-   * @ignore
    */
    function _admin_api($args=false) {
 		if ($this->CI->user->is_super_admin()) {

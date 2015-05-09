@@ -1,8 +1,8 @@
-<?php /**
+<?php
+/**
  * logs admin logins
  *
  * @author Jan den Besten
- * @ignore
  * @internal
  */
  class Login_log extends CI_Model {

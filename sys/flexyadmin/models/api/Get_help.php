@@ -1,9 +1,11 @@
 <?
 
 /**
- * Geeft een help pagina voor in de backend van FlexyAdmin
+ * API: Geeft een help pagina voor in de backend van FlexyAdmin
  * 
- * @author Jan den Besten
+ * @author: Jan den Besten
+ * $Revision$
+ * @copyright: (c) Jan den Besten
  */
 
 class get_help extends Api_Model {
@@ -15,7 +17,6 @@ class get_help extends Api_Model {
   var $lang;
   
   /**
-   * @ignore
    */
 	public function __construct($name='') {
 		parent::__construct();

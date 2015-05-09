@@ -1,10 +1,9 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/**
+/** \ingroup models
  * Handles the state a grid is in: order,search and page
  *
  * @author Jan den Besten
- * @ignore
  * @internal
  */
 

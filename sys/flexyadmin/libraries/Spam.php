@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/**
+/** \ingroup plugins
  * Controleer hiermee of een ingevuld formulier spam bevat
  *
  * @author Dr. Peter J. Meyers, Jan den Besten
@@ -10,8 +10,6 @@ class Spam {
   
   /**
    * Instellingen
-   *
-   * @var string
    */
 	private $settings=array(
     'score_low'=>5,
@@ -30,28 +28,21 @@ class Spam {
   
   /**
    * Tekst die gecontroleerd wordt op spam
-   *
-   * @var string
    */
 	private $text='';
   
   /**
    * De tekst zonder html tags
-   *
-   * @var string
    */
 	private $text_no_html='';
   
   /**
    * Spam rapport
-   *
-   * @var array
    */
 	private $rapport=array();
   
 
   /**
-   * @ignore
    */
   public function __construct($settings=array()) {
 		$this->settings=array_merge($this->settings,$settings);
@@ -94,7 +85,7 @@ class Spam {
    * Controleer of de invoer spam is
    *
    * @param array $data Data van een formulier
-   * @param string $spamBody['spambody'] Veld wat een spambot ws automatisch vult 
+   * @param string $spamBody default=['spambody'] Veld wat een spambot ws automatisch vult 
    * @return bool TRUE dan is hoogstwaarschijnlijk spam.
    * @author Jan den Besten
    */
@@ -258,7 +249,7 @@ class Spam {
    * Spambots zullen dit onzichtbare veld hoogstwaarschijnlijk automatisch gaan invullen omdat ze niet weten dat het leeg moet blijven.
    *
    * @param array $data Ingevulde data dat door formulier teruggeven wordt.
-   * @param string $field['spambody'] te controleren veld
+   * @param string $field default=['spambody'] te controleren veld
    * @return bool TRUE als veld niet leeg is en dus hoogstwaarschijnlijk een robot
    * @author Jan den Besten
    */

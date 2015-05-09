@@ -1,10 +1,9 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/**
+/** \ingroup plugins
  * FlexyAdmin Plugin
  *
  * @author Jan den Besten
- * @ignore
  * @internal
  */
 

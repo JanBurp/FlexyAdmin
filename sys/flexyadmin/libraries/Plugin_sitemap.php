@@ -1,10 +1,9 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/**
+/** \ingroup plugins
  * Creates sitemap.xml
  *
  * @author Jan den Besten
- * @ignore
  * @internal
  */
 

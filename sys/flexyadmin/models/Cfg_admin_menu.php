@@ -4,7 +4,6 @@
  * Laad het admin-menu, klaar voor Angular
  *
  * @author Jan den Besten
- * @ignore
  */
 class cfg_admin_menu extends _crud {
   

@@ -4,7 +4,6 @@
  * cfg_users
  *
  * @author Jan den Besten
- * @ignore
  */
 class cfg_users extends _crud {
   

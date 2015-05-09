@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/**
+/** \ingroup core
  * Uitbreiding op [CI_Config](http://codeigniter.com/user_guide/libraries/config.html)
  * 
  * Grootste aanpassing is het kunnen onderverdelen van config items in secties, zie deze [thread](http://codeigniter.com/forums/viewthread/175199/)
@@ -12,7 +12,6 @@ Class MY_Config extends CI_Config {
 
   /**
    * @author Jan den Besten
-   * @ignore
    */
 	public function __construct() {
 		parent::__construct();
@@ -62,8 +61,8 @@ Class MY_Config extends CI_Config {
    * Laad eerst de sys config, dan de site config en merge deze samen (zo kunnen site specifieke instellingen standaard instellingen overrulen)
    *
    * @param string $file 
-   * @param string $use_sections[FALSE]
-   * @param string $fail_gracefully[FALSE]
+   * @param string $use_sections default=FALSE
+   * @param string $fail_gracefully default=FALSE
    * @return void
    * @author Jan den Besten
    */

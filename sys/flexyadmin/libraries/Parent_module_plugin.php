@@ -1,5 +1,5 @@
 <?php 
-/**
+/** \ingroup libraries
  * De basis Class voor Modules en Plugins
  *
  * @author Jan den Besten
@@ -8,37 +8,27 @@ class Parent_module_plugin {
 
   /**
    * Verwijzing naar het CodeIgniter super-object
-   *
-   * @var object
    */
 	protected $CI;
   
   /**
    * Instellingen van deze Module of Plugin
-   *
-   * @var array
    */
 	protected $config=array();
   
   /**
    * Naam van deze Module of Plugin
-   *
-   * @var string
    */
 	protected $name='';
   
   /**
    * Naam van deze Module of Plugin zonder prefix 'plugin_'.
-   *
-   * @var string
    */
 	protected $shortname='';
 
 
   /**
-   * @param string $name 
-   * @author Jan den Besten
-   * @ignore
+   * @param array $args default=array()
    */
 	public function __construct($args=array()) {
 		$this->CI=&get_instance();
@@ -92,7 +82,7 @@ class Parent_module_plugin {
    * Stel extra config instellingen in: overruled eventueel bestaande.
    *
    * @param array $config 
-   * @param bool $merge[TRUE]
+   * @param bool $merge default=TRUE
    * @return array config
    * @author Jan den Besten
    */
@@ -110,7 +100,7 @@ class Parent_module_plugin {
    * Geeft config item terug uit de instellingen van huidige module/plugin. Als het item niet bestaat dan wordt een defaultwaarde teruggegeven
    *
    * @param string $item 
-   * @param string $default[NULL] Stel hier eventueel een andere default waarde in 
+   * @param string $default default=NULL Stel hier eventueel een andere default waarde in 
    * @return mixed config item of de default waarde
    * @author Jan den Besten
    */

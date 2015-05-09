@@ -1,98 +1,76 @@
 <?php 
-/**
- * Met dit model kun je bestanden tonen (in een grid), uploaden, verwijderen etc.
+
+/** \ingroup models
+ * Met dit model kun je bestanden opvragen, uploaden, verwijderen etc.
  *
- * @author Jan den Besten
+ * @author: Jan den Besten
+ * $Revision$
+ * @copyright: (c) Jan den Besten
  */
  
-class File_manager Extends CI_Model {
+class File_manager extends CI_Model {
 
   /**
    * config instellingen, worden ook doorgegeven aan File Upload Class
-   *
-   * @var array
    */
   private $settings=array();
 
   /**
    * Titel in het grid
-   *
-   * @var string
    */
   private $caption;
   
   /**
    * Bestanden
-   *
-   * @var array
    */
   private $files;
   
   /**
    * Huidig pad
-   *
-   * @var string
    */
   private $path;
   
   /**
    * Map
-   *
-   * @var string
    */
   private $map;
   
   /**
    * View
-   *
-   * @var string
    */
   private $view;
   
   /**
    * Pagination
-   *
-   * @var string
    */
   private $pagin;
   
   /**
    * Bestandsoorten
-   *
-   * @var string
    */
   private $fileTypes;
   
   /**
    * id
-   *
-   * @var int
    */
   private $currentId;
   
   /**
    * Moet upload knop getoont worden?
-   *
-   * @var bool
    */
   private $showUploadButton;
   
   /**
    * Moet delete knop getoont worden?
-   *
-   * @var string
    */
   private $showDeleteButtons;
   
   /**
    * Soort output
-   *
-   * @var string
    */
   private $type;
 
   /**
-   * @ignore
    */
 	public function __construct($config=array()) {
 		parent::__construct();
@@ -118,9 +96,9 @@ class File_manager Extends CI_Model {
 	/**
 	 * Initialiseer
 	 *
-	 * @param string $path['']
-	 * @param string $types[''] Bestandstypen
-	 * @param string $view['list]
+	 * @param string $path default=''
+	 * @param string $types default='' Bestandstypen
+	 * @param string $view default='list
 	 * @return object $this
 	 * @author Jan den Besten
 	 */
@@ -194,7 +172,7 @@ class File_manager Extends CI_Model {
   /**
    * Stel viewsoort in
    *
-   * @param string $view['list']
+   * @param string $view default='list'
    * @return object $this
    * @author Jan den Besten
    */
@@ -222,7 +200,6 @@ class File_manager Extends CI_Model {
    * @param string $type 
    * @return object $this
    * @author Jan den Besten
-   * @ignore
    * @internal
    */
 	public function set_type($type="html") {
@@ -245,7 +222,7 @@ class File_manager Extends CI_Model {
   /**
    * Moet upload button getoond worden?
    *
-   * @param bool $show[TRUE]
+   * @param bool $show default=TRUE
    * @return object $this
    * @author Jan den Besten
    */
@@ -257,7 +234,7 @@ class File_manager Extends CI_Model {
   /**
    * Moet delete buttons getoond worden?
    *
-   * @param bool $show[TRUE]
+   * @param bool $show default=TRUE
    * @return object $this
    * @author Jan den Besten
    */
@@ -269,7 +246,7 @@ class File_manager Extends CI_Model {
 	/**
 	 * Geeft bestanden
 	 *
-	 * @param array $files[NULL]
+	 * @param array $files default=NULL
 	 * @param string $name[''] Geef ook eventueel de titel mee
 	 * @return object $this
 	 * @author Jan den Besten
@@ -455,8 +432,7 @@ class File_manager Extends CI_Model {
 		}
 		$types=array_merge($types,$imgtypes);
 		$config['allowed_types']=implode('|',$types);
-    $CI=&get_instance();
-    $encrypt=$CI->cfg->get('cfg_media_info',$this->path,'b_encrypt_name');
+    $encrypt=$this->cfg->get('cfg_media_info',$this->path,'b_encrypt_name');
     if (isset($encrypt)) $config['encrypt_name'] = $encrypt;
     // strace_($config);
 		// trace_($_FILES);
@@ -510,8 +486,8 @@ class File_manager Extends CI_Model {
   /**
    * Geeft gesorteerde array van bestandsnamen terug
    *
-   * @param array $files files/bestanden
-   * @param string $order hoe moet er worden gesorteerd?: (name|type|size|date)
+   * @param array $f files/bestanden
+   * @param string $order default='name' hoe moet er worden gesorteerd?: (name|type|size|date)
    * @return array
    */
 	public function file_sort($f,$order="name") {
@@ -534,8 +510,8 @@ class File_manager Extends CI_Model {
   /**
    * Geeft HTML img tag terug voor een Thumbnail, als thumbnail niet bestaat dan wordt die aangemaakt
    *
-   * @param mixed $attr/$src
-   * @param bool $index[FALSE]
+   * @param mixed $attr
+   * @param bool $index default=FALSE
    * @return string
    * @author Jan den Besten
    */
@@ -588,7 +564,6 @@ class File_manager Extends CI_Model {
    *
    * @return array
    * @internal
-   * @ignore
    */
 	private function _create_render_data($files,$details=TRUE) {
 		$data=array();

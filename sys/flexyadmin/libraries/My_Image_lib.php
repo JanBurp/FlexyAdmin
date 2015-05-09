@@ -1,5 +1,5 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-/**
+/** \ingroup libraries
  * Image Manipulation class
  * 
  * Add sharpen parameter for quality improvement with imagemagick
@@ -21,11 +21,10 @@ class MY_Image_lib extends CI_Image_lib {
 	 *
 	 * This function will resize, crop or rotate
 	 *
-	 * @access	public
-	 * @param	string
+	 * @param	string $action default='resize'
 	 * @return	bool
 	 */
-	function image_process_imagemagick($action = 'resize')
+	public function image_process_imagemagick($action = 'resize')
 	{
 		//  Do we have a vaild library path?
 		if ($this->library_path == '')

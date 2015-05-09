@@ -1,4 +1,5 @@
 <?php 
+
 /** \ingroup helpers
  * Uitbreiding op <a href="http://codeigniter.com/user_guide/helpers/url_helper.html" target="_blank">URL_helper van CodeIgniter</a>.
  *
@@ -7,7 +8,6 @@
  * @copyright (c) Jan den Besten
  * @file
  */
-
 
 /**
   * Geeft pad naar assets map van de site en voegt meegegeven map toe
@@ -67,7 +67,6 @@ function add_assets($path) {
 /**
  * Maakt van gegeven parameters een site_url()
  *
- * @param string,string,string,...
  * @return string
  * @author Jan den Besten
  */
@@ -87,7 +86,6 @@ function api_url() {
 /**
  * Maakt van gegeven parameters een uri
  *
- * @param string,string,string,...
  * @return string
  * @author Jan den Besten
  */
@@ -113,8 +111,7 @@ function api_uri() {
  * @param string $l 
  * @return string
  * @author Jan den Besten
- * @depricated
- * @ignore
+ * @deprecated
  */
 function linkencode($l) {
 	return rawurlencode($l);
@@ -126,8 +123,7 @@ function linkencode($l) {
  * @param string $l 
  * @return string
  * @author Jan den Besten
- * @depricated
- * @ignore
+ * @deprecated
  */
 function linkdecode($l) {
 	return rawurldecode($l);
@@ -137,7 +133,7 @@ function linkdecode($l) {
  * Encode een pad zodat het geschikt is voor een uri
  *
  * @param string $p 
- * @param string $isPath[TRUE] 
+ * @param string $isPath default=TRUE 
  * @return string
  * @author Jan den Besten
  */
@@ -151,7 +147,7 @@ function pathencode($p,$isPath=TRUE) {
  * Decode een pad (uit een uri)
  *
  * @param string $p 
- * @param string $isPath[TRUE]
+ * @param string $isPath default=TRUE
  * @return string
  * @author Jan den Besten
  */
@@ -164,8 +160,8 @@ function pathdecode($p,$isPath=TRUE) {
 /**
  * Finds emailaddresses in string
  *
- * @param string $str 
- * @param bool $one[FALSE] set to TRUE if yo need just one email address
+ * @param string $s
+ * @param bool $one default=FALSE set to TRUE if yo need just one email address
  * @return mixed FALSE if no email addres is found, string when on is found, an array of strings when more are found
  * @author Jan den Besten
  */
@@ -183,6 +179,48 @@ function get_emails($s,$one=FALSE) {
   if ($one and is_array($emails)) $emails=current($emails);
   return $emails;
 }
+
+
+/**
+ * Test an url
+ *
+ * @param string $url
+ * @return bool
+ * @author Jan den Besten
+ */
+function test_url($url) {
+  // Email: don't test
+  if (substr($url,0,7)=='mailto:') {
+    $email=remove_prefix($url,':');
+  	$CI =& get_instance();
+    return $CI->form_validation->valid_email($email);
+  }
+  
+  // local => add site_url()
+  if (substr($url,0,4)!=='http') {
+    $url=site_url($url);
+  }
+
+  // http(s)
+  if (substr($url,0,4)=='http') {
+    $handle = curl_init($url);
+    curl_setopt($handle,  CURLOPT_RETURNTRANSFER, TRUE);
+    $response = curl_exec($handle);
+    /* Check for 404 (file not found). */
+    $httpCode = curl_getinfo($handle, CURLINFO_HTTP_CODE);
+    if($httpCode != 200) {
+      return FALSE;
+    }
+    // trace_([$url,$httpCode,$response]);
+    curl_close($handle);
+    return TRUE;
+  }
+  
+  return FALSE;
+}
+
+
+
 
 
 /**
@@ -286,46 +324,3 @@ $i = 0;foreach ($x as $val){ ?>l[<?php echo $i++; ?>]='<?php echo $val; ?>';<?ph
 		return $buffer;
 	}
 }
-
-
-
-
-/**
- * Test an url
- *
- * @param string $url 
- * @return bool
- * @author Jan den Besten
- */
-function test_url($url) {
-  // Email: don't test
-  if (substr($url,0,7)=='mailto:') {
-    $email=remove_prefix($url,':');
-  	$CI =& get_instance();
-    return $CI->form_validation->valid_email($email);
-  }
-  
-  // local => add site_url()
-  if (substr($url,0,4)!=='http') {
-    $url=site_url($url);
-  }
-
-  // http(s)
-  if (substr($url,0,4)=='http') {
-    $handle = curl_init($url);
-    curl_setopt($handle,  CURLOPT_RETURNTRANSFER, TRUE);
-    $response = curl_exec($handle);
-    /* Check for 404 (file not found). */
-    $httpCode = curl_getinfo($handle, CURLINFO_HTTP_CODE);
-    if($httpCode != 200) {
-      return FALSE;
-    }
-    // trace_([$url,$httpCode,$response]);
-    curl_close($handle);
-    return TRUE;
-  }
-  
-  return FALSE;
-}
-
-

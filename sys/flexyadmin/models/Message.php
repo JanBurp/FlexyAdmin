@@ -1,9 +1,8 @@
 <?php 
-/**
+/** \ingroup models
  * Wordt gebruikt voor interne messages in het admin deel
  *
  * @author Jan den Besten
- * @ignore
  */
 
 class Message extends CI_Model {
@@ -11,7 +10,6 @@ class Message extends CI_Model {
   var $uiNames=FALSE;
 	
   /**
-   * @ignore
    */
 	public function __construct() {
 		parent::__construct();
@@ -49,7 +47,7 @@ class Message extends CI_Model {
   /**
    * Reset
    *
-   * @param string $type['messages']
+   * @param string $type default='messages'
    * @return object $this;
    * @author Jan den Besten
    */
@@ -62,7 +60,7 @@ class Message extends CI_Model {
    * Voeg bericht toe
    *
    * @param string $message 
-   * @param string $type['message']
+   * @param string $type default='message'
    * @return object $this;
    * @author Jan den Besten
    */
@@ -78,7 +76,7 @@ class Message extends CI_Model {
   /**
    * Geeft bericht
    *
-   * @param string $type['message'] 
+   * @param string $type default='message'
    * @return mixed
    * @author Jan den Besten
    */
@@ -152,7 +150,7 @@ class Message extends CI_Model {
   /**
    * Geeft alle messages/errors terug als HTML
    *
-   * @param bool $view[FALSE]
+   * @param bool $view default=FALSE
    * @return string
    * @author Jan den Besten
    */

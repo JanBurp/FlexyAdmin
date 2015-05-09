@@ -1,6 +1,6 @@
 <?php require_once(APPPATH."core/AdminController.php");
 
-/**
+/** \ingroup controllers
  * Special Controller Class
  *
  * @author Jan den Besten

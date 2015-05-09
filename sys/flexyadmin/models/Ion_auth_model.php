@@ -1,54 +1,41 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/**
+/** \ingroup models
  * Ion Auth Model
  *
  * @author Ben Edmunds, Phil Sturgeon, Jan den Besten
- * @link http://github.com/benedmunds/CodeIgniter-Ion-Auth
  * @version 10.01.2009
- * @ignore
  *
  * Modified auth system based on redux_auth with extensive customization.  This is basically what Redux Auth 2 should be.
  * Original Author name has been kept but that does not mean that the method has not been modified.
  *
  * Used by User
- * 
  */
 
 class Ion_auth_model extends CI_Model
 {
 	/**
 	 * Holds an array of tables used
-	 *
-	 * @var string
 	 **/
 	public $tables = array();
 
 	/**
 	 * activation code
-	 *
-	 * @var string
 	 **/
 	public $activation_code;
 
 	/**
 	 * forgotten password key
-	 *
-	 * @var string
 	 **/
 	public $forgotten_password_code;
 
 	/**
 	 * new password
-	 *
-	 * @var string
 	 **/
 	public $new_password;
 
 	/**
 	 * Identity
-	 *
-	 * @var string
 	 **/
 	public $identity;
 

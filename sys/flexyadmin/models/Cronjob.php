@@ -1,10 +1,9 @@
 <?php
 
-/**
+/** \ingroup models
  * Verzorgt de afhandeling van cronjobs
  *
  * @author Jan den Besten
- * @ignore
  */
 
 class Cronjob extends CI_Model {
@@ -81,7 +80,8 @@ class Cronjob extends CI_Model {
    *
    * @param string $every
    * @param int $last unixstamp of last run
-   * @return int $next unixstamp of next run
+   * @param int $now  unixstamp of next run
+   * @return $next
    * @author Jan den Besten
    */
   public function _calc_next($every,$last,$now=false) {

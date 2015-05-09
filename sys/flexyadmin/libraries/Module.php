@@ -1,5 +1,5 @@
 <?php 
-/**
+/** \ingroup libraries
  * Basis class voor alle frontend modules. Zo begint je eigen module dus:
  *
  *      class Mijn_module extends Module
@@ -10,7 +10,6 @@
 class Module extends Parent_module_plugin {
 
   /**
-   * @ignore
    */
 	function __construct($args=array()) {
 		parent::__construct($args);
@@ -24,7 +23,6 @@ class Module extends Parent_module_plugin {
    * @return void
    * @author Jan den Besten
    * @internal
-   * @ignore
    */
 	public function __call($function, $args) {
 		echo '<div class="warning">Method: `'.ucfirst($function)."()` doesn't exists.<div>";

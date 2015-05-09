@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/**
+/** \ingroup plugins
  * Met deze class kun je een wizard maken
  * 
  * Een wizard is een aantal stappen die een gebruiker moet nemen, je ziet het veel bij het uitchecken van een webshop.
@@ -31,43 +31,31 @@ class Wizard {
 
   /**
    * Stappen van de wizard
-   *
-   * @var array
    */
   private $steps=array();
   
   /**
    * Huidige stap
-   *
-   * @var string
    */
   private $step=false;
   
   /**
    * Uri segment waar de step begint
-   *
-   * @var string
    */
   private $uri_segment=3;
   
   /**
    * undocumented variable
-   *
-   * @var string
    */
   private $object=null;
   
   /**
    * Titel van de Wizard
-   *
-   * @var string
    */
   private $title='Wizard';
   
   /**
    * Data
-   *
-   * @var string
    */
   private $data=array();
 
@@ -77,7 +65,6 @@ class Wizard {
    *
    * @param array $config 
    * @author Jan den Besten
-   * @ignore
    */
 	public function __construct($config=array()) {
     $this->CI=@get_instance();

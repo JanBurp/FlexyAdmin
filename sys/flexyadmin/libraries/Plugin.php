@@ -1,69 +1,54 @@
 <?php 
-/**
+/** \ingroup plugins
  * Basis class voor alle backend plugins. Zo begint je eigen plugin:
  *
  *      class Plugin_mijn_plugin extends Plugin
  *
- * @author Jan den Besten
+ * @author: Jan den Besten
+ * $Revision$
+ * @copyright: (c) Jan den Besten
  */
  
 class Plugin extends Parent_module_plugin {
 	
   /**
    * Eventuele output van de plugin komt hier.
-   *
-   * @var string
-   * @ignore
-   * @depricated
+   * @deprecated
    */
 	protected $content;
   
   /**
    * Messages that will be shown
-   *
-   * @var array
    */
   protected $messages=array();
   
   /**
    * Oorspronkelijke data van het huidige record. Deze data kan de plugin aanpassen en in newData zetten.
-   *
-   * @var string
    */
 	protected $oldData;
 
   /**
    * Door de plugin aangepaste data van het huidige record.
-   *
-   * @var string
    */
 	protected $newData;
   
   /**
    * Database tabel van het huidige record
-   *
-   * @var string
    */
 	protected $table;
   
   /**
    * id van huidige record
-   *
-   * @var string
    */
 	protected $id;
   
   /**
    * Trigger instellingen van de plugin (worden in de config ingesteld)
-   *
-   * @var string
-   * @ignore
    */
 	protected $trigger=array();
 
 
   /**
-   * @ignore
    */
 	public function __construct($args=array()) {
 		parent::__construct($args);
@@ -74,7 +59,7 @@ class Plugin extends Parent_module_plugin {
    * Stel extra config instellingen in: overruled eventueel bestaande.
    *
    * @param array $config 
-   * @param bool $merge[TRUE]
+   * @param bool $merge default=TRUE
    * @return array config
    * @author Jan den Besten
    */
@@ -91,7 +76,6 @@ class Plugin extends Parent_module_plugin {
 	 * @return void
 	 * @author Jan den Besten
    * @internal
-   * @ignore
 	 */
   public function set_data($data) {
 		if (isset($data['old'])) 		$this->oldData=$data['old'];
@@ -107,8 +91,7 @@ class Plugin extends Parent_module_plugin {
    * @return string
    * @author Jan den Besten
    * @internal
-   * @ignore
-   * @depricated
+   * @deprecated
    */
 	public function get_content() {
 		return $this->content;
@@ -120,8 +103,7 @@ class Plugin extends Parent_module_plugin {
    * @param string $content 
    * @return string $content Huidige output
    * @author Jan den Besten
-   * @depricated
-   * @ignore
+   * @deprecated
    */
 	protected function add_content($content) {
 		$this->content.=$content;
@@ -153,9 +135,9 @@ class Plugin extends Parent_module_plugin {
   /**
    * Laad de view van de plugin en voegt standaard de berichten toe in de argumenten
    *
-   * @param string $view[''] De view die geladen moet worden, als leeg, dan wordt de (volledige) naam van de plugin gebruikt: 'plugin_template' bijvoorbeeld.
-   * @param array $args[NULL] Alle argumenten. Alle berichten worden standaard meegegeven onder de naam 'messages' en als 'title' niet wordt meegegeven dan wordt die ingesteld op de (korte) naam van de plugin.
-   * @param bool $hide[TRUE] Als waar dan wordt de view niet meteen naar de output gestuurd, maar allen als return waarde gegeven
+   * @param string $view default='' De view die geladen moet worden, als leeg, dan wordt de (volledige) naam van de plugin gebruikt: 'plugin_template' bijvoorbeeld.
+   * @param array $args default=NULL Alle argumenten. Alle berichten worden standaard meegegeven onder de naam 'messages' en als 'title' niet wordt meegegeven dan wordt die ingesteld op de (korte) naam van de plugin.
+   * @param bool $hide default=TRUE Als waar dan wordt de view niet meteen naar de output gestuurd, maar allen als return waarde gegeven
    * @return string het HTML resultaat van de view
    * @author Jan den Besten
    */
@@ -173,7 +155,6 @@ class Plugin extends Parent_module_plugin {
 	 * @return void
 	 * @author Jan den Besten
    * @internal
-   * @ignore
 	 */
 	function get_show_type() {
 		return '';
@@ -186,7 +167,6 @@ class Plugin extends Parent_module_plugin {
  * Just to make sure old plugin extensions work too
  *
  * @author Jan den Besten
- * @ignore
  */
 class Plugin_ extends Plugin {
 }

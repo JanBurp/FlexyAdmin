@@ -83,11 +83,7 @@ class Ajax extends AjaxController {
    * Past een waarde aan in de database
    * - valideert eerste de data
    *
-   * @param string $table 
-   * @param string $id 
-   * @param string $field 
-   * @param string $value 
-   * @param string $plugins 
+   * @param bool $plugins  default=true 
    * @return void
    * @author Jan den Besten
    */

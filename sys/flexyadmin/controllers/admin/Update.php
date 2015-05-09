@@ -1,5 +1,5 @@
 <?php require_once(APPPATH."core/AdminController.php");
-/**
+/** \ingroup controllers
  * Updating FlexyAdmin
  *
  * @author Jan den Besten

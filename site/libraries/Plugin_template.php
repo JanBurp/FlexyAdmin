@@ -14,8 +14,7 @@
     * Laat deze altijd staan in je plugin
     *
     * @author Jan den Besten
-    * @ignore
-    */
+     */
    public function __construct() {
      parent::__construct();
    }

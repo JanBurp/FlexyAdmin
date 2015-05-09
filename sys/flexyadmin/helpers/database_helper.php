@@ -51,6 +51,7 @@ function foreign_key_from_table($table) {
  * Geeft foreign tabel van gegeven foreign key, en checkt of tabel werkelijk bestaat
  *
  * @param string $key Bijvoorbeeld id_links
+ * @param bool $give_clean default=FALSE
  * @return string Bijvoorbeeld tbl_links
  */
 function foreign_table_from_key($key,$give_clean=false) {
@@ -206,7 +207,8 @@ function get_fields_from_input($wildfields,$tables='') {
  * Geeft de uri van een pagina met de gevraagde module
  *
  * @param string $module 
- * @param bool $full_uri[true]
+ * @param bool $full_uri default=true
+ * @param string $table  default=''
  * @return string uri
  * @author Jan den Besten
  */

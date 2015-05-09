@@ -1,7 +1,7 @@
 <?
 
-/**
- * API media. Geeft een lijst, bewerkt of upload bestanden toe aan een map.
+/** \ingroup models
+ * API: media. Geeft een lijst, bewerkt of upload bestanden toe aan een map.
  * De specifieke functie wordt bepaald door de (soort) parameters. Zie hieronder per functie.
  * 
  * ##GET files

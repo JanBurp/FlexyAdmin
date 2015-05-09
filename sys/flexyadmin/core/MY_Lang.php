@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/**
+/** \ingroup core
  * Uitbreiding op [CI_Lang](http://codeigniter.com/user_guide/libraries/language.html)
  * 
  * @author Jan den Besten
@@ -9,22 +9,17 @@ class MY_Lang extends CI_Lang {
 
   /**
    * Ingestelde taal
-   *
-   * @var string
    */
 	private $idiom='';
   private $setLanguage='';
   
   /**
    * Als ingesteld, dan wordt in de frontend taal eerst geprobeerd te laden van lang_table
-   *
-   * @var string
    */
   private $lang_table='';
   
 
   /**
-   * @ignore
    */
 	public function __construct() {
 		parent::__construct();
@@ -57,6 +52,9 @@ class MY_Lang extends CI_Lang {
 	 *
 	 * @param mixed	$langfile Naam van language bestand
 	 * @param string $idiom	de taal (nl,en etc.)
+	 * @param bool $return default=FALSE
+	 * @param bool $add_suffix default=TRUE
+	 * @param string $alt_path default=SITE_PATH
 	 * @return mixed
 	 */
 	function load($langfile = '', $idiom = '', $return = FALSE, $add_suffix = TRUE, $alt_path = SITEPATH )
@@ -159,12 +157,12 @@ class MY_Lang extends CI_Lang {
 	/**
 	 * Fetch a single line of text from the language array
 	 *
-	 * @access	public
 	 * @param	  string	$line	the language line
-	 * @param   bool $logging[TRUE]
+	 * @param   bool $logging default=TRUE
+	 * @param  bool $give_key_on_false_result default=TRUE
 	 * @return	string
 	 */
-	function line($line='', $logging=TRUE, $give_key_on_false_result=TRUE) {
+	public function line($line='', $logging=TRUE, $give_key_on_false_result=TRUE) {
     $CI=&get_instance();
     $value=FALSE;
     if (empty($this->idiom) and isset($CI->site['language'])) {

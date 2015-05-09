@@ -1,6 +1,8 @@
 <?php 
 
 /**
+ * Verzorgt de updates
+ * 
  * @author Jan den Besten
  * $Revision$
  * @copyright (c) Jan den Besten

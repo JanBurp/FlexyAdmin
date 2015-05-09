@@ -242,7 +242,6 @@ if (strcasecmp(substr(__FILE__, -16), "classTextile.php") == 0) {
 /**
  * Markdown_Parser
  *
- * @ignore
  */
   
 class Markdown_Parser {
@@ -1706,7 +1705,6 @@ class Markdown_Parser {
 /**
  * Markdown Extra Parser Class
  *
- * @ignore
  */
 
 class MarkdownExtra_Parser extends Markdown_Parser {

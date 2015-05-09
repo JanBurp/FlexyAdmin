@@ -12,8 +12,8 @@
  * Telt aantal bestanden in meegegeven map
  *
  * @param string $path 
- * @param bool $recursive[FALSE]
- * @param int $counter[0] Als optie kun je teller een startwaarde meegeven
+ * @param bool $recursive default=FALSE
+ * @param int $counter default=0 Als optie kun je teller een startwaarde meegeven
  * @return int
  * @author Jan den Besten
  */
@@ -36,10 +36,10 @@ function count_files($path,$recursive=FALSE,$counter=0) {
  *
  * @param string $path 
  * @param string $types['']
- * @param bool $recursive[FALSE] 
- * @param bool $getInfo[TRUE]
- * @param bool $getMetaData[FALSE] als TRUE dan worden ook metadata van afbeeldingen meegegeven
- * @param bool $resultAsTree[TRUE] als TRUE dan wordt het resultaat ook als een tree weergegeven, anders als een platte array met als key het hele pad
+ * @param bool $recursive default=FALSE 
+ * @param bool $getInfo default=TRUE
+ * @param bool $getMetaData default=FALSE als TRUE dan worden ook metadata van afbeeldingen meegegeven
+ * @param bool $resultAsTree default=TRUE als TRUE dan wordt het resultaat ook als een tree weergegeven, anders als een platte array met als key het hele pad
  * @return array een multidimensinale array: een lijst van de gevonden bestanden met per bestand een array met info
  * @author Jan den Besten
  */
@@ -86,8 +86,8 @@ function read_map($path,$types='',$recursive=FALSE,$getInfo=TRUE,$getMetaData=FA
  * Maakt de meegegeven directory leeg
  *
  * @param string $dir 
- * @param bool $remove[FALSE] als TRUE dan wordt ook de map zelf en alle submappen verwijderd
- * @param bool $remove_hidden[FALSE]
+ * @param bool $remove default=FALSE als TRUE dan wordt ook de map zelf en alle submappen verwijderd
+ * @param bool $remove_hidden default=FALSE
  * @return void
  * @author Jan den Besten
  */
@@ -143,6 +143,7 @@ function clean_file_list($files,$tree=FALSE,$path='') {
  *
  * @param string $source 
  * @param string $destination 
+ * @param array $exclude  default=array('/.')
  * @return void
  */
 function copy_directory( $source,$destination, $exclude=array('/.') ) {

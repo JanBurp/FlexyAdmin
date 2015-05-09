@@ -1,6 +1,6 @@
 <?php require_once(APPPATH."core/AdminController.php");
 
-/**
+/** \ingroup controllers
  * DB Controller Class
  * This Controller handles database import/export
  *

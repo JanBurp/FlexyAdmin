@@ -1,7 +1,7 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 
-/**
+/** \ingroup core
  * Uitbreiding op de [Active Record Class](http://codeigniter.com/user_guide/database/active_record.html) van CodeIgniter's [Database Library](http://codeigniter.com/user_guide/database/index.html)
  * 
  * Belangrijkste doelen:
@@ -99,8 +99,6 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 
   /**
    * FALSE als er geen foreigndata meegenomen moet worden. TRUE of een array van tabellen waarvan de foreign data megegenomen moet worden in het resultaat.
-   *
-   * @var mixed
    */
   public $foreigns;
   private $foreign_trees=FALSE;
@@ -110,8 +108,6 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
   
   /**
    * FALSE als er geen relatietabellen moeten worden gekoppeld. TRUE of een array van tabellen die gekoppeld moeten worden in het resultaat.
-   *
-   * @var mixed
    */
   public $many;
 
@@ -133,7 +129,6 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
   /**
    * @param string $params 
    * @author Jan den Besten
-   * @ignore
    */
 	public function __construct($params) {
 		parent::__construct($params);
@@ -176,7 +171,6 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
    * @return void
    * @author Jan den Besten
    * @internal
-   * @ignore
    */
 	private function _repair_ar() {
 		// splits ar_where by OR/AND
@@ -221,7 +215,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
   /**
    * Zet primary key, standaard 'id'
    *
-   * @param string $pk['id']
+   * @param string $pk default=PRIMARY_KEY
    * @return object this
    * @author Jan den Besten
    */
@@ -234,7 +228,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
   /**
    * Zet key van de resultaat arrays.
    *
-   * @param string $key['id'] Moet een unieke waarde bevatten, velden die zich ervoor lenen zijn id, uri etc.
+   * @param string $key default=PRIMARY_KEY Moet een unieke waarde bevatten, velden die zich ervoor lenen zijn id, uri etc.
    * @return object this
    * @author Jan den Besten
    */
@@ -250,8 +244,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
    * @param string $field Te checken veldnaam
    * @return bool TRUE als veld bestaat, anders FALSE
    * @author Jan den Besten
-   * @depricated
-   * @ignore
+   * @deprecated
    */
 	public function has_field($table,$field) {
     return $this->field_exists($field,$table);
@@ -263,7 +256,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
    *
    * @param string $table 
    * @param string $test 
-   * @param string $field['id']
+   * @param string $field default=PRIMARY_KEY
    * @return boolean
    * @author Jan den Besten
    */
@@ -280,7 +273,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
    *
    * @param string $table Tabel waarin getest wordt
    * @param array $data data waarop getest wordt array('field'=>'value', ... )
-   * @param array $unset_fields['id,'uri'] Velden die niet meegenomen worden in de test (mogen wel in $data staan)
+   * @param array $unset_fields default=array('id,'uri') Velden die niet meegenomen worden in de test (mogen wel in $data staan)
    * @return mixed FALSE of de row
    * @author Jan den Besten
    */
@@ -299,7 +292,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
    * Zoekt eerste veld in een tabel met bepaalde prefix
    *
    * @param string $table Tabel waarin gezocht wordt
-   * @param string $pre['str'] Prefix waarop gezocht wordt
+   * @param string $pre default='str' Prefix waarop gezocht wordt
    * @return string Gevonden veldnaam, of FALSE als niets gevonden
    * @author Jan den Besten
    */
@@ -322,12 +315,11 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
    /**
     * Stel ar_order_by aan de hand van meegegeven foreign keys en door te kijken naar de order van die foreign tabellen
     *
-    * @param array $order_by_foreign[FALSE]
+    * @param array $order_by_foreign default=FALSE
     * @param string $table Tabel
     * @return void
     * @author Jan den Besten
-    * @ignore
-    */
+     */
 	private function _set_order_by_foreign($order_by_foreign=FALSE,$table) {
 		if ($order_by_foreign) {
 			if (!is_array($order_by_foreign)) $order_by_foreign=array($order_by_foreign);
@@ -349,8 +341,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
     * @param string $table 
     * @return void
     * @author Jan den Besten
-    * @ignore
-    */
+     */
 	private function _set_order_by_many($order_by_many=FALSE,$table) {
 		if ($order_by_many) {
 			if (!is_array($order_by_many)) $order_by_many=array($order_by_many);
@@ -406,12 +397,11 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
     *
     * @param string $table 
     * @param string $fallbackOrder['']
-    * @param string $tree_possible[TRUE]
-    * @param string $set[TRUE]
+    * @param string $tree_possible default=TRUE
+    * @param string $set default=TRUE
     * @return void
     * @author Jan den Besten
-    * @ignore
-    */
+     */
 	private function _set_standard_order($table,$fallbackOrder="",$tree_possible=TRUE,$set=TRUE) {
 		$order="";
 		if ($this->orderAsTree and $tree_possible) {
@@ -485,7 +475,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
   /**
    * Stel de volgorde in van huidige tabel in vanuit een foriegn_key en de volgorde van het resultaat daarvan
    *
-   * @param array $args[FALSE] Array van foreign keys en asc/desc
+   * @param array $args default=FALSE Array van foreign keys en asc/desc
    * @return object this
    * @author Jan den Besten
    */
@@ -497,7 +487,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
   /**
    * Stel de volgorde in van huidige tabel in vanuit een many tabel en de volgorde van het resultaat daarvan
    *
-   * @param array $args[FALSE] Array van many tabellen en asc/desc
+   * @param array $args default=FALSE Array van many tabellen en asc/desc
    * @return object this
    * @author Jan den Besten
    */
@@ -511,11 +501,10 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
    * 
    * Kan alleen bij tabellen met die de velden _order_ en _self_parent_ hebben.
    *
-   * @param bool $orderAsTree[TRUE]
+   * @param bool $orderAsTree default=TRUE
    * @return object this
    * @author Jan den Besten
-   * @ignore
-   * @depricated
+   * @deprecated
    */
 	public function order_as_tree($orderAsTree=TRUE) {
 		$this->orderAsTree=$orderAsTree;
@@ -548,9 +537,9 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 	 * JdB: Uitbreiding op standaard where.
    * Test of tweede parameter een array is, als dat zo is roep dan where_in aan
 	 *
-	 * @param	mixed
-	 * @param	mixed
-	 * @param	bool
+	 * @param	mixed $key
+	 * @param	mixed $value default=NULL
+	 * @param	bool $escape default=NULL
 	 * @return	CI_DB_query_builder
 	 */
 	public function where($key, $value = NULL, $escape = NULL) {
@@ -585,8 +574,8 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
    *            )
    *
    * @param array $search
-   * @param bool $word_boundaries[FALSE] Als True dan worden de zoektermen als volledige woorden gezocht 
-   * @param bool $set_sql[TRUE] Als TRUE dan wordt de SQL hiermee opgebouwd 
+   * @param bool $word_boundaries default=FALSE Als True dan worden de zoektermen als volledige woorden gezocht 
+   * @param bool $set_sql default=TRUE Als TRUE dan wordt de SQL hiermee opgebouwd 
    * @return mixed als $set_sql=TRUE dan wordt $this teruggegeven, anders de seacrh SQL
    * @author Jan den Besten
    */
@@ -701,7 +690,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
   /**
    * Geeft veld terug dat met select_first() is gevonden
    *
-   * @param string $n[-1] Als groter dan 1 dan is het resultaat een array van velden
+   * @param string $n default=-1 Als groter dan 1 dan is het resultaat een array van velden
    * @return mixed string of array van velden
    * @author Jan den Besten
    */
@@ -745,7 +734,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
    * Zorgt ervoor dat alle uri velden in het resultaat volledige uri-paden zijn, dus ook met de uri velden van de parents ervoor.
    * LET OP: de velden id, uir, order en self_parent dienen in het resultaat te zitten!
    *
-   * @param bool $fullUri[TRUE]
+   * @param bool $fullUri default=TRUE
    * @param string $extraFullField[''] Hier kun je meerdere velden meegeven die hetzelfde worden behandeld, bijvoorbeeld str_title
    * @return object $this
    * @author Jan den Besten
@@ -760,9 +749,9 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
     * Maakt een Query-Object met alle specifieke flexyadmin db instellingen (foreigns, abstracts, order, full etc.)
     * Vergelijkbaar met get() (wat alleen de standaard CI instellingen meeneemt)
     *
-    * @param string $table['']
-    * @param string $limit[0]
-    * @param string $offset[0]
+    * @param string $table default=''
+    * @param string $limit default=0
+    * @param string $offset default=0
     * @return object CI-Query-object
     * @author Jan den Besten
     */
@@ -1074,7 +1063,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 	 * @param string $table
 	 * @param array $row data
 	 * @param string $extraField[''] 
-	 * @param string $full[TRUE]
+	 * @param string $full default=TRUE
 	 * @return array parent
 	 * @author Jan den Besten
 	 */
@@ -1153,7 +1142,6 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
    * @param string $self_parent
    * @return bool
    * @author Jan den Besten
-   * @ignore
    */
 	private function _check_fulluri($table,$uriParts,$self_parent) {
 		$check=FALSE;
@@ -1175,8 +1163,8 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 	 * Zelfde als get_result()
 	 *
 	 * @param string $table
-	 * @param string $limit[0] 
-	 * @param string $offset[0]
+	 * @param string $limit default=0 
+	 * @param string $offset default=0
 	 * @return array
 	 * @author Jan den Besten
 	 */
@@ -1188,8 +1176,8 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
    * Geeft resultaat van opgebouwde query als array met alle opties meegenomen (order, foreigns, many, abstract, full_uris etc.)
    *
    * @param string $table 
-   * @param string $limit[0]
-   * @param string $offset[0]
+   * @param string $limit default=0
+   * @param string $offset default=0
    * @return array
    * @author Jan den Besten
    */
@@ -1274,7 +1262,6 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
    * @param string $row te testen item
    * @return bool
    * @author Jan den Besten
-   * @ignore
    */
   private function _test_if_full_path($result,$row) {
 		$test=FALSE;
@@ -1292,8 +1279,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
    * @param array $result
    * @return array $result
    * @author Jan den Besten
-   * @ignore
-   * @depricated
+   * @deprecated
    */
 	private function _make_tree_result($result) {
 		$test=current($result);
@@ -1318,8 +1304,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
    * @param string $parent 
    * @return void
    * @author Jan den Besten
-   * @ignore
-   * @depricated
+   * @deprecated
    */
 	private function _groups_to_tree($grouped,$parent) {
 		$tree=array();
@@ -1345,7 +1330,6 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
    * @param string $key 
    * @return array
    * @author Jan den Besten
-   * @ignore
    */
 	public function _set_key_to($a,$key="") {
     $out=$a;
@@ -1371,7 +1355,6 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
    * @param string $offset[0]
    * @return array
    * @author Jan den Besten
-   * @ignore
    */
 	private function _get_result($table,$limit=0,$offset=0) {
 		// init
@@ -1511,7 +1494,6 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
    * @return array
    * @author Jan den Besten
    * @internal
-   * @ignore
    */
   private function _insert_many_at_set_place($result,$manyResult,$id) {
     foreach ($manyResult as $rel => $relData) {
@@ -1544,8 +1526,8 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
    * Geeft resultaat als PHP array string
    *
    * @param string $table
-   * @param string $limit[0] 
-   * @param string $offset[0]
+   * @param string $limit default=0
+   * @param string $offset default=0
    * @return string PHP array
    * @author Jan den Besten
    */
@@ -1557,8 +1539,8 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
    * Geeft resultaat als XML string
    *
    * @param string $table 
-   * @param string $limit[0]
-   * @param string $offset[0]
+   * @param string $limit default=0
+   * @param string $offset default=0
    * @return string XML
    * @author Jan den Besten
    */
@@ -1570,7 +1552,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 	 * Geeft één rij van een resultaat
 	 *
 	 * @param string $table
-	 * @param string $offset[0] 
+	 * @param string $offset default=0
 	 * @return array
 	 * @author Jan den Besten
 	 */
@@ -1589,7 +1571,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
    * @param string $field 
    * @param string $where veld waarop voorwaarde getest word
    * @param string $what waarde van de voorwaarde
-   * @param string $like[FALSE] Als TRUE dan wordt de voorwaarde getest met LIKE ipv WHERE
+   * @param string $like default=FALSE Als TRUE dan wordt de voorwaarde getest met LIKE ipv WHERE
    * @return mixed
    * @author Jan den Besten
    */
@@ -1618,7 +1600,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
    *
    * @param string $table 
    * @param string $field 
-   * @param string $id[1] id van de rij in de tabel (standaard de eerste)
+   * @param string $id default=1 id van de rij in de tabel (standaard de eerste)
    * @return mixed
    * @author Jan den Besten
    */
@@ -1647,8 +1629,8 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
    * Maakt resulaat en met elke aanroep van get_each() wordt de volgende rij gegeven
    *
    * @param string $table 
-   * @param string $limit[0]
-   * @param string $offset[0]
+   * @param string $limit default=0
+   * @param string $offset default=0
    * @return array
    * @author Jan den Besten
    */
@@ -1677,7 +1659,6 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
    *
    * @return void
    * @author Jan den Besten
-   * @ignore
    */
   public function last_query() {
 		if ( !$this->qb_last_query) {
@@ -1690,7 +1671,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
   /**
    * Geeft laatste query, maar dan opgeschoont
    *
-   * @param array $settings[array('no_limit'=>true,'no_order'=>false,'select'=>PRIMARY_KEY)]
+   * @param array $settings default=array('no_limit'=>true,'no_order'=>false,'select'=>PRIMARY_KEY)
    * @return string
    * @author Jan den Besten
    */
@@ -1755,7 +1736,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
   /**
    * Stel maximum aantal karakters in dat in TEXT velden wordt teruggegeven in een resultaat
    *
-   * @param string $max[0] als 0 dan is er geen beperking
+   * @param string $max default=0 als 0 dan is er geen beperking
    * @return object $this
    * @author Jan den Besten
    */
@@ -1791,7 +1772,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
    *     // Neem alleen data mee uit de tabel *tbl_links* en daarvan alleen het veld *str_title*
    *     $this->db->add_foreigns( array( 'tbl_links'=>array('str_title','txt_text AS txt_text') ) ); 
    *
-   * @param mixed $foreigns[TRUE]
+   * @param mixed $foreigns default=TRUE
    * @return object $this
    * @author Jan den Besten
    */
@@ -1824,7 +1805,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
   /**
    * Zelfde als add_foreigns() maar dan worden de velden van de foreign data samengevoegd tot een abstract veld
    *
-   * @param mixed $foreigns[TRUE]
+   * @param mixed $foreigns default=TRUE
    * @return object $this
    * @author Jan den Besten
    */
@@ -1837,7 +1818,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
   /**
    * Zelfde als add_foreigns_as_abstracts() met dit verschil dat alleen als meegegeven argument TRUE is of een array automatisch add_foreigns() wordt aangeroepen
    *
-   * @param mixed $abstracts[TRUE] 
+   * @param mixed $abstracts default=TRUE 
    * @return object $this
    * @author Jan den Besten
    */
@@ -1850,7 +1831,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
   /**
    * Resultaat wordt teruggegeven als een abstract
    *
-   * @param bool $as[TRUE] 
+   * @param bool $as default=TRUE 
    * @return object $this
    * @author Jan den Besten
    */
@@ -1966,9 +1947,8 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 	 * @param string $asPre 
 	 * @return string
 	 * @author Jan den Besten
-	 * @depricated
-	 * @ignore
-	 */
+	 * @deprecated
+		 */
 	public function get_abstract_field($table,$asPre="") {
 		return $this->get_abstract_fields_sql($table, $asPre);
 	}
@@ -1976,7 +1956,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
   /**
    * Geeft alle tables terug met gegeven prefix
    *
-   * @param string $prefix['tbl_']
+   * @param string $prefix default='tbl_'
    * @return array
    * @author Jan den Besten
    */
@@ -2035,7 +2015,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
    *     $this->db->add_many( array( 'rel_menu__links'=>array('uri','str_title') ) ); // Neemt van de tabel *tbl_links* de velden *uri* en *str_title* mee.
    *     $this->db->add_many( array( 'rel_menu__links'=>array('uri','str_title') ) ); // Neemt van de tabel *tbl_links* de velden *uri* en *str_title* mee.
    *
-   * @param mixed $many[true]
+   * @param mixed $many default=true
    * @return object $this
    * @author Jan den Besten
    */
@@ -2059,7 +2039,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
    * Voeg opties (van velden die in een formulier meerkeuze zijn) toe aan het resultaat
    * Als $options een array bevat dan worden alleen de opties meegegeven van de veldnamen in die array.
    *
-   * @param mixed $options[true] Kan ook een array van velden bevatten.
+   * @param mixed $options default=true Kan ook een array van velden bevatten.
    * @return object $this
    * @author Jan den Besten
    */
@@ -2147,8 +2127,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 	 * @param string $table['']
 	 * @param array $select_fields[false]
 	 * @return array
-	 * @ignore
-	 */
+		 */
 	 private function _add_foreign_options($out,$foreignTables,$table='',$select_fields=false) {
 			$options=array();
 			if (isset($foreignTables)) {
@@ -2181,8 +2160,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 	 * @param array	$out huidig resultaat
 	 * @param array	$joinTables
 	 * @return array
-	 * @ignore
-	 */
+		 */
 	 private function _add_many_options($out,$manyTables) {
 			$options=array();
 			if (isset($manyTables)) {
@@ -2207,8 +2185,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 	 * @param string $table
 	 * @param array $select_fields[false]
 	 * @return array
-	 * @ignore
-	 */
+		 */
 	 private function _add_field_options($out,$table,$select_fields=false) {
 			// search options in cfg_field_info for every field, if found, give the options
 			$fields=$this->list_fields($table);
@@ -2297,7 +2274,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
   /**
    * Returns a random value for given field
    *
-   * @param string $fieldname
+   * @param string $field
    * @param array $info
    * @return mixed
    * @author Jan den Besten

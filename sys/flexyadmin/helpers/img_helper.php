@@ -13,7 +13,6 @@
  * Geeft HTML voor een icon
  *
  * @author Jan den Besten
- * @ignore
  */
 function icon($class="",$s="",$extraClass="",$a="") {
 	if (empty($s)) $s=$class;
@@ -26,7 +25,6 @@ function icon($class="",$s="",$extraClass="",$a="") {
  * @param mixed $attr 
  * @return string
  * @author Jan den Besten
- * @ignore
  */
 function show_thumb($attr) {
 	$a=array();
@@ -68,7 +66,7 @@ function show_thumb($attr) {
 /**
  * Geeft omvang van een afbeelding, checkt eerst of bestand wel bestaat en handeld eventuele foutmeldingen
  *
- * @param string $i het afbeeldingsbestand
+ * @param string $file het afbeeldingsbestand
  * @return mixed FALSE als niet bestaat of fout, anders =getimagesize($i)
  * @author Jan den Besten
  */
@@ -94,7 +92,7 @@ function is_wider_than($i,$w) {
 /**
  * Test of een afbeelding liggen of staand is
  *
- * @param string $i afbeelding
+ * @param string $file afbeelding
  * @return string = 'landscape', 'portrait' of 'unknown'
  * @author Jan den Besten
  */

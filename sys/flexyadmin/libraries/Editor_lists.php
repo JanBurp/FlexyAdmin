@@ -5,7 +5,6 @@
  * Creates js lists for use in html editor
  *
  * @author Jan den Besten
- * @ignore
  * @internal
  */
  

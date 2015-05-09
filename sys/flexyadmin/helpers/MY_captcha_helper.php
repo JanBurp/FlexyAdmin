@@ -9,12 +9,40 @@
  * @file
  */
 
-// ------------------------------------------------------------------------
+/**
+ * Save captcha in session
+ *
+ * @param string $cap
+ * @return void
+ * @author Jan den Besten
+ */
+function save_captcha($cap) {
+  $CI=&get_instance();
+  $CI->load->library('session');
+  unset($cap['image']);
+  $CI->session->set_userdata('captcha',$cap);
+}
+
+
+/**
+ * Get saved captha
+ *
+ * @return arr
+ * @author Jan den Besten
+ */
+function get_captcha() {
+  $CI=&get_instance();
+  $CI->load->library('session');
+  $cap = $CI->session->userdata('captcha');
+  $CI->session->unset_userdata('captcha');
+  return $cap;
+}
+
+
 
 /**
  * Create CAPTCHA
  *
- * @access	public
  * @param	array	array of data for the CAPTCHA
  * @param	string	path to create the image in
  * @param	string	URL to the CAPTCHA image folder
@@ -224,39 +252,6 @@ if ( ! function_exists('create_captcha'))
 		return array('word' => $word, 'time' => $now, 'image' => $img);
 	}
 }
-
-
-/**
- * Save captcha in session
- *
- * @param string $word 
- * @param string $now 
- * @return void
- * @author Jan den Besten
- */
-function save_captcha($cap) {
-  $CI=&get_instance();
-  $CI->load->library('session');
-  unset($cap['image']);
-  $CI->session->set_userdata('captcha',$cap);
-}
-
-
-/**
- * Get saved captha
- *
- * @return arr
- * @author Jan den Besten
- */
-function get_captcha() {
-  $CI=&get_instance();
-  $CI->load->library('session');
-  $cap = $CI->session->userdata('captcha');
-  $CI->session->unset_userdata('captcha');
-  return $cap;
-}
-
-
 
 
 // ------------------------------------------------------------------------

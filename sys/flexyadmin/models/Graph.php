@@ -1,9 +1,13 @@
-<?php /**
+<?php
+/**
  * Maakt grafieken, zoals bij de statistieken
  *
- * @author Jan den Besten
+ * @author: Jan den Besten
+ * $Revision$
+ * @copyright: (c) Jan den Besten
  */
-class Graph Extends CI_Model {
+
+class Graph extends CI_Model {
 
   private $captions=array();
   private $headings=array();
@@ -12,7 +16,6 @@ class Graph Extends CI_Model {
 	private $type;			// html | files
 
   /**
-   * @ignore
    */
 	public function __construct() {
 		parent::__construct();
@@ -25,7 +28,6 @@ class Graph Extends CI_Model {
    * @return void
    * @author Jan den Besten
    * @internal
-   * @ignore
    */
 	public function init() {
 		$this->renderExtraClass=array();
@@ -86,17 +88,12 @@ class Graph Extends CI_Model {
    * @param string $type 
    * @return object $this;
    * @author Jan den Besten
-   * @ignore
-   * @depricated
+   * @deprecated
    */
 	public function set_type($type="html") {
 		$this->type=$type;
     return $this;
 	}
-
-  // public function set_current($currentId=NULL) {
-  //   $this->currentId=$currentId;
-  // }
 
   /**
    * Zet de data die getoond moet worden
@@ -130,8 +127,9 @@ class Graph Extends CI_Model {
   /**
    * Geeft de HTML output van de grafiek
    *
-   * @param string $type['']
-   * @param string $class['']
+   * @param string $type default=''
+   * @param string $tableClass default=''
+   * @param string $extraClass default=''
    * @return string
    */
 	public function render($type="", $tableClass="", $extraClass="") {

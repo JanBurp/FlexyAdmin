@@ -1,15 +1,16 @@
 <?php 
-/**
- * Dit model wordt gebruikt om een formulier te creeren aan de hand van Flexy Form tabellen, zie ook de module [Flexy Form]({Flexy_form})
+/** \ingroup models
+ * Dit model wordt gebruikt om een formulier te creeren aan de hand van Flexy Form tabellen.
  *
- * @author Jan den Besten
+ * @author: Jan den Besten
+ * $Revision$
+ * @copyright: (c) Jan den Besten
  */
 
  class Getform extends CI_Model {
 
    /**
-    * @ignore
-    */
+     */
   public	function __construct() {
     $this->lang->load('update_delete');
     $this->lang->load('form');
@@ -23,8 +24,7 @@
    * @param string $module
    * @return string
    * @author Jan den Besten
-   * @ignore
-   * @depricated
+   * @deprecated
    */
 	public function by_module($module) {
 		$this->db->where('str_module',$module);
@@ -34,7 +34,7 @@
   /**
    * Kiest formulier aan de hand van de naam ('str_name') in tbl_forms
    *
-   * @param string $module
+   * @param string $title
    * @return string
    * @author Jan den Besten
    */
@@ -47,7 +47,7 @@
   /**
    * Kiest formulier aan de hand van titel ('str_title') in tbl_forms
    *
-   * @param string $module
+   * @param string $title
    * @return string
    * @author Jan den Besten
    */
@@ -59,7 +59,7 @@
   /**
    * Kiest formulier aan de hand van id in tbl_forms
    *
-   * @param string $module
+   * @param int $id
    * @return string
    * @author Jan den Besten
    */
@@ -74,7 +74,6 @@
    * @return array
    * @author Jan den Besten
    * @internal
-   * @ignore
    */
 	private function _get_form() {
 		$form=false;

@@ -41,9 +41,9 @@ function log_($type,$message) {
 /**
  * Geeft een backtrace van laatste functie/method aanroepen (zie PHP's debug_backtrace())
  *
- * @param string $offset[0] Hoeveel stappen terug worden getoond
- * @param string $limit[10] Aantal stappen dat wordt getooond
- * @param bool $echo[TRUE]
+ * @param string $offset default=0 Hoeveel stappen terug worden getoond
+ * @param string $limit default=10 Aantal stappen dat wordt getooond
+ * @param bool $echo default=TRUE
  * @return string resultaat
  * @author Jan den Besten
  */
@@ -92,9 +92,9 @@ function backtrace_($offset=0,$limit=10,$echo=true) {
  * Conditionele trace_()
  * 
  * @param bool $condition de conditie die bepaald of de trace getoond wordt (bij TRUE)
- * @param mixed $a 
- * @param bool $echo[TRUE] 
- * @param int $backtraceOffset[1]
+ * @param mixed $a  default=NULL
+ * @param bool $echo default=TRUE 
+ * @param int $backtraceOffset default=1
  * @return string
  * @author Jan den Besten
  */
@@ -130,8 +130,9 @@ function strace_($a=NULL) {
  * - Als een lege string wordt meegegeven dan wordt backtrace_() aangeroepen
  *
  * @param mixed $a Variabele waar je een dump van wilt
- * @param bool $echo[TRUE] Moet de dump meteen worden getoond?
- * @param int $backtraceOffset[1]
+ * @param bool $echo default=TRUE Moet de dump meteen worden getoond?
+ * @param int $backtraceOffset default=1
+ * @param int $max  default=50
  * @return string Geeft het resulaat (ook nog) als een string
  * @author Jan den Besten
  */
@@ -241,8 +242,9 @@ function array_($a) {
  * Geeft een trace van een array
  *
  * @param string $array 
- * @param string $return[FALSE]
- * @param string $tabs[0]
+ * @param string $return default=FALSE
+ * @param string $tabs default=0
+ * @param string $brackets  default='()'
  * @return string
  * @author Jan den Besten
  */
@@ -290,7 +292,7 @@ function print_ar($array,$return=false,$tabs=0,$brackets="()") {
  * Geeft aantal tab karakters terug
  *
  * @param string $t aantal
- * @param string $tab[&nbsp;] tab-string
+ * @param string $tab default="&nbsp;" tab-string
  * @return string
  * @author Jan den Besten
  */

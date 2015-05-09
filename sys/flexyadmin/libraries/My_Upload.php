@@ -1,7 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 
-/**
+/** \ingroup libraries
  * Uitbreiding op [CI_Upload](http://codeigniter.com/user_guide/libraries/file_uploading.html)
  *
  * @author Jan den Besten
@@ -13,13 +13,10 @@ class MY_Upload extends CI_Upload {
 	protected $result;
   /**
    * Array met extra gecreerde bestanden door resizen
-   *
-   * @var string
    */
   protected $extraFiles=array();
   
   /**
-   * @ignore
    */
 	public function __construct($config=NULL) {
 		parent::__construct($config);
@@ -125,7 +122,6 @@ class MY_Upload extends CI_Upload {
    * @return void
    * @author Jan den Besten
    * @internal
-   * @ignore
    */
 	private function _setMemory($imageInfo) {
 		if (isset($imageInfo['channels']) and isset($imageInfo['bits']) and function_exists('memory_get_usage') and function_exists('ini_set')) {
@@ -151,7 +147,7 @@ class MY_Upload extends CI_Upload {
    *
    * @param string $url De url van het externe bestand
    * @param string $path assets map waar bestand in moet komen
-   * @param string $prefix['downloaded_'] Prefix die aan het bestand moet worden toegevoegd.
+   * @param string $prefix default='downloaded_' Prefix die aan het bestand moet worden toegevoegd.
    * @return string Nieuwe naam van bestand
    * @author Jan den Besten
    */
@@ -184,7 +180,7 @@ class MY_Upload extends CI_Upload {
   /**
    * Upload een bestand
    *
-   * @param string $file['userfile'] De veldnaam van het te uploaden bestand
+   * @param string $file defaul='userfile' De veldnaam van het te uploaden bestand
    * @return bool TRUE als is gelukt
    * @author Jan den Besten
    */
@@ -399,7 +395,7 @@ class MY_Upload extends CI_Upload {
    * Controleert of de orientatie van de afbeelding klopt met de meta-data, zo niet corrigeer dat (komt vooral voor bij mobiele apparaten)
    *
    * @param string $file 
-   * @param string $map 
+   * @param string $path 
    * @return bool $success
    * @author Jan den Besten
    */
@@ -468,7 +464,7 @@ class MY_Upload extends CI_Upload {
   /**
    * Geeft array met alle afbeeldingen bestanden die door resize_image() extra zijn aangemaakt
    *
-   * @param bool $include_hidden[FALSE] Als TRUE dan worden ook de bestanden gegeven die 'hidden' zijn (beginnen met '_')
+   * @param bool $include_hidden default=FALSE Als TRUE dan worden ook de bestanden gegeven die 'hidden' zijn (beginnen met '_')
    * @return array array('file'=>bestandsnaam, 'path'=>map binnen assets, 'hidden'=>TRUE/FALSE als bestand hidden)
    * @author Jan den Besten
    */
@@ -488,7 +484,6 @@ class MY_Upload extends CI_Upload {
    * @param string $close 
    * @return void
    * @author Jan den Besten
-   * @ignore
    */
 	public function display_errors($open = '', $close = '') {
 		return trim(parent::display_errors($open,$close));

@@ -11,8 +11,7 @@ require_once(APPPATH."core/AdminController.php");
 class cfg_users extends AdminController {
    
    /**
-    * @ignore
-    */
+     */
 	public function __construct() {
 		parent::__construct();
     $this->load->language('help');
@@ -29,7 +28,6 @@ class cfg_users extends AdminController {
    * @param string $user_id 
    * @return void
    * @author Jan den Besten
-   * @ignore
    */
 	public function deny($user_id=false) {
     return $this->_do_action('deny',$user_id);
@@ -41,7 +39,6 @@ class cfg_users extends AdminController {
    * @param string $user_id 
    * @return void
    * @author Jan den Besten
-   * @ignore
    */
 	public function accept($user_id=false) {
     return $this->_do_action('accept',$user_id);
@@ -53,7 +50,6 @@ class cfg_users extends AdminController {
    * @param string $user_id 
    * @return void
    * @author Jan den Besten
-   * @ignore
    */
   public function invite($user_id=false) {
       return $this->_do_action('invite',$user_id);

@@ -1,8 +1,8 @@
-<?php /**
+<?php
+/**
  * Handles all backed plugin loading, calling etc.
  *
  * @author Jan den Besten
- * @ignore
  * @internal
  */
 class Plugin_handler extends CI_Model {
