@@ -153,23 +153,34 @@ class Update extends AdminController {
   }
 
   private function _update_code() {
-    // Update models
-		$updates=read_map('sys/flexyadmin/models/updates','php',FALSE,FALSE);
-		$updates=array_keys($updates);
-		$updates=filter_by($updates,'update_');
-		foreach ($updates as $key=>$file) {
-			$fileRev=(int) substr($file,7,4);
-			if ($fileRev<=$this->updates['code']['latest'])
-				unset($updates[$key]);
-			else {
-        $model=remove_suffix($file,'.');
-        $this->load->model('updates/'.$model);
-        $messages=$this->$model->update();
-        $this->messages=array_merge_recursive($this->messages,$messages);
+    $done=FALSE;
+    $nr=$this->uri->get(4);
+    if ($nr) {
+      // Update specific rev
+      $model='Update_'.$nr;
+      $this->load->model('updates/'.$model);
+      $messages=$this->$model->update();
+      $this->messages=array_merge_recursive($this->messages,$messages);
+    }
+    else {
+      // Update models
+  		$updates=read_map('sys/flexyadmin/models/updates','php',FALSE,FALSE);
+  		$updates=array_keys($updates);
+  		$updates=filter_by($updates,'update_');
+  		foreach ($updates as $key=>$file) {
+  			$fileRev=(int) substr($file,7,4);
+  			if ($fileRev<=$this->updates['code']['latest'])
+  				unset($updates[$key]);
+  			else {
+          $model=remove_suffix($file,'.');
+          $this->load->model('updates/'.$model);
+          $messages=$this->$model->update();
+          $this->messages=array_merge_recursive($this->messages,$messages);
+        }
+  		}
+      if (empty($updates)) {
+        $this->_add_message('code','<b>Up to date</b>','glyphicon-ok btn-success');
       }
-		}
-    if (empty($updates)) {
-      $this->_add_message('code','<b>Up to date</b>','glyphicon-ok btn-success');
     }
   }
   
