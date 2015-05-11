@@ -1217,7 +1217,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 		// Full uris if asked for
 		if ($fullUri) {
 			$uriField='uri';
-			if (is_string($fullUri)) $uriField=$fullUri;
+      if (is_string($fullUri)) $uriField=$fullUri;
       if (is_array($fullUri)) {
         echo trace_(array('BUG? :: fullUri=>'=>$fullUri),false);
       }
@@ -1226,7 +1226,12 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 					if (!empty($extraFullField)) $extra=$row[$extraFullField];
           // Get parent
           if ( $this->_test_if_full_path($result,$row) ) {
-            $parentUri=$result[$row["self_parent"]][$uriField];
+            if (isset($result[$row["self_parent"]][$uriField])) {
+              $parentUri=$result[$row["self_parent"]][$uriField];
+            }
+            else {
+              $parentUri=$result[$row["self_parent"]]['uri'];
+            }
             if (!empty($extraFullField)) {$parentExtra=$result[$row["self_parent"]][$extraFullField];}
           }
           else {

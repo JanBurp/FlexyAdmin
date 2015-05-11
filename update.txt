@@ -19,7 +19,7 @@ For recent sites the update processes described below should work:
 - perform all the steps from your version to the latest:
 
 
-UPDATE ....
+UPDATE 
 ===========
 
 - Run SQL Update update_r3067.sql
@@ -28,7 +28,10 @@ UPDATE ....
   - Vervang `index.php`
   - Vervang `site/language/nl/regex_validation_lang.php`
   - Verwijder de map `bulk_upload`
-  - Run update script: `admin/update` als je ingelogd bent als admin
+  - Login als admin
+  - Run update script: `admin/update/code/3067`
+  - Run update script: `admin/update/code/3089`
+  - Run daarna update script: : `admin/update/all`
 
 
 UPDATE 3063
