@@ -1004,6 +1004,7 @@ $config['DATE_fields_pre']			    = array("tme","datetime","dat","date");
 
 $config['FIELDS_media_fields']		= array( "file", "img", "mp3", "mov" );
 $config['FIELDS_date_fields']		  = array( "dat", "date", "tme", "datetime" );
+$config['FIELDS_bool_fields']		  = array( "b", "is", "has" );
 
 $config['FIELDS_default'] = array(
 																		"grid"				=> "%s",

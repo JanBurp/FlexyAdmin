@@ -230,11 +230,12 @@ class Forms extends Module {
     if ($this->settings('placeholders_as_labels')) $form->add_placeholders();
 		if (isset($formFieldSets)) $form->set_fieldsets($formFieldSets);
     if ($formButtons) $form->set_buttons($formButtons);
-
+    
 		// Validate, and test filled form
     $this->validated=$form->validation($this->form_id);
     $this->spam=false;
   
+    $result = true;
 		if ($this->validated) {
       $data=$form->get_data();
     
@@ -266,19 +267,26 @@ class Forms extends Module {
         
         $formaction=$this->settings('formaction');
         if (!is_array($formaction)) $formaction=array($formaction);
-        $result=true;
         foreach ($formaction as $faction) {
-          $action='action_'.$faction;
-          $this->CI->load->model($faction,$action);
-          $this->CI->$action->initialize($this->settings)->fields( $formFields );
-          $this->CI->$action->set_form_id($this->form_id);
-          $this_result=$this->CI->$action->go( $data );
-    			if (!$this_result) {
-    		    $errors.=$this->CI->$action->get_errors();
-    			}
-          $result=($result AND $this_result);
-          if (method_exists($this->CI->$action,'return_data')) {
-            $data=$this->CI->$action->return_data();
+          if ($result) {
+            $action='action_'.$faction;
+            $this->CI->load->model($faction,$action);
+            $this->CI->$action->initialize($this->settings)->fields( $formFields );
+            $this->CI->$action->set_form_id($this->form_id);
+            $this_result=$this->CI->$action->go( $data );
+      			if (!$this_result) {
+      		    $errors.=$this->CI->$action->get_errors();
+      			}
+            $result=($result AND $this_result);
+            if ($result) {
+              if (method_exists($this->CI->$action,'return_data')) {
+                $data=$this->CI->$action->return_data();
+              }
+              if (method_exists($this->CI->$action,'return_settings')) {
+                $new_settings=$this->CI->$action->return_settings();
+                $this->settings=array_merge($this->settings,$new_settings);
+              }
+            }
           }
         }
         if ($result) {
@@ -294,7 +302,7 @@ class Forms extends Module {
       }
 		}
 
-    if (!$this->validated or $this->spam)	{
+    if (!$this->validated or $this->spam or !$result)	{
 			// Form isn't filled or validated or regarded as spam: show form and validation errors
       if ($this->settings('validation_place','form')=='field') {
         $form->show_validation_errors(true);

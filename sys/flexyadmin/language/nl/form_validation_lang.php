@@ -26,7 +26,9 @@ $lang['form_validation_decimal']            = "'{field}' mag alleen decimale get
 $lang['form_validation_less_than']          = "'{field}' moet kleiner zijn dan {param}.";
 $lang['form_validation_greater_than']       = "'{field}' moet groter zijn dan {param}.";
 
-$lang['form_validation_valid_option']			= "'{field}' moet een van de volgende waarden hebben: [{field}]";
+$lang['form_validation_valid_option']			  = "'{field}' moet een van de volgende waarden hebben: [{param}]";
+$lang['form_validation_valid_options']			= "'{field}' moet waarden bevatten uit de volgende lijst: [{param}]";
+$lang['form_validation_is_not']			        = "'{field}' mag niet: [{param}] zijn.";
 
 $lang['form_validation_valid_rgb']				       = "Geen juiste kleurcode in '{field}'";
 $lang['form_validation_valid_date']              = "'{field}' moet een datum bevatten in dit formaat dd-mm-yyyy";

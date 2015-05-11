@@ -513,11 +513,11 @@ class Form {
    */
 	public function validation($form_id='') {
 		$data=$this->data;
-
+    
     if (!$this->_this_form($form_id)) return FALSE;
     
 		$hasCaptcha=FALSE;
-
+    
 		foreach($data as $name=>$field) {
 
 			// Change multiple data to string (str_, medias_)
@@ -557,7 +557,14 @@ class Form {
         $field['validation']='required|valid_same['.$code.']';
 			}
       
-      $this->CI->form_validation->set_rules($field["name"], $field["label"], $field["validation"]);
+      $set_rule=true;
+      // Check if file and required
+      if ($field['type']==='file' and has_string('required',$field['validation'],false)) {
+        if ( ! empty($_FILES[$field['name']]['name']) ) {
+          $set_rule=false;
+        }
+      }
+      if ($set_rule) $this->CI->form_validation->set_rules($field["name"], $field["label"], $field["validation"]);
 			
 			$this->data[$name]["repopulate"]=$this->CI->input->post($name);
 		}

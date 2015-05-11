@@ -26,6 +26,8 @@ $lang['form_validation_decimal']            = "The {field} field must contain a 
 $lang['form_validation_less_than']          = "The {field} field must contain a number less than {param}.";
 $lang['form_validation_greater_than']       = "The {field} field must contain a number greater than {param}.";
 $lang['form_validation_valid_option']       = "'{field}' needs to be one of the following values: [{param}]";
+$lang['form_validation_valid_options']			= "'{field}' must have values from: [{param}]";
+$lang['form_validation_is_not']			        = "'{field}' can't be: [{param}]";
 
 $lang['form_validation_valid_rgb']	             = "Wrong color code in the '{field}' field";
 $lang['form_validation_valid_date']              = "'{field}' must be a date in this format: dd-mm-yyyy";

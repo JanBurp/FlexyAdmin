@@ -201,7 +201,11 @@ class MY_Form_validation extends CI_Form_validation {
     $validation='';
 		$options=$this->CI->cfg->get('cfg_field_info',$table.'.'.$field,'str_options');
     if ($options) {
-      $validation['rules']='valid_option';
+      $multiple=$this->CI->cfg->get('cfg_field_info',$table.'.'.$field,'b_multi_options');
+      if ($multiple)
+        $validation['rules']='valid_options';
+      else
+        $validation['rules']='valid_option';
       $validation['params']=str_replace('|',',',$options);
     }
     return $validation;
@@ -333,6 +337,40 @@ class MY_Form_validation extends CI_Form_validation {
     if (empty($str) and empty($options[0])) return TRUE; // mag leeg zijn
     $result=in_array($str,$options);
     return $result;
+  }
+
+  /**
+   * Test of de waarde een of meer waarden bevat uit de lijst met opties.
+   *
+   * @param string $str
+   * @param string $options: 'opties1|optie2|optie3|....'
+   * @return bool
+   * @author Jan den Besten
+   */
+  public function valid_options($str,$options) {
+    if (empty($options)) return TRUE;
+    if (!is_array($options)) $options = explode(',',$options);
+    if (empty($str) and empty($options[0])) return TRUE; // mag leeg zijn
+    $data=explode('|',$str);
+    foreach ($data as $value) {
+      $result=in_array($value,$options);
+      if (!$result) return FALSE;
+    }
+    return TRUE;
+  }
+
+  
+  
+  /**
+   * Test of een waarde niet hetzelfde is als de paramater
+   *
+   * @param string $str 
+   * @param string $forbidden 
+   * @return bool
+   * @author Jan den Besten
+   */
+  public function is_not($str,$forbidden) {
+    return $str!==$forbidden;
   }
   
   
