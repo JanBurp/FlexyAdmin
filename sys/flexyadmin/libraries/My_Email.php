@@ -18,7 +18,20 @@ class MY_Email extends CI_Email {
    */
   private $lang='';
   
+  /**
+   * Default replace data
+   */
   private $default_data = array();
+  
+  /**
+   * Resulting body
+   */
+  private $body='';
+  
+  /**
+   * Send with with/as pdf 
+   */
+  private $send_with_pdf=FALSE;
   
 
   /**
@@ -57,6 +70,7 @@ class MY_Email extends CI_Email {
    */
 	public function set_mail($mail) {
     $this->total_send_addresses=0;
+    $this->body='';
     if (isset($mail['from'])) {
       if (isset($mail['name']))
         $this->from($mail['from'], $mail['name']);
@@ -133,7 +147,18 @@ class MY_Email extends CI_Email {
   }
   
   
-  
+  /**
+   * Set to send email with body as pdf
+   *
+   * @param string $pdf Default=TRUE. Kan ook de naam van de pdf bevatten
+   * @return void
+   * @author Jan den Besten
+   */
+  public function send_with_pdf($pdf=true) {
+    $this->send_with_pdf=$pdf;
+  }
+
+
   /**
    * Send a mail from cfg_emails
    * 
@@ -146,8 +171,9 @@ class MY_Email extends CI_Email {
    * @return bool
    * @author Jan den Besten
    */
-  public function send_lang($key,$data=array()) {
+  public function send_lang($key,$data=array(),$prepare_body=TRUE) {
     if (empty($this->lang)) $this->set_language();
+    $this->body='';
     
     // Get subject & body
     $CI = &get_instance();
@@ -166,12 +192,28 @@ class MY_Email extends CI_Email {
       return false;
     }
     
-    // Parse values in subject or body
+    // Parse values in subject and body
     $this->_set_default_data();
     $data=array_merge($this->default_data,$data);
     $CI->load->library('parser');
     $subject = $CI->parser->parse_string($subject,$data,true);
     $body = $CI->parser->parse_string($body,$data,true);
+    // Prepare body
+    if ($prepare_body) $body = $this->prepare_body($body);
+    $this->body=$body;
+
+    // Create PDF?
+    if ($this->send_with_pdf) {
+      $pdf_name = 'mail_'.date('Y-m-d-G-i').'.pdf';
+      if (is_string($this->send_with_pdf)) $pdf_name = $this->send_with_pdf;
+      // Create PDF from HTML
+      $CI->load->library('html2pdf/html2pdf');
+      $html2pdf = new HTML2PDF('P', 'A4', 'en');
+      $html2pdf->writeHTML($this->body);
+      $file='site/cache/'.$pdf_name;
+      $html2pdf->Output($file,'F');
+      $this->attach($file);
+    }
 
     // Set email
     $this->subject($subject);
@@ -197,7 +239,7 @@ class MY_Email extends CI_Email {
   
   
   /**
-   * Zorgt voor juiste verwijzingingen in de tekst van een mailbody en de juiste styling
+   * Zorgt voor juiste verwijzingen in de tekst van een mailbody en de juiste styling
    *
    * @param string $body 
    * @return string
@@ -237,6 +279,16 @@ class MY_Email extends CI_Email {
       }
     }
     return $body;
+  }
+  
+  /**
+   * Get resulting body after sending
+   *
+   * @return string
+   * @author Jan den Besten
+   */
+  public function get_body() {
+    return $this->body;
   }
   
   

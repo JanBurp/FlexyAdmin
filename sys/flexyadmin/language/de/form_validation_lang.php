@@ -30,6 +30,9 @@ $lang['form_validation_valid_google_analytics'] = "'{field}' has a wrong code fo
 $lang['form_validation_valid_regex']            = "'{field}' has a wrong value";
 
 $lang['form_validation_valid_option']			= "'{field}' needs to be one of the following values: [{param}]";
+$lang['form_validation_valid_options']			= "'{field}' must have values from: [{param}]";
+$lang['form_validation_is_not']			        = "'{field}' can't be: [{param}]";
+
 
 
 /* End of file form_validation_lang.php */

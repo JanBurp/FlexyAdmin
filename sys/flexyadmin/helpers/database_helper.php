@@ -8,6 +8,28 @@
  * @file
  **/
 
+
+/**
+ * Test if a value is a TRUE
+ *
+ * @param string $val 
+ * @return void
+ * @author Jan den Besten
+ */
+function is_true_value($val) {
+  if (is_bool($val))    return $val;
+  if (is_numeric($val)) return $val;
+  if (is_array($val))   return !empty($val);
+  if (is_string($val)) {
+    if (strtolower($val)==='true')  return true;
+    if (strtolower($val)==='false') return false;
+    if (strtolower($val)==='yes')   return true;
+    if (strtolower($val)==='no')    return false;
+  }
+  return null;
+}
+
+
 /**
  * Test of veld een foreign key is (beginnen met id_)
  *
