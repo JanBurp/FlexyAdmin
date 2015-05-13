@@ -65,11 +65,13 @@ class Message extends CI_Model {
    * @author Jan den Besten
    */
   public function add($message,$type='messages') {
-    $messages=$this->get($type);
-    if (!is_array($messages)) $messages=array();
-    // if ($this->uiNames) $message=$this->ui->replace_ui_names($message);
-    array_unshift($messages, $message );
-		$this->session->set_userdata($type,$messages);
+    if (!empty($message)) {
+      $messages=$this->get($type);
+      if (!is_array($messages)) $messages=array();
+      // if ($this->uiNames) $message=$this->ui->replace_ui_names($message);
+      array_unshift($messages, $message );
+  		$this->session->set_userdata($type,$messages);
+    }
     return $this;
   }
   
@@ -77,11 +79,19 @@ class Message extends CI_Model {
    * Geeft bericht
    *
    * @param string $type default='message'
-   * @return mixed
+   * @return mixed FALSE als geen bericht, anders een array van berichten
    * @author Jan den Besten
    */
   public function get($type='messages') {
-		return $this->session->userdata($type);
+    $messages=$this->session->userdata($type);
+    // Verwijder lege messages
+    if ($messages and is_array($messages)) {
+      foreach ($messages as $key => $message) {
+        if (empty($message)) unset($messages[$key]);
+      }
+    } 
+    if (empty($messages)) $messages=FALSE;
+		return $messages;
   }
 
   /**
