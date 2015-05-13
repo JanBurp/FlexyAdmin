@@ -61,7 +61,7 @@ class Plugin_install_plugin extends Plugin {
             $readme='';
             $skipped=array();
             $installed=array();
-            $errors='';
+            $errors=array();
             $zip = new ZipArchive;
             if ($zip->open($file) === true) {
               for($i = 0; $i < $zip->numFiles; $i++) {
@@ -84,7 +84,7 @@ class Plugin_install_plugin extends Plugin {
                       if ($this->CI->dbutil->is_safe_sql($sql,true,true)) {
                         $result=$this->CI->dbutil->import($sql);
                         if (!empty($result['errors'])) {
-                          $errors.=$result['errors'];
+                          $errors=array_merge($errors,$result['errors']);
                         }
                         $imported[]=$name;
                       }
@@ -112,7 +112,12 @@ class Plugin_install_plugin extends Plugin {
           if (isset($installed)) $this->add_content(h('Installed files:',2).ul($installed));
           if (isset($imported))  $this->add_content(h('Imported files:',2).ul($imported));
           if (isset($skipped))   $this->add_content(h('Skipped files:',2).ul($skipped));
-          if (!empty($errors))   $this->add_content(h('Errors:',2,'error').p('error').$errors._p());
+          if (!empty($errors))   {
+            $this->add_content(h('Errors:',2,'error'));
+            foreach ($errors as $error) {
+              $this->add_content(p('error').$error['message']._p());
+            }
+          }
           
           
           unlink($file);

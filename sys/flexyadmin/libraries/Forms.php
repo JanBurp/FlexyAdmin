@@ -278,7 +278,6 @@ class Forms extends Module {
       		    $errors.=$this->CI->$action->get_errors();
       			}
             $result=($result AND $this_result);
-            xdebug_break();
             
             if ($this_result) {
               if (method_exists($this->CI->$action,'return_data')) {

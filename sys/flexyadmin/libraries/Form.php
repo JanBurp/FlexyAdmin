@@ -543,15 +543,12 @@ class Form {
             $field['validation']='';
           }
         }
-        // strace_($field);
-        // strace_($data);
       }
       
       // captcha
 			if ($field['type']=='captcha') {
         $this->CI->load->helper('captcha');
 			  $hasCaptcha=$name; 
-        // $code=str_reverse($this->CI->input->post($hasCaptcha.'__captcha'));
         $cap=get_captcha();
         $code=$cap['word'];
         $field['validation']='required|valid_same['.$code.']';
@@ -572,19 +569,12 @@ class Form {
 		log_('info',"form: validation");
 		$this->isValidated=$this->CI->form_validation->run();
 
-    // // validate captcha
-    // if ($hasCaptcha!=FALSE) {
-    //   $value=$this->CI->input->post($hasCaptcha);
-    //   $code=str_reverse($this->CI->input->post($hasCaptcha.'__captcha'));
-    //   $this->isValidated=(($value) and ($value==$code));
-    // }
-
 		if ($this->isValidated) {
 			foreach ($data as $name => $field) {
 				$this->data[$name]["repopulate"]=$this->CI->input->post($name);
 			}
 		}
-		
+    
 		return $this->isValidated;
 	}
 

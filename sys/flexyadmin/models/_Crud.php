@@ -177,7 +177,11 @@ class _crud extends CI_Model {
 			if ($insert) unset($data[PRIMARY_KEY]);
 			
       if (!empty($data)) {
-  			$this->db->set($data);
+        
+        // Only set data if it has a safe value (not NULL)
+        foreach ($data as $key => $value) {
+          if (isset($value)) $this->db->set($key,$value);
+        }
 
   			if ($insert) {
   				$this->db->insert($this->table);
