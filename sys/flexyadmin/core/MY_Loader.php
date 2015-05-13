@@ -58,7 +58,7 @@ class MY_Loader extends CI_Loader {
 	 */
 	public function view($view, $vars = array(), $return = FALSE) {
     $result=parent::view($view,$vars,$return);
-    if ($this->CI->config->item('use_parser',false)) {
+    if ($this->CI->config->item('use_parser',false) and isset($this->CI->parser)) {
       $result=$this->CI->parser->parse_string($result,$vars,$return);
     }
     return $result;

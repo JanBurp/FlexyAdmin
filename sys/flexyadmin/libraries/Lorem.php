@@ -29,7 +29,7 @@ class Lorem {
 	*/
 	
 	private $words;
-  private $wordsPerParagraph
+  private $wordsPerParagraph;
   private $wordsPerSentence;
 	
 	public function __construct($wordsPer = 100)
