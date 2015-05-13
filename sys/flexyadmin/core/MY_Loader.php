@@ -11,14 +11,18 @@ class MY_Loader extends CI_Loader {
 	
 	protected $_ci_plugin_paths	= array();
 
+  private $CI;
+
 	public function __construct() {
 		parent::__construct();
+    $this->CI=& get_instance();
 		$this->_ci_view_paths=array(SITEPATH.'views/'=>1,APPPATH.'views/'=>1);
 		array_push($this->_ci_model_paths,SITEPATH);
 		array_push($this->_ci_library_paths,SITEPATH);
 		array_push($this->_ci_helper_paths,SITEPATH);
 		$this->_ci_plugin_paths = array(APPPATH,SITEPATH);
 	}
+    
     
   /**
    * Test if file is allready loaded
@@ -40,7 +44,25 @@ class MY_Loader extends CI_Loader {
     }
     return isset($list[$name]);
   }
-    
+  
+  
+	/**
+	 * Zelfde als CodeIgniter, maar gebruikt `parser` als dat globaal is ingesteld.
+	 *
+	 * @param	string	$view	View name
+	 * @param	array	$vars	An associative array of data
+	 *				to be extracted for use in the view
+	 * @param	bool	$return	Whether to return the view output
+	 *				or leave it to the Output class
+	 * @return	object|string
+	 */
+	public function view($view, $vars = array(), $return = FALSE) {
+    $result=parent::view($view,$vars,$return);
+    if ($this->CI->config->item('use_parser',false)) {
+      $result=$this->CI->parser->parse_string($result,$vars,$return);
+    }
+    return $result;
+	}
     
     
     
@@ -53,12 +75,10 @@ class MY_Loader extends CI_Loader {
 	 */
 	public function dbutil($db = NULL, $return = FALSE)
 	{
-		$CI =& get_instance();
-
 		if ( ! is_object($db) OR ! ($db instanceof CI_DB))
 		{
 			class_exists('CI_DB', FALSE) OR $this->database();
-			$db =& $CI->db;
+			$db =& $this->CI->db;
 		}
 
 		require_once(BASEPATH.'database/DB_utility.php');
@@ -79,9 +99,10 @@ class MY_Loader extends CI_Loader {
     }
 // Added stops here
 
-		$CI->dbutil = new $class($db);
+		$this->CI->dbutil = new $class($db);
 		return $this;
 	}
+  
    
 }
 
