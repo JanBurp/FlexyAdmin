@@ -26,6 +26,14 @@ $config['testmode'] = false;
  */
 // $config['framework']='bootstrap';
 
+
+/**
+ * User Parser for the views
+ */
+$config['use_parser'] = FALSE;
+
+
+
 /*
  *--------------------------------------------------------------------------
  * Menu options
@@ -325,7 +333,7 @@ if (!isset($config['base_url'])) {
 | 'session_cookie_name' = the name you want for the cookie - automatic set at install
 |
 */
-$config['sess_cookie_name'] = 'FlexyAdminDEMO';
+$config['sess_cookie_name'] = 'www_andiegrenze_eu';
 
 
 
