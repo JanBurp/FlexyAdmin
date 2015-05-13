@@ -502,28 +502,29 @@ function doGrid() {
                 if (data.error) ajaxError(data.error);
 							},'json');
 						}
+            
+  					// show the branches again
+  					show_branches(id);
+  					$(ui.item).addClass("current");
+            $('.lastnode',ui.item).remove();
+            $('.emptynode',ui.item).remove();
+            // node?
+            if (newParentId!=0) {
+              $(ui.item).addClass("parent_id_"+newParentId);
+              var title=$("td.str:first",ui.item);
+              var titleHtml=$(title).html();
+              var tree=titleHtml.split('/');
+              var treeDepth=tree.length-1;
+              // create new html
+              var newHtml='';
+              for (var i=0; i<treeDepth-1; i++) {
+                newHtml+='<span class="emptynode">&nbsp;</span>';
+              };
+              newHtml+='<span class="lastnode">&nbsp;</span>' + tree[treeDepth];
+              $(title).html(newHtml);
+            }
+            
 					}
-					
-					// show the branches again
-					show_branches(id);
-					$(ui.item).addClass("current");
-          $('.lastnode',ui.item).remove();
-          $('.emptynode',ui.item).remove();
-          // node?
-          if (newParentId!=0) {
-            $(ui.item).addClass("parent_id_"+newParentId);
-            var title=$("td.str:first",ui.item);
-            var titleHtml=$(title).html();
-            var tree=titleHtml.split('/');
-            var treeDepth=tree.length-1;
-            // create new html
-            var newHtml='';
-            for (var i=0; i<treeDepth-1; i++) {
-              newHtml+='<span class="emptynode">&nbsp;</span>';
-            };
-            newHtml+='<span class="lastnode">&nbsp;</span>' + tree[treeDepth];
-            $(title).html(newHtml);
-          }
 					
 					// prepare ajax request to re-order the table in the database
 					var url=site_url("admin/ajax/order/");
