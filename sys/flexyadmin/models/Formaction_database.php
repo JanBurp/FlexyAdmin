@@ -51,12 +51,19 @@
     
     // set
     foreach ($data as $key => $value) {
+
       // prepare booleans
       if (in_array(get_prefix($key),$this->config->item('FIELDS_bool_fields'))) {
         $value=is_true_value($value);
         $data[$key]=$value;
       }
       if ($value==NULL) $value='';
+
+      // prepare media (strip path)
+      if (in_array(get_prefix($key),array('file','media'))) {
+        $value=get_suffix($value,'/');
+      }
+
       // save in db
       if ($this->db->field_exists( $key, $table )) $this->db->set($key,$value);
     }
