@@ -424,6 +424,7 @@ class Flexy_field extends CI_Model {
 		}
     // if (!empty($validations)) $out['validation']=$this->_set_validation_params($validations);
     // trace_(array('start'=>$this->validation,'result'=>$out['validation']));
+    // trace_($out);
 		return $out;
 	}
 

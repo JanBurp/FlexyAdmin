@@ -447,8 +447,6 @@ class Show extends AdminController {
 				else
 					$uiShowTable=$uiTable;
 
-        // trace_($ffData);
-
 				$form->set_data($ffData,$uiShowTable);
 				$form->add_password_match();
 				$form->hash_passwords();
@@ -459,9 +457,10 @@ class Show extends AdminController {
 				if ($form->validation()) {
 					$this->lang->load("update_delete");
 					$this->load->model('queu');
-
+          
 					$newData=$form->get_data();
 					$newData=$this->_after_update($table,$data,$newData);
+          
           
           // Test if password field exist and is empty
           foreach ($newData as $key => $value) {
