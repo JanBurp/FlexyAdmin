@@ -125,7 +125,11 @@
   private function _attach_files($data) {
     foreach ($data as $field => $value) {
       if (in_array(get_prefix($field),array('file','media'))) {
-        $file='site/assets/'.$this->settings['upload_path'].'/'.$value;
+        // add path if needed
+        $file=$value;
+        if (get_suffix($file,'/')===$file) {
+          $file='site/assets/'.$this->settings['upload_path'].'/'.$value;
+        }
         $this->email->attach($file);
       }
     }
