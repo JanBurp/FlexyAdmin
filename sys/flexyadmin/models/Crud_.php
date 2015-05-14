@@ -2,14 +2,10 @@
 
 /** \ingroup models
  * Met dit model kun je de basis database handelingen uitvoeren (CRUD)
-
- * @copyright Jan den Besten
- * @license: n/a
  * 
- * @author Jan den Besten
+ * @author: Jan den Besten
  * $Revision$
- * @copyright (c) Jan den Besten
- * $HeadURL$ 
+ * @copyright: (c) Jan den Besten
  */
 
 class Crud_ extends CI_Model {
@@ -36,7 +32,7 @@ class Crud_ extends CI_Model {
   /**
    * Validate data bij insert/update
    *
-   * @param bool $validate=TRUE
+   * @param bool $validate default=TRUE
    * @return this
    * @author Jan den Besten
    */
@@ -52,6 +48,7 @@ class Crud_ extends CI_Model {
 	 * Stel tabel in waarvoor de acties gelden
 	 *
 	 * @param string $table : table name
+	 * @param mixed $user_id default=FALSE
 	 * @return object $this
 	 * @author Jan den Besten
 	 */

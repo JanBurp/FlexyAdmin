@@ -168,6 +168,7 @@ class MY_Email extends CI_Email {
    *
    * @param string $key The key in cfg_email to find the subject and body 
    * @param array $data Array of values that will be parsed in the subject and body, example: {name} $data=array('name'=>'My Name')
+   * @param bool $prepare_body default=TRUE
    * @return bool
    * @author Jan den Besten
    */
