@@ -15,7 +15,7 @@ class Ajax extends CI_Controller {
   public function index() {
     $args=func_get_args();
     $library=array_shift($args);
-    if ($library and file_exists(SITEPATH.'libraries/ajax_'.$library.'.php')) {
+    if ($library and file_exists(SITEPATH.'libraries/Ajax_'.$library.'.php')) {
       $ajax_library='ajax_'.$library;
       $this->load->library($ajax_library);
       $method=array_shift($args);

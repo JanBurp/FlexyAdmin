@@ -35,7 +35,7 @@ class FrontEndController extends MY_Controller {
    *     )
    */
 	public $site;
-  var $ajax_module = false;
+  var    $is_ajax_module = false;
 
   /**
     * __construct
@@ -59,9 +59,9 @@ class FrontEndController extends MY_Controller {
     // For this to work, config.php: $config['uri_protocol']  = "PATH_INFO";
     // if ($this->config->item('query_urls'))  parse_str($_SERVER['QUERY_STRING'],$_GET);
         
-    $this->ajax_module = $this->config->item('AJAX_MODULE');
+    $this->is_ajax_module = $this->config->item('AJAX_MODULE');
     
-    if ($this->ajax_module) {
+    if ($this->is_ajax_module) {
       // Load standard Ajax Module Class
       $this->load->library('ajax_module');
   		$this->load->helper("language"); // nodig voor lang() in config files etc.
@@ -175,7 +175,7 @@ class FrontEndController extends MY_Controller {
 		$this->site['languages']=$this->config->item('languages');
     $this->site['use_minimized']=$this->config->item('use_minimized');
 
-    if (!$this->ajax_module) {
+    if (!$this->is_ajax_module) {
   		/**
   		 * Declare and init some variables
   		 */
