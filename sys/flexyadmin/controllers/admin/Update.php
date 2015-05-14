@@ -9,7 +9,7 @@
 
 class Update extends AdminController {
   
-  private $tags   = '../TAGS';
+  private $tags   = '../tags';
   private $db_map = 'db';
   
   private $updates=array();
