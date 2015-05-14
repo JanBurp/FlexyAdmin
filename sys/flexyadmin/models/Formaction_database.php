@@ -13,10 +13,6 @@
    var $settings        = array();
    private $return_data = array();
 
-   /**
-    * @author Jan den Besten
-    * @ignore
-    */
    public function __construct() {
      parent::__construct();
    }
@@ -27,7 +23,6 @@
     * @param string $data data teruggekomen van het formulier
     * @return int id van toegevoegde data in de database
     * @author Jan den Besten
-    * @ignore
     */
   public function go($data) {
     parent::go($data);
