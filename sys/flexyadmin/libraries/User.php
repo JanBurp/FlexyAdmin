@@ -1,6 +1,6 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-require_once(APPPATH."libraries/ion_auth.php");
+require_once(APPPATH."libraries/Ion_auth.php");
 
 
 /** \ingroup libraries

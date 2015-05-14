@@ -5,7 +5,7 @@
  *
  * @author Jan den Besten
  */
-class cfg_admin_menu extends _crud {
+class cfg_admin_menu extends crud_ {
   
   private $types=array('tbl'=>'table','cfg'=>'config','log'=>'log','res'=>'result');
 

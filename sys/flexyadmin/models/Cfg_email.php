@@ -5,7 +5,7 @@
  *
  * @author Jan den Besten
  */
-class cfg_email extends _crud {
+class cfg_email extends crud_ {
   
   /**
    * Taal waarvan de templates moeten worden opgevraagd

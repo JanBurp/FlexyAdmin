@@ -2,7 +2,8 @@
 
 /** \ingroup models
  * Met dit model kun je de basis database handelingen uitvoeren (CRUD)
-
+ * (Wrapper van Crud_)
+ * 
  * @author Jan den Besten
  * $Revision$
  * @copyright (c) Jan den Besten
@@ -12,7 +13,7 @@ class Crud extends CI_Model {
 
 	public function __construct() {
 		parent::__construct();
-    $this->load->model('_crud');
+    $this->load->model('crud_');
 	}
   
   /**
@@ -24,7 +25,7 @@ class Crud extends CI_Model {
    * @author Jan den Besten
    */
 	public function table($table='',$user_id=FALSE) {
-		return $this->_crud->table($table,$user_id);
+		return $this->crud_->table($table,$user_id);
 	}
 
 
@@ -37,7 +38,7 @@ class Crud extends CI_Model {
    */
 	public function __call($function, $args) {
     $args=el(0,$args,null);
-    $table=$this->_crud->get_table();
+    $table=$this->crud_->get_table();
 
     // Test if table has own crud model, if so call it
     if (!empty($table) and file_exists(APPPATH.'models/'.$table.'.php')) {
@@ -49,8 +50,8 @@ class Crud extends CI_Model {
 
     // No special model for this table -> normal crud action
     // trace_('crud'.$table);
-    if ($args) return $this->_crud->$function($args);
-    return $this->_crud->$function();
+    if ($args) return $this->crud_->$function($args);
+    return $this->crud_->$function();
 	}
   
   
