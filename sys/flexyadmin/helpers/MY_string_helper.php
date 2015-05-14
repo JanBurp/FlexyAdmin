@@ -460,7 +460,7 @@ function intro_string($txt,$len=50,$type='WORDS',$strip_tags='<br/><strong><ital
 	}
 	// make sure all tags are closed
   if ($intro!=$txt) $intro.=$ellipses;
-	$intro=restore_tags($intro);
+  $intro=restore_tags($intro);
 	return $intro;
 }
 
@@ -579,7 +579,9 @@ function restore_tags($input) {
 				if(strtolower($regs[0]) != 'br') $opened[] = $regs[0];
 			} elseif(preg_match("/^\/([a-z]+)$/i", $tag, $regs)) {
 				// a tag has been closed
-				unset($opened[array_pop(array_keys($opened, $regs[1]))]);
+        $keys=array_keys($opened, $regs[1]);
+        $key=array_pop($keys);
+				unset($opened[$key]);
 			}
 		}
 	}
