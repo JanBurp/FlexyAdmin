@@ -1388,7 +1388,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 						$join=rtrim($jTable["join"],'_');
 						if ($this->abstracts) {
 							$this->select($join.".".PRIMARY_KEY);
-							$this->select($this->get_abstract_fields_sql($join));
+							$this->select($this->get_abstract_fields_sql($join),FALSE);
 						}
 						$relSelect=$this->many[$rel];
 						if (!empty($relSelect)) {
@@ -1854,7 +1854,8 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 		 * First check if abstract fields are set for this table
 		 */
 		$f=$this->CI->cfg->get('CFG_table',$cleanTable,"str_abstract_fields");
-		if (isset($f) and !empty($abFields)) $abFields=explode_pre(",",$f,$cleanTable.".");
+		if (isset($f) and empty($abFields)) $abFields=explode_pre(",",$f,$cleanTable.".");
+    
 		/**
 		 * If not set: Auto abstract fields according to prefixes
 		 */
