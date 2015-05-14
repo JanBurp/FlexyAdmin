@@ -5,7 +5,7 @@
  *
  * @author Jan den Besten
  */
-class cfg_users extends _crud {
+class cfg_users extends crud_ {
   
 	public function __construct() {
 		parent::__construct();

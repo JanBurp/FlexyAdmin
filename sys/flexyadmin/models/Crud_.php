@@ -12,7 +12,7 @@
  * $HeadURL$ 
  */
 
-class _crud extends CI_Model {
+class Crud_ extends CI_Model {
 
   private $get_as = "array";
 

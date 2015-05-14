@@ -1,5 +1,5 @@
 <div style="border:1px solid #696;margin:4px;padding:10px;color:#000;background-color:#FFF;opacity:.8;">
-<?php if (IS_LOCALHOST): ?>
+<?php if (ENVIRONMENT=='development'): ?>
 	<h4 style="font-weight:bold;font-size: 14px;color: #696;">A PHP Error was encountered</h4>
 	Severity:	<?php echo $severity; ?><br>
 	Message:	<?php echo $message; ?><br>
@@ -20,7 +20,7 @@
     $body.="Message:\t".$message."\n";
     $body.="File:\t\t".$filepath."\n";
     $body.="Line:\t\t".$line."\n";
-    $body.="\n\nBACKTRACE:\n".print_r(backtrace_(3,10,false),true);
+    if (function_exists('backtrace_')) $body.="\n\nBACKTRACE:\n".print_r(backtrace_(3,10,false),true);
     $body.="\n\nSERVER:\n".print_r($_SERVER,true);
     mail($to,$subject,$body);
   ?>

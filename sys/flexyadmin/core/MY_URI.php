@@ -85,7 +85,7 @@ class MY_URI extends CI_URI {
    */
 	public function remove_pagination() {
 		$CI=&get_instance();
-		if ( ! isset($CI->pagination)) return NULL;
+		if ( ! isset($CI->pagination->auto_uripart)) return NULL;
 		$parameter=$CI->pagination->auto_uripart;
 		$this->set_remove($parameter);
 		return $parameter;

@@ -25,7 +25,7 @@
 	<div id="content">
 		<?php if (empty($heading)) $heading='Database Error'?>
 		<h1><?php echo $heading; ?></h1>
-    <?php if (IS_LOCALHOST) echo $message; ?>
+    <?php if (ENVIRONMENT=='development') echo $message; ?>
 		<?php 		$error=explode(' ',$message);
 		$error=substr($error[2],0,4);
 		if (empty($error) or $error<'0000' or $error>'9999') $error=mysql_errno();
@@ -46,7 +46,7 @@
 
 			default:
 				echo "Error: '".$error."'<br/>";
-        if (IS_LOCALHOST) backtrace_(3);
+        if (ENVIRONMENT=='development' and function_exists('backtrace_')) backtrace_(3);
 			break;
 		}
 		?>

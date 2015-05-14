@@ -304,7 +304,7 @@ class FrontEndController extends MY_Controller {
 		if (!empty($library)) {
 			$library_file=str_replace(' ','_',$library);
       $library_name=get_suffix($library_file,'/');
-			if (file_exists(SITEPATH.'libraries/'.$library_file.'.php') or file_exists(APPPATH.'libraries/'.$library_file.'.php')) {
+			if (file_exists(SITEPATH.'libraries/'.ucfirst($library_file).'.php') or file_exists(APPPATH.'libraries/'.ucfirst($library_file).'.php')) {
 				$this->load->library($library_file,array('name'=>$library_name,'file'=>$library_file));
         // $this->$library_name->set_name($library);
 				return $this->$library_name->$method($args);
@@ -312,7 +312,7 @@ class FrontEndController extends MY_Controller {
 			elseif ($this->config->item('fallback_module')) {
 				$fallback=$this->config->item('fallback_module');
 				$fallback_name=str_replace(' ','_',$fallback);
-				if (file_exists(SITEPATH.'libraries/'.$fallback_name.'.php')) {
+				if (file_exists(SITEPATH.'libraries/'.ucfirst($fallback_name).'.php')) {
 					$this->load->library($fallback_name);
           $this->$fallback_name->set_name($library);
 					return $this->$fallback_name->index($args);
