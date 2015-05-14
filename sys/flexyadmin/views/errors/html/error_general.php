@@ -26,7 +26,7 @@
 	<div id="content">
 		<h1><?php echo $heading; ?></h1>
 		<?php echo $message; ?>
-		<?php if ($status_code>=400 and function_exists('backtrace_')) backtrace_(10); ?>
+		<?php if ($status_code>=400 and function_exists('backtrace_')) backtrace_(); ?>
 	</div>
 </body>
 </html>
