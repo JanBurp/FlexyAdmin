@@ -520,6 +520,23 @@ function filter_by_key($a,$preKey,$replaceKey=FALSE) {
 }
 
 /**
+ * implode array maar dan van de key in de multidimensionale array
+ *
+ * @param string $split 
+ * @param string $array 
+ * @param string $key 
+ * @return string
+ * @author Jan den Besten
+ */
+function implode_key($split,$array,$key) {
+  $s='';
+  foreach ($array as $k => $item) {
+    $s=add_string($s,$item[$key],$split);
+  }
+  return $s;
+}
+
+/**
  * Als array_merge() maar waarden worden niet overschreven
  *
  * @param string $a 
@@ -786,13 +803,15 @@ function array_preg_search($val,$array) {
  *
  * @param string $val (regex) zoekterm
  * @param array $array 
+ * @param string $key default=FALSE, eventueel kun je een key meegegeven als het een multidimensionele array betreft
  * @return array
  * @author Jan den Besten
  */
-function array_ereg_search($val, $array) {
+function array_ereg_search($val, $array, $key=false) {
 	$return = array();
 	foreach($array as $i=>$v) {
-  	if(preg_match("/$val/i", $v)) $return[] = $i;
+    if ($key) $v=$v[$key];
+  	if (preg_match("/$val/i", $v)) $return[] = $i;
 	}
 	return $return;
 }

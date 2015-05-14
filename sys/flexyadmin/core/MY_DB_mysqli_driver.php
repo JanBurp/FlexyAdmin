@@ -173,28 +173,32 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
    * @internal
    */
 	private function _repair_ar() {
-		// splits ar_where by OR/AND
-		$where=implode(' ',$this->qb_where);
-		$split=preg_split("/\s(OR|AND)\s/", $where,-1,PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
-		if ( ! empty($split)) {
-			// Make sure, first one is OR
-			if ( ! in_array($split[0],array('AND','OR'))) array_unshift($split,'OR');
-			// trace_($split);
-			$where=array();
-			// $where[]=$split[0];
-			for ($i=0; $i < count($split); $i+=2) { 
-				$andor=$split[$i];
-				if (isset($split[$i+1]) and !empty($split[$i+1])) {
-					$item=trim($split[$i+1]);
-					if (!empty($item)) {
-						if ($i>0) $item=$andor.' '.$item;
-						$where[]=$item;
-					}
-				}
-			}
-			$this->qb_where=$where;
-			// trace_($where);
-		}
+		// splits qb_where by OR/AND
+    if (!empty($this->qb_where)) {
+      $escape=current($this->qb_where);
+      $escape=$escape['escape'];
+  		$where=implode_key(' ',$this->qb_where,'condition');
+  		$split=preg_split("/\s(OR|AND)\s/", $where,-1,PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
+  		if ( ! empty($split)) {
+  			// Make sure, first one is OR
+  			if ( ! in_array($split[0],array('AND','OR'))) array_unshift($split,'OR');
+  			$where=array();
+  			for ($i=0; $i < count($split); $i+=2) { 
+  				$andor=$split[$i];
+  				if (isset($split[$i+1]) and !empty($split[$i+1])) {
+  					$item=trim($split[$i+1]);
+  					if (!empty($item)) {
+  						if ($i>0) $item=$andor.' '.$item;
+  						$where[]=$item;
+  					}
+  				}
+  			}
+        $this->qb_where=array();
+        foreach ($where as $key => $value) {
+          $this->qb_where[]=array('condition'=>$value,'escape'=>$escape);
+        }
+  		}
+    }
 	}
 
 
@@ -917,24 +921,15 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 			$manyTables=$this->get_many_tables($table,$this->many);
 			$manyWhere=FALSE;
 			$manyLike=FALSE;
-      // $this->_repair_ar();
-      // remove back-ticks
-      // foreach ($this->qb_where as $key => $ar_where) {
-      //   $this->qb_where[$key]=str_replace('`','',$ar_where);
-      // }
-      // trace_($this->qb_where);
-      // trace_($manyTables);
 			foreach($manyTables as $mTable) {
 				$jTable=$mTable["join"];
 				$relTable=$mTable['rel'];
         // trace_($mTable['join']);
 				// WHERE
-				$foundKeysArray=array_ereg_search($mTable['rel'], $this->qb_where);
-        // trace_($this->qb_where);
-        // trace_(!empty($foundKeysArray));
+				$foundKeysArray=array_ereg_search($mTable['rel'], $this->qb_where,'condition');
 				foreach($foundKeysArray as $key) {
 					$manyWhere=TRUE;
-					$mWhere=$this->qb_where[$key];
+					$mWhere=$this->qb_where[$key]['condition'];
           // trace_($mWhere);
 					$AndOr=trim(substr($mWhere,0,3));
 					if (!in_array($AndOr,array("AND","OR"))) $AndOr=''; else $AndOr.=' ';
@@ -965,43 +960,39 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 						$whereIn='';
 						foreach($manyResults as $r) { $whereIn=add_string($whereIn,$r["id"],',');	}
 						// $this->where_in($mTable["this"].".".$this->pk,$whereIn);
-						$this->qb_where[$key]=$AndOr.$mTable["this"].".".$this->pk.' IN ('.$whereIn.') ';
+						$this->qb_where[$key]['condition']=$AndOr.$mTable["this"].".".$this->pk.' IN ('.$whereIn.') ';
 					}
 					else {
-						// if (count($this->qb_where)==0)
-							$this->qb_where[$key]=' ';
-						// else
-						// 	$this->qb_where[$key]=' ';
+						$this->qb_where[$key]['condition']=' ';
 					}
 				}
         $this->_repair_ar();
-        // trace_($this->qb_where);
 				
-				// LIKE
-				$foundKeysArray=array_ereg_search($jTable, $this->ar_like);
-				foreach($foundKeysArray as $key) {
-					$manyLike=TRUE;
-					$mLike=$this->ar_like[$key];
-					$AndOr=trim(substr($mLike,0,3));
-					if (!in_array($AndOr,array("AND","OR"))) $mLike=" AND ".$mLike;
-					$sql="SELECT ".$mTable["rel"].".".$mTable["id_this"]." AS id  
-								FROM ".$mTable["rel"].",".$mTable["join"]." 
-								WHERE ".$mTable["rel"].".".$mTable["id_join"]."=".$mTable["join"].".id ".$mLike;
-					$query=$this->query($sql);
-					$manyResults=$query->result_array();
-					$query->free_result();
-					// trace_($manyResults);
-					// remove current like and add new 'WHERE IN' to active record which selects the id where the many field is right
-					unset($this->ar_like[$key]);
-					// add WHERE IN statement
-					$whereIn=array();
-					if (!empty($manyResults)) {
-						foreach($manyResults as $r) {
-							$whereIn[]=$r["id"];
-						}
-						$this->where_in($mTable["this"].".".$this->pk,$whereIn);
-					}
-				}
+				// LIKE TODO
+        // $foundKeysArray=array_ereg_search($jTable, $this->qb_like);
+        // foreach($foundKeysArray as $key) {
+        //   $manyLike=TRUE;
+        //   $mLike=$this->qb_like[$key];
+        //   $AndOr=trim(substr($mLike,0,3));
+        //   if (!in_array($AndOr,array("AND","OR"))) $mLike=" AND ".$mLike;
+        //   $sql="SELECT ".$mTable["rel"].".".$mTable["id_this"]." AS id
+        //         FROM ".$mTable["rel"].",".$mTable["join"]."
+        //         WHERE ".$mTable["rel"].".".$mTable["id_join"]."=".$mTable["join"].".id ".$mLike;
+        //   $query=$this->query($sql);
+        //   $manyResults=$query->result_array();
+        //   $query->free_result();
+        //   // trace_($manyResults);
+        //   // remove current like and add new 'WHERE IN' to active record which selects the id where the many field is right
+        //   unset($this->qb_like[$key]);
+        //   // add WHERE IN statement
+        //   $whereIn=array();
+        //   if (!empty($manyResults)) {
+        //     foreach($manyResults as $r) {
+        //       $whereIn[]=$r["id"];
+        //     }
+        //     $this->where_in($mTable["this"].".".$this->pk,$whereIn);
+        //   }
+        // }
 			}
 		}
 		
@@ -2084,7 +2075,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
         $this->_set_standard_order($cleanTable,$abstract_field);
 			}
       
-			if (!empty($optionsWhere)) $this->qb_where[]=$optionsWhere;
+			if (!empty($optionsWhere)) $this->qb_where[]=array('condition'=>$optionsWhere,'escape'=>true);
       
       // Hard coded usersgroup options
       if ($table=='cfg_user_groups') $this->where('id >=',$this->CI->user->group_id);
