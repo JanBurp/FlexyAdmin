@@ -1115,7 +1115,7 @@ $config['FIELDS_prefix'] = array (
 	"rel"				=> array (
 											"grid"				=> "function_join",
 											"form"				=> "function_join",
-											"validation"	=> "function_join"
+											"validation"	=> ""
 											),
 	"field"			=> array(
 												"grid"				=> "%s",

@@ -521,13 +521,11 @@ class Form {
 		foreach($data as $name=>$field) {
 
 			// Change multiple data to string (str_, medias_)
-			if (isset($field['multiple']) and isset($_POST[$name]) and is_array($_POST[$name]) ) { // and in_array(get_prefix($name),array('str','medias')) ) {
+			if (isset($field['multiple']) and isset($_POST[$name]) and is_array($_POST[$name]) and get_prefix($name)!='rel') {
 				if (isset($_POST[$name.'__hidden']))
 					$_POST[$name]=$_POST[$name.'__hidden'];
 				else
 					$_POST[$name]=implode('|',array_unique($_POST[$name]));
-				// strace_($_POST[$name]);
-				// trace_($field);
 			}
 
 			// set validation rules for passwords
@@ -536,10 +534,6 @@ class Form {
         if ($thisdata['value']>0) {
           // if not a new 'user', password maybe empty for no change
           if (isset($_POST[$field['name']]) and empty($_POST[$field['name']])) {
-            // $validation=$field['validation'];
-            // $validation=str_replace('required','',$validation);
-            // $validation=str_replace('||','|',$validation);
-            // $field['validation']=$validation;
             $field['validation']='';
           }
         }
@@ -569,10 +563,13 @@ class Form {
 		log_('info',"form: validation");
 		$this->isValidated=$this->CI->form_validation->run();
 
-		if ($this->isValidated) {
-			foreach ($data as $name => $field) {
-				$this->data[$name]["repopulate"]=$this->CI->input->post($name);
-			}
+		foreach ($data as $name => $field) {
+      $repopulate=$this->CI->input->post($name);
+      if (is_array($repopulate)) {
+        $repopulate=array_values($repopulate);
+        $repopulate=array_combine($repopulate,$repopulate);
+      }
+			$this->data[$name]["repopulate"]=$repopulate;
 		}
     
 		return $this->isValidated;
@@ -949,10 +946,12 @@ class Form {
 				if (isset($field["multiple"]) or is_array($value)) {
 					$extra.=" multiple=\"multipe\" ";
 					$name.="[]";
-					if (is_array($value)) 
+					if (is_array($value)) {
 						$value=array_keys($value);
-					else
+          }
+					else {
 						$value=explode("|",$value);
+          }
 				}
 				$extra.="class=\"".$attr["class"]."\" id=\"".$name."\"";
 				//

@@ -1973,7 +1973,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
     */
 		public function get_many_tables($table,$tables='') {
 			$out=array();
-						if (empty($tables) or !is_array($tables)) {
+			if (empty($tables) or !is_array($tables)) {
 				// list all tables with right name
 				$like=$this->CI->config->item('REL_table_prefix')."_".remove_prefix($table).$this->CI->config->item('REL_table_split');
 				if (isset($this->CI->cfg)) {
