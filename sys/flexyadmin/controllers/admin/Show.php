@@ -392,8 +392,13 @@ class Show extends AdminController {
 			 */
       $add_many=$this->cfg->get('CFG_table',$table,"b_form_add_many");
 			if (get_prefix($table)!=$this->config->item('REL_table_prefix') and (is_null($add_many) or $add_many)) {
-				$this->db->add_many();
-				// $this->db->add_foreigns();
+        // alleen ids van many is genoeg...
+        $manyTables=$this->db->get_many_tables($table);
+        foreach ($manyTables as $key => $value) {
+          $manyTables[$key]=array($value['join'].'.'.PRIMARY_KEY);
+        }
+        $this->db->add_many($manyTables);
+        // $this->db->add_many();
 			}
 			$this->db->add_options();
 			

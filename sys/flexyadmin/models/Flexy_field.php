@@ -633,6 +633,9 @@ class Flexy_field extends CI_Model {
 				$out['type']=$formManyType;
 				unset($out['button']);
 			}
+      $values=$out['value'];
+      $values=array_keys($out['value']);
+      $out['value']=array_combine($values,$values);
 		}
 		return $out;
 	}
