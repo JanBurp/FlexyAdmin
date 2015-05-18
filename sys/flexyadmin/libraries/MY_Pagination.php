@@ -5,8 +5,8 @@
   * 
   * ##Dit zijn de uitbreidingen op CodeIgniter:
   * 
-  * - tags hebben een mooiere default config (list-items)
-  * - extra tags: _total_tag_open_ en _total_tag_close_ waarin het totaal aantal items terecht komt
+  * - tags hebben een mooiere templates die te vinden zijn in site/config/pagination.php
+  * - extra tags: _total_tag_open_ en _total_tag_close_ waarin het totaal aantal items terecht komt. Als deze templates leeg zijn wordt dit niet getoond.
   * - automatisch pagination met in de uri een 'offset' deel waarachter de start van de volgende pagina komt.
   * 
   * ## Snelle manier om pagination in een eigen module toe te passen
@@ -35,110 +35,28 @@
   *         $pagination = $this->CI->pagination->create_links();  // $pagination bevat nu de HTML met pagination links
   * 
   *
-   * @author Jan den Besten
+  * @author: Jan den Besten
+  * $Revision$
+  * @copyright: (c) Jan den Besten
   */
 class MY_Pagination extends CI_Pagination {
 
   /**
    * Is auto pagination aan, default=FALSE
    */
-	var $auto = FALSE;
-  
+  var $auto = FALSE;
+
   /**
    * uripart wat wordt gebruikt voor auto pagination, default='offset'
    */
-	var $auto_uripart = 'offset';
+  var $auto_uripart = 'offset';
 
   /**
-   * Nieuwe tag: total_tag_open = '&lt;span class=&quot;pagination_total&quot;&gt;'
-   **/
-	var $total_tag_open  = '<span class="pagination_total">';
+   * Extra tags
+   */
+  protected $total_tag_open  = '<span class="pagination_total">';
+  protected $total_tag_close = '</span>';
 
-  /**
-   * Nieuwe tag: total_tag_close = '&lt;/span&gt;'
-   */
-	var $total_tag_close = '</span>';
-  
-  /**
-   * first_link      = '&lt;&lt;'
-   */
-	var $first_link      = '&lt;&lt;';
-
-  /**
-   * last_link       = '&gt;&gt;'
-   */
-	var $last_link       = '&gt;&gt;';
-
-  /**
-   * full_tag_open  = '&lt;ul&gt;'
-   */
-	var $full_tag_open  = '<ul>';
-
-  /**
-   * full_tag_close  = '&lt;/ul&gt;'
-   */
-	var $full_tag_close  = '</ul>';
-	
-  /**
-   * num_tag_open    = '&lt;li class=&quot;pager&quot;&gt;'
-   */
-  var $num_tag_open    = '<li class="pager"><span class="btn btn-default">';
-  
-  /**
-   * num_tag_close   = '&lt;/li&gt;'
-   */
-	var $num_tag_close   = '</span></li>';
-
-  /**
-   * cur_tag_open    = '&lt;li class=&quot;current&quot;&gt;'
-   */
-  var $cur_tag_open    = '<li class="active"><span class="btn btn-primary">';
-  
-  /**
-   * cur_tag_close   = '&lt;/li&gt;'
-   */
-	var $cur_tag_close   = '</span></li>';
-  
-  /**
-   * first_tag_open  = '&lt;li class=&quot;pager pagination_first&quot;&gt;'
-   */
-	var $first_tag_open  = '<li class="pager pagination_first"><span class="btn btn-default">';
-  
-  /**
-   * first_tag_close = '&lt;/li&gt;'
-   */
-	var $first_tag_close = '</span></li>';
-  
-  /**
-   * last_tag_open   = '&lt;li class=&quot;pager pagination_last&quot;&gt;'
-   */
-  var $last_tag_open   = '<li class="pager pagination_last"><span class="btn btn-default">';
-	
-  /**
-   * last_tag_close  = '&lt;/li&gt;'
-   */
-  var $last_tag_close  = '</span></li>';
-  
-  /**
-   * prev_tag_open   = '&lt;li class=&quot;pager pagination_prev&quot;&gt;'
-   */
-  var $prev_tag_open   = '<li class="pager pagination_prev"><span class="btn btn-default">';
-  
-  /**
-   * prev_tag_close  = '&lt;/li&gt;'
-   */
-	var $prev_tag_close  = '</span></li>';
-
-  /**
-   * next_tag_open   = '&lt;li class=&quot;pager pagination_next&quot;&gt;'
-   */
-  var $next_tag_open   = '<li class="pager pagination_next"><span class="btn btn-default">';
-  
-  /**
-   * next_tag_close  = '&lt;/li&gt;'
-   */
-	var $next_tag_close  = '</span></li>';
-	
   /**
    * @param string $params 
    * @author Jan den Besten
@@ -146,6 +64,7 @@ class MY_Pagination extends CI_Pagination {
 	public function __construct($params = array()) {
 		parent::__construct($params);
 	}
+  
 
   /**
    * Zelfde als originele method, maar creert ook nog de total tag en kan ook werken met auto pagination
@@ -166,7 +85,7 @@ class MY_Pagination extends CI_Pagination {
 		// voorkom lege uri
 		$output=str_replace('/'.$this->auto_uripart.'/"','/'.$this->auto_uripart.'/0"',$output);
 		// extra info
-		$output.=$this->total_tag_open.$this->total_rows.$this->total_tag_close;
+    if (!empty($this->total_tag_open) and !empty($this->total_tag_close)) $output.=$this->total_tag_open.$this->total_rows.$this->total_tag_close;
 		return $output;
 	}
 	
