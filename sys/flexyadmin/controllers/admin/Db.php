@@ -387,6 +387,11 @@ class Db extends AdminController {
 		}
 		if ($safe) {
       $result=$this->dbutil->import($sql);
+      if (isset($result['errors'])) {
+        foreach ($result['errors'] as $error) {
+          $this->_add_content(p('error').$error._p());
+        }
+      }
 			$this->_add_content(p().$action.br(2)._p());//.$comments);
 		}
 	}
@@ -394,9 +399,7 @@ class Db extends AdminController {
 	function sql() {
 		if ($this->user->is_super_admin()) {
 			$sql=$this->input->post('sql');
-			// $sure=$this->input->post('sure');
 			$this->lang->load('help');
-			// if ($sql and (IS_LOCALHOST or ($sure and $sure==$this->cfg->get('CFG_configurations','key')) ) ) {
 			if ($sql) {
 				$this->_sql($sql,"Import","Importing ...");
 			}
