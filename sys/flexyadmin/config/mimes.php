@@ -135,7 +135,7 @@ return array(
   'tgz'   =>	array('application/x-tar', 'application/x-gzip-compressed'), 
   'tif'   =>	'image/tiff',
   'tiff'  =>	'image/tiff',
-  'txt'   =>	array('text/plain','text/x-lisp'),
+  'txt'   =>	array('text/plain','text/html','text/x-lisp'),
   'vcf'   =>  array('text/vcard','text/x-vcard'),
   'vlc'   =>	'application/videolan',
   'wav'   =>	array('audio/x-wav', 'audio/wave', 'audio/wav'), 
