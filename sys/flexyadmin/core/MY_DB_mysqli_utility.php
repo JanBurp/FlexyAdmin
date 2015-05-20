@@ -105,29 +105,33 @@ class MY_DB_mysqli_utility extends CI_DB_mysqli_utility {
    * @author Jan den Besten
    */
   public function import($sql) {
-		$lines=explode("\n",$sql);
+    $lines=explode(PHP_EOL,$sql);
     // remove comments
-		$comments="";
+    $comments="";
     $errors=array();
-		foreach ($lines as $k=>$l) {
-			if (substr($l,0,1)=="#")	{
-				if (strlen($l)>2)	$comments.=$l.br();
-				unset($lines[$k]);
-			}
-		}
-		$sql=implode("\n",$lines);
-		$lines=preg_split('/;\n+/',$sql); // split at ; with EOL
+    foreach ($lines as $k=>$l) {
+      if (substr($l,0,1)=="#")  {
+        if (strlen($l)>2)  $comments.=$l.br();
+        unset($lines[$k]);
+      }
+      $l=str_replace(array("\n","\r"),'',$l);
+      if (empty($l)) unset($lines[$k]);
+      $lines[$k]=$l;
+    }
+
+    $sql=implode(PHP_EOL,$lines);
+    $lines=preg_split('/;'.PHP_EOL.'+/',$sql); // split at ; with EOL
     // actual import
-		foreach ($lines as $key => $line) {
-			$line=trim($line);
-			if (!empty($line)) {
-				if (!$this->db->simple_query($line)) {
+    foreach ($lines as $key => $line) {
+      $line=trim($line);
+      if (!empty($line)) {
+        if (!$this->db->simple_query($line)) {
           $errors[]=$this->db->error();
           break;
-				}
-			}
-		}
-    
+        }
+      }
+    }
+
     return array('comments'=>$comments,'queries'=>$lines,'errors'=>$errors);
   }
   
