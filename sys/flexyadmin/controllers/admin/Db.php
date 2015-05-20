@@ -279,7 +279,8 @@ class Db extends AdminController {
 		if ($this->user->is_super_admin()) {
       // What form is filled?
 			$sql=$this->input->post('sql');
-			if (!isset($_FILES["userfile"]) and !$sql) {
+      
+			if (!isset($_FILES["userfile"]) and empty($sql)) {
         // Maybe some update sqls?
         $update=$this->input->post('update');
         if (!$update) {
