@@ -26,7 +26,8 @@ UPDATE xxxx
 - Update naar CI 3.x:
   - Vervang de map `sys`
   - Vervang `index.php`
-  - Vervang `site/controller.php` door `Controller.php` (of vervang '$this->ajax_module' door '$this->is_ajax_module')
+  - Vervang `site/controller.php` door `Controller.php`
+    - of vervang '$this->ajax_module' door '$this->is_ajax_module`
   - Vervang `site/language/nl/regex_validation_lang.php`
   - Verwijder de map `bulk_upload`
   - Login als admin

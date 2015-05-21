@@ -8,6 +8,9 @@ NEW:
 - Update tool: admin/update
 - $_GET is always on now
 
+CHANGED:
+- MY_Pagination has now own config file site/config/pagination.php for template settings
+
 REMOVED:
 - build tool
 - less libraries
