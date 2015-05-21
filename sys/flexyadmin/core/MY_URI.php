@@ -26,7 +26,7 @@ class MY_URI extends CI_URI {
   /**
    * array van uri delen waarna de uri niet meer bekeken wordt (verwijderd)
    */
-	private $remove;
+	private $remove=array();
 
   /**
    */
@@ -87,7 +87,7 @@ class MY_URI extends CI_URI {
 		$CI=&get_instance();
 		if ( ! isset($CI->pagination->auto_uripart)) return NULL;
 		$parameter=$CI->pagination->auto_uripart;
-		$this->set_remove($parameter);
+		$this->add_remove($parameter);
 		return $parameter;
 	}
 
