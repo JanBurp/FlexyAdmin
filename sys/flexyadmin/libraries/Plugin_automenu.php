@@ -133,7 +133,7 @@ class Plugin_automenu extends Plugin {
       }
       else {
         // maybe a language field
-        $lang=get_postfix($field);
+        $lang=get_suffix($field);
         $langfield=remove_postfix($field);
         // trace_(array('lang'=>$lang,'langfield'=>$langfield));
         if (in_array($lang,$this->CI->config->item('LANGUAGES')) and $this->CI->db->field_exists($langfield,'res_menu_result')) {
@@ -437,7 +437,7 @@ class Plugin_automenu extends Plugin {
     							$this->CI->db->add_many();
     						}
                 $where=$autoValue['field_group_by'].' = '.$groupId;
-    						$data=$this->_get_current_data($autoValue['table'], $where,$autoValue['int_limit'],0,array('field'=>get_postfix($autoValue['field_group_by'],'.'),'value'=>$groupId) );
+    						$data=$this->_get_current_data($autoValue['table'], $where,$autoValue['int_limit'],0,array('field'=>get_suffix($autoValue['field_group_by'],'.'),'value'=>$groupId) );
 						
     						if ($data) {
 

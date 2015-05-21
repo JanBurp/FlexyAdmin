@@ -118,7 +118,7 @@ class Plugin_export extends Plugin {
 		if ($this->config('add_foreigns_as_abstracts')) {
 			foreach ($data as $id => $row) {
 				foreach ($row as $field => $value) {
-					if (get_postfix($field,'__')=='abstract') {
+					if (get_suffix($field,'__')=='abstract') {
 						$foreign_field=remove_postfix($field,'__');
 						$data[$id][$foreign_field]=$value;
 						unset($data[$id][$field]);
