@@ -119,7 +119,7 @@ class Plugin_export extends Plugin {
 			foreach ($data as $id => $row) {
 				foreach ($row as $field => $value) {
 					if (get_suffix($field,'__')=='abstract') {
-						$foreign_field=remove_postfix($field,'__');
+						$foreign_field=remove_suffix($field,'__');
 						$data[$id][$foreign_field]=$value;
 						unset($data[$id][$field]);
 					}

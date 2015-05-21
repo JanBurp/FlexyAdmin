@@ -134,7 +134,7 @@ class Plugin_automenu extends Plugin {
       else {
         // maybe a language field
         $lang=get_suffix($field);
-        $langfield=remove_postfix($field);
+        $langfield=remove_suffix($field);
         // trace_(array('lang'=>$lang,'langfield'=>$langfield));
         if (in_array($lang,$this->CI->config->item('LANGUAGES')) and $this->CI->db->field_exists($langfield,'res_menu_result')) {
           // find language branch where to update
