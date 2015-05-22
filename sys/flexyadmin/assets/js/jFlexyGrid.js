@@ -117,6 +117,8 @@ function doGrid() {
 		// if 'self_parent' is there hide that column, add parent_id class to row, and visual nodes to next (str) column
 		//
     function make_tree() {
+      $('table.grid .emptynode').remove();
+      $('table.grid .lastnode').remove();
       $("table.grid td.self_parent").each(function(){
   			var html=$(this).html();
         var parent_id=html.substring(1,html.indexOf(" ")-1);
@@ -476,12 +478,13 @@ function doGrid() {
 							}
 						}
             
+						// Set parent_id in row
+						parentId=get_subclass("parent_id_",$(ui.item));
+						$("table.grid tbody tr#"+id).removeClass("parent_id_"+parentId);
+						$("table.grid tbody tr#"+id).addClass("parent_id_"+newParentId);
+
 						if (newParentId>=0) {
 							// Yes, it has been moved to another branch
-							// Set parent_id in table
-							parentId=get_subclass("parent_id_",$(ui.item));
-							$("table.grid tbody tr#"+id).removeClass("parent_id_"+parentId);
-							if (newParentId>0) $("table.grid tbody tr#"+id).addClass("parent_id_"+newParentId);
 							if (shifted>0)
 								shiftNodes(id,1);
 							else {
@@ -503,27 +506,28 @@ function doGrid() {
 							},'json');
 						}
             
+            
   					// show the branches again
   					show_branches(id);
   					$(ui.item).addClass("current");
-            $('.lastnode',ui.item).remove();
-            $('.emptynode',ui.item).remove();
-            // node?
-            if (newParentId!=0) {
-              $(ui.item).addClass("parent_id_"+newParentId);
-              var title=$("td.str:first",ui.item);
-              var titleHtml=$(title).html();
-              var tree=titleHtml.split('/');
-              var treeDepth=tree.length-1;
-              // create new html
-              var newHtml='';
-              for (var i=0; i<treeDepth-1; i++) {
-                newHtml+='<span class="emptynode">&nbsp;</span>';
-              };
-              newHtml+='<span class="lastnode">&nbsp;</span>' + tree[treeDepth];
-              $(title).html(newHtml);
-            }
-            
+            // $('.lastnode',ui.item).remove();
+            // $('.emptynode',ui.item).remove();
+            // make_tree();
+            // // node?
+            // if (newParentId!=0) {
+            //   $(ui.item).addClass("parent_id_"+newParentId);
+            //   var title=$("td.str:first",ui.item);
+            //   var titleHtml=$(title).html();
+            //   var tree=titleHtml.split('/');
+            //   var treeDepth=tree.length-1;
+            //   // create new html
+            //   var newHtml='';
+            //   for (var i=0; i<treeDepth-1; i++) {
+            //     newHtml+='<span class="emptynode">&nbsp;</span>';
+            //   };
+            //   newHtml+='<span class="lastnode">&nbsp;</span>' + tree[treeDepth];
+            //   $(title).html(newHtml);
+            // }
 					}
 					
 					// prepare ajax request to re-order the table in the database
@@ -536,6 +540,7 @@ function doGrid() {
               ajaxError(data.error);
             else
               rowsEvenOdd();
+            location.reload();
 					},'json');
 				}
 			});
