@@ -432,7 +432,8 @@ class Crud_ extends CI_Model {
     $this->info = array(
       'rows'        => count($result),
       'total_rows'  => $this->db->last_num_rows_no_limit(),
-      'table_rows'  => $this->db->count_all($this->table)
+      'table_rows'  => $this->db->count_all($this->table),
+      // 'query'       => $this->db->last_query()
     );
     return $result;
   }

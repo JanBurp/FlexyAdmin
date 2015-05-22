@@ -23,7 +23,7 @@ class Update_3089 extends Model_updates {
         unset($tables[$key]);
       }
       else {
-        $count = $this->order->reset($table);
+        $count = $this->order->reset($table,0,true);
         $this->_add_message("Order of <b>`$table`</b> is reset",'glyphicon-ok btn-success');
       }
     }
