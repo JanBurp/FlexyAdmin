@@ -1,6 +1,6 @@
 <?php // Minimized versions of Javascript & CSS files (see http://refresh-sf.com/yui/)
 $minimize=FALSE;
-// $minimize=TRUE;
+$minimize=TRUE;
 
 if ($minimize) {
 	$js='.min.js';
