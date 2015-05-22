@@ -106,7 +106,7 @@ class FrontEndController extends MY_Controller {
     $this->site['int_version']=$version;
     
     // Is there a library that needs to be run first??
-    if (file_exists(SITEPATH.'libraries/before_controller.php')) {
+    if (file_exists(SITEPATH.'libraries/Before_controller.php')) {
       $this->load->library('module');
       $this->load->library('before_controller');
     }
@@ -303,8 +303,11 @@ class FrontEndController extends MY_Controller {
 		}
 		if (!empty($library)) {
 			$library_file=str_replace(' ','_',$library);
+      $load_file=explode('/',$library_file);
+      $load_file[count($load_file)-1]=ucfirst($load_file[count($load_file)-1]);
+      $load_file=implode('/',$load_file);
       $library_name=get_suffix($library_file,'/');
-			if (file_exists(SITEPATH.'libraries/'.ucfirst($library_file).'.php') or file_exists(APPPATH.'libraries/'.ucfirst($library_file).'.php')) {
+			if (file_exists(SITEPATH.'libraries/'.$load_file.'.php') or file_exists(APPPATH.'libraries/'.$load_file.'.php')) {
 				$this->load->library($library_file,array('name'=>$library_name,'file'=>$library_file));
         // $this->$library_name->set_name($library);
 				return $this->$library_name->$method($args);
