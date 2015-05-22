@@ -119,23 +119,38 @@ function doGrid() {
     function make_tree() {
       $('table.grid .emptynode').remove();
       $('table.grid .lastnode').remove();
+      var treeDepth=0;
+      var parentLevels=new Array();
       $("table.grid td.self_parent").each(function(){
   			var html=$(this).html();
         var parent_id=html.substring(1,html.indexOf(" ")-1);
+        var title=$(this).nextAll("td.str:first");
+        var strTitle=$(title).html();
+        strTitle=strTitle.split('/');
+        strTitle=strTitle[strTitle.length-1];
+
         if (parent_id!=0) {
           $(this).parent("tr").addClass("parent_id_"+parent_id);
-    			var title=$(this).nextAll("td.str:first");
-          var titleHtml=$(title).html();
-          var tree=titleHtml.split('/');
-          var treeDepth=tree.length-1;
+          if (typeof(parentLevels[parent_id])!=="undefined") {
+            treeDepth=parentLevels[parent_id];
+          }
+          else {
+            treeDepth++;
+            parentLevels[parent_id]=treeDepth;
+          }
           // create new html
           var newHtml='';
           for (var i=0; i<treeDepth-1; i++) {
             newHtml+='<span class="emptynode">&nbsp;</span>';
           };
-          newHtml+='<span class="lastnode">&nbsp;</span>' + tree[treeDepth];
+          newHtml+='<span class="lastnode">&nbsp;</span>' + strTitle;
     			$(title).html(newHtml);
   			}
+        else {
+          treeDepth=0;
+        }
+        // console.log(strTitle,parent_id,treeDepth);
+        
   		});
     }
     make_tree();
@@ -452,7 +467,7 @@ function doGrid() {
 				},
 				update:function(event,ui) {
 					table=$("table.grid").data("table");
-					id=get_id($(ui.item));
+					id=parseInt(get_id($(ui.item)));
 					
 					endPos=ui.position.left;
 					shifted=(endPos-startPos)/25;
@@ -464,7 +479,10 @@ function doGrid() {
 						nextRow=$(ui.item).next("tr");
 						if (nextRow.length>0) {
 							newParentId=get_subclass("parent_id_",$(nextRow));
-							if (newParentId=="") newParentId=0;
+							if (newParentId=="")
+                newParentId=0;
+              else
+                newParentId=parseInt(newParentId);
 						}
 						else
 							newParentId=0;
@@ -480,8 +498,16 @@ function doGrid() {
             
 						// Set parent_id in row
 						parentId=get_subclass("parent_id_",$(ui.item));
-						$("table.grid tbody tr#"+id).removeClass("parent_id_"+parentId);
-						$("table.grid tbody tr#"+id).addClass("parent_id_"+newParentId);
+            if (parentId=="")
+              parentId=0;
+            else
+              parentId=parseInt(parentId);
+            
+            var c=$("table.grid tbody tr#"+id).attr('class');
+            c=c.replace(/parent_id_\d*/g, "");
+            $("table.grid tbody tr#"+id).attr('class',c);
+            $("table.grid tbody tr#"+id).addClass('parent_id_'+newParentId);
+            // console.log('NEW',parentId,newParentId);
 
 						if (newParentId>=0) {
 							// Yes, it has been moved to another branch
@@ -509,10 +535,12 @@ function doGrid() {
             
   					// show the branches again
   					show_branches(id);
-  					$(ui.item).addClass("current");
+            $(ui.item).addClass("current");
             // $('.lastnode',ui.item).remove();
             // $('.emptynode',ui.item).remove();
-            // make_tree();
+            
+            make_tree();
+            
             // // node?
             // if (newParentId!=0) {
             //   $(ui.item).addClass("parent_id_"+newParentId);
