@@ -24,7 +24,7 @@ class Api extends AjaxController {
     // does api model exists?
     if (strtolower($model)!='apimodel') {
 
-      if (file_exists(APPPATH.'/models/api/'.$model.'.php') or file_exists(SITEPATH.'/models/api/'.$model.'.php')) {
+      if (file_exists(APPPATH.'/models/api/'.ucfirst($model).'.php') or file_exists(SITEPATH.'/models/api/'.ucfirst($model).'.php')) {
        // Load Model
        $this->load->model('api/'.$model);
        // Call model/method
