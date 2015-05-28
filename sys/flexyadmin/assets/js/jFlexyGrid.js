@@ -163,7 +163,7 @@ function doGrid() {
         
   		});
     }
-    make_tree(true);
+    if ($("table.grid tr td.self_parent").length>0) make_tree(true);
 		
 		if ($.browser.safari)
 			$("table.grid .self_parent").add("table.grid .uri").addClass('hiddenCell').show();
