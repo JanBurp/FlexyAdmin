@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<phpunit
+  bootstrap="sys/flexyadmin/tests/bootstrap.php"
+	colors="true"
+	convertNoticesToExceptions="false"
+	convertWarningsToExceptions="false"
+	stopOnError="false"
+	stopOnFailure="false"
+	stopOnIncomplete="false"
+	stopOnSkipped="false">
+  
+	<testsuites>
+		<testsuite name="FlexyAdmin Test Suite">
+      <directory suffix="Test.php">sys/flexyadmin/tests</directory>
+      <exclude>sys/flexyadmin/tests/_old</exclude>
+		</testsuite>
+	</testsuites>
+  
+	<php>
+		<const name="PHPUNIT_TEST" value="1" />
+		<server name="REMOTE_ADDR" value="127.0.0.1" />
+	</php>
+
+	<filter>
+		<blacklist>
+      <directory suffix=".php">sys/codeigniter</directory>
+      <directory suffix=".php">sys/flexyadmin/libraries</directory>
+		</blacklist>
+	</filter>
+
+</phpunit>

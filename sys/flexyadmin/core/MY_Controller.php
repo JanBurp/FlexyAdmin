@@ -14,6 +14,7 @@ class MY_Controller extends CI_Controller {
 
 	public function __construct($isAdmin=false) {
 		parent::__construct();
+    if (defined('PHPUNIT_TEST')) return;
     
 		if ($this->_check_if_flexy_database_exists())
 			$this->_init_flexy_admin($isAdmin);

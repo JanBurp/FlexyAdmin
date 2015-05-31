@@ -486,23 +486,25 @@ class FrontEndController extends MY_Controller {
    * @author Jan den Besten
    */
 	public function view($view='',$data=array(),$return=FALSE) {
-    $default=array('assets'=>assets(),'language'=>el('language',$this->site,$this->config->item('language')));
-    $main_view=(empty($view));
-		if (empty($data)) {
-      $data=$this->site;
-      if ($main_view and isset($data['content'])) {
-        $data['content']=$this->content->render($data['content']);
+    if (!defined('PHPUNIT_TEST')) {
+      $default=array('assets'=>assets(),'language'=>el('language',$this->site,$this->config->item('language')));
+      $main_view=(empty($view));
+  		if (empty($data)) {
+        $data=$this->site;
+        if ($main_view and isset($data['content'])) {
+          $data['content']=$this->content->render($data['content']);
+        }
       }
-    }
-    $data=array_merge($default,$data);
+      $data=array_merge($default,$data);
 
-		if ($main_view) {
-			$view=$this->config->item('main_view');
-		}
-    $html=$this->load->view($view,$data,TRUE);
-    if ($main_view) $html=$this->content->render($html,true);
-    if (!$return) echo $html;
-		return $html;
+  		if ($main_view) {
+  			$view=$this->config->item('main_view');
+  		}
+      $html=$this->load->view($view,$data,TRUE);
+      if ($main_view) $html=$this->content->render($html,true);
+      if (!$return) echo $html;
+  		return $html;
+    }
 	}
   
   /**

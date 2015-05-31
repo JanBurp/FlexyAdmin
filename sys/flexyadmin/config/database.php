@@ -13,7 +13,12 @@ foreach (array('default','local') as $group) {
   $db[$group]['cachedir'] = "";
   $db[$group]['char_set'] = "utf8";
   $db[$group]['dbcollat'] = "utf8_general_ci";
+
+  if (defined('PHPUNIT_TEST')) {
+    $db[$group]['db_debug'] = FALSE;
+  }
 }
+
 
 /* End of file database.php */
 /* Location: ./system/application/config/database.php */
