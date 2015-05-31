@@ -82,17 +82,30 @@
 // define("ERROR_EMAIL","error@flexyadmin.com");
 
 /*
+ *------------------------------------------------------------------------------------------------
+ * FLEXYADMIN: Set the default timezone
+ *------------------------------------------------------------------------------------------------
+ */
+date_default_timezone_set('Europe/Amsterdam');
+
+/*
  *---------------------------------------------------------------
  * FLEXYADMIN: set IS_LOCALHOST, for a local enverinment
  *---------------------------------------------------------------
  * You can set several localhosts if needed.
  */
-define("LOCALHOSTS","localhost,localhost:8888,10.37.129.2");
-function is_local_host() { $is=FALSE; $localhosts=explode(",",LOCALHOSTS); foreach ($localhosts as $host) { if ($host==$_SERVER['HTTP_HOST']) { $is=TRUE; } } return $is; }
-if (is_local_host())
-	define("IS_LOCALHOST",TRUE);
-else
-	define("IS_LOCALHOST",FALSE);
+if (defined('PHPUNIT_TEST')) {
+  define("IS_LOCALHOST",TRUE);
+}
+else {
+  define("LOCALHOSTS","0.0.0.0,localhost,localhost:8888,10.37.129.2");
+  function is_local_host() { $is=FALSE; $localhosts=explode(",",LOCALHOSTS); foreach ($localhosts as $host) { if ($host==$_SERVER['HTTP_HOST']) { $is=TRUE; } } return $is; }
+  if (is_local_host())
+  	define("IS_LOCALHOST",TRUE);
+  else
+  	define("IS_LOCALHOST",FALSE);
+}
+
 
 /*
  *---------------------------------------------------------------
@@ -125,10 +138,14 @@ else
 /*
  * FLEXYADMIN: Set according to IS_LOCALHOST
  */
-if (IS_LOCALHOST)
+if (defined('PHPUNIT_TEST')) {
+  define('ENVIRONMENT','testing');
+}
+elseif (IS_LOCALHOST)
   define('ENVIRONMENT', 'development');
 else
   define('ENVIRONMENT', 'production');
+
 // define('ENVIRONMENT','testing');   // This sets logging on
   
 

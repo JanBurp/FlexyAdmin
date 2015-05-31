@@ -26,7 +26,10 @@ $config['framework']='default';
 |	First tries to create one automaticaly (JdB), see: https://github.com/EllisLab/CodeIgniter/wiki/Automatic-base-url
 */
 
-if (isset($_SERVER['HTTP_HOST']) and isset($_SERVER['SCRIPT_NAME'])) {
+if (defined('PHPUNIT_TEST')) {
+  $config['base_url']="http://localhost/FlexyAdmin/FlexyAdminDEMO/_tests";
+}
+elseif (isset($_SERVER['HTTP_HOST']) and isset($_SERVER['SCRIPT_NAME'])) {
   $config['base_url']="http://".$_SERVER['HTTP_HOST'];
   $config['base_url'].=str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']);
 }

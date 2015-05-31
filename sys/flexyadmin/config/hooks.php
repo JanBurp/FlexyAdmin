@@ -11,3 +11,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |	http://codeigniter.com/user_guide/general/hooks.html
 |
 */
+
+if (defined('PHPUNIT_TEST')) {
+  $hook['display_override'] = array();
+}
