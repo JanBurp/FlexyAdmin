@@ -23,6 +23,7 @@ UPDATE xxxx
 ===========
 
 - Run SQL Update update_r3067.sql (Deze update kan niet binnen FlexyAdmin gedaan worden, gebruik dus PhpMyAdmin oid)
+- Vervang .htaccess en htaccess.htaccess (of voeg iig de code onder dit commentaar toe # Tell IE to use latest engine)
 - Update naar CI 3.x:
   - Vervang de map `sys`
   - Vervang `index.php`
@@ -30,11 +31,10 @@ UPDATE xxxx
     - of vervang '$this->ajax_module' door '$this->is_ajax_module`
   - Vervang `site/language/nl/regex_validation_lang.php`
   - Verwijder de map `bulk_upload`
-  - Login als admin
-  - Run update script: `admin/update/code/3067`
-  - Run update script: `admin/update/code/3089`
-  - Run daarna update script: : `admin/update/all`
-- Vervang .htaccess en htaccess.htaccess (of voeg iig de code onder dit commentaar toe # Tell IE to use latest engine)
+  - Login als admin:
+    - Run update script: `admin/update/code/3067`
+    - Run update script: `admin/update/code/3089`
+    - Run daarna update script: : `admin/update/all`
 
 
 UPDATE 3063
