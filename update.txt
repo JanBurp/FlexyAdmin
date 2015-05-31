@@ -34,6 +34,7 @@ UPDATE xxxx
   - Run update script: `admin/update/code/3067`
   - Run update script: `admin/update/code/3089`
   - Run daarna update script: : `admin/update/all`
+- Vervang .htaccess en htaccess.htaccess (of voeg iig de code onder dit commentaar toe # Tell IE to use latest engine)
 
 
 UPDATE 3063
