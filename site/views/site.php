@@ -11,7 +11,6 @@
 <html lang="<?=$language?>">
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <base href="<?=base_url()?>">
@@ -21,8 +20,7 @@
   <meta name="Description" content="<?=ascii_to_entities($description);?>">
   <meta name="Keywords" content="<?=$keywords;?>">
   <meta name="Author" content="<?=$author;?>">
-  <meta name="web_author" content="Jan den Besten">
-  <meta name="copyright" content="Jan den Besten,<?=$author;?>">
+  <meta name="dcterms.rightsHolder" content="Jan den Besten,<?=$author;?>">
   <meta name="robots" content="index,follow">
   <meta name="revisit-after" content="7 days">
 
@@ -60,7 +58,7 @@
   </div>
   
   <!-- main navigation -->
-  <nav id="menu" class="navbar navbar-default" role="navigation">
+  <nav id="menu" class="navbar navbar-default">
     <div class="container">
       <span class="fa fa-bars mobile-only"></span>
       <?=$menu?>

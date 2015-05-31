@@ -3,6 +3,14 @@ RewriteEngine on
 RewriteCond $1 !^(index\.php|site/assets|sys/flexyadmin/assets|sys/tinymce|sys/jquery|sitemap\.xml|robots\.txt|sys/__test)
 RewriteRule ^(.*)$ index.php/$1 [L]
 
+# Tell IE to use latest engine
+<FilesMatch "\.(htm|html|php)$">
+  <IfModule mod_headers.c>
+    BrowserMatch MSIE ie
+    Header set X-UA-Compatible "IE=Edge,chrome=1" env=ie
+  </IfModule>
+</FilesMatch>
+
 # gzip site method 1: (test on http://www.feedthebot.com/tools/gzip/)
 # <ifModule mod_gzip.c>
 # mod_gzip_on Yes
