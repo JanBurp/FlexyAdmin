@@ -1134,8 +1134,8 @@ class Form {
     
 		if ($field["type"]=="hidden") return $field['control'];
     $field['horizontal_bootstrap']=($this->framework=='bootstrap' and has_string('form-horizontal',$form_class));
-    // trace_($field);
-    $rendered_field=$this->CI->load->view($this->view_path.'/field',array('field'=>$field,'styles'=>$this->styles[$this->framework]),true);
+    $attributes=implode_attributes(el('attributes',$field,array()));
+    $rendered_field=$this->CI->load->view($this->view_path.'/field',array('field'=>$field,'styles'=>$this->styles[$this->framework],'attributes'=>$attributes),true);
 		return $rendered_field;
 	}
 
