@@ -11,10 +11,29 @@
 	stopOnSkipped="false">
   
 	<testsuites>
-		<testsuite name="FlexyAdmin Test Suite">
-      <directory suffix="Test.php">sys/flexyadmin/tests</directory>
+    
+    <!-- Real Unit tests, fast and no need for demo database -->
+    <testsuite name="fast">
+      <directory suffix="Test.php">sys/flexyadmin/tests/fast</directory>
+		</testsuite>
+
+    <!-- Test this before committing: the fast unit tests, and testing the code for debug actions -->
+    <testsuite name="commit">
+      <directory suffix="Test.php">sys/flexyadmin/tests/fast</directory>
+      <directory suffix="Test.php">sys/flexyadmin/tests/commit</directory>
+      <file>site/tests/frontend/DebugTest.php</file>
+		</testsuite>
+
+    <!-- Just test the frontend -->
+		<testsuite name="frontend">
       <directory suffix="Test.php">site/tests</directory>
 		</testsuite>
+
+    <!--Heavy testing: auth, api, which assumes the demo database is present -->
+    <testsuite name="demo_db">
+      <directory suffix="Test.php">sys/flexyadmin/tests/demo_db</directory>
+		</testsuite>
+    
 	</testsuites>
   
 	<php>
