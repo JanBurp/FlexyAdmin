@@ -35,6 +35,21 @@ class MY_URI extends CI_URI {
 		$this->set_home();
 		$this->set_remove();
 	}
+  
+  /**
+   * Set uri for testing purposes
+   *
+   * @param string $str 
+   * @return this
+   * @author Jan den Besten
+   */
+  public function set_uri($str) {
+    if (defined('PHPUNIT_TEST')) {
+      $this->segments=array();
+      $this->_set_uri_string($str);
+    }
+    return $this;
+  }
 
   /**
    * Stel uri van homepage in

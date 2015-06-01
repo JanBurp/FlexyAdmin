@@ -139,13 +139,18 @@ function strace_($a=NULL) {
 function trace_($a=NULL,$echo=true,$backtraceOffset=1,$max=50) {
 	$CI=&get_instance();
 	static $c=0;
-  if ($c==0 and !IS_AJAX) {
+  if ($c==0 and !IS_AJAX and !defined('PHPUNIT_TEST')) {
     echo "<style>._trace {position:relative;margin:2px;padding:5px;overflow:auto;color:#000;font-family:courier,serif;font-size:10px;line-height:14px;border:solid 1px #666;background-color:#efe;opacity:.95;z-index:99999;}._trace a {color:#000;font-family:courier,serif;font-size:10px;line-height:14px;text-decoration:underline;}</style>";
   }
-  if (IS_AJAX)
+  if (IS_AJAX or defined('PHPUNIT_TEST')) {
     $out='';
-  else
+  }
+  else {
     $out='<pre class="_trace">';
+  }
+  if (defined('PHPUNIT_TEST')) {
+   $out.="\e[32m";
+  }
   if ($c>=$max) {
     if ($c==$max) $out.="TOO MANY TRACES, MAYBE A LOOP BUG...";
   }
@@ -169,7 +174,7 @@ function trace_($a=NULL,$echo=true,$backtraceOffset=1,$max=50) {
   	else
   		$out.=print_r(tr_string($a),true);
   }
-  if (IS_AJAX)
+  if (IS_AJAX  or defined('PHPUNIT_TEST'))
     $out.=" ENDTRACE\n";
   else
     $out.='</pre>';
@@ -259,7 +264,7 @@ function print_ar($array,$return=false,$tabs=0,$brackets="()") {
   	$out=$bl.$eol;
   	foreach($array as $key=>$value) {
   		$out.=tabs($tabs);
-      if (IS_AJAX)
+      if (IS_AJAX  or defined('PHPUNIT_TEST'))
         $thisOut="[".$key."] => ";
       else
         $thisOut="<b>[".$key."]</b> => ";
