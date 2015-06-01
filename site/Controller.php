@@ -26,6 +26,8 @@ class Main extends FrontEndController {
 	 * Elke uri wordt hier afgehandeld
 	 */
 	public function index() {
+    
+    if (defined('PHPUNIT_TEST')) return;
 		
     /********************************************
      * Als een AJAX request binnenkomt, stuur deze door naar de desbetreffende ajax module en roep de desbetreffende method aan.
