@@ -29,6 +29,7 @@ UPDATE xxxx
   - Vervang `index.php`
   - Vervang `site/controller.php` door `Controller.php`
     - of vervang '$this->ajax_module' door '$this->is_ajax_module`
+    - en voeg `if (defined('PHPUNIT_TEST')) return;` op regel 30
   - Vervang `site/language/nl/regex_validation_lang.php`
   - Verwijder de map `bulk_upload`
   - Login als admin:

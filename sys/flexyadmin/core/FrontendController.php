@@ -43,6 +43,8 @@ class FrontEndController extends MY_Controller {
 	public function __construct() {
 		parent::__construct();
     
+    if (defined('PHPUNIT_TEST')) return;
+    
     // In testmode a temp message will be shown (if not logged in as administrator) and sitemap.xml is deleted
     if ($this->config->item('testmode')) {
       $this->load->library('user');
@@ -486,25 +488,23 @@ class FrontEndController extends MY_Controller {
    * @author Jan den Besten
    */
 	public function view($view='',$data=array(),$return=FALSE) {
-    if (!defined('PHPUNIT_TEST')) {
-      $default=array('assets'=>assets(),'language'=>el('language',$this->site,$this->config->item('language')));
-      $main_view=(empty($view));
-  		if (empty($data)) {
-        $data=$this->site;
-        if ($main_view and isset($data['content'])) {
-          $data['content']=$this->content->render($data['content']);
-        }
+    $default=array('assets'=>assets(),'language'=>el('language',$this->site,$this->config->item('language')));
+    $main_view=(empty($view));
+		if (empty($data)) {
+      $data=$this->site;
+      if ($main_view and isset($data['content'])) {
+        $data['content']=$this->content->render($data['content']);
       }
-      $data=array_merge($default,$data);
-
-  		if ($main_view) {
-  			$view=$this->config->item('main_view');
-  		}
-      $html=$this->load->view($view,$data,TRUE);
-      if ($main_view) $html=$this->content->render($html,true);
-      if (!$return) echo $html;
-  		return $html;
     }
+    $data=array_merge($default,$data);
+
+		if ($main_view) {
+			$view=$this->config->item('main_view');
+		}
+    $html=$this->load->view($view,$data,TRUE);
+    if ($main_view) $html=$this->content->render($html,true);
+    if (!$return) echo $html;
+		return $html;
 	}
   
   /**
