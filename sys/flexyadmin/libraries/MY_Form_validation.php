@@ -69,8 +69,12 @@ class MY_Form_validation extends CI_Form_validation {
   public function validate_data($data,$table='') {
     // For fetching the labels
     $this->CI->load->model('ui');
-    // Set data
+    // (re)Set data
     $this->set_data($data);
+    $this->_field_data=array();
+    $this->_config_rules=array();
+    $this->_error_array=array();
+    $this->_error_messages=array();
     // Set rules
 		foreach($data as $field=>$value) {
       $thisTable=$table;
