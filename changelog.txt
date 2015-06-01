@@ -7,7 +7,7 @@ UPDATE:
 NEW:
 - Update tool: admin/update
 - $_GET is always on now
-- Unit Testing with PhpUnit
+- Unit met PPHunit (en CIunit verwijderd)
 
 CHANGED:
 - MY_Pagination has now own config file site/config/pagination.php for template settings
