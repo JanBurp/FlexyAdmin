@@ -28,12 +28,6 @@
 $route['(?!__api|admin|rss|file|_media|_cronjob|_unittest|_ajax|_api)(.*)'] = "";
 
 /**
- * CI unit test
- */
-$route['_unittest'] = "ciunit_controller/index";
-$route['_unittest/(.*)'] = "ciunit_controller/index/$1";
-
-/**
  * Frontend Ajax testing
  */
 $route['_ajax'] = "ajax/index";

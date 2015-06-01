@@ -100,7 +100,7 @@ class ApiMediaTest extends ApiTestModel {
     // UPLOADING files
     // $upload_files=scandir($this->upload_path);
     // $upload_files=array_slice($upload_files,2,2);
-    // $this->CI->load->view('ciunit/upload',array('files'=>$upload_files));
+    // $this->CI->load->view('../upload',array('files'=>$upload_files));
     // foreach ($upload_files as $file) {
     //   trace_($this->upload_path.'/'.$file);
     //   $_FILES      = array( 'file' => array(
