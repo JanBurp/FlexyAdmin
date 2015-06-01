@@ -23,9 +23,9 @@ UPDATE xxxx
 ===========
 
 - Run SQL Update update_r3067.sql (Deze update kan niet binnen FlexyAdmin gedaan worden, gebruik dus PhpMyAdmin oid)
-- Vervang .htaccess en htaccess.htaccess (of voeg iig de code onder dit commentaar toe # Tell IE to use latest engine)
-- Vervang site/tests
-- Update naar CI 3.x:
+- Vervang .htaccess en htaccess.htaccess (of voeg iig de code onder dit commentaar toe: # Tell IE to use latest engine)
+- Vervang de map site/tests
+- Update naar CI3.x (ea):
   - Vervang de map `sys`
   - Vervang `index.php`
   - Vervang `site/controller.php` door `Controller.php`
