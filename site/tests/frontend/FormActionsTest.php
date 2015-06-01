@@ -1,6 +1,8 @@
 <?php
 
-class FormActionsTest extends CIUnit_Framework_TestCase {
+require_once('sys/flexyadmin/tests/CITestCase.php');
+
+class FormActionsTest extends CITestCase {
 
   private $settings=array();
 

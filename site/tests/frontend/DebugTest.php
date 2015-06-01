@@ -1,23 +1,9 @@
 <?php
 
-class DebugTest extends CIUnit_Framework_TestCase {
+require_once('sys/flexyadmin/tests/CITestCase.php');
 
-  protected function setUp () {
-    // $this->CI->load->model('cfg');
-    // $this->CI->load->helper('language');
-    // // Load basic modules
-    // $this->CI->load->library('Menu');
-    // $this->CI->load->library('Forms');
-    // $this->CI->load->library('Email');
-    // $this->CI->load->library('Module');
-    // $this->CI->load->library('Ajax_module');
-    // $this->CI->load->model('formaction');
+class DebugTest extends CITestCase {
 
-    $this->CI->config->load('unittest');
-  }
-    
-
-  
   /**
    * Test of er nog debughelper commando's zijn
    *
