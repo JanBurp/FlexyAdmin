@@ -1,6 +1,8 @@
 <?php
 
-class ModulesTest extends CIUnit_Framework_TestCase {
+require_once('sys/flexyadmin/tests/CITestCase.php');
+
+class ModulesTest extends CITestCase {
 
   private $settings=array();
 
@@ -9,18 +11,12 @@ class ModulesTest extends CIUnit_Framework_TestCase {
     $this->CI->load->helper('language');
     // Load basic modules
     $this->CI->load->library('Menu');
-    $this->CI->load->library('Forms');
+    // $this->CI->load->library('Forms');
     $this->CI->load->library('Module');
-    // $this->CI->load->library('Ajax_module');
-
-    $this->CI->config->load('unittest');
   }
     
-    
-  
-    
   /**
-   * Test (ajax)modules
+   * Test Modules
    */
   public function test_modules()  {
     $page=$this->CI->config->item('page');
