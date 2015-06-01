@@ -4,13 +4,6 @@
  * Instellingen voor unittest FrontEndTest
  */
 
-
-/**
- * Test of er nog debughelpers in de code staan (trace_ e.d.)
- */
-$config['check_if_debug_code'] = true;
-
-
 /**
  * Standaard gebruikte testpagina $page
  */
@@ -34,7 +27,6 @@ $config['modules'] = array(
   //   'ajax_example.other'  => array('assertEquals','{"message":"Ajax_example","method":"other","module":"example","success":true}'),
   // ),
 );
-
 
 
 /**
