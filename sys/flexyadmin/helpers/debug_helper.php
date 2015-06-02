@@ -151,29 +151,39 @@ function trace_($a=NULL,$echo=true,$backtraceOffset=1,$max=50) {
   if (defined('PHPUNIT_TEST')) {
    $out.="\e[32m";
   }
-  if ($c>=$max) {
-    if ($c==$max) $out.="TOO MANY TRACES, MAYBE A LOOP BUG...";
-  }
-  else {
-  	$show="";
-  	if (!isset($a)) {
-  		$a=backtrace_($backtraceOffset,10,false);
-  		$show="NULL -> BACKTRACE ";
-  		$type="";
-  	}
-  	else {
-      $type="[".gettype($a).(is_array($a)?'-'.count($a):'')."]";
-  	}
-    $out.="TRACE $show#$c$type:";
-  	if (is_bool($a)) {
-  		if ($a) $out.="'True'";
-  		else		$out.="'False'";
-  	}
-  	elseif (is_array($a) or is_object($a))
-  		$out.=print_ar(array_($a,true),true,2);//strlen($show.$type)+3);
-  	else
-  		$out.=print_r(tr_string($a),true);
-  }
+  
+  // echo $out;
+  ob_start();
+  var_dump($a);
+  $out.=ob_get_contents();
+  
+  ob_end_clean();
+
+  // if ($c>=$max) {
+  //   if ($c==$max) $out.="TOO MANY TRACES, MAYBE A LOOP BUG...";
+  // }
+  // else {
+  //   $show="";
+  //   if (!isset($a)) {
+  //     $a=backtrace_($backtraceOffset,10,false);
+  //     $show="NULL -> BACKTRACE ";
+  //     $type="";
+  //   }
+  //   else {
+  //     $type="[".gettype($a).(is_array($a)?'-'.count($a):'')."]";
+  //   }
+  //   $out.="TRACE $show#$c$type:";
+  //   if (is_bool($a)) {
+  //     if ($a) $out.="'True'";
+  //     else    $out.="'False'";
+  //   }
+  //   elseif (is_array($a) or is_object($a))
+  //     $out.=print_ar(array_($a,true),true,2);//strlen($show.$type)+3);
+  //   else
+  //     $out.=print_r(tr_string($a),true);
+  // }
+  
+  // $out='';
   if (IS_AJAX  or defined('PHPUNIT_TEST'))
     $out.=" ENDTRACE\n";
   else
