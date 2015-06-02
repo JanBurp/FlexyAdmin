@@ -6,9 +6,7 @@ $db['phpunit']['hostname'] = "127.0.0.1";
 $db['phpunit']['username'] = "root";
 $db['phpunit']['password'] = "eonisme";
 $db['phpunit']['database'] = "flexyadmin_demo";
-if (IS_LOCALHOST and defined('PHPUNIT_TEST')) {
-  $active_group = "phpunit";
-}
+
 
 // Always on
 $query_builder = TRUE;
@@ -28,7 +26,6 @@ foreach (array('default','local','phpunit') as $group) {
     $db[$group]['db_debug'] = FALSE;
   }
 }
-
 
 /* End of file database.php */
 /* Location: ./system/application/config/database.php */
