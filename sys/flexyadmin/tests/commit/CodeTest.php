@@ -2,7 +2,7 @@
 
 require_once('sys/flexyadmin/tests/CITestCase.php');
 
-class ZZ_CodeTest extends CITestCase {
+class CodeTest extends CITestCase {
 
   /**
    * Test of er nog debughelper commando's zijn (SLOW)

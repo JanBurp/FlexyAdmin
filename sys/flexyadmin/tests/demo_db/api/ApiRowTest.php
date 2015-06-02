@@ -14,17 +14,17 @@ class ApiRowTest extends ApiTestModel {
         'str_title' => 'Update',
       ),
     ),
-    array(
-      'table' => 'tbl_links',
-      'insert'  => array(
-        'url_url'   => 'http://www.flexyadmin.com',
-        'str_title' => 'FlexyAdmin 1',
-      ),
-      'update'  => array(
-        'url_url'   => 'http://www.flexyadmin.nl',
-        'str_title' => 'FlexyAdmin 2',
-      ),
-    ),
+    // array(
+    //   'table' => 'tbl_links',
+    //   'insert'  => array(
+    //     'url_url'   => 'http://www.flexyadmin.com',
+    //     'str_title' => 'FlexyAdmin 1',
+    //   ),
+    //   'update'  => array(
+    //     'url_url'   => 'http://www.flexyadmin.nl',
+    //     'str_title' => 'FlexyAdmin 2',
+    //   ),
+    // ),
     
     array(
       'table' => 'tbl_menu',

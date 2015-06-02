@@ -36,6 +36,20 @@
     
 	</testsuites>
   
+  <listeners>
+    <listener class="JohnKary\PHPUnit\Listener\SpeedTrapListener" file='vendor/johnkary/phpunit-speedtrap/src/JohnKary/PHPUnit/Listener/SpeedTrapListener.php'/>
+    <arguments>
+      <array>
+        <element key="slowThreshold">
+          <integer>200</integer>
+        </element>
+        <element key="reportLength">
+          <integer>7</integer>
+        </element>
+      </array>
+    </arguments>
+  </listeners>
+  
 	<php>
 		<const name="PHPUNIT_TEST" value="1" />
 		<server name="REMOTE_ADDR" value="127.0.0.1" />
