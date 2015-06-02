@@ -1,10 +1,20 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 require_once(SITEPATH.'/config/database.php');
 
+// Set test database settings for phpunit testing
+$db['phpunit']['hostname'] = "127.0.0.1";
+$db['phpunit']['username'] = "root";
+$db['phpunit']['password'] = "eonisme";
+$db['phpunit']['database'] = "flexyadmin_demo";
+if (IS_LOCALHOST and defined('PHPUNIT_TEST')) {
+  $active_group = "phpunit";
+}
+
+// Always on
 $query_builder = TRUE;
 
 // Make sure all settings are ok
-foreach (array('default','local') as $group) {
+foreach (array('default','local','phpunit') as $group) {
   $db[$group]['dbdriver'] = "mysqli";
   $db[$group]['dbprefix'] = "";
   $db[$group]['pconnect'] = FALSE;
