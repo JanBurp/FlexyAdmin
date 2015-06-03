@@ -1,5 +1,11 @@
 #!/bin/sh
 
+#
+# Dit script runt phpunit voor een commit
+# - Als de testen zonder fouten zijn gaat de commit verder
+# - Als er wel fouten zijn komt er een melding
+#
+
 cd ~/Sites/FlexyAdmin/FlexyAdminDEMO
 EXITCODE= /usr/local/bin/phpunit >&2
 
