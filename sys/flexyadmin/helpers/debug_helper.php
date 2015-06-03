@@ -140,7 +140,7 @@ function trace_($a=NULL,$echo=true,$backtraceOffset=1,$max=50) {
 	$CI=&get_instance();
 	static $c=0;
   if ($c==0 and !IS_AJAX and !defined('PHPUNIT_TEST')) {
-    echo "<style>._trace {position:relative;margin:2px;padding:5px;overflow:auto;color:#000;font-family:courier,serif;font-size:10px;line-height:14px;border:solid 1px #666;background-color:#efe;opacity:.95;z-index:99999;}._trace a {color:#000;font-family:courier,serif;font-size:10px;line-height:14px;text-decoration:underline;}</style>";
+    echo "<style>._trace {box-sizing:border-box;position:relative;width:100%;float:left;margin:2px;padding:5px;overflow:auto;color:#000;font-family:courier,serif;font-size:10px;line-height:14px;border:solid 1px #666;background-color:#efe;opacity:.95;z-index:99999;}</style>";
   }
   if (IS_AJAX or defined('PHPUNIT_TEST')) {
     $out='';
@@ -151,12 +151,12 @@ function trace_($a=NULL,$echo=true,$backtraceOffset=1,$max=50) {
   if (defined('PHPUNIT_TEST')) {
    $out.="\e[32m";
   }
-  
+  $out.='TRACE ['.$c.']';
   // echo $out;
   ob_start();
   var_dump($a);
   $out.=ob_get_contents();
-  
+  $out=preg_replace("/<font/ui", "<font style=\"white-space:nowrap;\" ", $out);
   ob_end_clean();
 
   // if ($c>=$max) {
