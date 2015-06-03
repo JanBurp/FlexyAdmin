@@ -20,6 +20,22 @@ function icon($class="",$s="",$extraClass="",$a="") {
 }
 
 /**
+ * Geeft alle images (src) terug uit een (html) tekst
+ *
+ * @param string $text 
+ * @return array
+ * @author Jan den Besten
+ */
+function get_images_from_text($text) {
+  $images=NULL;
+  if(preg_match("/<img(.*)src=\"([^\"]*)\"/ui", $text, $matches)) {
+    $images=$matches[2];
+    if (!is_array($images)) $images=array($images);
+  }
+  return $images;
+}
+
+/**
  * Geeft thumb
  *
  * @param mixed $attr 
