@@ -9,7 +9,7 @@ class StringHelperTest extends CITestCase {
   }
 
   public function testJustTest() {
-    $this->assertEquals(true,true);
+    $this->assertEquals(true,false);
   }
   
   public function testRepeater() {
