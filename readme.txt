@@ -7,3 +7,4 @@ All other libraries in /sys/ are LGPL, MIT or Apache licences or noted.
 
 == LOGIN ==
 Log in as admin/admin or user/user with the default database
+
