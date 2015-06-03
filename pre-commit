@@ -1,0 +1,6 @@
+#!/bin/sh
+
+cd ~/Sites/FlexyAdmin/FlexyAdminDEMO
+EXITCODE= /usr/local/bin/phpunit >&2
+
+exit $EXITCODE
