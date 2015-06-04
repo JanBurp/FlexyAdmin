@@ -159,9 +159,12 @@ $config['auto_pagination']	= TRUE;
  * - $config['autoload_modules_if'] = array( 'submenu'=>array('str_module'=>'page') );   // Loads module 'submenu' when str_module='page'
  * - $config['autoload_modules_if'] = array( 'page'=>array('str_module'=>'') );          // Loads module 'page' when str_module=''
  * - $config['autoload_modules_if'] = array( 'page'=>array('str_module'=>''), 'submenu'=>array('str_module'=>'page') );          // Combination
+ * 
+ * With 'error404_module' you can set a module if a page is not found
  */
 // $config['autoload_modules'] = array('login');
 // $config['autoload_modules_if'] = array( 'login'=>array('b_restricted'=>'true') );
+// $config['error404_module'] = 'fallback';
 
 /*
  *--------------------------------------------------------------------------
