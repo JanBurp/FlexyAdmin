@@ -424,7 +424,7 @@ class FrontEndController extends MY_Controller {
     $page=array();
     $page['str_title']=' ';
     $page['txt_text']=$this->view('error','',true);
-      
+    if ($this->config->item('error404_module')) $page['str_module']=$this->config->item('error404_module');
   	// Load and call modules
     $page=$this->_module($page);
 		// Add page content (if no break)
