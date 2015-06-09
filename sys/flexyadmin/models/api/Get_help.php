@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * API: Geeft een help pagina voor in de backend van FlexyAdmin

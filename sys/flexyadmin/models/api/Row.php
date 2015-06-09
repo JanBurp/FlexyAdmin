@@ -1,4 +1,4 @@
-<?
+<?php
 
 /** \ingroup models
  * API row. Geeft, bewerkt of voegt een record toe aan een tabel.

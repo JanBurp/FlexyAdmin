@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * API: Geeft het admin menu terug voor in het backend deel van FlexyAdmin.

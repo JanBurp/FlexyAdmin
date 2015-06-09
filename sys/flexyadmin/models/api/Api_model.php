@@ -1,4 +1,4 @@
-<?
+<?php
 
 /** \ingroup models
  * Core API model: Roept de opgevraagde API aan en verzorgt het resultaat
