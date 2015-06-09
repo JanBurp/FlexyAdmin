@@ -1,11 +1,12 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-require_once(SITEPATH.'/config/database.php');
 
 // Set test database settings for phpunit testing
 $db['phpunit']['hostname'] = "127.0.0.1";
 $db['phpunit']['username'] = "root";
 $db['phpunit']['password'] = "eonisme";
 $db['phpunit']['database'] = "flexyadmin_demo";
+
+require_once(SITEPATH.'/config/database.php');
 
 
 // Always on
