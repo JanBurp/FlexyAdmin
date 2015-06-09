@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * API: Geeft plugin pagina, voor backend van FlexyAdmin

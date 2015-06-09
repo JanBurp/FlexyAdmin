@@ -1,4 +1,4 @@
-<?
+<?php
 
 /** \ingroup models
  * API: media. Geeft een lijst, bewerkt of upload bestanden toe aan een map.
