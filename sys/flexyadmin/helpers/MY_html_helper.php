@@ -62,7 +62,8 @@ if ( ! function_exists('nbs'))
 function html($tag,$a=array(),$end=FALSE) {
 	if (!is_array($a)) $a=array("class"=>$a);
 	$attr=attributes($a);
-	$out="<$tag $attr";
+	$out="<$tag";
+  if (!empty($attr)) $out.=' '.$attr;
 	if ($end) $out.=" /";
 	$out.=">";
 	return $out;
