@@ -25,7 +25,7 @@
  * @copyright (c) Jan den Besten
  */
 
-class Page extends Api_Model {
+class Page extends Api_model {
   
   var $needs = array(
     'uri'   => '',
