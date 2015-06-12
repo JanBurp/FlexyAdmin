@@ -82,6 +82,43 @@ function read_map($path,$types='',$recursive=FALSE,$getInfo=TRUE,$getMetaData=FA
 	return $files;
 }
 
+
+/**
+ * Snel scannen van een map en submappen
+ *
+ * @param string $path 
+ * @param string $types = ''
+ * @param bool $recursive = FALSE
+ * @return array
+ * @author Jan den Besten
+ */
+function scan_map($path,$types='',$recursive=FALSE) {
+  $path=rtrim($path,'/');
+	if (!empty($types) and !is_array($types)) $types=explode(',',$types);
+	$files=array();
+	if(is_dir($path)) {
+		if($dh = opendir($path)) {
+			while(($file = readdir($dh)) !== false) {
+				if ($file!='.' and $file!='..' and substr($file,0,1)!='.') {
+          if (is_dir($path.'/'.$file)) {
+						if ($recursive) {
+              $subfiles=scan_map($path."/".$file, $types, TRUE);
+              $files=array_merge($files,$subfiles);
+						}
+					}
+          elseif (empty($types) or in_array(get_suffix($file,'.'),$types)) {
+            $files[]=$path.'/'.$file;
+          }
+				}
+			}
+			closedir($dh);
+		}
+	}
+	return $files;
+}
+
+
+
 /**
  * Maakt de meegegeven directory leeg
  *

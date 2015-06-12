@@ -11,7 +11,7 @@ class CodeTest extends CITestCase {
    * @author Jan den Besten
    */
   public function test_debug_code() {
-    $files=read_map('sys/flexyadmin','php',true,false,false,false);
+    $files=scan_map('sys/flexyadmin','php',true);
     unset($files['sys/flexyadmin/helpers/debug_helper.php']);
     foreach ($files as $file) {
       $lines=file($file['path']);

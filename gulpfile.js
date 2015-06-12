@@ -143,6 +143,8 @@ var stylish     = require('jshint-stylish');
 var uglify      = require('gulp-uglify');
 var flatten     = require('gulp-flatten');
 
+var phpunit     = require('gulp-phpunit');
+
 
 /**
  * Calling 'gulp --build' minify the css (without sourcemaps)
@@ -282,10 +284,7 @@ gulp.task('cssmin',['less'],function(){
         }));
 });
 
-
 gulp.task('default', ['jshint','jsmin','less','cssmin'] );
-
-
 
 // Watchers
 gulp.task('watch', function() {
@@ -304,3 +303,25 @@ gulp.task('watch', function() {
   ], { interval: watch_interval } ).on('change', livereload.changed);
   
 });
+
+
+
+
+/**
+ * PHPUNIT TESTS
+ */
+gulp.task('phpunit', function() {
+   gulp.src('phpunit.xml')
+     .pipe(phpunit('/usr/local/bin/phpunit', {notify: true}))
+     .on('error', notify.onError('phpunit FAILED'))
+     .pipe(notify({
+       title:'phpunit',
+       message:'phpunit OK!'
+     }));
+});
+
+gulp.task('watch_php', function() {
+  gulp.watch( [ 'site/tests/**/*Test.php', 'sys/flexyadmin/tests/**/*Test.php'], { interval: watch_interval }, ['phpunit'] );
+});
+
+

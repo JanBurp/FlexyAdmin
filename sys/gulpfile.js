@@ -95,6 +95,8 @@ var stylish     = require('jshint-stylish');
 var uglify      = require('gulp-uglify');
 var flatten     = require('gulp-flatten');
 
+var phpunit     = require('gulp-phpunit');
+
 /**
  * Calling 'gulp --build' minify the css (without sourcemaps)
  */

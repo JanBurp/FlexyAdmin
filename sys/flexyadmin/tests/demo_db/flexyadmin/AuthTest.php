@@ -47,9 +47,6 @@ class AuthTest extends CITestCase {
     $this->assertFalse( $this->CI->user->login( '', '' ), 'Login must fail with empty password/username');
 
     $this->assertFalse( $this->CI->user->login( random_string(), random_string() ), 'Login must fail with random username/password');
-    $this->assertFalse( $this->CI->user->login( random_string(), random_string() ), 'Login must fail with random username/password');
-    $this->assertFalse( $this->CI->user->login( random_string(), random_string() ), 'Login must fail with random username/password');
-    $this->assertFalse( $this->CI->user->login( random_string(), random_string() ), 'Login must fail with random username/password');
   }
   
   

@@ -21,7 +21,7 @@ class ApiMediaTest extends ApiTestModel {
     $this->CI->user->login($user['username'], $user['password']);
     
     // Test with wrong paths
-    for ($i=0; $i < 10; $i++) {
+    for ($i=0; $i < 2; $i++) {
       $path = random_string();
       $this->CI->media->set_args( array('path'=>$path) );
       $result = $this->CI->media->index();
@@ -64,7 +64,7 @@ class ApiMediaTest extends ApiTestModel {
     
     // Test update some files
     $files=$this->CI->mediatable->get_files('pictures',false);
-    $files=array_slice($files,0,10);
+    $files=array_slice($files,0,3);
     foreach ($files as $id => $file) {
       $path=$file['path'];
       $name=$file['file'];
@@ -82,7 +82,7 @@ class ApiMediaTest extends ApiTestModel {
       $this->assertEquals( true, $result['data'] );
     }
     // Test update with wrong args
-    for ($i=0; $i < 10 ; $i++) { 
+    for ($i=0; $i < 3 ; $i++) { 
       $name=random_string();
       $new_title=random_string();
       // update
@@ -135,7 +135,7 @@ class ApiMediaTest extends ApiTestModel {
     // }
 
     // Try to delete wrong filenames
-    for ($i=0; $i < 10; $i++) { 
+    for ($i=0; $i < 3; $i++) { 
       $name=random_string();
       // delete
       $this->CI->media->set_args( array('POST'=>array('path'=>$path, 'where'=>$name) ) );
