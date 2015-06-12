@@ -36,7 +36,7 @@ class ApiTestModel extends CITestCase {
   /**
    * Tables for testing
    */
-  protected $tables = array('tbl_site','tbl_menu','cfg_users','res_media_files');
+  protected $tables = array('tbl_menu','cfg_users');
   
   /**
    * Test possible config loading
