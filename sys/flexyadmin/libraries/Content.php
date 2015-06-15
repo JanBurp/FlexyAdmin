@@ -74,6 +74,19 @@ class Content {
     $this->settings=array_merge($this->settings,$config);
     return $this;
   }
+  
+  /**
+   * Pas één config item aan
+   *
+   * @param string $config item
+   * @param string $value 
+   * @return this
+   * @author Jan den Besten
+   */
+  public function set($config,$value) {
+    $this->settings[$config]=$value;
+    return $this;
+  }
 
 
 
