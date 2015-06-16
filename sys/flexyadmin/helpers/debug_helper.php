@@ -48,8 +48,8 @@ function log_($type,$message) {
  * @author Jan den Besten
  */
 function backtrace_($offset=0,$limit=10,$echo=true) {
-  if (ENVIRONMENT=='production') return '';
-	if ($echo) return trace_(NULL,$echo,$offset+1);
+  // if (ENVIRONMENT=='production') return '';
+  // if ($echo) return trace_(NULL,$echo,$offset+1);
 	$dbgTrace = debug_backtrace();
 	if ($offset>0) $dbgTrace=array_slice($dbgTrace,$offset,$limit);
 	$out=array();
@@ -64,10 +64,10 @@ function backtrace_($offset=0,$limit=10,$echo=true) {
 			if ($len>5)	$explode=array_slice($explode,$len-4);
 			$file=implode('/',$explode);
 			if (isset($val['line'])) {
-        if (!IS_AJAX)
-          $val['file']='#show#<a href="txmt://open?url=file:///'.$val['file'].'&amp;line='.$val['line'].'">'.$file.' at '.$val['line'].'</a>';
-        else
-          $val['file']='#show#'.$val['file'].'&amp;line='.$val['line'].'">'.$file.' at '.$val['line'];
+        // if (!IS_AJAX)
+        //   $val['file']='#show#<a href="txmt://open?url=file:///'.$val['file'].'&amp;line='.$val['line'].'">'.$file.' at '.$val['line'].'</a>';
+        // else
+          $val['file']=$file.' at '.$val['line'];
 				unset($val['line']);
 			}
 		}
@@ -140,7 +140,7 @@ function trace_($a=NULL,$echo=true,$backtraceOffset=1,$max=50) {
 	$CI=&get_instance();
 	static $c=0;
   if ($c==0 and !IS_AJAX and !defined('PHPUNIT_TEST')) {
-    echo "<style>._trace {box-sizing:border-box;position:relative;width:100%;float:left;margin:2px;padding:5px;overflow:auto;color:#000;font-family:courier,serif;font-size:10px;line-height:14px;border:solid 1px #666;background-color:#efe;opacity:.95;z-index:99999;}</style>";
+    echo "<style>._trace {box-sizing:border-box;position:relative;width:100%;margin:2px;padding:5px;overflow:auto;color:#000;font-family:courier,serif;font-size:10px;line-height:14px;border:solid 1px #666;background-color:#efe;opacity:.95;z-index:99999;}</style>";
   }
   if (IS_AJAX or defined('PHPUNIT_TEST')) {
     $out='';
