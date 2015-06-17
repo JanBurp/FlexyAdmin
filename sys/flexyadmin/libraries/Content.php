@@ -16,7 +16,7 @@
  * - auto_target_links      - [TRUE] alle link-tags naar externe adressen krijgen de attributen `target="_blank"` en `rel="external"` mee.
  * - site_links             - [FALSE] alle link-tags naar interne adressen worden aangepast met site_url(), zodat eventueel index.php ervoor wordt gezet.
  * - add_classes            - [FALSE] alle div, p, en img tags krijgen extra classes: een nr en 'odd' of 'even'
- * - remove_sizes           - [FALSE] width en height attributen van img tags worden verwijderd (zodat met css styling kan worden ingegrepen)
+ * - remove_sizes           - [FALSE] Als TRUE dan worden width en height attributen van img tags verwijderd (zodat met css styling kan worden ingegrepen). Je kunt ook alleen de 'width' of 'height' attributen verwijderen door 'width' of 'height' (of 'style').
  * - replace_language_links - [FALSE] Links die beginnen met een taal, bijvoorbeeld _nl/contact_ worden vervangen worden door links met de juiste taal bv: _en/contact_
  * - replace_soft_hyphens   - [FALSE] Soft Hyphens karakters (standaard [-]) worden vervangen door de HTML entity: &#173;
  * - custom                 - [FALSE] array('search'=>'','replace'=>''). Voeg hier een custom search & replace toe voor de content. Als regex.
@@ -294,11 +294,18 @@ class Content {
       }
 
       if ($this->settings['remove_sizes']) {
-        $txt = preg_replace("/<img(.*)(\swidth=\"\d*\")/uiUsm", "<img$1", $txt);
-        $txt = preg_replace("/<img(.*)(\sheight=\"\d*\")/uiUsm", "<img$1", $txt);
-        $txt = preg_replace("/(<img[^>]*style=['|\"].*)(width:.*;)/uiUm", "$1", $txt);
-        $txt = preg_replace("/(<img[^>]*style=['|\"].*)(height:.*;)/uiUm", "$1", $txt);
-        $txt = preg_replace("/(<img[^>]*)(style=['|\"]\s['|\"])/uiUm", "$1", $txt);
+        $remove=$this->settings['remove_sizes'];
+        if ($remove===true or $remove==='width') {
+          $txt = preg_replace("/<img(.*)(\swidth=\"\d*\")/uiUsm", "<img$1", $txt);
+          $txt = preg_replace("/(<img[^>]*style=['|\"].*)(width:.*;)/uiUm", "$1", $txt);
+        }
+        if ($remove===true or $remove==='height') {
+          $txt = preg_replace("/<img(.*)(\sheight=\"\d*\")/uiUsm", "<img$1", $txt);
+          $txt = preg_replace("/(<img[^>]*style=['|\"].*)(height:.*;)/uiUm", "$1", $txt);
+        }
+        if ($remove===true or $remove==='style') {
+          $txt = preg_replace("/(<img[^>]*)(style=['|\"]\s['|\"])/uiUm", "$1", $txt);
+        }
       }
       
       if ($this->settings['custom']) {
