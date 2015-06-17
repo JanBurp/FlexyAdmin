@@ -401,9 +401,12 @@ class MY_Upload extends CI_Upload {
    */
   public function restore_orientation($file,$path) {
     $fileandpath=$path.'/'.$file;
+
     // Als niet bestaat, stop er dan meteen maar mee
-    // strace_($fileandpath);
     if(!file_exists($fileandpath)) return false;
+
+    // Of als de exifdata niet op te vragen is, stop dan ook meteen.
+    if (!function_exists('read_exif_data')) return FALSE;
     
     // Get all the exif data from the file
     $exif=FALSE;
