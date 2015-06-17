@@ -439,6 +439,7 @@ class FrontEndController extends MY_Controller {
    * @author Jan den Besten
    */
 	public function add_class($class) {
+    $class=str_replace('/','__',$class);
 		$this->site['class']=add_string(el('class',$this->site,''),$class,' ');
 	}
 	
