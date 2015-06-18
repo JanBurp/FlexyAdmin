@@ -68,10 +68,14 @@
     $send=false;
     // Prepare Replace array
     $replace=array();
-    if (isset($this->site['url_url'])) {
-      $replace=array_merge($replace,$this->site);
-      $replace['URL']=trim(str_replace('http://','',$this->site['url_url']),'/');
+    if (isset($this->site)) {
+      $site=$this->site;
     }
+    else {
+      $site=$this->db->get_row('tbl_site');
+    }
+    $replace=array_merge($replace,$site);
+    $replace['URL']=trim(str_replace('http://','',$site['url_url']),'/');
     $emailfields=filter_by_key($data,'email');
     if (empty($emailfields)) $emailfields=filter_by_key($data,'Email');
     if ($emailfields) $replace['MAIL']=current($emailfields);
