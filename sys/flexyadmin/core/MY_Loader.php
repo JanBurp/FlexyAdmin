@@ -63,6 +63,21 @@ class MY_Loader extends CI_Loader {
     }
     return $result;
 	}
+  
+  
+  /**
+   * Unloads a model
+   *
+   * @param string $name 
+   * @return bool
+   * @author Jan den Besten
+   */
+  public function unload_model($name) {
+    unset($this->CI->$name);
+    $key = array_search($name,$this->_ci_models);
+    unset($this->_ci_models[$key]);
+    return ($key!==FALSE);
+  }
     
     
     
