@@ -56,6 +56,13 @@ function doGrid() {
             // chunk_size : '1mb',
             // unique_names : true,
             filters : [ {title : "--", extensions : config.file_types} ],
+        		preinit : {
+        			Init: function() {
+                var txt=$('.plupload_header_text').html();
+                txt+='<br/>'+langp('dialog_minimal_size');
+                $('.plupload_header_text').html(txt);
+        			},
+        		},
             init : {
               FileUploaded: function(up, file, info) {
                 response=info.response;

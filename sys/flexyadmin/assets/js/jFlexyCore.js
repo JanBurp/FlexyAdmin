@@ -354,7 +354,16 @@ function lang(line) {
 function langp(line,p) {
 	var s;
 	s=lang(line);
-	return s.replace(/%s/g,p);
+  if (line=='dialog_minimal_size') {
+    if (config.int_min_width>0 || config.int_min_height>0) {
+      p=config.int_min_width+'x'+config.int_min_height;
+    }
+    else {
+      s='';
+    }
+  }
+	s=s.replace(/%s/g,p);
+  return s;
 }
 
 

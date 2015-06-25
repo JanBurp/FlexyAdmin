@@ -9,6 +9,7 @@ $lang['dialog_title_warning']		= "Warning";
 $lang['dialog_title_help']			= "Help for '%s'";
 $lang['dialog_title_confirm']		= "Are you sure?";
 $lang['dialog_title_upload']		= "Upload file(s)";
+$lang['dialog_minimal_size']		= "Pictures must be at least %s pixels.";
 $lang['dialog_title_rename']		= "Rename '<i>%s</i>'";
 $lang['dialog_title_edit']			= "Rename or set new date of '<i>%s</i>'";
 

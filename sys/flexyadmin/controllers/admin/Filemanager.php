@@ -65,6 +65,9 @@ class Filemanager extends AdminController {
 			$name="";
 			$map=$this->config->item('ASSETS').$path;
 			$cfg=$this->cfg->get('CFG_media_info',$path);
+      $sizes=$this->cfg->get('CFG_img_info',$path);
+      $this->_add_js_variable('int_min_width',el('int_min_width',$sizes));
+      $this->_add_js_variable('int_min_height',el('int_min_height',$sizes));
 			if (!empty($cfg) and $right=$this->_has_rights($path)) {
 				$this->load->helper('html');
 				$this->load->model("file_manager");
