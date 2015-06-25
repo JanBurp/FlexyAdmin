@@ -29,6 +29,11 @@ class Api extends AjaxController {
        $this->load->model('api/'.$model);
        // Call model/method
        $result=$this->$model->$method($args);
+       // Als result geen array is (maar HTML bijvoorbeeld) echo het result en die.
+       if (!is_array($result)) {
+         echo $result;
+         die();
+       }
        // Result
        $result['api']=$model;
        return $this->_result( $result );
