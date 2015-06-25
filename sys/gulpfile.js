@@ -338,3 +338,22 @@ gulp.task('watch', function() {
   ], { interval: watch_interval } ).on('change', livereload.changed);
   
 });
+
+
+// PHPUNIT
+gulp.task('phpunit', function() {
+   gulp.src('phpunit.xml')
+     .pipe(phpunit('/usr/local/bin/phpunit', {notify:true }))
+     .on('error', notify.onError('phpunit FAILED'))
+     .pipe(notify({
+       title:'phpunit',
+       message:'phpunit OK!'
+     }));
+});
+
+// PHP Watch
+gulp.task('watch_php', function() {
+  // WATCH PHP
+  gulp.watch( [ 'flexyadmin/**/*.php', 'flexyadmin/**/**/*.php'], { interval: watch_interval }, ['phpunit'] );
+});
+

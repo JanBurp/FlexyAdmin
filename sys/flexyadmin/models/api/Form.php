@@ -12,8 +12,7 @@
  * 
  * - `table`                    // De tabel waar de record van wordt opgevraagd.
  * - `where`                    // Hiermee wordt bepaald welk record wordt opgevraagd.
- * - `options`                  // Hiermee worden opties voor velden toegevoegd (zoals dropdowns etc)
- * - `schemaform`               // Als TRUE dan wordt een json schemaform van het formulier toegevoegd (zie http://schemaform.io)
+ * - `options`                  // Hiermee worden opties voor velden toegevoegd
  * - `[config[]=table_info]`    // Informatie over de tabel kan op deze manier meegenomen worden in het resultaat.
  * - `[config[]=field_info]`    // Informatie over de velden in de tabel kan op deze manier meegenomen worden in het resultaat.
  * 
@@ -26,7 +25,7 @@
  * 
  * ###Response:
  * 
- * Voorbeeld response (dump) van `_api/table?row=tbl_menu&where=3&options=true&schemaform=true`:
+ * Voorbeeld response (dump) van `_api/table?row=tbl_menu&where=3&options=true`:
  * 
  *     [success] => TRUE
  *     [test] => TRUE
@@ -35,10 +34,7 @@
  *       [where] => '3'
  *       [type] => 'GET'
  *      )
- *     [options] => (
- *      )
- *     [schemaform] => (
- *      )
+ *     [options] =>
  *     [data] => (
  *       [id] => '3'
  *       [order] => '0'
@@ -206,10 +202,6 @@ class Row extends Api_Model {
     // GET
     if ($this->args['type']=='GET') {
       $this->result['data']=$this->_get_row();
-      if (el('schemaform',$this->args,false)==true) {
-        $this->load->model('schemaform');
-        $this->result['schemaform']=$this->schemaform->create_from_row($this->result['data'],el('table',$this->args));
-      }
       return $this->_result_ok();
     }
 
