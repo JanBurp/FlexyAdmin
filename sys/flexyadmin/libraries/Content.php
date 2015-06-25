@@ -333,6 +333,7 @@ class Content {
   				$replace=array();
   				foreach ($matches[2] as $key=>$adres) {
   					$show=str_replace('"',"'",$matches[4][$key]);
+            $show=html_entity_decode($show);
             $search[]=$matches[0][$key];
   					// classes, id's etc
   					$extra='';
