@@ -1,5 +1,5 @@
 <div style="border:1px solid #696;margin:4px;padding:10px;color:#000;background-color:#FFF;opacity:.8;">
-<?php if (ENVIRONMENT=='development'): ?>
+<?php if (ENVIRONMENT=='development' or ENVIRONMENT=='testing'): ?>
 	<h4 style="font-weight:bold;font-size: 14px;color: #696;">A PHP Error was encountered</h4>
 	Severity:	<?php echo $severity; ?><br>
 	Message:	<?php echo $message; ?><br>
