@@ -27,6 +27,17 @@ class Schemaform extends CI_Model {
   //   => 'maxLength',
   //
   // );
+  // http://json-schema.org/latest/json-schema-validation.html
+  //    5.1.  Validation keywords for numeric instances (number and integer)
+  //        multipleOf, maximum, exclusiveMaximum, minimum, exclusiveMinimum
+  //    5.2.  Validation keywords for strings
+  //        maxLength, minLength, pattern
+  //    5.3.  Validation keywords for arrays
+  //        additionalItems, items, maxItems, minItems,uniqueItems
+  //    5.4.  Validation keywords for objects
+  //        maxProperties, minProperties, required, additionalProperties, properties, patternProperties, dependencies
+  //    5.5.  Validation keywords for any instance type
+  //        enum, type, allOf, anyOf, oneOf, not, definitions
 
   
   /**
