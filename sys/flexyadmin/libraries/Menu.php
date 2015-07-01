@@ -720,7 +720,7 @@ class Menu {
         if (!el('unique_uri',$item,false) and !empty($thisUri)) $thisUri=$preUri."/".$thisUri;
         $thisUri=trim(str_replace('//','/',$thisUri),'/');
 				$cleanUri=remove_suffix($thisUri,$this->CI->config->item('URI_HASH'));
-        $classUri=str_replace('/','',get_suffix($cleanUri,'/'));
+        $classUri=str_replace('/','',get_suffix(get_prefix($cleanUri,'?'),'/'));
         
         // title
         $title=ascii_to_entities(trim(el('name',$item,$uri),'_'));
