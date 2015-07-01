@@ -352,7 +352,6 @@ class Crud_ extends CI_Model {
         }
       }
       // WHERE IN
-      // trace_($this->where);
 		}
 		$this->order 	= element('order',$args,FALSE);
     // if ($this->order and !is_array($this->order)) $this->order=array($this->order.' DESC');
@@ -435,6 +434,7 @@ class Crud_ extends CI_Model {
       'table_rows'  => $this->db->count_all($this->table),
       // 'query'       => $this->db->last_query()
     );
+    // trace_($this->info);
     return $result;
   }
   
