@@ -187,7 +187,7 @@ class Editor_lists {
           $filename=$file['path'].'/'.$name;
           $name=$this->CI->mediatable->get_img_title($filename);
   				if (!empty($name)) {
-  					$list.='["'.$name.'","'.$filename.'"],';
+  					$list.='["'.str_replace($this->CI->config->item('ASSETS'),'',$filename).'","'.$filename.'"],';
   				}
         }
 			}
