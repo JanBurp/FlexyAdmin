@@ -21,7 +21,7 @@ class Plugin_create_plugin extends Plugin {
 	
   /**
    */
-   function _admin_api($args=false) {
+  public function _admin_api($args=false) {
 		if ($this->CI->user->is_super_admin()) {
 			$this->add_content(h($this->name,1));
       
@@ -94,7 +94,7 @@ class Plugin_create_plugin extends Plugin {
       $addon=str_replace('.php','',$addon);
       $redirect=site_url($this->wizard->get_next_step_uri($addon));
       // trace_($redirect);
-      redirect($redirect, 'refresh');
+      redirect($redirect);
     }
     else {
       $out.=$form->render();
@@ -132,13 +132,27 @@ class Plugin_create_plugin extends Plugin {
         foreach ($extra_files as $key=>$extra_file) {
           // Wildcard at end?
           if (substr($extra_file,-2)=='/*') {
-            unset($extra_files[$key]);
             $map=substr($extra_file,0,strlen($extra_file)-2);
             $sub_files=read_map($map,'',TRUE,FALSE,FALSE,FALSE);
             if ($sub_files) $extra_files=array_merge($extra_files,array_keys($sub_files));
           }
+          elseif (substr($extra_file,-1)=='*') {
+            $map=remove_suffix($extra_file,'/');
+            $find_file=substr($extra_file,0,-1);
+            $find_file_len=strlen($find_file);
+            $sub_files=read_map($map,'',TRUE,FALSE,FALSE,FALSE);
+            foreach ($sub_files as $key => $value) {
+              if (substr($value['path'],0,$find_file_len)===$find_file) {
+                $extra_files[]=$value['path'];
+              }
+            }
+          }
         }
         $files=array_merge($files,$extra_files);
+        foreach ($files as $key => $file) {
+          if (substr($file,-1,1)=='*') unset($files[$key]);
+        }
+        
       }
     }
     
@@ -180,7 +194,7 @@ class Plugin_create_plugin extends Plugin {
       $this->CI->session->set_userdata('zipname',$data['zipname']);
       $redirect=site_url($this->wizard->get_next_step_uri($addon));
       // trace_($redirect);
-      redirect($redirect, 'refresh');
+      redirect($redirect);
     }
     else {
       $out.=$form->render();
@@ -188,6 +202,7 @@ class Plugin_create_plugin extends Plugin {
     
     return $out;
   }
+  
   
   public function create_zip($args) {
     $out='';
@@ -200,7 +215,7 @@ class Plugin_create_plugin extends Plugin {
   
     $this->CI->zip->add_data($addon.'_readme.md',$readme); 
     foreach ($files as $file) {
-      $this->CI->zip->file_get_contents($file,true); 
+      $this->CI->zip->read_file($file,true); 
     }
     $this->CI->zip->download($zipname);
     
