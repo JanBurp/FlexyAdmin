@@ -110,8 +110,7 @@ class Wizard {
    * @author Jan den Besten
    */
   public function get_step() {
-    $uri=explode('/',uri_string());
-    $step=element($this->uri_segment,$uri);
+    $step=$this->CI->uri->get($this->uri_segment);
     if (!isset($this->steps[$step])) {
       reset($this->steps);
       $step=key($this->steps);
@@ -147,7 +146,7 @@ class Wizard {
   public function get_next_step_uri($extra='') {
     $step=$this->get_next_step();
     $uri=explode('/',uri_string());
-    $uri=array_slice($uri,0,$this->uri_segment);
+    $uri=array_slice($uri,0,$this->uri_segment-1);
     $uri=implode('/',$uri);
     $uri=$uri.'/'.$step;
     if ($extra) $uri.='/'.$extra;
