@@ -157,6 +157,7 @@ class Graph extends CI_Model {
 			$tableCells=array();
 			$cn=0;
 			foreach($row as $name=>$cell) {
+        if (is_array($cell)) break;
 				$pre=get_prefix($name);
 				if ($pre==$name) $pre="";
 				$tableCells[]=array(	"class"				=> "$tableClass $name $extraClass nr$cn ".alternator("oddcol","evencol"),

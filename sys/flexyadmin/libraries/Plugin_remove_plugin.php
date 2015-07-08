@@ -84,7 +84,7 @@ class Plugin_remove_plugin extends Plugin {
   public function collect_files($args) {
     $out='';
     
-    $addon=$args[1];
+    $addon=$args[0];
     $addon_file=$addon.'.php';
     $is_plugin=(substr($addon,0,6)=='plugin');
     
@@ -109,14 +109,28 @@ class Plugin_remove_plugin extends Plugin {
         $extra_files=$config['_files'];
         foreach ($extra_files as $key=>$extra_file) {
           // Wildcard at end?
+          // Wildcard at end?
           if (substr($extra_file,-2)=='/*') {
-            unset($extra_files[$key]);
             $map=substr($extra_file,0,strlen($extra_file)-2);
             $sub_files=read_map($map,'',TRUE,FALSE,FALSE,FALSE);
             if ($sub_files) $extra_files=array_merge($extra_files,array_keys($sub_files));
           }
+          elseif (substr($extra_file,-1)=='*') {
+            $map=remove_suffix($extra_file,'/');
+            $find_file=substr($extra_file,0,-1);
+            $find_file_len=strlen($find_file);
+            $sub_files=read_map($map,'',TRUE,FALSE,FALSE,FALSE);
+            foreach ($sub_files as $key => $value) {
+              if (substr($value['path'],0,$find_file_len)===$find_file) {
+                $extra_files[]=$value['path'];
+              }
+            }
+          }
         }
         $files=array_merge($files,$extra_files);
+        foreach ($files as $key => $file) {
+          if (substr($file,-1,1)=='*') unset($files[$key]);
+        }
       }
     }
     
