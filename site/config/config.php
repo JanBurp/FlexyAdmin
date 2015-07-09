@@ -146,6 +146,13 @@ $config['auto_pagination']	= TRUE;
  */
 // $config['site_variables']	= array('submenu','comments');
 
+
+/**
+ * RSS feed model
+ */
+// $config['rss_model'] = '';
+
+
 /*
  *--------------------------------------------------------------------------
  * Autoload Modules
