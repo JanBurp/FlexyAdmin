@@ -25,7 +25,14 @@
 /**
  * This routing makes sure all uri's go to the frontend site, except soms system uri's
  */
-$route['(?!__api|admin|rss|file|_media|_cronjob|_unittest|_ajax|_api)(.*)'] = "";
+$route['(?!__api|admin|_rss|file|_media|_cronjob|_unittest|_ajax|_api)(.*)'] = "";
+
+/**
+ * RSS feed(s)
+ */
+$route['_rss'] = 'rss/index';
+$route['_rss/(.*)'] = 'rss/index/$1';
+
 
 /**
  * Frontend Ajax testing

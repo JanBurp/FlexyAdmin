@@ -12,6 +12,11 @@
 $config['framework']='default';
 
 
+/**
+ * RSS feed model
+ */
+$config['rss_model'] = 'Rss_feed';
+
 
 /*
 |--------------------------------------------------------------------------
