@@ -1,0 +1,36 @@
+<?php
+/**
+ * Standaard RSS feed, gaat uit van de standaard demo database
+ *
+ * @author: Jan den Besten
+ * $Revision$
+ * @copyright: (c) Jan den Besten
+ */
+
+class RSS_feed extends CI_Model {
+
+	public function __construct() {
+		parent::__construct();
+	}
+  
+  /**
+   * Geeft RSS feed data terug in formaat:
+   * array(
+   *  'uri'       => ''
+   *  'str_title' => ''
+   *  ['txt_text'  => '',]
+   *  ['dat_date'  => '',]
+   * )
+   *
+   * @return void
+   * @author Jan den Besten
+   */
+  public function index() {
+    $this->db->select('uri,str_title');
+    return $this->db->get_result( get_menu_table(), 10 );
+  }
+
+
+}
+
+?>
