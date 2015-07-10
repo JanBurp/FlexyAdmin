@@ -29,20 +29,23 @@ class Plugin_resize_images extends Plugin {
       $imgInfo=$this->CI->cfg->get('cfg_img_info');
       $maps=array_keys($imgInfo);
     }
+
+    $actiondata=array();
     
     foreach ($maps as $map) {
       $this->add_message(h('Resize images in `'.$map.'`'));
       $files=read_map(assets().$map,FALSE,FALSE,FALSE);
       
-      $actiondata=array();
       foreach ($files as $key => $file) {
-        if (substr($key,0,1)!='_') $actiondata[$key]=array('action_url'=>'admin/ajax/resize_image/'.$map.'/'.$file['name'], 'title'=>$map.'/'.$file['name']);
+        if (substr($key,0,1)!='_') $actiondata[]=array('action_url'=>'admin/ajax/resize_image/'.$map.'/'.$file['name'], 'title'=>$map.'/'.$file['name']);
       }
-      
+    }
+    
+    if ($actiondata) {
       $this->CI->actiongrid->add_actions($actiondata);
       $this->add_content( $this->CI->actiongrid->view() );
-
     }
+    
     return $this->view();
 	}
   
