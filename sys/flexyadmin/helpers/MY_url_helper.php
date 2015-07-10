@@ -220,6 +220,16 @@ function test_url($url) {
 }
 
 
+/**
+ * Maakt leesbare string van een url (haalt http:// etc eraf)
+ *
+ * @param string $s 
+ * @return string
+ * @author Jan den Besten
+ */
+function url_string($s) {
+  return trim(str_replace(array('http://','https://','mailto:','tel:'),'',$s),'/');
+}
 
 
 
