@@ -61,7 +61,7 @@ var files = {
    */
   'default' : {
     'js'      : assets+'/js',                             // JS map (string)
-    'jshint'  : assets+'/js/*.js',                        // JS bestanden die gecontroleerd moeten worden op fouten (string of array)
+    'jshint'  : assets+'/js/site.js',                     // JS bestanden die gecontroleerd moeten worden op fouten (string of array)
     'jsmin'   : [                                         // JS bestanden die samengevoegd en gemimificeerd moeten worden (string of array)
       assets+'/js/jquery.min.js',
       assets+'/js/site.js',
