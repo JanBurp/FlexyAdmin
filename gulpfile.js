@@ -67,7 +67,7 @@ var files = {
       assets+'/js/site.js',
     ],
     'jsdest'  : 'scripts.min.js',                         // gemimificeerd JS bestand (string)
-    'watchjs' : assets+'/js/*.js',                        // check deze JS bestanden op veranderingen (string of array)
+    'watchjs' : assets+'/js/site.js',                     // check deze JS bestanden op veranderingen (string of array)
     'css'     : assets+'/css',                            // CSS map (string)
     'less'    : assets+'/less-default/*.less',            // LESS bestanden die gecompileerd moeten worden (string of array)
     'cssmin'  : [                                         // all CSS bestanden die samengevoegd en gemimificeerd moeten worden (string of array)
@@ -94,7 +94,7 @@ var files = {
       assets+'/js/site.js',
     ],
     'jsdest'  : 'scripts.min.js',
-    'watchjs' : assets+'/js/*.js',
+    'watchjs' : assets+'/js/site.js',
     'less'    : assets+'/less-bootstrap/bootstrap.less',
     'css'     : assets+'/css',
     'cssmin'  : [
