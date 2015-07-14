@@ -466,7 +466,6 @@ class Show extends AdminController {
 					$newData=$form->get_data();
 					$newData=$this->_after_update($table,$data,$newData);
           
-          
           // Test if password field exist and is empty
           foreach ($newData as $key => $value) {
             if (in_array(get_prefix($key),array('gpw','pwd')) and empty($value)) {
