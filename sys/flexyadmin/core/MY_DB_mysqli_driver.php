@@ -472,7 +472,12 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 	 */
 	public function order_by($orderby, $direction = '', $escape = NULL) {
     parent::order_by($orderby,$direction,$escape);
-    $this->last_order=$this->qb_orderby;
+    if (is_array($this->qb_orderby)) {
+      $last=current($this->qb_orderby);
+      if (isset($last['field']) and get_prefix($last['field'])!=='rel') {
+        $this->last_order=$this->qb_orderby;
+      }
+    }
     return $this;
 	}
 
@@ -524,11 +529,11 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
    */
 	public function get_last_order() {
 		$order=$this->last_order;
-		while (is_array($order)) {
+		while (is_array($order) and !isset($order['field'])) {
       $order=current($order);
     }
-    $order=remove_suffix($order,',');
-		return str_replace('`','',$order);
+    $order=remove_suffix($order['field'],',').' '.$order['direction'];
+		return trim(str_replace('`','',$order));
 	}
   
   
