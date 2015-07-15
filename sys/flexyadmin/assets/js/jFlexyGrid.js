@@ -601,7 +601,7 @@ function doGrid() {
 		//
 		else {
 			isSortable=true;
-			}
+		}
 	}
 	
   
@@ -634,7 +634,7 @@ function doGrid() {
 						if ($(this).hasClass('headerSortDown')) field='_'+field;
 						// ok now reload the page, starting from page 0
 						var url=$(grid).attr('url')+'/0/order/'+field+'/search/'+$(grid).attr('search');
-						location.href=url;
+            location.href=url;
 					});
 				}
 			});

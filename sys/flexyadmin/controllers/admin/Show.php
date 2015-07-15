@@ -117,7 +117,7 @@ class Show extends AdminController {
 						$pagination=$this->cfg->get("CFG_table",$table,'b_pagination',NULL);
             if ($pagination===NULL) $pagination=$this->config->item('PAGINATION');
 						if ($pagination) $pagination=$this->cfg->get('cfg_configurations','int_pagination');
-						
+
 						// How to order?
 						if ($hasField['self_parent']) {
               // $this->db->order_as_tree();
@@ -144,7 +144,6 @@ class Show extends AdminController {
                 }
 							}
 						}
-            
 						
 						// has rights?
 						if ($restrictedToUser>0 and $hasField['user']) {
@@ -195,6 +194,9 @@ class Show extends AdminController {
             $data_query=$this->db->last_query_clean(array('select'=>$table.'.'.PRIMARY_KEY));
 						$total_rows=$this->db->last_num_rows_no_limit();
 
+						$last_order=$this->db->get_last_order();
+						if (substr($last_order,0,1)!='(') $order=$last_order;
+
             // trace_('#show#'.$data_query);
             // trace_($data);
             // trace_($total_rows);
@@ -208,8 +210,6 @@ class Show extends AdminController {
             if ($hasDateField) $hasDateField=$keys[$hasDateField];
             $keys=array_combine($keys,$keys);
             
-						$last_order=$this->db->get_last_order();
-						if (substr($last_order,0,1)!='(') $order=$last_order;
             
             // if datefield and no current: select items from today and set offset of pagination
             if ($this->cfg->get("CFG_table",$table,'b_jump_to_today') and $hasDateField) {
