@@ -26,7 +26,7 @@ function unix_to_normal($time = '', $seconds = TRUE) {
 function unix_to_mysql($unix='',$with_time=TRUE) {
   if (empty($unix)) $unix=time();
   if ($with_time)
-    return date('Y-m-d H:i',$unix);
+    return date('Y-m-d H:i:s',$unix);
   else
     return date('Y-m-d',$unix);
 }
