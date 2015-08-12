@@ -258,8 +258,20 @@ function find_module_uri($module,$full_uri=true,$table='') {
   		$like_field=$CI->config->item('module_field');
   	}
   	$CI->db->like($CI->config->item('module_field'),$module);
-    $CI->db->order_by('id');
+    if ($full_uri) {
+      $CI->db->order_by('self_parent,order');
+    }
+    else {
+      $CI->db->order_by('id');
+    }
   	$items=$CI->db->get_result($menuTable);
+    // oeps er zijn er meer.... pak dan degene die het hoogts in de menustructuur zit en het eerst voorkomt op dat nivo
+    if (count($items)>1) {
+      foreach ($items as $id => $item) {
+        $items[$id]['_level']=substr_count($item['uri'],'/');
+      }
+      $items=sort_by($items,array('_level','order'));
+    }
     reset($items);
     $item=current($items);
   	return $item['uri'];
