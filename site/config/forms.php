@@ -1,5 +1,18 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+
+
+/**
+ * Pas hier css classes aan voor de meldingen van de formulieren
+ */
+
+$config['_classes'] = array(
+  'thanks'  => 'message',
+  'error'   => 'error'
+);
+
+
+
 /*
  *--------------------------------------------------------------------------
  * Alle formulieren worden ingesteld met een eigen config array.
