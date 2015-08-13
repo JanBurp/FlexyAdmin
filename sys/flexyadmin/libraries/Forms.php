@@ -60,12 +60,18 @@ class Forms extends Module {
   private $spam=false;
   private $validated=false;
   
+  private $classes = array(
+    'thanks'  => 'message',
+    'error'   => 'error'
+  );
+  
   /**
    */
 	public function __construct() {
 		parent::__construct();
     $this->CI->load->library('session');
     $this->CI->load->model('formaction');
+    if (isset($this->config['_classes'])) $this->classes = array_merge($this->classes,$this->config['_classes']);
 	}
 
 
@@ -299,7 +305,7 @@ class Forms extends Module {
         }
       }
       else {
-        $errors='<p class="error">'.lang('error_spam').'</p>';
+        $errors='<p class="'.$this->classes['error'].'">'.lang('error_spam').'</p>';
       }
 		}
 
@@ -309,12 +315,12 @@ class Forms extends Module {
         $form->show_validation_errors(true);
       }
       else {
-        $error=$form->validation_errors($this->form_id,'<p class="error">', '</p>');
+        $error=$form->validation_errors($this->form_id,'<p class="'.$this->classes['error'].'">', '</p>');
         if (!empty($error)) {
           if ($this->settings('validation_place','form')=='form')
             $errors.=$error;
           else
-            $errors.='<p class="error">'.$this->settings('validation_place','').'</p>';
+            $errors.='<p class="'.$this->classes['error'].'">'.$this->settings('validation_place','').'</p>';
         }
       }
       $html.=$thanks;
@@ -347,7 +353,7 @@ class Forms extends Module {
       $html=$this->CI->$model->$method($result);
     }
     else {
-      $html=div('message').$this->settings('thanks','')._div();
+      $html=div($this->classes['thanks']).$this->settings('thanks','')._div();
     }
     return $html;
   }
