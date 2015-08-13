@@ -329,11 +329,11 @@ class Form {
    * @author Jan den Besten
    */
 	public function add_password_match($args=TRUE) {
-		$opts=array('fields'=>array('gpw','pwd'),'label'=>' (2x)','name'=>'matches','class'=>'matches');
-		if (is_array($args)) $opts=array_merge($opts,$args);
-		if (is_bool($args) and !$args) $opts=FALSE;
-		$this->add_password_match=$opts;
-		if ($this->add_password_match) $this->data=$this->_add_matching_password($this->data);
+    $opts=array('fields'=>array('gpw','pwd'),'label'=>' (2x)','name'=>'matches','class'=>'matches');
+    if (is_array($args)) $opts=array_merge($opts,$args);
+    if (is_bool($args) and !$args) $opts=FALSE;
+    $this->add_password_match=$opts;
+    if ($this->add_password_match) $this->data=$this->_add_matching_password($this->data);
 	}
 	
 	/**
@@ -528,14 +528,12 @@ class Form {
 					$_POST[$name]=implode('|',array_unique($_POST[$name]));
 			}
 
-			// set validation rules for passwords
+			// set extra validation rules for passwords if new (required)
       if ($field['type']=='password' and !isset($field['matches'])) {
-        $thisdata=current($data);
-        if ($thisdata['value']>0) {
-          // if not a new 'user', password maybe empty for no change
-          if (isset($_POST[$field['name']]) and empty($_POST[$field['name']])) {
-            $field['validation']='';
-          }
+        $id=el(array('id','value'),$data,-1);
+        if ($id<0) {
+          // if new 'user' password is required
+          $field['validation']='required|'.$field['validation'];
         }
       }
       
@@ -555,6 +553,8 @@ class Form {
           $set_rule=false;
         }
       }
+      $field['validation']=trim($field['validation'],'|');
+      
       if ($set_rule) $this->CI->form_validation->set_rules($field["name"], $field["label"], $field["validation"]);
 			
 			$this->data[$name]["repopulate"]=$this->CI->input->post($name);
@@ -684,12 +684,12 @@ class Form {
 				$pre=get_prefix($name);
 				$value=$this->CI->input->post($name);
 				// remove matches if any
-				if ($this->add_password_match) {
-					if (in_array($pre,$this->add_password_match['fields']) and isset($field['matches'])) {
-						unset($this->data[$name]);
-						continue;
-					}
-				}
+        if ($this->add_password_match) {
+          if (in_array($pre,$this->add_password_match['fields']) and isset($field['matches'])) {
+            unset($this->data[$name]);
+            continue;
+          }
+        }
 				/**
 				 *  Is data from join?
 				 */
@@ -737,8 +737,8 @@ class Form {
 		$data=array();
 		if (!empty($this->post_data))
 			$data=$this->post_data;
-		else
-			$data=$this->get_postdata();
+    // else
+    //   $data=$this->get_postdata();
 		if (empty($data)) {
 			foreach($this->data as $name=>$field) {
 				if (isset($field['repopulate']))
@@ -767,8 +767,6 @@ class Form {
 		// fieldsets with fields
 		$nr=1;
     $fieldsets=array();
-    
-    // trace_([$this->fieldsets,$data]);
     
 		foreach ($this->fieldsets as $title) {
       $fieldsets[$nr]=array(

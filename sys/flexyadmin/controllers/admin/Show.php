@@ -451,10 +451,10 @@ class Show extends AdminController {
 				}
 				else
 					$uiShowTable=$uiTable;
-
+        
 				$form->set_data($ffData,$uiShowTable);
 				$form->add_password_match();
-				$form->hash_passwords();
+        $form->hash_passwords();
         
 				/**
 				 * Validate form, if succes, update/insert data
@@ -466,13 +466,6 @@ class Show extends AdminController {
 					$newData=$form->get_data();
 					$newData=$this->_after_update($table,$data,$newData);
           
-          // Test if password field exist and is empty
-          foreach ($newData as $key => $value) {
-            if (in_array(get_prefix($key),array('gpw','pwd')) and empty($value)) {
-              unset($newData[$key]);
-            }
-          }
-
 					$this->crud->table($table,$restrictedToUser);
 					if ($id==-1) {
 						$id=$this->crud->insert(array('data'=>$newData));
@@ -602,7 +595,6 @@ class Show extends AdminController {
 			$this->load->model('queu');
 			
 			$newData=$form->get_data();
-			if (empty($newData['gpw_password'])) unset($newData['gpw_password']);
 			
 			$newData=$this->_after_update($userTable,'',$newData);
 			$resultId=$this->crud->table($userTable)->update(array('where'=>array(PRIMARY_KEY=>$userId), 'data'=>$newData));
