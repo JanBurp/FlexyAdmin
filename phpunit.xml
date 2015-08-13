@@ -29,7 +29,7 @@
       <directory suffix="Test.php">site/tests</directory>
 		</testsuite>
 
-    <!--Heavy testing: auth, api, which assumes the demo database is present -->
+    <!-- Heavy testing: auth, api, which assumes the demo database is present -->
     <testsuite name="demo_db">
       <directory suffix="Test.php">sys/flexyadmin/tests/demo_db</directory>
 		</testsuite>
