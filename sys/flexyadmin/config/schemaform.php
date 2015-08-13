@@ -225,14 +225,14 @@ $config['FIELDS_prefix'] = array (
     'formType'    => 'password',
     'grid'        => '***',
     'form'        => 'password',
-    'validation'	=> 'trim'
-										),
+    'validation'	=> 'trim|valid_password'
+  ),
 	'gpw'				=> array (
     'schemaType'  => 'string',
     'formType'    => 'password',
     'grid'        => '***',
     'form'        => 'password',
-    'validation'	=> 'trim'
+    'validation'	=> 'trim|valid_password'
   ),
 	'url'				=> array (
     'schemaType'  => 'string',

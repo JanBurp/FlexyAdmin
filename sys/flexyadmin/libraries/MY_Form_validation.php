@@ -380,8 +380,8 @@ class MY_Form_validation extends CI_Form_validation {
   
   
   /**
-   * You can use this as normal (cfg_users.str_user_name) for example.
-   * Or you can use this to not test on update ()
+   * Je kunt dit op de normale manier gebruiken (CI), voorbeeld 'cfg_users.str_username'.
+   * Of door de 'id' mee te van de rij uit de tabel. De waarde van het veld op die rij wordt ook geaccepteerd (meestal zichzelf): 'cfg_users.str_username.3'
    *
    * @param string $str 
    * @param string $field 
@@ -392,21 +392,19 @@ class MY_Form_validation extends CI_Form_validation {
     if (substr_count($field, '.')>=2) {
       // Not checking the row where $id=...
       list($table,$field,$id)=explode('.', $field);
-      if($this->CI->input->post($id) > 0):
-        $query = $this->CI->db->limit(1)->get_where($table, array($field => $str, $id.' !='=>$this->CI->input->post($id)));
-      else:
-        $query = $this->CI->db->limit(1)->get_where($table, array($field => $str));
-      endif;
+      if ($id>0) {
+        $possible_value=$this->CI->db->get_field_where($table,$field,'id',$id);
+        if ($str===$possible_value) return true;
+      }
     }
+    // Normal operation
     else {
-      // Normal operation
       list($table, $field)=explode('.', $field);
-      $query = $this->CI->db->limit(1)->get_where($table, array($field => $str));      
     }
-
-    return $query->num_rows() === 0;
+    return isset($this->CI->db)
+      ? ($this->CI->db->limit(1)->get_where($table, array($field => $str))->num_rows() === 0)
+      : FALSE;
   }
-  
   
   
   /**
@@ -502,10 +500,18 @@ class MY_Form_validation extends CI_Form_validation {
     * - minimaal 1 hoofdletter
     * - minimaal 1 nummer
     * 
+    * Als er een id in de postdata zit dan mag het nieuwe wachtwoord leeg zijn (als er al een wachtwoord is ingesteld en de gebruiker aktief is)
+    * 
     * @param  string $password
     * @return mixed
     */
    public function valid_password($password) {
+     // Als id bekend in postwaarde, kijk dan of het passwoord leeg mag zijn.
+     $id=$this->CI->input->post('id');
+     if (isset($id) and !empty($id) and $id>0) {
+       $user=$this->CI->db->select('id,gpw_password,b_active')->where('id',$id)->get_row('cfg_users');
+       if ($user['b_active']===true && !empty($user['gpw_password'])) return TRUE;
+     }
      $match=array();
      // Match
      if (preg_match("#.*^(?=.{8,20})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$#",$password,$match)) {

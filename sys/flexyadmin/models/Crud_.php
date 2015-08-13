@@ -174,10 +174,16 @@ class Crud_ extends CI_Model {
 			if ($insert) unset($data[PRIMARY_KEY]);
 			
       if (!empty($data)) {
-        
-        // Only set data if it has a safe value (not NULL)
+
+        // Remove empty passwords, so they can't be saved...
         foreach ($data as $key => $value) {
-          if (isset($value)) $this->db->set($key,$value);
+          if (in_array(get_prefix($key),array('gpw','pwd')) and empty($value)) {
+            unset($data[$key]);
+          }
+        }
+        // Set data if it has a safe value (not NULL), and if the field exists
+        foreach ($data as $key => $value) {
+          if (isset($value) and $this->db->field_exists($key,$this->table)) $this->db->set($key,$value);
         }
 
   			if ($insert) {

@@ -862,7 +862,7 @@ $config["CFG_"]=array(
 			"field"=>'cfg_users.gpw_password',
 			"b_show_in_grid"=>'0',
 			"b_show_in_form"=>'1',
-			"str_validation_rules"=>'required|valid_password'
+			"str_validation_rules"=>'trim|valid_password'
  			),
     "cfg_users.email_email"=>array(
       "field"=>'cfg_users.email_email',
