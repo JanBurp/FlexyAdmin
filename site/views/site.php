@@ -60,12 +60,12 @@
   </div>
   
   <!-- main navigation -->
-  <nav id="menu" class="navbar navbar-default">
+  <div id="menu" class="navbar navbar-default">
     <div class="container">
       <span class="fa fa-bars mobile-only"></span>
       <?=$menu?>
     </div>
-  </nav>
+  </div>
 
   <!-- content -->
 	<div id="content"><?=$content;?></div>
