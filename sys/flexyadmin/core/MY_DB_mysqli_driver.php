@@ -122,7 +122,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
   private $selectFirst;
   private	$selectFirsts;
   private $qb_dont_select;
-  private $qb_last_query=FALSE;
+  // private $qb_last_query=FALSE;
   private $qb_last_count=FALSE;
   private $remember_query=TRUE;
 
@@ -227,7 +227,6 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 		$this->pk=$pk;
     return $this;
   }
-
 
   /**
    * Zet key van de resultaat arrays.
@@ -1047,8 +1046,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
     else
       $query=parent::get($table);
 
-    if ($this->remember_query) $this->qb_last_query=parent::last_query();
-    // trace_('#show#'.$this->qb_last_query);
+    if (!$this->remember_query) { array_pop($this->queries); }
 		return $query;
 	}
   
@@ -1654,19 +1652,19 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 	}
 
 
-  /**
-   * Geeft laatste query (zelfde als oorspronkelijke method in CI)
-   *
-   * @return void
-   * @author Jan den Besten
-   */
-  public function last_query() {
-		if ( !$this->qb_last_query) {
-			return parent::last_query();
-		}
-		$sql=$this->qb_last_query;
-    return $sql;
-  }
+  // /**
+  //  * Geeft laatste query (zelfde als oorspronkelijke method in CI)
+  //  *
+  //  * @return void
+  //  * @author Jan den Besten
+  //  */
+  // // public function last_query() {
+  // //     if ( !$this->qb_last_query) {
+  // //       return parent::last_query();
+  // //     }
+  // //     $sql=$this->qb_last_query;
+  // //   return $sql;
+  // // }
   
   /**
    * Geeft laatste query, maar dan opgeschoont
