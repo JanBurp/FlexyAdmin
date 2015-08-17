@@ -34,7 +34,9 @@ UPDATE xxxx
     - of vervang '$this->ajax_module' door '$this->is_ajax_module`
     - en voeg `if (defined('PHPUNIT_TEST')) return;` op regel 30
   - Vervang `site/language/nl/regex_validation_lang.php`
+  - Vervang `site/config/unittests.php`
   - Verwijder de map `bulk_upload`
+  
   - Login als admin:
     - Run update script: `admin/update/code/3067`
     - Run update script: `admin/update/code/3089`
