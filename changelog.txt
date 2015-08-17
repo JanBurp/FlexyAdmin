@@ -3,6 +3,8 @@ Changes ....
 
 UPDATE:
 - CodeIgniter 3.0
+- CodeIgniter 3.0.1
+
 
 NEW:
 - Update tool: admin/update
