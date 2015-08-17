@@ -35,6 +35,7 @@ function el($name,$arr,$default=NULL) {
  * @author Jan den Besten
  */
 function array2object($array,$recursive=TRUE) {
+  if (empty($array)) return $array;
 	$obj = new StdClass();
 	foreach ($array as $key => $val){
 		if (is_array($val)) $val=array2object($val,$recursive);

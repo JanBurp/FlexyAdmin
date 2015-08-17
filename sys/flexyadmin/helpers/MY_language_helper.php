@@ -61,6 +61,7 @@ function set_language_neutral_fields($item,$fields=array('str_title','txt_text')
  */
 function langp($s1="",$sn="") {
 	$CI =& get_instance();
+  $CI->load->model('ui');
 	$args=func_get_args();
 	$line=array_shift($args);
 	$line=$CI->lang->line($line);
