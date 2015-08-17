@@ -735,10 +735,13 @@ class Form {
    */
 	public function get_data() {
 		$data=array();
-		if (!empty($this->post_data))
+		if (!empty($this->post_data)) {
 			$data=$this->post_data;
-    // else
-    //   $data=$this->get_postdata();
+    }
+    else {
+      // Nodig om checkboxes goed mee te krijgen
+      $data=$this->get_postdata();
+    }
 		if (empty($data)) {
 			foreach($this->data as $name=>$field) {
 				if (isset($field['repopulate']))
