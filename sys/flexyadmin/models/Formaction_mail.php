@@ -91,6 +91,7 @@
     }
     else {
       // Send standard
+      $this->load->model('ui');
       $this->load->library('parser');
       // old replace -- for backward compatibility
       $old_replace=array();
@@ -103,10 +104,10 @@
       $this->email->subject($subject);
       $body='';
       // STANDARD BODY
-      foreach ($this->fields as $key => $field) {
+      foreach ($data as $key => $field) {
         $value=el('value',$field,'');
       	if (substr($key,0,1)!='_' and !empty($value)) {
-    			$showKey=ucfirst($field['label']);
+    			$showKey=$this->ui->get($key);
     			$body.="<b>$showKey:&nbsp;</b>";
     			$body.="$value<br/><br/>";
     			if (isset($data[$key]['options'][$value])) {
@@ -118,6 +119,7 @@
       $this->_attach_files($data);
       $send = $this->email->send();
     }
+    
     if ( ! $send) {
       $this->errors=$this->email->print_debugger();
       return false;
