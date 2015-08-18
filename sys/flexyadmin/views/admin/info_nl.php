@@ -15,6 +15,6 @@ Het admin gedeelte van FlexyAdmin werkt op moderne browsers.<br/>
 Mocht je problemen ondervinden, gebruik dan de gratis en veilige <a href="http://www.mozilla.org/firefox">Firefox</a> browser.
 
 <p>&nbsp;</p>
-<p><a href="http://www.flexyadmin.com" target="_blank">FlexyAdmin 2009-2013 r<?=$revision?></a></p>
+<p><a href="http://www.flexyadmin.com" target="_blank">FlexyAdmin <?=$version?> (build <?=$revision?>)</a></p>
 
 <h1>&nbsp;</h1>
