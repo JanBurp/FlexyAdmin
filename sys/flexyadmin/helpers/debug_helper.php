@@ -156,7 +156,7 @@ function trace_($a=NULL,$echo=true,$backtraceOffset=1,$max=50) {
   ob_start();
   var_dump($a);
   $out.=ob_get_contents();
-  $out=preg_replace("/<font/ui", "<font style=\"white-space:nowrap;\" ", $out);
+  $out=preg_replace("/<font/ui", "<font style=\"\" ", $out);
   ob_end_clean();
 
   // if ($c>=$max) {
@@ -197,6 +197,11 @@ function trace_($a=NULL,$echo=true,$backtraceOffset=1,$max=50) {
     echo $out;
   }
 	return $out;
+}
+
+function trace_sql($sql) {
+  $sql = preg_replace("/(SELECT|FROM|WHERE|SET|ORDER|LEFT|RIGHT|LIMIT)\s/uis", "\n$1 ", $sql);
+  return trace_($sql);
 }
 
 /**
