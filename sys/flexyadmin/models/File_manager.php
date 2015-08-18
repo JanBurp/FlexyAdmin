@@ -773,7 +773,9 @@ class File_manager extends CI_Model {
 		/**
 		 * Prepare file data
 		 */
-		$renderData=$this->_create_render_data( array_slice($this->files,$offset,$pagination) );
+    $filesPerPage=$this->files;
+    if ($pagination>0) $filesPerPage=array_slice($filesPerPage,$offset,$pagination);
+		$renderData=$this->_create_render_data( $filesPerPage );
     // trace_([$offset,$pagination,count($this->files),count($renderData),$renderData]);
     
 
