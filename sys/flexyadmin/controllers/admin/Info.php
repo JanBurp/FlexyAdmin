@@ -17,6 +17,7 @@ class Info extends AdminController {
 		// last login info
 		$data["username"]=$this->session->userdata("user");
 		$data["language"]=$this->session->userdata('language');
+    $data["version"]=$this->svn->get_version();
 		$data["revision"]=$this->svn->get_revision();
 		$this->_set_content($this->load->view("admin/info_".$data["language"],$data,true));
 		$this->_show_type("info");
