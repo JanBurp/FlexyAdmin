@@ -197,7 +197,7 @@ class Show extends AdminController {
 						$last_order=$this->db->get_last_order();
 						if (substr($last_order,0,1)!='(') $order=$last_order;
 
-            // trace_('#show#'.$data_query);
+            // trace_sql($data_query);
             // trace_($data);
             // trace_($total_rows);
             // trace_($search);

@@ -122,9 +122,8 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
   private $selectFirst;
   private	$selectFirsts;
   private $qb_dont_select;
-  // private $qb_last_query=FALSE;
+  private $qb_last_query='';
   private $qb_last_count=FALSE;
-  private $remember_query=TRUE;
 
   /**
    * @param string $params 
@@ -1045,8 +1044,9 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
       $query=parent::get($table,$limit,$offset);
     else
       $query=parent::get($table);
+    
+    $this->qb_last_query = $this->last_query();
 
-    if (!$this->remember_query) { array_pop($this->queries); }
 		return $query;
 	}
   
@@ -1466,9 +1466,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
         // get all foreign tree data
         $this->select('id,uri,order,self_parent');
         $this->select($abstract_field)->order_as_tree()->uri_as_full_uri(TRUE,$abstract_field);
-        $this->remember_query=FALSE;
         $foreign_data=$this->get_results($foreign_table,0,0);
-        $this->remember_query=TRUE;
         // put tree abstract in result
         foreach ($result as $id => $row) {
           if (isset($foreign_data[$row[$foreign_key]][$abstract_field]))
@@ -1652,19 +1650,15 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 	}
 
 
-  // /**
-  //  * Geeft laatste query (zelfde als oorspronkelijke method in CI)
-  //  *
-  //  * @return void
-  //  * @author Jan den Besten
-  //  */
-  // // public function last_query() {
-  // //     if ( !$this->qb_last_query) {
-  // //       return parent::last_query();
-  // //     }
-  // //     $sql=$this->qb_last_query;
-  // //   return $sql;
-  // // }
+  /**
+   * Geeft laatste qb_query (zelfde als oorspronkelijke method in CI)
+   *
+   * @return void
+   * @author Jan den Besten
+   */
+  public function last_qb_query() {
+    return $this->qb_last_query;
+  }
   
   /**
    * Geeft laatste query, maar dan opgeschoont
@@ -1673,10 +1667,13 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
    * @return string
    * @author Jan den Besten
    */
-  public function last_query_clean($settings=array()) {
+  public function last_query_clean($settings=array(),$qb=TRUE) {
     $default=array('no_limit'=>true,'no_order'=>false,'select'=>PRIMARY_KEY);
     $settings=array_merge($default,$settings);
-    $sql=$this->last_query();
+    if ($qb)
+      $sql=$this->last_qb_query();
+    else
+      $sql=$this->last_query();
     if ($settings['no_limit']) $sql = preg_replace("/LIMIT\s\d+/ui", " ", $sql);
     if ($settings['select'])   $sql = preg_replace("/SELECT(.*)FROM(.*)/uis", "SELECT ".$settings['select']." FROM$2", $sql); 
     return $sql;
@@ -1946,7 +1943,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 	 * @return string
 	 * @author Jan den Besten
 	 * @deprecated
-		 */
+	*/
 	public function get_abstract_field($table,$asPre="") {
 		return $this->get_abstract_fields_sql($table, $asPre);
 	}
@@ -2096,6 +2093,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
         // set id as key
         $res=$this->_set_key_to($res,PRIMARY_KEY);
       }
+      
       // Deep foreigns?
       $cfgDeep=$this->CI->config->item('DEEP_FOREIGNS');
 			foreach($res as $row) {
