@@ -21,8 +21,8 @@ For recent sites the update processes described below should work:
 
 
 
-UPDATE xxxx
-===========
+UPDATE 3.x (xxxx)
+=================
 
 - Run SQL Update update_r3067.sql (Deze update kan niet binnen FlexyAdmin gedaan worden, gebruik dus PhpMyAdmin oid)
 - Vervang .htaccess en htaccess.htaccess (of voeg iig de code onder dit commentaar toe: # Tell IE to use latest engine)
