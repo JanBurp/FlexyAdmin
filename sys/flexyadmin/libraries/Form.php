@@ -561,6 +561,7 @@ class Form {
 		}
 
 		log_('info',"form: validation");
+    
 		$this->isValidated=$this->CI->form_validation->run();
 
 		foreach ($data as $name => $field) {

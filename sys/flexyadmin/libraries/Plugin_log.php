@@ -69,14 +69,13 @@ class Plugin_log extends Plugin {
 										"search"		=> array('label'=>'Filter'));
 			$form=new form();
 			$form->set_data($data,'Logfiles');
-			if ($form->validation()) {
-				$file=$this->CI->input->post('logfiles');
-				$data['logfiles']['value']=$file;
-				$this->from=$this->CI->input->post('from');
-				$data['from']['value']=$this->from;
-				$this->search=$this->CI->input->post('search');
-				$data['search']['value']=$this->search;
-			}
+
+			$file=$this->CI->input->post('logfiles');
+			$this->from=$this->CI->input->post('from');
+			$this->search=$this->CI->input->post('search');
+			$data['logfiles']['value']=$file;
+			$data['from']['value']=$this->from;
+			$data['search']['value']=$this->search;
       
       // Set params for reading and filtering file
 			if (!empty($this->from)) {
@@ -85,7 +84,7 @@ class Plugin_log extends Plugin {
       }
       
       // Read and filter logfile
-			$currentLog=read_file_filter($this->CI->config->item('log_path').$file, array($this,'_log_filter')  );
+			$currentLog=read_file_filter( $this->CI->config->item('log_path').$file, array($this,'_log_filter')  );
       
 			$this->add_message($form->render());
 			$this->add_message(div('after_form').h($file,1).'<pre>'.$currentLog.'<pre>'._div());
