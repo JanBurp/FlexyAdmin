@@ -58,7 +58,7 @@ class Crud_ extends CI_Model {
 		$this->table=$table;
 		$this->_set_args();
 		$this->user_id=$user_id;
-		log_message('debug', 'Model: Crud; Method: table("'.$table.')"');
+		log_message('debug', 'Crud->table( '.$table.' )');
 		return $this;
 	}
   
@@ -78,6 +78,7 @@ class Crud_ extends CI_Model {
 	public function insert($args='') {
 		$this->_set_args($args);
 		if (empty($this->table)) return FALSE;
+		log_message('debug', 'Crud->insert() '.$this->info['affected_rows'].' items into table '.$this->table);
 		return $this->_update_insert(TRUE);
 	}
   
@@ -104,6 +105,7 @@ class Crud_ extends CI_Model {
 	public function update($args='') {
 		$this->_set_args($args);
 		if (empty($this->table)) return FALSE;
+		log_message('debug', 'Crud->update() '.$this->info['affected_rows'].' from table '.$this->table);
 		return $this->_update_insert(FALSE);
 	}
 
@@ -115,6 +117,7 @@ class Crud_ extends CI_Model {
 	 */
 	private function _update_insert($insert=FALSE) {
 		$id=FALSE;
+
 		if ((is_array($this->where) or $insert) && is_array($this->data)) {
 
 			/**
@@ -161,10 +164,11 @@ class Crud_ extends CI_Model {
 					unset($data[$key]);
 				}
 			}
+      
+      
 
-
-      // trace_(['table'=>$this->table,'where'=>$this->where,'data'=>$data,'many'=>$many]);
-
+      
+      // trace_(['insert'=>$insert,'table'=>$this->table,'where'=>$this->where,'data'=>$data,'many'=>$many]);
 
 			/**
 			* Start updating the data
@@ -181,26 +185,33 @@ class Crud_ extends CI_Model {
             unset($data[$key]);
           }
         }
+        
         // Set data if it has a safe value (not NULL), and if the field exists
+        $set=array();
         foreach ($data as $key => $value) {
-          if (isset($value) and $this->db->field_exists($key,$this->table)) $this->db->set($key,$value);
+          if (isset($value) and $this->db->field_exists($key,$this->table)) $set[$key]=$value;
+        }
+        
+        if (!empty($set)) {
+          $this->db->set($set);
+    			if ($insert) {
+    				$this->db->insert($this->table);
+    				$id=$this->db->insert_id();
+            $this->info=array(
+              'insert_id' =>$id
+            );
+    			}
+    			else {
+    				$this->db->where($this->where);
+    				$this->db->update($this->table);
+            $this->info=array(
+              'affected_rows' => $this->db->affected_rows()
+            );
+    				$id=$this->_get_id();
+    			}
+          // trace_(['sql'=>$this->db->last_query(),'rows'=>$this->db->affected_rows(),'info'=>$this->info]);
         }
 
-  			if ($insert) {
-  				$this->db->insert($this->table);
-  				$id=$this->db->insert_id();
-          $this->info=array(
-            'insert_id' =>$id
-          );
-  			}
-  			else {
-  				$this->db->where($this->where);
-  				$this->db->update($this->table);
-          $this->info=array(
-            'affected_rows' => $this->db->affected_rows()
-          );
-  				$id=$this->_get_id();
-  			}
       }
 			
 			/**
@@ -233,7 +244,6 @@ class Crud_ extends CI_Model {
 			 */
 		
 			$this->db->trans_complete();
-			
 		}
 		return intval($id);
 	}
@@ -318,7 +328,7 @@ class Crud_ extends CI_Model {
             $this->info['affected_rel_rows'] = $affected;
   				}
 				
-  				log_message('debug', 'Model: Crud->Delete('.$id.') from table "'.$this->table.'"');
+  				log_message('debug', 'Crud->delete() '.$this->info['affected_rows'].' items from table '.$this->table);
   			}
 
   			$this->db->trans_complete();
