@@ -78,8 +78,9 @@ class Crud_ extends CI_Model {
 	public function insert($args='') {
 		$this->_set_args($args);
 		if (empty($this->table)) return FALSE;
-		log_message('debug', 'Crud->insert() '.$this->info['affected_rows'].' items into table '.$this->table);
-		return $this->_update_insert(TRUE);
+    $result=$this->_update_insert(TRUE);
+		log_message('debug', 'Crud->insert() '.el('affected_rows',$this->info).' items into table '.$this->table);
+		return $result;
 	}
   
 	/**
@@ -105,8 +106,9 @@ class Crud_ extends CI_Model {
 	public function update($args='') {
 		$this->_set_args($args);
 		if (empty($this->table)) return FALSE;
-		log_message('debug', 'Crud->update() '.$this->info['affected_rows'].' from table '.$this->table);
-		return $this->_update_insert(FALSE);
+    $result = $this->_update_insert(FALSE);
+		log_message('debug', 'Crud->update() '.el('affected_rows',$this->info).' from table '.$this->table);
+		return $result;
 	}
 
 
