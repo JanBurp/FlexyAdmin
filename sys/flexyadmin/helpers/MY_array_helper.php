@@ -478,7 +478,7 @@ function filter_by($arr,$prefix) {
 }
 
 /**
- * Geeft alle elementen uit de associatieve array die NIET de meegegeven prefix(en) in hun key hebben
+ * Geeft alle elementen uit de associatieve array die NIET de meegegeven prefix(en) in hun waarde hebben
  *
  * @param array $a Array
  * @param array $ap Prefix(en) eentje als een string, of meerdere als een array van strings
@@ -516,6 +516,23 @@ function filter_by_key($a,$preKey,$replaceKey=FALSE) {
 		$newKey=$key;
 		if ($replaceKey) $newKey=str_replace($preKey,'',$newKey);
 		if (substr($key,0,$len)==$preKey) $arr[$newKey]=$value;
+	}
+	return $arr;
+}
+
+/**
+ * Geeft alle elemeten uit de associatieve array die NIET de meegegeven (prefix van de) key hebben.
+ *
+ * @param string $a 
+ * @param string $preKey 
+ * @return array
+ * @author Jan den Besten
+ */
+function not_filter_by_key($a,$preKey) {
+	$arr=array();
+	$len=strlen($preKey);
+	foreach ($a as $key => $value) {
+		if (substr($key,0,$len)!==$preKey) $arr[$key]=$value;
 	}
 	return $arr;
 }
