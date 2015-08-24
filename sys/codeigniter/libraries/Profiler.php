@@ -278,7 +278,7 @@ class CI_Profiler {
 					}
 
 					$output .= '<tr><td style="padding:5px;vertical-align:top;width:1%;color:#900;font-weight:normal;background-color:#ddd;">'
-							.$time.'&nbsp;&nbsp;</td><td style="padding:5px;color:#000;font-weight:normal;background-color:#ddd;">'
+							.$time.'&nbsp;['.$key.']&nbsp;&nbsp;</td><td style="padding:5px;color:#000;font-weight:normal;background-color:#ddd;">'
 							.$val."</td></tr>\n";
 				}
 			}
