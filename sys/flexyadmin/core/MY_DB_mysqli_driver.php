@@ -1664,6 +1664,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
    * Geeft laatste query, maar dan opgeschoont
    *
    * @param array $settings default=array('no_limit'=>true,'no_order'=>false,'select'=>PRIMARY_KEY)
+   * @param bool $qb default=TRUE (als FALS dan wordt als bron last_query() gebruikt)
    * @return string
    * @author Jan den Besten
    */
