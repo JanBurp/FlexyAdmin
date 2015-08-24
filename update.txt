@@ -19,9 +19,18 @@ For recent sites the update processes described below should work:
 - perform all the steps from your version to the latest:
 
 
+UPDATE 3.0.1 (xxxx)
+===================
+
+- Update naar CI 3.0.1:
+  - Vervang de map `sys`
+  - Vervang `index.php`
+- Login als admin:
+  - Run update script: `admin/update/database` // update_r3285.sql
 
 
-UPDATE 3.x (xxxx)
+
+UPDATE 3.0 (xxxx)
 =================
 
 - Run SQL Update update_r3067.sql (Deze update kan niet binnen FlexyAdmin gedaan worden, gebruik dus PhpMyAdmin oid)

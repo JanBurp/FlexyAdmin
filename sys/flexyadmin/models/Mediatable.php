@@ -221,27 +221,21 @@ class Mediatable extends CI_Model {
     
     foreach ($paths as $key=>$path) {
       $info=$this->cfg->get('cfg_media_info',$path);
-      $in_database=el('b_in_database',$info,true);
-      if ($in_database) {
-        $path=add_assets($path);
-        $paths[$key]=$path;
-        $files=read_map($path,'',FALSE,TRUE,$this->db->field_exists('stx_meta',$this->table)); // Get header info for jpg
-        $files=not_filter_by($files,'_'); // remove hidden files
-        foreach ($files as $file => $info) {
-          if (is_visible_file($file)) {
-            if ($this->db->field_exists('b_used',$this->table)) $info['b_used']=$this->is_file_used($file,$path);
-            $info['b_exists']=true;
-            if ($clean or !$this->exists_in_table($file,$path)) {
-              $this->add($info);
-            }
-            else {
-              $this->add_info($info);
-            }
+      $path=add_assets($path);
+      $paths[$key]=$path;
+      $files=read_map($path,'',FALSE,TRUE,$this->db->field_exists('stx_meta',$this->table)); // Get header info for jpg
+      $files=not_filter_by($files,'_'); // remove hidden files
+      foreach ($files as $file => $info) {
+        if (is_visible_file($file)) {
+          if ($this->db->field_exists('b_used',$this->table)) $info['b_used']=$this->is_file_used($file,$path);
+          $info['b_exists']=true;
+          if ($clean or !$this->exists_in_table($file,$path)) {
+            $this->add($info);
+          }
+          else {
+            $this->add_info($info);
           }
         }
-      }
-      else {
-        unset($paths[$key]);
       }
     }
     
@@ -312,10 +306,8 @@ class Mediatable extends CI_Model {
     
     if (empty($files)) {
       // not in database, read from filesystem if set so
-      if (!el('b_in_database',$info,true)) {
-        $files=read_map($map,$info['str_types'],FALSE,TRUE,FALSE,FALSE);
-        $asReadMap=false;
-      }
+      $files=read_map($map,$info['str_types'],FALSE,TRUE,FALSE,FALSE);
+      $asReadMap=false;
     }
     if ($asReadMap) {
       $map_files=array();

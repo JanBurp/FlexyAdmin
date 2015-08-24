@@ -5,6 +5,8 @@ UPDATE:
 - CodeIgniter 3.0
 - CodeIgniter 3.0.1
 
+DB:
+- removed: cfg_media_info.b_in_database
 
 NEW:
 - Update tool: admin/update
