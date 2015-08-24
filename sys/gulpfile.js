@@ -209,10 +209,10 @@ gulp.task('install', function() {
     assets+"/js/froala-sanitize.js"
   ])
   .pipe(flatten())
-  // .pipe(sourcemaps.init({loadMaps: true}))
+  .pipe(sourcemaps.init({loadMaps: true}))
   .pipe(concat( 'externals.min.js' ))
   .pipe(uglify())
-  // .pipe(sourcemaps.write('maps'))
+  .pipe(sourcemaps.write('maps'))
   .pipe(gulp.dest( assets+'/js') )
   .pipe(notify({
     title:  'Angular & Modules concat & minified ' + title,

@@ -23,28 +23,27 @@
   ],
   "dependencies": {
     "bootstrap": "~3.x",
-    "angular": "~1.3.x",
-    "angular-route": "~1.x",
+    "angular": "~1.4.x",
+    "angular-route": "~1.4.x",
     "angular-bootstrap": "~0.x",
     "angular-loading-bar": "~0.x",
     "angular-smart-table": "~2.x",
     "angular-toArrayFilter": "~1.x",
-    "ng-sortable": "1.x",
-    "angular-mocks": "~1.x",
+    "ng-sortable": "1.3.x",
+    "angular-mocks": "~1.4.x",
     "angular-http-auth": "git://github.com/witoldsz/angular-http-auth.git#~1.x",
     "angular-bootstrap-show-errors": "~2.x",
-    "angular-schema-form": "~0.7.6",
-    "angular-sanitize": "~1.3.7",
-    "tv4": "~1.1.4",
-    "objectpath": "~1.0.4",
+    "angular-schema-form": "~0.x",
+    "angular-sanitize": "~1.4.x",
+    "tv4": "~1.1.x",
+    "objectpath": "~1.x",
     "angular-froala": "https://github.com/froala/angular-froala.git",
     "FroalaWysiwygEditor": "https://github.com/froala/wysiwyg-editor.git",
-    "components-font-awesome": "~4.2.0",
-    "angular-file-upload": "~1.1.5"
+    "components-font-awesome": "~4.2.x",
+    "angular-file-upload": "~1.1.x"
   },
   "resolutions": {
-    "angular": "1.3.x",
-    "tv4": "~1.1.4",
-    "objectpath": "~1.1.0"
+    "angular": "~1.4.x",
+    "tv4": "~1.1.x"
   }
 }
