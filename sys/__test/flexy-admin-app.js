@@ -32,7 +32,7 @@ var flexyAdmin = angular.module( 'flexyAdmin', [
   'ui.bootstrap.showErrors',
   // Grid
   'smart-table',
-  'ui.sortable',
+  'as.sortable',
   
   // Form
   'schemaForm',

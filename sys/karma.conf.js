@@ -16,7 +16,30 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+
+      // 'js/jquery.min.js',
+      // 'js/angular.js',
+      // 'js/angular-route.js',
+      // 'js/ui-bootstrap-tpls.min.js',
+      // 'js/showErrors.min.js',
+      // 'js/http-auth-interceptor.js',
+      // 'js/toArrayFilter.js',
+      // 'js/loading-bar.js',
+      // 'js/smart-table.min.js',
+      // 'js/ng-sortable.min.js',
+      // 'js/angular-file-upload.js',
+      // 'js/angular-sanitize.min.js',
+      // 'js/tv4.js',
+      // 'js/ObjectPath.js',
+      // 'js/schema-form.min.js',
+      // 'js/bootstrap-decorator.min.js',
+      // 'flexy-form/bootstrap-decorator-froala.js',
+      // 'js/froala_editor.min.js',
+      // 'js/angular-froala.js',
+      // 'js/froala-sanitize.js',
+      
       'js/externals.min.js',
+
       'js/angular-mocks.js',
 
       "jdb*.js",
