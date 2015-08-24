@@ -70,7 +70,7 @@ class Update extends AdminController {
   }
   
   private function _latest_tag() {
-    return $this->_tag_from_files($this->tags);
+    return $this->_tag_from_files($this->tags)-1;
   }
 
   private function _latest_sql() {
@@ -122,10 +122,12 @@ class Update extends AdminController {
 		$updates=read_map('db','sql',FALSE,FALSE);
 		$updates=array_keys($updates);
 		$updates=filter_by($updates,'update_');
+    
 		foreach ($updates as $key=>$file) {
 			$fileRev=(int) substr($file,8,4);
-			if ($fileRev<=$this->updates['database']['latest'])
+			if ($fileRev<=$this->updates['database']['current']) {
 				unset($updates[$key]);
+      }
 			else {
 				// load SQL
 				$sql=file_get_contents('db/'.$file);
@@ -149,6 +151,7 @@ class Update extends AdminController {
   }
   
   private function _update_sys() {
+    // TODO install new files??
     $this->_add_message('sys','<b>Up to date</b>','glyphicon-ok btn-success');
   }
 
