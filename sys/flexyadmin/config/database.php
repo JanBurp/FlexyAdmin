@@ -19,7 +19,7 @@ foreach (array('default','local','phpunit') as $group) {
   $db[$group]['pconnect'] = FALSE;
   $db[$group]['db_debug'] = TRUE;
   $db[$group]['cache_on'] = FALSE;
-  $db[$group]['cachedir'] = "";
+  $db[$group]['cachedir'] = "site/cache";
   $db[$group]['char_set'] = "utf8";
   $db[$group]['dbcollat'] = "utf8_general_ci";
 
