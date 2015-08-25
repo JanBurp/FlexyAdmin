@@ -9,7 +9,7 @@
 
 class Update extends AdminController {
   
-  private $tags   = '../tags';
+  private $tags   = '/FlexyAdmin/tags';
   private $db_map = 'db';
   
   private $updates=array();
@@ -22,6 +22,7 @@ class Update extends AdminController {
     $this->load->model('svn');
     $this->load->model('updates/model_updates');
     $this->load->dbutil();
+    $this->tags=$_SERVER['DOCUMENT_ROOT'].$this->tags;
 	}
 
   public function index() {
@@ -70,7 +71,9 @@ class Update extends AdminController {
   }
   
   private function _latest_tag() {
-    return $this->_tag_from_files($this->tags)-1;
+    $version=$this->_tag_from_files($this->tags);
+    if ($version!='unkown') $version++;
+    return $version;
   }
 
   private function _latest_sql() {
