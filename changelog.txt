@@ -14,6 +14,7 @@ NEW:
 - Unit met PPHunit (en CIunit verwijderd)
 
 CHANGED:
+- Form: het 'html' type is aangepast. Zie documentatie bij Form
 - MY_Pagination has now own config file site/config/pagination.php for template settings
 
 REMOVED:
