@@ -46,15 +46,24 @@
  *      echo $validation_errors . $htmlForm;
  *     }
  * 
- * Velden instellen
- * ================
+ * Opties voor de velden
+ * =====================
  * 
- * Wat je iig per veld kunt instellen:
+ * Alle opties zijn optioneel. Default waarden zijn per optie aangegeven.
  * 
- * - label - Het label dat voor het veld komt, als dit niet wordt meegegeven dan wordt een label gemaakt aan de hand van de naam van het veld (zonder prefix)
- * - type - Type veld, mogelijk zijn de standaard HTML velden: input,textarea,select, etc. (defaultwaarde is 'input')
+ * - label - Label dat voor het veld komt. Default: het label wordt gemaakt aan de hand van de naam van het veld (zonder prefix)
+ * - type - Type veld (zie hieronder). Default: 'input'
  * - options - als het type _select_ is moet je hier een array meegeven van de mogelijke opties
  * - validation - validatie van het veld. Zie de [Form Validation van CodeIgniter](http://codeigniter.com/user_guide/libraries/form_validation.html) voor mogelijke waarden.
+ * - html - extra html wat na het veld wordt geplaatst
+ * - attributes - extra attributen die aan het form element meegegeven kunnen worden.
+ * 
+ * Types velden
+ * ============
+ * - Alle standaard html form elementen zoals _input_, _textarea_, _checkbox_, etc.
+ * - htmleditor - Indien mogelijk wordt hier een htmleditor getoond (uitgebreide textarea zeg maar)
+ * - html - Je kunt hiermee extra html in het formulier plaatsen met de optie 'html'=>'hier je html'
+ * 
  * 
  * 
  * @author Jan den Besten
@@ -827,6 +836,10 @@ class Form {
    * @internal
    */
 	private function render_field($name,$field,$form_class="") {
+    
+    // HTML?
+    if ($field['type']=='html') return $field['html'];
+    
 		$pre=get_prefix($name);
 		if ($pre==$name) $pre="";
     $styles=$this->styles[$this->framework];
@@ -873,7 +886,7 @@ class Form {
 		if (!empty($field['when'])) $this->when($field['when'],$name);
     
 		switch($field["type"]):
-
+      
 			case "hidden":
         $field['container_class'].='hidden';
 				$field['control']='<input type="hidden" '.attributes($attr).'>';
@@ -895,9 +908,9 @@ class Form {
         $field['control']=div('captcha').$cap['image'].form_input($attr)._div();
         break;
 
-			case "html":
-				$field['control']=$field['html'];
-				break;
+      // case "html":
+      //   $field['control']=$field['html'];
+      //   break;
 
 			case "checkbox":
 				if (!empty($attr["value"]))
