@@ -381,7 +381,8 @@ class MY_Form_validation extends CI_Form_validation {
   
   /**
    * Je kunt dit op de normale manier gebruiken (CI), voorbeeld 'cfg_users.str_username'.
-   * Of door de 'id' mee te van de rij uit de tabel. De waarde van het veld op die rij wordt ook geaccepteerd (meestal zichzelf): 'cfg_users.str_username.3'
+   * Of door als extra de 'id' waarde mee te van de rij uit de tabel. De waarde van het veld op die rij wordt ook geaccepteerd (meestal zichzelf): 'cfg_users.str_username.3'
+   * Als de id in de POST data meekomt, kun je ook volstaan met 'id': 'cfg_users.str_username.id'
    *
    * @param string $str 
    * @param string $field 
@@ -392,6 +393,9 @@ class MY_Form_validation extends CI_Form_validation {
     if (substr_count($field, '.')>=2) {
       // Not checking the row where $id=...
       list($table,$field,$id)=explode('.', $field);
+      if ($id==='id' and isset($_POST['id'])) {
+        $id=$this->CI->input->post('id');
+      }
       if ($id>0) {
         $possible_value=$this->CI->db->get_field_where($table,$field,'id',$id);
         if ($str===$possible_value) return true;
