@@ -29,21 +29,6 @@ class Crud_ extends CI_Model {
 		$this->table='';
 	}
   
-  /**
-   * Validate data bij insert/update
-   *
-   * @param bool $validate default=TRUE
-   * @return this
-   * @author Jan den Besten
-   */
-  public function validate($validate=TRUE) {
-    $this->validate_data=$validate;
-    if ($validate) {
-      $this->load->library('form_validation');
-    }
-    return $this;
-  }
-
 	/**
 	 * Stel tabel in waarvoor de acties gelden
 	 *
@@ -61,9 +46,21 @@ class Crud_ extends CI_Model {
 		log_message('debug', 'Crud->table( '.$table.' )');
 		return $this;
 	}
+
   
-  public function get_table() {
-    return $this->table;
+  /**
+   * Geef aan of bij insert/update de data eerst moet worden gevalideerd
+   *
+   * @param bool $validate default=TRUE
+   * @return this
+   * @author Jan den Besten
+   */
+  public function validate($validate=TRUE) {
+    $this->validate_data=$validate;
+    if ($validate) {
+      $this->load->library('form_validation');
+    }
+    return $this;
   }
 
 
@@ -431,7 +428,18 @@ class Crud_ extends CI_Model {
   
   
   /**
-   * Get result
+   * Geeft gebruikte tabel terug
+   *
+   * @return string $table
+   * @author Jan den Besten
+   */
+  public function get_table() {
+    return $this->table;
+  }
+  
+  
+  /**
+   * Geeft array van rijen als resultaat
    *
    * @param string $args 
    * @return mixed $result
@@ -457,7 +465,7 @@ class Crud_ extends CI_Model {
   }
   
   /**
-   * Get result as array
+   * Zelfde als get()
    *
    * @param string $args 
    * @return array $result
@@ -468,7 +476,7 @@ class Crud_ extends CI_Model {
   }
 
   /**
-   * Get result as row
+   * Geeft rij als resultaat
    *
    * @param string $args 
    * @return array $result
