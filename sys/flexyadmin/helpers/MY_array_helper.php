@@ -1263,5 +1263,23 @@ function flatten_array_by_field($a,$field) {
   return $flatten;
 }
 
+/**
+ * Loopt alle items in de array (recursief) langs en verwijderd empty waarden
+ *
+ * @param array $a 
+ * @return array $a
+ * @author Jan den Besten
+ */
+function array_unset_empty_values($a) {
+  foreach ($a as $key => $value) {
+    if (is_array($value)) {
+      $value=array_unset_empty_values($value);
+      $a[$key]=$value;
+    }
+    if (empty($value)) unset($a[$key]);
+  }
+  return $a;
+}
+
 
 ?>
