@@ -762,6 +762,10 @@ class Form {
 		}
     unset($data['captcha']);
     unset($data['_captcha']);
+    // cleanup html types
+    foreach ($data as $key => $value) {
+      if (el(array($key,'type'),$this->data,'input')=='html') unset($data[$key]);
+    }
 		return $data;
 	}
 
