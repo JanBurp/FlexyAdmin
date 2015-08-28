@@ -87,7 +87,7 @@ var files = {
    */
   'bootstrap' : {
     'js'      : assets+'/js',
-    'jshint'  : assets+'/js/*.js',
+    'jshint'  : assets+'/js/site.js',
     'jsmin'   : [
       assets+'/js/jquery.min.js',
       assets+'/js/bootstrap.min.js',
@@ -142,6 +142,8 @@ var jshint      = require('gulp-jshint');
 var stylish     = require('jshint-stylish');
 var uglify      = require('gulp-uglify');
 var flatten     = require('gulp-flatten');
+var cached      = require('gulp-cached');
+var remember    = require('gulp-remember');
 
 var phpunit     = require('gulp-phpunit');
 
@@ -218,7 +220,9 @@ gulp.task('install', function() {
 gulp.task('jshint',function(){
   return gulp.src( files[framework]['jshint'] )
         .pipe(plumber({ errorHandler: onError }))
+        .pipe(cached('jshint'))
         .pipe(jshint())
+        .pipe(remember('jshint'))
         // Use gulp-notify as jshint reporter
         .pipe(notify(function (file) {
           if (file.jshint.success) { return false }
@@ -241,9 +245,11 @@ gulp.task('jsmin',['jshint'],function(){
   return gulp.src( files[framework]['jsmin'] )
         .pipe(flatten())
         .pipe(sourcemaps.init({loadMaps: true}))
-        .pipe(concat(files[framework]['jsdest']))
+        .pipe(cached('jsmin'))
         .pipe(uglify())
+        .pipe(remember('jsmin'))
         .pipe(sourcemaps.write('maps'))
+        .pipe(concat(files[framework]['jsdest']))
         .pipe(gulp.dest( files[framework]['js']) )
         .pipe(notify({
           title:  'JS contact & uglify ' + title,
@@ -258,7 +264,9 @@ gulp.task('less',function(){
   return gulp.src( files[framework]['less'] )
         .pipe(plumber({ errorHandler: onError }))
         .pipe(sourcemaps.init())
+        .pipe(cached('less'))
         .pipe(less({compress:true}))
+        .pipe(remember('less'))
         .pipe(sourcemaps.write('maps'))
         .pipe(gulp.dest( files[framework]['css'] ))
         .pipe(notify({

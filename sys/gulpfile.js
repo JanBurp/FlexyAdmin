@@ -24,10 +24,6 @@ var watch_interval = 100;
 var bower     = 'bower_components';
 var assets    = '__test';
 
-/**
- * Bestanden die per framework moeten worden verwerkt.
- * Pas dit aan (bij je framework). Bij default staat overal commentaar achter voor uitleg.
- */
 var files = {
   // JS
   'js'      : assets+'/js',
@@ -94,6 +90,8 @@ var jshint      = require('gulp-jshint');
 var stylish     = require('jshint-stylish');
 var uglify      = require('gulp-uglify');
 var flatten     = require('gulp-flatten');
+var cached      = require('gulp-cached');
+var remember    = require('gulp-remember');
 
 var phpunit     = require('gulp-phpunit');
 
@@ -230,7 +228,9 @@ gulp.task('install', function() {
 gulp.task('jshint',function(){
   return gulp.src( files['jshint'] )
     .pipe(plumber({ errorHandler: onError }))
+    .pipe(cached('sys_jshint'))
     .pipe(jshint())
+    .pipe(remember('sys_jshint'))
     // Use gulp-notify as jshint reporter
     .pipe(notify(function (file) {
       if (file.jshint.success) { return false }
@@ -253,9 +253,11 @@ gulp.task('jsmin',['jshint'],function(){
   return gulp.src( files['jsmin'] )
     .pipe(flatten())
     .pipe(sourcemaps.init({loadMaps: true}))
-    .pipe(concat(files['jsdest']))
+    .pipe(cached('sys_jsmin'))
     .pipe(uglify())
+    .pipe(remember('sys_jsmin'))
     .pipe(sourcemaps.write('maps'))
+    .pipe(concat(files['jsdest']))
     .pipe(gulp.dest( files['js']) )
     .pipe(notify({
       title:  'JS contact & uglify ' + title,
@@ -270,7 +272,9 @@ gulp.task('less',function(){
   return gulp.src( files['less'] )
         .pipe(plumber({ errorHandler: onError }))
         .pipe(sourcemaps.init())
+        .pipe(cached('sys_less'))
         .pipe(less({compress:true}))
+        .pipe(remember('sys_less'))
         .pipe(sourcemaps.write('maps'))
         .pipe(gulp.dest( files['css'] ))
         .pipe(notify({
