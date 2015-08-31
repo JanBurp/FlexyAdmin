@@ -185,7 +185,9 @@ class Plugin_automenu extends Plugin {
 		}
 		if ($offset>0 and $limit==0) $limit=10000;
 
-    $this->CI->db->order_as_tree();
+    if ($this->CI->db->has_field($table,'order')) {
+      $this->CI->db->order_as_tree();
+    }
 		$data=$this->CI->db->get_results($table,$limit,$offset);
     
 		if ($table==$this->table and isset($this->newData['id']) and $this->pass==1) {

@@ -436,7 +436,6 @@ class Menu {
 		reset($menu);
 		$menu=current($menu);
 		$this->set_menu($menu);
-		// trace_($menu);
 		return $menu;
 	}
 
