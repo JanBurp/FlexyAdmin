@@ -1332,9 +1332,9 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 	public function _set_key_to($a,$key="") {
     $out=$a;
 		$n=0;
-		$out=array();
 		$first=current($a);
 		if (isset($first[$key])) {
+      $out=array();
 			foreach($a as $row) {
 				if (empty($key))
 					$out[$n++]=$row;
