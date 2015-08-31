@@ -22,7 +22,7 @@ $config['testmode'] = false;
  * - default - the basic and light flexyadmin template
  * - bootstrap - use bootstrap as a start
  * 
- * NB If you use gulpfile.js, change the framework there also!
+ * Als je gulp gebruikt (in het geval van Bootstrap moet dat, of je moet site.php aanpassen) dan moet je in .gulpfile.js ook het framework nog instellen.
  */
 // $config['framework']='bootstrap';
 

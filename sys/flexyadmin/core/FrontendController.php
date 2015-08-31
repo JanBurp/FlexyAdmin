@@ -51,7 +51,7 @@ class FrontEndController extends MY_Controller {
       if (!$this->user->is_super_admin()) {
         $temp=file_get_contents('index_temp.html');
         echo $temp;
-        unlink('sitemap.xml');
+        if (file_exists('sitemap.xml')) unlink('sitemap.xml');
         die();
       }
     }
