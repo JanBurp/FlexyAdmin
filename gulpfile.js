@@ -263,11 +263,11 @@ gulp.task('jsmin',['jshint'],function(){
 gulp.task('less',function(){
   return gulp.src( files[framework]['less'] )
         .pipe(plumber({ errorHandler: onError }))
-        .pipe(sourcemaps.init())
         .pipe(cached('less'))
+        .pipe(sourcemaps.init())
         .pipe(less({compress:true}))
-        .pipe(remember('less'))
         .pipe(sourcemaps.write('maps'))
+        .pipe(remember('less'))
         .pipe(gulp.dest( files[framework]['css'] ))
         .pipe(notify({
           title:   'LESS' + title,
@@ -282,7 +282,7 @@ gulp.task('cssmin',['less'],function(){
   return gulp.src( files[framework]['cssmin'] )
         .pipe(sourcemaps.init({loadMaps: true}))
         .pipe(autoprefixer())
-        .pipe(pixrem())
+        // .pipe(pixrem())
         .pipe(concat(files[framework]['cssdest']))
         .pipe(sourcemaps.write('maps'))
         .pipe(gulp.dest( files[framework]['css']) )
