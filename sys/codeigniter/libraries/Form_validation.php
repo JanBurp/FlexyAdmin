@@ -245,7 +245,7 @@ class CI_Form_validation {
 			'postdata'	=> NULL,
 			'error'		=> ''
 		);
-
+    
 		return $this;
 	}
 

@@ -28,7 +28,7 @@ class MY_Form_validation extends CI_Form_validation {
    */
 	public function set_rules($field, $label = '', $rules = array(), $errors = array()) {
     if (is_string($rules)) {
-      $rules=trim(trim($rules),'|'); 
+      $rules=trim(trim($rules),'|');
       if (empty($rules)) $rules = array(); // if an empty string...
     }
     // clean up empty rules
@@ -39,6 +39,39 @@ class MY_Form_validation extends CI_Form_validation {
     }
     return parent::set_rules($field,$label,$rules,$errors);
   }
+  
+  
+	/**
+	 * Run the Validator
+	 *
+	 * JDB Change: als er geen validation data is, dan is er geen validatie nodig en is het waar.
+	 *
+	 * @param	string	$group
+	 * @return	bool
+	 */
+	public function run($group = '') {
+		// Do we even have any data to process?  Mm?
+		$validation_array = empty($this->validation_data) ? $_POST : $this->validation_data;
+		if (count($validation_array) === 0)
+		{
+			return FALSE;
+		}
+
+		// Does the _field_data array containing the validation rules exist?
+		// If not, we look to see if they were assigned via a config file
+		if (count($this->_field_data) === 0)
+		{
+			// No validation rules?  We're done...
+			if (count($this->_config_rules) === 0)
+			{
+				return TRUE;
+			}
+    }
+    
+    return parent::run($group);
+  }
+
+
   
   /**
    * Geeft validation foutmeldingen terug
