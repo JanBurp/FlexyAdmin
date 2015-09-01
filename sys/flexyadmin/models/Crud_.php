@@ -192,6 +192,16 @@ class Crud_ extends CI_Model {
         }
         
         if (!empty($set)) {
+          // Set user_changed (if known and field exists)
+          if ($this->user_id and $this->db->field_exists('user_changed',$this->table)) {
+            $set['user_changed']=$this->user_id;
+            // first timestamp?
+            if ($insert and $this->db->field_exists('tme_last_changed',$this->table)) {
+              $set['tme_last_changed']=date(DATE_W3C);
+            }
+          }
+          
+          // SET
           $this->db->set($set);
     			if ($insert) {
     				$this->db->insert($this->table);
