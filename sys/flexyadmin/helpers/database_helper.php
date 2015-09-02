@@ -279,6 +279,26 @@ function find_module_uri($module,$full_uri=true,$table='') {
   return false;
 }
 
+/**
+ * Maakt van een database result opties die gebruikt kunnen worden in een form
+ *
+ * @param array $result 
+ * @param mixed $fields ['*'] 
+ * @return array
+ * @author Jan den Besten
+ */
+function make_options_from_result($result,$fields='*') {
+  $options=array();
+  foreach ($result as $key => $row) {
+    $id=$key;
+    if (isset($row['id'])) $id=$row['id'];
+    unset($row['id']);
+    if ($fields!=='*') $row=array_keep_keys($row,$fields);
+    $options[$id]=implode('|',$row);
+  }
+  return $options;
+}
+
 
 
 ?>

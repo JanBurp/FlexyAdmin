@@ -24,7 +24,7 @@ class ApiTableTest extends ApiTestModel {
         'data'  => array( 'type' => 'array' ),
         'data'  => array( 'countGreaterOrEqual' => 1 ),
         'info'  => array( 'type' => 'array' ),
-        'info'  => array( 'count' => 3 ),
+        'info'  => array( 'count' => 4 ),
       )
     ));
 
