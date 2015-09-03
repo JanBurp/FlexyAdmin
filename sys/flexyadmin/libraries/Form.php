@@ -522,8 +522,38 @@ class Form {
    */
 	public function validation($form_id='') {
 		$data=$this->data;
-    
     if (!$this->_this_form($form_id)) return FALSE;
+    
+    // Extra (cloned) fields? Zorg ervoor dat die ook gevalideerd worden.
+    $set_fields=array_keys($this->data);
+    $post_fields=array_keys($_POST);
+    $extra_fields=array_diff($post_fields,$set_fields);
+    $cloned_fields=false;
+    if ($extra_fields) {
+      // Kijk of er clonen van bestaan en voeg dat toe aan data
+      foreach ($extra_fields as $key => $field) {
+        if (!in_array($field,array('submit','__form_id'))) {
+          $clone_nr=(int) get_suffix($field,'-');
+          $original_name=remove_suffix($field,'-').'-'.($clone_nr-1);
+          $info=el($original_name,$this->data);
+          if ($info) {
+            $cloned_fields=true;
+            $info['name']=$field;
+            $info['value']=$_POST[$field];
+            $info['label']=preg_replace("/\s\d*$/uim", " ".($clone_nr+1), $info['label']);
+            $data=array_add_after($data,$original_name,array($field=>$info));
+          }
+        }
+      }
+      if ($cloned_fields) {
+        $this->data=$data;
+        // trace_(['set_fields'=>$set_fields,'post_fields'=>$post_fields,'extra'=>$extra_fields]);
+        // trace_($cloned_fields);
+      }
+    }
+    
+    
+    
     
 		$hasCaptcha=FALSE;
     
