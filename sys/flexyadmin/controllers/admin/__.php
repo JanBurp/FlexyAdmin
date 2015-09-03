@@ -31,6 +31,9 @@ class __ extends AdminController {
     $this->version=$this->svn->get_version();
     $this->revision=$this->svn->get_revision();
     $this->upload_path = $_SERVER['DOCUMENT_ROOT'].$this->upload_path;
+    $doxygen = file_get_contents('userguide/doxygen.cfg');
+    $doxygen = preg_replace("/(PROJECT_NUMBER\s*=)(.*)/uim", "$1 ".$this->version.'&nbsp;(r'.$this->revision.')', $doxygen);
+    file_put_contents('userguide/doxygen.cfg',$doxygen);
 	}
 
 	public function index() {
