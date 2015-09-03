@@ -14,6 +14,7 @@ class __ extends AdminController {
   private $tinyMCElibs='../FlexyAdmin_DocsLibs/Libraries/tinyMCE';
   private $work='FlexyAdminDEMO';
   private $tags='zips';
+  private $version;
   private $revision;
   
   private $upload_path = '/test_afbeeldingen/test_groot';
@@ -27,6 +28,7 @@ class __ extends AdminController {
 	public function __construct() {
 		parent::__construct();
     $this->load->model('svn');
+    $this->version=$this->svn->get_version();
     $this->revision=$this->svn->get_revision();
     $this->upload_path = $_SERVER['DOCUMENT_ROOT'].$this->upload_path;
 	}
@@ -36,10 +38,10 @@ class __ extends AdminController {
     $menuArray=array(
       array( 'uri'=>'admin/__/minify', 'name' => 'Minify JS & CSS' ),
       array( 'uri'=>'admin/__/tinymce', 'name' => 'Update tinyMCE' ),
-      array( 'uri'=>'admin/__/clean_assets', 'name' => 'Clean assets' ),
+      // array( 'uri'=>'admin/__/clean_assets', 'name' => 'Clean assets' ),
       array( 'uri'=>'admin/__/process_svnlog', 'name' => 'Process SVN log' ),
-      array( 'uri'=>'admin/__/build', 'name' => 'Build revision: '.$this->revision ),
-      array( 'uri'=>'admin/__/ajax_upload_text', 'name' => 'API/Ajax upload test' ),
+      array( 'uri'=>'admin/__/build', 'name' => 'Build version: '.$this->version.' (r'.$this->revision.')' ),
+      // array( 'uri'=>'admin/__/ajax_upload_text', 'name' => 'API/Ajax upload test' ),
     );
     $menu = new Menu();
     $menu->set_menu($menuArray);
@@ -292,19 +294,19 @@ class __ extends AdminController {
    **/
   public function build() {
     $revision=$this->svn->get_revision() + 1;
-    $tags=$this->tags.'/FlexyAdmin_r'.$revision;
-    $this->_add_content('<h1>Build: r_'.$revision.'</h1>');
+    $tags=$this->tags.'/FlexyAdmin_'.$this->version.'_r'.$revision;
+    $this->_add_content('<h1>Build: '.$this->version.' r_'.$revision.'</h1>');
 
     // Copy alles behalve hidden files en files/mappen met __ en _test (dat zijn build processen en autodoc bronbestanden) en node_modules
     $this->_add_content('<p>Copy all</p>');
-    copy_directory( $this->path.$this->work, $this->path.$tags, array('/.svn','/__','/_test','/node_modules','/bower_components') );
+    copy_directory( $this->path.$this->work, $this->path.$tags, array('/.svn','/__','/_test','/node_modules') );
     
     // - maak lege db instelling bestand
     unlink($this->path.$tags.'/site/config/database_local.php');
     rename($this->path.$tags.'/site/config/database_local_empty.php', $this->path.$tags.'/site/config/database_local.php');
 
     // - maak zip, geef dit de naam met revisie nr
-    $zip=$this->path.$this->tags.'/FlexyAdmin_r'.$revision.'.zip';
+    $zip=$this->path.$this->tags.'/FlexyAdmin_'.$this->version.'_r'.$revision.'.zip';
     $this->_add_content('<p>Create:'.$zip.'</p>');
     $this->load->library('zip');
     $this->zip->read_dir($this->path.$tags.'/',FALSE); 
