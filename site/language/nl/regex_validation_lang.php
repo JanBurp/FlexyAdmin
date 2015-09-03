@@ -1,6 +1,7 @@
 <?php
 
-$lang['valid_zipcode']	         = "'{field}' bevat geen juiste postcode";
+$lang['valid_zipcode']	         = "{field} bevat geen geldige postcode";
+$lang['valid_phone']             = "'{field}' bevat geen geldig telefoonnummer";
 
 
 /* End of file form_validation_lang.php */
