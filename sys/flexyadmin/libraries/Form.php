@@ -553,8 +553,6 @@ class Form {
     }
     
     
-    
-    
 		$hasCaptcha=FALSE;
     
 		foreach($data as $name=>$field) {
