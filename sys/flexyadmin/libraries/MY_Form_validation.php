@@ -14,6 +14,7 @@ class MY_Form_validation extends CI_Form_validation {
     parent::__construct();
     $this->CI = @get_instance();
     $this->CI->load->helper('email');
+    $this->CI->lang->load('regex_validation');
   }
   
   /**
@@ -562,12 +563,13 @@ class MY_Form_validation extends CI_Form_validation {
     * Form validation rule die de invoer in het formulier checkt tegen een regex waarde.
     * De regex waarden moeten worden ingesteld in de config bij $config['valid_regex_rules'].
     * De error_key verwijst naar een key in de language file regex_validation_lang
+    * 
     * @param  string $str
     * @param  string $regex_rule
     * @return mixed
     */
     public function valid_regex($str, $regex_rule) {
-      $regexs=$this->config->item('valid_regex_rules');
+      $regexs=$this->CI->config->item('valid_regex_rules');
       if (!isset($regexs[$regex_rule])) {
         $this->set_message('valid_regex', langp('valid_regex_rule',$regex_rule));
         return FALSE;
