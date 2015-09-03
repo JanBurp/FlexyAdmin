@@ -392,6 +392,10 @@ $config['valid_regex_rules'] = array(
   'postcode' => array(
     'regex'     => '/^[1-9][0-9]{3}[\s]?[A-Za-z]{2}$/i',
     'error_key' => 'valid_zipcode'
+  ),
+  'telefoon'  => array(
+    'regex'     => '/^\(?0\d{1,4}\)?[-\s]\d{5,8}$/',
+    'error_key' => 'valid_phone'
   )
 );
 
