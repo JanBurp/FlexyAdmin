@@ -237,7 +237,7 @@ class ui extends CI_Model {
         if (!empty($newword)) $s[$key]=$newword;
       }
     }
-    $s=implode(' ',$s);
+    $s=implode('',$s);
     $s=str_replace(' .','.',$s);
 		return $s;
 	}
