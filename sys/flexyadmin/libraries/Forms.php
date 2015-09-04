@@ -215,7 +215,7 @@ class Forms extends Module {
     }
     
     if (!$formFields) {
-      echo '<div class="warning">'.langp('error_no_fields',$this->name).'<div>';
+      log_message('error', langp('error_no_fields',$this->name));
       return false;
     }
     
