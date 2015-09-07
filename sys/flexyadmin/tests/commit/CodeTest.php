@@ -11,6 +11,8 @@ class CodeTest extends CITestCase {
    * @author Jan den Besten
    */
   public function test_debug_code() {
+    echo "commit/".__METHOD__."\n";
+    
     $files=scan_map('sys/flexyadmin','php',true);
     foreach ($files as $file) {
       if (!in_array($file,array('sys/flexyadmin/tests/commit/CodeTest.php','sys/flexyadmin/helpers/debug_helper.php'))) {

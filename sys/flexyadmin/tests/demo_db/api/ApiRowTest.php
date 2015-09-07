@@ -47,11 +47,15 @@ class ApiRowTest extends ApiTestModel {
   }
 
   public function testWithoutLogin() {
+    echo "demo_db/api/ApiRowTest".__METHOD__."\n";
+    
     $this->_testWithoutAuth('row');
   }
 
 
   public function testWithLogin() {
+    echo "demo_db/api/ApiRowTest".__METHOD__."\n";
+    
     $this->_testWithAuth(array(
       'model'   => 'row',
       'args'    => array(
@@ -72,11 +76,15 @@ class ApiRowTest extends ApiTestModel {
 
 
   public function testWithWrongParameters() {
+    echo "demo_db/api/ApiRowTest".__METHOD__."\n";
+    
     $this->_testWithWrongParameters('row');
   }
 
 
   public function testConfig() {
+    echo "demo_db/api/ApiRowTest".__METHOD__."\n";
+    
     // Test config of tbl_menu
     $this->_testWithAuth(array(
       'model'   => 'row',
@@ -107,6 +115,7 @@ class ApiRowTest extends ApiTestModel {
 
 
   public function testCrud() {
+    echo "demo_db/api/ApiRowTest".__METHOD__."\n";
     
     foreach ($this->testData as $test) {
       $table=$test['table'];
@@ -250,7 +259,8 @@ class ApiRowTest extends ApiTestModel {
   
   
   public function testWrongData() {
-
+    echo "demo_db/api/ApiRowTest".__METHOD__."\n";
+    
     foreach ($this->wrongData as $test) {
       $table=$test['table'];
 

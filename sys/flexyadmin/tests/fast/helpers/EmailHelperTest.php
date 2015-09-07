@@ -9,6 +9,8 @@ class EmailHelperTest extends CITestCase {
   }
 
   public function testEmailValidation() {
+    echo "fast/helpers/EmailHelperTest/".__METHOD__."\n";
+    
     $this->assertTrue(valid_email('test@test.com'));
     $this->assertFalse(valid_email('test#testcom'));
   }

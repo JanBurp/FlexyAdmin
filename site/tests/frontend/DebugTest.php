@@ -11,14 +11,17 @@ class DebugTest extends CITestCase {
    * @author Jan den Besten
    */
   public function test_debug_code() {
+    echo "frontend/".__METHOD__."\n";
+    
     if ($this->CI->config->item('check_if_debug_code')) {
       $files=scan_map('site','php',true);
-      unset($files['sys/flexyadmin/helpers/debug_helper.php']);
-      foreach ($files as $file) {
-        $lines=file($file['path']);
+      if (!in_array($file,array('site/tests/frontend/DebugTest.php'))) {
+        $lines=file($file);
         foreach ($lines as $key => $line) {
-          $found=preg_match("/^\s*\s*(trace_|trace_if|strace_|backtrace_|xdebug_break|var_dump)\(/u", $line);
-          $this->assertLessThan(1,$found, 'Debug helper found in `<i><b>'.$file['path'].'</i></b>` at line '.($key+1).':<br><code>'.$line.'</code>');
+          $found=preg_match("/^\s*\s*(trace_|trace_if|strace_|backtrace_|xdebug_break|var_dump|FIXME|\<\<\<\<\<\<\<|\>\>\>\>\>\>\>)\(/u", $line);
+          $this->assertLessThan(1,$found, 'Debug helper found in `'.$file.'` at line '.($key+1)."\n".$line);
+          $found=preg_match("/(<<<<<<<|>>>>>>>)/uim", $line);
+          $this->assertLessThan(1,$found, 'Subversion text found in `'.$file.'` at line '.($key+1)."\n".$line);
         }
       }
     }

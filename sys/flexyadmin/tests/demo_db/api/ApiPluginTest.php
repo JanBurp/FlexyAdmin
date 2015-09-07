@@ -7,10 +7,14 @@ class ApiPluginTest extends ApiTestModel {
   }
 
   public function testWithoutLogin() {
+    echo "demo_db/api/ApiPluginTest".__METHOD__."\n";
+    
     $this->_testWithoutAuth('get_plugin');
   }
 
   public function testWithLogin() {
+    echo "demo_db/api/ApiPluginTest".__METHOD__."\n";
+    
     $this->_testWithAuth(array(
       'model'   => 'get_plugin',
       'args'    => array('table'=>'','plugin'=>'stats'),
@@ -28,6 +32,8 @@ class ApiPluginTest extends ApiTestModel {
   }
 
   public function testWithWrongParameters() {
+    echo "demo_db/api/ApiPluginTest".__METHOD__."\n";
+    
     $this->_testWithWrongParameters('get_plugin');
   }
   
