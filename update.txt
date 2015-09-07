@@ -25,7 +25,7 @@ UPDATE 3.0.1 (xxxx)
 - Update naar CI 3.0.1:
   - Vervang de map `sys`
   - Vervang `index.php`
-- Login als admin:
+- Login als admin en run update scripts:
   - Run update script: `admin/update/database` // update_r3285.sql
 
 
@@ -46,7 +46,7 @@ UPDATE 3.0 (xxxx)
   - Vervang `site/config/unittests.php`
   - Verwijder de map `bulk_upload`
   
-  - Login als admin:
+  - Login als admin en run update scripts:
     - Run update script: `admin/update/code/3067`
     - Run update script: `admin/update/code/3089`
     - Run daarna update script: : `admin/update/all`
