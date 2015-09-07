@@ -66,7 +66,7 @@ class Testlang extends CI_Controller
         {
 
             $classname = ($language == $idiom) ? "btn btn-primary" : "btn btn-default";
-            $language = anchor("admin/testlang/lang_text/$language", ucfirst($language), array('class' => $classname));
+            $language = anchor("admin/testlang/lang_text/$language", $language, array('class' => $classname));
         }
         unset($language);
 
@@ -104,7 +104,7 @@ class Testlang extends CI_Controller
             $nb_error = $this->testlang_lib->get_nb_error();
 
             // Link title
-            $title = ($i + 1) . ". " . ucfirst($idiom);
+            $title = ($i + 1) . ". " . $idiom;
 
             if ($nb_error == 0)
             {
