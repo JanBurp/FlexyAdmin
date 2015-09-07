@@ -39,17 +39,3 @@ $lang['form_validation_greater_than']		= 'Het {field}-veld dient een cijfer grot
 $lang['form_validation_greater_than_equal_to']	= 'Het {field}-veld dient een cijfer groter dan, of gelijk aan {param} te bevatten.';
 $lang['form_validation_error_message_not_set']	= 'Tijdens de validatie van het {field}-veld is een niet nader genoemde fout opgetreden.';
 $lang['form_validation_in_list']		= 'Het {field}-veld moet één van de volgende waardes bevatten: {param}.';
-
-// FlexyAdmin extensions
-$lang['form_validation_valid_option']			  = "'{field}' moet een van de volgende waarden hebben: [{param}]";
-$lang['form_validation_valid_options']			= "'{field}' moet waarden bevatten uit de volgende lijst: [{param}]";
-$lang['form_validation_is_not']			        = "'{field}' mag niet: [{param}] zijn.";
-
-$lang['form_validation_valid_rgb']				       = "Geen juiste kleurcode in '{field}'";
-$lang['form_validation_valid_date']              = "'{field}' moet een datum bevatten in dit formaat dd-mm-yyyy";
-$lang['form_validation_valid_google_analytics']	 = "'{field}' bevat geen juiste code voor Google Analytics";
-$lang['form_validation_valid_same']	             = "'{field}' is niet juist.";
-$lang['form_validation_valid_password']	         = "'{field}' moet minimaal 8 karakters lang zijn met minimaal één hoofletter, één kleine letter en één cijfer.";
-
-$lang['form_validation_valid_regex_rule']        = "Regex rule '{field}' bestaat niet.";
-$lang['form_validation_valid_regex']	           = "'{field}' bevat geen juiste waarde";
