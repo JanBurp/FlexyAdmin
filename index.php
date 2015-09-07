@@ -74,6 +74,15 @@
  * @copyright	(c) Jan den Besten
  */
 
+
+/*
+ *------------------------------------------------------------------------------------------------
+ * FLEXYADMIN: Set debugging features on/off
+ *------------------------------------------------------------------------------------------------
+ */
+define('DEBUGGING', false);
+// define('DEBUGGING', true);
+
 /*
  *------------------------------------------------------------------------------------------------
  * FLEXYADMIN: Set the emailadress of the webmaster here, bug reports will be send to this address
@@ -117,6 +126,7 @@ if ( !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_RE
 else
   define("IS_AJAX",false);
 
+
 /*
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT
@@ -138,16 +148,18 @@ else
 /*
  * FLEXYADMIN: Set according to IS_LOCALHOST
  */
-if (defined('PHPUNIT_TEST')) {
+
+
+if (defined('PHPUNIT_TEST') or DEBUGGING) {
   define('ENVIRONMENT','testing');
 }
-elseif (IS_LOCALHOST)
+elseif (IS_LOCALHOST) {
   define('ENVIRONMENT', 'development');
-else
+}
+else {
   define('ENVIRONMENT', 'production');
+}
 
-// define('ENVIRONMENT','testing');   // This sets logging on
-  
 
 /*
  *---------------------------------------------------------------

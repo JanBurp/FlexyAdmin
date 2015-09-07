@@ -39,6 +39,10 @@
 
 $autoload['packages'] = array();
 
+if (ENVIRONMENT=='testing') {
+  $autoload['packages'] = array(APPPATH.'third_party/DevelBar');
+}
+
 /*
 | -------------------------------------------------------------------
 |  Auto-load Libraries

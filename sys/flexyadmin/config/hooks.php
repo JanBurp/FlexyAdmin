@@ -12,6 +12,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 */
 
+if (ENVIRONMENT=='testing') {
+  $hook['display_override'][] = array(
+  	'class'  	=> 'Develbar',
+      'function' 	=> 'debug',
+      'filename' 	=> 'Develbar.php',
+      'filepath' 	=> 'third_party/DevelBar/hooks'
+  );
+}
+
+
 if (defined('PHPUNIT_TEST')) {
   $hook['display_override'] = array();
 }
