@@ -110,8 +110,8 @@ class Schemaform extends CI_Model {
       
     }
     
-    trace_($sf['schema']);
-    trace_($sf['form']);
+    // trace_($sf['schema']);
+    // trace_($sf['form']);
     return $sf;
   }
   
