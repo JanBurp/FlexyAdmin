@@ -32,7 +32,20 @@ class MY_Lang extends CI_Lang {
     else {
       $this->set();
     }
+    log_message('debug', 'MY Language Class Initialized');
 	}
+
+
+  /**
+   * Voor LangTester
+   *
+   * @return void
+   */
+  public function reset_lang() {
+    $this->language = array();
+    $this->is_loaded = array();
+  }
+
 	
   /**
    * Zet standaard taal
