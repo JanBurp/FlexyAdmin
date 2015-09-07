@@ -7,15 +7,21 @@ class ApiTableTest extends ApiTestModel {
   }
 
   public function testWithoutLogin() {
+    echo "demo_db/api/ApiTableTest".__METHOD__."\n";
+    
     $this->_testWithoutAuth('table');
   }
   
   public function testWithWrongParameters() {
+    echo "demo_db/api/ApiTableTest".__METHOD__."\n";
+    
     $this->_testWithWrongParameters('table');
   }
   
 
   public function testWithLogin() {
+    echo "demo_db/api/ApiTableTest".__METHOD__."\n";
+    
     // Test all tables
     $this->_testWithAuth(array(
       'model'   => 'table',

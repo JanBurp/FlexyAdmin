@@ -10,6 +10,7 @@ class CronjobTest extends CITestCase {
     }
 
     public function test_calc_next_minutes()  { 
+      echo "fast/models/CronjobTest/".__METHOD__."\n";
       // every x minutes
       $this->assertGreaterThan( time(), $this->CI->cronjob->_calc_next(5,time()) , 'Moet 5 minuten later zijn' );
       $this->assertGreaterThan( time(), $this->CI->cronjob->_calc_next(1,time()) , 'Moet 1 minuut later zijn' );
@@ -17,6 +18,7 @@ class CronjobTest extends CITestCase {
     }
 
     public function test_calc_next_day()  { 
+      echo "fast/models/CronjobTest/".__METHOD__."\n";
       // day 12:00
       $testtime=mktime(12,0,0); // 12:00
       $this->assertLessThan( $testtime, $this->CI->cronjob->_calc_next('day 11:59',$testtime) ,    '11:59 moet eerder zijn dan 12:00 ('.$testtime.')' );
@@ -32,6 +34,7 @@ class CronjobTest extends CITestCase {
     }
 
     public function test_calc_next_week()  { 
+      echo "fast/models/CronjobTest/".__METHOD__."\n";
       // testtime = afgelopen sunday 23:59
       $date=getdate();
       $wday=$date['wday']; // 0 = sunday
@@ -45,6 +48,7 @@ class CronjobTest extends CITestCase {
     }
 
     public function test_calc_next_month()  { 
+      echo "fast/models/CronjobTest/".__METHOD__."\n";
       // eerste dag vd maand 23:59
       $date=getdate();
       $mday=$date['mday']-1; // eerste dag vd maand

@@ -19,6 +19,8 @@ class ModulesTest extends CITestCase {
    * Test Modules
    */
   public function test_modules()  {
+    echo "frontend/".__METHOD__."\n";
+    
     $page=$this->CI->config->item('page');
     $modules = $this->CI->config->item('modules');
     

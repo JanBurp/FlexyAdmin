@@ -7,10 +7,14 @@ class ApiHelpTest extends ApiTestModel {
   }
 
   public function testWithoutLogin() {
+    echo "demo_db/api/ApiHelpTest".__METHOD__."\n";
+    
     $this->_testWithoutAuth('get_help');
   }
 
   public function testWithLogin() {
+    echo "demo_db/api/ApiHelpTest".__METHOD__."\n";
+    
     $this->_testWithAuth(array(
       'model'   => 'get_help',
       'args'    => array('table'=>''),

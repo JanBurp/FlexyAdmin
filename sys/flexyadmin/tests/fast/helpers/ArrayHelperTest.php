@@ -9,6 +9,8 @@ class ArrayHelperTest extends CITestCase {
   }
 
   public function testElement() { 
+    echo "fast/helpers/ArrayHelperTest/".__METHOD__."\n";
+    
     $array = array(
         'color' => 'red',
         'shape' => 'round',
@@ -23,6 +25,8 @@ class ArrayHelperTest extends CITestCase {
   }
 
   public function testElements() {
+    echo "fast/helpers/ArrayHelperTest/".__METHOD__."\n";
+    
     $array = array(
         'color' => 'red',
         'shape' => 'round',

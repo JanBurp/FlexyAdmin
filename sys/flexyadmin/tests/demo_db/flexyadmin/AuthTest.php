@@ -34,11 +34,15 @@ class AuthTest extends CITestCase {
 
 
   public function testIfLogout() {
+    echo "demo_db/flexyadmin/AuthTest/".__METHOD__."\n";
+    
     $this->assertFalse( $this->CI->user->logged_in(), 'Must be logged out at start of test.');
   }
 
 
   public function testWrongLogin() {
+    echo "demo_db/flexyadmin/AuthTest/".__METHOD__."\n";
+    
     $this->assertFalse( $this->CI->user->login( $this->users[0]['username'], $this->users[1]['password'] ), 'Login must fail with wrong username/password');
     $this->assertFalse( $this->CI->user->login( $this->users[1]['username'], $this->users[0]['password'] ), 'Login must fail with wrong username/password');
     
@@ -51,6 +55,8 @@ class AuthTest extends CITestCase {
   
   
   public function testHackAttempt() {
+    echo "demo_db/flexyadmin/AuthTest/".__METHOD__."\n";
+    
     $message='Login must fail with a SQL injection';
     $this->assertFalse( $this->CI->user->login( 'OR ""=""', 'OR ""=""'  ), $message);
     $this->assertFalse( $this->CI->user->login( '1; DROP TABLE cfg_users', '1; DROP TABLE cfg_users' ), $message);
@@ -63,6 +69,8 @@ class AuthTest extends CITestCase {
   
   
   public function testLogin() {
+    echo "demo_db/flexyadmin/AuthTest/".__METHOD__."\n";
+    
     foreach ($this->users as $user) {
       $this->assertTrue( $this->CI->user->login( $user['username'], $user['password'] ), 'Login must work with good username/password ['.$user['username'].'/'.$user['password'].']');
       $this->assertTrue( $this->CI->user->logged_in(), 'Login must work with good username/password: '.$user['username']);

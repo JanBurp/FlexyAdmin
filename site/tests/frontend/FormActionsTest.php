@@ -24,6 +24,7 @@ class FormActionsTest extends CITestCase {
    * @author Jan den Besten
    */
   public function test_formactions()  {
+    echo "frontend/".__METHOD__."\n";
     
     $formactions=$this->CI->config->item('formactions');
     

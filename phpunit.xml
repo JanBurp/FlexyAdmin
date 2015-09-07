@@ -33,6 +33,12 @@
     <testsuite name="demo_db">
       <directory suffix="Test.php">sys/flexyadmin/tests/demo_db</directory>
 		</testsuite>
+
+    <!-- Heavy testing: auth, api, which assumes the demo database is present -->
+    <testsuite name="core">
+      <directory suffix="Test.php">sys/flexyadmin/tests/core</directory>
+		</testsuite>
+
     
 	</testsuites>
   

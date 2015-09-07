@@ -31,6 +31,8 @@ UPDATE `tbl_menu` SET `order`='2', `self_parent`='0', `uri`='contact' WHERE `id`
 
 
   public function testAll() {
+    echo "demo_db/models/OrderTest/".__METHOD__."\n";
+    
     // Start situatie
     $expected = array(
       '1'=>array( 'id'=>'1', 'order'=>'0' ),
