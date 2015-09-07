@@ -77,7 +77,7 @@ class Plugin_sitemap extends Plugin {
   			$this->_create_robots();
   		}
   		else {
-  			$this->add_content('<p>could not create sitemap.xml: '.$err.'</p>');
+  			$this->add_content('<p>Could not create sitemap.xml, probably problem with rights: '.$err.'</p>');
       }
     }
 
