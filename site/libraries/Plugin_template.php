@@ -36,6 +36,19 @@
 	}
 
 
+  /**
+   * _admin_homepage
+   *
+   * @param string $action 
+   * @return string
+   * @author Jan den Besten
+   */
+	public function _admin_homepage($action) {
+    $out=h('Homepage');
+    return $out;
+	}
+
+
 	/**
 		* _admin_logout
 		*

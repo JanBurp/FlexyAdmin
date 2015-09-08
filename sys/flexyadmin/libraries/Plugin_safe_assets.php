@@ -38,6 +38,41 @@ class Plugin_safe_assets extends Plugin {
 
 
   /**
+   * Test (als administrator) of de rechten in orde zijn
+   *
+   * @param string $action 
+   * @return string
+   * @author Jan den Besten
+   */
+	public function _admin_homepage($action) {
+    $out='';
+    if ($this->CI->user->is_super_admin()) {
+      // Test alle rechten van de mappen en bestanden
+      $files = array(
+        'sitemap.xml' => 0100664,
+        'site/cache'  => 0040755,
+        'site/stats'  => 0040755,
+      );
+
+      foreach ($files as $file => $permissions) {
+        $current_permissions = fileperms($file);
+        if ($current_permissions!==$permissions) {
+          // if (!chmod($file,$permissions))
+          //   $out.='<li>Permissions of <strong>'.$file.'</strong> are set to '.substr(decoct($permissions),-3,3).' (where '.substr(decoct($current_permissions),-3,3).')';
+          // else
+            $out.='<li>Permissions of <strong>'.$file.'</strong> should be '.substr(decoct($permissions),-3,3).' (are now '.substr(decoct($current_permissions),-3,3).')';
+        }
+      }
+      
+    }
+    if (!empty($out)) {
+      $out=h('Check file permissions!',1,'warning').'<ul>'.$out.'</ul>';
+    }
+    return $out;
+	}
+
+
+  /**
    * Plugin werkt altijd bij logout
    *
    * @return void
