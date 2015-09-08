@@ -15,9 +15,12 @@ class Svn extends CI_Model {
 	}
   
   public function get_version() {
-    $package=file_get_contents('sys/package.json');
-    preg_match("/\"version\"\s?:\s?\"(.*)\"/uim", $package,$matches);
-    return $matches[1];
+    if (file_exists('sys/package.json')) {
+      $package=file_get_contents('sys/package.json');
+      preg_match("/\"version\"\s?:\s?\"(.*)\"/uim", $package,$matches);
+      return $matches[1];
+    }
+    return '';
   }
   
   public function get_revision_of_file($file) {
