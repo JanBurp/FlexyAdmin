@@ -9,8 +9,9 @@
 |
 */
 
-$config['admin_api_method'] = '_admin_api';
-$config['logout_method'] = '_admin_logout';
+$config['admin_api_method']    = '_admin_api';
+$config['home_method']         = '_admin_homepage';
+$config['logout_method']       = '_admin_logout';
 $config['after_update_method'] = '_after_update';
 
 
