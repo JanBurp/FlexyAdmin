@@ -44,21 +44,18 @@ class Testlang_lib
     /**
      * CI Singleton
      *
-     * @var object
      */
     private $CI;
 
     /**
      * Idiom for original text
      *
-     * @var string
      */
     private $default_idiom = '';
 
     /**
      * Idiom for translated text
      *
-     * @var string
      */
     private $idiom = '';
 
@@ -66,19 +63,16 @@ class Testlang_lib
     /**
      * List of available languages
      *
-     * @var array
      */
     private $lang_list = NULL;
 
     /**
      * Language data (language, files)
-     * @var array
      */
     private $lang_data = NULL;
 
     /**
      * Number of errors in this file
-     * @var number
      */
     private $nb_error = 0;
 

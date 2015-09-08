@@ -11,15 +11,11 @@ class MY_Loader extends CI_Loader {
 	
   /**
    * List of loaded views
-   *
-   * @return array
    */
   protected $_ci_views = array();
   
   /**
    * Plugin paden
-   *
-   * @var array
    */
 	protected $_ci_plugin_paths	= array();
   
@@ -175,9 +171,6 @@ class MY_Loader extends CI_Loader {
    *
    * Variables are prefixed with _ci_ to avoid symbol collision with
    * variables made available to view files.
-   *
-   * @used-by    CI_Loader::view()
-   * @used-by    CI_Loader::file()
    *
    * @param    array $_ci_data Data to load
    *
