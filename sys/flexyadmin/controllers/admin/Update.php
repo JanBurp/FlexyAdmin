@@ -27,7 +27,7 @@ class Update extends AdminController {
 
   public function index() {
     if (!$this->user->is_super_admin()) {
-      redirect($this->config->item('API_home'),'refresh');
+      redirect($this->config->item('API_home'));
     };
     
     $latest     = $this->_latest_tag();

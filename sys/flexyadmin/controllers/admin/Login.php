@@ -66,7 +66,7 @@ class Login extends MY_Controller {
 			if (empty($message)) $message = $this->user->errors();
 			$this->session->set_userdata('message', $message);
 		}
-		redirect($this->homePage, 'refresh');
+		redirect($this->homePage);
 	}
 
 
