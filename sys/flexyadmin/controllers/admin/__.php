@@ -10,7 +10,8 @@ require_once(APPPATH."core/AdminController.php");
  
 class __ extends AdminController {
   
-  private $path='/Users/jan/Sites/FlexyAdmin/';
+  private $path='';
+  private $userguid='';
   private $tinyMCElibs='../FlexyAdmin_DocsLibs/Libraries/tinyMCE';
   private $work='FlexyAdminDEMO';
   private $tags='zips';
@@ -27,6 +28,9 @@ class __ extends AdminController {
   
 	public function __construct() {
 		parent::__construct();
+    $this->path       = str_replace('sys/flexyadmin/','',APPPATH);
+    $this->userguide  = $this->path.'/userguide/FlexyAdmin/';
+    
     $this->load->model('svn');
     $this->version=$this->svn->get_version();
     $this->revision=$this->svn->get_revision();
@@ -42,6 +46,7 @@ class __ extends AdminController {
       array( 'uri'=>'admin/__/minify', 'name' => 'Minify JS & CSS' ),
       array( 'uri'=>'admin/__/tinymce', 'name' => 'Update tinyMCE' ),
       // array( 'uri'=>'admin/__/clean_assets', 'name' => 'Clean assets' ),
+      array( 'uri'=>'admin/__/apidoc', 'name' => 'Create Api doc' ),
       array( 'uri'=>'admin/__/process_svnlog', 'name' => 'Process SVN log' ),
       array( 'uri'=>'admin/__/build', 'name' => 'Build version: '.$this->version.' (r'.$this->revision.')' ),
       // array( 'uri'=>'admin/__/ajax_upload_text', 'name' => 'API/Ajax upload test' ),
@@ -378,6 +383,48 @@ class __ extends AdminController {
     $output = str_replace(';}', '}', $output);
     return $output;
   }
+  
+  public function apidoc() {
+    $this->_add_content('<h1>Create API documentation</h1>');
+    
+    $apiMapBackend=APPPATH.'models/api';
+    $apiMapFrontend=SITEPATH.'models/api';
+    
+    // Algemene api doc
+    $api=file_get_contents($this->userguide.'__doc/5_api/1-algemeen.dox');
+    $api=str_replace('/*! \page algemeen Algemeen','',$api);
+    write_file($this->userguide.'api/algemeen.md',$api);
+    
+    $this->_apidoc($apiMapBackend,'admin_api');
+    $this->_apidoc($apiMapFrontend,'frontend_api');
+    
+    
+    $this->_show_all();
+  }
+  
+  private function _apidoc($map,$destination) {
+    $files=read_map($map,'php',false,false);
+    unset($files['api_model.php']);
+    
+    $doc = '';
+    foreach ($files as $name => $file) {
+      $text=file_get_contents($file['path']);
+      if (preg_match("/\/\*\*(.*)\*\//uUsm", $text,$matches)) {
+        $md=$matches[1];
+        $md = preg_replace("/^\s\* /uUsm", "", $md);
+        $md = preg_replace("/- /uUsm", " - ", $md);
+        $md = preg_replace("/^@(.*)\n/um", "", $md);
+        $api="`_api/".str_replace('.php','',$name).'`';
+        $doc.=$api."\n".repeater("-",strlen($api))."\n".$md."\n---------------------------------------\n\n";
+      }
+    }
+    
+    $filename=$map.'api.md';
+    $filename=$this->userguide.'api/'.$destination.'.md';
+    write_file($filename,$doc);
+    $this->_add_content('<p>'.$filename.' created.</>');
+  }
+  
   
   
   
