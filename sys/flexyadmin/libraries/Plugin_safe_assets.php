@@ -49,24 +49,34 @@ class Plugin_safe_assets extends Plugin {
     if ($this->CI->user->is_super_admin()) {
       // Test alle rechten van de mappen en bestanden
       $files = array(
-        'sitemap.xml' => 0100664,
-        'site/cache'  => 0040755,
-        'site/stats'  => 0040755,
+        'sitemap.xml'                       => 0100664,
+        'robots.txt'                        => 0100644,
+        'site/config/database.php'          => 0100600,
+        'site/cache'                        => 0040764,
+        // 'site/cache/.htaccess'              => 0100644,
+        'site/stats'                        => 0040764,
+        'site/stats/.htaccess'              => 0100644,
       );
+      $media=$this->CI->mediatable->get_media_folders();
+      $media[]='site/assets/_thumbcache';
+      $media[]='site/assets/lists';             // 0754
+      foreach ($media as $folder) {
+        $files[$folder] = 0040776;              // 0776
+        $files[$folder.'/.htaccess'] = 0100644; // 0664
+      }
+      $files['site/assets/lists'] = 0040754;
+      ksort($files);
 
       foreach ($files as $file => $permissions) {
         $current_permissions = fileperms($file);
-        if ($current_permissions!==$permissions) {
-          // if (!chmod($file,$permissions))
-          //   $out.='<li>Permissions of <strong>'.$file.'</strong> are set to '.substr(decoct($permissions),-3,3).' (where '.substr(decoct($current_permissions),-3,3).')';
-          // else
-            $out.='<li>Permissions of <strong>'.$file.'</strong> should be '.substr(decoct($permissions),-3,3).' (are now '.substr(decoct($current_permissions),-3,3).')';
+        if ($current_permissions!=$permissions) {
+          $out.='<li>Permissions of <strong>'.$file.'</strong> should be '.substr(decoct($permissions),-3,3).' (are now '.substr(decoct($current_permissions),-3,3).')';
         }
       }
       
     }
     if (!empty($out)) {
-      $out=h('Check file permissions!',1,'warning').'<ul>'.$out.'</ul>';
+      $out=h('SAFETY ERROR: Check file permissions!',1,array('class'=>'error')).'<ul>'.$out.'</ul>';
     }
     return $out;
 	}
