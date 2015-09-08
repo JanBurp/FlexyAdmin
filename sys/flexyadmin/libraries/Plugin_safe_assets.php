@@ -51,10 +51,10 @@ class Plugin_safe_assets extends Plugin {
     $files = array(
       'sitemap.xml'                       => 0100664,
       'robots.txt'                        => 0100644,
-      'site/config/database.php'          => 0100600,
-      'site/cache'                        => 0040764,
+      'site/config/database.php'          => 0100440,
+      'site/cache'                        => 0040774,
       // 'site/cache/.htaccess'              => 0100644,
-      'site/stats'                        => 0040764,
+      'site/stats'                        => 0040774,
       'site/stats/.htaccess'              => 0100644,
     );
     $media=$this->CI->mediatable->get_media_folders();
