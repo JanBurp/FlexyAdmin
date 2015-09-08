@@ -21,9 +21,9 @@ class Logout extends AdminController {
 		if (!$logoutMessages) {
 			$this->user->logout();
 			if ($this->config->item('logout_to_site'))
-				redirect('','refresh');
+				redirect('');
 			else
-				redirect($this->homePage, 'refresh');
+				redirect($this->homePage);
 		}
 		else {
 			$this->_add_content(h('Logout',1));

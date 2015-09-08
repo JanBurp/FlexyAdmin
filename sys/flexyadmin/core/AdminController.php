@@ -38,11 +38,11 @@ class AdminController extends BasicController {
     $this->js['multiple_upload'] = $multiple_upload;
     
 		if ( ! $this->user->logged_in() ) {
-			redirect($this->config->item('API_login'), 'refresh');
+			redirect($this->config->item('API_login'));
 		}
 		if ( ! $this->_user_can_use_admin() ) {
 			$this->user->logout();
-			redirect(site_url(), 'refresh');
+			redirect(site_url());
 		}
 		$this->currentTable="";
 		$this->currentId="";

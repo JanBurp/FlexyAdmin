@@ -191,7 +191,7 @@ class Main extends FrontEndController {
 			$subItem=$this->db->get_row(get_menu_table());
 			if ($subItem) {
 				$newUri=$this->site['uri'].'/'.$subItem['uri'];
-				redirect($newUri, 'refresh');
+				redirect($newUri);
 			}
 		}
 	}
