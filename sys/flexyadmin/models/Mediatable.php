@@ -43,6 +43,23 @@ class Mediatable extends CI_Model {
   public function exists() {
     return $this->has_table;
   }
+  
+  /**
+   * Geeft alle media mappen die bekend zijn
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_media_folders() {
+    $this->db->select('path');
+    $result=$this->db->get_result('cfg_media_info');
+    $folders=array();
+    foreach ($result as $key => $info) {
+      $folders[]='site/assets/'.$info['path'];
+    }
+    return $folders;
+  }
+  
 
   /**
    * Test of bestand in media tabel bestaat

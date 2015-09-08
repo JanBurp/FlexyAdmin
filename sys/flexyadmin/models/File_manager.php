@@ -277,7 +277,7 @@ class File_manager extends CI_Model {
     else {
       $result=false;
       if (file_exists($name)) {
-        chmod($name,0777);
+        @chmod($name,0777);
         $result=unlink($name);
       }
         
