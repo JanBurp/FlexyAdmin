@@ -48,12 +48,16 @@ class Plugin_safe_assets extends Plugin {
     if (!$this->CI->user->is_super_admin()) return '';
     $out='';
     // Test alle rechten van de mappen en bestanden
+		// - Normale bestanden 644 of 640
+		// - Normale mappen 755 of 750
+		// - Zeer kritische bestanden (database.php) 600
+		// - Map met upload bestanden 766 / 666 / 707
+    
     $files = array(
       'sitemap.xml'                       => 0100664,
       'robots.txt'                        => 0100644,
       'site/config/database.php'          => 0100440,
       'site/cache'                        => 0040774,
-      // 'site/cache/.htaccess'              => 0100644,
       'site/stats'                        => 0040774,
       'site/stats/.htaccess'              => 0100644,
     );
