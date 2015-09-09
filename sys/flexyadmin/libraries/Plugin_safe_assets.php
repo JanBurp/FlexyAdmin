@@ -45,7 +45,7 @@ class Plugin_safe_assets extends Plugin {
    * @author Jan den Besten
    */
 	public function _admin_homepage($action) {
-    if (!$this->CI->user->is_super_admin()) return '';
+    if (!$this->CI->user->is_super_admin() or IS_LOCALHOST) return '';
     $out='';
     // Test alle rechten van de mappen en bestanden
 		// - Normale bestanden 644 of 640
