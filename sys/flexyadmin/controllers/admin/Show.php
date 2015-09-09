@@ -22,30 +22,30 @@ class Show extends AdminController {
 		$this->_show_all();
 	}
 
-  /**
-   * This controls the order of a table.
-   * 
-   * Wordt gebruikt in de grid als JavaScript niet aan staat.
-   *
-   * @param string $table Table name
-   * @param int $id maybe an id, the last that changed
-   * @param mixed $newOrder (top|bottom|up|down|(number))
-   */
-	public function order($table="",$id="",$newOrder="") {
-		if (!empty($table) and ($id!="") and !empty($newOrder) and $this->user->has_rights($table,$id)>=RIGHTS_EDIT) {
-			/**
-			 * re-order data
-			 */
-			$this->lang->load("update_delete");
-			$this->load->model("order");
-			$this->order->move_to($table,$id,$newOrder);
-			$this->message->add(langp("order_has_changed",$table));
-			$this->load->model("login_log");
-			$this->login_log->update($table);
-			redirect(api_uri('API_view_grid',$table,$id));
-		}
-		$this->_show_all();
-	}
+  //   /**
+  //    * This controls the order of a table.
+  //    *
+  //    * Wordt gebruikt in de grid als JavaScript niet aan staat.
+  //    *
+  //    * @param string $table Table name
+  //    * @param int $id maybe an id, the last that changed
+  //    * @param mixed $newOrder (top|bottom|up|down|(number))
+  //    */
+  // public function order($table="",$id="",$newOrder="") {
+  //   if (!empty($table) and ($id!="") and !empty($newOrder) and $this->user->has_rights($table,$id)>=RIGHTS_EDIT) {
+  //     /**
+  //      * re-order data
+  //      */
+  //     $this->lang->load("update_delete");
+  //     $this->load->model("order");
+  //     $this->order->move_to($table,$id,$newOrder);
+  //     $this->message->add(langp("order_has_changed",$table));
+  //     $this->load->model("login_log");
+  //     $this->login_log->update($table);
+  //     redirect(api_uri('API_view_grid',$table,$id));
+  //   }
+  //   $this->_show_all();
+  // }
 
 
   	/**
