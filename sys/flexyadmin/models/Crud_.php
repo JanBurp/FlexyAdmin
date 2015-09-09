@@ -136,7 +136,7 @@ class Crud_ extends CI_Model {
 				else
 					$this->data["order"]=$this->order_model->get_next_order($this->table);
 			}
-
+      
 			$data=$this->data;
       
       /**
@@ -317,10 +317,7 @@ class Crud_ extends CI_Model {
   				 * Reset order of children (if any)
   				 */
   				if ($isTree) {
-            $parent= $this->db->get_field_where($this->table,'self_parent',PRIMARY_KEY,$id);
-            if ($parent!=0) {
-  					  $this->info['moved_rows'] = $this->order_model->reset_tree($this->table,$parent);
-            }
+					  $this->info['moved_rows'] = $this->order_model->reset($this->table);
   				}
 
   				/**
