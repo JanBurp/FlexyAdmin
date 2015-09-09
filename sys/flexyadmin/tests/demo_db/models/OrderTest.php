@@ -39,7 +39,6 @@ UPDATE `tbl_menu` SET `order`='4', `self_parent`='0', `uri`='contact' WHERE `id`
    * @author Jan den Besten
    */
   public function testStart() {
-    echo "demo_db/models/OrderTest/".__METHOD__."\n";
 
     // Start situatie
     $expected = array(
@@ -73,7 +72,6 @@ UPDATE `tbl_menu` SET `order`='4', `self_parent`='0', `uri`='contact' WHERE `id`
    * @author Jan den Besten
    */
   public function testVolgende() {
-    echo "demo_db/models/OrderTest/".__METHOD__."\n";
     
     // Volgende
     $this->assertEquals(5, $this->CI->order->get_next_order($this->table) );
@@ -122,7 +120,6 @@ UPDATE `tbl_menu` SET `order`='4', `self_parent`='0', `uri`='contact' WHERE `id`
    * @author Jan den Besten
    */
   public function testSet() {
-    echo "demo_db/models/OrderTest/".__METHOD__."\n";
     
     // Set all - 1
     $ids=array(1,2,5,4,3);

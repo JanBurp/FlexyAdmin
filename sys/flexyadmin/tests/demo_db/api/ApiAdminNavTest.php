@@ -7,12 +7,10 @@ class ApiAdminNavTest extends ApiTestModel {
   }
 
   public function testWithoutLogin() {
-    echo "demo_db/api/ApiAdminNavTest".__METHOD__."\n";
     $this->_testWithoutAuth('get_admin_nav');
   }
 
   public function testWithLogin() {
-    echo "demo_db/api/ApiAdminNavTest".__METHOD__."\n";
     $this->_testWithAuth(array(
       'model'   => 'get_admin_nav',
       'args'    => array('table'=>''),

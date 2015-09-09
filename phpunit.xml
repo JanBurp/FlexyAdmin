@@ -12,6 +12,12 @@
   
 	<testsuites>
     
+    <!-- Latest / Busy -->
+    <testsuite name="busy">
+      <directory suffix="Test.php">sys/flexyadmin/tests/demo_db/models</directory>
+		</testsuite>
+    
+    
     <!-- Real Unit tests, fast and no need for demo database -->
     <testsuite name="fast">
       <directory suffix="Test.php">sys/flexyadmin/tests/fast</directory>

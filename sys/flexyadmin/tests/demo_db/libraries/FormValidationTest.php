@@ -35,7 +35,6 @@ class FormValidationTest extends CITestCase {
   
   
   public function testIsOption() {
-    echo "demo_db/libraries/FormValidationTest/".__METHOD__."\n";
     
     $options=',one,two,three';
     $values=array('no'=>false,'one'=>true,'two'=>true,'three'=>true,'|'=>false,','=>false,''=>true);
@@ -77,7 +76,6 @@ class FormValidationTest extends CITestCase {
 
 
   public function testValidateGoodData() {
-    echo "demo_db/libraries/FormValidationTest/".__METHOD__."\n";
     
     // Should be ok
     foreach ($this->good_data as $data) {
@@ -91,7 +89,6 @@ class FormValidationTest extends CITestCase {
   }
 
   public function testValidateWrongData() {
-    echo "demo_db/libraries/FormValidationTest/".__METHOD__."\n";
     
     // Should give an error
     foreach ($this->false_data as $data) {
