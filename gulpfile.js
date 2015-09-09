@@ -320,7 +320,7 @@ gulp.task('watch', function() {
  */
 gulp.task('phpunit', function() {
    gulp.src('phpunit.xml')
-     .pipe(phpunit('/usr/local/bin/phpunit', {notify: true}))
+     .pipe(phpunit('/usr/local/bin/phpunit --testsuite busy', {notify: true}))
      .on('error', notify.onError('phpunit FAILED'))
      .pipe(notify({
        title:'phpunit',

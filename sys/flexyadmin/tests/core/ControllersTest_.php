@@ -11,8 +11,6 @@ class ControllersTest extends CITestCase
 	 */
 	public function testLoadController()
 	{
-    echo "core/ControllersTest/".__METHOD__."\n";
-    
 		$folder = APPPATH.'controllers/';
 		
 		$this->assertTrue(is_dir($folder), 'Controllers folder found');
@@ -47,8 +45,6 @@ class ControllersTest extends CITestCase
 	 */
 	public function testLoadControllerFromSubfolder()
 	{
-    echo "core/ControllersTest/".__METHOD__."\n";
-    
 		$folder = APPPATH.'controllers/testsubfolder';
 		
 		// check if we can run the test
@@ -87,7 +83,6 @@ class ControllersTest extends CITestCase
 	 */
 	public function testLoadInexistentController()
 	{
-    echo "core/ControllersTest/".__METHOD__."\n";
     
 		$this->requireController('InexistentStub');
 		$this->assertFalse(class_exists('InexistentStub'), 'Inexistent class is not loadable');
@@ -100,7 +95,6 @@ class ControllersTest extends CITestCase
 	 */
 	public function testLoadModel()
 	{
-    echo "core/ControllersTest/".__METHOD__."\n";
     
 		$folder = APPPATH.'models/';
 		

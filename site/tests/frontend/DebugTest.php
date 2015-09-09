@@ -11,7 +11,6 @@ class DebugTest extends CITestCase {
    * @author Jan den Besten
    */
   public function test_debug_code() {
-    echo "frontend/".__METHOD__."\n";
     
     if ($this->CI->config->item('check_if_debug_code')) {
       $files=scan_map('site','php',true);

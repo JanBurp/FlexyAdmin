@@ -9,7 +9,6 @@ class ApiAuthTest extends ApiTestModel {
 
 
   public function testLoginLogout() {
-    echo "demo_db/api/ApiAuthTest".__METHOD__."\n";
     
     // Check if logged out
     $result=$this->CI->auth->check();
@@ -30,7 +29,6 @@ class ApiAuthTest extends ApiTestModel {
   }
   
   public function testWrongLogin() {
-    echo "demo_db/api/ApiAuthTest".__METHOD__."\n";
     
     $attempts = array(
       array('username'=> $this->users[0]['username'],   'password' => $this->users[1]['password'] ),
@@ -61,7 +59,6 @@ class ApiAuthTest extends ApiTestModel {
   
   
   public function testHackAttempts() {
-    echo "demo_db/api/ApiAuthTest".__METHOD__."\n";
     
     $message='Login must fail with a SQL injection';
     $attempts = array(
@@ -99,7 +96,6 @@ class ApiAuthTest extends ApiTestModel {
   }
   
   public function testLogin() {
-    echo "demo_db/api/ApiAuthTest".__METHOD__."\n";
     
     foreach ($this->users as $user) {
       $this->CI->auth->set_args(array('POST'=>array('username'=>$user['username'],'password'=>$user['password'])));
@@ -115,7 +111,6 @@ class ApiAuthTest extends ApiTestModel {
   }
   
   public function testNewPasswordSend() {
-    echo "demo_db/api/ApiAuthTest".__METHOD__."\n";
     
     // Is it possible to send emails?
     $error_reporting=error_reporting();

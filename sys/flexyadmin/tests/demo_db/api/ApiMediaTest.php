@@ -11,14 +11,12 @@ class ApiMediaTest extends ApiTestModel {
   }
 
   public function testWithoutLogin() {
-    echo "demo_db/api/ApiMediaTest".__METHOD__."\n";
     
     $this->_testWithoutAuth('media');
   }
 
 
   public function testWithLogin() {
-    echo "demo_db/api/ApiMediaTest".__METHOD__."\n";
     
     // First login
     $user=current($this->users);

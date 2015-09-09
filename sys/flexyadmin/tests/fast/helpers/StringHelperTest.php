@@ -9,13 +9,11 @@ class StringHelperTest extends CITestCase {
   }
 
   public function testJustTest() {
-    echo "fast/helpers/StringHelperTest/".__METHOD__."\n";
     
     $this->assertEquals(true,true);
   }
   
   public function testRepeater() {
-    echo "fast/helpers/StringHelperTest/".__METHOD__."\n";
 
     $actualString = "a";
     $expectedString = "aaaaaaaaaa";
@@ -24,7 +22,6 @@ class StringHelperTest extends CITestCase {
 
 
   public function testTrimSlashes() {
-    echo "fast/helpers/StringHelperTest/".__METHOD__."\n";
     
     $actualString = "/this/that/theother/";
     $expectedString = "this/that/theother";
@@ -32,7 +29,6 @@ class StringHelperTest extends CITestCase {
   }
 
   public function testReduceDoubleSlashes() {
-    echo "fast/helpers/StringHelperTest/".__METHOD__."\n";
     
     $actualString = "http://example.com//index.php";
     $expectedString = "http://example.com/index.php";
@@ -40,7 +36,6 @@ class StringHelperTest extends CITestCase {
   }
 
   public function testReduceMultiples() {
-    echo "fast/helpers/StringHelperTest/".__METHOD__."\n";
     
     $actualString = "Fred, Bill,, Joe, Jimmy";
     $expectedString = "Fred, Bill, Joe, Jimmy";
@@ -48,7 +43,6 @@ class StringHelperTest extends CITestCase {
   }
 
   public function testQuotesToEntities() {
-    echo "fast/helpers/StringHelperTest/".__METHOD__."\n";
     
     $actualString = "Joe's \"dinner\"";
     $expectedString = "Joe&#39;s &quot;dinner&quot;";
@@ -56,7 +50,6 @@ class StringHelperTest extends CITestCase {
   }
 
   public function testStripQuotes() {
-    echo "fast/helpers/StringHelperTest/".__METHOD__."\n";
     
     $actualString = "Joe's \"dinner\"";
     $expectedString = "Joes dinner";
@@ -64,13 +57,11 @@ class StringHelperTest extends CITestCase {
   }
 
   public function testRandomString() {
-    echo "fast/helpers/StringHelperTest/".__METHOD__."\n";
     
     $this->assertNotEquals(random_string(), random_string());
   }
 
   public function testHasString() {
-    echo "fast/helpers/StringHelperTest/".__METHOD__."\n";
     
     $this->assertTrue( has_string('Test','HatsTestikidee') );
     $this->assertTrue( has_string('Test','Testikidee') );
