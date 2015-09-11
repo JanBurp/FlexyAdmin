@@ -12,6 +12,7 @@ class Cli extends CI_Controller {
 	
 	public function __construct()	{
 		parent::__construct();
+    $this->load->library('user');
 	}
   
   public function index() {
@@ -21,6 +22,15 @@ class Cli extends CI_Controller {
     
     // does CLI model exists?
     if (file_exists(APPPATH.'/models/cli/'.ucfirst($model).'.php') or file_exists(SITEPATH.'/models/cli/'.ucfirst($model).'.php')) {
+      
+      // auth?
+      $num  = count($args);
+      if ($num>=3 and $args[$num-3]=='login') {
+        $password = array_pop($args);
+        $username = array_pop($args);
+        $this->user->login( $username, $password );
+      }
+      
       // Load Model
       $this->load->model('cli/'.$model);
       // Call model/method

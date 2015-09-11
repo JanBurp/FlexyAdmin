@@ -8,7 +8,6 @@ class DataModelTest extends CITestCase {
   protected function setUp ()  {
     $this->CI->load->model('data/data_model');
     $this->CI->load->model('data/tbl_menu');
-    
   }
   
   protected function tearDown() {
