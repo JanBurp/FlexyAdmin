@@ -3,11 +3,11 @@
 require_once('sys/flexyadmin/tests/CITestCase.php');
 
 
-class DataModelTest extends CITestCase {
+class TableModelTest extends CITestCase {
   
   protected function setUp ()  {
-    $this->CI->load->model('data/data_model');
-    $this->CI->load->model('data/tbl_menu');
+    $this->CI->load->model('tables/table_model');
+    $this->CI->load->model('tables/tbl_menu');
   }
   
   protected function tearDown() {
