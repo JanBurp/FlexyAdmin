@@ -8,20 +8,33 @@
 
 Class tbl_menu extends Data_Model {
 
-  protected $table            = __CLASS__;
-  protected $fields           = array();
-  protected $relations        = array();
+  protected $primary_key      = PRIMARY_KEY;
+  protected $table            = 'tbl_menu';
+  protected $fields           = array('id','order','self_parent','uri','str_title','txt_text','str_module','stx_description','str_keywords');
+  protected $relations        = array(
+                                  'belongs_to'       => array(),
+                                  'many_to_many'     => array(),
+                                );
   protected $order_by         = '';
   protected $max_rows         = 0;
   protected $update_uris      = TRUE;
   protected $abstract_fields  = array();
-  protected $abstract_filter   = '';
-  protected $admin_grid = array();
-  protected $admin_form = array();
+  protected $abstract_filter  = '';
+  protected $admin_grid       = array(
+                                  'fields'            => array(),
+                                  'relations'         => array(),
+                                  'order_by'          => '',
+                                  'jump_to_today'     => TRUE,
+                                );
+  protected $admin_form        = array(
+                                  'fields'            => array(),
+                                  'relations'         => array(),
+                                  'fieldsets'         => array(),
+                                );
   
-	public function __construct() {
-		parent::__construct();
-	}
-  
+
+  public function __construct() {
+    parent::__construct();
+  }
 
 }

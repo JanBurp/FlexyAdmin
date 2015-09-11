@@ -4,7 +4,7 @@
 $db['phpunit']['hostname'] = "127.0.0.1";
 $db['phpunit']['username'] = "root";
 $db['phpunit']['password'] = "eonisme";
-$db['phpunit']['database'] = "flexyadmin_demo";
+$db['phpunit']['database'] = "flexyadmin_test";
 
 require_once(SITEPATH.'/config/database.php');
 

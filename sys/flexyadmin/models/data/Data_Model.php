@@ -17,6 +17,8 @@
  */
 
 Class Data_Model extends CI_Model {
+  
+  /* --- SETTINGS --- */
 
   /**
    * Primary key van deze tabel, standaard 'id'
@@ -28,7 +30,7 @@ Class Data_Model extends CI_Model {
    * Automatisch wordt de naam van het model gebruikt in lowercase.
    * Maar kan hier ook ingesteld worden zodat het model een andere naam kah hebben als de tabel.
    */
-  protected $table            = __CLASS__;
+  protected $table            = '';
   
   /**
    * Een array van velden die de tabel bevat.
@@ -42,11 +44,11 @@ Class Data_Model extends CI_Model {
    * Kan bij elke aanroep altijd met with() worden overruled.
    */
   protected $relations        = array(
-    'belongs_to'              => array(),
-    'has_one'                 => array(),
-    'has_many'                => array(),
-    'has_and_belongs_to_many' => array(),
-  );
+                                  'belongs_to'       => array(),
+                                  'many_to_many'     => array(),
+                                  // 'has_many'      => array(),
+                                  // 'has_one'       => array(),
+                                );
   
   /**
    * Hier kan een standaard volgorde worden ingesteld waarin de resultaten worden getoond.
@@ -80,7 +82,7 @@ Class Data_Model extends CI_Model {
   /**
    * Een where SQL die wordt gebruikt om een abstract resultaat te filteren indiend nodig.
    */
-  protected $abstract_filter   = '';
+  protected $abstract_filter  = '';
   
   
   /**
@@ -93,12 +95,12 @@ Class Data_Model extends CI_Model {
    * - jump_to_today  - Als het resultaat een datumveld bevat dan begint het resultaat op de pagina waar de datum het dichst de huidige datum benaderd.
    *                    Je kunt een specifiek datumveld instellen of TRUE: dan wordt het eerste datumveld opgezocht (wat extra resources kost)
    */
-  protected $admin_grid = array(
-    'fields'            => array(),
-    'relations'         => array(),
-    'order_by'          => '',
-    'jump_to_today'     => TRUE,
-  );
+  protected $admin_grid       = array(
+                                  'fields'            => array(),
+                                  'relations'         => array(),
+                                  'order_by'          => '',
+                                  'jump_to_today'     => TRUE,
+                                );
 
   /**
    * Deze instellingen bepalen wat voor resultaat er wordt gegeven voor het admin formulier.
@@ -108,22 +110,32 @@ Class Data_Model extends CI_Model {
    * - relations      - Relaties die mee worden genomen en getoond. Als leeg dan is dat hetzelfde als $this->relations
    * - fieldsets      - Fieldsets voor het formulier. Per fieldset kan aangegeven worden welke velden daarin verschijnen. Bijvoorbeeld: 'Fieldset naam' => array( 'str_title_en', 'txt_text_en' )
    */
-  protected $admin_form = array(
-    'fields'            => array(),
-    'relations'         => array(),
-    'fieldsets'         => array(),
-  );
+  protected $admin_form        = array(
+                                  'fields'            => array(),
+                                  'relations'         => array(),
+                                  'fieldsets'         => array(),
+                                );
+  
+  /* --- CONFIG --- */
   
   /**
    * Methods of the query builder that give data back instead of the querybuilder object.
    * Needed by __call() to use all query_builder methods
    */
   private $returning_qb_methods = array( 'get', 'get_where','get_compiled_select', 'get_compiled_insert','get_compiled_update','get_compiled_delete','count_all_results','count_all' );
+
   
+  /* --- CONSTRUCT --- */
 
 	public function __construct() {
 		parent::__construct();
+    // Autoset stuff that are nog set allready
+    if (empty($this->table)) $this->table = get_class($this);
 	}
+
+
+  /* --- DB methods --- */
+
   
   /**
    * Alle Query Builder methods zijn beschikbaar -> TODO beter is ze uit te schrijven hier...
@@ -143,8 +155,8 @@ Class Data_Model extends CI_Model {
   }
   
   
-// Methods die query data teruggeven ////////////////////////////////////////////////////////////////////////////////////////////////
-
+  /* --- Methods die query data teruggeven --- */
+  
   
   /**
    * Geeft resultaat als query object. Eventueel beperkt door limit en offset
@@ -186,8 +198,8 @@ Class Data_Model extends CI_Model {
   }
   
   
-// Methods om de query te vormen  ////////////////////////////////////////////////////////////////////////////////////////////////  
-
+  /* --- Methods om de query te vormen --- */
+  
   
   /**
    * Geef aan welke relaties meegenomen moeten worden in het resultaat
@@ -200,8 +212,8 @@ Class Data_Model extends CI_Model {
   }
   
 
-// Informatieve methods ////////////////////////////////////////////////////////////////////////////////////////////////  
-
+  /* --- Informatieve methods --- */
+  
   
   /**
    * Geeft velden van tabel terug
