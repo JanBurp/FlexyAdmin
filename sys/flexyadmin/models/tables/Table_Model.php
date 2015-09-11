@@ -124,9 +124,20 @@ Class Table_Model extends CI_Model {
 
 	public function __construct() {
 		parent::__construct();
-    $this->autoset();
+    $this->autoset_table();
 	}
   
+  /**
+   * Check if table is set, if not, autoset it
+   *
+   * @return this
+   * @author Jan den Besten
+   */
+  public function autoset_table() {
+    if (empty($this->table))  $this->table = get_class($this);
+    return $this;
+  }
+
   /**
    * Autoset stuff that is not set allready
    * Also usefull by using this without a special model for a table and using this for setting all
@@ -135,9 +146,29 @@ Class Table_Model extends CI_Model {
    * @author Jan den Besten
    */
   public function autoset() {
-    if (empty($this->table))  $this->table = get_class($this);
-    $this->fields = array();
-    // TODO reset en meer...
+    $this->autoset_table();
+    // Set defaults
+    $this->fields           = array();
+    $this->order_by         = '';
+    $this->relations        = array(
+                                'belongs_to'       => array(),
+                                'many_to_many'     => array(),
+                              );
+    $this->max_rows         = '0';
+    $this->update_uris      = true;
+    $this->abstract_fields  = array();
+    $this->abstract_filter  = '';
+    $this->admin_grid       = array(
+                                'fields'            => array(),
+                                'relations'         => array(),
+                                'order_by'          => '',
+                                'jump_to_today'     => TRUE,
+                              );
+    $this->admin_form       = array(
+                                'fields'            => array(),
+                                'relations'         => array(),
+                                'fieldsets'         => array(),
+                              );
     return $this;
   }
   
