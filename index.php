@@ -109,10 +109,19 @@ if (defined('PHPUNIT_TEST')) {
 else {
   define("LOCALHOSTS","0.0.0.0,localhost,localhost:8888,10.37.129.2");
   function is_local_host() { $is=FALSE; $localhosts=explode(",",LOCALHOSTS); foreach ($localhosts as $host) { if ($host==$_SERVER['HTTP_HOST']) { $is=TRUE; } } return $is; }
-  if (is_local_host())
-  	define("IS_LOCALHOST",TRUE);
+  
+  // HTTP SERVER?
+  if (isset($_SERVER['HTTP_HOST'])) {
+    if (is_local_host())
+      define("IS_LOCALHOST",TRUE);
+    else
+    	define("IS_LOCALHOST",FALSE);
+  }
+  // or CLI?
+  elseif (isset($_SERVER['SHELL']))
+    define("IS_LOCALHOST",TRUE);
   else
-  	define("IS_LOCALHOST",FALSE);
+    define("IS_LOCALHOST",FALSE);
 }
 
 

@@ -25,7 +25,7 @@
 /**
  * This routing makes sure all uri's go to the frontend site, except soms system uri's
  */
-$route['(?!__api|admin|_rss|file|_media|_cronjob|_unittest|_ajax|_api)(.*)'] = "";
+$route['(?!__api|admin|_rss|file|_media|_cronjob|_unittest|_ajax|_api|_cli)(.*)'] = "";
 
 /**
  * RSS feed(s)
@@ -40,11 +40,20 @@ $route['_rss/(.*)'] = 'rss/index/$1';
 $route['_ajax'] = "ajax/index";
 $route['_ajax/(.*)'] = "ajax/index/$1";
 
+
 /**
  * Api routing (controllers/api/class/args)
  */
 $route['_api'] = 'api/index';
 $route['_api/(.*)'] = 'api/index/$1';
+
+
+/**
+ * CLI routing
+ */
+$route['_cli'] = '_cli';
+$route['_cli/(.*)/(.*)'] = '_cli/$1/index/$2';
+
 
 /**
  * This route makes a nice download path and media path (which may serve files if they are restricted, but user has rights)
