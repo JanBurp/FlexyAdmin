@@ -51,8 +51,8 @@ $route['_api/(.*)'] = 'api/index/$1';
 /**
  * CLI routing
  */
-$route['_cli'] = '_cli';
-$route['_cli/(.*)/(.*)'] = '_cli/$1/index/$2';
+$route['_cli'] = 'cli/index';
+$route['_cli/(.*)'] = 'cli/index/$1';
 
 
 /**
