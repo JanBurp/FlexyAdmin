@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/** \ingroup core
+/** \ingroup tables
  * 
  * Doelen:
  * - alle gegevens over een database tabel in een eigen model, zodat geen cfg_table_info en cfg_field_info meer nodig is
@@ -124,9 +124,35 @@ Class Table_Model extends CI_Model {
 
 	public function __construct() {
 		parent::__construct();
-    // Autoset stuff that are nog set allready
-    if (empty($this->table)) $this->table = get_class($this);
+    $this->autoset();
 	}
+  
+  /**
+   * Autoset stuff that is not set allready
+   * Also usefull by using this without a special model for a table and using this for setting all
+   *
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function autoset() {
+    if (empty($this->table))  $this->table = get_class($this);
+    $this->fields = array();
+    // TODO reset en meer...
+    return $this;
+  }
+  
+  /**
+   * Set a table so you can use this model for every table as a standard model
+   *
+   * @param string $table 
+   * @return void
+   * @author Jan den Besten
+   */
+  public function table( $table ) {
+    $this->table = $table;
+    $this->autoset();
+    return $this;
+  }
 
 
   /* --- DB methods --- */
