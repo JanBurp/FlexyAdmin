@@ -1,10 +1,12 @@
 <?php require_once(APPPATH."core/AdminController.php");
 
 /**
- * This Controller loads a plugin and calls the method
+ * Geeft lijs van beschikbare plugins en roept ze aan.
+ *
+ * @author: Jan den Besten
+ * $Revision$
+ * @copyright: (c) Jan den Besten
  */
-
-
 class Plugin_controller extends AdminController {
 
 	function __construct() {
@@ -13,7 +15,21 @@ class Plugin_controller extends AdminController {
 	}
 
 	function index() {
-		$this->_show_all();
+    $this->_add_content( h('Plugins') );
+
+    $this->load->library('menu');
+    $this->load->library('documentation');
+    
+    $plugin_menu = new Menu();
+    $plugins = $this->plugin_handler->get_plugins();
+    foreach ($plugins as $name => $plugin) {
+      if ($name!='plugin_template' and isset($plugin['config']['admin_api_method'])) {
+        $help = $this->documentation->get('sys/flexyadmin/libraries/'.ucfirst($name).'.php');
+        $plugin_menu->add( array( 'uri'=>$this->uri->uri_string().'/'.str_replace('plugin_','',$name), 'name' => '<b>'.ucfirst($name).'</b> - '.$help['short'] ) );
+      }
+    }
+    $this->_add_content( $plugin_menu->render() );
+    $this->_show_all();
 	}
 
   /**

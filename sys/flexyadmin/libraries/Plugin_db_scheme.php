@@ -1,7 +1,9 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /** \ingroup plugins
- * @author Jan den Besten
+ * Geeft visuele weergave van database tabellen
+ * 
+ * @author: Jan den Besten
  */
  class Plugin_db_scheme extends Plugin {
    

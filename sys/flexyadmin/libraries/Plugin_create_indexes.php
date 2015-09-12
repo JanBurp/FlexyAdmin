@@ -1,24 +1,24 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
- /** \ingroup plugins
-  * Voorziet tabellen van indexen
-  * 
-  * Deze plugin zal alle tabellen waar het zinvol is voorzien van indexen op zinvollen velden. 
-  * In alle tabellen worden de volgende velden van indexen voorzien:
-  * 
-  * - _id_...
-  * - _self_parent_ 
-  * - _uri_
-  * - _order_
-  * 
-  * In de tabel _res_menu_result_ (zie [Samengesteld menu]({Samengesteld-menu})) zullen ook deze velden worden voorzien van een index:
-  * 
-  * - _int_id_
-  * - _str_uri_
-  * - _str_table_
-  *
-   * @author Jan den Besten
-  */
+/** \ingroup plugins
+ * Voorziet tabellen van indexen
+ * 
+ * Deze plugin zal alle tabellen waar het zinvol is voorzien van indexen op zinvollen velden. 
+ * In alle tabellen worden de volgende velden van indexen voorzien:
+ * 
+ * - _id_...
+ * - _self_parent_ 
+ * - _uri_
+ * - _order_
+ * 
+ * In de tabel _res_menu_result_ (zie [Samengesteld menu]({Samengesteld-menu})) zullen ook deze velden worden voorzien van een index:
+ * 
+ * - _int_id_
+ * - _str_uri_
+ * - _str_table_
+ *
+ * @author Jan den Besten
+ */
 class Plugin_create_indexes extends Plugin {
 
 	public function __construct() {

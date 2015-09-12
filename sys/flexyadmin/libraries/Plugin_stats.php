@@ -1,13 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /** \ingroup plugins
- * FlexyAdmin Plugin template
+ * Geeft statistieken visueel weer
  *
  * @author Jan den Besten
  * @internal
  */
-
-
 class Plugin_stats extends Plugin {
 
 	var $logTable;
