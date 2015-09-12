@@ -48,14 +48,16 @@ class Cli extends CI_Controller {
    * @author Jan den Besten
    */
   private function _help() {
+    $this->load->library('documentation');
     echo "FlexyAdmin cli commands:".PHP_EOL.PHP_EOL;
+    
     $clis = scan_map('sys/flexyadmin/models/cli',$types='php',FALSE);
     foreach ($clis as $cli) {
-      $file   = get_suffix($cli,'/');
-      $class  = str_replace('.php','',$file);
-      $this->load->model('cli/'.$class);
-      echo $this->$class->help();
-      echo PHP_EOL;
+      $doc = $this->documentation->get($cli);
+      echo $doc['name'].PHP_EOL;
+      echo repeater('-',strlen($doc['name'])).PHP_EOL;
+      echo $doc['long'];
+      echo PHP_EOL.PHP_EOL;
     }
   }
   

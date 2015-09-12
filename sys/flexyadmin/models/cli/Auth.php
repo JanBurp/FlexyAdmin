@@ -1,7 +1,9 @@
 <?php
 
 /**
- * CLI auth example
+ * CLI example of authentication
+ * 
+ * - auth .... login <username> <password>
  *
  * @package default
  * @author Jan den Besten
@@ -17,10 +19,6 @@ class Auth extends CI_Model {
     else {
       echo "auth: no user".PHP_EOL;
     }
-  }
-  
-  public function help()  {
-    return "== `auth` example of auth with cli ==".PHP_EOL."auth .... login <username> <password>".PHP_EOL;
   }
   
 }

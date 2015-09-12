@@ -2,8 +2,9 @@
 /**
  * Handles all backed plugin loading, calling etc.
  *
- * @author Jan den Besten
- * @internal
+ * @author: Jan den Besten
+ * $Revision$
+ * @copyright: (c) Jan den Besten
  */
 class Plugin_handler extends CI_Model {
 
@@ -15,7 +16,10 @@ class Plugin_handler extends CI_Model {
 		parent::__construct();
 		$this->load_plugin('plugin');
 	}
-
+  
+  public function get_plugins() {
+    return $this->plugins;
+  }
 	
 	public function init_plugins() {
 		$plugin_config_files=read_map(APPPATH.'config','php',FALSE,FALSE,FALSE);

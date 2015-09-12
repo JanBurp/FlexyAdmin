@@ -1,10 +1,13 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- * FlexyAdmin Plugin
+ * Reset uri velden in tabellen
+ * 
+ * Geef: /plugin/uri/<table>
  *
- * @author Jan den Besten
- * @internal
+ * @author: Jan den Besten
+ * $Revision$
+ * @copyright: (c) Jan den Besten
  */
 
 class Plugin_uri extends Plugin {
@@ -42,7 +45,9 @@ class Plugin_uri extends Plugin {
 				}
 			}
 			else
-				$this->add_message('Which table?');
+        $this->CI->load->library('documentation');
+        $help=$this->CI->documentation->get('sys/flexyadmin/libraries/Plugin_uri.php');
+				$this->add_message( $help['html_long'] );
 		}
     
     return $this->view('admin/plugins/plugin');

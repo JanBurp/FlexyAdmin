@@ -1,8 +1,11 @@
 <?php
 
 /**
- * CLI Tablemodel
- *
+ * Creates tablemodels for table(s) in database
+ * 
+ * - tablemodel login <username> <password> // creates all tables
+ * - tablemodel <table> login <username> <password> // creates one table <table>
+ * 
  * @package default
  * @author Jan den Besten
  */
@@ -21,10 +24,6 @@ class Tablemodel extends CI_Model {
     else {
       echo "You nee to be an admin user...".PHP_EOL;
     }
-  }
-  
-  public function help()  {
-    return "== `tablemodel` creating table models ==".PHP_EOL."tablemodel <table> login <username> <password>".PHP_EOL;
   }
   
 }

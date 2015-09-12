@@ -69,6 +69,7 @@ $route['file/(.*)/(.*)']          = "file/file/download/$1/$2";
 /**
  * This routing reroutes plugin calls
  */
+$route['admin/plugin']      = "admin/plugin_controller";
 $route['admin/plugin/(.+)'] = "admin/plugin_controller/call/$1";
 
 /**

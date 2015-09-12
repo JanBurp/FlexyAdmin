@@ -1,7 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /** \ingroup plugins
- * FlexyAdmin Plugin
+ * Merged tabellen samen tot een menu in _res_menu_result_
  *
  * @author Jan den Besten
  * @internal

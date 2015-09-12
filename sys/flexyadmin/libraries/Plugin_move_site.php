@@ -1,13 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /** \ingroup plugins
- * FlexyAdmin Plugin
+ * Kan alle assets van een (oude) site verplaatsen van map van nieuwe site.
  *
  * @author Jan den Besten
  * @internal
  */
-
-
 class Plugin_move_site extends Plugin {
 
   var $old = '';
@@ -25,7 +23,7 @@ class Plugin_move_site extends Plugin {
     
     // Check
     if (empty($this->old)) {
-       $this->old='<span class="error">-- please fill new path in `config/plugin_move_site.php` --</span>'; 
+       $this->old='<span class="error">-- please fill new path in `config/plugin_move_site.php` --</span>';
     }
     else {
       if (!file_exists($this->old)) $this->old='<span class="error">-- `'.$this->old.'` seems not to exist. --</span>';
@@ -36,9 +34,11 @@ class Plugin_move_site extends Plugin {
     $this->add_message('<pre><strong>New site: </strong> '.$this->new.'</pre>');
 
     // Actions
-    $this->empty_paths();
-    $this->move();
-    $this->merge();
+    if (file_exists($this->old) and file_exists($this->new)) {
+      $this->empty_paths();
+      $this->move();
+      $this->merge();
+    }
 	
   	return $this->view('admin/plugins/plugin');
   }
