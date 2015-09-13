@@ -1,4 +1,4 @@
-<?php require_once(APPPATH."core/AjaxController.php");
+<?php
 
 /** \ingroup controllers
  * API Controller

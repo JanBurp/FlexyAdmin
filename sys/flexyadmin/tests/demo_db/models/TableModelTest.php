@@ -14,7 +14,17 @@ class TableModelTest extends CITestCase {
   }
   
   
-  public function testQueryBuilder() {
+  /**
+   * Test of normale db functies werken en dat goede return waarden
+   *
+   * @return void
+   * @author Jan den Besten
+   */
+  public function test_db() {
+    // Moet array teruggeven
+    $result = $this->CI->table_model->list_tables();
+    $this->assertInternalType( 'array', $result);
+    
     // Standard model:
     
     // tbl_menu
@@ -36,22 +46,25 @@ class TableModelTest extends CITestCase {
     $this->assertEquals( 2, $query->num_rows() );
     $this->assertEquals( 9, $query->num_fields() );
 
-    $query = $this->CI->tbl_menu->where( 'order <=', '2' )
-                                ->get();
+    $query = $this->CI->tbl_menu->where( 'order <=', '2' )->get();
     $this->assertEquals( 3, $query->num_rows() );
 
     $query = $this->CI->tbl_menu->get_one( 1 );
     $this->assertEquals( 1, $query->num_rows() );
 
-    $query = $this->CI->tbl_menu->where( 'order <=', '2' )
-                                ->get_one( 1 );
+    $query = $this->CI->tbl_menu->where( 'order <=', '2' )->get_one( 1 );
     $this->assertEquals( 1, $query->num_rows() );
 
     $query = $this->CI->tbl_menu->get_one_by( 'uri',  'test' );
     $this->assertEquals( 0, $query->num_rows() );
-    
-    // $result = $this->CI->tbl_menu->not_existing();
   }
+  
+
+  // public function test_abstractfields() {
+  //   $fields = $this->CI->tbl_menu->list_fields();
+  //   $abstract_fields = $this->CI->tbl_menu->get_abstract_fields( $fields );
+  //   $this->assertEquals( array('str_title','str_module'), $abstract_fields );
+  // }
 
 
 }
