@@ -28,6 +28,16 @@ Class Table_Model extends CI_Model {
   protected $table            = '';
   
   /**
+   * Primary key, standaard 'id'
+   */
+  protected $primary_key      = PRIMARY_KEY;
+
+  /**
+   * Key die wordt gebruikt bij $this->get_result(), standaard hetzelfde als $this->primary_key
+   */
+  protected $result_key       = PRIMARY_KEY;
+  
+  /**
    * Een array van velden die de tabel bevat.
    * Als het leeg is wordt het automatisch opgevraagd uit de database (met $this->db->list_fields() )
    * Dat heeft als voordeel dat het model 'out of the box' werkt, maar kost extra tijd.
@@ -35,21 +45,18 @@ Class Table_Model extends CI_Model {
   protected $fields           = array();
   
   /**
+   * Per veld mogelijk meer informatie:
+   * - validation         - array met validation rules
+   * - options            - array met opties
+   * - multiple_options   - TRUE dan zijn er meet dan één van bovenstaande options mogelijk
+   */
+  protected $field_info       = array();
+  
+  /**
    * Hier kan een standaard volgorde worden ingesteld waarin de resultaten worden getoond.
    */
   protected $order_by         = '';
 
-  /**
-   * Een array met alle relaties die het model standaard meeneemt in de resultaten.
-   * Kan bij elke aanroep altijd met with() worden overruled.
-   */
-  protected $relations        = array(
-                                  'belongs_to'       => array(),
-                                  'many_to_many'     => array(),
-                                  // 'has_many'      => array(),
-                                  // 'has_one'       => array(),
-                                );
-  
   /**
    * Als de waarde groter is dan 0, dan is de tabel begrenst op een maximaal aantal rijen.
    * Een insert zal dat FALSE als resultaat geven
@@ -66,9 +73,9 @@ Class Table_Model extends CI_Model {
   /**
    * Velden die gebruikt worden om een abstract veld samen te stellen.
    * Bijvoorbeeld voor het gebruik van dropdown velden in formulieren.
-   * Als dit leeg is en er wordt een abstract gevraagd zullen deze velden automatisch gekozen worden aan de hand van $this->fields.
+   * Als dit NULL is en er wordt een abstract gevraagd zullen deze velden automatisch gekozen worden aan de hand van $this->fields.
    */
-  protected $abstract_fields  = array();
+  protected $abstract_fields  = NULL;
   
   /**
    * Een where SQL die wordt gebruikt om een abstract resultaat te filteren indiend nodig.
@@ -80,16 +87,16 @@ Class Table_Model extends CI_Model {
    * Als een instelling leeg is wordt deze gezocht in de standaard instelling.
    * 
    * - fields         - Velden die meegegeven en getoond worden (afhankelijk van veld specifieke instellingen). Als leeg dan is dat hetzelfde als $this->fields
-   * - relations      - Relaties die mee worden genomen en getoond. Als leeg dan is dat hetzelfde als $this->relations
    * - order_by       - Volgorde voor het grid. Als leeg dan is dat hetzelfde als $this->order_by
    * - jump_to_today  - Als het resultaat een datumveld bevat dan begint het resultaat op de pagina waar de datum het dichst de huidige datum benaderd.
+   * - with           - Relaties die mee worden genomen en getoond. Zie $this->with()
    *                    Je kunt een specifiek datumveld instellen of TRUE: dan wordt het eerste datumveld opgezocht (wat extra resources kost)
    */
   protected $admin_grid       = array(
-                                  'fields'            => array(),
-                                  'relations'         => array(),
-                                  'order_by'          => '',
-                                  'jump_to_today'     => TRUE,
+                                  'fields'        => array(),
+                                  'order_by'      => '',
+                                  'with'          => array(),
+                                  'jump_to_today' => TRUE,
                                 );
 
   /**
@@ -97,29 +104,23 @@ Class Table_Model extends CI_Model {
    * Als een instelling leeg is wordt deze gezocht in de standaard instelling.
    * 
    * - fields         - Velden die meegegeven en getoond worden (afhankelijk van veld specifieke instellingen). Als leeg dan is dat hetzelfde als $this->fields
-   * - relations      - Relaties die mee worden genomen en getoond. Als leeg dan is dat hetzelfde als $this->relations
+   * - with           - Relaties die mee worden genomen en getoond. Zie $this->with()
    * - fieldsets      - Fieldsets voor het formulier. Per fieldset kan aangegeven worden welke velden daarin verschijnen. Bijvoorbeeld: 'Fieldset naam' => array( 'str_title_en', 'txt_text_en' )
    */
   protected $admin_form        = array(
-                                  'fields'            => array(),
-                                  'relations'         => array(),
-                                  'fieldsets'         => array(),
+                                  'fields'    => array(),
+                                  'with'      => array(),
+                                  'fieldsets' => array(),
                                 );
+  /* --- VARS --- */
   
-  /* --- CONFIG --- */
-  
-  /**
-   * Primary key, standaard 'id'
-   */
-  protected $primary_key      = PRIMARY_KEY;
-  
-  /**
-   * Methods of the query builder that give data back instead of the querybuilder object.
-   * Needed by __call() to use all query_builder methods
-   */
-  private $returning_qb_methods = array( 'get', 'get_where','get_compiled_select', 'get_compiled_insert','get_compiled_update','get_compiled_delete','count_all_results','count_all' );
 
+  /**
+   * Relations that need to be joined into result.
+   */
+  private $with               = array();
   
+
   /* --- CONSTRUCT --- */
 
 	public function __construct() {
@@ -137,7 +138,7 @@ Class Table_Model extends CI_Model {
     if (empty($this->table))  $this->table = get_class($this);
     return $this;
   }
-
+  
   /**
    * Autoset stuff that is not set allready
    * Also usefull by using this without a special model for a table and using this for setting all
@@ -150,27 +151,52 @@ Class Table_Model extends CI_Model {
     // Set defaults
     $this->fields           = array();
     $this->order_by         = '';
-    $this->relations        = array(
-                                'belongs_to'       => array(),
-                                'many_to_many'     => array(),
-                              );
     $this->max_rows         = '0';
     $this->update_uris      = true;
-    $this->abstract_fields  = array();
+    $this->abstract_fields  = null;
     $this->abstract_filter  = '';
-    $this->admin_grid       = array(
-                                'fields'            => array(),
-                                'relations'         => array(),
-                                'order_by'          => '',
-                                'jump_to_today'     => TRUE,
-                              );
-    $this->admin_form       = array(
-                                'fields'            => array(),
-                                'relations'         => array(),
-                                'fieldsets'         => array(),
-                              );
     return $this;
   }
+
+  
+  /**
+   * Geeft abstract_fields, als die nog niet zijn ingesteld zoek ze op en stel ze in.
+   *
+   * @param mixed $fields [''] als je hier een array van strings, of een komma gescheiden string met velden meegeeft wordt dat gebruikt.
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_abstract_fields( $fields='' ) {
+    if ( is_null($this->abstract_fields) ) {
+      $abstract_fields = array();
+      if ( !empty($fields) ) {
+        if ( !is_array($fields) ) $fields = explode( ',', $fields );
+      }
+      else {
+        $fields=$this->list_fields( $this->table );
+      }
+      // Zoek op type velden
+  		$abstract_field_types = $this->config->item('ABSTRACT_field_pre_types');
+      $max_abstract_fields  = $this->config->item('ABSTRACT_field_max');
+			while ( list($key,$field) = each( $fields ) and $max_abstract_fields>0) {
+				$pre = get_prefix($field);
+				if ( in_array( $pre, $abstract_field_types ) ) {
+					array_push( $abstract_fields, $field );
+					$max_abstract_fields--;
+				}
+  		}
+      // Als leeg, zoek dan de eerste velden
+  		if (empty($abstract_fields)) {
+        $max_abstract_fields  = $this->config->item('ABSTRACT_field_max');
+  			for ( $n=0; $n<$max_abstract_fields; $n++) {
+  				array_push( $abstract_fields, each($fields) );
+  			}
+  		}
+    }
+    $this->abstract_fields = $abstract_fields;
+    return $this->abstract_fields;
+  }
+  
   
   /**
    * Set a table so you can use this model for every table as a standard model
@@ -184,7 +210,7 @@ Class Table_Model extends CI_Model {
     $this->autoset();
     return $this;
   }
-
+  
 
   /* --- DB methods --- */
 
@@ -198,12 +224,35 @@ Class Table_Model extends CI_Model {
   public function __call($method,$arguments) {
     if (method_exists($this->db,$method)) {
       $result = call_user_func_array( array($this->db,$method), $arguments );
-      if ( in_array( $method, $this->returning_qb_methods ) ) {
+      if ($result!==$this->db) {
         return $result;
       }
       return $this;
     }
     throw new Exception( $method . ' does not exist in '.__CLASS__);
+  }
+  
+  
+  /* --- Getters for properties --- */
+
+  /**
+   * Geeft instellingen voor admin_grid
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_admin_grid() {
+    return $this->admin_grid;
+  }
+
+  /**
+   * Geeft instellingen voor admin_form
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_admin_form() {
+    return $this->admin_form;
   }
   
   
@@ -249,8 +298,58 @@ Class Table_Model extends CI_Model {
     return $this->get();
   }
   
+  /**
+   * Geeft resultaat terug als array
+   * - array key is standaard de PRIMARY KEY maar kan ingesteld worden met $this->set_result_key()
+   * - voor many_to_many en has_many wordt resultaat sub arrays in het resultaat.
+   * 
+   * NB Gebruik dit niet bij grote resultaten, of bij grote resultaten alleen met limit / pagination
+   *
+   * @param int $limit [0]
+   * @param int $offset [0] 
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_result( $limit=0, $offset=0 ) {
+    $query = $this->get( $limit, $offset );
+    $result = array();
+    foreach ($query->result_array() as $row) {
+      $key = $row[ $this->result_key ];
+      // TODO has_many en many_to_many als subarrays
+      $result[$key] = $row;
+    }
+    return $result;
+  }
+
+  
+  /**
+   * Zelfde als get_result(), maar geeft nu alleen maar de eerstgevonden rij.
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_row() {
+    $result = $this->get_result( 1 );
+    return current($result);
+  }
+
   
   /* --- Methods om de query te vormen --- */
+
+
+  /**
+   * Stel result key in voor gebruik bij $this->get_result()
+   * Standaard hetzelfde als primary_key.
+   *
+   * @param string $key [''] Als leeg dan wordt primary_key gebruikt
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function set_result_key( $key='' ) {
+    if (empty($key)) $key = $this->primary_key;
+    $this->result_key = $key;
+    return $this;
+  }
   
   
   /**
@@ -262,6 +361,7 @@ Class Table_Model extends CI_Model {
    */
   public function with($relations) {
   }
+  
   
 
   /* --- Informatieve methods --- */
@@ -292,7 +392,6 @@ Class Table_Model extends CI_Model {
     $fields = $this->list_fields();
     return in_array( $field, $fields );
   }
-  
-  
+
 
 }

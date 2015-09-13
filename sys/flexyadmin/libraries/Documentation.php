@@ -33,7 +33,7 @@ class Documentation {
         foreach ($lines as $key => $line) {
           if ( in_array( substr($line,0,1), array('@','$') ) ) {
             unset($long[$key]);
-            if (preg_match("/[@$](.*):\s?(.*)/um", $line,$match)) {
+            if (preg_match("/[@$%](.*):\s?(.*)/um", $line,$match)) {
               $params[$match[1]] = $match[2];
             }
           }
