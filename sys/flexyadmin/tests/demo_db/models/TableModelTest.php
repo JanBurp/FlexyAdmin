@@ -60,11 +60,17 @@ class TableModelTest extends CITestCase {
   }
   
 
-  // public function test_abstractfields() {
-  //   $fields = $this->CI->tbl_menu->list_fields();
-  //   $abstract_fields = $this->CI->tbl_menu->get_abstract_fields( $fields );
-  //   $this->assertEquals( array('str_title','str_module'), $abstract_fields );
-  // }
+  public function test_abstractfields() {
+    $abstract_fields = $this->CI->tbl_menu->get_abstract_fields();
+    $this->assertEquals( array('str_title','str_module'), $abstract_fields );
+    
+    $abstract_fields_sql  = $this->CI->tbl_menu->get_compiled_abstract_select();
+    $this->assertEquals( "`tbl_menu`.`id`, CONCAT_WS('|',`tbl_menu`.`str_title`,`tbl_menu`.`str_module`) AS `abstract`", $abstract_fields_sql );
+    
+    $query = $this->CI->tbl_menu->get_as_abstract();
+    $this->assertEquals( 5, $query->num_rows() );
+    $this->assertEquals( 2, $query->num_fields() );
+  }
 
 
 }
