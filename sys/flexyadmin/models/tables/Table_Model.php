@@ -2,14 +2,14 @@
 
 /** \ingroup tables
  * 
- * Doelen:
- * - alle gegevens over een database tabel in een eigen model, zodat geen cfg_table_info en cfg_field_info meer nodig is
- *  - daardoor: veel sneller
- * - standaard get/crud zit al in het model, voor elke tabel
- * - inclusief standaard relaties
- * - ieder tabel kan deze overerven een aanpassen naar wens, de aanroepen blijven hetzelfde voor ieder tabel
- * - het is in feite een uitbreiding op de query-builder, zodat straks Crud & zelfs MY_DB... weg kan
- * - Geeft alle data als query objecten terug! (zie CI handleiding)
+ * - Alle gegevens over een database en zijn velden tabel als properties in een model (zodat geen cfg_table_info en cfg_field_info meer nodig is)
+ * - Daardoor: veel sneller omdat de gegevens al beschikbaar zijn en niet te hoeven worden opgezocht (in db of cfg)
+ * - Standaard get/crud zit al in het model, voor elke tabel
+ * - Inclusief standaard relaties
+ * - Iedere tabel kan deze overerven en aanpassen naar wens, de aanroepen blijven hetzelfde voor ieder tabel
+ * - Alle query-builder methods (en db methods) kunnen worden gebruikt
+ * - Geeft data als query objecten terug (zie CI handleiding)
+ * - En ook enkele methods die de data als result arrays teruggeven met mooiere key en relatie-data
  * 
  * @author: Jan den Besten
  * $Revision$
@@ -121,7 +121,7 @@ Class Table_Model extends CI_Model {
   private $with               = array();
   
 
-  /* --- CONSTRUCT --- */
+  /* --- CONSTRUCT  & AUTOSET --- */
 
 	public function __construct() {
 		parent::__construct();
@@ -157,7 +157,44 @@ Class Table_Model extends CI_Model {
     $this->abstract_filter  = '';
     return $this;
   }
+  
+  
+  /* --- DB methods --- */
 
+  
+  /**
+   * Alle Query Builder methods zijn beschikbaar -> TODO beter is ze uit te schrijven hier...
+   *
+   * @return this
+   * @author Jan den Besten
+   */
+  public function __call($method,$arguments) {
+    if (method_exists($this->db,$method)) {
+      $result = call_user_func_array( array($this->db,$method), $arguments );
+      if ($result!==$this->db) {
+        return $result;
+      }
+      return $this;
+    }
+    throw new Exception( $method . ' does not exist in '.__CLASS__);
+  }
+  
+  
+  /* -- Methods voor het klaarmaken van een query --- */
+  
+  /**
+   * Set a table so you can use this model for every table as a standard model
+   *
+   * @param string $table 
+   * @return void
+   * @author Jan den Besten
+   */
+  public function table( $table ) {
+    $this->table = $table;
+    $this->autoset();
+    return $this;
+  }
+  
   
   /**
    * Geeft abstract_fields, als die nog niet zijn ingesteld zoek ze op en stel ze in.
@@ -192,45 +229,34 @@ Class Table_Model extends CI_Model {
   				array_push( $abstract_fields, each($fields) );
   			}
   		}
+      $this->abstract_fields = $abstract_fields;
     }
-    $this->abstract_fields = $abstract_fields;
     return $this->abstract_fields;
   }
   
   
-  /**
-   * Set a table so you can use this model for every table as a standard model
-   *
-   * @param string $table 
-   * @return void
-   * @author Jan den Besten
-   */
-  public function table( $table ) {
-    $this->table = $table;
-    $this->autoset();
-    return $this;
-  }
-  
-
-  /* --- DB methods --- */
-
-  
-  /**
-   * Alle Query Builder methods zijn beschikbaar -> TODO beter is ze uit te schrijven hier...
-   *
-   * @return this
-   * @author Jan den Besten
-   */
-  public function __call($method,$arguments) {
-    if (method_exists($this->db,$method)) {
-      $result = call_user_func_array( array($this->db,$method), $arguments );
-      if ($result!==$this->db) {
-        return $result;
+	/**
+	 * Geeft (select) SQL voor selecteren van abstract
+	 *
+	 * @param string $asPre['']
+	 * @return string
+	 * @author Jan den Besten
+	 */
+  public function get_compiled_abstract_select() {
+		$abstract_fields = $this->get_abstract_fields();
+    $deep_foreigns = $this->config->item('DEEP_FOREIGNS');
+    if ($deep_foreigns )  {
+      foreach ( $deep_foreigns as $deep_key => $deep_info ) {
+        if ( $nr = in_array_like( $deep_key,$abstract_fields ) ) {
+          $deep_field = $abstract_fields[$nr];
+          $abstract_fields[$nr] = "(SELECT `".$deep_info['abstract']."` FROM `".$deep_info['table']."` WHERE ".$deep_info['table'].".id=".$deep_field.")";
+        }
       }
-      return $this;
     }
-    throw new Exception( $method . ' does not exist in '.__CLASS__);
-  }
+    // Maak de SQL
+		$sql = '`'.$this->table.'`.`'.$this->primary_key."`, CONCAT_WS('|',`".$this->table.'`.`' . implode( "`,`".$this->table.'`.`' ,$abstract_fields ) . "`) AS `" . $this->config->item('ABSTRACT_field_name') . "`";
+    return $sql;
+	}
   
   
   /* --- Getters for properties --- */
@@ -271,6 +297,20 @@ Class Table_Model extends CI_Model {
     if ( !empty($this->order_by) ) $this->db->order_by( $this->order_by );
     return $this->db->get( $this->table, $limit, $offset );
   }
+
+  /**
+   * Geeft abstract resultaat als query object. Eventueel beperkt door limit en offset
+   *
+   * @param int $limit [0]
+   * @param int $offset [0] 
+   * @return object $query
+   * @author Jan den Besten
+   */
+  public function get_as_abstract( $limit=0, $offset=0 ) {
+    $this->select( $this->get_compiled_abstract_select(), FALSE );
+    return $this->get( $limit,$offset );
+  }
+  
   
   
   /**
@@ -298,6 +338,29 @@ Class Table_Model extends CI_Model {
     return $this->get();
   }
   
+  
+  /**
+   * Maakt een mooie result_array van een $query
+   * - Met keys die standaard primary_key zijn, of ingesteld kunnen worden met set_result_key()
+   * - Met relaties gekoppeld als subarrays
+   *
+   * @param object $query 
+   * @return array
+   * @author Jan den Besten
+   */
+  private function _make_result_array( $query ) {
+    $result = array();
+    foreach ($query->result_array() as $row) {
+      if ( isset( $row[$this->result_key] ) ) {
+        $key = $row[ $this->result_key ];
+      }
+      // TODO has_many en many_to_many als subarrays toevoegen aan row
+      $result[$key] = $row;
+    }
+    return $result;
+  }
+  
+  
   /**
    * Geeft resultaat terug als array
    * - array key is standaard de PRIMARY KEY maar kan ingesteld worden met $this->set_result_key()
@@ -312,13 +375,21 @@ Class Table_Model extends CI_Model {
    */
   public function get_result( $limit=0, $offset=0 ) {
     $query = $this->get( $limit, $offset );
-    $result = array();
-    foreach ($query->result_array() as $row) {
-      $key = $row[ $this->result_key ];
-      // TODO has_many en many_to_many als subarrays
-      $result[$key] = $row;
-    }
-    return $result;
+    return $this->_make_result_array( $query );
+  }
+  
+  
+  /**
+   * Zelfde als get_result() maar dan als abstract
+   *
+   * @param int $limit [0]
+   * @param int $offset [0] 
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_result_as_abstract( $limit=0, $offset=0 ) {
+    $query = $this->get_as_abstract( $limit, $offset );
+    return $this->_make_result_array( $query );
   }
 
   
@@ -332,6 +403,20 @@ Class Table_Model extends CI_Model {
     $result = $this->get_result( 1 );
     return current($result);
   }
+
+
+  /**
+   * Zelfde als get_row(), maar nu als een abstract.
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_row_as_abstract() {
+    $result = $this->get_result_as_abstract( 1 );
+    return current($result);
+  }
+  
+  
 
   
   /* --- Methods om de query te vormen --- */
@@ -353,13 +438,20 @@ Class Table_Model extends CI_Model {
   
   
   /**
-   * Geef aan welke relaties meegenomen moeten worden in het resultaat
+   * Geef aan welke relaties meegenomen moeten worden in het resultaat.
+   * 
+   * Bijvoorbeeld: array(
+   *    'belongs_to' => array( 'tbl_items', 'tbl_posts' => array( ... fields ... ) )
+   * )
+   * 
    *
-   * @param string $relations 
-   * @return void
+   * @param array $with
+   * @return $this
    * @author Jan den Besten
    */
-  public function with($relations) {
+  public function with( $with ) {
+    $this->with = $with;
+    return $this;
   }
   
   

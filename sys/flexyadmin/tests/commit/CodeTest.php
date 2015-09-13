@@ -13,7 +13,7 @@ class CodeTest extends CITestCase {
   public function test_debug_code() {
     $files=scan_map('sys/flexyadmin','php',true);
     foreach ($files as $file) {
-      if (!in_array($file,array('sys/flexyadmin/tests/commit/CodeTest.php','sys/flexyadmin/helpers/debug_helper.php'))) {
+      if (!in_array($file,array('sys/flexyadmin/tests/commit/CodeTest.php','sys/flexyadmin/controllers/admin/Test.php','sys/flexyadmin/helpers/debug_helper.php'))) {
         $lines=file($file);
         foreach ($lines as $key => $line) {
           $found=preg_match("/^\s*\s*(trace_|trace_if|strace_|backtrace_|xdebug_break|var_dump|FIXME|\<\<\<\<\<\<\<|\>\>\>\>\>\>\>)\(/u", $line);
