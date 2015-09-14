@@ -19,7 +19,7 @@ For recent sites the update processes described below should work:
 - perform all the steps from your version to the latest:
 
 
-UPDATE 3.0.1 (xxxx)
+UPDATE 3.0.1 (3285?)
 ===================
 
 - Update naar CI 3.0.1:
@@ -30,7 +30,7 @@ UPDATE 3.0.1 (xxxx)
 
 
 
-UPDATE 3.0 (xxxx)
+UPDATE 3.0 (3089?)
 =================
 
 - Run SQL Update update_r3067.sql (Deze update kan niet binnen FlexyAdmin gedaan worden, gebruik dus PhpMyAdmin oid)
