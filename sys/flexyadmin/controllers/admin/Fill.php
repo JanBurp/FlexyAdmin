@@ -38,6 +38,10 @@ class Fill extends AdminController {
 				$first_field=$this->db->list_fields($addtable);
 				$first_field=not_filter_by($first_field,$forbidden_fields);
 				$first_field=array_shift($first_field);
+        if (empty($first_field)) {
+          $first_field=$this->db->list_fields($addtable);
+          $first_field=$first_field[1];
+        }
 				for ($i=0; $i < $aantal; $i++) { 
 					$id='#';
 					if (!$test) {
