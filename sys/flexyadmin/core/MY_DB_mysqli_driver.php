@@ -1688,6 +1688,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
    * @author Jan den Besten
    */
 	public function last_num_rows_no_limit() {
+    $num_rows = 0;
 		$sql=$this->last_query();
     if (!$sql) return FALSE;
     if ($sql) {
