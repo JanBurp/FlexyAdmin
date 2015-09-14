@@ -67,7 +67,7 @@ class TableModelTest extends CITestCase {
     $abstract_fields_sql  = $this->CI->tbl_menu->get_compiled_abstract_select();
     $this->assertEquals( "`tbl_menu`.`id`, CONCAT_WS('|',`tbl_menu`.`str_title`,`tbl_menu`.`str_module`) AS `abstract`", $abstract_fields_sql );
     
-    $query = $this->CI->tbl_menu->get_as_abstract();
+    $query = $this->CI->tbl_menu->select_abstract()->get();
     $this->assertEquals( 5, $query->num_rows() );
     $this->assertEquals( 2, $query->num_fields() );
   }

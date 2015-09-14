@@ -298,20 +298,6 @@ Class Table_Model extends CI_Model {
     return $this->db->get( $this->table, $limit, $offset );
   }
 
-  /**
-   * Geeft abstract resultaat als query object. Eventueel beperkt door limit en offset
-   *
-   * @param int $limit [0]
-   * @param int $offset [0] 
-   * @return object $query
-   * @author Jan den Besten
-   */
-  public function get_as_abstract( $limit=0, $offset=0 ) {
-    $this->select( $this->get_compiled_abstract_select(), FALSE );
-    return $this->get( $limit,$offset );
-  }
-  
-  
   
   /**
    * Geeft één rij uit de database tabel, als query_row object, met het meegegeven id
@@ -380,20 +366,6 @@ Class Table_Model extends CI_Model {
   
   
   /**
-   * Zelfde als get_result() maar dan als abstract
-   *
-   * @param int $limit [0]
-   * @param int $offset [0] 
-   * @return array
-   * @author Jan den Besten
-   */
-  public function get_result_as_abstract( $limit=0, $offset=0 ) {
-    $query = $this->get_as_abstract( $limit, $offset );
-    return $this->_make_result_array( $query );
-  }
-
-  
-  /**
    * Zelfde als get_result(), maar geeft nu alleen maar de eerstgevonden rij.
    *
    * @return array
@@ -404,19 +376,6 @@ Class Table_Model extends CI_Model {
     return current($result);
   }
 
-
-  /**
-   * Zelfde als get_row(), maar nu als een abstract.
-   *
-   * @return array
-   * @author Jan den Besten
-   */
-  public function get_row_as_abstract() {
-    $result = $this->get_result_as_abstract( 1 );
-    return current($result);
-  }
-  
-  
 
   
   /* --- Methods om de query te vormen --- */
@@ -433,6 +392,18 @@ Class Table_Model extends CI_Model {
   public function set_result_key( $key='' ) {
     if (empty($key)) $key = $this->primary_key;
     $this->result_key = $key;
+    return $this;
+  }
+  
+  
+  /**
+   * Selecteert abstract fields
+   *
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function select_abstract() {
+    $this->db->select( $this->get_compiled_abstract_select(), FALSE );
     return $this;
   }
   
