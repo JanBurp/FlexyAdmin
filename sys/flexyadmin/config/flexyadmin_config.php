@@ -979,7 +979,7 @@ $config['ABSTRACT_field_max']				= 2;
 $config['ABSTRACT_field_split']			= " | ";
 
 $config['URI_field_pre_types']			= array("str","url","dat","date","datetime","tme",'time',"int","media");
-$config['DATE_fields_pre']			    = array("tme","datetime","dat","date");
+$config['DATE_fields_pre']			    = array("dat","date","tme","datetime",);
 
 
 
