@@ -14,21 +14,19 @@ echo '<?xml version="1.0" encoding="utf-8"?>' . "\n";
 		<description><?=$page_description;?></description>
 		<dc:language><?=$page_language;?></dc:language>
 		<dc:creator><?=$creator_email;?></dc:creator>
-		<atom:link href="<?=$feed_url;?>/rss" rel="self" type="application/rss+xml" />
+		<atom:link href="<?=$feed_url;?>/_rss" rel="self" type="application/rss+xml" />
 
 		<dc:rights>Copyright <?=gmdate("Y", time());?></dc:rights>
 		<admin:generatorAgent rdf:resource="http://www.flexyadmin.com/" />
 
 		<?php foreach($posts as $entry): ?>
-			<item>
-
-				<title><?=xml_convert($entry['title']);?></title>
-				<link><?=site_url($entry['url']);?></link>
-				<guid><?=site_url($entry['url']);?></guid>
-				<description><![CDATA[<?=$entry['body']; ?>]]></description>
-				<pubDate><?=$entry['date'];?></pubDate>
-				
-			</item>
+<item>
+  			<title><?=xml_convert($entry['title']);?></title>
+  			<link><?=site_url($entry['url']);?></link>
+  			<guid><?=site_url($entry['url']);?></guid>
+  			<description><![CDATA[<?=$entry['body']; ?>]]></description>
+  			<pubDate><?=$entry['date'];?></pubDate>
+  		</item>
 		<?php endforeach; ?>
 
 	</channel>
