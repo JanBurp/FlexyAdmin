@@ -9,28 +9,37 @@
  */
 class Plugin_controller extends AdminController {
 
-	function __construct() {
+	public function __construct() {
 		parent::__construct();
 		$this->load->model('plugin_handler');
 	}
 
-	function index() {
-    $this->_add_content( h('Plugins') );
+  /**
+   * Shows all plugins
+   *
+   * @return void
+   * @author Jan den Besten
+   */
+	public function index() {
+    if ( $this->user->is_super_admin() ) {
+      $this->_add_content( h('Plugins') );
 
-    $this->load->library('menu');
-    $this->load->library('documentation');
+      $this->load->library('menu');
+      $this->load->library('documentation');
     
-    $plugin_menu = new Menu();
-    $plugins = $this->plugin_handler->get_plugins();
-    foreach ($plugins as $name => $plugin) {
-      if ($name!='plugin_template' and isset($plugin['config']['admin_api_method'])) {
-        $help = $this->documentation->get('sys/flexyadmin/libraries/'.ucfirst($name).'.php');
-        $plugin_menu->add( array( 'uri'=>$this->uri->uri_string().'/'.str_replace('plugin_','',$name), 'name' => '<b>'.ucfirst($name).'</b> - '.$help['short'] ) );
+      $plugin_menu = new Menu();
+      $plugins = $this->plugin_handler->get_plugins();
+      foreach ($plugins as $name => $plugin) {
+        if ($name!='plugin_template' and isset($plugin['config']['admin_api_method'])) {
+          $help = $this->documentation->get('sys/flexyadmin/libraries/'.ucfirst($name).'.php');
+          $plugin_menu->add( array( 'uri'=>$this->uri->uri_string().'/'.str_replace('plugin_','',$name), 'name' => '<b>'.ucfirst($name).'</b> - '.$help['short'] ) );
+        }
       }
+      $this->_add_content( $plugin_menu->render() );
     }
-    $this->_add_content( $plugin_menu->render() );
     $this->_show_all();
 	}
+  
 
   /**
    * Calls the plugin, this is rerouted from admin/plugin/###
@@ -38,7 +47,7 @@ class Plugin_controller extends AdminController {
    * @return void
    * @author Jan den Besten
    */
-	function call() {
+	public function call() {
     $this->load->model('queu');
 		
 		$args=func_get_args();

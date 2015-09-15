@@ -7,6 +7,11 @@ class Test extends CI_Controller {
 	}
   
   public function index() {
+    $this->load->config( 'tables/tbl_menu', TRUE );
+    
+    trace_( $this->config->item('table', 'tables/tbl_menu') );
+    
+    
     $this->load->model('tables/table_model');
     $this->load->model('tables/tbl_menu');
     
