@@ -191,7 +191,7 @@ class Show extends AdminController {
             }
 
 						$data=$this->db->get_result($table,$pagination,$offset);
-            $data_query=$this->db->last_query_clean(array('select'=>$table.'.'.PRIMARY_KEY));
+            $data_query=$this->db->last_query_clean(array('select'=>$table.'.'.PRIMARY_KEY), true);
 						$total_rows=$this->db->last_num_rows_no_limit();
 
 						$last_order=$this->db->get_last_order();
@@ -206,6 +206,7 @@ class Show extends AdminController {
 						$keys=array();
 						if (!empty($data)) $keys=array_keys(current($data));
             $prekeys=get_prefix($keys);
+            
             $hasDateField = one_of_array_in_array($this->config->item('DATE_fields_pre'),$prekeys);
             if ($hasDateField) $hasDateField=$keys[$hasDateField];
             $keys=array_combine($keys,$keys);
@@ -217,8 +218,9 @@ class Show extends AdminController {
               $this->db->where('DATE(`'.$hasDateField.'`)=DATE(NOW())');
               $today_ids=$this->db->get_result($table);
               if (empty($today_ids)) {
-                $this->db->select($hasDateField);
-                $this->db->where('DATE(`'.$hasDateField.'`)<=DATE(NOW())');
+                // $this->db->select($hasDateField);
+                $this->db->where('DATE(`'.$hasDateField.'`)>=DATE(NOW())');
+                $this->db->order_by($hasDateField);
                 $today_ids=$this->db->get_result($table,1);
               }
               if (!empty($today_ids) and $id=='') {
