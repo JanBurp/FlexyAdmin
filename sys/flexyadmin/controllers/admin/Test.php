@@ -15,9 +15,10 @@ class Test extends CI_Controller {
     $this->load->model('tables/table_model');
     $this->load->model('tables/tbl_menu');
     
-    $result = $this->tbl_menu->select_abstract()->get_result();
-    var_dump( $result );
-    var_dump( $this->db->last_query() );
+    $this->load->model('schoolbase/schoolbase_notifications','notifications');
+    $items = $this->notifications->create_newsletter_items( 'all', 'week ');
+    
+    var_dump( $items );
     
     return '';
   }
