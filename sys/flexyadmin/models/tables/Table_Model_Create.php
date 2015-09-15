@@ -43,6 +43,7 @@ Class Table_Model_Create extends CI_Model {
       $settings='';
     }
     
+    
     foreach ($tables as $table) {
       $this->messages[] = $table;
       
@@ -69,7 +70,7 @@ Class Table_Model_Create extends CI_Model {
         $settings_fields_info[$field]['validation'] = $this->form_validation->get_validations( $table, $field );
         if (!empty($field_info['str_options'])) {
           $settings_fields_info[$field]['options'] = $field_info['str_options'];
-          $settings_fields_info[$field]['multiple'] = $field_info['b_multi_options']?true:false;
+          $settings_fields_info[$field]['multiple_options'] = $field_info['b_multi_options']?true:false;
         }
       }
       

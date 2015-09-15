@@ -26,6 +26,7 @@ $db['local']['hostname'] = "127.0.0.1";
 $db['local']['username'] = "root";
 $db['local']['password'] = "eonisme";
 $db['local']['database'] = "flexyadmin_demo";
+$db['local']['database'] = "flexyadmin_test";
 
 /* End of file database.php */
 /* Location: ./system/application/config/database.php */
