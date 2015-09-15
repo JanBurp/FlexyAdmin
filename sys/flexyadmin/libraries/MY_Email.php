@@ -259,13 +259,30 @@ class MY_Email extends CI_Email {
   
   /**
    * Add styling to tags
+   * 
+   * Met deze functie kun je aan tags en tags met een class in de html van je email styling toevoegen.
+   * Je geeft een array met styles mee:
+   * - Waarvan de key de tag is of een tag met een class: 'td' of 'td.speciaal' bijvoorbeeld.
+   * - De value komt dat bij al die tags ('<td>' of '<td class="speciaal">) in de vorm van een style attribuut: style="..."
+   * - Let op dat bij emails overerving en dat soort zaken niet (of niet geheel) worden ondersteund.
+   * - Verder is de volgorde van de style array van belang. Zorg ervoor dat een tag zonder class eerder komt dan dezelfde tag met een class.
+   * 
+   * Voorbeeld:
+   * 
+   * array(
+   *  'td'           => 'background-color:#DEA;color:#696',
+   *  'td.speciaal'  => 'background-color:#696;color:#DEA',
+   *  'p'            => 'font-family:Arial;font-size:16px;color:#696',
+   *  'a'            => 'font-family:Arial;font-size:16px;color:#F00'
+   * )
+   * 
    *
    * @param string $body
    * @param array $styles 
    * @return string
    * @author Jan den Besten
    */
-  public function add_styles($body,$styles) {
+  public function add_styles($body,$styles ) {
     if ($styles) {
       foreach ($styles as $tag => $style) {
         $class=get_suffix($tag,'.');
@@ -273,7 +290,7 @@ class MY_Email extends CI_Email {
         if ($class==$tag) $class='';
         // trace_([$tag,$class]);
         if ($class)
-          $body = preg_replace("/<".$tag."(|\s[^>]*)(class=\"".$class."\")(|\s[^>]*)>/uiU", "<".$tag." style=\"".$style."\"$1$2>", $body);
+          $body = preg_replace("/<".$tag."(|\s[^>]*)(class=\"".$class."\")(|\s[^>]*)>/uiU", "<".$tag." class=\"".$class."\" style=\"".$style."\"$1$2>", $body);
         else
           $body = preg_replace("/<".$tag."(|\s[^>]*)>/uiU", "<".$tag." style=\"".$style."\"$1$2>", $body);
         
