@@ -26,6 +26,8 @@ Class Table_Model_Create extends CI_Model {
     
     // Load Template & Change it for everye table with its own settings
     $path = 'sys/flexyadmin/models/tables/';
+    $cfgpath = 'sys/flexyadmin/config/tables/';
+    
     $template = file_get_contents( $path.'Table_Model_Template.php');
     // Settings
     $settings = file_get_contents( $path.'Table_Model.php');
@@ -47,11 +49,7 @@ Class Table_Model_Create extends CI_Model {
     foreach ($tables as $table) {
       $this->messages[] = $table;
       
-      // Tableinfo
-      $info = $this->cfg->get( 'cfg_table_info', $table );
-      $table_info = $this->db->where('table',$table)->get_row( 'cfg_table_info');
-      $info = array_merge($info,$table_info);
-      // Fields & Info
+      // FieldInfo
       $fields = $this->db->list_fields( $table );
       $fields_info = array();
       $settings_fields_info = array();
@@ -72,6 +70,28 @@ Class Table_Model_Create extends CI_Model {
           $settings_fields_info[$field]['options'] = $field_info['str_options'];
           $settings_fields_info[$field]['multiple_options'] = $field_info['b_multi_options']?true:false;
         }
+      }
+
+      // Tableinfo
+      $info = $this->cfg->get( 'cfg_table_info', $table );
+      $table_info = $this->db->where('table',$table)->get_row( 'cfg_table_info');
+      $info = array_merge($info,$table_info);
+      // set order_by
+      if (empty($info['str_order_by'])) {
+				$order_fields = $this->config->item( 'ORDER_default_fields' );
+				do {
+					$possible_order_field = each( $order_fields );
+          if ($possible_order_field) {
+            $possible_order_field = explode( ' ', $possible_order_field['value'] ); // split DESC/ASC
+            $possible_field = $possible_order_field[0];
+            if ( $key=in_array_like($possible_field,$fields) ) {
+              $info['str_order_by'] = $fields[$key];
+              if ( isset($possible_order_field[1]) ) $info['str_order_by'] .= ' ' . $possible_order_field[1]; // add DESC/ASC
+            }
+          }
+        } while (empty($info['str_order_by']) and $possible_order_field);
+        // last option is last in $order
+        if (empty($info['str_order_by'])) $info['str_order_by'] = $order_fields[count($order_fields)-1];
       }
       
       // Put in settings
@@ -126,6 +146,15 @@ Class Table_Model_Create extends CI_Model {
       );
       $model = $this->parser->parse_string($template, $data, true);
       file_put_contents( $path.$table.'.php', $model);
+      
+      // Save all data in config file
+      $php    = '<?php if ( ! defined(\'BASEPATH\')) exit(\'No direct script access allowed\');'.PHP_EOL.PHP_EOL.'/* --- Settings for table model `'.$table.'` - for help on settings, see `table_model.php` --- */'.PHP_EOL.PHP_EOL;
+      foreach ( $settings_array as $key => $value ) {
+        $php .= '$config[\''.$key.'\'] = ' . $this->value_to_string($value) . ';' . PHP_EOL;
+      }
+      // $config = array2php( $settings_array );
+      // $config = $this->load->view( 'admin/empty_config', array( 'config'=>$config ), true );
+      file_put_contents( $cfgpath.$table.'.php', $php );
     }
     
   }
