@@ -169,10 +169,11 @@ class MY_Email extends CI_Email {
    * @param string $key The key in cfg_email to find the subject and body 
    * @param array $data Array of values that will be parsed in the subject and body, example: {name} $data=array('name'=>'My Name')
    * @param bool $prepare_body default=TRUE
+   * @param string $body [''] Je kunt een expliciete body meegeven. (overruled de body uit cfg_email)
    * @return bool
    * @author Jan den Besten
    */
-  public function send_lang($key,$data=array(),$prepare_body=TRUE) {
+  public function send_lang($key,$data=array(),$prepare_body=TRUE, $body='' ) {
     if (empty($this->lang)) $this->set_language();
     $this->body='';
     
@@ -187,7 +188,7 @@ class MY_Email extends CI_Email {
     
     // Get mail info
     $subject=el('str_subject_'.$this->lang,$mail,'');
-    $body=el('txt_email_'.$this->lang,$mail,'');
+    if (empty($body)) $body=el('txt_email_'.$this->lang,$mail,'');
     if (empty($subject) or empty($body)) {
       $this->_set_error_message('email_subject_text_empty', $key);
       return false;
