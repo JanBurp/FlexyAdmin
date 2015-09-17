@@ -235,6 +235,7 @@ class MY_Email extends CI_Email {
     $CI = &get_instance();
     if (!isset($this->default_data['site_url']))    $this->default_data['site_url'] = site_url();
     if (!isset($this->default_data['site_title']))  $this->default_data['site_title'] = $CI->db->get_field('tbl_site','str_title');
+    if (!isset($this->default_data['today']))       $this->default_data['today'] = strftime('%A %e %B %Y');
     return $this;
   }
   
