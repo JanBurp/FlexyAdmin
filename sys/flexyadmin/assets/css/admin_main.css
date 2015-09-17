@@ -923,6 +923,12 @@ tfoot tr.pagination .pagination_total {float:right;}
 	}
 
 
+hr {
+  border:none;
+  background-color:#DEA;
+  height:1px;
+}
+
 /* ============== form ================== */
 
 form {
@@ -984,6 +990,7 @@ div.flexyFormField:hover {
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 }
+div.flexyFormField .flexyFormHtml {float:left;}
 
 div.flexyFormField>label {
 	float:left;
