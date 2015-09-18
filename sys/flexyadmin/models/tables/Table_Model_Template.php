@@ -11,8 +11,6 @@
 
 Class {NAME} extends Table_Model {
 
-{SETTINGS}
-
   public function __construct() {
     parent::__construct();
   }

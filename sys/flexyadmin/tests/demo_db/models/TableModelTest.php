@@ -28,7 +28,7 @@ class TableModelTest extends CITestCase {
     // Standard model:
     
     // tbl_menu
-    $this->CI->table_model->table('tbl_menu');
+    $this->CI->table_model->table( 'tbl_menu' );
     $this->assertEquals( array('id','order','self_parent','uri','str_title','txt_text','str_module','stx_description','str_keywords'), $this->CI->table_model->list_fields() );
     $query = $this->CI->table_model->get();
     $this->assertEquals( 5, $query->num_rows() );

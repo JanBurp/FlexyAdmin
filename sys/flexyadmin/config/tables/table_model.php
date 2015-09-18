@@ -48,9 +48,9 @@ $config['max_rows']         = 0;
 /**
  * Als een tabel een uri veld bevat kan deze automatisch worden aangepast na een update.
  * Hiermee kan dat aan of uit worden gezet.
- * Standaard staat deze optie aan.
+ * Standaard staat deze optie aan (door _autoset)
  */
-$config['update_uris']      = TRUE;
+$config['update_uris']      = '';
 
 /**
  * Velden die gebruikt worden om een abstract veld samen te stellen.
