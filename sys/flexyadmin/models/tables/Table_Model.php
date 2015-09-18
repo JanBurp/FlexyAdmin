@@ -2,14 +2,12 @@
 
 /** \ingroup tables
  * 
- * - Alle gegevens over een database en zijn velden tabel als properties in een model (zodat geen cfg_table_info en cfg_field_info meer nodig is)
- * - Daardoor: veel sneller omdat de gegevens al beschikbaar zijn en niet te hoeven worden opgezocht (in db of cfg)
- * - Standaard get/crud zit al in het model, voor elke tabel
- * - Inclusief standaard relaties
- * - Iedere tabel kan deze overerven en aanpassen naar wens, de aanroepen blijven hetzelfde voor ieder tabel
- * - Alle query-builder methods (en db methods) kunnen worden gebruikt
- * - Geeft data als query objecten terug (zie CI handleiding)
- * - En ook enkele methods die de data als result arrays teruggeven met mooiere key en relatie-data
+ * - Alle instellingen van een tabel en zijn velden tabel zijn te vinden in config/tables/... (zodat geen cfg_table_info en cfg_field_info meer nodig is)
+ * - Daardoor: veel sneller omdat de gegevens al beschikbaar zijn en niet te hoeven worden opgezocht.
+ * - Standaard get/crud zit al in het model, voor elke tabel hetzelfde.
+ * - Iedere tabel kan deze overerven en aanpassen naar wens, de aanroepen blijven hetzelfde voor ieder tabel.
+ * - Alle query-builder methods (en db methods) kunnen worden gebruikt met het model. Dus dezelfde naamgeving voor de methods.
+ * - Naast ->get() die een query object teruggeeft ook ->get_result() en get_row() die een aangepaste result array teruggeeft met eventuele many_to_many data als subarray.
  * 
  * @author: Jan den Besten
  * $Revision$
@@ -18,145 +16,273 @@
 
 Class Table_Model extends CI_Model {
   
-  /* --- SETTINGS --- */
-
   /**
-   * Database tabel waarvoor dit model geld.
-   * Automatisch wordt de naam van het model gebruikt in lowercase.
-   * Maar kan hier ook ingesteld worden zodat het model een andere naam kah hebben als de tabel.
+   * De instellingen voor deze tabel en velden.
+   * Deze worden opgehaald uit het config bestand met dezelfde naam als die model. (config/tables/table_model.php in dit geval)
    */
-  protected $table            = '';
+  protected $settings = array();
   
   /**
-   * Primary key, standaard 'id'
+   * Enkele noodzakelijk instellingen die desnoods automatisch worden ingesteld als ze niet bekend zijn.
    */
-  protected $primary_key      = PRIMARY_KEY;
-
-  /**
-   * Key die wordt gebruikt bij $this->get_result(), standaard hetzelfde als $this->primary_key
-   */
-  protected $result_key       = PRIMARY_KEY;
+  protected $autoset = array(
+    'table'           => '',
+    'fields'          => array(),
+    'field_info'      => array(),
+    'primary_key'     => PRIMARY_KEY,
+    'result_key'      => PRIMARY_KEY,
+    'order_by'        => '',
+    'max_rows'        => 0,
+    'update_uris'     => '',
+    'abstract_fields' => '',
+    'abstract_filter' => '',
+  );
+  
   
   /**
-   * Een array van velden die de tabel bevat.
-   * Als het leeg is wordt het automatisch opgevraagd uit de database (met $this->db->list_fields() )
-   * Dat heeft als voordeel dat het model 'out of the box' werkt, maar kost extra tijd.
+   * Welke relaties mee moeten worden genomen
    */
-  protected $fields           = array();
-  
-  /**
-   * Per veld mogelijk meer informatie:
-   * - validation         - array met validation rules
-   * - options            - array met opties
-   * - multiple_options   - TRUE dan zijn er meet dan één van bovenstaande options mogelijk
-   */
-  protected $field_info       = array();
-  
-  /**
-   * Hier kan een standaard volgorde worden ingesteld waarin de resultaten worden getoond.
-   */
-  protected $order_by         = '';
-
-  /**
-   * Als de waarde groter is dan 0, dan is de tabel begrenst op een maximaal aantal rijen.
-   * Een insert zal dat FALSE als resultaat geven
-   */
-  protected $max_rows         = 0;
-  
-  /**
-   * Als een tabel een uri veld bevat kan deze automatisch worden aangepast na een update.
-   * Hiermee kan dat aan of uit worden gezet.
-   * Standaard staat deze optie aan.
-   */
-  protected $update_uris      = TRUE;
-  
-  /**
-   * Velden die gebruikt worden om een abstract veld samen te stellen.
-   * Bijvoorbeeld voor het gebruik van dropdown velden in formulieren.
-   * Als dit NULL is en er wordt een abstract gevraagd zullen deze velden automatisch gekozen worden aan de hand van $this->fields.
-   */
-  protected $abstract_fields  = NULL;
-  
-  /**
-   * Een where SQL die wordt gebruikt om een abstract resultaat te filteren indiend nodig.
-   */
-  protected $abstract_filter  = '';
-  
-  /**
-   * Deze instellingen bepalen wat voor resultaat er wordt gegeven voor het admin grid.
-   * Als een instelling leeg is wordt deze gezocht in de standaard instelling.
-   * 
-   * - fields         - Velden die meegegeven en getoond worden (afhankelijk van veld specifieke instellingen). Als leeg dan is dat hetzelfde als $this->fields
-   * - order_by       - Volgorde voor het grid. Als leeg dan is dat hetzelfde als $this->order_by
-   * - jump_to_today  - Als het resultaat een datumveld bevat dan begint het resultaat op de pagina waar de datum het dichst de huidige datum benaderd.
-   * - with           - Relaties die mee worden genomen en getoond. Zie $this->with()
-   *                    Je kunt een specifiek datumveld instellen of TRUE: dan wordt het eerste datumveld opgezocht (wat extra resources kost)
-   */
-  protected $admin_grid       = array(
-                                  'fields'        => array(),
-                                  'order_by'      => '',
-                                  'with'          => array(),
-                                  'jump_to_today' => TRUE,
-                                );
-
-  /**
-   * Deze instellingen bepalen wat voor resultaat er wordt gegeven voor het admin formulier.
-   * Als een instelling leeg is wordt deze gezocht in de standaard instelling.
-   * 
-   * - fields         - Velden die meegegeven en getoond worden (afhankelijk van veld specifieke instellingen). Als leeg dan is dat hetzelfde als $this->fields
-   * - with           - Relaties die mee worden genomen en getoond. Zie $this->with()
-   * - fieldsets      - Fieldsets voor het formulier. Per fieldset kan aangegeven worden welke velden daarin verschijnen. Bijvoorbeeld: 'Fieldset naam' => array( 'str_title_en', 'txt_text_en' )
-   */
-  protected $admin_form        = array(
-                                  'fields'    => array(),
-                                  'with'      => array(),
-                                  'fieldsets' => array(),
-                                );
-  /* --- VARS --- */
+  private $with       = array();
   
 
-  /**
-   * Relations that need to be joined into result.
-   */
-  private $with               = array();
-  
-
-  /* --- CONSTRUCT  & AUTOSET --- */
+  /* --- CONSTRUCT & AUTOSET --- */
 
 	public function __construct() {
 		parent::__construct();
-    $this->autoset_table();
+    $this->_config();
 	}
   
   /**
-   * Check if table is set, if not, autoset it
+   * Laad de bijbehorende config.
+   * Merge die met de defaults.
+   * Als dan nog niet alle belangrijke zaken zijn ingesteld, doe dat dan met autoset
    *
-   * @return this
+   * @param string $table [''] Stel eventueel de naam van de table in. Default wordt de naam van het huidige model gebruikt.
+   * @return $this;
    * @author Jan den Besten
    */
-  public function autoset_table() {
-    if (empty($this->table))  $this->table = get_class($this);
+  protected function _config( $table='' ) {
+    // Haal de default settings op
+    $this->config->load( 'tables/table_model', true);
+    $default = $this->config->item( 'tables/table_model' );
+    $this->settings = $default;
+    if ($table) $this->settings['table'] = $table; // Voor het los instellen van een table zonder eigen model
+    // Haal de settings van huidige model op
+    if ( empty($table) ) $table=get_class($this);
+    if ( get_class()!=$table ) {
+      $this->config->load( 'tables/'.$table, true);
+      $settings = $this->config->item( 'tables/'.$table );
+      // Merge samen tot settings
+      if ( $settings ) {
+        $this->settings = array_merge( $default, $settings );
+      }
+      // Test of de noodzakelijke settings zijn ingesteld, zo niet doe dat automatisch
+      $this->_autoset( $table );
+    }
     return $this;
   }
   
+  
   /**
-   * Autoset stuff that is not set allready
-   * Also usefull by using this without a special model for a table and using this for setting all
+   * Test of belangrijke settings zijn ingesteld. Zo niet doet dat dan automatisch.
+   * Dit maakt plug'n play mogelijk, maar gebruikt meer resources.
    *
    * @return $this
    * @author Jan den Besten
    */
-  public function autoset() {
-    $this->autoset_table();
-    // Set defaults
-    $this->fields           = array();
-    $this->order_by         = '';
-    $this->max_rows         = '0';
-    $this->update_uris      = true;
-    $this->abstract_fields  = null;
-    $this->abstract_filter  = '';
+  protected function _autoset() {
+    foreach ($this->autoset as $key => $value) {
+      if ( empty($this->settings[$key]) ) {
+        // Moet worden ingesteld, dus automatisch, met bijbehorden waarde of met een method.
+        if (method_exists($this,'_autoset_'.$key)) {
+          $method = '_autoset_'.$key;
+          $this->settings[$key] = $this->$method();
+        }
+        else {
+          $this->settings[$key] = $this->autoset[$key];
+        }
+        var_dump(['_autoset_'.$key, $this->autoset[$key] ]);
+      }
+    }
     return $this;
   }
+  
+  
+  /**
+   * Autoset table
+   *
+   * @param object $object [], Standaard wordt de tablenaam gegenereerd aan de hand van het model waarin dit wordt aangeroepen. Geef hier eventueel een andere model mee.
+   * @return string
+   * @author Jan den Besten
+   */
+  protected function _autoset_table( $object=null ) {
+    if ( $object===null) $object = $this;
+    return get_class( $object );
+  }
+
+  /**
+   * Autoset fields
+   *
+   * @param string $table [''], Standaard wordt de tabelnaam gebruikt die in het huidige model is ingesteld. Geef hier eventueel een afwijkende table naam.
+   * @return array
+   * @author Jan den Besten
+   */
+  protected function _autoset_fields( $table='' ) {
+    if (empty($table)) $table = $this->settings['table'];
+    return $this->db->list_fields( $table );
+  }
+  
+  /**
+   * Autoset field_info
+   *
+   * @param string $table [''], Standaard wordt de tabelnaam gebruikt die in het huidige model is ingesteld. Geef hier eventueel een afwijkende table naam.
+   * @param array $fields [array()], Standaard worden de velden gebruikt die in het huidige model zijn ingesteld. Geef hier eventueel een afwijkende velden lijst. 
+   * @return void
+   * @author Jan den Besten
+   */
+  protected function _autoset_field_info( $table='', $fields=array() ) {
+    $this->load->model('cfg');
+    $this->load->library('form_validation');
+    if (empty($table)) $table = $this->settings['table'];
+    if (empty($fields)) $fields = $this->settings['fields'];
+    $fields_info = array();
+    $settings_fields_info = array();
+    foreach ($fields as $field) {
+      $field_info = $this->cfg->get( 'cfg_field_info', $table.'.'.$field);
+      // Haal uit (depricated) cfg_field_info
+      $field_info_db = $this->db->where('field_field',$table.'.'.$field)->get_row('cfg_field_info');
+      if (is_array($field_info) and is_array($field_info_db)) {
+        $field_info = array_merge($field_info,$field_info_db);
+      }
+      else {
+        if (!is_array($field_info)) $field_info=$field_info_db;
+        if (!is_array($field_info)) $field_info=null;
+      }
+      $fields_info[$field] = $field_info;
+      $settings_fields_info[$field] = array();
+      $settings_fields_info[$field]['validation'] = $this->form_validation->get_validations( $table, $field );
+      if (!empty($field_info['str_options'])) {
+        $settings_fields_info[$field]['options'] = $field_info['str_options'];
+        $settings_fields_info[$field]['multiple_options'] = $field_info['b_multi_options']?true:false;
+      }
+    }
+    return $settings_fields_info;
+  }
+  
+  
+  /**
+   * Autoset order_by
+   * 
+   * @param array $fields [array()], Standaard worden de velden gebruikt die in het huidige model zijn ingesteld. Geef hier eventueel een afwijkende velden lijst. 
+   * @return string
+   * @author Jan den Besten
+   */
+  protected function _autoset_order_by( $fields=array() ) {
+    $this->load->model('cfg');
+    if (empty($fields)) $fields = $this->settings['fields'];
+    $order_by = '';
+    // Haal eerst indien mogelijk uit (depricated) cfg_table_info
+    $order_by = $this->cfg->get( 'cfg_table_info', $this->settings['table'], 'str_order_by');
+    // Als leeg: Zoek mogelijke standaard order fields
+    if (empty($order_by)) {
+  		$order_fields = $this->config->item( 'ORDER_default_fields' );
+  		do {
+  			$possible_order_field = each( $order_fields );
+        if ($possible_order_field) {
+          $possible_order_field = explode( ' ', $possible_order_field['value'] ); // split DESC/ASC
+          $possible_field = $possible_order_field[0];
+          if ( $key=in_array_like($possible_field, $fields) ) {
+            $order_by = $fields[$key];
+            if ( isset($possible_order_field[1]) ) $order_by .= ' ' . $possible_order_field[1]; // add DESC/ASC
+          }
+        }
+      } while (empty($order_by) and $possible_order_field);
+      
+    }
+    // Als leeg: Pak dat het laatste standaard order veld ('id')
+    if (empty($order_by)) $order_by = $order_fields[count($order_fields)-1];
+    return $order_by;
+  }
+  
+  /**
+   * Autoset max_rows
+   *
+   * @return integer
+   * @author Jan den Besten
+   */
+  protected function _autoset_max_rows() {
+    $this->load->model('cfg');
+    // Haal eerst indien mogelijk uit (depricated) cfg_table_info
+    $max_rows = $this->cfg->get( 'cfg_table_info', $this->settings['table'], 'int_max_rows');
+    // Anders is het gewoon standaard 0
+    if (is_null($max_rows)) $max_rows = 0;
+    return $max_rows;
+  }
+  
+  /**
+   * Autoset update_uris
+   *
+   * @return boolean
+   * @author Jan den Besten
+   */
+  protected function _autoset_update_uris() {
+    $this->load->model('cfg');
+    // Haal eerst indien mogelijk uit (depricated) cfg_table_info
+    $update_uris = $this->cfg->get( 'cfg_table_info', $this->settings['table'], 'b_freeze_uris');
+    // Anders is het gewoon standaard true
+    if (is_null($update_uris)) $update_uris = true;
+    return $update_uris;
+  }
+  
+  
+
+  /**
+   * Autoset abstract fields
+   *
+   * @param array $fields [array()], Standaard worden de velden gebruikt die in het huidige model zijn ingesteld. Geef hier eventueel een afwijkende velden lijst. 
+   * @return array
+   * @author Jan den Besten
+   */
+  protected function _autoset_abstract_fields( $fields = array() ) {
+    if (empty($fields)) $fields = $this->settings['fields'];
+    
+    $abstract_fields = array();
+    if ( !is_array($fields) ) $fields = explode( ',', $fields );
+    // Zoek op type velden
+		$abstract_field_types = $this->config->item('ABSTRACT_field_pre_types');
+    $max_abstract_fields  = $this->config->item('ABSTRACT_field_max');
+		while ( list($key,$field) = each( $fields ) and $max_abstract_fields>0) {
+			$pre = get_prefix($field);
+			if ( in_array( $pre, $abstract_field_types ) ) {
+				array_push( $abstract_fields, $field );
+				$max_abstract_fields--;
+			}
+		}
+    // Als leeg, zoek dan de eerste velden
+		if (empty($abstract_fields)) {
+      $max_abstract_fields  = $this->config->item('ABSTRACT_field_max');
+			for ( $n=0; $n<$max_abstract_fields; $n++) {
+				array_push( $abstract_fields, each($fields) );
+			}
+		}
+    return $abstract_fields;
+  }
+  
+  /**
+   * Autoset abstract_filter
+   *
+   * @return string
+   * @author Jan den Besten
+   */
+  protected function _autoset_abstract_filter() {
+    $this->load->model('cfg');
+    // Haal eerst indien mogelijk uit (depricated) cfg_table_info
+    $abstract_filter = $this->cfg->get( 'cfg_table_info', $this->settings['table'], 'str_options_where');
+    // Anders is het gewoon standaard ''
+    if (is_null($abstract_filter)) $abstract_filter = '';
+    return $abstract_filter;
+  }
+  
   
   
   /* --- DB methods --- */
@@ -180,58 +306,40 @@ Class Table_Model extends CI_Model {
   }
   
   
+  
   /* -- Methods voor het klaarmaken van een query --- */
   
   /**
-   * Set a table so you can use this model for every table as a standard model
+   * Stel hier eventueel een table in die gebruikt moet worden in table_model.
+   * 
+   * Je kunt table_model ook los gebruiken, zonder een eigen model voor een table.
+   * Stel dan hier de table in die gebruikt moet worden.
+   * Als de bijbehorede config bestaat (bijvoorbeeld config/tables/tbl_menu.php) dan wordt die geladen.
+   * Als de bijbehorede config NIET bestaat, dat wordt zover het kan alles automatisch ingesteld met autoset.
    *
    * @param string $table 
    * @return void
    * @author Jan den Besten
    */
   public function table( $table ) {
-    $this->table = $table;
-    $this->autoset();
+    if (empty($table)) {
+      $table = $this->autoset_table();
+    }
+    $this->_config( $table );
+    $this->settings['table'] = $table;
     return $this;
   }
   
   
   /**
-   * Geeft abstract_fields, als die nog niet zijn ingesteld zoek ze op en stel ze in.
+   * Geeft abstract_fields
    *
    * @param mixed $fields [''] als je hier een array van strings, of een komma gescheiden string met velden meegeeft wordt dat gebruikt.
    * @return array
    * @author Jan den Besten
    */
   public function get_abstract_fields( $fields='' ) {
-    if ( is_null($this->abstract_fields) ) {
-      $abstract_fields = array();
-      if ( !empty($fields) ) {
-        if ( !is_array($fields) ) $fields = explode( ',', $fields );
-      }
-      else {
-        $fields=$this->list_fields( $this->table );
-      }
-      // Zoek op type velden
-  		$abstract_field_types = $this->config->item('ABSTRACT_field_pre_types');
-      $max_abstract_fields  = $this->config->item('ABSTRACT_field_max');
-			while ( list($key,$field) = each( $fields ) and $max_abstract_fields>0) {
-				$pre = get_prefix($field);
-				if ( in_array( $pre, $abstract_field_types ) ) {
-					array_push( $abstract_fields, $field );
-					$max_abstract_fields--;
-				}
-  		}
-      // Als leeg, zoek dan de eerste velden
-  		if (empty($abstract_fields)) {
-        $max_abstract_fields  = $this->config->item('ABSTRACT_field_max');
-  			for ( $n=0; $n<$max_abstract_fields; $n++) {
-  				array_push( $abstract_fields, each($fields) );
-  			}
-  		}
-      $this->abstract_fields = $abstract_fields;
-    }
-    return $this->abstract_fields;
+    return $this->settings['abstract_fields'];
   }
   
   
@@ -254,12 +362,63 @@ Class Table_Model extends CI_Model {
       }
     }
     // Maak de SQL
-		$sql = '`'.$this->table.'`.`'.$this->primary_key."`, CONCAT_WS('|',`".$this->table.'`.`' . implode( "`,`".$this->table.'`.`' ,$abstract_fields ) . "`) AS `" . $this->config->item('ABSTRACT_field_name') . "`";
+		$sql = '`'.$this->settings['table'].'`.`'.$this->settings['primary_key']."`, CONCAT_WS('|',`".$this->settings['table'].'`.`' . implode( "`,`".$this->settings['table'].'`.`' ,$abstract_fields ) . "`) AS `" . $this->config->item('ABSTRACT_field_name') . "`";
     return $sql;
 	}
   
   
-  /* --- Getters for properties --- */
+  /* --- Getters & Setters --- */
+  
+  /**
+   * Stelt een setting in.
+   * Is alleen nodig als je tijdelijk een afwijkende instelling wilt, want standaard kun je alles al instellen in de het config bestand dat bij het table_model hoort.
+   *
+   * @param string $key 
+   * @param mixed $value 
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function set_setting( $key, $value ) {
+    $this->settings[$key] = $value;
+    return $this;
+  }
+  
+  
+  /**
+   * Stel result key in voor gebruik bij $this->get_result()
+   * Staat standaard al ingesteld (default PRIMARY_KEY), maar kan hier tijdelijk een andere waarder krijgen.
+   *
+   * @param string $key [''] Als leeg dan wordt primary_key gebruikt
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function set_result_key( $key='' ) {
+    if (empty($key)) $key = $this->settings['primary_key'];
+    $this->set_setting( 'result_key', $key );
+    return $this;
+  }
+  
+  
+  /**
+   * Geeft een setting. Als die niet bestaat dan wordt de standaard autoset waarde gegeven of anders null
+   *
+   * @param string $key 
+   * @return mixed
+   * @author Jan den Besten
+   */
+  public function get_setting( $key ) {
+    return el( $key, $settings, el( $key, $this->autoset ) );
+  }
+  
+  /**
+   * Geeft alle settings
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_settings() {
+    return $this->settings;
+  }
 
   /**
    * Geeft instellingen voor admin_grid
@@ -268,7 +427,7 @@ Class Table_Model extends CI_Model {
    * @author Jan den Besten
    */
   public function get_admin_grid() {
-    return $this->admin_grid;
+    return $this->get_setting( 'admin_grid' );
   }
 
   /**
@@ -278,7 +437,7 @@ Class Table_Model extends CI_Model {
    * @author Jan den Besten
    */
   public function get_admin_form() {
-    return $this->admin_form;
+    return $this->get_setting( 'admin_form' );
   }
   
   
@@ -294,8 +453,8 @@ Class Table_Model extends CI_Model {
    * @author Jan den Besten
    */
   public function get( $limit=0, $offset=0 ) {
-    if ( !empty($this->order_by) ) $this->db->order_by( $this->order_by );
-    return $this->db->get( $this->table, $limit, $offset );
+    if ( ! empty($this->settings['order_by']) ) $this->db->order_by( $this->settings['order_by'] );
+    return $this->db->get( $this->settings['table'], $limit, $offset );
   }
 
   
@@ -307,7 +466,7 @@ Class Table_Model extends CI_Model {
    * @author Jan den Besten
    */
   public function get_one($id) {
-    return $this->get_one_by( $this->primary_key, $id);
+    return $this->get_one_by( $this->settings['primary_key'], $id);
   }
   
   
@@ -319,7 +478,7 @@ Class Table_Model extends CI_Model {
    * @return object $query->row
    * @author Jan den Besten
    */
-  public function get_one_by($field,$value) {
+  public function get_one_by( $field,$value ) {
     $this->db->where( $field, $value );
     return $this->get();
   }
@@ -336,11 +495,13 @@ Class Table_Model extends CI_Model {
    */
   private function _make_result_array( $query ) {
     $result = array();
-    foreach ($query->result_array() as $row) {
-      if ( isset( $row[$this->result_key] ) ) {
-        $key = $row[ $this->result_key ];
-      }
+    foreach ( $query->result_array() as $row ) {
       // TODO has_many en many_to_many als subarrays toevoegen aan row
+      // ...
+      // result_key
+      if ( isset( $row[$this->settings['result_key']] ) ) {
+        $key = $row[ $this->settings['result_key'] ];
+      }
       $result[$key] = $row;
     }
     return $result;
@@ -348,11 +509,13 @@ Class Table_Model extends CI_Model {
   
   
   /**
-   * Geeft resultaat terug als array
+   * Geeft resultaat terug als result array
    * - array key is standaard de PRIMARY KEY maar kan ingesteld worden met $this->set_result_key()
    * - voor many_to_many en has_many wordt resultaat sub arrays in het resultaat.
    * 
-   * NB Gebruik dit niet bij grote resultaten, of bij grote resultaten alleen met limit / pagination
+   * NB Gebruikt relatief veel resources.
+   * Bij voorkeur niet gebruiken als resources belangrijk zijn.
+   * Of alleen bij kleine resultaten en/of in combinatie met limit / pagination.
    *
    * @param int $limit [0]
    * @param int $offset [0] 
@@ -381,21 +544,6 @@ Class Table_Model extends CI_Model {
   /* --- Methods om de query te vormen --- */
 
 
-  /**
-   * Stel result key in voor gebruik bij $this->get_result()
-   * Standaard hetzelfde als primary_key.
-   *
-   * @param string $key [''] Als leeg dan wordt primary_key gebruikt
-   * @return $this
-   * @author Jan den Besten
-   */
-  public function set_result_key( $key='' ) {
-    if (empty($key)) $key = $this->primary_key;
-    $this->result_key = $key;
-    return $this;
-  }
-  
-  
   /**
    * Selecteert abstract fields
    *
@@ -437,10 +585,7 @@ Class Table_Model extends CI_Model {
    * @author Jan den Besten
    */
   public function list_fields() {
-    if (empty($this->fields)) {
-      $this->fields = $this->db->list_fields( $this->table );
-    }
-    return $this->fields;
+    return $this->settings['fields'];
   }
   
   
