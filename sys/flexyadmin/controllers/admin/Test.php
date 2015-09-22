@@ -4,16 +4,24 @@ class Test extends CI_Controller {
 	
 	public function __construct()	{
 		parent::__construct();
+    $this->load->model('cfg');
+    $this->load->model('tables/table_model');
 	}
   
   public function index() {
-    // $this->load->config( 'tables/tbl_menu', TRUE );
-    // trace_( $this->config->item( 'tables/tbl_menu' ) );
     
-    $this->load->model('tables/table_model');
-    $this->load->model('tables/tbl_menu');
+    // Oude manier
+    // $this->db->add_foreigns_as_abstracts();
+    // $result = $this->db->get_result('tbl_leerlingen');
     
-    $result = $this->tbl_menu->get_result();
+    
+    // Met table_model
+    $this->table_model->table('tbl_leerlingen');
+    // $this->table_model->select('str_first_name');
+    $this->table_model->with( 'many_to_one' );
+    $result = $this->table_model->get_result();
+    
+    echo( $this->db->last_query() );
     var_dump( $result );
     
     return '';
