@@ -522,6 +522,23 @@ function filter_by_key($a,$preKey,$replaceKey=FALSE) {
 }
 
 /**
+ * Geeft alle elementen waarvan de key de meegegeven prefix hebben
+ *
+ * @param array $a 
+ * @param string $prefix 
+ * @return array
+ * @author Jan den Besten
+ */
+function filter_by_prefix( $a, $prefix ) {
+	$len=strlen($prefix);
+	foreach ($a as $key => $value) {
+		if (substr($key,0,$len)!==$prefix) unset($a[$key]);
+	}
+	return $a;
+}
+
+
+/**
  * Geeft alle elemeten uit de associatieve array die NIET de meegegeven (prefix van de) key hebben.
  *
  * @param string $a 

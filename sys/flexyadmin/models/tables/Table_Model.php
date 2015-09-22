@@ -32,18 +32,27 @@ Class Table_Model extends CI_Model {
     'primary_key'     => PRIMARY_KEY,
     'result_key'      => PRIMARY_KEY,
     'order_by'        => '',
-    'max_rows'        => 0,
+    // 'max_rows'        => 0,
     'update_uris'     => '',
     'abstract_fields' => '',
-    'abstract_filter' => '',
+    // 'abstract_filter' => '',
+    'admin_grid'      => array(),
+    'admin_form'      => array(),
   );
   
-  
+  /**
+   * Hou bij wat er geselecteerd is
+   */
+  private $tm_select  = false;
+
   /**
    * Welke relaties mee moeten worden genomen
    */
-  private $with       = array();
+  private $tm_with    = array();
   
+
+
+
 
   /* --- CONSTRUCT & AUTOSET --- */
 
@@ -101,7 +110,7 @@ Class Table_Model extends CI_Model {
         else {
           $this->settings[$key] = $this->autoset[$key];
         }
-        var_dump(['_autoset_'.$key, $this->autoset[$key] ]);
+        // var_dump(['_autoset_'.$key => $this->settings[$key] ]);
       }
     }
     return $this;
@@ -160,11 +169,11 @@ Class Table_Model extends CI_Model {
       }
       $fields_info[$field] = $field_info;
       $settings_fields_info[$field] = array();
-      $settings_fields_info[$field]['validation'] = $this->form_validation->get_validations( $table, $field );
       if (!empty($field_info['str_options'])) {
         $settings_fields_info[$field]['options'] = $field_info['str_options'];
-        $settings_fields_info[$field]['multiple_options'] = $field_info['b_multi_options']?true:false;
+        $settings_fields_info[$field]['multiple_options'] = el('b_multi_options', $field_info, false)?true:false;
       }
+      $settings_fields_info[$field]['validation'] = $this->form_validation->get_validations( $table, $field );
     }
     return $settings_fields_info;
   }
@@ -234,7 +243,6 @@ Class Table_Model extends CI_Model {
     return $update_uris;
   }
   
-  
 
   /**
    * Autoset abstract fields
@@ -283,15 +291,142 @@ Class Table_Model extends CI_Model {
     return $abstract_filter;
   }
   
+
+  /**
+   * Autoset admin_grid
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+  protected function _autoset_admin_grid() {
+    $this->load->model('cfg');
+    $table_info = $this->cfg->get( 'cfg_table_info',$this->settings['table'] );
+    $show_always = $this->config->item('ALWAYS_SHOW_FIELDS');
+
+    $admin_grid['fields'] = $this->settings['fields'];
+    foreach ($admin_grid['fields'] as $key => $field) {
+      $field_info = $this->cfg->get('cfg_field_info', $this->settings['table'].'.'.$field );
+      if ( !in_array($field,$show_always) and !el('b_show_in_grid',$field_info,TRUE) ) unset($admin_grid['fields'][$key]);
+    }
+    $admin_grid['order_by']      = $this->settings['order_by'];
+    $admin_grid['jump_to_today'] = el('b_jump_to_today',$table_info,TRUE);
+    $admin_grid['pagination']    = el('b_pagination',$table_info,TRUE);
+    $admin_grid['with']          = array();
+    return $admin_grid;
+  }
+
+  /**
+   * Autoset admin_form
+   *
+   * @return void
+   * @author Jan den Besten
+   */
+  protected function _autoset_admin_form() {
+    $this->load->model('cfg');
+    $table_info = $this->cfg->get( 'cfg_table_info',$this->settings['table'] );
+    $show_always = $this->config->item('ALWAYS_SHOW_FIELDS');
+    $main_fieldset = $this->settings['table'];
+    $fieldsets = array($main_fieldset=>array());
+
+    $admin_form['fields'] = $this->settings['fields'];
+    foreach ($admin_form['fields'] as $key => $field) {
+      $field_info = $this->cfg->get('cfg_field_info', $this->settings['table'].'.'.$field );
+      // Show?
+      if ( !in_array($field,$show_always) and !el('b_show_in_form',$field_info,TRUE) ) {
+        unset($admin_form['fields'][$key]);
+      }
+      // in which fieldset?
+      else {
+        $fieldset = el('str_fieldset',$field_info, $main_fieldset );
+        if (!isset($fieldsets[$fieldset])) $fieldsets[$fieldset]=array();
+        array_push( $fieldsets[$fieldset], $field );
+      }
+    }
+    $admin_form['fieldsets'] = $fieldsets;
+    $admin_form['with']      = array();
+    return $admin_form;
+  }
+  
+  /* --- Informatie uit andere tabellen/models --- */
+
+  /**
+   * Haalt een setting op van een andere table (model) 
+   *
+   * @param string $table 
+   * @param string $key 
+   * @return mixed NULL als niet gevonden
+   * @author Jan den Besten
+   */
+  protected function get_other_table_setting( $table, $key ) {
+    $setting = null;
+    // Probeer eerst of het table model bestaat
+    if ( method_exists( $table, 'get_setting' ) ) {
+      $setting = $this->$table->get_setting( $key );
+    }
+    // Laad anders de config van die tabel/model
+    else {
+      $this->config->load( 'tables/'.$table, true);
+      $settings = $this->config->item( 'tables/'.$table );
+      $setting = el( $key, $settings );
+    }
+    return $setting;
+  }
+  
+  /**
+   * Haalt de velden van een andere table model op.
+   * Als die niet gevonden worden, of niet zijn ingesteld, dan worden de velden uit de database gehaald.
+   *
+   * @param string $table 
+   * @return array()
+   * @author Jan den Besten
+   */
+  protected function get_other_table_fields( $table ) {
+    $fields = $this->get_other_table_setting( $table, 'fields' );
+    if ( is_null($fields) or empty($fields)) {
+      $fields = $this->db->list_fields( $table );
+    }
+    return $fields;
+  }
+  
+  /**
+   * Haalt de abstract fields van een andere table model op.
+   * Als die niet gevonden worden, of niet zijn ingesteld, dan worden de velden gegenereerd.
+   *
+   * @param string $table 
+   * @return array()
+   * @author Jan den Besten
+   */
+  protected function get_other_table_abstract_fields( $table ) {
+    $abstract_fields = $this->get_other_table_setting( $table, 'abstract_fields' );
+    if ( is_null($abstract_fields) or empty($abstract_fields)) {
+      $fields = $this->get_other_table_fields( $table );
+      $abstract_fields = $this->_autoset_abstract_fields( $table, $fields );
+    }
+    return $abstract_fields;
+  }
+  
+  
+  /**
+   * Haal abstract select op van andere tabel
+   *
+   * @param string $table 
+   * @return string
+   * @author Jan den Besten
+   */
+  protected function get_other_table_compiled_abstract_select( $table ) {
+    $abstract_fields = $this->get_other_table_abstract_fields( $table );
+    return $this->get_compiled_abstract_select( $table, $abstract_fields );
+  }
+  
   
   
   /* --- DB methods --- */
 
   
   /**
-   * Alle Query Builder methods zijn beschikbaar -> TODO beter is ze uit te schrijven hier...
+   * Alle Query Builder en andere database methods zijn beschikbaar
    *
-   * @return this
+   * @return mixed
    * @author Jan den Besten
    */
   public function __call($method,$arguments) {
@@ -310,6 +445,18 @@ Class Table_Model extends CI_Model {
   /* -- Methods voor het klaarmaken van een query --- */
   
   /**
+   * Reset alle instellingen voor het opbouwen van een query
+   *
+   * @return void
+   * @author Jan den Besten
+   */
+  public function reset() {
+    $this->tm_select = false;
+    $this->with();
+    return $this;
+  }
+  
+  /**
    * Stel hier eventueel een table in die gebruikt moet worden in table_model.
    * 
    * Je kunt table_model ook los gebruiken, zonder een eigen model voor een table.
@@ -322,6 +469,7 @@ Class Table_Model extends CI_Model {
    * @author Jan den Besten
    */
   public function table( $table ) {
+    $this->reset();
     if (empty($table)) {
       $table = $this->autoset_table();
     }
@@ -346,12 +494,14 @@ Class Table_Model extends CI_Model {
 	/**
 	 * Geeft (select) SQL voor selecteren van abstract
 	 *
-	 * @param string $asPre['']
+	 * @param string $table [''] als leeg dan wordt de table uit de settings gehaald
+	 * @param array  $abstract_fields [''] als leeg dan worden de abstract_fields uit de 'settings' gehaald
 	 * @return string
 	 * @author Jan den Besten
 	 */
-  public function get_compiled_abstract_select() {
-		$abstract_fields = $this->get_abstract_fields();
+  public function get_compiled_abstract_select( $table='', $abstract_fields='' ) {
+		if (empty($table)) $table = $this->settings['table'];
+		if (empty($abstract_fields)) $abstract_fields = $this->get_abstract_fields();
     $deep_foreigns = $this->config->item('DEEP_FOREIGNS');
     if ($deep_foreigns )  {
       foreach ( $deep_foreigns as $deep_key => $deep_info ) {
@@ -362,9 +512,43 @@ Class Table_Model extends CI_Model {
       }
     }
     // Maak de SQL
-		$sql = '`'.$this->settings['table'].'`.`'.$this->settings['primary_key']."`, CONCAT_WS('|',`".$this->settings['table'].'`.`' . implode( "`,`".$this->settings['table'].'`.`' ,$abstract_fields ) . "`) AS `" . $this->config->item('ABSTRACT_field_name') . "`";
+		$sql = "CONCAT_WS('|',`".$table.'`.`' . implode( "`,`".$table.'`.`' ,$abstract_fields ) . "`) AS `" . $this->config->item('ABSTRACT_field_name') . "`";
     return $sql;
 	}
+  
+  
+  /**
+   * Find relation tables of a given type
+   *
+   * @param string $type 
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_relation_tables( $type ) {
+    $method = '_get_'.$type.'_tables';
+    if ( method_exists($this,$method) ) {
+      return $this->$method();
+    }
+    else {
+      throw new ErrorException( 'FA: Method "'.$method.'" does not exists. So the relation tables cannot be found.' );
+    }
+    return $tables;
+  }
+
+  /**
+   * Find many_to_one tables
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+  protected function _get_many_to_one_tables() {
+    $tables = array();
+    $foreign_keys = filter_by( $this->settings['fields'], $this->settings['primary_key'].'_' );
+    foreach ( $foreign_keys as $foreign_key ) {
+      $tables[] = 'tbl_'.remove_prefix($foreign_key);
+    }
+    return $tables;
+  }
   
   
   /* --- Getters & Setters --- */
@@ -440,6 +624,20 @@ Class Table_Model extends CI_Model {
     return $this->get_setting( 'admin_form' );
   }
   
+  /**
+   * Geeft relatie instellingen terug
+   * 
+   * @param string $type [''] geef hier eventueel het type relatie dat je wilt terugkrijgen
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_with( $type='' ) {
+    if (!empty($type)) {
+      return el( $type, $this->tm_with );
+    }
+    return $this->tm_with;
+  }
+  
   
   /* --- Methods die query data teruggeven --- */
   
@@ -448,25 +646,25 @@ Class Table_Model extends CI_Model {
    * Geeft resultaat als query object. Eventueel beperkt door limit en offset
    *
    * @param int $limit [0]
-   * @param int $offset [0] 
+   * @param int $offset [0]
+   * @param bool $reset [true] als true dan wordt aan het eind alle instellingen gereset (with,)
    * @return object $query
    * @author Jan den Besten
    */
-  public function get( $limit=0, $offset=0 ) {
-    if ( ! empty($this->settings['order_by']) ) $this->db->order_by( $this->settings['order_by'] );
-    return $this->db->get( $this->settings['table'], $limit, $offset );
-  }
+  public function get( $limit=0, $offset=0, $reset = true ) {
+    // select, zorg ervoor dat er iig iets in de select komt
+    if ( !$this->tm_select ) $this->select();
 
-  
-  /**
-   * Geeft één rij uit de database tabel, als query_row object, met het meegegeven id
-   *
-   * @param int $id 
-   * @return object $query->row
-   * @author Jan den Besten
-   */
-  public function get_one($id) {
-    return $this->get_one_by( $this->settings['primary_key'], $id);
+    // with, maak de relatie queries
+    if ( !empty( $this->tm_with ) ) $this->_with( $this->tm_with );
+
+    // order_by
+    if ( ! empty($this->settings['order_by']) ) $this->db->order_by( $this->settings['order_by'] );
+    
+    // limit & offset
+    $query = $this->db->get( $this->settings['table'], $limit, $offset );
+    if ( $reset ) $this->reset();
+    return $query;
   }
   
   
@@ -474,13 +672,27 @@ Class Table_Model extends CI_Model {
    * Geeft één (of de eerste) rij uit de database tabel, als query_row object, waarvoor geld dat 'field' = 'value'
    *
    * @param string $field 
-   * @param mixed $value 
+   * @param mixed $value
+   * @param bool $reset [true] als true dan wordt aan het eind alle instellingen gereset (with,)
    * @return object $query->row
    * @author Jan den Besten
    */
-  public function get_one_by( $field,$value ) {
+  public function get_one_by( $field, $value, $reset = true ) {
     $this->db->where( $field, $value );
-    return $this->get();
+    return $this->get( 0,0, $reset );
+  }
+
+  
+  /**
+   * Geeft één rij uit de database tabel, als query_row object, met het meegegeven id
+   *
+   * @param int $id
+   * @param bool $reset [true] als true dan wordt aan het eind alle instellingen gereset (with,)
+   * @return object $query->row
+   * @author Jan den Besten
+   */
+  public function get_one( $id, $reset = true ) {
+    return $this->get_one_by( $this->settings['primary_key'], $id, $reset );
   }
   
   
@@ -495,14 +707,12 @@ Class Table_Model extends CI_Model {
    */
   private function _make_result_array( $query ) {
     $result = array();
+    $key = el( 'result_key', $this->settings, el( 'primary_key',$this->settings ) );
     foreach ( $query->result_array() as $row ) {
-      // TODO has_many en many_to_many als subarrays toevoegen aan row
-      // ...
+      // TODO many_to_many als subarrays toevoegen aan row
+      
       // result_key
-      if ( isset( $row[$this->settings['result_key']] ) ) {
-        $key = $row[ $this->settings['result_key'] ];
-      }
-      $result[$key] = $row;
+      $result[ $row[$key] ] = $row;
     }
     return $result;
   }
@@ -523,8 +733,10 @@ Class Table_Model extends CI_Model {
    * @author Jan den Besten
    */
   public function get_result( $limit=0, $offset=0 ) {
-    $query = $this->get( $limit, $offset );
-    return $this->_make_result_array( $query );
+    $query = $this->get( $limit, $offset, false );
+    $result = $this->_make_result_array( $query );
+    $this->reset();
+    return $result;
   }
   
   
@@ -545,33 +757,175 @@ Class Table_Model extends CI_Model {
 
 
   /**
+   * Zelfde als 'select' van Query Builder, maar met enkele checks:
+   * - zorgt ervoor dat altijd de primary_key in de select voorkomt
+   * - zorgt ervoor dat de veldnamen altijd met de tabel naam ervoor wordt geselecteerd
+   *
+   * @param mixed $select ['*']
+   * @param mixed $escape [NULL]
+   * @return $this
+   * @author Jan den Besten
+   */
+	public function select( $select = '*', $escape = NULL ) {
+    // Niet '*' maar alle velden expliciet maken
+    if ( $select=='*' ) $select = $this->settings['fields'];
+
+    // Alle selects als array
+    if (is_string($select)) $select = explode(',', $select);
+
+		// Zorgt ervoor dat iig primary_key wordt geselecteerd (bij de eerste keer dat select wordt aangeroepen)
+    if ( !$this->tm_select and !in_array( $this->settings['primary_key'], $select ) ) {
+      array_unshift( $select, $this->settings['primary_key'] );
+    }
+
+    foreach ($select as $key => $field) {
+      // Zorg ervoor dat alle velden geprefixed worden door de eigen tabelnaam om dubbelingen te voorkomen
+      if (in_array($field,$this->settings['fields'])) {
+        $field = $this->settings['table'].'.'.$field;
+      }
+      // Bewaar
+      $this->tm_select[] = $field;
+      // Normale select
+      $this->db->select( $field, $escape );
+    }
+
+		return $this;
+	}
+  
+
+  /**
    * Selecteert abstract fields
    *
    * @return $this
    * @author Jan den Besten
    */
   public function select_abstract() {
-    $this->db->select( $this->get_compiled_abstract_select(), FALSE );
+    $this->select( $this->get_compiled_abstract_select(), FALSE );
     return $this;
   }
   
   
   /**
    * Geef aan welke relaties meegenomen moeten worden in het resultaat.
+   * Deze method kan vaker aangeroepen worden met nieuwe relaties.
+   * Als de relatie eenzelfde tabel bevat, worden van die tabel de extra meegegeven waarden vervangen
    * 
-   * Bijvoorbeeld: array(
-   *    'belongs_to' => array( 'tbl_items', 'tbl_posts' => array( ... fields ... ) )
-   * )
+   * Voorbeelden: [] = array()
    * 
-   *
-   * @param array $with
+   * - with();                                                                // Reset alle relaties. Wordt ook aangeroepen na elke get() (of variant)
+   * 
+   * - with( 'many_to_one' );                                                 // Voegt alle many_to_one relaties toe aan resultaat. Hiermee wordt automatisch naar de foreign keys gezocht.
+   * - with( 'many_to_one', [] );                                             // idem
+   * - with( 'many_to_one' => [ 'tbl_posts' ] );                              // Voegt alleen de many_to_one relatie met 'tbl_posts' toe
+   * - with( 'many_to_one' => [ 'tbl_posts', 'tbl_links' ] );                 // Voegt alleen de many_to_one relatie met 'tbl_posts' en 'tbl_links' toe
+   * - with( 'many_to_one' => [ 'tbl_posts' => ['str_title','txt_text'] ] );  // Voegt alleen de many_to_one relatie met 'tbl_posts' en daarvan alleen de velden 'str_title' en 'txt_text'
+   * - with( 'many_to_one' => [ 'tbl_posts' => 'abstract ] );                 // Voegt alleen de many_to_one relatie met 'tbl_posts' en daarvan alleen een abstract
+   * 
+   * - with( 'many_to_many' );                                                 // Voegt alle many_to_many relaties toe aan resultaat
+   * - with( 'many_to_many', [] );                                             // idem
+   * - with( 'many_to_many' => [ 'tbl_posts' ] );                              // Voegt alleen de many_to_many relatie met 'tbl_posts' toe
+   * - with( 'many_to_many' => [ 'tbl_posts', 'tbl_links' ] );                 // Voegt alleen de many_to_many relatie met 'tbl_posts' en 'tbl_links' toe
+   * - with( 'many_to_many' => [ 'tbl_posts' => ['str_title','txt_text'] ] );  // Voegt alleen de many_to_many relatie met 'tbl_posts' en daarvan alleen de velden 'str_title' en 'txt_text'
+   * - with( 'many_to_many' => [ 'tbl_posts' => 'abstract ] );                 // Voegt alleen de many_to_many relatie met 'tbl_posts' en daarvan alleen een abstract
+   * 
+   * @param string $type
+   * @param array $tables [array()]
    * @return $this
    * @author Jan den Besten
    */
-  public function with( $with ) {
-    $this->with = $with;
+  public function with( $type='', $tables=array() ) {
+    // Reset?
+    if ( empty($type) ) {
+      $this->tm_with = array();
+      return $this;
+    }
+    
+    // Als geen tables zijn meegegeven, zoek ze automatisch
+    if ( empty($tables) ) $tables = $this->get_relation_tables( $type );
+    // Zorg ervoor dat $tables in dit formaat komt: 'table' => fields
+    $tables_new = array();
+    foreach ($tables as $key => $value) {
+      $table  = $key;
+      $fields = $value;
+      if ( is_integer($key) ) {
+        $table  = $value;
+        $fields = array();
+      }
+      $tables_new[$table] = $fields;
+    }
+    // Merge met bestaande
+    $tables_before = el( $type, $this->tm_with, array() );
+    $tables_new = array_merge( $tables_before, $tables_new );
+    // Bewaar deze relatie instelling
+    $this->tm_with[$type] = $tables_new;
     return $this;
   }
+  
+  
+  /**
+   * Bouwt de query op voor relaties, roept voor elke soort relatie een eigen method aan.
+   *
+   * @param string $with 
+   * @return $this
+   * @author Jan den Besten
+   */
+  protected function _with( $with ) {
+    foreach ( $with as $type => $tables ) {
+      $method = '_with_'.$type;
+      if ( method_exists( $this, $method ) ) {
+        $this->$method( $tables );
+      }
+      else {
+        throw new ErrorException( 'FA: Method "'.$method.'" does not exists. So the relation cannot be included in the result.' );
+      }
+    }
+    return $this;
+  }
+  
+  /**
+   * Bouwt many_to_one join query
+   *
+   * @param array $tables 
+   * @return $this
+   * @author Jan den Besten
+   */
+  protected function _with_many_to_one( $tables ) {
+    // Zorg ervoor dat er velden van de eigen tabel zijn geselecteerd
+    
+    
+    
+    // Voeg gerelateerde tabel toe aan query
+    foreach ($tables as $table => $fields) {
+      $select = false;
+      // Welke velden van de gerelateerde tabel?
+      if ( empty($fields) ) {
+        $fields = $this->get_other_table_fields( $table );
+      }
+      elseif ( $fields === 'abstract' ) {
+        $select = $this->get_other_table_compiled_abstract_select( $table );
+      }
+      
+      // Select de velden van de gerelateerde tabel
+      if ($select) {
+        $this->db->select( $select );
+      }
+      else {
+        // primary_key hoeft er niet in
+        if ( $key=array_search( $this->settings['primary_key'], $fields ) ) {
+          unset($fields[$key]);
+        }
+        foreach ($fields as $field) {
+          $this->db->select( "$table.$field AS $table"."__"."$field" );
+        }
+      }
+      
+      // Join
+      $foreign_key = $this->settings['primary_key'].'_'.remove_prefix( $table );
+      $this->join( $table, $table.'.'.$this->settings['primary_key'].' = '.$this->settings['table'].".".$foreign_key, 'left');
+    }
+    return $this;
+  }
+  
   
   
 
@@ -600,6 +954,6 @@ Class Table_Model extends CI_Model {
     $fields = $this->list_fields();
     return in_array( $field, $fields );
   }
-
+  
 
 }

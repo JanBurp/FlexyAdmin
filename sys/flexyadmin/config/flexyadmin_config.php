@@ -964,6 +964,7 @@ define('PRIMARY_KEY','id');
 
 $config['PRIMARY_key']							= PRIMARY_KEY;
 $config['FOREIGN_key_format']				= "/^id_.*/";		// regexpression used by preg_match
+$config['ALWAYS_SHOW_FIELDS']       = array(PRIMARY_KEY,'uri','order','self_parent');
 
 $config['ORDER_field_name']					= "order";
 $config['ORDER_decimals']						= 3;

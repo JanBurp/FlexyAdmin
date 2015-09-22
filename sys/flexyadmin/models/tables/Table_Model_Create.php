@@ -2,7 +2,8 @@
 
 Class Table_Model_Create extends CI_Model {
   
-  protected $show_always = array('id','order','self_parent');
+  protected $site_models = array('tbl','rel');
+  // protected $show_always = array('id','order','self_parent');
   
   private $messages = array();
   
@@ -25,104 +26,71 @@ Class Table_Model_Create extends CI_Model {
     }
     
     // Load Template & Change it for everye table with its own settings
-    $path = 'sys/flexyadmin/models/tables/';
-    $cfgpath = 'sys/flexyadmin/config/tables/';
-    
-    $template = file_get_contents( $path.'Table_Model_Template.php');
-    // Settings
-    // $settings = $this->table_model->get_settings();
-    // if (preg_match("/\* --- SETTINGS --- \*\/(.*)\/\* ---/uiUs", $settings, $matches)) {
-    //   $settings=$matches[1];
-    //   //  Removes multi-line comments and does not create
-    //   //  a blank line, also treats white spaces/tabs
-    //   $settings = preg_replace('!^[ \s]*/\*.*?\*/[ \s]*[\r\n]!uism', '', $settings);
-    //   //  Removes single line '//' comments, treats blank characters
-    //   $settings = preg_replace('![ \t]*//.*[ \t]*[\r\n]!', '', $settings);
-    //   //  Strip blank lines
-    //   $settings = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $settings);
-    // }
-    // else {
-    //   $settings='';
-    // }
-    
-    // var_dump($settings);
-    // die();
+    $sys_model_path     = 'sys/flexyadmin/models/tables/';
+    $site_model_path    = 'site/models/tables/';
+    $sys_config_path    = 'sys/flexyadmin/config/tables/';
+    $site_config_path   = 'site/config/tables/';
+    $model_template = file_get_contents( $sys_model_path.'Table_Model_Template.php');
+    $config_template= file_get_contents( $sys_config_path.'table_model.php');
     
     foreach ($tables as $table) {
       $this->messages[] = $table;
       $this->table_model->table( $table );
       $settings = $this->table_model->get_settings();
-      var_dump( $settings );
-      die();
-      
-      // // Grid settings
-      // $admin_grid = $this->table_model->get_admin_grid();
-      // $admin_grid['fields']   = $settings_array['fields'];
-      // foreach ($admin_grid['fields'] as $key => $value) {
-      //   if ( !in_array($value,$this->show_always) and !el(array($value,'b_show_in_grid'),$fields_info,true) ) unset($admin_grid['fields'][$key]);
-      // }
-      // $admin_grid['order_by'] = $settings_array['order_by'];
-      // $settings_array['admin_grid']      = $admin_grid;
-      
-      // // Form settings
-      // $admin_form = $this->table_model->get_admin_form();
-      // $admin_form['fields'] = $settings_array['fields'];
-      // foreach ($admin_form['fields'] as $key => $value) {
-      //   if ( !in_array($value,$this->show_always) and !el(array($value,'b_show_in_form'),$fields_info,true) ) unset($admin_form['fields'][$key]);
-      // }
-      // $fieldsets=el('str_fieldsets',$info,'');
-      // if ($fieldsets) {
-      //   if (!is_array($fieldsets)) $fieldsets=explode(',',$fieldsets);
-      //   $form_sets = array();
-      //   foreach ($fieldsets as $key=>$fieldset) {
-      //     $form_sets[$fieldset] = array();
-      //   }
-      //   // Stop de juiste velden in de fieldsets
-      //   foreach ($settings_array['fields'] as $field) {
-      //     $fieldset = el('str_fieldset',$fields_info[$field],'');
-      //     if (isset($form_sets[$fieldset])) array_push( $form_sets[$fieldset], $field );
-      //   }
-      //   $admin_form['fieldsets'] = $form_sets;
-      // }
-      // $settings_array['admin_form']      = $admin_form;
-      
-      
-      // // All data to template and save this table model
-      // $settings = $this->set_setting( $settings, $settings_array );
-      // $data=array(
-      //   'NAME'     => $table,
-      //   'DATE'     => date('D j F Y, H:i'),
-      //   'SETTINGS' => "\t// SETTINGS\n".$settings."// --SETTINGS\n",
-      // );
-      // $model = $this->parser->parse_string($template, $data, true);
-      // file_put_contents( $path.$table.'.php', $model);
-      //
-      // // Save all data in config file
-      // $php    = '<?php if ( ! defined(\'BASEPATH\')) exit(\'No direct script access allowed\');'.PHP_EOL.PHP_EOL.'/* --- Settings for table model `'.$table.'` - for help on settings, see `table_model.php` --- */'.PHP_EOL.PHP_EOL;
-      // foreach ( $settings_array as $key => $value ) {
-      //   $php .= '$config[\''.$key.'\'] = ' . $this->value_to_string($value) . ';' . PHP_EOL;
-      // }
-      // // $config = array2php( $settings_array );
-      // // $config = $this->load->view( 'admin/empty_config', array( 'config'=>$config ), true );
-      // file_put_contents( $cfgpath.$table.'.php', $php );
+      // All data to template and save this table model
+      $data=array(
+        'NAME'     => $table,
+        'DATE'     => date('D j F Y, H:i'),
+      );
+      $model  = $this->parser->parse_string( $model_template, $data, true );
+      $config = $this->replace_config($config_template,$settings);
+      $config = $this->parser->parse_string( $config, $data, true );
+      // sys or site
+      if ( in_array(get_prefix($table),$this->site_models) ) {
+        file_put_contents( $site_model_path.$table.'.php', $model);
+        file_put_contents( $site_config_path.$table.'.php', $config );
+      }
+      else {
+        file_put_contents( $sys_model_path.$table.'.php', $model);
+        file_put_contents( $sys_config_path.$table.'.php', $config );
+      }
     }
-    
-  }
 
-  private function set_setting($settings,$settings_array) {
-    foreach ($settings_array as $key => $value) {
-      $value = $this->value_to_string($value);
-      $settings = preg_replace('/(protected\s\$'.$key.'.*=)(.*);/uUism', '$1 '.$value.';', $settings);
-    }
-    return $settings;
   }
   
+  /**
+   * Vervang $config['...'] door een waarde in een config bestand
+   *
+   * @param string $template 
+   * @param array $config 
+   * @return string
+   * @author Jan den Besten
+   */
+  private function replace_config( $template, $config ) {
+    foreach ($config as $key => $value) {
+      $value = $this->value_to_string($value);
+      $template = preg_replace("/(config\['".$key."']\s?).*;/um", "$1= ".$value.";", $template);
+    }
+    return $template;
+  }
+
+  /**
+   * Maakt eens string van een waarde
+   *
+   * @param mixed $value 
+   * @param int $tabs 
+   * @param int $lev 
+   * @return string
+   * @author Jan den Besten
+   */
   private function value_to_string($value,$tabs=1,$lev=0) {
     if (is_numeric($value)) {
-      $value = (int)$value;
+      $value = (string)$value;
+      return $value;
     }
     if (is_string($value)) {
       $value = "'".$value."'";
+      return $value;
     }
     if (is_array($value)) {
       if (is_assoc($value)) {
@@ -131,7 +99,7 @@ Class Table_Model_Create extends CI_Model {
         $longest_item=array_sort_length($longest_item);
         $longest_item=current($longest_item);
         $len = strlen($longest_item) + 2;
-        $value="array(";
+        $value="array( ";
         if ($lev<1) $value.="\n";
         foreach ($items as $key => $sub_value) {
           if ($lev<1)
@@ -146,11 +114,13 @@ Class Table_Model_Create extends CI_Model {
         $value .= ")";
       }
       else {
-        $value = "array('".implode("','",$value)."')";
+        $value = "array( '".implode("','",$value)."')";
       }
+      return $value;
     }
     if (is_bool($value)) {
       $value = ($value?'true':'false');
+      return $value;
     }
     return $value;
   }

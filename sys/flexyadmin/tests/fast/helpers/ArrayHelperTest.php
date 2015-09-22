@@ -8,8 +8,7 @@ class ArrayHelperTest extends CITestCase {
     $this->CI->load->helper('array');
   }
 
-  public function testElement() { 
-    
+  public function testElement() {
     $array = array(
         'color' => 'red',
         'shape' => 'round',
@@ -24,7 +23,6 @@ class ArrayHelperTest extends CITestCase {
   }
 
   public function testElements() {
-    
     $array = array(
         'color' => 'red',
         'shape' => 'round',
@@ -67,6 +65,15 @@ class ArrayHelperTest extends CITestCase {
   //   );
   //
   //   $this->assertNotEquals(random_element($quotes), random_element($quotes));
+  // }
+  
+  
+  // public function testFilter_by_prefix() {
+  //   $array = array('id','str_title','id_link','txt_text','id_example');
+  //   $this->assertEquals( array(
+  //       'id_link',
+  //       'id_example',
+  //     ), filter_by_prefix( $array,'id' ) );
   // }
 
 }

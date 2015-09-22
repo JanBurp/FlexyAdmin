@@ -1,1 +1,19 @@
 Keep track of you're todo's here.
+
+
+PROFILER admin/test (tbl_leerlingen)
+====================================
+
+Wat             | with              | tijd    | geheugen | aantal queries
+----------------|-------------------|---------|----------|---------------
+Oud             |                   | 0.1050  | 5.06 Mb  | 4
+Nieuw           |                   | 0.0990  | 5.08 Mb  | 3
+Oud             | many_to_one       | 0.1150  | 5.23 Mb  | 9
+Nieuw (auto)    | many_to_one       | 0.1627  | 5.59 Mb  | 14
+Nieuw (models)  | many_to_one       | 0.1088  | 5.22 Mb  | 3
+
+
+
+
+
+

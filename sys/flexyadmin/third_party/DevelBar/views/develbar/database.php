@@ -10,7 +10,7 @@
                 $time = number_format($db->query_times[$key], 4);
                 $total_execution_time = number_format(array_sum($db->query_times), 4);
 
-                $highlight = array('SELECT', 'DISTINCT', 'FROM', 'WHERE', 'AND', 'LEFT&nbsp;JOIN', 'ORDER&nbsp;BY', 'GROUP&nbsp;BY', 'LIMIT', 'INSERT', 'INTO', 'VALUES', 'UPDATE', 'OR&nbsp;', 'HAVING', 'OFFSET', 'NOT&nbsp;IN', 'IN', 'LIKE', 'NOT&nbsp;LIKE', 'COUNT', 'MAX', 'MIN', 'ON', 'AS', 'AVG', 'SUM', '(', ')');
+                $highlight = array('SELECT', 'SHOW', 'DISTINCT', 'FROM', 'WHERE', 'AND', 'JOIN', 'LEFT ', 'ORDER BY', 'GROUP BY', 'LIMIT', 'INSERT', 'INTO', 'VALUES', 'UPDATE', 'OR ;', 'HAVING', 'OFFSET', 'NOT IN', 'IN', 'LIKE', 'NOT LIKE', 'COUNT', 'MAX', 'MIN', 'ON', 'AS', 'AVG', 'SUM', '(', ')');
                 //$query = highlight_code($query);
                 foreach ($highlight as $bold) {
                     $query = str_replace($bold, '<strong style="color:#e0e0e0">'.$bold.'</strong>', $query);
