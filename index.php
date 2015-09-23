@@ -80,8 +80,8 @@
  * FLEXYADMIN: Set debugging features on/off
  *------------------------------------------------------------------------------------------------
  */
-// define('DEBUGGING', false);
-define('DEBUGGING', true);
+define('DEBUGGING', false);
+// define('DEBUGGING', true);
 
 /*
  *------------------------------------------------------------------------------------------------

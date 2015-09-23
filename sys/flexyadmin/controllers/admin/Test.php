@@ -31,7 +31,7 @@ class Test extends CI_Controller {
     // Met table_model
     $this->table_model->table('tbl_groepen');
     $this->table_model->with( 'many_to_many', array( 'rel_groepen__adressen' ) );
-    $this->table_model->where( 'tbl_adressen.str_address', "Schooolstraat 1" );
+    $this->table_model->where_exists( 'tbl_adressen.str_address', "Schooolstraat 1" );
     // $query = $this->table_model->get();
     $result = $this->table_model->get_result();
     
