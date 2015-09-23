@@ -77,6 +77,13 @@ $config['abstract_fields'] = array( 'str_show_in_form_where','str_fieldset');
  */
 $config['abstract_filter'] = '';
 
+
+/**
+ * Welke relaties de tabel heeft met hun gekoppelde tabellen
+ */
+$config['relations'] = array( '');
+
+
 /**
  * Deze instellingen bepalen wat voor resultaat er wordt gegeven voor het admin grid.
  * Als een instelling leeg is wordt deze gezocht in de standaard instelling.
