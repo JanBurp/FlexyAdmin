@@ -63,6 +63,7 @@ $config['abstract_fields']  = NULL;
  */
 $config['abstract_filter']  = '';
 
+
 /**
  * Deze instellingen bepalen wat voor resultaat er wordt gegeven voor het admin grid.
  * Als een instelling leeg is wordt deze gezocht in de standaard instelling.

@@ -39,7 +39,7 @@
 
 $autoload['packages'] = array();
 
-if (ENVIRONMENT=='testing') {
+if ( DEBUGGING ) {
   $autoload['packages'] = array(APPPATH.'third_party/DevelBar');
 }
 
