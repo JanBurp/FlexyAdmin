@@ -80,8 +80,8 @@ class TableModelTest extends CITestCase {
     
     $expected = array(
       'many_to_one'=>array(
-        'tbl_adressen' => array(),
-        'tbl_groepen'  => array(),
+        'tbl_adressen' => array('fields'=>array(),'grouped'=>false),
+        'tbl_groepen'  => array('fields'=>array(),'grouped'=>false),
       )
     );
     // find all
@@ -100,7 +100,7 @@ class TableModelTest extends CITestCase {
     // set one
     $expected = array(
       'many_to_one'=>array(
-        'tbl_adressen' => array(),
+        'tbl_adressen' => array('fields'=>array(),'grouped'=>false),
       )
     );
     $this->CI->table_model->with( 'many_to_one', array( 'tbl_adressen') );
