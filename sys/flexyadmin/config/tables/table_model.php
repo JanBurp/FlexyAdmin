@@ -48,7 +48,7 @@ $config['max_rows']         = 0;
  * Hiermee kan dat aan of uit worden gezet.
  * Standaard staat deze optie aan (door _autoset)
  */
-$config['update_uris']      = '';
+$config['update_uris']      = true;
 
 /**
  * Velden die gebruikt worden om een abstract veld samen te stellen.
