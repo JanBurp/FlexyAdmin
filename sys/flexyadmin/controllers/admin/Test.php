@@ -30,18 +30,21 @@ class Test extends CI_Controller {
 
     // Met table_model
     $this->table_model->table('tbl_groepen');
-    // $this->table_model->with( 'many_to_many' );
+    $this->table_model->with( 'many_to_many' );
+    $this->table_model->with_grouped( 'many_to_many' );
     // $this->table_model->with_grouped( 'many_to_many', array( 'tbl_adressen' => array('str_zipcode')) );
-    $this->table_model->with_grouped( 'many_to_many', array( 'tbl_adressen' => 'abstract' ) );
+    // $this->table_model->with_grouped( 'many_to_many', array( 'tbl_adressen' => 'abstract' ) );
     $this->table_model->where_exists( 'tbl_adressen.str_address', "Schooolstraat 1" );
-    // $query = $this->table_model->get();
-    $result = $this->table_model->get_result(4);
+    $this->table_model->limit(2);
+    $query = $this->table_model->get();
+    // $result = $this->table_model->get_result();
     
     
-    var_dump( $this->table_model->get_query_info() );
-    // var_dump( $query->result_array() );
-    // trace_( current($result)['tbl_adressen'] );
-    var_dump( $result );
+    trace_( $this->table_model->get_query_info() );
+    if (isset($result))
+      var_dump( $result );
+    else
+      var_dump( $query->result_array() );
     
     
     return '';
