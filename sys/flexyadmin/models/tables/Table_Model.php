@@ -9,16 +9,17 @@
  * - Naast ->get() die een query object teruggeeft ook ->get_result() die een aangepaste result array teruggeeft met eventuele many_to_many data als subarray.
  * 
  * 
- * Enkele belangrijke methods (deels overgerft van Query Builder):
+ * Enkele belangrijke methods (deels overgeerft van Query Builder):
  * 
  * ->table( $table )                              // Stelt tabel waarvoor het model wordt gebruikt (laad corresponderende settings als die bestaan)
  * ->get( $limit=0, $offset=0 )                   // Geeft een $query object (zoals in Query Builder)
- * ->get_one( $id )                               // Geeft een $query object met maar één row waar de primary_key de meegegeven waarde heeft
- * ->get_one_by( $field, $value )                 // Geeft een $query object met maar één row waar het aangegeven veld de meegegeven waarde heeft (als er meer zijn, is de eerste het resultaat)
+ * ->get_where( $where=NULL, $limit=0, $offset=0) // Geeft een $query object (zoals in Query Builder)
  * ->get_result( $limit=0, $offset=0 )            // Geeft een aangepaste $query->result_array, met de key ingesteld als result_key en many_to_many data als subarray per item
  * ->get_row()                                    // Idem, maar dan maar één item (de eerste in het resultaat)
+ * ->get_field( $field )                          // Idem, maar dan van één item alleen de waarde van het gevraagde veld
  * ->select( $select = '*' )                      // Maak SELECT deel van de query (zoals in Query Builder)
  * ->select_abstract()                            // Maak SELECT deel van de query door alle abstract_fields te gebruiken (en als die niet zijn ingesteld zelf te genereren)
+ * ->path( $path_field, $original_field = '' )    // Geeft een veld aan dat een geheel pad aan waarden moet bevatten in een tree table (bijvoorbeeld een menu)
  * ->with( $type='', $tables=array() )            // Voeg relaties toe (many_to_one, many_to_many) en specificeer eventueel van welke tabellen en hun velden
  * ->with_grouped( $type='', $tables=array() )    // Idem, maar dan met gegroepeerde many_to_many data
  * ->where($key, $value = NULL)                   // Zoals in Query Builder. Kan ook zoeken in many_to_many data (waar de many_to_many data ook gefilterd is)
@@ -65,6 +66,11 @@ Class Table_Model extends CI_Model {
    */
   private $tm_limit = 0;
   private $tm_offset = 0;
+
+  /**
+   * Een eventueel veld dat een compleet pad moet bevatten in een tree table
+   */
+  private $tm_path = false;
 
 
   /**
@@ -530,6 +536,7 @@ Class Table_Model extends CI_Model {
    */
   public function reset() {
     $this->tm_select = false;
+    $this->tm_path   = false;
     $this->tm_limit  = 0;
     $this->tm_offset = 0;
     $this->with();
@@ -781,37 +788,21 @@ Class Table_Model extends CI_Model {
     return $query;
   }
   
-
-
+  
   /**
-   * Geeft één (of de eerste) rij uit de database tabel, als query object, waarvoor geld dat 'field' = 'value'
+   * Zelfde als bij Query Builder
    *
-   * @param string $field 
-   * @param mixed $value
-   * @param bool $reset [true] als true dan wordt aan het eind alle instellingen gereset (with,)
-   * @return object $query->row
+   * @param mixed $where [NULL]
+   * @param int $limit [0]
+   * @param int $offset [0]
+   * @return object $query
    * @author Jan den Besten
    */
-  public function get_one_by( $field, $value, $reset = true ) {
-    $this->db->where( $field, $value );
-    return $this->get( 1,0, $reset );
-  }
+	public function get_where( $where = NULL, $limit = NULL, $offset = NULL) {
+		if ($where !== NULL) $this->where($where);
+    return $this->get( $limit,$offset);
+	}
   
-
-
-  /**
-   * Geeft één rij uit de database tabel, als query object, met het meegegeven id
-   *
-   * @param int $id
-   * @param bool $reset [true] als true dan wordt aan het eind alle instellingen gereset (with,)
-   * @return object $query->row
-   * @author Jan den Besten
-   */
-  public function get_one( $id, $reset = true ) {
-    return $this->get_one_by( $this->settings['primary_key'], $id, $reset );
-  }
-  
-
 
   /**
    * Maakt een mooie result_array van een $query
@@ -823,9 +814,9 @@ Class Table_Model extends CI_Model {
    * @author Jan den Besten
    */
   private function _make_result_array( $query ) {
-    $result = array();
     $key = el( 'result_key', $this->settings, el( 'primary_key',$this->settings ) );
-    $has_many_to_many = !empty($this->tm_with);
+    $result = array();
+    $has_many_to_many = !empty($this->tm_with['many_to_many']);
     $many_data = array();
     
     foreach ( $query->result_array() as $row ) {
@@ -864,6 +855,17 @@ Class Table_Model extends CI_Model {
       $result[ $result_key ] = $row;
     }
     
+    
+    // path (kan pas als result met result_key benaderbaar is, vandaar de extra loop)
+    if ($this->tm_path) {
+      foreach ($result as $key => $row) {
+        foreach ($this->tm_path as $field => $path_info) {
+          $result[$key][$path_info['path_field']] = $this->_fill_path( $result, $key, $path_info );
+        }
+      }
+    }
+    
+    
     // pas query info aan
     $this->query_info['num_rows']   = count($result);
     // $this->query_info['total_rows'] = count($result);
@@ -874,6 +876,24 @@ Class Table_Model extends CI_Model {
     return $result;
   }
   
+  /**
+   * Vul een path veld recursief
+   *
+   * @param array $result 
+   * @param int $key
+   * @param array $path_info 
+   * @return string
+   * @author Jan den Besten
+   */
+  protected function _fill_path( $result, $key, $path_info ) {
+    $value = '';
+    $parent = $result[$key]['self_parent'];
+    if ( $parent>0 ) {
+      $value .= $this->_fill_path( $result, $parent, $path_info) . $path_info['split'];
+    }
+    $value .= $result[$key][$path_info['original_field']];
+    return $value;
+  }
 
 
   /**
@@ -910,6 +930,20 @@ Class Table_Model extends CI_Model {
     $result = $this->get_result( 1 );
     return current($result);
   }
+
+
+  /**
+   * Zelfde als ->get_row() maar geeft alleen de waarde van het gevraagde field terug
+   *
+   * @param string $field 
+   * @return mixed
+   * @author Jan den Besten
+   */
+	public function get_field( $field ) {
+    $this->select( $field );
+    $row = $this->get_row();
+		return $row[$field];
+	}
 
 
   
@@ -964,6 +998,45 @@ Class Table_Model extends CI_Model {
    */
   public function select_abstract() {
     $this->select( $this->get_compiled_abstract_select(), FALSE );
+    return $this;
+  }
+  
+  
+  /**
+   * Selecteert een veld waarvan de waarde een samengevoegde string is van alle waarden in een pad van een tree table.
+   * Een tree table is een tabel met rijen die in een boomstructuur aan elkaar gekoppeld zijn, bijvoorbeeld een menu.
+   * Een tree table bevat altijd de velden order en self_parent
+   * 
+   * Voorbeeld:
+   * 
+   * ->path( 'uri' )
+   * 
+   * Een andere optie is om het origenele veld te behouden en een extra veld toe te voegen met het hele pad.
+   * In het voorbeeld hieronder zal het veld 'path' worden toegevoegd en dezefde waarden hebben als het veld 'uri' in het voorbeeld hierboven.
+   * 
+   * ->path( 'path', 'uri' );
+   * 
+   * NB Kan alleen gebruikt worden in combinate met ->get_result() en varianten.
+   * NB2 In combinatie met een ->where() statement kan het zijn dat de resultaten niet compleet zijn omdat rijen kunnen ontbreken die een tak in een tree zijn.
+   *
+   * @param string $path_field 
+   * @param string $original_field ['']
+   * @param string $split ['/'] Eventueel kan een andere string worden meegegeven die tussen de diverse paden in komt.
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function path( $path_field, $original_field = '', $split = '/' ) {
+    if ( !$this->field_exists('order') and !$this->field_exists('order') ) {
+      $this->reset();
+      throw new ErrorException( 'Table_Model->path(): Table is not a tree table. (tables whith the fields `order` and `self_parent`)' );
+      return $this;
+    }
+    if (empty($original_field)) $original_field = $path_field;
+    $this->tm_path[$original_field] = array(
+      'path_field'      => $path_field,
+      'original_field'  => $original_field,
+      'split'           => $split
+    );
     return $this;
   }
   
