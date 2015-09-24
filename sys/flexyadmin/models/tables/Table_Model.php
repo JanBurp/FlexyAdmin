@@ -5,19 +5,25 @@
  * - Alle instellingen van een tabel en zijn velden tabel zijn te vinden in config/tables/...
  * - Standaard get/crud zit in het model, voor elke tabel hetzelfde.
  * - Iedere tabel kan deze overerven en aanpassen naar wens, de aanroepen blijven hetzelfde voor iedere tabel.
- * - Alle query-builder methods (en db methods) kunnen worden gebruikt met het model. Dus dezelfde naamgeving voor de methods.
- * - Naast ->get() die een query object teruggeeft ook ->get_result() en get_row() die een aangepaste result array teruggeeft met eventuele many_to_many data als subarray.
- * - Relaties worden helemaal met SQL gegenereerd, ook de WHERE statements:
+ * - Alle query-builder methods (en db methods) kunnen worden gebruikt met het model. Als je CodeIgniter kent, ken je dit model al bijna.
+ * - Naast ->get() die een query object teruggeeft ook ->get_result() die een aangepaste result array teruggeeft met eventuele many_to_many data als subarray.
  * 
- * many_to_one
- * -----------
- * ->where( 'tbl_links.str_title', 'test );           // Filtert het resultaat op het veld 'str_title' uit de many_to_one relatie met tbl_links.
  * 
- * many_to_many
- * ------------
- * ->where( 'tbl_links.str_title', 'text' );          // Filtert het resultaat op het veld 'str_title' uit de many_to_many relatie met tbl_links. Alleen het gezochte subitem komt mee in het resultaat.
- * ->where_exists( 'tbl_links.str_title', 'text' );   // Idem maar in resultaat worden alle subitems meegenomen
+ * Enkele belangrijke methods (deels overgerft van Query Builder):
  * 
+ * ->table( $table )                              // Stelt tabel waarvoor het model wordt gebruikt (laad corresponderende settings als die bestaan)
+ * ->get( $limit=0, $offset=0 )                   // Geeft een $query object (zoals in Query Builder)
+ * ->get_one( $id )                               // Geeft een $query object met maar één row waar de primary_key de meegegeven waarde heeft
+ * ->get_one_by( $field, $value )                 // Geeft een $query object met maar één row waar het aangegeven veld de meegegeven waarde heeft (als er meer zijn, is de eerste het resultaat)
+ * ->get_result( $limit=0, $offset=0 )            // Geeft een aangepaste $query->result_array, met de key ingesteld als result_key en many_to_many data als subarray per item
+ * ->get_row()                                    // Idem, maar dan maar één item (de eerste in het resultaat)
+ * ->select( $select = '*' )                      // Maak SELECT deel van de query (zoals in Query Builder)
+ * ->select_abstract()                            // Maak SELECT deel van de query door alle abstract_fields te gebruiken (en als die niet zijn ingesteld zelf te genereren)
+ * ->with( $type='', $tables=array() )            // Voeg relaties toe (many_to_one, many_to_many) en specificeer eventueel van welke tabellen en hun velden
+ * ->with_grouped( $type='', $tables=array() )    // Idem, maar dan met gegroepeerde many_to_many data
+ * ->where($key, $value = NULL)                   // Zoals in Query Builder. Kan ook zoeken in many_to_many data (waar de many_to_many data ook gefilterd is)
+ * ->where_exists( $key, $value = NULL )          // Idem met als resultaat dezelfde items maar met complete many_to_many data van dat item (ongefilterd)
+ * ->set_result_key( $key='' )                    // Hiermee kan voor ->get_result() de key van de array ingesteld worden op een ander (uniek) veld. Standaard is dat de primary_key
  * 
  * @author: Jan den Besten
  * $Revision$
@@ -55,9 +61,10 @@ Class Table_Model extends CI_Model {
   private $tm_select  = false;
   
   /**
-   * Hou LIMIT bij om eventueel total_rows te kunnen berekenen
+   * Hou LIMIT en OFFSET bij om eventueel total_rows te kunnen berekenen
    */
   private $tm_limit = 0;
+  private $tm_offset = 0;
 
 
   /**
@@ -82,9 +89,11 @@ Class Table_Model extends CI_Model {
   
   /**
    * Bewaart hier na elke get_result() (en varianten) informatie over het query resultaat.
-   * - num_rows         - Zelfde als $query->num_rows()
-   * - total_rows       - Idem, maar nu zonder limit
-   * - num_fields       - Zelfde als $query->num_fields()
+   * - num_rows           - Zelfde als $query->num_rows()
+   * - total_rows         - Idem, maar nu zonder limit
+   * - num_fields         - Zelfde als $query->num_fields()
+   * (- last_query)       - Alleen als nodig is geweest voor het berekenen van total_rows
+   * (- last_clean_query) - Alleen als nodig is geweest voor het berekenen van total_rows
    */
   private $query_info = array();
   
@@ -522,6 +531,7 @@ Class Table_Model extends CI_Model {
   public function reset() {
     $this->tm_select = false;
     $this->tm_limit  = 0;
+    $this->tm_offset = 0;
     $this->with();
     return $this;
   }
@@ -605,7 +615,8 @@ Class Table_Model extends CI_Model {
       return $this->$method();
     }
     else {
-      throw new ErrorException( 'FA: Method "'.$method.'" does not exists. So the relation tables cannot be found.' );
+      $this->reset();
+      throw new ErrorException( __CLASS__.'->'.$method.' does not exists. So the relation tables cannot be found.' );
     }
     return $tables;
   }
@@ -670,7 +681,9 @@ Class Table_Model extends CI_Model {
 
   /**
    * Stel result key in voor gebruik bij $this->get_result()
-   * Staat standaard al ingesteld (default PRIMARY_KEY), maar kan hier tijdelijk een andere waarder krijgen.
+   * Staat standaard ingesteld op primary_key.
+   * 
+   * NB Als het meegegeven veld geen unieke waarden bevat dan kan het resulteren in een onverwachte result_array
    *
    * @param string $key [''] Als leeg dan wordt primary_key gebruikt
    * @return $this
@@ -707,29 +720,6 @@ Class Table_Model extends CI_Model {
     return $this->settings;
   }
 
-
-
-  /**
-   * Geeft instellingen voor admin_grid
-   *
-   * @return array
-   * @author Jan den Besten
-   */
-  public function get_admin_grid() {
-    return $this->get_setting( 'admin_grid' );
-  }
-
-
-
-  /**
-   * Geeft instellingen voor admin_form
-   *
-   * @return array
-   * @author Jan den Besten
-   */
-  public function get_admin_form() {
-    return $this->get_setting( 'admin_form' );
-  }
   
 
 
@@ -763,8 +753,8 @@ Class Table_Model extends CI_Model {
    * @author Jan den Besten
    */
   public function get( $limit=0, $offset=0, $reset = true ) {
-    // Bewaar limit
-    $this->tm_limit = $limit;
+    // Bewaar limit & offset als ingesteld (overruled eerder ingestelde door ->limit() )
+    if ($limit!=0 or $offset!=0) $this->limit( $limit,$offset );
     
     // select, zorg ervoor dat er iig iets in de select komt
     if ( !$this->tm_select ) $this->select();
@@ -776,18 +766,17 @@ Class Table_Model extends CI_Model {
     if ( ! empty($this->settings['order_by']) ) $this->db->order_by( $this->settings['order_by'] );
     
     // limit & offset
-    $query = $this->db->get( $this->settings['table'], $limit, $offset );
+    $query = $this->db->get( $this->settings['table'], $this->tm_limit, $this->tm_offset );
     
     // Info & reset
-    $this->query_info = array(
-      'num_rows'    => $query->num_rows(),
-      'total_rows'  => $query->num_rows(),
-      'num_fields'  => $query->num_fields(),
-    );
+    $this->query_info = array();
+    $this->query_info['num_rows'] = $query->num_rows();
+    $this->query_info['total_rows'] = $query->num_rows();
+    $this->query_info['num_fields'] = $query->num_fields();
     if ($this->tm_limit>0) {
-      $this->query_info['total_rows'] = $this->total_rows(true);
+      $this->query_info['total_rows'] = $this->total_rows( true );
     }
-    
+
     if ( $reset ) $this->reset();
     return $query;
   }
@@ -795,7 +784,7 @@ Class Table_Model extends CI_Model {
 
 
   /**
-   * Geeft één (of de eerste) rij uit de database tabel, als query_row object, waarvoor geld dat 'field' = 'value'
+   * Geeft één (of de eerste) rij uit de database tabel, als query object, waarvoor geld dat 'field' = 'value'
    *
    * @param string $field 
    * @param mixed $value
@@ -805,13 +794,13 @@ Class Table_Model extends CI_Model {
    */
   public function get_one_by( $field, $value, $reset = true ) {
     $this->db->where( $field, $value );
-    return $this->get( 0,0, $reset );
+    return $this->get( 1,0, $reset );
   }
   
 
 
   /**
-   * Geeft één rij uit de database tabel, als query_row object, met het meegegeven id
+   * Geeft één rij uit de database tabel, als query object, met het meegegeven id
    *
    * @param int $id
    * @param bool $reset [true] als true dan wordt aan het eind alle instellingen gereset (with,)
@@ -877,7 +866,10 @@ Class Table_Model extends CI_Model {
     
     // pas query info aan
     $this->query_info['num_rows']   = count($result);
-    if ($this->tm_limit==0) $this->query_info['total_rows'] = count($result);
+    // $this->query_info['total_rows'] = count($result);
+    if (isset($this->tm_with['many_to_many'])) {
+      $this->query_info['total_rows'] = $this->total_rows(true,true);
+    }
     
     return $result;
   }
@@ -901,6 +893,7 @@ Class Table_Model extends CI_Model {
   public function get_result( $limit=0, $offset=0 ) {
     $query = $this->get( $limit, $offset, false );
     $result = $this->_make_result_array( $query );
+    $query->free_result();
     $this->reset();
     return $result;
   }
@@ -989,8 +982,9 @@ Class Table_Model extends CI_Model {
    * ------------
    * ->where( 'tbl_links.str_title', 'text' );    // Zoekt het resultaat op het veld 'str_title' uit de many_to_many relatie met tbl_links.
    * ->where( 'tbl_links.id', 3 );                // idem op 'id'
-   * LET OP: deze voorbeelden zoeken snel maar geven geen complete many_to_many resultaten. De resulataten zijn ook alleen maar met de where voorwaarden.
-   * Als je wilt zoeken, maar wel de complete waarden wilt, gebruik dan ->where_exists()
+   * 
+   * LET OP: Bovenstaand many_to_many voorbeelden zijn snel, maar geven many_to_many data die voldoet aan het where statement.
+   * Als je wilt zoeken, maar wel de complete many_to_many data voor een bepaald item gebruik dan ->where_exists()
    *
    * @param string $key 
    * @param mixed $value [NULL]
@@ -1010,10 +1004,7 @@ Class Table_Model extends CI_Model {
 
 
   /**
-   * where_exists zoekt in many_to_many data
-   * - Eerst wordt gezocht in de andere tabel voor de key/value combinatie
-   * - Alle items in de eigen tabel worden getoond waarvan een relatie bestaat met het zoekresultaat
-   * - Alle subitems van de eigen tabel worden getoond
+   * where_exists zoekt in many_to_many data en toont data waarbinnen de zoekcriteria voldoet maar met de complete many_to_many subdata.
    * 
    * many_to_many
    * ------------
@@ -1025,7 +1016,7 @@ Class Table_Model extends CI_Model {
    * @return $this
    * @author Jan den Besten
    */
-  public function where_exists( $key, $value ) {
+  public function where_exists( $key, $value = NULL ) {
     return $this->_where_exists( $key, $value, 'AND');
   }
   
@@ -1039,7 +1030,7 @@ Class Table_Model extends CI_Model {
    * @return void
    * @author Jan den Besten
    */
-  public function or_where_exists( $key, $value ) {
+  public function or_where_exists( $key, $value = NULL ) {
     return $this->_where_exists( $key, $value, 'OR');
   }
   
@@ -1063,11 +1054,18 @@ Class Table_Model extends CI_Model {
    * @return $this
    * @author Jan den Besten
    */
-  protected function _where_exists( $key, $value, $type = 'AND' ) {
+  protected function _where_exists( $key, $value = NULL, $type = 'AND' ) {
+    
+    if (!isset($this->tm_with['many_to_many'])) {
+      $this->reset();
+      throw new ErrorException( 'Table_Model->where_exists(): No `many_to_many` relation set. This is needed when using `where_exists`.' );
+      return $this;
+    }
     $other_table = get_prefix($key,'.');
     $key         = get_suffix($key,'.');
     if (empty($other_table) or empty($key) or $key==$other_table) {
-      throw new ErrorException( 'FA: First argument of `where_exists` needs to be of this format: `table.field`.' );
+      $this->reset();
+      throw new ErrorException( 'Table_Model->where_exists(): First argument of `where_exists` needs to be of this format: `table.field`.' );
     }
     $id                = $this->settings['primary_key'];
     $this_table        = $this->settings['table'];
@@ -1131,6 +1129,8 @@ Class Table_Model extends CI_Model {
    * ------------
    * 
    * Hetzelfde als bij 'many_to_one', vervang alleen het type in 'many_to_many'.
+   * Als dit gecombineerd wordt met ->limit() kan het onverwachte resultaten geven.
+   * Dit kun je voorkomen door ->with_grouped() te gebruiken, zie hieronder.
    * 
    * grouped
    * -------
@@ -1138,14 +1138,14 @@ Class Table_Model extends CI_Model {
    * Een standaard 'many_to_many' $query resultaat (met ->get() en varianten) kan erg veel rows bevatten:
    * voor elke rij in de relatietabel komt er een extra rij in het query resultaat bij.
    * In een result array (met ->get_result() en varianten) wordt dat standaard opgelost door de 'many_to_many' data samen te voegen in een subarray met de naam van de relatietabel.
-   * Maar $query->num_rows is nog steeds te veel.
+   * Nadeel is dat $query->num_rows geen goed resultaat geeft in combinatie met ->limit()
    * 
    * Dit kan op $query niveau opgelost worden door in plaats van ->with() ->with_grouped() te gebruiken.
    * Dan worden de many_to_many data samengevoegd tot één veld onder de naam van de relatietabel.
    * 
    * Voordelen:
    * - $query->num_rows geeft juiste informatie waardoor pagination etc prima werkt.
-   * - Het resultaat is klaar om te tonen in een grid
+   * - Het resultaat is klaar om te tonen in een grid doordat de many_to_many data geen eigen rijen krijgt met dubbele informatie
    * Nadelen:
    * - Het groeperen van de data gebeurt door de data tussen [] te zetten en te scheiden met een komma. De velden worden onderling gescheiden door een |
    * - Deze karakters (met name de | ) kunnen dan niet meer voorkomen in de data zelf.
@@ -1232,7 +1232,8 @@ Class Table_Model extends CI_Model {
         $this->$method( $tables );
       }
       else {
-        throw new ErrorException( 'FA: Method "'.$method.'" does not exists. So the relation cannot be included in the result.' );
+        $this->reset();
+        throw new ErrorException( __CLASS__.'->'.$method.'() does not exists. The `'.$type.'` relation could not be included in the result.' );
       }
     }
     return $this;
@@ -1347,6 +1348,20 @@ Class Table_Model extends CI_Model {
   }
   
   
+  /**
+   * Zelfde als bij Query Builder, met als extra dat de limit instelling wordt bewaard voor intern gebruik.
+   *
+   * @param int $value 
+   * @param int $offset [0]
+   * @return $this
+   * @author Jan den Besten
+   */
+	public function limit($value, $offset = 0) {
+    $this->tm_limit = $value;
+    $this->tm_offset = $offset;
+		return $this;
+	}
+  
   
 
   /* --- Informatieve methods --- */
@@ -1381,37 +1396,14 @@ Class Table_Model extends CI_Model {
    * @return int
    * @author Jan den Besten
    */
-  public function total_rows( $calculate=false ) {
+  public function total_rows( $calculate=false, $grouped=false ) {
     if ($calculate) {
-      $this->query_info['last_query'] = $this->db->last_query();
-      $this->query_info['last_clean_query'] = $this->last_clean_query( $this->query_info['last_query'] );
       // perform simple query count
-      $query = $this->db->query( $this->query_info['last_clean_query'] );
+      $query = $this->db->query( $this->last_clean_query( $grouped ) );
       $total_rows = $query->num_rows();
       return $total_rows;
     }
     return $this->get_query_info('total_rows');
-  }
-  
-  /**
-   * Geeft opgeschoonde last_query()
-   * - Eenvoudiger SELECT met alleen primary_key
-   * - Verwijder WHERE
-   * - Verwijder LIMIT
-   * - Verwijder ORDER BY
-   *
-   * @return string
-   * @author Jan den Besten
-   */
-  public function last_clean_query( $query='' ) {
-    if (empty($query)) $query = $this->db->last_query();
-    $query = preg_replace("/(WHERE.*)GROUP/uUs", " GROUP", $query);
-    $query = preg_replace("/(WHERE.*)ORDER/uUs", " ORDER", $query);
-    $query = preg_replace("/(WHERE.*)LIMIT/uUs", " LIMIT", $query);
-    $query = preg_replace("/SELECT.*FROM/uUs", 'SELECT `'.$this->settings['table'].'`.`'.$this->settings['primary_key'].'` FROM', $query);
-    $query = preg_replace("/LIMIT\s+\d*/us", " ", $query);
-    $query = preg_replace("/ORDER.*/us", "", $query);
-    return $query;
   }
 
   /**
@@ -1422,6 +1414,45 @@ Class Table_Model extends CI_Model {
    */
   public function num_fields() {
     return $this->get_query_info('num_fields');
+  }
+
+
+  /**
+   * Geeft laatst gebruikte query
+   *
+   * @return return
+   * @author Jan den Besten
+   */
+  public function last_query() {
+    if (!isset($this->query_info['last_query'])) {
+      $this->query_info['last_query'] = $this->db->last_query();
+    }
+    return $this->query_info['last_query'];
+  }
+
+  
+  /**
+   * Geeft opgeschoonde last_query()
+   * - Eenvoudiger SELECT met alleen primary_key
+   * - Verwijder LIMIT
+   * - Verwijder ORDER BY
+   *
+   * @return string
+   * @author Jan den Besten
+   */
+  protected function last_clean_query( $grouped=false, $query='' ) {
+    if (empty($query)) $query = $this->last_query();
+    // $query = preg_replace("/(WHERE.*)GROUP/uUs", " GROUP", $query);
+    // $query = preg_replace("/(WHERE.*)ORDER/uUs", " ORDER", $query);
+    // $query = preg_replace("/(WHERE.*)LIMIT/uUs", " LIMIT", $query);
+    $query = preg_replace("/SELECT.*FROM/uUs", 'SELECT `'.$this->settings['table'].'`.`'.$this->settings['primary_key'].'` FROM', $query, 1);
+    $query = preg_replace("/LIMIT\s+\d*/us", " ", $query);
+    $query = preg_replace("/ORDER.*/us", "", $query);
+    if ($grouped and strpos($query,'GROUP BY')===false) {
+      $query.=' GROUP BY `'.$this->settings['table'].'`.`'.$this->settings['primary_key'].'`';
+    }
+    $this->query_info['last_clean_query'] = $query;
+    return $this->query_info['last_clean_query'];
   }
 
 
