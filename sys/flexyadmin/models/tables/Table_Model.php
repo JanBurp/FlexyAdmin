@@ -885,7 +885,7 @@ Class Table_Model extends CI_Model {
    * @return string
    * @author Jan den Besten
    */
-  protected function _fill_path( $result, $key, $path_info ) {
+  protected function _fill_path( &$result, $key, $path_info ) {
     $value = '';
     $parent = $result[$key]['self_parent'];
     if ( $parent>0 ) {
@@ -1417,6 +1417,31 @@ Class Table_Model extends CI_Model {
       $this->join( $rel_table,    $this_table.'.'.$id.' = '.$rel_table.".".$this_foreign_key,     'left');
       $this->join( $other_table,  $rel_table. '.'.$other_foreign_key.' = '.$other_table.".".$id,  'left');
     }
+    return $this;
+  }
+  
+  
+  /**
+   * Zelfde als Query Builder
+   * 
+   * many_to_one
+   * -----------
+   * 
+   * ->order_by( 'tbl_posts__str_title' );
+   * 
+   * many_to_many
+   * ------------
+   * 
+   * ->order_by( 'tbl_posts.str_title' );
+   *
+   * @param string $orderby 
+   * @param string $direction [''] 
+   * @param string $escape [NULL]
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function order_by( $orderby, $direction = '', $escape = NULL ) {
+    $this->db->order_by($orderby,$direction,$escape);
     return $this;
   }
   
