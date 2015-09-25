@@ -12,19 +12,27 @@
  * Enkele belangrijke methods (deels overgeerft van Query Builder):
  * 
  * ->table( $table )                              // Stelt tabel waarvoor het model wordt gebruikt (laad corresponderende settings als die bestaan)
+ * 
  * ->get( $limit=0, $offset=0 )                   // Geeft een $query object (zoals in Query Builder)
  * ->get_where( $where=NULL, $limit=0, $offset=0) // Geeft een $query object (zoals in Query Builder)
  * ->get_result( $limit=0, $offset=0 )            // Geeft een aangepaste $query->result_array, met de key ingesteld als result_key en relatie data als subarray per item
- * ->get_row()                                    // Idem, maar dan maar één item (de eerste in het resultaat)
- * ->get_field( $field )                          // Idem, maar dan van één item alleen de waarde van het gevraagde veld
+ * ->get_row( $where = NULL )                     // Idem, maar dan maar één item (de eerste in het resultaat)
+ * ->get_field( $field, $where = NULL )           // Idem, maar dan van één item alleen de waarde van het gevraagde veld
+ * ->set_result_key( $key='' )                    // Hiermee kan voor ->get_result() de key van de array ingesteld worden op een ander (uniek) veld. Standaard is dat de primary_key
+ * 
+ * ->insert( $set = NULL )                        // Als Query Builder, maar met many_to_many data
+ * ->update( $set=NULL, $where=NULL, $limit=NULL) // idem
+ * ->delete( $where = '', $limit = NULL )         // idem
+ * 
  * ->select( $select = '*' )                      // Maak SELECT deel van de query (zoals in Query Builder)
  * ->select_abstract()                            // Maak SELECT deel van de query door alle abstract_fields te gebruiken (en als die niet zijn ingesteld zelf te genereren)
  * ->path( $path_field, $original_field = '' )    // Geeft een veld aan dat een geheel pad aan waarden moet bevatten in een tree table (bijvoorbeeld een menu)
+ * 
  * ->with( $type='', $tables=array() )            // Voeg relaties toe (many_to_one, many_to_many) en specificeer eventueel van welke tabellen en hun velden
  * ->with_grouped( $type='', $tables=array() )    // Idem, maar dan met gegroepeerde many_to_many data
+ * 
  * ->where($key, $value = NULL)                   // Zoals in Query Builder. Kan ook zoeken in many_to_many data (waar de many_to_many data ook gefilterd is)
  * ->where_exists( $key, $value = NULL )          // Idem met als resultaat dezelfde items maar met complete many_to_many data van dat item (ongefilterd)
- * ->set_result_key( $key='' )                    // Hiermee kan voor ->get_result() de key van de array ingesteld worden op een ander (uniek) veld. Standaard is dat de primary_key
  * 
  * @author: Jan den Besten
  * $Revision$
@@ -153,7 +161,22 @@ Class Table_Model extends CI_Model {
 		parent::__construct();
     $this->_config();
 	}
+
+
   
+  //
+  // TODO
+  // 
+  // van Query Builder:
+  // 
+  // public function insert_batch()
+  // public function update_batch()
+  // public function set_insert_batch()
+  // public function set_update_batch()
+  //
+
+
+
 
 
   /**
