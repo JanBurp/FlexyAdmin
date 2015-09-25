@@ -221,7 +221,9 @@
 	/**
 	 * Use this method instead of field_data() to make sure MySql gives the right information
 	 * see http://codeigniter.com/forums/viewthread/46418/
-	 *
+	 * 
+	 * DEPRICATED -> MOVED TO Table_Model.php
+	 * 
 	 * @param string $table Tablename for which field data is asked
 	 * @param string $key  default=''
 	 * @param string $value default=''
