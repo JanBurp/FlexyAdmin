@@ -39,34 +39,37 @@ class Test extends CI_Controller {
     // $result = $this->db->get_result('tbl_groepen');
 
     // Met table_model
-    $this->table_model->table('tbl_groepen');
-    $this->table_model->with( 'many_to_many' );
+    // $this->table_model->table('tbl_groepen');
+    // $this->table_model->with( 'many_to_many' );
     // $this->table_model->with_grouped( 'many_to_many' );
     // $this->table_model->with_grouped( 'many_to_many', array( 'tbl_adressen' => array('str_zipcode')) );
     // $this->table_model->with_grouped( 'many_to_many', array( 'tbl_adressen' => 'abstract' ) );
     // $this->table_model->where_exists( 'tbl_adressen.str_address', "Schooolstraat 1" );
     // $this->table_model->limit(2);
     // $this->table_model->order_by( 'str_title, tbl_adressen.str_address' );
-    $this->table_model->find( 'park straat', 'tbl_adressen.str_address' );
-    // $query = $this->table_model->get();
-    $result = $this->table_model->get_result();
-    
-    
-    // PATH (full uri)
-    // $this->table_model->table('tbl_menu');
-    // $this->table_model->select('uri,order,self_parent,str_title');
-    // $this->table_model->path( 'path','uri' );
-    // $this->table_model->path( 'str_title' );
-    // $this->table_model->find( '"gelukt om"', array(), true );
+    // $this->table_model->find( 'park straat', 'tbl_adressen.str_address' );
     // $query = $this->table_model->get();
     // $result = $this->table_model->get_result();
     
     
+    // PATH (full uri)
+    $this->table_model->table('tbl_menu');
+    // $this->table_model->select('uri,order,self_parent,str_title');
+    $this->table_model->select_txt_maxlen( 200 );
+    // $this->table_model->path( 'path','uri' );
+    // $this->table_model->path( 'str_title' );
+    // $this->table_model->find( '"gelukt om"', array(), true );
+    // $query = $this->table_model->get();
+    $result = $this->table_model->get_result();
+    
+    // $this->table_model->table('tbl_menu');
+    // $result = $this->table_model->field_data();
+    // $result = $this->table_model->get_defaults();
+    
+    
     trace_( $this->table_model->get_query_info() );
-    if (isset($result))
-      var_dump( $result );
-    else
-      var_dump( $query->result_array() );
+    if (isset($result))  var_dump( $result );
+    if (isset($query))   var_dump( $query->result_array() );
     
     
     return '';

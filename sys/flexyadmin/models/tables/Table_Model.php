@@ -54,12 +54,22 @@ Class Table_Model extends CI_Model {
     'admin_grid'      => array(),
     'admin_form'      => array(),
   );
+  
+  /**
+   * Onthoud eventueel opgevraagde field_data
+   */
+  private $field_data = null;
 
 
   /**
    * Hou SELECT bij om ervoor te zorgen dat SELECT in orde is
    */
   private $tm_select  = false;
+  
+  /**
+   * Maximale lengte van txt velden, 0 is geen aanpassing.
+   */
+  private $tm_txt_maxlen = 0;
   
   /**
    * Hou LIMIT en OFFSET bij om eventueel total_rows te kunnen berekenen
@@ -229,10 +239,10 @@ Class Table_Model extends CI_Model {
       $fields_info[$field] = $field_info;
       $settings_fields_info[$field] = array();
       if (!empty($field_info['str_options'])) {
-        $settings_fields_info[$field]['options'] = $field_info['str_options'];
+        $settings_fields_info[$field]['options'] = explode('|',$field_info['str_options']);
         $settings_fields_info[$field]['multiple_options'] = el('b_multi_options', $field_info, false)?true:false;
       }
-      $settings_fields_info[$field]['validation'] = $this->form_validation->get_validations( $table, $field );
+      $settings_fields_info[$field]['validation'] = explode('|',$this->form_validation->get_validations( $table, $field ));
     }
     return $settings_fields_info;
   }
@@ -745,8 +755,73 @@ Class Table_Model extends CI_Model {
   }
   
   
-  /* --- Methods die query data teruggeven --- */
+  /**
+   * Geeft eventuele opties van een bepaald veld, of van alle velden met opties als geen veld is gegeven.
+   * 
+   * Resultaat bij één veld:
+   * 
+   * array(
+   *  'options'           => array(...),
+   *  'multiple_options'  => [true|false]
+   * )
+   * 
+   * Resultaat bij geen meegegeven veld:
+   * 
+   * array(
+   *    '...veldnaam...' => array( ...zie hierboven... ),
+   *    ....
+   * )
+   *
+   * @param string $field ['']
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_options( $field='' ) {
+    $one = false;
+    if (!empty($field)) {
+      $one = true;
+      $fields = array($field);
+    }
+    else {
+      $fields = array_keys($this->settings['field_info']);
+    }
+    // Collect options
+    $options=array();
+    foreach ($fields as $field) {
+      $field_options = el( array($field,'options'), $this->settings['field_info'] );
+      if ($field_options) {
+        $options[$field] = array_keep_keys( $this->settings['field_info'][$field], array('options','multiple_options') );
+      }
+    }
+    // Return
+    if ($one) {
+      return current($options);
+    }
+    return $options;
+  }
   
+  
+
+  
+  /**
+   * Geeft default waarden van een row. Wordt uit de database gehaald.
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_defaults() {
+    $defaults = array();
+		$fields = $this->settings['fields'];
+		foreach ($fields as $field) {
+      $defaults[$field] = $this->field_data( $field, 'default' );
+		}
+    $defaults[$this->settings['primary_key']] = -1;
+    return $defaults;
+  }
+
+  
+  
+  /* --- Methods die query data teruggeven --- */
   
 
 
@@ -809,6 +884,7 @@ Class Table_Model extends CI_Model {
    * Maakt een mooie result_array van een $query
    * - Met keys die standaard primary_key zijn, of ingesteld kunnen worden met set_result_key()
    * - Met relaties gekoppeld als subarrays
+   * - Als select_txt_maxlen() is ingesteld dan worden die velden ook nog gestript van HTML tags
    *
    * @param object $query 
    * @return array
@@ -872,6 +948,14 @@ Class Table_Model extends CI_Model {
         // Recursive create current path field
         foreach ($this->tm_path as $field => $path_info) {
           $row[$path_info['path_field']] = $this->_fill_path( $paths, $id, $path_info );
+        }
+      }
+      
+      // tm_txt_maxlen
+      if ($this->tm_txt_maxlen>0) {
+        $txt_row = filter_by_key($row,'txt_');
+        foreach ($txt_row as $key => $value) {
+          $row[$key] = strip_tags($value);
         }
       }
       
@@ -988,13 +1072,20 @@ Class Table_Model extends CI_Model {
 
     foreach ($select as $key => $field) {
       // Zorg ervoor dat alle velden geprefixed worden door de eigen tabelnaam om dubbelingen te voorkomen
+      $sql = $field;
       if (in_array($field,$this->settings['fields'])) {
-        $field = $this->settings['table'].'.'.$field;
+        $sql = $this->settings['table'].'.'.$field;
       }
+
+      // tm_txt_maxlen?
+      if ($this->tm_txt_maxlen>0 and get_prefix($field)=='txt') {
+        $sql = 'SUBSTRING(`'.$this->settings['table'].'`.`'.$field.'`,1,'.$this->tm_txt_maxlen.') AS `'.$field.'`';
+      }
+      
       // Bewaar
-      $this->tm_select[] = $field;
+      $this->tm_select[$field] = $sql;
       // Normale select
-      $this->db->select( $field, $escape );
+      $this->db->select( $sql, $escape );
     }
 
 		return $this;
@@ -1010,6 +1101,18 @@ Class Table_Model extends CI_Model {
    */
   public function select_abstract() {
     $this->select( $this->get_compiled_abstract_select(), FALSE );
+    return $this;
+  }
+  
+  /**
+   * Veranderd all txt velden tot een string met een maximale lengte en zonder html tags.
+   *
+   * @param int $txt_maxlen [0]
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function select_txt_maxlen( $txt_maxlen = 0 ) {
+    $this->tm_txt_maxlen = $txt_maxlen;
     return $this;
   }
   
@@ -1635,6 +1738,47 @@ Class Table_Model extends CI_Model {
     $fields = $this->list_fields();
     return in_array( $field, $fields );
   }
+  
+  
+  /**
+   * Een uitgebreidere versie van field_data() bij ->db.
+   * En het resultaat is een array waarvan de keys de veldnamen zijn zodat het eenvoudiger kan worden opgezocht.
+   *
+   * @param string $asked_field ['']
+   * @param string $asked_key ['']
+   * @return array
+   * @author Jan den Besten
+   */
+	public function field_data( $asked_field='', $asked_key='' ) {
+    if (!isset($this->field_data)) {
+      $this->field_data = array();
+			$query = $this->db->query( 'SHOW COLUMNS FROM `'.$this->settings['table'].'`' );
+			foreach ($query->result() as $field) {
+				preg_match('/([^(]+)(\((\d+)\))?/', $field->Type, $matches);
+				$type           = sizeof($matches) > 1 ? $matches[1] : null;
+				$max_length     = sizeof($matches) > 3 ? $matches[3] : null;
+        $info=array(
+  				'name'        => $field->Field,
+  				'type'        => $type,
+  				'default'     => $field->Default,
+  				'max_length'  => $max_length,
+  				'primary_key' => ($field->Key == "PRI") ? 1 : 0,
+  				'extra'       => $field->Extra,
+        );
+        if ( strpos($info['type'],'int')!==false ) {
+          $info['default'] = (int) $info['default'];
+        }
+        $this->field_data[$info['name']] = $info;
+			}
+			$query->free_result();
+		}
+    // return
+    if ($asked_field) {
+      if ($asked_key) return $this->field_data[$asked_field][$asked_key];
+      return $this->field_data[$asked_field];
+    }
+    return $this->field_data;
+	}
   
 
 }
