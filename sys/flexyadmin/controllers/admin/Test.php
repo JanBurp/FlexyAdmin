@@ -17,14 +17,15 @@ class Test extends CI_Controller {
     // // $result = $this->db->get_result('tbl_leerlingen');
     //
     // // Met table_model
-    $this->table_model->table('tbl_leerlingen');
+    // $this->table_model->table('tbl_leerlingen');
     // $this->table_model->select('str_first_name');
     // $this->table_model->select_abstract();
-    $this->table_model->with( 'many_to_one' );
+    // $this->table_model->with( 'many_to_one' );
     // $this->table_model->where( 'id_groepen', 29 );  // 16
     // $this->table_model->where( 'tbl_groepen.str_title', "D" );  // 16
     // $this->table_model->limit(4);
-    $query = $this->table_model->get();
+    // $this->table_model->order_by( 'tbl_groepen__str_title', 'DESC' );
+    // $query = $this->table_model->get();
     // $result = $this->table_model->get_result();
 
     // MANY_TO_MANY
@@ -42,6 +43,7 @@ class Test extends CI_Controller {
     // // $this->table_model->with_grouped( 'many_to_many', array( 'tbl_adressen' => 'abstract' ) );
     // $this->table_model->where_exists( 'tbl_adressen.str_address', "Schooolstraat 1" );
     // $this->table_model->limit(2);
+    // $this->table_model->order_by( 'str_title, tbl_adressen.str_address' );
     // $query = $this->table_model->get();
     // $result = $this->table_model->get_result();
     
