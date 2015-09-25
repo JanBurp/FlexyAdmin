@@ -51,7 +51,7 @@ class Test extends CI_Controller {
     // PATH (full uri)
     $this->table_model->table('tbl_menu');
     $this->table_model->select('uri,order,self_parent,str_title');
-    $this->table_model->path( 'uri' );
+    $this->table_model->path( 'path','uri' );
     $this->table_model->path( 'str_title' );
     $result = $this->table_model->get_result();
     

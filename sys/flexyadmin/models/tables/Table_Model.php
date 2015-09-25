@@ -819,7 +819,13 @@ Class Table_Model extends CI_Model {
     $has_many_to_many = !empty($this->tm_with['many_to_many']);
     $many_data = array();
     
+    if ($this->tm_path) {
+      $paths=array();
+      $needed_path_fields = array_merge(array_keys($this->tm_path),array($this->settings['primary_key'],'self_parent'));
+    }
+    
     foreach ( $query->result_array() as $row ) {
+      $id = $row[$this->settings['primary_key']];
       $result_key = $row[$key];
       
       // many_to_many als subarrays toevoegen aan row
@@ -851,20 +857,19 @@ Class Table_Model extends CI_Model {
         }
       }
       
+      // path
+      if ($this->tm_path)  {
+        // Remember current row with necessary fields
+        $paths[$id] = array_keep_keys($row,$needed_path_fields);
+        // Recursive create current path field
+        foreach ($this->tm_path as $field => $path_info) {
+          $row[$path_info['path_field']] = $this->_fill_path( $paths, $id, $path_info );
+        }
+      }
+      
       // result_key
       $result[ $result_key ] = $row;
     }
-    
-    
-    // path (kan pas als result met result_key benaderbaar is, vandaar de extra loop)
-    if ($this->tm_path) {
-      foreach ($result as $key => $row) {
-        foreach ($this->tm_path as $field => $path_info) {
-          $result[$key][$path_info['path_field']] = $this->_fill_path( $result, $key, $path_info );
-        }
-      }
-    }
-    
     
     // pas query info aan
     $this->query_info['num_rows']   = count($result);
