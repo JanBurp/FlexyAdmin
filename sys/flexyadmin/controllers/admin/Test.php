@@ -4,11 +4,13 @@ class Test extends CI_Controller {
 	
 	public function __construct()	{
 		parent::__construct();
+    $this->load->library('user');
     $this->load->model('cfg');
     $this->load->model('tables/table_model');
 	}
   
   public function index() {
+    if (!$this->user->is_super_admin()) return;
     
     // MANY_TO_ONE
     
