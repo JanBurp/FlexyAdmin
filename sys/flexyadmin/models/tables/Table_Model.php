@@ -780,6 +780,7 @@ Class Table_Model extends CI_Model {
     $this->query_info['num_rows'] = $query->num_rows();
     $this->query_info['total_rows'] = $query->num_rows();
     $this->query_info['num_fields'] = $query->num_fields();
+    $this->query_info['last_query'] = $this->last_query();
     if ($this->tm_limit>0) {
       $this->query_info['total_rows'] = $this->total_rows( true );
     }
@@ -1164,6 +1165,52 @@ Class Table_Model extends CI_Model {
       $this->db->or_where( $sql, NULL, false );
     else
       $this->db->where( $sql, NULL, false );
+    return $this;
+  }
+  
+  /**
+   * Zoekt de gevraagde zoekterm(en).
+   * Bouwt een uitgebreide zoekquery op.
+   * 
+   * Voorbeelden van $by:
+   * 
+   * - zoek                     // Zoekt naar 'zoek'
+   * - zoek ook                 // Zoekt naar 'zoek' of 'ook'
+   * - "zoek ook"               // Zoekt naar 'zoek ook'      
+   * - array( 'zoek ook' )      // Zoekt naar 'zoek' of 'ook'
+   * - array( 'zoek', 'ook' )   // Zoekt naar 'zoek' of 'ook'
+   * - array( '"zoek ook"' )    // Zoekt naar 'zoek ook'
+   * 
+   * @param mixed $by 
+   * @param array $fields Kan ook in relatietabellen zoeken, bijvoorbeeld 'tbl_links.str_title' als een veld in een gerelateerde tabel
+   * @param bool $word_boundaries 
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function find( $by, $fields = array(), $word_boundaries = FALSE ) {
+    if ( empty($fields) ) $fields = $this->settings['fields'];
+    if (is_string($fields)) $fields = array($fields);
+
+    // Maak tot een lange string gescheiden door spaties
+    if ( is_array($by) ) $by = implode(' ',$by);
+    // Splits de termen (behalve die tussen quotes)
+    $by=preg_split('~(?:"[^"]*")?\K[/\s]+~', ' '.$by.' ', -1, PREG_SPLIT_NO_EMPTY );
+    
+    // Bouw query op voor elke term
+    foreach ($by as $term) {
+      $term = trim($term,'"');
+      foreach ($fields as $field) {
+        // Plak tabelnaam voor veld, als dat nog niet zo is, en escape
+        if (strpos($field,'.')===false) $field = $this->settings['table'].'.'.$field;
+        $field = $this->db->protect_identifiers($field);
+        // LIKE of REGEXP (word boundaries)
+        if ($word_boundaries)
+          $this->db->or_where( $field.' REGEXP \'[[:<:]]'.$term.'[[:>:]]\'', NULL, false);
+        else
+          $this->db->or_like( $field, $term, 'both', false);
+      }
+    }
+    
     return $this;
   }
 
