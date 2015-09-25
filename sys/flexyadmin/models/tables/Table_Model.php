@@ -6,7 +6,7 @@
  * - Standaard get/crud zit in het model, voor elke tabel hetzelfde.
  * - Iedere tabel kan deze overerven en aanpassen naar wens, de aanroepen blijven hetzelfde voor iedere tabel.
  * - Alle query-builder methods (en db methods) kunnen worden gebruikt met het model. Als je CodeIgniter kent, ken je dit model al bijna.
- * - Naast ->get() die een query object teruggeeft ook ->get_result() die een aangepaste result array teruggeeft met eventuele many_to_many data als subarray.
+ * - Naast ->get() die een query object teruggeeft ook ->get_result() die een aangepaste result array teruggeeft met relatie data als subarray.
  * 
  * 
  * Enkele belangrijke methods (deels overgeerft van Query Builder):
@@ -14,7 +14,7 @@
  * ->table( $table )                              // Stelt tabel waarvoor het model wordt gebruikt (laad corresponderende settings als die bestaan)
  * ->get( $limit=0, $offset=0 )                   // Geeft een $query object (zoals in Query Builder)
  * ->get_where( $where=NULL, $limit=0, $offset=0) // Geeft een $query object (zoals in Query Builder)
- * ->get_result( $limit=0, $offset=0 )            // Geeft een aangepaste $query->result_array, met de key ingesteld als result_key en many_to_many data als subarray per item
+ * ->get_result( $limit=0, $offset=0 )            // Geeft een aangepaste $query->result_array, met de key ingesteld als result_key en relatie data als subarray per item
  * ->get_row()                                    // Idem, maar dan maar één item (de eerste in het resultaat)
  * ->get_field( $field )                          // Idem, maar dan van één item alleen de waarde van het gevraagde veld
  * ->select( $select = '*' )                      // Maak SELECT deel van de query (zoals in Query Builder)
@@ -817,8 +817,7 @@ Class Table_Model extends CI_Model {
   private function _make_result_array( $query ) {
     $key = el( 'result_key', $this->settings, el( 'primary_key',$this->settings ) );
     $result = array();
-    $has_many_to_many = !empty($this->tm_with['many_to_many']);
-    $many_data = array();
+    $with_data = array();
     
     if ($this->tm_path) {
       $paths=array();
@@ -830,31 +829,39 @@ Class Table_Model extends CI_Model {
       $result_key = $row[$key];
       
       // many_to_many als subarrays toevoegen aan row
-      if ($has_many_to_many) {
-        foreach ($this->tm_with['many_to_many'] as $other_table => $info) {
-          if (!$info['grouped']) {
-            $fields   = $info['fields'];
-            // split row and many data
-            $row_many_data = filter_by_key( $row, $other_table );
-            $row = array_diff( $row, $row_many_data );
-            // process many data
-            foreach ($row_many_data as $oldkey => $values) {
-              $newkey = remove_prefix( $oldkey, '__');
-              $row_many_data[$newkey] = $values;
-              unset($row_many_data[$oldkey]);
-            }
-            // remember many data
-            if ( isset($row_many_data[ $this->settings['primary_key'] ]) ) {
-              $many_data[$result_key][$row_many_data[$this->settings['primary_key']]] = $row_many_data;
-            }
-            else {
-              $many_data[$result_key][]=$row_many_data;
+      if ($this->tm_with) {
+        foreach ($this->tm_with as $with_type => $this_with) {
+          // if ($with_type=='many_to_one') break; // Hier wordt besloten of many_to_one ook in array gaat of niet.
+          foreach ($this_with as $other_table => $info) {
+            if ( ! el('grouped',$info,false) ) {
+              $fields   = $info['fields'];
+              // split row and with data
+              $row_with_data = filter_by_key( $row, $other_table );
+              $row = array_diff( $row, $row_with_data );
+              // process with data
+              foreach ($row_with_data as $oldkey => $values) {
+                $newkey = remove_prefix( $oldkey, '__');
+                $row_with_data[$newkey] = $values;
+                unset($row_with_data[$oldkey]);
+              }
+              // remember with data
+              if ($with_type=='many_to_one') {
+                $with_data[$result_key][$other_table] = $row_with_data;
+              }
+              else {
+                if ( isset($row_with_data[ $this->settings['primary_key'] ]) ) {
+                  $with_data[$result_key][$other_table][$row_with_data[$this->settings['primary_key']]] = $row_with_data;
+                }
+                else {
+                  $with_data[$result_key][$other_table][] = $row_with_data;
+                }
+              }
             }
           }
-        }
-        if (isset($many_data[$result_key])) {
-          if (!isset($row[$other_table])) $row[$other_table] = array();
-          $row[$other_table] = array_unique_multi($many_data[$result_key]);
+          // Merge with data met normale data in row
+          if (isset($with_data[$result_key])) {
+            $row = array_merge($row,$with_data[$result_key]);
+          }
         }
       }
       
@@ -905,9 +912,8 @@ Class Table_Model extends CI_Model {
   /**
    * Geeft resultaat terug als result array
    * - array key is standaard de PRIMARY KEY maar kan ingesteld worden met $this->set_result_key()
-   * - voor many_to_many en has_many wordt resultaat sub arrays in het resultaat.
+   * - relatie data komt als sub arrays in het resultaat per relatietabel
    * 
-   * NB Gebruikt relatief veel resources.
    * Bij voorkeur niet gebruiken als resources belangrijk zijn.
    * Of alleen bij kleine resultaten en/of in combinatie met limit / pagination.
    *
@@ -1260,8 +1266,7 @@ Class Table_Model extends CI_Model {
    * grouped
    * -------
    * 
-   * Een standaard 'many_to_many' $query resultaat (met ->get() en varianten) kan erg veel rows bevatten:
-   * voor elke rij in de relatietabel komt er een extra rij in het query resultaat bij.
+   * Een standaard 'many_to_many' $query resultaat (met ->get() en varianten) kan erg veel rows bevatten: voor elke rij in de relatietabel komt er een extra rij in het query resultaat bij.
    * In een result array (met ->get_result() en varianten) wordt dat standaard opgelost door de 'many_to_many' data samen te voegen in een subarray met de naam van de relatietabel.
    * Nadeel is dat $query->num_rows geen goed resultaat geeft in combinatie met ->limit()
    * 
