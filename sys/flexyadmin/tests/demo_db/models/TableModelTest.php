@@ -283,6 +283,67 @@ class TableModelTest extends CITestCase {
 
   }
   
+  
+  
+  
+  public function test_crud() {
+    
+    $this->CI->table_model->table('tbl_crud');
+    
+    // INSERT
+    $random_string = 'INSERT '.random_string();
+    $this->CI->table_model->set( array('str_insert'=>$random_string ) );
+    $this->CI->table_model->insert();
+    $insert_id = $this->CI->table_model->insert_id();
+    $this->assertGreaterThan( 0, $insert_id ); // Succes of niet...
+    // check of de data id hetzelfde is
+    $value = $this->CI->table_model->get_field( 'str_insert', array('id'=>$insert_id));
+    $this->assertEquals( $value, $random_string );
+    
+    // UPDATE
+    $random_string = 'UPDATE '.random_string();
+    $this->CI->table_model->set( array('str_update'=>$random_string ) );
+    $this->CI->table_model->where( 'id', $insert_id );
+    $this->CI->table_model->update();
+    // check of de data hetzelfde is
+    $this->assertEquals( 1, $this->CI->table_model->affected_rows() );
+    $value = $this->CI->table_model->get_field( 'str_update', array('id'=>$insert_id));
+    $this->assertEquals( $value, $random_string );
+
+    // UPDATE BOTH in een aanroep
+    $insert_string = 'INSERT '.random_string();
+    $update_string = 'UPDATE '.random_string();
+    $this->CI->table_model->update( array( 'str_insert'=>$insert_string, 'str_update'=>$update_string ), array( 'id' => $insert_id ) );
+    // check of de data hetzelfde is
+    $this->assertEquals( 1, $this->CI->table_model->affected_rows() );
+    $row = $this->CI->table_model->select('id,str_insert,str_update')->get_row( array('id'=>$insert_id) );
+    $this->assertEquals( array( 'id'=>$insert_id, 'str_insert'=>$insert_string, 'str_update'=>$update_string ), $row );
+
+    // UPDATE Meerdere
+    $insert_string = 'INSERT '.random_string();
+    $update_string = 'UPDATE '.random_string();
+    $this->CI->table_model->like( 'str_update', 'UPDATE', 'both');
+    $this->CI->table_model->update( array( 'str_insert'=>$insert_string, 'str_update'=>$update_string ) );
+    // check of de data hetzelfde is
+    $this->assertGreaterThanOrEqual( 1, $this->CI->table_model->affected_rows() );
+    $row = $this->CI->table_model->select('id,str_insert,str_update')->get_row( array('id'=>$insert_id) );
+    $this->assertEquals( array( 'id'=>$insert_id, 'str_insert'=>$insert_string, 'str_update'=>$update_string ), $row );
+    
+    // INSERT / UPDATE many_to_many
+    
+    
+    // DELETE
+    $this->CI->table_model->like( 'str_update', 'UPDATE', 'both');
+    $this->CI->table_model->limit( 1 );
+    $this->CI->table_model->delete();
+    $this->assertEquals( 1, $this->CI->table_model->affected_rows() );
+    
+    
+    
+    
+    
+  }
+  
 
 
 }

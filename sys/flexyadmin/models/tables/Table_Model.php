@@ -59,6 +59,11 @@ Class Table_Model extends CI_Model {
    * Onthoud eventueel opgevraagde field_data
    */
   private $field_data = null;
+  
+  /**
+   * Onthoud eventueel al opgezochte relatie tabellen
+   */
+  private $relation_tables = array();
 
 
   /**
@@ -102,14 +107,41 @@ Class Table_Model extends CI_Model {
    * )
    */
   private $tm_with    = array();
+
+
+  /**
+   * Set array voor insert/update
+   */
+  private $tm_set     = NULL;
+
   
   /**
-   * Bewaart hier na elke get_result() (en varianten) informatie over het query resultaat.
+   * Moet de data voor een insert/update eerste gevalideerd worden?
+   */
+  private $validation   = false;
+  
+  /**
+   * Is nodig om eventueel te kunnen instellen in de database wie iets heeft aangepast
+   */
+  private $user_id = null;
+  
+
+  
+  /**
+   * Bewaart informatie van bepaalde methods
+   * 
+   * ->get_result() (en varianten):
+   * ------------------------------  
    * - num_rows           - Zelfde als $query->num_rows()
    * - total_rows         - Idem, maar nu zonder limit
    * - num_fields         - Zelfde als $query->num_fields()
    * (- last_query)       - Alleen als nodig is geweest voor het berekenen van total_rows
    * (- last_clean_query) - Alleen als nodig is geweest voor het berekenen van total_rows
+   * 
+   * ->insert() / ->update():
+   * ------------------------
+   * - validation         - TRUE/FALSE, alleen als $this->validate() bij
+   * - validation_errors  - Als 'validation' = FALSE, dan staan hier foutmeldingen
    */
   private $query_info = array();
   
@@ -576,6 +608,31 @@ Class Table_Model extends CI_Model {
     $this->settings['table'] = $table;
     return $this;
   }
+
+  /**
+   * Stel (eventueel automatisch) een user_id in.
+   * Dat is nodig voor het bijhouden van wie wat heeft aangepast.
+   *
+   * @param int $user_id [FALSE]
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function set_user_id( $user_id = false ) {
+    if ( $user_id === false ) {
+      $this->user_id = false; // we hebben het iig gebrobeerd in te stellen
+      if (defined('PHPUNIT_TEST')) {
+        $this->user_id = 0; // TESTER
+      }
+      else {
+        $this->load->library('user');
+        $user_info = $this->user->get_user();
+        if ($user_info) {
+          $this->user_id = $user_info->id;
+        }
+      }
+    }
+    return $this;
+  }
   
 
 
@@ -652,6 +709,7 @@ Class Table_Model extends CI_Model {
     foreach ( $foreign_keys as $foreign_key ) {
       $tables[] = 'tbl_'.remove_prefix($foreign_key);
     }
+    $this->relation_tables['many_to_one'] = $tables;
     return $tables;
   }
 
@@ -666,11 +724,13 @@ Class Table_Model extends CI_Model {
   protected function _get_many_to_many_tables() {
     $rel_tables = $this->db->list_tables();
     $rel_tables = filter_by( $rel_tables, 'rel_'.remove_prefix($this->settings['table']) );
+    $this->relation_tables['many_to_many__rel'] = $rel_tables;
     $tables = array();
     foreach ($rel_tables as $rel_table) {
       $other_table = 'tbl_'.get_suffix($rel_table,'__');
       $tables[] = $other_table;
     }
+    $this->relation_tables['many_to_many'] = $tables;
     return $tables;
   }
   
@@ -1018,11 +1078,13 @@ Class Table_Model extends CI_Model {
 
   /**
    * Zelfde als get_result(), maar geeft nu alleen maar de eerstgevonden rij.
-   *
+   * 
+   * @param mixed $where [NULL]
    * @return array
    * @author Jan den Besten
    */
-  public function get_row() {
+  public function get_row( $where = NULL ) {
+    if ($where) $this->where( $where );
     $result = $this->get_result( 1 );
     return current($result);
   }
@@ -1032,12 +1094,13 @@ Class Table_Model extends CI_Model {
    * Zelfde als ->get_row() maar geeft alleen de waarde van het gevraagde field terug
    *
    * @param string $field 
+   * @param mixed $where [NULL]
    * @return mixed
    * @author Jan den Besten
    */
-	public function get_field( $field ) {
+	public function get_field( $field, $where = NULL ) {
     $this->select( $field );
-    $row = $this->get_row();
+    $row = $this->get_row( $where );
 		return $row[$field];
 	}
 
@@ -1143,7 +1206,7 @@ Class Table_Model extends CI_Model {
   public function path( $path_field, $original_field = '', $split = '/' ) {
     if ( !$this->field_exists('order') and !$this->field_exists('order') ) {
       $this->reset();
-      throw new ErrorException( 'Table_Model->path(): Table is not a tree table. (tables whith the fields `order` and `self_parent`)' );
+      throw new ErrorException( __CLASS__.'->'.$method.'() table is not a tree table. (tables whith the fields `order` and `self_parent`)' );
       return $this;
     }
     if (empty($original_field)) $original_field = $path_field;
@@ -1246,14 +1309,14 @@ Class Table_Model extends CI_Model {
     
     if (!isset($this->tm_with['many_to_many'])) {
       $this->reset();
-      throw new ErrorException( 'Table_Model->where_exists(): No `many_to_many` relation set. This is needed when using `where_exists`.' );
+      throw new ErrorException( __CLASS__.'->'.$method.'(): No `many_to_many` relation set. This is needed when using `where_exists`.' );
       return $this;
     }
     $other_table = get_prefix($key,'.');
     $key         = get_suffix($key,'.');
     if (empty($other_table) or empty($key) or $key==$other_table) {
       $this->reset();
-      throw new ErrorException( 'Table_Model->where_exists(): First argument of `where_exists` needs to be of this format: `table.field`.' );
+      throw new ErrorException( __CLASS__.'->'.$method.'(): First argument of `where_exists` needs to be of this format: `table.field`.' );
     }
     $id                = $this->settings['primary_key'];
     $this_table        = $this->settings['table'];
@@ -1621,6 +1684,317 @@ Class Table_Model extends CI_Model {
 	}
   
   
+  
+  /* --- CRUD methods --- */
+  
+  
+  /**
+   * Insert & Update data moet eerst worden gevalideerd (als true).
+   *
+   * @param bool $validation [true]
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function validate( $validation = true ) {
+    $this->validation = $validation;
+    if ( $this->validation ) $this->load->library('form_validation');
+    return $this;
+  }
+  
+  
+  
+  /**
+   * Zelfde als Query Builder, behalve:
+   * - relatie kan als subarray mee met de set
+   * - $key kan geen object zijn
+   *
+   * @param mixed $key 
+   * @param mixed $value 
+   * @param mixed $escape 
+   * @return $this
+   * @author Jan den Besten
+   */
+	public function set($key, $value = '', $escape = NULL) {
+		if ( ! is_array($key)) $key = array($key => $value);
+    $this->tm_set = $key;
+		return $this;
+	}
+
+  
+  
+	/**
+	 * Zelfde als in Query Builder, maar ook met meegenomen relatiedata
+	 *
+	 * @param array $set [NULL]
+	 * @param mixed $escape [NULL]
+	 * @return $this
+	 * @author Jan den Besten
+	 */
+  public function insert( $set = NULL, $escape = NULL ) {
+    return $this->_update_insert( 'INSERT', $set );
+	}
+  
+
+  /**
+   * Zelfde als in Query Builder, maar ook met meegeniomen relatiedata
+   *
+   * @param array $set [NULL]
+   * @param string $where [NULL]
+   * @param int $limit [NULL]
+   * @return $this
+   * @author Jan den Besten
+   */
+	public function update($set = NULL, $where = NULL, $limit = NULL) {
+    return $this->_update_insert( 'UPDATE', $set, $where, $limit);
+	}
+
+  /**
+   * Voert insert/update uit
+   *
+   * @param string $type [INSERT|UPDATE]
+   * @param array $set = NULL
+   * @param mixed $where = NULL
+   * @param int $limit = NULL
+   * @return int $id
+   * @author Jan den Besten
+   */
+	protected function _update_insert( $type, $set = NULL, $where = NULL, $limit = NULL ) {
+
+    // Is een type meegegeven?
+    $types = array('INSERT','UPDATE');
+    if ( ! in_array($type,$types) ) {
+      throw new ErrorException( __CLASS__.'->'.$method.'(): no type set, should be one of `'.implode(',',$types).'`' );
+    }
+    
+    // Is er een data set?
+    if ($set) $this->set( $set );
+    if (empty( $this->tm_set )) {
+      throw new ErrorException( __CLASS__.'->'.$method.'(): no data set for `'.$type.'`. Use ->set()' );
+    }
+    
+    /**
+     * Ok we kunnen! Stel nog even alles in...
+     */
+    if ($where) $this->where( $where );
+    if ($limit) $this->limit( $limit );
+    $id = false;
+		$set = $this->tm_set;
+
+
+		/**
+		 * Stel nieuwe volgorde van een item in, indien nodig
+		 */
+    if ( $type=='INSERT' and isset( $set["order"]) ) {
+      $this->load->model('order','_order');
+      if ( isset( $set["self_parent"]) ) { 
+        $set["order"] = $this->_order->get_next_order( $this->settings['table'], $set["self_parent"]);
+      }
+      else {
+        $set["order"] = $this->_order->get_next_order( $this->settings['table'] );
+      }
+    }
+      
+    /**
+     * Valideer eventueel eerst de set
+     */
+    if ( $this->validation ) {
+      if ( ! $this->form_validation->validate_data( $set, $this->settings['table'] ) ) {
+        $this->query_info = array(
+          'validation'        => FALSE,
+          'validation_errors' => $this->form_validation->get_error_messages()
+        );
+        return FALSE; // CHECK Heeft dit zin? Hij moet iig hier afbreken.
+      }
+    }
+      
+
+    /**
+     * Split eventuele many_to_many data
+     */
+    $many_to_many = filter_by_key( $this->tm_set, 'rel'); // CHECK, is dit de manier? of nu juist met 'tbl_'
+    $set = array_diff( $set, $many_to_many);
+
+      
+    /**
+     * Start updating the data
+     */
+    $this->db->trans_start();
+		
+    
+    /**
+     * Bij INSERT is primary_key niet nodig, haal die weg mocht die er zijn.
+     */
+		if ( $type=='INSERT' ) unset( $set[ $this->settings['primary_key']] );
+    
+
+    /**
+     * Verwijder lege wachtwoorden, zodat die niet overschreven worden in de db
+     * TODO/CHECK: Verhuis dit naar cfg_users
+     */
+    foreach ( $set as $key => $value ) {
+      if ( empty($value) and in_array(get_prefix($key), $this->config->item('PASSWORD_field_types') ) ) {
+        unset( $set[$key] );
+      }
+    }
+        
+    /**
+     * Verwijder data die NULL is of waarvan het veld niet in de table bestaat.
+     */
+    foreach ( $set as $key => $value ) {
+      if ( !isset($value) or !$this->field_exists( $key) ) unset( $set[$key] );
+    }
+    
+    
+    /**
+     * Ga door als de set niet leeg is
+     */
+    if (!empty($set)) {
+      
+      /**
+       * Voeg user_changed data toe als bekend is en veld bestaat
+       */
+      if ( $this->field_exists('user_changed')) {
+        if ( !isset( $this->user_id )) {
+          $this->set_user_id();
+        }
+        if ( $this->user_id!==false ) $set['user_changed'] = $this->user_id;
+      }
+      
+      /**
+       * Eerste timestamp gebeurt niet automatisch in database, dus hier doen als nodig.
+       */
+      if ($type=='INSERT' and $this->field_exists('tme_last_changed')) {
+        $set['tme_last_changed'] = date(DATE_W3C);
+      }
+          
+
+      /**
+       * Eindelijk, we kunnen de set instellen...
+       */
+      $this->db->set($set);
+      
+      /**
+       * En de INSERT of UPDATE doen
+       */
+      if ($type=='INSERT') {
+				$this->db->insert( $this->settings['table'] );
+				$id = $this->db->insert_id();
+        $this->query_info = array(
+          'insert_id' => $id
+        );
+			}
+    	else {
+				$this->db->update( $this->settings['table'] );
+        $this->query_info = array(
+          'affected_rows' => $this->db->affected_rows()
+        );
+			}
+      
+			/**
+			 * Als er many_to_many data is, update/insert die ook
+			 */
+			if ( ! empty($many_to_many) ) {
+        
+        /**
+         * Er moet een id zijn om verder te kunnen TODO CHECK
+         */
+        if ( ! $id ) $id=$this->_get_id();
+
+				foreach( $many_to_many as $rel_table => $value) {
+          // Value moet een array zijn
+					if ( ! is_array($value) ) $value=explode('|',$value);
+					// DELETE eerst huidige items
+					$this_foreign_key = this_key_from_rel_table($rel_table);
+					$other_foreign_key = join_key_from_rel_table($rel_table);
+          // if ( $this_foreign_key==$other_foreign_key ) $other_foreign_key.="_"; // TODO : self relaties
+					$this->db->where( $this_foreign_key, $id );
+					$this->db->delete( $rel_table );
+					// INSERT dan nieuwe items
+					foreach ( $value as $other_data ) {
+            $other_id = $other_data;
+            if (is_array($other_data)) $other_id = $other_data[$this->settings['primary_key']];
+						$this->db->set( $this_foreign_key,$id );
+						$this->db->set( $other_foreign_key,$other_id );
+						$this->db->insert($rel_table);
+            // $rel_id=$this->db->insert_id();
+					}
+				}
+			}
+
+			/**
+			 * Data is updated/inserted.
+			 */
+			$this->db->trans_complete();
+		}
+    
+    // Geef id terug, dat is anders dat bij Query Builder
+		return intval($id);
+	}
+  
+  
+  /**
+   * Net als Query Builder, en ook:
+   * - verwijderd ook bijbehorende many_to_many data
+   *
+   * @param mixed $where ['']
+   * @param int $limit [NULL]
+   * @param bool $reset_data 
+   * @return void
+   * @author Jan den Besten
+   */
+	public function delete( $where = '', $limit = NULL, $reset_data = TRUE) {
+    if ($where) $this->where( $where );
+    if ($limit) $this->limit( $limit );
+
+    $is_ordered_table = $this->field_exists( 'order' );
+    if ($is_ordered_table) $this->load->model('order','_order');
+      
+		/**
+		 * Verwijder uit database
+		 */
+    $this->db->trans_start();			
+
+		$is_deleted = $this->db->delete( $this->settings['table'], '', NULL, $reset_data );
+    $this->query_info = array(
+      'affected_rows' => $this->db->affected_rows()
+    );
+
+		if ($is_deleted) {
+
+  		/**
+  		 * Reset volgorde
+  		 */
+  		if ( $is_ordered_table ) {
+  		  $this->query_info['moved_rows'] = $this->_order->reset( $this->settings['table'] );
+  		}
+
+			/**
+			 * Als er many_to_many is, verwijder die ook
+			 */
+			$other_tables = $this->get_relation_tables( 'many_to_many' );
+			if ( ! empty($other_tables) ) {
+        $this_foreign_key = $this->settings['primary_key'].'_'.remove_prefix( $this->settings['table'] );
+        $rel_tables = $this->relation_tables['many_to_many__rel'];
+        $affected = 0;
+				foreach ( $rel_tables as $rel_table => $rel_item ) {
+					$this->db->where( $rel_item[ $this_foreign_key ], $id );
+					$this->db->delete( $rel_table );
+          $affected += $this->db->affected_rows();
+				}
+        $this->query_info['affected_rel_rows'] = $affected;
+			}
+      
+    }
+    
+    $this->db->trans_complete();
+		return $is_deleted;
+	}
+  
+  
+  
+  
+  
+  
 
   /* --- Informatieve methods --- */
   
@@ -1634,6 +2008,28 @@ Class Table_Model extends CI_Model {
   public function get_query_info( $what='' ) {
     if (!empty($what)) return el($what,$this->query_info);
     return $this->query_info;
+  }
+  
+  
+  /**
+   * Geeft insert_id
+   *
+   * @return int
+   * @author Jan den Besten
+   */
+  public function insert_id() {
+    return $this->get_query_info('insert_id');
+  }
+  
+  
+  /**
+   * Geeft affected_rows
+   *
+   * @return int
+   * @author Jan den Besten
+   */
+  public function affected_rows() {
+    return $this->get_query_info('affected_rows');
   }
   
   
