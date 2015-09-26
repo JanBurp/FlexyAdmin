@@ -1,6 +1,6 @@
-<?php 
+<?php require_once(APPPATH."core/AdminController.php");
 
-class Test extends CI_Controller {
+class Test extends AdminController {
 	
 	public function __construct()	{
 		parent::__construct();
@@ -53,18 +53,26 @@ class Test extends CI_Controller {
     
     
     // PATH (full uri)
-    $this->table_model->table('tbl_menu');
+    // $this->table_model->table('tbl_menu');
     // $this->table_model->select('uri,order,self_parent,str_title');
-    $this->table_model->select_txt_maxlen( 200 );
+    // $this->table_model->select_txt_maxlen( 200 );
     // $this->table_model->path( 'path','uri' );
     // $this->table_model->path( 'str_title' );
     // $this->table_model->find( '"gelukt om"', array(), true );
     // $query = $this->table_model->get();
+    // $result = $this->table_model->get_result();
+    
+    $this->table_model->table('tbl_links');
+    $this->table_model->select_abstract();
     $result = $this->table_model->get_result();
     
-    // $this->table_model->table('tbl_menu');
-    // $result = $this->table_model->field_data();
-    // $result = $this->table_model->get_defaults();
+    
+    // UPDATE
+    // $this->table_model->table('tbl_crud');
+    // $this->table_model->set('str_insert','TEST');
+    // $this->table_model->limit(5);
+    // $this->table_model->update();
+    
     
     
     trace_( $this->table_model->get_query_info() );

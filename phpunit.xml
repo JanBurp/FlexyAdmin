@@ -28,6 +28,7 @@
     <testsuite name="commit">
       <directory suffix="Test.php">sys/flexyadmin/tests/fast</directory>
       <directory suffix="Test.php">sys/flexyadmin/tests/commit</directory>
+      <file>sys/flexyadmin/tests/demo_db/models/TableModelTest.php</file>
       <file>site/tests/frontend/DebugTest.php</file>
 		</testsuite>
 
@@ -40,12 +41,6 @@
     <testsuite name="demo_db">
       <directory suffix="Test.php">sys/flexyadmin/tests/demo_db</directory>
 		</testsuite>
-
-    <!-- Heavy testing: auth, api, which assumes the demo database is present -->
-    <testsuite name="core">
-      <directory suffix="Test.php">sys/flexyadmin/tests/core</directory>
-		</testsuite>
-
     
 	</testsuites>
   
