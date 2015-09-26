@@ -70,6 +70,12 @@ class TableModelTest extends CITestCase {
     $query = $this->CI->table_model->select_abstract()->get();
     $this->assertEquals( 5, $query->num_rows() );
     $this->assertEquals( 2, $query->num_fields() );
+    
+    // tbl_links
+    $this->CI->table_model->table( 'tbl_links' );
+    // ->get_abstract_fields()
+    $abstract_fields = $this->CI->table_model->get_abstract_fields();
+    $this->assertEquals( array('str_title'), $abstract_fields );
   }
   
   
@@ -329,18 +335,42 @@ class TableModelTest extends CITestCase {
     $row = $this->CI->table_model->select('id,str_insert,str_update')->get_row( array('id'=>$insert_id) );
     $this->assertEquals( array( 'id'=>$insert_id, 'str_insert'=>$insert_string, 'str_update'=>$update_string ), $row );
     
-    // INSERT / UPDATE many_to_many
-    
+    // INSERT many_to_many
+    $insert_string = '_INSERT '.random_string();
+    $update_string = '_UPDATE '.random_string();
+    $nr_others = rand(3,6);
+    $other_ids  = array();
+    for ($i=0; $i < $nr_others; $i++) { 
+      $other_ids[] = $this->CI->db->random_field_value( 'id_crud2', array() );
+    }
+    $set = array(
+      'str_insert' => $insert_string,
+      'str_update' => $update_string,
+      'tbl_crud2'  => $other_ids,
+    );
+    $this->CI->table_model->insert( $set );
+    $insert_id = $this->CI->table_model->insert_id();
+    // check of de data hetzelfde is
+    $this->assertGreaterThanOrEqual( 1, $insert_id );
+    $this->assertEquals( $nr_others, $this->CI->table_model->get_query_info('affected_rel_rows') );
+    $row = $this->CI->table_model->select('id,str_insert,str_update')->with('many_to_many')->where( 'tbl_crud.id',$insert_id )->get_row();
+    $this->assertInternalType( 'array', $row );
+    $this->assertEquals( $insert_id, $row['id'] );
+    $this->assertEquals( $insert_string, $row['str_insert'] );
+    $this->assertInternalType( 'array', $row['tbl_crud2'] );
+    $this->assertLessThanOrEqual( $nr_others, count($row['tbl_crud2']) );
     
     // DELETE
     $this->CI->table_model->like( 'str_update', 'UPDATE', 'both');
     $this->CI->table_model->limit( 1 );
     $this->CI->table_model->delete();
     $this->assertEquals( 1, $this->CI->table_model->affected_rows() );
-    
-    
-    
-    
+    // Mag geen many_to_many relatie meer bestaan
+    $affected_ids = $this->CI->table_model->get_query_info('affected_ids');
+    $this->CI->table_model->table('rel_crud__crud2');
+    $this->CI->table_model->where_in( 'id_crud', $affected_ids );
+    $result = $this->CI->table_model->get_result();
+    $this->assertEquals( array(), $result );
     
   }
   

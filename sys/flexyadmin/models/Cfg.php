@@ -71,7 +71,7 @@
 		// set default keys/fields if not given
 		if (empty($key) and isset($this->keys[$table]['key'])) $key=$this->keys[$table]['key'];
 		if (empty($fields)) {
-			if ( ! $this->isAdmin and isset($this->keys[$table]['fields']))
+			if ( ! $this->isAdmin and isset($this->keys[$table]['fields']) and !defined('PHPUNIT_TEST'))
 				$fields=$this->keys[$table]['fields'];
 			else
 				$fields='*';
@@ -80,6 +80,7 @@
 		
 		$out=false;
 		$table=$this->_name($table);
+    
 		log_("info","[Cfg] Loading config table '$table'");
 		if ($this->db->table_exists($table)) {
 			$sql="SELECT $fields FROM `$table`";
@@ -105,6 +106,7 @@
 					}
 				}
 			}
+      
 			$query->free_result();
 			$this->data[$table]=$data;
 			$out=true;

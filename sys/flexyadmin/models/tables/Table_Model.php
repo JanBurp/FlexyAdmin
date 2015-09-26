@@ -20,7 +20,7 @@
  * ->get_field( $field, $where = NULL )           // Idem, maar dan van één item alleen de waarde van het gevraagde veld
  * ->set_result_key( $key='' )                    // Hiermee kan voor ->get_result() de key van de array ingesteld worden op een ander (uniek) veld. Standaard is dat de primary_key
  * 
- * ->insert( $set = NULL )                        // Als Query Builder, maar met many_to_many data
+ * ->insert( $set = NULL )                        // Als Query Builder, maar met verwijzingen naar bestaande many_to_many data
  * ->update( $set=NULL, $where=NULL, $limit=NULL) // idem
  * ->delete( $where = '', $limit = NULL )         // idem
  * 
@@ -385,21 +385,33 @@ Class Table_Model extends CI_Model {
   protected function _autoset_abstract_fields( $table='', $fields = array() ) {
     if (empty($table))  $table = $this->settings['table'];
     if (empty($fields)) $fields = $this->settings['fields'];
-    
-    $abstract_fields = array();
     if ( !is_array($fields) ) $fields = explode( ',', $fields );
-    // Zoek op type velden
-		$abstract_field_types = $this->config->item('ABSTRACT_field_pre_types');
-    $max_abstract_fields  = $this->config->item('ABSTRACT_field_max');
-		while ( list($key,$field) = each( $fields ) and $max_abstract_fields>0) {
-			$pre = get_prefix($field);
-			if ( in_array( $pre, $abstract_field_types ) ) {
-				array_push( $abstract_fields, $field );
-				$max_abstract_fields--;
-			}
-		}
+    
+    // Haal eerst indien mogelijk uit (depricated) cfg_table_info
+    $this->load->model('cfg');
+    $this->cfg->load( 'cfg_table_info' );
+    $abstract_fields = $this->cfg->get( 'cfg_table_info', $table, 'str_abstract_fields');
+    if ($abstract_fields) {
+      $abstract_fields = explode(',',$abstract_fields);
+      if (is_string($abstract_fields)) $abstract_fields = explode('|',$abstract_fields);
+    }
+
+    // Als leeg zoek op type velden
+		if (empty($abstract_fields)) {
+      $abstract_fields=array();
+  		$abstract_field_types = $this->config->item('ABSTRACT_field_pre_types');
+      $max_abstract_fields  = $this->config->item('ABSTRACT_field_max');
+  		while ( list($key,$field) = each( $fields ) and $max_abstract_fields>0) {
+  			$pre = get_prefix($field);
+  			if ( in_array( $pre, $abstract_field_types ) ) {
+  				array_push( $abstract_fields, $field );
+  				$max_abstract_fields--;
+  			}
+  		}
+    }
     // Als leeg, zoek dan de eerste velden
 		if (empty($abstract_fields)) {
+      $abstract_fields=array();
       $max_abstract_fields  = $this->config->item('ABSTRACT_field_max');
 			for ( $n=0; $n<$max_abstract_fields; $n++) {
 				array_push( $abstract_fields, each($fields) );
@@ -930,17 +942,19 @@ Class Table_Model extends CI_Model {
     // order_by
     if ( ! empty($this->settings['order_by']) ) $this->db->order_by( $this->settings['order_by'] );
     
-    // limit & offset
+    // limit & offset & GET
+    $this->query_info = array();
     $query = $this->db->get( $this->settings['table'], $this->tm_limit, $this->tm_offset );
     
-    // Info & reset
-    $this->query_info = array();
-    $this->query_info['num_rows'] = $query->num_rows();
-    $this->query_info['total_rows'] = $query->num_rows();
-    $this->query_info['num_fields'] = $query->num_fields();
-    $this->query_info['last_query'] = $this->last_query();
-    if ($this->tm_limit>0) {
-      $this->query_info['total_rows'] = $this->total_rows( true );
+    // Info
+    if ($query) {
+      $this->query_info['num_rows'] = $query->num_rows();
+      $this->query_info['total_rows'] = $query->num_rows();
+      $this->query_info['num_fields'] = $query->num_fields();
+      $this->query_info['last_query'] = $this->last_query();
+      if ($this->tm_limit>0) {
+        $this->query_info['total_rows'] = $this->total_rows( true );
+      }
     }
 
     if ( $reset ) $this->reset();
@@ -974,6 +988,8 @@ Class Table_Model extends CI_Model {
    * @author Jan den Besten
    */
   private function _make_result_array( $query ) {
+    if ( $query===false) return array();
+    
     $key = el( 'result_key', $this->settings, el( 'primary_key',$this->settings ) );
     $result = array();
     $with_data = array();
@@ -1090,9 +1106,12 @@ Class Table_Model extends CI_Model {
    * @author Jan den Besten
    */
   public function get_result( $limit=0, $offset=0 ) {
+    $result = array();
     $query = $this->get( $limit, $offset, false );
-    $result = $this->_make_result_array( $query );
-    $query->free_result();
+    if ($query) {
+      $result = $this->_make_result_array( $query );
+      $query->free_result();
+    }
     $this->reset();
     return $result;
   }
@@ -1108,7 +1127,13 @@ Class Table_Model extends CI_Model {
    */
   public function get_row( $where = NULL ) {
     if ($where) $this->where( $where );
-    $result = $this->get_result( 1 );
+    // Als er many_to_many data is die niet grouped is dan kan het zijn dat er meer resultaten nodig zijn om één row samen te stellen
+    if ( isset($this->tm_with['many_to_many']) ) {
+      $result = $this->get_result();
+    }
+    else {
+      $result = $this->get_result( 1 );
+    }
     return current($result);
   }
 
@@ -1746,7 +1771,7 @@ Class Table_Model extends CI_Model {
   
   
 	/**
-	 * Zelfde als in Query Builder, maar ook met meegenomen relatiedata
+	 * Zelfde als in Query Builder, maar ook met verwijzingen naar bestaande many_to_many data
 	 *
 	 * @param array $set [NULL]
 	 * @param mixed $escape [NULL]
@@ -1759,7 +1784,7 @@ Class Table_Model extends CI_Model {
   
 
   /**
-   * Zelfde als in Query Builder, maar ook met meegeniomen relatiedata
+   * Zelfde als in Query Builder, maar ook met verwijzingen naar bestaande many_to_many data
    *
    * @param array $set [NULL]
    * @param string $where [NULL]
@@ -1767,7 +1792,7 @@ Class Table_Model extends CI_Model {
    * @return $this
    * @author Jan den Besten
    */
-	public function update($set = NULL, $where = NULL, $limit = NULL) {
+	public function update( $set = NULL, $where = NULL, $limit = NULL) {
     return $this->_update_insert( 'UPDATE', $set, $where, $limit);
 	}
 
@@ -1800,10 +1825,9 @@ Class Table_Model extends CI_Model {
      */
     if ($where) $this->where( $where );
     if ($limit) $this->limit( $limit );
-    $id = false;
 		$set = $this->tm_set;
-
-
+    $id = null;
+    
 		/**
 		 * Stel nieuwe volgorde van een item in, indien nodig
 		 */
@@ -1834,21 +1858,16 @@ Class Table_Model extends CI_Model {
     /**
      * Split eventuele many_to_many data
      */
-    $many_to_many = filter_by_key( $this->tm_set, 'rel'); // CHECK, is dit de manier? of nu juist met 'tbl_'
-    $set = array_diff( $set, $many_to_many);
-
+    $many_to_many = filter_by_key( $set, 'tbl_'); // CHECK, is dit de manier? of nu juist met 'tbl_'
+    if ( !empty($many_to_many) ) {
+      $many_to_many_keys = array_keys($many_to_many);
+      $set = array_unset_keys( $set, $many_to_many_keys );
+    }
       
-    /**
-     * Start updating the data
-     */
-    $this->db->trans_start();
-		
-    
     /**
      * Bij INSERT is primary_key niet nodig, haal die weg mocht die er zijn.
      */
 		if ( $type=='INSERT' ) unset( $set[ $this->settings['primary_key']] );
-    
 
     /**
      * Verwijder lege wachtwoorden, zodat die niet overschreven worden in de db
@@ -1859,6 +1878,7 @@ Class Table_Model extends CI_Model {
         unset( $set[$key] );
       }
     }
+
         
     /**
      * Verwijder data die NULL is of waarvan het veld niet in de table bestaat.
@@ -1866,7 +1886,6 @@ Class Table_Model extends CI_Model {
     foreach ( $set as $key => $value ) {
       if ( !isset($value) or !$this->field_exists( $key) ) unset( $set[$key] );
     }
-    
     
     /**
      * Ga door als de set niet leeg is
@@ -1882,15 +1901,7 @@ Class Table_Model extends CI_Model {
         }
         if ( $this->user_id!==false ) $set['user_changed'] = $this->user_id;
       }
-      
-      /**
-       * Eerste timestamp gebeurt niet automatisch in database, dus hier doen als nodig.
-       */
-      if ($type=='INSERT' and $this->field_exists('tme_last_changed')) {
-        $set['tme_last_changed'] = date(DATE_W3C);
-      }
           
-
       /**
        * Eindelijk, we kunnen de set instellen...
        */
@@ -1907,9 +1918,13 @@ Class Table_Model extends CI_Model {
         );
 			}
     	else {
-				$this->db->update( $this->settings['table'] );
+        $sql = $this->db->get_compiled_update( $this->settings['table'], false );
+				$this->db->update( $this->settings['table'], NULL,NULL, $this->tm_limit );
+        $ids = $this->_get_ids( $sql );
+        $id = current( $ids );
         $this->query_info = array(
-          'affected_rows' => $this->db->affected_rows()
+          'affected_rows' => $this->db->affected_rows(),
+          'affected_ids'  => $ids,
         );
 			}
       
@@ -1917,47 +1932,37 @@ Class Table_Model extends CI_Model {
 			 * Als er many_to_many data is, update/insert die ook
 			 */
 			if ( ! empty($many_to_many) ) {
-        
-        /**
-         * Er moet een id zijn om verder te kunnen TODO CHECK
-         */
-        if ( ! $id ) $id=$this->_get_id();
+        $affected = 0;
+				foreach( $many_to_many as $other_table => $other_ids ) {
+          $rel_table = 'rel_'.remove_prefix($this->settings['table']).'__'.remove_prefix($other_table);
+					$this_foreign_key  = $this->settings['primary_key'].'_'.remove_prefix($this->settings['table']);
+          $other_foreign_key = $this->settings['primary_key'].'_'.remove_prefix($other_table);
+            // if ( $this_foreign_key==$other_foreign_key ) $other_foreign_key.="_"; // TODO : self relaties?
 
-				foreach( $many_to_many as $rel_table => $value) {
-          // Value moet een array zijn
-					if ( ! is_array($value) ) $value=explode('|',$value);
 					// DELETE eerst huidige items
-					$this_foreign_key = this_key_from_rel_table($rel_table);
-					$other_foreign_key = join_key_from_rel_table($rel_table);
-          // if ( $this_foreign_key==$other_foreign_key ) $other_foreign_key.="_"; // TODO : self relaties
 					$this->db->where( $this_foreign_key, $id );
 					$this->db->delete( $rel_table );
-					// INSERT dan nieuwe items
-					foreach ( $value as $other_data ) {
-            $other_id = $other_data;
-            if (is_array($other_data)) $other_id = $other_data[$this->settings['primary_key']];
-						$this->db->set( $this_foreign_key,$id );
-						$this->db->set( $other_foreign_key,$other_id );
-						$this->db->insert($rel_table);
+
+					// INSERT dan nieuwe many_to_many ids
+					foreach ( $other_ids as $other_id ) {
+						$this->db->set( $this_foreign_key,  $id );
+						$this->db->set( $other_foreign_key, $other_id );
+						$this->db->insert( $rel_table );
+            $affected++;
             // $rel_id=$this->db->insert_id();
 					}
 				}
+        $this->query_info['affected_rel_rows'] = $affected;
 			}
-
-			/**
-			 * Data is updated/inserted.
-			 */
-			$this->db->trans_complete();
 		}
     
-    // Geef id terug, dat is anders dat bij Query Builder
+    $this->reset();
 		return intval($id);
 	}
   
   
   /**
-   * Net als Query Builder, en ook:
-   * - verwijderd ook bijbehorende many_to_many data
+   * Net als Query Builder, en met verwijderen van bijbehorende many_to_many verwijzingen
    *
    * @param mixed $where ['']
    * @param int $limit [NULL]
@@ -1973,13 +1978,21 @@ Class Table_Model extends CI_Model {
     if ($is_ordered_table) $this->load->model('order','_order');
       
 		/**
-		 * Verwijder uit database
+		 * Wat zijn de id's van de te verwijderen items?
+		 * Zijn nodig om eventuele many_to_many data te verwijderen
 		 */
-    $this->db->trans_start();			
-
-		$is_deleted = $this->db->delete( $this->settings['table'], '', NULL, $reset_data );
+    $ids = $this->_get_ids( $this->db->get_compiled_delete( $this->settings['table'], false) );
+    
+    /**
+     * Start DELETE
+     */
+    $this->db->trans_start();
+		
+    $is_deleted = $this->db->delete( $this->settings['table'], '', $this->tm_limit, $reset_data );
+    
     $this->query_info = array(
-      'affected_rows' => $this->db->affected_rows()
+      'affected_rows' => $this->db->affected_rows(),
+      'affected_ids'  => $ids,
     );
 
 		if ($is_deleted) {
@@ -1995,26 +2008,49 @@ Class Table_Model extends CI_Model {
 			 * Als er many_to_many is, verwijder die ook
 			 */
 			$other_tables = $this->get_relation_tables( 'many_to_many' );
-			if ( ! empty($other_tables) ) {
+      if ( ! empty($other_tables) ) {
         $this_foreign_key = $this->settings['primary_key'].'_'.remove_prefix( $this->settings['table'] );
         $rel_tables = $this->relation_tables['many_to_many__rel'];
         $affected = 0;
-				foreach ( $rel_tables as $rel_table => $rel_item ) {
-					$this->db->where( $rel_item[ $this_foreign_key ], $id );
-					$this->db->delete( $rel_table );
-          $affected += $this->db->affected_rows();
-				}
+        foreach ( $rel_tables as $rel_table ) {
+          $this->db->where_in( $this_foreign_key, $ids );
+          $this->db->delete( $rel_table );
+          $affected = $affected + $this->db->affected_rows();
+        }
         $this->query_info['affected_rel_rows'] = $affected;
-			}
+      }
       
     }
     
     $this->db->trans_complete();
+    $this->reset();
 		return $is_deleted;
 	}
   
   
-  
+  /**
+   * Geeft ids terug van een update of delete sql query die vereenvoudigd een resultaat teruggeeft
+   *
+   * @param string $sql 
+   * @return array
+   * @author Jan den Besten
+   */
+  protected function _get_ids( $sql ) {
+    $ids = array();
+    $sql = preg_replace("/DELETE\sFROM/u", "SELECT `".$this->settings['table'].'`.`'.$this->settings['primary_key']."` FROM", $sql);
+    $sql = preg_replace("/UPDATE(.*)SET(.*)WHERE/uUs", "SELECT `".$this->settings['table'].'`.`'.$this->settings['primary_key']."` FROM $1 WHERE", $sql);
+    if ($this->tm_limit>0 and strpos($sql,'LIMIT')===false) {
+      $sql.=' LIMIT '.$this->tm_limit;
+    }
+    $query = $this->db->query( $sql );
+    if ( is_object($query) ) {
+      $result = $query->result_array();
+      foreach ($result as $row) {
+        $ids[] = $row[$this->settings['primary_key']];
+      }
+    }
+    return $ids;
+  }
   
   
   
