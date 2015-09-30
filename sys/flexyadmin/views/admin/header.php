@@ -148,7 +148,14 @@ $isForm=has_string('form',$show_type);
 						        + '8217,rsquo,8218,sbquo,8220,ldquo,8221,rdquo,8222,bdquo,8224,dagger,8225,Dagger,8240,permil,8249,lsaquo,8250,rsaquo,8364,euro',
 						theme_advanced_buttons1 : "<?=$buttons1?>",
 						theme_advanced_buttons2 : "<?=$buttons2?>",
-						theme_advanced_buttons3 : "<?=$buttons3?>"
+						theme_advanced_buttons3 : "<?=$buttons3?>",
+            setup: function(ed) {
+                      ed.onKeyUp.add( function(){
+                        if ( typeof(editor_changed)=='function' ) {
+                          editor_changed(ed);
+                        }
+                      });
+                    }
 			   });
 			});
 			</script>
