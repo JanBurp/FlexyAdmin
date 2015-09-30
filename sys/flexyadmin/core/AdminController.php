@@ -28,6 +28,7 @@ class AdminController extends BasicController {
     $this->load->model('svn');
     
     // default js variables
+    if ($this->config->item('admin_js_vars')) $this->js = $this->config->item('admin_js_vars');
     $this->js['site_url'] = rtrim(site_url(),'/').'/';
     $this->js['form_nice_dropdowns'] = $this->config->item('FORM_NICE_DROPDOWNS');
     $multiple_upload = $this->config->item('MULTIPLE_UPLOAD');

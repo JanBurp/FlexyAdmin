@@ -1106,7 +1106,7 @@ body#tinymce th
 	line-height:1.3em;
 	letter-spacing:.04em;
 }
-
+#txt_stats {position:absolute;right:20px;}
 
 select {
 	width:460px;
