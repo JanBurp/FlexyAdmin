@@ -65,6 +65,51 @@ $config['abstract_filter']  = '';
 
 
 /**
+ * Hier worden de relaties ingesteld die deze tabel heeft.
+ * Met enkele voorbeelden waarin meteen alle foreign_keys en tabellen kunnen worden vastgelegd
+ */
+$config['relations'] = array(
+  
+  'many_to_one' => array(
+
+    'tbl_links'  => array(
+      'other_table' => 'tbl_links',
+      'foreign_key' => 'id_links',
+    ),
+
+    'cfg_users_groups' => array(
+      'other_table' => 'cfg_users_groups',
+      'foreign_key' => 'id_user_group',
+    ),
+
+    
+  'many_to_many' => array(
+
+    'tbl_links' => array(
+      'other_table' => 'tbl_links',
+      'rel_table'   => 'rel_menu__links',
+      'this_key'    => 'id_menu',
+      'other_key'   => 'id_links'
+    ),
+    
+    'cfg_users_groups' => array(
+      'other_table' => 'cfg_users_groups',
+      'rel_table'   => 'rel_users__users_groups',
+      'this_key'    => 'id_user',
+      'other_key'   => 'id_user_group'
+    ),
+
+    
+    
+  ),
+    
+    
+  ),
+  
+);
+
+
+/**
  * Deze instellingen bepalen wat voor resultaat er wordt gegeven voor het admin grid.
  * Als een instelling leeg is wordt deze gezocht in de standaard instelling.
  * 
