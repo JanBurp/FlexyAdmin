@@ -15,7 +15,9 @@ Class Table_Model_Create extends CI_Model {
     $this->load->model( 'tables/table_model', 'table_model' );
 	}
   
-  public function create($table='') {
+  public function create( $table='', $save = TRUE ) {
+    $returned_config = array();
+    
     $this->messages[] = "Creating Table Models:";
     if (!empty($table)) {
       $this->messages[] = 'table = '.$table;
@@ -32,6 +34,8 @@ Class Table_Model_Create extends CI_Model {
     $site_config_path   = 'site/config/tables/';
     $model_template = file_get_contents( $sys_model_path.'Table_Model_Template.php');
     $config_template= file_get_contents( $sys_config_path.'table_model.php');
+    // Remove all comments from config_template
+    $config_template = preg_replace("~/\*\*.*\/\n~uUs", "", $config_template);
     
     foreach ($tables as $table) {
       $this->messages[] = $table;
@@ -45,17 +49,21 @@ Class Table_Model_Create extends CI_Model {
       $model  = $this->parser->parse_string( $model_template, $data, true );
       $config = $this->replace_config($config_template,$settings);
       $config = $this->parser->parse_string( $config, $data, true );
-      // sys or site
-      if ( in_array(get_prefix($table),$this->site_models) ) {
-        file_put_contents( $site_model_path.$table.'.php', $model);
-        file_put_contents( $site_config_path.$table.'.php', $config );
+      if ($save) {
+        // sys or site
+        if ( in_array(get_prefix($table),$this->site_models) ) {
+          file_put_contents( $site_model_path.$table.'.php', $model);
+          file_put_contents( $site_config_path.$table.'.php', $config );
+        }
+        else {
+          file_put_contents( $sys_model_path.$table.'.php', $model);
+          file_put_contents( $sys_config_path.$table.'.php', $config );
+        }
       }
-      else {
-        file_put_contents( $sys_model_path.$table.'.php', $model);
-        file_put_contents( $sys_config_path.$table.'.php', $config );
-      }
+      $returned_config[$table] = $settings;
     }
-
+    
+    return $returned_config;
   }
   
   /**
