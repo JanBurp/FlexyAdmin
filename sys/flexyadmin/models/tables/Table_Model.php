@@ -57,8 +57,11 @@ Class Table_Model extends CI_Model {
     'table'           => '',
     'fields'          => array(),
     'field_info'      => array(),
-    'order_by'        => '',
-    'abstract_fields' => '',
+    'order_by'        => 'id',
+    'max_rows'        => 0,
+    'update_uris'     => true,
+    'abstract_fields' => array(),
+    'relations'       => array(),
     'admin_grid'      => array(),
     'admin_form'      => array(),
   );
@@ -66,7 +69,7 @@ Class Table_Model extends CI_Model {
   /**
    * Onthoud eventueel opgevraagde field_data
    */
-  private $field_data = null;
+  private $field_data = NULL;
   
   /**
    * Onthoud eventueel al opgezochte relatie tabellen
@@ -77,7 +80,7 @@ Class Table_Model extends CI_Model {
   /**
    * Hou SELECT bij om ervoor te zorgen dat SELECT in orde is
    */
-  private $tm_select  = false;
+  private $tm_select  = FALSE;
   
   /**
    * Maximale lengte van txt velden, 0 is geen aanpassing.
@@ -87,13 +90,13 @@ Class Table_Model extends CI_Model {
   /**
    * Hou LIMIT en OFFSET bij om eventueel total_rows te kunnen berekenen
    */
-  private $tm_limit = 0;
+  private $tm_limit  = 0;
   private $tm_offset = 0;
 
   /**
    * Een eventueel veld dat een compleet pad moet bevatten in een tree table
    */
-  private $tm_path = false;
+  private $tm_path = FALSE;
 
 
   /**
@@ -105,7 +108,7 @@ Class Table_Model extends CI_Model {
    *  'many_to_many' => array(
    *    'tbl_links' => array(
    *       'fields'   => 'abstract',
-   *       'grouped'  => false
+   *       'grouped'  => FALSE
    *     ),
    *    'tbl_posts' => array(
    *       'fields'   => array('id','str_title',')
@@ -126,12 +129,12 @@ Class Table_Model extends CI_Model {
   /**
    * Moet de data voor een insert/update eerste gevalideerd worden?
    */
-  private $validation   = false;
+  private $validation = FALSE;
   
   /**
    * Is nodig om eventueel te kunnen instellen in de database wie iets heeft aangepast
    */
-  private $user_id = null;
+  private $user_id    = NULL;
   
 
   
@@ -185,12 +188,12 @@ Class Table_Model extends CI_Model {
    * Als dan nog niet alle belangrijke zaken zijn ingesteld, doe dat dan met autoset
    *
    * @param string $table [''] Stel eventueel de naam van de table in. Default wordt de naam van het huidige model gebruikt.
-   * @return $this;
+   * @return $this->settings;
    * @author Jan den Besten
    */
-  protected function _config( $table='' ) {
+  public function _config( $table='', $load = true ) {
     // Haal de default settings op
-    $this->config->load( 'tables/table_model', true);
+    if ($load) $this->config->load( 'tables/table_model', true);
     $default = $this->config->item( 'tables/table_model' );
     $this->settings = $default;
     if ($table) $this->settings['table'] = $table; // Voor het los instellen van een table zonder eigen model
@@ -206,7 +209,7 @@ Class Table_Model extends CI_Model {
       // Test of de noodzakelijke settings zijn ingesteld, zo niet doe dat automatisch
       $this->_autoset( $table );
     }
-    return $this;
+    return $this->settings;
   }
   
 
@@ -215,12 +218,12 @@ Class Table_Model extends CI_Model {
    * Test of belangrijke settings zijn ingesteld. Zo niet doet dat dan automatisch.
    * Dit maakt plug'n play mogelijk, maar gebruikt meer resources.
    *
-   * @return $this
+   * @return array $autoset
    * @author Jan den Besten
    */
   protected function _autoset() {
     foreach ($this->autoset as $key => $value) {
-      if ( empty($this->settings[$key]) ) {
+      if ( !isset($this->settings[$key]) ) {
         // Moet worden ingesteld, dus automatisch, met bijbehorden waarde of met een method.
         if (method_exists($this,'_autoset_'.$key)) {
           $method = '_autoset_'.$key;
@@ -232,7 +235,7 @@ Class Table_Model extends CI_Model {
         // var_dump(['_autoset_'.$key => $this->settings[$key] ]);
       }
     }
-    return $this;
+    return $this->settings;
   }
   
 
@@ -244,8 +247,8 @@ Class Table_Model extends CI_Model {
    * @return string
    * @author Jan den Besten
    */
-  protected function _autoset_table( $object=null ) {
-    if ( $object===null) $object = $this;
+  protected function _autoset_table( $object=NULL ) {
+    if ( $object===NULL) $object = $this;
     return get_class( $object );
   }
 
@@ -289,13 +292,13 @@ Class Table_Model extends CI_Model {
       }
       else {
         if (!is_array($field_info)) $field_info=$field_info_db;
-        if (!is_array($field_info)) $field_info=null;
+        if (!is_array($field_info)) $field_info=NULL;
       }
       $fields_info[$field] = $field_info;
       $settings_fields_info[$field] = array();
       if (!empty($field_info['str_options'])) {
         $settings_fields_info[$field]['options'] = explode('|',$field_info['str_options']);
-        $settings_fields_info[$field]['multiple_options'] = el('b_multi_options', $field_info, false)?true:false;
+        $settings_fields_info[$field]['multiple_options'] = el('b_multi_options', $field_info, FALSE)?true:FALSE;
       }
       $settings_fields_info[$field]['validation'] = explode('|',$this->form_validation->get_validations( $table, $field ));
     }
@@ -351,7 +354,7 @@ Class Table_Model extends CI_Model {
     // Haal eerst indien mogelijk uit (depricated) cfg_table_info
     $max_rows = $this->cfg->get( 'cfg_table_info', $this->settings['table'], 'int_max_rows');
     // Anders is het gewoon standaard 0
-    if (is_null($max_rows)) $max_rows = 0;
+    if (is_NULL($max_rows)) $max_rows = 0;
     return $max_rows;
   }
   
@@ -368,7 +371,7 @@ Class Table_Model extends CI_Model {
     // Haal eerst indien mogelijk uit (depricated) cfg_table_info
     $update_uris = $this->cfg->get( 'cfg_table_info', $this->settings['table'], 'b_freeze_uris');
     // Anders is het gewoon standaard true
-    if (is_null($update_uris)) $update_uris = true;
+    if (is_NULL($update_uris)) $update_uris = true;
     return $update_uris;
   }
 
@@ -433,10 +436,49 @@ Class Table_Model extends CI_Model {
     // Haal eerst indien mogelijk uit (depricated) cfg_table_info
     $abstract_filter = $this->cfg->get( 'cfg_table_info', $this->settings['table'], 'str_options_where');
     // Anders is het gewoon standaard ''
-    if (is_null($abstract_filter)) $abstract_filter = '';
+    if (is_NULL($abstract_filter)) $abstract_filter = '';
     return $abstract_filter;
   }
   
+  
+  /**
+   * Autoset relations
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+  protected function _autoset_relations() {
+    $relations = array();
+    // many_to_one
+    $tables = $this->get_relation_tables( 'many_to_one' );
+    if ($tables) {
+      $relations['many_to_one'] = array();
+      foreach ($tables as $table) {
+        $foreign_key = $this->settings['primary_key'].'_'.remove_prefix($table);
+        $relations['many_to_one'][$table] = array(
+          'other_table' => $table,
+          'foreign_key' => $foreign_key,
+        );
+      }
+    }
+    // many_to_many
+    $tables = $this->get_relation_tables( 'many_to_many' );
+    if ($tables) {
+      $relations['many_to_many'] = array();
+      foreach ($tables as $other_table) {
+        $rel_table = 'rel_'.remove_prefix($this->settings['table']).'__'.remove_prefix($other_table);
+        $this_key  = $this->settings['primary_key'].'_'.remove_prefix($this->settings['table']);
+        $other_key = $this->settings['primary_key'].'_'.remove_prefix($other_table);
+        $relations['many_to_many'][$other_table] = array(
+          'other_table' => $other_table,
+          'rel_table'   => $rel_table,
+          'this_key'    => $this_key,
+          'other_key'   => $other_key,
+        );
+      }
+    }
+    return $relations;
+  }
 
 
   /**
@@ -510,7 +552,7 @@ Class Table_Model extends CI_Model {
    * @author Jan den Besten
    */
   protected function get_other_table_setting( $table, $key ) {
-    $setting = null;
+    $setting = NULL;
     // Probeer eerst of het table model bestaat
     if ( method_exists( $table, 'get_setting' ) ) {
       $setting = $this->$table->get_setting( $key );
@@ -536,7 +578,7 @@ Class Table_Model extends CI_Model {
    */
   protected function get_other_table_fields( $table ) {
     $fields = $this->get_other_table_setting( $table, 'fields' );
-    if ( is_null($fields) or empty($fields)) {
+    if ( is_NULL($fields) or empty($fields)) {
       $fields = $this->db->list_fields( $table );
     }
     return $fields;
@@ -554,7 +596,7 @@ Class Table_Model extends CI_Model {
    */
   protected function get_other_table_abstract_fields( $table ) {
     $abstract_fields = $this->get_other_table_setting( $table, 'abstract_fields' );
-    if ( is_null($abstract_fields) or empty($abstract_fields)) {
+    if ( is_NULL($abstract_fields) or empty($abstract_fields)) {
       $fields = $this->get_other_table_fields( $table );
       $abstract_fields = $this->_autoset_abstract_fields( $table, $fields );
     }
@@ -612,8 +654,8 @@ Class Table_Model extends CI_Model {
    * @author Jan den Besten
    */
   public function reset() {
-    $this->tm_select = false;
-    $this->tm_path   = false;
+    $this->tm_select = FALSE;
+    $this->tm_path   = FALSE;
     $this->tm_limit  = 0;
     $this->tm_offset = 0;
     $this->with();
@@ -652,9 +694,9 @@ Class Table_Model extends CI_Model {
    * @return $this
    * @author Jan den Besten
    */
-  public function set_user_id( $user_id = false ) {
-    if ( $user_id === false ) {
-      $this->user_id = false; // we hebben het iig gebrobeerd in te stellen
+  public function set_user_id( $user_id = FALSE ) {
+    if ( $user_id === FALSE ) {
+      $this->user_id = FALSE; // we hebben het iig gebrobeerd in te stellen
       if (defined('PHPUNIT_TEST')) {
         $this->user_id = 0; // TESTER
       }
@@ -810,7 +852,7 @@ Class Table_Model extends CI_Model {
 
 
   /**
-   * Geeft een setting. Als die niet bestaat dan wordt de standaard autoset waarde gegeven of anders null
+   * Geeft een setting. Als die niet bestaat dan wordt de standaard autoset waarde gegeven of anders NULL
    *
    * @param string $key 
    * @return mixed
@@ -857,7 +899,7 @@ Class Table_Model extends CI_Model {
    * 
    * array(
    *  'options'           => array(...),
-   *  'multiple_options'  => [true|false]
+   *  'multiple_options'  => [true|FALSE]
    * )
    * 
    * Resultaat bij geen meegegeven veld:
@@ -872,7 +914,7 @@ Class Table_Model extends CI_Model {
    * @author Jan den Besten
    */
   public function get_options( $field='' ) {
-    $one = false;
+    $one = FALSE;
     if (!empty($field)) {
       $one = true;
       $fields = array($field);
@@ -988,7 +1030,7 @@ Class Table_Model extends CI_Model {
    * @author Jan den Besten
    */
   private function _make_result_array( $query ) {
-    if ( $query===false) return array();
+    if ( $query===FALSE) return array();
     
     $key = el( 'result_key', $this->settings, el( 'primary_key',$this->settings ) );
     $result = array();
@@ -1008,7 +1050,7 @@ Class Table_Model extends CI_Model {
         foreach ($this->tm_with as $with_type => $this_with) {
           // if ($with_type=='many_to_one') break; // Hier wordt besloten of many_to_one ook in array gaat of niet.
           foreach ($this_with as $other_table => $info) {
-            if ( ! el('grouped',$info,false) ) {
+            if ( ! el('grouped',$info,FALSE) ) {
               $fields   = $info['fields'];
               // split row and with data
               $row_with_data = filter_by_key( $row, $other_table );
@@ -1107,7 +1149,7 @@ Class Table_Model extends CI_Model {
    */
   public function get_result( $limit=0, $offset=0 ) {
     $result = array();
-    $query = $this->get( $limit, $offset, false );
+    $query = $this->get( $limit, $offset, FALSE );
     if ($query) {
       $result = $this->_make_result_array( $query );
       $query->free_result();
@@ -1382,9 +1424,9 @@ Class Table_Model extends CI_Model {
     	)	
     )';
     if ($type=='OR')
-      $this->db->or_where( $sql, NULL, false );
+      $this->db->or_where( $sql, NULL, FALSE );
     else
-      $this->db->where( $sql, NULL, false );
+      $this->db->where( $sql, NULL, FALSE );
     return $this;
   }
   
@@ -1421,13 +1463,13 @@ Class Table_Model extends CI_Model {
       $term = trim($term,'"');
       foreach ($fields as $field) {
         // Plak tabelnaam voor veld, als dat nog niet zo is, en escape
-        if (strpos($field,'.')===false) $field = $this->settings['table'].'.'.$field;
+        if (strpos($field,'.')===FALSE) $field = $this->settings['table'].'.'.$field;
         $field = $this->db->protect_identifiers($field);
         // LIKE of REGEXP (word boundaries)
         if ($word_boundaries)
-          $this->db->or_where( $field.' REGEXP \'[[:<:]]'.$term.'[[:>:]]\'', NULL, false);
+          $this->db->or_where( $field.' REGEXP \'[[:<:]]'.$term.'[[:>:]]\'', NULL, FALSE);
         else
-          $this->db->or_like( $field, $term, 'both', false);
+          $this->db->or_like( $field, $term, 'both', FALSE);
       }
     }
     
@@ -1511,8 +1553,11 @@ Class Table_Model extends CI_Model {
       return $this;
     }
     
-    // Als geen tables zijn meegegeven, zoek ze automatisch
-    if ( empty($tables) ) $tables = $this->get_relation_tables( $type );
+    // Als geen tables zijn meegegeven, haal ze uit de settings
+    if ( empty($tables) ) {
+      $tables = el( array('relations',$type), $this->settings, array() );
+      if ($tables) $tables = array_keys($tables);
+    }
     
     // Zorg ervoor dat $tables in dit formaat komt: 'table' => fields
     $tables_new = array();
@@ -1588,21 +1633,21 @@ Class Table_Model extends CI_Model {
   /**
    * Selecteerd de velden die bij SELECT moeten komen bij relaties
    *
-   * @param string $table de gerelateerde tabel
+   * @param string $other_table de gerelateerde tabel
    * @param array $fields velden van de gerelateerde tabel
    * @param bool $grouped of de many_to_many data gegroupeerd worden in één veld met de naam van de relatie tabel
    * @return $this
    * @author Jan den Besten
    */
-  protected function _select_with_fields( $table, $fields, $grouped = false ) {
-    $abstract = false;
+  protected function _select_with_fields( $other_table, $fields, $grouped = FALSE ) {
+    $abstract = FALSE;
 
     // Welke velden van de gerelateerde tabel?
     if ( empty($fields) ) {
-      $fields = $this->get_other_table_fields( $table );
+      $fields = $this->get_other_table_fields( $other_table );
     }
     elseif ( $fields === 'abstract' ) {
-      $abstract = $this->get_other_table_compiled_abstract_select( $table );
+      $abstract = $this->get_other_table_compiled_abstract_select( $other_table );
     }
     
     // Select de velden van de gerelateerde tabel voor een abstract
@@ -1610,7 +1655,7 @@ Class Table_Model extends CI_Model {
       $select = $abstract;
       if ($grouped) {
         $abstract = remove_suffix($abstract,' AS ');
-        $select = 'GROUP_CONCAT( "[",'.$abstract.',"]" SEPARATOR ",") `'.$table.'`';
+        $select = 'GROUP_CONCAT( "[",'.$abstract.',"]" SEPARATOR ",") `'.$other_table.'`';
       }
     }
     // Select de velden van de gerelateerde tabel voor een lijst met velden
@@ -1622,16 +1667,16 @@ Class Table_Model extends CI_Model {
       // maak velden sql
       $select = '';
       foreach ($fields as $field) {
-        $select .= '`'.$table.'`.`'.$field.'`';
+        $select .= '`'.$other_table.'`.`'.$field.'`';
         if ($grouped)
           $select.= ',"|",';
         else
-          $select.= ' AS `'.$table.'__'.$field.'`, ';
+          $select.= ' AS `'.$other_table.'__'.$field.'`, ';
       }
       $select = trim($select,',');
       if ($grouped) {
         $select = substr($select,0,strlen($select)-4); // remove last ,"|"
-        $select = 'GROUP_CONCAT( "[",' . $select . ',"]" SEPARATOR ",") `'.$table.'`';
+        $select = 'GROUP_CONCAT( "[",' . $select . ',"]" SEPARATOR ",") `'.$other_table.'`';
       }
     }
     
@@ -1653,13 +1698,13 @@ Class Table_Model extends CI_Model {
    */
   protected function _with_many_to_one( $tables ) {
     $id = $this->settings['primary_key'];
-    foreach ($tables as $table => $info) {
+    foreach ($tables as $other_table => $info) {
       $fields = $info['fields'];
       // Select fields
-      $this->_select_with_fields( $table, $fields );
+      $this->_select_with_fields( $other_table, $fields );
       // Join
-      $foreign_key = $id.'_'.remove_prefix( $table );
-      $this->join( $table, $table.'.'.$id.' = '.$this->settings['table'].".".$foreign_key, 'left');
+      $foreign_key = $this->settings['relations']['many_to_one'][$other_table]['foreign_key'];
+      $this->join( $other_table, $other_table.'.'.$id.' = '.$this->settings['table'].".".$foreign_key, 'left');
     }
     return $this;
   }
@@ -1679,9 +1724,9 @@ Class Table_Model extends CI_Model {
     foreach ( $tables as $other_table => $info ) {
       $fields   = $info['fields'];
       $grouped  = $info['grouped'];
-      $rel_table = 'rel_'.remove_prefix($this_table).'__'.remove_prefix($other_table);
-      $this_foreign_key  = $id.'_'.remove_prefix( $this_table );
-      $other_foreign_key = $id.'_'.remove_prefix( $other_table );
+      $rel_table         = $this->settings['relations']['many_to_many'][$other_table]['rel_table'];
+      $this_foreign_key  = $this->settings['relations']['many_to_many'][$other_table]['this_key'];
+      $other_foreign_key = $this->settings['relations']['many_to_many'][$other_table]['other_key'];
       // Select fields
       $this->_select_with_fields( $other_table, $fields, $grouped );
       // Joins
@@ -1826,7 +1871,7 @@ Class Table_Model extends CI_Model {
     if ($where) $this->where( $where );
     if ($limit) $this->limit( $limit );
 		$set = $this->tm_set;
-    $id = null;
+    $id = NULL;
     
 		/**
 		 * Stel nieuwe volgorde van een item in, indien nodig
@@ -1899,7 +1944,7 @@ Class Table_Model extends CI_Model {
         if ( !isset( $this->user_id )) {
           $this->set_user_id();
         }
-        if ( $this->user_id!==false ) $set['user_changed'] = $this->user_id;
+        if ( $this->user_id!==FALSE ) $set['user_changed'] = $this->user_id;
       }
           
       /**
@@ -1918,7 +1963,7 @@ Class Table_Model extends CI_Model {
         );
 			}
     	else {
-        $sql = $this->db->get_compiled_update( $this->settings['table'], false );
+        $sql = $this->db->get_compiled_update( $this->settings['table'], FALSE );
 				$this->db->update( $this->settings['table'], NULL,NULL, $this->tm_limit );
         $ids = $this->_get_ids( $sql );
         $id = current( $ids );
@@ -1934,9 +1979,9 @@ Class Table_Model extends CI_Model {
 			if ( ! empty($many_to_many) ) {
         $affected = 0;
 				foreach( $many_to_many as $other_table => $other_ids ) {
-          $rel_table = 'rel_'.remove_prefix($this->settings['table']).'__'.remove_prefix($other_table);
-					$this_foreign_key  = $this->settings['primary_key'].'_'.remove_prefix($this->settings['table']);
-          $other_foreign_key = $this->settings['primary_key'].'_'.remove_prefix($other_table);
+          $rel_table         = $this->settings['relations']['many_to_many'][$other_table]['rel_table'];
+					$this_foreign_key  = $this->settings['relations']['many_to_many'][$other_table]['this_key'];
+          $other_foreign_key = $this->settings['relations']['many_to_many'][$other_table]['other_key'];
             // if ( $this_foreign_key==$other_foreign_key ) $other_foreign_key.="_"; // TODO : self relaties?
 
 					// DELETE eerst huidige items
@@ -1981,7 +2026,7 @@ Class Table_Model extends CI_Model {
 		 * Wat zijn de id's van de te verwijderen items?
 		 * Zijn nodig om eventuele many_to_many data te verwijderen
 		 */
-    $ids = $this->_get_ids( $this->db->get_compiled_delete( $this->settings['table'], false) );
+    $ids = $this->_get_ids( $this->db->get_compiled_delete( $this->settings['table'], FALSE) );
     
     /**
      * Start DELETE
@@ -2007,12 +2052,15 @@ Class Table_Model extends CI_Model {
 			/**
 			 * Als er many_to_many is, verwijder die ook
 			 */
-			$other_tables = $this->get_relation_tables( 'many_to_many' );
+			$other_tables = $this->settings['relations']['many_to_many'];
       if ( ! empty($other_tables) ) {
-        $this_foreign_key = $this->settings['primary_key'].'_'.remove_prefix( $this->settings['table'] );
-        $rel_tables = $this->relation_tables['many_to_many__rel'];
+        $other_tables = array_keys($other_tables);
+        // $this_foreign_key = $this->settings['relations']['many_to_many'][$other_table]['this_key'];
+        // $rel_tables = $this->relation_tables['many_to_many__rel'];
         $affected = 0;
-        foreach ( $rel_tables as $rel_table ) {
+        foreach ( $other_tables as $other_table ) {
+          $rel_table        = $this->settings['relations']['many_to_many'][$other_table]['rel_table'];
+          $this_foreign_key = $this->settings['relations']['many_to_many'][$other_table]['this_key'];
           $this->db->where_in( $this_foreign_key, $ids );
           $this->db->delete( $rel_table );
           $affected = $affected + $this->db->affected_rows();
@@ -2039,7 +2087,7 @@ Class Table_Model extends CI_Model {
     $ids = array();
     $sql = preg_replace("/DELETE\sFROM/u", "SELECT `".$this->settings['table'].'`.`'.$this->settings['primary_key']."` FROM", $sql);
     $sql = preg_replace("/UPDATE(.*)SET(.*)WHERE/uUs", "SELECT `".$this->settings['table'].'`.`'.$this->settings['primary_key']."` FROM $1 WHERE", $sql);
-    if ($this->tm_limit>0 and strpos($sql,'LIMIT')===false) {
+    if ($this->tm_limit>0 and strpos($sql,'LIMIT')===FALSE) {
       $sql.=' LIMIT '.$this->tm_limit;
     }
     $query = $this->db->query( $sql );
@@ -2105,11 +2153,11 @@ Class Table_Model extends CI_Model {
   /**
    * Geeft aantal rijen in laatste resultaat zonder limit
    *
-   * @param bool $calculate [false] als TRUE dan moet het uitgerekend worden, anders zit het in query_info
+   * @param bool $calculate [FALSE] als TRUE dan moet het uitgerekend worden, anders zit het in query_info
    * @return int
    * @author Jan den Besten
    */
-  public function total_rows( $calculate=false, $grouped=false ) {
+  public function total_rows( $calculate=FALSE, $grouped=FALSE ) {
     if ($calculate) {
       // perform simple query count
       $query = $this->db->query( $this->last_clean_query( $grouped ) );
@@ -2153,7 +2201,7 @@ Class Table_Model extends CI_Model {
    * @return string
    * @author Jan den Besten
    */
-  protected function last_clean_query( $grouped=false, $query='' ) {
+  protected function last_clean_query( $grouped=FALSE, $query='' ) {
     if (empty($query)) $query = $this->last_query();
     // $query = preg_replace("/(WHERE.*)GROUP/uUs", " GROUP", $query);
     // $query = preg_replace("/(WHERE.*)ORDER/uUs", " ORDER", $query);
@@ -2161,7 +2209,7 @@ Class Table_Model extends CI_Model {
     $query = preg_replace("/SELECT.*FROM/uUs", 'SELECT `'.$this->settings['table'].'`.`'.$this->settings['primary_key'].'` FROM', $query, 1);
     $query = preg_replace("/LIMIT\s+\d*/us", " ", $query);
     $query = preg_replace("/ORDER.*/us", "", $query);
-    if ($grouped and strpos($query,'GROUP BY')===false) {
+    if ($grouped and strpos($query,'GROUP BY')===FALSE) {
       $query.=' GROUP BY `'.$this->settings['table'].'`.`'.$this->settings['primary_key'].'`';
     }
     $this->query_info['last_clean_query'] = $query;
@@ -2210,8 +2258,8 @@ Class Table_Model extends CI_Model {
 			$query = $this->db->query( 'SHOW COLUMNS FROM `'.$this->settings['table'].'`' );
 			foreach ($query->result() as $field) {
 				preg_match('/([^(]+)(\((\d+)\))?/', $field->Type, $matches);
-				$type           = sizeof($matches) > 1 ? $matches[1] : null;
-				$max_length     = sizeof($matches) > 3 ? $matches[3] : null;
+				$type           = sizeof($matches) > 1 ? $matches[1] : NULL;
+				$max_length     = sizeof($matches) > 3 ? $matches[3] : NULL;
         $info=array(
   				'name'        => $field->Field,
   				'type'        => $type,
@@ -2220,7 +2268,7 @@ Class Table_Model extends CI_Model {
   				'primary_key' => ($field->Key == "PRI") ? 1 : 0,
   				'extra'       => $field->Extra,
         );
-        if ( strpos($info['type'],'int')!==false ) {
+        if ( strpos($info['type'],'int')!==FALSE ) {
           $info['default'] = (int) $info['default'];
         }
         $this->field_data[$info['name']] = $info;

@@ -62,8 +62,8 @@ class Test extends AdminController {
     // $query = $this->table_model->get();
     // $result = $this->table_model->get_result();
     
-    $this->table_model->table('tbl_links');
-    $this->table_model->select_abstract();
+    $this->table_model->table('tbl_groepen');
+    // $this->table_model->select_abstract();
     $result = $this->table_model->get_result();
     
     
