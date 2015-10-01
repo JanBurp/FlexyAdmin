@@ -20,6 +20,8 @@ a:hover {	text-decoration:underline; }
 
 a.autoLink { text-decoration:underline;}
 
+pre {margin:0px;}
+
 .phpinfo hr,
 .phpinfo img {
 	display:none;
@@ -1731,4 +1733,7 @@ iframe {
   margin:0px 20px 20px 0px;
 }
 #plugin_db_scheme thead td {border-bottom:solid 1px;}
-#plugin_db_scheme tbody td {background-color:#FFF;
+#plugin_db_scheme tbody td {background-color:#FFF;}
+  
+.diffright.selected {background-color:#DEA}
+.diffleft.selected {background-color:#DEA}
