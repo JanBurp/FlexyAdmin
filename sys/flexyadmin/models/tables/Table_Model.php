@@ -357,8 +357,7 @@ Class Table_Model extends CI_Model {
     $this->load->model('cfg');
     // Haal eerst indien mogelijk uit (depricated) cfg_table_info
     $max_rows = $this->cfg->get( 'cfg_table_info', $this->settings['table'], 'int_max_rows');
-    // Anders is het gewoon standaard NULL (niet nodig)
-    if ($max_rows==0) return NULL;
+    // Anders is het gewoon standaard 0
     return intval($max_rows);
   }
   
@@ -372,12 +371,9 @@ Class Table_Model extends CI_Model {
    */
   protected function _autoset_update_uris() {
     // Heeft alleen maar nu als een 'uri' veld bestaat
-    if ( ! $this->field_exists('uri') ) return NULL;
     $this->load->model('cfg');
     // Haal eerst indien mogelijk uit (depricated) cfg_table_info
-    $update_uris = $this->cfg->get( 'cfg_table_info', $this->settings['table'], 'b_freeze_uris');
-    // Anders is het gewoon standaard true
-    if (is_NULL($update_uris)) $update_uris = true;
+    $update_uris = ! $this->cfg->get( 'cfg_table_info', $this->settings['table'], 'b_freeze_uris');
     return boolval($update_uris);
   }
 
@@ -441,8 +437,6 @@ Class Table_Model extends CI_Model {
     $this->load->model('cfg');
     // Haal eerst indien mogelijk uit (depricated) cfg_table_info
     $abstract_filter = $this->cfg->get( 'cfg_table_info', $this->settings['table'], 'str_options_where');
-    // Anders is het gewoon standaard NULL
-    if ($abstract_filter=='') $abstract_filter=NULL;
     return $abstract_filter;
   }
   
@@ -503,6 +497,7 @@ Class Table_Model extends CI_Model {
       $field_info = $this->cfg->get('cfg_field_info', $this->settings['table'].'.'.$field );
       if ( !in_array($field,$show_always) and !el('b_show_in_grid',$field_info,TRUE) ) unset($admin_grid['fields'][$key]);
     }
+    $admin_grid['fields'] = array_values($admin_grid['fields']); // reset keys
     $admin_grid['order_by']      = $this->settings['order_by'];
     $admin_grid['jump_to_today'] = el('b_jump_to_today',$table_info,TRUE);
     $admin_grid['pagination']    = el('b_pagination',$table_info,TRUE);
@@ -539,6 +534,7 @@ Class Table_Model extends CI_Model {
         array_push( $fieldsets[$fieldset], $field );
       }
     }
+    $admin_form['fields'] = array_values($admin_form['fields']); // reset keys
     $admin_form['fieldsets'] = $fieldsets;
     $admin_form['with']      = array();
     return $admin_form;
