@@ -2,6 +2,15 @@
 
 Class Table_Model_Create extends CI_Model {
   
+  
+  private $paths = array(
+    'sys_model'   => 'sys/flexyadmin/models/tables/',
+    'site_model'  => 'site/models/tables/',
+    'sys_config'  => 'sys/flexyadmin/config/tables/',
+    'site_config' => 'site/config/tables/',
+  );
+    
+  
   protected $site_models = array('tbl','rel');
   // protected $show_always = array('id','order','self_parent');
   
@@ -28,12 +37,8 @@ Class Table_Model_Create extends CI_Model {
     }
     
     // Load Template & Change it for everye table with its own settings
-    $sys_model_path     = 'sys/flexyadmin/models/tables/';
-    $site_model_path    = 'site/models/tables/';
-    $sys_config_path    = 'sys/flexyadmin/config/tables/';
-    $site_config_path   = 'site/config/tables/';
-    $model_template = file_get_contents( $sys_model_path.'Table_Model_Template.php');
-    $config_template= file_get_contents( $sys_config_path.'table_model.php');
+    $model_template = file_get_contents( $this->paths['sys_model'].'Table_Model_Template.php');
+    $config_template= file_get_contents( $this->paths['sys_config'].'table_model.php');
     // Remove all comments from config_template
     $config_template = preg_replace("~/\*\*.*\/\n~uUs", "", $config_template);
     
@@ -54,12 +59,12 @@ Class Table_Model_Create extends CI_Model {
         if (is_string($save)) $file=$save.'/'.$file;
         // sys or site
         if ( in_array(get_prefix($table),$this->site_models) ) {
-          file_put_contents( $site_model_path.$file, $model);
-          file_put_contents( $site_config_path.$file, $config );
+          file_put_contents( $this->paths['site_model'].$file, $model);
+          file_put_contents( $this->paths['site_config'].$file, $config );
         }
         else {
-          file_put_contents( $sys_model_path.$file, $model);
-          file_put_contents( $sys_config_path.$file, $config );
+          file_put_contents( $this->paths['sys_model'].$file, $model);
+          file_put_contents( $this->paths['sys_config'].$file, $config );
         }
       }
       $returned_config[$table] = $settings;
@@ -67,6 +72,30 @@ Class Table_Model_Create extends CI_Model {
     
     return $returned_config;
   }
+  
+  
+  public function save_config_for($table,$config) {
+    $config_template= file_get_contents( $this->paths['sys_config'].'table_model.php');
+    // Remove all comments from config_template
+    $config_template = preg_replace("~/\*\*.*\/\n~uUs", "", $config_template);
+    // All data to template and save this table model
+    $data=array(
+      'NAME'     => $table,
+      'DATE'     => date('D j F Y, H:i'),
+    );
+    $config = $this->replace_config($config_template,$config);
+    $config = $this->parser->parse_string( $config, $data, true );
+    // sys or site
+    $file = $table.'.php';
+    if ( in_array(get_prefix($table),$this->site_models) ) {
+      file_put_contents( $this->paths['site_config'].$file, $config );
+    }
+    else {
+      file_put_contents( $this->paths['sys_config'].$file, $config );
+    }
+  }
+  
+  
   
   
   /**
@@ -104,28 +133,33 @@ Class Table_Model_Create extends CI_Model {
       return $value;
     }
     if (is_array($value)) {
-      if (is_assoc($value)) {
-        $items=$value;
-        $longest_item=array_keys($items);
-        $longest_item=array_sort_length($longest_item);
-        $longest_item=current($longest_item);
-        $len = strlen($longest_item) + 2;
-        $value="array( ";
-        if ($lev<1) $value.="\n";
-        foreach ($items as $key => $sub_value) {
-          if ($lev<1)
-            $value.= repeater("\t",$tabs+1) . sprintf('%-'.$len.'s',"'".$key."'");
-          else
-            $value.= "'".$key."'";
-          $value .= " => ".$this->value_to_string($sub_value,$tabs+2,$lev+1).", ";
-          if ($lev<1) $value.="\n";
-        }
-        $value = str_replace(", )"," )",$value);
-        if ($lev<1) $value.= repeater("\t",$tabs);
-        $value .= ")";
+      if (empty($value)) {
+        $value='array()';
       }
       else {
-        $value = "array( '".implode("','",$value)."')";
+        if (is_assoc($value)) {
+          $items=$value;
+          $longest_item=array_keys($items);
+          $longest_item=array_sort_length($longest_item);
+          $longest_item=current($longest_item);
+          $len = strlen($longest_item) + 2;
+          $value="array(";
+          if ($lev<1) $value.="\n";
+          foreach ($items as $key => $sub_value) {
+            if ($lev<1)
+              $value.= repeater("\t",$tabs+1) . sprintf('%-'.$len.'s',"'".$key."'");
+            else
+              $value.= "'".$key."'";
+            $value .= " => ".$this->value_to_string($sub_value,$tabs+2,$lev+1).", ";
+            if ($lev<1) $value.="\n";
+          }
+          $value = str_replace(", )"," )",$value);
+          if ($lev<1) $value.= repeater("\t",$tabs);
+          $value .= ")";
+        }
+        else {
+          $value = "array('".implode("','",$value)."')";
+        }
       }
       return $value;
     }

@@ -558,7 +558,9 @@ function flash(swf,w,h) {
       $('tbody tr',self).click(function(){
         methods.change.apply(this);
       });
-      
+      $('.diffmerge',self).click(function(){
+        methods.merge.apply(this);
+      });
       return self;
     },
     
@@ -579,9 +581,23 @@ function flash(swf,w,h) {
       $(this).find('.glyphicon').removeAttr('class').addClass('glyphicon glyphicon-chevron-'+glyph);
     },
     
-    
-    
-    
+    merge : function() {
+      var table = $(this).attr('data-table');
+      var keys = [];
+      $('tbody tr',self).each(function(){
+        var key  = $(this).find('td:first');
+        key = $(key).text();
+        var diff = $(this).find('.selected');
+        diff = $(diff).attr('class');
+        diff = diff.split(' ')[0].replace('diff','');
+        keys.push( {'key':key,'diff':diff} );
+      });
+      var url = 'admin/plugin/analyze_table_models/'+table+'?';
+      for (var i = 0; i < keys.length; i++) {
+        url+=keys[i].key + '=' + keys[i].diff + '&';
+      }
+      location.href = url;
+    }
     
     
   };
