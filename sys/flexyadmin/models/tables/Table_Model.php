@@ -61,6 +61,7 @@ Class Table_Model extends CI_Model {
     'max_rows'        => 0,
     'update_uris'     => true,
     'abstract_fields' => array(),
+    'abstract_filter' => '',
     'relations'       => array(),
     'admin_grid'      => array(),
     'admin_form'      => array(),
@@ -193,21 +194,23 @@ Class Table_Model extends CI_Model {
    */
   public function _config( $table='', $load = true ) {
     // Haal de default settings op
-    if ($load) $this->config->load( 'tables/table_model', true);
+    $this->config->load( 'tables/table_model', true);
     $default = $this->config->item( 'tables/table_model' );
     $this->settings = $default;
     if ($table) $this->settings['table'] = $table; // Voor het los instellen van een table zonder eigen model
     // Haal de settings van huidige model op
     if ( empty($table) ) $table=get_class($this);
     if ( get_class()!=$table ) {
-      $this->config->load( 'tables/'.$table, true);
-      $settings = $this->config->item( 'tables/'.$table );
-      // Merge samen tot settings
-      if ( $settings ) {
-        $this->settings = array_merge( $default, $settings );
+      if ($load) {
+        $this->config->load( 'tables/'.$table, true);
+        $settings = $this->config->item( 'tables/'.$table );
+        // Merge samen tot settings
+        if ( $settings ) {
+          $this->settings = array_merge( $default, $settings );
+        }
       }
       // Test of de noodzakelijke settings zijn ingesteld, zo niet doe dat automatisch
-      $this->_autoset( $table );
+      $this->_autoset( );
     }
     return $this->settings;
   }
@@ -234,6 +237,7 @@ Class Table_Model extends CI_Model {
         }
         // var_dump(['_autoset_'.$key => $this->settings[$key] ]);
       }
+      if ($this->settings[$key]===NULL) unset($this->settings[$key]);
     }
     return $this->settings;
   }
@@ -353,9 +357,9 @@ Class Table_Model extends CI_Model {
     $this->load->model('cfg');
     // Haal eerst indien mogelijk uit (depricated) cfg_table_info
     $max_rows = $this->cfg->get( 'cfg_table_info', $this->settings['table'], 'int_max_rows');
-    // Anders is het gewoon standaard 0
-    if (is_NULL($max_rows)) $max_rows = 0;
-    return $max_rows;
+    // Anders is het gewoon standaard NULL (niet nodig)
+    if ($max_rows==0) return NULL;
+    return intval($max_rows);
   }
   
 
@@ -367,12 +371,14 @@ Class Table_Model extends CI_Model {
    * @author Jan den Besten
    */
   protected function _autoset_update_uris() {
+    // Heeft alleen maar nu als een 'uri' veld bestaat
+    if ( ! $this->field_exists('uri') ) return NULL;
     $this->load->model('cfg');
     // Haal eerst indien mogelijk uit (depricated) cfg_table_info
     $update_uris = $this->cfg->get( 'cfg_table_info', $this->settings['table'], 'b_freeze_uris');
     // Anders is het gewoon standaard true
     if (is_NULL($update_uris)) $update_uris = true;
-    return $update_uris;
+    return boolval($update_uris);
   }
 
 
@@ -435,8 +441,8 @@ Class Table_Model extends CI_Model {
     $this->load->model('cfg');
     // Haal eerst indien mogelijk uit (depricated) cfg_table_info
     $abstract_filter = $this->cfg->get( 'cfg_table_info', $this->settings['table'], 'str_options_where');
-    // Anders is het gewoon standaard ''
-    if (is_NULL($abstract_filter)) $abstract_filter = '';
+    // Anders is het gewoon standaard NULL
+    if ($abstract_filter=='') $abstract_filter=NULL;
     return $abstract_filter;
   }
   

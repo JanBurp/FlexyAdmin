@@ -61,7 +61,7 @@ $config['abstract_fields']  = NULL;
 /**
  * Een where SQL die wordt gebruikt om een abstract resultaat te filteren indiend nodig.
  */
-$config['abstract_filter']  = '';
+$config['abstract_filter']  = NULL;
 
 /**
  * Hier worden de relaties ingesteld die deze tabel heeft.

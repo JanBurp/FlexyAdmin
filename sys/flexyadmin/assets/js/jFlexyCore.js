@@ -167,6 +167,9 @@ $(document).ready(function() {
 		var mh=$('#menu').height();
 		$(this).css({'top':-(-fh+mh-30)});
 	});
+  
+  // DIFF
+  $('div.diff').diff();
 
 });
 
@@ -535,3 +538,62 @@ function flash(swf,w,h) {
 	f=f.replace(/#attr#/g,attr);
 	return f;
 }
+
+
+
+//
+// diff
+//
+(function($) {
+  var defaults = {};
+  var opts;
+  var self;
+  var methods = {
+    init : function( options ) {
+      self=this;
+   		opts = $.extend({}, defaults, options);
+      $('.diffleft',self).add('.diffright',self).each(function(){
+        $(this).css({'cursor':'pointer'});
+      });
+      $('tbody tr',self).click(function(){
+        methods.change.apply(this);
+      });
+      
+      return self;
+    },
+    
+    change : function() {
+      var selected = $(this).find('.selected');
+      var other = '';
+      var glyph='left';
+      if ( $(selected).hasClass('diffleft') ) {
+        other = $(this).find('.diffright');
+        glyph = 'right';
+      }
+      else {
+        other = $(this).find('.diffleft');
+        glyph = 'left';
+      }
+      $(selected).removeClass('selected');
+      $(other).addClass('selected');
+      $(this).find('.glyphicon').removeAttr('class').addClass('glyphicon glyphicon-chevron-'+glyph);
+    },
+    
+    
+    
+    
+    
+    
+  };
+  $.fn.diff = function(methodOrOptions) {
+     if ( methods[methodOrOptions] ) {
+       return methods[ methodOrOptions ].apply( this, Array.prototype.slice.call( arguments, 1 ));
+     } else if ( typeof methodOrOptions === 'object' || ! methodOrOptions ) {
+       return methods.init.apply( this, arguments );
+     } else {
+       $.error( 'Method "' +  methodOrOptions + '" does not exist on jQuery.diff' );
+     }    
+   };  
+})(jQuery);
+
+

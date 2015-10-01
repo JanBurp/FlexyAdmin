@@ -50,14 +50,16 @@ Class Table_Model_Create extends CI_Model {
       $config = $this->replace_config($config_template,$settings);
       $config = $this->parser->parse_string( $config, $data, true );
       if ($save) {
+        $file = $table.'.php';
+        if (is_string($save)) $file=$save.'/'.$file;
         // sys or site
         if ( in_array(get_prefix($table),$this->site_models) ) {
-          file_put_contents( $site_model_path.$table.'.php', $model);
-          file_put_contents( $site_config_path.$table.'.php', $config );
+          file_put_contents( $site_model_path.$file, $model);
+          file_put_contents( $site_config_path.$file, $config );
         }
         else {
-          file_put_contents( $sys_model_path.$table.'.php', $model);
-          file_put_contents( $sys_config_path.$table.'.php', $config );
+          file_put_contents( $sys_model_path.$file, $model);
+          file_put_contents( $sys_config_path.$file, $config );
         }
       }
       $returned_config[$table] = $settings;
@@ -65,6 +67,7 @@ Class Table_Model_Create extends CI_Model {
     
     return $returned_config;
   }
+  
   
   /**
    * Vervang $config['...'] door een waarde in een config bestand

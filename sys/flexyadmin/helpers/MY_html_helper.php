@@ -211,6 +211,26 @@ function hr($a=array()) {
 }
 
 /**
+ * pre tag
+ *
+ * @return string
+ * @author Jan den Besten
+ */
+function pre() {
+  return '<pre>';
+}
+
+/**
+ * einde pre tag
+ *
+ * @return string
+ * @author Jan den Besten
+ */
+function _pre() {
+  return '</pre>';
+}
+
+/**
  * Maakt een veilig email link
  *
  * @param string $adres Emailadres

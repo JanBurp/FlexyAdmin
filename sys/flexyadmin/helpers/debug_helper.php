@@ -136,22 +136,22 @@ function strace_($a=NULL) {
  * @return string Geeft het resulaat (ook nog) als een string
  * @author Jan den Besten
  */
-function trace_($a=NULL,$echo=true,$backtraceOffset=1,$max=50) {
+function trace_($a=NULL,$echo=true,$backtraceOffset=1,$max=50,$class='_trace') {
 	$CI=&get_instance();
 	static $c=0;
-  if ($c==0 and !IS_AJAX and !defined('PHPUNIT_TEST')) {
-    echo "<style>._trace {box-sizing:border-box;position:relative;width:100%;margin:2px;padding:5px;overflow:auto;color:#000;font-family:courier,serif;font-size:10px;line-height:14px;border:solid 1px #666;background-color:#efe;opacity:.95;z-index:99999;} ._trace pre {font-size:10px;border:none;background:#FFF;margin:0;padding:2px;}</style>";
-  }
+  // if ($styling and $c==0 and !IS_AJAX and !defined('PHPUNIT_TEST')) {
+  //   echo "<style>._trace {box-sizing:border-box;position:relative;width:100%;margin:2px;padding:5px;overflow:auto;color:#000;font-family:courier,serif;font-size:10px;line-height:14px;border:solid 1px #666;background-color:#efe;opacity:.95;z-index:99999;} ._trace pre {font-size:10px;border:none;background:#FFF;margin:0;padding:2px;}</style>";
+  // }
   if (IS_AJAX or defined('PHPUNIT_TEST')) {
     $out='';
   }
   else {
-    $out='<pre class="_trace">';
+    $out='<pre class="'.$class.'">';
   }
   if (defined('PHPUNIT_TEST')) {
    $out.="\e[32m";
   }
-  $out.='TRACE ['.$c.']';
+  if (!empty($class)) $out.='TRACE ['.$c.']';
   // echo $out;
   ob_start();
   var_dump($a);
@@ -160,37 +160,11 @@ function trace_($a=NULL,$echo=true,$backtraceOffset=1,$max=50) {
   $out=preg_replace("/\n*\s*<b>array/ui", " <b>array", $out); // remove array on next line
   $out=preg_replace("/ *<i><font[^>]*>empty<\/font><\/i>\\n/uim", "", $out); // remove "empty"
   ob_end_clean();
-
-  // if ($c>=$max) {
-  //   if ($c==$max) $out.="TOO MANY TRACES, MAYBE A LOOP BUG...";
-  // }
-  // else {
-  //   $show="";
-  //   if (!isset($a)) {
-  //     $a=backtrace_($backtraceOffset,10,false);
-  //     $show="NULL -> BACKTRACE ";
-  //     $type="";
-  //   }
-  //   else {
-  //     $type="[".gettype($a).(is_array($a)?'-'.count($a):'')."]";
-  //   }
-  //   $out.="TRACE $show#$c$type:";
-  //   if (is_bool($a)) {
-  //     if ($a) $out.="'True'";
-  //     else    $out.="'False'";
-  //   }
-  //   elseif (is_array($a) or is_object($a))
-  //     $out.=print_ar(array_($a,true),true,2);//strlen($show.$type)+3);
-  //   else
-  //     $out.=print_r(tr_string($a),true);
-  // }
-  
-  // $out='';
   if (IS_AJAX  or defined('PHPUNIT_TEST'))
-    $out.=" ENDTRACE\n";
+    $out.="---\n\n";
   else
     $out.='</pre>';
-  if ($c>$max) $out='';
+  if ($max>0 and $c>$max) $out='';
 	if ($echo and !IS_AJAX) echo $out;
 	$c++;
   
