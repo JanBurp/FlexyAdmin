@@ -19,10 +19,9 @@ class __test extends AjaxController {
    * @author Jan den Besten
    */
 	public function index() {
-    $site = $this->crud->get_row(array(
-      'table'   => 'tbl_site',
-      'select'  => 'str_title,url_url'
-    ));
+    $site = $this->table_model->table('tbl_site')
+                              ->select('str_title,url_url')
+                              ->get_row();
     $this->load->view('admin/__test/main_app',array('title'=>$site['str_title'],'language'=>$this->user->language),false);
 	}
 

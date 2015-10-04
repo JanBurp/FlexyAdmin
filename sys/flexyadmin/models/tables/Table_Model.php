@@ -63,8 +63,8 @@ Class Table_Model extends CI_Model {
     'abstract_fields' => array(),
     'abstract_filter' => '',
     'relations'       => array(),
-    'admin_grid'      => array(),
-    'admin_form'      => array(),
+    'grid_set'        => array(),
+    'form_set'        => array(),
   );
   
   /**
@@ -84,9 +84,15 @@ Class Table_Model extends CI_Model {
   private $tm_select  = FALSE;
   
   /**
-   * Maximale lengte van txt velden, 0 is geen aanpassing.
+   * Maximale lengte van txt velden.
+   * Als groter dan 0 dan worden txt_ velden gemaximaliseerd op aantal karakters en gestript van html tags
    */
-  private $tm_txt_maxlen = 0;
+  private $tm_txt_abstract = 0;
+  
+  /**
+   * Of de result_array in het geval van ->select_abstract() plat moet worden. Zie bij ->select_abstract()
+   */
+  private $tm_flat_abstracts = FALSE;
   
   /**
    * Hou LIMIT en OFFSET bij om eventueel total_rows te kunnen berekenen
@@ -487,22 +493,27 @@ Class Table_Model extends CI_Model {
    * @return array
    * @author Jan den Besten
    */
-  protected function _autoset_admin_grid() {
+  protected function _autoset_grid_set() {
     $this->load->model('cfg');
     $table_info = $this->cfg->get( 'cfg_table_info',$this->settings['table'] );
     $show_always = $this->config->item('ALWAYS_SHOW_FIELDS');
 
-    $admin_grid['fields'] = $this->settings['fields'];
-    foreach ($admin_grid['fields'] as $key => $field) {
+    $grid_set['fields'] = $this->settings['fields'];
+    foreach ($grid_set['fields'] as $key => $field) {
       $field_info = $this->cfg->get('cfg_field_info', $this->settings['table'].'.'.$field );
-      if ( !in_array($field,$show_always) and !el('b_show_in_grid',$field_info,TRUE) ) unset($admin_grid['fields'][$key]);
+      if ( !in_array($field,$show_always) and !el('b_show_in_grid',$field_info,TRUE) ) unset($grid_set['fields'][$key]);
     }
-    $admin_grid['fields'] = array_values($admin_grid['fields']); // reset keys
-    $admin_grid['order_by']      = $this->settings['order_by'];
-    $admin_grid['jump_to_today'] = el('b_jump_to_today',$table_info,TRUE);
-    $admin_grid['pagination']    = el('b_pagination',$table_info,TRUE);
-    $admin_grid['with']          = array();
-    return $admin_grid;
+    $grid_set['fields'] = array_values($grid_set['fields']); // reset keys
+    $grid_set['order_by']      = $this->settings['order_by'];
+    $grid_set['jump_to_today'] = el('b_jump_to_today',$table_info,TRUE);
+    $grid_set['pagination']    = el('b_pagination',$table_info,TRUE);
+    $many_to_one               = el( array('relations','many_to_one'), $this->settings, array() );
+    $with=array('many_to_one'=>array());
+    foreach ($many_to_one as $table => $info) {
+      $with['many_to_one'][$table] = 'abstract';
+    }
+    $grid_set['with'] = $with;
+    return $grid_set;
   }
 
 
@@ -513,19 +524,19 @@ Class Table_Model extends CI_Model {
    * @return void
    * @author Jan den Besten
    */
-  protected function _autoset_admin_form() {
+  protected function _autoset_form_set() {
     $this->load->model('cfg');
     $table_info = $this->cfg->get( 'cfg_table_info',$this->settings['table'] );
     $show_always = $this->config->item('ALWAYS_SHOW_FIELDS');
     $main_fieldset = $this->settings['table'];
     $fieldsets = array($main_fieldset=>array());
 
-    $admin_form['fields'] = $this->settings['fields'];
-    foreach ($admin_form['fields'] as $key => $field) {
+    $form_set['fields'] = $this->settings['fields'];
+    foreach ($form_set['fields'] as $key => $field) {
       $field_info = $this->cfg->get('cfg_field_info', $this->settings['table'].'.'.$field );
       // Show?
       if ( !in_array($field,$show_always) and !el('b_show_in_form',$field_info,TRUE) ) {
-        unset($admin_form['fields'][$key]);
+        unset($form_set['fields'][$key]);
       }
       // in which fieldset?
       else {
@@ -534,10 +545,10 @@ Class Table_Model extends CI_Model {
         array_push( $fieldsets[$fieldset], $field );
       }
     }
-    $admin_form['fields'] = array_values($admin_form['fields']); // reset keys
-    $admin_form['fieldsets'] = $fieldsets;
-    $admin_form['with']      = array();
-    return $admin_form;
+    $form_set['fields'] = array_values($form_set['fields']); // reset keys
+    $form_set['fieldsets'] = $fieldsets;
+    $form_set['with']      = array();
+    return $form_set;
   }
   
   
@@ -681,7 +692,7 @@ Class Table_Model extends CI_Model {
   public function table( $table ) {
     $this->reset();
     if (empty($table)) {
-      $table = $this->autoset_table();
+      $table = $this->_autoset_table();
     }
     $this->_config( $table );
     $this->settings['table'] = $table;
@@ -861,7 +872,7 @@ Class Table_Model extends CI_Model {
    * @author Jan den Besten
    */
   public function get_setting( $key ) {
-    return el( $key, $settings, el( $key, $this->autoset ) );
+    return el( $key, $this->settings, el( $key, $this->autoset ) );
   }
   
 
@@ -990,15 +1001,18 @@ Class Table_Model extends CI_Model {
     $this->query_info = array();
     $query = $this->db->get( $this->settings['table'], $this->tm_limit, $this->tm_offset );
     
-    // Info
+    // Query Info
     if ($query) {
-      $this->query_info['num_rows'] = $query->num_rows();
+      $this->query_info['num_rows']   = $query->num_rows();
       $this->query_info['total_rows'] = $query->num_rows();
-      $this->query_info['num_fields'] = $query->num_fields();
-      $this->query_info['last_query'] = $this->last_query();
-      if ($this->tm_limit>0) {
+      if ($this->tm_limit>1) {
+        $this->query_info['limit']      = $this->tm_limit;
+        $this->query_info['offset']     = $this->tm_offset;
+        $this->query_info['page']       = $this->tm_offset / $this->tm_limit;
         $this->query_info['total_rows'] = $this->total_rows( true );
       }
+      $this->query_info['num_fields'] = $query->num_fields();
+      $this->query_info['last_query'] = $this->last_query();
     }
 
     if ( $reset ) $this->reset();
@@ -1025,7 +1039,7 @@ Class Table_Model extends CI_Model {
    * Maakt een mooie result_array van een $query
    * - Met keys die standaard primary_key zijn, of ingesteld kunnen worden met set_result_key()
    * - Met relaties gekoppeld als subarrays
-   * - Als select_txt_maxlen() is ingesteld dan worden die velden ook nog gestript van HTML tags
+   * - Als select_txt_abstract() is ingesteld dan worden die velden ook nog gestript van HTML tags
    *
    * @param object $query 
    * @return array
@@ -1094,12 +1108,19 @@ Class Table_Model extends CI_Model {
         }
       }
       
-      // tm_txt_maxlen
-      if ($this->tm_txt_maxlen>0) {
-        $txt_row = filter_by_key($row,'txt_');
-        foreach ($txt_row as $key => $value) {
-          $row[$key] = strip_tags($value);
+      // tm_txt_abstract
+      if ($this->tm_txt_abstract>0) {
+        $txt_row = $row;
+        $txt_row = filter_by_key($txt_row,'txt_');
+        $txt_row = array_keys($txt_row);
+        foreach ($txt_row as $txt_field) {
+          $row[$txt_field] = preg_replace( "/[\n\r]/"," ", strip_tags($row[$txt_field]));
         }
+      }
+      
+      // tm_flat_abstracts
+      if ($this->tm_flat_abstracts and isset($row['abstract'])) {
+        $row = $row['abstract'];
       }
       
       // result_key
@@ -1195,6 +1216,53 @@ Class Table_Model extends CI_Model {
     $row = $this->get_row( $where );
 		return $row[$field];
 	}
+  
+  
+  
+  /**
+   * Geeft resultaat terug specifiek voor het admin grid:
+   * - pagination
+   * - zoeken
+   * - abstracts van many_to_one
+   *
+   * @param int $page [0]
+   * @param string $sort ['']
+   * @param string $search ['']
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_grid( $page = 0, $sort = '', $search = '' ) {
+    $grid_set = $this->settings['grid_set'];
+    
+    // Fields
+    $this->select( $grid_set['fields'] );
+    $this->select_txt_abstract(250);
+    
+    // Order_by
+    if ($sort) {
+      $desc = (substr($sort,0,1) == '_'?'DESC':'ASC');
+      $sort = trim($sort,'_');
+      $this->order_by( $sort, $desc );
+    }
+    
+    // TODO SEARCH
+    
+    // Pagination
+    if ($grid_set['pagination']) {
+      $this->load->model('cfg');
+      $limit = $this->cfg->get('cfg_configurations','int_pagination');
+      $offset = $page * $limit;
+      $this->limit( $limit, $offset );
+    }
+
+    // TODO Jump to today
+    
+    // many_to_one
+    if (isset($grid_set['with']['many_to_one'])) $this->with( 'many_to_one', $grid_set['with']['many_to_one'] );
+    
+    return $this->get_result();
+  }
+  
 
 
   
@@ -1232,9 +1300,9 @@ Class Table_Model extends CI_Model {
         $sql = $this->settings['table'].'.'.$field;
       }
 
-      // tm_txt_maxlen?
-      if ($this->tm_txt_maxlen>0 and get_prefix($field)=='txt') {
-        $sql = 'SUBSTRING(`'.$this->settings['table'].'`.`'.$field.'`,1,'.$this->tm_txt_maxlen.') AS `'.$field.'`';
+      // tm_txt_abstract?
+      if ( $this->tm_txt_abstract and get_prefix($field)=='txt' ) {
+        $sql = 'SUBSTRING(`'.$this->settings['table'].'`.`'.$field.'`,1,'.$this->tm_txt_abstract.') AS `'.$field.'`';
       }
       
       // Bewaar
@@ -1247,27 +1315,29 @@ Class Table_Model extends CI_Model {
 	}
   
 
-
   /**
    * Selecteert abstract fields
    *
+   * @param bool $flat [FALSE] Als true dan worden de rijnen in de result_array geen arrays van een row, maar alleen de abstract value.
    * @return $this
    * @author Jan den Besten
    */
-  public function select_abstract() {
+  public function select_abstract( $flat = FALSE ) {
     $this->select( $this->get_compiled_abstract_select(), FALSE );
+    $this->tm_flat_abstracts = $flat;
     return $this;
   }
   
   /**
-   * Veranderd all txt velden tot een string met een maximale lengte en zonder html tags.
+   * Veranderd all txt velden tot een string met een maximale lengte, zonder html tags en zonder linebreaks.
    *
-   * @param int $txt_maxlen [0]
+   * @param mixed $txt_abstract [0] 0 = geen aanpassingen, TRUE = standaard aanpassingen, int = lengte bepalen
    * @return $this
    * @author Jan den Besten
    */
-  public function select_txt_maxlen( $txt_maxlen = 0 ) {
-    $this->tm_txt_maxlen = $txt_maxlen;
+  public function select_txt_abstract( $txt_abstract = 0 ) {
+    if ( $txt_abstract===TRUE or strtolower($txt_abstract)==='true') $txt_abstract = 100;
+    $this->tm_txt_abstract = $txt_abstract;
     return $this;
   }
   
@@ -1314,12 +1384,19 @@ Class Table_Model extends CI_Model {
 
   /**
    * Zelfde als 'where' van Query Builder, met deze uitbreidingen:
+   * - Je kunt als enig argument de primary_key meegeven of de strings 'first'
    * - Als $value een array is wordt 'where_in' aangeroepen.
-   * - Je kunt ook where statements voor relaties aangeven, zie hieronder.
+   * - Je kunt ook where statements voor relaties aangeven.
+   * 
+   * primary_key ea
+   * --------------
+   * ->where( 2 );        // Zoekt naar het resultaat met de primary_key 2
+   * ->where( 'first' );  // Zoekt naar het eerste resultaat
+   * 
    * 
    * many_to_one
    * -----------
-   * ->where( 'tbl_links.str_title', 'test );     // Zoekt het resultaat op het veld 'str_title' uit de many_to_one relatie met tbl_links.
+   * ->where( 'tbl_links.str_title', 'test' );     // Zoekt het resultaat op het veld 'str_title' uit de many_to_one relatie met tbl_links.
    * 
    * many_to_many
    * ------------
@@ -1336,11 +1413,27 @@ Class Table_Model extends CI_Model {
    * @author Jan den Besten
    */
 	public function where($key, $value = NULL, $escape = NULL) {
+    // Als value een array is, dan ->where_in()
     if (isset($value) and is_array($value)) {
       $this->db->where_in($key,$value,$escape);
       return $this;
     }
-    $this->db->where($key,$value,$escape);
+    // Als geen value maar alleen een key (die geen array is), dat wordt alleen op primary_key gevraagd
+    if (!isset($value) and !is_array($key)) {
+      // 'first'
+      if ($key==='first') {
+        unset($key);
+        unset($value);
+        $this->limit( 1 );
+      }
+      // primary_key
+      else {
+        $value = $key;
+        $key = $this->settings['primary_key'];
+      }
+    }
+    // where
+    if (isset($key)) $this->db->where($key,$value,$escape);
     return $this;
   }
   
@@ -2054,8 +2147,8 @@ Class Table_Model extends CI_Model {
 			/**
 			 * Als er many_to_many is, verwijder die ook
 			 */
-			$other_tables = $this->settings['relations']['many_to_many'];
-      if ( ! empty($other_tables) ) {
+      if ( isset($this->settings['relations']['many_to_many'])) {
+        $other_tables = $this->settings['relations']['many_to_many'];
         $other_tables = array_keys($other_tables);
         // $this_foreign_key = $this->settings['relations']['many_to_many'][$other_table]['this_key'];
         // $rel_tables = $this->relation_tables['many_to_many__rel'];
@@ -2111,12 +2204,18 @@ Class Table_Model extends CI_Model {
    * Geeft informatie van laatste query
    *
    * @param string $what ['']
+   * @param bool $last_query [FALSE]
    * @return mixed
    * @author Jan den Besten
    */
-  public function get_query_info( $what='' ) {
+  public function get_query_info( $what='', $last_query = FALSE ) {
     if (!empty($what)) return el($what,$this->query_info);
-    return $this->query_info;
+    $query_info = $this->query_info;
+    if ( ! $last_query ) {
+      unset($query_info['last_query']);
+      unset($query_info['last_clean_query']);
+    }
+    return $query_info;
   }
   
   

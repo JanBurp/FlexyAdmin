@@ -28,11 +28,11 @@ class TableModelTest extends CITestCase {
     // tbl_menu
     $this->CI->table_model->table( 'tbl_menu' );
     // ->list_fields()
-    $this->assertEquals( array('id','order','self_parent','uri','str_title','txt_text','str_module','stx_description','str_keywords'), $this->CI->table_model->list_fields() );
+    $this->assertEquals( array('id','order','self_parent','uri','str_title','txt_text','b_visible','str_module','stx_description','str_keywords'), $this->CI->table_model->list_fields() );
     // ->get()
     $query = $this->CI->table_model->get();
     $this->assertEquals( 5, $query->num_rows() );
-    $this->assertEquals( 9, $query->num_fields() );
+    $this->assertEquals( 10, $query->num_fields() );
 
     // tbl_links
     $this->CI->table_model->table('tbl_links');
@@ -46,11 +46,11 @@ class TableModelTest extends CITestCase {
     // tbl_menu, nog een keer om te kijk of wisseling goed gaat
     $this->CI->table_model->table('tbl_menu');
     // ->list_fields()
-    $this->assertEquals( array('id','order','self_parent','uri','str_title','txt_text','str_module','stx_description','str_keywords'), $this->CI->table_model->list_fields() );
+    $this->assertEquals( array('id','order','self_parent','uri','str_title','txt_text','b_visible','str_module','stx_description','str_keywords'), $this->CI->table_model->list_fields() );
     // ->get(2)
     $query = $this->CI->table_model->get(2);
     $this->assertEquals( 2, $query->num_rows() );
-    $this->assertEquals( 9, $query->num_fields() );
+    $this->assertEquals( 10, $query->num_fields() );
     // ->where()
     $query = $this->CI->table_model->where( 'order <=', '2' )->get();
     $this->assertEquals( 3, $query->num_rows() );
@@ -135,6 +135,14 @@ class TableModelTest extends CITestCase {
   
   
   public function test_many_to_one_data() {
+    $this->CI->table_model->table( 'tbl_leerlingen' );
+    $grid_set = $this->CI->table_model->get_setting('grid_set');
+    $this->assertInternalType( 'array', $grid_set );
+    $this->assertInternalType( 'array', $grid_set['with']['many_to_one'] );
+    $this->assertEquals( 2, count($grid_set['with']['many_to_one']) );
+    $this->assertEquals( 'abstract', $grid_set['with']['many_to_one']['tbl_groepen'] );
+    $this->assertEquals( 'abstract', $grid_set['with']['many_to_one']['tbl_adressen'] );
+    
     // tbl_leerlingen - abstract
     $query = $this->CI->table_model->table( 'tbl_leerlingen' )
                                    ->select('id,str_first_name')
@@ -371,6 +379,59 @@ class TableModelTest extends CITestCase {
     $this->CI->table_model->where_in( 'id_crud', $affected_ids );
     $result = $this->CI->table_model->get_result();
     $this->assertEquals( array(), $result );
+  }
+  
+  
+  
+  
+  public function test_grid_set() {
+    
+    // Page1
+    $this->CI->table_model->table('tbl_leerlingen');
+    $page1 = $this->CI->table_model->get_grid();
+    $info = $this->CI->table_model->get_query_info();
+    $this->assertInternalType( 'array', $page1 );
+    $this->assertEquals( 20, count($page1) );
+    $this->assertEquals( 20, $info['num_rows'] );
+    $this->assertEquals( 92, $info['total_rows'] );
+    $this->assertEquals( 0, $info['page'] );
+    // Page2
+    $page2 = $this->CI->table_model->get_grid( 1 );
+    $info = $this->CI->table_model->get_query_info();
+    $this->assertInternalType( 'array', $page2 );
+    $this->assertEquals( 20, count($page2) );
+    $this->assertEquals( 20, $info['num_rows'] );
+    $this->assertEquals( 92, $info['total_rows'] );
+    $this->assertEquals( 1, $info['page'] );
+    // page1 != page2
+    $this->assertFalse(  $page1==$page2 );
+    // Last page
+    $last_page = $this->CI->table_model->get_grid( 4 );
+    $info = $this->CI->table_model->get_query_info();
+    $this->assertEquals( 12, count($last_page) );
+    $this->assertEquals( 12, $info['num_rows'] );
+    $this->assertEquals( 92, $info['total_rows'] );
+    $this->assertEquals( 4, $info['page'] );
+    
+    // order_by & abstract test
+    $first = current($page1);
+    $this->assertEquals( 'Aafje', $first['str_first_name'] );
+    $this->assertEquals( 'Rekenpark 42|1234IJ', $first['tbl_adressen']['abstract'] );
+    $this->assertEquals( 'Gym|vak', $first['tbl_groepen']['abstract'] );
+    
+    // DESC
+    $result = $this->CI->table_model->get_grid(0, '_str_first_name');
+    $first = current($result);
+    $this->assertEquals( 'Evy', $first['str_first_name'] );
+    //
+    $result = $this->CI->table_model->get_grid(0, 'str_last_name');
+    $first = current($result);
+    $this->assertEquals( 'Aalts', $first['str_last_name'] );
+    //
+    $result = $this->CI->table_model->get_grid(0, '_str_last_name');
+    $first = current($result);
+    $this->assertEquals( 'Evertsen', $first['str_last_name'] );
+    
     
   }
   

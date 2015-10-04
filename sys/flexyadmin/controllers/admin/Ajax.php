@@ -123,36 +123,15 @@ class Ajax extends AjaxController {
             if (! $this->form_validation->validate_data($newData,$table)) {
               $validation_errors = $this->form_validation->get_error_messages();
             }
-            
-            // $validation[]=array('rules'=>$this->ff->validation,'params'=>'');
-            // $validations=$this->form_validation->get_validations($table,$field,$validation,true);
-            // foreach ($validations as $rule => $param) {
-            //   $rule=str_replace(array('[',']'),'',$rule);
-            //   if (!$this->form_validation->$rule($value,$param)) {
-            //     if (empty($param))
-            //       $validation_errors=langp($rule,$field);
-            //     else
-            //       $validation_errors=langp($rule,$field,$param);
-            //     break;
-            //   }
-            // }
-            
-            // Options?
-            // if (!$validation_errors) {
-            //   $options=$this->cfg->get('cfg_field_info',$table.'.'.$field,'str_options');
-            //   if ($options) {
-            //     $aOptions=explode('|',$options);
-            //     if (!in_array($value,$aOptions)) $validation_errors[$field]=langp('valid_option',$field).str_replace('|',',',$options);
-            //   }
-            // }
 
             if (!$validation_errors) {
               // Call Plugins
     					if ($plugins)	$newData=$this->_after_update($table,$oldData,$newData);
 
               // Update in database
-    					$this->crud->table($table);
-    					$this->crud->update(array('where'=>array(PRIMARY_KEY=>$id), 'data'=>$newData));
+              $this->table_model->table($table);
+              $this->table_model->update( $newData, array(PRIMARY_KEY=>$id) );
+              
               $this->login_log->update($table);
 
     					if ($plugins) {
@@ -183,6 +162,7 @@ class Ajax extends AjaxController {
     if (isset($options)) $result['opions']=$options;
     $result['old_value']=$old_value;
     $result['new_value']=$value;
+    $result['field']=$field;
     $this->message->reset_errors();
     return $this->_result($result);
  	}

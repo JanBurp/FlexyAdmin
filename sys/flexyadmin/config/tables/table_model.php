@@ -107,10 +107,11 @@ $config['relations'] = NULL;
  * - fields         - Velden die meegegeven en getoond worden (afhankelijk van veld specifieke instellingen). Als leeg dan is dat hetzelfde als $this->fields
  * - order_by       - Volgorde voor het grid. Als leeg dan is dat hetzelfde als $this->order_by
  * - jump_to_today  - Als het resultaat een datumveld bevat dan begint het resultaat op de pagina waar de datum het dichst de huidige datum benaderd.
+ * - pagination     - Als true dan wordt het resultaat in pagina's gegeven.
  * - with           - Relaties die mee worden genomen en getoond. Zie $this->with()
  *                    Je kunt een specifiek datumveld instellen of TRUE: dan wordt het eerste datumveld opgezocht (wat extra resources kost)
  */
-$config['admin_grid']       = NULL;
+$config['grid_set'] = NULL;
 
 /**
  * Deze instellingen bepalen wat voor resultaat er wordt gegeven voor het admin formulier.
@@ -120,4 +121,4 @@ $config['admin_grid']       = NULL;
  * - with           - Relaties die mee worden genomen en getoond. Zie $this->with()
  * - fieldsets      - Fieldsets voor het formulier. Per fieldset kan aangegeven worden welke velden daarin verschijnen. Bijvoorbeeld: 'Fieldset naam' => array( 'str_title_en', 'txt_text_en' )
  */
-$config['admin_form']        = NULL;
+$config['form_set'] = NULL;

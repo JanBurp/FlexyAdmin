@@ -27,7 +27,6 @@ class ApiTableTest extends ApiTestModel {
         'data'  => array( 'type' => 'array' ),
         'data'  => array( 'countGreaterOrEqual' => 1 ),
         'info'  => array( 'type' => 'array' ),
-        'info'  => array( 'count' => 4 ),
       )
     ));
 
@@ -58,12 +57,10 @@ class ApiTableTest extends ApiTestModel {
         'data|1'  => array( 'hasKey' => 'str_google_analytics' ),
         'info'    => array( 'type' => 'array' ),
         'info'    => array( 'count' => 3 ),
-        'info'    => array( 'hasKey' => 'rows' ),
+        'info'    => array( 'hasKey' => 'num_rows' ),
         'info'    => array( 'hasKey' => 'total_rows' ),
-        'info'    => array( 'hasKey' => 'table_rows' ),
-        'info|rows' => array( 'Equals' => 1 ),
+        'info|num_rows' => array( 'Equals' => 1 ),
         'info|total_rows' => array( 'Equals' => 1 ),
-        'info|table_rows' => array( 'Equals' => 1 ),
       )
     ));
     

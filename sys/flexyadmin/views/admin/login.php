@@ -10,7 +10,7 @@
 	<!--[if IE 8]><style type="text/css" media="screen">@import url(<?=admin_assets()?>css/ie8.css);</style><![endif]-->
 	<!--[if IE 9]><style type="text/css" media="screen">@import url(<?=admin_assets()?>/css/ie9.css);</style><![endif]-->
 	
-	<script src="sys/jquery/jquery-1.6.2.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="sys/jquery/jquery-1.8.3.min.js" type="text/javascript" charset="utf-8"></script>
 	<script>
 	$(document).ready(function(){
 	if ( $.browser.msie && $.browser.version<=6 ) {

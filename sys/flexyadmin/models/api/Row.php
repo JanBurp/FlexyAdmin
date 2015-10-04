@@ -249,11 +249,10 @@ class Row extends Api_Model {
   private function _get_row() {
     $this->db->unselect( el(array('field_info','hidden_fields'),$this->cfg_info,array()) );
     $args=$this->_clean_args(array('table','where'));
-    $table=$args['table'];
-    unset($args['table']);
-    $this->crud->table($table);
-    $values = $this->crud->get_row($args);
-    $this->info=$this->crud->get_info();
+    $this->table_model->table( $args['table'] );
+    if (isset($args['where'])) $this->table_model->where( $args['where'] );
+    $values = $this->table_model->get_row();
+    $this->info=$this->table_model->get_query_info();
     // trace_(['_get_row'=>$values,'args'=>$this->args]);
     return $values;
   }
@@ -266,11 +265,11 @@ class Row extends Api_Model {
    */
   private function _update_row() {
     $args=$this->_clean_args(array('table','where','data'));
-    $table=$args['table'];
-    unset($args['table']);
-    $this->crud->table($table);
-    $id = $this->crud->validate()->update($args);
-    $this->info=$this->crud->get_info();
+    $this->table_model->table( $args['table'] );
+    if (isset($args['where'])) $this->table_model->where( $args['where'] );
+    $this->table_model->set( $args['data'] );
+    $id = $this->table_model->validate()->update();
+    $this->info=$this->table_model->get_query_info();
     return array('id'=>$id);
   }
 
@@ -283,11 +282,11 @@ class Row extends Api_Model {
    */
   private function _insert_row() {
     $args=$this->_clean_args(array('table','data'));
-    $table=$args['table'];
-    unset($args['table']);
-    $this->crud->table($table);
-    $id = $this->crud->validate()->insert($args);
-    $this->info=$this->crud->get_info();
+    $this->table_model->table( $args['table'] );
+    if (isset($args['where'])) $this->table_model->where( $args['where'] );
+    $this->table_model->set( $args['data'] );
+    $id = $this->table_model->validate()->insert();
+    $this->info=$this->table_model->get_query_info();
     return array('id'=>$id);
   }
 
@@ -300,11 +299,10 @@ class Row extends Api_Model {
    */
   private function _delete_row() {
     $args=$this->_clean_args(array('table','where'));
-    $table=$args['table'];
-    unset($args['table']);
-    $this->crud->table($table);
-    $deleted=$this->crud->delete($args['where']);
-    $this->info=$this->crud->get_info();
+    $this->table_model->table( $args['table'] );
+    if (isset($args['where'])) $this->table_model->where( $args['where'] );
+    $id = $this->table_model->delete();
+    $this->info=$this->table_model->get_query_info();
     return $deleted;
   }
 
