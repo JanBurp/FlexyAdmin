@@ -7,7 +7,7 @@
  */
 class cfg_admin_menu extends crud_ {
   
-  private $types=array('tbl'=>'table','cfg'=>'config','log'=>'log','res'=>'result');
+  private $types=array('tbl'=>'table','cfg'=>'config','rel'=>'rel','log'=>'log','res'=>'result');
 
 	public function __construct() {
 		parent::__construct();

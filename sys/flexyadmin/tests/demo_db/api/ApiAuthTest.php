@@ -117,12 +117,11 @@ class ApiAuthTest extends ApiTestModel {
     error_reporting(0);
     $can_send = $this->CI->email->can_send();
     error_reporting($error_reporting);
-    if (!$can_send) return FALSE;
 
     // first create new users
     $cleanup_ids=array();
     foreach ($this->test_users as $user) {
-      $cleanup_ids[]=$this->CI->crud->table('cfg_users')->insert(array('data'=>$user));
+      $cleanup_ids[]=$this->CI->table_model->table('cfg_users')->insert( $user );
     }
     
     // Try 10 times with random emails
@@ -140,28 +139,29 @@ class ApiAuthTest extends ApiTestModel {
     }
     
     // send new password
-    foreach ($this->test_users as $user) {
-      $this->CI->auth->set_args(array('email'=>$user['email_email']));
-      $result=$this->CI->auth->send_new_password();
+    if ($can_send) {
+      foreach ($this->test_users as $user) {
+        $this->CI->auth->set_args(array('email'=>$user['email_email']));
+        $result=$this->CI->auth->send_new_password();
       
-      $this->assertArrayHasKey( 'success', $result );
-      $this->assertEquals( true, $result['success'] );
-      $this->assertArrayHasKey( 'args', $result );
-      $this->assertInternalType( 'array', $result['args'] );
-      $this->assertEquals( $user['email_email'], $result['args']['email'] );
-      $this->assertArrayHasKey( 'data', $result );
-      $this->assertInternalType( 'array', $result['data'] );
-      $this->assertEquals( $user['email_email'], $result['data']['email'] );
-      $this->assertEquals( $user['str_username'], $result['data']['username'] );
+        $this->assertArrayHasKey( 'success', $result );
+        $this->assertEquals( true, $result['success'] );
+        $this->assertArrayHasKey( 'args', $result );
+        $this->assertInternalType( 'array', $result['args'] );
+        $this->assertEquals( $user['email_email'], $result['args']['email'] );
+        $this->assertArrayHasKey( 'data', $result );
+        $this->assertInternalType( 'array', $result['data'] );
+        $this->assertEquals( $user['email_email'], $result['data']['email'] );
+        $this->assertEquals( $user['str_username'], $result['data']['username'] );
       
-      // Test if password is not same anymore
-      $new_password_hash=$this->CI->db->get_field_where('cfg_users','gpw_password','email_email',$user['email_email']);
-      $this->assertNotEquals( $user['gpw_password'], $new_password_hash );
-      
+        // Test if password is not same anymore
+        $new_password_hash=$this->CI->db->get_field_where('cfg_users','gpw_password','email_email',$user['email_email']);
+        $this->assertNotEquals( $user['gpw_password'], $new_password_hash );
+      }      
     }
-    
+
     // cleanup testusers
-    $this->CI->crud->table('cfg_users')->delete(array('id'=>$cleanup_ids));
+    $this->CI->table_model->table('cfg_users')->where_in( 'id', $cleanup_ids)->delete();
   }
   
 }

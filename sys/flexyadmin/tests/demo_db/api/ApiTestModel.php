@@ -84,11 +84,11 @@ class ApiTestModel extends CITestCase {
   }
   
   protected function _message($message,$args=FALSE,$user=FALSE,$result=FALSE) {
-    $message='<span class="text-warning">'.$message;
+    // $message='<span class="text-warning">'.$message;
     if ($args) $message.="\n".'$args='.array2php($args,0,'');
     if ($user) $message.="\n".'$username=`'.$user['username'].'`';
     if ($result) $message.="\n".'$result='.array2php($result,0,'');
-    $message.='</span>';
+    // $message.='</span>';
     return $message;
   }
   
@@ -201,103 +201,104 @@ class ApiTestModel extends CITestCase {
       
       // which tables?
       $tables = $this->_tableFromArgs($params['args']);
-      
-      foreach ($tables as $table) {
+      if ($tables) {
+        foreach ($tables as $table) {
         
-        $args=$this->_tableInArgs($params['args'],$table);
-        // trace_([$params,$table,$args]);
+          $args=$this->_tableInArgs($params['args'],$table);
+          // trace_([$params,$table,$args]);
         
-        $this->CI->$apiModel->set_args($args);
-        $result    = $this->CI->$apiModel->index();
-        $results[] = $result;
+          $this->CI->$apiModel->set_args($args);
+          $result    = $this->CI->$apiModel->index();
+          $results[] = $result;
         
-        // trace_([$args,$result]);
+          // trace_([$args,$result]);
         
-        // trace_([$table,$user]);
-        if (empty($table) or in_array($table,$user['tables'])) {
+          // trace_([$table,$user]);
+          if (empty($table) or in_array($table,$user['tables'])) {
 
-          // trace_([$table,$args,$result,$user]);
+            // trace_([$table,$args,$result,$user]);
 
-          // user has rights for this table
-          $this->assertArrayNotHasKey( 'status', $result );
-          $this->assertArrayHasKey( 'success', $result );
-          $this->assertEquals( true, $result['success'] );
-          $this->assertArrayNotHasKey( 'error', $result );
+            // user has rights for this table
+            $this->assertArrayNotHasKey( 'status', $result );
+            $this->assertArrayHasKey( 'success', $result );
+            $this->assertEquals( true, $result['success'] );
+            $this->assertArrayNotHasKey( 'error', $result );
 
-          // args
-          $this->assertArrayHasKey( 'args', $result );
-          $this->assertInternalType( 'array', $result['args'] );
+            // args
+            $this->assertArrayHasKey( 'args', $result );
+            $this->assertInternalType( 'array', $result['args'] );
           
-          // data
-          $this->assertArrayHasKey( 'data', $result );
-          // $this->assertInternalType( 'array', $result['data'] );
+            // data
+            $this->assertArrayHasKey( 'data', $result );
+            // $this->assertInternalType( 'array', $result['data'] );
 
-          // other asserts
-          foreach ( $params['asserts'] as $key => $assert) {
-            $keys=explode('|',$key);
-            if (count($keys)<=1) $keys=$key;
-            $keyResult=el($keys,$result);
+            // other asserts
+            foreach ( $params['asserts'] as $key => $assert) {
+              $keys=explode('|',$key);
+              if (count($keys)<=1) $keys=$key;
+              $keyResult=el($keys,$result);
             
-            foreach ($assert as $type => $value) {
-              switch ($type) {
+              foreach ($assert as $type => $value) {
+                switch ($type) {
 
-                case 'type':
-                  // trace_([$args,$result]);
-                  $this->assertInternalType(
-                    $value,
-                    $keyResult,
-                    $this->_message('Type of <b>'.$key.'</b> in <i>result</i> needs to be <b>'.$value.'</b>.', $args, $user)
-                  );
-                  break;
+                  case 'type':
+                    // trace_([$args,$result]);
+                    $this->assertInternalType(
+                      $value,
+                      $keyResult,
+                      $this->_message('Type of `'.$key.'` in result needs to be  "'.$value.'".', $args, $user)
+                    );
+                    break;
 
-                case 'hasKey':
-                  // trace_(['args'=>$args,'assert'=>$assert,'result'=>$result]);
-                  $this->assertArrayHasKey(
-                    $value,
-                    $keyResult,
-                    $this->_message('<b>'.$key.'</b> in <i>result</i> should have a key <b>'.$value.'</b>.', $args, $user)
-                  );
-                  break;
+                  case 'hasKey':
+                    // trace_(['args'=>$args,'assert'=>$assert,'result'=>$result]);
+                    $this->assertArrayHasKey(
+                      $value,
+                      $keyResult,
+                      $this->_message('`'.$key.'` in result should have a key  "'.$value.'".', $args, $user)
+                    );
+                    break;
 
-                case 'count':
-                  // trace_(['args'=>$args,'result'=>$result]);
-                  $this->assertCount(
-                    $value,
-                    $keyResult,
-                    $this->_message('<b>'.$key.'</b> in <i>result</i> should have '.$value.' keys.', $args, $user, $result)
-                  );
-                  break;
+                  case 'count':
+                    // trace_(['args'=>$args,'result'=>$result]);
+                    $this->assertCount(
+                      $value,
+                      $keyResult,
+                      $this->_message('`'.$key.'` in result should have '.$value.' keys.', $args, $user, $result)
+                    );
+                    break;
                   
-                case 'countGreaterOrEqual':
-                  // trace_([$args,$result]);
-                  $count=count($keyResult);
-                  $this->assertGreaterThanOrEqual(
-                    $value,
-                    $count,
-                    $this->_message('<b>'.$key.'</b> in <i>result</i> should have '.$value.' or more keys.', $args, $user)
-                  );
-                  break;
+                  case 'countGreaterOrEqual':
+                    // trace_([$args,$result]);
+                    $count=count($keyResult);
+                    $this->assertGreaterThanOrEqual(
+                      $value,
+                      $count,
+                      $this->_message('`'.$key.'` in result should have '.$value.' or more keys.', $args, $user)
+                    );
+                    break;
                   
-                case 'Equals':
-                  // trace_([$params,$table,$args]);
-                  $this->assertEquals(
-                    $value,
-                    $keyResult,
-                    $this->_message('<b>'.$key.'</b> in <i>result</i> should Equals<b>'.$value.'</b>.', $args, $user)
-                  );
-                  break;
+                  case 'Equals':
+                    // trace_([$params,$table,$args]);
+                    $this->assertEquals(
+                      $value,
+                      $keyResult,
+                      $this->_message('`'.$key.'` in result should Equals "'.$value.'".', $args, $user)
+                    );
+                    break;
                   
 
+                }
               }
             }
           }
-        }
-        else {
-          // user has no rights for this table
-          // trace_([$user,$args,$result]);
-          $this->assertCount( 1, $result, $this->_message('Result without AUTH is more than 1 ',$args,$user) );
-          $this->assertArrayHasKey( 'status', $result );
-          $this->assertEquals( 401, $result['status'] );
+          else {
+            // user has no rights for this table
+            // trace_([$user,$args,$result]);
+            $this->assertCount( 1, $result, $this->_message('Result without AUTH is more than 1 ',$args,$user) );
+            $this->assertArrayHasKey( 'status', $result );
+            $this->assertEquals( 401, $result['status'] );
+          }
         }
       }
     }

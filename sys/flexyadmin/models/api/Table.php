@@ -8,7 +8,7 @@
  * - `table`                    // De gevraagde tabel
  * - `[limit=0]`                // Aantal rijen dat het resultaat moet bevatten. Als `0` dan worden alle rijen teruggegeven.
  * - `[offset=0]`               // Hoeveel rijen vanaf de start worden overgeslagen.
- * - `[txt_as_abstract=FALSE]`  // Als `TRUE`, dan bevatten velden met de `txt_` prefix een ingekorte tekst zonder HTML tags.
+ * - `[txt_abstract=0]`         // Als `TRUE`, dan bevatten velden met de `txt_` prefix een ingekorte tekst zonder HTML tags. Of een integer waarde voor de lengte.
  * - `[as_options=FALSE]`       // Als `TRUE`, dan wordt de data als opties teruggegeven die gebruikt kunnen worden in een dropdown field bijvoorbeeld. (`limit` en `offset` werken dan niet)
  * - `[options=FALSE]`          // Als `TRUE`, dan worden de mogelijke waarden van velden meegegeven.
  * - `[config[]=table_info]`    // Informatie over de tabel kan op deze manier meegenomen worden in het resultaat.
@@ -19,16 +19,15 @@
  * 
  * - `_api/table?table=tbl_menu`
  * - `_api/table?table=tbl_menu&offset=9&limit=10`
- * - `_api/table?table=tbl_menu&txt_as_abstract=TRUE`
+ * - `_api/table?table=tbl_menu&txt_abstract=TRUE`
  * - `_api/table?table=tbl_menu&config[]=table_info`
  * 
  * ###Response:
  * 
  * De `info` response key geeft extra informatie over het resultaat, met de volgende keys:
  * 
- * - `rows`       // Het aantal items in `data`.
+ * - `num_rows`   // Het aantal items in `data`.
  * - `total_rows` // Het totaal aantal items zonder `limit`
- * - `table_rows` // Het totaal aantal items in de gevraagde tabel
  * 
  * ###Voorbeeld response (dump) van `_api/table?table=tbl_menu`:
  * 
@@ -83,9 +82,8 @@
  *        )
  *      )
  *     [info] => (
- *         [rows] => 5
+ *         [num_rows] => 5
  *         [total_rows] => 5
- *         [table_rows] => 5
  *        )
  * 
  *    
@@ -121,10 +119,6 @@ class Table extends Api_Model {
     $this->_get_config(array('table_info','field_info'));
     // GET DATA
     $items=$this->_get_data();
-    // PROCESS DATA
-    if ($items) {
-      $items = $this->_process_data($items);
-    }
     
     // RESULT
     $this->result['data']=$items;
@@ -139,67 +133,18 @@ class Table extends Api_Model {
    * @author Jan den Besten
    */
   private function _get_data() {
-    // AS OPTIONS
-    if (el('as_options',$this->args,false)) {
-      $where=el('where',$this->args,'');
-      $items=$this->db->get_options($this->args['table'],$where);
-      $this->info = array(
-        'rows'        => count($items),
-        'total_rows'  => $this->db->last_num_rows_no_limit(),
-        'table_rows'  => $this->db->count_all($this->args['table']),
-      );
-    }
-    // NORMAL DATA
-    else {
-      // UNSELECT Hidden fields
-      $this->db->unselect( el(array('field_info','hidden_fields'),$this->cfg_info,array()) );
-      // ABSTRACTS of txt?
-      if (el('txt_as_abstract',$this->args,false))                $this->db->max_text_len(100);
-      // As TREE?
-      // if (el( array('table_info','tree'), $this->cfg_info,false)) $this->db->order_as_tree();
-      // if (el( array('table_info','tree'), $this->cfg_info,false)) $this->db->order_by('order');
-      $items = $this->crud->get($this->args);
-      $this->info  = $this->crud->get_info();
-    }
+    $this->table_model->table( $this->args['table'] );
+    if ( isset($this->args['where']) ) $this->table_model->where( $this->args['where'] );
+    // txt_abstract
+    if ( isset($this->args['txt_abstract'])) $this->table_model->select_txt_abstract( $this->args['txt_abstract'] );
+    // as options => as_abstract en een plat resultaat
+    if (el('as_options',$this->args,false)) $this->table_model->select_abstract( TRUE );
+    //
+    $items = $this->table_model->get_result( $this->args['limit'], $this->args['offset'] );
+    $this->info = $this->table_model->get_query_info();
     return $items;
   }
-  
-  
-  /**
-   * Loop through all rows and process them
-   *
-   * @param string $items 
-   * @param string $table_info 
-   * @param string $field_info 
-   * @return void
-   * @author Jan den Besten
-   */
-  private function _process_data($items) {
-    
-    $txt_as_abstract = el('txt_as_abstract',$this->args,false);
-
-    // init STRIP TAGS in txt fields
-    if ( $txt_as_abstract ) {
-      $fields=$this->cfg_info['table_info']['fields'];
-      $txtKeys=array_combine($fields,$fields);
-      $txtKeys=filter_by_key($txtKeys,'txt');
-    }
-
-    // LOOP ROWS IF NEEDED
-    if ($txt_as_abstract) {
-      foreach ($items as $id => $row) {
-        // STRIP TAGS in txt fields
-        if ( $txt_as_abstract ) {
-          foreach ($txtKeys as $key) {
-            $items[$id][$key]=strip_tags($row[$key]);
-          }
-        }
-      }
-    }
-    
-    return $items;
-  }
-  
+ 
 
 }
 

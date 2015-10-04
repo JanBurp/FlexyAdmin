@@ -381,7 +381,7 @@ class Ion_auth
 			delete_cookie('remember_code');
 		}
 
-		$this->CI->session->sess_destroy();
+    if(session_status() === PHP_SESSION_ACTIVE)		$this->CI->session->sess_destroy();
 
 		$this->set_message('logout_successful');
 		return TRUE;

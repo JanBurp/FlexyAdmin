@@ -64,10 +64,10 @@ class ApiRowTest extends ApiTestModel {
         'data'  => array( 'countGreaterOrEqual'   => 2 ),
         'info'  => array( 'type' => 'array' ),
         'info'  => array( 'count' => 3 ),
-        'info'  => array( 'hasKey' => 'rows' ),
+        'info'  => array( 'hasKey' => 'num_rows' ),
         'info'  => array( 'hasKey' => 'total_rows' ),
-        'info'  => array( 'hasKey' => 'table_rows' ),
-        'info|rows'  => array( 'Equals' => 1 ),
+        // 'info'  => array( 'hasKey' => 'table_rows' ),
+        'info|num_rows'  => array( 'Equals' => 1 ),
       )
     ));
   }

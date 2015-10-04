@@ -19,7 +19,7 @@ class Test extends AdminController {
     // // $result = $this->db->get_result('tbl_leerlingen');
     //
     // // Met table_model
-    // $this->table_model->table('tbl_leerlingen');
+    $this->table_model->table('tbl_leerlingen');
     // $this->table_model->select('str_first_name');
     // $this->table_model->select_abstract();
     // $this->table_model->with( 'many_to_one' );
@@ -30,6 +30,7 @@ class Test extends AdminController {
     // $this->table_model->find( 'park', 'tbl_adressen.str_address' );
     // $query = $this->table_model->get();
     // $result = $this->table_model->get_result();
+    $result = $this->table_model->get_grid();
 
     // MANY_TO_MANY
 
@@ -55,23 +56,26 @@ class Test extends AdminController {
     // PATH (full uri)
     // $this->table_model->table('tbl_menu');
     // $this->table_model->select('uri,order,self_parent,str_title');
-    // $this->table_model->select_txt_maxlen( 200 );
+    // $this->table_model->select_txt_abstract( 200 );
     // $this->table_model->path( 'path','uri' );
     // $this->table_model->path( 'str_title' );
     // $this->table_model->find( '"gelukt om"', array(), true );
     // $query = $this->table_model->get();
     // $result = $this->table_model->get_result();
     
-    $this->table_model->table('tbl_groepen');
+    // $this->table_model->table('tbl_groepen');
     // $this->table_model->select_abstract();
-    $result = $this->table_model->get_result();
-    
+    // $result = $this->table_model->get_result();
     
     // UPDATE
     // $this->table_model->table('tbl_crud');
     // $this->table_model->set('str_insert','TEST');
     // $this->table_model->limit(5);
     // $this->table_model->update();
+    
+    
+    
+    
     
     
     

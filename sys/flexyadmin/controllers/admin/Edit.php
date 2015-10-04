@@ -63,16 +63,15 @@ class Edit extends AdminController {
             $items[]=$id;
           }
         }
-        $where=array(PRIMARY_KEY=>$items);
         
-        if (!empty($where)) {
+        if (!empty($items)) {
           // Start Delete
           // Call _after_delete just for one (last) item (more is not needed)
   				$this->db->where(PRIMARY_KEY,$id);
   				$oldData=$this->db->get_row($table);
           if ($this->_after_delete($table,$oldData)) {
             // Delete all items
-            $this->crud->table($table)->delete( $where );  
+            $this->table_model->table( $table )->where_in( PRIMARY_KEY,$items )->delete();  
             // End messages
             $this->load->model("login_log");
             $this->login_log->update($table);
