@@ -2005,11 +2005,26 @@ Class Table_Model extends CI_Model {
     /**
      * Split eventuele many_to_many data
      */
-    $many_to_many = filter_by_key( $set, 'tbl_'); // CHECK, is dit de manier? of nu juist met 'tbl_'
-    if ( !empty($many_to_many) ) {
-      $many_to_many_keys = array_keys($many_to_many);
-      $set = array_unset_keys( $set, $many_to_many_keys );
+    if (isset($this->settings['relations']['many_to_many'])) {
+      $many_to_many = array();
+      foreach ( $this->settings['relations']['many_to_many'] as $other_table => $relation_info ) {
+        // tbl_... nieuwe manier van many_to_many data
+        if (isset($set[$other_table])) {
+          $many_to_many[$other_table] = $set[$other_table];
+          unset($set[$other_table]);
+        }
+        // rel_... oude manier van many_to_many data
+        elseif (isset($set[$relation_info['rel_table']])) {
+          $rel_table = $relation_info['rel_table'];
+          $many_to_many[$other_table] = $set[$rel_table];
+          $many_to_many[$other_table] = array_keys($many_to_many[$other_table]);
+          unset($set[$rel_table]);
+        }
+      }
     }
+
+    // trace_($set);
+    // trace_($many_to_many);
       
     /**
      * Bij INSERT is primary_key niet nodig, haal die weg mocht die er zijn.
