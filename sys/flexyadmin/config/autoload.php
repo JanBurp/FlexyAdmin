@@ -113,7 +113,7 @@ $autoload['language'] = array();
 |
 */
 
-$autoload['model'] = array('crud','tables/table_model','mediatable');
+$autoload['model'] = array('tables/table_model','mediatable');
 
 
 
