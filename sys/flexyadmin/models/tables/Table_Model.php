@@ -1954,6 +1954,13 @@ Class Table_Model extends CI_Model {
       throw new ErrorException( __CLASS__.'->'.$method.'(): no type set, should be one of `'.implode(',',$types).'`' );
     }
     
+    // Is user id nodig?
+    if ( $this->field_exists('user_changed')) {
+      if ( !isset( $this->user_id )) {
+        $this->set_user_id();
+      }
+    }
+    
     // Is er een data set?
     if ($set) $this->set( $set );
     if (empty( $this->tm_set )) {
@@ -2036,9 +2043,6 @@ Class Table_Model extends CI_Model {
        * Voeg user_changed data toe als bekend is en veld bestaat
        */
       if ( $this->field_exists('user_changed')) {
-        if ( !isset( $this->user_id )) {
-          $this->set_user_id();
-        }
         if ( $this->user_id!==FALSE ) $set['user_changed'] = $this->user_id;
       }
           
