@@ -16,6 +16,7 @@ class get_admin_nav extends Api_Model {
    */
 	public function __construct($name='') {
 		parent::__construct();
+    $this->load->model('crud');
     $this->load->model($this->table);
     return $this;
 	}
