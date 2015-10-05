@@ -15,7 +15,6 @@
     <!-- Latest / Busy -->
     <testsuite name="busy">
       <file>sys/flexyadmin/tests/demo_db/models/TableModelTest.php</file>
-      <directory suffix="Test.php">sys/flexyadmin/tests/demo_db/api</directory>
       <directory suffix="Test.php">sys/flexyadmin/tests/fast/helpers</directory>
 		</testsuite>
     

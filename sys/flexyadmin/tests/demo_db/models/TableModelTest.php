@@ -106,8 +106,8 @@ class TableModelTest extends CITestCase {
     // ->with( 'many_to_one' )
     $expected = array(
       'many_to_one'=>array(
-        'tbl_adressen' => array('fields'=>array(),'grouped'=>false),
-        'tbl_groepen'  => array('fields'=>array(),'grouped'=>false),
+        'tbl_adressen' => array('fields'=>array(),'grouped'=>false,'flat'=>false),
+        'tbl_groepen'  => array('fields'=>array(),'grouped'=>false,'flat'=>false),
       )
     );
     $this->CI->table_model->with( 'many_to_one' );
@@ -125,7 +125,7 @@ class TableModelTest extends CITestCase {
     // ->with( 'many_to_one', array( 'tbl_adressen') );
     $expected = array(
       'many_to_one'=>array(
-        'tbl_adressen' => array('fields'=>array(),'grouped'=>false),
+        'tbl_adressen' => array('fields'=>array(),'grouped'=>false,'flat'=>false),
       )
     );
     $this->CI->table_model->with( 'many_to_one', array( 'tbl_adressen') );
@@ -152,6 +152,7 @@ class TableModelTest extends CITestCase {
     $this->assertEquals( 3, $query->num_fields() );
     // data, klopt num_rows & num_fields?
     $array = $query->result_array();
+    
     $this->assertEquals( 92, count($array) );
     $row = current($array);
     $this->assertEquals( 3, count($row) );
