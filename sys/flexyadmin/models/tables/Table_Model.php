@@ -112,6 +112,12 @@ Class Table_Model extends CI_Model {
    * Kan er bijvoorbeeld zo uit zien:
    * 
    * array(
+   *  'many_to_one' => array(
+   *    'tbl_links' => array(
+   *      'fields'  => ....,
+   *      'flat'    => FALSE,
+   *     ),
+   *  ),
    *  'many_to_many' => array(
    *    'tbl_links' => array(
    *       'fields'   => 'abstract',
@@ -987,12 +993,17 @@ Class Table_Model extends CI_Model {
   public function get( $limit=0, $offset=0, $reset = true ) {
     // Bewaar limit & offset als ingesteld (overruled eerder ingestelde door ->limit() )
     if ($limit!=0 or $offset!=0) $this->limit( $limit,$offset );
-    
-    // select, zorg ervoor dat er iig iets in de select komt
-    if ( !$this->tm_select ) $this->select();
 
-    // with, maak de relatie queries
+    // bouw select query op
+    $this->_select();
+    
+    // bouw relatie queries
     if ( !empty( $this->tm_with ) ) $this->_with( $this->tm_with );
+    
+    // maak select concreet
+    $this->db->select( $this->tm_select, FALSE );
+    
+    // trace_($this->tm_select);
 
     // order_by
     if ( ! empty($this->settings['order_by']) ) $this->db->order_by( $this->settings['order_by'] );
@@ -1061,11 +1072,13 @@ Class Table_Model extends CI_Model {
       $id = $row[$this->settings['primary_key']];
       $result_key = $row[$key];
       
-      // many_to_many als subarrays toevoegen aan row
+      // Voeg relatie data als subarrays aan row
       if ($this->tm_with) {
         foreach ($this->tm_with as $with_type => $this_with) {
-          // if ($with_type=='many_to_one') break; // Hier wordt besloten of many_to_one ook in array gaat of niet.
           foreach ($this_with as $other_table => $info) {
+            // Flat many_to_one of ook als array?
+            if ( $with_type==='many_to_one' and $info['flat']===true) break;
+            
             if ( ! el('grouped',$info,FALSE) ) {
               $fields   = $info['fields'];
               // split row and with data
@@ -1269,8 +1282,6 @@ Class Table_Model extends CI_Model {
   /* --- Methods om de query te vormen --- */
 
 
-
-
   /**
    * Zelfde als 'select' van Query Builder, maar met enkele checks:
    * - zorgt ervoor dat altijd de primary_key in de select voorkomt
@@ -1282,37 +1293,46 @@ Class Table_Model extends CI_Model {
    * @author Jan den Besten
    */
 	public function select( $select = '*', $escape = NULL ) {
-    // Niet '*' maar alle velden expliciet maken
-    if ( $select=='*' ) $select = $this->settings['fields'];
-
-    // Alle selects als array
-    if (is_string($select)) $select = explode(',', $select);
-
-		// Zorgt ervoor dat iig primary_key wordt geselecteerd (bij de eerste keer dat select wordt aangeroepen)
-    if ( !$this->tm_select and !in_array( $this->settings['primary_key'], $select ) ) {
-      array_unshift( $select, $this->settings['primary_key'] );
+    if ($select=='*') return $this;
+    if (is_string($select)) $select=explode(',',$select);
+    if (!is_array($select)) $select=array($select);
+    // Bewaar
+    foreach ($select as $value) {
+      $key = remove_prefix( $value,'.' );
+      $this->tm_select[$key] = $value;
     }
-
-    foreach ($select as $key => $field) {
-      // Zorg ervoor dat alle velden geprefixed worden door de eigen tabelnaam om dubbelingen te voorkomen
-      $sql = $field;
-      if (in_array($field,$this->settings['fields'])) {
-        $sql = $this->settings['table'].'.'.$field;
-      }
-
-      // tm_txt_abstract?
-      if ( $this->tm_txt_abstract and get_prefix($field)=='txt' ) {
-        $sql = 'SUBSTRING(`'.$this->settings['table'].'`.`'.$field.'`,1,'.$this->tm_txt_abstract.') AS `'.$field.'`';
-      }
-      
-      // Bewaar
-      $this->tm_select[$field] = $sql;
-      // Normale select
-      $this->db->select( $sql, $escape );
-    }
-
 		return $this;
 	}
+
+  /**
+   * Bouwt select deel van de query op
+   *
+   * @return $this
+   * @author Jan den Besten
+   */
+  private function _select() {
+    if ( !$this->tm_select ) {
+      // Niet '*' maar alle velden expliciet maken
+      $this->tm_select = array_combine($this->settings['fields'],$this->settings['fields']);
+    }
+    // Zorgt ervoor dat iig primary_key wordt geselecteerd
+    if (!in_array( $this->settings['primary_key'], $this->tm_select ) ) {
+      $id = $this->settings['primary_key'];
+      $this->tm_select = array($id=>$id) + $this->tm_select;
+    }
+    foreach ( $this->tm_select as $key => $field ) {
+      // Zorg ervoor dat alle velden geprefixed worden door de eigen tabelnaam om dubbelingen te voorkomen
+      if (in_array($field,$this->settings['fields'])) {
+        $this->tm_select[$key] = '`'.$this->settings['table'].'`.`'.$field.'`';
+      }
+      // tm_txt_abstract?
+      if ( $this->tm_txt_abstract and get_prefix($field)=='txt' ) {
+        $this->tm_select[$key] = 'SUBSTRING(`'.$this->settings['table'].'`.`'.$field.'`,1,'.$this->tm_txt_abstract.') AS `'.$field.'`';
+      }
+    }
+    return $this;
+  }
+  
   
 
   /**
@@ -1323,7 +1343,7 @@ Class Table_Model extends CI_Model {
    * @author Jan den Besten
    */
   public function select_abstract( $flat = FALSE ) {
-    $this->select( $this->get_compiled_abstract_select(), FALSE );
+    $this->tm_select[] = $this->get_compiled_abstract_select();
     $this->tm_flat_abstracts = $flat;
     return $this;
   }
@@ -1606,6 +1626,12 @@ Class Table_Model extends CI_Model {
    * 
    * ->with( 'many_to_one' => [ 'tbl_posts' => 'abstract ] );
    * 
+   * flat
+   * ----
+   * 
+   * Een standaard many_to_one relatie voegt één extra veld toe met de naam van de tabel en daarin een array met alle data uit de andere tabel.
+   * Soms is het handig om in plaats daarvan per toegevoegd veld een veld toe te voegen. Dat kan door ->with_flat_many_to_one() te gebruiken
+   * 
    * 
    * many_to_many
    * ------------
@@ -1637,11 +1663,12 @@ Class Table_Model extends CI_Model {
    *                      - Je kunt een array van tabellen specificeren.
    *                      - En eventueel per tabel de velden of 'abstract'
    * @param bool $grouped [FALSE] bepaalt of een 'many_to_many' resultaat gegroupeerd moet worden op rij niveau. (zie ->with_grouped())
+   * @param bool $flat [FALSE] bepaalt of een 'many_to_one' resultaat plat moet worden geintegreerd. (zie ->with_flat())
    * @return $this
    * @author Jan den Besten
    */
-  public function with( $type='', $tables=array(), $grouped=FALSE ) {
-    
+  public function with( $type='', $tables=array(), $grouped=FALSE, $flat=FALSE ) {
+
     // Reset?
     if ( empty($type) ) {
       $this->tm_with = array();
@@ -1653,6 +1680,8 @@ Class Table_Model extends CI_Model {
       $tables = el( array('relations',$type), $this->settings, array() );
       if ($tables) $tables = array_keys($tables);
     }
+    // Als tables geen array is, zorg daarvoor
+    if ( ! is_array($tables) ) $tables=array($tables);
     
     // Zorg ervoor dat $tables in dit formaat komt: 'table' => fields
     $tables_new = array();
@@ -1677,14 +1706,29 @@ Class Table_Model extends CI_Model {
     foreach ($tables_new as $table => $fields) {
       $tm_with_new[$table] = array(
         'fields'  => $fields,
-        'grouped' => $grouped
+        'grouped' => $grouped,
       );
+      if ($type=='many_to_one') $tm_with_new[$table]['flat'] = $flat;
     }
     $tm_with_new = array_replace_recursive( $tm_with_before, $tm_with_new );
     // Bewaar deze relatie instelling
     $this->tm_with[$type] = $tm_with_new;
     return $this;
   }
+  
+  
+  /**
+   * Geeft aan welke many_to_one relaties plat moeten worden toegevoegd aan het resultaat.
+   * Zie ook bij ->with()
+   *
+   * @param string $tables 
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function with_flat_many_to_one( $tables = array() ) {
+    return $this->with( 'many_to_one', $tables, FALSE, TRUE );
+  }
+  
   
   /**
    * Geef aan welke relaties meegenomen moeten worden in het resultaat.
@@ -1775,8 +1819,17 @@ Class Table_Model extends CI_Model {
       }
     }
     
-    // Stop select in query
-    $this->db->select( $select );
+    // Stop select in query, als het kan direct na foreign_key
+    $select = trim(trim($select),',');
+    $foreign_key = el( array('relations','many_to_one',$other_table,'foreign_key'), $this->settings );
+    if (isset($foreign_key) and isset($this->tm_select[$foreign_key])) {
+      $this->tm_select = array_add_after( $this->tm_select, $foreign_key, array($other_table=>$select) );
+    }
+    else {
+      $this->tm_select[$other_table] = $select;
+    }
+
+    // grouped?
     if ($grouped) $this->db->group_by( $this->settings['table'].'.'.$this->settings['primary_key'] );
     
     return $this;
