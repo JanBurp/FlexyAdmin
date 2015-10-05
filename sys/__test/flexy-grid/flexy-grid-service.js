@@ -22,7 +22,7 @@ flexyAdmin.factory('flexyGridService', ['flexySettingsService','flexyApiService'
     table  : '',
     limit  : 0,
     offset : 0,
-    txt_as_abstract : true
+    txt_abstract : true
   };
   
   /**
@@ -159,11 +159,10 @@ flexyAdmin.factory('flexyGridService', ['flexySettingsService','flexyApiService'
   /**
    * Geeft informatie over de tabel. De volgende keys zitten erin:
    * 
-   * - rows         - Het aantal records dat beschikbaar is
-   * - limit        - Het aantal records per pagina
+   * - num_rows     - Het aantal records dat beschikbaar is
    * - total_pages  - Het totaal aantal pagina's dat beschiklaar is
    * - total_rows   - Het totaal aantal records dat in het resultaat bestaat voor deze tabel
-   * - table_rows   - Het totaal aantal records dat in de tabel bestaat
+   * - limit        - Het aantal records per pagina
    * 
    * @param string table De gevraagde tabel
    * @return mixed FALSE als de data/info niet beschikbaar is, anders een object met de data.

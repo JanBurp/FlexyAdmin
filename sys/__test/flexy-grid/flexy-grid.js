@@ -39,7 +39,7 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyGridServic
    * Info for Pagination (changed when data is present)
    */
   $scope.info = {
-    rows            : 0,
+    num_rows        : 0,
     limit           : 10,
     total_pages     : 0,
     displayed_pages : 5,
@@ -73,13 +73,14 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyGridServic
     $scope.info = grid.get_info($scope.table);
     $scope.info.displayed_pages = 5;
     $scope.info.limit = 10;
-    $scope.info.total_pages = Math.ceil($scope.info.rows / $scope.info.limit);
+    $scope.info.total_pages = Math.ceil($scope.info.num_rows / $scope.info.limit);
     // field_info
     $scope.fields = settings.item('config','field_info',$scope.table);
     // data
     $scope.gridItems = grid.get_grid_data($scope.table);
     // Copy the references, needed for smart-table to watch for changes in the data
     $scope.displayedItems = [].concat($scope.gridItems);
+    
   });
   
   /**
