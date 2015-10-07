@@ -399,6 +399,7 @@ $config["CFG_"]=array(
 			"table"=>'cfg_field_info',
 			'str_fieldsets'=>'Options,Validation',
 			"b_grid_add_many"=>'0',
+      'b_pagination' => '0',
 			"str_abstract_fields"=>'',
 			"str_order_by"=>'field_field',
 			),
