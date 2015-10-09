@@ -19,10 +19,10 @@ For recent sites the update processes described below should work:
 - perform all the steps from your version to the latest:
 
 
-UPDATE 3.0.1 (3285?)
-===================
+UPDATE 3.0.3 (3412...)
+====================
 
-- Update naar CI 3.0.1:
+- Update naar CI 3.0.2:
   - Vervang de map `sys`
   - Vervang `index.php`
 - Login als admin en run update scripts:
