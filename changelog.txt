@@ -1,14 +1,19 @@
-Changes 3.x (xxxx)
+Changes 3.x (3412)
 ==================
 
 UPDATE:
 - CodeIgniter 3.0
 - CodeIgniter 3.0.1
+- CodeIgniter 3.0.2
+
+DEPRICATED:
+- Crud
 
 DB:
 - removed: cfg_media_info.b_in_database
 
 NEW:
+- TableModel
 - Update tool: admin/update
 - $_GET is always on now
 - Unit met PPHunit (en CIunit verwijderd)
