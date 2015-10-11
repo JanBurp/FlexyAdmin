@@ -516,7 +516,8 @@ Class Table_Model extends CI_Model {
     $many_to_one               = el( array('relations','many_to_one'), $this->settings, array() );
     $with=array('many_to_one'=>array());
     foreach ($many_to_one as $table => $info) {
-      $with['many_to_one'][$table] = 'abstract';
+      $with['many_to_one'][$table]['fields'] = 'abstract';
+      $with['many_to_one'][$table]['flat'] = TRUE;
     }
     $grid_set['with'] = $with;
     return $grid_set;
@@ -1077,9 +1078,17 @@ Class Table_Model extends CI_Model {
         foreach ($this->tm_with as $with_type => $this_with) {
           foreach ($this_with as $other_table => $info) {
             // Flat many_to_one of ook als array?
-            if ( $with_type==='many_to_one' and $info['flat']===true) break;
+            if ( $with_type=='many_to_one' AND el('flat', $info, false)===true) {
+              $foreign_key = $this->settings['relations'][$with_type][$other_table]['foreign_key'];
+              $abstract_field = $other_table.'__abstract';
+              if (isset($row[$abstract_field])) {
+                $row[$foreign_key] = $row[$abstract_field];
+                unset($row[$abstract_field]);
+              }
+            }
             
-            if ( ! el('grouped',$info,FALSE) ) {
+            // Niet grouped, dan als subarray
+            elseif ( ! el('grouped',$info,FALSE) ) {
               $fields   = $info['fields'];
               // split row and with data
               $row_with_data = filter_by_key( $row, $other_table );
@@ -1141,8 +1150,8 @@ Class Table_Model extends CI_Model {
     }
     
     // pas query info aan
-    $this->query_info['num_rows']   = count($result);
-    // $this->query_info['total_rows'] = count($result);
+    $this->query_info['num_rows']     = count($result);
+    $this->query_info['num_fields']   = count(current($result));
     if (isset($this->tm_with['many_to_many'])) {
       $this->query_info['total_rows'] = $this->total_rows(true,true);
     }
@@ -1246,10 +1255,13 @@ Class Table_Model extends CI_Model {
    */
   public function get_grid( $page = 0, $sort = '', $search = '' ) {
     $grid_set = $this->settings['grid_set'];
-    
+
     // Fields
     $this->select( $grid_set['fields'] );
     $this->select_txt_abstract(250);
+    
+    // many_to_one
+    if (isset($grid_set['with']['many_to_one'])) $this->tm_with['many_to_one'] = $grid_set['with']['many_to_one'];
     
     // Order_by
     if ($sort) {
@@ -1259,6 +1271,7 @@ Class Table_Model extends CI_Model {
     }
     
     // TODO SEARCH
+    
     
     // Pagination
     if ($grid_set['pagination']) {
@@ -1270,8 +1283,6 @@ Class Table_Model extends CI_Model {
 
     // TODO Jump to today
     
-    // many_to_one
-    if (isset($grid_set['with']['many_to_one'])) $this->with( 'many_to_one', $grid_set['with']['many_to_one'] );
     
     return $this->get_result();
   }

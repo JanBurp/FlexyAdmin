@@ -271,3 +271,15 @@ jdb.randomString = function(len,chars) {
 jdb.randomInt = function(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 };
+
+/**
+ * jdb.firstArrayItem()
+ * 
+ * Geeft eerste item van een array
+ * 
+ * @param array arr
+ * @return mixed
+ */
+jdb.firstArrayItem = function( arr ) {
+  for(var i in arr) return arr[i];
+};

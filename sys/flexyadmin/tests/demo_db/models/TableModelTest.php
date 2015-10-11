@@ -140,8 +140,8 @@ class TableModelTest extends CITestCase {
     $this->assertInternalType( 'array', $grid_set );
     $this->assertInternalType( 'array', $grid_set['with']['many_to_one'] );
     $this->assertEquals( 2, count($grid_set['with']['many_to_one']) );
-    $this->assertEquals( 'abstract', $grid_set['with']['many_to_one']['tbl_groepen'] );
-    $this->assertEquals( 'abstract', $grid_set['with']['many_to_one']['tbl_adressen'] );
+    $this->assertEquals( 'abstract', $grid_set['with']['many_to_one']['tbl_groepen']['fields'] );
+    $this->assertEquals( 'abstract', $grid_set['with']['many_to_one']['tbl_adressen']['fields'] );
     
     // tbl_leerlingen - abstract
     $query = $this->CI->table_model->table( 'tbl_leerlingen' )
@@ -521,8 +521,8 @@ class TableModelTest extends CITestCase {
     // order_by & abstract test
     $first = current($page1);
     $this->assertEquals( 'Aafje', $first['str_first_name'] );
-    $this->assertEquals( 'Rekenpark 42|1234IJ', $first['tbl_adressen']['abstract'] );
-    $this->assertEquals( 'Gym|vak', $first['tbl_groepen']['abstract'] );
+    $this->assertEquals( 'Rekenpark 42|1234IJ', $first['id_adressen'] );
+    $this->assertEquals( 'Gym|vak', $first['id_groepen'] );
     
     // DESC
     $result = $this->CI->table_model->get_grid(0, '_str_first_name');

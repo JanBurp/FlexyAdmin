@@ -74,12 +74,20 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyGridServic
     $scope.info.displayed_pages = 5;
     $scope.info.limit = 10;
     $scope.info.total_pages = Math.ceil($scope.info.num_rows / $scope.info.limit);
-    // field_info
-    $scope.fields = settings.item('config','field_info',$scope.table);
+    
     // data
     $scope.gridItems = grid.get_grid_data($scope.table);
     // Copy the references, needed for smart-table to watch for changes in the data
     $scope.displayedItems = [].concat($scope.gridItems);
+    
+    // field_info, only the fields in the gridItems
+    $scope.fields = settings.item('config','field_info',$scope.table);
+    var first_item = jdb.firstArrayItem( $scope.gridItems );
+    angular.forEach( $scope.fields, function(value, field) {
+      if ( angular.isUndefined( first_item[field] )) {
+        delete $scope.fields[field];
+      }
+    });
     
   });
   
