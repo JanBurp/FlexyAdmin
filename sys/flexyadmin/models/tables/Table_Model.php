@@ -1549,43 +1549,111 @@ Class Table_Model extends CI_Model {
    * Zoekt de gevraagde zoekterm(en).
    * Bouwt een uitgebreide zoekquery op.
    * 
-   * Voorbeelden van $by:
+   * Voorbeelden met diverse termen
+   * ------------------------------
    * 
-   * - zoek                     // Zoekt naar 'zoek'
-   * - zoek ook                 // Zoekt naar 'zoek' of 'ook'
-   * - "zoek ook"               // Zoekt naar 'zoek ook'      
-   * - array( 'zoek ook' )      // Zoekt naar 'zoek' of 'ook'
-   * - array( 'zoek', 'ook' )   // Zoekt naar 'zoek' of 'ook'
-   * - array( '"zoek ook"' )    // Zoekt naar 'zoek ook'
+   * ->find( 'zoek' )               // Zoekt naar de letters 'zoek' in alle velden
+   * ->find( 'zoek ook')            // Zoekt naar de letters 'zoek' of 'ook'
+   * ->find( array( 'zoek ook' ) )  // idem
+   * ->find( '"zoek ook"' )         // Zoekt naar de letters 'zoek ook'      
+   * ->find( array( '"zoek ook"' )  // idem
    * 
-   * @param mixed $by 
-   * @param array $fields Kan ook in relatietabellen zoeken, bijvoorbeeld 'tbl_links.str_title' als een veld in een gerelateerde tabel
-   * @param bool $word_boundaries 
+   * In specifieke velden
+   * --------------------
+   * 
+   * Alle bovenstaande combinaties zijn mogelijk en:
+   * 
+   * ->find( 'zoek', array( 'str_title' ) )             // Zoekt naar de letters 'zoek' in in het veld 'str_title'
+   * ->find( 'zoek', array( 'str_title', 'txt_text ) )  // Zoekt naar de letters 'zoek' in in het veld 'str_title' en 'txt_text'
+   * 
+   * Specifieke instellingen
+   * -----------------------
+   * 
+   * AND in plaats van OR, alle voorbeelden met meerdere zoektermen en velden maken een OR query, zo kun je er een AND query van maken;
+   * ->find( 'zoek ook', null, array( 'and' => TRUE ) )  // Zoekt naar rows in het resultaat waar 'zoek' EN 'ook' in voorkomen
+   * ->find( 'zoek ook', null, array( 'and' => 'AND' ) ) // idem
+   * ->find( 'zoek ook', null, array( 'and' => 'OR' ) )  // Dit is default, en zoekt naar resultaten waar 'zoek' OF 'ook' in voorkomen
+   * ->find( 'zoek ook', null, array( 'and' => FALSE ) ) // idem
+   * 
+   * Zoeken op hele woorden in plaats van letters:
+   * ->find( 'zoek', null, array( 'word_boundaries' =>TRUE ) )  // Zoekt het woord 'zoek' ipv de letters 'zoek'
+   * 
+   * Ook zoeken in relaties
+   * ----------------------
+   * 
+   * LET OP: Zorg dat ->with() eerder wordt aangeroepen dan ->find()
+   * 
+   * 
+   * @param mixed $terms Zoekterm(en) als een string of array van strings. Letterlijk zoeken kan door termen tussen "" te zetten.
+   * @param array $fields [array()] De velden waarop gezocht wordt. Standaard alle velden. Kan ook in relatietabellen zoeken, bijvoorbeeld 'tbl_links.str_title' als een veld in een gerelateerde tabel
+   * @param array $settings [array()] Extra instelingen, default: arra( 'and' => 'OR, 'word_boundaries' => FALSE )
    * @return $this
    * @author Jan den Besten
    */
-  public function find( $by, $fields = array(), $word_boundaries = FALSE ) {
-    if ( empty($fields) ) $fields = $this->settings['fields'];
-    if (is_string($fields)) $fields = array($fields);
+  public function find( $terms, $fields = array(), $settings = array() ) {
+    
+    // settings
+    $defaults = array(
+      'and'             => 'OR',
+      'word_boundaries' => FALSE
+    );
+    $settings = array_merge( $defaults,$settings );
+    if ($settings['and']===TRUE)  $settings['and'] = 'AND';
+    if ($settings['and']===FALSE) $settings['and'] = 'OR';
+    $settings['and'] = strtoupper( $settings['and'] );
+    
+    // In welke velden zoeken?
+    if ( is_string($fields) ) $fields = array($fields);
+    // Geen velden meegegeven, gebruik dan de velden van deze tabel en eventuele relaties
+    if ( empty($fields) ) {
+      $fields = $this->settings['fields'];
+      // Ook nog in relaties?
+      if ( isset($this->tm_with) and !empty($this->tm_with) ) {
+        foreach ($this->tm_with as $type => $tm_with) {
+          foreach ($tm_with as $other_table => $with) {
+            $other_fields = $with['fields'];
+            foreach ($other_fields as $other_field) {
+              array_push( $fields, $this->db->protect_identifiers($other_table.'.'.$other_field) );
+            }
+          }
+        }
+      }
+    }
+    // Plak tabelnaam voor elk veld, als dat nog niet zo is, en escape
+    foreach ( $fields as $key => $field ) {
+      if (strpos($field,'.')===FALSE) $fields[$key] = $this->db->protect_identifiers($this->settings['table'].'.'.$field);
+    }
+    
 
-    // Maak tot een lange string gescheiden door spaties
-    if ( is_array($by) ) $by = implode(' ',$by);
-    // Splits de termen (behalve die tussen quotes)
-    $by=preg_split('~(?:"[^"]*")?\K[/\s]+~', ' '.$by.' ', -1, PREG_SPLIT_NO_EMPTY );
+    // Splits terms
+    if ( is_array($terms) ) $terms = implode(' ',$terms);
+    $terms=preg_split('~(?:"[^"]*")?\K[/\s]+~', ' '.$terms.' ', -1, PREG_SPLIT_NO_EMPTY );
     
     // Bouw query op voor elke term
-    foreach ($by as $term) {
-      $term = trim($term,'"');
-      foreach ($fields as $field) {
-        // Plak tabelnaam voor veld, als dat nog niet zo is, en escape
-        if (strpos($field,'.')===FALSE) $field = $this->settings['table'].'.'.$field;
-        $field = $this->db->protect_identifiers($field);
-        // LIKE of REGEXP (word boundaries)
-        if ($word_boundaries)
-          $this->db->or_where( $field.' REGEXP \'[[:<:]]'.$term.'[[:>:]]\'', NULL, FALSE);
-        else
-          $this->db->or_like( $field, $term, 'both', FALSE);
+    foreach ($terms as $terms) {
+      $terms = trim($terms,'"');
+      
+      // Start term query AND/OR?
+      if ($settings['and']==='AND') {
+        $this->db->group_start();
       }
+      else {
+        $this->db->or_group_start();
+      }
+      
+      // Per veld:
+      foreach ($fields as $field) {
+        // word boundaries of gewoon LIKE ?
+        if ( $settings['word_boundaries'] ) {
+          $this->db->or_where( $field.' REGEXP \'[[:<:]]'.$terms.'[[:>:]]\'', NULL, FALSE);
+        }
+        else {
+          $this->db->or_like( $field, $terms, 'both', FALSE);
+        }
+      }
+      
+      // End of term query
+      $this->db->group_end();
     }
     
     return $this;
@@ -1696,6 +1764,10 @@ Class Table_Model extends CI_Model {
       // fields moet een (lege) array of een string ('abstract') zijn.
       if (is_string($fields) and $fields!==$this->config->item('ABSTRACT_field_name')) {
         $fields = explode( ',',$fields );
+      }
+      // Als fields is een lege array, stop dan alle velden van die tabel erin
+      if (is_array($fields) and empty($fields)) {
+        $fields = $this->get_other_table_fields( $table );
       }
       // Bewaar
       $tables_new[$table] = $fields;
