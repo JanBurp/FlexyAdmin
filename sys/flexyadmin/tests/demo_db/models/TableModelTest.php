@@ -106,8 +106,8 @@ class TableModelTest extends CITestCase {
     // ->with( 'many_to_one' )
     $expected = array(
       'many_to_one'=>array(
-        'tbl_adressen' => array('fields'=>array(),'grouped'=>false,'flat'=>false),
-        'tbl_groepen'  => array('fields'=>array(),'grouped'=>false,'flat'=>false),
+        'tbl_adressen' => array('fields'=>array('id','str_address','str_zipcode','str_city'),'grouped'=>false,'flat'=>false),
+        'tbl_groepen'  => array('fields'=>array('id','uri','order','str_title','str_soort'),'grouped'=>false,'flat'=>false),
       )
     );
     $this->CI->table_model->with( 'many_to_one' );
@@ -125,7 +125,7 @@ class TableModelTest extends CITestCase {
     // ->with( 'many_to_one', array( 'tbl_adressen') );
     $expected = array(
       'many_to_one'=>array(
-        'tbl_adressen' => array('fields'=>array(),'grouped'=>false,'flat'=>false),
+        'tbl_adressen' => array('fields'=>array('id','str_address','str_zipcode','str_city'),'grouped'=>false,'flat'=>false),
       )
     );
     $this->CI->table_model->with( 'many_to_one', array( 'tbl_adressen') );
@@ -298,7 +298,111 @@ class TableModelTest extends CITestCase {
 
   }
   
-  
+  public function test_find() {
+    $this->CI->table_model->table('tbl_leerlingen');
+    // ruw
+    $this->CI->table_model->find('va');
+    $result = $this->CI->table_model->get_result();
+    $info = $this->CI->table_model->get_query_info();
+    $this->assertEquals( 26, $info['num_rows'] );
+    // word boundaries
+    $this->CI->table_model->find('va',null,array('word_boundaries'=>TRUE));
+    $result = $this->CI->table_model->get_result();
+    $info = $this->CI->table_model->get_query_info();
+    $this->assertEquals( 0, $info['num_rows'] );
+    // specific fields
+    $this->CI->table_model->find('va',array('str_middle_name'));
+    $result = $this->CI->table_model->get_result();
+    $info = $this->CI->table_model->get_query_info();
+    $this->assertEquals( 26, $info['num_rows'] );
+    // specific fields & word boundaries
+    $this->CI->table_model->find('van',array('str_middle_name'),array('word_boundaries'=>TRUE));
+    $result = $this->CI->table_model->get_result();
+    $info = $this->CI->table_model->get_query_info();
+    $this->assertEquals( 26, $info['num_rows'] );
+    // specific fields & word boundaries
+    $this->CI->table_model->find('va',array('str_middle_name'),array('word_boundaries'=>TRUE));
+    $result = $this->CI->table_model->get_result();
+    $info = $this->CI->table_model->get_query_info();
+    $this->assertEquals( 0, $info['num_rows'] );
+    
+    // meerdere termen los (string)
+    $this->CI->table_model->find('van den');
+    $result = $this->CI->table_model->get_result();
+    $info = $this->CI->table_model->get_query_info();
+    $this->assertEquals( 28, $info['num_rows'] );
+    // meerdere termen los (array string)
+    $this->CI->table_model->find( array('van den') );
+    $result = $this->CI->table_model->get_result();
+    $info = $this->CI->table_model->get_query_info();
+    $this->assertEquals( 28, $info['num_rows'] );
+    // meerdere termen los (array)
+    $this->CI->table_model->find( array('van','den') );
+    $result = $this->CI->table_model->get_result();
+    $info = $this->CI->table_model->get_query_info();
+    $this->assertEquals( 28, $info['num_rows'] );
+    // meerdere termen vast
+    $this->CI->table_model->find('"van den"');
+    $result = $this->CI->table_model->get_result();
+    $info = $this->CI->table_model->get_query_info();
+    $this->assertEquals( 2, $info['num_rows'] );
+    // meerdere termen AND
+    $this->CI->table_model->find('van den',null, array('and'=>TRUE));
+    $result = $this->CI->table_model->get_result();
+    $info = $this->CI->table_model->get_query_info();
+    $this->assertEquals( 2, $info['num_rows'] );
+    
+    // Zoeken in many_to_one 'va'
+    $this->CI->table_model->with( 'many_to_one' );
+    $this->CI->table_model->find('va');
+    $result = $this->CI->table_model->get_result();
+    $info = $this->CI->table_model->get_query_info();
+    $this->assertEquals( 49, $info['num_rows'] );
+    // Zoeken in many_to_one 'van'
+    $this->CI->table_model->with( 'many_to_one' );
+    $this->CI->table_model->find('van');
+    $result = $this->CI->table_model->get_result();
+    $info = $this->CI->table_model->get_query_info();
+    $this->assertEquals( 26, $info['num_rows'] );
+    // Zoeken in many_to_one 'vak'
+    $this->CI->table_model->with( 'many_to_one' );
+    $this->CI->table_model->find('vak');
+    $result = $this->CI->table_model->get_result();
+    $info = $this->CI->table_model->get_query_info();
+    $this->assertEquals( 32, $info['num_rows'] );
+    // Zoeken in many_to_one 'straat'
+    $this->CI->table_model->with( 'many_to_one' );
+    $this->CI->table_model->find('straat');
+    $result = $this->CI->table_model->get_result();
+    $info = $this->CI->table_model->get_query_info();
+    $this->assertEquals( 6, $info['num_rows'] );
+    // Zoeken in many_to_one 'straat' word_boundaries
+    $this->CI->table_model->with( 'many_to_one' );
+    $this->CI->table_model->find('straat',null,array('word_boundaries'=>TRUE));
+    $result = $this->CI->table_model->get_result();
+    $info = $this->CI->table_model->get_query_info();
+    $this->assertEquals( 0, $info['num_rows'] );
+    
+    // Zoeken in many_to_many 'straat' (LET OP query resultaat omdat sommige dubbel kunnen zijn, get_result geeft dan ander aantal)
+    $this->CI->table_model->table( 'tbl_groepen' );
+    $this->CI->table_model->with( 'many_to_many' );
+    $this->CI->table_model->find('straat');
+    $query = $this->CI->table_model->get();
+    $info = $this->CI->table_model->get_query_info();
+    $this->assertEquals( 5, $info['num_rows'] );
+    // Zoeken in many_to_many 'straat' ->word_boundaries
+    $this->CI->table_model->table( 'tbl_groepen' );
+    $this->CI->table_model->with( 'many_to_many' );
+    $this->CI->table_model->find('straat', null, array('word_boundaries'=>TRUE));
+    $query = $this->CI->table_model->get();
+    $info = $this->CI->table_model->get_query_info();
+    $this->assertEquals( 0, $info['num_rows'] );
+    
+    
+    
+    
+    
+  }
   
   
   public function test_crud() {
