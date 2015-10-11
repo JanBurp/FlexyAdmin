@@ -216,6 +216,15 @@ class Api_Model extends CI_Model {
     // merge with defaults
     $args=array_merge($this->needs,$args);
     
+    // create booleans from strings
+    foreach ($args as $key => $value) {
+      if (is_string($value)) {
+        $value==strtolower($value);
+        if ($value==='true')      $args[$key]=TRUE;
+        elseif ($value==='false') $args[$key]=FALSE;
+      }
+    }
+    
     // config
     if (!isset($args['config'])) {
       $args['config'] = array();
@@ -438,6 +447,7 @@ class Api_Model extends CI_Model {
   protected function _add_options() {
     $table=el('table',$this->args);
     if (empty($table)) return FALSE;
+    if ( el('options',$this->args,false)===FALSE) return FALSE;
     $options=array();
     $fields=$this->db->list_fields($table);
     foreach ($fields as $field) {

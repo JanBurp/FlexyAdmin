@@ -8,6 +8,7 @@
  * - `table`                    // De gevraagde tabel
  * - `[limit=0]`                // Aantal rijen dat het resultaat moet bevatten. Als `0` dan worden alle rijen teruggegeven.
  * - `[offset=0]`               // Hoeveel rijen vanaf de start worden overgeslagen.
+ * - `[as_grid=FALSE]`          // Als `TRUE`, dan wordt de data als specifieke grid formaat teruggegeven zoals het de backend van de CMS wordt getoond. NB Kan onderstaande opties overrulen!
  * - `[txt_abstract=0]`         // Als `TRUE`, dan bevatten velden met de `txt_` prefix een ingekorte tekst zonder HTML tags. Of een integer waarde voor de lengte.
  * - `[as_options=FALSE]`       // Als `TRUE`, dan wordt de data als opties teruggegeven die gebruikt kunnen worden in een dropdown field bijvoorbeeld. (`limit` en `offset` werken dan niet)
  * - `[options=FALSE]`          // Als `TRUE`, dan worden de mogelijke waarden van velden meegegeven.
@@ -93,9 +94,13 @@
 class Table extends Api_Model {
   
   var $needs = array(
-    'table'   => '',
-    'limit'   => 0,
-    'offset'  => 0
+    'table'        => '',
+    'limit'        => 0,
+    'offset'       => 0,
+    'as_grid'      => false,
+    'as_options'   => false,
+    'txt_abstract' => 0,
+    'options'      => false,
   );
   
 	public function __construct() {
@@ -133,14 +138,23 @@ class Table extends Api_Model {
    * @author Jan den Besten
    */
   private function _get_data() {
+    
     $this->table_model->table( $this->args['table'] );
     if ( isset($this->args['where']) ) $this->table_model->where( $this->args['where'] );
     // txt_abstract
     if ( isset($this->args['txt_abstract'])) $this->table_model->select_txt_abstract( $this->args['txt_abstract'] );
     // as options => as_abstract en een plat resultaat
-    if (el('as_options',$this->args,false)) $this->table_model->select_abstract( TRUE );
-    //
-    $items = $this->table_model->get_result( $this->args['limit'], $this->args['offset'] );
+    if ( el('as_options',$this->args,false) ) $this->table_model->select_abstract( TRUE );
+
+    // Normaal resultaat, of grid resultaat
+    if ( el('as_grid',$this->args,false) ) {
+      $items = $this->table_model->get_grid( $this->args['limit'], $this->args['offset'] );
+    }
+    else {
+      $items = $this->table_model->get_result( $this->args['limit'], $this->args['offset'] );
+    }
+    
+    // Info
     $this->info = $this->table_model->get_query_info();
     return $items;
   }

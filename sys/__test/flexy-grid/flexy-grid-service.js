@@ -22,7 +22,8 @@ flexyAdmin.factory('flexyGridService', ['flexySettingsService','flexyApiService'
     table  : '',
     limit  : 0,
     offset : 0,
-    txt_abstract : true
+    as_grid : true,
+    // txt_abstract : true
   };
   
   /**

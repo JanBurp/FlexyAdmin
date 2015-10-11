@@ -307,6 +307,8 @@ class Show extends AdminController {
 
 							$data=$this->ff->render_grid($table,$data,$right,$info);
               
+              // trace_($data);
+              
 							if (empty($uiTable)) $uiTable=$this->ui->get($table);
 							$tableHelp=$this->ui->get_help($table);
 							if (!empty($tableHelp)) {
