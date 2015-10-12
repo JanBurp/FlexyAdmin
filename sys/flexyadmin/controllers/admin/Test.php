@@ -19,7 +19,7 @@ class Test extends AdminController {
     // // $result = $this->db->get_result('tbl_leerlingen');
     //
     // // Met table_model
-    $this->table_model->table('tbl_leerlingen');
+    // $this->table_model->table('tbl_leerlingen');
     // $this->table_model->select('id,str_first_name');
     // $this->table_model->select_abstract();
     // $this->table_model->with( 'many_to_one', ['tbl_adressen'] );
@@ -28,10 +28,18 @@ class Test extends AdminController {
     // $this->table_model->where( 'tbl_groepen.str_title', "D" );  // 16
     // $this->table_model->limit(4);
     // $this->table_model->order_by( 'tbl_groepen__str_title' );
+    // $this->table_model->order_by( 'str_first_name', 'DESC' );
     // $this->table_model->find( 'park', 'tbl_adressen.str_address' );
     // $query = $this->table_model->get();
     // $result = $this->table_model->get_result();
-    $result = $this->table_model->get_grid();
+    // $result = $this->table_model->get_grid( );
+    // $result = $this->table_model->get_grid( 0, 'str_first_name' );
+
+    $this->table_model->table('tbl_crud2');
+    // $query = $this->table_model->get();
+    // $result = $this->table_model->get_result();
+    $result = $this->table_model->get_grid( 0, 'tme_last_changed', 'e' );
+
 
     // MANY_TO_MANY
 
@@ -81,6 +89,7 @@ class Test extends AdminController {
     
     
     trace_( $this->table_model->get_query_info() );
+    trace_sql( $this->table_model->last_query() );
     if (isset($result))  var_dump( $result );
     if (isset($query))   var_dump( $query->result_array() );
     

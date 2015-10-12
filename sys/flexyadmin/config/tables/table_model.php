@@ -34,6 +34,7 @@ $config['field_info']       = NULL;
 
 /**
  * Hier kan een standaard volgorde worden ingesteld waarin de resultaten worden getoond.
+ * Kan een string zijn, een string gescheiden met komma's, of een array van strings.
  */
 $config['order_by']         = NULL;
 

@@ -46,10 +46,10 @@ flexyAdmin.factory('flexyGridService', ['flexySettingsService','flexyApiService'
    * Bereken pagination en voeg die data toe aan info 
    */
   function calculate_pagination(info,args) {
-    info.total_pages = 1;
-    info.limit = args.limit;
-    if (angular.isDefined(info.total_rows) && angular.isDefined(args.limit) && args.limit>0) {
-      info.total_pages = Math.ceil(info.total_rows / args.limit) ;
+    if ( angular.isUndefined(info.num_pages)) info.num_pages = args.num_pages;
+    if ( angular.isUndefined(info.limit))     info.limit = args.limit;
+    if (angular.isDefined(info.total_rows) && angular.isDefined(info.limit) && info.limit>0) {
+      info.num_pages = Math.ceil(info.total_rows / info.limit) ;
     }
     return info;
   }
@@ -161,7 +161,7 @@ flexyAdmin.factory('flexyGridService', ['flexySettingsService','flexyApiService'
    * Geeft informatie over de tabel. De volgende keys zitten erin:
    * 
    * - num_rows     - Het aantal records dat beschikbaar is
-   * - total_pages  - Het totaal aantal pagina's dat beschiklaar is
+   * - num_pages  - Het totaal aantal pagina's dat beschiklaar is
    * - total_rows   - Het totaal aantal records dat in het resultaat bestaat voor deze tabel
    * - limit        - Het aantal records per pagina
    * 
