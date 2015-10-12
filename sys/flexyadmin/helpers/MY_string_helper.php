@@ -182,14 +182,22 @@ function get_prefix($s,$split="_") {
 /**
  * Geeft suffix van een string
  *
- * @param string $s 
+ * @param mixed $s string of een array van strings
  * @param string $split default='_'
- * @return string
+ * @return mixed
  * @author Jan den Besten
  */
 function get_suffix($s,$split="_") {
-	$e=explode($split,$s);
-	return $e[count($e)-1];
+  if (is_array($s)) {
+    foreach ($s as $key => $value) {
+      $s[$key] = get_suffix($value,$split);
+    }
+    return $s;
+  }
+  else {
+    $e=explode($split,$s);
+    return $e[count($e)-1];
+  }
 }
 
 /**

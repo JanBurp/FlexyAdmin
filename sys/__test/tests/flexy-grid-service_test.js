@@ -66,7 +66,7 @@ describe('flexy-grid-service-http', function(){
     // Get the grid info
     var info = service.get_info('tbl_menu');
     expect( info ).toBeDefined();
-    expect( info ).toEqual( { rows:data.length, total_rows:data.length, table_rows:data.length, total_pages:1, limit:0} );
+    expect( info ).toEqual( { rows:data.length, total_rows:data.length, table_rows:data.length, num_pages:1, limit:0} );
 
     // Get the grid
     var grid = service.get_grid_data('tbl_menu');

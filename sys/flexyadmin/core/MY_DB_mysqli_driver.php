@@ -2353,12 +2353,12 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
       case 'date':
       case 'dat':
         $year=(int) date('Y');
-        $value=rand($year,$year+1).'-'.rand(1,12).'-'.rand(1,31);
+        $value=rand($year-5,$year+5).'-'.rand(1,12).'-'.rand(1,31);
         break;
 
       case 'tme':
         $year=(int) date('Y');
-        $value=rand($year,$year+1).'-'.rand(1,12).'-'.rand(1,31). ' '.rand(0,23).':'.rand(0,59).':'.rand(0,59);
+        $value=rand($year-5,$year+5).'-'.rand(1,12).'-'.rand(1,31). ' '.rand(0,23).':'.rand(0,59).':'.rand(0,59);
         break;
 
       case 'time':

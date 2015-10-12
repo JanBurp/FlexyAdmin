@@ -175,9 +175,9 @@ function trace_($a=NULL,$echo=true,$backtraceOffset=1,$max=50,$class='_trace') {
 	return $out;
 }
 
-function trace_sql($sql) {
+function trace_sql($sql,$echo=true) {
   $sql = preg_replace("/(SELECT|FROM|WHERE|SET|ORDER|LEFT|RIGHT|LIMIT)\s/uis", "\n$1 ", $sql);
-  return trace_($sql);
+  return trace_($sql,$echo);
 }
 
 /**

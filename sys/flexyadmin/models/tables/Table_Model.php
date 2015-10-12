@@ -84,6 +84,11 @@ Class Table_Model extends CI_Model {
   private $tm_select  = FALSE;
   
   /**
+   * Een eventueel veld dat een compleet pad moet bevatten in een tree table
+   */
+  private $tm_path = FALSE;
+  
+  /**
    * Maximale lengte van txt velden.
    * Als groter dan 0 dan worden txt_ velden gemaximaliseerd op aantal karakters en gestript van html tags
    */
@@ -93,17 +98,19 @@ Class Table_Model extends CI_Model {
    * Of de result_array in het geval van ->select_abstract() plat moet worden. Zie bij ->select_abstract()
    */
   private $tm_flat_abstracts = FALSE;
+
+  /**
+   * Hou ORDER BY bij als array van strings per veld en DESC eventueel achter het veld, met name 'jump_to_today' maakt daar gebruik van
+   */
+  private $tm_order_by = array();
   
   /**
    * Hou LIMIT en OFFSET bij om eventueel total_rows te kunnen berekenen
+   * En of er naar de pagina moet worden gegaan van het item het dichtsbij vandaag
    */
-  private $tm_limit  = 0;
-  private $tm_offset = 0;
-
-  /**
-   * Een eventueel veld dat een compleet pad moet bevatten in een tree table
-   */
-  private $tm_path = FALSE;
+  private $tm_limit         = 0;
+  private $tm_offset        = 0;
+  private $tm_jump_to_today = FALSE;
 
 
   /**
@@ -517,7 +524,7 @@ Class Table_Model extends CI_Model {
     $with=array('many_to_one'=>array());
     foreach ($many_to_one as $table => $info) {
       $with['many_to_one'][$table]['fields'] = 'abstract';
-      $with['many_to_one'][$table]['flat'] = TRUE;
+      $with['many_to_one'][$table]['flat']   = TRUE;
     }
     $grid_set['with'] = $with;
     return $grid_set;
@@ -674,10 +681,12 @@ Class Table_Model extends CI_Model {
    * @author Jan den Besten
    */
   public function reset() {
-    $this->tm_select = FALSE;
-    $this->tm_path   = FALSE;
-    $this->tm_limit  = 0;
-    $this->tm_offset = 0;
+    $this->tm_select        = FALSE;
+    $this->tm_path          = FALSE;
+    $this->tm_order_by      = array();
+    $this->tm_limit         = 0;
+    $this->tm_offset        = 0;
+    $this->tm_jump_to_today = FALSE;
     $this->with();
     return $this;
   }
@@ -1004,24 +1013,74 @@ Class Table_Model extends CI_Model {
     // maak select concreet
     $this->db->select( $this->tm_select, FALSE );
     
-    // trace_($this->tm_select);
-
     // order_by
-    if ( ! empty($this->settings['order_by']) ) $this->db->order_by( $this->settings['order_by'] );
+    $first_order_by = '';
+    if ( empty($this->tm_order_by) and !empty($this->settings['order_by']) ) {
+      $this->order_by( $this->settings['order_by'] );
+    }
+    if ( ! empty($this->tm_order_by) ) {
+      foreach ($this->tm_order_by as $order_by) {
+        if (empty($first_order_by)) $first_order_by = $order_by;
+        $this->db->order_by( $order_by );
+      }
+    }
     
     // limit & offset & GET
     $this->query_info = array();
     $query = $this->db->get( $this->settings['table'], $this->tm_limit, $this->tm_offset );
     
-    // Query Info
+    // Jump to today?
+    if ( $query AND $this->tm_jump_to_today AND $this->tm_limit>1 ) {
+      $this->query_info['limit']      = (int) $this->tm_limit;
+      $this->query_info['page']       = $this->tm_offset / $this->tm_limit;
+      $this->query_info['total_rows'] = $this->total_rows( true );
+      // Jump to today nodig?
+      if ($this->query_info['total_rows']>$this->query_info['limit']) {
+        // Is er een datum/tijd veld?
+        $select = str_replace('`','',$this->tm_select);
+        $fields = array_values(get_suffix( $select, '.' ));
+        $prefixes = get_prefix( $fields );
+        $date_field = one_of_array_in_array( $this->config->item('DATE_fields_pre'), $prefixes );
+        if ($date_field) {
+          // Zoek id van dichtsbijzijnde row
+          $date_field = $fields[$date_field];
+          $last_full_sql = $this->last_query();
+          $last_sql = $this->last_clean_query();
+          $sql = $last_sql . ' AND DATE(`'.$date_field.'`)>=DATE(NOW()) ORDER BY `'.$date_field.'`  LIMIT 1';
+          $jump_query = $this->db->query( $sql );
+          $today_id = $jump_query->result_array();
+          if ($today_id) {
+            // Zoek pagina van dichtsbijzijnde row
+            $today_id = (int) current($today_id)[$this->settings['primary_key']];
+            $sql = $last_sql . ' ORDER BY ' . $first_order_by;
+            $jump_query = $this->db->query( $sql );
+            $sub_result = $jump_query->result_array();
+            $today = find_row_by_value( $sub_result, $today_id, $this->settings['primary_key'] );
+            if (is_array($today)) {
+              $today = key($today);
+              $page = (int) floor($today / $this->query_info['limit']);
+              // Moet er worden gesprongen naar andere pagina? Dan de query opnieuw met andere offset
+              if ($page>0) {
+                $this->tm_offset = (int) $page * $this->tm_limit;
+                $last_full_sql = str_replace( 'LIMIT '.$this->tm_limit, 'LIMIT '.$this->tm_offset.','.$this->tm_limit, $last_full_sql);
+                $query = $this->db->query( $last_full_sql );
+              }
+            }
+          }
+        }
+      }
+    }
+    
+    // Query Info Complete
     if ($query) {
       $this->query_info['num_rows']   = $query->num_rows();
       $this->query_info['total_rows'] = $query->num_rows();
       if ($this->tm_limit>1) {
-        $this->query_info['limit']      = $this->tm_limit;
+        $this->query_info['limit']      = (int) $this->tm_limit;
         $this->query_info['offset']     = $this->tm_offset;
         $this->query_info['page']       = $this->tm_offset / $this->tm_limit;
         $this->query_info['total_rows'] = $this->total_rows( true );
+        $this->query_info['num_pages']  = (int) ceil($this->query_info['total_rows'] / $this->tm_limit);
       }
       $this->query_info['num_fields'] = $query->num_fields();
       $this->query_info['last_query'] = $this->last_query();
@@ -1247,42 +1306,61 @@ Class Table_Model extends CI_Model {
    * - zoeken
    * - abstracts van many_to_one
    *
-   * @param int $page [0]
-   * @param string $sort ['']
-   * @param string $search ['']
+   * @param mixed $page [FALSE] De pagina van het resultaat, als FALSE dan kan is jump_to_today aktief, anders niet.
+   * @param string $sort [''] Veld dat de volgorde van het resultaat bepaalt, als het DESC moet, dan beginnen met een '_'
+   * @param mixed $find [''] Een string waarde die gevonden moet worden, of een array met alle parameters van ->find()
    * @return array
    * @author Jan den Besten
    */
-  public function get_grid( $page = 0, $sort = '', $search = '' ) {
+  public function get_grid( $page = FALSE, $sort = '', $find = '' ) {
     $grid_set = $this->settings['grid_set'];
+    
+    // trace_($grid_set);
 
-    // Fields
+    // Select
     $this->select( $grid_set['fields'] );
     $this->select_txt_abstract(250);
     
-    // many_to_one
-    if (isset($grid_set['with']['many_to_one'])) $this->tm_with['many_to_one'] = $grid_set['with']['many_to_one'];
+    // Relations
+    if (isset($grid_set['with'])) $this->tm_with = $grid_set['with'];
     
     // Order_by
-    if ($sort) {
-      $desc = (substr($sort,0,1) == '_'?'DESC':'ASC');
-      $sort = trim($sort,'_');
-      $this->order_by( $sort, $desc );
+    if (empty($sort)) {
+      if (!empty($this->tm_order_by)) {
+        $sort=$this->tm_order_by;
+        $this->tm_order_by = array();
+      }
+      else {
+        $sort=$this->settings['order_by'];
+      }
     }
+    else {
+      if (substr($sort,0,1)=='_') {
+        $sort=trim($sort,'_').' DESC';
+      }
+    }
+    $this->order_by( $sort );
     
-    // TODO SEARCH
-    
+    // Find
+    if ( $find ) {
+      if ( !isset($find['terms']))  $find=array( 'terms'=>$find, 'fields'=>array(), 'settings'=>array() );
+      $this->find( $find['terms'], $find['fields'], $find['settings'] );
+    }
     
     // Pagination
     if ($grid_set['pagination']) {
+      $calc_page = $page;
+      if (is_bool($page) AND $page===FALSE) $calc_page = 0;
       $this->load->model('cfg');
       $limit = $this->cfg->get('cfg_configurations','int_pagination');
-      $offset = $page * $limit;
+      $offset = $calc_page * $limit;
       $this->limit( $limit, $offset );
     }
 
-    // TODO Jump to today
-    
+    // Jump to today?
+    if (is_bool($page) AND $page===FALSE and $grid_set['jump_to_today']) {
+      $this->tm_jump_to_today = TRUE;
+    }
     
     return $this->get_result();
   }
@@ -1602,7 +1680,6 @@ Class Table_Model extends CI_Model {
    * @author Jan den Besten
    */
   public function find( $terms, $fields = array(), $settings = array() ) {
-    
     // settings
     $defaults = array(
       'and'             => 'OR',
@@ -1623,6 +1700,8 @@ Class Table_Model extends CI_Model {
         foreach ($this->tm_with as $type => $tm_with) {
           foreach ($tm_with as $other_table => $with) {
             $other_fields = $with['fields'];
+            if ($other_fields=='abstract') $other_fields = $this->get_other_table_fields( $other_table );
+            if (!is_array($other_fields)) $other_fields = explode(',',$other_fields);
             foreach ($other_fields as $other_field) {
               array_push( $fields, $this->db->protect_identifiers($other_table.'.'.$other_field) );
             }
@@ -1634,13 +1713,16 @@ Class Table_Model extends CI_Model {
     foreach ( $fields as $key => $field ) {
       if (strpos($field,'.')===FALSE) $fields[$key] = $this->db->protect_identifiers($this->settings['table'].'.'.$field);
     }
-    
 
     // Splits terms
     if ( is_array($terms) ) $terms = implode(' ',$terms);
     $terms=preg_split('~(?:"[^"]*")?\K[/\s]+~', ' '.$terms.' ', -1, PREG_SPLIT_NO_EMPTY );
     
-    // Bouw query op voor elke term
+    // Bouw 'query' op voor elke term
+    $tm_find=array();
+    
+    
+    
     foreach ($terms as $terms) {
       $terms = trim($terms,'"');
       
@@ -1969,7 +2051,16 @@ Class Table_Model extends CI_Model {
   
   
   /**
-   * Zelfde als Query Builder
+   * Zelfde als Query Builder, met deze verschillen:
+   * - Als order_by() niet specifiek wordt aangeroepen, dan wordt de in de config van de tabel ingesteld order_by gebruikt.
+   * - De eerste parameter kan een array van strings kan zijn.
+   * - Als de eerste parameter een array is en de tweede parameter (direction) is meegegeven, dan geld die direction alleen voor de eerste waarde in de array.
+   * - De direction parameter kan naast 'DESC','ASC' en 'RANDOM' ook 'RAND' zijn (dit lijkt meer op de SQL)
+   * 
+   * eerste parameter is een array
+   * -----------------------------
+   * 
+   * ->order_by( array( 'str_title', 'dat_date DESC' ) );
    * 
    * many_to_one
    * -----------
@@ -1988,7 +2079,23 @@ Class Table_Model extends CI_Model {
    * @author Jan den Besten
    */
   public function order_by( $orderby, $direction = '', $escape = NULL ) {
-    $this->db->order_by($orderby,$direction,$escape);
+    // Zorg ervoor dat order_by een array is met direction erbij en verder volgens specs van Query Builder
+    if (is_string($orderby)) $orderby = explode(',',$orderby);
+    if (!empty($direction)) {
+      if ( in_array($direction,array('RANDOM','RAND')) ) {
+        if (is_numeric($orderby[0])) {
+          $orderby[0] = 'RAND('.$orderby[0].')';
+        }
+        else {
+          $orderby[0] = 'RAND()';
+        }
+      }
+      else {
+        $orderby[0] = $orderby[0].' '.$direction;
+      }
+    }
+    // merge met bestaande
+    $this->tm_order_by = array_merge( $this->tm_order_by, $orderby );
     return $this;
   }
   
