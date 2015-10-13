@@ -59,7 +59,7 @@ class AdminController extends BasicController {
 
 	private function _user_can_use_admin() {
     $rights=$this->user->get_rights();
-    return (($rights['b_edit'] or $rights['b_add'] or $rights['b_delete'] or $rights['b_all_users']) and !empty($rights['rights']));
+    return (( el('b_edit',$rights,FALSE) or el('b_add',$rights,FALSE) or el('b_delete',$rights,FALSE) or el('b_all_users',$rights,FALSE)) and !empty($rights['rights']));
 	}
 
 	function use_editor() {
