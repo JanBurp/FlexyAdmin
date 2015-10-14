@@ -1044,7 +1044,7 @@ class Form {
 				// Normal dropdown (also normal image dropdown)
 				//
 				if ($field['type']=='select' or $field['type']=='dropdown' or $field['type']=='image_dropdown') {
-					$field['control']=form_dropdown($name,$options,$value,$extra);
+					$field['control'].=form_dropdown($name,$options,$value,$extra);
 				}
 				//
 				// Ordered lists

@@ -2190,7 +2190,7 @@ Class Table_Model extends CI_Model {
    * @author Jan den Besten
    */
 	protected function _update_insert( $type, $set = NULL, $where = NULL, $limit = NULL ) {
-
+    
     // Is een type meegegeven?
     $types = array('INSERT','UPDATE');
     if ( ! in_array($type,$types) ) {
@@ -2218,6 +2218,7 @@ Class Table_Model extends CI_Model {
 		$set = $this->tm_set;
     $id = NULL;
     
+
 		/**
 		 * Stel nieuwe volgorde van een item in, indien nodig
 		 */
@@ -2268,11 +2269,17 @@ Class Table_Model extends CI_Model {
 
     // trace_($set);
     // trace_($many_to_many);
+    
       
     /**
      * Bij INSERT is primary_key niet nodig, haal die weg mocht die er zijn.
      */
 		if ( $type=='INSERT' ) unset( $set[ $this->settings['primary_key']] );
+
+    /**
+     * Verwijder id uit set, niet nodig
+     */
+    unset($set[$this->settings['primary_key']]);
 
     /**
      * Verwijder lege wachtwoorden, zodat die niet overschreven worden in de db
@@ -2283,7 +2290,7 @@ Class Table_Model extends CI_Model {
         unset( $set[$key] );
       }
     }
-
+    
         
     /**
      * Verwijder data die NULL is of waarvan het veld niet in de table bestaat.
@@ -2291,6 +2298,7 @@ Class Table_Model extends CI_Model {
     foreach ( $set as $key => $value ) {
       if ( !isset($value) or !$this->field_exists( $key) ) unset( $set[$key] );
     }
+    
     
     /**
      * Ga door als de set niet leeg is
@@ -2309,6 +2317,7 @@ Class Table_Model extends CI_Model {
        */
       $this->db->set($set);
       
+      
       /**
        * En de INSERT of UPDATE doen
        */
@@ -2322,6 +2331,7 @@ Class Table_Model extends CI_Model {
     	else {
         $sql = $this->db->get_compiled_update( $this->settings['table'], FALSE );
 				$this->db->update( $this->settings['table'], NULL,NULL, $this->tm_limit );
+        // trace_($this->last_query());
         $ids = $this->_get_ids( $sql );
         $id = current( $ids );
         $this->query_info = array(
@@ -2329,6 +2339,7 @@ Class Table_Model extends CI_Model {
           'affected_ids'  => $ids,
         );
 			}
+      
       
 			/**
 			 * Als er many_to_many data is, update/insert die ook
