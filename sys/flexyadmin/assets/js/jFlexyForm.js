@@ -126,7 +126,8 @@ function doForm() {
 		$('.flexyFormField.dropdown.has_button button').css({width:430});
 		$('.flexyFormField.dropdown.has_button .ui-multiselect-menu').css({width:428});
     $('.flexyFormField.image_dropdown.multiple ul.values').css({width:425,position:'relative'});
-    $('.flexyFormField.image_dropdown button.ui-multiselect').css({width:460,height:38,'float':'right'});
+    $('.flexyFormField.image_dropdown .ui-multiselect-menu').css({'margin-left':148});
+    $('.flexyFormField.image_dropdown button.ui-multiselect').css({width:460,height:38,'margin-left':148});
 		$('.flexyFormField.fieldtype_rgb .ui-multiselect').css({width:100});
 		$('.flexyFormField.fieldtype_rgb .ui-multiselect-menu').css({width:100});
 	}
