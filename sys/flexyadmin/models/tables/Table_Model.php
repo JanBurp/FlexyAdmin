@@ -2339,7 +2339,7 @@ Class Table_Model extends CI_Model {
           $rel_table         = $this->settings['relations']['many_to_many'][$other_table]['rel_table'];
 					$this_foreign_key  = $this->settings['relations']['many_to_many'][$other_table]['this_key'];
           $other_foreign_key = $this->settings['relations']['many_to_many'][$other_table]['other_key'];
-            // if ( $this_foreign_key==$other_foreign_key ) $other_foreign_key.="_"; // TODO : self relaties?
+          // if ( $this_foreign_key==$other_foreign_key ) $other_foreign_key.="_"; // TODO : self relaties?
 
 					// DELETE eerst huidige items
 					$this->db->where( $this_foreign_key, $id );

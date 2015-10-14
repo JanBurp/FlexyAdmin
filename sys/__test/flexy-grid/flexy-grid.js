@@ -11,10 +11,39 @@
  * $Revision$
  */
 
+flexyAdmin.controller('pipeCtrl', ['flexySettingsService','flexyGridService','$scope','$routeParams', function(settings,grid,$scope,$routeParams) {
+  'use strict';
+  var self=this;
+  
+  console.log('pipeCtrl');
+
+  self.displayed = ['TEST'];
+
+  self.callServer = function callServer(tableState) {
+    console.log(tableState);
+    self.isLoading = true;
+    // var pagination = tableState.pagination;
+    // var start = pagination.start || 0;     // This is NOT the page number, but the index of item in the list that you want to use to display the table.
+    // var number = pagination.number || 10;  // Number of entries showed per page.
+    
+
+    // service.getPage(start, number, tableState).then(function (result) {
+    //   ctrl.displayed = result.data;
+    //   tableState.pagination.numberOfPages = result.numberOfPages;//set the number of pages so the pagination can update
+    //   ctrl.isLoading = false;
+    // });
+  };  
+  
+}]);
+
+
 
 flexyAdmin.controller('GridController', ['flexySettingsService','flexyGridService','$scope','$routeParams', function(settings,grid,$scope,$routeParams) {
   'use strict';
   var self=this;
+  
+  console.log('GridController');
+  
   
   /**
    * Basic settings to make it work
@@ -60,10 +89,27 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyGridServic
   $scope.gridItems = [];
   $scope.displayedItems  = [];
   
+  $scope.pipe = function(tableState) {
+    console.log('GridController.pipe()',tableState);
+    // var pagination = tableState.pagination;
+    // var start = pagination.start || 0;     // This is NOT the page number, but the index of item in the list that you want to use to display the table.
+    // var number = pagination.number || 10;  // Number of entries showed per page.
+
+
+    // service.getPage(start, number, tableState).then(function (result) {
+    //   ctrl.displayed = result.data;
+    //   tableState.pagination.numberOfPages = result.numberOfPages;//set the number of pages so the pagination can update
+    //   ctrl.isLoading = false;
+    // });
+  };
+  
   /**
    * LOAD FROM SERVER
    */
   grid.load( $scope.table ).then(function(response){
+    console.log('GridController.load()');
+    
+    
     // ui_name
     $scope.ui_name = settings.item('config','table_info',$scope.table,'ui_name');
     // table type
