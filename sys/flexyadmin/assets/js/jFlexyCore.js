@@ -276,7 +276,7 @@ function showHelpItems() {
 function showAutoZoom() {
 	var ShowDelay;
 	var HideDelay;
-	$('img.zoom').add('.flash .zoom').not('.thumbs img.zoom').not('.thumbs .flash .zoom').mouseenter(function(){
+	$('img.zoom').add('.flash .zoom').not('.values img.zoom').not('.choices img.zoom').not('.thumbs img.zoom').not('.thumbs .flash .zoom').mouseenter(function(){
 		obj=$(this);
 		ShowDelay=setTimeout( function() {		
 			zoomThumb=$(obj).clone().addClass('autoZoom');
