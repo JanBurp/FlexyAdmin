@@ -423,6 +423,7 @@ class Plugin_automenu extends Plugin {
 					
               // trace_($autoValue);
               // trace_($groupTable);
+              // trace_($groupData);
 					
     					foreach ($groupData as $groupId=>$groupData) {
     						$titleField='str_title';
