@@ -1266,6 +1266,16 @@ input.button {
 .flexyFormField ul.values {
 	width:450px;
 }
+.flexyFormField ul.choices img {
+	filter:alpha(opacity=80);
+  opacity:.8;
+	-moz-opacity:0.8;
+}
+.flexyFormField ul.choices img:hover {
+	filter:alpha(opacity=100);
+  opacity:1;
+	-moz-opacity:1;
+}
 
 .flexyFormField.image_dragndrop.wide ul.choices,
 .flexyFormField.image_dragndrop.big  ul.choices {
