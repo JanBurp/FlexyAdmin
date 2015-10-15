@@ -50,6 +50,7 @@ flexyAdmin.constant('flexyConstants', {
  */
 flexyAdmin.factory( 'flexySettings', ['flexyConstants', function(constants) {
   'use strict';
+  
   return {
 
     /**
@@ -71,7 +72,13 @@ flexyAdmin.factory( 'flexySettings', ['flexyConstants', function(constants) {
     cfg : {
       // table_info : {},
       // field_info : {},
-    }, 
+    },
+    
+    screen : {
+      width       : window.innerWidth,
+      height      : window.innerHeight,
+      pagination  : Math.ceil((window.innerHeight - 400) / 35 / 5 ) * 5 , // height - header&footer / row | in steps of 5 
+    },
   
   
     /**

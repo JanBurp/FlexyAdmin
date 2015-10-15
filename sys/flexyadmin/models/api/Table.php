@@ -8,6 +8,8 @@
  * - `table`                    // De gevraagde tabel
  * - `[limit=0]`                // Aantal rijen dat het resultaat moet bevatten. Als `0` dan worden alle rijen teruggegeven.
  * - `[offset=0]`               // Hoeveel rijen vanaf de start worden overgeslagen.
+ * - `[sort='']`                // De volgorde van het resultaat, geef een veld, bijvoorbeeld `str_title` of `_str_title` voor DESC
+ * - `[filter='']`              // Eventuele string waarop alle data wordt gefilterd
  * - `[as_grid=FALSE]`          // Als `TRUE`, dan wordt de data als specifieke grid formaat teruggegeven zoals het de backend van de CMS wordt getoond. NB Kan onderstaande opties overrulen!
  * - `[txt_abstract=0]`         // Als `TRUE`, dan bevatten velden met de `txt_` prefix een ingekorte tekst zonder HTML tags. Of een integer waarde voor de lengte.
  * - `[as_options=FALSE]`       // Als `TRUE`, dan wordt de data als opties teruggegeven die gebruikt kunnen worden in een dropdown field bijvoorbeeld. (`limit` en `offset` werken dan niet)
@@ -97,6 +99,8 @@ class Table extends Api_Model {
     'table'        => '',
     'limit'        => 0,
     'offset'       => 0,
+    // 'sort'         => '',
+    // 'filter'       => '',
     'as_grid'      => false,
     'as_options'   => false,
     'txt_abstract' => 0,
@@ -140,17 +144,18 @@ class Table extends Api_Model {
   private function _get_data() {
     
     $this->table_model->table( $this->args['table'] );
-    if ( isset($this->args['where']) ) $this->table_model->where( $this->args['where'] );
-    // txt_abstract
-    if ( isset($this->args['txt_abstract'])) $this->table_model->select_txt_abstract( $this->args['txt_abstract'] );
-    // as options => as_abstract en een plat resultaat
-    if ( el('as_options',$this->args,false) ) $this->table_model->select_abstract( TRUE );
-
     // Normaal resultaat, of grid resultaat
     if ( el('as_grid',$this->args,false) ) {
-      $items = $this->table_model->get_grid( $this->args['limit'], $this->args['offset'] );
+      // Grid, pagination, sort
+      $this->args['sort'] = el( 'sort', $this->args, '' );
+      $this->args['filter'] = el( 'filter', $this->args, '' );
+      $items = $this->table_model->get_grid( $this->args['limit'], $this->args['offset'], $this->args['sort'], $this->args['filter'] );
     }
     else {
+      // Normaal: where, txt_abstract, options
+      if ( isset($this->args['where']) ) $this->table_model->where( $this->args['where'] );
+      if ( isset($this->args['txt_abstract'])) $this->table_model->select_txt_abstract( $this->args['txt_abstract'] );
+      if ( el('as_options',$this->args,false) ) $this->table_model->select_abstract( TRUE );
       $items = $this->table_model->get_result( $this->args['limit'], $this->args['offset'] );
     }
     
