@@ -750,6 +750,13 @@ class Menu {
         // item of seperator
         $view=(empty($item)?'seperator':'item');
         
+        // first / last
+        $order_style = '';
+        if ($pos==1) $order_style.='first ';
+        if ($pos==count($menu)) $order_style.='last';
+        $order_style=trim($order_style);
+        
+        
         // render item
         $item_html=$this->CI->load->view($this->settings['view_path'].'/'.$view.'.php',array(
           'title'       => $title,
@@ -758,7 +765,7 @@ class Menu {
           'lev'         => $level,
           'pos'         => $pos,
           '_pos'        => $_pos,
-					'order'       => ($pos==1)?$styles['first']:($pos==count($menu)?$styles['last']:''),
+					'order'       => $order_style,
 					'sub'         => (isset($item['sub']))?$styles['is_sub']:'',
           'current'     => ($this->settings['current']==$cleanUri?$styles['current']:'').((strpos($submenu,$styles['current'])>0?' '.$styles['active']:'')),
           'class_uri'   => $classUri,
