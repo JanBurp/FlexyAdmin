@@ -20,7 +20,7 @@ flexyAdmin.factory('flexyGridService', ['flexySettingsService','flexyApiService'
    */
   var default_args = {
     table  : '',
-    limit  : 0,
+    limit  : 20,
     offset : 0,
     as_grid : true,
     // txt_abstract : true
@@ -139,7 +139,7 @@ flexyAdmin.factory('flexyGridService', ['flexySettingsService','flexyApiService'
      // console.log('PARENTS',parents);
      angular.forEach(parents,function(level,id){
        var key = jdb.indexOfProperty(data,'id',id);
-       data[key]._info.has_children = true;
+       if (key!==false) data[key]._info.has_children = true;
      });
    }
    // flexy_grid_service.show_grid_items(data);

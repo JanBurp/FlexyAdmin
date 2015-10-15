@@ -20,8 +20,8 @@ describe('flexy-grid-service-http', function(){
     http     = $httpBackend;
     
     // MOCK
-    var args  = {table:'tbl_menu', limit:0, offset:0, txt_as_abstract:true, 'config':['table_info','field_info']};
-    var url   = mock.api_url( 'table', {table:'tbl_menu', limit:0, offset:0, txt_as_abstract:true, 'config':['table_info','field_info']} );
+    var args  = { 'as_grid':true, 'config':['table_info','field_info'], limit:20, offset:0, table:'tbl_menu'};
+    var url   = mock.api_url( 'table', { 'as_grid':true, 'config':['table_info','field_info'], limit:20, offset:0, table:'tbl_menu' } );
     http.when( 'GET', url ).respond( mock.api_get_data_response(args, 'table') );
     // console.log('MOCK:',url,mock.api_get_data_response({table:'tbl_menu'}, 'table'));
   }));
@@ -55,18 +55,18 @@ describe('flexy-grid-service-http', function(){
     data = service.get_raw_data('tbl_menu');
     expect( data ).toBeDefined();
     // expect( data ).toEqual( mock.table('tbl_menu') );
-    
+    //
     // config in Settings?
     expect( settings.has_item('config') ).toEqual( true);
     expect( settings.has_item('config','table_info') ).toEqual( true);
     expect( settings.has_item('config','table_info', 'tbl_menu') ).toEqual( true);
     expect( settings.has_item('config','field_info') ).toEqual( true);
     expect( settings.has_item('config','field_info', 'tbl_menu') ).toEqual( true);
-    
+
     // Get the grid info
     var info = service.get_info('tbl_menu');
     expect( info ).toBeDefined();
-    expect( info ).toEqual( { rows:data.length, total_rows:data.length, table_rows:data.length, num_pages:1, limit:0} );
+    expect( info ).toEqual( { rows:data.length, total_rows:data.length, table_rows:data.length, num_pages:1, limit:20} );
 
     // Get the grid
     var grid = service.get_grid_data('tbl_menu');
@@ -81,9 +81,9 @@ describe('flexy-grid-service-http', function(){
     expect( grid[5]._info ).toEqual( {level: 0, is_child: false, has_children: false} );
     expect( grid[6]._info ).toEqual( {level: 0, is_child: false, has_children: false} );
     
-    // angular.forEach( grid, function(item,id) {
-    //   console.log('ITEM',item.id,item.self_parent,item._info,item.uri);
-    // });
+    angular.forEach( grid, function(item,id) {
+      console.log('ITEM',item.id,item.self_parent,item._info,item.uri);
+    });
     
   });
 

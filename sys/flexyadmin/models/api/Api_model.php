@@ -216,14 +216,16 @@ class Api_Model extends CI_Model {
     // merge with defaults
     $args=array_merge($this->needs,$args);
     
-    // create booleans from strings
+    // create booleans and numbers from strings
     foreach ($args as $key => $value) {
       if (is_string($value)) {
         $value==strtolower($value);
-        if ($value==='true')      $args[$key]=TRUE;
-        elseif ($value==='false') $args[$key]=FALSE;
+        if ($value==='true')        $args[$key]=TRUE;
+        elseif ($value==='false')   $args[$key]=FALSE;
+        elseif (is_numeric($value)) $args[$key]=(int) $value;
       }
     }
+    
     
     // config
     if (!isset($args['config'])) {

@@ -1,4 +1,5 @@
-<div class="panel panel-primary flexy-grid {{table}}" ng-controller="GridController" st-delay="200" st-table="displayedItems" st-safe-src="gridItems">
+<div class="controller" ng-controller="GridController">
+<div class="panel panel-primary flexy-grid {{table}}" st-pipe="pipe" st-delay="200" st-table="displayedItems">
 
   <div class="panel-heading panel-title">
     <!-- Title -->
@@ -12,7 +13,7 @@
   </div>
 
   <div class="panel-content">
-    <table 
+    <table
       class="table table-striped table-hover table-condensed table-responsive table-bordered"
       ng-class="{'table-sortable': type.is_sortable, 'table-tree': type.is_tree}">
 
@@ -84,9 +85,10 @@
 
   <div class="panel-footer text-primary">
     <!-- Pagination -->
-		<div class="flexy-grid-pagination" st-pagination="" st-template="flexy-grid/flexy-grid-pagination.html" st-items-by-page="info.limit" st-displayed-pages="info.displayed_pages"></div>
+		<div class="flexy-grid-pagination" st-pagination="" st-template="flexy-grid/flexy-grid-pagination.html" st-items-by-page="info.limit" st-displayed-pages="5"></div>
     <!-- Info -->
     <div class="flexy-grid-stats">{{info.total_rows}} items on {{info.num_pages}} pages</div>
   </div>
   
+</div>
 </div>

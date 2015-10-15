@@ -91,22 +91,22 @@ jdb.deleteItems = function(obj,items) {
 /**
  * jdb.indexOfProperty(array,property,value)
  * 
- * Vind de key van een array van objecten waar de waarde van een property van een object gelijkt is aan value
+ * Vind de key van een array van objecten waar de waarde van een property van een object gelijk is aan value
  * 
- * @param array array De array van objecten waarin gezoch wordt
+ * @param array array De array van objecten waarin gezocht wordt
  * @param string property Naam van de property
  * @param mixed value De waarde waarnaar gezocht wordt
  * @return integer index De index van het gevonden object, of -1 als niet is gevonden.
  */
 jdb.indexOfProperty = function(array,property,value) {
-  var index=-1;
+  var index = false;
   var i=0;
   do {
-    if (array[i][property]===value) {
+    if ( angular.isDefined(array[i]) && angular.isDefined(array[i][property]) && array[i][property]===value) {
       index=i;
     }
     i++;
-  } while (index===-1);
+  } while (index===false && i<array.length);
   return index;
 };
 

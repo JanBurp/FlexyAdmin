@@ -11,39 +11,9 @@
  * $Revision$
  */
 
-flexyAdmin.controller('pipeCtrl', ['flexySettingsService','flexyGridService','$scope','$routeParams', function(settings,grid,$scope,$routeParams) {
-  'use strict';
-  var self=this;
-  
-  console.log('pipeCtrl');
-
-  self.displayed = ['TEST'];
-
-  self.callServer = function callServer(tableState) {
-    console.log(tableState);
-    self.isLoading = true;
-    // var pagination = tableState.pagination;
-    // var start = pagination.start || 0;     // This is NOT the page number, but the index of item in the list that you want to use to display the table.
-    // var number = pagination.number || 10;  // Number of entries showed per page.
-    
-
-    // service.getPage(start, number, tableState).then(function (result) {
-    //   ctrl.displayed = result.data;
-    //   tableState.pagination.numberOfPages = result.numberOfPages;//set the number of pages so the pagination can update
-    //   ctrl.isLoading = false;
-    // });
-  };  
-  
-}]);
-
-
-
 flexyAdmin.controller('GridController', ['flexySettingsService','flexyGridService','$scope','$routeParams', function(settings,grid,$scope,$routeParams) {
   'use strict';
   var self=this;
-  
-  console.log('GridController');
-  
   
   /**
    * Basic settings to make it work
@@ -83,61 +53,67 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyGridServic
   $scope.search = '';
   
   /**
+   * Loading
+   */
+  $scope.loading = false;
+  
+  /**
    * References of the grid data: https://lorenzofox3.github.io/smart-table-website/#section-intro stSafeSrc attribute
    * Set when data is present
    */
   $scope.gridItems = [];
   $scope.displayedItems  = [];
   
-  $scope.pipe = function(tableState) {
-    console.log('GridController.pipe()',tableState);
-    // var pagination = tableState.pagination;
-    // var start = pagination.start || 0;     // This is NOT the page number, but the index of item in the list that you want to use to display the table.
-    // var number = pagination.number || 10;  // Number of entries showed per page.
-
-
-    // service.getPage(start, number, tableState).then(function (result) {
-    //   ctrl.displayed = result.data;
-    //   tableState.pagination.numberOfPages = result.numberOfPages;//set the number of pages so the pagination can update
-    //   ctrl.isLoading = false;
-    // });
-  };
-  
   /**
    * LOAD FROM SERVER
    */
-  grid.load( $scope.table ).then(function(response){
-    console.log('GridController.load()');
+  $scope.pipe = function(tableState) {
     
+    // pagination
+    var args = {
+      offset  : tableState.pagination.start,
+      limit   : settings.item(['screen','pagination'])
+    };
+    // sorting
+    if ( angular.isDefined( tableState.sort.predicate ) ) {
+      args.sort = tableState.sort.predicate;
+      if (tableState.sort.reverse===true) args.sort = '_' + args.sort;
+    }
+    // filter
+    if ( angular.isDefined( tableState.search.predicateObject ) ) {
+      args.filter = tableState.search.predicateObject.$;
+    }
     
-    // ui_name
-    $scope.ui_name = settings.item('config','table_info',$scope.table,'ui_name');
-    // table type
-    $scope.type.is_tree = settings.item('config','table_info',$scope.table,'tree');
-    $scope.type.is_sortable = settings.item('config','table_info',$scope.table,'sortable');
-    // info & pagination TODO: pagination is calculated by grid-server
-    $scope.info = grid.get_info($scope.table);
-    // $scope.info.displayed_pages = 5;
-    // $scope.info.limit = 10;
-    // $scope.info.num_pages = Math.ceil($scope.info.num_rows / $scope.info.limit);
-    console.log($scope.info);
+    // console.log(tableState);
+    // console.log('load args:',args);
     
-    
-    // data
-    $scope.gridItems = grid.get_grid_data($scope.table);
-    // Copy the references, needed for smart-table to watch for changes in the data
-    $scope.displayedItems = [].concat($scope.gridItems);
-    
-    // field_info, only the fields in the gridItems
-    $scope.fields = settings.item('config','field_info',$scope.table);
-    var first_item = jdb.firstArrayItem( $scope.gridItems );
-    angular.forEach( $scope.fields, function(value, field) {
-      if ( angular.isUndefined( first_item[field] )) {
-        delete $scope.fields[field];
+    grid.load( $scope.table, args ).then(function(response){
+      // ui_name
+      $scope.ui_name = settings.item('config','table_info',$scope.table,'ui_name');
+      // table type
+      $scope.type.is_tree = settings.item('config','table_info',$scope.table,'tree');
+      $scope.type.is_sortable = settings.item('config','table_info',$scope.table,'sortable');
+      // info & pagination
+      $scope.info = grid.get_info($scope.table);
+      $scope.info.num_pages = Math.ceil($scope.info.total_rows / $scope.info.limit);
+      tableState.pagination.numberOfPages = $scope.info.num_pages;
+      // data
+      $scope.gridItems = grid.get_grid_data($scope.table);
+      // Copy the references, needed for smart-table to watch for changes in the data
+      $scope.displayedItems = [].concat($scope.gridItems);
+      // field_info, show only the fields in the gridItems
+      $scope.fields = settings.item('config','field_info',$scope.table);
+      var first_item = jdb.firstArrayItem( $scope.gridItems );
+      if ( angular.isDefined( first_item )) {
+        angular.forEach( $scope.fields, function(value, field) {
+          if ( angular.isUndefined( first_item[field] )) {
+            delete $scope.fields[field];
+          }
+        });
       }
+
     });
-    
-  });
+  };
   
   /**
    * SELECT ALL TOGGLE

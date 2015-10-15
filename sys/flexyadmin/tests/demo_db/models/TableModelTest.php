@@ -501,7 +501,7 @@ class TableModelTest extends CITestCase {
     $this->assertEquals( 92, $info['total_rows'] );
     $this->assertEquals( 0, $info['page'] );
     // Page2
-    $page2 = $this->CI->table_model->get_grid( 1 );
+    $page2 = $this->CI->table_model->get_grid( 20, 20 );
     $info = $this->CI->table_model->get_query_info();
     $this->assertInternalType( 'array', $page2 );
     $this->assertEquals( 20, count($page2) );
@@ -511,7 +511,7 @@ class TableModelTest extends CITestCase {
     // page1 != page2
     $this->assertFalse(  $page1==$page2 );
     // Last page
-    $last_page = $this->CI->table_model->get_grid( 4 );
+    $last_page = $this->CI->table_model->get_grid( 20, 80 );
     $info = $this->CI->table_model->get_query_info();
     $this->assertEquals( 12, count($last_page) );
     $this->assertEquals( 12, $info['num_rows'] );
@@ -525,15 +525,15 @@ class TableModelTest extends CITestCase {
     $this->assertEquals( 'Gym|vak', $first['id_groepen'] );
     
     // DESC
-    $result = $this->CI->table_model->get_grid(0, '_str_first_name');
+    $result = $this->CI->table_model->get_grid( 0,0, '_str_first_name');
     $first = current($result);
     $this->assertEquals( 'Evy', $first['str_first_name'] );
     //
-    $result = $this->CI->table_model->get_grid(0, 'str_last_name');
+    $result = $this->CI->table_model->get_grid( 0,0, 'str_last_name');
     $first = current($result);
     $this->assertEquals( 'Aalts', $first['str_last_name'] );
     //
-    $result = $this->CI->table_model->get_grid(0, '_str_last_name');
+    $result = $this->CI->table_model->get_grid( 0,0, '_str_last_name');
     $first = current($result);
     $this->assertEquals( 'Evertsen', $first['str_last_name'] );
     

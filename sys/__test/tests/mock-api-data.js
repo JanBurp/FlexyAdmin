@@ -178,6 +178,7 @@ flexyAdmin.factory( 'flexyApiMock', ['flexySettingsService',function(flexySettin
   flexyApiMock.api_url = function(type,args) {
     var serializedData=jdb.serializeJSON(args);
     if (serializedData!=='') serializedData = '?'+serializedData;
+    serializedData=serializedData.replace('&&','&');
     return encodeURI(api + type + serializedData );
   }
 

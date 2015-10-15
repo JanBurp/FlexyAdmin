@@ -1046,7 +1046,7 @@ Class Table_Model extends CI_Model {
           $date_field = $fields[$date_field];
           $last_full_sql = $this->last_query();
           $last_sql = $this->last_clean_query();
-          $sql = $last_sql . ' AND DATE(`'.$date_field.'`)>=DATE(NOW()) ORDER BY `'.$date_field.'`  LIMIT 1';
+          $sql = $last_sql . ' WHERE DATE(`'.$date_field.'`)>=DATE(NOW()) ORDER BY `'.$date_field.'`  LIMIT 1';
           $jump_query = $this->db->query( $sql );
           $today_id = $jump_query->result_array();
           if ($today_id) {
@@ -1306,17 +1306,16 @@ Class Table_Model extends CI_Model {
    * - zoeken
    * - abstracts van many_to_one
    *
-   * @param mixed $page [FALSE] De pagina van het resultaat, als FALSE dan kan is jump_to_today aktief, anders niet.
+   * @param mixed $limit [20] 
+   * @param mixed $offset [FALSE] De start van het resultaat, als FALSE dan kan is jump_to_today aktief, anders niet.
    * @param string $sort [''] Veld dat de volgorde van het resultaat bepaalt, als het DESC moet, dan beginnen met een '_'
    * @param mixed $find [''] Een string waarde die gevonden moet worden, of een array met alle parameters van ->find()
    * @return array
    * @author Jan den Besten
    */
-  public function get_grid( $page = FALSE, $sort = '', $find = '' ) {
+  public function get_grid( $limit = 20, $offset = FALSE, $sort = '', $find = '' ) {
     $grid_set = $this->settings['grid_set'];
     
-    // trace_($grid_set);
-
     // Select
     $this->select( $grid_set['fields'] );
     $this->select_txt_abstract(250);
@@ -1343,22 +1342,34 @@ Class Table_Model extends CI_Model {
     
     // Find
     if ( $find ) {
-      if ( !isset($find['terms']))  $find=array( 'terms'=>$find, 'fields'=>array(), 'settings'=>array() );
+      if ( !isset($find['terms']))  {
+        $fields = $grid_set['fields'];
+        if (isset($grid_set['with'])) {
+          foreach ($grid_set['with'] as $type => $with) {
+            foreach ($with as $other_table => $with_info) {
+              $other_fields = $this->get_other_table_abstract_fields( $other_table );
+              if ($other_fields) {
+                foreach ($other_fields as $other_field) {
+                  $fields[] = $other_table.'.'.$other_field;
+                }
+              }
+            }
+          }
+        }
+        $find=array( 'terms'=>$find, 'fields'=>$fields, 'settings'=>array() );
+      }
+      // trace_($find);
       $this->find( $find['terms'], $find['fields'], $find['settings'] );
     }
     
     // Pagination
     if ($grid_set['pagination']) {
-      $calc_page = $page;
-      if (is_bool($page) AND $page===FALSE) $calc_page = 0;
-      $this->load->model('cfg');
-      $limit = $this->cfg->get('cfg_configurations','int_pagination');
-      $offset = $calc_page * $limit;
+      if (is_bool($offset) AND $offset===FALSE) $offset = 0;
       $this->limit( $limit, $offset );
     }
 
     // Jump to today?
-    if (is_bool($page) AND $page===FALSE and $grid_set['jump_to_today']) {
+    if (is_bool($offset) AND $offset===FALSE and $grid_set['jump_to_today']) {
       $this->tm_jump_to_today = TRUE;
     }
     
@@ -2103,13 +2114,13 @@ Class Table_Model extends CI_Model {
   /**
    * Zelfde als bij Query Builder, met als extra dat de limit instelling wordt bewaard voor intern gebruik.
    *
-   * @param int $value 
+   * @param int $limit 
    * @param int $offset [0]
    * @return $this
    * @author Jan den Besten
    */
-	public function limit($value, $offset = 0) {
-    $this->tm_limit = $value;
+	public function limit( $limit, $offset = 0) {
+    $this->tm_limit = $limit;
     $this->tm_offset = $offset;
 		return $this;
 	}

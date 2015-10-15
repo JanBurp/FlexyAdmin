@@ -35,10 +35,10 @@ class Test extends AdminController {
     // $result = $this->table_model->get_grid( );
     // $result = $this->table_model->get_grid( 0, 'str_first_name' );
 
-    $this->table_model->table('tbl_crud2');
+    $this->table_model->table('tbl_leerlingen');
     // $query = $this->table_model->get();
     // $result = $this->table_model->get_result();
-    $result = $this->table_model->get_grid( 0, 'tme_last_changed', 'e' );
+    $result = $this->table_model->get_grid( 0,0, '', 'groep' );
 
 
     // MANY_TO_MANY
@@ -89,7 +89,7 @@ class Test extends AdminController {
     
     
     trace_( $this->table_model->get_query_info() );
-    trace_sql( $this->table_model->last_query() );
+    echo( $this->table_model->last_query() );
     if (isset($result))  var_dump( $result );
     if (isset($query))   var_dump( $query->result_array() );
     
