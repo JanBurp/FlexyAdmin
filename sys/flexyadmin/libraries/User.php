@@ -74,19 +74,15 @@ class User extends Ion_auth {
    * @author Jan den Besten
    */
 	public function login($identity, $password, $remember=false) {
-    // strace_(array('identity'=>$identity,'password'=>$password));
-		if ( ! $this->_check_if_userdate_ok()) {
-			$this->set_message('update_needed');
-		}
-		else {
-			if ( $this->_check_if_old_password($identity) ) {
-        $this->_update_old_passwords();
-			}
+    if ( ! $this->_check_if_userdate_ok()) {
+      $this->set_message('update_needed');
+    }
+    else {
 			if ($this->CI->ion_auth_model->login($identity, $password, $remember)) {
         $this->load_user_cfg();
 				return TRUE;
 			}
-		}
+    }
 		$this->set_error('login_unsuccessful');
 		return FALSE;
 	}
@@ -100,61 +96,6 @@ class User extends Ion_auth {
    */
 	private function _check_if_userdate_ok() {
 		return ($this->CI->db->field_exists('str_username',$this->tables['users']) and $this->CI->db->field_exists('gpw_password',$this->tables['users']) );
-	}
-	
-  /**
-   * Check of systeem nog gebruik maakt van oude passwords, nodig voor updaten naar r1280
-   *
-   * @param string $identity 
-   * @return bool
-   * @author Jan den Besten
-   * @internal
-   * @deprecated
-   */
-	private function _check_if_old_password($identity) {
-		$new_password = TRUE;
-    if ($this->tables['users']=='cfg_users' and $this->tables['groups']=='cfg_user_groups') {
-      $new_password = FALSE;
-  		// check if password field length = 40 and the password itself is 32 chars or longer long, that should do it
-  		$field_data=$this->CI->db->field_data($this->tables['users']);
-  		foreach ($field_data as $field_info) {
-  			$field_info=object2array($field_info);
-  			if ($field_info['name']=='gpw_password') {
-  				$password = $this->CI->db->get_field('cfg_users','gpw_password');
-  				$new_password = ( $password and $field_info['max_length']==40 and strlen($password)>=32 );
-  			}
-  		}
-    }
-		return ! $new_password;
-	}
-	
-  /**
-   * Update oude passwords naar nieuwe, nodig voor updaten naar r1280
-   *
-   * @return void
-   * @author Jan den Besten
-   * @internal
-   * @deprecated
-   */
-	private function _update_old_passwords() {
-		// update all users:
-		$this->CI->db->select('id,gpw_password,id_user_group');
-		$users=$this->CI->db->get_results('cfg_users');
-		foreach ($users as $id => $user) {
-			$set=array();
-			// hash password, and get usergroup
-			$set['gpw_password']=$this->CI->ion_auth_model->hash_password($user['gpw_password']);
-			$set['id_user_group']=$this->CI->db->get_field_where('rel_users__rights','id_rights','id_users',$id);
-			// update
-			$this->CI->db->set($set);
-			$this->CI->db->where('id',$id);
-			$this->CI->db->update('cfg_users');
-		}
-		// remove 'rel_users__rights'
-		$this->CI->load->dbforge();
-		$this->CI->dbforge->drop_table('rel_users__rights',true);
-		// set a message
-		$this->set_message('update_to_safe_passwords');
 	}
 	
 	

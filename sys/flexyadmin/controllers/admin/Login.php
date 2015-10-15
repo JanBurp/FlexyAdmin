@@ -37,7 +37,7 @@ class Login extends MY_Controller {
 
 	public function check() {
 		$username=$this->input->post("user",TRUE);
-		$password=$this->input->post("password",TRUE);
+		$password=$this->input->post("password",FALSE);
     
 		if ($this->user->login( $username, $password, FALSE )) {
 			
