@@ -43,7 +43,13 @@ var files = {
   ],
   
   // LESS / CSS
-  'less'    : assets+'/less/flexyadmin.less',
+  'less'    : [
+    // assets+"/less/bootstrap/bootstrap.less",
+    // assets+"/less/variables.less",
+    // assets+"/less/flexy-main.less",
+    // assets+"/less/flexy-grid.less",
+    assets+'/less/flexyadmin.less',
+  ],
   'css'     : assets+'/css',
   'cssmin'  : [
     assets+'/css/loading-bar.css',
@@ -274,11 +280,11 @@ gulp.task('jsmin',['jshint'],function(){
 gulp.task('less',function(){
   return gulp.src( files['less'] )
         .pipe(plumber({ errorHandler: onError }))
-        .pipe(cached('sys_less'))
+        // .pipe(cached('sys_less'))
         .pipe(sourcemaps.init())
         .pipe(less({compress:true}))
         .pipe(sourcemaps.write('maps'))
-        .pipe(remember('sys_less'))
+        // .pipe(remember('sys_less'))
         .pipe(gulp.dest( files['css'] ))
         .pipe(notify({
           title:   'LESS' + title,

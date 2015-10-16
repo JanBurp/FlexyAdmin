@@ -88,6 +88,10 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyApiService
     // console.log(tableState);
     // console.log('load args:',args);
     
+    // console.log( settings.item( ['config','table_info'] ) );
+    
+    
+    
     grid.load( $scope.table, args ).then(function(response){
       // ui_name
       $scope.ui_name = settings.item('config','table_info',$scope.table,'ui_name');
@@ -132,8 +136,8 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyApiService
    * DELETE ITEM
    */
   $scope.delete = function( table, id ) {
+    
     $translate(['DIALOGS_SURE','DIALOGS_DELETE','DIALOGS_DELETED']).then(function (translations) {
-      console.log($scope.gridItems);
       
       var confirm = dialogs.confirm(
         translations.DIALOGS_SURE,
