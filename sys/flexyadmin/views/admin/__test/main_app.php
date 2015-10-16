@@ -60,6 +60,10 @@
       <div class="navbar-text"><a href="./admin/__test#/home" data-flexy-blocks=""><?=$title?></a></div>
       <nav class="menu-header navbar-text"><flexy-menu type="header" uiclass="nav-pills" items="menu.header"></flexy-menu></nav>
     </header>
+    
+    <div class="flexy-alerts">
+      <alert ng-repeat="alert in alerts" type="alert.type" class="alert alert-{{alert.type}}">{{ alert.msg }} <button type="button" class="close" ng-click="closeAlert($index)"><span aria-hidden="true">&times;</span></button></alert>
+    </div>
 
     <div id="content" class="row">
       <nav class="menu-side"><flexy-menu type="sidebar" uiclass="nav-pills nav-stacked" items="menu.sidebar"></flexy-menu></nav>
@@ -83,6 +87,8 @@
 <script src="sys/__test/js/http-auth-interceptor.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/toArrayFilter.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/loading-bar.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/js/angular-translate.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/js/dialogs.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/smart-table.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/ng-sortable.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/angular-file-upload.js" type="text/javascript" charset="utf-8"></script>
@@ -106,6 +112,7 @@
 <script src="sys/__test/flexy-api-settings/flexy-settings.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-api-settings/flexy-settings-service.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-api-settings/flexy-api-service.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/flexy-api-settings/flexy-translate.js" type="text/javascript" charset="utf-8"></script>
 
 <script src="sys/__test/flexy-http/http-request.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-http/http-interceptor-auth-check.js" type="text/javascript" charset="utf-8"></script>
@@ -114,6 +121,8 @@
 <script src="sys/__test/flexy-auth/flexy-auth-service.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-auth/flexy-login-controller.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-auth/flexy-logout-controller.js" type="text/javascript" charset="utf-8"></script>
+
+<script src="sys/__test/flexy-ui/flexy-alert-service.js" type="text/javascript" charset="utf-8"></script>
 
 <script src="sys/__test/flexy-menu/flexy-menu-service.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-menu/flexy-menu-controller.js" type="text/javascript" charset="utf-8"></script>

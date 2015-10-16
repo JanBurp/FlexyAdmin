@@ -203,7 +203,19 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
   //   return flexy_api_service.post('row',args,cfg);
   // };
 
+  /**
+   * API call voor delete (post)
+   * 
+   * @return Promise
+   */
+  flexy_api_service.delete = function(args ) {
+    return flexy_api_service.post('row', args );
+  };
+  
+  
   // TODO: meer api calls
+  
+  
   
   
   

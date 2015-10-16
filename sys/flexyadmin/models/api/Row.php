@@ -303,7 +303,7 @@ class Row extends Api_Model {
     if (isset($args['where'])) $this->table_model->where( $args['where'] );
     $id = $this->table_model->delete();
     $this->info=$this->table_model->get_query_info();
-    return $deleted;
+    return $id;
   }
 
 

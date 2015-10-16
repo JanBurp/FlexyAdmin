@@ -26,7 +26,9 @@ var flexyAdmin = angular.module( 'flexyAdmin', [
   'http-auth-interceptor',
   'angular-toArrayFilter',
   'angular-loading-bar',
+  'dialogs.main',
   'cfp.loadingBar',
+  'pascalprecht.translate',
   
   'ui.bootstrap',
   'ui.bootstrap.showErrors',

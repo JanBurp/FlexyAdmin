@@ -63,7 +63,7 @@
               <!-- Select button -->
               <div class="btn btn-info action-select"><span class="flexy-grid-unselected glyphicon glyphicon-unchecked"></span><span class="flexy-grid-selected glyphicon glyphicon-check"></span></div>
               <!-- Delete button -->
-              <div class="btn btn-danger action-remove"><span class="glyphicon glyphicon-remove"></span></div>
+              <div ng-click="delete(table,row.id)" class="btn btn-danger action-remove"><span class="glyphicon glyphicon-remove"></span></div>
             </div>
             <div class="btn-group btn-group-xs as-sortable-handle" as-sortable-item-handle>
               <!-- Order button -->
@@ -87,7 +87,7 @@
     <!-- Pagination -->
 		<div class="flexy-grid-pagination" st-pagination="" st-template="flexy-grid/flexy-grid-pagination.html" st-items-by-page="info.limit" st-displayed-pages="5"></div>
     <!-- Info -->
-    <div class="flexy-grid-stats">{{info.total_rows}} items on {{info.num_pages}} pages</div>
+    <div class="flexy-grid-stats">{{info.total_rows}} <span translate>ITEMS_ON</span> {{info.num_pages}} <span translate>PAGES</span></div>
   </div>
   
 </div>

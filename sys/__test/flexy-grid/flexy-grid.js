@@ -11,7 +11,7 @@
  * $Revision$
  */
 
-flexyAdmin.controller('GridController', ['flexySettingsService','flexyGridService','$scope','$routeParams', function(settings,grid,$scope,$routeParams) {
+flexyAdmin.controller('GridController', ['flexySettingsService','flexyApiService','flexyGridService','$scope','$routeParams','$translate','dialogs','flexyAlertService', function(settings,api,grid,$scope,$routeParams,$translate,dialogs,alertService) {
   'use strict';
   var self=this;
   
@@ -53,9 +53,9 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyGridServic
   $scope.search = '';
   
   /**
-   * Loading
+   * Copy of tableState
    */
-  $scope.loading = false;
+  $scope.tableState = {};
   
   /**
    * References of the grid data: https://lorenzofox3.github.io/smart-table-website/#section-intro stSafeSrc attribute
@@ -68,6 +68,7 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyGridServic
    * LOAD FROM SERVER
    */
   $scope.pipe = function(tableState) {
+    $scope.tableState = tableState;
     
     // pagination
     var args = {
@@ -125,6 +126,38 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyGridServic
       $scope.gridItems[key].isSelected=selected;
     });
   };
+  
+  
+  /**
+   * DELETE ITEM
+   */
+  $scope.delete = function( table, id ) {
+    $translate(['DIALOGS_SURE','DIALOGS_DELETE','DIALOGS_DELETED']).then(function (translations) {
+      console.log($scope.gridItems);
+      
+      var confirm = dialogs.confirm(
+        translations.DIALOGS_SURE,
+        translations.DIALOGS_DELETE+' <b>'+table+'.'+id+'<b>',
+        {
+          'size'        : 'sm',
+        }
+      );
+  		
+      confirm.result.then(function(btn){
+        // console.log('DELETE',table,id);
+        api.delete( { 'table':table, 'where':id }).then(function(response){
+          if (response.success===true && response.data===true) {
+            // Reload page
+            $scope.pipe( $scope.tableState );
+            alertService.add( 'success', table+'.'+id+' '+translations.DIALOGS_DELETED+'.', 3000);
+          }
+        });
+  		},function(btn){
+        // console.log('NOT DELETE');
+  		});
+    });
+  };
+  
 
   /**
    * MAKE SURE ORDER OF ROWS IS ORIGINAL (keys) : https://stackoverflow.com/questions/19676694/ng-repeat-directive-sort-the-data-when-using-key-value
