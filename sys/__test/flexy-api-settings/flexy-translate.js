@@ -6,8 +6,7 @@ flexyAdmin.config(['$translateProvider', function ($translateProvider) {
    */
   $translateProvider.translations('en', {
 
-    'ITEMS_ON'      : 'items on',
-    'PAGES'         : 'pages',
+    'ITEMS_ON_PAGE' : "{{rows}} items on {{pages}} pages",
 
     'DIALOGS_SURE'    : 'Are you sure?',
     'DIALOGS_DELETE'  : 'Delete',
@@ -22,8 +21,7 @@ flexyAdmin.config(['$translateProvider', function ($translateProvider) {
    */
   $translateProvider.translations('nl', {
 
-    'ITEMS_ON'      : 'rijen op',
-    'PAGES'         : "pagina's",
+    'ITEMS_ON_PAGE'   : "{{rows}} rijen in {{pages}} pagina's",
 
     'DIALOGS_SURE'    : 'Zeker weten?',
     'DIALOGS_DELETE'  : 'Verwijder',

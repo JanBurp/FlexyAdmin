@@ -87,7 +87,7 @@
     <!-- Pagination -->
 		<div class="flexy-grid-pagination" st-pagination="" st-template="flexy-grid/flexy-grid-pagination.html" st-items-by-page="info.limit" st-displayed-pages="5"></div>
     <!-- Info -->
-    <div class="flexy-grid-stats">{{info.total_rows}} <span translate>ITEMS_ON</span> {{info.num_pages}} <span translate>PAGES</span></div>
+    <div class="flexy-grid-stats"><span translate="ITEMS_ON_PAGE" translate-values="{rows: info.total_rows, pages: info.num_pages}"></span></div>
   </div>
   
 </div>

@@ -69,7 +69,7 @@ flexyAdmin.factory( 'flexySettings', ['flexyConstants', function(constants) {
     /**
      * Config that comes from database, and will grow if needed with the cfg_ methods
      */
-    cfg : {
+    config : {
       // table_info : {},
       // field_info : {},
     },
