@@ -151,6 +151,7 @@ gulp.task('install', function() {
     bower+"/angular-http-auth/src/http-auth-interceptor.js",
     bower+"/angular-toArrayFilter/toArrayFilter.js",
     bower+"/angular-loading-bar/src/loading-bar.js",
+    bower+'/angular-translate/angular-translate.min.js',
     // grid
     bower+"/angular-smart-table/dist/smart-table.min.js",
     bower+"/ng-sortable/dist/ng-sortable.min.js",
@@ -193,7 +194,9 @@ gulp.task('install', function() {
     assets+"/js/http-auth-interceptor.js",
     assets+"/js/toArrayFilter.js",
     assets+"/js/loading-bar.js",
+    assets+"/js/angular-translate.min.js",
     assets+"/js/smart-table.min.js",
+    assets+"/js/dialogs.min.js",
     assets+"/js/ng-sortable.min.js",
     assets+"/js/angular-file-upload.js",
     assets+"/js/angular-sanitize.min.js",
@@ -271,11 +274,11 @@ gulp.task('jsmin',['jshint'],function(){
 gulp.task('less',function(){
   return gulp.src( files['less'] )
         .pipe(plumber({ errorHandler: onError }))
-        .pipe(sourcemaps.init())
         .pipe(cached('sys_less'))
+        .pipe(sourcemaps.init())
         .pipe(less({compress:true}))
-        .pipe(remember('sys_less'))
         .pipe(sourcemaps.write('maps'))
+        .pipe(remember('sys_less'))
         .pipe(gulp.dest( files['css'] ))
         .pipe(notify({
           title:   'LESS' + title,
@@ -290,7 +293,7 @@ gulp.task('cssmin',['less'],function(){
   return gulp.src( files['cssmin'] )
         .pipe(sourcemaps.init({loadMaps: true}))
         .pipe(autoprefixer())
-        .pipe(pixrem())
+        // .pipe(pixrem())
         .pipe(concat(files['cssdest']))
         .pipe(sourcemaps.write('maps'))
         .pipe(gulp.dest( files['css']) )

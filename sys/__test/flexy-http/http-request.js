@@ -21,8 +21,10 @@ flexyAdmin.config(['flexyConstants','$httpProvider',function(constants,$httpProv
     return {
       'request': function (config) {
         if (config.url.substr(-5)=='.html') {
-          // HTML views
-          config.url = constants.sys_folder + config.url;
+          if (config.url.indexOf('flexy')>=0) {
+            // Redirect flexy HTML views
+            config.url = constants.sys_folder + config.url;
+          }
         }
         else {
           // API calls
