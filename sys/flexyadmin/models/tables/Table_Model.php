@@ -881,14 +881,24 @@ Class Table_Model extends CI_Model {
 
 
   /**
-   * Geeft een setting. Als die niet bestaat dan wordt de standaard autoset waarde gegeven of anders NULL
+   * Geeft een of meer settings. Als deze niet bestaan dan wordt de standaard autoset waarde gegeven of anders NULL
    *
-   * @param string $key 
+   * @param mixed $key een met de gevraagde key, of array van gevraagde keys
    * @return mixed
    * @author Jan den Besten
    */
   public function get_setting( $key ) {
-    return el( $key, $this->settings, el( $key, $this->autoset ) );
+    if (is_array($key)) {
+      $return = array();
+      foreach ($key as $subkey) {
+        $return[$subkey] = $this->get_setting( $subkey );
+      }
+      return $return;
+    }
+    else {
+      return el( $key, $this->settings, el( $key, $this->autoset ) );
+    }
+    return null;
   }
   
 

@@ -21,27 +21,15 @@ describe('flexy-api-service-basic', function(){
   });
 
   /**
-   * has_cfg
+   * has_settings
    */
-  it('flexy-api-service: testing has_cfg', function() {
-    expect( service.has_cfg('table_info') ).toEqual(false);
-    expect( service.has_cfg('field_info') ).toEqual(false);
-    expect( service.has_cfg('some_random_info') ).toEqual(false);
+  it('flexy-api-service: testing has_settings', function() {
+    expect( service.has_settings('table') ).toEqual(false);
+    expect( service.has_settings('path') ).toEqual(false);
+    expect( service.has_settings('some_random_info') ).toEqual(false);
     //
-    setting.set_item({'test':'_test'},['cfg','table_info']);
-    expect( service.has_cfg('table_info') ).toEqual(true);
-  });
-
-  /**
-   * needs_these_cfg
-   */
-  it('flexy-api-service: testing needs_these_cfg', function() {
-    expect( service.needs_these_cfg( ['table_info']) ).toEqual( ['table_info'] );
-    expect( service.needs_these_cfg( ['table_info','field_info']) ).toEqual( ['table_info','field_info'] );
-    //
-    setting.set_item({'test':'_test'},['cfg','table_info']);
-    expect( service.needs_these_cfg( ['table_info']) ).toEqual( [] );
-    expect( service.needs_these_cfg( ['table_info','field_info']) ).toEqual( ['field_info'] );
+    setting.set_item({'test':'_test'},['setting','table']);
+    // expect( service.has_settings('table') ).toEqual(true);
   });
 
 });

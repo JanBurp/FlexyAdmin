@@ -11,6 +11,7 @@
  * $Revision$
  */
 
+/*jshint -W069 */
 
 flexyAdmin.factory('flexyGridService', ['flexySettingsService','flexyApiService', function(settings,api) {
   'use strict';
@@ -90,12 +91,10 @@ flexyAdmin.factory('flexyGridService', ['flexySettingsService','flexyApiService'
   * Daarvoor wordt uitgegaan van de volgorde van de meegegeven array en het veld `self_parent` per item.
   */
  flexy_grid_service.add_tree_info = function(data,is_tree) {
-   // Process _info
    var parents = {};
-
+   
    // Loop all items and add info
    var level=0;
-   var order=0;
    angular.forEach( data, function(item,key) {
      // Make sure _info is set
      data[key]._info = {};
@@ -128,15 +127,10 @@ flexyAdmin.factory('flexyGridService', ['flexySettingsService','flexyApiService'
        data[key]._info.is_child      = is_child;
        data[key]._info.has_children  = false; // this will be set later...
      }
-     
-     // Reset order
-     data[key].order = order;
-     order++;
    });
    
    // Add more tree info (has_children)
    if (is_tree && parents!={}) {
-     // console.log('PARENTS',parents);
      angular.forEach(parents,function(level,id){
        var key = jdb.indexOfProperty(data,'id',id);
        if (key!==false) data[key]._info.has_children = true;
@@ -193,10 +187,42 @@ flexyAdmin.factory('flexyGridService', ['flexySettingsService','flexyApiService'
         args  : args,
         raw   : response.data,
         info  : calculate_pagination(response.info,args),
-        grid  : flexy_grid_service.add_tree_info(response.data, settings.item('config','table_info', args.table, 'tree' ) )
+        grid  : flexy_grid_service.add_tree_info( response.data, settings.item('settings','table', args.table, 'table_info','tree' ) )
       };
       return response;
     });
+  };
+  
+  
+  /**
+   * Geeft een rij uit een tabel
+   */
+  flexy_grid_service.row = function( table,id ) {
+    var row = {};
+    angular.forEach( data[table].raw, function(item,key) {
+      if (item['id']===id) row = item;
+    });
+    return row;
+  };
+  
+  
+  /**
+   * Geef een abstract van een rij uit een table
+   */
+  flexy_grid_service.get_abstract = function( table, id ) {
+    var abstract = table+'.'+id;
+    var abstract_fields = settings.item( ['settings','table', table, 'abstract_fields'] );
+    if (angular.isDefined(abstract_fields)) {
+      var row = flexy_grid_service.row( table,id );
+      if (angular.isDefined(row)) {
+        abstract = '';
+        angular.forEach( abstract_fields, function(abstract_field,key) {
+          abstract+=row[abstract_field]+' | ';
+        });
+        abstract = abstract.substr(0, abstract.length - 3);
+      }
+    }
+    return abstract;
   };
   
   return flexy_grid_service;

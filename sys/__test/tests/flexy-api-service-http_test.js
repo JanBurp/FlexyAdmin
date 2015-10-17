@@ -39,19 +39,23 @@ describe('flexy-api-service-http', function(){
       
       // random - ERROR
       args  = mock.api_random_args();
+      args.settings = true;
       url   = mock.api_get_table_url( args );
       http.when( 'GET', url ).respond( mock.api_error_wrong_args( args ) );
       randomArgs.push(args);
-      
+      // console.log('MOCK:',url);
+
       // TABLE without config
       args  = {'table':table};
       url   = mock.api_get_table_url( args );
       http.when( 'GET', url ).respond( mock.api_get_data_response( args, 'table' ) );
-      
+
       // TABLE with config
-      args  = {'table':table,'config':['table_info','field_info']};
+      args  = {'table':table,'settings':true};
       url   = mock.api_get_table_url( args );
       http.when( 'GET', url ).respond( mock.api_get_data_response( args, 'table' ) );
+      // console.log('MOCK:',url);
+      
       
     });
     
@@ -103,16 +107,16 @@ describe('flexy-api-service-http', function(){
   it('flexy-api-service: testing get(table)', function() {
     var result;
     var args = {};
-    
+
     // Roep alle get(table) met alle tables aan
     angular.forEach(mock.tables(),function(table,key){
-      
+
       /**
        * Start zonder resultaat
        */
       result=undefined;
       expect( result ).toBeUndefined();
-      
+
       /**
        * Test een foute API call
        */
@@ -133,7 +137,7 @@ describe('flexy-api-service-http', function(){
 
 
       /**
-       * Roep de API aan, ZONDER CONFIG vraag
+       * Roep de API aan, ZONDER CONFIG vraag -> wordt toch meegenomen...?
        */
       service.get( 'table', {'table':table} ).then(function(response){
         result=response;
@@ -145,16 +149,16 @@ describe('flexy-api-service-http', function(){
       expect( result.success ).toBeDefined();
       expect( result.success ).toEqual(true);
       expect( result.args ).toBeDefined();
-      expect( result.args ).toEqual({'table':table});
+      expect( result.args ).toEqual({'table':table,'settings':true});
       expect( result.data ).toBeDefined();
       expect( result.data ).toEqual( mock.table(table) );
-      expect( result.config ).not.toBeDefined();
+      // expect( result.settings ).not.toBeDefined();
 
 
       /**
        * Roep de API aan, MET CONFIG vraag
        */
-      service.get( 'table', {'table':table}, ['table_info','field_info'] ).then(function(response){
+      service.get( 'table', {'table':table,settings:true} ).then(function(response){
         result=response;
       });
       http.flush(1);
@@ -168,11 +172,9 @@ describe('flexy-api-service-http', function(){
       expect( result.args.table ).toEqual(table);
       expect( result.data ).toBeDefined();
       expect( result.data ).toEqual( mock.table(table) );
-      expect( result.config ).toBeDefined();
-      
-      
+      expect( result.settings ).toBeDefined();
     });
-    
+
     // TEST Spies
     expect( service.get ).toHaveBeenCalled();
     expect( service.get.callCount ).toEqual( callCount );

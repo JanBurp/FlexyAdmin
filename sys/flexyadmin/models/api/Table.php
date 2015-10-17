@@ -14,8 +14,7 @@
  * - `[txt_abstract=0]`         // Als `TRUE`, dan bevatten velden met de `txt_` prefix een ingekorte tekst zonder HTML tags. Of een integer waarde voor de lengte.
  * - `[as_options=FALSE]`       // Als `TRUE`, dan wordt de data als opties teruggegeven die gebruikt kunnen worden in een dropdown field bijvoorbeeld. (`limit` en `offset` werken dan niet)
  * - `[options=FALSE]`          // Als `TRUE`, dan worden de mogelijke waarden van velden meegegeven.
- * - `[config[]=table_info]`    // Informatie over de tabel kan op deze manier meegenomen worden in het resultaat.
- * - `[config[]=field_info]`    // Informatie over de velden in de tabel kan op deze manier meegenomen worden in het resultaat.
+ * - `[settings=FALSE]`         // Instellingen van de gevraagde tabel
  * 
  * 
  * ###Voorbeelden:
@@ -23,7 +22,7 @@
  * - `_api/table?table=tbl_menu`
  * - `_api/table?table=tbl_menu&offset=9&limit=10`
  * - `_api/table?table=tbl_menu&txt_abstract=TRUE`
- * - `_api/table?table=tbl_menu&config[]=table_info`
+ * - `_api/table?table=tbl_menu&settings=true`
  * 
  * ###Response:
  * 
@@ -104,7 +103,7 @@ class Table extends Api_Model {
     'as_grid'      => false,
     'as_options'   => false,
     'txt_abstract' => 0,
-    'options'      => false,
+    'settings'     => false,
   );
   
 	public function __construct() {
@@ -124,8 +123,7 @@ class Table extends Api_Model {
     
     // DEFAULTS
     $items=FALSE;
-    // CFG
-    $this->_get_config(array('table_info','field_info'));
+
     // GET DATA
     $items=$this->_get_data();
     

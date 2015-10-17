@@ -67,11 +67,15 @@ flexyAdmin.factory( 'flexySettings', ['flexyConstants', function(constants) {
     use_mock      : true,
 
     /**
-     * Config that comes from database, and will grow if needed with the cfg_ methods
+     * Settings die van de api komen
      */
-    config : {
-      // table_info : {},
-      // field_info : {},
+    settings : {
+      // 'table' : [
+      //   'tbl_menu' : []
+      // ],
+      // 'path'  : [
+      //   'pictures' : []
+      // ]
     },
     
     screen : {

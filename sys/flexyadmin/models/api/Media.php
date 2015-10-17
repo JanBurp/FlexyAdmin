@@ -13,14 +13,12 @@
  * - `path`                     // De map is assets waarvan de bestanden worden opgevraagd.
  * - `[offset=0]`               // Sla de eerste bestanden in de lijst over
  * - `[limit=0]`                // Geef een maximaal aantal bestanden terug (bij 0 worden alle bestanden teruggegeven)
- * - `[config[]=media_info]`    // Informatie over de map kan op deze manier meegenomen worden in het resultaat.
- * - `[config[]=img_info]`      // Informatie over de afbeeldingen in de map kan op deze manier meegenomen worden in het resultaat.
- * 
+ * - `[settings=FALSE]`         // Instellingen van de gevraagde map 
  * 
  * ###Voorbeelden:
  * 
  * - `_api/media?path=pictures`
- * - `_api/media?path=pictures&config[]=media_info`
+ * - `_api/media?path=pictures&settings=true`
  * 
  * ###Response:
  * 
@@ -66,9 +64,7 @@
  * 
  * - `path`                     // De map waar het bestand naartoe moet.
  * - `file`                     // De bestandsnaam dat geupload moet worden. NB Zoals het resultaat van een HTML FORM: `<input type="file" name="file" />`. Dus ook in FILES['file'].
- * - `[config[]=media_info]`    // Informatie over de map kan op deze manier meegenomen worden in het resultaat.
- * - `[config[]=img_info]`      // Informatie over de afbeeldingen in de map kan op deze manier meegenomen worden in het resultaat.
- * 
+ * - `[settings=FALSE]`         // Instellingen van de gevraagde map 
  * 
  * ###Voorbeeld:
  * 
@@ -110,8 +106,7 @@
  * - `path`                     // De map waar het bestand in staat
  * - `where`                    // Bepaal hiermee welk bestand moet worden aangepast
  * - `data`                     // De aangepaste data (hoeft niet compleet, alleen de aan te passen velden meegeven is genoeg).
- * - `[config[]=media_info]`    // Informatie over de map kan op deze manier meegenomen worden in het resultaat.
- * - `[config[]=img_info]`      // Informatie over de afbeeldingen in de map kan op deze manier meegenomen worden in het resultaat.
+ * - `[settings=FALSE]`         // Instellingen van de gevraagde map 
  * 
  * 
  * ###Voorbeeld:
@@ -142,8 +137,7 @@
  * 
  * - `path`                     // De map waar het bestand in staat
  * - `where`                    // Bepaal hiermee welk bestand moet worden verwijderd
- * - `[config[]=media_info]`    // Informatie over de map kan op deze manier meegenomen worden in het resultaat.
- * - `[config[]=img_info]`      // Informatie over de afbeeldingen in de map kan op deze manier meegenomen worden in het resultaat.
+ * - `[settings=FALSE]`         // Instellingen van de gevraagde map 
  * 
  * 
  * ###Voorbeeld:
@@ -172,7 +166,8 @@
 class Media extends Api_Model {
   
   var $needs = array(
-    'path'   => '',
+    'path'      => '',
+    'settings'  => false,
   );
   
 	public function __construct() {
@@ -192,9 +187,6 @@ class Media extends Api_Model {
       $this->_set_error('PATH NOT FOUND');
       return $this->_result_ok();
     }
-    
-    // CFG
-    $this->_get_config(array('media_info','img_info'));
     
     // GET
     if ($this->args['type']=='GET') {

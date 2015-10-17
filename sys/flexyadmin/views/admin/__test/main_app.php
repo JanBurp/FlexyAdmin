@@ -62,7 +62,7 @@
     </header>
     
     <div class="flexy-alerts">
-      <alert ng-repeat="alert in alerts" type="alert.type" class="alert alert-{{alert.type}}">{{ alert.msg }} <button type="button" class="close" ng-click="closeAlert($index)"><span aria-hidden="true">&times;</span></button></alert>
+      <div ng-repeat="alert in alerts" class="alert alert-{{alert.type}}" ng-bind-html="alert.msg">{{alert.msg}} <button type="button" class="close" ng-click="closeAlert($index)"><span aria-hidden="true">&times;</span></button></div>
     </div>
 
     <div id="content" class="row">

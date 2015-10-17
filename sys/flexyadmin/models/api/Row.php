@@ -14,15 +14,12 @@
  * - `where`                    // Hiermee wordt bepaald welk record wordt opgevraagd.
  * - `options`                  // Hiermee worden opties voor velden toegevoegd (zoals dropdowns etc)
  * - `schemaform`               // Als TRUE dan wordt een json schemaform van het formulier toegevoegd (zie http://schemaform.io)
- * - `[config[]=table_info]`    // Informatie over de tabel kan op deze manier meegenomen worden in het resultaat.
- * - `[config[]=field_info]`    // Informatie over de velden in de tabel kan op deze manier meegenomen worden in het resultaat.
- * 
+ * - `[settings=FALSE]`         // Instellingen van de gevraagde tabel
  * 
  * ###Voorbeelden:
  * 
  * - `_api/row?table=tbl_menu&where=3`
  * - `_api/row?table=tbl_menu&where=10&options=true`
- * - `_api/row?table=tbl_menu&where=10&config[]=table_info`
  * 
  * ###Response:
  * 
@@ -58,8 +55,7 @@
  * 
  * - `table`                    // De tabel waar de record aan wordt toegevoegd.
  * - `data`                     // Het nieuwe record
- * - `[config[]=table_info]`    // Informatie over de tabel kan op deze manier meegenomen worden in het resultaat.
- * - `[config[]=field_info]`    // Informatie over de velden in de tabel kan op deze manier meegenomen worden in het resultaat.
+ * - `[settings=FALSE]`         // Instellingen van de gevraagde tabel
  * 
  * 
  * ###Voorbeeld:
@@ -103,9 +99,7 @@
  * - `where`                    // Bepaal hiermee welk record moet worden aangepast
  * - `data`                     // De aangepaste data (hoeft niet compleet, alleen de aan te passen velden meegeven is genoeg).
  * - `[options=FALSE]`          // Als `TRUE`, dan worden de mogelijke waarden van velden meegegeven.
- * - `[config[]=table_info]`    // Informatie over de tabel kan op deze manier meegenomen worden in het resultaat.
- * - `[config[]=field_info]`    // Informatie over de velden in de tabel kan op deze manier meegenomen worden in het resultaat.
- * 
+ * - `[settings=FALSE]`         // Instellingen van de gevraagde tabel
  * 
  * ###Voorbeeld:
  * 
@@ -144,10 +138,9 @@
  * ###Parameters (POST):
  * 
  * - `table`                    // De tabel waar de record van wordt verwijderd.
- * - `where`                    // Bepaal hierme welk record wordt verwijderd
- * - `[config[]=table_info]`    // Informatie over de tabel kan op deze manier meegenomen worden in het resultaat.
- * - `[config[]=field_info]`    // Informatie over de velden in de tabel kan op deze manier meegenomen worden in het resultaat.
- * 
+ * - `where`                    // Bepaal hierme welk record wordt verwijderd, als where een array is worden er meerdere tegelijk verwijderd
+ * - `[settings=FALSE]`         // Instellingen van de gevraagde tabel
+
  * ###Voorbeeld:
  * 
  * - `_api/row` met POST data: `table=tbl_links&where=3
@@ -175,6 +168,7 @@ class Row extends Api_Model {
   var $needs = array(
     'table'   => '',
     // 'where'   => 'first'
+    'settings'     => false,
   );
 
 
@@ -200,9 +194,6 @@ class Row extends Api_Model {
       return $this->_result_wrong_args();
     }
     
-    // CFG
-    $this->_get_config(array('table_info','field_info'));
-
     // GET
     if ($this->args['type']=='GET') {
       $this->result['data']=$this->_get_row();
@@ -247,7 +238,6 @@ class Row extends Api_Model {
    * @author Jan den Besten
    */
   private function _get_row() {
-    $this->db->unselect( el(array('field_info','hidden_fields'),$this->cfg_info,array()) );
     $args=$this->_clean_args(array('table','where'));
     $this->table_model->table( $args['table'] );
     if (isset($args['where'])) $this->table_model->where( $args['where'] );
@@ -300,7 +290,15 @@ class Row extends Api_Model {
   private function _delete_row() {
     $args=$this->_clean_args(array('table','where'));
     $this->table_model->table( $args['table'] );
-    if (isset($args['where'])) $this->table_model->where( $args['where'] );
+    if (isset($args['where'])) {
+      if (is_array($args['where'])) {
+        $primary_key = $this->table_model->get_setting( 'primary_key' );
+        $this->table_model->where_in( $primary_key, $args['where'] ); 
+      }
+      else {
+        $this->table_model->where( $args['where'] ); 
+      }
+    }
     $id = $this->table_model->delete();
     $this->info=$this->table_model->get_query_info();
     return $id;

@@ -56,6 +56,19 @@ class TableModelTest extends CITestCase {
     $this->assertEquals( 3, $query->num_rows() );
   }
   
+  public function test_settings() {
+    $this->CI->table_model->table( 'tbl_menu' );
+    // null
+    $this->assertEquals( null, $this->CI->table_model->get_setting( 'not_a_setting' ) );
+    // one settings
+    $this->assertEquals( 'tbl_menu', $this->CI->table_model->get_setting( 'table' ) );
+    $this->assertEquals( array('id','order','self_parent','uri','str_title','txt_text','b_visible','str_module','stx_description','str_keywords'), $this->CI->table_model->get_setting( 'fields' ) );
+    $this->assertEquals( array( 'str_title','str_module'), $this->CI->table_model->get_setting( 'abstract_fields' ) );
+    $this->assertEquals( 'order', $this->CI->table_model->get_setting( 'order_by' ) );
+    // array of settings
+    $this->assertEquals( array('table'=>'tbl_menu','order_by'=>'order'), $this->CI->table_model->get_setting( array('table','order_by') ) );
+  }
+  
 
   public function test_abstractfields() {
     // tbl_menu

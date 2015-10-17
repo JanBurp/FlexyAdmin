@@ -69,16 +69,8 @@ describe('flexy-settings-service', function(){
   /**
    * cfg
    */
-  it('flexy-settings-service: cfg should be defined but empty', function() {
-    expect( service.item('cfg') ).toBeDefined();
-    // expect( service.item('cfg','table_info') ).toBeDefined();
-    // expect( service.item(['cfg','field_info']) ).toBeDefined();
-    expect( service.item('cfg') ).toEqual({});
-      // table_info : {},
-      // field_info : {},
-    // });
-    // expect( service.item('cfg','table_info') ).toEqual({});
-    // expect( service.item(['cfg','field_info']) ).toEqual({});
+  it('flexy-settings-service: settings should be defined but empty', function() {
+    expect( service.item('settings') ).toBeDefined();
   });
   
   
