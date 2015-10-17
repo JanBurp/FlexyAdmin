@@ -11,6 +11,8 @@
  * $Revision$
  */
 
+/*jshint -W069 */
+
 flexyAdmin.controller('GridController', ['flexySettingsService','flexyApiService','flexyGridService','$scope','$routeParams','$translate','dialogs','flexyAlertService', function(settings,api,grid,$scope,$routeParams,$translate,dialogs,alertService) {
   'use strict';
   var self=this;
@@ -87,17 +89,14 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyApiService
     
     // console.log(tableState);
     // console.log('load args:',args);
-    
-    // console.log( settings.item( ['config','table_info'] ) );
-    
-    
+    // console.log( settings.item( ['settings','table', $scope.table] ) );
     
     grid.load( $scope.table, args ).then(function(response){
       // ui_name
-      $scope.ui_name = settings.item('config','table_info',$scope.table,'ui_name');
+      $scope.ui_name = settings.item( 'settings','table',$scope.table,'table_info','ui_name' );
       // table type
-      $scope.type.is_tree = settings.item('config','table_info',$scope.table,'tree');
-      $scope.type.is_sortable = settings.item('config','table_info',$scope.table,'sortable');
+      $scope.type.is_tree = settings.item( 'settings','table',$scope.table,'table_info','tree');
+      $scope.type.is_sortable = settings.item( 'settings','table',$scope.table,'table_info','sortable');
       // info & pagination
       $scope.info = grid.get_info($scope.table);
       $scope.info.num_pages = Math.ceil($scope.info.total_rows / $scope.info.limit);
@@ -136,30 +135,50 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyApiService
    * DELETE ITEM
    */
   $scope.delete = function( table, id ) {
-    
-    $translate(['DIALOGS_SURE','DIALOGS_DELETE','DIALOGS_DELETED']).then(function (translations) {
-      
-      var confirm = dialogs.confirm(
-        translations.DIALOGS_SURE,
-        translations.DIALOGS_DELETE+' <b>'+table+'.'+id+'<b>',
-        {
-          'size'        : 'sm',
-        }
-      );
-  		
+    var abstract = grid.get_abstract( table,id );
+    $translate(['DIALOGS_SURE','DIALOGS_DELETE_ITEM','DIALOGS_DELETED','DIALOGS_DELETE_ERROR']).then(function (translations) {
+      var confirm = dialogs.confirm( translations.DIALOGS_SURE, '<b>'+translations.DIALOGS_DELETE_ITEM+'</b><br>'+abstract, { 'size' : 'sm' } );
       confirm.result.then(function(btn){
-        // console.log('DELETE',table,id);
         api.delete( { 'table':table, 'where':id }).then(function(response){
           if (response.success===true && response.data===true) {
             // Reload page
             $scope.pipe( $scope.tableState );
-            alertService.add( 'success', table+'.'+id+' '+translations.DIALOGS_DELETED+'.', 3000);
+            alertService.add( 'success', abstract+' <b>'+translations.DIALOGS_DELETED+'</b>');
           }
         });
   		},function(btn){
-        // console.log('NOT DELETE');
+        // alertService.add( 'danger', abstract+' <b>'+translations.DIALOGS_DELETE_ERROR+'</b>');
   		});
     });
+  };
+  
+  /**
+   * DELETE SELECTED ITEMS
+   */
+  $scope.deleteSelected = function( table ) {
+    var selected = [];
+    angular.forEach($scope.gridItems, function(item,key) {
+      if ($scope.gridItems[key].isSelected) {
+        selected.push(item['id']);
+      }
+    });
+    
+    if (selected.length>0) {
+      $translate(['DIALOGS_SURE','DIALOGS_DELETE_SELECTED','DIALOGS_DELETED_SELECTED','DIALOGS_DELETE_ERROR'],{num:selected.length}).then(function (translations) {
+        var confirm = dialogs.confirm( translations.DIALOGS_SURE, '<b>'+translations.DIALOGS_DELETE_SELECTED+'</b>', { 'size' : 'sm' } );
+        confirm.result.then(function(btn){
+          api.delete( { 'table':table, 'where':selected }).then(function(response){
+            if (response.success===true && response.data===true) {
+              // Reload page
+              $scope.pipe( $scope.tableState );
+              alertService.add( 'success', selected.length+' <b>'+translations.DIALOGS_DELETED_SELECTED+'</b>');
+            }
+          });
+    		},function(btn){
+          // alertService.add( 'danger', abstract+' <b>'+translations.DIALOGS_DELETE_ERROR+'</b>');
+    		});
+      });
+    }
   };
   
 

@@ -2,8 +2,8 @@
  * FlexyAdmin (c) Jan den Besten
  * www.flexyadmin.com
  * 
- * flexy-api-service handles core api requests.
- * Also ask for cfg info if asked for and not present
+ * Verzorgt de api aanroepen
+ * En het verzamelen van settings van de gevraagde api als die nog niet voorhanden zijn.
  * 
  * 
  * @author: Jan den Besten
@@ -21,45 +21,27 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
   var flexy_api_service = {};
   
   /**
-   * Test if a certain cfg time is available (table_info|field_info|...).
-   * Returns true/false
+   * Test of bepaalde api settings al bestaan
+   * Geeft true/false
    * 
-   * @param string api
+   * @param string type [table|path]
+   * @param string what voorbeeld: 'tbl_menu' of 'pictures'
    * @return bool
    * @private
    */
-  flexy_api_service.has_cfg = function(api) {
-    return settings.has_item('cfg',api);
+  flexy_api_service.has_settings = function(type,what) {
+    return settings.has_item(['settings',type,what]);
   };
 
   /**
-   * Checks if given cfg are available. Returns the cfg that ar not available
-   * 
-   * @param array cfg
-   * @return array
-   * @private
-   */
-  flexy_api_service.needs_these_cfg = function(cfg) {
-    if (! angular.isDefined(cfg)) return false;
-    var needs=[];
-    for (var i = 0; i < cfg.length; i++) {
-      if ( ! flexy_api_service.has_cfg(cfg[i]) ) {
-        needs.push(cfg[i]);
-      }
-    }
-    return needs;
-  };
-  
-  /**
    * GET wrapper voor call()
    * 
-   * @param string api    Welke api aanroep: 'table', 'row' etc.
-   * @param object args   Object met alle mee te sturen paramaters/data
-   * @param object cfg    Object met de gevraagd config, bijvoorbeeld {table_info:true,field_info:true}
+   * @param string api         Welke api aanroep: 'table', 'row' etc.
+   * @param object args        Object met alle mee te sturen paramaters/data
    * @return Promise
    */
-  flexy_api_service.get = function(api,args,cfg) {
-    return flexy_api_service.call('GET',api,args,cfg);
+  flexy_api_service.get = function( api,args ) {
+    return flexy_api_service.call('GET',api,args);
   };
 
   /**
@@ -67,33 +49,33 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
    * 
    * @param string api    Welke api aanroep: 'table', 'row' etc.
    * @param object args   Object met alle mee te sturen paramaters/data
-   * @param object cfg    Object met de gevraagd config, bijvoorbeeld {table_info:true,field_info:true}
    * @return Promise
    */
-  flexy_api_service.post = function(api,args,cfg) {
-   return flexy_api_service.call('POST',api,args,cfg);
+  flexy_api_service.post = function( api,args ) {
+   return flexy_api_service.call('POST',api,args);
   };
   
   
   /**
    * De $htpp call gebeurt hier.
    * Alles wordt klaargezet en uitgevoerd.
-   * response.config data word in settings gezet.
+   * Er wordt ook gekeken of er bij bepaalde api's nog settings moeten worden opgevraagd
    * 
-   * @param string method 'GET','POST'
-   * @param string api    Welke api aanroep: 'table', 'row' etc.
-   * @param object args   Object met alle mee te sturen paramaters/data
-   * @param object cfg    Object met de gevraagd config, bijvoorbeeld {table_info:true,field_info:true}
+   * @param string method       'GET','POST'
+   * @param string api          Welke api aanroep: 'table', 'row' etc.
    * @return Promise
    */
-  flexy_api_service.call = function(method,api,args,cfg) {
-    method = method.toUpperCase();
-    // Check if cfg is needed
-    var needs = flexy_api_service.needs_these_cfg( cfg );
-    if (needs.length>0) args['config[]']=needs;
-    // setup
+  flexy_api_service.call = function( method,api,args ) {
+    // Zijn er nog settings nodig?
+    if (api==='table' && !flexy_api_service.has_settings( 'table', args.table )) {
+      args.settings = true;
+    }
+    if (api==='media' && !flexy_api_service.has_settings( 'path', args.path )) {
+      args.settings = true;
+    }
+    // Klaar zetten van alle argumenten
     var config = {
-      method : method,
+      method : method.toUpperCase(),
       url    : settings.item('api_base_url') + api,
       params : (method=='GET'?args:undefined),
       data   : (method=='POST'?args:undefined),
@@ -102,19 +84,16 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
     
     // API CALL
     return $http(config).then(function(response){
-      // Als er config data is, bewaar die in settings
-      if (angular.isDefined(response.data.config)) {
-        var config = response.data.config;
-        // table_info
-        if (angular.isDefined( config.table_info )) {
-          settings.set_item( config.table_info, ['config','table_info', args.table ]);
+      // Als er setting data is, bewaar die in settings
+      if (angular.isDefined( response.data.settings )) {
+        if (api=='table') {
+          settings.set_item( response.data.settings, ['settings','table', args.table ]);
         }
-        // field_info
-        if (angular.isDefined( config.field_info )) {
-          settings.set_item( config.field_info, ['config','field_info', args.table ]);
+        if (api=='media') {
+          settings.set_item( response.data.settings, ['settings','path', args.path ]);
         }
       }
-      // console.log('API has config in settings', settings.has_item('config') , angular.isDefined(response.data.config), args );
+      // console.log('API has settings', args, response.data.settings );
       // Ga verder met Promise
       return response.data;
     },function(errResponse){
@@ -182,7 +161,7 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
    * @return Promise
    */
   flexy_api_service.table = function(args) {
-    return flexy_api_service.get('table', args, ['table_info','field_info'] );
+    return flexy_api_service.get('table', args );
   };
 
   /**
@@ -191,7 +170,7 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
    * @return Promise
    */
   flexy_api_service.row = function(args ) {
-    return flexy_api_service.get('row',args, ['table_info','field_info'] );
+    return flexy_api_service.get('row',args );
   };
 
   // /**

@@ -36,12 +36,8 @@ class ApiMediaTest extends ApiTestModel {
     
     // Test with good folders & cfg
     foreach ($this->paths as $path) {
-      $config=FALSE;
-      if ($path=='pictures') $config=array('media_info','img_info');
-      if ($config)
-        $this->CI->media->set_args( array('path'=>$path, 'config'=>$config) );
-      else
-        $this->CI->media->set_args( array('path'=>$path ) );
+      $settings=FALSE;
+      $this->CI->media->set_args( array('path'=>$path, 'settings'=>$settings) );
       $result = $this->CI->media->index();
       
       $this->assertArrayNotHasKey( 'status', $result );
@@ -50,16 +46,15 @@ class ApiMediaTest extends ApiTestModel {
       $this->assertArrayNotHasKey( 'error', $result );
       $this->assertArrayHasKey( 'data', $result );
       $this->assertInternalType( 'array', $result['data'] );
-      // cfg?
-      if ($config) {
-        $this->assertArrayHasKey( 'config', $result );
-        $this->assertArrayHasKey( 'media_info', $result['config'] );
-        $this->assertInternalType( 'array', $result['config']['media_info'] );
-        $this->assertArrayHasKey( 'img_info', $result['config'] );
-        $this->assertInternalType( 'array', $result['config']['media_info'] );
+      // settings
+      if ($settings) {
+        $this->assertArrayHasKey( 'settings', $result );
+        $this->assertInternalType( 'array', $result['settings'] );
+        $this->assertArrayHasKey( 'path', $result['settings'] );
+        $this->assertArrayHasKey( 'img_info', $result['settings'] );
       }
       else {
-        $this->assertArrayNotHasKey( 'config', $result );
+        $this->assertArrayNotHasKey( 'settings', $result );
       }
     }
     

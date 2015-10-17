@@ -8,11 +8,13 @@ flexyAdmin.config(['$translateProvider', function ($translateProvider) {
 
     'ITEMS_ON_PAGE' : "{{rows}} items on {{pages}} pages",
 
-    'DIALOGS_SURE'    : 'Are you sure?',
-    'DIALOGS_DELETE'  : 'Delete',
-    'DIALOGS_DELETED' : 'deleted',
-    'DIALOGS_YES'     : 'Ok',
-    'DIALOGS_NO'      : 'Cancel',
+    'DIALOGS_SURE'         : 'Are you sure?',
+    'DIALOGS_DELETE_ITEM'  : 'Delete this item?',
+    'DIALOGS_DELETED'      : 'Has been deleted.',
+    'DIALOGS_DELETE_ERROR' : 'AN ERROR HAS OCURRED WHILE DELETING.',
+    
+    'DIALOGS_YES'          : 'Ok',
+    'DIALOGS_NO'           : 'Cancel',
     
   });
 
@@ -23,11 +25,15 @@ flexyAdmin.config(['$translateProvider', function ($translateProvider) {
 
     'ITEMS_ON_PAGE'   : "{{rows}} rijen in {{pages}} pagina's",
 
-    'DIALOGS_SURE'    : 'Zeker weten?',
-    'DIALOGS_DELETE'  : 'Verwijder',
-    'DIALOGS_DELETED' : 'verwijderd',
-    'DIALOGS_YES'     : 'Ok',
-    'DIALOGS_NO'      : 'Annuleer',
+    'DIALOGS_SURE'              : 'Zeker weten?',
+    'DIALOGS_DELETE_ITEM'       : 'Verwijder deze gegevens?',
+    'DIALOGS_DELETED'           : 'Is verwijderd.',
+    'DIALOGS_DELETE_SELECTED'   : 'Verwijder {{num}} geselecteerde rijen?',
+    'DIALOGS_DELETED_SELECTED'  : 'items verwijderd.',
+    'DIALOGS_DELETE_ERROR'      : 'ER IS EEN FOUT OPGETREDEN TIJDENS VERWIJDEREN.',
+    
+    'DIALOGS_YES'         : 'Ok',
+    'DIALOGS_NO'          : 'Annuleer',
 
   });
 

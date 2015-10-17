@@ -87,23 +87,23 @@ class ApiRowTest extends ApiTestModel {
       'args'    => array(
         'table' => 'tbl_menu',
         'where' =>'first',
-        'config'=>array('table_info','field_info'),
+        'settings'=>true,
       ),
       'asserts' => array(
-        'config' => array( 'type'   => 'array' ),
-        'config' => array( 'hasKey' => 'table_info' ),
-        'config' => array( 'hasKey' => 'field_info' ),
-        'config|field_info' => array( 'type' => 'array' ),
-        'config|table_info' => array( 'type' => 'array' ),
+        'settings' => array( 'type'   => 'array' ),
+        'settings' => array( 'hasKey' => 'table_info' ),
+        'settings' => array( 'hasKey' => 'field_info' ),
+        'settings'          => array( 'hasKey' => 'fields' ),
+        'settings|fields'   => array( 'type' => 'array' ),
+        'settings|field_info' => array( 'type' => 'array' ),
+        'settings|table_info' => array( 'type' => 'array' ),
 
-        'config|table_info'          => array( 'hasKey' => 'tree' ),
-        'config|table_info|tree'     => array( 'Equals' => true ),
-        'config|table_info'          => array( 'hasKey' => 'sortable' ),
-        'config|table_info|sortable' => array( 'Equals' => false ),
-        'config|table_info'          => array( 'hasKey' => 'fields' ),
-        'config|table_info|fields'   => array( 'type' => 'array' ),
-        'config|table_info'          => array( 'hasKey' => 'ui_name' ),
-        'config|table_info|ui_name'  => array( 'type' => 'string' ),
+        'settings|table_info'          => array( 'hasKey' => 'tree' ),
+        'settings|table_info|tree'     => array( 'Equals' => true ),
+        'settings|table_info'          => array( 'hasKey' => 'sortable' ),
+        'settings|table_info|sortable' => array( 'Equals' => false ),
+        'settings|table_info'          => array( 'hasKey' => 'ui_name' ),
+        'settings|table_info|ui_name'  => array( 'type' => 'string' ),
 
       )
     ));

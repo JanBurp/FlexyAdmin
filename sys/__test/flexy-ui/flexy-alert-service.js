@@ -12,7 +12,8 @@ flexyAdmin.factory( 'flexyAlertService', ['$rootScope','$timeout', function($roo
   /**
    * Voeg alert toe
    */
-  flexyAlertService.add = function(type, msg, timeout) {
+  flexyAlertService.add = function(type, msg) {
+    var timeout = 0;
     $rootScope.alerts.push({
       type: type,
       msg: msg,
@@ -20,7 +21,13 @@ flexyAdmin.factory( 'flexyAlertService', ['$rootScope','$timeout', function($roo
         return flexyAlertService.closeAlert(this);
       }
     });
-    if (timeout) {
+    if (type==='success') {
+      timeout = 2000;
+    }
+    if (type==='warning' || type=='danger') {
+      timeout = 10000;
+    }
+    if (timeout>0) {
       $timeout(function(){ 
         flexyAlertService.closeAlert(this); 
       }, timeout); 
