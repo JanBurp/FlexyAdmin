@@ -393,7 +393,7 @@ Class Table_Model extends CI_Model {
     $this->load->model('cfg');
     // Haal eerst indien mogelijk uit (depricated) cfg_table_info
     $update_uris = ! $this->cfg->get( 'cfg_table_info', $this->settings['table'], 'b_freeze_uris');
-    return boolval($update_uris);
+    return settype($update_uris,'bool');
   }
 
 
