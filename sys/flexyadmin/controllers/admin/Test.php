@@ -35,10 +35,10 @@ class Test extends AdminController {
     // $result = $this->table_model->get_grid( );
     // $result = $this->table_model->get_grid( 0, 'str_first_name' );
 
-    $this->table_model->table('tbl_leerlingen');
-    // $query = $this->table_model->get();
+    $this->table_model->table('tbl_crud2');
+    // $query = $this->table_model->get( 5 );
     // $result = $this->table_model->get_result();
-    $result = $this->table_model->get_grid( 0,0, '', 'groep' );
+    $result = $this->table_model->get_grid( 10 );
 
 
     // MANY_TO_MANY

@@ -67,7 +67,7 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
    */
   flexy_api_service.call = function( method,api,args ) {
     // Zijn er nog settings nodig?
-    if (api==='table' && !flexy_api_service.has_settings( 'table', args.table )) {
+    if ((api==='table' || api==='row') && !flexy_api_service.has_settings( 'table', args.table )) {
       args.settings = true;
     }
     if (api==='media' && !flexy_api_service.has_settings( 'path', args.path )) {
@@ -86,7 +86,7 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
     return $http(config).then(function(response){
       // Als er setting data is, bewaar die in settings
       if (angular.isDefined( response.data.settings )) {
-        if (api=='table') {
+        if (api=='table' || api=='row') {
           settings.set_item( response.data.settings, ['settings','table', args.table ]);
         }
         if (api=='media') {
@@ -172,6 +172,7 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
   flexy_api_service.row = function(args ) {
     return flexy_api_service.get('row',args );
   };
+  
 
   // /**
   //  * API call voor row (insert)

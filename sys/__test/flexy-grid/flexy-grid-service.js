@@ -22,7 +22,7 @@ flexyAdmin.factory('flexyGridService', ['flexySettingsService','flexyApiService'
   var default_args = {
     table  : '',
     limit  : 20,
-    offset : 0,
+    offset : false,   // met false ipv 0 werkt jump_to_today
     as_grid : true,
     // txt_abstract : true
   };

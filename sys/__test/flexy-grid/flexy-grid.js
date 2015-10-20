@@ -73,8 +73,10 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyApiService
     $scope.tableState = tableState;
     
     // pagination
+    var offset = tableState.pagination.start;
+    if (offset===0) offset=false; // zodat jump_to_todat werkt
     var args = {
-      offset  : tableState.pagination.start,
+      offset  : offset,
       limit   : settings.item(['screen','pagination'])
     };
     // sorting
@@ -100,7 +102,9 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyApiService
       // info & pagination
       $scope.info = grid.get_info($scope.table);
       $scope.info.num_pages = Math.ceil($scope.info.total_rows / $scope.info.limit);
+      tableState.pagination.start = $scope.info.offset;
       tableState.pagination.numberOfPages = $scope.info.num_pages;
+      
       // data
       $scope.gridItems = grid.get_grid_data($scope.table);
       // Copy the references, needed for smart-table to watch for changes in the data
