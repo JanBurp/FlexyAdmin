@@ -12,7 +12,7 @@
  */
 
 
-flexyAdmin.controller('FormController', ['flexySettingsService','$scope','$routeParams','$http', function(settings, $scope,$routeParams,$http) {
+flexyAdmin.controller('FormController', ['flexySettingsService','flexyApiService','$scope','$routeParams', function(settings,api,$scope,$routeParams) {
   'use strict';
 
   /**
@@ -41,8 +41,6 @@ flexyAdmin.controller('FormController', ['flexySettingsService','$scope','$route
   };
   $scope.form = [];
   $scope.model = {};
-  
-  
   
   /**
    * RESET FORM
@@ -74,18 +72,17 @@ flexyAdmin.controller('FormController', ['flexySettingsService','$scope','$route
    */
   var callServer = function(tableState) {
     
-    $http.get('row?table='+$scope.table+'&where='+$scope.id+'&config[]=table_info&config[]=field_info').success(function(result){
+    api.row( {table:$scope.table, 'where': $scope.id} ).then(function(response) {
       
       // keep items in Scope
-      $scope.form_data.fields=result.data;
-      $scope.form_data.table_info=result.config.table_info;
-      $scope.form_data.field_info=result.config.field_info;
+      $scope.form_data.fields = response.data;
 
       // Create Schema properties
       $scope.schema.properties = {};
       // Start tabs
       var tabs = {};
-      tabs[$scope.form_data.table_info.ui_name]=[];
+      var table_ui_name = settings.item('settings','table', $scope.table, 'table_info', 'ui_name' );
+      tabs[table_ui_name] = [];
       
       angular.forEach( $scope.form_data.fields, function(value, key) {
 
@@ -112,13 +109,15 @@ flexyAdmin.controller('FormController', ['flexySettingsService','$scope','$route
         };
         
         // Tabs & items in tabs
-        field.tab = $scope.form_data.table_info.ui_name; // default tab
-        if ( angular.isDefined( $scope.form_data.field_info[key].info.str_fieldset) ) {
-          if ($scope.form_data.field_info[key].info.str_fieldset!=="") {
-            field.tab = $scope.form_data.field_info[key].info.str_fieldset;
-          }
-        }
+        field.tab = table_ui_name; // default tab
+        // if ( angular.isDefined( $scope.form_data.field_info[key].info.str_fieldset ) ) {
+        //   if ($scope.form_data.field_info[key].info.str_fieldset!=="") {
+        //     field.tab = $scope.form_data.field_info[key].info.str_fieldset;
+        //   }
+        // }
         if ( angular.isUndefined( tabs[field.tab] )) tabs[field.tab]=[]; // new tab
+        
+        // Add this field to its tab
         tabs[field.tab].push({
           'key'       : key,
           'type'      : field.type,
@@ -139,9 +138,9 @@ flexyAdmin.controller('FormController', ['flexySettingsService','$scope','$route
         });
       });
       $scope.form.push(form_tabs);
-    }).error(function(data){
-      $log.log('AJAX error -> Form');
+      
     });
+
   };
   
   callServer();

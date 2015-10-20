@@ -516,10 +516,10 @@ Class Table_Model extends CI_Model {
       $field_info = $this->cfg->get('cfg_field_info', $this->settings['table'].'.'.$field );
       if ( !in_array($field,$show_always) and !el('b_show_in_grid',$field_info,TRUE) ) unset($grid_set['fields'][$key]);
     }
-    $grid_set['fields'] = array_values($grid_set['fields']); // reset keys
+    $grid_set['fields']        = array_values($grid_set['fields']); // reset keys
     $grid_set['order_by']      = $this->settings['order_by'];
-    $grid_set['jump_to_today'] = el('b_jump_to_today',$table_info,TRUE);
-    $grid_set['pagination']    = el('b_pagination',$table_info,TRUE);
+    $grid_set['jump_to_today'] = (el('b_jump_to_today',$table_info,TRUE)?true:false);
+    $grid_set['pagination']    = (el('b_pagination',$table_info,TRUE)?true:false);
     $many_to_one               = el( array('relations','many_to_one'), $this->settings, array() );
     $with=array('many_to_one'=>array());
     foreach ($many_to_one as $table => $info) {
@@ -1042,41 +1042,29 @@ Class Table_Model extends CI_Model {
     // Jump to today?
     if ( $query AND $this->tm_jump_to_today AND $this->tm_limit>1 ) {
       $this->query_info['limit']      = (int) $this->tm_limit;
-      $this->query_info['page']       = $this->tm_offset / $this->tm_limit;
       $this->query_info['total_rows'] = $this->total_rows( true );
       // Jump to today nodig?
       if ($this->query_info['total_rows']>$this->query_info['limit']) {
-        // Is er een datum/tijd veld?
-        $select = str_replace('`','',$this->tm_select);
-        $fields = array_values(get_suffix( $select, '.' ));
-        $prefixes = get_prefix( $fields );
-        $date_field = one_of_array_in_array( $this->config->item('DATE_fields_pre'), $prefixes );
-        if ($date_field) {
-          // Zoek id van dichtsbijzijnde row
-          $date_field = $fields[$date_field];
+        // Is (eerste) order_by een datum/tijd veld
+        $order_by = $this->tm_order_by[0];
+        if ( in_array( get_prefix($order_by),$this->config->item('DATE_fields_pre')) ) {
+          // Tel aantal items eerder dan vandaag
+          $date_field=remove_suffix($order_by,' ');
+          $direction=get_suffix($order_by,' ');
           $last_full_sql = $this->last_query();
-          $last_sql = $this->last_clean_query();
-          $sql = $last_sql . ' WHERE DATE(`'.$date_field.'`)>=DATE(NOW()) ORDER BY `'.$date_field.'`  LIMIT 1';
-          $jump_query = $this->db->query( $sql );
-          $today_id = $jump_query->result_array();
-          if ($today_id) {
-            // Zoek pagina van dichtsbijzijnde row
-            $today_id = (int) current($today_id)[$this->settings['primary_key']];
-            $sql = $last_sql . ' ORDER BY ' . $first_order_by;
-            $jump_query = $this->db->query( $sql );
-            $sub_result = $jump_query->result_array();
-            $today = find_row_by_value( $sub_result, $today_id, $this->settings['primary_key'] );
-            if (is_array($today)) {
-              $today = key($today);
-              $page = (int) floor($today / $this->query_info['limit']);
-              // Moet er worden gesprongen naar andere pagina? Dan de query opnieuw met andere offset
-              if ($page>0) {
-                $this->tm_offset = (int) $page * $this->tm_limit;
-                $last_full_sql = str_replace( 'LIMIT '.$this->tm_limit, 'LIMIT '.$this->tm_offset.','.$this->tm_limit, $last_full_sql);
-                $query = $this->db->query( $last_full_sql );
-              }
-            }
-          }
+          $last_clean_sql = $this->last_clean_query();
+          unset($this->query_info['last_query']); // reset last_query
+          if ($direction=='DESC')
+            $direction='>';
+          else
+            $direction='<';
+          $count_sql = $last_clean_sql . ' WHERE DATE(`'.$date_field.'`) '.$direction.'= DATE(NOW()) ORDER BY '.$order_by;
+          $count_query = $this->db->query( $count_sql );
+          $jump_offset = $count_query->num_rows();
+          $page = (int) floor($jump_offset / $this->tm_limit);
+          $this->tm_offset = $page * $this->tm_limit;
+          $sql = str_replace( 'LIMIT '.$this->tm_limit, 'LIMIT '.$this->tm_offset.','.$this->tm_limit, $last_full_sql);
+          $query = $this->db->query( $sql );
         }
       }
     }
@@ -1326,6 +1314,8 @@ Class Table_Model extends CI_Model {
   public function get_grid( $limit = 20, $offset = FALSE, $sort = '', $find = '' ) {
     $grid_set = $this->settings['grid_set'];
     
+    // trace_($grid_set);
+    
     // Select
     $this->select( $grid_set['fields'] );
     $this->select_txt_abstract(250);
@@ -1374,15 +1364,14 @@ Class Table_Model extends CI_Model {
     
     // Pagination
     if ($grid_set['pagination']) {
-      if (is_bool($offset) AND $offset===FALSE) $offset = 0;
-      $this->limit( $limit, $offset );
+      if (is_numeric($offset) or $offset!==TRUE) $this->limit( $limit, $offset );
     }
 
     // Jump to today?
     if (is_bool($offset) AND $offset===FALSE and $grid_set['jump_to_today']) {
       $this->tm_jump_to_today = TRUE;
     }
-    
+
     return $this->get_result();
   }
   
