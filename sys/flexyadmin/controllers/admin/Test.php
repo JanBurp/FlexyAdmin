@@ -12,6 +12,24 @@ class Test extends AdminController {
   public function index() {
     if (!$this->user->is_super_admin()) return;
     
+    $this->load->model('schoolbase/schoolbase');
+    $this->load->model('schoolbase/schoolbase_leerlingen');
+    
+    $time = array(
+      'start' => mktime(0,0,0,12,1,2015), // 1 dec 2015
+      'end'   => mktime(0,0,0,1,31,2016), // 1 feb 2016
+    );
+    $birthdays = $this->schoolbase_leerlingen->get_birthdays( $time );
+    trace_([$time,$birthdays]);
+
+    // $time = array(
+    //   'start' => mktime(0,0,0,1,1,2016), // 1 januari 2016
+    //   'end'   => mktime(0,0,0,2,1,2016), // 1 feb 2016
+    // );
+    // $birthdays = $this->schoolbase_leerlingen->get_birthdays( $time );
+    // trace_([$time,$birthdays]);
+    
+    
     // MANY_TO_ONE
     
     // // Oude manier
@@ -35,10 +53,14 @@ class Test extends AdminController {
     // $result = $this->table_model->get_grid( );
     // $result = $this->table_model->get_grid( 0, 'str_first_name' );
 
-    $this->table_model->table('tbl_crud2');
+    // $this->table_model->table('tbl_crud2');
     // $query = $this->table_model->get( 5 );
     // $result = $this->table_model->get_result();
+<<<<<<< .mine
+    // $result = $this->table_model->get_grid( 0, 'tme_last_changed', 'e' );
+=======
     $result = $this->table_model->get_grid( 10 );
+>>>>>>> .r3434
 
 
     // MANY_TO_MANY
@@ -88,10 +110,17 @@ class Test extends AdminController {
     
     
     
+<<<<<<< .mine
+    // trace_( $this->table_model->get_query_info() );
+    // trace_sql( $this->table_model->last_query() );
+    // if (isset($result))  var_dump( $result );
+    // if (isset($query))   var_dump( $query->result_array() );
+=======
     trace_( $this->table_model->get_query_info() );
     echo( $this->table_model->last_query() );
     if (isset($result))  var_dump( $result );
     if (isset($query))   var_dump( $query->result_array() );
+>>>>>>> .r3434
     
     
     return '';

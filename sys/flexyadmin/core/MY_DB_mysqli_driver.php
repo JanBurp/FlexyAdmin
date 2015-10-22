@@ -2163,7 +2163,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 			$options=array();
 			if (isset($manyTables)) {
 				foreach ($manyTables as $rel => $jTable) {
-					$optionsWhere=$this->CI->cfg->get('CFG_table',$jTable["rel"],'str_options_where');
+					$optionsWhere=$this->CI->cfg->get('CFG_table',$jTable["join"],'str_options_where');
 					$options[$rel]=$this->get_options($jTable["join"],$optionsWhere);
 				}
 			}
