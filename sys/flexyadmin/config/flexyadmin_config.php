@@ -425,6 +425,7 @@ $config["CFG_"]=array(
 			"b_grid_add_many"=>'1',
 			"str_abstract_fields"=>'str_username',
 			"str_order_by"=>'b_active,str_username',
+      'b_add_empty_choice' => true,
 			),
 		"cfg_user_groups"=>array(
 			"order"=>'121',
@@ -479,6 +480,9 @@ $config["CFG_"]=array(
     '*.user_changed' => array(
  			"b_show_in_grid"=>'1',
 			"b_show_in_form"=>'0'
+    ),
+    '*.id_user' => array(
+      'str_validation_rules' => 'required'
     ),
     
 		"cfg_ui.path"=>array(

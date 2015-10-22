@@ -10,6 +10,7 @@
  */
 defined('BASEPATH') OR exit('Directe toegang tot scripts is niet toegestaan');
 
+$lang['validation_warning'] = 'LET OP: één of meer velden zijn niet goed ingevuld.';
 $lang['form_validation_required']		= 'Het {field}-veld is verplicht.';
 $lang['form_validation_isset']			= 'Het {field}-veld mag niet leeg zijn.';
 $lang['form_validation_valid_email']		= 'Het {field}-veld dient een geldig e-mailadres te bevatten.';
