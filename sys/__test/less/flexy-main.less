@@ -2,6 +2,7 @@
 @flexy-header-height      : 50px;
 @flexy-header-text-height : 34px; // ergens uit boostrap halen?
 @flexy-margins            : 12px;
+@flexy-panel-title-height : 42px;
 
 
 /* CALCULATED SIZES */
@@ -69,7 +70,7 @@ header, footer {height:@flexy-header-height;}
 .dialog-header-confirm * {color:@body-bg;}
 
 /* PANELS */
-.panel-heading {height:42px;overflow:hidden;padding:7px 1rem;}
+.panel-heading {height:@flexy-panel-title-height;overflow:hidden;padding:7px 1rem;}
 .panel-heading h3 {text-transform:uppercase;margin:0;float:left}
 .panel-heading>div {float:right;}
 .panel-heading span.glyphicon-floppy-disk {margin-left:1rem;}
@@ -80,13 +81,14 @@ header, footer {height:@flexy-header-height;}
 label,button {text-transform:uppercase;}
 label {display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .form-group {border-radius:@border-radius-base;}
-.form-group:hover {background-color:@gray-lighter;}
-.form-group>.control-label {.make-sm-column(2);text-align:left;}
-.form-group>div {.make-sm-column(10)}
+// .form-group:hover {background-color:@gray-lighter;}
+.form-group:hover .form-control {border-color:@brand-primary;}
+.form-group>.control-label {.make-sm-column(3);text-align:left;}
+.form-group>div {.make-sm-column(9)}
 .form-group>div.mce-tinymce {.make-sm-column(8);margin-left:1.5rem}
-.form-group.button-group>div {.make-sm-column(10);.make-sm-column-offset(2);}
+.form-group.button-group>div {.make-sm-column(9);.make-sm-column-offset(3);}
 .form-inline .form-group {width:100%;}
-.form-inline .form-group>div {.make-sm-column-offset(2);}
+.form-inline .form-group>div {.make-sm-column-offset(3);padding-left:7px}
 .help-block {margin:0px}
 /* FIELDS */
 
@@ -101,7 +103,9 @@ label {display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 /* FLEXY LOGIN */
 #login {width:700px;margin:2rem auto;}
 #login .panel-content {padding-bottom:0;}
-#login .flexy-login-forgot {padding-top:1rem;}
+#login .panel-heading {height:(1.5 * @flexy-panel-title-height);padding-top:18px;padding-left:19px;}
+#login .flexy-login-forgot {position:relative;top:7px;color:@gray-light;}
+#login .flexy-login-forgot:hover {color:@brand-primary;}
 #login .panel-footer .form-group {width:100%;}
 
 
