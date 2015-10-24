@@ -136,50 +136,51 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyApiService
   
   
   /**
-   * DELETE ITEM
+   * DELETE (selected) ITEM(s), maar eerst CONFIRM
    */
   $scope.delete = function( table, id ) {
-    var abstract = grid.get_abstract( table,id );
-    $translate(['DIALOGS_SURE','DIALOGS_DELETE_ITEM','DIALOGS_DELETED','DIALOGS_DELETE_ERROR']).then(function (translations) {
-      var confirm = dialogs.confirm( translations.DIALOGS_SURE, '<b>'+translations.DIALOGS_DELETE_ITEM+'</b><br>'+abstract, { 'size' : 'sm' } );
-      confirm.result.then(function(btn){
-        api.delete( { 'table':table, 'where':id }).then(function(response){
-          if (response.success===true && response.data===true) {
-            // Reload page
-            $scope.pipe( $scope.tableState );
-            alertService.add( 'success', abstract+' <b>'+translations.DIALOGS_DELETED+'</b>');
-          }
-        });
-  		},function(btn){
-        // alertService.add( 'danger', abstract+' <b>'+translations.DIALOGS_DELETE_ERROR+'</b>');
-  		});
-    });
-  };
-  
-  /**
-   * DELETE SELECTED ITEMS
-   */
-  $scope.deleteSelected = function( table ) {
+    var abstract = '';
     var selected = [];
-    angular.forEach($scope.gridItems, function(item,key) {
-      if ($scope.gridItems[key].isSelected) {
-        selected.push(item['id']);
-      }
-    });
-    
+    // één item, of selected?
+    if (angular.isDefined(id)) {
+      selected.push(id);
+    }
+    else {
+      angular.forEach($scope.gridItems, function(item,key) {
+        if ($scope.gridItems[key].isSelected) {
+          selected.push(item['id']);
+        }
+      });
+    }
+    // Alleen verder als er minimaal één item wordt gedelete
     if (selected.length>0) {
-      $translate(['DIALOGS_SURE','DIALOGS_DELETE_SELECTED','DIALOGS_DELETED_SELECTED','DIALOGS_DELETE_ERROR'],{num:selected.length}).then(function (translations) {
-        var confirm = dialogs.confirm( translations.DIALOGS_SURE, '<b>'+translations.DIALOGS_DELETE_SELECTED+'</b>', { 'size' : 'sm' } );
+      $translate(['DIALOGS_SURE','DIALOGS_DELETE_ITEM','DIALOGS_DELETED','DIALOGS_DELETE_SELECTED','DIALOGS_DELETED_SELECTED','DIALOGS_DELETE_ERROR'],{num:selected.length}).then(function (translations) {
+        // prepare conform dialog
+        var title   = translations.DIALOGS_SURE;
+        var message = '<b>';
+        if (selected.length>1) {
+          message+= translations.DIALOGS_DELETE_SELECTED + '</b>';
+        }
+        else {
+          abstract = grid.get_abstract( table, selected[0] );
+          message+= translations.DIALOGS_DELETE_ITEM + '</b><br>' + abstract;
+        }
+        // Show confirm dialog
+        var confirm = dialogs.confirm( title, message, {'size':'sm'} );
         confirm.result.then(function(btn){
           api.delete( { 'table':table, 'where':selected }).then(function(response){
             if (response.success===true && response.data===true) {
               // Reload page
               $scope.pipe( $scope.tableState );
-              alertService.add( 'success', selected.length+' <b>'+translations.DIALOGS_DELETED_SELECTED+'</b>');
+              // Message
+              if (selected.length>1)
+                alertService.add( 'success', selected.length+' <b>'+translations.DIALOGS_DELETED_SELECTED+'</b>');
+              else
+                alertService.add( 'success', abstract + ' <b>'+translations.DIALOGS_DELETED+'</b>');
             }
           });
     		},function(btn){
-          // alertService.add( 'danger', abstract+' <b>'+translations.DIALOGS_DELETE_ERROR+'</b>');
+          // alertService.add( 'danger', '<b>'+translations.DIALOGS_DELETE_ERROR+'</b>');
     		});
       });
     }
