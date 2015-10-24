@@ -21,8 +21,8 @@ flexyAdmin.config(['flexyConstants','$httpProvider',function(constants,$httpProv
     return {
       'request': function (config) {
         if (config.url.substr(-5)=='.html') {
-          if (config.url.indexOf('flexy')>=0) {
-            // Redirect flexy HTML views
+          // Redirect HTML templates, behalve die van ui-boostrap templates
+          if (config.url.indexOf('template')===-1) {
             config.url = constants.sys_folder + config.url;
           }
         }

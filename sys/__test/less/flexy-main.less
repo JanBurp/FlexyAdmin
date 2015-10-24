@@ -48,7 +48,25 @@ header, footer {height:@flexy-header-height;}
 #loading-bar-spinner .spinner-icon {width: 34px;height: 34px;border:solid 3px transparent;border-top-color:#CCC;border-left-color:#CCC;border-radius: 17px;}
 
 /* ALERTS */
-// .flexy-alerts {position:fixed;}
+.flexy-alerts {
+  display:block;
+  position:fixed;
+  top:-@border-radius-base;
+  left:50%;
+  margin-left:-320px;
+  width:640px;
+  z-index:999999;
+}
+.flexy-alerts .alert { box-shadow:0 3px 9px #000; }
+
+/* DIALOGS */
+.modal-dialog {margin-top:(@flexy-header-height + @flexy-margins);}
+.dialog-header-confirm {
+  background-color:@brand-danger;
+  border-top-left-radius:@border-radius-base;
+  border-top-right-radius:@border-radius-base;
+}
+.dialog-header-confirm * {color:@body-bg;}
 
 /* PANELS */
 .panel-heading {height:42px;overflow:hidden;padding:7px 1rem;}
