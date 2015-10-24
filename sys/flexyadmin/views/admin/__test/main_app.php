@@ -12,30 +12,26 @@
 <body class="hidden" ng-controller="stateController">
   
   <div id="debug" class="panel panel-danger hidden">
-    <div class="panel-heading panel-title"><h3>ERROR</h3></div>
+    <div class="panel-heading panel-title"><h3>{{ 'ERROR' | translate }}</h3></div>
     <div class="panel-content"></div>
   </div>
 
   <div id="login" class="panel panel-primary" ng-if="!isLoggedIn" ng-controller="flexyLoginController as loginCtrl">
-    <div class="panel-heading panel-title"><h3>Login</h3></div>
+    <div class="panel-heading panel-title"><h3>{{ 'LOGIN_TITLE' | translate }}</h3></div>
     <div class="panel-content">
       <form class="form-horizontal" name="loginForm" ng-submit="loginCtrl.login()">
         <div class="form-group">
-          <label class="control-label" for="login-username">Username</label>
-          <div>
-            <input class="form-control" id="login-username" name="login-username" required class="form-control" placeholder="" ng-model="loginCtrl.user.username">
-          </div>
+          <label class="control-label" for="login-username">{{ 'LOGIN_USERNAME' | translate }}</label>
+          <div><input class="form-control" id="login-username" name="login-username" required class="form-control" placeholder="" ng-model="loginCtrl.user.username"></div>
         </div>
         <div class="form-group">
-          <label class="control-label" for="login-password">Password</label>
-          <div>
-            <input class="form-control" id="login-password" name="login-password" type="password" required class="form-control" placeholder="" ng-model="loginCtrl.user.password">
-          </div>
+          <label class="control-label" for="login-password">{{ 'LOGIN_PASSWORD' | translate }}</label>
+          <div><input class="form-control" id="login-password" name="login-password" type="password" required class="form-control" placeholder="" ng-model="loginCtrl.user.password"></div>
         </div>
         <div class="form-group button-group">
           <div class="">
-            <button type="submit" id="login-button" class="btn btn-default" ng-disabled="loginForm.$invalid">Login</button>
-            <a class="flexy-login-forgot action-click pull-right" ng-click="loginCtrl.askMail=!loginCtrl.askMail;loginCtrl.mailSend=false">wachtwoord vergeten?</a>
+            <a class="flexy-login-forgot action-click" ng-click="loginCtrl.askMail=!loginCtrl.askMail;loginCtrl.mailSend=false">{{ 'LOGIN_FORGOT' | translate }}</a>
+            <button type="submit" id="login-button" class="btn btn-primary pull-right" ng-disabled="loginForm.$invalid">{{ 'LOGIN_SUBMIT' | translate }}</button>
           </div>
         </div>
       </form>
@@ -44,8 +40,8 @@
       <form class="form-inline" name="loginEmailForm" ng-submit="loginCtrl.sendNewPassword()">
         <div class="form-group" show-errors>
           <div>
-            <input class="form-control" name="login-email" type="email" required placeholder="E-mail" ng-model="loginCtrl.user.email">
-            <button type="submit" class="btn btn-default" ng-disabled="loginEmailForm.$invalid">Stuur wachtwoord</button>
+            <input class="form-control" name="login-email" type="email" required placeholder="{{ 'EMAIL' | translate }}" ng-model="loginCtrl.user.email">
+            <button type="submit" class="btn btn-primary" ng-disabled="loginEmailForm.$invalid">{{ 'LOGIN_SEND_PASSWORD' | translate }}</button>
             <div class="btn text-success" ng-show="loginCtrl.mailSend"><span class="glyphicon glyphicon-ok"></span></div>
             <div class="btn text-danger" ng-show="loginCtrl.mailError"><span class="glyphicon glyphicon-remove"></span></div>
           </div>
