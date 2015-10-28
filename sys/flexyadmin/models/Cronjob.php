@@ -19,6 +19,7 @@ class Cronjob extends CI_Model {
     if ($this->db->table_exists('log_cronjobs')) {
       $this->jobs=$this->config->item('cronjobs');
       foreach ($this->jobs as $key=>$job) {
+        // trace_($job);
         $this->jobs[$key] = $this->needs_run($job);
         if ($this->jobs[$key]['needs_run']) {
           $this->jobs[$key]=$this->run($this->jobs[$key]);
@@ -53,6 +54,7 @@ class Cronjob extends CI_Model {
     // run
     $job['result']=$this->$name->index($job);
     $job['at']=unix_to_mysql(time());
+    // trace_($job);
     // store in db
     if ($job['result']===TRUE) {
       $this->db->set(array('str_job'=>$job['name'],'tme_last_run'=>$job['at']));
@@ -122,6 +124,7 @@ class Cronjob extends CI_Model {
             $start=mktime( 0,0,0, date('n'), date('j')-$wday );
           }
           $day_of_week=(int) $every[1];
+          $hour++; // Hack, blijkt dat altijd een uur te vroeg, waarom, geen idee
           break;
 
         case 'month':
@@ -138,7 +141,17 @@ class Cronjob extends CI_Model {
       
       $next = $start + $day_of_year*86400 + $day_of_month*86400 + $day_of_week*86400 + $hour*3600 + $min*60;
       
-      // trace_([$every,'last'=>unix_to_mysql($last),'start'=>unix_to_mysql($start),'next'=>unix_to_mysql($next)]);
+      // trace_([
+      //   '$every'=>$every,
+      //   '$start'=>unix_to_mysql($start),
+      //   '$next'=>unix_to_mysql($next),
+      //   '$day_of_year'=>$day_of_year,
+      //   '$day_of_month'=>$day_of_month,
+      //   '$day_of_week'=>$day_of_week,
+      //   '$hour'=>$hour,
+      //   '$min'=>$min,
+      // ]);
+
     }
     return $next;
   }
