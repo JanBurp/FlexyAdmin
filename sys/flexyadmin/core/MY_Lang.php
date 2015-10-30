@@ -182,8 +182,8 @@ class MY_Lang extends CI_Lang {
       $this->idiom=$CI->site['language'];
     }
     if (!empty($this->lang_table) and !empty($this->idiom)) {
-      // Only frontend
-      if ($CI->uri->segment(1)!='admin' and isset($CI->db)) {
+      // Only when db is ready
+      if (isset($CI->db)) {
         if ($CI->db->field_exists('lang_'.$this->idiom,$this->lang_table)) $value=$CI->db->get_field_where($this->lang_table,'lang_'.$this->idiom,'key',$line);
       }
     }
