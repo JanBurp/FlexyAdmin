@@ -181,12 +181,14 @@ class MY_Lang extends CI_Lang {
     if (empty($this->idiom) and isset($CI->site['language'])) {
       $this->idiom=$CI->site['language'];
     }
-    if (!empty($this->lang_table) and !empty($this->idiom)) {
+    // only if not a db_error look for cfg_lang
+    if ( substr($line,0,3)!=='db_' AND !empty($this->lang_table) AND !empty($this->idiom) ) {
       // Only when db is ready
       if (isset($CI->db)) {
         if ($CI->db->field_exists('lang_'.$this->idiom,$this->lang_table)) $value=$CI->db->get_field_where($this->lang_table,'lang_'.$this->idiom,'key',$line);
       }
     }
+    
     if ($value===FALSE) {
   		$value = ($line == '' OR ! isset($this->language[$line])) ? FALSE : $this->language[$line];
     }
