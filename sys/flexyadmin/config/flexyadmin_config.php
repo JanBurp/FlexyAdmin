@@ -378,7 +378,8 @@ $config["CFG_"]=array(
 			),
 		"cfg_lang"=>array(
 			"order"=>'107',
-			"table"=>'cfg_lang'
+			"table"=>'cfg_lang',
+      'str_order_by'=>'key',
     ),
 		"cfg_email"=>array(
 			"order"=>'108',
