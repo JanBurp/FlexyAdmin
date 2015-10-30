@@ -456,6 +456,7 @@ class Mediatable extends CI_Model {
    * @author Jan den Besten
    */
   public function portrait_or_landscape($file) {
+    $file=$this->_file($file);
     $size=$this->get_img_size($file);
   	if ($size) {
   		if ($size['width']>$size['height'])
@@ -543,6 +544,18 @@ class Mediatable extends CI_Model {
     if (!isset($info['user'])) return true;
     if ($this->user->user_id == $info['user']) return true;
     return false;
+  }
+  
+  /**
+   * Geeft echte bestandsnaam terug als er met '_media' wordt gewerk bijvoorbeeld.
+   *
+   * @param string $file 
+   * @return string $file
+   * @author Jan den Besten
+   */
+  private function _file($file) {
+    $file = str_replace('_media/','site/assets/',$file);
+    return $file;
   }
 
 }
