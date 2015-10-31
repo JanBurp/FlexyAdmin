@@ -123,7 +123,7 @@ UPDATE `tbl_menu` SET `order`='4', `self_parent`='0', `uri`='contact' WHERE `id`
     
     // Set all - 1
     $ids=array(1,2,5,4,3);
-    $this->CI->order->set_all($this->table,$ids);
+    $return = $this->CI->order->set_all($this->table,$ids);
     $result = $this->_result();
     $expected = array(
       '1'=>array( 'id'=>'1', 'order'=>'0' ),
@@ -133,6 +133,14 @@ UPDATE `tbl_menu` SET `order`='4', `self_parent`='0', `uri`='contact' WHERE `id`
       '3'=>array( 'id'=>'3', 'order'=>'4' ),
     ); 
     $this->assertEquals($expected, $result);
+    $expected = array(
+      '0'=>array( 'id'=>'1', 'order'=>'0' ),
+      '1'=>array( 'id'=>'2', 'order'=>'1' ),
+      '2'=>array( 'id'=>'5', 'order'=>'2' ),
+      '3'=>array( 'id'=>'4', 'order'=>'3' ),
+      '4'=>array( 'id'=>'3', 'order'=>'4' ),
+    );
+    $this->assertEquals($expected, $return);
 
     // Set all - 2
     $ids=array(2,5,4,3,1);
@@ -149,7 +157,7 @@ UPDATE `tbl_menu` SET `order`='4', `self_parent`='0', `uri`='contact' WHERE `id`
 
     // Set all - 3 shift 
     $ids=array(2,5,4,3,1);
-    $this->CI->order->set_all($this->table,$ids,2);
+    $return = $this->CI->order->set_all($this->table,$ids,2);
     $result = $this->_result();
     $expected = array(
       '2'=>array( 'id'=>'2', 'order'=>'2' ),
@@ -159,6 +167,14 @@ UPDATE `tbl_menu` SET `order`='4', `self_parent`='0', `uri`='contact' WHERE `id`
       '1'=>array( 'id'=>'1', 'order'=>'6' ),
     ); 
     $this->assertEquals($expected, $result);
+    $expected = array(
+      '0'=>array( 'id'=>'2', 'order'=>'2' ),
+      '1'=>array( 'id'=>'5', 'order'=>'3' ),
+      '2'=>array( 'id'=>'4', 'order'=>'4' ),
+      '3'=>array( 'id'=>'3', 'order'=>'5' ),
+      '4'=>array( 'id'=>'1', 'order'=>'6' ),
+    ); 
+    $this->assertEquals($expected, $return);
     
     // Set all - 4
     $ids=array(1,2,5,4,3);

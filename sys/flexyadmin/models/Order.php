@@ -167,21 +167,23 @@ class order extends CI_Model {
   
 
 	/**
-	 * Geeft alle items een nieuwe volgorde zoals meegegeven in de $ids array
+	 * Geeft de meegegeven items een nieuwe volgorde zoals meegegeven in de $ids array
 	 *
 	 * @param string $table
 	 * @param array $ids Array met nieuwe volgorde
-	 * @param int $from default=0 Begin te tellen vanaf... ??
-	 * @return object $this;
+	 * @param int $from default=0 Begin te tellen vanaf deze order (voor als maar een deel van de items in een tabel worden meegegeven)
+	 * @return array $items, geeft een array terug in met voor elke row dit formaat: 'id_van_row' => 'nieuwe order' 
 	 * @author Jan den Besten
 	 */
   public function set_all($table,$ids,$from=0) {
+    $return=array();
     $order=$from;
 		foreach($ids as $id) {
+      $return[]=array('id'=>$id,'order'=>$order);
 			$this->db->where(PRIMARY_KEY,$id);
 			$this->db->update($table, array($this->order => $order++ ));
 		}
-    return $this;
+    return $return;
 	}
 
 

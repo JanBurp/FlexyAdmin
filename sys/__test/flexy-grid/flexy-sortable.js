@@ -37,6 +37,7 @@ flexyAdmin.directive('asSortable', [ 'flexyGridService', function (grid) {
        * Decleration of closure with all callback functions and needed data.
        */
       var sortable = {
+        order_start     : 0,       // order value of first item (for calculating new order fields)
         oldItems        : [],      // Items before moving
         draggedChildren : [],      // The children that are dragged with the parent
         table           : null,    // Table element
@@ -50,7 +51,9 @@ flexyAdmin.directive('asSortable', [ 'flexyGridService', function (grid) {
        * START DRAGGING: hide and remember children
        */
       sortable.dragStart = function(obj) {
-        // Remeber current items
+        // Remember order start
+        sortable.order_start = $scope.$parent.gridItems[0].order;
+        // Remember current items
         sortable.oldItems = obj.source.sortableScope.modelValue.slice();
         // Re(set) draggedChildren
         sortable.draggedChildren=[];
@@ -96,16 +99,25 @@ flexyAdmin.directive('asSortable', [ 'flexyGridService', function (grid) {
           
           // 4) Verplaats items
           items = jdb.moveMultipleArrayItems(items, oldIndex, number_of_children+1, newIndex);
-          
+
           // 5) Vernieuw de grid info & bewaar in grid
           $scope.$parent.gridItems = grid.add_tree_info(items, true);
-          
-          // 7) Update sortable
-          obj.dest.sortableScope.modelValue = $scope.$parent.gridItems;
-          
-          // 8) Update grid UI
-          $scope.$parent.displayedItems = [].concat($scope.$parent.gridItems);
         }
+        
+        // Update order fields
+        var order = sortable.order_start;
+        angular.forEach( $scope.$parent.gridItems, function(item,key) {
+          $scope.$parent.gridItems[key].order = order;
+          order++;
+        });
+        
+        // Update sortable
+        obj.dest.sortableScope.modelValue = $scope.$parent.gridItems;
+        // Update grid UI
+        $scope.$parent.displayedItems = [].concat($scope.$parent.gridItems);
+        
+        // Call server to change the order
+        grid.change_order( $scope.$parent.table, $scope.$parent.gridItems, sortable.order_start );
       };
   
   

@@ -31,10 +31,10 @@
 .flexy-grid th.actions .action-remove {display:none;}
 .flexy-grid .flexy-grid-has-selection th.actions .action-remove {display:inline;}
 /* Hidden Columns */
-.flexy-grid th.flexy-grid-field-id, .flexy-grid td.flexy-grid-field-id, .as-sortable-drag td.flexy-grid-field-id,
-.flexy-grid th.flexy-grid-field-uri, .flexy-grid td.flexy-grid-field-uri, .as-sortable-drag td.flexy-grid-field-uri,
-.flexy-grid th.flexy-grid-field-order, .flexy-grid td.flexy-grid-field-order, .as-sortable-drag td.flexy-grid-field-order,
-.flexy-grid th.flexy-grid-field-self_parent, .flexy-grid td.flexy-grid-field-self_parent, .as-sortable-drag td.flexy-grid-field-self_parent,
+.flexy-grid th.flexy-grid-field-id, .flexy-grid td.flexy-grid-field-id, //.as-sortable-drag td.flexy-grid-field-id,
+.flexy-grid th.flexy-grid-field-uri, .flexy-grid td.flexy-grid-field-uri, //.as-sortable-drag td.flexy-grid-field-uri,
+.flexy-grid th.flexy-grid-field-order, .flexy-grid td.flexy-grid-field-order, //.as-sortable-drag td.flexy-grid-field-order,
+.flexy-grid th.flexy-grid-field-self_parent, .flexy-grid td.flexy-grid-field-self_parent, //.as-sortable-drag td.flexy-grid-field-self_parent,
 .flexy-grid td.flexy-grid-field-_info {display:none;}
 /* Column Styling */
 .flexy-grid .flexy-grid-sortable-column {cursor:pointer;}
@@ -75,6 +75,12 @@
 
 
 /* ng-sortable */
+.as-sortable-item, .as-sortable-placeholder, .as-sortable-drag {
+  display: table-row!important;
+}
+.as-sortable-item.hidden {
+  display:none!important;
+}
 .as-sortable-drag {
   overflow:hidden;
   border:1px dotted @brand-primary;
@@ -93,7 +99,3 @@
   padding:(@table-cell-padding - 1);
 }
 .as-sortable-drag span.flexy-grid-unselected {display:none;}
-
-.as-sortable-item, .as-sortable-placeholder {
-  display: table-row;
-}
