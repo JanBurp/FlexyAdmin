@@ -272,6 +272,25 @@ jdb.randomInt = function(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 };
 
+
+/**
+ * jdb.assocArrayItem()
+ * 
+ * Geeft een item van een associatieve array terug
+ * 
+ * @param array de array
+ * @param string key de key waarop gezocht moet worden
+ * @param mixed value waarde van de key waarop gezocht wordt
+ */
+jdb.assocArrayItem = function( array, key, value ) {
+  var item = {};
+  angular.forEach( array, function( row,nr ) {
+    if (row[key]===value) item = row;
+  });
+  return item;
+};
+
+
 /**
  * jdb.firstArrayItem()
  * 

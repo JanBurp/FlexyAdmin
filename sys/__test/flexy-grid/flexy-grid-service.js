@@ -13,7 +13,7 @@
 
 /*jshint -W069 */
 
-flexyAdmin.factory('flexyGridService', ['flexySettingsService','flexyApiService', function(settings,api) {
+flexyAdmin.factory('flexyGridService', ['flexySettingsService','flexyApiService','$translate','flexyAlertService', function(settings,api,$translate,alertService) {
   'use strict';
   
   /**
@@ -195,14 +195,53 @@ flexyAdmin.factory('flexyGridService', ['flexySettingsService','flexyApiService'
   
   
   /**
+   * Bewaar aangepaste data (niet op server, misschien later??)
+   */
+  // flexy_grid_service.save = function(table,items) {
+  //   angular.forEach( items, function(item,key) {
+  //     data[table].grid[item.id] = item;
+  //   });
+  // };
+  
+  
+  /**
+   * Geeft de aangepaste volgorde van de meegegeven items door aan de server
+   */
+  flexy_grid_service.change_order = function( table, items, from ) {
+    var args = { 'table':table, 'id': [], 'from':0 };
+    if (angular.isDefined(from)) args.from = from;
+    angular.forEach( items, function(item,key) {
+      args.id.push( item.id );
+    });
+    
+    // API
+    return api.table_order( args ).then(function(response){
+      var expected = true;
+      var data = response.data;
+      // Check of data hetzelfde is
+      angular.forEach( items, function(item,key) {
+        if ( Number(item.order)!==Number(jdb.assocArrayItem(data,'id',item.id).order) ) {
+          expected = false;
+        }
+      });
+      // Melding
+      $translate(['DIALOGS_ORDER_SUCCESS','DIALOGS_ORDER_ERROR']).then(function (translations) {
+        if (expected) {
+          alertService.add( 'success', '<b>'+translations.DIALOGS_ORDER_SUCCESS+'</b>');
+        }
+        else {
+          alertService.add( 'danger', '<b>'+translations.DIALOGS_ORDER_ERROR+'</b>');
+        }
+      });
+    });
+  };
+  
+  
+  /**
    * Geeft een rij uit een tabel
    */
   flexy_grid_service.row = function( table,id ) {
-    var row = {};
-    angular.forEach( data[table].raw, function(item,key) {
-      if (item['id']===id) row = item;
-    });
-    return row;
+    return jdb.assocArrayItem( data[table].raw, 'id',id);
   };
   
   

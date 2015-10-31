@@ -154,7 +154,6 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
     return flexy_api_service.get('auth/send_new_password',{'email':email});
   };
   
-  
   /**
    * API call voor table
    * 
@@ -162,6 +161,15 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
    */
   flexy_api_service.table = function(args) {
     return flexy_api_service.get('table', args );
+  };
+  
+  /**
+   * API call voor nieuwe volgorde van items in tabel
+   * 
+   * @return Promise
+   */
+  flexy_api_service.table_order = function(args) {
+    return flexy_api_service.post('table_order', args);
   };
 
   /**
