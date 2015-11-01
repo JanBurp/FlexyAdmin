@@ -135,7 +135,9 @@ gulp.task('install', function() {
 
   // Verplaats bootstrap dist bestanden (css,fonts,js)
   gulp.src([
-     bower+'/bootstrap/dist/**/*.min.js',
+     bower+'/bootstrap/dist/js/bootstrap.js',
+    ]).pipe(gulp.dest( assets + '/js' ));
+  gulp.src([
      bower+'/bootstrap/dist/**/glyphicons*',
     ]).pipe(gulp.dest( assets ));
   gulp.src( bower+'/bootstrap/less/*')
@@ -149,25 +151,27 @@ gulp.task('install', function() {
     // Angular
     bower+"/angular/angular.js",
     bower+"/angular-route/angular-route.js",
-    bower+"/angular-bootstrap/ui-bootstrap-tpls.min.js",
-    bower+"/angular-bootstrap-show-errors/src/showErrors.min.js",
+    bower+"/angular-bootstrap/ui-bootstrap.js",
+    bower+"/angular-bootstrap/ui-bootstrap-tpls.js",
+    bower+"/angular-bootstrap-show-errors/src/showErrors.js",
     // Mock
     bower+"/angular-mocks/angular-mocks.js",
     // Angular External Modules
     bower+"/angular-http-auth/src/http-auth-interceptor.js",
     bower+"/angular-toArrayFilter/toArrayFilter.js",
     bower+"/angular-loading-bar/src/loading-bar.js",
-    bower+'/angular-translate/angular-translate.min.js',
+    bower+'/angular-translate/angular-translate.js',
+    bower+'/angular-dialog-service/dist/dialogs.js',
     // grid
-    bower+"/angular-smart-table/dist/smart-table.min.js",
-    bower+"/ng-sortable/dist/ng-sortable.min.js",
+    bower+"/angular-smart-table/dist/smart-table.js",
+    bower+"/ng-sortable/dist/ng-sortable.js",
     // media
     bower+"/angular-file-upload/angular-file-upload.js",
     // form
-    bower+"/angular-sanitize/*.min.js",
+    bower+"/angular-sanitize/angular-sanitize.js",
     bower+"/tv4/tv4.js",
     bower+"/objectpath/lib/ObjectPath.js",
-    bower+"/angular-schema-form/dist/*.min.js",
+    bower+"/angular-schema-form/dist/*.js",
     // jQuery
     bower+"/jquery/dist/jquery.min.js",
     // Froala editor
@@ -195,21 +199,21 @@ gulp.task('install', function() {
     assets+"/js/jquery.min.js",
     assets+"/js/angular.js",
     assets+"/js/angular-route.js",
-    assets+"/js/ui-bootstrap-tpls.min.js",
-    assets+"/js/showErrors.min.js",
+    assets+"/js/ui-bootstrap-tpls.js",
+    assets+"/js/showErrors.js",
     assets+"/js/http-auth-interceptor.js",
     assets+"/js/toArrayFilter.js",
     assets+"/js/loading-bar.js",
-    assets+"/js/angular-translate.min.js",
-    assets+"/js/smart-table.min.js",
-    assets+"/js/dialogs.min.js",
-    assets+"/js/ng-sortable.min.js",
+    assets+"/js/angular-translate.js",
+    assets+"/js/smart-table.js",
+    assets+"/js/dialogs.js",
+    assets+"/js/ng-sortable.js",
     assets+"/js/angular-file-upload.js",
-    assets+"/js/angular-sanitize.min.js",
+    assets+"/js/angular-sanitize.js",
     assets+"/js/tv4.js",
     assets+"/js/ObjectPath.js",
-    assets+"/js/schema-form.min.js",
-    assets+"/js/bootstrap-decorator.min.js",
+    assets+"/js/schema-form.js",
+    assets+"/js/bootstrap-decorator.js",
     assets+"/flexy-form/bootstrap-decorator-froala.js",
     assets+"/js/froala_editor.min.js",
     assets+"/js/angular-froala.js",

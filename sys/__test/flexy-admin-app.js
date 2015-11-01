@@ -79,10 +79,16 @@ flexyAdmin.config( function($routeProvider){
       controller  : '',
       templateUrl : 'flexy-help/help.html',
     })
-    .when('/grid/:table',{
+    // Grid zonder offset
+    .when('/grid/:table',{                      
       controller  : '',
       templateUrl : 'flexy-grid/flexy-grid.html'
     })
+    // // Grid met offset
+    // .when('/grid/:table/:offset',{
+    //   controller  : '',
+    //   templateUrl : 'flexy-grid/flexy-grid.html'
+    // })
     .when('/media/:path',{
       controller  : '',
       templateUrl : 'flexy-media/flexy-media.html'

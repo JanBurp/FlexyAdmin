@@ -519,6 +519,18 @@ Class Table_Model extends CI_Model {
     $grid_set['fields']        = array_values($grid_set['fields']); // reset keys
     $grid_set['order_by']      = $this->settings['order_by'];
     $grid_set['jump_to_today'] = (el('b_jump_to_today',$table_info,TRUE)?true:false);
+    if ($grid_set['jump_to_today']) {
+      // Kan het wel? Is er een veld waarmee het zinvol is?
+      $possible_jump = FALSE;
+      $date_fields = $this->config->item('DATE_fields_pre');
+      foreach ($grid_set['fields'] as $field) {
+        $pre = get_prefix($field);
+        if (in_array($pre,$date_fields)) {
+          $possible_jump = TRUE;
+        }
+      }
+      $grid_set['jump_to_today'] = $possible_jump;
+    }
     $grid_set['pagination']    = (el('b_pagination',$table_info,TRUE)?true:false);
     $many_to_one               = el( array('relations','many_to_one'), $this->settings, array() );
     $with=array('many_to_one'=>array());
@@ -1065,10 +1077,10 @@ Class Table_Model extends CI_Model {
           $this->tm_offset = $page * $this->tm_limit;
           $sql = str_replace( 'LIMIT '.$this->tm_limit, 'LIMIT '.$this->tm_offset.','.$this->tm_limit, $last_full_sql);
           $query = $this->db->query( $sql );
+          $this->query_info['today'] = true;
         }
       }
     }
-    
     // Query Info Complete
     if ($query) {
       $this->query_info['num_rows']   = $query->num_rows();
