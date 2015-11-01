@@ -44,7 +44,7 @@ describe('flexy-grid-service-http', function(){
   it('flexy-grid-service', function() {
     
     // At start, the grid data should be undefined
-    var data = service.get_raw_data();
+    var data = service.get_grid_data('tbl_menu');
     expect( data ).not.toBeDefined();
     
     // Load the menu
@@ -52,7 +52,7 @@ describe('flexy-grid-service-http', function(){
     http.flush(1);
 
     // Get the data data
-    data = service.get_raw_data('tbl_menu');
+    data = service.get_grid_data('tbl_menu');
     expect( data ).toBeDefined();
     //
     // settings in Settings?

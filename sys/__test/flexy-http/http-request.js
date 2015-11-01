@@ -24,6 +24,7 @@ flexyAdmin.config(['flexyConstants','$httpProvider',function(constants,$httpProv
           // Redirect HTML templates, behalve die van ui-boostrap templates
           if (config.url.indexOf('template')===-1) {
             config.url = constants.sys_folder + config.url;
+            config.url = config.url.replace('//','/');
           }
         }
         else {

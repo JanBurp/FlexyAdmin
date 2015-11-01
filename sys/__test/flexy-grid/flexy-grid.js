@@ -18,17 +18,15 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyApiService
   var self=this;
   
   /**
-   * Basic settings to make it work
-   */
-  $scope.base_url = settings.item('base_url');
-  /**
    * The table
    */
   $scope.table = $routeParams.table;
+  
   /**
-   * UI Name (changed when data is present)
+   * UI Name
    */
   $scope.ui_name = '';
+
   /**
    * Table Type
    */
@@ -36,28 +34,31 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyApiService
     is_sortable  : false,
     is_tree      : false
   };
+  
   /**
-   * Info for Pagination (changed when data is present)
+   * Info for Pagination
    */
   $scope.info = {
     num_rows        : 0,
     limit           : 0,
     num_pages       : 0,
-    displayed_pages : 5,
+    offset          : 0,
   };
+  
   /**
-   * Information about the fields (field_info)
+   * Kan er een knop komen om naar vandaag te springen?
+   */
+  $scope.jump_to_today = false;
+  
+  /**
+   * Information about the fields
    */
   $scope.fields = [];
+  
   /**
    * Search term
    */
   $scope.search = '';
-  
-  /**
-   * Copy of tableState
-   */
-  $scope.tableState = {};
   
   /**
    * References of the grid data: https://lorenzofox3.github.io/smart-table-website/#section-intro stSafeSrc attribute
@@ -67,61 +68,79 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyApiService
   $scope.displayedItems  = [];
   
   /**
-   * LOAD FROM SERVER
+   * Last TableState
+   */
+  self.tableState = {};
+  
+  
+  /**
+   * LOAD REQUESTED DATA
    */
   $scope.pipe = function(tableState) {
-    $scope.tableState = tableState;
-    
-    // pagination
-    var offset = tableState.pagination.start;
-    if (offset===0) offset=false; // zodat jump_to_todat werkt
-    var args = {
-      offset  : offset,
-      limit   : settings.item(['screen','pagination'])
-    };
-    // sorting
-    if ( angular.isDefined( tableState.sort.predicate ) ) {
-      args.sort = tableState.sort.predicate;
-      if (tableState.sort.reverse===true) args.sort = '_' + args.sort;
-    }
-    // filter
-    if ( angular.isDefined( tableState.search.predicateObject ) ) {
-      args.filter = tableState.search.predicateObject.$;
-    }
-    
-    // console.log(tableState);
-    // console.log('load args:',args);
-    // console.log( settings.item( ['settings','table', $scope.table] ) );
-    
-    grid.load( $scope.table, args ).then(function(response){
-      // ui_name
+
+    // Bewaar deze tableState
+    self.tableState = tableState;
+
+    // Laad
+    grid.load( $scope.table, tableState ).then(function(response){
+
+      // table ui_name
       $scope.ui_name = settings.item( 'settings','table',$scope.table,'table_info','ui_name' );
-      // table type
+
+      // table type (tree, sortable)
       $scope.type.is_tree = settings.item( 'settings','table',$scope.table,'table_info','tree');
       $scope.type.is_sortable = settings.item( 'settings','table',$scope.table,'table_info','sortable');
-      // info & pagination
+
+      // Pagination
       $scope.info = grid.get_info($scope.table);
       $scope.info.num_pages = Math.ceil($scope.info.total_rows / $scope.info.limit);
       tableState.pagination.start = $scope.info.offset;
       tableState.pagination.numberOfPages = $scope.info.num_pages;
       
-      // data
-      $scope.gridItems = grid.get_grid_data($scope.table);
-      // Copy the references, needed for smart-table to watch for changes in the data
+      // Jump to today
+      $scope.jump_to_today = settings.item( 'settings','table',$scope.table,'grid_set','jump_to_today');
+      
+      // Search
+      $scope.search = '';
+      if ( angular.isDefined( tableState.search.predicateObject )) {
+        $scope.search = tableState.search.predicateObject.$;
+      }
+    
+      // Grid data & references
+      $scope.gridItems = response.data;
       $scope.displayedItems = [].concat($scope.gridItems);
-      // field_info, show only the fields in the gridItems
-      $scope.fields = settings.item('config','field_info',$scope.table);
-      var first_item = jdb.firstArrayItem( $scope.gridItems );
+      
+      // Show only the fields that exists in the gridItems (remove the field info of fields that are not in there)
+      var fields = settings.item('settings','table',$scope.table,'field_info');
+      // Verwijder id,self_parent,uri,order uit fields
+      delete fields['id'];
+      delete fields['self_parent'];
+      delete fields['order'];
+      delete fields['uri'];
+      // Verwijder niet zichtbare velden
+      var first_item = jdb.firstArrayItem( response.data );
       if ( angular.isDefined( first_item )) {
-        angular.forEach( $scope.fields, function(value, field) {
+        angular.forEach( fields, function(info, field) {
           if ( angular.isUndefined( first_item[field] )) {
-            delete $scope.fields[field];
+            delete fields[field];
           }
         });
       }
-
+      $scope.fields = fields;
     });
+    
   };
+  
+  
+  /**
+   * Jump to today
+   */
+  $scope.jump_to_page_with_today = function() {
+    var tableState = self.tableState;
+    tableState.pagination.start = false;
+    $scope.pipe( tableState );
+  };
+  
   
   /**
    * SELECT ALL TOGGLE
@@ -170,7 +189,8 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyApiService
         confirm.result.then(function(btn){
           api.delete( { 'table':table, 'where':selected }).then(function(response){
             if (response.success===true && response.data===true) {
-              // Reload page
+              // Reload page, door eerst de huidige data te verwijderen en dan opnieuw te laden
+              grid.remove( $scope.table );
               $scope.pipe( $scope.tableState );
               // Message
               if (selected.length>1)

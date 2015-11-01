@@ -1,5 +1,5 @@
 <div class="controller" ng-controller="GridController">
-<div class="panel panel-primary flexy-grid {{table}}" st-pipe="pipe" st-delay="200" st-table="displayedItems">
+<div class="panel panel-primary flexy-grid {{table}}" st-pipe="pipe" st-table="displayedItems">
 
   <div class="panel-heading panel-title">
     <!-- Title -->
@@ -67,7 +67,7 @@
             </div>
             <div class="btn-group btn-group-xs as-sortable-handle" as-sortable-item-handle>
               <!-- Order button -->
-              <div class="btn btn-warning action-move"><span class="glyphicon glyphicon-resize-vertical"></span></div>
+              <div class="btn btn-warning action-move" ng-disabled="search"><span class="glyphicon glyphicon-resize-vertical"></span></div>
             </div>
           </td>
 
@@ -86,6 +86,8 @@
   <div class="panel-footer text-primary">
     <!-- Pagination -->
 		<div class="flexy-grid-pagination" st-pagination="" st-template="flexy-grid/flexy-grid-pagination.html" st-items-by-page="info.limit" st-displayed-pages="5"></div>
+    <!--Jump to today -->
+    <div ng-if="jump_to_today" ng-click="jump_to_page_with_today(table)" class="btn btn-default button-jump-to-today" ng-class="{'btn-primary' : info.today}" translate="JUMP_TO_TODAY"></div>
     <!-- Info -->
     <div class="flexy-grid-stats"><span translate="ITEMS_ON_PAGE" translate-values="{rows: info.total_rows, pages: info.num_pages}"></span></div>
   </div>
