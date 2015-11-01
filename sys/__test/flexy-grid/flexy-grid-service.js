@@ -226,7 +226,7 @@ flexyAdmin.factory('flexyGridService', ['flexySettingsService','flexyApiService'
     if ( flexy_grid_service.tabledata_is_present( table, args ) ) {
       return $q.when(data[table]);
     }
-
+    
     // API call
     return api.table( args ).then(function(response){
       // Reset data

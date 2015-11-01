@@ -83,7 +83,7 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyApiService
 
     // Laad
     grid.load( $scope.table, tableState ).then(function(response){
-
+      
       // table ui_name
       $scope.ui_name = settings.item( 'settings','table',$scope.table,'table_info','ui_name' );
 
@@ -123,6 +123,9 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyApiService
         angular.forEach( fields, function(info, field) {
           if ( angular.isUndefined( first_item[field] )) {
             delete fields[field];
+          }
+          else {
+            fields[field].field = field; // name of field
           }
         });
       }
