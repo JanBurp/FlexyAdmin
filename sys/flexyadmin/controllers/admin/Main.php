@@ -38,8 +38,9 @@ class Main extends AdminController {
 		$grid=new grid();
 		foreach($userData as $k=>$d) {
 			$userData[$k]=array(
-											lang("home_date")		=>	str_replace(' ','&nbsp;',strftime("%a %e %B %Y - %R",strtotime($d["tme_login_time"]))),
-											lang("home_changes")=>	str_replace("|",", ",$this->ui->get($d["str_changed_tables"])) );
+				lang("home_date")		=>	str_replace(' ','&nbsp;',strftime("%a %e %B %Y - %R",strtotime($d["tme_login_time"]))),
+				lang("home_changes")=>	str_replace("|",", ",$this->ui->get($d["str_changed_tables"]))
+      );
 		}
 		$grid->set_data($userData,langp("home_last_login",ucfirst($data["username"])));
 		$renderGrid=$grid->render("html","","grid home");
