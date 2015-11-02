@@ -97,8 +97,13 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyApiService
       tableState.pagination.start = $scope.info.offset;
       tableState.pagination.numberOfPages = $scope.info.num_pages;
       
-      // Jump to today
+      // Jump to today, kan alleen als op volgorde van jump_to_today veld
       $scope.jump_to_today = settings.item( 'settings','table',$scope.table,'grid_set','jump_to_today');
+      var order_by = settings.item( 'settings','table',$scope.table,'grid_set','order_by').prefix(' ');
+      if ( angular.isDefined( tableState.sort.predicate ) ) {
+        order_by = tableState.sort.predicate;
+      }
+      if ( order_by!==$scope.jump_to_today ) $scope.jump_to_today = false;
       
       // Search
       $scope.search = '';
