@@ -523,10 +523,11 @@ Class Table_Model extends CI_Model {
       // Kan het wel? Is er een veld waarmee het zinvol is?
       $possible_jump = FALSE;
       $date_fields = $this->config->item('DATE_fields_pre');
-      foreach ($grid_set['fields'] as $field) {
+      $fields = array_reverse($grid_set['fields']);
+      foreach ($fields as $field) {
         $pre = get_prefix($field);
         if (in_array($pre,$date_fields)) {
-          $possible_jump = TRUE;
+          $possible_jump = $field;
         }
       }
       $grid_set['jump_to_today'] = $possible_jump;
@@ -1057,11 +1058,11 @@ Class Table_Model extends CI_Model {
       $this->query_info['total_rows'] = $this->total_rows( true );
       // Jump to today nodig?
       if ($this->query_info['total_rows']>$this->query_info['limit']) {
-        // Is (eerste) order_by een datum/tijd veld
+        // Is (eerste) order_by het jump_to_today veld?
         $order_by = $this->tm_order_by[0];
-        if ( in_array( get_prefix($order_by),$this->config->item('DATE_fields_pre')) ) {
+        $date_field=remove_suffix($order_by,' ');
+        if ( $date_field==$this->tm_jump_to_today ) {
           // Tel aantal items eerder dan vandaag
-          $date_field=remove_suffix($order_by,' ');
           $direction=get_suffix($order_by,' ');
           $last_full_sql = $this->last_query();
           $last_clean_sql = $this->last_clean_query();

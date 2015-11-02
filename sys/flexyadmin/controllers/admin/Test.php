@@ -40,7 +40,7 @@ class Test extends AdminController {
     // $query = $this->table_model->get( 5 );
     // $result = $this->table_model->get_result();
     // $result = $this->table_model->get_grid( 0, FALSE, 'tme_last_changed', 'e' );
-    $result = $this->table_model->get_grid();
+    $result = $this->table_model->get_grid( 20, FALSE, 'tme_last_changed' );
 
 
     // MANY_TO_MANY

@@ -107,7 +107,7 @@ $config['relations'] = NULL;
  * 
  * - fields         - Velden die meegegeven en getoond worden (afhankelijk van veld specifieke instellingen). Als leeg dan is dat hetzelfde als $this->fields
  * - order_by       - Volgorde voor het grid. Als leeg dan is dat hetzelfde als $this->order_by
- * - jump_to_today  - Als het resultaat een datumveld bevat dan begint het resultaat op de pagina waar de datum het dichst de huidige datum benaderd.
+ * - jump_to_today  - FALSE of een datum(tijd) veld waarmee in een grid met pagination naar de pagina gesprongen kan worden met de datum het dichtstbij vandaag.
  * - pagination     - Als true dan wordt het resultaat in pagina's gegeven.
  * - with           - Relaties die mee worden genomen en getoond. Zie $this->with()
  *                    Je kunt een specifiek datumveld instellen of TRUE: dan wordt het eerste datumveld opgezocht (wat extra resources kost)
