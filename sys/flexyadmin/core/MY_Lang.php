@@ -172,10 +172,12 @@ class MY_Lang extends CI_Lang {
 	 *
 	 * @param	  string	$line	the language line
 	 * @param   bool $logging default=TRUE
-	 * @param  bool $give_key_on_false_result default=TRUE
-	 * @return	string
+	 * @param   bool $give_key_on_false_result default=TRUE
+	 * @return	string Leeg als $line=''
 	 */
 	public function line($line='', $logging=TRUE, $give_key_on_false_result=TRUE) {
+    if ($line==='') return '';
+
     $CI=&get_instance();
     $value=FALSE;
     if (empty($this->idiom) and isset($CI->site['language'])) {
