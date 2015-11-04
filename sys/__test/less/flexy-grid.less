@@ -43,10 +43,9 @@
 .flexy-grid th.flexy-grid-field-str_title, .flexy-grid td.flexy-grid-field-str_title {max-width:none;text-overflow:inherit;}
 .flexy-grid th.flexy-grid-field-type-txt, .flexy-grid td.flexy-grid-field-type-txt {max-width:350px;}
 .flexy-grid th.flexy-grid-field-type-media, .flexy-grid td.flexy-grid-field-type-media,
-.flexy-grid th.flexy-grid-field-type-rgb, .flexy-grid td.flexy-grid-field-type-rgb {text-align:center;width:52px;max-width:52px; }
 .flexy-grid th.flexy-grid-field-type-medias, .flexy-grid td.flexy-grid-field-type-medias {min-width:120px;max-width:600px;}
+.flexy-grid th.flexy-grid-field-type-rgb, .flexy-grid td.flexy-grid-field-type-rgb {text-align:center;max-width:none;text-overflow:none; }
 .flexy-grid th.flexy-grid-field-type-tme, .flexy-grid td.flexy-grid-field-type-tme {max-width:none; width:130px;}
-.flexy-grid th.flexy-grid-field-type-rgb, .flexy-grid td.flexy-grid-field-type-rgb {min-width:25px;max-width:50px;}
 /* ROW Actions */
 .flexy-grid .table-sortable tr .actions .as-sortable-handle {display:none}
 /* ROW SELECTION */
@@ -55,6 +54,32 @@
 .flexy-grid tr .action-select span.flexy-grid-unselected {display:inline;}
 .flexy-grid tr.st-selected .action-select span.flexy-grid-unselected {display:none;}
 .flexy-grid tr.st-selected .action-select span.flexy-grid-selected {display:inline;}
+
+
+/* FIELD TYPES */
+.flexy-grid tbody td span.field-type-rgb {
+  display:block;
+  width:100%;
+  height:24px;
+  padding:1px 5px;
+  border-radius:@border-radius-base;
+  text-align:center;
+}
+.flexy-grid tbody td div.thumb {
+  float:left;
+  display:block;
+  height:24px;
+  width:auto;
+  margin-right:@border-radius-base;
+  border-radius:@border-radius-base;
+  overflow:hidden;
+}
+.flexy-grid tbody td div.thumb img {
+  display:block;
+  width:auto;
+  height:100%;
+}
+
 
 /* tree, branches & nodes */
 .flexy-grid tbody tr.flexy-tree-child td.flexy-grid-field-str_title {background-image:url('../img/tree_lastnode.gif');background-repeat:no-repeat;}

@@ -29,6 +29,7 @@ $config['fields']           = NULL;
  * - validation         - array met validation rules
  * - options            - array met opties
  * - multiple_options   - TRUE dan zijn er meer dan één van bovenstaande options mogelijk
+ * - path               - als het een media veld is dan komt hier het assets pad
  */
 $config['field_info']       = NULL;
 

@@ -1,0 +1,17 @@
+<ng-switch on="field_type">
+
+  <!-- BOOL -->
+  <span ng-switch-when="bool" class="glyphicon" ng-class="{'glyphicon-ok text-success':value==1, 'glyphicon-minus text-danger':value!=1}"></span>
+  
+  <!-- URL -->
+  <a ng-switch-when="url" href="{{value}}" target="_blank">{{value}}</a>
+  
+  <!-- COLOR -->
+  <span ng-switch-when="rgb" class="field-type-rgb" style="background-color:{{value}};color:{{inverse_color}}">{{value}}</span>
+  
+  <!-- MEDIA -->
+  <flexy-field-thumb ng-switch-when="media" path="{{path}}" file="{{value}}"></flexy-field-thumb>
+  <flexy-field-thumb ng-switch-when="medias" path="{{path}}" file="{{value}}"></flexy-field-thumb>
+  
+  <span ng-switch-default>{{value}}</span>
+</ng-switch>
