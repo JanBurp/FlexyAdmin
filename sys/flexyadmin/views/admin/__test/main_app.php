@@ -124,12 +124,12 @@
 <script src="sys/__test/flexy-menu/flexy-menu-controller.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-menu/flexy-menu-directive.js" type="text/javascript" charset="utf-8"></script>
 
-<script src="sys/__test/flexy-grid/flexy-sortable.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/flexy-grid/flexy-grid-service.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/flexy-grid/flexy-grid-controller.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/flexy-grid/flexy-grid-directive.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/flexy-grid/flexy-field.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/flexy-grid/flexy-field-thumb.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/flexy-table/flexy-sortable.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/flexy-table/flexy-table-service.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/flexy-table/flexy-table-controller.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/flexy-table/flexy-table.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/flexy-table/flexy-field.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/flexy-table/flexy-field-thumb.js" type="text/javascript" charset="utf-8"></script>
 
 <script src="sys/__test/flexy-media/flexy-media.js" type="text/javascript" charset="utf-8"></script>
 
