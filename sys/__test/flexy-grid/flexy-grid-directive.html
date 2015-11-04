@@ -73,7 +73,7 @@
 
           <!-- ROW Fields -->
           <td ng-repeat="key in orderedKeys(row)" class="flexy-grid-field-type-{{fields[key].type}} flexy-grid-field-{{key}}">
-            {{row[key]}}
+            <flexy-field table="{{table}}" data-id="{{row.id}}" field="{{key}}" value="{{row[key]}}"></flexy-field>
           </td>
 
         </tr>

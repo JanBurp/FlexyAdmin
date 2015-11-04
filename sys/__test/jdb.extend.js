@@ -178,6 +178,7 @@ String.method('prefix', function(char) {
   return this.substr(0, this.indexOf(char)) ;
 });
 
+
 /**
  * String.suffix([String char="_"])
  * 
@@ -200,10 +201,10 @@ String.method('suffix', function(char) {
  * Voor de conversie van paths in een URL
  * @return String
  */
-// String.method('decodePath', function() {
-//   'use strict';
-//   return this.replace(/\//g,"___");
-// });
+String.method('decodePath', function() {
+  'use strict';
+  return this.replace(/\//g,"___");
+});
 
 
 /**
@@ -213,10 +214,10 @@ String.method('suffix', function(char) {
  * Voor de conversie van paths in een URL
  * @return String
  */
-// String.method('encodePath', function() {
-//   'use strict';
-//   return this.replace(/___/g,"/");
-// });
+String.method('encodePath', function() {
+  'use strict';
+  return this.replace(/___/g,"/");
+});
 
 
 /**
@@ -271,6 +272,17 @@ jdb.randomString = function(len,chars) {
 jdb.randomInt = function(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 };
+
+
+/**
+ * Geeft complement van kleur (string)
+ */
+jdb.colorComplement = function(color) {
+  color = '0x'+color.replace('#','');
+  color = parseInt(color,16);
+  var complement = '#'+(0xFFFFFF ^ color).toString(16);
+  return complement;
+}
 
 
 /**

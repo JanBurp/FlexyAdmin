@@ -208,11 +208,11 @@ flexyAdmin.directive('flexyGrid', ['flexySettingsService','flexyApiService','fle
               }
               else {
                 fields[field].field = field; // Voeg naam van het veld toe
+                fields[field].type = field.prefix(); // Voeg type van het veld toe
               }
             });
           }
           $scope.fields = fields;
-
         });
         
         

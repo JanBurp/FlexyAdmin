@@ -324,6 +324,13 @@ Class Table_Model extends CI_Model {
         $settings_fields_info[$field]['multiple_options'] = el('b_multi_options', $field_info, FALSE)?true:FALSE;
       }
       $settings_fields_info[$field]['validation'] = explode('|',$this->form_validation->get_validations( $table, $field ));
+      // media path?
+      if (in_array(get_prefix($field),array('media','medias'))) {
+        // find in media_info
+        $full_field=$table.'.'.$field;
+        $media_info = $this->db->like('fields_media_fields',$full_field)->get_row('cfg_media_info');
+        $settings_fields_info[$field]['path'] = $media_info['path'];
+      }
     }
     return $settings_fields_info;
   }
