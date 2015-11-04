@@ -1,9 +1,9 @@
 /*jshint -W083 */
 
 /**
- * flexy-grid-service test
+ * flexy-table-service test
  */
-describe('flexy-grid-service-http', function(){
+describe('flexy-table-service-http', function(){
   'use strict';
   
   beforeEach(module('flexyAdmin'));
@@ -13,8 +13,8 @@ describe('flexy-grid-service-http', function(){
   // count all $http calls
   var callCount = 0;
   
-  beforeEach(inject(function(flexyGridService,flexySettingsService, flexyApiMock, $httpBackend ) {
-    service  = flexyGridService;
+  beforeEach(inject(function(flexyTableService,flexySettingsService, flexyApiMock, $httpBackend ) {
+    service  = flexyTableService;
     settings = flexySettingsService;
     mock     = flexyApiMock;
     http     = $httpBackend;
@@ -30,7 +30,7 @@ describe('flexy-grid-service-http', function(){
   /**
    * Only test when mocking is on!
    */
-  it('flexy-grid-service: only test if mocking is on!', function() {
+  it('flexy-table-service: only test if mocking is on!', function() {
     expect( settings.has_item('use_mock') ).toEqual(true);
     expect( settings.item( 'use_mock' ) ).toEqual(true);
   });
@@ -41,7 +41,7 @@ describe('flexy-grid-service-http', function(){
   /**
    * Test get_admin_nav
    */
-  it('flexy-grid-service', function() {
+  it('flexy-table-service', function() {
     
     // At start, the grid data should be undefined
     var data = service.get_grid_data('tbl_menu');

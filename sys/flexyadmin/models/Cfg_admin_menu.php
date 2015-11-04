@@ -218,7 +218,7 @@ class cfg_admin_menu extends crud_ {
       if (!in_array($table,$excluded) and $this->user->has_rights($table)) {
         $menu[]=array(
           'name'    => $this->ui->get($table),
-          'uri'     => 'grid/'.$table,
+          'uri'     => 'table/'.$table,
           'type'    => $this->types[get_prefix($table)],
           'args'    => array('table' => $table),
           'help'    => $this->ui->get_help($table) 

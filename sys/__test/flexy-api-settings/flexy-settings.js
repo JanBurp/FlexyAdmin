@@ -35,6 +35,11 @@ flexyAdmin.constant('flexyConstants', {
    * Folder from root
    */
   sys_folder    : 'sys/__test/',
+  
+  /**
+   * Assets folder
+   */
+  site_assets   : 'site/assets/',
 
   /**
    * A prefix that will be added to all logging messages
@@ -122,6 +127,7 @@ flexyAdmin.factory( 'flexySettings', ['flexyConstants', function(constants) {
     base_url      : constants.base_url,
     api_base_url  : constants.api_base_url,
     sys_folder    : constants.sys_folder,
+    site_assets   : constants.site_assets,
     log_prefix    : constants.log_prefix,
 
     /**

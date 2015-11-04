@@ -47,7 +47,7 @@ var files = {
     // assets+"/less/bootstrap/bootstrap.less",
     // assets+"/less/variables.less",
     // assets+"/less/flexy-main.less",
-    // assets+"/less/flexy-grid.less",
+    // assets+"/less/flexy-table.less",
     assets+'/less/flexyadmin.less',
   ],
   'css'     : assets+'/css',
