@@ -13,8 +13,10 @@
 
 /*jshint -W069 */
 
-flexyAdmin.factory('flexyGridService', ['flexySettingsService','flexyApiService','$q','$translate','flexyAlertService', function(settings,api,$q,$translate,alertService) {
+flexyAdmin.factory('flexyGridService', ['flexySettingsService','flexyApiService','$q','$translate','dialogs','flexyAlertService', function(settings,api,$q,$translate,dialogs,alertService) {
   'use strict';
+  
+  var self = this;
   
   /**
    * Default args
@@ -34,7 +36,7 @@ flexyAdmin.factory('flexyGridService', ['flexySettingsService','flexyApiService'
    *  'tbl_menu : {
    *     args       : {},    // argumenten waarmee de table is opgevraagd bij de server
    *     info       : {},    // info (oa pagination data)
-   *     date       : {}     // data klaar voor het grid
+   *     data       : {}     // data klaar voor het grid
    *  }
    * ...
    * ]
@@ -198,7 +200,6 @@ flexyAdmin.factory('flexyGridService', ['flexySettingsService','flexyApiService'
    * @return promise met als response data[table]
    */
   flexy_grid_service.load = function( table, tableState ) {
-    
     /**
      * Maak args klaar aan de hand van gegeven tableState
      * - pagination
@@ -224,7 +225,7 @@ flexyAdmin.factory('flexyGridService', ['flexySettingsService','flexyApiService'
      * Als er al data van deze table bestaat, dan is een API call niet nodig, geef de promise met de data terug
      */
     if ( flexy_grid_service.tabledata_is_present( table, args ) ) {
-      return $q.when(data[table]);
+      return $q.resolve(data[table]);
     }
     
     // API call
@@ -235,21 +236,72 @@ flexyAdmin.factory('flexyGridService', ['flexySettingsService','flexyApiService'
       var saved_args = args;
       delete(saved_args.settings);
       data[table] = {
-        args  : saved_args,
-        info  : calculate_pagination(response.info,args),
-        data  : flexy_grid_service.add_tree_info( response.data, settings.item('settings','table', args.table, 'table_info', 'tree' ) )
+        args       : saved_args,
+        info       : calculate_pagination(response.info,args),
+        data       : flexy_grid_service.add_tree_info( response.data, settings.item('settings','table', args.table, 'table_info', 'tree' ) )
       };
       // Geef data terug in de promise
-      return $q.when(data[table]);
+      return $q.resolve(data[table]);
     });
   };
   
 
   /**
-   * Verwijder data
+   * Verwijder data uit table
    */
   flexy_grid_service.remove = function(table) {
     delete(data[table]);
+  };
+  
+  
+  /**
+   * DELETE (selected) ITEM(s), maar eerst CONFIRM
+   */
+  flexy_grid_service.delete = function( table, selected ) {
+    // Alleen verder als er minimaal een item moet worden verwijderd
+    if (selected.length<=0) return $q.resolve(false);
+    // prepare confirm dialog
+    return $translate(['DIALOGS_SURE','DIALOGS_DELETE_ITEM','DIALOGS_DELETED','DIALOGS_DELETE_SELECTED','DIALOGS_DELETED_SELECTED','DIALOGS_DELETE_ERROR'],{num:selected.length}).then(function (translations) {
+      var title   = translations.DIALOGS_SURE;
+      var abstract = '';
+      var message = '<b>';
+      if (selected.length>1) {
+        message+= translations.DIALOGS_DELETE_SELECTED + '</b>';
+      }
+      else {
+        abstract = flexy_grid_service.get_abstract( table, selected[0] );
+        message+= translations.DIALOGS_DELETE_ITEM + '</b><br>' + abstract;
+      }
+      // Confirm dialog
+      return dialogs.confirm( title, message, {'size':'sm'} ).result.then(function(btn){
+        // OK: dus delete
+        api.delete( { 'table':table, 'where':selected }).then( function(response) {
+          if (response.success===true && response.data===true) {
+            // Message
+            if (selected.length>1) {
+              alertService.add( 'success', selected.length+' <b>'+translations.DIALOGS_DELETED_SELECTED+'</b>');
+            }
+            else {
+              alertService.add( 'success', abstract + ' <b>'+translations.DIALOGS_DELETED+'</b>');
+            }
+            return $q.resolve(true);
+          }
+          else {
+            // FOUT
+            alertService.add( 'warning', ' <b>'+translations.DIALOGS_DELETE_ERROR+'</b>');
+            return $q.resolve(false);
+          }
+        },
+        function(response){
+          // FOUT
+          alertService.add( 'warning', ' <b>'+translations.DIALOGS_DELETE_ERROR+'</b>');
+          return $q.resolve(false);
+        });
+      },function(btn){
+        // CANCEL
+        return $q.resolve(false);
+      });
+    });
   };
   
   
@@ -291,7 +343,10 @@ flexyAdmin.factory('flexyGridService', ['flexySettingsService','flexyApiService'
    * Geeft een rij uit een table
    */
   flexy_grid_service.row = function( table,id ) {
-    return jdb.assocArrayItem( data[table].data,'id',id );
+    if ( angular.isDefined(data) && angular.isDefined(data[table]) && angular.isDefined(data[table].data) ) {
+      return jdb.assocArrayItem( data[table].data,'id',id );
+    }
+    return undefined;
   };
   
   

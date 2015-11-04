@@ -13,7 +13,7 @@
 
 /*jshint -W069 */
 
-flexyAdmin.controller('GridController', ['flexySettingsService','flexyApiService','flexyGridService','$scope','$routeParams','$translate','dialogs','flexyAlertService', function(settings,api,grid,$scope,$routeParams,$translate,dialogs,alertService) {
+flexyAdmin.controller('GridController', ['flexySettingsService','flexyApiService','flexyGridService','$scope','$routeParams', function(settings,api,grid,$scope,$routeParams) {
   'use strict';
   var self=this;
   
@@ -163,10 +163,9 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyApiService
   
   
   /**
-   * DELETE (selected) ITEM(s), maar eerst CONFIRM
+   * DELETE (selected) ITEM(s)
    */
   $scope.delete = function( table, id ) {
-    var abstract = '';
     var selected = [];
     // één item, of selected?
     if (angular.isDefined(id)) {
@@ -179,39 +178,15 @@ flexyAdmin.controller('GridController', ['flexySettingsService','flexyApiService
         }
       });
     }
-    // Alleen verder als er minimaal één item wordt gedelete
-    if (selected.length>0) {
-      $translate(['DIALOGS_SURE','DIALOGS_DELETE_ITEM','DIALOGS_DELETED','DIALOGS_DELETE_SELECTED','DIALOGS_DELETED_SELECTED','DIALOGS_DELETE_ERROR'],{num:selected.length}).then(function (translations) {
-        // prepare conform dialog
-        var title   = translations.DIALOGS_SURE;
-        var message = '<b>';
-        if (selected.length>1) {
-          message+= translations.DIALOGS_DELETE_SELECTED + '</b>';
-        }
-        else {
-          abstract = grid.get_abstract( table, selected[0] );
-          message+= translations.DIALOGS_DELETE_ITEM + '</b><br>' + abstract;
-        }
-        // Show confirm dialog
-        var confirm = dialogs.confirm( title, message, {'size':'sm'} );
-        confirm.result.then(function(btn){
-          api.delete( { 'table':table, 'where':selected }).then(function(response){
-            if (response.success===true && response.data===true) {
-              // Reload page, door eerst de huidige data te verwijderen en dan opnieuw te laden
-              grid.remove( $scope.table );
-              $scope.pipe( $scope.tableState );
-              // Message
-              if (selected.length>1)
-                alertService.add( 'success', selected.length+' <b>'+translations.DIALOGS_DELETED_SELECTED+'</b>');
-              else
-                alertService.add( 'success', abstract + ' <b>'+translations.DIALOGS_DELETED+'</b>');
-            }
-          });
-    		},function(btn){
-          // alertService.add( 'danger', '<b>'+translations.DIALOGS_DELETE_ERROR+'</b>');
-    		});
-      });
-    }
+
+    grid.delete( table, selected ).then(function(response){
+      if (response!==false) {
+        var tableState = self.tableState;
+        // Reload huidige pagina in tabel (eerst huidige verwijderen)
+        grid.remove( $scope.table );
+        $scope.pipe( tableState );
+      }
+    });
   };
   
 

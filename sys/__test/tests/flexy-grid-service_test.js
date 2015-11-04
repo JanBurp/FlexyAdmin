@@ -77,9 +77,9 @@ describe('flexy-grid-service-http', function(){
     // expect( grid[5]._info ).toEqual( {level: 0, is_child: false, has_children: false} );
     // expect( grid[6]._info ).toEqual( {level: 0, is_child: false, has_children: false} );
     
-    angular.forEach( grid, function(item,id) {
-      console.log('ITEM',item.id,item.self_parent,item._info,item.uri);
-    });
+    // angular.forEach( grid, function(item,id) {
+    //   console.log('ITEM',item.id,item.self_parent,item._info,item.uri);
+    // });
     
   });
 
