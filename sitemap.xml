@@ -20,12 +20,6 @@
 		<content>.</content>
 	</url>
 	<url>
-		<loc>http://www.flexyadmin.com/een_pagina/subpagina_met_module_links</loc>
-		<priority>0.64</priority>
-		<title>Subpagina</title>
-		<content>Een subpagina.</content>
-	</url>
-	<url>
 		<loc>http://www.flexyadmin.com/contact</loc>
 		<priority>0.80</priority>
 		<title>Contact</title>
