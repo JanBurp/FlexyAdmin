@@ -250,7 +250,7 @@ class MY_Email extends CI_Email {
    */
   public function prepare_body($body) {
     // good paths to local images
-		$body=str_replace('src="','src="'.base_url(),$body);
+		$body=preg_replace('/src=\"(?!https?:\/\/).*?/','src="'.base_url(),$body);
     // good internal links
 		$body=str_replace('href="mailto:','##MAIL##',$body);
 		$body=str_replace('href="undefined/','href="'.base_url(),$body);
