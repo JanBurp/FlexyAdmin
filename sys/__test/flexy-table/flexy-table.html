@@ -46,7 +46,7 @@
       <tbody as-sortable="sortableOptions" ng-model="gridItems">
         
         <!-- ROW -->
-        <tr ng-repeat="row in displayedItems"
+        <tr ng-repeat="row in displayedItems track by $index"
             st-select-row="row" st-select-mode="multiple"
             ng-class="{'flexy-tree-has_children':row._info.has_children, 'flexy-tree-child':row._info.is_child, 'flexy-table-selected':row._info.selected}"
             tree-level="{{row._info.level}}"
@@ -61,13 +61,13 @@
             </div>
             <div class="btn-group btn-group-xs">
               <!-- Select button -->
-              <div class="btn btn-info action-select"><span class="flexy-table-unselected glyphicon glyphicon-unchecked"></span><span class="flexy-table-selected glyphicon glyphicon-check"></span></div>
+              <div ng-click="select($index)" class="btn btn-info action-select"><span class="flexy-table-unselected glyphicon glyphicon-unchecked"></span><span class="flexy-table-selected glyphicon glyphicon-check"></span></div>
               <!-- Delete button -->
               <div ng-click="delete(table,row.id)" class="btn btn-danger action-remove"><span class="glyphicon glyphicon-remove"></span></div>
             </div>
             <div class="btn-group btn-group-xs as-sortable-handle" as-sortable-item-handle>
               <!-- Order button -->
-              <div class="btn btn-warning action-move" ng-disabled="search"><span class="glyphicon glyphicon-resize-vertical"></span></div>
+              <div class="btn btn-warning action-move" ng-disabled="search"><span class="glyphicon glyphicon-menu-hamburger"></span></div>
             </div>
           </td>
 

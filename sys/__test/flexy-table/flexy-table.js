@@ -201,6 +201,16 @@ flexyAdmin.directive('flexyTable', ['flexySettingsService','flexyApiService','fl
        * LINK METHODS
        */
       
+
+      // /**
+      //  * SELECT ROW TOGGLE
+      //  */
+      // $scope.select = function(index) {
+      //   var selected = $scope.gridItems[index].isSelected;
+      //   $scope.gridItems[index].isSelected = !$scope.gridItems[index].isSelected;
+      // };
+
+
       /**
        * SELECT ALL TOGGLE
        */
@@ -211,6 +221,8 @@ flexyAdmin.directive('flexyTable', ['flexySettingsService','flexyApiService','fl
           $scope.gridItems[key].isSelected=selected;
         });
       };
+      
+      
       
       /**
        * DELETE (selected) ITEM(s)
