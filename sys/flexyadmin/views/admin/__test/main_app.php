@@ -131,7 +131,7 @@
 <script src="sys/__test/flexy-table/flexy-field.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-table/flexy-field-thumb.js" type="text/javascript" charset="utf-8"></script>
 
-<script src="sys/__test/flexy-media/flexy-media-controller.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/flexy-media/flexy-media.js" type="text/javascript" charset="utf-8"></script>
 
 <script src="sys/__test/flexy-form/flexy-form.js" type="text/javascript" charset="utf-8"></script>
 
