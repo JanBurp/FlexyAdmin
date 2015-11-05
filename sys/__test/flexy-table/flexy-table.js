@@ -15,6 +15,118 @@
 
 flexyAdmin.directive('flexyTable', ['flexySettingsService','flexyApiService','flexyTableService','$routeParams', function(settings,api,flexyTable,$routeParams) {
   'use strict';
+
+  /**
+   * Controller function for loading table data
+   */
+  var loadTable = function($scope,tableState) {
+    flexyTable.load( $scope.table, tableState ).then(function(response){
+      // table ui_name
+      $scope.ui_name = settings.item( 'settings','table',$scope.table,'table_info','ui_name' );
+      // table type (tree, sortable)
+      $scope.type.is_tree = settings.item( 'settings','table',$scope.table,'table_info','tree');
+      $scope.type.is_sortable = settings.item( 'settings','table',$scope.table,'table_info','sortable');
+      // Pagination
+      $scope.info = flexyTable.get_info($scope.table);
+      $scope.info.num_pages = Math.ceil($scope.info.total_rows / $scope.info.limit);
+      tableState.pagination.start = $scope.info.offset;
+      tableState.pagination.numberOfPages = $scope.info.num_pages;
+  
+      // Jump to today, kan alleen als op volgorde van jump_to_today veld
+      $scope.jump_to_today = settings.item( 'settings','table',$scope.table,'grid_set','jump_to_today');
+      var order_by = settings.item( 'settings','table',$scope.table,'grid_set','order_by').prefix(' ');
+      if ( angular.isDefined( tableState.sort.predicate ) ) {
+        order_by = tableState.sort.predicate;
+      }
+      if ( order_by!==$scope.jump_to_today ) $scope.jump_to_today = false;
+  
+      // Search
+      $scope.search = '';
+      if ( angular.isDefined( tableState.search.predicateObject )) {
+        $scope.search = tableState.search.predicateObject.$;
+      }
+
+      // Grid data & references
+      $scope.gridItems = response.data;
+      $scope.displayedItems = [].concat($scope.gridItems);
+  
+      // Show only the fields that exists in the gridItems (remove the field info of fields that are not in there)
+      var fields = settings.item('settings','table',$scope.table,'field_info');
+      // Verwijder enkele standaard velden
+      delete fields['id'];
+      delete fields['self_parent'];
+      delete fields['order'];
+      delete fields['uri'];
+      // Verwijder niet zichtbare velden
+      var first_item = jdb.firstArrayItem( response.data );
+      if ( angular.isDefined( first_item )) {
+        angular.forEach( fields, function(info, field) {
+          if ( angular.isUndefined( first_item[field] )) {
+            delete fields[field];
+          }
+          else {
+            fields[field].field = field; // Voeg naam van het veld toe
+            fields[field].type = field.prefix(); // Voeg type van het veld toe
+          }
+        });
+      }
+      $scope.fields = fields;
+    });
+  };
+  
+  /**
+   * Controller function for loading media data
+   */
+  var loadMedia = function($scope,tableState) {
+    flexyTable.load( $scope.table, tableState ).then(function(response){
+      // table ui_name
+      $scope.ui_name = settings.item( 'settings','table',$scope.table,'table_info','ui_name' );
+      // table type (tree, sortable)
+      // $scope.type.is_tree = settings.item( 'settings','table',$scope.table,'table_info','tree');
+      // $scope.type.is_sortable = settings.item( 'settings','table',$scope.table,'table_info','sortable');
+      // // Pagination
+      // $scope.info = flexyTable.get_info($scope.table);
+      // $scope.info.num_pages = Math.ceil($scope.info.total_rows / $scope.info.limit);
+      // tableState.pagination.start = $scope.info.offset;
+      // tableState.pagination.numberOfPages = $scope.info.num_pages;
+  
+      // Search
+      // $scope.search = '';
+      // if ( angular.isDefined( tableState.search.predicateObject )) {
+      //   $scope.search = tableState.search.predicateObject.$;
+      // }
+
+      // Grid data & references
+      // $scope.gridItems = response.data;
+      // $scope.displayedItems = [].concat($scope.gridItems);
+  
+      // Show only the fields that exists in the gridItems (remove the field info of fields that are not in there)
+      // var fields = settings.item('settings','table',$scope.table,'field_info');
+      // // Verwijder enkele standaard velden
+      // delete fields['id'];
+      // delete fields['self_parent'];
+      // delete fields['order'];
+      // delete fields['uri'];
+      // // Verwijder niet zichtbare velden
+      // var first_item = jdb.firstArrayItem( response.data );
+      // if ( angular.isDefined( first_item )) {
+      //   angular.forEach( fields, function(info, field) {
+      //     if ( angular.isUndefined( first_item[field] )) {
+      //       delete fields[field];
+      //     }
+      //     else {
+      //       fields[field].field = field; // Voeg naam van het veld toe
+      //       fields[field].type = field.prefix(); // Voeg type van het veld toe
+      //     }
+      //   });
+      // }
+      // $scope.fields = fields;
+    });
+  };
+  
+  
+  
+  
   
   return {
     restrict:     'E',
@@ -28,10 +140,11 @@ flexyAdmin.directive('flexyTable', ['flexySettingsService','flexyApiService','fl
     link: function($scope, element, attrs) {
 
       /**
-       * The table
+       * The table, or path
        */
       $scope.table = attrs.table;
-
+      $scope.path  = attrs.path;
+      
       /**
        * UI Name
        */
@@ -41,10 +154,12 @@ flexyAdmin.directive('flexyTable', ['flexySettingsService','flexyApiService','fl
        * Table Type
        */
       $scope.type = {
+        is_media     : angular.isDefined($scope.path),
         is_sortable  : false,
         is_tree      : false
       };
-  
+
+      
       /**
        * Info for Pagination
        */
@@ -161,60 +276,12 @@ flexyAdmin.directive('flexyTable', ['flexySettingsService','flexyApiService','fl
         $scope.tableState = tableState;
 
         // Laad data
-        flexyTable.load( $scope.table, tableState ).then(function(response){
-
-          // table ui_name
-          $scope.ui_name = settings.item( 'settings','table',$scope.table,'table_info','ui_name' );
-          // table type (tree, sortable)
-          $scope.type.is_tree = settings.item( 'settings','table',$scope.table,'table_info','tree');
-          $scope.type.is_sortable = settings.item( 'settings','table',$scope.table,'table_info','sortable');
-          // Pagination
-          $scope.info = flexyTable.get_info($scope.table);
-          $scope.info.num_pages = Math.ceil($scope.info.total_rows / $scope.info.limit);
-          tableState.pagination.start = $scope.info.offset;
-          tableState.pagination.numberOfPages = $scope.info.num_pages;
-      
-          // Jump to today, kan alleen als op volgorde van jump_to_today veld
-          $scope.jump_to_today = settings.item( 'settings','table',$scope.table,'grid_set','jump_to_today');
-          var order_by = settings.item( 'settings','table',$scope.table,'grid_set','order_by').prefix(' ');
-          if ( angular.isDefined( tableState.sort.predicate ) ) {
-            order_by = tableState.sort.predicate;
-          }
-          if ( order_by!==$scope.jump_to_today ) $scope.jump_to_today = false;
-      
-          // Search
-          $scope.search = '';
-          if ( angular.isDefined( tableState.search.predicateObject )) {
-            $scope.search = tableState.search.predicateObject.$;
-          }
-    
-          // Grid data & references
-          $scope.gridItems = response.data;
-          $scope.displayedItems = [].concat($scope.gridItems);
-      
-          // Show only the fields that exists in the gridItems (remove the field info of fields that are not in there)
-          var fields = settings.item('settings','table',$scope.table,'field_info');
-          // Verwijder enkele standaard velden
-          delete fields['id'];
-          delete fields['self_parent'];
-          delete fields['order'];
-          delete fields['uri'];
-          // Verwijder niet zichtbare velden
-          var first_item = jdb.firstArrayItem( response.data );
-          if ( angular.isDefined( first_item )) {
-            angular.forEach( fields, function(info, field) {
-              if ( angular.isUndefined( first_item[field] )) {
-                delete fields[field];
-              }
-              else {
-                fields[field].field = field; // Voeg naam van het veld toe
-                fields[field].type = field.prefix(); // Voeg type van het veld toe
-              }
-            });
-          }
-          $scope.fields = fields;
-        });
-        
+        if ($scope.type.is_media) {
+          loadMedia( $scope,tableState );
+        }
+        else {
+          loadTable( $scope,tableState );
+        }
         
       };
       
