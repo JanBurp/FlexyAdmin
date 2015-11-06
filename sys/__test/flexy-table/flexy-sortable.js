@@ -17,7 +17,7 @@
  * - options
  * - callbacks
  */
-flexyAdmin.directive('asSortable', [ 'flexyTableService', function (flexyTable) {
+flexyAdmin.directive('asSortable', [ 'flexyTableService','$window','$document', function (flexyTable) {
   return {
     restrict: 'A',
     priority: 500,
@@ -27,8 +27,10 @@ flexyAdmin.directive('asSortable', [ 'flexyTableService', function (flexyTable) 
        * Here the Options & Callbacks are set
        */
       $scope.sortableOptions = {
-        containment:    '.flexy-table tbody',
+        // containment:    '.flexy-table tbody',
+        containment:    '.flexy-table',
         dragStart :     function(obj) { sortable.dragStart(obj); },
+        dragMove :      function(obj) { sortable.dragMove(obj); },
         orderChanged :  function(obj) { sortable.orderChanged(obj); },
         dragEnd:        function(obj) { sortable.dragEnd(obj); },
       };
@@ -40,7 +42,6 @@ flexyAdmin.directive('asSortable', [ 'flexyTableService', function (flexyTable) 
         order_start     : 0,       // order value of first item (for calculating new order fields)
         oldItems        : [],      // Items before moving
         draggedChildren : [],      // The children that are dragged with the parent
-        table           : null,    // Table element
       };
 
       /**
@@ -57,8 +58,7 @@ flexyAdmin.directive('asSortable', [ 'flexyTableService', function (flexyTable) 
         sortable.oldItems = obj.source.sortableScope.modelValue.slice();
         // Re(set) draggedChildren
         sortable.draggedChildren=[];
-        // Set current table element
-        sortable.table = angular.element(document.querySelector('.flexy-table'+$scope.$parent.table+' table'));
+        
         // Is table a tree and row has children?
         if ($scope.$parent.type.is_tree && obj.source.itemScope.row._info.has_children) {
           // Find the children
@@ -69,6 +69,26 @@ flexyAdmin.directive('asSortable', [ 'flexyTableService', function (flexyTable) 
         // Keep styling of dragged item intact
         sortable.style_drag_item(obj);
       };
+      
+      
+      /**
+       * Test of buiten de drag ruimte: misschien moet het item een pagina eerder of later..
+       */
+      sortable.dragMove = function (obj) {
+        if (obj) {
+          // var dragHeight  = $element.find('tr:first')[0].clientHeight;
+          var bodyTop     = Math.round($element.offset().top);
+          var bodyBottom  = bodyTop + $element[0].clientHeight;
+          var dragTop = obj.nowY;
+          if (dragTop<bodyTop) {
+            console.log('dragMove: PAGE UP', dragTop);
+          }
+          if (dragTop>bodyBottom) {
+            console.log('dragMove: PAGE DOWN', dragTop);
+          }
+        }
+      };
+      
 
       /**
        * ORDER HAS CHANGED, if has children make sure they are on right place and determine new level & parent
@@ -115,9 +135,10 @@ flexyAdmin.directive('asSortable', [ 'flexyTableService', function (flexyTable) 
         obj.dest.sortableScope.modelValue = $scope.$parent.gridItems;
         // Update grid UI
         $scope.$parent.displayedItems = [].concat($scope.$parent.gridItems);
-        
+
         // Call server to change the order
-        flexyTable.change_order( $scope.$parent.table, $scope.$parent.gridItems, sortable.order_start );
+        flexyTable.change_order( $scope.$parent.table, $scope.$parent.gridItems, sortable.order_start ).then(function(response){
+        });
       };
   
   
@@ -130,7 +151,7 @@ flexyAdmin.directive('asSortable', [ 'flexyTableService', function (flexyTable) 
 
       
       /**
-       * HELPER FUNCTIONS ====================================================================
+       * HELPERS ====================================================================
        */
 
       /**
@@ -176,11 +197,11 @@ flexyAdmin.directive('asSortable', [ 'flexyTableService', function (flexyTable) 
         if (angular.isDefined($scope.sortableOptions.containment)) {
           var widths = [];
           // get widths of headers
-          angular.forEach( sortable.table.find('th'), function(cell, key) {
+          angular.forEach( $element.find('tr:first td:visible'), function(cell, key) {
             widths.push(cell.offsetWidth+"px");
           });
           // set width of dragged cells
-          angular.forEach( obj.source.itemScope.element.find('td'), function(cell, key) {  
+          angular.forEach( obj.source.itemScope.element.find('td:visible'), function(cell, key) {  
             var w = widths.shift();
             angular.element(cell).css({'width':w,'min-width':w,'max-width':w});
           });

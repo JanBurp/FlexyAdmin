@@ -46,7 +46,7 @@
       <tbody as-sortable="sortableOptions" ng-model="gridItems">
         
         <!-- ROW -->
-        <tr ng-repeat="row in displayedItems track by $index"
+        <tr ng-repeat="row in displayedItems"
             st-select-row="row" st-select-mode="multiple"
             ng-class="{'flexy-tree-has_children':row._info.has_children, 'flexy-tree-child':row._info.is_child, 'flexy-table-selected':row._info.selected}"
             tree-level="{{row._info.level}}"

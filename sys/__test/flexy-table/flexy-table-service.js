@@ -220,6 +220,9 @@ flexyAdmin.factory('flexyTableService', ['flexySettingsService','flexyApiService
       params.filter = tableState.search.predicateObject.$;
     }
     var args = angular.extend({}, default_args, params, {'table':table});
+    
+    // console.log('flexy_table_service.load args',args);
+    
 
     /**
      * Als er al data van deze table bestaat, dan is een API call niet nodig, geef de promise met de data terug
@@ -230,6 +233,9 @@ flexyAdmin.factory('flexyTableService', ['flexySettingsService','flexyApiService
     
     // API call
     return api.table( args ).then(function(response){
+      
+      // console.log('flexy_table_service.load response',response);
+      
       // Reset data
       data[table] = {};
       // Bewaar data (met juiste args)
@@ -310,30 +316,32 @@ flexyAdmin.factory('flexyTableService', ['flexySettingsService','flexyApiService
    * TODO: pas de data[table] aan... als dat nodig is...
    */
   flexy_table_service.change_order = function( table, items, from ) {
-    var args = { 'table':table, 'id': [], 'from':0 };
-    if (angular.isDefined(from)) args.from = from;
-    angular.forEach( items, function(item,key) {
-      args.id.push( item.id );
-    });
-    
-    // API
-    return api.table_order( args ).then(function(response){
-      var expected = true;
-      var data = response.data;
-      // Check of data hetzelfde is
+    return $translate(['DIALOGS_ORDER_SUCCESS','DIALOGS_ORDER_ERROR']).then(function (translations) {
+      var args = { 'table':table, 'id': [], 'from':0 };
+      if (angular.isDefined(from)) args.from = from;
       angular.forEach( items, function(item,key) {
-        if ( Number(item.order)!==Number(jdb.assocArrayItem(data,'id',item.id).order) ) {
-          expected = false;
-        }
+        args.id.push( item.id );
       });
-      // Melding
-      $translate(['DIALOGS_ORDER_SUCCESS','DIALOGS_ORDER_ERROR']).then(function (translations) {
+    
+      // API
+      return api.table_order( args ).then(function(response){
+        var expected = true;
+        var new_data = response.data;
+        // Check of data hetzelfde is
+        angular.forEach( items, function(item,key) {
+          if ( Number(item.order)!==Number(jdb.assocArrayItem(new_data,'id',item.id).order) ) {
+            expected = false;
+          }
+        });
+        // Melding
         if (expected) {
+          data[table].data=items;
           alertService.add( 'success', '<b>'+translations.DIALOGS_ORDER_SUCCESS+'</b>');
         }
         else {
           alertService.add( 'danger', '<b>'+translations.DIALOGS_ORDER_ERROR+'</b>');
         }
+        return $q.resolve(data[table]);
       });
     });
   };

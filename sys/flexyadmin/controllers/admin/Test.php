@@ -36,11 +36,11 @@ class Test extends AdminController {
     // $result = $this->table_model->get_grid( );
     // $result = $this->table_model->get_grid( 0, 'str_first_name' );
 
-    $this->table_model->table('tbl_crud2');
+    $this->table_model->table('tbl_crud');
     // $query = $this->table_model->get( 5 );
     // $result = $this->table_model->get_result();
-    // $result = $this->table_model->get_grid( 0, FALSE, 'tme_last_changed', 'e' );
-    $result = $this->table_model->get_grid( 20, FALSE, 'tme_last_changed' );
+    $result = $this->table_model->get_grid();
+    // $result = $this->table_model->get_grid( 20, FALSE, 'tme_last_changed' );
 
 
     // MANY_TO_MANY
