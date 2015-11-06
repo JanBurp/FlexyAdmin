@@ -278,6 +278,20 @@ $config["CFG_"]=array(
 			"txt_help_nl"=>'<p>Instellingen voor RSS feeds.</p>',
 			"txt_help_en"=>'<p>Settings for RSS feeds.</p>',
 			),
+		"cfg_lang"=>array(
+			"table"         => 'cfg_lang',
+      'str_title_nl'  => 'Algemene teksten',
+      'str_title_en'  => 'Language keys',
+			"txt_help_nl"   => '<p>Teksten die op diverse plaatsen in de site of het CMS gebruikt worden.</p>',
+			"txt_help_en"   => '<p>Langage keys.</p>'
+			),
+		"cfg_email"=>array(
+			"table"         => 'cfg_email',
+      'str_title_nl'  => 'Email templates',
+      'str_title_en'  => 'Email templates',
+			"txt_help_nl"   => '<p>Email templates die door de site verstuurd worden of het CMS gebruikt worden.</p>',
+			"txt_help_en"   => '<p>Email templates.</p>'
+			),
 
 		"cfg_users"=>array(
 			"table"=>'cfg_users',
