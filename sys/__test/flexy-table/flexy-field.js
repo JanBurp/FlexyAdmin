@@ -20,7 +20,12 @@ flexyAdmin.directive('flexyField', ['flexySettingsService',function(settings) {
     restrict:     'E',
     templateUrl:  'flexy-table/flexy-field.html',
     replace:      true,
-    scope:        {},
+    scope:        {
+      table: "@",
+      id:    "@",
+      field: "@",
+      value: "@",
+    },
     
     /**
      * DIRECTIVE LINK
