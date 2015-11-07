@@ -42,6 +42,8 @@ flexyAdmin.directive('asSortable', [ 'flexyTableService','$window','$document', 
         order_start     : 0,       // order value of first item (for calculating new order fields)
         oldItems        : [],      // Items before moving
         draggedChildren : [],      // The children that are dragged with the parent
+        tableElement    : {},      // Remember the table element
+        newPage         : false,   // If dragged outside containment, which page to load next
       };
 
       /**
@@ -53,11 +55,15 @@ flexyAdmin.directive('asSortable', [ 'flexyTableService','$window','$document', 
        */
       sortable.dragStart = function(obj) {
         // Remember order start
-        sortable.order_start = $scope.$parent.gridItems[0].order;
+        sortable.order_start = $scope.$parent.tableItems[0].order;
+        // Naar nieuwe pagina
+        sortable.newPage = false;
         // Remember current items
         sortable.oldItems = obj.source.sortableScope.modelValue.slice();
         // Re(set) draggedChildren
         sortable.draggedChildren=[];
+        // Remember the table element
+        sortable.tableElement = $element.parent('table');
         
         // Is table a tree and row has children?
         if ($scope.$parent.type.is_tree && obj.source.itemScope.row._info.has_children) {
@@ -76,16 +82,13 @@ flexyAdmin.directive('asSortable', [ 'flexyTableService','$window','$document', 
        */
       sortable.dragMove = function (obj) {
         if (obj) {
-          // var dragHeight  = $element.find('tr:first')[0].clientHeight;
           var bodyTop     = Math.round($element.offset().top);
           var bodyBottom  = bodyTop + $element[0].clientHeight;
           var dragTop = obj.nowY;
-          if (dragTop<bodyTop) {
-            console.log('dragMove: PAGE UP', dragTop);
-          }
-          if (dragTop>bodyBottom) {
-            console.log('dragMove: PAGE DOWN', dragTop);
-          }
+          var newPage = false;
+          if (dragTop<bodyTop)    newPage = -1;
+          if (dragTop>bodyBottom) newPage = 1;
+          sortable.newPage = newPage;
         }
       };
       
@@ -94,51 +97,87 @@ flexyAdmin.directive('asSortable', [ 'flexyTableService','$window','$document', 
        * ORDER HAS CHANGED, if has children make sure they are on right place and determine new level & parent
        */
       sortable.orderChanged = function(obj) {
-        if ($scope.$parent.type.is_tree) {
-
-          // 0) Vars
-          var oldIndex = obj.source.index;
-          var newIndex = obj.dest.index;
-          var number_of_children = sortable.draggedChildren.length;
+        // console.log('sortable.orderChanged');
+        
+        // Moet item naar vorige of volgende pagina?
+        if (sortable.newPage!==false) {
           
-          // 1) Kopie van oude items & nieuwe items
-          var items = sortable.oldItems;
-          var newItems = obj.dest.sortableScope.modelValue;
-
-          // 3) Pas parent van verplaatste item aan
-          // Bijna altijd 0
-          // Behalve als het volgende item een hoger level heeft: dan heeft het dezelfde parent als dat item, dus als er een item na komt, neem die parent.
-          // Check eerst of het niet de laatste is, want dan hoeven we al niet verder te kijken
-          var parent_id = 0; 
-          if (newIndex+1 < newItems.length) {
-            // Het is niet de laatste, dus pak de parent van het volgende item
-            parent_id = newItems[newIndex+1].self_parent;
+          var tableState = flexyTable.get_table_data($scope.$parent.table,'tableState');
+          var offset = Number(tableState.pagination.start);
+          var newOffset = offset;
+          
+          // Bereken niewe offset (binnen min en max)
+          if ( sortable.newPage===-1 ) newOffset -= Number(tableState.pagination.number);
+          if ( sortable.newPage===1 )  newOffset += Number(tableState.pagination.number);
+          if ( newOffset < 0 )  newOffset = 0;
+          if ( newOffset > ((tableState.pagination.numberOfPages-1) * tableState.pagination.number) ) newOffset = (tableState.pagination.numberOfPages-1) * tableState.pagination.number;
+          
+          // Als nieuwe offset anders dan huidige, Verplaats het item dan naar andere pagina en laad dan de nieuwe pagina
+          if ( newOffset!=offset ) {
+            var item = obj.source.itemScope.modelValue; 
+            var new_order = Number(sortable.order_start);
+            if (sortable.newPage===-1) new_order-=1;
+            if (sortable.newPage===1) new_order+=Number(tableState.pagination.number);
+            flexyTable.set_order( $scope.$parent.table, item, new_order ).then(function(response){
+              if (response) {
+                // Laad pagina waar item naar verplaatst is
+                tableState.pagination.start = newOffset;
+                $scope.$parent.pipe(tableState);
+              }
+            });
           }
-          // Bewaar nieuwe parent in oud item
-          items[oldIndex].self_parent = parent_id;
+          else {
+            // Kan niet, dus gewoon op huidige pagina doorgaan
+            sortable.newPage = false;
+          }
           
-          // 4) Verplaats items
-          items = jdb.moveMultipleArrayItems(items, oldIndex, number_of_children+1, newIndex);
-
-          // 5) Vernieuw de grid info & bewaar in grid
-          $scope.$parent.gridItems = flexyTable.add_tree_info(items, true);
         }
         
-        // Update order fields
-        var order = sortable.order_start;
-        angular.forEach( $scope.$parent.gridItems, function(item,key) {
-          $scope.$parent.gridItems[key].order = order;
-          order++;
-        });
-        
-        // Update sortable
-        obj.dest.sortableScope.modelValue = $scope.$parent.gridItems;
-        // Update grid UI
-        $scope.$parent.displayedItems = [].concat($scope.$parent.gridItems);
+        // Op huidige pagina
+        if ( sortable.newPage===false ) {
 
-        // Call server to change the order
-        flexyTable.change_order( $scope.$parent.table, $scope.$parent.gridItems, sortable.order_start ).then(function(response){
-        });
+          // Is het een tree? Neem dan de children mee
+          if ($scope.$parent.type.is_tree) {
+            // 0) Vars
+            var oldIndex = obj.source.index;
+            var newIndex = obj.dest.index;
+            var number_of_children = sortable.draggedChildren.length;
+            // 1) Kopie van oude items & nieuwe items
+            var items = sortable.oldItems;
+            var newItems = obj.dest.sortableScope.modelValue;
+            // 3) Pas parent van verplaatste item aan
+            // Bijna altijd 0, behalve als het volgende item een hoger level heeft: dan heeft het dezelfde parent als dat item, dus als er een item na komt, neem die parent.
+            // Check eerst of het niet de laatste is, want dan hoeven we al niet verder te kijken
+            var parent_id = 0; 
+            if (newIndex+1 < newItems.length) {
+              // Het is niet de laatste, dus pak de parent van het volgende item
+              parent_id = newItems[newIndex+1].self_parent;
+            }
+            // Bewaar nieuwe parent in oud item
+            items[oldIndex].self_parent = parent_id;
+            // 4) Verplaats items
+            items = jdb.moveMultipleArrayItems(items, oldIndex, number_of_children+1, newIndex);
+            // 5) Vernieuw de grid info & bewaar in grid
+            $scope.$parent.tableItems = flexyTable.add_tree_info(items, true);
+          }
+        
+          // Update order
+          var order = sortable.order_start;
+          angular.forEach( $scope.$parent.tableItems, function(item,key) {
+            $scope.$parent.tableItems[key].order = order;
+            order++;
+          });
+        
+          // Update table items
+          obj.dest.sortableScope.modelValue = $scope.$parent.tableItems;
+          $scope.$parent.displayedItems = [].concat($scope.$parent.tableItems);
+          
+          // Call server to change the order
+          flexyTable.change_order( $scope.$parent.table, $scope.$parent.tableItems, sortable.order_start );
+        }
+        
+        // Reset bewaarde items
+        sortable.newPage = false;
       };
   
   
@@ -146,6 +185,11 @@ flexyAdmin.directive('asSortable', [ 'flexyTableService','$window','$document', 
        * DRAG END -  Show hidden children again
        */
       sortable.dragEnd = function(obj) {
+        // Als buiten de dragruimte, dan nog naar nieuwe pagina? (eerste en laatste item geven geen 'orderChanged')
+        if (sortable.newPage!==false) {
+          // console.log('sortable.dragEnd',sortable.newPage);
+          sortable.orderChanged(obj);
+        }
         sortable.show_rows( sortable.draggedChildren );
       };
 
@@ -164,11 +208,11 @@ flexyAdmin.directive('asSortable', [ 'flexyTableService','$window','$document', 
         var node_level=0;
         do {
           index++;
-          if (angular.isDefined($scope.$parent.gridItems[index])) {
-            node_level=$scope.$parent.gridItems[index]._info.level;
-            if (node_level>row.level) children.push($scope.$parent.gridItems[index].id);
+          if (angular.isDefined($scope.$parent.tableItems[index])) {
+            node_level=$scope.$parent.tableItems[index]._info.level;
+            if (node_level>row.level) children.push($scope.$parent.tableItems[index].id);
           }
-        } while (node_level>row.level && angular.isDefined($scope.$parent.gridItems[index]));
+        } while (node_level>row.level && angular.isDefined($scope.$parent.tableItems[index]));
         return children;
       };
   
@@ -197,7 +241,7 @@ flexyAdmin.directive('asSortable', [ 'flexyTableService','$window','$document', 
         if (angular.isDefined($scope.sortableOptions.containment)) {
           var widths = [];
           // get widths of headers
-          angular.forEach( $element.find('tr:first td:visible'), function(cell, key) {
+          angular.forEach( sortable.tableElement.find('th:visible'), function(cell, key) {
             widths.push(cell.offsetWidth+"px");
           });
           // set width of dragged cells
@@ -206,7 +250,7 @@ flexyAdmin.directive('asSortable', [ 'flexyTableService','$window','$document', 
             angular.element(cell).css({'width':w,'min-width':w,'max-width':w});
           });
           // Preserve position & size of dragged row
-          var panel = angular.element(document.querySelector('.panel.flexy-table.'+$scope.$parent.table));
+          var panel = angular.element(document.querySelector('.panel.flexy-table_'+$scope.$parent.table));
           var pos   = panel.offset();
           var width = panel.width()+1;
           angular.element(document.querySelector('.as-sortable-drag',panel)).css({'margin-top':(-pos.top),'margin-left':(-pos.left+13),'max-width':width});

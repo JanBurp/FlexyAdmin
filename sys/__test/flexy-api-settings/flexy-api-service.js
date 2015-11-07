@@ -171,6 +171,7 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
     return flexy_api_service.post('table_order', args);
   };
 
+
   /**
    * API call voor row (get)
    * 

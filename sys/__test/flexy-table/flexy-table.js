@@ -15,67 +15,6 @@
 
 flexyAdmin.directive('flexyTable', ['flexySettingsService','flexyApiService','flexyTableService','$routeParams', function(settings,api,flexyTable,$routeParams) {
   'use strict';
-
-  /**
-   * Controller function for loading table data
-   */
-  // var loadTable = function($scope,tableState) {
-  //   flexyTable.load( $scope.table, tableState ).then(function(response){
-  //     // table ui_name
-  //     $scope.ui_name = settings.item( 'settings','table',$scope.table,'table_info','ui_name' );
-  //     // table type (tree, sortable)
-  //     $scope.type.is_tree = settings.item( 'settings','table',$scope.table,'table_info','tree');
-  //     $scope.type.is_sortable = settings.item( 'settings','table',$scope.table,'table_info','sortable');
-  //     // Pagination
-  //     $scope.info = flexyTable.get_info($scope.table);
-  //     $scope.info.num_pages = Math.ceil($scope.info.total_rows / $scope.info.limit);
-  //     tableState.pagination.start = $scope.info.offset;
-  //     tableState.pagination.numberOfPages = $scope.info.num_pages;
-  //
-  //     // Jump to today, kan alleen als op volgorde van jump_to_today veld
-  //     $scope.jump_to_today = settings.item( 'settings','table',$scope.table,'grid_set','jump_to_today');
-  //     var order_by = settings.item( 'settings','table',$scope.table,'grid_set','order_by').prefix(' ');
-  //     if ( angular.isDefined( tableState.sort.predicate ) ) {
-  //       order_by = tableState.sort.predicate;
-  //     }
-  //     if ( order_by!==$scope.jump_to_today ) $scope.jump_to_today = false;
-  //
-  //     // Search
-  //     $scope.search = '';
-  //     if ( angular.isDefined( tableState.search.predicateObject )) {
-  //       $scope.search = tableState.search.predicateObject.$;
-  //     }
-  //
-  //     // Grid data & references
-  //     $scope.gridItems = response.data;
-  //     $scope.displayedItems = [].concat($scope.gridItems);
-  //     console.log($scope.displayedItems);
-  //
-  //
-  //     // Show only the fields that exists in the gridItems (remove the field info of fields that are not in there)
-  //     var fields = settings.item('settings','table',$scope.table,'field_info');
-  //     // Verwijder enkele standaard velden
-  //     delete fields['id'];
-  //     delete fields['self_parent'];
-  //     delete fields['order'];
-  //     delete fields['uri'];
-  //     // Verwijder niet zichtbare velden
-  //     var first_item = jdb.firstArrayItem( response.data );
-  //     if ( angular.isDefined( first_item )) {
-  //       angular.forEach( fields, function(info, field) {
-  //         if ( angular.isUndefined( first_item[field] )) {
-  //           delete fields[field];
-  //         }
-  //         else {
-  //           fields[field].field = field; // Voeg naam van het veld toe
-  //           fields[field].type = field.prefix(); // Voeg type van het veld toe
-  //         }
-  //       });
-  //     }
-  //     $scope.fields = fields;
-  //   });
-  // };
-  
   
   return {
     restrict:     'E',
@@ -138,7 +77,7 @@ flexyAdmin.directive('flexyTable', ['flexySettingsService','flexyApiService','fl
        * References of the grid data: https://lorenzofox3.github.io/smart-table-website/#section-intro stSafeSrc attribute
        * Set when data is present
        */
-      $scope.gridItems = [];
+      $scope.tableItems = [];
       $scope.displayedItems  = [];
   
       /**
@@ -157,8 +96,8 @@ flexyAdmin.directive('flexyTable', ['flexySettingsService','flexyApiService','fl
       $scope.select = function(index) {
         // Niet nodig, gaat automatisch
         // console.log('select',index);
-        // var selected = $scope.gridItems[index].isSelected;
-        // $scope.gridItems[index].isSelected = !$scope.gridItems[index].isSelected;
+        // var selected = $scope.tableItems[index].isSelected;
+        // $scope.tableItems[index].isSelected = !$scope.tableItems[index].isSelected;
       };
 
 
@@ -166,10 +105,10 @@ flexyAdmin.directive('flexyTable', ['flexySettingsService','flexyApiService','fl
        * SELECT ALL TOGGLE
        */
       $scope.toggleSelection = function() {
-        angular.forEach($scope.gridItems, function(item,key) {
-          var selected=$scope.gridItems[key].isSelected;
+        angular.forEach($scope.tableItems, function(item,key) {
+          var selected=$scope.tableItems[key].isSelected;
           if (!selected) selected=true; else selected=false;
-          $scope.gridItems[key].isSelected=selected;
+          $scope.tableItems[key].isSelected=selected;
         });
       };
       
@@ -185,8 +124,8 @@ flexyAdmin.directive('flexyTable', ['flexySettingsService','flexyApiService','fl
           selected.push(id);
         }
         else {
-          angular.forEach($scope.gridItems, function(item,key) {
-            if ($scope.gridItems[key].isSelected) {
+          angular.forEach($scope.tableItems, function(item,key) {
+            if ($scope.tableItems[key].isSelected) {
               selected.push(item['id']);
             }
           });
@@ -237,14 +176,6 @@ flexyAdmin.directive('flexyTable', ['flexySettingsService','flexyApiService','fl
 
         // Bewaar deze tableState
         $scope.tableState = tableState;
-
-        // Laad data
-        // if ($scope.type.is_media) {
-        //   loadMedia( $scope,tableState );
-        // }
-        // else {
-        //   loadTable( $scope,tableState );
-        // }
         
         flexyTable.load( $scope.table, tableState ).then(function(response){
           // table ui_name
@@ -252,10 +183,11 @@ flexyAdmin.directive('flexyTable', ['flexySettingsService','flexyApiService','fl
           // table type (tree, sortable)
           $scope.type.is_tree = settings.item( 'settings','table',$scope.table,'table_info','tree');
           $scope.type.is_sortable = settings.item( 'settings','table',$scope.table,'table_info','sortable');
-          // Pagination
+          // Pagination en update tableState
           $scope.info = flexyTable.get_info($scope.table);
           $scope.info.num_pages = Math.ceil($scope.info.total_rows / $scope.info.limit);
           tableState.pagination.start = $scope.info.offset;
+          tableState.pagination.totalItemCount = $scope.info.total_rows;
           tableState.pagination.numberOfPages = $scope.info.num_pages;
   
           // Jump to today, kan alleen als op volgorde van jump_to_today veld
@@ -273,10 +205,10 @@ flexyAdmin.directive('flexyTable', ['flexySettingsService','flexyApiService','fl
           }
 
           // Grid data & references
-          $scope.gridItems = response.data;
-          $scope.displayedItems = [].concat($scope.gridItems);
+          $scope.tableItems = response.data;
+          $scope.displayedItems = [].concat($scope.tableItems);
   
-          // Show only the fields that exists in the gridItems (remove the field info of fields that are not in there)
+          // Show only the fields that exists in the tableItems (remove the field info of fields that are not in there)
           var fields = settings.item('settings','table',$scope.table,'field_info');
           // Verwijder enkele standaard velden
           delete fields['id'];
@@ -298,14 +230,51 @@ flexyAdmin.directive('flexyTable', ['flexySettingsService','flexyApiService','fl
           }
           $scope.fields = fields;
         });
-        
-        
       };
-      
-      
     }
-    
-    
   };
   
 }]);
+
+
+
+//
+// angular.module('smart-table').directive('stPaginationScroll', ['$timeout', function (timeout) {
+//   return{
+//     require: 'stTable',
+//     link: function (scope, element, attr, ctrl) {
+//       var itemByPage = Number(5); // || ctrl.tableState().number;
+//       var pagination = ctrl.tableState().pagination;
+//       var lengthThreshold = 50;
+//       var timeThreshold = 400;
+//       var handler = function () {
+//         //call next page
+//         console.log('stPaginationScroll',pagination,itemByPage);
+//
+//         ctrl.slice( Number(pagination.start) + itemByPage, itemByPage);
+//       };
+//       var promise = null;
+//       var lastRemaining = 9999;
+//       var container = angular.element(element.find('.panel-content'));
+//
+//       container.bind('scroll', function () {
+//         var remaining = container[0].scrollHeight - (container[0].clientHeight + container[0].scrollTop);
+//
+//         // if we have reached the threshold and we scroll down
+//         if (remaining < lengthThreshold && (remaining - lastRemaining) < 0) {
+//           //if there is already a timer running which has no expired yet we have to cancel it and restart the timer
+//           if (promise !== null) {
+//             timeout.cancel(promise);
+//           }
+//           promise = timeout(function () {
+//             handler();
+//             //scroll a bit up
+//             container[0].scrollTop -= 70;
+//             promise = null;
+//           }, timeThreshold);
+//         }
+//         lastRemaining = remaining;
+//       });
+//     }
+//   };
+// }]);

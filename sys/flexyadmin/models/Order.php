@@ -187,54 +187,99 @@ class order extends CI_Model {
 	}
 
 
-  // /**
-  //  * Verplaatst item naar nieuwe plek, en geeft de nieuwe order terug
-  //  * Test ook of er andere items mee moeten worden verplaatst (kinderen)
-  //  *
-  //  * @param string $table
-  //  * @param int $id
-  //  * @param int $new Nieuwe plek (order)
-  //  * @return int $new
-  //  * @author Jan den Besten
-  //  */
-  // public function set($table,$id,$new) {
-  //     $is_tree=$this->is_a_tree($table);
-  //     // Wat is de huidige order?
-  //   $old=$this->_get_order($table,$id);
-  //     // Is dat hetzelfde, dan hoeft er niets te gebeuren
-  //     if ($old===$new) return $new;
-  //
-  //     // Neem kinderen mee...
-  //     if ($is_tree) {
-  //       $parent=$id;
-  //       // TODO
-  //
-  //
-  //
-  //     }
-  //     else {
-  //       // Pas eigen order aan
-  //       $this->db->where(PRIMARY_KEY,$id);
-  //       $this->db->set('order',$new);
-  //       $this->db->update($table);
-  //     }
-  //     // En subkinderen????
-  //
-  //     // En dan alles opschuiven wat niet dezelfde self_parent heeft
-  //
-  //     if ($new>$old) {
-  //       // Schuif alle tussenliggende terug
-  //       $sql="UPDATE `$table` SET `order`=`order`-1 WHERE `order`>'$old' AND `order`<='$new' AND `id` != '$id'";
-  //       $this->db->query($sql);
-  //     }
-  //     if ($new<$old) {
-  //       // Schuif alle tussenliggende verder
-  //       $sql="UPDATE `$table` SET `order`=`order`+1 WHERE `order`>='$new' AND `order`<'$old' AND `id` != '$id'";
-  //       $this->db->query($sql);
-  //     }
-  //
-  //   return $new;
-  // }
+  /**
+   * Verplaatst item naar nieuwe plek, en geeft de nieuwe order terug
+   * Test ook of er andere items mee moeten worden verplaatst (kinderen)
+   *
+   * @param string $table
+   * @param int $id
+   * @param int $new Nieuwe plek (order)
+   * @return int $new
+   * @author Jan den Besten
+   */
+  public function set( $table,$id,$new ) {
+    $is_tree=$this->is_a_tree($table);
+    // Wat is de huidige order?
+    $old=(int)$this->_get_order($table,$id);
+    // Is dat hetzelfde, dan hoeft er niets te gebeuren
+    if ($old===$new) return $new;
+
+    $moved_ids=[$id];
+    // Neem kinderen mee...
+    if ($is_tree) {
+      $children_ids = $this->_get_children_ids( $table, $id, $old );
+      $moved_ids=array_merge($moved_ids,$children_ids);
+    }
+    // Pas order in item (en kinderen) aan
+    $order = $new;
+    foreach ($moved_ids as $move_id) {
+      $this->db->set( 'order', $order );
+      $this->db->where( PRIMARY_KEY, $move_id);
+      $this->db->update( $table );
+      $order++;
+    }
+    $order--;
+    $shifted_count = count($moved_ids);
+
+    // Alles opschuiven
+    if ($new>$old) {
+      // Schuif alle tussenliggende terug
+      $sql="UPDATE `$table` SET `order`=`order`-".$shifted_count." WHERE `order`>'$old' AND `order`<='$order' AND `id` NOT IN(".implode(',',$moved_ids).")";
+      $this->db->query($sql);
+    }
+    if ($new<$old) {
+      // Schuif alle tussenliggende verder
+      $sql="UPDATE `$table` SET `order`=`order`+".$shifted_count." WHERE `order`>='$new' AND `order`<'$old' AND `id` NOT IN(".implode(',',$moved_ids).")";
+      $this->db->query($sql);
+    }
+    // trace_($sql);
+    
+    // Als order>0 dan moet de parent misschien aangepast worden: dan neemt die de parent van het item ervoor over
+    if ($is_tree and $new>0) {
+      // item ervoor
+      $this->db->select('id,order,self_parent');
+      $this->db->where( 'order <',$new);
+      $this->db->order_by( 'order','DESC' );
+      $prev = $this->db->get_row( $table );
+      $prev_parent = $prev['self_parent'];
+      // geef nieuw parent
+      $this->db->set('self_parent',$prev_parent);
+      $this->db->where(PRIMARY_KEY,$id);
+      $this->db->update( $table );
+    }
+    
+    return $new;
+  }
+  
+  /**
+   * Geef ids van de kinderen terug
+   *
+   * @param string $table
+   * @param string $id de id van item
+   * @param string $order de order van item 
+   * @return array
+   * @author Jan den Besten
+   */
+  private function _get_children_ids( $table, $id, $order ) {
+    // Zoek de eerstvolgende met zelfde parent
+    $parent = $this->_get_parent( $table,$id );
+    $this->db->select('id,self_parent,order');
+    $this->db->where( 'self_parent', $parent );
+    $this->db->where( 'order >', $order );
+    $this->db->order_by( 'order' );
+    $next = $this->db->get_row($table);
+    $next_order = $next['order'];
+    // Zijn er wel kinderen?
+    if ( ($next_order-$order)===1 ) return array();
+    // Zoek alle kinderen: dat zijn alle tussenliggende
+    $this->db->select('id,self_parent,order');
+    $this->db->where( 'order >', $order );
+    $this->db->where( 'order <', $next_order );
+    $this->db->order_by( 'order' );
+    $children = $this->db->get_result($table);
+    $children_ids = array_keys($children);
+    return $children_ids;
+  }
   
   
   //   /**

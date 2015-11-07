@@ -25,8 +25,9 @@ UPDATE `tbl_menu` SET `order`='4', `self_parent`='0', `uri`='contact' WHERE `id`
   }
   
 
-  private function _result() {
+  private function _result($parent=false) {
     $this->CI->db->select('id,order');
+    if ($parent) $this->CI->db->select('self_parent');
     $this->CI->db->order_by('order ASC');
     return $this->CI->db->get_result($this->table);
   }
@@ -189,30 +190,97 @@ UPDATE `tbl_menu` SET `order`='4', `self_parent`='0', `uri`='contact' WHERE `id`
     ); 
     $this->assertEquals($expected, $result);
 
+    // Set all - Reset
+    $ids=array(1,2,3,5,4);
+    $this->CI->order->set_all($this->table,$ids);
+    $result = $this->_result();
+    $expected = array(
+      '1'=>array( 'id'=>'1', 'order'=>'0' ),
+      '2'=>array( 'id'=>'2', 'order'=>'1' ),
+      '3'=>array( 'id'=>'3', 'order'=>'2' ),
+      '5'=>array( 'id'=>'5', 'order'=>'3' ),
+      '4'=>array( 'id'=>'4', 'order'=>'4' ),
+    ); 
+    $this->assertEquals($expected, $result);
 
-    // // Set 1
-    // $this->CI->order->set($this->table,2,4);
-    // $result = $this->_result();
-    // $expected = array(
-    //   '1'=>array( 'id'=>'1', 'order'=>'0' ),
-    //   '5'=>array( 'id'=>'5', 'order'=>'1' ),
-    //   '4'=>array( 'id'=>'4', 'order'=>'2' ),
-    //   '3'=>array( 'id'=>'3', 'order'=>'3' ),
-    //   '2'=>array( 'id'=>'2', 'order'=>'4' ),
-    // );
-    // $this->assertEquals($expected, $result);
-    //
-    // // Set 2
-    // $this->CI->order->set($this->table,2,2);
-    // $result = $this->_result();
-    // $expected = array(
-    //   '1'=>array( 'id'=>'1', 'order'=>'0' ),
-    //   '5'=>array( 'id'=>'5', 'order'=>'1' ),
-    //   '2'=>array( 'id'=>'2', 'order'=>'2' ),
-    //   '4'=>array( 'id'=>'4', 'order'=>'3' ),
-    //   '3'=>array( 'id'=>'3', 'order'=>'4' ),
-    // );
-    // $this->assertEquals($expected, $result);
+    // Set 1 => 4 (geen kinderen)
+    $new = $this->CI->order->set($this->table,1,4);
+    $this->assertEquals( 4, $new );
+    $result = $this->_result();
+    $expected = array(
+      '2'=>array( 'id'=>'2', 'order'=>'0' ),
+      '3'=>array( 'id'=>'3', 'order'=>'1' ),
+      '5'=>array( 'id'=>'5', 'order'=>'2' ),
+      '4'=>array( 'id'=>'4', 'order'=>'3' ),
+      '1'=>array( 'id'=>'1', 'order'=>'4' ),
+    );
+    $this->assertEquals($expected, $result);
+
+    // Set 4 => 0
+    $new = $this->CI->order->set($this->table,4,0);
+    $this->assertEquals( 0, $new );
+    $result = $this->_result();
+    $expected = array(
+      '4'=>array( 'id'=>'4', 'order'=>'0' ),
+      '2'=>array( 'id'=>'2', 'order'=>'1' ),
+      '3'=>array( 'id'=>'3', 'order'=>'2' ),
+      '5'=>array( 'id'=>'5', 'order'=>'3' ),
+      '1'=>array( 'id'=>'1', 'order'=>'4' ),
+    );
+    $this->assertEquals($expected, $result);
+    
+    // Set 2 => 0 (met kinderen)
+    $new = $this->CI->order->set($this->table,2,0);
+    $this->assertEquals( 0, $new );
+    $result = $this->_result();
+    $expected = array(
+      '2'=>array( 'id'=>'2', 'order'=>'0' ),
+      '3'=>array( 'id'=>'3', 'order'=>'1' ),
+      '5'=>array( 'id'=>'5', 'order'=>'2' ),
+      '4'=>array( 'id'=>'4', 'order'=>'3' ),
+      '1'=>array( 'id'=>'1', 'order'=>'4' ),
+    );
+    $this->assertEquals($expected, $result);
+
+    // Set 2 => 2 (met kinderen)
+    $new = $this->CI->order->set($this->table,2,2);
+    $this->assertEquals( 2, $new );
+    $result = $this->_result();
+    $expected = array(
+      '4'=>array( 'id'=>'4', 'order'=>'0' ),
+      '1'=>array( 'id'=>'1', 'order'=>'1' ),
+      '2'=>array( 'id'=>'2', 'order'=>'2' ),
+      '3'=>array( 'id'=>'3', 'order'=>'3' ),
+      '5'=>array( 'id'=>'5', 'order'=>'4' ),
+    );
+    $this->assertEquals($expected, $result);
+
+    // Set 1 => 3 (wordt een kind)
+    $new = $this->CI->order->set($this->table,1,3);
+    $this->assertEquals( 3, $new );
+    $result = $this->_result(true);
+    $expected = array(
+      '4'=>array( 'id'=>'4', 'order'=>'0', 'self_parent'=>0 ),
+      '2'=>array( 'id'=>'2', 'order'=>'1', 'self_parent'=>0 ),
+      '3'=>array( 'id'=>'3', 'order'=>'2', 'self_parent'=>2 ),
+      '1'=>array( 'id'=>'1', 'order'=>'3', 'self_parent'=>2 ),
+      '5'=>array( 'id'=>'5', 'order'=>'4', 'self_parent'=>2 ),
+    );
+    $this->assertEquals($expected, $result);
+
+    // Set 1 => 1 (wordt geen kind)
+    $new = $this->CI->order->set($this->table,1,1);
+    $this->assertEquals( 1, $new );
+    $result = $this->_result(true);
+    $expected = array(
+      '4'=>array( 'id'=>'4', 'order'=>'0', 'self_parent'=>0 ),
+      '1'=>array( 'id'=>'1', 'order'=>'1', 'self_parent'=>0 ),
+      '2'=>array( 'id'=>'2', 'order'=>'2', 'self_parent'=>0 ),
+      '3'=>array( 'id'=>'3', 'order'=>'3', 'self_parent'=>2 ),
+      '5'=>array( 'id'=>'5', 'order'=>'4', 'self_parent'=>2 ),
+    );
+    $this->assertEquals($expected, $result);
+
   }
     
     
