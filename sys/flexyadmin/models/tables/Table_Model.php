@@ -2450,7 +2450,7 @@ Class Table_Model extends CI_Model {
 			/**
 			 * Als er many_to_many is, verwijder die ook
 			 */
-      if ( isset($this->settings['relations']['many_to_many'])) {
+      if ( isset($this->settings['relations']['many_to_many']) and !empty($ids)) {
         $other_tables = $this->settings['relations']['many_to_many'];
         $other_tables = array_keys($other_tables);
         // $this_foreign_key = $this->settings['relations']['many_to_many'][$other_table]['this_key'];

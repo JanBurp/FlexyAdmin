@@ -44,7 +44,7 @@ describe('flexy-table-service-http', function(){
   it('flexy-table-service', function() {
     
     // At start, the grid data should be undefined
-    var data = service.get_grid_data('tbl_menu');
+    var data = service.get_table_data('tbl_menu');
     expect( data ).not.toBeDefined();
     
     // Load the menu
@@ -52,7 +52,7 @@ describe('flexy-table-service-http', function(){
     http.flush(1);
 
     // Get the data data
-    data = service.get_grid_data('tbl_menu');
+    data = service.get_table_data('tbl_menu');
     expect( data ).toBeDefined();
     //
     // settings in Settings?
@@ -64,7 +64,7 @@ describe('flexy-table-service-http', function(){
     // expect( info ).toEqual( { rows:data.length, total_rows:data.length, table_rows:data.length, num_pages:1, limit:20} );
 
     // Get the grid
-    var grid = service.get_grid_data('tbl_menu');
+    var grid = service.get_table_data('tbl_menu');
     // Test the processed grid data
     expect( grid ).toBeDefined();
     expect( grid.length ).toEqual( data.length );

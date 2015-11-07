@@ -6,6 +6,8 @@
  * ##UPDATE VOLGORDE
  * 
  * Hiermee wordt van items (id's) in de meegegeven tabel een nieuwe volgorde gemaakt (vanaf een bepaalde waarde)
+ * - Als er meerdere ids worden meegegeven dan wordt klakkeloos die volgorde overgenomen en verder niets (geen control op kinderen en tussenliggenden).
+ * - Als er één id wordt meegegeven dan wordt gekeken of er kinderen meemoeten en worden tussenliggende items opgeschoven.
  * 
  * ###Parameters (POST):
  * 
@@ -13,13 +15,14 @@
  * - `id[]`                     // id's van de items die moeten worden aangepast
  * - `[from=0]`                 // Startwaarde van de nieuwe volgorde van de items
  * 
- * ###Voorbeeld:
- * 
- * - `_api/table_order` met POST data: `table=tbl_menu&id[]=3&id[]=5&id[]=7&from=3`
- * 
  * ###Response:
  * 
  * Als response worden de nieuwe volgordes meegegeven.
+ * Of in het geval van één meegegeven id, dan wordt alleen de nieuwe volgorde teruggegeven
+ * 
+ * ###Voorbeeld 1:
+ * 
+ * - `_api/table_order` met POST data: `table=tbl_menu&id[]=3&id[]=5&id[]=7&from=3`
  * 
  * Voorbeeld response (dump) van bovenstaand voorbeeld:
  * 
@@ -39,6 +42,21 @@
  *                1 => array( 'id'=>5, 'order'=>4 ),
  *                2 => array( 'id'=>7, 'order'=>5 ),
  *              )
+ * 
+ *  * ###Voorbeeld 1:
+ * 
+ * - `_api/table_order` met POST data: `table=tbl_menu&id[]=3&from=3`
+ * 
+ * Voorbeeld response (dump) van bovenstaand voorbeeld:
+ * 
+ *     [success] => TRUE
+ *     [args] => (
+ *       [table] => 'tbl_links'
+ *       [id] => 3
+ *       [from] => 3
+ *       [type] => 'POST'
+ *     )
+ *     [data] => 3
  * 
  * @author Jan den Besten
  */
@@ -88,8 +106,19 @@ class Table_order extends Api_Model {
    */
   private function _set_order() {
     $this->load->model('order');
-    $items = $this->order->set_all( $this->args['table'], $this->args['id'], $this->args['from']);
-    return $items;
+    // Zet er meerdere
+    if (count($this->args['id'])>1) {
+      $items = $this->order->set_all( $this->args['table'], $this->args['id'], $this->args['from']);
+      return $items;
+    }
+    // Of één
+    if (count($this->args['id'])===1) {
+      if (is_array($this->args['id'])) $this->args['id']=current($this->args['id']);
+      $new = $this->order->set( $this->args['table'], $this->args['id'], $this->args['from'] );
+      return $new;
+    }
+    //
+    return FALSE;
   }
   
 

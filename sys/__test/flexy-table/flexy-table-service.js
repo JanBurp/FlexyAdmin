@@ -34,6 +34,7 @@ flexyAdmin.factory('flexyTableService', ['flexySettingsService','flexyApiService
    * 
    * [
    *  'tbl_menu : {
+   *     tableState : {},    // Last tableState
    *     args       : {},    // argumenten waarmee de table is opgevraagd bij de server
    *     info       : {},    // info (oa pagination data)
    *     data       : {}     // data klaar voor het grid
@@ -48,12 +49,12 @@ flexyAdmin.factory('flexyTableService', ['flexySettingsService','flexyApiService
    * Bereken pagination en voeg die data toe aan info 
    */
   function calculate_pagination(info,args) {
-    if ( angular.isUndefined(info.num_pages) ) info.num_pages = args.num_pages;
-    if ( angular.isUndefined(info.limit) )     info.limit = args.limit;
+    if ( angular.isUndefined(info.num_pages) ) info.num_pages = Number(args.num_pages);
+    if ( angular.isUndefined(info.limit) )     info.limit = Number(args.limit);
     if ( angular.isDefined(info.total_rows) && angular.isDefined(info.limit) && info.limit>0 ) {
       info.num_pages = Math.ceil(info.total_rows / info.limit) ;
     }
-    if ( angular.isUndefined(info.offset) ) info.offset = args.offset;
+    if ( angular.isUndefined(info.offset) ) info.offset = Number(args.offset);
     return info;
   }
   
@@ -71,7 +72,7 @@ flexyAdmin.factory('flexyTableService', ['flexySettingsService','flexyApiService
    * @param string table De gevraagde tabel
    * @return mixed FALSE als de data niet beschikbaar is, anders een object met de data.
    */
-  flexy_table_service.get_grid_data = function(table,type) {
+  flexy_table_service.get_table_data = function(table,type) {
     if ( angular.isDefined(data[table]) ) {
       if ( angular.isDefined(type) ) {
         if ( angular.isDefined(data[table][type]) ) {
@@ -236,16 +237,31 @@ flexyAdmin.factory('flexyTableService', ['flexySettingsService','flexyApiService
       
       // console.log('flexy_table_service.load response',response);
       
-      // Reset data
-      data[table] = {};
+      
+      // Reset data als eerste pagina
+      if ( tableState.pagination.start===0) data[table] = {
+        tableState : {},
+        args       : {},
+        info       : {},
+        data       : []
+      };
+      
+      // add info to loaded data
+      var newData = flexy_table_service.add_tree_info( response.data, settings.item('settings','table', args.table, 'table_info', 'tree' ) );
+      
+      // console.log('flexy_table_service.load newData',newData);
+      
+      
       // Bewaar data (met juiste args)
       var saved_args = args;
       delete(saved_args.settings);
       data[table] = {
+        tableState : tableState,
         args       : saved_args,
         info       : calculate_pagination(response.info,args),
-        data       : flexy_table_service.add_tree_info( response.data, settings.item('settings','table', args.table, 'table_info', 'tree' ) )
+        data       : newData
       };
+      
       // Geef data terug in de promise
       return $q.resolve(data[table]);
     });
@@ -254,6 +270,7 @@ flexyAdmin.factory('flexyTableService', ['flexySettingsService','flexyApiService
 
   /**
    * Verwijder data uit table
+   * @param string table tabel
    */
   flexy_table_service.remove = function(table) {
     delete(data[table]);
@@ -262,6 +279,10 @@ flexyAdmin.factory('flexyTableService', ['flexySettingsService','flexyApiService
   
   /**
    * DELETE (selected) ITEM(s), maar eerst CONFIRM
+   * 
+   * @param string table De gevraagde tabel
+   * @param array selected De te verwijderen item id's
+   * @return promise met als response TRUE/FALSE
    */
   flexy_table_service.delete = function( table, selected ) {
     // Alleen verder als er minimaal een item moet worden verwijderd
@@ -313,7 +334,10 @@ flexyAdmin.factory('flexyTableService', ['flexySettingsService','flexyApiService
   
   /**
    * Geeft de aangepaste volgorde van de meegegeven items door aan de server
-   * TODO: pas de data[table] aan... als dat nodig is...
+   * 
+   * @param string table De gevraagde tabel
+   * @param array items De items in de juiste volgorde
+   * @return promise met als response een array met per row de id en de nieuwe order
    */
   flexy_table_service.change_order = function( table, items, from ) {
     return $translate(['DIALOGS_ORDER_SUCCESS','DIALOGS_ORDER_ERROR']).then(function (translations) {
@@ -322,7 +346,6 @@ flexyAdmin.factory('flexyTableService', ['flexySettingsService','flexyApiService
       angular.forEach( items, function(item,key) {
         args.id.push( item.id );
       });
-    
       // API
       return api.table_order( args ).then(function(response){
         var expected = true;
@@ -342,6 +365,40 @@ flexyAdmin.factory('flexyTableService', ['flexySettingsService','flexyApiService
           alertService.add( 'danger', '<b>'+translations.DIALOGS_ORDER_ERROR+'</b>');
         }
         return $q.resolve(data[table]);
+      });
+    });
+  };
+  
+  /**
+   * Pas van één item de volgorde aan (rekening houdend met kinderen en tussenliggende items)
+   * 
+   * @param string table De gevraagde tabel
+   * @param object Het item dat verplaatst moet worden
+   * @param int new_order de nieuwe volgorde
+   * @param int direction de richting (-1 of 1)
+   * @return promise met als response TRUE/FALSE
+   */
+  flexy_table_service.set_order = function(table, item, new_order, direction) {
+    return $translate(['DIALOGS_ORDER_PAGE_UP','DIALOGS_ORDER_PAGE_DOWN','DIALOGS_ORDER_ERROR']).then(function (translations) {
+      var args = { 'table':table, 'id': item.id, 'from': new_order };
+      // console.log('flexy_table_service.set_order args:',args);
+      // API
+      return api.table_order( args ).then(function(response){
+        // console.log('flexy_table_service.set_order response:',response);
+        var new_data = response.data;
+        // Check of data hetzelfde is
+        var expected = (new_order==new_data);
+        // Melding
+        if (expected) {
+          if (direction==-1)
+            alertService.add( 'success', '<b>'+translations.DIALOGS_ORDER_PAGE_DOWN+'</b>');
+          else
+            alertService.add( 'success', '<b>'+translations.DIALOGS_ORDER_PAGE_UP+'</b>');
+        }
+        else {
+          alertService.add( 'danger', '<b>'+translations.DIALOGS_ORDER_ERROR+'</b>');
+        }
+        return $q.resolve(expected);
       });
     });
   };
