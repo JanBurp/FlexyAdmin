@@ -1583,12 +1583,12 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 				$sql.="WHERE `$where`='$what'";
 		}
 		$query=$this->query($sql);
-		$row=$query->row_array();
-		$query->free_result();
-		if (isset($row[$field]))
-			return $row[$field];
-		else
-			return FALSE;
+    if ($query) {
+  		$row=$query->row_array();
+  		$query->free_result();
+  		if (isset($row[$field])) return $row[$field];
+    }
+		return FALSE;
 	}
   
   /**
