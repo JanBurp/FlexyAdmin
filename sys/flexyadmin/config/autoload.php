@@ -114,7 +114,7 @@ $autoload['language'] = array();
 */
 
 // Also 'tables/Table_Model' is autoloaded in MY_Controller
-$autoload['model'] = array('mediatable');
+$autoload['model'] = array('mediatable','crud');
 
 
 
