@@ -103,7 +103,7 @@ class MY_Email extends CI_Email {
    * @internal
    */
   private function _count_addresses($addresses) {
-    $addresses=explode(',',$addresses);
+    if (!is_array($addresses)) $addresses=explode(',',$addresses);
     return count($addresses);
   }
   

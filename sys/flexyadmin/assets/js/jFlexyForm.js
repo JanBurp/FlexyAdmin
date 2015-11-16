@@ -120,7 +120,7 @@ function doForm() {
 		});
     
 		// styling of multiple
-		$('.flexyFormField.dropdown button').css({width:460});
+		$('.flexyFormField.dropdown button').add('.flexyFormField.select button').css({width:'460px'});
     $('.flexyFormField.dropdown.fieldtype_rel button').css({width:430});
 		$('.flexyFormField.dropdown .ui-multiselect-menu').css({width:458});
 		$('.flexyFormField.dropdown.has_button button').css({width:430});

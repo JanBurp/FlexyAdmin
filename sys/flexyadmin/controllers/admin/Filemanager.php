@@ -153,7 +153,7 @@ class Filemanager extends AdminController {
           $this->load->model('search_replace');
           $fields=explode('|',$cfg['fields_check_if_used_in']);
           foreach ($show_files as $name => $file) {
-            $found=$this->search_replace->has_text($name,$fields);
+            $found=$this->search_replace->has_text($file['name'],$fields);
             $files[$name][$used_field]=$found;
           }
         }

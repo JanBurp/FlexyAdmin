@@ -1081,7 +1081,7 @@ textarea, .mceEditor {
 	width:450px;
 }
 textarea.md {height:400px;}
-.mceEditor table {
+.mceEditor>table {
 	width:450px;
 }
 li textarea {width:100%;}
