@@ -114,7 +114,7 @@ $isForm=has_string('form',$show_type);
 						theme_advanced_statusbar_location: "bottom",
 						theme_advanced_resizing : true,
 						theme_advanced_resize_horizontal : false,
-						content_css : "<?=assets()?>css/text.css",
+						content_css : "<?=assets()?>css/text.css,<?=assets()?>css/admin.css",
 						<?php if (isset($formats)): ?>
 						theme_advanced_blockformats : "<?=$formats?>",
 						<?php else: ?>
