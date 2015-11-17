@@ -99,7 +99,7 @@
 		* Dit wordt aangeroepen als aan de bij triggers ingestelde voorwaarden wordt voldaan.
 		* Je kunt met de return waarde beinvloeden of het item daadwerkelijk verwijderd mag worden.
 		*
-		* @return bool FALSE als delete kan doorgaan
+		* @return bool FALSE als delete NIET kan doorgaan
 		* @author Jan den Besten
 		*/
 	public function _after_delete() {
