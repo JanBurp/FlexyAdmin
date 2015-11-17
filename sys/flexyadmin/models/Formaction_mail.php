@@ -76,10 +76,14 @@
     }
     $replace=array_merge($replace,$site);
     $replace['URL']=trim(str_replace('http://','',$site['url_url']),'/');
+    $replace['PAGE']=current_url();
     $emailfields=filter_by_key($data,'email');
     if (empty($emailfields)) $emailfields=filter_by_key($data,'Email');
     if ($emailfields) $replace['MAIL']=current($emailfields);
     $replace=array_merge($replace,$data);
+    if (is_array(el('body_data',$this->settings,FALSE))) {
+      $replace=array_merge($replace,el('body_data',$this->settings));
+    }
     // Template?
     $template=el('template',$this->settings,'');
     if ($template) {
