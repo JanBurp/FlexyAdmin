@@ -53,15 +53,12 @@
     }
     $this->email->to($this->settings['to']);
     // FROM
-    $this->email->from($this->get_from_addres($data));
+    $from = $this->get_from_addres($data);
+    $this->email->from( $from );
+    
     // COPY TO SENDER?
     if ($this->settings['send_copy_to_sender']) {
-      // TO sender (instead of site owner)
-      $this->email->to($this->get_from_addres($data));
-      // FROM site (instead of sender)
-      $this->email->from($this->settings['to']);
-      // CC site
-      $this->email->cc($this->settings['to']);
+      $this->email->cc( $from );
     }
    
     // SEND With a template from cfg_email, or standard
