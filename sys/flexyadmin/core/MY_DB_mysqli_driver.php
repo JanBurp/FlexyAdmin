@@ -1061,18 +1061,16 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 	 * @author Jan den Besten
 	 */
   private function get_parent($table,$row,$extraField='',$full=true) {
-    $remember=$this->remember_query;
-    $this->remember_query=false;
-    $this->where('id',$row['self_parent']);
-		$this->select("id,order,uri,self_parent");
-		if (!empty($extraField)) $this->select($extraField);
-		$parent=$this->get_row($table);
+    $sql = "SELECT `id`,`order`,`uri`,`self_parent`";
+    if (!empty($extraField)) $sql.=",`".$extraField."`";
+    $sql.=" FROM `".$table."` WHERE `id`=".$row['self_parent']." ORDER BY `order` LIMIT 1";
+    $query = $this->query($sql);
+    $parent = current($query->result_array());
     if ($full and $parent['self_parent']!=0) {
       $parentParent=$this->get_parent($table,$parent,$extraField,$full);
       $parent['uri']=$parentParent['uri'].'/'.$parent['uri'];
       if ($extraField) $parent[$extraField]=$parentParent[$extraField].'&nbsp;/&nbsp;'.$parent[$extraField];
     }
-    $this->remember_query=$remember;
     return $parent;
 	}
 
@@ -1689,7 +1687,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
    */
 	public function last_num_rows_no_limit() {
     $num_rows = 0;
-		$sql=$this->last_qb_query();
+		$sql=$this->last_query_clean();
     if (!$sql) return FALSE;
     if ($sql) {
       
