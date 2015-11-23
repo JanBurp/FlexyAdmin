@@ -286,7 +286,8 @@ class File_manager extends CI_Model {
   			/**
   			 * Check if cached thumb exists, if so, delete it
   			 */
-  			$cachedThumb=$this->config->item('THUMBCACHE').pathencode($name);
+        $thumbpath=remove_assets($name);
+  			$cachedThumb=$this->config->item('THUMBCACHE').pathencode($thumbpath);
   			if (file_exists($cachedThumb)) {
           @chmod($cachedThumb,0777);
           unlink($cachedThumb);
@@ -525,11 +526,12 @@ class File_manager extends CI_Model {
   	}
     $map=get_suffix($a['path'],'/');
   	$a['longdesc']='file/serve/'.$map.'/'.$a['src'];
+    $a['thumb'] = remove_assets($a['path'].'/'.$a['src']);
   	$a['src']=$a['path'].'/'.$a['src'];
   	if (empty($a['alt'])) $a['alt']=$a['src'];
-
   	$thumbPath=$this->config->item('THUMBCACHE');
-  	$thumb=$thumbPath.pathencode($a['src']);
+  	$thumb=$thumbPath.pathencode( $a['thumb'] );
+    
   	if (file_exists($thumb)) {
   		$a['src']=$thumb;
   	}
