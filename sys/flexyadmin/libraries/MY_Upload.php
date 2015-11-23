@@ -372,7 +372,7 @@ class MY_Upload extends CI_Upload {
 				$configResize['maintain_ratio'] = TRUE;
 				$configResize['width'] 					= $thumbSize[0];
 				$configResize['height'] 				= $thumbSize[1];
-				$configResize['new_image']			= $this->_CI->config->item('THUMBCACHE').pathencode($path."/".$this->file_name,FALSE);
+				$configResize['new_image']			= $this->_CI->config->item('THUMBCACHE').pathencode($uPath."/".$this->file_name,FALSE);
 				$configResize['master_dim']			= 'auto';
 				// set mem higher if needed
 				$this->_setMemory($currentSizes);
