@@ -173,9 +173,10 @@ class Update extends AdminController {
   		$updates=read_map('sys/flexyadmin/models/updates','php',FALSE,FALSE);
   		$updates=array_keys($updates);
   		$updates=filter_by($updates,'update_');
+
   		foreach ($updates as $key=>$file) {
   			$fileRev=(int) substr($file,7,4);
-  			if ($fileRev<=$this->updates['code']['latest'])
+  			if ($fileRev<=$this->updates['code']['current'])
   				unset($updates[$key]);
   			else {
           $model=remove_suffix($file,'.');
