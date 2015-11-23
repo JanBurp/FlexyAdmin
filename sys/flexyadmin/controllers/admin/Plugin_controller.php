@@ -31,7 +31,7 @@ class Plugin_controller extends AdminController {
       $plugins = $this->plugin_handler->get_plugins();
       foreach ($plugins as $name => $plugin) {
         if ($name!='plugin_template' and isset($plugin['config']['admin_api_method'])) {
-          $help = $this->documentation->get('sys/flexyadmin/libraries/'.ucfirst($name).'.php');
+          $help = $this->documentation->get('sys/flexyadmin/libraries/plugins/'.ucfirst($name).'.php');
           $plugin_menu->add( array( 'uri'=>$this->uri->uri_string().'/'.str_replace('plugin_','',$name), 'name' => '<b>'.ucfirst($name).'</b> - '.$help['short'] ) );
         }
       }

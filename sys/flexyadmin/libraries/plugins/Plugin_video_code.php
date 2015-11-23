@@ -14,7 +14,7 @@ class Plugin_video_code extends Plugin {
   
   public function __construct() {
     parent::__construct();
-    $this->fields=$this->config['trigger']['fields'];
+    $this->fields = $this->config['trigger']['fields'];
     $this->CI->load->helper('video');
   }
 

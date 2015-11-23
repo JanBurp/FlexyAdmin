@@ -71,7 +71,8 @@ class Parent_module_plugin {
 	protected function load_config($file='') {
 		if (empty($file)) $file=$this->name;
     if (!is_array($file)) { // Hack, want hoe komt het dat $name soms de $config is???
-  		$this->CI->config->load($file,true,false);
+      if (has_string('plugin_',$file)) $file = 'plugins/'.$file;
+      $this->CI->config->load($file,true,false);
   		$this->set_config( $this->CI->config->item($file) );
     }
 		return $this->config;

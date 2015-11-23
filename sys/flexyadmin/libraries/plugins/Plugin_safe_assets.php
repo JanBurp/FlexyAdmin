@@ -172,6 +172,7 @@ class Plugin_safe_assets extends Plugin {
 				$mapsToClean[$path]=$filetypes;
 			}
 		}
+    
 		// Loop through all maps and make them safe and clen
 		foreach ($mapsToClean as $path => $allowed) {
       if (!empty($allowed)) {

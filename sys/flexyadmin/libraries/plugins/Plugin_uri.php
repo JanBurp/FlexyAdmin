@@ -46,7 +46,7 @@ class Plugin_uri extends Plugin {
 			}
 			else {
         $this->CI->load->library('documentation');
-        $help=$this->CI->documentation->get('sys/flexyadmin/libraries/Plugin_uri.php');
+        $help=$this->CI->documentation->get('sys/flexyadmin/libraries/plugins/Plugin_uri.php');
 				$this->add_message( $help['html_long'] );
       }
 		}
