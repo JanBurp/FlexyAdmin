@@ -22,8 +22,8 @@ class Plugin_handler extends CI_Model {
   }
 	
 	public function init_plugins() {
-		$plugin_config_files=read_map(APPPATH.'config','php',FALSE,FALSE,FALSE);
-		$plugin_config_files_site=read_map(SITEPATH.'config','php',FALSE,FALSE,FALSE);
+		$plugin_config_files=read_map(APPPATH.'config/plugins','php',FALSE,FALSE,FALSE);
+		$plugin_config_files_site=read_map(SITEPATH.'config/plugins','php',FALSE,FALSE,FALSE);
 		$plugin_config_files=array_merge($plugin_config_files,$plugin_config_files_site);
 		$plugin_config_files=filter_by($plugin_config_files,'plugin');
     // unset($plugin_config_files['plugin_template.php']);
@@ -49,15 +49,15 @@ class Plugin_handler extends CI_Model {
 				$plugin_config_files[$file]=$swap;
 			}
 		}
-		
+    
 		// loop through all plugins and set config and triggers
 		foreach ($plugin_config_files as $filename => $value) {
 			$pluginName=get_file_without_extension($filename);
 			$this->plugins[$pluginName]['name']=$pluginName;
 
 			// load plugin config file
-			$this->config->load($pluginName,true);
-			$this->plugins[$pluginName]['config']=$this->config->item($pluginName);
+			$this->config->load('plugins/'.$pluginName,true);
+			$this->plugins[$pluginName]['config']=$this->config->item('plugins/'.$pluginName);
 
 			// set triggers
 			if (isset($this->plugins[$pluginName]['config']['trigger'])) {
@@ -111,12 +111,10 @@ class Plugin_handler extends CI_Model {
 
 
 	public function load_plugin($plugin) {
-		$this->load->library($plugin);
+		$this->load->library('plugins/'.$plugin);
 		if (is_object($this->$plugin)) {
 			$this->plugins[$plugin]['is_loaded']=true;
 		}
-    // Not needed anymore, config will be loaded by the plugin itself, but need to load trigger
-    // $this->$plugin->set_config( $this->plugins[$plugin] ); 
     if (isset($this->plugins[$plugin]['trigger'])) {
       $config['trigger']=$this->plugins[$plugin]['trigger'];
       $config['config']=array();
