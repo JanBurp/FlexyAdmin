@@ -1,5 +1,12 @@
+Changes 3.0.4 (3480...)
+=======================
+
+CHANGED:
+- thumbcache bestanden hebben nu niet de site/assets in hun naam
+- plugins hebben eigen submap in libraries
+
 Changes 3.0.4 (3460)
-==================
+====================
 
 UPDATE:
 - CodeIgniter 3.0

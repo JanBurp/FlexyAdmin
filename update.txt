@@ -19,7 +19,7 @@ For recent sites the update processes described below should work:
 - perform all the steps from your version to the latest:
 
 
-UPDATE 3.0.4 (3412...)
+UPDATE 3.0.4 (3490...)
 ====================
 
 - Update naar CI 3.0.3:
@@ -27,6 +27,7 @@ UPDATE 3.0.4 (3412...)
   - Vervang `index.php`
 - Login als admin en run update scripts:
   - Run update script: `admin/update/database` // update_r3285.sql
+  - Run update script: `admin/update/database/code/3480`
 
 
 
