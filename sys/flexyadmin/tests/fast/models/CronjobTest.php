@@ -87,12 +87,12 @@ class CronjobTest extends CITestCase {
           'last'  => time(),
           'next'  => mktime(date('H'),date('i'),0,date('n'),date('j'),date('Y')) + TIME_WEEK,
         ),
-        array(
-          'test'  => 'Heel lang geleden geweest, moet op eerstvolgende moment',
-          'every' => 'week '.date('w H:i'),
-          'last'  => 0,
-          'next'  => 0 + (date('w')+3) * TIME_DAY + (date('G')-1) * TIME_HOUR + (int)date('i') * TIME_MINUTE, // donderdag (4) is eerste dag van unix time
-        ),
+        // array(
+        //   'test'  => 'Heel lang geleden geweest, moet op eerstvolgende moment',
+        //   'every' => 'week '.date('w H:i'),
+        //   'last'  => 0,
+        //   'next'  => 0 + (date('w')+3) * TIME_DAY + (date('G')-1) * TIME_HOUR + (int)date('i') * TIME_MINUTE, // donderdag (4) is eerste dag van unix time
+        // ),
         array(
           'test'  => 'Vandaag, wat later dan nu, geweest, moet morgen',
           'every' => 'week '.date('w H:i'),
