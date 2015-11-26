@@ -194,8 +194,8 @@ function doGrid() {
 				$(filterBox).keypress(function(e){
           if (e.which==keyEnter) {
   					var search=$(this).val();
-            search=escape(search);
-            search=search.replace(/%/,'~');
+            search=encodeURI(search);
+            search=search.replace(/%/g,'~');
   					// ok now reload the page, starting from page 0, with this search and current order
   					var url=$(filter).attr('url')+'/0/order/'+$(filter).attr('order')+'/search/'+search;
             location.href=url;
@@ -592,6 +592,8 @@ function doGrid() {
 		grid=$("table.grid");
 		var order=$(grid).attr('order');
     var search=$(grid).attr('search');
+    search=encodeURI(search);
+    search=search.replace(/%/g,'~');
 		if (order=='') order='name';
 		var url=$(this).attr('href')+'/order/'+order+'/search/'+search;
 		$(this).attr('href',url);
@@ -615,7 +617,10 @@ function doGrid() {
 							var field=get_class($(this),1);
 						if ($(this).hasClass('headerSortDown')) field='_'+field;
 						// ok now reload the page, starting from page 0
-						var url=$(grid).attr('url')+'/0/order/'+field+'/search/'+$(grid).attr('search');
+            var search=$(grid).attr('search');
+            search=encodeURI(search);
+            search=search.replace(/%/g,'~');
+						var url=$(grid).attr('url')+'/0/order/'+field+'/search/'+search;
             location.href=url;
 					});
 				}
