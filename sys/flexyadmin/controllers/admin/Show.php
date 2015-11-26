@@ -63,6 +63,8 @@ class Show extends AdminController {
 			$offset=el('offset',$args,0);
 			$order=el('order',$args);
 			$search=el('search',$args);
+      $search=str_replace('~','%',$search);
+      $search=urldecode($search);
       $where=el('where',$args);
 			$this->grid_set->save(array('table'=>$table,'offset'=>$offset,'order'=>$order,'search'=>$search));
 
