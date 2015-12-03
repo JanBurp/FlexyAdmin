@@ -139,9 +139,9 @@ function strace_($a=NULL) {
 function trace_($a=NULL,$echo=true,$backtraceOffset=1,$max=50,$class='_trace') {
 	$CI=&get_instance();
 	static $c=0;
-  // if ($styling and $c==0 and !IS_AJAX and !defined('PHPUNIT_TEST')) {
-  //   echo "<style>._trace {box-sizing:border-box;position:relative;width:100%;margin:2px;padding:5px;overflow:auto;color:#000;font-family:courier,serif;font-size:10px;line-height:14px;border:solid 1px #666;background-color:#efe;opacity:.95;z-index:99999;} ._trace pre {font-size:10px;border:none;background:#FFF;margin:0;padding:2px;}</style>";
-  // }
+  if ($c==0 and !IS_AJAX and !defined('PHPUNIT_TEST')) {
+    echo "<style>._trace {box-sizing:border-box;position:absolute;width:100%;margin:2px;padding:5px;overflow:auto;color:#000;font-family:courier,serif;font-size:10px;line-height:14px;border:solid 1px #666;background-color:#efe;opacity:.95;z-index:99999;} ._trace pre {font-size:10px;border:none;background:transparent;margin:0;padding:2px;}</style>";
+  }
   if (IS_AJAX or defined('PHPUNIT_TEST')) {
     $out='';
   }

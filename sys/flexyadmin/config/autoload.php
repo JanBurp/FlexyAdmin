@@ -67,7 +67,7 @@ $autoload['libraries'] = array('parent_module_plugin','database');
 |	$autoload['helper'] = array('url', 'file');
 */
 
-$autoload['helper'] = array('array','cache','database','debug','directory','file','form','help','html','img','string','text','url');
+$autoload['helper'] = array('array','cache','database','debug','directory','file','form','help','html','img','string','text','url','language');
 
 
 
@@ -114,7 +114,7 @@ $autoload['language'] = array();
 */
 
 // Also 'tables/Table_Model' is autoloaded in MY_Controller
-$autoload['model'] = array('mediatable','crud');
+$autoload['model'] = array('formaction','mediatable','crud');
 
 
 

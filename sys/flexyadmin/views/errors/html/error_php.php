@@ -5,7 +5,7 @@
 	Message:	<?php echo $message; ?><br>
 	Filename:	<?php echo $filepath; ?><br>
 	Line:		<?php echo $line; ?><br>
-  <?php if (function_exists('backtrace_') and strpos($filepath,'Session.php')===false) { backtrace_(3); } ?>
+  <?php if (function_exists('backtrace_') and strpos($filepath,'Session.php')===false) { backtrace_(10); } ?>
 <?php else : ?>
   <?php
 	  $to="error@flexyadmin.com";
