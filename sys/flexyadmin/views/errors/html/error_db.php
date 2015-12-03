@@ -46,7 +46,7 @@
 
 			default:
 				echo "Error: '".$error."'<br/>";
-        if (ENVIRONMENT=='development' and function_exists('backtrace_')) backtrace_(3);
+        if (ENVIRONMENT=='development' and function_exists('backtrace_')) backtrace_(10);
 			break;
 		}
 		?>
