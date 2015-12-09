@@ -49,7 +49,6 @@ class Rss extends FrontEndController {
 
 		header("Content-Type: application/rss+xml");
 		$this->load->view('rss/feed', $data);
-    
   }
   
 }
