@@ -88,6 +88,8 @@ class AjaxController extends BasicController {
    */
   protected function _result($result) {
     $status = false;
+    $cors = el('cors',$result,false);
+    unset($result['cors']);
     
     // status = 401 Unauthorized ?
     if ( isset($result['status']) and $result['status']==401) {
@@ -126,9 +128,9 @@ class AjaxController extends BasicController {
     }
 
     // 401 output
-    if ( $status and !el('test',$result,false))  {
+    if ( $status )  {
       header($status);
-      exit;
+      if ($status=='HTTP/1.1 401 Unauthorized' and !$result['test']) exit;
     }
     
     // Order of result
@@ -148,7 +150,7 @@ class AjaxController extends BasicController {
       case 'php':
         $output = array2php($result);
         break;
-        
+      
       case 'dump':
         $output = trace_($result,false);
         break;
@@ -166,6 +168,15 @@ class AjaxController extends BasicController {
         }
         break;
     }
+    
+    // ENABLE CORS
+    if (el('format',$result,'default')==='json' and $cors) {
+      // default Status header
+      if (!$status) header("HTTP/1.1 200 OK");
+      header("Access-Control-Allow-Origin: ".$cors);
+      header("Access-Control-Allow-Credentials: true");
+    }
+
     echo $output;
     return $output;
   }
