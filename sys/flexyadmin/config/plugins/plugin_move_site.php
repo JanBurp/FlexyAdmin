@@ -13,8 +13,8 @@ $config['admin_api_method'] = '_admin_api';
 
 
 // paths of Old & New site
-$config['old'] = '';//str_replace(array('sys/flexyadmin/config','/www.'),array('','/_www.'),__DIR__);
-$config['new'] = '';//str_replace('sys/flexyadmin/config','',__DIR__);
+$config['old'] = str_replace(array('sys/flexyadmin/config/plugins','/www.'),array('','/_www.'),__DIR__);
+$config['new'] = str_replace('sys/flexyadmin/config/plugins','',__DIR__);
 
 // $config['old'] = str_replace(array('sys/flexyadmin/config','/www.'),array('','/_www.'),__DIR__);
 // $config['new'] = str_replace('sys/flexyadmin/config','',__DIR__);

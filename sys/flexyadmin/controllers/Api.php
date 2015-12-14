@@ -36,6 +36,8 @@ class Api extends AjaxController {
        }
        // Result
        $result['api']=$model;
+       // CORS?
+       $result['cors']=$this->$model->get_cors();
        return $this->_result( $result );
      }
       

@@ -41,6 +41,12 @@ class Api_Model extends CI_Model {
   protected $result=array();
   protected $info=array();
   protected $settings=array();
+
+  /**
+   * Eventuel cors domeinen, of FALSE als cors niet is toegestaan
+   * http://www.html5rocks.com/en/tutorials/cors/#toc-adding-cors-support-to-the-server
+   */
+  protected $cors = FALSE;
   
   private $error='';
   private $message='';
@@ -69,8 +75,24 @@ class Api_Model extends CI_Model {
     }
 	}
   
+  /**
+   * Geeft terug of er is ingelogd of niet
+   *
+   * @return bool
+   * @author Jan den Besten
+   */
   protected function logged_in() {
     return $this->user->logged_in();
+  }
+  
+  /**
+   * Geeft eventuele cors domeinen terug
+   *
+   * @return mixed
+   * @author Jan den Besten
+   */
+  public function get_cors() {
+    return $this->cors;
   }
 
 
