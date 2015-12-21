@@ -129,7 +129,7 @@ class auth extends Api_Model {
       return $this->_result_wrong_args();
     }
     
-    $this->user->login( $this->args['username'], $this->args['password'] );
+    $logged_in = $this->user->login( $this->args['username'], $this->args['password'] );
     return $this->check();
   }
   
