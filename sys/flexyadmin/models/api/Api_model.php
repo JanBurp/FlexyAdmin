@@ -164,22 +164,38 @@ class Api_Model extends CI_Model {
     }
     // Prepare end result
     $this->result['success'] = true;
+    // args
     $this->result['args'] = $this->args;
     if (isset($this->result['args']['password'])) $this->result['args']['password']='***';
     if (empty($this->result['args']['config'])) unset($this->result['args']['config']);
+    // unset some
     unset($this->result['status']);
     unset($this->result['error']);
     unset($this->result['message']);
+    // error/succes
     if ($this->error) {
       $this->result['error']=$this->error;
       $this->result['success']=false;
     }
+    // message
     if ($this->message) {
       $this->result['message']=$this->message;
     }
+    // format
     if (isset($this->args['format'])) $this->result['format']=$this->args['format'];
+    // info
     if (isset($this->info) and $this->info) $this->result['info']=$this->info;
+    // options
     if (isset($this->args['options'])) $this->result['options']=$this->_add_options();
+    // user
+    $this->result['user'] = FALSE;
+    if ($this->user->user_name) {
+      $this->result['user'] = array(
+        'user_name'   => $this->user->user_name,
+        'group_id'    => $this->user->group_id,
+        'group_name'  => $this->user->rights['str_description'],
+      );
+    }
     return $this->result;
   }
   
