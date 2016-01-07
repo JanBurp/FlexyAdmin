@@ -132,6 +132,7 @@ $config['enable_hooks'] = TRUE;
 */
 $config['subclass_prefix'] = 'MY_';
 
+
 /*
 |--------------------------------------------------------------------------
 | Composer auto-loading
@@ -152,7 +153,8 @@ $config['subclass_prefix'] = 'MY_';
 | Note: This will NOT disable or override the CodeIgniter-specific
 |	autoloading (application/config/autoload.php)
 */
-$config['composer_autoload'] = FALSE;
+$config['composer_autoload'] = 'sys/vendor/autoload.php';
+
 
 
 /*
@@ -326,7 +328,7 @@ $config['encryption_key'] = "pfny9WkeCN4pWU2wr6UsTfvzNBomWxxh";
 |--------------------------------------------------------------------------
 */
 $config['sess_driver']            = 'database';
-$config['sess_cookie_name']       = 'FlexyAdmin';    // This will be replaced at install, see site/config/config.php
+$config['sess_cookie_name']       = 'FlexyAdminDEMO';    // This will be replaced at install, see site/config/config.php
 $config['sess_expiration']		    = 7200;
 $config['sess_save_path']         = 'cfg_sessions';
 $config['sess_match_ip']		      = FALSE;

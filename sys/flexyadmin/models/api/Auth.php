@@ -1,8 +1,10 @@
 <?php
 
+use \Firebase\JWT\JWT;
 
 /** \ingroup models
  * API auth. Hiermee kan worden ingelogd of uitgelogd.
+ * 
  * 
  * ###_api/auth
  * 
@@ -55,11 +57,16 @@
  *      [args] => (
  *        [type] => 'GET'
  *       )
+ *      [user] => (
+ *        [username] => 'admin'                    // Gebruikersnaam
+ *        [group_name] => 'Administrator'          // Groepsnaam
+ *        [group_id] => '1'                        // Groeps id
+ *      )
  *      [data] => (
  *        [username] => 'admin'                     // Gebruikersnaam
  *        [email] => 'info@flexyadmin.com'          // Emailadres van gebruiker
- *        [last_login] => '1426762938'              // Laatste keer dat de gebruiker heeft ingelogd (unix timestamp)
  *        [language] => 'nl'                        // Taal van de gebruiker
+ *        [auth_token] => 'xxxx'                    // Auth token dat gebruikt moet worden in de Authorization header bij volgende api aanroepen (als cookies niet mogelijk zijn, cross domain)
  *       )
  * 
  * @author Jan den Besten
@@ -87,8 +94,9 @@ class auth extends Api_Model {
    * 
    * array(
    *  'success' => true
-   *  'args' => array with passed arguments
-   *  'data' => array with userdata
+   *  'args'    => array with passed arguments
+   *  'data'    => array with userdata
+   *  'token'   => JWT token for authentication
    * )
    * 
    * If not:
@@ -103,12 +111,31 @@ class auth extends Api_Model {
   protected function _check() {
     // if not logged in status = 401
     if (!$this->logged_in()) return null;
-    // Give back user session if logged in
+    
+    // Give back user info
     $data=$this->user->get_user();
     $data=object2array($data);
-    $data=array_rename_keys($data,array('str_username'=>'username','email_email'=>'email','last_login'=>'last_login','str_language'=>'language'),false);
+    $data=array_rename_keys($data,array('str_username'=>'username','email_email'=>'email','str_language'=>'language'),false);
+    
+    // create JWT token
+    if (isset($this->args['password'])) {
+      $token = array(
+        'username' => $data['username'],
+        'password' => $this->args['password'],
+        'email'    => $data['email']
+      );
+      $this->jwt_token = JWT::encode( $token, $this->jwt_key );
+    }
+    
     return $data;
   }
+  
+  /**
+   * Check if user is logged in, and if so returns user info and auth token
+   *
+   * @return void
+   * @author Jan den Besten
+   */
   public function check() {
     $data=$this->_check();
     if ($data===null) return $this->_result_status401();
@@ -128,7 +155,7 @@ class auth extends Api_Model {
     if ($this->args['type']!='POST' or !isset($this->args['username']) or !isset($this->args['password']) ) {
       return $this->_result_wrong_args();
     }
-    
+
     $logged_in = $this->user->login( $this->args['username'], $this->args['password'] );
     return $this->check();
   }
