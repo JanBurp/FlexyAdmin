@@ -1,5 +1,7 @@
 <?php
 
+use \Firebase\JWT\JWT;
+
 /** \ingroup models
  * Core API model: Roept de opgevraagde API aan en verzorgt het resultaat
  * 
@@ -13,6 +15,7 @@
  * - result can have these keys (same as AJAX controller returns):
  *    - status=401 // if call is unauthorized
  *    - success=[true|false]
+ *    - user=(array) with user info and a auth_token if just logged in
  *    - error=(string)
  *    - message=(string)
  *    - args=(array) given arguments
@@ -43,11 +46,11 @@ class Api_Model extends CI_Model {
   protected $settings=array();
 
   /**
-   * Eventuel cors domeinen, of FALSE als cors niet is toegestaan
-   * http://www.html5rocks.com/en/tutorials/cors/#toc-adding-cors-support-to-the-server
+   * Authentication token
    */
-  protected $cors = FALSE;
-  
+  protected $jwt_key   = '';  // See $config['sess_cookie_name']
+  protected $jwt_token = '';
+
   private $error='';
   private $message='';
   
@@ -56,15 +59,37 @@ class Api_Model extends CI_Model {
    */
 	public function __construct() {
 		parent::__construct();
+
+    // Basic install
+    if (empty($this->jwt_key)) $this->jwt_key = $this->config->item('sess_cookie_name');
+    
     // Get arguments
     $this->args=$this->_get_args($this->needs);
+    
     // Standard result
     $this->result['args']=$this->args;
     $this->result['api']=__CLASS__;
-    // $this->result['format']='json';
+
     // Check Authentication and Rights if not api/auth
     $auth=($this->uri->get(2)=='auth');
+    
+    // session based login
     $loggedIn=$this->user->logged_in();
+    // if not session based login, check authentication header and try login
+    if (!$loggedIn and !$auth) {
+      // Get authentication token from header
+      $jwt_header = $this->input->get_request_header('Authorization', FALSE);
+      // Try login with authentication token
+      try {
+        $jwt_decoded = (array) JWT::decode( $jwt_header, $this->jwt_key, array('HS256') );
+        if (isset($jwt_decoded['username']) and isset($jwt_decoded['password']) ) {
+          $loggedIn = $this->user->login( $jwt_decoded['username'], $jwt_decoded['password'] );
+        }
+      } catch (Exception $e) {
+        // no cath just continue
+      }
+    }
+    
     if (!$auth) {
       if (!$loggedIn) {
         return $this->_result_status401();
@@ -73,6 +98,7 @@ class Api_Model extends CI_Model {
         return $this->_result_norights();
       }
     }
+    
 	}
   
   /**
@@ -83,16 +109,6 @@ class Api_Model extends CI_Model {
    */
   protected function logged_in() {
     return $this->user->logged_in();
-  }
-  
-  /**
-   * Geeft eventuele cors domeinen terug
-   *
-   * @return mixed
-   * @author Jan den Besten
-   */
-  public function get_cors() {
-    return $this->cors;
   }
 
 
@@ -191,10 +207,14 @@ class Api_Model extends CI_Model {
     $this->result['user'] = FALSE;
     if ($this->user->user_name) {
       $this->result['user'] = array(
-        'user_name'   => $this->user->user_name,
+        'username'    => $this->user->user_name,
         'group_id'    => $this->user->group_id,
         'group_name'  => $this->user->rights['str_description'],
       );
+    }
+    // jwt token
+    if (!empty($this->jwt_token)) {
+      $this->result['data']['auth_token'] = $this->jwt_token;
     }
     return $this->result;
   }
