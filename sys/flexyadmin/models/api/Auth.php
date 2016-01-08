@@ -5,6 +5,9 @@ use \Firebase\JWT\JWT;
 /** \ingroup models
  * API auth. Hiermee kan worden ingelogd of uitgelogd.
  * 
+ * Bij login wordt een auth_token terugegeven die gebruikt moet worden in cross-domain apis in de authentication header.
+ * Deze auth_token is een dag geldig.
+ * 
  * 
  * ###_api/auth
  * 
@@ -66,12 +69,13 @@ use \Firebase\JWT\JWT;
  *        [username] => 'admin'                     // Gebruikersnaam
  *        [email] => 'info@flexyadmin.com'          // Emailadres van gebruiker
  *        [language] => 'nl'                        // Taal van de gebruiker
- *        [auth_token] => 'xxxx'                    // Auth token dat gebruikt moet worden in de Authorization header bij volgende api aanroepen (als cookies niet mogelijk zijn, cross domain)
+ *        [auth_token] => 'xxxx'                    // Auth token die gebruikt moet worden in de Authorization header bij volgende api aanroepen. Is een dag geldig. Daarna moet een nieuwe worden opgevraagd door in te loggen.
  *       )
  * 
  * @author Jan den Besten
  */
 class auth extends Api_Model {
+
   
   var $needs = array(
     // 'username'   => '',
@@ -117,7 +121,7 @@ class auth extends Api_Model {
     $data=object2array($data);
     $data=array_rename_keys($data,array('str_username'=>'username','email_email'=>'email','str_language'=>'language'),false);
     
-    // create JWT token
+    // create JWT token bij login
     if (isset($this->args['password'])) {
       $token = array(
         'username' => $data['username'],
@@ -137,7 +141,7 @@ class auth extends Api_Model {
    * @author Jan den Besten
    */
   public function check() {
-    $data=$this->_check();
+    $data = $this->_check();
     if ($data===null) return $this->_result_status401();
     $this->result['data']=$data;
     return $this->_result_ok();

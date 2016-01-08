@@ -282,7 +282,7 @@ jdb.colorComplement = function(color) {
   color = parseInt(color,16);
   var complement = '#'+(0xFFFFFF ^ color).toString(16);
   return complement;
-}
+};
 
 
 /**

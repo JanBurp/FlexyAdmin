@@ -12,7 +12,7 @@
  */
 
 
-flexyAdmin.factory('flexyAuthService',['flexyApiService',function(api){
+flexyAdmin.factory('flexyAuthService',['flexyApiService','$window',function(api,$window){
   'use strict';
   
   var isLoggedIn = false;
@@ -21,9 +21,30 @@ flexyAdmin.factory('flexyAuthService',['flexyApiService',function(api){
    * Test of response van een succesvolle login
    */
   function testResponseAuth(response) {
-    var loggedIn = (typeof(response)==='object' && response.success===true);
+    var loggedIn = false;
+    if ( response!==null && angular.isDefined(response.data) ) {
+      loggedIn = (typeof(response)==='object' && response.success===true);
+    }
+    if (loggedIn) {
+      saveAuthToken(response);
+    }
     return loggedIn;
   }
+
+  /**
+   * Bewaar de auth token
+   */
+  function saveAuthToken(response) {
+    $window.sessionStorage.token = response.data.auth_token;
+  }
+  
+  /**
+   * Verwijder de auth token (na logout bijvoorbeeld)
+   */
+  function deleteAuthToken() {
+    delete $window.sessionStorage.token;
+  }
+  
   
   return  {
 
@@ -63,9 +84,10 @@ flexyAdmin.factory('flexyAuthService',['flexyApiService',function(api){
     /**
      * Logout
      */
-    logout : function(){
+    logout : function() {
       return api.auth_logout().then(function(response){
         isLoggedIn = false;
+        deleteAuthToken();
         return response;
       });
     },
