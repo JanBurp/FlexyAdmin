@@ -26,10 +26,13 @@ flexyAdmin.constant('flexyConstants', {
    */
   base_url      : 'admin/__test',
 
+
   /**
    * URL of api calls
    */
-  api_base_url  : '_api/',
+  // api_base_url  : '_api/',
+  api_base_url  : 'http://ntozl.nl/test/flexyadmin/3.x-beta/_api/',
+  
 
   /**
    * Folder from root

@@ -66,6 +66,9 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
    * @return Promise
    */
   flexy_api_service.call = function( method,api,args ) {
+    // args klaarzetten
+    if (angular.isUndefined(args)) args = {};
+
     // Zijn er nog settings nodig?
     if ((api==='table' || api==='row') && !flexy_api_service.has_settings( 'table', args.table )) {
       args.settings = true;
@@ -73,6 +76,8 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
     if (api==='media' && !flexy_api_service.has_settings( 'path', args.path )) {
       args.settings = true;
     }
+    args.format = 'json';
+    
     // Klaar zetten van alle argumenten
     var config = {
       method : method.toUpperCase(),
@@ -80,17 +85,20 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
       params : (method=='GET'?args:undefined),
       data   : (method=='POST'?args:undefined),
     };
-    // console.log('API service',config.url,config.params);
+    console.log('API service',config);
     
     // API CALL
     return $http(config).then(function(response){
       // Als er setting data is, bewaar die in settings
-      if ( angular.isDefined(response.data.settings) ) {
-        if (api=='table' || api=='row') {
-          settings.set_item( response.data.settings, ['settings','table', args.table ]);
-        }
-        if (api=='media') {
-          settings.set_item( response.data.settings, ['settings','path', args.path ]);
+      // console.log('API response',response);
+      if ( angular.isDefined(response.data) && response.data!==null) {
+        if ( angular.isDefined(response.data.settings) ) {
+          if (api=='table' || api=='row') {
+            settings.set_item( response.data.settings, ['settings','table', args.table ]);
+          }
+          if (api=='media') {
+            settings.set_item( response.data.settings, ['settings','path', args.path ]);
+          }
         }
       }
       // Ga verder met Promise

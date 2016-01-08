@@ -50,6 +50,12 @@ class Api_Model extends CI_Model {
    */
   protected $jwt_key   = '';  // See $config['sess_cookie_name']
   protected $jwt_token = '';
+  
+  /**
+   * Eventuel cors domeinen, of FALSE als cors niet is toegestaan
+   * http://www.html5rocks.com/en/tutorials/cors/#toc-adding-cors-support-to-the-server
+   */
+  protected $cors = '*';
 
   private $error='';
   private $message='';
@@ -61,7 +67,11 @@ class Api_Model extends CI_Model {
 		parent::__construct();
 
     // Basic install
-    if (empty($this->jwt_key)) $this->jwt_key = $this->config->item('sess_cookie_name');
+    if (empty($this->jwt_key)) {
+      $this->jwt_key = $this->config->item('sess_cookie_name');
+    }
+    // Expiration of auth_token: each day a new one, add 'unixday' to key
+    $this->jwt_key.= ceil((date('U') - (3*TIME_DAY)) / TIME_DAY);
     
     // Get arguments
     $this->args=$this->_get_args($this->needs);
@@ -70,15 +80,16 @@ class Api_Model extends CI_Model {
     $this->result['args']=$this->args;
     $this->result['api']=__CLASS__;
 
-    // Check Authentication and Rights if not api/auth
-    $auth=($this->uri->get(2)=='auth');
+    // Check Authentication and Rights if not api/auth/login
+    $api_login = ($this->uri->get(3)=='login');
     
-    // session based login
+    // session based login?
     $loggedIn=$this->user->logged_in();
+    
     // if not session based login, check authentication header and try login
-    if (!$loggedIn and !$auth) {
+    if (!$loggedIn and !$api_login) {
       // Get authentication token from header
-      $jwt_header = $this->input->get_request_header('Authorization', FALSE);
+      $jwt_header = $this->input->get_request_header('Authorization', TRUE);
       // Try login with authentication token
       try {
         $jwt_decoded = (array) JWT::decode( $jwt_header, $this->jwt_key, array('HS256') );
@@ -90,7 +101,7 @@ class Api_Model extends CI_Model {
       }
     }
     
-    if (!$auth) {
+    if (!$api_login) {
       if (!$loggedIn) {
         return $this->_result_status401();
       }
@@ -108,7 +119,18 @@ class Api_Model extends CI_Model {
    * @author Jan den Besten
    */
   protected function logged_in() {
-    return $this->user->logged_in();
+    $loggedIn = $this->user->logged_in();
+    return $loggedIn;
+  }
+
+  /**
+   * Geeft eventuele cors domeinen terug
+   *
+   * @return mixed
+   * @author Jan den Besten
+   */
+  public function get_cors() {
+    return $this->cors;
   }
 
 
@@ -216,6 +238,10 @@ class Api_Model extends CI_Model {
     if (!empty($this->jwt_token)) {
       $this->result['data']['auth_token'] = $this->jwt_token;
     }
+    // cors
+    if (!empty($this->cors)) {
+      $this->result['cors'] = $this->cors;
+    }
     return $this->result;
   }
   
@@ -256,6 +282,18 @@ class Api_Model extends CI_Model {
     $keys=array_keys($defaults);
     $keys=array_merge($keys,array('settings','format'));
     $args=array();
+    
+    // OPTIONS - preflight
+    if ($this->input->server('REQUEST_METHOD')==='OPTIONS') {
+      $origin = $this->input->get_request_header('Origin',TRUE);
+      header("HTTP/1.1 200 OK");
+      header("Access-Control-Allow-Origin: ".$origin);
+      header("Access-Control-Allow-Methods: GET, POST");
+      header("Access-Control-Allow-Credentials: true");
+      header("Access-Control-Allow-Headers: Authorization");
+      echo '';
+      die();
+    }
     
     // GET
     if (!$args and (!empty($_SERVER['QUERY_STRING']) or !empty($_GET))) {
@@ -304,7 +342,7 @@ class Api_Model extends CI_Model {
     $this->message='';
     unset($_GET);
     unset($_POST);
-    $types=array('GET','POST');
+    $types=array('GET','POST','OPTIONS');
     $types_exists = FALSE;
     foreach ($types as $type) {
       $types_exists = ($types_exists or array_key_exists($type,$args));
@@ -319,6 +357,9 @@ class Api_Model extends CI_Model {
           break;
         case 'POST':
           $_POST = $ar;
+          break;
+        case 'OPTIONS':
+          $_OPTIONS = $ar;
           break;
       }
     }
@@ -455,110 +496,6 @@ class Api_Model extends CI_Model {
     return $settings;
   }
   
-
-  
-  // /**
-  //  * Adds (old) config data to result if asked for
-  //  *
-  //  * @return void
-  //  * @author Jan den Besten
-  //  */
-  // protected function _get_config( $asked_for=array() ) {
-  //   $config = el('config',$this->args,array());
-  //   $asked_for = array_merge( $asked_for, $config );
-  //   $asked_for = array_unique($asked_for);
-  //   foreach ($asked_for as $cfg_key) {
-  //     $method='_get_'.$cfg_key;
-  //     if (method_exists($this,$method)) {
-  //       $this->cfg_info[$cfg_key] = $this->$method();
-  //     }
-  //     else {
-  //       $this->cfg_info[$cfg_key] = FALSE;
-  //     }
-  //   }
-  //   return $this->cfg_info;
-  // }
-  //
-  //
-  //
-  // /**
-  //  * Gets information about the table (in args)
-  //  *
-  //  * @return array
-  //  * @author Jan den Besten
-  //  */
-  // protected function _get_table_info($table='') {
-  //   $table=el('table',$this->args,$table);
-  //   if (empty($table)) return FALSE;
-  //   $table_info=$this->cfg->get('cfg_table_info',$table);
-  //   $table_info['fields']   = $this->db->list_fields($table);
-  //   $table_info['ui_name']  = $this->ui->get( $table );
-  //   $table_info['sortable'] = !in_array('order',$table_info['fields']);
-  //   $table_info['tree']     = in_array('self_parent',$table_info['fields']);
-  //   return $table_info;
-  // }
-  //
-  // /**
-  //  * Gets information about all fields of the table in args
-  //  *
-  //  * @return array
-  //  * @author Jan den Besten
-  //  */
-  // protected function _get_field_info($table='') {
-  //   $table=el('table',$this->args,$table);
-  //   if (empty($table)) return FALSE;
-  //   $hidden_fields=array();
-  //   $field_info=array();
-  //   $fields=$this->db->list_fields($table);
-  //   foreach ($fields as $field) {
-  //     $prefix=get_prefix($field);
-  //     $full_name=$table.'.'.$field;
-  //     $info=$this->cfg->get('cfg_field_info',$full_name);
-  //     if (!el('b_show_in_grid',$info,true)) {
-  //       $hidden_fields[]=$field;
-  //     }
-  //     $type=get_prefix($field);
-  //     if (empty($type)) $type=$field;
-  //     if ($info) $info=array_unset_keys($info,array('id','field_field'));
-  //     $field_info[$field]=array(
-  //       'table'     => $table,
-  //       'field'     => $field,
-  //       'type'      => $type,
-  //       'ui_name'   => $this->ui->get($field),
-  //       'info'      => $info,
-  //       'editable'  => !in_array($field, $this->config->item('NON_EDITABLE_FIELDS') ),
-  //       'incomplete'=> in_array($prefix, $this->config->item('INCOMPLETE_DATA_TYPES') )
-  //     );
-  //   }
-  //   $this->cfg_info['table_info']['hidden_fields'] = $hidden_fields;
-  //   return $field_info;
-  // }
-  //
-  // /**
-  //  * Gets media info
-  //  *
-  //  * @return void
-  //  * @author Jan den Besten
-  //  */
-  // protected function _get_media_info($path='') {
-  //   $path=el('path',$this->args,$path);
-  //   if (empty($path)) return FALSE;
-  //   $media_info = $this->cfg->get('cfg_media_info',$path);
-  //   return $media_info;
-  // }
-  //
-  // /**
-  //  * Gets img info
-  //  *
-  //  * @author Jan den Besten
-  //  */
-  // protected function _get_img_info($path='') {
-  //   $path=el('path',$this->args,$path);
-  //   if (empty($path)) return FALSE;
-  //   $img_info = $this->cfg->get('cfg_img_info',$path);
-  //   return $img_info;
-  // }
-  //
   
   /**
    * Voegt opties voor velden toe (voor dropdown velden bijvoorbeeld)

@@ -123,7 +123,7 @@ flexyAdmin.controller('stateController', ['$scope','flexyAuthService','$location
     function(success) {
       $scope.isLoggedIn = flexyAuthService.loggedIn();
       // Show login if needed
-      if (!$scope.isLoggedIn) loginShow();
+      // if (!$scope.isLoggedIn) loginShow();
     },
     function(error) {}
   );

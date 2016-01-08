@@ -92,6 +92,7 @@ flexyAdmin.factory( 'flexyMenuService', ['flexySettingsService','flexyApiService
    * @return  object the menuobject
    */
   flexy_menu_service.get_processed = function(menu) {
+    if (loaded_menu===null) return null;
     return flexy_menu_service.process(loaded_menu[menu]);
   };
   
