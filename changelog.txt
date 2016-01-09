@@ -1,3 +1,11 @@
+Changes 3.0.5 (3501...)
+=======================
+
+CHANGED:
+- API versimpeld, standaard format=json
+- API werkt nu cross domain met auth token
+
+
 Changes 3.0.4 (3480...)
 =======================
 
