@@ -52,10 +52,10 @@ class Api_Model extends CI_Model {
   protected $jwt_token = '';
   
   /**
-   * Eventuel cors domeinen, of FALSE als cors niet is toegestaan
+   * Eventueel cors domeinen, of FALSE als cors niet is toegestaan
    * http://www.html5rocks.com/en/tutorials/cors/#toc-adding-cors-support-to-the-server
    */
-  protected $cors = '*';
+  protected $cors = FALSE;
 
 
   private $error='';
@@ -82,28 +82,27 @@ class Api_Model extends CI_Model {
     $this->result['api']=__CLASS__;
 
     // Check Authentication and Rights if not api/auth/login
-    $api_login = ($this->uri->get(3)=='login');
+    $api_login = ($this->uri->get(3)==='login');
     
-    // session based login?
+    // Check session based login
     $loggedIn=$this->user->logged_in();
-    
-    // if not session based login, check authentication header and try login
-    if (!$loggedIn and !$api_login) {
-      // Get authentication token from header
-      $jwt_header = $this->input->get_request_header('Authorization', TRUE);
-      // Try login with authentication token
-      try {
-        $jwt_decoded = (array) JWT::decode( $jwt_header, $this->jwt_key, array('HS256') );
-        $this->result['jwt'] = $jwt_decoded;
-        if (isset($jwt_decoded['username']) and isset($jwt_decoded['password']) ) {
-          $loggedIn = $this->user->login( $jwt_decoded['username'], $jwt_decoded['password'] );
+    // Check authentication header, and if its set login that way
+    $jwt_header = $this->input->get_request_header('Authorization', TRUE);
+    if (!empty($jwt_header)) {
+      if (!$loggedIn) {
+        // Try login with authentication token
+        try {
+          $jwt_decoded = (array) JWT::decode( $jwt_header, $this->jwt_key, array('HS256') );
+          if (isset($jwt_decoded['username']) and isset($jwt_decoded['password']) ) {
+            $loggedIn = $this->user->login( $jwt_decoded['username'], $jwt_decoded['password'] );
+          }
+        } catch (Exception $e) {
+          // no cath just continue
         }
-        if (isset($jwt_decoded['host'])) {
-          $this->cors = $jwt_decoded['host'];
-          $this->cors = '*';
-        }
-      } catch (Exception $e) {
-        // no cath just continue
+      }
+      // Set CORS
+      if ($loggedIn) {
+        $this->cors = '*';
       }
     }
     
