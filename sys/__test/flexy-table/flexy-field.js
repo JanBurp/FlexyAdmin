@@ -48,6 +48,7 @@ flexyAdmin.directive('flexyField', ['flexySettingsService',function(settings) {
        */
       scope.field       = attrs.field;
       scope.field_type  = attrs.field.prefix();
+      
       // booleans (different types)
       if (['b','is','has','bool'].indexOf(scope.field_type)>=0) {
         scope.field_type = 'bool';

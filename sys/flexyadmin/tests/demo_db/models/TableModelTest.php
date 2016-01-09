@@ -28,11 +28,11 @@ class TableModelTest extends CITestCase {
     // tbl_menu
     $this->CI->table_model->table( 'tbl_menu' );
     // ->list_fields()
-    $this->assertEquals( array('id','order','self_parent','uri','str_title','txt_text','b_visible','str_module','stx_description','str_keywords'), $this->CI->table_model->list_fields() );
+    $this->assertEquals( array('id','order','self_parent','uri','str_title','txt_text','medias_fotos','b_visible','str_module','stx_description','str_keywords'), $this->CI->table_model->list_fields() );
     // ->get()
     $query = $this->CI->table_model->get();
     $this->assertEquals( 5, $query->num_rows() );
-    $this->assertEquals( 10, $query->num_fields() );
+    $this->assertEquals( 11, $query->num_fields() );
 
     // tbl_links
     $this->CI->table_model->table('tbl_links');
@@ -46,11 +46,11 @@ class TableModelTest extends CITestCase {
     // tbl_menu, nog een keer om te kijk of wisseling goed gaat
     $this->CI->table_model->table('tbl_menu');
     // ->list_fields()
-    $this->assertEquals( array('id','order','self_parent','uri','str_title','txt_text','b_visible','str_module','stx_description','str_keywords'), $this->CI->table_model->list_fields() );
+    $this->assertEquals( array('id','order','self_parent','uri','str_title','txt_text','medias_fotos','b_visible','str_module','stx_description','str_keywords'), $this->CI->table_model->list_fields() );
     // ->get(2)
     $query = $this->CI->table_model->get(2);
     $this->assertEquals( 2, $query->num_rows() );
-    $this->assertEquals( 10, $query->num_fields() );
+    $this->assertEquals( 11, $query->num_fields() );
     // ->where()
     $query = $this->CI->table_model->where( 'order <=', '2' )->get();
     $this->assertEquals( 3, $query->num_rows() );
@@ -62,7 +62,7 @@ class TableModelTest extends CITestCase {
     $this->assertEquals( null, $this->CI->table_model->get_setting( 'not_a_setting' ) );
     // one settings
     $this->assertEquals( 'tbl_menu', $this->CI->table_model->get_setting( 'table' ) );
-    $this->assertEquals( array('id','order','self_parent','uri','str_title','txt_text','b_visible','str_module','stx_description','str_keywords'), $this->CI->table_model->get_setting( 'fields' ) );
+    $this->assertEquals( array('id','order','self_parent','uri','str_title','txt_text','medias_fotos','b_visible','str_module','stx_description','str_keywords'), $this->CI->table_model->get_setting( 'fields' ) );
     $this->assertEquals( array( 'str_title','str_module'), $this->CI->table_model->get_setting( 'abstract_fields' ) );
     $this->assertEquals( 'order', $this->CI->table_model->get_setting( 'order_by' ) );
     // array of settings

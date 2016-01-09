@@ -32,10 +32,10 @@ flexyAdmin.directive('flexyFieldThumb', ['flexySettingsService',function(setting
       scope.thumbs  = [];
       for (var i = 0; i < scope.files.length; i++) {
         if (scope.files[i]!=='') {
-          var src = assets+scope.path+'/'+scope.files[i];
+          var src = scope.path+'/'+scope.files[i];
           scope.thumbs[i] = {
             thumb:  assets+'_thumbcache/'+src.decodePath(),
-            src:    src,
+            src:    assets+src,
             alt:    scope.files[i]
           };
         }
