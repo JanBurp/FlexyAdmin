@@ -56,6 +56,7 @@ flexyAdmin.factory( 'flexyMenuService', ['flexySettingsService','flexyApiService
     return angular.isDefined(loaded_menu);
   };
   
+
   
   /**
    * Loads menu if not present
@@ -71,8 +72,14 @@ flexyAdmin.factory( 'flexyMenuService', ['flexySettingsService','flexyApiService
       });
     }
   };
-
   
+  /**
+   * Unload menu data (when logout for example)
+   */
+  flexy_menu_service.unload = function(menu) {
+    loaded_menu = undefined;
+  }
+
   /**
    * Returns a menu object.
    * 

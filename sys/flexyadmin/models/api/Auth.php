@@ -75,6 +75,11 @@ use \Firebase\JWT\JWT;
  * @author Jan den Besten
  */
 class auth extends Api_Model {
+  
+  /**
+   * Auth mag van alle domeinen, als inlog goed lukt dan wordt dat beperkt tot domein waar vraag vandaan kwam.
+   */
+  protected $cors = "*";
 
   
   var $needs = array(
@@ -123,10 +128,14 @@ class auth extends Api_Model {
     
     // create JWT token bij login
     if (isset($this->args['password'])) {
+      $host = $this->input->get_request_header('Origin');
+      $this->cors = $host;
+      $this->cors = '*';
       $token = array(
         'username' => $data['username'],
         'password' => $this->args['password'],
-        'email'    => $data['email']
+        'email'    => $data['email'],
+        'host'     => $host,
       );
       $this->jwt_token = JWT::encode( $token, $this->jwt_key );
     }

@@ -15,7 +15,7 @@ use \Firebase\JWT\JWT;
  * - result can have these keys (same as AJAX controller returns):
  *    - status=401 // if call is unauthorized
  *    - success=[true|false]
- *    - user=(array) with user info and a auth_token if just logged in
+ *    - user=(array) with user info
  *    - error=(string)
  *    - message=(string)
  *    - args=(array) given arguments
@@ -57,6 +57,7 @@ class Api_Model extends CI_Model {
    */
   protected $cors = '*';
 
+
   private $error='';
   private $message='';
   
@@ -66,7 +67,7 @@ class Api_Model extends CI_Model {
 	public function __construct() {
 		parent::__construct();
 
-    // Basic install
+    // Token secret
     if (empty($this->jwt_key)) {
       $this->jwt_key = $this->config->item('sess_cookie_name');
     }
@@ -93,8 +94,13 @@ class Api_Model extends CI_Model {
       // Try login with authentication token
       try {
         $jwt_decoded = (array) JWT::decode( $jwt_header, $this->jwt_key, array('HS256') );
+        $this->result['jwt'] = $jwt_decoded;
         if (isset($jwt_decoded['username']) and isset($jwt_decoded['password']) ) {
           $loggedIn = $this->user->login( $jwt_decoded['username'], $jwt_decoded['password'] );
+        }
+        if (isset($jwt_decoded['host'])) {
+          $this->cors = $jwt_decoded['host'];
+          $this->cors = '*';
         }
       } catch (Exception $e) {
         // no cath just continue
@@ -242,6 +248,12 @@ class Api_Model extends CI_Model {
     if (!empty($this->cors)) {
       $this->result['cors'] = $this->cors;
     }
+    
+    if (DEBUGGING) {
+      $this->result['server'] = $_SERVER;
+      $this->result['headers'] = $this->input->request_headers();
+    }
+    
     return $this->result;
   }
   

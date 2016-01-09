@@ -76,7 +76,6 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
     if (api==='media' && !flexy_api_service.has_settings( 'path', args.path )) {
       args.settings = true;
     }
-    args.format = 'json';
     
     // Klaar zetten van alle argumenten
     var config = {
@@ -85,13 +84,13 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
       params : (method=='GET'?args:undefined),
       data   : (method=='POST'?args:undefined),
     };
-    console.log('API service',config);
     
     // API CALL
     return $http(config).then(function(response){
+      console.log('API '+api+' ? ',config);
       // Als er setting data is, bewaar die in settings
-      // console.log('API response',response);
       if ( angular.isDefined(response.data) && response.data!==null) {
+       console.log('API '+api+' ! ',response.data);
         if ( angular.isDefined(response.data.settings) ) {
           if (api=='table' || api=='row') {
             settings.set_item( response.data.settings, ['settings','table', args.table ]);
