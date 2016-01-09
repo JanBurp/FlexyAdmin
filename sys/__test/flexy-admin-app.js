@@ -113,7 +113,6 @@ flexyAdmin.controller('stateController', ['$scope','flexyAuthService','$location
   
   // First check if mocking is on
   // TODO!!
-  
 
   // state variables
   $scope.isLoggedIn = false;
@@ -122,8 +121,6 @@ flexyAdmin.controller('stateController', ['$scope','flexyAuthService','$location
   flexyAuthService.check().then(
     function(success) {
       $scope.isLoggedIn = flexyAuthService.loggedIn();
-      // Show login if needed
-      // if (!$scope.isLoggedIn) loginShow();
     },
     function(error) {}
   );

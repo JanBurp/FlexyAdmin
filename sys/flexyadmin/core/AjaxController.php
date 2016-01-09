@@ -40,7 +40,7 @@ class AjaxController extends BasicController {
   /**
    * Set type of return [''|'json']
    */
-  private $format = '';
+  private $format = 'json';
   
 
   /**
@@ -122,15 +122,15 @@ class AjaxController extends BasicController {
       $this->message->reset_ajax();
     }
 
-    // Test output - if not AJAX
-    if ( ! $this->input->is_ajax_request() ) {
-      $result['test']=true;
-    }
+    // // Test output - if not AJAX
+    // if ( ! $this->input->is_ajax_request() ) {
+    //   $result['test']=true;
+    // }
 
     // 401 output
     if ( $status )  {
       header($status);
-      if ($status=='HTTP/1.1 401 Unauthorized' and !$result['test']) exit;
+      if ($status=='HTTP/1.1 401 Unauthorized') exit;
     }
     
     // Order of result
@@ -143,10 +143,6 @@ class AjaxController extends BasicController {
         $output = array2xml($result);
         break;
 
-      case 'json':
-        $output = array2json($result);
-        break;
-
       case 'php':
         $output = array2php($result);
         break;
@@ -154,23 +150,28 @@ class AjaxController extends BasicController {
       case 'dump':
         $output = trace_($result,false);
         break;
-
+        
+      case 'json':
       default:
-        if (isset($result['test']) and $result['test']) {
-          $result['format']='dump';
-          $result=$this->_sort_result($result);
-          $output = trace_($result,false);
-        }
-        else {
-          $result['format']='json';
-          $result=$this->_sort_result($result);
-          $output = array2json($result);
-        }
+        $output = array2json($result);
         break;
+
+      // default:
+      //   if (isset($result['test']) and $result['test']) {
+      //     $result['format']='dump';
+      //     $result=$this->_sort_result($result);
+      //     $output = trace_($result,false);
+      //   }
+      //   else {
+      //     $result['format']='json';
+      //     $result=$this->_sort_result($result);
+      //     $output = array2json($result);
+      //   }
+      //   break;
     }
 
     // ENABLE CORS
-    if (el('format',$result,'default')==='json' and $cors) {
+    if ($cors) {
       // default Status header
       if (!$status) header("HTTP/1.1 200 OK");
       header("Access-Control-Allow-Origin: ".$cors);
@@ -185,7 +186,7 @@ class AjaxController extends BasicController {
   
   
   private function _sort_result($result) {
-    return sort_keys($result,array('status','success','user','test','error','message','format','api','args','info','options','data','config'));
+    return sort_keys($result,array('status','success','user','error','message','format','api','args','info','options','data','config'));
   }
   
 

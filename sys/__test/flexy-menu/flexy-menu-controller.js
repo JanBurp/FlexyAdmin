@@ -20,27 +20,60 @@ var flexyMenu = angular.module( 'flexyMenu', []);
 /**
  * CONTROLLER
  */
-flexyMenu.controller( 'flexyMenuCtrl', [ 'flexySettingsService','flexyMenuService','$scope', function(settings,menuService,$scope) {
+flexyMenu.controller( 'flexyMenuCtrl', [ 'flexySettingsService','flexyAuthService','flexyMenuService','$scope', function(settings,authService,menuService,$scope) {
   
   // Default menu
-  $scope.menu = {
-    header  : [ { href: settings.item('base_url')+"/logout", name: 'Logout' } ],
+  var defaultMenu = {
+    // header  : [ { href: settings.item('base_url')+"/logout", name: 'Logout' } ],
+    header  : [],
     sidebar : [],
     footer  : []
   };
+
+  // Keep Menu
+  $scope.menu = defaultMenu;
+  
+  function load() {
+    var menu = {
+      header  : menuService.get_processed( 'header' ),
+      sidebar : menuService.get_processed( 'sidebar' ),
+      footer  : menuService.get_processed( 'footer' ),
+    };
+    $scope.menu = menu;
+  }
+  
+  function unload() {
+    menuService.unload();
+    $scope.menu = defaultMenu;
+  }
+  
   
   /**
-   * Make sure menu data is loaded
+   * Make sure menu data is loaded at start
    */
   if ( ! menuService.isLoaded() ) {
     menuService.load().then(function(data){
-      var menu = {
-        header  : menuService.get_processed( 'header' ),
-        sidebar : menuService.get_processed( 'sidebar' ),
-        footer  : menuService.get_processed( 'footer' ),
-      };
-      $scope.menu = menu;
+      load();
     });
   }
-  
+
+  /**
+   * Load menu on login
+   */
+  $scope.$on('event:auth-loginConfirmed', function() {
+    menuService.load().then(function(data){
+      load();
+    });
+  });
+
+  /**
+   * Reset menu on logout
+   */
+  $scope.$on('event:auth-loginRequired', function() {
+    unload();
+  });
+  $scope.$on('event:auth-loginCancelled', function() {
+    unload();
+  });
+
 }]);

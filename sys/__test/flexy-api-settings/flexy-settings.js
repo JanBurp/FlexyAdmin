@@ -30,8 +30,8 @@ flexyAdmin.constant('flexyConstants', {
   /**
    * URL of api calls
    */
-  // api_base_url  : '_api/',
-  api_base_url  : 'http://ntozl.nl/test/flexyadmin/3.x-beta/_api/',
+  api_base_url  : '_api/',
+  // api_base_url  : 'http://ntozl.nl/test/flexyadmin/3.x-beta/_api/',
   
 
   /**
@@ -43,6 +43,7 @@ flexyAdmin.constant('flexyConstants', {
    * Assets folder
    */
   site_assets   : 'site/assets/',
+
 
   /**
    * A prefix that will be added to all logging messages

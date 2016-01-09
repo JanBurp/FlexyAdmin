@@ -32,6 +32,7 @@ flexyAdmin.directive('flexyTable', ['flexySettingsService','flexyApiService','fl
        */
       $scope.table = attrs.table;
       $scope.path  = attrs.path;
+      $scope.base_url = settings.item('base_url');
       
       /**
        * UI Name
