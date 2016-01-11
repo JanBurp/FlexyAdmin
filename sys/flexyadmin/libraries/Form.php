@@ -1029,15 +1029,17 @@ class Form {
 				if ($field["type"]=="image_dragndrop") {
 					$preName=get_prefix($field['name']);
 					$field['control'].='<ul class="choices">';
-					foreach($options as $img) {
-						if (empty($img)) {
-							$field['control'].='<li><img src="'.$this->CI->config->item('ADMINASSETS').'icons/flexyadmin_empty_image.gif" class="media empty" /></li>';
-						}
-						else {
-							$image=$img['name'];
-							if ($preName=='media' or !in_array($image,$medias)) $field['control'].='<li>'.show_thumb(array("src"=>$field["path"]."/".$image,"class"=>"media",'alt'=>$image,'title'=>$image)).'</li>';
-						}
-					}
+          if (!empty($options)) {
+  					foreach($options as $img) {
+  						if (empty($img)) {
+  							$field['control'].='<li><img src="'.$this->CI->config->item('ADMINASSETS').'icons/flexyadmin_empty_image.gif" class="media empty" /></li>';
+  						}
+  						else {
+  							$image=$img['name'];
+  							if ($preName=='media' or !in_array($image,$medias)) $field['control'].='<li>'.show_thumb(array("src"=>$field["path"]."/".$image,"class"=>"media",'alt'=>$image,'title'=>$image)).'</li>';
+  						}
+  					}
+          }
 					$field['control'].='</ul>';					
 				}
 				//
