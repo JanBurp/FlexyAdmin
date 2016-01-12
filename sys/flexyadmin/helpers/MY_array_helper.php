@@ -1060,6 +1060,24 @@ function array_push_assoc($arr,$key,$val) {
 }
 
 
+/**
+ * Implode associative array
+ *
+ * @param string $glue 
+ * @param array $array 
+ * @return string
+ * @author Jan den Besten
+ */
+function implode_assoc($glue,$array) {
+  $out='';
+  foreach ($array as $key => $value) {
+    $out.=$key.' => "'.$value.'"'.$glue;
+  }
+  $out=substr($out,0,strlen($out)-strlen($glue));
+  return $out;
+}
+
+
 
 /**
  * Maakt van associatieve array een string van attributen

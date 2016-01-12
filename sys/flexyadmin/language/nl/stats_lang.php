@@ -1,5 +1,7 @@
 <?php
 
+$lang["statistics"]					= "Statistieken";
+
 $lang["stats_hits"]					= "Aantal";
 $lang["stats_page"]					= "Pagina";
 $lang["stats_referer"]			= "Referrer";

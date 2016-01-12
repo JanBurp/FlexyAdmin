@@ -7,7 +7,7 @@
  */
 
 class MY_Email extends CI_Email {
-
+  
   /**
    * Houdt bij naar hoeveel adressen 
    */
@@ -32,6 +32,27 @@ class MY_Email extends CI_Email {
    * Send with with/as pdf 
    */
   private $send_with_pdf=FALSE;
+  
+  
+	/**
+	 * Send Email, met logging
+	 *
+	 * @param	bool	$auto_clear = TRUE
+	 * @return	bool
+	 */
+  public function send($auto_clear = TRUE) {
+    $send = parent::send(FALSE);
+    $CI = &get_instance();
+    $CI->load->model('log_activity');
+    if ($send) {
+      $CI->log_activity->email( implode_assoc( PHP_EOL, $this->_headers) ,'EMAIL TO '.$this->_headers['To'] );
+    }
+    else {
+      $CI->log_activity->email( $this->print_debugger('headers') ,'EMAIL ERROR TO '.$this->_headers['To'] );
+    }
+    if ($send and $auto_clear) $this->clear();
+    return $send;
+  }
   
 
   /**

@@ -18,7 +18,7 @@ class Ajax extends AjaxController {
 		parent::__construct();
 		$this->load->model('ui');
     $this->load->model('flexy_field','ff');
-    $this->load->model("login_log");
+    // $this->load->model("login_log");
     $this->load->library('form_validation');
     $this->lang->load('ajax');
     $this->lang->load('form_validation');
@@ -44,7 +44,7 @@ class Ajax extends AjaxController {
 					$this->load->model('queu');
 					$this->order->set_all($table,$ids);
           $this->_after_update($table);
-          $this->login_log->update($table);
+          // $this->log_activity->database('',$table);
 					$this->queu->run_calls();
 					delete_all_cache();
 				}
@@ -132,7 +132,7 @@ class Ajax extends AjaxController {
               $this->table_model->table($table);
               $this->table_model->update( $newData, array(PRIMARY_KEY=>$id) );
               
-              $this->login_log->update($table);
+              // $this->log_activity->database('',$table);
 
     					if ($plugins) {
     						$this->queu->run_calls();

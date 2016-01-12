@@ -197,7 +197,7 @@ $config['CFG_users']									= "users";
 $config['CFG_media_info']							= "media_info";
 $config['CFG_img_info']								= "img_info";
 
-$config['LOG_login']									= "login";
+$config['LOG_activity']							  = "activity";
 $config['LOG_stats']									= "stats";
 
 
@@ -450,9 +450,9 @@ $config["CFG_"]=array(
 			"str_order_by"=>'id',
 			"b_add_empty_choice"=>'1',
 			),
-		"log_login"=>array(
+		"log_activity"=>array(
 			"order"=>'130',
-			"table"=>'log_login',
+			"table"=>'log_activity',
 			'b_pagination'=>true,
 			"b_grid_add_many"=>'0',
 			"str_abstract_fields"=>'',

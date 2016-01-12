@@ -22,5 +22,4 @@ $config['smtp_port'] = 1025;
 $config['newline'] = "\r\n";
 
 
-
 ?>

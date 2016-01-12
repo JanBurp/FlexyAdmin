@@ -223,11 +223,11 @@ class TableModelTest extends CITestCase {
                                    ->select('str_title')
                                    ->with( 'many_to_many', array('tbl_adressen' => 'abstract') )
                                    ->get();
-    $this->assertEquals( 52, $query->num_rows() );
+    $this->assertEquals( 48, $query->num_rows() );
     $this->assertEquals( 3, $query->num_fields() );
     // data, klopt num_rows & num_fields?
     $array = $query->result_array();
-    $this->assertEquals( 52, count($array) );
+    $this->assertEquals( 48, count($array) );
     $row = current($array);
     $this->assertEquals( 3, count($row) );
     // kloppen keys in row?
@@ -238,11 +238,11 @@ class TableModelTest extends CITestCase {
     
     // tbl_groepen - full
     $query = $this->CI->table_model->select('str_title')->with( 'many_to_many', array('tbl_adressen'=>'str_address') )->get();
-    $this->assertEquals( 52, $query->num_rows() );
+    $this->assertEquals( 48, $query->num_rows() );
     $this->assertEquals( 3, $query->num_fields() );
     // data, klopt num_rows & num_fields?
     $array = $query->result_array();
-    $this->assertEquals( 52, count($array) );
+    $this->assertEquals( 48, count($array) );
     $row = current($array);
     $this->assertEquals( 3, count($row) );
     // kloppen keys in row?
@@ -402,7 +402,7 @@ class TableModelTest extends CITestCase {
     $this->CI->table_model->find('straat');
     $query = $this->CI->table_model->get();
     $info = $this->CI->table_model->get_query_info();
-    $this->assertEquals( 5, $info['num_rows'] );
+    $this->assertEquals( 4, $info['num_rows'] );
     // Zoeken in many_to_many 'straat' ->word_boundaries
     $this->CI->table_model->table( 'tbl_groepen' );
     $this->CI->table_model->with( 'many_to_many' );
@@ -410,16 +410,10 @@ class TableModelTest extends CITestCase {
     $query = $this->CI->table_model->get();
     $info = $this->CI->table_model->get_query_info();
     $this->assertEquals( 0, $info['num_rows'] );
-    
-    
-    
-    
-    
   }
   
   
   public function test_crud() {
-    
     $this->CI->table_model->table('tbl_crud');
     
     // INSERT

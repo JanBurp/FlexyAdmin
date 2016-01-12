@@ -29,6 +29,7 @@ class Mediatable extends CI_Model {
    */
 	public function __construct() {
 		parent::__construct();
+    $this->load->model('log_activity');
     $this->has_table=$this->db->table_exists($this->table);
     if ($this->has_table and $this->db->field_exists('b_used',$this->table)) $this->load->model('search_replace');
 	}
@@ -129,7 +130,11 @@ class Mediatable extends CI_Model {
       if ($userId and $this->db->field_exists('user',$this->table)) $set['user']=$userId;
       $this->db->set($set);
       $this->db->insert($this->table);
-      return $this->db->insert_id();
+      $id = $this->db->insert_id();
+      
+      $this->log_activity->media( $this->db->last_query(), $path.' UPLOAD `'.$file['name'].'` id='.$id );
+
+      return $id;
     }
     return false;
   }
@@ -208,7 +213,11 @@ class Mediatable extends CI_Model {
     }
     $this->db->where('file',$file)->where('path',$path);
     $this->db->delete($this->table);
-    return ($this->db->affected_rows()>0);
+    $is_deleted = ($this->db->affected_rows()>0);
+    if ($is_deleted) {
+      $this->log_activity->media( $this->db->last_query(), $path.' DELETED `'.$file.'`' );
+    }
+    return $is_deleted;
   }
   
   
@@ -372,7 +381,9 @@ class Mediatable extends CI_Model {
       else
         $data=$item;
       $this->db->where('file',$name)->where('path',$path)->set($data)->update($this->table);
-      return ($this->db->affected_rows()>0);
+      $changed=($this->db->affected_rows()>0);
+      if ($changed) $this->log_activity->media( $this->db->last_query(), $path.' EDITED `'.$name.'' );
+      return $changed;
     }
     return false;
   }
