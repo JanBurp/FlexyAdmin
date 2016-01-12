@@ -54,11 +54,6 @@ class Login extends MY_Controller {
 			
 			// login log
 			$this->load->helper('date');
-			$this->db->set('id_user',$userData['id']);
-			$this->db->set('tme_login_time',date(DATE_W3C,time()));
-			$this->db->set('ip_login_ip',$_SERVER['REMOTE_ADDR']);
-			$this->db->insert($this->config->item('LOG_table_prefix')."_".$this->config->item('LOG_login'));
-
 		}
 		else { 
 			// Unsuccesfull

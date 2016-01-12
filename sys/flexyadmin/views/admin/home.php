@@ -1,5 +1,4 @@
 <?=$homeplugins;?>
-<?=$logindata;?>
 
 <?php if (isset($message)): ?>
 <br /><br />

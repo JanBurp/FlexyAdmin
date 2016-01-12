@@ -182,6 +182,7 @@ Class Table_Model extends CI_Model {
 
 	public function __construct() {
 		parent::__construct();
+    $this->load->model('log_activity');
     $this->_config();
 	}
 
@@ -2354,6 +2355,10 @@ Class Table_Model extends CI_Model {
       if ($type=='INSERT') {
 				$this->db->insert( $this->settings['table'] );
 				$id = $this->db->insert_id();
+        $log = array(
+          'query'       => $this->db->last_query(),
+          'description' => $this->settings['table'].' '.$type.' id='.$id
+        );
         $this->query_info = array(
           'insert_id' => $id
         );
@@ -2361,13 +2366,17 @@ Class Table_Model extends CI_Model {
     	else {
         $sql = $this->db->get_compiled_update( $this->settings['table'], FALSE );
 				$this->db->update( $this->settings['table'], NULL,NULL, $this->tm_limit );
-        // trace_($this->last_query());
+        $log = array(
+          'query'       => $this->db->last_query(),
+          'description' => $this->settings['table'].' '.$type.' id='
+        );
         $ids = $this->_get_ids( $sql );
         $id = current( $ids );
         $this->query_info = array(
           'affected_rows' => $this->db->affected_rows(),
           'affected_ids'  => $ids,
         );
+        $log['description'].=implode(',',$ids);
 			}
       
       
@@ -2385,6 +2394,7 @@ Class Table_Model extends CI_Model {
 					// DELETE eerst huidige items
 					$this->db->where( $this_foreign_key, $id );
 					$this->db->delete( $rel_table );
+          $log['query'] .= ';'.PHP_EOL.PHP_EOL.$this->db->last_query();
 
 					// INSERT dan nieuwe many_to_many ids
 					foreach ( $other_ids as $other_id ) {
@@ -2393,11 +2403,16 @@ Class Table_Model extends CI_Model {
 						$this->db->insert( $rel_table );
             $affected++;
             // $rel_id=$this->db->insert_id();
+            $log['query'] .= ';'.PHP_EOL.PHP_EOL.$this->db->last_query();
 					}
 				}
         $this->query_info['affected_rel_rows'] = $affected;
 			}
 		}
+    
+    if (isset($log)) {
+      $this->log_activity->database( $log['query'], $log['description'] );
+    }
     
     $this->reset();
 		return intval($id);
@@ -2433,6 +2448,14 @@ Class Table_Model extends CI_Model {
 		
     $is_deleted = $this->db->delete( $this->settings['table'], '', $this->tm_limit, $reset_data );
     
+    if ($is_deleted) {
+      $log = array(
+        'query'       => $this->db->last_query(),
+        'description' => $this->settings['table'].' DELETE '.implode(',',$ids),
+      );
+    }
+    
+    
     $this->query_info = array(
       'affected_rows' => $this->db->affected_rows(),
       'affected_ids'  => $ids,
@@ -2461,6 +2484,7 @@ Class Table_Model extends CI_Model {
           $this_foreign_key = $this->settings['relations']['many_to_many'][$other_table]['this_key'];
           $this->db->where_in( $this_foreign_key, $ids );
           $this->db->delete( $rel_table );
+          $log['query'] .= ';'.PHP_EOL.PHP_EOL.$this->db->last_query();
           $affected = $affected + $this->db->affected_rows();
         }
         $this->query_info['affected_rel_rows'] = $affected;
@@ -2469,6 +2493,11 @@ Class Table_Model extends CI_Model {
     }
     
     $this->db->trans_complete();
+
+    if (isset($log)) {
+      $this->log_activity->database( $log['query'], $log['description'] );
+    }
+
     $this->reset();
 		return $is_deleted;
 	}

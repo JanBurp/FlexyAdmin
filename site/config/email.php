@@ -18,7 +18,6 @@ $config['mailtype'] = 'html';
 // $config['protocol'] = 'smtp';
 // $config['smtp_host'] = 'localhost';
 
-
 if (IS_LOCALHOST) {
 	include("email_local.php");
 }

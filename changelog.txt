@@ -1,3 +1,12 @@
+Changes 3.0.5 (3505...)
+=======================
+
+CHANGED:
+- log_login changed to log_activity
+- log_activity logs all database,media,auth and email activity
+- homescreen changed to statistics
+
+
 Changes 3.0.5 (3501...)
 =======================
 

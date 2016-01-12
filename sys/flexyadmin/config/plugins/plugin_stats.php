@@ -10,6 +10,7 @@
 */
 
 $config['admin_api_method'] = '_admin_api';
+$config['home_method']      = '_admin_api';
 
 
 ?>

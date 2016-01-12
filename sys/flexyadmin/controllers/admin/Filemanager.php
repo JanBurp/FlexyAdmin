@@ -275,8 +275,8 @@ class Filemanager extends AdminController {
 								if ($this->mediatable->exists()) {
                   $this->mediatable->delete($file,$path);
 								}
-								$this->load->model("login_log");
-								$this->login_log->update($path);
+                // $this->load->model("login_log");
+                // $this->log_activity->update($path);
 								$deletedFiles.=', '.$file;
 							}
 							else {
@@ -353,8 +353,8 @@ class Filemanager extends AdminController {
 					}
 					// message
 					$this->message->add(langp("upload_succes",$file));
-					$this->load->model("login_log");
-					$this->login_log->update($path);
+          // $this->load->model("login_log");
+          // $this->log_activity->update($path);
           // redirect(api_uri('API_filemanager_view',pathencode($path),$file));
 				}
 			}

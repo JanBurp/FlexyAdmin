@@ -15,6 +15,7 @@ class order extends CI_Model {
 
   public function __construct($table="") {
 		parent::__construct();
+    $this->load->model('log_activity');
 		$this->initialize(array('table'=>$table));
 	}
 
@@ -112,6 +113,7 @@ class order extends CI_Model {
     if (!empty($parent)) {
       $sql="UPDATE `$table` SET `order`=`order`+1 WHERE `order`>='$next'";
       $this->db->query($sql);
+      $this->log_activity->database( $this->db->last_query(), $table.' SHIFT ORDER' );
     }
 		return $next;
 	}
@@ -178,11 +180,19 @@ class order extends CI_Model {
   public function set_all($table,$ids,$from=0) {
     $return=array();
     $order=$from;
+    $log = array(
+      'query' =>'',
+      'description' => $table.' SET ORDER id='.implode(',',$ids),
+    );
 		foreach($ids as $id) {
       $return[]=array('id'=>$id,'order'=>$order);
 			$this->db->where(PRIMARY_KEY,$id);
 			$this->db->update($table, array($this->order => $order++ ));
+      $log['query'] .= $this->db->last_query().';'.PHP_EOL.PHP_EOL;
 		}
+    if ($log['query']) {
+      $this->log_activity->database( $log['query'], $log['description'] );
+    }
     return $return;
 	}
 
@@ -210,6 +220,12 @@ class order extends CI_Model {
       $children_ids = $this->_get_children_ids( $table, $id, $old );
       $moved_ids=array_merge($moved_ids,$children_ids);
     }
+    
+    $log = array(
+      'query' =>'',
+      'description' => $table.' SET AND MOVE ORDER id='.$id,
+    );
+    
     // Pas order in item (en kinderen) aan
     $order = $new;
     foreach ($moved_ids as $move_id) {
@@ -217,6 +233,7 @@ class order extends CI_Model {
       $this->db->where( PRIMARY_KEY, $move_id);
       $this->db->update( $table );
       $order++;
+      $log['query'] .= $this->db->last_query().';'.PHP_EOL.PHP_EOL;
     }
     $order--;
     $shifted_count = count($moved_ids);
@@ -226,11 +243,13 @@ class order extends CI_Model {
       // Schuif alle tussenliggende terug
       $sql="UPDATE `$table` SET `order`=`order`-".$shifted_count." WHERE `order`>'$old' AND `order`<='$order' AND `id` NOT IN(".implode(',',$moved_ids).")";
       $this->db->query($sql);
+      $log['query'] .= $this->db->last_query().';'.PHP_EOL.PHP_EOL;
     }
     if ($new<$old) {
       // Schuif alle tussenliggende verder
       $sql="UPDATE `$table` SET `order`=`order`+".$shifted_count." WHERE `order`>='$new' AND `order`<'$old' AND `id` NOT IN(".implode(',',$moved_ids).")";
       $this->db->query($sql);
+      $log['query'] .= $this->db->last_query().';'.PHP_EOL.PHP_EOL;
     }
     // trace_($sql);
     
@@ -246,8 +265,12 @@ class order extends CI_Model {
       $this->db->set('self_parent',$prev_parent);
       $this->db->where(PRIMARY_KEY,$id);
       $this->db->update( $table );
+      $log['query'] .= $this->db->last_query().';'.PHP_EOL.PHP_EOL;
     }
     
+    if ($log['query']) {
+      $this->log_activity->database( $log['query'], $log['description'] );
+    }
     return $new;
   }
   

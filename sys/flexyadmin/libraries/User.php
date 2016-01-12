@@ -80,6 +80,8 @@ class User extends Ion_auth {
     else {
 			if ($this->CI->ion_auth_model->login($identity, $password, $remember)) {
         $this->load_user_cfg();
+        $this->CI->load->model('log_activity');
+        $this->CI->log_activity->auth();
 				return TRUE;
 			}
     }
