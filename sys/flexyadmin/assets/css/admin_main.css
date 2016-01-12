@@ -1079,6 +1079,8 @@ input.checkbox {
 textarea, .mceEditor {
 	line-height: 1.4em;
 	width:450px;
+  display:block;
+  margin-left:150px;
 }
 textarea.md {height:400px;}
 .mceEditor>table {
@@ -1091,6 +1093,7 @@ div.flexyFormField.htmleditor.big label {float:none;}
 
 div.flexyFormField.wide .mceEditor,
 div.flexyFormField.big .mceEditor {margin:4px 0px 4px;}
+
 /* These are also set in header.php, the tinyMCE call */
 textarea.wide,
 textarea.big {width:608px;}
@@ -1141,7 +1144,7 @@ body.normal_dropdowns select.image_dropdown {margin-top:0px;}
 
 .flexyFormField.fieldtype_medias select.image_dropdown {	width:460px;}
 
-.flexyFormField.fieldtype_media {min-height:35px;}
+.flexyFormField.fieldtype_media {min-height:132px;}
 .flexyFormField.fieldtype_medias {min-height:132px;}
 body.normal_dropdowns .flexyFormField.fieldtype_medias {
 /*  float:left;*/
@@ -1265,6 +1268,7 @@ input.button {
 .flexyFormField ul.choices,
 .flexyFormField ul.values {
 	width:450px;
+  min-height:79px;
 }
 .flexyFormField ul.choices img {
 	filter:alpha(opacity=80);
@@ -1282,6 +1286,8 @@ input.button {
 	width:599px;
 	margin-left:0px;
 }
+.flexyFormField.image_dragndrop ul.choices img {opacity:.7;}
+.flexyFormField.image_dragndrop ul.choices img:hover {opacity:1;}
 
 .flexyFormField>ul li {
 	list-style:none;
