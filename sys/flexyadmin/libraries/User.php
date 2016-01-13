@@ -88,6 +88,21 @@ class User extends Ion_auth {
 		$this->set_error('login_unsuccessful');
 		return FALSE;
 	}
+  
+  /**
+   * Logout
+   *
+   * @return void
+   * @author Jan den Besten
+   */
+  public function logout() {
+    $logout = parent::logout();
+    if ($logout) {
+      $this->CI->load->model('log_activity');
+      $this->CI->log_activity->auth('logout',$this->user_id);
+    }
+    return $logout;
+  }
 	
   /**
    * _check_if_userdate_ok()

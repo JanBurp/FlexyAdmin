@@ -2356,8 +2356,9 @@ Class Table_Model extends CI_Model {
 				$this->db->insert( $this->settings['table'] );
 				$id = $this->db->insert_id();
         $log = array(
-          'query'       => $this->db->last_query(),
-          'description' => $this->settings['table'].' '.$type.' id='.$id
+          'query' => $this->db->last_query(),
+          'table' => $this->settings['table'],
+          'id'    => $id
         );
         $this->query_info = array(
           'insert_id' => $id
@@ -2367,8 +2368,9 @@ Class Table_Model extends CI_Model {
         $sql = $this->db->get_compiled_update( $this->settings['table'], FALSE );
 				$this->db->update( $this->settings['table'], NULL,NULL, $this->tm_limit );
         $log = array(
-          'query'       => $this->db->last_query(),
-          'description' => $this->settings['table'].' '.$type.' id='
+          'query' => $this->db->last_query(),
+          'table' => $this->settings['table'],
+          'id'    => $id
         );
         $ids = $this->_get_ids( $sql );
         $id = current( $ids );
@@ -2376,7 +2378,7 @@ Class Table_Model extends CI_Model {
           'affected_rows' => $this->db->affected_rows(),
           'affected_ids'  => $ids,
         );
-        $log['description'].=implode(',',$ids);
+        $log['id']=implode(',',$ids);
 			}
       
       
@@ -2411,7 +2413,7 @@ Class Table_Model extends CI_Model {
 		}
     
     if (isset($log)) {
-      $this->log_activity->database( $log['query'], $log['description'] );
+      $this->log_activity->database( $log['query'], $log['table'], $log['id'] );
     }
     
     $this->reset();
@@ -2450,8 +2452,9 @@ Class Table_Model extends CI_Model {
     
     if ($is_deleted) {
       $log = array(
-        'query'       => $this->db->last_query(),
-        'description' => $this->settings['table'].' DELETE '.implode(',',$ids),
+        'query' => $this->db->last_query(),
+        'table' => $this->settings['table'],
+        'id'    => implode(',',$ids),
       );
     }
     
@@ -2495,7 +2498,7 @@ Class Table_Model extends CI_Model {
     $this->db->trans_complete();
 
     if (isset($log)) {
-      $this->log_activity->database( $log['query'], $log['description'] );
+      $this->log_activity->database( $log['query'], $log['table'], $log['id'] );
     }
 
     $this->reset();

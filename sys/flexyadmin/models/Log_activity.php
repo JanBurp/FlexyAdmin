@@ -22,33 +22,34 @@ class Log_activity extends CI_Model {
    * @return int id
    * @author Jan den Besten
    */
-  public function add($type,$activity,$description='') {
+  public function add($type,$activity,$model='',$key='',$user_id=FALSE) {
     if (!defined('PHPUNIT_TEST')) {
-      $user_id = $this->session->userdata("user_id");
+      if (!$user_id) $user_id = $this->session->userdata("user_id");
       $this->db->set( 'id_user',$user_id );
       $this->db->set( 'str_activity_type',$type );
       $this->db->set( 'stx_activity',$activity );
-      if ($description) $this->db->set( 'str_description',$description );
+      if ($model)       $this->db->set( 'str_model',$model );
+      if ($key)         $this->db->set( 'str_key',$key );
       $this->db->insert( 'log_activity' );
     }
   }
   
   
-  public function database( $activity,$description='' ) {
-    return $this->add('database',$activity,$description);
+  public function database( $activity,$model='',$key='' ) {
+    return $this->add('database',$activity,$model,$key);
   }
 
-  public function auth( $activity='',$description='' ) {
-    if (empty($activity)) $activity = 'logged in';
-    return $this->add('auth',$activity,$description);
+  public function auth( $activity='', $user_id = FALSE ) {
+    if (empty($activity)) $activity = 'login';
+    return $this->add('auth',$activity,'','',$user_id);
   }
 
-  public function media( $activity,$description='' ) {
-    return $this->add('media',$activity,$description);
+  public function media( $activity,$model='',$key='' ) {
+    return $this->add('media',$activity,$model,$key);
   }
 
-  public function email( $activity,$description='' ) {
-    return $this->add('email',$activity,$description);
+  public function email( $activity,$model='',$key='' ) {
+    return $this->add('email',$activity,$model,$key);
   }
 
 
@@ -59,11 +60,9 @@ class Log_activity extends CI_Model {
    * @return void
    * @author Jan den Besten
    */
-  public function get_user_activity( $user_id, $limit=5 ) {
-		$this->db->select( 'tme_timestamp, str_description' );
-		$this->db->where( 'id_user', $user_id);
-		$this->db->order_by( 'tme_timestamp DESC' );
-		$query = $this->db->get( 'log_activity', $limit );
+  public function get_user_activity( $user_id=FALSE, $limit=10 ) {
+    if (!$user_id) $user_id = $this->session->userdata("user_id");
+    $query = $this->db->query("SELECT DISTINCT `id_user`,`tme_timestamp`, `str_model` FROM `log_activity` WHERE `str_activity_type`!='auth' ORDER BY `tme_timestamp` DESC LIMIT ".$limit);
     return $query->result_array();
   }
 

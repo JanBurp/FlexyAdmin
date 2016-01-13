@@ -132,7 +132,7 @@ class Mediatable extends CI_Model {
       $this->db->insert($this->table);
       $id = $this->db->insert_id();
       
-      $this->log_activity->media( $this->db->last_query(), $path.' UPLOAD `'.$file['name'].'` id='.$id );
+      $this->log_activity->media( $this->db->last_query(), $path, $id.'|'.$file['name'] );
 
       return $id;
     }
@@ -215,7 +215,7 @@ class Mediatable extends CI_Model {
     $this->db->delete($this->table);
     $is_deleted = ($this->db->affected_rows()>0);
     if ($is_deleted) {
-      $this->log_activity->media( $this->db->last_query(), $path.' DELETED `'.$file.'`' );
+      $this->log_activity->media( $this->db->last_query(), $path, $file );
     }
     return $is_deleted;
   }
@@ -382,7 +382,7 @@ class Mediatable extends CI_Model {
         $data=$item;
       $this->db->where('file',$name)->where('path',$path)->set($data)->update($this->table);
       $changed=($this->db->affected_rows()>0);
-      if ($changed) $this->log_activity->media( $this->db->last_query(), $path.' EDITED `'.$name.'' );
+      if ($changed) $this->log_activity->media( $this->db->last_query(), $path, $name );
       return $changed;
     }
     return false;

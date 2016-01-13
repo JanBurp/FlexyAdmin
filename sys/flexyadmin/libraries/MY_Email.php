@@ -45,10 +45,10 @@ class MY_Email extends CI_Email {
     $CI = &get_instance();
     $CI->load->model('log_activity');
     if ($send) {
-      $CI->log_activity->email( implode_assoc( PHP_EOL, $this->_headers) ,'EMAIL TO '.$this->_headers['To'] );
+      $CI->log_activity->email( implode_assoc( PHP_EOL, $this->_headers) ,'to',$this->_headers['To'] );
     }
     else {
-      $CI->log_activity->email( $this->print_debugger('headers') ,'EMAIL ERROR TO '.$this->_headers['To'] );
+      $CI->log_activity->email( $this->print_debugger('headers') ,'error',$this->_headers['To'] );
     }
     if ($send and $auto_clear) $this->clear();
     return $send;
