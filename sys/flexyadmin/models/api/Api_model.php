@@ -200,9 +200,12 @@ class Api_Model extends CI_Model {
     if (el('settings',$this->args,false)) {
       if (isset($this->args['table'])) {
         $this->result['settings'] = $this->_get_settings( $this->args['table'], 'table' );
+        if ($this->args['table']==='res_media_files' and isset($this->args['path'])) {
+          $this->result['settings']['media_info'] = $this->_get_settings( $this->args['path'], 'path' );
+        }
       }
       if (isset($this->args['path'])) {
-        $this->result['settings'] = $this->_get_settings( $this->args['path'], 'path' );
+        $this->result['settings']['media_info'] = $this->_get_settings( $this->args['path'], 'path' );
       }
     }
     // Prepare end result

@@ -33,9 +33,10 @@ flexyAdmin.directive('flexyField', ['flexySettingsService',function(settings) {
     link: function(scope, element, attrs ) {
       
       /**
-       * Table & id (not needed yet)
+       * Table/Path & id (not needed yet)
        */
       scope.table = attrs.table;
+      scope.path  = attrs.path;
       scope.id    = attrs.id;
       
       /**
@@ -63,7 +64,6 @@ flexyAdmin.directive('flexyField', ['flexySettingsService',function(settings) {
       if (['media','medias'].indexOf(scope.field_type)>=0) {
         scope.path = settings.item( ['settings','table', scope.table, 'field_info', scope.field, 'path' ] );
       }
-
     },
     
   };

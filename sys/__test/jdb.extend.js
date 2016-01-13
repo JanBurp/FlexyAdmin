@@ -169,13 +169,15 @@ jdb.moveMultipleArrayItems = function(array, from, many, to) {
 /**
  * String.prefix([String char="_"])
  * 
- * Geeft de prefix van een string
+ * Geeft de prefix van een string, als er geen prefix is wordt hele string teruggegeven
  * @return String
  */
 String.method('prefix', function(char) {
   'use strict';
   char = char || "_";
-  return this.substr(0, this.indexOf(char)) ;
+  var prefix = this.substr(0, this.indexOf(char)) ;
+  if (prefix==='') prefix=this;
+  return prefix;
 });
 
 
@@ -188,7 +190,7 @@ String.method('prefix', function(char) {
 String.method('suffix', function(char) {
   'use strict';
   char = char || "_";
-  return this.substr(0, this.lastIndexOf(char)) ;
+  return this.substr(this.lastIndexOf(char)+1) ;
 });
 
 
