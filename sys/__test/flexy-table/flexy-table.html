@@ -14,9 +14,9 @@
 
   <div class="panel-content">
     <table
-      data-table="{{table}}"
-      class="table table-striped table-hover table-condensed table-responsive table-bordered"
-      ng-class="{'table-sortable': type.is_sortable, 'table-tree': type.is_tree}">
+      data-table="{{table}}" data-path="{{path}}"
+      class="table table-striped table-hover table-condensed table-responsive table-bordered media-view-{{thumb_view}}"
+      ng-class="{'table-sortable': type.is_sortable, 'table-tree': type.is_tree, 'table-media':type.is_media }">
 
       <!-- Table Head -->
       <thead>
@@ -74,7 +74,7 @@
 
           <!-- ROW Fields -->
           <td ng-repeat="key in orderedKeys(row)" class="flexy-table-field-type-{{fields[key].type}} flexy-table-field-{{key}}">
-            <flexy-field table="{{table}}" data-id="{{row.id}}" field="{{key}}" value="{{row[key]}}"></flexy-field>
+            <flexy-field table="{{table}}" path={{path}} data-id="{{row.id}}" field="{{key}}" value="{{row[key]}}"></flexy-field>
           </td>
 
         </tr>
@@ -85,6 +85,11 @@
   </div>
 
   <div class="panel-footer text-primary">
+    <!-- Media view -->
+    <div ng-if="type.is_media" class="flexy-table-media-views btn-group">
+      <div ng-click="media_view('thumbs')" class="btn btn-default" ng-class="{'btn-primary' : thumb_view === 'thumbs'}"><span class="glyphicon glyphicon-th"></span></div>
+      <div ng-click="media_view('list')" class="btn btn-default" ng-class="{'btn-primary' : thumb_view === 'list'}"><span class="glyphicon glyphicon-menu-hamburger"></span></div>
+    </div>
     <!-- Pagination -->
 		<div class="flexy-table-pagination" st-pagination="" st-template="flexy-table/flexy-table-pagination.html" st-items-by-page="info.limit" st-displayed-pages="5"></div>
     <!--Jump to today -->

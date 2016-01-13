@@ -69,8 +69,12 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
     // args klaarzetten
     if (angular.isUndefined(args)) args = {};
 
-    // Zijn er nog settings nodig?
+    // Table settings
     if ((api==='table' || api==='row') && !flexy_api_service.has_settings( 'table', args.table )) {
+      args.settings = true;
+    }
+    // Media settings
+    if (api==='table' && args.table==='res_media_files' && !flexy_api_service.has_settings( 'path', args.path )) {
       args.settings = true;
     }
     if (api==='media' && !flexy_api_service.has_settings( 'path', args.path )) {
@@ -92,11 +96,15 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
       if ( angular.isDefined(response.data) && response.data!==null) {
        console.log('API '+api+' ! ',response.data);
         if ( angular.isDefined(response.data.settings) ) {
+          if (angular.isDefined(response.data.settings.media_info)) {
+            settings.set_item( response.data.settings.media_info, ['settings','path', args.path ]);
+            delete(response.data.settings.media_info);
+          }
+          // if (api=='media') {
+          //   settings.set_item( response.data.settings, ['settings','path', args.path ]);
+          // }
           if (api=='table' || api=='row') {
             settings.set_item( response.data.settings, ['settings','table', args.table ]);
-          }
-          if (api=='media') {
-            settings.set_item( response.data.settings, ['settings','path', args.path ]);
           }
         }
       }

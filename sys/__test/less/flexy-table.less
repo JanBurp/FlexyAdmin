@@ -6,11 +6,11 @@
 .flexy-table .panel-heading .glyphicon {left:0;}
 .flexy-table .panel-content {padding:0;}
 .flexy-table .panel-footer {padding:2px 5px;height:39px;}
-.flexy-table .flexy-table-pagination {float:left;}
+.flexy-table .panel-footer>div {float:left;}
 .flexy-table .pagination {margin:0;}
 .flexy-table .button-jump-to-today {margin-left:.5rem;color:@brand-primary;text-transform:uppercase;}
 .flexy-table .button-jump-to-today.btn-primary {color:@body-bg;}
-.flexy-table .flexy-table-stats {float:right;padding:7px 14px;}
+.flexy-table .panel-footer .flexy-table-stats {float:right;padding:7px 14px;}
 
 /* Scrollable table (panel) */
 .flexy-table .panel-content {overflow:auto;}
@@ -57,6 +57,8 @@
 
 
 /* FIELD TYPES */
+
+/* RGB */
 .flexy-table tbody td span.field-type-rgb {
   display:block;
   width:100%;
@@ -65,13 +67,13 @@
   border-radius:@border-radius-base;
   text-align:center;
 }
+/* THUMB-IMG */
 .flexy-table tbody td div.thumb {
   float:left;
   display:block;
   height:24px;
   width:auto;
   margin-right:@border-radius-base;
-  border-radius:@border-radius-base;
   overflow:hidden;
 }
 .flexy-table tbody td div.thumb img {
@@ -79,6 +81,48 @@
   width:auto;
   height:100%;
 }
+.flexy-table tbody td div.thumb .fa {font-size:24px;color:@brand-info;}
+
+
+
+/* MEDIA */
+.flexy-table table.table-media .flexy-table-field-b_exists  {display:none}
+.flexy-table table.table-media .flexy-table-field-path      {display:none}
+
+/* MEDIA as thumbs */
+.flexy-table table.table-media.media-view-thumbs th.flexy-table-field-file        {display:none}
+.flexy-table table.table-media.media-view-thumbs td.actions                       {display:none}
+.flexy-table table.table-media.media-view-thumbs .flexy-table-field-id            {display:none}
+.flexy-table table.table-media.media-view-thumbs .flexy-table-field-str_title     {display:none}
+.flexy-table table.table-media.media-view-thumbs .flexy-table-field-str_type      {display:none}
+.flexy-table table.table-media.media-view-thumbs .flexy-table-field-dat_date      {display:none}
+.flexy-table table.table-media.media-view-thumbs .flexy-table-field-int_size      {display:none}
+.flexy-table table.table-media.media-view-thumbs .flexy-table-field-int_img_width {display:none}
+.flexy-table table.table-media.media-view-thumbs .flexy-table-field-int_img_height{display:none}
+/* TR TD as DIV */
+.flexy-table table.table-media.media-view-thumbs tbody tr {
+  float:left;
+  display:block!important;
+  width:100px;
+  height:100px;
+  border:none;
+  margin:1rem;
+}
+.flexy-table table.table-media.media-view-thumbs tbody td { float:left; border:none;}
+/* THUMB-IMG */
+.flexy-table table.table-media.media-view-thumbs tbody td { .center() }
+.flexy-table table.table-media.media-view-thumbs tbody td div.thumb {
+  height:100%;
+  width:auto;
+  border:none;
+  border-radius:0px;
+  margin:0px;
+}
+.flexy-table table.table-media.media-view-thumbs tbody td div.thumb .fa {font-size:76px;}
+
+
+
+
 
 
 /* tree, branches & nodes */
@@ -127,3 +171,22 @@
   padding:(@table-cell-padding - 1);
 }
 .as-sortable-drag span.flexy-table-unselected {display:none;}
+
+
+
+/* MIXINS */
+.vertical-center() {
+	position: relative;
+  height:auto;
+  max-height:none;
+  min-height:none;
+	top: 50%;
+	transform: translateY(-50%);
+}
+.center() {
+  .vertical-center();
+  width:auto;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
+

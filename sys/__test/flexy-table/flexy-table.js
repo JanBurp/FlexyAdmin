@@ -47,7 +47,6 @@ flexyAdmin.directive('flexyTable', ['flexySettingsService','flexyApiService','fl
         is_sortable  : false,
         is_tree      : false
       };
-
       
       /**
        * Info for Pagination
@@ -63,6 +62,11 @@ flexyAdmin.directive('flexyTable', ['flexySettingsService','flexyApiService','fl
        * Kan er een knop komen om naar vandaag te springen?
        */
       $scope.jump_to_today = false;
+      
+      /**
+       * De view van de media thumbs (thumbs of list)
+       */
+      $scope.thumb_view = 'thumbs';
   
       /**
        * Information about the fields
@@ -152,6 +156,14 @@ flexyAdmin.directive('flexyTable', ['flexySettingsService','flexyApiService','fl
       };
       
       /**
+       * Media view
+       */
+      $scope.media_view = function(view) {
+        $scope.thumb_view = view;
+      };
+
+      
+      /**
        * MAKE SURE ORDER OF ROWS IS ORIGINAL (keys) : https://stackoverflow.com/questions/19676694/ng-repeat-directive-sort-the-data-when-using-key-value
        * And remove $$hashKey & isSelected & _info
        */
@@ -178,10 +190,12 @@ flexyAdmin.directive('flexyTable', ['flexySettingsService','flexyApiService','fl
         // Bewaar deze tableState
         $scope.tableState = tableState;
         
-        flexyTable.load( $scope.table, tableState ).then(function(response){
+        flexyTable.load( $scope.table, $scope.path, tableState ).then(function(response){
           // table ui_name
           $scope.ui_name = settings.item( 'settings','table',$scope.table,'table_info','ui_name' );
-          // table type (tree, sortable)
+          if ($scope.type.is_media) $scope.ui_name = settings.item( 'settings','path', $scope.path, 'ui_name' );
+          
+          // table type (tree, sortable) - is_media is allready set
           $scope.type.is_tree = settings.item( 'settings','table',$scope.table,'table_info','tree');
           $scope.type.is_sortable = settings.item( 'settings','table',$scope.table,'table_info','sortable');
           // Pagination en update tableState

@@ -160,7 +160,22 @@ flexyAdmin.factory( 'flexySettings', ['flexyConstants', function(constants) {
       height      : window.innerHeight,
       pagination  : Math.ceil((window.innerHeight - 400) / 35 / 5 ) * 5 , // height - header&footer / row | in steps of 5 
     },
-  
+    
+    file_types : {
+      'file-image' : ['jpg','gif','png'],
+      'file-pdf'   : ['pdf'],
+      'file-excel' : ['xls','xlsx'],
+      'file-word'  : ['doc','docx'],
+      'file-zip'   : ['zip','rar'],
+      // 'file-movie'
+      // 'file-archive'
+      // 'file-audio'
+      // 'file-code'
+      // 'file-powerpoint'
+      // 'file-text'
+      // 'file-video'
+    },
+    
   
     /**
      * Form fields, for form thema's

@@ -135,6 +135,26 @@ flexyAdmin.factory( 'flexySettingsService', ['flexyConstants','flexySettings', f
     return value;
   };
   
+  /**
+   * Speciale functies =================================
+   */
+  
+  
+  /**
+   * Zoekt het filtype op
+   */
+  flexy_settings_service.get_file_type =  function(extension) {
+    var types = flexy_settings_service.item('file_types');
+    var type = 'file';
+    angular.forEach(types, function(value, file) {
+      if (value.indexOf(extension)>=0) {
+        type=file;
+      }
+    });
+    return type;
+  };
+  
+  
   
   
   /**

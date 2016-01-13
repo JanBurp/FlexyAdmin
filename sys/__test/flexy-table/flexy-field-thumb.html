@@ -1,3 +1,6 @@
 <div ng-repeat="thumb in thumbs" class="thumb">
-  <img ng-if="thumb.src!==''" ng-src="{{thumb.thumb}}" alt="{{thumb.alt}}" title="{{thumb.alt}}" />
+  <ng-switch on="thumb.type">
+    <img ng-switch-when="file-image"  ng-src="{{thumb.thumb}}" alt="{{thumb.alt}}" title="{{thumb.alt}}" />
+    <span ng-switch-default class="fa fa-{{thumb.type}}-o" title="{{thumb.alt}}"></span>
+  </ng-switch>
 </div>

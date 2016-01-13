@@ -200,7 +200,7 @@ flexyAdmin.factory('flexyTableService', ['flexySettingsService','flexyApiService
    * @param object params Eventuele extra parameters die aan de API meegegeven worden (offset, limit)
    * @return promise met als response data[table]
    */
-  flexy_table_service.load = function( table, tableState ) {
+  flexy_table_service.load = function( table, path, tableState ) {
     /**
      * Maak args klaar aan de hand van gegeven tableState
      * - pagination
@@ -220,9 +220,9 @@ flexyAdmin.factory('flexyTableService', ['flexySettingsService','flexyApiService
     if ( angular.isDefined( tableState ) && angular.isDefined( tableState.search.predicateObject ) ) {
       params.filter = tableState.search.predicateObject.$;
     }
-    var args = angular.extend({}, default_args, params, {'table':table});
-    
-    // console.log('flexy_table_service.load args',args);
+    // args
+    var args = angular.extend({}, default_args, params, {'table':table });
+    if ( angular.isDefined(path) ) args = angular.extend({}, args, {'path':path });
     
 
     /**

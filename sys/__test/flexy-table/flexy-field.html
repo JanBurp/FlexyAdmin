@@ -10,6 +10,7 @@
   <span ng-switch-when="rgb" class="field-type-rgb" style="background-color:{{value}};color:{{inverse_color}}">{{value}}</span>
   
   <!-- MEDIA -->
+  <flexy-field-thumb ng-switch-when="file" path="{{path}}" file="{{value}}"></flexy-field-thumb>
   <flexy-field-thumb ng-switch-when="media" path="{{path}}" file="{{value}}"></flexy-field-thumb>
   <flexy-field-thumb ng-switch-when="medias" path="{{path}}" file="{{value}}"></flexy-field-thumb>
   

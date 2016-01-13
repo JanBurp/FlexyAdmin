@@ -19,6 +19,7 @@ flexyAdmin.controller('MediaController', ['$scope','$routeParams', function($sco
   /**
    * The path
    */
+  $scope.table = 'res_media_files';
   $scope.path = $routeParams.path;
   
 }]);
