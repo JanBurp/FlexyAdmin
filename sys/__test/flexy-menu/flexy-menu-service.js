@@ -78,7 +78,7 @@ flexyAdmin.factory( 'flexyMenuService', ['flexySettingsService','flexyApiService
    */
   flexy_menu_service.unload = function(menu) {
     loaded_menu = undefined;
-  }
+  };
 
   /**
    * Returns a menu object.

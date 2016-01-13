@@ -186,8 +186,6 @@ Class Table_Model extends CI_Model {
     $this->_config();
 	}
 
-
-  
   //
   // TODO
   // 
@@ -259,6 +257,7 @@ Class Table_Model extends CI_Model {
       }
       if ($this->settings[$key]===NULL) unset($this->settings[$key]);
     }
+    // trace_($this->settings['relations']);die();
     return $this->settings;
   }
   
@@ -482,6 +481,9 @@ Class Table_Model extends CI_Model {
       $relations['many_to_one'] = array();
       foreach ($tables as $table) {
         $foreign_key = $this->settings['primary_key'].'_'.remove_prefix($table);
+        // Enkele keys worden standaard anders genoemd: TODO: aanpassen bij uiteindelijke models
+        $special_foreigns = array('id_users'=>'id_user','id_user_groups'=>'id_user_group');
+        $foreign_key = el($foreign_key,$special_foreigns,$foreign_key);
         $relations['many_to_one'][$table] = array(
           'other_table' => $table,
           'foreign_key' => $foreign_key,
@@ -834,7 +836,10 @@ Class Table_Model extends CI_Model {
     $tables = array();
     $foreign_keys = filter_by( $this->settings['fields'], $this->settings['primary_key'].'_' );
     foreach ( $foreign_keys as $foreign_key ) {
-      $tables[] = 'tbl_'.remove_prefix($foreign_key);
+      $table = 'tbl_'.remove_prefix($foreign_key);
+      // Zorg ervoor dat cfg_ tables ook meekomen TODO: aanpassen bij uiteindelijke models
+      $cfg_tables = array( 'tbl_user'=>'cfg_users', 'tbl_user_group'=>'cfg_user_groups' );
+      $tables[] = el( $table, $cfg_tables, $table);
     }
     $this->relation_tables['many_to_one'] = $tables;
     return $tables;
