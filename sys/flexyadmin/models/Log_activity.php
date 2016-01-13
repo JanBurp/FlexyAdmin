@@ -23,7 +23,7 @@ class Log_activity extends CI_Model {
    * @author Jan den Besten
    */
   public function add($type,$activity,$model='',$key='',$user_id=FALSE) {
-    if (!defined('PHPUNIT_TEST')) {
+    if (!defined('PHPUNIT_TEST') and $this->db->table_exists('log_activity')) {
       if (!$user_id) $user_id = $this->session->userdata("user_id");
       $this->db->set( 'id_user',$user_id );
       $this->db->set( 'str_activity_type',$type );
@@ -61,6 +61,7 @@ class Log_activity extends CI_Model {
    * @author Jan den Besten
    */
   public function get_user_activity( $user_id=FALSE, $limit=10 ) {
+    if (!$this->db->table_exists('log_activity')) return array();
     if (!$user_id) $user_id = $this->session->userdata("user_id");
     $query = $this->db->query("SELECT DISTINCT `id_user`,`tme_timestamp`, `str_model` FROM `log_activity` WHERE `str_activity_type`!='auth' ORDER BY `tme_timestamp` DESC LIMIT ".$limit);
     return $query->result_array();
