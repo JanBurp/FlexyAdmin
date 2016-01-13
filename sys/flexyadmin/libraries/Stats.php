@@ -28,7 +28,7 @@ class Stats {
     $queryStr=el('QUERY_STRING',$_SERVER,'');
     if (!empty($queryStr)) $thisUri.='?'.$queryStr;
 		$firstSegment=$URI->get(1);
-		if ( ! in_array($firstSegment,array(SITEPATH,'sys','admin','rss','file','_media','_unittest')) && !IS_AJAX ) {
+		if ( ! in_array($firstSegment,array(SITEPATH,'sys','admin','_admin','_api','_rss','_file','rss','_media','file')) && !IS_AJAX ) {
 			$this->add_uri(trim($thisUri,'/'));
 		}
 	}

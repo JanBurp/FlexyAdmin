@@ -86,8 +86,8 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
     };
     
     // API CALL
+    console.log('API '+api+' ? ',config);
     return $http(config).then(function(response){
-      console.log('API '+api+' ? ',config);
       // Als er setting data is, bewaar die in settings
       if ( angular.isDefined(response.data) && response.data!==null) {
        console.log('API '+api+' ! ',response.data);

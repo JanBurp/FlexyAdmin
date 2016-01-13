@@ -20,7 +20,7 @@ $lang['b_visible']        = "Zichtbaar";
 $lang['b_active']         = "Aktief";
 $lang['b_restricted']     = "Afgeschermd";
 $lang['dat_date']         = "Datum";
-$lang['tme_datetime']     = "Datum &amp; Tijd";
+$lang['tme_datetime']     = "Datum & Tijd";
 $lang['tme_added']        = "Toegevoegd op";
 $lang['self_parent']      = "Submenu van";
 $lang['str_keywords']     = "Zoektermen";
@@ -39,7 +39,7 @@ $lang['str_zipcode']      = "Postcode";
 $lang['str_city']         = "Plaatsnaam";
 $lang['str_country']      = "Land";
 
-$lang['tme_date_time']    = "Datum &amp; Tijd";
+$lang['tme_date_time']    = "Datum & Tijd";
 $lang['dec_price']        = "Prijs";
 
 // Fields in tbl_site

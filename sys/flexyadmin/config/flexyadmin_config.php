@@ -305,8 +305,8 @@ $config["CFG_"]=array(
 			),
 		"cfg_users.last_login"=>array(
 			"field_field"=>'cfg_users.last_login',
-			"str_title_nl"=>'<p>Laatste login</p>',
-			"str_title_en"=>'<p>Last login</p>'
+			"str_title_nl"=>'Laatste login',
+			"str_title_en"=>'Last login'
 			),
 
 		"cfg_user_groups"=>array(
