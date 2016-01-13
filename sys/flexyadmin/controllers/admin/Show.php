@@ -40,8 +40,6 @@ class Show extends AdminController {
   //     $this->load->model("order");
   //     $this->order->move_to($table,$id,$newOrder);
   //     $this->message->add(langp("order_has_changed",$table));
-  //     $this->load->model("login_log");
-  //     $this->log_activity->update($table);
   //     redirect(api_uri('API_view_grid',$table,$id));
   //   }
   //   $this->_show_all();
@@ -611,8 +609,6 @@ class Show extends AdminController {
 			}
 			else {
 				$this->message->add(lang("update_user_changed"));
-				$this->load->model("login_log");
-				$this->log_activity->database('user changed '.$resultId,$userTable);
 			}
 			redirect(api_uri('API_home'));
 		}

@@ -73,8 +73,6 @@ class Edit extends AdminController {
             // Delete all items
             $this->table_model->table( $table )->where_in( PRIMARY_KEY,$items )->delete();  
             // End messages
-            // $this->load->model("login_log");
-            // $this->log_activity->database('',$table);
             $this->message->add(langp("delete_succes",$table) . $message);
           }
           else {

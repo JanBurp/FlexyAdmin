@@ -113,7 +113,7 @@ class order extends CI_Model {
     if (!empty($parent)) {
       $sql="UPDATE `$table` SET `order`=`order`+1 WHERE `order`>='$next'";
       $this->db->query($sql);
-      $this->log_activity->database( $this->db->last_query(), $table.' SHIFT ORDER' );
+      $this->log_activity->database( $this->db->last_query(), $table, 'order' );
     }
 		return $next;
 	}
@@ -182,7 +182,8 @@ class order extends CI_Model {
     $order=$from;
     $log = array(
       'query' =>'',
-      'description' => $table.' SET ORDER id='.implode(',',$ids),
+      'table' => $table,
+      'id'    => implode(',',$ids),
     );
 		foreach($ids as $id) {
       $return[]=array('id'=>$id,'order'=>$order);
@@ -191,7 +192,7 @@ class order extends CI_Model {
       $log['query'] .= $this->db->last_query().';'.PHP_EOL.PHP_EOL;
 		}
     if ($log['query']) {
-      $this->log_activity->database( $log['query'], $log['description'] );
+      $this->log_activity->database( $log['query'], $log['table'], $log['id'] );
     }
     return $return;
 	}
@@ -223,7 +224,8 @@ class order extends CI_Model {
     
     $log = array(
       'query' =>'',
-      'description' => $table.' SET AND MOVE ORDER id='.$id,
+      'table' => $table,
+      'id'    => $id,
     );
     
     // Pas order in item (en kinderen) aan
@@ -269,7 +271,7 @@ class order extends CI_Model {
     }
     
     if ($log['query']) {
-      $this->log_activity->database( $log['query'], $log['description'] );
+      $this->log_activity->database( $log['query'], $log['table'], $log['id'] );
     }
     return $new;
   }
