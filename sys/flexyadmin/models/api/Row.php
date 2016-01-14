@@ -48,7 +48,7 @@
  * 
  * ##INSERT ROW
  * 
- * Hiermee wordt een record uit een tabel toegevoegd.
+ * Hiermee wordt een record uit een tabel toegevoegd
  * De data wordt altijd eerst gevalideerd.
  * 
  * ###Parameters (POST):
@@ -289,18 +289,24 @@ class Row extends Api_Model {
    */
   private function _delete_row() {
     $args=$this->_clean_args(array('table','where'));
-    $this->table_model->table( $args['table'] );
+    $model='table_model';
+    // Media?
+    if ($args['table']==='res_media_files') {
+      $this->load->model('tables/res_media_files');
+      $model = 'res_media_files';
+    }
+    $this->$model->table( $args['table'] );
     if (isset($args['where'])) {
       if (is_array($args['where'])) {
-        $primary_key = $this->table_model->get_setting( 'primary_key' );
-        $this->table_model->where_in( $primary_key, $args['where'] ); 
+        $primary_key = $this->$model->get_setting( 'primary_key' );
+        $this->$model->where_in( $primary_key, $args['where'] ); 
       }
       else {
-        $this->table_model->where( $args['where'] ); 
+        $this->$model->where( $args['where'] ); 
       }
     }
-    $id = $this->table_model->delete();
-    $this->info=$this->table_model->get_query_info();
+    $id = $this->$model->delete();
+    $this->info=$this->$model->get_query_info();
     return $id;
   }
 

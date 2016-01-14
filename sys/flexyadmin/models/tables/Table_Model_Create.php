@@ -56,14 +56,15 @@ Class Table_Model_Create extends CI_Model {
       $config = $this->parser->parse_string( $config, $data, true );
       if ($save) {
         $file = $table.'.php';
+        $mfile = ucfirst($file);
         if (is_string($save)) $file=$save.'/'.$file;
         // sys or site
         if ( in_array(get_prefix($table),$this->site_models) ) {
-          file_put_contents( $this->paths['site_model'].$file, $model);
+          file_put_contents( $this->paths['site_model'].$mfile, $model);
           file_put_contents( $this->paths['site_config'].$file, $config );
         }
         else {
-          file_put_contents( $this->paths['sys_model'].$file, $model);
+          file_put_contents( $this->paths['sys_model'].$mfile, $model);
           file_put_contents( $this->paths['sys_config'].$file, $config );
         }
       }

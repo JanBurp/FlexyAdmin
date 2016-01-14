@@ -303,7 +303,7 @@ flexyAdmin.factory('flexyTableService', ['flexySettingsService','flexyApiService
       return dialogs.confirm( title, message, {'size':'sm'} ).result.then(function(btn){
         // OK: dus delete
         api.delete( { 'table':table, 'where':selected }).then( function(response) {
-          if (response.success===true && response.data===true) {
+          if (response.success===true && response.data!==false) {
             // Message
             if (selected.length>1) {
               alertService.add( 'success', selected.length+' <b>'+translations.DIALOGS_DELETED_SELECTED+'</b>');
