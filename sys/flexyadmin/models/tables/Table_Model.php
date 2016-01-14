@@ -1296,6 +1296,11 @@ Class Table_Model extends CI_Model {
    * @author Jan den Besten
    */
   public function get_row( $where = NULL ) {
+    // Nieuwe row? Geef dan defaults terug
+    if ($where===-1) {
+      return $this->get_defaults();
+    }
+    
     if ($where) $this->where( $where );
     // Als er many_to_many data is die niet grouped is dan kan het zijn dat er meer resultaten nodig zijn om één row samen te stellen
     if ( isset($this->tm_with['many_to_many']) ) {

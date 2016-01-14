@@ -240,8 +240,8 @@ class Row extends Api_Model {
   private function _get_row() {
     $args=$this->_clean_args(array('table','where'));
     $this->table_model->table( $args['table'] );
-    if (isset($args['where'])) $this->table_model->where( $args['where'] );
-    $values = $this->table_model->get_row();
+    if (!isset($args['where'])) $args['where']=null;
+    $values = $this->table_model->get_row( $args['where'] );
     $this->info=$this->table_model->get_query_info();
     // trace_(['_get_row'=>$values,'args'=>$this->args]);
     return $values;

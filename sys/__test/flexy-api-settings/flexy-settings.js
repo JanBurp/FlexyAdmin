@@ -83,6 +83,9 @@ flexyAdmin.constant('flexyConstants', {
       'DIALOGS_ORDER_ERROR'       : 'ERROR: Order could not be changed on the server.<br>Reload the page and try again.',
       'DIALOGS_YES'               : 'Ok',
       'DIALOGS_NO'                : 'Cancel',
+      'FORM_SUBMIT'               : 'Save',
+      'FORM_RESET'                : 'Reset',
+      'FORM_CANCEL'               : 'Cancel',
     },
     nl : {
       'ERROR'                     : 'Fout',
@@ -114,6 +117,9 @@ flexyAdmin.constant('flexyConstants', {
       'DIALOGS_ORDER_ERROR'       : 'FOUT: De volgorde kon niet worden aangepast op de server.<br>Herlaad de pagina en probeer het nog eens.',
       'DIALOGS_YES'               : 'Ok',
       'DIALOGS_NO'                : 'Annuleer',
+      'FORM_SUBMIT'               : 'Invoeren',
+      'FORM_RESET'                : 'Reset',
+      'FORM_CANCEL'               : 'Annuleer',
     },
   },
   
