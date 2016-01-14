@@ -121,7 +121,7 @@ class Table extends Api_Model {
   public function index() {
     if (!$this->has_args())                         return $this->_result_wrong_args(); 
     if (!$this->_has_rights($this->args['table']))  return $this->_result_status401();
-    if ($this->args['table']==='res_media_files' AND !$this->_has_rights($this->args['path']))  return $this->_result_status401();
+    if ($this->args['table']==='res_media_files' AND isset($this->args['path']) AND !$this->_has_rights($this->args['path']))  return $this->_result_status401();
     
     // DEFAULTS
     $items=FALSE;
@@ -151,7 +151,7 @@ class Table extends Api_Model {
       $this->args['sort'] = el( 'sort', $this->args, '' );
       $this->args['filter'] = el( 'filter', $this->args, '' );
       // Media?
-      if ( $this->args['table'] === 'res_media_files' ) $this->args['where'] = array( 'path' => $this->args['path'] );
+      if ( $this->args['table'] === 'res_media_files' AND isset($this->args['path']) ) $this->args['where'] = array( 'path' => $this->args['path'] );
       // Where?
       if (!isset($this->args['where'])) $this->args['where'] = '';
       $items = $this->table_model->get_grid( $this->args['limit'], $this->args['offset'], $this->args['sort'], $this->args['filter'], $this->args['where'] );

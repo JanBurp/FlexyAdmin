@@ -64,6 +64,10 @@ flexyAdmin.directive('flexyField', ['flexySettingsService',function(settings) {
       if (['media','medias'].indexOf(scope.field_type)>=0) {
         scope.path = settings.item( ['settings','table', scope.table, 'field_info', scope.field, 'path' ] );
       }
+      if (scope.path==='' && ['file'].indexOf(scope.field_type)>=0) {
+        scope.field_type='str';
+      }
+      
     },
     
   };
