@@ -3,10 +3,9 @@
   <div class="panel-heading panel-title">
     <h3>{{form_data.table_info.ui_name}}</h3>
     <div class="btn-group btn-group-sm">
-      <button class="btn btn-info" ng-disabled="flexyform.$pristine" type="button" ng-click="submitForm(flexyform)">Invoeren<span class="glyphicon glyphicon-floppy-disk"></span></button>
-      <button class="btn btn-info" ng-disabled="flexyform.$pristine" type="button" ng-click="submitForm(flexyform)"><span class="glyphicon glyphicon-floppy-saved"></span></button>
-      <button class="btn btn-warning" ng-disabled="flexyform.$pristine" type="button" ng-click="resetForm(flexyform)"><span class="glyphicon glyphicon-refresh"></span></button>
-      <a href="javascript:window.history.back()" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span></a>
+      <!-- <button class="btn btn-warning" ng-disabled="flexyform.$pristine" type="button" ng-click="resetForm(flexyform)"><span translate="FORM_RESET"></span><span class="glyphicon glyphicon-refresh"></span></button> -->
+      <a href="javascript:window.history.back()" class="btn btn-danger"><span translate="FORM_CANCEL"></span><span class="glyphicon glyphicon-remove"></span></a>
+      <button class="btn btn-info" ng-disabled="flexyform.$pristine" type="button" ng-click="submitForm(flexyform)"><span translate="FORM_SUBMIT"></span><span class="glyphicon glyphicon-floppy-disk"></span></button>
     </div>
   </div>
 
@@ -15,6 +14,5 @@
       <div sf-schema="schema" sf-form="form" sf-model="model"></div>
     </form>
   </div>
-  
   
 </div>
