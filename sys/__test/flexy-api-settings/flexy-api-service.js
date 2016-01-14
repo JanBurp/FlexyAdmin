@@ -74,7 +74,7 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
       args.settings = true;
     }
     // Media settings
-    if (api==='table' && args.table==='res_media_files' && !flexy_api_service.has_settings( 'path', args.path )) {
+    if (api==='table' && args.table==='_media_' && !flexy_api_service.has_settings( 'path', args.path )) {
       args.settings = true;
     }
     if (api==='media' && !flexy_api_service.has_settings( 'path', args.path )) {

@@ -322,6 +322,9 @@ class Api_Model extends CI_Model {
       $args['type']='POST';
     }
     
+    // table=_media_ ?
+    if (isset($args['table']) and $args['table']==='_media_') $args['table'] = 'res_media_files';
+    
     // merge with defaults
     $args=array_merge($this->needs,$args);
     
