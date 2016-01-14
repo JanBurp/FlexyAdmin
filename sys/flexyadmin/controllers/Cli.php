@@ -1,7 +1,10 @@
 <?php
 
 /** \ingroup controllers
- * API Controller
+ * CLI controller
+ * 
+ * Running CLI:
+ * php index.php -cli <command>
  *
  * @author: Jan den Besten
  * $Revision$

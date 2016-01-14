@@ -197,15 +197,6 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
   };
   
 
-  // /**
-  //  * API call voor row (insert)
-  //  *
-  //  * @return Promise
-  //  */
-  // flexy_api_service.row_insert = function(args,cfg) {
-  //   return flexy_api_service.post('row',args,cfg);
-  // };
-
   /**
    * API call voor delete (post)
    * 
@@ -214,6 +205,17 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
   flexy_api_service.delete = function(args ) {
     return flexy_api_service.post('row', args );
   };
+  
+  
+  // /**
+  //  * API call voor row (insert)
+  //  *
+  //  * @return Promise
+  //  */
+  // flexy_api_service.row_insert = function(args,cfg) {
+  //   return flexy_api_service.post('row',args,cfg);
+  // };
+  
   
   
   // TODO: meer api calls

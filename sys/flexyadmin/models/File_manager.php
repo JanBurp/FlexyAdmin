@@ -74,6 +74,7 @@ class File_manager extends CI_Model {
    */
 	public function __construct($config=array()) {
 		parent::__construct();
+    $this->load->model('cfg');
     $this->load->library('upload');
     $this->lang->load('update_delete');
 		$this->initialize($config);
@@ -267,18 +268,25 @@ class File_manager extends CI_Model {
 	 * @return bool $result
 	 * @author Jan den Besten
 	 */
-  public function delete_file($file) {
+  public function delete_file($file, $test = FALSE) {
 		$name=$this->map."/".$file;
     $result=true;
     
     if (is_dir($name)) {
-      if (file_exists($name)) $result=rmdir($name);
+      if (file_exists($name)) {
+        if (!$test) $result=rmdir($name);
+      }
     }
     else {
       $result=false;
       if (file_exists($name)) {
-        @chmod($name,0777);
-        $result=unlink($name);
+        if (!$test) {
+          @chmod($name,0777);
+          $result=unlink($name);
+        }
+        else {
+          $result=true;
+        }
       }
         
 
@@ -289,8 +297,10 @@ class File_manager extends CI_Model {
         $thumbpath=remove_assets($name);
   			$cachedThumb=$this->config->item('THUMBCACHE').pathencode($thumbpath);
   			if (file_exists($cachedThumb)) {
-          @chmod($cachedThumb,0777);
-          unlink($cachedThumb);
+          if (!$test) {
+            @chmod($cachedThumb,0777);
+            unlink($cachedThumb);
+          }
   			}
   			/**
   			 * Check if other sizes exists and if they are hidden, delete them
@@ -306,8 +316,10 @@ class File_manager extends CI_Model {
   			$names=filter_by($names,"_");
   			foreach($names as $name) {
           if (file_exists($this->map."/".$name)) {
-            @chmod($this->map."/".$name,0777);
-            unlink($this->map."/".$name);
+            if (!$test) {
+              @chmod($this->map."/".$name,0777);
+              unlink($this->map."/".$name);
+            }
           }
   			}
 			
@@ -333,8 +345,8 @@ class File_manager extends CI_Model {
             $searchedFields[]=$field;
           }
         }
-
-        $this->remove_file_from_fields($searchedFields,$this->map,$file);
+        
+        if (!$test) $this->remove_file_from_fields($searchedFields,$this->map,$file);
       }      
     }
 

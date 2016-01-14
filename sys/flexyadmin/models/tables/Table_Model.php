@@ -1334,10 +1334,11 @@ Class Table_Model extends CI_Model {
    * @param mixed $offset [FALSE] De start van het resultaat, als FALSE dan kan is jump_to_today aktief, anders niet.
    * @param string $sort [''] Veld dat de volgorde van het resultaat bepaalt, als het DESC moet, dan beginnen met een '_'
    * @param mixed $find [''] Een string waarde die gevonden moet worden, of een array met alle parameters van ->find()
+   * @param mixed $where [''] Een where statement zoals aan de eerste paramater van ->where() gegeven kan worden.
    * @return array
    * @author Jan den Besten
    */
-  public function get_grid( $limit = 20, $offset = FALSE, $sort = '', $find = '' ) {
+  public function get_grid( $limit = 20, $offset = FALSE, $sort = '', $find = '', $where = '' ) {
     $grid_set = $this->settings['grid_set'];
     
     // trace_($grid_set);
@@ -1365,6 +1366,11 @@ Class Table_Model extends CI_Model {
       }
     }
     $this->order_by( $sort );
+    
+    // Where
+    if ( $where ) {
+      $this->where( $where );
+    }
     
     // Find
     if ( $find ) {
@@ -1703,6 +1709,9 @@ Class Table_Model extends CI_Model {
    * Zoeken op hele woorden in plaats van letters:
    * ->find( 'zoek', null, array( 'word_boundaries' =>TRUE ) )  // Zoekt het woord 'zoek' ipv de letters 'zoek'
    * 
+   * Zoeken op specifieke term in plaats van een deel:
+   * ->find( 'zoek', 'str_tag' , array( 'exact_term' =>TRUE ) ) // Zoekt het veld 'str_tag' dat precies de waarde 'zoek' heeft
+   * 
    * Ook zoeken in relaties
    * ----------------------
    * 
@@ -1711,7 +1720,7 @@ Class Table_Model extends CI_Model {
    * 
    * @param mixed $terms Zoekterm(en) als een string of array van strings. Letterlijk zoeken kan door termen tussen "" te zetten.
    * @param array $fields [array()] De velden waarop gezocht wordt. Standaard alle velden. Kan ook in relatietabellen zoeken, bijvoorbeeld 'tbl_links.str_title' als een veld in een gerelateerde tabel
-   * @param array $settings [array()] Extra instelingen, default: arra( 'and' => 'OR, 'word_boundaries' => FALSE )
+   * @param array $settings [array()] Extra instelingen, default: array( 'and' => 'OR, 'word_boundaries' => FALSE, 'exact_term' => FALSE )
    * @return $this
    * @author Jan den Besten
    */
@@ -1719,7 +1728,8 @@ Class Table_Model extends CI_Model {
     // settings
     $defaults = array(
       'and'             => 'OR',
-      'word_boundaries' => FALSE
+      'word_boundaries' => FALSE,
+      'exact_term'      => FALSE,
     );
     $settings = array_merge( $defaults,$settings );
     if ($settings['and']===TRUE)  $settings['and'] = 'AND';
@@ -1772,8 +1782,11 @@ Class Table_Model extends CI_Model {
       
       // Per veld:
       foreach ($fields as $field) {
-        // word boundaries of gewoon LIKE ?
-        if ( $settings['word_boundaries'] ) {
+        // exact_term, of word_boundaries of normaal
+        if ( $settings['exact_term'] ) {
+          $this->db->or_where( $field, $terms, FALSE);
+        }
+        elseif ( $settings['word_boundaries'] ) {
           $this->db->or_where( $field.' REGEXP \'[[:<:]]'.$terms.'[[:>:]]\'', NULL, FALSE);
         }
         else {
@@ -2222,7 +2235,7 @@ Class Table_Model extends CI_Model {
    * @param array $set = NULL
    * @param mixed $where = NULL
    * @param int $limit = NULL
-   * @return int $id
+   * @return mixed FALSE als niet gelukt, anders een result_array van de verwijderde data
    * @author Jan den Besten
    */
 	protected function _update_insert( $type, $set = NULL, $where = NULL, $limit = NULL ) {
@@ -2432,28 +2445,52 @@ Class Table_Model extends CI_Model {
    * @param mixed $where ['']
    * @param int $limit [NULL]
    * @param bool $reset_data 
-   * @return void
+   * @return mixed FALSE als niet gelukt, anders array_result van verwijderde data
    * @author Jan den Besten
    */
-	public function delete( $where = '', $limit = NULL, $reset_data = TRUE) {
-    if ($where) $this->where( $where );
-    if ($limit) $this->limit( $limit );
-
+	public function delete( $where = '', $limit = NULL, $reset_data = TRUE ) {
+    
+    /**
+     * Is het een ordered tabel?
+     */
     $is_ordered_table = $this->field_exists( 'order' );
     if ($is_ordered_table) $this->load->model('order','_order');
-      
+
+    /**
+     * Bouw query op, bewaar deze, en reset query
+     */
+    if ($where) $this->where( $where );
+    if ($limit) $this->limit( $limit );
+    // Bewaar query en zorg ervoor dat LIMIT mee komt
+    if ($this->tm_limit) $limit = $this->tm_limit;
+    $compiled_delete = $this->db->get_compiled_delete( $this->settings['table'], TRUE );
+    if ($limit) $compiled_delete .= ' LIMIT '.$this->tm_limit;
+
 		/**
 		 * Wat zijn de id's van de te verwijderen items?
-		 * Zijn nodig om eventuele many_to_many data te verwijderen
+		 * - Nodig om eventuele many_to_many data te verwijderen
+		 * - En om huidige data op te vragen
 		 */
-    $ids = $this->_get_ids( $this->db->get_compiled_delete( $this->settings['table'], FALSE) );
+    $ids = $this->_get_ids( $compiled_delete );
+    
+    /**
+     * Onthoud huidige data van te deleten records om terug te geven.
+     */
+    $deleted_data = FALSE;
+    $this->db->where_in( $this->settings['primary_key'], $ids );
+    $query = $this->db->get( $this->settings['table'] );
+    if ($query) $deleted_data = $query->result_array();
+    $this->reset();
     
     /**
      * Start DELETE
      */
     $this->db->trans_start();
 		
-    $is_deleted = $this->db->delete( $this->settings['table'], '', $this->tm_limit, $reset_data );
+    // $is_deleted = $this->db->delete( $this->settings['table'], '', $this->tm_limit, $reset_data );
+    $is_deleted = $this->db->query( $compiled_delete );
+    
+    // trace_(['is_deleted' => $is_deleted,'compiled_delete'=>$compiled_delete,'ids'=>$ids,'deleted_data'=>$deleted_data]);
     
     if ($is_deleted) {
       $log = array(
@@ -2507,7 +2544,8 @@ Class Table_Model extends CI_Model {
     }
 
     $this->reset();
-		return $is_deleted;
+    if ($is_deleted) return $deleted_data;
+		return FALSE;
 	}
   
   

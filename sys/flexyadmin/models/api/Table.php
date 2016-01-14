@@ -6,6 +6,7 @@
  * ###Parameters:
  * 
  * - `table`                    // De gevraagde tabel
+ * - `[path]`                   // Eventueel op te vragen map voor media/assets (bij table='res_media_files')
  * - `[limit=0]`                // Aantal rijen dat het resultaat moet bevatten. Als `0` dan worden alle rijen teruggegeven.
  * - `[offset=0]`               // Hoeveel rijen vanaf de start worden overgeslagen.
  * - `[sort='']`                // De volgorde van het resultaat, geef een veld, bijvoorbeeld `str_title` of `_str_title` voor DESC
@@ -118,8 +119,9 @@ class Table extends Api_Model {
    * @author Jan den Besten
    */
   public function index() {
-    if (!$this->_has_rights($this->args['table']))  return $this->_result_status401();
     if (!$this->has_args())                         return $this->_result_wrong_args(); 
+    if (!$this->_has_rights($this->args['table']))  return $this->_result_status401();
+    if ($this->args['table']==='res_media_files' AND !$this->_has_rights($this->args['path']))  return $this->_result_status401();
     
     // DEFAULTS
     $items=FALSE;
@@ -142,12 +144,17 @@ class Table extends Api_Model {
   private function _get_data() {
     
     $this->table_model->table( $this->args['table'] );
+    
     // Normaal resultaat, of grid resultaat
     if ( el('as_grid',$this->args,false) ) {
       // Grid, pagination, sort
       $this->args['sort'] = el( 'sort', $this->args, '' );
       $this->args['filter'] = el( 'filter', $this->args, '' );
-      $items = $this->table_model->get_grid( $this->args['limit'], $this->args['offset'], $this->args['sort'], $this->args['filter'] );
+      // Media?
+      if ( $this->args['table'] === 'res_media_files' ) $this->args['where'] = array( 'path' => $this->args['path'] );
+      // Where?
+      if (!isset($this->args['where'])) $this->args['where'] = '';
+      $items = $this->table_model->get_grid( $this->args['limit'], $this->args['offset'], $this->args['sort'], $this->args['filter'], $this->args['where'] );
     }
     else {
       // Normaal: where, txt_abstract, options

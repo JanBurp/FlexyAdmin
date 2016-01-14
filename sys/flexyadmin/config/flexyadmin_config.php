@@ -200,7 +200,6 @@ $config['CFG_img_info']								= "img_info";
 $config['LOG_activity']							  = "activity";
 $config['LOG_stats']									= "stats";
 
-
 $config['FILE_types_forbidden']				= array('php','php3','php4','phtml','pl','py','jsp','asp','shtml','sh','cgi','js','exe','dmg','app');
 $config['FILE_types_img']							= array('jpg','jpeg','gif','png','tiff','cur','tif','tiff');
 $config['FILE_types_mp3']							= array('mp3','wav','wma','aiff','ogg');
