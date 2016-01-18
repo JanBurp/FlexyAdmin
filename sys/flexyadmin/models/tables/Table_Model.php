@@ -1582,6 +1582,11 @@ Class Table_Model extends CI_Model {
         unset($value);
         $this->limit( 1 );
       }
+      // current (alleen voor 'cfg_users') TODO verhuis naar model cfg_users
+      elseif ($key==='current' and $this->settings['table']==='cfg_users' and isset($this->user->user_id)) {
+        $value = $this->user->user_id;
+        $key = $this->settings['primary_key'];
+      }
       // primary_key
       else {
         $value = $key;
