@@ -22,6 +22,8 @@ UPDATE `tbl_menu` SET `order`='4', `self_parent`='0', `uri`='contact' WHERE `id`
   
   protected function tearDown() {
     $this->CI->order->reset($this->table);
+    $this->CI->load->dbutil();
+    $this->CI->dbutil->import($this->test_sql);
   }
   
 
