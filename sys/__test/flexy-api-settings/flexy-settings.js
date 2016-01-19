@@ -164,7 +164,7 @@ flexyAdmin.factory( 'flexySettings', ['flexyConstants', function(constants) {
     screen : {
       width       : window.innerWidth,
       height      : window.innerHeight,
-      pagination  : Math.ceil((window.innerHeight - 400) / 35 / 5 ) * 5 , // height - header&footer / row | in steps of 5 
+      pagination  : (window.innerHeight<400)?5 : Math.ceil((window.innerHeight - 400) / 35 / 5 ) * 5 , // height - header&footer / row | in steps of 5 en minimaal 5
     },
     
     file_types : {
@@ -186,7 +186,7 @@ flexyAdmin.factory( 'flexySettings', ['flexyConstants', function(constants) {
     /**
      * Form fields, for form thema's
      */
-    form_field_types : {
+    form_schema_properties : {
     
       // DEFAULT TYPE
       '[default]' : {
@@ -194,25 +194,9 @@ flexyAdmin.factory( 'flexySettings', ['flexyConstants', function(constants) {
         'format'      : 'string',
         'type'        : 'string',
         'readonly'    : false,
+        'default'     : '',
       },
-    
-      // SPECIAL FIELDS
-      '[id]' : {
-        'readonly'    : true,
-        'type'        : 'hidden',
-      },
-      '[order]' : {
-        'readonly'    : true,
-        'type'        : 'hidden',
-      },
-      '[self_parent]' : {
-        'readonly'    : true,
-      },
-      '[uri]' : {
-        'readonly'    : true,
-        'type'        : 'hidden',
-      },
-    
+      
       // TYPES (determined by prefix)
       'email' : {
         'type' : 'email',
@@ -223,6 +207,26 @@ flexyAdmin.factory( 'flexySettings', ['flexyConstants', function(constants) {
       },
       'stx' : {
         'type' : 'textarea',
+      },
+    
+      // SPECIAL FIELDS
+      '[id]' : {
+        'readonly'    : true,
+        'type'        : 'hidden',
+        'default'     : -1,
+      },
+      '[order]' : {
+        'readonly'    : true,
+        'type'        : 'hidden',
+        'default'     : 0,
+      },
+      '[self_parent]' : {
+        'readonly'    : true,
+        'default'     : 0,
+      },
+      '[uri]' : {
+        'readonly'    : true,
+        'type'        : 'hidden',
       },
     
     },  // form_field_types
