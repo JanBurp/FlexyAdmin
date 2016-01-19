@@ -52,7 +52,7 @@ flexyAdmin.factory('flexyTableService', ['flexySettingsService','flexyApiService
     if ( angular.isUndefined(info.num_pages) ) info.num_pages = Number(args.num_pages);
     if ( angular.isUndefined(info.limit) )     info.limit = Number(args.limit);
     if ( angular.isDefined(info.total_rows) && angular.isDefined(info.limit) && info.limit>0 ) {
-      info.num_pages = Math.ceil(info.total_rows / info.limit) ;
+      info.num_pages = Math.ceil(info.total_rows / info.limit);
     }
     if ( angular.isUndefined(info.offset) ) info.offset = Number(args.offset);
     return info;
@@ -213,6 +213,7 @@ flexyAdmin.factory('flexyTableService', ['flexySettingsService','flexyApiService
       offset  : offset,
       limit   : settings.item(['screen','pagination'])
     };
+    
     if ( angular.isDefined( tableState ) && angular.isDefined( tableState.sort.predicate ) ) {
       params.sort = tableState.sort.predicate;
       if (tableState.sort.reverse===true) params.sort = '_' + params.sort;
@@ -258,7 +259,7 @@ flexyAdmin.factory('flexyTableService', ['flexySettingsService','flexyApiService
       data[table] = {
         tableState : tableState,
         args       : saved_args,
-        info       : calculate_pagination(response.info,args),
+        info       : calculate_pagination( response.info, args),
         data       : newData
       };
       

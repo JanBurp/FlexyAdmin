@@ -127,14 +127,16 @@
 <script src="sys/__test/flexy-table/flexy-sortable.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-table/flexy-table-service.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-table/flexy-table-controller.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/flexy-table/flexy-table.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/flexy-table/flexy-table-directive.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-table/flexy-field.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-table/flexy-field-thumb.js" type="text/javascript" charset="utf-8"></script>
 
 <script src="sys/__test/flexy-media/flexy-media.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-media/flexy-media-controller.js" type="text/javascript" charset="utf-8"></script>
 
+<script src="sys/__test/flexy-form/flexy-form-service.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-form/flexy-form-controller.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/flexy-form/flexy-form-directive.js" type="text/javascript" charset="utf-8"></script>
 
 <script src="sys/__test/flexy-help/flexy-help.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-plugin/flexy-plugin.js" type="text/javascript" charset="utf-8"></script>

@@ -84,13 +84,15 @@ flexyAdmin.config( function($routeProvider){
       controller  : 'TableController',
       templateUrl : 'flexy-table/flexy-table-route.html'
     })
+    // Media
     .when('/media/:path',{
       controller  : 'MediaController',
       templateUrl : 'flexy-media/flexy-media-route.html'
     })
+    // Form
     .when('/form/:table/:id',{
-      controller  : '',
-      templateUrl : 'flexy-form/flexy-form.html'
+      controller  : 'FormController',
+      templateUrl : 'flexy-form/flexy-form-route.html'
     })
     .when('/plugin/:plugin',{
       controller  : '',
