@@ -77,18 +77,33 @@ flexyAdmin.directive('flexyForm', ['flexySettingsService','flexyApiService','fle
       //   // pristine form
       //   form.$setPristine();
       // };
+
+      /**
+       * SAVE FORM
+       */
+      $scope.saveForm = function(form) {
+        // First we broadcast an event so all fields validate themselves
+        $scope.$broadcast('schemaFormValidate');
+        // Then we check if the form is valid
+        if (form.$valid) {
+          // flexyForm.save();
+          alert('SAVE yes!');
+        }
+        else {
+          alert('not Valid');
+        }
+      };
+
   
       /**
        * SUBMIT FORM
        */
       $scope.submitForm = function(form) {
-        // First we broadcast an event so all fields validate themselves
-        $scope.$broadcast('schemaFormValidate');
-        // Then we check if the form is valid
-        if (form.$valid) {
-          alert('yes!');
-        }
+        $scope.saveForm(form);
+        // En nu terug naar table view
       };
+      
+      
       
     },
     

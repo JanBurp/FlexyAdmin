@@ -27,7 +27,7 @@ flexyAdmin.factory( 'flexySettingsService', ['flexyConstants','flexySettings', f
   
   /**
    * Gets an item from the settings object.
-   * If not found, returns 'undefined', else returns the settings value.
+   * If not found, returns 'undefined', else returns the settings value (a real copy).
    * 
    * item('part','subpart', ... ); // as multiple arguments, each argument is a key
    * or
@@ -39,7 +39,7 @@ flexyAdmin.factory( 'flexySettingsService', ['flexyConstants','flexySettings', f
     var setting;
     if (args.length>0) {
       if (angular.isArray(args[0])) args=args[0]; // if first arg is an array that one holds all args
-      setting = settings;
+      setting = angular.copy(settings); // Maak een echte kopie van de settings
       for (var i = 0; i < args.length; i++) {
         // Test if setting and setting[arg] is defined, if so, setting will become this item
         if (angular.isDefined(setting)) {

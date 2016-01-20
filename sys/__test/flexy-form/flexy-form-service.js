@@ -60,100 +60,27 @@ flexyAdmin.factory('flexyFormService', ['flexySettingsService','flexyApiService'
     });
   };
   
+
+  /**
+   * Bewaar data van form op de server
+   */
+  flexy_form_service.save = function( table,id, data ) {
+    return $translate(['FORM_SAVED','FORM_SAVE_ERROR']).then(function (translations) {
+      // UPDATE/INSERT
+      api.update( { 'table':table, 'where':id, 'data':data }).then( function(response) {
+        if (response.success===true && response.data!==false) {
+          alertService.add( 'success', '<b>'+translations.FORM_SAVED+'</b>');
+          return $q.resolve(true);
+        }
+        else {
+          // FOUT
+          alertService.add( 'warning', '<b>'+translations.FORM_SAVE_ERROR+'</b>');
+          return $q.resolve(false);
+        }
+      });
+    });
+  };
   
-  
-  // /**
-  //  * Zet form data om in schemaform
-  //  */
-  // flexy_form_service.to_schemaform = function( table, data, form_ui_name ) {
-  //
-  //   /**
-  //    * Default schema
-  //    */
-  //   var schema = {
-  //     schema : {
-  //       type: "object",
-  //       properties: {},
-  //     },
-  //     form : ['*'],
-  //     model: {},
-  //   };
-  //
-  //
-  //   /**
-  //    * Tabs
-  //    */
-  //   var tabs = {};
-  //   if (angular.isUndefined(form_ui_name)) {
-  //     form_ui_name = settings.item('settings','table', table, 'table_info', 'ui_name' );
-  //   }
-  //   tabs[form_ui_name] = [];
-  //
-  //   /**
-  //    * Loop each field
-  //    */
-  //   angular.forEach( data, function(value, key) {
-  //
-  //     // Default field type
-  //     var field = angular.copy( settings.item('form_schema_properties','[default]') );
-  //     // Field type by prefix
-  //     var prefix = key.prefix();
-  //     if ( settings.has_item('form_schema_properties',prefix)) {
-  //       field = angular.extend( field, settings.item('form_schema_properties',prefix) );
-  //     }
-  //     // Field type by fieldname
-  //     var fieldname='['+key+']';
-  //     if ( settings.has_item('form_schema_properties',fieldname) ) {
-  //       field = angular.extend( field, settings.item('form_schema_properties',fieldname) );
-  //     }
-  //
-  //     // Name, Value etc.
-  //     field.default   = value;
-  //     field.title     = settings.item( ['settings','table',table, 'field_info', key, 'ui_name'] );
-  //     if (angular.isUndefined(field.title)) field.title = '';
-  //
-  //     // -> schema
-  //     schema.schema.properties[key] = {
-  //       'title'     : field.title,
-  //       'type'      : field.type,
-  //       'data-type' : field['data-type'],
-  //       'default'   : field['default']
-  //     };
-  //     schema.model[key] = value;
-  //
-  //     // Tabs & items in tabs
-  //     field.tab = form_ui_name; // default tab
-  //     // if ( angular.isDefined( data.field_info[key].info.str_fieldset ) ) {
-  //     //   if (data.field_info[key].info.str_fieldset!=="") {
-  //     //     field.tab = data.field_info[key].info.str_fieldset;
-  //     //   }
-  //     // }
-  //     if ( angular.isUndefined( tabs[field.tab] )) tabs[field.tab]=[]; // new tab
-  //
-  //     // Add this field to its tab
-  //     tabs[field.tab].push({
-  //       'key'       : key,
-  //       'type'      : field.type,
-  //       'readonly'  : field.readonly,
-  //     });
-  //
-  //   });
-  //
-  //   // -> create Tabs in form
-  //   var form_tabs = {
-  //     type: "tabs",
-  //     tabs: [],
-  //   };
-  //   angular.forEach( tabs, function(tab_items, tab_title) {
-  //     form_tabs.tabs.push({
-  //       title: tab_title,
-  //       items: tab_items
-  //     });
-  //   });
-  //
-  //   // $scope.form.push(form_tabs);
-  //   return schema;
-  // };
   
   
   return flexy_form_service;

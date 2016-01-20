@@ -257,7 +257,6 @@ Class Table_Model extends CI_Model {
       }
       if ($this->settings[$key]===NULL) unset($this->settings[$key]);
     }
-    // trace_($this->settings['relations']);die();
     return $this->settings;
   }
   
@@ -928,7 +927,6 @@ Class Table_Model extends CI_Model {
   }
   
 
-
   /**
    * Geeft alle settings
    *
@@ -938,8 +936,6 @@ Class Table_Model extends CI_Model {
   public function get_settings() {
     return $this->settings;
   }
-
-  
 
 
   /**
