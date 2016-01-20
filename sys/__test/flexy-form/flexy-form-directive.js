@@ -54,15 +54,11 @@ flexyAdmin.directive('flexyForm', ['flexySettingsService','flexyApiService','fle
         // table ui_name
         $scope.ui_name = settings.item( 'settings','table',$scope.table,'table_info','ui_name' );
         
-        // shema form data
-        var schema = flexyForm.to_schemaform( $scope.table, response, $scope.ui_name );
-        $scope.schema = schema.schema;
-        $scope.form   = schema.form;
-        $scope.model  = schema.model;
-        console.log(schema);
-        
+        // schema form data
+        $scope.schema = response.schemaform.schema;
+        $scope.form   = response.schemaform.form;
+        $scope.model  = response.data;
       });
-
 
       
       /**

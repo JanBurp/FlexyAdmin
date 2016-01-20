@@ -1,13 +1,17 @@
-<div class="checkbox" ng-class="{'has-error': hasError(), 'has-success': hasSuccess()}">
-  <label>
+<div class="form-group has-feedback" ng-class="{'has-error': hasError(), 'has-success': hasSuccess()}">
+  
+  <label class="control-label" ng-show="showTitle()">{{form.title}}</label>
+
+  <div>
     <input type="checkbox"
            sf-changed="form"
            ng-disabled="form.readonly"
            ng-model="$$value$$"
            ng-model-options="form.ngModelOptions"
            schema-validate="form">
-    <span ng-bind-html="form.title"></span>
-  </label>
+    </input>
 
-  <div class="help-block" ng-show="form.description" ng-bind-html="form.description"></div>
+    <span class="help-block">{{ (hasError() && errorMessage(schemaError())) || form.description}}</span>
+  </div>
+  
 </div>
