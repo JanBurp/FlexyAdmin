@@ -575,7 +575,7 @@ Class Table_Model extends CI_Model {
       if ( !in_array($field,$show_always) and !el('b_show_in_form',$field_info,TRUE) ) {
         unset($form_set['fields'][$key]);
       }
-      // in which fieldset?
+      // in which fieldset/tab?
       else {
         $fieldset = el('str_fieldset',$field_info, $main_fieldset );
         if (!isset($fieldsets[$fieldset])) $fieldsets[$fieldset]=array();
@@ -1410,6 +1410,99 @@ Class Table_Model extends CI_Model {
     }
 
     return $this->get_result();
+  }
+  
+  
+  /**
+   * Creert schemaform van een standaard row uit de database
+   *
+   * @param array $row 
+   * @param string $name 
+   * @return array $schemaform
+   * @author Jan den Besten
+   */
+  public function schemaform( $row, $name='row' ) {
+    $this->config->load('schemaform');
+    $this->load->model('ui');
+    // Default schema
+    $sf  = array(
+      'schema' => array(
+        'type'       => 'object',
+        'title'      => $name,
+        'properties' => array(),
+        'required'   => array(),
+      ),
+      'form'  => array(),
+    );
+    // Load schemaform config
+    $cfgDefault = $this->config->item('FIELDS_default');
+    $cfgPrefix  = $this->config->item('FIELDS_prefix');
+    $cfgSpecial = $this->config->item('FIELDS_special');
+    
+    foreach ($row as $name => $value) {
+      // default
+      $fieldProperties = $cfgDefault;
+      
+      // from prefix
+      $prefix = get_prefix($name);
+      if (el($prefix,$cfgPrefix)) {
+        $fieldProperties = array_merge($fieldProperties,el($prefix,$cfgPrefix));
+      }
+      // special
+      if (el($name,$cfgSpecial)) {
+        $fieldProperties = array_merge($fieldProperties,el($name,$cfgSpecial));
+      }
+      
+      // name
+      $fieldProperties['title'] = $name;
+
+      // split validation / required
+      $validation=explode('|',$fieldProperties['validation']);
+      // required
+      if ($key=array_search('required',$validation)) {
+        unset($validation['$key']);
+        // Add requered
+        $sf['schema']['required'][]=$name;
+      }
+      $fieldProperties['validation']=$validation;
+      
+      // Put in Schema
+      $sf['schema']['properties'][$name] = $fieldProperties;
+    }
+    
+    // FIELDSETS / TABS
+    $tabs = array();
+    // Prepare fieldsets
+    foreach ($this->settings['form_set']['fieldsets'] as $tabtitle => $items) {
+      foreach ($items as $i=>$item) {
+        $items[$i] = array(
+          'key' => $sf['schema']['properties'][$item]['title'],
+          'type' => $sf['schema']['properties'][$item]['form-type'],
+        );
+      }
+      $tabs[]=array(
+        'title' => $this->ui->get($tabtitle),
+        'items' => $items,
+      );
+    }
+    // Tabs
+    if (count($tabs)>1) {
+      $sf['form'][] = array(
+        'type' => 'tabs',
+        'tabs' => $tabs,
+      );
+    }
+    // No tabs -> keep order of fields in form
+    else {
+      foreach ($sf['schema']['properties'] as $key => $item) {
+        $sf['form'][] = array(
+          'key'  => $key,
+          'type' => $item['form-type'],
+        );
+      }
+    }
+
+    return $sf;
   }
   
 

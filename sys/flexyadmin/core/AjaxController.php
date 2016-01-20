@@ -186,7 +186,7 @@ class AjaxController extends BasicController {
   
   
   private function _sort_result($result) {
-    return sort_keys($result,array('status','success','user','error','message','format','api','args','info','options','data','config'));
+    return sort_keys($result,array('status','success','user','error','message','format','api','args','info','options','schemaform','data','config'));
   }
   
 

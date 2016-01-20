@@ -181,57 +181,7 @@ flexyAdmin.factory( 'flexySettings', ['flexyConstants', function(constants) {
       // 'file-text'
       // 'file-video'
     },
-    
-  
-    /**
-     * Form fields, for form thema's
-     */
-    form_schema_properties : {
-    
-      // DEFAULT TYPE
-      '[default]' : {
-        'data-type'   : 'string',
-        'format'      : 'string',
-        'type'        : 'string',
-        'readonly'    : false,
-        'default'     : '',
-      },
-      
-      // TYPES (determined by prefix)
-      'email' : {
-        'type' : 'email',
-      },
-      'txt' : {
-        'format' : 'html',
-        'type'   : 'wysiwyg',
-      },
-      'stx' : {
-        'type' : 'textarea',
-      },
-    
-      // SPECIAL FIELDS
-      '[id]' : {
-        'readonly'    : true,
-        'type'        : 'hidden',
-        'default'     : -1,
-      },
-      '[order]' : {
-        'readonly'    : true,
-        'type'        : 'hidden',
-        'default'     : 0,
-      },
-      '[self_parent]' : {
-        'readonly'    : true,
-        'default'     : 0,
-      },
-      '[uri]' : {
-        'readonly'    : true,
-        'type'        : 'hidden',
-      },
-    
-    },  // form_field_types
-    
-    
+
     
   };
 

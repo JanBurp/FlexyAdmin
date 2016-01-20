@@ -198,8 +198,7 @@ class Row extends Api_Model {
     if ($this->args['type']=='GET') {
       $this->result['data']=$this->_get_row();
       if (el('schemaform',$this->args,false)==true) {
-        $this->load->model('schemaform');
-        $this->result['schemaform']=$this->schemaform->create_from_row($this->result['data'],el('table',$this->args));
+        $this->result['schemaform'] = $this->table_model->schemaform( $this->result['data'],el('table',$this->args) );
       }
       return $this->_result_ok();
     }
