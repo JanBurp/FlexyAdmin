@@ -213,7 +213,7 @@ class Row extends Api_Model {
         return $this->_result_ok();
       }
       // INSERT
-      if (isset($this->args['data']) and !isset($this->args['where'])) {
+      if (isset($this->args['data']) and (!isset($this->args['where']) or $this->args['where']===-1) ) {
         if (!$this->_has_rights($this->args['table'])>=RIGHTS_ADD) return $this->_result_norights();
         $this->result['data']=$this->_insert_row();
         return $this->_result_ok();

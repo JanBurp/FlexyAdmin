@@ -200,14 +200,16 @@ $config['FIELDS_special'] = array(
     'validation' => 'integer|required',
   ),
 	'user'			=> array(
-    'type'  => 'integer',
-    'form-type'       => 'text',
-    'validation' => 'trim|integer',
+    'type'        => 'integer',
+    'form-type'   => 'text',
+    'validation'  => 'trim|integer',
   ),
 	'user_changed' => array(
-    'type'  => 'integer',
-    'form-type'       => 'text',
+    'type'      => 'integer',
+    'form-type' => 'hidden',
+    'readonly'  => true,
   ),
+  
 	'uri'				=> array(
     'type'      => 'string',
     'form-type' => 'hidden',
@@ -268,8 +270,13 @@ $config['FIELDS_special'] = array(
   ),
                       
   'last_login'    => array(
-    'type'  => 'string',
-    'form-type'       => 'text',
+    'type'      => 'string',
+    'form-type' => 'text',
+  ),
+  'tme_last_changed' => array(
+    'type'      => 'string',
+    'form-type' => 'hidden',
+    'readonly'  => true,
   ),
 										
 );

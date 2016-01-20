@@ -474,7 +474,7 @@ class Api_Model extends CI_Model {
   protected function _get_table_settings( $table ) {
     $this->table_model->table( $table );
     $settings = $this->table_model->get_setting(array('table','fields','abstract_fields','field_info','grid_set','form_set'));
-    
+
     $this->load->model('ui');
     // field ui_names
     if (isset($settings['field_info'])) {
