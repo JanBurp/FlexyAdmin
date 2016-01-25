@@ -75,7 +75,7 @@
 
 
 <!-- External JS -->
-<!-- <script src="sys/__test/js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/angular.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/angular-route.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/ui-bootstrap-tpls.js" type="text/javascript" charset="utf-8"></script>
@@ -96,9 +96,9 @@
 <script src="sys/__test/flexy-form/bootstrap-decorator-froala.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/froala_editor.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/angular-froala.js" type="text/javascript" charset="utf-8"></script>
-<script src="sys/__test/js/froala-sanitize.js" type="text/javascript" charset="utf-8"></script> -->
+<script src="sys/__test/js/froala-sanitize.js" type="text/javascript" charset="utf-8"></script>
 
-<script src="sys/__test/js/externals.min.js" type="text/javascript" charset="utf-8"></script>
+<!-- <script src="sys/__test/js/externals.min.js" type="text/javascript" charset="utf-8"></script> -->
 
 
 <!-- FlexyAdmin -->
