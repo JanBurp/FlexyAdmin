@@ -94,7 +94,6 @@ class FormValidationTest extends CITestCase {
     foreach ($this->false_data as $data) {
       $validated = $this->CI->form_validation->validate_data($data,'tbl_site');
       $errors    = $this->CI->form_validation->get_error_messages();
-      
       $this->assertFalse($validated);
       $this->assertInternalType('array',$errors);
       $this->assertArrayHasKey('email_email',$errors);
