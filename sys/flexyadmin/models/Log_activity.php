@@ -64,7 +64,7 @@ class Log_activity extends CI_Model {
   public function get_user_activity( $user_id=FALSE, $limit=10 ) {
     if (!$this->db->table_exists('log_activity')) return array();
     if (!$user_id) $user_id = $this->session->userdata("user_id");
-    $query = $this->db->query("SELECT DISTINCT `id_user`,`tme_timestamp`, `str_model` FROM `log_activity` WHERE `str_activity_type`!='auth' ORDER BY `tme_timestamp` DESC LIMIT ".$limit);
+    $query = $this->db->query("SELECT DISTINCT `id_user`,`tme_timestamp`, `str_model` FROM `log_activity` WHERE `str_activity_type`='database' OR `str_activity_type`='media'  ORDER BY `tme_timestamp` DESC LIMIT ".$limit);
     return $query->result_array();
   }
 
