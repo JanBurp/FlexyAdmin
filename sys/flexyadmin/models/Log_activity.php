@@ -25,6 +25,7 @@ class Log_activity extends CI_Model {
   public function add($type,$activity,$model='',$key='',$user_id=FALSE) {
     if (!defined('PHPUNIT_TEST') and $this->db->table_exists('log_activity')) {
       if (!$user_id) $user_id = $this->session->userdata("user_id");
+      if (!$user_id) $user_id = 0;
       $this->db->set( 'id_user',$user_id );
       $this->db->set( 'str_activity_type',$type );
       $this->db->set( 'stx_activity',$activity );
