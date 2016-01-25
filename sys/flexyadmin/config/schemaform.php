@@ -301,15 +301,19 @@ $config['FIELDS_special'] = array(
     'form'        => 'function_user',
     'validation'	=> 'trim|integer',
   ),
+  
+  // Gebruiker die laatste aanpassing deed
 	'user_changed' => array(
     'type'        => 'integer',
-    'form-type'   => 'text',
+    'form-type'   => 'hidden',
+    'readonly'    => true,
     'grid'        => 'function_user'
   ),
                       
 	'uri'				=> array(
     'type'        => 'string',
-    'form-type'   => 'text',
+    'form-type'   => 'hidden',
+    'readonly'    => true,
     'grid'        => '/%s',
     'form'        => 'hidden',
     'validation'	=> 'trim',
@@ -393,6 +397,13 @@ $config['FIELDS_special'] = array(
     'type'        => 'string',
     'form-type'   => 'text',
     'grid'        => 'function_date("Y-m-d H:i:s",%s)',
+  ),
+  
+  // Tijdstip van laatste aanpassing
+  'tme_last_changed' => array(
+    'type'        => 'string',
+    'form-type'   => 'hidden',
+    'readonly'    => true,
   ),
 										
 );

@@ -84,19 +84,13 @@ flexyAdmin.directive('flexyForm', ['flexySettingsService','flexyApiService','fle
       $scope.saveForm = function(form) {
         // First we broadcast an event so all fields validate themselves
         $scope.$broadcast('schemaFormValidate');
-        
-        console.log('save',form.$valid?'VALID':'NOT valid',$scope.model);
-        
         // Then we check if the form is valid
         if (form.$valid) {
-          // flexyForm.save();
+          flexyForm.save( $scope.table, $scope.id, $scope.model ).then(function(response){
+            // console.log('SAVED',response);
+          });
         }
-        else {
-        }
-        
-        
       };
-
   
       /**
        * SUBMIT FORM
