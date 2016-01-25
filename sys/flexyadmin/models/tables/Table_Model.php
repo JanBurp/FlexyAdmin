@@ -1448,18 +1448,22 @@ Class Table_Model extends CI_Model {
       if (el($name,$cfgSpecial)) {
         $fieldProperties = array_merge($fieldProperties,el($name,$cfgSpecial));
       }
+      // keep only the needed info
+      $fieldProperties=array_unset_keys($fieldProperties,array('grid','form','default' )); // TODO kan (deels) weg als oude ui weg is
       
       // name
       $fieldProperties['title'] = $name;
 
+      // get validation (set in field_info)
+      $validation = $this->settings['field_info'][$name]['validation'];
       // split validation / required
-      $validation=explode('|',$fieldProperties['validation']);
-      // required
-      if ($key=array_search('required',$validation)) {
-        unset($validation['$key']);
+      $key = array_search('required',$validation);
+      if ( $key!==false ) {
+        unset($validation[$key]);
         // Add requered
         $sf['schema']['required'][]=$name;
       }
+      
       $fieldProperties['validation']=$validation;
       
       // Put in Schema
@@ -1472,7 +1476,7 @@ Class Table_Model extends CI_Model {
     foreach ($this->settings['form_set']['fieldsets'] as $tabtitle => $items) {
       foreach ($items as $i=>$item) {
         $items[$i] = array(
-          'key' => $sf['schema']['properties'][$item]['title'],
+          'key'  => $sf['schema']['properties'][$item]['title'],
           'type' => $sf['schema']['properties'][$item]['form-type'],
         );
       }
@@ -2334,7 +2338,7 @@ Class Table_Model extends CI_Model {
    * @param array $set = NULL
    * @param mixed $where = NULL
    * @param int $limit = NULL
-   * @return mixed FALSE als niet gelukt, anders een result_array van de verwijderde data
+   * @return mixed FALSE als niet gelukt, anders de id van het aangepaste item
    * @author Jan den Besten
    */
 	protected function _update_insert( $type, $set = NULL, $where = NULL, $limit = NULL ) {

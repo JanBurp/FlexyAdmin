@@ -60,6 +60,13 @@ jdb.serializeJSON = function(data) {
           serializeString += encodeURIComponent(key) + '[]=' + encodeURIComponent(el);
         });
       }
+      // object
+      if (angular.isObject(data[key])) {
+        angular.forEach(data[key], function(el,index) {
+          if (serializeString!=='') serializeString+='&';
+          serializeString += encodeURIComponent(key) + '['+index+']=' + encodeURIComponent(el);
+        });
+      }
       // normal
       else {
         serializeString += encodeURIComponent(key) + '=' + encodeURIComponent(data[key]);

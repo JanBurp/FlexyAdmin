@@ -17,10 +17,6 @@
 
 flexyAdmin.config(['flexyConstants','$httpProvider',function(constants,$httpProvider) {
 
-  // $httpProvider.defaults.withCredentials = true;
-  // $httpProvider.defaults.useXDomain = true;
-  // $httpProvider.defaults.headers.common['Accept'] = "*/*";
-  
   // Add Authentication Header & Globaly sets all base URL's
   $httpProvider.interceptors.push(function ($q) {
     return {

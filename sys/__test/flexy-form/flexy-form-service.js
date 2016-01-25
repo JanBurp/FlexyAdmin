@@ -12,7 +12,7 @@
  */
 
 
-flexyAdmin.factory('flexyFormService', ['flexySettingsService','flexyApiService','$q', function(settings,api,$q) {
+flexyAdmin.factory('flexyFormService', ['flexySettingsService','flexyApiService','flexyAlertService','$translate','$q', function(settings,api,alertService,$translate,$q) {
   'use strict';
 
   var self = this;
