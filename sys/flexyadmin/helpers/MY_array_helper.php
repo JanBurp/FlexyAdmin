@@ -136,6 +136,7 @@ function array2json($arr) {
   }
 
 	foreach($arr as $key=>$value) {
+    $prefix = get_prefix($key);
 		if(is_array($value)) { //Custom handling for arrays
 			if($is_list)
 				$parts[] = array2json($value); /* :RECURSION: */
@@ -146,9 +147,20 @@ function array2json($arr) {
 			$str = '';
 			if(!$is_list) $str = '"' . $key . '":';
 			//Custom handling for multiple data types
-			if(is_numeric($value)) $str.= '"'.$value.'"';  // Numbers
-			elseif($value === false) $str.= 'false';       // The booleans
+      // Booleans
+      if (in_array($prefix,array('b','is','has'))) {
+  			if ($value == false)
+          $str.= 'false';
+  			else
+          $str.= 'true';
+        
+      }
+      // Numbers
+      elseif(is_numeric($value)) $str.= $value;
+      // The booleans
+			elseif($value === false) $str.= 'false';
 			elseif($value === true) $str.= 'true';
+      // Strings - Default
       else $str.='"'.addcslashes ($value, '"'."\n\r".chr(92)).'"'; // All other things: escape double quotes, backslash and newlines
 			$parts[] = $str;
 		}
