@@ -13,7 +13,7 @@ require_once(SITEPATH.'/config/database.php');
 $query_builder = TRUE;
 
 // Make sure all settings are ok
-foreach (array('default','local','phpunit') as $group) {
+foreach (array('default','local','import','phpunit') as $group) {
   $db[$group]['dbdriver'] = "mysqli";
   $db[$group]['dbprefix'] = "";
   $db[$group]['pconnect'] = FALSE;
