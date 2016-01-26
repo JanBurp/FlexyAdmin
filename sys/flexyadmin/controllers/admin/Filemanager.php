@@ -54,7 +54,7 @@ class Filemanager extends AdminController {
 			$idFile=el('current',$args);
 			$info=el('info',$args);
 			// $sub=el('sub',$args);
-			$offset=el('offset',$args,0);
+			$offset=(int) el('offset',$args,0);
 			$order=el('order',$args, $this->cfg->get('cfg_media_info',$path,'str_order','name') );
 			$search=el('search',$args,'');
 		}
