@@ -64,7 +64,8 @@ flexyAdmin.factory('logInterceptor',['flexySettingsService','$q',function(settin
     responseError : function(rejection) {
       var method=rejection.config.method;
       var url = _url(rejection.config);
-      console.error(settings.item('log_prefix')+'ERROR '+rejection.status+' -> '+method+' - '+url, rejection);
+      console.error(settings.item('log_prefix')+'response ERROR '+rejection.status+' -> '+method+' - '+url, rejection);
+      message(rejection.config,'<-',rejection.data);
       return $q.reject(rejection);
     },
     
