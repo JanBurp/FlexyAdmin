@@ -19,7 +19,7 @@ class __test extends AjaxController {
    * @author Jan den Besten
    */
 	public function index() {
-    $site = $this->table_model->table('tbl_site')
+    $site = $this->data_model->table('tbl_site')
                               ->select('str_title,url_url')
                               ->get_row();
     $this->load->view('admin/__test/main_app',array('title'=>$site['str_title'],'language'=>$this->user->language),false);

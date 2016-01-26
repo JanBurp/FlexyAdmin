@@ -113,7 +113,7 @@ $autoload['language'] = array();
 |
 */
 
-// Also 'tables/Table_Model' is autoloaded in MY_Controller
+// Also 'tables/Data_Model' is autoloaded in MY_Controller
 $autoload['model'] = array('formaction','mediatable','crud');
 
 

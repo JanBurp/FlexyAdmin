@@ -121,7 +121,7 @@ class ApiAuthTest extends ApiTestModel {
     // first create new users
     $cleanup_ids=array();
     foreach ($this->test_users as $user) {
-      $cleanup_ids[]=$this->CI->table_model->table('cfg_users')->insert( $user );
+      $cleanup_ids[]=$this->CI->data_model->table('cfg_users')->insert( $user );
     }
     
     // Try 10 times with random emails
@@ -161,7 +161,7 @@ class ApiAuthTest extends ApiTestModel {
     }
 
     // cleanup testusers
-    $this->CI->table_model->table('cfg_users')->where_in( 'id', $cleanup_ids)->delete();
+    $this->CI->data_model->table('cfg_users')->where_in( 'id', $cleanup_ids)->delete();
   }
   
 }

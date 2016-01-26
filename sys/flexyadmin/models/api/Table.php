@@ -143,7 +143,7 @@ class Table extends Api_Model {
    */
   private function _get_data() {
     
-    $this->table_model->table( $this->args['table'] );
+    $this->data_model->table( $this->args['table'] );
     
     // Normaal resultaat, of grid resultaat
     if ( el('as_grid',$this->args,false) ) {
@@ -154,18 +154,18 @@ class Table extends Api_Model {
       if ( $this->args['table'] === 'res_media_files' AND isset($this->args['path']) ) $this->args['where'] = array( 'path' => $this->args['path'] );
       // Where?
       if (!isset($this->args['where'])) $this->args['where'] = '';
-      $items = $this->table_model->get_grid( $this->args['limit'], $this->args['offset'], $this->args['sort'], $this->args['filter'], $this->args['where'] );
+      $items = $this->data_model->get_grid( $this->args['limit'], $this->args['offset'], $this->args['sort'], $this->args['filter'], $this->args['where'] );
     }
     else {
       // Normaal: where, txt_abstract, options
-      if ( isset($this->args['where']) ) $this->table_model->where( $this->args['where'] );
-      if ( isset($this->args['txt_abstract'])) $this->table_model->select_txt_abstract( $this->args['txt_abstract'] );
-      if ( el('as_options',$this->args,false) ) $this->table_model->select_abstract( TRUE );
-      $items = $this->table_model->get_result( $this->args['limit'], $this->args['offset'] );
+      if ( isset($this->args['where']) ) $this->data_model->where( $this->args['where'] );
+      if ( isset($this->args['txt_abstract'])) $this->data_model->select_txt_abstract( $this->args['txt_abstract'] );
+      if ( el('as_options',$this->args,false) ) $this->data_model->select_abstract( TRUE );
+      $items = $this->data_model->get_result( $this->args['limit'], $this->args['offset'] );
     }
     
     // Info
-    $this->info = $this->table_model->get_query_info();
+    $this->info = $this->data_model->get_query_info();
     return $items;
   }
  
