@@ -81,13 +81,15 @@ flexyAdmin.directive('flexyForm', ['flexySettingsService','flexyApiService','fle
       /**
        * SAVE FORM
        */
-      $scope.saveForm = function(form) {
+      $scope.saveForm = function(form,back_to_table) {
         // First we broadcast an event so all fields validate themselves
         $scope.$broadcast('schemaFormValidate');
         // Then we check if the form is valid
         if (form.$valid) {
-          flexyForm.save( $scope.table, $scope.id, $scope.model ).then(function(response){
-            // console.log('SAVED',response);
+          flexyForm.save( $scope.model, $scope.table, $scope.id ).then(function(response){
+            if (angular.isDefined(back_to_table) && back_to_table===true) {
+              window.history.back();
+            }
           });
         }
       };
@@ -96,8 +98,7 @@ flexyAdmin.directive('flexyForm', ['flexySettingsService','flexyApiService','fle
        * SUBMIT FORM
        */
       $scope.submitForm = function(form) {
-        $scope.saveForm(form);
-        // En nu terug naar table view
+        $scope.saveForm(form,true);
       };
       
       

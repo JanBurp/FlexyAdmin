@@ -405,6 +405,16 @@ flexyAdmin.factory('flexyTableService', ['flexySettingsService','flexyApiService
   };
   
   
+  
+  /**
+   * Past een rij aan in de data van een tabel (gebruikt als een form een update geeft)
+   * TODO: Op dit moment wordt hele data gereset zodat data opnieuw van server wordt opgevraagd
+   */
+  flexy_table_service.update_row = function( table, id, new_row ) {
+    flexy_table_service.remove(table);
+  };
+  
+  
   /**
    * Geeft een rij uit een table
    */

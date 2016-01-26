@@ -217,17 +217,5 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
     return flexy_api_service.post( 'row', args );
   };
   
-  // /**
-  //  * API call voor row (insert)
-  //  *
-  //  * @return Promise
-  //  */
-  // flexy_api_service.insert = function(args) {
-  //   return flexy_api_service.post( 'row', args );
-  // };
-  //
-  //
-  
-
   return flexy_api_service;
 }]);

@@ -753,10 +753,7 @@ Class Table_Model extends CI_Model {
       }
       else {
         $this->load->library('user');
-        $user_info = $this->user->get_user();
-        if ($user_info) {
-          $this->user_id = $user_info->id;
-        }
+        $this->user_id = $this->user->user_id;
       }
     }
     return $this;
@@ -2424,14 +2421,11 @@ Class Table_Model extends CI_Model {
     
       
     /**
-     * Bij INSERT is primary_key niet nodig, haal die weg mocht die er zijn.
-     */
-		if ( $type=='INSERT' ) unset( $set[ $this->settings['primary_key']] );
-
-    /**
-     * Verwijder id uit set, niet nodig
+     * Verwijder onnodige velden
      */
     unset($set[$this->settings['primary_key']]);
+    unset($set['tme_last_changed']);
+
 
     /**
      * Verwijder lege wachtwoorden, zodat die niet overschreven worden in de db

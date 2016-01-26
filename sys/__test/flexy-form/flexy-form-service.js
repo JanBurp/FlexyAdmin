@@ -12,7 +12,7 @@
  */
 
 
-flexyAdmin.factory('flexyFormService', ['flexySettingsService','flexyApiService','flexyAlertService','$translate','$q', function(settings,api,alertService,$translate,$q) {
+flexyAdmin.factory('flexyFormService', ['flexySettingsService','flexyApiService','flexyTableService','flexyAlertService','$translate','$q', function(settings,api,tableService,alertService,$translate,$q) {
   'use strict';
 
   var self = this;
@@ -64,11 +64,22 @@ flexyAdmin.factory('flexyFormService', ['flexySettingsService','flexyApiService'
   /**
    * Bewaar data van form op de server
    */
-  flexy_form_service.save = function( table,id, data ) {
+  flexy_form_service.save = function( data, table, id ) {
     return $translate(['FORM_SAVED','FORM_SAVE_ERROR']).then(function (translations) {
-      // UPDATE/INSERT
-      api.update( { 'table':table, 'where':id, 'data':data }).then( function(response) {
+      var args = {
+        'data':data,
+        'table':table,
+      };
+      // Update or insert?
+      if (angular.isDefined(id) && id>=0) {
+        args.where = id;
+      }
+      api.update( args ).then( function(response) {
         if (response.success===true && response.data!==false) {
+          id = response.data.id;
+          // Bewaar data in table data, zodat geen reload van de hele table nodig is
+          tableService.update_row( table,id, data);
+          // Message
           alertService.add( 'success', '<b>'+translations.FORM_SAVED+'</b>');
           return $q.resolve(true);
         }
