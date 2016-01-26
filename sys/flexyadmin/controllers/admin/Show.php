@@ -471,13 +471,13 @@ class Show extends AdminController {
 					$newData=$form->get_data();
 					$newData=$this->_after_update($table,$data,$newData);
           
-          $this->table_model->table( $table )->set_user_id( $restrictedToUser );
+          $this->data_model->table( $table )->set_user_id( $restrictedToUser );
 					if ($id==-1) {
-						$id = $this->table_model->insert( $newData );
+						$id = $this->data_model->insert( $newData );
 						$this->message->add(langp("insert_new",$table));
 					}
 					else {
-						$id = $this->table_model->update( $newData, array( PRIMARY_KEY => $id) );
+						$id = $this->data_model->update( $newData, array( PRIMARY_KEY => $id) );
 						$this->message->add(langp("update_succes",$table));
 					}
 					
@@ -600,7 +600,7 @@ class Show extends AdminController {
 			$newData=$form->get_data();
 			
 			$newData=$this->_after_update($userTable,'',$newData);
-			$resultId = $this->table_model->table( $userTable )->update( $newData, array( PRIMARY_KEY => $userId ) );
+			$resultId = $this->data_model->table( $userTable )->update( $newData, array( PRIMARY_KEY => $userId ) );
 			
 			$this->queu->run_calls();
 			

@@ -5,7 +5,7 @@
  * 
  * @author: Jan den Besten
  */
- class Plugin_analyze_table_models extends Plugin {
+ class Plugin_analyze_data_models extends Plugin {
    
    public function __construct() {
      parent::__construct();
@@ -21,8 +21,8 @@
       else
         $tables = $this->CI->db->list_tables();
       
-      $this->CI->load->model('tables/table_model');
-      $this->CI->load->model('tables/table_model_create');
+      $this->CI->load->model('data/data_model');
+      $this->CI->load->model('data/data_model_create');
       
       $config = array();
       $keys = array();
@@ -36,10 +36,10 @@
         $diff = $this->CI->input->get();
         if ($diff) {
           $this->add_message( p().$table.' config merged and saved'._p() );
-          $this->add_message( p().'<a class="button" href="admin/plugin/analyze_table_models">RETURN</a>'._p() );
+          $this->add_message( p().'<a class="button" href="admin/plugin/analyze_data_models">RETURN</a>'._p() );
           
           $config = array();
-          $autoset  = $this->CI->table_model->_config( $table, false );
+          $autoset  = $this->CI->data_model->_config( $table, false );
           foreach ($diff as $key => $which ) {
             switch ($which) {
               case 'left':
@@ -50,18 +50,18 @@
                 break;
             }
           }
-          $this->CI->table_model_create->save_config_for( $table, $config );
+          $this->CI->data_model_create->save_config_for( $table, $config );
         }
         
         // Als er nog geen settings voor deze tabel zijn, maak het model aan
         elseif (is_null($settings)) {
           $this->add_message( p().$table.' => model &amp; config created'._p() );
-          $this->CI->table_model_create->create( $table );
+          $this->CI->data_model_create->create( $table );
         }
 
         // Als wel settings bestaat, bepaal het verschil
         elseif ($settings) {
-          $autoset  = $this->CI->table_model->_config( $table, false );
+          $autoset  = $this->CI->data_model->_config( $table, false );
           if ($settings) {
             $this_keys=array_keys($settings);
             $keys = array_merge($keys,$this_keys);

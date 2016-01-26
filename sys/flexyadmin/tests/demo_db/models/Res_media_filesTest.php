@@ -6,7 +6,7 @@ require_once('sys/flexyadmin/tests/CITestCase.php');
 class Res_media_filesTest extends CITestCase {
   
   protected function setUp ()  {
-    $this->CI->load->model('tables/res_media_files');
+    $this->CI->load->model('data/res_media_files');
   }
   
   protected function tearDown() {

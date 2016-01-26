@@ -14,7 +14,7 @@ class MY_Controller extends CI_Controller {
 
 	public function __construct($isAdmin=false) {
 		parent::__construct();
-    $this->load->model( 'tables/Table_Model','table_model' );
+    $this->load->model( 'data/Data_Model','data_model' );
       
     if (defined('PHPUNIT_TEST')) return;
     
