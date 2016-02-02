@@ -641,6 +641,7 @@ class Plugin_automenu extends Plugin {
         if (isset($row['str_table'])) $table=$row['str_table'];
 
   			foreach ($row as $field => $value) {
+          if ($value==null) $value='';
           // Create new uri's??
           if ($field=='uri' and isset($this->languages) and !in_array($value,$this->languages) and $this->config('multi_lang_uris') and isset($row['str_title_'.$lang])) {
             $uri=$value;
