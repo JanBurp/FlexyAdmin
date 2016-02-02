@@ -65,6 +65,23 @@ function add_assets($path) {
 
 
 /**
+ * Site URL
+ * Zoals de standaard CodeIgniter versie, met deze aanpassingen:
+ * - plakt automatisch 'lang=' in de query als dit is ingesteld
+ *
+ * @param	string	$uri
+ * @param	string	$protocol
+ * @return	string
+ */
+function site_url($uri = '', $protocol = NULL) {
+  $CI=&get_instance();
+  $url=$CI->config->site_url($uri, $protocol);
+  if (isset($CI->site['language'])) $url.='?lang='.$CI->site['language'];
+  return $url;
+}
+
+
+/**
  * Maakt van gegeven parameters een site_url()
  *
  * @return string
