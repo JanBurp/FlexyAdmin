@@ -9,7 +9,7 @@
  */
 
 Class MY_Config extends CI_Config {
-
+  
   /**
    * @author Jan den Besten
    */
@@ -18,23 +18,64 @@ Class MY_Config extends CI_Config {
 		array_push($this->_config_paths,SITEPATH);
 	}
 
+
 	/**
 	 * Site URL
 	 *
-	 * Returns base_url . index_page [. uri_string]
-	 *
-	 * @uses	CI_Config::_uri_string()
+	 * Zelfde als CodeIgbiter origineel met deze aanpassingen:
+	 * - Verwijderd url_suffix in admin kant
+	 * - Voegt eventuele query toe aan eind, en iig lang='' als die bestaat aan de frontend
 	 *
 	 * @param	string|string[]	$uri	URI string or an array of segments
-	 * @param	string	$protocol
+	 * @param	string	$protocol [NULL]
+	 * @param	array	$add_query [NULL] ...
 	 * @return	string
 	 */
-	public function site_url($uri = '', $protocol = NULL) {
+	public function site_url($uri = '', $protocol = NULL, $add_query = array() ) {
+    if ($uri=='./') $uri ='';
     $url = parent::site_url($uri,$protocol);
+    $is_admin = has_string('/admin',$url);
+
     // no url_suffix in admin
-    if (has_string('/admin',$url)) {
+    if ($is_admin) {
       $url = str_replace($this->item('url_suffix'),'',$url);
     }
+    
+    // (lang) query on frontend
+    else {
+      // Splits query
+      $query = explode('?',$url);
+      $uri = $query[0];
+      $query = el(1,$query,'');
+      // Query parts
+      if (!empty($query)) {
+        $query = explode('&', $query);
+        foreach ( $query as $key => $val ) {
+          $var  = explode('=',$val);
+          $value= el(1,$var,'');
+          $var  = el(0,$var,'');
+          $query[$var] = $value;
+          unset($query[$key]);
+        }
+      }
+      // Default
+      if (empty($query)) $query=array();
+      // Add current language
+      $CI = &get_instance();
+      if (isset($CI->site['language'])) $query['lang'] = $CI->site['language'];
+      // Merge with new?
+      $query = array_merge($query,$add_query);
+      // Add query parts
+      if (!empty($query)) {
+        $url=$uri.'?';
+        foreach ($query as $key => $value) {
+          $url.=$key.'='.$value.'&';
+        }
+        $url=substr($url,0,strlen($url)-1);
+      }
+      
+    }
+    
 	  return $url; 
 	}
 

@@ -139,6 +139,7 @@ class Menu {
       'bool_class'  => '',
       'extra'       => '',
     ),
+    'multilang_title' => FALSE,
     'framework'       => 'default',             // 'default', 'bootstrap'
     'attributes'      => array('class'=>''),
     'full_uris'       => false,
@@ -211,6 +212,7 @@ class Menu {
    *        'bool_class'   => '',                  // - als dit veld TRUE is dan wordt de veldnaam toegevoegd als een class aan het menu-item
    *        'extra'        => '',                  
    *      ),
+   *      'multilang_title' => FALSE,              // Als TRUE, dat wordt aan 'fields'.'title' een language code die bekend is in $this->site['language'] toegevoegd (str_title wordt dan str_title_nl bv)
    *      'framework'     => 'default',            // 'default', 'bootstrap'
    *      'view_path'     => 'menu'                // pad waar de menu views in staan
    *      'attributes'    => array('class'=>''),   // extra attributen de items
@@ -224,6 +226,10 @@ class Menu {
   public function initialize($settings=array()) {
     foreach ($settings as $name => $value) {
       $this->set($name,$value);
+    }
+    // Multilang?
+    if ($this->settings['multilang_title'] and isset($this->CI->site['language'])) {
+      $this->settings['fields']['title'] .= '_'.$this->CI->site['language'];
     }
     return $this;
   }
