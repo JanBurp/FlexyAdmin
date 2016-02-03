@@ -9,6 +9,13 @@
  * @file
  */
 
+
+function site_url($uri = '', $protocol = NULL, $add_query=array() ) {
+	return get_instance()->config->site_url($uri, $protocol,$add_query);
+}
+
+
+
 /**
   * Geeft pad naar assets map van de site en voegt meegegeven map toe
   *
@@ -61,23 +68,6 @@ function remove_assets($path) {
  */
 function add_assets($path) {
   return assets().remove_assets($path);
-}
-
-
-/**
- * Site URL
- * Zoals de standaard CodeIgniter versie, met deze aanpassingen:
- * - plakt automatisch 'lang=' in de query als dit is ingesteld
- *
- * @param	string	$uri
- * @param	string	$protocol
- * @return	string
- */
-function site_url($uri = '', $protocol = NULL) {
-  $CI=&get_instance();
-  $url=$CI->config->site_url($uri, $protocol);
-  if (isset($CI->site['language'])) $url.='?lang='.$CI->site['language'];
-  return $url;
 }
 
 
