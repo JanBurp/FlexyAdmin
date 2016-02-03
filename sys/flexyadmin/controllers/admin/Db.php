@@ -12,8 +12,8 @@
 class Db extends AdminController {
 
   var $types = array(
-    'data'      => array('name'=>'All Tables & Data, except log & session Tables','data'=>'*,-cfg_sessions,-log_login,-log_stats','structure'=>''),
-    'all'       => array('name'=>'All Tables & Data, except log & session Data','data'=>'*,-cfg_sessions,-log_login,-log_stats','structure'=>'cfg_sessions,log_login,log_stats'),
+    'data'      => array('name'=>'All Tables & Data, except log & session Tables','data'=>'*,-cfg_sessions,-log_activity,-log_stats','structure'=>''),
+    'all'       => array('name'=>'All Tables & Data, except log & session Data','data'=>'*,-cfg_sessions,-log_activity,-log_stats','structure'=>'cfg_sessions,log_activity,log_stats'),
     'complete'  => array('name'=>'All Tables & Data','data'=>'*','structure'=>''),
     'tbl'       => array('name'=>'Normal Tables & Data','data'=>'tbl_*,res_*','structure'=>''),
     'cfg_clean' => array('name'=>'Config Tables & Data, except session table','data'=>'cfg_*,-cfg_sessions','structure'=>''),
