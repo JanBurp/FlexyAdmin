@@ -44,6 +44,7 @@
     */
   public function go($data) {
     parent::go($data);
+    unset($data['int_spamscore']);
     
     // TO
     if (!isset($this->settings['to']) or empty($this->settings['to'])) {
