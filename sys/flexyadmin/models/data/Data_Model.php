@@ -1254,6 +1254,27 @@ Class Data_Model extends CI_Model {
     return $value;
   }
 
+  /**
+   * Interne method voor get_result(), andere models kunnen zo get_result() zonder problemen aanpassen zoder de interne werking te beinvloeden.
+   *
+   * @param int $limit [0]
+   * @param int $offset [0] 
+   * @return array
+   * @author Jan den Besten
+   */
+  private function _get_result( $limit=0, $offset=0 ) {
+    $result = array();
+    $query = $this->get( $limit, $offset, FALSE );
+    if ($query) {
+      $result = $this->_make_result_array( $query );
+      $query->free_result();
+    }
+    $this->reset();
+    return $result;
+  }
+
+
+
 
   /**
    * Geeft resultaat terug als result array
@@ -1297,10 +1318,10 @@ Class Data_Model extends CI_Model {
     if ($where) $this->where( $where );
     // Als er many_to_many data is die niet grouped is dan kan het zijn dat er meer resultaten nodig zijn om één row samen te stellen
     if ( isset($this->tm_with['many_to_many']) ) {
-      $result = $this->get_result();
+      $result = $this->_get_result();
     }
     else {
-      $result = $this->get_result( 1 );
+      $result = $this->_get_result( 1 );
     }
     return current($result);
   }
@@ -1402,7 +1423,7 @@ Class Data_Model extends CI_Model {
       $this->tm_jump_to_today = TRUE;
     }
 
-    return $this->get_result();
+    return $this->_get_result();
   }
   
   
