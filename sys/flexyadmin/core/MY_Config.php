@@ -22,9 +22,9 @@ Class MY_Config extends CI_Config {
 	/**
 	 * Site URL
 	 *
-	 * Zelfde als CodeIgbiter origineel met deze aanpassingen:
+	 * Zelfde als CodeIgniter origineel met deze aanpassingen:
 	 * - Verwijderd url_suffix in admin kant
-	 * - Voegt eventuele query toe aan eind, en iig lang='' als die bestaat aan de frontend
+	 * - Voegt eventuele query keys toe aan eind
 	 *
 	 * @param	string|string[]	$uri	URI string or an array of segments
 	 * @param	string	$protocol [NULL]
@@ -43,26 +43,24 @@ Class MY_Config extends CI_Config {
     
     // (lang) query on frontend
     else {
+      $CI = &get_instance();
       // Splits query
       $query = explode('?',$url);
       $uri = $query[0];
-      $query = el(1,$query,'');
-      // Query parts
-      if (!empty($query)) {
-        $query = explode('&', $query);
-        foreach ( $query as $key => $val ) {
-          $var  = explode('=',$val);
-          $value= el(1,$var,'');
-          $var  = el(0,$var,'');
-          $query[$var] = $value;
-          unset($query[$key]);
-        }
+      if (isset($query[1]))
+        parse_str($query[1],$query);
+      else 
+        $query=array();
+      // Keep current query keys
+      if ($this->item('keep_query_keys')) {
+        $server=$CI->input->server('QUERY_STRING');
+        parse_str($server,$keys);
+        // Keep only the set keys
+        $keys=array_keep_keys($keys,$this->item('keep_query_keys'));
+        $query=array_merge($query,$keys);
+        // Set language if asked for
+        if (isset($CI->site['language']) and in_array('lang',$this->item('keep_query_keys'))) $query['lang'] = $CI->site['language'];
       }
-      // Default
-      if (empty($query)) $query=array();
-      // Add current language
-      $CI = &get_instance();
-      if (isset($CI->site['language'])) $query['lang'] = $CI->site['language'];
       // Merge with new?
       $query = array_merge($query,$add_query);
       // Add query parts
