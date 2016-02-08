@@ -115,6 +115,16 @@ $config['language']	= "nl";
  */
 // $config['language_table']  = "cfg_lang";
 
+
+
+/**
+ * Query keys to keep in every link
+ *
+ * This enables and sets query keys that automatically will be remembered on every link (if not activily changed) created with site_url()
+ */
+$config['keep_query_keys'] = FALSE;
+// $config['keep_query_keys'] = array('lang');
+
 /*
  *--------------------------------------------------------------------------
  * Redirect
