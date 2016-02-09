@@ -134,16 +134,13 @@ var plumber     = require('gulp-plumber');
 var livereload  = require('gulp-livereload');
 var less        = require('gulp-less');
 var sourcemaps  = require('gulp-sourcemaps');
-var autoprefixer= require('gulp-autoprefixer');
 var pixrem      = require('gulp-pixrem');
 var concat      = require('gulp-concat');
-var minify_css  = require('gulp-minify-css');
+var cssnano     = require('gulp-cssnano');
 var jshint      = require('gulp-jshint');
 var stylish     = require('jshint-stylish');
 var uglify      = require('gulp-uglify');
 var flatten     = require('gulp-flatten');
-var cached      = require('gulp-cached');
-var remember    = require('gulp-remember');
 
 var phpunit     = require('gulp-phpunit');
 
@@ -220,9 +217,7 @@ gulp.task('install', function() {
 gulp.task('jshint',function(){
   return gulp.src( files[framework]['jshint'] )
         .pipe(plumber({ errorHandler: onError }))
-        // .pipe(cached('jshint'))
         .pipe(jshint())
-        // .pipe(remember('jshint'))
         // Use gulp-notify as jshint reporter
         .pipe(notify(function (file) {
           if (file.jshint.success) { return false }
@@ -244,11 +239,9 @@ gulp.task('jshint',function(){
 gulp.task('jsmin',['jshint'],function(){
   return gulp.src( files[framework]['jsmin'] )
         .pipe(flatten())
-        // .pipe(sourcemaps.init({loadMaps: true}))
-        // .pipe(cached('jsmin'))
+        .pipe(sourcemaps.init({loadMaps: true}))
         .pipe(uglify())
-        // .pipe(remember('jsmin'))
-        // .pipe(sourcemaps.write('maps'))
+        .pipe(sourcemaps.write('maps'))
         .pipe(concat(files[framework]['jsdest']))
         .pipe(gulp.dest( files[framework]['js']) )
         .pipe(notify({
@@ -263,11 +256,9 @@ gulp.task('jsmin',['jshint'],function(){
 gulp.task('less',function(){
   return gulp.src( files[framework]['less'] )
         .pipe(plumber({ errorHandler: onError }))
-        // .pipe(cached('less'))
         .pipe(sourcemaps.init())
         .pipe(less({compress:true}))
         .pipe(sourcemaps.write('maps'))
-        // .pipe(remember('less'))
         .pipe(gulp.dest( files[framework]['css'] ))
         .pipe(notify({
           title:   'LESS' + title,
@@ -281,8 +272,8 @@ gulp.task('less',function(){
 gulp.task('cssmin',['less'],function(){
   return gulp.src( files[framework]['cssmin'] )
         .pipe(sourcemaps.init({loadMaps: true}))
-        .pipe(autoprefixer())
         // .pipe(pixrem())
+        .pipe(cssnano())
         .pipe(concat(files[framework]['cssdest']))
         .pipe(sourcemaps.write('maps'))
         .pipe(gulp.dest( files[framework]['css']) )
