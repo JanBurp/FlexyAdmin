@@ -186,7 +186,8 @@ class Main extends FrontEndController {
 	 * Redirect to a page down in the menu tree, if current page is empty
 	 */
 	private function _redirect($page) {
-		if (empty($page['txt_text'])) {
+    $text = trim(el( 'txt_text',$page, el('txt_text_'.$this->site['language'],$page,'') ));
+		if (empty($text)) {
 			$this->db->select('uri');
 			$this->db->where('self_parent',$page['id']);
 			if (isset($page['b_visible'])) $this->db->where('b_visible','1');

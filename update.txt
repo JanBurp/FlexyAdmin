@@ -29,6 +29,7 @@ UPDATE 3.0.6 (3518...)
   - Vervang de map `sys`
 - Login als admin en run update scripts:
   - Run update script: `admin/update/database` // update_r3505.sql
+- Vervang site/Controller.php (of pas regel 189 & 190 aan)
 
 
 UPDATE 3.0.4 (3490...)

@@ -1,6 +1,6 @@
 {
   "name": "FlexyAdmin",
-  "version": "3.0.1",
+  "version": "3.0.3",
   "description": "www.flexyadmin.com",
   "moduleType": [
     "node"
@@ -17,7 +17,7 @@
     "__"
   ],
   "dependencies": {
-    "bootstrap": "~3.3",
+    "bootstrap": "~3",
     "normalize.css": "~3",
     "jquery-legacy": "jquery#^1",
     "components-font-awesome": "~4"
