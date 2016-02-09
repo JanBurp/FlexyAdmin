@@ -141,7 +141,7 @@ class Filemanager extends AdminController {
 				}
         
         // Pagination? Slice array
-        if ($cfg['b_pagination']) {
+        if (el('b_pagination',$cfg,true)) {
           $limit=$this->cfg->get('cfg_configurations','int_pagination');
           $show_files=array_slice($files,$offset,$limit);
         }
