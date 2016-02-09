@@ -220,9 +220,9 @@ gulp.task('install', function() {
 gulp.task('jshint',function(){
   return gulp.src( files[framework]['jshint'] )
         .pipe(plumber({ errorHandler: onError }))
-        .pipe(cached('jshint'))
+        // .pipe(cached('jshint'))
         .pipe(jshint())
-        .pipe(remember('jshint'))
+        // .pipe(remember('jshint'))
         // Use gulp-notify as jshint reporter
         .pipe(notify(function (file) {
           if (file.jshint.success) { return false }
@@ -244,11 +244,11 @@ gulp.task('jshint',function(){
 gulp.task('jsmin',['jshint'],function(){
   return gulp.src( files[framework]['jsmin'] )
         .pipe(flatten())
-        .pipe(sourcemaps.init({loadMaps: true}))
-        .pipe(cached('jsmin'))
+        // .pipe(sourcemaps.init({loadMaps: true}))
+        // .pipe(cached('jsmin'))
         .pipe(uglify())
-        .pipe(remember('jsmin'))
-        .pipe(sourcemaps.write('maps'))
+        // .pipe(remember('jsmin'))
+        // .pipe(sourcemaps.write('maps'))
         .pipe(concat(files[framework]['jsdest']))
         .pipe(gulp.dest( files[framework]['js']) )
         .pipe(notify({
@@ -263,11 +263,11 @@ gulp.task('jsmin',['jshint'],function(){
 gulp.task('less',function(){
   return gulp.src( files[framework]['less'] )
         .pipe(plumber({ errorHandler: onError }))
-        .pipe(cached('less'))
+        // .pipe(cached('less'))
         .pipe(sourcemaps.init())
         .pipe(less({compress:true}))
         .pipe(sourcemaps.write('maps'))
-        .pipe(remember('less'))
+        // .pipe(remember('less'))
         .pipe(gulp.dest( files[framework]['css'] ))
         .pipe(notify({
           title:   'LESS' + title,
