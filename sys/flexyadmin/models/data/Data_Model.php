@@ -2681,11 +2681,13 @@ Class Data_Model extends CI_Model {
     if ($this->tm_limit>0 and strpos($sql,'LIMIT')===FALSE) {
       $sql.=' LIMIT '.$this->tm_limit;
     }
-    $query = $this->db->query( $sql );
-    if ( is_object($query) ) {
-      $result = $query->result_array();
-      foreach ($result as $row) {
-        $ids[] = $row[$this->settings['primary_key']];
+    if (!empty($sql)) {
+      $query = $this->db->query( $sql );
+      if ( is_object($query) ) {
+        $result = $query->result_array();
+        foreach ($result as $row) {
+          $ids[] = $row[$this->settings['primary_key']];
+        }
       }
     }
     return $ids;
