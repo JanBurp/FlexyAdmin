@@ -3,11 +3,13 @@
 /**
  * CLI example of authentication
  * 
- * - auth .... login <username> <password>
+ * - auth .... login _username_ _password_
  *
- * @package default
- * @author Jan den Besten
+ * @author: Jan den Besten
+ * $Revision$
+ * @copyright: (c) Jan den Besten
  */
+
 class Auth extends CI_Model {
   
   public function index()  {

@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/** \ingroup tables
+/** \ingroup data_model
  * 
  * - Alle instellingen van een tabel en zijn velden tabel zijn te vinden in config/tables/...
  * - Standaard get/crud zit in het model, voor elke tabel hetzelfde.

@@ -4,7 +4,7 @@
  * CLI controller
  * 
  * Running CLI:
- * php index.php _cli <command>
+ * php index.php _cli _command_
  *
  * @author: Jan den Besten
  * $Revision$

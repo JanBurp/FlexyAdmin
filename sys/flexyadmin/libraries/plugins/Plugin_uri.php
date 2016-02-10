@@ -2,8 +2,8 @@
 
 /**
  * Reset uri velden in tabellen
- * 
- * Geef: /plugin/uri/<table>
+ *
+ * Geef: /plugin/uri/...table...
  *
  * @author: Jan den Besten
  * $Revision$

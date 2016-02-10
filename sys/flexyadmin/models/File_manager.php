@@ -265,6 +265,7 @@ class File_manager extends CI_Model {
 	 * Verwijder meegegeven bestand, en alle eventuele varianten (thumbs etc)
 	 *
 	 * @param string $file 
+	 * @param bool $test [FALSE] // Alleen voor PHPUNIT test 
 	 * @return bool $result
 	 * @author Jan den Besten
 	 */

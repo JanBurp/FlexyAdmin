@@ -133,6 +133,7 @@ function strace_($a=NULL) {
  * @param bool $echo default=TRUE Moet de dump meteen worden getoond?
  * @param int $backtraceOffset default=1
  * @param int $max  default=50
+ * @param string $class  Eventuele class
  * @return string Geeft het resulaat (ook nog) als een string
  * @author Jan den Besten
  */

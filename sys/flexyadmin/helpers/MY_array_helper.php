@@ -772,25 +772,6 @@ function sort_keys($a,$keys) {
   return $b;
 }
 
-// /**
-//  * Sorteert associatieve array op volgorde van lengte van de keys
-//  *
-//  * @param array $a
-//  * @param bool $reverse [false]
-//  * @return array
-//  * @author Jan den Besten
-//  */
-// function sort_key_length($a,$reverse=false) {
-//   if (!function_exists('_sort_key_length')) {
-//     function _sort_key_length($x, $y) {
-//       if (strlen($x) < strlen($y)) return -1;
-//       if (strlen($x) > strlen($y)) return 1;
-//       return 0;
-//     }
-//   }
-//   uksort($a, "_sort_key_length");
-//   return $a;
-// }
 
 /**
  * Sorteert array op lengte van de waarden

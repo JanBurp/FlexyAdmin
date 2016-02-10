@@ -3,11 +3,13 @@
 /**
  * CLI 'Hello World!'
  * 
- * - hello <string>
+ * - hello _string_
  *
- * @package default
- * @author Jan den Besten
+ * @author: Jan den Besten
+ * $Revision$
+ * @copyright: (c) Jan den Besten
  */
+
 class Hello extends CI_Model {
 
   public function index()  {

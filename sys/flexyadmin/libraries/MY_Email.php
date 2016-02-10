@@ -293,10 +293,10 @@ class MY_Email extends CI_Email {
    * Voorbeeld:
    * 
    * array(
-   *  'td'           => 'background-color:#DEA;color:#696',
-   *  'td.speciaal'  => 'background-color:#696;color:#DEA',
-   *  'p'            => 'font-family:Arial;font-size:16px;color:#696',
-   *  'a'            => 'font-family:Arial;font-size:16px;color:#F00'
+   *  'td'           => 'color:grey',
+   *  'td.speciaal'  => 'font-weight:bold',
+   *  'p'            => 'font-family:Arial;font-size:16px;',
+   *  'a'            => 'font-family:Arial;font-size:16px;'
    * )
    * 
    *
