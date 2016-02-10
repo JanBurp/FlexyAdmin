@@ -43,7 +43,7 @@
  *                2 => array( 'id'=>7, 'order'=>5 ),
  *              )
  * 
- *  * ###Voorbeeld 1:
+ *  ###Voorbeeld 2:
  * 
  * - `_api/table_order` met POST data: `table=tbl_menu&id[]=3&from=3`
  * 

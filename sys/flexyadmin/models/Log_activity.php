@@ -18,7 +18,9 @@ class Log_activity extends CI_Model {
    *
    * @param string $type (auth|database|media|email) soort activiteit
    * @param string $activity sql query of technisch omschrijving
-   * @param string $description leesbare uitleg voor mensen
+   * @param string $model ['']
+   * @param string $key ['']
+   * @param int $user_id [FALSE]
    * @return int id
    * @author Jan den Besten
    */
@@ -58,6 +60,7 @@ class Log_activity extends CI_Model {
    * Geeft laatste user activiteit
    *
    * @param string $user_id 
+   * @param int $limit [10] 
    * @return void
    * @author Jan den Besten
    */

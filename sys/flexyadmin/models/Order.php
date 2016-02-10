@@ -140,33 +140,6 @@ class order extends CI_Model {
     return count($ids);
 	}
   
-  // /**
-  //  * Reset children van een tree (als er aanpassingen er een child verwijderd of toegevoegd wordt bijvoorbeeld)
-  //  * (Wordt gebruikt in Crud)
-  //  *
-  //  * @param string $table
-  //  * @param int $parent default=0
-  //  * @return int Aantal verschoven items;
-  //  * @author Jan den Besten
-  //  */
-  // public function reset_tree($table,$parent=0) {
-  //   if ($parent!=0 and $this->is_a_tree($table)) {
-  //     $this->db->where("self_parent",$parent);
-  //     $this->db->select(PRIMARY_KEY);
-  //     $result=$this->db->get_result($table);
-  //     $from_id=current($result);
-  //     $from_id=$from_id[PRIMARY_KEY];
-  //     $from_order=$this->_get_order($table,$from_id);
-  //     $ids=array_keys($result);
-  //     $this->set_all($table,$ids,$from_order);
-  //     $count=count($ids);
-  //   }
-  //   else {
-  //     $count=$this->reset($table);
-  //   }
-  //   return $count;
-  // }
-  
 
 	/**
 	 * Geeft de meegegeven items een nieuwe volgorde zoals meegegeven in de $ids array

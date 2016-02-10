@@ -3,11 +3,12 @@
 /**
  * Creates datamodels for table(s) in database
  * 
- * - datamodel login <username> <password> // creates all tables
- * - datamodel <table> login <username> <password> // creates one table <table>
+ * - datamodel login _username_ _password_ // creates all tables
+ * - datamodel _table_ login _username_ _password_ // creates one table _table_
  * 
- * @package default
- * @author Jan den Besten
+ * @author: Jan den Besten
+ * $Revision$
+ * @copyright: (c) Jan den Besten
  */
 class Datamodel extends CI_Model {
   
