@@ -1269,6 +1269,7 @@ input.button {
 .flexyFormField ul.values {
 	width:450px;
   min-height:79px;
+  overflow-x:hidden;
 }
 .flexyFormField ul.choices img {
 	filter:alpha(opacity=80);
