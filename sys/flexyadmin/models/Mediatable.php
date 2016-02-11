@@ -266,7 +266,7 @@ class Mediatable extends CI_Model {
     }
     
     // Remove unused files?
-    if ($remove) {
+    if ($remove and $this->db->field_exists('b_used',$this->table)) {
       $this->load->model('file_manager');
       $this->db->where('b_used',false);
       $not_used=$this->db->get_result('res_media_files');
