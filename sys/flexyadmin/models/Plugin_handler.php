@@ -302,7 +302,7 @@ class Plugin_handler extends CI_Model {
 
 	private function is_triggered($plugin) {
 		$is_triggered=false;
-		$triggers=$this->plugins[$plugin]['trigger'];
+		$triggers=el('trigger',$this->plugins[$plugin]);
 		
 		// existing tables
 		if (isset($triggers['existing_tables'])) {
