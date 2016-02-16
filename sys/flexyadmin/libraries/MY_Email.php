@@ -112,6 +112,9 @@ class MY_Email extends CI_Email {
     }
 		$this->subject($mail['subject']);
 		$this->message($mail['body']);
+    if (isset($mail['attachment'])) {
+      $this->attach($mail['attachment']);
+    }
     return $this;
 	}
   

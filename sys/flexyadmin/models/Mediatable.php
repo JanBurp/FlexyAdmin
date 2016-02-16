@@ -296,6 +296,24 @@ class Mediatable extends CI_Model {
   public function get_files($path='',$asReadMap=TRUE,$full_path=TRUE) {
     return $this->_get_files($path,$asReadMap,$full_path);
   }
+  
+  /**
+   * Geeft alle bestanden terug als opties voor bijvoorbeeld een dropdown formulier
+   *
+   * @param string $path 
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_files_as_options($path='') {
+    $files = $this->get_files($path);
+    $options = array(''=>'');
+    foreach ($files as $key => $value) {
+      $name=$value['name'];
+      $options[$name] = $name;
+    }
+    return $options;
+  }
+  
 
   /**
    * Geeft alle recente bestanden en info in een map terug als een array
