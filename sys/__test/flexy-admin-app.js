@@ -29,6 +29,7 @@ var flexyAdmin = angular.module( 'flexyAdmin', [
   'dialogs.main',
   'cfp.loadingBar',
   'pascalprecht.translate',
+  'angular.filter',
   
   'ui.bootstrap',
   'ui.bootstrap.showErrors',

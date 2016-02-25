@@ -162,6 +162,8 @@ gulp.task('install', function() {
     bower+"/angular-loading-bar/src/loading-bar.js",
     bower+'/angular-translate/angular-translate.js',
     bower+'/angular-dialog-service/dist/dialogs.js',
+    // filter
+    bower+'/angular-filter/dist/angular-filter.js',
     // grid
     bower+"/angular-smart-table/dist/smart-table.js",
     bower+"/ng-sortable/dist/ng-sortable.js",

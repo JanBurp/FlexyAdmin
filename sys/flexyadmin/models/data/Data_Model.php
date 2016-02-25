@@ -1364,7 +1364,6 @@ Class Data_Model extends CI_Model {
     
     // Select
     $this->select( $grid_set['fields'] );
-    $this->select_txt_abstract(250);
     
     // Relations
     if (isset($grid_set['with'])) $this->tm_with = $grid_set['with'];

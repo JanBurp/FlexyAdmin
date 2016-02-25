@@ -78,6 +78,7 @@
 <script src="sys/__test/js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/angular.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/angular-route.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/js/angular-filter.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/ui-bootstrap-tpls.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/showErrors.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/js/http-auth-interceptor.js" type="text/javascript" charset="utf-8"></script>
