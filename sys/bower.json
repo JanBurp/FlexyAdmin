@@ -42,7 +42,8 @@
     "ng-sortable": "1.3.x",
     "objectpath": "~1.x",
     "tv4": "~1.1.x",
-    "angular-translate": "~2.8.1"
+    "angular-translate": "~2.8.1",
+    "angular-filter": "^0.5.8"
   },
   "resolutions": {
     "angular": "~1.4.x",

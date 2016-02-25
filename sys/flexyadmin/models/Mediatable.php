@@ -347,7 +347,7 @@ class Mediatable extends CI_Model {
     }
     // get files
     $files=$this->db->get_result($this->table,$recent_numbers);
-    
+
     if (empty($files)) {
       // not in database, read from filesystem if set so
       $files=read_map($map,$info['str_types'],FALSE,TRUE,FALSE,FALSE);

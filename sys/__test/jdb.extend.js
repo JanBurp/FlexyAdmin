@@ -269,6 +269,7 @@ jdb.randomString = function(len,chars) {
   return randomstring;
 };
 
+
 /**
  * jdb.randomInt()
  * 
