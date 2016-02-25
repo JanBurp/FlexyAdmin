@@ -9,8 +9,14 @@
 
 class Log_activity extends CI_Model {
   
+  /**
+   * Bewaarperiode voor log-items (in unixtime seconds)
+   */
+  private $remember_period = TIME_YEAR; // Standaard, verderop ingezet op half jaar
+  
   public function __construct() {
     parent::__construct();
+    $this->remember_period = TIME_YEAR/4;
   }
   
   /**
@@ -34,9 +40,10 @@ class Log_activity extends CI_Model {
       if ($model)       $this->db->set( 'str_model',$model );
       if ($key)         $this->db->set( 'str_key',$key );
       $this->db->insert( 'log_activity' );
+      //
+      $this->clean_up();
     }
   }
-  
   
   public function database( $activity,$model='',$key='' ) {
     return $this->add('database',$activity,$model,$key);
@@ -53,6 +60,19 @@ class Log_activity extends CI_Model {
 
   public function email( $activity,$model='',$key='' ) {
     return $this->add('email',$activity,$model,$key);
+  }
+  
+  /**
+   * Verwijderd items ouder de ingestelde bewaarperiod
+   *
+   * @return int Aantal verwijderde items
+   * @author Jan den Besten
+   */
+  public function clean_up() {
+    $this->db->where( 'tme_timestamp <', unix_to_mysql(time()-$this->remember_period) );
+    $this->db->delete( 'log_activity' );
+    $deleted = $this->db->affected_rows();
+    return $deleted;
   }
 
 
