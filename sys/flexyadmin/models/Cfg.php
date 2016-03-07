@@ -248,9 +248,13 @@
 //					$F->comment     = $field->Comment;
 //					$F->collation   = $field->Collation;
 				$F->extra       = $field->Extra;
+
+        if (is_numeric($F->default)) $F->default = intval($F->default);
+        
 				$info[] = $F;
 			}
 			$query->free_result();
+      
 			/**
 			 *  easier array format
 			 */
@@ -258,6 +262,7 @@
 				$i=object2array($i);
 				$out[$i["name"]]=$i;
 			}
+      
 			$this->fieldInfo[$table]=$out;
 		}
 		else

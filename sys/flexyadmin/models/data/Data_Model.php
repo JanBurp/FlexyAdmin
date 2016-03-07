@@ -307,6 +307,8 @@ Class Data_Model extends CI_Model {
     $settings_fields_info = array();
     foreach ($fields as $field) {
       $field_info = $this->cfg->get( 'cfg_field_info', $table.'.'.$field);
+      // Default
+      $field_info['default'] = $this->cfg->field_data( $table,$field, 'default' );
       // Haal uit (depricated) cfg_field_info
       $field_info_db = $this->db->where('field_field',$table.'.'.$field)->get_row('cfg_field_info');
       if (is_array($field_info) and is_array($field_info_db)) {
@@ -317,11 +319,33 @@ Class Data_Model extends CI_Model {
         if (!is_array($field_info)) $field_info=NULL;
       }
       $fields_info[$field] = $field_info;
-      $settings_fields_info[$field] = array();
+      // Default
+      $settings_fields_info[$field] = array('default'=>$field_info['default']);
+      
+      // Options uit cfg_field_info
       if (!empty($field_info['str_options'])) {
         $settings_fields_info[$field]['options'] = explode('|',$field_info['str_options']);
         $settings_fields_info[$field]['multiple_options'] = el('b_multi_options', $field_info, FALSE)?true:FALSE;
       }
+      
+      // Opties van foreign_keys
+      if (get_prefix($field)=='id' and $field!==$this->settings['primary_key']) {
+        // get options from db
+        $foreignTable=foreign_table_from_key($field);
+        if ($foreignTable) {
+          // Zijn er teveel opties?
+          if ($this->db->count_all($foreignTable)>10) {
+            // Geef dan de api aanroep terug waarmee de opties opgehaald kunnen worden
+            $settings_fields_info[$field]['options'] = '_api/table?table='.$foreignTable.'&as_options=true';
+          }
+          else {
+            // Anders geef gewoon de opties terug
+            $settings_fields_info[$field]['options'] = $this->db->get_options($foreignTable);
+          }
+        }
+      }
+      
+      // Validation
       $settings_fields_info[$field]['validation'] = explode('|',$this->form_validation->get_validations( $table, $field ));
       // media path?
       if (in_array(get_prefix($field),array('media','medias'))) {
@@ -1359,8 +1383,6 @@ Class Data_Model extends CI_Model {
    */
   public function get_grid( $limit = 20, $offset = FALSE, $sort = '', $find = '', $where = '' ) {
     $grid_set = $this->settings['grid_set'];
-    
-    // trace_($grid_set);
     
     // Select
     $this->select( $grid_set['fields'] );
