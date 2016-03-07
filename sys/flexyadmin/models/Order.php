@@ -188,7 +188,7 @@ class order extends CI_Model {
     // Is dat hetzelfde, dan hoeft er niets te gebeuren
     if ($old===$new) return $new;
 
-    $moved_ids=[$id];
+    $moved_ids=array($id);
     // Neem kinderen mee...
     if ($is_tree) {
       $children_ids = $this->_get_children_ids( $table, $id, $old );

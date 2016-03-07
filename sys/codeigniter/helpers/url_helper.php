@@ -529,7 +529,7 @@ if ( ! function_exists('redirect'))
 	 * @param	int	$code	HTTP Response status code
 	 * @return	void
 	 */
-	function redirect($uri = '', $method = 'auto', $code = NULL)
+	function redirect($uri = '', $method = 'refresh', $code = NULL)
 	{
 		if ( ! preg_match('#^(\w+:)?//#i', $uri))
 		{
