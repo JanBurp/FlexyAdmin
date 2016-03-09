@@ -171,7 +171,7 @@ class AjaxController extends BasicController {
     }
 
     // ENABLE CORS
-    if ($cors) {
+    if ($cors and el('format',$result,'default')!=='dump') {
       // default Status header
       if (!$status) header("HTTP/1.1 200 OK");
       header("Access-Control-Allow-Origin: ".$cors);
