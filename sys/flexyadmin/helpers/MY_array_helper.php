@@ -807,13 +807,14 @@ function in_array_like($v,$a) {
 }
 
 /**
- * Zoekt alle rijen waarbinnen een waarde voorkomt (eventueel in specifieke keys)
+ * Zoekt alle rijen waarbinnen een waarde voorkomt (eventueel in specifieke keys) en geeft deze waarden in een array terug.
  *
  * @param array $a array waarin gezocht wordt
  * @param mixed $v waarde die gezocht wordt
  * @param string $key[''] Eventueel mee te geven key waarin gezoch moet worden
  * @param bool $like default=FALSE als TRUE dan wordt gezocht naar een waarde die erop lijkt ipv precies gelijk is
  * @return array
+ * 
  * @author Jan den Besten
  */
 function find_row_by_value($a,$v,$key='',$like=false) {
@@ -844,7 +845,7 @@ function find_row_by_value($a,$v,$key='',$like=false) {
 			}
     }
 	}
-	if (empty($found)) $found=FALSE;
+  // if (empty($found)) $found=FALSE;
 	return $found;
 }
 

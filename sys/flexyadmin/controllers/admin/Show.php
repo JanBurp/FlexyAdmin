@@ -210,7 +210,7 @@ class Show extends AdminController {
             		$query=$this->db->query($data_query);
             		$sub_data=$query->result_array();
                 $offset=find_row_by_value($sub_data,$current_id,$key=PRIMARY_KEY);
-                if (is_array($offset)) {
+                if ($offset) {
                   $offset=key($offset);
                   $offset=floor($offset / $pagination) * $pagination;
                   if ($offset>0) {
