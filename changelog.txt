@@ -5,7 +5,7 @@
 Changes 3.0.6 (3518...)
 =======================
 
-- CodeIgniter 3.0.3
+- CodeIgniter 3.0.4
 
 
 Changes 3.0.5 (3505...)
