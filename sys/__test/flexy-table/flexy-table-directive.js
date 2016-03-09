@@ -99,21 +99,15 @@ flexyAdmin.directive('flexyTable', ['flexySettingsService','flexyApiService','fl
        * SELECT ROW TOGGLE
        */
       $scope.select = function(index) {
-        // Niet nodig, gaat automatisch
-        // console.log('select',index);
-        // var selected = $scope.tableItems[index].isSelected;
-        // $scope.tableItems[index].isSelected = !$scope.tableItems[index].isSelected;
+        $scope.displayedItems[index]._info.selected = ! $scope.displayedItems[index]._info.selected;
       };
-
 
       /**
        * SELECT ALL TOGGLE
        */
       $scope.toggleSelection = function() {
         angular.forEach($scope.tableItems, function(item,key) {
-          var selected=$scope.tableItems[key].isSelected;
-          if (!selected) selected=true; else selected=false;
-          $scope.tableItems[key].isSelected=selected;
+          $scope.displayedItems[key]._info.selected = ! $scope.displayedItems[key]._info.selected;
         });
       };
       
@@ -130,7 +124,7 @@ flexyAdmin.directive('flexyTable', ['flexySettingsService','flexyApiService','fl
         }
         else {
           angular.forEach($scope.tableItems, function(item,key) {
-            if ($scope.tableItems[key].isSelected) {
+            if ($scope.tableItems[key]._info.selected) {
               selected.push(item['id']);
             }
           });
