@@ -78,7 +78,7 @@ class TableModelTest extends CITestCase {
     $this->assertEquals( array('str_title','str_module'), $abstract_fields );
     // ->get_compiled_abstract_select()
     $abstract_fields_sql  = $this->CI->data_model->get_compiled_abstract_select();
-    $this->assertEquals( "CONCAT_WS('|',`tbl_menu`.`str_title`,`tbl_menu`.`str_module`) AS `abstract`", $abstract_fields_sql );
+    $this->assertEquals( "CONCAT_WS(' | ',`tbl_menu`.`str_title`,`tbl_menu`.`str_module`) AS `abstract`", $abstract_fields_sql );
     // ->select_abstract()
     $query = $this->CI->data_model->select_abstract()->get();
     $this->assertEquals( 5, $query->num_rows() );
@@ -528,8 +528,8 @@ class TableModelTest extends CITestCase {
     // order_by & abstract test
     $first = current($page1);
     $this->assertEquals( 'Aafje', $first['str_first_name'] );
-    $this->assertEquals( 'Rekenpark 42|1234IJ', $first['id_adressen'] );
-    $this->assertEquals( 'Gym|vak', $first['id_groepen'] );
+    $this->assertEquals( 'Rekenpark 42 | 1234IJ', $first['id_adressen'] );
+    $this->assertEquals( 'Gym | vak', $first['id_groepen'] );
     
     // DESC
     $result = $this->CI->data_model->get_grid( 0,0, '_str_first_name');
