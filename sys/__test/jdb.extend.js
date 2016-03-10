@@ -312,7 +312,6 @@ jdb.assocArrayItem = function( array, key, value ) {
   return item;
 };
 
-
 /**
  * jdb.firstArrayItem()
  * 
@@ -323,4 +322,54 @@ jdb.assocArrayItem = function( array, key, value ) {
  */
 jdb.firstArrayItem = function( arr ) {
   for(var i in arr) return arr[i];
+};
+
+
+/**
+ * jdb.arrayKeys()
+ * 
+ * @param array de array
+ * @param string eventueel mee te geven key
+ * @param array nieuwe array
+ */
+jdb.arrayKeys = function( array, key ) {
+  var newArray = [];
+  angular.forEach( array, function( row,nr ) {
+    if (angular.isDefined(key)) {
+       newArray.push( row[key] );
+    }
+    else {
+      newArray.push( nr );
+    }
+  });
+  return newArray;
+};
+
+
+
+/**
+ * jdb.object2array()
+ * 
+ * Maakt een array van een object, eventueel in een bepaalde volgorde
+ * 
+ * @param object
+ * @param mixed sort de key van de column waarop gesorteerd moet worden
+ * @param bool reverse the sorting
+ * @param array
+ */
+jdb.object2array = function( obj, sort, reverse ) {
+  var array = $.map( obj, function(value, index) {
+    return [value];
+  });
+  if (angular.isDefined(sort)) {
+    array = array.sort(function(a,b) {
+      if (angular.isDefined(reverse) && reverse===true) {
+        return a[sort] < b[sort];
+      }
+      else {
+        return a[sort] > b[sort];
+      }
+    });
+  }
+  return array;
 };

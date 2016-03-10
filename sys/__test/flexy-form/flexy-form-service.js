@@ -50,15 +50,40 @@ flexyAdmin.factory('flexyFormService', ['flexySettingsService','flexyApiService'
     // API call
     return api.row( args ).then(function(response){
 
-      // Ui names van de velden in het schema zetten
+      // Schemaform compleet maken met data uit de settings van deze tabel/data
+      var formIndex = 0;
       angular.forEach( response.schemaform.schema.properties, function(value, key) {
-        response.schemaform.schema.properties[key].title = settings.item( 'settings','table', table,'field_info',key,'ui_name');
-      });
 
+        // Ui names van de velden in het schema zetten
+        response.schemaform.schema.properties[key].title = settings.item( 'settings','table', table,'field_info',key,'ui_name');
+
+        // Select opties in het schema zetten
+        if (value['form-type']==='select') {
+          
+          var options = settings.item( 'settings','table',table,'field_info', key, 'options' );
+
+          // Options per API call (typeahead)
+          if (typeof(options)==='string') {
+            
+            
+          }
+          else {
+            // De waarden in het schema
+            response.schemaform.schema.properties[key].enum = jdb.arrayKeys( options, 'value' );
+            // De visuele weergave in form
+            response.schemaform.form[ formIndex ].titleMap = options;
+          }
+          
+        }
+        
+        formIndex++;
+      });
+      
       // Geef data terug in de promise
       return $q.resolve( response );
     });
   };
+  
   
 
   /**

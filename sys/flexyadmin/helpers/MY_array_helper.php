@@ -115,7 +115,9 @@ function array2csv($array,$eol="\r\n") {
 
 
 /**
- * Maakt JSON van een array. Is net anders dan de standaard PHP functie json_encode(), ook arrays worden meegegeven.
+ * Maakt JSON van een array. Is net anders dan de standaard PHP functie json_encode():
+ * - Arrays blijven arrays in dezelfde volgorde
+ * 
  * Zie http://www.bin-co.com/php/scripts/array2json/
  *
  * @param string $arr
@@ -123,7 +125,8 @@ function array2csv($array,$eol="\r\n") {
  */
 function array2json($arr) {
 	$parts = array();
-	$is_list = false;
+	$is_list = FALSE;
+
 	// Find out if the given array is a numerical array
 	$keys = array_keys($arr);
 	$max_length = count($arr)-1;

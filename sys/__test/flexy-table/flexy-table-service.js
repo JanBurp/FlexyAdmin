@@ -244,14 +244,11 @@ flexyAdmin.factory('flexyTableService', ['flexySettingsService','flexyApiService
         tableState : {},
         args       : {},
         info       : {},
-        data       : []
+        data       : {}
       };
       
       // add info to loaded data
       var newData = flexy_table_service.add_tree_info( response.data, settings.item('settings','table', args.table, 'table_info', 'tree' ) );
-      
-      // console.log('flexy_table_service.load newData',newData);
-      
       
       // Bewaar data (met juiste args)
       var saved_args = args;

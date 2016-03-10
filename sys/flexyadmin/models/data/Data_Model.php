@@ -56,12 +56,12 @@ Class Data_Model extends CI_Model {
   protected $autoset = array(
     'table'           => '',
     'fields'          => array(),
+    'abstract_fields' => array(),
+    'abstract_filter' => '',
     'field_info'      => array(),
     'order_by'        => 'id',
     'max_rows'        => 0,
     'update_uris'     => true,
-    'abstract_fields' => array(),
-    'abstract_filter' => '',
     'relations'       => array(),
     'grid_set'        => array(),
     'form_set'        => array(),
@@ -325,13 +325,14 @@ Class Data_Model extends CI_Model {
       // Options uit cfg_field_info
       if (!empty($field_info['str_options'])) {
         $settings_fields_info[$field]['options'] = explode('|',$field_info['str_options']);
+        $settings_fields_info[$field]['options'] = array_combine($settings_fields_info[$field]['options'],$settings_fields_info[$field]['options']);
         $settings_fields_info[$field]['multiple_options'] = el('b_multi_options', $field_info, FALSE)?true:FALSE;
       }
       
       // Opties van foreign_keys
       if (get_prefix($field)=='id' and $field!==$this->settings['primary_key']) {
         // get options from db
-        $foreignTable=foreign_table_from_key($field);
+        $foreignTable = foreign_table_from_key($field);
         if ($foreignTable) {
           // Zijn er teveel opties?
           if ($this->db->count_all($foreignTable)>10) {
@@ -340,7 +341,13 @@ Class Data_Model extends CI_Model {
           }
           else {
             // Anders geef gewoon de opties terug
-            $settings_fields_info[$field]['options'] = $this->db->get_options($foreignTable);
+            $other_model = new Data_model();
+            $other_model->table( $foreignTable )->select_abstract();
+            $options = $other_model->get_result();
+            foreach ($options as $key => $option) {
+              $options[$key] = array( 'value'=>$key, 'name'=>$option['abstract'] );
+            }
+            $settings_fields_info[$field]['options'] = $options;
           }
         }
       }
@@ -819,7 +826,7 @@ Class Data_Model extends CI_Model {
       }
     }
     // Maak de SQL
-		$sql = "CONCAT_WS('|',`".$table.'`.`' . implode( "`,`".$table.'`.`' ,$abstract_fields ) . "`) AS `" . $abstract_field_name . "`";
+		$sql = "CONCAT_WS(' | ',`".$table.'`.`' . implode( "`,`".$table.'`.`' ,$abstract_fields ) . "`) AS `" . $abstract_field_name . "`";
     return $sql;
 	}
   
@@ -1606,7 +1613,7 @@ Class Data_Model extends CI_Model {
   /**
    * Selecteert abstract fields
    *
-   * @param bool $flat [FALSE] Als true dan worden de rijnen in de result_array geen arrays van een row, maar alleen de abstract value.
+   * @param bool $flat [FALSE] Als true dan worden de rijen in de result_array geen arrays van een row, maar alleen de abstract value.
    * @return $this
    * @author Jan den Besten
    */

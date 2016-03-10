@@ -53,8 +53,7 @@ flexyAdmin.directive('flexyForm', ['flexySettingsService','flexyApiService','fle
 
         // table ui_name
         $scope.ui_name = settings.item( 'settings','table',$scope.table,'table_info','ui_name' );
-        
-        // schema form data
+
         $scope.schema = response.schemaform.schema;
         $scope.form   = response.schemaform.form;
         $scope.model  = response.data;
@@ -78,6 +77,7 @@ flexyAdmin.directive('flexyForm', ['flexySettingsService','flexyApiService','fle
       //   form.$setPristine();
       // };
 
+
       /**
        * SAVE FORM
        */
@@ -100,7 +100,6 @@ flexyAdmin.directive('flexyForm', ['flexySettingsService','flexyApiService','fle
       $scope.submitForm = function(form) {
         $scope.saveForm(form,true);
       };
-      
       
       
     },

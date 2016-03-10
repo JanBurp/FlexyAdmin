@@ -213,7 +213,23 @@ flexyAdmin.directive('flexyTable', ['flexySettingsService','flexyApiService','fl
             $scope.search = tableState.search.predicateObject.$;
           }
 
-          // Grid data & references
+          // Bepaal volgorde (veld) // Als arrays objecten zijn en niet op goede volgorde
+          // var orderField = settings.item('settings','table',$scope.table, 'grid_set','order_by' );
+          // var orderReverse = false;
+          // if (orderField.substr(-5,5)===' DESC') {
+          //   orderReverse = true;
+          //   orderField = orderField.replace(/ DESC/,'');
+          // }
+          // if ($scope.type.is_tree) orderField = 'order';
+          // if (angular.isDefined($scope.tableState.sort.predicate)) {
+          //   orderField = $scope.tableState.sort.predicate;
+          //   if (angular.isDefined($scope.tableState.sort.reverse)) {
+          //     orderReverse = $scope.tableState.sort.reverse;
+          //   }
+          // }
+          
+          // Grid data & references in goede volgorde
+          // $scope.tableItems = jdb.object2array( response.data, orderField, orderReverse ); // Als arrays objecten zijn en niet op goede volgorde
           $scope.tableItems = response.data;
           $scope.displayedItems = [].concat($scope.tableItems);
   
