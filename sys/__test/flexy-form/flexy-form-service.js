@@ -62,7 +62,7 @@ flexyAdmin.factory('flexyFormService', ['flexySettingsService','flexyApiService'
           
           var options = settings.item( 'settings','table',table,'field_info', key, 'options' );
 
-          // Options per API call (typeahead)
+          // Options per API call (typeahead) BUSY TODO
           if (typeof(options)==='string') {
             
             

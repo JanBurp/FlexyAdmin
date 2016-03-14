@@ -1,5 +1,9 @@
+Changes 3.0.7 (3518...)
+=======================
 
+- CodeIgniter 3.0.5
 - Language kan nu ook door ?lang= ingesteld worden
+
 
 
 Changes 3.0.6 (3518...)
