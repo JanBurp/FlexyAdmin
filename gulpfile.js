@@ -197,14 +197,14 @@ gulp.task('install', function() {
 
   // Verplaatst en minificeer normalize.css
   gulp.src( bower+'/normalize.css/*.css')
-    .pipe(minify_css({keepSpecialComments:0,keepBreaks:false}))
+    .pipe(cssnano({keepSpecialComments:0,keepBreaks:false}))
     .pipe(gulp.dest(assets +'/css'))
     .pipe(notify("normalize.css moved and minified"));
     
-  // Verplaatst jquery 1.11.x
-  gulp.src( bower+'/jquery-legacy/dist/jquery.min.js')
+  // Verplaatst jquery 1.12.x
+  gulp.src( bower+'/jquery-legacy/dist/jquery.min.*')
     .pipe(gulp.dest(assets +'/js'))
-    .pipe(notify("jquery.min.js (v1.11.x) moved"));
+    .pipe(notify("jquery.min.js (v1.12.x) moved"));
     
   // Voeg hier eventueel je eigen commandos toe
     
@@ -238,11 +238,11 @@ gulp.task('jshint',function(){
  */
 gulp.task('jsmin',['jshint'],function(){
   return gulp.src( files[framework]['jsmin'] )
-        .pipe(flatten())
-        .pipe(sourcemaps.init({loadMaps: true}))
-        .pipe(uglify())
-        .pipe(sourcemaps.write('maps'))
-        .pipe(concat(files[framework]['jsdest']))
+        .pipe( sourcemaps.init( {loadMaps:true}) )
+          .pipe( concat(files[framework]['jsdest']) )
+          .pipe(uglify())
+          .pipe(flatten())
+        .pipe(sourcemaps.write( 'maps' ))
         .pipe(gulp.dest( files[framework]['js']) )
         .pipe(notify({
           title:  'JS contact & uglify ' + title,
