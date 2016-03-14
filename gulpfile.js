@@ -238,12 +238,12 @@ gulp.task('jshint',function(){
  */
 gulp.task('jsmin',['jshint'],function(){
   return gulp.src( files[framework]['jsmin'] )
-        .pipe( sourcemaps.init( {loadMaps:true}) )
-          .pipe( concat(files[framework]['jsdest']) )
+        .pipe(sourcemaps.init({loadMaps:true}))
+          .pipe(concat(files[framework]['jsdest']))
           .pipe(uglify())
           .pipe(flatten())
-        .pipe(sourcemaps.write( 'maps' ))
-        .pipe(gulp.dest( files[framework]['js']) )
+        .pipe(sourcemaps.write('maps'))
+        .pipe(gulp.dest( files[framework]['js']))
         .pipe(notify({
           title:  'JS contact & uglify ' + title,
           message: message
