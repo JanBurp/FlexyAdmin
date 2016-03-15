@@ -31,6 +31,7 @@ flexyAdmin.directive('flexyForm', ['flexySettingsService','flexyApiService','fle
        */
       $scope.table    = attrs.table;
       $scope.id       = attrs.id;
+      
       $scope.base_url = settings.item('base_url');
 
       /**

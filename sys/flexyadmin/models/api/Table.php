@@ -16,6 +16,7 @@
  * - `[as_options=FALSE]`       // Als `TRUE`, dan wordt de data als opties teruggegeven die gebruikt kunnen worden in een dropdown field bijvoorbeeld. (`limit` en `offset` werken dan niet)
  * - `[options=FALSE]`          // Als `TRUE`, dan worden de mogelijke waarden van velden meegegeven.
  * - `[settings=FALSE]`         // Instellingen van de gevraagde tabel
+ * - `[schemaform=FALSE]`       // Als TRUE dan wordt een json schemaform van het formulier toegevoegd (zie http://schemaform.io)
  * 
  * 
  * ###Voorbeelden:
@@ -105,6 +106,7 @@ class Table extends Api_Model {
     'as_options'   => false,
     'txt_abstract' => 0,
     'settings'     => false,
+    'schemaform'   => false,
   );
   
 	public function __construct() {
@@ -169,6 +171,12 @@ class Table extends Api_Model {
     
     // Info
     $this->info = $this->data_model->get_query_info();
+    
+    // Schemaform
+    if ( el('schemaform',$this->args,false) ) {
+      $this->result['schemaform'] = $this->data_model->schemaform( current($items), el('table',$this->args) );
+    }
+    
     return $items;
   }
  

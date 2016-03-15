@@ -69,9 +69,10 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
     // args klaarzetten
     if (angular.isUndefined(args)) args = {};
 
-    // Table settings
+    // Table settings & Schemaform
     if ((api==='table' || api==='row') && !flexy_api_service.has_settings( 'table', args.table )) {
-      args.settings = true;
+      args.settings   = true;
+      args.schemaform = true;
     }
     // Media settings
     if (api==='table' && args.table==='_media_' && !flexy_api_service.has_settings( 'path', args.path )) {

@@ -9,11 +9,10 @@ class Test extends AdminController {
   public function index() {
     if (!$this->user->is_super_admin()) return;
     
-    $this->load->model('mediatable');
-    $files = $this->mediatable->get_files( 'pictures' );
+    $this->data_model->table( 'tbl_menu' );
+    $options = $this->data_model->get_settings( );
     
-    
-    trace_($files);
+    trace_($options);
     
     
     

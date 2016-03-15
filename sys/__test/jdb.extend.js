@@ -307,7 +307,7 @@ jdb.colorComplement = function(color) {
 jdb.assocArrayItem = function( array, key, value ) {
   var item = {};
   angular.forEach( array, function( row,nr ) {
-    if (row[key]===value) item = row;
+    if (row[key]==value) item = angular.copy(row);
   });
   return item;
 };

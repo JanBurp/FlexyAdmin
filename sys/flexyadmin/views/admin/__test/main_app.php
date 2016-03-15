@@ -67,7 +67,7 @@
     </div>
   
     <footer class="navbar navbar-default navbar-fixed-bottom">
-      <div class="navbar-text"><a href="./admin/__test#/home" data-flexy-blocks="">FlexyAdmin</a></div>
+      <div class="navbar-text"><a href="./admin/__test#/home" data-flexy-blocks="">TOKPIT</a></div>
       <nav class="menu-footer navbar-text"><flexy-menu type="footer" uiclass="nav-pills" items="menu.footer"></flexy-menu></nav>
     </footer>
     
