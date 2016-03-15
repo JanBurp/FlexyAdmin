@@ -50,6 +50,14 @@ flexyAdmin.directive('flexyField', ['flexySettingsService',function(settings) {
       scope.field       = attrs.field;
       scope.field_type  = attrs.field.prefix();
       
+      // foreign keys
+      if (['id'].indexOf(scope.field_type)>=0 && scope.field!=='id') {
+        scope.field_type = 'foreign_key';
+        var options = settings.item(['settings','table',scope.table,'field_info',scope.field,'options','data']);
+        var option = jdb.assocArrayItem( options,'value',scope.value );
+        scope.name = option.name;
+      }
+      
       // booleans (different types)
       if (['b','is','has','bool'].indexOf(scope.field_type)>=0) {
         scope.field_type = 'bool';

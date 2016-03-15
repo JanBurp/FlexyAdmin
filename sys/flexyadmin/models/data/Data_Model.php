@@ -307,9 +307,18 @@ Class Data_Model extends CI_Model {
     $settings_fields_info = array();
     foreach ($fields as $field) {
       $field_info = $this->cfg->get( 'cfg_field_info', $table.'.'.$field);
-      // Default
-      $field_info['default'] = $this->cfg->field_data( $table,$field, 'default' );
-      // Haal uit (depricated) cfg_field_info
+      
+      /**
+       * Default, eerst uit schemaform, dan uit database
+       */
+      $schemaform = $this->config->item('FIELDS_special');
+      $field_info['default'] = el(array($field,'default'),$schemaform);
+      // Uit database
+      if ( !isset($field_info['default'])) {
+        $field_info['default'] = $this->cfg->field_data( $table,$field, 'default' );
+      }
+      
+      // Verzamal de rest van de field info, eerst uit depricated cfg_field_info en uit de db
       $field_info_db = $this->db->where('field_field',$table.'.'.$field)->get_row('cfg_field_info');
       if (is_array($field_info) and is_array($field_info_db)) {
         $field_info = array_merge($field_info,$field_info_db);
@@ -319,48 +328,75 @@ Class Data_Model extends CI_Model {
         if (!is_array($field_info)) $field_info=NULL;
       }
       $fields_info[$field] = $field_info;
-      // Default
+      // Combineer, met oa de default waarde
       $settings_fields_info[$field] = array('default'=>$field_info['default']);
       
-      // Options uit cfg_field_info
-      if (!empty($field_info['str_options'])) {
-        $settings_fields_info[$field]['options'] = explode('|',$field_info['str_options']);
-        $settings_fields_info[$field]['options'] = array_combine($settings_fields_info[$field]['options'],$settings_fields_info[$field]['options']);
-        $settings_fields_info[$field]['multiple_options'] = el('b_multi_options', $field_info, FALSE)?true:FALSE;
-      }
       
-      // Opties van foreign_keys
-      if (get_prefix($field)=='id' and $field!==$this->settings['primary_key']) {
-        // get options from db
+      /**
+       * Options
+       */
+      $options = array();
+      // Uit (depricated) cfg_field_info
+      if (!empty($field_info['str_options'])) {
+        $options['data'] = explode('|',$field_info['str_options']);
+        foreach ($options['data'] as $key=>$option) {
+          $options['data'][$key] = array( 'value'=>$option, 'name'=>$option );
+        }
+        $options['multiple'] = el('b_multi_options', $field_info, FALSE)?true:FALSE;
+      }
+
+      // Via foreign_keys of self_parent
+      if ( get_prefix($field)==='id' and $field!==$this->settings['primary_key']) {
         $foreignTable = foreign_table_from_key($field);
         if ($foreignTable) {
           // Zijn er teveel opties?
-          if ($this->db->count_all($foreignTable)>10) {
+          if ($this->db->count_all($foreignTable)>100) {
             // Geef dan de api aanroep terug waarmee de opties opgehaald kunnen worden
-            $settings_fields_info[$field]['options'] = '_api/table?table='.$foreignTable.'&as_options=true';
+            $options['api'] = '_api/table?table='.$foreignTable.'&as_options=true';
           }
           else {
             // Anders geef gewoon de opties terug
             $other_model = new Data_model();
             $other_model->table( $foreignTable )->select_abstract();
-            $options = $other_model->get_result();
-            foreach ($options as $key => $option) {
-              $options[$key] = array( 'value'=>$key, 'name'=>$option['abstract'] );
+            $options['data'] = $other_model->get_result();
+            foreach ($options['data'] as $key => $option) {
+              $options['data'][$key] = array( 'value'=>$key, 'name'=>$option['abstract'] );
             }
-            $settings_fields_info[$field]['options'] = $options;
           }
         }
       }
+
+      // Self parent -> tree options
+      if ($field==='self_parent') {
+        $first_abstract_field = $this->settings['abstract_fields'];
+        $first_abstract_field = current($first_abstract_field);
+        $this->select('id,self_parent,order,'.$first_abstract_field);
+        $this->path( $first_abstract_field, '', ' / ' );
+        $options['data'] = $this->get_result();
+        foreach ($options['data'] as $key => $option) {
+          $options['data'][$key] = array( 'value'=>$key, 'name'=> $option[$first_abstract_field] );
+        }
+      }
+
+      if ( $options) {
+        $settings_fields_info[$field]['options'] = $options;
+      }
       
-      // Validation
+      /**
+       * Validation
+       */
       $settings_fields_info[$field]['validation'] = explode('|',$this->form_validation->get_validations( $table, $field ));
-      // media path?
+      
+      /**
+       * Media path
+       */
       if (in_array(get_prefix($field),array('media','medias'))) {
-        // find in media_info
+        // find in (depricated) media_info
         $full_field=$table.'.'.$field;
         $media_info = $this->db->like('fields_media_fields',$full_field)->get_row('cfg_media_info');
         $settings_fields_info[$field]['path'] = $media_info['path'];
       }
+      
     }
     return $settings_fields_info;
   }
@@ -575,10 +611,11 @@ Class Data_Model extends CI_Model {
     $grid_set['pagination']    = (el('b_pagination',$table_info,TRUE)?true:false);
     $many_to_one               = el( array('relations','many_to_one'), $this->settings, array() );
     $with=array('many_to_one'=>array());
-    foreach ($many_to_one as $table => $info) {
-      $with['many_to_one'][$table]['fields'] = 'abstract';
-      $with['many_to_one'][$table]['flat']   = TRUE;
-    }
+    // Kan ook met de opties, voor als formdata uit tabledata gebruikt moet gaan worden
+    // foreach ($many_to_one as $table => $info) {
+    //   $with['many_to_one'][$table]['fields'] = 'abstract';
+    //   $with['many_to_one'][$table]['flat']   = TRUE;
+    // }
     $grid_set['with'] = $with;
     return $grid_set;
   }
@@ -987,11 +1024,20 @@ Class Data_Model extends CI_Model {
    * Resultaat bij één veld:
    * 
    * array(
-   *  'options'           => array(...),
-   *  'multiple_options'  => [true|FALSE]
+   *  'api'       => '',
+   *  'data'      => array(),
+   *  'multiple'  => [TRUE|FALSE],
    * )
    * 
-   * Resultaat bij geen meegegeven veld:
+   * Waar de 'data' array er zo uit ziet:
+   * 
+   * array(
+   *  'value'   => '', // De waarde zelf (bijvoorbeeld een primary key)
+   *  'name'    => '', // Doe de waarde getoont wordt (bijvoorbeeld een abstract)
+   *  ['group'   => '', // Een eventuele groep, voor selects die verdeeld zijn in groepen. ]
+   * ) 
+   * 
+   * Als geen veld wordt meegegeven worden de opties van alle velden uit de tabel teruggegeven:
    * 
    * array(
    *    '...veldnaam...' => array( ...zie hierboven... ),
@@ -1003,6 +1049,7 @@ Class Data_Model extends CI_Model {
    * @author Jan den Besten
    */
   public function get_options( $field='' ) {
+    // Eén of alle velden?
     $one = FALSE;
     if (!empty($field)) {
       $one = true;
@@ -1011,13 +1058,11 @@ Class Data_Model extends CI_Model {
     else {
       $fields = array_keys($this->settings['field_info']);
     }
-    // Collect options
+    // Alle opties van de velden verzamelen
     $options=array();
     foreach ($fields as $field) {
       $field_options = el( array($field,'options'), $this->settings['field_info'] );
-      if ($field_options) {
-        $options[$field] = array_keep_keys( $this->settings['field_info'][$field], array('options','multiple_options') );
-      }
+      if ($field_options) $options[$field] = $field_options;
     }
     // Return
     if ($one) {
@@ -1171,6 +1216,7 @@ Class Data_Model extends CI_Model {
     $result = array();
     $with_data = array();
     
+    // Pad fields
     if ($this->tm_path) {
       $paths=array();
       $needed_path_fields = array_merge(array_keys($this->tm_path),array($this->settings['primary_key'],'self_parent'));
@@ -1183,6 +1229,7 @@ Class Data_Model extends CI_Model {
       // Voeg relatie data als subarrays aan row
       if ($this->tm_with) {
         foreach ($this->tm_with as $with_type => $this_with) {
+          
           foreach ($this_with as $other_table => $info) {
             // Flat many_to_one of ook als array?
             if ( $with_type=='many_to_one' AND el('flat', $info, false)===true) {
@@ -1499,6 +1546,11 @@ Class Data_Model extends CI_Model {
       
       // name
       $fieldProperties['title'] = $name;
+      
+      // type (maak select als er opties zijn)
+      if (isset($this->settings['field_info'][$name]['options'])) {
+        $fieldProperties['form-type'] = 'select';
+      }
 
       // get validation (set in field_info)
       $validation = $this->settings['field_info'][$name]['validation'];
@@ -1518,12 +1570,13 @@ Class Data_Model extends CI_Model {
     
     // FIELDSETS / TABS
     $tabs = array();
+
     // Prepare fieldsets
     foreach ($this->settings['form_set']['fieldsets'] as $tabtitle => $items) {
       foreach ($items as $i=>$item) {
         $items[$i] = array(
-          'key'  => $sf['schema']['properties'][$item]['title'],
-          'type' => $sf['schema']['properties'][$item]['form-type'],
+          'key'  => el( array('schema','properties',$item,'title'), $sf ),
+          'type' => el( array('schema','properties',$item,'form-type'), $sf ),
         );
       }
       $tabs[]=array(
@@ -1646,7 +1699,7 @@ Class Data_Model extends CI_Model {
    * 
    * ->path( 'uri' )
    * 
-   * Een andere optie is om het origenele veld te behouden en een extra veld toe te voegen met het hele pad.
+   * Een andere optie is om het originele veld te behouden en een extra veld toe te voegen met het hele pad.
    * In het voorbeeld hieronder zal het veld 'path' worden toegevoegd en dezefde waarden hebben als het veld 'uri' in het voorbeeld hierboven.
    * 
    * ->path( 'path', 'uri' );

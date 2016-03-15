@@ -26,6 +26,7 @@ $config['fields']           = NULL;
 
 /**
  * Per veld mogelijk meer informatie:
+ * - default            - defaultwaarde
  * - validation         - array met validation rules
  * - options            - array met opties
  * - multiple_options   - TRUE dan zijn er meer dan één van bovenstaande options mogelijk

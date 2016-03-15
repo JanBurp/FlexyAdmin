@@ -26,6 +26,7 @@ flexyAdmin.factory('flexyTableService', ['flexySettingsService','flexyApiService
     limit  : 20,
     offset : false,   // met false ipv 0 werkt jump_to_today
     as_grid : true,
+    schemaform :true,
     // txt_abstract : true
   };
   
@@ -37,6 +38,7 @@ flexyAdmin.factory('flexyTableService', ['flexySettingsService','flexyApiService
    *     tableState : {},    // Last tableState
    *     args       : {},    // argumenten waarmee de table is opgevraagd bij de server
    *     info       : {},    // info (oa pagination data)
+   *     schemaform : {},    // schemaform van deze table
    *     data       : {}     // data klaar voor het grid
    *  }
    * ...
@@ -76,11 +78,11 @@ flexyAdmin.factory('flexyTableService', ['flexySettingsService','flexyApiService
     if ( angular.isDefined(data[table]) ) {
       if ( angular.isDefined(type) ) {
         if ( angular.isDefined(data[table][type]) ) {
-          return data[table][type];
+          return angular.copy(data[table][type]);
         }
       }
       else {
-        return data[table];
+        return angular.copy(data[table]);
       }
     }
     return undefined;
@@ -244,6 +246,7 @@ flexyAdmin.factory('flexyTableService', ['flexySettingsService','flexyApiService
         tableState : {},
         args       : {},
         info       : {},
+        schemaform : {},
         data       : {}
       };
       
@@ -257,6 +260,7 @@ flexyAdmin.factory('flexyTableService', ['flexySettingsService','flexyApiService
         tableState : tableState,
         args       : saved_args,
         info       : calculate_pagination( response.info, args),
+        schemaform : response.schemaform,
         data       : newData
       };
       
@@ -420,6 +424,18 @@ flexyAdmin.factory('flexyTableService', ['flexySettingsService','flexyApiService
       return jdb.assocArrayItem( data[table].data,'id',id );
     }
     return undefined;
+  };
+  
+  /**
+   * Geeft default waarden van een nieuwe rij voor deze tabel
+   */
+  flexy_table_service.row_defaults = function( table ) {
+    var defaults = {};
+    var fields = settings.item( ['settings','table', table, 'fields'] );
+    angular.forEach(fields, function(field,key){
+      defaults[field] = settings.item( ['settings','table', table, 'field_info', field, 'default'] );
+    });
+    return defaults;
   };
   
   

@@ -36,7 +36,7 @@ class cfg_admin_menu extends crud_ {
     );
 
     $footer = array(
-      array( 'name' => lang('settings'), 'uri'=>'form/tbl_site/first', 'type' => 'form', 'args' => array('table'=>'tbl_site')),
+      array( 'name' => lang('settings'), 'uri'=>'form/tbl_site/1', 'type' => 'form', 'args' => array('table'=>'tbl_site')),
       array( 'name' => lang('statistics'), 'uri'=>'plugin/stats', 'type' => 'plugin', 'args' => array('plugin'=>'stats')),
     );
     return array('header'=>$header,'sidebar'=>$sidebar,'footer'=>$footer);
