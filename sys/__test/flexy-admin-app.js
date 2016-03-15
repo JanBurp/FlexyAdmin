@@ -41,6 +41,7 @@ var flexyAdmin = angular.module( 'flexyAdmin', [
   'schemaForm',
   'froala',
   'schemaForm-froala',
+  'schemaForm-media',
   
   'angularFileUpload',
   

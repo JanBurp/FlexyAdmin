@@ -74,14 +74,14 @@ $config['FIELDS_prefix'] = array (
   // Media/assets				
 	'media'			=> array (
     'type'        => 'string',
-    'form-type'   => 'select',
+    'form-type'   => 'media',
     'grid'        => 'function_dropdown_media',
     'form'        => 'function_dropdown_media',
     'validation'	=> 'trim'
   ),
 	'medias'		=> array (
     'type'        => 'string',
-    'form-type'   => 'select',
+    'form-type'   => 'media',
     'grid'        => 'function_dropdown_medias',
     'form'        => 'function_dropdown_media',
     'validation'	=> 'trim'
