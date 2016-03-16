@@ -1324,11 +1324,11 @@ Class Data_Model extends CI_Model {
    */
   protected function _fill_path( &$result, $key, $path_info ) {
     $value = '';
-    $parent = $result[$key]['self_parent'];
+    $parent = el(array($key,'self_parent'),$result,0);
     if ( $parent>0 ) {
       $value .= $this->_fill_path( $result, $parent, $path_info) . $path_info['split'];
     }
-    $value .= $result[$key][$path_info['original_field']];
+    $value .= el(array($key,$path_info['original_field']),$result);
     return $value;
   }
 
