@@ -10,9 +10,11 @@ class Plugin_move_site extends Plugin {
 
   var $old = '';
   var $new = '';
+  var $oldDB;
 
 	public function __construct() {
 		parent::__construct();
+    $this->CI->load->dbforge();
 	}
 
   public function _admin_api($args=false) {
@@ -29,7 +31,7 @@ class Plugin_move_site extends Plugin {
       if (!file_exists($this->old)) $this->old='<span class="error">-- `'.$this->old.'` seems not to exist. --</span>';
       if (!file_exists($this->new)) $this->new='<span class="error">-- `'.$this->new.'` seems not to exist. --</span>';
     }
-    
+
     $this->add_message('<pre><strong>Old site: </strong> '.$this->old.'</pre>');
     $this->add_message('<pre><strong>New site: </strong> '.$this->new.'</pre>');
 
@@ -39,9 +41,138 @@ class Plugin_move_site extends Plugin {
       $this->move();
       $this->merge();
     }
+    
+    
+    $this->add_message('<h2>Merge old database with fresh database</h2>');
+    $old_db = $this->config['db'];
+    if ($old_db) {
+      $this->oldDB = $this->CI->load->database( $this->config['db'], TRUE);
+      $this->truncate_demo_tables();
+      $this->import_database();
+    }
 	
   	return $this->view('admin/plugins/plugin');
   }
+  
+  
+  /**
+   * Schoon de demo database op
+   *
+   * @return void
+   * @author Jan den Besten
+   */
+  private function truncate_demo_tables() {
+    $ul=array();
+    foreach ($this->config['truncate_demo_tables'] as $table) {
+      $this->CI->db->truncate( $table );
+      $ul[]=$table;
+    }
+    $this->add_message('<h3>Truncated demo tables:</h3>');
+    $this->add_message(ul($ul));
+  }
+  
+  
+  /**
+   * Merge (and import) old tables
+   *
+   * @author Jan den Besten
+   */
+  private function import_database() {
+    // Merge some tables
+    $tables = $this->config['merge_tables'];
+    $this->_merge_tables($tables);
+    
+    // Merge & complete some tables
+    $tables = $this->config['merge_and_complete_tables'];
+    $this->_merge_tables($tables,TRUE);
+    
+    // Import some tables
+    $this->_import_missing_tables();
+  }
+  
+  
+  private function _import_missing_tables() {
+    $tables = $this->CI->db->list_tables();
+    $old_tables = $this->oldDB->list_tables();
+    $missing_tables = array_diff($old_tables,$tables);
+    // only 'tbl_' tables
+    $missing_tables = filter_by($missing_tables,'tbl');
+    // create them
+    foreach ($missing_tables as $table) {
+      $this->CI->dbforge->add_field('id');
+      $this->CI->dbforge->create_table($table);
+    }
+    // Now import the data and create missing fields
+    $this->_merge_tables( $missing_tables,TRUE, 'Import missing tables');
+  }
+  
+
+  private function _merge_tables( $tables, $complete=FALSE, $title='' ) {
+    if (empty($title)) {
+      $title = 'Merged tables:';
+      if ($complete) $title='Merged &amp; completed tables:';
+    }
+    $ul=array();
+    foreach ($tables as $table) {
+      if (!$this->CI->db->table_exists($table)) {
+        $ul[]=span('error').$table.' missing in NEW database'._span();
+      }
+      else {
+        $fields = $this->CI->db->list_fields($table);
+        if (!$this->oldDB->table_exists($table)) {
+          $ul[]=span('error').$table.' missing in OLD database'._span();
+        }
+        else {
+          // truncate new
+          $this->CI->db->truncate( $table );
+          // which fields?
+          $old_fields = $this->oldDB->list_fields($table);
+          $merge_fields = array_intersect( $fields, $old_fields);
+          $missing_fields = array_diff( $old_fields,$fields );
+          if (!$complete) {
+             $this->oldDB->select($merge_fields);
+          }
+          else {
+            if ($missing_fields) {
+              // Create the missing fields
+              $field_info = $this->oldDB->field_data( $table );
+              $field_info = object2array($field_info);
+              foreach ($field_info as $key => $info) {
+                if (in_array($info['name'],$missing_fields)) {
+                  $field_info[$info['name']] = $info;
+                }
+                unset($field_info[$key]);
+              }
+              // Create the fields
+              foreach ($field_info as $name => $info) {
+                $settings = array( $name=>array( 'type' => strtoupper($info['type']) ));
+                if ($info['max_length'])     $settings[$name]['constraint'] = $info['max_length'];
+                if (isset($info['default'])) $settings[$name]['default'] = $info['default'];
+                $this->CI->dbforge->add_column( $table, $settings );
+              }
+            }
+          }
+          $data = $this->oldDB->get_result($table);
+          foreach ($data as $id => $row) {
+            $this->CI->db->set($row);
+            $this->CI->db->insert( $table );
+          }
+        }
+        $message = $table.'&nbsp;['.implode(',',$merge_fields).']';
+        if ($missing_fields) {
+          if ($complete)
+            $message.= span('error').' created ['.implode(',',$missing_fields).']'._span();
+          else
+            $message.= span('error').'&nbsp;missing&nbsp;['.implode(',',$merge_fields).']'._span();
+        }
+        $ul[]=$message;
+      }
+    }
+    $this->add_message('<h3>'.$title.'</h3>');
+    $this->add_message(ul($ul));
+  }
+  
+  
   
   
   /**
