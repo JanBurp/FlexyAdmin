@@ -340,16 +340,7 @@ class Content {
   					if (isset($matches[1][$key])) $extra.=$matches[1][$key];
   					if (isset($matches[3][$key])) $extra.=$matches[3][$key];
             $extra=trim($extra);
-            $extra=explode(' ',$extra);
-            $attr=array();
-            foreach ($extra as $value) {
-              if (!empty($value)) {
-                $value=explode('=',$value);
-                if (is_array($value) and isset($value[1])) {
-                  $attr[$value[0]]=trim($value[1],'"');
-                }
-              }
-            }
+            $attr=explode_attributes($extra);
             $replace[]=safe_mailto($adres,$show,$attr);
   				}
   				$txt=str_replace($search,$replace,$txt);
