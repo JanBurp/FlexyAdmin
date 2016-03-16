@@ -183,17 +183,25 @@ class Main extends FrontEndController {
 	/*
 	 * function _redirect($page)
 	 * 
-	 * Redirect to a page down in the menu tree, if current page is empty
+	 * Redirect to a (set) page (and anchor), or down in the menu tree if current page is empty
 	 */
 	private function _redirect($page) {
     $text = trim(el( 'txt_text',$page, el('txt_text_'.$this->site['language'],$page,'') ));
-		if (empty($text) or (isset($page['b_redirect']) and $page['b_redirect'])) {
-			$this->db->select('uri');
-			$this->db->where('self_parent',$page['id']);
-			if (isset($page['b_visible'])) $this->db->where('b_visible','1');
-			$subItem=$this->db->get_row(get_menu_table());
-			if ($subItem) {
-				$newUri=$this->site['uri'].'/'.$subItem['uri'];
+		if (empty($text) or el('b_redirect',$page,false)) {
+      if (el('list_redirect',$page,'')) {
+        $newUri=$page['list_redirect'];
+      }
+      else {
+  			$this->db->select('uri');
+  			$this->db->where('self_parent',$page['id']);
+  			if (isset($page['b_visible'])) $this->db->where('b_visible','1');
+  			$subItem=$this->db->get_row(get_menu_table());
+  			if ($subItem) $newUri=$this->site['uri'].'/'.$subItem['uri'];
+      }
+      if (isset($newUri)) {
+        if (el('str_anchor',$page,'')) {
+          $newUri.='#'.$page['str_anchor'];
+        }
 				redirect($newUri);
 			}
 		}
