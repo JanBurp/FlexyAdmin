@@ -890,6 +890,7 @@ class Flexy_field extends CI_Model {
 		$options=array();
 		$field=$this->field;
 		$list=remove_prefix($field);
+    if (!in_array($list,array('link','img','media','embed'))) $list='link'; // defaults to link
     $multiple=false;
     if (substr($list,strlen($list)-1,1)=='s') {
       $multiple=true;
