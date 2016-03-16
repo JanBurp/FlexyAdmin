@@ -187,7 +187,7 @@ class Main extends FrontEndController {
 	 */
 	private function _redirect($page) {
     $text = trim(el( 'txt_text',$page, el('txt_text_'.$this->site['language'],$page,'') ));
-		if (empty($text)) {
+		if (empty($text) or (isset($page['b_redirect']) and $page['b_redirect'])) {
 			$this->db->select('uri');
 			$this->db->where('self_parent',$page['id']);
 			if (isset($page['b_visible'])) $this->db->where('b_visible','1');
