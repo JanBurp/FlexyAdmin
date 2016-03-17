@@ -85,7 +85,7 @@ class Main extends FrontEndController {
 		 * Redirect to a page down in the menu tree, if current page is empty.
 		 * If needed, set the redirect config to TRUE in config.php
 		 */
-		if ($this->config->item('redirect')) $this->_redirect($page);
+		if ($this->config->item('redirect') or el('b_redirect',$page,false)) $this->_redirect($page);
 
 
 		/***********************************************
