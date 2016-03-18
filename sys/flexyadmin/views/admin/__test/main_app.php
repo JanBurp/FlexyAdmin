@@ -138,6 +138,7 @@
 <script src="sys/__test/flexy-form/flexy-form-service.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-form/flexy-form-controller.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-form/flexy-form-directive.js" type="text/javascript" charset="utf-8"></script>
+<script src="sys/__test/flexy-form/flexy-file-upload.js" type="text/javascript" charset="utf-8"></script>
 <script src="sys/__test/flexy-form/bootstrap-decorator-media.js" type="text/javascript" charset="utf-8"></script>
 
 <script src="sys/__test/flexy-help/flexy-help.js" type="text/javascript" charset="utf-8"></script>

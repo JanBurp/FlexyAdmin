@@ -13,7 +13,7 @@
 
 /*jshint -W069 */
 
-flexyAdmin.directive('flexyTable', ['flexySettingsService','flexyApiService','flexyTableService','$routeParams', function(settings,api,flexyTable,$routeParams) {
+flexyAdmin.directive('flexyTable', ['flexySettingsService','flexyApiService','flexyTableService','FileUploader','$routeParams', function(settings,api,flexyTable,FileUploader,$routeParams) {
   'use strict';
   
   return {
@@ -67,6 +67,11 @@ flexyAdmin.directive('flexyTable', ['flexySettingsService','flexyApiService','fl
        * De view van de media thumbs (thumbs of list)
        */
       $scope.thumb_view = 'list';
+      
+      /**
+       * Zichtbaarheid van uploader
+       */
+      $scope.uploader_visible = false;
   
       /**
        * Information about the fields
@@ -93,6 +98,14 @@ flexyAdmin.directive('flexyTable', ['flexySettingsService','flexyApiService','fl
       /**
        * LINK METHODS
        */
+      
+      
+      /**
+       * SHOW UPLOADER
+       */
+      $scope.showUploader = function() {
+        $scope.uploader_visible = true;
+      };
       
 
       /**

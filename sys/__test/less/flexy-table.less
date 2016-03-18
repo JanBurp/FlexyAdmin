@@ -56,6 +56,12 @@
 .flexy-table tr.flexy-table-selected .action-select span.flexy-table-selected {display:inline;}
 
 
+/* UPLOADER */
+.flexy-table .file-browser {
+  padding:1rem;
+}
+
+
 /* FIELD TYPES */
 
 /* RGB */
@@ -73,10 +79,10 @@
 .flexy-table table.table-media .flexy-table-field-path      {display:none}
 
 /* MEDIA as list */
-.flexy-table table.media-view-list .thumbnail { height:auto; border:none; border-radius:0px; padding:0px; margin:0px .25rem 0px 0px; background-color:transparent;}
-.flexy-table table.media-view-list .thumbnail img { height:23px;float:left; }
+.flexy-table table.media-view-list .thumbnail { height:23px; border:none; border-radius:0px; padding:0px; margin:0px .25rem 0px 0px; background-color:transparent; overflow:visible;}
+.flexy-table table.media-view-list .thumbnail img { height:23px; float:left; margin-right:.5rem; }
 .flexy-table table.media-view-list .thumbnail .caption { display:none; }
-.flexy-table table.table-media.media-view-list .thumbnail .caption { display:inline; float:left; margin-left:1rem;}
+.flexy-table table.table-media.media-view-list .thumbnail .caption {display:block;}
 
 /* MEDIA as thumbs */
 .flexy-table table.table-media.media-view-thumbs td.actions {
