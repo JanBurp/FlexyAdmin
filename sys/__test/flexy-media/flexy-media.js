@@ -19,7 +19,7 @@
  */
 
 
-flexyAdmin.controller('flexyMediaCtrl', ['flexySettingsService','flexyApiService','FileUploader','cfpLoadingBar','$routeParams','$scope', function(settings,api,FileUploader,cfpLoadingBar,$routeParams,$scope) {
+flexyAdmin.controller('flexyMediaCtrl', ['flexySettingsService','flexyApiService','FileUploader','cfpLoadingBar','$routeParams','$scope','$route', function(settings,api,FileUploader,cfpLoadingBar,$routeParams,$scope,$route) {
 
   $scope.path = $routeParams.path;
   $scope.files = [];
@@ -39,12 +39,12 @@ flexyAdmin.controller('flexyMediaCtrl', ['flexySettingsService','flexyApiService
   /**
    * Load files (api)
    */
-  function loadFiles() {
-    api.get('media',{path:$scope.path}).then(function(response){
-      $scope.files = response.data;
-      $scope.countFiles = $scope.files.length;
-    });
-  }
+  // function loadFiles() {
+  //   api.get('media',{path:$scope.path}).then(function(response){
+  //     $scope.files = response.data;
+  //     $scope.countFiles = $scope.files.length;
+  //   });
+  // }
   
   /**
    * Uploader
@@ -105,11 +105,9 @@ flexyAdmin.controller('flexyMediaCtrl', ['flexySettingsService','flexyApiService
    * Upload complete
    */
   uploader.onCompleteAll  = function() {
-    // Reload all the files
-    loadFiles();
+    // Reload the files
+    $route.reload();
   };
   
-  // Start with loading the files
-  loadFiles();
 }]);
 

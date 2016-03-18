@@ -89,6 +89,11 @@ flexyAdmin.constant('flexyConstants', {
       'FORM_CANCEL'               : 'Cancel',
       'FORM_SAVED'                : 'Data is saved',
       'FORM_SAVE_ERROR'           : 'ERROR, DATA IS NOT SAVED.',
+      'UPLOADING'                 : 'Uploading...',
+      'UPLOADER_FILENAME'         : 'Filename',
+      'UPLOADER_SIZE'             : 'Filesize',
+      'UPLOADER_PROGRESS'         : 'Progress',
+      'UPLOADER_STATUS'           : 'Status'
       
     },
     nl : {
@@ -127,6 +132,12 @@ flexyAdmin.constant('flexyConstants', {
       'FORM_CANCEL'               : 'Annuleer',
       'FORM_SAVED'                : 'Gegevens zijn bewaard',
       'FORM_SAVE_ERROR'           : 'BEWAREN VAN GEGEVENS IS MISLUKT.',
+      'UPLOADING'                 : 'Uploaden...',
+      'UPLOADER_FILENAME'         : 'Bestandsnaam',
+      'UPLOADER_SIZE'             : 'Omvang',
+      'UPLOADER_PROGRESS'         : 'Voortgang',
+      'UPLOADER_STATUS'           : 'Status'
+      
     },
   },
   

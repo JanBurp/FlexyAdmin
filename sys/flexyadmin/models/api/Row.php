@@ -291,10 +291,12 @@ class Row extends Api_Model {
     $model='data_model';
     // Media?
     if ($args['table']==='res_media_files') {
-      $this->load->model('tables/res_media_files');
+      $this->load->model('data/res_media_files');
       $model = 'res_media_files';
     }
-    $this->$model->table( $args['table'] );
+    else {
+      $this->$model->table( $args['table'] );
+    }
     if (isset($args['where'])) {
       if (is_array($args['where'])) {
         $primary_key = $this->$model->get_setting( 'primary_key' );
