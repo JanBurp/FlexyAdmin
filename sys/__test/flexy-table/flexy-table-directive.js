@@ -66,7 +66,7 @@ flexyAdmin.directive('flexyTable', ['flexySettingsService','flexyApiService','fl
       /**
        * De view van de media thumbs (thumbs of list)
        */
-      $scope.thumb_view = 'thumbs';
+      $scope.thumb_view = 'list';
   
       /**
        * Information about the fields

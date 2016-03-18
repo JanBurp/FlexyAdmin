@@ -44,6 +44,7 @@ flexyAdmin.directive('flexyFieldThumb', ['flexySettingsService',function(setting
           };
         }
       }
+      
     },
     
   };

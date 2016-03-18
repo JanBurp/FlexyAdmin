@@ -24,13 +24,9 @@
         <!--Columns -->
         <tr>
           <th class="edit">
-            <div class="btn-group btn-group-xs">
-              <a ng-href="{{base_url}}#form/{{table}}/-1" class="btn btn-primary action-new"><span class="glyphicon glyphicon-plus"></span></a>
-            </div>
-            <div class="btn-group btn-group-xs">
-              <div class="btn btn-info action-select" ng-click="toggleSelection()"><span class="flexy-table-unselected glyphicon glyphicon-unchecked"></div>
-              <div class="btn btn-danger action-remove" ng-click="delete(table)"><span class="glyphicon glyphicon-remove"></span></div>
-            </div>
+            <a ng-href="{{base_url}}#form/{{table}}/-1" class="btn btn-xs btn-primary action-new"><span class="glyphicon glyphicon-plus"></span></a>
+            <div class="btn btn-xs btn-info action-select" ng-click="toggleSelection()"><span class="flexy-table-unselected glyphicon glyphicon-unchecked"></div>
+            <div class="btn btn-xs btn-danger action-remove" ng-click="delete(table)"><span class="glyphicon glyphicon-remove"></span></div>
           </th>
           
           <th ng-if="type.is_sortable" ng-repeat="field in fields | toArray" st-sort="{{field.field}}" class="flexy-table-sortable-column flexy-table-field-type-{{field.type}} flexy-table-field-{{field.field}}">{{field.ui_name}}
@@ -55,16 +51,12 @@
 
           <!-- ROW Actions -->
           <td class="actions">
-            <div class="btn-group btn-group-xs">
-              <!-- Edit button -->
-              <a ng-href="{{base_url}}#form/{{table}}/{{row.id}}" class="btn btn-primary action-edit"><span class="glyphicon glyphicon-pencil"></span></a>
-            </div>
-            <div class="btn-group btn-group-xs">
-              <!-- Select button -->
-              <div ng-click="select($index)" class="btn btn-info action-select"><span class="flexy-table-unselected glyphicon glyphicon-unchecked"></span><span class="flexy-table-selected glyphicon glyphicon-check"></span></div>
-              <!-- Delete button -->
-              <div ng-click="delete(table,row.id)" class="btn btn-danger action-remove"><span class="glyphicon glyphicon-remove"></span></div>
-            </div>
+            <!-- Edit button -->
+            <a ng-href="{{base_url}}#form/{{table}}/{{row.id}}" class="btn btn-xs btn-primary action-edit"><span class="glyphicon glyphicon-pencil"></span></a>
+            <!-- Select button -->
+            <div ng-click="select($index)" class="btn btn-xs btn-info action-select"><span class="flexy-table-unselected glyphicon glyphicon-unchecked"></span><span class="flexy-table-selected glyphicon glyphicon-check"></span></div>
+            <!-- Delete button -->
+            <div ng-click="delete(table,row.id)" class="btn btn-xs btn-danger action-remove"><span class="glyphicon glyphicon-remove"></span></div>
             <div class="btn-group btn-group-xs as-sortable-handle" as-sortable-item-handle>
               <!-- Order button -->
               <div class="btn btn-warning action-move" ng-disabled="search"><span class="glyphicon glyphicon-menu-hamburger"></span></div>
@@ -86,8 +78,8 @@
   <div class="panel-footer text-primary">
     <!-- Media view -->
     <div ng-if="type.is_media" class="flexy-table-media-views btn-group">
-      <div ng-click="media_view('thumbs')" class="btn btn-default" ng-class="{'btn-primary' : thumb_view === 'thumbs'}"><span class="glyphicon glyphicon-th"></span></div>
       <div ng-click="media_view('list')" class="btn btn-default" ng-class="{'btn-primary' : thumb_view === 'list'}"><span class="glyphicon glyphicon-menu-hamburger"></span></div>
+      <div ng-click="media_view('thumbs')" class="btn btn-default" ng-class="{'btn-primary' : thumb_view === 'thumbs'}"><span class="glyphicon glyphicon-th"></span></div>
     </div>
     <!-- Pagination -->
 		<div class="flexy-table-pagination" st-pagination="" st-template="flexy-table/flexy-table-pagination.html" st-items-by-page="info.limit" st-displayed-pages="5"></div>
