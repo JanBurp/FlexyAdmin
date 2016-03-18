@@ -26,6 +26,29 @@ flexyAdmin.factory('flexyFormService', ['flexySettingsService','flexyApiService'
   };
   
   /**
+   * Functie om een waarde in het form deel van schemaform te zetten bij het juiste veld
+   */
+  var put_value_in_form = function( response, key, form_key, value ) {
+    var formIndex = false;
+    if (response.schemaform.form.length>1) {
+      // Geen tabs/fieldsets
+      formIndex = jdb.indexOfProperty( response.schemaform.form, 'key', key);
+      response.schemaform.form[ formIndex ][form_key] = value;
+    }
+    else {
+      // Wel in een tab/fieldsey
+      var tabs = response.schemaform.form[0].tabs;
+      var tab = -1;
+      while ( !formIndex && tab<tabs.length-1) {
+        tab++;
+        formIndex = jdb.indexOfProperty( tabs[tab].items, 'key', key);
+      }
+      response.schemaform.form[0].tabs[tab].items[ formIndex ][form_key] = value;
+    }
+  };
+  
+  
+  /**
    * flexyFormService
    */
   var flexy_form_service = {};
@@ -45,32 +68,28 @@ flexyAdmin.factory('flexyFormService', ['flexySettingsService','flexyApiService'
       // Ui names van de velden in het schema zetten
       response.schemaform.schema.properties[key].title = settings.item( 'settings','table', table,'field_info',key,'ui_name');
       
-      // Select opties in het schema zetten
+      /**
+       * Select opties in het schema zetten
+       */
       if (value['form-type']==='select') {
         var options = settings.item( 'settings','table',table,'field_info', key, 'options' );
         if (angular.isDefined(options)) {
           // De waarden in het schema
           response.schemaform.schema.properties[key].enum = jdb.arrayKeys( options.data, 'value' );
           // De visuele weergave in form, zoek eerst de juiste form entree (tab, index)
-          var formIndex = false;
-          if (response.schemaform.form.length>1) {
-            // Geen tabs/fieldsets
-            formIndex = jdb.indexOfProperty( response.schemaform.form, 'key', key);
-            response.schemaform.form[ formIndex ].titleMap = options.data;
-          }
-          else {
-            // Wel in een tab/fieldsey
-            var tabs = response.schemaform.form[0].tabs;
-            var tab = -1;
-            while ( !formIndex && tab<tabs.length-1) {
-              tab++;
-              formIndex = jdb.indexOfProperty( tabs[tab].items, 'key', key);
-            }
-            response.schemaform.form[0].tabs[tab].items[ formIndex ].titleMap = options.data;
-          }
-            
+          put_value_in_form( response, key, 'titleMap', options.data );
         }
       }
+      
+      /**
+       * Path & file info bij media toevoegen
+       */
+      if (value['form-type']==='media') {
+        put_value_in_form( response, key, 'path', settings.item( ['settings','table',table,'field_info',key,'path'] ) );
+        put_value_in_form( response, key, 'file', response.data[key] );
+      }
+      
+      
     });
     return response;
   };
