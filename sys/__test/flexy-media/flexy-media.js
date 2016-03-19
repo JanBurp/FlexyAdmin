@@ -19,7 +19,7 @@
  */
 
 
-flexyAdmin.controller('flexyMediaCtrl', ['flexySettingsService','flexyApiService','FileUploader','cfpLoadingBar','$routeParams','$scope','$route', function(settings,api,FileUploader,cfpLoadingBar,$routeParams,$scope,$route) {
+flexyAdmin.controller('flexyMediaCtrl', ['flexySettingsService','flexyApiService','FileUploader','cfpLoadingBar','flexyTableService','$routeParams','$scope','$route', function(settings,api,FileUploader,cfpLoadingBar,tableService,$routeParams,$scope,$route) {
 
   $scope.path = $routeParams.path;
   $scope.files = [];
@@ -77,6 +77,8 @@ flexyAdmin.controller('flexyMediaCtrl', ['flexySettingsService','flexyApiService
     cfpLoadingBar.complete();
     // TRACE / ERROR logging: See http-interceptor-logging.js  -> message()
     if (typeof(response)=='string' || angular.isDefined(response.trace)) {
+      console.log(response);
+      
       var trace = response;
       if (angular.isDefined(response.trace)) {
         trace = response.trace;
@@ -106,6 +108,7 @@ flexyAdmin.controller('flexyMediaCtrl', ['flexySettingsService','flexyApiService
    */
   uploader.onCompleteAll  = function() {
     // Reload the files
+    tableService.remove('_media_');
     $route.reload();
   };
   

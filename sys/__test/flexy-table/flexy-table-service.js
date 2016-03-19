@@ -88,7 +88,6 @@ flexyAdmin.factory('flexyTableService', ['flexySettingsService','flexyApiService
     return undefined;
   };
   
-  
  /**
   * Maakt van ruwe data array een grid array met:
   * - `order` wordt ingesteld op de volgorde van de meegegeven array
