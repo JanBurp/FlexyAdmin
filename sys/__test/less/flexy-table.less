@@ -57,9 +57,14 @@
 
 
 /* UPLOADER */
-.flexy-table .file-browser {
-  padding:1rem;
-}
+.flexy-table-uploader {background-color:@gray-lighter;}
+.flexy-table-uploader * {border-color:@brand-primary!important;}
+.flexy-table-uploader .file-browser { padding:3rem 5px;height:9rem; }
+.flexy-table-uploader .file-browser>* {float:left; margin-right:1rem;}
+.flexy-table-uploader .file-browser h2 {margin:0px;color:@body-bg;text-shadow: 0px 0px 1px @gray;
+  }
+.flexy-table-uploader .media-upload-que td { vertical-align:center; padding:4px 8px;}
+.flexy-table-uploader .progress { margin:0px;}
 
 
 /* FIELD TYPES */
@@ -77,6 +82,7 @@
 /* MEDIA */
 .flexy-table table.table-media .flexy-table-field-b_exists  {display:none}
 .flexy-table table.table-media .flexy-table-field-path      {display:none}
+.flexy-table table.media-view-thumbs .thumbnail .caption { max-width:130px;overflow:hidden;text-overflow:ellipsis;}
 
 /* MEDIA as list */
 .flexy-table table.media-view-list .thumbnail { height:23px; border:none; border-radius:0px; padding:0px; margin:0px .25rem 0px 0px; background-color:transparent; overflow:visible;}
@@ -88,7 +94,7 @@
 .flexy-table table.table-media.media-view-thumbs td.actions {
   display:block;
   position:absolute;
-  right:3px;
+  right:0px;
   text-align:right;
   width:100%;
   background-color:transparent!important;
@@ -109,11 +115,12 @@
   display:block!important;
   position:relative;
   float:left;
-  width:auto;
+  width:150px;
   height:150px;
   border:none;
   margin:.5rem;
   background-color:@body-bg;
+  overflow:hidden;
 }
 .flexy-table table.table-media.media-view-thumbs tbody td { float:left; border:none;}
 

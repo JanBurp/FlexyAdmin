@@ -1511,6 +1511,7 @@ Class Data_Model extends CI_Model {
    * @author Jan den Besten
    */
   public function schemaform( $row, $name='row' ) {
+    if (!is_array($row)) $row=array();
     $this->config->load('schemaform');
     $this->load->model('ui');
     // Default schema

@@ -14,14 +14,13 @@
 flexyAdmin.directive('flexyFileField', function() {
   return {
     restrict  : 'E',
-    template  :'<div class="btn btn-xs btn-primary action-new"><span class="glyphicon glyphicon-floppy-save"></span><input type="file" style="display:none" multiple></div>',
+    template  :'<div class="btn btn btn-primary action-new"><span class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;<span translate="UPLOADER_BROWSE"></span><input class="hidden" type="file" nv-file-select="" uploader="uploader" multiple  /></div>',
     replace   :true,
     
     link: function (scope, element, attrs, ngModel) {
       var input = element.find('input');
       input.bind('change', function(event){
         scope.$evalAsync(function () {
-          ngModel.$setViewValue(event.target.files[0]);
           if(attrs.preview) {
             var reader = new FileReader();
             reader.onload = function (e) {
