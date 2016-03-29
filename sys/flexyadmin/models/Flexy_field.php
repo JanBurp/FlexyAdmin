@@ -725,18 +725,18 @@ class Flexy_field extends CI_Model {
 				}
 			}
 			// join fields?
-			if ($this->table!='cfg_media_info') {
-  			$jt="rel_".remove_prefix($table).$this->config->item('REL_table_split');
-  			$rel_tables=filter_by($tables,"rel_");
-  			foreach($rel_tables as $key=>$jtable) {
-  				if (strncmp($jt,$jtable,strlen($jt))==0) {
-  					$field=$jtable;
-  					$options[]="$table.$field";
-  				}
-  			}
-			}
+      // if ($this->table!=='cfg_media_info') {
+      //         $jt="rel_".remove_prefix($table).$this->config->item('REL_table_split');
+      //         $rel_tables=filter_by($tables,"rel_");
+      //         foreach($rel_tables as $key=>$jtable) {
+      //           if (strncmp($jt,$jtable,strlen($jt))==0) {
+      //             $field=$jtable;
+      //             $options[]="$table.$field";
+      //           }
+      //         }
+      // }
 		}
-    if ($this->table!='cfg_media_info') {    
+    if ($this->table!=='cfg_media_info') {    
       $commonFields=array_reverse($commonFields);
       foreach ($commonFields as $field ) {
         array_unshift($options,'*.'.$field);
