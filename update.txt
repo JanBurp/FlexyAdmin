@@ -22,10 +22,11 @@ For recent sites the update processes described below should work:
 - Vervang site/Controller.php (of voeg regels 162,163 toe)
 
 
-UPDATE 3.0.7 (3518...)
+UPDATE 3.0.7 (3592...)
 ======================
-- Update naar CI 3.0.5:
+- Update naar CI 3.0.6:
   - Vervang de map `sys`
+  - Vervang `index.php`
 
 
 UPDATE 3.0.6 (3518...)
