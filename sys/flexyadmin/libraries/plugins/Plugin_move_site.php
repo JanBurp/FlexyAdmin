@@ -43,13 +43,13 @@ class Plugin_move_site extends Plugin {
     }
     
     
-    $this->add_message('<h2>Merge old database with fresh database</h2>');
-    $old_db = $this->config['db'];
-    if ($old_db) {
-      $this->oldDB = $this->CI->load->database( $this->config['db'], TRUE);
-      $this->truncate_demo_tables();
-      $this->import_database();
-    }
+    // $this->add_message('<h2>Merge old database with fresh database</h2>');
+    // $old_db = $this->config['db'];
+    // if ($old_db) {
+    //   $this->oldDB = $this->CI->load->database( $this->config['db'], TRUE);
+    //   $this->truncate_demo_tables();
+    //   $this->import_database();
+    // }
 	
   	return $this->view('admin/plugins/plugin');
   }
@@ -64,8 +64,10 @@ class Plugin_move_site extends Plugin {
   private function truncate_demo_tables() {
     $ul=array();
     foreach ($this->config['truncate_demo_tables'] as $table) {
-      $this->CI->db->truncate( $table );
-      $ul[]=$table;
+      if ($this->CI->db->table_exists($table)) {
+        $this->CI->db->truncate( $table );
+        $ul[]=$table;
+      }
     }
     $this->add_message('<h3>Truncated demo tables:</h3>');
     $this->add_message(ul($ul));
