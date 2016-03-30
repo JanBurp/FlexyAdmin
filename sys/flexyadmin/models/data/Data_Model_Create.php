@@ -138,7 +138,7 @@ Class Data_Model_Create extends CI_Model {
         $value='array()';
       }
       else {
-        if (is_assoc($value)) {
+        if (is_assoc($value) or is_multi($value) ) {
           $items=$value;
           $longest_item=array_keys($items);
           $longest_item=array_sort_length($longest_item);
@@ -159,7 +159,7 @@ Class Data_Model_Create extends CI_Model {
           $value .= ")";
         }
         else {
-          $value = "array('".implode("','",$value)."')";
+          $value = "array('" . implode("','",$value) . "')";
         }
       }
       return $value;

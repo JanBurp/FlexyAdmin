@@ -347,7 +347,11 @@ Class Data_Model extends CI_Model {
 
       // Via foreign_keys of self_parent
       if ( get_prefix($field)==='id' and $field!==$this->settings['primary_key']) {
+        
         $foreignTable = foreign_table_from_key($field);
+        // Om meerdere verwijzingen naar dezelfde tabel mogelijk te maken:
+        $foreignTable = trim($foreignTable,'_');
+        
         if ($foreignTable) {
           // Zijn er teveel opties?
           if ($this->db->count_all($foreignTable)>100) {

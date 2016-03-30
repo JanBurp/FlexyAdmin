@@ -1249,6 +1249,17 @@ function is_assoc($a){
   return (bool)count(array_filter(array_keys($a), 'is_string'));
 }
 
+/**
+ * Test of een array multidimensionaal is
+ *
+ * @param string $array 
+ * @return bool
+ * @author Jan den Besten
+ */
+function is_multi($array) {
+  return (count($array) != count($array, COUNT_RECURSIVE));
+}
+
 
 /**
  * Maakt van een multidimensionale array een 'platte' array door de subarray te vervangen door de 1e waarde ervan
