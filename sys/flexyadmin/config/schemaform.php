@@ -224,7 +224,7 @@ $config['FIELDS_prefix'] = array (
   ),
 	'int'				=> array (
     'type'        => 'integer',
-    'form-type'   => 'text',
+    'form-type'   => 'number',
     'grid'        => '%s',
     'form'        => '',
     'validation'	=> 'trim|integer'

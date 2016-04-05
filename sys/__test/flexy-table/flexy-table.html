@@ -1,5 +1,7 @@
 <div>
 <div class="panel panel-primary flexy-table flexy-table_{{table}}" st-pipe="pipe" st-table="displayedItems">
+  
+  <div ng-controller="flexyMediaCtrl" nv-file-drop="" uploader="uploader">
 
   <div class="panel-heading panel-title">
     <!-- Title -->
@@ -12,7 +14,7 @@
     </form>
   </div>
 
-  <div ng-if="type.is_media" ng-show="uploader_visible" class="panel-content flexy-table-uploader" ng-controller="flexyMediaCtrl" nv-file-drop="" uploader="uploader">
+  <div ng-if="type.is_media" ng-show="uploader_visible || uploader.queue.length > 0" class="panel-content flexy-table-uploader">
     
     <!-- Select file -->
     <div class="file-browser" ng-show="uploader.queue.length===0">
@@ -128,6 +130,8 @@
     <div ng-if="jump_to_today" ng-click="jump_to_page_with_today(table)" class="btn btn-default button-jump-to-today" ng-class="{'btn-primary' : info.today}" translate="JUMP_TO_TODAY"></div>
     <!-- Info -->
     <div class="flexy-table-stats"><span translate="ITEMS_ON_PAGE" translate-values="{rows: info.total_rows, pages: info.num_pages}"></span></div>
+  </div>
+  
   </div>
   
 </div>

@@ -19,7 +19,7 @@
  */
 
 
-flexyAdmin.controller('flexyMediaCtrl', ['flexySettingsService','flexyApiService','FileUploader','cfpLoadingBar','flexyTableService','$routeParams','$scope','$route', function(settings,api,FileUploader,cfpLoadingBar,tableService,$routeParams,$scope,$route) {
+flexyAdmin.controller('flexyMediaCtrl', ['flexySettingsService','flexyApiService','FileUploader','cfpLoadingBar','flexyTableService','flexyAlertService','$routeParams','$scope','$route', function(settings,api,FileUploader,cfpLoadingBar,tableService,alertService,$routeParams,$scope,$route) {
 
   $scope.path = $routeParams.path;
   $scope.files = [];
@@ -64,21 +64,22 @@ flexyAdmin.controller('flexyMediaCtrl', ['flexySettingsService','flexyApiService
   uploader.onBeforeUploadItem = function(fileItem, response, status, headers) {
     cfpLoadingBar.start();
   };
+  
   /**
    * Upload progress
    */
   uploader.onProgressItem = function(fileItem, progress) {
     cfpLoadingBar.set(progress);
   };
+  
   /**
    * Upload file complete
    */
   uploader.onCompleteItem = function(fileItem, response, status, headers) {
     cfpLoadingBar.complete();
     // TRACE / ERROR logging: See http-interceptor-logging.js  -> message()
-    if (typeof(response)=='string' || angular.isDefined(response.trace)) {
+    if (typeof(response)==='string' || angular.isDefined(response.trace)) {
       console.log(response);
-      
       var trace = response;
       if (angular.isDefined(response.trace)) {
         trace = response.trace;
@@ -96,13 +97,15 @@ flexyAdmin.controller('flexyMediaCtrl', ['flexySettingsService','flexyApiService
         fileItem.isSuccess = false;
         fileItem.isError = true;
         fileItem.error = response.error;
+        alertService.add( 'danger', ' <b>'+fileItem.error+'</b>');
       }
       else {
         // Ok, remove from que
-        fileItem.remove();
+        // fileItem.remove();
       }
     }
   };
+  
   /**
    * Upload complete
    */
