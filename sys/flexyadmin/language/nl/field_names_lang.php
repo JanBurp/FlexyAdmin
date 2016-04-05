@@ -59,12 +59,17 @@ $lang['user_changed']     ='Aangepast door';
 
 
 // MEDIA GRID fields
-$lang['filename']         = 'Bestandsnaam';
+$lang['filename']         = 'Bestand';
 $lang['alt']              = $lang['str_title'];
 $lang['file']             = $lang['filename'];
 $lang['filetype']         = 'Soort';
+$lang['str_type']         = 'Soort';
 $lang['filesize']         = 'Omvang';
+$lang['int_size']         = 'Omvang';
 $lang['size']             = 'Breedte x Hoogte';
+$lang['int_img_width']    = 'Breedte';
+$lang['int_img_height']   = 'Hoogte';
 $lang['USED']             = 'Gebruikt';
+
 
 ?>

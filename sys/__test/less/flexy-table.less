@@ -1,6 +1,8 @@
 /* FLEXY-GRID */
 
 /* HEADER-FOOTER & PANEL*/
+.flexy-table .panel-title {background-color:@brand-primary;} 
+.flexy-table .panel-title>h3 {color:@body-bg;} 
 .flexy-table .panel-heading form {margin-top:-2px;}
 .flexy-table .panel-heading input {padding-left:30px;}
 .flexy-table .panel-heading .glyphicon {left:0;}
@@ -84,11 +86,13 @@
 .flexy-table table.table-media .flexy-table-field-path      {display:none}
 .flexy-table table.media-view-thumbs .thumbnail .caption { max-width:130px;overflow:hidden;text-overflow:ellipsis;}
 
+
 /* MEDIA as list */
 .flexy-table table.media-view-list .thumbnail { height:23px; border:none; border-radius:0px; padding:0px; margin:0px .25rem 0px 0px; background-color:transparent; overflow:visible;}
-.flexy-table table.media-view-list .thumbnail img { height:23px; float:left; margin-right:.5rem; }
+.flexy-table table.media-view-list .thumbnail img, .flexy-table table.media-view-list .thumbnail span.fa { height:23px; float:left; }
+.flexy-table table.media-view-list .thumbnail span.fa:before {font-size:23px;}
 .flexy-table table.media-view-list .thumbnail .caption { display:none; }
-.flexy-table table.table-media.media-view-list .thumbnail .caption {display:block;}
+.flexy-table table.table-media.media-view-list .thumbnail .caption {display:block;float:right;}
 
 /* MEDIA as thumbs */
 .flexy-table table.table-media.media-view-thumbs td.actions {
@@ -100,6 +104,7 @@
   background-color:transparent!important;
   z-index:99999;
 }
+.flexy-table table.table-media.media-view-thumbs .thumbnail span.fa:before { font-size:100px;margin-left:25px; }
 .flexy-table table.table-media.media-view-thumbs td.actions .btn {display:none}
 .flexy-table table.table-media.media-view-thumbs td.actions .btn.action-select {display:inline;}
 .flexy-table table.table-media.media-view-thumbs th.flexy-table-field-file        {display:none}
@@ -110,6 +115,7 @@
 .flexy-table table.table-media.media-view-thumbs .flexy-table-field-int_size      {display:none}
 .flexy-table table.table-media.media-view-thumbs .flexy-table-field-int_img_width {display:none}
 .flexy-table table.table-media.media-view-thumbs .flexy-table-field-int_img_height{display:none}
+
 /* TR TD as DIV */
 .flexy-table table.table-media.media-view-thumbs tbody tr {
   display:block!important;
