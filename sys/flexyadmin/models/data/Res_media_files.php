@@ -9,11 +9,15 @@
  * @copyright: (c) Jan den Besten
  */
 
-Class Res_media_files extends Data_Model {
+Class Res_media_files extends Data_Model_Core {
 
   public function __construct() {
     parent::__construct();
 		$this->load->model("file_manager");
+    
+    // Add current filemanager_view setting:
+    $user_id = $this->data_model_core->get_user_id();
+    $this->settings['grid_set']['grid_view'] = $this->db->get_field_where( 'cfg_users','str_filemanager_view','id',$user_id);
   }
   
   
