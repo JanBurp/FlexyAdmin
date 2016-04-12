@@ -30,8 +30,8 @@ flexyAdmin.directive('flexyTable', ['flexySettingsService','flexyApiService','fl
       /**
        * The table, or path
        */
-      $scope.table = attrs.table;
-      $scope.path  = attrs.path;
+      $scope.table    = attrs.table;
+      $scope.path     = attrs.path;
       $scope.base_url = settings.item('base_url');
       
       /**
@@ -167,6 +167,7 @@ flexyAdmin.directive('flexyTable', ['flexySettingsService','flexyApiService','fl
        */
       $scope.media_view = function(view) {
         $scope.thumb_view = view;
+        settings.set_item( ['settings', 'table', $scope.table, 'grid_set', 'grid_view'], view );
       };
 
       
@@ -205,6 +206,9 @@ flexyAdmin.directive('flexyTable', ['flexySettingsService','flexyApiService','fl
           // table type (tree, sortable) - is_media is allready set
           $scope.type.is_tree = settings.item( 'settings','table',$scope.table,'table_info','tree');
           $scope.type.is_sortable = settings.item( 'settings','table',$scope.table,'table_info','sortable');
+          $scope.thumb_view = settings.item( 'settings', 'table', $scope.table, 'grid_set', 'grid_view' );
+          if ($scope.thumb_view==='icons') $scope.thumb_view = 'thumbs';
+          
           // Pagination en update tableState
           $scope.info = flexyTable.get_info($scope.table);
           $scope.info.num_pages = Math.ceil($scope.info.total_rows / $scope.info.limit);

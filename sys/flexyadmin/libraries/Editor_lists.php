@@ -58,7 +58,7 @@ class Editor_lists {
 			}
 			if (isset($tblSite['email_email'])) {
 				$name=$tblSite['email_email'];
-				$data[$name]=array('name'=>$name,'url'=>'mailto:'.$tblSite['email_email']);
+				$data['info_'.'link_'.$name]=array('name'=>$name,'url'=>'mailto:'.$tblSite['email_email']);
 			}
 
 			// add if asked for, internal links from menu table
@@ -88,7 +88,7 @@ class Editor_lists {
 							$url=$row["uri"];
 							$name=$url;
 							$name=addslashes($row[$nameField]);
-							$data[$name]=array("url"=>site_url($url),"name"=>$name);
+							$data['site_'.$name]=array("url"=>site_url($url),"name"=>$name);
 						}
 					}
 				}
@@ -105,7 +105,7 @@ class Editor_lists {
 					$query=$this->CI->db->get($table);
 					foreach($query->result_array() as $row) {
 						$name=addslashes($row[$titleField]);
-						$data[$name]=array("url"=>$row["url_url"],"name"=>$name);
+						$data['link_'.$name]=array("url"=>$row["url_url"],"name"=>$name);
 					}
 					$query->free_result();
 				}
@@ -119,7 +119,7 @@ class Editor_lists {
 				$titleField=$this->CI->db->get_first_field($embedTbl,'str');
 				$embeds=$this->CI->db->get_result($embedTbl);
 				foreach($embeds as $row) {
-					$data[$row[$titleField]]=array("embed"=>$row["stx_embed"],"name"=>$row[$titleField]);
+					$data['embed_'.$row[$titleField]]=array("embed"=>$row["stx_embed"],"name"=>$row[$titleField]);
 				}
 			}
 		}
@@ -180,7 +180,6 @@ class Editor_lists {
 			}
 		}
 		else {
-      // trace_($data);
 			foreach($data as $name=>$file) {
         if (!empty($file)) {
           $name=$file['name'];
