@@ -91,5 +91,36 @@ class Log_activity extends CI_Model {
     return $query->result_array();
   }
 
+  /**
+   * Geeft laatste user activiteit gegroupeerd weer (één rij per user per dag)
+   *
+   * @param string $user_id 
+   * @param string $limit 
+   * @return void
+   * @author Jan den Besten
+   */
+  public function get_grouped_user_activity( $user_id=FALSE, $limit=10 ) {
+    if (!$this->db->table_exists('log_activity')) return array();
+    if (!$user_id) $user_id = $this->session->userdata("user_id");
+    $query = $this->db->query( "SELECT DISTINCT `id_user`, DATE_FORMAT( `tme_timestamp`, '%Y-%m-%d') AS `tme_timestamp`, `str_model` FROM `log_activity` WHERE (`str_activity_type`='database' OR `str_activity_type`='media') AND `str_model`!='res_menu_result' ORDER BY `tme_timestamp` DESC LIMIT ".$limit*10 );
+    $result = $query->result_array();
+    $user = FALSE;
+    $user_row_id = 0;
+    foreach ($result as $id => $row) {
+      if ($row['id_user']===$user) {
+        $result[$user_row_id]['str_model'].='|'.$this->ui->get( $row['str_model'] );
+        unset($result[$id]);
+      }
+      else {
+        $user = $row['id_user'];
+        $user_row_id = $id;
+        $result[$id]['str_model'] = $this->ui->get( $row['str_model'] );
+      }
+    }
+    return $result;
+  }
+  
+  
+
 }
 ?>

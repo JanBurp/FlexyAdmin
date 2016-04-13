@@ -44,12 +44,10 @@ class Plugin_log extends Plugin {
    */
   public function _home() {
     $this->CI->load->model('log_activity');
-    $log = $this->CI->log_activity->get_user_activity();
+    $log = $this->CI->log_activity->get_grouped_user_activity();
 		$grid=new grid();
 		foreach($log as $k=>$d) {
       $log[$k]['id_user']       = $this->CI->db->get_field_where('cfg_users','str_username','id',$d['id_user']);
-			$log[$k]['tme_timestamp'] = str_replace(' ','&nbsp;',strftime("%a %e %B %Y - %R",strtotime($d["tme_timestamp"])));
-      $log[$k]['str_model']     = str_replace("|",", ",$this->CI->ui->get($d["str_model"]));
 		}
 		$grid->set_data($log,langp("home_activity"));
     $grid->set_headings(array(
