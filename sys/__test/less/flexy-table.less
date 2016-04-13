@@ -44,10 +44,16 @@
 .flexy-table .flexy-table-sortable-column {cursor:pointer;}
 .flexy-table th.flexy-table-field-str_title, .flexy-table td.flexy-table-field-str_title {max-width:none;text-overflow:inherit;}
 .flexy-table th.flexy-table-field-type-txt, .flexy-table td.flexy-table-field-type-txt {max-width:350px;}
-.flexy-table th.flexy-table-field-type-media, .flexy-table td.flexy-table-field-type-media,
-.flexy-table th.flexy-table-field-type-medias, .flexy-table td.flexy-table-field-type-medias {min-width:120px;max-width:600px;}
 .flexy-table th.flexy-table-field-type-rgb, .flexy-table td.flexy-table-field-type-rgb {text-align:center;max-width:none;text-overflow:none; }
 .flexy-table th.flexy-table-field-type-tme, .flexy-table td.flexy-table-field-type-tme {max-width:none; width:130px;}
+/* media thumbnails */
+.flexy-table th.flexy-table-field-type-media, .flexy-table td.flexy-table-field-type-media,
+.flexy-table th.flexy-table-field-type-medias, .flexy-table td.flexy-table-field-type-medias {min-width:120px;max-width:600px;}
+.flexy-table td.flexy-table-field-type-medias .flexy-field-thumb {float:left;}
+.flexy-table td.flexy-table-field-type-medias .thumbnail {height:25px;width:auto;padding:0px;margin-right:5px;border:none;border-radius:0px;}
+.flexy-table td.flexy-table-field-type-medias .thumbnail img {height:100%;margin:0px;padding:0px;}
+.flexy-table td.flexy-table-field-type-medias .thumbnail .caption {display:none}
+
 /* ROW Actions */
 .flexy-table .table-sortable tr .actions .as-sortable-handle {display:none}
 /* ROW SELECTION */
@@ -85,7 +91,6 @@
 .flexy-table table.table-media .flexy-table-field-b_exists  {display:none}
 .flexy-table table.table-media .flexy-table-field-path      {display:none}
 .flexy-table table.media-view-thumbs .thumbnail .caption { max-width:130px;overflow:hidden;text-overflow:ellipsis;}
-
 
 /* MEDIA as list */
 .flexy-table table.media-view-list .thumbnail { height:23px; border:none; border-radius:0px; padding:0px; margin:0px .25rem 0px 0px; background-color:transparent; overflow:visible;}

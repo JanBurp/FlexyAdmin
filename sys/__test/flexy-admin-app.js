@@ -77,29 +77,37 @@ flexyAdmin.config( function($routeProvider){
       controller  : 'flexyLogoutController',
       template    : '',
     })
+    
+    // Help
     .when('/help/:page',{
       controller  : '',
       templateUrl : 'flexy-help/help.html',
     })
+    
     // Table
     .when('/table/:table',{                      
       controller  : 'TableController',
       templateUrl : 'flexy-table/flexy-table-route.html'
     })
+    
     // Media
     .when('/media/:path',{
       controller  : 'MediaController',
       templateUrl : 'flexy-media/flexy-media-route.html'
     })
+    
     // Form
     .when('/form/:table/:id',{
       controller  : 'FormController',
       templateUrl : 'flexy-form/flexy-form-route.html'
     })
+    
+    // Plugin
     .when('/plugin/:plugin',{
       controller  : '',
       templateUrl : 'flexy-plugin/plugin.html',
     })
+    
     .otherwise({
       redirectTo: '/home'
     });

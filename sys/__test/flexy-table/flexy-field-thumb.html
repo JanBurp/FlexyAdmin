@@ -1,4 +1,4 @@
-<div ng-repeat="thumb in thumbs">
+<div class="flexy-field-thumb" ng-repeat="thumb in thumbs">
   <div class="thumbnail">
     <ng-switch on="thumb.type">
       <img ng-switch-when="file-image"  ng-src="{{thumb.thumb}}" alt="{{thumb.alt}}" title="{{thumb.alt}}" />
