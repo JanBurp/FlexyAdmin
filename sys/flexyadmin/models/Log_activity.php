@@ -31,7 +31,7 @@ class Log_activity extends CI_Model {
    * @author Jan den Besten
    */
   public function add($type,$activity,$model='',$key='',$user_id=FALSE) {
-    if (!defined('PHPUNIT_TEST') and $this->db->table_exists('log_activity')) {
+    if ( !defined('PHPUNIT_TEST') and $this->db->table_exists('log_activity') ) {
       if (!$user_id) $user_id = $this->session->userdata("user_id");
       if (!$user_id) $user_id = 0;
       $this->db->set( 'id_user',$user_id );
@@ -40,7 +40,6 @@ class Log_activity extends CI_Model {
       if ($model)       $this->db->set( 'str_model',$model );
       if ($key)         $this->db->set( 'str_key',$key );
       $this->db->insert( 'log_activity' );
-      //
       $this->clean_up();
     }
   }
