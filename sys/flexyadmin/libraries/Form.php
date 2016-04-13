@@ -1036,7 +1036,8 @@ class Form {
   						}
   						else {
   							$image=$img['name'];
-  							if ($preName=='media' or !in_array($image,$medias)) $field['control'].='<li>'.show_thumb(array("src"=>$field["path"]."/".$image,"class"=>"media",'alt'=>$image,'title'=>$image)).'</li>';
+                $title=$img['name'].' ('.$img['date'].')';
+  							if ($preName=='media' or !in_array($image,$medias)) $field['control'].='<li>'.show_thumb(array("src"=>$field["path"]."/".$image,"class"=>"media",'alt'=>$title,'title'=>$title)).'</li>';
   						}
   					}
           }

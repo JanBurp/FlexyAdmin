@@ -842,20 +842,21 @@ class Flexy_field extends CI_Model {
 			if ($this->restrictedToUser) {
 				$files=$this->mediatable->filter_restricted_files($files,$this->restrictedToUser);
 			}
-			$order='_rawdate';
-			if (isset($info['str_order']) and !empty($info['str_order'])) {
-				$order=$info['str_order'];
-			}
-			if (substr($order,0,1)=='_') {
-				$desc=TRUE;	
-				$order=substr($order,1);
-			}
-			else {
-				$desc=FALSE;
-			}
+      // $order='_rawdate';
+      // if (isset($info['str_order']) and !empty($info['str_order'])) {
+      //   $order=$info['str_order'];
+      // }
+      // if (substr($order,0,1)=='_') {
+      //   $desc=TRUE;
+      //   $order=substr($order,1);
+      // }
+      // else {
+      //   $desc=FALSE;
+      // }
       
 			if ($fieldType=='image_dragndrop') {
-				$options=sort_by($files,$order,$desc);
+        // $options=sort_by($files,$order,$desc);
+        $options=$files;
 				if ($this->cfg->get('CFG_media_info',$path,'b_add_empty_choice') and ($this->pre!='medias'))	array_unshift($options,'');
 			}
 			else {

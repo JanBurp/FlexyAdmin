@@ -15,6 +15,18 @@ class Mediatable extends CI_Model {
   private $table='res_media_files';
   
   /**
+   * Order->fields
+   */
+  private $order_fields = array(
+    'name'    => 'file',
+    'rawdate' => 'dat_date',
+    'type'    => 'str_type',
+    'size'    => 'int_size',
+    'width'   => 'int_img_width',
+    'height'  => 'int_img_height'
+  );
+  
+  /**
    * Hier wordt bijgehouden of de mediatabel wel bestaat
    */
   private $has_table=FALSE;
@@ -345,8 +357,17 @@ class Mediatable extends CI_Model {
     if (el('b_user_restricted',$info,false) and $this->db->field_exists('user',$this->table) and !$this->user->rights['b_all_users']) {
       $this->db->where('user',$this->user->user_id);
     }
+    // order?
+    if (el('str_order',$info)) {
+      $order=$info['str_order'];
+      $order_by = '';
+      if (substr($order,0,1)==='_') $order_by = ' DESC';
+      $order=trim($order,'_');
+      $order_by = el( $order, $this->order_fields, $order ) . $order_by;
+      $this->db->order_by( $order_by );
+    }
     // get files
-    $files=$this->db->get_result($this->table,$recent_numbers);
+    $files = $this->db->get_result($this->table,$recent_numbers);
 
     if (empty($files)) {
       // not in database, read from filesystem if set so
