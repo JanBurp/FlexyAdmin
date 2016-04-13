@@ -46,7 +46,6 @@ flexyAdmin.directive('flexyForm', ['flexySettingsService','flexyApiService','fle
       $scope.form = ["*"];
       $scope.model = {};
       
-      
       /**
        * LOAD REQUESTED DATA
        */
@@ -59,7 +58,6 @@ flexyAdmin.directive('flexyForm', ['flexySettingsService','flexyApiService','fle
         $scope.form   = response.schemaform.form;
         $scope.model  = response.data;
       });
-
       
       /**
        * LINK METHODS
