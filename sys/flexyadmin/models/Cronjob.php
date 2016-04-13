@@ -13,6 +13,7 @@ class Cronjob extends CI_Model {
     $lang=$this->config->item('language');
 		$lang=$lang."_".strtoupper($lang);
 		setlocale(LC_ALL, $lang);
+    ini_set('max_execution_time', 600); // 10 minuten mag het script erover doen.
 	}
 
 	public function go()	{
