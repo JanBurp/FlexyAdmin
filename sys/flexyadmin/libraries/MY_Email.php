@@ -12,6 +12,11 @@ class MY_Email extends CI_Email {
    * Houdt bij naar hoeveel adressen 
    */
   private $total_send_addresses=0;
+  
+  /**
+   * Remember to for logging
+   */
+  private $to = array();
 
   /**
    * Taal voor het verzenden van emails uit cfg_email
@@ -41,18 +46,33 @@ class MY_Email extends CI_Email {
 	 * @return	bool
 	 */
   public function send($auto_clear = TRUE) {
+    if (empty( $this->to )) $this->to = el('To',$this->_headers, 'unknown' );
     $send = parent::send(FALSE);
     $CI = &get_instance();
     $CI->load->model('log_activity');
     if ($send) {
-      $CI->log_activity->email( implode_assoc( PHP_EOL, $this->_headers) ,'to',el('To',$this->_headers) );
+      $CI->log_activity->email( implode_assoc( PHP_EOL, $this->_headers) ,'to', $this->to );
     }
     else {
-      $CI->log_activity->email( $this->print_debugger('headers') ,'error',el('To',$this->_headers) );
+      $CI->log_activity->email( $this->print_debugger('headers') ,'error', $this->to );
     }
+    $this->to=array();
     if ($send and $auto_clear) $this->clear();
     return $send;
   }
+  
+
+  /**
+   * Zelfde als CI clear(), met wat extra's
+   *
+   * @param string $clear_attachments 
+   * @return void
+   * @author Jan den Besten
+   */
+	public function clear($clear_attachments = FALSE) {
+    $this->to=array();
+    return parent::clear($clear_attachments);
+	}
   
 
   /**
@@ -99,14 +119,17 @@ class MY_Email extends CI_Email {
         $this->from($mail['from']);
     }
     if (isset($mail['to']))	{
+      $this->add_to($mail['to']);
       $this->to($mail['to']);
       $this->total_send_addresses += $this->_count_addresses($mail['to']);
     }
     if (isset($mail['cc'])) {
+      $this->add_to($mail['cc']);
       $this->cc($mail['cc']);
       $this->total_send_addresses += $this->_count_addresses($mail['cc']);
     }
     if (isset($mail['bcc'])) {
+      $this->add_to($mail['bcc']);
       $this->bcc($mail['bcc']);
       $this->total_send_addresses += $this->_count_addresses($mail['bcc']);
     }
@@ -117,6 +140,19 @@ class MY_Email extends CI_Email {
     }
     return $this;
 	}
+  
+  /**
+   * Voeg adres aan de 'to' lijst voor logging
+   *
+   * @param mixed $to
+   * @return void
+   * @author Jan den Besten
+   */
+  private function add_to( $to ) {
+    if (!is_array($to)) $to=explode(',',$to);
+    $this->to = array_merge( $this->to,$to );
+    return $this;
+  }
   
   /**
    * Telt aantal adressen
