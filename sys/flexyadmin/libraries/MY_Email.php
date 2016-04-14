@@ -63,6 +63,47 @@ class MY_Email extends CI_Email {
     return $send;
   }
   
+  /**
+   * to()
+   * 
+   * Zelfde als origineel, maar onthoud adressen voor logging
+   *
+   * @param string $to 
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function to($to) {
+    $this->add_to($to);
+    return parent::to($to);
+  }
+  
+  /**
+   * cc()
+   * 
+   * Zelfde als origineel, maar onthoud adressen voor logging
+   *
+   * @param string $cc 
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function cc($cc) {
+    $this->add_to($cc);
+    return parent::cc($cc);
+  }
+  
+  /**
+   * bcc()
+   * 
+   * Zelfde als origineel, maar onthoud adressen voor logging
+   *
+   * @param string $bcc 
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function bcc($bcc) {
+    $this->add_to($bcc);
+    return parent::bcc($bcc);
+  }
 
   /**
    * Zelfde als CI clear(), met wat extra's
@@ -153,6 +194,7 @@ class MY_Email extends CI_Email {
   private function add_to( $to ) {
     if (!is_array($to)) $to=explode(',',$to);
     $this->to = array_merge( $this->to,$to );
+    $this->to = array_unique( $this->to );
     return $this;
   }
   
