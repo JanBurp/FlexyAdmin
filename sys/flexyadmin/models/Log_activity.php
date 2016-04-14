@@ -40,7 +40,6 @@ class Log_activity extends CI_Model {
       if ($model)       $this->db->set( 'str_model',$model );
       if ($key)         $this->db->set( 'str_key',$key );
       $this->db->insert( 'log_activity' );
-      $this->clean_up();
     }
   }
   

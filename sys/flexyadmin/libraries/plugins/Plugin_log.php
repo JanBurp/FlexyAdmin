@@ -44,6 +44,8 @@ class Plugin_log extends Plugin {
    */
   public function _home() {
     $this->CI->load->model('log_activity');
+    $this->CI->log_activity->clean_up();
+    
     $log = $this->CI->log_activity->get_grouped_user_activity();
 		$grid=new grid();
 		foreach($log as $k=>$d) {
@@ -58,6 +60,8 @@ class Plugin_log extends Plugin {
 		$renderGrid=$grid->render("html","","grid home");
     return $this->CI->load->view("admin/grid",$renderGrid,true) ;
   }
+  
+  
   
 
   /**

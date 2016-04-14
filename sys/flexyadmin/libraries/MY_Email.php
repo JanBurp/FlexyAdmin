@@ -47,6 +47,8 @@ class MY_Email extends CI_Email {
 	 */
   public function send($auto_clear = TRUE) {
     if (empty( $this->to )) $this->to = el('To',$this->_headers, 'unknown' );
+    if (!is_array($this->to)) $this->to = array($this->to);
+    
     $send = parent::send(FALSE);
     $CI = &get_instance();
     $CI->load->model('log_activity');
