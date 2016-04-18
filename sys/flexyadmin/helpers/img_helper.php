@@ -53,6 +53,7 @@ function show_thumb($attr) {
 	$CI=& get_instance();
 	$img_types=$CI->config->item('FILE_types_img');
 	$flash_types=$CI->config->item('FILE_types_flash');
+
 	if (in_array($ext,$img_types) or in_array($ext,$flash_types)) {
 		$imgSize=get_img_size($a["src"]);
 		if ($imgSize) {
