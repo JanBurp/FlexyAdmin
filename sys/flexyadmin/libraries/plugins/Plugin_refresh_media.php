@@ -19,6 +19,7 @@ class Plugin_refresh_media extends Plugin {
   function __construct() {
 		parent::__construct();
     $this->CI->load->model('mediatable');
+    ini_set('max_execution_time', 600); // 10 minuten mag het script erover doen.
 	}
 
   /**

@@ -558,7 +558,7 @@ class File_manager extends CI_Model {
   		// $config['image_library'] = 'gd2';
   		$config['source_image'] = $a['src'];
   		$config['maintain_ratio'] = TRUE;
-  		$config['new_image'] = $thumb;
+  		$config['new_image'] = str_replace('%20',' ',$thumb); // geen spatie code, maar echte spatie
   		$config['master_dim'] = 'auto';
   		$this->image_lib->initialize($config);
   		$this->image_lib->resize();

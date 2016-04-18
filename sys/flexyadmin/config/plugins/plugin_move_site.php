@@ -17,8 +17,8 @@ $config['old'] = str_replace(array('sys/flexyadmin/config/plugins','/www.'),arra
 $config['new'] = str_replace('sys/flexyadmin/config/plugins','',__DIR__);
 
 // Paths set by hand
-$config['old'] = '';
-$config['new'] = '';
+$config['old'] = '/Users/jan/Sites/projecten_2010/www.lekkodigidoc.org/';
+// $config['new'] = '';
 
 // Old database
 $config['db'] = 'old_db'; // set this group in config/database_local.php
@@ -40,8 +40,8 @@ $config['merge_tables'] = array(
   'cfg_media_info',
   'cfg_table_info',
   'cfg_ui',
-  'cfg_user_groups',
-  'cfg_users',
+  // 'cfg_user_groups',
+  // 'cfg_users',
 );
 
 $config['merge_and_complete_tables'] = array(
@@ -63,8 +63,12 @@ $config['empty'] = array(
 
 // Paths & files  to move
 $config['move'] = array(
-  'site/assets/',
-  'ontwerp/',
+  // 'ontwerp/',
+  // 'site/assets/',
+  'site/assets/img',
+  'site/assets/css',
+  'site/assets/js',
+  'site/assets/lists',
 );
 
 // Paths & files to merge (keep newest)
