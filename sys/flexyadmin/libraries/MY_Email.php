@@ -97,12 +97,13 @@ class MY_Email extends CI_Email {
    * Zelfde als origineel, maar onthoud adressen voor logging
    *
    * @param string $bcc 
+   * @param string $limit [''] 
    * @return $this
    * @author Jan den Besten
    */
-  public function bcc($bcc) {
+	public function bcc($bcc, $limit = '') {
     $this->add_to($bcc);
-    return parent::bcc($bcc);
+    return parent::bcc($bcc,$limit);
   }
 
   /**
