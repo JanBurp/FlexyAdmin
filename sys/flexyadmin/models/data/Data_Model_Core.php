@@ -2,20 +2,21 @@
 
 /** \ingroup data_model
  * 
- * - Alle instellingen van een tabel en zijn velden tabel zijn te vinden in config/tables/...
+ * - Alle query-builder methods (en db methods) kunnen worden gebruikt met het model. Als je CodeIgniter kent, ken je dit model al bijna.
+ * - Alle instellingen van een tabel en zijn velden tabel zijn te vinden in config/data/...
  * - Standaard get/crud zit in het model, voor elke tabel hetzelfde.
  * - Iedere tabel kan deze overerven en aanpassen naar wens, de aanroepen blijven hetzelfde voor iedere tabel.
- * - Alle query-builder methods (en db methods) kunnen worden gebruikt met het model. Als je CodeIgniter kent, ken je dit model al bijna.
  * - Naast ->get() die een query object teruggeeft ook ->get_result() die een aangepaste result array teruggeeft met relatie data als subarray.
  * 
  * 
  * Enkele belangrijke methods (deels overgeerft van Query Builder):
  * 
- * ->table( $table )                              // Stelt tabel waarvoor het model wordt gebruikt (laad corresponderende settings als die bestaan)
+ * ->table( $table )                              // Stelt tabel waarvoor het model wordt gebruikt (laad corresponderende settings als die bestaan, of analyseert de tabel en genereerd settings)
  * 
  * ->get( $limit=0, $offset=0 )                   // Geeft een $query object (zoals in Query Builder)
  * ->get_where( $where=NULL, $limit=0, $offset=0) // Geeft een $query object (zoals in Query Builder)
- * ->get_result( $limit=0, $offset=0 )            // Geeft een aangepaste $query->result_array, met de key ingesteld als result_key en relatie data als subarray per item
+ * 
+ * ->get_result( $limit=0, $offset=0 )            // Geeft een aangepaste $query->result_array: - key ingesteld als result_key (standaard zelfde als primary_key) - inclusief relatie data als subarray per item
  * ->get_row( $where = NULL )                     // Idem, maar dan maar één item (de eerste in het resultaat)
  * ->get_field( $field, $where = NULL )           // Idem, maar dan van één item alleen de waarde van het gevraagde veld
  * ->set_result_key( $key='' )                    // Hiermee kan voor ->get_result() de key van de array ingesteld worden op een ander (uniek) veld. Standaard is dat de primary_key
@@ -220,8 +221,8 @@ Class Data_Model_Core extends CI_Model {
     if ( empty($table) ) $table=get_class($this);
     if ( get_class()!=$table ) {
       if ($load) {
-        $this->config->load( 'tables/'.$table, true);
-        $settings = $this->config->item( 'tables/'.$table );
+        $this->config->load( 'data/'.$table, true);
+        $settings = $this->config->item( 'data/'.$table );
         // Merge samen tot settings
         if ( $settings ) {
           $this->settings = array_merge( $default, $settings );
@@ -255,7 +256,7 @@ Class Data_Model_Core extends CI_Model {
         }
         // var_dump(['_autoset_'.$key => $this->settings[$key] ]);
       }
-      if ($this->settings[$key]===NULL) unset($this->settings[$key]);
+      if ( $this->settings[$key]===NULL ) unset($this->settings[$key]);
     }
     return $this->settings;
   }
@@ -288,8 +289,7 @@ Class Data_Model_Core extends CI_Model {
     return $this->db->list_fields( $table );
   }
   
-
-
+  
   /**
    * Autoset field_info
    *
@@ -348,10 +348,7 @@ Class Data_Model_Core extends CI_Model {
       // Via foreign_keys of self_parent
       if ( get_prefix($field)==='id' and $field!==$this->settings['primary_key']) {
         
-        $foreignTable = foreign_table_from_key($field);
-        // Om meerdere verwijzingen naar dezelfde tabel mogelijk te maken:
-        $foreignTable = trim($foreignTable,'_');
-        
+        $foreignTable = el( array('relations','many_to_one',$field,'other_table'), $this->settings); //   $this->get_other_table_from_key($field);
         if ($foreignTable) {
           // Zijn er teveel opties?
           if ($this->db->count_all($foreignTable)>100) {
@@ -545,21 +542,24 @@ Class Data_Model_Core extends CI_Model {
    */
   protected function _autoset_relations() {
     $relations = array();
+    
     // many_to_one
-    $tables = $this->get_relation_tables( 'many_to_one' );
-    if ($tables) {
+    $foreign_keys = filter_by( $this->settings['fields'], $this->settings['primary_key'].'_' );
+    if ($foreign_keys) {
       $relations['many_to_one'] = array();
-      foreach ($tables as $table) {
-        $foreign_key = $this->settings['primary_key'].'_'.remove_prefix($table);
+      foreach ($foreign_keys as $foreign_key) {
         // Enkele keys worden standaard anders genoemd: TODO: aanpassen bij uiteindelijke models
         $special_foreigns = array('id_users'=>'id_user','id_user_groups'=>'id_user_group');
         $foreign_key = el($foreign_key,$special_foreigns,$foreign_key);
-        $relations['many_to_one'][$table] = array(
-          'other_table' => $table,
+        // table
+        $table = $this->get_other_table_from_key( $foreign_key, TRUE );
+        $relations['many_to_one'][$foreign_key] = array(
+          'other_table' => $this->get_other_table_from_key( $foreign_key),
           'foreign_key' => $foreign_key,
         );
       }
     }
+
     // many_to_many
     $tables = $this->get_relation_tables( 'many_to_many' );
     if ($tables) {
@@ -576,6 +576,7 @@ Class Data_Model_Core extends CI_Model {
         );
       }
     }
+
     return $relations;
   }
 
@@ -661,6 +662,24 @@ Class Data_Model_Core extends CI_Model {
   
   
   /* --- Informatie uit andere tabellen/models --- */
+  
+  
+  /**
+   * Geeft other table door de naam van een (foreign) key
+   *
+   * @param string $key 
+   * @param bool $multiple [FALSE] // Moet er rekening worden gehouden met meerdere verwijzingen? (zo ja dan is de tabelnaam niet de echte tabel)
+   * @return string
+   * @author Jan den Besten
+   */
+  private function get_other_table_from_key( $key, $multiple=FALSE ) {
+    if (empty($key)) return '';
+    // Extra verwijzing?
+    if ( !$multiple ) $key = trim($key,'_');
+    // tbl_(key)
+    $other_table = $this->config->item('TABLE_prefix').'_'.remove_prefix($key);
+    return $other_table;
+  }
 
 
 
@@ -698,6 +717,7 @@ Class Data_Model_Core extends CI_Model {
    * @author Jan den Besten
    */
   protected function get_other_table_fields( $table ) {
+    $table = trim($table,'_');
     $fields = $this->get_other_table_setting( $table, 'fields' );
     if ( is_NULL($fields) or empty($fields)) {
       $fields = $this->db->list_fields( $table );
@@ -730,12 +750,14 @@ Class Data_Model_Core extends CI_Model {
    * Haal abstract select op van andere tabel
    *
    * @param string $table 
+   * @param string $as_table ['']
    * @return string
    * @author Jan den Besten
    */
-  protected function get_other_table_compiled_abstract_select( $table ) {
+  protected function get_other_table_compiled_abstract_select( $table, $as_table='' ) {
     $abstract_fields = $this->get_other_table_abstract_fields( $table );
-    return $this->get_compiled_abstract_select( $table, $abstract_fields, $table.'__' );
+    if (empty($as_table)) $as_table=$table;
+    return $this->get_compiled_abstract_select( $table, $abstract_fields, $as_table.'__' );
   }
   
   
@@ -907,6 +929,8 @@ Class Data_Model_Core extends CI_Model {
 
   /**
    * Find many_to_one tables
+   * 
+   * TODO: kan waarschijnlijk weg
    *
    * @return array
    * @author Jan den Besten
@@ -915,7 +939,7 @@ Class Data_Model_Core extends CI_Model {
     $tables = array();
     $foreign_keys = filter_by( $this->settings['fields'], $this->settings['primary_key'].'_' );
     foreach ( $foreign_keys as $foreign_key ) {
-      $table = 'tbl_'.remove_prefix($foreign_key);
+      $table = $this->get_other_table_from_key( $foreign_key );
       // Zorg ervoor dat cfg_ tables ook meekomen TODO: aanpassen bij uiteindelijke models
       $cfg_tables = array( 'tbl_user'=>'cfg_users', 'tbl_user_group'=>'cfg_user_groups' );
       $tables[] = el( $table, $cfg_tables, $table);
@@ -1241,13 +1265,16 @@ Class Data_Model_Core extends CI_Model {
       $id = $row[$this->settings['primary_key']];
       $result_key = $row[$key];
       
-      // Voeg relatie data als subarrays aan row
+      // Voeg relatie data aan row
       if ($this->tm_with) {
         foreach ($this->tm_with as $with_type => $this_with) {
           
-          foreach ($this_with as $other_table => $info) {
+          foreach ($this_with as $what => $info) {
+            $other_table = $info['table'];
+            $as_table = el('as_table',$info,$other_table);
+            
             // Flat many_to_one of ook als array?
-            if ( $with_type=='many_to_one' AND el('flat', $info, false)===true) {
+            if ( $with_type==='many_to_one' AND el('flat', $info, false)===true) {
               $foreign_key = $this->settings['relations'][$with_type][$other_table]['foreign_key'];
               $abstract_field = $other_table.'__abstract';
               if (isset($row[$abstract_field])) {
@@ -1260,8 +1287,8 @@ Class Data_Model_Core extends CI_Model {
             elseif ( ! el('grouped',$info,FALSE) ) {
               $fields   = $info['fields'];
               // split row and with data
-              $row_with_data = filter_by_key( $row, $other_table );
-              $row = array_diff( $row, $row_with_data );
+              $row_with_data = filter_by_key( $row, $as_table );
+              $row = array_diff_assoc( $row, $row_with_data );
               // process with data
               foreach ($row_with_data as $oldkey => $values) {
                 $newkey = remove_prefix( $oldkey, '__');
@@ -1269,15 +1296,15 @@ Class Data_Model_Core extends CI_Model {
                 unset($row_with_data[$oldkey]);
               }
               // remember with data
-              if ($with_type=='many_to_one') {
-                $with_data[$result_key][$other_table] = $row_with_data;
+              if ($with_type==='many_to_one') {
+                $with_data[$result_key][$as_table] = $row_with_data;
               }
               else {
                 if ( isset($row_with_data[ $this->settings['primary_key'] ]) ) {
-                  $with_data[$result_key][$other_table][$row_with_data[$this->settings['primary_key']]] = $row_with_data;
+                  $with_data[$result_key][$as_table][$row_with_data[$this->settings['primary_key']]] = $row_with_data;
                 }
                 else {
-                  $with_data[$result_key][$other_table][] = $row_with_data;
+                  $with_data[$result_key][$as_table][] = $row_with_data;
                 }
               }
             }
@@ -2022,8 +2049,8 @@ Class Data_Model_Core extends CI_Model {
 
 
   /**
-   * Geef aan welke relaties meegenomen moeten worden in het resultaat.
-   * Deze method kan vaker aangeroepen worden met nieuwe relaties, bestaande relaties worden dan samengevoegd met de nieuwe.
+   * Geef aan welke relaties meegenomen moeten worden in het resultaat, en hoe.
+   * Deze method kan vaker achter elkaar aangeroepen.
    * 
    * Reset alle relaties:
    * (wordt automatisch aangeroepen na iedere ->get() variant)
@@ -2039,34 +2066,59 @@ Class Data_Model_Core extends CI_Model {
    * ->with( 'many_to_one' );
    * ->with( 'many_to_one', [] );
    * 
-   * Specificeer welke relatietabellen mee moeten worden genomen in het resultaat:
+   * Specificeer welke relatietabellen mee moeten worden genomen in het resultaat (als er meerdere foreign_keys verwijzen naar dezelfde tabel, dan worden ze allemaal toegevoegd):
    * 
-   * ->with( 'many_to_one' => [ 'tbl_posts' ] );
-   * ->with( 'many_to_one' => [ 'tbl_posts', 'tbl_links' ] );
+   * ->with( 'many_to_one' => [ 'id_posts' ] );
+   * ->with( 'many_to_one' => [ 'id_posts', 'id_links' ] );
    * 
    * Specificeer per tabel welke velden meegenomen moeten worden in het resultaat:
    * 
-   * ->with( 'many_to_one' => [ 'tbl_posts' => 'str_title,txt_text' ] );
-   * ->with( 'many_to_one' => [ 'tbl_posts' => ['str_title','txt_text'] ] );
-   * ->with( 'many_to_one' => [ 'tbl_posts' => 'str_title,txt_text', 'tbl_links' ] );
+   * ->with( 'many_to_one' => [ 'id_posts' => 'str_title,txt_text' ] );
+   * ->with( 'many_to_one' => [ 'id_posts' => ['str_title','txt_text'] ] );
+   * ->with( 'many_to_one' => [ 'id_posts' => 'str_title,txt_text', 'tbl_links' ] );
+   * 
+   * 
+   * 
+   * many_to_one abstract
+   * --------------------
    * 
    * Geef aan dat bij een tabel een abstract van de velden moet worden meegenomen in plaats van specifieke velden:
    * 
-   * ->with( 'many_to_one' => [ 'tbl_posts' => 'abstract ] );
+   * ->with( 'many_to_one' => [ 'id_posts' => 'abstract ] );
    * 
-   * flat
-   * ----
    * 
-   * Een standaard many_to_one relatie voegt één extra veld toe met de naam van de tabel en daarin een array met alle data uit de andere tabel.
-   * Soms is het handig om in plaats daarvan per toegevoegd veld een veld toe te voegen. Dat kan door ->with_flat_many_to_one() te gebruiken
+   * many_to_one flat
+   * ----------------
+   * 
+   * Een standaard many_to_one relatie voegt een extra veld toe met daarin een array met alle data uit de foreign tabel. De naam van dat veld is: foreign_key__foreign_table.
+   * Soms is het handig om geen array, maar één string veld toe te voegen waarin alle data van de velden zitte gescheiden door '|'. Dat kan door ->with_flat_many_to_one() te gebruiken.
    * 
    * 
    * many_to_many
    * ------------
    * 
-   * Hetzelfde als bij 'many_to_one', vervang alleen het type in 'many_to_many'.
-   * Als dit gecombineerd wordt met ->limit() kan het onverwachte resultaten geven.
-   * Dit kun je voorkomen door ->with_grouped() te gebruiken, zie hieronder.
+   * LET OP: Als dit gecombineerd wordt met ->limit() kan het onverwachte resultaten geven. Dit kun je voorkomen door ->with_grouped() te gebruiken, zie hieronder.
+   * 
+   * Voegt alle many_to_many relaties met al hun velden toe aan resultaat:
+   * 
+   * ->with( 'many_to_many' );
+   * ->with( 'many_to_many', [] );
+   * 
+   * Specificeer welke relatietabellen mee moeten worden genomen in het resultaat:
+   * 
+   * ->with( 'many_to_many' => [ 'tbl_posts' ] );
+   * ->with( 'many_to_many' => [ 'tbl_posts', 'tbl_links' ] );
+   * 
+   * Specificeer per tabel welke velden meegenomen moeten worden in het resultaat:
+   * 
+   * ->with( 'many_to_many' => [ 'tbl_posts' => 'str_title,txt_text' ] );
+   * ->with( 'many_to_many' => [ 'tbl_posts' => ['str_title','txt_text'] ] );
+   * ->with( 'many_to_many' => [ 'tbl_posts' => 'str_title,txt_text', 'tbl_links' ] );
+   * 
+   * Geef aan dat bij een tabel een abstract van de velden moet worden meegenomen in plaats van specifieke velden:
+   * 
+   * ->with( 'many_to_many' => [ 'tbl_posts' => 'abstract ] );
+   * 
    * 
    * grouped
    * -------
@@ -2081,70 +2133,87 @@ Class Data_Model_Core extends CI_Model {
    * Voordelen:
    * - $query->num_rows geeft juiste informatie waardoor pagination etc prima werkt.
    * - Het resultaat is klaar om te tonen in een grid doordat de many_to_many data geen eigen rijen krijgt met dubbele informatie
-   * Nadelen:
+   * LET OP:
    * - Het groeperen van de data gebeurt door de data tussen [] te zetten en te scheiden met een komma. De velden worden onderling gescheiden door een |
    * - Deze karakters (met name de | ) kunnen dan niet meer voorkomen in de data zelf.
    * 
    * @param string $type De soort relatie ['many_to_one'|'many_to_many']
-   * @param array $tables Een array van tabellen die meegenomen moeten worden bij deze relatie.
-   *                      - Als deze paramater niet wordt meegegeven worden automatisch alle relatie tabellen gezocht en meegenomen met al hun velden
-   *                      - Je kunt een array van tabellen specificeren.
-   *                      - En eventueel per tabel de velden of 'abstract'
+   * @param array  $what Een array van welke relaties meegenomen moeten worden bij deze relatie-vorm.3
+   *                      - Als deze paramater niet wordt meegegeven worden automatisch alle relaties gezocht en meegenomen met al hun velden
+   *                      - Voor 'many_to_one' relaties kun je een array meegeven van foreign_keys
+   *                      - Voor 'many_to_many' een array van tabellen.
+   *                      - Eventueel kun je per relatie de velden of 'abstract' meegeven
    * @param bool $grouped [FALSE] bepaalt of een 'many_to_many' resultaat gegroupeerd moet worden op rij niveau. (zie ->with_grouped())
    * @param bool $flat [FALSE] bepaalt of een 'many_to_one' resultaat plat moet worden geintegreerd. (zie ->with_flat())
    * @return $this
    * @author Jan den Besten
    */
-  public function with( $type='', $tables=array(), $grouped=FALSE, $flat=FALSE ) {
+  public function with( $type='', $what=array(), $grouped=FALSE, $flat=FALSE ) {
 
     // Reset?
     if ( empty($type) ) {
       $this->tm_with = array();
       return $this;
     }
-    
-    // Als geen tables zijn meegegeven, haal ze uit de settings
-    if ( empty($tables) ) {
-      $tables = el( array('relations',$type), $this->settings, array() );
-      if ($tables) $tables = array_keys($tables);
+
+    // Als geen $what is meegegeven, haal ze uit de settings
+    if ( empty($what) ) {
+      $what = el( array('relations',$type), $this->settings, array() );
+      if ($what) $what = array_keys($what);
     }
-    // Als tables geen array is, zorg daarvoor
-    if ( ! is_array($tables) ) $tables=array($tables);
+    // $what moet een arrat zijn
+    if ( ! is_array($what) ) $what=array($what);
     
-    // Zorg ervoor dat $tables in dit formaat komt: 'table' => fields
-    $tables_new = array();
-    foreach ($tables as $key => $value) {
-      // table als key en fields als value
-      $table  = $key;
+    // Zorg ervoor dat $what in dit formaat komt: '$what' => array( 'table'=>'', 'fields'=>'' )
+    $what_new = array();
+    foreach ($what as $key => $value) {
+      // Als de velden expliciet zijn meegegeven zit dat in $value
+      $what   = $key;
       $fields = $value;
+      // Als de velden niet expliciet zijn meegegeven dan is $value $what
       if ( is_integer($key) ) {
-        $table  = $value;
+        $what   = $value;
         $fields = array();
       }
+      // bij 'many_to_many' is $what hetzelfde als de tabel, bij 'many_to_one' moet dat uit de relaties settings worden gehaald
+      $table = $what;
+      if ($type==='many_to_one') $table = $this->settings['relations']['many_to_one'][$what]['other_table'];
       // fields moet een (lege) array of een string ('abstract') zijn.
       if (is_string($fields) and $fields!==$this->config->item('ABSTRACT_field_name')) {
         $fields = explode( ',',$fields );
       }
-      // Als fields is een lege array, stop dan alle velden van die tabel erin
+      // Als fields een lege array is, stop dan alle velden van die tabel erin
       if (is_array($fields) and empty($fields)) {
         $fields = $this->get_other_table_fields( $table );
       }
       // Bewaar
-      $tables_new[$table] = $fields;
+      $what_new[$what] = array(
+        'table'   => $table,
+        'fields'  => $fields,
+      );
+      if ($type==='many_to_one') {
+        $what_new[$what]['as_table'] = $this->settings['relations']['many_to_one'][$what]['foreign_key'].'__'.$table;
+      }
     }
+    
     // Merge met bestaande
     $tm_with_before = el( $type, $this->tm_with, array() );
     $tm_with_new    = array();
-    foreach ($tables_new as $table => $fields) {
-      $tm_with_new[$table] = array(
-        'fields'  => $fields,
+    foreach ($what_new as $what => $value) {
+      $tm_with_new[$what] = array(
+        'table'   => $value['table'],
+        'as_table'=> $value['as_table'],
+        'fields'  => $value['fields'],
         'grouped' => $grouped,
       );
-      if ($type=='many_to_one') $tm_with_new[$table]['flat'] = $flat;
+      if ($type=='many_to_one') {
+        $tm_with_new[$what]['flat'] = $flat;
+      }
     }
     $tm_with_new = array_replace_recursive( $tm_with_before, $tm_with_new );
     // Bewaar deze relatie instelling
     $this->tm_with[$type] = $tm_with_new;
+    // trace_($this->tm_with);
     return $this;
   }
   
@@ -2153,27 +2222,27 @@ Class Data_Model_Core extends CI_Model {
    * Geeft aan welke many_to_one relaties plat moeten worden toegevoegd aan het resultaat.
    * Zie ook bij ->with()
    *
-   * @param string $tables 
+   * @param string $forein_keys 
    * @return $this
    * @author Jan den Besten
    */
-  public function with_flat_many_to_one( $tables = array() ) {
-    return $this->with( 'many_to_one', $tables, FALSE, TRUE );
+  public function with_flat_many_to_one( $forein_keys = array() ) {
+    return $this->with( 'many_to_one', $forein_keys, FALSE, TRUE );
   }
   
   
   /**
-   * Geef aan welke relaties meegenomen moeten worden in het resultaat.
-   * De data uit de relatietabellen worden gegroupeerd in een veld met de naam van de relatietabel.
+   * Geef aan welke relaties gegroupeerd meegenomen moeten worden in het resultaat.
+   * De data uit de relatietabellen worden gegroupeerd in een veld met de naam van de relatie.
    * Zie ook bij ->with()
    *
    * @param string $type ['many_to_many'] 
-   * @param array $tables [array()]
+   * @param array $what [array()]
    * @return $this
    * @author Jan den Besten
    */
-  public function with_grouped( $type='many_to_many', $tables=array() ) {
-    return $this->with( $type, $tables, TRUE);
+  public function with_grouped( $type='many_to_many', $what=array() ) {
+    return $this->with( $type, $what, TRUE);
   }
   
 
@@ -2186,10 +2255,10 @@ Class Data_Model_Core extends CI_Model {
    * @author Jan den Besten
    */
   protected function _with( $with ) {
-    foreach ( $with as $type => $tables ) {
+    foreach ( $with as $type => $what ) {
       $method = '_with_'.$type;
       if ( method_exists( $this, $method ) ) {
-        $this->$method( $tables );
+        $this->$method( $what );
       }
       else {
         $this->reset();
@@ -2202,89 +2271,24 @@ Class Data_Model_Core extends CI_Model {
 
 
   /**
-   * Selecteerd de velden die bij SELECT moeten komen bij relaties
-   *
-   * @param string $other_table de gerelateerde tabel
-   * @param array $fields velden van de gerelateerde tabel
-   * @param bool $grouped of de many_to_many data gegroupeerd worden in één veld met de naam van de relatie tabel
-   * @return $this
-   * @author Jan den Besten
-   */
-  protected function _select_with_fields( $other_table, $fields, $grouped = FALSE ) {
-    $abstract = FALSE;
-
-    // Welke velden van de gerelateerde tabel?
-    if ( empty($fields) ) {
-      $fields = $this->get_other_table_fields( $other_table );
-    }
-    elseif ( $fields === 'abstract' ) {
-      $abstract = $this->get_other_table_compiled_abstract_select( $other_table );
-    }
-    
-    // Select de velden van de gerelateerde tabel voor een abstract
-    if ($abstract) {
-      $select = $abstract;
-      if ($grouped) {
-        $abstract = remove_suffix($abstract,' AS ');
-        $select = 'GROUP_CONCAT( "[",'.$abstract.',"]" SEPARATOR ",") `'.$other_table.'`';
-      }
-    }
-    // Select de velden van de gerelateerde tabel voor een lijst met velden
-    else {
-      // primary_key hoeft er niet in
-      if ( $key=array_search( $this->settings['primary_key'], $fields ) ) {
-        unset($fields[$key]);
-      }
-      // maak velden sql
-      $select = '';
-      foreach ($fields as $field) {
-        $select .= '`'.$other_table.'`.`'.$field.'`';
-        if ($grouped)
-          $select.= ',"|",';
-        else
-          $select.= ' AS `'.$other_table.'__'.$field.'`, ';
-      }
-      $select = trim($select,',');
-      if ($grouped) {
-        $select = substr($select,0,strlen($select)-4); // remove last ,"|"
-        $select = 'GROUP_CONCAT( "[",' . $select . ',"]" SEPARATOR ",") `'.$other_table.'`';
-      }
-    }
-    
-    // Stop select in query, als het kan direct na foreign_key
-    $select = trim(trim($select),',');
-    $foreign_key = el( array('relations','many_to_one',$other_table,'foreign_key'), $this->settings );
-    if (isset($foreign_key) and isset($this->tm_select[$foreign_key])) {
-      $this->tm_select = array_add_after( $this->tm_select, $foreign_key, array($other_table=>$select) );
-    }
-    else {
-      $this->tm_select[$other_table] = $select;
-    }
-
-    // grouped?
-    if ($grouped) $this->db->group_by( $this->settings['table'].'.'.$this->settings['primary_key'] );
-    
-    return $this;
-  }
-
-
-
-  /**
    * Bouwt many_to_one join query
    *
-   * @param array $tables 
+   * @param array $what 
    * @return $this
    * @author Jan den Besten
    */
-  protected function _with_many_to_one( $tables ) {
+  protected function _with_many_to_one( $what ) {
     $id = $this->settings['primary_key'];
-    foreach ($tables as $other_table => $info) {
+    foreach ($what as $key => $info) {
+      $table  = $info['table'];
       $fields = $info['fields'];
+      $foreign_key = $this->settings['relations']['many_to_one'][$key]['foreign_key'];
+      $other_table = $this->settings['relations']['many_to_one'][$key]['other_table'];
+      $as_table    = $info['as_table'];
       // Select fields
-      $this->_select_with_fields( $other_table, $fields );
+      $this->_select_with_fields( $as_table, $fields );
       // Join
-      $foreign_key = $this->settings['relations']['many_to_one'][$other_table]['foreign_key'];
-      $this->join( $other_table, $other_table.'.'.$id.' = '.$this->settings['table'].".".$foreign_key, 'left');
+      $this->join( $other_table.' AS '.$as_table, $as_table.'.'.$id.' = '.$this->settings['table'].".".$foreign_key, 'left');
     }
     return $this;
   }
@@ -2315,6 +2319,79 @@ Class Data_Model_Core extends CI_Model {
     }
     return $this;
   }
+  
+  
+  /**
+   * Selecteerd de velden die bij SELECT moeten komen bij relaties
+   *
+   * @param string $other_table de gerelateerde tabel
+   * @param array $fields velden van de gerelateerde tabel
+   * @param bool $grouped of de many_to_many data gegroupeerd worden in één veld met de naam van de relatie tabel
+   * @return $this
+   * @author Jan den Besten
+   */
+  protected function _select_with_fields( $other_table, $fields, $grouped = FALSE ) {
+    $abstract = FALSE;
+    $as_table = $other_table;
+    $other_table = get_suffix($other_table,'__');
+    if ($other_table===$as_table) $as_table='';
+
+    // Welke velden van de gerelateerde tabel?
+    if ( empty($fields) ) {
+      $fields = $this->get_other_table_fields( $other_table );
+    }
+    elseif ( $fields === 'abstract' ) {
+      $abstract = $this->get_other_table_compiled_abstract_select( $other_table, $as_table );
+    }
+    
+    // Select de velden van de gerelateerde tabel voor een abstract
+    if ($abstract) {
+      $select = $abstract;
+      if ($grouped) {
+        $abstract = remove_suffix($abstract,' AS ');
+        $select = 'GROUP_CONCAT( "[",'.$abstract.',"]" SEPARATOR ",") `'.$other_table.'`';
+      }
+    }
+    // Select de velden van de gerelateerde tabel voor een lijst met velden
+    else {
+      // primary_key hoeft er niet in
+      if ( $key=array_search( $this->settings['primary_key'], $fields ) ) {
+        unset($fields[$key]);
+      }
+      // maak velden sql
+      $select = '';
+      foreach ($fields as $field) {
+        $select .= '`'.$other_table.'`.`'.$field.'`';
+        if ($grouped)
+          $select.= ',"|",';
+        else
+          $select.= ' AS `'.$other_table.'.'.$field.'`, ';
+      }
+      $select = trim($select,',');
+      if ($grouped) {
+        $select = substr($select,0,strlen($select)-4); // remove last ,"|"
+        $select = 'GROUP_CONCAT( "[",' . $select . ',"]" SEPARATOR ",") `'.$other_table.'`';
+      }
+    }
+    
+    // Stop select in query, als het kan direct na foreign_key
+    $select = trim(trim($select),',');
+    $foreign_key = el( array('relations','many_to_one',$other_table,'foreign_key'), $this->settings );
+    
+    if (isset($foreign_key) and isset($this->tm_select[$foreign_key])) {
+      $this->tm_select = array_add_after( $this->tm_select, $foreign_key, array($other_table=>$select) );
+    }
+    else {
+      $this->tm_select[$other_table] = $select;
+    }
+
+    // grouped?
+    if ($grouped) $this->db->group_by( $this->settings['table'].'.'.$this->settings['primary_key'] );
+    
+    return $this;
+  }
+  
+  
   
   
   /**
