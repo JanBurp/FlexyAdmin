@@ -1753,6 +1753,14 @@ abstract class CI_DB_driver {
 			$message = is_array($error) ? $error : array(str_replace('%s', $swap, $LANG->line($error)));
 		}
 
+    // JDB: nice SQL output
+    $sql = $message[2];
+    $sql=preg_replace("/(SELECT|FROM|WHERE|SET|ORDER BY|LEFT JOIN|RIGHT JOIN|LIMIT)\s/uis", "<br><b>$1</b> ", $sql);
+    $sql=preg_replace("/(AS|ON)/uis", "<b>$1</b>", $sql);
+    $sql=str_replace(", ", "<b>,<br></b>", $sql);
+    $message[2]=$sql;
+    // JDB: end
+
 		// Find the most likely culprit of the error by going through
 		// the backtrace until the source file is no longer in the
 		// database folder.
