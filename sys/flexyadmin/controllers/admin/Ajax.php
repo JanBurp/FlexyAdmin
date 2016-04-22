@@ -127,8 +127,8 @@ class Ajax extends AjaxController {
     					if ($plugins)	$newData=$this->_after_update($table,$oldData,$newData);
 
               // Update in database
-              $this->data_model->table($table);
-              $this->data_model->update( $newData, array(PRIMARY_KEY=>$id) );
+              $this->data->table($table);
+              $this->data->update( $newData, array(PRIMARY_KEY=>$id) );
               
     					if ($plugins) {
     						$this->queu->run_calls();

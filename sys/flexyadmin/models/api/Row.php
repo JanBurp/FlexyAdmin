@@ -198,7 +198,7 @@ class Row extends Api_Model {
     if ($this->args['type']=='GET') {
       $this->result['data']=$this->_get_row();
       if (el('schemaform',$this->args,false)==true) {
-        $this->result['schemaform'] = $this->data_model->schemaform( $this->result['data'],el('table',$this->args) );
+        $this->result['schemaform'] = $this->data->schemaform( $this->result['data'],el('table',$this->args) );
       }
       return $this->_result_ok();
     }
@@ -238,10 +238,10 @@ class Row extends Api_Model {
    */
   private function _get_row() {
     $args=$this->_clean_args(array('table','where'));
-    $this->data_model->table( $args['table'] );
+    $this->data->table( $args['table'] );
     if (!isset($args['where'])) $args['where']=null;
-    $values = $this->data_model->get_row( $args['where'] );
-    $this->info=$this->data_model->get_query_info();
+    $values = $this->data->get_row( $args['where'] );
+    $this->info=$this->data->get_query_info();
     // trace_(['_get_row'=>$values,'args'=>$this->args]);
     return $values;
   }
@@ -254,11 +254,11 @@ class Row extends Api_Model {
    */
   private function _update_row() {
     $args=$this->_clean_args(array('table','where','data'));
-    $this->data_model->table( $args['table'] );
-    if (isset($args['where'])) $this->data_model->where( $args['where'] );
-    $this->data_model->set( $args['data'] );
-    $id = $this->data_model->validate()->update();
-    $this->info = $this->data_model->get_query_info();
+    $this->data->table( $args['table'] );
+    if (isset($args['where'])) $this->data->where( $args['where'] );
+    $this->data->set( $args['data'] );
+    $id = $this->data->validate()->update();
+    $this->info = $this->data->get_query_info();
     return array('id'=>$id);
   }
 
@@ -271,11 +271,11 @@ class Row extends Api_Model {
    */
   private function _insert_row() {
     $args=$this->_clean_args(array('table','data'));
-    $this->data_model->table( $args['table'] );
-    if (isset($args['where'])) $this->data_model->where( $args['where'] );
-    $this->data_model->set( $args['data'] );
-    $id = $this->data_model->validate()->insert();
-    $this->info=$this->data_model->get_query_info();
+    $this->data->table( $args['table'] );
+    if (isset($args['where'])) $this->data->where( $args['where'] );
+    $this->data->set( $args['data'] );
+    $id = $this->data->validate()->insert();
+    $this->info=$this->data->get_query_info();
     return array('id'=>$id);
   }
 
@@ -288,7 +288,7 @@ class Row extends Api_Model {
    */
   private function _delete_row() {
     $args=$this->_clean_args(array('table','where'));
-    $model='data_model';
+    $model='data';
     // Media?
     if ($args['table']==='res_media_files') {
       $this->load->model('data/res_media_files');

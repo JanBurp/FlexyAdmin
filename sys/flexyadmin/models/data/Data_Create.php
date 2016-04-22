@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-Class Data_Model_Create extends CI_Model {
+Class Data_Create extends CI_Model {
   
   
   private $paths = array(
@@ -21,7 +21,7 @@ Class Data_Model_Create extends CI_Model {
     $this->load->library('parser');
     $this->load->library('form_validation');
     $this->load->model('cfg');
-    $this->load->model( 'data/data_model', 'data_model' );
+    $this->load->model( 'data/data', 'data' );
 	}
   
   public function create( $table='', $save = TRUE ) {
@@ -44,8 +44,8 @@ Class Data_Model_Create extends CI_Model {
     
     foreach ($tables as $table) {
       $this->messages[] = $table;
-      $this->data_model->table( $table );
-      $settings = $this->data_model->get_settings();
+      $this->data->table( $table );
+      $settings = $this->data->get_settings();
       // All data to template and save this table model
       $data=array(
         'NAME'     => $table,

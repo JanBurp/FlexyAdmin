@@ -1,7 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /** \ingroup plugins
- * Analyseert de database en kijkt of die overeenkomt met de settings van de table models
+ * Analyseert de database en kijkt of die overeenkomt met de settings van de data models
  * 
  * @author: Jan den Besten
  */
@@ -21,7 +21,7 @@
       else
         $tables = $this->CI->db->list_tables();
       
-      $this->CI->load->model('data/data_model');
+      $this->CI->load->model('data/data');
       $this->CI->load->model('data/data_model_create');
       
       $config = array();
@@ -39,7 +39,7 @@
           $this->add_message( p().'<a class="button" href="admin/plugin/analyze_data_models">RETURN</a>'._p() );
           
           $config = array();
-          $autoset  = $this->CI->data_model->_config( $table, false );
+          $autoset  = $this->CI->data->_config( $table, false );
           foreach ($diff as $key => $which ) {
             switch ($which) {
               case 'left':
@@ -61,7 +61,7 @@
 
         // Als wel settings bestaat, bepaal het verschil
         elseif ($settings) {
-          $autoset  = $this->CI->data_model->_config( $table, false );
+          $autoset  = $this->CI->data->_config( $table, false );
           if ($settings) {
             $this_keys=array_keys($settings);
             $keys = array_merge($keys,$this_keys);
