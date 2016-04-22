@@ -17,7 +17,10 @@ foreach (array('default','local','import','phpunit') as $group) {
   $db[$group]['dbdriver'] = "mysqli";
   $db[$group]['dbprefix'] = "";
   $db[$group]['pconnect'] = FALSE;
-  $db[$group]['db_debug'] = TRUE;
+  if (IS_LOCALHOST OR ENVIRONMENT==='testing')
+    $db[$group]['db_debug'] = TRUE;
+  else
+    $db[$group]['db_debug'] = FALSE;
   $db[$group]['cache_on'] = FALSE;
   $db[$group]['cachedir'] = "site/cache";
   $db[$group]['char_set'] = "utf8";
@@ -27,6 +30,9 @@ foreach (array('default','local','import','phpunit') as $group) {
     $db[$group]['db_debug'] = FALSE;
   }
 }
+
+
+
 
 /* End of file database.php */
 /* Location: ./system/application/config/database.php */
