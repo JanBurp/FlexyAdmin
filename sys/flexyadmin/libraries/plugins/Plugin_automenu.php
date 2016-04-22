@@ -112,6 +112,7 @@ class Plugin_automenu extends Plugin {
   
   private function _needs_create() {
     if (!empty($this->newData) and !empty($this->oldData)) {
+      if ($this->config('update_fields')===TRUE) return TRUE;
       $old=array_keep_keys($this->oldData,$this->config('update_fields'));
       $new=array_keep_keys($this->newData,$this->config('update_fields'));
       $changed=($new!=$old);
