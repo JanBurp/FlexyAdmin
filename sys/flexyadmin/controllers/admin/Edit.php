@@ -71,7 +71,7 @@ class Edit extends AdminController {
   				$oldData=$this->db->get_row($table);
           if ($this->_after_delete($table,$oldData)) {
             // Delete all items
-            $this->data_model->table( $table )->where_in( PRIMARY_KEY,$items )->delete();  
+            $this->data->table( $table )->where_in( PRIMARY_KEY,$items )->delete();  
             // End messages
             $this->message->add(langp("delete_succes",$table) . $message);
           }

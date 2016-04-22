@@ -148,7 +148,7 @@ class Table extends Api_Model {
    */
   private function _get_data() {
     
-    $this->data_model->table( $this->args['table'] );
+    $this->data->table( $this->args['table'] );
     
     // Normaal resultaat, of grid resultaat
     if ( el('as_grid',$this->args,false) ) {
@@ -159,22 +159,22 @@ class Table extends Api_Model {
       if ( $this->args['table'] === 'res_media_files' AND isset($this->args['path']) ) $this->args['where'] = array( 'path' => $this->args['path'] );
       // Where?
       if (!isset($this->args['where'])) $this->args['where'] = '';
-      $items = $this->data_model->get_grid( $this->args['limit'], $this->args['offset'], $this->args['sort'], $this->args['filter'], $this->args['where'] );
+      $items = $this->data->get_grid( $this->args['limit'], $this->args['offset'], $this->args['sort'], $this->args['filter'], $this->args['where'] );
     }
     else {
       // Normaal: where, txt_abstract, options
-      if ( isset($this->args['where']) ) $this->data_model->where( $this->args['where'] );
-      if ( isset($this->args['txt_abstract'])) $this->data_model->select_txt_abstract( $this->args['txt_abstract'] );
-      if ( el('as_options',$this->args,false) ) $this->data_model->select_abstract( TRUE );
-      $items = $this->data_model->get_result( $this->args['limit'], $this->args['offset'] );
+      if ( isset($this->args['where']) ) $this->data->where( $this->args['where'] );
+      if ( isset($this->args['txt_abstract'])) $this->data->select_txt_abstract( $this->args['txt_abstract'] );
+      if ( el('as_options',$this->args,false) ) $this->data->select_abstract( TRUE );
+      $items = $this->data->get_result( $this->args['limit'], $this->args['offset'] );
     }
     
     // Info
-    $this->info = $this->data_model->get_query_info();
+    $this->info = $this->data->get_query_info();
     
     // Schemaform
     if ( el('schemaform',$this->args,false) ) {
-      $this->result['schemaform'] = $this->data_model->schemaform( current($items), el('table',$this->args) );
+      $this->result['schemaform'] = $this->data->schemaform( current($items), el('table',$this->args) );
     }
     
     return $items;

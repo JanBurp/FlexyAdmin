@@ -14,7 +14,7 @@
     
     <!-- Latest / Busy -->
     <testsuite name="busy">
-      <file>sys/flexyadmin/tests/demo_db/models/TableModelTest.php</file>
+      <file>sys/flexyadmin/tests/demo_db/models/DataTest.php</file>
       <file>sys/flexyadmin/tests/demo_db/models/OrderTest.php</file>
       <directory suffix="Test.php">sys/flexyadmin/tests/fast/helpers</directory>
 		</testsuite>
@@ -29,7 +29,7 @@
     <testsuite name="commit">
       <directory suffix="Test.php">sys/flexyadmin/tests/fast</directory>
       <directory suffix="Test.php">sys/flexyadmin/tests/commit</directory>
-      <file>sys/flexyadmin/tests/demo_db/models/TableModelTest.php</file>
+      <file>sys/flexyadmin/tests/demo_db/models/DataTest.php</file>
       <file>site/tests/frontend/DebugTest.php</file>
 		</testsuite>
 

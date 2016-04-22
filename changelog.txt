@@ -1,3 +1,11 @@
+Changes 3.1.0 (3612...)
+=======================
+
+Breaking changes:
+- Renamed 'Data_Model' to 'Data'
+- Changed 'Data' relations system and naming to make it more flexibel
+
+
 Changes 3.0.7 (3592...)
 =======================
 

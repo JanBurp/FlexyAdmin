@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/** \ingroup data_model
+/** \ingroup data
  * 
  * Wrapper voor Data_Model_Core en eventueel afgeleiden
  * 
@@ -10,7 +10,7 @@
  */
 
 
-Class Data_Model extends CI_Model {
+Class Data extends CI_Model {
   
   /**
    * Huidige tabel
@@ -28,7 +28,7 @@ Class Data_Model extends CI_Model {
   
   
   /**
-   * data_model->table()
+   * data->table()
    *
    * @param string $table 
    * @return mixed
@@ -36,7 +36,7 @@ Class Data_Model extends CI_Model {
    */
   public function table( $table ) {
     $this->table = $table;
-    return $this->data_model_core->table( $table );
+    return $this->data_core->table( $table );
   }
 
 
@@ -57,7 +57,7 @@ Class Data_Model extends CI_Model {
         $this->models[$table] = $this->$table;
       }
       else {
-        $this->models[$table] = $this->data_model_core;
+        $this->models[$table] = $this->data_core;
       }
     }
 
