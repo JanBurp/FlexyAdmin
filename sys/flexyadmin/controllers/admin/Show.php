@@ -219,6 +219,9 @@ class Show extends AdminController {
                     redirect($uri);
                   }
                 }
+                else {
+                  $offset=0;
+                }
               }
             }
 
