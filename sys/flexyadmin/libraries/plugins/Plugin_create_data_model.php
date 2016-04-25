@@ -19,9 +19,9 @@ class Plugin_create_data_model extends Plugin {
 				if (isset($args[0])) $table=$args[0];
 				if (isset($table)) $goodArgs=true;
 				if ($goodArgs) {
-          $this->CI->load->model('data/data_model_create');
-          $this->CI->data_model_create->create($table);
-          $this->add_content( $this->CI->data_model_create->output() );
+          $this->CI->load->model('data/data_create');
+          $this->CI->data_create->create($table);
+          $this->add_content( $this->CI->data_create->output() );
 				}
 			}
 			if (!$goodArgs) {
