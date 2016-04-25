@@ -1,7 +1,10 @@
 <ng-switch on="field_type">
 
   <!-- FOREIGN KEY -->
-  <span ng-switch-when="foreign_key">{{name}}</span>
+  <span ng-switch-when="foreign_key">{{abstract}}</span>
+  
+  <!-- HIDDEN -->
+  <span ng-switch-when="hidden" class="hidden"></span>
 
   <!-- BOOL -->
   <span ng-switch-when="bool" class="glyphicon" ng-class="{'glyphicon-ok text-success':value==1, 'glyphicon-minus text-danger':value!=1}"></span>
@@ -20,6 +23,7 @@
   <!-- HTML -->
   <span ng-switch-when="txt">{{ value | stripTags }}</span>
   
+  <!-- DEFAULT -->
   <span ng-switch-default>{{value}}</span>
   
 </ng-switch>

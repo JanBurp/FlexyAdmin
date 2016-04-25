@@ -108,7 +108,7 @@
 
           <!-- ROW Fields -->
           <td ng-repeat="key in orderedKeys(row)" class="flexy-table-field-type-{{fields[key].type}} flexy-table-field-{{key}}">
-            <flexy-field table="{{table}}" path={{path}} data-id="{{row.id}}" field="{{key}}" value="{{row[key]}}"></flexy-field>
+            <flexy-field table="{{table}}" path={{path}} data-id="{{row.id}}" field="{{key}}" value="{{row[key]}}" row={{row}}></flexy-field>
           </td>
 
         </tr>

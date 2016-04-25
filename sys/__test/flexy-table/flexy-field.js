@@ -43,6 +43,9 @@ flexyAdmin.directive('flexyField', ['flexySettingsService',function(settings) {
        * Value
        */
       scope.value       = attrs.value;
+      scope.row         = JSON.parse(attrs.row);
+      scope.abstract    = '';
+      
       
       /**
        * Field & type
@@ -53,10 +56,13 @@ flexyAdmin.directive('flexyField', ['flexySettingsService',function(settings) {
       // foreign keys
       if (['id'].indexOf(scope.field_type)>=0 && scope.field!=='id') {
         scope.field_type = 'foreign_key';
-        var options = settings.item(['settings','table',scope.table,'field_info',scope.field,'options','data']);
-        var option = jdb.assocArrayItem( options,'value',scope.value );
-        scope.name = option.name;
+        var abstract_field = String(settings.item(['settings','table',scope.table,'grid_set','relations','many_to_one',scope.field,'result_name'])) + '.abstract';
+        scope.abstract = scope.row[abstract_field];
       }
+      if (['tbl'].indexOf(scope.field_type)>=0 && scope.field!=='id') {
+        scope.field_type = 'hidden';
+      }
+      
       
       // booleans (different types)
       if (['b','is','has','bool'].indexOf(scope.field_type)>=0) {

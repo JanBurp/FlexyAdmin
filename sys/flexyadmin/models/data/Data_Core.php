@@ -638,6 +638,8 @@ Class Data_Core extends CI_Model {
       $many_to_one[$key]['flat']   = TRUE;
     }
     $grid_set['relations'] = array('many_to_one'=>$many_to_one);
+    
+    // trace_($grid_set);
 
     return $grid_set;
   }
@@ -1566,7 +1568,7 @@ Class Data_Core extends CI_Model {
       }
 
       // get validation (set in field_info)
-      $validation = $this->settings['field_info'][$name]['validation'];
+      $validation = el( array('field_info',$name,'validation'), $this->settings, array() );
       // split validation / required
       $key = array_search('required',$validation);
       if ( $key!==false ) {
