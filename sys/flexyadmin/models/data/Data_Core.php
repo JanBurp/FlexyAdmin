@@ -2271,7 +2271,7 @@ Class Data_Core extends CI_Model {
       $other_table = $this->settings['relations']['many_to_one'][$key]['other_table'];
       $as          = el('as',$info, $other_table);
       // Select fields
-      $this->_select_with_fields( 'many_to_one', $other_table, $as, $fields, $grouped );
+      $this->_select_with_fields( 'many_to_one', $other_table, $as, $fields, $foreign_key, $grouped );
       // Join
       $this->join( $other_table.' AS '.$as, $as.'.'.$id.' = '.$this->settings['table'].".".$foreign_key, 'left');
     }
@@ -2298,7 +2298,7 @@ Class Data_Core extends CI_Model {
       $other_foreign_key = $this->settings['relations']['many_to_many'][$rel_table]['other_key'];
       $as_table = '_'.$rel_table;
       // Select fields
-      $this->_select_with_fields( 'many_to_many', $other_table, $as_table, $fields, $grouped );
+      $this->_select_with_fields( 'many_to_many', $other_table, $as_table, $fields, '', $grouped );
       // Joins
       $this->join( $rel_table,    $this_table.'.'.$id.' = '.$rel_table.".".$this_foreign_key,     'left');
       $this->join( $other_table,  $rel_table. '.'.$other_foreign_key.' = '.$other_table.".".$id,  'left');
@@ -2314,11 +2314,12 @@ Class Data_Core extends CI_Model {
    * @param string $other_table de gerelateerde tabel
    * @param string $as_table naamgeving
    * @param array $fields velden van de gerelateerde tabel
+   * @param string $foreign_key eventuele foreignkey als many_to_one
    * @param bool $grouped of de many_to_many data gegroupeerd worden in één veld met de naam van de relatie tabel
    * @return $this
    * @author Jan den Besten
    */
-  protected function _select_with_fields( $type, $other_table, $as_table, $fields, $grouped = FALSE ) {
+  protected function _select_with_fields( $type, $other_table, $as_table, $fields, $foreign_key='', $grouped = FALSE ) {
     $abstract = FALSE;
 
     // Welke velden van de gerelateerde tabel?
@@ -2375,13 +2376,17 @@ Class Data_Core extends CI_Model {
     
     // Stop select in query, als het kan direct na foreign_key
     $select = trim(trim($select),',');
-    $foreign_key = el( array('relations','many_to_one',$other_table,'foreign_key'), $this->settings );
+    // $foreign_key = el( array('relations','many_to_one',$other_table,'foreign_key'), $this->settings );
+    
+    // trace_([$other_table,$foreign_key,$select]);
+    
+    
     
     if (isset($foreign_key) and isset($this->tm_select[$foreign_key])) {
-      $this->tm_select = array_add_after( $this->tm_select, $foreign_key, array($other_table=>$select) );
+      $this->tm_select = array_add_after( $this->tm_select, $foreign_key, array($as_table=>$select) );
     }
     else {
-      $this->tm_select[$other_table] = $select;
+      $this->tm_select[$as_table] = $select;
     }
 
     // grouped?
