@@ -252,24 +252,27 @@ flexyAdmin.directive('flexyTable', ['flexySettingsService','flexyApiService','fl
   
           // Show only the fields that exists in the tableItems (remove the field info of fields that are not in there)
           var fields = settings.item('settings','table',$scope.table,'field_info');
+          
           // Verwijder enkele standaard velden
           delete fields['id'];
           delete fields['self_parent'];
           delete fields['order'];
           delete fields['uri'];
+
           // Verwijder niet zichtbare velden
           var first_item = jdb.firstArrayItem( response.data );
           if ( angular.isDefined( first_item )) {
             angular.forEach( fields, function(info, field) {
-              if ( angular.isUndefined( first_item[field] )) {
-                delete fields[field];
-              }
-              else {
+              if ( angular.isDefined( first_item[field] )) {
                 fields[field].field = field; // Voeg naam van het veld toe
                 fields[field].type = field.prefix(); // Voeg type van het veld toe
               }
+              else {
+                delete fields[field];
+              }
             });
           }
+          
           $scope.fields = fields;
         });
       };
