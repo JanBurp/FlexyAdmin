@@ -32,8 +32,13 @@ class Test extends AdminController {
   public function index() {
     if (!$this->user->is_super_admin()) return;
     
-    $this->db->add_many();
-    $result = $this->db->get_result( 'tbl_groepen' );
+    $this->data->table('tbl_fotoarchief')->select( 'id,str_naam_sleepboot,id_maatschappij,id_land,id_vlag');
+    
+    $this->data->with('many_to_one',array('id_land','id_vlag') );
+    $result = $this->data->get_result( 12 );
+    
+    trace_( $this->data->last_query() );
+    trace_( $result );
     
   }
   
