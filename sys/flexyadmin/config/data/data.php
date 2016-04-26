@@ -114,7 +114,42 @@ $config['abstract_filter']  = '';
  *      'other_table' => 'cfg_users_groups',
  *      'foreign_key' => 'id_user_group',
  *      'result_name' => 'cfg_users_groups',
+ *    )
+ * 
+ * 'one_to_many'
+ * -------------
+ * 
+ * De other_table is de key van de array van de relatie.
+ * Daarin komen de volgende velden:
+ * 
+ * - other_table  -> de foreign table (nogmaals)
+ * - foreign_keys -> de foreign_key in de other_table
+ * - result_name  -> onder welke naam de relatie data wordt toegevoegd. Standaard hetzelfde als 'other_table', maar bijvoorbeeld als er meerdere verwijzingen naar dezelfde other_table zijn, dan geeft dat problemen. Dat kan dan worden opgelost door hier een andere naam te geven.
+ * 
+ * Hieronder enkele voorbeelden voor many_to_one:
+ *   
+ * array(
+ * 
+ *  'one_to_many' => array(
+ *
+ *    'tbl_links'  => array(
+ *      'other_table' => 'tbl_links',
+ *      'foreign_key' => 'id_post',
+ *      'result_name' => 'tbl_links',
  *    ),
+ *
+ *    'tbl_links_extra'  => array(
+ *      'other_table' => 'tbl_links',
+ *      'foreign_key' => 'id_post',
+ *      'result_name' => 'links_extra',
+ *    ),
+ * 
+ *    'cfg_user_groups' => array(
+ *      'other_table' => 'cfg_users_groups',
+ *      'foreign_key' => 'id_user_group',
+ *      'result_name' => 'cfg_users_groups',
+ *    )
+ * 
  * 
  * 'many_to_many'
  * --------------
