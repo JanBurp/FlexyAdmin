@@ -114,6 +114,7 @@ class DataTest extends CITestCase {
     // ->get_with()
     $with = $this->CI->data->get_with();
     $this->assertEquals( array(), $with );
+    
     // ->with( 'many_to_one' )
     $expected = array(
       'many_to_one'=>array(
@@ -135,16 +136,21 @@ class DataTest extends CITestCase {
     );
     $this->CI->data->with( 'many_to_one' );
     $this->assertEquals( $expected, $this->CI->data->get_with() );
+    
     // ->with( 'many_to_one', array() );
     $this->CI->data->with( 'many_to_one', array() );
     $this->assertEquals( $expected, $this->CI->data->get_with() );
+    
     // ->with( 'many_to_one', array( 'tbl_adressen') );
     $this->CI->data->with( 'many_to_one', array( 'id_adressen') );
     $this->assertEquals( $expected, $this->CI->data->get_with() );
+    
     // ->reset()
     $this->CI->data->reset();
+    
     // ->get_with()
     $this->assertEquals( array(), $this->CI->data->get_with() );
+    
     // ->with( 'many_to_one', array( 'tbl_adressen') );
     $expected = array(
       'many_to_one'=>array(
@@ -216,8 +222,9 @@ class DataTest extends CITestCase {
     $this->assertEquals( 2, count($row['tbl_adressen']) );
 
     // tbl_leerlingen ->where()->get_result()
-    $array = $this->CI->data->select('str_first_name')->with( 'many_to_one', array('id_adressen'=>'str_address') )
-                                                            ->where('tbl_adressen.str_address','Schooolstraat 1')->get_result();
+    $array = $this->CI->data->select('str_first_name')
+                            ->with( 'many_to_one', array('id_adressen'=>'str_address') )
+                            ->where('tbl_adressen.str_address','Schooolstraat 1')->get_result();
     // data, klopt num_rows & num_fields?
     $this->assertLessThan( 92, count($array) );
     $row = current($array);
@@ -228,6 +235,71 @@ class DataTest extends CITestCase {
     $this->assertInternalType( 'array', $row['tbl_adressen'] );
     $this->assertEquals( 2, count($row['tbl_adressen']) );
     $this->assertEquals( 'Schooolstraat 1', $row['tbl_adressen']['str_address'] );
+  }
+  
+  public function test_one_to_many_data() {
+    // tbl_adressen
+    $query = $this->CI->data->table( 'tbl_adressen' )
+                            ->select( 'id,str_city' )
+                            ->with( 'one_to_many', ['tbl_leerlingen'=>array('str_first_name','str_last_name')] )
+                            ->get();
+    $this->assertEquals( 92, $query->num_rows() );
+    $this->assertEquals( 5, $query->num_fields() );
+    // data, klopt num_rows & num_fields?
+    $array = $query->result_array();
+    $this->assertEquals( 92, count($array) );
+    $row = current($array);
+    $this->assertEquals( 5, count($row) );
+    // kloppen keys in row?
+    $keys = array_keys($row);
+    $this->assertEquals( array('id','str_city','tbl_leerlingen.id','tbl_leerlingen.str_first_name','tbl_leerlingen.str_last_name'), $keys );
+
+    // tbl_adressen - absract
+    $query = $this->CI->data->select( 'id,str_city' )
+                            ->with( 'one_to_many', ['tbl_leerlingen'=>'abstract'] )
+                            ->get();
+    $this->assertEquals( 92, $query->num_rows() );
+    $this->assertEquals( 4, $query->num_fields() );
+    // data, klopt num_rows & num_fields?
+    $array = $query->result_array();
+    $this->assertEquals( 92, count($array) );
+    $row = current($array);
+    $this->assertEquals( 4, count($row) );
+    // kloppen keys in row?
+    $keys = array_keys($row);
+    $this->assertEquals( array('id','str_city','tbl_leerlingen.id','tbl_leerlingen.abstract'), $keys );
+    // klopt abstract?
+    $this->assertInternalType( 'string', $row['tbl_leerlingen.abstract'] );
+
+    // tbl_adressen ->get_result()
+    $array = $this->CI->data->select( 'id,str_city')
+                            ->with( 'one_to_many', array('tbl_leerlingen'=>'str_first_name') )
+                            ->get_result();
+    // data, klopt num_rows & num_fields?
+    $this->assertEquals( 14, count($array) );
+    $row = current($array);
+    $this->assertEquals( 3, count($row) );
+    // kloppen keys in row en subdata?
+    $keys = array_keys($row);
+    $this->assertEquals( array('id','str_city','tbl_leerlingen'), $keys );
+    $this->assertInternalType( 'array', $row['tbl_leerlingen'] );
+    $this->assertEquals( 11, count($row['tbl_leerlingen']) );
+   
+    // tbl_adressen ->where()->get_result()
+    $array = $this->CI->data->select('str_city')
+                            ->with( 'one_to_many', array('tbl_leerlingen'=>'str_first_name') )
+                            ->where('tbl_leerlingen.str_first_name','Adam')
+                            ->get_result();
+    // data, klopt num_rows & num_fields?
+    $this->assertLessThan( 2, count($array) );
+    $row = current($array);
+    $this->assertEquals( 3, count($row) );
+    // kloppen keys in row en subdata?
+    $keys = array_keys($row);
+    $this->assertEquals( array('id','str_city','tbl_leerlingen'), $keys );
+    $this->assertInternalType( 'array', $row['tbl_leerlingen'] );
+    $this->assertEquals( 1, count($row['tbl_leerlingen']) );
+    $this->assertEquals( 'Adam', $row['tbl_leerlingen'][2]['str_first_name'] );
   }
   
   
@@ -412,21 +484,40 @@ class DataTest extends CITestCase {
     $result = $this->CI->data->get_result();
     $info = $this->CI->data->get_query_info();
     $this->assertEquals( 0, $info['num_rows'] );
+    
+    // Zoeken in one_to_many 'van' (LET OP query resultaat omdat sommige dubbel kunnen zijn, get_result geeft dan ander aantal)
+    $this->CI->data->table( 'tbl_adressen' );
+    $this->CI->data->with( 'one_to_many' );
+    $this->CI->data->find( 'van' );
+    $query = $this->CI->data->get();
+    // trace_( $query->result_array());
+    // trace_( $this->CI->data->last_query());
+    $info = $this->CI->data->get_query_info();
+    $this->assertEquals( 25, $info['num_rows'] );
+    // Zoeken in many_to_many 'van' ->word_boundaries
+    $this->CI->data->table( 'tbl_adressen' );
+    $this->CI->data->with( 'one_to_many' );
+    $this->CI->data->find( 'van', null, array('word_boundaries'=>TRUE));
+    $query = $this->CI->data->get();
+    $info = $this->CI->data->get_query_info();
+    $this->assertEquals( 25, $info['num_rows'] );
+    
+    
 
     // Zoeken in many_to_many 'straat' (LET OP query resultaat omdat sommige dubbel kunnen zijn, get_result geeft dan ander aantal)
-    $this->CI->data->table( 'tbl_groepen' );
-    $this->CI->data->with( 'many_to_many' );
-    $this->CI->data->find( 'straat' );
-    $query = $this->CI->data->get();
-    $info = $this->CI->data->get_query_info();
-    $this->assertEquals( 4, $info['num_rows'] );
-    // Zoeken in many_to_many 'straat' ->word_boundaries
-    $this->CI->data->table( 'tbl_groepen' );
-    $this->CI->data->with( 'many_to_many' );
-    $this->CI->data->find('straat', null, array('word_boundaries'=>TRUE));
-    $query = $this->CI->data->get();
-    $info = $this->CI->data->get_query_info();
-    $this->assertEquals( 0, $info['num_rows'] );
+    // $this->CI->data->table( 'tbl_groepen' );
+   //  $this->CI->data->with( 'many_to_many' );
+   //  $this->CI->data->find( 'straat' );
+   //  $query = $this->CI->data->get();
+   //  $info = $this->CI->data->get_query_info();
+   //  $this->assertEquals( 4, $info['num_rows'] );
+   //  // Zoeken in many_to_many 'straat' ->word_boundaries
+   //  $this->CI->data->table( 'tbl_groepen' );
+   //  $this->CI->data->with( 'many_to_many' );
+   //  $this->CI->data->find('straat', null, array('word_boundaries'=>TRUE));
+   //  $query = $this->CI->data->get();
+   //  $info = $this->CI->data->get_query_info();
+   //  $this->assertEquals( 0, $info['num_rows'] );
   }
   
   

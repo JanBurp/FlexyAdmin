@@ -567,6 +567,20 @@ Class Data_Core extends CI_Model {
         );
       }
     }
+    
+    // one_to_many
+    $tables = $this->get_relation_tables( 'one_to_many', $this->settings['table'] );
+    if ($tables) {
+      $relations['one_to_many'] = array();
+      $foreign_key = 'id_'.remove_prefix( $this->settings['table'] );
+      foreach ($tables as $other_table) {
+        $relations['one_to_many'][$other_table] = array(
+          'other_table' => $other_table,
+          'foreign_key' => $foreign_key,
+          'result_name' => $other_table,
+        );
+      }
+    }
 
     // many_to_many
     $tables = $this->get_relation_tables( 'many_to_many' );
@@ -899,10 +913,13 @@ Class Data_Core extends CI_Model {
    * @return array
    * @author Jan den Besten
    */
-  public function get_relation_tables( $type ) {
+  public function get_relation_tables( $type, $args=null ) {
     $method = '_get_'.$type.'_tables';
     if ( method_exists($this,$method) ) {
-      return $this->$method();
+      if ( !is_null($args) )
+        return $this->$method($args);
+      else
+        return $this->$method();
     }
     else {
       $this->reset();
@@ -910,6 +927,28 @@ Class Data_Core extends CI_Model {
     }
     return $tables;
   }
+  
+  /**
+   * Find one_to_many tables
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+  protected function _get_one_to_many_tables( $table ) {
+    $tables = $this->list_tables();
+    $tables = filter_by( $tables, 'tbl_');
+    // find foreign_keys to this table
+    $foreign_key = 'id_'.remove_prefix($table);
+    foreach ($tables as $key=>$table) {
+      $fields = $this->db->list_fields($table);
+      if (!in_array($foreign_key,$fields)) {
+        unset($tables[$key]);
+      }
+    }
+    $this->relation_tables['one_to_many'] = $tables;
+    return $tables;
+  }
+  
 
   /**
    * Find many_to_many tables
@@ -1925,20 +1964,21 @@ Class Data_Core extends CI_Model {
    * Zoeken op specifieke term in plaats van een deel:
    * ->find( 'zoek', 'str_tag' , array( 'exact_term' =>TRUE ) ) // Zoekt het veld 'str_tag' dat precies de waarde 'zoek' heeft
    * 
-   * Ook zoeken in relaties
-   * ----------------------
+   * Zoeken in relaties
+   * ------------------
    * 
    * Als je wilt dat ook in relaties wordt gezocht, zorg dan dat eerst de relaties worden ingesteld met een ->with() aanroep (of een variant).
    * En daarna pas de ->find() aanroep.
    * 
-   * Verder geld hetvolgende:
+   * Verder geld:
    * 
    * - In alle 'many_to_one' relaties wordt gezocht zolang het foreign_key veld in de zoekvelden zit.
-   * - Automatisch wordt in alle 'many_to_many' relaties gezocht
+   * - Automatisch wordt in alle 'many_to_many' en 'one_to_many' relaties gezocht
+   * - Je kunt specifieker instellen met $settings['with'] welke relaties mee moeten worden genomen met het zoeken
    * 
    * @param mixed $terms Zoekterm(en) als een string of array van strings. Letterlijk zoeken kan door termen tussen "" te zetten.
    * @param array $fields [array()] De velden waarop gezocht wordt. Standaard alle velden. Kan ook in relatietabellen zoeken, bijvoorbeeld 'tbl_links.str_title' als een veld in een gerelateerde tabel
-   * @param array $settings [array()] Extra instelingen, default: array( 'and' => 'OR, 'word_boundaries' => FALSE, 'exact_term' => FALSE )
+   * @param array $settings [array()] Extra instelingen, default: array( 'and' => 'OR, 'word_boundaries' => FALSE, , 'exact_term' => FALSE, 'with'=>array('many_to_one','one_to_many','many_to_many') )
    * @return $this
    * @author Jan den Besten
    */
@@ -1948,6 +1988,7 @@ Class Data_Core extends CI_Model {
       'and'             => 'OR',
       'word_boundaries' => FALSE,
       'exact_term'      => FALSE,
+      'with'            => array('many_to_one','one_to_many','many_to_many'),
     );
     $settings = array_merge( $defaults,$settings );
     if ($settings['and']===TRUE)  $settings['and'] = 'AND';
@@ -1965,19 +2006,28 @@ Class Data_Core extends CI_Model {
     // Ook nog in relaties zoeken?
     if ( isset($this->tm_with) and !empty($this->tm_with) ) {
       foreach ($this->tm_with as $type => $tm_with) {
-        foreach ($tm_with as $what => $with) {
-          // Alleen 'many_to_one' relaties die in de velden staan, en alle 'many_to_many'
-          if ( $type==='many_to_many' or ($type==='many_to_one' and in_array($what,$fields)) ) {
+        if ( in_array($type,$settings['with']) ) {
+          foreach ($tm_with as $what => $with) {
+            // Alleen 'many_to_one' relaties die in de velden staan
+            if ( $type==='many_to_one' and !in_array($what,$fields) ) continue;
+            //
             $other_table  = $with['table'];
             $as           = el('as',$with,$other_table);
             $other_fields = $with['fields'];
             if ($other_fields=='abstract') $other_fields = $this->get_other_table_fields( $other_table );
             if (!is_array($other_fields)) $other_fields = explode(',',$other_fields);
             foreach ($other_fields as $other_field) {
-              if ($type==='many_to_one')
-                array_push( $fields, $this->db->protect_identifiers($as.'.'.$other_field) );
-              else
-                array_push( $fields, $this->db->protect_identifiers( $this->settings['relations']['many_to_many'][$other_table]['other_table'].'.'.$other_field) );
+              switch ($type) {
+                case 'many_to_one':
+                  array_push( $fields, $this->db->protect_identifiers($as.'.'.$other_field) );
+                  break;
+                case 'one_to_many':
+                  array_push( $fields, $this->db->protect_identifiers( $other_table.'.'.$other_field) );
+                  break;
+                case 'many_to_many':
+                  array_push( $fields, $this->db->protect_identifiers( $this->settings['relations']['many_to_many'][$other_table]['other_table'].'.'.$other_field) );
+                  break;
+              }
             }
           }
         }
@@ -2099,17 +2149,44 @@ Class Data_Core extends CI_Model {
    * Dus het resultaat komt niet in een array.
    * 
    * 
+   * one_to_many
+   * -----------
+   * 
+   * LET OP: ->num_rows() kan onverwachte resultaten geven, zo ook met het gebruik van ->limit(). Dit kun je voorkomen door ->with_grouped() te gebruiken, zie hieronder.
+   * 
+   * Voegt alle one_to_many relaties met al hun velden toe aan het resultaat:
+   * 
+   * ->with( 'one_to_many' );
+   * ->with( 'one_to_many', [] );
+   * 
+   * Specificeer welke tabellen en welke van hun velden worden meegenomen in het resultaat:
+   * 
+   * ->with( 'one_to_many', ['tbl_posts'] );
+   * ->with( 'one_to_many', ['tbl_posts'=>['str_title','txt_text]] );
+   * 
+   * Geef aan dat de velden een abstract moeten zijn in het resultaat:
+   * 
+   * ->with( 'one_to_many', 'abstract' );
+   * ->with( 'one_to_many', ['tbl_posts'=>'abstract'] );
+   * 
+   * one_to_many resultaat
+   * ---------------------
+   * 
+   * Het resultaat van een one_to_many relatie wordt net als bij many_to_one relaties toegevoegd als extra velden van de andere tabel. Op dezelfde manier als bij many_to_one:
+   * - tbl_posts.....
+   * 
+   * 
    * many_to_many
    * ------------
    * 
-   * LET OP: Als dit gecombineerd wordt met ->limit() kan het onverwachte resultaten geven. Dit kun je voorkomen door ->with_grouped() te gebruiken, zie hieronder.
+   * LET OP: ->num_rows() kan onverwachte resultaten geven, zo ook met het gebruik van ->limit(). Dit kun je voorkomen door ->with_grouped() te gebruiken, zie hieronder.
    * 
    * Voegt alle many_to_many relaties met al hun velden toe aan resultaat:
    * 
    * ->with( 'many_to_many' );
    * ->with( 'many_to_many', [] );
    * 
-   * Specificeer welke relatietabellen mee moeten worden genomen in het resultaat:
+   * Specificeer welke relatietabellen mee moeten worden meegenomen in het resultaat:
    * 
    * ->with( 'many_to_many', [ 'rel_menu__posts' ] );
    * ->with( 'many_to_many', [ 'rel_menu__posts', 'rel_menu__links' ] );
@@ -2194,6 +2271,7 @@ Class Data_Core extends CI_Model {
       // Als fields een lege array is, stop dan alle velden van die tabel erin
       if (is_array($fields) and empty($fields)) {
         if ($type=='many_to_one')  $fields = $this->get_other_table_fields( $table );
+        if ($type=='one_to_many')  $fields = $this->get_other_table_fields( $this->settings['relations']['one_to_many'][$what]['other_table'] );
         if ($type=='many_to_many') $fields = $this->get_other_table_fields( $this->settings['relations']['many_to_many'][$what]['other_table'] );
       }
       // fields moet iig ook de primary key bevatten
@@ -2306,6 +2384,32 @@ Class Data_Core extends CI_Model {
     return $this;
   }
   
+  
+  /**
+   * Bouwt one_to_many join query
+   *
+   * @param array $what 
+   * @return $this
+   * @author Jan den Besten
+   */
+  protected function _with_one_to_many( $what ) {
+    $id = $this->settings['primary_key'];
+    foreach ($what as $key => $info) {
+      $fields      = $info['fields'];
+      $grouped     = el('grouped',$info,false);
+      $foreign_key = $this->settings['relations']['one_to_many'][$key]['foreign_key'];
+      $other_table = $this->settings['relations']['one_to_many'][$key]['other_table'];
+      $as          = el('as',$info, $other_table);
+      // Select fields
+      $this->_select_with_fields( 'one_to_many', $other_table, $as, $fields, $foreign_key, $grouped );
+      // Join
+      $this->join( $other_table.' AS '.$as, $as.'.'.$foreign_key.' = '.$this->settings['table'].".".$id, 'left');
+    }
+    return $this;
+  }
+  
+  
+  
 
 
   /**
@@ -2371,8 +2475,8 @@ Class Data_Core extends CI_Model {
         $abstract = remove_suffix($abstract,' AS ');
         $select = 'GROUP_CONCAT( "[",'.$abstract.',"]" SEPARATOR ",") `'.$other_table.'`';
       }
-      // Voeg ook de primary_key erbij als many_to_many
-      if ($type=='many_to_many') {
+      // Voeg ook de primary_key erbij (behalve bij many_to_one, daar is die al bekend)
+      if ($type!=='many_to_one') {
         $other_primary_key = $this->get_other_table_setting( $other_table, 'primary_key', PRIMARY_KEY);
         $select = '`'.$other_table.'`.`'.$other_primary_key.'` AS `'.$as_table.'.'.$other_primary_key.'`, '.$select;
       }

@@ -54,6 +54,15 @@ class Test extends AdminController {
     $many_to_one['grouped']  = "->with_grouped( 'many_to_one', ['id_adressen'] )";
     $many_to_one['flat']     = "->with_flat_many_to_one( ['id_adressen'] )";
     $this->eval_table('many_to_one',$many_to_one);
+    
+    // one_to_many
+    $this->data->table( 'tbl_adressen' );
+    $one_to_many['without']  = "";
+    $one_to_many['normal']   = "->with( 'one_to_many' )";
+    $one_to_many['specific'] = "->with( 'one_to_many', ['tbl_leerlingen'=>['str_first_name','str_last_name']] )";
+    $one_to_many['abstract'] = "->with( 'one_to_many', ['tbl_leerlingen'=>'abstract'] )";
+    $one_to_many['grouped']  = "->with_grouped( 'one_to_many', ['tbl_leerlingen'] )";
+    $this->eval_table('one_to_many',$one_to_many);
 
     // many_to_many
     $this->data->table( 'tbl_groepen' );
