@@ -979,17 +979,17 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   public function get_setting( $key, $default=null ) {
-    if (is_array($key)) {
-      $return = array();
-      foreach ($key as $subkey) {
-        $return[$subkey] = $this->get_setting( $subkey );
-      }
-      return $return;
-    }
-    else {
-      return el( $key, $this->settings, el( $key, $this->autoset ) );
-    }
-    return $default;
+    // if (is_array($key)) {
+    //   $return = array();
+    //   foreach ($key as $subkey) {
+    //     $return[$subkey] = $this->get_setting( $subkey );
+    //   }
+    //   return $return;
+    // }
+    // else {
+    return el( $key, $this->settings, el( $key, $this->autoset, $default ) );
+    // }
+    // return $default;
   }
   
 
@@ -2053,14 +2053,14 @@ Class Data_Core extends CI_Model {
    * 
    * Specificeer welke relatietabellen mee moeten worden genomen in het resultaat (als er meerdere foreign_keys verwijzen naar dezelfde tabel, dan worden ze allemaal toegevoegd):
    * 
-   * ->with( 'many_to_one' => [ 'id_posts' ] );
-   * ->with( 'many_to_one' => [ 'id_posts', 'id_links' ] );
+   * ->with( 'many_to_one', [ 'id_posts' ] );
+   * ->with( 'many_to_one', [ 'id_posts', 'id_links' ] );
    * 
    * Specificeer per tabel welke velden meegenomen moeten worden in het resultaat:
    * 
-   * ->with( 'many_to_one' => [ 'id_posts' => 'str_title,txt_text' ] );
-   * ->with( 'many_to_one' => [ 'id_posts' => ['str_title','txt_text'] ] );
-   * ->with( 'many_to_one' => [ 'id_posts' => 'str_title,txt_text', 'tbl_links' ] );
+   * ->with( 'many_to_one', [ 'id_posts' => 'str_title,txt_text' ] );
+   * ->with( 'many_to_one', [ 'id_posts' => ['str_title','txt_text'] ] );
+   * ->with( 'many_to_one', [ 'id_posts' => 'str_title,txt_text', 'tbl_links' ] );
    * 
    * many_to_one resultaat
    * ---------------------
@@ -2078,9 +2078,15 @@ Class Data_Core extends CI_Model {
    * many_to_one abstract
    * --------------------
    * 
-   * Geef aan dat bij een tabel een abstract van de velden moet worden meegenomen in plaats van specifieke velden:
+   * Een abstract resultaat is dat een deel van de velden van de andere tabel wordt samengevoegd tot een nieuw veld. Een samenvatting.
    * 
-   * ->with( 'many_to_one' => [ 'id_posts' => 'abstract ] );
+   * Zo worden alle 'many_to_one' relaties toegevoegd als abstract:
+   * 
+   * ->with( 'many_to_one', 'abstract' );
+   * 
+   * En zo kun je dat per relatie aanpassen:
+   * 
+   * ->with( 'many_to_one', [ 'id_posts' => 'abstract ] );
    * 
    * Het resultaat komt in een extra veld: tbl_posts.abstract
    * 
@@ -2104,18 +2110,18 @@ Class Data_Core extends CI_Model {
    * 
    * Specificeer welke relatietabellen mee moeten worden genomen in het resultaat:
    * 
-   * ->with( 'many_to_many' => [ 'rel_menu__posts' ] );
-   * ->with( 'many_to_many' => [ 'rel_menu__posts', 'rel_menu__links' ] );
+   * ->with( 'many_to_many', [ 'rel_menu__posts' ] );
+   * ->with( 'many_to_many', [ 'rel_menu__posts', 'rel_menu__links' ] );
    * 
    * Specificeer per tabel welke velden meegenomen moeten worden in het resultaat:
    * 
-   * ->with( 'many_to_many' => [ 'rel_menu__posts' => 'str_title,txt_text' ] );
-   * ->with( 'many_to_many' => [ 'rel_menu__posts' => ['str_title','txt_text'] ] );
-   * ->with( 'many_to_many' => [ 'rel_menu__posts' => 'str_title,txt_text', 'rel_menu__links' ] );
+   * ->with( 'many_to_many', [ 'rel_menu__posts' => 'str_title,txt_text' ] );
+   * ->with( 'many_to_many', [ 'rel_menu__posts' => ['str_title','txt_text'] ] );
+   * ->with( 'many_to_many', [ 'rel_menu__posts' => 'str_title,txt_text', 'rel_menu__links' ] );
    * 
    * Geef aan dat bij een tabel een abstract van de velden moet worden meegenomen in plaats van specifieke velden:
    * 
-   * ->with( 'many_to_many' => [ 'rel_menu__posts' => 'abstract ] );
+   * ->with( 'many_to_many', [ 'rel_menu__posts' => 'abstract ] );
    * 
    * 
    * many_to_many resultaat
@@ -2157,7 +2163,8 @@ Class Data_Core extends CI_Model {
     }
 
     // Als geen $what is meegegeven, haal ze uit de settings
-    if ( empty($what) ) {
+    $abstract = ($what==='abstract');
+    if ( empty($what) or $abstract) {
       $what = el( array('relations',$type), $this->settings, array() );
       if ($what) $what = array_keys($what);
     }
@@ -2175,6 +2182,7 @@ Class Data_Core extends CI_Model {
         $what   = $value;
         $fields = array();
       }
+      if ($abstract) $fields='abstract';
       // bij 'many_to_many' is $what hetzelfde als de tabel, bij 'many_to_one' moet dat uit de relaties settings worden gehaald
       $table = $what;
       if ($type==='many_to_one') $table = $this->settings['relations']['many_to_one'][$what]['other_table'];
