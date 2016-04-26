@@ -971,7 +971,7 @@ Class Data_Core extends CI_Model {
 
 
   /**
-   * Geeft een of meer settings. Als deze niet bestaan dan wordt de standaard autoset waarde gegeven of anders NULL
+   * Geeft een setting. Als deze niet bestaan dan wordt eerste geprobeerd een autoset waarde te geven, anders default [NULL].
    *
    * @param mixed $key een met de gevraagde key, of array van gevraagde keys
    * @param mixed $default [null]
@@ -979,17 +979,7 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   public function get_setting( $key, $default=null ) {
-    // if (is_array($key)) {
-    //   $return = array();
-    //   foreach ($key as $subkey) {
-    //     $return[$subkey] = $this->get_setting( $subkey );
-    //   }
-    //   return $return;
-    // }
-    // else {
     return el( $key, $this->settings, el( $key, $this->autoset, $default ) );
-    // }
-    // return $default;
   }
   
 

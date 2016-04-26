@@ -65,8 +65,6 @@ class DataTest extends CITestCase {
     $this->assertEquals( array('id','order','self_parent','uri','str_title','txt_text','medias_fotos','b_visible','str_module','stx_description','str_keywords'), $this->CI->data->get_setting( 'fields' ) );
     $this->assertEquals( array( 'str_title','str_module'), $this->CI->data->get_setting( 'abstract_fields' ) );
     $this->assertEquals( 'order', $this->CI->data->get_setting( 'order_by' ) );
-    // array of settings
-    $this->assertEquals( array('table'=>'tbl_menu','order_by'=>'order'), $this->CI->data->get_setting( array('table','order_by') ) );
   }
   
 
