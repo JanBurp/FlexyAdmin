@@ -1928,8 +1928,13 @@ Class Data_Core extends CI_Model {
    * Ook zoeken in relaties
    * ----------------------
    * 
-   * LET OP: Zorg dat ->with() eerder wordt aangeroepen dan ->find()
+   * Als je wilt dat ook in relaties wordt gezocht, zorg dan dat eerst de relaties worden ingesteld met een ->with() aanroep (of een variant).
+   * En daarna pas de ->find() aanroep.
    * 
+   * Verder geld hetvolgende:
+   * 
+   * - In alle 'many_to_one' relaties wordt gezocht zolang het foreign_key veld in de zoekvelden zit.
+   * - Automatisch wordt in alle 'many_to_many' relaties gezocht
    * 
    * @param mixed $terms Zoekterm(en) als een string of array van strings. Letterlijk zoeken kan door termen tussen "" te zetten.
    * @param array $fields [array()] De velden waarop gezocht wordt. Standaard alle velden. Kan ook in relatietabellen zoeken, bijvoorbeeld 'tbl_links.str_title' als een veld in een gerelateerde tabel
@@ -1951,13 +1956,18 @@ Class Data_Core extends CI_Model {
     
     // In welke velden zoeken?
     if ( is_string($fields) ) $fields = array($fields);
-    // Geen velden meegegeven, gebruik dan de velden van deze tabel en eventuele relaties
+    
+    // Geen velden meegegeven, gebruik dan alle velden van deze tabel (zoals ingesteld).
     if ( empty($fields) ) {
       $fields = $this->settings['fields'];
-      // Ook nog in relaties?
-      if ( isset($this->tm_with) and !empty($this->tm_with) ) {
-        foreach ($this->tm_with as $type => $tm_with) {
-          foreach ($tm_with as $what => $with) {
+    }
+    
+    // Ook nog in relaties zoeken?
+    if ( isset($this->tm_with) and !empty($this->tm_with) ) {
+      foreach ($this->tm_with as $type => $tm_with) {
+        foreach ($tm_with as $what => $with) {
+          // Alleen 'many_to_one' relaties die in de velden staan, en alle 'many_to_many'
+          if ( $type==='many_to_many' or ($type==='many_to_one' and in_array($what,$fields)) ) {
             $other_table  = $with['table'];
             $as           = el('as',$with,$other_table);
             $other_fields = $with['fields'];
@@ -1973,6 +1983,7 @@ Class Data_Core extends CI_Model {
         }
       }
     }
+    
     // Plak tabelnaam voor elk veld, als dat nog niet zo is, en escape
     foreach ( $fields as $key => $field ) {
       if (strpos($field,'.')===FALSE) $fields[$key] = $this->db->protect_identifiers($this->settings['table'].'.'.$field);
@@ -1982,7 +1993,7 @@ Class Data_Core extends CI_Model {
     if ( is_array($terms) ) $terms = implode(' ',$terms);
     $terms=preg_split('~(?:"[^"]*")?\K[/\s]+~', ' '.$terms.' ', -1, PREG_SPLIT_NO_EMPTY );
     
-    // trace_([$fields,$terms]);
+    // trace_(['fields'=>$fields,'terms'=>$terms]);
     
     // Bouw 'query' op voor elke term
     $tm_find=array();
