@@ -911,7 +911,6 @@ Class Data_Core extends CI_Model {
 	}
   
 
-
   /**
    * Find relation tables of a given type
    *
@@ -1142,6 +1141,7 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   public function get( $limit=0, $offset=0, $reset = true ) {
+
     // Bewaar limit & offset als ingesteld (overruled eerder ingestelde door ->limit() )
     if ($limit!=0 or $offset!=0) $this->limit( $limit,$offset );
 
@@ -1164,14 +1164,15 @@ Class Data_Core extends CI_Model {
       }
     }
 
-
     // FROM
     $this->_from();
     
-    // limit & offset & GET
+    // limit & offset
     $this->query_info = array();
     $this->db->limit( $this->tm_limit );
     $this->db->offset( $this->tm_offset );
+    
+    // get
     $query = $this->db->get();
     
     // Jump to today?
@@ -1204,6 +1205,7 @@ Class Data_Core extends CI_Model {
         }
       }
     }
+    
     // Query Info Complete
     if ($query) {
       $this->query_info['num_rows']   = $query->num_rows();
@@ -1351,7 +1353,7 @@ Class Data_Core extends CI_Model {
     // pas query info aan
     $this->query_info['num_rows']     = count($result);
     $this->query_info['num_fields']   = count(current($result));
-    if (isset($this->tm_with['many_to_many'])) {
+    if ( isset($this->tm_with['many_to_many']) or isset($this->tm_with['one_to_many']) ) {
       $this->query_info['total_rows'] = $this->total_rows(true,true);
     }
     
@@ -1812,10 +1814,21 @@ Class Data_Core extends CI_Model {
       
       // Als 'one_to_many' of 'many_to_many' relatie, maak dan een subselect met gevraagde LIMIT en ORDER
       if ( isset($this->tm_with['one_to_many']) or isset($this->tm_with['many_to_many']) ) {
+        // table
         $table = $this->settings['table'];
+        // WHERE ?
+        $where = '';
+        $sql = $this->db->get_compiled_select('',FALSE);
+        if (preg_match("/WHERE(.*)ORDER/us", $sql,$match)) {
+          $where=$match[1];
+        }
+        // ORDER BY ?
         reset($this->tm_order_by);
         $order_by = current($this->tm_order_by);
-        $this->tm_from = '(SELECT * FROM '.$this->db->protect_identifiers($table).' ORDER BY '.$this->db->protect_identifiers($order_by);
+        // Compile the subquery:
+        $this->tm_from = '(SELECT * FROM '.$this->db->protect_identifiers($table);
+        if (!empty($where)) $this->tm_from.= ' WHERE '.$where;
+        $this->tm_from .= ' ORDER BY '.$order_by;
         if ( $this->tm_limit > 0) {
           $this->tm_from .= ' LIMIT '.$this->tm_offset.','.$this->tm_limit;
           $this->tm_limit = 0;
