@@ -86,6 +86,11 @@ Class Data_Core extends CI_Model {
   private $tm_select  = FALSE;
   
   /**
+   * Hou de FROM bij, kan aangepast worden om LIMIT bij one_to_many en many_to_many relaties mooi te krijgen
+   */
+  private $tm_from = '';
+  
+  /**
    * Een eventueel veld dat een compleet pad moet bevatten in een tree table
    */
   private $tm_path = FALSE;
@@ -797,6 +802,7 @@ Class Data_Core extends CI_Model {
    */
   public function reset() {
     $this->tm_select        = FALSE;
+    $this->tm_from          = '';
     $this->tm_path          = FALSE;
     $this->tm_order_by      = array();
     $this->tm_limit         = 0;
@@ -1149,20 +1155,24 @@ Class Data_Core extends CI_Model {
     $this->db->select( $this->tm_select, FALSE );
     
     // order_by
-    $first_order_by = '';
     if ( empty($this->tm_order_by) and !empty($this->settings['order_by']) ) {
       $this->order_by( $this->settings['order_by'] );
     }
-    if ( ! empty($this->tm_order_by) ) {
+    if ( !empty($this->tm_order_by) ) {
       foreach ($this->tm_order_by as $order_by) {
-        if (empty($first_order_by)) $first_order_by = $order_by;
         $this->db->order_by( $order_by );
       }
     }
+
+
+    // FROM
+    $this->_from();
     
     // limit & offset & GET
     $this->query_info = array();
-    $query = $this->db->get( $this->settings['table'], $this->tm_limit, $this->tm_offset );
+    $this->db->limit( $this->tm_limit );
+    $this->db->offset( $this->tm_offset );
+    $query = $this->db->get();
     
     // Jump to today?
     if ( $query AND $this->tm_jump_to_today AND $this->tm_limit>1 ) {
@@ -1774,6 +1784,51 @@ Class Data_Core extends CI_Model {
   }
   
 
+  /**
+   * Zelfde als QueryBuilder from().
+   * Met dit verschil, FROM deel kan eventueel aangepast worden als dat nodig is voor relaties in combinatie met LIMIT
+   *
+   * @param string $from 
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function from( $from ) {
+    $this->tm_from = $from;
+    return $this;
+  }
+  
+  /**
+   * Bouwt het FROM deel van de query op
+   *
+   * @return void
+   * @author Jan den Besten
+   */
+  private function _from() {
+    // Als geen expliciete FROM (meestal) bouw die dan op
+    if ( empty($this->tm_from) ) {
+      
+      // Default is de ingestelde tabel
+      $this->tm_from = $this->settings['table'];
+      
+      // Als 'one_to_many' of 'many_to_many' relatie, maak dan een subselect met gevraagde LIMIT en ORDER
+      if ( isset($this->tm_with['one_to_many']) or isset($this->tm_with['many_to_many']) ) {
+        $table = $this->settings['table'];
+        reset($this->tm_order_by);
+        $order_by = current($this->tm_order_by);
+        $this->tm_from = '(SELECT * FROM '.$this->db->protect_identifiers($table).' ORDER BY '.$this->db->protect_identifiers($order_by);
+        if ( $this->tm_limit > 0) {
+          $this->tm_from .= ' LIMIT '.$this->tm_offset.','.$this->tm_limit;
+          $this->tm_limit = 0;
+          $this->tm_offset = 0;
+        }
+        $this->tm_from .= ') AS '.$this->db->protect_identifiers($table).'';
+      }
+      
+    }
+    return $this->db->from( $this->tm_from );
+  }
+  
+
 
   /**
    * Zelfde als 'where' van Query Builder, met deze uitbreidingen:
@@ -2152,8 +2207,6 @@ Class Data_Core extends CI_Model {
    * one_to_many
    * -----------
    * 
-   * LET OP: ->num_rows() kan onverwachte resultaten geven, zo ook met het gebruik van ->limit(). Dit kun je voorkomen door ->with_grouped() te gebruiken, zie hieronder.
-   * 
    * Voegt alle one_to_many relaties met al hun velden toe aan het resultaat:
    * 
    * ->with( 'one_to_many' );
@@ -2178,8 +2231,6 @@ Class Data_Core extends CI_Model {
    * 
    * many_to_many
    * ------------
-   * 
-   * LET OP: ->num_rows() kan onverwachte resultaten geven, zo ook met het gebruik van ->limit(). Dit kun je voorkomen door ->with_grouped() te gebruiken, zie hieronder.
    * 
    * Voegt alle many_to_many relaties met al hun velden toe aan resultaat:
    * 
@@ -2220,6 +2271,18 @@ Class Data_Core extends CI_Model {
    * 
    * - Het groeperen van de data gebeurt door de data tussen [] te zetten en te scheiden met een komma. De velden worden onderling gescheiden door een |
    * - Deze karakters (met name de | ) kunnen dan niet meer voorkomen in de data zelf.
+   * 
+   * 
+   * LET OP: ->num_rows() bij 'one_to_many' en 'many_to_many'
+   * --------------------------------------------------------
+   * 
+   * Bij 'one_to_many' en 'many_to_many' relaties:
+   * 
+   * - Kan ->get()->result_array() méér rijen als resultaat geven dan het gevraagde aantal wat met ->limit() is ingesteld.
+   * - Dat is omdat voor elke relatie-rij een extra rij is toegevoegd.
+   * - Dit kan voorkomen worden door de relatie data 'grouped' bij te voegen (zie hierboven)
+   * 
+   * - Bij ->get_result() worden deze relatie rijen samengevoegd en klopt het aantal rijen wél met de ingestelde ->limit().
    * 
    * @param string $type De soort relatie ['many_to_one'|'many_to_many']
    * @param array  $what Een array van welke relaties meegenomen moeten worden bij deze relatie-vorm.
@@ -3106,13 +3169,13 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   protected function last_clean_query( $grouped=FALSE, $query='' ) {
-    if (empty($query)) $query = $this->last_query();
+    if (empty($query)) $query = trim($this->last_query());
     // $query = preg_replace("/(WHERE.*)GROUP/uUs", " GROUP", $query);
     // $query = preg_replace("/(WHERE.*)ORDER/uUs", " ORDER", $query);
     // $query = preg_replace("/(WHERE.*)LIMIT/uUs", " LIMIT", $query);
     $query = preg_replace("/SELECT.*FROM/uUs", 'SELECT `'.$this->settings['table'].'`.`'.$this->settings['primary_key'].'` FROM', $query, 1);
     $query = preg_replace("/LIMIT\s+\d*/us", " ", $query);
-    $query = preg_replace("/ORDER.*/us", "", $query);
+    $query = preg_replace("/ORDER\sBY[^)]*/us", "", $query);
     if ($grouped and strpos($query,'GROUP BY')===FALSE) {
       $query.=' GROUP BY `'.$this->settings['table'].'`.`'.$this->settings['primary_key'].'`';
     }
