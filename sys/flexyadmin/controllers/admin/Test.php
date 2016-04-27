@@ -32,12 +32,12 @@ class Test extends AdminController {
   public function index() {
     if (!$this->user->is_super_admin()) return;
     
-    $this->data->table('tbl_groepen');
-    $this->data->with('many_to_many');
-    $result = $this->data->get_result( 12 );
+    $this->data->table('tbl_adressen');
+    $this->data->with('one_to_many');
+    $query = $this->data->get( 10,2 );
     
     trace_( $this->data->last_query() );
-    trace_( $result );
+    trace_( $query->result_array() );
     
   }
   
@@ -80,13 +80,14 @@ class Test extends AdminController {
 
     $get=array();
     $result=array();
+    $sql=array();
     
     foreach ($with as $key => $value) {
       // With
       $with[$key] = highlight_code( str_replace(')->',")\n->",$value) );
 
       // Get
-      $eval = 'return $this->data'.$value.'->get();';
+      $eval = 'return $this->data'.$value.'->get( 2 );';
       $query = eval($eval);
       if ($query) {
         $num_rows = $query->num_rows();
@@ -98,18 +99,22 @@ class Test extends AdminController {
       }
       
       // Result
-      $eval = 'return $this->data'.$value.'->get_result();';
+      $eval = 'return $this->data'.$value.'->get_result( 2 );';
       $array = eval($eval);
       $num_rows = $this->data->num_rows();
       $result[$key] = 'num_rows = '.$num_rows.' (2)'.br().highlight_code(array2php( array_slice($array,0,2) ));
+      // Query
+      $sql[$key] = highlight_code(nice_sql( $this->data->last_query() ));
     }
     array_unshift($with,"\n<strong>with()</strong>");
     array_unshift($get,"<strong>get()->result_array()</strong>");
     array_unshift($result,"<strong>get_result()</strong>");
+    array_unshift($sql,"\n<strong>->last_query()</strong>");
     
     echo( '<h1>'.$caption.'</h1>' );
     $this->table->set_heading( array_keys($with) );
     $this->table->add_row( $with );
+    $this->table->add_row( $sql );
     $this->table->add_row( $get );
     $this->table->add_row( $result );
     echo $this->table->generate();

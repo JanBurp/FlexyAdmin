@@ -177,8 +177,17 @@ function trace_($a=NULL,$echo=true,$backtraceOffset=1,$max=50,$class='_trace') {
 }
 
 function trace_sql($sql,$echo=true) {
-  $sql = preg_replace("/(SELECT|FROM|WHERE|SET|ORDER|LEFT|RIGHT|LIMIT)\s/uis", "\n$1 ", $sql);
+  $sql = nice_sql($sql);
   return trace_($sql,$echo);
+}
+
+function nice_sql($sql) {
+  $sql = preg_replace("/(SELECT)\s/uis", "$1\n", $sql,1);
+  $sql = str_replace("`, ", "`, \n", $sql);
+  $sql = preg_replace("/(FROM)\s/uis", "\n$1 ", $sql,1);
+  $sql = substr_replace( $sql,"\nORDER",strrpos($sql,'ORDER'),'5');
+  $sql = preg_replace("/(WHERE|SET|LEFT|RIGHT|GROUP)\s/uis", "\n$1 ", $sql);
+  return $sql;
 }
 
 /**
