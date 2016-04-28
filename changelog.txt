@@ -1,3 +1,11 @@
+Changes 3.1.1 (3625...)
+=======================
+
+Breaking changes:
+- 'Data' Removed data->with_grouped()
+- 'Data' Added data->with_json()
+
+
 Changes 3.1.0 (3612...)
 =======================
 

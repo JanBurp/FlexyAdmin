@@ -33,11 +33,18 @@ class Test extends AdminController {
     if (!$this->user->is_super_admin()) return;
     
     $this->data->table('tbl_adressen');
-    $this->data->with('one_to_many');
-    $query = $this->data->get( 10,2 );
+    $this->data->with_json('one_to_many');
+    // $this->data->with('one_to_many');
+    // $this->data->find('van');
+    $query = $this->data->get(5);
+    $result = $query->result_array();
+    $row = current($result);
+    $json = $row['tbl_leerlingen.json'];
     
     trace_( $this->data->last_query() );
-    trace_( $query->result_array() );
+    trace_( $result );
+    echo( $json );
+    trace_( json_decode( $json,true ) );
     
   }
   
@@ -51,17 +58,17 @@ class Test extends AdminController {
     $many_to_one['normal']   = "->with( 'many_to_one' )";
     $many_to_one['specific'] = "->with( 'many_to_one', ['id_adressen'=>['str_zipcode','str_city']] )";
     $many_to_one['abstract'] = "->with( 'many_to_one', ['id_adressen'=>'abstract'] )";
-    $many_to_one['grouped']  = "->with_grouped( 'many_to_one', ['id_adressen'] )";
+    $many_to_one['json']  = "->with_json( 'many_to_one', ['id_adressen'] )";
     $many_to_one['flat']     = "->with_flat_many_to_one( ['id_adressen'] )";
     $this->eval_table('many_to_one',$many_to_one);
-    
+
     // one_to_many
     $this->data->table( 'tbl_adressen' );
     $one_to_many['without']  = "";
     $one_to_many['normal']   = "->with( 'one_to_many' )";
     $one_to_many['specific'] = "->with( 'one_to_many', ['tbl_leerlingen'=>['str_first_name','str_last_name']] )";
     $one_to_many['abstract'] = "->with( 'one_to_many', ['tbl_leerlingen'=>'abstract'] )";
-    $one_to_many['grouped']  = "->with_grouped( 'one_to_many', ['tbl_leerlingen'] )";
+    $one_to_many['json']  = "->with_json( 'one_to_many', ['tbl_leerlingen'] )";
     $this->eval_table('one_to_many',$one_to_many);
 
     // many_to_many
@@ -70,7 +77,7 @@ class Test extends AdminController {
     $many_to_many['normal']   = "->with( 'many_to_many' )";
     $many_to_many['specific'] = "->with( 'many_to_many', ['rel_groepen__adressen'=>['str_zipcode']] )";
     $many_to_many['abstract'] = "->with( 'many_to_many', ['rel_groepen__adressen'=>'abstract'] )";
-    $many_to_many['grouped']  = "->with_grouped( 'many_to_many', ['rel_groepen__adressen'] )";
+    $many_to_many['json']  = "->with_json( 'many_to_many', ['rel_groepen__adressen'] )";
     $this->eval_table('many_to_many',$many_to_many);
     
   }
