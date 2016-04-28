@@ -1023,6 +1023,8 @@ $config['DATE_fields_pre']			    = array("dat","date","tme","datetime",);
 $config['FIELDS_media_fields']		= array( "file", "img", "mp3", "mov" );
 $config['FIELDS_date_fields']		  = array( "dat", "date", "tme", "datetime" );
 $config['FIELDS_bool_fields']		  = array( "b", "is", "has" );
+$config['FIELDS_number_fields']		= array( 'id', 'int', 'dec','order','self' );
+
 
 require_once(APPPATH."config/schemaform.php");
 

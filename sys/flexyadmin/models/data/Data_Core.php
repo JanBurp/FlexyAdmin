@@ -30,7 +30,7 @@
  * ->path( $path_field, $original_field = '' )    // Geeft een veld aan dat een geheel pad aan waarden moet bevatten in een tree table (bijvoorbeeld een menu)
  * 
  * ->with( $type='', $what=array() )              // Voeg relaties toe (many_to_one, many_to_many) en specificeer eventueel welke tabellen en hun velden. Zie bij ->with()
- * ->with_grouped( $type='', $what=array() )      // Idem, maar dan met gegroepeerde data
+ * ->with_json( $type='', $what=array() )         // Idem, maar dan komt de data in één JSON veld
  * ->with_flat_many_to_one( $what=array() )       // Idem, maar dan met platte foreign data
  * 
  * ->where($key, $value = NULL)                   // Zoals in Query Builder. Kan ook zoeken in many_to_many data (waar de many_to_many data ook gefilterd is)
@@ -78,8 +78,7 @@ Class Data_Core extends CI_Model {
    * Onthoud eventueel al opgezochte relatie tabellen
    */
   private $relation_tables = array();
-
-
+  
   /**
    * Hou SELECT bij om ervoor te zorgen dat SELECT in orde is
    */
@@ -135,11 +134,11 @@ Class Data_Core extends CI_Model {
    *  'many_to_many' => array(
    *    'rel_menu__links' => array(
    *       'fields'   => 'abstract',
-   *       'grouped'  => FALSE
+   *       'json'     => FALSE
    *     ),
    *    'rel_menu__posts' => array(
    *       'fields'   => array('id','str_title',')
-   *       'grouped'  => true
+   *       'json'     => true
    *     ),
    *   )
    * )
@@ -1288,8 +1287,8 @@ Class Data_Core extends CI_Model {
               }
             }
             
-            // Niet grouped en niet flat, dan als subarray
-            elseif ( ! el('grouped',$info,FALSE) ) {
+            // Niet JSON en niet flat, dan als subarray
+            elseif ( ! el('json',$info,FALSE) ) {
               $fields   = $info['fields'];
               // split row and with data
               $row_with_data = filter_by_key( $row, $as.'.' );
@@ -1443,7 +1442,7 @@ Class Data_Core extends CI_Model {
     }
     
     if ($where) $this->where( $where );
-    // Als er many_to_many data is die niet grouped is dan kan het zijn dat er meer resultaten nodig zijn om één row samen te stellen
+    // Als er many_to_many data is die niet JSON is dan kan het zijn dat er meer resultaten nodig zijn om één row samen te stellen
     if ( isset($this->tm_with['many_to_many']) ) {
       $result = $this->_get_result();
     }
@@ -1816,19 +1815,27 @@ Class Data_Core extends CI_Model {
       if ( isset($this->tm_with['one_to_many']) or isset($this->tm_with['many_to_many']) ) {
         // table
         $table = $this->settings['table'];
-        // WHERE ?
-        $where = '';
+        // als WHERE en LIMIT en één relatie die niet JSON is, dan een Exception
         $sql = $this->db->get_compiled_select('',FALSE);
-        if (preg_match("/WHERE(.*)ORDER/us", $sql,$match)) {
-          $where=$match[1];
+        if (has_string('WHERE',$sql) and $this->tm_limit>0) {
+          $json = TRUE;
+          foreach ($this->tm_with as $type => $with) {
+            if ($type==='one_to_many' or $type==='many_to_many') {
+              foreach ($with as $what => $relation) {
+                $json = ($json && $relation['json']);
+              }
+            }
+          }
+          if (!$json) throw new Exception( __CLASS__.": The combination of a '...to_many' result, LIMIT and WHERE gives unexpected (numbers of) results. Try using ->with_json().");
         }
         // ORDER BY ?
         reset($this->tm_order_by);
         $order_by = current($this->tm_order_by);
+        $order_by = explode(' ',$order_by);
         // Compile the subquery:
         $this->tm_from = '(SELECT * FROM '.$this->db->protect_identifiers($table);
-        if (!empty($where)) $this->tm_from.= ' WHERE '.$where;
-        $this->tm_from .= ' ORDER BY '.$order_by;
+        if (!empty($where)) $this->tm_from.= ' WHERE ('.$where.') ';
+        $this->tm_from .= ' ORDER BY '.$this->db->protect_identifiers($order_by[0]).' '.el(1,$order_by,'');
         if ( $this->tm_limit > 0) {
           $this->tm_from .= ' LIMIT '.$this->tm_offset.','.$this->tm_limit;
           $this->tm_limit = 0;
@@ -2273,17 +2280,14 @@ Class Data_Core extends CI_Model {
    * - tbl_posts.....
    * 
    * 
-   * grouped
-   * -------
+   * json
+   * ----
    * 
-   * Dit lijkt wel op 'abstract'. Met dit verschil dat het resultaat altijd in één veld wordt gegroupeerd.
+   * Hiermee wordt de relatie data in één JSON string gestopt:
    * Voor many_to_one:
-   * - tbl_posts.grouped => [4|titel|tekst]
+   * - tbl_posts.json => { "id":4, "str_title":"titel", "txt_text": "tekst" }
    * Voor many_to_many:
-   * - tbl_posts.grouped => [4|titel|tekst], [8|nog een|lorum], [...] etc.
-   * 
-   * - Het groeperen van de data gebeurt door de data tussen [] te zetten en te scheiden met een komma. De velden worden onderling gescheiden door een |
-   * - Deze karakters (met name de | ) kunnen dan niet meer voorkomen in de data zelf.
+   * - tbl_posts.json => { "4": { "id":4, "str_title":"titel", "txt_text": "tekst" }, "18" { "id":18, "str_title":"test", "txt_text": "lorum" }, ... etc... }
    * 
    * 
    * LET OP: ->num_rows() bij 'one_to_many' en 'many_to_many'
@@ -2293,7 +2297,7 @@ Class Data_Core extends CI_Model {
    * 
    * - Kan ->get()->result_array() méér rijen als resultaat geven dan het gevraagde aantal wat met ->limit() is ingesteld.
    * - Dat is omdat voor elke relatie-rij een extra rij is toegevoegd.
-   * - Dit kan voorkomen worden door de relatie data 'grouped' bij te voegen (zie hierboven)
+   * - Dit kan voorkomen worden door de relatie data 'json' bij te voegen (zie hierboven)
    * 
    * - Bij ->get_result() worden deze relatie rijen samengevoegd en klopt het aantal rijen wél met de ingestelde ->limit().
    * 
@@ -2303,12 +2307,12 @@ Class Data_Core extends CI_Model {
    *                      - Voor 'many_to_one' relaties kun je een array meegeven van foreign_keys
    *                      - Voor 'many_to_many' een array van relatie tabellen.
    *                      - Eventueel kun je per relatie de velden of 'abstract' meegeven
-   * @param bool $grouped [FALSE] bepaalt of een resultaat gegroupeerd moet worden op rij niveau. (zie ->with_grouped())
+   * @param bool $json [FALSE] bepaalt of een resultaat gegroupeerd moet worden op rij niveau. (zie ->with_json())
    * @param bool $flat [FALSE] bepaalt of een 'many_to_one' resultaat plat moet worden geintegreerd. (zie ->with_flat())
    * @return $this
    * @author Jan den Besten
    */
-  public function with( $type='', $what=array(), $grouped=FALSE, $flat=FALSE ) {
+  public function with( $type='', $what=array(), $json=FALSE, $flat=FALSE ) {
     
     // Reset?
     if ( empty($type) ) {
@@ -2371,7 +2375,7 @@ Class Data_Core extends CI_Model {
         'table'   => $value['table'],
         'as'      => el('as',$value, $this->settings['relations'][$type][$what]['result_name'] ),
         'fields'  => $value['fields'],
-        'grouped' => $grouped,
+        'json' => $json,
       );
       if ($type=='many_to_one') {
         $tm_with_new[$what]['flat'] = $flat;
@@ -2399,7 +2403,7 @@ Class Data_Core extends CI_Model {
   
   
   /**
-   * Geef aan welke relaties gegroupeerd meegenomen moeten worden in het resultaat.
+   * Geef aan welke relaties in één JSON veld moeten worden meegenomen
    * Zie ook bij ->with()
    *
    * @param string $type ['many_to_many'] 
@@ -2407,7 +2411,7 @@ Class Data_Core extends CI_Model {
    * @return $this
    * @author Jan den Besten
    */
-  public function with_grouped( $type='many_to_many', $what=array() ) {
+  public function with_json( $type='many_to_many', $what=array() ) {
     return $this->with( $type, $what, TRUE);
   }
   
@@ -2448,12 +2452,12 @@ Class Data_Core extends CI_Model {
     $id = $this->settings['primary_key'];
     foreach ($what as $key => $info) {
       $fields      = $info['fields'];
-      $grouped     = el('grouped',$info,false);
+      $json     = el('json',$info,false);
       $foreign_key = $this->settings['relations']['many_to_one'][$key]['foreign_key'];
       $other_table = $this->settings['relations']['many_to_one'][$key]['other_table'];
       $as          = el('as',$info, $other_table);
       // Select fields
-      $this->_select_with_fields( 'many_to_one', $other_table, $as, $fields, $foreign_key, $grouped );
+      $this->_select_with_fields( 'many_to_one', $other_table, $as, $fields, $foreign_key, $json );
       // Join
       $this->join( $other_table.' AS '.$as, $as.'.'.$id.' = '.$this->settings['table'].".".$foreign_key, 'left');
     }
@@ -2472,12 +2476,12 @@ Class Data_Core extends CI_Model {
     $id = $this->settings['primary_key'];
     foreach ($what as $key => $info) {
       $fields      = $info['fields'];
-      $grouped     = el('grouped',$info,false);
+      $json     = el('json',$info,false);
       $foreign_key = $this->settings['relations']['one_to_many'][$key]['foreign_key'];
       $other_table = $this->settings['relations']['one_to_many'][$key]['other_table'];
       $as          = el('as',$info, $other_table);
       // Select fields
-      $this->_select_with_fields( 'one_to_many', $other_table, $as, $fields, $foreign_key, $grouped );
+      $this->_select_with_fields( 'one_to_many', $other_table, $as, $fields, $foreign_key, $json );
       // Join
       $this->join( $other_table.' AS '.$as, $as.'.'.$foreign_key.' = '.$this->settings['table'].".".$id, 'left');
     }
@@ -2499,14 +2503,14 @@ Class Data_Core extends CI_Model {
     $id = $this->settings['primary_key'];
     foreach ( $tables as $rel_table => $info ) {
       $fields   = $info['fields'];
-      $grouped  = $info['grouped'];
+      $json  = $info['json'];
       $this_table        = $this->settings['relations']['many_to_many'][$rel_table]['this_table'];
       $other_table       = $this->settings['relations']['many_to_many'][$rel_table]['other_table'];
       $this_foreign_key  = $this->settings['relations']['many_to_many'][$rel_table]['this_key'];
       $other_foreign_key = $this->settings['relations']['many_to_many'][$rel_table]['other_key'];
       $as                = $this->settings['relations']['many_to_many'][$rel_table]['result_name'];
       // Select fields
-      $this->_select_with_fields( 'many_to_many', $other_table, $as, $fields, '', $grouped );
+      $this->_select_with_fields( 'many_to_many', $other_table, $as, $fields, '', $json );
       // Joins
       $this->join( $rel_table,    $this_table.'.'.$id.' = '.$rel_table.".".$this_foreign_key,     'left');
       $this->join( $other_table,  $rel_table. '.'.$other_foreign_key.' = '.$other_table.".".$id,  'left');
@@ -2523,12 +2527,13 @@ Class Data_Core extends CI_Model {
    * @param string $as_table naamgeving
    * @param array $fields velden van de gerelateerde tabel
    * @param string $foreign_key eventuele foreignkey als many_to_one
-   * @param bool $grouped of de many_to_many data gegroupeerd worden in één veld met de naam van de relatie tabel
+   * @param bool $json of de many_to_many data gegroupeerd worden in één veld met de naam van de relatie tabel
    * @return $this
    * @author Jan den Besten
    */
-  protected function _select_with_fields( $type, $other_table, $as_table, $fields, $foreign_key='', $grouped = FALSE ) {
+  protected function _select_with_fields( $type, $other_table, $as_table, $fields, $foreign_key='', $json = FALSE ) {
     $abstract = FALSE;
+    $select   = '';
 
     // Welke velden van de gerelateerde tabel?
     if ( empty($fields) ) {
@@ -2544,10 +2549,10 @@ Class Data_Core extends CI_Model {
       }
     }
     
-    // Select de velden van de gerelateerde tabel voor een abstract
+    // SELECT abstract
     if ($abstract) {
       $select = $abstract;
-      if ($grouped) {
+      if ($json) {
         $abstract = remove_suffix($abstract,' AS ');
         $select = 'GROUP_CONCAT( "[",'.$abstract.',"]" SEPARATOR ",") `'.$other_table.'`';
       }
@@ -2557,39 +2562,66 @@ Class Data_Core extends CI_Model {
         $select = '`'.$other_table.'`.`'.$other_primary_key.'` AS `'.$as_table.'.'.$other_primary_key.'`, '.$select;
       }
     }
-    // Select de velden van de gerelateerde tabel voor een lijst met velden
+    
+    // SELECT anderen
     else {
+      
       // primary_key hoeft er niet in
       if ( $key=array_search( $this->settings['primary_key'], $fields ) ) {
         unset($fields[$key]);
       }
-      // maak velden sql
-      $select = '';
+      
+      // Verzamel de velden
+      $select_fields = array();
       foreach ($fields as $field) {
-        if ($type=='many_to_one')
-          $select .= '`'.$as_table.'`.`'.$field.'`';
-        else
-          $select .= '`'.$other_table.'`.`'.$field.'`';
-        if ($grouped)
-          $select.= ',"|",';
-        else
-          $select.= ' AS `'.$as_table.'.'.$field.'`, ';
+        $type = get_prefix($field);
+        $select_fields[$field] = array(
+          'type'        => $type,
+          'add_slashes' => !in_array($type, $this->config->item('FIELDS_number_fields')) and !in_array($type, $this->config->item('FIELDS_bool_fields')),
+          'field'       => $field,
+          'select'      => '`' . ( $type==='many_to_one' ? $as_table : $other_table) . '`.`'.$field.'`',
+        );
+
       }
-      $select = trim($select,',');
-      if ($grouped) {
-        $select = substr($select,0,strlen($select)-4); // remove last ,"|"
-        $select = 'GROUP_CONCAT( "[",' . $select . ',"]" SEPARATOR ",") `'.$as_table.'.grouped`';
+      
+      // SELECT normaal
+      if (!$json) {
+        foreach ($select_fields as $field => $select_field) {
+          $select .= $select_field['select'].' AS `'.$as_table.'.'.$field.'`, ';
+        }
+        $select = trim($select,',');
+      }
+      
+      // SELECT grouped JSON
+      else {
+        $this->db->simple_query('SET SESSION group_concat_max_len=1048576'); // (1mb) Zorg ervoor dat het resultaat van GROUP_CONCAT lang genoeg is
+        $last_slashes = FALSE;
+        foreach ($select_fields as $field => $select_field) {
+          $last_slashes = $select_field['add_slashes'];
+          // numbers/booleans etc
+          if ( !$select_field['add_slashes'] ) {
+            $select .= '"\"'.$field.'\":", '  .$select_field['select'].', ",", ';
+          }
+          else {
+            $select .= '"\"'.$field.'\":\"", '.$select_field['select'].', "\",", ';
+          }
+        }
+        // remove last ","
+        if ($last_slashes) {
+          $select = substr($select,0,strlen($select)-9);
+          $select .= ', "\""';
+        }
+        else {
+          $select = substr($select,0,strlen($select)-7);
+          $select .= ', ""';
+        }
+        // ready
+        $select = 'CONCAT( "{", GROUP_CONCAT( "\"",'.$select_fields['id']['select'].',"\":{", '.$select.', "}" SEPARATOR ", "), "}" ) `'.$as_table.'.json`';
       }
     }
+    $select = trim(trim($select),',');
     
     // Stop select in query, als het kan direct na foreign_key
-    $select = trim(trim($select),',');
-    // $foreign_key = el( array('relations','many_to_one',$other_table,'foreign_key'), $this->settings );
-    
-    // trace_([$other_table,$foreign_key,$select]);
-    
-    
-    
     if (isset($foreign_key) and isset($this->tm_select[$foreign_key])) {
       $this->tm_select = array_add_after( $this->tm_select, $foreign_key, array($as_table=>$select) );
     }
@@ -2597,8 +2629,8 @@ Class Data_Core extends CI_Model {
       $this->tm_select[$as_table] = $select;
     }
 
-    // grouped?
-    if ($grouped) $this->db->group_by( $this->settings['table'].'.'.$this->settings['primary_key'] );
+    // json?
+    if ($json) $this->db->group_by( $this->settings['table'].'.'.$this->settings['primary_key'] );
     
     return $this;
   }
@@ -3137,10 +3169,10 @@ Class Data_Core extends CI_Model {
    * @return int
    * @author Jan den Besten
    */
-  public function total_rows( $calculate=FALSE, $grouped=FALSE ) {
+  public function total_rows( $calculate=FALSE, $json=FALSE ) {
     if ($calculate) {
       // perform simple query count
-      $query = $this->db->query( $this->last_clean_query( $grouped ) );
+      $query = $this->db->query( $this->last_clean_query( $json ) );
       $total_rows = $query->num_rows();
       return $total_rows;
     }
@@ -3181,7 +3213,7 @@ Class Data_Core extends CI_Model {
    * @return string
    * @author Jan den Besten
    */
-  protected function last_clean_query( $grouped=FALSE, $query='' ) {
+  protected function last_clean_query( $groupby=FALSE, $query='' ) {
     if (empty($query)) $query = trim($this->last_query());
     // $query = preg_replace("/(WHERE.*)GROUP/uUs", " GROUP", $query);
     // $query = preg_replace("/(WHERE.*)ORDER/uUs", " ORDER", $query);
@@ -3189,7 +3221,7 @@ Class Data_Core extends CI_Model {
     $query = preg_replace("/SELECT.*FROM/uUs", 'SELECT `'.$this->settings['table'].'`.`'.$this->settings['primary_key'].'` FROM', $query, 1);
     $query = preg_replace("/LIMIT\s+\d*/us", " ", $query);
     $query = preg_replace("/ORDER\sBY[^)]*/us", "", $query);
-    if ($grouped and strpos($query,'GROUP BY')===FALSE) {
+    if ($groupby and strpos($query,'GROUP BY')===FALSE) {
       $query.=' GROUP BY `'.$this->settings['table'].'`.`'.$this->settings['primary_key'].'`';
     }
     $this->query_info['last_clean_query'] = $query;
