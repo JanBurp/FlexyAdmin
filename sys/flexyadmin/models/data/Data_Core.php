@@ -60,11 +60,11 @@ Class Data_Core extends CI_Model {
     'fields'          => array(),
     'abstract_fields' => array(),
     'abstract_filter' => '',
+    'relations'       => array(),
     'field_info'      => array(),
     'order_by'        => 'id',
     'max_rows'        => 0,
     'update_uris'     => true,
-    'relations'       => array(),
     'grid_set'        => array(),
     'form_set'        => array(),
   );
@@ -354,7 +354,7 @@ Class Data_Core extends CI_Model {
       if ( get_prefix($field)==='id' and $field!==$this->settings['primary_key']) {
         
         $foreignTable = el( array('relations','many_to_one',$field,'other_table'), $this->settings);
-        if ($foreignTable) {
+        if ($foreignTable and $this->db->table_exists($foreignTable)) {
           // Zijn er teveel opties?
           if ($this->db->count_all($foreignTable)>100) {
             // Geef dan de api aanroep terug waarmee de opties opgehaald kunnen worden
@@ -362,7 +362,7 @@ Class Data_Core extends CI_Model {
           }
           else {
             // Anders geef gewoon de opties terug
-            $other_model = new Data_model_core();
+            $other_model = new Data_core();
             $other_model->table( $foreignTable )->select_abstract();
             $options['data'] = $other_model->get_result();
             foreach ($options['data'] as $key => $option) {

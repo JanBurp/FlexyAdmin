@@ -283,7 +283,7 @@ class DataTest extends CITestCase {
     $keys = array_keys($row);
     $this->assertEquals( array('id','str_city','tbl_leerlingen'), $keys );
     $this->assertInternalType( 'array', $row['tbl_leerlingen'] );
-    $this->assertEquals( 11, count($row['tbl_leerlingen']) );
+    $this->assertEquals( 12, count($row['tbl_leerlingen']) );
    
     // tbl_adressen ->where()->get_result()
     $array = $this->CI->data->select('str_city')
