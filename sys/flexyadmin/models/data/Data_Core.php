@@ -1287,7 +1287,7 @@ Class Data_Core extends CI_Model {
               }
             }
             
-            // Niet JSON en niet flat, dan als subarray
+            // Niet JSON en niet flat => als subarray
             elseif ( ! el('json',$info,FALSE) ) {
               $fields   = $info['fields'];
               // split row and with data
@@ -1817,7 +1817,8 @@ Class Data_Core extends CI_Model {
         $table = $this->settings['table'];
         // als WHERE en LIMIT en één relatie die niet JSON is, dan een Exception
         $sql = $this->db->get_compiled_select('',FALSE);
-        if (has_string('WHERE',$sql) and $this->tm_limit>0) {
+        $has_where = has_string('WHERE',$sql);
+        if ($has_where AND $this->tm_limit>0) {
           $json = TRUE;
           foreach ($this->tm_with as $type => $with) {
             if ($type==='one_to_many' or $type==='many_to_many') {
@@ -1836,7 +1837,7 @@ Class Data_Core extends CI_Model {
         $this->tm_from = '(SELECT * FROM '.$this->db->protect_identifiers($table);
         if (!empty($where)) $this->tm_from.= ' WHERE ('.$where.') ';
         $this->tm_from .= ' ORDER BY '.$this->db->protect_identifiers($order_by[0]).' '.el(1,$order_by,'');
-        if ( $this->tm_limit > 0) {
+        if ( !$has_where AND $this->tm_limit > 0) {
           $this->tm_from .= ' LIMIT '.$this->tm_offset.','.$this->tm_limit;
           $this->tm_limit = 0;
           $this->tm_offset = 0;
@@ -2616,7 +2617,7 @@ Class Data_Core extends CI_Model {
           $select .= ', ""';
         }
         // ready
-        $select = 'CONCAT( "{", GROUP_CONCAT( "\"",'.$select_fields['id']['select'].',"\":{", '.$select.', "}" SEPARATOR ", "), "}" ) `'.$as_table.'.json`';
+        $select = 'CONCAT( "{", IFNULL( GROUP_CONCAT( "\"",'.$select_fields['id']['select'].',"\":{", '.$select.', "}" SEPARATOR ", "), ""), "}" ) `'.$as_table.'.json`';
       }
     }
     $select = trim(trim($select),',');
