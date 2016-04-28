@@ -29,7 +29,7 @@ class ApiAuthTest extends ApiTestModel {
   }
   
   public function testWrongLogin() {
-    
+
     $attempts = array(
       array('username'=> $this->users[0]['username'],   'password' => $this->users[1]['password'] ),
       array('username'=> $this->users[1]['username'],   'password' => $this->users[0]['password'] ),
@@ -59,7 +59,7 @@ class ApiAuthTest extends ApiTestModel {
   
   
   public function testHackAttempts() {
-    
+ 
     $message='Login must fail with a SQL injection';
     $attempts = array(
       array( 'username'=> 'OR ""=""',                     'password' => 'OR ""=""'  ),
@@ -92,11 +92,10 @@ class ApiAuthTest extends ApiTestModel {
       $this->assertArrayNotHasKey( 'data', $result );
     }
 
-    
-  }
+ }
   
   public function testLogin() {
-    
+
     foreach ($this->users as $user) {
       $this->CI->auth->set_args(array('POST'=>array('username'=>$user['username'],'password'=>$user['password'])));
       $result=$this->CI->auth->login();
@@ -111,7 +110,7 @@ class ApiAuthTest extends ApiTestModel {
   }
   
   public function testNewPasswordSend() {
-    
+
     // Is it possible to send emails?
     $error_reporting=error_reporting();
     error_reporting(0);
@@ -121,11 +120,11 @@ class ApiAuthTest extends ApiTestModel {
     // first create new users
     $cleanup_ids=array();
     foreach ($this->test_users as $user) {
-      $cleanup_ids[]=$this->CI->data->table('cfg_users')->insert( $user );
+      $cleanup_ids[] = $this->CI->data->table('cfg_users')->insert( $user );
     }
-    
+
     // Try 10 times with random emails
-    for ($i=0; $i < 2 ; $i++) { 
+    for ($i=0; $i < 2 ; $i++) {
       $random_email=random_string().'@'.random_string.'.'.random_string('alpha',3);
       $this->CI->auth->set_args(array('email'=>$random_email));
       $result=$this->CI->auth->send_new_password();
@@ -137,13 +136,13 @@ class ApiAuthTest extends ApiTestModel {
       $this->assertArrayHasKey( 'data', $result );
       // $this->assertEquals( false, $result['data'] );
     }
-    
+
     // send new password
     if ($can_send) {
       foreach ($this->test_users as $user) {
         $this->CI->auth->set_args(array('email'=>$user['email_email']));
         $result=$this->CI->auth->send_new_password();
-      
+
         $this->assertArrayHasKey( 'success', $result );
         $this->assertEquals( true, $result['success'] );
         $this->assertArrayHasKey( 'args', $result );
@@ -153,11 +152,11 @@ class ApiAuthTest extends ApiTestModel {
         $this->assertInternalType( 'array', $result['data'] );
         $this->assertEquals( $user['email_email'], $result['data']['email'] );
         $this->assertEquals( $user['str_username'], $result['data']['username'] );
-      
+
         // Test if password is not same anymore
         $new_password_hash=$this->CI->db->get_field_where('cfg_users','gpw_password','email_email',$user['email_email']);
         $this->assertNotEquals( $user['gpw_password'], $new_password_hash );
-      }      
+      }
     }
 
     // cleanup testusers
