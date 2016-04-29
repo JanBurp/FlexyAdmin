@@ -31,12 +31,13 @@ Class Data extends CI_Model {
    * data->table()
    *
    * @param string $table 
-   * @return mixed
+   * @return $this
    * @author Jan den Besten
    */
   public function table( $table ) {
     $this->table = $table;
-    return $this->data_core->table( $table );
+    $this->data_core->table( $table );
+    return $this;
   }
 
 
@@ -60,8 +61,14 @@ Class Data extends CI_Model {
         $this->models[$table] = $this->data_core;
       }
     }
-
-    return call_user_func_array(array($this->models[$table],$method), $args);
+    
+    $return = call_user_func_array(array($this->models[$table],$method), $args);
+    // Return $this als het het Data_core object is
+    if (is_object($return) and isset($return->settings)) {
+      return $this;
+    }
+    // Anders return de return value
+    return $return;
 	}
   
   

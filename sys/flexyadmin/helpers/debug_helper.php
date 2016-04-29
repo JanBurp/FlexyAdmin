@@ -47,7 +47,7 @@ function log_($type,$message) {
  * @return string resultaat
  * @author Jan den Besten
  */
-function backtrace_($offset=0,$limit=10,$echo=true) {
+function backtrace_($offset=0,$limit=3,$echo=true) {
   // if (ENVIRONMENT=='production') return '';
   // if ($echo) return trace_(NULL,$echo,$offset+1);
 	$dbgTrace = debug_backtrace();
