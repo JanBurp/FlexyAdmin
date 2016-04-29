@@ -215,6 +215,6 @@ $config['grid_set'] = NULL;
  * 
  * - fields         - Velden die meegegeven en getoond worden (afhankelijk van veld specifieke instellingen). Als leeg dan is dat hetzelfde als $this->fields
  * - with           - Relaties die mee worden genomen en getoond. Zie $this->with()
- * - fieldsets      - Fieldsets voor het formulier. Per fieldset kan aangegeven worden welke velden daarin verschijnen. Bijvoorbeeld: 'Fieldset naam' => array( 'str_title_en', 'txt_text_en' )
+ * - [fieldsets]    - Fieldsets voor het formulier. Standaard één fieldset met de hierboven ingestelde velden. Per fieldset kan aangegeven worden welke velden daarin verschijnen. Bijvoorbeeld: 'Fieldset naam' => array( 'str_title_en', 'txt_text_en' )
  */
 $config['form_set'] = NULL;
