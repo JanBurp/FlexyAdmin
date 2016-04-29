@@ -15,4 +15,21 @@ Class cfg_users extends Data_Core {
     parent::__construct();
   }
 
+  /**
+   * Aanpassing voor ->where() zodat ook 'current' opgevraagd kan worden
+   *
+   * @param string $key 
+   * @param string $value 
+   * @param string $escape 
+   * @return void
+   * @author Jan den Besten
+   */
+  public function where($key, $value = NULL, $escape = NULL) {
+    if ($key==='current' and isset($this->user->user_id)) {
+      $value = $this->user->user_id;
+      $key = $this->settings['primary_key'];
+    }
+    return parent::where($key,$value,$escape);
+  }
+
 }

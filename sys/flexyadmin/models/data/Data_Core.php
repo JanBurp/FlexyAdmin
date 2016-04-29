@@ -694,6 +694,7 @@ Class Data_Core extends CI_Model {
     $form_set['fields'] = array_values($form_set['fields']); // reset keys
     $form_set['fieldsets'] = $fieldsets;
     $form_set['with']      = array();
+    // trace_($form_set);
     return $form_set;
   }
   
@@ -1568,6 +1569,10 @@ Class Data_Core extends CI_Model {
     if (!is_array($row)) $row=array();
     $this->config->load('schemaform');
     $this->load->model('ui');
+    
+    // Alleen de rijen die in form_set ingesteld zijn
+    $row = array_keep_keys($row, $this->settings['form_set']['fields'] );
+    
     // Default schema
     $sf  = array(
       'schema' => array(
@@ -1627,7 +1632,9 @@ Class Data_Core extends CI_Model {
     $tabs = array();
 
     // Prepare fieldsets
-    foreach ($this->settings['form_set']['fieldsets'] as $tabtitle => $items) {
+    $default_fieldset = array( $this->settings['table'] => $this->settings['form_set']['fields'] );
+    $fieldsets = el(array('form_set','fieldsets'), $this->settings, $default_fieldset );
+    foreach ($fieldsets as $tabtitle => $items) {
       foreach ($items as $i=>$item) {
         $items[$i] = array(
           'key'  => el( array('schema','properties',$item,'title'), $sf ),
@@ -1897,11 +1904,6 @@ Class Data_Core extends CI_Model {
         unset($key);
         unset($value);
         $this->limit( 1 );
-      }
-      // current (alleen voor 'cfg_users') TODO verhuis naar model cfg_users
-      elseif ($key==='current' and $this->settings['table']==='cfg_users' and isset($this->user->user_id)) {
-        $value = $this->user->user_id;
-        $key = $this->settings['primary_key'];
       }
       // primary_key
       else {
