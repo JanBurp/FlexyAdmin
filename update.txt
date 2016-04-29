@@ -19,6 +19,20 @@ For recent sites the update processes described below should work:
 - perform all the steps from your version to the latest:
 
 
+
+UPDATE 3.1.2 (3630...)
+======================
+
+- Als je 'crud->' gebruikt of de crud models, pas die code aan en gebruik 'data->'
+
+
+
+UPDATE 3.1.1 (3625...)
+======================
+
+- Als je 'data->with_grouped()' gebruikt, pas dit aan naar 'data->with_json()':
+
+
 UPDATE 3.1.0 (3612...)
 ======================
 
