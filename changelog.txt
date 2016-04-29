@@ -1,7 +1,14 @@
-Changes 3.1.1 (3625...)
+Changes 3.1.2 (3630)
 =======================
 
-Breaking changes:
+Breaking changes (if you used Crud):
+- Model ->crud-> removed.
+- Crud Models removed (cfg_users,cfg_email,cfg_admin_menu)
+
+Changes 3.1.1 (3625)
+=======================
+
+Breaking changes (if you used data->):
 - 'Data' Removed data->with_grouped()
 - 'Data' Added data->with_json()
 
@@ -9,7 +16,7 @@ Breaking changes:
 Changes 3.1.0 (3612...)
 =======================
 
-Breaking changes:
+Breaking changes (if you used data_model):
 - Renamed 'Data_Model' to 'Data'
 - Changed 'Data' relations system and naming to make it more flexibel
 
