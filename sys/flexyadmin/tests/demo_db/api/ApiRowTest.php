@@ -186,8 +186,8 @@ class ApiRowTest extends ApiTestModel {
             'data|id'   => array( 'type'   => 'integer' ),
             'data|id'   => array( 'assertGreaterThan' => 0 ),
             'info'      => array( 'type' => 'array'),
-            'info'      => array( 'count' => 1),
-            'info'      => array( 'hasKey' => 'affected_rows'),
+            'info'      => array( 'assertGreaterThan' => 1),
+            // 'info'      => array( 'hasKey' => 'affected_rows'),
           )
         ));
 

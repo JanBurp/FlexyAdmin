@@ -5,6 +5,9 @@
 
 $config['table'] = 'cfg_users';
 
+$config['fields'] = array( 'id', 'str_username', 'id_user_group', 'email_email', 'str_language');
+
+$config['order_by'] = 'id_user_group,str_username';
 
 $config['relations'] = array( 
 		'many_to_one' => array( 
@@ -18,6 +21,6 @@ $config['relations'] = array(
 
 
 $config['form_set'] = array(
-  'fields'    => array( 'str_username', 'id_user_group', 'email_email', 'str_language'),
+  'fields'    => array( 'id','str_username', 'id_user_group', 'email_email', 'str_language'),
   'with'      => array( 'many_to_one'=>array('id_user_group') ),
 );

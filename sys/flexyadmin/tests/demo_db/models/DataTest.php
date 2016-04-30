@@ -603,6 +603,39 @@ class DataTest extends CITestCase {
     $this->CI->data->where_in( 'id_crud', $affected_ids );
     $result = $this->CI->data->get_result();
     $this->assertEquals( array(), $result );
+    
+    // Test update relaties met afwijkende naam 'cfg_users'
+    $this->CI->data->table('cfg_users');
+    $row = $this->CI->data->where( 'str_username', 'test')
+                          ->with( 'many_to_one' )
+                          ->get_row();
+    $this->assertEquals( 3, $row['id_user_group'] );
+    $this->assertInternalType( 'array', $row['cfg_user_groups'] );
+    $this->assertEquals( 3, $row['cfg_user_groups']['id'] );
+    $id = $row['id'];
+    // Update and check again
+    $result = $this->CI->data->where( 'str_username', 'test')
+                             ->with( 'many_to_one' )
+                             ->set(array('id_user_group'=>2))
+                             ->validate()->update(  );
+    $this->assertEquals( $result, $id );
+    $row = $this->CI->data->where( 'str_username', 'test')
+                          ->with( 'many_to_one' )
+                          ->get_row();
+    $this->assertEquals( 2, $row['id_user_group'] );
+    $this->assertInternalType( 'array', $row['cfg_user_groups'] );
+    $this->assertEquals( 2, $row['cfg_user_groups']['id'] );
+    // Update and check again
+    $result = $this->CI->data->where( 'str_username', 'test')
+                             ->with( 'many_to_one' )
+                             ->update( array('id_user_group'=>3) );
+    $this->assertEquals( $result, $id );
+    $row = $this->CI->data->where( 'str_username', 'test')
+                          ->with( 'many_to_one' )
+                          ->get_row();
+    $this->assertEquals( 3, $row['id_user_group'] );
+    $this->assertInternalType( 'array', $row['cfg_user_groups'] );
+    $this->assertEquals( 3, $row['cfg_user_groups']['id'] );
   }
   
   

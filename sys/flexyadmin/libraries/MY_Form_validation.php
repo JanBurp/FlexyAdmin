@@ -431,7 +431,10 @@ class MY_Form_validation extends CI_Form_validation {
         $id=$this->CI->input->post('id');
       }
       if ($id>0) {
-        $possible_value=$this->CI->db->get_field_where($table,$field,'id',$id);
+        $sql = 'SELECT `'.$field.'` FROM `'.$table.'` WHERE `id`='.$id;
+        $query = $this->CI->db->query($sql);
+        $possible_value = $query->result_array()[$field];
+        // $possible_value = $this->CI->db->get_field_where($table,$field,'id',$id);
         if ($str===$possible_value) return true;
       }
     }
@@ -439,9 +442,16 @@ class MY_Form_validation extends CI_Form_validation {
     else {
       list($table, $field)=explode('.', $field);
     }
-    return isset($this->CI->db)
-      ? ($this->CI->db->limit(1)->get_where($table, array($field => $str))->num_rows() === 0)
-      : FALSE;
+    
+    if ( !isset($this->CI->db) ) return FALSE;
+    
+    $sql = 'SELECT `'.$field.'` FROM `'.$table.'` WHERE `'.$field.'`="'.$str.'" LIMIT 1';
+    $query = $this->CI->db->query($sql);
+    return ($query->num_rows()===0);
+    //
+    // return isset($this->CI->db)
+    //   ? ($this->CI->db->limit(1)->get_where($table, array($field => $str))->num_rows() === 0)
+    //   : FALSE;
   }
   
   
@@ -547,7 +557,10 @@ class MY_Form_validation extends CI_Form_validation {
      // Als id bekend in postwaarde, kijk dan of het passwoord leeg mag zijn.
      $id=$this->CI->input->post('id');
      if (isset($id) and !empty($id) and $id>0) {
-       $user=$this->CI->db->select('id,gpw_password,b_active')->where('id',$id)->get_row('cfg_users');
+       $sql = 'SELECT `id`,`gpw_password`,`b_active` FROM `cfg_users` WHERE `id`='.$id;
+       $query = $this->CI->db->query($sql);
+       $user = $query->row_array();
+       // $user=$this->CI->db->select('id,gpw_password,b_active')->where('id',$id)->get_row('cfg_users');
        if ($user['b_active']===true && !empty($user['gpw_password'])) return TRUE;
      }
      $match=array();
