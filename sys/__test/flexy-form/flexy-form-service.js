@@ -156,11 +156,11 @@ flexyAdmin.factory('flexyFormService', ['flexySettingsService','flexyApiService'
         'table':table,
       };
       // Update or insert?
-      if (angular.isDefined(id) && id>=0) {
+      if ( angular.isDefined(id) && (id>=0 || id==='current')) {
         args.where = id;
       }
       api.update( args ).then( function(response) {
-        if (response.success===true && response.data!==false) {
+        if (response.success===true && angular.isDefined(response.data) && response.data.id!==false) {
           id = response.data.id;
           // Bewaar data in table data, zodat geen reload van de hele table nodig is
           tableService.update_row( table,id, data);
@@ -171,7 +171,15 @@ flexyAdmin.factory('flexyFormService', ['flexySettingsService','flexyApiService'
         }
         else {
           // FOUT
-          alertService.add( 'warning', '<b>'+translations.FORM_SAVE_ERROR+'</b>');
+          var message = '<b>'+translations.FORM_SAVE_ERROR+'</b>';
+          if (angular.isDefined(response.info) && angular.isDefined(response.info.validation_errors)) {
+            message += '<br><br><ul>';
+            angular.forEach( response.info.validation_errors, function(value,key){
+              message += '<li class="error">'+value+'</li>';
+            });
+            message += '</ul>';
+          }
+          alertService.add( 'warning', message );
           return $q.resolve(false);
         }
       });

@@ -211,7 +211,7 @@ class ApiTestModel extends CITestCase {
           $result    = $this->CI->$apiModel->index();
           $results[] = $result;
         
-          // trace_([$args,$result]);
+          // trace_([$table,$result['info']]);
         
           // trace_([$table,$user]);
           if (empty($table) or in_array($table,$user['tables'])) {

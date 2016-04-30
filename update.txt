@@ -23,25 +23,14 @@ For recent sites the update processes described below should work:
 UPDATE 3.1.2 (3630...)
 ======================
 
-- Als je 'crud->' gebruikt of de crud models, pas die code aan en gebruik 'data->'
-
-
-
-UPDATE 3.1.1 (3625...)
-======================
-
-- Als je 'data->with_grouped()' gebruikt, pas dit aan naar 'data->with_json()':
-
-
-UPDATE 3.1.0 (3612...)
-======================
-
 - Als je 'Data_Model' hebt gebruikt, hernoem deze overal naar 'Data':
   - Hernoem alle data_model aanroepen in je code: vervang '->data_model->' naar '->data->'
   - In eigen models in models/data: vervang 'extends Data_Model' naar 'extends Data'
 - De relaties naamgeving en resultaten zijn veranderd:
   - Kijk voor voorbeelden van hoe de aanroepen en de resultaten nu zijn op de pagina /admin/test/relations
   - En pas je code aan zodat die net zo gebruik maakt van relaties
+- Als je 'data_model->with_grouped()' gebruikt, pas dit aan naar 'data->with_json()' (en de code die iets met het resultaat doet)
+- Als je 'crud->' gebruikt of de crud models, pas die code aan en gebruik 'data->'
 - Vervang site/Controller.php (of voeg regels 162,163 toe)
 
 

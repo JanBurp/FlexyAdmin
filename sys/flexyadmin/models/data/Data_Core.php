@@ -2832,7 +2832,7 @@ Class Data_Core extends CI_Model {
           'validation'        => FALSE,
           'validation_errors' => $this->form_validation->get_error_messages()
         );
-        return FALSE; // CHECK Heeft dit zin? Hij moet iig hier afbreken.
+        return FALSE; // Niet gevalideerd, dus we kunnen geen update doen, dus FALSE
       }
     }
       
