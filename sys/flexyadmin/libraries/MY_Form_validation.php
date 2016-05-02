@@ -433,7 +433,8 @@ class MY_Form_validation extends CI_Form_validation {
       if ($id>0) {
         $sql = 'SELECT `'.$field.'` FROM `'.$table.'` WHERE `id`='.$id;
         $query = $this->CI->db->query($sql);
-        $possible_value = $query->result_array()[$field];
+        $possible_value = $query->result_array();
+        $possible_value = $possible_value[$field];
         // $possible_value = $this->CI->db->get_field_where($table,$field,'id',$id);
         if ($str===$possible_value) return true;
       }
