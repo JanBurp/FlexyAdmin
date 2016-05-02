@@ -723,7 +723,7 @@ class Menu {
         if (isset($item['uri'])) $uri=$item['uri'];
         $thisUri=el($this->settings['fields']['url'],$item,$uri);
         if (!el('unique_uri',$item,false) and !empty($thisUri)) $thisUri=$preUri."/".$thisUri;
-        $thisUri=trim(str_replace('//','/',$thisUri),'/');
+        $thisUri=trim($thisUri,'/');
 				$cleanUri=remove_suffix($thisUri,$this->CI->config->item('URI_HASH'));
         $classUri=str_replace('/','',get_suffix(str_replace(array('?','='),'_',$cleanUri),'/'));
         
