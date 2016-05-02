@@ -2852,7 +2852,7 @@ Class Data_Core extends CI_Model {
         // rel_... oude manier van many_to_many data
         elseif (isset($set[$rel_table])) {
           $many_to_many[$rel_table] = $set[$rel_table];
-          $many_to_many[$rel_table] = array_keys($many_to_many[$other_table]);
+          $many_to_many[$rel_table] = array_keys($many_to_many[$rel_table]);
           unset($set[$rel_table]);
         }
       }
