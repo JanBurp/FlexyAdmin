@@ -187,6 +187,24 @@ class Ajax extends AjaxController {
   }
   
   
+  /**
+   * AJAX plugin call
+   *
+   * @return array ajax result
+   * @author Jan den Besten
+   */
+  public function plugin() {
+		$args=func_get_args();
+    $plugin=array_shift($args);
+    // load the plugin
+    $plugin_name='plugin_'.$plugin;
+    $this->load->library('plugins/plugin_'.$plugin,$plugin_name);
+    // Call the plugin
+    $result = call_user_func_array( array( $this->$plugin_name,'_ajax_api'), $args);
+    return $this->_result( $result );
+  }
+  
+  
   
 	
 
