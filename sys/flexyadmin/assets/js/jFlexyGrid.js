@@ -668,9 +668,8 @@ function doGrid() {
 	//
 	// ActionGrid
 	//
-
 	if (isGridAction) {
-		totalActions=$('.actionGrid td.id').html('<div class="icon no" /></div').length;
+		totalActions=$('.actionGrid tbody tr').length;
 		actionNr=0;
 		$('.actionGrid thead table tr:first td:first').before('<td>&nbsp;</td>').after('<td id="actionCounter"></td>');
 		$('#actionCounter').html(actionNr/totalActions*100+' %');
@@ -680,7 +679,7 @@ function doGrid() {
 	}
 	
 	function doAction(obj) {
-		$(obj).children('td.id:first').html('<div class="icon wait" /></div>');
+		$(obj).children('td:first').html('<div class="icon wait" /></div>');
 		uri=$(obj).children('td.uri').html();
 		if (uri!='') {
 			$.ajax({
@@ -694,9 +693,9 @@ function doGrid() {
           }
 					else {
             if (data._message) {
-              $(obj).children('td._message').html(data._message);
+              $(obj).children('td:nth-child(2)').html(data._message);
             }
-						$(obj).children('td.id:first').html('<div class="icon yes" /></div');
+						$(obj).children('td:first').html('<div class="icon yes" /></div');
 						$(obj).next('tr:first').each(function(){
 							actionNr++;
 							$('#actionCounter').html(((actionNr+1)/totalActions*100).toFixed(1)+' %');
@@ -705,7 +704,7 @@ function doGrid() {
 					}
 				},
 				error: function() {
-					$(obj).children('td.id:first').html('<div class="icon no" /></div');
+					$(obj).children('td:first').html('<div class="icon no" /></div');
 					$(obj).next('tr:first').each(function(){
 						actionNr++;
 						$('#actionCounter').html(((actionNr+1)/totalActions*100).toFixed(1)+' %');
