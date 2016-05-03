@@ -13,6 +13,12 @@
 Class Data extends CI_Model {
   
   /**
+   * Dit zijn de namen van de methods waarvoor in principe ->table() niet eerst hoeft te worden aangeroepen.
+   * Meestal methods die rechtstreeks doorverwijzen naar ->db
+   */
+  private $methods_without_model = array( 'list_tables' );
+  
+  /**
    * Huidige tabel
    */
   private $table = '';
@@ -36,7 +42,21 @@ Class Data extends CI_Model {
    */
   public function table( $table ) {
     $this->table = $table;
-    $this->data_core->table( $table );
+    
+    // Load model; test if table has own data model
+    if (!isset($this->models[$table])) {
+      if ( !empty($table) and file_exists(APPPATH.'models/data/'. ucfirst($table) .'.php')) {
+        $this->load->model('data/'.$table);
+        $this->models[$table] = $this->$table;
+      }
+      else {
+        $this->models[$table] = $this->data_core;
+      }
+    }
+    
+    // Set table
+    call_user_func_array( array($this->models[$table],'table'), array($table) );
+
     return $this;
   }
 
@@ -51,23 +71,25 @@ Class Data extends CI_Model {
 	public function __call( $method, $args ) {
     $table = $this->table;
     
-    if (!isset($this->models[$table])) {
-      // Test if table has own data model, if so load it
-      if ( !empty($table) and file_exists(APPPATH.'models/data/'. ucfirst($table) .'.php')) {
-        $this->load->model('data/'.$table);
-        $this->models[$table] = $this->$table;
-      }
-      else {
-        $this->models[$table] = $this->data_core;
-      }
+    // If no table or model needed, just call it
+    if (in_array($method,$this->methods_without_model)) {
+      $return = call_user_func_array( array($this->data_core,$method), array($args) );
+    }
+    // Error if table/model not set and needed
+    elseif (!isset($this->models[$table])) {
+      throw new ErrorException( __CLASS__.'->'.$method.' model not set. Try using ->data->table() first.' );
+    }
+    // Alles in orde, roep de method aan
+    else {
+      $return = call_user_func_array(array($this->models[$table],$method), $args);
     }
     
-    $return = call_user_func_array(array($this->models[$table],$method), $args);
     // Return $this als het het Data_core object is
     if (is_object($return) and isset($return->settings)) {
       return $this;
     }
-    // Anders return de return value
+    
+    // Anders return de return value zelf
     return $return;
 	}
   
