@@ -13,6 +13,8 @@ Class cfg_users extends Data_Core {
 
   public function __construct() {
     parent::__construct();
+    // Zorg ervoor dat huidige user is ingesteld
+    $this->set_user_id();
   }
 
   /**
@@ -59,6 +61,24 @@ Class cfg_users extends Data_Core {
     }
     
     return parent::_update_insert($type,NULL,$where,$limit);
+  }
+  
+  
+  /**
+   * Zorg ervoor dat alleen users teruggegeven kunnen worden die dezelfde rechten hebben of meer
+   *
+   * @param string $limit[0] 
+   * @param string $offset[0] 
+   * @param string $reset[true] 
+   * @return object $query
+   * @author Jan den Besten
+   */
+  public function get( $limit=0, $offset=0, $reset = true ) {
+    if ($this->user_id) {
+      $group_id = $this->user->group_id;
+      $this->data->where( '`cfg_users`.`id_user_group` >=', $group_id );
+    }
+    return parent::get($limit,$offset,$reset);
   }
   
   

@@ -71,7 +71,7 @@ Class Data extends CI_Model {
     }
     // Alles in orde, roep de method aan
     else {
-      $return = call_user_func_array(array($this->models[$table],$method), $args);
+      $return = call_user_func_array( array($this->models[$table],$method), $args);
     }
     
     // Return $this als het het Data_core object is

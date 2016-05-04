@@ -47,7 +47,6 @@ class ApiRowTest extends ApiTestModel {
   }
 
   public function testWithoutLogin() {
-    
     $this->_testWithoutAuth('row');
   }
 

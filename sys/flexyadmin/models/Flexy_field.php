@@ -154,23 +154,14 @@ class Flexy_field extends CI_Model {
 	 */
 	function concat_foreign_fields($row) {
     $fields=array_keys($row);
-    $newRow=array();
 		foreach ($row as $field=>$data) {
       if (is_foreign_key($field) and !is_foreign_field($field)) {
-        // pakt alle foreign fields van deze foreign key
-        $ffields=filter_by($fields,$field.'__');
-        // combineer alle data en verwijder de foreignfields
-        $foreigndata='';
-        foreach ($ffields as $ffield) {
-          $foreigndata=add_string($foreigndata,$row[$ffield]);
-        }
-        $newRow[$field]=$foreigndata;
-      }
-      elseif (!is_foreign_field($field)) {
-        $newRow[$field]=$data;
+        $abstract_field = $this->relations['many_to_one'][$field]['result_name'].'.abstract';
+        $row[$field] = $row[$abstract_field];
+        unset($row[$abstract_field]);
       }
 		}
-		return $newRow;
+    return $row;
 	}
 
 
@@ -180,7 +171,8 @@ class Flexy_field extends CI_Model {
 	 * Renders full data set according to type and action (grid|form)
 	 *
 	 */
-	function render_grid($table,$data,$right=RIGHTS_ALL,$extraInfoId=NULL) {
+	function render_grid($table,$data,$right=RIGHTS_ALL,$relations=array(),$extraInfoId=NULL) {
+    $this->relations = $relations;
 		$this->init_table($table,"grid",$right);
 		$out=array();
 		foreach ($data as $idRow=>$row) {
@@ -215,7 +207,7 @@ class Flexy_field extends CI_Model {
 	function render_grid_field($table,$field,$data,$right=RIGHTS_ALL,$extraInfoId=NULL) {
 		$this->extraInfoId=$extraInfoId;
 		$this->init_field($field,$data,$right);
-    
+
 		// Hide field?
 		if (isset($this->fieldCfg[$field]['b_show_in_grid']) and ($this->fieldCfg[$field]['b_show_in_grid']==false or $this->fieldCfg[$field]['b_show_in_grid']<0)) {
       return FALSE;
@@ -264,11 +256,9 @@ class Flexy_field extends CI_Model {
 	 *
 	 * Standard rendering function. Replaces %s with the data, and known variables with their content.
 	 */
-
 	function _replace() {
 		$out=$this->type;
 		$out=str_replace("%s",$this->data,$out);
-		//$this->set_variables();
 		foreach ($this->vars as $search=>$replace) {
 			$out=str_replace("#".$search."#",$replace,$out);
 		}
@@ -546,7 +536,6 @@ class Flexy_field extends CI_Model {
     // self_parent kan niet naar zichzelf verwijzen
     if ($this->field=='self_parent') $this->db->where(PRIMARY_KEY." !=", $this->id);
     // Als self_parent bestaat, dan moet het op volgorde van de tree
-    // if ($this->db->field_exists('self_parent',$this->table)) $this->db->order_as_tree();
 		if ($strField)
 			$this->db->uri_as_full_uri(TRUE,$strField);
 		else
@@ -572,10 +561,12 @@ class Flexy_field extends CI_Model {
 		$out="";
 		$data=$this->data;
 		if (is_array($data)) {
-			if (isset($data[$this->config->item('ABSTRACT_field_name')]))
+			if (isset($data[$this->config->item('ABSTRACT_field_name')])) {
 				$out=$data[$this->config->item('ABSTRACT_field_name')];
-			else
+			}
+			else {
 				$out=implode("|",$data);
+      }
 		}
 		else {
 		  $out=$data;

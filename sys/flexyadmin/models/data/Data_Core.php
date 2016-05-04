@@ -85,6 +85,12 @@ Class Data_Core extends CI_Model {
   protected $tm_select  = FALSE;
   
   /**
+   * Eventuele velden die niet in SELECT mogen voorkomen
+   */
+  protected $tm_unselect = FALSE;
+
+  
+  /**
    * Hou de FROM bij, kan aangepast worden om LIMIT bij one_to_many en many_to_many relaties mooi te krijgen
    */
   protected $tm_from = '';
@@ -137,10 +143,10 @@ Class Data_Core extends CI_Model {
   protected $validation = FALSE;
   
   /**
-   * Is nodig om eventueel te kunnen instellen in de database wie iets heeft aangepast
+   * Is nodig om eventueel te kunnen instellen in de database wie iets heeft aangepast.
+   * En om eventueel alleen rijen terug te geven waarvoor de gebruiker rechten heeft.
    */
   protected $user_id    = NULL;
-  
 
   
   /**
@@ -587,7 +593,7 @@ Class Data_Core extends CI_Model {
       }
     }
     
-    // trace_($relations);
+    // trace_([$this->settings['table'],$relations]);
     return $relations;
   }
 
@@ -778,13 +784,14 @@ Class Data_Core extends CI_Model {
    */
   public function reset() {
     $this->tm_select        = FALSE;
+    $this->tm_unselect      = FALSE;
     $this->tm_from          = '';
     $this->tm_path          = FALSE;
     $this->tm_order_by      = array();
     $this->tm_limit         = 0;
     $this->tm_offset        = 0;
     $this->tm_jump_to_today = FALSE;
-    $this->with();
+    $this->with(FALSE);
     return $this;
   }
   
@@ -1136,7 +1143,14 @@ Class Data_Core extends CI_Model {
     }
     if ( !empty($this->tm_order_by) ) {
       foreach ($this->tm_order_by as $order_by) {
-        $this->db->order_by( $order_by );
+        $escape=TRUE;
+        // order relations
+        if (has_string('.',$order_by)) {
+          $escape=FALSE;
+          $order_by=explode(' ',$order_by);
+          $order_by='`'.$order_by[0].'` '.el(1,$order_by,'');
+        }
+        $this->db->order_by( $order_by,'',$escape );
       }
     }
 
@@ -1669,6 +1683,24 @@ Class Data_Core extends CI_Model {
     }
 		return $this;
 	}
+  
+  
+  /**
+   * Zorg ervoor dat de meegegeven veld(en) niet in het SELECT deel van de query komen.
+   *
+   * @param mixed $unselect Veldnaam die uit de selectlijst gehaald moet worden, of een string met veldnamen gescheiden door komma's of een array van veldnamen.
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function unselect( $unselect ) {
+    if (is_string($unselect)) $unselect=explode(',',$unselect);
+    if (!is_array($unselect)) $unselect=array($unselect);
+    if (!is_array($this->tm_unselect)) $this->tm_unselect = array();
+    foreach ($unselect as $key => $field) {
+      $this->tm_unselect[$key] = $field;
+    }
+    return $this;
+  }
 
 
   /**
@@ -1687,6 +1719,15 @@ Class Data_Core extends CI_Model {
       $id = $this->settings['primary_key'];
       $this->tm_select = array($id=>$id) + $this->tm_select;
     }
+    // Eventuele unselect verwijderen
+    if ($this->tm_unselect) {
+      foreach ($this->tm_unselect as $key => $field) {
+        if ( $found=array_search($field,$this->tm_select) ) {
+          unset($this->tm_select[$found]);
+        }
+      }
+    }
+    // Maak de SELECT query
     foreach ( $this->tm_select as $key => $field ) {
       // Zorg ervoor dat alle velden geprefixed worden door de eigen tabelnaam om dubbelingen te voorkomen
       if (in_array($field,$this->settings['fields'])) {
@@ -1718,11 +1759,11 @@ Class Data_Core extends CI_Model {
   /**
    * Veranderd all txt velden tot een string met een maximale lengte, zonder html tags en zonder linebreaks.
    *
-   * @param mixed $txt_abstract [0] 0 = geen aanpassingen, TRUE = standaard aanpassingen, int = lengte bepalen
+   * @param mixed $txt_abstract [TRUE] FALSE = geen aanpassingen, TRUE = standaard aanpassingen, int = lengte bepalen
    * @return $this
    * @author Jan den Besten
    */
-  public function select_txt_abstract( $txt_abstract = 0 ) {
+  public function select_txt_abstract( $txt_abstract = TRUE ) {
     if ( $txt_abstract===TRUE or strtolower($txt_abstract)==='true') $txt_abstract = 100;
     $this->tm_txt_abstract = $txt_abstract;
     return $this;
@@ -1746,14 +1787,14 @@ Class Data_Core extends CI_Model {
    * NB Kan alleen gebruikt worden in combinate met ->get_result() en varianten.
    * NB2 In combinatie met een ->where() statement kan het zijn dat de resultaten niet compleet zijn omdat rijen kunnen ontbreken die een tak in een tree zijn.
    *
-   * @param string $path_field 
-   * @param string $original_field ['']
+   * @param string $path_field Het veld wat een pad moet worden
+   * @param string $original_field [''] Je kunt bij bij $path_field ook een andere naam geven voor het pad, en hier de naam van het originele veld.
    * @param string $split ['/'] Eventueel kan een andere string worden meegegeven die tussen de diverse paden in komt.
    * @return $this
    * @author Jan den Besten
    */
   public function path( $path_field, $original_field = '', $split = '/' ) {
-    if ( !$this->field_exists('order') and !$this->field_exists('order') ) {
+    if ( !$this->field_exists('order') and !$this->field_exists('self_parent') ) {
       $this->reset();
       throw new ErrorException( __CLASS__.'->'.__METHOD__.'() table is not a tree table. (tables whith the fields `order` and `self_parent`)' );
       return $this;
@@ -2062,12 +2103,14 @@ Class Data_Core extends CI_Model {
       foreach ($this->tm_with as $type => $tm_with) {
         if ( in_array($type,$settings['with']) ) {
           foreach ($tm_with as $what => $with) {
+
             // Alleen 'many_to_one' relaties die in de velden staan
             if ( $type==='many_to_one' and !in_array($what,$fields) ) continue;
-            //
-            $other_table  = $with['table'];
-            $as           = el('as',$with,$other_table);
+
+            $other_table  = $this->settings['relations'][$type][$what]['other_table'];
+            $as           = $this->settings['relations'][$type][$what]['result_name'];
             $other_fields = $with['fields'];
+            
             if ($other_fields=='abstract') $other_fields = $this->get_other_table_fields( $other_table );
             if (!is_array($other_fields)) $other_fields = explode(',',$other_fields);
             foreach ($other_fields as $other_field) {
@@ -2079,7 +2122,7 @@ Class Data_Core extends CI_Model {
                   array_push( $fields, $this->db->protect_identifiers( $other_table.'.'.$other_field) );
                   break;
                 case 'many_to_many':
-                  array_push( $fields, $this->db->protect_identifiers( $this->settings['relations']['many_to_many'][$other_table]['other_table'].'.'.$other_field) );
+                  array_push( $fields, $this->db->protect_identifiers( $other_table.'.'.$other_field) );
                   break;
               }
             }
@@ -2140,12 +2183,14 @@ Class Data_Core extends CI_Model {
    * Geef aan welke relaties meegenomen moeten worden in het resultaat, en hoe.
    * Deze method kan vaker achter elkaar worden aangeroepen.
    * 
+   * NB Alleen de relaties die bekend zijn in settings['relations'] worden meegenomen.
+   * 
    * Voorbeelden zijn te vinden in /admin/test/relations (NB als de 'flexyadmin_test' is geselecteerd)
    * 
    * Reset alle relaties:
    * (wordt automatisch aangeroepen na iedere ->get() variant)
    * 
-   * ->with();
+   * ->with( FALSE );
    * 
    * 
    * many_to_one
@@ -2294,6 +2339,15 @@ Class Data_Core extends CI_Model {
   public function with( $type='', $what=array(), $json=FALSE, $flat=FALSE ) {
     
     // Reset?
+    if ($type===FALSE) {
+      $this->tm_with = array();
+      return $this;
+    }
+    
+    // Bestaat relatie wel?
+    if (!isset( $this->settings['relations'][$type])) return $this;
+    
+    // Reset?
     if ( empty($type) ) {
       $this->tm_with = array();
       return $this;
@@ -2363,7 +2417,7 @@ Class Data_Core extends CI_Model {
     $tm_with_new = array_replace_recursive( $tm_with_before, $tm_with_new );
     // Bewaar deze relatie instelling
     $this->tm_with[$type] = $tm_with_new;
-    // trace_($this->tm_with);
+    // trace_([$this->settings['table'],$this->tm_with]);
     return $this;
   }
   
@@ -2428,10 +2482,11 @@ Class Data_Core extends CI_Model {
    */
   protected function _with_many_to_one( $what ) {
     // trace_($what);
+    // trace_($this->settings['relations']);
     $id = $this->settings['primary_key'];
     foreach ($what as $key => $info) {
       $fields      = $info['fields'];
-      $json     = el('json',$info,false);
+      $json        = el('json',$info,false);
       $foreign_key = $this->settings['relations']['many_to_one'][$key]['foreign_key'];
       $other_table = $this->settings['relations']['many_to_one'][$key]['other_table'];
       $as          = el('as',$info, $other_table);
@@ -2535,10 +2590,12 @@ Class Data_Core extends CI_Model {
         $abstract = remove_suffix($abstract,' AS ');
         $select = 'GROUP_CONCAT( "[",'.$abstract.',"]" SEPARATOR ",") `'.$other_table.'`';
       }
-      // Voeg ook de primary_key erbij (behalve bij many_to_one, daar is die al bekend)
-      if ($type!=='many_to_one') {
-        $other_primary_key = $this->get_other_table_setting( $other_table, 'primary_key', PRIMARY_KEY);
-        $select = '`'.$other_table.'`.`'.$other_primary_key.'` AS `'.$as_table.'.'.$other_primary_key.'`, '.$select;
+      else {
+        // Als geen JSON, voeg dan ook de primary_key erbij (behalve bij many_to_one, daar is die al bekend)
+        if ($type!=='many_to_one' ) {
+          $other_primary_key = $this->get_other_table_setting( $other_table, 'primary_key', PRIMARY_KEY);
+          $select = '`'.$other_table.'`.`'.$other_primary_key.'` AS `'.$as_table.'.'.$other_primary_key.'`, '.$select;
+        }
       }
     }
     
@@ -3199,13 +3256,26 @@ Class Data_Core extends CI_Model {
 
 
   /**
-   * Geeft velden van tabel terug
+   * Geeft velden van tabel terug.
+   * Eventueel alleen van een bepaald type, en eventueel een maximum aantal
    *
-   * @return array
+   * @param string $type [''] Geef hier eventueel de prefix van de velden die je terug wilt.
+   * @param int $count [0] Geef hier eventueel het maximum aantal terug te geven velden.
+   * @return mixded geeft een array terug, of een string als $count=1
    * @author Jan den Besten
    */
-  public function list_fields() {
-    return $this->settings['fields'];
+  public function list_fields($type='',$count=0) {
+    $fields = $this->settings['fields'];
+    if ($type) {
+      foreach ($fields as $key => $field) {
+        if ( get_prefix($field)!==$type ) unset($fields[$key]);
+      }
+    }
+    if ($count>0) {
+      $fields = array_slice($fields,0,$count);
+      if ($count===1) return current($fields);
+    }
+    return $fields;
   }
   
 
