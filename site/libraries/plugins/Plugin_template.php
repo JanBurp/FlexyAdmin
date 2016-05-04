@@ -79,6 +79,21 @@
 
 
 	/**
+		* _ajax_api
+		*
+		* Standaard method om de plugin met een ajax aanroep aan te roepen
+		* De ajax url is: /admin/ajax/plugin/NAAM_PLUGIN/EVENTUELE_PARAMETERS
+		*
+		* @return array result array die als JSON wordt teruggegeven
+		* @author Jan den Besten
+		*/
+	public function _ajax_api($args=NULL) {
+    return array( 'plugin'=>'template','args'=>$args );
+	}
+
+
+
+	/**
 		* _after_update()
 		*
 		* Dit wordt aangeroepen als aan de bij triggers ingestelde voorwaarden wordt voldaan.

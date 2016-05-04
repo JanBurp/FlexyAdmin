@@ -9,8 +9,9 @@
 |
 */
 
-$config['admin_api_method'] = '_admin_api';
-$config['after_update_method']  = '_after_update';
+$config['admin_api_method']    = '_admin_api';
+$config['ajax_api_method']     = '_ajax_api';
+$config['after_update_method'] = '_after_update';
 
 
 /*
