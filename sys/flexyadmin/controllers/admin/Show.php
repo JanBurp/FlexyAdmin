@@ -46,7 +46,9 @@ class Show extends AdminController {
         
         $this->load->model('queu');
         $this->_before_grid($table);
-				$singleRow=( $this->cfg->get('CFG_table',$table,"int_max_rows") == 1);
+        
+        // Single Row? Laat dan form zien
+				$singleRow = ( $this->cfg->get('CFG_table',$table,"int_max_rows") == 1);
 				if ($singleRow) {
           // Laat alleen de rij zien van de user (als die bestaat)
           if ($this->db->has_field($table,'user')) {
@@ -58,277 +60,274 @@ class Show extends AdminController {
 					$row=$this->db->get_row($table,1);
 					$id=$row["id"];
 					$this->form_args['form']=$table.$this->config->item('URI_HASH').$id;
+					return $this->form();
+				}
+        
+        // Rechten voor deze tabel?
+        $rights = $this->user->has_rights($table,$id);
+        if ( !$rights ) {
+          $this->_show_all();
+          return;
+        }
+        
+        /**
+         * Rechten zijn in orde, ga verder
+         */
+        $this->load->library("pagination");
+				$this->load->model("grid");
+				$this->lang->load("help");
+        
+        // Help
+				$this->_add_js_variable("help_filter",$this->_add_help(langp('grid_filter')));
+
+        // Table info / UI naam
+				$tableInfo=$this->cfg->get('CFG_table',$table);
+				$uiTable=$this->ui->get($table);
+			
+      
+				/**
+				 * Haal ruwe data op
+				 */
+        
+        $this->data->table( $table );
+        $this->data->set_user_id();
+        
+        // Extra where statement, via Admin Menu instelling?
+				if (!empty($info)) {
+					$extraInfo   = $this->cfg->get('cfg_admin_menu',$info);
+					$extra_where = $extraInfo['str_table_where'];
+					if (!empty($extra_where)) {
+            $this->data->where( $extra_where,NULL,FALSE) ;
+					}
+				}
+
+        // Pagination ?
+				$pagination=(int)$this->cfg->get("CFG_table",$table,'b_pagination',NULL);
+        if ($pagination===NULL) $pagination=(int)$this->config->item('PAGINATION');
+				if ($pagination) $pagination=(int)$this->cfg->get('cfg_configurations','int_pagination');
+
+				// ORDER als een tree ?
+				if ( $this->data->field_exists('self_parent') ) {
+          $titleField = $this->data->list_fields( 'str',1 );
+          $this->data->order_by( 'order' );
+          $this->data->path( 'uri' )->path( $titleField );
+          $last_order = 'order';
+				}
+        // ORDER op de normale manier
+				elseif ($order) {
+					$orderArr=explode(':',$order);
+					foreach ($orderArr as $key => $ord) {
+            if (!isset($last_order)) $last_order=$ord;
+            $ordField=trim(trim($ord),'_');
+            if ( $this->data->field_exists($ordField) ) {
+							$ordPre=get_prefix($ordField);
+							if ($ordField!=='') {
+								if ($ordPre=='id' and $ordField!='id') {
+                  // Volgorde van een many_to_one abstract veld
+                  $ordField = $this->data->get_setting( array('relations','many_to_one', $ordField, 'result_name' ) ) . '.abstract';
+								}
+								elseif ($ordPre=='tbl') {
+                  // Volgorde van een many_to_many abstract veld
+                  $ordField = $this->data->get_setting( array('relations','many_to_many', $ordField, 'result_name' ) ) . '.abstract';
+                }
+                $desc='';
+  							if (substr($ord,0,1)=='_') $desc='DESC';
+                $this->data->order_by( $ordField, $desc );
+							}
+            }
+					}
+				}
+				
+        // Check of er alleen rechten zijn voor bepaalde rijen
+				$restrictedToUser = $this->user->restricted_id( $table );
+				if ( $restrictedToUser>0 and $this->data->field_exists('user') ) {
+          if (!$this->user->rights['b_all_users']) {
+            $this->data->where( $table.".user", $restrictedToUser );
+          }
+          $this->data->unselect( 'user' );
+				}
+        
+        // Voeg relaties als abstracts toe
+        $search_with=array('many_to_one');
+        $this->data->with( 'many_to_one', 'abstract' );
+				if ( el('b_grid_add_many',$tableInfo)) {
+          $search_with[]='many_to_many';
+          $this->data->with_json( 'many_to_many', 'abstract' );
+        }
+        
+        // Maximale lengte voor txt_ velden
+        $this->data->select_txt_abstract();
+				
+				// ZOEKEN?
+				if ($search) $this->data->find( $search, array(), array('and'=>'OR','with'=>$search_with) );
+        
+        // Zit er een WHERE in de URL? Pas die dan toe.
+        if ($this->config->item('GRID_WHERE') and $where) {
+          $where=explode('___',$where);
+          foreach ($where as $wh) {
+            $wfield=get_prefix($wh,'-');
+            $wvalue=get_suffix($wh,'-');
+            $this->data->where( $wfield,$wvalue );
+          }
+        }
+
+        $data = $this->data->get_result( $pagination, $offset );
+        $data_query = $this->data->last_query(); //_clean(array('select'=>$table.'.'.PRIMARY_KEY), true);
+				$total_rows = $this->data->total_rows();
+        
+        // trace_($data);
+        // trace_sql($data_query);
+        // trace_($pagination);
+        // trace_($last_order);
+        // trace_($total_rows);
+        
+				$keys=array();
+				if (!empty($data)) $keys=array_keys(current($data));
+        $prekeys=get_prefix($keys);
+        
+        $hasDateField = one_of_array_in_array($this->config->item('DATE_fields_pre'),$prekeys);
+        if ($hasDateField) $hasDateField=$keys[$hasDateField];
+        $keys=array_combine($keys,$keys);
+        
+        
+        // if datefield and no current: select items from today and set offset of pagination
+        if ($this->cfg->get("CFG_table",$table,'b_jump_to_today') and $hasDateField) {
+          $this->db->select($hasDateField);
+          $this->db->where('DATE(`'.$hasDateField.'`)=DATE(NOW())');
+          $today_ids=$this->db->get_result($table);
+          if (empty($today_ids)) {
+            // $this->db->select($hasDateField);
+            $this->db->where('DATE(`'.$hasDateField.'`)>=DATE(NOW())');
+            $this->db->order_by($hasDateField);
+            $today_ids=$this->db->get_result($table,1);
+          }
+          if (!empty($today_ids) and $id=='') {
+            $today_ids=array_keys($today_ids);
+            // $id=implode('_',$today_ids);
+          }
+          if ($pagination and $offset=='') {
+            $current_id=current($today_ids);
+            if (has_string('DESC',$order)) $current_id=end($today_ids);
+        		$query=$this->db->query($data_query);
+        		$sub_data=$query->result_array();
+            $offset=find_row_by_value($sub_data,$current_id,$key=PRIMARY_KEY);
+            if ($offset) {
+              $offset=key($offset);
+              $offset=floor($offset / $pagination) * $pagination;
+              if ($offset>0) {
+          			$this->grid_set->save(array('table'=>$table,'offset'=>$offset,'order'=>$order,'search'=>$search));
+                $uri=$this->grid_set->open_uri();
+                redirect($uri);
+              }
+            }
+            else {
+              $offset=0;
+            }
+          }
+        }
+
+				if (empty($data) and empty($search)) {
+					/**
+					 * if no data, start an input form
+					 */
+					$this->form_args['form']=$table.$this->config->item('URI_HASH').'-1';
 					$this->form();
 					return;
 				}
-				else {
-					if ($right=$this->user->has_rights($table,$id)) {
-						$restrictedToUser=$this->user->restricted_id($table);
-						$this->load->library("pagination");
-						$this->load->model("grid");
-						$this->lang->load("help");
-						$this->_add_js_variable("help_filter",$this->_add_help(langp('grid_filter')));
-						$tableInfo=$this->cfg->get('CFG_table',$table);
-					
-						/**
-						 * get data
-						 */
-						
-						// extra info?
-						if (!empty($info)) {
-							// yes, get extra query info
-							$extraInfo=$this->cfg->get('cfg_admin_menu',$info);
-							$extra_where=$extraInfo['str_table_where'];
-							if (!empty($extra_where)) {
-                $this->db->where($extra_where,NULL,FALSE);
-							}
-						}
-						$uiTable=$this->ui->get($table);
+				else 	{
+          $html='';
+					$grid=new grid();
+          $grid->set_editable($this->config->item('GRID_EDIT'));
+          
+					if ($pagination) {
+						$base_url=api_url('API_view_grid',$table);
+						$pagination=array('base_url'=>$base_url,'per_page'=>$pagination,'total_rows'=>$total_rows,'offset'=>$offset);
+						$grid->set_pagination($pagination);
+					}
 
-						// get information (from db) needed later...
-						$hasField=array();
-						$hasField['self_parent']=$this->db->field_exists('self_parent',$table);
-						$hasField['user']=$this->db->field_exists('user',$table);
+					/**
+					 * if data: first render data, then put data in grid and render as html
+					 */
 
-						$pagination=$this->cfg->get("CFG_table",$table,'b_pagination',NULL);
-            if ($pagination===NULL) $pagination=$this->config->item('PAGINATION');
-						if ($pagination) $pagination=$this->cfg->get('cfg_configurations','int_pagination');
-
-						// How to order?
-						if ($hasField['self_parent']) {
-              // $this->db->order_as_tree();
-              $this->db->order_by('order');
-              $titleField=$this->db->get_first_field($table,'str');
-              $this->db->uri_as_full_uri('uri',$titleField);
-						}
-						elseif ($order) {
-							$orderArr=explode(':',$order);
-							foreach ($orderArr as $key => $ord) {
-                $ordField=trim(trim($ord),'_');
-                if ($this->db->field_exists($ordField,$table)) {
-  								if (substr($ord,0,1)=='_') $ord=substr($ord,1).' DESC';
-                  $ordField=trim($ord);
-  								$ordPre=get_prefix($ordField);
-  								if ($ordField!='') {
-  									if ($ordPre=='id' and $ordField!='id')
-  										$this->db->order_by_foreign($ordField);
-  									elseif ($ordPre=='rel')
-  										$this->db->order_by_many($ordField);
-  									else
-  										$this->db->order_by($ordField);
-  								}
-                }
-							}
-						}
-						
-						// has rights?
-						if ($restrictedToUser>0 and $hasField['user']) {
-              if (!$this->user->rights['b_all_users']) $this->db->where($table.".user",$restrictedToUser);
-              $this->db->dont_select("user");
-						}
-            // trace_($this);
-						if ($table=="cfg_users") $this->db->where('cfg_users.id_user_group >=',$this->user->group_id);
-							
-            $this->db->add_foreigns_as_abstracts();
-						if (isset($tableInfo['b_grid_add_many']) and $tableInfo['b_grid_add_many']) $this->db->add_many();
-            $this->db->max_text_len(250);
-						
-						// search?
-						if ($search) {
-							$fields=$this->db->list_fields($table);
-              // But not id nr
-              $key=array_search(PRIMARY_KEY,$fields);
-              unset($fields[$key]);
-              
-							$searchArr=array();
-							foreach ($fields as $field) {
-								$searchArr[]=array('field'=>$field,'search'=>$search,'or'=>'OR','table'=>$table);
-							}
-							// search in many_tables if any
-							if ($this->db->many) {
-								if (!is_array($this->db->many))
-									$many_tables=$this->db->get_many_tables($table);
-								else
-									$many_tables=$many;
-								foreach ($many_tables as $many_table => $value) {
-									$searchArr[]=array('field'=>$many_table,'search'=>$search,'or'=>'OR','table'=>$table);
-								}
-							}
-							$this->db->search($searchArr);
-						}
-            
-            if ($this->config->item('GRID_WHERE') and $where) {
-              $where=explode('___',$where);
-              foreach ($where as $wh) {
-                $wfield=get_prefix($wh,'-');
-                $wvalue=get_suffix($wh,'-');
-                $this->db->where($wfield,$wvalue);
-              }
-            }
-
-						$data=$this->db->get_result($table,$pagination,$offset);
-            $data_query=$this->db->last_query_clean(array('select'=>$table.'.'.PRIMARY_KEY), true);
-						$total_rows=$this->db->last_num_rows_no_limit();
-
-						$last_order=$this->db->get_last_order();
-						if (substr($last_order,0,1)!='(') $order=$last_order;
-
-            // trace_sql($data_query);
-            // trace_($pagination);
-            // trace_($total_rows);
-            // trace_($data);
-            // trace_($search);
-            // trace_($this->db->queries);
-            
-						$keys=array();
-						if (!empty($data)) $keys=array_keys(current($data));
-            $prekeys=get_prefix($keys);
-            
-            $hasDateField = one_of_array_in_array($this->config->item('DATE_fields_pre'),$prekeys);
-            if ($hasDateField) $hasDateField=$keys[$hasDateField];
-            $keys=array_combine($keys,$keys);
-            
-            
-            // if datefield and no current: select items from today and set offset of pagination
-            if ($this->cfg->get("CFG_table",$table,'b_jump_to_today') and $hasDateField) {
-              $this->db->select($hasDateField);
-              $this->db->where('DATE(`'.$hasDateField.'`)=DATE(NOW())');
-              $today_ids=$this->db->get_result($table);
-              if (empty($today_ids)) {
-                // $this->db->select($hasDateField);
-                $this->db->where('DATE(`'.$hasDateField.'`)>=DATE(NOW())');
-                $this->db->order_by($hasDateField);
-                $today_ids=$this->db->get_result($table,1);
-              }
-              if (!empty($today_ids) and $id=='') {
-                $today_ids=array_keys($today_ids);
-                // $id=implode('_',$today_ids);
-              }
-              if ($pagination and $offset=='') {
-                $current_id=current($today_ids);
-                if (has_string('DESC',$order)) $current_id=end($today_ids);
-            		$query=$this->db->query($data_query);
-            		$sub_data=$query->result_array();
-                $offset=find_row_by_value($sub_data,$current_id,$key=PRIMARY_KEY);
-                if ($offset) {
-                  $offset=key($offset);
-                  $offset=floor($offset / $pagination) * $pagination;
-                  if ($offset>0) {
-              			$this->grid_set->save(array('table'=>$table,'offset'=>$offset,'order'=>$order,'search'=>$search));
-                    $uri=$this->grid_set->open_uri();
-                    redirect($uri);
-                  }
+					if ($rights<RIGHTS_EDIT) {
+						// remove order fields
+						foreach ($data as $id => $row) unset($data[$id]['order']);
+					}
+          
+          /**
+           * ADD ACTIONS for cfg_users
+           */
+          if ($table=='cfg_users') {
+            $inactive=0;
+            $unused=0;
+            foreach ($data as $id => $row) {
+              if ($rights['id_user_group']<=$row['id_user_group']) {
+                if ($row['b_active']) {
+                  $data[$id]['actions'] = array('send_new_password'=>'cfg_users/send_new_password/'.$id);
                 }
                 else {
-                  $offset=0;
+                  $inactive++;
+                  $data[$id]['actions'] = array('deny'=>'cfg_users/deny/'.$id,'accept'=>'cfg_users/accept/'.$id);
+                }
+                if (empty($row['last_login'])) {
+                  $unused++;
+                  $data[$id]['actions']['invite'] = 'cfg_users/invite/'.$id;
                 }
               }
             }
+            if ($inactive>0) {
+              $html.=h(lang('inactive_users'));
+              $html.=p() . anchor(api_uri('API_home','cfg_users/accept'),lang('accept'),array('class' => 'button')) .' | '. anchor(api_uri('API_home','cfg_users/deny'),lang('deny'),array('class' => 'button')) .' '. lang('all_inactive_users').' ('.$inactive.')'._p();
+            }
+            if ($unused>0) {
+              $html.=h(lang('new_users'));
+              $html.=p() . anchor(api_uri('API_home','cfg_users/invite'),lang('invite'),array('class' => 'button')) .' '. lang('all_new_users').' ('.$unused.')'._p();
+            }
+          }
 
-						if (empty($data) and empty($search)) {
-							/**
-							 * if no data, start an input form
-							 */
-							$this->form_args['form']=$table.$this->config->item('URI_HASH').'-1';
-							$this->form();
-							return;
-						}
-						else 	{
-              $html='';
-							$grid=new grid();
-              $grid->set_editable($this->config->item('GRID_EDIT'));
-              
-							if ($pagination) {
-								$base_url=api_url('API_view_grid',$table);
-								$pagination=array('base_url'=>$base_url,'per_page'=>$pagination,'total_rows'=>$total_rows,'offset'=>$offset);
-								$grid->set_pagination($pagination);
-							}
-
-							/**
-							 * if data: first render data, then put data in grid and render as html
-							 */
-
-							if ($right<RIGHTS_EDIT) {
-								// remove order fields
-								foreach ($data as $id => $row) unset($data[$id]['order']);
-							}
-              
-              /**
-               * ADD ACTIONS for cfg_users
-               */
-              if ($table=='cfg_users') {
-                $inactive=0;
-                $unused=0;
-                foreach ($data as $id => $row) {
-                  if ($right['id_user_group']<=$row['id_user_group']) {
-                    if ($row['b_active']) {
-                      $data[$id]['actions'] = array('send_new_password'=>'cfg_users/send_new_password/'.$id);
-                    }
-                    else {
-                      $inactive++;
-                      $data[$id]['actions'] = array('deny'=>'cfg_users/deny/'.$id,'accept'=>'cfg_users/accept/'.$id);
-                    }
-                    if (empty($row['last_login'])) {
-                      $unused++;
-                      $data[$id]['actions']['invite'] = 'cfg_users/invite/'.$id;
-                    }
-                  }
-                }
-                if ($inactive>0) {
-                  $html.=h(lang('inactive_users'));
-                  $html.=p() . anchor(api_uri('API_home','cfg_users/accept'),lang('accept'),array('class' => 'button')) .' | '. anchor(api_uri('API_home','cfg_users/deny'),lang('deny'),array('class' => 'button')) .' '. lang('all_inactive_users').' ('.$inactive.')'._p();
-                }
-                if ($unused>0) {
-                  $html.=h(lang('new_users'));
-                  $html.=p() . anchor(api_uri('API_home','cfg_users/invite'),lang('invite'),array('class' => 'button')) .' '. lang('all_new_users').' ('.$unused.')'._p();
-                }
-              }
-
-							$data=$this->ff->render_grid($table,$data,$right,$info);
-              
-              // trace_($data);
-              
-							if (empty($uiTable)) $uiTable=$this->ui->get($table);
-							$tableHelp=$this->ui->get_help($table);
-							if (!empty($tableHelp)) {
-								$uiShowTable=help($uiTable." ",$tableHelp);
-							}
-							else
-								$uiShowTable=$uiTable;
-              
-							$grid->set_data($data,$uiShowTable);
-							$grid->set_order($order);
-							$grid->set_search($search);
-              
-							if (!empty($data)) {
-								$keys=array_keys(current($data));
-								$keys=array_combine($keys,$keys);
-							}
-              
-							$grid->set_headings($this->ui->get($keys,$table));
-              
-              if (is_editable_table($table) AND $right>=RIGHTS_ADD) {
-								$newUri=api_uri('API_view_form',$table.$this->config->item('URI_HASH').'-1');
-								if (!empty($info)) $newUri.='/info/'.$info;
-								$newIcon=anchor($newUri,help(icon("new"),langp('grid_new',$uiTable)) );
-								if ($this->cfg->get('CFG_table',$table,'int_max_rows')<count($data))
-									$grid->prepend_to_captions($newIcon,"new");
-								else
-									$grid->prepend_to_captions('&nbsp;');
-							}
-              if (is_editable_table($table) AND $right>=RIGHTS_DELETE)
-								$grid->set_heading(PRIMARY_KEY,help(icon("select all"),lang('grid_select_all')).help(icon("delete"),lang('grid_delete'), array("class"=>"delete") ) );
-							else {
-                // $grid->set_heading(PRIMARY_KEY,'');
-              }
-							
-							if (!empty($id)) $grid->set_current($id);
-							$html.=$grid->view("html",$table,"grid");
-							$this->_set_content($html);
-						}
+					$data=$this->ff->render_grid($table,$data,$rights, $this->data->get_setting('relations'), $info);
+          
+          // trace_($data);
+          
+					if (empty($uiTable)) $uiTable=$this->ui->get($table);
+					$tableHelp=$this->ui->get_help($table);
+					if (!empty($tableHelp)) {
+						$uiShowTable=help($uiTable." ",$tableHelp);
 					}
+					else
+						$uiShowTable=$uiTable;
+          
+					$grid->set_data($data,$uiShowTable);
+					$grid->set_order($order);
+					$grid->set_search($search);
+          
+					if (!empty($data)) {
+						$keys=array_keys(current($data));
+						$keys=array_combine($keys,$keys);
+					}
+          
+					$grid->set_headings($this->ui->get($keys,$table));
+          
+          if (is_editable_table($table) AND $rights>=RIGHTS_ADD) {
+						$newUri=api_uri('API_view_form',$table.$this->config->item('URI_HASH').'-1');
+						if (!empty($info)) $newUri.='/info/'.$info;
+						$newIcon=anchor($newUri,help(icon("new"),langp('grid_new',$uiTable)) );
+						if ($this->cfg->get('CFG_table',$table,'int_max_rows')<count($data))
+							$grid->prepend_to_captions($newIcon,"new");
+						else
+							$grid->prepend_to_captions('&nbsp;');
+					}
+          if (is_editable_table($table) AND $rights>=RIGHTS_DELETE)
+						$grid->set_heading(PRIMARY_KEY,help(icon("select all"),lang('grid_select_all')).help(icon("delete"),lang('grid_delete'), array("class"=>"delete") ) );
+					else {
+            // $grid->set_heading(PRIMARY_KEY,'');
+          }
+					
+					if (!empty($id)) $grid->set_current($id);
+					$html.=$grid->view("html",$table,"grid");
+					$this->_set_content($html);
 				}
-				$this->_show_type("grid");
+        $this->_show_type("grid");
 			}
 			if (!isset($uiTable)) $uiTable="";
 			$this->_show_all($uiTable);
@@ -358,7 +357,7 @@ class Show extends AdminController {
 
 		if (!empty($table) and get_prefix($table)!='res' and ($id!="")
 				and $this->db->table_exists($table)
-				and $right=$this->user->has_rights($table,$id)) {
+				and $rights=$this->user->has_rights($table,$id)) {
           
 			$restrictedToUser=$this->user->restricted_id($table);
       
@@ -508,7 +507,7 @@ class Show extends AdminController {
 					array_unshift($fieldsets,$this->ui->get($table));
 					$form->set_fieldsets($fieldsets);
 					
-					if ($right<RIGHTS_EDIT) $form->no_submit();
+					if ($rights<RIGHTS_EDIT) $form->no_submit();
 					$html=$form->render("html ".$table,$table);
 					if ($form->has_htmlfield()) $this->use_editor();
 					$this->_add_content($html);
