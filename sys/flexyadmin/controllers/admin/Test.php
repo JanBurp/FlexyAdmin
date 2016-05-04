@@ -32,24 +32,17 @@ class Test extends AdminController {
   public function index() {
     if (!$this->user->is_super_admin()) return;
     
-    // $this->db->add_foreigns_as_abstracts();
-    // $data = $this->db->get_result( 'tbl_leerlingen', 5 );
-    // trace_($data);
-    //
-    
-    $this->data->table('tbl_adressen');
-    $this->data->with_json('one_to_many');
-    // $this->data->with('one_to_many');
-    // $this->data->find('van');
-    $query = $this->data->get(5);
+    $query = $this->data->table( 'tbl_groepen' )
+                         ->with( 'many_to_many' )
+                         ->find( 'straat' )
+                         ->get();
     $result = $query->result_array();
-    $row = current($result);
-    $json = $row['tbl_leerlingen.json'];
     
-    trace_( $this->data->last_query() );
+    trace_( $this->data->get_query_info() );
+    // echo( $this->data->last_query());
     trace_( $result );
-    echo( $json );
-    trace_( json_decode( $json,true ) );
+    
+    
     
   }
   

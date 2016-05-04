@@ -1900,7 +1900,7 @@ Class Data_Core extends CI_Model {
    * 
    * 
    * LET OP: Bovenstaand many_to_many voorbeelden zijn snel, maar geven many_to_many data die voldoet aan het where statement.
-   * Als je wilt zoeken, maar wel de complete many_to_many data voor een bepaald item gebruik dan ->where_exists()
+   * Als je wilt zoeken, maar wel de complete many_to_many data voor een bepaald item gebruik dan ->where_exists() of ->like_exists()
    *
    * @param string $key 
    * @param mixed $value [NULL]
@@ -1909,9 +1909,41 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
 	public function where($key, $value = NULL, $escape = NULL) {
+    $this->_where($key,$value,$escape,'AND');
+    return $this;
+  }
+
+  /**
+   * Zelfd als 'where' maar dan OR
+   *
+   * @param string $key 
+   * @param string $value[NULL] 
+   * @param string $escape[NULL]
+   * @return $this
+   * @author Jan den Besten
+   */
+	public function or_where($key, $value = NULL, $escape = NULL) {
+    $this->_where($key,$value,$escape,'OR');
+    return $this;
+  }
+
+  /**
+   * Maakt where en or_where
+   *
+   * @param string $key 
+   * @param string $value 
+   * @param string $escape 
+   * @param string $type 
+   * @return $this
+   * @author Jan den Besten
+   */
+  private function _where( $key, $value=NULL, $escape = NULL, $type = 'AND') {
     // Als value een array is, dan ->where_in()
     if (isset($value) and is_array($value)) {
-      $this->db->where_in($key,$value,$escape);
+      if ($type=='AND')
+        $this->db->where_in($key,$value,$escape);
+      else
+        $this->db->or_where_in($key,$value,$escape);
       return $this;
     }
     // Als geen value maar alleen een key (die geen array is), dat wordt alleen op primary_key gevraagd
@@ -1929,7 +1961,12 @@ Class Data_Core extends CI_Model {
       }
     }
     // where
-    if (isset($key)) $this->db->where($key,$value,$escape);
+    if (isset($key)) {
+      if ($type=='AND')
+        $this->db->where($key,$value);
+      else
+        $this->db->or_where($key,$value);
+    }
     return $this;
   }
   
@@ -1949,9 +1986,8 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   public function where_exists( $key, $value = NULL ) {
-    return $this->_where_exists( $key, $value, 'AND');
+    return $this->_exists( $key, $value, FALSE, 'AND');
   }
-  
 
 
   /**
@@ -1963,13 +1999,45 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   public function or_where_exists( $key, $value = NULL ) {
-    return $this->_where_exists( $key, $value, 'OR');
+    return $this->_exists( $key, $value, FALSE, 'OR');
   }
   
-
+  
+  /**
+   * like_exists zoekt in many_to_many data en toont data waarbinnen de zoekcriteria voldoet maar met de complete many_to_many subdata.
+   * 
+   * many_to_many
+   * ------------
+   * ->like_exists( 'tbl_links.str_title', 'text' );            // Zoekt '%text%' op het in het 'str_title' uit de many_to_many relatie met tbl_links.
+   * ->like_exists( 'tbl_links.str_title', 'text', 'before );   // Idem maar dan '%text'
+   *
+   * @param string $field Moet in het formaat table.field zijn.
+   * @param string $match De te zoeken waarde
+   * @param string $side [both] [both|before|after|]
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function like_exists( $field, $match, $side = 'both' ) {
+    return $this->_exists( $field, $match, $side, 'AND' );
+  }
 
   /**
-   * where_exists zoekt in many_to_many data, met als sql resultaat (zie voorbeeld)
+   * Zelfde als like_exists maar dan een OR
+   *
+   * @param string $field Moet in het formaat table.field zijn.
+   * @param string $match De te zoeken waarde
+   * @param string $side [both] [both|before|after|]
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function or_like_exists( $field, $match, $side = 'both' ) {
+    return $this->_exists( $field, $match, $side, 'OR');
+  }
+
+  /**
+   * _exists of een bepaalde waarde in many_to_many data bestaat, en geeft dan alle many_to_many date terug, en niet allen die waar de waarde in gevonden is.
+   * 
+   * Bouwt een WHERE of een LIKE sql statement.
    * 
    * WHERE `tbl_menu`.`id` IN (
    * 	SELECT `rel_menu__links`.`id_menu`
@@ -1977,28 +2045,30 @@ Class Data_Core extends CI_Model {
    * 	WHERE `rel_menu__links`.`id_links` IN (
    * 		SELECT `tbl_links`.`id`
    * 		FROM `tbl_links`
-   * 		WHERE `str_title` = "text"
+   * 		WHERE `str_title` = "text"   / of / WHERE `str_title` LIKE "%text%"
    * 	)	
    * )
    *
    * @param string $key 
    * @param string $value 
+   * @param mixed $side[FALSE] als [both|before|after] dan is het een LIKE
    * @param string $type ['AND'|'OR']
    * @return $this
    * @author Jan den Besten
    */
-  protected function _where_exists( $key, $value = NULL, $type = 'AND' ) {
+  protected function _exists( $key, $value = NULL, $side=FALSE, $type = 'AND' ) {
+    // trace_(['_exists',$key,$value,$side,$type]);
     
-    if (!isset($this->tm_with['many_to_many'])) {
+    if ( !isset($this->tm_with['many_to_many'])) {
       $this->reset();
-      throw new ErrorException( __CLASS__.'->'.__METHOD__.'(): No `many_to_many` relation set. This is needed when using `where_exists`.' );
+      throw new ErrorException( __CLASS__.'->'.__METHOD__.'(): No `many_to_many` relation set. This is needed when using `..._exists`.' );
       return $this;
     }
     $other_table = get_prefix($key,'.');
     $key         = get_suffix($key,'.');
     if (empty($other_table) or empty($key) or $key==$other_table) {
       $this->reset();
-      throw new ErrorException( __CLASS__.'->'.__METHOD__.'(): First argument of `where_exists` needs to be of this format: `table.field`.' );
+      throw new ErrorException( __CLASS__.'->'.__METHOD__.'(): First argument of `..._exists` needs to be of this format: `table.field`.' );
     }
     $id                = $this->settings['primary_key'];
     $this_table        = $this->settings['table'];
@@ -2010,11 +2080,28 @@ Class Data_Core extends CI_Model {
     	SELECT `'.$join_table.'`.`'.$this_foreign_key.'`
     	FROM `'.$join_table.'`
     	WHERE `'.$join_table.'`.`'.$other_foreign_key.'` IN (
-    		SELECT `'.$other_table.'`.`'.$id.'`
-    		FROM `'.$other_table.'`
-    		WHERE `'.$key.'` = "'.$value.'"
-    	)	
-    )';
+    		SELECT `'.$other_table.'`.`'.$id.'` FROM `'.$other_table.'` WHERE `'.$key.'` ';
+    if ($side) {
+      // like_exists
+      $sql.=' LIKE ';
+      switch ($side) {
+        case 'both':
+          $sql.='"%'.$value.'%"';
+          break;
+        case 'before':
+          $sql.='"%'.$value.'"';
+          break;
+        case 'after':
+          $sql.='"'.$value.'%"';
+          break;
+      }
+    }
+    else {
+      // where_exists
+      $sql.='= "'.$value.'"';
+    }
+    $sql.='))';
+    
     if ($type=='OR')
       $this->db->or_where( $sql, NULL, FALSE );
     else
@@ -2063,17 +2150,14 @@ Class Data_Core extends CI_Model {
    * ------------------
    * 
    * Als je wilt dat ook in relaties wordt gezocht, zorg dan dat eerst de relaties worden ingesteld met een ->with() aanroep (of een variant).
-   * En daarna pas de ->find() aanroep.
-   * 
-   * Verder geld:
    * 
    * - In alle 'many_to_one' relaties wordt gezocht zolang het foreign_key veld in de zoekvelden zit.
-   * - Automatisch wordt in alle 'many_to_many' en 'one_to_many' relaties gezocht
+   * - Automatisch wordt in alle 'many_to_many' en 'one_to_many' relaties gezocht (zoals bij like_exists())
    * - Je kunt specifieker instellen met $settings['with'] welke relaties mee moeten worden genomen met het zoeken
    * 
    * @param mixed $terms Zoekterm(en) als een string of array van strings. Letterlijk zoeken kan door termen tussen "" te zetten.
-   * @param array $fields [array()] De velden waarop gezocht wordt. Standaard alle velden. Kan ook in relatietabellen zoeken, bijvoorbeeld 'tbl_links.str_title' als een veld in een gerelateerde tabel
-   * @param array $settings [array()] Extra instelingen, default: array( 'and' => 'OR, 'word_boundaries' => FALSE, , 'exact_term' => FALSE, 'with'=>array('many_to_one','one_to_many','many_to_many') )
+   * @param array $fields [array()] De velden waarop gezocht wordt. Standaard alle velden (behalve id,order,self_parent). Kan ook in relatietabellen zoeken, bijvoorbeeld 'tbl_links.str_title' als een veld in een gerelateerde tabel
+   * @param array $settings [array()] Extra instelingen, default: array( 'and' => 'OR, 'word_boundaries' => FALSE, , 'exact_term' => FALSE, 'with'=>array('many_to_one','one_to_many','many_to_many'), 'many_exists'=>TRUE )
    * @return $this
    * @author Jan den Besten
    */
@@ -2084,6 +2168,7 @@ Class Data_Core extends CI_Model {
       'word_boundaries' => FALSE,
       'exact_term'      => FALSE,
       'with'            => array('many_to_one','one_to_many','many_to_many'),
+      'many_exists'     => TRUE,
     );
     $settings = array_merge( $defaults,$settings );
     if ($settings['and']===TRUE)  $settings['and'] = 'AND';
@@ -2097,6 +2182,15 @@ Class Data_Core extends CI_Model {
     if ( empty($fields) ) {
       $fields = $this->settings['fields'];
     }
+    
+    // Sommige velden nooit in zoeken:
+    $forbidden_fields = array('id','order','self_parent');
+    foreach ($forbidden_fields as $forbidden_field) {
+      if ( $found_key=array_search($forbidden_field,$fields) ) {
+        unset($fields[$found_key]);
+      }
+    }
+    
     
     // Ook nog in relaties zoeken?
     if ( isset($this->tm_with) and !empty($this->tm_with) ) {
@@ -2116,13 +2210,22 @@ Class Data_Core extends CI_Model {
             foreach ($other_fields as $other_field) {
               switch ($type) {
                 case 'many_to_one':
-                  array_push( $fields, $this->db->protect_identifiers($as.'.'.$other_field) );
+                  array_push( $fields, array(
+                    'relation' => 'many_to_one',
+                    'field'    => $as.'.'.$other_field,
+                  ));
                   break;
                 case 'one_to_many':
-                  array_push( $fields, $this->db->protect_identifiers( $other_table.'.'.$other_field) );
+                  array_push( $fields, array(
+                    'relation' => 'one_to_many',
+                    'field'    => $other_table.'.'.$other_field,
+                  ));
                   break;
                 case 'many_to_many':
-                  array_push( $fields, $this->db->protect_identifiers( $other_table.'.'.$other_field) );
+                  array_push( $fields, array(
+                    'relation' => 'many_to_many',
+                    'field'    => $other_table.'.'.$other_field,
+                  ));
                   break;
               }
             }
@@ -2133,14 +2236,19 @@ Class Data_Core extends CI_Model {
     
     // Plak tabelnaam voor elk veld, als dat nog niet zo is, en escape
     foreach ( $fields as $key => $field ) {
-      if (strpos($field,'.')===FALSE) $fields[$key] = $this->db->protect_identifiers($this->settings['table'].'.'.$field);
+      if (is_array($field)) {
+        if (strpos($field['field'],'.')===FALSE) $fields[$key]['field'] = $this->db->protect_identifiers($this->settings['table'].'.'.$field['field']);
+      }
+      else {
+        if (strpos($field,'.')===FALSE) $fields[$key] = $this->db->protect_identifiers($this->settings['table'].'.'.$field);
+      }
     }
+    
+    // trace_([$terms,$fields]);
 
     // Splits terms
     if ( is_array($terms) ) $terms = implode(' ',$terms);
     $terms=preg_split('~(?:"[^"]*")?\K[/\s]+~', ' '.$terms.' ', -1, PREG_SPLIT_NO_EMPTY );
-    
-    // trace_(['fields'=>$fields,'terms'=>$terms]);
     
     // Bouw 'query' op voor elke term
     $tm_find=array();
@@ -2158,15 +2266,31 @@ Class Data_Core extends CI_Model {
       
       // Per veld:
       foreach ($fields as $field) {
-        // exact_term, of word_boundaries of normaal
-        if ( $settings['exact_term'] ) {
-          $this->db->or_where( $field, $terms, FALSE);
+        $relation=FALSE;
+        if (is_array($field)) {
+          $relation=$field['relation'];
+          $field=$field['field'];
         }
-        elseif ( $settings['word_boundaries'] ) {
-          $this->db->or_where( $field.' REGEXP \'[[:<:]]'.$terms.'[[:>:]]\'', NULL, FALSE);
+        if ( $settings['many_exists'] AND $relation=='many_to_many') {
+          // 'many_to_many' => ..._exists()
+          if ( $settings['exact_term'] ) {
+            $this->or_where_exists( $field, $terms );
+          }
+          else {
+            $this->or_like_exists( $field, $terms, 'both' );
+          }
         }
         else {
-          $this->db->or_like( $field, $terms, 'both', FALSE);
+          // Normal fields, or 'many_to_one'
+          if ( $settings['exact_term'] ) {
+            $this->or_where( $field, $terms, FALSE);
+          }
+          elseif ( $settings['word_boundaries'] ) {
+            $this->db->or_where( $field.' REGEXP \'[[:<:]]'.$terms.'[[:>:]]\'', NULL, FALSE);
+          }
+          else {
+            $this->db->or_like( $field, $terms, 'both', FALSE);
+          }
         }
       }
       
