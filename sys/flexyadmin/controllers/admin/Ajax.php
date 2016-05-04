@@ -164,31 +164,9 @@ class Ajax extends AjaxController {
  	}
   
   
-  /**
-   * AJAX call ro resize an image according to img_info from given path
-   *
-   * @param string $path 
-   * @param string $file 
-   * @return void
-   * @author Jan den Besten
-   */
-  public function resize_image($path,$file) {
-    $result=array('method'=>__METHOD__,'path'=>$path,'file'=>$file,'message'=>'-');
-    $this->load->library('upload');
-    
-    if ($this->upload->resize_image($file,assets().$path)) {
-      $result['message']='resized';
-    }
-    else {
-      $result['message']='ERROR while resizing';
-      $result['success']=false;
-    }
-    return $this->_result($result);
-  }
-  
   
   /**
-   * AJAX plugin call
+   * AJAX plugin call (admin/ajax/plugin/...)
    *
    * @return array ajax result
    * @author Jan den Besten

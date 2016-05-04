@@ -7,21 +7,12 @@
  */
 class Plugin_resize_images extends Plugin {
 
-  /**
-   */
-  function __construct() {
+  public function __construct() {
 		parent::__construct();
     $this->CI->load->model('actiongrid');
 	}
 
-  /**
-   * Plugin wordt met URL worden aangeroepen
-   *
-   * @param string $args 
-   * @return void
-   * @author Jan den Besten
-   */
-	function _admin_api($args=NULL) {
+	public function _admin_api($args=NULL) {
     if (isset($args[0])) {
       $maps=array($args[0]);
     }
@@ -37,7 +28,7 @@ class Plugin_resize_images extends Plugin {
       $files=read_map(assets().$map,FALSE,FALSE,FALSE);
       
       foreach ($files as $key => $file) {
-        if (substr($key,0,1)!='_') $actiondata[]=array('action_url'=>'admin/ajax/resize_image/'.$map.'/'.$file['name'], 'title'=>$map.'/'.$file['name']);
+        if (substr($key,0,1)!='_') $actiondata[]=array('action_url'=>'admin/ajax/plugin/resize_images/'.$map.'/'.$file['name'], 'title'=>$map.'/'.$file['name']);
       }
     }
     
@@ -70,7 +61,22 @@ class Plugin_resize_images extends Plugin {
   }
   
   
-  
+  public function _ajax_api( $args ) {
+		$args = func_get_args();
+    $path = $args[0];
+    $file = $args[1];
+    $result=array('method'=>__METHOD__,'path'=>$path,'file'=>$file,'_message'=>'-');
+
+    $this->CI->load->library('upload');
+    if ($this->CI->upload->resize_image($file,assets().$path)) {
+      $result['_message']='resized';
+    }
+    else {
+      $result['_message']='ERROR while resizing';
+      $result['success']=false;
+    }
+    return $result;
+  }
 
 
 	function get_show_type() {
