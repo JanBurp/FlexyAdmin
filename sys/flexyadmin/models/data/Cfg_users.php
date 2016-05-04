@@ -31,5 +31,36 @@ Class cfg_users extends Data_Core {
     }
     return parent::where($key,$value,$escape);
   }
+  
+  
+  /**
+   * Aanpassing voor ->_update_insert(): leeg wachtwoord veld wordt uit de set gehaald.
+   * Hierdoor wordt alleen een wachtwoord aangepast als die een nieuwe waarde heeft en wordt een wachtwoord nooit leeg.
+   *
+   * @param string $type 
+   * @param string $set 
+   * @param string $where 
+   * @param string $limit 
+   * @return void
+   * @author Jan den Besten
+   */
+	protected function _update_insert( $type, $set = NULL, $where = NULL, $limit = NULL ) {
+    // Geef de set alvast door en test deze ook alvast
+    if (isset($set)) $this->set($set);
+    if (empty( $this->tm_set )) return FALSE;
+    
+    /**
+     * Verwijder lege wachtwoorden uit de set, zodat die niet overschreven worden in de db
+     */
+    foreach ( $this->tm_set as $key => $value ) {
+      if ( empty($value) and in_array(get_prefix($key), $this->config->item('PASSWORD_field_types') ) ) {
+        unset( $this->tm_set[$key] );
+      }
+    }
+    
+    return parent::_update_insert($type,NULL,$where,$limit);
+  }
+  
+  
 
 }

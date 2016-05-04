@@ -13,12 +13,6 @@
 Class Data extends CI_Model {
   
   /**
-   * Dit zijn de namen van de methods waarvoor in principe ->table() niet eerst hoeft te worden aangeroepen.
-   * Meestal methods die rechtstreeks doorverwijzen naar ->db
-   */
-  private $methods_without_model = array( 'list_tables' );
-  
-  /**
    * Huidige tabel
    */
   private $table = '';
@@ -71,12 +65,8 @@ Class Data extends CI_Model {
 	public function __call( $method, $args ) {
     $table = $this->table;
     
-    // If no table or model needed, just call it
-    if (in_array($method,$this->methods_without_model)) {
-      $return = call_user_func_array( array($this->data_core,$method), array($args) );
-    }
     // Error if table/model not set and needed
-    elseif (!isset($this->models[$table])) {
+    if (!isset($this->models[$table])) {
       throw new ErrorException( __CLASS__.'->'.$method.' model not set. Try using ->data->table() first.' );
     }
     // Alles in orde, roep de method aan

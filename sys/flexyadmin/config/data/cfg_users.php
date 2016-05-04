@@ -5,7 +5,7 @@
 
 $config['table'] = 'cfg_users';
 
-$config['fields'] = array( 'id', 'str_username', 'id_user_group', 'email_email', 'str_language');
+$config['fields'] = array( 'id', 'str_username', 'id_user_group', 'gpw_password', 'email_email', 'ip_address', 'str_salt', 'str_activation_code', 'str_forgotten_password_code', 'str_remember_code', 'created_on', 'last_login', 'b_active', 'str_language', 'str_filemanager_view' );
 
 $config['order_by'] = 'id_user_group,str_username';
 
@@ -18,6 +18,11 @@ $config['relations'] = array(
 					), 
 			), 
 	);
+
+
+$config['grid_set'] = array(
+  'fields'    => array( 'id','str_username', 'id_user_group', 'email_email', 'str_language'),
+);
 
 
 $config['form_set'] = array(
