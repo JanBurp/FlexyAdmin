@@ -516,14 +516,15 @@ class DataTest extends CITestCase {
     $this->CI->data->find( 'straat' );
     $query = $this->CI->data->get();
     $info = $this->CI->data->get_query_info();
-    $this->assertEquals( 4, $info['num_rows'] );
-    // Zoeken in many_to_many 'straat' ->word_boundaries
+    $this->assertEquals( 21, $info['num_rows'] );
+
+    // Zoeken in many_to_many 'straat' result
     $this->CI->data->table( 'tbl_groepen' );
     $this->CI->data->with( 'many_to_many' );
-    $this->CI->data->find('straat', null, array('word_boundaries'=>TRUE));
-    $query = $this->CI->data->get();
+    $this->CI->data->find( 'straat' );
+    $result = $this->CI->data->get_result();
     $info = $this->CI->data->get_query_info();
-    $this->assertEquals( 0, $info['num_rows'] );
+    $this->assertEquals( 3, $info['num_rows'] );
   }
   
   
