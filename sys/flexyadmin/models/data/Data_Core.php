@@ -72,95 +72,74 @@ Class Data_Core extends CI_Model {
   /**
    * Onthoud eventueel opgevraagde field_data
    */
-  private $field_data = NULL;
+  protected $field_data = NULL;
   
   /**
    * Onthoud eventueel al opgezochte relatie tabellen
    */
-  private $relation_tables = array();
+  protected $relation_tables = array();
   
   /**
    * Hou SELECT bij om ervoor te zorgen dat SELECT in orde is
    */
-  private $tm_select  = FALSE;
+  protected $tm_select  = FALSE;
   
   /**
    * Hou de FROM bij, kan aangepast worden om LIMIT bij one_to_many en many_to_many relaties mooi te krijgen
    */
-  private $tm_from = '';
+  protected $tm_from = '';
   
   /**
    * Een eventueel veld dat een compleet pad moet bevatten in een tree table
    */
-  private $tm_path = FALSE;
+  protected $tm_path = FALSE;
   
   /**
    * Maximale lengte van txt velden.
    * Als groter dan 0 dan worden txt_ velden gemaximaliseerd op aantal karakters en gestript van html tags
    */
-  private $tm_txt_abstract = 0;
+  protected $tm_txt_abstract = 0;
   
   /**
    * Of de result_array in het geval van ->select_abstract() plat moet worden. Zie bij ->select_abstract()
    */
-  private $tm_flat_abstracts = FALSE;
+  protected $tm_flat_abstracts = FALSE;
 
   /**
    * Hou ORDER BY bij als array van strings per veld en DESC eventueel achter het veld, met name 'jump_to_today' maakt daar gebruik van
    */
-  private $tm_order_by = array();
+  protected $tm_order_by = array();
   
   /**
    * Hou LIMIT en OFFSET bij om eventueel total_rows te kunnen berekenen
    * En of er naar de pagina moet worden gegaan van het item het dichtsbij vandaag
    */
-  private $tm_limit         = 0;
-  private $tm_offset        = 0;
-  private $tm_jump_to_today = FALSE;
+  protected $tm_limit         = 0;
+  protected $tm_offset        = 0;
+  protected $tm_jump_to_today = FALSE;
 
 
   /**
    * Welke relaties mee moeten worden genomen en op welke manier
-   * 
-   * Kan er bijvoorbeeld zo uit zien:
-   * 
-   * array(
-   *  'many_to_one' => array(
-   *    'id_links' => array(
-   *      'fields'  => ....,
-   *      'flat'    => FALSE,
-   *     ),
-   *  ),
-   *  'many_to_many' => array(
-   *    'rel_menu__links' => array(
-   *       'fields'   => 'abstract',
-   *       'json'     => FALSE
-   *     ),
-   *    'rel_menu__posts' => array(
-   *       'fields'   => array('id','str_title',')
-   *       'json'     => true
-   *     ),
-   *   )
-   * )
    */
-  private $tm_with    = array();
+  protected $tm_with    = array();
 
 
   /**
    * Set array voor insert/update
    */
-  private $tm_set     = NULL;
+  protected $tm_set     = NULL;
 
   
   /**
    * Moet de data voor een insert/update eerste gevalideerd worden?
    */
-  private $validation = FALSE;
+  protected $validation = FALSE;
   
   /**
    * Is nodig om eventueel te kunnen instellen in de database wie iets heeft aangepast
    */
-  private $user_id    = NULL;
+  protected $user_id    = NULL;
   
 
   
@@ -180,7 +159,7 @@ Class Data_Core extends CI_Model {
    * - validation         - TRUE/FALSE, alleen als $this->validate() bij
    * - validation_errors  - Als 'validation' = FALSE, dan staan hier foutmeldingen
    */
-  private $query_info = array();
+  protected $query_info = array();
   
 
 
@@ -554,9 +533,6 @@ Class Data_Core extends CI_Model {
     if ($foreign_keys) {
       $relations['many_to_one'] = array();
       foreach ($foreign_keys as $foreign_key) {
-        // Enkele keys worden standaard anders genoemd: TODO: aanpassen bij uiteindelijke models
-        $special_foreigns = array('id_users'=>'id_user','id_user_groups'=>'id_user_group');
-        $foreign_key = el($foreign_key,$special_foreigns,$foreign_key);
         // other table
         $table = $this->config->item('TABLE_prefix').'_'.remove_prefix($foreign_key);
         $name  = $table;
@@ -1779,7 +1755,7 @@ Class Data_Core extends CI_Model {
   public function path( $path_field, $original_field = '', $split = '/' ) {
     if ( !$this->field_exists('order') and !$this->field_exists('order') ) {
       $this->reset();
-      throw new ErrorException( __CLASS__.'->'.$method.'() table is not a tree table. (tables whith the fields `order` and `self_parent`)' );
+      throw new ErrorException( __CLASS__.'->'.__METHOD__.'() table is not a tree table. (tables whith the fields `order` and `self_parent`)' );
       return $this;
     }
     if (empty($original_field)) $original_field = $path_field;
@@ -1974,14 +1950,14 @@ Class Data_Core extends CI_Model {
     
     if (!isset($this->tm_with['many_to_many'])) {
       $this->reset();
-      throw new ErrorException( __CLASS__.'->'.$method.'(): No `many_to_many` relation set. This is needed when using `where_exists`.' );
+      throw new ErrorException( __CLASS__.'->'.__METHOD__.'(): No `many_to_many` relation set. This is needed when using `where_exists`.' );
       return $this;
     }
     $other_table = get_prefix($key,'.');
     $key         = get_suffix($key,'.');
     if (empty($other_table) or empty($key) or $key==$other_table) {
       $this->reset();
-      throw new ErrorException( __CLASS__.'->'.$method.'(): First argument of `where_exists` needs to be of this format: `table.field`.' );
+      throw new ErrorException( __CLASS__.'->'.__METHOD__.'(): First argument of `where_exists` needs to be of this format: `table.field`.' );
     }
     $id                = $this->settings['primary_key'];
     $this_table        = $this->settings['table'];
@@ -2435,7 +2411,7 @@ Class Data_Core extends CI_Model {
       }
       else {
         $this->reset();
-        throw new ErrorException( __CLASS__.'->'.$method.'() does not exists. The `'.$type.'` relation could not be included in the result.' );
+        throw new ErrorException( __CLASS__.'->'.__METHOD__.'() does not exists. The `'.$type.'` relation could not be included in the result.' );
       }
     }
     return $this;
@@ -2785,7 +2761,7 @@ Class Data_Core extends CI_Model {
     // Is een type meegegeven?
     $types = array('INSERT','UPDATE');
     if ( ! in_array($type,$types) ) {
-      throw new ErrorException( __CLASS__.'->'.$method.'(): no type set, should be one of `'.implode(',',$types).'`' );
+      throw new ErrorException( __CLASS__.'->'.__METHOD__.'(): no type set, should be one of `'.implode(',',$types).'`' );
     }
     
     // Is user id nodig?
@@ -2796,10 +2772,10 @@ Class Data_Core extends CI_Model {
     }
     
     // Is er een data set?
-    if ($set) $this->set( $set );
-    if (empty( $this->tm_set )) {
-      throw new ErrorException( __CLASS__.'->'.$method.'(): no data set for `'.$type.'`. Use ->set()' );
-    }
+    if (!is_null($set)) $this->set( $set );
+    // Als er een lege set is, dan zijn we al klaar
+    if (empty( $this->tm_set )) return FALSE;
+
     
     /**
      * Ok we kunnen! Stel nog even alles in...
@@ -2864,16 +2840,6 @@ Class Data_Core extends CI_Model {
     unset($set[$this->settings['primary_key']]);
     unset($set['tme_last_changed']);
 
-    /**
-     * Verwijder lege wachtwoorden, zodat die niet overschreven worden in de db
-     * TODO/CHECK: Verhuis dit naar cfg_users
-     */
-    foreach ( $set as $key => $value ) {
-      if ( empty($value) and in_array(get_prefix($key), $this->config->item('PASSWORD_field_types') ) ) {
-        unset( $set[$key] );
-      }
-    }
-    
         
     /**
      * Verwijder data die NULL is of waarvan het veld niet in de table bestaat.
@@ -2943,7 +2909,6 @@ Class Data_Core extends CI_Model {
           $other_table       = $this->settings['relations']['many_to_many'][$rel_table]['other_table'];
 					$this_foreign_key  = $this->settings['relations']['many_to_many'][$rel_table]['this_key'];
           $other_foreign_key = $this->settings['relations']['many_to_many'][$rel_table]['other_key'];
-          // if ( $this_foreign_key==$other_foreign_key ) $other_foreign_key.="_"; // TODO : self relaties?
 
 					// DELETE eerst huidige items
 					$this->db->where( $this_foreign_key, $id );
