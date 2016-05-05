@@ -595,7 +595,12 @@ function doGrid() {
     search=encodeURI(search);
     search=search.replace(/%/g,'~');
 		if (order=='') order='name';
-		var url=$(this).attr('href')+'/order/'+order+'/search/'+search;
+    var base_url=$(this).attr('href');
+    var lastslash=base_url.lastIndexOf('/offset')+7;
+    var offset=base_url.substr(lastslash+1);
+    if (offset==='') offset=0;
+    base_url=base_url.substr(0,lastslash);
+		var url=base_url+'/'+offset+'/order/'+order+'/search/'+search;
 		$(this).attr('href',url);
 	});
   
