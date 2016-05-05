@@ -33,7 +33,7 @@ class Show extends AdminController {
 			$table=el('grid',$args);
 			$id=el('current',$args);
 			$info=el('info',$args);
-			$sub=el('sub',$args);
+      // $sub=el('sub',$args);
 			$offset=el('offset',$args,0);
 			$order=el('order',$args);
 			$search=el('search',$args);
@@ -50,16 +50,17 @@ class Show extends AdminController {
         // Single Row? Laat dan form zien
 				$singleRow = ( $this->cfg->get('CFG_table',$table,"int_max_rows") == 1);
 				if ($singleRow) {
-          // Laat alleen de rij zien van de user (als die bestaat)
-          if ($this->db->has_field($table,'user')) {
-            $this->db->where('user',$this->user->user_id);
+          $this->data->table($table);
+          // Laat alleen de rij zien van de user (als die bestaat) TODO naar cfg_users of DataCore
+          if ($this->data->field_exists('user')) {
+            $this->data->where('user',$this->user->user_id);
           }
           $id=$this->cfg->get('CFG_table',$table,"int_id",$id); // met dit kan de id met cfg_table_info worden ingesteld
-					$this->db->select("id");
-          if ($id) $this->db->where('id',$id);
-					$row=$this->db->get_row($table,1);
+					$this->data->select("id");
+          if ($id) $this->data->where('id',$id);
+					$row=$this->data->get_row();
 					$id=$row["id"];
-					$this->form_args['form']=$table.$this->config->item('URI_HASH').$id;
+					$this->form_args['form'] = $table.$this->config->item('URI_HASH').$id;
 					return $this->form();
 				}
         
@@ -97,7 +98,7 @@ class Show extends AdminController {
 					$extraInfo   = $this->cfg->get('cfg_admin_menu',$info);
 					$extra_where = $extraInfo['str_table_where'];
 					if (!empty($extra_where)) {
-            $this->data->where( $extra_where,NULL,FALSE) ;
+            $this->data->where( $extra_where, NULL, FALSE) ;
 					}
 				}
 
@@ -137,8 +138,10 @@ class Show extends AdminController {
             }
 					}
 				}
+        if (!isset($last_order)) $last_order = $this->data->get_setting('order_by');
+        if (has_string('DESC',$last_order)) $last_order='_'.trim(str_replace('DESC','',$last_order));
 				
-        // Check of er alleen rechten zijn voor bepaalde rijen
+        // Check of er alleen rechten zijn voor bepaalde rijen TODO-> naar Data_Core
 				$restrictedToUser = $this->user->restricted_id( $table );
 				if ( $restrictedToUser>0 and $this->data->field_exists('user') ) {
           if (!$this->user->rights['b_all_users']) {
@@ -215,7 +218,7 @@ class Show extends AdminController {
               $offset=key($offset);
               $offset=floor($offset / $pagination) * $pagination;
               if ($offset>0) {
-          			$this->grid_set->save(array('table'=>$table,'offset'=>$offset,'order'=>$order,'search'=>$search));
+          			$this->grid_set->save(array('table'=>$table,'offset'=>$offset,'order'=>$last_order,'search'=>$search));
                 $uri=$this->grid_set->open_uri();
                 redirect($uri);
               }
@@ -298,7 +301,7 @@ class Show extends AdminController {
 						$uiShowTable=$uiTable;
           
 					$grid->set_data($data,$uiShowTable);
-					$grid->set_order($order);
+					$grid->set_order($last_order);
 					$grid->set_search($search);
           
 					if (!empty($data)) {

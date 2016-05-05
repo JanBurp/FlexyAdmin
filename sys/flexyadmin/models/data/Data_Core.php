@@ -1954,8 +1954,8 @@ Class Data_Core extends CI_Model {
         unset($value);
         $this->limit( 1 );
       }
-      // primary_key
-      else {
+      // primary_key als nummer
+      elseif (is_numeric((int)$value)) {
         $value = $key;
         $key = $this->settings['primary_key'];
       }
