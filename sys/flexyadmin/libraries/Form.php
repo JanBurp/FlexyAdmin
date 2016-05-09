@@ -1176,7 +1176,7 @@ class Form {
           case 'email': $attr['type']='email'; break;
           case 'url': $attr['type']='url'; break;
           case 'int': $attr['type']='number'; break;
-          case 'dec': $attr['type']='number'; break;
+          // case 'dec': $attr['type']='number'; $attr['step']="any"; break;
           case 'rgb': $attr['type']='color'; break;
         }
 				$field['control']=form_input($attr);

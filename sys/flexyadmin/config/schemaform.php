@@ -234,7 +234,7 @@ $config['FIELDS_prefix'] = array (
     'form-type'   => 'text',
     'grid'        => '%s',
     'form'        => '',
-    'validation'	=> 'trim|numeric'
+    'validation'	=> 'trim|decimal'
   ),
 	'ip'				=> array (
     'type'        => 'string',
