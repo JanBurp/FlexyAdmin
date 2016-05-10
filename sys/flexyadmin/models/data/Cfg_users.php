@@ -16,6 +16,7 @@ Class cfg_users extends Data_Core {
     // Zorg ervoor dat huidige user is ingesteld
     $this->set_user_id();
   }
+  
 
   /**
    * Aanpassing voor ->where() zodat ook 'current' opgevraagd kan worden
@@ -65,7 +66,8 @@ Class cfg_users extends Data_Core {
   
   
   /**
-   * Zorg ervoor dat alleen users teruggegeven kunnen worden die dezelfde rechten hebben of meer
+   * Zorg ervoor dat alleen users teruggegeven kunnen worden die dezelfde rechten hebben of meer.
+   * En dat alleen administrators het veld 'id_user_group' kunnen inzien.
    *
    * @param string $limit[0] 
    * @param string $offset[0] 
@@ -75,12 +77,38 @@ Class cfg_users extends Data_Core {
    */
   public function get( $limit=0, $offset=0, $reset = true ) {
     if ($this->user_id) {
+      // Alleen users tonen met minimaal zelfde rechten
       $group_id = $this->user->group_id;
       $this->data->where( '`cfg_users`.`id_user_group` >=', $group_id );
+      // Als rechten minder dan admin, dan geen id_user_group tonen/aanpassen
+      if ($group_id>2) $this->data->unselect('id_user_group');
     }
     return parent::get($limit,$offset,$reset);
   }
   
+  
+  /**
+   * Zorg ervoor dat alleen de 'id_user_group' als opties teruggegeven worden waarvoor de gebruiker rechten heeft.
+   *
+   * @param string $field 
+   * @param string $with 
+   * @return void
+   * @author Jan den Besten
+   */
+  public function get_options( $field='', $with=array('many_to_many') ) {
+    $options=parent::get_options($field,$with);
+    if ($this->user_id) {
+      if ( array_key_exists('id_user_group',$options) ) {
+        $group_id = $this->user->group_id;
+        foreach ($options['id_user_group']['data'] as $id => $row) {
+          if ( $id<$group_id ) {
+            unset($options['id_user_group']['data'][$id]);
+          }
+        }
+      }
+    }
+    return $options;
+  }
   
 
 }

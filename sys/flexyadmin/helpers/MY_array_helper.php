@@ -23,7 +23,7 @@ function el($name,$arr,$default=NULL) {
     if (!is_array($arr)) break;
     $arr=element($key,$arr,$default);
   }
-  if ($arr==null) $arr=$default;
+  if ($arr===null) $arr=$default;
 	return $arr;
 }
 

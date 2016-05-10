@@ -30,16 +30,16 @@ class Test extends AdminController {
 	}
   
   public function index() {
-    if (!$this->user->is_super_admin()) return;
-    
-    $query = $this->data->table( 'tbl_groepen' )
-                         ->with( 'many_to_many' )
-                         ->find( 'straat' )
-                         ->get();
-    $result = $query->result_array();
+
+    $this->data->table( 'cfg_users' )->set_user_id()
+              ->select( $this->data->get_setting(array('grid_set','fields')) )
+              ->with( 'many_to_one');
+    $result = $this->data->get_result();
+    $options = $this->data->get_options();
     
     trace_( $this->data->get_query_info() );
     // echo( $this->data->last_query());
+    trace_($options);
     trace_( $result );
     
     

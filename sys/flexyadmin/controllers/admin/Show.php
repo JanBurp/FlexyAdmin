@@ -39,6 +39,7 @@ class Show extends AdminController {
 			$search=el('search',$args);
       $search=str_replace('~','%',$search);
       $search=urldecode($search);
+      if (empty($search)) $search=$this->input->get('search');
       $where=el('where',$args);
 			$this->grid_set->save(array('table'=>$table,'offset'=>$offset,'order'=>$order,'search'=>$search));
 
@@ -92,6 +93,7 @@ class Show extends AdminController {
         
         $this->data->table( $table );
         $this->data->set_user_id();
+        $this->data->select( $this->data->get_setting( array('grid_set','fields') ));
         
         // Extra where statement, via Admin Menu instelling?
 				if (!empty($info)) {
@@ -162,7 +164,25 @@ class Show extends AdminController {
         $this->data->select_txt_abstract();
 				
 				// ZOEKEN?
-				if ($search) $this->data->find( $search, array(), array('and'=>'OR','with'=>$search_with) );
+				if ($search) {
+          $extended_search = FALSE;
+          if (has_string('{',$search)) {
+            $decode_search = json2array($search);
+            if ($decode_search) {
+              $extended_search = TRUE;
+              // trace_($search);
+              // trace_($decode_search);
+            }
+          }
+          if ($extended_search) {
+            foreach ($decode_search as $field => $value) {
+              $this->data->find( $value, $field, array('and'=>'OR','with'=>$search_with) );
+            }
+          }
+          else {
+            $this->data->find( $search, array(), array('and'=>'OR','with'=>$search_with) );
+          }
+        }
         
         // Zit er een WHERE in de URL? Pas die dan toe.
         if ($this->config->item('GRID_WHERE') and $where) {
@@ -343,7 +363,7 @@ class Show extends AdminController {
  * @param string 	$table 	Table name
  * @param mixed 	$id 		id
  */
-	public function form($table='',$id=false) {
+	public function form( $table='',$id=false ) {
 
 		if (isset($this->form_args)) {
 			$args=$this->form_args;
@@ -357,167 +377,183 @@ class Show extends AdminController {
 		$table=explode($this->config->item('URI_HASH'),$table);
 		$id=el(1,$table);
 		$table=el(0,$table);
+    
+    // Check of alle gegevens in orde zijn
+    if ( empty($table) OR !$this->db->table_exists($table) OR get_prefix($table)==='res' OR $id=='') {
+      $this->_show_all();
+      return;
+    }
+    
+    // Check of gebruiker rechten heeft
+    $rights=$this->user->has_rights($table,$id);
+    if ( !$rights ) {
+      $this->_show_all();
+      return;
+    }
+		$restrictedToUser = $this->user->restricted_id($table);
 
-		if (!empty($table) and get_prefix($table)!='res' and ($id!="")
-				and $this->db->table_exists($table)
-				and $rights=$this->user->has_rights($table,$id)) {
-          
-			$restrictedToUser=$this->user->restricted_id($table);
-      
-			$this->load->library('form_validation');
-			$this->load->library('upload');
-			$this->load->model("order");
-			$this->load->helper('html');
-			$this->lang->load("form");
+    // Laad libraries etc
+		$this->lang->load("form");
+		$this->load->library('upload');
+		$this->load->model("order");
+		$this->load->helper('html');
+		$this->load->library('form_validation');
+    $this->form_validation->set_error_delimiters('<span class="error">', '<br/></span>');
+		$this->load->library("form");
+    
+    /**
+     * Table
+     */
+    $this->data->table( $table );
+    $this->data->select( $this->data->get_setting( array('form_set','fields') ));
 
-			$this->form_validation->set_error_delimiters('<span class="error">', '<br/></span>');
-			$this->load->library("form");
-
-			/**
-			 * get data
-			 */
-      $add_many=$this->cfg->get('CFG_table',$table,"b_form_add_many");
-			if (get_prefix($table)!=$this->config->item('REL_table_prefix') and (is_null($add_many) or $add_many)) {
-        // alleen ids van many is genoeg...
-        $manyTables=$this->db->get_many_tables($table);
-        foreach ($manyTables as $key => $value) {
-          $manyTables[$key]=array($value['join'].'.'.PRIMARY_KEY);
-        }
-        $this->db->add_many($manyTables);
-        // $this->db->add_many();
-			}
-			$this->db->add_options();
-			
-			if ($id==-1) {
-				// New item, fill data with defaults
-				$data=$this->db->defaults($table);
-				$options=el("options",$data);
-				$multiOptions=el("multi_options",$data);
-				$data=current($data);
-				$data[PRIMARY_KEY]="-1";
-			}
-			else {
-				if ($restrictedToUser>0 and $this->db->field_exists('user',$table)) {
-          $this->ff->set_restricted_to_user($restrictedToUser,$this->user_id);
-          if (!$this->user->rights['b_all_users']) $this->db->where("user",$restrictedToUser);
-					$this->db->dont_select("user");
-				}
-				if ($id!="") {
-					$this->db->where($table.".".PRIMARY_KEY,$id);
-				}
-				$data=$this->db->get_result($table);
-				// trace_('#show#'.$this->db->last_query());
-        // trace_($data);
-				$options=el("options",$data);
-				$multiOptions=el("multi_options",$data);
-				$data=current($data);
-			}
-      
-      $data=$this->_before_form($table,$data);
-      
-      // strace_($options);
-      // strace_($multiOptions);
-
-			/**
-			 * if data: first render data for the form class, then put data in form
-			 */
-			if (!empty($data)) {
-        
-				$ffData=$this->ff->render_form($table,$data,$options,$multiOptions);
-        
-				$actionUri=api_uri('API_view_form',$table.$this->config->item('URI_HASH').$id);
-				if (!empty($info)) $actionUri.='/info/'.$info;
-				
-				$form=new form($actionUri);
-        
-				$uiTable=$this->ui->get($table);
-				$tableHelp=$this->ui->get_help($table);
-				if (!empty($tableHelp)) {
-					$uiShowTable=help($uiTable,$tableHelp);
-				}
-				else
-					$uiShowTable=$uiTable;
-        
-				$form->set_data($ffData,$uiShowTable);
-				$form->add_password_match();
-        $form->hash_passwords();
-        
-				/**
-				 * Validate form, if succes, update/insert data
-				 */
-				if ($form->validation()) {
-					$this->lang->load("update_delete");
-					$this->load->model('queu');
-          
-					$newData=$form->get_data();
-					$newData=$this->_after_update($table,$data,$newData);
-          
-          $this->data->table( $table )->set_user_id( $restrictedToUser );
-					if ($id==-1) {
-						$id = $this->data->insert( $newData );
-						$this->message->add(langp("insert_new",$table));
-					}
-					else {
-						$id = $this->data->update( $newData, array( PRIMARY_KEY => $id) );
-						$this->message->add(langp("update_succes",$table));
-					}
-					
-					// Make calls that plugins might have put in the queu
-					$this->queu->run_calls();
-					// Remove all cached files
-					delete_all_cache();
-
-					$redirectUri=$this->grid_set->open_uri($table);
-					// trace_($redirectUri);
-					if (!empty($info)) $redirectUri.='/info/'.$info;
-					
-					if ( $id===FALSE ) {
-						$this->message->add_error(langp("update_error",$table));
-						redirect($redirectUri);
-					}
-					else {
-						redirect($redirectUri.'/current/'.$id);
-					}
-				}
-
-				/**
-				 * Validate form, no succes: show form, maybe with validation errors
-				 */
-				else {
-          $errors=validation_errors();
-          if ($errors) {
-            $this->message->add($errors);
-            $this->message->add(lang('validation_warning'));
-          }
-
-					$keys=array_keys($ffData);
-					$keys=array_combine($keys,$keys);
-					$uiFieldNames=array();
-					foreach($keys as $key) {
-						$fieldHelp=$this->ui->get_help($table.".".$key);
-						if (!empty($fieldHelp))
-							$uiFieldNames[$key]=help($this->ui->get($key,$table),$fieldHelp);
-						else
-							$uiFieldNames[$key]=$this->ui->get($key,$table);
-					}
-					$form->set_labels($uiFieldNames);
-					
-					// Fieldsets?
-					$fieldsets=$this->cfg->get('cfg_table_info',$table,'str_fieldsets');
-					if (empty($fieldsets)) $fieldsets=array();
-					elseif (is_string($fieldsets)) $fieldsets=explode(',',$fieldsets);
-					// add default fieldset with name of table
-					array_unshift($fieldsets,$this->ui->get($table));
-					$form->set_fieldsets($fieldsets);
-					
-					if ($rights<RIGHTS_EDIT) $form->no_submit();
-					$html=$form->render("html ".$table,$table);
-					if ($form->has_htmlfield()) $this->use_editor();
-					$this->_add_content($html);
-				}
-				$this->_show_type("form");
-			}
+		/**
+		 * Met many_to_many data?
+		 */
+    $many_to_many = $this->cfg->get('CFG_table',$table,"b_form_add_many");
+		if ( get_prefix($table)!==$this->config->item('REL_table_prefix') AND (is_null($many_to_many) or $many_to_many)) {
+      $this->data->with('many_to_many','abstract');
 		}
+		
+    /**
+     * Nieuw item (INSERT)
+     */
+		if ($id==-1) {
+			// New item, fill data with defaults
+      $data = $this->data->get_defaults();
+		}
+    
+    /**
+     * Edit item (UPDATE)
+     */
+		else {
+
+      // Van een bepaalde gebruiker?
+      if ( $restrictedToUser>0 and $this->data->field_exists('user') ) {
+        $this->ff->set_restricted_to_user( $restrictedToUser,$this->user_id );
+        if ( !$this->user->rights['b_all_users'] ) $this->data->where( 'user', $restrictedToUser);
+				$this->data->unselect('user');
+			}
+      // Zoek de juiste rij
+			if ($id!=='') {
+				$this->data->where( $table.".".PRIMARY_KEY, $id );
+			}
+      
+      // Haal data op
+			$data = $this->data->get_row();
+		}
+    
+    /**
+     * Opties
+     */
+    $options=$this->data->get_options();
+
+    // trace_($this->data->last_query());
+    // trace_($data);
+    // trace_($options);
+    
+    $data = $this->_before_form($table,$data);
+    
+		/**
+		 * if data: first render data for the form class, then put data in form
+		 */
+		if ( !empty($data) ) {
+      
+			$ffData = $this->ff->render_form( $table,$data,$options );
+      
+			$actionUri=api_uri('API_view_form',$table.$this->config->item('URI_HASH').$id);
+			if (!empty($info)) $actionUri.='/info/'.$info;
+			
+			$form=new form($actionUri);
+      
+			$uiTable=$this->ui->get($table);
+			$tableHelp=$this->ui->get_help($table);
+			if (!empty($tableHelp)) {
+				$uiShowTable=help($uiTable,$tableHelp);
+			}
+			else
+				$uiShowTable=$uiTable;
+      
+			$form->set_data($ffData,$uiShowTable);
+			$form->add_password_match();
+      $form->hash_passwords();
+      
+			/**
+			 * Validate form, if succes, update/insert data
+			 */
+			if ($form->validation()) {
+				$this->lang->load("update_delete");
+				$this->load->model('queu');
+        
+				$newData=$form->get_data();
+				$newData=$this->_after_update($table,$data,$newData);
+        
+        $this->data->table( $table )->set_user_id( $restrictedToUser );
+				if ($id==-1) {
+					$id = $this->data->insert( $newData );
+					$this->message->add(langp("insert_new",$table));
+				}
+				else {
+					$id = $this->data->update( $newData, array( PRIMARY_KEY => $id) );
+					$this->message->add(langp("update_succes",$table));
+				}
+				
+				// Make calls that plugins might have put in the queu
+				$this->queu->run_calls();
+				// Remove all cached files
+				delete_all_cache();
+
+				$redirectUri=$this->grid_set->open_uri($table);
+				// trace_($redirectUri);
+				if (!empty($info)) $redirectUri.='/info/'.$info;
+				
+				if ( $id===FALSE ) {
+					$this->message->add_error(langp("update_error",$table));
+					redirect($redirectUri);
+				}
+				else {
+					redirect($redirectUri.'/current/'.$id);
+				}
+			}
+
+			/**
+			 * Validate form, no succes: show form, maybe with validation errors
+			 */
+			else {
+        $errors=validation_errors();
+        if ($errors) {
+          $this->message->add($errors);
+          $this->message->add(lang('validation_warning'));
+        }
+
+				$keys=array_keys($ffData);
+				$keys=array_combine($keys,$keys);
+				$uiFieldNames=array();
+				foreach($keys as $key) {
+					$fieldHelp=$this->ui->get_help($table.".".$key);
+					if (!empty($fieldHelp))
+						$uiFieldNames[$key]=help($this->ui->get($key,$table),$fieldHelp);
+					else
+						$uiFieldNames[$key]=$this->ui->get($key,$table);
+				}
+				$form->set_labels($uiFieldNames);
+				
+				// Fieldsets?
+				$fieldsets=$this->cfg->get('cfg_table_info',$table,'str_fieldsets');
+				if (empty($fieldsets)) $fieldsets=array();
+				elseif (is_string($fieldsets)) $fieldsets=explode(',',$fieldsets);
+				// add default fieldset with name of table
+				array_unshift($fieldsets,$this->ui->get($table));
+				$form->set_fieldsets($fieldsets);
+				
+				if ($rights<RIGHTS_EDIT) $form->no_submit();
+				$html=$form->render("html ".$table,$table);
+				if ($form->has_htmlfield()) $this->use_editor();
+				$this->_add_content($html);
+			}
+			$this->_show_type("form");
+		}
+
 		/**
 		 * output
 		 */
@@ -534,75 +570,10 @@ class Show extends AdminController {
  * @param string 	$table 	Table name
  * @param mixed 	$id 		id
  */
-
 	public function user($table='',$id=false) {
-		/**
-		 * get user data
-		 */
-		$userTable='cfg_users';
-		$userId=$this->session->userdata("user_id");
-		$this->db->select("id,str_username,email_email,gpw_password,str_language");
-		$this->db->add_options();
-		$this->db->where("id",$userId);
-		$userData=$this->db->get_result($userTable);
-		$options=el("options",$userData);
-		$userData=current($userData);
-		
-		/**
-		 * Init user form
-		 */
-		$title=ucwords($userData["str_username"]);
-		$fieldset=$title;
-		
-		$formData=$this->ff->render_form($userTable,$userData,$options);
-		foreach ($formData as $key => $value) {
-			$formData[$key]['fieldset']=$title;
-		}
-    
-		$this->lang->load("update_delete");
-		$this->lang->load("form");
-
-		$this->load->library('form_validation');
-		$this->load->helper('html');
-		$this->form_validation->set_error_delimiters('<span class="error">', '<br/></span>');
-		$this->load->library("form");
-		$form=new form(api_uri('API_user'));
-		$form->set_data($formData,$userData["str_username"]);
-		$form->set_fieldsets($title);
-		$form->add_password_match();
-		$form->hash_passwords();
-		$form->set_caption($title);
-		/**
-		 * Validate form, if succes, make form do an update
-		 */
-		if ($form->validation()) {
-			$this->load->model('queu');
-			
-			$newData=$form->get_data();
-			
-			$newData=$this->_after_update($userTable,'',$newData);
-			$resultId = $this->data->table( $userTable )->update( $newData, array( PRIMARY_KEY => $userId ) );
-			
-			$this->queu->run_calls();
-			
-			if ($resultId===FALSE) {
-				$this->message->add_error(langp("update_error",$userTable,$resultId));
-			}
-			else {
-				$this->message->add(lang("update_user_changed"));
-			}
-			redirect(api_uri('API_home'));
-		}
-		else {
-			/**
-			 * Render
-			 */
-			$html=$form->render("html");
-			$this->_add_content(validation_errors());
-			$this->_add_content($html);
-			$this->_show_type("form");
-		}
-		$this->_show_all();
+    $userId=$this->session->userdata("user_id");
+		$this->form_args['form'] = 'cfg_users'.$this->config->item('URI_HASH').$userId;
+		return $this->form();
 	}
 
 
