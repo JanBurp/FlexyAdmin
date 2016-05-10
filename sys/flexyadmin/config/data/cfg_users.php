@@ -21,11 +21,11 @@ $config['relations'] = array(
 
 
 $config['grid_set'] = array(
-  'fields'    => array( 'id','str_username', 'id_user_group', 'email_email', 'str_language'),
+  'fields'    => array( 'id','str_username', 'id_user_group', 'email_email', 'str_language','b_active'),
 );
 
 
 $config['form_set'] = array(
-  'fields'    => array( 'id','str_username', 'id_user_group', 'email_email', 'str_language'),
+  'fields'    => array( 'id','str_username', 'id_user_group', 'gpw_password', 'email_email', 'str_language'),
   'with'      => array( 'many_to_one'=>array('id_user_group') ),
 );

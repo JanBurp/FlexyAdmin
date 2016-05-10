@@ -246,12 +246,9 @@ function doForm() {
     }
     var textValues='';
     $(checkedItems).each(function(){
-      textValues += ' | ' + $(this).attr('title');
+      textValues += ', ' + $(this).attr('title');
     });
-    // $(values).each(function(i,title){
-    //   textValues += ' | ' + title;
-    // });
-    textValues=textValues.substr(3);
+    textValues=textValues.substr(2);
     var textSpan=$(select).parent('.flexyFormField').find('button span:not(.ui-icon)');
     $(textSpan).html(textValues);
   }

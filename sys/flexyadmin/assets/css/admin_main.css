@@ -717,6 +717,19 @@ tr.caption td				{ border:none; }
 	background-color:#EFB;
 }
 
+.grid .rel_data {
+  display:block; float:left;
+  border:solid 1px #DEA;
+  border-radius:4px;
+  padding:2px 5px;
+  margin-right:2px;
+  margin-bottom:2px;
+}
+.grid tr:hover .rel_data {
+  border-color:#F4FFE0;
+}
+
+
 table.res_menu_result .order {display:none;}
 
 /* Safari hack for hidden cells in grid in combo with jQuery sortable & selectable */

@@ -171,10 +171,10 @@ Class Data_Core extends CI_Model {
 
   /* --- CONSTRUCT & AUTOSET --- */
 
-	public function __construct() {
+	public function __construct( $table='' ) {
 		parent::__construct();
     $this->load->model('log_activity');
-    $this->_config();
+    $this->_config( $table );
 	}
 
   //
@@ -889,7 +889,7 @@ Class Data_Core extends CI_Model {
       }
     }
     // Maak de SQL
-		$sql = "CONCAT_WS(' | ',`".$table.'`.`' . implode( "`,`".$table.'`.`' ,$abstract_fields ) . "`) AS `" . $abstract_field_name . "`";
+		$sql = "CONCAT_WS('|',`".$table.'`.`' . implode( "`,`".$table.'`.`' ,$abstract_fields ) . "`) AS `" . $abstract_field_name . "`";
     return $sql;
 	}
   
@@ -1066,7 +1066,7 @@ Class Data_Core extends CI_Model {
    * @return array
    * @author Jan den Besten
    */
-  public function get_options( $field='' ) {
+  public function get_options( $field='', $with=array('many_to_many') ) {
     // Eén of alle velden?
     $one = FALSE;
     if (!empty($field)) {
@@ -1076,12 +1076,36 @@ Class Data_Core extends CI_Model {
     else {
       $fields = array_keys($this->settings['field_info']);
     }
-    // Alle opties van de velden verzamelen
+    
+    // Alle opties van de (normale) velden verzamelen
     $options=array();
     foreach ($fields as $field) {
       $field_options = el( array($field,'options'), $this->settings['field_info'] );
       if ($field_options) $options[$field] = $field_options;
     }
+    
+    // ..._to_many opties?
+    if ( in_array('many_to_many',$with) or in_array('one_to_many',$with) ) {
+      foreach ($with as $type) {
+        $relations = $this->get_setting(array('relations',$type));
+        if ($relations) {
+          foreach ( $relations as $what => $relation ) {
+            $other_table = $relation['other_table'];
+            $result_name = $relation['result_name'];
+            // trace_(['get_options',$what,$other_table,$result_name]);
+            $other_model = new Data();
+            $other_model->table($other_table)->select_abstract();
+            $options[$result_name] = $other_model->get_result();
+            if ($options[$result_name]) {
+              foreach ($options[$result_name] as $key => $value) {
+                $options[$result_name]['data'][$key] = array('value'=>$key,'name'=>$value['abstract']);
+              }
+            }
+          }
+        }
+      }
+    }
+
     // Return
     if ($one) {
       return current($options);
@@ -1105,6 +1129,18 @@ Class Data_Core extends CI_Model {
       $defaults[$field] = $this->field_data( $field, 'default' );
 		}
     $defaults[$this->settings['primary_key']] = -1;
+    
+    // Met relaties ..._to_many
+    if (is_array($this->tm_with)) {
+      foreach ($this->tm_with as $type => $with) {
+        if (in_array($type,array('many_to_many','one_to_many'))) {
+          foreach ($with as $what => $relation) {
+            $defaults[$relation['as']]=array();
+          }
+        }
+      }
+    }
+    
     return $defaults;
   }
 
@@ -1278,31 +1314,37 @@ Class Data_Core extends CI_Model {
               }
             }
             
+            // JSON: schoon lege abstract resulaten op
+            elseif ( el('json',$info,FALSE) ) {
+              if (el('fields',$info)==='abstract') {
+                if ($row[$as]==='{}') $row[$as] = '';
+              }
+            }
+            
             // Niet JSON en niet flat => als subarray
-            elseif ( ! el('json',$info,FALSE) ) {
+            else {
               $fields   = $info['fields'];
               // split row and with data
               $row_with_data = filter_by_key( $row, $as.'.' );
               $row = array_diff_assoc( $row, $row_with_data );
-              // process with data
+              // process 'with' data
               foreach ($row_with_data as $oldkey => $values) {
                 $newkey = remove_prefix( $oldkey, '.');
                 $row_with_data[$newkey] = $values;
                 unset($row_with_data[$oldkey]);
               }
-              // remember with data
+              // remember 'with' data
+              if (!isset($with_data[$result_key][$as])) $with_data[$result_key][$as]=array();
               if ($with_type==='many_to_one') {
                 $with_data[$result_key][$as] = $row_with_data;
               }
               else {
-                if ( isset($row_with_data[ $this->settings['primary_key'] ]) ) {
+                if ( el( $this->settings['primary_key'], $row_with_data ) ) {
                   $with_data[$result_key][$as][$row_with_data[$this->settings['primary_key']]] = $row_with_data;
-                }
-                else {
-                  $with_data[$result_key][$as][] = $row_with_data;
                 }
               }
             }
+            
           }
           // Merge with data met normale data in row
           if (isset($with_data[$result_key])) {
@@ -1362,11 +1404,11 @@ Class Data_Core extends CI_Model {
    */
   protected function _fill_path( &$result, $key, $path_info ) {
     $value = '';
-    $parent = el(array($key,'self_parent'),$result,0);
+    $parent = el( array($key,'self_parent'), $result, 0 );
     if ( $parent>0 ) {
       $value .= $this->_fill_path( $result, $parent, $path_info) . $path_info['split'];
     }
-    $value .= el(array($key,$path_info['original_field']),$result);
+    $value .= el( array($key,$path_info['original_field']), $result );
     return $value;
   }
 
@@ -2712,7 +2754,7 @@ Class Data_Core extends CI_Model {
       $select = $abstract;
       if ($json) {
         $abstract = remove_suffix($abstract,' AS ');
-        $select = 'GROUP_CONCAT( "[",'.$abstract.',"]" SEPARATOR ",") `'.$other_table.'`';
+        $select = 'GROUP_CONCAT( "{",'.$abstract.',"}" SEPARATOR ", ") `'.$other_table.'`';
       }
       else {
         // Als geen JSON, voeg dan ook de primary_key erbij (behalve bij many_to_one, daar is die al bekend)
@@ -2997,23 +3039,25 @@ Class Data_Core extends CI_Model {
     /**
      * Split eventuele many_to_many data
      */
-    if (isset($this->settings['relations']['many_to_many'])) {
-      $many_to_many = array();
-      foreach ( $this->settings['relations']['many_to_many'] as $rel_table => $relation_info ) {
-        $other_table = $relation_info['other_table'];
-        // tbl_... nieuwe manier van many_to_many data
-        if (isset($set[$other_table])) {
-          $many_to_many[$rel_table] = $set[$other_table];
-          unset($set[$other_table]);
-        }
-        // rel_... oude manier van many_to_many data
-        elseif (isset($set[$rel_table])) {
-          $many_to_many[$rel_table] = $set[$rel_table];
-          $many_to_many[$rel_table] = array_keys($many_to_many[$rel_table]);
-          unset($set[$rel_table]);
+    if ( isset($this->settings['relations']['many_to_many'])) {
+      $to_many = array();
+      foreach ($this->settings['relations'] as $rel_type => $relation) {
+        if (in_array($rel_type,array('many_to_many'))) {
+          foreach ( $relation as $what => $relation_info ) {
+            $rel_table   = $relation_info['rel_table'];
+            $other_table = $relation_info['other_table'];
+            $result_name = $relation_info['result_name'];
+            if ( array_key_exists($result_name,$set) ) {
+              $to_many[$rel_table] = $set[$result_name];
+              unset($set[$result_name]);
+            }
+          }
         }
       }
     }
+    
+    // trace_($set);
+    // trace_($to_many);
 
     /**
      * Verwijder onnodige velden
@@ -3054,6 +3098,7 @@ Class Data_Core extends CI_Model {
       if ($type=='INSERT') {
 				$this->db->insert( $this->settings['table'] );
 				$id = $this->db->insert_id();
+        
         $log = array(
           'query' => $this->db->last_query(),
           'table' => $this->settings['table'],
@@ -3082,14 +3127,15 @@ Class Data_Core extends CI_Model {
       
       
 			/**
-			 * Als er many_to_many data is, update/insert die ook
+			 * Als er ..._to_many data is, update/insert die ook
 			 */
-			if ( ! empty($many_to_many) ) {
+			if ( ! empty($to_many) ) {
         $affected = 0;
-				foreach( $many_to_many as $rel_table => $other_ids ) {
-          $other_table       = $this->settings['relations']['many_to_many'][$rel_table]['other_table'];
-					$this_foreign_key  = $this->settings['relations']['many_to_many'][$rel_table]['this_key'];
-          $other_foreign_key = $this->settings['relations']['many_to_many'][$rel_table]['other_key'];
+				foreach( $to_many as $rel_table => $other_ids ) {
+          $other_table       = $this->settings['relations']['many_to_many'][$what]['other_table'];
+					$this_foreign_key  = $this->settings['relations']['many_to_many'][$what]['this_key'];
+          $other_foreign_key = $this->settings['relations']['many_to_many'][$what]['other_key'];
+          if (!is_array($other_ids)) $other_ids=explode('|',$other_ids);
 
 					// DELETE eerst huidige items
 					$this->db->where( $this_foreign_key, $id );

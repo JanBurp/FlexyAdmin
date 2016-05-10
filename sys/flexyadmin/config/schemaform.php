@@ -56,6 +56,14 @@ $config['FIELDS_prefix'] = array (
     'form'        => 'function_join',
     'validation'	=> ''
   ),
+	'tbl'				=> array (
+    'type'        => 'integer',
+    'form-type'   => 'select',
+    'grid'        => 'function_join',
+    'form'        => 'function_join',
+    'validation'	=> ''
+  ),
+
 	'field'			=> array(
     'type'        => 'string',
     'form-type'   => 'select',
@@ -287,13 +295,6 @@ $config['FIELDS_special'] = array(
     'default'     => -1,
   ),
 
-	'id_group'	=> array(
-    'type'        => 'integer',
-    'form-type'   => 'select',
-    'grid'        => 'function_foreign_key',
-    'form'        => 'function_id_group',
-    'validation'	=> 'integer|required',
-  ),
 	'user'			=> array(
     'type'        => 'integer',
     'form-type'   => 'text',
