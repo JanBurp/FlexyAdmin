@@ -42,7 +42,7 @@ class Mediatable extends CI_Model {
 	public function __construct() {
 		parent::__construct();
     $this->load->model('log_activity');
-    $this->has_table=$this->db->table_exists($this->table);
+    $this->has_table = $this->db->table_exists($this->table);
     if ($this->has_table and $this->db->field_exists('b_used',$this->table)) $this->load->model('search_replace');
 	}
 

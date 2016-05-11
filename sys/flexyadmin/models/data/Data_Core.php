@@ -341,7 +341,7 @@ Class Data_Core extends CI_Model {
         $foreignTable = el( array('relations','many_to_one',$field,'other_table'), $this->settings);
         if ($foreignTable and $this->db->table_exists($foreignTable)) {
           // Zijn er teveel opties?
-          if ($this->db->count_all($foreignTable)>100) {
+          if ($this->db->count_all($foreignTable)>10000) {
             // Geef dan de api aanroep terug waarmee de opties opgehaald kunnen worden
             $options['api'] = '_api/table?table='.$foreignTable.'&as_options=true';
           }
