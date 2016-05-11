@@ -11,7 +11,7 @@ class Flexy_field extends CI_Model {
 	var $table;
 	var $field;
 	var $formData;
-	var $data;
+	var $fieldData;
   var $rowdata;
   var $title_field;
 	var $id;
@@ -46,7 +46,7 @@ class Flexy_field extends CI_Model {
 	}
 
 	function init_field($field,$data,$right=RIGHTS_ALL) {
-		$this->data=$data;
+		$this->fieldData=$data;
 		$this->field=$field;
 		$this->fieldRight=$right;
 		$cfg=$this->cfg->get('CFG_field',$this->table.".".$field);
@@ -221,7 +221,7 @@ class Flexy_field extends CI_Model {
       }
       else {
         $func=trim(remove_suffix($func,'_'),'_');
-        $data=$this->data;
+        $data=$this->fieldData;
         if (!is_numeric($data)) $data="'".$data."'";
         $func=str_replace('%s',$data,$func);
         $args=array();
@@ -258,7 +258,7 @@ class Flexy_field extends CI_Model {
 	 */
 	function _replace() {
 		$out=$this->type;
-		$out=str_replace("%s",$this->data,$out);
+		$out=str_replace("%s",$this->fieldData,$out);
 		foreach ($this->vars as $search=>$replace) {
 			$out=str_replace("#".$search."#",$replace,$out);
 		}
@@ -351,7 +351,7 @@ class Flexy_field extends CI_Model {
 		$out = array(
   		'table'    => $this->table,
   		'name'     => $this->field,
-  		'value'    => $this->data,
+  		'value'    => $this->fieldData,
   		'label'    => $this->ui->get($this->field,$this->table),
   		'type'     => $this->type,
   		'fieldset' => el('str_fieldset', el($this->field,$this->fieldCfg), $this->ui->get($this->table) ),
@@ -393,7 +393,7 @@ class Flexy_field extends CI_Model {
       // Flat options
 			if (el('multiple',$options)) $out["multiple"]="multiple";
       $out['options'] = array();
-      if (!isset($options['data']) or !isset(current($options['data'])['name'])) {
+      if (!isset($options['data'])) {
         // trace_(['_standard_form_field',$this->field,$options]);
         throw new ErrorException( __CLASS__.'->'.__METHOD__.'() options not properly set.' );
       }
@@ -437,15 +437,15 @@ class Flexy_field extends CI_Model {
 	 */
 
 	function _primary_key_grid() {
-		$this->id=$this->data;
+		$this->id=$this->fieldData;
 		$class=$this->table." id".$this->id;
 		$out="";
     if (is_editable_table($this->table)) {
       if ($this->fieldRight>=RIGHTS_EDIT)   {
         if (isset($this->extraInfoId))
-          $uri=api_uri('API_view_form',$this->table.$this->config->item('URI_HASH').$this->data,'info',$this->extraInfoId);
+          $uri=api_uri('API_view_form',$this->table.$this->config->item('URI_HASH').$this->fieldData,'info',$this->extraInfoId);
         else
-          $uri=api_uri('API_view_form',$this->table.$this->config->item('URI_HASH').$this->data);
+          $uri=api_uri('API_view_form',$this->table.$this->config->item('URI_HASH').$this->fieldData);
         $out.=anchor( $uri, help(icon("edit"),lang('grid_edit')), array("class"=>"edit $class"));
       }
       if ($this->fieldRight>=RIGHTS_DELETE)  {
@@ -459,7 +459,7 @@ class Flexy_field extends CI_Model {
 	}
 
 	function _primary_key_form() {
-		$this->id=$this->data;
+		$this->id=$this->fieldData;
 		$out=$this->_standard_form_field();
 		$out["type"]="hidden";
 		return $out;
@@ -467,7 +467,7 @@ class Flexy_field extends CI_Model {
 
 	function _user_grid() {
 		$this->db->as_abstracts();
-		$this->db->where("id",$this->data);
+		$this->db->where("id",$this->fieldData);
 		$user=$this->db->get_row("cfg_users");
 		$out=$user['abstract'];
 		return $out;		
@@ -512,25 +512,25 @@ class Flexy_field extends CI_Model {
   // }
 
 	function _self_grid() {
-    if ($this->table=='res_menu_result') return $this->data;
+    if ($this->table=='res_menu_result') return $this->fieldData;
     if ($this->field=='self_parent') {
       if (isset($this->rowdata[$this->title_field]))
         $tree=$this->rowdata[$this->title_field];
       else
         $tree=$this->rowdata[PRIMARY_KEY];
-      return "[$this->data] ".$tree;
+      return "[$this->fieldData] ".$tree;
     }
     else {
       $this->db->select('id');
       $this->db->select($this->title_field);
-      $this->db->where('id',$this->data);
+      $this->db->where('id',$this->fieldData);
       $self=$this->db->get_row($this->table);
       if ($self) {
         return $self[$this->title_field];
       }
       return '';
     }
-    return $this->data;
+    return $this->fieldData;
 	}
 
 	function _self_form( $options ) {
@@ -565,7 +565,7 @@ class Flexy_field extends CI_Model {
 
 	function _foreign_key_grid() {
 		$out="";
-		$data=$this->data;
+		$data=$this->fieldData;
 		if (is_array($data)) {
 			if (isset($data[$this->config->item('ABSTRACT_field_name')])) {
 				$out=$data[$this->config->item('ABSTRACT_field_name')];
@@ -582,7 +582,7 @@ class Flexy_field extends CI_Model {
 
 	function _order_grid() {
 		$out="";
-		$data=$this->data;
+		$data=$this->fieldData;
     if (is_editable_table($this->table) AND $this->fieldRight>=RIGHTS_EDIT) {
 			$out=	anchor(api_uri('API_view_order',$this->table,$this->id,"up"),help(icon("up"),lang('grid_order'))).
 						anchor(api_uri('API_view_order',$this->table,$this->id,"down"),help(icon("down"),lang('grid_order')));
@@ -592,7 +592,7 @@ class Flexy_field extends CI_Model {
 
 
 	function _join_grid() {
-		$out=$this->data;
+		$out=$this->fieldData;
     $out=str_replace(array('{','}',', '),array('<span class="rel_data">','</span>',''),$out);
 		return $out;
 	}
@@ -600,7 +600,7 @@ class Flexy_field extends CI_Model {
   
   function _actions_grid() {
 		$out="";
-		$data=$this->data;
+		$data=$this->fieldData;
     foreach ($data as $key => $value) {
       $out.=anchor(api_uri('API_home',$value),lang($key),array('class' => 'button')).' ';
     }
@@ -628,7 +628,7 @@ class Flexy_field extends CI_Model {
 	}
 
 	function _boolean_grid() {
-		if ($this->data)
+		if ($this->fieldData)
 			$out=icon("yes");
 		else
 			$out=icon("no");
@@ -636,7 +636,7 @@ class Flexy_field extends CI_Model {
 	}
 
 	function _text_grid() {
-		return strip_string($this->data,30);
+		return strip_string($this->fieldData,30);
 	}
 
 	function _dropdown_rights_form() {
@@ -765,10 +765,10 @@ class Flexy_field extends CI_Model {
 
 	function _dropdown_media_grid() {
 		$out="";
-		if (!empty($this->data)) {
+		if (!empty($this->fieldData)) {
 			$info=$this->cfg->get('CFG_media_info',$this->table.".".$this->field);
 			$path=el("path",$info);
-			$media=$this->config->item('ASSETS').$path."/".$this->data;
+			$media=$this->config->item('ASSETS').$path."/".$this->fieldData;
 			$out=show_thumb($media);
 		}
 		return $out;
@@ -776,14 +776,14 @@ class Flexy_field extends CI_Model {
 
 	function _dropdown_medias_grid() {
 		$out='';
-		if (!empty($this->data)) {
+		if (!empty($this->fieldData)) {
 			$info=$this->cfg->get('CFG_media_info',$this->table.".".$this->field);
 			$path=$this->config->item('ASSETS').el("path",$info)."/";
   		$filetypes=el("str_types",$info);
       $are_images=file_types_are_images($filetypes);
       $are_flash=file_types_are_flash($filetypes);
       $thumbs = $are_images or $are_flash;
-			$data=explode("|",$this->data);
+			$data=explode("|",$this->fieldData);
       // if ($thumbs) $out.='<ul>';
 			foreach($data as $file) {
         if ($thumbs)
@@ -797,16 +797,18 @@ class Flexy_field extends CI_Model {
 	}
 
 	function _create_media_options($files,$types) {
-    $options=array('data'=>array());
+    $options=array();
 		foreach($files as $file) {
-			if ($file["type"]!="dir") {
-				$ext=strtolower(get_file_extension($file["name"]));
-				if (in_array($ext,$types)) {
-          $value = str_replace('_','_&#173;',$file["name"])." (".trim(strftime("%e %B %Y",strtotime($file["date"]))).")";
-					$options['data'][$file["name"]] = array('name'=>$value,'value'=>$value);
-				}
-			}
+      $options[$file['name']] = str_replace('_','_&#173;',$file["name"])." (".trim(strftime("%e %B %Y",strtotime($file["date"]))).")";
+      // if ($file["type"]!=="dir") {
+      //   $ext=strtolower($file["type"]);
+      //   if (in_array($ext,$types)) {
+      //           $name = str_replace('_','_&#173;',$file["name"])." (".trim(strftime("%e %B %Y",strtotime($file["date"]))).")";
+      //     $options[$file["name"]] = array('name'=>$name,'value'=>$file['name']);
+      //   }
+      // }
 		}
+    $options = array_slice($options,0,50); // TODO: LIMIET WEG
 		return $options;
 	}
   
@@ -841,38 +843,40 @@ class Flexy_field extends CI_Model {
       }
       
       // Get files as Options
-      $options = array();
-  		if ($this->pre=="medias") $options['multiple']=true;
-      $this->load->model('mediatable');
-      $files=$this->mediatable->get_files($map);
-			if ($this->restrictedToUser) {
-				$files=$this->mediatable->filter_restricted_files($files,$this->restrictedToUser);
-			}
+      $options = array('data'=>array());
+  		if ($this->pre==="medias") $options['multiple']=true;
+      
+      $this->data->table('res_media_files');
+      $filter = array(
+        'user' => $this->restrictedToUser,
+        'type' => $types,
+      );
       
 			if ($fieldType=='image_dragndrop') {
-        // $options=sort_by($files,$order,$desc);
-        $options['data']=$files;
+        $options['data'] = $this->data->get_files( $path, $filter );
 			}
 			else {
-				$lastUploadMax=$this->cfg->get('CFG_media_info',$path,'int_last_uploads');
-				if ($lastUploadMax>0) {
-					$lastUploads=sort_by($files,"rawdate",TRUE,FALSE,$lastUploadMax);
-					ignorecase_ksort($files);
-					// add empty option if needed
-					if ($this->pre=='media' and $this->cfg->get('CFG_media_info',$path,'b_add_empty_choice')) $options['data'][]="";
-					$optionsLast=$this->_create_media_options($lastUploads,$types);
-					if (!empty($optionsLast)) $options[langp("form_dropdown_sort_on_last_upload",$lastUploadMax)]=$optionsLast;
-					$optionsNames=$this->_create_media_options($files,$types);
-					if (!empty($optionsNames)) $options['data'][lang("form_dropdown_sort_on_name")]=$optionsNames;
+				$lastUploadMax = $this->cfg->get('CFG_media_info',$path,'int_last_uploads');
+				if ( $lastUploadMax>0 ) {
+          $filesOnName = $this->data->order_by('str_title')->get_files( $path, $filter );
+          $filesRecent = $this->data->order_by('rawdate','DESC')->get_files( $path, $filter, $lastUploadMax );
+          $options['data'] = array(
+            langp("form_dropdown_sort_on_last_upload",$lastUploadMax) => $this->_create_media_options( $filesRecent,$types ),
+            lang("form_dropdown_sort_on_name")                        => $this->_create_media_options( $filesOnName,$types )
+          );
 				}
 				else {
+          $files = $this->data->get_files( $path, $filter );
 					$options['data'] = $this->_create_media_options($files,$types);
 				}
 			}
-			if ($this->cfg->get('CFG_media_info',$path,'b_add_empty_choice')) array_unshift($options['data'],array('name'=>'','value'=>''));
+  		// add empty option if needed
+  		if ($this->cfg->get('CFG_media_info',$path,'b_add_empty_choice')) array_unshift( $options['data'],'');
+      
 		}
     
 		$out = $this->_standard_form_field($options);
+
     if (isset($fieldType)) $out['type']=$fieldType;
 		$out["path"]=$map;
 		if ($this->pre=="medias") $out["multiple"]="multiple";

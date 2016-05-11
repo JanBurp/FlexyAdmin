@@ -79,6 +79,37 @@ function show_thumb($attr) {
 	return $path[count($path)-1];
 }
 
+/**
+ * Deze is sneller dan show_thumb(), er worden minder checks gedaan
+ *
+ * @param string $attr 
+ * @return mixed
+ * @author Jan den Besten
+ */
+function thumb($attr) {
+	if (!is_array($attr)) $attr["src"]=$attr;
+  $map=explode('/',$attr['src']);
+  $filename=array_pop($map);
+  $map=array_pop($map);
+	$ext=get_suffix($filename,'.');
+  
+	if (!isset($attr["alt"]))		$attr["alt"]=$attr["src"];
+	if (!isset($attr["class"]))	$attr["class"]="zoom"; else $attr["class"].=" zoom";
+	if ($ext=="swf") {
+		$src=$attr["src"];
+		unset($attr["src"]);
+		return flash($src,$attr);
+	}
+	else {
+		if (!isset($attr["alt"])) $attr["alt"]=$attr["src"];
+		if (!isset($attr["longdesc"])) $attr["longdesc"]='file/serve/'.$map.'/'.$filename;
+    $CI=&get_instance();
+		$cachedThumb = $CI->config->item('THUMBCACHE').pathencode($attr['src']);
+		if (file_exists($cachedThumb)) $attr['src']=$cachedThumb;
+		return img($attr);
+	}
+}
+
 
 /**
  * Geeft omvang van een afbeelding, checkt eerst of bestand wel bestaat en handeld eventuele foutmeldingen

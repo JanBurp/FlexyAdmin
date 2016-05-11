@@ -1038,7 +1038,7 @@ class Form {
   							$image=$img['name'];
                 $title=$img['name'];
                 if (isset($img['date'])) $title.=' ('.$img['date'].')';
-  							if ($preName=='media' or !in_array($image,$medias)) $field['control'].='<li>'.show_thumb(array("src"=>$field["path"]."/".$image,"class"=>"media",'alt'=>$title,'title'=>$title)).'</li>';
+  							if ($preName=='media' or !in_array($image,$medias)) $field['control'].='<li>'.thumb(array("src"=>$field["path"]."/".$image,"class"=>"media",'alt'=>$title,'title'=>$title)).'</li>';
   						}
   					}
           }

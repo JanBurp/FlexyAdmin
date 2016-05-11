@@ -443,6 +443,7 @@ class Show extends AdminController {
 			$data = $this->data->get_row();
 		}
     
+
     /**
      * Opties
      */
@@ -450,7 +451,8 @@ class Show extends AdminController {
 
     // trace_($this->data->last_query());
     // trace_($data);
-    // trace_($options);
+    // trace_(array_keys($options));
+    // die();
     
     $data = $this->_before_form($table,$data);
     
@@ -460,6 +462,8 @@ class Show extends AdminController {
 		if ( !empty($data) ) {
       
 			$ffData = $this->ff->render_form( $table,$data,$options );
+      // trace_($ffData);
+      // die();
       
 			$actionUri=api_uri('API_view_form',$table.$this->config->item('URI_HASH').$id);
 			if (!empty($info)) $actionUri.='/info/'.$info;

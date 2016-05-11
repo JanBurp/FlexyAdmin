@@ -1149,8 +1149,9 @@ select.media, select.medias {
 	margin:0px 0px 2px 0px;
 	}
 select.image_dropdown {
-	width:400px;
+	width:460px;
   margin-top:-32px;
+  margin-left:150px;
 }
 
 body.normal_dropdowns select.image_dropdown {margin-top:0px;}

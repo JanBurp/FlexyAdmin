@@ -14,7 +14,6 @@ Class Res_media_files extends Data_Core {
   public function __construct() {
     parent::__construct();
 		$this->load->model("file_manager");
-    
     // Add current filemanager_view setting:
     $user_id = $this->data_core->get_user_id();
     $this->settings['grid_set']['grid_view'] = $this->db->get_field_where( 'cfg_users','str_filemanager_view','id',$user_id);
@@ -53,5 +52,78 @@ Class Res_media_files extends Data_Core {
     }
     return $deleted_data;
   }
+  
+
+  /**
+   * Geeft informatie terug van alle bestanden in een bepaalde map.
+   * 
+   * Eventueel gefilterd op:
+   * - user   - alleen bestanden van een bepaalde gebruiker (als het user veld bestaat)
+   * - type   - alleen bestanden bepaalde type(n) bestanden
+   * - ...    - nog meer eigen filters: vergelijkbaar zoals je aan ->where() mee kunt geven
+   * 
+   * Het resultaat is wat anders dan een standaard database resultaat, de veldnamen wijken af en zijn alsvolgt:
+   * 
+   * - id         = id in de tabel res_media_files
+   * - name       = bestandsnaam
+   * - path       = map van bestand inclusief assets map
+   * - full_path  = complete beveiligde pad van bestand, deze kun je het best gebruiken om een bestand te tonen of niet
+   * - type       = extentie van het bestand
+   * - alt        = titel
+   * - size       = omvang in kb
+   * - rawdate    = datum (YYYY MM DD)
+   * - date       = datum mooi opgemaakt (DD mm YYYY)
+   * - width      = breedte in pixels, als het bestand een afbeelding is
+   * - height     = hoogte in pixels, als het bestand een afbeelding is
+   * - user       = user id als dit veld bestaat
+   *
+   * @param string $path Geef hier de directory waar je de bestanden van wilt.
+   * @param mixed $types[''] Type bestanden (extenties) die je wilt, als leeg dan krijg je alle bestanden.
+   * @param int $user_id [FALSE] Geef eventueel de user_id als je alleen bestanden van een bepaalde user wilt3
+   * @param int $limit [0]
+   * @param int $offset [0] 
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_files( $path, $filter=array(), $limit=0, $offset=0 ) {
+
+    // Veldnamen
+    $this->select( array(
+      '`file` AS `name`',
+      '`path`',
+      '`str_type` AS `type`',
+      '`str_title` AS `alt`',
+      'DATE_FORMAT(`dat_date`, "%Y %m %d") AS `rawdate`',
+      'DATE_FORMAT(`dat_date`,"%d %b %Y") AS `date`',
+      '`int_size` AS `size`',
+      '`int_img_width` AS `width`',
+      '`int_img_height` AS `height`'
+    ));
+    
+    // Van bepaalde user?
+    if ( $this->field_exists('user') ) {
+      $this->select( 'user' );
+    }
+    else {
+      unset($filter['user']);
+    }
+
+    // Alleen de bestanden die bestaan
+    $this->where( 'b_exists', TRUE );
+
+    // Bestanden van bepaalde map
+    $this->where( 'path', $path );
+    
+    // Standaard filters
+    $filter = array_rename_keys($filter,array('type'=>'str_type'));
+    if ($filter) {
+      foreach ($filter as $field=>$value) {
+        $this->where( $field, $value);
+      }
+    }
+    
+    return $this->get_result($limit,$offset);
+  }
+  
   
 }
