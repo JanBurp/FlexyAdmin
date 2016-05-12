@@ -2160,7 +2160,7 @@ Class Data_Core extends CI_Model {
    * ------------------------------
    * 
    * ->find( 'zoek' )               // Zoekt naar de letters 'zoek' in alle velden
-   * ->find( 'zoek ook')            // Zoekt naar de letters 'zoek' of 'ook'
+   * ->find( 'zoek ook')            // Zoekt naar de letters 'zoek' of 'ook'.
    * ->find( array( 'zoek ook' ) )  // idem
    * ->find( '"zoek ook"' )         // Zoekt naar de letters 'zoek ook'      
    * ->find( array( '"zoek ook"' )  // idem
@@ -2176,17 +2176,13 @@ Class Data_Core extends CI_Model {
    * Specifieke instellingen
    * -----------------------
    * 
-   * AND in plaats van OR, alle voorbeelden met meerdere zoektermen en velden maken een OR query, zo kun je er een AND query van maken;
-   * ->find( 'zoek ook', null, array( 'and' => TRUE ) )  // Zoekt naar rows in het resultaat waar 'zoek' EN 'ook' in voorkomen
-   * ->find( 'zoek ook', null, array( 'and' => 'AND' ) ) // idem
-   * ->find( 'zoek ook', null, array( 'and' => 'OR' ) )  // Dit is default, en zoekt naar resultaten waar 'zoek' OF 'ook' in voorkomen
-   * ->find( 'zoek ook', null, array( 'and' => FALSE ) ) // idem
+   * Er zijn nog diverse instellingen om de zoekfunctie verder te verfijnen:
    * 
-   * Zoeken op hele woorden in plaats van letters:
-   * ->find( 'zoek', null, array( 'word_boundaries' =>TRUE ) )  // Zoekt het woord 'zoek' ipv de letters 'zoek'
-   * 
-   * Zoeken op specifieke term in plaats van een deel:
-   * ->find( 'zoek', 'str_tag' , array( 'exact_term' =>TRUE ) ) // Zoekt het veld 'str_tag' dat precies de waarde 'zoek' heeft
+   * - 'and'         - ['OR'] Als er meerdere zoekopdrachten worden gegeven kun je hier aangeven of ze AND of OR moeten worden gekoppeld. Default is 'OR' (wat afwijkt van ->where(), maar voor zoeken logischer).
+   * - 'word'        - [FALSE] Geef aan of de zoekterm als geheel woord moet worden gevonden, of als een reeks karakters.
+   * - 'exact'       - [FALSE] Geef aan of de zoekterm exact in het gezochte veld moet voorkomen.
+   * - 'with'        - [array('many_to_one','one_to_many','many_to_many')] Geef aan welke relaties mee moeten worden genomen.
+   * - 'many_exists' - [TRUE] Net als where_exists()
    * 
    * Zoeken in relaties
    * ------------------
@@ -2199,7 +2195,7 @@ Class Data_Core extends CI_Model {
    * 
    * @param mixed $terms Zoekterm(en) als een string of array van strings. Letterlijk zoeken kan door termen tussen "" te zetten.
    * @param array $fields [array()] De velden waarop gezocht wordt. Standaard alle velden (behalve id,order,self_parent). Kan ook in relatietabellen zoeken, bijvoorbeeld 'tbl_links.str_title' als een veld in een gerelateerde tabel
-   * @param array $settings [array()] Extra instelingen, default: array( 'and' => 'OR, 'word_boundaries' => FALSE, , 'exact_term' => FALSE, 'with'=>array('many_to_one','one_to_many','many_to_many'), 'many_exists'=>TRUE )
+   * @param array $settings [array()] Extra instelingen.
    * @return $this
    * @author Jan den Besten
    */
@@ -2207,15 +2203,18 @@ Class Data_Core extends CI_Model {
     // settings
     $defaults = array(
       'and'             => 'OR',
-      'word_boundaries' => FALSE,
-      'exact_term'      => FALSE,
+      'word'            => FALSE,
+      'exact'           => FALSE,
       'with'            => array('many_to_one','one_to_many','many_to_many'),
       'many_exists'     => TRUE,
     );
     $settings = array_merge( $defaults,$settings );
-    if ($settings['and']===TRUE)  $settings['and'] = 'AND';
-    if ($settings['and']===FALSE) $settings['and'] = 'OR';
+    if (!is_string($settings['and']) or is_numeric($settings['and']) or empty($settings['and'])) {
+      if ($settings['and']==TRUE)  $settings['and'] = 'AND';
+      if ($settings['and']==FALSE) $settings['and'] = 'OR';
+    }
     $settings['and'] = strtoupper( $settings['and'] );
+    // trace_(['find',$terms,$fields,$settings]);
     
     // In welke velden zoeken?
     if ( is_string($fields) ) $fields = array($fields);
@@ -2315,7 +2314,7 @@ Class Data_Core extends CI_Model {
         }
         if ( $settings['many_exists'] AND $relation=='many_to_many') {
           // 'many_to_many' => ..._exists()
-          if ( $settings['exact_term'] ) {
+          if ( $settings['exact'] ) {
             $this->or_where_exists( $field, $terms );
           }
           else {
@@ -2324,10 +2323,10 @@ Class Data_Core extends CI_Model {
         }
         else {
           // Normal fields, or 'many_to_one'
-          if ( $settings['exact_term'] ) {
+          if ( $settings['exact'] ) {
             $this->or_where( $field, $terms, FALSE);
           }
-          elseif ( $settings['word_boundaries'] ) {
+          elseif ( $settings['word'] ) {
             $this->db->or_where( $field.' REGEXP \'[[:<:]]'.$terms.'[[:>:]]\'', NULL, FALSE);
           }
           else {
@@ -2340,6 +2339,96 @@ Class Data_Core extends CI_Model {
       $this->db->group_end();
     }
     
+    return $this;
+  }
+  
+  
+  /**
+   * Hiermee kun je meerdere zoekopdrachten in één keer meegeven.
+   * Een uitgebreide versie van ->find() dus.
+   * 
+   * Je moet een array meegeven met per veld de te zoeken waarden en instellingen:
+   * 
+   * array(
+   * 
+   *    array(
+   *      'field' => veld waarin gezocht moet worden.
+   *      'term'  => te zoeken term, zie bij ->find() voor alle opties hier.
+   *      'and'   => ["OR"] Zie ->find() settings.
+   *      'word'  => [FALSE] (idem)
+   *      'exact' => [FALSE] (idem)
+   *    ),
+   * 
+   *    array( ...  ),
+   *    ...etc...
+   * 
+   * )
+   * 
+   * groups
+   * ------
+   * 
+   * Je kunt het zoeken onderverdelen in groepen, door meerdere aanroepen van find_multiple() te doen en daaromheen de CodeIgniter group_start() en group_end() aanroepen.
+   * Maar je kunt het ook in de $search array al meegeven door subbarrays.
+   * De groepsnaam kan van alles zijn (heeft geen functie) als het maar uniek is. In de array moet dan de key 'group' bestaan met daarin de standaard CodeIgniter group methods met één afwijking: group_start is OR en or_group_start is vervangen door and_group_start.
+   * 
+   *  array( ... ),
+   * 
+   *  array( 
+   *     'group' => 'group_start',
+   *     array( ... ),
+   *     ..etc..
+   *  ),
+   *  ...etc...
+   * 
+   * )
+   * 
+   * 
+   *
+   * @param array $search Hier geef je een array met alle zoektermen per veld.
+   * @param array $settings [array()] Extra instelingen, de meeste zitten al in $search, hier alleen 'with' en 'many_exists'. Zie verder bij ->find()
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function find_multiple( $search, $settings = array() ) {
+    // settings
+    $defaults = array(
+      'and'             => 'OR',
+      'with'            => array('many_to_one','one_to_many','many_to_many'),
+      'many_exists'     => TRUE
+    );
+    $settings = array_merge( $defaults,$settings );
+    
+    // Loop alle search termen langs
+    foreach ( $search as $key => $item) {
+      if (isset($item['term'])) {
+        // ITEM
+        $term = $item['term'];
+        $item_settings = $item['settings'];
+        $item_settings = array_merge( $settings,$item_settings );
+        $this->find( $term, $item['field'], $item_settings );
+      }
+      if ( isset($item['group']) and in_array(strtoupper($item['group']),array('GROUP_START','AND_GROUP_START','NOT_GROUP_START','AND_NOT_GROUP_START')) ) {
+        // GROUP
+        $group=strtolower($item['group']);
+        switch ($group) {
+          case 'group_start':
+            $group='or_group_start';
+            break;
+          case 'and_group_start':
+            $group='group_start';
+            break;
+          case 'not_group_start':
+            $group='or_not_group_start';
+            break;
+          case 'and_not_group_start':
+            $group='not_group_start';
+            break;
+        }
+        $this->db->$group();
+        $this->find_multiple( $item, $settings );
+        $this->db->group_end();
+      }
+    }
     return $this;
   }
 

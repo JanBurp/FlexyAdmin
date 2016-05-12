@@ -31,15 +31,24 @@ class Test extends AdminController {
   
   public function index() {
 
-    $this->data->table( 'cfg_users' )->set_user_id()
-              ->select( $this->data->get_setting(array('grid_set','fields')) )
-              ->with( 'many_to_one');
+    $search=array(
+      ['field'=>'str_middle_name', 'term'=>'van','settings'=>['exact'=>true]],
+      // ['field'=>'str_first_name', 'term'=>'oo','and'=>'AND'],
+      // [ 'group'=>'and_group_start',
+      //   ['field'=>'str_middle_name', 'term'=>'van'],
+      //   ['field'=>'str_middle_name', 'term'=>'den'],
+      // ],
+      // ['field'=>'tbl_adressen.str_address', 'term'=>'laan'],
+    );
+    trace_( $search );
+
+    $this->data->table( 'tbl_leerlingen' )->with( 'many_to_one');
+    $this->data->find_multiple( $search );
+    // $this->data->find( 'van' );
     $result = $this->data->get_result();
-    $options = $this->data->get_options();
-    
+
     trace_( $this->data->get_query_info() );
-    // echo( $this->data->last_query());
-    trace_($options);
+    echo '<pre><code>'.nice_sql( $this->data->last_query() ).'</code></pre>';
     trace_( $result );
     
     

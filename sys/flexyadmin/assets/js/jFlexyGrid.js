@@ -181,23 +181,100 @@ function doGrid() {
 		//
 		// Filter/Search rows
 		//
-		filter=$("table.grid:first");
+    
+		var filter=$("table.grid:first");
 		if (filter.length>0 && !isGridAction && !$(filter).hasClass('home')) {
+      
+      // multiple filter
+      if ( $('.extended_search').length>0) {
+        
+        extended_search_show_existing();
+        extended_search_bind_actions();
+        
+        // Vul huidige zoektermen in en laat zien
+        function extended_search_show_existing() {
+          var json=$('table.grid').attr('data-search');
+          if (json!=='' && json.substr(0,1)==='{') {
+            var search=JSON.parse(json);
+            var new_row = $('.extended_search td .extended_search_row').clone();
+            $.each(search,function(index,item){
+              var child=Number(index)+1;
+              if (index>0) $('.extended_search td').append(new_row.clone());
+              var row=$('.extended_search td .extended_search_row:nth-child('+child+')');
+              $('.extended_search_and select',row).val(item.and);
+              $('.extended_search_field select',row).val(item.field);
+              if (item.settings.exact===true) $('.extended_search_equal select',row).val('exact');
+              if (item.settings.word===true) $('.extended_search_equal select',row).val('word');
+              $('.extended_search_term input',row).val(item.term);
+            });
+          }
+        }
+        // Zorg dat alle knoppen werken en dat een verandering een nieuwe zoekresultaat in gang zet
+        function extended_search_bind_actions() {
+          $('.extended_search *').unbind();
+          // add new row
+          var new_row = $('.extended_search .extended_search_row:first').clone();
+          $('.extended_search .extended_search_plus').click(function(){
+            $('.extended_search td').append(new_row.clone());
+            extended_search_bind_actions();
+          });
+          // remove row
+          $('.extended_search .extended_search_remove').click(function(){
+            $(this).parent('.extended_search_row').remove();
+          });
+          // change
+          $('.extended_search .extended_search_row input').add('.extended_search .extended_search_row select').change(function(){
+            var search = extended_search_create_search_json();
+  					var url=$(filter).attr('url')+'/0/order/'+$(filter).attr('order')+'?search='+search;
+            location.href=url;
+          });
+        }
+        // Zet zoekform om in json
+        function extended_search_create_search_json() {
+          var search={};
+          var nr=0;
+          $('.extended_search_row').each(function(){
+            var and = $('.extended_search_and select',this).val();
+            var field = $('.extended_search_field select',this).val();
+            var equal = $('.extended_search_equal select',this).val();
+            var term = $('.extended_search_term input',this).val();
+            search[nr] = {"field":field,"term":term,"and":and,"settings":{}};
+            if (equal==='exact') search[nr]['settings']['exact'] = true;
+            if (equal==='word') search[nr]['settings']['word'] = true;
+            nr++;
+          });
+          var json=JSON.stringify(search);
+          $('input.filter').val(json);
+          return json;
+        }
+        
+      }
 
 			if ($(filter).hasClass('pagination')) {
 				// add filter input
-				var search=unescape($(filter).attr('search').replace(/~/,'%'));
-        
-        $("tr.caption:first tr td:first").append('<span class="filter"><span class="help '+config.help_filter+'"><input class="filter" type="text" value="'+search+'"/></span></span>');
-				// bind action
+				var search=$(filter).attr('data-search');
+        $("tr.caption:first tr td:first").append('<span class="filter"><span class="help '+config.help_filter+'"><input class="filter" type="text" value="'+search+'"/></span><img class="hidden extended_search_button" src="sys/flexyadmin/assets/icons/action_add.gif"></span>');
         var filterBox=$('input.filter');
+        // Extended search on
+        $('.extended_search_button').click(function(){
+          $('tr.extended_search').removeClass('hidden');
+          $('.grid .filter').addClass('hidden');
+        });
+        if (search.substr(0,1)==='{') {
+          $('tr.extended_search').removeClass('hidden');
+          $('.grid .filter').addClass('hidden');
+        }
+				// bind action
 				$(filterBox).keypress(function(e){
+          var search=$(this).val();
+          if (search.length>0) {
+            $('.extended_search_button').removeClass('hidden');
+          }
+          else {
+            $('.extended_search_button').addClass('hidden');
+          }
           if (e.which==keyEnter) {
-  					var search=$(this).val();
-            search=encodeURI(search);
-            search=search.replace(/%/g,'~');
-  					// ok now reload the page, starting from page 0, with this search and current order
-  					var url=$(filter).attr('url')+'/0/order/'+$(filter).attr('order')+'/search/'+search;
+  					var url=$(filter).attr('url')+'/0/order/'+$(filter).attr('order')+'?search='+search;
             location.href=url;
           }
 				});
@@ -238,11 +315,11 @@ function doGrid() {
 				});
         
 				// place filter input on other place
-				filter_input=$("div.filter:first input");
-				$(filter_input).addClass("filter").attr({title:'search / filter'});
-				$("tr.caption:first tr td:first").append('<span class="filter">');
-				$("span.filter:first").html(filter_input);
-				$("span.filter:first input").wrap('<span class="help '+config.help_filter+'"></span>');
+        // var filter_input=$("div.filter:first input");
+        // $(filter_input).addClass("filter").attr({title:'search / filter'});
+        // $("tr.caption:first tr td:first").append('<span class="filter">');
+        // $("span.filter:first").html(filter_input);
+        // $("span.filter:first input").wrap('<span class="help '+config.help_filter+'"></span>');
 			}
 		}
 
@@ -591,16 +668,14 @@ function doGrid() {
 	$("table.grid").find('tfoot .pagination a').each(function(){
 		grid=$("table.grid");
 		var order=$(grid).attr('order');
-    var search=$(grid).attr('search');
-    search=encodeURI(search);
-    search=search.replace(/%/g,'~');
+    var search=$(grid).attr('data-search');
 		if (order=='') order='name';
     var base_url=$(this).attr('href');
     var lastslash=base_url.lastIndexOf('/offset')+7;
     var offset=base_url.substr(lastslash+1);
     if (offset==='') offset=0;
     base_url=base_url.substr(0,lastslash);
-		var url=base_url+'/'+offset+'/order/'+order+'/search/'+search;
+		var url=base_url+'/'+offset+'/order/'+order+'?search='+search;
 		$(this).attr('href',url);
 	});
   
@@ -622,10 +697,8 @@ function doGrid() {
 							var field=get_class($(this),1);
 						if ($(this).hasClass('headerSortDown')) field='_'+field;
 						// ok now reload the page, starting from page 0
-            var search=$(grid).attr('search');
-            search=encodeURI(search);
-            search=search.replace(/%/g,'~');
-						var url=$(grid).attr('url')+'/0/order/'+field+'/search/'+search;
+            var search=$(grid).attr('data-search');
+						var url=$(grid).attr('url')+'/0/order/'+field+'?search='+search;
             location.href=url;
 					});
 				}
@@ -726,7 +799,7 @@ function doGrid() {
 
 function get_current_grid_page_uri() {
 	var grid=$('table.grid');
-	return '/offset/'+$(grid).attr('offset')+ '/order/'+$(grid).attr('order')+ '/search/'+$(grid).attr('search');
+	return '/offset/'+$(grid).attr('offset')+ '/order/'+$(grid).attr('order')+ '?search='+$(grid).attr('data-search');
 }
 
 function hide_branches(parent_id) {
@@ -772,3 +845,4 @@ function shiftNodes(id,add,newParentId) {
 		}
 	}
 }
+

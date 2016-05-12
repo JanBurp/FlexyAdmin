@@ -14,6 +14,7 @@ class Grid extends CI_Model {
   private $rowId;
   private $order;
   private $search;
+  private $searchfields;
   private $currentId;
   private $renderData;
   private $pagin;
@@ -42,6 +43,7 @@ class Grid extends CI_Model {
 		$this->set_type();
 		$this->set_order();
 		$this->set_search();
+		$this->set_searchfields();
 		$this->set_current();
 		$this->set_pagination();
     return $this;
@@ -171,6 +173,19 @@ class Grid extends CI_Model {
 	}
 
   /**
+   * Velden waarin uitgebreid zoeken mogelijk is
+   *
+   * @param array $fields 
+   * @return $this
+   * @author Jan den Besten
+   */
+	public function set_searchfields( $searchfields = array()) {
+		$this->searchfields=$searchfields;
+    return $this;
+	}
+
+
+  /**
    * Stel huidig item in
    *
    * @param string $currentId 
@@ -287,6 +302,7 @@ class Grid extends CI_Model {
     if ($this->editable) $renderData["class"].=' editable';
 		$renderData['order']=implode(':',$this->order);
 		$renderData['search']=$this->search;
+		$renderData['searchfields']=$this->searchfields;
     
 		$renderData["caption"]["class"]="$table $class";
 		$renderData["caption"]["row"]=$this->captions;
