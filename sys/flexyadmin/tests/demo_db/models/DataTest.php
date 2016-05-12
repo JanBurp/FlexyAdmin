@@ -418,7 +418,7 @@ class DataTest extends CITestCase {
     $info = $this->CI->data->get_query_info();
     $this->assertEquals( 25, $info['num_rows'] );
     // word boundaries
-    $this->CI->data->find('va',null,array('word_boundaries'=>TRUE));
+    $this->CI->data->find('va',null,array('word'=>TRUE));
     $result = $this->CI->data->get_result();
     $info = $this->CI->data->get_query_info();
     $this->assertEquals( 0, $info['num_rows'] );
@@ -428,12 +428,12 @@ class DataTest extends CITestCase {
     $info = $this->CI->data->get_query_info();
     $this->assertEquals( 25, $info['num_rows'] );
     // specific fields & word boundaries
-    $this->CI->data->find('van',array('str_middle_name'),array('word_boundaries'=>TRUE));
+    $this->CI->data->find('van',array('str_middle_name'),array('word'=>TRUE));
     $result = $this->CI->data->get_result();
     $info = $this->CI->data->get_query_info();
     $this->assertEquals( 25, $info['num_rows'] );
     // specific fields & word boundaries
-    $this->CI->data->find('va',array('str_middle_name'),array('word_boundaries'=>TRUE));
+    $this->CI->data->find('va',array('str_middle_name'),array('word'=>TRUE));
     $result = $this->CI->data->get_result();
     $info = $this->CI->data->get_query_info();
     $this->assertEquals( 0, $info['num_rows'] );
@@ -490,7 +490,7 @@ class DataTest extends CITestCase {
     $this->assertEquals( 6, $info['num_rows'] );
     // Zoeken in many_to_one 'straat' word_boundaries
     $this->CI->data->with( 'many_to_one' );
-    $this->CI->data->find('straat',null,array('word_boundaries'=>TRUE));
+    $this->CI->data->find('straat',null,array('word'=>TRUE));
     $result = $this->CI->data->get_result();
     $info = $this->CI->data->get_query_info();
     $this->assertEquals( 0, $info['num_rows'] );
@@ -505,7 +505,7 @@ class DataTest extends CITestCase {
     // Zoeken in many_to_many 'van' ->word_boundaries
     $this->CI->data->table( 'tbl_adressen' );
     $this->CI->data->with( 'one_to_many' );
-    $this->CI->data->find( 'van', null, array('word_boundaries'=>TRUE));
+    $this->CI->data->find( 'van', null, array('word'=>TRUE));
     $query = $this->CI->data->get();
     $info = $this->CI->data->get_query_info();
     $this->assertEquals( 25, $info['num_rows'] );

@@ -36,10 +36,7 @@ class Show extends AdminController {
       // $sub=el('sub',$args);
 			$offset=el('offset',$args,0);
 			$order=el('order',$args);
-			$search=el('search',$args);
-      $search=str_replace('~','%',$search);
-      $search=urldecode($search);
-      if (empty($search)) $search=$this->input->get('search');
+      $search=$this->input->get('search');
       $where=el('where',$args);
 			$this->grid_set->save(array('table'=>$table,'offset'=>$offset,'order'=>$order,'search'=>$search));
 
@@ -170,14 +167,12 @@ class Show extends AdminController {
             $decode_search = json2array($search);
             if ($decode_search) {
               $extended_search = TRUE;
-              // trace_($search);
-              // trace_($decode_search);
+              // strace_($search);
+              // strace_($decode_search);
             }
           }
           if ($extended_search) {
-            foreach ($decode_search as $field => $value) {
-              $this->data->find( $value, $field, array('and'=>'OR','with'=>$search_with) );
-            }
+            $this->data->find_multiple( $decode_search, array('with'=>$search_with) );
           }
           else {
             $this->data->find( $search, array(), array('and'=>'OR','with'=>$search_with) );
@@ -323,6 +318,15 @@ class Show extends AdminController {
 					$grid->set_data($data,$uiShowTable);
 					$grid->set_order($last_order);
 					$grid->set_search($search);
+
+          $searchfields = $this->data->get_setting('fields');
+          $searchfields=array_unset_keys($searchfields, array('id','order','self_paren'));
+          foreach ($searchfields as $key => $value) {
+            unset($searchfields[$key]);
+            $searchfields[$value] = $this->ui->get($value);
+          }
+          $grid->set_searchfields($searchfields);
+          
           
 					if (!empty($data)) {
 						$keys=array_keys(current($data));
