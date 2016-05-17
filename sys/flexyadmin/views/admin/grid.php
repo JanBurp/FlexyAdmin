@@ -20,7 +20,7 @@
                       <option value="<?=$field?>"><?=$name?></option>
                     <? endforeach; ?>
                   </select></span>
-                  <span class="extended_search_equal"><select name="extended_equals[]"><option selected="selected" value="">&asymp;</option><option value="exact">=</option><option value="word">|...|</option></select></span>
+                  <span class="extended_search_equal"><select name="extended_equals[]" title="<?=lang('grid_extended_search')?>"><option selected="selected" value="">&asymp;</option><option value="exact">=</option><option value="word">|...|</option></select></span>
                   <span class="extended_search_term"><input name="extended_term[]"></span>
                   <span class="extended_search_plus"><img src="sys/flexyadmin/assets/icons/action_add.gif"></span>
                   <span class="extended_search_remove"><img src="sys/flexyadmin/assets/icons/action_delete.gif"></span>
