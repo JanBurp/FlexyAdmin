@@ -16,6 +16,7 @@ $lang['grid_delete']				= '<p>Verwijder dit item</p>';
 $lang['grid_select']				= '<p>Selecteer dit item</p>';
 $lang['grid_select_all']		= '<p>Selecteer alle items</p>';
 $lang['grid_order']					= '<p>Verplaats dit item</p>';
+$lang['grid_extended_search'] = "&asymp; zoek ongeveer, = zoek precies, |..| zoek woord";
 
 $lang['file_delete']				= '<p>Verwijder dit bestand</p>';
 $lang['file_upload'] 				= '<p>Upload een nieuw bestand.</p>';

@@ -18,6 +18,7 @@ $lang['grid_delete']				= '<p>Delete this item</p>';
 $lang['grid_select']				= '<p>Select this item</p>';
 $lang['grid_select_all']		= '<p>Select all items</p>';
 $lang['grid_order']					= '<p>Move</p>';
+$lang['grid_extended_search'] = "&asymp; search approximately, = search exact, |..| search word";
 
 $lang['file_delete']				= '<p>Remove this file</p>';
 $lang['file_upload'] 				= '<p>Upload a new file.</p>';
