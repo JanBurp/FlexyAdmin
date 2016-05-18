@@ -24,6 +24,14 @@ require_once(APPPATH."libraries/Ion_auth.php");
  */
  
 class User extends Ion_auth {
+  
+  
+  private $_rights_settings = array(
+    8 => 'DELETE',
+    4 => 'ADD',
+    2 => 'EDIT',
+    1 => 'SHOW',
+  );
 	
 
   /**
@@ -607,15 +615,27 @@ class User extends Ion_auth {
    * @return int Rechten zie boven
    * @author Jan den Besten
    */
-	public function has_rights($item,$id="",$whatRight=0) {
-    if (  $item===$this->tables['users'] and !empty($id) and ($id!==-1) ) {
+	public function has_rights($item,$id="",$whatRight=0, $user_id=FALSE) {
+    
+    // Ingelogde gebruiker of een andere?
+    if ( !$user_id ) {
       $user_info = $this->get_user();
+      $rights = $this->rights;
+    }
+    else {
+      $user_info = $this->get_user( $user_id );
+      $rights = $this->create_rights( $user_id );
+    }
+
+    // Rechten voor aanpassen zelf?
+    if (  $item===$this->tables['users'] and !empty($id) and ($id!==-1) ) {
       // Eigen info kunnen aanpassen
       if ($id===$user_info->id) return 2;
       // No rights to edit/delete a user with more rights
       $deleted_group = $this->CI->db->get_field_where('cfg_users','id_user_group','id',$id);
       if ( $user_info->id_user_group > $deleted_group ) return false;
     }
+    
 		
 		$found=array('b_delete'=>FALSE,'b_add'=>FALSE,'b_edit'=>FALSE,'b_show'=>FALSE);
 		$pre=get_prefix($item);
@@ -628,7 +648,6 @@ class User extends Ion_auth {
 		// trace_if($condition,$this->rights);
 		// trace_if($condition,array('item'=>$item,'pre'=>$pre,'preAll'=>$preAll));
 
-		$rights=$this->rights;
     
     if (isset($rights['stx_specific_rights']) and preg_match("/".$item."=\[(.*)\]/uiUsm", $rights['stx_specific_rights'],$match)) {
       $keys=explode(',',$match[1]);
@@ -731,6 +750,30 @@ class User extends Ion_auth {
 	public function get_inactive_old_users($group_name = false, $time=1209600) {
 		return $this->CI->ion_auth_model->get_inactive_old_users($group_name,$time)->result();
 	}
+  
+  
+  /**
+   * Geeft rechten als een mooie string
+   * 
+   * - DELETE = 8
+   * - ADD    = 4
+   * - EDIT   = 2
+   * - SHOW   = 1
+   * - NO     = 0 
+   *
+   * @param string $rights 
+   * @return string
+   * @author Jan den Besten
+   */
+  public function rights_to_string($rights) {
+    $string = '';
+    foreach ($this->_rights_settings as $number => $description) {
+      if ( $rights-$number >=0 ) {
+        $string = add_string($string,$description,'|');
+      }
+    }
+    return $string;
+  }
 
 
 

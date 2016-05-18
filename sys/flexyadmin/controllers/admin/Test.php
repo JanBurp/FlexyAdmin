@@ -30,26 +30,18 @@ class Test extends AdminController {
 	}
   
   public function index() {
+    
+    $this->data->table( 'cfg_users' )->select('id,str_username')->with( 'many_to_one', array( 'id_user_group' => array('str_name','str_description') ) );
+    $users = $this->data->get_result();
+    $tables = $this->db->list_tables();
+    
+    foreach ($users as $id => $user) {
+      foreach ($tables as $table) {
+        $users[$id]['rights'][$table] = $this->user->rights_to_string( $this->user->has_rights( $table, '', 0, $id) );
+      }
+    }
 
-    $search=array(
-      ['field'=>'str_middle_name', 'term'=>'van','settings'=>['exact'=>true]],
-      // ['field'=>'str_first_name', 'term'=>'oo','and'=>'AND'],
-      // [ 'group'=>'and_group_start',
-      //   ['field'=>'str_middle_name', 'term'=>'van'],
-      //   ['field'=>'str_middle_name', 'term'=>'den'],
-      // ],
-      // ['field'=>'tbl_adressen.str_address', 'term'=>'laan'],
-    );
-    trace_( $search );
-
-    $this->data->table( 'tbl_leerlingen' )->with( 'many_to_one');
-    $this->data->find_multiple( $search );
-    // $this->data->find( 'van' );
-    $result = $this->data->get_result();
-
-    trace_( $this->data->get_query_info() );
-    echo '<pre><code>'.nice_sql( $this->data->last_query() ).'</code></pre>';
-    trace_( $result );
+    trace_( $users );
     
     
     

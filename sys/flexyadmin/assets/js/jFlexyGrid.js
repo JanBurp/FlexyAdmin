@@ -251,9 +251,11 @@ function doGrid() {
       }
 
 			if ($(filter).hasClass('pagination')) {
+        
 				// add filter input
 				var search=$(filter).attr('data-search');
         $("tr.caption:first tr td:first").append('<span class="filter"><span class="help '+config.help_filter+'"><input class="filter" type="text" value="'+search+'"/></span><img class="hidden extended_search_button" src="sys/flexyadmin/assets/icons/action_add.gif"></span>');
+        
         var filterBox=$('input.filter');
         // Extended search on
         $('.extended_search_button').click(function(){
@@ -315,11 +317,11 @@ function doGrid() {
 				});
         
 				// place filter input on other place
-        // var filter_input=$("div.filter:first input");
-        // $(filter_input).addClass("filter").attr({title:'search / filter'});
-        // $("tr.caption:first tr td:first").append('<span class="filter">');
-        // $("span.filter:first").html(filter_input);
-        // $("span.filter:first input").wrap('<span class="help '+config.help_filter+'"></span>');
+        var filter_input=$("div.filter:first input");
+        $(filter_input).addClass("filter").attr({title:'search / filter'});
+        $("tr.caption:first tr td:first").append('<span class="filter">');
+        $("span.filter:first").html(filter_input);
+        $("span.filter:first input").wrap('<span class="help '+config.help_filter+'"></span>');
 			}
 		}
 
