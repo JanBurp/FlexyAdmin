@@ -45,10 +45,11 @@ Class Data extends CI_Model {
       }
       else {
         $this->models[$table] = $this->data_core;
-        // Set table
-        call_user_func_array( array($this->models[$table],'table'), array($table) );
       }
     }
+    
+    // Set table
+    call_user_func_array( array($this->models[$table],'table'), array($table) );
     
     return $this;
   }

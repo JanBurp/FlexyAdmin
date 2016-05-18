@@ -31,21 +31,33 @@ class Test extends AdminController {
   
   public function index() {
     
-    $this->data->table( 'cfg_users' )->select('id,str_username')->with( 'many_to_one', array( 'id_user_group' => array('str_name','str_description') ) );
+    
+  }
+  
+  
+  public function users() {
+    if (!$this->user->is_super_admin()) return;
+
+    $this->data->table( 'cfg_users' )->select('id,str_username')->with_flat_many_to_one( array( 'id_user_group' => array('str_name') ) );
     $users = $this->data->get_result();
     $tables = $this->db->list_tables();
     
     foreach ($users as $id => $user) {
+      if (!isset($users[$id]['rights'])) $users[$id]['rights']='<table>';
       foreach ($tables as $table) {
-        $users[$id]['rights'][$table] = $this->user->rights_to_string( $this->user->has_rights( $table, '', 0, $id) );
+        $users[$id]['rights'] .= '<tr><td><b>'.$table.'<b></td><td>'.$this->user->rights_to_string( $this->user->has_rights( $table, '', 0, $id) ). '</td></tr>';
       }
+      $users[$id]['rights'] .= '</table>';
     }
-
-    trace_( $users );
     
-    
-    
+    echo( '<h1>User rights</h1>' );
+    $this->table->set_heading( array('id','user_name','group.id','group.name','rights') );
+    foreach ($users as $id => $user) {
+      $this->table->add_row( $user );
+    }
+    echo $this->table->generate();
   }
+  
   
   
   public function relations() {
