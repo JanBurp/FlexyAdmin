@@ -21,7 +21,7 @@ class Plugin_controller extends AdminController {
    * @author Jan den Besten
    */
 	public function index() {
-    if ( $this->user->is_super_admin() ) {
+    if ( $this->flexy_auth->is_super_admin() ) {
       $this->_add_content( h('Plugins') );
 
       $this->load->library('menu');

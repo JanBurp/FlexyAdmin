@@ -15,7 +15,7 @@ class Login extends MY_Controller {
 	function __construct() {
 		parent::__construct();
 		$this->load->library('session');
-		$this->load->library('user');
+		$this->load->library('flexy_auth');
 		$this->homePage=$this->config->item('API_home');
 	}
 
@@ -39,14 +39,14 @@ class Login extends MY_Controller {
 		$username=$this->input->post("user",TRUE);
 		$password=$this->input->post("password",FALSE);
     
-		if ($this->user->login( $username, $password, FALSE )) {
+		if ($this->flexy_auth->login( $username, $password, FALSE )) {
 			
-			$message = $this->user->messages();
+			$message = $this->flexy_auth->messages();
 			$this->session->set_flashdata('message', $message);
 
 			// Succesfull login
-			$this->session->set_flashdata('message', $this->user->messages());
-			$userData = object2array( $this->user->get_user() );
+			$this->session->set_flashdata('message', $this->flexy_auth->messages());
+			$userData = object2array( $this->flexy_auth->user() );
 
 			// set user preferences in session data
 			if (isset($userData['str_language'])) $this->session->set_userdata("language",$userData['str_language']);	else $this->session->set_userdata("language",'nl');
@@ -57,8 +57,7 @@ class Login extends MY_Controller {
 		}
 		else { 
 			// Unsuccesfull
-			$message = $this->user->messages();
-			if (empty($message)) $message = $this->user->errors();
+      if (empty($message)) $message = $this->flexy_auth->errors();
 			$this->session->set_userdata('message', $message);
 		}
 		redirect($this->homePage);

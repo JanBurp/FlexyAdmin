@@ -442,6 +442,30 @@ function doGrid() {
 	// Grid only (Edit Fields & Order editing)
 	//
 	if (isGrid && !isFile) {
+    
+    // Iets doen met geselecteerde gebruikers
+    if ( $('.grid table.cfg_users').length>0 ) {
+      
+      var button=$('a.button.selected_users');
+      var href=$(button).attr('href');
+      $(button).click(function(e){
+        e.preventDefault();
+        var selected=$('table.grid tbody tr.selected:not(.filtered)');
+        var url = '';
+        $(selected).each(function(index,el){
+          var user_id = Number( $(el).attr('id') );
+          if (user_id>0) {
+            if (url==='') url=href+'?';
+            url += 'users[]='+user_id+'&';
+          }
+        });
+        if (url!=='') {
+          location.href=url;
+        }
+        return false;
+      });
+    }
+    
 
 		//
 		// Editable Fields

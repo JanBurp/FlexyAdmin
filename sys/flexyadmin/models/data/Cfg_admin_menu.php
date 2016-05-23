@@ -30,7 +30,7 @@ Class cfg_admin_menu extends Data_Core {
   public function get_menu() {
     $this->where( array(
       'b_visible'=>true,
-      'id_user_group >='=>$this->user->group_id,
+      'id_user_group >='=>$this->flexy_auth->group_id,
       'order >=' => 4,
       'api !='=> 'API_plugin_stats'
     ));
@@ -40,7 +40,7 @@ Class cfg_admin_menu extends Data_Core {
 
     $header = array(
       array( 'name' => lang('help'), 'uri'=>'help/index', 'type' => 'info' ),
-      array( 'name' => $this->user->user_name, 'uri'=>'form/cfg_users/current', 'type' => 'form', 'args' => array('table'=>'cfg_users','id'=>$this->user->user_id)),
+      array( 'name' => $this->flexy_auth->username, 'uri'=>'form/cfg_users/current', 'type' => 'form', 'args' => array('table'=>'cfg_users','id'=>$this->flexy_auth->user_id)),
       array( 'name' => lang('logout'), 'uri'=>'logout', 'type' => 'logout' )
     );
 
@@ -61,8 +61,8 @@ Class cfg_admin_menu extends Data_Core {
    * @author Jan den Besten
    */
 	private function _process_menu($db_menu,$currentMenuItem="") {
-    $user=$this->user->get_user();
-    $user_group=$user->id_user_group;
+    $user=$this->flexy_auth->get_user();
+    $user_group=$user['group_id'];
     
     $menu=array();
 		foreach ($db_menu as $item) {
@@ -85,7 +85,7 @@ Class cfg_admin_menu extends Data_Core {
 
         case 'tools':
           // Database import/export tools
-          if ($this->user->is_super_admin()) {
+          if ($this->flexy_auth->is_super_admin()) {
             $menu[] = array(
               'name'    => lang('db_export'),
               'uri'     => 'tools/db_export',
@@ -99,7 +99,7 @@ Class cfg_admin_menu extends Data_Core {
               'args'    => array('api'=>api_uri('API_db_import'))
             );
           }
-          elseif ($this->user->can_backup()) {
+          elseif ($this->flexy_auth->can_backup()) {
             $menu[] = array(
               'name'    => lang('db_backup'),
               'uri'     => 'tools/db_backup',
@@ -114,7 +114,7 @@ Class cfg_admin_menu extends Data_Core {
             );
           }
           // Search&Replace AND Bulkupload tools
-          if ($this->user->can_use_tools()) {
+          if ($this->flexy_auth->can_use_tools()) {
             $menu[] = array(
               'name'    => lang('sr_search_replace'),
               'uri'     => 'tools/search',
@@ -225,7 +225,7 @@ Class cfg_admin_menu extends Data_Core {
     }
     $oTables=array_merge($oTables,$tables);
 		foreach ($oTables as $table) {
-      if (!in_array($table,$excluded) and $this->user->has_rights($table)) {
+      if (!in_array($table,$excluded) and $this->flexy_auth->has_rights($table)) {
         $menu[]=array(
           'name'    => $this->ui->get($table),
           'uri'     => 'table/'.$table,

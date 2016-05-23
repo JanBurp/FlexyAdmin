@@ -1,6 +1,6 @@
-<?php require_once(APPPATH."core/AdminController.php");
+<?php require_once(APPPATH."core/MY_Controller.php");
 
-class Test extends AdminController {
+class Test extends MY_Controller {
 	
 	public function __construct()	{
 		parent::__construct();
@@ -30,29 +30,31 @@ class Test extends AdminController {
 	}
   
   public function index() {
-    
-    
+    if (!IS_LOCALHOST) return;
+    echo 'TEST';
   }
   
   
   public function users() {
-    if (!$this->user->is_super_admin()) return;
+    if (!IS_LOCALHOST) return;
 
-    $this->data->table( 'cfg_users' )->select('id,str_username')->with_flat_many_to_one( array( 'id_user_group' => array('str_name') ) );
-    $users = $this->data->get_result();
     $tables = $this->db->list_tables();
+    $this->data->table( 'cfg_users' )->select('id,str_username')->with( 'many_to_many', array( 'rel_users__groups' => array('name','rights') ) );
+    $query = $this->data->get();
+    $users = $query->result_array();
     
-    foreach ($users as $id => $user) {
-      if (!isset($users[$id]['rights'])) $users[$id]['rights']='<table>';
+    foreach ($users as $key=>$user) {
+      $id=$user['id'];
+      if (!isset($user[$key]['rights'])) $users[$key]['rights']='<table>';
       foreach ($tables as $table) {
-        $users[$id]['rights'] .= '<tr><td><b>'.$table.'<b></td><td>'.$this->user->rights_to_string( $this->user->has_rights( $table, '', 0, $id) ). '</td></tr>';
+        $users[$key]['rights'] .= '<tr><td><b>'.$table.'<b></td><td>'.$this->flexy_auth->rights_to_string( $this->flexy_auth->has_rights( $table, '', 0, $id) ). '</td></tr>';
       }
-      $users[$id]['rights'] .= '</table>';
+      $users[$key]['rights'] .= '</table>';
     }
     
     echo( '<h1>User rights</h1>' );
-    $this->table->set_heading( array('id','user_name','group.id','group.name','rights') );
-    foreach ($users as $id => $user) {
+    $this->table->set_heading( array('id','user_name','group.id','group.name','group.rights','rights') );
+    foreach ($users as $user) {
       $this->table->add_row( $user );
     }
     echo $this->table->generate();
@@ -61,7 +63,7 @@ class Test extends AdminController {
   
   
   public function relations() {
-    if (!$this->user->is_super_admin()) return;
+    if (!IS_LOCALHOST) return;
     
     // many_to_one
     $this->data->table( 'tbl_leerlingen' );

@@ -49,10 +49,6 @@ class Show extends AdminController {
 				$singleRow = ( $this->cfg->get('CFG_table',$table,"int_max_rows") == 1);
 				if ($singleRow) {
           $this->data->table($table);
-          // Laat alleen de rij zien van de user (als die bestaat) TODO naar cfg_users of DataCore
-          if ($this->data->field_exists('user')) {
-            $this->data->where('user',$this->user->user_id);
-          }
           $id=$this->cfg->get('CFG_table',$table,"int_id",$id); // met dit kan de id met cfg_table_info worden ingesteld
 					$this->data->select("id");
           if ($id) $this->data->where('id',$id);
@@ -63,7 +59,7 @@ class Show extends AdminController {
 				}
         
         // Rechten voor deze tabel?
-        $rights = $this->user->has_rights($table,$id);
+        $rights = $this->flexy_auth->has_rights($table,$id);
         if ( !$rights ) {
           $this->_show_all();
           return;
@@ -119,7 +115,7 @@ class Show extends AdminController {
 					foreach ($orderArr as $key => $ord) {
             if (!isset($last_order)) $last_order=$ord;
             $ordField=trim(trim($ord),'_');
-            if ( $this->data->field_exists($ordField) ) {
+            if ( $this->data->field_exists($ordField,'grid') ) {
 							$ordPre=get_prefix($ordField);
 							if ($ordField!=='') {
 								if ($ordPre=='id' and $ordField!='id') {
@@ -137,13 +133,14 @@ class Show extends AdminController {
             }
 					}
 				}
+        if (!isset($last_order)) $last_order = $this->data->get_setting(array('grid_set','order_by'));
         if (!isset($last_order)) $last_order = $this->data->get_setting('order_by');
         if (has_string('DESC',$last_order)) $last_order='_'.trim(str_replace('DESC','',$last_order));
 				
         // Check of er alleen rechten zijn voor bepaalde rijen TODO-> naar Data_Core
-				$restrictedToUser = $this->user->restricted_id( $table );
+				$restrictedToUser = $this->flexy_auth->restricted_id( $table );
 				if ( $restrictedToUser>0 and $this->data->field_exists('user') ) {
-          if (!$this->user->rights['b_all_users']) {
+          if (!$this->flexy_auth->rights['b_all_users']) {
             $this->data->where( $table.".user", $restrictedToUser );
           }
           $this->data->unselect( 'user' );
@@ -267,19 +264,19 @@ class Show extends AdminController {
 					 * if data: first render data, then put data in grid and render as html
 					 */
 
+					// remove order fields als geen edit rechten
 					if ($rights<RIGHTS_EDIT) {
-						// remove order fields
 						foreach ($data as $id => $row) unset($data[$id]['order']);
 					}
           
           /**
            * ADD ACTIONS for cfg_users
            */
-          if ($table=='cfg_users') {
+          if ( $table==='cfg_users' ) {
             $inactive=0;
             $unused=0;
             foreach ($data as $id => $row) {
-              if ($rights['id_user_group']<=$row['id_user_group']) {
+              if ( $this->flexy_auth->allowed_to_edit_users() ) {
                 if ($row['b_active']) {
                   $data[$id]['actions'] = array('send_new_password'=>'cfg_users/send_new_password/'.$id);
                 }
@@ -297,10 +294,9 @@ class Show extends AdminController {
               $html.=h(lang('inactive_users'));
               $html.=p() . anchor(api_uri('API_home','cfg_users/accept'),lang('accept'),array('class' => 'button')) .' | '. anchor(api_uri('API_home','cfg_users/deny'),lang('deny'),array('class' => 'button')) .' '. lang('all_inactive_users').' ('.$inactive.')'._p();
             }
-            if ($unused>0) {
-              $html.=h(lang('new_users'));
-              $html.=p() . anchor(api_uri('API_home','cfg_users/invite'),lang('invite'),array('class' => 'button')) .' '. lang('all_new_users').' ('.$unused.')'._p();
-            }
+            // Nieuw wachtwoord aan alle geselecteerde gebruikers
+            $html.=h(lang('send_new_password'));
+            $html.=p() . anchor(api_uri('API_home','cfg_users/send_new_password'),lang('send_new_password'),array('class' => 'button selected_users')) .' '. lang('selected_users')._p();
           }
 
 					$data=$this->ff->render_grid($table,$data,$rights, $this->data->get_setting('relations'), $info);
@@ -389,12 +385,12 @@ class Show extends AdminController {
     }
     
     // Check of gebruiker rechten heeft
-    $rights=$this->user->has_rights($table,$id);
+    $rights=$this->flexy_auth->has_rights($table,$id);
     if ( !$rights ) {
       $this->_show_all();
       return;
     }
-		$restrictedToUser = $this->user->restricted_id($table);
+		$restrictedToUser = $this->flexy_auth->restricted_id($table);
 
     // Laad libraries etc
 		$this->lang->load("form");
@@ -414,17 +410,15 @@ class Show extends AdminController {
 		/**
 		 * Met many_to_many data?
 		 */
-    $many_to_many = $this->cfg->get('CFG_table',$table,"b_form_add_many");
-		if ( get_prefix($table)!==$this->config->item('REL_table_prefix') AND (is_null($many_to_many) or $many_to_many)) {
-      $this->data->with('many_to_many','abstract');
-		}
+    $many_to_many = $this->data->get_setting( array('form_set','with','many_to_many') );
+    if ( $many_to_many ) $this->data->with('many_to_many','abstract');
 		
     /**
      * Nieuw item (INSERT)
      */
 		if ($id==-1) {
 			// New item, fill data with defaults
-      $data = $this->data->get_defaults();
+      $data = $this->data->get_defaults('form');
 		}
     
     /**
@@ -435,9 +429,10 @@ class Show extends AdminController {
       // Van een bepaalde gebruiker?
       if ( $restrictedToUser>0 and $this->data->field_exists('user') ) {
         $this->ff->set_restricted_to_user( $restrictedToUser,$this->user_id );
-        if ( !$this->user->rights['b_all_users'] ) $this->data->where( 'user', $restrictedToUser);
+        if ( !$this->flexy_auth->rights['b_all_users'] ) $this->data->where( 'user', $restrictedToUser);
 				$this->data->unselect('user');
 			}
+
       // Zoek de juiste rij
 			if ($id!=='') {
 				$this->data->where( $table.".".PRIMARY_KEY, $id );
@@ -447,14 +442,14 @@ class Show extends AdminController {
 			$data = $this->data->get_row();
 		}
     
+    // trace_($this->data->last_query());
+    // trace_($data);
 
     /**
      * Opties
      */
     $options=$this->data->get_options();
 
-    // trace_($this->data->last_query());
-    // trace_($data);
     // trace_(array_keys($options));
     // die();
     

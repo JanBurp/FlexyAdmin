@@ -37,7 +37,7 @@ class Ajax extends AjaxController {
 
 		$error='';
 		if (!empty($table) and $this->db->table_exists($table)) {
-			if ($this->user->has_rights($table)>=RIGHTS_EDIT) {
+			if ($this->flexy_auth->has_rights($table)>=RIGHTS_EDIT) {
 				if ($ids) {
 					$this->load->model("order");
 					$this->load->model('queu');
@@ -99,7 +99,7 @@ class Ajax extends AjaxController {
 		if (!empty($table) and ($id!="") and !empty($field)) {
 			if ($this->db->table_exists($table) and $this->db->field_exists($field,$table)) {
         
- 				if ($this->user->has_rights($table,$id)>=RIGHTS_EDIT) {
+ 				if ($this->flexy_auth->has_rights($table,$id)>=RIGHTS_EDIT) {
 
 					if ($plugins) $this->load->model('queu');
 

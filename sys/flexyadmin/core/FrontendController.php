@@ -47,8 +47,8 @@ class FrontEndController extends MY_Controller {
     
     // In testmode a temp message will be shown (if not logged in as administrator) and sitemap.xml is deleted
     if ($this->config->item('testmode')) {
-      $this->load->library('user');
-      if (!$this->user->is_super_admin()) {
+      $this->load->library('flexy_auth');
+      if (!$this->flexy_auth->is_super_admin()) {
         $temp=file_get_contents('index_temp.html');
         echo $temp;
         if (file_exists('sitemap.xml')) unlink('sitemap.xml');

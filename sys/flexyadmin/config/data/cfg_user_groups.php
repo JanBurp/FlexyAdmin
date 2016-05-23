@@ -5,13 +5,13 @@
 $config['table']           = 'cfg_user_groups';
 $config['primary_key']     = 'id';
 $config['result_key']      = 'id';
-$config['fields']          = array('id','str_name','str_description','rights','b_all_users','b_backup','b_tools','b_delete','b_add','b_edit','b_show');
+$config['fields']          = array('id','name','description','rights','b_all_users','b_backup','b_tools','b_delete','b_add','b_edit','b_show');
 $config['order_by']        = 'id';
-$config['abstract_fields'] = array('str_description');
+$config['abstract_fields'] = array('description');
 $config['relations']       = array();
 
 $config['grid_set'] = array( 
-		'fields'        => array('id','str_name','str_description','rights','b_all_users','b_backup','b_tools','b_delete','b_add','b_edit','b_show'), 
+		'fields'        => array('id','name','description','rights','b_all_users','b_backup','b_tools','b_delete','b_add','b_edit','b_show'), 
 		'order_by'      => 'id', 
 		'jump_to_today' => false, 
 		'pagination'    => true, 
@@ -21,9 +21,9 @@ $config['grid_set'] = array(
 	);
 
 $config['form_set'] = array( 
-		'fields'    => array('id','str_name','str_description','rights','b_all_users','b_backup','b_tools','b_delete','b_add','b_edit','b_show'), 
+		'fields'    => array('id','name','description','rights','b_all_users','b_backup','b_tools','b_delete','b_add','b_edit','b_show'), 
 		'fieldsets' => array( 
-				'cfg_user_groups' => array('id','str_name','str_description','rights','b_all_users','b_backup','b_tools','b_delete','b_add','b_edit','b_show'), 
+				'cfg_user_groups' => array('id','name','description','rights','b_all_users','b_backup','b_tools','b_delete','b_add','b_edit','b_show'), 
 			), 
 		'with'      => array(), 
 	);

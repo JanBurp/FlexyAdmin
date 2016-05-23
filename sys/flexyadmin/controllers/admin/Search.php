@@ -18,7 +18,7 @@ class Search extends AdminController {
 	}
 
 	function index() {
-		if ($this->user->can_use_tools()) {
+		if ($this->flexy_auth->can_use_tools()) {
 			$this->lang->load('help');
 			$this->lang->load('form');
 

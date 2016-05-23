@@ -20,7 +20,7 @@ class ApiMediaTest extends ApiTestModel {
     
     // First login
     $user=current($this->users);
-    $this->CI->user->login($user['username'], $user['password']);
+    $this->CI->flexy_auth->login($user['username'], $user['password']);
     
     // Test with wrong paths
     for ($i=0; $i < 2; $i++) {

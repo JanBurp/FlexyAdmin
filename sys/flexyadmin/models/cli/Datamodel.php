@@ -13,7 +13,7 @@
 class Datamodel extends CI_Model {
   
   public function index()  {
-    $user_info = $this->user->get_user();
+    $user_info = $this->flexy_auth->user();
     if ($user_info and $user_info->group=='super_admin') {
       $args = func_get_args();
       $table = (string) el(0,$args,'');

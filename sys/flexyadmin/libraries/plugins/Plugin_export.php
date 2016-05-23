@@ -31,7 +31,7 @@ class Plugin_export extends Plugin {
 		}
 		// only tables which user has rights for
 		foreach ($tables as $key=>$table) {
-			if (!$this->CI->user->has_rights($table)) unset($tables[$key]);
+			if (!$this->CI->flexy_auth->has_rights($table)) unset($tables[$key]);
 		}
     
 		// Check if args are set, and if so, do the export
@@ -72,7 +72,7 @@ class Plugin_export extends Plugin {
 		}
 		
 		$typeOptions=array('csv','xml','json');
-		if ($this->CI->user->is_super_admin()) $typeOptions[]='php';
+		if ($this->CI->flexy_auth->is_super_admin()) $typeOptions[]='php';
 		$typeOptions=array_combine($typeOptions,$typeOptions);
 
 		$formData=array("table"	=> array("validation"=>"required",'type'=>'dropdown','options'=>$tableOptions),

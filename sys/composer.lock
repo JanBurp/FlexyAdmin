@@ -4,9 +4,41 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9b621d6ae096aeabf7d8291b7c1f3c69",
-    "content-hash": "20fad51902f91e7fd3039e016a6556b5",
+    "hash": "c35e4e78f6be170658e2ea870790f144",
+    "content-hash": "5f4a3d7a0de0bf65e32a5a3a99191512",
     "packages": [
+        {
+            "name": "codeigniter/framework",
+            "version": "3.0.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bcit-ci/CodeIgniter.git",
+                "reference": "8082544c5b4b33175790f505587e202e3ca9e488"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bcit-ci/CodeIgniter/zipball/8082544c5b4b33175790f505587e202e3ca9e488",
+                "reference": "8082544c5b4b33175790f505587e202e3ca9e488",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.4"
+            },
+            "require-dev": {
+                "mikey179/vfsstream": "1.1.*"
+            },
+            "suggest": {
+                "paragonie/random_compat": "Provides better randomness in PHP 5.x"
+            },
+            "type": "project",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "The CodeIgniter framework",
+            "homepage": "https://codeigniter.com",
+            "time": "2016-03-21 16:26:30"
+        },
         {
             "name": "firebase/php-jwt",
             "version": "v3.0.0",
@@ -49,6 +81,36 @@
             "description": "A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.",
             "homepage": "https://github.com/firebase/php-jwt",
             "time": "2015-07-22 18:31:08"
+        },
+        {
+            "name": "mikey179/vfsStream",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mikey179/vfsStream.git",
+                "reference": "fc0fe8f4d0b527254a2dc45f0c265567c881d07e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mikey179/vfsStream/zipball/fc0fe8f4d0b527254a2dc45f0c265567c881d07e",
+                "reference": "fc0fe8f4d0b527254a2dc45f0c265567c881d07e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "org\\bovigo\\vfs": "src/main/php"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD"
+            ],
+            "homepage": "http://vfs.bovigo.org/",
+            "time": "2012-08-25 12:49:29"
         }
     ],
     "packages-dev": [],

@@ -21,7 +21,7 @@ class Plugin_remove_relation_table extends Plugin {
   /**
    */
    function _admin_api($args=false) {
-		if ($this->CI->user->is_super_admin()) {
+		if ($this->CI->flexy_auth->is_super_admin()) {
 
 			$goodArgs=false;
 			if ($args) {

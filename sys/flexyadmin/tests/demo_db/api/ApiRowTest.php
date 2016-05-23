@@ -60,7 +60,7 @@ class ApiRowTest extends ApiTestModel {
       ),
       'asserts' => array(
         'data'  => array( 'hasKey'                => 'id' ),
-        'data'  => array( 'countGreaterOrEqual'   => 2 ),
+        'data'  => array( 'countGreaterOrEqual'   => 1 ),
         'info'  => array( 'type' => 'array' ),
         'info'  => array( 'count' => 3 ),
         'info'  => array( 'hasKey' => 'num_rows' ),

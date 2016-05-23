@@ -28,7 +28,7 @@ class Plugin_create_indexes extends Plugin {
   /**
    */
 	public function _admin_api($args=NULL) {
-		if ($this->CI->user->is_super_admin()) {
+		if ($this->CI->flexy_auth->is_super_admin()) {
 			$this->add_content(h($this->name,1));
 			$this->_create_indexes();
 	 	}

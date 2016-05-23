@@ -13,7 +13,7 @@
 class Auth extends CI_Model {
   
   public function index()  {
-    $user_info = $this->user->get_user();
+    $user_info = $this->flexy_auth->user();
     if ($user_info) {
       echo "auth: logged in as '".$user_info->str_username."'".PHP_EOL;
       if ($user_info->group=='super_admin') echo "auth: is super admin".PHP_EOL;

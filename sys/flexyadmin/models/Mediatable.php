@@ -354,8 +354,8 @@ class Mediatable extends CI_Model {
     $this->db->where('b_exists',true);
     $this->db->where('path',$path);
     // user restricted where
-    if (el('b_user_restricted',$info,false) and $this->db->field_exists('user',$this->table) and !$this->user->rights['b_all_users']) {
-      $this->db->where('user',$this->user->user_id);
+    if (el('b_user_restricted',$info,false) and $this->db->field_exists('user',$this->table) and !$this->flexy_auth->rights['b_all_users']) {
+      $this->db->where('user',$this->flexy_auth->user_id);
     }
     // order?
     if (el('str_order',$info)) {
@@ -587,12 +587,12 @@ class Mediatable extends CI_Model {
     // Alleen verder testen als deze map restricted is, anders gewoon true
     if (!$serve_restricted) return true;
     // Heeft de user zowiezo geen rechten voor deze map: false
-    $this->load->library('user');
-    if (!$this->user->has_rights($map)) return false;
+    $this->load->library('flexy_auth');
+    if (!$this->flexy_auth->has_rights($map)) return false;
     // Is de user gekoppeld aan dit bestand?
     $info=$this->get_info($map.'/'.$file);
     if (!isset($info['user'])) return true;
-    if ($this->user->user_id == $info['user']) return true;
+    if ($this->flexy_auth->user_id == $info['user']) return true;
     return false;
   }
   
