@@ -56,7 +56,7 @@ class ApiTestModel extends CITestCase {
   public function __construct($apiModel) {
     parent::__construct();
     error_reporting(E_ALL - E_NOTICE - E_WARNING); // skip session notices
-    $this->CI->load->library('user');
+    $this->CI->load->library('flexy_auth');
     $this->CI->load->model('api/Api_Model');
     $this->apiModel=$apiModel;
     $this->CI->load->model('api/'.$apiModel);
@@ -70,13 +70,14 @@ class ApiTestModel extends CITestCase {
    * @author Jan den Besten
    */
   protected function setUp() { 
-    $this->logout();
+    // $this->logout();
   }
   protected function tearDown() {
-    $this->logout();
+    // $this->logout();
   }
+
   private function logout() {
-    if ($this->CI->user->logged_in()) $this->CI->user->logout();
+    if ($this->CI->flexy_auth->logged_in()) $this->CI->flexy_auth->logout();
   }
   
   protected function setModel($apiModel) {
@@ -120,7 +121,7 @@ class ApiTestModel extends CITestCase {
     // test for all users
     foreach ($this->users as $user) {
       // login
-      $this->CI->user->login($user['username'], $user['password']);
+      $this->CI->flexy_auth->login($user['username'], $user['password']);
       for ($i=0; $i < $this->numberOfWrongTests; $i++) {
         $args = $this->_randomArgs();
         $this->CI->$apiModel->set_args($args);
@@ -197,7 +198,7 @@ class ApiTestModel extends CITestCase {
     // test for all users
     foreach ($this->users as $user) {
       // login
-      $this->CI->user->login($user['username'], $user['password']);
+      $this->CI->flexy_auth->login($user['username'], $user['password']);
       
       // which tables?
       $tables = $this->_tableFromArgs($params['args']);

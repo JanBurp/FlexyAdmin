@@ -25,6 +25,7 @@ class AdminController extends BasicController {
 
 	public function __construct() {
 		parent::__construct(true);
+    $this->load->library('flexy_auth');
     $this->load->model('svn');
     
     // default js variables
@@ -33,16 +34,16 @@ class AdminController extends BasicController {
     $this->js['form_nice_dropdowns'] = $this->config->item('FORM_NICE_DROPDOWNS');
     $multiple_upload = $this->config->item('MULTIPLE_UPLOAD');
     if (is_array($multiple_upload)) {
-      $user_group=$this->user->get_user()->id_user_group;
+      $user_group=$this->flexy_auth->user_group;
       $multiple_upload=$multiple_upload[$user_group];
     }
     $this->js['multiple_upload'] = $multiple_upload;
     
-		if ( ! $this->user->logged_in() ) {
+		if ( ! $this->flexy_auth->logged_in() ) {
 			redirect($this->config->item('API_login'));
 		}
 		if ( ! $this->_user_can_use_admin() ) {
-			$this->user->logout();
+			$this->flexy_auth->logout();
 			redirect(site_url());
 		}
 		$this->currentTable="";
@@ -58,7 +59,7 @@ class AdminController extends BasicController {
 	}
 
 	private function _user_can_use_admin() {
-    $rights=$this->user->get_rights();
+    $rights=$this->flexy_auth->get_rights();
     return (( el('b_edit',$rights,FALSE) or el('b_add',$rights,FALSE) or el('b_delete',$rights,FALSE) or el('b_all_users',$rights,FALSE)) and !empty($rights['rights']));
 	}
 
@@ -92,7 +93,7 @@ class AdminController extends BasicController {
 		if (!$previewWidth) $previewWidth=450;
 		$previewHeight=$this->cfg->get('CFG_configurations',"int_preview_height");
 		if (!$previewHeight) $previewHeight=500;
-		if ($this->user->is_super_admin()) {
+		if ($this->flexy_auth->is_super_admin()) {
 			if (strpos($buttons1,"code")===FALSE) $buttons1.=",|,code";
 		}
 		$formats=$this->cfg->get('CFG_configurations',"str_formats");
@@ -140,7 +141,7 @@ class AdminController extends BasicController {
 			$uri=api_uri('API_view_grid',$name);
 			// if ($type!='tbl') $menuName='_'.$menuName;
 			// if ($type=='res') $menuName='_'.$menuName;
-			if (!in_array($name,$excluded) and $this->user->has_rights($name)) {
+			if (!in_array($name,$excluded) and $this->flexy_auth->has_rights($name)) {
 				$subUri=api_uri('API_view_form',$name);
 				$sub=array($subUri=>array('uri'=>$subUri,'name'=>$menuName,'unique_uri'=>true));
 				$a[$uri]=array("uri"=>$uri,'unique_uri'=>true,'name'=>$menuName,"class"=>$type,'sub'=>$sub);
@@ -152,8 +153,8 @@ class AdminController extends BasicController {
 	}
 
 	function _show_menu($currentMenuItem="") {
-    $user=$this->user->get_user();
-    $user_group=$user->id_user_group;
+    $user=$this->flexy_auth->get_user();
+    $user_group=$user['group_id'];
 		$this->lang->load('help');
 		$menu=array();
 		if ($this->db->table_exists('cfg_admin_menu')) {
@@ -197,20 +198,20 @@ class AdminController extends BasicController {
 
 				case 'tools':
 					// Database import/export tools
-					if ($this->user->is_super_admin()) {
+					if ($this->flexy_auth->is_super_admin()) {
 						$uri=api_uri('API_db_export');
 						$menu[$uri]=array("uri"=>$uri,'name'=>lang('db_export'), "class"=>"db db_backup");
 						$uri=api_uri('API_db_import');
 						$menu[$uri]=array("uri"=>$uri,'name'=>lang('db_import'),"class"=>"db");
 					}
-					elseif ($this->user->can_backup()) {
+					elseif ($this->flexy_auth->can_backup()) {
 						$uri=api_uri('API_db_backup');
 						$menu[$uri]=array("uri"=>$uri,'name'=>lang('db_backup'),"class"=>"db db_backup");
 						$uri=api_uri('API_db_restore');
 						$menu[$uri]=array("uri"=>api_uri('API_db_restore'),'name'=>lang('db_restore'),"class"=>"db");
 					}
 					// Search&Replace
-					if ($this->user->can_use_tools()) {
+					if ($this->flexy_auth->can_use_tools()) {
 						$uri=api_uri('API_search');
 						$menu[$uri]=array("uri"=>$uri,'name'=>lang('sr_search_replace'),"class"=>"sr db_backup");
 						$uri=api_uri('API_fill');
@@ -258,7 +259,7 @@ class AdminController extends BasicController {
   							while (isset($a[$menuName])) {$menuName.=" ";}
   							$rightsName=el('path',$mediaInfo);
   							$uri=api_uri('API_filemanager',"show",pathencode(el('path',$mediaInfo)));
-  							if (!empty($menuName) and $this->user->has_rights("media_".$rightsName)) {
+  							if (!empty($menuName) and $this->flexy_auth->has_rights("media_".$rightsName)) {
   								$menu[$uri]=array("uri"=>$uri,'name'=>$menuName,"class"=>"media");
   							}
   							$mediaHelp=$this->ui->get_help($mediaInfo["path"]);
@@ -334,7 +335,7 @@ class AdminController extends BasicController {
 										"help"		=> $this->helpTexts,
 										"local"		=> $this->config->item('LOCAL'),
 										"site"		=> rtrim($siteInfo["url_url"],'/'),
-										"user"		=> ucwords($this->user->user_name),
+										"user"		=> ucwords($this->flexy_auth->username),
                     "version" => $this->svn->get_version(),
 										"revision"=> $this->svn->get_revision(),
                     

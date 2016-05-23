@@ -22,7 +22,7 @@ class __test extends AjaxController {
     $site = $this->data->table('tbl_site')
                               ->select('str_title,url_url')
                               ->get_row();
-    $this->load->view('admin/__test/main_app',array('title'=>$site['str_title'],'language'=>$this->user->language),false);
+    $this->load->view('admin/__test/main_app',array('title'=>$site['str_title'],'language'=>$this->flexy_auth->language),false);
 	}
 
 }

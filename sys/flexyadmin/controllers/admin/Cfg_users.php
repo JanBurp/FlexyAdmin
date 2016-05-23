@@ -71,42 +71,44 @@ class cfg_users extends AdminController {
   private function _do_action($action,$user_id=false) {
 		if ($this->_can_activate_users()) {
       if (!$user_id) {
-        $users_ids=$this->_get_inactive_user_ids();
-        if (!$users_ids and $action=='send_new_password') {
-          $users_ids=$this->_get_inactive_user_ids(true);
-        } 
+        $users_ids=$this->input->get('users');
+        if (!$users_ids) {
+          $users_ids=$this->_get_inactive_user_ids();
+          if (!$users_ids and $action=='send_new_password') {
+            $users_ids=$this->_get_inactive_user_ids(true);
+          } 
+        }
       }
       else {
         $users_ids=array($user_id);
       }
       foreach ($users_ids as $user_id) {
-        $user=$this->user->get_user($user_id);
+        $user = $this->flexy_auth->get_user($user_id);
         $extra_emails=$this->_extra_emails($user_id);
         switch ($action) {
           case 'deny':
       			$message='user_removed';
-      			$this->user->send_deny_mail($user_id,lang('mail_denied_subject'),$extra_emails);
-      			$this->user->delete_user($user_id);
+      			$this->flexy_auth->user_denied_mail( $user_id );
+            $this->flexy_auth->delete_user($user_id);
             break;
           case 'accept':
       			$message='user_accepted';
-      			$this->user->send_accepted_mail($user_id,lang('mail_accepted_subject'),$extra_emails);
-      			$this->user->activate_user($user_id);
+      			$this->flexy_auth->user_accepted_mail( $user_id );
+      			$this->flexy_auth->activate_user($user_id);
             break;
           case 'invite':
             $message='send_invitation';
-            $this->user->send_new_account_mail($user_id,lang('mail_new_subject'),$extra_emails);
-            $this->user->activate_user($user_id);
+            $this->flexy_auth->send_new_account($user_id);
+            $this->flexy_auth->activate_user($user_id);
             break;
           case 'send_new_password':
             $message='user_send_password';
-            $code=$this->ion_auth_model->forgotten_password_by_id($user_id);
-            if (! $this->user->forgotten_password_complete($code,lang('new_password'),$extra_emails)) {
+            if (! $this->flexy_auth->send_new_password($user_id)) {
               $message='user_send_password_error';
             }
             break;
         }
-        if (isset($message)) $this->message->add(langp($message,$user->str_username.'('.$user->email_email.','.$extra_emails.')'));
+        if (isset($message)) $this->message->add(langp($message,$user['username'].'('.$user['email'].','.$user['extra_email_string'].')'));
       }
 		}
     redirect(api_uri('API_view_grid','cfg_users'));
@@ -137,8 +139,8 @@ class cfg_users extends AdminController {
 
   private function _get_inactive_user_ids($active=false) {
     $user_ids=array();
-    $users=$this->user->get_users();
-    $this_user=$this->user->get_user();
+    $users=$this->flexy_auth->get_users();
+    $this_user=$this->flexy_auth->user();
     $this_user_id=$this_user->id;
     foreach ($users as $user) {
       if (($active and $user->id!=$this_user_id) or (!$user->b_active or empty($user->last_login))) $user_ids[$user->id]=$user->id;
@@ -147,7 +149,7 @@ class cfg_users extends AdminController {
   }
 
   private function _can_activate_users() {
-    return ($this->user->can_activate_users());
+    return ($this->flexy_auth->allowed_to_edit_users());
   }
   
 }

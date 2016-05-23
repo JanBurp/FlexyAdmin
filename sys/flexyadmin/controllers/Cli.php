@@ -15,7 +15,7 @@ class Cli extends CI_Controller {
 	
 	public function __construct()	{
 		parent::__construct();
-    $this->load->library('user');
+    $this->load->library('flexy_auth');
 	}
   
   public function index() {
@@ -31,7 +31,7 @@ class Cli extends CI_Controller {
       if ($num>=3 and $args[$num-3]=='login') {
         $password = array_pop($args);
         $username = array_pop($args);
-        $this->user->login( $username, $password );
+        $this->flexy_auth->login( $username, $password );
       }
       
       // Load Model

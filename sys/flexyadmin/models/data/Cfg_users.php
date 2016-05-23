@@ -11,10 +11,28 @@
 
 Class cfg_users extends Data_Core {
 
+  private $allowed_to_edit_users;
+  private $group_id;
+  private $only_these_users = array();
+
   public function __construct() {
     parent::__construct();
+    $this->load->library('flexy_auth');
     // Zorg ervoor dat huidige user is ingesteld
     $this->set_user_id();
+    // Kijk of de gebruiker andere gebruikers mag aanpassen
+    $this->allowed_to_edit_users = $this->flexy_auth->allowed_to_edit_users();
+    // Welke andere users mag deze user bekijken?
+    $this->group_id = $this->flexy_auth->group_id;
+    if ($this->group_id) {
+      $query = $this->db->query( 'SELECT `id_user` FROM `rel_users__groups` WHERE `id_user_group` >= '.$this->group_id);
+      if ($query) {
+        $this->only_these_users = $query->result_array();
+        foreach ($this->only_these_users as $key => $value) {
+          $this->only_these_users[$key]=$value['id_user'];
+        }
+      }
+    }
   }
   
 
@@ -28,8 +46,8 @@ Class cfg_users extends Data_Core {
    * @author Jan den Besten
    */
   public function where($key, $value = NULL, $escape = NULL) {
-    if ($key==='current' and isset($this->user->user_id)) {
-      $value = $this->user->user_id;
+    if ($key==='current' and isset($this->flexy_auth->user_id)) {
+      $value = $this->flexy_auth->user_id;
       $key = $this->settings['primary_key'];
     }
     return parent::where($key,$value,$escape);
@@ -67,7 +85,7 @@ Class cfg_users extends Data_Core {
   
   /**
    * Zorg ervoor dat alleen users teruggegeven kunnen worden die dezelfde rechten hebben of meer.
-   * En dat alleen administrators het veld 'id_user_group' kunnen inzien.
+   * En dat alleen administrators de user_group kunnen inzien.
    *
    * @param string $limit[0] 
    * @param string $offset[0] 
@@ -77,13 +95,34 @@ Class cfg_users extends Data_Core {
    */
   public function get( $limit=0, $offset=0, $reset = true ) {
     if ($this->user_id) {
-      // Alleen users tonen met minimaal zelfde rechten
-      $group_id = $this->user->group_id;
-      $this->data->where( '`cfg_users`.`id_user_group` >=', $group_id );
-      // Als rechten minder dan admin, dan geen id_user_group tonen/aanpassen
-      if ($group_id>2) $this->data->unselect('id_user_group');
+
+      // Als geen rechten om users aan te passen dan geen id_user_group tonen/aanpassen
+      if ( !$this->allowed_to_edit_users ) {
+        if (isset($this->tm_with['many_to_many']['rel_users__groups'])) {
+          $result_name = $this->settings['relations']['many_to_many']['rel_users__groups']['result_name'];
+          unset($this->tm_with['many_to_many']['rel_users__groups']);
+          $this->unselect($result_name);
+        }
+      };
+
+      // Alleen users tonen met minimaal zelfde rechten: usergroup id minimaal hetzelfde
+      if (!$this->flexy_auth->is_super_admin()) $this->where( $this->settings['table'].'.'.$this->settings['primary_key'], $this->only_these_users );
     }
     return parent::get($limit,$offset,$reset);
+  }
+  
+  /**
+   * Zorg ervoor dat het password veld altijd als een leeg veld in een resultaat terecht komt
+   *
+   * @return $this
+   * @author Jan den Besten
+   */
+  protected function _select() {
+    parent::_select();
+    if (isset($this->tm_select['gpw_password'])) {
+      $this->tm_select['gpw_password'] = 'SPACE(0) AS `gpw_password`';
+    }
+    return $this;
   }
   
   
@@ -98,11 +137,10 @@ Class cfg_users extends Data_Core {
   public function get_options( $field='', $with=array('many_to_many') ) {
     $options=parent::get_options($field,$with);
     if ($this->user_id) {
-      if ( array_key_exists('id_user_group',$options) ) {
-        $group_id = $this->user->group_id;
-        foreach ($options['id_user_group']['data'] as $id => $row) {
-          if ( $id<$group_id ) {
-            unset($options['id_user_group']['data'][$id]);
+      if ( array_key_exists('rel_users__groups',$options) ) {
+        foreach ($options['rel_users__groups']['data'] as $key=>$option) {
+          if ( $option['value'] < $this->group_id ) {
+            unset($options['rel_users__groups']['data'][$key]);
           }
         }
       }

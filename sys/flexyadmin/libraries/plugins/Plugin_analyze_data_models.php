@@ -15,7 +15,7 @@
 
 	public function _admin_api($args=NULL) {
     
-    if ($this->CI->user->is_super_admin()) {
+    if ($this->CI->flexy_auth->is_super_admin()) {
       if (isset($args[0]))
         $tables=array($args[0]);
       else

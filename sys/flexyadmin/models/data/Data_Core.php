@@ -638,9 +638,6 @@ Class Data_Core extends CI_Model {
       $many_to_one[$key]['flat']   = TRUE;
     }
     $grid_set['relations'] = array('many_to_one'=>$many_to_one);
-    
-    // trace_($grid_set);
-
     return $grid_set;
   }
 
@@ -835,8 +832,8 @@ Class Data_Core extends CI_Model {
         $this->user_id = 0; // TESTER
       }
       else {
-        $this->load->library('user');
-        $this->user_id = $this->user->user_id;
+        $this->load->library('flexy_auth');
+        $this->user_id = $this->flexy_auth->user_id;
       }
     }
     return $this;
@@ -1119,12 +1116,17 @@ Class Data_Core extends CI_Model {
   /**
    * Geeft default waarden van een row. Wordt uit de database gehaald.
    *
+   * @param $set [FALSE] 'form', hiermee bepaal je eventueel de set en daarmee welke velden in het resultaat terugkomen
    * @return array
    * @author Jan den Besten
    */
-  public function get_defaults() {
+  public function get_defaults( $set=FALSE ) {
     $defaults = array();
-		$fields = $this->settings['fields'];
+    
+    if ($set=='form')
+      $fields = $this->settings['form_set']['fields'];
+    else
+      $fields = $this->settings['fields'];
 		foreach ($fields as $field) {
       $defaults[$field] = $this->field_data( $field, 'default' );
 		}
@@ -1184,7 +1186,7 @@ Class Data_Core extends CI_Model {
         if (has_string('.',$order_by)) {
           $escape=FALSE;
           $order_by=explode(' ',$order_by);
-          $order_by='`'.$order_by[0].'` '.el(1,$order_by,'');
+          $order_by=trim('`'.str_replace('.','`.`',$order_by[0]).'` '.el(1,$order_by,''));
         }
         $this->db->order_by( $order_by,'',$escape );
       }
@@ -1325,6 +1327,8 @@ Class Data_Core extends CI_Model {
             else {
               $fields   = $info['fields'];
               // split row and with data
+              $keys = array_keys($row);
+              $many_data_index = array_preg_search( $as,$keys );
               $row_with_data = filter_by_key( $row, $as.'.' );
               $row = array_diff_assoc( $row, $row_with_data );
               // process 'with' data
@@ -1346,9 +1350,15 @@ Class Data_Core extends CI_Model {
             }
             
           }
-          // Merge with data met normale data in row
+          // Merge with data met normale data in row, als mogelijk op gewenste plek
           if (isset($with_data[$result_key])) {
-            $row = array_merge($row,$with_data[$result_key]);
+            if ($many_data_index) {
+              $many_data_index = current($many_data_index);
+              $row = array_merge(array_slice($row,0,$many_data_index),$with_data[$result_key],array_slice($row,$many_data_index));
+            }
+            else {
+              $row = array_merge($row,$with_data[$result_key]);
+            }
           }
         }
       }
@@ -1538,7 +1548,7 @@ Class Data_Core extends CI_Model {
         $this->tm_order_by = array();
       }
       else {
-        $sort=$this->settings['order_by'];
+        $sort = el('order_by',$grid_set,$this->settings['order_by']);
       }
     }
     else {
@@ -1751,7 +1761,7 @@ Class Data_Core extends CI_Model {
    * @return $this
    * @author Jan den Besten
    */
-  private function _select() {
+  protected function _select() {
     if ( !$this->tm_select ) {
       // Niet '*' maar alle velden expliciet maken
       $this->tm_select = array_combine($this->settings['fields'],$this->settings['fields']);
@@ -1899,6 +1909,9 @@ Class Data_Core extends CI_Model {
         reset($this->tm_order_by);
         $order_by = current($this->tm_order_by);
         $order_by = explode(' ',$order_by);
+        if (!$this->field_exists($order_by[0])) {
+          $order_by = array($this->settings['primary_key'],'');
+        }
         // Compile the subquery:
         $this->tm_from = '(SELECT * FROM '.$this->db->protect_identifiers($table);
         if (!empty($where)) $this->tm_from.= ' WHERE ('.$where.') ';
@@ -2823,7 +2836,7 @@ Class Data_Core extends CI_Model {
   protected function _select_with_fields( $type, $other_table, $as_table, $fields, $foreign_key='', $json = FALSE ) {
     $abstract = FALSE;
     $select   = '';
-
+    
     // Welke velden van de gerelateerde tabel?
     if ( empty($fields) ) {
       $fields = $this->get_other_table_fields( $other_table );
@@ -2843,7 +2856,7 @@ Class Data_Core extends CI_Model {
       $select = $abstract;
       if ($json) {
         $abstract = remove_suffix($abstract,' AS ');
-        $select = 'GROUP_CONCAT( "{",'.$abstract.',"}" SEPARATOR ", ") `'.$other_table.'`';
+        $select = 'GROUP_CONCAT( "{",'.$abstract.',"}" SEPARATOR ", ") `'.$as_table.'`';
       }
       else {
         // Als geen JSON, voeg dan ook de primary_key erbij (behalve bij many_to_one, daar is die al bekend)
@@ -2872,7 +2885,6 @@ Class Data_Core extends CI_Model {
           'field'       => $field,
           'select'      => '`' . ( $type==='many_to_one' ? $as_table : $other_table) . '`.`'.$field.'`',
         );
-
       }
       
       // SELECT normaal
@@ -3145,9 +3157,6 @@ Class Data_Core extends CI_Model {
       }
     }
     
-    // trace_($set);
-    // trace_($to_many);
-
     /**
      * Verwijder onnodige velden
      */
@@ -3161,12 +3170,12 @@ Class Data_Core extends CI_Model {
     foreach ( $set as $key => $value ) {
       if ( !isset($value) or !$this->field_exists( $key) ) unset( $set[$key] );
     }
-    
+
     
     /**
      * Ga door als de set niet leeg is
      */
-    if (!empty($set)) {
+    if (!empty($set) or $to_many) {
       
       /**
        * Voeg user_changed data toe als bekend is en veld bestaat
@@ -3174,75 +3183,104 @@ Class Data_Core extends CI_Model {
       if ( $this->field_exists('user_changed')) {
         if ( $this->user_id!==FALSE ) $set['user_changed'] = $this->user_id;
       }
-          
-      /**
-       * Eindelijk, we kunnen de set instellen...
-       */
-      $this->db->set($set);
-      
       
       /**
-       * En de INSERT of UPDATE doen
+       * Eindelijk, we kunnen...
        */
-      if ($type=='INSERT') {
-				$this->db->insert( $this->settings['table'] );
-				$id = $this->db->insert_id();
-        
+      $this->db->trans_start();
+
+      /**
+       * Als set leeg is (maar wel ..to_many) zoek dan de id en stel WHERE opnieuw in
+       */
+      if (empty($set)) {
+        // WHERE is al ingesteld, dus we kunnen gewoon de id's vinden
+        $result = $this->select( $this->settings['primary_key'] )->get_result();
+        $ids = array_keys($result);
+        $id = current($ids);
         $log = array(
           'query' => $this->db->last_query(),
           'table' => $this->settings['table'],
           'id'    => $id
         );
         $this->query_info = array(
-          'insert_id' => $id
-        );
-			}
-    	else {
-        $sql = $this->db->get_compiled_update( $this->settings['table'], FALSE );
-				$this->db->update( $this->settings['table'], NULL,NULL, $this->tm_limit );
-        $log = array(
-          'query' => $this->db->last_query(),
-          'table' => $this->settings['table'],
-          'id'    => $id
-        );
-        $ids = $this->_get_ids( $sql );
-        $id = current( $ids );
-        $this->query_info = array(
-          'affected_rows' => $this->db->affected_rows(),
+          'affected_rows' => 0,
           'affected_ids'  => $ids,
         );
-        $log['id']=implode(',',$ids);
-			}
+      }
+      else {
+        
+        $this->db->set($set);
+    
+        /**
+         * INSERT of UPDATE doen
+         */
+        if ($type=='INSERT') {
+  				$this->db->insert( $this->settings['table'] );
+  				$id = $this->db->insert_id();
+      
+          $log = array(
+            'query' => $this->db->last_query(),
+            'table' => $this->settings['table'],
+            'id'    => $id
+          );
+          $this->query_info = array(
+            'insert_id' => $id
+          );
+  			}
+      	else {
+          $sql = $this->db->get_compiled_update( $this->settings['table'], FALSE );
+  				$this->db->update( $this->settings['table'], NULL,NULL, $this->tm_limit );
+          $log = array(
+            'query' => $this->db->last_query(),
+            'table' => $this->settings['table'],
+            'id'    => $id
+          );
+          $ids = $this->_get_ids( $sql );
+          $id = current( $ids );
+          $this->query_info = array(
+            'affected_rows' => $this->db->affected_rows(),
+            'affected_ids'  => $ids,
+          );
+          $log['id']=implode(',',$ids);
+  			}
+      }
       
       
 			/**
 			 * Als er ..._to_many data is, update/insert die ook
 			 */
-			if ( ! empty($to_many) ) {
+			if ( !empty($to_many) ) {
         $affected = 0;
 				foreach( $to_many as $rel_table => $other_ids ) {
           $other_table       = $this->settings['relations']['many_to_many'][$what]['other_table'];
 					$this_foreign_key  = $this->settings['relations']['many_to_many'][$what]['this_key'];
           $other_foreign_key = $this->settings['relations']['many_to_many'][$what]['other_key'];
-          if (!is_array($other_ids)) $other_ids=explode('|',$other_ids);
 
 					// DELETE eerst huidige items
 					$this->db->where( $this_foreign_key, $id );
 					$this->db->delete( $rel_table );
           $log['query'] .= ';'.PHP_EOL.PHP_EOL.$this->db->last_query();
 
+          // Zorg ervoor dat $other_ids een normale array van ids is
+          if (is_string($other_ids)) $other_ids=explode('|',$other_ids);
+          if (!is_array($other_ids)) $other_ids=array($other_ids);
+
 					// INSERT dan nieuwe many_to_many ids
 					foreach ( $other_ids as $other_id ) {
+            // Zorg er eerst voor dat $other_id echt alleen maar een nummer is
+            if (is_array($other_id) and isset($other_id[$this->settings['primary_key']])) {
+              $other_id=$other_id[$this->settings['primary_key']];
+            }
 						$this->db->set( $this_foreign_key,  $id );
 						$this->db->set( $other_foreign_key, $other_id );
 						$this->db->insert( $rel_table );
             $affected++;
-            // $rel_id=$this->db->insert_id();
             $log['query'] .= ';'.PHP_EOL.PHP_EOL.$this->db->last_query();
 					}
 				}
         $this->query_info['affected_rel_rows'] = $affected;
 			}
+      $this->db->trans_complete();
 		}
     
     if (isset($log)) {
@@ -3511,6 +3549,21 @@ Class Data_Core extends CI_Model {
     $this->query_info['last_clean_query'] = $query;
     return $this->query_info['last_clean_query'];
   }
+  
+  /**
+   * Geeft het WHERE deel van de laatste query
+   *
+   * @return string
+   * @author Jan den Besten
+   */
+  protected function get_compiled_where() {
+    $sql = $this->last_clean_query();
+    $where='';
+    if (preg_match("/(WHERE)(.*)(|LIMIT|GROUP|ORDER)/u", $sql, $matches)) {
+      $where=trim(el(2,$matches,''));
+    }
+    return $where;
+  }
 
 
 
@@ -3543,11 +3596,12 @@ Class Data_Core extends CI_Model {
    * Test of een veld bestaat
    *
    * @param string $field 
+   * @param string $set [''] Je kunt hier 'grid' of 'form' aangeven
    * @return boolean
    * @author Jan den Besten
    */
-  public function field_exists( $field ) {
-    $fields = $this->list_fields();
+  public function field_exists( $field, $set='' ) {
+    $fields = $this->get_setting( array($set.'_set','fields'), $this->list_fields() );
     return in_array( $field, $fields );
   }
   
@@ -3584,10 +3638,11 @@ Class Data_Core extends CI_Model {
 			}
 			$query->free_result();
 		}
+
     // return
     if ($asked_field) {
-      if ($asked_key) return $this->field_data[$asked_field][$asked_key];
-      return $this->field_data[$asked_field];
+      if ($asked_key) return el(array($asked_field,$asked_key),$this->field_data);
+      return el($asked_field,$this->field_data);
     }
     return $this->field_data;
 	}

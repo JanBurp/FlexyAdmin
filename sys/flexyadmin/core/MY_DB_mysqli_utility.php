@@ -90,7 +90,7 @@ class MY_DB_mysqli_utility extends CI_DB_mysqli_utility {
 				$tables=not_filter_by($tables,'rel');
 				// check if rights for found tables
 				foreach ($tables as $table) {
-					if ($CI->user->has_rights($table) < RIGHTS_ALL) $safe=FALSE;
+					if ($CI->flexy_auth->has_rights($table) < RIGHTS_ALL) $safe=FALSE;
 				}
 			}
 		}

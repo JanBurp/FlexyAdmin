@@ -188,7 +188,8 @@ img {
 #menu li.log_geocode_cache a,
 #menu li.log_activity a,
 #menu li.log_cronjobs a,
-#menu li.log_stats a {
+#menu li.log_stats a,
+#menu li.log_login_attempts a {
 	background-image: url("../icons/stats.gif");
 	background-repeat: no-repeat;
 	background-position:0px 2px;

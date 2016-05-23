@@ -297,8 +297,12 @@ $config["CFG_"]=array(
 			"txt_help_nl"=>'<p>Maak hier gebruikers aan.</p>',
 			"txt_help_en"=>'<p>Create users here.</p>'
 			),
-		"cfg_users.id_user_group"=>array(
-			"field_field"=>'cfg_users.id_user_group',
+		"cfg_users.email_email"=>array(
+			"field_field"=>'cfg_users.email_email',
+			"txt_help_nl"=>'<p>Dit email adres kan oa gebruikt worden om een nieuw wachtwoord op te sturen.</p>',
+    ),
+		"cfg_users.rel_users__groups"=>array(
+			"field_field"=>'cfg_users.rel_users__groups',
 			"txt_help_nl"=>'<p>Kies hier de groep. Dit bepaald welke rechten een gebruiker heeft.</p>',
 			"txt_help_en"=>'<p>Choose e group. This will determine the rights of a user.</p>'
 			),
@@ -445,21 +449,32 @@ $config["CFG_"]=array(
 			"order"=>'121',
 			"table"=>'cfg_groups',
 			"b_grid_add_many"=>'0',
-			"str_abstract_fields"=>'str_description',
+			"str_abstract_fields"=>'description',
 			"str_order_by"=>'id',
 			"b_add_empty_choice"=>'1',
 			),
-		"log_activity"=>array(
+
+		"log_stats"=>array(
 			"order"=>'130',
+			"table"=>'log_stats',
+			'b_pagination'=>true,
+			"b_grid_add_many"=>'0',
+			"str_abstract_fields"=>'',
+			"str_order_by"=>'',
+			),
+
+		"log_activity"=>array(
+			"order"=>'131',
 			"table"=>'log_activity',
 			'b_pagination'=>true,
 			"b_grid_add_many"=>'0',
 			"str_abstract_fields"=>'',
 			"str_order_by"=>'',
 			),
-		"log_stats"=>array(
-			"order"=>'131',
-			"table"=>'log_stats',
+
+		"log_login_attempts"=>array(
+			"order"=>'132',
+			"table"=>'log_login_attempts',
 			'b_pagination'=>true,
 			"b_grid_add_many"=>'0',
 			"str_abstract_fields"=>'',
@@ -859,14 +874,11 @@ $config["CFG_"]=array(
 			"b_multi_options"=>'0',
 			"str_validation_rules"=>''
  			),
-		"cfg_users.id_user_group"=>array(
-			"field"=>'cfg_users.id_user_group',
-			"str_ui_name"=>'Group',
+		"cfg_users.rel_users__groups"=>array(
+			"field"=>'cfg_users.rel_users__groups',
 			"b_show_in_grid"=>'1',
 			"b_show_in_form"=>'1',
-			"str_options"=>'',
-			"b_multi_options"=>'0',
-			"str_validation_rules"=>'required'
+			"str_validation_rules"=>'required|valid_options'
  			),
 		"cfg_users.str_username"=>array(
 			"field"=>'cfg_users.str_username',
@@ -878,11 +890,12 @@ $config["CFG_"]=array(
 			"field"=>'cfg_users.gpw_password',
 			"b_show_in_grid"=>'0',
 			"b_show_in_form"=>'1',
-			"str_validation_rules"=>'trim|valid_password'
+      // "str_validation_rules"=>'',
+      "str_validation_rules"=>'trim|valid_password'
  			),
     "cfg_users.email_email"=>array(
       "field"=>'cfg_users.email_email',
-      "str_validation_rules"=>'valid_email|is_unique[cfg_users.email_email.id]'
+      "str_validation_rules"=>'valid_email|required|is_unique[cfg_users.email_email.id]'
     ),
 		"cfg_users.ip_address"=>array(
 			"field"=>'cfg_users.ip_address',

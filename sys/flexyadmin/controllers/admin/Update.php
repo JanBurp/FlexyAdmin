@@ -1,4 +1,4 @@
-<?php require_once(APPPATH."core/AdminController.php");
+<?php require_once(APPPATH."core/BasicController.php");
 /** \ingroup controllers
  * Updating FlexyAdmin
  *
@@ -7,7 +7,7 @@
  * @copyright (c) Jan den Besten
  */
 
-class Update extends AdminController {
+class Update extends BasicController {
   
   private $tags   = '/FlexyAdmin/tags';
   private $db_map = 'db';
@@ -26,7 +26,7 @@ class Update extends AdminController {
 	}
 
   public function index() {
-    if (!$this->user->is_super_admin()) {
+    if (!$this->flexy_auth->is_super_admin() and !IS_LOCALHOST) {
       redirect($this->config->item('API_home'));
     };
     

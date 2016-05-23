@@ -17,9 +17,9 @@ class BasicController extends MY_Controller {
 	public function __construct($isAdmin=false) {
 		parent::__construct($isAdmin);
 		$this->load->library('session');
-		$this->load->library('user');
+		$this->load->library('flexy_auth');
 
-		if ( !$this->user->logged_in()) {
+		if ( !$this->flexy_auth->logged_in()) {
       if (!$this->input->is_ajax_request()) $this->output->set_status_header('401');
       return;
 		}
@@ -31,7 +31,7 @@ class BasicController extends MY_Controller {
     $this->load->model('create_uri');
 		$this->load->helper("language");
 
-    $this->language=$this->user->language;
+    $this->language=$this->flexy_auth->language;
 		$lang=$this->language."_".strtoupper($this->language);
 		setlocale(LC_ALL, $lang);
 

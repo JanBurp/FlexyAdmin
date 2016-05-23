@@ -85,7 +85,7 @@ class Api_Model extends CI_Model {
     $api_login = ($this->uri->get(3)==='login');
     
     // Check session based login
-    $loggedIn=$this->user->logged_in();
+    $loggedIn=$this->flexy_auth->logged_in();
     // Check authentication header, and if its set login that way
     $jwt_header = $this->input->get_request_header('Authorization', TRUE);
     if (!empty($jwt_header)) {
@@ -94,7 +94,7 @@ class Api_Model extends CI_Model {
         try {
           $jwt_decoded = (array) JWT::decode( $jwt_header, $this->jwt_key, array('HS256') );
           if (isset($jwt_decoded['username']) and isset($jwt_decoded['password']) ) {
-            $loggedIn = $this->user->login( $jwt_decoded['username'], $jwt_decoded['password'] );
+            $loggedIn = $this->flexy_auth->login( $jwt_decoded['username'], $jwt_decoded['password'] );
           }
         } catch (Exception $e) {
           // no cath just continue
@@ -124,7 +124,7 @@ class Api_Model extends CI_Model {
    * @author Jan den Besten
    */
   protected function logged_in() {
-    $loggedIn = $this->user->logged_in();
+    $loggedIn = $this->flexy_auth->logged_in();
     return $loggedIn;
   }
 
@@ -235,11 +235,12 @@ class Api_Model extends CI_Model {
     // if (isset($this->args['options'])) $this->result['options']=$this->_add_options();
     // user
     $this->result['user'] = FALSE;
-    if ($this->user->user_name) {
+    if ($this->flexy_auth->username) {
+      $user = $this->flexy_auth->get_user();
       $this->result['user'] = array(
-        'username'    => $this->user->user_name,
-        'group_id'    => $this->user->group_id,
-        'group_name'  => $this->user->rights['str_description'],
+        'username'    => $user['username'],
+        'group_id'    => $user['group_id'],
+        'group_name'  => $user['group_name'],
       );
     }
     // jwt token
@@ -424,8 +425,8 @@ class Api_Model extends CI_Model {
    * @author Jan den Besten
    */
   protected function _has_rights($item,$id="",$whatRight=RIGHTS_NO) {
-    if (!$this->user->logged_in()) return FALSE;
-    $rights=$this->user->has_rights($item,$id,$whatRight);
+    if (!$this->flexy_auth->logged_in()) return FALSE;
+    $rights=$this->flexy_auth->has_rights($item,$id,$whatRight);
     // if no normal rights and cfg_users and current user rights are ok, TODO: safety check this!!
     if ($rights<RIGHTS_EDIT and $item=='cfg_users') {
       if (el('where',$this->args,null)=='current') $rights=RIGHTS_EDIT;
@@ -441,7 +442,7 @@ class Api_Model extends CI_Model {
    * @author Jan den Besten
    */
   protected function _is_super_admin() {
-    return $this->user->is_super_admin();
+    return $this->flexy_auth->is_super_admin();
   }
   
   

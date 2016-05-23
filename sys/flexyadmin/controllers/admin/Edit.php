@@ -59,7 +59,7 @@ class Edit extends AdminController {
         // Set items to delete
         $items=array();
   			foreach ($ids as $id) {
-  				if ($this->user->has_rights($table,$id)>=RIGHTS_DELETE) {
+  				if ($this->flexy_auth->has_rights($table,$id)>=RIGHTS_DELETE) {
             $items[]=$id;
           }
         }

@@ -308,7 +308,7 @@ class Grid extends CI_Model {
 		$renderData["caption"]["row"]=$this->captions;
 
 		$renderData["heading"]["class"]="$table $class";
-    $firstOrder=remove_suffix($this->order[0],'__');
+    $firstOrder=remove_suffix($this->order[0],'.');
 		foreach($this->headings as $name=>$heading) {
 			$orderClass='';
 			if ($firstOrder==$name) $orderClass=' headerSortDown';

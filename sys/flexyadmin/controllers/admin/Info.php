@@ -38,7 +38,7 @@ class Info extends AdminController {
 
 	function license() {
     $license_file='sys/flexyadmin/flexyadmin_license';
-    $lang=$this->user->language;
+    $lang=$this->flexy_auth->language;
     if (file_exists($license_file.'_'.$lang.'.txt')) {
       $license_file.='_'.$lang;
     }

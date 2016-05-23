@@ -110,11 +110,7 @@ $config['abstract_filter']  = '';
  *      'result_name' => 'links_extra',
  *    ),
  * 
- *    'id_user_groups' => array(
- *      'other_table' => 'cfg_users_groups',
- *      'foreign_key' => 'id_user_group',
- *      'result_name' => 'cfg_users_groups',
- *    )
+ *  )
  * 
  * 'one_to_many'
  * -------------
@@ -143,12 +139,8 @@ $config['abstract_filter']  = '';
  *      'foreign_key' => 'id_post',
  *      'result_name' => 'links_extra',
  *    ),
+ * )
  * 
- *    'cfg_user_groups' => array(
- *      'other_table' => 'cfg_users_groups',
- *      'foreign_key' => 'id_user_group',
- *      'result_name' => 'cfg_users_groups',
- *    )
  * 
  * 
  * 'many_to_many'

@@ -26,7 +26,7 @@ class Plugin_bulkupload extends Plugin {
 
 	public function _admin_api() {
     $this->doAction=false;
-		if ($this->CI->user->can_use_tools()) {
+		if ($this->CI->flexy_auth->can_use_tools()) {
 
 			$mediaCfg=$this->CI->cfg->get('CFG_media_info');
 
@@ -129,7 +129,7 @@ class Plugin_bulkupload extends Plugin {
 
   
 	public function _ajax_api($args) {
-    if (!$this->CI->user->can_use_tools()) return array('plugin'=>'bulkupload','message'=>'no rights');
+    if (!$this->CI->flexy_auth->can_use_tools()) return array('plugin'=>'bulkupload','message'=>'no rights');
     
 		$args = func_get_args();
     $path = pathdecode($args[0]);

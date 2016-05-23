@@ -558,7 +558,7 @@ class Form {
 		foreach($data as $name=>$field) {
 
 			// Change multiple data to string (str_, medias_)
-			if (isset($field['multiple']) and isset($_POST[$name]) and is_array($_POST[$name]) and get_prefix($name)!='rel') {
+			if (isset($field['multiple']) and isset($_POST[$name]) and is_array($_POST[$name]) ) { // and get_prefix($name)!='rel') {
 				if (isset($_POST[$name.'__hidden']))
 					$_POST[$name]=$_POST[$name.'__hidden'];
 				else
@@ -747,7 +747,7 @@ class Form {
 				*/
 				elseif (in_array($pre,array('gpw','pwd'))) {
 					if ($this->hash_passwords and !empty($value))
-						$data[$name]=$this->CI->ion_auth_model->hash_password($value);
+						$data[$name]=$this->CI->flexy_auth->hash_password($value);
 					else
 						$data[$name]=$value;
 				}

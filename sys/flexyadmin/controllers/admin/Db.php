@@ -12,8 +12,8 @@
 class Db extends AdminController {
 
   var $types = array(
-    'data'      => array('name'=>'All Tables & Data, except log & session Tables','data'=>'*,-cfg_sessions,-log_activity,-log_stats','structure'=>''),
-    'all'       => array('name'=>'All Tables & Data, except log & session Data','data'=>'*,-cfg_sessions,-log_activity,-log_stats','structure'=>'cfg_sessions,log_activity,log_stats'),
+    'data'      => array('name'=>'All Tables & Data, except log & session Tables','data'=>'*,-cfg_sessions,-log_activity,-log_stats,-log_login_attempts','structure'=>''),
+    'all'       => array('name'=>'All Tables & Data, except log & session Data','data'=>'*,-cfg_sessions,-log_activity,-log_stats,-log_login_attempts','structure'=>'cfg_sessions,log_activity,log_stats,log_login_attempts'),
     'complete'  => array('name'=>'All Tables & Data','data'=>'*','structure'=>''),
     'tbl'       => array('name'=>'Normal Tables & Data','data'=>'tbl_*,res_*','structure'=>''),
     'cfg_clean' => array('name'=>'Config Tables & Data, except session table','data'=>'cfg_*,-cfg_sessions','structure'=>''),
@@ -43,12 +43,13 @@ class Db extends AdminController {
 		$this->lang->load("form");
 
 		$form=new form($this->config->item('API_db_export'));
-		$tablesWithRights=$this->user->get_table_rights();
+		$tablesWithRights=$this->flexy_auth->get_table_rights();
 		$options=array_combine($tablesWithRights,$tablesWithRights);
 		$valuesData=$options;
 		unset($valuesData['cfg_sessions']);
 		unset($valuesData['log_login']);
-		unset($valuesData['log_stats']);
+		unset($valuesData['log_activity']);
+		unset($valuesData['log_login_attempts']);
 		$valuesStructure=array_diff($options,$valuesData);
     
     $types=$this->types;
@@ -66,7 +67,7 @@ class Db extends AdminController {
 	}
 
 	function export() {
-		if ($this->user->is_super_admin()) {
+		if ($this->flexy_auth->is_super_admin()) {
       $type=$this->input->post('type');
 			$ext="txt";
 			$name=$this->input->post('filename');
@@ -173,11 +174,11 @@ class Db extends AdminController {
 	}
 
 	function backup() {
-		if ($this->user->can_backup()) {
+		if ($this->flexy_auth->can_backup()) {
 			$this->load->dbutil();
 			$this->load->helper('download');
 		
-			$tablesWithRights=$this->user->get_table_rights();
+			$tablesWithRights=$this->flexy_auth->get_table_rights();
 			// select only data (not config)
 			$tablesWithRights=array_combine($tablesWithRights,$tablesWithRights);
 			$tablesWithRights=not_filter_by($tablesWithRights,"cfg");
@@ -200,7 +201,7 @@ class Db extends AdminController {
 	}
 
 	function restore() {
-		if ($this->user->can_backup()) {
+		if ($this->flexy_auth->can_backup()) {
 			if (!isset($_FILES["userfile"])) {
 				$this->load->library('form');
 				$this->lang->load('help');
@@ -268,7 +269,7 @@ class Db extends AdminController {
 		$form=new form($this->config->item('API_db_import'));
 		$data=array( 	"userfile"	=> array("type"=>"file","label"=>"File (txt,sql)"),
 		 							"sql"				=> array("type"=>"textarea","label"=>"SQL"));
-		if ($this->user->has_rights('cfg_configurations')) {
+		if ($this->flexy_auth->has_rights('cfg_configurations')) {
 			$data['update']=array('label'=>'Update DB from r');
 		}
 		$form->set_data($data,"Choose File to upload and import");
@@ -276,7 +277,7 @@ class Db extends AdminController {
 	}
 
 	function import() {
-		if ($this->user->is_super_admin()) {
+		if ($this->flexy_auth->is_super_admin()) {
       // What form is filled?
 			$sql=$this->input->post('sql');
       
@@ -377,7 +378,7 @@ class Db extends AdminController {
 		if ($safe)
 			$this->_add_content(p()."Checking safety ... ok"._p());
 		else {
-			$rights=$this->user->get_rights();
+			$rights=$this->flexy_auth->get_rights();
 			if ($rights["str_name"]=="super_admin" and $rights["rights"]=="*" and $rights["b_all_users"] and $rights['b_backup']) {
 				$safe=TRUE;
 				$this->_add_content(p()."Checking safety ... Risky SQL, but Super Admin Rights."._p());
@@ -397,7 +398,7 @@ class Db extends AdminController {
 	}
 	
 	function sql() {
-		if ($this->user->is_super_admin()) {
+		if ($this->flexy_auth->is_super_admin()) {
 			$sql=$this->input->post('sql');
 			$this->lang->load('help');
 			if ($sql) {

@@ -56,5 +56,7 @@ $lang['bad_regex']					= 'Error in regular expression.';
 
 $lang['user_send_password']           = 'User "%s" has a got an email with a new password';
 $lang['user_send_password_error']     = 'ERROR: could not send email with new password to %s.';
+$lang['selected_users']               = 'To selected users';
+
 
 ?>

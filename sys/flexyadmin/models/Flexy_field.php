@@ -498,7 +498,7 @@ class Flexy_field extends CI_Model {
   //   /**
   //     * User can't set itself to higher user group, Remove other options
   //     */
-  //   $user=$this->user->get_user();
+  //   $user=$this->flexy_auth->user();
   //   $id_group=$user->id_group;
   //   $this->db->where('id >=',$id_group);
   //   $this->db->select('id,str_description');
@@ -702,7 +702,7 @@ class Flexy_field extends CI_Model {
 
 	function _dropdown_field_form() {
 		$tables=$this->db->list_tables();
-		$thisRights=$this->user->get_rights();
+		$thisRights=$this->flexy_auth->get_rights();
     // $normal_tables=$tables;
     // $normal_tables=filter_by($tables,"tbl_");
     // $result_tables=filter_by($tables,"res_");

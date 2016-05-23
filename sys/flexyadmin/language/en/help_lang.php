@@ -72,5 +72,7 @@ $lang['send_new_password']            = 'Send new password';
 $lang['user_send_password']           = 'User "%s" has a got an email with a new password';
 $lang['user_send_password_error']     = 'ERROR: could not send email with new password to %s.';
 $lang['new_password']                 = 'New password';
+$lang['selected_users']               = 'To selected users';
+
 
 ?>

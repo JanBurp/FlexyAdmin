@@ -131,19 +131,21 @@ $config['FIELDS_prefix'] = array (
     'form'        => 'htmleditor',
     'validation'	=> ''
   ),
+  
+  // Password
 	'pwd'				=> array (
     'type'        => 'string',
     'form-type'   => 'password',
     'grid'        => '***',
     'form'        => 'password',
-    'validation'	=> 'trim|valid_password'
+    'validation'  => 'trim|valid_password'
   ),
 	'gpw'				=> array (
     'type'        => 'string',
     'form-type'   => 'password',
     'grid'        => '***',
     'form'        => 'password',
-    'validation'	=> 'trim|valid_password'
+    'validation'  => 'trim|valid_password'
   ),
 	'url'				=> array (
     'type'        => 'string',

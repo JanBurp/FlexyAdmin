@@ -23,7 +23,7 @@ class Plugin_install_plugin extends Plugin {
    */
    function _admin_api($args=false) {
      
-		if ($this->CI->user->is_super_admin()) {
+		if ($this->CI->flexy_auth->is_super_admin()) {
 			$this->add_content(h($this->name,1));
       
       $form = new Form();

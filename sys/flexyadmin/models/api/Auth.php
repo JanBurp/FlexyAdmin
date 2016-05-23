@@ -89,7 +89,7 @@ class auth extends Api_Model {
   
 	public function __construct() {
 		parent::__construct();
-    $this->load->library('user');
+    $this->load->library('flexy_auth');
 	}
   
   public function index() {
@@ -122,7 +122,7 @@ class auth extends Api_Model {
     if (!$this->logged_in()) return null;
     
     // Give back user info
-    $data=$this->user->get_user();
+    $data=$this->flexy_auth->user();
     $data=object2array($data);
     $data=array_rename_keys($data,array('str_username'=>'username','email_email'=>'email','str_language'=>'language'),false);
     
@@ -166,7 +166,7 @@ class auth extends Api_Model {
       return $this->_result_wrong_args();
     }
 
-    $logged_in = $this->user->login( $this->args['username'], $this->args['password'] );
+    $logged_in = $this->flexy_auth->login( $this->args['username'], $this->args['password'] );
     return $this->check();
   }
   
@@ -178,7 +178,7 @@ class auth extends Api_Model {
    * @author Jan den Besten
    */
   public function logout() {
-    $this->user->logout();
+    $this->flexy_auth->logout();
     return $this->check();
   }
   
@@ -191,7 +191,7 @@ class auth extends Api_Model {
    */
   public function send_new_password() {
     $email=$this->args['email'];
-    $user=$this->user->get_user_by_email($email);
+    $user=$this->flexy_auth->get_user_by_email($email);
     // No user found
     if (!$user) {
       $this->result['data']=FALSE;
@@ -199,7 +199,7 @@ class auth extends Api_Model {
     }
     else {
       // User found
-      $send=$this->user->send_new_password_mail($user->id);
+      $send=$this->flexy_auth->send_new_password_mail($user->id);
       // Error when sending
       if (!$send) {
         $this->result['data']=FALSE;

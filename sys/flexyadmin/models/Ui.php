@@ -82,8 +82,8 @@ class ui extends CI_Model {
 			elseif (isset($this->language)) {
         $lang=$this->language;
       }
-      elseif ($this->uri->is_admin() and isset($this->user->language)) {
-        $lang=$this->user->language;
+      elseif ($this->uri->is_admin() and isset($this->flexy_auth->language)) {
+        $lang=$this->flexy_auth->language;
       }
       else {  
         $lang=$this->config->item('language');
@@ -164,7 +164,7 @@ class ui extends CI_Model {
 			//
 			$help='';
 			foreach ($tableHelp as $key => $value) {
-				if ($this->user->has_rights($key)) {
+				if ($this->flexy_auth->has_rights($key)) {
 					$help.="<h2>".$this->get($key)."</h2>".$value;
 					$fields=filter_by_key($fieldHelp,$key);
 					if (!empty($fields)) {

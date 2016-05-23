@@ -25,7 +25,7 @@ class Filemanager extends AdminController {
   private function _has_rights($path,$whatRight=0) {
 		$ok=FALSE;
 		$mediaName=$this->cfg->get('CFG_media_info',$path,"path");
-    $rights=$this->user->has_rights("media_".$mediaName,"",$whatRight);
+    $rights=$this->flexy_auth->has_rights("media_".$mediaName,"",$whatRight);
 		return $rights;
 	}
 
@@ -99,7 +99,7 @@ class Filemanager extends AdminController {
 					* Exclude files that are not owned by user, build in mediateble now
 					*/
         // if (isset($cfg['b_user_restricted']) and $cfg['b_user_restricted']) {
-        //   $restrictedToUser=$this->user->restricted_id($path);
+        //   $restrictedToUser=$this->flexy_auth->restricted_id($path);
         //           trace_([$restrictedToUser,$path,$files]);
         //   $files=$this->mediatable->filter_restricted_files($files,$restrictedToUser);
         //           trace_($files);
@@ -258,7 +258,7 @@ class Filemanager extends AdminController {
 						$DoDelete=TRUE;
 						if ($this->mediatable->exists()) {
 							if ($this->mediatable->is_user_restricted($path)) {
-                $restrictedToUser=$this->user->restricted_id($path);
+                $restrictedToUser=$this->flexy_auth->restricted_id($path);
 								$DoDelete=FALSE;
 								$unrestrictedFiles=$this->mediatable->get_unrestricted_files($restrictedToUser);
 								if (array_key_exists($path."/".$file,$unrestrictedFiles)) {
