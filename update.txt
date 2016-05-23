@@ -20,7 +20,19 @@ For recent sites the update processes described below should work:
 
 
 
-UPDATE 3.1.2 (3630...)
+UPDATE 3.2.0 (...)
+======================
+
+LET OP: Door deze update heeft iedere user een nieuw wachtwoord nodig!!
+
+- Update naar laatste versie van IonAuth:
+  - Vervang de map `sys`
+  - Als je de library ->user of ->ion_auth gebruikte moet je je code aanpassen naar de library ->flexy_auth (zie de methods daar, zijn eenvoudiger en degelijker geworden dan die in ->user)
+  - Run update script: `admin/update/....`
+
+
+
+UPDATE 3.1.2 (3654...)
 ======================
 
 - Als je 'Data_Model' hebt gebruikt, hernoem deze overal naar 'Data':
