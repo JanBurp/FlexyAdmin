@@ -1,9 +1,7 @@
 {
 	"description" : "Auto update & install CodeIgniter and others",
 	"require": {
-		"codeigniter/framework": "3.*",
     "benedmunds/CodeIgniter-Ion-Auth":"*",
-		"mikey179/vfsStream": "1.1.*",
     "firebase/php-jwt":"*"
 	}
 }
