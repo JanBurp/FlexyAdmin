@@ -206,19 +206,21 @@ Class Data_Core extends CI_Model {
     $this->config->load( 'data/data', true);
     $default = $this->config->item( 'data/data' );
     $this->settings = $default;
-    if ($table) $this->settings['table'] = $table; // Voor het los instellen van een table zonder eigen model
-    // Haal de settings van huidige model op
+    // Stel eventueel de tabel in als die is meegegeven
+    if ($table) $this->settings['table'] = $table;
+    // Of anders geef het de naam van het huidige model als die geen eigen settings heeft
     if ( empty($table) ) $table=get_class($this);
-    if ( get_class()!=$table ) {
+    // Haal de settings van huidige model op als die bestaan
+    if ( get_class()!==$table ) {
       if ($load) {
         $this->config->load( 'data/'.$table, true);
         $settings = $this->config->item( 'data/'.$table );
-        // Merge samen tot settings
+        // Merge met default samen tot settings
         if ( $settings ) {
           $this->settings = array_merge( $default, $settings );
         }
       }
-      // Test of de noodzakelijke settings zijn ingesteld, zo niet doe dat automatisch
+      // Test of de noodzakelijke settings zijn ingesteld, zo niet doe de rest automatisch
       $this->_autoset( );
     }
     return $this->settings;
