@@ -370,13 +370,12 @@ class Flexy_field extends CI_Model {
       // trace_([$this->field,$optCfg]);
 			if ( el('b_add_empty_choice',$optCfg) ) {
         array_unshift( $options['data'], array('name'=>'','value'=>'') );
-        // $options['data'] = array( ''=>'' ) + $options['data'];
 			}
 			// no empty option needed with jquery.multiselect if multiple
 			if ( el('multiple',$options) and isset( $options['data'][''] )) unset($options['data']['']);
 
 			// type?
-			if ($this->type!="dropdown") {
+			if ($this->type!=="dropdown") {
 				$out["type"]="dropdown";
 				$orderedOptions=$this->cfg->get('cfg_field_info',$out['table'].'.'.$out['name'],'b_ordered_options');
 				if ($orderedOptions) {
@@ -391,7 +390,7 @@ class Flexy_field extends CI_Model {
 			}
       
       // Flat options
-			if (el('multiple',$options)) $out["multiple"]="multiple";
+			$out["multiple"]=( el('multiple',$options)?'multiple':'');
       $out['options'] = array();
       if (!isset($options['data'])) {
         // trace_(['_standard_form_field',$this->field,$options]);
@@ -608,10 +607,9 @@ class Flexy_field extends CI_Model {
   }
 
 	function _join_form($options) {
-    // $options=array('data'=>array());
 		$out=$this->_standard_form_field($options);
-		$out["multiple"]="multiple";
-		$out["button"]=api_uri('API_view_form',join_table_from_rel_table($out["name"]).':-1');
+    if (!isset($out['multiple'])) $out['multiple']='multiple';
+		$out["button"] = api_uri('API_view_form',join_table_from_rel_table($out["name"]).':-1');
 		if (get_prefix($out['name'])==$this->config->item('REL_table_prefix')) {
 			$table=join_table_from_rel_table($out['name']);
 			$tableInfo=$this->cfg->get('CFG_table',$table);

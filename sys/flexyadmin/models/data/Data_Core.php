@@ -1092,9 +1092,9 @@ Class Data_Core extends CI_Model {
             // trace_(['get_options',$what,$other_table,$result_name]);
             $other_model = new Data();
             $other_model->table($other_table)->select_abstract();
-            $options[$result_name] = $other_model->get_result();
-            if ($options[$result_name]) {
-              foreach ($options[$result_name] as $key => $value) {
+            $options[$result_name] = array( 'data'=>$other_model->get_result(), 'multiple'=>true );
+            if ($options[$result_name]['data']) {
+              foreach ($options[$result_name]['data'] as $key => $value) {
                 $options[$result_name]['data'][$key] = array('value'=>$key,'name'=>$value['abstract']);
               }
             }
