@@ -84,6 +84,7 @@ class Show extends AdminController {
 				 * Haal ruwe data op
 				 */
         
+        
         $this->data->table( $table );
         $this->data->set_user_id();
         $this->data->select( $this->data->get_setting( array('grid_set','fields') ));
@@ -133,9 +134,12 @@ class Show extends AdminController {
             }
 					}
 				}
-        if (!isset($last_order)) $last_order = $this->data->get_setting(array('grid_set','order_by'));
-        if (!isset($last_order)) $last_order = $this->data->get_setting('order_by');
-        if (has_string('DESC',$last_order)) $last_order='_'.trim(str_replace('DESC','',$last_order));
+        else {
+          if (!isset($last_order)) $last_order = $this->data->get_setting(array('grid_set','order_by'));
+          if (!isset($last_order)) $last_order = $this->data->get_setting('order_by');
+          $this->data->order_by($last_order);
+          if (has_string('DESC',$last_order)) $last_order='_'.trim(str_replace('DESC','',$last_order));
+        }
 				
         // Check of er alleen rechten zijn voor bepaalde rijen TODO-> naar Data_Core
 				$restrictedToUser = $this->flexy_auth->restricted_id( $table );
@@ -190,11 +194,11 @@ class Show extends AdminController {
         $data_query = $this->data->last_query(); //_clean(array('select'=>$table.'.'.PRIMARY_KEY), true);
 				$total_rows = $this->data->total_rows();
         
-        // trace_($data);
         // trace_sql($data_query);
-        // trace_($pagination);
         // trace_($last_order);
+        // trace_($pagination);
         // trace_($total_rows);
+        // trace_($data);
         
 				$keys=array();
 				if (!empty($data)) $keys=array_keys(current($data));

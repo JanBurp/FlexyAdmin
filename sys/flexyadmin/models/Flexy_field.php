@@ -398,7 +398,7 @@ class Flexy_field extends CI_Model {
       }
       if (!in_array($this->pre,array('media','medias'))) {
         foreach ($options['data'] as $key => $option) {
-          $out['options'][el('value',$option,$key)] = $option['name'];
+          if (isset($option['name'])) $out['options'][el('value',$option,$key)] = $option['name'];
         }
       }
       else {

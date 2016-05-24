@@ -58,19 +58,27 @@ class Flexy_auth extends Ion_auth {
   
   public function __construct() {
 		parent::__construct();
-    $this->_set_config();
+    // Stel site afhankelijke instelling in
+		$this->db->select('`str_title` AS `site_title`, `email_email` AS `admin_email`');
+    $site_config=$this->db->get('tbl_site')->row_array();
+    $this->set_config( $site_config );
+    $this->tables = $this->config->item( 'tables', 'ion_auth');
 	}
   
-  private function _set_config() {
-		// set standard configurations
-		$this->db->select('url_url,str_title,email_email');
-		$this->siteInfo = $this->db->get_row('tbl_site');
-		$this->config->set_item('site_title', $this->siteInfo['str_title'],'ion_auth');
-		$this->config->set_item('admin_email', $this->siteInfo['email_email'],'ion_auth');
-    if ($this->db->table_exists('cfg_email')) $this->mail_table='cfg_email';
-    $this->tables = $this->config->item( 'tables', 'ion_auth');
+  /**
+   * Overrule standaard instellingen.
+   *
+   * @param array $config 
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function set_config( $config ) {
+    foreach ($config as $key => $value) {
+      $this->config->set_item( $key, $value, 'ion_auth' );
+    }
+    return $this;
   }
-  
+
   
   /**
    * Login
