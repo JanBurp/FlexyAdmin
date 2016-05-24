@@ -450,7 +450,7 @@ class Show extends AdminController {
      */
     $options=$this->data->get_options();
 
-    // trace_(array_keys($options));
+    // trace_($options);
     // die();
     
     $data = $this->_before_form($table,$data);
@@ -460,7 +460,7 @@ class Show extends AdminController {
 		 */
 		if ( !empty($data) ) {
       
-			$ffData = $this->ff->render_form( $table,$data,$options );
+			$ffData = $this->ff->render_form( $table, $data, $options );
       // trace_($ffData);
       // die();
       

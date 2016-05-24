@@ -143,6 +143,7 @@ Class cfg_users extends Data_Core {
             unset($options['rel_users__groups']['data'][$key]);
           }
         }
+        $options['rel_users__groups']['multiple'] = $this->get_setting('multiple_groups',el('multiple',$options['rel_users__groups'],FALSE));
       }
     }
     return $options;
