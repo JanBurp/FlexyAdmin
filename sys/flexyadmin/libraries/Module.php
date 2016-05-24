@@ -11,7 +11,7 @@ class Module extends Parent_module_plugin {
 
   /**
    */
-	function __construct($args=array()) {
+	public function __construct($args=array()) {
 		parent::__construct($args);
 	}
 
@@ -44,12 +44,13 @@ class Module extends Parent_module_plugin {
   /**
    * Als je dit aanroept ergens in je module dan laad de controller daarna geen andere modules meer.
    *
-   * @return void
+   * @return $this
    * @author Jan den Besten
    */
 	protected function break_content() {
 		$this->CI->site['content']='';
 		$this->CI->site['break']=true;
+    return $this;
 	}
   
   
