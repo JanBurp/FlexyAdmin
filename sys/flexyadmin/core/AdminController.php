@@ -175,7 +175,7 @@ class AdminController extends BasicController {
 		foreach ($adminMenu as $item) {
 			switch($item['str_type']) {
 				case 'api' :
-          if ( $this->flexy_auth->at_least_in_group( el('id_user_group',$item,0) )) {
+          if ( el('id_user_group',$item,0)=='0' or $this->flexy_auth->at_least_in_group( el('id_user_group',$item,0) )) {
   					$uiName=$item['str_ui_name'];
   					$args=array($item['path'],$item['table'],$item['str_table_where']);
   					$args=implode('/',$args);

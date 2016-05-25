@@ -70,8 +70,7 @@ Class cfg_admin_menu extends Data_Core {
 		foreach ($db_menu as $item) {
 			switch($item['str_type']) {
         case 'api' :
-          if (!isset($item['id_user_group']) or $item['id_user_group']>=$user_group) {
-            // TODO
+          if (!isset($item['id_user_group']) or $item['id_user_group']===0 or $item['id_user_group']>=$user_group) {
             $menu[] = array(
               'name'    => lang(trim($item['str_uri']   ,'_')),
               'uri'     => $item['str_uri']   ,

@@ -347,13 +347,31 @@ class Mediatable extends CI_Model {
     $user = $this->flexy_auth->get_user();
     $path=remove_assets($map);
     $info=$this->cfg->get('cfg_media_info',$path);
-    // if ($asReadMap) $this->db->set_key('file');
     
     // select fields
-    $fields=$this->db->list_fields($this->table);
+    $fields = $this->db->list_fields($this->table);
     unset($fields[array_search('b_exists',$fields)]);
     if ($full_path) array_splice($fields,array_search('path',$fields),0, 'CONCAT("_media/",`path`,"/",`file`) AS `full_path`' );
-    $this->db->select($fields);
+    if ($asReadMap) {
+      $this->db->select( array(
+        '`file` AS `name`',
+        '`path`',
+        '`str_type` AS `type`',
+        '`str_title` AS `alt`',
+        'DATE_FORMAT(`dat_date`, "%Y %m %d") AS `rawdate`',
+        'DATE_FORMAT(`dat_date`,"%d %b %Y") AS `date`',
+        '`int_size` AS `size`',
+        '`int_img_width` AS `width`',
+        '`int_img_height` AS `height`'
+      ));
+      if (isset($info['user'])) {
+        $this->db->select('id_user');
+        $this->db->add_many();
+      }
+    }
+    else {
+      $this->db->select($fields);
+    }
     // where exists and set path
     $this->db->where('b_exists',true);
     $this->db->where('path',$path);
@@ -372,35 +390,10 @@ class Mediatable extends CI_Model {
     }
     // get files
     $files = $this->db->get_result($this->table,$recent_numbers);
-
+    
     if (empty($files)) {
-      // not in database, read from filesystem if set so
+      // not in database, read from filesystem
       $files=read_map($map,$info['str_types'],FALSE,TRUE,FALSE,FALSE);
-      $asReadMap=false;
-    }
-    if ($asReadMap) {
-      $map_files=array();
-      foreach ($files as $file => $info) {
-        $date=explode('-',$info['dat_date']);
-        $map_files[$file]=array(
-          'name'  => $info['file'],
-          'path'  => add_assets($info['path']),
-          'type'  => $info['str_type'],
-          'alt'   => $info['str_title'],
-          'size'  => $info['int_size'],
-          'rawdate' => str_replace('-',' ',$info['dat_date']),
-          'date'    => date('j M Y',mktime(0,0,0,$date[1],$date[2],$date[0])),
-          'width'   => $info['int_img_width'],
-          'height'  => $info['int_img_height']
-        );
-        if (isset($info['user'])) {
-          $map_files[$file]['id_user']=$this->db->get_field_where('cfg_users','str_username','id',$info['user']);
-        }
-        // extra fields
-        $extra=array_unset_keys($info,array('id','b_exists','path','file','str_type','int_size','dat_date','int_img_height','int_img_width','str_title'));
-        if ($extra) $map_files[$file]=array_merge($map_files[$file],$extra);
-      }
-      $files=$map_files;
     }
     return $files;
   }

@@ -85,35 +85,23 @@ class Filemanager extends AdminController {
 				$types=$cfg['str_types'];
 				$uiName=$this->ui->get($path);
         
-        if ($this->mediatable->exists()) 
-          $files=$this->mediatable->get_files($map,true,false);
-        else
-          $files=read_map($map);
+        $files=$this->mediatable->get_files($map,true,false);
         
 				/**
 				 * update img/media_lists
 				 */
         $this->_before_filemanager($path,$files);
         
-				/**
-					* Exclude files that are not owned by user, build in mediateble now
-					*/
-        // if (isset($cfg['b_user_restricted']) and $cfg['b_user_restricted']) {
-        //   $restrictedToUser=$this->flexy_auth->restricted_id($path);
-        //           trace_([$restrictedToUser,$path,$files]);
-        //   $files=$this->mediatable->filter_restricted_files($files,$restrictedToUser);
-        //           trace_($files);
-        // }
-        
         /**
          * Hide files (set in cfg_field_info)
          */
-        $hideFields=array('b_exists');
+        $first_row=current($files);
+        $hideFields=array();
         $fieldInfo=$this->cfg->get('cfg_field_info');
         $fieldInfo=filter_by($fieldInfo,'res_media_files.');
         if ($fieldInfo) {
           foreach ($fieldInfo as $field => $info) {
-            if (isset($info['b_show_in_grid']) and $info['b_show_in_grid']==false) {
+            if (isset($info['b_show_in_grid']) and $info['b_show_in_grid']==false and array_key_exists($field,$first_row)) {
               $hideFields[]=get_suffix($field,'.');
             }
           }

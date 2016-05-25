@@ -13,6 +13,7 @@ Class cfg_users extends Data_Core {
 
   private $allowed_to_edit_users;
   private $groups;
+  private $show_groups=FALSE;
   private $only_these_users = array();
 
   public function __construct() {
@@ -22,10 +23,21 @@ Class cfg_users extends Data_Core {
     $this->set_user_id();
     // Kijk of de gebruiker andere gebruikers mag aanpassen
     $this->allowed_to_edit_users = $this->flexy_auth->allowed_to_edit_users();
-    // Welke andere users mag deze user bekijken?
+    
     $this->groups = $this->flexy_auth->get_user()['groups'];
     if ($this->groups) {
       $group_ids = array_keys($this->groups);
+      $all_groups = $this->flexy_auth->groups()->result_array();
+      // Welke andere user_groups mag deze user bekijken?
+      $this->show_groups = array();
+      foreach ($all_groups as $key => $group) {
+        $show=FALSE;
+        foreach ($group_ids as $group_id) {
+          if ($group_id<=$group['id']) $show=TRUE;
+        }
+        if ($show) $this->show_groups[$group['id']]=$group['id'];
+      }
+      // Welke andere users mag deze user bekijken?
       $query = $this->db->query( 'SELECT `id_user` FROM `rel_users__groups` WHERE `id_user_group` IN ('.implode(',',$group_ids).')');
       if ($query) {
         $this->only_these_users = $query->result_array();
@@ -140,7 +152,7 @@ Class cfg_users extends Data_Core {
     if ($this->user_id) {
       if ( array_key_exists('rel_users__groups',$options) ) {
         foreach ($options['rel_users__groups']['data'] as $key=>$option) {
-          if ( $option['value'] < $this->group_id ) {
+          if ( !in_array($option['value'],$this->show_groups) ) {
             unset($options['rel_users__groups']['data'][$key]);
           }
         }
