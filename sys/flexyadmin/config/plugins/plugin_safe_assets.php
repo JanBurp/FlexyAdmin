@@ -57,5 +57,14 @@ $config['file_types'] = array(
 );
 
 
+/**
+ * Actions at logout
+ */
+$config['logout_actions'] = array(
+  'cleanup_captha' => true,
+  'clean_all'      => true
+);
+
+
 
 ?>
