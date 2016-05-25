@@ -1,1 +1,1 @@
-var tinyMCEImageList = new Array(["pictures/test_01.jpg","site/assets/pictures/test_01.jpg"],["pictures/test_02.jpg","site/assets/pictures/test_02.jpg"],["pictures/test_03.jpg","site/assets/pictures/test_03.jpg"]);
+var tinyMCEImageList = new Array(["pictures/test_03.jpg","pictures/test_03.jpg"]);
