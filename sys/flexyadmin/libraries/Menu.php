@@ -330,8 +330,11 @@ class Menu {
     $table=$this->settings['menu_table'];
     
     if ($table) {
+      
+      $this->CI->data->table( $table );
+      $fields = $this->CI->data->list_fields();
+      
   		// select fields
-  		$fields=$this->CI->db->list_fields($table);
   		foreach ($fields as $key=>$f) {
   			if (!in_array($f,$this->settings['fields']) and !isset($this->settings['fields']['extra'][$f])) unset($fields[$key]);
   		}
@@ -343,15 +346,14 @@ class Menu {
   				}
   			}
   		}
+      
   		// get data from table
-  		$this->CI->db->select(PRIMARY_KEY);
-  		$this->CI->db->select($fields);
-  		if ($foreign) $this->CI->db->add_foreigns($foreign);
+      $this->CI->data->select( $fields );
+  		if ($foreign) $this->CI->data->with('many_to_one',$foreign);
   		if (in_array($this->settings['fields']['parent'],$fields)) {
-  			$this->CI->db->uri_as_full_uri('full_uri');	
-        // $this->CI->db->order_as_tree();  
+        $this->CI->data->path('full_uri','uri');
   		}
-  		$data=$this->CI->db->get_result($table);
+      $data=$this->CI->data->get_result();
   		return $this->set_menu_from_table_data($data,$foreign);
     }
     
@@ -806,11 +808,28 @@ class Menu {
 	public function get_item($uri='',$foreigns=false,$many=false) {
 		$item=array('uri'=>'');
     if (empty($uri)) $uri=$this->settings['current'];
-		$this->CI->db->where_uri($uri);
-		if ($foreigns) $this->CI->db->add_foreigns();
-		if ($many) $this->CI->db->add_many();
-    $table=el('menu_table',$this->settings,get_menu_table());
-    $item=$this->CI->db->get_row($table);
+    
+    $this->CI->data->table( el('menu_table',$this->settings,get_menu_table() ));
+    $this->CI->data->path('full_uri','uri');
+    // Zoek in simpel uri veld, of naar gehele pad?
+    if (strpos($uri,'/')!==FALSE) {
+      $this->CI->data->where_path( 'full_uri', $uri );
+    }
+    else {
+      $this->CI->data->where( 'uri', $uri );
+       $this->CI->data->where( 'self_parent', 0 );
+    }
+    // Relaties?
+    if ($foreigns) $this->data->with('many_to_one');
+    if ($many)     $this->data->with('many_to_many');
+    // Resultaat
+    $items=$this->CI->data->get_result();
+    if ($items) {
+      $item=current($items);
+    }
+    else {
+      $item=FALSE;
+    }
 		return $item;
 	}
 	

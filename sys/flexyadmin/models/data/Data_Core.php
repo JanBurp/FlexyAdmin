@@ -98,7 +98,8 @@ Class Data_Core extends CI_Model {
   /**
    * Een eventueel veld dat een compleet pad moet bevatten in een tree table
    */
-  protected $tm_path = FALSE;
+  protected $tm_path       = FALSE;
+  protected $tm_where_path = array();
   
   /**
    * Maximale lengte van txt velden.
@@ -786,6 +787,7 @@ Class Data_Core extends CI_Model {
     $this->tm_unselect      = FALSE;
     $this->tm_from          = '';
     $this->tm_path          = FALSE;
+    $this->tm_where_path    = array();
     $this->tm_order_by      = array();
     $this->tm_limit         = 0;
     $this->tm_offset        = 0;
@@ -1401,6 +1403,17 @@ Class Data_Core extends CI_Model {
       $this->query_info['total_rows'] = $this->total_rows(true,true);
     }
     
+    // where paths?
+    if ( !empty($this->tm_where_path) and !empty($result) ) {
+      if (!$this->tm_path) {
+        throw new ErrorException( __CLASS__.'->where_path() You need to set ->path() when using ->where_path()' );
+      }
+      foreach ($this->tm_where_path as $where_path) {
+        $result = find_row_by_value( $result, $where_path['value'], $where_path['field'] );
+      }
+      $this->query_info['num_rows'] = count($result);
+    }
+    
     return $result;
   }
   
@@ -1858,6 +1871,27 @@ Class Data_Core extends CI_Model {
       'path_field'      => $path_field,
       'original_field'  => $original_field,
       'split'           => $split
+    );
+    return $this;
+  }
+  
+  /**
+   * Speciaal where method voor het zoeken in path velden. Kan alleen in combinatie met ->get_result() en ->path()
+   * 
+   * NB Dit gebeurt niet met de database, maar wordt aan het eind van een volledige result nog gefilterd:
+   * - Het is daarom niet erg snel.
+   * - Het wijkt af van normale ->where methoden.
+   * - Gebruik dit alleen als het echt niet anders kan (bij Menu structuren bijvoorbeeld, die zijn niet zo groot)
+   *
+   * @param string $field 
+   * @param mixed $value 
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function where_path( $field, $value ) {
+    $this->tm_where_path[$field]=array(
+      'field' => $field,
+      'value' => $value,
     );
     return $this;
   }
