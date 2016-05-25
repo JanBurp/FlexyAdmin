@@ -69,10 +69,10 @@ class Ajax extends AjaxController {
    * @author Jan den Besten
    */
 	private function _get_current_order($table) {
-		$this->select('id,order,self_parent,uri');
-    // $this->db->order_as_tree();
-		$this->db->uri_as_full_uri();
-		return $this->db->get_result($table);
+    $this->data->table( $table )
+                ->select('id,order,self_parent,uri')
+                ->path( 'uri' );
+		return $this->data->get_result();
 	}
   
 
@@ -104,8 +104,7 @@ class Ajax extends AjaxController {
 					if ($plugins) $this->load->model('queu');
 
           // Get olddata
-					$this->db->where(PRIMARY_KEY,$id);
-					$oldData=$this->db->get_row($table);
+          $oldData = $this->data->table($table)->where( PRIMARY_KEY, $id )->get_row();
 					$newData=$oldData;
           $old_value=$oldData[$field];
           // Get newdate
@@ -136,7 +135,7 @@ class Ajax extends AjaxController {
     					delete_all_cache();
               
               // Fetch new value from database as double check and feedback to user
-              $value=$this->db->get_field_where($table,$field,PRIMARY_KEY,$id);
+              $value=$this->data->table($table)->where(PRIMARY_KEY,$id)->get_field( $field );
             }
           }
 				}

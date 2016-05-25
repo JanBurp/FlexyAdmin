@@ -166,7 +166,7 @@ class Db extends AdminController {
 	}
 	
 	function _filename() {
-		$name=$this->db->get_field("tbl_site","url_url");
+		$name=$this->data->table('tbl_site')->get_field("url_url");
 		$name=str_replace(array('http://','www.'),'',$name);
 		$name=explode(".",$name);
 		$name=$name[0];

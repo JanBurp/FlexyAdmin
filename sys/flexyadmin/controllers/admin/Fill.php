@@ -67,19 +67,19 @@ class Fill extends AdminController {
 					$table=get_prefix($field,'.');
           $field=get_suffix($field,'.');
           // items
-          $this->db->select('id');
-					if (!empty($where)) $this->db->where($where);
-					$items=$this->db->get_result($table);
+          $this->data->table($table)->select('id');
+					if (!empty($where)) $this->data->where($where);
+					$items = $this->data->get_result();
 					foreach ($items as $id => $item) {
 						$result=$fill;
             if ($random) {
               $result=$this->db->random_field_value($field,array('table'=>$table));
             }
 						if (!$test) {
-							$this->db->where('id',$id);
-							$this->db->set($field,$result);
-							if (!empty($where)) $this->db->where($where);
-							$this->db->update($table);
+              $this->data->table($table)->where('id',$id);
+							if (!empty($where)) $this->data->where($where);
+							$this->data->set($field,$result);
+							$this->data->update();
 							// trace_($this->db->last_query());
 						}
 						$htmlTest.="<li>$field [$id] = '$result'</li>";

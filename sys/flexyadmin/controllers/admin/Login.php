@@ -24,7 +24,7 @@ class Login extends MY_Controller {
 	}
 
 	private function _get_site_title() {
-    return '- '.$this->db->get_field('tbl_site','str_title');
+    return '- '.$this->data->table('tbl_site')->get_field('str_title');
 	}
 
 	public function check() {
