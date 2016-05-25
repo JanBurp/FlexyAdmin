@@ -25,7 +25,7 @@ class ApiTestModel extends CITestCase {
   protected $test_users=array(
     array(
       'str_username'  => 'test',
-      'id_user_group' => 3,
+      // 'id_user_group' => 3,
       'gpw_password'  => 'test',
       'email_email'   => 'test@flexyadmin.com',
     )
@@ -126,12 +126,17 @@ class ApiTestModel extends CITestCase {
         $args = $this->_randomArgs();
         $this->CI->$apiModel->set_args($args);
         $result=$this->CI->$apiModel->index();
-
-        $this->assertArrayHasKey( 'success', $result );
-        $this->assertEquals( false, $result['success'] );
-        $this->assertArrayHasKey( 'error', $result );
-        $this->assertInternalType( string, $result['error'] );
-        $this->assertEquals( 'WRONG ARGUMENTS', $result['error'] );
+        if ($apiModel=='row') {
+          $this->assertArrayHasKey( 'status', $result );
+          $this->assertEquals( '401', $result['status'] );
+        }
+        else {
+          $this->assertArrayHasKey( 'success', $result );
+          $this->assertEquals( false, $result['success'] );
+          $this->assertArrayHasKey( 'error', $result );
+          $this->assertInternalType( string, $result['error'] );
+          $this->assertEquals( 'WRONG ARGUMENTS', $result['error'] );
+        }
       }
     }
   }

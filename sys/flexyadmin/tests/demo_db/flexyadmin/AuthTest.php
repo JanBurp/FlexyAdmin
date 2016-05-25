@@ -11,42 +11,117 @@ class AuthTest extends CITestCase {
       'username' => 'admin',
       'password' => 'admin',
       'rights'   => array(
-        'rights'      => '*',
-        'b_all_users' => '1',
-        'b_backup'    => '1',
-        'b_tools'     => '1',
-        'b_delete'    => '1',
-        'b_add'       => '1',
-        'b_edit'      => '1',
-        'b_show'      => '1',
+        'all_users' => true,
+        'backup'    => true,
+        'tools'     => true,
+        'items'     => array(
+          'cfg_admin_menu'        => 15,
+          'cfg_configurations'    => 15,
+          'cfg_email'             => 15,
+          'cfg_field_info'        => 15,
+          'cfg_img_info'          => 15,
+          'cfg_media_info'        => 15,
+          'cfg_sessions'          => 15,
+          'cfg_table_info'        => 15,
+          'cfg_ui'                => 15,
+          'cfg_user_groups'       => 15,
+          'cfg_users'             => 15,
+          'log_activity'          => 15,
+          'log_login_attempts'    => 15,
+          'log_stats'             => 15,
+          'rel_crud__crud2'       => 15,
+          'rel_groepen__adressen' => 15,
+          'rel_users__groups'     => 15,
+          'res_media_files'       => 15,
+          'tbl_adressen'          => 15,
+          'tbl_crud'              => 15,
+          'tbl_crud2'             => 15,
+          'tbl_groepen'           => 15,
+          'tbl_leerlingen'        => 15,
+          'tbl_links'             => 15,
+          'tbl_menu'              => 15,
+          'tbl_site'              => 15,
+          'media_pictures'        => 15,
+          'media_downloads'       => 15,
+        )
       ),
     ),
     array(
       'username' => 'user',
       'password' => 'user',
       'rights'   => array(         
-        'rights'      => 'tbl_*|media_*',
-        'b_all_users' => '0',
-        'b_backup'    => '0',
-        'b_tools'     => '0',
-        'b_delete'    => '1',
-        'b_add'       => '1',
-        'b_edit'      => '1',
-        'b_show'      => '1',
+        'all_users' => false,
+        'backup'    => false,
+        'tools'     => false,
+        'items'     => array(
+          'cfg_admin_menu'        => 0,
+          'cfg_configurations'    => 0,
+          'cfg_email'             => 0,
+          'cfg_field_info'        => 0,
+          'cfg_img_info'          => 0,
+          'cfg_media_info'        => 0,
+          'cfg_sessions'          => 0,
+          'cfg_table_info'        => 0,
+          'cfg_ui'                => 0,
+          'cfg_user_groups'       => 0,
+          'cfg_users'             => 0,
+          'log_activity'          => 0,
+          'log_login_attempts'    => 0,
+          'log_stats'             => 0,
+          'rel_crud__crud2'       => 0,
+          'rel_groepen__adressen' => 0,
+          'rel_users__groups'     => 0,
+          'res_media_files'       => 0,
+          'tbl_adressen'          => 15,
+          'tbl_crud'              => 15,
+          'tbl_crud2'             => 15,
+          'tbl_groepen'           => 15,
+          'tbl_leerlingen'        => 15,
+          'tbl_links'             => 15,
+          'tbl_menu'              => 15,
+          'tbl_site'              => 15,
+          'media_pictures'        => 15,
+          'media_downloads'       => 15,
+        )
       ),
     ),
     array(
       'username' => 'test',
       'password' => 'test',
       'rights'   => array(         
-        'rights'      => 'tbl_*|media_*|cfg_users',
-        'b_all_users' => '0',
-        'b_backup'    => '1',
-        'b_tools'     => '1',
-        'b_delete'    => '1',
-        'b_add'       => '1',
-        'b_edit'      => '1',
-        'b_show'      => '1',
+        'all_users' => false,
+        'backup'    => true,
+        'tools'     => true,
+        'items'     => array(
+          'cfg_admin_menu'        => 0,
+          'cfg_configurations'    => 0,
+          'cfg_email'             => 0,
+          'cfg_field_info'        => 0,
+          'cfg_img_info'          => 0,
+          'cfg_media_info'        => 0,
+          'cfg_sessions'          => 0,
+          'cfg_table_info'        => 0,
+          'cfg_ui'                => 0,
+          'cfg_user_groups'       => 0,
+          'cfg_users'             => 15,
+          'log_activity'          => 0,
+          'log_login_attempts'    => 0,
+          'log_stats'             => 0,
+          'rel_crud__crud2'       => 0,
+          'rel_groepen__adressen' => 0,
+          'rel_users__groups'     => 0,
+          'res_media_files'       => 0,
+          'tbl_adressen'          => 15,
+          'tbl_crud'              => 15,
+          'tbl_crud2'             => 15,
+          'tbl_groepen'           => 15,
+          'tbl_leerlingen'        => 15,
+          'tbl_links'             => 15,
+          'tbl_menu'              => 15,
+          'tbl_site'              => 15,
+          'media_pictures'        => 15,
+          'media_downloads'       => 15,
+        )
       ),
     )
   );
@@ -111,9 +186,9 @@ class AuthTest extends CITestCase {
       // Login
       $this->assertTrue( $this->CI->flexy_auth->login( $user['username'], $user['password'] ), 'Login must work with good username/password ['.$user['username'].'/'.$user['password'].']');
       $this->assertTrue( $this->CI->flexy_auth->logged_in(), 'Login must work with good username/password: '.$user['username']);
-      $rights = $this->CI->flexy_auth->get_rights();
-      // $this->assertArrayHasKey( 'items', $rights, 'User must have rights');
-      // $this->assertEquals( $user['rights'], $rights, 'User has wrong rights');
+      $get_user = $this->CI->flexy_auth->get_user();
+      $this->assertArrayHasKey( 'rights', $get_user, 'User must have rights');
+      $this->assertEquals( $user['rights'], $get_user['rights'], 'User has wrong rights');
     }
   }
   
@@ -123,17 +198,8 @@ class AuthTest extends CITestCase {
     $password   = random_string();
     $email      = $identity.'@flexyadmin.com';
     $additional = array();
-    $groups     = array(4);    // user
-    $expected_rights = array(
-      'rights'      => 'tbl_*|media_*',
-      'b_all_users' => '0',
-      'b_backup'    => '0',
-      'b_tools'     => '0',
-      'b_delete'    => '0',
-      'b_add'       => '0',
-      'b_edit'      => '0',
-      'b_show'      => '0',
-    );
+    $groups     = array(3);    // user
+    $expected_rights = $this->users[1]['rights'];
 
     $user_id = $this->CI->flexy_auth->register( $identity, $password, $email, $additional, $groups);
     $this->assertInternalType( 'integer', $user_id, 'Attempt to create user `'.$identity.'` Failed');
@@ -145,7 +211,7 @@ class AuthTest extends CITestCase {
       $this->assertTrue( $this->CI->flexy_auth->login( $identity, $password ), 'Created user must be able to login '.$identity);
       // Check rights
       $rights = $this->CI->flexy_auth->get_rights($user_id);
-      $this->assertArrayHasKey( 'rights', $rights, 'New user must have rights '.$identity);
+      $this->assertArrayHasKey( 'items', $rights, 'New user must have rights '.$identity);
       $this->assertEquals( $expected_rights, $rights, 'User has wrong rights '.$identity);
       if ($this->can_send_mail) {
         // Send new account mail

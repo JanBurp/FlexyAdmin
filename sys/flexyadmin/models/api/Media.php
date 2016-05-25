@@ -177,7 +177,7 @@ class Media extends Api_Model {
 	}
   
   public function index() {
-    if (!$this->_has_rights($this->args['path'])) return $this->_result_status401();
+    if (!$this->_has_rights('media_'.$this->args['path'])) return $this->_result_status401();
     
     if ( !$this->has_args() ) {
       return $this->_result_wrong_args();
@@ -199,19 +199,19 @@ class Media extends Api_Model {
       
       // UPDATE
       if (isset($this->args['data']) and isset($this->args['where'])) {
-        if (!$this->_has_rights($this->args['path'])>=RIGHTS_EDIT) return $this->_result_norights();
+        if (!$this->_has_rights('media_'.$this->args['path'])>=RIGHTS_EDIT) return $this->_result_norights();
         $this->result['data']=$this->_update_file();
         return $this->_result_ok();
       }
       // UPLOAD
       if (!isset($this->args['data']) and !isset($this->args['where'])) {
-        if (!$this->_has_rights($this->args['path'])>=RIGHTS_ADD) return $this->_result_norights();
+        if (!$this->_has_rights('media_'.$this->args['path'])>=RIGHTS_ADD) return $this->_result_norights();
         $this->result['data']=$this->_upload_file();
         return $this->_result_ok();
       }
       // DELETE
       if (!isset($this->args['data']) and isset($this->args['where'])) {
-        if (!$this->_has_rights($this->args['path'])>=RIGHTS_DELETE) return $this->_result_norights();
+        if (!$this->_has_rights('media_'.$this->args['path'])>=RIGHTS_DELETE) return $this->_result_norights();
         $this->result['data']=$this->_delete_file();
         return $this->_result_ok();
       }

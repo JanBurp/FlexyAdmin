@@ -190,8 +190,8 @@ class auth extends Api_Model {
    * @author Jan den Besten
    */
   public function send_new_password() {
-    $email=$this->args['email'];
-    $user=$this->flexy_auth->get_user_by_email($email);
+    $email = $this->args['email'];
+    $user  = $this->flexy_auth->get_user_by_email($email);
     // No user found
     if (!$user) {
       $this->result['data']=FALSE;
@@ -199,7 +199,7 @@ class auth extends Api_Model {
     }
     else {
       // User found
-      $send=$this->flexy_auth->send_new_password_mail($user->id);
+      $send=$this->flexy_auth->send_new_password( $user );
       // Error when sending
       if (!$send) {
         $this->result['data']=FALSE;
@@ -207,8 +207,8 @@ class auth extends Api_Model {
       }
       else {
         $data=array(
-          'username' => $user->str_username,
-          'email'    => $user->email_email
+          'username' => $user['username'],
+          'email'    => $user['email_email']
         );
         $this->result['data']=$data;
       }

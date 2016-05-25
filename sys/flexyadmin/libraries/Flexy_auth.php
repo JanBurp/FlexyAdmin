@@ -601,7 +601,7 @@ class Flexy_auth extends Ion_auth {
   public function at_least_in_group( $group_id ) {
     $yes = FALSE;
     foreach ($this->current_user['groups'] as $id => $group) {
-      if ($group_id<=$id) $yes=TRUE;
+      if ($id<=$group_id) $yes=TRUE;
     }
     return $yes;
   }
