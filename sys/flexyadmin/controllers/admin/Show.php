@@ -144,9 +144,7 @@ class Show extends AdminController {
         // Check of er alleen rechten zijn voor bepaalde rijen TODO-> naar Data_Core
 				$restrictedToUser = $this->flexy_auth->restricted_id( $table );
 				if ( $restrictedToUser>0 and $this->data->field_exists('user') ) {
-          if (!$this->flexy_auth->rights['b_all_users']) {
-            $this->data->where( $table.".user", $restrictedToUser );
-          }
+          $this->data->where( $table.".user", $restrictedToUser );
           $this->data->unselect( 'user' );
 				}
         
@@ -433,7 +431,7 @@ class Show extends AdminController {
       // Van een bepaalde gebruiker?
       if ( $restrictedToUser>0 and $this->data->field_exists('user') ) {
         $this->ff->set_restricted_to_user( $restrictedToUser,$this->user_id );
-        if ( !$this->flexy_auth->rights['b_all_users'] ) $this->data->where( 'user', $restrictedToUser);
+        $this->data->where( 'user', $restrictedToUser);
 				$this->data->unselect('user');
 			}
 

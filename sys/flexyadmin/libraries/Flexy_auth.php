@@ -33,29 +33,13 @@ class Flexy_auth extends Ion_auth {
   );
 
   /**
-   * Rechten van huidige gebruiker
+   * Gegevens & rechten van huidige gebruiker, zelfde als wat get_user() teruggeeft
    */
-	public $rights;
-
-  /**
-   * gegevens van huidige gebruiker
-   */
-	public $user_id = FALSE;
-  public $group_id;
-  public $username;
-  public $language;
-  
+  private $current_user = FALSE;
   
   /**
-   * Array van tbl_site
+   * construct
    */
-	private $siteInfo;
-  
-  /**
-   * Is er een tabel met emails?
-   */
-  private $mail_table=false;
-  
   public function __construct() {
 		parent::__construct();
     // Stel site afhankelijke instelling in
@@ -64,6 +48,7 @@ class Flexy_auth extends Ion_auth {
     $this->set_config( $site_config );
     $this->tables = $this->config->item( 'tables', 'ion_auth');
 	}
+
   
   /**
    * Overrule standaard instellingen.
@@ -91,7 +76,6 @@ class Flexy_auth extends Ion_auth {
    */
 	public function login($identity, $password, $remember=false) {
 		if (parent::login($identity, $password, $remember)) {
-      // $this->load_user_cfg();
       $this->load->model('log_activity');
       $this->log_activity->auth();
 			return TRUE;
@@ -110,7 +94,7 @@ class Flexy_auth extends Ion_auth {
     $logout = parent::logout();
     if ($logout) {
       $this->load->model('log_activity');
-      $this->log_activity->auth('logout',$this->user_id);
+      $this->log_activity->auth('logout',$this->current_user['id']);
     }
     return $logout;
   }
@@ -125,13 +109,9 @@ class Flexy_auth extends Ion_auth {
 	public function logged_in() {
 		$logged_in = parent::logged_in();
 		if ($logged_in) {
-      $user=$this->get_user();
-			$this->user_id     = $user['user_id'];
-      $this->username    = $user['username'];
-      $this->language    = $user['str_language'];
-			$this->rights      = $this->create_rights( $this->user_id );
-      $this->group_id    = $user['group_id'];
-      // $this->load_user_cfg();
+      $user = $this->user()->row_array();
+      $this->current_user = $this->_create_nice_user($user);
+      if ( $this->in_group( 1, $this->current_user['id'] )) $this->current_user['is_super_admin'] = TRUE;
 		}
     return (bool) $logged_in;
 	}
@@ -140,13 +120,19 @@ class Flexy_auth extends Ion_auth {
   /**
    * Creert een mooie user array, de standaard (zinvolle) velden zoals ze in de cfg_users tabel voorkomen inclusief groep:
    *
+   * 'id'
    * 'user_id'
+   * 'str_username'
    * 'username'
    * 'email'
+   * 'email_email'
+   * 'extra_email' => array()
    * 'b_active'
-   * 'group_id'
-   * 'group_name'
-   * 'group_description'
+   * 'groups' => array(
+   *    'id'
+   *    'name'
+   *    'description'
+   * )
    *
    * @param array $user 
    * @return array $user
@@ -156,11 +142,13 @@ class Flexy_auth extends Ion_auth {
     // Alleen zinvolle velden
     $user = array_keep_keys( $user, array( 'id','str_username', 'email_email', 'str_language','b_active') );
     // Voeg groepen toe
-    $groups = $this->get_users_groups($user['id'])->row();
-    $groups = object2array($groups);
-    $user['group_id'] = el('id',$groups,0);
-    $user['group_name'] = el('name',$groups,'');
-    $user['group_description'] = el('description',$groups,'');
+    $groups = $this->get_users_groups($user['id'])->result_array();
+    $user['groups']=array();
+    foreach ($groups as $key => $group) {
+      $user['groups'][$group['id']] = $group;
+    }
+    // Rechten
+    $user['rights'] = $this->_create_rights( $user );
     // Hernoem/Alias
     $user['user_id'] = $user['id'];
     $user['username'] = $user['str_username'];
@@ -188,6 +176,7 @@ class Flexy_auth extends Ion_auth {
    * @author Jan den Besten
    */
   public function get_user( $user_id=NULL ) {
+    if (is_null($user_id) and is_array($this->current_user)) return $this->current_user;
     $user = $this->user( $user_id )->row_array();
     if ($user) {
       $user = $this->_create_nice_user($user);
@@ -195,6 +184,19 @@ class Flexy_auth extends Ion_auth {
     }
     return FALSE;
   }
+  
+  /**
+   * Geeft rechten van huidige gebruiker
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_rights( $user_id=FALSE ) {
+    return $this->get_user($user_id)['rights'];
+  }
+
+  
+
 
   /**
    * Geeft user gekoppeld aan email
@@ -224,9 +226,10 @@ class Flexy_auth extends Ion_auth {
    * @author Jan den Besten
    */
   public function get_users( $groups = NULL ) {
-    $users = $this->users($groups)->result_array();
-    foreach ($users as $key => $user) {
-      $users[$key] = $this->_create_nice_user($user);
+    $result = $this->users($groups)->result_array();
+    $users=array();
+    foreach ( $result as $key => $user ) {
+      $users[$user['id']] = $this->_create_nice_user($user);
     }
     return $users;
   }
@@ -243,7 +246,7 @@ class Flexy_auth extends Ion_auth {
    */
   public function update($id,$data) {
     // Extra velden toevoegen
-    if ( $this->db->field_exists('user_changed','cfg_users') and $this->user_id) $data['user_changed'] = $this->user_id;
+    if ( $this->db->field_exists('user_changed','cfg_users') and $this->current_user['id']) $data['user_changed'] = $this->current_user['id'];
     // Update
     $success = parent::update($id,$data);
     // Log als gelukt
@@ -262,33 +265,6 @@ class Flexy_auth extends Ion_auth {
   public function update_user($id,$data) {
     return $this->update($id,$data);
   }
-  
-	
-  
-  // /**
-  //  * Add user cfg from user groups to config
-  //  *
-  //  * @return void
-  //  * @author Jan den Besten
-  //  */
-  // private function load_user_cfg() {
-  //   $rights=$this->get_rights();
-  //   // if (isset($rights['stx_extra_config']) and !empty($rights['stx_extra_config'])) {
-  //   //   $extra_cfg=$rights['stx_extra_config'];
-  //   //   $extra_cfg=str_replace(array(' ','"',"'"),'',$extra_cfg);
-  //   //   $extra_cfg=explode(';',$extra_cfg);
-  //   //   foreach ($extra_cfg as $cfg) {
-  //   //     $cfg=trim($cfg);
-  //   //     if (!empty($cfg)) {
-  //   //       $key=get_prefix($cfg,'=');
-  //   //       $key=trim(trim($key,'['),']');
-  //   //       $keys=explode('][',$key);
-  //   //       $value=trim(get_suffix($cfg,'='));
-  //   //       array_set_multi_key($this->config->config,$keys,$value);
-  //   //     }
-  //   //   }
-  //   // }
-  // }
   
   
 	/**
@@ -599,8 +575,36 @@ class Flexy_auth extends Ion_auth {
    * @author Jan den Besten
    */
 	public function is_super_admin() {
-		return ($this->rights["rights"]=="*");
+    return el('is_super_admin',$this->current_user,FALSE);
 	}
+  
+  /**
+   * Test of huidige gebruiker mag inloggen in backend van cms
+   *
+   * @return bool
+   * @author Jan den Besten
+   */
+  public function allowed_to_use_cms() {
+    $rights = $this->current_user['rights'];
+    //return (( el('b_edit',$rights,FALSE) or el('b_add',$rights,FALSE) or el('b_delete',$rights,FALSE) or el('b_all_users',$rights,FALSE)) and !empty($rights['rights']));
+    return TRUE;
+  }
+  
+  /**
+   * Test of gebruiker op z'n minst in deze groep zit (of een groep die meer rechten heeft)
+   * TODO: werkt nu alleen op de volgorde van groepen, wordt alleen gebruikt in AdminMenu
+   *
+   * @param int $group_id 
+   * @return bool
+   * @author Jan den Besten
+   */
+  public function at_least_in_group( $group_id ) {
+    $yes = FALSE;
+    foreach ($this->current_user['groups'] as $id => $group) {
+      if ($group_id<=$id) $yes=TRUE;
+    }
+    return $yes;
+  }
 	
   /**
    * Test of huidige gebruiker genoeg rechten heeft om nieuwe gebruikers te mogen aanpassen
@@ -609,7 +613,7 @@ class Flexy_auth extends Ion_auth {
    * @author Jan den Besten
    */
 	public function allowed_to_edit_users() {
-		return $this->has_rights($this->tables['users'])>=RIGHTS_ALL;
+		return $this->has_rights( $this->tables['users'] ) >= RIGHTS_ALL;
 	}
 	
   /**
@@ -619,7 +623,7 @@ class Flexy_auth extends Ion_auth {
    * @author Jan den Besten
    */
 	public function can_backup() {
-		if ($this->rights['b_backup']) return TRUE;
+		if ($this->current_user['rights']['backup']) return TRUE;
 		return FALSE;
 	}
 
@@ -630,9 +634,10 @@ class Flexy_auth extends Ion_auth {
    * @author Jan den Besten
    */
 	public function can_use_tools() {
-		if ($this->rights['b_tools']) return TRUE;
+		if ($this->current_user['rights']['tools']) return TRUE;
 		return FALSE;
 	}
+  
 
   /**
    * Geeft de rechten in een array terug van de meegegeven gebruiker
@@ -642,37 +647,68 @@ class Flexy_auth extends Ion_auth {
    * @author Jan den Besten
    * @internal
    */
-	private function create_rights($user_id) {
-		$this->db->select('id');
-		$this->db->where('cfg_users.id',$user_id);
-		$this->db->add_many(array('rel_users__groups'=>array('rights','b_all_users','b_backup','b_tools','b_delete','b_add','b_edit','b_show')));
-		$user=$this->db->get_row('cfg_users');
-		$rights=array();
-		if ($user) {
-      foreach ($user['rel_users__groups'] as $id_group => $group) {
-        $rights[$id_group]=$group;
-        unset($rights[$id_group]['id']);
-      }
-		}
-    $rights=current($rights); // TODO wat als meerdere groepen?
+	private function _create_rights( $user ) {
+		$this->db->where_in( 'id', array_keys($user['groups']) );
+		$groups=$this->db->get_result( 'cfg_user_groups' );
+		if (!$groups) return FALSE;
+    
+    $tables = $this->db->list_tables();
+    $medias = $this->mediatable->get_media_folders(FALSE,'media_');
+    $items  = array_merge($tables,$medias);
+    
+		$rights = array(
+      'all_users' => FALSE,
+      'backup'    => FALSE,
+      'tools'     => FALSE,
+      'items'     => array_combine($items,array_fill(0,count($items), RIGHTS_NO )),
+		);
+    
+    foreach ($groups as $group) {
+      $rights['all_users'] = ($rights['all_users'] OR $group['b_all_users']);
+      $rights['backup']    = ($rights['backup'] OR $group['b_backup']);
+      $rights['tools']     = ($rights['tools'] OR $group['b_tools']);
+      $rights['items']     = $this->_combine_item_rights( $rights['items'], $group );
+    }
+    
 		return $rights;
 	}
-
-
+  
   /**
-   * Deze functie wordt alleen gebruikt door has_rights()
+   * Combineer de verschillende rechten per item TODO: dit nog specifieker maken
    *
-   * @param string $&found 
-   * @param string $rights 
-   * @return void
+   * @param array $item_rights 
+   * @param array $group 
+   * @return array
    * @author Jan den Besten
-   * @internal
    */
-	private function _change_rights(&$found,$rights) {
-		foreach ($found as $key => $value) {
-			if ($rights[$key]) $found[$key]=TRUE;
-		}
-	}
+  private function _combine_item_rights( $item_rights, $group ) {
+    foreach ( $item_rights as $item => $rights) {
+      $item_type = get_prefix($item).'_*';
+      // RIGHTS_ALL?
+      if ( $group['rights']==='*' ) {
+        $rights = $this->_add_item_right( $rights, $group );
+      }
+      // Per groep? cfg_*, tbl_*, media_* etc.
+      elseif ( strpos($group['rights'],$item_type)!==FALSE ) {
+        $rights = $this->_add_item_right( $rights, $group );
+      }
+      // Specifiek item?
+      elseif ( strpos($group['rights'],$item)!==FALSE ) {
+        $rights = $this->_add_item_right( $rights, $group );
+      }
+      // Update
+      $item_rights[$item] = $rights;
+    }
+    return $item_rights; 
+  }
+  
+  private function _add_item_right( $right, $new_right ) {
+    if ( $new_right['b_delete'] and ($right + RIGHTS_DELETE) <= RIGHTS_ALL ) $right+=RIGHTS_DELETE;
+    if ( $new_right['b_add']    and ($right + RIGHTS_ADD)    <= RIGHTS_ALL ) $right+=RIGHTS_ADD;
+    if ( $new_right['b_edit']   and ($right + RIGHTS_EDIT)   <= RIGHTS_ALL ) $right+=RIGHTS_EDIT;
+    if ( $new_right['b_show']   and ($right + RIGHTS_SHOW)   <= RIGHTS_ALL ) $right+=RIGHTS_SHOW;
+    return $right;
+  }
   
   /**
    * Test of gebruiker rechten heeft voor bepaald item (en row)
@@ -693,87 +729,38 @@ class Flexy_auth extends Ion_auth {
    * @return int Rechten zie boven
    * @author Jan den Besten
    */
-	public function has_rights( $item,$id="",$whatRight=0, $user_id=FALSE) {
-    
+	public function has_rights( $item, $id=FALSE, $whatRight=0, $user_id=FALSE) {
     // Ingelogde gebruiker of een andere?
-    if ( !$user_id ) {
+    if ( !$user_id )
       $user_info = $this->get_user();
-      $rights = $this->rights;
-    }
-    else {
+    else
       $user_info = $this->get_user($user_id);
-      $rights = $this->create_rights( $user_id );
-    }
     
-    // trace_(['has_rights',$item,$user_id,$rights]);
+    // Rechten van de gebruiker
+    $rights = $user_info['rights'];
 
-    // Alleen rechten voor aanpassen van zichzelf
-    if (  $item===$this->tables['users'] and !empty($id) and ($id!==-1) ) {
-      if ($id===$user_info['user_id']) return RIGHTS_EDIT;
-    }
+    // Rechten voor aanpassen van zichzelf als:
+    // - cfg_users
+    // - user_id === id van huidige user
+    if (  $item===$this->tables['users'] and $id===$user_info['user_id'] ) return RIGHTS_EDIT;
     
-    // trace_(['has_rights',$rights]);
-		
-		$found=array('b_delete'=>FALSE,'b_add'=>FALSE,'b_edit'=>FALSE,'b_show'=>FALSE);
-		$pre=get_prefix($item);
-		$preAll=$pre."_*";
-
-		$rightsAsNumber=RIGHTS_NO;
-    
-    // if (isset($rights['stx_specific_rights']) and preg_match("/".$item."=\[(.*)\]/uiUsm", $rights['stx_specific_rights'],$match)) {
-    //   $keys=explode(',',$match[1]);
-    //   foreach ($keys as $key) {
-    //     $name=get_prefix($key,'=');
-    //     $value=get_suffix($key,'=');
-    //     switch ($name) {
-    //       case 'delete':  if ($value) $rightsAsNumber+=RIGHTS_DELETE;break;
-    //       case 'add':     if ($value) $rightsAsNumber+=RIGHTS_ADD;break;
-    //       case 'edit':    if ($value) $rightsAsNumber+=RIGHTS_EDIT;break;
-    //       case 'show':    if ($value) $rightsAsNumber+=RIGHTS_SHOW;break;
-    //     }
-    //   }
-    // }
-    // else {
-		if ($rights and ($rights['rights']==="*" or (strpos($rights['rights'],$preAll)!==FALSE) or (strpos($rights['rights'],$item)!==FALSE)) ) {
-			$this->_change_rights($found,$rights);
-		}
-		// trace_if($condition,$found);
-		if (!empty($found['b_delete'])	and $found['b_delete'])	$rightsAsNumber+=RIGHTS_DELETE;
-		if (!empty($found['b_add']) 		and $found['b_add'])		$rightsAsNumber+=RIGHTS_ADD;
-		if (!empty($found['b_edit'])		and $found['b_edit'])		$rightsAsNumber+=RIGHTS_EDIT;
-		if (!empty($found['b_show'])		and $found['b_show'])		$rightsAsNumber+=RIGHTS_SHOW;
-    // }
-    
-    // trace_($rightsAsNumber);
-    // trace_($whatRight);
-
-		if ($whatRight==0)
-			return $rightsAsNumber;
-		else
-			return ($rightsAsNumber>=$whatRight);
+    // Anders normale rechten:
+    // trace_(['has_rights',$item,$user_info,el( array('items',$item), $rights, RIGHTS_NO )]);
+    return el( array('items',$item), $rights, RIGHTS_NO );
 	}
 	
 
   /**
    * Test of de rows van tabel/media_map gekoppeld zijn aan gebruikers
    *
-   * @param string $table
-   * @return bool TRUE als dat zo is
+   * @param string $item
+   * @return bool user_id als dat zo is, anders FALSE
    * @author Jan den Besten
    */
-	public function restricted_id($table) {
-		$restricted=TRUE;
-		$pre=get_prefix($table);
-		$preAll=$pre."_*";
-		$rights=$this->rights;
-    
-		if ($rights['rights']=="") $restricted=FALSE;
-		if ($rights['rights']=="*" or (strpos($rights['rights'],$preAll)!==FALSE) or (strpos($rights['rights'],$table)!==FALSE) ) $restricted=$restricted and TRUE;
-		if ($restricted) {
-			return $this->user_id;
-		}
-		else
-			return FALSE;
+	public function restricted_id( $item ) {
+		if ( $this->current_user['rights']['all_users'] ) return FALSE; // Rechten voor alle gebruikers, dus niet restricted
+		if ( $this->has_rights($item) ) return $this->current_user['id'];
+		return FALSE;
 	}
 
 
@@ -801,17 +788,6 @@ class Flexy_auth extends Ion_auth {
 		return $tableRights;
 	}
 	
-  /**
-   * Geeft rechten van huidige gebruiker
-   *
-   * @return array
-   * @author Jan den Besten
-   */
-	public function get_rights( $user_id=FALSE ) {
-    if ( $user_id===FALSE) return $this->rights;
-    return $this->create_rights($user_id);
-	}
-
   
   
   /**

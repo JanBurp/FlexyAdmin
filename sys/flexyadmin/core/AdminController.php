@@ -42,7 +42,7 @@ class AdminController extends BasicController {
 		if ( ! $this->flexy_auth->logged_in() ) {
 			redirect($this->config->item('API_login'));
 		}
-		if ( ! $this->_user_can_use_admin() ) {
+		if ( ! $this->flexy_auth->allowed_to_use_cms() ) {
 			$this->flexy_auth->logout();
 			redirect(site_url());
 		}
@@ -58,10 +58,6 @@ class AdminController extends BasicController {
 		$this->helpTexts=array();
 	}
 
-	private function _user_can_use_admin() {
-    $rights=$this->flexy_auth->get_rights();
-    return (( el('b_edit',$rights,FALSE) or el('b_add',$rights,FALSE) or el('b_delete',$rights,FALSE) or el('b_all_users',$rights,FALSE)) and !empty($rights['rights']));
-	}
 
 	function use_editor() {
 		$this->showEditor=true;
@@ -154,7 +150,6 @@ class AdminController extends BasicController {
 
 	function _show_menu($currentMenuItem="") {
     $user=$this->flexy_auth->get_user();
-    $user_group=$user['group_id'];
 		$this->lang->load('help');
 		$menu=array();
 		if ($this->db->table_exists('cfg_admin_menu')) {
@@ -180,7 +175,7 @@ class AdminController extends BasicController {
 		foreach ($adminMenu as $item) {
 			switch($item['str_type']) {
 				case 'api' :
-          if (!isset($item['id_user_group']) or $item['id_user_group']>=$user_group) {
+          if (!isset($item['id_user_group']) and $this->flexy_auth->at_least_in_group($item['id_user_group']) ) {
   					$uiName=$item['str_ui_name'];
   					$args=array($item['path'],$item['table'],$item['str_table_where']);
   					$args=implode('/',$args);
@@ -335,7 +330,7 @@ class AdminController extends BasicController {
 										"help"		=> $this->helpTexts,
 										"local"		=> $this->config->item('LOCAL'),
 										"site"		=> rtrim($siteInfo["url_url"],'/'),
-										"user"		=> ucwords($this->flexy_auth->username),
+										"user"		=> ucwords($this->flexy_auth->get_user()['username']),
                     "version" => $this->svn->get_version(),
 										"revision"=> $this->svn->get_revision(),
                     

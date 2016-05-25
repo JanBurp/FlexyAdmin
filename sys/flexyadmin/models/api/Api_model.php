@@ -235,12 +235,12 @@ class Api_Model extends CI_Model {
     // if (isset($this->args['options'])) $this->result['options']=$this->_add_options();
     // user
     $this->result['user'] = FALSE;
-    if ($this->flexy_auth->username) {
-      $user = $this->flexy_auth->get_user();
+    $user = $this->flexy_auth->get_user();
+    if ($user) {
       $this->result['user'] = array(
         'username'    => $user['username'],
-        'group_id'    => $user['group_id'],
-        'group_name'  => $user['group_name'],
+        // 'group_id'    => $user['group_id'],
+        // 'group_name'  => $user['group_name'],
       );
     }
     // jwt token
