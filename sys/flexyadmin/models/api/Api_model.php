@@ -424,13 +424,13 @@ class Api_Model extends CI_Model {
    * @return boolean
    * @author Jan den Besten
    */
-  protected function _has_rights($item,$id="",$whatRight=RIGHTS_NO) {
-    if (!$this->flexy_auth->logged_in()) return FALSE;
-    $rights=$this->flexy_auth->has_rights($item,$id,$whatRight);
+  protected function _has_rights( $item, $id="", $whatRight=RIGHTS_NO ) {
+    if ( !$this->flexy_auth->logged_in() ) return FALSE;
+    $rights = $this->flexy_auth->has_rights( $item, $id, $whatRight );
     // if no normal rights and cfg_users and current user rights are ok, TODO: safety check this!!
-    if ($rights<RIGHTS_EDIT and $item=='cfg_users') {
-      if (el('where',$this->args,null)=='current') $rights=RIGHTS_EDIT;
-    }
+    // if ($rights<RIGHTS_EDIT and $item=='cfg_users') {
+    //   if (el('where',$this->args,null)=='current') $rights=RIGHTS_EDIT;
+    // }
     return $rights;
   }
   

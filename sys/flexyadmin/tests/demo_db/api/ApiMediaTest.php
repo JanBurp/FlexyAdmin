@@ -11,7 +11,6 @@ class ApiMediaTest extends ApiTestModel {
   }
 
   public function testWithoutLogin() {
-    
     $this->_testWithoutAuth('media');
   }
 
@@ -20,18 +19,15 @@ class ApiMediaTest extends ApiTestModel {
     
     // First login
     $user=current($this->users);
-    $this->CI->flexy_auth->login($user['username'], $user['password']);
+    $this->CI->flexy_auth->login( $user['username'], $user['password'] );
     
     // Test with wrong paths
     for ($i=0; $i < 2; $i++) {
       $path = random_string();
       $this->CI->media->set_args( array('path'=>$path) );
       $result = $this->CI->media->index();
-      
-      $this->assertArrayNotHasKey( 'status', $result );
-      $this->assertArrayHasKey( 'success', $result );
-      $this->assertEquals( false, $result['success'] );
-      $this->assertArrayHasKey( 'error', $result );
+      $this->assertArrayHasKey( 'status', $result );
+      $this->assertEquals( '401', $result['status'] );
     }
     
     // Test with good folders & cfg
