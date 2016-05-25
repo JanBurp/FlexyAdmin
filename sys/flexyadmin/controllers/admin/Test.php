@@ -35,25 +35,33 @@ class Test extends MY_Controller {
   }
   
   
-  public function users() {
+  public function users( $user_id=FALSE ) {
     if (!IS_LOCALHOST) return;
 
-    $tables = $this->db->list_tables();
-    $this->data->table( 'cfg_users' )->select('id,str_username')->with( 'many_to_many', array( 'rel_users__groups' => array('name','rights') ) );
-    $query = $this->data->get();
-    $users = $query->result_array();
-    
-    foreach ($users as $key=>$user) {
-      $id=$user['id'];
-      if (!isset($user[$key]['rights'])) $users[$key]['rights']='<table>';
-      foreach ($tables as $table) {
-        $users[$key]['rights'] .= '<tr><td><b>'.$table.'<b></td><td>'.$this->flexy_auth->rights_to_string( $this->flexy_auth->has_rights( $table, '', 0, $id) ). '</td></tr>';
-      }
-      $users[$key]['rights'] .= '</table>';
+    $this->load->library('flexy_auth');
+    if ($user_id) {
+      $user = $this->flexy_auth->get_user($user_id);
+      $users[$user_id] = $user;
+    }
+    else {
+      $users = $this->flexy_auth->get_users();
     }
     
+    foreach ($users as $id=>$user) {
+      $user['groups.description']='';
+      foreach ( $user['groups'] as $group ) {
+        $user['groups.description'] = add_string( $user['groups.description'], $group['description'],' | ');
+      }
+      $user['rights.description']='<table>';
+      foreach ($user['rights']['items'] as $item=>$rights) {
+        $user['rights.description'] .= '<tr><td><b>'.$item.'<b></td><td>'.$this->flexy_auth->rights_to_string( $rights ). '</td></tr>';
+      }
+      $user['rights.description'] .= '</table>';
+      $users[$id] = array_keep_keys( $user, array('id','str_username','groups.description','rights.description'));
+    }
+
     echo( '<h1>User rights</h1>' );
-    $this->table->set_heading( array('id','user_name','group.id','group.name','group.rights','rights') );
+    $this->table->set_heading( array('id','user_name','groups.description','rights') );
     foreach ($users as $user) {
       $this->table->add_row( $user );
     }

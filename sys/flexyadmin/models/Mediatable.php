@@ -63,12 +63,15 @@ class Mediatable extends CI_Model {
    * @return array
    * @author Jan den Besten
    */
-  public function get_media_folders() {
+  public function get_media_folders( $include_assets=TRUE, $prefix='' ) {
     $this->db->select('path');
     $result=$this->db->get_result('cfg_media_info');
     $folders=array();
     foreach ($result as $key => $info) {
-      $folders[]='site/assets/'.$info['path'];
+      if ($include_assets)
+        $folders[]='site/assets/'.$info['path'];
+      else
+        $folders[]=$prefix.$info['path'];
     }
     return $folders;
   }
@@ -341,6 +344,7 @@ class Mediatable extends CI_Model {
   }
     
   private function _get_files($map='',$asReadMap=TRUE,$full_path=TRUE,$recent_numbers=0) {
+    $user = $this->flexy_auth->get_user();
     $path=remove_assets($map);
     $info=$this->cfg->get('cfg_media_info',$path);
     // if ($asReadMap) $this->db->set_key('file');
@@ -354,8 +358,8 @@ class Mediatable extends CI_Model {
     $this->db->where('b_exists',true);
     $this->db->where('path',$path);
     // user restricted where
-    if (el('b_user_restricted',$info,false) and $this->db->field_exists('user',$this->table) and !$this->flexy_auth->rights['b_all_users']) {
-      $this->db->where('user',$this->flexy_auth->user_id);
+    if ( el('b_user_restricted',$info,false) and $this->db->field_exists('user',$this->table) and !$user['rights']['all_users'] ) {
+      $this->db->where('user',$user['id']);
     }
     // order?
     if (el('str_order',$info)) {
@@ -592,7 +596,7 @@ class Mediatable extends CI_Model {
     // Is de user gekoppeld aan dit bestand?
     $info=$this->get_info($map.'/'.$file);
     if (!isset($info['user'])) return true;
-    if ($this->flexy_auth->user_id == $info['user']) return true;
+    if ($this->flexy_auth->get_user()['id'] == $info['user']) return true;
     return false;
   }
   

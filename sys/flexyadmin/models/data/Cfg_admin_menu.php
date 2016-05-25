@@ -37,10 +37,12 @@ Class cfg_admin_menu extends Data_Core {
     $result = $this->get_result();
 
     $sidebar=$this->_process_menu($result);
+    
+    $user = $this->flexy_auth->get_user();
 
     $header = array(
       array( 'name' => lang('help'), 'uri'=>'help/index', 'type' => 'info' ),
-      array( 'name' => $this->flexy_auth->username, 'uri'=>'form/cfg_users/current', 'type' => 'form', 'args' => array('table'=>'cfg_users','id'=>$this->flexy_auth->user_id)),
+      array( 'name' => $user['username'], 'uri'=>'form/cfg_users/current', 'type' => 'form', 'args' => array('table'=>'cfg_users','id'=>$user['id'] )),
       array( 'name' => lang('logout'), 'uri'=>'logout', 'type' => 'logout' )
     );
 

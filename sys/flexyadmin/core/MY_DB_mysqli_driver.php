@@ -2077,7 +2077,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 			if (!empty($optionsWhere)) $this->qb_where[]=array('condition'=>$optionsWhere,'escape'=>true);
       
       // Hard coded usersgroup options
-      if ($table=='cfg_user_groups') $this->where('id >=',$this->CI->flexy_auth->group_id);
+      // if ($table=='cfg_user_groups') $this->where('id >=',$this->CI->flexy_auth->group_id);
         
       // Get results
       if ($asTree) {
