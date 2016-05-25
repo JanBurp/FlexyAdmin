@@ -67,8 +67,7 @@ class Edit extends AdminController {
         if (!empty($items)) {
           // Start Delete
           // Call _after_delete just for one (last) item (more is not needed)
-  				$this->db->where(PRIMARY_KEY,$id);
-  				$oldData=$this->db->get_row($table);
+  				$oldData = $this->data->table($table)->where(PRIMARY_KEY,$id)->get_row();
           if ($this->_after_delete($table,$oldData)) {
             // Delete all items
             $this->data->table( $table )->where_in( PRIMARY_KEY,$items )->delete();  

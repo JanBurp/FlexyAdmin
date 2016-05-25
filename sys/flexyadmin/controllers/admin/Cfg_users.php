@@ -126,12 +126,13 @@ class cfg_users extends AdminController {
     $extra_emails='';
     $table=$this->config->item('extra_email_table');
     if (!empty($table)) {
-      $fields=$this->db->list_fields($table);
-      $fields=filter_by($fields,'email');
-      $this->db->select($fields);
-      $this->db->where('id_user',$user_id);
-      $u=$this->db->get_row($table);
-      if ($u) $extra_emails=trim(implode(', ',$u),', ');
+      $this->data->table( $table );
+      $fields = $this->data->list_fields();
+      $fields = filter_by($fields,'email');
+      $this->data->select($fields);
+      $this->data->where( 'id_user',$user_id );
+      $user = $this->data->get_row();
+      if ($user) $extra_emails=trim(implode(', ',$user),', ');
     }
     return $extra_emails;
   }
@@ -141,7 +142,7 @@ class cfg_users extends AdminController {
     $user_ids=array();
     $users=$this->flexy_auth->get_users();
     $this_user=$this->flexy_auth->user();
-    $this_user_id=$this_user->id;
+    $this_user_id = $this_user->id;
     foreach ($users as $user) {
       if (($active and $user->id!=$this_user_id) or (!$user->b_active or empty($user->last_login))) $user_ids[$user->id]=$user->id;
     }

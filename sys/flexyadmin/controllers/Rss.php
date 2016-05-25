@@ -36,7 +36,7 @@ class Rss extends FrontEndController {
       }
 		}
     
-		$siteInfo=$this->db->get_row('tbl_site');
+		$siteInfo = $this->data->table('tbl_site')->get_row();
     $data=array();
 		$data['encoding'] = 'utf-8';
 		$data['feed_name'] = $siteInfo['str_title'];

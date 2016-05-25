@@ -46,7 +46,7 @@ class Update extends BasicController {
       ),
       'database'  => array(
         'name'    => 'database (update sql)',
-        'current' => $this->db->get_field('cfg_configurations','str_revision'),
+        'current' => $this->data->table('cfg_configurations')->get_field('str_revision'),
         'latest'  => $latest_sql,
       ),
     );

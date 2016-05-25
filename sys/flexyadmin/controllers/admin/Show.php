@@ -209,14 +209,10 @@ class Show extends AdminController {
         
         // if datefield and no current: select items from today and set offset of pagination
         if ($this->cfg->get("CFG_table",$table,'b_jump_to_today') and $hasDateField) {
-          $this->db->select($hasDateField);
-          $this->db->where('DATE(`'.$hasDateField.'`)=DATE(NOW())');
-          $today_ids=$this->db->get_result($table);
+          $this->data->table( $table )->select($hasDateField)->where('DATE(`'.$hasDateField.'`)=DATE(NOW())');
+          $today_ids=$this->data->get_result();
           if (empty($today_ids)) {
-            // $this->db->select($hasDateField);
-            $this->db->where('DATE(`'.$hasDateField.'`)>=DATE(NOW())');
-            $this->db->order_by($hasDateField);
-            $today_ids=$this->db->get_result($table,1);
+            $today_ids = $this->data->where('DATE(`'.$hasDateField.'`)>=DATE(NOW())')->order_by($hasDateField)->get_result(1);
           }
           if (!empty($today_ids) and $id=='') {
             $today_ids=array_keys($today_ids);
