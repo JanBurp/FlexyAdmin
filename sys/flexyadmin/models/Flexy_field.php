@@ -392,7 +392,7 @@ class Flexy_field extends CI_Model {
       // Flat options
 			$out["multiple"]=( el('multiple',$options)?'multiple':'');
       $out['options'] = array();
-      if (!isset($options['data'])) {
+      if (!isset($options['data']) and !$options['error']) {
         // trace_(['_standard_form_field',$this->field,$options]);
         throw new ErrorException( __CLASS__.'->'.__METHOD__.'() options not properly set.' );
       }

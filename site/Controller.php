@@ -192,10 +192,11 @@ class Main extends FrontEndController {
         $newUri=$page['list_redirect'];
       }
       else {
-  			$this->db->select('uri');
-  			$this->db->where('self_parent',$page['id']);
-  			if (isset($page['b_visible'])) $this->db->where('b_visible','1');
-  			$subItem=$this->db->get_row(get_menu_table());
+        $this->data->table( get_menu_table() );
+  			$this->data->select('uri');
+  			$this->data->where('self_parent',$page['id']);
+  			if (isset($page['b_visible'])) $this->data->where('b_visible','1');
+  			$subItem = $this->data->get_row();
   			if ($subItem) $newUri=$this->site['uri'].'/'.$subItem['uri'];
       }
       if (isset($newUri)) {
