@@ -817,7 +817,7 @@ class Menu {
     }
     else {
       $this->CI->data->where( 'uri', $uri );
-       $this->CI->data->where( 'self_parent', 0 );
+      if ($this->CI->data->field_exists('self_parent')) $this->CI->data->where( 'self_parent', 0 );
     }
     // Relaties?
     if ($foreigns) $this->data->with('many_to_one');
