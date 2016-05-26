@@ -385,8 +385,11 @@ class Flexy_field extends CI_Model {
 			}
 			else {
 				// add a 'new' item button
-				$out["button"]=api_uri('API_view_form',trim(foreign_table_from_key($this->field),'_').':-1');
-        $out['class'].='has_button ';
+        $other_table = el('other_table',$options);
+        if ($other_table) {
+          $out["button"] = api_uri('API_view_form',$other_table.':-1');
+          $out['class'].='has_button ';
+        }
 			}
       
       // Flat options
@@ -426,6 +429,7 @@ class Flexy_field extends CI_Model {
 		if (!empty($out['table'])) {
 			$out['validation']=$this->form_validation->get_validations($out['table'],$out['name'],$validation);
 		}
+    if ( el('multiple',$out,'')==='' ) unset($out['multiple']);
     // trace_($out);
 		return $out;
 	}

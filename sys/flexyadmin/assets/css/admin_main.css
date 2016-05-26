@@ -399,10 +399,11 @@ table.thumbs tr.caption .icon.delete {
 }
 
 div.add_button {
-	float:right;
-	width:20px;
-	height:20px;
-  margin:6px 2px 0px 0px;
+  float:right;
+	width:0px;
+	height:0px;
+  overflow:visible;
+  position:relative;
 }
 .multiple div.add_button {
 /*	margin-top:153px;*/
