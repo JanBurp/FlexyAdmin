@@ -35,12 +35,12 @@ class Plugin_move_site extends Plugin {
     $this->add_message('<pre><strong>Old site: </strong> '.$this->old.'</pre>');
     $this->add_message('<pre><strong>New site: </strong> '.$this->new.'</pre>');
 
-    // Actions
-    if (file_exists($this->old) and file_exists($this->new)) {
-      $this->empty_paths();
-      $this->move();
-      $this->merge();
-    }
+    // // Actions
+    // if (file_exists($this->old) and file_exists($this->new)) {
+    //   $this->empty_paths();
+    //   $this->move();
+    //   $this->merge();
+    // }
     
     
     // $this->add_message('<h2>Merge old database with fresh database</h2>');
