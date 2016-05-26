@@ -988,7 +988,7 @@ class Form {
 				$extra="";
 				$options=el("options",$field);
 				$value=$attr["value"];
-        // $button=el("button",$field);
+        $button=el("button",$field);
 				if (isset($field["path"])) 	$extra.=" path=\"".$field["path"]."\"";
 				if (isset($field["multiple"]) or is_array($value)) {
 					$extra.=" multiple=\"multipe\" ";
@@ -1076,9 +1076,10 @@ class Form {
 					$field['control'].='</ul>';
 					$field['control'].=form_hidden($field['name'].'__hidden',$hiddenValue);				
 				}
-        // if (isset($button)) {
-        //   $field['control'].=div("add_button").anchor($button,icon("add"))._div();
-        // }
+        //
+        if (isset($button)) {
+          $field['control'].=div("add_button").anchor($button,icon("add"))._div();
+        }
 				break;
 				
 			// #BUSY Form->Subfields
@@ -1182,6 +1183,8 @@ class Form {
         }
 				$field['control']=form_input($attr);
 		endswitch;
+    
+    // trace_($field);
     
 		if ($field["type"]=="hidden") return $field['control'];
     $field['horizontal_bootstrap']=($this->framework=='bootstrap' and has_string('form-horizontal',$form_class));

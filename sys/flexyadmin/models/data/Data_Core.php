@@ -338,20 +338,21 @@ Class Data_Core extends CI_Model {
         $options['multiple'] = el('b_multi_options', $field_info, FALSE)?true:FALSE;
       }
 
-      // Via foreign_keys of self_parent
+      // Via many_to_one of self_parent
       if ( get_prefix($field)==='id' and $field!==$this->settings['primary_key']) {
         
-        $foreignTable = el( array('relations','many_to_one',$field,'other_table'), $this->settings);
-        if ($foreignTable and $this->db->table_exists($foreignTable)) {
+        $other_table = el( array('relations','many_to_one',$field,'other_table'), $this->settings);
+        if ($other_table and $this->db->table_exists($other_table)) {
           // Zijn er teveel opties?
-          if ($this->db->count_all($foreignTable)>10000) {
+          $options['other_table'] = $other_table;
+          if ($this->db->count_all($other_table)>10000) {
             // Geef dan de api aanroep terug waarmee de opties opgehaald kunnen worden
-            $options['api'] = '_api/table?table='.$foreignTable.'&as_options=true';
+            $options['api'] = '_api/table?table='.$other_table.'&as_options=true';
           }
           else {
             // Anders geef gewoon de opties terug
             $other_model = new Data_core();
-            $other_model->table( $foreignTable )->select_abstract();
+            $other_model->table( $other_table )->select_abstract();
             $options['data'] = $other_model->get_result();
             foreach ($options['data'] as $key => $option) {
               $options['data'][$key] = array( 'value'=>$key, 'name'=>$option['abstract'] );
@@ -1043,9 +1044,10 @@ Class Data_Core extends CI_Model {
    * Resultaat bij één veld:
    * 
    * array(
-   *  'api'       => '',
-   *  'data'      => array(),
-   *  'multiple'  => [TRUE|FALSE],
+   *  'api'         => '',
+   *  'data'        => array(),
+   *  'multiple'    => [TRUE|FALSE],
+   *  'other_table' => [''] Als de data uit een andere tabel komt, dan wordt hier de naam van die tabel gegeven
    * )
    * 
    * Waar de 'data' array er zo uit ziet:
@@ -1093,6 +1095,7 @@ Class Data_Core extends CI_Model {
           foreach ( $relations as $what => $relation ) {
             $other_table = $relation['other_table'];
             $result_name = $relation['result_name'];
+            $options[$result_name]['other_table'] = $other_table;
             // trace_(['get_options',$what,$other_table,$result_name]);
             $other_model = new Data();
             $other_model->table($other_table)->select_abstract();
@@ -3213,12 +3216,17 @@ Class Data_Core extends CI_Model {
      */
     if (!empty($set) or $to_many) {
       
-      /**
-       * Voeg user_changed data toe als bekend is en veld bestaat
-       */
-      if ( $this->field_exists('user_changed')) {
-        if ( $this->user_id!==FALSE ) $set['user_changed'] = $this->user_id;
+      if ( $this->user_id!==FALSE ) {
+        /**
+         * Voeg user_changed data toe als bekend is en veld bestaat
+         */
+        if ( $this->field_exists('user_changed')) $set['user_changed'] = $this->user_id;
+        /**
+         * idem voor user bij INSERT
+         */
+        if ( $this->field_exists('user') and $type==='INSERT') $set['user'] = $this->user_id;
       }
+      
       
       /**
        * Eindelijk, we kunnen...

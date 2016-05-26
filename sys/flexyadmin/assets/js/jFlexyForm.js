@@ -258,7 +258,7 @@ function doForm() {
 		var options=$(select).find('option');
 		var multiple=$(select).hasClass('medias');
 		var path=$(select).attr("path")+"/";
-
+    
     // get current values (in current order)
     var current_values=[];
     $(list).find('li img').each(function(){
@@ -270,9 +270,12 @@ function doForm() {
       current_values.push(src);
     });
     
-    
-    if (typeof(values)=='undefined') {
+    if (typeof(values)==='undefined') {
       var values = current_values;
+      if (!multiple) {
+        current_values=[]
+        values = [$(select).attr('value')];
+      }
     }
     else {
   		// remove doubles
@@ -297,7 +300,7 @@ function doForm() {
       values=new_values.concat(values);
       values=values.unique();
     }
-
+    
 		// remove old thumb & clean value
 		$(list).find('li').remove();
 		if (multiple) $(select).prevAll('input').attr('value','');
