@@ -24,6 +24,7 @@
                   <span class="extended_search_term"><input name="extended_term[]"></span>
                   <span class="extended_search_plus"><img src="sys/flexyadmin/assets/icons/action_add.gif"></span>
                   <span class="extended_search_remove"><img src="sys/flexyadmin/assets/icons/action_delete.gif"></span>
+                  <span class="extended_search_submit"><img src="sys/flexyadmin/assets/icons/search.gif"></span>
                 </div>
               </td>
             </tr>

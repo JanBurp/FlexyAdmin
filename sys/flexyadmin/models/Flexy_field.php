@@ -155,7 +155,7 @@ class Flexy_field extends CI_Model {
 	function concat_foreign_fields($row) {
     $fields=array_keys($row);
 		foreach ($row as $field=>$data) {
-      if (is_foreign_key($field) and !is_foreign_field($field)) {
+      if ( (is_foreign_key($field) and !is_foreign_field($field)) or substr($field,0,4)==='user') {
         $abstract_field = $this->relations['many_to_one'][$field]['result_name'].'.abstract';
         $row[$field] = $row[$abstract_field];
         unset($row[$abstract_field]);
@@ -207,7 +207,7 @@ class Flexy_field extends CI_Model {
 	function render_grid_field($table,$field,$data,$right=RIGHTS_ALL,$extraInfoId=NULL) {
 		$this->extraInfoId=$extraInfoId;
 		$this->init_field($field,$data,$right);
-
+    
 		// Hide field?
 		if (isset($this->fieldCfg[$field]['b_show_in_grid']) and ($this->fieldCfg[$field]['b_show_in_grid']==false or $this->fieldCfg[$field]['b_show_in_grid']<0)) {
       return FALSE;
@@ -468,13 +468,12 @@ class Flexy_field extends CI_Model {
 		return $out;
 	}
 
-	function _user_grid() {
-		$this->db->as_abstracts();
-		$this->db->where("id",$this->fieldData);
-		$user=$this->db->get_row("cfg_users");
-		$out=$user['abstract'];
-		return $out;		
-	}
+  function _user_grid() {
+    $out=$this->fieldData;
+    return $out;
+  }
+  
+  
 
 	function _user_form() {
 		if ($this->restrictedToUser===FALSE) {

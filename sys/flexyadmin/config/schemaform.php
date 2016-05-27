@@ -297,6 +297,7 @@ $config['FIELDS_special'] = array(
     'default'     => -1,
   ),
 
+  // Aangemaakt door:
 	'user'			=> array(
     'type'        => 'integer',
     'form-type'   => 'text',
@@ -304,8 +305,7 @@ $config['FIELDS_special'] = array(
     'form'        => 'function_user',
     'validation'	=> 'trim|integer',
   ),
-  
-  // Gebruiker die laatste aanpassing deed
+  // Aangepast door:
 	'user_changed' => array(
     'type'        => 'integer',
     'form-type'   => 'hidden',
