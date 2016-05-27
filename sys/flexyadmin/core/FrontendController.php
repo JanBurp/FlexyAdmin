@@ -196,13 +196,13 @@ class FrontEndController extends MY_Controller {
    		 * Set home uri (top from tbl_menu) if content comes from database
    		 */
         if ( $this->config->item('menu_autoset_home')) {
-   			$menuTable=get_menu_table();
+   			$menuTable = get_menu_table();
    			if ( ! empty($menuTable)) {
-           // if ($this->db->field_exists('self_parent',$menuTable)) $this->db->order_as_tree();
-   				if ($this->db->field_exists('uri',$menuTable)) {
-   					$this->db->select('uri');
-   					$top=$this->db->get_row($menuTable);
-   					$this->uri->set_home($top['uri']);
+          $this->data->table( $menuTable );
+   				if ( $this->data->field_exists( 'uri') ) {
+   					$this->data->select('uri');
+   					$top = $this->data->get_row();
+   					$this->uri->set_home( $top['uri'] );
    				}
    				else {
    					$this->uri->set_home('');
@@ -531,10 +531,10 @@ class FrontEndController extends MY_Controller {
 	public function find_modules_in_item($page) {
 		if (get_prefix($this->config->item('module_field'))=='id') {
 			// Modules from foreign table
-			$foreign_key=$this->config->item('module_field');
-			$foreign_field='str_'.get_suffix($this->config->item('module_field'));
-			$foreign_table=foreign_table_from_key($foreign_key);
-			$modules=$this->db->get_field_where($foreign_table,$foreign_field,'id',$page[$foreign_key]);
+			$foreign_key   = $this->config->item('module_field');
+			$foreign_field = 'str_'.get_suffix($this->config->item('module_field'));
+			$foreign_table = foreign_table_from_key($foreign_key);
+			$modules       = $this->data->table($foreign_table)->where('id',$page[$foreign_key])->get_field($foreign_field);
 		}
 		else {
 			// Modules direct from field

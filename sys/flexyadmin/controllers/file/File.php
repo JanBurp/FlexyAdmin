@@ -25,9 +25,9 @@ class File extends FrontEndController {
    */
   public function serve($path='',$file='') {
 		if (!empty($path) and !empty($file)) {
-			$fullpath=SITEPATH.'assets/'.$path.'/'.$file;
-			if (file_exists($fullpath)) {
-        if ($this->mediatable->has_serve_rights($path,$file)) {
+			$fullpath = SITEPATH.'assets/'.$path.'/'.$file;
+			if ( file_exists($fullpath) ) {
+        if ( $this->mediatable->has_serve_rights($path,$file) ) {
           $type=get_suffix($file,'.');
           $this->output->set_content_type($type);
           $this->output->set_output(file_get_contents($fullpath));

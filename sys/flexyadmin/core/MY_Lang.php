@@ -24,14 +24,12 @@ class MY_Lang extends CI_Lang {
 	public function __construct() {
 		parent::__construct();
     // check if a language table is set
-    $config =& get_config();
-    if (isset($config['language_table']) and !empty($config['language_table'])) {
-      $this->lang_table=$config['language_table'];
-      // $this->set($config['language']);
+    $config = &get_config();
+    if ( isset($config['language_table']) and !empty($config['language_table']) ) {
+      $this->lang_table= $config['language_table'];
+      $this->lang_data = $this->data->table($this->lang_table)->set_result_key('key')->get_result();
     }
-    else {
-      $this->set();
-    }
+    $this->set();
     log_message('debug', 'MY Language Class Initialized');
 	}
 
@@ -183,11 +181,12 @@ class MY_Lang extends CI_Lang {
     if (empty($this->idiom) and isset($CI->site['language'])) {
       $this->idiom=$CI->site['language'];
     }
+    
     // only if not a db_error look for cfg_lang
     if ( substr($line,0,3)!=='db_' AND !empty($this->lang_table) AND !empty($this->idiom) ) {
       // Only when db is ready
-      if (isset($CI->db)) {
-        if ($CI->db->field_exists('lang_'.$this->idiom,$this->lang_table)) $value=$CI->db->get_field_where($this->lang_table,'lang_'.$this->idiom,'key',$line);
+      if (isset($this->lang_data)) {
+        $value = el( array($line,'lang_'.$this->idiom), $this->lang_data, FALSE );
       }
     }
     
