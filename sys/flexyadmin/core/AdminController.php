@@ -74,7 +74,7 @@ class AdminController extends BasicController {
 	// show methods
 
 	function _show_header() {
-		$site=$this->db->get_row('tbl_site');
+		$site = $this->data->table('tbl_site')->get_row();
 		$title=$site['str_title'];
 		if ($this->config->item('LOCAL'))	$title=' # '.$title; else $title=' - '.$title;
 		$url=str_replace('http://','',$site['url_url']);
@@ -153,8 +153,7 @@ class AdminController extends BasicController {
 		$this->lang->load('help');
 		$menu=array();
 		if ($this->db->table_exists('cfg_admin_menu')) {
-      $this->db->where('b_visible',1);
-			$adminMenu=$this->db->get_result('cfg_admin_menu');
+			$adminMenu = $this->data->table('cfg_admin_menu')->where('b_visible',1)->get_result();
 		}
 		else {
 			// minimal standard menu

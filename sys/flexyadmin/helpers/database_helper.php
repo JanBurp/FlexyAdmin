@@ -235,36 +235,40 @@ function get_fields_from_input($wildfields,$tables='') {
  * @author Jan den Besten
  */
 function find_module_uri($module,$full_uri=true,$table='') {
-  $menuTable=get_menu_table();
+  $menuTable = get_menu_table();
   if ($menuTable) {
     $CI=&get_instance();
-    if ($full_uri) $full_uri = $CI->db->field_exists('self_parent',$menuTable);
-  	$CI->db->select('id,uri');
-    if ($table) $CI->db->where('str_table',$table);
+    $CI->data->table($menuTable);
+    if ($full_uri) $full_uri = $CI->data->field_exists('self_parent');
+    
+  	$CI->data->select('id,uri');
+    if ($table) $CI->data->where('str_table',$table);
   	if ($full_uri) {
-  		$CI->db->select('order,self_parent');
-  		$CI->db->uri_as_full_uri();
+  		$CI->data->select('order,self_parent');
+  		$CI->data->path('uri');
   	}
-  	if (get_prefix($CI->config->item('module_field'))=='id') {
+  	if ( get_prefix($CI->config->item('module_field'))==='id' ) {
   		// Modules from foreign table
   		$foreign_key=$CI->config->item('module_field');
   		$foreign_field='str_'.get_suffix($CI->config->item('module_field'));
   		$foreign_table=foreign_table_from_key($foreign_key);
-  		$CI->db->add_foreigns();
-  		$like_field=$foreign_table.'__'.$foreign_field;
+  		$CI->data->with('many_to_one');
+  		$like_field = $foreign_table.'__'.$foreign_field;
   	}
   	else {
   		// Modules direct from field
-  		$like_field=$CI->config->item('module_field');
+  		$like_field = $CI->config->item('module_field');
   	}
-  	$CI->db->like($CI->config->item('module_field'),$module);
+    
+  	$CI->data->like( $CI->config->item('module_field'), $module );
     if ($full_uri) {
-      $CI->db->order_by('self_parent,order');
+      $CI->data->order_by('order');
     }
     else {
-      $CI->db->order_by('id');
+      $CI->data->order_by('id');
     }
-  	$items=$CI->db->get_result($menuTable);
+  	$items = $CI->data->get_result();
+    
     // oeps er zijn er meer.... pak dan degene die het hoogts in de menustructuur zit en het eerst voorkomt op dat nivo
     if (count($items)>1) {
       foreach ($items as $id => $item) {

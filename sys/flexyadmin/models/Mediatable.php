@@ -579,17 +579,20 @@ class Mediatable extends CI_Model {
    * @author Jan den Besten
    */
   public function has_serve_rights($path,$file) {
-    $map=get_suffix($path,'/');
-    $serve_restricted=$this->cfg->get('cfg_media_info',$map,'b_serve_restricted');
+    $map = get_suffix($path,'/');
+    $serve_restricted = $this->cfg->get('cfg_media_info',$map,'b_serve_restricted');
     // Alleen verder testen als deze map restricted is, anders gewoon true
     if (!$serve_restricted) return true;
+    
     // Heeft de user zowiezo geen rechten voor deze map: false
     $this->load->library('flexy_auth');
     if (!$this->flexy_auth->has_rights($map)) return false;
+    
     // Is de user gekoppeld aan dit bestand?
-    $info=$this->get_info($map.'/'.$file);
+    $info = $this->get_info($map.'/'.$file);
     if (!isset($info['user'])) return true;
-    if ($this->flexy_auth->get_user()['id'] == $info['user']) return true;
+    
+    if ( $this->flexy_auth->get_user()['id'] == $info['user']) return true;
     return false;
   }
   
