@@ -99,9 +99,11 @@ class Show extends AdminController {
 				}
 
         // Pagination ?
-				$pagination=(int)$this->cfg->get("CFG_table",$table,'b_pagination',NULL);
-        if ($pagination===NULL) $pagination=(int)$this->config->item('PAGINATION');
-				if ($pagination) $pagination=(int)$this->cfg->get('cfg_configurations','int_pagination');
+				$pagination=$this->cfg->get("CFG_table",$table,'b_pagination',NULL);
+        if ($pagination===NULL) $pagination=$this->config->item('PAGINATION');
+				if ($pagination) $pagination=$this->cfg->get('cfg_configurations','int_pagination');
+        $pagination=(int)$pagination;
+        
 
 				// ORDER als een tree ?
 				if ( $this->data->field_exists('self_parent') ) {
@@ -192,6 +194,7 @@ class Show extends AdminController {
         $data_query = $this->data->last_query(); //_clean(array('select'=>$table.'.'.PRIMARY_KEY), true);
 				$total_rows = $this->data->total_rows();
         
+        // trace_($this->data->get_setting('relations'));
         // trace_sql($data_query);
         // trace_($last_order);
         // trace_($pagination);
@@ -299,7 +302,6 @@ class Show extends AdminController {
 
 					$data=$this->ff->render_grid($table,$data,$rights, $this->data->get_setting('relations'), $info);
           
-          // trace_($data);
           
 					if (empty($uiTable)) $uiTable=$this->ui->get($table);
 					$tableHelp=$this->ui->get_help($table);
@@ -508,11 +510,11 @@ class Show extends AdminController {
 				
 				if ( $id===FALSE ) {
 					$this->message->add_error(langp("update_error",$table));
-					redirect($redirectUri);
 				}
 				else {
-					redirect($redirectUri.'/current/'.$id);
+          $redirectUri=str_replace('?search=','/current/'.$id.'?search=',$redirectUri);
 				}
+				redirect($redirectUri);
 			}
 
 			/**

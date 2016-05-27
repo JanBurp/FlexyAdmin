@@ -222,12 +222,19 @@ function doGrid() {
           $('.extended_search .extended_search_remove').click(function(){
             $(this).parent('.extended_search_row').remove();
           });
-          // change
-          $('.extended_search .extended_search_row input').add('.extended_search .extended_search_row select').change(function(){
-            var search = extended_search_create_search_json();
-  					var url=$(filter).attr('url')+'/0/order/'+$(filter).attr('order')+'?search='+search;
-            location.href=url;
+          // submit
+          $('.extended_search_submit').click(function(){
+            extended_search_submit();
           });
+          $('.extended_search').keypress(function(event){
+            if (event.which == 13 ) extended_search_submit();
+          });
+        }
+        // Submit
+        function extended_search_submit() {
+          var search = extended_search_create_search_json();
+          var url=$(filter).attr('url')+'/0/order/'+$(filter).attr('order')+'?search='+search;
+          location.href=url;
         }
         // Zet zoekform om in json
         function extended_search_create_search_json() {
@@ -254,7 +261,7 @@ function doGrid() {
         
 				// add filter input
 				var search=$(filter).attr('data-search');
-        $("tr.caption:first tr td:first").append('<span class="filter"><span class="help '+config.help_filter+'"><input class="filter" type="text" value="'+search+'"/></span><img class="hidden extended_search_button" src="sys/flexyadmin/assets/icons/action_add.gif"></span>');
+        $("tr.caption:first tr td:first").append('<span class="filter"><span class="help '+config.help_filter+'"><input class="filter" type="text" value="'+search+'"/></span><img class="extended_search_button" src="sys/flexyadmin/assets/icons/action_add.gif"></span>');
         
         var filterBox=$('input.filter');
         // Extended search on

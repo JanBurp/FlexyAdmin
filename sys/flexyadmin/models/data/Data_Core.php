@@ -557,6 +557,18 @@ Class Data_Core extends CI_Model {
         );
       }
     }
+    // user is ook een many_to_one:
+    $user_keys = filter_by( $this->settings['fields'], 'user' );
+    if ($user_keys) {
+      if (!isset($relations['many_to_one'])) $relations['many_to_one'] = array();
+      foreach ($user_keys as $user_key) {
+        $relations['many_to_one'][$user_key] = array(
+          'other_table' => 'cfg_users',
+          'foreign_key' => $user_key,
+          'result_name' => '_'.$user_key,
+        );
+      }
+    }
     
     // one_to_many
     $tables = $this->get_relation_tables( 'one_to_many', $this->settings['table'] );

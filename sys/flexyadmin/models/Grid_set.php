@@ -34,12 +34,18 @@ class Grid_set extends CI_Model {
     // strace_($set);
 		$uri=api_uri($this->api,$table);
 		unset($set['table']);
+    // search als GET
+    $search=el('search',$set,'');
+    unset($set['search']);
 
     if ($set) {
   		foreach ($set as $key => $value) {
   			if (!empty($value)) $uri.="/$key/$value";
   		}
     }
+    
+    // searcg
+    $uri.='?search='.$search;
     
     // strace_($uri);
 		return $uri;
