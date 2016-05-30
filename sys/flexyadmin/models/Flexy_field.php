@@ -913,7 +913,7 @@ class Flexy_field extends CI_Model {
       }
 		}
     $options=array('data'=>array());
-    $options['data']=array('name'=>'','value'=>'');
+    $options['data'][]=array('name'=>'','value'=>'');
 		foreach($links as $link) {
 			$lopt=explode(',',$link);
       if (isset($lopt[1])) {
