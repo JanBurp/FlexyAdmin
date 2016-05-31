@@ -65,8 +65,10 @@ class Search extends AdminController {
 				foreach ($testFields as $f) {
 					$table=$f['table'];
 					$field=$f['field'];
-          $this->data->table( $table )->select(PRIMARY_KEY)->select($field);
-					$result=$this->data->get_result();
+          $result = $this->data->table( $table )
+                              ->select(PRIMARY_KEY)
+                              ->select($field)
+					                    ->get_result();
 					$htmlTest.="";
 					foreach($result as $id=>$row) {
 						unset($row[PRIMARY_KEY]);
@@ -80,7 +82,10 @@ class Search extends AdminController {
               }
               set_error_handler($oldErrorHandler);
 							if ($new!==$txt) {
-                $abstract = $this->data->table($table)->where(PRIMARY_KEY,$id)->select_abstract()->get_row();
+                $abstract = $this->data->table($table)
+                                        ->where(PRIMARY_KEY,$id)
+                                        ->select_abstract()
+                                        ->get_row();
 								$abstract = $abstract['abstract'];
 								$htmlTest.="<h4>".$this->ui->get($table)." - <i>$abstract</i></h4>";
                 if ($matches) {
@@ -92,12 +97,12 @@ class Search extends AdminController {
                 }
 							}
 							if (!$test) {
-								$this->db->set($key,$new);	
+								$this->data->set($key,$new);	
 							}
 						}
 						if (!$test) {
-							$this->db->where(PRIMARY_KEY,$id);
-							$res=$this->db->update($table);
+							$this->data->where(PRIMARY_KEY,$id);
+							$res = $this->data->update();
 						}
 						// $this->db->as_abstracts(FALSE);
 					}

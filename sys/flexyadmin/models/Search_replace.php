@@ -111,7 +111,7 @@ class Search_replace extends CI_Model {
   		$query=$this->db->get($table);
   		foreach($query->result_array() as $row) {
   			$id=$row["id"];
-        $this->db->update($table,array($field=>$replace),"id = $id");
+        $this->data->table($table)->where('id',$id)->set($field,$replace)->update();
   			$result[]=array('table'=>$table,'id'=>$id,'field'=>$field);
   		}
   		$query->free_result();
@@ -144,7 +144,7 @@ class Search_replace extends CI_Model {
       $newtxt=str_replace($search,$replace,$txt);
 			// Update in database if changed
 			if ($txt!=$newtxt) {
-				$this->db->update($table,array($field=>$newtxt),"id = $id");
+				$this->data->table($table)->where('id',$id)->set($field,$newtxt)->update();
 				$result[]=array('table'=>$table,'id'=>$id,'field'=>$field);
 			}
 		}
@@ -217,7 +217,7 @@ class Search_replace extends CI_Model {
 
 			// Update in database if changed
 			if ($txt!=$newtxt) {
-				$this->db->update($table,array($field=>$newtxt),"id = $id");
+				$this->data->table($table)->where('id',$id)->set($field,$newtxt)->update();
 				$result[]=array('table'=>$table,'id'=>$id,'field'=>$field);
 			}
 		}
@@ -352,7 +352,7 @@ class Search_replace extends CI_Model {
 			// Update in database if changed
 			if ($data!=$newData) {
         // trace_('CHANGED');
-				$this->db->update($table,array($field=>$newData),"id = $id");
+				$this->data->table($table)->where('id',$id)->set($field,$newData)->update();
         // trace_($this->db->last_query());
 				$result[]=array('table'=>$table,'id'=>$id,'field'=>$field);
 			}

@@ -80,11 +80,10 @@
     $lang=$this->site['language'];
 		if ($this->db->table_exists('tbl_forms') and $this->db->table_exists('tbl_formfields')) {
 			$form=array();
-      $row=$this->db->get_row('tbl_forms');
+      $row=$this->data->table('tbl_forms')->get_row();
 			if ($row) {
         $form['form']=$row;
-        $this->db->where('id_form',$form['form']['id']);
-				$fields=$this->db->get_result('tbl_formfields');
+				$fields = $this->data->table('tbl_formfields')->where('id_form',$form['form']['id'])->get_result();
 				array_push($fields,array('str_type'=>'##END##','str_label'=>'##END##','str_name'=>'','str_validation'=>'','str_validation_parameters'=>''));
 				if ($fields) {
 					$options=false;

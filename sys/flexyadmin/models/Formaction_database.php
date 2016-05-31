@@ -33,8 +33,10 @@
     else
       $table=$this->settings['table'];
     
+    $this->data->table($table);
+    
     // tme_ of dat_ field zonder inhoud? Voeg die toe
-    $fields=$this->db->list_fields($table);
+    $fields=$this->data->list_fields();
     $fields=array_values($fields);
     $date_fields=array();
     foreach ($fields as $key => $field) {
@@ -60,11 +62,11 @@
       }
 
       // save in db
-      if ($this->db->field_exists( $key, $table )) $this->db->set($key,$value);
+      if ($this->data->field_exists( $key )) $this->data->set($key,$value);
     }
     // insert in db
-    $this->db->insert( $table );
-    $id=$this->db->insert_id();
+    $this->data->insert);
+    $id=$this->data->insert_id();
     
     $this->return_data = array_merge($data,array('id'=>$id));
     

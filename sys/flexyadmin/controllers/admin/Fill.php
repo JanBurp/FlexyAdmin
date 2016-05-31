@@ -33,20 +33,21 @@ class Fill extends AdminController {
 
 			// create rows in table
 			if ($aantal and $addtable) {
+        $this->data->table($addtable);
 				$forbidden_fields=$this->config->item('FIELDS_special');
 				$forbidden_fields=array_keys($forbidden_fields);
-				$first_field=$this->db->list_fields($addtable);
+				$first_field=$this->data->list_fields();
 				$first_field=not_filter_by($first_field,$forbidden_fields);
 				$first_field=array_shift($first_field);
         if (empty($first_field)) {
-          $first_field=$this->db->list_fields($addtable);
+          $first_field=$this->data->list_fields();
           $first_field=$first_field[1];
         }
 				for ($i=0; $i < $aantal; $i++) { 
 					$id='#';
 					if (!$test) {
-						$this->db->insert($addtable,array($first_field=>''));
-						$id=$this->db->insert_id();
+						$this->data->table($addtable)->set($first_field,'');
+						$id = $this->data->insert_id();
 					}
 					$htmlTest.="<li>+ $addtable [$id]</li>";
 				}
@@ -54,7 +55,7 @@ class Fill extends AdminController {
 
       if (!empty($addtable) and (empty($fields) or (count($fields)==1 and $fields[0]=='.'))) {
         // Voeg alle velden van gekozen tabel toe
-        $fields=$this->db->list_fields($addtable);
+        $fields = $this->data->table($addtable)->list_fields();
         foreach ($fields as $key => $field) {
           $fields[$key]=$addtable.'.'.$field;
           if ($field=='id') unset($fields[$key]);

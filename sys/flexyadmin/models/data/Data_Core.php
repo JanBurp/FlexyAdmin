@@ -824,6 +824,9 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   public function table( $table ) {
+    // Alleen aanpassen als het een andere tabel is dan nu ingesteld
+    if ($this->settings['table']===$table) return $this;
+    // Een andere tabel, reset alles en verander de instellingen
     $this->reset();
     if (empty($table)) {
       $table = $this->_autoset_table();
@@ -863,6 +866,9 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   public function get_user_id() {
+    if (is_null($this->user_id)) {
+      $this->set_user_id();
+    }
     return $this->user_id;
   }
   
@@ -3280,7 +3286,8 @@ Class Data_Core extends CI_Model {
             'id'    => $id
           );
           $this->query_info = array(
-            'insert_id' => $id
+            'insert_id'     => $id,
+            'affected_rows' => 1,
           );
   			}
       	else {

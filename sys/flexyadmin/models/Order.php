@@ -45,8 +45,7 @@ class order extends CI_Model {
    * @author Jan den Besten
    */
   public function is_a_tree($table) {
-    $fields=$this->db->list_fields($table);
-    return (in_array("self_parent",$fields));
+    return $this->data->table($table)->field_exists('self_parent');
   }
 
 	/**
@@ -58,7 +57,7 @@ class order extends CI_Model {
 	 * @author Jan den Besten
 		 */
   private function _get_order($table,$id) {
-		return $this->db->get_field($table,$this->order,$id);
+		return $this->data->table($table)->where($id)->get_field($this->order);
 	}
 
   /**
@@ -70,7 +69,7 @@ class order extends CI_Model {
    * @author Jan den Besten
    */
 	private function _get_parent($table,$id) {
-		return $this->db->get_field($table,"self_parent",$id);
+		return $this->data->table($table)->where($id)->get_field('self_parent');
 	}
 
   /**
@@ -98,15 +97,12 @@ class order extends CI_Model {
 	 * @author Jan den Besten
 	 */
 	public function get_next_order($table,$parent="") {
-		$this->db->select("order");
-		if (!empty($parent)) $this->db->where("self_parent",$parent);
-		$this->db->order_by("order DESC");
-		$lastrow=$this->db->get_row($table);
+    $this->data->table($table)->select("order")->order_by("order DESC");
+		if (!empty($parent)) $this->data->where("self_parent",$parent);
+		$lastrow = $this->data->get_row();
     if (!$lastrow) {
       // Geen kinderen in de opgevraagde tree, dan is de order hetzelfde als de parent zelf
-  		$this->db->select("order");
-  		$this->db->where("id",$parent);
-  		$lastrow=$this->db->get_row($table);
+  		$lastrow = $this->data->select("order")->where($parent)->get_row();
     }
     $next = $lastrow['order'] + 1;
     // Als in een tree, verschuif alles met hogere volgorde dan die van de tree op
@@ -129,12 +125,12 @@ class order extends CI_Model {
    * @author Jan den Besten
    */
 	public function reset($table,$from=0,$old=FALSE) {
+    $this->data->table($table);
     if ($this->is_a_tree($table)) {
-      $this->db->order_as_tree();
-      $this->db->select('self_parent');
+      $this->data->order_by('order')->select('self_parent');
     }
-    $this->db->select('order');
-		$result=$this->db->get_result($table);
+    $this->data->select('order');
+		$result=$this->data->get_result();
 		$ids=array_keys($result);
 		$this->set_all($table,$ids,$from);
     return count($ids);
@@ -160,9 +156,11 @@ class order extends CI_Model {
     );
 		foreach($ids as $id) {
       $return[]=array('id'=>$id,'order'=>$order);
-			$this->db->where(PRIMARY_KEY,$id);
-			$this->db->update($table, array($this->order => $order++ ));
-      $log['query'] .= $this->db->last_query().';'.PHP_EOL.PHP_EOL;
+      $this->data->table($table);
+			$this->data->where(PRIMARY_KEY,$id);
+      $this->data->set( $this->order,$order++);
+			$this->data->update();
+      $log['query'] .= $this->data->last_query().';'.PHP_EOL.PHP_EOL;
 		}
     if ($log['query']) {
       $this->log_activity->database( $log['query'], $log['table'], $log['id'] );
@@ -204,11 +202,12 @@ class order extends CI_Model {
     // Pas order in item (en kinderen) aan
     $order = $new;
     foreach ($moved_ids as $move_id) {
-      $this->db->set( 'order', $order );
-      $this->db->where( PRIMARY_KEY, $move_id);
-      $this->db->update( $table );
+      $this->data->table($table);
+      $this->data->set( 'order', $order );
+      $this->data->where( PRIMARY_KEY, $move_id);
+      $this->data->update();
       $order++;
-      $log['query'] .= $this->db->last_query().';'.PHP_EOL.PHP_EOL;
+      $log['query'] .= $this->data->last_query().';'.PHP_EOL.PHP_EOL;
     }
     $order--;
     $shifted_count = count($moved_ids);
@@ -231,16 +230,17 @@ class order extends CI_Model {
     // Als order>0 dan moet de parent misschien aangepast worden: dan neemt die de parent van het item ervoor over
     if ($is_tree and $new>0) {
       // item ervoor
-      $this->db->select('id,order,self_parent');
-      $this->db->where( 'order <',$new);
-      $this->db->order_by( 'order','DESC' );
-      $prev = $this->db->get_row( $table );
+      $prev = $this->data->table($table)
+                          ->select('id,order,self_parent')
+                          ->where( 'order <',$new)
+                          ->order_by( 'order','DESC' )
+                          ->get_row();
       $prev_parent = $prev['self_parent'];
       // geef nieuw parent
-      $this->db->set('self_parent',$prev_parent);
-      $this->db->where(PRIMARY_KEY,$id);
-      $this->db->update( $table );
-      $log['query'] .= $this->db->last_query().';'.PHP_EOL.PHP_EOL;
+      $this->data->set('self_parent',$prev_parent);
+      $this->data->where(PRIMARY_KEY,$id);
+      $this->data->update();
+      $log['query'] .= $this->data->last_query().';'.PHP_EOL.PHP_EOL;
     }
     
     if ($log['query']) {
@@ -261,20 +261,22 @@ class order extends CI_Model {
   private function _get_children_ids( $table, $id, $order ) {
     // Zoek de eerstvolgende met zelfde parent
     $parent = $this->_get_parent( $table,$id );
-    $this->db->select('id,self_parent,order');
-    $this->db->where( 'self_parent', $parent );
-    $this->db->where( 'order >', $order );
-    $this->db->order_by( 'order' );
-    $next = $this->db->get_row($table);
+    $next = $this->data->table($table)
+                        ->select('id,self_parent,order')
+                        ->where( 'self_parent', $parent )
+                        ->where( 'order >', $order )
+                        ->order_by( 'order' )
+                        ->get_row();
     $next_order = $next['order'];
     // Zijn er wel kinderen?
     if ( ($next_order-$order)===1 ) return array();
     // Zoek alle kinderen: dat zijn alle tussenliggende
-    $this->db->select('id,self_parent,order');
-    $this->db->where( 'order >', $order );
-    $this->db->where( 'order <', $next_order );
-    $this->db->order_by( 'order' );
-    $children = $this->db->get_result($table);
+    $children = $this->data->table( $table )
+                            ->select('id,self_parent,order')
+                            ->where( 'order >', $order )
+                            ->where( 'order <', $next_order )
+                            ->order_by( 'order' )
+                            ->get_result();
     $children_ids = array_keys($children);
     return $children_ids;
   }

@@ -382,7 +382,7 @@ class Flexy_auth extends Ion_auth {
 		   'gpw_password'  => $password_info['hash_password'],
 		   'remember_code' => NULL,
 		);
-    $successfully_changed_password_in_db = $this->db->update('cfg_users', $set, array('id' => $user['user_id'] ));
+    $successfully_changed_password_in_db = $this->data->table('cfg_users')->where('id',$user['user_id'])->set($set)->update();
 		if ($successfully_changed_password_in_db)
 		{
 			$this->trigger_events(array('post_change_password', 'post_change_password_successful'));

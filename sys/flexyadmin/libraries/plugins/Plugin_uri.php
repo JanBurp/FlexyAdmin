@@ -36,9 +36,10 @@ class Plugin_uri extends Plugin {
 						$uri=$data['uri'];
 						$newUri=$this->CI->create_uri->create($data,el(1,$args,false)); // reset
 						if ($uri!=$newUri) {
-							$this->CI->db->set('uri',$newUri);
-							$this->CI->db->where('id',$id);
-							$this->CI->db->update($this->table);
+              $this->CI->data->table($this->table);
+							$this->CI->data->set('uri',$newUri);
+							$this->CI->data->where('id',$id);
+							$this->CI->data->update();
 						}
 					}
           $this->add_message("All uri's in <b>$this->table</b> are (re)set.</p><p>Just change one in this table to make sure all other plugins did there work.");

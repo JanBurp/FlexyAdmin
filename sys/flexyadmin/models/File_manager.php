@@ -407,9 +407,10 @@ class File_manager extends CI_Model {
   						}
               // if changed, put in db
               if ($newdata!=$data) {
-                $this->db->set($field,$newdata);
-                $this->db->where(PRIMARY_KEY,$id);
-                $this->db->update($table);
+                $this->data->table($table);
+                $this->data->set($field,$newdata);
+                $this->data->where(PRIMARY_KEY,$id);
+                $this->data->update();
               }
   					}
   				}

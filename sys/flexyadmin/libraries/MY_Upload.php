@@ -273,7 +273,7 @@ class MY_Upload extends CI_Upload {
 							break;
 					}
 				}
-				$this->_CI->db->insert($table);
+        $this->_CI->db->insert($table);
 			}
 		}
 		return TRUE;

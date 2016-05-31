@@ -39,7 +39,8 @@ class Flexy_field extends CI_Model {
 
 	function init_table($table,$action,$formData=array()) {
 		$this->table=$table;
-    $this->title_field=$this->db->get_first_field($this->table,'str');
+    $this->data->table($table);
+    $this->title_field = $this->data->list_fields('str',1);
 		$this->action=$action;
 		$this->formData=$formData;
 		if (!isset($vars)) $this->set_variables();
@@ -477,8 +478,7 @@ class Flexy_field extends CI_Model {
 
 	function _user_form() {
 		if ($this->restrictedToUser===FALSE) {
-			$this->db->as_abstracts();
-			$users=$this->db->get_result("cfg_users");
+      $users = $this->data->table('cfg_users')->select_abstract()->get_result();
 			$options=array();
 			$options['data']['']='';
 			foreach ($users as $key => $value) {
@@ -496,23 +496,6 @@ class Flexy_field extends CI_Model {
 		return $out;
 	}
 
-  // function _id_group_form() {
-  //   /**
-  //     * User can't set itself to higher user group, Remove other options
-  //     */
-  //   $user=$this->flexy_auth->user();
-  //   $id_group=$user->id_group;
-  //   $this->db->where('id >=',$id_group);
-  //   $this->db->select('id,str_description');
-  //   $options=$this->db->get_result('cfg_groups');
-  //   foreach ($options as $id => $value) {
-  //     $options[$id]=$value['str_description'];
-  //   }
-  //   $out=$this->_standard_form_field($options);
-  //   $out['validation'].='|greater_than['.($id_group-1).']';
-  //   return $out;
-  // }
-
 	function _self_grid() {
     if ($this->table=='res_menu_result') return $this->fieldData;
     if ($this->field=='self_parent') {
@@ -523,10 +506,11 @@ class Flexy_field extends CI_Model {
       return "[$this->fieldData] ".$tree;
     }
     else {
-      $this->db->select('id');
-      $this->db->select($this->title_field);
-      $this->db->where('id',$this->fieldData);
-      $self=$this->db->get_row($this->table);
+      $self = $this->data->table($this->table)
+                          ->select('id')
+                          ->select($this->title_field)
+                          ->where('id',$this->fieldData)
+                          ->get_row();
       if ($self) {
         return $self[$this->title_field];
       }
@@ -541,21 +525,21 @@ class Flexy_field extends CI_Model {
 			$strField=$this->cfg->get('cfg_table_info','cfg_auto_menu','str_abstract_fields');
 		}
 		else {
-      $strField=$this->db->get_first_field($this->table,'str');
+      $strField=$this->data->table($this->table)->list_fields('str',1);
 		}
-		$this->db->select(array(PRIMARY_KEY));
-		if ($strField) $this->db->select($strField);
-		if ($this->db->field_exists('uri',$this->table)) $this->db->select('uri');
-		if ($this->db->field_exists('self_parent',$this->table)) $this->db->select('self_parent');
-		if ($this->db->field_exists('order',$this->table)) $this->db->select('order');
+    
+    $this->data->table($this->table)->select(array(PRIMARY_KEY));
+		if ($strField) $this->data->select($strField);
+		if ($this->data->field_exists('uri')) $this->data->select('uri');
+		if ($this->data->field_exists('self_parent')) $this->data->select('self_parent');
+		if ($this->data->field_exists('order')) $this->data->select('order');
     // self_parent kan niet naar zichzelf verwijzen
-    if ($this->field=='self_parent') $this->db->where(PRIMARY_KEY." !=", $this->id);
+    if ($this->field=='self_parent') $this->data->where(PRIMARY_KEY." !=", $this->id);
     // Als self_parent bestaat, dan moet het op volgorde van de tree
-		if ($strField)
-			$this->db->uri_as_full_uri(TRUE,$strField);
-		else
-			$this->db->uri_as_full_uri(TRUE,$strField);
-		$res=$this->db->get_result($this->table);
+		$this->data->path('uri');
+    if ($strField) $this->data->path($strField);
+		$res = $this->data->get_result();
+    
     // Zorg ervoor dat er altijd een lege optie is
     array_unshift( $options['data'], array('name'=>'','value'=>0));
     // Veld verder instellen volgens standaard

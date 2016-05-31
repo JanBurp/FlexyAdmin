@@ -64,8 +64,7 @@ class Mediatable extends CI_Model {
    * @author Jan den Besten
    */
   public function get_media_folders( $include_assets=TRUE, $prefix='' ) {
-    $this->db->select('path');
-    $result=$this->db->get_result('cfg_media_info');
+    $result = $this->data->table('cfg_media_info')->select('path')->get_result();
     $folders=array();
     foreach ($result as $key => $info) {
       if ($include_assets)
@@ -88,8 +87,10 @@ class Mediatable extends CI_Model {
   public function exists_in_table($file,$path='') {
     $path=str_replace($this->config->item('ASSETS'),'',$path);
     $file=get_suffix($file,'/');
-    $this->db->where('path',$path)->where('file',$file);
-    $row=$this->db->get_result($this->table);
+    $row = $this->data->table( $this->table )
+                      ->where('path',$path)
+                      ->where('file',$file)
+                      ->get_result();
     return (!empty($row));
   }
 
@@ -123,6 +124,7 @@ class Mediatable extends CI_Model {
   public function add($file,$path='',$userId=FALSE) {
     if (!is_array($file)) $file=get_full_file_info($path.'/'.$file,TRUE,TRUE);
     if ($file['type']!='dir') {
+      $this->data->table($this->table);
       $set=array(
         'file'      => $file['name'],
         'path'      => remove_assets(remove_suffix($file['path'],'/')),
@@ -141,11 +143,11 @@ class Mediatable extends CI_Model {
         $set['int_img_width']   = $file['width'];
         $set['int_img_height']  = $file['height'];
       }
-      if (isset($file['meta']) and $this->db->field_exists('stx_meta',$this->table)) $set['stx_meta']=exif2string($file['meta']);
-      if ($userId and $this->db->field_exists('user',$this->table)) $set['user']=$userId;
-      $this->db->set($set);
-      $this->db->insert($this->table);
-      $id = $this->db->insert_id();
+      if (isset($file['meta']) and $this->data->field_exists('stx_meta')) $set['stx_meta']=exif2string($file['meta']);
+      if ($userId and $this->data->field_exists('user')) $set['user']=$userId;
+      $this->data->set($set);
+      $this->data->insert();
+      $id = $this->data->insert_id();
       
       $this->log_activity->media( $this->db->last_query(), $path, $id.'|'.$file['name'] );
 
@@ -192,7 +194,7 @@ class Mediatable extends CI_Model {
     }
     
     // Preserve title
-    $oldTitle=$this->db->get_field_where($this->table,'str_title','file',$set['file']);
+    $oldTitle = $this->data->table($this->table)->where('file',$set['file'])->get_field('str_title');
     if (!empty($oldTitle)) unset($set['str_title']);
       
     if ($userId and $this->db->field_exists('user',$this->table)) $set['user']=$userId;
@@ -202,9 +204,10 @@ class Mediatable extends CI_Model {
       if (!$this->db->field_exists($field,$this->table)) unset($set[$field]);
     }
     if ($set) {
-      $this->db->set($set);
-      $this->db->where('file',$set['file'])->where('path',$set['path']);
-      $this->db->update($this->table);
+      $this->data->table($this->table);
+      $this->data->set($set);
+      $this->data->where('file',$set['file'])->where('path',$set['path']);
+      $this->data->update();
     }
     return $this;
   }
@@ -226,9 +229,10 @@ class Mediatable extends CI_Model {
       $path=remove_suffix($file,'/');
       $file=get_suffix($file,'/');
     }
-    $this->db->where('file',$file)->where('path',$path);
-    $this->db->delete($this->table);
-    $is_deleted = ($this->db->affected_rows()>0);
+    $this->data->table($this->table);
+    $this->data->where('file',$file)->where('path',$path);
+    $this->data->delete();
+    $is_deleted = ($this->data->affected_rows()>0);
     if ($is_deleted) {
       $this->log_activity->media( $this->db->last_query(), $path, $file );
     }
@@ -256,8 +260,9 @@ class Mediatable extends CI_Model {
       $this->db->truncate($this->table);
     }
     else {
-      $this->db->set('b_exists',false);
-      $this->db->update($this->table);
+      $this->data->table($this->table);
+      $this->data->set('b_exists',false);
+      $this->data->update();
     }
     
     foreach ($paths as $key=>$path) {
@@ -281,10 +286,10 @@ class Mediatable extends CI_Model {
     }
     
     // Remove unused files?
-    if ($remove and $this->db->field_exists('b_used',$this->table)) {
+    $this->data->table($this->table);
+    if ($remove and $this->data->field_exists('b_used')) {
       $this->load->model('file_manager');
-      $this->db->where('b_used',false);
-      $not_used=$this->db->get_result('res_media_files');
+      $not_used = $this->data->table('res_media_files')->where('b_used',false)->get_result();
       foreach ($not_used as $id => $row) {
         $path=$row['path'];
         $file=$row['file'];
@@ -348,12 +353,13 @@ class Mediatable extends CI_Model {
     $path=remove_assets($map);
     $info=$this->cfg->get('cfg_media_info',$path);
     
+    $this->data->table( $this->table );
     // select fields
-    $fields = $this->db->list_fields($this->table);
+    $fields = $this->data->list_fields();
     unset($fields[array_search('b_exists',$fields)]);
     if ($full_path) array_splice($fields,array_search('path',$fields),0, 'CONCAT("_media/",`path`,"/",`file`) AS `full_path`' );
     if ($asReadMap) {
-      $this->db->select( array(
+      $this->data->select( array(
         '`file` AS `name`',
         '`path`',
         '`str_type` AS `type`',
@@ -365,19 +371,18 @@ class Mediatable extends CI_Model {
         '`int_img_height` AS `height`'
       ));
       if (isset($info['user'])) {
-        $this->db->select('id_user');
-        $this->db->add_many();
+        $this->data->select('id_user');
+        $this->data->with('many_to_many');
       }
     }
     else {
-      $this->db->select($fields);
+      $this->data->select($fields);
     }
     // where exists and set path
-    $this->db->where('b_exists',true);
-    $this->db->where('path',$path);
+    $this->data->where('b_exists',true)->where('path',$path);
     // user restricted where
-    if ( el('b_user_restricted',$info,false) and $this->db->field_exists('user',$this->table) and !$user['rights']['all_users'] ) {
-      $this->db->where('user',$user['id']);
+    if ( el('b_user_restricted',$info,false) and $this->data->field_exists('user') and !$user['rights']['all_users'] ) {
+      $this->data->where('user',$user['id']);
     }
     // order?
     if (el('str_order',$info)) {
@@ -386,10 +391,10 @@ class Mediatable extends CI_Model {
       if (substr($order,0,1)==='_') $order_by = ' DESC';
       $order=trim($order,'_');
       $order_by = el( $order, $this->order_fields, $order ) . $order_by;
-      $this->db->order_by( $order_by );
+      $this->data->order_by( $order_by );
     }
     // get files
-    $files = $this->db->get_result($this->table,$recent_numbers);
+    $files = $this->data->get_result($recent_numbers);
     
     if (empty($files)) {
       // not in database, read from filesystem
@@ -537,8 +542,9 @@ class Mediatable extends CI_Model {
    * @internal
    */
 	public function get_unrestricted_files($user) {
-    if ($this->db->field_exists('user',$this->table)) $this->db->where('user',$user);
-		$files=$this->db->get_result($this->table);
+    $this->data->table($this->table);
+    if ($this->data->field_exists('user')) $this->data->where('user',$user);
+		$files = $this->data->get_result();
     $unrestrictedFiles=array();
     foreach ($files as $file) {
       $unrestrictedFiles[$file['path'].'/'.$file['file']]=$file;
