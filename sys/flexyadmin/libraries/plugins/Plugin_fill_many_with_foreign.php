@@ -45,9 +45,10 @@ class Plugin_fill_many_with_foreign extends Plugin {
 				$this->CI->db->select('id,'.$foreignKey);
 				$data = $this->CI->data->table($table)->get_result();
 				foreach ($data as $id => $row) {
-					$this->CI->db->set($thisKey,$id);
-					$this->CI->db->set($foreignKey,$row[$foreignKey]);
-					$this->CI->db->insert($relTable);
+          $this->CI->data->table($relTable);
+					$this->CI->data->set($thisKey,$id);
+					$this->CI->data->set($foreignKey,$row[$foreignKey]);
+					$this->CI->dat1->insert();
 				}
 			}
 			if (!$goodArgs) {

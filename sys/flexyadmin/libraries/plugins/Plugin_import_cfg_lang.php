@@ -41,19 +41,20 @@ class Plugin_import_cfg_lang extends Plugin {
       }
       
       // Stop in cfg_lang
+      $this->CI->data->table('cfg_lang');
       foreach ($keys as $key => $value) {
         $this->add_message($key);
-        $update = $this->CI->db->row_exists('cfg_lang',$key,'key');
-        $this->CI->db->set('key',$key);
+        $update = $this->CI->data->table('cfg_lang')->where($key,'key')->get_row();
+        $this->CI->data->set('key',$key);
         foreach ($value as $lang => $line) {
-          $this->CI->db->set('lang_'.$lang,$line);
+          $this->CI->data->set('lang_'.$lang,$line);
         }
         if ($update) {
-          $this->CI->db->where('key',$key);
-          $this->CI->db->update('cfg_lang');
+          $this->CI->data->where('key',$key);
+          $this->CI->data->update('cfg_lang');
         }
         else {
-          $this->CI->db->insert('cfg_lang');
+          $this->CI->data->insert('cfg_lang');
         }
       }
       

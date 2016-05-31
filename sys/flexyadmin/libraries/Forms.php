@@ -174,7 +174,7 @@ class Forms extends Module {
     }
     // Geen velden ingesteld, maar wel een tabel: haal ze uit de tabel
     if (!$formFields and $this->settings('table')) {
-      $fields=$this->CI->db->list_fields( $this->settings('table') );
+      $fields=$this->CI->data->table($this->settings('table'))->list_fields();
       $formFields=array2formfields($fields);
       unset($formFields['id']);
     }
@@ -259,15 +259,16 @@ class Forms extends Module {
 
         if ($this->settings('restrict_this_ip_days')) {
           // remove (old) entries
-          $this->CI->db->where('ip',$ip)->where('str_form',$this->form_id);
-          $this->CI->db->delete('log_forms_submit');
+          $this->CI->data->table('log_forms_submit')
+                          ->where('ip',$ip)->where('str_form',$this->form_id)
+                          ->delete('log_forms_submit');
           $set=array(
             'str_form'  => $this->form_id,
             'ip'        => $this->CI->input->ip_address(),
             'dat_date'  => unix_to_mysql(time())
           );
-          $this->CI->db->set($set);
-          $this->CI->db->insert('log_forms_submit');
+          $this->CI->data->set($set);
+          $this->CI->data->insert();
         }
         
         $formaction=$this->settings('formaction');

@@ -195,9 +195,10 @@ class Filemanager extends AdminController {
    */
   public function setview($viewType="",$path="") {
 		if (!empty($viewType) and in_array($viewType,$this->config->item('FILES_view_types'))) {
-			$this->db->set("str_filemanager_view",$viewType);
-			$this->db->where("str_username",$this->session->userdata("str_username"));
-			$this->db->update('cfg_users');
+      $this->data->table('cfg_users');
+			$this->data->set("str_filemanager_view",$viewType);
+			$this->data->where("str_username",$this->session->userdata("str_username"));
+			$this->data->update();
 			$this->session->set_userdata("fileview",$viewType);
 		}
     

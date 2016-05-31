@@ -50,7 +50,7 @@
     if (!isset($this->settings['to']) or empty($this->settings['to'])) {
      $table=get_prefix($this->settings['to_field'],'.');
      $field=get_suffix($this->settings['to_field'],'.');
-     $this->settings['to']=$this->db->get_field($table,$field);
+     $this->settings['to']=$this->data->table($table)->get_field($field);
     }
     $this->email->to($this->settings['to']);
     // FROM
@@ -70,7 +70,7 @@
       $site=$this->site;
     }
     else {
-      $site=$this->db->get_row('tbl_site');
+      $site = $this->data->table('tbl_site')->get_row();
     }
     $replace=array_merge($replace,$site);
     $replace['URL']=trim(str_replace('http://','',$site['url_url']),'/');

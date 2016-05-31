@@ -16,7 +16,7 @@ Class Res_media_files extends Data_Core {
 		$this->load->model("file_manager");
     // Add current filemanager_view setting:
     $user_id = $this->data_core->get_user_id();
-    $this->settings['grid_set']['grid_view'] = $this->db->query( 'SELECT `str_filemanager_view` FROM `cfg_users` WHERE `id`='.$user_id )->row_object()->str_filemanager_view;
+    if ($user_id) $this->settings['grid_set']['grid_view'] = $this->db->query( 'SELECT `str_filemanager_view` FROM `cfg_users` WHERE `id`='.$user_id )->row_object()->str_filemanager_view;
   }
   
   

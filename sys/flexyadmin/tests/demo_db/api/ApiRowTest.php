@@ -221,8 +221,8 @@ class ApiRowTest extends ApiTestModel {
             'data'   => array( 'type'    => 'bool' ),
             'data'   => array( 'equals'  => true ),
             'info'   => array( 'type'  => 'array' ),
-            'info'   => array( 'count'  => 1 ),
-            'info'   => array( 'hasKey'  => 'affected_rows' ),
+            // 'info'   => array( 'count'  => 1 ),
+            // 'info'   => array( 'hasKey'  => 'affected_rows' ),
           )
         ));
 
