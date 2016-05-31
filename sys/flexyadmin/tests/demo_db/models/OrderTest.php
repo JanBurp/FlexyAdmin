@@ -28,10 +28,11 @@ UPDATE `tbl_menu` SET `order`='4', `self_parent`='0', `uri`='contact' WHERE `id`
   
 
   private function _result($parent=false) {
-    $this->CI->db->select('id,order');
-    if ($parent) $this->CI->db->select('self_parent');
-    $this->CI->db->order_by('order ASC');
-    return $this->CI->db->get_result($this->table);
+    $this->CI->data->table($this->table);
+    $this->CI->data->select('id,order');
+    if ($parent) $this->CI->data->select('self_parent');
+    $this->CI->data->order_by('order ASC');
+    return $this->CI->data->get_result();
   }
 
 

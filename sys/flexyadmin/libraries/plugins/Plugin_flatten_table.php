@@ -28,14 +28,13 @@ class Plugin_flatten_table extends Plugin {
 				if (isset($args[0])) $table=$args[0];
 				if (isset($table)) $goodArgs=true;
 				if ($goodArgs) {
-          $data=$this->CI->db->get_result($table);
-          $fields=$this->CI->db->list_fields($table);
+          $data=$this->CI->data->table($table)->get_result();
+          $fields=$this->CI->data->list_fields();
           $foreign_keys=filter_by($fields,'id_');
           foreach ($data as $id => $row) {
             foreach ($foreign_keys as $fkey) {
               $foreignTable=foreign_table_from_key($fkey);
-              $this->CI->db->where('id',$row[$fkey]);
-              $foreignData=$this->CI->db->get_row($foreignTable);
+              $foreignData=$this->CI->data->table($foreignTable)->where('id',$row[$fkey])->get_row();
               unset($foreignData['id']);
               $set=array();
               if ($foreignData) {

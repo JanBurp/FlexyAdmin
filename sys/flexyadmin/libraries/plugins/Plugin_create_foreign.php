@@ -39,11 +39,11 @@ class Plugin_create_foreign extends Plugin {
           if (!$this->CI->db->field_exists($foreign_key,$table)) $this->CI->dbforge->add_column($table, array( $foreign_key => array('type'=>'INT')) );
           
           // Fill
-          $data=$this->CI->db->get_result($table);          
+          $data = $this->CI->data->table($table)->get_result();          
           foreach ($data as $id => $row) {
             // Does foreign data exists?
             $value=$row[$field];
-            $fid=$this->CI->db->get_field_where($foreign_table,'id',$field,$value);
+            $fid = $this->CI->data->table($foreign_table)->where($field,$value)->get_field('id');
             if (!$fid) {
               // No: add data to foreign_table
               $this->CI->db->set($field,$value)->insert($foreign_table);

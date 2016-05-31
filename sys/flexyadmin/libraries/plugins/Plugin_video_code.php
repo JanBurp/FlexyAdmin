@@ -22,7 +22,7 @@ class Plugin_video_code extends Plugin {
 		if (isset($args)) {
 			if (isset($args[0])) {
 				$table=$args[0];
-        $items=$this->CI->db->get_result($table);
+        $items=$this->CI->data->table($table)->get_result();
         foreach ($items as $id  => $item) {
           $items[$id]=$this->_get_video_codes($item);
         }

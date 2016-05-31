@@ -41,8 +41,9 @@ class Plugin_automenu extends Plugin {
 			$checkTables[]=$this->automationTable;
 			$checkTables[]=$this->resultMenu;
 			// get tables from automation data
-			$this->CI->db->order_as_tree();
-			$this->automationData=$this->CI->db->get_results($this->automationTable);
+      $this->CI->data->table( $this->automationTable );
+			$this->CI->data->order_by( 'order' );
+			$this->automationData = $this->CI->data->get_result();
 			foreach ($this->automationData as $aData) {
 				if (!in_array($aData['table'], $checkTables))	$checkTables[]=$aData['table'];
 				$foreignTable=$aData['field_group_by'];
@@ -139,11 +140,12 @@ class Plugin_automenu extends Plugin {
         // trace_(array('lang'=>$lang,'langfield'=>$langfield));
         if (in_array($lang,$this->CI->config->item('LANGUAGES')) and $this->CI->db->field_exists($langfield,'res_menu_result')) {
           // find language branch where to update
-          $this->CI->db->select('id,order,self_parent,uri');
-          $this->CI->db->uri_as_full_uri('full_uri');
-          $this->CI->db->where('int_id',$id);
-          $this->CI->db->where('str_table',$this->table);
-          $branches=$this->CI->db->get_result('res_menu_result');
+          $this->CI->data->table('res_menu_result');
+          $this->CI->data->select('id,order,self_parent,uri');
+          $this->CI->data->path('full_uri','uri');
+          $this->CI->data->where('int_id',$id);
+          $this->CI->data->where('str_table',$this->table);
+          $branches=$this->CI->data->get_result();
           foreach ($branches as $key => $branch) {
             if (substr($branch['full_uri'],0,2)!=$lang) unset($branches[$key]);
           }
@@ -180,16 +182,16 @@ class Plugin_automenu extends Plugin {
 	 * Make sure that data has newData!!
 	 */
 	private function _get_current_data($table,$where='',$limit=0, $offset=0, $insert_check='') {
+    $this->CI->data->table($table);
 		if (!empty($where)) {
-      $this->CI->db->where($where);  
-      if (has_string('rel_',$where)) $this->CI->db->add_many();
+      $this->CI->data->where($where);  
+      if (has_string('rel_',$where)) $this->CI->data->with('many_to_many');
 		}
 		if ($offset>0 and $limit==0) $limit=10000;
-
-    if ($this->CI->db->has_field($table,'order')) {
-      $this->CI->db->order_as_tree();
+    if ($this->CI->data->field_exists('order')) {
+      $this->CI->data->order_by('order');
     }
-		$data=$this->CI->db->get_results($table,$limit,$offset);
+		$data = $this->CI->data->get_result($limit,$offset);
     
 		if ($table==$this->table and isset($this->newData['id']) and $this->pass==1) {
       if (empty($insert_check) or (isset($this->newData[$insert_check['field']]) and $this->newData[$insert_check['field']]==$insert_check['value'])) {

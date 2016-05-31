@@ -27,7 +27,7 @@ class Plugin_uri extends Plugin {
           $prefix_callback=el(array('prefix_callback',$this->table),$this->config,false);
           if ($prefix_callback) $this->CI->create_uri->set_prefix_callback($prefix_callback);
 					// reset all uris of this table
-					$allData=$this->CI->db->get_results($this->table);
+					$allData = $this->CI->data->table($this->table)->get_result();
 					foreach ($allData as $id => $data) {
 						$this->id=$id;
 						$this->oldData=$data;

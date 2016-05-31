@@ -241,8 +241,9 @@ class Search_replace extends CI_Model {
     foreach ($fields as $field) {
       $table=get_prefix($field,'.');
       $field=remove_prefix($field,'.');
-      $this->db->search(array('search'=>$text,'field'=>$field))->select($field);
-      $row=$this->db->get_row($table);
+      $this->data->table( $table )->select( $field );
+      $this->data->find( $text, $field);
+      $row=$this->data->get_row();
       $found=(!empty($row));
       if ($found) break;
     }

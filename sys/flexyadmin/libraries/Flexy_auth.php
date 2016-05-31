@@ -354,7 +354,8 @@ class Flexy_auth extends Ion_auth {
    * @author Jan den Besten
    */
   private function _create_new_password( $user_id ) {
-    $salt = $this->db->get_field_where('cfg_users','salt','id',$user_id);
+    $sql = 'SELECT `salt` FROM `cfg_users` WHERE `id` = "'.$user_id.'"';
+    $salt = $this->db->query($sql)->row_object()->salt;
     $password = $this->salt();
     $hashed_password = $this->hash_password( $password, $salt);
     return array(
@@ -648,8 +649,7 @@ class Flexy_auth extends Ion_auth {
    * @internal
    */
 	private function _create_rights( $user ) {
-		$this->db->where_in( 'id', array_keys($user['groups']) );
-		$groups=$this->db->get_result( 'cfg_user_groups' );
+    $groups=$this->data->table('cfg_user_groups')->where_in( 'id', array_keys($user['groups']) )->get_result();
 		if (!$groups) return FALSE;
     
     $tables = $this->db->list_tables();

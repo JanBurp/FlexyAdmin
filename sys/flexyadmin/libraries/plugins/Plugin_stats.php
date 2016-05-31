@@ -74,7 +74,7 @@ class Plugin_stats extends Plugin {
 		}
 		if (!empty($years)) $this->add_content('<p>'.$years.'</p>');
 
-		$this->url=$this->CI->db->get_field('tbl_site','url_url');
+		$this->url = $this->CI->data->table('tbl_site')->get_field('url_url');
 		$this->logTable=$this->CI->config->item('LOG_table_prefix')."_".$this->CI->config->item('LOG_stats');
 
 		// get data from XML (if exists)
@@ -128,8 +128,9 @@ class Plugin_stats extends Plugin {
 		} while ($notReady);
 		
 		// Delete data from DB older than current month
-    $this->CI->db->where('tme_date_time <',date('Y-m',unixdate_add_days(time(),-$this->keep)));
-    $this->CI->db->delete($this->logTable);
+    $this->CI->data->table($this->logTable);
+    $this->CI->data->where('tme_date_time <',date('Y-m',unixdate_add_days(time(),-$this->keep)));
+    $this->CI->data->delete();
     
     // $this->_download_links($year,$month);
     
@@ -325,76 +326,77 @@ class Plugin_stats extends Plugin {
 		if (empty($year))		$year=$this->Year;
 		$data=NULL;
 		$limit=10;
+    $this->CI->data->table( $this->logTable );
 		switch ($type) {
 			case 'total':
 				// Total
-				$this->CI->db->select("COUNT('id') as total");
-				$this->CI->db->where(array('YEAR(tme_date_time)' => $year, 'MONTH(tme_date_time)' => $month));
-				$data=$this->CI->db->get_row($this->logTable);
+				$this->CI->data->select("COUNT('id') as total");
+				$this->CI->data->where(array('YEAR(tme_date_time)' => $year, 'MONTH(tme_date_time)' => $month));
+				$data=$this->CI->data->get_row();
 				$data=$data['total'];
 				$this->Total=$data;
 				break;
 			case 'this_year':
-				$this->CI->db->select("MONTH(tme_date_time) as `month`, COUNT(DATE(tme_date_time)) as `views`");
-				$this->CI->db->where(array('YEAR(tme_date_time) >=' => $year, 'YEAR(tme_date_time) <' => $year+1) );
-				$this->CI->db->group_by('`month`');
-				$this->CI->db->order_by("`month`");
+				$this->CI->data->select("MONTH(tme_date_time) as `month`, COUNT(DATE(tme_date_time)) as `views`");
+				$this->CI->data->where(array('YEAR(tme_date_time) >=' => $year, 'YEAR(tme_date_time) <' => $year+1) );
+        $this->CI->data->group_by( 'MONTH(`tme_date_time`)' );
+				$this->CI->data->order_by( "`month`" );
 				$limit=12;
 				break;
 			case 'this_month':
-				$this->CI->db->select("DAYOFMONTH(tme_date_time) as `day`, COUNT(DATE(tme_date_time)) as `views`");
-				$this->CI->db->where(array('YEAR(tme_date_time)' => $year, 'MONTH(tme_date_time)' => $month));
-				$this->CI->db->group_by('`day`');
-				$this->CI->db->order_by("`day`");
+				$this->CI->data->select("DAYOFMONTH(tme_date_time) as `day`, COUNT(DATE(tme_date_time)) as `views`");
+				$this->CI->data->where(array('YEAR(tme_date_time)' => $year, 'MONTH(tme_date_time)' => $month));
+				$this->CI->data->group_by('`day`');
+				$this->CI->data->order_by("`day`");
 				$limit=0;
 				break;
 			case 'top_10_pages':
-				$this->CI->db->select("str_uri as page, COUNT(`str_uri`) as hits");
-				$this->CI->db->where(array('YEAR(tme_date_time)' => $year, 'MONTH(tme_date_time)' => $month));
-				$this->CI->db->group_by("page");
-				$this->CI->db->order_by("hits DESC");
+				$this->CI->data->select("str_uri as page, COUNT(`str_uri`) as hits");
+				$this->CI->data->where(array('YEAR(tme_date_time)' => $year, 'MONTH(tme_date_time)' => $month));
+				$this->CI->data->group_by( "str_uri" );
+				$this->CI->data->order_by( "hits DESC" );
 				break;
 			case 'top_10_referers':
-				$this->CI->db->select("str_referrer as referer, COUNT(`str_referrer`) as hits");
-				$this->CI->db->where(array('YEAR(tme_date_time)' => $year, 'MONTH(tme_date_time)' => $month));
-				$this->CI->db->where('str_referrer !=','');
+				$this->CI->data->select("str_referrer as referer, COUNT(`str_referrer`) as hits");
+				$this->CI->data->where(array('YEAR(tme_date_time)' => $year, 'MONTH(tme_date_time)' => $month));
+				$this->CI->data->where('str_referrer !=','');
 				if (!empty($this->url)) {
 					$this->url=str_replace('http://','',$this->url);
 					$this->url=str_replace('www.','',$this->url);
-					$this->CI->db->not_like('str_referrer',$this->url);
+					$this->CI->data->not_like('str_referrer',$this->url);
 				}
-				$this->CI->db->group_by('str_referrer');
-				$this->CI->db->order_by("hits DESC");
+				$this->CI->data->group_by('str_referrer');
+				$this->CI->data->order_by("hits DESC");
 				break;
 			case 'top_10_google':
-				$this->CI->db->select("str_referrer as search, COUNT(`str_referrer`) as hits");
-				$this->CI->db->where(array('YEAR(tme_date_time)' => $year, 'MONTH(tme_date_time)' => $month));
-				$this->CI->db->like('str_referrer','q=');
-				$this->CI->db->group_by('str_referrer');
-				$this->CI->db->order_by("hits DESC");
+				$this->CI->data->select("str_referrer as search, COUNT(`str_referrer`) as hits");
+				$this->CI->data->where(array('YEAR(tme_date_time)' => $year, 'MONTH(tme_date_time)' => $month));
+				$this->CI->data->like('str_referrer','q=');
+				$this->CI->data->group_by('str_referrer');
+				$this->CI->data->order_by("hits DESC");
 				$limit=50;
 				break;
 			case 'top_10_browsers':
         $tot=$this->Total * 100;
-				$this->CI->db->select("str_browser as browser, str_version as version, COUNT(`str_browser`) as hits, (COUNT(`str_browser`)/".$tot.") as percent");
-				$this->CI->db->where(array('YEAR(tme_date_time)' => $year, 'MONTH(tme_date_time)' => $month));
-				$this->CI->db->group_by('str_browser,str_version');
-				$this->CI->db->order_by("hits DESC");
+				$this->CI->data->select("str_browser as browser, str_version as version, COUNT(`str_browser`) as hits, (COUNT(`str_browser`)/".$tot.") as percent");
+				$this->CI->data->where(array('YEAR(tme_date_time)' => $year, 'MONTH(tme_date_time)' => $month));
+				$this->CI->data->group_by('str_browser,str_version');
+				$this->CI->data->order_by("hits DESC");
 				break;
 			case 'top_10_platform':
         $tot=$this->Total * 100;
-				$this->CI->db->select("str_platform as platform, COUNT(`str_platform`) as hits, (COUNT(`str_platform`)/".$tot.") as percent");
-				$this->CI->db->where(array('YEAR(tme_date_time)' => $year, 'MONTH(tme_date_time)' => $month));
-				$this->CI->db->group_by('str_platform');
-				$this->CI->db->order_by("hits DESC");
+				$this->CI->data->select("str_platform as platform, COUNT(`str_platform`) as hits, (COUNT(`str_platform`)/".$tot.") as percent");
+				$this->CI->data->where(array('YEAR(tme_date_time)' => $year, 'MONTH(tme_date_time)' => $month));
+				$this->CI->data->group_by('str_platform');
+				$this->CI->data->order_by("hits DESC");
 				break;
 		}
 		
 		// get data
-		if ($type!='total') $data=$this->CI->db->get_results($this->logTable,$limit);
+		if ($type!='total') $data = $this->CI->data->get_result( $limit );
     // if ($type=='this_year') {
     //   trace_($type);
-    //   trace_($this->CI->db->last_query());
+    //   trace_($this->CI->data->last_query());
     //   trace_($data);
     //   // die();
     // }
@@ -446,6 +448,7 @@ class Plugin_stats extends Plugin {
 				}
 				break;
 		}
+    
     if (is_array($data)) {
       foreach ($data as $id => $value) unset($data[$id]['id']);
     }

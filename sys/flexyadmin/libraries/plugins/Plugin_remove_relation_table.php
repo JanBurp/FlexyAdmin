@@ -45,12 +45,13 @@ class Plugin_remove_relation_table extends Plugin {
           }
           
           // Pak de huidige data, en voer die in bij de foreign keys
-          $this->CI->db->set_key($foreign_key_table);
-          $rel_data=$this->CI->db->get_result($rel_table);
+          $this->CI->data->table( $rel_table )->set_result_key($foreign_key_table);
+          $rel_data = $this->CI->data->get_result();
           foreach ($rel_data as $id_table => $row) {
-            $this->CI->db->where(PRIMARY_KEY,$id_table);
-            $this->CI->db->set($foreign_key_join,$row[$foreign_key_join]);
-            $this->CI->db->update($table);
+            $this->CI->data->table($table);
+            $this->CI->data->where(PRIMARY_KEY,$id_table);
+            $this->CI->data->set($foreign_key_join,$row[$foreign_key_join]);
+            $this->CI->data->update();
             $this->add_content("<p>Updated item: ".$table."[".$id_table."]</p>");
           }
           

@@ -330,7 +330,7 @@ class File_manager extends CI_Model {
         $searchedFields=array();
       
         // txt fields
-        $tables=$this->db->get_tables();
+        $tables=$this->db->list_tables();
   			foreach ($tables as $table) {
   				$fields=$this->db->list_fields($table);
   				foreach ($fields as $field) {
@@ -378,11 +378,9 @@ class File_manager extends CI_Model {
     foreach ($fields as $fieldname) {
       if (!empty($fieldname) and $fieldname!='0') {
         // trace_($fieldname);
-        $table=get_prefix($fieldname,'.');
-        $fieldname=remove_prefix($fieldname,'.');
-  			$this->db->select(PRIMARY_KEY);
-  			$this->db->select($fieldname);
-  			$currentData=$this->db->get_result($table);
+        $table = get_prefix($fieldname,'.');
+        $fieldname = remove_prefix($fieldname,'.');
+        $currentData = $this->data->table($table)->select(PRIMARY_KEY)->select($fieldname)->get_result();
   			foreach ($currentData as $row) {
   				foreach ($row as $field=>$data) {
   					if ($field==PRIMARY_KEY)

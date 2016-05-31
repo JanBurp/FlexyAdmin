@@ -49,7 +49,7 @@ class Plugin_log extends Plugin {
     $log = $this->CI->log_activity->get_grouped_user_activity();
 		$grid=new grid();
 		foreach($log as $k=>$d) {
-      $log[$k]['id_user']       = $this->CI->db->get_field_where('cfg_users','str_username','id',$d['id_user']);
+      $log[$k]['id_user'] = $this->CI->data->table('cfg_users')->where('id',$d['id_user'])->get_field('str_username');
 		}
 		$grid->set_data($log,langp("home_activity"));
     $grid->set_headings(array(

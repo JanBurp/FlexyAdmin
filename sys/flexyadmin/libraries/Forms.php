@@ -148,10 +148,9 @@ class Forms extends Module {
     }
     
     // Test set to not fill again
-    if ($this->settings('restrict_this_ip_days')) {
-      $ip=$this->CI->input->ip_address();
-      $this->CI->db->where('ip',$ip)->where('str_form',$this->form_id);
-      $filled=$this->CI->db->get_row('log_forms_submit');
+    if ( $this->settings('restrict_this_ip_days') ) {
+      $ip = $this->CI->input->ip_address();
+      $filled = $this->CI->data->table('log_forms_submit')->where('ip',$ip)->where('str_form',$this->form_id)->get_row();
       if ($filled) {
         $date=mysql_to_unix($filled['dat_date']);
         $expire_date=unixdate_add_days($date,$this->settings('restrict_this_ip_days'));

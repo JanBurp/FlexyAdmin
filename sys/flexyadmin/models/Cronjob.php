@@ -22,8 +22,9 @@ class Cronjob extends CI_Model {
       $this->jobs=$this->config->item('cronjobs');
       
       // Eerst alle informatie verzamelen
+      $this->data->table('log_cronjobs');
       foreach ($this->jobs as $key=>$job) {
-        $last = $this->db->get_field_where('log_cronjobs','tme_last_run','str_job',$job['name']);
+        $last = $this->data->where('str_job',$job['name'])->get_field('tme_last_run');
         if ($last===false)
           $job['last'] = 0;
         else
