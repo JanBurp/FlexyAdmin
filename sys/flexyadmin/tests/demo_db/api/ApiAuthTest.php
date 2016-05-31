@@ -150,7 +150,7 @@ class ApiAuthTest extends ApiTestModel {
         $this->assertEquals( $user['str_username'], $result['data']['username'] );
 
         // Test if password is not same anymore
-        $new_password_hash=$this->CI->db->get_field_where('cfg_users','gpw_password','email_email',$user['email_email']);
+        $new_password_hash = $this->CI->data->table('cfg_users')->where('email_email',$user['email_email'])->get_field('gpw_password');
         $this->assertNotEquals( $user['gpw_password'], $new_password_hash );
       }
     }

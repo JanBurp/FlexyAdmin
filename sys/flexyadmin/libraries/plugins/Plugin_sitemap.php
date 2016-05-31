@@ -31,12 +31,14 @@ class Plugin_sitemap extends Plugin {
     
     if ($menuTable) {
   		// create Sitemap
-  		$url=trim($this->CI->db->get_field('tbl_site','url_url'),'/');
-  		if ($this->CI->db->field_exists('self_parent',$menuTable)) $this->CI->db->uri_as_full_uri();
-      if ($this->CI->db->field_exists('b_restricted',$menuTable)) $this->CI->db->where('b_restricted',false);
-      if ($this->CI->db->field_exists('b_visible',$menuTable)) $this->CI->db->where('b_visible',true);
-      // $this->CI->db->order_as_tree();
-  		$menu=$this->CI->db->get_result($menuTable);
+      $this->CI->data->table('tbl_site');
+  		$url = trim($this->CI->data->get_field('url_url'),'/');
+      
+      $this->CI->data->table($menuTable);
+  		if ($this->CI->data->field_exists('self_parent')) $this->CI->data->path('uri');
+      if ($this->CI->data->field_exists('b_restricted')) $this->CI->data->where('b_restricted',false);
+      if ($this->CI->data->field_exists('b_visible')) $this->CI->data->where('b_visible',true);
+  		$menu = $this->CI->data->get_result();
 
   		$urlset=array();
   		$pageCount=count($menu);
@@ -85,7 +87,7 @@ class Plugin_sitemap extends Plugin {
 	
 	function _create_robots() {
 		$robots=file_get_contents('robots.txt');
-		$url=$this->CI->db->get_field('tbl_site','url_url');
+		$url = $this->CI->data->table('tbl_site')->get_field('url_url');
 		$newSitemapLine='Sitemap: '.$url.'/sitemap.xml';
 		if (strpos($robots,'Sitemap')!==false) {
 			// Replace old Sitemap line with new

@@ -23,8 +23,8 @@
   * 
   * 3. Je items, een voorbeeld
   * 
-  *         $items = $this->CI->db->get_result( 'tbl_links', $per_page, $offset );
-  *         $total_rows = $this->CI->db->last_num_rows_no_limit();
+  *         $items = $this->CI->data->table('tbl_links')->get_result( $per_page, $offset );
+  *         $total_rows = $this->CI->data->total_rows();
   * 
   * 4. In je module de pagination links genereren:
   * 

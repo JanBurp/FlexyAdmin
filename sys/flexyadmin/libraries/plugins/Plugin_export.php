@@ -112,7 +112,7 @@ class Plugin_export extends Plugin {
 			$this->CI->db->add_many( $this->config('add_many') );	
 		}
 		
-		$data=$this->CI->db->get_result($table);
+		$data = $this->CI->data->table($table)->get_result();
 
 		// Keep only the abstract data
 		if ($this->config('add_foreigns_as_abstracts')) {

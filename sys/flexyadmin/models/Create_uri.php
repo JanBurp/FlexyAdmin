@@ -32,7 +32,7 @@ class Create_uri extends CI_Model {
   /**
    * data uit tabel
    */
-  private $data;
+  private $table_data;
   
   /**
    * veldnamen an tabel
@@ -101,21 +101,21 @@ class Create_uri extends CI_Model {
  	 */
   public function create($data,$overrule=FALSE) {
     // init
-    $this->data=$data;
+    $this->table_data=$data;
     $this->fields=array_keys($data);
     if (empty($this->source_field)) $this->set_source_field( $this->_find_source_field($data) );
  		$replaceSpace=$this->config->item('PLUGIN_URI_REPLACE_CHAR');
     
     // Need to create an uri?
- 		$uri=el('uri',$this->data,'');
- 		if (isset($this->data[$this->source_field]))
- 			$uri_source=$this->data[$this->source_field];
+ 		$uri=el('uri',$this->table_data,'');
+ 		if (isset($this->table_data[$this->source_field]))
+ 			$uri_source=$this->table_data[$this->source_field];
  		else
- 			$uri_source=$this->data['id'];
+ 			$uri_source=$this->table_data['id'];
  		$createUri=true;
 
     if ($this->cfg->get('CFG_table',$this->table,'b_freeze_uris')) $createUri=false;
-    if (isset($this->data['b_freeze_uri']) and $this->data['b_freeze_uri']) $createUri=false;
+    if (isset($this->table_data['b_freeze_uri']) and $this->table_data['b_freeze_uri']) $createUri=false;
     if (empty($uri)) $createUri=true;
     if ($overrule) $createUri=true;
     
@@ -246,15 +246,17 @@ class Create_uri extends CI_Model {
       return call_user_func(array($class, '_is_existing_uri'),$uri,$data);
     }
     else {
+      $this->data->table( $this->table );
       // Normal function to test
-   		if ($this->db->field_exists('self_parent',$this->table) and isset($this->data['self_parent'])) {
-   			$this->db->select('self_parent');
-   			$this->db->where('self_parent',$this->data['self_parent']);
+   		if ($this->data->field_exists('self_parent') and isset($this->table_data['self_parent'])) {
+   			$this->data->select('self_parent');
+   			$this->data->where('self_parent',$this->table_data['self_parent']);
    		}
-   		$this->db->select("uri");
-   		$this->db->where("uri",$uri);
-   		if (isset($this->data['id'])) $this->db->where("id !=",$this->data['id']);
-   		$uris=$this->db->get_result($this->table);
+   		$this->data->select("uri");
+   		$this->data->where("uri",$uri);
+   		if (isset($this->table_data['id'])) $this->data->where("id !=",$this->table_data['id']);
+   		$uris = $this->data->get_result();
+      
    		if (empty($uris))
    			return FALSE;
    		return current($uris);

@@ -284,8 +284,7 @@ class MY_Email extends CI_Email {
     
     // Get subject & body
     $CI = &get_instance();
-    $CI->db->where('key',$key);
-    $mail=$CI->db->get_row('cfg_email');
+    $mail = $this->CI->data->table('cfg_email')->where('key',$key)->get_row();
     if (!$mail) {
       $this->_set_error_message('email_key_not_found', $key);
       return false;
@@ -339,7 +338,7 @@ class MY_Email extends CI_Email {
   private function _set_default_data() {
     $CI = &get_instance();
     if (!isset($this->default_data['site_url']))    $this->default_data['site_url'] = site_url();
-    if (!isset($this->default_data['site_title']))  $this->default_data['site_title'] = $CI->db->get_field('tbl_site','str_title');
+    if (!isset($this->default_data['site_title']))  $this->default_data['site_title'] = $CI->data->table('tbl_site')->get_field('str_title');
     if (!isset($this->default_data['today']))       $this->default_data['today'] = strftime('%A %e %B %Y');
     return $this;
   }

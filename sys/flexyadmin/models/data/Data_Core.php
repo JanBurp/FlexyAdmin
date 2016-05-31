@@ -3383,6 +3383,17 @@ Class Data_Core extends CI_Model {
     $ids = $this->_get_ids( $compiled_delete );
     
     /**
+     * Als geen te verwijderen ids, dan zijn we al klaar
+     */
+    if (empty($ids)) {
+      $this->query_info = array(
+        'affected_rows' => 0,
+        'affected_ids'  => $ids,
+      );
+      return FALSE;
+    }
+    
+    /**
      * Onthoud huidige data van te deleten records om terug te geven.
      */
     $deleted_data = FALSE;
