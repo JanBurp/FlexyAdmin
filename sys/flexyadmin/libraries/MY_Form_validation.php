@@ -210,7 +210,7 @@ class MY_Form_validation extends CI_Form_validation {
    */
 	private function _get_db_validation($table,$field) {
 		$validation='';
-		$info=$this->CI->cfg->field_data($table,$field);
+		$info=$this->CI->db->field_data($table,$field);
 		if (isset($info['type']))
 		switch ($info['type']) {
 			case 'varchar':

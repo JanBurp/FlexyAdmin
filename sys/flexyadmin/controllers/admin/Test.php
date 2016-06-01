@@ -31,7 +31,9 @@ class Test extends MY_Controller {
   
   public function index() {
     if (!IS_LOCALHOST) return;
-    echo 'TEST';
+    $this->data->table('tbl_menu')->unselect('txt_text');
+    $result = $this->data->get_result();
+    trace_( $result );
   }
   
   

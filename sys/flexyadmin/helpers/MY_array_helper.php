@@ -28,6 +28,32 @@ function el($name,$arr,$default=NULL) {
 }
 
 /**
+ * Zet een item in een (multidimensionele) array
+ *
+ * @param array $arr array
+ * @param mixed $name string of array van strings
+ * @param mixed $value 
+ * @return void
+ * @author Jan den Besten
+ */
+function set_el( $arr, $name, $value) {
+  if (!is_array($name)) $name=array($name);
+  do {
+    $key=array_shift($name);
+    // Zorg ervoor dat de entry iig bestaat
+    if (!isset($arr[$key])) $arr[$key] = NULL;
+    // Laatste in de rij?
+    if (count($name)===0)
+      $arr[$key] = $value;
+    // Nog niet de laatste
+    else
+      $arr[$key] = set_el( $arr[$key],$name,$value );
+  } while ($key);
+  return $arr;
+}
+
+
+/**
  * Maakt een object van een array
  *
  * @param string $array 

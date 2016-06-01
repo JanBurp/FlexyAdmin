@@ -17,10 +17,6 @@
 	private $keys=array();
 	private $isAdmin;
 
- 	/**
- 	 * Information for database fields
- 	 */
- 	private $fieldInfo=array();
 
  	public function __construct() {
  		parent::__construct();
@@ -29,14 +25,14 @@
  	}
   
   public function reset() {
- 		$this->hasData=false;
- 		$this->data=array();
-		$this->keys=array(
-			'cfg_'.$this->config->item('CFG_table')					=> array( 'key' => $this->config->item('CFG_table_name'), 'fields' => '`id`,`order`,`table`,`str_order_by`' ),
-			'cfg_'.$this->config->item('CFG_field') 				=> array( 'key' => $this->config->item('CFG_field_name') ),
-			'cfg_'.$this->config->item('CFG_media_info')		=> array( 'key' => array('path','fields_media_fields') ),
-			'cfg_'.$this->config->item('CFG_img_info')			=> array( 'key' => 'path' ),
-			'cfg_'.$this->config->item('cfg_admin_menu')		=> array( 'key' => 'id' )		
+ 		$this->hasData = false;
+ 		$this->data = array();
+		$this->keys = array(
+			'cfg_table_info' => array( 'key' => 'table', 'fields' => '`id`,`order`,`table`,`str_order_by`' ),
+			'cfg_field_info' => array( 'key' => 'field_field' ),
+			'cfg_media_info' => array( 'key' => array('path','fields_media_fields') ),
+			'cfg_img_info'   => array( 'key' => 'path' ),
+			'cfg_admin_menu' => array( 'key' => 'id' )		
 		);
   }
 
@@ -219,65 +215,6 @@
  	}
 
 
-
-	/**
-	 * Use this method instead of field_data() to make sure MySql gives the right information
-	 * see http://codeigniter.com/forums/viewthread/46418/
-	 * 
-	 * DEPRICATED -> MOVED TO Data_Model.php
-	 * 
-	 * @param string $table Tablename for which field data is asked
-	 * @param string $key  default=''
-	 * @param string $value default=''
-	 * @return array Array of the information
-	 */
-	public function field_data($table,$key="",$value="") {
-		if (!isset($this->fieldInfo[$table])) {
-			$sql = "SHOW COLUMNS FROM `$table`";
-			$query = $this->db->query($sql);
-			foreach ($query->result() as $field) {
-				preg_match('/([^(]+)(\((\d+)\))?/', $field->Type, $matches);
-				$type           = sizeof($matches) > 1 ? $matches[1] : null;
-				$max_length     = sizeof($matches) > 3 ? $matches[3] : null;
-				$F              = new stdClass();
-				$F->name        = $field->Field;
-				$F->type        = $type;
-				$F->default     = $field->Default;
-				$F->max_length  = $max_length;
-				$F->primary_key = ($field->Key == "PRI") ? 1 : 0;
-//					$F->comment     = $field->Comment;
-//					$F->collation   = $field->Collation;
-				$F->extra       = $field->Extra;
-
-        if (is_numeric($F->default)) $F->default = intval($F->default);
-        
-				$info[] = $F;
-			}
-			$query->free_result();
-      
-			/**
-			 *  easier array format
-			 */
-			foreach ($info as $i) {
-				$i=object2array($i);
-				$out[$i["name"]]=$i;
-			}
-      
-			$this->fieldInfo[$table]=$out;
-		}
-		else
-			$out=$this->fieldInfo[$table];
-
-		// return value depends on given params
-		if (empty($value)) {
-			if (empty($key))
-				return $out;
-			else
-				return el($key,$out);
-		}
-		else
-			return $out[$key][$value];
-	}
 
  }
 ?>

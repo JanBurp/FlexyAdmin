@@ -75,7 +75,7 @@ class Plugin_handler extends CI_Model {
 				if (isset($this->plugins[$pluginName]['config'][$method])) {
 					$this->trigger_methods[$method][$pluginName] = $this->plugins[$pluginName]['config'][$method];
 					if ($method=='admin_api_method') {
-						$this->config->set_item('API_'.$pluginName, '/admin/plugin/'.str_replace('plugin_','',$pluginName));
+						$this->config->set_item( 'API_'.$pluginName, '/admin/plugin/'.str_replace('plugin_','',$pluginName) );
 					}
 				}
 			}
