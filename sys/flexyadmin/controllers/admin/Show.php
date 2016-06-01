@@ -45,15 +45,14 @@ class Show extends AdminController {
         $this->load->model('queu');
         $this->_before_grid($table);
         
+        $this->data->table($table);
+        
         // Single Row? Laat dan form zien
-				$singleRow = ( $this->cfg->get('CFG_table',$table,"int_max_rows") == 1);
+				$singleRow = ( $this->data->get_setting('max_rows') == 1);
 				if ($singleRow) {
           $this->data->table($table);
-          $id=$this->cfg->get('CFG_table',$table,"int_id",$id); // met dit kan de id met cfg_table_info worden ingesteld
-					$this->data->select("id");
-          if ($id) $this->data->where('id',$id);
-					$row=$this->data->get_row();
-					$id=$row["id"];
+					$this->data->select( $this->data->get_setting('primary_key') );
+					$id=$this->data->get_field($this->data->get_setting('primary_key'));
 					$this->form_args['form'] = $table.$this->config->item('URI_HASH').$id;
 					return $this->form();
 				}
@@ -490,13 +489,20 @@ class Show extends AdminController {
 				$newData=$this->_after_update($table,$data,$newData);
         
         $this->data->table( $table )->set_user_id( $restrictedToUser );
+        
 				if ($id==-1) {
 					$id = $this->data->insert( $newData );
-					$this->message->add(langp("insert_new",$table));
+          if ($id)
+            $this->message->add(langp("insert_new",$table));
+          else
+            $this->message->add($this->data->get_query_info('error'));
 				}
 				else {
 					$id = $this->data->update( $newData, array( PRIMARY_KEY => $id) );
-					$this->message->add(langp("update_succes",$table));
+          if ($id)
+            $this->message->add(langp("update_succes",$table));
+          else
+            $this->message->add_error(langp("update_error",$table));
 				}
 				
 				// Make calls that plugins might have put in the queu
@@ -507,13 +513,8 @@ class Show extends AdminController {
 				$redirectUri=$this->grid_set->open_uri($table);
 				// trace_($redirectUri);
 				if (!empty($info)) $redirectUri.='/info/'.$info;
-				
-				if ( $id===FALSE ) {
-					$this->message->add_error(langp("update_error",$table));
-				}
-				else {
-          $redirectUri=str_replace('?search=','/current/'.$id.'?search=',$redirectUri);
-				}
+				if ( $id!==FALSE ) $redirectUri=str_replace('?search=','/current/'.$id.'?search=',$redirectUri);
+
 				redirect($redirectUri);
 			}
 

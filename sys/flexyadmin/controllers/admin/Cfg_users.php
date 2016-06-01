@@ -17,9 +17,9 @@ class cfg_users extends AdminController {
     $this->load->language('help');
     $this->config->load('login');
     if (file_exists(SITEPATH.'views/login/'.$this->language))
-      $this->config->set_item('email_templates','login/'.$this->language.'/','ion_auth');
+      $this->config->set_item(array('ion_auth','email_templates'),'login/'.$this->language.'/');
     elseif (file_exists(SITEPATH.'cfg_users/'.$this->language))
-      $this->config->set_item('email_templates','cfg_users/'.$this->language.'/','ion_auth');
+      $this->config->set_item(array('ion_auth','email_templates'),'cfg_users/'.$this->language.'/');
 	}
 	
   /**

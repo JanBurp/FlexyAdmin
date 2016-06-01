@@ -106,7 +106,7 @@ class Flexy_field extends CI_Model {
 		 * or is it a known field information from database
 		 */
 		$platform=$this->db->platform();
-		$info=$this->cfg->field_data($this->table);
+		$info=$this->db->field_data($this->table);
 		$database=$this->config->item('FIELDS_'.$platform);
 		if (isset($database[$this->field][$this->action])) {
 			// trace_($this->field." - from database field info");

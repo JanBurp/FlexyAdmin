@@ -53,7 +53,7 @@ Class Data_Core extends CI_Model {
 
 
   /**
-   * Enkele noodzakelijk instellingen die automatisch worden ingesteld als ze niet bekend zijn.
+   * Noodzakelijk instellingen die automatisch worden ingesteld als ze niet bekend zijn.
    */
   protected $autoset = array(
     'table'           => '',
@@ -175,6 +175,7 @@ Class Data_Core extends CI_Model {
 	public function __construct( $table='' ) {
 		parent::__construct();
     $this->load->model('log_activity');
+    $this->lang->load('data');
     $this->_config( $table );
 	}
 
@@ -308,7 +309,7 @@ Class Data_Core extends CI_Model {
       $field_info['default'] = el(array($field,'default'),$schemaform);
       // Uit database
       if ( !isset($field_info['default'])) {
-        $field_info['default'] = $this->cfg->field_data( $table,$field, 'default' );
+        $field_info['default'] = $this->field_data( $field, 'default' );
       }
       
       // Verzamal de rest van de field info, eerst uit depricated cfg_field_info en uit de db
@@ -828,9 +829,7 @@ Class Data_Core extends CI_Model {
     if ($this->settings['table']===$table) return $this;
     // Een andere tabel, reset alles en verander de instellingen
     $this->reset();
-    if (empty($table)) {
-      $table = $this->_autoset_table();
-    }
+    if (empty($table)) $table = $this->_autoset_table();
     $this->_config( $table );
     $this->settings['table'] = $table;
     return $this;
@@ -3110,6 +3109,16 @@ Class Data_Core extends CI_Model {
 	 * @author Jan den Besten
 	 */
   public function insert( $set = NULL, $escape = NULL ) {
+    // Alleen doorgaan als max_rows = 0 of total_rows < max_rows
+    if ($this->settings['max_rows']>0) {
+      $total = $this->count_all();
+      if ( $total >= $this->settings['max_rows'] ) {
+        $this->query_info['affected_rows'] = 0;
+        $this->query_info['insert_id']     = FALSE;
+        $this->query_info['error']         = langp('data_max_rows_exceeded',$this->settings['table']);
+        return FALSE;
+      }
+    }
     return $this->_update_insert( 'INSERT', $set );
 	}
   
@@ -3574,6 +3583,19 @@ Class Data_Core extends CI_Model {
     }
     return $this->get_query_info('total_rows');
   }
+  
+  /**
+   * Geeft aantal rijen van de tabel
+   *
+   * @param string $table ['']
+   * @return int
+   * @author Jan den Besten
+   */
+  public function count_all($table='') {
+    if (empty($table)) $table=$this->settings['table'];
+    return $this->db->count_all($table);
+  }
+  
 
   /**
    * Geeft aantal velden in laatste resultaat

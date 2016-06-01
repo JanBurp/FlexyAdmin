@@ -91,6 +91,11 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 	
   private $CI;
   
+ 	/**
+ 	 * Information for database fields
+ 	 */
+ 	private $fieldInfo=array();
+  
 	private $pk;
 	private $key;
 	private $maxTextLen;
@@ -213,6 +218,66 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
     $status=current($query->result_array());
     return array_change_key_case($status);
   }
+  
+  
+	/**
+	 * Use this method instead of field_data() to make sure MySql gives the right information
+	 * see http://codeigniter.com/forums/viewthread/46418/
+	 * 
+	 * DEPRICATED -> MOVED TO Data_Model.php
+	 * 
+	 * @param string $table Tablename for which field data is asked
+	 * @param string $key  default=''
+	 * @param string $value default=''
+	 * @return array Array of the information
+	 */
+	public function field_data($table,$key="",$value="") {
+		if (!isset($this->fieldInfo[$table])) {
+			$sql = "SHOW COLUMNS FROM `$table`";
+			$query = $this->query($sql);
+			foreach ($query->result() as $field) {
+				preg_match('/([^(]+)(\((\d+)\))?/', $field->Type, $matches);
+				$type           = sizeof($matches) > 1 ? $matches[1] : null;
+				$max_length     = sizeof($matches) > 3 ? $matches[3] : null;
+				$F              = new stdClass();
+				$F->name        = $field->Field;
+				$F->type        = $type;
+				$F->default     = $field->Default;
+				$F->max_length  = $max_length;
+				$F->primary_key = ($field->Key == "PRI") ? 1 : 0;
+//					$F->comment     = $field->Comment;
+//					$F->collation   = $field->Collation;
+				$F->extra       = $field->Extra;
+
+        if (is_numeric($F->default)) $F->default = intval($F->default);
+        
+				$info[] = $F;
+			}
+			$query->free_result();
+      
+			/**
+			 *  easier array format
+			 */
+			foreach ($info as $i) {
+				$i=object2array($i);
+				$out[$i["name"]]=$i;
+			}
+      
+			$this->fieldInfo[$table]=$out;
+		}
+		else
+			$out=$this->fieldInfo[$table];
+
+		// return value depends on given params
+		if (empty($value)) {
+			if (empty($key))
+				return $out;
+			else
+				return el($key,$out);
+		}
+		else
+			return $out[$key][$value];
+	}
 
 
   /**
@@ -2217,7 +2282,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 		$id=-1;
 		$fields=$this->list_fields($table);
 		foreach ($fields as $field) {
-			$out[$id][$field]=$this->CI->cfg->field_data($table,$field,'default');
+			$out[$id][$field]=$this->CI->field_data($table,$field,'default');
 			if ($out[$id][$field]==NULL) $out[$id][$field]="";
 		}
 

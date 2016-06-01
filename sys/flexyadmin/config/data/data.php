@@ -72,7 +72,7 @@ $config['abstract_fields']  = NULL;
 
 
 /**
- * Een where SQL die wordt gebruikt om een abstract resultaat te filteren indiend nodig.
+ * Een where SQL die wordt gebruikt om een abstract resultaat te filteren indien nodig.
  */
 $config['abstract_filter']  = '';
 

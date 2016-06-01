@@ -78,20 +78,34 @@ Class MY_Config extends CI_Config {
 	}
 
 
-/**
-	* Zet een config item, eventueel met een sectie
-	*
-	* @param string $item Naam van het item
-	* @param string $value Waarde van het item
-	* @param string $section an optional section to save the item 
-	* @return void
-	*/
-	public function set_item($item, $value, $section="") {
-		if( $section === "" )
-			$this->config[$item] = $value;    
-		else
-			$this->config[$section][$item] = $value;
+
+
+
+
+  /**
+	 * Zet een config item
+	 *
+	 * @param mixed $item string of array van strings
+	 * @param mixed $value Waarde van het item
+	 * @return $this
+	 */
+	public function set_item($item, $value) {
+    $this->config = set_el( $this->config, $item, $value);
+    return $this;
 	}
+
+
+	/**
+	 * Aangepaste versie van ->item(), werkt hetzelfde als el() (array helpers).
+	 *
+	 * @param	mixed	$item	string of array van strings
+	 * @param	mixed	$default	[NULL]
+	 * @return mixed
+	 */
+	public function get_item( $item, $default=NULL) {
+    return el( $item,$this->config, $default );
+	}
+
 
 
   /**
@@ -182,6 +196,7 @@ Class MY_Config extends CI_Config {
 
 		return $loaded;
 	}
+  
   
 
   /**
