@@ -256,7 +256,7 @@ function doForm() {
 	function update_image_dropdown(select,values) {
 		var list=$(select).prevAll('ul.values');
 		var options=$(select).find('option');
-		var multiple=$(select).hasClass('medias');
+		var multiple = ($(select).hasClass('medias') || $(select).hasClass('multiple'));
 		var path=$(select).attr("path")+"/";
     
     // get current values (in current order)

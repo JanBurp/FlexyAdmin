@@ -5,6 +5,7 @@ class Test extends MY_Controller {
 	public function __construct()	{
 		parent::__construct();
     $this->load->library('table');
+    $this->load->library('flexy_auth');
     
     $template = array(
       'table_open'            => '<table border="1" cellpadding="4" cellspacing="0">',
@@ -31,10 +32,30 @@ class Test extends MY_Controller {
   
   public function index() {
     if (!IS_LOCALHOST) return;
-    $this->data->table('tbl_menu')->unselect('txt_text');
-    $result = $this->data->get_result();
+    $this->data->table('res_media_files');
+    $result = $this->data->get_files_as_options('pictures');
+    trace_( $this->data->last_query() );
     trace_( $result );
   }
+
+
+  public function options() {
+    if (!IS_LOCALHOST) return;
+    
+    $tables = $this->db->list_tables();
+    $tables = array('cfg_admin_menu');
+    foreach ($tables as $table) {
+      $this->data->table( $table );
+      $options_settings = $this->data->get_setting('options');
+      if ($options_settings) {
+        echo h($table);
+        trace_( $this->data->get_setting('options') );
+        trace_( $this->data->get_options());
+      }
+    }
+    
+  }
+
   
   
   public function users( $user_id=FALSE ) {

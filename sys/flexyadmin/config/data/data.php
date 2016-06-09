@@ -33,11 +33,28 @@ $config['fields']           = NULL;
  * Per veld mogelijk meer informatie:
  * - default            - defaultwaarde
  * - validation         - array met validation rules
- * - options            - array met opties
- * - multiple_options   - TRUE dan zijn er meer dan één van bovenstaande options mogelijk
  * - path               - als het een media veld is dan komt hier het assets pad
  */
 $config['field_info']       = NULL;
+
+/**
+ * Per veld informatie over mogelijk opties
+ * 
+ * Eenvoudige opties met één keus:
+ * - array( 'optie1'=>'optie1', 'optie2'=> 'optie2', '...' ) - in key=>value paren
+ * 
+ * Eenvoudige opties met meerdere keuzen:
+ *  - array( 'data' => array(...bovenstaande array...), 'multiple' )
+ * 
+ * Alle mogelijkheden:
+ *  - array(
+ *    'data' => array()         - Array met opties (zie hierboven), of:
+ *    'table' => ''             - naam van andere tabel waar de opties worden opgevraagd, of:
+ *    'model' => ''             - naam van model waar de opties worden opgevraagd.
+ *    'multiple' => TRUE/FALSE  - of het meerkeuze is
+ * )
+ */
+$config['options'] = NULL;
 
 
 /**

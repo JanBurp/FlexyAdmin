@@ -323,6 +323,7 @@ class Flexy_field extends CI_Model {
     
 		// Show
 		$func=$this->_is_function();
+    // trace_($func);
 		if ($func!==false) {
 			if (method_exists($this,$func)) {
 				if (isset($options))
@@ -341,6 +342,7 @@ class Flexy_field extends CI_Model {
 			$out['class'].=' '.$class;
 		else
 			$out['class']=$class;
+    // trace_($out);
 		return $out;
 	}
 
@@ -364,17 +366,6 @@ class Flexy_field extends CI_Model {
 		 */
 		if ( !is_null($options) ) {
 
-			// empty option on top?
-			$key = foreign_table_from_key($this->field,true);
-			$optCfg = $this->cfg->get('CFG_table',$key);
-      $fieldOpts = $this->cfg->get('CFG_field',$out['table'].'.'.$out['name']);
-      // trace_([$this->field,$optCfg]);
-			if ( el('b_add_empty_choice',$optCfg) ) {
-        array_unshift( $options['data'], array('name'=>'','value'=>'') );
-			}
-			// no empty option needed with jquery.multiselect if multiple
-			if ( el('multiple',$options) and isset( $options['data'][''] )) unset($options['data']['']);
-
 			// type?
 			if ($this->type!=="dropdown") {
 				$out["type"]="dropdown";
@@ -384,29 +375,40 @@ class Flexy_field extends CI_Model {
 					$out['value']=explode('|',$out['value']);
 				}
 			}
-			else {
-				// add a 'new' item button
-        $other_table = el('other_table',$options);
-        if ($other_table) {
-          $out["button"] = api_uri('API_view_form',$other_table.':-1');
-          $out['class'].='has_button ';
-        }
-			}
-      
-      // Flat options
-			$out["multiple"]=( el('multiple',$options)?'multiple':'');
-      $out['options'] = array();
-      if (!isset($options['data']) and !$options['error']) {
-        // trace_(['_standard_form_field',$this->field,$options]);
-        throw new ErrorException( __CLASS__.'->'.__METHOD__.'() options not properly set.' );
+
+			// add a 'new' item button
+      $other_table = el('table',$options);
+      if ($other_table) {
+        $out["button"] = api_uri('API_view_form',$other_table.':-1');
+        $out['class'].='has_button ';
       }
-      if (!in_array($this->pre,array('media','medias'))) {
-        foreach ($options['data'] as $key => $option) {
-          if (isset($option['name'])) $out['options'][el('value',$option,$key)] = $option['name'];
-        }
+      
+      // Options
+      if (isset($options['error'])) {
+        $options=$options['error'];
       }
       else {
-        $out['options']=el('data',$options, el('error',$options) );
+        $out['multiple']=( el('multiple',$options)?'multiple':'');
+        
+        // Opties op standaard manier key=>value
+        if (isset($options['data'])) $options = $options['data'];
+        $out['options']=array();
+        foreach ($options as $key => $option) {
+          $out['options'][$key]=$option;
+        }
+        
+  			// Empty option? Niet nodig met FORM_NICE_DROPDOWNS en 'multiple'
+        if ( !$this->config->item('FORM_NICE_DROPDOWNS') or empty($out['multiple']) ) {
+    			$key       = foreign_table_from_key($this->field,true);
+    			$optCfg    = $this->cfg->get('CFG_table',$key);
+          $fieldOpts = $this->cfg->get('CFG_field',$out['table'].'.'.$out['name']);
+    			if ( el('b_add_empty_choice',$optCfg) ) {
+            array_unshift( $options, '' );
+    			}
+        }
+        else {
+          if (current($out['options'])=='') array_shift($out['options']);
+        }
       }
 		}
 		/**
@@ -519,35 +521,6 @@ class Flexy_field extends CI_Model {
     return $this->fieldData;
 	}
 
-	function _self_form( $options ) {
-    // Kies veld dat getoond wordt
-		if ($this->table=='cfg_auto_menu') {
-			$strField=$this->cfg->get('cfg_table_info','cfg_auto_menu','str_abstract_fields');
-		}
-		else {
-      $strField=$this->data->table($this->table)->list_fields('str',1);
-		}
-    
-    $this->data->table($this->table)->select(array(PRIMARY_KEY));
-		if ($strField) $this->data->select($strField);
-		if ($this->data->field_exists('uri')) $this->data->select('uri');
-		if ($this->data->field_exists('self_parent')) $this->data->select('self_parent');
-		if ($this->data->field_exists('order')) $this->data->select('order');
-    // self_parent kan niet naar zichzelf verwijzen
-    if ($this->field=='self_parent') $this->data->where(PRIMARY_KEY." !=", $this->id);
-    // Als self_parent bestaat, dan moet het op volgorde van de tree
-		$this->data->path('uri');
-    if ($strField) $this->data->path($strField);
-		$res = $this->data->get_result();
-    
-    // Zorg ervoor dat er altijd een lege optie is
-    array_unshift( $options['data'], array('name'=>'','value'=>0));
-    // Veld verder instellen volgens standaard
-		$out=$this->_standard_form_field($options);
-		$out["type"]="dropdown";
-		unset($out["button"]);
-		return $out;		
-	}
 
 	function _foreign_key_grid() {
 		$out="";
@@ -593,25 +566,6 @@ class Flexy_field extends CI_Model {
 		return $out;
   }
 
-	function _join_form($options) {
-		$out=$this->_standard_form_field($options);
-    if (!isset($out['multiple'])) $out['multiple']='multiple';
-		$out["button"] = api_uri('API_view_form',join_table_from_rel_table($out["name"]).':-1');
-		if (get_prefix($out['name'])==$this->config->item('REL_table_prefix')) {
-			$table=join_table_from_rel_table($out['name']);
-			$tableInfo=$this->cfg->get('CFG_table',$table);
-			$formManyType=el('str_form_many_type',$tableInfo);
-			if (!empty($formManyType) and $formManyType!='dropdown') {
-				$out['type']=$formManyType;
-				unset($out['button']);
-			}
-      $values=$out['value'];
-      $values=array_keys($out['value']);
-      $out['value']=array_combine($values,$values);
-		}
-		return $out;
-	}
-
 	function _boolean_grid() {
 		if ($this->fieldData)
 			$out=icon("yes");
@@ -646,21 +600,6 @@ class Flexy_field extends CI_Model {
 		return $out;
 	}
 
-	function _dropdown_tables_form() {
-		$tables=$this->db->list_tables();
-		$tables=not_filter_by($tables,"cfg_");
-		$tables=not_filter_by($tables,"log_");
-		$tables=not_filter_by($tables,"rel_users");
-		$tables=array_merge(array(""),$tables);
-    $options=array('data'=>array());
-    foreach ($tables as $key => $value) {
-      $options['data'][$value]=array('name'=>$value,'value'=>$value);
-    }
-		$out=$this->_standard_form_field($options);
-		$out["type"]="dropdown";
-		unset($out["button"]);
-		return $out;
-	}
 
 	function _dropdown_fieldsets_form() {
 		$table=get_prefix(el('field_field',$this->formData,''),'.');
@@ -684,69 +623,6 @@ class Flexy_field extends CI_Model {
 		return $out;
 	}
 
-
-	function _dropdown_field_form() {
-		$tables=$this->db->list_tables();
-		$thisRights=$this->flexy_auth->get_rights();
-    // $normal_tables=$tables;
-    // $normal_tables=filter_by($tables,"tbl_");
-    // $result_tables=filter_by($tables,"res_");
-    // $normal_tables=array_merge($result_tables,$normal_tables);
-		$specialFields=array_keys($this->config->item('FIELDS_special'));
-		$options=array();
-
-    $commonFields=array();
-		foreach ($tables as $table) {
-			$fields=$this->db->list_fields($table);
-			foreach ($fields as $field) {
-        if (!in_array($field,$commonFields)) $commonFields[]=$field;
-				$pre=get_prefix($field);
-				if ( ($this->table!='cfg_media_info') or ($pre=='media') or ($pre=='medias') or ($this->field=='fields_check_if_used_in')) {
-					$options[]="$table.$field";
-				}
-			}
-			// join fields?
-      // if ($this->table!=='cfg_media_info') {
-      //         $jt="rel_".remove_prefix($table).$this->config->item('REL_table_split');
-      //         $rel_tables=filter_by($tables,"rel_");
-      //         foreach($rel_tables as $key=>$jtable) {
-      //           if (strncmp($jt,$jtable,strlen($jt))==0) {
-      //             $field=$jtable;
-      //             $options[]="$table.$field";
-      //           }
-      //         }
-      // }
-		}
-    if ($this->table!=='cfg_media_info') {    
-      $commonFields=array_reverse($commonFields);
-      foreach ($commonFields as $field ) {
-        array_unshift($options,'*.'.$field);
-      }
-    }
-    array_unshift($options,"");
-    foreach ($options as $key => $value) {
-      $options[$value]=$value;
-      unset($options[$key]);
-    }
-    ksort($options);
-    
-    $data=$options;
-    $options=array('data'=>array());
-    foreach ($data as $key => $value) {
-      $options['data'][$value]=array('name'=>$value,'value'=>$value);
-    }
-    
-		$out=$this->_standard_form_field($options);
-		$out["type"]="dropdown";
-		unset($out["button"]);
-		return $out;
-	}
-
-	function _dropdown_fields_form() {
-		$out=$this->_dropdown_field_form();
-		$out["multiple"]="multiple";
-		return $out;
-	}
 
 	function _dropdown_media_grid() {
 		$out="";
@@ -785,89 +661,22 @@ class Flexy_field extends CI_Model {
     $options=array();
 		foreach($files as $file) {
       $options[$file['name']] = str_replace('_','_&#173;',$file["name"])." (".trim(strftime("%e %B %Y",strtotime($file["date"]))).")";
-      // if ($file["type"]!=="dir") {
-      //   $ext=strtolower($file["type"]);
-      //   if (in_array($ext,$types)) {
-      //           $name = str_replace('_','_&#173;',$file["name"])." (".trim(strftime("%e %B %Y",strtotime($file["date"]))).")";
-      //     $options[$file["name"]] = array('name'=>$name,'value'=>$file['name']);
-      //   }
-      // }
 		}
     $options = array_slice($options,0,50); // TODO: LIMIET WEG
 		return $options;
 	}
   
-	function _dropdown_media_form() {
-		$info = $this->cfg->get('CFG_media_info',$this->table.".".$this->field);
-		if (empty($info)) {
-      $options=array('error'=>'ERROR: add this field in Media Info');
-  		$out=$this->_standard_form_field($options);
-      $out['type']='input';
-      $out['value']='ERROR: add this field in Media Info';
-      return $out;
-		}
-		else {
-			$types=el("str_types",$info);
-			$types=str_replace(",","|",$types);
-			$types=explode("|",$types);
-			$path=el("path",$info);
-			$map=$this->config->item('ASSETS').$path;
-      
-      // Determine fieldtype first
-  		$filetypes=el("str_types",$info);
-      $are_images=file_types_are_images($filetypes);
-      $are_flash=file_types_are_flash($filetypes);
-      
-      $fieldType=$this->type;
-  		if ( file_types_are_images($types) or file_types_are_flash($types) ) {
-        $fieldType="image_dropdown";
-    		if (el('b_dragndrop',$info)) $fieldType="image_dragndrop";
-      }
-      else {
-        $fieldType='dropdown';
-      }
-      
-      // Get files as Options
-      $options = array('data'=>array());
-  		if ($this->pre==="medias") $options['multiple']=true;
-      
-      $this->data->table('res_media_files');
-      $filter = array(
-        'user' => $this->restrictedToUser,
-        'type' => $types,
-      );
-      
-			if ($fieldType=='image_dragndrop') {
-        $options['data'] = $this->data->get_files( $path, $filter );
-			}
-			else {
-				$lastUploadMax = $this->cfg->get('CFG_media_info',$path,'int_last_uploads');
-				if ( $lastUploadMax>0 ) {
-          $filesOnName = $this->data->order_by('str_title')->get_files( $path, $filter );
-          $filesRecent = $this->data->order_by('rawdate','DESC')->get_files( $path, $filter, $lastUploadMax );
-          $options['data'] = array(
-            langp("form_dropdown_sort_on_last_upload",$lastUploadMax) => $this->_create_media_options( $filesRecent,$types ),
-            lang("form_dropdown_sort_on_name")                        => $this->_create_media_options( $filesOnName,$types )
-          );
-				}
-				else {
-          $files = $this->data->get_files( $path, $filter );
-					$options['data'] = $this->_create_media_options($files,$types);
-				}
-			}
-  		// add empty option if needed
-  		if ($this->cfg->get('CFG_media_info',$path,'b_add_empty_choice')) array_unshift( $options['data'],'');
-      
-		}
-    
-		$out = $this->_standard_form_field($options);
-
-    if (isset($fieldType)) $out['type']=$fieldType;
-		$out["path"]=$map;
-		if ($this->pre=="medias") $out["multiple"]="multiple";
-		unset($out["button"]);
-		return $out;
-	}
+  function _dropdown_media_form($options) {
+    $out=$this->_standard_form_field($options);
+    $out['path']=$this->config->item('ASSETS').$options['path'];
+    $out['type']="image_dropdown";
+    if ( $this->cfg->get('CFG_media_info',$this->table.".".$this->field,'b_dragndrop') ) {
+      $out['type']='image_dragndrop';
+      $out['options'] = array_pop($out['options']);
+    }
+    return $out;
+  }
+  
 	
 	function _dropdown_list_form() {
 		$options=array();
@@ -941,34 +750,7 @@ class Flexy_field extends CI_Model {
 		unset($out["button"]);
 		return $out;
 	}
-
-	function _dropdown_path_form() {
-		$map=$this->config->item('ASSETS');
-		$files=read_map($map,'dir');
-    $files=array_unset_keys($files,array('css','fonts','img','js','lists','_thumbcache','less-bootstrap','less-default'));
-    
-		$options=array('data'=>array());
-    $options['data']['']=array('name'=>'','value'=>'');
-		foreach($files as $file) {
-			$options['data'][$file["name"]]=array('name'=>$file['name'],'value'=>$file["name"]);
-		}
-		$out=$this->_standard_form_field($options);
-		unset($out["button"]);
-		return $out;
-	}
-
-	function _dropdown_api_form() {
-		$apis=$this->config->config;
-		$apis=filter_by_key($apis,'API');
-		$options=array('data'=>array());
-		$options['data'][]=array('name'=>'','value'=>'');
-		foreach ($apis as $key => $value) {
-			$options['data'][$key]=array('name'=>$value,'value'=>$value);
-		}
-		$out=$this->_standard_form_field($options);
-		unset($out["button"]);
-		return $out;
-	}
+ 
 
 	function _dropdown_plugin_form() {
 		$plugins=$this->plugins;

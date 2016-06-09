@@ -410,7 +410,7 @@ class Show extends AdminController {
 		 * Met many_to_many data?
 		 */
     $many_to_many = $this->data->get_setting( array('form_set','with','many_to_many') );
-    if ( $many_to_many ) $this->data->with('many_to_many','abstract');
+    if ( is_array($many_to_many) ) $this->data->with('many_to_many','abstract');
 		
     /**
      * Nieuw item (INSERT)
