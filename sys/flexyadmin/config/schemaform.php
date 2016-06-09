@@ -364,7 +364,7 @@ $config['FIELDS_special'] = array(
     'type'        => 'string',
     'form-type'   => 'text',
     'grid'        => '%s',
-    'form'        => 'function_dropdown_tables',
+    'form'        => 'dropdown',
     'validation'	=> 'trim',
   ),
 	'rights'			=> array(
@@ -378,7 +378,7 @@ $config['FIELDS_special'] = array(
     'type'        => 'string',
     'form-type'   => 'text',
     'grid'        => '%s',
-    'form'        => 'function_dropdown_path',
+    'form'        => 'dropdown',
     'validation'	=> 'trim',
   ),
 	'file'			=> array(

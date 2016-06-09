@@ -22,7 +22,7 @@ class ui extends CI_Model {
 		parent::__construct();
     $this->load->model('cfg');
     $this->lang->load('field_names');
-    // $this->load->library('lang');
+    $this->load->library('flexy_auth');
     $this->_load();
 	}
 
@@ -34,7 +34,6 @@ class ui extends CI_Model {
    */
 	private function _load() {
 		log_('info',"ui_names: loading");
-		
 		$ui=$this->cfg->get('cfg_ui');
 		// fill ui data
 		foreach ($ui as $ui_row) {

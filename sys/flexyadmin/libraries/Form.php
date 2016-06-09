@@ -1030,14 +1030,11 @@ class Form {
 					$preName=get_prefix($field['name']);
 					$field['control'].='<ul class="choices">';
           if (!empty($options)) {
-  					foreach($options as $img) {
-  						if (empty($img)) {
+  					foreach($options as $image=>$title) {
+  						if (empty($image)) {
   							$field['control'].='<li><img src="'.$this->CI->config->item('ADMINASSETS').'icons/flexyadmin_empty_image.gif" class="media empty" /></li>';
   						}
   						else {
-  							$image=$img['name'];
-                $title=$img['name'];
-                if (isset($img['date'])) $title.=' ('.$img['date'].')';
   							if ($preName=='media' or !in_array($image,$medias)) $field['control'].='<li>'.thumb(array("src"=>$field["path"]."/".$image,"class"=>"media",'alt'=>$title,'title'=>$title)).'</li>';
   						}
   					}

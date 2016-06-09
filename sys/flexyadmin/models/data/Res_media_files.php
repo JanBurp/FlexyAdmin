@@ -107,13 +107,76 @@ Class Res_media_files extends Data_Core {
     else {
       unset($filter['user']);
     }
+    
+    return $this->_get_files_result($path,$filter,$limit,$offset);
+  }
+  
+  /**
+   * Geeft een abstract van de bestanden uit een bepaalde map.
+   *
+   * @param string $path 
+   * @param string $filter 
+   * @param string $limit 
+   * @param string $offset 
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_files_abstract( $path,$filter=array(),$limit=0,$offset=0) {
+    // Veldnamen
+    $this->select('file')->select_abstract()->set_result_key('file');
+    return $this->_get_files_result($path,$filter,$limit,$offset);
+  }
+  
+  
+  /**
+   * Geeft bestanden als opties terug. Eventueel gegroupeerd.
+   *
+   * @param string $path 
+   * @param array $filter 
+   * @param int $limit 
+   * @param int $offset 
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_files_as_options( $path,$filter=array(), $limit=0, $offset=0 ) {
+    $this->select('file')->select_abstract()->order_by('file');
+    $query = $this->_get_files($path,$filter,$limit,$offset);
+    $options = $this->_make_options_result($query,'file');
+    // recent uploads?
+    $number_of_recent_uploads = $this->get_setting('number_of_recent_uploads');
+    if ($number_of_recent_uploads>0 ) {
+      $this->reset();
+      $this->select('file')->select_abstract()->order_by('dat_date','DESC');
+      $query = $this->_get_files( $path,$filter, $number_of_recent_uploads);
+      $recent_uploads_options = $this->_make_options_result($query,'file');
+      if ($recent_uploads_options) {
+        $options = array(
+          langp('form_dropdown_sort_on_last_upload',$number_of_recent_uploads) => $recent_uploads_options,
+          lang('form_dropdown_sort_on_name')                                   => $options,
+        );
+      }
+      $this->reset();
+    }
+    $query->free_result();
+    return $options;
+  }
 
+
+  /**
+   * Basis voor get_files... methods
+   *
+   * @param string $path 
+   * @param array $filter 
+   * @param int $limit 
+   * @param int $offset 
+   * @return object $query
+   * @author Jan den Besten
+   */
+  private function _get_files( $path, $filter=array(), $limit=0, $offset=0 ) {
     // Alleen de bestanden die bestaan
     $this->where( 'b_exists', TRUE );
-
     // Bestanden van bepaalde map
     $this->where( 'path', $path );
-    
     // Standaard filters
     $filter = array_rename_keys($filter,array('type'=>'str_type'));
     if ($filter) {
@@ -121,9 +184,33 @@ Class Res_media_files extends Data_Core {
         $this->where( $field, $value);
       }
     }
-    
-    return $this->get_result($limit,$offset);
+    $query = $this->get( $limit, $offset, FALSE );
+    return $query;
   }
+  
+  
+  /**
+   * Basis voor get_files_result... methods
+   *
+   * @param string $path 
+   * @param string $filter 
+   * @param string $limit 
+   * @param string $offset 
+   * @return array
+   * @author Jan den Besten
+   */
+  private function _get_files_result( $path, $filter=array(), $limit=0, $offset=0 ) {
+    $query = $this->_get_files( $path, $filter=array(), $limit=0, $offset=0 );
+    if ($query) {
+      $result = $this->_make_result_array( $query );
+      $query->free_result();
+    }
+    $this->reset();
+    return $result;
+  }
+  
+  
+  
   
   
 }

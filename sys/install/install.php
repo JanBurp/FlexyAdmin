@@ -122,7 +122,7 @@ class Installer
                     "= 'group_id'"        => "= 'id_user_group'",
                     "= 'email'"           => "= 'str_username'",
                     "= 'members'"         => "= 'users'",
-                    "= 86500;"            => "= 604800;",
+                    "= 86500;"            => "= 2419200;",
                     '$config[\'track_login_attempts\']       = FALSE;' => '$config[\'track_login_attempts\']       = TRUE;',
                   ),
 

@@ -152,7 +152,7 @@ Class cfg_users extends Data_Core {
     if ($this->user_id) {
       if ( array_key_exists('rel_users__groups',$options) ) {
         foreach ($options['rel_users__groups']['data'] as $key=>$option) {
-          if ( !in_array($option['value'],$this->show_groups) ) {
+          if ( !in_array($key,$this->show_groups) ) {
             unset($options['rel_users__groups']['data'][$key]);
           }
         }

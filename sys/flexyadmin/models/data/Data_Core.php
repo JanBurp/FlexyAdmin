@@ -62,6 +62,7 @@ Class Data_Core extends CI_Model {
     'abstract_filter' => '',
     'relations'       => array(),
     'field_info'      => array(),
+    'options'         => array(),
     'order_by'        => 'id',
     'max_rows'        => 0,
     'update_uris'     => true,
@@ -239,7 +240,7 @@ Class Data_Core extends CI_Model {
    */
   protected function _autoset() {
     foreach ($this->autoset as $key => $value) {
-      if ( !isset($this->settings[$key]) ) {
+      if ( !isset($this->settings[$key])) {
         // Moet worden ingesteld, dus automatisch, met bijbehorden waarde of met een method.
         if (method_exists($this,'_autoset_'.$key)) {
           $method = '_autoset_'.$key;
@@ -293,10 +294,12 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   protected function _autoset_field_info( $table='', $fields=array() ) {
+
     $this->load->model('cfg');
     $this->load->library('form_validation');
     if (empty($table)) $table = $this->settings['table'];
     if (empty($fields)) $fields = $this->settings['fields'];
+
     $fields_info = array();
     $settings_fields_info = array();
     foreach ($fields as $field) {
@@ -325,59 +328,6 @@ Class Data_Core extends CI_Model {
       // Combineer, met oa de default waarde
       $settings_fields_info[$field] = array('default'=>$field_info['default']);
       
-      
-      /**
-       * Options
-       */
-      $options = array();
-      // Uit (depricated) cfg_field_info
-      if (!empty($field_info['str_options'])) {
-        $options['data'] = explode('|',$field_info['str_options']);
-        foreach ($options['data'] as $key=>$option) {
-          $options['data'][$key] = array( 'value'=>$option, 'name'=>$option );
-        }
-        $options['multiple'] = el('b_multi_options', $field_info, FALSE)?true:FALSE;
-      }
-
-      // Via many_to_one of self_parent
-      if ( get_prefix($field)==='id' and $field!==$this->settings['primary_key']) {
-        
-        $other_table = el( array('relations','many_to_one',$field,'other_table'), $this->settings);
-        if ($other_table and $this->db->table_exists($other_table)) {
-          // Zijn er teveel opties?
-          $options['other_table'] = $other_table;
-          if ($this->db->count_all($other_table)>10000) {
-            // Geef dan de api aanroep terug waarmee de opties opgehaald kunnen worden
-            $options['api'] = '_api/table?table='.$other_table.'&as_options=true';
-          }
-          else {
-            // Anders geef gewoon de opties terug
-            $other_model = new Data_core();
-            $other_model->table( $other_table )->select_abstract();
-            $options['data'] = $other_model->get_result();
-            foreach ($options['data'] as $key => $option) {
-              $options['data'][$key] = array( 'value'=>$key, 'name'=>$option['abstract'] );
-            }
-          }
-        }
-      }
-
-      // Self parent -> tree options
-      if ($field==='self_parent') {
-        $first_abstract_field = $this->settings['abstract_fields'];
-        $first_abstract_field = current($first_abstract_field);
-        $this->select('id,self_parent,order,'.$first_abstract_field);
-        $this->path( $first_abstract_field, '', ' / ' );
-        $options['data'] = $this->get_result();
-        foreach ($options['data'] as $key => $option) {
-          $options['data'][$key] = array( 'value'=>$key, 'name'=> $option[$first_abstract_field] );
-        }
-      }
-
-      if ( $options) {
-        $settings_fields_info[$field]['options'] = $options;
-      }
-      
       /**
        * Validation
        */
@@ -395,6 +345,86 @@ Class Data_Core extends CI_Model {
       
     }
     return $settings_fields_info;
+  }
+  
+  /**
+   * Autoset opties
+   */
+  protected function _autoset_options() {
+    $settings_options = array();
+    $table = $this->settings['table'];
+    $fields = $this->settings['fields'];
+    foreach ($fields as $field) {
+      // trace_($table.'.'.$field);
+      $options = array();
+
+      // 1) Uit (depricated) cfg_field_info
+      $field_info = $this->cfg->get( 'cfg_field_info', $table.'.'.$field);
+      if (!empty($field_info['str_options'])) {
+        $options['data'] = explode('|',$field_info['str_options']);
+        $options['data'] = array_combine($options['data'],$options['data']);
+        $options['multiple'] = el('b_multi_options', $field_info, FALSE)?true:FALSE;
+        // if ($options['multiple']===FALSE) $options=$options['data'];
+      }
+
+      // Via many_to_one
+      if ( get_prefix($field)==='id' and $field!==$this->settings['primary_key']) {
+        $other_table = el( array('relations','many_to_one',$field,'other_table'), $this->settings);
+        if ($other_table and $this->db->table_exists($other_table)) $options['table'] = $other_table;
+      }
+      
+      // Speciale velden
+      $type=get_prefix($field);
+      switch ($type) {
+        
+        case 'media':
+        case 'medias':
+          $options['model'] = 'media';
+          $options['path'] = $this->get_setting(array('field_info',$field,'path'));
+          if ($type=='medias') $options['multiple']=true;
+          break;
+        
+        case 'field':
+        case 'fields':
+          $options['model'] = 'fields';
+          if ($type=='fields') $options['multiple']=true;
+          break;
+      }
+      
+      switch ($field) {
+        
+        // Self parent -> tree options
+        case 'self_parent':
+          $first_abstract_field = $this->settings['abstract_fields'];
+          $first_abstract_field = current($first_abstract_field);
+          $this->select('id,self_parent,order,'.$first_abstract_field);
+          $this->path( $first_abstract_field, '', ' / ' );
+          $options['data'] = $this->get_result();
+          foreach ($options['data'] as $key => $option) {
+            $options['data'][$key] = $option[$first_abstract_field];
+          }
+          array_unshift($options['data'],'');
+          break;
+        
+        case 'table':
+          $options['model'] = 'tables';
+          break;
+
+        case 'path':
+          $options['model'] = 'paths';
+          break;
+
+        case 'api':
+          $options['model'] = 'apis';
+          break;
+        
+      }
+
+      if ( $options) {
+        $settings_options[$field] = $options;
+      }
+    }
+    return $settings_options;
   }
   
 
@@ -690,6 +720,7 @@ Class Data_Core extends CI_Model {
     $form_set['fields'] = array_values($form_set['fields']); // reset keys
     $form_set['fieldsets'] = $fieldsets;
     $form_set['with']      = array();
+    if (isset($this->settings['relations']['many_to_many'])) $form_set['with']['many_to_many']=array();
     // trace_($form_set);
     return $form_set;
   }
@@ -964,6 +995,7 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   protected function _get_many_to_many_tables() {
+    if (get_prefix($this->settings['table'])==='rel') return array();
     $rel_tables = $this->db->list_tables();
     $rel_tables = filter_by( $rel_tables, 'rel_'.remove_prefix($this->settings['table']) );
     $this->relation_tables['many_to_many__rel'] = $rel_tables;
@@ -1060,20 +1092,30 @@ Class Data_Core extends CI_Model {
    * 
    * Resultaat bij één veld:
    * 
-   * array(
-   *  'api'         => '',
-   *  'data'        => array(),
-   *  'multiple'    => [TRUE|FALSE],
-   *  'other_table' => [''] Als de data uit een andere tabel komt, dan wordt hier de naam van die tabel gegeven
+   * Alle mogelijkheden:
+   *  - array(
+   *    'data' => array()         - Array met opties
+   *    'table' => ''             - naam van andere tabel waar de opties worden opgevraagd, of:
+   *    'path' => ''              - als het een media(s) veld is het pad van de bestanden
+   *    'model' => ''             - naam van model waar de opties worden opgevraagd.
+   *    'multiple' => TRUE/FALSE  - of het meerkeuze is
    * )
+   *
    * 
    * Waar de 'data' array er zo uit ziet:
    * 
    * array(
-   *  'value'   => '', // De waarde zelf (bijvoorbeeld een primary key)
-   *  'name'    => '', // Doe de waarde getoont wordt (bijvoorbeeld een abstract)
-   *  ['group'   => '', // Een eventuele groep, voor selects die verdeeld zijn in groepen. ]
+   *  'value'   => 'name',
+   *  ...
    * ) 
+   * 
+   * of met gegroupeerde data (voor groepen in selects)
+   * 
+   * array(
+   *  'groep_naam_1' => array(...),
+   *  'groep_naam_2' => array(...),
+   *  ...
+   * )
    * 
    * Als geen veld wordt meegegeven worden de opties van alle velden uit de tabel teruggegeven:
    * 
@@ -1094,14 +1136,87 @@ Class Data_Core extends CI_Model {
       $fields = array($field);
     }
     else {
-      $fields = array_keys($this->settings['field_info']);
+      $fields = array_keys($this->settings['options']);
     }
     
-    // Alle opties van de (normale) velden verzamelen
+    // Alle opties van de velden verzamelen
     $options=array();
     foreach ($fields as $field) {
-      $field_options = el( array($field,'options'), $this->settings['field_info'] );
-      if ($field_options) $options[$field] = $field_options;
+      $field_options = el( array($field), $this->settings['options'] );
+      // trace_([$field,$field_options]);
+      if ($field_options) {
+        $field_options;
+        
+        // table
+        if ( isset($field_options['table']) ) {
+          $other_table = $field_options['table'];
+          // Zijn er teveel opties?
+          if ($this->db->count_all($other_table)>10000) {
+            $field_options['api'] = '_api/table?table='.$other_table.'&as_options=true';
+          }
+          // Anders geef gewoon de opties terug
+          else {
+            $other_model = new Data_core();
+            $field_options['data'] = $other_model->table( $other_table )->get_result_as_options();
+            $field_options['data'] = array_unshift_assoc($field_options['data'],'','');
+          }
+        }
+        
+        // model (TODO dit extern maken zodat het echt models zijn, dus flexibeler)
+        if ( isset($field_options['model']) ) {
+          $model = $field_options['model'];
+          switch ($model) {
+            
+            case 'media':
+              $path = $field_options['path'];
+              $media = new Data();
+              $media->table( 'res_media_files' );
+              $field_options['data'] = $media->get_files_as_options($path);
+              // $field_options['data']=array_unshift_assoc($field_options['data'],'','');
+              break;
+
+            case 'tables':
+              $tables=$this->db->list_tables();
+        		  $tables=not_filter_by($tables,"cfg_");
+        		  $tables=not_filter_by($tables,"log_");
+        		  $tables=not_filter_by($tables,"rel_users");
+          		$field_options['data']=$tables;
+              array_unshift($field_options['data'],'');
+              $field_options['data']=array_combine($field_options['data'],$field_options['data']);
+              break;
+              
+            case 'fields':
+              $field_options['data']=array();
+              $tables=$this->db->list_tables();
+              foreach ($tables as $table) {
+                $table_fields=$this->db->list_fields($table);
+                foreach ($table_fields as $value) {
+                  $field_options['data'][]=$table.'.'.$value;
+                }
+              }
+              array_unshift($field_options['data'],'');
+              $field_options['data']=array_combine($field_options['data'],$field_options['data']);
+              break;
+
+            case 'paths':
+          		$map=$this->config->item('ASSETS');
+          		$files=read_map($map,'dir');
+              $files=array_unset_keys($files,array('css','fonts','img','js','lists','_thumbcache','less-bootstrap','less-default'));
+          		$field_options['data']=array_keys($files);
+              array_unshift($field_options['data'],'');
+              $field_options['data']=array_combine($field_options['data'],$field_options['data']);
+              break;
+              
+            case 'apis':
+          		$field_options['data']=filter_by_key($this->config->config,'API');
+              array_unshift($field_options['data'],'');
+              $field_options['data']=array_combine($field_options['data'],$field_options['data']);
+              break;
+          }
+        }
+      }
+      // trace_($field_options);
+      $options[$field] = $field_options;
     }
     
     // ..._to_many opties?
@@ -1112,15 +1227,14 @@ Class Data_Core extends CI_Model {
           foreach ( $relations as $what => $relation ) {
             $other_table = $relation['other_table'];
             $result_name = $relation['result_name'];
-            $options[$result_name]['other_table'] = $other_table;
-            // trace_(['get_options',$what,$other_table,$result_name]);
             $other_model = new Data();
             $other_model->table($other_table)->select_abstract();
-            $options[$result_name] = array( 'data'=>$other_model->get_result(), 'multiple'=>true );
+            $options[$result_name] = array( 'table'=>$other_table, 'data'=>$other_model->get_result(), 'multiple'=>true );
             if ($options[$result_name]['data']) {
               foreach ($options[$result_name]['data'] as $key => $value) {
-                $options[$result_name]['data'][$key] = array('value'=>$key,'name'=>$value['abstract']);
+                $options[$result_name]['data'][$key] = $value['abstract'];
               }
+              $options[$result_name]['data'] = array_unshift_assoc($options[$result_name]['data'],'','');
             }
           }
         }
@@ -1128,9 +1242,8 @@ Class Data_Core extends CI_Model {
     }
 
     // Return
-    if ($one) {
-      return current($options);
-    }
+    // trace_($options);
+    if ($one) return current($options);
     return $options;
   }
   
@@ -1318,7 +1431,7 @@ Class Data_Core extends CI_Model {
     
     foreach ( $query->result_array() as $row ) {
       $id = $row[$this->settings['primary_key']];
-      $result_key = $row[$key];
+      $result_key = el($key,$row,$id);
       
       // Voeg relatie data aan row
       if ($this->tm_with) {
@@ -1544,6 +1657,43 @@ Class Data_Core extends CI_Model {
     $row = $this->get_row( $where );
 		return $row[$field];
 	}
+  
+  
+  /**
+   * Geeft resulaat terug als opties. Een resultaat is combinatie van hetvolgende:
+   * - de key is de PRIMARY_KEY
+   * - de rijen zijn geen array, maar een abstract (string). Zie select_abstract().
+   * - als geen volgorder is aangegeven in de config en niet is ingesteld worden de abstract velden als volgorde gebruikt
+   *
+   * @param int $limit [0]
+   * @param int $offset [0] 
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_result_as_options( $limit=0, $offset=0 ) {
+    $this->select_abstract();
+    if (empty($this->tm_order_by) and !el('order_by',$this->settings) ) {
+      $abstract_fields = $this->settings['abstract_fields'];
+      $this->order_by( $abstract_fields );
+    }
+    
+    $query = $this->get( $limit,$offset );
+    $options = $this->_make_options_result($query);
+    $query->free_result();
+    return $options;
+  }
+  
+  
+  protected function _make_options_result( $query,$key='' ) {
+    if ( $query===FALSE) return array();
+    if (empty($key)) $key=$this->settings['primary_key'];
+    $options=array();
+    foreach ( $query->result_array() as $row ) {
+      $id = $row[$key];
+      $options[$id] = $row['abstract'];
+    }
+    return $options;
+  }
   
   
   

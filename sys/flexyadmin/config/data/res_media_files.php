@@ -1,5 +1,10 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
+
+// DIT MOET NOG PER PAD WORDEN INGESTELD
+$config['number_of_recent_uploads'] = 10;
+
+
 /* --- Settings for data model 'res_media_files' --- zie voor uitleg config/data/data_model.php */
 
 $config['table'] = 'res_media_files';
@@ -29,7 +34,7 @@ $config['max_rows'] = 0;
 
 $config['update_uris'] = true;
 
-$config['abstract_fields'] = array('str_type','str_title');
+$config['abstract_fields'] = array('file','dat_date');
 
 $config['abstract_filter'] = '';
 
