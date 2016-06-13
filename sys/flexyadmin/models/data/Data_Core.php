@@ -1190,6 +1190,11 @@ Class Data_Core extends CI_Model {
               $tables=$this->db->list_tables();
               foreach ($tables as $table) {
                 $table_fields=$this->db->list_fields($table);
+                // Speciale velden filter
+                if ($field==='fields_media_fields') {
+                  $table_fields = filter_by($table_fields,'media');
+                }
+                // Maak er opties van
                 foreach ($table_fields as $value) {
                   $field_options['data'][]=$table.'.'.$value;
                 }
