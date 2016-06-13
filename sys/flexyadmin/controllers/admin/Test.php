@@ -32,9 +32,9 @@ class Test extends MY_Controller {
   
   public function index() {
     if (!IS_LOCALHOST) return;
-    $this->data->table('res_media_files');
-    $result = $this->data->get_files_as_options('pictures');
-    trace_( $this->data->last_query() );
+    $this->data->table('tbl_menu')->select('uri,order,self_parent,str_title');
+    $this->data->path('uri');
+    $result = $this->data->get_result();
     trace_( $result );
   }
 

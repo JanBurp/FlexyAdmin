@@ -399,11 +399,12 @@ Class Data_Core extends CI_Model {
           $first_abstract_field = current($first_abstract_field);
           $this->select('id,self_parent,order,'.$first_abstract_field);
           $this->path( $first_abstract_field, '', ' / ' );
+          $this->order_by( 'order,self_parent' );
           $options['data'] = $this->get_result();
           foreach ($options['data'] as $key => $option) {
             $options['data'][$key] = $option[$first_abstract_field];
           }
-          array_unshift($options['data'],'');
+          $options['data'] = array_unshift_assoc( $options['data'], '','');
           break;
         
         case 'table':
@@ -1143,7 +1144,6 @@ Class Data_Core extends CI_Model {
     $options=array();
     foreach ($fields as $field) {
       $field_options = el( array($field), $this->settings['options'] );
-      // trace_([$field,$field_options]);
       if ($field_options) {
         $field_options;
         
