@@ -101,7 +101,7 @@ class Filemanager extends AdminController {
         $fieldInfo=filter_by($fieldInfo,'res_media_files.');
         if ($fieldInfo) {
           foreach ($fieldInfo as $field => $info) {
-            if (isset($info['b_show_in_grid']) and $info['b_show_in_grid']==false and array_key_exists($field,$first_row)) {
+            if (isset($info['b_show_in_grid']) and $info['b_show_in_grid']==false and is_array($first_row) and array_key_exists($field,$first_row)) {
               $hideFields[]=get_suffix($field,'.');
             }
           }
