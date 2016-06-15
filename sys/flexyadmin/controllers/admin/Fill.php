@@ -93,14 +93,12 @@ class Fill extends AdminController {
 			if (!$addtable or $test) {
 				// show form
 				$this->load->library('form');
-				$this->load->model('flexy_field','ff');
+        $this->load->model( 'Data/Options_Core' );
+        $this->load->model( 'Data/Options_Tables');
+        $this->load->model( 'Data/Options_Fields');
 				$form=new form($this->config->item('API_fill'));
-				$tablesOptions=$this->ff->_dropdown_tables_form();
-				$tablesOptions=$tablesOptions['options'];
-				$fieldsOptions=$this->ff->_dropdown_fields_form();
-				$fieldsOptions=$fieldsOptions["options"];
-				// unset($fieldsOptions[""]);
-				$fieldsOptions=array_combine($fieldsOptions,$fieldsOptions);
+				$tablesOptions=$this->Options_Tables->get_options();
+				$fieldsOptions=$this->Options_Fields->get_options();
 				if (empty($fields)) $fields=array();
 				else $fields=array_combine($fields,$fields);
 				// create form

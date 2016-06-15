@@ -1144,6 +1144,7 @@ Class Data_Core extends CI_Model {
     $options=array();
     foreach ($fields as $field) {
       $field_options = el( array($field), $this->settings['options'] );
+      $field_options['field'] = $field;
       if ($field_options) {
         $field_options;
         
@@ -1162,62 +1163,12 @@ Class Data_Core extends CI_Model {
           }
         }
         
-        // model (TODO dit extern maken zodat het echt models zijn, dus flexibeler)
+        // model
         if ( isset($field_options['model']) ) {
-          $model = $field_options['model'];
-          switch ($model) {
-            
-            case 'media':
-              $path = $field_options['path'];
-              $media = new Data();
-              $media->table( 'res_media_files' );
-              $field_options['data'] = $media->get_files_as_options($path);
-              // $field_options['data']=array_unshift_assoc($field_options['data'],'','');
-              break;
-
-            case 'tables':
-              $tables=$this->db->list_tables();
-        		  $tables=not_filter_by($tables,"cfg_");
-        		  $tables=not_filter_by($tables,"log_");
-        		  $tables=not_filter_by($tables,"rel_users");
-          		$field_options['data']=$tables;
-              array_unshift($field_options['data'],'');
-              $field_options['data']=array_combine($field_options['data'],$field_options['data']);
-              break;
-              
-            case 'fields':
-              $field_options['data']=array();
-              $tables=$this->db->list_tables();
-              foreach ($tables as $table) {
-                $table_fields=$this->db->list_fields($table);
-                // Speciale velden filter
-                if ($field==='fields_media_fields') {
-                  $table_fields = filter_by($table_fields,'media');
-                }
-                // Maak er opties van
-                foreach ($table_fields as $value) {
-                  $field_options['data'][]=$table.'.'.$value;
-                }
-              }
-              array_unshift($field_options['data'],'');
-              $field_options['data']=array_combine($field_options['data'],$field_options['data']);
-              break;
-
-            case 'paths':
-          		$map=$this->config->item('ASSETS');
-          		$files=read_map($map,'dir');
-              $files=array_unset_keys($files,array('css','fonts','img','js','lists','_thumbcache','less-bootstrap','less-default'));
-          		$field_options['data']=array_keys($files);
-              array_unshift($field_options['data'],'');
-              $field_options['data']=array_combine($field_options['data'],$field_options['data']);
-              break;
-              
-            case 'apis':
-          		$field_options['data']=filter_by_key($this->config->config,'API');
-              array_unshift($field_options['data'],'');
-              $field_options['data']=array_combine($field_options['data'],$field_options['data']);
-              break;
-          }
+          $model = 'Options_'.ucfirst($field_options['model']);
+          $this->load->model( 'Data/Options_Core' );
+          $this->load->model( 'Data/'.$model );
+          $field_options['data'] = $this->$model->get_options( $field_options );
         }
       }
       // trace_($field_options);
