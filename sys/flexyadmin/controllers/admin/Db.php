@@ -378,8 +378,7 @@ class Db extends AdminController {
 		if ($safe)
 			$this->_add_content(p()."Checking safety ... ok"._p());
 		else {
-			$rights=$this->flexy_auth->get_rights();
-			if ($rights["str_name"]=="super_admin" and $rights["rights"]=="*" and $rights["b_all_users"] and $rights['b_backup']) {
+			if ($this->flexy_auth->is_super_admin()) {
 				$safe=TRUE;
 				$this->_add_content(p()."Checking safety ... Risky SQL, but Super Admin Rights."._p());
 			}

@@ -123,7 +123,7 @@ class Ajax extends AjaxController {
 
             if (!$validation_errors) {
               // Call Plugins
-    					if ($plugins)	$newData=$this->_after_update($table,$oldData,$newData);
+              if ($plugins)  $newData=$this->_after_update($table,$oldData,$newData);
 
               // Update in database
               $this->data->table($table);
