@@ -191,7 +191,7 @@ class Flexy_auth extends Ion_auth {
    * @return array
    * @author Jan den Besten
    */
-  public function get_rights( $user_id=FALSE ) {
+  public function get_rights( $user_id=NULL ) {
     return $this->get_user($user_id)['rights'];
   }
 

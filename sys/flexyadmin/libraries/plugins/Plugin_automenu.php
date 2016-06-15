@@ -165,7 +165,7 @@ class Plugin_automenu extends Plugin {
 
     // Then all other fields
     foreach ($set as $id_field => $subset) {
-      $this->data->table('res_menu_result');
+      $this->CI->data->table('res_menu_result');
       foreach ($subset as $key => $row) {
         // always start with WHERE str_table AND int_id
         $this->CI->data->where('str_table',$this->table);
