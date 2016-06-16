@@ -284,7 +284,7 @@ class MY_Email extends CI_Email {
     
     // Get subject & body
     $CI = &get_instance();
-    $mail = $this->CI->data->table('cfg_email')->where('key',$key)->get_row();
+    $mail = $CI->data->table('cfg_email')->where('key',$key)->get_row();
     if (!$mail) {
       $this->_set_error_message('email_key_not_found', $key);
       return false;

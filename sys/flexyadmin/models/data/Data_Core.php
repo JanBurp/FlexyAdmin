@@ -226,6 +226,7 @@ Class Data_Core extends CI_Model {
       // Test of de noodzakelijke settings zijn ingesteld, zo niet doe de rest automatisch
       $this->_autoset( );
     }
+    // trace_($this->settings);
     return $this->settings;
   }
   
@@ -1070,6 +1071,23 @@ Class Data_Core extends CI_Model {
    */
   public function get_settings() {
     return $this->settings;
+  }
+  
+  
+  /**
+   * Geeft ingestelde relatie met gegeven key/waarde van die relaties setting (bv 'other_table' oid)
+   *
+   * @param string $type 
+   * @param string $key 
+   * @param string $value 
+   * @return array
+   * @author Jan den Besten
+   */
+  private function _find_relation_setting_by($type,$key,$value) {
+    $relations = $this->get_setting( array('relations',$type) );
+    if (is_null($relations)) return NULL;
+    $relations = find_row_by_value($relations,$value,$key);
+    return current($relations);
   }
 
 
@@ -2287,16 +2305,17 @@ Class Data_Core extends CI_Model {
       $this->reset();
       throw new ErrorException( __CLASS__.'->'.__METHOD__.'(): First argument of `..._exists` needs to be of this format: `table.field`.' );
     }
+    $relation          = $this->_find_relation_setting_by('many_to_many','other_table',$other_table);
     $id                = $this->settings['primary_key'];
     $this_table        = $this->settings['table'];
-    $join_table        = 'rel_'.remove_prefix($this_table).'__'.remove_prefix($other_table);
-    $this_foreign_key  = $id.'_'.remove_prefix($this_table);
-    $other_foreign_key = $id.'_'.remove_prefix($other_table);
+    $rel_table         = $relation['rel_table']; //'rel_'.remove_prefix($this_table).'__'.remove_prefix($other_table);
+    $this_foreign_key  = $relation['this_key'];//  $id.'_'.remove_prefix($this_table);
+    $other_foreign_key = $relation['other_key'];//$id.'_'.remove_prefix($other_table);
     
     $sql = ' `'.$this_table.'`.`'.$id.'` IN (
-    	SELECT `'.$join_table.'`.`'.$this_foreign_key.'`
-    	FROM `'.$join_table.'`
-    	WHERE `'.$join_table.'`.`'.$other_foreign_key.'` IN (
+    	SELECT `'.$rel_table.'`.`'.$this_foreign_key.'`
+    	FROM `'.$rel_table.'`
+    	WHERE `'.$rel_table.'`.`'.$other_foreign_key.'` IN (
     		SELECT `'.$other_table.'`.`'.$id.'` FROM `'.$other_table.'` WHERE `'.$key.'` ';
     if ($side) {
       // like_exists

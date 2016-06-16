@@ -38,6 +38,12 @@ class Flexy_auth extends Ion_auth {
   private $current_user = FALSE;
   
   /**
+   * De uri waar de vergeten wachtwoorden worden afgehandeld.
+   */
+  private $forgotten_password_uri = '';
+  
+  
+  /**
    * construct
    */
   public function __construct() {
@@ -315,6 +321,18 @@ class Flexy_auth extends Ion_auth {
 	}
   
   
+  /**
+   * Stel de uri in van de pagina waar de vergeten wachtwoorden worden afgehandeld
+   *
+   * @param string $uri 
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function set_forgotten_password_uri($uri) {
+    $this->forgotten_password_uri = $uri;
+    return $this;
+  }
+  
 	/**
 	 * Verzorgt het proces als een gebruiker het paswoord is vergeten
 	 * Verstuurt een mail naar gebruiker met link voor nieuw wachtwoord (TODO de link!!)
@@ -327,6 +345,7 @@ class Flexy_auth extends Ion_auth {
     $user = $this->get_user_by_email( $email );
     if ( !$user ) FALSE;
     $mail_info = parent::forgotten_password( $user['username'] );
+    $mail_info['forgotten_password_uri'] = $this->forgotten_password_uri;
     return $this->_mail( 'login_forgot_password', $user, $mail_info );
   }
   
@@ -537,7 +556,7 @@ class Flexy_auth extends Ion_auth {
     // Collect data die in de mail komt
     if (!is_array($user)) $user = $this->get_user($user);
     $data = array_merge($user,$data);
-    $data['identity'] = $user['username'];
+    $data['identity'] = el('username',$user, el('identity',$user) );
     // Waarnaartoe?
     if ($send_to_admin) {
       $to = $this->config->item('admin_email','ion_auth');
