@@ -121,8 +121,9 @@ class Search extends AdminController {
 				else
 					$selection=array('');
 				$selection=array_combine($selection,$selection);
-				$fields=$this->ff->_dropdown_fields_form();
-				$fields=$fields['options'];
+        $this->load->model( 'Data/Options_Core' );
+        $this->load->model( 'Data/Options_Fields');
+				$fields=$this->Options_Fields->get_options();
 				unset($fields['']);
 				foreach ($fields as $key => $value) {
 					$field=get_suffix($key,'.');
