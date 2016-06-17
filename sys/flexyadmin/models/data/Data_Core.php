@@ -691,7 +691,7 @@ Class Data_Core extends CI_Model {
     }
     
     // many_to_many, als in oude instellingen gevraagd is
-    if ($table_info['b_grid_add_many']) {
+    if (el('b_grid_add_many',$table_info)) {
       $many_to_many = el( array('relations','many_to_many'), $this->settings );
       if ($many_to_many) {
         foreach ($many_to_many as $key => $info) {
