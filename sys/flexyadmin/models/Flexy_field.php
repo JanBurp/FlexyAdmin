@@ -403,11 +403,13 @@ class Flexy_field extends CI_Model {
     			$optCfg    = $this->cfg->get('CFG_table',$key);
           $fieldOpts = $this->cfg->get('CFG_field',$out['table'].'.'.$out['name']);
     			if ( el('b_add_empty_choice',$optCfg) ) {
-            array_unshift( $options, '' );
+            $options = array_unshift_assoc( $options,'','');
     			}
         }
         else {
-          if (current($out['options'])=='') array_shift($out['options']);
+          if (current($out['options'])=='') {
+            unset($out['options']['']);
+          }
         }
       }
 		}

@@ -560,11 +560,13 @@ class Form {
 		foreach($data as $name=>$field) {
 
 			// Change multiple data to string (str_, medias_)
-			if ( isset($field['multiple']) or is_array(el($name,$_POST)) ) {
-				if (isset($_POST[$name.'__hidden']))
+			if ( isset($_POST[$name]) and (isset($field['multiple']) or is_array(el($name,$_POST))) ) {
+				if (isset($_POST[$name.'__hidden'])) {
 					$_POST[$name]=$_POST[$name.'__hidden'];
-				else
+        }
+				else {
 					$_POST[$name]=implode('|',array_unique($_POST[$name]));
+        }
 			}
 
 			// set extra validation rules for passwords if new (required)
