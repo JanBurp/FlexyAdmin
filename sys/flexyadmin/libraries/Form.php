@@ -555,10 +555,12 @@ class Form {
     
 		$hasCaptcha=FALSE;
     
+    // trace_($data);
+    
 		foreach($data as $name=>$field) {
 
 			// Change multiple data to string (str_, medias_)
-			if (isset($field['multiple']) and isset($_POST[$name]) and is_array($_POST[$name]) ) { // and get_prefix($name)!='rel') {
+			if ( isset($field['multiple']) or is_array(el($name,$_POST)) ) {
 				if (isset($_POST[$name.'__hidden']))
 					$_POST[$name]=$_POST[$name.'__hidden'];
 				else

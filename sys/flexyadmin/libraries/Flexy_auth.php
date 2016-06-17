@@ -273,6 +273,27 @@ class Flexy_auth extends Ion_auth {
   }
   
   
+  
+  /**
+   * Loopt alle users langs en als ze nog geen gebruikersgroep hebben, geef ze de standaard 'user' gebruikersgroep
+   *
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function auto_set_imported_users() {
+    $users = $this->get_users();
+    $user_group = 3;
+    foreach ($users as $user_id => $user) {
+      if (empty($user['groups'])) {
+        $this->add_to_group( $user_group, $user_id );
+      }
+    }
+    return $this;
+  }
+  
+  
+  
+  
 	/**
 	 * Verstuurt een mail naar gebruiker met een nieuw wachtwoord
 	 *
@@ -668,7 +689,8 @@ class Flexy_auth extends Ion_auth {
    * @internal
    */
 	private function _create_rights( $user ) {
-    $groups=$this->data->table('cfg_user_groups')->where_in( 'id', array_keys($user['groups']) )->get_result();
+    if (empty($user['groups'])) return FALSE;
+    $groups = $this->data->table('cfg_user_groups')->where_in( 'id', array_keys($user['groups']) )->get_result();
 		if (!$groups) return FALSE;
     
     $tables = $this->db->list_tables();

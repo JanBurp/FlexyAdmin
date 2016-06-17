@@ -114,10 +114,10 @@ class Show extends AdminController {
         // ORDER op de normale manier
 				elseif ($order) {
 					$orderArr=explode(':',$order);
+          $last_order = '';
 					foreach ($orderArr as $key => $ord) {
-            if (!isset($last_order)) $last_order=$ord;
             $ordField=trim(trim($ord),'_');
-            if ( $this->data->field_exists($ordField,'grid') ) {
+            // if ( $this->data->field_exists($ordField,'grid') ) { // GEEFT PROBLEMEN BIJ VOLGORDE VAN many fields... en het wordt toch al wel gecheck ergens...
 							$ordPre=get_prefix($ordField);
 							if ($ordField!=='') {
 								if ($ordPre=='id' and $ordField!='id') {
@@ -131,8 +131,9 @@ class Show extends AdminController {
                 $desc='';
   							if (substr($ord,0,1)=='_') $desc='DESC';
                 $this->data->order_by( $ordField, $desc );
+                $last_order=add_string($last_order,$ord.' '.$desc,',');
 							}
-            }
+            // }
 					}
 				}
         else {

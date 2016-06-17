@@ -32,10 +32,7 @@ class Test extends MY_Controller {
   
   public function index() {
     if (!IS_LOCALHOST) return;
-    $this->data->table('tbl_menu')->select('uri,order,self_parent,str_title');
-    $this->data->path('uri');
-    $result = $this->data->get_result();
-    trace_( $result );
+    // $this->flexy_auth->auto_set_imported_users();
   }
 
 
