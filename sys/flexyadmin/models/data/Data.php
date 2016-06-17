@@ -44,7 +44,7 @@ Class Data extends CI_Model {
         $this->models[$table] = $this->$table;
       }
       else {
-        $this->models[$table] = $this->data_core;
+        $this->models[$table] = new Data_core; // Elk model een eigen object, zodat maar één keer de settings ingesteld worden per aanroep.
       }
     }
     

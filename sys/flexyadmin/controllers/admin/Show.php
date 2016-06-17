@@ -151,11 +151,18 @@ class Show extends AdminController {
 				}
         
         // Voeg relaties als abstracts toe
+        // many_to_one
         $search_with=array('many_to_one');
         $this->data->with( 'many_to_one', 'abstract' );
-				if ( el('b_grid_add_many',$tableInfo)) {
+        // many_to_many ?
+  			if ( $this->data->get_setting( array('grid_set','relations','many_to_many') )) {
           $search_with[]='many_to_many';
           $this->data->with_json( 'many_to_many', 'abstract' );
+        }
+        // one_to_many ?
+				if ( $this->data->get_setting( array('grid_set','relations','one_to_many') ) ) {
+          $search_with[]='one_to_many';
+          $this->data->with_json( 'one_to_many', 'abstract' );
         }
         
         // Maximale lengte voor txt_ velden
@@ -407,11 +414,22 @@ class Show extends AdminController {
     $this->data->table( $table );
     $this->data->select( $this->data->get_setting( array('form_set','fields') ));
 
-		/**
-		 * Met many_to_many data?
-		 */
+    /**
+     * Relaties?
+     */
+    $options_with = array('many_to_one');
+    // many_to_many?
     $many_to_many = $this->data->get_setting( array('form_set','with','many_to_many') );
-    if ( is_array($many_to_many) ) $this->data->with('many_to_many','abstract');
+    if ( is_array($many_to_many) ) {
+      $this->data->with('many_to_many','abstract');
+      array_push($options_with,'many_to_many');
+    }
+    // one_to_many?
+    $one_to_many = $this->data->get_setting( array('form_set','with','one_to_many') );
+    if ( is_array($one_to_many) ) {
+      $this->data->with('one_to_many');
+      array_push($options_with,'one_to_many');
+    }
 		
     /**
      * Nieuw item (INSERT)
@@ -448,8 +466,9 @@ class Show extends AdminController {
     /**
      * Opties
      */
-    $options=$this->data->get_options();
+    $options=$this->data->get_options('',$options_with);
 
+    // trace_($options_with);
     // trace_($options);
     // die();
     
