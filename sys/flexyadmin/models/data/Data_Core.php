@@ -226,7 +226,6 @@ Class Data_Core extends CI_Model {
       // Test of de noodzakelijke settings zijn ingesteld, zo niet doe de rest automatisch
       $this->_autoset( );
     }
-    // trace_($this->settings);
     return $this->settings;
   }
   
@@ -1293,13 +1292,19 @@ Class Data_Core extends CI_Model {
     if ( !empty($this->tm_order_by) ) {
       foreach ($this->tm_order_by as $order_by) {
         $escape=TRUE;
+        // order abstract
+        if (has_string('.abstract',$order_by)) {
+          $escape=FALSE;
+          $order_by=explode(' ',$order_by);
+          $order_by=trim('`'.$order_by[0].'` '.el(1,$order_by,''));
+        }
         // order relations
-        if (has_string('.',$order_by)) {
+        elseif (has_string('.',$order_by)) {
           $escape=FALSE;
           $order_by=explode(' ',$order_by);
           $order_by=trim('`'.str_replace('.','`.`',$order_by[0]).'` '.el(1,$order_by,''));
         }
-        $this->db->order_by( $order_by,'',$escape );
+        $this->db->order_by( $order_by, '' ,$escape );
       }
     }
 
@@ -3041,7 +3046,7 @@ Class Data_Core extends CI_Model {
       $select = $abstract;
       if ($json) {
         $abstract = remove_suffix($abstract,' AS ');
-        $select = 'GROUP_CONCAT( "{",'.$abstract.',"}" SEPARATOR ", ") `'.$as_table.'`';
+        $select = 'GROUP_CONCAT( DISTINCT "{",'.$abstract.',"}" ORDER BY '.$abstract.' SEPARATOR ", ") `'.$as_table.'`';
       }
       else {
         // Als geen JSON, voeg dan ook de primary_key erbij (behalve bij many_to_one, daar is die al bekend)
