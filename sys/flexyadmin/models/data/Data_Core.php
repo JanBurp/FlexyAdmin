@@ -2086,17 +2086,21 @@ Class Data_Core extends CI_Model {
           if (!$json) throw new Exception( __CLASS__.": The combination of a '...to_many' result, LIMIT and WHERE gives unexpected (numbers of) results. Try using ->with_json().");
         }
         // ORDER BY ?
+        $order_on_self = TRUE;
         reset($this->tm_order_by);
         $order_by = current($this->tm_order_by);
         $order_by = explode(' ',$order_by);
+        // Bestaat het order veld? Zo niet pak gewoon de primary_key
         if (!$this->field_exists($order_by[0])) {
+          $order_on_self = FALSE; 
           $order_by = array($this->settings['primary_key'],'');
         }
         // Compile the subquery:
         $this->tm_from = '(SELECT * FROM '.$this->db->protect_identifiers($table);
         if (!empty($where)) $this->tm_from.= ' WHERE ('.$where.') ';
         $this->tm_from .= ' ORDER BY '.$this->db->protect_identifiers($order_by[0]).' '.el(1,$order_by,'');
-        if ( !$has_where AND $this->tm_limit > 0) {
+        // Limit in subquery alleen als de volgorde géén invloed heeft op resultaat. (met limit is wel sneller)
+        if ( $order_on_self AND !$has_where AND $this->tm_limit>0) {
           $this->tm_from .= ' LIMIT '.$this->tm_offset.','.$this->tm_limit;
           $this->tm_limit = 0;
           $this->tm_offset = 0;
