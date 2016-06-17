@@ -679,13 +679,29 @@ Class Data_Core extends CI_Model {
       $grid_set['jump_to_today'] = $possible_jump;
     }
     $grid_set['pagination']    = (el('b_pagination',$table_info,TRUE)?true:false);
-    $many_to_one               = el( array('relations','many_to_one'), $this->settings, array() );
-    // Kan ook met de opties, voor als formdata uit tabledata gebruikt moet gaan worden
-    foreach ($many_to_one as $key => $info) {
-      $many_to_one[$key]['fields'] = 'abstract';
-      $many_to_one[$key]['flat']   = TRUE;
+
+    // many_to_one, voor als formdata uit tabledata gebruikt moet gaan worden
+    $many_to_one = el( array('relations','many_to_one'), $this->settings );
+    if ($many_to_one) {
+      foreach ($many_to_one as $key => $info) {
+        $many_to_one[$key]['fields'] = 'abstract';
+        $many_to_one[$key]['flat']   = TRUE;
+      }
+      $grid_set['relations'] = array('many_to_one'=>$many_to_one);
     }
-    $grid_set['relations'] = array('many_to_one'=>$many_to_one);
+    
+    // many_to_many, als in oude instellingen gevraagd is
+    if ($table_info['b_grid_add_many']) {
+      $many_to_many = el( array('relations','many_to_many'), $this->settings );
+      if ($many_to_many) {
+        foreach ($many_to_many as $key => $info) {
+          $many_to_one[$key]['fields'] = 'abstract';
+          $many_to_one[$key]['flat']   = TRUE;
+        }
+        $grid_set['relations'] = array('many_to_many'=>$many_to_one);
+      }
+    }
+
     return $grid_set;
   }
 
@@ -839,6 +855,7 @@ Class Data_Core extends CI_Model {
     $this->tm_offset        = 0;
     $this->tm_jump_to_today = FALSE;
     $this->with(FALSE);
+    $this->db->reset_query();
     return $this;
   }
   
@@ -2079,6 +2096,10 @@ Class Data_Core extends CI_Model {
         // als WHERE en LIMIT en één relatie die niet JSON is, dan een Exception
         $sql = $this->db->get_compiled_select('',FALSE);
         $has_where = has_string('WHERE',$sql);
+        // Geen exception als de WHERE alleen op id zoekt en limit=1 (->get_row())
+        if ($has_where AND $this->tm_limit==1 AND has_string('WHERE `'.$this->settings['table'].'`.`'.$this->settings['primary_key'].'`',$sql) ) {
+          $this->tm_limit=0;
+        }
         if ($has_where AND $this->tm_limit>0) {
           $json = TRUE;
           foreach ($this->tm_with as $type => $with) {
@@ -3250,6 +3271,7 @@ Class Data_Core extends CI_Model {
         $this->query_info['affected_rows'] = 0;
         $this->query_info['insert_id']     = FALSE;
         $this->query_info['error']         = langp('data_max_rows_exceeded',$this->settings['table']);
+        $this->reset();
         return FALSE;
       }
     }
@@ -3297,8 +3319,12 @@ Class Data_Core extends CI_Model {
     
     // Is er een data set?
     if (!is_null($set)) $this->set( $set );
+    
     // Als er een lege set is, dan zijn we al klaar
-    if (empty( $this->tm_set )) return FALSE;
+    if (empty( $this->tm_set )) {
+      $this->reset();
+      return FALSE;
+    }
 
     
     /**
@@ -3332,7 +3358,9 @@ Class Data_Core extends CI_Model {
           'validation'        => FALSE,
           'validation_errors' => $this->form_validation->get_error_messages()
         );
-        return FALSE; // Niet gevalideerd, dus we kunnen geen update doen, dus FALSE
+        // Niet gevalideerd, dus we kunnen geen update doen, dus FALSE
+        $this->reset();
+        return FALSE;
       }
     }
       
@@ -3340,21 +3368,24 @@ Class Data_Core extends CI_Model {
     /**
      * Split eventuele many_to_many data
      */
-    if ( isset($this->settings['relations']['many_to_many'])) {
+    if ( isset($this->settings['relations']['many_to_many']) or isset($this->settings['relations']['one_to_many'])) {
       $to_many = array();
       foreach ($this->settings['relations'] as $rel_type => $relation) {
-        if (in_array($rel_type,array('many_to_many'))) {
+        // many_to_many
+        if (in_array($rel_type,array('many_to_many','one_to_many'))) {
+          $to_many[$rel_type]=array();
           foreach ( $relation as $what => $relation_info ) {
-            $rel_table   = $relation_info['rel_table'];
+            if ($rel_type=='many_to_many') $rel_table   = $relation_info['rel_table'];
             $other_table = $relation_info['other_table'];
             $result_name = $relation_info['result_name'];
             if ( array_key_exists($result_name,$set) ) {
-              $to_many[$rel_table] = $set[$result_name];
+              $to_many[$rel_type][$what] = $set[$result_name];
               unset($set[$result_name]);
             }
           }
         }
       }
+      // trace_($to_many);
     }
     
     /**
@@ -3457,33 +3488,69 @@ Class Data_Core extends CI_Model {
 			 */
 			if ( !empty($to_many) ) {
         $affected = 0;
-				foreach( $to_many as $rel_table => $other_ids ) {
-          $other_table       = $this->settings['relations']['many_to_many'][$what]['other_table'];
-					$this_foreign_key  = $this->settings['relations']['many_to_many'][$what]['this_key'];
-          $other_foreign_key = $this->settings['relations']['many_to_many'][$what]['other_key'];
+        
+        // many_to_many
+        if (isset($to_many['many_to_many'])) {
+  				foreach( $to_many['many_to_many'] as $what => $other_ids ) {
+            $other_table       = $this->settings['relations']['many_to_many'][$what]['other_table'];
+            $rel_table         = $this->settings['relations']['many_to_many'][$what]['rel_table'];
+  					$this_foreign_key  = $this->settings['relations']['many_to_many'][$what]['this_key'];
+            $other_foreign_key = $this->settings['relations']['many_to_many'][$what]['other_key'];
 
-					// DELETE eerst huidige items
-					$this->db->where( $this_foreign_key, $id );
-					$this->db->delete( $rel_table );
-          $log['query'] .= ';'.PHP_EOL.PHP_EOL.$this->db->last_query();
-
-          // Zorg ervoor dat $other_ids een normale array van ids is
-          if (is_string($other_ids)) $other_ids=explode('|',$other_ids);
-          if (!is_array($other_ids)) $other_ids=array($other_ids);
-
-					// INSERT dan nieuwe many_to_many ids
-					foreach ( $other_ids as $other_id ) {
-            // Zorg er eerst voor dat $other_id echt alleen maar een nummer is
-            if (is_array($other_id) and isset($other_id[$this->settings['primary_key']])) {
-              $other_id=$other_id[$this->settings['primary_key']];
-            }
-						$this->db->set( $this_foreign_key,  $id );
-						$this->db->set( $other_foreign_key, $other_id );
-						$this->db->insert( $rel_table );
-            $affected++;
+  					// DELETE eerst huidige items
+  					$this->db->where( $this_foreign_key, $id );
+  					$this->db->delete( $rel_table );
             $log['query'] .= ';'.PHP_EOL.PHP_EOL.$this->db->last_query();
-					}
-				}
+
+            // Zorg ervoor dat $other_ids een normale array van ids is
+            if (is_string($other_ids)) $other_ids=explode('|',$other_ids);
+            if (!is_array($other_ids)) $other_ids=array($other_ids);
+
+  					// INSERT dan nieuwe many_to_many ids
+  					foreach ( $other_ids as $other_id ) {
+              // Zorg er eerst voor dat $other_id echt alleen maar een nummer is
+              if (is_array($other_id) and isset($other_id[$this->settings['primary_key']])) {
+                $other_id=$other_id[$this->settings['primary_key']];
+              }
+  						$this->db->set( $this_foreign_key,  $id );
+  						$this->db->set( $other_foreign_key, $other_id );
+  						$this->db->insert( $rel_table );
+              $affected++;
+              $log['query'] .= ';'.PHP_EOL.PHP_EOL.$this->db->last_query();
+  					}
+  				}
+        }
+        
+        // one_to_many
+        if (isset($to_many['one_to_many'])) {
+  				foreach( $to_many['one_to_many'] as $what => $other_ids ) {
+            $other_table  = $this->settings['relations']['one_to_many'][$what]['other_table'];
+  					$foreign_key  = $this->settings['relations']['one_to_many'][$what]['foreign_key'];
+            // Zorg ervoor dat $other_ids een normale array van ids is
+            if (is_string($other_ids)) $other_ids=explode('|',$other_ids);
+            if (!is_array($other_ids)) $other_ids=array($other_ids);
+            
+            // 1) Verwijder de oude verwijzingen (maak ze 0)
+            $this->db->set( $foreign_key, 0);
+  					$this->db->where( $foreign_key, $id );
+  					$this->db->update( $other_table );
+            $log['query'] .= ';'.PHP_EOL.PHP_EOL.$this->db->last_query();
+            // 2) Maak de nieuwe verwijzingen
+            foreach ($other_ids as $other_id) {
+              // Zorg er eerst voor dat $other_id echt alleen maar een nummer is
+              if (is_array($other_id) and isset($other_id[$this->settings['primary_key']])) {
+                $other_id=$other_id[$this->settings['primary_key']];
+              }
+              $this->db->set( $foreign_key, $id);
+    					$this->db->where( $this->settings['primary_key'], $other_id );
+    					$this->db->update( $other_table );
+              $affected++;
+              $log['query'] .= ';'.PHP_EOL.PHP_EOL.$this->db->last_query();
+            }
+            
+          }
+        }
+        
         $this->query_info['affected_rel_rows'] = $affected;
 			}
       $this->db->trans_complete();

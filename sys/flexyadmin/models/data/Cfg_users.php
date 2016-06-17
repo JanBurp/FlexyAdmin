@@ -81,7 +81,10 @@ Class cfg_users extends Data_Core {
 	protected function _update_insert( $type, $set = NULL, $where = NULL, $limit = NULL ) {
     // Geef de set alvast door en test deze ook alvast
     if (isset($set)) $this->set($set);
-    if (empty( $this->tm_set )) return FALSE;
+    if (empty( $this->tm_set )) {
+      $this->reset();
+      return FALSE;
+    }
     
     /**
      * Verwijder lege wachtwoorden uit de set, zodat die niet overschreven worden in de db

@@ -32,7 +32,13 @@ class Test extends MY_Controller {
   
   public function index() {
     if (!IS_LOCALHOST) return;
-    // $this->flexy_auth->auto_set_imported_users();
+    
+    $this->data->table( 'tbl_leerlingen' );
+    $result = $this->data->get_grid();
+    
+    trace_($this->data->last_query());
+    trace_($result);
+    
   }
 
 
