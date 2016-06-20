@@ -565,7 +565,7 @@ class Form {
 					$_POST[$name]=$_POST[$name.'__hidden'];
         }
 				else {
-					$_POST[$name]=implode('|',array_unique($_POST[$name]));
+          if (is_array($_POST[$name])) $_POST[$name]=implode('|',array_unique($_POST[$name]));
         }
 			}
 
