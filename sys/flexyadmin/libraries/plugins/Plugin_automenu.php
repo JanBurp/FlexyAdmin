@@ -161,20 +161,16 @@ class Plugin_automenu extends Plugin {
       }
     }
 
-    // trace_($set);
-
     // Then all other fields
     foreach ($set as $id_field => $subset) {
-      $this->CI->data->table('res_menu_result');
       foreach ($subset as $key => $row) {
         // always start with WHERE str_table AND int_id
+        $this->CI->data->table('res_menu_result');
         $this->CI->data->where('str_table',$this->table);
         $this->CI->data->where($id_field,$key);
-        foreach ($row as $field => $value) {
-          $this->CI->data->set( $field, $value );
-        }
-        // trace_('#show# '.$this->CI->db->last_query());
+        $this->CI->data->set( $row );
         $this->CI->data->update();
+        // trace_('#show# '.$this->CI->data->last_query());
       }
     }
   }
