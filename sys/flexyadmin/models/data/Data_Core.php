@@ -1714,8 +1714,8 @@ Class Data_Core extends CI_Model {
     $this->select( $grid_set['fields'] );
     
     // Relations
-    if (isset($grid_set['relations'])) {
-      foreach ($grid_set['relations'] as $type => $relations) {
+    if (isset($grid_set['with'])) {
+      foreach ($grid_set['with'] as $type => $relations) {
         foreach ($relations as $what => $info) {
           $this->with( $type, array( $what=>'abstract'), FALSE, TRUE );
         }

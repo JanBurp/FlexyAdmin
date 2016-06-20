@@ -15,7 +15,7 @@ $config['grid_set'] = array(
 		'order_by'      => 'id', 
 		'jump_to_today' => false, 
 		'pagination'    => true, 
-		'relations'     => array( 
+		'with'          => array( 
 				'many_to_one' => array(), 
 			), 
 	);
