@@ -155,12 +155,12 @@ class Show extends AdminController {
         $search_with=array('many_to_one');
         $this->data->with( 'many_to_one', 'abstract' );
         // many_to_many ?
-  			if ( $this->data->get_setting( array('grid_set','relations','many_to_many') )) {
+  			if ( $this->data->get_setting( array('grid_set','with','many_to_many') )) {
           $search_with[]='many_to_many';
           $this->data->with_json( 'many_to_many', 'abstract' );
         }
         // one_to_many ?
-				if ( $this->data->get_setting( array('grid_set','relations','one_to_many') ) ) {
+				if ( $this->data->get_setting( array('grid_set','with','one_to_many') ) ) {
           $search_with[]='one_to_many';
           $this->data->with_json( 'one_to_many', 'abstract' );
         }

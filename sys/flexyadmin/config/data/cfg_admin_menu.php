@@ -44,7 +44,7 @@ $config['grid_set'] = array(
 		'order_by'      => 'order', 
 		'jump_to_today' => false, 
 		'pagination'    => false, 
-		'relations'     => array( 
+		'with'          => array( 
 				'many_to_one' => array( 
 						'id_user_group' => array( 'other_table' => 'cfg_user_groups', 'foreign_key' => 'id_user_group', 'result_name' => 'cfg_user_groups', 'fields' => 'abstract', 'flat' => true ), 
 					), 
