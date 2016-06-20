@@ -687,7 +687,7 @@ Class Data_Core extends CI_Model {
         $many_to_one[$key]['fields'] = 'abstract';
         $many_to_one[$key]['flat']   = TRUE;
       }
-      $grid_set['relations'] = array('many_to_one'=>$many_to_one);
+      $grid_set['with'] = array('many_to_one'=>$many_to_one);
     }
     
     // many_to_many, als in oude instellingen gevraagd is
@@ -698,7 +698,7 @@ Class Data_Core extends CI_Model {
           $many_to_one[$key]['fields'] = 'abstract';
           $many_to_one[$key]['flat']   = TRUE;
         }
-        $grid_set['relations'] = array('many_to_many'=>$many_to_one);
+        $grid_set['with'] = array('many_to_many'=>$many_to_one);
       }
     }
 

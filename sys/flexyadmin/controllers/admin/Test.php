@@ -34,10 +34,11 @@ class Test extends MY_Controller {
     if (!IS_LOCALHOST) return;
     
     $this->data->table( 'tbl_leerlingen' );
-    $result = $this->data->get_grid();
+    $page1 = $this->data->get_grid();
     
-    trace_($this->data->last_query());
-    trace_($result);
+    // trace_( $this->data->get_setting('grid_set') );
+    
+    trace_($page1);
     
   }
 
