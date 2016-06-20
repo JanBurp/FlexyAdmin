@@ -286,25 +286,25 @@ class Show extends AdminController {
             foreach ($data as $id => $row) {
               if ( $this->flexy_auth->allowed_to_edit_users() ) {
                 if ($row['b_active']) {
-                  $data[$id]['actions'] = array('send_new_password'=>'cfg_users/send_new_password/'.$id);
+                  $data[$id]['actions'] = array('send_new_password'=>'users/send_new_password/'.$id);
                 }
                 else {
                   $inactive++;
-                  $data[$id]['actions'] = array('deny'=>'cfg_users/deny/'.$id,'accept'=>'cfg_users/accept/'.$id);
+                  $data[$id]['actions'] = array('deny'=>'users/deny/'.$id,'accept'=>'users/accept/'.$id);
                 }
                 if (empty($row['last_login'])) {
                   $unused++;
-                  $data[$id]['actions']['invite'] = 'cfg_users/invite/'.$id;
+                  $data[$id]['actions']['invite'] = 'users/invite/'.$id;
                 }
               }
             }
             if ($inactive>0) {
               $html.=h(lang('inactive_users'));
-              $html.=p() . anchor(api_uri('API_home','cfg_users/accept'),lang('accept'),array('class' => 'button')) .' | '. anchor(api_uri('API_home','cfg_users/deny'),lang('deny'),array('class' => 'button')) .' '. lang('all_inactive_users').' ('.$inactive.')'._p();
+              $html.=p() . anchor(api_uri('API_home','users/accept'),lang('accept'),array('class' => 'button')) .' | '. anchor(api_uri('API_home','users/deny'),lang('deny'),array('class' => 'button')) .' '. lang('all_inactive_users').' ('.$inactive.')'._p();
             }
             // Nieuw wachtwoord aan alle geselecteerde gebruikers
             $html.=h(lang('send_new_password'));
-            $html.=p() . anchor(api_uri('API_home','cfg_users/send_new_password'),lang('send_new_password'),array('class' => 'button selected_users')) .' '. lang('selected_users')._p();
+            $html.=p() . anchor(api_uri('API_home','users/send_new_password'),lang('send_new_password'),array('class' => 'button selected_users')) .' '. lang('selected_users')._p();
           }
 
 					$data=$this->ff->render_grid($table,$data,$rights, $this->data->get_setting('relations'), $info);
