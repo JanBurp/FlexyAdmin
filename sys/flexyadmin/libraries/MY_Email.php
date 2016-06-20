@@ -326,7 +326,9 @@ class MY_Email extends CI_Email {
     $this->message($body);
     
     // Send email
-    return $this->send();
+    $send = $this->send(); 
+    // trace_(['send_lang','key'=>$key,'send'=>$send,'mail'=>$mail,'subject'=>$subject,'body'=>$body]);
+    return $send;
   }
   
   /**
