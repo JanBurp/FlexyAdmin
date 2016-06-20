@@ -192,8 +192,11 @@ class MY_Upload extends CI_Upload {
 		if ($goodluck) {
       $this->error='';
 			$this->result=$this->data();
-			$this->file_name=$this->result["file_name"];
-			$cleanName=clean_file_name($this->file_name);
+			$this->file_name=$this->result['file_name'];
+			$cleanName = clean_file_name($this->file_name);
+      if (el('prefix',$config)) {
+        $cleanName=el('prefix',$config).$cleanName;
+      }
 			if ($cleanName!=$this->file_name) {
 				rename($config["upload_path"]."/".$this->file_name, $config["upload_path"]."/".$cleanName);
 				$this->file_name=$cleanName;

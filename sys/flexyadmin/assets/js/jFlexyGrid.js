@@ -61,9 +61,16 @@ function doGrid() {
                 var txt=$('.plupload_header_text').html();
                 txt+='<br/>'+langp('dialog_minimal_size');
                 $('.plupload_header_text').html(txt);
+                $('.plupload_header_content').append('<label>'+langp('dialog_prefix')+'</label><input class="plupload_prefix" name="plupload_prefix" value="">');
         			},
         		},
             init : {
+              BeforeUpload: function(up,file) {
+                var prefix = $('.plupload_prefix').val();
+                if (prefix!=='') {
+                  up.settings.multipart_params = {'prefix':prefix};
+                }
+              },
               FileUploaded: function(up, file, info) {
                 response=info.response;
                 response=$.parseJSON(response);

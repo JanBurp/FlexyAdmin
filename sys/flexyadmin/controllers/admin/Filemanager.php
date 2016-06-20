@@ -305,7 +305,10 @@ class Filemanager extends AdminController {
 				$this->load->model("file_manager");
 				$mediaCfg=$this->cfg->get('CFG_media_info');
 				$types=$mediaCfg[$path]['str_types'];
-				$fileManager=new file_manager(array('upload_path'=>$path,'allowed_types'=>$types));
+        $settings=array('upload_path'=>$path,'allowed_types'=>$types);
+        $prefix=$this->input->post('prefix'); // AJAX call met prefix als argument
+        if ($prefix) $settings['prefix']=$prefix;
+				$fileManager=new file_manager($settings);
 				$result=$fileManager->upload_file();
         // strace_($result);
 				$error=$result["error"];
@@ -361,7 +364,8 @@ class Filemanager extends AdminController {
         'thumb'=>$this->config->item('THUMBCACHE').pathencode(add_assets($path.'/'.$file)),
         'message'=>$messages,
         'error'=>$errors,
-        'ajax'=>$ajax
+        'ajax'=>$ajax,
+        // 'params'=>array_keys($_POST),
       );
       $this->message->reset()->reset_errors();
       $json=array2json($out);
