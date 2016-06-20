@@ -585,12 +585,14 @@ class Flexy_auth extends Ion_auth {
     else {
       $to = el('email',$user, el('email_email',$user));
     }
+    // trace_(['to'=>$to,'from'=>$this->config->item('admin_email', 'ion_auth'),'data'=>$data]);
     // Stuur
     $this->email->clear();
     $this->email->from( $this->config->item('admin_email', 'ion_auth'), $this->config->item('site_title', 'ion_auth') );
     $this->email->to( $to );
     // Naar welke template in cfg_email?
     $send = $this->email->send_lang( $template,$data );
+    // trace_($send);
     if ($send !== TRUE) $this->set_error('activation_email_unsuccessful');
     return $send;
   }
