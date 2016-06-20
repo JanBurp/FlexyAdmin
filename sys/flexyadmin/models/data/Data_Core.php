@@ -1200,7 +1200,6 @@ Class Data_Core extends CI_Model {
         // model
         if ( isset($field_options['model']) ) {
           $model = 'Options_'.ucfirst($field_options['model']);
-          $this->load->model( 'Data/Options_Core' );
           $this->load->model( 'Data/'.$model );
           $field_options['data'] = $this->$model->get_options( $field_options );
         }

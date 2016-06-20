@@ -8,7 +8,7 @@
  */
 
 
-Class Options_Fields extends Options_Core {
+Class Options_Fields extends CI_Model {
 
 	public function __construct( $table='' ) {
 		parent::__construct();

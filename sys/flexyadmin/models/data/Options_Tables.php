@@ -8,7 +8,7 @@
  */
 
 
-Class Options_Tables extends Options_Core {
+Class Options_Tables extends CI_Model {
 
 	public function __construct( $table='' ) {
 		parent::__construct();
