@@ -18,6 +18,8 @@ $lang['dialog_delete_more']			= "%s items";
 
 $lang['dialog_beforeunload']		= "WARNING!\nYou didn't save the changes you made!\nPress submit first.";
 
+$lang['dialog_prefix']          = "Prefix: ";
+
 
 $lang['form_random_password']		= "Random Password";
 

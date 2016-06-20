@@ -169,7 +169,7 @@ class Editor_lists {
 			foreach($data as $name=>$file) {
         if (!empty($file)) {
           $name=$file['name'];
-          $filename=$file['path'].'/'.$name;
+          $filename=$this->CI->config->item('ASSETS').$file['path'].'/'.$name;
           $name=$this->CI->mediatable->get_img_title($filename);
   				if (!empty($name)) {
   					$list.='["'.str_replace($this->CI->config->item('ASSETS'),'',$filename).'","'.$filename.'"],';

@@ -18,6 +18,8 @@ $lang['dialog_delete_more']			= "%s items";
 
 $lang['dialog_beforeunload']		= "LET OP!\nJe hebt je aanpassingen nog niet bewaard!\nDruk eerst op invoeren.";
 
+$lang['dialog_prefix']          = "Eventueel voorvoegsel:";
+
 
 $lang['form_random_password']		= "Willekeurig Wachtwoord";
 
