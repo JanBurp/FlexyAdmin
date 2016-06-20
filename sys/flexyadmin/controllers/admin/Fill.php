@@ -93,7 +93,6 @@ class Fill extends AdminController {
 			if (!$addtable or $test) {
 				// show form
 				$this->load->library('form');
-        $this->load->model( 'Data/Options_Core' );
         $this->load->model( 'Data/Options_Tables');
         $this->load->model( 'Data/Options_Fields');
 				$form=new form($this->config->item('API_fill'));

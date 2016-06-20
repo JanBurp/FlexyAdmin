@@ -8,7 +8,7 @@
  */
 
 
-Class Options_Paths extends Options_Core {
+Class Options_Paths extends CI_Model {
 
 	public function __construct( $table='' ) {
 		parent::__construct();
