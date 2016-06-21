@@ -261,7 +261,9 @@ img {
 	padding-left: 20px;
 	}
 
-/*#menu .users-rights {display:none;}*/
+#menu li.log_stats {
+  margin-top:10px;
+}
 
 #menu ul.lev2 {display:none;}
 
