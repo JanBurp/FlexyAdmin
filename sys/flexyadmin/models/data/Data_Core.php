@@ -215,6 +215,7 @@ Class Data_Core extends CI_Model {
     if ( empty($table) ) $table=get_class($this);
     // Haal de settings van huidige model op als die bestaan
     if ( get_class()!==$table ) {
+      $table=strtolower($table);
       if ($load) {
         $this->config->load( 'data/'.$table, true);
         $settings = $this->config->item( 'data/'.$table );
@@ -443,7 +444,8 @@ Class Data_Core extends CI_Model {
     $order_by = '';
     // Haal eerst indien mogelijk uit (depricated) cfg_table_info
     $order_by = $this->cfg->get( 'cfg_table_info', $this->settings['table'], 'str_order_by');
-    // Als leeg: Zoek mogelijke standaard order fields
+    
+    // Zoek mogelijke standaard order fields
     if (empty($order_by)) {
   		$order_fields = $this->config->item( 'ORDER_default_fields' );
   		do {
@@ -680,26 +682,15 @@ Class Data_Core extends CI_Model {
     }
     $grid_set['pagination']    = (el('b_pagination',$table_info,TRUE)?true:false);
 
+    // Relaties
+    $grid_set['with'] = array();
     // many_to_one, voor als formdata uit tabledata gebruikt moet gaan worden
     $many_to_one = el( array('relations','many_to_one'), $this->settings );
-    if ($many_to_one) {
-      foreach ($many_to_one as $key => $info) {
-        $many_to_one[$key]['fields'] = 'abstract';
-        $many_to_one[$key]['flat']   = TRUE;
-      }
-      $grid_set['with'] = array('many_to_one'=>$many_to_one);
-    }
-    
+    if ($many_to_one) $grid_set['with']['many_to_one']=$many_to_one;
     // many_to_many, als in oude instellingen gevraagd is
     if (el('b_grid_add_many',$table_info)) {
       $many_to_many = el( array('relations','many_to_many'), $this->settings );
-      if ($many_to_many) {
-        foreach ($many_to_many as $key => $info) {
-          $many_to_one[$key]['fields'] = 'abstract';
-          $many_to_one[$key]['flat']   = TRUE;
-        }
-        $grid_set['with'] = array('many_to_many'=>$many_to_one);
-      }
+      if ($many_to_many) $grid_set['with']['many_to_many'] = $many_to_many;
     }
 
     return $grid_set;
@@ -736,9 +727,15 @@ Class Data_Core extends CI_Model {
     }
     $form_set['fields'] = array_values($form_set['fields']); // reset keys
     $form_set['fieldsets'] = $fieldsets;
+
+
+    // relaties?
     $form_set['with']      = array();
-    if (isset($this->settings['relations']['many_to_many'])) $form_set['with']['many_to_many']=array();
-    // trace_($form_set);
+    // many_to_one, voor als formdata uit tabledata gebruikt moet gaan worden
+    if (isset($this->settings['relations']['many_to_one'])) $form_set['with']['many_to_one']=array();
+    // many_to_many, als in oude instellingen gevraagd is
+    if (el('b_form_add_many',$table_info)) $form_set['with']['many_to_many']=array();
+    
     return $form_set;
   }
   
@@ -1716,7 +1713,8 @@ Class Data_Core extends CI_Model {
     if (isset($grid_set['with'])) {
       foreach ($grid_set['with'] as $type => $relations) {
         foreach ($relations as $what => $info) {
-          $this->with( $type, array( $what=>'abstract'), FALSE, TRUE );
+          $json = ($type!=='many_to_one');
+          $this->with( $type, array( $what=>'abstract'), $json, TRUE );
         }
       }
     }
@@ -1737,6 +1735,12 @@ Class Data_Core extends CI_Model {
       }
     }
     $this->order_by( $sort );
+    
+    // Paths als menu tabel
+    if ( $this->is_menu_table() ) {
+      $title_field = $this->list_fields( 'str',1 );
+      $this->path( 'uri' )->path( $title_field );
+    }
     
     // Where
     if ( $where ) {
@@ -1766,7 +1770,7 @@ Class Data_Core extends CI_Model {
     }
     
     // Pagination
-    if ($grid_set['pagination']) {
+    if (el('pagination',$grid_set)) {
       if (is_numeric($offset) or $offset!==TRUE) $this->limit( $limit, $offset );
     }
 
@@ -2136,6 +2140,25 @@ Class Data_Core extends CI_Model {
     }
     return $this->db->from( $this->tm_from );
   }
+  
+  
+
+  /**
+   * Zorgt ervoor dat alleen de rijen van de ingestelde of meegegeven user worden teruggegeven
+   *
+   * @param int [$user_id] Als dit niet expliciet wordt meegegeven wordt de ingestelde user gebruikt ($this->set_user_id()) 
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function where_user( $user_id=NULL ) {
+    if (is_null($user_id)) $user_id = $this->user_id;
+		if ( $this->field_exists('user') ) {
+      $this->where( $this->settings['table'].'.user', $user_id );
+      $this->unselect( 'user' );
+		}
+    return $this;
+  }
+  
   
 
 
@@ -3942,6 +3965,16 @@ Class Data_Core extends CI_Model {
     }
     return $this->field_data;
 	}
+  
+  /**
+   * Geeft terug of de tabel een menu-achtige tabel is (met de velden 'order','self_parent' en 'uri')
+   *
+   * @return bool
+   * @author Jan den Besten
+   */
+  public function is_menu_table() {
+    return ( $this->field_exists('self_parent') and $this->field_exists('order') and $this->field_exists('uri') );
+  }
   
 
 }

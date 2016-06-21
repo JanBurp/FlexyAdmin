@@ -83,10 +83,8 @@ class Show extends AdminController {
 				 * Haal ruwe data op
 				 */
         
-        
         $this->data->table( $table );
         $this->data->set_user_id();
-        $this->data->select( $this->data->get_setting( array('grid_set','fields') ));
         
         // Extra where statement, via Admin Menu instelling?
 				if (!empty($info)) {
@@ -103,16 +101,8 @@ class Show extends AdminController {
 				if ($pagination) $pagination=$this->cfg->get('cfg_configurations','int_pagination');
         $pagination=(int)$pagination;
         
-
-				// ORDER als een tree ?
-				if ( $this->data->field_exists('self_parent') ) {
-          $titleField = $this->data->list_fields( 'str',1 );
-          $this->data->order_by( 'order' );
-          $this->data->path( 'uri' )->path( $titleField );
-          $last_order = 'order';
-				}
-        // ORDER op de normale manier
-				elseif ($order) {
+        // ORDER
+        if ($order) {
 					$orderArr=explode(':',$order);
           $last_order = '';
 					foreach ($orderArr as $key => $ord) {
@@ -143,27 +133,10 @@ class Show extends AdminController {
           if (has_string('DESC',$last_order)) $last_order='_'.trim(str_replace('DESC','',$last_order));
         }
 				
-        // Check of er alleen rechten zijn voor bepaalde rijen TODO-> naar Data_Core
-				$restrictedToUser = $this->flexy_auth->restricted_id( $table );
-				if ( $restrictedToUser>0 and $this->data->field_exists('user') ) {
-          $this->data->where( $table.".user", $restrictedToUser );
-          $this->data->unselect( 'user' );
-				}
-        
-        // Voeg relaties als abstracts toe
-        // many_to_one
-        $search_with=array('many_to_one');
-        $this->data->with( 'many_to_one', 'abstract' );
-        // many_to_many ?
-  			if ( $this->data->get_setting( array('grid_set','with','many_to_many') )) {
-          $search_with[]='many_to_many';
-          $this->data->with_json( 'many_to_many', 'abstract' );
-        }
-        // one_to_many ?
-				if ( $this->data->get_setting( array('grid_set','with','one_to_many') ) ) {
-          $search_with[]='one_to_many';
-          $this->data->with_json( 'one_to_many', 'abstract' );
-        }
+        // Alleen voor gebruiker
+				if ( $this->flexy_auth->restricted_id( $table ) ) {
+				  $this->data->where_user();
+				};
         
         // Maximale lengte voor txt_ velden
         $this->data->select_txt_abstract();
@@ -175,10 +148,9 @@ class Show extends AdminController {
             $decode_search = json2array($search);
             if ($decode_search) {
               $extended_search = TRUE;
-              // strace_($search);
-              // strace_($decode_search);
             }
           }
+          $search_with = array_keys( $this->data->get_setting( array('grid_set','with') ) );
           if ($extended_search) {
             $this->data->find_multiple( $decode_search, array('with'=>$search_with) );
           }
@@ -197,7 +169,8 @@ class Show extends AdminController {
           }
         }
 
-        $data = $this->data->get_result( $pagination, $offset );
+        $data = $this->data->get_grid( $pagination, $offset );
+        
         $data_query = $this->data->last_query(); //_clean(array('select'=>$table.'.'.PRIMARY_KEY), true);
 				$total_rows = $this->data->total_rows();
         
