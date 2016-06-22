@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-/* --- Settings for data model '{NAME}' --- Created @ {DATE} */
+/* --- Settings for Data model '{NAME}' --- Created @ {DATE} */
 
 
 /**

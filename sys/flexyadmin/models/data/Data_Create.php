@@ -40,7 +40,9 @@ Class Data_Create extends CI_Model {
     $model_template = file_get_contents( $this->paths['sys_model'].'Data_Template.php');
     $config_template= file_get_contents( $this->paths['sys_config'].'data.php');
     // Remove all comments from config_template
-    // $config_template = preg_replace("~/\*\*.*\/\n~uUs", "", $config_template);
+    $config_template = preg_replace("~/\*\*.*\/\n~uUs", "", $config_template);
+    // Remove empty lines
+    $config_template = preg_replace("/^\n/uim", "", $config_template);
     
     foreach ($tables as $table) {
       $this->messages[] = $table;
@@ -149,17 +151,17 @@ Class Data_Create extends CI_Model {
           $longest_item=current($longest_item);
           $len = strlen($longest_item) + 2;
           $value="array( ";
-          if ($lev<3) $value.="\n";
+          if ($lev<1) $value.="\n";
           foreach ($items as $key => $sub_value) {
-            if ($lev<3)
+            if ($lev<1)
               $value.= repeater("\t",$tabs+1) . sprintf('%-'.$len.'s',"'".$key."'");
             else
               $value.= "'".$key."'";
             $value .= " => ".$this->value_to_string($sub_value,$tabs+2,$lev+1).", ";
-            if ($lev<3) $value.="\n";
+            if ($lev<1) $value.="\n";
           }
           $value = str_replace(", )"," )",$value);
-          if ($lev<3) $value.= repeater("\t",$tabs);
+          if ($lev<1) $value.= repeater("\t",$tabs);
           $value .= ")";
         }
         else {

@@ -442,25 +442,26 @@ Class Data_Core extends CI_Model {
     $this->load->model('cfg');
     if (empty($fields)) $fields = $this->settings['fields'];
     $order_by = '';
+    
     // Haal eerst indien mogelijk uit (depricated) cfg_table_info
     $order_by = $this->cfg->get( 'cfg_table_info', $this->settings['table'], 'str_order_by');
     
     // Zoek mogelijke standaard order fields
     if (empty($order_by)) {
-  		$order_fields = $this->config->item( 'ORDER_default_fields' );
-  		do {
-  			$possible_order_field = each( $order_fields );
-        if ($possible_order_field) {
-          $possible_order_field = explode( ' ', $possible_order_field['value'] ); // split DESC/ASC
-          $possible_field = $possible_order_field[0];
-          if ( $key=in_array_like($possible_field, $fields) ) {
-            $order_by = $fields[$key];
-            if ( isset($possible_order_field[1]) ) $order_by .= ' ' . $possible_order_field[1]; // add DESC/ASC
+        $order_fields = $this->config->item( 'ORDER_default_fields' );
+        do {
+          $possible_order_field = each( $order_fields );
+          if ($possible_order_field) {
+            $possible_order_field = explode( ' ', $possible_order_field['value'] ); // split DESC/ASC
+            $possible_field = $possible_order_field[0];
+            if ( $key=in_array_like($possible_field, $fields) ) {
+              $order_by = $fields[$key];
+              if ( isset($possible_order_field[1]) ) $order_by .= ' ' . $possible_order_field[1]; // add DESC/ASC
+            }
           }
-        }
-      } while (empty($order_by) and $possible_order_field);
-      
+        } while (empty($order_by) and $possible_order_field);
     }
+
     // Als leeg: Pak dat het laatste standaard order veld ('id')
     if (empty($order_by)) $order_by = $order_fields[count($order_fields)-1];
     return $order_by;
@@ -593,6 +594,7 @@ Class Data_Core extends CI_Model {
     }
     // user is ook een many_to_one:
     $user_keys = filter_by( $this->settings['fields'], 'user' );
+    if ( in_array('id_user',$this->settings['fields'])) array_unshift($user_keys,'id_user');
     if ($user_keys) {
       if (!isset($relations['many_to_one'])) $relations['many_to_one'] = array();
       foreach ($user_keys as $user_key) {
@@ -683,15 +685,25 @@ Class Data_Core extends CI_Model {
     $grid_set['pagination']    = (el('b_pagination',$table_info,TRUE)?true:false);
 
     // Relaties
-    $grid_set['with'] = array();
+    // $grid_set['with'] = array();
+    // // many_to_one, voor als formdata uit tabledata gebruikt moet gaan worden
+    // $many_to_one = el( array('relations','many_to_one'), $this->settings );
+    // if ($many_to_one) $grid_set['with']['many_to_one']=$many_to_one;
+    // // many_to_many, als in oude instellingen gevraagd is
+    // if (el('b_grid_add_many',$table_info)) {
+    //   $many_to_many = el( array('relations','many_to_many'), $this->settings );
+    //   if ($many_to_many) $grid_set['with']['many_to_many'] = $many_to_many;
+    // }
+    
+    // relaties?
+    $grid_set['with']      = array();
     // many_to_one, voor als formdata uit tabledata gebruikt moet gaan worden
-    $many_to_one = el( array('relations','many_to_one'), $this->settings );
-    if ($many_to_one) $grid_set['with']['many_to_one']=$many_to_one;
+    if (isset($this->settings['relations']['many_to_one'])) $grid_set['with']['many_to_one']=array();
     // many_to_many, als in oude instellingen gevraagd is
-    if (el('b_grid_add_many',$table_info)) {
-      $many_to_many = el( array('relations','many_to_many'), $this->settings );
-      if ($many_to_many) $grid_set['with']['many_to_many'] = $many_to_many;
-    }
+    if (el('b_form_add_many',$table_info)) $grid_set['with']['many_to_many']=array();
+    
+    
+    
 
     return $grid_set;
   }
@@ -720,7 +732,9 @@ Class Data_Core extends CI_Model {
       }
       // in which fieldset/tab?
       else {
-        $fieldset = el('str_fieldset',$field_info, $main_fieldset );
+        $fieldset = el('str_fieldset',$field_info );
+        if (!$fieldset) $fieldset=$main_fieldset;
+        // trace_([$fieldset,$main_fieldset]);
         if (!isset($fieldsets[$fieldset])) $fieldsets[$fieldset]=array();
         array_push( $fieldsets[$fieldset], $field );
       }
