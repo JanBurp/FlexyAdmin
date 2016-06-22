@@ -3282,7 +3282,7 @@ Class Data_Core extends CI_Model {
 	 *
 	 * @param array $set [NULL]
 	 * @param mixed $escape [NULL]
-	 * @return $this
+	 * @return mixed FALSE als niet gelukt, anders de id van het aangepaste item
 	 * @author Jan den Besten
 	 */
   public function insert( $set = NULL, $escape = NULL ) {
@@ -3307,7 +3307,7 @@ Class Data_Core extends CI_Model {
    * @param array $set [NULL]
    * @param string $where [NULL]
    * @param int $limit [NULL]
-   * @return $this
+   * @return mixed FALSE als niet gelukt, anders de id van het aangepaste item
    * @author Jan den Besten
    */
 	public function update( $set = NULL, $where = NULL, $limit = NULL) {
