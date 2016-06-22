@@ -56,7 +56,7 @@ class Filemanager extends AdminController {
 			// $sub=el('sub',$args);
 			$offset=(int) el('offset',$args,0);
 			$order=el('order',$args, $this->cfg->get('cfg_media_info',$path,'str_order','name') );
-			$search=el('search',$args,'');
+			$search=$this->input->get('search');
 		}
     $this->grid_set->save(array('table'=>$path,'offset'=>$offset,'order'=>$order,'search'=>$search));
 		
@@ -286,7 +286,6 @@ class Filemanager extends AdminController {
 		$redirectUri=$this->grid_set->open_uri();
 		if (!empty($info)) $redirectUri.='/info/'.$info;
     redirect($redirectUri);
-    // trace_($redirectUri);
 	}
 
   /**
@@ -322,8 +321,8 @@ class Filemanager extends AdminController {
 				}
 				else {
 					// autofill
-					if (isset($mediaCfg[$path]['str_autofill']) and ($mediaCfg[$path]['str_autofill']=='single upload' or $mediaCfg[$path]['str_autofill']=='both') ) {
-						$autoFill=$this->upload->auto_fill_fields($file,$path);
+					if ( isset($mediaCfg[$path]['str_autofill']) and ($mediaCfg[$path]['str_autofill']==='single upload' or $mediaCfg[$path]['str_autofill']==='both') ) {
+						$autoFill = $this->upload->auto_fill_fields($file,$path);
 					}
 					// fill in media table if any
 					$userRestricted=$this->cfg->get('CFG_media_info',$path,'b_user_restricted');
