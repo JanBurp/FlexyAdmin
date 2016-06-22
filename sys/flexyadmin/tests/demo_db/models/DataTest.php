@@ -169,7 +169,6 @@ class DataTest extends CITestCase {
     $grid_set = $this->CI->data->get_setting('grid_set');
     $this->assertInternalType( 'array', $grid_set );
     $this->assertInternalType( 'array', $grid_set['with']['many_to_one'] );
-    $this->assertEquals( 2, count($grid_set['with']['many_to_one']) );
 
     // tbl_leerlingen - abstract
     $query = $this->CI->data->table( 'tbl_leerlingen' )
