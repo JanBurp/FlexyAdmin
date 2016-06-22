@@ -1726,9 +1726,12 @@ Class Data_Core extends CI_Model {
     // Relations
     if (isset($grid_set['with'])) {
       foreach ($grid_set['with'] as $type => $relations) {
-        foreach ($relations as $what => $info) {
-          $json = ($type!=='many_to_one');
-          $this->with( $type, array( $what=>'abstract'), $json, TRUE );
+        if (empty($relations)) $relations = $this->get_setting(array('relations',$type));
+        if ($relations) {
+          foreach ($relations as $what => $info) {
+            $json = ($type!=='many_to_one');
+            $this->with( $type, array( $what=>'abstract'), $json, TRUE );
+          }
         }
       }
     }
