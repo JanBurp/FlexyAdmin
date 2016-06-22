@@ -25,7 +25,7 @@ class MY_Lang extends CI_Lang {
 		parent::__construct();
     // check if a language table is set
     $config = &get_config();
-    if ( isset($config['language_table']) and !empty($config['language_table']) ) {
+    if ( isset($config['language_table']) and !empty($config['language_table']) and isset($this->data) ) {
       $this->lang_table= $config['language_table'];
       $this->lang_data = $this->data->table($this->lang_table)->set_result_key('key')->get_result();
     }

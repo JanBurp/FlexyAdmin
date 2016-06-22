@@ -28,8 +28,9 @@ LET OP: Door deze update heeft iedere user een nieuw wachtwoord nodig!!
 - Update naar laatste versie van IonAuth:
   - Vervang de map `sys`
   - Als je de library ->user of ->ion_auth gebruikte moet je je code aanpassen naar de library ->flexy_auth (zie de methods daar, zijn eenvoudiger en degelijker geworden dan die in ->user)
-  - Run update script: `admin/update/....`
-
+  - Run update script: `admin/update/....` (oa SQL update 3653)
+  - User met id=1 (meestal 'Super Admin') heeft tijdelijk het wachtwoord 'admin' gekregen.
+  - Update alle wachtwoorden.
 
 
 UPDATE 3.1.2 (3654...)
@@ -38,7 +39,7 @@ UPDATE 3.1.2 (3654...)
 - Als je 'Data_Model' hebt gebruikt, hernoem deze overal naar 'Data':
   - Hernoem alle data_model aanroepen in je code: vervang '->data_model->' naar '->data->'
   - In eigen models in models/data: vervang 'extends Data_Model' naar 'extends Data'
-- De relaties naamgeving en resultaten zijn veranderd:
+- De relaties naamgeving en resultaten zijn veranderd in Data:
   - Kijk voor voorbeelden van hoe de aanroepen en de resultaten nu zijn op de pagina /admin/test/relations
   - En pas je code aan zodat die net zo gebruik maakt van relaties
 - Als je 'data_model->with_grouped()' gebruikt, pas dit aan naar 'data->with_json()' (en de code die iets met het resultaat doet)
