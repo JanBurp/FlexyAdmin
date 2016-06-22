@@ -1422,7 +1422,7 @@ Class Data_Core extends CI_Model {
    * @return array
    * @author Jan den Besten
    */
-  private function _make_result_array( $query ) {
+  protected function _make_result_array( $query ) {
     if ( $query===FALSE) return array();
     
     $key = el( 'result_key', $this->settings, el( 'primary_key',$this->settings ) );
