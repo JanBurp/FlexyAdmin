@@ -268,10 +268,15 @@ function doGrid() {
         
 				// add filter input
 				var search=$(filter).attr('data-search');
-        $("tr.caption:first tr td:first").append('<span class="filter"><span class="help '+config.help_filter+'"><input class="filter" type="text" value="'+search+'"/></span><img class="extended_search_button" src="sys/flexyadmin/assets/icons/action_add.gif"></span>');
+        
+        if ($('.extended_search').length>0) {
+          $("tr.caption:first tr td:first").append('<span class="filter"><span class="help '+config.help_filter+'"><input class="filter" type="text" value="'+search+'"/></span><img class="extended_search_button" src="sys/flexyadmin/assets/icons/action_add.gif"></span>');
+        }
+        else {
+          $("tr.caption:first tr td:first").append('<span class="filter"><span class="help '+config.help_filter+'"><input class="filter" type="text" value="'+search+'"/></span>');
+        }
         
         var filterBox=$('input.filter');
-        // Extended search on
         $('.extended_search_button').click(function(){
           $('tr.extended_search').removeClass('hidden');
           $('.grid .filter').addClass('hidden');

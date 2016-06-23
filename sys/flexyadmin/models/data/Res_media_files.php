@@ -44,10 +44,12 @@ Class Res_media_files extends Data_Core {
    * @author Jan den Besten
    */
   public function _delete_files( $deleted_data ) {
-    foreach ($deleted_data as $id => $file_row) {
-      $this->file_manager->set_path( $file_row['path'] );
-      if ( !$this->file_manager->delete_file( $file_row['file'] ) ) {
-        unset($deleted_data[$id]);
+    if (is_array($deleted_data)) {
+      foreach ($deleted_data as $id => $file_row) {
+        $this->file_manager->set_path( $file_row['path'] );
+        if ( !$this->file_manager->delete_file( $file_row['file'] ) ) {
+          unset($deleted_data[$id]);
+        }
       }
     }
     return $deleted_data;

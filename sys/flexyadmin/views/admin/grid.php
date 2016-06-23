@@ -11,6 +11,7 @@
 							<?php endforeach; ?>
 						</tr>
             
+            <?php if ($searchfields): ?>
             <tr class="hidden extended_search">
               <td colspan="100">
                 <div class="extended_search_row">
@@ -28,6 +29,7 @@
                 </div>
               </td>
             </tr>
+            <?php endif ?>
             
 					</thead>
 				</table>

@@ -593,7 +593,7 @@ class Flexy_field extends CI_Model {
 		$options_data=array_merge($options_data,$tables);
 		$options_data=array_merge($options_data,$media);
     foreach ($options_data as $key => $value) {
-      $options['data'][$value]=array('name'=>$value,'value'=>$value);
+      $options['data'][$value]=$value;
     }
 		$out=$this->_standard_form_field($options);
 		$out["type"]="dropdown";
