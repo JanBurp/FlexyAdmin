@@ -33,7 +33,7 @@ Class Data_Create extends CI_Model {
       $tables=array($table);
     }
     else {
-      $tables = $this->db->list_tables();
+      $tables = $this->data->list_tables();
     }
     
     // Load Template & Change it for everye table with its own settings

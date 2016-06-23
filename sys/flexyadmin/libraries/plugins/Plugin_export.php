@@ -27,7 +27,7 @@ class Plugin_export extends Plugin {
 		// What are possible tables to export?
 		$tables=$this->config('tables');
 		if (empty($tables)) {
-			$tables=$this->CI->db->list_tables();
+			$tables=$this->CI->data->list_tables();
 		}
 		// only tables which user has rights for
 		foreach ($tables as $key=>$table) {

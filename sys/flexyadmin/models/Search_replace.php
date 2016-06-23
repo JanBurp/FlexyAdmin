@@ -48,7 +48,7 @@ class Search_replace extends CI_Model {
   public function replace_all($search,$replace,$types='txt') {
     if (!is_array($types)) $types=array($types);
 		$result=FALSE;
-		$tables=$this->db->list_tables();
+		$tables=$this->data->list_tables();
 		foreach($tables as $table) {
 			$type=get_prefix($table);
 			if (in_array($type,$this->table_types)) {
@@ -76,7 +76,7 @@ class Search_replace extends CI_Model {
    * @author Jan den Besten
    */
   public function replace_value($search,$replace,$fields='',$tables='') {
-    if (empty($tables)) $tables=$this->db->list_tables();
+    if (empty($tables)) $tables=$this->data->list_tables();
 		$result=FALSE;
 		foreach($tables as $table) {
       if (empty($fields)) $fields=$this->db->list_fields($table);
@@ -166,7 +166,7 @@ class Search_replace extends CI_Model {
    */
    public function links($search,$replace='') {
 		$result=FALSE;
-		$tables=$this->db->list_tables();
+		$tables=$this->data->list_tables();
 		foreach($tables as $table) {
 			$type=get_prefix($table);
 			// Only in set table types
@@ -261,7 +261,7 @@ class Search_replace extends CI_Model {
    */
   public function media($search,$replace='') {
     $result=FALSE;
-		$tables=$this->db->list_tables();
+		$tables=$this->data->list_tables();
 		foreach($tables as $table) {
 			$type=get_prefix($table);
 			// Only in set table types

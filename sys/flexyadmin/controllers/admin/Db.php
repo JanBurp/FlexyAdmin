@@ -119,18 +119,18 @@ class Db extends AdminController {
     foreach ($expressions as $expression) {
       switch ($expression) {
         case '*':
-          $add=$this->db->list_tables();
+          $add=$this->data->list_tables();
           $add=array_combine($add,$add);
           $tables=array_merge($tables,$add);
           break;
         case 'tbl_*':
-          $add=$this->db->list_tables();
+          $add=$this->data->list_tables();
           $add=filter_by($add,'tbl_');
           $add=array_combine($add,$add);
           $tables=array_merge($tables,$add);
           break;
         case 'cfg_*':
-          $add=$this->db->list_tables();
+          $add=$this->data->list_tables();
           $add=filter_by($add,'cfg_');
           $add=array_combine($add,$add);
           $tables=array_merge($tables,$add);
@@ -142,7 +142,7 @@ class Db extends AdminController {
           }
           elseif (has_string('*',$expression)) {
             $like=get_prefix($expression,'*');
-            $add=$this->db->list_tables();
+            $add=$this->data->list_tables();
             $add=filter_by($add,$like);
             $add=array_combine($add,$add);
             $tables=array_merge($tables,$add);

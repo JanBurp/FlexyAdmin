@@ -42,7 +42,7 @@ class Plugin_create_indexes extends Plugin {
    * @author Jan den Besten
    */
 	private function _create_indexes() {
-		$tables=$this->CI->db->list_tables();
+		$tables=$this->CI->data->list_tables();
 
 		foreach ($tables as $table) {
 			$pre=get_prefix($table);

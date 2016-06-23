@@ -17,7 +17,7 @@ class Update_3089 extends Model_updates {
   
   public function update() {
     // Reset order of all tables with 'order' field
-    $tables=$this->db->list_tables();
+    $tables=$this->data->list_tables();
     foreach ($tables as $key => $table) {
       if (! $this->db->has_field($table,'order')) {
         unset($tables[$key]);

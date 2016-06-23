@@ -695,7 +695,7 @@ class Flexy_auth extends Ion_auth {
     $groups = $this->data->table('cfg_user_groups')->where_in( 'id', array_keys($user['groups']) )->get_result();
 		if (!$groups) return FALSE;
     
-    $tables = $this->db->list_tables();
+    $tables = $this->data->list_tables();
     $medias = $this->mediatable->get_media_folders(FALSE,'media_');
     $items  = array_merge($tables,$medias);
     
@@ -813,7 +813,7 @@ class Flexy_auth extends Ion_auth {
    * @author Jan den Besten
    */
 	public function get_table_rights($atLeast=RIGHTS_ALL) {
-		$tables=$this->db->list_tables();
+		$tables=$this->data->list_tables();
 		$tableRights=array();
 		foreach ($tables as $key => $table) {
 			$pre=get_prefix($table);
