@@ -1634,7 +1634,7 @@ Class Data_Core extends CI_Model {
    */
   public function get_row( $where = NULL, $set='' ) {
     // Nieuwe row? Geef dan defaults terug
-    if ($where===-1) {
+    if ($where==-1) {
       return $this->get_defaults($set);
     }
     
@@ -2296,7 +2296,7 @@ Class Data_Core extends CI_Model {
       // primary_key als nummer
       elseif (is_numeric((int)$value)) {
         $value = $key;
-        $key = $this->settings['primary_key'];
+        $key = $this->settings['table'].'.'.$this->settings['primary_key'];
       }
     }
     // where
