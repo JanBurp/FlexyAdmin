@@ -453,6 +453,7 @@ class Show extends AdminController {
 		if ( !empty($data) ) {
       
 			$ffData = $this->ff->render_form( $table, $data, $options );
+      // trace_($ffData);
       
 			$actionUri=api_uri('API_view_form',$table.$this->config->item('URI_HASH').$id);
 			if (!empty($info)) $actionUri.='/info/'.$info;
