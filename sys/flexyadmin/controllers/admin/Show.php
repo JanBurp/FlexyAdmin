@@ -411,7 +411,7 @@ class Show extends AdminController {
 		 */
 		if ( !empty($data) ) {
       
-			$ffData = $this->ff->render_form( $table, $data, $options );
+			$ffData = $this->ff->render_form( $table, $data, $options, $this->data->get_setting('relations') );
       // trace_($ffData);
       
 			$actionUri=api_uri('API_view_form',$table.$this->config->item('URI_HASH').$id);
@@ -441,7 +441,7 @@ class Show extends AdminController {
 				$newData=$form->get_data();
 				$newData=$this->_after_update($table,$data,$newData);
         
-        $this->data->table( $table )->set_user_id( $restrictedToUser );
+        $this->data->table( $table )->set_user_id();
         
 				if ($id==-1) {
 					$id = $this->data->insert( $newData );

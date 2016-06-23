@@ -153,12 +153,12 @@ class Flexy_field extends CI_Model {
 	 * @param array $row Row of all data
 	 * @return array	Returns a new row
 	 */
-	function concat_foreign_fields($row) {
+	function concat_foreign_fields($row,$grid=false) {
     $fields=array_keys($row);
     foreach ($row as $field=>$data) {
       if ( (is_foreign_key($field) and !is_foreign_field($field)) or substr($field,0,4)==='user') {
         $abstract_field = $this->relations['many_to_one'][$field]['result_name'].'.abstract';
-        $row[$field] = $row[$abstract_field];
+        if ($grid) $row[$field] = $row[$abstract_field];
         unset($row[$abstract_field]);
       }
     }
@@ -191,7 +191,7 @@ class Flexy_field extends CI_Model {
 	function render_grid_row($table,$row,$right=RIGHTS_ALL,$extraInfoId=NULL) {
 		$out=array();
 		// first create one field from foreign data
-		$this->rowdata=$this->concat_foreign_fields($row);
+		$this->rowdata=$this->concat_foreign_fields($row,true);
 		foreach ($this->rowdata as $field=>$data) {
 			$renderedField=$this->render_grid_field($table,$field,$data,$right,$extraInfoId);
 			if ($renderedField!==FALSE)	$out[$field]=$renderedField;
@@ -272,9 +272,11 @@ class Flexy_field extends CI_Model {
 	 * Renders full data set according to type and action (grid|form)
 	 *
 	 */
-	public function render_form($table,$data,$options=NULL,$extraInfoId=NULL) {
+	public function render_form($table,$data,$options=NULL,$relations,$extraInfoId=NULL) {
+    $this->relations = $relations;
 		$this->init_table($table,"form",$data);
 		$out=array();
+    $data=$this->concat_foreign_fields($data);
 		foreach ($data as $name => $value) {
 			$opt=el($name,$options);
 			$renderedField=$this->render_form_field($table,$name,$value,$opt,$extraInfoId);
