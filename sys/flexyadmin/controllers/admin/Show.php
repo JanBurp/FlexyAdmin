@@ -370,7 +370,6 @@ class Show extends AdminController {
       $this->_show_all();
       return;
     }
-		$restrictedToUser = $this->flexy_auth->restricted_id($table);
 
     // Laad libraries etc
 		$this->lang->load("form");
@@ -385,53 +384,14 @@ class Show extends AdminController {
      * Table
      */
     $this->data->table( $table );
-    $this->data->select( $this->data->get_setting( array('form_set','fields') ));
-
-    /**
-     * Relaties?
-     */
-    $options_with = array('many_to_one');
-    // many_to_many?
-    $many_to_many = $this->data->get_setting( array('form_set','with','many_to_many') );
-    if ( is_array($many_to_many) ) {
-      $this->data->with('many_to_many','abstract');
-      array_push($options_with,'many_to_many');
-    }
-    // one_to_many?
-    $one_to_many = $this->data->get_setting( array('form_set','with','one_to_many') );
-    if ( is_array($one_to_many) ) {
-      $this->data->with('one_to_many');
-      array_push($options_with,'one_to_many');
-    }
 		
-    /**
-     * Nieuw item (INSERT)
-     */
-		if ($id==-1) {
-			// New item, fill data with defaults
-      $data = $this->data->get_defaults('form');
-		}
-    
-    /**
-     * Edit item (UPDATE)
-     */
-		else {
+    // Alleen voor gebruiker
+		if ( $this->flexy_auth->restricted_id( $table ) ) {
+		  $this->data->where_user();
+		};
 
-      // Van een bepaalde gebruiker?
-      if ( $restrictedToUser>0 and $this->data->field_exists('user') ) {
-        $this->ff->set_restricted_to_user( $restrictedToUser,$this->user_id );
-        $this->data->where( 'user', $restrictedToUser);
-				$this->data->unselect('user');
-			}
-
-      // Zoek de juiste rij
-			if ($id!=='') {
-				$this->data->where( $table.".".PRIMARY_KEY, $id );
-			}
-      
-      // Haal data op
-			$data = $this->data->get_row();
-		}
+    // Haal data op
+		$data = $this->data->get_form( $id );
     
     // trace_($this->data->last_query());
     // trace_($data);
@@ -439,9 +399,8 @@ class Show extends AdminController {
     /**
      * Opties
      */
-    $options=$this->data->get_options('',$options_with);
+    $options=$this->data->get_options('', array_keys($this->data->get_setting( array('form_set','with'))) );
 
-    // trace_($options_with);
     // trace_($options);
     // die();
     
