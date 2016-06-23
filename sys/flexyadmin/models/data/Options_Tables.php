@@ -17,7 +17,7 @@ Class Options_Tables extends CI_Model {
   
   public function get_options( $info=array() ) {
     $options=array();
-    $tables=$this->db->list_tables();
+    $tables=$this->data->list_tables();
 	  $tables=not_filter_by($tables,"cfg_");
 	  $tables=not_filter_by($tables,"log_");
 	  $tables=not_filter_by($tables,"rel_users");

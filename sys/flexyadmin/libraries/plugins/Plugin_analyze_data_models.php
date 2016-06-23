@@ -19,7 +19,7 @@
       if (isset($args[0]))
         $tables=array($args[0]);
       else
-        $tables = $this->CI->db->list_tables();
+        $tables = $this->CI->data->list_tables();
       
       $this->CI->load->model('data/data');
       $this->CI->load->model('data/data_model_create');

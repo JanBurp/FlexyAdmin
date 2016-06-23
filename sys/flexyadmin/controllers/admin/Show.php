@@ -280,7 +280,7 @@ class Show extends AdminController {
             $html.=p() . anchor(api_uri('API_home','users/send_new_password'),lang('send_new_password'),array('class' => 'button selected_users')) .' '. lang('selected_users')._p();
           }
 
-					$data=$this->ff->render_grid($table,$data,$rights, $this->data->get_setting('relations'), $info);
+					$data=$this->ff->render_grid( $table,$data,$rights, $this->data->get_setting('relations'), $info);
           
           
 					if (empty($uiTable)) $uiTable=$this->ui->get($table);

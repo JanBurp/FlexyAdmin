@@ -41,7 +41,7 @@
    * @author Jan den Besten
    */
   private function analyze() {
-    $tables=$this->CI->db->list_tables();
+    $tables=$this->CI->data->list_tables();
     $analysedTables=array();
     $statistics=array(
       'total_tables'            => count($tables),
@@ -194,7 +194,7 @@
   }
   
   function table_exists($tableName) {
-    $result = $this->CI->db->list_tables();
+    $result = $this->CI->data->list_tables();
     foreach( $result as $row ) {
       if( $row == $tableName ) return true;
     }

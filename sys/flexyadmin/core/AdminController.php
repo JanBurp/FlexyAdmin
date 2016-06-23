@@ -220,19 +220,19 @@ class AdminController extends BasicController {
 					break;
 					
 				case 'all_tbl_tables' :
-					$tables=$this->db->list_tables();
+					$tables=$this->data->list_tables();
 					$menu=array_merge($menu,$this->_show_table_menu($tables,$this->config->item('TABLE_prefix')));
 					break;
 
 				case 'all_cfg_tables' :
-					$tables=$this->db->list_tables();
+					$tables=$this->data->list_tables();
 					$menu=array_merge($menu,$this->_show_table_menu($tables,$this->config->item('CFG_table_prefix')));
 					$menu=array_merge($menu,$this->_show_table_menu($tables,$this->config->item('LOG_table_prefix')));
 					$menu=array_merge($menu,$this->_show_table_menu($tables,$this->config->item('REL_table_prefix')));
 					break;
 
 				case 'all_res_tables' :
-					$tables=$this->db->list_tables();
+					$tables=$this->data->list_tables();
 					$menu=array_merge($menu,$this->_show_table_menu($tables,$this->config->item('RES_table_prefix')));
 					break;
 				

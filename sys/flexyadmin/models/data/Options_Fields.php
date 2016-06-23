@@ -17,7 +17,7 @@ Class Options_Fields extends CI_Model {
   
   public function get_options( $info=array() ) {
     $options=array();
-    $tables = $this->db->list_tables();
+    $tables = $this->data->list_tables();
     foreach ($tables as $table) {
       $table_fields=$this->db->list_fields($table);
       // Speciale velden filter

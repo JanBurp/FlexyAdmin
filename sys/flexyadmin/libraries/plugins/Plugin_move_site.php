@@ -94,7 +94,7 @@ class Plugin_move_site extends Plugin {
   
   
   private function _import_missing_tables() {
-    $tables = $this->CI->db->list_tables();
+    $tables = $this->CI->data->list_tables();
     $old_tables = $this->oldDB->list_tables();
     $missing_tables = array_diff($old_tables,$tables);
     // only 'tbl_' tables

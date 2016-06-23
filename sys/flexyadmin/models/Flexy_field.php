@@ -155,13 +155,13 @@ class Flexy_field extends CI_Model {
 	 */
 	function concat_foreign_fields($row) {
     $fields=array_keys($row);
-		foreach ($row as $field=>$data) {
+    foreach ($row as $field=>$data) {
       if ( (is_foreign_key($field) and !is_foreign_field($field)) or substr($field,0,4)==='user') {
         $abstract_field = $this->relations['many_to_one'][$field]['result_name'].'.abstract';
         $row[$field] = $row[$abstract_field];
         unset($row[$abstract_field]);
       }
-		}
+    }
     return $row;
 	}
 
@@ -581,7 +581,7 @@ class Flexy_field extends CI_Model {
 	}
 
 	function _dropdown_rights_form() {
-		$tables=$this->db->list_tables();
+		$tables=$this->data->list_tables();
 		$folders=$this->cfg->get('CFG_media_info');
 		$folders=array_keys($folders);
 		$not=filter_by($folders,"tbl_");

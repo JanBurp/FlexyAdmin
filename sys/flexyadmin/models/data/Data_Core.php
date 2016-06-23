@@ -774,8 +774,8 @@ Class Data_Core extends CI_Model {
     }
     // Laad anders de config van die tabel/model
     else {
-      $this->config->load( 'tables/'.$table, true);
-      $settings = $this->config->item( 'tables/'.$table );
+      $this->config->load( 'data/'.$table, true);
+      $settings = $this->config->item( 'data/'.$table );
       $setting = el( $key, $settings, $default );
     }
     return $setting;
@@ -1002,7 +1002,7 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   protected function _get_one_to_many_tables( $table ) {
-    $tables = $this->list_tables();
+    $tables = $this->data->list_tables();
     $tables = filter_by( $tables, 'tbl_');
     // find foreign_keys to this table
     $foreign_key = 'id_'.remove_prefix($table);
@@ -1025,7 +1025,7 @@ Class Data_Core extends CI_Model {
    */
   protected function _get_many_to_many_tables() {
     if (get_prefix($this->settings['table'])==='rel') return array();
-    $rel_tables = $this->db->list_tables();
+    $rel_tables = $this->data->list_tables();
     $rel_tables = filter_by( $rel_tables, 'rel_'.remove_prefix($this->settings['table']) );
     $this->relation_tables['many_to_many__rel'] = $rel_tables;
     $tables = array();

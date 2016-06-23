@@ -51,7 +51,7 @@ class Search extends AdminController {
 					$table=get_prefix($value,'.');
 					$field=get_suffix($value,'.');
           if ($table=='*') {
-            $tables=$this->db->list_tables();
+            $tables=$this->data->list_tables();
             $tables=not_filter_by($tables,array('cfg','log'));
             foreach ($tables as $table) {
               if ($this->db->field_exists($field,$table)) $testFields[]=array('table'=>$table,'field'=>$field);

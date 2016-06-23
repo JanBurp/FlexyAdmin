@@ -205,7 +205,7 @@ function is_editable_table($table) {
 function get_fields_from_input($wildfields,$tables='') {
   $CI =& get_instance();
   if (!is_array($wildfields)) $wildfields=explode('|',$wildfields);
-  if (!$tables) $tables=$CI->db->list_tables();
+  if (!$tables) $tables=$CI->data->list_tables();
   if (!is_array($tables)) $tables=explode('|',$tables);
   $fields=array();
   foreach ($wildfields as $field) {

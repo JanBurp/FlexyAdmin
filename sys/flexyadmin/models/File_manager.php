@@ -330,7 +330,7 @@ class File_manager extends CI_Model {
         $searchedFields=array();
       
         // txt fields
-        $tables=$this->db->list_tables();
+        $tables=$this->data->list_tables();
   			foreach ($tables as $table) {
   				$fields=$this->db->list_fields($table);
   				foreach ($fields as $field) {
