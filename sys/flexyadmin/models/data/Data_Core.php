@@ -1628,13 +1628,14 @@ Class Data_Core extends CI_Model {
    * Zelfde als get_result(), maar geeft nu alleen maar de eerstgevonden rij.
    * 
    * @param mixed $where [NULL]
+   * @param string $set [''] 'form' als de aanroep voor de form_set wordt gebruikt
    * @return array
    * @author Jan den Besten
    */
-  public function get_row( $where = NULL ) {
+  public function get_row( $where = NULL, $set='' ) {
     // Nieuwe row? Geef dan defaults terug
     if ($where===-1) {
-      return $this->get_defaults();
+      return $this->get_defaults($set);
     }
     
     if ($where) $this->where( $where );
@@ -1797,6 +1798,41 @@ Class Data_Core extends CI_Model {
 
     return $this->_get_result();
   }
+  
+  /**
+   * Geeft resultaat terug specifiek voor een formulier van één item
+   *
+   * @param mixed $where Meestal alleen het id nummer
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_form( $where = '' ) {
+    $form_set = $this->settings['form_set'];
+
+    // Select
+    $this->select( $form_set['fields'] );
+    
+    // Relations
+    if (isset($form_set['with'])) {
+      foreach ($form_set['with'] as $type => $relations) {
+        if (empty($relations)) $relations = $this->get_setting(array('relations',$type));
+        if ($relations) {
+          foreach ($relations as $what => $info) {
+            $this->with( $type, array( $what=>'abstract') );
+          }
+        }
+      }
+    }
+    
+    // Paths als menu tabel
+    if ( $this->is_menu_table() ) {
+      $title_field = $this->list_fields( 'str',1 );
+      $this->path( 'uri' )->path( $title_field );
+    }
+    
+    return $this->get_row( $where );
+  }
+  
   
   
   /**
