@@ -319,8 +319,8 @@ class Flexy_auth extends Ion_auth {
 			$message = $this->load->view($this->config->item('email_templates', 'ion_auth').$this->config->item('email_forgot_password', 'ion_auth'), $data, true);
 
 			$this->email->clear();
-			$config['mailtype'] = $this->config->item('email_type', 'ion_auth');
-			$this->email->initialize($config);
+      // $config['mailtype'] = $this->config->item('email_type', 'ion_auth');
+      // $this->email->initialize($config);
 			$this->email->from($this->config->item('admin_email', 'ion_auth'), $this->config->item('site_title', 'ion_auth'));
 			$this->email->to($email);
 			$this->email->subject($this->config->item('site_title', 'ion_auth').' - '.$subject);
@@ -423,18 +423,16 @@ class Flexy_auth extends Ion_auth {
 		   'remember_code' => NULL,
 		);
     $successfully_changed_password_in_db = $this->data->table('cfg_users')->where('id',$user['user_id'])->set($set)->update();
-		if ($successfully_changed_password_in_db)
-		{
-			$this->trigger_events(array('post_change_password', 'post_change_password_successful'));
+		if ($successfully_changed_password_in_db) {
+      $this->trigger_events(array('post_change_password', 'post_change_password_successful'));
 			$this->set_message('password_change_successful');
       $data = array_merge($data,$set);
       $data['identity'] = $user['username'];
       $data['password'] = $password_info['password'];
       return $this->_mail($template, $user, $data);
 		}
-		else
-		{
-			$this->trigger_events(array('post_change_password', 'post_change_password_unsuccessful'));
+		else {
+      // $this->trigger_events(array('post_change_password', 'post_change_password_unsuccessful'));
 			$this->set_error('password_change_unsuccessful');
       return FALSE;
 		}
