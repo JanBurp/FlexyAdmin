@@ -1817,7 +1817,7 @@ Class Data_Core extends CI_Model {
       foreach ($form_set['with'] as $type => $relations) {
         if (empty($relations)) $relations = $this->get_setting(array('relations',$type));
         if ($relations) {
-          foreach ($relations as $what => $info) {
+          foreach ($relations as $what) {
             $this->with( $type, array( $what=>'abstract') );
           }
         }
@@ -1830,7 +1830,7 @@ Class Data_Core extends CI_Model {
       $this->path( 'uri' )->path( $title_field );
     }
     
-    return $this->get_row( $where );
+    return $this->get_row( $where, 'form' );
   }
   
   
