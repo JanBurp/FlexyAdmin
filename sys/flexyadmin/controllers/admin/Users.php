@@ -85,29 +85,29 @@ class Users extends AdminController {
       foreach ($users_ids as $user_id) {
         $user = $this->flexy_auth->get_user($user_id);
         $extra_emails=$this->_extra_emails($user_id);
+        $send = FALSE;
         switch ($action) {
           case 'deny':
       			$message='user_removed';
-      			$this->flexy_auth->user_denied_mail( $user_id );
-            $this->flexy_auth->delete_user($user_id);
+            $send = $this->flexy_auth->user_denied_mail( $user_id );
+            if ($send) $this->flexy_auth->delete_user($user_id);
             break;
           case 'accept':
       			$message='user_accepted';
-      			$this->flexy_auth->user_accepted_mail( $user_id );
-      			$this->flexy_auth->activate_user($user_id);
+            $send = $this->flexy_auth->user_accepted_mail( $user_id );
+            if ($send) $this->flexy_auth->activate_user($user_id);
             break;
           case 'invite':
             $message='send_invitation';
-            $this->flexy_auth->send_new_account($user_id);
-            $this->flexy_auth->activate_user($user_id);
+            $send = $this->flexy_auth->send_new_account($user_id);
+            if ($send) $this->flexy_auth->activate_user($user_id);
             break;
           case 'send_new_password':
             $message='user_send_password';
-            if (! $this->flexy_auth->send_new_password($user_id)) {
-              $message='user_send_password_error';
-            }
+            $send = $this->flexy_auth->send_new_password($user_id);
             break;
         }
+        if (!$send) $message='user_send_error';
         if (isset($message)) $this->message->add(langp($message,$user['username'].'('.$user['email'].','.$user['extra_email_string'].')'));
       }
 		}
