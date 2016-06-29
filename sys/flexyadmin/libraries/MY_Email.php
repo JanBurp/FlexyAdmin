@@ -16,7 +16,7 @@ class MY_Email extends CI_Email {
   /**
    * Remember to for logging
    */
-  private $to = array();
+  private $_to = array();
 
   /**
    * Taal voor het verzenden van emails uit cfg_email
@@ -48,18 +48,18 @@ class MY_Email extends CI_Email {
   public function send($auto_clear = TRUE) {
     $send = parent::send(FALSE);
     
-    if (empty( $this->to )) $this->to = el('To',$this->_headers, 'unknown' );
-    if (!is_array($this->to)) $this->to = array($this->to);
-      
+    if (empty( $this->_to )) $this->_to = el('To',$this->_headers, 'unknown' );
+    if (!is_array($this->_to)) $this->_to = array($this->_to);
+
     $CI = &get_instance();
     $CI->load->model('log_activity');
     if ($send) {
-      $CI->log_activity->email( implode_assoc( PHP_EOL, $this->_headers) ,'to', implode(',',$this->to) );
+      $CI->log_activity->email( implode_assoc( PHP_EOL, $this->_headers) ,'to', implode(',',$this->_to) );
     }
     else {
-      $CI->log_activity->email( $this->print_debugger('headers') ,'error', implode(',',$this->to) );
+      $CI->log_activity->email( $this->print_debugger('headers') ,'error', implode(',',$this->_to) );
     }
-    $this->to=array();
+    $this->_to=array();
     if ($send and $auto_clear) $this->clear();
     return $send;
   }
@@ -115,7 +115,7 @@ class MY_Email extends CI_Email {
    * @author Jan den Besten
    */
 	public function clear($clear_attachments = FALSE) {
-    $this->to=array();
+    $this->_to=array();
     return parent::clear($clear_attachments);
 	}
   
@@ -164,17 +164,14 @@ class MY_Email extends CI_Email {
         $this->from($mail['from']);
     }
     if (isset($mail['to']))	{
-      $this->add_to($mail['to']);
       $this->to($mail['to']);
       $this->total_send_addresses += $this->_count_addresses($mail['to']);
     }
     if (isset($mail['cc'])) {
-      $this->add_to($mail['cc']);
       $this->cc($mail['cc']);
       $this->total_send_addresses += $this->_count_addresses($mail['cc']);
     }
     if (isset($mail['bcc'])) {
-      $this->add_to($mail['bcc']);
       $this->bcc($mail['bcc']);
       $this->total_send_addresses += $this->_count_addresses($mail['bcc']);
     }
@@ -195,8 +192,8 @@ class MY_Email extends CI_Email {
    */
   private function add_to( $to ) {
     if (!is_array($to)) $to=explode(',',$to);
-    $this->to = array_merge( $this->to,$to );
-    $this->to = array_unique( $this->to );
+    $this->_to = array_merge( $this->_to,$to );
+    $this->_to = array_unique( $this->_to );
     return $this;
   }
   
