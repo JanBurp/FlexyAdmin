@@ -109,6 +109,7 @@ class DevelBar
     {
         $this->CI =& get_instance();
         $this->CI->load->config('develbar', true);
+        
         $this->CI->load->helpers($this->helpers);
 
         // Initialize default options
