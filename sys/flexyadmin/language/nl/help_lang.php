@@ -72,6 +72,7 @@ $lang['active_users']				          = 'Stuur nieuw wachtwoord naar bestaande gebr
 $lang['send_new_password']            = 'Stuur (nieuw) wachtwoord';
 $lang['user_send_password']           = 'Gebruiker "%s" heeft een nieuw wachtwoord opgestuurd gekregen.';
 $lang['user_send_password_error']     = 'FOUT: Kon geen email met nieuw wachtwoord sturen aan %s.';
+$lang['user_send_error']              = 'FOUT: Kon geen email sturen aan %s.';
 $lang['new_password']                 = 'Nieuw wachtwoord.';
 $lang['selected_users']               = 'Aan geselecteerde gebruikers.';
 
