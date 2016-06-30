@@ -1818,6 +1818,7 @@ Class Data_Core extends CI_Model {
         if (empty($relations)) $relations = $this->get_setting(array('relations',$type));
         if ($relations) {
           foreach ($relations as $what => $relation ) {
+            if (is_numeric($what) and is_string($relation)) $what=$relation;
             if ( in_array($what,$form_set['fields']) ) {
               $this->with( $type, array( $what=>'abstract') );
             }
