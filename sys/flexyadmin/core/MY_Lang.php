@@ -17,6 +17,7 @@ class MY_Lang extends CI_Lang {
    * Als ingesteld, dan wordt in de frontend taal eerst geprobeerd te laden van lang_table
    */
   private $lang_table='';
+  private $lang_data=FALSE;
   
 
   /**
@@ -25,9 +26,8 @@ class MY_Lang extends CI_Lang {
 		parent::__construct();
     // check if a language table is set
     $config = &get_config();
-    if ( isset($config['language_table']) and !empty($config['language_table']) and isset($this->data) ) {
+    if ( isset($config['language_table']) and !empty($config['language_table']) ) {
       $this->lang_table= $config['language_table'];
-      $this->lang_data = $this->data->table($this->lang_table)->set_result_key('key')->get_result();
     }
     $this->set();
     log_message('debug', 'MY Language Class Initialized');
@@ -185,7 +185,10 @@ class MY_Lang extends CI_Lang {
     // only if not a db_error look for cfg_lang
     if ( substr($line,0,3)!=='db_' AND !empty($this->lang_table) AND !empty($this->idiom) ) {
       // Only when db is ready
-      if (isset($this->lang_data)) {
+      if (!$this->lang_data) {
+        $this->lang_data = $CI->data->table($this->lang_table)->set_result_key('key')->get_result();
+      }
+      if ($this->lang_data) {
         $value = el( array($line,'lang_'.$this->idiom), $this->lang_data, FALSE );
       }
     }
