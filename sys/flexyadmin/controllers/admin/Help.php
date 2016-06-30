@@ -13,7 +13,8 @@ class Help extends AdminController {
 	}
 
 	public function index($page='') {
-		$lang=$this->session->userdata('language');
+		$lang=$this->flexy_auth->get_user()['str_language'];
+    
     $this->load->helper('markdown');
     
 		$commonHelp=$this->cfg->get('CFG_configurations','txt_help');
