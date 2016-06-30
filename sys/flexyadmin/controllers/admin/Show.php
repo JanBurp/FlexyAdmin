@@ -174,7 +174,7 @@ class Show extends AdminController {
         $data_query = $this->data->last_query(); //_clean(array('select'=>$table.'.'.PRIMARY_KEY), true);
 				$total_rows = $this->data->total_rows();
         
-        // trace_($this->data->get_setting('relations'));
+        // trace_($this->data->get_setting('grid_set'));
         // trace_sql($data_query);
         // trace_($last_order);
         // trace_($pagination);
@@ -395,6 +395,7 @@ class Show extends AdminController {
     
     // trace_($this->data->last_query());
     // trace_($data);
+    // trace_( $this->data->get_settings() );
 
     /**
      * Opties
