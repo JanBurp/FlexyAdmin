@@ -395,7 +395,6 @@ class Show extends AdminController {
     
     // trace_($this->data->last_query());
     // trace_($data);
-    // trace_( $this->data->get_settings() );
 
     /**
      * Opties

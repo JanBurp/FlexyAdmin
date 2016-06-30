@@ -89,7 +89,7 @@ class order extends CI_Model {
 	/**
 	 * Geeft volgende order (eventueel van bepaalde branch)
 	 * Als in een branch, dan worden alle andere items opgeschoven.
-	 * (Wordt gebruikt in Plugin_automenu en in _Crud)
+	 * (Wordt gebruikt in Plugin_automenu en in DataCore)
 	 *
 	 * @param string $table
 	 * @param int $parent[''] 
