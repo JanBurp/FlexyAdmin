@@ -15,8 +15,9 @@ class Info extends AdminController {
 
 	function index() {
 		// last login info
-		$data["username"]=$this->session->userdata("user");
-		$data["language"]=$this->session->userdata('language');
+    $user=$this->flexy_auth->get_user();
+		$data["username"]=$user['str_username'];
+		$data["language"]=$user['str_language'];
     $data["version"]=$this->svn->get_version();
 		$data["revision"]=$this->svn->get_revision();
 		$this->_set_content($this->load->view("admin/info_".$data["language"],$data,true));
