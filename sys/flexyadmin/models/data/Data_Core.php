@@ -1470,7 +1470,8 @@ Class Data_Core extends CI_Model {
               $fields   = $info['fields'];
               // split row and with data
               $keys = array_keys($row);
-              $many_data_index = array_preg_search( $as,$keys );
+              // $many_data_index = array_preg_search( $as, $keys );
+              $many_data_index = array_search( $as, $keys );
               $row_with_data = filter_by_key( $row, $as.'.' );
               $row = array_diff_assoc( $row, $row_with_data );
               // process 'with' data
@@ -1495,7 +1496,7 @@ Class Data_Core extends CI_Model {
           // Merge with data met normale data in row, als mogelijk op gewenste plek
           if (isset($with_data[$result_key])) {
             if ($many_data_index) {
-              $many_data_index = current($many_data_index);
+              if (is_array($many_data_index)) $many_data_index = current($many_data_index);
               $row = array_merge(array_slice($row,0,$many_data_index),$with_data[$result_key],array_slice($row,$many_data_index));
             }
             else {
@@ -1792,7 +1793,7 @@ Class Data_Core extends CI_Model {
     }
 
     // Jump to today?
-    if (is_bool($offset) AND $offset===FALSE and $grid_set['jump_to_today']) {
+    if (is_bool($offset) AND $offset===FALSE and el('jump_to_today',$grid_set)) {
       $this->tm_jump_to_today = TRUE;
     }
 
@@ -3069,11 +3070,11 @@ Class Data_Core extends CI_Model {
       $json     = el('json',$info,false);
       $foreign_key = $this->settings['relations']['one_to_many'][$key]['foreign_key'];
       $other_table = $this->settings['relations']['one_to_many'][$key]['other_table'];
-      $as          = el('as',$info, $other_table);
+      $as          = $this->settings['relations']['one_to_many'][$key]['result_name'];
       // Select fields
       $this->_select_with_fields( 'one_to_many', $other_table, $as, $fields, $foreign_key, $json );
       // Join
-      $this->join( $other_table.' AS '.$as, $as.'.'.$foreign_key.' = '.$this->settings['table'].".".$id, 'left');
+      $this->join( $other_table, $other_table.'.'.$foreign_key.' = '.$this->settings['table'].".".$id, 'left');
     }
     return $this;
   }

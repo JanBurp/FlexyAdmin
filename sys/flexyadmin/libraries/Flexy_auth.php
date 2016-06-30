@@ -42,7 +42,6 @@ class Flexy_auth extends Ion_auth {
    */
   private $forgotten_password_uri = '';
   
-  
   /**
    * construct
    */
@@ -124,7 +123,7 @@ class Flexy_auth extends Ion_auth {
   
   
   /**
-   * Creert een mooie user array, de standaard (zinvolle) velden zoals ze in de cfg_users tabel voorkomen inclusief groep:
+   * Creert een mooie user array, de standaard (zinvolle) velden zoals ze in de cfg_users tabel voorkomen inclusief groep en eventueel extra emails:
    *
    * 'id'
    * 'user_id'
@@ -162,6 +161,13 @@ class Flexy_auth extends Ion_auth {
     // Extra emailadressen
     $user['extra_email'] = array();
     $user['extra_email_string'] = '';
+    if ( $with=$this->data_core->table('cfg_users')->get_setting('has_extra_emails') ) {
+      $user_emails = $this->data_core->table('cfg_users')->with($with)->select('emails_extra')->where($user['id'])->get_row();
+      foreach ($user_emails['emails_extra'] as $extra ) {
+        array_push($user['extra_email'],$extra['email_email']);
+        $user['extra_email_string'] = add_string($user['extra_email_string'],$extra['email_email'],',');
+      }
+    }
     return $user;
   }
   
@@ -222,6 +228,27 @@ class Flexy_auth extends Ion_auth {
     }
     return FALSE;
   }
+
+
+  /**
+   * Geeft user gekoppeld aan username
+   *
+   * @param string $username 
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_user_by_name($username) {
+    $query = $this->db->where('str_username',$username)->get('cfg_users');
+    if ($query) {
+      $user = $query->row_array();
+      if ($user) {
+        $user = $this->_create_nice_user($user);
+        return $user;
+      }
+    }
+    return FALSE;
+  }
+
   
   
   /**
@@ -380,8 +407,9 @@ class Flexy_auth extends Ion_auth {
   public function forgotten_password_complete($code) {
     $mail_info = parent::forgotten_password_complete($code);
     if (!$mail_info) return FALSE;
+    $user = $this->get_user_by_name($mail_info['identity']);
     $mail_info['password'] = $mail_info['new_password'];
-    $send = $this->_mail( 'login_new_password', $mail_info );
+    $send = $this->_mail( 'login_new_password', $user, $mail_info );
     if ($send!==true) $this->set_error('password_change_unsuccessful');
     return $send;
   }
@@ -416,23 +444,29 @@ class Flexy_auth extends Ion_auth {
    */
   public function send_new_password( $user, $data=array(), $template = 'login_new_password' ) {
     if (!is_array($user)) $user = $this->get_user($user);
-    // Create random password and save it to user
-    $password_info = $this->_create_new_password($user['user_id']);
-		$set = array(
-		   'gpw_password'  => $password_info['hash_password'],
-		   'remember_code' => NULL,
-		);
-    $successfully_changed_password_in_db = $this->data->table('cfg_users')->where('id',$user['user_id'])->set($set)->update();
+    $successfully_changed_password_in_db = TRUE;
+    if (!isset($data['password'])) {
+      // Create random password and save it to user
+      $password_info = $this->_create_new_password($user['user_id']);
+  		$set = array(
+  		   'gpw_password'  => $password_info['hash_password'],
+  		   'remember_code' => NULL,
+  		);
+      $successfully_changed_password_in_db = $this->data->table('cfg_users')->where('id',$user['user_id'])->set($set)->update();
+    }
+    // Stuur mail
 		if ($successfully_changed_password_in_db) {
       $this->trigger_events(array('post_change_password', 'post_change_password_successful'));
 			$this->set_message('password_change_successful');
-      $data = array_merge($data,$set);
+      if (isset($set)) {
+        $data = array_merge($data,$set);
+        $data['password'] = $password_info['password'];
+      }
       $data['identity'] = $user['username'];
-      $data['password'] = $password_info['password'];
       return $this->_mail($template, $user, $data);
 		}
 		else {
-      // $this->trigger_events(array('post_change_password', 'post_change_password_unsuccessful'));
+      $this->trigger_events(array('post_change_password', 'post_change_password_unsuccessful'));
 			$this->set_error('password_change_unsuccessful');
       return FALSE;
 		}
@@ -561,6 +595,8 @@ class Flexy_auth extends Ion_auth {
     return $this->_mail( 'login_deny',$user_id );
   }
 
+
+
   /**
    * Stuur email, TODO: als meerdere emailadressen gekoppeld zijn, stuur deze dan ook door
    *
@@ -588,6 +624,10 @@ class Flexy_auth extends Ion_auth {
     $this->email->clear();
     $this->email->from( $site['email_email'], $site['str_title'] );
     $this->email->to( $to );
+    // Naar meerdere emailadressen?
+    if (el('extra_email',$user)) {
+      $this->email->cc( el('extra_email',$user) );
+    }
     // Naar welke template in cfg_email?
     $send = $this->email->send_lang( $template, $data );
     // trace_($send);
