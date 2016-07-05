@@ -353,6 +353,7 @@ $config['FIELDS_special'] = array(
     'validation'	=> 'trim',
     'default'     => 0,
   ),
+  
 	'abstract'	=> array(
     'type'        => 'string',
     'form-type'   => 'text',

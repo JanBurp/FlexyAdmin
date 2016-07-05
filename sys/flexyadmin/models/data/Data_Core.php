@@ -149,6 +149,11 @@ Class Data_Core extends CI_Model {
    * En om eventueel alleen rijen terug te geven waarvoor de gebruiker rechten heeft.
    */
   protected $user_id    = NULL;
+  
+  /**
+   * Bewaar de id van opgevraagde row als ->where( id ) wordt gebruikt.
+   */
+  protected $tm_where_primary_key = NULL;
 
   
   /**
@@ -396,16 +401,7 @@ Class Data_Core extends CI_Model {
         
         // Self parent -> tree options
         case 'self_parent':
-          $first_abstract_field = $this->settings['abstract_fields'];
-          $first_abstract_field = current($first_abstract_field);
-          $this->select('id,self_parent,order,'.$first_abstract_field);
-          $this->path( $first_abstract_field, '', ' / ' );
-          $this->order_by( 'order,self_parent' );
-          $options['data'] = $this->get_result();
-          foreach ($options['data'] as $key => $option) {
-            $options['data'][$key] = $option[$first_abstract_field];
-          }
-          $options['data'] = array_unshift_assoc( $options['data'], '','');
+          $options['special'] = 'self_parent';
           break;
         
         case 'table':
@@ -856,15 +852,15 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   public function reset() {
-    $this->tm_select        = FALSE;
-    $this->tm_unselect      = FALSE;
-    $this->tm_from          = '';
-    $this->tm_path          = FALSE;
-    $this->tm_where_path    = array();
-    $this->tm_order_by      = array();
-    $this->tm_limit         = 0;
-    $this->tm_offset        = 0;
-    $this->tm_jump_to_today = FALSE;
+    $this->tm_select            = FALSE;
+    $this->tm_unselect          = FALSE;
+    $this->tm_from              = '';
+    $this->tm_path              = FALSE;
+    $this->tm_where_path        = array();
+    $this->tm_order_by          = array();
+    $this->tm_limit             = 0;
+    $this->tm_offset            = 0;
+    $this->tm_jump_to_today     = FALSE;
     $this->with(FALSE);
     $this->db->reset_query();
     return $this;
@@ -1208,10 +1204,30 @@ Class Data_Core extends CI_Model {
           }
         }
         
-        // model
+        // special (fields)
+        if ( isset($field_options['special']) ) {
+          switch ($field_options['special']) {
+            case 'self_parent':
+              $first_abstract_field = $this->settings['abstract_fields'];
+              $first_abstract_field = current($first_abstract_field);
+              $this->select('id,self_parent,order,'.$first_abstract_field);
+              if ($this->tm_where_primary_key) $this->where( $this->settings['primary_key'].'!=',$this->tm_where_primary_key);
+              $this->path( $first_abstract_field, '', ' / ' );
+              $this->order_by( 'order,self_parent' );
+              $field_options['data'] = $this->get_result();
+              foreach ($field_options['data'] as $key => $option) {
+                $field_options['data'][$key] = $option[$first_abstract_field];
+              }
+              $field_options['data'] = array_unshift_assoc( $field_options['data'], '','');
+              break;
+          }
+        }
+        
+        // model (external)
         if ( isset($field_options['model']) ) {
           $model = 'Options_'.ucfirst($field_options['model']);
           $this->load->model( 'data/'.$model );
+          $field_options['table'] = $this->settings['table'];
           $field_options['data'] = $this->$model->get_options( $field_options );
         }
       }
@@ -2281,6 +2297,7 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   private function _where( $key, $value=NULL, $escape = NULL, $type = 'AND') {
+    $this->tm_where_primary_key = NULL;
     // Als value een array is, dan ->where_in()
     if (isset($value) and is_array($value)) {
       if ($type=='AND')
@@ -2301,6 +2318,7 @@ Class Data_Core extends CI_Model {
       elseif (is_numeric((int)$value)) {
         $value = $key;
         $key = $this->settings['table'].'.'.$this->settings['primary_key'];
+        $this->tm_where_primary_key = $value;
       }
     }
     // where
