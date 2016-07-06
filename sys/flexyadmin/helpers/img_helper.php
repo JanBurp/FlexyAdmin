@@ -69,8 +69,26 @@ function show_thumb($attr) {
 			else {
 				if (!isset($a["alt"])) $a["alt"]=$a["src"];
 				if (!isset($a["longdesc"])) $a["longdesc"]='file/serve/'.$map.'/'.$filename;
-				$cachedThumb=$CI->config->item('THUMBCACHE').pathencode($a['src']);
-				if (file_exists($cachedThumb)) $a['src']=$cachedThumb;
+        $clean_src=str_replace($CI->config->item('ASSETS'),'',$a['src']);
+				$cachedThumb=$CI->config->item('THUMBCACHE').pathencode($clean_src);
+        // trace_([$cachedThumb,file_exists($cachedThumb)]);
+				if (!file_exists($cachedThumb)) {
+      		/**
+      		 * Create new thumb, if its bigger, else make a copy with thumb name
+      		 */
+      		$thumbSize=$CI->config->item('THUMBSIZE');
+      		$config['width'] = $thumbSize[0];
+      		$config['height'] = $thumbSize[1];
+      		$config['source_image'] = $a['src'];
+      		$config['maintain_ratio'] = TRUE;
+      		$config['new_image'] = str_replace('%20',' ',$cachedThumb); // geen spatie code, maar echte spatie
+      		$config['master_dim'] = 'auto';
+          $CI->load->library('image_lib');
+      		$CI->image_lib->initialize($config);
+      		$CI->image_lib->resize();
+				}
+          
+        $a['src']=$cachedThumb;
 				return img($a);
 			}
 		}
