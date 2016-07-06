@@ -15,19 +15,22 @@ Class cfg_users extends Data_Core {
   private $groups;
   private $show_groups=FALSE;
   private $only_these_users = array();
+  
 
   public function __construct() {
     parent::__construct();
     $this->load->library('flexy_auth');
+    
     // Zorg ervoor dat huidige user is ingesteld
     $this->set_user_id();
+    
     // Kijk of de gebruiker andere gebruikers mag aanpassen
     $this->allowed_to_edit_users = $this->flexy_auth->allowed_to_edit_users();
-    
     $this->groups = $this->flexy_auth->get_user()['groups'];
     if ($this->groups) {
       $group_ids = array_keys($this->groups);
       $all_groups = $this->flexy_auth->groups()->result_array();
+
       // Welke andere user_groups mag deze user bekijken?
       $this->show_groups = array();
       foreach ($all_groups as $key => $group) {
@@ -37,8 +40,9 @@ Class cfg_users extends Data_Core {
         }
         if ($show) $this->show_groups[$group['id']]=$group['id'];
       }
+
       // Welke andere users mag deze user bekijken?
-      $query = $this->db->query( 'SELECT `id_user` FROM `rel_users__groups` WHERE `id_user_group` IN ('.implode(',',$group_ids).')');
+      $query = $this->db->query( 'SELECT `id_user` FROM `rel_users__groups` WHERE `id_user_group` IN ('.implode(',',$this->show_groups).')');
       if ($query) {
         $this->only_these_users = $query->result_array();
         foreach ($this->only_these_users as $key => $value) {
@@ -122,7 +126,9 @@ Class cfg_users extends Data_Core {
       };
 
       // Alleen users tonen met minimaal zelfde rechten: usergroup id minimaal hetzelfde
-      if (!$this->flexy_auth->is_super_admin()) $this->where( $this->settings['table'].'.'.$this->settings['primary_key'], $this->only_these_users );
+      if (!$this->flexy_auth->is_super_admin()) {
+        $this->where( $this->settings['table'].'.'.$this->settings['primary_key'], $this->only_these_users );
+      }
     }
     return parent::get($limit,$offset,$reset);
   }
