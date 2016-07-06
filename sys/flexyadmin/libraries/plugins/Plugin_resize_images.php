@@ -72,7 +72,7 @@ class Plugin_resize_images extends Plugin {
       $result['_message']='resized';
     }
     else {
-      $result['_message']='ERROR while resizing';
+      $result['_message']=span('error').$this->CI->upload->get_error().'</span><br>'.assets().$path.'/'.$file;//'ERROR while resizing';
       $result['success']=false;
     }
     return $result;

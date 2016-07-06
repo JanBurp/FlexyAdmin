@@ -328,8 +328,8 @@ class MY_Upload extends CI_Upload {
 				$this->_setMemory($currentSizes);
         // trace_($configResize);
 				$this->_CI->image_lib->initialize($configResize);
-				if (!$this->_CI->image_lib->resize()) {
-					$this->error=$this->_CI->image_lib->display_errors();
+				if ( !$this->_CI->image_lib->resize() ) {
+					$this->error=$this->_CI->image_lib->display_errors().' -- '.$nr;
           // strace_($this->error);
           // strace_($configResize);
 					$goodluck=FALSE;
@@ -357,9 +357,9 @@ class MY_Upload extends CI_Upload {
 				// set mem higher if needed
 				$this->_setMemory($currentSizes);
 				$this->_CI->image_lib->initialize($configResize);
-				if (!$this->_CI->image_lib->resize()) {
-					$this->error=$this->_CI->image_lib->display_errors();
-					// trace_($this->error);
+				if ( !$this->_CI->image_lib->resize() ) {
+					$this->error=$this->_CI->image_lib->display_errors().' -- SELF';
+          // trace_($this->error);
 					$goodluck=FALSE;
 				}
 				$this->_CI->image_lib->clear();
@@ -382,7 +382,7 @@ class MY_Upload extends CI_Upload {
 				// trace_($configResize);
 				$this->_CI->image_lib->initialize($configResize);
 				if (!$this->_CI->image_lib->resize()) {
-					$this->error=$this->_CI->image_lib->display_errors();
+					$this->error=$this->_CI->image_lib->display_errors().' -- thumb';
 					// trace_($this->error);
 					$goodluck=FALSE;
 				}
