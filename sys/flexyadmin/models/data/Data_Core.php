@@ -1588,7 +1588,17 @@ Class Data_Core extends CI_Model {
     if ( $parent>0 ) {
       $value .= $this->_fill_path( $result, $parent, $path_info) . $path_info['split'];
     }
-    $value .= el( array($key,$path_info['original_field']), $result );
+    $part = el( array($key,$path_info['original_field']), $result );
+    // Als parent niet in resultaat zit (bij where/like statements) zoek die dan op
+    if (is_null($part) and $key!==0) {
+      $sql = 'SELECT `'.$path_info['original_field'].'` FROM `'.$this->settings['table'].'` WHERE `'.$this->settings['primary_key'].'` = "'.$key.'" ORDER BY `'.implode('`,`',$this->tm_order_by).'` LIMIT 1';
+      $query = $this->db->query($sql);
+      if ($query) {
+        $row = $query->row_array();
+        $part = el( $path_info['original_field'],$row );
+      }
+    }
+    $value .= $part;
     return $value;
   }
 
