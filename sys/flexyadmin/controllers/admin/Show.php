@@ -401,7 +401,7 @@ class Show extends AdminController {
     $options=$this->data->get_options('', array_keys($this->data->get_setting( array('form_set','with'))) );
 
     // trace_($options['self_parent']);
-    // trace_($this->data->get_setting('form_set'));
+    // trace_($this->data->get_settings());
     // die();
     
     $data = $this->_before_form($table,$data);

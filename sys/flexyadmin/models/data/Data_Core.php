@@ -589,6 +589,7 @@ Class Data_Core extends CI_Model {
         );
       }
     }
+    
     // user is ook een many_to_one:
     $user_keys = filter_by( $this->settings['fields'], 'user' );
     if ( in_array('id_user',$this->settings['fields'])) array_unshift($user_keys,'id_user');
@@ -1247,16 +1248,18 @@ Class Data_Core extends CI_Model {
         $relations = $this->get_setting(array('relations',$type));
         if ($relations) {
           foreach ( $relations as $what => $relation ) {
-            $other_table = $relation['other_table'];
-            $result_name = $relation['result_name'];
-            $other_model = new Data();
-            $other_model->table($other_table)->select_abstract();
-            $options[$result_name] = array( 'table'=>$other_table, 'data'=>$other_model->get_result(), 'multiple'=>true );
-            if ($options[$result_name]['data']) {
-              foreach ($options[$result_name]['data'] as $key => $value) {
-                $options[$result_name]['data'][$key] = $value['abstract'];
+            if (!isset($options[$what]['data'])) {
+              $other_table = $relation['other_table'];
+              $result_name = $relation['result_name'];
+              $other_model = new Data();
+              $other_model->table($other_table)->select_abstract();
+              $options[$result_name] = array( 'table'=>$other_table, 'data'=>$other_model->get_result(), 'multiple'=>true );
+              if ($options[$result_name]['data']) {
+                foreach ($options[$result_name]['data'] as $key => $value) {
+                  $options[$result_name]['data'][$key] = $value['abstract'];
+                }
+                $options[$result_name]['data'] = array_unshift_assoc($options[$result_name]['data'],'','');
               }
-              $options[$result_name]['data'] = array_unshift_assoc($options[$result_name]['data'],'','');
             }
           }
         }
@@ -1853,7 +1856,7 @@ Class Data_Core extends CI_Model {
         if ($relations) {
           foreach ($relations as $what => $relation ) {
             if (is_numeric($what) and is_string($relation)) $what=$relation;
-            if ( in_array($what,$form_set['fields']) ) {
+            if ( in_array($what,$form_set['fields']) or $what!=='user_changed') {
               $this->with( $type, array( $what=>'abstract') );
             }
           }

@@ -157,9 +157,11 @@ class Flexy_field extends CI_Model {
     $fields=array_keys($row);
     foreach ($row as $field=>$data) {
       if ( (is_foreign_key($field) and !is_foreign_field($field)) or substr($field,0,4)==='user') {
-        $abstract_field = $this->relations['many_to_one'][$field]['result_name'].'.abstract';
-        if ($grid) $row[$field] = $row[$abstract_field];
-        unset($row[$abstract_field]);
+        if (isset($this->relations['many_to_one'][$field])) {
+          $abstract_field = $this->relations['many_to_one'][$field]['result_name'].'.abstract';
+          if ($grid) $row[$field] = $row[$abstract_field];
+          unset($row[$abstract_field]);
+        }
       }
     }
     return $row;
