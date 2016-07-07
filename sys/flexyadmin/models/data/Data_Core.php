@@ -3200,13 +3200,13 @@ Class Data_Core extends CI_Model {
       // Verzamel de velden
       $select_fields = array();
       foreach ($fields as $field) {
-        $type = get_prefix($field);
+        $field_type = get_prefix($field);
         $select_fields[$field] = array(
-          'type'        => $type,
-          'add_slashes' => !in_array($type, $this->config->item('FIELDS_number_fields')) and !in_array($type, $this->config->item('FIELDS_bool_fields')),
+          'type'        => $field_type,
+          'add_slashes' => !in_array($field_type, $this->config->item('FIELDS_number_fields')) and !in_array($field_type, $this->config->item('FIELDS_bool_fields')),
           'field'       => $field,
-          // 'select'      => '`' . ( $type==='many_to_one' ? $as_table : $other_table) . '`.`'.$field.'`',
-          'select'      => '`' . $as_table . '`.`'.$field.'`',
+          'select'      => '`' . ( $type==='many_to_many' ? $other_table : $as_table) . '`.`'.$field.'`',
+          // 'select'      => '`' . $as_table . '`.`'.$field.'`',
         );
       }
       
