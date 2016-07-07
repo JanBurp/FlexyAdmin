@@ -594,10 +594,14 @@ Class Data_Core extends CI_Model {
     if ($user_keys) {
       if (!isset($relations['many_to_one'])) $relations['many_to_one'] = array();
       foreach ($user_keys as $user_key) {
+        if ($user_key=='id_user')
+          $result_name='cfg_users';
+        else
+          $result_name = '_'.$user_key;
         $relations['many_to_one'][$user_key] = array(
           'other_table' => 'cfg_users',
           'foreign_key' => $user_key,
-          'result_name' => '_'.$user_key,
+          'result_name' => $result_name,
         );
       }
     }
@@ -3102,7 +3106,7 @@ Class Data_Core extends CI_Model {
       // Select fields
       $this->_select_with_fields( 'one_to_many', $other_table, $as, $fields, $foreign_key, $json );
       // Join
-      $this->join( $other_table, $other_table.'.'.$foreign_key.' = '.$this->settings['table'].".".$id, 'left');
+      $this->join( $other_table.' AS '.$as, $as.'.'.$foreign_key.' = '.$this->settings['table'].".".$id, 'left');
     }
     return $this;
   }
@@ -3168,7 +3172,9 @@ Class Data_Core extends CI_Model {
       }
     }
     
+    //
     // SELECT abstract
+    //
     if ($abstract) {
       $select = $abstract;
       if ($json) {
@@ -3183,15 +3189,14 @@ Class Data_Core extends CI_Model {
         }
       }
     }
-    
+    //
     // SELECT anderen
+    //
     else {
-      
       // primary_key hoeft er niet in
       if ( $key=array_search( $this->settings['primary_key'], $fields ) ) {
         unset($fields[$key]);
       }
-      
       // Verzamel de velden
       $select_fields = array();
       foreach ($fields as $field) {
@@ -3200,7 +3205,8 @@ Class Data_Core extends CI_Model {
           'type'        => $type,
           'add_slashes' => !in_array($type, $this->config->item('FIELDS_number_fields')) and !in_array($type, $this->config->item('FIELDS_bool_fields')),
           'field'       => $field,
-          'select'      => '`' . ( $type==='many_to_one' ? $as_table : $other_table) . '`.`'.$field.'`',
+          // 'select'      => '`' . ( $type==='many_to_one' ? $as_table : $other_table) . '`.`'.$field.'`',
+          'select'      => '`' . $as_table . '`.`'.$field.'`',
         );
       }
       
