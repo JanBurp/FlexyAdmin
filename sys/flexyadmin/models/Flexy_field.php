@@ -272,8 +272,9 @@ class Flexy_field extends CI_Model {
 	 * Renders full data set according to type and action (grid|form)
 	 *
 	 */
-	public function render_form($table,$data,$options=NULL,$relations,$extraInfoId=NULL) {
-    $this->relations = $relations;
+	public function render_form($table,$data,$options=NULL,$settings,$extraInfoId=NULL) {
+    $this->form_set = $settings['form_set'];
+    $this->relations = $settings['relations'];
 		$this->init_table($table,"form",$data);
 		$out=array();
     $data=$this->concat_foreign_fields($data);
@@ -349,17 +350,24 @@ class Flexy_field extends CI_Model {
 	}
 
 	function _standard_form_field( $options=NULL ) {
-
+    
 		/**
 		 * Standard form field information
 		 */
+    $fieldset='';
+    foreach ($this->form_set['fieldsets'] as $fieldset_name => $fieldset_fields) {
+      if (in_array($this->field,$fieldset_fields)) $fieldset=$fieldset_name;
+      if ($fieldset==$this->table) $fieldset=$this->ui->get($this->table);
+    }
+    
 		$out = array(
   		'table'    => $this->table,
   		'name'     => $this->field,
   		'value'    => $this->fieldData,
   		'label'    => $this->ui->get($this->field,$this->table),
   		'type'     => $this->type,
-  		'fieldset' => el('str_fieldset', el($this->field,$this->fieldCfg), $this->ui->get($this->table) ),
+      // 'fieldset' => el('str_fieldset', el( $this->field, $this->fieldCfg), $this->ui->get($this->table) ),
+      'fieldset' => $fieldset,
       'class'    => '',
 		);
 

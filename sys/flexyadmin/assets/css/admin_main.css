@@ -419,6 +419,8 @@ div.add_button {
 .multiple .icon.add {
 /*	margin-top:-154px;*/
 }
+.fieldtype_media .icon.add {display:none;}
+.fieldtype_medias .icon.add {display:none;}
 .icon.list {
 	background-image: url("../icons/list.gif");
 	background-repeat: no-repeat;

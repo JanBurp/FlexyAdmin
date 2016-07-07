@@ -35,12 +35,17 @@ class Test extends MY_Controller {
     
     $leerlingen = $this->data->table('tbl_leerlingen')
       ->select('id,str_first_name,str_last_name')
-      ->with('one_to_many',array('tbl_leerlingen__groepen'=>array('id_groepen','id_subgroepen')))
-      ->get_result();
+      ->with('many_to_many',array(
+        'groep'=>array('id_schooljaar','str_title'),
+        'subgroep'=>array('id_schooljaar','str_title')
+      ))
+      // ->with('many_to_many')
+      ->get_row();
     
-    trace_($this->data->get_query_info());
-    trace_sql($this->data->last_query()) ;
+    // trace_($this->data->get_query_info());
+    // trace_sql($this->data->last_query()) ;
     trace_($leerlingen);
+    trace_($this->data->get_options(array('groep','subgroep')));
     
   }
 
