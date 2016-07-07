@@ -33,9 +33,16 @@ class Test extends MY_Controller {
   public function index() {
     if (!IS_LOCALHOST) return;
     
-    $users = $this->flexy_auth->get_user();
+    $page = $this->data->table('res_menu_result')
+                        ->select('id,uri,order,self_parent,str_title,str_module')
+                        ->order_by('order')
+                        ->path('uri')
+                        ->like('str_module','blog')
+                        ->get_row();
     
-    trace_($users);
+    trace_($page);
+    trace_($this->data->get_query_info());
+    trace_($this->data->last_query());
     
   }
 
