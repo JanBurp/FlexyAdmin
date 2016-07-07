@@ -532,13 +532,14 @@ Class Data_Core extends CI_Model {
   			}
   		}
     }
+    
     // Als leeg, zoek dan de eerste velden
 		if (empty($abstract_fields)) {
       $abstract_fields=array();
-      $max_abstract_fields  = $this->config->item('ABSTRACT_field_max');
-			for ( $n=0; $n<$max_abstract_fields; $n++) {
-				array_push( $abstract_fields, each($fields) );
-			}
+      foreach ($fields as $field) {
+        if ($field!==$this->settings['primary_key']) array_push( $abstract_fields, $field );
+      }
+      $abstract_fields=array_slice($abstract_fields,0,$this->config->item('ABSTRACT_field_max'));
 		}
     return $abstract_fields;
   }
