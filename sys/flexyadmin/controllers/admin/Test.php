@@ -33,19 +33,19 @@ class Test extends MY_Controller {
   public function index() {
     if (!IS_LOCALHOST) return;
     
-    $leerlingen = $this->data->table('tbl_leerlingen')
-      ->select('id,str_first_name,str_last_name')
-      ->with('many_to_many',array(
-        'groep'=>array('id_schooljaar','str_title'),
-        'subgroep'=>array('id_schooljaar','str_title')
-      ))
-      // ->with('many_to_many')
-      ->get_row();
+    $leerlingen = $this->data->table('tbl_kalender')
+      // ->select('id,str_first_name,str_last_name')
+      // ->with('many_to_many',array(
+      //   'groep'=>array('id_schooljaar','str_title'),
+      //   'subgroep'=>array('id_schooljaar','str_title')
+      // ))
+      ->with('many_to_many')
+      ->get_form();
     
     // trace_($this->data->get_query_info());
     // trace_sql($this->data->last_query()) ;
     trace_($leerlingen);
-    trace_($this->data->get_options(array('groep','subgroep')));
+    trace_($this->data->get_options());
     
   }
 
