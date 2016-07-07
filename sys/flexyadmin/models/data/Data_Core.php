@@ -1171,16 +1171,18 @@ Class Data_Core extends CI_Model {
    *    ....
    * )
    *
-   * @param string $field ['']
+   * @param mixed $fields ['']
    * @return array
    * @author Jan den Besten
    */
-  public function get_options( $field='', $with=array('many_to_many') ) {
+  public function get_options( $fields='', $with=array('many_to_many') ) {
     // Eén of alle velden?
     $one = FALSE;
-    if (!empty($field)) {
-      $one = true;
-      $fields = array($field);
+    if (!empty($fields)) {
+      if (!is_array($fields)) {
+        $one = true;
+        $fields = array($fields);
+      }
     }
     else {
       $fields = array_keys($this->settings['options']);

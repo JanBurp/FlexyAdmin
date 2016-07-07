@@ -401,7 +401,7 @@ class Show extends AdminController {
     $options=$this->data->get_options('', array_keys($this->data->get_setting( array('form_set','with'))) );
 
     // trace_($options['self_parent']);
-    // trace_($this->data->get_settings());
+    // trace_($this->data->get_setting('form_set'));
     // die();
     
     $data = $this->_before_form($table,$data);
@@ -411,8 +411,8 @@ class Show extends AdminController {
 		 */
 		if ( !empty($data) ) {
       
-			$ffData = $this->ff->render_form( $table, $data, $options, $this->data->get_setting('relations') );
-      // trace_($ffData['self_parent']);
+			$ffData = $this->ff->render_form( $table, $data, $options, $this->data->get_settings() );
+      // trace_($ffData);
       
 			$actionUri=api_uri('API_view_form',$table.$this->config->item('URI_HASH').$id);
 			if (!empty($info)) $actionUri.='/info/'.$info;
@@ -494,11 +494,12 @@ class Show extends AdminController {
 				$form->set_labels($uiFieldNames);
 				
 				// Fieldsets?
-				$fieldsets=$this->cfg->get('cfg_table_info',$table,'str_fieldsets');
-				if (empty($fieldsets)) $fieldsets=array();
-				elseif (is_string($fieldsets)) $fieldsets=explode(',',$fieldsets);
+				$fieldsets=array_keys($this->data->get_setting(array('form_set','fieldsets')));  //$this->cfg->get('cfg_table_info',$table,'str_fieldsets');
+        // if (empty($fieldsets)) $fieldsets=array();
+        // elseif (is_string($fieldsets)) $fieldsets=explode(',',$fieldsets);
 				// add default fieldset with name of table
-				array_unshift($fieldsets,$this->ui->get($table));
+        array_shift($fieldsets);
+        array_unshift($fieldsets,$this->ui->get($table));
 				$form->set_fieldsets($fieldsets);
 				
 				if ($rights<RIGHTS_EDIT) $form->no_submit();
