@@ -3125,19 +3125,20 @@ Class Data_Core extends CI_Model {
    */
   protected function _with_many_to_many( $tables ) {
     $id = $this->settings['primary_key'];
-    foreach ( $tables as $rel_table => $info ) {
+    foreach ( $tables as $what => $info ) {
       $fields   = $info['fields'];
       $json  = $info['json'];
-      $this_table        = $this->settings['relations']['many_to_many'][$rel_table]['this_table'];
-      $other_table       = $this->settings['relations']['many_to_many'][$rel_table]['other_table'];
-      $this_foreign_key  = $this->settings['relations']['many_to_many'][$rel_table]['this_key'];
-      $other_foreign_key = $this->settings['relations']['many_to_many'][$rel_table]['other_key'];
-      $as                = $this->settings['relations']['many_to_many'][$rel_table]['result_name'];
+      $rel_table         = $this->settings['relations']['many_to_many'][$what]['rel_table'];
+      $this_table        = $this->settings['relations']['many_to_many'][$what]['this_table'];
+      $other_table       = $this->settings['relations']['many_to_many'][$what]['other_table'];
+      $this_foreign_key  = $this->settings['relations']['many_to_many'][$what]['this_key'];
+      $other_foreign_key = $this->settings['relations']['many_to_many'][$what]['other_key'];
+      $as                = $this->settings['relations']['many_to_many'][$what]['result_name'];
       // Select fields
       $this->_select_with_fields( 'many_to_many', $other_table, $as, $fields, '', $json );
       // Joins
-      $this->join( $rel_table,    $this_table.'.'.$id.' = '.$rel_table.".".$this_foreign_key,     'left');
-      $this->join( $other_table,  $rel_table. '.'.$other_foreign_key.' = '.$other_table.".".$id,  'left');
+      $this->join( $rel_table.' AS '.$what,    $this_table.'.'.$id.' = '.$what.".".$this_foreign_key,     'left');
+      $this->join( $other_table,  $what. '.'.$other_foreign_key.' = '.$other_table.".".$id,  'left');
     }
     return $this;
   }
