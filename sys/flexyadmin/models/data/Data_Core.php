@@ -3610,43 +3610,51 @@ Class Data_Core extends CI_Model {
         // many_to_many
         if (isset($to_many['many_to_many'])) {
   				foreach( $to_many['many_to_many'] as $what => $other_ids ) {
+            $other_ids         = $this->_check_other_ids($other_ids);
             $other_table       = $this->settings['relations']['many_to_many'][$what]['other_table'];
             $rel_table         = $this->settings['relations']['many_to_many'][$what]['rel_table'];
   					$this_foreign_key  = $this->settings['relations']['many_to_many'][$what]['this_key'];
             $other_foreign_key = $this->settings['relations']['many_to_many'][$what]['other_key'];
-
-  					// DELETE eerst huidige items
-  					$this->db->where( $this_foreign_key, $id );
-  					$this->db->delete( $rel_table );
-            $log['query'] .= ';'.PHP_EOL.PHP_EOL.$this->db->last_query();
-
-            // Zorg ervoor dat $other_ids een normale array van ids is
-            if (is_string($other_ids)) $other_ids=explode('|',$other_ids);
-            if (!is_array($other_ids)) $other_ids=array($other_ids);
-
-  					// INSERT dan nieuwe many_to_many ids
-  					foreach ( $other_ids as $other_id ) {
-              // Zorg er eerst voor dat $other_id echt alleen maar een nummer is
-              if (is_array($other_id) and isset($other_id[$this->settings['primary_key']])) {
-                $other_id=$other_id[$this->settings['primary_key']];
+            
+            // Haal bestaande items op
+            $existing = $this->db->where( $this_foreign_key, $id )->get( $rel_table )->result_array();
+            // Update/Insert nieuwe items
+            foreach ($other_ids as $key => $other_id) {
+              // Update bestaande item als die nog bestaat
+              if (count($existing)>0) {
+                $existing_item = array_shift($existing);
+    						$this->db->where( 'id', $existing_item['id'] ); // Juiste existing item
+    						$this->db->set( $other_foreign_key, $other_id );
+    						$this->db->update( $rel_table );
+                $affected++;
+                $log['query'] .= ';'.PHP_EOL.PHP_EOL.$this->db->last_query();
               }
-  						$this->db->set( $this_foreign_key,  $id );
-  						$this->db->set( $other_foreign_key, $other_id );
-  						$this->db->insert( $rel_table );
-              $affected++;
-              $log['query'] .= ';'.PHP_EOL.PHP_EOL.$this->db->last_query();
-  					}
+              // Geen bestaande items meer, dus vanaf nu nieuwe items
+              else {
+    						$this->db->set( $this_foreign_key,  $id );
+    						$this->db->set( $other_foreign_key, $other_id );
+    						$this->db->insert( $rel_table );
+                $affected++;
+                $log['query'] .= ';'.PHP_EOL.PHP_EOL.$this->db->last_query();
+              }
+            }
+            // Zijn er nog oude over? -> verwijder deze
+            if (count($existing)>0) {
+              foreach ($existing as $existing_item) {
+      					$this->db->where( 'id', $existing_item['id'] );
+      					$this->db->delete( $rel_table );
+                $log['query'] .= ';'.PHP_EOL.PHP_EOL.$this->db->last_query();
+              }
+            }
   				}
         }
         
         // one_to_many
         if (isset($to_many['one_to_many'])) {
   				foreach( $to_many['one_to_many'] as $what => $other_ids ) {
+            $other_ids    = $this->_check_other_ids($other_ids);
             $other_table  = $this->settings['relations']['one_to_many'][$what]['other_table'];
   					$foreign_key  = $this->settings['relations']['one_to_many'][$what]['foreign_key'];
-            // Zorg ervoor dat $other_ids een normale array van ids is
-            if (is_string($other_ids)) $other_ids=explode('|',$other_ids);
-            if (!is_array($other_ids)) $other_ids=array($other_ids);
             
             // 1) Verwijder de oude verwijzingen (maak ze 0)
             $this->db->set( $foreign_key, 0);
@@ -3655,10 +3663,6 @@ Class Data_Core extends CI_Model {
             $log['query'] .= ';'.PHP_EOL.PHP_EOL.$this->db->last_query();
             // 2) Maak de nieuwe verwijzingen
             foreach ($other_ids as $other_id) {
-              // Zorg er eerst voor dat $other_id echt alleen maar een nummer is
-              if (is_array($other_id) and isset($other_id[$this->settings['primary_key']])) {
-                $other_id=$other_id[$this->settings['primary_key']];
-              }
               $this->db->set( $foreign_key, $id);
     					$this->db->where( $this->settings['primary_key'], $other_id );
     					$this->db->update( $other_table );
@@ -3681,6 +3685,24 @@ Class Data_Core extends CI_Model {
     $this->reset();
 		return intval($id);
 	}
+  
+  /**
+   * Zorg ervoor dat other_ids in orde zijn
+   *
+   * @param array $other_ids 
+   * @return array
+   * @author Jan den Besten
+   */
+  private function _check_other_ids($other_ids) {
+    if (is_string($other_ids)) $other_ids=explode('|',$other_ids);
+    if (!is_array($other_ids)) $other_ids=array($other_ids);
+		foreach ( $other_ids as $okey => $other_id ) {
+      if (is_array($other_id) and isset($other_id[$this->settings['primary_key']])) {
+        $other_ids[$okey]=$other_id[$this->settings['primary_key']];
+      }
+    }
+    return $other_ids;
+  }
   
   
   /**
