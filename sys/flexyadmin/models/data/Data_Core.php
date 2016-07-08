@@ -1192,6 +1192,7 @@ Class Data_Core extends CI_Model {
     
     // Alle opties van de velden verzamelen
     $options=array();
+    $where_primary_key = $this->tm_where_primary_key; // Bewaar dit voor opties uit andere tabellen
     foreach ($fields as $field) {
       $field_options = el( array($field), $this->settings['options'] );
       $field_options['field'] = $field;
@@ -1209,7 +1210,7 @@ Class Data_Core extends CI_Model {
           else {
             // $other_model = new Data_core();
             // $field_options['data'] = $other_model->table( $other_table )->get_result_as_options();
-            $field_options['data'] = $this->data->table( $other_table )->get_result_as_options();
+            $field_options['data'] = $this->data->table( $other_table )->get_result_as_options(0,0, $where_primary_key );
             $field_options['data'] = array_unshift_assoc($field_options['data'],'','');
             $this->data->table($this->settings['table']); // Terug naar huidige data table.
           }
@@ -1716,7 +1717,7 @@ Class Data_Core extends CI_Model {
    * @return array
    * @author Jan den Besten
    */
-  public function get_result_as_options( $limit=0, $offset=0 ) {
+  public function get_result_as_options( $limit=0, $offset=0, $where_primary_key='' ) {
     $this->select_abstract();
     if (empty($this->tm_order_by) and !el('order_by',$this->settings) ) {
       $abstract_fields = $this->settings['abstract_fields'];
