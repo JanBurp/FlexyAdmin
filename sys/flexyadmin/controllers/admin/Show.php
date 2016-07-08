@@ -496,10 +496,14 @@ class Show extends AdminController {
 				$form->set_labels($uiFieldNames);
 				
 				// Fieldsets?
-				$fieldsets=array_keys($this->data->get_setting(array('form_set','fieldsets')));  //$this->cfg->get('cfg_table_info',$table,'str_fieldsets');
-        // if (empty($fieldsets)) $fieldsets=array();
-        // elseif (is_string($fieldsets)) $fieldsets=explode(',',$fieldsets);
-				// add default fieldset with name of table
+        if ($this->data->get_setting(array('form_set','fieldsets'))) {
+  				$fieldsets=array_keys($this->data->get_setting(array('form_set','fieldsets')));  //$this->cfg->get('cfg_table_info',$table,'str_fieldsets');
+        }
+        if (empty($fieldsets))
+          $fieldsets=array();
+        elseif (is_string($fieldsets))
+          $fieldsets=explode(',',$fieldsets);
+        // add default fieldset with name of table
         array_shift($fieldsets);
         array_unshift($fieldsets,$this->ui->get($table));
 				$form->set_fieldsets($fieldsets);

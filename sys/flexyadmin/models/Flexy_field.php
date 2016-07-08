@@ -366,9 +366,11 @@ class Flexy_field extends CI_Model {
 		 * Standard form field information
 		 */
     $fieldset='';
-    foreach ($this->form_set['fieldsets'] as $fieldset_name => $fieldset_fields) {
-      if (in_array($this->field,$fieldset_fields)) $fieldset=$fieldset_name;
-      if ($fieldset==$this->table) $fieldset=$this->ui->get($this->table);
+    if (isset($this->form_set['fieldsets'])) {
+      foreach ($this->form_set['fieldsets'] as $fieldset_name => $fieldset_fields) {
+        if (in_array($this->field,$fieldset_fields)) $fieldset=$fieldset_name;
+        if ($fieldset==$this->table) $fieldset=$this->ui->get($this->table);
+      }
     }
     
 		$out = array(
