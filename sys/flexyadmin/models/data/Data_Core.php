@@ -3520,7 +3520,6 @@ Class Data_Core extends CI_Model {
     foreach ( $set as $key => $value ) {
       if ( !isset($value) or !$this->field_exists( $key) ) unset( $set[$key] );
     }
-
     
     /**
      * Ga door als de set niet leeg is

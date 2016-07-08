@@ -169,6 +169,7 @@ class Show extends AdminController {
           }
         }
 
+        $data_settings = $this->data->get_settings();
         $data = $this->data->get_grid( $pagination, $offset );
         
         $data_query = $this->data->last_query(); //_clean(array('select'=>$table.'.'.PRIMARY_KEY), true);
@@ -279,8 +280,8 @@ class Show extends AdminController {
             $html.=h(lang('send_new_password'));
             $html.=p() . anchor(api_uri('API_home','users/send_new_password'),lang('send_new_password'),array('class' => 'button selected_users')) .' '. lang('selected_users')._p();
           }
-
-					$data=$this->ff->render_grid( $table,$data,$rights, $this->data->get_setting('relations'), $info);
+          
+					$data=$this->ff->render_grid( $table,$data,$rights, $data_settings, $info);
           
 					if (empty($uiTable)) $uiTable=$this->ui->get($table);
 					$tableHelp=$this->ui->get_help($table);
@@ -400,7 +401,7 @@ class Show extends AdminController {
      */
     $options=$this->data->get_options('', array_keys($this->data->get_setting( array('form_set','with'))) );
 
-    // trace_($options['self_parent']);
+    // trace_($options['groep']);
     // trace_($this->data->get_settings());
     // die();
     
@@ -412,7 +413,8 @@ class Show extends AdminController {
 		if ( !empty($data) ) {
       
 			$ffData = $this->ff->render_form( $table, $data, $options, $this->data->get_settings() );
-      // trace_($ffData);
+      // trace_($ffData['groep']);
+      // trace_($ffData['subgroep']);
       
 			$actionUri=api_uri('API_view_form',$table.$this->config->item('URI_HASH').$id);
 			if (!empty($info)) $actionUri.='/info/'.$info;
@@ -440,7 +442,7 @@ class Show extends AdminController {
         
 				$newData=$form->get_data();
 				$newData=$this->_after_update($table,$data,$newData);
-        
+
         $this->data->table( $table )->set_user_id();
         
 				if ($id==-1) {

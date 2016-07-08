@@ -77,6 +77,13 @@ class Flexy_field extends CI_Model {
 	 * Look in flexyadmin_config.php for what it can be.
 	 */
 	function type() {
+    $validation_set = FALSE;
+    if ( $validation = el(array('field_info',$this->field,'validation'),$this->settings) ) {
+      $validation_set = TRUE;
+      $this->_set_validation( implode('|',$validation) );
+    }
+      
+    
 		/**
 		 * is it a special fieldname?
 		 */
@@ -85,7 +92,7 @@ class Flexy_field extends CI_Model {
 			$type=$specials[$this->field][$this->action];
 			$validation=el("validation",$specials[$this->field]);
 			$this->_set_type($type);
-			$this->_set_validation($validation);
+      if (!$validation_set) $this->_set_validation($validation);
 			return $type;
 		}
 
@@ -98,7 +105,7 @@ class Flexy_field extends CI_Model {
 			$type=$prefixes[$this->pre][$this->action];
 			$validation=el("validation",$prefixes[$this->pre]);
 			$this->_set_type($type);
-			$this->_set_validation($validation);
+      if (!$validation_set) $this->_set_validation($validation);
 			return $type;
 		}
 
@@ -113,7 +120,7 @@ class Flexy_field extends CI_Model {
 			$type=$database[$this->field][$this->action];
 			$validation=el("validation",$database[$this->field]);
 			$this->_set_type($type);
-			$this->_set_validation($validation);
+      if (!$validation_set) $this->_set_validation($validation);
 			return $type;
 		}
 
@@ -124,7 +131,7 @@ class Flexy_field extends CI_Model {
 		$type=el($this->action,$default);
 		$validation=el("validation",$default);
 		$this->_set_type($type);
-		$this->_set_validation($validation);
+		if (!$validation_set) $this->_set_validation($validation);
     // trace_([$this->field." - default",$this->validation]);
 		return $type;
 	}
@@ -134,7 +141,7 @@ class Flexy_field extends CI_Model {
 	}
 
 	function _set_validation($validation) {
-		$this->validation=$validation;
+    $this->validation=$validation;
 	}
 
 
@@ -174,8 +181,9 @@ class Flexy_field extends CI_Model {
 	 * Renders full data set according to type and action (grid|form)
 	 *
 	 */
-	function render_grid($table,$data,$right=RIGHTS_ALL,$relations=array(),$extraInfoId=NULL) {
-    $this->relations = $relations;
+	function render_grid($table,$data,$right=RIGHTS_ALL, $settings, $extraInfoId=NULL) {
+    $this->settings = $settings;
+    $this->relations = el('relations',$settings);
 		$this->init_table($table,"grid",$right);
 		$out=array();
 		foreach ($data as $idRow=>$row) {
@@ -275,6 +283,7 @@ class Flexy_field extends CI_Model {
 	 *
 	 */
 	public function render_form($table,$data,$options=NULL,$settings,$extraInfoId=NULL) {
+    $this->settings = $settings;
     $this->form_set = $settings['form_set'];
     $this->relations = $settings['relations'];
 		$this->init_table($table,"form",$data);
