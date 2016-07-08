@@ -1137,6 +1137,7 @@ Class Data_Core extends CI_Model {
   
   /**
    * Geeft eventuele opties van een bepaald veld, of van alle velden met opties als geen veld is gegeven.
+   * NB Roep altijd aan na een ->get..() variant.
    * 
    * Resultaat bij één veld:
    * 
@@ -1206,9 +1207,11 @@ Class Data_Core extends CI_Model {
           }
           // Anders geef gewoon de opties terug
           else {
-            $other_model = new Data_core();
-            $field_options['data'] = $other_model->table( $other_table )->get_result_as_options();
+            // $other_model = new Data_core();
+            // $field_options['data'] = $other_model->table( $other_table )->get_result_as_options();
+            $field_options['data'] = $this->data->table( $other_table )->get_result_as_options();
             $field_options['data'] = array_unshift_assoc($field_options['data'],'','');
+            $this->data->table($this->settings['table']); // Terug naar huidige data table.
           }
         }
         

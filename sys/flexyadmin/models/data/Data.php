@@ -44,7 +44,7 @@ Class Data extends CI_Model {
     $this->table = $table;
     // Load model; test if table has own data model
     if (!isset($this->models[$table])) {
-      if ( !empty($table) and file_exists(APPPATH.'models/data/'. ucfirst($table) .'.php')) {
+      if ( !empty($table) and (file_exists(APPPATH.'models/data/'. ucfirst($table) .'.php') or file_exists(SITEPATH.'models/data/'. ucfirst($table) .'.php')) ) {
         $this->load->model('data/'.$table);
         $this->models[$table] = $this->$table;
       }
