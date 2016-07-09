@@ -119,20 +119,21 @@ class auth extends Api_Model {
    */
   protected function _check() {
     // if not logged in status = 401
-    if (!$this->logged_in()) return null;
+    if ( !$this->logged_in() ) return null;
     
     // Give back user info
-    $data=$this->flexy_auth->get_user();
-    $data=object2array($data);
-    $data=array_rename_keys($data,array('str_username'=>'username','email_email'=>'email','str_language'=>'language'),false);
+    $data = $this->flexy_auth->get_user();
+    if (el('user_id',$data)) {
+      $data=array_rename_keys($data,array('str_username'=>'username','email_email'=>'email','str_language'=>'language'),false);
+    }
     
     // create JWT token bij login
     if (isset($this->args['password'])) {
       $this->cors = '*';
       $token = array(
-        'username' => $data['username'],
+        'username' => el('username',$data,''),
         'password' => $this->args['password'],
-        'email'    => $data['email'],
+        'email'    => el('email',$data,''),
       );
       $this->jwt_token = JWT::encode( $token, $this->jwt_key );
     }
