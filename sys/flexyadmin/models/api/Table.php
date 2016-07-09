@@ -123,7 +123,7 @@ class Table extends Api_Model {
   public function index() {
     if (!$this->has_args())                         return $this->_result_wrong_args(); 
     if (!$this->_has_rights($this->args['table']))  return $this->_result_status401();
-    if ($this->args['table']==='res_media_files' AND isset($this->args['path']) AND !$this->_has_rights($this->args['path']))  return $this->_result_status401();
+    if ($this->args['table']==='res_media_files' AND isset($this->args['path']) AND !$this->_has_rights('media_'.$this->args['path']))  return $this->_result_status401();
     
     // Opties toevoegen bij as_grid en settings
     if ( $this->args['as_grid'] and $this->args['settings'] ) $this->args['options'] = true;

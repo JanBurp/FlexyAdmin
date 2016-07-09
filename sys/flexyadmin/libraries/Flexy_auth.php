@@ -117,7 +117,7 @@ class Flexy_auth extends Ion_auth {
 		if ($logged_in) {
       $user = $this->user()->row_array();
       $this->current_user = $this->_create_nice_user($user);
-      if ( $this->in_group( 1, $this->current_user['id'] )) $this->current_user['is_super_admin'] = TRUE;
+      if ( isset($this->current_user['id']) AND $this->in_group( 1, $this->current_user['id'] )) $this->current_user['is_super_admin'] = TRUE;
 		}
     return (bool) $logged_in;
 	}
@@ -146,6 +146,7 @@ class Flexy_auth extends Ion_auth {
    */
   private function _create_nice_user($user) {
     // Alleen zinvolle velden
+    if (!is_array($user)) return FALSE;
     $user = array_keep_keys( $user, array( 'id','str_username', 'email_email', 'str_language','str_filemanager_view','b_active') );
     // Voeg groepen toe
     $groups = $this->get_users_groups($user['id'])->result_array();
@@ -156,9 +157,9 @@ class Flexy_auth extends Ion_auth {
     // Rechten
     $user['rights'] = $this->_create_rights( $user );
     // Hernoem/Alias
-    $user['user_id'] = $user['id'];
-    $user['username'] = $user['str_username'];
-    $user['email'] = $user['email_email'];
+    $user['user_id'] = el('id',$user);
+    $user['username'] = el('str_username',$user,'');
+    $user['email'] = el('email_email',$user,'');
     // Extra emailadressen
     $user['extra_email'] = array();
     $user['extra_email_string'] = '';
