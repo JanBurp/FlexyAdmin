@@ -4042,7 +4042,10 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   public function field_exists( $field, $set='' ) {
-    $fields = $this->get_setting( array($set.'_set','fields'), $this->list_fields() );
+    if ($set)
+      $fields = $this->get_setting( array($set.'_set','fields'), $this->list_fields() );
+    else
+      $fields = $this->get_setting( 'fields', $this->list_fields() );
     return in_array( $field, $fields );
   }
   
