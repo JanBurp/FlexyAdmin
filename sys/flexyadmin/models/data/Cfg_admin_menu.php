@@ -28,9 +28,11 @@ Class cfg_admin_menu extends Data_Core {
    * @author Jan den Besten
    */
   public function get_menu() {
+    $user = $this->flexy_auth->get_user();
+    
     $this->where( array(
       'b_visible'=>true,
-      'id_user_group >='=>$this->flexy_auth->group_id,
+      'id_user_group >=' => current(array_keys($user['groups'])),
       'order >=' => 4,
       'api !='=> 'API_plugin_stats'
     ));
@@ -38,7 +40,6 @@ Class cfg_admin_menu extends Data_Core {
 
     $sidebar=$this->_process_menu($result);
     
-    $user = $this->flexy_auth->get_user();
 
     $header = array(
       array( 'name' => lang('help'), 'uri'=>'help/index', 'type' => 'info' ),
@@ -64,7 +65,7 @@ Class cfg_admin_menu extends Data_Core {
    */
 	private function _process_menu($db_menu,$currentMenuItem="") {
     $user=$this->flexy_auth->get_user();
-    $user_group=$user['group_id'];
+    $user_group=current(array_keys($user['groups']));
     
     $menu=array();
 		foreach ($db_menu as $item) {

@@ -122,7 +122,7 @@ class auth extends Api_Model {
     if (!$this->logged_in()) return null;
     
     // Give back user info
-    $data=$this->flexy_auth->user();
+    $data=$this->flexy_auth->get_user();
     $data=object2array($data);
     $data=array_rename_keys($data,array('str_username'=>'username','email_email'=>'email','str_language'=>'language'),false);
     

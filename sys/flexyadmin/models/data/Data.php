@@ -41,6 +41,10 @@ Class Data extends CI_Model {
    * @author Jan den Besten
    */
   public function table( $table ) {
+    if (empty($table)) {
+      throw new ErrorException( __CLASS__.'->'.__METHOD__.'() table is not given.' );
+      return $this;
+    }
     $this->table = $table;
     // Load model; test if table has own data model
     if (!isset($this->models[$table])) {

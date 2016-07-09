@@ -809,7 +809,9 @@ class Menu {
 		$item=array('uri'=>'');
     if (empty($uri)) $uri=$this->settings['current'];
     
-    $this->CI->data->table( el('menu_table',$this->settings,get_menu_table() ));
+    $table = el('menu_table',$this->settings );
+    if (empty($table)) $table=get_menu_table();
+    $this->CI->data->table( $table );
     $this->CI->data->path('full_uri','uri');
     // Zoek in simpel uri veld, of naar gehele pad?
     if (strpos($uri,'/')!==FALSE) {
