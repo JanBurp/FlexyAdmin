@@ -10,6 +10,7 @@ class Flexy_field extends CI_Model {
 
 	var $table;
 	var $field;
+  var $settings = array();
 	var $formData;
 	var $fieldData;
   var $rowdata;
