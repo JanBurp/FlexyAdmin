@@ -20,7 +20,7 @@ For recent sites the update processes described below should work:
 
 
 
-UPDATE 3.2.0 (...)
+UPDATE 3.2.x (...)
 ======================
 
 LET OP: Door deze update heeft iedere user een nieuw wachtwoord nodig!!
