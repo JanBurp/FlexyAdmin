@@ -211,7 +211,7 @@ class Grid extends CI_Model {
 			else
 				$pagin['base_url'].='/offset';
 			
-			$default=array('auto'=>TRUE,'num_links'=>5,'first_link'=>'&lt;&lt;','last_link'=>'&gt;&gt;' ); //,'total_tag_open'=>'<span class="pager_totals">','total_tag_close'=>'</span>');
+			$default=array('auto'=>TRUE,'num_links'=>5,'first_link'=>'&lt;&lt;','last_link'=>'&gt;&gt;','total_tag_open'=>'<span class="pagination_total">','total_tag_close'=>'</span>');
 			$pagin=array_merge($default,$pagin);
 		}
 		$this->pagin=$pagin;

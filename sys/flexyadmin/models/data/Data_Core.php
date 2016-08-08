@@ -2747,10 +2747,11 @@ Class Data_Core extends CI_Model {
       if (isset($item['term'])) {
         // ITEM
         $term = $item['term'];
-        $item_settings = $item['settings'];
-        $item_settings = array_merge( $settings,$item_settings );
+        $item_settings = array_unset_keys($item,array('term','field','settings'));
+        $item_settings = array_merge( $settings,$item['settings'],$item_settings );
         $this->find( $term, $item['field'], $item_settings );
       }
+      
       if ( isset($item['group']) and in_array(strtoupper($item['group']),array('GROUP_START','AND_GROUP_START','NOT_GROUP_START','AND_NOT_GROUP_START')) ) {
         // GROUP
         $group=strtolower($item['group']);
