@@ -716,12 +716,14 @@ function doGrid() {
     var search=$(grid).attr('data-search');
 		if (order=='') order='name';
     var base_url=$(this).attr('href');
-    var lastslash=base_url.lastIndexOf('/offset')+7;
-    var offset=base_url.substr(lastslash+1);
-    if (offset==='') offset=0;
-    base_url=base_url.substr(0,lastslash);
-		var url=base_url+'/'+offset+'/order/'+order+'?search='+search;
-		$(this).attr('href',url);
+    if (base_url) {
+      var lastslash=base_url.lastIndexOf('/offset')+7;
+      var offset=base_url.substr(lastslash+1);
+      if (offset==='') offset=0;
+      base_url=base_url.substr(0,lastslash);
+  		var url=base_url+'/'+offset+'/order/'+order+'?search='+search;
+  		$(this).attr('href',url);
+    }
 	});
   
   
