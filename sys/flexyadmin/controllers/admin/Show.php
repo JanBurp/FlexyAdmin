@@ -394,7 +394,7 @@ class Show extends AdminController {
 		$data = $this->data->get_form( $id );
     
     // trace_($this->data->last_query());
-    // trace_($data);
+    trace_($data);
 
     /**
      * Opties
