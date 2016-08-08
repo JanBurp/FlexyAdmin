@@ -2282,7 +2282,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
 		$id=-1;
 		$fields=$this->list_fields($table);
 		foreach ($fields as $field) {
-			$out[$id][$field]=$this->CI->field_data($table,$field,'default');
+			$out[$id][$field]=$this->field_data($table,$field,'default');
 			if ($out[$id][$field]==NULL) $out[$id][$field]="";
 		}
 
