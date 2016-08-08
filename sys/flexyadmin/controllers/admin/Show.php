@@ -176,7 +176,7 @@ class Show extends AdminController {
         $data_query = $this->data->last_query(); //_clean(array('select'=>$table.'.'.PRIMARY_KEY), true);
 				$total_rows = $this->data->total_rows();
         
-        // trace_($this->data->get_setting('grid_set'));
+        // trace_($this->data->get_settings());
         // trace_sql($data_query);
         // trace_($last_order);
         // trace_($pagination);
@@ -297,10 +297,10 @@ class Show extends AdminController {
 					$grid->set_search($search);
 
           $searchfields = $this->data->get_setting('fields');
-          $searchfields=array_unset_keys($searchfields, array('id','order','self_paren'));
+          $searchfields=array_unset_keys($searchfields, array('id','order','self_parent'));
           foreach ($searchfields as $key => $value) {
             unset($searchfields[$key]);
-            $searchfields[$value] = $this->ui->get($value);
+            $searchfields[$value] = $this->ui->get($value,$table);
           }
           $grid->set_searchfields($searchfields);
           
@@ -309,8 +309,8 @@ class Show extends AdminController {
 						$keys=array_keys(current($data));
 						$keys=array_combine($keys,$keys);
 					}
-          
-					$grid->set_headings($this->ui->get($keys,$table));
+          $uiKeys=$this->ui->get($keys,$table);
+					$grid->set_headings($uiKeys);
           
           if (is_editable_table($table) AND $rights>=RIGHTS_ADD) {
 						$newUri=api_uri('API_view_form',$table.$this->config->item('URI_HASH').'-1');
