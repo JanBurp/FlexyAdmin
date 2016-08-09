@@ -1770,7 +1770,7 @@ Class Data_Core extends CI_Model {
         if (empty($relations)) $relations = $this->get_setting(array('relations',$type));
         if ($relations) {
           foreach ($relations as $what => $info) {
-            $json = ($type!=='many_to_one');
+            $json = (in_array($type,array('one_to_many','many_to_many')));
             $this->with( $type, array( $what=>'abstract'), $json, TRUE );
           }
         }
@@ -3006,10 +3006,12 @@ Class Data_Core extends CI_Model {
     foreach ($what_new as $what => $value) {
       $tm_with_new[$what] = array(
         'table'   => $value['table'],
-        'as'      => el('as',$value, $this->settings['relations'][$type][$what]['result_name'] ),
         'fields'  => $value['fields'],
         'json' => $json,
       );
+      if ($type!=='merge') {
+        $tm_with_new[$what]['as'] = el('as',$value, $this->settings['relations'][$type][$what]['result_name'] );
+      }
       if ($type=='many_to_one') {
         $tm_with_new[$what]['flat'] = $flat;
       }
@@ -3067,6 +3069,29 @@ Class Data_Core extends CI_Model {
         $this->reset();
         throw new ErrorException( __CLASS__.'->'.__METHOD__.'() does not exists. The `'.$type.'` relation could not be included in the result.' );
       }
+    }
+    return $this;
+  }
+  
+  
+  /**
+   * Bouwt merge relatie op (toevoeging van platte data in andere tabel)
+   *
+   * @author Jan den Besten
+   */
+  protected function _with_merge( $what ) {
+    trace_($what);
+    $id = $this->settings['primary_key'];
+    foreach ($what as $key => $info) {
+      $fields      = $info['fields'];
+      $json        = el('json',$info,false);
+      $foreign_key = $this->settings['relations']['merge'][$key]['foreign_key'];
+      $other_table = $this->settings['relations']['merge'][$key]['other_table'];
+      $as          = el('as',$info, $other_table);
+      // Select fields
+      // $this->_select_with_fields( 'many_to_one', $other_table, $as, $fields, $foreign_key, $json );
+      // Join
+      $this->join( $other_table.' AS '.$as, $as.'.'.$id.' = '.$this->settings['table'].".".$foreign_key, 'left');
     }
     return $this;
   }
@@ -3176,11 +3201,11 @@ Class Data_Core extends CI_Model {
     }
     elseif ( $fields === 'abstract' ) {
       $abstract_fields = $this->get_other_table_abstract_fields( $other_table );
-      if ($type=='many_to_one') {
-        $abstract = $this->get_compiled_abstract_select( $as_table, $abstract_fields, $as_table.'.' );
+      if ($type=='many_to_many') {
+        $abstract = $this->get_compiled_abstract_select( $other_table, $abstract_fields, $as_table.'.' );
       }
       else {
-        $abstract = $this->get_compiled_abstract_select( $other_table, $abstract_fields, $as_table.'.' );
+        $abstract = $this->get_compiled_abstract_select( $as_table, $abstract_fields, $as_table.'.' );
       }
     }
     
@@ -3197,7 +3222,7 @@ Class Data_Core extends CI_Model {
         // Als geen JSON, voeg dan ook de primary_key erbij (behalve bij many_to_one, daar is die al bekend)
         if ($type!=='many_to_one' ) {
           $other_primary_key = $this->get_other_table_setting( $other_table, 'primary_key', PRIMARY_KEY);
-          $select = '`'.$other_table.'`.`'.$other_primary_key.'` AS `'.$as_table.'.'.$other_primary_key.'`, '.$select;
+          $select = '`'.$as_table.'`.`'.$other_primary_key.'` AS `'.$as_table.'.'.$other_primary_key.'`, '.$select;
         }
       }
     }

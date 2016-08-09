@@ -260,7 +260,7 @@ class Show extends AdminController {
             $unused=0;
             foreach ($data as $id => $row) {
               if ( $this->flexy_auth->allowed_to_edit_users() ) {
-                if ($row['b_active']) {
+                if (el('b_active',$row,true)) {
                   $data[$id]['actions'] = array('send_new_password'=>'users/send_new_password/'.$id);
                 }
                 else {
@@ -402,7 +402,7 @@ class Show extends AdminController {
      */
     $options=$this->data->get_options('', array_keys($this->data->get_setting( array('form_set','with'))) );
 
-    // trace_($options['groep']);
+    // trace_($options);
     // trace_($this->data->get_settings());
     // die();
     
