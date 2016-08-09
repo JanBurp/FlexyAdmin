@@ -59,7 +59,7 @@ $lang['deny']													= 'Weiger';
 $lang['accept']												= 'Accepteer';
 $lang['new_users']                    = 'Nieuwe gebruikers (nog nooit ingelogd)';
 $lang['all_new_users']                = 'aan alle nieuwe gebruikers';
-$lang['invite']												= 'Stuur welkom met inloggegevens';
+$lang['invite']												= 'Stuur&nbsp;welkom&nbsp;met&nbsp;inloggegevens';
 
 $lang['user_removed']									= 'Gebruiker "%s" verwijderd en een afwijzings email gestuurd.';
 $lang['user_accepted']								= 'Gebruiker "%s" is geactiveerd en heeft een accepterings email gekregen.';
@@ -69,7 +69,7 @@ $lang['mail_accepted_subject']				= 'Account aanvraag geaccepteerd.';
 $lang['mail_new_subject']				      = 'U krijgt inloggegevens.';
 
 $lang['active_users']				          = 'Stuur nieuw wachtwoord naar bestaande gebruikers';
-$lang['send_new_password']            = 'Stuur (nieuw) wachtwoord';
+$lang['send_new_password']            = 'Stuur&nbsp;(nieuw)&nbsp;wachtwoord';
 $lang['user_send_password']           = 'Gebruiker "%s" heeft een nieuw wachtwoord opgestuurd gekregen.';
 $lang['user_send_password_error']     = 'FOUT: Kon geen email met nieuw wachtwoord sturen aan %s.';
 $lang['user_send_error']              = 'FOUT: Kon geen email sturen aan %s.';
