@@ -394,7 +394,7 @@ class Show extends AdminController {
     // Haal data op
 		$data = $this->data->get_form( $id );
     
-    // trace_($this->data->last_query());
+    // trace_sql($this->data->last_query());
     // trace_($data);
 
     /**
