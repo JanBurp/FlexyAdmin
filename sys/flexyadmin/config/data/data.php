@@ -97,16 +97,13 @@ $config['abstract_filter']  = '';
 /**
  * Hier worden de relaties ingesteld die deze tabel heeft.
  * 
- * De array is onderverdeeld per relatiesoort ('many_to_one','many_to_many').
+ * De array is onderverdeeld per relatiesoort bijvoorbeeld: ('many_to_one','many_to_many').
  * 
- * 'many_to_one'
- * -------------
- * 
- * De foreign_key is de key van de array van de relatie.
- * Daarin komen de volgende velden:
+ * 'many_to_one' en 'one_to_one'
+ * -----------------------------
  * 
  * - other_table  -> de foreign table
- * - foreign_keys -> nogmaals de foreign_key
+ * - foreign_key  -> de foreign_key (ook bij one_to_one nodig)
  * - result_name  -> onder welke naam de relatie data wordt toegevoegd. Standaard hetzelfde als 'other_table', maar bijvoorbeeld als er meerdere verwijzingen naar dezelfde other_table zijn, dan geeft dat problemen. Dat kan dan worden opgelost door hier een andere naam te geven.
  * 
  * Hieronder enkele voorbeelden voor many_to_one:

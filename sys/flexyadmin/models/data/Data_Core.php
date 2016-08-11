@@ -131,7 +131,14 @@ Class Data_Core extends CI_Model {
    * Welke relaties mee moeten worden genomen en op welke manier
    */
   protected $tm_with    = array();
-
+  
+  /**
+   * Wat er gezocht gaat woren
+   * - terms
+   * - with
+   * - settings
+   */
+  protected $tm_find      = FALSE;
 
   /**
    * Set array voor insert/update
@@ -875,6 +882,7 @@ Class Data_Core extends CI_Model {
     $this->tm_limit             = 0;
     $this->tm_offset            = 0;
     $this->tm_jump_to_today     = FALSE;
+    $this->tm_find              = FALSE;
     $this->with(FALSE);
     $this->db->reset_query();
     return $this;
@@ -1359,6 +1367,9 @@ Class Data_Core extends CI_Model {
 
     // bouw select query op
     $this->_select();
+    
+    // bouw find query op
+    if ($this->tm_find) $this->_find();
     
     // bouw relatie queries
     if ( !empty( $this->tm_with ) ) $this->_with( $this->tm_with );
@@ -2576,13 +2587,14 @@ Class Data_Core extends CI_Model {
    * - 'and'         - ['OR'] Als er meerdere zoekopdrachten worden gegeven kun je hier aangeven of ze AND of OR moeten worden gekoppeld. Default is 'OR' (wat afwijkt van ->where(), maar voor zoeken logischer).
    * - 'word'        - [FALSE] Geef aan of de zoekterm als geheel woord moet worden gevonden, of als een reeks karakters.
    * - 'exact'       - [FALSE] Geef aan of de zoekterm exact in het gezochte veld moet voorkomen.
+   * 
    * - 'with'        - [array('many_to_one','one_to_many','many_to_many')] Geef aan welke relaties mee moeten worden genomen.
    * - 'many_exists' - [TRUE] Net als where_exists()
    * 
    * Zoeken in relaties
    * ------------------
    * 
-   * Als je wilt dat ook in relaties wordt gezocht, zorg dan dat eerst de relaties worden ingesteld met een ->with() aanroep (of een variant).
+   * Als je wilt dat ook in relaties wordt gezocht, roep dan ook een ->with() variant aan.
    * 
    * - In alle 'many_to_one' relaties wordt gezocht zolang het foreign_key veld in de zoekvelden zit.
    * - Automatisch wordt in alle 'many_to_many' en 'one_to_many' relaties gezocht (zoals bij like_exists())
@@ -2595,6 +2607,183 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   public function find( $terms, $fields = array(), $settings = array() ) {
+    // settings
+    $defaults = array(
+      'and'             => 'OR',
+      'word'            => FALSE,
+      'exact'           => FALSE,
+      'with'            => array('many_to_one','one_to_many','many_to_many'),
+      'many_exists'     => TRUE,
+    );
+    $settings = array_merge( $defaults,$settings );
+    if (!is_string($settings['and']) or is_numeric($settings['and']) or empty($settings['and'])) {
+      if ($settings['and']==TRUE)  $settings['and'] = 'AND';
+      if ($settings['and']==FALSE) $settings['and'] = 'OR';
+    }
+    $settings['and'] = strtoupper( $settings['and'] );
+    
+    // In welke velden zoeken?
+    if ( is_string($fields) ) $fields = array($fields);
+    // Geen velden meegegeven, gebruik dan alle velden van deze tabel (zoals ingesteld).
+    if ( empty($fields) ) {
+      $fields = $this->settings['fields'];
+    }
+    // Sommige velden hoeft zowiezo niet in gezocht te worden:
+    $forbidden_fields = array('id','order','self_parent');
+    foreach ($forbidden_fields as $forbidden_field) {
+      if ( $found_key=array_search($forbidden_field,$fields) ) {
+        unset($fields[$found_key]);
+      }
+    }
+    
+    // Splits terms
+    if ( is_array($terms) ) $terms = implode(' ',$terms);
+    $terms=preg_split('~(?:"[^"]*")?\K[/\s]+~', ' '.$terms.' ', -1, PREG_SPLIT_NO_EMPTY );
+    
+    // Bewaar zoekvraag per zoekterm
+    if ($this->tm_find===FALSE) $this->tm_find = array(
+      'search'=>array(),
+      'settings'=>$settings
+    );
+    $this->tm_find['settings'] = array_merge($this->tm_find['settings'],$settings);
+
+    $this->tm_find['search']=array();
+    foreach($terms as $term) {
+      $search=array();
+      if (el('and',$settings)==='OR')
+        $search['group'] = 'group_start';
+      else
+        $search['group'] = 'and_group_start';
+      foreach ($fields as $field) {
+        $search[] = array(
+          'field'       => $field,
+          'term'        => $term,
+          'and'         => el('and',$settings,'OR'),
+          'word'        => el('word',$settings,FALSE),
+          'exact'       => el('exact',$settings,FALSE),
+          'settings'    => array()
+        );
+      }
+      $this->tm_find['search'][] = $search;
+    }
+
+    
+    return $this;
+  }
+  
+  /**
+   * Hiermee kun je meerdere zoekopdrachten in één keer meegeven.
+   * Een uitgebreide versie van ->find() dus.
+   * 
+   * Je moet een array meegeven met per veld de te zoeken waarden en instellingen:
+   * 
+   * array(
+   * 
+   *    array(
+   *      'field' => veld waarin gezocht moet worden.
+   *      'term'  => te zoeken term, zie bij ->find() voor alle opties hier.
+   *      'and'   => ["OR"] Zie ->find() settings.
+   *      'word'  => [FALSE] (idem)
+   *      'exact' => [FALSE] (idem)
+   *    ),
+   * 
+   *    array(
+   *      'field' => ...
+   *      'term'  => ...
+   *      'and'   => ...
+   *      'word'  => ...
+   *      'exact' => ...
+   *    ),
+   * 
+   *    ...etc...
+   * 
+   * )
+   * 
+   * 
+   * groups
+   * ------
+   * 
+   * Je kunt het zoeken onderverdelen in groepen door meerdere aanroepen van find_multiple() te doen.
+   * Maar je kunt het ook in de $search array al meegeven door subarrays.
+   * De groepsnaam kan van alles zijn (heeft geen functie) als het maar uniek is.
+   * In de array moet dan de key 'group' bestaan met daarin de standaard CodeIgniter group methods met één afwijking: group_start is OR en or_group_start is vervangen door and_group_start.
+   * 
+   * Bijvoorbeeld:
+   * 
+   * array(
+   * 
+   *    array(
+   *      'group' => 'group_start',
+   *      array(
+   *        'field' => veld waarin gezocht moet worden.
+   *        'term'  => te zoeken term, zie bij ->find() voor alle opties hier.
+   *        'and'   => ["OR"] Zie ->find() settings.
+   *        'word'  => [FALSE] (idem)
+   *        'exact' => [FALSE] (idem)
+   *      )
+   *      array(
+   *        'field' => ...
+   *        'term'  => ...
+   *        'and'   => ...
+   *        'word'  => ...
+   *        'exact' => ...
+   *      ),
+   *      array(
+   *        'group' => 'or_group_start'   // geneste group
+   *        array(
+   *          'field' => ...
+   *          'term'  => ...
+   *          'and'   => ...
+   *          'word'  => ...
+   *          'exact' => ...
+   *        )
+   *        array(
+   *          'field' => ...
+   *          'term'  => ...
+   *          'and'   => ...
+   *          'word'  => ...
+   *          'exact' => ...
+   *        )
+   *      ),
+   *    ),
+   * 
+   *    array(
+   *      'field' => ...
+   *      'term'  => ...
+   *      'and'   => ...
+   *      'word'  => ...
+   *      'exact' => ...
+   *    ),
+   * 
+   *    ...etc...
+   * 
+   * )
+   * 
+   *
+   * @param array $search Hier geef je een array met alle zoektermen per veld.
+   * @param array $settings [array()] Extra instelingen, de meeste zitten al in $search, hier alleen 'with' en 'many_exists'. Zie verder bij ->find()
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function find_multiple( $search, $settings = array() ) {
+    $this->tm_find = array(
+      'search'   =>$search,
+      'settings' =>$settings
+    );
+    return $this;
+  }
+  
+
+  /**
+   * Bouw de query van een zoekterm op
+   *
+   * @param array $terms 
+   * @param arrat $fields 
+   * @param array $settings 
+   * @return void
+   * @author Jan den Besten
+   */
+  private function _find_term( $terms, $fields = array(), $settings = array() ) {
     // settings
     $defaults = array(
       'and'             => 'OR',
@@ -2626,7 +2815,6 @@ Class Data_Core extends CI_Model {
         unset($fields[$found_key]);
       }
     }
-    
     
     // Ook nog in relaties zoeken?
     if ( isset($this->tm_with) and !empty($this->tm_with) ) {
@@ -2737,74 +2925,21 @@ Class Data_Core extends CI_Model {
     return $this;
   }
   
-  
   /**
-   * Hiermee kun je meerdere zoekopdrachten in één keer meegeven.
-   * Een uitgebreide versie van ->find() dus.
-   * 
-   * Je moet een array meegeven met per veld de te zoeken waarden en instellingen:
-   * 
-   * array(
-   * 
-   *    array(
-   *      'field' => veld waarin gezocht moet worden.
-   *      'term'  => te zoeken term, zie bij ->find() voor alle opties hier.
-   *      'and'   => ["OR"] Zie ->find() settings.
-   *      'word'  => [FALSE] (idem)
-   *      'exact' => [FALSE] (idem)
-   *    ),
-   * 
-   *    array( ...  ),
-   *    ...etc...
-   * 
-   * )
-   * 
-   * groups
-   * ------
-   * 
-   * Je kunt het zoeken onderverdelen in groepen, door meerdere aanroepen van find_multiple() te doen en daaromheen de CodeIgniter group_start() en group_end() aanroepen.
-   * Maar je kunt het ook in de $search array al meegeven door subbarrays.
-   * De groepsnaam kan van alles zijn (heeft geen functie) als het maar uniek is. In de array moet dan de key 'group' bestaan met daarin de standaard CodeIgniter group methods met één afwijking: group_start is OR en or_group_start is vervangen door and_group_start.
-   * 
-   *  array( ... ),
-   * 
-   *  array( 
-   *     'group' => 'group_start',
-   *     array( ... ),
-   *     ..etc..
-   *  ),
-   *  ...etc...
-   * 
-   * )
-   * 
-   * 
+   * Bouw een gehele zoekquery op
    *
-   * @param array $search Hier geef je een array met alle zoektermen per veld.
-   * @param array $settings [array()] Extra instelingen, de meeste zitten al in $search, hier alleen 'with' en 'many_exists'. Zie verder bij ->find()
-   * @return $this
+   * @return void
    * @author Jan den Besten
    */
-  public function find_multiple( $search, $settings = array() ) {
-    // settings
-    $defaults = array(
-      'and'             => 'OR',
-      'with'            => array('many_to_one','one_to_many','many_to_many'),
-      'many_exists'     => TRUE
-    );
-    $settings = array_merge( $defaults,$settings );
+  private function _find( $search=NULL, $settings=NULL ) {
+    if (is_null($search))   $search = $this->tm_find['search'];
+    if (is_null($settings)) $settings = $this->tm_find['settings'];
     
     // Loop alle search termen langs
     foreach ( $search as $key => $item) {
-      if (isset($item['term'])) {
-        // ITEM
-        $term = $item['term'];
-        $item_settings = array_unset_keys($item,array('term','field','settings'));
-        $item_settings = array_merge( $settings,$item['settings'],$item_settings );
-        $this->find( $term, $item['field'], $item_settings );
-      }
       
+      // GROUP
       if ( isset($item['group']) and in_array(strtoupper($item['group']),array('GROUP_START','AND_GROUP_START','NOT_GROUP_START','AND_NOT_GROUP_START')) ) {
-        // GROUP
         $group=strtolower($item['group']);
         switch ($group) {
           case 'group_start':
@@ -2821,9 +2956,20 @@ Class Data_Core extends CI_Model {
             break;
         }
         $this->db->$group();
-        $this->find_multiple( $item, $settings );
+        $items = $item;
+        unset($items['group']);
+        $this->_find( $items, $settings );
         $this->db->group_end();
       }
+
+      // ITEM
+      elseif (isset($item['term'])) {
+        $term = $item['term'];
+        $item_settings = array_unset_keys($item,array('term','field','settings'));
+        $item_settings = array_merge( $settings,$item['settings'],$item_settings );
+        $this->_find_term( $term, $item['field'], $item_settings );
+      }
+      
     }
     return $this;
   }
@@ -2842,6 +2988,21 @@ Class Data_Core extends CI_Model {
    * (wordt automatisch aangeroepen na iedere ->get() variant)
    * 
    * ->with( FALSE );
+   * 
+   * 
+   * one_to_one
+   * ----------
+   * 
+   * Wordt niet vaak gebruikt. Maar in sommige gevallen toch handig om data van een tabel in meerdere tabellen te splitsen.
+   * Werkt hetzelfde als many_to_one.
+   * 
+   * ->with( 'one_to_one' );
+   * 
+   * one_to_one resultaat
+   * --------------------
+   * 
+   * De velden uit de extra tabel krijgen de naam: 'extra_tabel.veld' om vewarringen te voorkomen.
+   * Bij ->get_result() varianten wordt niet een mogelijk niet bestaande rij uit de extra tabel vervangen door default data.
    * 
    * 
    * many_to_one
@@ -2954,7 +3115,6 @@ Class Data_Core extends CI_Model {
    * Het resultaat van een many_to_many relatie wordt net als bij many_to_one relaties toegevoegd als extra velden van de andere tabel. Op dezelfde manier als bij many_to_one:
    * - tbl_posts.....
    * 
-   * 
    * json
    * ----
    * 
@@ -2975,6 +3135,7 @@ Class Data_Core extends CI_Model {
    * - Dit kan voorkomen worden door de relatie data 'json' bij te voegen (zie hierboven)
    * 
    * - Bij ->get_result() worden deze relatie rijen samengevoegd en klopt het aantal rijen wél met de ingestelde ->limit().
+   * 
    * 
    * @param string $type De soort relatie ['many_to_one'|'many_to_many']
    * @param array  $what Een array van welke relaties meegenomen moeten worden bij deze relatie-vorm.

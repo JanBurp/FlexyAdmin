@@ -21,7 +21,7 @@ $config['grid_set'] = array(
 	);
 
 $config['form_set'] = array( 
-		'fields'    => array('id','name','description','rights','b_all_users','b_backup','b_tools','b_delete','b_add','b_edit','b_show'), 
+    'fields'    => array('id','name','description','rights','b_all_users','b_backup','b_tools','b_delete','b_add','b_edit','b_show'),
 		'fieldsets' => array( 
 				'cfg_user_groups' => array('id','name','description','rights','b_all_users','b_backup','b_tools','b_delete','b_add','b_edit','b_show'), 
 			), 

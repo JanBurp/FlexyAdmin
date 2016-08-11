@@ -415,6 +415,7 @@ class DataTest extends CITestCase {
     $result = $this->CI->data->get_result();
     $info = $this->CI->data->get_query_info();
     $this->assertEquals( 26, $info['num_rows'] );
+    
     // word boundaries
     $this->CI->data->find('va',null,array('word'=>TRUE));
     $result = $this->CI->data->get_result();
@@ -456,8 +457,9 @@ class DataTest extends CITestCase {
     $result = $this->CI->data->get_result();
     $info = $this->CI->data->get_query_info();
     $this->assertEquals( 2, $info['num_rows'] );
+
     // meerdere termen AND
-    $this->CI->data->find('van den',null, array('and'=>TRUE));
+    $this->CI->data->find('van den','str_middle_name', array('and'=>TRUE));
     $result = $this->CI->data->get_result();
     $info = $this->CI->data->get_query_info();
     $this->assertEquals( 2, $info['num_rows'] );
