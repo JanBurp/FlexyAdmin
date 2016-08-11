@@ -3080,7 +3080,6 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   protected function _with_merge( $what ) {
-    trace_($what);
     $id = $this->settings['primary_key'];
     foreach ($what as $key => $info) {
       $fields      = $info['fields'];
