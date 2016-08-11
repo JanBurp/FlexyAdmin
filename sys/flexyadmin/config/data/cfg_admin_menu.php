@@ -30,6 +30,7 @@ $config['field_info'] = array(
 	);
 $config['order_by']        = 'order';
 $config['abstract_fields'] = array('str_ui_name','str_type');
+
 $config['relations'] = array( 
 		'many_to_one' => array( 
 				'id_user_group' => array( 
@@ -39,6 +40,7 @@ $config['relations'] = array(
 					), 
 			), 
 	);
+
 $config['grid_set'] = array( 
 		'fields'        => array('id','order','str_ui_name','b_visible','id_user_group','str_type','api','path','table','str_table_where'), 
 		'order_by'      => 'order', 
@@ -51,9 +53,6 @@ $config['grid_set'] = array(
 			), 
 	);
 $config['form_set']  = array( 
-		'fields'           => array('id','order','str_ui_name','b_visible','id_user_group','str_type','api','path','table','str_table_where'), 
-		'fieldsets'        => array( 
-				'cfg_admin_menu' => array('id','order','str_ui_name','b_visible','id_user_group','str_type','api','path','table','str_table_where'), 
-			), 
+		'fields'    => array('id','order','str_ui_name','b_visible','id_user_group','str_type','api','path','table','str_table_where'), 
 		'with'      => array(), 
 	);

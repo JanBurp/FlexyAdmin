@@ -8,11 +8,6 @@ $config['number_of_recent_uploads'] = 10;
 /* --- Settings for data model 'res_media_files' --- zie voor uitleg config/data/data_model.php */
 
 $config['table'] = 'res_media_files';
-
-$config['primary_key'] = 'id';
-
-$config['result_key'] = 'id';
-
 $config['fields'] = array('id','b_exists','file','path','str_type','str_title','dat_date','int_size','int_img_width','int_img_height');
 
 $config['field_info'] = array(
@@ -29,14 +24,7 @@ $config['field_info'] = array(
 	);
 
 $config['order_by'] = 'dat_date DESC';
-
-$config['max_rows'] = 0;
-
-$config['update_uris'] = true;
-
 $config['abstract_fields'] = array('file','dat_date');
-
-$config['abstract_filter'] = '';
 
 $config['relations'] = array();
 
@@ -50,6 +38,6 @@ $config['grid_set'] = array(
 
 $config['form_set'] = array(
 		'fields'    => array('id','b_exists','file','path','str_type','str_title','dat_date','int_size','int_img_width','int_img_height'), 
-		'fieldsets' => array('res_media_files' => array('id','b_exists','file','path','str_type','str_title','dat_date','int_size','int_img_width','int_img_height') ), 
+    // 'fieldsets' => array('res_media_files' => array('id','b_exists','file','path','str_type','str_title','dat_date','int_size','int_img_width','int_img_height') ),
 		'with'      => array(), 
 	);
