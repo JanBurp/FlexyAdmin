@@ -141,6 +141,7 @@ Class Res_media_files extends Data_Core {
    * @author Jan den Besten
    */
   public function get_files_as_options( $path,$filter=array(), $limit=0, $offset=0 ) {
+    $options = array();
     $this->select('file')->select_abstract()->order_by('file');
     $query = $this->_get_files($path,$filter,$limit,$offset);
     $options = $this->_make_options_result($query,'file');

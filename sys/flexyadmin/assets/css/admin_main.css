@@ -638,9 +638,8 @@ tr.caption div.filter {
 	overflow:hidden;
 	min-width:20px;
 }
-.grid th.id {
-	padding-right:0px;
-}
+.grid tbody td {white-space:pre;}
+.grid th.id {padding-right:0px;}
 tr.caption td				{ border:none; }
 
 .grid thead td,

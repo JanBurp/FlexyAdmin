@@ -499,7 +499,6 @@ function doGrid() {
         var id=cell.id;
         var value=0;
         if ($(this).children("div:first").hasClass("no")) value="1";
-        // var url=site_url("admin/ajax/edit/"+cell.table+"/"+cell.id+"/"+cell.field+"/"+value);
         var url=site_url("admin/ajax/edit/");
         var data={'table':cell.table,'id':cell.id,'field':cell.field,'value':value};
         // ajax request

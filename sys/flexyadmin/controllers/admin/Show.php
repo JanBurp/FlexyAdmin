@@ -177,7 +177,7 @@ class Show extends AdminController {
 				$total_rows = $this->data->total_rows();
         
         // trace_($this->data->get_settings());
-        // trace_sql($data_query);
+        // echo($data_query);
         // trace_($last_order);
         // trace_($pagination);
         // trace_($total_rows);
@@ -414,8 +414,7 @@ class Show extends AdminController {
 		if ( !empty($data) ) {
       
 			$ffData = $this->ff->render_form( $table, $data, $options, $this->data->get_settings() );
-      // trace_($ffData['groep']);
-      // trace_($ffData['subgroep']);
+      // trace_($ffData);
       
 			$actionUri=api_uri('API_view_form',$table.$this->config->item('URI_HASH').$id);
 			if (!empty($info)) $actionUri.='/info/'.$info;

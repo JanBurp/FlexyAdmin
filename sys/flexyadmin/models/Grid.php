@@ -315,6 +315,7 @@ class Grid extends CI_Model {
 			if ($firstOrder=='_'.$name) $orderClass=' headerSortUp';
 			if ($name=='id') $orderClass.=' edit';
       $prefix=get_prefix($name);
+      if (strpos($name,'.')!==FALSE) $prefix=get_prefix(get_suffix($name,'.'));
       if ($prefix=='id' and $name!='id') $prefix='id_';
 			$renderData["heading"]["row"][]=array(	"class"	=>"$table $name ".$prefix." $class ".alternator("oddcol","evencol").$orderClass, "cell"	=> $heading );
 		}
@@ -335,6 +336,7 @@ class Grid extends CI_Model {
           $cellClass='';
 					// if (empty($cell)) $cell="&nbsp;";
 					$pre=get_prefix($name);
+          if (strpos($name,'.')!==FALSE) $pre=get_prefix(get_suffix($name,'.'));
 					if ($pre==$name) $pre="";
           if ($pre=='id' and $pre!=$name) $pre='id_';
           $cell_value=$cell;

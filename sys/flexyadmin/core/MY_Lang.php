@@ -174,6 +174,7 @@ class MY_Lang extends CI_Lang {
 	 * @return	string Leeg als $line=''
 	 */
 	public function line($line='', $logging=TRUE, $give_key_on_false_result=TRUE) {
+    if (defined('PHPUNIT_TEST')) return '['.$line.'.'.$this->idiom.']';
     if ($line==='') return '';
 
     $CI=&get_instance();

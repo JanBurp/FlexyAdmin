@@ -163,11 +163,19 @@ class Flexy_auth extends Ion_auth {
     // Extra emailadressen
     $user['extra_email'] = array();
     $user['extra_email_string'] = '';
-    if ( $with=$this->data_core->table('cfg_users')->get_setting('has_extra_emails') ) {
-      $user_emails = $this->data_core->table('cfg_users')->with($with)->select('emails_extra')->where($user['id'])->get_row();
-      foreach ($user_emails['emails_extra'] as $extra ) {
-        array_push($user['extra_email'],$extra['email_email']);
-        $user['extra_email_string'] = add_string($user['extra_email_string'],$extra['email_email'],',');
+    // Kijk in config of er idd extra emails nodig zijn (en van welke tabel)
+    $this->config->load('data/cfg_users',true);
+    $has_extra_emails = $this->config->get_item(array('data/cfg_users','has_extra_emails'));
+    // Zo ja, haal ze op (zonder data/db model!)
+    if ( $has_extra_emails ) {
+      $sql = 'SELECT `email_email` FROM `'.$has_extra_emails.'` WHERE `id_user` = "'.$user['id'].'"';
+      $query=$this->db->query($sql);
+      if ($query) {
+        $user_emails = $query->result_array();
+        foreach ($user_emails as $extra ) {
+          array_push($user['extra_email'],$extra['email_email']);
+          $user['extra_email_string'] = add_string($user['extra_email_string'],$extra['email_email'],',');
+        }
       }
     }
     return $user;

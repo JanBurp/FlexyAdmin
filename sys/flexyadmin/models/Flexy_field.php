@@ -54,6 +54,7 @@ class Flexy_field extends CI_Model {
 		$cfg=$this->cfg->get('CFG_field',$this->table.".".$field);
 		if (!empty($cfg)) $this->fieldCfg[$field]=$cfg;
 		$this->pre=get_prefix($field);
+    if (strpos($field,'.')!==false) $this->pre = get_prefix(get_suffix($field,'.'));
 		$this->type();
 	}
 	function set_restricted_to_user($restrictedToUser=TRUE,$user_id='') {
@@ -290,11 +291,19 @@ class Flexy_field extends CI_Model {
 		$this->init_table($table,"form",$data);
 		$out=array();
     $data=$this->concat_foreign_fields($data);
-		foreach ($data as $name => $value) {
-			$opt=el($name,$options);
-			$renderedField=$this->render_form_field($table,$name,$value,$opt,$extraInfoId);
-			if ($renderedField!==FALSE)	$out[$name]=$renderedField;
-		}
+    // In volgorde van fieldsets
+    foreach ($this->form_set['fieldsets'] as $fieldset => $fields) {
+      foreach ($fields as $name) {
+        $opt=el($name,$options);
+        $renderedField = $this->render_form_field($table,$name,$data[$name],$opt,$extraInfoId);
+        if ($renderedField!==FALSE) $out[$name]=$renderedField;
+      }
+    }
+    // foreach ($data as $name => $value) {
+    //   $opt=el($name,$options);
+    //   $renderedField=$this->render_form_field($table,$name,$value,$opt,$extraInfoId);
+    //   if ($renderedField!==FALSE)  $out[$name]=$renderedField;
+    // }
 		return $out;
 	}
 

@@ -97,7 +97,7 @@ class Ajax extends AjaxController {
     $validation_errors='';
     $old_value=NULL;
 		if (!empty($table) and ($id!="") and !empty($field)) {
-			if ($this->db->table_exists($table) and $this->db->field_exists($field,$table)) {
+			if ($this->db->table_exists($table) ) { //and $this->db->field_exists($field,$table)) {
         
  				if ($this->flexy_auth->has_rights($table,$id)>=RIGHTS_EDIT) {
 
@@ -106,37 +106,25 @@ class Ajax extends AjaxController {
           // Get olddata
           $oldData = $this->data->table($table)->where( PRIMARY_KEY, $id )->get_row();
 					$newData=$oldData;
-          $old_value=$oldData[$field];
+          $old_value=el($field,$oldData);
           // Get newdate
 					$newData[$field]=$value;
           
           // Only update & validate if different
           if ($oldData!=$newData) {
             
-            // Validate new Data
-            $this->ff->table=$table;
-            $this->ff->init_field($field,$value);
+            // Call Plugins
+            if ($plugins)  $newData=$this->_after_update($table,$oldData,$newData);
+
+            // Update in database
+            $this->data->table($table);
+            // $this->data->validate();
+            if ( !$this->data->update( $newData, array(PRIMARY_KEY=>$id) )) {
+              $validation_errors = $this->data->get_query_info('validation_errors');
+            }
             
-            if (! $this->form_validation->validate_data($newData,$table)) {
-              $validation_errors = $this->form_validation->get_error_messages();
-            }
-
-            if (!$validation_errors) {
-              // Call Plugins
-              if ($plugins)  $newData=$this->_after_update($table,$oldData,$newData);
-
-              // Update in database
-              $this->data->table($table);
-              $this->data->update( $newData, array(PRIMARY_KEY=>$id) );
-              
-    					if ($plugins) {
-    						$this->queu->run_calls();
-    					}
-    					delete_all_cache();
-              
-              // Fetch new value from database as double check and feedback to user
-              $value=$this->data->table($table)->where(PRIMARY_KEY,$id)->get_field( $field );
-            }
+  					if ($plugins) $this->queu->run_calls();
+  					delete_all_cache();
           }
 				}
 				else $error='ajax_error_no_rights';		 		

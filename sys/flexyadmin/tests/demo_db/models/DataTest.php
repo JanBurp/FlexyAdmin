@@ -37,7 +37,7 @@ class DataTest extends CITestCase {
     $query = $this->CI->data->get();
     $this->assertEquals( 3, $query->num_rows() );
     $this->assertEquals( 3, $query->num_fields() );
-    
+
     // tbl_menu, nog een keer om te kijk of wisseling goed gaat
     $this->CI->data->table('tbl_menu');
     // ->list_fields()
@@ -50,7 +50,7 @@ class DataTest extends CITestCase {
     $query = $this->CI->data->where( 'order <=', '2' )->get();
     $this->assertEquals( 3, $query->num_rows() );
   }
-  
+
   public function test_settings() {
     $this->CI->data->table( 'tbl_menu' );
     // null
@@ -61,7 +61,7 @@ class DataTest extends CITestCase {
     $this->assertEquals( array( 'str_title','str_module'), $this->CI->data->get_setting( 'abstract_fields' ) );
     $this->assertEquals( 'order', $this->CI->data->get_setting( 'order_by' ) );
   }
-  
+
 
   public function test_abstractfields() {
     // tbl_menu
@@ -76,23 +76,21 @@ class DataTest extends CITestCase {
     $query = $this->CI->data->select_abstract()->get();
     $this->assertEquals( 5, $query->num_rows() );
     $this->assertEquals( 2, $query->num_fields() );
-    
+
     // tbl_links
     $this->CI->data->table( 'tbl_links' );
     // ->get_abstract_fields()
     $abstract_fields = $this->CI->data->get_abstract_fields();
     $this->assertEquals( array('str_title'), $abstract_fields );
   }
-  
-  
+
+
   public function test_get_options() {
     // tbl_menu.str_module
     $this->CI->data->table( 'tbl_menu' );
     $options = $this->CI->data->get_options( 'str_module' );
     $this->assertInternalType( 'array', $options );
     $this->assertArrayHasKey( 'data', $options );
-    // $this->assertArrayHasKey( 'multiple', $options );
-    // $this->assertEquals( false, $options['multiple'] );
     $this->assertEquals( 3, count($options['data']) );
     // tbl_menu
     $options = $this->CI->data->get_options();
@@ -100,16 +98,16 @@ class DataTest extends CITestCase {
     $this->assertArrayHasKey( 'str_module', $options );
     $this->assertGreaterThanOrEqual( 1, count($options) );
   }
-  
-  
-  
+
+
+
   public function test_setting_with() {
     // tbl_leerlingenTEST
     $this->CI->data->table( 'tbl_leerlingenTEST' );
-    // ->get_with()
+    
     $with = $this->CI->data->get_with();
     $this->assertEquals( array(), $with );
-    
+
     // ->with( 'many_to_one' )
     $expected = array(
       'many_to_one'=>array(
@@ -130,22 +128,24 @@ class DataTest extends CITestCase {
       )
     );
     $this->CI->data->with( 'many_to_one' );
-    $this->assertEquals( $expected, $this->CI->data->get_with() );
-    
+    $with = $this->CI->data->get_with();
+    $this->assertEquals( $expected, $with );
+
+
     // ->with( 'many_to_one', array() );
     $this->CI->data->with( 'many_to_one', array() );
     $this->assertEquals( $expected, $this->CI->data->get_with() );
-    
+
     // ->with( 'many_to_one', array( 'tbl_adressen') );
     $this->CI->data->with( 'many_to_one', array( 'id_adressen') );
     $this->assertEquals( $expected, $this->CI->data->get_with() );
-    
+
     // ->reset()
     $this->CI->data->reset();
-    
+
     // ->get_with()
     $this->assertEquals( array(), $this->CI->data->get_with() );
-    
+
     // ->with( 'many_to_one', array( 'tbl_adressen') );
     $expected = array(
       'many_to_one'=>array(
@@ -161,9 +161,9 @@ class DataTest extends CITestCase {
     $this->CI->data->with( 'many_to_one', array( 'id_adressen') );
     $this->assertEquals( $expected, $this->CI->data->get_with() );
   }
-  
-  
-  
+
+
+
   public function test_many_to_one_data() {
     $this->CI->data->table( 'tbl_leerlingenTEST' );
     $grid_set = $this->CI->data->get_setting('grid_set');
@@ -230,7 +230,7 @@ class DataTest extends CITestCase {
     $this->assertEquals( 2, count($row['tbl_adressen']) );
     $this->assertEquals( 'Schooolstraat 1', $row['tbl_adressen']['str_address'] );
   }
-  
+
   public function test_one_to_many_data() {
     // tbl_adressen
     $query = $this->CI->data->table( 'tbl_adressen' )
@@ -278,7 +278,7 @@ class DataTest extends CITestCase {
     $this->assertEquals( array('id','str_city','tbl_leerlingenTEST'), $keys );
     $this->assertInternalType( 'array', $row['tbl_leerlingenTEST'] );
     $this->assertEquals( 11, count($row['tbl_leerlingenTEST']) );
-   
+
     // tbl_adressen ->where()->get_result()
     $array = $this->CI->data->select('str_city')
                             ->with( 'one_to_many', array('tbl_leerlingenTEST'=>'str_first_name') )
@@ -294,8 +294,7 @@ class DataTest extends CITestCase {
     $this->assertInternalType( 'array', $row['tbl_leerlingenTEST'] );
     $this->assertEquals( 1, count($row['tbl_leerlingenTEST']) );
     $this->assertEquals( 'Adam', $row['tbl_leerlingenTEST'][2]['str_first_name'] );
-    
-    
+
     // Met afwijkende namen als standaard cfg_users
     $result = $this->CI->data->table( 'cfg_users' )
                              ->with( 'many_to_many' )
@@ -308,8 +307,8 @@ class DataTest extends CITestCase {
     $keys = array_keys($row);
     $this->assertEquals( array( 'id', 'str_username', 'gpw_password', 'email_email', 'ip_address', 'salt', 'activation_code', 'forgotten_password_code', 'forgotten_password_time', 'remember_code', 'created_on', 'last_login', 'b_active', 'str_language', 'str_filemanager_view', 'rel_users__groups' ), $keys );
   }
-  
-  
+
+ 
   public function test_many_to_many_data() {
     // tbl_groepen - abstract
     $query = $this->CI->data->table( 'tbl_groepen' )
@@ -408,7 +407,7 @@ class DataTest extends CITestCase {
     $this->assertGreaterThanOrEqual( 1, count($found) );
     $this->assertLessThan( count($row['tbl_adressen']), count($found) );
   }
-  
+
   public function test_find() {
     $this->CI->data->table('tbl_leerlingenTEST');
     // ruw
@@ -493,7 +492,7 @@ class DataTest extends CITestCase {
     $result = $this->CI->data->get_result();
     $info = $this->CI->data->get_query_info();
     $this->assertEquals( 0, $info['num_rows'] );
-    
+
     // Zoeken in one_to_many 'van' (LET OP query resultaat omdat sommige dubbel kunnen zijn, get_result geeft dan ander aantal)
     $this->CI->data->table( 'tbl_adressen' );
     $this->CI->data->with( 'one_to_many' );
@@ -525,8 +524,8 @@ class DataTest extends CITestCase {
     $info = $this->CI->data->get_query_info();
     $this->assertEquals( 4, $info['num_rows'] );
   }
-  
-  
+
+
   public function test_crud() {
     $this->CI->data->table('tbl_crud');
 
@@ -606,7 +605,7 @@ class DataTest extends CITestCase {
     $this->CI->data->where_in( 'id_crud', $affected_ids );
     $result = $this->CI->data->get_result();
     $this->assertEquals( array(), $result );
-    
+
     // Test update relaties met afwijkende naam 'cfg_users'
     $this->CI->data->table('cfg_users');
     $row = $this->CI->data->where( 'str_username', 'test')
@@ -637,17 +636,17 @@ class DataTest extends CITestCase {
                           ->get_row();
     $this->assertEquals( 2, current($row['rel_users__groups'])['id'] );
     $this->assertInternalType( 'array', $row['rel_users__groups'] );
-    
+
     // Test aanpassen wachtwoord, een leeg wachtwoord mag niet in de set blijven staan
     $this->CI->data->table('cfg_users');
     $result = $this->CI->data->where( 'str_username', 'test' )
                              ->set( array('gpw_password'=>'') )
                              ->update();
     $this->assertEquals( $result, FALSE );
-    
+
   }
-  
-  
+
+
   public function test_grid_set() {
 
     // Page1
