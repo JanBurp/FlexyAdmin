@@ -6,6 +6,7 @@
 $config['table']       = 'log_activity';
 $config['fields']      = array('id','id_user','tme_timestamp','stx_activity','str_activity_type','str_model','str_key');
 $config['order_by']    = 'tme_timestamp DESC';
+
 $config['relations'] = array( 
 		'many_to_one' => array( 
 				'id_user' => array( 

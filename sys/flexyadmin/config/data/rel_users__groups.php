@@ -2,10 +2,7 @@
 
 /* --- Settings for data model 'rel_users__groups' --- Created @ Mon 23 May 2016, 12:23 */
 
-
 $config['table'] = 'rel_users__groups';
-$config['primary_key'] = 'id';
-$config['result_key'] = 'id';
 $config['fields'] = array('id','id_user','id_user_group');
 $config['field_info'] = array(
     'id'            => array(

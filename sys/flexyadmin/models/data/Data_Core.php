@@ -1909,6 +1909,15 @@ Class Data_Core extends CI_Model {
    */
   public function get_form( $where = '' ) {
     $form_set = $this->settings['form_set'];
+    
+    // Haal fields uit fieldset als niet gegeven
+    if (!isset($form_set['fields']) and isset($form_set['fieldsets'])) {
+      $fields=array();
+      foreach($form_set['fieldsets'] as $fieldsetfields) {
+        $fields=array_merge($fields,$fieldsetfields);
+      }
+      $form_set['fields'] = $fields;
+    }
 
     // Select
     $this->select( $form_set['fields'] );

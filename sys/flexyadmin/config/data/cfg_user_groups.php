@@ -3,12 +3,9 @@
 /* --- Settings for data model 'cfg_user_groups' --- Created @ Tue 17 May 2016, 17:25 */
 
 $config['table']           = 'cfg_user_groups';
-$config['primary_key']     = 'id';
-$config['result_key']      = 'id';
 $config['fields']          = array('id','name','description','rights','b_all_users','b_backup','b_tools','b_delete','b_add','b_edit','b_show');
 $config['order_by']        = 'id';
 $config['abstract_fields'] = array('description');
-$config['relations']       = array();
 
 $config['grid_set'] = array( 
 		'fields'        => array('id','name','description','rights','b_all_users','b_backup','b_tools','b_delete','b_add','b_edit','b_show'), 
@@ -21,9 +18,9 @@ $config['grid_set'] = array(
 	);
 
 $config['form_set'] = array( 
-    'fields'    => array('id','name','description','rights','b_all_users','b_backup','b_tools','b_delete','b_add','b_edit','b_show'),
 		'fieldsets' => array( 
-				'cfg_user_groups' => array('id','name','description','rights','b_all_users','b_backup','b_tools','b_delete','b_add','b_edit','b_show'), 
+				'cfg_user_groups' => array('id','name','description','rights','b_all_users'), 
+        'Tools' => array('b_backup','b_tools','b_delete','b_add','b_edit','b_show'), 
 			), 
 		'with'      => array(), 
 	);
