@@ -724,7 +724,8 @@ class Form {
 		if ($this->isValidated) {
 			foreach($this->data as $name=>$field) {
 				$pre=get_prefix($name);
-				$value=$this->CI->input->post($name);
+        $postname=str_replace('.','-',$name);
+				$value=$this->CI->input->post($postname);
 				// remove matches if any
         if ($this->add_password_match) {
           if (in_array($pre,$this->add_password_match['fields']) and isset($field['matches'])) {
@@ -766,6 +767,7 @@ class Form {
 			
 			$this->post_data=array_merge($data,$joins);
 		}
+    
 		return $this->post_data;
 	}
 
@@ -794,7 +796,7 @@ class Form {
 		}
     unset($data['captcha']);
     unset($data['_captcha']);
-    // cleanup html types
+    // cleanup html types and names with dots
     foreach ($data as $key => $value) {
       if (el(array($key,'type'),$this->data,'input')=='html') unset($data[$key]);
     }
@@ -872,6 +874,8 @@ class Form {
    * @internal
    */
 	private function render_field($name,$field,$form_class="") {
+    
+    $name=str_replace('.','-',$name);
     
     // HTML?
     if ($field['type']=='html') return $field['html'];

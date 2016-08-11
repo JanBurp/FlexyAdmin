@@ -232,6 +232,7 @@ Class Data_Core extends CI_Model {
       // Test of de noodzakelijke settings zijn ingesteld, zo niet doe de rest automatisch
       $this->_autoset( );
     }
+    // if ($table==='cfg_users')  trace_($this->settings);
     return $this->settings;
   }
   
@@ -758,6 +759,22 @@ Class Data_Core extends CI_Model {
   
   /* --- Informatie uit andere tabellen/models --- */
   
+  protected function get_other_table_settings( $table ) {
+    $settings = NULL;
+    // Probeer eerst of het table model bestaat
+    // $settings = $this->data_core->table( $table )->get_settings();
+    // $this->data_core->table($this->settings['table']); // Terug naar huidige data table.
+    if ( method_exists( $table, 'get_setting' ) ) {
+      $settings = $this->$table->get_settings();
+    }
+    // Laad anders de config van die tabel/model
+    else {
+      $this->config->load( 'data/'.$table, true);
+      $settings = $this->config->item( 'data/'.$table );
+    }
+    return $settings;
+  }
+  
 
   /**
    * Haalt een setting op van een andere table (model) 
@@ -769,17 +786,8 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   protected function get_other_table_setting( $table, $key, $default=null ) {
-    $setting = NULL;
-    // Probeer eerst of het table model bestaat
-    if ( method_exists( $table, 'get_setting' ) ) {
-      $setting = $this->$table->get_setting( $key, $default );
-    }
-    // Laad anders de config van die tabel/model
-    else {
-      $this->config->load( 'data/'.$table, true);
-      $settings = $this->config->item( 'data/'.$table );
-      $setting = el( $key, $settings, $default );
-    }
+    $settings = $this->get_other_table_settings( $table );
+    $setting = el( $key, $settings, $default );
     return $setting;
   }
   
@@ -1246,7 +1254,24 @@ Class Data_Core extends CI_Model {
       $options[$field] = $field_options;
     }
     
-    // ..._to_many opties?
+    // one_to_one opties: die opties toevoegen
+    if ( in_array('one_to_one',$with) ) {
+      $relations = $this->settings['relations']['one_to_one'];
+      foreach ($relations as $relation) {
+        $other_table = $relation['other_table'];
+        $other_options = $this->data->table( $other_table )->get_options();
+        $this->data->table($this->settings['table']); // Terug naar huidige data table.
+        unset($other_options[$relation['foreign_key']]);
+        if ($other_options) {
+          foreach ($other_options as $field => $info) {
+            $options[$other_table.'.'.$field] = $info;
+          }
+        }
+      }
+    }
+    
+    
+    // ..._to_many opties
     if ( in_array('many_to_many',$with) or in_array('one_to_many',$with) ) {
       foreach ($with as $type) {
         $relations = $this->get_setting(array('relations',$type));
@@ -1444,7 +1469,8 @@ Class Data_Core extends CI_Model {
   /**
    * Maakt een mooie result_array van een $query
    * - Met keys die standaard primary_key zijn, of ingesteld kunnen worden met set_result_key()
-   * - Met relaties gekoppeld als subarrays
+   * - Met relaties gekoppeld (bijvoorbeeld als subarrays)
+   * - Met default data voor one_to_one relaties
    * - Als select_txt_abstract() is ingesteld dan worden die velden ook nog gestript van HTML tags
    *
    * @param object $query 
@@ -1464,9 +1490,30 @@ Class Data_Core extends CI_Model {
       $needed_path_fields = array_merge(array_keys($this->tm_path),array($this->settings['primary_key'],'self_parent'));
     }
     
-    foreach ( $query->result_array() as $row ) {
+    // Eventuele defaults bewaren bij een niet bestaanden one_to_one
+    $one_to_one = el('one_to_one',$this->tm_with);
+    $one_to_one_defaults=array();
+    
+    while ( $row = $query->unbuffered_row('array') ) {
+
+      // keys
       $id = $row[$this->settings['primary_key']];
       $result_key = el($key,$row,$id);
+      
+      // defaults bij niet bestaande one_to_one
+      if ($one_to_one and in_array(NULL,$row)) {
+        foreach ($row as $field => $value) {
+          if (is_null($value)) {
+            $other_table = get_prefix($field,'.');
+            if (!isset($one_to_one_defaults[$other_table])) {
+              $one_to_one_defaults[$other_table] = $this->data->table($other_table)->get_defaults();
+              $this->data->table($this->settings['table']); // Terug naar huidige data table.
+            }
+            $value = el(array($other_table,get_suffix($field,'.')),$one_to_one_defaults,'DEFAULT');
+            $row[$field] = $value;
+          }
+        }
+      }
       
       // Voeg relatie data aan row
       if ($this->tm_with) {
@@ -1496,7 +1543,7 @@ Class Data_Core extends CI_Model {
             }
             
             // Niet JSON en niet flat => als subarray
-            else {
+            elseif ($with_type!=='one_to_one') {
               $fields   = $info['fields'];
               // split row and with data
               $keys = array_keys($row);
@@ -1608,7 +1655,7 @@ Class Data_Core extends CI_Model {
       $sql = 'SELECT `'.$path_info['original_field'].'` FROM `'.$this->settings['table'].'` WHERE `'.$this->settings['primary_key'].'` = "'.$key.'" ORDER BY `'.implode('`,`',$this->tm_order_by).'` LIMIT 1';
       $query = $this->db->query($sql);
       if ($query) {
-        $row = $query->row_array();
+        $row = $query->unbuffered_row('array'); ;
         $part = el( $path_info['original_field'],$row );
       }
     }
@@ -1771,7 +1818,9 @@ Class Data_Core extends CI_Model {
         if ($relations) {
           foreach ($relations as $what => $info) {
             $json = (in_array($type,array('one_to_many','many_to_many')));
-            $this->with( $type, array( $what=>'abstract'), $json, TRUE );
+            $fields='abstract';
+            if ($type==='one_to_one') $fields=$info;
+            $this->with( $type, array( $what=>$fields), $json, TRUE );
           }
         }
       }
@@ -1858,10 +1907,12 @@ Class Data_Core extends CI_Model {
       foreach ($form_set['with'] as $type => $relations) {
         if (empty($relations)) $relations = $this->get_setting(array('relations',$type));
         if ($relations) {
-          foreach ($relations as $what => $relation ) {
-            if (is_numeric($what) and is_string($relation)) $what=$relation;
+          foreach ($relations as $what => $info ) {
+            if (is_numeric($what) and is_string($info)) $what=$info;
+            $fields='abstract';
+            if ($type==='one_to_one' and is_array($info)) $fields=$info;
             if ( in_array($what,$form_set['fields']) or $what!=='user_changed') {
-              $this->with( $type, array( $what=>'abstract') );
+              $this->with( $type, array( $what=>$fields) );
             }
           }
         }
@@ -2937,21 +2988,14 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   public function with( $type='', $what=array(), $json=FALSE, $flat=FALSE ) {
-    
     // Reset?
-    if ($type===FALSE) {
+    if ($type===FALSE or empty($type)) {
       $this->tm_with = array();
       return $this;
     }
     
     // Bestaat relatie wel?
-    if (!isset( $this->settings['relations'][$type])) return $this;
-    
-    // Reset?
-    if ( empty($type) ) {
-      $this->tm_with = array();
-      return $this;
-    }
+    if (! el( array('relations',$type), $this->settings)) return $this;
 
     // Als geen $what is meegegeven, haal ze uit de settings
     $abstract = ($what==='abstract');
@@ -2983,13 +3027,16 @@ Class Data_Core extends CI_Model {
       }
       // Als fields een lege array is, stop dan alle velden van die tabel erin
       if (is_array($fields) and empty($fields)) {
+        if ($type=='one_to_one')   $fields = $this->get_other_table_fields( $table );
         if ($type=='many_to_one')  $fields = $this->get_other_table_fields( $table );
         if ($type=='one_to_many')  $fields = $this->get_other_table_fields( $this->settings['relations']['one_to_many'][$what]['other_table'] );
         if ($type=='many_to_many') $fields = $this->get_other_table_fields( $this->settings['relations']['many_to_many'][$what]['other_table'] );
       }
-      // fields moet iig ook de primary key bevatten
-      $other_primary_key = $this->get_other_table_setting( $table,'primary_key', PRIMARY_KEY );
-      if ( is_array($fields) AND !in_array($other_primary_key,$fields) ) array_unshift($fields,$other_primary_key);
+      // fields moet iig ook de primary key bevatten (behalve bij one_to_one)
+      if ($type!=='one_to_one') {
+        $other_primary_key = $this->get_other_table_setting( $table,'primary_key', PRIMARY_KEY );
+        if ( is_array($fields) AND !in_array($other_primary_key,$fields) ) array_unshift($fields,$other_primary_key);
+      }
       // Bewaar
       $what_new[$what] = array(
         'table'   => $table,
@@ -3009,7 +3056,7 @@ Class Data_Core extends CI_Model {
         'fields'  => $value['fields'],
         'json' => $json,
       );
-      if ($type!=='merge') {
+      if ($type!=='one_to_one') {
         $tm_with_new[$what]['as'] = el('as',$value, $this->settings['relations'][$type][$what]['result_name'] );
       }
       if ($type=='many_to_one') {
@@ -3060,6 +3107,7 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   protected function _with( $with ) {
+    // trace_($with);
     foreach ( $with as $type => $what ) {
       $method = '_with_'.$type;
       if ( method_exists( $this, $method ) ) {
@@ -3075,22 +3123,22 @@ Class Data_Core extends CI_Model {
   
   
   /**
-   * Bouwt merge relatie op (toevoeging van platte data in andere tabel)
+   * Bouwt one_to_one relatie op
    *
    * @author Jan den Besten
    */
-  protected function _with_merge( $what ) {
+  protected function _with_one_to_one( $what ) {
     $id = $this->settings['primary_key'];
     foreach ($what as $key => $info) {
       $fields      = $info['fields'];
       $json        = el('json',$info,false);
-      $foreign_key = $this->settings['relations']['merge'][$key]['foreign_key'];
-      $other_table = $this->settings['relations']['merge'][$key]['other_table'];
+      $foreign_key = $this->settings['relations']['one_to_one'][$key]['foreign_key'];
+      $other_table = $this->settings['relations']['one_to_one'][$key]['other_table'];
       $as          = el('as',$info, $other_table);
       // Select fields
-      // $this->_select_with_fields( 'many_to_one', $other_table, $as, $fields, $foreign_key, $json );
+      $this->_select_with_fields( 'one_to_one', $other_table, $as, $fields, $foreign_key, $json );
       // Join
-      $this->join( $other_table.' AS '.$as, $as.'.'.$id.' = '.$this->settings['table'].".".$foreign_key, 'left');
+      $this->join( $other_table.' AS '.$as, $as.'.'.$foreign_key.' = '.$this->settings['table'].".".$id, 'left');
     }
     return $this;
   }
@@ -3105,8 +3153,6 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   protected function _with_many_to_one( $what ) {
-    // trace_($what);
-    // trace_($this->settings['relations']);
     $id = $this->settings['primary_key'];
     foreach ($what as $key => $info) {
       $fields      = $info['fields'];
@@ -3221,7 +3267,7 @@ Class Data_Core extends CI_Model {
         // Als geen JSON, voeg dan ook de primary_key erbij (behalve bij many_to_one, daar is die al bekend)
         if ($type!=='many_to_one' ) {
           $other_primary_key = $this->get_other_table_setting( $other_table, 'primary_key', PRIMARY_KEY);
-          $select = '`'.$as_table.'`.`'.$other_primary_key.'` AS `'.$as_table.'.'.$other_primary_key.'`, '.$select;
+          $select = '`'.$other_table.'`.`'.$other_primary_key.'` AS `'.$as_table.'.'.$other_primary_key.'`, '.$select;
         }
       }
     }
@@ -3245,6 +3291,7 @@ Class Data_Core extends CI_Model {
           // 'select'      => '`' . $as_table . '`.`'.$field.'`',
         );
       }
+      // trace_($select_fields);
       
       // SELECT normaal
       if (!$json) {
@@ -3511,7 +3558,23 @@ Class Data_Core extends CI_Model {
         return FALSE;
       }
     }
-      
+    
+    
+    /**
+     * Split eventuele one_to_one data
+     */
+    if ( isset($this->settings['relations']['one_to_one'])) {
+      $to_one = array();
+      foreach ($this->settings['relations']['one_to_one'] as $what=>$relation) {
+        // $other_table = $relation['other_table'];
+        // $foreign_key = $relation['foreign_key'];
+        $result_name = $relation['result_name'];
+        $to_one[$what] = filter_by_key($set,$result_name.'.');
+        if ($to_one[$what]) {
+          $set = array_unset_keys($set,array_keys($to_one[$what]));
+        }
+      }
+    }
 
     /**
      * Split eventuele many_to_many data
@@ -3533,7 +3596,6 @@ Class Data_Core extends CI_Model {
           }
         }
       }
-      // trace_($to_many);
     }
     
     /**
@@ -3553,19 +3615,12 @@ Class Data_Core extends CI_Model {
     /**
      * Ga door als de set niet leeg is
      */
-    if (!empty($set) or $to_many) {
+    if (!empty($set) or $to_many or $to_one) {
       
-      if ( $this->user_id!==FALSE ) {
-        /**
-         * Voeg user_changed data toe als bekend is en veld bestaat
-         */
-        if ( $this->field_exists('user_changed')) $set['user_changed'] = $this->user_id;
-        /**
-         * idem voor user bij INSERT
-         */
-        if ( $this->field_exists('user') and $type==='INSERT') $set['user'] = $this->user_id;
-      }
-      
+      /**
+       * User fields toevoegen aan set?
+       */
+      if ( $this->user_id!==FALSE ) $set = $this->_add_user_fields_to_set( $set,$type );
       
       /**
        * Eindelijk, we kunnen...
@@ -3627,6 +3682,38 @@ Class Data_Core extends CI_Model {
           );
           $log['id']=implode(',',$ids);
   			}
+      }
+      
+      /**
+       * Als er to_one data is, update/insert die ook
+       */
+      if ( !empty($to_one)) {
+        foreach ($to_one as $what => $other_set) {
+          if (!empty($other_set)) {
+            $other_table = $this->settings['relations']['one_to_one'][$what]['other_table'];
+            $foreign_key = $this->settings['relations']['one_to_one'][$what]['foreign_key'];
+            $result_name = $this->settings['relations']['one_to_one'][$what]['result_name'];
+            
+            if ( $this->user_id!==FALSE ) $other_set = $this->_add_user_fields_to_set( $other_set,$type,$other_table );
+            
+            /**
+             * INSERT als niet bestaat, anders UPDATE
+             */
+            $existing = $this->db->where( $foreign_key, $id )->get( $other_table )->num_rows();
+            if ( !$existing ) {
+              $other_set[$foreign_key]=$id;
+              $this->db->set($other_set);
+      				$this->db->insert( $other_table );
+              $log['query'] .= '; '.$this->db->last_query();
+      			}
+          	else {
+              $this->db->set($other_set);
+              $this->db->where( $foreign_key,$id );
+      				$this->db->update( $other_table );
+              $log['query'] .= '; '.$this->db->last_query();
+      			}
+          }
+        }
       }
       
       
@@ -3716,6 +3803,27 @@ Class Data_Core extends CI_Model {
 	}
   
   /**
+   * Voeg user velden to aan set zodat kan worden bijgehouden wie wat heeft aangepast/aangemaakt.
+   *
+   * @param array $set 
+   * @param string $type INSERT/UPDATE
+   * @param string $table['']
+   * @return arra
+   * @author Jan den Besten
+   */
+  private function _add_user_fields_to_set( $set, $type, $table='') {
+    if (empty($table) or $table===$this->settings['table']) {
+      if ( $this->field_exists('user_changed'))               $set['user_changed'] = $this->user_id;
+      if ( $type==='INSERT' and $this->field_exists('user'))  $set['user'] = $this->user_id;
+    }
+    else {
+      if ( $this->db->field_exists('user_changed',$table))               $set['user_changed'] = $this->user_id;
+      if ( $type==='INSERT' and $this->db->field_exists('user',$table))  $set['user'] = $this->user_id;
+    }
+    return $set;
+  }
+  
+  /**
    * Zorg ervoor dat other_ids in orde zijn
    *
    * @param array $other_ids 
@@ -3724,6 +3832,7 @@ Class Data_Core extends CI_Model {
    */
   private function _check_other_ids($other_ids) {
     if (is_string($other_ids)) $other_ids=explode('|',$other_ids);
+    if (is_null($other_ids)) $other_ids = array();
     if (!is_array($other_ids)) $other_ids=array($other_ids);
 		foreach ( $other_ids as $okey => $other_id ) {
       if (is_array($other_id) and isset($other_id[$this->settings['primary_key']])) {
