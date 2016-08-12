@@ -296,7 +296,8 @@ class Flexy_field extends CI_Model {
     foreach ($fieldsets as $fieldset => $fields) {
       foreach ($fields as $name) {
         $opt=el($name,$options);
-        $renderedField = $this->render_form_field($table,$name,$data[$name],$opt,$extraInfoId);
+        $thisdata=el($name,$data);
+        $renderedField = $this->render_form_field($table,$name,$thisdata,$opt,$extraInfoId);
         if ($renderedField!==FALSE) $out[$name]=$renderedField;
       }
     }
