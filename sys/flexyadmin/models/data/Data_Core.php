@@ -1331,17 +1331,34 @@ Class Data_Core extends CI_Model {
 		}
     $defaults[$this->settings['primary_key']] = -1;
     
-    // Met relaties ..._to_many
+    // Relaties
     if (is_array($this->tm_with)) {
-      foreach ($this->tm_with as $type => $with) {
-        if (in_array($type,array('many_to_many','one_to_many'))) {
-          foreach ($with as $what => $relation) {
-            $defaults[$relation['as']]=array();
+      
+      // one_to_one
+      if (isset($this->tm_with['one_to_one'])) {
+        foreach ($this->tm_with['one_to_one'] as $what => $relation) {
+          $other_table  = $relation['table'];
+          $other_fields = $relation['fields'];
+          $other_defaults = $this->data->table($other_table)->get_defaults();
+          $this->data->table($this->settings['table']); // Terug naar huidige data table.
+          $other_defaults = array_keep_keys($other_defaults,$other_fields);
+          foreach ($other_defaults as $key => $value) {
+            $defaults[$other_table.'.'.$key] = $value;
           }
+          // $defaults = array_merge($defaults,$other_defaults);
+        }
+      }
+      
+      // .._to_many
+      if (isset($this->tm_with['many_to_many']) or isset($this->tm_with['one_to_many'])) {
+        foreach ($this->tm_with['many_to_many'] as $what => $relation) {
+          $defaults[$relation['as']]=array();
+        }
+        foreach ($this->tm_with['one_to_many'] as $what => $relation) {
+          $defaults[$relation['as']]=array();
         }
       }
     }
-    
     return $defaults;
   }
 
