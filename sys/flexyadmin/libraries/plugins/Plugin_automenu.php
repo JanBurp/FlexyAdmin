@@ -190,6 +190,12 @@ class Plugin_automenu extends Plugin {
     }
 		$data = $this->CI->data->get_result($limit,$offset);
     
+    // if ($table=='tbl_groepen') {
+    //   trace_($where);
+    //   trace_($this->CI->data->last_query());
+    //   trace_($data);
+    // }
+    
 		if ($table==$this->table and isset($this->newData['id']) and $this->pass==1) {
       if (empty($insert_check) or (isset($this->newData[$insert_check['field']]) and $this->newData[$insert_check['field']]==$insert_check['value'])) {
   			$id=$this->newData['id'];
@@ -217,6 +223,8 @@ class Plugin_automenu extends Plugin {
 	private function _create_auto_menu() {
     $this->pass++;
 
+    // $order=0;
+    
     // Check pass
     if ($this->pass_twice and $this->pass==1) {
 
@@ -278,7 +286,7 @@ class Plugin_automenu extends Plugin {
     					}
     					$data=$this->_get_current_data($autoValue['table'],$where,$limit,$offset);
           
-    					$order=0;
+              $order=0;
     					$parent=0;
     					if (!empty($autoValue['str_parent_where'])) {
     						$parent=$this->_get_where_parent($autoValue);
@@ -528,7 +536,7 @@ class Plugin_automenu extends Plugin {
             case 'split by language':
     					$this->languages=$autoValue['str_parameters'];
     					$this->languages=explode('|',$this->languages);
-    					$order=0;
+              $order=0;
     					$beforeMenu=$this->newMenu;
     					foreach ($this->languages as $lang) {
     						// add language
@@ -564,7 +572,7 @@ class Plugin_automenu extends Plugin {
     							$items=$moduleFunction($autoValue);
     							// Produce menu from returned items
     							if ($items) {
-    								$order=0;
+                    $order=0;
     								$parent=$this->_get_where_parent($autoValue);
     								if (isset($autoValue['b_keep_parent_modules']) and $autoValue['b_keep_parent_modules']) {
     									if (isset($this->newMenu[$parent][$this->config('module_field')])) {
@@ -605,7 +613,8 @@ class Plugin_automenu extends Plugin {
         $this->newMenu[$id]=$item;
       }
 
-  		ksort($this->newMenu);
+      ksort($this->newMenu);
+      $this->newMenu = $this->_make_tree($this->newMenu);
       
   		// put in db
   		$this->CI->db->trans_start();
@@ -683,6 +692,43 @@ class Plugin_automenu extends Plugin {
   		$this->CI->queu->add_call(@$this->CI->editor_lists,'create_list','links');
     }
 	}
+  
+  private function _make_tree( $menu ) {
+    // split by parents
+    $parents=array();
+    foreach ($menu as $key => $value) {
+      if (!isset($parents[$value['self_parent']])) $parents[$value['self_parent']]=array();
+      $parents[$value['self_parent']][] = $value;
+    }
+    // Order parents
+    foreach ($parents as $key => $branch) {
+      $parents[$key] = sort_by($branch,'order');
+    }
+    
+    // trace_($parents);
+    
+    $tree_menu=array();
+    $tree_menu = $this->_make_tree_branch( $parents[0], $parents );
+    
+    // trace_($tree_menu);
+    return $tree_menu;
+  }
+  private function _make_tree_branch($branch,$parents) {
+    static $order = 0;
+    $result=array();
+    foreach ($branch as $item) {
+      $item['order']=$order;
+      $result[]=$item;
+      $order++;
+      if (isset($parents[$item['id']])) {
+        $this_branch = $parents[$item['id']];
+        $sub_result = $this->_make_tree_branch($this_branch,$parents);
+        $result=array_merge($result,$sub_result);
+      }
+    }
+    return $result;
+  }
+  
 
 
   public function _is_existing_uri($uri,$data) {

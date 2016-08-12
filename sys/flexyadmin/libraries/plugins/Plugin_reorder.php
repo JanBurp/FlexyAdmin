@@ -16,7 +16,7 @@ class Plugin_reorder extends Plugin {
     if ($table) {
       $this->add_message($table.' is re-ordered');
       $this->CI->load->model('order');
-      $this->CI->order->reset($table);
+      $this->CI->order->reset($table,0,TRUE);
     }
     else {
       $this->add_message('use: /table');

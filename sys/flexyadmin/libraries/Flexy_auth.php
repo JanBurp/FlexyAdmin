@@ -46,6 +46,8 @@ class Flexy_auth extends Ion_auth {
    * construct
    */
   public function __construct() {
+    $this->load->model('data/data_core');
+    $this->load->model('data/data');
 		parent::__construct();
     // Stel site afhankelijke instelling in
 		$this->db->select('`str_title` AS `site_title`, `email_email` AS `admin_email`');
@@ -740,8 +742,15 @@ class Flexy_auth extends Ion_auth {
    */
 	private function _create_rights( $user ) {
     if (empty($user['groups'])) return FALSE;
+    // $sql = "SELECT * FROM `cfg_user_groups` WHERE `id` IN(".implode(',',array_keys($user['groups'])).")";
+    // $query = $this->db->query($sql);
+    // if (!$query) return FALSE;
+    // $groups = $query->result_array();
     $groups = $this->data->table('cfg_user_groups')->where_in( 'id', array_keys($user['groups']) )->get_result();
 		if (!$groups) return FALSE;
+    
+    $this->load->model('data/data_core');
+    $this->load->model('data/data');
     
     $tables = $this->data->list_tables();
     $medias = $this->mediatable->get_media_folders(FALSE,'media_');

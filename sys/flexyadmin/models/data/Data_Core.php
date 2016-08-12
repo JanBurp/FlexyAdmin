@@ -2401,7 +2401,7 @@ Class Data_Core extends CI_Model {
         $this->db->or_where_in($key,$value,$escape);
       return $this;
     }
-    // Als geen value maar alleen een key (die geen array is), dat wordt alleen op primary_key gevraagd
+    // Als geen value maar alleen een key (die geen array is), dat wordt alleen op primary_key gevraagd als het een nummer is
     if (!isset($value) and !is_array($key)) {
       // 'first'
       if ($key==='first') {
@@ -2410,7 +2410,7 @@ Class Data_Core extends CI_Model {
         $this->limit( 1 );
       }
       // primary_key als nummer
-      elseif (is_numeric((int)$value)) {
+      elseif (is_numeric($key)) {
         $value = $key;
         $key = $this->settings['table'].'.'.$this->settings['primary_key'];
         $this->tm_where_primary_key = $value;
@@ -3656,6 +3656,43 @@ Class Data_Core extends CI_Model {
 	public function update( $set = NULL, $where = NULL, $limit = NULL) {
     return $this->_update_insert( 'UPDATE', $set, $where, $limit);
 	}
+  
+  
+  /**
+   * Maak kopie van rijen en pas eventueel bepaalde velden aan
+   *
+   * @param array $set[NULL] Velden die aangepast moeten worden tijdens het kopieren
+   * @param array $where[NULL] Welke velden?
+   * @param number $limit[NULL] Maximum aantal?
+   * @return mixed
+   * @author Jan den Besten
+   */
+	public function copy( $set = NULL, $where = NULL, $limit = NULL) {
+    // Is er een data set?
+    if (!is_null($set)) $this->set( $set );
+    
+    // Where/Limit
+    if ($where) $this->where( $where );
+    if ($limit) $this->limit( $limit );
+    
+		$set  = $this->tm_set;
+    $copy = $this->unselect( array('tme_last_changed','user_changed' ));
+    $copy = $this->get_result();
+    // Pas copy aan met set
+    foreach ($copy as $id => $row) {
+      $copy[$id] = array_merge($row,$set);
+      unset($copy[$id]['id']);
+    }
+    
+    // Maak copy
+    foreach ($copy as $id => $row) {
+      $ok = $this->insert( $row );
+    }
+
+    return $ok;
+	}
+  
+  
 
   /**
    * Voert insert/update uit
