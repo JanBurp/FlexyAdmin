@@ -125,12 +125,22 @@ class order extends CI_Model {
    * @author Jan den Besten
    */
 	public function reset($table,$from=0,$old=FALSE) {
-    $this->data->table($table);
-    if ($this->is_a_tree($table)) {
-      $this->data->order_by('order')->select('self_parent');
+    if ($old) {
+      if ($this->is_a_tree($table)) {
+        $this->db->order_as_tree();
+        $this->db->select('self_parent');
+      }
+      $this->db->select('order');
+  		$result=$this->db->get_result($table);
     }
-    $this->data->select('order');
-		$result=$this->data->get_result();
+    else {
+      $this->data->table($table);
+      if ($this->is_a_tree($table)) {
+        $this->data->order_by('order')->select('self_parent');
+      }
+      $this->data->select('order');
+  		$result=$this->data->get_result();
+    }
 		$ids=array_keys($result);
 		$this->set_all($table,$ids,$from);
     return count($ids);

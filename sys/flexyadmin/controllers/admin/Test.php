@@ -33,13 +33,13 @@ class Test extends MY_Controller {
   public function index() {
     if (!IS_LOCALHOST) return;
     
-    $this->data->table('tbl_leerlingenTEST');
-    $this->data->find('van den');//, array(), array('and'=>TRUE));
-    $leerlingen = $this->data->get_result();
+    $this->data->table('res_menu_result');
+    $this->data->path('uri');
+    $menu = $this->data->get_result();
     
     trace_sql($this->data->last_query());
     trace_($this->data->get_query_info());
-    trace_($leerlingen);
+    trace_($menu);
     
   }
 
