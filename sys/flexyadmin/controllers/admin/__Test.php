@@ -6,10 +6,11 @@
  * @author Jan den Besten
  */
 
-class __test extends AjaxController {
+class __Test extends AjaxController {
 	
 	public function __construct() {
 		parent::__construct();
+    $this->load->library('flexy_auth');
 	}
   
   /**
