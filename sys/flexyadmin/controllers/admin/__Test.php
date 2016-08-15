@@ -6,7 +6,7 @@
  * @author Jan den Besten
  */
 
-class __Test extends AjaxController {
+class Test extends MY_Controller {
 	
 	public function __construct() {
 		parent::__construct();
