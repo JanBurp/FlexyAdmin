@@ -1831,7 +1831,7 @@ Class Data_Core extends CI_Model {
    * - abstracts van many_to_one
    *
    * @param mixed $limit [20] 
-   * @param mixed $offset [FALSE] De start van het resultaat, als FALSE dan kan is jump_to_today aktief, anders niet.
+   * @param mixed $offset [FALSE] De start van het resultaat, als FALSE dan is jump_to_today aktief, anders niet.
    * @param string $sort [''] Veld dat de volgorde van het resultaat bepaalt, als het DESC moet, dan beginnen met een '_'
    * @param mixed $find [''] Een string waarde die gevonden moet worden, of een array met alle parameters van ->find()
    * @param mixed $where [''] Een where statement zoals aan de eerste paramater van ->where() gegeven kan worden.
@@ -2319,6 +2319,7 @@ Class Data_Core extends CI_Model {
         $this->tm_from .= ' ORDER BY '.$this->db->protect_identifiers($order_by[0]).' '.el(1,$order_by,'');
         // Limit in subquery alleen als de volgorde géén invloed heeft op resultaat. (met limit is wel sneller)
         if ( $order_on_self AND !$has_where AND $this->tm_limit>0) {
+          if ($this->tm_offset===FALSE) $this->tm_offset=0;
           $this->tm_from .= ' LIMIT '.$this->tm_offset.','.$this->tm_limit;
           $this->tm_limit = 0;
           $this->tm_offset = 0;

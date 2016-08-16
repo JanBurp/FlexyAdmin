@@ -466,8 +466,8 @@ function doGrid() {
     if ( $('.grid table.cfg_users').length>0 ) {
       
       var button=$('a.button.selected_users');
-      var href=$(button).attr('href');
       $(button).click(function(e){
+        var href=$(this).attr('href');
         e.preventDefault();
         var selected=$('table.grid tbody tr.selected:not(.filtered)');
         var url = '';
