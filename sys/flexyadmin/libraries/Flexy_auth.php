@@ -742,18 +742,21 @@ class Flexy_auth extends Ion_auth {
    */
 	private function _create_rights( $user ) {
     if (empty($user['groups'])) return FALSE;
-    // $sql = "SELECT * FROM `cfg_user_groups` WHERE `id` IN(".implode(',',array_keys($user['groups'])).")";
-    // $query = $this->db->query($sql);
-    // if (!$query) return FALSE;
-    // $groups = $query->result_array();
-    $groups = $this->data->table('cfg_user_groups')->where_in( 'id', array_keys($user['groups']) )->get_result();
+    $sql = "SELECT * FROM `cfg_user_groups` WHERE `id` IN(".implode(',',array_keys($user['groups'])).")";
+    $query = $this->db->query($sql);
+    if (!$query) return FALSE;
+    $groups = $query->result_array();
 		if (!$groups) return FALSE;
     
-    $this->load->model('data/data_core');
-    $this->load->model('data/data');
-    
-    $tables = $this->data->list_tables();
-    $medias = $this->mediatable->get_media_folders(FALSE,'media_');
+    $tables = $this->db->list_tables();
+    $medias = array();
+    $sql = 'SELECT `path` FROM `cfg_media_info`';
+    $query = $this->db->query($sql);
+    if ($query) {
+      foreach ($query->result() as $row) {
+        $medias[] = 'medias_'.$row->path;
+      }
+    }
     $items  = array_merge($tables,$medias);
     
 		$rights = array(
