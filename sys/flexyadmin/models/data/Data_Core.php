@@ -355,6 +355,9 @@ Class Data_Core extends CI_Model {
         $full_field=$table.'.'.$field;
         $media_info = $this->db->like('fields_media_fields',$full_field)->get_row('cfg_media_info');
         $settings_fields_info[$field]['path'] = $media_info['path'];
+        // trace_($media_info);
+        // $media_info = $this->db->like('fields_media_fields',$full_field)->get_row('cfg_media_info');
+        // $settings_fields_info[$field]['path'] = 'test';
       }
       
     }
@@ -710,10 +713,7 @@ Class Data_Core extends CI_Model {
     // many_to_one, voor als formdata uit tabledata gebruikt moet gaan worden
     if (isset($this->settings['relations']['many_to_one'])) $grid_set['with']['many_to_one']=array();
     // many_to_many, als in oude instellingen gevraagd is
-    if (el('b_form_add_many',$table_info)) $grid_set['with']['many_to_many']=array();
-    
-    
-    
+    if (el('b_grid_add_many',$table_info)) $grid_set['with']['many_to_many']=array();
 
     return $grid_set;
   }
@@ -732,8 +732,26 @@ Class Data_Core extends CI_Model {
     $show_always = $this->config->item('ALWAYS_SHOW_FIELDS');
     $main_fieldset = $this->settings['table'];
     $fieldsets = array($main_fieldset=>array());
-
+    
+    // relaties?
+    $form_set['with']      = array();
+    // many_to_one, voor als formdata uit tabledata gebruikt moet gaan worden
+    if (isset($this->settings['relations']['many_to_one'])) $form_set['with']['many_to_one']=array();
+    // many_to_many, als in oude instellingen gevraagd is
+    if (el('b_form_add_many',$table_info)) $form_set['with']['many_to_many']=array();
+    
+    // fields / formset
     $form_set['fields'] = $this->settings['fields'];
+    // voeg eventueel ..._to_many velden toe
+    if (isset($form_set['with']['many_to_many'])) {
+      $many_to_many = el(array('relations','many_to_many'),$this->settings);
+      if ($many_to_many) {
+        foreach ($many_to_many as $what => $relation) {
+          $form_set['fields'][] = $relation['result_name'];
+        }
+      }
+    }
+    
     foreach ($form_set['fields'] as $key => $field) {
       $field_info = $this->cfg->get('cfg_field_info', $this->settings['table'].'.'.$field );
       // Show?
@@ -751,14 +769,6 @@ Class Data_Core extends CI_Model {
     }
     $form_set['fields'] = array_values($form_set['fields']); // reset keys
     $form_set['fieldsets'] = $fieldsets;
-
-
-    // relaties?
-    $form_set['with']      = array();
-    // many_to_one, voor als formdata uit tabledata gebruikt moet gaan worden
-    if (isset($this->settings['relations']['many_to_one'])) $form_set['with']['many_to_one']=array();
-    // many_to_many, als in oude instellingen gevraagd is
-    if (el('b_form_add_many',$table_info)) $form_set['with']['many_to_many']=array();
     
     return $form_set;
   }
@@ -1224,8 +1234,6 @@ Class Data_Core extends CI_Model {
           }
           // Anders geef gewoon de opties terug
           else {
-            // $other_model = new Data_core();
-            // $field_options['data'] = $other_model->table( $other_table )->get_result_as_options();
             $field_options['data'] = $this->data->table( $other_table )->get_result_as_options(0,0, $where_primary_key );
             $field_options['data'] = array_unshift_assoc($field_options['data'],'','');
             $this->data->table($this->settings['table']); // Terug naar huidige data table.
@@ -1288,15 +1296,9 @@ Class Data_Core extends CI_Model {
             if (!isset($options[$what]['data'])) {
               $other_table = $relation['other_table'];
               $result_name = $relation['result_name'];
-              $other_model = new Data();
-              $other_model->table($other_table)->select_abstract();
-              $options[$result_name] = array( 'table'=>$other_table, 'data'=>$other_model->get_result(), 'multiple'=>true );
-              if ($options[$result_name]['data']) {
-                foreach ($options[$result_name]['data'] as $key => $value) {
-                  $options[$result_name]['data'][$key] = $value['abstract'];
-                }
-                $options[$result_name]['data'] = array_unshift_assoc($options[$result_name]['data'],'','');
-              }
+              $this->data->table($other_table);
+              $options[$result_name] = array( 'table'=>$other_table, 'data'=>$this->data->get_result_as_options(), 'multiple'=>true );
+              $this->data->table($this->settings['table']); // Weer terug naar huidige tabel
             }
           }
         }
@@ -1351,11 +1353,15 @@ Class Data_Core extends CI_Model {
       
       // .._to_many
       if (isset($this->tm_with['many_to_many']) or isset($this->tm_with['one_to_many'])) {
-        foreach ($this->tm_with['many_to_many'] as $what => $relation) {
-          $defaults[$relation['as']]=array();
+        if (isset($this->tm_with['many_to_many'])) {
+          foreach ($this->tm_with['many_to_many'] as $what => $relation) {
+            $defaults[$relation['as']]=array();
+          }
         }
-        foreach ($this->tm_with['one_to_many'] as $what => $relation) {
-          $defaults[$relation['as']]=array();
+        if (isset($this->tm_with['one_to_many'])) {
+          foreach ($this->tm_with['one_to_many'] as $what => $relation) {
+            $defaults[$relation['as']]=array();
+          }
         }
       }
     }
@@ -1785,7 +1791,7 @@ Class Data_Core extends CI_Model {
    * Geeft resulaat terug als opties. Een resultaat is combinatie van hetvolgende:
    * - de key is de PRIMARY_KEY
    * - de rijen zijn geen array, maar een abstract (string). Zie select_abstract().
-   * - als geen volgorder is aangegeven in de config en niet is ingesteld worden de abstract velden als volgorde gebruikt
+   * - als geen volgorde is aangegeven in de config en niet is ingesteld worden de abstract velden als volgorde gebruikt
    *
    * @param int $limit [0]
    * @param int $offset [0] 
@@ -1798,7 +1804,6 @@ Class Data_Core extends CI_Model {
       $abstract_fields = $this->settings['abstract_fields'];
       $this->order_by( $abstract_fields );
     }
-    
     $query = $this->get( $limit,$offset );
     $options = $this->_make_options_result($query);
     $query->free_result();
