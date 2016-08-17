@@ -2861,7 +2861,8 @@ Class Data_Core extends CI_Model {
             $as           = $this->settings['relations'][$type][$what]['result_name'];
             $other_fields = $with['fields'];
             
-            if ($other_fields=='abstract') $other_fields = $this->get_other_table_fields( $other_table );
+            
+            if ($other_fields=='abstract') $other_fields = $this->get_other_table_abstract_fields( $other_table );
             if (!is_array($other_fields)) $other_fields = explode(',',$other_fields);
             foreach ($other_fields as $other_field) {
               switch ($type) {
