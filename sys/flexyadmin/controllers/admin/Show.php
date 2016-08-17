@@ -152,6 +152,7 @@ class Show extends AdminController {
           }
           $search_with = array_keys( $this->data->get_setting( array('grid_set','with') ) );
           if ($extended_search) {
+            // trace_($decode_search);
             $this->data->find_multiple( $decode_search, array('with'=>$search_with) );
           }
           else {
@@ -177,7 +178,7 @@ class Show extends AdminController {
         
         // trace_($this->data->get_settings());
         // trace_($total_rows);
-        // echo($data_query);
+        // trace_sql($data_query);
         // trace_($last_order);
         // trace_($pagination);
         // trace_($data);
