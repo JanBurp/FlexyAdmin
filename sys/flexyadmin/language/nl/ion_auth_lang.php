@@ -41,11 +41,11 @@ $lang['activation_email_successful'] 	  	 = 'Activatie e-mail is verzonden';
 $lang['activation_email_unsuccessful']   	 = 'Activatie e-mail verzenden is mislukt';
 
 // Login / Logout
-$lang['login_successful'] 		  	 = 'U bent ingelogd';
-$lang['login_unsuccessful'] 		  	 = 'Login is incorrect';
-$lang['login_unsuccessful_not_active'] 		 = 'Account is inactief';
-$lang['login_timeout']                       = 'U bent tijdelijk geblokkeerd. Probeer het later nogmaals.';
-$lang['logout_successful'] 		 	 = 'U bent uitgelogd';
+$lang['login_successful'] 		  	      = 'U bent ingelogd';
+$lang['login_unsuccessful'] 		  	    = 'Login is incorrect';
+$lang['login_unsuccessful_not_active']  = 'Account is inactief';
+$lang['login_timeout']                  = 'U bent tijdelijk geblokkeerd door teveel verkeerde pogingen. Probeer het over vijf minuten nogmaals.';
+$lang['logout_successful'] 		 	        = 'U bent uitgelogd';
 
 // Account Changes
 $lang['update_successful'] 		 	 = 'Account is bijgewerkt';

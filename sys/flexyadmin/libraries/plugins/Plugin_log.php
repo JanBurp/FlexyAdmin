@@ -51,6 +51,7 @@ class Plugin_log extends Plugin {
 		foreach($log as $k=>$d) {
       $log[$k]['id_user'] = $this->CI->data->table('cfg_users')->where('id',$d['id_user'])->get_field('str_username');
 		}
+    $log=array_slice($log,0,10);
 		$grid->set_data($log,langp("home_activity"));
     $grid->set_headings(array(
       'id_user'       => lang('home_user'),

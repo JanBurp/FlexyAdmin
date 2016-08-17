@@ -754,7 +754,7 @@ class Flexy_auth extends Ion_auth {
     $query = $this->db->query($sql);
     if ($query) {
       foreach ($query->result() as $row) {
-        $medias[] = 'medias_'.$row->path;
+        $medias[] = 'media_'.$row->path;
       }
     }
     $items  = array_merge($tables,$medias);
@@ -763,7 +763,7 @@ class Flexy_auth extends Ion_auth {
       'all_users' => FALSE,
       'backup'    => FALSE,
       'tools'     => FALSE,
-      'items'     => array_combine($items,array_fill(0,count($items), FALSE )),
+      'items'     => array_combine($items,array_fill(0,count($items), 0 )),
 		);
     
     foreach ($groups as $group) {
