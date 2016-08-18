@@ -2651,6 +2651,7 @@ Class Data_Core extends CI_Model {
    */
   public function find( $terms, $fields = array(), $settings = array() ) {
     if (empty($terms)) return $this;
+    
     // settings
     $defaults = array(
       'and'             => 'OR',
@@ -2705,7 +2706,8 @@ Class Data_Core extends CI_Model {
     );
     $this->tm_find['settings'] = array_merge($this->tm_find['settings'],$settings);
 
-    $this->tm_find['search']=array();
+    if (empty($this->tm_find)) $this->tm_find['search']=array();
+    
     foreach($terms as $term) {
       $search=array();
       if (el('and',$settings)==='OR')
@@ -2724,7 +2726,6 @@ Class Data_Core extends CI_Model {
       }
       $this->tm_find['search'][] = $search;
     }
-
     
     return $this;
   }
