@@ -1324,10 +1324,21 @@ Class Data_Core extends CI_Model {
   public function get_defaults( $set=FALSE ) {
     $defaults = array();
     
-    if ($set=='form')
-      $fields = $this->settings['form_set']['fields'];
-    else
+    if ($set=='form') {
+      $fields = el(array('form_set','fields'),$this->settings);
+      if (empty($fields)) {
+        // van fieldsets
+        $fields=array();
+        $fieldsets = el(array('form_set','fieldsets'),$this->settings);
+        foreach ($fieldsets as $fieldset) {
+          $fields = array_merge($fields,$fieldset);
+        }
+      }
+    }
+    else {
       $fields = $this->settings['fields'];
+    }
+    
 		foreach ($fields as $field) {
       $defaults[$field] = $this->field_data( $field, 'default' );
 		}
@@ -2854,15 +2865,16 @@ Class Data_Core extends CI_Model {
         if ( in_array($type,$settings['with']) ) {
           foreach ($tm_with as $what => $with) {
 
-            // Alleen 'many_to_one' relaties die in de velden staan
-            if ( $type==='many_to_one' and !in_array($what,$fields) ) continue;
+            // Alleen relaties die in de velden staan
+            if ( !in_array($what,$fields) ) continue;
 
             $other_table  = $this->settings['relations'][$type][$what]['other_table'];
             $as           = $this->settings['relations'][$type][$what]['result_name'];
             $other_fields = $with['fields'];
             
             
-            if ($other_fields=='abstract') $other_fields = $this->get_other_table_abstract_fields( $other_table );
+            if ($other_fields==='abstract') $other_fields = $this->get_other_table_abstract_fields( $other_table );
+            
             if (!is_array($other_fields)) $other_fields = explode(',',$other_fields);
             foreach ($other_fields as $other_field) {
               switch ($type) {
@@ -2969,8 +2981,8 @@ Class Data_Core extends CI_Model {
     if (is_null($settings)) $settings = $this->tm_find['settings'];
     
     // Loop alle search termen langs
+    $this->db->group_start();
     foreach ( $search as $key => $item) {
-      
       // GROUP
       if ( isset($item['group']) and in_array(strtoupper($item['group']),array('GROUP_START','AND_GROUP_START','NOT_GROUP_START','AND_NOT_GROUP_START')) ) {
         $group=strtolower($item['group']);
@@ -3004,6 +3016,8 @@ Class Data_Core extends CI_Model {
       }
       
     }
+    $this->db->group_end();
+    
     return $this;
   }
 
