@@ -2667,9 +2667,23 @@ Class Data_Core extends CI_Model {
     
     // In welke velden zoeken?
     if ( is_string($fields) ) $fields = array($fields);
+
     // Geen velden meegegeven, gebruik dan alle velden van deze tabel (zoals ingesteld).
     if ( empty($fields) ) {
       $fields = $this->settings['fields'];
+      // Inclusief die van de meegegeven relaties
+      if ($this->tm_with) {
+        foreach ($this->tm_with as $type => $with) {
+          foreach ($with as $what => $info) {
+            // // trace_([$type,$what,$info]);
+            // if (in_array($type,array('one_to_many','many_to_many'))) {
+              foreach ($info['fields'] as $field) {
+                $fields[]=$info['as'].'.'.$field;
+              }
+            // }
+          }
+        }
+      }
     }
     // Sommige velden hoeft zowiezo niet in gezocht te worden:
     $forbidden_fields = array('id','order','self_parent');
