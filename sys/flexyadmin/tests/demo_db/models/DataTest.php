@@ -502,6 +502,7 @@ class DataTest extends CITestCase {
     $query = $this->CI->data->get();
     $info = $this->CI->data->get_query_info();
     $this->assertEquals( 26, $info['num_rows'] );
+
     // Zoeken in many_to_many 'van' ->word_boundaries
     $this->CI->data->table( 'tbl_adressen' );
     $this->CI->data->with( 'one_to_many' );
@@ -516,7 +517,8 @@ class DataTest extends CITestCase {
     $this->CI->data->find( 'straat' );
     $query = $this->CI->data->get();
     $info = $this->CI->data->get_query_info();
-    $this->assertEquals( 28, $info['num_rows'] );
+    $this->assertEquals( 5, $info['num_rows'] );
+    // $this->assertEquals( 28, $info['num_rows'] );
 
     // Zoeken in many_to_many 'straat' result
     $this->CI->data->table( 'tbl_groepen' );
