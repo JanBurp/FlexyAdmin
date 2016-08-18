@@ -516,7 +516,7 @@ class Flexy_field extends CI_Model {
   
 
 	function _user_form() {
-		if ($this->restrictedToUser===FALSE) {
+    // if ($this->restrictedToUser===FALSE) {
       $users = $this->data->table('cfg_users')->select_abstract()->get_result();
 			$options=array();
 			$options['data']['']='';
@@ -527,11 +527,11 @@ class Flexy_field extends CI_Model {
 			$out["type"]="dropdown";
 			unset($out["button"]);
 			if (empty($out['value'])) $out['value']=$this->user_id;
-		}
-		else {
-			$out=$this->_standard_form_field();
-			$out["type"]="hidden";
-		}
+    // }
+    // else {
+    //   $out=$this->_standard_form_field();
+    //   $out["type"]="hidden";
+    // }
 		return $out;
 	}
 
