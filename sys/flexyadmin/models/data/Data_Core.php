@@ -2650,6 +2650,7 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   public function find( $terms, $fields = array(), $settings = array() ) {
+    if (empty($terms)) return $this;
     // settings
     $defaults = array(
       'and'             => 'OR',
