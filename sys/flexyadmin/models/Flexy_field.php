@@ -292,7 +292,7 @@ class Flexy_field extends CI_Model {
 		$out=array();
     $data=$this->concat_foreign_fields($data);
     // In volgorde van fieldsets
-    $fieldsets = el('fieldsets',$this->form_set, array($table=>$this->form_set['fields']) );
+    $fieldsets = el( 'fieldsets',$this->form_set, array( $table=>el('fields',$this->form_set,array()) ));
     foreach ($fieldsets as $fieldset => $fields) {
       foreach ($fields as $name) {
         $opt=el($name,$options);
