@@ -44,7 +44,7 @@ $lang['activation_email_unsuccessful']   	 = 'Activatie e-mail verzenden is misl
 $lang['login_successful'] 		  	      = 'U bent ingelogd';
 $lang['login_unsuccessful'] 		  	    = 'Login is incorrect';
 $lang['login_unsuccessful_not_active']  = 'Account is inactief';
-$lang['login_timeout']                  = 'U bent tijdelijk geblokkeerd door teveel verkeerde pogingen. Probeer het over vijf minuten nogmaals.';
+$lang['login_timeout']                  = 'U bent tijdelijk geblokkeerd door teveel verkeerde inlogpogingen. Probeer het over vijf minuten nogmaals.';
 $lang['logout_successful'] 		 	        = 'U bent uitgelogd';
 
 // Account Changes
