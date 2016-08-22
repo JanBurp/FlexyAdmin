@@ -841,6 +841,7 @@ class Flexy_auth extends Ion_auth {
       $user_info = $this->get_user($user_id);
   
     $rights = $user_info['rights'];
+
     // Rechten voor aanpassen van zichzelf als:
     // - cfg_users
     // - user_id === id van huidige user
