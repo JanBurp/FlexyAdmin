@@ -404,7 +404,7 @@ class Show extends AdminController {
     $options = $this->data->get_options( '', array_keys($this->data->get_setting( array('form_set','with'))) );
 
     // trace_($options);
-    // trace_($this->data->get_settings());
+    // trace_($this->data->get_setting('form_set'));
     // die();
     
     $data = $this->_before_form($table,$data);
@@ -497,6 +497,7 @@ class Show extends AdminController {
 				$form->set_labels($uiFieldNames);
 				
 				// Fieldsets?
+        $this->data->table($table);
         if ($this->data->get_setting(array('form_set','fieldsets'))) {
   				$fieldsets=array_keys($this->data->get_setting(array('form_set','fieldsets')));  //$this->cfg->get('cfg_table_info',$table,'str_fieldsets');
         }
