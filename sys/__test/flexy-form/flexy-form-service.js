@@ -132,8 +132,13 @@ flexyAdmin.factory('flexyFormService', ['flexySettingsService','flexyApiService'
       where      : id,
       schemaform : true,
     };
+    // Is het een media bestand? Voeg path toe
+    if ( id.indexOf('.') ) {
+      var split = id.split(':');
+      params.path = split[0];
+      params.where = split[1];
+    }
     var args = angular.extend({}, default_args, params );
-    
 
     // API call
     return api.row( args ).then(function(response){

@@ -24,7 +24,8 @@ flexyAdmin.constant('flexyConstants', {
   /**
    * URL of app
    */
-  base_url      : 'admin/test',
+  // base_url      : 'admin/test',
+  base_url      : '_admin',
 
 
   /**
