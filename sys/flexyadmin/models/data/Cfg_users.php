@@ -171,5 +171,5 @@ Class cfg_users extends Data_Core {
     return $options;
   }
   
-
+  
 }

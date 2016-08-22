@@ -1344,6 +1344,12 @@ Class Data_Core extends CI_Model {
 		}
     $defaults[$this->settings['primary_key']] = -1;
     
+    // Stel eventuele eigenaar van de row in op huidige user.
+    if (isset($defaults['user'])) {
+      $defaults['user'] = $this->get_user_id();
+    }
+    
+    
     // Relaties
     if (is_array($this->tm_with)) {
       
