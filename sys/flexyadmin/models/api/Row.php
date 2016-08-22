@@ -185,7 +185,18 @@ class Row extends Api_Model {
    * @author Jan den Besten
    */
   public function index() {
-    if (!$this->_has_rights($this->args['table'])) return $this->_result_status401();
+    
+    // Check rechten
+    if ($this->args['table']==='res_media_files' AND isset($this->args['path'])) {
+      if ( !$this->_has_rights('media_'.$this->args['path']) ) {
+        return $this->_result_status401();
+      }
+    }
+    else {
+      if (!$this->_has_rights($this->args['table'])) {
+        return $this->_result_status401();
+      }
+    }
     
     // DEFAULTS
     $fields=FALSE;
