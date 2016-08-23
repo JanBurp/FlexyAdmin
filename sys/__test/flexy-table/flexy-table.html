@@ -95,8 +95,8 @@
           <!-- ROW Actions -->
           <td class="actions">
             <!-- Edit button -->
-            <a ng-show="(path==='')" ng-href="{{base_url}}#form/{{table}}/{{row.id}}" class="btn btn-xs btn-primary action-edit"><span class="glyphicon glyphicon-pencil"></span></a>
-            <a ng-show="(path!=='')" ng-href="{{base_url}}#form/{{table}}/{{path}}:{{row.id}}" class="btn btn-xs btn-primary action-edit"><span class="glyphicon glyphicon-pencil"></span></a>
+            <a ng-show="(path===undefined)" ng-href="{{base_url}}#form/{{table}}/{{row.id}}" class="btn btn-xs btn-primary action-edit"><span class="glyphicon glyphicon-pencil"></span></a>
+            <a ng-show="(path!==undefined)" ng-href="{{base_url}}#form/{{table}}/{{path}}:{{row.id}}" class="btn btn-xs btn-primary action-edit"><span class="glyphicon glyphicon-pencil"></span></a>
             <!-- Select button -->
             <div ng-click="select($index)" class="btn btn-xs btn-info action-select"><span class="flexy-table-unselected glyphicon glyphicon-unchecked"></span><span class="flexy-table-selected glyphicon glyphicon-check"></span></div>
             <!-- Delete button -->

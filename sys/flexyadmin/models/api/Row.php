@@ -253,7 +253,6 @@ class Row extends Api_Model {
     if (!isset($args['where'])) $args['where']=null;
     $values = $this->data->get_row( $args['where'] );
     $this->info=$this->data->get_query_info();
-    // trace_(['_get_row'=>$values,'args'=>$this->args]);
     return $values;
   }
   

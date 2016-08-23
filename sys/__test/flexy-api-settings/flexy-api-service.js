@@ -95,7 +95,6 @@ flexyAdmin.factory( 'flexyApiService', ['flexySettingsService','$http',function(
     return $http(config).then(function(response){
       // Als er setting data is, bewaar die in settings
       if ( angular.isDefined(response.data) && response.data!==null) {
-       // console.log('API '+api+' ! ',response.data);
         if ( angular.isDefined(response.data.settings) ) {
           if (angular.isDefined(response.data.settings.media_info)) {
             settings.set_item( response.data.settings.media_info, ['settings','path', args.path ]);

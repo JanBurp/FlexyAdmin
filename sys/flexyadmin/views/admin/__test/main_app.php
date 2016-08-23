@@ -53,7 +53,7 @@
   <div id="container" class="container-fluid" ng-if="isLoggedIn" ng-controller="flexyMenuCtrl">
     
     <header class="navbar navbar-default navbar-fixed-top">
-      <div class="navbar-text"><a href="./_admin#/home" data-flexy-blocks=""><?=$title?></a> <span class="flexy-block btn btn-default alert-danger text-lowercase" title="!! bugs may present and data may het corrupted !!">pre alpha version</span></div>
+      <div class="navbar-text"><a href="./_admin#/home" data-flexy-blocks=""><?=$title?></a></div>
       <nav class="menu-header navbar-text"><flexy-menu type="header" uiclass="nav-pills" items="menu.header"></flexy-menu></nav>
     </header>
     
@@ -67,7 +67,7 @@
     </div>
   
     <footer class="navbar navbar-default navbar-fixed-bottom">
-      <div class="navbar-text"><a href="./_admin#/home" data-flexy-blocks="">TOKPIT</a></div>
+      <div class="navbar-text"><a href="./_admin#/home" data-flexy-blocks="">TOKPIT</a>  <span class="flexy-block btn btn-default alert-danger text-lowercase" title="!! bugs may present and data may het corrupted !!">pre alpha version</span></div>
       <nav class="menu-footer navbar-text"><flexy-menu type="footer" uiclass="nav-pills" items="menu.footer"></flexy-menu></nav>
     </footer>
     
