@@ -1927,7 +1927,7 @@ Class Data_Core extends CI_Model {
     }
     
     // Pagination
-    if (el('pagination',$grid_set)) {
+    if (el('pagination',$grid_set,true) and $limit!==0) {
       if (is_numeric($offset) or $offset!==TRUE) $this->limit( $limit, $offset );
     }
 
