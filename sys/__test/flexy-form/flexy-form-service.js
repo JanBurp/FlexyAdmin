@@ -22,7 +22,7 @@ flexyAdmin.factory('flexyFormService', ['flexySettingsService','flexyApiService'
    */
   var default_args = {
     table : '',
-    id    : false, 
+    where : false, 
   };
   
   /**
@@ -64,15 +64,15 @@ flexyAdmin.factory('flexyFormService', ['flexySettingsService','flexyApiService'
   flexy_form_service.complete_schemaform_in_response = function( response, table ) {
 
     angular.forEach( response.schemaform.schema.properties, function(value, key) {
-
+      
       // Ui names van de velden in het schema zetten
       response.schemaform.schema.properties[key].title = settings.item( 'settings','table', table,'field_info',key,'ui_name');
       
       /**
        * Select opties in het schema zetten
        */
-      if (value['form-type']==='select') {
-        var options = settings.item( 'settings','table',table,'field_info', key, 'options' );
+      if (value['form-type']==='select' || settings.has_item( 'settings','table',table, 'options', key )) {
+        var options = settings.item( 'settings','table',table, 'options', key );
         if (angular.isDefined(options)) {
           // De waarden in het schema
           response.schemaform.schema.properties[key].enum = jdb.arrayKeys( options.data, 'value' );
@@ -133,7 +133,7 @@ flexyAdmin.factory('flexyFormService', ['flexySettingsService','flexyApiService'
       schemaform : true,
     };
     // Is het een media bestand? Voeg path toe
-    if ( id.indexOf('.') ) {
+    if ( id.indexOf(':')>0 ) {
       var split = id.split(':');
       params.path = split[0];
       params.where = split[1];

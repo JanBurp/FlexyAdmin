@@ -471,6 +471,7 @@ class Api_Model extends CI_Model {
   protected function _get_table_settings( $table ) {
     $this->data->table( $table );
     $settings = $this->data->get_settings();
+    $settings['options'] = $this->data->get_options();
 
     $this->load->model('ui');
     // field ui_names
@@ -479,7 +480,6 @@ class Api_Model extends CI_Model {
         $settings['field_info'][$field]['ui_name'] = $this->ui->get( $field, $settings['table'] );
       }
     }
-
     $table_info = array();
     // table ui_name
     $table_info['ui_name']  = $this->ui->get( $settings['table'] );

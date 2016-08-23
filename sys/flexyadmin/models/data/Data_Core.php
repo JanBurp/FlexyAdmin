@@ -1180,9 +1180,17 @@ Class Data_Core extends CI_Model {
    * Waar de 'data' array er zo uit ziet:
    * 
    * array(
-   *  'value'   => 'name',
+   *  'value' => 'name',
    *  ...
    * ) 
+   * 
+   * Of als 'as_object' = TRUE:
+   * 
+   * array(
+   *  array( 'value' => ..., 'name' => .... )
+   *  ...
+   * ) 
+   * 
    * 
    * of met gegroupeerde data (voor groepen in selects)
    * 
@@ -1203,7 +1211,7 @@ Class Data_Core extends CI_Model {
    * @return array
    * @author Jan den Besten
    */
-  public function get_options( $fields='', $with=array('many_to_many') ) {
+  public function get_options( $fields='', $with=array('many_to_many'), $as_object = TRUE ) {
     // Eén of alle velden?
     $one = FALSE;
     if (!empty($fields)) {
@@ -1306,7 +1314,17 @@ Class Data_Core extends CI_Model {
     }
 
     // Return
-    // trace_($options);
+    if ($as_object) {
+      foreach ($options as $key => $row) {
+        if (isset($row['data'])) {
+          $data = array();
+          foreach ($row['data'] as $value => $name) {
+            $data[] = array('value'=>$value,'name'=>$name);
+          }
+          $options[$key]['data'] = $data;
+        }
+      }
+    }
     if ($one) return current($options);
     return $options;
   }
