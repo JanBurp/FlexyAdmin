@@ -97,6 +97,11 @@ Class Data_Core extends CI_Model {
   protected $tm_from = '';
   
   /**
+   * Hou bij of er een WHERE of LIKE statement is
+   */
+  protected $tm_has_condition = FALSE;
+  
+  /**
    * Een eventueel veld dat een compleet pad moet bevatten in een tree table
    */
   protected $tm_path       = FALSE;
@@ -180,7 +185,13 @@ Class Data_Core extends CI_Model {
    * - validation_errors  - Als 'validation' = FALSE, dan staan hier foutmeldingen
    */
   protected $query_info = array();
+
   
+  /**
+   * Deze wordt gebruikt om bij __call() te checken of een db-> aanroep conditioneel is.
+   */
+  private $conditional_methods = array( 'where','or_where','get_where','where_in','or_where_in','where_not_in','or_where_not_in','like','not_like','or_like','or_not_like' );
+
 
 
   /* --- CONSTRUCT & AUTOSET --- */
@@ -852,15 +863,20 @@ Class Data_Core extends CI_Model {
 
   
 
-
   /**
-   * Alle Query Builder en andere database methods zijn beschikbaar
+   * Alle Query Builder en andere database methods zijn beschikbaar:
+   * - Als een method niet hier bestaat, wordt die doorgeschakeld naar ->db->
+   * - Bij alle conditionele methods (where/like etc) die niet bestaan wordt wel onthouden dat ze zijn aangeroepen
    *
    * @return mixed
    * @author Jan den Besten
    */
   public function __call($method,$arguments) {
     if (method_exists($this->db,$method)) {
+      if ( in_array($method,$this->conditional_methods) ) {
+        // Onthou dat er een conditie in de query zit
+        $this->tm_has_condition = TRUE;
+      }
       $result = call_user_func_array( array($this->db,$method), $arguments );
       if ($result!==$this->db) {
         return $result;
@@ -893,6 +909,7 @@ Class Data_Core extends CI_Model {
     $this->tm_offset            = 0;
     $this->tm_jump_to_today     = FALSE;
     $this->tm_find              = FALSE;
+    $this->tm_has_condition     = FALSE;
     $this->with(FALSE);
     $this->db->reset_query();
     return $this;
@@ -2425,6 +2442,7 @@ Class Data_Core extends CI_Model {
     return $this;
   }
 
+
   /**
    * Zelfd als 'where' maar dan OR
    *
@@ -2450,6 +2468,9 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   private function _where( $key, $value=NULL, $escape = NULL, $type = 'AND') {
+    // Onthou dat er een conditie in de query zit
+    $this->tm_has_condition = TRUE;
+    
     $this->tm_where_primary_key = NULL;
     // Als value een array is, dan ->where_in()
     if (isset($value) and is_array($value)) {
@@ -2459,6 +2480,7 @@ Class Data_Core extends CI_Model {
         $this->db->or_where_in($key,$value,$escape);
       return $this;
     }
+    
     // Als geen value maar alleen een key (die geen array is), dat wordt alleen op primary_key gevraagd als het een nummer is
     if (!isset($value) and !is_array($key)) {
       // 'first'
@@ -2578,12 +2600,14 @@ Class Data_Core extends CI_Model {
       throw new ErrorException( __CLASS__.'->'.__METHOD__.'(): No `many_to_many` relation set. This is needed when using `..._exists`.' );
       return $this;
     }
+    
     $other_table = get_prefix($key,'.');
     $key         = get_suffix($key,'.');
     if (empty($other_table) or empty($key) or $key==$other_table) {
       $this->reset();
       throw new ErrorException( __CLASS__.'->'.__METHOD__.'(): First argument of `..._exists` needs to be of this format: `table.field`.' );
     }
+    
     $relation          = $this->_find_relation_setting_by('many_to_many','other_table',$other_table);
     $id                = $this->settings['primary_key'];
     $this_table        = $this->settings['table'];
@@ -2621,6 +2645,9 @@ Class Data_Core extends CI_Model {
       $this->db->or_where( $sql, NULL, FALSE );
     else
       $this->db->where( $sql, NULL, FALSE );
+    
+    // Onthou dat er een conditie in de query zit
+    $this->tm_has_condition = TRUE;
     return $this;
   }
   
@@ -3814,6 +3841,13 @@ Class Data_Core extends CI_Model {
     if ($limit) $this->limit( $limit );
 		$set = $this->tm_set;
     $id = NULL;
+    
+    /**
+     * Als een UPDATE check of er wel een WHERE is om te voorkomen dat een hele tabel wordt overschreven.
+     */
+    if ( $type=='UPDATE' and !$this->tm_has_condition ) {
+      throw new ErrorException( __CLASS__.'->'.__METHOD__.'(): no condition set (WHERE,LIKE etc). Could result in overwriting all rows in `'.$this->settings['table'].'`' );
+    }
     
 
 		/**
