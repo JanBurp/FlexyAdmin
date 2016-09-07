@@ -253,8 +253,8 @@ class Create_uri extends CI_Model {
    			$this->data->where('self_parent',$this->table_data['self_parent']);
    		}
    		$this->data->select("uri");
-   		$this->data->where("uri",$uri);
-   		if (isset($this->table_data['id'])) $this->data->where("id !=",$this->table_data['id']);
+   		$this->data->where( $this->table.".uri",$uri);
+   		if (isset($this->table_data['id'])) $this->data->where( $this->table.".id !=",$this->table_data['id']);
    		$uris = $this->data->get_result();
       
    		if (empty($uris))

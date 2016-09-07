@@ -142,7 +142,13 @@ Class Res_media_files extends Data_Core {
    */
   public function get_files_as_options( $path,$filter=array(), $limit=0, $offset=0 ) {
     $options = array();
-    $this->select('file')->select_abstract()->order_by('file');
+    // TODO: niet meer uit cfg_media_info
+    $order = $this->cfg->get('CFG_media_info',$path,'str_order');
+    $desc = (substr($order,0,1)==='_')?'DESC':'ASC';
+    $order = trim($order,'_');
+		$order=str_replace(array('width','size','rawdate','name'),array('size','filewidth','dat_date','filename'),$order);
+    $this->select('file')->select_abstract();
+    $this->order_by($order,$desc);
     $query = $this->_get_files($path,$filter,$limit,$offset);
     $options = $this->_make_options_result($query,'file');
     // recent uploads?
