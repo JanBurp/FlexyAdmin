@@ -429,7 +429,10 @@ class Flexy_field extends CI_Model {
         if (isset($options['data'])) $options = $options['data'];
         $out['options']=array();
         foreach ($options as $key => $option) {
-          $out['options'][$key]=$option;
+          if (isset($option['value']))
+            $out['options'][$option['value']]=$option['name'];
+          else
+            $out['options'][$key]=$option;
         }
         
   			// Empty option? Niet nodig met FORM_NICE_DROPDOWNS en 'multiple'
