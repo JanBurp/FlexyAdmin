@@ -341,14 +341,14 @@ Class Data_Core extends CI_Model {
       }
       
       // Verzamal de rest van de field info, eerst uit depricated cfg_field_info en uit de db
-      $field_info_db = $this->db->where('field_field',$table.'.'.$field)->get_row('cfg_field_info');
-      if (is_array($field_info) and is_array($field_info_db)) {
-        $field_info = array_merge($field_info,$field_info_db);
-      }
-      else {
-        if (!is_array($field_info)) $field_info=$field_info_db;
-        if (!is_array($field_info)) $field_info=NULL;
-      }
+      // $field_info_db = $this->db->where('field_field',$table.'.'.$field)->get_row('cfg_field_info');
+      // if (is_array($field_info) and is_array($field_info_db)) {
+      //   $field_info = array_merge($field_info,$field_info_db);
+      // }
+      // else {
+      //   if (!is_array($field_info)) $field_info=$field_info_db;
+      //   if (!is_array($field_info)) $field_info=NULL;
+      // }
       $fields_info[$field] = $field_info;
       // Combineer, met oa de default waarde
       $settings_fields_info[$field] = array('default'=>$field_info['default']);
