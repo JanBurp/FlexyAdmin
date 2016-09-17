@@ -55,11 +55,6 @@ class FrontEndController extends MY_Controller {
       }
     }
     
-    // Set $_GET if asked for
-    // See http://www.askaboutphp.com/tutorials/58/codeigniter-mixing-segment-based-url-with-querystrings.html
-    // For this to work, config.php: $config['uri_protocol']  = "PATH_INFO";
-    // if ($this->config->item('query_urls'))  parse_str($_SERVER['QUERY_STRING'],$_GET);
-        
     $this->is_ajax_module = $this->config->item('AJAX_MODULE');
     
     if ($this->is_ajax_module) {
@@ -139,12 +134,9 @@ class FrontEndController extends MY_Controller {
 		/**
 		 * Set global site info from tbl_site (if it doesn't exist, put some standard info)
 		 */
-		if ($this->db->table_exists("tbl_site")) {
+    if ($this->data->table_exists("tbl_site")) {
 			$stdFields=array("str_title","str_author","url_url","email_email","stx_description","stx_keywords");
-			$query=$this->db->get("tbl_site");
-			$this->site=$query->row_array();
-			$query->free_result();
-			// remove the unneeded
+      $this->site = $this->data->table('tbl_site')->get_row();
 			unset($this->site['id']);
 			// rename standard fields
 			foreach ($stdFields as $f) {

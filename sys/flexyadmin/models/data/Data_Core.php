@@ -199,6 +199,7 @@ Class Data_Core extends CI_Model {
 		parent::__construct();
     $this->load->model('log_activity');
     $this->lang->load('data');
+    $this->load->driver('cache', array('adapter' => 'file'));
     $this->_config( $table );
 	}
 
@@ -227,27 +228,35 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   public function _config( $table='', $load = true ) {
-    // Haal de default settings op
-    $this->config->load( 'data/data', true);
-    $default = $this->config->item( 'data/data' );
-    $this->settings = $default;
-    // Stel eventueel de tabel in als die is meegegeven
-    if ($table) $this->settings['table'] = $table;
-    // Of anders geef het de naam van het huidige model als die geen eigen settings heeft
-    if ( empty($table) ) $table=get_class($this);
-    // Haal de settings van huidige model op als die bestaan
-    if ( get_class()!==$table ) {
-      $table=strtolower($table);
-      if ($load) {
-        $this->config->load( 'data/'.$table, true);
-        $settings = $this->config->item( 'data/'.$table );
-        // Merge met default samen tot settings
-        if ( $settings ) {
-          $this->settings = array_merge( $default, $settings );
+    // Settings in cache?
+    $cached = $this->cache->get( 'data_settings_'.$table );
+    if ( $cached!==FALSE ) {
+      $this->settings = $cached;
+    }
+    else {
+      // Haal de default settings op
+      $this->config->load( 'data/data', true);
+      $default = $this->config->item( 'data/data' );
+      $this->settings = $default;
+      // Stel eventueel de tabel in als die is meegegeven
+      if ($table) $this->settings['table'] = $table;
+      // Of anders geef het de naam van het huidige model als die geen eigen settings heeft
+      if ( empty($table) ) $table=get_class($this);
+      // Haal de settings van huidige model op als die bestaan
+      if ( get_class()!==$table ) {
+        $table=strtolower($table);
+        if ($load) {
+          $this->config->load( 'data/'.$table, true);
+          $settings = $this->config->item( 'data/'.$table );
+          // Merge met default samen tot settings
+          if ( $settings ) {
+            $this->settings = array_merge( $default, $settings );
+          }
         }
+        // Test of de noodzakelijke settings zijn ingesteld, zo niet doe de rest automatisch
+        $this->_autoset( );
       }
-      // Test of de noodzakelijke settings zijn ingesteld, zo niet doe de rest automatisch
-      $this->_autoset( );
+      $this->cache->save('data_settings_'.$table, $this->settings, TIME_YEAR );
     }
     // if ($table==='cfg_users')  trace_($this->settings);
     return $this->settings;
@@ -256,7 +265,7 @@ Class Data_Core extends CI_Model {
 
 
   /**
-   * Test of belangrijke settings zijn ingesteld. Zo niet doet dat dan automatisch.
+   * Test of belangrijke settings zijn ingesteld. Zo niet doe dat dan automatisch.
    * Dit maakt plug'n play mogelijk, maar gebruikt meer resources.
    *
    * @return array $autoset
@@ -933,8 +942,10 @@ Class Data_Core extends CI_Model {
     // Een andere tabel, reset alles en verander de instellingen
     $this->reset();
     if (empty($table)) $table = $this->_autoset_table();
-    $this->_config( $table );
-    $this->settings['table'] = $table;
+    if (!empty($table) and $table!=='Data_Core') {
+      $this->_config( $table );
+      $this->settings['table'] = $table;
+    }
     return $this;
   }
   
