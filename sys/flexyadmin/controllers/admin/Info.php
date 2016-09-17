@@ -18,7 +18,6 @@ class Info extends AdminController {
 		$data["username"]=$user['str_username'];
 		$data["language"]=$user['str_language'];
     $data["version"]=$this->svn->get_version();
-		$data["revision"]=$this->svn->get_revision();
 		$this->_set_content($this->load->view("admin/info_".$data["language"],$data,true));
 		$this->_show_type("info");
 		$this->_show_all();
