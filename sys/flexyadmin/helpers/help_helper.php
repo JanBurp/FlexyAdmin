@@ -4,7 +4,6 @@
  * Only for internal use
  *
  * @author Jan den Besten
- * $Revision$
  * @copyright (c) Jan den Besten
  **/
 

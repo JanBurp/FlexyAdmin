@@ -19,7 +19,6 @@ require_once(APPPATH."libraries/Ion_auth.php");
  * - Allerlei combinaties van bovenstaande zijn mogelijk (net zoals RIGHTS_ALL een combinatie is)
  *
  * @author: Jan den Besten
- * $Revision$
  * @copyright: (c) Jan den Besten
  */
  

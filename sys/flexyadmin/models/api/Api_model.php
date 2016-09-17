@@ -32,7 +32,6 @@ use \Firebase\JWT\JWT;
  * - _api/get_table?table=tbl_links&settings=true
  * 
  * @author: Jan den Besten
- * $Revision$
  * @copyright: (c) Jan den Besten
  */
 

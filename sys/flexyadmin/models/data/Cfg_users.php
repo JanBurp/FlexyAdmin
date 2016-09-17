@@ -4,8 +4,6 @@
  * cfg_users
  * 
  * @author: Jan den Besten
- * %Generated: Thu 28 April 2016, 17:02
- * $Revision$
  * @copyright: (c) Jan den Besten
  */
 

@@ -4,7 +4,6 @@
  * This Controller shows a grid or form
  *
  * @author Jan den Besten
- * $Revision$
  * @copyright (c) Jan den Besten
  */
 

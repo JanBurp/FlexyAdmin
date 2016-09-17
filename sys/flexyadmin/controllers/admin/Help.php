@@ -2,7 +2,6 @@
 
 /** \ingroup controllers
  * @author Jan den Besten
- * $Revision$
  * @copyright (c) Jan den Besten
  */
 

@@ -6,7 +6,6 @@
  * Die mooie namen kunnen samen met helpteksten ingesteld in de tabe: **cfg_ui**. Zie ook [Help Teksten]({Help-teksten})
  *
  * @author: Jan den Besten
- * $Revision$
  * @copyright: (c) Jan den Besten
  */
  

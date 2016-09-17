@@ -5,7 +5,6 @@
  *      class Plugin_mijn_plugin extends Plugin
  *
  * @author: Jan den Besten
- * $Revision$
  * @copyright: (c) Jan den Besten
  */
  

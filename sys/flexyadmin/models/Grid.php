@@ -3,7 +3,6 @@
  * Maakt een mooie tabel met opties zoals zoeken, sorteren etc.
  *
  * @author: Jan den Besten
- * $Revision$
  * @copyright: (c) Jan den Besten
  */
 class Grid extends CI_Model {

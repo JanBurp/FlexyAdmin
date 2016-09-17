@@ -36,8 +36,7 @@
   * 
   *
   * @author: Jan den Besten
-  * $Revision$
-  * @copyright: (c) Jan den Besten
+   * @copyright: (c) Jan den Besten
   */
 class MY_Pagination extends CI_Pagination {
 

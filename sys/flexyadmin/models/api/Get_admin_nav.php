@@ -4,7 +4,6 @@
  * API: Geeft het admin menu terug voor in het backend deel van FlexyAdmin.
  * 
  * @author: Jan den Besten
- * $Revision$
  * @copyright: (c) Jan den Besten
  */
 

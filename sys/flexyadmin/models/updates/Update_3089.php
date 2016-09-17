@@ -4,7 +4,6 @@
  * Update 3089
  * 
  * @author Jan den Besten
- * $Revision$
  * @copyright (c) Jan den Besten
  */
 

@@ -8,7 +8,6 @@
  * This Controller handles all AJAX requests
  *
  * @author Jan den Besten
- * $Revision$
  * @copyright (c) Jan den Besten
  */
 

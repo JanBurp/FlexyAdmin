@@ -37,7 +37,6 @@
  * ->where_exists( $key, $value = NULL )          // Idem met als resultaat dezelfde items maar met complete many_to_many data van dat item (ongefilterd)
  * 
  * @author: Jan den Besten
- * $Revision$
  * @copyright: (c) Jan den Besten
  */
 

@@ -117,7 +117,6 @@
   *     - views/menu/seperaror.php - een <li> zonder link
   * 
   * @author: Jan den Besten
-  * $Revision$
   * @copyright: (c) Jan den Besten
   */
   

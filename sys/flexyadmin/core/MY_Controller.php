@@ -5,7 +5,6 @@
  * This Controller Class handles authentication, loading basic data class
  *
  * @author Jan den Besten
- * $Revision$
  * @copyright (c) Jan den Besten
  */
 

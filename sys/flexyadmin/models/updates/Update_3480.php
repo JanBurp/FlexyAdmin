@@ -6,7 +6,6 @@
  * - Alle plugins naar eigen submap binnen libraries
  * 
  * @author Jan den Besten
- * $Revision$
  * @copyright (c) Jan den Besten
  */
 

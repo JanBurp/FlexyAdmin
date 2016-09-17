@@ -5,7 +5,6 @@
  * Wrapper voor Data_Core en eventueel afgeleiden
  * 
  * @author: Jan den Besten
- * $Revision$
  * @copyright: (c) Jan den Besten
  */
 

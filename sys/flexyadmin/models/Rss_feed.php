@@ -3,7 +3,6 @@
  * Standaard RSS feed, gaat uit van de standaard demo database
  *
  * @author: Jan den Besten
- * $Revision$
  * @copyright: (c) Jan den Besten
  */
 

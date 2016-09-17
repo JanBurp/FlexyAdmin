@@ -3,7 +3,6 @@
  * Log van activiteit
  *
  * @author Jan den Besten
- * $Revision$
  * @copyright (c) Jan den Besten
  */
 

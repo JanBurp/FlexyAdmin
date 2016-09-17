@@ -3,7 +3,6 @@
  * Functies die handig zijn voor tabel en veldnamen van de database
  *
  * @author Jan den Besten
- * $Revision$
  * @copyright (c) Jan den Besten
  * @file
  **/

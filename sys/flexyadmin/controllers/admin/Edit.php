@@ -6,7 +6,6 @@
  * This Controller updates (other than form updates) / deletes
  *
  * @author Jan den Besten
- * $Revision$
  * @copyright (c) Jan den Besten
  */
 

@@ -3,7 +3,6 @@
  * Een aantal handige functies om met YouTube en Vimeo filmpjes om te gaan
  *
  * @author Jan den Besten
- * $Revision$
  * @copyright (c) Jan den Besten
  * @file
  **/

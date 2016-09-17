@@ -4,7 +4,6 @@
  * API: Geeft plugin pagina, voor backend van FlexyAdmin
  * 
  * @author: Jan den Besten
- * $Revision$
  * @copyright: (c) Jan den Besten
  */
 

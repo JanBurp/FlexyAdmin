@@ -4,7 +4,6 @@
  * API: Geeft een help pagina voor in de backend van FlexyAdmin
  * 
  * @author: Jan den Besten
- * $Revision$
  * @copyright: (c) Jan den Besten
  */
 

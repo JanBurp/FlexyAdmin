@@ -49,10 +49,9 @@
 	* - Pas de view (en styling) aan indien nodig
 	* - Maak je eigen taalbestand en/of wijzig de bestaande
 	*
- * @author: Jan den Besten
- * $Revision$
- * @copyright: (c) Jan den Besten
-	*/
+  * @author: Jan den Besten
+  * @copyright: (c) Jan den Besten
+  */
 class Forms extends Module {
   
   private $form_id='';

@@ -14,7 +14,6 @@
  * 
  * 
  * @author: Jan den Besten
- * $Revision$
  * @copyright: (c) Jan den Besten
  */
  class Formaction_mail extends Formaction {

@@ -4,7 +4,6 @@
  * Uitbreiding op Form Validation van CodeIgniter
  *
  * @author: Jan den Besten
- * $Revision$
  * @copyright: (c) Jan den Besten
  */
 

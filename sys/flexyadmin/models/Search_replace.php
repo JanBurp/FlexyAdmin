@@ -3,7 +3,6 @@
  * Zoekt/vervangt items in de database
  *
  * @author: Jan den Besten
- * $Revision$
  * @copyright: (c) Jan den Besten
  */
  
