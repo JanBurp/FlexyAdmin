@@ -228,6 +228,13 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   public function _config( $table='', $load = true ) {
+    if (empty($table)) {
+      // Haal de default settings op
+      $this->config->load( 'data/data', true);
+      $default = $this->config->item( 'data/data' );
+      $this->settings = $default;
+      return $this->settings;
+    };
     // Settings in cache?
     $cached = $this->cache->get( 'data_settings_'.$table );
     if ( $cached!==FALSE ) {
