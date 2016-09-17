@@ -19,28 +19,26 @@
       <directory suffix="Test.php">sys/flexyadmin/tests/fast/helpers</directory>
 		</testsuite>
     
+    <!-- Test this before committing: the fast unit tests, and testing the code for debug actions -->
+    <testsuite name="commit">
+      <!-- Testing code for debugging code -->
+      <file>site/tests/frontend/DebugTest.php</file>
+      <directory suffix="Test.php">sys/flexyadmin/tests/commit</directory>
+      <!-- Fast tests that can be tested allways -->
+      <directory suffix="Test.php">sys/flexyadmin/tests/fast</directory>
+      <!-- Core tests -->
+      <file>sys/flexyadmin/tests/demo_db/models/DataTest.php</file>
+		</testsuite>
+
     
     <!-- Real Unit tests, fast and no need for demo database -->
     <testsuite name="fast">
       <directory suffix="Test.php">sys/flexyadmin/tests/fast</directory>
 		</testsuite>
 
-    <!-- Test this before committing: the fast unit tests, and testing the code for debug actions -->
-    <testsuite name="commit">
-      <directory suffix="Test.php">sys/flexyadmin/tests/fast</directory>
-      <directory suffix="Test.php">sys/flexyadmin/tests/commit</directory>
-      <file>sys/flexyadmin/tests/demo_db/models/DataTest.php</file>
-      <file>site/tests/frontend/DebugTest.php</file>
-		</testsuite>
-
     <!-- Just test the frontend -->
 		<testsuite name="frontend">
       <directory suffix="Test.php">site/tests</directory>
-		</testsuite>
-
-    <!-- Heavy testing: auth, api, which assumes the demo database is present -->
-    <testsuite name="demo_db">
-      <directory suffix="Test.php">sys/flexyadmin/tests/demo_db</directory>
 		</testsuite>
     
 	</testsuites>
