@@ -109,17 +109,6 @@ class FrontEndController extends MY_Controller {
     
 	}
 	
-	/**
-	 * For compatibility with older sites
-	 *
-	 * @return void
-	 * @author Jan den Besten
-	 * @deprecated
-	 */
-	public function FrontEndController() {
-		$this->__construct();
-	}
-	
 
 	/**
 	 * Stop alle globale variabelen in $site
@@ -186,7 +175,7 @@ class FrontEndController extends MY_Controller {
    		/**
    		 * Set home uri (top from tbl_menu) if content comes from database
    		 */
-        if ( $this->config->item('menu_autoset_home')) {
+      if ( $this->config->item('menu_autoset_home')) {
    			$menuTable = get_menu_table();
    			if ( ! empty($menuTable)) {
           $this->data->table( $menuTable );
