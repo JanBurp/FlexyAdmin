@@ -1,7 +1,7 @@
 // run webdriver-manager start
 // run protractor e2e_admin.conf.js
 
-var baseURL = 'http://localhost/FlexyAdmin/FlexyAdminDEMO/admin/__test';
+var baseURL = 'http://localhost/FlexyAdmin/FlexyAdmin/admin/__test';
 
 // Protractor configuration
 
