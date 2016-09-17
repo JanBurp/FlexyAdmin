@@ -1,2 +1,2 @@
-site/stats/*.xml
 site/cache/log*.php
+site/stats/*.xml

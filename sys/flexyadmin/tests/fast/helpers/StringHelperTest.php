@@ -14,7 +14,6 @@ class StringHelperTest extends CITestCase {
   }
   
   public function testRepeater() {
-
     $actualString = "a";
     $expectedString = "aaaaaaaaaa";
     $this->assertEquals($expectedString, repeater($actualString, 10));
