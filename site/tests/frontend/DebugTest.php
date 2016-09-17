@@ -11,9 +11,9 @@ class DebugTest extends CITestCase {
    * @author Jan den Besten
    */
   public function test_debug_code() {
-    
-    if ($this->CI->config->item('check_if_debug_code')) {
-      $files=scan_map('site','php',true);
+
+    $files=scan_map('site','php',true);
+    foreach ($files as $file) {
       if (!in_array($file,array('site/tests/frontend/DebugTest.php'))) {
         $lines=file($file);
         foreach ($lines as $key => $line) {
@@ -23,9 +23,6 @@ class DebugTest extends CITestCase {
           $this->assertLessThan(1,$found, 'Subversion text found in `'.$file.'` at line '.($key+1)."\n".$line);
         }
       }
-    }
-    else {
-      $this->assertTrue(true);
     }
   }
 
