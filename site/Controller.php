@@ -53,10 +53,10 @@ class Main extends FrontEndController {
 		 * Set also $config['auto']=TRUE in the pagination config.
 		 * Now you don't need to set $config['base_url'] and $config['uri_segment'], these are set automatic and uses uripart 'offset'.
 		 */
-		if ($this->config->item('auto_pagination')) {
-			$this->load->library('pagination');
-			$this->uri->remove_pagination();
-		}
+    if ($this->config->item('auto_pagination')) {
+      $this->load->library('pagination');
+      $this->uri->remove_pagination();
+    }
 
 
 		/***********************************************
@@ -77,7 +77,7 @@ class Main extends FrontEndController {
 		/***********************************************
 		 * Get current page item from menu
 		 */
-		$page=$this->menu->get_item();
+    $page=$this->menu->get_item();
 
 
 		/***********************************************

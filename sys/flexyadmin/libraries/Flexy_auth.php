@@ -49,8 +49,9 @@ class Flexy_auth extends Ion_auth {
     $this->load->model('data/data');
 		parent::__construct();
     // Stel site afhankelijke instelling in
-		$this->db->select('`str_title` AS `site_title`, `email_email` AS `admin_email`');
-    $site_config=$this->db->get('tbl_site')->row_array();
+		$site_config = $this->data->table('tbl_site')->select('`str_title` AS `site_title`, `email_email` AS `admin_email`')->get_row();
+    // $this->db->select('`str_title` AS `site_title`, `email_email` AS `admin_email`');
+    // $site_config=$this->db->get('tbl_site')->row_array();
     $this->set_config( $site_config );
     $this->tables = $this->config->item( 'tables', 'ion_auth');
 	}
@@ -115,11 +116,13 @@ class Flexy_auth extends Ion_auth {
 	 */
 	public function logged_in() {
 		$logged_in = parent::logged_in();
-		if ($logged_in) {
-      $user = $this->user()->row_array();
-      $this->current_user = $this->_create_nice_user($user);
-      if ( isset($this->current_user['id']) AND $this->in_group( 1, $this->current_user['id'] )) $this->current_user['is_super_admin'] = TRUE;
-		}
+    if ( !$logged_in ) {
+      $this->current_user = FALSE;
+      return FALSE;
+    }
+    $user = $this->user()->row_array();
+    $this->current_user = $this->_create_nice_user($user);
+    if ( isset($this->current_user['id']) AND $this->in_group( 1, $this->current_user['id'] )) $this->current_user['is_super_admin'] = TRUE;
     return (bool) $logged_in;
 	}
   
@@ -741,6 +744,8 @@ class Flexy_auth extends Ion_auth {
    */
 	private function _create_rights( $user ) {
     if (empty($user['groups'])) return FALSE;
+    if (isset($user['rights']) and is_array($user['rights'])) return $user['rights'];
+    
     $sql = "SELECT * FROM `cfg_user_groups` WHERE `id` IN(".implode(',',array_keys($user['groups'])).")";
     $query = $this->db->query($sql);
     if (!$query) return FALSE;

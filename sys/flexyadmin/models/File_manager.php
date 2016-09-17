@@ -331,7 +331,7 @@ class File_manager extends CI_Model {
         // txt fields
         $tables=$this->data->list_tables();
   			foreach ($tables as $table) {
-  				$fields=$this->db->list_fields($table);
+  				$fields=$this->data->table($table)->list_fields();
   				foreach ($fields as $field) {
   					$pre=get_prefix($field);
   					if ($pre=="txt") $searchedFields[]=$table.'.'.$field;
