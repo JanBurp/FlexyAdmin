@@ -5,7 +5,6 @@
  * Zie bij config/forms.php het voorbeeld 'reservation' en 'shop'
  * 
  * @author: Jan den Besten
- * $Revision$
  * @copyright: (c) Jan den Besten
  */
  class Formaction_database extends Formaction {

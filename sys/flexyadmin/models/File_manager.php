@@ -4,7 +4,6 @@
  * Met dit model kun je bestanden opvragen, uploaden, verwijderen etc.
  *
  * @author: Jan den Besten
- * $Revision$
  * @copyright: (c) Jan den Besten
  */
  

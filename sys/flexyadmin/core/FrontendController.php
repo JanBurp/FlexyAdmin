@@ -4,7 +4,6 @@
  * Dit is de basis voor de controller aan de frontend (site/controller.php)
  *
  * @author Jan den Besten
- * $Revision$
  * @copyright (c) Jan den Besten
  */
 class FrontEndController extends MY_Controller {

@@ -8,7 +8,6 @@ require_once(APPPATH."core/BasicController.php");
  * Adds view methods and loads/views automatic header, menu and message.
  *
  * @author Jan den Besten
- * $Revision$
  * @copyright (c) Jan den Besten
  **/
  

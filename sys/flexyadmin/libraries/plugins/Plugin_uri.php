@@ -6,7 +6,6 @@
  * Geef: /plugin/uri/...table...
  *
  * @author: Jan den Besten
- * $Revision$
  * @copyright: (c) Jan den Besten
  */
 

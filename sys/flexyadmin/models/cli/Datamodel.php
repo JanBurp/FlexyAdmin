@@ -7,7 +7,6 @@
  * - datamodel _table_ login _username_ _password_ // creates one table _table_
  * 
  * @author: Jan den Besten
- * $Revision$
  * @copyright: (c) Jan den Besten
  */
 class Datamodel extends CI_Model {

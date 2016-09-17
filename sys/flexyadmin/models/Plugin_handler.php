@@ -3,7 +3,6 @@
  * Handles all backed plugin loading, calling etc.
  *
  * @author: Jan den Besten
- * $Revision$
  * @copyright: (c) Jan den Besten
  */
 class Plugin_handler extends CI_Model {

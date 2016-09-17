@@ -4,7 +4,6 @@
  * Geeft het opgevraagde bestand als er rechten voor zijn. Met /file/serve, /file/download of /media, /media/download
  *
  * @author: Jan den Besten
- * $Revision$
  * @copyright: (c) Jan den Besten
  */
 

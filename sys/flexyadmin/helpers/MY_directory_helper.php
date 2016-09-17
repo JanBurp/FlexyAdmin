@@ -3,7 +3,6 @@
  * Uitbreiding op <a href="http://codeigniter.com/user_guide/helpers/directory_helper.html" target="_blank">Directory_helper van CodeIgniter</a>.
  *
  * @author Jan den Besten
- * $Revision$
  * @copyright (c) Jan den Besten
  * @file
  */

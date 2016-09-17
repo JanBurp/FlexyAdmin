@@ -3,7 +3,6 @@
  * Maakt grafieken, zoals bij de statistieken
  *
  * @author: Jan den Besten
- * $Revision$
  * @copyright: (c) Jan den Besten
  */
 

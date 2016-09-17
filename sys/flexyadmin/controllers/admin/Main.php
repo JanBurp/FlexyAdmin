@@ -6,7 +6,6 @@
  * This Controller shows the startscreen
  * 
  * @author Jan den Besten
- * $Revision$
  * @copyright (c) Jan den Besten
  */
 

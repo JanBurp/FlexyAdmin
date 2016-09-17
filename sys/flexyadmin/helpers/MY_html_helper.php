@@ -10,7 +10,6 @@
  * NB Maak bij voorkeur gebruikt van Views, als het niet anders kan, gebruik dan deze functies in je PHP code ipv letterlijke HTML strings
  * 
  * @author Jan den Besten
- * $Revision$
  * @copyright (c) Jan den Besten
  * @file
  */

@@ -7,7 +7,6 @@
  * Als 'allowed_types' leeg is wordt gekeken naar de instellingen van 'Media Info' van het pad. ('upload_path').
  * 
  * @author: Jan den Besten
- * $Revision$
  * @copyright: (c) Jan den Besten
  */
 

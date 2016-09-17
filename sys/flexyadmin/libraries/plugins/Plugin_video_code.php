@@ -4,7 +4,6 @@
  * Vervang alle urls van YouTube/Vimeo videos door hun code
  *
  * @author: Jan den Besten
- * $Revision$
  * @copyright: (c) Jan den Besten
  */
 

@@ -4,7 +4,6 @@
  * Geeft lijs van beschikbare plugins en roept ze aan.
  *
  * @author: Jan den Besten
- * $Revision$
  * @copyright: (c) Jan den Besten
  */
 class Plugin_controller extends AdminController {

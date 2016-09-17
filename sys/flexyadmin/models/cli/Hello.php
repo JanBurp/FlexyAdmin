@@ -6,7 +6,6 @@
  * - hello _string_
  *
  * @author: Jan den Besten
- * $Revision$
  * @copyright: (c) Jan den Besten
  */
 

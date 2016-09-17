@@ -3,7 +3,6 @@
  * Dit model wordt gebruikt om een formulier te creeren aan de hand van Flexy Form tabellen.
  *
  * @author: Jan den Besten
- * $Revision$
  * @copyright: (c) Jan den Besten
  */
 

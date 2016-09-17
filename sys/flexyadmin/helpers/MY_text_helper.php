@@ -3,7 +3,6 @@
  * Uitbreiding op <a href="http://codeigniter.com/user_guide/helpers/text_helper.html" target="_blank">Text_helper van CodeIgniter</a>.
  *
  * @author Jan den Besten
- * $Revision$
  * @copyright (c) Jan den Besten
  * @file
  */

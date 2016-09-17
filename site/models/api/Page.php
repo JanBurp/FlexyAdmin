@@ -21,7 +21,6 @@
  * - `/_api/page?uri=contact`
  * 
  * @author Jan den Besten
- * $Revision$
  * @copyright (c) Jan den Besten
  */
 

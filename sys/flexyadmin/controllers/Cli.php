@@ -7,7 +7,6 @@
  * php index.php _cli _command_
  *
  * @author: Jan den Besten
- * $Revision$
  * @copyright: (c) Jan den Besten
  */
 

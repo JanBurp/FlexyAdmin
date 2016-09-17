@@ -6,7 +6,6 @@
  * - auth .... login _username_ _password_
  *
  * @author: Jan den Besten
- * $Revision$
  * @copyright: (c) Jan den Besten
  */
 

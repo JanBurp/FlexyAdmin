@@ -4,7 +4,6 @@
  * This Controller logs user in or out
  *
  * @author Jan den Besten
- * $Revision$
  * @copyright (c) Jan den Besten
  */
 

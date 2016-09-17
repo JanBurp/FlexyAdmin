@@ -4,7 +4,6 @@
  * Verzorgt het (her)sorteren van items in een tabel (ook met boomstructuur)
  * 
  * @author Jan den Besten
- * $Revision$
  * @copyright (c) Jan den Besten
  */
 
