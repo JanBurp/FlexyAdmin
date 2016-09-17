@@ -1,0 +1,2 @@
+site/cache/log*.php
+site/stats/*.xml
