@@ -1,2 +1,3 @@
 site/cache/log*.php
 site/stats/*.xml
+site/cache/data_settings_*
