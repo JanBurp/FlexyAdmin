@@ -6,7 +6,7 @@
 			<?php endif; ?>
 			</a></p>
 			<p id="site"><a href="<?=$site;?>" target="_blank"><?=str_replace("http://","",$site);?></a></p>
-			<p id="copyright"><a href="admin/info">FlexyAdmin <?=$version?> <span class="small">(<?=$revision?>)</span></a>|<a href="admin/info/license"><span class="small">disclaimer</a></span></p>
+			<p id="copyright"><a href="admin/info">FlexyAdmin <?=$version?></a> | <a href="admin/info/license"><span class="small">disclaimer</a></span></p>
 		</div>
 	</div>
 

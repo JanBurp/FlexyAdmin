@@ -330,8 +330,6 @@ class AdminController extends BasicController {
 										"site"		=> rtrim($siteInfo["url_url"],'/'),
 										"user"		=> ucwords($this->flexy_auth->get_user()['username']),
                     "version" => $this->svn->get_version(),
-										"revision"=> $this->svn->get_revision(),
-                    
 									);
 		$this->load->view('admin/footer',$footer);
 	}
