@@ -9,7 +9,7 @@ class Info extends AdminController {
 
 	function __construct() {
 		parent::__construct();
-    $this->load->model('svn');
+    $this->load->model('version');
 	}
 
 	function index() {
@@ -17,7 +17,7 @@ class Info extends AdminController {
     $user=$this->flexy_auth->get_user();
 		$data["username"]=$user['str_username'];
 		$data["language"]=$user['str_language'];
-    $data["version"]=$this->svn->get_version();
+    $data["version"]=$this->version->get_version();
 		$this->_set_content($this->load->view("admin/info_".$data["language"],$data,true));
 		$this->_show_type("info");
 		$this->_show_all();

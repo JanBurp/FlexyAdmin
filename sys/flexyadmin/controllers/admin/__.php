@@ -16,7 +16,7 @@ class __ extends AdminController {
   private $work='FlexyAdminDEMO';
   private $tags='zips';
   private $version;
-  private $revision;
+  private $hash;
   
   private $upload_path = '/test_afbeeldingen/test_groot';
   
@@ -31,12 +31,12 @@ class __ extends AdminController {
     $this->path       = str_replace('sys/flexyadmin/','',APPPATH);
     $this->userguide  = $this->path.'/userguide/FlexyAdmin/';
     
-    $this->load->model('svn');
-    $this->version=$this->svn->get_version();
-    $this->revision=$this->svn->get_revision();
+    $this->load->model('version');
+    $this->version=$this->version->get_version();
+    $this->hash=$this->version->get_hash();
     $this->upload_path = $_SERVER['DOCUMENT_ROOT'].$this->upload_path;
     $doxygen = file_get_contents('userguide/doxygen.cfg');
-    $doxygen = preg_replace("/(PROJECT_NUMBER\s*=)(.*)/uim", "$1 ".$this->version.'&nbsp;(r'.$this->revision.')', $doxygen);
+    $doxygen = preg_replace("/(PROJECT_NUMBER\s*=)(.*)/uim", "$1 ".$this->version.'&nbsp;('.$this->hash.')', $doxygen);
     file_put_contents('userguide/doxygen.cfg',$doxygen);
 	}
 
@@ -48,7 +48,7 @@ class __ extends AdminController {
       // array( 'uri'=>'admin/__/clean_assets', 'name' => 'Clean assets' ),
       array( 'uri'=>'admin/__/apidoc', 'name' => 'Create Api doc' ),
       array( 'uri'=>'admin/__/process_svnlog', 'name' => 'Process SVN log' ),
-      array( 'uri'=>'admin/__/build', 'name' => 'Build version: '.$this->version.' (r'.$this->revision.')' ),
+      array( 'uri'=>'admin/__/build', 'name' => 'Build version: '.$this->version.' ('.$this->hash.')' ),
       // array( 'uri'=>'admin/__/ajax_upload_text', 'name' => 'API/Ajax upload test' ),
     );
     $menu = new Menu();
@@ -276,7 +276,7 @@ class __ extends AdminController {
     }
     
     $this->_add_content('<h1>New Changelog - Added</h1>');
-    $changelog='Changes '.$this->svn->get_revision()."\n============\n\n";
+    $changelog='Changes '.$this->version->get_version()."\n============\n\n";
     foreach ($newchangelog as $key => $value) {
       $changelog.=$key.":\n";
       foreach ($value as $entry) {
@@ -301,9 +301,8 @@ class __ extends AdminController {
    * @author Jan den Besten
    **/
   public function build() {
-    $revision=$this->svn->get_revision() + 1;
-    $tags=$this->tags.'/FlexyAdmin_'.$this->version.'_r'.$revision;
-    $this->_add_content('<h1>Build: '.$this->version.' r_'.$revision.'</h1>');
+    $tags=$this->tags.'/FlexyAdmin_'.$this->version;
+    $this->_add_content('<h1>Build: '.$this->version.'</h1>');
 
     // Copy alles behalve hidden files en files/mappen met __ en _test (dat zijn build processen en autodoc bronbestanden) en node_modules
     $this->_add_content('<p>Copy all</p>');
@@ -314,7 +313,7 @@ class __ extends AdminController {
     rename($this->path.$tags.'/site/config/database_local_empty.php', $this->path.$tags.'/site/config/database_local.php');
 
     // - maak zip, geef dit de naam met revisie nr
-    $zip=$this->path.$this->tags.'/FlexyAdmin_'.$this->version.'_r'.$revision.'.zip';
+    $zip=$this->path.$this->tags.'/FlexyAdmin_'.$this->version.'_r'.$version.'.zip';
     $this->_add_content('<p>Create:'.$zip.'</p>');
     $this->load->library('zip');
     $this->zip->read_dir($this->path.$tags.'/',FALSE); 
