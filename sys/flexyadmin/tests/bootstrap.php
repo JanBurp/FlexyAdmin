@@ -19,6 +19,7 @@ function show_404($page = '', $log_error = TRUE)
 	throw new PHPUnit_Framework_Exception($page, 404);
 }
 
+
 /*
  *---------------------------------------------------------------
  * BOOTSTRAP
@@ -26,5 +27,4 @@ function show_404($page = '', $log_error = TRUE)
  *
  * Bootstrap CodeIgniter from index.php as usual
  */
-
 require_once dirname(__FILE__) . '/../../../index.php';
