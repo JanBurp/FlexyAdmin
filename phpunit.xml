@@ -12,21 +12,17 @@
   
 	<testsuites>
     
-    <!-- Latest / Busy -->
+    <!-- Busy -->
     <testsuite name="busy">
       <file>sys/flexyadmin/tests/demo_db/models/DataTest.php</file>
-      <file>sys/flexyadmin/tests/demo_db/models/OrderTest.php</file>
-      <directory suffix="Test.php">sys/flexyadmin/tests/fast/helpers</directory>
+      <directory suffix="Test.php">sys/flexyadmin/tests/commit</directory>
 		</testsuite>
     
     <!-- Test this before committing: the fast unit tests, and testing the code for debug actions -->
     <testsuite name="commit">
-      <!-- Testing code for debugging code -->
       <file>site/tests/frontend/DebugTest.php</file>
       <directory suffix="Test.php">sys/flexyadmin/tests/commit</directory>
-      <!-- Fast tests that can be tested allways -->
       <directory suffix="Test.php">sys/flexyadmin/tests/fast</directory>
-      <!-- Core tests -->
       <file>sys/flexyadmin/tests/demo_db/models/DataTest.php</file>
 		</testsuite>
 
