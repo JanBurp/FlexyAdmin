@@ -8,10 +8,11 @@
  */
 class Version extends CI_Model {
   
-  private $version = '';
-  private $hash    = '';
-  private $date    = '';
-  private $build   = '';
+  private $version  = '';
+  private $revision = '';
+  private $hash     = '';
+  private $date     = '';
+  private $build    = '';
 
 	public function __construct() {
 		parent::__construct();
@@ -19,10 +20,21 @@ class Version extends CI_Model {
     $this->get_version();
     $this->get_hash();
     exec("git show", $output);
-    $this->date = date('Y-m-d H:i:s',strtotime((trim(str_replace('Date:','',$output[2])))));
-    $this->build = $this->version.' ['.$this->hash.'] '.$this->date;
-    $revfile="sys/build.txt";
-    write_file('sys/build.txt', $this->build);
+    if (isset($output[2])) {
+      $this->date = date('Y-m-d H:i:s',strtotime((trim(str_replace('Date:','',$output[2])))));
+      $this->build = $this->version.' ['.$this->revision.'] {'.$this->hash.'} '.$this->date;
+      $revfile="sys/build.txt";
+      write_file('sys/build.txt', $this->build);
+    }
+    else {
+      $this->build = read_file('sys/build.txt');
+      if (preg_match('/^(\d\.\d\.\d*)\s\[(\d*)]\s{([0-9a-zA-Z]*)}\s(.*)/u', $this->build, $matches)) {
+        $this->version  = $matches[1];
+        $this->revision = $matches[2];
+        $this->hash     = $matches[3];
+        $this->date     = $matches[4];
+      }
+    }
 	}
 
   public function set_version() {
@@ -31,10 +43,13 @@ class Version extends CI_Model {
       $package=file_get_contents('sys/package.json');
       preg_match("/\"version\"\s?:\s?\"(.*)\"/uim", $package,$matches);
       $this->version = $matches[1];
+      exec('git rev-list --all --count',$output);
+      if (!empty($output)) {
+        $this->revision = current($output);
+      }
     }
   }
 
-  
   public function get_version() {
     if (empty($this->version)) {
       $this->set_version();
@@ -51,10 +66,11 @@ class Version extends CI_Model {
   }
   
   public function get_build() {
-    if (empty($this->build)) {
-      $this->build = read_file('sys/build.txt');
-    }
     return $this->build;
+  }
+  
+  public function get_revision() {
+    $this->revision;
   }
   
   public function get_last_update_file() {
