@@ -14,13 +14,13 @@
 		<content>.</content>
 	</url>
 	<url>
-		<loc>http://www.flexyadmin.com/een_pagina/subpagina_met_module_links</loc>
+		<loc>http://www.flexyadmin.com/een_pagina/subpagina</loc>
 		<priority>0.64</priority>
 		<title>Subpagina</title>
 		<content>Een subpagina.</content>
 	</url>
 	<url>
-		<loc>http://www.flexyadmin.com/een_pagina/nog_een_subpagina</loc>
+		<loc>http://www.flexyadmin.com/een_pagina/een_pagina</loc>
 		<priority>0.64</priority>
 		<title>Nog een subpagina</title>
 		<content>.</content>
