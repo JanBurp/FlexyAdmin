@@ -89,7 +89,7 @@ Class Data extends CI_Model {
   
   
   /**
-   * list_tables onthoud de tabellen lijst zodat niet vaker de database hoeft te worden aangesproken
+   * cache list_tables
    *
    * @return array
    * @author Jan den Besten
@@ -99,6 +99,20 @@ Class Data extends CI_Model {
       $this->_list_tables = $this->db->list_tables();
     }
     return $this->_list_tables;
+  }
+  
+  
+  
+  /**
+   * Check if table exists in cached list_tables
+   *
+   * @param string $table 
+   * @return void
+   * @author Jan den Besten
+   */
+  public function table_exists( $table ) {
+    $tables = $this->list_tables();
+    return (in_array( $table,$tables ));
   }
   
   

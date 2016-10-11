@@ -1,4 +1,4 @@
-Copyright (c) 2009-2015, Jan den Besten, www.flexyadmin.com
+Copyright (c) 2009-2016, Jan den Besten, www.flexyadmin.com
 All rights reserved.
 
 Disclaimer
@@ -24,4 +24,4 @@ Jan den Besten heeft geen zeggenschap over de inhoud of over andere kenmerken va
 Alle rechten worden voorbehouden.
 Op deze disclaimer is het Nederlands recht van toepassing.
 
-Laatst bijgewerkt: mei 2015
+Laatst bijgewerkt: mei 2016

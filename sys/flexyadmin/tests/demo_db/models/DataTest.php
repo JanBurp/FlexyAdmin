@@ -86,17 +86,129 @@ class DataTest extends CITestCase {
 
 
   public function test_get_options() {
-    // tbl_menu.str_module
-    $this->CI->data->table( 'tbl_menu' );
-    $options = $this->CI->data->get_options( 'str_module' );
-    $this->assertInternalType( 'array', $options );
-    $this->assertArrayHasKey( 'data', $options );
-    $this->assertEquals( 3, count($options['data']) );
     // tbl_menu
+    $this->CI->data->table( 'tbl_menu' );
     $options = $this->CI->data->get_options();
     $this->assertInternalType( 'array', $options );
     $this->assertArrayHasKey( 'str_module', $options );
-    $this->assertGreaterThanOrEqual( 1, count($options) );
+    $this->assertGreaterThanOrEqual( 3, count($options) );
+    // tbl_menu.str_module
+    $options = $this->CI->data->get_options( 'str_module' );
+    $this->assertInternalType( 'array', $options );
+    $this->assertArrayHasKey( 'field', $options );
+    $this->assertEquals( 'str_module', $options['field'] );
+    $this->assertArrayHasKey( 'multiple', $options );
+    $this->assertEquals( FALSE, $options['multiple'] );
+    $this->assertArrayHasKey( 'data', $options );
+    $this->assertEquals( 3, count($options['data']) );
+    $this->assertArrayHasKey( 'value', current($options['data']));
+    $this->assertArrayHasKey( 'name', current($options['data']));
+    // tbl_menu.medias_fotos
+    $options = $this->CI->data->get_options( 'medias_fotos' );
+    $this->assertInternalType( 'array', $options );
+    $this->assertArrayHasKey( 'field', $options );
+    $this->assertEquals( 'medias_fotos', $options['field'] );
+    $this->assertArrayHasKey( 'model', $options );
+    $this->assertEquals( 'media', $options['model'] );
+    $this->assertArrayHasKey( 'path', $options );
+    $this->assertEquals( 'pictures', $options['path'] );
+    $this->assertArrayHasKey( 'multiple', $options );
+    $this->assertEquals( TRUE, $options['multiple'] );
+    $this->assertArrayHasKey( 'data', $options );
+    $this->assertEquals( 2, count($options['data']) );
+    $current = current($options['data']);
+    $this->assertArrayHasKey( 'name', $current);
+    $this->assertInternalType( 'array', $current['name']);
+    $this->assertArrayHasKey( 'value', $current);
+    $this->assertInternalType( 'string', $current['value']);
+    // tbl_menu.self_parent
+    $options = $this->CI->data->get_options( 'self_parent' );
+    $this->assertInternalType( 'array', $options );
+    $this->assertArrayHasKey( 'field', $options );
+    $this->assertEquals( 'self_parent', $options['field'] );
+    $this->assertArrayNotHasKey( 'multiple', $options );
+    $this->assertArrayHasKey( 'data', $options );
+    $this->assertEquals( 6, count($options['data']) );
+    $current = current($options['data']);
+    $this->assertArrayHasKey( 'name', $current);
+    $this->assertArrayHasKey( 'value', $current);
+    $this->assertInternalType( 'string', $current['name']);
+    $this->assertInternalType( 'string', $current['value']);
+
+    // tbl_kinderen
+    $this->CI->data->table( 'tbl_kinderen' );
+    $options = $this->CI->data->get_options();
+    $this->assertInternalType( 'array', $options );
+    $this->assertEquals( 2, count($options) );
+    // tbl_kinderen.id_adressen
+    $options = $this->CI->data->get_options('id_adressen');
+    $this->assertInternalType( 'array', $options );
+    $this->assertArrayHasKey( 'field', $options );
+    $this->assertEquals( 'id_adressen', $options['field'] );
+    $this->assertArrayHasKey( 'table', $options );
+    $this->assertEquals( 'tbl_adressen', $options['table'] );
+    $this->assertArrayNotHasKey( 'multiple', $options );
+    $this->assertArrayHasKey( 'data', $options );
+    $this->assertEquals( 15, count($options['data']) );
+    $current = current($options['data']);
+    $this->assertArrayHasKey( 'name', $current);
+    $this->assertArrayHasKey( 'value', $current);
+    $this->assertInternalType( 'string', $current['name']);
+    $this->assertInternalType( 'string', $current['value']);
+    // tbl_kinderen.id_groepen
+    $options = $this->CI->data->get_options('id_groepen');
+    $this->assertInternalType( 'array', $options );
+    $this->assertArrayHasKey( 'field', $options );
+    $this->assertEquals( 'id_groepen', $options['field'] );
+    $this->assertArrayHasKey( 'table', $options );
+    $this->assertEquals( 'tbl_groepen', $options['table'] );
+    $this->assertArrayNotHasKey( 'multiple', $options );
+    $this->assertArrayHasKey( 'data', $options );
+    $this->assertEquals( 9, count($options['data']) );
+    $current = current($options['data']);
+    $this->assertArrayHasKey( 'name', $current);
+    $this->assertArrayHasKey( 'value', $current);
+    $this->assertInternalType( 'string', $current['name']);
+    $this->assertInternalType( 'string', $current['value']);
+    
+    // tbl_groepen
+    $this->CI->data->table( 'tbl_groepen' );
+    $options = $this->CI->data->get_options();
+    $this->assertInternalType( 'array', $options );
+    $this->assertEquals( 2, count($options) );
+    // tbl_groepen.media_tekening
+    $options = $this->CI->data->get_options('media_tekening');
+    $this->assertInternalType( 'array', $options );
+    $this->assertArrayHasKey( 'field', $options );
+    $this->assertEquals( 'media_tekening', $options['field'] );
+    $this->assertArrayHasKey( 'model', $options );
+    $this->assertEquals( 'media', $options['model'] );
+    $this->assertArrayHasKey( 'path', $options );
+    $this->assertEquals( 'pictures', $options['path'] );
+    $this->assertArrayNotHasKey( 'multiple', $options );
+    $this->assertArrayHasKey( 'data', $options );
+    $this->assertEquals( 2, count($options['data']) );
+    $current = current($options['data']);
+    $this->assertArrayHasKey( 'name', $current);
+    $this->assertArrayHasKey( 'value', $current);
+    $this->assertInternalType( 'array', $current['name']);
+    $this->assertInternalType( 'string', $current['value']);
+    // tbl_groepen.tbl_adressen
+    $options = $this->CI->data->get_options('tbl_adressen');
+    $this->assertInternalType( 'array', $options );
+    $this->assertArrayHasKey( 'table', $options );
+    $this->assertEquals( 'tbl_adressen', $options['table'] );
+    $this->assertArrayHasKey( 'multiple', $options );
+    $this->assertEquals( TRUE, $options['multiple'] );
+    $this->assertArrayHasKey( 'data', $options );
+    $this->assertEquals( 14, count($options['data']) );
+    $current = current($options['data']);
+    $this->assertArrayHasKey( 'name', $current);
+    $this->assertArrayHasKey( 'value', $current);
+    $this->assertInternalType( 'string', $current['name']);
+    $this->assertInternalType( 'integer', $current['value']);
+    
+    
   }
 
 
