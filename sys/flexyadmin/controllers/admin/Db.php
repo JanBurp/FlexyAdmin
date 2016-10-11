@@ -22,7 +22,7 @@ class Db extends AdminController {
 
 	function __construct() {
 		parent::__construct();
-    $this->load->model('svn');
+    $this->load->model('version');
     $this->load->dbutil();
     $extra_export_types=$this->config->item('extra_export_types','plugin_db_export');
     if ($extra_export_types) {
@@ -307,8 +307,8 @@ class Db extends AdminController {
 				$update=(int) $this->input->post('update');
 				if ($update) {
 					$sql='';
-					$latestRev=(int) $this->svn->get_revision();
-					$this->_add_content(h('Update from r'.$update.' to r'.$latestRev));
+					$latestVersion=(int) $this->version->get_version();
+					$this->_add_content(h('Update from '.$update.' to r'.$latestVersion));
 					// load all update sql files
 					$updates=read_map('db','sql',FALSE,FALSE);
 					$updates=array_keys($updates);

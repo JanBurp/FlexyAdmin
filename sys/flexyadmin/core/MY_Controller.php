@@ -17,7 +17,24 @@ class MY_Controller extends CI_Controller {
     $this->load->model( 'data/Data_Core','data_core' );
     $this->load->model( 'data/Data','data' );
       
-    if (defined('PHPUNIT_TEST')) return;
+    if (defined('PHPUNIT_TEST')) {
+      // Load test database
+      $files = directory_map('db');
+      $key = in_array_like('unittest_',$files);
+      if ($key) {
+        $file = el($key,$files);
+        if ($file) {
+          $file='db/'.$file;
+          if (file_exists($file)) {
+            $testDB = read_file('db/'.$file);
+            $this->load->dbutil();
+            $this->dbutil->import($testDB);
+            echo "Test database (".$file.") Loaded\n";
+          }
+        }
+      }
+      return;
+    }
     
 		if ($this->_check_if_flexy_database_exists())
 			$this->_init_flexy_admin($isAdmin);
@@ -66,7 +83,7 @@ class MY_Controller extends CI_Controller {
 	}
 
 	private function _check_if_flexy_database_exists() {
-		return ($this->db->table_exists('cfg_configurations') and $this->db->table_exists('cfg_sessions'));
+		return ($this->data->table_exists('cfg_configurations') and $this->data->table_exists('cfg_sessions'));
 	}
 
 	private function _init_flexy_admin($isAdmin=false) {

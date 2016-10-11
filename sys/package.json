@@ -1,6 +1,6 @@
 {
   "name": "FlexyAdminDEMO",
-  "version": "3.2.1",
+  "version": "3.2.2",
   "description": "== FLEXYADMIN == (c) Jan den Besten www.flexyadmin.com",
   "private": true,
   "main": "index.php",

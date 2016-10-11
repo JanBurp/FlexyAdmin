@@ -18,7 +18,7 @@ class Update extends BasicController {
 	
 	public function __construct()	{
 		parent::__construct();
-    $this->load->model('svn');
+    $this->load->model('version');
     $this->load->model('updates/model_updates');
     $this->load->dbutil();
     $this->tags=$_SERVER['DOCUMENT_ROOT'].$this->tags;
@@ -35,13 +35,13 @@ class Update extends BasicController {
     $this->updates = array(
       'sys'        => array(
         'name'     => 'sys (build)',
-        'current'  => $this->svn->get_revision(),
+        'current'  => $this->version->get_revision(),
         'latest'   => $latest,
       ),
       'code'      => array(
         'name'    => 'code (update scripts)',
-        'current' => $this->svn->get_revision(),
-        'latest'  => $this->svn->get_last_update_file(),
+        'current' => $this->version->get_revision(),
+        'latest'  => '(unknown)',
       ),
       'database'  => array(
         'name'    => 'database (update sql)',

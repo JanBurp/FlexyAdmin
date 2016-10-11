@@ -25,7 +25,7 @@ class AdminController extends BasicController {
 	public function __construct() {
 		parent::__construct(true);
     $this->load->library('flexy_auth');
-    $this->load->model('svn');
+    $this->load->model('version');
     
     // default js variables
     if ($this->config->item('admin_js_vars')) $this->js = $this->config->item('admin_js_vars');
@@ -329,9 +329,8 @@ class AdminController extends BasicController {
 										"local"		=> $this->config->item('LOCAL'),
 										"site"		=> rtrim($siteInfo["url_url"],'/'),
 										"user"		=> ucwords($this->flexy_auth->get_user()['username']),
-                    "version" => $this->svn->get_version(),
-										"revision"=> $this->svn->get_revision(),
-                    
+                    "version" => $this->version->get_version(),
+                    "build"   => $this->version->get_build(),
 									);
 		$this->load->view('admin/footer',$footer);
 	}

@@ -41,7 +41,7 @@
  * 
  * A flexible userfriendly CMS build on CodeIgniter
  * 
- * Copyright (c) 2009-2015, Jan den Besten, www.flexyadmin.com
+ * Copyright (c) 2009-2016, Jan den Besten, www.flexyadmin.com
  * All rights reserved.
  * 
  * Disclaimer
@@ -67,7 +67,7 @@
  * Alle rechten worden voorbehouden.
  * Op deze disclaimer is het Nederlands recht van toepassing.
  * 
- * Laatst bijgewerkt: mei 2015
+ * Laatst bijgewerkt: mei 2016
  * 
  * @package	FlexyAdmin
  * @author	Jan den Besten
