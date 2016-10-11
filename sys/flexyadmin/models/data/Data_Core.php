@@ -1249,7 +1249,7 @@ Class Data_Core extends CI_Model {
     $one = FALSE;
     if (!empty($fields)) {
       if (!is_array($fields)) {
-        $one = true;
+        $one = $fields;
         $fields = array($fields);
       }
     }
@@ -1359,7 +1359,8 @@ Class Data_Core extends CI_Model {
         }
       }
     }
-    if ($one) return current($options);
+    
+    if ($one!==FALSE) return $options[$one];
     return $options;
   }
   

@@ -190,6 +190,7 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
   				$andor=$split[$i];
   				if (isset($split[$i+1]) and !empty($split[$i+1])) {
   					$item=trim($split[$i+1]);
+            $item=preg_replace('/\(\s*\)/us', '', $item); // Remove empty (...)
   					if (!empty($item)) {
   						if ($i>0) $item=$andor.' '.$item;
   						$where[]=$item;
