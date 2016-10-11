@@ -35,12 +35,12 @@ class Update extends BasicController {
     $this->updates = array(
       'sys'        => array(
         'name'     => 'sys (build)',
-        'current'  => $this->version->get_version(),
+        'current'  => $this->version->get_revision(),
         'latest'   => $latest,
       ),
       'code'      => array(
         'name'    => 'code (update scripts)',
-        'current' => $this->version->get_version(),
+        'current' => $this->version->get_revision(),
         'latest'  => '(unknown)',
       ),
       'database'  => array(
