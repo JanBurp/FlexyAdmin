@@ -8,26 +8,44 @@
  */
 class Version extends CI_Model {
   
-  private $version  = '';
-  private $revision = '';
-  private $hash     = '';
-  private $date     = '';
-  private $build    = '';
+  private $version   = 'unknown';
+  private $revision  = '0';
+  private $hash      = '0';
+  private $date      = '';
+  private $build     = '';
+  private $buildFile = 'sys/build.txt';
 
 	public function __construct() {
 		parent::__construct();
-    $this->set_version();
-    $this->get_version();
-    $this->get_hash();
-    exec("git show", $output);
-    if (isset($output[2])) {
-      $this->date = date('Y-m-d H:i:s',strtotime((trim(str_replace('Date:','',$output[2])))));
+
+    // version
+    if (file_exists('sys/package.json')) {
+      $package=file_get_contents('sys/package.json');
+      preg_match("/\"version\"\s?:\s?\"(.*)\"/uim", $package,$matches);
+      $this->version = $matches[1];
+    }
+
+    // revision (commit count)
+    exec('git rev-list --all --count',$output);
+    if (!empty($output) and is_numeric($output)) {
+      $this->revision = current($output);
+      // commit hash
+      exec('git rev-parse --verify HEAD 2> /dev/null', $output);
+      if (!empty($output)) {
+        $this->hash = substr($output[1],0,8);
+      }
+      // date last commit
+      exec("git show", $output);
+      if (isset($output[2])) {
+        $this->date = date('Y-m-d H:i:s',strtotime((trim(str_replace('Date:','',$output[4])))));
+      }
+      // build
       $this->build = $this->version.' ['.$this->revision.'] {'.$this->hash.'} '.$this->date;
-      $revfile="sys/build.txt";
-      write_file('sys/build.txt', $this->build);
+      write_file($this->buildFile, $this->build);
     }
     else {
-      $this->build = read_file('sys/build.txt');
+      // build without git present, just from file
+      $this->build = read_file( $this->buildFile );
       if (preg_match('/^(\d\.\d\.\d*)\s\[(\d*)]\s{([0-9a-zA-Z]*)}\s(.*)/u', $this->build, $matches)) {
         $this->version  = $matches[1];
         $this->revision = $matches[2];
@@ -35,53 +53,23 @@ class Version extends CI_Model {
         $this->date     = $matches[4];
       }
     }
+    
 	}
 
-  public function set_version() {
-    $this->version = 'unkown';
-    if (file_exists('sys/package.json')) {
-      $package=file_get_contents('sys/package.json');
-      preg_match("/\"version\"\s?:\s?\"(.*)\"/uim", $package,$matches);
-      $this->version = $matches[1];
-      exec('git rev-list --all --count',$output);
-      if (!empty($output)) {
-        $this->revision = current($output);
-      }
-    }
+  public function get_version() {
+    return $this->version;
   }
 
-  public function get_version() {
-    if (empty($this->version)) {
-      $this->set_version();
-    }
-    return $this->version;
+  public function get_revision() {
+    return $this->revision;
   }
   
   public function get_hash() {
-    if (empty($this->hash)) {
-      exec('git rev-parse --verify HEAD 2> /dev/null', $output);
-      $this->hash = substr($output[0],0,8);
-    }
     return $this->hash;
   }
   
   public function get_build() {
     return $this->build;
-  }
-  
-  public function get_revision() {
-    $this->revision;
-  }
-  
-  public function get_last_update_file() {
-		$updates=read_map('sys/flexyadmin/models/updates','php',FALSE,FALSE);
-		$updates=array_keys($updates);
-		$updates=filter_by($updates,'update_');
-    sort($updates);
-    $last=array_pop($updates);
-    $last=get_suffix($last,'/');
-    $rev=(int) substr($last,7,4);
-    return $rev;
   }
   
 
