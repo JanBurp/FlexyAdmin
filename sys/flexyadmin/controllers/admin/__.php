@@ -44,7 +44,7 @@ class __ extends AdminController {
       // array( 'uri'=>'admin/__/clean_assets', 'name' => 'Clean assets' ),
       array( 'uri'=>'admin/__/apidoc', 'name' => 'Create Api doc' ),
       array( 'uri'=>'admin/__/process_svnlog', 'name' => 'Process SVN log' ),
-      array( 'uri'=>'admin/__/build', 'name' => 'Build version: '.$this->version->get_version().' ('.$this->version->get_hash().')' ),
+      array( 'uri'=>'admin/__/build', 'name' => 'Build version: '.$this->version->get_version().' ('.$this->version->get_revision().')' ),
       // array( 'uri'=>'admin/__/ajax_upload_text', 'name' => 'API/Ajax upload test' ),
     );
     $menu = new Menu();
