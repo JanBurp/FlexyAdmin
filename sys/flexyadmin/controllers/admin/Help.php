@@ -18,7 +18,7 @@ class Help extends AdminController {
     
 		$commonHelp=$this->cfg->get('CFG_configurations','txt_help');
 
-    $map='sys/flexyadmin/views/help';
+    $map=APPPATH.'views/help';
     $helpFiles=read_map($map);
     ksort($helpFiles);
     $helpHTML='';
@@ -41,6 +41,7 @@ class Help extends AdminController {
         $helpHTML.=$html;
       }
     }
+    $helpHTML = str_replace('sys/flexyadmin/assets/',$this->config->item('ADMINASSETS'),$helpHTML);
 
 		$this->_add_content($this->load->view("admin/help_".$lang,array('page'=>$page,'commonHelp'=>$commonHelp,'help'=>$helpHTML),true) );
 		$this->_show_all();
