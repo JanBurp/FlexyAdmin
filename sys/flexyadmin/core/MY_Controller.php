@@ -13,7 +13,24 @@ class MY_Controller extends CI_Controller {
 
 	public function __construct($isAdmin=false) {
 		parent::__construct();
-
+    
+    /**
+     * Load extra's needed for front,back & ajax
+     */
+    $this->load->library('parent_module_plugin');
+    $this->load->model('formaction');
+    $this->load->helper('directory');
+    $this->load->helper('file');
+    $this->load->helper('form');
+    $this->load->helper('help');
+    $this->load->helper('html');
+    $this->load->helper('img');
+    $this->load->helper('text');
+    $this->load->helper('language');
+    
+    /**
+     * Load Data Model
+     */
     $this->load->model( 'data/Data_Core','data_core' );
     $this->load->model( 'data/Data','data' );
       
