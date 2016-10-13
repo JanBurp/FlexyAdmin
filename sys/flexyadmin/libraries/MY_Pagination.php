@@ -5,13 +5,13 @@
   * 
   * ##Dit zijn de uitbreidingen op CodeIgniter:
   * 
-  * - tags hebben een mooiere templates die te vinden zijn in site/config/pagination.php
+  * - tags hebben een mooiere templates die te vinden zijn in SITEPATH.config/pagination.php
   * - extra tags: _total_tag_open_ en _total_tag_close_ waarin het totaal aantal items terecht komt. Als deze templates leeg zijn wordt dit niet getoond.
   * - automatisch pagination met in de uri een 'offset' deel waarachter de start van de volgende pagina komt.
   * 
   * ## Snelle manier om pagination in een eigen module toe te passen
   * 
-  * 1. In 'site/config/config.php' de volgende instelling de waarde TRUE geven:
+  * 1. In SITEPATH.'config/config.php' de volgende instelling de waarde TRUE geven:
   * 
   *         $config['auto_pagination']	= TRUE;
   * 

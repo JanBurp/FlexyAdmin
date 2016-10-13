@@ -305,8 +305,8 @@ class __ extends AdminController {
     copy_directory( $this->path.$this->work, $this->path.$tags, array('/.svn','/__','/_test','/node_modules') );
     
     // - maak lege db instelling bestand
-    unlink($this->path.$tags.'/site/config/database_local.php');
-    rename($this->path.$tags.'/site/config/database_local_empty.php', $this->path.$tags.'/site/config/database_local.php');
+    unlink($this->path.$tags.'/'.SITEPATH.'config/database_local.php');
+    rename($this->path.$tags.'/'.SITEPATH.'config/database_local_empty.php', $this->path.$tags.'/'.SITEPATH.'config/database_local.php');
 
     // - maak zip, geef dit de naam met revisie nr
     $zip= $this->path.$this->tags.'/FlexyAdmin_'.$this->version->get_version().'_r'.$this->version->get_revision().'.zip';

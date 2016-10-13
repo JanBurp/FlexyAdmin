@@ -328,7 +328,7 @@ $config['encryption_key'] = "pfny9WkeCN4pWU2wr6UsTfvzNBomWxxh";
 |--------------------------------------------------------------------------
 */
 $config['sess_driver']            = 'database';
-$config['sess_cookie_name']       = 'FlexyAdminDEMO';    // This will be replaced at install, see site/config/config.php
+$config['sess_cookie_name']       = 'FlexyAdminDEMO';    // This will be replaced at install, see SITEPATH.config/config.php
 $config['sess_expiration']		    = 86400;               // 24 uur
 $config['sess_expiration']		    = 86400;               // 24 uur;
 $config['sess_save_path']         = 'cfg_sessions';

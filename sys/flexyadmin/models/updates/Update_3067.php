@@ -54,7 +54,7 @@ class Update_3067 extends Model_updates {
   
   
   private function _cleanup_database_configs() {
-    $configs=read_map('site/config','php',FALSE,FALSE);
+    $configs=read_map(SITEPATH.'config','php',FALSE,FALSE);
     $configs=filter_by($configs,'database');
     foreach ($configs as $file) {
       $old=file_get_contents($file['path']);
@@ -86,7 +86,7 @@ class Update_3067 extends Model_updates {
   }
   
   private function _change_config() {
-    $file='site/config/config.php';
+    $file=SITEPATH.'config/config.php';
     $old=file_get_contents($file);
     $new=$old;
 
