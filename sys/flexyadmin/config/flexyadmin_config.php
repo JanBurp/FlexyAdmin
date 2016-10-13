@@ -24,7 +24,8 @@ $config['MENU_TABLES']						= array('res_menu_result','tbl_menu');
 // Directories
 $config['SITE']										= SITEPATH;
 $config['ADMINASSETS']						= "sys/flexyadmin/assets/";
-$config['ASSETS']									= $config['SITE'].'assets/';
+$config['PUBLICASSETS']						= $config['SITE'].'assets/';
+$config['ASSETS']									= $config['PUBLICASSETS'];
 $config['THUMBCACHE']							= $config['ASSETS']."_thumbcache/";
 $config['STATS']									= $config['SITE'].'stats/';
 $config['PLUGINS']								= $config['SITE'].'plugins';

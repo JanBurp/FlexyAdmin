@@ -146,9 +146,10 @@ class FrontEndController extends MY_Controller {
 		/**
 		 * Set Asset folders
 		 */
-		$this->site["assets"]=assets();
-		$this->site["rel_assets"]=$this->config->item("ASSETS");
-		$this->site["admin_assets"]=admin_assets();
+		$this->site["assets"]         = $this->config->item('ASSETS');
+    $this->site["publicassets"]   = $this->config->item('PUBLICASSETS');
+		$this->site["rel_assets"]     = $this->config->item('ASSETS');
+		$this->site["admin_assets"]   = $this->config->item('ADMINASSETS');
 
 		/**
 		 * Set Some Config
