@@ -14,6 +14,11 @@ class Mediatable extends CI_Model {
   private $table='res_media_files';
   
   /**
+   * Always serve files from these folders
+   */
+  private $serve_rights = array( 'css','fonts','js','lists' );
+  
+  /**
    * Order->fields
    */
   private $order_fields = array(
@@ -585,6 +590,8 @@ class Mediatable extends CI_Model {
    */
   public function has_serve_rights($path,$file) {
     $map = get_suffix($path,'/');
+    if (in_array($map,$this->serve_rights)) return true;
+    
     $query = $this->db->select('b_serve_restricted')->where('path',$map)->get('cfg_media_info',1);
     if ($query->num_rows()<1) return FALSE;
     $row = $query->row_object();
