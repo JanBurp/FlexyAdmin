@@ -5,7 +5,7 @@
  * 
  * - Maakt voor elke assets map een .htaccess aan die alleen toegestane bestanden toelaat
  * - Verwijderd alle bestanden die niet zijn toegestaan
- * - Wil je andere bestandstypen toelaten dan standaard? Maak een kopie van sys/flexyadmin/config/plugin_safe_assets.php in site/config en pas aan naar wens.
+ * - Wil je andere bestandstypen toelaten dan standaard? Maak een kopie van sys/flexyadmin/config/plugin_safe_assets.php in SITEPATH.config en pas aan naar wens.
  * 
  * Is actief:
  * 
@@ -56,19 +56,19 @@ class Plugin_safe_assets extends Plugin {
     $files = array(
       'sitemap.xml'                       => 0100664,
       'robots.txt'                        => 0100644,
-      'site/config/database.php'          => 0100440,
-      'site/cache'                        => 0040774,
-      'site/stats'                        => 0040774,
-      'site/stats/.htaccess'              => 0100644,
+      SITEPATH.'config/database.php'      => 0100440,
+      SITEPATH.'cache'                    => 0040774,
+      SITEPATH.'stats'                    => 0040774,
+      SITEPATH.'stats/.htaccess'          => 0100644,
     );
     $media=$this->CI->mediatable->get_media_folders();
-    $media[]='site/assets/_thumbcache';
-    $media[]='site/assets/lists';             // 0754
+    $media[]=$this->CI->config->item('ASSETS').'_thumbcache';
+    $media[]=$this->CI->config->item('ASSETS').'lists';             // 0754
     foreach ($media as $folder) {
       $files[$folder] = 0040776;              // 0776
       $files[$folder.'/.htaccess'] = 0100644; // 0664
     }
-    $files['site/assets/lists'] = 0040754;
+    $files[$this->CI->config->item('ASSETS').'lists'] = 0040754;
     ksort($files);
 
     foreach ($files as $file => $permissions) {
@@ -94,7 +94,7 @@ class Plugin_safe_assets extends Plugin {
 		$logout=true;
     $logout_actions = $this->config('logout_actions');
     if ( el('cleanup_captha',$logout_actions,false) ) {
-      $files = glob('site/assets/_thumbcache/captcha*');
+      $files = glob(SITEPATH.'assets/_thumbcache/captcha*');
       if (is_array($files)) {
         foreach( $files as $file ) {
           unlink($file);

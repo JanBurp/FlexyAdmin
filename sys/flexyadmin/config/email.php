@@ -7,7 +7,7 @@
 | Set you're email configuration here, it will override the standard settings|
 | See http://codeigniter.com/user_guide/libraries/email.html
 |
-| Will be override by settings in site/config/email.php
+| Will be override by settings in SITEPATH.config/email.php
 | -------------------------------------------------------------------------
 */
 

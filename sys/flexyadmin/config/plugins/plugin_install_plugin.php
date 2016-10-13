@@ -12,7 +12,7 @@
 $config['admin_api_method'] = '_admin_api';
 
 
-$config['safe_paths'] = array('db/','site/');
+$config['safe_paths'] = array('db/',SITEPATH);
 
 
 ?>

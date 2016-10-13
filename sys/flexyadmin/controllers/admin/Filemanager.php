@@ -428,7 +428,7 @@ class Filemanager extends AdminController {
 		$uiPath=$this->ui->get($path);
     $img_types=$this->config->item('FILE_types_img');
     if (in_array(get_suffix($file,'.'),$img_types)) {
-      $uiPath.=': '.$file.show_thumb('site/assets/'.$path.'/'.$file);
+      $uiPath.=': '.$file.show_thumb($this->config->item('ASSETS').$path.'/'.$file);
     }
 		if (!empty($help)) $uiShowPath=help($uiPath,$help); else $uiShowPath=$uiPath;
     

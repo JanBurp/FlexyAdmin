@@ -67,7 +67,7 @@ class Mediatable extends CI_Model {
     $folders=array();
     foreach ($result as $key => $info) {
       if ($include_assets)
-        $folders[]='site/assets/'.$info['path'];
+        $folders[]=SITEPATH.'assets/'.$info['path'];
       else
         $folders[]=$prefix.$info['path'];
     }
@@ -612,7 +612,7 @@ class Mediatable extends CI_Model {
    * @author Jan den Besten
    */
   private function _file($file) {
-    $file = str_replace('_media/','site/assets/',$file);
+    $file = str_replace('_media/',SITEPATH.'assets/',$file);
     return $file;
   }
 

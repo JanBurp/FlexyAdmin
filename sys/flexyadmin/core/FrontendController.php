@@ -1,7 +1,7 @@
 <?php 
 
 /** \ingroup core
- * Dit is de basis voor de controller aan de frontend (site/controller.php)
+ * Dit is de basis voor de controller aan de frontend (SITEPATH/controller.php)
  *
  * @author Jan den Besten
  * @copyright (c) Jan den Besten
@@ -21,11 +21,11 @@ class FrontEndController extends MY_Controller {
    *      ['description']          => '',                               // Description (= tbl_site.stx_description)
    *      ['keywords']             => '',                               // Keywords (= tbl_site.stx_keywords)
    *      ['str_google_analytics'] => '',                               // Wordt gebruikt voor Google Analytics. (= tbl_site.str_google_analytics)
-   *      ['assets']               => 'site/assets',                    // verwijzing naar de assets map
-   *      ['admin_assets']         => 'sys/flexyadmin/assets',          // verwijzing naar de flexyadmin assets map
+   *      ['assets']               => '',                               // verwijzing naar de assets map
+   *      ['admin_assets']         => '',                               // verwijzing naar de flexyadmin assets map
    *      ['use_minimized']        => [true|false]                      // geeft aan of er de geminificeerde js,css bestanden moeten worden gebruikt
    *      ['framework']            => ['default'|'bootstrap']           // welk frontend framework moet worden geladen
-   *      ['languages']            => array('nl'),                      // array met mogelijke talen. Zoals ingesteld in _site/config/config.php_
+   *      ['languages']            => array('nl'),                      // array met mogelijke talen. Zoals ingesteld in _SITEPATH/config/config.php_
    *      ['uri']                  => '',                               // Uri van huidige pagina
    *      ['menu']                 => '',                               // Bij aanvang leeg, wordt gevuld met het menu (HTML)
    *      ['content']              => '',                               // Bij aanvang leeg. Wordt gevuld met alle HTML content
@@ -92,7 +92,7 @@ class FrontEndController extends MY_Controller {
     }
     
     // Version timestamp
-    $files=array('site/assets/css/styles.min.css','site/assets/js/scripts.min.js');
+    $files=array($this->config->item('ASSETS').'css/styles.min.css',$this->config->item('ASSETS').'js/scripts.min.js');
     $version=0;
     foreach ($files as $file) {
       $time=0;
@@ -448,7 +448,7 @@ class FrontEndController extends MY_Controller {
 
   /**
    * Stelt de standaard view in van een pagina
-   * Staat standaard ingesteld in 'site/config/config.php' bij `$config['page_view']='page';`, maar hiermee kun je dat in een module aanpassen
+   * Staat standaard ingesteld in SITEPATH.'config/config.php' bij `$config['page_view']='page';`, maar hiermee kun je dat in een module aanpassen
    *
    * @param string $page_view default='page
    * @return object $this

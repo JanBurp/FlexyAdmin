@@ -314,7 +314,7 @@ class MY_Email extends CI_Email {
       $CI->load->library('html2pdf/html2pdf');
       $html2pdf = new HTML2PDF('P', 'A4', 'en');
       $html2pdf->writeHTML($this->body);
-      $file='site/cache/'.$pdf_name;
+      $file=SITEPATH.'cache/'.$pdf_name;
       $html2pdf->Output($file,'F');
       $this->attach($file);
     }
@@ -354,7 +354,7 @@ class MY_Email extends CI_Email {
    */
   public function prepare_body($body) {
     // good paths to local images
-		$body=preg_replace('/src=\"(?!https?:\/\/).*?/','src="'.base_url(),$body);
+    $body=preg_replace('/src=\"(?!https?:\/\/).*?/','src="'.base_url(),$body);
     // good internal links
 		$body=str_replace('href="mailto:','##MAIL##',$body);
 		$body=str_replace('href="undefined/','href="'.base_url(),$body);
