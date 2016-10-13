@@ -9,6 +9,12 @@
 
 
 class File extends CI_Controller {
+  
+  /**
+   * Always serve files from these folders
+   */
+  private $serve_rights = array( 'css','fonts','js','lists' );
+  
 	
 	function __construct()	{
 		parent::__construct();
@@ -26,7 +32,7 @@ class File extends CI_Controller {
 		if (!empty($path) and !empty($file)) {
 			$fullpath = SITEPATH.'assets/'.$path.'/'.$file;
 			if ( file_exists($fullpath) ) {
-        if ( $this->mediatable->has_serve_rights($path,$file) ) {
+        if ( in_array($path,$this->serve_rights) or $this->mediatable->has_serve_rights($path,$file) ) {
           $type=get_suffix($file,'.');
           $this->output->set_content_type($type);
           $this->output->set_output(file_get_contents($fullpath));
