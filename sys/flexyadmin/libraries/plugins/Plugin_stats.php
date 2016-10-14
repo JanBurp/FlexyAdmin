@@ -220,8 +220,8 @@ class Plugin_stats extends Plugin {
 
   // function _download_links($year,$month) {
   //   $this->add_content(h('Download XML',2));
-  //   $xmlYear='site/stats/'.$year.'.xml';
-  //   $xmlMonth='site/stats/'.$year.'-'.$month.'.xml';
+  //   $xmlYear=SITEPATH.'stats/'.$year.'.xml';
+  //   $xmlMonth=SITEPATH.'stats/'.$year.'-'.$month.'.xml';
   //   $this->add_content(anchor($xmlYear));
   //   $this->add_content(anchor($xmlMonth));
   // }

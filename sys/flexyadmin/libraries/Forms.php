@@ -32,20 +32,20 @@
 	* Instellingen
 	* ----------------
 	* 
-	* Er zijn veel verschillende instellingen mogelijk. In _site/config/forms.php_ vindt je diverse voorbeelden en uitleg bij de diverse instellingen.
+	* Er zijn veel verschillende instellingen mogelijk. In _SITEPATH/config/forms.php_ vindt je diverse voorbeelden en uitleg bij de diverse instellingen.
 	* Mocht het formulier gebruik maken van een formaction, dan worden alle instellingen ook naar het formaction gestuurd.
 	*
 	* Bestanden
 	* ----------------
 	*
-	* - site/config/forms.php - Hier worden alle formulieren ingesteld
-	* - site/views/forms.php - De view waarin de comments en het formulier geplaatst worden
-	* - site/language/##/forms_lang.php - Taalbestanden
+	* - SITEPATH.config/forms.php - Hier worden alle formulieren ingesteld
+	* - SITEPATH.views/forms.php - De view waarin de comments en het formulier geplaatst worden
+	* - SITEPATH.language/##/forms_lang.php - Taalbestanden
 	*
 	* Installatie
 	* ----------------
 	*
-	* - Pas de configuratie aan indien nodig (zie: site/config/forms.php)
+	* - Pas de configuratie aan indien nodig (zie: SITEPATH.config/forms.php)
 	* - Pas de view (en styling) aan indien nodig
 	* - Maak je eigen taalbestand en/of wijzig de bestaande
 	*
