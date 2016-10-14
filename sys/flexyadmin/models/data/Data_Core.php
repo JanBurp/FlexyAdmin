@@ -1804,14 +1804,7 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   public function get_result( $limit=0, $offset=0 ) {
-    $result = array();
-    $query = $this->get( $limit, $offset, FALSE );
-    if ($query) {
-      $result = $this->_make_result_array( $query );
-      $query->free_result();
-    }
-    $this->reset();
-    return $result;
+    return $this->_get_result($limit,$offset);
   }
   
 
