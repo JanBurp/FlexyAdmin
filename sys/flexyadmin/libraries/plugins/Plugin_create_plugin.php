@@ -48,10 +48,10 @@ class Plugin_create_plugin extends Plugin {
       $this->wizard = new Wizard($wizard);
       array_shift($args);
       $this->add_content("<h3>These files are added to the plugin package:</h3><ul>
-        <li>The config file with the same name in 'site/config'</li>
-        <li>All language files with the name and the suffix '_lang' in 'site/language/xx/'</li>
-        <li>The module/plugin file in 'site/libraries'</li>
-        <li>The view file with the same name in 'site/views'</li>
+        <li>The config file with the same name in SITEPATH.'config'</li>
+        <li>All language files with the name and the suffix '_lang' in SITEPATH.'language/xx/'</li>
+        <li>The module/plugin file in SITEPATH.'libraries'</li>
+        <li>The view file with the same name in SITEPATH.'views'</li>
         </ul>
         <h3>A 'readme.md' file is also generated. It will contain:</h3>
         <ul>
@@ -75,7 +75,7 @@ class Plugin_create_plugin extends Plugin {
   
   public function choose_addon() {
     $out='';
-    $addons = read_map('site/libraries','php',TRUE,FALSE);
+    $addons = read_map(SITEPATH.'libraries','php',TRUE,FALSE);
     $addons = array_unset_keys($addons,$this->config('exclude'));
     $addons = array_keys($addons);
     $addons = array_combine($addons,$addons);
@@ -111,20 +111,20 @@ class Plugin_create_plugin extends Plugin {
     
     // Collect files with same name
     $files=array();
-    $files[]='site/libraries/'.$addon_file;
-    if (file_exists('site/config/'.$addon_file)) $files[]='site/config/'.$addon_file;
-    if (file_exists('site/views/'.$addon_file)) $files[]='site/views/'.$addon_file;
-    if (file_exists('site/tests/plugins/Plugin'.ucfirst($addon).'Test.php')) $files[]='site/tests/plugins/Plugin'.ucfirst($addon).'Test.php';
+    $files[]=SITEPATH.'libraries/'.$addon_file;
+    if (file_exists(SITEPATH.'config/'.$addon_file)) $files[]=SITEPATH.'config/'.$addon_file;
+    if (file_exists(SITEPATH.'views/'.$addon_file)) $files[]=SITEPATH.'views/'.$addon_file;
+    if (file_exists(SITEPATH.'tests/plugins/Plugin'.ucfirst($addon).'Test.php')) $files[]=SITEPATH.'tests/plugins/Plugin'.ucfirst($addon).'Test.php';
     // lang files
-    $langs = read_map('site/language','dir',FALSE,FALSE);
+    $langs = read_map(SITEPATH.'language','dir',FALSE,FALSE);
     $langs = array_keys($langs);
     $langfile=$addon.'_lang.php';
     foreach ($langs as $lang) {
-      if (file_exists('site/language/'.$lang.'/'.$langfile)) $files[]='site/language/'.$lang.'/'.$langfile;
+      if (file_exists(SITEPATH.'language/'.$lang.'/'.$langfile)) $files[]=SITEPATH.'language/'.$lang.'/'.$langfile;
     }
     
     // Files mentioned in config
-    if (file_exists('site/config/'.$addon_file)) {
+    if (file_exists(SITEPATH.'config/'.$addon_file)) {
       $this->CI->config->load($addon_file,true);
       $config=$this->CI->config->item($addon);
       if (isset($config['_files'])) {
@@ -157,7 +157,7 @@ class Plugin_create_plugin extends Plugin {
     }
     
     // Readme
-    $code=file_get_contents('site/libraries/'.$addon_file);
+    $code=file_get_contents(SITEPATH.'libraries/'.$addon_file);
     $readme='';
     // $readme=strtoupper($addon)."\n".str_repeat('=',strlen($addon))."\n\n";
     if (preg_match("/\*\*(.*?)\*\//uis", $code,$matches)) {
