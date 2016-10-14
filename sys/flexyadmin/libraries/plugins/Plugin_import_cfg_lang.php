@@ -2,7 +2,7 @@
 
 
 /** \ingroup plugins
- * Met deze plugin worden alle language files in site/language/.. omgezet naar de tabel cfg_lang
+ * Met deze plugin worden alle language files in SITEPATH.language/.. omgezet naar de tabel cfg_lang
  *
  * @author Jan den Besten
  */
@@ -23,11 +23,11 @@ class Plugin_import_cfg_lang extends Plugin {
    */
 	public function _admin_api() {
 		if ($this->CI->flexy_auth->is_super_admin()) {
-      $language_files = scan_map('site/language','php',true);
+      $language_files = scan_map(SITEPATH.'language','php',true);
       $keys=array();
       // collect keys and languages
       foreach ($language_files as $file) {
-        $clean_name = str_replace('site/language/','',$file);
+        $clean_name = str_replace(SITEPATH.'language/','',$file);
         $language = get_prefix($clean_name,'/');
         // load file and get keys and translations
         $text = file_get_contents($file);

@@ -195,7 +195,7 @@ function confirm_dialog(uri,name,id) {
 								cancel	: function(){	$(dialog).dialog("destroy"); },
 								yes			: function(){
 														$('.ui-dialog .ui-dialog-buttonpane').add('.ui-dialog a').hide();
-														$('.ui-dialog .ui-dialog-content').append("<img src='"+site_url("sys/flexyadmin/assets/icons/wait.gif")+"' align='right' />");
+														$('.ui-dialog .ui-dialog-content').append("<img src='"+config.admin_assets+"icons/wait.gif"+"' align='right' />");
 														var value='';
 														for(x in id) {value+=':'+id[x];}
 														value=value.substr(1);

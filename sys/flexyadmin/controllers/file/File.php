@@ -8,7 +8,7 @@
  */
 
 
-class File extends FrontEndController {
+class File extends CI_Controller {
 	
 	function __construct()	{
 		parent::__construct();

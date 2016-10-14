@@ -19,7 +19,7 @@ function doGrid() {
                                 backslash=uploadFile.lastIndexOf('\\');
                                 if (backslash>0) uploadFile=uploadFile.substr(backslash+1);
                                 $('.ui-dialog .ui-dialog-buttonpane').add('.ui-dialog a').add('.ui-dialog form').hide();
-                                $('.ui-dialog .ui-dialog-content').prepend("Uploading '<i>"+uploadFile+"</i>' <img src='"+site_url("sys/flexyadmin/assets/icons/wait.gif")+"' align='right' />");
+                                $('.ui-dialog .ui-dialog-content').prepend("Uploading '<i>"+uploadFile+"</i>' <img src='"+config.admin_assets+"icons/wait.gif"+"' align='right' />");
                                 $("form.upload").submit();
                                 // $(dialog).dialog("destroy");
                                 // alert('Hups');
@@ -270,7 +270,7 @@ function doGrid() {
 				var search=$(filter).attr('data-search');
         
         if ($('.extended_search').length>0) {
-          $("tr.caption:first tr td:first").append('<span class="filter"><span class="help '+config.help_filter+'"><input class="filter" type="text" value="'+search+'"/></span><img class="extended_search_button" src="sys/flexyadmin/assets/icons/action_add.gif"></span>');
+          $("tr.caption:first tr td:first").append('<span class="filter"><span class="help '+config.help_filter+'"><input class="filter" type="text" value="'+search+'"/></span><img class="extended_search_button" src="'+config.admin_assets+'icons/action_add.gif"></span>');
         }
         else {
           $("tr.caption:first tr td:first").append('<span class="filter"><span class="help '+config.help_filter+'"><input class="filter" type="text" value="'+search+'"/></span>');

@@ -3,7 +3,7 @@
 
 /**
  * Dit is een cronjob voorbeeld. Het stuurt een mail om de zoveel tijd.
- * Cronjobs kun je instellen in site/config.php, zie daar voor meer info.
+ * Cronjobs kun je instellen in SITEPATH.config.php, zie daar voor meer info.
  *
  * @author Jan den Besten
  */

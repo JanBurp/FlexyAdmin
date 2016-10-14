@@ -21,7 +21,7 @@ class Update_3480 extends Model_updates {
     $this->_add_message('Removed all thumbs in <b><i>'.$this->config->item('THUMBCACHE').'</i></b>','glyphicon-ok btn-success');
     
     // Verplaats alle plugins naar submap libraries/plugins
-    $folders=array('sys/flexyadmin/libraries','sys/flexyadmin/config','site/libraries','site/config');
+    $folders=array('sys/flexyadmin/libraries','sys/flexyadmin/config',SITEPATH.'libraries',SITEPATH.'config');
     foreach ($folders as $folder) {
       $plugin_folder = $folder.'/plugins';
       if (!file_exists($plugin_folder)) {
