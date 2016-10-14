@@ -265,7 +265,7 @@ Class Data_Core extends CI_Model {
       }
       $this->cache->save('data_settings_'.$table, $this->settings, TIME_YEAR );
     }
-    // if ($table==='cfg_users')  trace_($this->settings);
+    // if ($table==='tbl_links')  trace_($this->settings['abstract_fields']);
     return $this->settings;
   }
   
