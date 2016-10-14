@@ -5,9 +5,9 @@ Class Data_Create extends CI_Model {
   
   private $paths = array(
     'sys_model'   => 'sys/flexyadmin/models/data/',
-    'site_model'  => 'site/models/data/',
+    'site_model'  => SITEPATH.'models/data/',
     'sys_config'  => 'sys/flexyadmin/config/data/',
-    'site_config' => 'site/config/data/',
+    'site_config' => SITEPATH.'config/data/',
   );
     
   

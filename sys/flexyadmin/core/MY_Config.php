@@ -110,7 +110,7 @@ Class MY_Config extends CI_Config {
 
   /**
    * Laad een config bestand.
-   * Als hetzelfde bestand in sys en in site/config bestaat:
+   * Als hetzelfde bestand in sys en in SITEPATH.config bestaat:
    * Laad eerst de sys config, dan de site config en merge deze samen (zo kunnen site specifieke instellingen standaard instellingen overrulen)
    *
    * @param string $file 

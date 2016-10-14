@@ -47,42 +47,42 @@ $isForm=has_string('form',$show_type);
 	</script>
 
 	<!-- jQuery NB 1.9 gaat niet in combi met tinyMCE 3.5 -->
-	<script language="javascript" type="text/javascript" src="sys/jquery/jquery-1.8.3.min.js"></script>
+	<script language="javascript" type="text/javascript" src="<?=admin_assets()?>../../jquery/jquery-1.8.3.min.js"></script>
 	<!-- jQuery UI, 1.9 vraag nieuwe UI/classes, dus voorlopig niet -->
-	<link rel="stylesheet" type="text/css" href="sys/jquery/ui/custom-theme/jquery-ui-1.8.7.custom.css" />
-	<script language="javascript" type="text/javascript" src="sys/jquery/ui/jquery-ui-1.8.24.custom.min.js"></script>
-  <script src="sys/jquery/ui/jquery.ui.progressbar.min.js" type="text/javascript" charset="utf-8"></script>
+	<link rel="stylesheet" type="text/css" href="<?=admin_assets()?>../../jquery/ui/custom-theme/jquery-ui-1.8.7.custom.css" />
+	<script language="javascript" type="text/javascript" src="<?=admin_assets()?>../../jquery/ui/jquery-ui-1.8.24.custom.min.js"></script>
+  <script src="<?=admin_assets()?>../../jquery/ui/jquery.ui.progressbar.min.js" type="text/javascript" charset="utf-8"></script>
   
 	<!-- jQuery plugins-->
-	<link rel="stylesheet" type="text/css" href="sys/jquery/plugins/fullsize/fullsize.css" />
-	<script language="javascript" type="text/javascript" src="sys/jquery/plugins/fullsize/jquery.fullsize<?=$js?>"></script>
-	<script language="javascript" type="text/javascript" src="sys/jquery/plugins/flipv/cvi_text_lib<?=$js?>"></script>
-	<script language="javascript" type="text/javascript" src="sys/jquery/plugins/flipv/jquery.flipv<?=$js?>"></script>
+	<link rel="stylesheet" type="text/css" href="<?=admin_assets()?>../../jquery/plugins/fullsize/fullsize.css" />
+	<script language="javascript" type="text/javascript" src="<?=admin_assets()?>../../jquery/plugins/fullsize/jquery.fullsize<?=$js?>"></script>
+	<script language="javascript" type="text/javascript" src="<?=admin_assets()?>../../jquery/plugins/flipv/cvi_text_lib<?=$js?>"></script>
+	<script language="javascript" type="text/javascript" src="<?=admin_assets()?>../../jquery/plugins/flipv/jquery.flipv<?=$js?>"></script>
 	
 	<?php if ($isGrid): ?>
 		<!-- grid Scripts -->
-		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/filterable/jquery.filterable<?=$js?>"></script>
-		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/tablesorter/jquery.tablesorter.min.js"></script>
+		<script language="javascript" type="text/javascript" src="<?=admin_assets()?>../../jquery/plugins/filterable/jquery.filterable<?=$js?>"></script>
+		<script language="javascript" type="text/javascript" src="<?=admin_assets()?>../../jquery/plugins/tablesorter/jquery.tablesorter.min.js"></script>
     
     <!-- Load plupload  -->
-    <script src="sys/jquery/plugins/plupload/js/plupload.full.js" type="text/javascript" charset="utf-8"></script>
-    <script src="sys/jquery/plugins/plupload/js/jquery.ui.plupload/jquery.ui.plupload.js" type="text/javascript" charset="utf-8"></script>
-    <?php if ($language!='en'): ?><script src="sys/jquery/plugins/plupload/js/i18n/<?=$language?>.js" type="text/javascript" charset="utf-8"></script><?php endif ?>
-    <link rel="stylesheet" href="sys/jquery/plugins/plupload/js/jquery.ui.plupload/css/jquery.ui.plupload.css" type="text/css" media="screen" title="no title" charset="utf-8" />
+    <script src="<?=admin_assets()?>../../jquery/plugins/plupload/js/plupload.full.js" type="text/javascript" charset="utf-8"></script>
+    <script src="<?=admin_assets()?>../../jquery/plugins/plupload/js/jquery.ui.plupload/jquery.ui.plupload.js" type="text/javascript" charset="utf-8"></script>
+    <?php if ($language!='en'): ?><script src="<?=admin_assets()?>../../jquery/plugins/plupload/js/i18n/<?=$language?>.js" type="text/javascript" charset="utf-8"></script><?php endif ?>
+    <link rel="stylesheet" href="<?=admin_assets()?>../../jquery/plugins/plupload/js/jquery.ui.plupload/css/jquery.ui.plupload.css" type="text/css" media="screen" title="no title" charset="utf-8" />
     
 	<?php endif; ?>
 	<?php if ($isForm): ?>
 		<!-- form Scripts -->
-		<script language="javascript" type="text/javascript" src="sys/jquery/ui/i18n/ui.datepicker-nl.js"></script>
-		<script language="javascript" type="text/javascript" src="sys/jquery/plugins/timepicker/jquery.ui.timepicker<?=$js?>"></script>
-    <script language="javascript" type="text/javascript" src="sys/jquery/plugins/multiselect/jquery.multiselect<?=$js?>"></script>
-		<link rel="stylesheet" href="sys/jquery/plugins/multiselect/jquery.multiselect.css" type="text/css" media="screen" title="no title" charset="utf-8" />
-		<script src="sys/jquery/plugins/colorpicker/js/colorpicker.js" type="text/javascript" charset="utf-8"></script>
-		<link rel="stylesheet" href="sys/jquery/plugins/colorpicker/css/colorpicker.css" type="text/css" media="screen" title="no title" charset="utf-8" />
+		<script language="javascript" type="text/javascript" src="<?=admin_assets()?>../../jquery/ui/i18n/ui.datepicker-nl.js"></script>
+		<script language="javascript" type="text/javascript" src="<?=admin_assets()?>../../jquery/plugins/timepicker/jquery.ui.timepicker<?=$js?>"></script>
+    <script language="javascript" type="text/javascript" src="<?=admin_assets()?>../../jquery/plugins/multiselect/jquery.multiselect<?=$js?>"></script>
+		<link rel="stylesheet" href="<?=admin_assets()?>../../jquery/plugins/multiselect/jquery.multiselect.css" type="text/css" media="screen" title="no title" charset="utf-8" />
+		<script src="<?=admin_assets()?>../../jquery/plugins/colorpicker/js/colorpicker.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" href="<?=admin_assets()?>../../jquery/plugins/colorpicker/css/colorpicker.css" type="text/css" media="screen" title="no title" charset="utf-8" />
 		<?php if ($show_editor): ?>
 			<!-- editor Scripts -->
-			<script language="javascript" type="text/javascript" src="sys/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-			<script language="javascript" type="text/javascript" src="sys/tinymce/jscripts/tiny_mce/jquery.tinymce.js"></script>
+			<script language="javascript" type="text/javascript" src="<?=admin_assets()?>../../tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+			<script language="javascript" type="text/javascript" src="<?=admin_assets()?>../../tinymce/jscripts/tiny_mce/jquery.tinymce.js"></script>
 			<script>
 			$(document).ready(function() {
 			   $('textarea.htmleditor').tinymce( {

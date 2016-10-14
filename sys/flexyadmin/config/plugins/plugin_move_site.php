@@ -55,29 +55,29 @@ $config['merge_and_complete_tables'] = array(
 
 // Paths to clean before move new content in
 $config['empty'] = array(
-  'site/assets/_thumbcache',
-  'site/assets/pictures',
-  'site/assets/downloads',
-  'site/assets/img',
+  SITEPATH.'assets/_thumbcache',
+  SITEPATH.'assets/pictures',
+  SITEPATH.'assets/downloads',
+  SITEPATH.'assets/img',
 );
 
 // Paths & files  to move
 $config['move'] = array(
   // 'ontwerp/',
-  // 'site/assets/',
-  'site/assets/img',
-  'site/assets/css',
-  'site/assets/js',
-  'site/assets/lists',
+  // SITEPATH.'assets/',
+  SITEPATH.'assets/img',
+  SITEPATH.'assets/css',
+  SITEPATH.'assets/js',
+  SITEPATH.'assets/lists',
 );
 
 // Paths & files to merge (keep newest)
 $config['merge'] = array(
-  'site/views/',
-  'site/libraries/',
-  'site/models/',
-  'site/helpers/',
-  'site/config/',
+  SITEPATH.'views/',
+  SITEPATH.'libraries/',
+  SITEPATH.'models/',
+  SITEPATH.'helpers/',
+  SITEPATH.'config/',
 );
 
 

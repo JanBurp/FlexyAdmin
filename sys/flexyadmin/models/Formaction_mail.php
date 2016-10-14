@@ -135,7 +135,7 @@
         // add path if needed
         $file=$value;
         if (get_suffix($file,'/')===$file) {
-          $file='site/assets/'.$this->settings['upload_path'].'/'.$value;
+          $file=SITEPATH.'assets/'.$this->settings['upload_path'].'/'.$value;
         }
         $this->email->attach($file);
       }

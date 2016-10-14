@@ -13,10 +13,10 @@
  * Er wordt gebruik gemaakt van de logbestanden van CodeIgniter, die aangevuld zijn met FlexyAdmin en eventueel eigen entries.
  * Zie [CodeIgniter Error handling](http://ellislab.com/codeigniter/user-guide/general/errors.html) bij `log_message()`.
  * 
- * - Standaard worden logfiles in de map site/cache geplaatst. Deze moet schrijfbaar zijn.
+ * - Standaard worden logfiles in de map SITEPATH.cache geplaatst. Deze moet schrijfbaar zijn.
  * - Logging staat standaard uit en kun je aanzetten door:
  *    - in de index.php deze code te uncommenten: `define('ENVIRONMENT','testing');`
- *    - of in site/config/config.php de `log_threshold` in te stellen op 4: `$config['log_threshold'] = 4;`
+ *    - of in SITEPATH.config/config.php de `log_threshold` in te stellen op 4: `$config['log_threshold'] = 4;`
  *
  * @author Jan den Besten
  */

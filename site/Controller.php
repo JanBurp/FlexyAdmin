@@ -113,7 +113,7 @@ class Main extends FrontEndController {
 		 * Caching
 		 * See: http://codeigniter.com/user_guide/general/caching.html
 		 * and: http://stevenbenner.com/2010/12/caching-with-codeigniter-zen-headaches-and-performance
-		 * Chache directory: site/cache must be writable.
+		 * Chache directory: SITEPATH.cache must be writable.
 		 *
 		 * After each change in FlexyAdmin the whole cache is flushed. So don't worry about that.
 		 * You have to flush the page yourself (or set an smaller time) if the page is (partly) dynamic with the cache_helper function: delete_cache( $this->uri->uri_string() );
