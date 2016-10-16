@@ -30,7 +30,7 @@ class File extends CI_Controller {
    */
   public function serve($path='',$file='') {
 		if (!empty($path) and !empty($file)) {
-			$fullpath = SITEPATH.'assets/'.$path.'/'.$file;
+      $fullpath = SITEPATH.'assets/'.$path.'/'.$file;
 			if ( file_exists($fullpath) ) {
         if ( in_array($path,$this->serve_rights) or $this->mediatable->has_serve_rights($path,$file) ) {
           $type=get_suffix($file,'.');
@@ -43,6 +43,29 @@ class File extends CI_Controller {
     show_404('page');
     return false;
   }
+  
+  /**
+   * Serve admin assets
+   *
+   * @param string $path 
+   * @param string $file 
+   * @return void
+   * @author Jan den Besten
+   */
+  public function admin_assets($path='',$file='') {
+		if (!empty($path) and !empty($file)) {
+      $fullpath = APPPATH.'assets/'.$path.'/'.$file;
+			if ( file_exists($fullpath) ) {
+        $type=get_suffix($file,'.');
+        $this->output->set_content_type($type);
+        $this->output->set_output(file_get_contents($fullpath));
+        return;
+			}
+		}
+    show_404('page');
+    return false;
+  }
+
 
   /**
    * Download gevraagde bestand
