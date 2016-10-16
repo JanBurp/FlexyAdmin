@@ -821,6 +821,39 @@ class DataTest extends CITestCase {
     $first = current($result);
     $this->assertEquals( 'Evertsen', $first['str_last_name'] );
   }
+  
+  
+  public function testCaching() {
+    $this->CI->data->table('tbl_groepen');
+    // Simple
+    $result = $this->CI->data->cache()->get_result();
+    $info   = $this->CI->data->get_query_info();
+    $cached_result = $this->CI->data->cache()->get_result();
+    $cached_info   = $this->CI->data->get_query_info();
+    $this->assertEquals($result,$cached_result);
+    $this->assertFalse($info['from_cache']);
+    $this->assertTrue($cached_info['from_cache']);
+
+    // Where, order, limit
+    $result = $this->CI->data->cache()->where('str_soort','groep')->order_by('id')->get_result(3);
+    $info   = $this->CI->data->get_query_info();
+    $cached_result = $this->CI->data->cache()->where('str_soort','groep')->order_by('id')->get_result(3);
+    $cached_info   = $this->CI->data->get_query_info();
+    $this->assertEquals($result,$cached_result);
+    $this->assertFalse($info['from_cache']);
+    $this->assertTrue($cached_info['from_cache']);
+
+    // Relations
+    $result = $this->CI->data->cache()->with('many_to_many')->get_result(3);
+    $info   = $this->CI->data->get_query_info();
+    $cached_result = $this->CI->data->cache()->with('many_to_many')->get_result(3);
+    $cached_info   = $this->CI->data->get_query_info();
+    $this->assertEquals($result,$cached_result);
+    $this->assertFalse($info['from_cache']);
+    $this->assertTrue($cached_info['from_cache']);
+    
+    $this->CI->data->clear_cache();
+  }
 
 
 

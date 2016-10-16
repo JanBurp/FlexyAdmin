@@ -40,7 +40,12 @@ Class Data_Create extends CI_Model {
       if ($result) $this->messages[] = 'Settings cache for '.$table.' removed.';
     }
     else {
-      $result = $this->cache->clean();
+      $cached_results = $this->cache->cache_info();
+      foreach ($cached_results as $cache) {
+        if (substr($cache['name'],0,14)==='data_settings_' ) {
+          $this->cache->delete($cache['name']);
+        }
+      }
       if ($result) $this->messages[] = 'Settings cache for all tables removed.';
     }
     return $result;
