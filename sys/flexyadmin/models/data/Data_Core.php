@@ -6,7 +6,7 @@
  * - Alle instellingen van een tabel en zijn velden tabel zijn te vinden in config/data/...
  * - Standaard get/crud zit in het model, voor elke tabel hetzelfde.
  * - Iedere tabel kan deze overerven en aanpassen naar wens, de aanroepen blijven hetzelfde voor iedere tabel.
- * - Naast ->get() die een query object teruggeeft ook ->get_result() die een aangepaste result array teruggeeft met relatie data als subarray.
+ * - Naast ->get() die een query object teruggeeft ook ->get_result() die een aangepaste result array teruggeeft met relatie data als subarray en mogelijkheid tot caching heeft.
  * 
  * 
  * Enkele belangrijke methods (deels overgeerft van Query Builder):
@@ -45,6 +45,11 @@ Class Data_Core extends CI_Model {
 
 
   /**
+   * Testing this
+   */
+  private $caching = FALSE;
+
+  /**
    * De instellingen voor deze tabel en velden.
    * Deze worden opgehaald uit het config bestand met dezelfde naam als die model. (config/data/data_model.php in dit geval)
    */
@@ -79,6 +84,21 @@ Class Data_Core extends CI_Model {
    */
   protected $relation_tables = array();
   
+  /**
+   * Set to TRUE if a query has been prepared
+   */
+  protected $tm_query_prepared = FALSE;
+  
+  /**
+   * Of huidig resultaat moet worden gecached of niet
+   */
+  protected $tm_cache_result = FALSE;
+
+  /**
+   * De naam van de cache van huidige query
+   */
+  protected $tm_cache_name = '';
+
   /**
    * Hou SELECT bij om ervoor te zorgen dat SELECT in orde is
    */
@@ -265,7 +285,7 @@ Class Data_Core extends CI_Model {
       }
       $this->cache->save('data_settings_'.$table, $this->settings, TIME_YEAR );
     }
-    // if ($table==='cfg_users')  trace_($this->settings);
+    // if ($table==='tbl_links')  trace_($this->settings['abstract_fields']);
     return $this->settings;
   }
   
@@ -913,17 +933,20 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   public function reset() {
-    $this->tm_select            = FALSE;
-    $this->tm_unselect          = FALSE;
-    $this->tm_from              = '';
-    $this->tm_path              = FALSE;
-    $this->tm_where_path        = array();
-    $this->tm_order_by          = array();
-    $this->tm_limit             = 0;
-    $this->tm_offset            = 0;
-    $this->tm_jump_to_today     = FALSE;
-    $this->tm_find              = FALSE;
-    $this->tm_has_condition     = FALSE;
+    $this->tm_query_prepared = FALSE;
+    $this->tm_cache_result   = $this->caching;
+    $this->tm_cache_name     = '';
+    $this->tm_select         = FALSE;
+    $this->tm_unselect       = FALSE;
+    $this->tm_from           = '';
+    $this->tm_path           = FALSE;
+    $this->tm_where_path     = array();
+    $this->tm_order_by       = array();
+    $this->tm_limit          = 0;
+    $this->tm_offset         = 0;
+    $this->tm_jump_to_today  = FALSE;
+    $this->tm_find           = FALSE;
+    $this->tm_has_condition  = FALSE;
     $this->with(FALSE);
     $this->db->reset_query();
     return $this;
@@ -1455,6 +1478,73 @@ Class Data_Core extends CI_Model {
    */
   public function get( $limit=0, $offset=0, $reset = true ) {
 
+    $this->_prepare_query($limit,$offset);
+    
+    // get
+    $query = $this->db->get();
+    
+    // Jump to today? Pas query aan.
+    if ( $query AND $this->tm_jump_to_today AND $this->tm_limit>1 ) {
+      $this->query_info['limit']      = (int) $this->tm_limit;
+      $this->query_info['total_rows'] = $this->total_rows( true );
+      // Jump to today nodig?
+      if ($this->query_info['total_rows']>$this->query_info['limit']) {
+        // Is (eerste) order_by het jump_to_today veld?
+        $order_by = $this->tm_order_by[0];
+        $date_field=remove_suffix($order_by,' ');
+        if ( $date_field==$this->tm_jump_to_today ) {
+          // Tel aantal items eerder dan vandaag
+          $direction=get_suffix($order_by,' ');
+          $last_full_sql = $this->last_query();
+          $last_clean_sql = $this->last_clean_query();
+          unset($this->query_info['last_query']); // reset last_query
+          if ($direction=='DESC')
+            $direction='>';
+          else
+            $direction='<';
+          $count_sql = $last_clean_sql . ' WHERE DATE(`'.$date_field.'`) '.$direction.'= DATE(NOW()) ORDER BY '.$order_by;
+          $count_query = $this->db->query( $count_sql );
+          $jump_offset = $count_query->num_rows();
+          $page = (int) floor($jump_offset / $this->tm_limit);
+          $this->tm_offset = $page * $this->tm_limit;
+          $sql = str_replace( 'LIMIT '.$this->tm_limit, 'LIMIT '.$this->tm_offset.','.$this->tm_limit, $last_full_sql);
+          $this->_create_cache_name($sql);
+          $query = $this->db->query( $sql );
+          $this->query_info['today'] = true;
+        }
+      }
+    }
+    
+    // Query Info Complete
+    if ($query) {
+      $this->query_info['from_cache'] = FALSE;
+      $this->query_info['num_rows']   = $query->num_rows();
+      $this->query_info['total_rows'] = $query->num_rows();
+      if ($this->tm_limit>1) {
+        $this->query_info['limit']      = (int) $this->tm_limit;
+        $this->query_info['offset']     = $this->tm_offset;
+        $this->query_info['page']       = $this->tm_offset / $this->tm_limit;
+        $this->query_info['total_rows'] = $this->total_rows( true );
+        $this->query_info['num_pages']  = (int) ceil($this->query_info['total_rows'] / $this->tm_limit);
+      }
+      $this->query_info['num_fields'] = $query->num_fields();
+      $this->query_info['last_query'] = $this->last_query();
+    }
+    
+    if ( $reset ) $this->reset();
+    return $query;
+  }
+  
+  
+  /**
+   * Prepares query (if not done allready) before calling get()
+   *
+   * @return void
+   * @author Jan den Besten
+   */
+  private function _prepare_query( $limit=0, $offset=0 ) {
+    if ( $this->tm_query_prepared ) return $this;
+    
     // Bewaar limit & offset als ingesteld (overruled eerder ingestelde door ->limit() )
     if ($limit!=0 or $offset!=0) $this->limit( $limit,$offset );
 
@@ -1501,57 +1591,11 @@ Class Data_Core extends CI_Model {
     $this->db->limit( $this->tm_limit );
     $this->db->offset( $this->tm_offset );
     
-    // get
-    $query = $this->db->get();
+    // Cache name
+    $this->_create_cache_name( $this->db->get_compiled_select( '',FALSE ) );
     
-    // Jump to today?
-    if ( $query AND $this->tm_jump_to_today AND $this->tm_limit>1 ) {
-      $this->query_info['limit']      = (int) $this->tm_limit;
-      $this->query_info['total_rows'] = $this->total_rows( true );
-      // Jump to today nodig?
-      if ($this->query_info['total_rows']>$this->query_info['limit']) {
-        // Is (eerste) order_by het jump_to_today veld?
-        $order_by = $this->tm_order_by[0];
-        $date_field=remove_suffix($order_by,' ');
-        if ( $date_field==$this->tm_jump_to_today ) {
-          // Tel aantal items eerder dan vandaag
-          $direction=get_suffix($order_by,' ');
-          $last_full_sql = $this->last_query();
-          $last_clean_sql = $this->last_clean_query();
-          unset($this->query_info['last_query']); // reset last_query
-          if ($direction=='DESC')
-            $direction='>';
-          else
-            $direction='<';
-          $count_sql = $last_clean_sql . ' WHERE DATE(`'.$date_field.'`) '.$direction.'= DATE(NOW()) ORDER BY '.$order_by;
-          $count_query = $this->db->query( $count_sql );
-          $jump_offset = $count_query->num_rows();
-          $page = (int) floor($jump_offset / $this->tm_limit);
-          $this->tm_offset = $page * $this->tm_limit;
-          $sql = str_replace( 'LIMIT '.$this->tm_limit, 'LIMIT '.$this->tm_offset.','.$this->tm_limit, $last_full_sql);
-          $query = $this->db->query( $sql );
-          $this->query_info['today'] = true;
-        }
-      }
-    }
-    
-    // Query Info Complete
-    if ($query) {
-      $this->query_info['num_rows']   = $query->num_rows();
-      $this->query_info['total_rows'] = $query->num_rows();
-      if ($this->tm_limit>1) {
-        $this->query_info['limit']      = (int) $this->tm_limit;
-        $this->query_info['offset']     = $this->tm_offset;
-        $this->query_info['page']       = $this->tm_offset / $this->tm_limit;
-        $this->query_info['total_rows'] = $this->total_rows( true );
-        $this->query_info['num_pages']  = (int) ceil($this->query_info['total_rows'] / $this->tm_limit);
-      }
-      $this->query_info['num_fields'] = $query->num_fields();
-      $this->query_info['last_query'] = $this->last_query();
-    }
-
-    if ( $reset ) $this->reset();
-    return $query;
+    $this->tm_query_prepared = TRUE;
+    return $this;
   }
   
   
@@ -1599,6 +1643,7 @@ Class Data_Core extends CI_Model {
     $one_to_one_defaults=array();
     
     while ( $row = $query->unbuffered_row('array') ) {
+    // foreach ( $query->result_array() as $row) {
 
       // keys
       $id = $row[$this->settings['primary_key']];
@@ -1777,17 +1822,29 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   private function _get_result( $limit=0, $offset=0 ) {
+    // First check if there is a cached result
+    if ($this->tm_cache_result) {
+      $this->_prepare_query($limit,$offset);
+      $result = $this->_get_cached_result();
+      if ($result) {
+        $this->reset();
+        return $result;
+      }
+    }
+    
+    // No cache, just create result from database
     $result = array();
     $query = $this->get( $limit, $offset, FALSE );
     if ($query) {
       $result = $this->_make_result_array( $query );
+      if ($this->tm_cache_result) $this->_cache_result($result);
       $query->free_result();
     }
+
     $this->reset();
     return $result;
   }
-
-
+  
 
 
   /**
@@ -1804,13 +1861,7 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   public function get_result( $limit=0, $offset=0 ) {
-    $result = array();
-    $query = $this->get( $limit, $offset, FALSE );
-    if ($query) {
-      $result = $this->_make_result_array( $query );
-      $query->free_result();
-    }
-    $this->reset();
+    $result = $this->_get_result($limit,$offset);
     return $result;
   }
   
@@ -1891,6 +1942,72 @@ Class Data_Core extends CI_Model {
     }
     return $options;
   }
+  
+  
+  /**
+   * Zet caching voor dit resultaat aan of uit (werk alleen in combinatie met get_result() en get_row() )
+   *
+   * @param bool [$caching=TRUE] 
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function cache($caching=TRUE) {
+    $this->tm_cache_result = $caching;
+    return $this;
+  }
+  
+  /**
+   * Maakt naam voor cache bestand specifiek voor deze query
+   *
+   * @param string $sql 
+   * @return string
+   * @author Jan den Besten
+   */
+  private function _create_cache_name($sql) {
+    $this->tm_cache_name = 'data_result_'.$this->settings['table'].'_'.md5($sql);
+    return $this->tm_cache_name;
+  }
+  
+  /**
+   * Bewaar huidige resultaat in de cache
+   *
+   * @param string $result 
+   * @return this
+   * @author Jan den Besten
+   */
+  private function _cache_result($result) {
+    $this->cache->save( $this->tm_cache_name, $result, TIME_YEAR );
+    return $this;
+  }
+  
+  /**
+   * Haalt resultaat van huidige query op uit de cache (of geef FALSE)
+   *
+   * @return mixed
+   * @author Jan den Besten
+   */
+  private function _get_cached_result() {
+    $cached = $this->cache->get( $this->tm_cache_name );
+    if ($cached) $this->query_info['from_cache'] = TRUE;
+    return $cached;
+  }
+  
+  /**
+   * Verwijder alle result caches
+   *
+   * @return void
+   * @author Jan den Besten
+   */
+  public function clear_cache() {
+    $cached_results = $this->cache->cache_info();
+    foreach ($cached_results as $cache) {
+      if ( substr($cache['name'],0,12)==='data_result_' ) {
+        $this->cache->delete($cache['name']);
+      }
+    }
+    return $this;
+  }
+  
   
   
   
@@ -3853,12 +3970,13 @@ Class Data_Core extends CI_Model {
 
     
     /**
-     * Ok we kunnen! Stel nog even alles in...
+     * Ok we kunnen! Stel nog even alles in en maak cache leeg
      */
     if ($where) $this->where( $where );
     if ($limit) $this->limit( $limit );
 		$set = $this->tm_set;
     $id = NULL;
+    $this->clear_cache();
     
     /**
      * Als een UPDATE check of er wel een WHERE is om te voorkomen dat een hele tabel wordt overschreven.
@@ -4190,6 +4308,7 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
 	public function delete( $where = '', $limit = NULL, $reset_data = TRUE ) {
+    $this->clear_cache();
     
     /**
      * Is het een ordered tabel?
