@@ -3,13 +3,7 @@
 Class Data_Create extends CI_Model {
   
   
-  private $paths = array(
-    'sys_model'   => 'sys/flexyadmin/models/data/',
-    'site_model'  => SITEPATH.'models/data/',
-    'sys_config'  => 'sys/flexyadmin/config/data/',
-    'site_config' => SITEPATH.'config/data/',
-  );
-    
+  private $paths = array();
   
   protected $site_models = array('tbl','rel');
   // protected $show_always = array('id','order','self_parent');
@@ -18,11 +12,45 @@ Class Data_Create extends CI_Model {
   
 	public function __construct() {
 		parent::__construct();
+    $this->paths = array(
+      'sys_model'   => 'sys/flexyadmin/models/data/',
+      'site_model'  => SITEPATH.'models/data/',
+      'sys_config'  => 'sys/flexyadmin/config/data/',
+      'site_config' => SITEPATH.'config/data/',
+    );
+    
     $this->load->library('parser');
     $this->load->library('form_validation');
     $this->load->model('cfg');
     $this->load->model( 'data/data', 'data' );
 	}
+  
+  
+  /**
+   * Clear data settings cache
+   *
+   * @param string [$table] 
+   * @return bool
+   * @author Jan den Besten
+   */
+  public function resetcache( $table='' ) {
+    $result = FALSE;
+    if (!empty($table)) {
+      $result = $this->cache->delete('data_settings_'.$table);
+      if ($result) $this->messages[] = 'Settings cache for '.$table.' removed.';
+    }
+    else {
+      $cached_results = $this->cache->cache_info();
+      foreach ($cached_results as $cache) {
+        if (substr($cache['name'],0,14)==='data_settings_' ) {
+          $this->cache->delete($cache['name']);
+        }
+      }
+      if ($result) $this->messages[] = 'Settings cache for all tables removed.';
+    }
+    return $result;
+  }
+  
   
   public function create( $table='', $save = TRUE ) {
     $returned_config = array();

@@ -30,6 +30,7 @@ class Cli extends CI_Controller {
       if ($num>=3 and $args[$num-3]=='login') {
         $password = array_pop($args);
         $username = array_pop($args);
+        array_pop($args);
         $this->flexy_auth->login( $username, $password );
       }
       

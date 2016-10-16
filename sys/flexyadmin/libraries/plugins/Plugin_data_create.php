@@ -4,7 +4,7 @@
  * @author Jan den Besten
  */
  
-class Plugin_create_data_model extends Plugin {
+class Plugin_data_create extends Plugin {
 
 	public function __construct() {
 		parent::__construct();
@@ -16,16 +16,22 @@ class Plugin_create_data_model extends Plugin {
 			$this->add_content(h($this->name,1));
 			$goodArgs=false;
 			if ($args) {
-				if (isset($args[0])) $table=$args[0];
+        $table = array_shift($args);
 				if (isset($table)) $goodArgs=true;
 				if ($goodArgs) {
           $this->CI->load->model('data/data_create');
-          $this->CI->data_create->create($table);
+          if ($table=='reset') {
+            $table = array_shift($args);
+            $this->CI->data_create->resetcache($table);
+          }
+          else {
+            $this->CI->data_create->create($table);
+          }
           $this->add_content( $this->CI->data_create->output() );
 				}
 			}
 			if (!$goodArgs) {
-				$this->add_content('<p>Which table?</br></br>Give: /tbl_xxx</p>');
+				$this->add_content('<p>Which table?</br></br>Give: /tbl_xxx or /reset/[tbl_xxx]</p>');
 			}
       return $this->content;
 		}

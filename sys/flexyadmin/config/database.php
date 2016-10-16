@@ -22,7 +22,7 @@ foreach (array('default','local','import','phpunit') as $group) {
   else
     $db[$group]['db_debug'] = FALSE;
   $db[$group]['cache_on'] = FALSE;
-  $db[$group]['cachedir'] = SITEPATH."cache";
+  $db[$group]['cachedir'] = SITEPATH."cache/";
   $db[$group]['char_set'] = "utf8";
   $db[$group]['dbcollat'] = "utf8_general_ci";
 
