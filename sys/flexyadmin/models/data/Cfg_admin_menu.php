@@ -52,6 +52,38 @@ Class cfg_admin_menu extends Data_Core {
     return array('header'=>$header,'sidebar'=>$sidebar,'footer'=>$footer);
   }
   
+  /**
+   * Speciale get om gegenereerd menu op te halen 
+   *
+   * @return void
+   * @author Jan den Besten
+   */
+  public function get_menus() {
+    $user = $this->flexy_auth->get_user();
+    
+    $this->where( array(
+      'b_visible'=>true,
+      'id_user_group >=' => current(array_keys($user['groups'])),
+      'order >=' => 4,
+      'api !='=> 'API_plugin_stats'
+    ));
+    $result = $this->get_result();
+
+    $sidebar=$this->_process_menu($result);
+    
+    $headerMenu = new Menu();
+    $headerMenu->add( array( 'name' => lang('help'), 'uri'=>'_admin/help/index', 'glyphicon' => 'info' ));
+    $headerMenu->add( array( 'name' => $user['username'], 'uri'=>'_admin/form/cfg_users/'.$user['id'], 'glyphicon' => 'user') );
+    $headerMenu->add( array( 'name' => lang('logout'), 'uri'=>'_admin/logout', 'glyphicon' => 'logout' ));
+
+    $footerMenu = new Menu();
+    $footerMenu->add( array( 'name' => lang('settings'), 'uri'=>'_admin/form/tbl_site/1', 'glyphicon' => 'settings'));
+    $footerMenu->add( array( 'name' => lang('statistics'), 'uri'=>'_admin/plugin/stats', 'glyphicon' => 'stats'));
+
+    return array('headermenu'=>$headerMenu->render(),'sidemenu'=>$sidebar,'footermenu'=>$footerMenu->render());
+  }
+  
+  
   
   /**
    * Process database result from cfg_admin_menu to a menu array

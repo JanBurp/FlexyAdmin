@@ -19,14 +19,11 @@
 
 <div class="container-fluid">
   
-  <div class="navbar navbar-light navbar-fixed-top">
+  <div id="header" class="navbar navbar-light bg-faded navbar-fixed-top">
     <!-- Site title -->
     <div class="navbar-text"><a id="flexyadmin" class="flexy-blocks" href="admin"><?=$str_title?></a></div>
     <!--Top menu -->
-    <ul id="flexy-menu-top" class="nav navbar-nav">
-      <li class="nav-item"><a class="nav-link" href="#">Link</a></li>
-      <li class="nav-item"><a class="nav-link" href="#">Link 2</a></li>
-    </ul>
+    <?=$headermenu?>
   </div>
   
   <div class="flexy-alerts"></div>
@@ -44,10 +41,11 @@
     
   </div>
   
-  <div id="footer" class="navbar navbar-default navbar-fixed-bottom">
+  <div id="footer" class="navbar navbar-light bg-faded navbar-fixed-bottom">
     <div class="navbar-text">
       <a href="admin" class="flexy-blocks">FlexyAdmin</a>
     </div>
+    <?=$footermenu?>
   </div>
   
 
