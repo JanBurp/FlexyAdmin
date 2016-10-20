@@ -44,7 +44,7 @@ class Help extends AdminController {
     $helpHTML = str_replace('sys/flexyadmin/assets/',$this->config->item('ADMINASSETS'),$helpHTML);
 
 		$this->_add_content($this->load->view("admin/help_".$lang,array('page'=>$page,'commonHelp'=>$commonHelp,'help'=>$helpHTML),true) );
-		$this->_show_all();
+		$this->view_admin();
 	}
 
 }

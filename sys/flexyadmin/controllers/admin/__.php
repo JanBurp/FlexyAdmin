@@ -50,7 +50,7 @@ class __ extends AdminController {
     $menu = new Menu();
     $menu->set_menu($menuArray);
     $this->_add_content($menu->render());
-    $this->_show_all();
+    $this->view_admin();
 	}
 
   
@@ -127,7 +127,7 @@ class __ extends AdminController {
         
       }
     }
-    $this->_show_all();
+    $this->view_admin();
   }
   
 
@@ -159,7 +159,7 @@ class __ extends AdminController {
       $this->_add_content('<p>'.$path.'</p>');
       empty_map($path);
 		}
-    $this->_show_all();
+    $this->view_admin();
   }
   
   
@@ -174,7 +174,7 @@ class __ extends AdminController {
       $form=new Form();
       $form->set_data($fields);
       $this->_add_content($form->render('Log'));
-      $this->_show_all();
+      $this->view_admin();
       return;
     }
     
@@ -286,7 +286,7 @@ class __ extends AdminController {
     $new_changelog=$changelog."\n\n".$old_changelog;
     write_file('changelog.txt',$new_changelog);
     
-    $this->_show_all();
+    $this->view_admin();
   }
   
   
@@ -319,7 +319,7 @@ class __ extends AdminController {
     $this->_add_content('<p>Cleanup</p>');
     empty_map($this->path.$tags,TRUE,TRUE);
     
-    $this->_show_all();
+    $this->view_admin();
   }
   
   
@@ -357,7 +357,7 @@ class __ extends AdminController {
       $this->_add_content('<p>'.$minFile.'</p>');
     }
     
-    $this->_show_all();
+    $this->view_admin();
   }
   
   /**
@@ -394,7 +394,7 @@ class __ extends AdminController {
     $this->_apidoc($apiMapFrontend,'frontend_api');
     
     
-    $this->_show_all();
+    $this->view_admin();
   }
   
   private function _apidoc($map,$destination) {
@@ -442,7 +442,7 @@ class __ extends AdminController {
     // };
     
     
-    $this->_show_all();
+    $this->view_admin();
   }
 
 

@@ -153,7 +153,7 @@ class Search extends AdminController {
         $this->_add_content(div($class).$htmlTest._div());  
 			}
 		}
-		$this->_show_all();
+		$this->view_admin();
 	}
 
 	private function myErrorHandler($errno, $errstr, $errfile, $errline) 	{

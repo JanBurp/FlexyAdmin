@@ -10,25 +10,5 @@
 		</div>
 	</div>
 
-	<?php if ($view!="") $this->load->view($view,$data); ?>
-
-	<div id="ui">
-	</div>
-	
-	<div id="popup">
-	</div>
-	
-	<div id="help_messages">
-		<?php foreach ($help as $key => $value) : ?>
-			<span id="<?=$key?>"><?=$value;?></span>
-    <?php endforeach; ?>
-	</div>
-
-	<div id="ui_messages">
-		<?php foreach ($dialog as $key => $value) : ?>
-			<span id="<?=$key?>"><?=$value;?></span>
-    <?php endforeach; ?>
-	</div>
-
 </body>
 </html>

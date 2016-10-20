@@ -18,7 +18,7 @@ class Filemanager extends AdminController {
 	}
 
   public function index() {
-		$this->_show_all();
+		$this->view_admin();
 	}
 
   private function _has_rights($path,$whatRight=0) {
@@ -181,7 +181,7 @@ class Filemanager extends AdminController {
 			}
 		}
 		if (!isset($name)) $name="";
-		$this->_show_all($name);
+		$this->view_admin($name);
 	}
 
   /**
@@ -559,7 +559,7 @@ class Filemanager extends AdminController {
 
 
 		$this->_show_type("form");
-    $this->_show_all($path);
+    $this->view_admin($path);
 	}
 
 }

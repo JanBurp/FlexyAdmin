@@ -114,7 +114,7 @@ class Fill extends AdminController {
 			}
 			$this->_add_content(div('after_form').$htmlTest._div());	
 		}
-		$this->_show_all();
+		$this->view_admin();
 	}
 
 	function myErrorHandler($errno, $errstr, $errfile, $errline) 	{

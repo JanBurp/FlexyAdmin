@@ -24,7 +24,7 @@ class Main extends AdminController {
     $data['homeplugins']=$this->plugin_handler->call_plugins_homepage();
     
     $this->_set_content($this->load->view("admin/home",$data,true));
-		$this->_show_all();
+		$this->view_admin();
 	}
 
 

@@ -17,7 +17,7 @@ class Edit extends AdminController {
 	}
 
 	function index() {
-		$this->_show_all();
+		$this->view_admin();
 	}
 
 
@@ -39,7 +39,7 @@ class Edit extends AdminController {
 				redirect(api_uri('API_view_grid',$table));
 			}
 		}
-		$this->_show_all();
+		$this->view_admin();
 	}
 
 
