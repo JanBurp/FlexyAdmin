@@ -3,3 +3,4 @@ node_modules/*
 site/cache/log*.php
 site/stats/*.xml
 site/cache/data_settings_*
+site/cache/data_result*

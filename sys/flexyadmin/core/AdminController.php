@@ -345,11 +345,17 @@ class AdminController extends BasicController {
 
 
   private function _prepare_view_data() {
-    // Alles uit tbl_site
-    $this->view_data = $this->data->table('tbl_site')->get_row();
+    // tbl_site
+    $this->view_data = $this->data->table('tbl_site')->select('str_title,url_url')->cache()->get_row();
     $this->view_data['url_url'] = str_replace('http://','',$this->view_data['url_url']);
+    
     // Language
     $this->view_data['language'] = $this->language;
+
+    // Menus
+    $menus = $this->data->table('cfg_admin_menu')->get_menus();
+    $this->view_data = array_merge($this->view_data,$menus);
+    
     // Editor stuff
     // $buttons1=$this->cfg->get('CFG_configurations',"str_buttons1");
     // $buttons2=$this->cfg->get('CFG_configurations',"str_buttons2");
@@ -360,12 +366,13 @@ class AdminController extends BasicController {
     // $formats=$this->cfg->get('CFG_configurations',"str_formats");
     // $styles=$this->cfg->get('CFG_configurations',"str_styles");
 
+
     // $this->_show_message();
-    // $this->_show_menu($currentMenuItem);
     // $this->_show_content();
     // $this->_show_trace();
     // $this->_show_footer();
     
+    // trace_($this->view_data);
   }
   
   /**
