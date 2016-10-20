@@ -13,14 +13,16 @@ require_once(APPPATH."core/BasicController.php");
  
 class AdminController extends BasicController {
 
-	var $currentTable;
-	var $currentId;
-	var $currentUser;
-	var $contentHTML;
-	var $showEditor;
-	var $showType;
-	var $helpTexts;
-	var $js;
+  private $view_data = array();
+
+  // var $currentTable;
+  // var $currentId;
+  // var $currentUser;
+  // var $contentHTML;
+  // var $showEditor;
+  // var $showType;
+  // var $helpTexts;
+  // var $js;
 
 	public function __construct() {
 		parent::__construct(true);
@@ -28,16 +30,16 @@ class AdminController extends BasicController {
     $this->load->model('version');
     
     // default js variables
-    if ($this->config->item('admin_js_vars')) $this->js = $this->config->item('admin_js_vars');
-    $this->js['site_url'] = rtrim(site_url(),'/').'/';
-    $this->js['admin_assets'] = $this->config->item('ADMINASSETS');
-    $this->js['form_nice_dropdowns'] = $this->config->item('FORM_NICE_DROPDOWNS');
-    $multiple_upload = $this->config->item('MULTIPLE_UPLOAD');
-    if (is_array($multiple_upload)) {
-      $user_group=$this->flexy_auth->user_group;
-      $multiple_upload=$multiple_upload[$user_group];
-    }
-    $this->js['multiple_upload'] = $multiple_upload;
+    // if ($this->config->item('admin_js_vars')) $this->js = $this->config->item('admin_js_vars');
+    // $this->js['site_url'] = rtrim(site_url(),'/').'/';
+    // $this->js['admin_assets'] = $this->config->item('ADMINASSETS');
+    // $this->js['form_nice_dropdowns'] = $this->config->item('FORM_NICE_DROPDOWNS');
+    // $multiple_upload = $this->config->item('MULTIPLE_UPLOAD');
+    // if (is_array($multiple_upload)) {
+    //   $user_group=$this->flexy_auth->user_group;
+    //   $multiple_upload=$multiple_upload[$user_group];
+    // }
+    // $this->js['multiple_upload'] = $multiple_upload;
     
 		if ( ! $this->flexy_auth->logged_in() ) {
 			redirect($this->config->item('API_login'));
@@ -46,16 +48,16 @@ class AdminController extends BasicController {
 			$this->flexy_auth->logout();
 			redirect(site_url());
 		}
-		$this->currentTable="";
-		$this->currentId="";
-		$this->currentUser="";
-		$this->currentMenuItem="";
-		$this->contentHTML="";
-		$this->showEditor=false;
+    // $this->currentTable="";
+    // $this->currentId="";
+    // $this->currentUser="";
+    // $this->currentMenuItem="";
+    // $this->contentHTML="";
+    // $this->showEditor=false;
 		$this->load->model("ui");
 		$this->load->library("menu");
 		$this->load->dbforge();
-		$this->helpTexts=array();
+    // $this->helpTexts=array();
 	}
 
 
@@ -337,16 +339,46 @@ class AdminController extends BasicController {
 	}
 
 	function _show_type($type) {
-		$this->showType=add_string($this->showType,$type,' ');
+    // $this->showType=add_string($this->showType,$type,' ');
 	}
 
-	function _show_all($currentMenuItem="") {
-		$this->_show_header();
-		$this->_show_message();
-		$this->_show_menu($currentMenuItem);
-		$this->_show_content();
-		$this->_show_trace();
-		$this->_show_footer();
+
+
+  private function _prepare_view_data() {
+    // Alles uit tbl_site
+    $this->view_data = $this->data->table('tbl_site')->get_row();
+    $this->view_data['url_url'] = str_replace('http://','',$this->view_data['url_url']);
+    // Language
+    $this->view_data['language'] = $this->language;
+    // Editor stuff
+    // $buttons1=$this->cfg->get('CFG_configurations',"str_buttons1");
+    // $buttons2=$this->cfg->get('CFG_configurations',"str_buttons2");
+    // $buttons3=$this->cfg->get('CFG_configurations',"str_buttons3");
+    // if ($this->flexy_auth->is_super_admin()) {
+    //   if (strpos($buttons1,"code")===FALSE) $buttons1.=",|,code";
+    // }
+    // $formats=$this->cfg->get('CFG_configurations',"str_formats");
+    // $styles=$this->cfg->get('CFG_configurations',"str_styles");
+
+    // $this->_show_message();
+    // $this->_show_menu($currentMenuItem);
+    // $this->_show_content();
+    // $this->_show_trace();
+    // $this->_show_footer();
+    
+  }
+  
+  /**
+   * Laad de admin pagina zien
+   *
+   * @param string $currentMenuItem 
+   * @return this
+   * @author Jan den Besten
+   */
+	public function view_admin($currentMenuItem="") {
+    $this->_prepare_view_data();
+    $this->load->view('admin/admin',$this->view_data);
+    return $this;
 	}
 
 	function _show_view($theView,$data=NULL,$bFooter=true) {

@@ -20,7 +20,7 @@ class Info extends AdminController {
     $data["version"]=$this->version->get_version();
 		$this->_set_content($this->load->view("admin/info_".$data["language"],$data,true));
 		$this->_show_type("info");
-		$this->_show_all();
+		$this->view_admin();
 	}
 
 	function php() {
@@ -32,7 +32,7 @@ class Info extends AdminController {
 		$info = str_replace('<table ', '<table class="grid" ', $info);
 		$this->_show_type("phpinfo");
 		$this->_add_content($info);
-		$this->_show_all();
+		$this->view_admin();
 	}
 
 	function license() {
@@ -43,7 +43,7 @@ class Info extends AdminController {
     }
 		$this->_set_content('<p class="small">'.str_replace("\n","<br/>",file_get_contents($license_file.'.txt'))."</p>");
 		$this->_show_type("info");
-		$this->_show_all();
+		$this->view_admin();
 	}
 
 }

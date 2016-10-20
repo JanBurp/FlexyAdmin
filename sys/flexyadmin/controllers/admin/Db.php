@@ -32,7 +32,7 @@ class Db extends AdminController {
 	}
 
 	function index() {
-		$this->_show_all();
+		$this->view_admin();
 	}
 
 	function _export() {
@@ -108,7 +108,7 @@ class Db extends AdminController {
 				force_download($name.'.'.$ext, $backup);
 			}
 		}
-		$this->_show_all();
+		$this->view_admin();
 	}
 
   private function _set_tables($expressions) {
@@ -196,7 +196,7 @@ class Db extends AdminController {
 			force_download($filename, $backup);
 			$this->_add_content(h(1,"Backup"));
 		}
-		$this->_show_all();
+		$this->view_admin();
 	}
 
 	function restore() {
@@ -221,7 +221,7 @@ class Db extends AdminController {
 				// }
 			}
 		}
-		$this->_show_all(lang('db_restore'));
+		$this->view_admin(lang('db_restore'));
 	}
 	
 
@@ -368,7 +368,7 @@ class Db extends AdminController {
 				}
 			}
 		}
-		$this->_show_all(lang('db_import'));					
+		$this->view_admin(lang('db_import'));					
 	}
 	
 	function _sql($sql,$title,$action) {
@@ -403,7 +403,7 @@ class Db extends AdminController {
 				$this->_sql($sql,"Import","Importing ...");
 			}
 		}
-		$this->_show_all(lang('db_import'));				
+		$this->view_admin(lang('db_import'));				
 	}
 	
 }

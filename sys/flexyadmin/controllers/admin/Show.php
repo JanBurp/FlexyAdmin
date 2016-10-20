@@ -18,7 +18,7 @@ class Show extends AdminController {
 	}
 
 	public function index() {
-		$this->_show_all();
+		$this->view_admin();
 	}
 
 	/**
@@ -59,7 +59,7 @@ class Show extends AdminController {
         // Rechten voor deze tabel?
         $rights = $this->flexy_auth->has_rights($table,$id);
         if ( !$rights ) {
-          $this->_show_all();
+          $this->view_admin();
           return;
         }
         
@@ -334,7 +334,7 @@ class Show extends AdminController {
         $this->_show_type("grid");
 			}
 			if (!isset($uiTable)) $uiTable="";
-			$this->_show_all($uiTable);
+			$this->view_admin($uiTable);
 		}
 
 
@@ -361,14 +361,14 @@ class Show extends AdminController {
     
     // Check of alle gegevens in orde zijn
     if ( empty($table) OR !$this->db->table_exists($table) OR get_prefix($table)==='res' OR $id=='') {
-      $this->_show_all();
+      $this->view_admin();
       return;
     }
     
     // Check of gebruiker rechten heeft
     $rights=$this->flexy_auth->has_rights($table,$id);
     if ( !$rights ) {
-      $this->_show_all();
+      $this->view_admin();
       return;
     }
 
@@ -522,7 +522,7 @@ class Show extends AdminController {
 		
 		if (!isset($uiTable)) $uiTable="";
     if (get_prefix($table)=='res') $this->_add_content('(empty)');
-		$this->_show_all($uiTable);
+		$this->view_admin($uiTable);
 	}
 
 

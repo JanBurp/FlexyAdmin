@@ -36,7 +36,7 @@ class Plugin_controller extends AdminController {
       }
       $this->_add_content( $plugin_menu->render() );
     }
-    $this->_show_all();
+    $this->view_admin();
 	}
   
 
@@ -73,7 +73,7 @@ class Plugin_controller extends AdminController {
 		// output
 		$this->_show_type($show_type);
 		if (!empty($show_type)) $this->use_editor();
-		if (!$ajax) $this->_show_all();
+		if (!$ajax) $this->view_admin();
 	}
 
 }
