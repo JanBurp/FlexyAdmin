@@ -7,7 +7,7 @@
 	<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
 	<meta http-equiv="Content-Style-Type" content="text/css" />
 
-	<title>FlexyAdmin <?=$str_title?></title>
+	<title>FlexyAdmin - <?=$str_title?></title>
 	<base href="<?=base_url()?>" />
   
   <link rel="shortcut icon" href="<?=admin_assets()?>img/favicon.ico" type="image/x-icon" />
@@ -49,7 +49,12 @@
       <a href="admin" class="flexy-blocks">FlexyAdmin</a>
     </div>
   </div>
+  
 
+  <script src="<?=admin_assets()?>js/jquery-3.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="<?=admin_assets()?>js/tether.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="<?=admin_assets()?>js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="<?=admin_assets()?>js/flexyadmin.js" type="text/javascript" charset="utf-8"></script>
   
 </div>
 
