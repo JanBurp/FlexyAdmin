@@ -17,11 +17,11 @@
 
 <body>
 
-<div class="container-fluid">
+<div id="main" class="container-fluid">
   
   <div id="header" class="navbar navbar-light bg-faded navbar-fixed-top">
     <!-- Site title -->
-    <div class="navbar-text"><a id="flexyadmin" class="flexy-blocks" href="admin"><?=$str_title?></a></div>
+    <div class="navbar-text"><flexy-blocks href="admin" text="<?=$str_title?>"/></div>
     <!--Top menu -->
     <?=$headermenu?>
   </div>
@@ -42,19 +42,16 @@
   </div>
   
   <div id="footer" class="navbar navbar-light bg-faded navbar-fixed-bottom">
-    <div class="navbar-text">
-      <a href="admin" class="flexy-blocks">FlexyAdmin</a>
-    </div>
+    <div class="navbar-text"><flexy-blocks href="admin" text="TokPit"/></div>
+    <div class="navbar-text"><span class="flexy-block btn btn-outline-danger btn-sm text-lowercase">alpha</span></div>
     <?=$footermenu?>
   </div>
-  
 
-  <script src="<?=admin_assets()?>js/jquery-3.1.1.min.js" type="text/javascript" charset="utf-8"></script>
-  <script src="<?=admin_assets()?>js/tether.min.js" type="text/javascript" charset="utf-8"></script>
-  <script src="<?=admin_assets()?>js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
-  <script src="<?=admin_assets()?>js/flexyadmin.js" type="text/javascript" charset="utf-8"></script>
-  
 </div>
+
+<script src="<?=admin_assets()?>js/vue.js" type="text/javascript" charset="utf-8"></script>
+<script src="<?=admin_assets()?>js/vue-components/flexy-blocks.js" type="text/javascript" charset="utf-8"></script>
+<script src="<?=admin_assets()?>js/flexyadmin-main.js" type="text/javascript" charset="utf-8"></script>
 
 </body>
 </html>
