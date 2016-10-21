@@ -40,7 +40,7 @@ class File extends CI_Controller {
         }
 			}
 		}
-    show_404('page');
+    header('HTTP/1.1 401 Unauthorized');
     return false;
   }
   
@@ -52,7 +52,10 @@ class File extends CI_Controller {
    * @return void
    * @author Jan den Besten
    */
-  public function admin_assets($path='',$file='') {
+  public function admin_assets() {
+    $args = func_get_args();
+    $file = array_pop($args);
+    $path = implode('/',$args);
 		if (!empty($path) and !empty($file)) {
       $fullpath = APPPATH.'assets/'.$path.'/'.$file;
 			if ( file_exists($fullpath) ) {
@@ -62,7 +65,7 @@ class File extends CI_Controller {
         return;
 			}
 		}
-    show_404('page');
+    header('HTTP/1.1 401 Unauthorized');
     return false;
   }
 
