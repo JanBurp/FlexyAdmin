@@ -26,6 +26,7 @@ $config['SITE']										= SITEPATH;
 $config['ADMINASSETS']						= "sys/flexyadmin/assets/";
 $config['PUBLICASSETS']						= $config['SITE'].'assets/';
 $config['ASSETS']									= $config['PUBLICASSETS'];
+$config['ASSETSFOLDER']						= $config['ASSETS'];
 $config['THUMBCACHE']							= $config['ASSETS']."_thumbcache/";
 $config['STATS']									= $config['SITE'].'stats/';
 $config['PLUGINS']								= $config['SITE'].'plugins';
