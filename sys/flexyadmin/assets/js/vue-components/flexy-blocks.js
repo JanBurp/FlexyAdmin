@@ -3,12 +3,6 @@ Vue.component('flexy-blocks', {
 
   props:['text','href'],
 
-  data : function(){
-    return {
-      cssClass : 'flexy-block btn btn-outline-primary btn-sm',
-    }
-  },
-
   computed: {
     chars : function() {
       var text = this.text.split('');
@@ -25,7 +19,7 @@ Vue.component('flexy-blocks', {
 
   template: '\
     <a v-bind:href="href">\
-      <span v-for="char in chars" v-bind:class="[ cssClass, char.css ]">{{char.char}}</span>\
+      <span v-once v-for="char in chars" class="flexy-block btn btn-outline-primary btn-sm" v-bind:class="char.css">{{char.char}}</span>\
     </a>',
 
 });
