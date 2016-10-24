@@ -55,7 +55,7 @@ if ( DEBUGGING ) {
 |	$autoload['libraries'] = array('database', 'session', 'xmlrpc');
 */
 
-$autoload['libraries'] = array('parent_module_plugin','database');
+$autoload['libraries'] = array('database');
 
 
 /*
@@ -67,7 +67,15 @@ $autoload['libraries'] = array('parent_module_plugin','database');
 |	$autoload['helper'] = array('url', 'file');
 */
 
-$autoload['helper'] = array('array','cache','database','debug','directory','file','form','help','html','img','string','text','url','language');
+// $autoload['helper'] = array('array','cache','database','debug','directory','file','form','help','html','img','string','text','url','language');
+$autoload['helper'] = array(
+  'array',
+  'cache',
+  'database',
+  'debug',
+  'string',
+  'url',
+);
 
 
 
@@ -114,7 +122,7 @@ $autoload['language'] = array();
 */
 
 // Also 'data/Data' is autoloaded in MY_Controller
-$autoload['model'] = array('formaction','mediatable');
+$autoload['model'] = array('mediatable');
 
 
 

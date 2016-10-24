@@ -9,6 +9,12 @@
 
 
 class File extends CI_Controller {
+  
+  /**
+   * Always serve files from these folders
+   */
+  private $serve_rights = array( 'css','fonts','js','lists' );
+  
 	
 	function __construct()	{
 		parent::__construct();
@@ -24,9 +30,9 @@ class File extends CI_Controller {
    */
   public function serve($path='',$file='') {
 		if (!empty($path) and !empty($file)) {
-			$fullpath = SITEPATH.'assets/'.$path.'/'.$file;
+      $fullpath = SITEPATH.'assets/'.$path.'/'.$file;
 			if ( file_exists($fullpath) ) {
-        if ( $this->mediatable->has_serve_rights($path,$file) ) {
+        if ( in_array($path,$this->serve_rights) or $this->mediatable->has_serve_rights($path,$file) ) {
           $type=get_suffix($file,'.');
           $this->output->set_content_type($type);
           $this->output->set_output(file_get_contents($fullpath));
@@ -34,9 +40,35 @@ class File extends CI_Controller {
         }
 			}
 		}
-    show_404('page');
+    header('HTTP/1.1 401 Unauthorized');
     return false;
   }
+  
+  /**
+   * Serve admin assets
+   *
+   * @param string $path 
+   * @param string $file 
+   * @return void
+   * @author Jan den Besten
+   */
+  public function admin_assets() {
+    $args = func_get_args();
+    $file = array_pop($args);
+    $path = implode('/',$args);
+		if (!empty($path) and !empty($file)) {
+      $fullpath = APPPATH.'assets/'.$path.'/'.$file;
+			if ( file_exists($fullpath) ) {
+        $type=get_suffix($file,'.');
+        $this->output->set_content_type($type);
+        $this->output->set_output(file_get_contents($fullpath));
+        return;
+			}
+		}
+    header('HTTP/1.1 401 Unauthorized');
+    return false;
+  }
+
 
   /**
    * Download gevraagde bestand

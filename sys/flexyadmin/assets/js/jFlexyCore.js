@@ -1,5 +1,5 @@
 $(document).ready(function() {
-
+  
   oldIE=($.browser.msie && $.browser.version<9);
   // oldIE=true;
 
@@ -23,7 +23,7 @@ $(document).ready(function() {
 	if (isFile)							{ isThumbs=$("#content").hasClass("icons");}
 	isSortable=false;
 	//
-
+  
   if (isGrid || isFile) doGrid();
 
   // Message & error boxes
@@ -35,7 +35,7 @@ $(document).ready(function() {
     var html=$('#errors').html();
     info_dialog(html);
   }).hide();
-
+  
 	// plugin to prepare html form for ui-tabs
 	(function($) {
 		$.fn.formTabs = function(opts) {

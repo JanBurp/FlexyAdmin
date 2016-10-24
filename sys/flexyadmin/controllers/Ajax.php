@@ -9,7 +9,9 @@ class Ajax extends CI_Controller {
 	
 	public function __construct()	{
 		parent::__construct();
+    $this->load->library('parent_module_plugin');
     $this->load->library('ajax_module');
+    $this->load->helper('html');
 	}
 
   public function index() {
