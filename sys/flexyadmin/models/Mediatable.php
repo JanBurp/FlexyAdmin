@@ -585,6 +585,9 @@ class Mediatable extends CI_Model {
    */
   public function has_serve_rights($path,$file) {
     $map = get_suffix($path,'/');
+    if ($map=='_thumbcache') {
+      $map = get_prefix($file,'___');
+    }
     $query = $this->db->select('b_serve_restricted')->where('path',$map)->get('cfg_media_info',1);
     if ($query->num_rows()<1) return FALSE;
     $row = $query->row_object();

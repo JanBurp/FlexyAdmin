@@ -28,6 +28,7 @@ class File_manager extends CI_Model {
    * Huidig pad
    */
   private $path;
+  private $folder;
   
   /**
    * Map
@@ -150,6 +151,7 @@ class File_manager extends CI_Model {
 	public function set_path($path="") {
 		$this->path=$path;
 		$this->map=$this->config->item('ASSETS').$path;
+    $this->folder=$this->config->item('ASSETSFOLDER').$path;;
     return $this;
 	}
 
@@ -269,7 +271,7 @@ class File_manager extends CI_Model {
 	 * @author Jan den Besten
 	 */
   public function delete_file($file, $test = FALSE) {
-		$name=$this->map."/".$file;
+		$name=$this->folder."/".$file;
     $result=true;
     
     if (is_dir($name)) {
@@ -315,10 +317,10 @@ class File_manager extends CI_Model {
   			}
   			$names=filter_by($names,"_");
   			foreach($names as $name) {
-          if (file_exists($this->map."/".$name)) {
+          if (file_exists($this->folder."/".$name)) {
             if (!$test) {
-              @chmod($this->map."/".$name,0777);
-              unlink($this->map."/".$name);
+              @chmod($this->folder."/".$name,0777);
+              unlink($this->folder."/".$name);
             }
           }
   			}
@@ -429,7 +431,7 @@ class File_manager extends CI_Model {
 		$error='';
 		// UPLOAD
     $config=$this->settings;
-    $config['upload_path'] = $this->map;
+    $config['upload_path'] = $this->folder;
     $config['allowed_types'] = implode("|",$this->fileTypes);
     
 		// CI bug work around, make sure all imagesfiletypes are at the end
@@ -462,7 +464,7 @@ class File_manager extends CI_Model {
       log_("info","[FM] uploaded: '$file'");
       $saveName=clean_file_name($file);
       if ($file!=$saveName) {
-        if (rename($this->map.'/'.$file, $this->map.'/'.$saveName));
+        if (rename($this->folder.'/'.$file, $this->folder.'/'.$saveName));
       }
       $file=$saveName;
 
@@ -470,12 +472,12 @@ class File_manager extends CI_Model {
       if (in_array(strtolower($ext),$this->config->item('FILE_types_img'))) {
         
         // restore orientation
-        $this->upload->restore_orientation($file,$this->map);
+        $this->upload->restore_orientation($file,$this->folder);
         
         // check minimal size
-        if ($this->upload->check_size($file,$this->map)) {
+        if ($this->upload->check_size($file,$this->folder)) {
           // if ok: resizing
-          $ok=$this->upload->resize_image($file,$this->map);
+          $ok=$this->upload->resize_image($file,$this->folder);
           if (!($ok)) {
             $error=$this->upload->get_error();
           }
@@ -617,7 +619,7 @@ class File_manager extends CI_Model {
   					else {
   						$errorReporting=error_reporting(E_ALL);
   						error_reporting($errorReporting - E_WARNING - E_NOTICE);
-              $imgSize=getimagesize($this->map."/".$name);
+              $imgSize=getimagesize($this->folder."/".$name);
   						error_reporting($errorReporting);
             }
           }

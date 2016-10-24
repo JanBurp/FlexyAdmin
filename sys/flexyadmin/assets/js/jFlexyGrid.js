@@ -1,5 +1,5 @@
 function doGrid() {
-
+  
 	//
 	// Upload button and dialog (one file upload)
 	//

@@ -31,6 +31,23 @@ function assets($s="") {
   return $assets;
 }
 
+
+/**
+ * Geeft pad naar publice assets
+ *
+ * @return string
+ * @author Jan den Besten
+ */
+function public_assets() {
+  static $public_assets;
+  if (empty($public_assets)) {
+  	$CI =& get_instance();
+  	$public_assets=$CI->config->item('PUBLICASSETS');
+  }
+  return $public_assets;
+}
+
+
 /**
  * Geeft pad naar assets map van admin
  *
