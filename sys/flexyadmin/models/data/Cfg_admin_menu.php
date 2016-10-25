@@ -70,18 +70,42 @@ Class cfg_admin_menu extends Data_Core {
     ));
     $result = $this->get_result();
 
+    $sideMenu = new Menu();
+    $sideMenu->set('view_path','admin/menu-vertical');
     $sidebar=$this->_process_menu($result);
     
+    foreach ($sidebar as $item) {
+      $class='text-muted';
+      if ($item['type']=='seperator') {
+        $sideMenu->add_split();
+      }
+      else {
+        switch ($item['type']) {
+          case 'tools': $icon='cog'; break;
+          case 'config': $icon='cog'; break;
+          case 'log': $icon='bar-chart'; break;
+          case 'rel': $icon='link'; break;
+          case 'result': $icon='cloud';$class=""; break;
+          case 'media': $icon='folder';$class=""; break;
+          case 'table': $class='';
+          default: $icon = '';
+        }
+        $sideMenu->add( array( 'name' => $item['name'], 'uri'=> '_admin/'.$item['uri'], 'icon' => $icon, 'class'=>$class ));
+      }
+    }
+    
     $headerMenu = new Menu();
-    $headerMenu->add( array( 'name' => lang('help'), 'uri'=>'_admin/help/index', 'glyphicon' => 'info' ));
-    $headerMenu->add( array( 'name' => $user['username'], 'uri'=>'_admin/form/cfg_users/'.$user['id'], 'glyphicon' => 'user') );
-    $headerMenu->add( array( 'name' => lang('logout'), 'uri'=>'_admin/logout', 'glyphicon' => 'logout' ));
+    $headerMenu->set('view_path','admin/menu-horizontal');
+    $headerMenu->add( array( 'name' => lang('help'), 'uri'=>'_admin/help/index', 'icon' => 'question-circle' ));
+    $headerMenu->add( array( 'name' => $user['username'], 'uri'=>'_admin/form/cfg_users/'.$user['id'], 'icon' => 'user') );
+    $headerMenu->add( array( 'name' => lang('logout'), 'uri'=>'_admin/logout', 'icon' => 'power-off' ));
 
     $footerMenu = new Menu();
-    $footerMenu->add( array( 'name' => lang('settings'), 'uri'=>'_admin/form/tbl_site/1', 'glyphicon' => 'settings'));
-    $footerMenu->add( array( 'name' => lang('statistics'), 'uri'=>'_admin/plugin/stats', 'glyphicon' => 'stats'));
+    $footerMenu->set('view_path','admin/menu-horizontal');
+    $footerMenu->add( array( 'name' => lang('settings'), 'uri'=>'_admin/form/tbl_site/1', 'icon' => 'cog'));
+    $footerMenu->add( array( 'name' => lang('statistics'), 'uri'=>'_admin/plugin/stats', 'icon' => 'bar-chart'));
 
-    return array('headermenu'=>$headerMenu->render(),'sidemenu'=>$sidebar,'footermenu'=>$footerMenu->render());
+    return array('headermenu'=>$headerMenu->render(),'sidemenu'=>$sideMenu->render(),'footermenu'=>$footerMenu->render());
   }
   
   

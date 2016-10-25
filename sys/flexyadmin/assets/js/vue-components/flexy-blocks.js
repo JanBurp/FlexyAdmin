@@ -19,7 +19,7 @@ Vue.component('flexy-blocks', {
 
   template: '\
     <a v-bind:href="href">\
-      <span v-once v-for="char in chars" class="flexy-block btn btn-outline-primary btn-sm" v-bind:class="char.css">{{char.char}}</span>\
+      <span v-once v-for="char in chars" class="flexy-block btn btn-secondary" v-bind:class="char.css">{{char.char}}</span>\
     </a>',
 
 });

@@ -12,6 +12,7 @@
   
   <link rel="shortcut icon" href="<?=admin_assets()?>img/favicon.ico" type="image/x-icon" />
   <link rel="stylesheet" href="<?=admin_assets()?>css/bootstrap.min.css" type="text/css" />
+  <link rel="stylesheet" href="<?=admin_assets()?>css/font-awesome.min.css" type="text/css" media="screen">
   <link rel="stylesheet" href="<?=admin_assets()?>css/flexyadmin.css" type="text/css" />
 </head>
 
@@ -32,6 +33,7 @@
     
     <div id="flexy-menu-side">
       <!--side menu -->
+      <?=$sidemenu?>
     </div>
     
     <div id="main">
@@ -43,7 +45,7 @@
   
   <div id="footer" class="navbar navbar-light bg-faded navbar-fixed-bottom">
     <div class="navbar-text"><flexy-blocks href="admin" text="TokPit"/></div>
-    <div class="navbar-text"><span class="flexy-block btn btn-outline-danger btn-sm text-lowercase">alpha</span></div>
+    <div class="navbar-text"><span class="flexy-block btn btn-outline-danger text-lowercase"><?=$version?></span></div>
     <?=$footermenu?>
   </div>
 
