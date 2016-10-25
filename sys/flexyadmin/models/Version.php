@@ -27,7 +27,7 @@ class Version extends CI_Model {
 
     // revision (commit count)
     exec('git rev-list --all --count',$output);
-    if (!empty($output) and is_numeric($output)) {
+    if (!empty($output)) {
       $this->revision = current($output);
       // commit hash
       exec('git rev-parse --verify HEAD 2> /dev/null', $output);
@@ -36,8 +36,8 @@ class Version extends CI_Model {
       }
       // date last commit
       exec("git show", $output);
-      if (isset($output[2])) {
-        $this->date = date('Y-m-d H:i:s',strtotime((trim(str_replace('Date:','',$output[4])))));
+      if (isset($output[5])) {
+        $this->date = date('Y-m-d H:i:s',strtotime((trim(str_replace('Date:','',$output[5])))));
       }
       // build
       $this->build = $this->version.' ['.$this->revision.'] {'.$this->hash.'} '.$this->date;
