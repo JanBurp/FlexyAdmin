@@ -36,8 +36,9 @@ class Version extends CI_Model {
       }
       // date last commit
       exec("git show", $output);
-      if (isset($output[5])) {
-        $this->date = date('Y-m-d H:i:s',strtotime((trim(str_replace('Date:','',$output[5])))));
+      if ( $key=array_preg_search('^Date:\s',$output) ) {
+        $key=current($key);
+        $this->date = date('Y-m-d H:i:s',strtotime((trim(str_replace('Date:','',$output[$key])))));
       }
       // build
       $this->build = $this->version.' ['.$this->revision.'] {'.$this->hash.'} '.$this->date;
