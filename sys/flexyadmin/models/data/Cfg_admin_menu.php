@@ -26,7 +26,8 @@ Class cfg_admin_menu extends Data_Core {
    * @author Jan den Besten
    */
   public function get_menu() {
-    $user = $this->flexy_auth->get_user();
+    $user  = $this->flexy_auth->get_user();
+    if ( !$user ) return FALSE;
     
     $this->where( array(
       'b_visible'=>true,

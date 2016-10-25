@@ -34,7 +34,7 @@ flexyAdmin.config(['flexyConstants','$httpProvider',function(constants,$httpProv
           config.url = constants.api_base_url + config.url.replace( constants.api_base_url ,'');
           // Authentication header
           config.headers = config.headers || {};
-          if (window.sessionStorage.token) {
+          if (window.sessionStorage.token && window.sessionStorage.token!=="undefined" && typeof(window.sessionStorage.token)!=="undefined") {
             config.headers.Authorization = window.sessionStorage.token;
           }
         }
