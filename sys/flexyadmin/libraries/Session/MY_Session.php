@@ -13,7 +13,7 @@ class MY_Session extends CI_Session {
 	 */
 	public function sess_destroy()
 	{
-    if (session_status() === PHP_SESSION_ACTIVE) session_destroy();
+    if (session_status() === PHP_SESSION_ACTIVE) parent::sess_destroy();
 	}
 
 
