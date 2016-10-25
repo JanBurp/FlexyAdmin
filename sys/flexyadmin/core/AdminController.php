@@ -345,13 +345,17 @@ class AdminController extends BasicController {
 
 
   private function _prepare_view_data() {
+
     // tbl_site
     $this->view_data = $this->data->table('tbl_site')->select('str_title,url_url')->cache()->get_row();
     $this->view_data['url_url'] = str_replace('http://','',$this->view_data['url_url']);
     
     // Language
     $this->view_data['language'] = $this->language;
-
+    
+    // Version
+    $this->view_data['version'] = $this->version->get_version();
+ 
     // Menus
     $menus = $this->data->table('cfg_admin_menu')->get_menus();
     $this->view_data = array_merge($this->view_data,$menus);
