@@ -498,6 +498,30 @@ class Menu {
 		$this->menu[$item['uri']]=$item;
     return $this;
 	}
+  
+  /**
+   * Voeg seperator toe aan menu
+   *
+   * @return $this
+   * @author Jan den Besten
+   */
+	public function add_seperator() {
+		$this->menu[]='';
+    return $this;
+	}
+
+  /**
+   * Voeg split toe aan Menu (meestal is dat een </ul>)
+   *
+   * @return $this
+   * @author Jan den Besten
+   */
+	public function add_split() {
+		$this->menu[]='split';
+    return $this;
+	}
+
+  
 
   /**
    * Voegt een menu item toe aan het begin van het huidige menu
@@ -754,15 +778,16 @@ class Menu {
           $submenu=$this->render($item['sub'],$attr,$level+1,$thisUri,$max_level);
         }
 
-        // item of seperator
-        $view=(empty($item)?'seperator':'item');
+        // item, seperator or split
+        $view='item';
+        if (empty($item) or $item==='seperator') $view='seperator';
+        if ($item==='split') $view='split';
         
         // first / last
         $order_style = '';
         if ($pos==1) $order_style.='first ';
         if ($pos==count($menu)) $order_style.='last';
         $order_style=trim($order_style);
-        
         
         // render item
         $item_html=$this->CI->load->view($this->settings['view_path'].'/'.$view.'.php',array(
@@ -779,7 +804,8 @@ class Menu {
           'class'       => el('class',$item,' '),
           'attr'        => attributes(el('attr',$item,'')),
           'clickable'   => (!empty($thisUri)),
-          'submenu'     => $submenu
+          'submenu'     => $submenu,
+          'icon'        => el('icon',$item),
         ),true);
 
         $html.=$item_html;
