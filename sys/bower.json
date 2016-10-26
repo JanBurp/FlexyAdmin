@@ -1,6 +1,5 @@
 {
-  "name": "FlexyAdmin",
-  "version": "3.0.0b",
+  "name": "flexyadmin",
   "description": "www.flexyadmin.com",
   "moduleType": [
     "node"
@@ -22,31 +21,8 @@
     "tests"
   ],
   "dependencies": {
-    "angular": "~1.4.x",
-    "angular-bootstrap": "~0.x",
-    "angular-bootstrap-show-errors": "~2.x",
-    "angular-dialog-service": "~5.2.8",
-    "angular-file-upload": "~1.1.x",
-    "angular-froala": "https://github.com/froala/angular-froala.git",
-    "angular-http-auth": "git://github.com/witoldsz/angular-http-auth.git#~1.x",
-    "angular-loading-bar": "~0.x",
-    "angular-mocks": "~1.4.x",
-    "angular-route": "~1.4.x",
-    "angular-sanitize": "~1.4.x",
-    "angular-schema-form": "~0.x",
-    "angular-smart-table": "~2.x",
-    "angular-toArrayFilter": "~1.x",
-    "bootstrap": "~3.x",
-    "components-font-awesome": "~4.2.x",
-    "FroalaWysiwygEditor": "https://github.com/froala/wysiwyg-editor.git",
-    "ng-sortable": "1.3.x",
-    "objectpath": "~1.x",
-    "tv4": "~1.1.x",
-    "angular-translate": "~2.8.1",
-    "angular-filter": "^0.5.8"
-  },
-  "resolutions": {
-    "angular": "~1.4.x",
-    "tv4": "~1.1.x"
+    "bootstrap": "~4.x",
+    "components-font-awesome": "~4.x",
+    "vue": "^2.x"
   }
 }

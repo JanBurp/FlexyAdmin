@@ -10,7 +10,6 @@
 	<title>FlexyAdmin - <?=$str_title?></title>
 	<base href="<?=base_url()?>" />
   
-  <link rel="shortcut icon" href="<?=admin_assets()?>img/favicon.ico" type="image/x-icon" />
   <link rel="stylesheet" href="<?=admin_assets()?>css/bootstrap.min.css" type="text/css" />
   <link rel="stylesheet" href="<?=admin_assets()?>css/font-awesome.min.css" type="text/css" media="screen">
   <link rel="stylesheet" href="<?=admin_assets()?>css/flexyadmin.css" type="text/css" />
