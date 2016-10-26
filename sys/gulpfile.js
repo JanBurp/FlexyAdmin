@@ -1,8 +1,8 @@
 /**
  * 
- * gulpfile.js voor FlexyAdmin - Jan den Besten 2014
+ * gulpfile.js voor FlexyAdmin - Jan den Besten 2016
  * 
- * - gulp less    // compileer alleen de LESS bestanden tot CSS bestanden
+ * - gulp compile // compileer de LESS & SASS bestanden tot CSS bestanden
  * - gulp cssmin  // voeg de CSS bestanden samen, autoprefixed browser specifieke css en voegt fallback in px toe waar rem units worden gebruikt (roept eerst 'less' aan)
  * - gulp jshint  // test JS bestanden op veelvoorkomende fouten
  * - gulp jsmin   // combineer en minificeer alle JS bestanden (roept eerst 'jshint' aan)
@@ -10,7 +10,7 @@
  * - gulp install // zie hierboven
  * 
  * Instellingen:
- * - files     : Als je meer css/less of js bestanden gebruikt dan de standaard installatie, voeg ze dan hier toe (bij je gekozen framework)
+ * - files     : Als je meer css/less/scss of js bestanden gebruikt dan de standaard installatie, voeg ze dan hier toe (bij je gekozen framework)
  */
 
 
@@ -22,28 +22,27 @@ var watch_interval = 100;
 
 /** Paths (keep as is) */
 var bower     = 'bower_components';
-var assets    = '__test';
+var assets    = 'flexyadmin/assets';
 
 var files = {
   // JS
   'js'      : assets+'/js',
   'jshint'  : [
-    assets+'/**/jdb*.js',
-    assets+'/**/flexy*.js',
+    assets+'/js/vue-components/*.js',
+    assets+'/js/flexy*.js',
   ],
   'jsmin'   : [
-    assets+'/js/jquery.min.js',
-    assets+'/js/bootstrap.min.js',
-    assets+'/js/site.js',
+    assets+'/js/vue-components/*.js',
+    assets+'/js/flexy*.js',
+    assets+'/js/vue.js',
   ],
   'jsdest'  : 'scripts.min.js',
   'watchjs' : [
-    assets+'/**/jdb*.js',
-    assets+'/**/flexy*.js',
+    assets+'/js/*.js',
   ],
   
-  // LESS / CSS
-  'less'    : [
+  // LESS / CSS / SASS
+  'compile'    : [
     // assets+"/less/bootstrap/bootstrap.less",
     // assets+"/less/variables.less",
     // assets+"/less/flexy-main.less",
@@ -82,24 +81,23 @@ var dir          = __dirname.replace('/Users/','');
  * Load plugins
  */
 var gulp        = require('gulp');
-var notify      = require("gulp-notify");
 var gutil       = require('gulp-util');
-var plumber     = require('gulp-plumber');
-var livereload  = require('gulp-livereload');
-var less        = require('gulp-less');
-var sourcemaps  = require('gulp-sourcemaps');
-var autoprefixer= require('gulp-autoprefixer');
-var pixrem      = require('gulp-pixrem');
-var concat      = require('gulp-concat');
-var minify_css  = require('gulp-minify-css');
-var jshint      = require('gulp-jshint');
-var stylish     = require('jshint-stylish');
-var uglify      = require('gulp-uglify');
-var flatten     = require('gulp-flatten');
-var cached      = require('gulp-cached');
-var remember    = require('gulp-remember');
+var notify      = require("gulp-notify");
+// var plumber     = require('gulp-plumber');
+// var livereload  = require('gulp-livereload');
+// var less        = require('gulp-less');
+// var sourcemaps  = require('gulp-sourcemaps');
+// var autoprefixer= require('gulp-autoprefixer');
+// var pixrem      = require('gulp-pixrem');
+// var concat      = require('gulp-concat');
+// var minify_css  = require('gulp-minify-css');
+// var jshint      = require('gulp-jshint');
+// var stylish     = require('jshint-stylish');
+// var uglify      = require('gulp-uglify');
+// var flatten     = require('gulp-flatten');
+// var cached      = require('gulp-cached');
+// var remember    = require('gulp-remember');
 
-var phpunit     = require('gulp-phpunit');
 
 /**
  * Calling 'gulp --build' minify the css (without sourcemaps)
@@ -133,105 +131,28 @@ gulp.task('message',function(){
  */
 gulp.task('install', function() {
 
-  // Verplaats bootstrap dist bestanden (css,fonts,js)
+  // Bootstrap
   gulp.src([
      bower+'/bootstrap/dist/js/bootstrap.js',
     ]).pipe(gulp.dest( assets + '/js' ));
-  gulp.src([
-     bower+'/bootstrap/dist/**/glyphicons*',
-    ]).pipe(gulp.dest( assets ));
-  gulp.src( bower+'/bootstrap/less/*')
-    .pipe(gulp.dest(assets +'/less/bootstrap'));
-  gulp.src( bower+'/bootstrap/less/mixins/*' )
-    .pipe(gulp.dest(assets +'/less/bootstrap/mixins'));
-  gulp.src( '' ).pipe(notify("Bootstrap moved"));
-  
-  // Verplaats Angular JS etc.
-  gulp.src([
-    // Angular
-    bower+"/angular/angular.js",
-    bower+"/angular-route/angular-route.js",
-    bower+"/angular-bootstrap/ui-bootstrap.js",
-    bower+"/angular-bootstrap/ui-bootstrap-tpls.js",
-    bower+"/angular-bootstrap-show-errors/src/showErrors.js",
-    // Mock
-    bower+"/angular-mocks/angular-mocks.js",
-    // Angular External Modules
-    bower+"/angular-http-auth/src/http-auth-interceptor.js",
-    bower+"/angular-toArrayFilter/toArrayFilter.js",
-    bower+"/angular-loading-bar/src/loading-bar.js",
-    bower+'/angular-translate/angular-translate.js',
-    bower+'/angular-dialog-service/dist/dialogs.js',
-    // filter
-    bower+'/angular-filter/dist/angular-filter.js',
-    // grid
-    bower+"/angular-smart-table/dist/smart-table.js",
-    bower+"/ng-sortable/dist/ng-sortable.js",
-    // media
-    bower+"/angular-file-upload/angular-file-upload.js",
-    // form
-    bower+"/angular-sanitize/angular-sanitize.js",
-    bower+"/tv4/tv4.js",
-    bower+"/objectpath/lib/ObjectPath.js",
-    bower+"/angular-schema-form/dist/*.js",
-    // jQuery
-    bower+"/jquery/dist/jquery.min.js",
-    // Froala editor
-    bower+"/FroalaWysiwygEditor/js/froala_editor.min.js",
-    bower+"/angular-froala/src/angular-froala.js",
-    bower+"/angular-froala/src/froala-sanitize.js",
-  ]).pipe(gulp.dest( assets+'/js' ));
-  gulp.src( '' ).pipe(notify("Angular, Angular modules, jQuery & Froala editore moved"));
+  gulp.src( bower+'/bootstrap/scss/*')
+    .pipe(gulp.dest(assets +'/scss/bootstrap'));
+  gulp.src( '' ).pipe(notify("Bootstrap Installed"));
 
-  // CSS - Loading bar - Fontawsome - Froala - etc
+  // Fontawsome
   gulp.src([
-    bower+"/angular-loading-bar/src/loading-bar.css",
-    bower+"/ng-sortable/dist/ng-sortable.css",
     bower+"/components-font-awesome/css/font-awesome.min.css",
-    bower+"/FroalaWysiwygEditor/css/froala_editor.css",
-    bower+"/FroalaWysiwygEditor/css/froala_style.css",
   ]).pipe(gulp.dest( assets+'/css' ));
   gulp.src([
     bower+"/components-font-awesome/fonts/*",
   ]).pipe(gulp.dest( assets+'/fonts' ));
-  gulp.src( '' ).pipe(notify("CSS Moved"));
+  gulp.src( '' ).pipe(notify("Fontawsome Installed"));
   
-  // Minify JS
+  // Vue
   gulp.src([
-    assets+"/js/jquery.min.js",
-    assets+"/js/angular.js",
-    assets+"/js/angular-route.js",
-    assets+"/js/ui-bootstrap-tpls.js",
-    assets+"/js/showErrors.js",
-    assets+"/js/http-auth-interceptor.js",
-    assets+"/js/toArrayFilter.js",
-    assets+"/js/loading-bar.js",
-    assets+"/js/angular-translate.js",
-    assets+"/js/smart-table.js",
-    assets+"/js/dialogs.js",
-    assets+"/js/ng-sortable.js",
-    assets+"/js/angular-file-upload.js",
-    assets+"/js/angular-sanitize.js",
-    assets+"/js/tv4.js",
-    assets+"/js/ObjectPath.js",
-    assets+"/js/schema-form.js",
-    assets+"/js/bootstrap-decorator.js",
-    assets+"/flexy-form/bootstrap-decorator-froala.js",
-    assets+"/js/froala_editor.min.js",
-    assets+"/js/angular-froala.js",
-    assets+"/js/froala-sanitize.js"
-  ])
-  .pipe(flatten())
-  .pipe(sourcemaps.init({loadMaps: true}))
-  .pipe(concat( 'externals.min.js' ))
-  .pipe(uglify())
-  .pipe(sourcemaps.write('maps'))
-  .pipe(gulp.dest( assets+'/js') )
-  .pipe(notify({
-    title:  'Angular & Modules concat & minified ' + title,
-    message: message
-  }));
-  
+     bower+'/vue/dist/vue.js',
+    ]).pipe(gulp.dest( assets + '/js' ));
+  gulp.src( '' ).pipe(notify("Vue Installed"));
   
 
 });
@@ -356,23 +277,5 @@ gulp.task('watch', function() {
     files['watchjs'],
   ], { interval: watch_interval } ).on('change', livereload.changed);
   
-});
-
-
-// PHPUNIT
-gulp.task('phpunit', function() {
-   gulp.src('phpunit.xml')
-     .pipe(phpunit('/usr/local/bin/phpunit --testsuite busy', {notify:true }))
-     .on('error', notify.onError('phpunit FAILED'))
-     .pipe(notify({
-       title:'phpunit',
-       message:'phpunit OK!'
-     }));
-});
-
-// PHP Watch
-gulp.task('watch_php', function() {
-  // WATCH PHP
-  gulp.watch( [ 'flexyadmin/**/*.php', 'flexyadmin/**/**/*.php'], { interval: watch_interval }, ['phpunit'] );
 });
 
