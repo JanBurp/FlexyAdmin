@@ -3,14 +3,15 @@
  * Copyright Jan den Besten
  */
 
-@import "custom";
+//@import "themes/bootstrap";
+@import "themes/classic";
+//@import "themes/jandenbesten";
+
 @import "bootstrap/bootstrap";
 
 
 /* DEFAULTS */
-a {
-  outline: none !important;
-}
+a {outline: none !important;}
 
 /* HEADER & FOOTER */
 #header, #footer {
@@ -19,28 +20,14 @@ a {
   padding-bottom:0px;
   background-color:$gray-lightest;
 }
-#header {
-  border-bottom:solid 1px $gray-lighter;
-}
-#footer {
-  border-top:solid 1px $gray-lighter;
-}
-#header .nav, #footer .nav {
-  float:right;
-  padding-top:.45rem;
-}
-
+#header {border-bottom:solid 1px $gray-lighter;}
+#footer {border-top:solid 1px $gray-lighter;}
+#header .nav, #footer .nav {float:right;padding-top:.45rem;}
 
 /* CONTENT */
-#content {
-  margin:$font-size-root*4 0px;
-}
-#flexy-menu-side {
-  padding-left:0;
-}
-#main {
-  padding-right:.5rem;
-}
+#content {margin:$font-size-root*4 0px;}
+#flexy-menu-side {padding-left:0;}
+#main {padding-right:.5rem;}
 
 /* SIDEBAR MENU */
 #flexy-menu-side > ul {
@@ -56,17 +43,23 @@ a {
   overflow:hidden;
   text-overflow: ellipsis;
 }
-.nav-pills .nav-link:hover, .nav-pills .nav-link:focus {
-  background-color: $gray-lighter;
-}
+.nav-pills .nav-link:hover, .nav-pills .nav-link:focus {background-color: $gray-lighter;}
 .nav > li > a > span.fa { margin-right:.35rem;}
 
 /* MAIN > CARD */
 #main > .card {border:solid 1px $brand-primary;}
 #main > .card > .card-header {background-color:$brand-primary;color:$body-bg;}
 
-
 /* FLEXY-BLOCK: text uppercase & hide spaces */
 .flexy-block {text-transform:uppercase;margin-right:1px;}
 .flexy-block.text-lowercase {text-transform:lowercase;}
 .flexy-block.char-space {visibility:hidden;}
+
+
+
+/* GRID */
+.grid .card-block {padding:0;}
+.grid .card-footer {padding:0;}
+.grid .card-footer .pagination {margin:0;}
+
+.grid td, .grid th {white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}

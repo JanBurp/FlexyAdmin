@@ -50,7 +50,7 @@ var files = {
   ],
   'cssdest' : 'flexyadmin.min.css',
   'watchcss': [
-    assets+'/scss/*'
+    assets+'/scss/**'
   ]
 };
 
