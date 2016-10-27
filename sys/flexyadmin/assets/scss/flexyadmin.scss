@@ -1,0 +1,72 @@
+/*!
+ * FlexyAdmin
+ * Copyright Jan den Besten
+ */
+
+@import "custom";
+@import "bootstrap/bootstrap";
+
+
+/* DEFAULTS */
+a {
+  outline: none !important;
+}
+
+/* HEADER & FOOTER */
+#header, #footer {
+  height:$font-size-root*3.25;
+  padding-top:0px;
+  padding-bottom:0px;
+  background-color:$gray-lightest;
+}
+#header {
+  border-bottom:solid 1px $gray-lighter;
+}
+#footer {
+  border-top:solid 1px $gray-lighter;
+}
+#header .nav, #footer .nav {
+  float:right;
+  padding-top:.45rem;
+}
+
+
+/* CONTENT */
+#content {
+  margin:$font-size-root*4 0px;
+}
+#flexy-menu-side {
+  padding-left:0;
+}
+#main {
+  padding-right:.5rem;
+}
+
+/* SIDEBAR MENU */
+#flexy-menu-side > ul {
+  background-color: $gray-lightest;
+  border:solid 1px $gray-lighter;
+  margin-bottom:1rem;
+  border-radius:.25rem;
+}
+.nav-pills .nav-link {
+  padding:.35rem .5rem;
+  text-transform: uppercase;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow: ellipsis;
+}
+.nav-pills .nav-link:hover, .nav-pills .nav-link:focus {
+  background-color: $gray-lighter;
+}
+.nav > li > a > span.fa { margin-right:.35rem;}
+
+/* MAIN > CARD */
+#main > .card {border:solid 1px $brand-primary;}
+#main > .card > .card-header {background-color:$brand-primary;color:$body-bg;}
+
+
+/* FLEXY-BLOCK: text uppercase & hide spaces */
+.flexy-block {text-transform:uppercase;margin-right:1px;}
+.flexy-block.text-lowercase {text-transform:lowercase;}
+.flexy-block.char-space {visibility:hidden;}

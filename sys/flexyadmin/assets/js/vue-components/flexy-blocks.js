@@ -11,15 +11,12 @@ Vue.component('flexy-blocks', {
         chars[i] = {
           char : text[i],
           css  : 'char-' + (text[i]===' '?'space':text[i]),
-        }
+        };
       }
       return chars;
     },
   },
 
-  template: '\
-    <a v-bind:href="href">\
-      <span v-once v-for="char in chars" class="flexy-block btn btn-secondary" v-bind:class="char.css">{{char.char}}</span>\
-    </a>',
+  template: '<a v-bind:href="href"><span v-once v-for="char in chars" class="flexy-block btn btn-secondary" v-bind:class="char.css">{{char.char}}</span></a>',
 
 });
