@@ -1,16 +1,12 @@
 /**
+ * gulpfile.js voor FlexyAdmin
  * 
- * gulpfile.js voor FlexyAdmin - Jan den Besten 2016
- * 
- * - gulp compile // compileer de LESS & SASS bestanden tot CSS bestanden
- * - gulp cssmin  // voeg de CSS bestanden samen, autoprefixed browser specifieke css en voegt fallback in px toe waar rem units worden gebruikt (roept eerst 'less' aan)
+ * - gulp install // alle benodigde bestanden van bower naar juiste plek verplaatsen
+ * - gulp compile // compileer de SASS bestanden tot CSS bestanden
+ * - gulp cssmin  // voeg de CSS bestanden samen, autoprefixed browser specifieke css en voegt fallback in px toe waar rem units worden gebruikt (roept eerst 'compile' aan)
  * - gulp jshint  // test JS bestanden op veelvoorkomende fouten
  * - gulp jsmin   // combineer en minificeer alle JS bestanden (roept eerst 'jshint' aan)
  * - gulp message // een test om te kijken of gulp werkt en er een notificatie komt
- * - gulp install // zie hierboven
- * 
- * Instellingen:
- * - files     : Als je meer css/less/scss of js bestanden gebruikt dan de standaard installatie, voeg ze dan hier toe (bij je gekozen framework)
  */
 
 
@@ -25,6 +21,7 @@ var bower     = 'bower_components';
 var assets    = 'flexyadmin/assets';
 
 var files = {
+  
   // JS
   'js'      : assets+'/js',
   'jshint'  : [
@@ -36,31 +33,24 @@ var files = {
     assets+'/js/flexy*.js',
     assets+'/js/vue.js',
   ],
-  'jsdest'  : 'scripts.min.js',
+  'jsdest'  : 'build.min.js',
   'watchjs' : [
-    assets+'/js/*.js',
+    assets+'/js/**',
   ],
   
-  // LESS / CSS / SASS
+  // CSS / SASS
   'compile'    : [
-    // assets+"/less/bootstrap/bootstrap.less",
-    // assets+"/less/variables.less",
-    // assets+"/less/flexy-main.less",
-    // assets+"/less/flexy-table.less",
-    assets+'/less/flexyadmin.less',
+    assets+'/scss/flexyadmin.scss',
   ],
   'css'     : assets+'/css',
   'cssmin'  : [
-    assets+'/css/loading-bar.css',
+    assets+'/css/bootstrap.css',
     assets+'/css/font-awesome.min.css',
-    assets+'/css/froala_editor.css',
-    assets+'/css/froala_style.css',
-    assets+'/css/ng-sortable.css',
     assets+'/css/flexyadmin.css',
   ],
   'cssdest' : 'flexyadmin.min.css',
   'watchcss': [
-    assets+'/less/*'
+    assets+'/scss/*'
   ]
 };
 
@@ -73,7 +63,6 @@ var files = {
  */
 var title        = '';
 var message      = '<%= file.relative %>';
-var icon         = 'sys/flexyadmin/assets/img/work.png';
 var dir          = __dirname.replace('/Users/','');
 
 
@@ -83,20 +72,21 @@ var dir          = __dirname.replace('/Users/','');
 var gulp        = require('gulp');
 var gutil       = require('gulp-util');
 var notify      = require("gulp-notify");
-// var plumber     = require('gulp-plumber');
-// var livereload  = require('gulp-livereload');
-// var less        = require('gulp-less');
-// var sourcemaps  = require('gulp-sourcemaps');
-// var autoprefixer= require('gulp-autoprefixer');
-// var pixrem      = require('gulp-pixrem');
-// var concat      = require('gulp-concat');
-// var minify_css  = require('gulp-minify-css');
-// var jshint      = require('gulp-jshint');
-// var stylish     = require('jshint-stylish');
-// var uglify      = require('gulp-uglify');
-// var flatten     = require('gulp-flatten');
-// var cached      = require('gulp-cached');
-// var remember    = require('gulp-remember');
+var livereload  = require('gulp-livereload');
+// jshint
+var plumber     = require('gulp-plumber');
+var jshint      = require('gulp-jshint');
+var stylish     = require('jshint-stylish');
+// jsmin
+var flatten     = require('gulp-flatten');
+var uglify      = require('gulp-uglify');
+var sourcemaps  = require('gulp-sourcemaps');
+var concat      = require('gulp-concat');
+// sass
+var sass        = require('gulp-sass');
+// cssmin
+var autoprefixer= require('gulp-autoprefixer');
+
 
 
 /**
@@ -120,8 +110,7 @@ gulp.task('message',function(){
   gulp.src( '' )
   .pipe(notify({
     'title'   : 'WATCH '+title,
-    'message' : dir,
-    'icon'    : icon
+    'message' : dir
   })); 
 });
 
@@ -135,7 +124,7 @@ gulp.task('install', function() {
   gulp.src([
      bower+'/bootstrap/dist/js/bootstrap.js',
     ]).pipe(gulp.dest( assets + '/js' ));
-  gulp.src( bower+'/bootstrap/scss/*')
+  gulp.src( bower+'/bootstrap/scss/**')
     .pipe(gulp.dest(assets +'/scss/bootstrap'));
   gulp.src( '' ).pipe(notify("Bootstrap Installed"));
 
@@ -153,7 +142,6 @@ gulp.task('install', function() {
      bower+'/vue/dist/vue.js',
     ]).pipe(gulp.dest( assets + '/js' ));
   gulp.src( '' ).pipe(notify("Vue Installed"));
-  
 
 });
 
@@ -164,9 +152,7 @@ gulp.task('install', function() {
 gulp.task('jshint',function(){
   return gulp.src( files['jshint'] )
     .pipe(plumber({ errorHandler: onError }))
-    .pipe(cached('sys_jshint'))
     .pipe(jshint())
-    .pipe(remember('sys_jshint'))
     // Use gulp-notify as jshint reporter
     .pipe(notify(function (file) {
       if (file.jshint.success) { return false }
@@ -177,7 +163,6 @@ gulp.task('jshint',function(){
     .pipe(notify({
       title:   'JS Hint OK' + title,
       message: message,
-      icon: icon 
     }));
 });
 
@@ -189,40 +174,37 @@ gulp.task('jsmin',['jshint'],function(){
   return gulp.src( files['jsmin'] )
     .pipe(flatten())
     .pipe(sourcemaps.init({loadMaps: true}))
-    .pipe(cached('sys_jsmin'))
     .pipe(uglify())
-    .pipe(remember('sys_jsmin'))
     .pipe(sourcemaps.write('maps'))
-    .pipe(concat(files['jsdest']))
-    .pipe(gulp.dest( files['js']) )
+    .pipe(concat( files['jsdest']) )
+    .pipe(gulp.dest( files['js'] ))
     .pipe(notify({
       title:  'JS contact & uglify ' + title,
       message: message
     }));
 });
 
+
 /**
- * compile & minify LESS files
+ * compile & minify SASS files
  */
-gulp.task('less',function(){
-  return gulp.src( files['less'] )
-        .pipe(plumber({ errorHandler: onError }))
-        // .pipe(cached('sys_less'))
-        .pipe(sourcemaps.init())
-        .pipe(less({compress:true}))
-        .pipe(sourcemaps.write('maps'))
-        // .pipe(remember('sys_less'))
-        .pipe(gulp.dest( files['css'] ))
-        .pipe(notify({
-          title:   'LESS' + title,
-          message: message
-        }));
+gulp.task('compile',function(){
+  return gulp.src( files['compile'] )
+    .pipe(plumber({ errorHandler: onError }))
+    .pipe(sourcemaps.init())
+    .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
+    .pipe(sourcemaps.write('maps'))
+    .pipe(gulp.dest( files['css'] ))
+    .pipe(notify({
+      title:   'SCSS' + title,
+      message: message
+    }));
 });
   
 /**
  * Concat CSS files
  */
-gulp.task('cssmin',['less'],function(){
+gulp.task('cssmin',['compile'],function(){
   return gulp.src( files['cssmin'] )
         .pipe(sourcemaps.init({loadMaps: true}))
         .pipe(autoprefixer())
@@ -243,9 +225,6 @@ gulp.task('default', ['jshint','jsmin','less','cssmin'] );
 // Watchers
 gulp.task('watch', function() {
   
-  // watch for JS changes
-  // gulp.watch( files['watchjs'], { interval: watch_interval }, ['jshint','jsmin','message'] );
-  
   // Watch for JS changes
   gulp.watch( files['watchjs'], { interval: watch_interval } ).on('change', function(jsfile) {
     return gulp.src( jsfile.path )
@@ -261,12 +240,11 @@ gulp.task('watch', function() {
       .pipe(notify({
         title:   'JS Hint OK' + title,
         message: message,
-        icon: icon 
       }));
   });
  
   // watch for LESS/CSS changes
-  gulp.watch( files['watchcss'], { interval: watch_interval }, ['less','cssmin','message'] );
+  gulp.watch( files['watchcss'], { interval: watch_interval }, ['compile','cssmin','message'] );
   
   // Watch any resulting file changed
   livereload.listen();
