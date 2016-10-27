@@ -4452,7 +4452,15 @@ Class Data_Core extends CI_Model {
   /* --- Informatieve methods --- */
   
   /**
-   * Geeft informatie van laatste query
+   * Geeft informatie van laatste query, zoals oa:
+   * 
+   * - total_rows
+   * - num_rows
+   * - limit
+   * - offset
+   * - page
+   * - num_pages
+   * - num_fields
    *
    * @param string $what ['']
    * @param bool $last_query [FALSE]
