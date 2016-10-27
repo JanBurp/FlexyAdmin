@@ -43,7 +43,8 @@ a {outline: none !important;}
   overflow:hidden;
   text-overflow: ellipsis;
 }
-.nav-pills .nav-link:hover, .nav-pills .nav-link:focus {background-color: $gray-lighter;}
+.nav-pills .nav-link.active {background-color: $brand-primary; color: $body-bg!important;}
+.nav-pills .nav-link:not(.active):hover, .nav-pills .nav-link:not(.active):focus {background-color: $gray-lighter; color: $brand-primary!important;}
 .nav > li > a > span.fa { margin-right:.35rem;}
 
 /* MAIN > CARD */

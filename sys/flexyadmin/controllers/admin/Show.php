@@ -29,7 +29,7 @@ class Show extends AdminController {
     $first  = current($result);
     $grid = array(
       'title'   => $this->ui->get($name),
-      'headers' => $this->ui->get(array_keys($first)),
+      'headers' => $this->ui->get($this->data->get_setting(array('grid_set','fields'))),
       'data'    => $result,
       'info'    => $this->data->get_query_info(),
     );
