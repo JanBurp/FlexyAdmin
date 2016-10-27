@@ -60,7 +60,7 @@ Class cfg_admin_menu extends Data_Core {
    * @return void
    * @author Jan den Besten
    */
-  public function get_menus( $base_url ) {
+  public function get_menus( $base_url, $current_uri ) {
     $user = $this->flexy_auth->get_user();
     
     $this->where( array(
@@ -73,6 +73,8 @@ Class cfg_admin_menu extends Data_Core {
 
     $sideMenu = new Menu();
     $sideMenu->set('view_path','admin/menu-vertical');
+    $sideMenu->set('framework','bootstrap');
+    $sideMenu->set_current($current_uri);
     $sidebar=$this->_process_menu($result);
     
     foreach ($sidebar as $item) {
@@ -97,12 +99,16 @@ Class cfg_admin_menu extends Data_Core {
     
     $headerMenu = new Menu();
     $headerMenu->set('view_path','admin/menu-horizontal');
+    $headerMenu->set('framework','bootstrap');
+    $headerMenu->set_current($current_uri);
     $headerMenu->add( array( 'name' => lang('help'), 'uri'=> $base_url.'help/index', 'icon' => 'question-circle' ));
     $headerMenu->add( array( 'name' => $user['username'], 'uri'=> $base_url.'data/form/cfg_users/'.$user['id'], 'icon' => 'user') );
     $headerMenu->add( array( 'name' => lang('logout'), 'uri'=> $base_url.'logout', 'icon' => 'power-off' ));
 
     $footerMenu = new Menu();
     $footerMenu->set('view_path','admin/menu-horizontal');
+    $footerMenu->set('framework','bootstrap');
+    $footerMenu->set_current($current_uri);
     $footerMenu->add( array( 'name' => lang('settings'), 'uri'=> $base_url.'data/form/tbl_site/1', 'icon' => 'cog'));
     $footerMenu->add( array( 'name' => lang('statistics'), 'uri'=> $base_url.'plugin/stats', 'icon' => 'bar-chart'));
 
