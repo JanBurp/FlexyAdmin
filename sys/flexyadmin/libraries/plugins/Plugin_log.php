@@ -43,25 +43,24 @@ class Plugin_log extends Plugin {
    * @author Jan den Besten
    */
   public function _home() {
-    $this->CI->load->model('grid');
     $this->CI->load->model('log_activity');
     $this->CI->log_activity->clean_up();
     $this->CI->lang->load('home');
-    
     $log = $this->CI->log_activity->get_grouped_user_activity();
-		$grid=new grid();
 		foreach($log as $k=>$d) {
       $log[$k]['id_user'] = $this->CI->data->table('cfg_users')->where('id',$d['id_user'])->get_field('str_username');
 		}
     $log=array_slice($log,0,10);
-		$grid->set_data($log,langp("home_activity"));
-    $grid->set_headings(array(
-      'id_user'       => lang('home_user'),
-      'tme_timestamp' => lang('home_date'),
-      'str_model'     => lang('home_changes'),
-    ));
-		$renderGrid=$grid->render("html","","grid home");
-    return $this->CI->load->view("admin/grid",$renderGrid,true) ;
+    $gridData = array(
+      'title'   => langp("home_activity"),
+      'headers' => array(
+        'id_user'       => lang('home_user'),
+        'tme_timestamp' => lang('home_date'),
+        'str_model'     => lang('home_changes'),
+      ),
+      'data'    => $log,
+    );
+    return $this->CI->load->view("admin/grid",$gridData,true) ;
   }
   
   
