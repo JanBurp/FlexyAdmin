@@ -16,15 +16,10 @@ class Main extends AdminController {
 	}
 
 	public function index() {
-		$this->load->model("grid");
-		$this->lang->load("home");
-    $this->_show_type("stats");
-
-    // homepage plugin (stats)
-    $data['homeplugins']=$this->plugin_handler->call_plugins_homepage();
-    
-    $this->_set_content($this->load->view("admin/home",$data,true));
-		$this->view_admin();
+    $data = array(
+      'plugins' => $this->plugin_handler->call_plugins_homepage(),
+    );
+		$this->view_admin( 'content_home', $data );
 	}
 
 

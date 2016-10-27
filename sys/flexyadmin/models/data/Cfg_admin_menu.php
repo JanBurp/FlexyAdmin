@@ -53,13 +53,14 @@ Class cfg_admin_menu extends Data_Core {
     return array('header'=>$header,'sidebar'=>$sidebar,'footer'=>$footer);
   }
   
+  
   /**
    * Speciale get om gegenereerd menu op te halen 
    *
    * @return void
    * @author Jan den Besten
    */
-  public function get_menus() {
+  public function get_menus( $base_url ) {
     $user = $this->flexy_auth->get_user();
     
     $this->where( array(
@@ -90,20 +91,20 @@ Class cfg_admin_menu extends Data_Core {
           case 'table': $class='';
           default: $icon = '';
         }
-        $sideMenu->add( array( 'name' => $item['name'], 'uri'=> '_admin/'.$item['uri'], 'icon' => $icon, 'class'=>$class ));
+        $sideMenu->add( array( 'name' => $item['name'], 'uri'=> $base_url.$item['uri'], 'icon' => $icon, 'class'=>$class ));
       }
     }
     
     $headerMenu = new Menu();
     $headerMenu->set('view_path','admin/menu-horizontal');
-    $headerMenu->add( array( 'name' => lang('help'), 'uri'=>'_admin/help/index', 'icon' => 'question-circle' ));
-    $headerMenu->add( array( 'name' => $user['username'], 'uri'=>'_admin/form/cfg_users/'.$user['id'], 'icon' => 'user') );
-    $headerMenu->add( array( 'name' => lang('logout'), 'uri'=>'_admin/logout', 'icon' => 'power-off' ));
+    $headerMenu->add( array( 'name' => lang('help'), 'uri'=> $base_url.'help/index', 'icon' => 'question-circle' ));
+    $headerMenu->add( array( 'name' => $user['username'], 'uri'=> $base_url.'data/form/cfg_users/'.$user['id'], 'icon' => 'user') );
+    $headerMenu->add( array( 'name' => lang('logout'), 'uri'=> $base_url.'logout', 'icon' => 'power-off' ));
 
     $footerMenu = new Menu();
     $footerMenu->set('view_path','admin/menu-horizontal');
-    $footerMenu->add( array( 'name' => lang('settings'), 'uri'=>'_admin/form/tbl_site/1', 'icon' => 'cog'));
-    $footerMenu->add( array( 'name' => lang('statistics'), 'uri'=>'_admin/plugin/stats', 'icon' => 'bar-chart'));
+    $footerMenu->add( array( 'name' => lang('settings'), 'uri'=> $base_url.'data/form/tbl_site/1', 'icon' => 'cog'));
+    $footerMenu->add( array( 'name' => lang('statistics'), 'uri'=> $base_url.'plugin/stats', 'icon' => 'bar-chart'));
 
     return array('headermenu'=>$headerMenu->render(),'sidemenu'=>$sideMenu->render(),'footermenu'=>$footerMenu->render());
   }
@@ -285,7 +286,7 @@ Class cfg_admin_menu extends Data_Core {
       if (!in_array($table,$excluded) and $this->flexy_auth->has_rights($table)) {
         $menu[]=array(
           'name'    => $this->ui->get($table),
-          'uri'     => 'table/'.$table,
+          'uri'     => 'show/grid/'.$table,
           'type'    => $this->types[get_prefix($table)],
           'args'    => array('table' => $table),
           'help'    => $this->ui->get_help($table) 
