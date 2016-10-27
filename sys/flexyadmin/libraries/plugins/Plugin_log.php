@@ -43,8 +43,10 @@ class Plugin_log extends Plugin {
    * @author Jan den Besten
    */
   public function _home() {
+    $this->CI->load->model('grid');
     $this->CI->load->model('log_activity');
     $this->CI->log_activity->clean_up();
+    $this->CI->lang->load('home');
     
     $log = $this->CI->log_activity->get_grouped_user_activity();
 		$grid=new grid();

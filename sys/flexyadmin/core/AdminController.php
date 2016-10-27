@@ -350,6 +350,12 @@ class AdminController extends BasicController {
     $this->view_data = $this->data->table('tbl_site')->select('str_title,url_url')->cache()->get_row();
     $this->view_data['url_url'] = str_replace('http://','',$this->view_data['url_url']);
     
+    // Basic content
+    $this->view_data['content'] = '';
+    
+    // API urls
+    $this->view_data['base_url'] = 'admin/';
+    
     // Language
     $this->view_data['language'] = $this->language;
     
@@ -357,7 +363,7 @@ class AdminController extends BasicController {
     $this->view_data['version'] = $this->version->get_version();
  
     // Menus
-    $menus = $this->data->table('cfg_admin_menu')->get_menus();
+    $menus = $this->data->table('cfg_admin_menu')->get_menus( $this->view_data['base_url'] );
     $this->view_data = array_merge($this->view_data,$menus);
     
     // Editor stuff
@@ -382,65 +388,72 @@ class AdminController extends BasicController {
   /**
    * Laad de admin pagina zien
    *
-   * @param string $currentMenuItem 
+   * @param string [$view] view for content 
+   * @param array [$data] data for content 
    * @return this
    * @author Jan den Besten
    */
-	public function view_admin($currentMenuItem="") {
+	public function view_admin( $view='', $data=array() ) {
     $this->_prepare_view_data();
+    if ( !empty($view)) $this->view_data['content'] = $this->load->view('admin/'.$view,$data,true);
     $this->load->view('admin/admin',$this->view_data);
     return $this;
 	}
+  
+  public function view_404() {
+    $this->load->view('admin/admin_404');
+    return $this;
+  }
 
-	function _show_view($theView,$data=NULL,$bFooter=true) {
-		if ($data==NULL) $data=array("content"=>$this->contentHTML);
-		$this->load->view($theView,$data);
-		if ($bFooter) $this->_show_footer();
-	}
+  // function _show_view($theView,$data=NULL,$bFooter=true) {
+  //   if ($data==NULL) $data=array("content"=>$this->contentHTML);
+  //   $this->load->view($theView,$data);
+  //   if ($bFooter) $this->_show_footer();
+  // }
 
-	function _show_dialog($data,$all=true) {
-		$this->_show_view('admin/dialog',$data);
-	}
+  // function _show_dialog($data,$all=true) {
+  //   $this->_show_view('admin/dialog',$data);
+  // }
 
 	// content helpers
 
-	function _set_content($content) {
-		$this->contentHTML=$content;
-	}
-	function _add_content($add) {
-		$this->contentHTML.=$add;
-	}
-	
-	function _add_help($help,$name="") {
-		static $counter=0;
-		$found=array_search($help,$this->helpTexts);
-		if (!$found) {
-			if (empty($name))
-				$name=safe_string($help,20);
-			else
-				$name=safe_string($name);
-			$name='help_'.$counter++.'_'.$name;
-			$this->helpTexts[$name]=ascii_to_entities($help);
-			return $name;
-		}
-		return $found;
-	}
-
-	function _add_js_variable($name,$value) {
-		$this->js[$name]=$value;
-	}
+  // function _set_content($content) {
+  //   $this->contentHTML=$content;
+  // }
+  // function _add_content($add) {
+  //   $this->contentHTML.=$add;
+  // }
+  //
+  // function _add_help($help,$name="") {
+  //   static $counter=0;
+  //   $found=array_search($help,$this->helpTexts);
+  //   if (!$found) {
+  //     if (empty($name))
+  //       $name=safe_string($help,20);
+  //     else
+  //       $name=safe_string($name);
+  //     $name='help_'.$counter++.'_'.$name;
+  //     $this->helpTexts[$name]=ascii_to_entities($help);
+  //     return $name;
+  //   }
+  //   return $found;
+  // }
+  //
+  // function _add_js_variable($name,$value) {
+  //   $this->js[$name]=$value;
+  // }
 	
 	
 
   // TODO: Move to plugin...
-	function _before_filemanager($path,$files) {
-		$this->load->library("editor_lists");
-		$result=$this->editor_lists->create_list("img");
-		if ($result) $result=$this->editor_lists->create_list("media");
-		if ($result) $result=$this->editor_lists->create_list("downloads");
-    if (!$result) $this->message->add_error("Could not update img/media List. Check file rights.");
-		return $result;
-	}
+  // function _before_filemanager($path,$files) {
+  //   $this->load->library("editor_lists");
+  //   $result=$this->editor_lists->create_list("img");
+  //   if ($result) $result=$this->editor_lists->create_list("media");
+  //   if ($result) $result=$this->editor_lists->create_list("downloads");
+  //     if (!$result) $this->message->add_error("Could not update img/media List. Check file rights.");
+  //   return $result;
+  // }
 
 
 }
