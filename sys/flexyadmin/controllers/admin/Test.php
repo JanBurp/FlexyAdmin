@@ -34,7 +34,7 @@ class Test extends MY_Controller {
     if (!IS_LOCALHOST) return;
     
     $this->data->table( 'tbl_kinderen' );
-    $result = $this->data->get_grid(20,FALSE,'id_adressen');
+    $result = $this->data->get_grid(20,FALSE,'tbl_adressen.abstract');
     
     trace_($result);
     
