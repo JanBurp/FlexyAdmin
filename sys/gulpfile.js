@@ -17,6 +17,7 @@ var watch_interval = 100;
 
 
 /** Paths (keep as is) */
+var node      = 'node_modules';
 var bower     = 'bower_components';
 var assets    = 'flexyadmin/assets';
 
@@ -142,6 +143,13 @@ gulp.task('install', function() {
      bower+'/vue/dist/vue.js',
     ]).pipe(gulp.dest( assets + '/js' ));
   gulp.src( '' ).pipe(notify("Vue Installed"));
+  
+  // Lodash
+  gulp.src([
+     node+'/lodash/lodash.js',
+    ]).pipe(gulp.dest( assets + '/js' ));
+  gulp.src( '' ).pipe(notify("Lodash Installed"));
+  
 
 });
 

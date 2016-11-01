@@ -22,5 +22,8 @@
     "jshint-stylish": "^2.2.1"
   },
   "author": "Jan den Besten",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.16.6"
+  }
 }

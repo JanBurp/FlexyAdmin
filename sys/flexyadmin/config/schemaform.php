@@ -289,7 +289,7 @@ $config['FIELDS_special'] = array(
   // Primary key
 	'id'				=> array(
     'type'        => 'number',
-    'form-type'   => 'hidden',
+    'form-type'   => 'primary',
     'readonly'    => true,
     'grid'        => 'function_primary_key',
     'form'        => 'function_primary_key',
