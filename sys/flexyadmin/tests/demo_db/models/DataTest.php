@@ -820,6 +820,14 @@ class DataTest extends CITestCase {
     $result = $this->CI->data->get_grid( 0,0, '_str_last_name');
     $first = current($result);
     $this->assertEquals( 'Evertsen', $first['str_last_name'] );
+    
+    $result = $this->CI->data->get_grid( 0,0, 'id_adressen');
+    $first = current($result);
+    // var_dump($first);
+    // $this->assertEquals( 'Evy', $first['id_adressen'] );
+    
+    
+    
   }
   
   
