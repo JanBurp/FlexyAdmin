@@ -30,7 +30,7 @@ class Show extends AdminController {
     
     // Options for grid result
     $default = array(
-      'limit'   => 5,
+      'limit'   => 10,
       'offset'  => false,
       'order'   => '',
       'find'   => ''
