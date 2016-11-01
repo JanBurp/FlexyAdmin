@@ -80,10 +80,12 @@ function array2object($array,$recursive=TRUE) {
  */
 function object2array($object,$recursive=TRUE) {
 	$array=array();
-	foreach ($object as $key => $value) {
-		if ($recursive and is_object($value)) $value=object2array($value,$recursive);
-		$array[$key] = $value;
-	}
+  if (!empty($object)) {
+  	foreach ($object as $key => $value) {
+  		if ($recursive and is_object($value)) $value=object2array($value,$recursive);
+  		$array[$key] = $value;
+  	}
+  }
 	return $array;
 }
 
