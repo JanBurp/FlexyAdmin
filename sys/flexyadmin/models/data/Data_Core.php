@@ -2117,13 +2117,14 @@ Class Data_Core extends CI_Model {
           if (in_array($field,$relations_fields)) {
             $abstract_field = $grid_set['with']['many_to_one'][$field]['result_name'].'.abstract';
             if (isset($row[$abstract_field])) {
-              $result[$id][$field] = '{"'.$id.'":"'.$row[$abstract_field].'"}';
+              $result[$id][$field] = '{"'.$value.'":"'.$row[$abstract_field].'"}';
               unset($result[$id][$abstract_field]);
             }
           }
         }
       }
     }
+    reset($result);
     return $result;
   }
   
