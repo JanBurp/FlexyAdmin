@@ -45,6 +45,7 @@
 <script src="<?=admin_assets()?>js/vue.js" type="text/javascript" charset="utf-8"></script> -->
 <script src="<?=admin_assets()?>js/vue-components/flexy-blocks.js" type="text/javascript" charset="utf-8"></script>
 <script src="<?=admin_assets()?>js/vue-components/vue-pagination.js" type="text/javascript" charset="utf-8"></script>
+<script src="<?=admin_assets()?>js/vue-components/vue-grid-cell.js" type="text/javascript" charset="utf-8"></script>
 <script src="<?=admin_assets()?>js/vue-components/vue-grid.js" type="text/javascript" charset="utf-8"></script>
 <script src="<?=admin_assets()?>js/flexyadmin-main.js" type="text/javascript" charset="utf-8"></script>
 

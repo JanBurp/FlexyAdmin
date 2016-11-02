@@ -49,7 +49,7 @@ a {outline: none !important;}
 
 /* MAIN > CARD */
 #main > .card {border:solid 1px $brand-primary;}
-#main > .card > .card-header {background-color:$brand-primary;color:$body-bg;}
+#main > .card > .card-header {background-color:$brand-primary;color:$body-bg;padding:.5rem;}
 
 /* FLEXY-BLOCK: text uppercase & hide spaces */
 .flexy-block {text-transform:uppercase;margin-right:1px;}
@@ -57,14 +57,25 @@ a {outline: none !important;}
 .flexy-block.char-space {visibility:hidden;}
 
 
+/* PAGINATION */
+.pagination-container {width:100%;}
+.pagination {margin:0;}
+.pagination-info {
+  color:$brand-primary;
+  margin-top:.5rem;
+  float:right;
+}
+
 
 /* GRID */
 .grid .card-block {padding:0;}
-.grid .card-footer {padding:0;}
-.grid .card-footer .pagination {margin:0;}
-
-.grid td, .grid th {overflow:hidden;text-overflow:ellipsis;}
-.grid th {color:$brand-primary;}
+.grid .card-footer {padding:.25rem .25rem 0;}
+/* HEADERS */
+.grid th {overflow:hidden;text-overflow:ellipsis;color:$brand-primary;}
 .grid th a {text-decoration:none;}
-.grid th span.fa {position:relative;float:right;margin-top:.25rem;}
-.grid td {white-space:nowrap;}
+.grid th span {white-space:nowrap;text-transform:uppercase;}
+.grid th > span.fa {position:relative;float:right;margin-top:.25rem;}
+.grid th.grid-header-type-primary {width:10rem;max-width:10rem;}
+/* CELLS */
+.grid td {overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:250px;}
+.grid td.grid-cell-type-checkbox {text-align:center;}
