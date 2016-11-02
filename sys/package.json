@@ -6,6 +6,15 @@
   "license": "ISC",
   "private": true,
   "main": "index.php",
+  "eslintConfig": {
+    "parserOptions": {
+      "ecmaVersion": 6,
+      "sourceType": "module"
+    },
+    "plugins": [
+      "html"
+    ]
+  },
   "dependencies": {
     "vue": "^2.0.1"
   },
@@ -23,6 +32,7 @@
     "sass-loader": "^4.0.2",
     "vue-loader": "^9.7.0",
     "webpack": "^2.1.0-beta.25",
-    "webpack-dev-server": "^2.1.0-beta.0"
+    "webpack-dev-server": "^2.1.0-beta.0",
+    "webpack-livereload-plugin": "^0.9.0"
   }
 }

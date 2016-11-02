@@ -1,16 +1,18 @@
-var path = require('path')
-var webpack = require('webpack')
-// var ExtractTextPlugin = require('extract-text-webpack-plugin')
+var path = require('path');
+var webpack = require('webpack');
+var LiveReloadPlugin = require('webpack-livereload-plugin');
+// var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
   entry: "./flexyadmin/assets/js/main.js",
   output: {
     path: __dirname + '/flexyadmin/assets/dist/',
     publicPath:'/flexyadmin/assets/dist/',
-    filename: "bundle.js"
+    filename: "bundle.js",
   },
   
   module: {
+    
       rules: [
         
         // eslint
@@ -20,6 +22,7 @@ module.exports = {
           loader: 'eslint',
           exclude: /node_modules/
         },
+        
         // vue loader
         {
           test: /\.vue$/,
@@ -28,6 +31,7 @@ module.exports = {
             // vue-loader options go here
           }
         },
+        
         // babel
         {
           test: /\.js$/,
@@ -43,15 +47,13 @@ module.exports = {
           //   fallbackLoader: "style-loader",
           //   loader: "css-loader!sass-loader"
           // })
-          // loader: ExtractTextPlugin.extract(
-          //   'css?sourceMap!sass?sourceMap'
-          // )
         },
+        
         // fonts
-        {
-          test: /\.(eot|svg|ttf|woff|woff2)$/,
-          loader: 'file?name=[name].[ext]'
-        }
+        // {
+        //   test: /\.(eot|svg|ttf|woff|woff2)$/,
+        //   loader: 'file?name=[name].[ext]'
+        // }
         
         // {
         //   test: /\.(png|jpg|gif|svg)$/,
@@ -63,13 +65,24 @@ module.exports = {
       ]
   },
   
+  devtool: "source-map",
+  
   plugins: [
-    // new ExtractTextPlugin('../dist/bundle.css'),
+    
+    // new ExtractTextPlugin({
+    //   filename: "[name].css?[hash]-[chunkhash]-[contenthash]-[name]",
+    //   disable: false,
+    //   allChunks: true
+    // }),
+    
     new webpack.optimize.UglifyJsPlugin({
       compress: {
         warnings: false
       }
     }),
+    
+    new LiveReloadPlugin()
+    
   ],
   
   resolve: {
