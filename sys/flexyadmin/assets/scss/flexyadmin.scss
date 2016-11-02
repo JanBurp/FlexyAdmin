@@ -76,6 +76,9 @@ a {outline: none !important;}
 .grid th span {white-space:nowrap;text-transform:uppercase;}
 .grid th > span.fa {position:relative;float:right;margin-top:.25rem;}
 .grid th.grid-header-type-primary {width:10rem;max-width:10rem;}
+.grid.grid-type-tree th.grid-header-type-primary {width:10rem;max-width:10rem;}
+.grid.grid-type-table th.grid-header-type-primary {width:7.75rem;max-width:7.75rem;}
+
 /* CELLS */
 .grid td {overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:250px;}
 .grid td.grid-cell-type-checkbox {text-align:center;}

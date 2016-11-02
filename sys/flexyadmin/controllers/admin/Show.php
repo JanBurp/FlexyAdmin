@@ -67,6 +67,25 @@ class Show extends AdminController {
 	  $this->view_admin( 'vue/vue-grid', $grid );
 	}
   
+
+/**
+ * This controls the form view
+ *
+ * @param string 	$table 	Table name
+ * @param mixed 	$id 		id
+ */
+	public function form( $name='',$id=false ) {
+    $form = array(
+      'title' => $this->ui->get($name),
+      'name'  => $name,
+      'id'    => $id,
+      
+    );
+	  $this->view_admin( 'form', $form );
+	}
+
+
+
   /**
    * Geeft schema(form) van gegeven veld
    *
@@ -92,17 +111,6 @@ class Show extends AdminController {
     return $schema;
   }
 
-
-
-
-/**
- * This controls the form view
- *
- * @param string 	$table 	Table name
- * @param mixed 	$id 		id
- */
-	public function form( $table='',$id=false ) {
-	}
 
 
 }
