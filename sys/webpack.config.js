@@ -12,6 +12,7 @@ module.exports = {
   
   module: {
       rules: [
+        
         // eslint
         {
           enforce: 'pre',
@@ -33,6 +34,7 @@ module.exports = {
           loader: 'babel',
           exclude: /node_modules/
         },
+        
         // sass,css
         {
           test: /\.scss$/,
