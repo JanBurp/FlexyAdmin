@@ -7,3 +7,4 @@ site/stats/*.xml
 site/cache/data_settings_*
 site/cache/data_result*
 sys/build.txt
+/sys/build.txt
