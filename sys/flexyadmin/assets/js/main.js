@@ -5,14 +5,24 @@
  * @author: Jan den Besten
  */
 
+var _ = require('lodash');
+
 import Vue from 'vue'
 import FlexyBlocks from './vue-components/flexyblocks.vue'
 import VuePagination from './vue-components/vue-pagination.vue'
 import VueGrid from './vue-components/vue-grid.vue'
 
-require("!css!sass!../scss/flexyadmin.scss");
-
-var _ = require('lodash');
+var css = require("!css!sass!../scss/flexyadmin.scss");
+// HACK TODO: Require does't work as expected, so include it directly
+var head = document.head || document.getElementsByTagName('head')[0];
+var style = document.createElement('style');
+style.type = 'text/css';
+if (style.styleSheet){
+  style.styleSheet.cssText = css;
+} else {
+  style.appendChild(document.createTextNode(css));
+}
+head.appendChild(style);
 
 // Every component logs its name and props
 // Vue.mixin({

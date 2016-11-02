@@ -10,7 +10,6 @@
 	<title>FlexyAdmin - <?=$str_title?></title>
 	<base href="<?=base_url()?>" />
   
-  <link rel="stylesheet" href="<?=admin_assets()?>css/flexyadmin.min.css" type="text/css" />
 </head>
 
 <body>
