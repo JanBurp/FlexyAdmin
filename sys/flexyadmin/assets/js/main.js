@@ -10,6 +10,8 @@ import FlexyBlocks from './vue-components/flexyblocks.vue'
 import VuePagination from './vue-components/vue-pagination.vue'
 import VueGrid from './vue-components/vue-grid.vue'
 
+// var css = require("!css!sass!../scss/flexyadmin.scss");
+
 var _ = require('lodash');
 
 // Every component logs its name and props

@@ -25,7 +25,9 @@ export default {
 </template>
 
 <style>
+
   .flexy-block {text-transform:uppercase;margin-right:1px;}
   .flexy-block.text-lowercase {text-transform:lowercase;}
   .flexy-block.char-space {visibility:hidden;}
+
 </style>
