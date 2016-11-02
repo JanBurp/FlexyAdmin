@@ -49,9 +49,13 @@
 </template>
 
 <script>
+
+import VuePagination from './vue-pagination.vue'
+import VueGridCell from './vue-grid-cell.vue'
+
 export default {
   name: 'VueGrid',
-  components:{ VueGridCell },
+  components: { VueGridCell,VuePagination },
   props:{
     'title':String,
     'name':String,

@@ -2,28 +2,22 @@
   "name": "FlexyAdmin",
   "version": "3.5.0-alpha",
   "description": "== FLEXYADMIN == (c) Jan den Besten www.flexyadmin.com",
-  "private": true,
-  "main": "index.php",
-  "devDependencies": {
-    "bower": "^1.x",
-    "gulp": "^3.9.1",
-    "gulp-autoprefixer": "^3.1.1",
-    "gulp-concat": "^2.6.0",
-    "gulp-flatten": "^0.3.1",
-    "gulp-jshint": "^2.0.2",
-    "gulp-livereload": "^3.8.1",
-    "gulp-notify": "^2.2.0",
-    "gulp-plumber": "^1.1.0",
-    "gulp-sass": "^2.3.2",
-    "gulp-sourcemaps": "^2.2.0",
-    "gulp-uglify": "^2.0.0",
-    "gulp-util": "^3.0.7",
-    "jshint": "^2.9.4",
-    "jshint-stylish": "^2.2.1"
-  },
   "author": "Jan den Besten",
   "license": "ISC",
+  "private": true,
+  "main": "index.php",
   "dependencies": {
-    "lodash": "^4.16.6"
+    "vue": "^2.0.1"
+  },
+    "devDependencies": {
+    "babel-core": "^6.0.0",
+    "babel-loader": "^6.0.0",
+    "babel-preset-es2015": "^6.0.0",
+    "cross-env": "^3.0.0",
+    "css-loader": "^0.25.0",
+    "file-loader": "^0.9.0",
+    "vue-loader": "^9.7.0",
+    "webpack": "^2.1.0-beta.25",
+    "webpack-dev-server": "^2.1.0-beta.0"
   }
 }
