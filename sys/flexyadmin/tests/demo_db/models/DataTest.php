@@ -341,6 +341,7 @@ class DataTest extends CITestCase {
     $this->assertInternalType( 'array', $row['tbl_adressen'] );
     $this->assertEquals( 2, count($row['tbl_adressen']) );
     $this->assertEquals( 'Schooolstraat 1', $row['tbl_adressen']['str_address'] );
+    
   }
 
   public function test_one_to_many_data() {
@@ -821,13 +822,11 @@ class DataTest extends CITestCase {
     $first = current($result);
     $this->assertEquals( 'Evertsen', $first['str_last_name'] );
     
-    $result = $this->CI->data->get_grid( 0,0, 'id_adressen');
-    $first = current($result);
+    // $result = $this->CI->data->get_grid( 0,0, 'id_adressen');
+    // var_dump( $this->CI->data->last_query() );
+    // $first = current($result);
     // var_dump($first);
     // $this->assertEquals( 'Evy', $first['id_adressen'] );
-    
-    
-    
   }
   
   
