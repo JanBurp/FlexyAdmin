@@ -12,6 +12,14 @@ module.exports = {
   
   module: {
       rules: [
+        // eslint
+        {
+          enforce: 'pre',
+          test: /.vue$/,
+          loader: 'eslint',
+          exclude: /node_modules/
+        },
+        // vue loader
         {
           test: /\.vue$/,
           loader: 'vue',
@@ -19,11 +27,18 @@ module.exports = {
             // vue-loader options go here
           }
         },
+        // babel
         {
           test: /\.js$/,
           loader: 'babel',
           exclude: /node_modules/
+        },
+        // sass,css
+        {
+          test: /\.scss$/,
+          loaders: ["style", "css", "sass"]
         }
+        
         // {
         //   test: /\.(png|jpg|gif|svg)$/,
         //   loader: 'file',
@@ -34,6 +49,13 @@ module.exports = {
       ]
   },
   
+  plugins: [
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false
+      }
+    }),
+  ],
   
   resolve: {
     alias: {
