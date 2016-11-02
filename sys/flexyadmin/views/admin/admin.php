@@ -9,7 +9,8 @@
 
 	<title>FlexyAdmin - <?=$str_title?></title>
 	<base href="<?=base_url()?>" />
-  
+
+  <link rel="stylesheet" href="<?=admin_assets()?>css/font-awesome.min.css" type="text/css" media="screen">
 </head>
 
 <body>
