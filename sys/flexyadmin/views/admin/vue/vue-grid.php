@@ -1,4 +1,4 @@
-<vue-grid title="<?=$title?>" :fields='<?=json_encode($fields)?>' :data='<?=json_encode($data)?>' order="<?=$order?>"  :info='<?=json_encode($info)?>' inline-template>
+<vue-grid title="<?=$title?>" :fields='<?=array2json($fields)?>' :data='<?=array2json($data)?>' order="<?=$order?>"  :info='<?=json_encode($info)?>' inline-template>
 
   <div class="card grid">
 
@@ -19,8 +19,8 @@
         </thead>
 
         <tbody>
-          <tr v-for="(row,id) in gridData" :data-id="id">
-            <td v-for="cell in row" :data-id="id" :data-type="cell.type" :data-value="cell.value">{{cell.value}}</td>
+          <tr v-for="row in gridData" :data-id="row.id">
+            <td v-for="cell in row" :data-id="row.id" :data-type="cell.type" :data-value="cell.value">{{cell.value}}</td>
           </tr>
         </tbody>
         

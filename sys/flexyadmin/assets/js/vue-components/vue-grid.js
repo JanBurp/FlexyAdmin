@@ -3,8 +3,8 @@ Vue.component('vue-grid', {
   
   props:{
     'title':String,
-    'fields':Object,
-    'data':Object,
+    'fields':[Object,Array],
+    'data':Array,
     'info':Object,
     'order': {
       type   :String,
@@ -23,24 +23,25 @@ Vue.component('vue-grid', {
      */
     gridData : function() {
       var data = this.data;
-      for (var id in data) {
-        var row = data[id];
+      for (var i = 0; i < data.length; i++) {
+        var row = data[i];
+        var id = row['id'];
         for (var field in row) {
           var schema = this.fields[field].schema;
-          data[id][field] = {
+          data[i][field] = {
             'type'  : schema['form-type'],
             'value' : row[field]
           };
           if ( schema.type==='number' && schema['form-type']==='select') {
             var jsonValue = JSON.parse(row[field].value);
-            data[id][field] = {
+            data[i][field] = {
               'type'  : schema['form-type'],
               'value' : Object.values(jsonValue)[0],
               'id'    : Object.keys(jsonValue)[0],
             };
           }
         }
-        data[id] = row;
+        data[i] = row;
       }
       return data;
     },
