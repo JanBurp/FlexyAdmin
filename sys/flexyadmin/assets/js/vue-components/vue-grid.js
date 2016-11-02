@@ -3,6 +3,7 @@ Vue.component('vue-grid', {
   
   props:{
     'title':String,
+    'name':String,
     'fields':[Object,Array],
     'data':Array,
     'info':Object,
@@ -19,7 +20,21 @@ Vue.component('vue-grid', {
   computed:{
     
     /**
-     * Prepare gridData
+     * Bepaal het type grid: table, ordered of tree
+     */
+    gridType : function() {
+      var type='table';
+      if (typeof(this.fields.order)!=='undefined') type='ordered';
+      if (typeof(this.fields.self_parent)!=='undefined') type='tree';
+      return type;
+    },
+    
+    gridTypeClass : function() {
+      return 'grid-type-'+this.gridType
+    },
+    
+    /**
+     * Prepare gridData (schema)
      */
     gridData : function() {
       var data = this.data;
@@ -27,7 +42,12 @@ Vue.component('vue-grid', {
         var row = data[i];
         var id = row['id'];
         for (var field in row) {
-          var schema = this.fields[field].schema;
+          var schema = {
+            'type'      : 'string',
+            'form-type' : 'text',
+            'readonly'  : false,
+          };
+          if ( this.fields[field] ) schema = this.fields[field].schema;
           data[i][field] = {
             'type'  : schema['form-type'],
             'value' : row[field]
@@ -40,6 +60,7 @@ Vue.component('vue-grid', {
               'id'    : Object.keys(jsonValue)[0],
             };
           }
+          data[i][field].name = field;
         }
         data[i] = row;
       }
@@ -58,6 +79,10 @@ Vue.component('vue-grid', {
   
   methods:{
     
+    headerClass : function(field) {
+      return 'grid-header-type-'+field.schema['form-type'];
+    },
+    
     /**
      * Create url, used for all links (pagination, edit, sort etc..)
      */
@@ -69,7 +94,13 @@ Vue.component('vue-grid', {
       };
       parts = _.extend( defaults, parts );
       return location.pathname + '?options={"offset":"'+parts.offset+'","order":"'+parts.order+'","find":"'+parts.find+'"}';
-    }
+    },
+    
+    editUrl : function(id) {
+      return 'admin/show/form/'+this.name+'/'+id;
+    },
+    
+    
   }
 
 });

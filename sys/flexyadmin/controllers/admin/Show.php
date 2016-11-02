@@ -56,6 +56,7 @@ class Show extends AdminController {
     // Show grid
     $grid = array(
       'title'   => $this->ui->get($name),
+      'name'    => $name,
       'fields'  => $fields,
       'data'    => $data,
       'info'    => $this->data->get_query_info(),
