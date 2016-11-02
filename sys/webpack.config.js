@@ -1,6 +1,6 @@
 var path = require('path')
 var webpack = require('webpack')
-
+// var ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 module.exports = {
   entry: "./flexyadmin/assets/js/main.js",
@@ -38,7 +38,19 @@ module.exports = {
         // sass,css
         {
           test: /\.scss$/,
-          loaders: ["style", "css", "sass"]
+          loaders: [ 'style', 'css?sourceMap', 'sass?sourceMap' ]
+          // loader: ExtractTextPlugin.extract({
+          //   fallbackLoader: "style-loader",
+          //   loader: "css-loader!sass-loader"
+          // })
+          // loader: ExtractTextPlugin.extract(
+          //   'css?sourceMap!sass?sourceMap'
+          // )
+        },
+        // fonts
+        {
+          test: /\.(eot|svg|ttf|woff|woff2)$/,
+          loader: 'file'
         }
         
         // {
@@ -52,6 +64,7 @@ module.exports = {
   },
   
   plugins: [
+    // new ExtractTextPlugin('../dist/bundle.css'),
     new webpack.optimize.UglifyJsPlugin({
       compress: {
         warnings: false
