@@ -25,7 +25,6 @@
   
   <div class="flexy-alerts"></div>
 
-
   <div id="content" class="row">
     <div id="flexy-menu-side" class="col-sm-2"><?=$sidemenu?></div>
 
@@ -37,6 +36,15 @@
     <div class="navbar-text"><flexy-blocks href="<?=$base_url?>" text="TokPit"/></div>
     <div class="navbar-text"><span class="flexy-block btn btn-outline-danger text-lowercase"><?=$version?></span></div>
     <?=$footermenu?>
+    <?php if (!empty($debug)): ?>
+    <div class="card debug-info">
+      <div class="card-block">
+      <?php foreach ($debug as $message): ?>
+        <?=trace_($message,false);?>
+      <?php endforeach ?>
+      </div>
+    </div>
+    <?php endif ?>
   </div>
 
 </div>

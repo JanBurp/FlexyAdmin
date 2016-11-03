@@ -10,8 +10,10 @@
 // var _ = require('lodash');
 var _ = require('lodash/core');
 
-import Vue from 'vue'
-// import VueForm from 'vue-form-2'
+import Vue              from 'vue'
+import tab              from './vue-strap-vue2/src/components/tab.vue'
+import tabs             from './vue-strap-vue2/src/components/tabs.vue'
+import tabGroup         from './vue-strap-vue2/src/components/tabGroup.vue'
 
 import FlexyBlocks      from './components/flexy-blocks.vue'
 import FlexyPagination  from './components/flexy-pagination.vue'
@@ -35,5 +37,12 @@ import FlexyGrid        from './components/grid/flexy-grid.vue'
 
 var vm = new Vue({
   el:'#main',
-  components: { FlexyBlocks,FlexyPagination,FlexyGrid},
+  components: {
+    FlexyBlocks,
+    FlexyPagination,
+    FlexyGrid,
+    tabs,
+    tabGroup,
+    tab,
+  },
 });
