@@ -2080,11 +2080,11 @@ Class Data_Core extends CI_Model {
         $fields = $grid_set['fields'];
         if (isset($grid_set['with'])) {
           foreach ($grid_set['with'] as $type => $with) {
-            foreach ($with as $other_table => $with_info) {
-              $other_fields = $this->get_other_table_abstract_fields( $other_table );
+            foreach ($with as $with_info) {
+              $other_fields = $this->get_other_table_abstract_fields( $with_info['other_table'] );
               if ($other_fields) {
                 foreach ($other_fields as $other_field) {
-                  $fields[] = $other_table.'.'.$other_field;
+                  $fields[] = '`'.$with_info['result_name'].'`.`'.$other_field.'`';
                 }
               }
             }
