@@ -8,7 +8,7 @@
  */
 
 class Show extends AdminController {
-	
+  
 	public function __construct() {
 		parent::__construct();
     $this->config->load('schemaform');
@@ -27,7 +27,6 @@ class Show extends AdminController {
 	 * @param string $name name of datamodel
 	 */
 	public function grid( $name='' ) {
-    
     // Options for grid result
     $default = array(
       'limit'   => 10,
@@ -37,22 +36,11 @@ class Show extends AdminController {
     );
     $options = object2array(json_decode($this->input->get('options')));
     $options = array_merge($default,$options);
-    
-    // Get result
-    $data = $this->data->table($name)
-              ->select_txt_abstract()
-              ->get_grid( $options['limit'], $options['offset'], $options['order'], $options['find'] );
-    
-    // Prepare fields
-    $fields = $this->data->get_setting(array('grid_set','fields'));
-    $fields = array_combine($fields,$fields);
-    foreach ($fields as $field => $info) {
-      $fields[$field] = array(
-        'name'    => $this->ui->get($field),
-        'schema'  => $this->_getSchema($field)
-      );
-    }
-    
+    // Data
+    $this->data->table($name);
+    $data = $this->data->select_txt_abstract()->get_grid( $options['limit'], $options['offset'], $options['order'], $options['find'] );
+    // Fields
+    $fields = $this->_prepareFields('grid_set');
     // Show grid
     $grid = array(
       'title'   => $this->ui->get($name),
@@ -63,7 +51,6 @@ class Show extends AdminController {
       'order'   => $options['order'],
       'find'    => $options['find'],
     );
-    
 	  $this->view_admin( 'vue/grid', $grid );
 	}
   
@@ -75,14 +62,45 @@ class Show extends AdminController {
  * @param mixed 	$id 		id
  */
 	public function form( $name='',$id=false ) {
+    // Data
+    $this->data->table($name);
+    $data = $this->data->get_form($id);
+    // Fields
+    $fields = $this->_prepareFields('form_set');
+    $fieldsets = $this->data->get_setting(array('form_set','fieldsets'));
+    $fieldsetsKeys = $this->ui->get(array_keys($fieldsets));
+    $fieldsets = array_combine($fieldsetsKeys,$fieldsets);
+    // Show form
     $form = array(
-      'title' => $this->ui->get($name),
-      'name'  => $name,
-      'id'    => $id,
-      
+      'title'     => $this->ui->get($name),
+      'name'      => $name,
+      'id'        => $id,
+      'fields'    => $fields,
+      'fieldsets' => $fieldsets,
+      'data'      => $data
     );
 	  $this->view_admin( 'vue/form', $form );
 	}
+  
+  
+  /**
+   * Geeft alle velden met nuttige informatie per veld
+   *
+   * @param string $set [grid_set|form_set]
+   * @return array
+   * @author Jan den Besten
+   */
+  private function _prepareFields($set) {
+    $fields = $this->data->get_setting(array($set,'fields'));
+    $fields = array_combine($fields,$fields);
+    foreach ($fields as $field => $info) {
+      $fields[$field] = array(
+        'name'    => $this->ui->get($field),
+        'schema'  => $this->_getSchema($field)
+      );
+    }
+    return $fields;
+  }
 
 
 
@@ -110,7 +128,6 @@ class Show extends AdminController {
     $schema=array_unset_keys($schema,array('grid','form','default','format' )); // TODO kan (deels) weg als oude ui weg is
     return $schema;
   }
-
 
 
 }

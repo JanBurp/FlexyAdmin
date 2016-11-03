@@ -178,8 +178,6 @@ export default {
 
 <style>
   .grid .card-block {padding:0;}
-  .grid .card-header h1 {margin:0;float:left;}
-  .grid .card-header form {float:right;}
   .grid .card-footer {padding:.25rem .25rem 0;}
   .grid th {overflow:hidden;text-overflow:ellipsis;}
   .grid th a {text-decoration:none;}

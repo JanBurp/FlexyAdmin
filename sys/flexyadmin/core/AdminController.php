@@ -16,6 +16,8 @@ class AdminController extends BasicController {
   private $view_data    = array();
   private $current_uri  = '';
 
+  private $debug = array();
+
 
 	public function __construct() {
 		parent::__construct(true);
@@ -34,6 +36,17 @@ class AdminController extends BasicController {
     
     $this->current_uri = $this->uri->uri_string();
 	}
+  
+  /**
+   * Voeg debug informatie toe
+   *
+   * @return void
+   * @author Jan den Besten
+   */
+  protected function _debug() {
+    $this->debug = array_merge($this->debug,func_get_args());
+    return $this;
+  }
 
 
   // function use_editor() {
@@ -318,7 +331,7 @@ class AdminController extends BasicController {
   // }
 
   private function _prepare_view_data() {
-
+    
     // tbl_site
     $this->view_data = $this->data->table('tbl_site')->select('str_title,url_url')->cache()->get_row();
     $this->view_data['url_url'] = str_replace('http://','',$this->view_data['url_url']);
@@ -339,6 +352,9 @@ class AdminController extends BasicController {
     $menus = $this->data->table('cfg_admin_menu')->get_menus( $this->view_data['base_url'], $this->current_uri );
     $this->view_data = array_merge($this->view_data,$menus);
     $this->view_data['uri'] = $this->current_uri;
+    
+    // debug
+    $this->view_data['debug'] = $this->debug;
 
     // Editor stuff
     // $buttons1=$this->cfg->get('CFG_configurations',"str_buttons1");
@@ -356,6 +372,8 @@ class AdminController extends BasicController {
     // $this->_show_footer();
     
     // trace_($this->view_data);
+    
+    
   }
   
   /**
