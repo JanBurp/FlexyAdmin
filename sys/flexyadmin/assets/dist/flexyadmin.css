@@ -4996,11 +4996,11 @@ a > .fa, .btn > .fa {
   padding-bottom: 0;
   margin-bottom: 0; }
 
-.form-group:hover {
+.form-group.row:hover {
   border-radius: 0.25rem;
   background-color: #DEA; }
 
-.form-group:hover input {
+.form-group.row:hover input {
   border-color: #696; }
 
 /* DEBUG HELPERS */
