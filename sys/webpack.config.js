@@ -35,7 +35,7 @@ module.exports = [
         {
           test: /\.js$/,
           loader: 'babel',
-          include: includePaths,
+          // include: includePaths,
           exclude: /node_modules/
         }
         
