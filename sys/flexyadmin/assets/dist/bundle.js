@@ -13320,22 +13320,7 @@ module.exports = function(module) {
  * - Global Vue Settings (Mixins)
  * 
  * @author: Jan den Besten
- */// var _ = require('lodash');
-var _=__webpack_require__(3);// Vue.use( VueForm,{
-//   layout:'form-horizontal',
-// });
-// Vue.mixin({
-// // Every component logs its name and props
-// created: function () {
-//   if (this.$options._componentTag) {
-//     console.log(this.$options._componentTag, this.$options.propsData);
-//   }
-//   else {
-//     console.log('Some Vue Component/Instance ready');
-//   }
-// },
-// });
-var vm=new _vue2.default({el:'#main',components:{FlexyBlocks:_flexyBlocks2.default,FlexyPagination:_flexyPagination2.default,FlexyGrid:_flexyGrid2.default,tabs:_Tabs2.default,tabGroup:_TabGroup2.default,tab:_Tab2.default}});
+ */var _=__webpack_require__(3);var vm=new _vue2.default({el:'#main',components:{FlexyBlocks:_flexyBlocks2.default,FlexyPagination:_flexyPagination2.default,FlexyGrid:_flexyGrid2.default,tabs:_Tabs2.default,tabGroup:_TabGroup2.default,tab:_Tab2.default}});
 
 /***/ }
 /******/ ]);
