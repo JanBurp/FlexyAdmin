@@ -1,10 +1,7 @@
 // var webpack = require('webpack');
 var path = require('path');
-// var fs = require('fs.realpath')
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var LiveReloadPlugin = require('webpack-livereload-plugin');
-
-var includePaths = [ '~/Sites/GitHub' ];
 
 module.exports = [
   
@@ -19,12 +16,12 @@ module.exports = [
   module: {
       rules: [
         // eslint
-        // {
-        //   enforce: 'pre',
-        //   test: /.vue$/,
-        //   loader: 'eslint',
-        //   exclude: /node_modules/
-        // },
+        {
+          enforce: 'pre',
+          test: /.vue$/,
+          loader: 'eslint',
+          exclude: /node_modules/
+        },
         // vue loader
         {
           test: /\.vue$/,
@@ -35,7 +32,6 @@ module.exports = [
         {
           test: /\.js$/,
           loader: 'babel',
-          // include: includePaths,
           exclude: /node_modules/
         }
         

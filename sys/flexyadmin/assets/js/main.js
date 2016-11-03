@@ -11,9 +11,9 @@
 var _ = require('lodash/core');
 
 import Vue              from 'vue'
-import tab              from './vue-strap/src/components/Tab.vue'
-import tabs             from './vue-strap/src/components/Tabs.vue'
-import tabGroup         from './vue-strap/src/components/TabGroup.vue'
+import tab              from './vue-strap-src/components/Tab.vue'
+import tabs             from './vue-strap-src/components/Tabs.vue'
+import tabGroup         from './vue-strap-src/components/TabGroup.vue'
 
 import FlexyBlocks      from './components/flexy-blocks.vue'
 import FlexyPagination  from './components/flexy-pagination.vue'
