@@ -4615,27 +4615,9 @@ exports.default={name:'VueGrid',components:{VueGridCell:_vueGridCell2.default,Vu
      * Prepare gridData (schema)
      */gridData:function gridData(){var data=this.data;for(var i=0;i<data.length;i++){var row=data[i];var id=row['id'];for(var field in row){var schema={'type':'string','form-type':'text','readonly':false};if(this.fields[field])schema=this.fields[field].schema;data[i][field]={'type':schema['form-type'],'value':row[field]};if(schema.type==='number'&&schema['form-type']==='select'){var jsonValue=JSON.parse(row[field].value);data[i][field]={'type':schema['form-type'],'value':Object.values(jsonValue)[0],'id':Object.keys(jsonValue)[0]};}data[i][field].name=field;}data[i]=row;}return data;},/**
      * Test if grid needs pagination
-     */needsPagination:function needsPagination(){return typeof this.info.num_pages!=='undefined'&&this.info.num_pages>1;}},data:function data(){return{findTerm:this.find};},mounted:function mounted(){if(this.find!==''){this.showFindTerm(this.find);}},methods:{headerClass:function headerClass(field){return'grid-header-type-'+field.schema['form-type'];},/**
+     */needsPagination:function needsPagination(){return typeof this.info.num_pages!=='undefined'&&this.info.num_pages>1;}},data:function data(){return{findTerm:this.find};},methods:{headerClass:function headerClass(field){return'grid-header-type-'+field.schema['form-type'];},/**
      * Create url, used for all links (pagination, edit, sort etc..)
-     */createdUrl:function createdUrl(parts){var defaults={order:this.order,find:this.find,offset:this.info.offset};parts=_.extend(defaults,parts);return location.pathname+'?options={"offset":"'+parts.offset+'","order":"'+parts.order+'","find":"'+parts.find+'"}';},editUrl:function editUrl(id){return'admin/show/form/'+this.name+'/'+id;},startFinding:function startFinding(event){if(event)event.preventDefault();var url=this.createdUrl({find:this.findTerm});console.log('startFinding',this.findTerm,url);window.location.assign(url);},showFindTerm:function showFindTerm(term){// function highlightDOM(el,term) {
-//   var children = el.childNodes;
-//   if (children.length===0) {
-//     var text = el.innerHTML;
-//     console.log(text);
-//     if (text) {
-//       console.log(text);
-//       el.innerHTML = text.replace(term, '<b>'+term+'</b>');
-//     }
-//   }
-//   else {
-//     for (var i = 0; i < children.length; i++) {
-//       highlightDOM( children[i], term);
-//     }
-//   }
-// }
-// var main = document.getElementById("grid-body");
-// highlightDOM(main,term);
-}}};
+     */createdUrl:function createdUrl(parts){var defaults={order:this.order,find:this.find,offset:this.info.offset};parts=_.extend(defaults,parts);return location.pathname+'?options={"offset":"'+parts.offset+'","order":"'+parts.order+'","find":"'+parts.find+'"}';},editUrl:function editUrl(id){return'admin/show/form/'+this.name+'/'+id;},startFinding:function startFinding(event){if(event)event.preventDefault();var url=this.createdUrl({find:this.findTerm});window.location.assign(url);}}};
 
 /***/ },
 /* 115 */

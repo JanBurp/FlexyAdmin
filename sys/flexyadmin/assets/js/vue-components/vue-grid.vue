@@ -143,12 +143,6 @@ export default {
     }
   },
   
-  mounted: function() {
-    if (this.find!=='') {
-      this.showFindTerm( this.find );
-    }
-  },
-  
   methods:{
     
     headerClass : function(field) {
@@ -175,31 +169,8 @@ export default {
     startFinding : function(event) {
       if (event) event.preventDefault();
       var url = this.createdUrl({find:this.findTerm});
-      console.log('startFinding',this.findTerm,url);
       window.location.assign(url);
     },
-    
-    showFindTerm : function(term) {
-      // function highlightDOM(el,term) {
-      //   var children = el.childNodes;
-      //   if (children.length===0) {
-      //     var text = el.innerHTML;
-      //     console.log(text);
-      //     if (text) {
-      //       console.log(text);
-      //       el.innerHTML = text.replace(term, '<b>'+term+'</b>');
-      //     }
-      //   }
-      //   else {
-      //     for (var i = 0; i < children.length; i++) {
-      //       highlightDOM( children[i], term);
-      //     }
-      //   }
-      // }
-      // var main = document.getElementById("grid-body");
-      // highlightDOM(main,term);
-    },
-    
     
   }
   
