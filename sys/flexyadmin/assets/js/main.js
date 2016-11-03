@@ -25,16 +25,16 @@ import VueGrid from './vue-components/vue-grid.vue'
 // head.appendChild(style);
 
 
-// Every component logs its name and props
 // Vue.mixin({
-//   created: function () {
-//     if (this.$options._componentTag) {
-//       console.log(this.$options._componentTag, this.$options.propsData);
-//     }
-//     else {
-//       console.log('Some Vue Component/Instance ready');
-//     }
-//   },
+  // // Every component logs its name and props
+  // created: function () {
+  //   if (this.$options._componentTag) {
+  //     console.log(this.$options._componentTag, this.$options.propsData);
+  //   }
+  //   else {
+  //     console.log('Some Vue Component/Instance ready');
+  //   }
+  // },
 // });
 
 Vue.use( VueForm,{

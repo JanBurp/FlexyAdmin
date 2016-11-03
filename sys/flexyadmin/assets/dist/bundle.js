@@ -4603,15 +4603,39 @@ exports.default={name:'VueGridCell',props:['type','name','value'],computed:{cell
 //
 //
 //
+//
+//
+//
+//
+//
+//
 exports.default={name:'VueGrid',components:{VueGridCell:_vueGridCell2.default,VuePagination:_vuePagination2.default},props:{'title':String,'name':String,'fields':[Object,Array],'data':Array,'info':Object,'order':{type:String,default:''},'find':{type:[String,Object],default:''}},computed:{/**
      * Bepaal het type grid: table, ordered of tree
      */gridType:function gridType(){var type='table';if(typeof this.fields.order!=='undefined')type='ordered';if(typeof this.fields.self_parent!=='undefined')type='tree';return type;},gridTypeClass:function gridTypeClass(){return'grid-type-'+this.gridType;},/**
      * Prepare gridData (schema)
      */gridData:function gridData(){var data=this.data;for(var i=0;i<data.length;i++){var row=data[i];var id=row['id'];for(var field in row){var schema={'type':'string','form-type':'text','readonly':false};if(this.fields[field])schema=this.fields[field].schema;data[i][field]={'type':schema['form-type'],'value':row[field]};if(schema.type==='number'&&schema['form-type']==='select'){var jsonValue=JSON.parse(row[field].value);data[i][field]={'type':schema['form-type'],'value':Object.values(jsonValue)[0],'id':Object.keys(jsonValue)[0]};}data[i][field].name=field;}data[i]=row;}return data;},/**
      * Test if grid needs pagination
-     */needsPagination:function needsPagination(){return typeof this.info.num_pages!=='undefined'&&this.info.num_pages>1;}},methods:{headerClass:function headerClass(field){return'grid-header-type-'+field.schema['form-type'];},/**
+     */needsPagination:function needsPagination(){return typeof this.info.num_pages!=='undefined'&&this.info.num_pages>1;}},data:function data(){return{findTerm:this.find};},mounted:function mounted(){if(this.find!==''){this.showFindTerm(this.find);}},methods:{headerClass:function headerClass(field){return'grid-header-type-'+field.schema['form-type'];},/**
      * Create url, used for all links (pagination, edit, sort etc..)
-     */createdUrl:function createdUrl(parts){var defaults={order:this.order,find:this.find,offset:this.info.offset};parts=_.extend(defaults,parts);return location.pathname+'?options={"offset":"'+parts.offset+'","order":"'+parts.order+'","find":"'+parts.find+'"}';},editUrl:function editUrl(id){return'admin/show/form/'+this.name+'/'+id;}}};
+     */createdUrl:function createdUrl(parts){var defaults={order:this.order,find:this.find,offset:this.info.offset};parts=_.extend(defaults,parts);return location.pathname+'?options={"offset":"'+parts.offset+'","order":"'+parts.order+'","find":"'+parts.find+'"}';},editUrl:function editUrl(id){return'admin/show/form/'+this.name+'/'+id;},startFinding:function startFinding(event){if(event)event.preventDefault();var url=this.createdUrl({find:this.findTerm});console.log('startFinding',this.findTerm,url);window.location.assign(url);},showFindTerm:function showFindTerm(term){// function highlightDOM(el,term) {
+//   var children = el.childNodes;
+//   if (children.length===0) {
+//     var text = el.innerHTML;
+//     console.log(text);
+//     if (text) {
+//       console.log(text);
+//       el.innerHTML = text.replace(term, '<b>'+term+'</b>');
+//     }
+//   }
+//   else {
+//     for (var i = 0; i < children.length; i++) {
+//       highlightDOM( children[i], term);
+//     }
+//   }
+// }
+// var main = document.getElementById("grid-body");
+// highlightDOM(main,term);
+}}};
 
 /***/ },
 /* 115 */
@@ -4656,7 +4680,7 @@ exports = module.exports = __webpack_require__(3)();
 
 
 // module
-exports.push([module.i, "\n.grid .card-block {padding:0;\n}\n.grid .card-footer {padding:.25rem .25rem 0;\n}\n.grid th {overflow:hidden;text-overflow:ellipsis;\n}\n.grid th a {text-decoration:none;\n}\n.grid th span {white-space:nowrap;text-transform:uppercase;\n}\n.grid th > span.fa {position:relative;float:right;margin-top:.25rem;\n}\n.grid th.grid-header-type-primary {width:10rem;max-width:10rem;\n}\n.grid.grid-type-tree th.grid-header-type-primary {width:10rem;max-width:10rem;\n}\n.grid.grid-type-table th.grid-header-type-primary {width:7.75rem;max-width:7.75rem;\n}\n", ""]);
+exports.push([module.i, "\n.grid .card-block {padding:0;\n}\n.grid .card-header h1 {margin:0;float:left;\n}\n.grid .card-header form {float:right;\n}\n.grid .card-footer {padding:.25rem .25rem 0;\n}\n.grid th {overflow:hidden;text-overflow:ellipsis;\n}\n.grid th a {text-decoration:none;\n}\n.grid th span {white-space:nowrap;text-transform:uppercase;\n}\n.grid th > span.fa {position:relative;float:right;margin-top:.25rem;\n}\n.grid th.grid-header-type-primary {width:10rem;max-width:10rem;\n}\n.grid.grid-type-tree th.grid-header-type-primary {width:10rem;max-width:10rem;\n}\n.grid.grid-type-table th.grid-header-type-primary {width:7.75rem;max-width:7.75rem;\n}\n", ""]);
 
 // exports
 
@@ -4757,9 +4781,43 @@ module.exports={render:function (){with(this) {
   return _h('div', {
     staticClass: "card grid",
     class: gridTypeClass
-  }, [_h('h1', {
+  }, [_h('div', {
     staticClass: "card-header"
-  }, [_s(title)]), " ", _h('div', {
+  }, [_h('h1', [_s(title)]), " ", _h('form', {
+    staticClass: "form-inline",
+    on: {
+      "submit": function($event) {
+        startFinding($event)
+      }
+    }
+  }, [_h('div', {
+    staticClass: "form-group"
+  }, [_h('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model.trim",
+      value: (findTerm),
+      expression: "findTerm",
+      modifiers: {
+        "trim": true
+      }
+    }],
+    staticClass: "form-control form-control-sm",
+    attrs: {
+      "type": "text",
+      "id": "grid-find",
+      "placeholder": "zoeken"
+    },
+    domProps: {
+      "value": _s(findTerm)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) return;
+        findTerm = $event.target.value.trim()
+      }
+    }
+  })]), " ", _m(0)])]), " ", _h('div', {
     staticClass: "card-block table-responsive"
   }, [_h('table', {
     staticClass: "table table-bordered table-hover table-sm"
@@ -4772,7 +4830,7 @@ module.exports={render:function (){with(this) {
       attrs: {
         "href": editUrl(-1)
       }
-    }, [_m(0, true)]), " ", _m(1, true), " ", _m(2, true)]) : _e(), " ", (field.schema['form-type'] !== 'hidden' && field.schema['form-type'] !== 'primary') ? _h('th', {
+    }, [_m(1, true)]), " ", _m(2, true), " ", _m(3, true)]) : _e(), " ", (field.schema['form-type'] !== 'hidden' && field.schema['form-type'] !== 'primary') ? _h('th', {
       staticClass: "text-primary",
       class: headerClass(field)
     }, [_h('a', {
@@ -4786,7 +4844,11 @@ module.exports={render:function (){with(this) {
     }) : _e(), " ", (order == '_' + key) ? _h('span', {
       staticClass: "fa fa-caret-down"
     }) : _e()])]) : _e()]
-  })])]), " ", _h('tbody', [_l((gridData), function(row) {
+  })])]), " ", _h('tbody', {
+    attrs: {
+      "id": "grid-body"
+    }
+  }, [_l((gridData), function(row) {
     return _h('tr', {
       attrs: {
         "data-id": row.id.value
@@ -4799,9 +4861,9 @@ module.exports={render:function (){with(this) {
         attrs: {
           "href": editUrl(cell.value)
         }
-      }, [_m(3, true)]), " ", _m(4, true), " ", _m(5, true), " ", (gridType !== 'table') ? _h('div', {
+      }, [_m(4, true)]), " ", _m(5, true), " ", _m(6, true), " ", (gridType !== 'table') ? _h('div', {
         staticClass: "btn btn-sm btn-warning action-move"
-      }, [_m(6, true)]) : _e()]) : _h('vue-grid-cell', {
+      }, [_m(7, true)]) : _e()]) : _h('vue-grid-cell', {
         attrs: {
           "type": cell.type,
           "name": cell.name
@@ -4825,6 +4887,15 @@ module.exports={render:function (){with(this) {
     }
   })]) : _e()])
 }},staticRenderFns: [function (){with(this) {
+  return _h('button', {
+    staticClass: "btn btn-sm btn-primary",
+    attrs: {
+      "type": "submit"
+    }
+  }, [_h('span', {
+    staticClass: "fa fa-search"
+  })])
+}},function (){with(this) {
   return _h('span', {
     staticClass: "fa fa-plus"
   })
@@ -5155,16 +5226,16 @@ var _=__webpack_require__(20);// var css = require("!css!sass!../scss/flexyadmin
 // style.type = 'text/css';
 // style.appendChild(document.createTextNode(css));
 // head.appendChild(style);
-// Every component logs its name and props
 // Vue.mixin({
-//   created: function () {
-//     if (this.$options._componentTag) {
-//       console.log(this.$options._componentTag, this.$options.propsData);
-//     }
-//     else {
-//       console.log('Some Vue Component/Instance ready');
-//     }
-//   },
+// // Every component logs its name and props
+// created: function () {
+//   if (this.$options._componentTag) {
+//     console.log(this.$options._componentTag, this.$options.propsData);
+//   }
+//   else {
+//     console.log('Some Vue Component/Instance ready');
+//   }
+// },
 // });
 _vue2.default.use(_vueForm2.default,{layout:'form-horizontal'});var vm=new _vue2.default({el:'#main',components:{FlexyBlocks:_flexyblocks2.default,VuePagination:_vuePagination2.default,VueGrid:_vueGrid2.default}});
 

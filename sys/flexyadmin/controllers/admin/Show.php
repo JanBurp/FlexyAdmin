@@ -33,7 +33,7 @@ class Show extends AdminController {
       'limit'   => 10,
       'offset'  => false,
       'order'   => '',
-      'find'   => ''
+      'find'    => ''
     );
     $options = object2array(json_decode($this->input->get('options')));
     $options = array_merge($default,$options);
