@@ -64,7 +64,7 @@ class Show extends AdminController {
       'find'    => $options['find'],
     );
     
-	  $this->view_admin( 'vue/vue-grid', $grid );
+	  $this->view_admin( 'vue/grid', $grid );
 	}
   
 
@@ -81,7 +81,7 @@ class Show extends AdminController {
       'id'    => $id,
       
     );
-	  $this->view_admin( 'form', $form );
+	  $this->view_admin( 'vue/form', $form );
 	}
 
 

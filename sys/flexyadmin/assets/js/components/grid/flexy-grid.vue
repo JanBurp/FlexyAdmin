@@ -1,6 +1,6 @@
 <template>
   <div class="card grid" :class="gridTypeClass">
-
+    <!-- MAIN HEADER -->
     <div class="card-header">
       <h1>{{title}}</h1>
       <form class="form-inline" v-on:submit="startFinding($event)">
@@ -8,10 +8,9 @@
         <button type="submit" class="btn btn-sm btn-primary"><span class="fa fa-search"></span></button>
       </form>
     </div>
-
+    <!-- GRID HEADERS -->
     <div class="card-block table-responsive">
       <table class="table table-bordered table-hover table-sm">
-
         <thead>
           <tr>
             <template v-for="(field,key) in fields">
@@ -29,39 +28,40 @@
             </template>
           </tr>
         </thead>
-
+        <!-- GRID BODY -->
         <tbody id="grid-body">
+          <!-- ROW -->
           <tr v-for="row in gridData" :data-id="row.id.value">
             <template v-for="cell in row">
+              <!-- PRIMARY CELL -->
               <td v-if="cell.type=='primary'" class="action">
                 <a class="btn btn-sm btn-success" :href="editUrl(cell.value)"><span class="fa fa-pencil"></span></a>
                 <div class="btn btn-sm btn-info action-select"><span class="fa fa-square-o"></span><span class="fa fa-check-square-o"></span></div>
                 <div class="btn btn-sm btn-danger action-delete"><span class="fa fa-remove"></span></div>
                 <div v-if="gridType!=='table'"class="btn btn-sm btn-warning action-move"><span class="fa fa-bars"></span></div>
               </td>
-              <vue-grid-cell v-else :type="cell.type" :name="cell.name" :value="cell.value"></vue-grid-cell>
+              <!-- CELL -->
+              <flexy-grid-cell v-else :type="cell.type" :name="cell.name" :value="cell.value"></flexy-grid-cell>
             </template>
           </tr>
         </tbody>
         
       </table>
     </div>
-    
+    <!-- FOOTER -->
     <div v-if="needsPagination" class="card-footer text-muted">
-      <vue-pagination :total="info.total_rows" :pages="info.num_pages" :current="info.page + 1" :limit="info.limit" :url="createdUrl({'offset':'##'})"></vue-pagination>
+      <flexy-pagination :total="info.total_rows" :pages="info.num_pages" :current="info.page + 1" :limit="info.limit" :url="createdUrl({'offset':'##'})"></flexy-pagination>
     </div>
-    
   </div>
 </template>
 
 <script>
-
-import VuePagination from './vue-pagination.vue'
-import VueGridCell from './vue-grid-cell.vue'
+import FlexyPagination  from '../flexy-pagination.vue'
+import FlexyGridCell    from './flexy-grid-cell.vue'
 
 export default {
   name: 'VueGrid',
-  components: { VueGridCell,VuePagination },
+  components: { FlexyGridCell,FlexyPagination },
   props:{
     'title':String,
     'name':String,
@@ -173,7 +173,6 @@ export default {
     },
     
   }
-  
 }
 </script>
 
