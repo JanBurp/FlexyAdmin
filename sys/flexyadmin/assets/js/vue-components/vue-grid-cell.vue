@@ -22,3 +22,8 @@ export default {
   },
 }
 </script>
+
+<style>
+  .grid td {overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:250px;}
+  .grid td.grid-cell-type-checkbox {text-align:center;}
+</style>

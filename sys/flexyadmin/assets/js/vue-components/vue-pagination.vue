@@ -11,7 +11,7 @@
       <li v-if="current<pages-10 && pages>buttons" class="page-item"><a class="page-link" :href="pageUrl(current+10)"><span class="fa fa-chevron-right"></span><span class="fa fa-chevron-right"></span></a></li>
       <li v-if="current<pages-1  && pages>buttons" class="page-item"><a class="page-link" :href="pageUrl(pages-1)"><span class="fa fa-fast-forward"></span></a></li>
     </ul>
-    <span class="pagination-info">{{total}} rijen in {{pages}} pagina\'s</span>
+    <span class="pagination-info text-primary">{{total}} rijen in {{pages}} pagina's</span>
   </div>
 </template>
 
@@ -64,3 +64,12 @@ export default {
   }
 }
 </script>
+
+<style>
+  .pagination-container {width:100%;}
+  .pagination {margin:0;}
+  .pagination-info {
+    margin-top:.5rem;
+    float:right;
+  }
+</style>

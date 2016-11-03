@@ -11,6 +11,7 @@
 	<base href="<?=base_url()?>" />
 
   <link rel="stylesheet" href="<?=admin_assets()?>css/font-awesome.min.css" type="text/css" media="screen">
+  <link rel="stylesheet" href="<?=admin_assets()?>dist/flexyadmin.css" type="text/css" media="screen">
 </head>
 
 <body>
