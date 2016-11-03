@@ -5,9 +5,12 @@
  * @author: Jan den Besten
  */
 
-var _ = require('lodash');
+// var _ = require('lodash');
+var _ = require('lodash/core');
 
 import Vue from 'vue'
+import VueForm from 'vue-form-2'
+
 import FlexyBlocks from './vue-components/flexyblocks.vue'
 import VuePagination from './vue-components/vue-pagination.vue'
 import VueGrid from './vue-components/vue-grid.vue'
@@ -34,8 +37,12 @@ import VueGrid from './vue-components/vue-grid.vue'
 //   },
 // });
 
+Vue.use( VueForm,{
+  layout:'form-horizontal',
+  
+});
 
 var vm = new Vue({
   el:'#main',
-  components: { FlexyBlocks,VuePagination,VueGrid }
+  components: { FlexyBlocks,VuePagination,VueGrid},
 });
