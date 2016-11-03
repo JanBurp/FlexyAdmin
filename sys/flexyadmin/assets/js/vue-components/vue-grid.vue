@@ -1,7 +1,13 @@
 <template>
   <div class="card grid" :class="gridTypeClass">
 
-    <h1 class="card-header">{{title}}</h1>
+    <div class="card-header">
+      <h1>{{title}}</h1>
+      <form class="form-inline" v-on:submit="startFinding($event)">
+        <div class="form-group"><input type="text" v-model.trim="findTerm" class="form-control form-control-sm" id="grid-find" placeholder="zoeken"></div>
+        <button type="submit" class="btn btn-sm btn-primary"><span class="fa fa-search"></span></button>
+      </form>
+    </div>
 
     <div class="card-block table-responsive">
       <table class="table table-bordered table-hover table-sm">
@@ -24,7 +30,7 @@
           </tr>
         </thead>
 
-        <tbody>
+        <tbody id="grid-body">
           <tr v-for="row in gridData" :data-id="row.id.value">
             <template v-for="cell in row">
               <td v-if="cell.type=='primary'" class="action">
@@ -71,7 +77,7 @@ export default {
       default:'',
     }
   },
-
+  
   computed:{
     
     /**
@@ -131,6 +137,17 @@ export default {
     
   },
   
+  data : function() {
+    return {
+      findTerm : this.find
+    }
+  },
+  
+  mounted: function() {
+    if (this.find!=='') {
+      this.showFindTerm( this.find );
+    }
+  },
   
   methods:{
     
@@ -155,6 +172,35 @@ export default {
       return 'admin/show/form/'+this.name+'/'+id;
     },
     
+    startFinding : function(event) {
+      if (event) event.preventDefault();
+      var url = this.createdUrl({find:this.findTerm});
+      console.log('startFinding',this.findTerm,url);
+      window.location.assign(url);
+    },
+    
+    showFindTerm : function(term) {
+      // function highlightDOM(el,term) {
+      //   var children = el.childNodes;
+      //   if (children.length===0) {
+      //     var text = el.innerHTML;
+      //     console.log(text);
+      //     if (text) {
+      //       console.log(text);
+      //       el.innerHTML = text.replace(term, '<b>'+term+'</b>');
+      //     }
+      //   }
+      //   else {
+      //     for (var i = 0; i < children.length; i++) {
+      //       highlightDOM( children[i], term);
+      //     }
+      //   }
+      // }
+      // var main = document.getElementById("grid-body");
+      // highlightDOM(main,term);
+    },
+    
+    
   }
   
 }
@@ -162,6 +208,8 @@ export default {
 
 <style>
   .grid .card-block {padding:0;}
+  .grid .card-header h1 {margin:0;float:left;}
+  .grid .card-header form {float:right;}
   .grid .card-footer {padding:.25rem .25rem 0;}
   .grid th {overflow:hidden;text-overflow:ellipsis;}
   .grid th a {text-decoration:none;}
