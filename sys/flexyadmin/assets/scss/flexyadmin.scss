@@ -3,13 +3,14 @@
  * Copyright Jan den Besten
  */
 
+// THEME (uncomment the choosen thema)
 @import "themes/classic";
 //@import "themes/bootstrap";
 //@import "themes/jandenbesten";
 
-@import "bootstrap/bootstrap";
-//@import "../css/font-awesome";
 
+// FROM HERE, DON'T EDIT
+@import "bootstrap/bootstrap";
 
 /* DEFAULTS */
 a {outline: none !important;}
@@ -51,35 +52,3 @@ a {outline: none !important;}
 /* MAIN > CARD */
 #main > .card {border:solid 1px $brand-primary;}
 #main > .card > .card-header {background-color:$brand-primary;color:$body-bg;padding:.5rem;}
-
-/* FLEXY-BLOCK: text uppercase & hide spaces */
-//.flexy-block {text-transform:uppercase;margin-right:1px;}
-//.flexy-block.text-lowercase {text-transform:lowercase;}
-//.flexy-block.char-space {visibility:hidden;}
-
-
-/* PAGINATION */
-.pagination-container {width:100%;}
-.pagination {margin:0;}
-.pagination-info {
-  color:$brand-primary;
-  margin-top:.5rem;
-  float:right;
-}
-
-
-/* GRID */
-.grid .card-block {padding:0;}
-.grid .card-footer {padding:.25rem .25rem 0;}
-/* HEADERS */
-.grid th {overflow:hidden;text-overflow:ellipsis;color:$brand-primary;}
-.grid th a {text-decoration:none;}
-.grid th span {white-space:nowrap;text-transform:uppercase;}
-.grid th > span.fa {position:relative;float:right;margin-top:.25rem;}
-.grid th.grid-header-type-primary {width:10rem;max-width:10rem;}
-.grid.grid-type-tree th.grid-header-type-primary {width:10rem;max-width:10rem;}
-.grid.grid-type-table th.grid-header-type-primary {width:7.75rem;max-width:7.75rem;}
-
-/* CELLS */
-.grid td {overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:250px;}
-.grid td.grid-cell-type-checkbox {text-align:center;}

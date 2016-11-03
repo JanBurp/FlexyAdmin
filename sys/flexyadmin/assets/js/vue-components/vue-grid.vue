@@ -4,17 +4,17 @@
     <h1 class="card-header">{{title}}</h1>
 
     <div class="card-block table-responsive">
-      <table class="table table-striped table-bordered table-hover table-sm">
+      <table class="table table-bordered table-hover table-sm">
 
         <thead>
           <tr>
             <template v-for="(field,key) in fields">
-              <th v-if="field.schema['form-type']==='primary'" :class="headerClass(field)">
+              <th v-if="field.schema['form-type']==='primary'" :class="headerClass(field)" class="text-primary">
                 <a class="btn btn-sm btn-success" :href="editUrl(-1)"><span class="fa fa-plus"></span></a>
                 <div class="btn btn-sm btn-info action-select"><span class="fa fa-square-o"></span><span class="fa fa-check-square-o"></span></div>
                 <div class="btn btn-sm btn-danger action-delete"><span class="fa fa-remove"></span></div>
               </th>
-              <th v-if="field.schema['form-type']!=='hidden' && field.schema['form-type']!=='primary'" :class="headerClass(field)">
+              <th v-if="field.schema['form-type']!=='hidden' && field.schema['form-type']!=='primary'" :class="headerClass(field)"  class="text-primary">
                 <a :href="createdUrl({'order':(key==order?'_'+key:key)})"><span>{{field.name}}</span>
                   <span v-if="order==key" class="fa fa-caret-up"></span>
                   <span v-if="order=='_'+key" class="fa fa-caret-down"></span>
@@ -159,3 +159,15 @@ export default {
   
 }
 </script>
+
+<style>
+  .grid .card-block {padding:0;}
+  .grid .card-footer {padding:.25rem .25rem 0;}
+  .grid th {overflow:hidden;text-overflow:ellipsis;}
+  .grid th a {text-decoration:none;}
+  .grid th span {white-space:nowrap;text-transform:uppercase;}
+  .grid th > span.fa {position:relative;float:right;margin-top:.25rem;}
+  .grid th.grid-header-type-primary {width:10rem;max-width:10rem;}
+  .grid.grid-type-tree th.grid-header-type-primary {width:10rem;max-width:10rem;}
+  .grid.grid-type-table th.grid-header-type-primary {width:7.75rem;max-width:7.75rem;}
+</style>

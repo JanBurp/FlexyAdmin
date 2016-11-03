@@ -13,13 +13,13 @@ import VuePagination from './vue-components/vue-pagination.vue'
 import VueGrid from './vue-components/vue-grid.vue'
 
 
-var css = require("!css!sass!../scss/flexyadmin.scss");
-// HACK TODO: Require does't work as expected, so include it by hand
-var head = document.head || document.getElementsByTagName('head')[0];
-var style = document.createElement('style');
-style.type = 'text/css';
-style.appendChild(document.createTextNode(css));
-head.appendChild(style);
+// var css = require("!css!sass!../scss/flexyadmin.scss");
+// // HACK TODO: Require does't work as expected, so include it by hand
+// var head = document.head || document.getElementsByTagName('head')[0];
+// var style = document.createElement('style');
+// style.type = 'text/css';
+// style.appendChild(document.createTextNode(css));
+// head.appendChild(style);
 
 
 // Every component logs its name and props
