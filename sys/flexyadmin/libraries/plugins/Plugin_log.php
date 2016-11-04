@@ -47,6 +47,7 @@ class Plugin_log extends Plugin {
     $this->CI->log_activity->clean_up();
     $this->CI->lang->load('home');
     $log = $this->CI->log_activity->get_grouped_user_activity();
+    if (empty($log)) return '';
 		foreach($log as $k=>$d) {
       $log[$k]['id_user'] = $this->CI->data->table('cfg_users')->where('id',$d['id_user'])->get_field('str_username');
 		}

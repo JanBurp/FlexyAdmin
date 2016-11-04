@@ -1357,13 +1357,13 @@ pre {
 .table-info,
 .table-info > th,
 .table-info > td {
-  background-color: #d9edf7; }
+  background-color: #fff5dd; }
 
 .table-hover .table-info:hover {
-  background-color: #c4e3f3; }
+  background-color: #ffedc4; }
   .table-hover .table-info:hover > td,
   .table-hover .table-info:hover > th {
-    background-color: #c4e3f3; }
+    background-color: #ffedc4; }
 
 .table-warning,
 .table-warning > th,
@@ -3501,11 +3501,11 @@ a.tag:focus, a.tag:hover {
     color: #2b542c; }
 
 .alert-info {
-  background-color: #d9edf7;
-  border-color: #bcdff1;
+  background-color: #fff5dd;
+  border-color: #ffeab9;
   color: #31708f; }
   .alert-info hr {
-    border-top-color: #a6d5ec; }
+    border-top-color: #ffe2a0; }
   .alert-info .alert-link {
     color: #245269; }
 
@@ -3792,7 +3792,7 @@ button.list-group-item-success {
 
 .list-group-item-info {
   color: #31708f;
-  background-color: #d9edf7; }
+  background-color: #fff5dd; }
 
 a.list-group-item-info,
 button.list-group-item-info {
@@ -3804,7 +3804,7 @@ button.list-group-item-info {
   button.list-group-item-info:focus,
   button.list-group-item-info:hover {
     color: #31708f;
-    background-color: #c4e3f3; }
+    background-color: #ffedc4; }
   a.list-group-item-info.active, a.list-group-item-info.active:focus, a.list-group-item-info.active:hover,
   button.list-group-item-info.active,
   button.list-group-item-info.active:focus,

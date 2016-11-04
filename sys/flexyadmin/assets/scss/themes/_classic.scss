@@ -29,16 +29,37 @@ $font-size-h1: 1.5rem;
 $font-size-h2: 1.25rem;
 $font-size-h3: 1rem;
 
+h1 {text-transform:uppercase;}
 
 // Borders
-//$border-radius:          .25rem !default;
-//$border-radius-lg:       .3rem !default;
-//$border-radius-sm:       .2rem !default;
+//$border-radius:          .25rem;
+//$border-radius-lg:       .3rem;
+//$border-radius-sm:       .2rem;
 
 
 
 // Buttons
 $btn-padding-x:                  .75rem;
 
+// Form states and alerts
+//
+// Define colors for form feedback states and, by default, alerts.
 
-h1 {text-transform:uppercase;}
+//$state-success-text:             #3c763d;
+//$state-success-bg:               #dff0d8;
+//$state-success-border:           darken($state-success-bg, 5%);
+//
+//$state-info-text:                #31708f;
+$state-info-bg:                    lighten($brand-warning,50%);
+//$state-info-border:              darken($state-info-bg, 7%);
+//
+//$state-warning-text:             #8a6d3b;
+//$state-warning-bg:               #fcf8e3;
+//$mark-bg:                        $state-warning-bg;
+//$state-warning-border:           darken($state-warning-bg, 5%);
+//
+//$state-danger-text:              #a94442;
+//$state-danger-bg:                #f2dede;
+//$state-danger-border:            darken($state-danger-bg, 5%);
+
+
