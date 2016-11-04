@@ -5,7 +5,7 @@
       <h1>{{title}}</h1>
       <form class="form-inline" v-on:submit="startFinding($event)">
         <div class="form-group"><input type="text" v-model.trim="findTerm" class="form-control form-control-sm" id="grid-find" placeholder="zoeken"></div>
-        <button type="submit" class="btn btn-sm btn-primary"><span class="fa fa-search"></span></button>
+        <button type="submit" class="btn btn-sm btn-secundary"><span class="fa fa-search"></span></button>
       </form>
     </div>
     <!-- GRID HEADERS -->
@@ -15,9 +15,9 @@
           <tr>
             <template v-for="(field,key) in fields">
               <th v-if="field.schema['form-type']==='primary'" :class="headerClass(field)" class="text-primary">
-                <a class="btn btn-sm btn-success" :href="editUrl(-1)"><span class="fa fa-plus"></span></a>
-                <div class="btn btn-sm btn-info action-select"><span class="fa fa-square-o"></span><span class="fa fa-check-square-o"></span></div>
-                <div class="btn btn-sm btn-danger action-delete"><span class="fa fa-remove"></span></div>
+                <a class="btn btn-sm btn-warning" :href="editUrl(-1)"><span class="fa fa-plus"></span></a>
+                <div :class="{disabled:!hasSelection()}" class="btn btn-sm btn-danger action-delete"><span class="fa fa-remove"></span></div>
+                <div v-on:click="reverseSelection()" class="btn btn-sm btn-info action-select"><span class="fa fa-circle-o"></span></div>
               </th>
               <th v-if="field.schema['form-type']!=='hidden' && field.schema['form-type']!=='primary'" :class="headerClass(field)"  class="text-primary">
                 <a :href="createdUrl({'order':(key==order?'_'+key:key)})"><span>{{field.name}}</span>
@@ -31,14 +31,14 @@
         <!-- GRID BODY -->
         <tbody id="grid-body">
           <!-- ROW -->
-          <tr v-for="row in gridData" :data-id="row.id.value">
+          <tr v-for="row in gridData" :data-id="row.id.value" :class="{'table-danger':isSelected(row.id.value)}">
             <template v-for="cell in row">
               <!-- PRIMARY CELL -->
               <td v-if="cell.type=='primary'" class="action">
-                <a class="btn btn-sm btn-success" :href="editUrl(cell.value)"><span class="fa fa-pencil"></span></a>
-                <div class="btn btn-sm btn-info action-select"><span class="fa fa-square-o"></span><span class="fa fa-check-square-o"></span></div>
-                <div class="btn btn-sm btn-danger action-delete"><span class="fa fa-remove"></span></div>
-                <div v-if="gridType!=='table'"class="btn btn-sm btn-warning action-move"><span class="fa fa-bars"></span></div>
+                <a class="btn btn-sm btn-outline-warning" :href="editUrl(cell.value)"><span class="fa fa-pencil"></span></a>
+                <div class="btn btn-sm btn-outline-danger action-delete"><span class="fa fa-remove"></span></div>
+                <div v-on:click="select(row.id.value)" class="btn btn-sm btn-outline-info action-select"><span v-if="!isSelected(row.id.value)" class="fa fa-circle-o"></span><span v-if="isSelected(row.id.value)" class="fa fa-circle"></span></div>
+                <div v-if="gridType!=='table'"class="btn btn-sm btn-outline-info action-move"><span class="fa fa-bars"></span></div>
               </td>
               <!-- CELL -->
               <flexy-grid-cell v-else :type="cell.type" :name="cell.name" :value="cell.value"></flexy-grid-cell>
@@ -139,11 +139,38 @@ export default {
   
   data : function() {
     return {
-      findTerm : this.find
+      findTerm : this.find,
+      selected : [],
     }
   },
   
   methods:{
+    
+    hasSelection : function() {
+      return this.selected.length>1;
+    },
+    
+    isSelected : function(id) {
+      return this.selected.indexOf(id) > -1;
+    },
+    
+    select: function(id) {
+      var index = this.selected.indexOf(id);
+      if (index>-1) {
+        this.selected.splice(index, 1);
+      }
+      else {
+        this.selected.push(id);
+      }
+    },
+    
+    reverseSelection:function() {
+      var ids = [];
+      for (var i = 0; i < this.data.length; i++) {
+        ids.push(this.data[i].id.value);
+      }
+      this.selected = _.difference(ids,this.selected);
+    },
     
     headerClass : function(field) {
       return 'grid-header-type-'+field.schema['form-type'];

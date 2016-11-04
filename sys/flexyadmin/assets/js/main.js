@@ -7,7 +7,7 @@
  * @author: Jan den Besten
  */
 
-var _ = require('lodash/core');
+var _ = require('lodash');
 
 import Vue              from 'vue'
 import tab              from './vue-strap-src/components/Tab.vue'
@@ -17,6 +17,8 @@ import tabGroup         from './vue-strap-src/components/TabGroup.vue'
 import FlexyBlocks      from './components/flexy-blocks.vue'
 import FlexyPagination  from './components/flexy-pagination.vue'
 import FlexyGrid        from './components/grid/flexy-grid.vue'
+
+
 
 var vm = new Vue({
   el:'#main',
