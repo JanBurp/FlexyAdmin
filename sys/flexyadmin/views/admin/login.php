@@ -1,33 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-	<title>FlexyAdmin - Login <?=$title?></title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+	<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
+	<meta http-equiv="Content-Style-Type" content="text/css" />
+
+	<title>FlexyAdmin</title>
 	<base href="<?=base_url()?>" />
-	<link rel="shortcut icon" href="<?=admin_assets()?>img/favicon.ico" type="image/x-icon" />
-	<link rel="stylesheet" href="<?=admin_assets()?>css/admin_main.css" type="text/css" />
-	<!--[if lte IE 6]><style type="text/css" media="screen">@import url(<?=admin_assets()?>css/ie6.css);</style><![endif]-->
-	<!--[if IE 7]><style type="text/css" media="screen">@import url(<?=admin_assets()?>css/ie7.css);</style><![endif]-->
-	<!--[if IE 8]><style type="text/css" media="screen">@import url(<?=admin_assets()?>css/ie8.css);</style><![endif]-->
-	<!--[if IE 9]><style type="text/css" media="screen">@import url(<?=admin_assets()?>/css/ie9.css);</style><![endif]-->
+
+  <link rel="stylesheet" href="<?=admin_assets()?>css/font-awesome.min.css" type="text/css" media="screen">
+  <link rel="stylesheet" href="<?=admin_assets()?>dist/flexyadmin.css" type="text/css" media="screen">
 </head>
 
-<body style='background-color:#EEFFBB'>
+<body class="login-body bg-primary">
 
-<div id="wrapper">
-
-	<div id="dialog">
-		<form action="<?=site_url("admin/login/check")?>" method="post" class="login">
-			<h2>FlexyAdmin login</h2>
-			<?php if (isset($message) and !empty($message)): ?>
-				<div class="error message"><br/><?=$message?></div>
-			<?php endif ?>
-			<p class="str"><label for="user">User</label><input type="text" name="user" value="" id="user" class="user" /></p>
-			<p class="pwd"><label for="pass">Password</label><input type="password" name="password" value="" id="password" class="password"  /></p>
-			<input type="submit" name="" value="Login" submit="submit" class="button submit"  />
-		</form>
-	</div>
-
-</div> <!-- wrapper -->
+<div id="main">
+  <div class="card" id="login-form">
+		<?php if (isset($message) and !empty($message)): ?><h1 class="card-header bg-danger" style="padding-left:1.25rem;"><?=$message?></h1><?php endif ?>
+    <div class="card-block">
+  		<form action="<?=site_url("admin/login/check")?>" method="post" class="">
+        <div class="form-group row">
+          <div class="col-xs-10"><input type="text" class="form-control" id="user" name="user" placeholder="Username" value=""></div>
+          <label for="user" class="col-xs-2 col-form-label"><span class="fa fa-user"></span></label>
+        </div>
+        <div class="form-group row">
+          <div class="col-xs-10"><input type="password" class="form-control" id="password" name="password" placeholder="Password" value=""></div>
+          <label for="password" class="col-xs-2 col-form-label"><span class="fa fa-lock"></span></label>
+        </div>
+        <button type="submit" class="btn btn-warning col-xs-12">LOGIN</button>
+  		</form>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
