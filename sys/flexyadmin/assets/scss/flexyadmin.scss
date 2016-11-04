@@ -16,6 +16,9 @@
 a {outline: none !important;}
 a>.fa, .btn>.fa {margin-right:.35rem;margin-left:.35rem;}
 
+/* LOGIN */
+#login-form {width:20rem;margin:20% auto;box-shadow:0 0 1.25rem $gray-dark;}
+
 /* HEADER & FOOTER */
 #header, #footer {
   padding-top:0px;
@@ -51,8 +54,8 @@ a>.fa, .btn>.fa {margin-right:.35rem;margin-left:.35rem;}
 /* MAIN > CARD */
 #main > .card {border:solid 1px $brand-primary;}
 #main > .card > .card-header {background-color:$brand-primary;color:$body-bg;padding:.5rem;}
-.card > .card-header > *:first-child {margin:0;float:left;}
 .card > .card-header > *:last-child {margin:0;float:right;}
+.card > .card-header > *:first-child {margin:0;float:left;}
 .card > .card-header .btn {text-transform:uppercase};
 
 /* TABS */
@@ -60,8 +63,8 @@ a>.fa, .btn>.fa {margin-right:.35rem;margin-left:.35rem;}
 
 /* FORM */
 .col-form-label {text-transform:uppercase;font-weight:bold;padding-bottom:0;margin-bottom:0;}
-.form-group.row:hover {border-radius:$border-radius;background-color:$gray-lighter;}
 .form-group.row:hover input {border-color:$brand-primary};
+.card.form .form-group.row:hover {border-radius:$border-radius;background-color:$gray-lighter;}
 
 
 
