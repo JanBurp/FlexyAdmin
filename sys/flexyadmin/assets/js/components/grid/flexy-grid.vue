@@ -38,13 +38,23 @@ export default {
       return 'grid-type-'+this.gridType
     },
     /**
-     * Voeg informatie van een veld toe aan elke cell
+     * Maak data klaar voor tonen in het grid:
+     * - Voeg informatie van een veld toe aan elke cell
+     * - Bij een tree: voeg informatie aan elke row toe: {level:(int),is_child:(bool),has_children:(bool)}
      */
     gridData : function() {
-      var data = this.data;
+      var data     = this.data;
+      var isTree   = this.gridType=='tree';
+      if (isTree) {
+        var parents    = {};
+        var level      = 0;
+        var parent_key = 0;
+      }
+      
       for (var i = 0; i < data.length; i++) {
         var row = data[i];
         var id = row['id'];
+        // Add schema to each cell
         for (var field in row) {
           var schema = {
             'type'      : 'string',
@@ -66,8 +76,57 @@ export default {
           }
           data[i][field].name = field;
         }
+        // Add tree info to each row
+        if (isTree) {
+          row._info = {
+            level         : 0,
+            is_child      : false,
+            has_children  : false,
+          };
+          parent_key   = row.self_parent.value;
+          // if not on toplevel:
+          if (parent_key>0) {
+            row._info.is_child=true;
+            // are we on a known level?
+            if ( ! _.isUndefined(parents[parent_key]) ) {
+              // yes: get that level
+              level = parents[parent_key];
+            }
+            else {
+              // no: remember new level
+              level++;
+              parents[parent_key] = level;
+            }
+          }
+          else {
+            // on root, so level = 0
+            level=0;
+          }
+          // add level info
+          row._info.level = level;
+        }
+        
+        // Keep new row
         data[i] = row;
       }
+      
+      // Add more tree info (has_children)
+      if (isTree && parents!=={}) {
+        _.forEach(data,function(row,key){
+          var id = row.id.value;
+          var level = parents[id];
+          if (level) {
+            data[key]._info.has_children = true;
+          }
+        });
+      }
+      
+      // Console
+      if (isTree) {
+        console.log('treeInfo:');
+        _.forEach(data,function(row){ console.log(row.id.value,row._info); });
+      }
+      
       return data;
     },
     /**
@@ -89,7 +148,7 @@ export default {
   methods:{
     
     hasSelection : function() {
-      return this.selected.length>1;
+      return this.selected.length>0;
     },
     
     isSelected : function(id) {
@@ -112,6 +171,11 @@ export default {
         ids.push(this.data[i].id.value);
       }
       this.selected = _.difference(ids,this.selected);
+    },
+    
+    rowLevel:function(row) {
+      if (_.isUndefined(row._info)) return 0;
+      return row._info.level;
     },
     
     headerClass : function(field) {
@@ -178,17 +242,17 @@ export default {
         <!-- GRID BODY -->
         <tbody id="grid-body">
           <!-- ROW -->
-          <tr v-for="row in gridData" :data-id="row.id.value" :class="{'table-danger':isSelected(row.id.value)}">
+          <tr v-for="row in gridData" :data-id="row.id.value" :class="{'table-danger':isSelected(row.id.value)}" :level="rowLevel(row)">
             <template v-for="cell in row">
               <!-- PRIMARY CELL -->
               <td v-if="cell.type=='primary'" class="action">
                 <a class="btn btn-sm btn-outline-warning" :href="editUrl(cell.value)"><span class="fa fa-pencil"></span></a>
                 <div class="btn btn-sm btn-outline-danger action-delete"><span class="fa fa-remove"></span></div>
                 <div v-on:click="select(row.id.value)" class="btn btn-sm btn-outline-info action-select"><span v-if="!isSelected(row.id.value)" class="fa fa-circle-o"></span><span v-if="isSelected(row.id.value)" class="fa fa-circle"></span></div>
-                <div v-if="gridType!=='table'"class="btn btn-sm btn-outline-info action-move"><span class="fa fa-bars"></span></div>
+                <div v-if="gridType!=='table'"class="btn btn-sm btn-outline-info action-move"><span class="fa fa-reorder"></span></div>
               </td>
               <!-- CELL -->
-              <flexy-grid-cell v-else :type="cell.type" :name="cell.name" :value="cell.value"></flexy-grid-cell>
+              <flexy-grid-cell v-else :type="cell.type" :name="cell.name" :value="cell.value" :level="rowLevel(row)"></flexy-grid-cell>
             </template>
           </tr>
         </tbody>
