@@ -3,7 +3,7 @@ import FlexyPagination  from '../flexy-pagination.vue'
 import FlexyGridCell    from './flexy-grid-cell.vue'
 
 export default {
-  name: 'VueGrid',
+  name: 'FlexyGrid',
   components: { FlexyGridCell,FlexyPagination },
   props:{
     'title':String,
