@@ -1801,7 +1801,7 @@ Class Data_Core extends CI_Model {
     $part = el( array($key,$path_info['original_field']), $result );
     // Als parent niet in resultaat zit (bij where/like statements) zoek die dan op
     if (is_null($part) and $key!==0) {
-      $sql = 'SELECT `'.$path_info['original_field'].'` FROM `'.$this->settings['table'].'` WHERE `'.$this->settings['primary_key'].'` = "'.$key.'" ORDER BY `'.implode('`,`',$this->tm_order_by).'` LIMIT 1';
+      $sql = 'SELECT `'.$path_info['original_field'].'` FROM `'.$this->settings['table'].'` WHERE `'.$this->settings['primary_key'].'` = "'.$key.'" ORDER BY '.implode('`,`',$this->tm_order_by).' LIMIT 1';
       $query = $this->db->query($sql);
       if ($query) {
         $row = $query->unbuffered_row('array'); ;
@@ -2034,16 +2034,19 @@ Class Data_Core extends CI_Model {
     // Relations
     if (isset($grid_set['with'])) {
       foreach ($grid_set['with'] as $type => $relations) {
-        if (empty($relations)) $relations = $this->get_setting(array('relations',$type));
+        if (empty($relations)) $grid_set['with'][$type] = $this->get_setting(array('relations',$type));
+      }
+      foreach ($grid_set['with'] as $type => $relations) {
         if ($relations) {
           foreach ($relations as $what => $info) {
             $json = (in_array($type,array('one_to_many','many_to_many')));
             $fields='abstract';
             if ($type==='one_to_one') $fields=$info;
-            $this->with( $type, array( $what=>$fields), $json, TRUE );
+            $this->with( $type, array( $what=>$fields), $json, FALSE );
           }
         }
       }
+      if (isset($grid_set['with']['many_to_one'])) $many_to_one_fields = array_keys($grid_set['with']['many_to_one']);
     }
     
     // Order_by
@@ -2057,9 +2060,16 @@ Class Data_Core extends CI_Model {
       }
     }
     else {
+      $sort_field = $sort;
+      $sort_desc = '';
       if (substr($sort,0,1)=='_') {
-        $sort=trim($sort,'_').' DESC';
+        $sort_field = trim($sort,'_');
+        $sort_desc  = 'DESC';
       }
+      if (isset($many_to_one_fields) and in_array($sort_field,$many_to_one_fields)) {
+        $sort_field = $grid_set['with']['many_to_one'][$sort_field]['result_name'].'.abstract';
+      }
+      $sort = trim($sort_field.' '.$sort_desc);
     }
     $this->order_by( $sort );
     
@@ -2106,7 +2116,23 @@ Class Data_Core extends CI_Model {
       $this->tm_jump_to_today = TRUE;
     }
 
-    return $this->_get_result();
+    // prepare as grid result (foreign keys include abstract and foreign data in a json)
+    $result = $this->_get_result();
+    if (isset($grid_set['with']['many_to_one'])) {
+      foreach ($result as $id => $row) {
+        foreach ($row as $field => $value) {
+          if (in_array($field,$many_to_one_fields)) {
+            $abstract_field = $grid_set['with']['many_to_one'][$field]['result_name'].'.abstract';
+            if (isset($row[$abstract_field])) {
+              $result[$id][$field] = '{"'.$value.'":"'.$row[$abstract_field].'"}';
+              unset($result[$id][$abstract_field]);
+            }
+          }
+        }
+      }
+    }
+    reset($result);
+    return $result;
   }
   
   /**
@@ -3590,7 +3616,7 @@ Class Data_Core extends CI_Model {
     $id = $this->settings['primary_key'];
     foreach ($what as $key => $info) {
       $fields      = $info['fields'];
-      $json     = el('json',$info,false);
+      $json        = el('json',$info,false);
       $foreign_key = $this->settings['relations']['one_to_many'][$key]['foreign_key'];
       $other_table = $this->settings['relations']['one_to_many'][$key]['other_table'];
       $as          = $this->settings['relations']['one_to_many'][$key]['result_name'];
