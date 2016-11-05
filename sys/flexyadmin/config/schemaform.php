@@ -353,6 +353,14 @@ $config['FIELDS_special'] = array(
     'validation'	=> 'trim',
     'default'     => 0,
   ),
+	'self_parent'	  => array(
+    'type'        => 'integer',
+    'form-type'   => 'hidden',
+    'grid'        => 'function_self',
+    'form'        => 'function_self',
+    'validation'	=> 'trim|integer',
+    'default'     => 0,
+  ),
   
 	'abstract'	=> array(
     'type'        => 'string',

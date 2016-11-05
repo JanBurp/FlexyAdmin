@@ -2076,7 +2076,7 @@ Class Data_Core extends CI_Model {
     // Paths als menu tabel
     if ( $this->is_menu_table() ) {
       $title_field = $this->list_fields( 'str',1 );
-      $this->path( 'uri' )->path( $title_field );
+      $this->path( 'uri' );//->path( $title_field );
     }
     
     // Where

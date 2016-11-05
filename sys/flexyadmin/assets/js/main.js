@@ -18,8 +18,6 @@ import FlexyBlocks      from './components/flexy-blocks.vue'
 import FlexyPagination  from './components/flexy-pagination.vue'
 import FlexyGrid        from './components/grid/flexy-grid.vue'
 
-
-
 var vm = new Vue({
   el:'#main',
   components: {

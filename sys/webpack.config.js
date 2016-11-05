@@ -70,7 +70,7 @@ module.exports = [
           loader: ExtractTextPlugin.extract({
             loader: "css-loader?sourceMap!sass-loader?sourceMap"
           })
-        },
+        }
         // fonts
         // {
         //   test: /\.(eot|svg|ttf|woff|woff2)$/,
@@ -80,7 +80,7 @@ module.exports = [
         //   test: /\.(png|jpg|gif|svg)$/,
         //   loader: 'file',
         //   options: {
-        //     name: '[name].[ext]?[hash]'
+        //     name: '[name].[ext]'
         //   }
         // }
       ]
