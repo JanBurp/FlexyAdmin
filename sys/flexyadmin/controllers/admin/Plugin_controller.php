@@ -21,22 +21,29 @@ class Plugin_controller extends AdminController {
    */
 	public function index() {
     if ( $this->flexy_auth->is_super_admin() ) {
-      $this->_add_content( h('Plugins') );
-
-      $this->load->library('menu');
       $this->load->library('documentation');
-    
-      $plugin_menu = new Menu();
       $plugins = $this->plugin_handler->get_plugins();
       foreach ($plugins as $name => $plugin) {
-        if ($name!='plugin_template' and isset($plugin['config']['admin_api_method'])) {
+        $help='';
+        if ($name!=='plugin_template' and $name!=='plugin' and isset($plugin['config']['admin_api_method'])) {
           $help = $this->documentation->get('sys/flexyadmin/libraries/plugins/'.ucfirst($name).'.php');
-          $plugin_menu->add( array( 'uri'=>$this->uri->uri_string().'/'.str_replace('plugin_','',$name), 'name' => '<b>'.ucfirst($name).'</b> - '.$help['short'] ) );
+          $plugins[$name] = array(
+            'name'   => str_replace('plugin_','',$name),
+            'uri'    => 'admin/plugin/'.$name,
+            'doc'    => $help,
+          );
+        }
+        else {
+          unset($plugins[$name]);
         }
       }
-      $this->_add_content( $plugin_menu->render() );
+      $view_data = array(
+        'title'   => 'Plugins',
+        'plugins' => $plugins,
+      );
+      $this->view_admin('plugins/plugins',$view_data);
     }
-    $this->view_admin();
+    $this->view_404();
 	}
   
 
@@ -48,10 +55,9 @@ class Plugin_controller extends AdminController {
    */
 	public function call() {
     $this->load->model('queu');
-		
+
 		$args=func_get_args();
 		$ajax=false;
-		$show_type='';
 
 		if (!empty($args)) {
 			$ajax=($args[0]=='ajax');
@@ -64,16 +70,12 @@ class Plugin_controller extends AdminController {
 			}
 			else {
 				// first arg is plugin name
-				$plugin='plugin_'.$args[0];
-				array_shift($args);
-				$this->_add_content( $this->plugin_handler->call_plugin_admin_api($plugin,$args) );
-				$show_type=$this->plugin_handler->get_plugin_showtype($plugin);
+				$plugin=array_shift($args);
+        $content =  $this->plugin_handler->call_plugin_admin_api($plugin,$args);
 			}
 		}
 		// output
-		$this->_show_type($show_type);
-		if (!empty($show_type)) $this->use_editor();
-		if (!$ajax) $this->view_admin();
+		if (!$ajax) $this->view_admin('',array('title'=>$plugin,'content'=>$content));
 	}
 
 }

@@ -34,7 +34,11 @@ class AdminController extends BasicController {
 			redirect(site_url());
 		}
     
-    $this->current_uri = $this->uri->uri_string();
+    // Uri voor current menu item
+    $this->current_uri = $this->uri->segment_array();
+    $this->current_uri = array_slice($this->current_uri,0,4);
+    $this->current_uri = implode('/',$this->current_uri);
+    $this->current_uri = str_replace('/show/form/','/show/grid/',$this->current_uri);
 	}
   
   /**
@@ -386,6 +390,7 @@ class AdminController extends BasicController {
    */
 	public function view_admin( $view='', $data=array() ) {
     $this->_prepare_view_data();
+    $this->view_data = array_merge($this->view_data,$data);
     if ( !empty($view)) $this->view_data['content'] = $this->load->view('admin/'.$view,$data,true);
     $this->load->view('admin/admin',$this->view_data);
     return $this;

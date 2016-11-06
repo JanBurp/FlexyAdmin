@@ -101,15 +101,15 @@ Class cfg_admin_menu extends Data_Core {
     $headerMenu->set('view_path','admin/menu-horizontal');
     $headerMenu->set('framework','bootstrap');
     $headerMenu->set_current($current_uri);
-    $headerMenu->add( array( 'name' => lang('help'), 'uri'=> $base_url.'help/index', 'icon' => 'question-circle' ));
-    $headerMenu->add( array( 'name' => $user['username'], 'uri'=> $base_url.'data/form/cfg_users/'.$user['id'], 'icon' => 'user') );
+    $headerMenu->add( array( 'name' => $user['username'], 'uri'=> $base_url.'show/form/cfg_users/'.$user['id'], 'icon' => 'user') );
     $headerMenu->add( array( 'name' => lang('logout'), 'uri'=> $base_url.'logout', 'icon' => 'power-off' ));
+    $headerMenu->add( array( 'name' => lang('help'), 'uri'=> $base_url.'help/index', 'icon' => 'question-circle' ));
 
     $footerMenu = new Menu();
     $footerMenu->set('view_path','admin/menu-horizontal');
     $footerMenu->set('framework','bootstrap');
     $footerMenu->set_current($current_uri);
-    $footerMenu->add( array( 'name' => lang('settings'), 'uri'=> $base_url.'data/form/tbl_site/1', 'icon' => 'cog'));
+    $footerMenu->add( array( 'name' => lang('settings'), 'uri'=> $base_url.'show/form/tbl_site/1', 'icon' => 'cog'));
     $footerMenu->add( array( 'name' => lang('statistics'), 'uri'=> $base_url.'plugin/stats', 'icon' => 'bar-chart'));
 
     return array('headermenu'=>$headerMenu->render(),'sidemenu'=>$sideMenu->render(),'footermenu'=>$footerMenu->render());
