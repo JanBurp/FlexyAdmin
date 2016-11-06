@@ -85,13 +85,12 @@ class Api_Model extends CI_Model {
     $api_login = ($this->uri->get(3)==='login');
     
     // Always remove session based loggedin
-    $loggedIn = $this->flexy_auth->logged_in();
-    if ($loggedIn) $this->flexy_auth->logout();
+    // $loggedIn = $this->flexy_auth->logged_in();
+    // if ($loggedIn) $this->flexy_auth->logout();
+
+    // Check authentication header, and login with it
     $loggedIn = FALSE;
-
-    // Check authentication header, and if its set login that way
     $jwt_header = $this->input->get_request_header('Authorization', TRUE);
-
     if (!empty($jwt_header) and $jwt_header!=='undefined') {
       
       $jwt_decoded = (array) JWT::decode( $jwt_header, $this->jwt_key, array('HS256') );
@@ -101,6 +100,10 @@ class Api_Model extends CI_Model {
 
       // Set CORS
       if ($loggedIn) $this->cors = '*';
+    }
+    else {
+      // Always remove session when no authentication
+      $this->flexy_auth->logout();
     }
     
     if (!$api_login) {
