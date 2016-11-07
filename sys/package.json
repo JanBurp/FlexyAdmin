@@ -16,8 +16,9 @@
     ]
   },
   "dependencies": {
-    "vue": "^2.0.1",
-    "bootstrap": "^4.0.0-alpha.5"
+    "axios": "^0.15.2",
+    "bootstrap": "^4.0.0-alpha.5",
+    "vue": "^2.0.1"
   },
   "devDependencies": {
     "babel-core": "^6.0.0",
@@ -26,7 +27,7 @@
     "css-loader": "^0.25.0",
     "eslint": "^3.9.1",
     "eslint-loader": "^1.6.1",
-   "extract-text-webpack-plugin": "^2.0.0-beta",
+    "extract-text-webpack-plugin": "^2.0.0-beta",
     "file-loader": "^0.9.0",
     "node-sass": "^3.10.1",
     "sass-loader": "^4.0.2",
