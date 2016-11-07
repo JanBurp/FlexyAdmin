@@ -27,9 +27,7 @@
 
   <div id="content" class="row">
     <div id="flexy-menu-side" class="col-sm-2"><?=$sidemenu?></div>
-
     <div id="main" class="col-sm-10"><?=$content?></div>
-    
   </div>
   
   <div id="footer" class="navbar navbar-fixed-bottom">
@@ -46,6 +44,20 @@
     </div>
     <?php endif ?>
   </div>
+  
+  <!-- <flexy-help class="flexy-help">
+    <div class="card form">
+      <div class="card-header">
+        <h1>Help</h1>
+      </div>
+      <div class="card-block">
+        <h2>Lorem ipsum dolor sit amet</h2>
+        <p>Consectetur adipiscing elit. Vivamus in augue ac justo posuere luctus sodales vel justo. Integer blandit, quam id porttitor consequat, lorem libero bibendum ipsum, non auctor sem ipsum eu mauris. <b>Vestibulum condimentum,</b> lectus sed aliquam rutrum, est velit pellentesque mauris, sed mattis sapien ante vitae enim. Quisque cursus facilisis molestie. Sed rhoncus lacus ac nunc interdum in laoreet mi rhoncus. Suspendisse ultrices fringilla felis, in porta mi pretium ut. Nunc nisl nulla, varius in lobortis a, dictum a purus. Sed consequat felis ut erat lobortis hendrerit. Donec bibendum lorem lorem. Fusce suscipit sapien id lorem mollis vel placerat nunc congue. Aenean non nunc tortor. <i>Curabitur rhoncus neque eget nulla adipiscing euismod.</i></p>
+        <h2>Duis tincidunt sollicitudin convallis</h2>
+        <p>Quisque nibh tortor, blandit a mollis vitae, euismod non nulla. Duis dui erat, interdum sit amet porttitor a, porttitor nec augue. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed quis porta turpis. Suspendisse nec mi enim, ut fringilla tellus. Nunc sollicitudin justo at leo tempus eu fringilla nisl tempus. Sed id tellus non eros tristique vehicula. Quisque sollicitudin augue id velit euismod interdum. Proin lobortis ornare magna in facilisis. Nulla vestibulum ultricies dui ut fringilla. Duis eu ante in lorem pellentesque bibendum. Praesent id velit vel nulla ullamcorper adipiscing quis quis tellus. Integer nec augue quis felis dapibus imperdiet ac et nibh.</p>
+      </div>
+    </div>
+  </flexy-help> -->
 
 </div>
 
