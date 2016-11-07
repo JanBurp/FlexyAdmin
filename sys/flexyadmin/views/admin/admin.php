@@ -49,6 +49,11 @@
 
 </div>
 
+<script type="text/javascript" charset="utf-8">
+var _flexy = {
+  'auth_token' : '<?=$user['auth_token']?>',
+};
+</script>
 <script src="<?=admin_assets()?>dist/bundle.js" type="text/javascript" charset="utf-8"></script>
 
 </body>
