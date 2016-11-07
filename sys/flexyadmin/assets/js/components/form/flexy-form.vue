@@ -14,13 +14,40 @@ export default {
     'fields':[Object,Array],
     'fieldsets':[Object,Array],
     'data':[Object,Array],
+    'options':[Object,Array],
   },
   
-  mounted : function() {
-    console.log(this.fields);
+  computed : {
+
+    fieldTypes : function() {
+      var types = {
+        primary   : ['primary'],
+        hidden    : ['hidden'],
+        checkbox  : ['checkbox'],
+        select    : ['select','media'],
+        textarea  : ['textarea','wysiwyg'],
+      };
+      types.default = [].concat( types.primary, types.hidden, types.checkbox, types.select, types.textarea );
+      return types;
+    }
+    
   },
   
   methods:{
+    
+    isType : function( type,field ) {
+      if (type==='default') {
+        return this.fieldTypes['default'].indexOf(this.fields[field].schema['form-type']) === -1;
+      }
+      return this.fieldTypes[type].indexOf(this.fields[field].schema['form-type']) >= 0;
+    },
+    
+    isMultiple : function( field ) {
+      var multiple = false;
+      if (this.options[field].multiple) multiple='multiple';
+      console.log(field,multiple);
+      return multiple;
+    },
     
     cancel : function() {
       var url = 'admin/show/grid/' + this.name;
@@ -61,7 +88,7 @@ export default {
     
     updateField : function( field, value ) {
       this.data[field] = value;
-    }
+    },
     
   }
   
@@ -85,18 +112,34 @@ export default {
       <tab v-for="(fieldset,name) in fieldsets" :header="name">
         <template v-for="field in fieldset">
           
-          <template v-if="fields[field].schema['form-type']==='primary'">
+          <template v-if="isType('primary',field)">
             <input type="hidden" :value="data[field]">
           </template>
           
-          <div class="form-group row" v-if="fields[field].schema['form-type']==='textarea' || fields[field].schema['form-type']==='wysiwyg'">
+          <div class="form-group row" v-if="isType('textarea',field)">
             <label class="col-xs-2 col-form-label" :for="field">{{fields[field]['name']}}</label>
             <div class="col-xs-10">
               <textarea class="form-control" :id="field" :name="field" :value="data[field]" v-on:input="updateField(field,$event.target.value)" placeholder="">
             </div>
           </div>
 
-          <div class="form-group row" v-if="fields[field].schema['form-type']==='text' || fields[field].schema['form-type']==='number' || fields[field].schema['form-type']==='select'">
+          <div class="form-group row" v-if="isType('checkbox',field)">
+            <label class="col-xs-2 col-form-label" :for="field">{{fields[field]['name']}}</label>
+            <div class="col-xs-10">
+              <input class="form-check-input" type="checkbox" :id="field" :name="field" :value="data[field]" v-on:input="updateField(field,$event.target.value)">
+            </div>
+          </div>
+          
+          <div class="form-group row" v-if="isType('select',field)">
+            <label class="col-xs-2 col-form-label" :for="field">{{fields[field]['name']}}</label>
+            <div class="col-xs-10">
+              <select class="form-control" :id="field" :name="field" :value="data[field]" v-on:input="updateField(field,$event.target.value)" :multiple="isMultiple(field)">
+                <option v-for="option in options[field]['data']" :value="option.value" :selected="option.value==data[field]">{{option.name}}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group row" v-if="isType('default',field)">
             <label class="col-xs-2 col-form-label" :for="field">{{fields[field]['name']}}</label>
             <div class="col-xs-10"><input type="text" class="form-control" :id="field" :name="field" :value="data[field]" v-on:input="updateField(field,$event.target.value)" placeholder=""></div>
           </div>
@@ -110,6 +153,8 @@ export default {
 </template>
 
 <style>
-  .col-form-label {text-transform:uppercase;font-weight:bold;padding-bottom:0;margin-bottom:0;}
+  .form-group {min-height:2.35rem;}
+  .col-form-label,.col-form-label {text-transform:uppercase;font-weight:bold;padding-bottom:0;margin-bottom:0;}
   textarea {min-height:10rem;max-height:20rem;}
+  .form-check-input {margin-left:0;margin-top:.75rem;}
 </style>
