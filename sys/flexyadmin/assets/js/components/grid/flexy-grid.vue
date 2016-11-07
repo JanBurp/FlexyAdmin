@@ -9,7 +9,14 @@ export default {
     'title':String,
     'name':String,
     'fields':[Object,Array],
-    'data':Array,
+    'data':{
+      type: [Array,Boolean],
+      default:false
+    },
+    'data-url':{
+      type: [String,Boolean],
+      default:false
+    },
     'info':Object,
     'order': {
       type   :String,
@@ -273,7 +280,7 @@ export default {
   .grid th a {text-decoration:none;}
   .grid th span {white-space:nowrap;text-transform:uppercase;}
   .grid th > span.fa {position:relative;float:right;margin-top:.25rem;}
-  .grid th.grid-header-type-primary {width:10rem;max-width:10rem;}
+  .grid th.grid-header-type-primary {width:10rem;max-width:10rem;white-space:nowrap;}
   .grid.grid-type-tree th.grid-header-type-primary {width:10rem;max-width:10rem;}
-  .grid.grid-type-table th.grid-header-type-primary {width:7.75rem;max-width:7.75rem;}
+  .grid.grid-type-table th.grid-header-type-primary {width:9rem;max-width:9rem;}
 </style>

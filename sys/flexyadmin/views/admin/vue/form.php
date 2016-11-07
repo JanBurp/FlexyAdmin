@@ -1,1 +1,8 @@
-<flexy-form title="<?=$title?>" name="<?=$name?>" data-id="<?=$id?>" :fields='<?=array2json($fields)?>' :fieldsets='<?=array2json($fieldsets)?>' :data='<?=array2json($data)?>'></flexy-form>
+<flexy-form
+  title="<?=$title?>"
+  name="<?=$name?>"
+  :primary="<?=$id?>"
+  :fields='<?=array2json($fields)?>'
+  :fieldsets='<?=array2json($fieldsets)?>'
+  :data='<?=htmlentities(array2json($data),ENT_QUOTES, 'UTF-8')?>'>
+</flexy-form>

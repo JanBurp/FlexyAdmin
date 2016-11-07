@@ -39,6 +39,7 @@ class Show extends AdminController {
     // Data
     $this->data->table($name);
     $data = $this->data->select_txt_abstract()->get_grid( $options['limit'], $options['offset'], $options['order'], $options['find'] );
+    
     // Fields
     $fields = $this->_prepareFields('grid_set');
     // Show grid
