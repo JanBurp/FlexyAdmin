@@ -35,7 +35,7 @@ flexyAdmin.factory('flexyAuthService',['flexyApiService','$window',function(api,
    * Bewaar de auth token
    */
   function saveAuthToken(response) {
-    $window.sessionStorage.token = response.data.auth_token;
+    $window.sessionStorage.token = response.user.auth_token;
   }
   
   /**

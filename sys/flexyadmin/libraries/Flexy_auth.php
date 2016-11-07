@@ -2,6 +2,8 @@
 
 require_once(APPPATH."libraries/Ion_auth.php");
 
+use \Firebase\JWT\JWT;
+
 
 /** \ingroup libraries
  * Class voor het inloggen, aanmaken etc van gebruikers
@@ -42,6 +44,13 @@ class Flexy_auth extends Ion_auth {
   private $forgotten_password_uri = '';
   
   /**
+   * Authentication token
+   */
+  protected $jwt_key   = '';  // See $config['sess_cookie_name']
+  protected $jwt_token = '';
+  
+  
+  /**
    * construct
    */
   public function __construct() {
@@ -50,10 +59,11 @@ class Flexy_auth extends Ion_auth {
 		parent::__construct();
     // Stel site afhankelijke instelling in
 		$site_config = $this->data->table('tbl_site')->select('`str_title` AS `site_title`, `email_email` AS `admin_email`')->get_row();
-    // $this->db->select('`str_title` AS `site_title`, `email_email` AS `admin_email`');
-    // $site_config=$this->db->get('tbl_site')->row_array();
     $this->set_config( $site_config );
     $this->tables = $this->config->item( 'tables', 'ion_auth');
+    // Token secret, Expiration of auth_token: each day a new one, add 'unixday' to key
+    if (empty($this->jwt_key)) $this->jwt_key = $this->config->item('sess_cookie_name');
+    $this->jwt_key.= ceil((date('U') - (3*TIME_DAY)) / TIME_DAY);
 	}
 
   
@@ -83,6 +93,12 @@ class Flexy_auth extends Ion_auth {
    */
 	public function login($identity, $password, $remember=false) {
 		if (parent::login($identity, $password, $remember)) {
+      // Token aanmaken
+      $token = array(
+        'username' => $identity,
+        'password' => $password,
+      );
+      $this->jwt_token = JWT::encode( $token, $this->jwt_key );
       if (!$this->current_user) $this->_set_current_user();
       $this->load->model('log_activity');
       $this->log_activity->auth();
@@ -90,6 +106,27 @@ class Flexy_auth extends Ion_auth {
 		}
 		return FALSE;
 	}
+  
+  /**
+   * Login by checking the authorization header (for API/AJAX calls)
+   *
+   * @return bool
+   * @author Jan den Besten
+   */
+  public function login_with_authorization_header() {
+    $loggedIn = FALSE;
+    $auth_header = $this->input->get_request_header('Authorization', TRUE);
+    if (!empty($auth_header) and $auth_header!=='undefined') {
+      $auth_data = (array) JWT::decode( $auth_header, $this->jwt_key, array('HS256') );
+      if (isset($auth_data['username']) and isset($auth_data['password']) ) {
+        $loggedIn = $this->login( $auth_data['username'], $auth_data['password'] );
+      }
+    }
+    // Always remove session when no authentication
+    if ( !$loggedIn ) $this->flexy_auth->logout();
+    // Return if logged_in
+    return $loggedIn;
+  }
   
   
   /**
@@ -134,6 +171,7 @@ class Flexy_auth extends Ion_auth {
   private function _set_current_user() {
     $user = $this->user()->row_array();
     $this->current_user = $this->_create_nice_user($user);
+    $this->current_user['auth_token'] = $this->jwt_token;
     if ( isset($this->current_user['id']) AND $this->in_group( 1, $this->current_user['id'] )) $this->current_user['is_super_admin'] = TRUE;
   }
   
@@ -855,7 +893,8 @@ class Flexy_auth extends Ion_auth {
     else
       $user_info = $this->get_user($user_id);
   
-    $rights = $user_info['rights'];
+    $rights = el('rights',$user_info);
+    if (!$rights) return RIGHTS_NO;
 
     // Rechten voor aanpassen van zichzelf als:
     // - cfg_users
