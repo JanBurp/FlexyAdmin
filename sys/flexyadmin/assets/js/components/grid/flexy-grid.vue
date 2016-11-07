@@ -65,18 +65,18 @@ export default {
         for (var field in row) {
           var schema = {
             'type'      : 'string',
-            'form-type' : 'text',
+            'grid-type' : 'text',
             'readonly'  : false,
           };
           if ( this.fields[field] ) schema = this.fields[field].schema;
           data[i][field] = {
-            'type'  : schema['form-type'],
+            'type'  : schema['grid-type'] || schema['form-type'],
             'value' : row[field]
           };
           if ( schema.type==='number' && schema['form-type']==='select') {
             var jsonValue = JSON.parse(row[field].value);
             data[i][field] = {
-              'type'  : schema['form-type'],
+              'type'  : schema['grid-type'] || schema['form-type'],
               'value' : Object.values(jsonValue)[0],
               'id'    : Object.keys(jsonValue)[0],
             };

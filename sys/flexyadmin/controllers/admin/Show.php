@@ -66,8 +66,9 @@ class Show extends AdminController {
     // Data
     $this->data->table($name);
     $data = $this->data->get_form($id);
+    $options = $this->data->get_options();
     // Fields
-    $fields = $this->_prepareFields('form_set');
+    $fields = $this->_prepareFields('form_set',$options);
     $fieldsets = $this->data->get_setting(array('form_set','fieldsets'));
     $fieldsetsKeys = $this->ui->get(array_keys($fieldsets));
     $fieldsets = array_combine($fieldsetsKeys,$fieldsets);
@@ -78,8 +79,10 @@ class Show extends AdminController {
       'id'        => $id,
       'fields'    => $fields,
       'fieldsets' => $fieldsets,
-      'data'      => $data
+      'data'      => $data,
+      'options'   => $options,
     );
+    // trace_($options);
 	  $this->view_admin( 'vue/form', $form );
 	}
   
@@ -91,13 +94,13 @@ class Show extends AdminController {
    * @return array
    * @author Jan den Besten
    */
-  private function _prepareFields($set) {
+  private function _prepareFields($set,$options=array()) {
     $fields = $this->data->get_setting(array($set,'fields'));
     $fields = array_combine($fields,$fields);
     foreach ($fields as $field => $info) {
       $fields[$field] = array(
         'name'    => $this->ui->get($field),
-        'schema'  => $this->_getSchema($field)
+        'schema'  => $this->_getSchema($field,$options)
       );
     }
     return $fields;
@@ -112,7 +115,7 @@ class Show extends AdminController {
    * @return array
    * @author Jan den Besten
    */
-  private function _getSchema($field) {
+  private function _getSchema($field,$options=array()) {
     $schema = $this->config->item('FIELDS_default');
     // from prefix
     $fieldPrefix = get_prefix($field);
@@ -124,6 +127,10 @@ class Show extends AdminController {
     $cfgSpecial = $this->config->item('FIELDS_special');
     if ( $specialSchema = el($field,$cfgSpecial)) {
       $schema = array_merge($schema,$specialSchema);
+    }
+    // Has options??
+    if (isset($options[$field])) {
+      $schema['form-type'] = 'select';
     }
     // Only the needed stuff
     $schema=array_unset_keys($schema,array('grid','form','default','format' )); // TODO kan (deels) weg als oude ui weg is

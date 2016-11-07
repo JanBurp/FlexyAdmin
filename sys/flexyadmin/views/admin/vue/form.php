@@ -4,5 +4,6 @@
   :primary="<?=$id?>"
   :fields='<?=array2json($fields)?>'
   :fieldsets='<?=array2json($fieldsets)?>'
-  :data='<?=htmlentities(array2json($data),ENT_QUOTES, 'UTF-8')?>'>
-</flexy-form>
+  :data='<?=htmlentities(array2json($data),ENT_QUOTES, 'UTF-8')?>'
+  :options='<?=htmlentities(array2json($options),ENT_QUOTES, 'UTF-8')?>'
+></flexy-form>

@@ -191,14 +191,14 @@ $config['FIELDS_prefix'] = array (
   ),
 	'dat'				=> array (
     'type'        => 'string',
-    'form-type'   => 'text',
+    'form-type'   => 'date',
     'grid'        => '%s',
     'form'        => 'date',
     'validation'	=> ''
   ),
 	'date'			=> array (
     'type'        => 'string',
-    'form-type'   => 'text',
+    'form-type'   => 'date',
     'grid'        => '%s',
     'form'        => 'date',
     'validation'	=> ''
@@ -255,7 +255,7 @@ $config['FIELDS_prefix'] = array (
   ),
 	'rgb'				=> array (
     'type'        => 'string',
-    'form-type'   => 'text',
+    'form-type'   => 'color',
     'grid'        => '<div class="rgb" style="background-color:%s;" title="%s"><span class="hide">%s</span></div>',
     'form'        => '',
     'validation'	=> 'trim|valid_rgb'
@@ -355,7 +355,8 @@ $config['FIELDS_special'] = array(
   ),
 	'self_parent'	  => array(
     'type'        => 'integer',
-    'form-type'   => 'hidden',
+    'form-type'   => 'select',
+    'grid-type'   => 'hidden',
     'grid'        => 'function_self',
     'form'        => 'function_self',
     'validation'	=> 'trim|integer',
