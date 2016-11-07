@@ -1,7 +1,5 @@
 <?php
 
-use \Firebase\JWT\JWT;
-
 /** \ingroup models
  * API auth. Hiermee kan worden ingelogd of uitgelogd.
  * 
@@ -88,8 +86,8 @@ class auth extends Api_Model {
   );
   
 	public function __construct() {
-		parent::__construct();
-    $this->load->library('flexy_auth');
+    $checkAuthenticatonHeader = $this->uri->get(3)==='check';
+    parent::__construct( !$checkAuthenticatonHeader );
 	}
   
   public function index() {
@@ -119,24 +117,24 @@ class auth extends Api_Model {
    */
   protected function _check() {
     // if not logged in status = 401
-    if ( !$this->logged_in() ) return null;
+    $logged_in = $this->logged_in();
+    if ( !$logged_in ) return null;
     
     // Give back user info
     $data = $this->flexy_auth->get_user();
     if (el('user_id',$data)) {
-      $data=array_rename_keys($data,array('str_username'=>'username','email_email'=>'email','str_language'=>'language'),false);
+      $data = array_rename_keys($data,array('str_username'=>'username','email_email'=>'email','str_language'=>'language','auth_token'=>'token'),false);
     }
     
-    // create JWT token bij login
-    if (isset($this->args['password'])) {
-      $this->cors = '*';
-      $token = array(
-        'username' => el('username',$data,''),
-        'password' => $this->args['password'],
-        'email'    => el('email',$data,''),
-      );
-      $this->jwt_token = JWT::encode( $token, $this->jwt_key );
-    }
+    // // create JWT token bij login
+    // if (isset($this->args['password'])) {
+    //   $this->cors = '*';
+    //   $token = array(
+    //     'username' => el('username',$data,''),
+    //     'password' => $this->args['password'],
+    //   );
+    //   $this->jwt_token = JWT::encode( $token, $this->jwt_key );
+    // }
     
     return $data;
   }
@@ -162,6 +160,9 @@ class auth extends Api_Model {
    * @author Jan den Besten
    */
   public function login() {
+    // First logout if there is a login
+    if ( $this->flexy_auth->logged_in() ) $this->flexy_auth->logout();
+    
     // Has POST args?
     if ($this->args['type']!='POST' or !isset($this->args['username']) or !isset($this->args['password']) ) {
       return $this->_result_wrong_args();
@@ -180,7 +181,7 @@ class auth extends Api_Model {
    */
   public function logout() {
     $this->flexy_auth->logout();
-    return $this->check();
+    return null;
   }
   
   

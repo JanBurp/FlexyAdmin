@@ -1,7 +1,5 @@
 <?php
 
-use \Firebase\JWT\JWT;
-
 /** \ingroup models
  * Core API model: Roept de opgevraagde API aan en verzorgt het resultaat
  * 
@@ -46,12 +44,6 @@ class Api_Model extends CI_Model {
   protected $settings=array();
 
   /**
-   * Authentication token
-   */
-  protected $jwt_key   = '';  // See $config['sess_cookie_name']
-  protected $jwt_token = '';
-  
-  /**
    * Eventueel cors domeinen, of FALSE als cors niet is toegestaan
    * http://www.html5rocks.com/en/tutorials/cors/#toc-adding-cors-support-to-the-server
    */
@@ -64,15 +56,15 @@ class Api_Model extends CI_Model {
   
   /**
    */
-	public function __construct() {
+	public function __construct( $loginRequest = FALSE) {
 		parent::__construct();
-
-    // Token secret
-    if (empty($this->jwt_key)) {
-      $this->jwt_key = $this->config->item('sess_cookie_name');
+    $this->load->library('flexy_auth');
+    
+    $requestMethod = $_SERVER['REQUEST_METHOD'];
+    if($requestMethod == "OPTIONS"){
+      echo "";
+      die();
     }
-    // Expiration of auth_token: each day a new one, add 'unixday' to key
-    $this->jwt_key.= ceil((date('U') - (3*TIME_DAY)) / TIME_DAY);
     
     // Get arguments
     $this->args=$this->_get_args($this->needs);
@@ -81,40 +73,25 @@ class Api_Model extends CI_Model {
     $this->result['args']=$this->args;
     $this->result['api']=__CLASS__;
 
-    // Check Authentication and Rights if not api/auth/login
-    $api_login = ($this->uri->get(3)==='login');
-    
-    // Always remove session based loggedin
-    // $loggedIn = $this->flexy_auth->logged_in();
-    // if ($loggedIn) $this->flexy_auth->logout();
-
-    // Check authentication header, and login with it
     $loggedIn = FALSE;
-    $jwt_header = $this->input->get_request_header('Authorization', TRUE);
-    if (!empty($jwt_header) and $jwt_header!=='undefined') {
-      
-      $jwt_decoded = (array) JWT::decode( $jwt_header, $this->jwt_key, array('HS256') );
-      if (isset($jwt_decoded['username']) and isset($jwt_decoded['password']) ) {
-        $loggedIn = $this->flexy_auth->login( $jwt_decoded['username'], $jwt_decoded['password'] );
-      }
+    // If not login request (_api/auth/login), check authentication header
+    if ( !$loginRequest ) {
+      $loggedIn = $this->flexy_auth->login_with_authorization_header();
 
-      // Set CORS
-      if ($loggedIn) $this->cors = '*';
-    }
-    else {
-      // Always remove session when no authentication
-      $this->flexy_auth->logout();
-    }
-    
-    if (!$api_login) {
-      if (!$loggedIn) {
+      // Always remove session when no authentication, and return 401
+      if ( !$loggedIn ) {
+        $this->flexy_auth->logout();
         return $this->_result_status401();
       }
+      
+      // Set CORS
+      $this->cors = '*';
+      
+      // Rights for given table?
       if (isset($this->args['table']) and !$this->_has_rights($this->args['table'])) {
         return $this->_result_norights();
       }
     }
-    
 	}
   
   /**
@@ -238,14 +215,11 @@ class Api_Model extends CI_Model {
     $user = $this->flexy_auth->get_user();
     if ($user) {
       $this->result['user'] = array(
-        'username'    => $user['username'],
+        'username'    => el('str_username',$user,el('username',$user)),
+        'auth_token'  => $user['auth_token'],
         // 'group_id'    => $user['group_id'],
         // 'group_name'  => $user['group_name'],
       );
-    }
-    // jwt token
-    if (!empty($this->jwt_token)) {
-      $this->result['data']['auth_token'] = $this->jwt_token;
     }
     // cors
     if (!empty($this->cors)) {
