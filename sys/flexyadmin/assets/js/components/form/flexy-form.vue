@@ -3,6 +3,7 @@ import tab              from '../../vue-strap-src/components/Tab.vue'
 import tabs             from '../../vue-strap-src/components/Tabs.vue'
 import tabGroup         from '../../vue-strap-src/components/TabGroup.vue'
 
+
 export default {
   name: 'FlexyForm',
   components: {tab,tabs,tabGroup},
@@ -15,14 +16,9 @@ export default {
     'data':[Object,Array],
   },
   
-  computed:{
+  mounted : function() {
+    console.log(this.fields);
   },
-  
-  // data : function() {
-  //   return {
-  //     formData : this.data
-  //   }
-  // },
   
   methods:{
     
@@ -61,22 +57,6 @@ export default {
           'data'    : this.data
         },
       });
-      
-      // var form = document.createElement("form");
-      // form.setAttribute("method", "POST");
-      // form.setAttribute("action", url);
-      //
-      // for(var field in this.data) {
-      //   if( this.data.hasOwnProperty(field) ) {
-      //     var hiddenField = document.createElement("input");
-      //     hiddenField.setAttribute("type", "hidden");
-      //     hiddenField.setAttribute("name", field);
-      //     hiddenField.setAttribute("value", this.data[field]);
-      //     form.appendChild(hiddenField);
-      //    }
-      // }
-      // document.body.appendChild(form);
-      // form.submit();
     },
     
     updateField : function( field, value ) {
@@ -103,10 +83,25 @@ export default {
     
     <tabs navStyle="tabs">
       <tab v-for="(fieldset,name) in fieldsets" :header="name">
-        <div v-for="field in fieldset" class="form-group row">
-          <label class="col-xs-2 col-form-label" :for="field">{{fields[field]['name']}}</label>
-          <div class="col-xs-10"><input type="text" class="form-control" :id="field" :name="field" :value="data[field]" v-on:input="updateField(field,$event.target.value)" placeholder=""></div>
-        </div>
+        <template v-for="field in fieldset">
+          
+          <template v-if="fields[field].schema['form-type']==='primary'">
+            <input type="hidden" :value="data[field]">
+          </template>
+          
+          <div class="form-group row" v-if="fields[field].schema['form-type']==='textarea' || fields[field].schema['form-type']==='wysiwyg'">
+            <label class="col-xs-2 col-form-label" :for="field">{{fields[field]['name']}}</label>
+            <div class="col-xs-10">
+              <textarea class="form-control" :id="field" :name="field" :value="data[field]" v-on:input="updateField(field,$event.target.value)" placeholder="">
+            </div>
+          </div>
+
+          <div class="form-group row" v-if="fields[field].schema['form-type']==='text' || fields[field].schema['form-type']==='number' || fields[field].schema['form-type']==='select'">
+            <label class="col-xs-2 col-form-label" :for="field">{{fields[field]['name']}}</label>
+            <div class="col-xs-10"><input type="text" class="form-control" :id="field" :name="field" :value="data[field]" v-on:input="updateField(field,$event.target.value)" placeholder=""></div>
+          </div>
+
+        </template>
       </tab>
     </tabs>
 
@@ -115,4 +110,6 @@ export default {
 </template>
 
 <style>
+  .col-form-label {text-transform:uppercase;font-weight:bold;padding-bottom:0;margin-bottom:0;}
+  textarea {min-height:10rem;max-height:20rem;}
 </style>
