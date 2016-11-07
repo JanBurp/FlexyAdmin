@@ -339,6 +339,9 @@ class AdminController extends BasicController {
     // tbl_site
     $this->view_data = $this->data->table('tbl_site')->select('str_title,url_url')->cache()->get_row();
     $this->view_data['url_url'] = str_replace('http://','',$this->view_data['url_url']);
+    
+    // User data
+    $this->view_data['user'] = array_keep_keys($this->flexy_auth->get_user(),array('username','email','auth_token'));
 
     // Basic content
     $this->view_data['content'] = '';
@@ -374,10 +377,6 @@ class AdminController extends BasicController {
     // $this->_show_content();
     // $this->_show_trace();
     // $this->_show_footer();
-    
-    // trace_($this->view_data);
-    
-    
   }
   
   /**
