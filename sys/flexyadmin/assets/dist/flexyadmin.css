@@ -4957,7 +4957,7 @@ a > .fa, .btn > .fa {
   border-radius: .25rem; }
 
 .nav-pills .nav-link {
-  padding: .35rem .5rem;
+  padding: .45rem .5rem;
   text-transform: uppercase;
   white-space: nowrap;
   overflow: hidden;
@@ -4970,6 +4970,15 @@ a > .fa, .btn > .fa {
 .nav-pills .nav-link:not(.active):hover, .nav-pills .nav-link:not(.active):focus {
   background-color: #DEA;
   color: #696 !important; }
+
+/* HELP */
+.flexy-help {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 25%;
+  z-index: 9999; }
 
 /* MAIN > CARD */
 #main > .card {
