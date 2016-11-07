@@ -639,6 +639,7 @@ tr.caption div.filter {
 	min-width:20px;
 }
 .grid tbody td {white-space:pre;}
+.grid.files tbody td {white-space:normal;}
 .grid th.id {padding-right:0px;}
 tr.caption td				{ border:none; }
 
