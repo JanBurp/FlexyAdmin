@@ -60,9 +60,15 @@ class Api_Model extends CI_Model {
 		parent::__construct();
     $this->load->library('flexy_auth');
     
-    $requestMethod = $_SERVER['REQUEST_METHOD'];
-    if($requestMethod == "OPTIONS"){
-      echo "";
+    // OPTIONS - preflight
+    if ($this->input->server('REQUEST_METHOD')==='OPTIONS') {
+      $origin = $this->input->get_request_header('Origin',TRUE);
+      header("HTTP/1.1 200 OK");
+      header("Access-Control-Allow-Origin: ".$origin);
+      header("Access-Control-Allow-Methods: GET, POST");
+      header("Access-Control-Allow-Credentials: true");
+      header("Access-Control-Allow-Headers: Authorization");
+      echo '';
       die();
     }
     
@@ -271,18 +277,6 @@ class Api_Model extends CI_Model {
     $keys=array_keys($defaults);
     $keys=array_merge($keys,array('settings','format'));
     $args=array();
-    
-    // OPTIONS - preflight
-    if ($this->input->server('REQUEST_METHOD')==='OPTIONS') {
-      $origin = $this->input->get_request_header('Origin',TRUE);
-      header("HTTP/1.1 200 OK");
-      header("Access-Control-Allow-Origin: ".$origin);
-      header("Access-Control-Allow-Methods: GET, POST");
-      header("Access-Control-Allow-Credentials: true");
-      header("Access-Control-Allow-Headers: Authorization");
-      echo '';
-      die();
-    }
     
     // GET
     if (!$args and (!empty($_SERVER['QUERY_STRING']) or !empty($_GET))) {

@@ -46,8 +46,8 @@ class Flexy_auth extends Ion_auth {
   /**
    * Authentication token
    */
-  protected $jwt_key   = '';  // See $config['sess_cookie_name']
-  protected $jwt_token = '';
+  protected $auth_key   = '';  // See $config['sess_cookie_name']
+  protected $auth_token = '';
   
   
   /**
@@ -62,8 +62,8 @@ class Flexy_auth extends Ion_auth {
     $this->set_config( $site_config );
     $this->tables = $this->config->item( 'tables', 'ion_auth');
     // Token secret, Expiration of auth_token: each day a new one, add 'unixday' to key
-    if (empty($this->jwt_key)) $this->jwt_key = $this->config->item('sess_cookie_name');
-    $this->jwt_key.= ceil((date('U') - (3*TIME_DAY)) / TIME_DAY);
+    if (empty($this->auth_key)) $this->auth_key = $this->config->item('sess_cookie_name');
+    $this->auth_key.= ceil((date('U') - (3*TIME_DAY)) / TIME_DAY);
 	}
 
   
@@ -93,12 +93,17 @@ class Flexy_auth extends Ion_auth {
    */
 	public function login($identity, $password, $remember=false) {
 		if (parent::login($identity, $password, $remember)) {
-      // Token aanmaken
-      $token = array(
-        'username' => $identity,
-        'password' => $password,
-      );
-      $this->jwt_token = JWT::encode( $token, $this->jwt_key );
+      // Token aanmaken en toevoegen aan sessie
+      if (empty($this->auth_token)) {
+        $token = array(
+          'username' => $identity,
+          'password' => $password,
+        );
+        $this->auth_token = JWT::encode( $token, $this->auth_key );
+      }
+      $currentSession = $this->session->userdata();
+      $currentSession['auth_token'] = $this->auth_token;
+      $this->session->set_userdata($currentSession);
       if (!$this->current_user) $this->_set_current_user();
       $this->load->model('log_activity');
       $this->log_activity->auth();
@@ -115,9 +120,9 @@ class Flexy_auth extends Ion_auth {
    */
   public function login_with_authorization_header() {
     $loggedIn = FALSE;
-    $auth_header = $this->input->get_request_header('Authorization', TRUE);
-    if (!empty($auth_header) and $auth_header!=='undefined') {
-      $auth_data = (array) JWT::decode( $auth_header, $this->jwt_key, array('HS256') );
+    $this->auth_token = $this->input->get_request_header('Authorization', TRUE);
+    if (!empty($this->auth_token) and $this->auth_token!=='undefined') {
+      $auth_data = (array) JWT::decode( $this->auth_token, $this->auth_key, array('HS256') );
       if (isset($auth_data['username']) and isset($auth_data['password']) ) {
         $loggedIn = $this->login( $auth_data['username'], $auth_data['password'] );
       }
@@ -171,7 +176,11 @@ class Flexy_auth extends Ion_auth {
   private function _set_current_user() {
     $user = $this->user()->row_array();
     $this->current_user = $this->_create_nice_user($user);
-    $this->current_user['auth_token'] = $this->jwt_token;
+    if (empty($this->auth_token)) {
+      $currentSession = $this->session->userdata();
+      $this->auth_token = $currentSession['auth_token'];
+    }
+    $this->current_user['auth_token'] = $this->auth_token;
     if ( isset($this->current_user['id']) AND $this->in_group( 1, $this->current_user['id'] )) $this->current_user['is_super_admin'] = TRUE;
   }
   
