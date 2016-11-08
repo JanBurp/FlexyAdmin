@@ -14001,24 +14001,16 @@ created:function created(){this.row=this.data;},methods:{isType:function isType(
 
 /***/ },
 /* 43 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-'use strict';Object.defineProperty(exports,"__esModule",{value:true});//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-exports.default={name:'VueGridCell',props:['type','name','value','level'],computed:{cellClass:function cellClass(){return'grid-cell-type-'+this.type;},showTreeNode:function showTreeNode(){return this.name==="str_title"&&this.level>0;}}};
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _flexyState=__webpack_require__(4);var _flexyState2=_interopRequireDefault(_flexyState);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}exports.default={name:'VueGridCell',props:['type','name','primary','value','level','editable'],computed:{cellClass:function cellClass(){var c=[];c.push('grid-cell-type-'+this.type);if(this.editable)c.push('grid-cell-editable');return c;},showTreeNode:function showTreeNode(){return this.name==="str_title"&&this.level>0;}},data:function data(){return{item:this.value};},methods:{edit:function edit(){var self=this;if(this.editable){switch(this.type){case'checkbox':var currentValue=self.item;var newValue=1;if(currentValue)newValue=0;self.postField(newValue).then(function(response){if(!response.error){self.item=newValue;}});break;default:var currentValue=self.item;// var newValue = ....
+// self.postField(newValue).then(function(response){
+//   if (!response.error) {
+//     self.item = newValue;
+//   }
+// });
+break;}}},postField:function postField(value){var self=this;var data={};data[self.name]=value;return this.api({url:'row','data':{'table':this.primary.table,'where':this.primary.id,'data':data}}).then(function(response){if(!response.error){if(!_.isUndefined(response.data.info.validation)&&response.data.info.validation===false){_flexyState2.default.addMessage(response.data.info.validation_errors,'danger');}}else{_flexyState2.default.addMessage('<b>ERROR</b> while saving cell!','danger');}return response;});}}};
 
 /***/ },
 /* 44 */
@@ -14046,7 +14038,7 @@ data[i]=row;}// Add more tree info (has_children)
 if(isTree&&parents!=={}){_.forEach(data,function(row,key){var id=row.id.value;var level=parents[id];if(level){data[key]._info.has_children=true;}});}// Console
 if(isTree&&_flexyState2.default.debug){console.log('treeInfo:');_.forEach(data,function(row){console.log(row.id.value,row._info);});}return data;},/**
      * Test if grid needs pagination
-     */needsPagination:function needsPagination(){return typeof this.info.num_pages!=='undefined'&&this.info.num_pages>1;}},data:function data(){return{findTerm:this.find,selected:[]};},methods:{hasSelection:function hasSelection(){return this.selected.length>0;},isSelected:function isSelected(id){return this.selected.indexOf(id)>-1;},select:function select(id){var index=this.selected.indexOf(id);if(index>-1){this.selected.splice(index,1);}else{this.selected.push(id);}},reverseSelection:function reverseSelection(){var ids=[];for(var i=0;i<this.data.length;i++){ids.push(this.data[i].id.value);}this.selected=_.difference(ids,this.selected);},rowLevel:function rowLevel(row){if(_.isUndefined(row._info))return 0;return row._info.level;},headerClass:function headerClass(field){return'grid-header-type-'+field.schema['form-type'];},/**
+     */needsPagination:function needsPagination(){return typeof this.info.num_pages!=='undefined'&&this.info.num_pages>1;}},data:function data(){return{findTerm:this.find,selected:[]};},methods:{hasSelection:function hasSelection(){return this.selected.length>0;},isSelected:function isSelected(id){return this.selected.indexOf(id)>-1;},select:function select(id){var index=this.selected.indexOf(id);if(index>-1){this.selected.splice(index,1);}else{this.selected.push(id);}},reverseSelection:function reverseSelection(){var ids=[];for(var i=0;i<this.data.length;i++){ids.push(this.data[i].id.value);}this.selected=_.difference(ids,this.selected);},rowLevel:function rowLevel(row){if(_.isUndefined(row._info))return 0;return row._info.level;},isEditable:function isEditable(name){var editable=false;if(!_.isUndefined(this.fields[name]))editable=this.fields[name].schema['grid-edit'];return editable;},headerClass:function headerClass(field){return'grid-header-type-'+field.schema['form-type'];},/**
      * Create url, used for all links (pagination, edit, sort etc..)
      */createdUrl:function createdUrl(parts){var defaults={order:this.order,find:this.find,offset:this.info.offset};parts=_.extend(defaults,parts);return location.pathname+'?options={"offset":"'+parts.offset+'","order":"'+parts.order+'","find":"'+parts.find+'"}';},editUrl:function editUrl(id){return'admin/show/form/'+this.name+'/'+id;},startFinding:function startFinding(event){if(event)event.preventDefault();var url=this.createdUrl({find:this.findTerm});window.location.assign(url);}}};
 
@@ -14150,7 +14142,7 @@ exports = module.exports = __webpack_require__(1)();
 
 
 // module
-exports.push([module.i, "\n.grid td {overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:250px;\n}\n.grid td.grid-cell-type-checkbox {text-align:center;\n}\n/* tree, branches & nodes */\n.grid-type-tree tbody td[level=\"1\"][name=\"str_title\"] {padding-left:1rem;\n}\n.grid-type-tree tbody td[level=\"2\"][name=\"str_title\"] {padding-left:2rem;\n}\n.grid-type-tree tbody td[level=\"3\"][name=\"str_title\"] {padding-left:3rem;\n}\n.grid-type-tree tbody td[level=\"4\"][name=\"str_title\"] {padding-left:4rem;\n}\n.grid-type-tree tbody td[level=\"5\"][name=\"str_title\"] {padding-left:5rem;\n}\n.grid-type-tree tbody td[level=\"6\"][name=\"str_title\"] {padding-left:6rem;\n}\n.grid-type-tree tbody td[level=\"7\"][name=\"str_title\"] {padding-left:7rem;\n}\n", ""]);
+exports.push([module.i, "\n.grid td {overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:250px;\n}\n.grid td.grid-cell-type-checkbox {text-align:center;\n}\n.grid td.grid-cell-editable {cursor:pointer;\n}\n/* tree, branches & nodes */\n.grid-type-tree tbody td[level=\"1\"][name=\"str_title\"] {padding-left:1rem;\n}\n.grid-type-tree tbody td[level=\"2\"][name=\"str_title\"] {padding-left:2rem;\n}\n.grid-type-tree tbody td[level=\"3\"][name=\"str_title\"] {padding-left:3rem;\n}\n.grid-type-tree tbody td[level=\"4\"][name=\"str_title\"] {padding-left:4rem;\n}\n.grid-type-tree tbody td[level=\"5\"][name=\"str_title\"] {padding-left:5rem;\n}\n.grid-type-tree tbody td[level=\"6\"][name=\"str_title\"] {padding-left:6rem;\n}\n.grid-type-tree tbody td[level=\"7\"][name=\"str_title\"] {padding-left:7rem;\n}\n", ""]);
 
 // exports
 
@@ -14555,7 +14547,12 @@ module.exports={render:function (){with(this) {
         attrs: {
           "type": cell.type,
           "name": cell.name,
-          "level": rowLevel(row)
+          "level": rowLevel(row),
+          "primary": {
+            'table': name,
+            'id': row.id.value
+          },
+          "editable": isEditable(cell.name)
         },
         domProps: {
           "value": cell.value
@@ -14628,22 +14625,27 @@ module.exports={render:function (){with(this) {
     attrs: {
       "type": type,
       "name": name,
-      "value": "value",
+      "value": "item",
       "level": level
+    },
+    on: {
+      "click": function($event) {
+        edit()
+      }
     }
   }, [(showTreeNode) ? _h('span', {
     staticClass: "fa fa-level-up fa-rotate-90 text-muted"
-  }) : _e(), " ", (type == 'text') ? [_s(value)] : _e(), " ", (type == 'wysiwyg') ? [_s(value)] : _e(), " ", (type == 'media') ? [_s(value)] : _e(), " ", (type == 'checkbox') ? [(value) ? _h('span', {
+  }) : _e(), " ", (type == 'text') ? [_s(item)] : _e(), " ", (type == 'wysiwyg') ? [_s(item)] : _e(), " ", (type == 'media') ? [_s(item)] : _e(), " ", (type == 'checkbox') ? [(item) ? _h('span', {
     staticClass: "fa fa-check text-success",
     domProps: {
-      "value": value
+      "value": item
     }
   }) : _h('span', {
     staticClass: "fa fa-minus text-warning",
     domProps: {
-      "value": value
+      "value": item
     }
-  }), " "] : _e(), " ", (type == 'select') ? [_s(value)] : _e()]) : _e()
+  }), " "] : _e(), " ", (type == 'select') ? [_s(item)] : _e()]) : _e()
 }},staticRenderFns: []}
 if (false) {
   module.hot.accept()
