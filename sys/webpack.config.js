@@ -1,4 +1,4 @@
-// var webpack = require('webpack');
+var webpack = require('webpack');
 var path = require('path');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var LiveReloadPlugin = require('webpack-livereload-plugin');
@@ -38,11 +38,7 @@ module.exports = [
       ]
   },
   plugins: [
-    // new webpack.optimize.UglifyJsPlugin({
-    //   compress: {
-    //     warnings: false
-    //   }
-    // }),
+    // new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false } }),
     new LiveReloadPlugin()
   ],
   

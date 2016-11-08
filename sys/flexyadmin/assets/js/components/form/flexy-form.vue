@@ -3,12 +3,12 @@ import flexyState       from '../../flexy-state.js'
 
 import tab              from '../../vue-strap-src/components/Tab.vue'
 import tabs             from '../../vue-strap-src/components/Tabs.vue'
-import tabGroup         from '../../vue-strap-src/components/TabGroup.vue'
+// import tabGroup         from '../../vue-strap-src/components/TabGroup.vue'
 
 
 export default {
   name: 'FlexyForm',
-  components: {tab,tabs,tabGroup},
+  components: {tab,tabs},
   props:{
     'title':String,
     'name':String,
@@ -47,7 +47,7 @@ export default {
     isMultiple : function( field ) {
       var multiple = false;
       if (this.options[field].multiple) multiple='multiple';
-      console.log(field,multiple);
+      if (flexyState.debug) console.log('isMultiple',field,multiple);
       return multiple;
     },
     

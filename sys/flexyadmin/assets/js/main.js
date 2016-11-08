@@ -9,7 +9,7 @@
 
 var AUTH_TOKEN = _flexy.auth_token;
 
-var _ = require('lodash');
+var _ = require('lodash/core');
 
 import Vue              from 'vue'
 import Axios            from 'axios'

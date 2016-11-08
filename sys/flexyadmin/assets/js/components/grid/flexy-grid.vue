@@ -1,10 +1,12 @@
 <script>
+import flexyState       from '../../flexy-state.js'
+
 import FlexyPagination  from '../flexy-pagination.vue'
 import FlexyGridCell    from './flexy-grid-cell.vue'
 
 export default {
   name: 'FlexyGrid',
-  components: { FlexyGridCell,FlexyPagination },
+  components: {FlexyGridCell,FlexyPagination },
   props:{
     'title':String,
     'name':String,
@@ -129,7 +131,7 @@ export default {
       }
       
       // Console
-      if (isTree) {
+      if (isTree && flexyState.debug) {
         console.log('treeInfo:');
         _.forEach(data,function(row){ console.log(row.id.value,row._info); });
       }
