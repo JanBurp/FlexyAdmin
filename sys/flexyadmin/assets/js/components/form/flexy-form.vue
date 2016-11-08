@@ -96,7 +96,6 @@ export default {
           'data'    : this.row
         },
       }).then(function(response){
-        console.log(response);
         if (!response.error) {
           if (response.data.info.validation!==false) {
             flexyState.addMessage('Item saved');
@@ -104,7 +103,6 @@ export default {
           else {
             flexyState.addMessage('Niet alle velden zijn goed ingevuld!','danger');
             self.validationErrors = response.data.info.validation_errors;
-            console.log('ERRORS',self.validationErrors);
           }
         }
         else {
