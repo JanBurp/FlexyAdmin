@@ -127,7 +127,7 @@ a>.fa, .btn>.fa {margin-right:.35rem;margin-left:.35rem;}
 .nav-tabs>li>a.nav-link {text-transform:uppercase;}
 
 /* FORM */
-.form-group.row:hover input {border-color:$brand-primary};
+.form-group.row:not(.has-danger):hover input {border-color:$brand-primary};
 .card.form .form-group.row:hover {border-radius:$border-radius;background-color:$gray-lighter;}
 
 /* TRANSITIONS */

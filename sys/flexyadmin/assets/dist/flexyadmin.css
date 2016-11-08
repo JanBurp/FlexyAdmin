@@ -3690,7 +3690,7 @@ a > .fa, .btn > .fa {
   text-transform: uppercase; }
 
 /* FORM */
-.form-group.row:hover input {
+.form-group.row:not(.has-danger):hover input {
   border-color: #696; }
 
 .card.form .form-group.row:hover {
