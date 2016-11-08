@@ -1,4 +1,6 @@
 <script>
+import flexyState       from '../../flexy-state.js'
+
 import tab              from '../../vue-strap-src/components/Tab.vue'
 import tabs             from '../../vue-strap-src/components/Tabs.vue'
 import tabGroup         from '../../vue-strap-src/components/TabGroup.vue'
@@ -55,24 +57,17 @@ export default {
     },
     
     save : function() {
-      this.postForm().then(function (response) {
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log('error',error);
-      });
+      this.postForm();
     },
     
     submit : function() {
       var name = this.name;
       this.postForm().then(function (response) {
-        console.log(response);
-        var url = 'admin/show/grid/' + name;
-        window.location.assign( url );
+        if (!response.error) {
+          var url = 'admin/show/grid/' + name;
+          window.location.assign( url );
+        }
       })
-      .catch(function (error) {
-        console.log('error',error);
-      });
     },
     
     postForm : function() {
@@ -83,6 +78,14 @@ export default {
           'where'   : this.primary,
           'data'    : this.data
         },
+      }).then(function(response){
+        if (!response.error) {
+          flexyState.addMessage('Item saved');
+        }
+        else {
+          flexyState.addMessage('<b>ERROR</b> while saving item!','danger');
+        }
+        return response;
       });
     },
     
@@ -153,7 +156,7 @@ export default {
 </template>
 
 <style>
-  .form-group {min-height:2.35rem;}
+  .form .form-group {min-height:2.35rem;}
   .col-form-label,.col-form-label {text-transform:uppercase;font-weight:bold;padding-bottom:0;margin-bottom:0;}
   textarea {min-height:10rem;max-height:20rem;}
   .form-check-input {margin-left:0;margin-top:.75rem;}

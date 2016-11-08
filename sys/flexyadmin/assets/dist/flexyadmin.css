@@ -4941,13 +4941,24 @@ a > .fa, .btn > .fa {
 
 /* CONTENT */
 #content {
-  margin: 56px 0px; }
+  margin: 1rem 0px; }
 
 #flexy-menu-side {
   padding-left: 0; }
 
 #main {
   padding-right: .5rem; }
+
+/* PROGRESS */
+.progress {
+  margin: 0;
+  height: 2px;
+  border-radius: 0; }
+
+/* MESSAGES */
+#messages {
+  width: 100%;
+  margin-top: 56px; }
 
 /* SIDEBAR MENU */
 #flexy-menu-side > ul {
@@ -5011,6 +5022,17 @@ a > .fa, .btn > .fa {
 .card.form .form-group.row:hover {
   border-radius: 0.25rem;
   background-color: #DEA; }
+
+/* TRANSITIONS */
+.slideUp-enter-active {
+  transition: all .2s ease; }
+
+.slideUp-leave-active {
+  transition: all 1s ease; }
+
+.slideUp-enter, .slideUp-leave-active {
+  margin-top: -56px;
+  opacity: 0; }
 
 /* DEBUG HELPERS */
 .debug-info .card-block {
