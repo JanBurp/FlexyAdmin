@@ -187,6 +187,13 @@ export default {
       return row._info.level;
     },
     
+    isEditable : function(name) {
+      var editable = false;
+      if ( !_.isUndefined(this.fields[name]) ) editable = this.fields[name].schema['grid-edit'];
+      return editable;
+    },
+    
+    
     headerClass : function(field) {
       return 'grid-header-type-'+field.schema['form-type'];
     },
@@ -261,7 +268,7 @@ export default {
                 <div v-if="gridType!=='table'"class="btn btn-sm btn-outline-info action-move"><span class="fa fa-reorder"></span></div>
               </td>
               <!-- CELL -->
-              <flexy-grid-cell v-else :type="cell.type" :name="cell.name" :value="cell.value" :level="rowLevel(row)"></flexy-grid-cell>
+              <flexy-grid-cell v-else :type="cell.type" :name="cell.name" :value="cell.value" :level="rowLevel(row)" :primary="{'table':name,'id':row.id.value}" :editable="isEditable(cell.name)"></flexy-grid-cell>
             </template>
           </tr>
         </tbody>
