@@ -217,16 +217,16 @@ class Row extends Api_Model {
     // POST
     if ($this->args['type']=='POST') {
       
-      // UPDATE
-      if (isset($this->args['data']) and isset($this->args['where'])) {
-        if (!$this->_has_rights($this->args['table'])>=RIGHTS_EDIT) return $this->_result_norights();
-        $this->result['data']=$this->_update_row();
-        return $this->_result_ok();
-      }
       // INSERT
       if (isset($this->args['data']) and (!isset($this->args['where']) or $this->args['where']===-1) ) {
         if (!$this->_has_rights($this->args['table'])>=RIGHTS_ADD) return $this->_result_norights();
         $this->result['data']=$this->_insert_row();
+        return $this->_result_ok();
+      }
+      // UPDATE
+      if (isset($this->args['data']) and isset($this->args['where']) and $this->args['where']!==-1) {
+        if (!$this->_has_rights($this->args['table'])>=RIGHTS_EDIT) return $this->_result_norights();
+        $this->result['data']=$this->_update_row();
         return $this->_result_ok();
       }
       // DELETE

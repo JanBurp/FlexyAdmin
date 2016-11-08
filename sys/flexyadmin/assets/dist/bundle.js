@@ -13995,7 +13995,9 @@ type:Number,default:5}},methods:{/**
 
 "use strict";
 'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _flexyState=__webpack_require__(4);var _flexyState2=_interopRequireDefault(_flexyState);var _Tab=__webpack_require__(58);var _Tab2=_interopRequireDefault(_Tab);var _Tabs=__webpack_require__(60);var _Tabs2=_interopRequireDefault(_Tabs);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}// import tabGroup         from '../../vue-strap-src/components/TabGroup.vue'
-exports.default={name:'FlexyForm',components:{tab:_Tab2.default,tabs:_Tabs2.default},props:{'title':String,'name':String,'primary':Number,'fields':[Object,Array],'fieldsets':[Object,Array],'data':[Object,Array],'options':[Object,Array]},computed:{fieldTypes:function fieldTypes(){var types={primary:['primary'],hidden:['hidden'],checkbox:['checkbox'],select:['select','media'],textarea:['textarea','wysiwyg']};types.default=[].concat(types.primary,types.hidden,types.checkbox,types.select,types.textarea);return types;}},methods:{isType:function isType(type,field){if(type==='default'){return this.fieldTypes['default'].indexOf(this.fields[field].schema['form-type'])===-1;}return this.fieldTypes[type].indexOf(this.fields[field].schema['form-type'])>=0;},isMultiple:function isMultiple(field){var multiple=false;if(this.options[field].multiple)multiple='multiple';if(_flexyState2.default.debug)console.log('isMultiple',field,multiple);return multiple;},cancel:function cancel(){var url='admin/show/grid/'+this.name;window.location.assign(url);},save:function save(){this.postForm();},submit:function submit(){var name=this.name;this.postForm().then(function(response){if(!response.error){var url='admin/show/grid/'+name;window.location.assign(url);}});},postForm:function postForm(){return this.api({url:'row',data:{'table':this.name,'where':this.primary,'data':this.data}}).then(function(response){if(!response.error){_flexyState2.default.addMessage('Item saved');}else{_flexyState2.default.addMessage('<b>ERROR</b> while saving item!','danger');}return response;});},updateField:function updateField(field,value){this.data[field]=value;}}};
+exports.default={name:'FlexyForm',components:{tab:_Tab2.default,tabs:_Tabs2.default},props:{'title':String,'name':String,'primary':Number,'fields':[Object,Array],'fieldsets':[Object,Array],'data':[Object,Array],'options':[Object,Array]},computed:{fieldTypes:function fieldTypes(){var types={primary:['primary'],hidden:['hidden'],checkbox:['checkbox'],select:['select','media'],textarea:['textarea','wysiwyg']};types.default=[].concat(types.primary,types.hidden,types.checkbox,types.select,types.textarea);return types;}},// Copy of props.data
+data:function data(){return{row:{},validationErrors:{}};},// Make copy of props.data
+created:function created(){this.row=this.data;},methods:{isType:function isType(type,field){if(type==='default'){return this.fieldTypes['default'].indexOf(this.fields[field].schema['form-type'])===-1;}return this.fieldTypes[type].indexOf(this.fields[field].schema['form-type'])>=0;},isMultiple:function isMultiple(field){var multiple=false;if(this.options[field].multiple)multiple='multiple';if(_flexyState2.default.debug)console.log('isMultiple',field,multiple);return multiple;},validationClass:function validationClass(field){var validation='';if(this.validationErrors[field])validation='has-danger';return validation;},cancel:function cancel(){var url='admin/show/grid/'+this.name;window.location.assign(url);},save:function save(){this.postForm();},submit:function submit(){var name=this.name;this.postForm().then(function(response){if(!response.error){var url='admin/show/grid/'+name;window.location.assign(url);}});},postForm:function postForm(){var self=this;return this.api({url:'row','data':{'table':this.name,'where':this.primary,'data':this.row}}).then(function(response){console.log(response);if(!response.error){if(response.data.info.validation!==false){_flexyState2.default.addMessage('Item saved');}else{_flexyState2.default.addMessage('Niet alle velden zijn goed ingevuld!','danger');self.validationErrors=response.data.info.validation_errors;console.log('ERRORS',self.validationErrors);}}else{_flexyState2.default.addMessage('<b>ERROR</b> while saving item!','danger');}return response;});},updateField:function updateField(field,value){this.row[field]=value;}}};
 
 /***/ },
 /* 43 */
@@ -14177,7 +14179,7 @@ exports = module.exports = __webpack_require__(1)();
 
 
 // module
-exports.push([module.i, "\n.form .form-group {min-height:2.35rem;\n}\n.col-form-label,.col-form-label {text-transform:uppercase;font-weight:bold;padding-bottom:0;margin-bottom:0;\n}\ntextarea {min-height:10rem;max-height:20rem;\n}\n.form-check-input {margin-left:0;margin-top:.75rem;\n}\n", ""]);
+exports.push([module.i, "\n.form .form-group {min-height:2.35rem;\n}\n.form-control-label {text-transform:uppercase;font-weight:bold;padding-top:.35rem;\n}\ntextarea {min-height:10rem;max-height:20rem;\n}\n.form-check-input {margin-left:0;margin-top:.75rem;\n}\n.validation-error {padding:.25rem 1rem;font-weight:bold;\n}\n", ""]);
 
 // exports
 
@@ -14903,12 +14905,15 @@ module.exports={render:function (){with(this) {
           "type": "hidden"
         },
         domProps: {
-          "value": data[field]
+          "value": row[field]
         }
       })] : _e(), " ", (isType('textarea', field)) ? _h('div', {
-        staticClass: "form-group row"
-      }, [_h('label', {
-        staticClass: "col-xs-2 col-form-label",
+        staticClass: "form-group row",
+        class: validationClass(field)
+      }, [(validationErrors[field]) ? _h('div', {
+        staticClass: "validation-error form-text text-danger"
+      }, [_s(validationErrors[field])]) : _e(), " ", _h('label', {
+        staticClass: "col-xs-2 form-control-label",
         attrs: {
           "for": field
         }
@@ -14922,7 +14927,7 @@ module.exports={render:function (){with(this) {
           "placeholder": ""
         },
         domProps: {
-          "value": data[field]
+          "value": row[field]
         },
         on: {
           "input": function($event) {
@@ -14930,9 +14935,12 @@ module.exports={render:function (){with(this) {
           }
         }
       })])]) : _e(), " ", (isType('checkbox', field)) ? _h('div', {
-        staticClass: "form-group row"
-      }, [_h('label', {
-        staticClass: "col-xs-2 col-form-label",
+        staticClass: "form-group row",
+        class: validationClass(field)
+      }, [(validationErrors[field]) ? _h('div', {
+        staticClass: "validation-error form-text text-danger"
+      }, [_s(validationErrors[field])]) : _e(), " ", _h('label', {
+        staticClass: "col-xs-2 form-control-label",
         attrs: {
           "for": field
         }
@@ -14946,7 +14954,7 @@ module.exports={render:function (){with(this) {
           "name": field
         },
         domProps: {
-          "value": data[field]
+          "value": row[field]
         },
         on: {
           "input": function($event) {
@@ -14954,9 +14962,12 @@ module.exports={render:function (){with(this) {
           }
         }
       })])]) : _e(), " ", (isType('select', field)) ? _h('div', {
-        staticClass: "form-group row"
-      }, [_h('label', {
-        staticClass: "col-xs-2 col-form-label",
+        staticClass: "form-group row",
+        class: validationClass(field)
+      }, [(validationErrors[field]) ? _h('div', {
+        staticClass: "validation-error form-text text-danger"
+      }, [_s(validationErrors[field])]) : _e(), " ", _h('label', {
+        staticClass: "col-xs-2 form-control-label",
         attrs: {
           "for": field
         }
@@ -14970,7 +14981,7 @@ module.exports={render:function (){with(this) {
           "multiple": isMultiple(field)
         },
         domProps: {
-          "value": data[field]
+          "value": row[field]
         },
         on: {
           "input": function($event) {
@@ -14981,13 +14992,16 @@ module.exports={render:function (){with(this) {
         return _h('option', {
           domProps: {
             "value": option.value,
-            "selected": option.value == data[field]
+            "selected": option.value == row[field]
           }
         }, [_s(option.name)])
       })])])]) : _e(), " ", (isType('default', field)) ? _h('div', {
-        staticClass: "form-group row"
-      }, [_h('label', {
-        staticClass: "col-xs-2 col-form-label",
+        staticClass: "form-group row",
+        class: validationClass(field)
+      }, [(validationErrors[field]) ? _h('div', {
+        staticClass: "validation-error form-text text-danger"
+      }, [_s(validationErrors[field])]) : _e(), " ", _h('label', {
+        staticClass: "col-xs-2 form-control-label",
         attrs: {
           "for": field
         }
@@ -15002,7 +15016,7 @@ module.exports={render:function (){with(this) {
           "placeholder": ""
         },
         domProps: {
-          "value": data[field]
+          "value": row[field]
         },
         on: {
           "input": function($event) {
