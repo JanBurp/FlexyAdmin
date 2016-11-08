@@ -19,11 +19,12 @@
 <div id="main" class="container-fluid">
   
   <div id="header" class="navbar navbar-fixed-top">
+    <progress class="progress progress-danger progress-striped" :value="state.progress" max="100"></progress>
     <div class="navbar-text"><flexy-blocks href="<?=$base_url?>" text="<?=$str_title?>"/></div>
     <?=$headermenu?>
   </div>
   
-  <div class="flexy-alerts"></div>
+  <flexy-messages :messages="state.messages"></flexy-messages>
 
   <div id="content" class="row">
     <div id="flexy-menu-side" class="col-sm-2"><?=$sidemenu?></div>
@@ -58,8 +59,8 @@
       </div>
     </div>
   </flexy-help> -->
-
 </div>
+
 
 <script type="text/javascript" charset="utf-8">
 var _flexy = {
