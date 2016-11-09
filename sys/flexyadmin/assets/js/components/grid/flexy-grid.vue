@@ -231,7 +231,7 @@ export default {
     <div class="card-header">
       <h1>{{title}}</h1>
       <form class="form-inline" v-on:submit="startFinding($event)">
-        <div class="form-group"><input type="text" v-model.trim="findTerm" class="form-control form-control-sm" id="grid-find" placeholder="zoeken"></div>
+        <div class="form-group"><input type="text" v-model.trim="findTerm" class="form-control form-control-sm" id="grid-find" :placeholder="$lang.grid_search"></div>
         <button type="submit" class="btn btn-sm btn-secundary"><span class="fa fa-search"></span></button>
       </form>
     </div>

@@ -15,8 +15,11 @@ class AdminController extends BasicController {
 
   private $view_data    = array();
   private $current_uri  = '';
-
-  private $debug = array();
+  private $debug        = array();
+  /**
+   * Alle language files die nodig zijn
+   */
+  private $lang_files   = array( 'vue' );
 
 
 	public function __construct() {
@@ -334,6 +337,29 @@ class AdminController extends BasicController {
   //     // $this->showType=add_string($this->showType,$type,' ');
   // }
 
+
+
+  /**
+   * Verzamel alle languge keys en geef deze terug
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+  private function _collect_lang() {
+    foreach ($this->lang_files as $file) {
+      $this->lang->load($file);
+    }
+    $lang_keys = $this->lang->language;
+    $lang_keys = filter_by_key($lang_keys,'vue_','');
+    return $lang_keys;
+  }
+
+  /**
+   * Verzamel alle data die meegegeven moet worden aan de admin view
+   *
+   * @return void
+   * @author Jan den Besten
+   */
   private function _prepare_view_data() {
     
     // tbl_site
@@ -351,6 +377,7 @@ class AdminController extends BasicController {
 
     // Language
     $this->view_data['language'] = $this->language;
+    $this->view_data['lang_keys'] = $this->_collect_lang();
 
     // Version
     $this->view_data['version'] = $this->version->get_version();
@@ -362,7 +389,7 @@ class AdminController extends BasicController {
     
     // debug
     $this->view_data['debug'] = $this->debug;
-
+    
     // Editor stuff
     // $buttons1=$this->cfg->get('CFG_configurations',"str_buttons1");
     // $buttons2=$this->cfg->get('CFG_configurations',"str_buttons2");

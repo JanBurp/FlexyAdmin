@@ -12,6 +12,7 @@ var AUTH_TOKEN = _flexy.auth_token;
 var _ = require('lodash/core');
 
 import Vue              from 'vue'
+import Lang             from 'vue-lang'
 import Axios            from 'axios'
 
 import flexyState       from './flexy-state.js'
@@ -22,6 +23,10 @@ import FlexyPagination  from './components/flexy-pagination.vue'
 import FlexyGrid        from './components/grid/flexy-grid.vue'
 import FlexyForm        from './components/form/flexy-form.vue'
 
+// Languaga settings
+const locales = {};
+locales[_flexy.language] = JSON.parse(_flexy.language_keys);
+Vue.use(Lang, {lang: _flexy.language, locales: locales});
 
 Vue.mixin({
   
@@ -71,7 +76,7 @@ Vue.mixin({
       })
       .catch(function (error) {
         flexyState.hideProgress();
-        flexyState.addMessage('API error, see console for details','danger');
+        flexyState.addMessage( self.error_api,'danger');
         console.log('api ERROR <',request,error);
         return {'error':error};
       });

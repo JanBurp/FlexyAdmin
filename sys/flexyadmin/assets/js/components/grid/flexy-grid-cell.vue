@@ -1,5 +1,6 @@
 <script>
-import flexyState       from '../../flexy-state.js'
+import flexyState from '../../flexy-state.js'
+
 export default {
   name: 'VueGridCell',
   props:['type','name','primary','value','level','editable'],
@@ -71,7 +72,7 @@ export default {
           }
         }
         else {
-          flexyState.addMessage('<b>ERROR</b> while saving cell!','danger');
+          flexyState.addMessage( self.$lang.vue_form_save_error,'danger');
         }
         return response;
       });

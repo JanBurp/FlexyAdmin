@@ -13997,7 +13997,7 @@ type:Number,default:5}},methods:{/**
 'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _flexyState=__webpack_require__(3);var _flexyState2=_interopRequireDefault(_flexyState);var _Tab=__webpack_require__(56);var _Tab2=_interopRequireDefault(_Tab);var _Tabs=__webpack_require__(57);var _Tabs2=_interopRequireDefault(_Tabs);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}// import tabGroup         from '../../vue-strap-src/components/TabGroup.vue'
 exports.default={name:'FlexyForm',components:{tab:_Tab2.default,tabs:_Tabs2.default},props:{'title':String,'name':String,'primary':Number,'fields':[Object,Array],'fieldsets':[Object,Array],'data':[Object,Array],'options':[Object,Array]},computed:{fieldTypes:function fieldTypes(){var types={primary:['primary'],hidden:['hidden'],checkbox:['checkbox'],select:['select','media'],textarea:['textarea','wysiwyg']};types.default=[].concat(types.primary,types.hidden,types.checkbox,types.select,types.textarea);return types;}},// Copy of props.data
 data:function data(){return{row:{},validationErrors:{},isSaving:false};},// Make copy of props.data
-created:function created(){this.row=this.data;},methods:{isType:function isType(type,field){if(type==='default'){return this.fieldTypes['default'].indexOf(this.fields[field].schema['form-type'])===-1;}return this.fieldTypes[type].indexOf(this.fields[field].schema['form-type'])>=0;},isMultiple:function isMultiple(field){var multiple=false;if(this.options[field].multiple)multiple='multiple';if(_flexyState2.default.debug)console.log('isMultiple',field,multiple);return multiple;},validationClass:function validationClass(field){var validation='';if(this.validationErrors[field])validation='has-danger';return validation;},cancel:function cancel(){if(!this.isSaving){var url='admin/show/grid/'+this.name;window.location.assign(url);}},save:function save(){if(!this.isSaving){this.postForm();}},submit:function submit(){if(!this.isSaving){var name=this.name;this.postForm().then(function(response){if(!response.error){var url='admin/show/grid/'+name;window.location.assign(url);}});}},postForm:function postForm(){var self=this;self.isSaving=true;return this.api({url:'row','data':{'table':this.name,'where':this.row['id'],'data':this.row}}).then(function(response){self.isSaving=false;if(!response.error){if(_.isUndefined(response.data.info)||response.data.info.validation!==false){_flexyState2.default.addMessage('Item saved');if(self.isNewItem()){self.row['id']=response.data.data.id;}}else{_flexyState2.default.addMessage('Niet alle velden zijn goed ingevuld!','danger');if(!_.isUndefined(response.data.info))self.validationErrors=response.data.info.validation_errors;}}else{_flexyState2.default.addMessage('<b>ERROR</b> while saving item!','danger');}return response;});},isNewItem:function isNewItem(){return this.row['id']===-1;},updateField:function updateField(field,value){this.row[field]=value;}}};
+created:function created(){this.row=this.data;},methods:{isType:function isType(type,field){if(type==='default'){return this.fieldTypes['default'].indexOf(this.fields[field].schema['form-type'])===-1;}return this.fieldTypes[type].indexOf(this.fields[field].schema['form-type'])>=0;},isMultiple:function isMultiple(field){var multiple=false;if(this.options[field].multiple)multiple='multiple';if(_flexyState2.default.debug)console.log('isMultiple',field,multiple);return multiple;},validationClass:function validationClass(field){var validation='';if(this.validationErrors[field])validation='has-danger';return validation;},cancel:function cancel(){if(!this.isSaving){var url='admin/show/grid/'+this.name;window.location.assign(url);}},save:function save(){if(!this.isSaving){this.postForm();}},submit:function submit(){if(!this.isSaving){var name=this.name;this.postForm().then(function(response){if(!response.error){var url='admin/show/grid/'+name;window.location.assign(url);}});}},postForm:function postForm(){var self=this;self.isSaving=true;return this.api({url:'row','data':{'table':this.name,'where':this.row['id'],'data':this.row}}).then(function(response){self.isSaving=false;if(!response.error){if(_.isUndefined(response.data.info)||response.data.info.validation!==false){_flexyState2.default.addMessage('Item saved');if(self.isNewItem()){self.row['id']=response.data.data.id;}}else{_flexyState2.default.addMessage(self.$lang.form_validation_error,'danger');if(!_.isUndefined(response.data.info))self.validationErrors=response.data.info.validation_errors;}}else{_flexyState2.default.addMessage(self.$lang.form_save_error,'danger');}return response;});},isNewItem:function isNewItem(){return this.row['id']===-1;},updateField:function updateField(field,value){this.row[field]=value;}}};
 
 /***/ },
 /* 43 */
@@ -14010,7 +14010,7 @@ created:function created(){this.row=this.data;},methods:{isType:function isType(
 //     self.item = newValue;
 //   }
 // });
-break;}}},postField:function postField(value){var self=this;var data={};data[self.name]=value;return this.api({url:'row','data':{'table':this.primary.table,'where':this.primary.id,'data':data}}).then(function(response){if(!response.error){if(!_.isUndefined(response.data.info.validation)&&response.data.info.validation===false){_flexyState2.default.addMessage(response.data.info.validation_errors,'danger');}}else{_flexyState2.default.addMessage('<b>ERROR</b> while saving cell!','danger');}return response;});}}};
+break;}}},postField:function postField(value){var self=this;var data={};data[self.name]=value;return this.api({url:'row','data':{'table':this.primary.table,'where':this.primary.id,'data':data}}).then(function(response){if(!response.error){if(!_.isUndefined(response.data.info.validation)&&response.data.info.validation===false){_flexyState2.default.addMessage(response.data.info.validation_errors,'danger');}}else{_flexyState2.default.addMessage(self.$lang.vue_form_save_error,'danger');}return response;});}}};
 
 /***/ },
 /* 44 */
@@ -14169,7 +14169,7 @@ exports = module.exports = __webpack_require__(1)();
 
 
 // module
-exports.push([module.i, "\n.form .form-group {min-height:2.35rem;\n}\n.form-control-label {text-transform:uppercase;font-weight:bold;padding-top:.35rem;\n}\ntextarea {min-height:10rem;max-height:20rem;\n}\n.form-check-input {margin-left:0;margin-top:.75rem;\n}\n.validation-error {padding:.25rem 1rem;font-weight:bold;\n}\n", ""]);
+exports.push([module.i, "\n.form .form-group {min-height:2.35rem;\n}\n.form-control-label {text-transform:uppercase;font-weight:bold;padding-top:.5rem;padding-bottom:0;margin-bottom:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;\n}\ntextarea {min-height:10rem;max-height:20rem;\n}\n.form-check-input {margin-left:0;margin-top:.75rem;\n}\n.validation-error {padding:.25rem 1rem;font-weight:bold;\n}\n", ""]);
 
 // exports
 
@@ -14456,7 +14456,7 @@ module.exports={render:function (){with(this) {
     attrs: {
       "type": "text",
       "id": "grid-find",
-      "placeholder": "zoeken"
+      "placeholder": $lang.grid_search
     },
     domProps: {
       "value": _s(findTerm)
@@ -14739,7 +14739,7 @@ module.exports={render:function (){with(this) {
     }
   }, [_m(7)])]) : _e()]), " ", _h('span', {
     staticClass: "pagination-info text-primary"
-  }, [_s(total) + " rijen in " + _s(pages) + " pagina's"])])
+  }, [_s(_f("replace")($lang.grid_pagination, total, pages))])])
 }},staticRenderFns: [function (){with(this) {
   return _h('span', {
     staticClass: "fa fa-fast-backward"
@@ -14867,7 +14867,7 @@ module.exports={render:function (){with(this) {
         cancel()
       }
     }
-  }, ["Annuleer", _m(0)]), " ", _h('button', {
+  }, [_s($lang.cancel), _m(0)]), " ", _h('button', {
     staticClass: "btn btn-sm btn-warning",
     attrs: {
       "type": "button",
@@ -14878,7 +14878,7 @@ module.exports={render:function (){with(this) {
         save()
       }
     }
-  }, ["Bewaar", _m(1)]), " ", _h('button', {
+  }, [_s($lang.save), _m(1)]), " ", _h('button', {
     staticClass: "btn btn-sm btn-info",
     attrs: {
       "type": "button",
@@ -14889,7 +14889,7 @@ module.exports={render:function (){with(this) {
         submit()
       }
     }
-  }, ["Invoeren", _m(2)])])]), " ", _h('div', {
+  }, [_s($lang.submit), _m(2)])])]), " ", _h('div', {
     staticClass: "card-block"
   }, [_h('tabs', {
     attrs: {
@@ -14914,12 +14914,12 @@ module.exports={render:function (){with(this) {
       }, [(validationErrors[field]) ? _h('div', {
         staticClass: "validation-error form-text text-danger"
       }, [_s(validationErrors[field])]) : _e(), " ", _h('label', {
-        staticClass: "col-xs-2 form-control-label",
+        staticClass: "col-xs-3 form-control-label",
         attrs: {
           "for": field
         }
       }, [_s(fields[field]['name'])]), " ", _h('div', {
-        staticClass: "col-xs-10"
+        staticClass: "col-xs-9"
       }, [_h('textarea', {
         staticClass: "form-control",
         attrs: {
@@ -14941,12 +14941,12 @@ module.exports={render:function (){with(this) {
       }, [(validationErrors[field]) ? _h('div', {
         staticClass: "validation-error form-text text-danger"
       }, [_s(validationErrors[field])]) : _e(), " ", _h('label', {
-        staticClass: "col-xs-2 form-control-label",
+        staticClass: "col-xs-3 form-control-label",
         attrs: {
           "for": field
         }
       }, [_s(fields[field]['name'])]), " ", _h('div', {
-        staticClass: "col-xs-10"
+        staticClass: "col-xs-9"
       }, [_h('input', {
         staticClass: "form-check-input",
         attrs: {
@@ -14968,12 +14968,12 @@ module.exports={render:function (){with(this) {
       }, [(validationErrors[field]) ? _h('div', {
         staticClass: "validation-error form-text text-danger"
       }, [_s(validationErrors[field])]) : _e(), " ", _h('label', {
-        staticClass: "col-xs-2 form-control-label",
+        staticClass: "col-xs-3 form-control-label",
         attrs: {
           "for": field
         }
       }, [_s(fields[field]['name'])]), " ", _h('div', {
-        staticClass: "col-xs-10"
+        staticClass: "col-xs-9"
       }, [_h('select', {
         staticClass: "form-control",
         attrs: {
@@ -15002,12 +15002,12 @@ module.exports={render:function (){with(this) {
       }, [(validationErrors[field]) ? _h('div', {
         staticClass: "validation-error form-text text-danger"
       }, [_s(validationErrors[field])]) : _e(), " ", _h('label', {
-        staticClass: "col-xs-2 form-control-label",
+        staticClass: "col-xs-3 form-control-label",
         attrs: {
           "for": field
         }
       }, [_s(fields[field]['name'])]), " ", _h('div', {
-        staticClass: "col-xs-10"
+        staticClass: "col-xs-9"
       }, [_h('input', {
         staticClass: "form-control",
         attrs: {
@@ -15337,19 +15337,20 @@ module.exports = function(module) {
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-'use strict';var _vue=__webpack_require__(18);var _vue2=_interopRequireDefault(_vue);var _axios=__webpack_require__(12);var _axios2=_interopRequireDefault(_axios);var _flexyState=__webpack_require__(3);var _flexyState2=_interopRequireDefault(_flexyState);var _flexyMessages=__webpack_require__(15);var _flexyMessages2=_interopRequireDefault(_flexyMessages);var _flexyBlocks=__webpack_require__(14);var _flexyBlocks2=_interopRequireDefault(_flexyBlocks);var _flexyPagination=__webpack_require__(5);var _flexyPagination2=_interopRequireDefault(_flexyPagination);var _flexyGrid=__webpack_require__(17);var _flexyGrid2=_interopRequireDefault(_flexyGrid);var _flexyForm=__webpack_require__(16);var _flexyForm2=_interopRequireDefault(_flexyForm);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}/**
+'use strict';var _vue=__webpack_require__(18);var _vue2=_interopRequireDefault(_vue);var _vueLang=__webpack_require__(76);var _vueLang2=_interopRequireDefault(_vueLang);var _axios=__webpack_require__(12);var _axios2=_interopRequireDefault(_axios);var _flexyState=__webpack_require__(3);var _flexyState2=_interopRequireDefault(_flexyState);var _flexyMessages=__webpack_require__(15);var _flexyMessages2=_interopRequireDefault(_flexyMessages);var _flexyBlocks=__webpack_require__(14);var _flexyBlocks2=_interopRequireDefault(_flexyBlocks);var _flexyPagination=__webpack_require__(5);var _flexyPagination2=_interopRequireDefault(_flexyPagination);var _flexyGrid=__webpack_require__(17);var _flexyGrid2=_interopRequireDefault(_flexyGrid);var _flexyForm=__webpack_require__(16);var _flexyForm2=_interopRequireDefault(_flexyForm);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}/**
  * Bootstrapping FlexyAdmin:
  * - Import components
  * - Create Vue Instance
  * - Global Vue Settings (Mixins)
  * 
  * @author: Jan den Besten
- */var AUTH_TOKEN=_flexy.auth_token;var _=__webpack_require__(13);_vue2.default.mixin({data:function data(){return{state:_flexyState2.default.state};},methods:{/**
+ */var AUTH_TOKEN=_flexy.auth_token;var _=__webpack_require__(13);// Languaga settings
+var locales={};locales[_flexy.language]=JSON.parse(_flexy.language_keys);_vue2.default.use(_vueLang2.default,{lang:_flexy.language,locales:locales});_vue2.default.mixin({data:function data(){return{state:_flexyState2.default.state};},methods:{/**
       Global method om Api aan te roepen. Options Object bevat de volgende properties:
       - url, de url van de api (auth,table,row, etc)
       - data, de mee te geven parameters
       - Laat ook progress bar & spinner zien
-     */api:function api(options){var self=this;_flexyState2.default.showProgress();var method='GET';if(options.url==='row'&&!_.isUndefined(options.data.where))method='POST';var request={method:'POST',url:'_api/'+options.url,data:options.data,headers:{'Authorization':AUTH_TOKEN,'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'},transformRequest:[function(data){var requestString='';if(data){requestString=self.flexySerializeJSON(data);}return requestString;}],onDownloadProgress:function onDownloadProgress(progressEvent){_flexyState2.default.setProgress(progressEvent.loaded,progressEvent.total);}};_flexyState2.default.debug&&console.log('api > ',request);return _axios2.default.request(request).then(function(response){_flexyState2.default.hideProgress();_flexyState2.default.debug&&console.log('api < ',response);return response;}).catch(function(error){_flexyState2.default.hideProgress();_flexyState2.default.addMessage('API error, see console for details','danger');console.log('api ERROR <',request,error);return{'error':error};});},/* Maakt normale POST data (string) van meegegeven Object */flexySerializeJSON:function flexySerializeJSON(data){var serializeString='';if(!_.isUndefined(data)){// sort the keys, so the returned string has always same order of keys
+     */api:function api(options){var self=this;_flexyState2.default.showProgress();var method='GET';if(options.url==='row'&&!_.isUndefined(options.data.where))method='POST';var request={method:'POST',url:'_api/'+options.url,data:options.data,headers:{'Authorization':AUTH_TOKEN,'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'},transformRequest:[function(data){var requestString='';if(data){requestString=self.flexySerializeJSON(data);}return requestString;}],onDownloadProgress:function onDownloadProgress(progressEvent){_flexyState2.default.setProgress(progressEvent.loaded,progressEvent.total);}};_flexyState2.default.debug&&console.log('api > ',request);return _axios2.default.request(request).then(function(response){_flexyState2.default.hideProgress();_flexyState2.default.debug&&console.log('api < ',response);return response;}).catch(function(error){_flexyState2.default.hideProgress();_flexyState2.default.addMessage(self.error_api,'danger');console.log('api ERROR <',request,error);return{'error':error};});},/* Maakt normale POST data (string) van meegegeven Object */flexySerializeJSON:function flexySerializeJSON(data){var serializeString='';if(!_.isUndefined(data)){// sort the keys, so the returned string has always same order of keys
 var keys=Object.keys(data).sort();// Loop the keys
 for(var i=0;i<keys.length;i++){var key=keys[i];if(serializeString!=='')serializeString+='&';// array
 if(_.isArray(data[key])){data[key].forEach(function(el,index){if(serializeString!=='')serializeString+='&';serializeString+=encodeURIComponent(key)+'[]='+encodeURIComponent(el);});}// object
@@ -15357,6 +15358,127 @@ if(_.isObject(data[key])){_.forEach(data[key],function(el,index){if(serializeStr
 else{serializeString+=encodeURIComponent(key)+'='+encodeURIComponent(data[key]);}}}return serializeString;}}});/**
  Main Vue Instance
  */var vm=new _vue2.default({el:'#main',components:{FlexyBlocks:_flexyBlocks2.default,FlexyMessages:_flexyMessages2.default,FlexyPagination:_flexyPagination2.default,FlexyGrid:_flexyGrid2.default,FlexyForm:_flexyForm2.default},data:{state:_flexyState2.default.state}});
+
+/***/ },
+/* 76 */
+/***/ function(module, exports, __webpack_require__) {
+
+﻿; (function () {
+    var vueLang = {};
+    vueLang.install = function (Vue, options) {
+
+        // register the replace filter (Credits: @Haixing-Hu, https://github.com/Haixing-Hu/vue-format/)
+        var replace = __webpack_require__(77);
+        Vue.filter("replace", replace);
+
+        if(!options.lang){console.warn("vue-lang: No default language given. Please specify as {lang: ..}")}
+
+        // Set parameters
+        Vue.locales = options.locales || {}
+        Vue.prototype.$currentLang = options.lang || ""
+
+        // Set current language file
+        if(Vue.prototype.$currentLang){
+            Vue.prototype.$lang = Vue.locales[Vue.prototype.$currentLang]
+        }else{
+            Vue.prototype.$lang = {}
+        }
+
+        // Set list of available languages
+        Vue.prototype.$langs = Object.keys(Vue.locales)
+
+        // Create function to set the language
+        Vue.prototype.$setLang = function(language) {
+            Vue.prototype.$currentLang = language
+            if(language && Vue.prototype.$langs.indexOf(language) > -1){
+                Vue.prototype.$lang = Vue.locales[language]
+                update(this.$root);
+            }else{
+                console.warn("vue-lang: Language not given or not initialized")
+            }
+        }
+    }
+
+    if (true) {
+        module.exports = vueLang;
+    } else if (typeof define == "function" && define.amd) {
+        define([], function () { return vueLang });
+    } else if (window.Vue) {
+        window.vueLang = vueLang;
+        Vue.use(vueLang);
+    }
+
+    /**
+     * Credits: @Haixing-Hu
+     *
+     * Updates all the watchers in the Vue instance of a component tree.
+     *
+     * This function is inspired by the "_digest()" function in the
+     * "src/instance/scope.js" of the source of Vue.js, excepts that this function
+     * updates the children components no matter whether it is inheritable.
+     *
+     * @param vm
+     *    the root of the component tree.
+     */
+    function update(vm) {
+        var i = vm._watchers.length
+        while (i--) {
+            vm._watchers[i].update(true); // shallow updates
+        }
+        var children = vm.$children;
+        i = children.length;
+        while (i--) {
+            var child = children[i]
+            update(child)
+        }
+    }
+
+})();
+
+
+/***/ },
+/* 77 */
+/***/ function(module, exports) {
+
+/**
+ * Replace {0} in message. Credits: @Haixing-Hu
+ *
+ * @param template
+ *    the message template, which contains zero or more placeholders, e.g.,
+ *    "{0}", "{1}", ...
+ * @param arg1, arg2, ...
+ *    zero or more arguments used to replace the corresponding placeholders
+ *    in the message template.
+ * @return
+ *    the formatted message.
+ * @author Haixing Hu
+ */
+
+var PLACEHOLDER_REGEXP = /\{([0-9a-zA-Z]+)\}/g;
+
+module.exports = function() {
+    if(arguments.length === 0) {
+        return ""
+    }else if(arguments.length === 1) {
+        return arguments[0]
+    }else{
+        var args = arguments
+        var message = args[0]
+        return message.replace(PLACEHOLDER_REGEXP, function(match, placeholder, index) {
+            if (message[index - 1] === "{" && message[index + match.length] === "}") {
+                return placeholder;
+            }else{
+            var i = parseInt(placeholder)
+            var result = args[i + 1]
+                if (result === null || result === undefined) {
+                    return ""
+                }else{
+                    return result
+                }
+            }
+        })
+    }
+}
 
 /***/ }
 /******/ ]);
