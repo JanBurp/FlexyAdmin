@@ -657,7 +657,7 @@ function applyToTag(styleElement, obj) {
  * Simple State management for:
  * - progress bar
  * - messages
- */exports.default={name:'FlexyState',debug:false,state:{progress:0,messages:[]},showProgress:function showProgress(){this.state.progress=10;this.debug&&console.log('state.progress',this.state.progress);},hideProgress:function hideProgress(){var self=this;self.state.progress=100;window.setTimeout(function(){self.state.progress=0;self.debug&&console.log('state.progress',self.state.progress);},250);},setProgress:function setProgress(value,max){var percent=max/value*100;if(percent<10)percent=10;// Start met minimaal 10%
+ */exports.default={name:'FlexyState',debug:true,state:{progress:0,messages:[]},showProgress:function showProgress(){this.state.progress=10;this.debug&&console.log('state.progress',this.state.progress);},hideProgress:function hideProgress(){var self=this;self.state.progress=100;window.setTimeout(function(){self.state.progress=0;self.debug&&console.log('state.progress',self.state.progress);},250);},setProgress:function setProgress(value,max){var percent=max/value*100;if(percent<10)percent=10;// Start met minimaal 10%
 this.state.progress=percent;this.debug&&console.log('state.progress',this.state.progress);},addMessage:function addMessage(message,type){if(_.isUndefined(type))type='success';var self=this;self.state.messages.push({'text':message,'type':type});self.debug&&console.log('state.messages',self.state.messages);window.setTimeout(function(){self.state.messages.shift();self.debug&&console.log('state.messages',self.state.messages);},3000);}};
 
 /***/ },
@@ -14102,8 +14102,18 @@ break;}}},postField:function postField(value){var self=this;var data={};data[sel
   * Maak items klaar voor tonen in het grid:
   * - Voeg informatie van een veld toe aan elke cell
   * - Bij een tree: voeg informatie aan elke row toe: {level:(int),is_child:(bool),has_children:(bool)}
-  */created:function created(){var data=this.data;var isTree=this.gridType=='tree';if(isTree){var parents={};var level=0;var parent_key=0;}for(var i=0;i<data.length;i++){var row=data[i];var id=row['id'];// Add schema to each cell
-for(var field in row){var schema={'type':'string','grid-type':'text','readonly':false};if(this.fields[field])schema=this.fields[field].schema;data[i][field]={'type':schema['grid-type']||schema['form-type'],'value':row[field]};if(schema.type==='number'&&schema['form-type']==='select'){var jsonValue=JSON.parse(row[field].value);data[i][field]={'type':schema['grid-type']||schema['form-type'],'value':Object.values(jsonValue)[0],'id':Object.keys(jsonValue)[0]};}data[i][field].name=field;}// Add tree info to each row
+  */created:function created(){this.items=this.addTreeInfo(this.data,true);},data:function data(){return{items:[],findTerm:this.find,selected:[],draggable:{item:false,orderStart:0,oldItems:false,children:false,newPage:false}};},computed:{/**
+     * Bepaal het type grid: table, ordered of tree
+     */gridType:function gridType(){var type='table';if(typeof this.fields.order!=='undefined'&&this.order===''&&this.find==='')type='ordered';if(typeof this.fields.self_parent!=='undefined'&&this.order===''&&this.find==='')type='tree';return type;},/**
+     * Geeft class van type grid
+     */gridTypeClass:function gridTypeClass(){return'grid-type-'+this.gridType;},/**
+     * Test if grid needs pagination
+     */needsPagination:function needsPagination(){return typeof this.info.num_pages!=='undefined'&&this.info.num_pages>1;},/**
+     * Options for draggable
+     */draggableOptions:function draggableOptions(){return{draggable:'tr',handle:'.draggable-handle',forceFallback:true};}},methods:{/*
+      Voeg (tree)info toe aan meegegeven items
+    */addTreeInfo:function addTreeInfo(items,addSchema){var data=items;var isTree=this.gridType=='tree';if(isTree){var parents={};var level=0;var parent_key=0;}for(var i=0;i<data.length;i++){var row=data[i];var id=row['id'];// Add schema to each cell
+if(addSchema===true){for(var field in row){var schema={'type':'string','grid-type':'text','readonly':false};if(this.fields[field])schema=this.fields[field].schema;data[i][field]={'type':schema['grid-type']||schema['form-type'],'value':row[field]};if(schema.type==='number'&&schema['form-type']==='select'){var jsonValue=JSON.parse(row[field].value);data[i][field]={'type':schema['grid-type']||schema['form-type'],'value':Object.values(jsonValue)[0],'id':Object.keys(jsonValue)[0]};}data[i][field].name=field;}}// Add tree info to each row
 if(isTree){row._info={level:0,is_child:false,has_children:false};parent_key=row.self_parent.value;// if not on toplevel:
 if(parent_key>0){row._info.is_child=true;// are we on a known level?
 if(!_.isUndefined(parents[parent_key])){// yes: get that level
@@ -14113,17 +14123,23 @@ level=0;}// add level info
 row._info.level=level;}// Keep new row
 data[i]=row;}// Add more tree info (has_children)
 if(isTree&&parents!=={}){_.forEach(data,function(row,key){var id=row.id.value;var level=parents[id];if(level){data[key]._info.has_children=true;}});}// Console
-if(isTree&&_flexyState2.default.debug){console.log('treeInfo:');_.forEach(data,function(row){console.log(row.id.value,row._info);});}// Ready, save it
-this.items=data;},data:function data(){return{items:[],findTerm:this.find,selected:[],dragging:false};},computed:{/**
-     * Bepaal het type grid: table, ordered of tree
-     */gridType:function gridType(){var type='table';if(typeof this.fields.order!=='undefined'&&this.order===''&&this.find==='')type='ordered';if(typeof this.fields.self_parent!=='undefined'&&this.order===''&&this.find==='')type='tree';return type;},/**
-     * Geeft class van type grid
-     */gridTypeClass:function gridTypeClass(){return'grid-type-'+this.gridType;},/**
-     * Test if grid needs pagination
-     */needsPagination:function needsPagination(){return typeof this.info.num_pages!=='undefined'&&this.info.num_pages>1;}},methods:{hasSelection:function hasSelection(){return this.selected.length>0;},isSelected:function isSelected(id){return this.selected.indexOf(id)>-1;},select:function select(id){var index=this.selected.indexOf(id);if(index>-1){this.selected.splice(index,1);}else{this.selected.push(id);}},reverseSelection:function reverseSelection(){var ids=[];for(var i=0;i<this.data.length;i++){ids.push(this.data[i].id.value);}this.selected=_.difference(ids,this.selected);},rowLevel:function rowLevel(row){if(_.isUndefined(row._info))return 0;return row._info.level;},isEditable:function isEditable(name){var editable=false;if(!_.isUndefined(this.fields[name]))editable=this.fields[name].schema['grid-edit'];return editable;},headerClass:function headerClass(field){return'grid-header-type-'+field.schema['form-type'];},/**
+if(isTree&&_flexyState2.default.debug){console.log('treeInfo:');_.forEach(data,function(row){console.log('id:',row.id.value,'order:',row.order.value,'level:',row._info.level,'isChild:',row._info.is_child,'hasChildren:',row._info.has_children,'title:',row.str_title.value);});}return data;},hasSelection:function hasSelection(){return this.selected.length>0;},isSelected:function isSelected(id){return this.selected.indexOf(id)>-1;},select:function select(id){var index=this.selected.indexOf(id);if(index>-1){this.selected.splice(index,1);}else{this.selected.push(id);}},reverseSelection:function reverseSelection(){var ids=[];for(var i=0;i<this.data.length;i++){ids.push(this.data[i].id.value);}this.selected=_.difference(ids,this.selected);},rowLevel:function rowLevel(row){if(_.isUndefined(row._info))return 0;return row._info.level;},isEditable:function isEditable(name){var editable=false;if(!_.isUndefined(this.fields[name]))editable=this.fields[name].schema['grid-edit'];return editable;},headerClass:function headerClass(field){return'grid-header-type-'+field.schema['form-type'];},/**
      * Create url, used for all links (pagination, edit, sort etc..)
-     */createdUrl:function createdUrl(parts){var defaults={order:_.isUndefined(this.order)?'':this.order,find:_.isUndefined(this.find)?'':this.find,offset:_.isUndefined(this.info.offset)?0:this.info.offset};parts=_.extend(defaults,parts);return location.pathname+'?options={"offset":"'+parts.offset+'","order":"'+parts.order+'","find":"'+parts.find+'"}';},editUrl:function editUrl(id){return'admin/show/form/'+this.name+'/'+id;},startFinding:function startFinding(event){if(event)event.preventDefault();var url=this.createdUrl({find:this.findTerm});window.location.assign(url);},draggableOptions:function draggableOptions(){return{draggable:'tr',handle:'.draggable-handle',forceFallback:true};},isDragging:function isDragging(id){return this.dragging==id;},draggable_onStart:function draggable_onStart(event){this.dragging=event.item.dataset.id;},draggable_onEnd:function draggable_onEnd(event){var oldIndex=event.oldIndex;var newIndex=event.newIndex;if(oldIndex!==newIndex){// 4) Move items
-this.items=_jdbTools2.default.moveMultipleArrayItems(this.items,oldIndex,0,newIndex);}this.dragging=false;}}};
+     */createdUrl:function createdUrl(parts){var defaults={order:_.isUndefined(this.order)?'':this.order,find:_.isUndefined(this.find)?'':this.find,offset:_.isUndefined(this.info.offset)?0:this.info.offset};parts=_.extend(defaults,parts);return location.pathname+'?options={"offset":"'+parts.offset+'","order":"'+parts.order+'","find":"'+parts.find+'"}';},editUrl:function editUrl(id){return'admin/show/form/'+this.name+'/'+id;},startFinding:function startFinding(event){if(event)event.preventDefault();var url=this.createdUrl({find:this.findTerm});window.location.assign(url);},/**
+     * Dragging methods
+     */isHiddenChild:function isHiddenChild(id){if(this.draggable.children===false)return false;return this.draggable.children.indexOf(id)>=0;},isDragging:function isDragging(id){return this.draggable.item==id;},draggable_onStart:function draggable_onStart(event){var index=event.oldIndex;// Onthoud 'id' van draggable item
+this.draggable.item=event.item.dataset.id;// Onthoud 'order' van eerste item
+this.draggable.orderStart=this.items[0]['order'].value;// Onthoud kopie van huidige items
+this.draggable.oldItems=this.items;// Als tree, onthoud dan de children als die er zijn
+this.draggable.children=false;if(this.gridType==='tree'&&this.items[index]._info.has_children){this.draggable.children=[];var row=this.items[index]._info;var childIndex=index;var node_level=0;do{childIndex++;if(!_.isUndefined(this.items[childIndex])){node_level=this.items[childIndex]._info.level;if(node_level>row.level)this.draggable.children.push(this.items[childIndex].id.value);}}while(node_level>row.level&&!_.isUndefined(this.items[childIndex]));}},draggable_onEnd:function draggable_onEnd(event){var self=this;var oldIndex=event.oldIndex;var newIndex=event.newIndex;if(oldIndex!==newIndex){if(this.gridType==='tree'){var number_of_children=this.draggable.children.length;// Pas parent van verplaatste item aan
+// Bijna altijd 0, behalve als het volgende item een hoger level heeft: dan heeft het dezelfde parent als dat item, dus als er een item na komt, neem die parent.
+// Check eerst of het niet de laatste is, want dan hoeven we al niet verder te kijken
+var parent_id=0;if(newIndex+1<this.items.length){parent_id=this.items[newIndex+1].self_parent.value;}this.items[newIndex].self_parent.value=parent_id;// Verplaats children
+this.items=_jdbTools2.default.moveMultipleArrayItems(this.items,oldIndex+1,number_of_children,newIndex+1);}// Update 'order'
+var order=this.draggable.orderStart;for(var i=0;i<this.items.length;i++){this.items[i].order.value=order;order++;}// Vernieuw de tree info
+if(this.gridType=='tree')this.items=this.addTreeInfo(this.items);// Laat children weer zien
+this.draggable.children=false;if(_flexyState2.default.debug){console.log('draggable_onEnd ---------');_.forEach(self.items,function(row){if(self.gridType==='tree'){console.log(row.id.value,row.order.value,row.str_title.value,row._info.level,row._info.is_child,row._info.has_children);}else{console.log(row.id.value,row.order.value,row.str_title.value);}});}// TODO Update server...
+}this.draggable.item=false;}}};
 
 /***/ },
 /* 46 */
@@ -14637,7 +14653,7 @@ module.exports={render:function (){with(this) {
     attrs: {
       "list": items,
       "element": "tbody",
-      "options": draggableOptions()
+      "options": draggableOptions
     },
     on: {
       "start": draggable_onStart,
@@ -14645,6 +14661,12 @@ module.exports={render:function (){with(this) {
     }
   }, [_l((items), function(row) {
     return _h('tr', {
+      directives: [{
+        name: "show",
+        rawName: "v-show",
+        value: (!isHiddenChild(row.id.value)),
+        expression: "!isHiddenChild(row.id.value)"
+      }],
       key: row.id.value,
       class: {
         'table-danger': isSelected(row.id.value)
