@@ -3595,6 +3595,9 @@ a > .fa, .btn > .fa {
   margin: 20% auto;
   box-shadow: 0 0 1.25rem #373a3c; }
 
+#login-form h1 {
+  text-transform: none; }
+
 /* HEADER & FOOTER */
 #header, #footer {
   padding-top: 0px;

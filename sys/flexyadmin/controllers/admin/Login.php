@@ -9,10 +9,20 @@
 
 class Login extends MY_Controller {
 
+  var $lang = '';
+
 	public function __construct() {
 		parent::__construct();
 		$this->load->library('session');
 		$this->load->library('flexy_auth');
+		// Get prefered language from users browser settings or settings
+		if ( isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+      $lang=substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+    }
+    if (empty($lang) or !in_array($lang,$this->config->item('ADMIN_LANGUAGES'))) {
+		  $lang = array_shift($this->config->item('ADMIN_LANGUAGES'));
+    }
+    $this->lang->load('login',$lang);
 	}
 
 	public function index() {

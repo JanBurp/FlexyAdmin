@@ -45,6 +45,7 @@ $config['MULTIPLE_UPLOAD']		    = TRUE;
 $config['PAGINATION']             = TRUE;
 $config['GRID_EDIT']              = TRUE;
 $config['GRID_WHERE']             = FALSE;
+$config['ADMIN_LANGUAGES']        = array('nl','en');
 
 
 /*
