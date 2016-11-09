@@ -3700,6 +3700,12 @@ a > .fa, .btn > .fa {
   border-radius: 0.25rem;
   background-color: #DEA; }
 
+/* SORTABLE */
+.sortable-chosen, .sortable-fallback {
+  background-color: #f7fbea;
+  border-top: dashed 2px #696;
+  border-bottom: dashed 2px #696; }
+
 /* TRANSITIONS */
 .slideUp-enter-active {
   transition: all .2s ease; }

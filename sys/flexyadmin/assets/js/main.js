@@ -15,6 +15,7 @@ import Vue              from 'vue'
 import Lang             from 'vue-lang'
 import Axios            from 'axios'
 
+import jdb              from './jdb-tools.js'
 import flexyState       from './flexy-state.js'
 import FlexyMessages    from './components/flexy-messages.vue'
 

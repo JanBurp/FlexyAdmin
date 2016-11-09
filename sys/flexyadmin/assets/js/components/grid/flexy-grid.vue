@@ -1,4 +1,7 @@
 <script>
+import draggable        from 'vuedraggable'
+
+import jdb              from '../../jdb-tools.js'
 import flexyState       from '../../flexy-state.js'
 
 import FlexyPagination  from '../flexy-pagination.vue'
@@ -6,7 +9,7 @@ import FlexyGridCell    from './flexy-grid-cell.vue'
 
 export default {
   name: 'FlexyGrid',
-  components: {FlexyGridCell,FlexyPagination },
+  components: {draggable,FlexyGridCell,FlexyPagination },
   props:{
     'title':String,
     'name':String,
@@ -15,10 +18,10 @@ export default {
       type: [Array,Boolean],
       default:false
     },
-    'data-url':{
-      type: [String,Boolean],
-      default:false
-    },
+    // 'data-url':{
+    //   type: [String,Boolean],
+    //   default:false
+    // },
     'info':Object,
     'order': {
       type   :String,
@@ -27,6 +30,104 @@ export default {
     'find':{
       type   :[String,Object],
       default:'',
+    }
+  },
+  
+ /**
+  * Maak items klaar voor tonen in het grid:
+  * - Voeg informatie van een veld toe aan elke cell
+  * - Bij een tree: voeg informatie aan elke row toe: {level:(int),is_child:(bool),has_children:(bool)}
+  */
+  created : function() {
+    var data     = this.data;
+    var isTree   = this.gridType=='tree';
+    if (isTree) {
+      var parents    = {};
+      var level      = 0;
+      var parent_key = 0;
+    }
+    for (var i = 0; i < data.length; i++) {
+      var row = data[i];
+      var id = row['id'];
+      // Add schema to each cell
+      for (var field in row) {
+        var schema = {
+          'type'      : 'string',
+          'grid-type' : 'text',
+          'readonly'  : false,
+        };
+        if ( this.fields[field] ) schema = this.fields[field].schema;
+        data[i][field] = {
+          'type'  : schema['grid-type'] || schema['form-type'],
+          'value' : row[field]
+        };
+        if ( schema.type==='number' && schema['form-type']==='select') {
+          var jsonValue = JSON.parse(row[field].value);
+          data[i][field] = {
+            'type'  : schema['grid-type'] || schema['form-type'],
+            'value' : Object.values(jsonValue)[0],
+            'id'    : Object.keys(jsonValue)[0],
+          };
+        }
+        data[i][field].name = field;
+      }
+      // Add tree info to each row
+      if (isTree) {
+        row._info = {
+          level         : 0,
+          is_child      : false,
+          has_children  : false,
+        };
+        parent_key   = row.self_parent.value;
+        // if not on toplevel:
+        if (parent_key>0) {
+          row._info.is_child=true;
+          // are we on a known level?
+          if ( ! _.isUndefined(parents[parent_key]) ) {
+            // yes: get that level
+            level = parents[parent_key];
+          }
+          else {
+            // no: remember new level
+            level++;
+            parents[parent_key] = level;
+          }
+        }
+        else {
+          // on root, so level = 0
+          level=0;
+        }
+        // add level info
+        row._info.level = level;
+      }
+      // Keep new row
+      data[i] = row;
+    }
+    // Add more tree info (has_children)
+    if (isTree && parents!=={}) {
+      _.forEach(data,function(row,key){
+        var id = row.id.value;
+        var level = parents[id];
+        if (level) {
+          data[key]._info.has_children = true;
+        }
+      });
+    }
+    // Console
+    if (isTree && flexyState.debug) {
+      console.log('treeInfo:');
+      _.forEach(data,function(row){ console.log(row.id.value,row._info); });
+    }
+    // Ready, save it
+    this.items = data;
+  },
+  
+  data : function() {
+    return {
+      items       : [],
+      findTerm    : this.find,
+      selected    : [],
+      dragging    : false,
     }
   },
   
@@ -47,111 +148,11 @@ export default {
       return 'grid-type-'+this.gridType
     },
     /**
-     * Maak data klaar voor tonen in het grid:
-     * - Voeg informatie van een veld toe aan elke cell
-     * - Bij een tree: voeg informatie aan elke row toe: {level:(int),is_child:(bool),has_children:(bool)}
-     */
-    gridData : function() {
-      var data     = this.data;
-      var isTree   = this.gridType=='tree';
-      if (isTree) {
-        var parents    = {};
-        var level      = 0;
-        var parent_key = 0;
-      }
-      
-      for (var i = 0; i < data.length; i++) {
-        var row = data[i];
-        var id = row['id'];
-        // Add schema to each cell
-        for (var field in row) {
-          var schema = {
-            'type'      : 'string',
-            'grid-type' : 'text',
-            'readonly'  : false,
-          };
-          if ( this.fields[field] ) schema = this.fields[field].schema;
-          data[i][field] = {
-            'type'  : schema['grid-type'] || schema['form-type'],
-            'value' : row[field]
-          };
-          if ( schema.type==='number' && schema['form-type']==='select') {
-            var jsonValue = JSON.parse(row[field].value);
-            data[i][field] = {
-              'type'  : schema['grid-type'] || schema['form-type'],
-              'value' : Object.values(jsonValue)[0],
-              'id'    : Object.keys(jsonValue)[0],
-            };
-          }
-          data[i][field].name = field;
-        }
-        // Add tree info to each row
-        if (isTree) {
-          row._info = {
-            level         : 0,
-            is_child      : false,
-            has_children  : false,
-          };
-          parent_key   = row.self_parent.value;
-          // if not on toplevel:
-          if (parent_key>0) {
-            row._info.is_child=true;
-            // are we on a known level?
-            if ( ! _.isUndefined(parents[parent_key]) ) {
-              // yes: get that level
-              level = parents[parent_key];
-            }
-            else {
-              // no: remember new level
-              level++;
-              parents[parent_key] = level;
-            }
-          }
-          else {
-            // on root, so level = 0
-            level=0;
-          }
-          // add level info
-          row._info.level = level;
-        }
-        
-        // Keep new row
-        data[i] = row;
-      }
-      
-      // Add more tree info (has_children)
-      if (isTree && parents!=={}) {
-        _.forEach(data,function(row,key){
-          var id = row.id.value;
-          var level = parents[id];
-          if (level) {
-            data[key]._info.has_children = true;
-          }
-        });
-      }
-      
-      // Console
-      if (isTree && flexyState.debug) {
-        console.log('treeInfo:');
-        _.forEach(data,function(row){ console.log(row.id.value,row._info); });
-      }
-      
-      return data;
-    },
-    /**
      * Test if grid needs pagination
      */
     needsPagination : function(){
       return (typeof(this.info.num_pages)!=='undefined' &&  this.info.num_pages > 1);
     },
-    
-  },
-  
-  data : function() {
-    return {
-      findTerm : this.find,
-      selected : [],
-    }
   },
   
   methods:{
@@ -203,9 +204,9 @@ export default {
      */
     createdUrl : function(parts){
       var defaults = {
-        order   :this.order,
-        find    :this.find,
-        offset  :this.info.offset
+        order   : _.isUndefined( this.order ) ? '':this.order,
+        find    : _.isUndefined( this.find ) ? '':this.find,
+        offset  : _.isUndefined( this.info.offset) ? 0:this.info.offset,
       };
       parts = _.extend( defaults, parts );
       return location.pathname + '?options={"offset":"'+parts.offset+'","order":"'+parts.order+'","find":"'+parts.find+'"}';
@@ -219,6 +220,29 @@ export default {
       if (event) event.preventDefault();
       var url = this.createdUrl({find:this.findTerm});
       window.location.assign(url);
+    },
+    
+    draggableOptions : function() {
+      return {
+        draggable     : 'tr',
+        handle        : '.draggable-handle',
+        forceFallback : true,
+      }
+    },
+    isDragging : function(id) {
+      return this.dragging == id;
+    },
+    draggable_onStart: function(event){
+      this.dragging = event.item.dataset.id;
+    },
+    draggable_onEnd  : function(event){
+      var oldIndex = event.oldIndex;
+      var newIndex = event.newIndex;
+      if (oldIndex!==newIndex) {
+        // 4) Move items
+        this.items = jdb.moveMultipleArrayItems( this.items, oldIndex, 0, newIndex );
+      }
+      this.dragging = false;
     },
     
   }
@@ -256,23 +280,22 @@ export default {
           </tr>
         </thead>
         <!-- GRID BODY -->
-        <tbody id="grid-body">
+        <draggable  :list="items" element="tbody" :options="draggableOptions()" @start="draggable_onStart" @end="draggable_onEnd">
           <!-- ROW -->
-          <tr v-for="row in gridData" :data-id="row.id.value" :class="{'table-danger':isSelected(row.id.value)}" :level="rowLevel(row)">
+          <tr v-for="row in items" :data-id="row.id.value" :class="{'table-danger':isSelected(row.id.value)}" :level="rowLevel(row)" :key="row.id.value">
             <template v-for="cell in row">
               <!-- PRIMARY CELL -->
               <td v-if="cell.type=='primary'" class="action">
                 <a class="btn btn-sm btn-outline-warning" :href="editUrl(cell.value)"><span class="fa fa-pencil"></span></a>
                 <div class="btn btn-sm btn-outline-danger action-delete"><span class="fa fa-remove"></span></div>
                 <div v-on:click="select(row.id.value)" class="btn btn-sm btn-outline-info action-select"><span v-if="!isSelected(row.id.value)" class="fa fa-circle-o"></span><span v-if="isSelected(row.id.value)" class="fa fa-circle"></span></div>
-                <div v-if="gridType!=='table'"class="btn btn-sm btn-outline-info action-move"><span class="fa fa-reorder"></span></div>
+                <div v-if="gridType!=='table'"class="draggable-handle btn btn-sm btn-outline-info action-move" :class="{'active':isDragging(row.id.value)}"><span class="fa fa-reorder"></span></div>
               </td>
               <!-- CELL -->
               <flexy-grid-cell v-else :type="cell.type" :name="cell.name" :value="cell.value" :level="rowLevel(row)" :primary="{'table':name,'id':row.id.value}" :editable="isEditable(cell.name)"></flexy-grid-cell>
             </template>
           </tr>
-        </tbody>
-        
+        </draggable>
       </table>
     </div>
     <!-- FOOTER -->
@@ -292,4 +315,6 @@ export default {
   .grid th.grid-header-type-primary {width:10rem;max-width:10rem;white-space:nowrap;}
   .grid.grid-type-tree th.grid-header-type-primary {width:10rem;max-width:10rem;}
   .grid.grid-type-table th.grid-header-type-primary {width:9rem;max-width:9rem;}
+  .grid .draggable-handle {cursor:move;}
+  .grid .sortable-fallback {display:none;}
 </style>
