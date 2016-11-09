@@ -557,7 +557,7 @@ function filter_by_key($a,$preKey,$replaceKey=FALSE) {
 	$len=strlen($preKey);
 	foreach ($a as $key => $value) {
 		$newKey=$key;
-		if ($replaceKey) $newKey=str_replace($preKey,'',$newKey);
+		if ($replaceKey!==false) $newKey=str_replace($preKey,'',$newKey);
 		if (substr($key,0,$len)==$preKey) $arr[$newKey]=$value;
 	}
 	return $arr;
