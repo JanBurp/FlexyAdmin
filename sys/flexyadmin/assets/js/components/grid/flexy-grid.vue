@@ -39,87 +39,7 @@ export default {
   * - Bij een tree: voeg informatie aan elke row toe: {level:(int),is_child:(bool),has_children:(bool)}
   */
   created : function() {
-    var data     = this.data;
-    var isTree   = this.gridType=='tree';
-    if (isTree) {
-      var parents    = {};
-      var level      = 0;
-      var parent_key = 0;
-    }
-    for (var i = 0; i < data.length; i++) {
-      var row = data[i];
-      var id = row['id'];
-      // Add schema to each cell
-      for (var field in row) {
-        var schema = {
-          'type'      : 'string',
-          'grid-type' : 'text',
-          'readonly'  : false,
-        };
-        if ( this.fields[field] ) schema = this.fields[field].schema;
-        data[i][field] = {
-          'type'  : schema['grid-type'] || schema['form-type'],
-          'value' : row[field]
-        };
-        if ( schema.type==='number' && schema['form-type']==='select') {
-          var jsonValue = JSON.parse(row[field].value);
-          data[i][field] = {
-            'type'  : schema['grid-type'] || schema['form-type'],
-            'value' : Object.values(jsonValue)[0],
-            'id'    : Object.keys(jsonValue)[0],
-          };
-        }
-        data[i][field].name = field;
-      }
-      // Add tree info to each row
-      if (isTree) {
-        row._info = {
-          level         : 0,
-          is_child      : false,
-          has_children  : false,
-        };
-        parent_key   = row.self_parent.value;
-        // if not on toplevel:
-        if (parent_key>0) {
-          row._info.is_child=true;
-          // are we on a known level?
-          if ( ! _.isUndefined(parents[parent_key]) ) {
-            // yes: get that level
-            level = parents[parent_key];
-          }
-          else {
-            // no: remember new level
-            level++;
-            parents[parent_key] = level;
-          }
-        }
-        else {
-          // on root, so level = 0
-          level=0;
-        }
-        // add level info
-        row._info.level = level;
-      }
-      // Keep new row
-      data[i] = row;
-    }
-    // Add more tree info (has_children)
-    if (isTree && parents!=={}) {
-      _.forEach(data,function(row,key){
-        var id = row.id.value;
-        var level = parents[id];
-        if (level) {
-          data[key]._info.has_children = true;
-        }
-      });
-    }
-    // Console
-    if (isTree && flexyState.debug) {
-      console.log('treeInfo:');
-      _.forEach(data,function(row){ console.log(row.id.value,row._info); });
-    }
-    // Ready, save it
-    this.items = data;
+    this.items = this.addTreeInfo( this.data, true );
   },
   
   data : function() {
@@ -127,7 +47,13 @@ export default {
       items       : [],
       findTerm    : this.find,
       selected    : [],
-      dragging    : false,
+      draggable   : {
+        item        : false,
+        orderStart  : 0,
+        oldItems    : false,
+        children    : false,
+        newPage     : false,
+      },
     }
   },
   
@@ -153,9 +79,109 @@ export default {
     needsPagination : function(){
       return (typeof(this.info.num_pages)!=='undefined' &&  this.info.num_pages > 1);
     },
+    
+    /**
+     * Options for draggable
+     */
+    draggableOptions : function() {
+      return {
+        draggable     : 'tr',
+        handle        : '.draggable-handle',
+        forceFallback : true,
+      }
+    },
+    
   },
   
   methods:{
+    
+    /*
+      Voeg (tree)info toe aan meegegeven items
+    */
+    addTreeInfo : function(items,addSchema) {
+      var data     = items;
+      var isTree   = this.gridType=='tree';
+      if (isTree) {
+        var parents    = {};
+        var level      = 0;
+        var parent_key = 0;
+      }
+      for (var i = 0; i < data.length; i++) {
+        var row = data[i];
+        var id = row['id'];
+        // Add schema to each cell
+        if (addSchema===true) {
+          for (var field in row) {
+            var schema = {
+              'type'      : 'string',
+              'grid-type' : 'text',
+              'readonly'  : false,
+            };
+            if ( this.fields[field] ) schema = this.fields[field].schema;
+            data[i][field] = {
+              'type'  : schema['grid-type'] || schema['form-type'],
+              'value' : row[field]
+            };
+            if ( schema.type==='number' && schema['form-type']==='select') {
+              var jsonValue = JSON.parse(row[field].value);
+              data[i][field] = {
+                'type'  : schema['grid-type'] || schema['form-type'],
+                'value' : Object.values(jsonValue)[0],
+                'id'    : Object.keys(jsonValue)[0],
+              };
+            }
+            data[i][field].name = field;
+          }
+        }
+        // Add tree info to each row
+        if (isTree) {
+          row._info = {
+            level         : 0,
+            is_child      : false,
+            has_children  : false,
+          };
+          parent_key   = row.self_parent.value;
+          // if not on toplevel:
+          if (parent_key>0) {
+            row._info.is_child=true;
+            // are we on a known level?
+            if ( ! _.isUndefined(parents[parent_key]) ) {
+              // yes: get that level
+              level = parents[parent_key];
+            }
+            else {
+              // no: remember new level
+              level++;
+              parents[parent_key] = level;
+            }
+          }
+          else {
+            // on root, so level = 0
+            level=0;
+          }
+          // add level info
+          row._info.level = level;
+        }
+        // Keep new row
+        data[i] = row;
+      }
+      // Add more tree info (has_children)
+      if (isTree && parents!=={}) {
+        _.forEach(data,function(row,key){
+          var id = row.id.value;
+          var level = parents[id];
+          if (level) {
+            data[key]._info.has_children = true;
+          }
+        });
+      }
+      // Console
+      if (isTree && flexyState.debug) {
+        console.log('treeInfo:');
+        _.forEach(data,function(row){ console.log('id:',row.id.value,'order:',row.order.value,'level:',row._info.level,'isChild:',row._info.is_child,'hasChildren:',row._info.has_children,'title:',row.str_title.value); });
+      }
+      return data;
+    },
     
     hasSelection : function() {
       return this.selected.length>0;
@@ -222,27 +248,89 @@ export default {
       window.location.assign(url);
     },
     
-    draggableOptions : function() {
-      return {
-        draggable     : 'tr',
-        handle        : '.draggable-handle',
-        forceFallback : true,
-      }
+
+    /**
+     * Dragging methods
+     */
+    isHiddenChild : function(id) {
+      if (this.draggable.children===false) return false;
+      return this.draggable.children.indexOf(id) >= 0;
     },
     isDragging : function(id) {
-      return this.dragging == id;
+      return this.draggable.item == id;
     },
     draggable_onStart: function(event){
-      this.dragging = event.item.dataset.id;
+      var index = event.oldIndex;
+      // Onthoud 'id' van draggable item
+      this.draggable.item = event.item.dataset.id;
+      // Onthoud 'order' van eerste item
+      this.draggable.orderStart = this.items[0]['order'].value;
+      // Onthoud kopie van huidige items
+      this.draggable.oldItems = this.items;
+      // Als tree, onthoud dan de children als die er zijn
+      this.draggable.children = false;
+      if (this.gridType==='tree' && this.items[index]._info.has_children) {
+        this.draggable.children = [];
+        var row = this.items[index]._info;
+        var childIndex = index;
+        var node_level=0;
+        do {
+          childIndex++;
+          if ( !_.isUndefined(this.items[childIndex]) ) {
+            node_level = this.items[childIndex]._info.level;
+            if (node_level>row.level) this.draggable.children.push(this.items[childIndex].id.value);
+          }
+        } while (node_level>row.level && !_.isUndefined(this.items[childIndex]));
+      }
     },
     draggable_onEnd  : function(event){
+      var self = this;
       var oldIndex = event.oldIndex;
       var newIndex = event.newIndex;
+
       if (oldIndex!==newIndex) {
-        // 4) Move items
-        this.items = jdb.moveMultipleArrayItems( this.items, oldIndex, 0, newIndex );
+        
+        if (this.gridType==='tree') {
+          var number_of_children = this.draggable.children.length;
+          // Pas parent van verplaatste item aan
+          // Bijna altijd 0, behalve als het volgende item een hoger level heeft: dan heeft het dezelfde parent als dat item, dus als er een item na komt, neem die parent.
+          // Check eerst of het niet de laatste is, want dan hoeven we al niet verder te kijken
+          var parent_id = 0; 
+          if (newIndex+1 < this.items.length) {
+            parent_id = this.items[newIndex+1].self_parent.value;
+          }
+          this.items[newIndex].self_parent.value = parent_id;
+          // Verplaats children
+          this.items = jdb.moveMultipleArrayItems(this.items, oldIndex+1, number_of_children, newIndex+1);
+        }
+        
+        // Update 'order'
+        var order = this.draggable.orderStart;
+        for (var i = 0; i < this.items.length; i++) {
+          this.items[i].order.value = order;
+          order++;
+        }
+        // Vernieuw de tree info
+        if (this.gridType=='tree') this.items = this.addTreeInfo(this.items);
+        
+        // Laat children weer zien
+        this.draggable.children = false;
+
+        if (flexyState.debug) {
+          console.log( 'draggable_onEnd ---------' );
+          _.forEach(self.items,function(row){
+            if (self.gridType==='tree') {
+              console.log( row.id.value, row.order.value, row.str_title.value, row._info.level,row._info.is_child,row._info.has_children);
+            }
+            else {
+              console.log( row.id.value, row.order.value, row.str_title.value);
+            }
+          });
+        }
+        
+        // TODO Update server...
       }
-      this.dragging = false;
+      this.draggable.item = false;
     },
     
   }
@@ -280,9 +368,9 @@ export default {
           </tr>
         </thead>
         <!-- GRID BODY -->
-        <draggable  :list="items" element="tbody" :options="draggableOptions()" @start="draggable_onStart" @end="draggable_onEnd">
+        <draggable  :list="items" element="tbody" :options="draggableOptions" @start="draggable_onStart" @end="draggable_onEnd">
           <!-- ROW -->
-          <tr v-for="row in items" :data-id="row.id.value" :class="{'table-danger':isSelected(row.id.value)}" :level="rowLevel(row)" :key="row.id.value">
+          <tr v-for="row in items" :data-id="row.id.value" :class="{'table-danger':isSelected(row.id.value)}" v-show="!isHiddenChild(row.id.value)" :level="rowLevel(row)" :key="row.id.value">
             <template v-for="cell in row">
               <!-- PRIMARY CELL -->
               <td v-if="cell.type=='primary'" class="action">

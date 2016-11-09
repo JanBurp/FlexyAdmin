@@ -6,7 +6,7 @@
 
 export default {
   name: 'FlexyState',
-  debug: false,
+  debug: true,
   state: {
     progress  : 0,
     messages    : [],
