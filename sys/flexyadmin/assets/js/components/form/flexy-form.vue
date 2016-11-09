@@ -113,12 +113,12 @@ export default {
             }
           }
           else {
-            flexyState.addMessage('Niet alle velden zijn goed ingevuld!','danger');
+            flexyState.addMessage( self.$lang.form_validation_error, 'danger');
             if ( !_.isUndefined(response.data.info) ) self.validationErrors = response.data.info.validation_errors;
           }
         }
         else {
-          flexyState.addMessage('<b>ERROR</b> while saving item!','danger');
+          flexyState.addMessage( self.$lang.form_save_error, 'danger');
         }
         return response;
       });
@@ -142,9 +142,9 @@ export default {
   <div class="card-header">
     <h1>{{title}}</h1>
     <div class="btn-group" role="group">
-      <button type="button" v-on:click="cancel()" :disabled="isSaving" class="btn btn-sm btn-danger">Annuleer<span class="fa fa-close"></span></button>
-      <button type="button" v-on:click="save()"   :disabled="isSaving" class="btn btn-sm btn-warning">Bewaar<span class="fa fa-save"></span></button>
-      <button type="button" v-on:click="submit()" :disabled="isSaving" class="btn btn-sm btn-info">Invoeren<span class="fa fa-check"></span></button>
+      <button type="button" v-on:click="cancel()" :disabled="isSaving" class="btn btn-sm btn-danger">{{$lang.cancel}}<span class="fa fa-close"></span></button>
+      <button type="button" v-on:click="save()"   :disabled="isSaving" class="btn btn-sm btn-warning">{{$lang.save}}<span class="fa fa-save"></span></button>
+      <button type="button" v-on:click="submit()" :disabled="isSaving" class="btn btn-sm btn-info">{{$lang.submit}}<span class="fa fa-check"></span></button>
     </div>
   </div>
 
@@ -160,24 +160,24 @@ export default {
           
           <div class="form-group row" :class="validationClass(field)" v-if="isType('textarea',field)">
             <div v-if="validationErrors[field]" class="validation-error form-text text-danger">{{validationErrors[field]}}</div>
-            <label class="col-xs-2 form-control-label" :for="field">{{fields[field]['name']}}</label>
-            <div class="col-xs-10">
+            <label class="col-xs-3 form-control-label" :for="field">{{fields[field]['name']}}</label>
+            <div class="col-xs-9">
               <textarea class="form-control" :id="field" :name="field" :value="row[field]" v-on:input="updateField(field,$event.target.value)" placeholder="">
             </div>
           </div>
 
           <div class="form-group row" :class="validationClass(field)" v-if="isType('checkbox',field)">
             <div v-if="validationErrors[field]" class="validation-error form-text text-danger">{{validationErrors[field]}}</div>
-            <label class="col-xs-2 form-control-label" :for="field">{{fields[field]['name']}}</label>
-            <div class="col-xs-10">
+            <label class="col-xs-3 form-control-label" :for="field">{{fields[field]['name']}}</label>
+            <div class="col-xs-9">
               <input class="form-check-input" type="checkbox" :id="field" :name="field" :value="row[field]" v-on:input="updateField(field,$event.target.value)">
             </div>
           </div>
           
           <div class="form-group row" :class="validationClass(field)" v-if="isType('select',field)">
             <div v-if="validationErrors[field]" class="validation-error form-text text-danger">{{validationErrors[field]}}</div>
-            <label class="col-xs-2 form-control-label" :for="field">{{fields[field]['name']}}</label>
-            <div class="col-xs-10">
+            <label class="col-xs-3 form-control-label" :for="field">{{fields[field]['name']}}</label>
+            <div class="col-xs-9">
               <select class="form-control" :id="field" :name="field" :value="row[field]" v-on:input="updateField(field,$event.target.value)" :multiple="isMultiple(field)">
                 <option v-for="option in options[field]['data']" :value="option.value" :selected="option.value==row[field]">{{option.name}}</option>
               </select>
@@ -186,8 +186,8 @@ export default {
 
           <div class="form-group row" :class="validationClass(field)" v-if="isType('default',field)">
             <div v-if="validationErrors[field]" class="validation-error form-text text-danger">{{validationErrors[field]}}</div>
-            <label class="col-xs-2 form-control-label" :for="field">{{fields[field]['name']}}</label>
-            <div class="col-xs-10"><input type="text" class="form-control" :id="field" :name="field" :value="row[field]" v-on:input="updateField(field,$event.target.value)" placeholder=""></div>
+            <label class="col-xs-3 form-control-label" :for="field">{{fields[field]['name']}}</label>
+            <div class="col-xs-9"><input type="text" class="form-control" :id="field" :name="field" :value="row[field]" v-on:input="updateField(field,$event.target.value)" placeholder=""></div>
           </div>
           
         </template>
@@ -200,7 +200,7 @@ export default {
 
 <style>
   .form .form-group {min-height:2.35rem;}
-  .form-control-label {text-transform:uppercase;font-weight:bold;padding-top:.35rem;}
+  .form-control-label {text-transform:uppercase;font-weight:bold;padding-top:.5rem;padding-bottom:0;margin-bottom:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   textarea {min-height:10rem;max-height:20rem;}
   .form-check-input {margin-left:0;margin-top:.75rem;}
   .validation-error {padding:.25rem 1rem;font-weight:bold;}
