@@ -61,7 +61,7 @@
 /******/ 	__webpack_require__.p = "/flexyadmin/assets/dist/";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 75);
+/******/ 	return __webpack_require__(__webpack_require__.s = 77);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -853,13 +853,13 @@ process.umask = function() { return 0; };
 var __vue_exports__, __vue_options__
 
 /* styles */
-__webpack_require__(70)
+__webpack_require__(72)
 
 /* script */
-__vue_exports__ = __webpack_require__(41)
+__vue_exports__ = __webpack_require__(42)
 
 /* template */
-var __vue_template__ = __webpack_require__(63)
+var __vue_template__ = __webpack_require__(65)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -900,12 +900,12 @@ module.exports = __vue_exports__
 /* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
 var utils = __webpack_require__(0);
-var settle = __webpack_require__(25);
-var buildURL = __webpack_require__(28);
-var parseHeaders = __webpack_require__(34);
-var isURLSameOrigin = __webpack_require__(32);
+var settle = __webpack_require__(26);
+var buildURL = __webpack_require__(29);
+var parseHeaders = __webpack_require__(35);
+var isURLSameOrigin = __webpack_require__(33);
 var createError = __webpack_require__(9);
-var btoa = (typeof window !== 'undefined' && window.btoa) || __webpack_require__(27);
+var btoa = (typeof window !== 'undefined' && window.btoa) || __webpack_require__(28);
 
 module.exports = function xhrAdapter(config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -1001,7 +1001,7 @@ module.exports = function xhrAdapter(config) {
     // This is only done if running in a standard browser environment.
     // Specifically not if we're in a web worker, or react-native.
     if (utils.isStandardBrowserEnv()) {
-      var cookies = __webpack_require__(30);
+      var cookies = __webpack_require__(31);
 
       // Add xsrf header
       var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -1122,7 +1122,7 @@ module.exports = function isCancel(value) {
 "use strict";
 'use strict';
 
-var enhanceError = __webpack_require__(24);
+var enhanceError = __webpack_require__(25);
 
 /**
  * Create an Error with the specified message, config, error code, and response.
@@ -1147,7 +1147,7 @@ module.exports = function createError(message, config, code, response) {
 /* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
 var utils = __webpack_require__(0);
-var normalizeHeaderName = __webpack_require__(33);
+var normalizeHeaderName = __webpack_require__(34);
 
 var PROTECTION_PREFIX = /^\)\]\}',?\n/;
 var DEFAULT_CONTENT_TYPE = {
@@ -1255,7 +1255,7 @@ module.exports = function bind(fn, thisArg) {
 /* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(19);
+module.exports = __webpack_require__(20);
 
 /***/ },
 /* 13 */
@@ -5115,22 +5115,99 @@ module.exports = __webpack_require__(19);
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(73), __webpack_require__(74)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(75), __webpack_require__(76)(module)))
 
 /***/ },
 /* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
+﻿; (function () {
+    var vueLang = {};
+    vueLang.install = function (Vue, options) {
+
+        // register the replace filter (Credits: @Haixing-Hu, https://github.com/Haixing-Hu/vue-format/)
+        var replace = __webpack_require__(55);
+        Vue.filter("replace", replace);
+
+        if(!options.lang){console.warn("vue-lang: No default language given. Please specify as {lang: ..}")}
+
+        // Set parameters
+        Vue.locales = options.locales || {}
+        Vue.prototype.$currentLang = options.lang || ""
+
+        // Set current language file
+        if(Vue.prototype.$currentLang){
+            Vue.prototype.$lang = Vue.locales[Vue.prototype.$currentLang]
+        }else{
+            Vue.prototype.$lang = {}
+        }
+
+        // Set list of available languages
+        Vue.prototype.$langs = Object.keys(Vue.locales)
+
+        // Create function to set the language
+        Vue.prototype.$setLang = function(language) {
+            Vue.prototype.$currentLang = language
+            if(language && Vue.prototype.$langs.indexOf(language) > -1){
+                Vue.prototype.$lang = Vue.locales[language]
+                update(this.$root);
+            }else{
+                console.warn("vue-lang: Language not given or not initialized")
+            }
+        }
+    }
+
+    if (true) {
+        module.exports = vueLang;
+    } else if (typeof define == "function" && define.amd) {
+        define([], function () { return vueLang });
+    } else if (window.Vue) {
+        window.vueLang = vueLang;
+        Vue.use(vueLang);
+    }
+
+    /**
+     * Credits: @Haixing-Hu
+     *
+     * Updates all the watchers in the Vue instance of a component tree.
+     *
+     * This function is inspired by the "_digest()" function in the
+     * "src/instance/scope.js" of the source of Vue.js, excepts that this function
+     * updates the children components no matter whether it is inheritable.
+     *
+     * @param vm
+     *    the root of the component tree.
+     */
+    function update(vm) {
+        var i = vm._watchers.length
+        while (i--) {
+            vm._watchers[i].update(true); // shallow updates
+        }
+        var children = vm.$children;
+        i = children.length;
+        while (i--) {
+            var child = children[i]
+            update(child)
+        }
+    }
+
+})();
+
+
+/***/ },
+/* 15 */
+/***/ function(module, exports, __webpack_require__) {
+
 var __vue_exports__, __vue_options__
 
 /* styles */
-__webpack_require__(67)
+__webpack_require__(69)
 
 /* script */
-__vue_exports__ = __webpack_require__(39)
+__vue_exports__ = __webpack_require__(40)
 
 /* template */
-var __vue_template__ = __webpack_require__(59)
+var __vue_template__ = __webpack_require__(61)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -5164,16 +5241,16 @@ module.exports = __vue_exports__
 
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 var __vue_exports__, __vue_options__
 
 /* script */
-__vue_exports__ = __webpack_require__(40)
+__vue_exports__ = __webpack_require__(41)
 
 /* template */
-var __vue_template__ = __webpack_require__(58)
+var __vue_template__ = __webpack_require__(60)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -5207,19 +5284,19 @@ module.exports = __vue_exports__
 
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 var __vue_exports__, __vue_options__
 
 /* styles */
-__webpack_require__(71)
+__webpack_require__(73)
 
 /* script */
-__vue_exports__ = __webpack_require__(42)
+__vue_exports__ = __webpack_require__(43)
 
 /* template */
-var __vue_template__ = __webpack_require__(65)
+var __vue_template__ = __webpack_require__(67)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -5253,19 +5330,19 @@ module.exports = __vue_exports__
 
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 var __vue_exports__, __vue_options__
 
 /* styles */
-__webpack_require__(68)
+__webpack_require__(70)
 
 /* script */
-__vue_exports__ = __webpack_require__(44)
+__vue_exports__ = __webpack_require__(45)
 
 /* template */
-var __vue_template__ = __webpack_require__(60)
+var __vue_template__ = __webpack_require__(62)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -5299,7 +5376,7 @@ module.exports = __vue_exports__
 
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 /*!
@@ -13074,7 +13151,7 @@ return Vue$2;
 
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13082,7 +13159,7 @@ return Vue$2;
 
 var utils = __webpack_require__(0);
 var bind = __webpack_require__(11);
-var Axios = __webpack_require__(21);
+var Axios = __webpack_require__(22);
 
 /**
  * Create an instance of Axios
@@ -13116,14 +13193,14 @@ axios.create = function create(defaultConfig) {
 
 // Expose Cancel & CancelToken
 axios.Cancel = __webpack_require__(7);
-axios.CancelToken = __webpack_require__(20);
+axios.CancelToken = __webpack_require__(21);
 axios.isCancel = __webpack_require__(8);
 
 // Expose all/spread
 axios.all = function all(promises) {
   return Promise.all(promises);
 };
-axios.spread = __webpack_require__(35);
+axios.spread = __webpack_require__(36);
 
 module.exports = axios;
 
@@ -13132,7 +13209,7 @@ module.exports.default = axios;
 
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13196,7 +13273,7 @@ module.exports = CancelToken;
 
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13204,10 +13281,10 @@ module.exports = CancelToken;
 
 var defaults = __webpack_require__(10);
 var utils = __webpack_require__(0);
-var InterceptorManager = __webpack_require__(22);
-var dispatchRequest = __webpack_require__(23);
-var isAbsoluteURL = __webpack_require__(31);
-var combineURLs = __webpack_require__(29);
+var InterceptorManager = __webpack_require__(23);
+var dispatchRequest = __webpack_require__(24);
+var isAbsoluteURL = __webpack_require__(32);
+var combineURLs = __webpack_require__(30);
 
 /**
  * Create a new instance of Axios
@@ -13288,7 +13365,7 @@ module.exports = Axios;
 
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13347,14 +13424,14 @@ module.exports = InterceptorManager;
 
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 'use strict';
 
 var utils = __webpack_require__(0);
-var transformData = __webpack_require__(26);
+var transformData = __webpack_require__(27);
 var isCancel = __webpack_require__(8);
 var defaults = __webpack_require__(10);
 
@@ -13433,7 +13510,7 @@ module.exports = function dispatchRequest(config) {
 
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -13459,7 +13536,7 @@ module.exports = function enhanceError(error, config, code, response) {
 
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13491,7 +13568,7 @@ module.exports = function settle(resolve, reject, response) {
 
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13518,7 +13595,7 @@ module.exports = function transformData(data, headers, fns) {
 
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -13561,7 +13638,7 @@ module.exports = btoa;
 
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13636,7 +13713,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -13655,7 +13732,7 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13715,7 +13792,7 @@ module.exports = (
 
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -13736,7 +13813,7 @@ module.exports = function isAbsoluteURL(url) {
 
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13811,7 +13888,7 @@ module.exports = (
 
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13830,7 +13907,7 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13874,7 +13951,7 @@ module.exports = function parseHeaders(headers) {
 
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -13908,7 +13985,7 @@ module.exports = function spread(callback) {
 
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -13917,7 +13994,7 @@ module.exports = function spread(callback) {
 value:function on(events,selector,callback){var _this3=this;if(typeof events==='string'){events=events.trim().replace(/\s+/,' ').split(' ');}if(!this||!this.length)return this;if(callback===undefined){callback=selector;selector=null;}if(!callback)return this;var fn=callback;callback=selector?function(e){var els=new NodeList([selector,this]);if(!els.length){return;}els.some(function(el){var target=el.contains(e.target);if(target)fn.call(el,e,el);return target;});}:function(e){fn.apply(this,[e,this]);};events.forEach(function(event){for(var i in _this3){if(_this3[i]===window||isNode(_this3[i])){_this3[i].addEventListener(event,callback,false);Events.push({el:_this3[i],event:event,callback:callback});}}});return this;}},{key:'off',value:function off(events,callback){var _this4=this;if(events instanceof Function){callback=events;events=null;}if(typeof events==='string'&&callback instanceof Function){var _loop=function _loop(i){Events.forEach(function(e){events.events.split(' ').forEach(function(event){if(Events[e]&&Events[e].el===_this4[i]&&Events[e].event===event&&Events[e].callback===callback){Events[e].el.removeEventListener(Events[e].event,Events[e].callback);delete Events[e];}});});};for(var i in this){_loop(i);}}else if(typeof events==='string'){var _loop2=function _loop2(_i){Events.forEach(function(e){events.split(' ').forEach(function(event){if(Events[e]&&Events[e].el===_this4[_i]&&Events[e].event===event){Events[e].el.removeEventListener(Events[e].event,Events[e].callback);delete Events[e];}});});};for(var _i in this){_loop2(_i);}}else if(callback instanceof Function){for(var _i2 in this){for(var e in Events){if(Events[e]&&Events[e].el===this[_i2]&&Events[e].callback===callback){Events[e].el.removeEventListener(Events[e].event,Events[e].callback);delete Events[e];}}}}else{for(var _i3 in this){for(var _e in Events){if(Events[_e]&&Events[_e].el===this[_i3]){Events[_e].el.removeEventListener(Events[_e].event,Events[_e].callback);delete Events[_e];}}}}Events=Events.filter(function(el){return el!==undefined;});return this;}},{key:'onBlur',value:function onBlur(callback){if(!this||!this.length)return this;if(!callback)return this;this.each(function(el){blurList.push({el:el,callback:callback});});if(!blurEvent){blurEvent=function blurEvent(e){blurList.forEach(function(item){var target=item.el.contains(e.target)||item.el===e.target;if(!target)item.callback.call(item.el,e,item.el);});};document.addEventListener('click',blurEvent,false);document.addEventListener('touchstart',blurEvent,false);}return this;}},{key:'offBlur',value:function offBlur(callback){this.each(function(el){for(var e in blurList){if(blurList[e]&&blurList[e].el===el&&(!callback||blurList[e].callback===callback)){delete blurList[e];}}});blurList=blurList.filter(function(el){return el!==undefined;});return this;}},{key:'asArray',get:function get(){return ArrayProto.slice.call(this);}}]);return NodeList;}();var NL=NodeList.prototype;function flatten(arr,owner){var list=[];for(var i in arr){var el=arr[i];if(isNode(el)){if(!~list.indexOf(el))list.push(el);}else if(isNodeList(el)){for(var id in el){list.push(el[id]);}}else if(el!==null){arr.get=NL.get;arr.set=NL.set;arr.call=NL.call;arr.owner=owner;return arr;}}return new NodeList([list,owner]);}Object.getOwnPropertyNames(ArrayProto).forEach(function(key){if(key!=='join'&&key!=='copyWithin'&&key!=='fill'&&NL[key]===undefined){NL[key]=ArrayProto[key];}});if(window.Symbol&&Symbol.iterator){NL[Symbol.iterator]=NL.values=ArrayProto[Symbol.iterator];}var div=document.createElement('div');function setterGetter(prop){var _arguments=arguments,_this5=this;if(div[prop]instanceof Function){NL[prop]=function(){var arr=[];var returnThis=true;for(var i in NL){var el=NL[i];if(el&&el[prop]instanceof Function){el=el[prop].apply(el,_arguments);arr.push(el);if(returnThis&&el!==undefined){returnThis=false;}}else{arr.push(undefined);}}return returnThis?_this5:flatten(arr,_this5);};}else{Object.defineProperty(NL,prop,{get:function get(){var arr=[];for(var i in this){if(this[i]!==null){this[i]=this[i][prop];}arr.push(this[i]);}return flatten(arr,this);},set:function set(value){for(var i in this){if(i){var o=this[i];if(o&&prop in o){o[prop]=value;}}}}});}}for(var prop in div){setterGetter(prop);}function NodeListJS(){return new NodeList(arguments);}window.NL=NodeListJS;exports.default=NodeListJS;
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -13932,7 +14009,7 @@ function translations(){var lang=arguments.length>0&&arguments[0]!==undefined?ar
 function VueFixer(vue){var vue2=!window.Vue||!window.Vue.partial;var mixin={computed:{vue2:function vue2(){return!this.$dispatch;}}};if(!vue2){if(vue.beforeCreate){mixin.create=vue.beforeCreate;delete vue.beforeCreate;}if(vue.beforeMount){vue.beforeCompile=vue.beforeMount;delete vue.beforeMount;}if(vue.mounted){vue.ready=vue.mounted;delete vue.mounted;}}else{if(vue.beforeCompile){vue.beforeMount=vue.beforeCompile;delete vue.beforeCompile;}if(vue.compiled){mixin.compiled=vue.compiled;delete vue.compiled;}if(vue.ready){vue.mounted=vue.ready;delete vue.ready;}}if(!vue.mixins){vue.mixins=[];}vue.mixins.unshift(mixin);return vue;}
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13942,21 +14019,21 @@ function VueFixer(vue){var vue2=!window.Vue||!window.Vue.partial;var mixin={comp
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 39 */
+/* 40 */
 /***/ function(module, exports) {
 
 "use strict";
 'use strict';Object.defineProperty(exports,"__esModule",{value:true});exports.default={name:'FlexyBlocks',props:['text','href'],computed:{chars:function chars(){var text=this.text.split('');var chars=[];for(var i=0;i<text.length;i++){chars[i]={char:text[i],css:'char-'+(text[i]===' '?'space':text[i])};}return chars;}}};
 
 /***/ },
-/* 40 */
+/* 41 */
 /***/ function(module, exports) {
 
 "use strict";
 'use strict';Object.defineProperty(exports,"__esModule",{value:true});exports.default={name:'FlexyMessages',props:['messages'],methods:{typeClass:function typeClass(message){return'alert-'+message.type;}}};
 
 /***/ },
-/* 41 */
+/* 42 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -13990,17 +14067,17 @@ type:Number,default:5}},methods:{/**
      */pageUrl:function pageUrl(page){return this.url.replace('##',(page-1)*this.limit);}}};
 
 /***/ },
-/* 42 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _flexyState=__webpack_require__(3);var _flexyState2=_interopRequireDefault(_flexyState);var _Tab=__webpack_require__(56);var _Tab2=_interopRequireDefault(_Tab);var _Tabs=__webpack_require__(57);var _Tabs2=_interopRequireDefault(_Tabs);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}// import tabGroup         from '../../vue-strap-src/components/TabGroup.vue'
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _flexyState=__webpack_require__(3);var _flexyState2=_interopRequireDefault(_flexyState);var _Tab=__webpack_require__(58);var _Tab2=_interopRequireDefault(_Tab);var _Tabs=__webpack_require__(59);var _Tabs2=_interopRequireDefault(_Tabs);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}// import tabGroup         from '../../vue-strap-src/components/TabGroup.vue'
 exports.default={name:'FlexyForm',components:{tab:_Tab2.default,tabs:_Tabs2.default},props:{'title':String,'name':String,'primary':Number,'fields':[Object,Array],'fieldsets':[Object,Array],'data':[Object,Array],'options':[Object,Array]},computed:{fieldTypes:function fieldTypes(){var types={primary:['primary'],hidden:['hidden'],checkbox:['checkbox'],select:['select','media'],textarea:['textarea','wysiwyg']};types.default=[].concat(types.primary,types.hidden,types.checkbox,types.select,types.textarea);return types;}},// Copy of props.data
 data:function data(){return{row:{},validationErrors:{},isSaving:false};},// Make copy of props.data
 created:function created(){this.row=this.data;},methods:{isType:function isType(type,field){if(type==='default'){return this.fieldTypes['default'].indexOf(this.fields[field].schema['form-type'])===-1;}return this.fieldTypes[type].indexOf(this.fields[field].schema['form-type'])>=0;},isMultiple:function isMultiple(field){var multiple=false;if(this.options[field].multiple)multiple='multiple';if(_flexyState2.default.debug)console.log('isMultiple',field,multiple);return multiple;},validationClass:function validationClass(field){var validation='';if(this.validationErrors[field])validation='has-danger';return validation;},cancel:function cancel(){if(!this.isSaving){var url='admin/show/grid/'+this.name;window.location.assign(url);}},save:function save(){if(!this.isSaving){this.postForm();}},submit:function submit(){if(!this.isSaving){var name=this.name;this.postForm().then(function(response){if(!response.error){var url='admin/show/grid/'+name;window.location.assign(url);}});}},postForm:function postForm(){var self=this;self.isSaving=true;return this.api({url:'row','data':{'table':this.name,'where':this.row['id'],'data':this.row}}).then(function(response){self.isSaving=false;if(!response.error){if(_.isUndefined(response.data.info)||response.data.info.validation!==false){_flexyState2.default.addMessage('Item saved');if(self.isNewItem()){self.row['id']=response.data.data.id;}}else{_flexyState2.default.addMessage(self.$lang.form_validation_error,'danger');if(!_.isUndefined(response.data.info))self.validationErrors=response.data.info.validation_errors;}}else{_flexyState2.default.addMessage(self.$lang.form_save_error,'danger');}return response;});},isNewItem:function isNewItem(){return this.row['id']===-1;},updateField:function updateField(field,value){this.row[field]=value;}}};
 
 /***/ },
-/* 43 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14013,19 +14090,19 @@ created:function created(){this.row=this.data;},methods:{isType:function isType(
 break;}}},postField:function postField(value){var self=this;var data={};data[self.name]=value;return this.api({url:'row','data':{'table':this.primary.table,'where':this.primary.id,'data':data}}).then(function(response){if(!response.error){if(!_.isUndefined(response.data.info.validation)&&response.data.info.validation===false){_flexyState2.default.addMessage(response.data.info.validation_errors,'danger');}}else{_flexyState2.default.addMessage(self.$lang.vue_form_save_error,'danger');}return response;});}}};
 
 /***/ },
-/* 44 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _flexyState=__webpack_require__(3);var _flexyState2=_interopRequireDefault(_flexyState);var _flexyPagination=__webpack_require__(5);var _flexyPagination2=_interopRequireDefault(_flexyPagination);var _flexyGridCell=__webpack_require__(54);var _flexyGridCell2=_interopRequireDefault(_flexyGridCell);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}exports.default={name:'FlexyGrid',components:{FlexyGridCell:_flexyGridCell2.default,FlexyPagination:_flexyPagination2.default},props:{'title':String,'name':String,'fields':[Object,Array],'data':{type:[Array,Boolean],default:false},'data-url':{type:[String,Boolean],default:false},'info':Object,'order':{type:String,default:''},'find':{type:[String,Object],default:''}},computed:{/**
-     * Bepaal het type grid: table, ordered of tree
-     */gridType:function gridType(){var type='table';if(typeof this.fields.order!=='undefined'&&this.order===''&&this.find==='')type='ordered';if(typeof this.fields.self_parent!=='undefined'&&this.order===''&&this.find==='')type='tree';return type;},/**
-     * Geeft class van type grid
-     */gridTypeClass:function gridTypeClass(){return'grid-type-'+this.gridType;},/**
-     * Maak data klaar voor tonen in het grid:
-     * - Voeg informatie van een veld toe aan elke cell
-     * - Bij een tree: voeg informatie aan elke row toe: {level:(int),is_child:(bool),has_children:(bool)}
-     */gridData:function gridData(){var data=this.data;var isTree=this.gridType=='tree';if(isTree){var parents={};var level=0;var parent_key=0;}for(var i=0;i<data.length;i++){var row=data[i];var id=row['id'];// Add schema to each cell
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _vuedraggable=__webpack_require__(79);var _vuedraggable2=_interopRequireDefault(_vuedraggable);var _jdbTools=__webpack_require__(80);var _jdbTools2=_interopRequireDefault(_jdbTools);var _flexyState=__webpack_require__(3);var _flexyState2=_interopRequireDefault(_flexyState);var _flexyPagination=__webpack_require__(5);var _flexyPagination2=_interopRequireDefault(_flexyPagination);var _flexyGridCell=__webpack_require__(56);var _flexyGridCell2=_interopRequireDefault(_flexyGridCell);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}exports.default={name:'FlexyGrid',components:{draggable:_vuedraggable2.default,FlexyGridCell:_flexyGridCell2.default,FlexyPagination:_flexyPagination2.default},props:{'title':String,'name':String,'fields':[Object,Array],'data':{type:[Array,Boolean],default:false},// 'data-url':{
+//   type: [String,Boolean],
+//   default:false
+// },
+'info':Object,'order':{type:String,default:''},'find':{type:[String,Object],default:''}},/**
+  * Maak items klaar voor tonen in het grid:
+  * - Voeg informatie van een veld toe aan elke cell
+  * - Bij een tree: voeg informatie aan elke row toe: {level:(int),is_child:(bool),has_children:(bool)}
+  */created:function created(){var data=this.data;var isTree=this.gridType=='tree';if(isTree){var parents={};var level=0;var parent_key=0;}for(var i=0;i<data.length;i++){var row=data[i];var id=row['id'];// Add schema to each cell
 for(var field in row){var schema={'type':'string','grid-type':'text','readonly':false};if(this.fields[field])schema=this.fields[field].schema;data[i][field]={'type':schema['grid-type']||schema['form-type'],'value':row[field]};if(schema.type==='number'&&schema['form-type']==='select'){var jsonValue=JSON.parse(row[field].value);data[i][field]={'type':schema['grid-type']||schema['form-type'],'value':Object.values(jsonValue)[0],'id':Object.keys(jsonValue)[0]};}data[i][field].name=field;}// Add tree info to each row
 if(isTree){row._info={level:0,is_child:false,has_children:false};parent_key=row.self_parent.value;// if not on toplevel:
 if(parent_key>0){row._info.is_child=true;// are we on a known level?
@@ -14036,18 +14113,24 @@ level=0;}// add level info
 row._info.level=level;}// Keep new row
 data[i]=row;}// Add more tree info (has_children)
 if(isTree&&parents!=={}){_.forEach(data,function(row,key){var id=row.id.value;var level=parents[id];if(level){data[key]._info.has_children=true;}});}// Console
-if(isTree&&_flexyState2.default.debug){console.log('treeInfo:');_.forEach(data,function(row){console.log(row.id.value,row._info);});}return data;},/**
+if(isTree&&_flexyState2.default.debug){console.log('treeInfo:');_.forEach(data,function(row){console.log(row.id.value,row._info);});}// Ready, save it
+this.items=data;},data:function data(){return{items:[],findTerm:this.find,selected:[],dragging:false};},computed:{/**
+     * Bepaal het type grid: table, ordered of tree
+     */gridType:function gridType(){var type='table';if(typeof this.fields.order!=='undefined'&&this.order===''&&this.find==='')type='ordered';if(typeof this.fields.self_parent!=='undefined'&&this.order===''&&this.find==='')type='tree';return type;},/**
+     * Geeft class van type grid
+     */gridTypeClass:function gridTypeClass(){return'grid-type-'+this.gridType;},/**
      * Test if grid needs pagination
-     */needsPagination:function needsPagination(){return typeof this.info.num_pages!=='undefined'&&this.info.num_pages>1;}},data:function data(){return{findTerm:this.find,selected:[]};},methods:{hasSelection:function hasSelection(){return this.selected.length>0;},isSelected:function isSelected(id){return this.selected.indexOf(id)>-1;},select:function select(id){var index=this.selected.indexOf(id);if(index>-1){this.selected.splice(index,1);}else{this.selected.push(id);}},reverseSelection:function reverseSelection(){var ids=[];for(var i=0;i<this.data.length;i++){ids.push(this.data[i].id.value);}this.selected=_.difference(ids,this.selected);},rowLevel:function rowLevel(row){if(_.isUndefined(row._info))return 0;return row._info.level;},isEditable:function isEditable(name){var editable=false;if(!_.isUndefined(this.fields[name]))editable=this.fields[name].schema['grid-edit'];return editable;},headerClass:function headerClass(field){return'grid-header-type-'+field.schema['form-type'];},/**
+     */needsPagination:function needsPagination(){return typeof this.info.num_pages!=='undefined'&&this.info.num_pages>1;}},methods:{hasSelection:function hasSelection(){return this.selected.length>0;},isSelected:function isSelected(id){return this.selected.indexOf(id)>-1;},select:function select(id){var index=this.selected.indexOf(id);if(index>-1){this.selected.splice(index,1);}else{this.selected.push(id);}},reverseSelection:function reverseSelection(){var ids=[];for(var i=0;i<this.data.length;i++){ids.push(this.data[i].id.value);}this.selected=_.difference(ids,this.selected);},rowLevel:function rowLevel(row){if(_.isUndefined(row._info))return 0;return row._info.level;},isEditable:function isEditable(name){var editable=false;if(!_.isUndefined(this.fields[name]))editable=this.fields[name].schema['grid-edit'];return editable;},headerClass:function headerClass(field){return'grid-header-type-'+field.schema['form-type'];},/**
      * Create url, used for all links (pagination, edit, sort etc..)
-     */createdUrl:function createdUrl(parts){var defaults={order:this.order,find:this.find,offset:this.info.offset};parts=_.extend(defaults,parts);return location.pathname+'?options={"offset":"'+parts.offset+'","order":"'+parts.order+'","find":"'+parts.find+'"}';},editUrl:function editUrl(id){return'admin/show/form/'+this.name+'/'+id;},startFinding:function startFinding(event){if(event)event.preventDefault();var url=this.createdUrl({find:this.findTerm});window.location.assign(url);}}};
+     */createdUrl:function createdUrl(parts){var defaults={order:_.isUndefined(this.order)?'':this.order,find:_.isUndefined(this.find)?'':this.find,offset:_.isUndefined(this.info.offset)?0:this.info.offset};parts=_.extend(defaults,parts);return location.pathname+'?options={"offset":"'+parts.offset+'","order":"'+parts.order+'","find":"'+parts.find+'"}';},editUrl:function editUrl(id){return'admin/show/form/'+this.name+'/'+id;},startFinding:function startFinding(event){if(event)event.preventDefault();var url=this.createdUrl({find:this.findTerm});window.location.assign(url);},draggableOptions:function draggableOptions(){return{draggable:'tr',handle:'.draggable-handle',forceFallback:true};},isDragging:function isDragging(id){return this.dragging==id;},draggable_onStart:function draggable_onStart(event){this.dragging=event.item.dataset.id;},draggable_onEnd:function draggable_onEnd(event){var oldIndex=event.oldIndex;var newIndex=event.newIndex;if(oldIndex!==newIndex){// 4) Move items
+this.items=_jdbTools2.default.moveMultipleArrayItems(this.items,oldIndex,0,newIndex);}this.dragging=false;}}};
 
 /***/ },
-/* 45 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _NodeList=__webpack_require__(36);var _NodeList2=_interopRequireDefault(_NodeList);var _ClickOutside=__webpack_require__(38);var _ClickOutside2=_interopRequireDefault(_ClickOutside);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}//
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _NodeList=__webpack_require__(37);var _NodeList2=_interopRequireDefault(_NodeList);var _ClickOutside=__webpack_require__(39);var _ClickOutside2=_interopRequireDefault(_ClickOutside);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}//
 //
 //
 //
@@ -14070,7 +14153,7 @@ if(isTree&&_flexyState2.default.debug){console.log('treeInfo:');_.forEach(data,f
 exports.default={directives:{ClickOutside:_ClickOutside2.default},props:{disabled:{type:Boolean,default:false},size:{type:String,default:null},text:{type:String,default:null},type:{type:String,default:'default'},value:{type:Boolean,default:false}},data:function data(){var show=this.value;return{show:show};},watch:{show:function show(val){this.$emit('input',val);},value:function value(val){this.show=val;}},computed:{buttonSize:function buttonSize(){return~['lg','sm','xs'].indexOf(this.size)?'btn-'+this.size:'';},inInput:function inInput(){return this.$parent._input;},isLi:function isLi(){return this.$parent._isTabs||this.$parent._navbar||this.$parent.menu;},menu:function menu(){return!this.$parent||this.$parent.navbar;},slots:function slots(){return this._slotContents;},submenu:function submenu(){return this.$parent&&(this.$parent.menu||this.$parent.submenu);}},methods:{blur:function blur(){this.show=false;}},mounted:function mounted(){var _this=this;var $el=(0,_NodeList2.default)(this.$el);$el.findChildren('a,button.dropdown-toggle').on('click',function(e){e.preventDefault();if(!_this.disabled){_this.show=!_this.show;}return false;});$el.findChildren('ul').on('click','li>a',function(e){_this.show=false;});},beforeDestroy:function beforeDestroy(){(0,_NodeList2.default)(this.$el).findChildren('a,button,ul').off();}};
 
 /***/ },
-/* 46 */
+/* 47 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -14081,11 +14164,11 @@ exports.default={directives:{ClickOutside:_ClickOutside2.default},props:{disable
 exports.default={props:{disabled:{type:Boolean,default:false},header:{type:String}},data:function data(){return{fadein:false};},computed:{active:function active(){var _this=this;var active=!this._tabs||this._tabs.show===this;this.fadein=false;if(active){setTimeout(function(){_this.fadein=true;},0);}return active;},index:function index(){return this._tabs.tabs.indexOf(this);},transition:function transition(){return this._tabs?this._tabs.effect:null;}},created:function created(){this._isTab=true;var tabs=this;while(!this._tabs&&tabs.$parent){if(tabs._isTabGroup){tabs.tabs.push(this);this._tabGroup=tabs;}if(tabs._isTabs){tabs.tabs.push(this);this._tabs=tabs;if(!this._tabGroup)tabs.headers.push(this);}tabs=tabs.$parent;}if(!this._tabs)throw Error('tab depend on tabs.');},beforeDestroy:function beforeDestroy(){var _this2=this;if(this._tabGroup){this._tabGroup.tabs=this._tabGroup.tabs.filter(function(el){return el!==_this2;});}if(this._tabs){this._tabs.tabs=this._tabs.tabs.filter(function(el){return el!==_this2;});}if(this._tabs){if(this._tabs.active===this.index){this._tabs.index=0;}if(this._ingroup){var id=this.$parent.tabs.indexOf(this);if(~id)this.$parent.tabs.splice(id,1);}}if(this._tabs){var _id=this._tabs.tabs.indexOf(this);if(~_id)this._tabs.tabs.splice(_id,1);}}};
 
 /***/ },
-/* 47 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _utils=__webpack_require__(37);var _Dropdown=__webpack_require__(55);var _Dropdown2=_interopRequireDefault(_Dropdown);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}//
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _utils=__webpack_require__(38);var _Dropdown=__webpack_require__(57);var _Dropdown2=_interopRequireDefault(_Dropdown);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}//
 //
 //
 //
@@ -14105,7 +14188,7 @@ exports.default={components:{dropdown:_Dropdown2.default},props:{// effect: {typ
 justified:false,navStyle:{type:String,default:null},value:{type:Number,default:0}},data:function data(){var index=this.value||0;return{index:index,headers:[],tabs:[]};},watch:{index:function index(val){this.$emit('active',val);this.$emit('input',val);},value:function value(val){this.index=val;}},computed:{navStyleClass:function navStyleClass(){return['nav',~['pills','stacked'].indexOf(this.navStyle)?'nav-'+this.navStyle:'nav-tabs',{'nav-justified':_utils.coerce.boolean(this.justified),'nav-pills':this.navStyle==='stacked'}];},show:function show(){return this.tabs[this.index]||this.tabs[0];}},methods:{select:function select(tab){if(!tab.disabled){this.index=this.tabs.indexOf(tab);}}},created:function created(){this._isTabs=true;}};
 
 /***/ },
-/* 48 */
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)();
@@ -14119,20 +14202,6 @@ exports.push([module.i, "\n.flexy-block {text-transform:uppercase;margin-right:1
 
 
 /***/ },
-/* 49 */
-/***/ function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(1)();
-// imports
-
-
-// module
-exports.push([module.i, "\n.grid .card-block {padding:0;\n}\n.grid .card-footer {padding:.25rem .25rem 0;\n}\n.grid th {overflow:hidden;text-overflow:ellipsis;\n}\n.grid th a {text-decoration:none;\n}\n.grid th span {white-space:nowrap;text-transform:uppercase;\n}\n.grid th > span.fa {position:relative;float:right;margin-top:.25rem;\n}\n.grid th.grid-header-type-primary {width:10rem;max-width:10rem;white-space:nowrap;\n}\n.grid.grid-type-tree th.grid-header-type-primary {width:10rem;max-width:10rem;\n}\n.grid.grid-type-table th.grid-header-type-primary {width:9rem;max-width:9rem;\n}\n", ""]);
-
-// exports
-
-
-/***/ },
 /* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -14141,7 +14210,7 @@ exports = module.exports = __webpack_require__(1)();
 
 
 // module
-exports.push([module.i, "\n.grid td {overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:250px;\n}\n.grid td.grid-cell-type-checkbox {text-align:center;\n}\n.grid td.grid-cell-editable {cursor:pointer;\n}\n/* tree, branches & nodes */\n.grid-type-tree tbody td[level=\"1\"][name=\"str_title\"] {padding-left:1rem;\n}\n.grid-type-tree tbody td[level=\"2\"][name=\"str_title\"] {padding-left:2rem;\n}\n.grid-type-tree tbody td[level=\"3\"][name=\"str_title\"] {padding-left:3rem;\n}\n.grid-type-tree tbody td[level=\"4\"][name=\"str_title\"] {padding-left:4rem;\n}\n.grid-type-tree tbody td[level=\"5\"][name=\"str_title\"] {padding-left:5rem;\n}\n.grid-type-tree tbody td[level=\"6\"][name=\"str_title\"] {padding-left:6rem;\n}\n.grid-type-tree tbody td[level=\"7\"][name=\"str_title\"] {padding-left:7rem;\n}\n", ""]);
+exports.push([module.i, "\n.grid .card-block {padding:0;\n}\n.grid .card-footer {padding:.25rem .25rem 0;\n}\n.grid th {overflow:hidden;text-overflow:ellipsis;\n}\n.grid th a {text-decoration:none;\n}\n.grid th span {white-space:nowrap;text-transform:uppercase;\n}\n.grid th > span.fa {position:relative;float:right;margin-top:.25rem;\n}\n.grid th.grid-header-type-primary {width:10rem;max-width:10rem;white-space:nowrap;\n}\n.grid.grid-type-tree th.grid-header-type-primary {width:10rem;max-width:10rem;\n}\n.grid.grid-type-table th.grid-header-type-primary {width:9rem;max-width:9rem;\n}\n.grid .draggable-handle {cursor:move;\n}\n.grid .sortable-fallback {display:none;\n}\n", ""]);
 
 // exports
 
@@ -14155,7 +14224,7 @@ exports = module.exports = __webpack_require__(1)();
 
 
 // module
-exports.push([module.i, "\n.pagination-container {width:100%;\n}\n.pagination {margin:0;\n}\n.pagination-info {\n  margin-top:.5rem;\n  float:right;\n}\n", ""]);
+exports.push([module.i, "\n.grid td {overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:250px;\n}\n.grid td.grid-cell-type-checkbox {text-align:center;\n}\n.grid td.grid-cell-editable {cursor:pointer;\n}\n/* tree, branches & nodes */\n.grid-type-tree tbody td[level=\"1\"][name=\"str_title\"] {padding-left:1rem;\n}\n.grid-type-tree tbody td[level=\"2\"][name=\"str_title\"] {padding-left:2rem;\n}\n.grid-type-tree tbody td[level=\"3\"][name=\"str_title\"] {padding-left:3rem;\n}\n.grid-type-tree tbody td[level=\"4\"][name=\"str_title\"] {padding-left:4rem;\n}\n.grid-type-tree tbody td[level=\"5\"][name=\"str_title\"] {padding-left:5rem;\n}\n.grid-type-tree tbody td[level=\"6\"][name=\"str_title\"] {padding-left:6rem;\n}\n.grid-type-tree tbody td[level=\"7\"][name=\"str_title\"] {padding-left:7rem;\n}\n", ""]);
 
 // exports
 
@@ -14169,7 +14238,7 @@ exports = module.exports = __webpack_require__(1)();
 
 
 // module
-exports.push([module.i, "\n.form .form-group {min-height:2.35rem;\n}\n.form-control-label {text-transform:uppercase;font-weight:bold;padding-top:.5rem;padding-bottom:0;margin-bottom:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;\n}\ntextarea {min-height:10rem;max-height:20rem;\n}\n.form-check-input {margin-left:0;margin-top:.75rem;\n}\n.validation-error {padding:.25rem 1rem;font-weight:bold;\n}\n", ""]);
+exports.push([module.i, "\n.pagination-container {width:100%;\n}\n.pagination {margin:0;\n}\n.pagination-info {\n  margin-top:.5rem;\n  float:right;\n}\n", ""]);
 
 // exports
 
@@ -14183,7 +14252,7 @@ exports = module.exports = __webpack_require__(1)();
 
 
 // module
-exports.push([module.i, "\n[tabs] > .tab-content {\n  margin: 15px 0;\n}\n", ""]);
+exports.push([module.i, "\n.form .form-group {min-height:2.35rem;\n}\n.form-control-label {text-transform:uppercase;font-weight:bold;padding-top:.5rem;padding-bottom:0;margin-bottom:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;\n}\ntextarea {min-height:10rem;max-height:20rem;\n}\n.form-check-input {margin-left:0;margin-top:.75rem;\n}\n.validation-error {padding:.25rem 1rem;font-weight:bold;\n}\n", ""]);
 
 // exports
 
@@ -14192,16 +14261,74 @@ exports.push([module.i, "\n[tabs] > .tab-content {\n  margin: 15px 0;\n}\n", ""]
 /* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
+exports = module.exports = __webpack_require__(1)();
+// imports
+
+
+// module
+exports.push([module.i, "\n[tabs] > .tab-content {\n  margin: 15px 0;\n}\n", ""]);
+
+// exports
+
+
+/***/ },
+/* 55 */
+/***/ function(module, exports) {
+
+/**
+ * Replace {0} in message. Credits: @Haixing-Hu
+ *
+ * @param template
+ *    the message template, which contains zero or more placeholders, e.g.,
+ *    "{0}", "{1}", ...
+ * @param arg1, arg2, ...
+ *    zero or more arguments used to replace the corresponding placeholders
+ *    in the message template.
+ * @return
+ *    the formatted message.
+ * @author Haixing Hu
+ */
+
+var PLACEHOLDER_REGEXP = /\{([0-9a-zA-Z]+)\}/g;
+
+module.exports = function() {
+    if(arguments.length === 0) {
+        return ""
+    }else if(arguments.length === 1) {
+        return arguments[0]
+    }else{
+        var args = arguments
+        var message = args[0]
+        return message.replace(PLACEHOLDER_REGEXP, function(match, placeholder, index) {
+            if (message[index - 1] === "{" && message[index + match.length] === "}") {
+                return placeholder;
+            }else{
+            var i = parseInt(placeholder)
+            var result = args[i + 1]
+                if (result === null || result === undefined) {
+                    return ""
+                }else{
+                    return result
+                }
+            }
+        })
+    }
+}
+
+/***/ },
+/* 56 */
+/***/ function(module, exports, __webpack_require__) {
+
 var __vue_exports__, __vue_options__
 
 /* styles */
-__webpack_require__(69)
+__webpack_require__(71)
 
 /* script */
-__vue_exports__ = __webpack_require__(43)
+__vue_exports__ = __webpack_require__(44)
 
 /* template */
-var __vue_template__ = __webpack_require__(61)
+var __vue_template__ = __webpack_require__(63)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -14235,16 +14362,16 @@ module.exports = __vue_exports__
 
 
 /***/ },
-/* 55 */
+/* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
 var __vue_exports__, __vue_options__
 
 /* script */
-__vue_exports__ = __webpack_require__(45)
+__vue_exports__ = __webpack_require__(46)
 
 /* template */
-var __vue_template__ = __webpack_require__(64)
+var __vue_template__ = __webpack_require__(66)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -14278,16 +14405,16 @@ module.exports = __vue_exports__
 
 
 /***/ },
-/* 56 */
+/* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
 var __vue_exports__, __vue_options__
 
 /* script */
-__vue_exports__ = __webpack_require__(46)
+__vue_exports__ = __webpack_require__(47)
 
 /* template */
-var __vue_template__ = __webpack_require__(62)
+var __vue_template__ = __webpack_require__(64)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -14321,19 +14448,19 @@ module.exports = __vue_exports__
 
 
 /***/ },
-/* 57 */
+/* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
 var __vue_exports__, __vue_options__
 
 /* styles */
-__webpack_require__(72)
+__webpack_require__(74)
 
 /* script */
-__vue_exports__ = __webpack_require__(47)
+__vue_exports__ = __webpack_require__(48)
 
 /* template */
-var __vue_template__ = __webpack_require__(66)
+var __vue_template__ = __webpack_require__(68)
 __vue_options__ = __vue_exports__ = __vue_exports__ || {}
 if (
   typeof __vue_exports__.default === "object" ||
@@ -14367,7 +14494,7 @@ module.exports = __vue_exports__
 
 
 /***/ },
-/* 58 */
+/* 60 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){with(this) {
@@ -14399,7 +14526,7 @@ if (false) {
 }
 
 /***/ },
-/* 59 */
+/* 61 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){with(this) {
@@ -14424,7 +14551,7 @@ if (false) {
 }
 
 /***/ },
-/* 60 */
+/* 62 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){with(this) {
@@ -14506,12 +14633,19 @@ module.exports={render:function (){with(this) {
     }) : _e(), " ", (order == '_' + key) ? _h('span', {
       staticClass: "fa fa-caret-down"
     }) : _e()])]) : _e()]
-  })])]), " ", " ", _h('tbody', {
+  })])]), " ", " ", _h('draggable', {
     attrs: {
-      "id": "grid-body"
+      "list": items,
+      "element": "tbody",
+      "options": draggableOptions()
+    },
+    on: {
+      "start": draggable_onStart,
+      "end": draggable_onEnd
     }
-  }, [_l((gridData), function(row) {
+  }, [_l((items), function(row) {
     return _h('tr', {
+      key: row.id.value,
       class: {
         'table-danger': isSelected(row.id.value)
       },
@@ -14539,7 +14673,10 @@ module.exports={render:function (){with(this) {
       }) : _e(), (isSelected(row.id.value)) ? _h('span', {
         staticClass: "fa fa-circle"
       }) : _e()]), " ", (gridType !== 'table') ? _h('div', {
-        staticClass: "btn btn-sm btn-outline-info action-move"
+        staticClass: "draggable-handle btn btn-sm btn-outline-info action-move",
+        class: {
+          'active': isDragging(row.id.value)
+        }
       }, [_m(6, true)]) : _e()]) : _h('flexy-grid-cell', {
         attrs: {
           "type": cell.type,
@@ -14613,7 +14750,7 @@ if (false) {
 }
 
 /***/ },
-/* 61 */
+/* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){with(this) {
@@ -14652,7 +14789,7 @@ if (false) {
 }
 
 /***/ },
-/* 62 */
+/* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){with(this) {
@@ -14675,7 +14812,7 @@ if (false) {
 }
 
 /***/ },
-/* 63 */
+/* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){with(this) {
@@ -14781,7 +14918,7 @@ if (false) {
 }
 
 /***/ },
-/* 64 */
+/* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){with(this) {
@@ -14843,7 +14980,7 @@ if (false) {
 }
 
 /***/ },
-/* 65 */
+/* 67 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){with(this) {
@@ -15048,7 +15185,7 @@ if (false) {
 }
 
 /***/ },
-/* 66 */
+/* 68 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){with(this) {
@@ -15126,13 +15263,13 @@ if (false) {
 }
 
 /***/ },
-/* 67 */
+/* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(48);
+var content = __webpack_require__(49);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(2)(content, {});
@@ -15152,13 +15289,13 @@ if(false) {
 }
 
 /***/ },
-/* 68 */
+/* 70 */
 /***/ function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(49);
+var content = __webpack_require__(50);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(2)(content, {});
@@ -15178,13 +15315,13 @@ if(false) {
 }
 
 /***/ },
-/* 69 */
+/* 71 */
 /***/ function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(50);
+var content = __webpack_require__(51);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(2)(content, {});
@@ -15204,13 +15341,13 @@ if(false) {
 }
 
 /***/ },
-/* 70 */
+/* 72 */
 /***/ function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(51);
+var content = __webpack_require__(52);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(2)(content, {});
@@ -15230,13 +15367,13 @@ if(false) {
 }
 
 /***/ },
-/* 71 */
+/* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(52);
+var content = __webpack_require__(53);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(2)(content, {});
@@ -15256,13 +15393,13 @@ if(false) {
 }
 
 /***/ },
-/* 72 */
+/* 74 */
 /***/ function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(53);
+var content = __webpack_require__(54);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(2)(content, {});
@@ -15282,7 +15419,7 @@ if(false) {
 }
 
 /***/ },
-/* 73 */
+/* 75 */
 /***/ function(module, exports) {
 
 var g;
@@ -15307,7 +15444,7 @@ module.exports = g;
 
 
 /***/ },
-/* 74 */
+/* 76 */
 /***/ function(module, exports) {
 
 module.exports = function(module) {
@@ -15333,11 +15470,11 @@ module.exports = function(module) {
 
 
 /***/ },
-/* 75 */
+/* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-'use strict';var _vue=__webpack_require__(18);var _vue2=_interopRequireDefault(_vue);var _vueLang=__webpack_require__(76);var _vueLang2=_interopRequireDefault(_vueLang);var _axios=__webpack_require__(12);var _axios2=_interopRequireDefault(_axios);var _flexyState=__webpack_require__(3);var _flexyState2=_interopRequireDefault(_flexyState);var _flexyMessages=__webpack_require__(15);var _flexyMessages2=_interopRequireDefault(_flexyMessages);var _flexyBlocks=__webpack_require__(14);var _flexyBlocks2=_interopRequireDefault(_flexyBlocks);var _flexyPagination=__webpack_require__(5);var _flexyPagination2=_interopRequireDefault(_flexyPagination);var _flexyGrid=__webpack_require__(17);var _flexyGrid2=_interopRequireDefault(_flexyGrid);var _flexyForm=__webpack_require__(16);var _flexyForm2=_interopRequireDefault(_flexyForm);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}/**
+'use strict';var _vue=__webpack_require__(19);var _vue2=_interopRequireDefault(_vue);var _vueLang=__webpack_require__(14);var _vueLang2=_interopRequireDefault(_vueLang);var _axios=__webpack_require__(12);var _axios2=_interopRequireDefault(_axios);var _jdbTools=__webpack_require__(80);var _jdbTools2=_interopRequireDefault(_jdbTools);var _flexyState=__webpack_require__(3);var _flexyState2=_interopRequireDefault(_flexyState);var _flexyMessages=__webpack_require__(16);var _flexyMessages2=_interopRequireDefault(_flexyMessages);var _flexyBlocks=__webpack_require__(15);var _flexyBlocks2=_interopRequireDefault(_flexyBlocks);var _flexyPagination=__webpack_require__(5);var _flexyPagination2=_interopRequireDefault(_flexyPagination);var _flexyGrid=__webpack_require__(18);var _flexyGrid2=_interopRequireDefault(_flexyGrid);var _flexyForm=__webpack_require__(17);var _flexyForm2=_interopRequireDefault(_flexyForm);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}/**
  * Bootstrapping FlexyAdmin:
  * - Import components
  * - Create Vue Instance
@@ -15360,125 +15497,1495 @@ else{serializeString+=encodeURIComponent(key)+'='+encodeURIComponent(data[key]);
  */var vm=new _vue2.default({el:'#main',components:{FlexyBlocks:_flexyBlocks2.default,FlexyMessages:_flexyMessages2.default,FlexyPagination:_flexyPagination2.default,FlexyGrid:_flexyGrid2.default,FlexyForm:_flexyForm2.default},data:{state:_flexyState2.default.state}});
 
 /***/ },
-/* 76 */
+/* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
-﻿; (function () {
-    var vueLang = {};
-    vueLang.install = function (Vue, options) {
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/**!
+ * Sortable
+ * @author	RubaXa   <trash@rubaxa.org>
+ * @license MIT
+ */
 
-        // register the replace filter (Credits: @Haixing-Hu, https://github.com/Haixing-Hu/vue-format/)
-        var replace = __webpack_require__(77);
-        Vue.filter("replace", replace);
 
-        if(!options.lang){console.warn("vue-lang: No default language given. Please specify as {lang: ..}")}
+(function (factory) {
+	"use strict";
 
-        // Set parameters
-        Vue.locales = options.locales || {}
-        Vue.prototype.$currentLang = options.lang || ""
+	if (true) {
+		!(__WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	}
+	else if (typeof module != "undefined" && typeof module.exports != "undefined") {
+		module.exports = factory();
+	}
+	else if (typeof Package !== "undefined") {
+		Sortable = factory();  // export for Meteor.js
+	}
+	else {
+		/* jshint sub:true */
+		window["Sortable"] = factory();
+	}
+})(function () {
+	"use strict";
 
-        // Set current language file
-        if(Vue.prototype.$currentLang){
-            Vue.prototype.$lang = Vue.locales[Vue.prototype.$currentLang]
-        }else{
-            Vue.prototype.$lang = {}
-        }
+	var dragEl,
+		parentEl,
+		ghostEl,
+		cloneEl,
+		rootEl,
+		nextEl,
 
-        // Set list of available languages
-        Vue.prototype.$langs = Object.keys(Vue.locales)
+		scrollEl,
+		scrollParentEl,
 
-        // Create function to set the language
-        Vue.prototype.$setLang = function(language) {
-            Vue.prototype.$currentLang = language
-            if(language && Vue.prototype.$langs.indexOf(language) > -1){
-                Vue.prototype.$lang = Vue.locales[language]
-                update(this.$root);
-            }else{
-                console.warn("vue-lang: Language not given or not initialized")
-            }
-        }
-    }
+		lastEl,
+		lastCSS,
+		lastParentCSS,
 
-    if (true) {
-        module.exports = vueLang;
-    } else if (typeof define == "function" && define.amd) {
-        define([], function () { return vueLang });
-    } else if (window.Vue) {
-        window.vueLang = vueLang;
-        Vue.use(vueLang);
-    }
+		oldIndex,
+		newIndex,
 
-    /**
-     * Credits: @Haixing-Hu
-     *
-     * Updates all the watchers in the Vue instance of a component tree.
-     *
-     * This function is inspired by the "_digest()" function in the
-     * "src/instance/scope.js" of the source of Vue.js, excepts that this function
-     * updates the children components no matter whether it is inheritable.
-     *
-     * @param vm
-     *    the root of the component tree.
-     */
-    function update(vm) {
-        var i = vm._watchers.length
-        while (i--) {
-            vm._watchers[i].update(true); // shallow updates
-        }
-        var children = vm.$children;
-        i = children.length;
-        while (i--) {
-            var child = children[i]
-            update(child)
-        }
-    }
+		activeGroup,
+		autoScroll = {},
 
-})();
+		tapEvt,
+		touchEvt,
+
+		moved,
+
+		/** @const */
+		RSPACE = /\s+/g,
+
+		expando = 'Sortable' + (new Date).getTime(),
+
+		win = window,
+		document = win.document,
+		parseInt = win.parseInt,
+
+		supportDraggable = !!('draggable' in document.createElement('div')),
+		supportCssPointerEvents = (function (el) {
+			el = document.createElement('x');
+			el.style.cssText = 'pointer-events:auto';
+			return el.style.pointerEvents === 'auto';
+		})(),
+
+		_silent = false,
+
+		abs = Math.abs,
+		slice = [].slice,
+
+		touchDragOverListeners = [],
+
+		_autoScroll = _throttle(function (/**Event*/evt, /**Object*/options, /**HTMLElement*/rootEl) {
+			// Bug: https://bugzilla.mozilla.org/show_bug.cgi?id=505521
+			if (rootEl && options.scroll) {
+				var el,
+					rect,
+					sens = options.scrollSensitivity,
+					speed = options.scrollSpeed,
+
+					x = evt.clientX,
+					y = evt.clientY,
+
+					winWidth = window.innerWidth,
+					winHeight = window.innerHeight,
+
+					vx,
+					vy
+				;
+
+				// Delect scrollEl
+				if (scrollParentEl !== rootEl) {
+					scrollEl = options.scroll;
+					scrollParentEl = rootEl;
+
+					if (scrollEl === true) {
+						scrollEl = rootEl;
+
+						do {
+							if ((scrollEl.offsetWidth < scrollEl.scrollWidth) ||
+								(scrollEl.offsetHeight < scrollEl.scrollHeight)
+							) {
+								break;
+							}
+							/* jshint boss:true */
+						} while (scrollEl = scrollEl.parentNode);
+					}
+				}
+
+				if (scrollEl) {
+					el = scrollEl;
+					rect = scrollEl.getBoundingClientRect();
+					vx = (abs(rect.right - x) <= sens) - (abs(rect.left - x) <= sens);
+					vy = (abs(rect.bottom - y) <= sens) - (abs(rect.top - y) <= sens);
+				}
+
+
+				if (!(vx || vy)) {
+					vx = (winWidth - x <= sens) - (x <= sens);
+					vy = (winHeight - y <= sens) - (y <= sens);
+
+					/* jshint expr:true */
+					(vx || vy) && (el = win);
+				}
+
+
+				if (autoScroll.vx !== vx || autoScroll.vy !== vy || autoScroll.el !== el) {
+					autoScroll.el = el;
+					autoScroll.vx = vx;
+					autoScroll.vy = vy;
+
+					clearInterval(autoScroll.pid);
+
+					if (el) {
+						autoScroll.pid = setInterval(function () {
+							if (el === win) {
+								win.scrollTo(win.pageXOffset + vx * speed, win.pageYOffset + vy * speed);
+							} else {
+								vy && (el.scrollTop += vy * speed);
+								vx && (el.scrollLeft += vx * speed);
+							}
+						}, 24);
+					}
+				}
+			}
+		}, 30),
+
+		_prepareGroup = function (options) {
+			var group = options.group;
+
+			if (!group || typeof group != 'object') {
+				group = options.group = {name: group};
+			}
+
+			['pull', 'put'].forEach(function (key) {
+				if (!(key in group)) {
+					group[key] = true;
+				}
+			});
+
+			options.groups = ' ' + group.name + (group.put.join ? ' ' + group.put.join(' ') : '') + ' ';
+		}
+	;
+
+
+
+	/**
+	 * @class  Sortable
+	 * @param  {HTMLElement}  el
+	 * @param  {Object}       [options]
+	 */
+	function Sortable(el, options) {
+		if (!(el && el.nodeType && el.nodeType === 1)) {
+			throw 'Sortable: `el` must be HTMLElement, and not ' + {}.toString.call(el);
+		}
+
+		this.el = el; // root element
+		this.options = options = _extend({}, options);
+
+
+		// Export instance
+		el[expando] = this;
+
+
+		// Default options
+		var defaults = {
+			group: Math.random(),
+			sort: true,
+			disabled: false,
+			store: null,
+			handle: null,
+			scroll: true,
+			scrollSensitivity: 30,
+			scrollSpeed: 10,
+			draggable: /[uo]l/i.test(el.nodeName) ? 'li' : '>*',
+			ghostClass: 'sortable-ghost',
+			chosenClass: 'sortable-chosen',
+			ignore: 'a, img',
+			filter: null,
+			animation: 0,
+			setData: function (dataTransfer, dragEl) {
+				dataTransfer.setData('Text', dragEl.textContent);
+			},
+			dropBubble: false,
+			dragoverBubble: false,
+			dataIdAttr: 'data-id',
+			delay: 0,
+			forceFallback: false,
+			fallbackClass: 'sortable-fallback',
+			fallbackOnBody: false
+		};
+
+
+		// Set default options
+		for (var name in defaults) {
+			!(name in options) && (options[name] = defaults[name]);
+		}
+
+		_prepareGroup(options);
+
+		// Bind all private methods
+		for (var fn in this) {
+			if (fn.charAt(0) === '_') {
+				this[fn] = this[fn].bind(this);
+			}
+		}
+
+		// Setup drag mode
+		this.nativeDraggable = options.forceFallback ? false : supportDraggable;
+
+		// Bind events
+		_on(el, 'mousedown', this._onTapStart);
+		_on(el, 'touchstart', this._onTapStart);
+
+		if (this.nativeDraggable) {
+			_on(el, 'dragover', this);
+			_on(el, 'dragenter', this);
+		}
+
+		touchDragOverListeners.push(this._onDragOver);
+
+		// Restore sorting
+		options.store && this.sort(options.store.get(this));
+	}
+
+
+	Sortable.prototype = /** @lends Sortable.prototype */ {
+		constructor: Sortable,
+
+		_onTapStart: function (/** Event|TouchEvent */evt) {
+			var _this = this,
+				el = this.el,
+				options = this.options,
+				type = evt.type,
+				touch = evt.touches && evt.touches[0],
+				target = (touch || evt).target,
+				originalTarget = target,
+				filter = options.filter;
+
+
+			if (type === 'mousedown' && evt.button !== 0 || options.disabled) {
+				return; // only left button or enabled
+			}
+
+			target = _closest(target, options.draggable, el);
+
+			if (!target) {
+				return;
+			}
+
+			// get the index of the dragged element within its parent
+			oldIndex = _index(target);
+
+			// Check filter
+			if (typeof filter === 'function') {
+				if (filter.call(this, evt, target, this)) {
+					_dispatchEvent(_this, originalTarget, 'filter', target, el, oldIndex);
+					evt.preventDefault();
+					return; // cancel dnd
+				}
+			}
+			else if (filter) {
+				filter = filter.split(',').some(function (criteria) {
+					criteria = _closest(originalTarget, criteria.trim(), el);
+
+					if (criteria) {
+						_dispatchEvent(_this, criteria, 'filter', target, el, oldIndex);
+						return true;
+					}
+				});
+
+				if (filter) {
+					evt.preventDefault();
+					return; // cancel dnd
+				}
+			}
+
+
+			if (options.handle && !_closest(originalTarget, options.handle, el)) {
+				return;
+			}
+
+
+			// Prepare `dragstart`
+			this._prepareDragStart(evt, touch, target);
+		},
+
+		_prepareDragStart: function (/** Event */evt, /** Touch */touch, /** HTMLElement */target) {
+			var _this = this,
+				el = _this.el,
+				options = _this.options,
+				ownerDocument = el.ownerDocument,
+				dragStartFn;
+
+			if (target && !dragEl && (target.parentNode === el)) {
+				tapEvt = evt;
+
+				rootEl = el;
+				dragEl = target;
+				parentEl = dragEl.parentNode;
+				nextEl = dragEl.nextSibling;
+				activeGroup = options.group;
+
+				dragStartFn = function () {
+					// Delayed drag has been triggered
+					// we can re-enable the events: touchmove/mousemove
+					_this._disableDelayedDrag();
+
+					// Make the element draggable
+					dragEl.draggable = true;
+
+					// Chosen item
+					_toggleClass(dragEl, _this.options.chosenClass, true);
+
+					// Bind the events: dragstart/dragend
+					_this._triggerDragStart(touch);
+				};
+
+				// Disable "draggable"
+				options.ignore.split(',').forEach(function (criteria) {
+					_find(dragEl, criteria.trim(), _disableDraggable);
+				});
+
+				_on(ownerDocument, 'mouseup', _this._onDrop);
+				_on(ownerDocument, 'touchend', _this._onDrop);
+				_on(ownerDocument, 'touchcancel', _this._onDrop);
+
+				if (options.delay) {
+					// If the user moves the pointer or let go the click or touch
+					// before the delay has been reached:
+					// disable the delayed drag
+					_on(ownerDocument, 'mouseup', _this._disableDelayedDrag);
+					_on(ownerDocument, 'touchend', _this._disableDelayedDrag);
+					_on(ownerDocument, 'touchcancel', _this._disableDelayedDrag);
+					_on(ownerDocument, 'mousemove', _this._disableDelayedDrag);
+					_on(ownerDocument, 'touchmove', _this._disableDelayedDrag);
+
+					_this._dragStartTimer = setTimeout(dragStartFn, options.delay);
+				} else {
+					dragStartFn();
+				}
+			}
+		},
+
+		_disableDelayedDrag: function () {
+			var ownerDocument = this.el.ownerDocument;
+
+			clearTimeout(this._dragStartTimer);
+			_off(ownerDocument, 'mouseup', this._disableDelayedDrag);
+			_off(ownerDocument, 'touchend', this._disableDelayedDrag);
+			_off(ownerDocument, 'touchcancel', this._disableDelayedDrag);
+			_off(ownerDocument, 'mousemove', this._disableDelayedDrag);
+			_off(ownerDocument, 'touchmove', this._disableDelayedDrag);
+		},
+
+		_triggerDragStart: function (/** Touch */touch) {
+			if (touch) {
+				// Touch device support
+				tapEvt = {
+					target: dragEl,
+					clientX: touch.clientX,
+					clientY: touch.clientY
+				};
+
+				this._onDragStart(tapEvt, 'touch');
+			}
+			else if (!this.nativeDraggable) {
+				this._onDragStart(tapEvt, true);
+			}
+			else {
+				_on(dragEl, 'dragend', this);
+				_on(rootEl, 'dragstart', this._onDragStart);
+			}
+
+			try {
+				if (document.selection) {
+					document.selection.empty();
+				} else {
+					window.getSelection().removeAllRanges();
+				}
+			} catch (err) {
+			}
+		},
+
+		_dragStarted: function () {
+			if (rootEl && dragEl) {
+				// Apply effect
+				_toggleClass(dragEl, this.options.ghostClass, true);
+
+				Sortable.active = this;
+
+				// Drag start event
+				_dispatchEvent(this, rootEl, 'start', dragEl, rootEl, oldIndex);
+			}
+		},
+
+		_emulateDragOver: function () {
+			if (touchEvt) {
+				if (this._lastX === touchEvt.clientX && this._lastY === touchEvt.clientY) {
+					return;
+				}
+
+				this._lastX = touchEvt.clientX;
+				this._lastY = touchEvt.clientY;
+
+				if (!supportCssPointerEvents) {
+					_css(ghostEl, 'display', 'none');
+				}
+
+				var target = document.elementFromPoint(touchEvt.clientX, touchEvt.clientY),
+					parent = target,
+					groupName = ' ' + this.options.group.name + '',
+					i = touchDragOverListeners.length;
+
+				if (parent) {
+					do {
+						if (parent[expando] && parent[expando].options.groups.indexOf(groupName) > -1) {
+							while (i--) {
+								touchDragOverListeners[i]({
+									clientX: touchEvt.clientX,
+									clientY: touchEvt.clientY,
+									target: target,
+									rootEl: parent
+								});
+							}
+
+							break;
+						}
+
+						target = parent; // store last element
+					}
+					/* jshint boss:true */
+					while (parent = parent.parentNode);
+				}
+
+				if (!supportCssPointerEvents) {
+					_css(ghostEl, 'display', '');
+				}
+			}
+		},
+
+
+		_onTouchMove: function (/**TouchEvent*/evt) {
+			if (tapEvt) {
+				// only set the status to dragging, when we are actually dragging
+				if (!Sortable.active) {
+					this._dragStarted();
+				}
+
+				// as well as creating the ghost element on the document body
+				this._appendGhost();
+
+				var touch = evt.touches ? evt.touches[0] : evt,
+					dx = touch.clientX - tapEvt.clientX,
+					dy = touch.clientY - tapEvt.clientY,
+					translate3d = evt.touches ? 'translate3d(' + dx + 'px,' + dy + 'px,0)' : 'translate(' + dx + 'px,' + dy + 'px)';
+
+				moved = true;
+				touchEvt = touch;
+
+				_css(ghostEl, 'webkitTransform', translate3d);
+				_css(ghostEl, 'mozTransform', translate3d);
+				_css(ghostEl, 'msTransform', translate3d);
+				_css(ghostEl, 'transform', translate3d);
+
+				evt.preventDefault();
+			}
+		},
+
+		_appendGhost: function () {
+			if (!ghostEl) {
+				var rect = dragEl.getBoundingClientRect(),
+					css = _css(dragEl),
+					options = this.options,
+					ghostRect;
+
+				ghostEl = dragEl.cloneNode(true);
+
+				_toggleClass(ghostEl, options.ghostClass, false);
+				_toggleClass(ghostEl, options.fallbackClass, true);
+
+				_css(ghostEl, 'top', rect.top - parseInt(css.marginTop, 10));
+				_css(ghostEl, 'left', rect.left - parseInt(css.marginLeft, 10));
+				_css(ghostEl, 'width', rect.width);
+				_css(ghostEl, 'height', rect.height);
+				_css(ghostEl, 'opacity', '0.8');
+				_css(ghostEl, 'position', 'fixed');
+				_css(ghostEl, 'zIndex', '100000');
+				_css(ghostEl, 'pointerEvents', 'none');
+
+				options.fallbackOnBody && document.body.appendChild(ghostEl) || rootEl.appendChild(ghostEl);
+
+				// Fixing dimensions.
+				ghostRect = ghostEl.getBoundingClientRect();
+				_css(ghostEl, 'width', rect.width * 2 - ghostRect.width);
+				_css(ghostEl, 'height', rect.height * 2 - ghostRect.height);
+			}
+		},
+
+		_onDragStart: function (/**Event*/evt, /**boolean*/useFallback) {
+			var dataTransfer = evt.dataTransfer,
+				options = this.options;
+
+			this._offUpEvents();
+
+			if (activeGroup.pull == 'clone') {
+				cloneEl = dragEl.cloneNode(true);
+				_css(cloneEl, 'display', 'none');
+				rootEl.insertBefore(cloneEl, dragEl);
+			}
+
+			if (useFallback) {
+
+				if (useFallback === 'touch') {
+					// Bind touch events
+					_on(document, 'touchmove', this._onTouchMove);
+					_on(document, 'touchend', this._onDrop);
+					_on(document, 'touchcancel', this._onDrop);
+				} else {
+					// Old brwoser
+					_on(document, 'mousemove', this._onTouchMove);
+					_on(document, 'mouseup', this._onDrop);
+				}
+
+				this._loopId = setInterval(this._emulateDragOver, 50);
+			}
+			else {
+				if (dataTransfer) {
+					dataTransfer.effectAllowed = 'move';
+					options.setData && options.setData.call(this, dataTransfer, dragEl);
+				}
+
+				_on(document, 'drop', this);
+				setTimeout(this._dragStarted, 0);
+			}
+		},
+
+		_onDragOver: function (/**Event*/evt) {
+			var el = this.el,
+				target,
+				dragRect,
+				revert,
+				options = this.options,
+				group = options.group,
+				groupPut = group.put,
+				isOwner = (activeGroup === group),
+				canSort = options.sort;
+
+			if (evt.preventDefault !== void 0) {
+				evt.preventDefault();
+				!options.dragoverBubble && evt.stopPropagation();
+			}
+
+			moved = true;
+
+			if (activeGroup && !options.disabled &&
+				(isOwner
+					? canSort || (revert = !rootEl.contains(dragEl)) // Reverting item into the original list
+					: activeGroup.pull && groupPut && (
+						(activeGroup.name === group.name) || // by Name
+						(groupPut.indexOf && ~groupPut.indexOf(activeGroup.name)) // by Array
+					)
+				) &&
+				(evt.rootEl === void 0 || evt.rootEl === this.el) // touch fallback
+			) {
+				// Smart auto-scrolling
+				_autoScroll(evt, options, this.el);
+
+				if (_silent) {
+					return;
+				}
+
+				target = _closest(evt.target, options.draggable, el);
+				dragRect = dragEl.getBoundingClientRect();
+
+				if (revert) {
+					_cloneHide(true);
+
+					if (cloneEl || nextEl) {
+						rootEl.insertBefore(dragEl, cloneEl || nextEl);
+					}
+					else if (!canSort) {
+						rootEl.appendChild(dragEl);
+					}
+
+					return;
+				}
+
+
+				if ((el.children.length === 0) || (el.children[0] === ghostEl) ||
+					(el === evt.target) && (target = _ghostIsLast(el, evt))
+				) {
+
+					if (target) {
+						if (target.animated) {
+							return;
+						}
+
+						targetRect = target.getBoundingClientRect();
+					}
+
+					_cloneHide(isOwner);
+
+					if (_onMove(rootEl, el, dragEl, dragRect, target, targetRect) !== false) {
+						if (!dragEl.contains(el)) {
+							el.appendChild(dragEl);
+							parentEl = el; // actualization
+						}
+
+						this._animate(dragRect, dragEl);
+						target && this._animate(targetRect, target);
+					}
+				}
+				else if (target && !target.animated && target !== dragEl && (target.parentNode[expando] !== void 0)) {
+					if (lastEl !== target) {
+						lastEl = target;
+						lastCSS = _css(target);
+						lastParentCSS = _css(target.parentNode);
+					}
+
+
+					var targetRect = target.getBoundingClientRect(),
+						width = targetRect.right - targetRect.left,
+						height = targetRect.bottom - targetRect.top,
+						floating = /left|right|inline/.test(lastCSS.cssFloat + lastCSS.display)
+							|| (lastParentCSS.display == 'flex' && lastParentCSS['flex-direction'].indexOf('row') === 0),
+						isWide = (target.offsetWidth > dragEl.offsetWidth),
+						isLong = (target.offsetHeight > dragEl.offsetHeight),
+						halfway = (floating ? (evt.clientX - targetRect.left) / width : (evt.clientY - targetRect.top) / height) > 0.5,
+						nextSibling = target.nextElementSibling,
+						moveVector = _onMove(rootEl, el, dragEl, dragRect, target, targetRect),
+						after
+					;
+
+					if (moveVector !== false) {
+						_silent = true;
+						setTimeout(_unsilent, 30);
+
+						_cloneHide(isOwner);
+
+						if (moveVector === 1 || moveVector === -1) {
+							after = (moveVector === 1);
+						}
+						else if (floating) {
+							var elTop = dragEl.offsetTop,
+								tgTop = target.offsetTop;
+
+							if (elTop === tgTop) {
+								after = (target.previousElementSibling === dragEl) && !isWide || halfway && isWide;
+							} else {
+								after = tgTop > elTop;
+							}
+						} else {
+							after = (nextSibling !== dragEl) && !isLong || halfway && isLong;
+						}
+
+						if (!dragEl.contains(el)) {
+							if (after && !nextSibling) {
+								el.appendChild(dragEl);
+							} else {
+								target.parentNode.insertBefore(dragEl, after ? nextSibling : target);
+							}
+						}
+
+						parentEl = dragEl.parentNode; // actualization
+
+						this._animate(dragRect, dragEl);
+						this._animate(targetRect, target);
+					}
+				}
+			}
+		},
+
+		_animate: function (prevRect, target) {
+			var ms = this.options.animation;
+
+			if (ms) {
+				var currentRect = target.getBoundingClientRect();
+
+				_css(target, 'transition', 'none');
+				_css(target, 'transform', 'translate3d('
+					+ (prevRect.left - currentRect.left) + 'px,'
+					+ (prevRect.top - currentRect.top) + 'px,0)'
+				);
+
+				target.offsetWidth; // repaint
+
+				_css(target, 'transition', 'all ' + ms + 'ms');
+				_css(target, 'transform', 'translate3d(0,0,0)');
+
+				clearTimeout(target.animated);
+				target.animated = setTimeout(function () {
+					_css(target, 'transition', '');
+					_css(target, 'transform', '');
+					target.animated = false;
+				}, ms);
+			}
+		},
+
+		_offUpEvents: function () {
+			var ownerDocument = this.el.ownerDocument;
+
+			_off(document, 'touchmove', this._onTouchMove);
+			_off(ownerDocument, 'mouseup', this._onDrop);
+			_off(ownerDocument, 'touchend', this._onDrop);
+			_off(ownerDocument, 'touchcancel', this._onDrop);
+		},
+
+		_onDrop: function (/**Event*/evt) {
+			var el = this.el,
+				options = this.options;
+
+			clearInterval(this._loopId);
+			clearInterval(autoScroll.pid);
+			clearTimeout(this._dragStartTimer);
+
+			// Unbind events
+			_off(document, 'mousemove', this._onTouchMove);
+
+			if (this.nativeDraggable) {
+				_off(document, 'drop', this);
+				_off(el, 'dragstart', this._onDragStart);
+			}
+
+			this._offUpEvents();
+
+			if (evt) {
+				if (moved) {
+					evt.preventDefault();
+					!options.dropBubble && evt.stopPropagation();
+				}
+
+				ghostEl && ghostEl.parentNode.removeChild(ghostEl);
+
+				if (dragEl) {
+					if (this.nativeDraggable) {
+						_off(dragEl, 'dragend', this);
+					}
+
+					_disableDraggable(dragEl);
+
+					// Remove class's
+					_toggleClass(dragEl, this.options.ghostClass, false);
+					_toggleClass(dragEl, this.options.chosenClass, false);
+
+					if (rootEl !== parentEl) {
+						newIndex = _index(dragEl);
+
+						if (newIndex >= 0) {
+							// drag from one list and drop into another
+							_dispatchEvent(null, parentEl, 'sort', dragEl, rootEl, oldIndex, newIndex);
+							_dispatchEvent(this, rootEl, 'sort', dragEl, rootEl, oldIndex, newIndex);
+
+							// Add event
+							_dispatchEvent(null, parentEl, 'add', dragEl, rootEl, oldIndex, newIndex);
+
+							// Remove event
+							_dispatchEvent(this, rootEl, 'remove', dragEl, rootEl, oldIndex, newIndex);
+						}
+					}
+					else {
+						// Remove clone
+						cloneEl && cloneEl.parentNode.removeChild(cloneEl);
+
+						if (dragEl.nextSibling !== nextEl) {
+							// Get the index of the dragged element within its parent
+							newIndex = _index(dragEl);
+
+							if (newIndex >= 0) {
+								// drag & drop within the same list
+								_dispatchEvent(this, rootEl, 'update', dragEl, rootEl, oldIndex, newIndex);
+								_dispatchEvent(this, rootEl, 'sort', dragEl, rootEl, oldIndex, newIndex);
+							}
+						}
+					}
+
+					if (Sortable.active) {
+						if (newIndex === null || newIndex === -1) {
+							newIndex = oldIndex;
+						}
+
+						_dispatchEvent(this, rootEl, 'end', dragEl, rootEl, oldIndex, newIndex);
+
+						// Save sorting
+						this.save();
+					}
+				}
+
+				// Nulling
+				rootEl =
+				dragEl =
+				parentEl =
+				ghostEl =
+				nextEl =
+				cloneEl =
+
+				scrollEl =
+				scrollParentEl =
+
+				tapEvt =
+				touchEvt =
+
+				moved =
+				newIndex =
+
+				lastEl =
+				lastCSS =
+
+				activeGroup =
+				Sortable.active = null;
+			}
+		},
+
+
+		handleEvent: function (/**Event*/evt) {
+			var type = evt.type;
+
+			if (type === 'dragover' || type === 'dragenter') {
+				if (dragEl) {
+					this._onDragOver(evt);
+					_globalDragOver(evt);
+				}
+			}
+			else if (type === 'drop' || type === 'dragend') {
+				this._onDrop(evt);
+			}
+		},
+
+
+		/**
+		 * Serializes the item into an array of string.
+		 * @returns {String[]}
+		 */
+		toArray: function () {
+			var order = [],
+				el,
+				children = this.el.children,
+				i = 0,
+				n = children.length,
+				options = this.options;
+
+			for (; i < n; i++) {
+				el = children[i];
+				if (_closest(el, options.draggable, this.el)) {
+					order.push(el.getAttribute(options.dataIdAttr) || _generateId(el));
+				}
+			}
+
+			return order;
+		},
+
+
+		/**
+		 * Sorts the elements according to the array.
+		 * @param  {String[]}  order  order of the items
+		 */
+		sort: function (order) {
+			var items = {}, rootEl = this.el;
+
+			this.toArray().forEach(function (id, i) {
+				var el = rootEl.children[i];
+
+				if (_closest(el, this.options.draggable, rootEl)) {
+					items[id] = el;
+				}
+			}, this);
+
+			order.forEach(function (id) {
+				if (items[id]) {
+					rootEl.removeChild(items[id]);
+					rootEl.appendChild(items[id]);
+				}
+			});
+		},
+
+
+		/**
+		 * Save the current sorting
+		 */
+		save: function () {
+			var store = this.options.store;
+			store && store.set(this);
+		},
+
+
+		/**
+		 * For each element in the set, get the first element that matches the selector by testing the element itself and traversing up through its ancestors in the DOM tree.
+		 * @param   {HTMLElement}  el
+		 * @param   {String}       [selector]  default: `options.draggable`
+		 * @returns {HTMLElement|null}
+		 */
+		closest: function (el, selector) {
+			return _closest(el, selector || this.options.draggable, this.el);
+		},
+
+
+		/**
+		 * Set/get option
+		 * @param   {string} name
+		 * @param   {*}      [value]
+		 * @returns {*}
+		 */
+		option: function (name, value) {
+			var options = this.options;
+
+			if (value === void 0) {
+				return options[name];
+			} else {
+				options[name] = value;
+
+				if (name === 'group') {
+					_prepareGroup(options);
+				}
+			}
+		},
+
+
+		/**
+		 * Destroy
+		 */
+		destroy: function () {
+			var el = this.el;
+
+			el[expando] = null;
+
+			_off(el, 'mousedown', this._onTapStart);
+			_off(el, 'touchstart', this._onTapStart);
+
+			if (this.nativeDraggable) {
+				_off(el, 'dragover', this);
+				_off(el, 'dragenter', this);
+			}
+
+			// Remove draggable attributes
+			Array.prototype.forEach.call(el.querySelectorAll('[draggable]'), function (el) {
+				el.removeAttribute('draggable');
+			});
+
+			touchDragOverListeners.splice(touchDragOverListeners.indexOf(this._onDragOver), 1);
+
+			this._onDrop();
+
+			this.el = el = null;
+		}
+	};
+
+
+	function _cloneHide(state) {
+		if (cloneEl && (cloneEl.state !== state)) {
+			_css(cloneEl, 'display', state ? 'none' : '');
+			!state && cloneEl.state && rootEl.insertBefore(cloneEl, dragEl);
+			cloneEl.state = state;
+		}
+	}
+
+
+	function _closest(/**HTMLElement*/el, /**String*/selector, /**HTMLElement*/ctx) {
+		if (el) {
+			ctx = ctx || document;
+			selector = selector.split('.');
+
+			var tag = selector.shift().toUpperCase(),
+				re = new RegExp('\\s(' + selector.join('|') + ')(?=\\s)', 'g');
+
+			do {
+				if (
+					(tag === '>*' && el.parentNode === ctx) || (
+						(tag === '' || el.nodeName.toUpperCase() == tag) &&
+						(!selector.length || ((' ' + el.className + ' ').match(re) || []).length == selector.length)
+					)
+				) {
+					return el;
+				}
+			}
+			while (el !== ctx && (el = el.parentNode));
+		}
+
+		return null;
+	}
+
+
+	function _globalDragOver(/**Event*/evt) {
+		if (evt.dataTransfer) {
+			evt.dataTransfer.dropEffect = 'move';
+		}
+		evt.preventDefault();
+	}
+
+
+	function _on(el, event, fn) {
+		el.addEventListener(event, fn, false);
+	}
+
+
+	function _off(el, event, fn) {
+		el.removeEventListener(event, fn, false);
+	}
+
+
+	function _toggleClass(el, name, state) {
+		if (el) {
+			if (el.classList) {
+				el.classList[state ? 'add' : 'remove'](name);
+			}
+			else {
+				var className = (' ' + el.className + ' ').replace(RSPACE, ' ').replace(' ' + name + ' ', ' ');
+				el.className = (className + (state ? ' ' + name : '')).replace(RSPACE, ' ');
+			}
+		}
+	}
+
+
+	function _css(el, prop, val) {
+		var style = el && el.style;
+
+		if (style) {
+			if (val === void 0) {
+				if (document.defaultView && document.defaultView.getComputedStyle) {
+					val = document.defaultView.getComputedStyle(el, '');
+				}
+				else if (el.currentStyle) {
+					val = el.currentStyle;
+				}
+
+				return prop === void 0 ? val : val[prop];
+			}
+			else {
+				if (!(prop in style)) {
+					prop = '-webkit-' + prop;
+				}
+
+				style[prop] = val + (typeof val === 'string' ? '' : 'px');
+			}
+		}
+	}
+
+
+	function _find(ctx, tagName, iterator) {
+		if (ctx) {
+			var list = ctx.getElementsByTagName(tagName), i = 0, n = list.length;
+
+			if (iterator) {
+				for (; i < n; i++) {
+					iterator(list[i], i);
+				}
+			}
+
+			return list;
+		}
+
+		return [];
+	}
+
+
+
+	function _dispatchEvent(sortable, rootEl, name, targetEl, fromEl, startIndex, newIndex) {
+		var evt = document.createEvent('Event'),
+			options = (sortable || rootEl[expando]).options,
+			onName = 'on' + name.charAt(0).toUpperCase() + name.substr(1);
+
+		evt.initEvent(name, true, true);
+
+		evt.to = rootEl;
+		evt.from = fromEl || rootEl;
+		evt.item = targetEl || rootEl;
+		evt.clone = cloneEl;
+
+		evt.oldIndex = startIndex;
+		evt.newIndex = newIndex;
+
+		rootEl.dispatchEvent(evt);
+
+		if (options[onName]) {
+			options[onName].call(sortable, evt);
+		}
+	}
+
+
+	function _onMove(fromEl, toEl, dragEl, dragRect, targetEl, targetRect) {
+		var evt,
+			sortable = fromEl[expando],
+			onMoveFn = sortable.options.onMove,
+			retVal;
+
+		evt = document.createEvent('Event');
+		evt.initEvent('move', true, true);
+
+		evt.to = toEl;
+		evt.from = fromEl;
+		evt.dragged = dragEl;
+		evt.draggedRect = dragRect;
+		evt.related = targetEl || toEl;
+		evt.relatedRect = targetRect || toEl.getBoundingClientRect();
+
+		fromEl.dispatchEvent(evt);
+
+		if (onMoveFn) {
+			retVal = onMoveFn.call(sortable, evt);
+		}
+
+		return retVal;
+	}
+
+
+	function _disableDraggable(el) {
+		el.draggable = false;
+	}
+
+
+	function _unsilent() {
+		_silent = false;
+	}
+
+
+	/** @returns {HTMLElement|false} */
+	function _ghostIsLast(el, evt) {
+		var lastEl = el.lastElementChild,
+				rect = lastEl.getBoundingClientRect();
+
+		return ((evt.clientY - (rect.top + rect.height) > 5) || (evt.clientX - (rect.right + rect.width) > 5)) && lastEl; // min delta
+	}
+
+
+	/**
+	 * Generate id
+	 * @param   {HTMLElement} el
+	 * @returns {String}
+	 * @private
+	 */
+	function _generateId(el) {
+		var str = el.tagName + el.className + el.src + el.href + el.textContent,
+			i = str.length,
+			sum = 0;
+
+		while (i--) {
+			sum += str.charCodeAt(i);
+		}
+
+		return sum.toString(36);
+	}
+
+	/**
+	 * Returns the index of an element within its parent
+	 * @param  {HTMLElement} el
+	 * @return {number}
+	 */
+	function _index(el) {
+		var index = 0;
+
+		if (!el || !el.parentNode) {
+			return -1;
+		}
+
+		while (el && (el = el.previousElementSibling)) {
+			if (el.nodeName.toUpperCase() !== 'TEMPLATE') {
+				index++;
+			}
+		}
+
+		return index;
+	}
+
+	function _throttle(callback, ms) {
+		var args, _this;
+
+		return function () {
+			if (args === void 0) {
+				args = arguments;
+				_this = this;
+
+				setTimeout(function () {
+					if (args.length === 1) {
+						callback.call(_this, args[0]);
+					} else {
+						callback.apply(_this, args);
+					}
+
+					args = void 0;
+				}, ms);
+			}
+		};
+	}
+
+	function _extend(dst, src) {
+		if (dst && src) {
+			for (var key in src) {
+				if (src.hasOwnProperty(key)) {
+					dst[key] = src[key];
+				}
+			}
+		}
+
+		return dst;
+	}
+
+
+	// Export utils
+	Sortable.utils = {
+		on: _on,
+		off: _off,
+		css: _css,
+		find: _find,
+		is: function (el, selector) {
+			return !!_closest(el, selector, el);
+		},
+		extend: _extend,
+		throttle: _throttle,
+		closest: _closest,
+		toggleClass: _toggleClass,
+		index: _index
+	};
+
+
+	/**
+	 * Create sortable instance
+	 * @param {HTMLElement}  el
+	 * @param {Object}      [options]
+	 */
+	Sortable.create = function (el, options) {
+		return new Sortable(el, options);
+	};
+
+
+	// Export
+	Sortable.version = '1.4.2';
+	return Sortable;
+});
 
 
 /***/ },
-/* 77 */
+/* 79 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+'use strict';
+
+(function () {
+  "use strict";
+
+  function buildDraggable(Sortable) {
+    function removeNode(node) {
+      node.parentElement.removeChild(node);
+    }
+
+    function insertNodeAt(fatherNode, node, position) {
+      if (position < fatherNode.children.length) {
+        fatherNode.insertBefore(node, fatherNode.children[position]);
+      } else {
+        fatherNode.appendChild(node);
+      }
+    }
+
+    function computeVmIndex(vnodes, element) {
+      return vnodes.map(function (elt) {
+        return elt.elm;
+      }).indexOf(element);
+    }
+
+    function updatePosition(collection, oldIndex, newIndex) {
+      if (collection) {
+        collection.splice(newIndex, 0, collection.splice(oldIndex, 1)[0]);
+      }
+    }
+
+    function _computeIndexes(slots, children) {
+      if (!slots) {
+        return [];
+      }
+      return Array.prototype.map.call(children, function (elt) {
+        return computeVmIndex(slots, elt);
+      });
+    }
+
+    function merge(target, source) {
+      var output = Object(target);
+      for (var nextKey in source) {
+        if (source.hasOwnProperty(nextKey)) {
+          output[nextKey] = source[nextKey];
+        }
+      }
+      return output;
+    }
+
+    function emit(evtName, evtData) {
+      this.$emit(evtName.toLowerCase(), evtData);
+    }
+
+    function delegateAndEmit(evtName) {
+      var _this = this;
+
+      return function (evtData) {
+        _this['onDrag' + evtName](evtData);
+        emit.call(_this, evtName, evtData);
+      };
+    }
+
+    var props = {
+      options: Object,
+      list: {
+        type: Array,
+        required: false,
+        default: null
+      },
+      clone: {
+        type: Function,
+        default: function _default(original) {
+          return original;
+        }
+      },
+      element: {
+        type: String,
+        default: 'div'
+      }
+    };
+
+    var draggableComponent = {
+      props: props,
+
+      data: function data() {
+        return {
+          transitionMode: false
+        };
+      },
+      render: function render(h) {
+        if (this.$slots.default && this.$slots.default.length === 1) {
+          var child = this.$slots.default[0];
+          if (child.componentOptions && child.componentOptions.tag === "transition-group") {
+            this.transitionMode = true;
+          }
+        }
+        return h(this.element, null, this.$slots.default);
+      },
+      mounted: function mounted() {
+        var _this2 = this;
+
+        var optionsAdded = {};
+        ['Start', 'Add', 'Remove', 'Update', 'End'].forEach(function (elt) {
+          optionsAdded['on' + elt] = delegateAndEmit.call(_this2, elt);
+        });
+
+        ['Choose', 'Sort', 'Filter', 'Move', 'Clone'].forEach(function (elt) {
+          optionsAdded['on' + elt] = emit.bind(_this2, elt);
+        });
+
+        var options = merge(this.options, optionsAdded);
+        this._sortable = new Sortable(this.rootContainer, options);
+        this.computeIndexes();
+      },
+      beforeDestroy: function beforeDestroy() {
+        this._sortable.destroy();
+      },
+      updated: function updated() {
+        this.computeIndexes();
+      },
+
+
+      computed: {
+        rootContainer: function rootContainer() {
+          return this.transitionMode ? this.$el.children[0] : this.$el;
+        }
+      },
+
+      methods: {
+        getChildrenNodes: function getChildrenNodes() {
+          var rawNodes = this.$slots.default;
+          return this.transitionMode ? rawNodes[0].child.$slots.default : rawNodes;
+        },
+        computeIndexes: function computeIndexes() {
+          var _this3 = this;
+
+          this.$nextTick(function () {
+            _this3.visibleIndexes = _computeIndexes(_this3.getChildrenNodes(), _this3.rootContainer.children);
+          });
+        },
+        onDragStart: function onDragStart(evt) {
+          if (!this.list) {
+            return;
+          }
+          var currentIndex = computeVmIndex(this.getChildrenNodes(), evt.item);
+          var element = this.list[currentIndex];
+          this.context = {
+            currentIndex: currentIndex,
+            element: element
+          };
+          evt.item._underlying_vm_ = this.clone(element);
+        },
+        onDragAdd: function onDragAdd(evt) {
+          var element = evt.item._underlying_vm_;
+          if (!this.list || element === undefined) {
+            return;
+          }
+          removeNode(evt.item);
+          var indexes = this.visibleIndexes;
+          var domNewIndex = evt.newIndex;
+          var numberIndexes = indexes.length;
+          var newIndex = domNewIndex > numberIndexes - 1 ? numberIndexes : indexes[domNewIndex];
+          this.list.splice(newIndex, 0, element);
+          this.computeIndexes();
+        },
+        onDragRemove: function onDragRemove(evt) {
+          if (!this.list) {
+            return;
+          }
+          insertNodeAt(this.rootContainer, evt.item, evt.oldIndex);
+          var isCloning = !!evt.clone;
+          if (isCloning) {
+            removeNode(evt.clone);
+            return;
+          }
+          var oldIndex = this.context.currentIndex;
+          this.list.splice(oldIndex, 1);
+        },
+        onDragUpdate: function onDragUpdate(evt) {
+          if (!this.list) {
+            return;
+          }
+          removeNode(evt.item);
+          insertNodeAt(evt.from, evt.item, evt.oldIndex);
+          var oldIndexVM = this.context.currentIndex;
+          var newIndexVM = this.visibleIndexes[evt.newIndex];
+          updatePosition(this.list, oldIndexVM, newIndexVM);
+        },
+        onDragEnd: function onDragEnd(evt) {
+          this.computeIndexes();
+        }
+      }
+    };
+    return draggableComponent;
+  }
+
+  if (true) {
+    var Sortable = __webpack_require__(78);
+    module.exports = buildDraggable(Sortable);
+  } else if (typeof define == "function" && define.amd) {
+    define(['Sortable'], function (Sortable) {
+      return buildDraggable(Sortable);
+    });
+  } else if (window && window.Vue && window.Sortable) {
+    var draggable = buildDraggable(window.Sortable);
+    Vue.component('draggable', draggable);
+  }
+})();
+
+/***/ },
+/* 80 */
 /***/ function(module, exports) {
 
-/**
- * Replace {0} in message. Credits: @Haixing-Hu
- *
- * @param template
- *    the message template, which contains zero or more placeholders, e.g.,
- *    "{0}", "{1}", ...
- * @param arg1, arg2, ...
- *    zero or more arguments used to replace the corresponding placeholders
- *    in the message template.
- * @return
- *    the formatted message.
- * @author Haixing Hu
- */
-
-var PLACEHOLDER_REGEXP = /\{([0-9a-zA-Z]+)\}/g;
-
-module.exports = function() {
-    if(arguments.length === 0) {
-        return ""
-    }else if(arguments.length === 1) {
-        return arguments[0]
-    }else{
-        var args = arguments
-        var message = args[0]
-        return message.replace(PLACEHOLDER_REGEXP, function(match, placeholder, index) {
-            if (message[index - 1] === "{" && message[index + match.length] === "}") {
-                return placeholder;
-            }else{
-            var i = parseInt(placeholder)
-            var result = args[i + 1]
-                if (result === null || result === undefined) {
-                    return ""
-                }else{
-                    return result
-                }
-            }
-        })
-    }
-}
+"use strict";
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});/**
+ * Tools
+ */exports.default={name:'jdb',/**
+   * jdb.moveMultipleArrayItems(array,from,many,to)
+   * 
+   * Verplaatst items in een array
+   * 
+   * @param array array De originele array
+   * @param int from Vanaf welke index
+   * @param int many Hoeveel items
+   * @param int to Naar welke index
+   */moveMultipleArrayItems:function moveMultipleArrayItems(array,from,many,to){// Make sure from and to are >0 and <array.length
+var len=array.length;from=from<0?0:from;from=from>len?len:from;to=to<0?0:to;to=to>len?len:to;var newArray=array.slice();// copy
+// Als from=to, dan hoeft er niets te gebeuren
+if(from!==to){var removedItems=newArray.splice(from,many);// if (to>from) to-=many;  // Als de items naar hogere index gaan, vershuif `to` mee.
+for(var i=0;i<many;i++){newArray.splice(to+i,0,removedItems[i]);}}return newArray;}};
 
 /***/ }
 /******/ ]);
