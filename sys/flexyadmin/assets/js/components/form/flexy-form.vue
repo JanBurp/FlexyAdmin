@@ -37,7 +37,8 @@ export default {
   data : function() {
     return {
       row : {},
-      validationErrors : {}
+      validationErrors : {},
+      isSaving : false,
     }
   },
   // Make copy of props.data
@@ -68,41 +69,52 @@ export default {
     },
     
     cancel : function() {
-      var url = 'admin/show/grid/' + this.name;
-      window.location.assign( url );
+      if (!this.isSaving) {
+        var url = 'admin/show/grid/' + this.name;
+        window.location.assign( url );
+      }
     },
     
     save : function() {
-      this.postForm();
+      if (!this.isSaving) {
+        this.postForm();
+      }
     },
     
     submit : function() {
-      var name = this.name;
-      this.postForm().then(function (response) {
-        if (!response.error) {
-          var url = 'admin/show/grid/' + name;
-          window.location.assign( url );
-        }
-      })
+      if (!this.isSaving) {
+        var name = this.name;
+        this.postForm().then(function (response) {
+          if (!response.error) {
+            var url = 'admin/show/grid/' + name;
+            window.location.assign( url );
+          }
+        })
+      }
     },
     
     postForm : function() {
       var self=this;
+      self.isSaving = true;
       return this.api({
         url : 'row',
         'data': {
           'table'   : this.name,
-          'where'   : this.primary,
+          'where'   : this.row['id'],
           'data'    : this.row
         },
       }).then(function(response){
+        self.isSaving = false;
         if (!response.error) {
-          if (response.data.info.validation!==false) {
+          if ( _.isUndefined(response.data.info) || response.data.info.validation!==false) {
             flexyState.addMessage('Item saved');
+            if (self.isNewItem()) {
+              self.row['id'] = response.data.data.id;
+            }
           }
           else {
             flexyState.addMessage('Niet alle velden zijn goed ingevuld!','danger');
-            self.validationErrors = response.data.info.validation_errors;
+            if ( !_.isUndefined(response.data.info) ) self.validationErrors = response.data.info.validation_errors;
           }
         }
         else {
@@ -110,6 +122,10 @@ export default {
         }
         return response;
       });
+    },
+    
+    isNewItem : function() {
+      return this.row['id'] === -1;
     },
     
     updateField : function( field, value ) {
@@ -126,9 +142,9 @@ export default {
   <div class="card-header">
     <h1>{{title}}</h1>
     <div class="btn-group" role="group">
-      <button type="button" v-on:click="cancel()" class="btn btn-sm btn-danger">Annuleer<span class="fa fa-close"></span></button>
-      <button type="button" v-on:click="save()"   class="btn btn-sm btn-warning">Bewaar<span class="fa fa-save"></span></button>
-      <button type="button" v-on:click="submit()" class="btn btn-sm btn-info">Invoeren<span class="fa fa-check"></span></button>
+      <button type="button" v-on:click="cancel()" :disabled="isSaving" class="btn btn-sm btn-danger">Annuleer<span class="fa fa-close"></span></button>
+      <button type="button" v-on:click="save()"   :disabled="isSaving" class="btn btn-sm btn-warning">Bewaar<span class="fa fa-save"></span></button>
+      <button type="button" v-on:click="submit()" :disabled="isSaving" class="btn btn-sm btn-info">Invoeren<span class="fa fa-check"></span></button>
     </div>
   </div>
 
