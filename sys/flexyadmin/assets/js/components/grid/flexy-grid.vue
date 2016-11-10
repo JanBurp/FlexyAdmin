@@ -87,9 +87,15 @@ export default {
      */
     draggableOptions : function() {
       return {
+        // group         : { name:'tree', pull:true},
         draggable     : 'tr',
         handle        : '.draggable-handle',
         forceFallback : true,
+        // scroll        : true,
+        // scrollFn      : function(offsetX, offsetY, originalEvent) {
+        //   console.log(offsetY);
+        //
+        // },
       }
     },
     

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?=$language?>">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -20,7 +20,10 @@
   
   <div id="header" class="navbar navbar-fixed-top">
     <progress class="progress progress-danger progress-striped" :value="state.progress" max="100"></progress>
-    <div class="navbar-text"><flexy-blocks href="<?=$base_url?>" text="<?=$str_title?>"/></div>
+    <div class="navbar-text">
+      <a href="<?=$base_url?>" title="TokPit <?=$version?>"><span class="flexy-block btn btn-secondary">TokPit</span></a>
+      <flexy-blocks href="<?=$base_url?>" text="<?=$str_title?>"/>
+    </div>
     <?=$headermenu?>
   </div>
   
@@ -31,23 +34,8 @@
     <div id="main" class="col-sm-10"><?=$content?></div>
   </div>
   
-  <div id="footer" class="navbar navbar-fixed-bottom">
-    <div class="navbar-text"><flexy-blocks href="<?=$base_url?>" text="TokPit"/></div>
-    <div class="navbar-text"><span class="flexy-block btn btn-outline-danger text-lowercase"><?=$version?></span></div>
-    <?=$footermenu?>
-    <?php if (!empty($debug)): ?>
-    <div class="card debug-info">
-      <div class="card-block">
-      <?php foreach ($debug as $message): ?>
-        <?=trace_($message,false);?>
-      <?php endforeach ?>
-      </div>
-    </div>
-    <?php endif ?>
-  </div>
-  
-  <!-- <flexy-help class="flexy-help">
-    <div class="card form">
+  <flexy-help class="flexy-help">
+    <div class="card">
       <div class="card-header">
         <h1>Help</h1>
       </div>
@@ -58,7 +46,7 @@
         <p>Quisque nibh tortor, blandit a mollis vitae, euismod non nulla. Duis dui erat, interdum sit amet porttitor a, porttitor nec augue. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed quis porta turpis. Suspendisse nec mi enim, ut fringilla tellus. Nunc sollicitudin justo at leo tempus eu fringilla nisl tempus. Sed id tellus non eros tristique vehicula. Quisque sollicitudin augue id velit euismod interdum. Proin lobortis ornare magna in facilisis. Nulla vestibulum ultricies dui ut fringilla. Duis eu ante in lorem pellentesque bibendum. Praesent id velit vel nulla ullamcorper adipiscing quis quis tellus. Integer nec augue quis felis dapibus imperdiet ac et nibh.</p>
       </div>
     </div>
-  </flexy-help> -->
+  </flexy-help>
 </div>
 
 

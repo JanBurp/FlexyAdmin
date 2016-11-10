@@ -114,8 +114,11 @@ a>.fa, .btn>.fa {margin-right:.35rem;margin-left:.35rem;}
   top:0;
   right:0;
   width:25%;
+  height:100%;
+  box-shadow:0 0 .5rem $gray-dark;
   z-index:9999;
 }
+.flexy-help>.card {height:100%;}
 
 /* MAIN > CARD */
 #main > .card {border:solid 1px $brand-primary;}
@@ -132,7 +135,10 @@ a>.fa, .btn>.fa {margin-right:.35rem;margin-left:.35rem;}
 .card.form .form-group.row:hover {border-radius:$border-radius;background-color:$gray-lighter;}
 
 /* SORTABLE */
-.sortable-chosen, .sortable-fallback {background-color:$gray-lightest;border-top:dashed 2px $brand-primary;border-bottom:dashed 2px $brand-primary;}
+.sortable-chosen, .sortable-fallback {
+  background-color:$gray-lightest;
+  box-shadow:0 0 .5rem $gray-dark;
+}
 
 
 /* TRANSITIONS */
