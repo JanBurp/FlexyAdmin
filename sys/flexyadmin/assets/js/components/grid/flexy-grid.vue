@@ -53,6 +53,8 @@ export default {
         oldItems    : false,
         children    : false,
         newPage     : false,
+        oldIndex    : 0,
+        newIndex    : 0,
       },
     }
   },
@@ -266,8 +268,7 @@ export default {
       // Onthoud 'order' van eerste item
       this.draggable.orderStart = this.items[0]['order'].value;
       // Onthoud kopie van huidige items
-      // this.draggable.oldItems = _.cloneDeep(this.items);
-      this.draggable.oldItems = this.items.slice();
+      this.draggable.oldItems = _.cloneDeep(this.items);
       // Als tree, onthoud dan de children als die er zijn
       this.draggable.children = false;
       if (this.gridType==='tree' && this.items[index]._info.has_children) {
@@ -290,9 +291,11 @@ export default {
       var newIndex = event.newIndex;
 
       if (oldIndex!==newIndex) {
+        this.draggable.oldIndex = oldIndex;
+        this.draggable.newIndex = newIndex;
         
         if (this.gridType==='tree') {
-          var items = this.draggable.oldItems;
+          var items = _.cloneDeep(this.draggable.oldItems);
           var number_of_children = this.draggable.children.length || 0;
           // Pas parent van verplaatste item aan
           // Bijna altijd 0, behalve als het volgende item een hoger level heeft: dan heeft het dezelfde parent als dat item, dus als er een item na komt, neem die parent.
@@ -321,13 +324,41 @@ export default {
         if (flexyState.debug) {
           console.log( 'draggable_onEnd ---------' );
           console.log(oldIndex,' => ',newIndex);
-          this._log(self.items);
+          self._log(self.items);
         }
         
-        // TODO Update server...
+        self.postNewOrder().then(function(response){
+          self.draggable.item = false;
+        });
       }
-      this.draggable.item = false;
+      else {
+        self.draggable.item = false;
+      }
     },
+    
+    postNewOrder : function() {
+      var self=this;
+      var itemId = this.draggable.item;
+      var newOrder = this.draggable.orderStart + this.items[ this.draggable.newIndex ].order.value;
+      return this.api({
+        url : 'table_order',
+        'data': {
+          'table' : self.name,
+          'id'    : itemId,
+          'from'  : newOrder,
+        },
+      }).then(function(response){
+        var error = response.error;
+        if (!error && response.data.data===false) error = true;
+        if (error) {
+          flexyState.addMessage( self.$lang.grid_order_save_error, 'danger');
+          // Terug naar oude situatie
+          self.items = self.draggable.oldItems;
+        }
+        return response;
+      });
+    },
+    
     
     _log : function( items ) {
       var self = this;

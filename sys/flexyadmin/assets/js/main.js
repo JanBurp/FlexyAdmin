@@ -77,7 +77,7 @@ Vue.mixin({
       })
       .catch(function (error) {
         flexyState.hideProgress();
-        flexyState.addMessage( self.error_api,'danger');
+        flexyState.addMessage( error.response.data,'danger');
         console.log('api ERROR <',request,error);
         return {'error':error};
       });

@@ -6,7 +6,7 @@
 
 export default {
   name: 'FlexyState',
-  debug: false,
+  debug: true,
   state: {
     progress  : 0,
     messages    : [],
@@ -36,10 +36,15 @@ export default {
     var self = this;
     self.state.messages.push({'text':message,'type':type});
     self.debug && console.log('state.messages',self.state.messages); 
-    window.setTimeout(function(){
-      self.state.messages.shift();
-      self.debug && console.log('state.messages',self.state.messages); 
-    }, 3000);
+    if (type!=='danger') {
+      window.setTimeout(function(){
+        self.state.messages.shift();
+        self.debug && console.log('state.messages',self.state.messages); 
+      }, 3000);
+    }
+  },
+  removeMessage : function(id) {
+    this.state.messages.splice(id,1);
   },
   
 };
