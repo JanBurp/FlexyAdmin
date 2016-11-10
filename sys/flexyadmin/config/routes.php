@@ -60,9 +60,11 @@ $route['_cli/(.*)'] = 'cli/index/$1';
  */
 $route['_media/download/(.*)/(.*)'] = "file/file/download/$1/$2";
 $route['_media/serve/(.*)/(.*)']    = "file/file/serve/$1/$2";
+$route['_media/thumb/(.*)/(.*)']    = "file/file/thumb/$1/$2";
 $route['_media/(.*)/(.*)']          = "file/file/serve/$1/$2";
 
 $route['file/serve/(.*)/(.*)']      = "file/file/serve/$1/$2";
+$route['file/thumb/(.*)/(.*)']      = "file/file/thumb/$1/$2";
 $route['file/download/(.*)/(.*)']   = "file/file/download/$1/$2";
 $route['file/(.*)/(.*)']            = "file/file/download/$1/$2";
 

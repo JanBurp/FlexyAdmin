@@ -59,6 +59,7 @@ $config['FIELDS_prefix'] = array (
 	'tbl'				=> array (
     'type'        => 'integer',
     'form-type'   => 'select',
+    'grid-type'   => 'relation',
     'grid'        => 'function_join',
     'form'        => 'function_join',
     'validation'	=> ''
@@ -150,6 +151,7 @@ $config['FIELDS_prefix'] = array (
 	'url'				=> array (
     'type'        => 'string',
     'form-type'   => 'text',
+    'grid-type'   => 'url',
     'grid'        => '<a target="_blank" href="%s">%s</a>',
     'form'        => '',
     'validation'	=> 'trim|prep_url'

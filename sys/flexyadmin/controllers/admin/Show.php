@@ -9,6 +9,9 @@
 
 class Show extends AdminController {
   
+  private $name = '';
+  
+  
 	public function __construct() {
 		parent::__construct();
     $this->config->load('schemaform');
@@ -27,6 +30,7 @@ class Show extends AdminController {
 	 * @param string $name name of datamodel
 	 */
 	public function grid( $name='' ) {
+    $this->name = $name;
     // Options for grid result
     $default = array(
       'limit'   => 10,
@@ -41,7 +45,7 @@ class Show extends AdminController {
     $data = $this->data->select_txt_abstract()->get_grid( $options['limit'], $options['offset'], $options['order'], $options['find'] );
     
     // Fields
-    $fields = $this->_prepareFields('grid_set');
+    $fields = $this->_prepareFields('grid_set',array(),$data);
     // Show grid
     $grid = array(
       'title'   => $this->ui->get($name),
@@ -63,6 +67,7 @@ class Show extends AdminController {
  * @param mixed 	$id 		id
  */
 	public function form( $name='',$id=false ) {
+    $this->name = $name;
     // Data
     $this->data->table($name);
     $data = $this->data->get_form($id);
@@ -94,7 +99,7 @@ class Show extends AdminController {
    * @return array
    * @author Jan den Besten
    */
-  private function _prepareFields($set,$options=array()) {
+  private function _prepareFields($set,$options=array(),$data=array()) {
     $fields = $this->data->get_setting(array($set,'fields'));
     $fields = array_combine($fields,$fields);
     foreach ($fields as $field => $info) {
@@ -102,6 +107,32 @@ class Show extends AdminController {
         'name'    => $this->ui->get($field),
         'schema'  => $this->_getSchema($field,$options)
       );
+      if ($validation = $this->data->get_setting(array('field_info',$field,'validation'))) $fields[$field]['schema']['validation'] = implode('|',$validation);
+      if ($path = $this->data->get_setting(array('field_info',$field,'path'))) $fields[$field]['path'] = $path;
+    }
+    // More fields??
+    if ($data) {
+      $first = current($data);
+      $extraFields = array_diff( array_keys($first),array_keys($fields) );
+      if ($extraFields) {
+        // $with = $this->data->get_setting(array($set,'with'));
+        // $relations = $this->data->get_setting(array('relations'));
+        foreach ($extraFields as $extraField) {
+          // Relation?
+          // if ($with and $relations) {
+          //   foreach ($with as $type => $typeInfo) {
+          //     foreach ($relations[$type] as $name => $info) {
+          //       if ($extraField===$info['result_name']) {
+                  $fields[$extraField] = array(
+                    'name'  => $this->ui->get($extraField),
+                    'schema'=> $this->_getSchema($extraField,$options),
+                  );
+              //   }
+              // }
+            // }
+          // }
+        }
+      }
     }
     return $fields;
   }

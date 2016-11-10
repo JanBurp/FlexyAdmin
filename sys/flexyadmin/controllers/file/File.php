@@ -44,6 +44,25 @@ class File extends CI_Controller {
     return false;
   }
   
+  public function thumb($path,$file) {
+		if (!empty($path) and !empty($file)) {
+      $fullpath = $this->config->item('THUMBCACHE').$path.'___'.$file;
+			if ( file_exists($fullpath) ) {
+        if ( in_array($path,$this->serve_rights) or $this->mediatable->has_serve_rights($path,$file) ) {
+          $type=get_suffix($file,'.');
+          $this->output->set_content_type($type);
+          $this->output->set_output(file_get_contents($fullpath));
+          return;
+        }
+			}
+		}
+    header('HTTP/1.1 401 Unauthorized');
+    return false;
+  }
+  
+  
+  // public function 
+  
   /**
    * Serve admin assets
    *
