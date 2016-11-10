@@ -8,10 +8,13 @@ module.exports = [
 {
   name: 'js',
   entry: "./flexyadmin/assets/js/main.js",
+  devtool: "source-map",
   output: {
     path: __dirname + '/flexyadmin/assets/dist/',
     publicPath:'/flexyadmin/assets/dist/',
     filename: "bundle.js",
+    devtoolLineToLine: true,
+    pathinfo: true,
   },
   module: {
       rules: [

@@ -9,7 +9,7 @@
 
 var AUTH_TOKEN = _flexy.auth_token;
 
-var _ = require('lodash/core');
+var _ = require('lodash');
 
 import Vue              from 'vue'
 import Lang             from 'vue-lang'

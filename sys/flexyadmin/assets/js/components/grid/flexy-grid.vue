@@ -244,7 +244,7 @@ export default {
     
     startFinding : function(event) {
       if (event) event.preventDefault();
-      var url = this.createdUrl({find:this.findTerm});
+      var url = this.createdUrl({offset:0,find:this.findTerm});
       window.location.assign(url);
     },
     
@@ -266,7 +266,8 @@ export default {
       // Onthoud 'order' van eerste item
       this.draggable.orderStart = this.items[0]['order'].value;
       // Onthoud kopie van huidige items
-      this.draggable.oldItems = this.items;
+      // this.draggable.oldItems = _.cloneDeep(this.items);
+      this.draggable.oldItems = this.items.slice();
       // Als tree, onthoud dan de children als die er zijn
       this.draggable.children = false;
       if (this.gridType==='tree' && this.items[index]._info.has_children) {
@@ -291,7 +292,8 @@ export default {
       if (oldIndex!==newIndex) {
         
         if (this.gridType==='tree') {
-          var number_of_children = this.draggable.children.length;
+          var items = this.draggable.oldItems;
+          var number_of_children = this.draggable.children.length || 0;
           // Pas parent van verplaatste item aan
           // Bijna altijd 0, behalve als het volgende item een hoger level heeft: dan heeft het dezelfde parent als dat item, dus als er een item na komt, neem die parent.
           // Check eerst of het niet de laatste is, want dan hoeven we al niet verder te kijken
@@ -299,9 +301,9 @@ export default {
           if (newIndex+1 < this.items.length) {
             parent_id = this.items[newIndex+1].self_parent.value;
           }
-          this.items[newIndex].self_parent.value = parent_id;
-          // Verplaats children
-          this.items = jdb.moveMultipleArrayItems(this.items, oldIndex+1, number_of_children, newIndex+1);
+          items[oldIndex].self_parent.value = parent_id;
+          // Verplaats item & children
+          this.items = jdb.moveMultipleArrayItems( items, oldIndex, number_of_children + 1, newIndex);
         }
         
         // Update 'order'
@@ -318,20 +320,26 @@ export default {
 
         if (flexyState.debug) {
           console.log( 'draggable_onEnd ---------' );
-          _.forEach(self.items,function(row){
-            if (self.gridType==='tree') {
-              console.log( row.id.value, row.order.value, row.str_title.value, row._info.level,row._info.is_child,row._info.has_children);
-            }
-            else {
-              console.log( row.id.value, row.order.value, row.str_title.value);
-            }
-          });
+          console.log(oldIndex,' => ',newIndex);
+          this._log(self.items);
         }
         
         // TODO Update server...
       }
       this.draggable.item = false;
     },
+    
+    _log : function( items ) {
+      var self = this;
+      _.forEach(items,function(row){
+        if (self.gridType==='tree') {
+          console.log( row.id.value, row.order.value, 'tree:', row._info.level, row._info.is_child,row._info.has_children, row.str_title.value);
+        }
+        else {
+          console.log( row.id.value, row.order.value, row.str_title.value);
+        }
+      });
+    }
     
   }
 }

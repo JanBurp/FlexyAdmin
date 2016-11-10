@@ -17,7 +17,7 @@ export default {
    */
   moveMultipleArrayItems : function(array, from, many, to) {
     // Make sure from and to are >0 and <array.length
-    var len=array.length;
+    var len = array.length;
     from = (from<0) ? 0 : from;
     from = (from>len) ? len : from;
     to = (to<0) ? 0 : to;
