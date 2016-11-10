@@ -1,16 +1,14 @@
 <?php 
 
-$lang['vue_cancel']          = "Annuleer";
-$lang['vue_submit']          = "Invoeren";
-$lang['vue_save']            = "Bewaar";
-
-$lang['vue_grid_search']     = "zoeken";
-$lang['vue_grid_pagination'] = "{0} rijen in {1} pagina's";
-
+$lang['vue_cancel']                = "Annuleer";
+$lang['vue_submit']                = "Invoeren";
+$lang['vue_save']                  = "Bewaar";
+$lang['vue_grid_search']           = "Zoeken";
+$lang['vue_grid_pagination']       = "{0} rijen in {1} pagina's";
+$lang['vue_grid_order_save_error'] = "<b>FOUT</b> tijdens bewaren van nieuwe volgorde. Volgorde is hersteld, probeer het nog eens.";
 $lang['vue_form_validation_error'] = "Niet alle velden zijn goed ingevuld!";
 $lang['vue_form_save_error']       = "<b>FOUT</b> tijdens bewaren. Probeer nog eens.";
-
-$lang['vue_error_api']       = "<b>FOUT</b>. Contact met de server is mislukt. Probeer nog eens.";
+$lang['vue_error_api']             = "<b>FOUT</b>. Contact met de server is mislukt. Probeer nog eens.";
 
 
 // $lang['dialog_yes']       = "Ja";
