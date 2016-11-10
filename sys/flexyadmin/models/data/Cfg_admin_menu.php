@@ -237,7 +237,7 @@ Class cfg_admin_menu extends Data_Core {
                 if (!isset($mediaInfo['path']) and isset($mediaInfo['str_path'])) $mediaInfo['path']=$mediaInfo['str_path'];
                 $menu[] = array(
                   'name'    => $this->ui->get($mediaInfo['path']),
-                  'uri'     => 'media/'.$mediaInfo['path'],
+                  'uri'     => 'show/media/'.$mediaInfo['path'],
                   'type'    => 'media',
                   'args'    => array('path'=>$mediaInfo['path']),
                   'help'    => $this->ui->get_help($mediaInfo["path"]),

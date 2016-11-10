@@ -9,28 +9,22 @@
 
 class Show extends AdminController {
   
-  private $name = '';
-  
-  
 	public function __construct() {
 		parent::__construct();
     $this->config->load('schemaform');
     $this->load->model('ui');
 	}
 
-
 	public function index() {
 		$this->view_admin( 'admin_404' );
 	}
-
 
 	/**
 	 * This controls the grid view
 	 *
 	 * @param string $name name of datamodel
 	 */
-	public function grid( $name='' ) {
-    $this->name = $name;
+	public function grid( $name='') {
     // Options for grid result
     $default = array(
       'limit'   => 10,
@@ -40,6 +34,7 @@ class Show extends AdminController {
     );
     $options = object2array(json_decode($this->input->get('options')));
     $options = array_merge($default,$options);
+    
     // Data
     $this->data->table($name);
     $data = $this->data->select_txt_abstract()->get_grid( $options['limit'], $options['offset'], $options['order'], $options['find'] );
@@ -58,6 +53,43 @@ class Show extends AdminController {
     );
 	  $this->view_admin( 'vue/grid', $grid );
 	}
+  
+	/**
+	 * This controls the media view
+	 *
+	 * @param string $name name of path
+	 */
+  public function media( $path ) {
+    $default = array(
+      'limit'   => 10,
+      'offset'  => false,
+      'order'   => '',
+      'find'    => ''
+    );
+    $options = object2array(json_decode($this->input->get('options')));
+    $options = array_merge($default,$options);
+    
+    // Data
+    $this->data->table('res_media_files');
+    $files = $this->data->get_files( $path, $options['find'], $options['limit'], $options['offset'] );
+    
+    // Fields
+    // $fields = $this->_prepareFields('',array(),$files);
+    
+    // Show grid
+    $grid = array(
+      'title'   => $this->ui->get($path),
+      'name'    => $path,
+      'fields'  => array(),
+      'data'    => $files,
+      'info'    => $this->data->get_query_info(),
+      'order'   => $options['order'],
+      'find'    => $options['find'],
+      'type'    => 'media',
+    );
+	  $this->view_admin( 'vue/grid', $grid );
+  }
+  
   
 
 /**
@@ -100,7 +132,12 @@ class Show extends AdminController {
    * @author Jan den Besten
    */
   private function _prepareFields($set,$options=array(),$data=array()) {
-    $fields = $this->data->get_setting(array($set,'fields'));
+    if (empty($set)) {
+      $fields = $this->data->get_setting('fields');
+    }
+    else {
+      $fields = $this->data->get_setting(array($set,'fields'));
+    }
     $fields = array_combine($fields,$fields);
     foreach ($fields as $field => $info) {
       $fields[$field] = array(
