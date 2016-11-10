@@ -3666,7 +3666,12 @@ a > .fa, .btn > .fa {
   top: 0;
   right: 0;
   width: 25%;
+  height: 100%;
+  box-shadow: 0 0 0.5rem #373a3c;
   z-index: 9999; }
+
+.flexy-help > .card {
+  height: 100%; }
 
 /* MAIN > CARD */
 #main > .card {
@@ -3703,8 +3708,7 @@ a > .fa, .btn > .fa {
 /* SORTABLE */
 .sortable-chosen, .sortable-fallback {
   background-color: #f7fbea;
-  border-top: dashed 2px #696;
-  border-bottom: dashed 2px #696; }
+  box-shadow: 0 0 0.5rem #373a3c; }
 
 /* TRANSITIONS */
 .slideUp-enter-active {
