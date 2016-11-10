@@ -8,7 +8,7 @@
  */
 
 Class Res_media_files extends Data_Core {
-
+  
   public function __construct() {
     parent::__construct();
 		$this->load->model("file_manager");
@@ -105,7 +105,7 @@ Class Res_media_files extends Data_Core {
       $this->select( 'user' );
     }
     else {
-      unset($filter['user']);
+      if (is_array($filter)) unset($filter['user']);
     }
     
     return $this->_get_files_result($path,$filter,$limit,$offset);
@@ -218,8 +218,21 @@ Class Res_media_files extends Data_Core {
     return $result;
   }
   
-  
-  
-  
+  // public function get_setting($key, $default=null) {
+  //   switch ($key) {
+  //     case 'fields':
+  //       $key = 'files_fields';
+  //       break;
+  //     case 'field_info':
+  //       $key = 'files_field_info';
+  //       break;
+  //   }
+  //   $setting = parent::get_setting($key,$default);
+  //   return $setting;
+  // }
+  //
+  //
+  //
+  //
   
 }
