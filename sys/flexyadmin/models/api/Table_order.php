@@ -106,6 +106,8 @@ class Table_order extends Api_Model {
    */
   private function _set_order() {
     $this->load->model('order');
+    if ( !is_numeric($this->args['id'])) return FALSE;
+    if ( !is_numeric($this->args['from'])) return FALSE;
     // Zet er meerdere
     if (count($this->args['id'])>1) {
       $items = $this->order->set_all( $this->args['table'], $this->args['id'], $this->args['from']);
