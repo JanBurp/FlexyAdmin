@@ -34,7 +34,7 @@
     <div id="main" class="col-sm-10"><?=$content?></div>
   </div>
   
-  <flexy-help class="flexy-help">
+  <div class="flexy-help">
     <div class="card">
       <div class="card-header">
         <h1>Help</h1>
@@ -46,7 +46,7 @@
         <p>Quisque nibh tortor, blandit a mollis vitae, euismod non nulla. Duis dui erat, interdum sit amet porttitor a, porttitor nec augue. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed quis porta turpis. Suspendisse nec mi enim, ut fringilla tellus. Nunc sollicitudin justo at leo tempus eu fringilla nisl tempus. Sed id tellus non eros tristique vehicula. Quisque sollicitudin augue id velit euismod interdum. Proin lobortis ornare magna in facilisis. Nulla vestibulum ultricies dui ut fringilla. Duis eu ante in lorem pellentesque bibendum. Praesent id velit vel nulla ullamcorper adipiscing quis quis tellus. Integer nec augue quis felis dapibus imperdiet ac et nibh.</p>
       </div>
     </div>
-  </flexy-help>
+  </div>
 </div>
 
 

@@ -3710,6 +3710,17 @@ a > .fa, .btn > .fa {
   background-color: #f7fbea;
   box-shadow: 0 0 0.5rem #373a3c; }
 
+/* GRID / MEDIA */
+.media-thumb-sm {
+  height: 1.75rem;
+  border-radius: 0.125rem; }
+
+.grid .grid-relation-item {
+  border: solid 1px #DEA;
+  border-radius: 0.25rem;
+  padding: .15rem .35rem;
+  margin-right: .25rem; }
+
 /* TRANSITIONS */
 .slideUp-enter-active {
   transition: all .2s ease; }
