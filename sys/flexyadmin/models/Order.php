@@ -236,17 +236,18 @@ class order extends CI_Model {
     }
     // trace_($sql);
     
-    // Als order>0 dan moet de parent misschien aangepast worden: dan neemt die de parent van het item ervoor over
+    // Als order>0 dan moet de parent misschien aangepast worden: dan neemt die de parent van het item erna over
     if ($is_tree and $new>0) {
-      // item ervoor
-      $prev = $this->data->table($table)
-                          ->select('id,order,self_parent')
-                          ->where( 'order <',$new)
-                          ->order_by( 'order','DESC' )
-                          ->get_row();
-      $prev_parent = $prev['self_parent'];
+      $parent = 0;
+      // item erna
+      $next = $this->data->table($table)
+            ->select('id,order,self_parent')
+            ->where( 'order >',$new)
+            ->order_by( 'order' )
+            ->get_row();
+      if ($next) $parent = $next['self_parent'];
       // geef nieuw parent
-      $this->data->set('self_parent',$prev_parent);
+      $this->data->set('self_parent',$parent);
       $this->data->where(PRIMARY_KEY,$id);
       $this->data->update();
       $log['query'] .= $this->data->last_query().';'.PHP_EOL.PHP_EOL;
@@ -268,14 +269,22 @@ class order extends CI_Model {
    * @author Jan den Besten
    */
   private function _get_children_ids( $table, $id, $order ) {
-    // Zoek de eerstvolgende met zelfde parent
+    // Zoek de eerstvolgende met zelfde parent, of de laatste
     $parent = $this->_get_parent( $table,$id );
     $next = $this->data->table($table)
-                        ->select('id,self_parent,order')
-                        ->where( 'self_parent', $parent )
-                        ->where( 'order >', $order )
-                        ->order_by( 'order' )
-                        ->get_row();
+            ->select('id,self_parent,order')
+            ->where( 'self_parent', $parent )
+            ->where( 'order >', $order )
+            ->order_by( 'order' )
+            ->get_row();
+    if (!$next) {
+      $next = $this->data->table($table)
+              ->select('id,self_parent,order')
+              ->where( 'order >', $order )
+              ->order_by( 'order', 'DESC' )
+              ->get_row();
+    }
+    if (!$next) return array(); // Het is de laatste, dus geen kinderen
     $next_order = $next['order'];
     // Zijn er wel kinderen?
     if ( ($next_order-$order)===1 ) return array();
