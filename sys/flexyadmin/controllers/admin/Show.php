@@ -115,22 +115,11 @@ class Show extends AdminController {
       $first = current($data);
       $extraFields = array_diff( array_keys($first),array_keys($fields) );
       if ($extraFields) {
-        // $with = $this->data->get_setting(array($set,'with'));
-        // $relations = $this->data->get_setting(array('relations'));
         foreach ($extraFields as $extraField) {
-          // Relation?
-          // if ($with and $relations) {
-          //   foreach ($with as $type => $typeInfo) {
-          //     foreach ($relations[$type] as $name => $info) {
-          //       if ($extraField===$info['result_name']) {
-                  $fields[$extraField] = array(
-                    'name'  => $this->ui->get($extraField),
-                    'schema'=> $this->_getSchema($extraField,$options),
-                  );
-              //   }
-              // }
-            // }
-          // }
+          $fields[$extraField] = array(
+            'name'  => $this->ui->get($extraField),
+            'schema'=> $this->_getSchema($extraField,$options),
+          );
         }
       }
     }
