@@ -71,5 +71,15 @@ $lang['int_img_width']    = 'Breedte';
 $lang['int_img_height']   = 'Hoogte';
 $lang['USED']             = 'Gebruikt';
 
+$lang['name']             = 'Bestand';
+$lang['path']             = 'Map';
+$lang['path']             = 'Map';
+$lang['type']             = 'Soort';
+$lang['alt']              = $lang['str_title'];
+$lang['date']             = $lang['dat_date'];
+$lang['size']             = 'Omvang';
+$lang['width']            = 'Breedte';
+$lang['height']           = 'Hoogte';
+
 
 ?>

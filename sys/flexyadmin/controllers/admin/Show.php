@@ -71,16 +71,16 @@ class Show extends AdminController {
     
     // Data
     $this->data->table('res_media_files');
-    $files = $this->data->get_files( $path, $options['find'], $options['limit'], $options['offset'] );
+    $files = $this->data->get_files( $path, $options['find'], $options['limit'], $options['offset'], TRUE );
     
     // Fields
-    // $fields = $this->_prepareFields('',array(),$files);
+    $fields = $this->_prepareFields('',array(),$files,array('path'=>$path));
     
     // Show grid
     $grid = array(
       'title'   => $this->ui->get($path),
       'name'    => $path,
-      'fields'  => array(),
+      'fields'  => $fields,
       'data'    => $files,
       'info'    => $this->data->get_query_info(),
       'order'   => $options['order'],
@@ -131,9 +131,9 @@ class Show extends AdminController {
    * @return array
    * @author Jan den Besten
    */
-  private function _prepareFields($set,$options=array(),$data=array()) {
+  private function _prepareFields($set,$options=array(),$data=array(),$extra=array()) {
     if (empty($set)) {
-      $fields = $this->data->get_setting('fields');
+      $fields = array_keys(current($data));
     }
     else {
       $fields = $this->data->get_setting(array($set,'fields'));
@@ -146,6 +146,7 @@ class Show extends AdminController {
       );
       if ($validation = $this->data->get_setting(array('field_info',$field,'validation'))) $fields[$field]['schema']['validation'] = implode('|',$validation);
       if ($path = $this->data->get_setting(array('field_info',$field,'path'))) $fields[$field]['path'] = $path;
+      $fields[$field] = array_merge($fields[$field],$extra);
     }
     // More fields??
     if ($data) {

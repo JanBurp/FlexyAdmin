@@ -2,13 +2,13 @@
   <div class="pagination-container">
     <ul class="pagination">
       <li v-if="current>1  && pages>buttons" class="page-item"><a class="page-link" :href="pageUrl(1)"><span class="fa fa-fast-backward"></span></a></li>
-      <li v-if="current>10 && pages>buttons" class="page-item"><a class="page-link" :href="pageUrl(current-10)"><span class="fa fa-chevron-left"></span><span class="fa fa-chevron-left"></span></a></li>
+      <li v-if="current>10 && pages>buttons" class="page-item"><a class="page-link" :href="pageUrl(current-10)"><span class="fa fa-backward"></span></a></li>
       <li v-if="current>1  && pages>buttons" class="page-item"><a class="page-link" :href="pageUrl(current-1)"><span class="fa fa-chevron-left"></span></a></li>
       
       <li v-for="page in pagesButtons()" class="page-item" :class="{active:(page==current)}"><a class="page-link" :href="pageUrl(page)">{{page}}</a></li>
       
       <li v-if="current<pages-1  && pages>buttons" class="page-item"><a class="page-link" :href="pageUrl(current+1)"><span class="fa fa-chevron-right"></span></a></li>
-      <li v-if="current<pages-10 && pages>buttons" class="page-item"><a class="page-link" :href="pageUrl(current+10)"><span class="fa fa-chevron-right"></span><span class="fa fa-chevron-right"></span></a></li>
+      <li v-if="current<pages-10 && pages>buttons" class="page-item"><a class="page-link" :href="pageUrl(current+10)"><span class="fa fa-forward"></span></a></li>
       <li v-if="current<pages-1  && pages>buttons" class="page-item"><a class="page-link" :href="pageUrl(pages-1)"><span class="fa fa-fast-forward"></span></a></li>
     </ul>
     <span class="pagination-info text-primary">{{$lang.grid_pagination | replace(total,pages)}}</span>
@@ -71,5 +71,9 @@ export default {
   .pagination-info {
     margin-top:.5rem;
     float:right;
+  }
+  .pagination .page-link {
+    height:2rem;
+    padding:.2rem .5rem;
   }
 </style>

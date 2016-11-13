@@ -22,7 +22,6 @@ export default {
     //   type: [String,Boolean],
     //   default:false
     // },
-    'info':Object,
     'order': {
       type   :String,
       default:''
@@ -30,7 +29,12 @@ export default {
     'find':{
       type   :[String,Object],
       default:'',
-    }
+    },
+    'info':Object,
+    'type':{
+      type:String,
+      default:'table',
+    },
   },
   
  /**
@@ -39,7 +43,7 @@ export default {
   * - Bij een tree: voeg informatie aan elke row toe: {level:(int),is_child:(bool),has_children:(bool)}
   */
   created : function() {
-    this.items = this.addTreeInfo( this.data, true );
+    this.items = this.addInfo( this.data, true );
   },
   
   data : function() {
@@ -64,7 +68,7 @@ export default {
      * Bepaal het type grid: table, ordered of tree
      */
     gridType : function() {
-      var type='table';
+      var type=this.type;
       if (typeof(this.fields.order)!=='undefined' && this.order==='' && this.find==='') type='ordered';
       if (typeof(this.fields.self_parent)!=='undefined' && this.order==='' && this.find==='') type='tree';
       return type;
@@ -73,7 +77,11 @@ export default {
      * Geeft class van type grid
      */
     gridTypeClass : function() {
-      return 'grid-type-'+this.gridType
+      var c = 'grid-type-'+this.gridType;
+      if (this.gridType==='media') {
+        c += ' grid-media-view-'+this.getMediaView();
+      }
+      return c;
     },
     /**
      * Test if grid needs pagination
@@ -81,7 +89,6 @@ export default {
     needsPagination : function(){
       return (typeof(this.info.num_pages)!=='undefined' &&  this.info.num_pages > 1);
     },
-    
     /**
      * Options for draggable
      */
@@ -106,7 +113,7 @@ export default {
     /*
       Voeg (tree)info toe aan meegegeven items
     */
-    addTreeInfo : function(items,addSchema) {
+    addInfo : function(items,addSchema) {
       var data     = items;
       var isTree   = this.gridType=='tree';
       if (isTree) {
@@ -191,6 +198,28 @@ export default {
       return data;
     },
     
+    isPrimaryHeader : function(field) {
+      var headerType = field.schema['grid-type'] || field.schema['form-type'];
+      return headerType==='primary'
+    },
+    isNormalVisibleHeader : function(field) {
+      var headerType = field.schema['grid-type'] || field.schema['form-type'];
+      return headerType!=='hidden' && headerType!=='primary'
+    },
+    
+    getMediaView : function() {
+      return flexyState.getMediaView();
+    },
+
+    setMediaView : function(view) {
+      return flexyState.setMediaView(view);
+    },
+
+    
+    headerClass : function(field) {
+      return 'grid-header-type-'+field.schema['form-type'];
+    },
+    
     hasSelection : function() {
       return this.selected.length>0;
     },
@@ -228,10 +257,6 @@ export default {
       return editable;
     },
     
-    
-    headerClass : function(field) {
-      return 'grid-header-type-'+field.schema['form-type'];
-    },
     
     /**
      * Create url, used for all links (pagination, edit, sort etc..)
@@ -322,7 +347,7 @@ export default {
           order++;
         }
         // Vernieuw de tree info
-        if (this.gridType=='tree') this.items = this.addTreeInfo(this.items);
+        if (this.gridType=='tree') this.items = this.addInfo(this.items);
         
         // Laat children weer zien
         this.draggable.children = false;
@@ -386,10 +411,16 @@ export default {
   <div class="card grid" :class="gridTypeClass">
     <!-- MAIN HEADER -->
     <div class="card-header">
+      <div class="grid-actions">
+        <div class="btn-group" v-if="gridType === 'media'">
+          <button class="btn btn-warning" v-on:click="setMediaView('list')" :class="{'active':getMediaView()==='list'}"><span class="fa fa-bars fa-fw"></span></button>
+          <button class="btn btn-warning" v-on:click="setMediaView('thumbs')" :class="{'active':getMediaView()==='thumbs'}"><span class="fa fa-picture-o fa-fw"></span></button>
+        </div>
+      </div>
       <h1>{{title}}</h1>
       <form class="form-inline" v-on:submit="startFinding($event)">
         <div class="form-group"><input type="text" v-model.trim="findTerm" class="form-control form-control-sm" id="grid-find" :placeholder="$lang.grid_search"></div>
-        <button type="submit" class="btn btn-sm btn-secundary"><span class="fa fa-search"></span></button>
+        <button type="submit" class="btn btn-warning"><span class="fa fa-search"></span></button>
       </form>
     </div>
     <!-- GRID HEADERS -->
@@ -398,12 +429,12 @@ export default {
         <thead>
           <tr>
             <template v-for="(field,key) in fields">
-              <th v-if="field.schema['form-type']==='primary'" :class="headerClass(field)" class="text-primary">
-                <a class="btn btn-sm btn-warning" :href="editUrl(-1)"><span class="fa fa-plus"></span></a>
-                <div :class="{disabled:!hasSelection()}" class="btn btn-sm btn-danger action-delete"><span class="fa fa-remove"></span></div>
-                <div v-on:click="reverseSelection()" class="btn btn-sm btn-info action-select"><span class="fa fa-circle-o"></span></div>
+              <th v-if="isPrimaryHeader(field)" :class="headerClass(field)" class="text-primary">
+                <a class="btn btn-warning" :href="editUrl(-1)"><span class="fa fa-plus"></span></a>
+                <div :class="{disabled:!hasSelection()}" class="btn btn-danger action-delete"><span class="fa fa-remove"></span></div>
+                <div v-on:click="reverseSelection()" class="btn btn-info action-select"><span class="fa fa-square-o"></span></div>
               </th>
-              <th v-if="field.schema['form-type']!=='hidden' && field.schema['form-type']!=='primary'" :class="headerClass(field)"  class="text-primary">
+              <th v-if="isNormalVisibleHeader(field)" :class="headerClass(field)"  class="text-primary">
                 <a :href="createdUrl({'order':(key==order?'_'+key:key)})"><span>{{field.name}}</span>
                   <span v-if="order==key" class="fa fa-caret-up"></span>
                   <span v-if="order=='_'+key" class="fa fa-caret-down"></span>
@@ -415,14 +446,14 @@ export default {
         <!-- GRID BODY -->
         <draggable  :list="items" element="tbody" :options="draggableOptions" @start="draggable_onStart" @end="draggable_onEnd">
           <!-- ROW -->
-          <tr v-for="row in items" :data-id="row.id.value" :class="{'table-danger':isSelected(row.id.value)}" v-show="!isHiddenChild(row.id.value)" :level="rowLevel(row)" :key="row.id.value">
+          <tr v-for="row in items" :data-id="row.id.value" :class="{'table-warning':isSelected(row.id.value)}" v-show="!isHiddenChild(row.id.value)" :level="rowLevel(row)" :key="row.id.value">
             <template v-for="cell in row">
               <!-- PRIMARY CELL -->
               <td v-if="cell.type=='primary'" class="action">
-                <a class="btn btn-sm btn-outline-warning" :href="editUrl(cell.value)"><span class="fa fa-pencil"></span></a>
-                <div class="btn btn-sm btn-outline-danger action-delete"><span class="fa fa-remove"></span></div>
-                <div v-on:click="select(row.id.value)" class="btn btn-sm btn-outline-info action-select"><span v-if="!isSelected(row.id.value)" class="fa fa-circle-o"></span><span v-if="isSelected(row.id.value)" class="fa fa-circle"></span></div>
-                <div v-if="gridType!=='table'"class="draggable-handle btn btn-sm btn-outline-info action-move" :class="{'active':isDragging(row.id.value)}"><span class="fa fa-reorder"></span></div>
+                <a class="btn btn-warning" :href="editUrl(cell.value)"><span class="fa fa-pencil"></span></a>
+                <div class="btn btn-danger action-delete"><span class="fa fa-remove"></span></div>
+                <div v-on:click="select(row.id.value)" class="btn btn-info action-select"><span v-if="!isSelected(row.id.value)" class="fa fa-square-o"></span><span v-if="isSelected(row.id.value)" class="fa fa-check-square-o"></span></div>
+                <div v-if="gridType==='tree' || gridType==='ordered'"class="draggable-handle btn btn-info action-move" :class="{'active':isDragging(row.id.value)}"><span class="fa fa-reorder"></span></div>
               </td>
               <!-- CELL -->
               <flexy-grid-cell v-else :type="cell.type" :name="cell.name" :value="cell.value" :level="rowLevel(row)" :primary="{'table':name,'id':row.id.value}" :editable="isEditable(cell.name)" :options="fields[cell.name]"></flexy-grid-cell>
@@ -438,16 +469,49 @@ export default {
   </div>
 </template>
 
-<style>
+<style lang="sass">
+
+  @import "../../../scss/theme";
+
   .grid .card-block {padding:0;}
-  .grid .card-footer {padding:.25rem .25rem 0;}
+  .grid .card-footer {padding:1px 1px 0;}
   .grid th {overflow:hidden;text-overflow:ellipsis;}
   .grid th a {text-decoration:none;}
   .grid th span {white-space:nowrap;text-transform:uppercase;}
-  .grid th > span.fa {position:relative;float:right;margin-top:.25rem;}
-  .grid th.grid-header-type-primary {width:10rem;max-width:10rem;white-space:nowrap;}
-  .grid.grid-type-tree th.grid-header-type-primary {width:10rem;max-width:10rem;}
-  .grid.grid-type-table th.grid-header-type-primary {width:9rem;max-width:9rem;}
+  .grid th > span.fa {position:relative;float:right;margin-top:1px;}
+  .grid th.grid-header-type-primary {width:6.2rem;max-width:6.2rem;white-space:nowrap;}
+  .grid.grid-type-tree th.grid-header-type-primary {width:8rem;max-width:8rem;}
   .grid .draggable-handle {cursor:move;}
   .grid .sortable-fallback {display:none;}
+  
+  .grid .btn {width:1.85rem;height:1.6rem;padding:.1rem 0;text-align:center;}
+  .grid .btn .fa {width:1rem;}
+  
+  .grid.grid-media-view-thumbs tbody tr {
+    display:block!important;
+    position:relative;
+    float:left;
+    width:102px;
+    height:130px;
+    margin:.5rem;
+    padding:0;
+    overflow:hidden;
+    border:solid 1px $brand-primary;
+    border-radius:$border-radius;
+    overflow:visible;
+  }
+  .grid.grid-media-view-thumbs tbody td { position:absolute;float:left; border:none; padding:0px; background-color:transparent!important}
+  .grid.grid-media-view-thumbs tbody td[name="media_thumb"] img {width:auto;height:100%;}
+  .grid.grid-media-view-thumbs tbody td.action {width:100%;margin-top:102px;text-align:center;}
+  .grid.grid-media-view-thumbs tbody td[name="alt"] {bottom:2rem;text-align:center;width:100%;}
+  
+  .grid.grid-media-view-thumbs tbody td[name='name'],
+  .grid.grid-media-view-thumbs tbody td[name='path'],
+  .grid.grid-media-view-thumbs tbody td[name='type'],
+  .grid.grid-media-view-thumbs tbody td[name='date'],
+  .grid.grid-media-view-thumbs tbody td[name='size'],
+  .grid.grid-media-view-thumbs tbody td[name='width'],
+  .grid.grid-media-view-thumbs tbody td[name='height'] {display:none}
+
+  
 </style>

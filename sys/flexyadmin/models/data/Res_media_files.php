@@ -85,9 +85,11 @@ Class Res_media_files extends Data_Core {
    * @return array
    * @author Jan den Besten
    */
-  public function get_files( $path, $filter=array(), $limit=0, $offset=0 ) {
+  public function get_files( $path, $filter=array(), $limit=0, $offset=0, $with_thumb = FALSE ) {
     
     // Veldnamen
+    if ($with_thumb) $this->select( '`file` AS `media_thumb`' );
+
     $this->select( array(
       '`file` AS `name`',
       '`path`',
@@ -217,22 +219,5 @@ Class Res_media_files extends Data_Core {
     $this->reset();
     return $result;
   }
-  
-  // public function get_setting($key, $default=null) {
-  //   switch ($key) {
-  //     case 'fields':
-  //       $key = 'files_fields';
-  //       break;
-  //     case 'field_info':
-  //       $key = 'files_field_info';
-  //       break;
-  //   }
-  //   $setting = parent::get_setting($key,$default);
-  //   return $setting;
-  // }
-  //
-  //
-  //
-  //
   
 }

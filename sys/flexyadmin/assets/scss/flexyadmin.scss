@@ -3,16 +3,14 @@
  * Copyright Jan den Besten
  */
 
-// THEME
-@import "themes/classic";
-//@import "themes/bootstrap";
-//@import "themes/jandenbesten";
+// BOOTSTRAP & THEME
+@import "theme";
 
 
 // BOOTSTRAP
 // Core variables and mixins
-@import "../../../node_modules/bootstrap/scss/custom";
-@import "../../../node_modules/bootstrap/scss/variables";
+//@import "../../../node_modules/bootstrap/scss/custom";
+//@import "../../../node_modules/bootstrap/scss/variables";
 @import "../../../node_modules/bootstrap/scss/mixins";
 // Reset and dependencies
 @import "../../../node_modules/bootstrap/scss/normalize";
@@ -55,12 +53,10 @@
 
 
 
-
-
-
 /* DEFAULTS */
 a {outline: none !important;}
 a>.fa, .btn>.fa {margin-right:.35rem;margin-left:.35rem;}
+.btn.disabled {opacity:.5;}
 
 /* LOGIN */
 #login-form {width:20rem;margin:20% auto;box-shadow:0 0 1.25rem $gray-dark;}
@@ -123,8 +119,8 @@ a>.fa, .btn>.fa {margin-right:.35rem;margin-left:.35rem;}
 /* MAIN > CARD */
 #main > .card {border:solid 1px $brand-primary;}
 #main > .card > .card-header {background-color:$brand-primary;color:$body-bg;padding:.5rem;}
+.card > .card-header > * {margin:0 1rem 0 0;float:left;}
 .card > .card-header > *:last-child {margin:0;float:right;}
-.card > .card-header > *:first-child {margin:0;float:left;}
 .card > .card-header .btn {text-transform:uppercase};
 
 /* TABS */

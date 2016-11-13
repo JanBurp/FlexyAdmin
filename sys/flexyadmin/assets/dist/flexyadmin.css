@@ -2,6 +2,10 @@
  * FlexyAdmin
  * Copyright Jan den Besten
  */
+/*!
+ * FlexyAdmin
+ * Copyright Jan den Besten
+ */
 h1 {
   text-transform: uppercase; }
 
@@ -3589,6 +3593,9 @@ a > .fa, .btn > .fa {
   margin-right: .35rem;
   margin-left: .35rem; }
 
+.btn.disabled {
+  opacity: .5; }
+
 /* LOGIN */
 #login-form {
   width: 20rem;
@@ -3682,13 +3689,13 @@ a > .fa, .btn > .fa {
   color: #fff;
   padding: .5rem; }
 
+.card > .card-header > * {
+  margin: 0 1rem 0 0;
+  float: left; }
+
 .card > .card-header > *:last-child {
   margin: 0;
   float: right; }
-
-.card > .card-header > *:first-child {
-  margin: 0;
-  float: left; }
 
 .card > .card-header .btn {
   text-transform: uppercase; }

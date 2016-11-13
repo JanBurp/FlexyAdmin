@@ -43,16 +43,23 @@ export default {
   methods : {
     
     isType : function( type, fieldType ) {
+      var is = false;
       if (type==='default') {
-        return this.fieldTypes['default'].indexOf(fieldType) === -1;
+        is = (this.fieldTypes['default'].indexOf(fieldType) === -1);
       }
-      return this.fieldTypes[type].indexOf(fieldType) >= 0;
+      else {
+        is = (this.fieldTypes[type].indexOf(fieldType) >= 0);
+      }
+      return is;
     },
     
     thumbs : function(media) {
       var array = media.split('|');
       for (var i = 0; i < array.length; i++) {
-        array[i] = '_media/thumb/' + this.options['path'] +'/'+ array[i];
+        array[i] = {
+          src : '_media/thumb/' + this.options['path'] +'/'+ array[i],
+          alt : array[i],
+        }
       }
       return array;
     },
@@ -138,7 +145,7 @@ export default {
     </template>
 
     <template v-if="isType('media',type)">
-      <template v-if="item !==''"><img class="media-thumb-sm" v-for="img in thumbs(item)" :src="img"></template>
+      <template v-if="item !==''"><img class="media-thumb-sm" v-for="img in thumbs(item)" :src="img.src" :alt="img.alt" :title="img.alt"></template>
     </template>
 
     <template v-if="isType('color',type)">
