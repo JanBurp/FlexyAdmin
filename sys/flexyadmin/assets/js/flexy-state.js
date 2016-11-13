@@ -8,8 +8,9 @@ export default {
   name: 'FlexyState',
   debug: false,
   state: {
-    progress  : 0,
+    progress    : 0,
     messages    : [],
+    media_view  : _flexy.media_view,
   },
   
   showProgress : function() {
@@ -45,6 +46,16 @@ export default {
   },
   removeMessage : function(id) {
     this.state.messages.splice(id,1);
+  },
+  
+  getMediaView : function() {
+    return this.state.media_view;
+  },
+  
+  setMediaView : function(view) {
+    this.state.media_view = view;
+    // TODO api call to change it
+    this.debug && console.log('state.media_view',this.state.media_view); 
   },
   
 };

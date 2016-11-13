@@ -87,7 +87,7 @@ class AdminController extends BasicController {
     $this->view_data['url_url'] = str_replace('http://','',$this->view_data['url_url']);
     
     // User data
-    $this->view_data['user'] = array_keep_keys($this->flexy_auth->get_user(),array('username','email','auth_token'));
+    $this->view_data['user'] = array_keep_keys($this->flexy_auth->get_user(),array('username','email','str_filemanager_view','auth_token'));
 
     // Basic content
     $this->view_data['content'] = '';

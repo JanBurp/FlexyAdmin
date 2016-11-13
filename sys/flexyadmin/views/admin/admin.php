@@ -54,6 +54,7 @@
 var _flexy = {
   'auth_token'    : '<?=$user['auth_token']?>',
   'language'      : '<?=$language?>',
+  'media_view'    : '<?=$user['str_filemanager_view']?>',
   'language_keys' : '<?=addslashes(array2json($lang_keys))?>',
 };
 </script>

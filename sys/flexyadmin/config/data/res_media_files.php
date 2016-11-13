@@ -24,20 +24,6 @@ $config['field_info'] = array(
 	);
 
 
-// $config['files_fields'] = array('id','name','type','alt','rawdate','date','size','width','height');
-// $config['files_field_info'] = array(
-//   'id'      => array('validation' => array('trim','integer','required') ),
-//   'name'    => array('validation' => array('trim','max_length[255]') ),
-//   'type'    => array('validation' => array('max_length[10]') ),
-//   'alt'     => array('validation' => array('max_length[255]') ),
-//   'rawdate' => array('validation' => array('') ),
-//   'date'    => array('validation' => array('') ),
-//   'size'    => array('validation' => array('trim','integer') ),
-//   'width'   => array('validation' => array('trim','integer') ),
-//   'height'  => array('validation' => array('trim','integer') ),
-// );
-
-
 
 $config['order_by'] = 'dat_date DESC';
 $config['abstract_fields'] = array('file','dat_date');
