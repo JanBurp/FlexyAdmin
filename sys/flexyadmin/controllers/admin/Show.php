@@ -132,8 +132,9 @@ class Show extends AdminController {
    * @author Jan den Besten
    */
   private function _prepareFields($set,$options=array(),$data=array(),$extra=array()) {
+    $fields = array();
     if (empty($set)) {
-      $fields = array_keys(current($data));
+      if ($data) $fields = array_keys(current($data));
     }
     else {
       $fields = $this->data->get_setting(array($set,'fields'));

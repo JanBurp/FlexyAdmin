@@ -411,12 +411,6 @@ export default {
   <div class="card grid" :class="gridTypeClass">
     <!-- MAIN HEADER -->
     <div class="card-header">
-      <div class="grid-actions">
-        <div class="btn-group" v-if="gridType === 'media'">
-          <button class="btn btn-warning" v-on:click="setMediaView('list')" :class="{'active':getMediaView()==='list'}"><span class="fa fa-bars fa-fw"></span></button>
-          <button class="btn btn-warning" v-on:click="setMediaView('thumbs')" :class="{'active':getMediaView()==='thumbs'}"><span class="fa fa-picture-o fa-fw"></span></button>
-        </div>
-      </div>
       <h1>{{title}}</h1>
       <form class="form-inline" v-on:submit="startFinding($event)">
         <div class="form-group"><input type="text" v-model.trim="findTerm" class="form-control form-control-sm" id="grid-find" :placeholder="$lang.grid_search"></div>
@@ -463,8 +457,21 @@ export default {
       </table>
     </div>
     <!-- FOOTER -->
-    <div v-if="needsPagination" class="card-footer text-muted">
-      <flexy-pagination :total="info.total_rows" :pages="info.num_pages" :current="info.page + 1" :limit="info.limit" :url="createdUrl({'offset':'##'})"></flexy-pagination>
+    <div class="card-footer text-muted">
+      <div class="btn-group actions" v-if="gridType === 'media'">
+        <template v-if="getMediaView()==='list'">
+          <button class="btn btn-primary"><span class="fa fa-bars fa-fw"></span></button>
+          <button class="btn btn-outline-primary" v-on:click="setMediaView('thumbs')"><span class="fa fa-picture-o fa-fw"></span></button>
+        </template>
+        <template v-if="getMediaView()==='thumbs'">
+          <button class="btn btn-outline-primary" v-on:click="setMediaView('list')"><span class="fa fa-bars fa-fw"></span></button>
+          <button class="btn btn-primary"><span class="fa fa-picture-o fa-fw"></span></button>
+        </template>
+      </div>
+      <flexy-pagination v-if="needsPagination" :total="info.total_rows" :pages="info.num_pages" :current="info.page + 1" :limit="info.limit" :url="createdUrl({'offset':'##'})"></flexy-pagination>
+      <div v-if="!needsPagination" class="pagination-container">
+        <span class="pagination-info text-primary">{{$lang.grid_total | replace(info.total_rows)}}</span>
+      </div>
     </div>
   </div>
 </template>
@@ -474,7 +481,11 @@ export default {
   @import "../../../scss/theme";
 
   .grid .card-block {padding:0;}
-  .grid .card-footer {padding:1px 1px 0;}
+  .grid .card-footer {padding:.35rem .35rem;}
+  .grid .card-footer .actions {float:left;margin-top:.25rem;}
+  .grid .pagination-info {margin-right:.25rem;float:right;}
+  
+  .grid table {margin-bottom:0;}
   .grid th {overflow:hidden;text-overflow:ellipsis;}
   .grid th a {text-decoration:none;}
   .grid th span {white-space:nowrap;text-transform:uppercase;}
