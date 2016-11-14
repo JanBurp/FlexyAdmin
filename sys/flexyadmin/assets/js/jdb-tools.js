@@ -72,5 +72,9 @@ export default {
     return serializeString;
   },
   
+  encodeURL : function(string) {
+    return encodeURIComponent(_.escape(string));
+  },
+  
   
 };

@@ -34,10 +34,16 @@ class Show extends AdminController {
     );
     $options = object2array(json_decode($this->input->get('options')));
     $options = array_merge($default,$options);
+    $options['find'] = html_entity_decode($options['find']);
+    if (substr($options['find'],0,1)==='[') $options['find'] = json2array($options['find']);
     
     // Data
     $this->data->table($name);
     $data = $this->data->select_txt_abstract()->get_grid( $options['limit'], $options['offset'], $options['order'], $options['find'] );
+    
+    // trace_($options);
+    // trace_($this->data->last_query());
+    // trace_($data);
     
     // Default order
     if (empty($options['order'])) {
@@ -64,7 +70,7 @@ class Show extends AdminController {
       'data'    => $data,
       'info'    => $this->data->get_query_info(),
       'order'   => $options['order'],
-      'find'    => $options['find'],
+      'find'    => is_array($options['find'])?array2json($options['find']):$options['find'],
     );
 	  $this->view_admin( 'vue/grid', $grid );
 	}
