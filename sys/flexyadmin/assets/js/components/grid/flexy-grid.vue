@@ -69,8 +69,8 @@ export default {
      */
     gridType : function() {
       var type=this.type;
-      if (typeof(this.fields.order)!=='undefined' && this.order==='' && this.find==='') type='ordered';
-      if (typeof(this.fields.self_parent)!=='undefined' && this.order==='' && this.find==='') type='tree';
+      if (typeof(this.fields.order)!=='undefined' && (this.order==='' || this.order==='order') && this.find==='') type='ordered';
+      if (typeof(this.fields.self_parent)!=='undefined' && (this.order==='' || this.order==='order') && this.find==='') type='tree';
       return type;
     },
     /**
