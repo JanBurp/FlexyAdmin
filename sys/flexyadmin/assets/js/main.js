@@ -20,14 +20,17 @@ import flexyState       from './flexy-state.js'
 import FlexyMessages    from './components/flexy-messages.vue'
 
 import FlexyBlocks      from './components/flexy-blocks.vue'
+// import FlexyModal       from './components/flexy-modal.vue'
 import FlexyPagination  from './components/flexy-pagination.vue'
 import FlexyGrid        from './components/grid/flexy-grid.vue'
 import FlexyForm        from './components/form/flexy-form.vue'
+
 
 // Languaga settings
 const locales = {};
 locales[_flexy.language] = JSON.parse(_flexy.language_keys);
 Vue.use(Lang, {lang: _flexy.language, locales: locales});
+
 
 Vue.mixin({
   
@@ -61,7 +64,7 @@ Vue.mixin({
         transformRequest: [function (data) {
           var requestString='';
           if (data) {
-            requestString = self.flexySerializeJSON(data);
+            requestString = jdb.serializeJSON(data);
           }
           return requestString;
         }],
@@ -84,39 +87,6 @@ Vue.mixin({
     },
     
     
-    /* Maakt normale POST data (string) van meegegeven Object */
-    flexySerializeJSON : function(data) {
-      var serializeString='';
-      if ( !_.isUndefined(data) ) {
-        // sort the keys, so the returned string has always same order of keys
-        var keys = Object.keys(data).sort();
-        // Loop the keys
-        for (var i = 0; i < keys.length; i++) {
-          var key=keys[i];
-          if (serializeString!=='') serializeString+='&';
-          // array
-          if (_.isArray(data[key])) {
-            data[key].forEach(function(el,index) {
-              if (serializeString!=='') serializeString+='&';
-              serializeString += encodeURIComponent(key) + '[]=' + encodeURIComponent(el);
-            });
-          }
-          // object
-          if (_.isObject(data[key])) {
-            _.forEach(data[key], function(el,index) {
-              if (serializeString!=='') serializeString+='&';
-              serializeString += encodeURIComponent(key) + '['+index+']=' + encodeURIComponent(el);
-            });
-          }
-          // normal
-          else {
-            serializeString += encodeURIComponent(key) + '=' + encodeURIComponent(data[key]);
-          }
-        }
-      }
-      return serializeString;
-    },
-    
   },
 })
 
@@ -128,6 +98,7 @@ var vm = new Vue({
   el:'#main',
   components: {
     FlexyBlocks,
+    // FlexyModal,
     FlexyMessages,
     FlexyPagination,
     FlexyGrid,
