@@ -39,6 +39,21 @@ class Show extends AdminController {
     $this->data->table($name);
     $data = $this->data->select_txt_abstract()->get_grid( $options['limit'], $options['offset'], $options['order'], $options['find'] );
     
+    // Default order
+    if (empty($options['order'])) {
+      $order = $this->data->get_setting('order_by');
+      if (!empty($order)) {
+        $order = explode(',',$order)[0];
+        $order = explode(' ',$order);
+        if (isset($order[1]) and strtoupper($order[1])==='DESC') {
+          $options['order'] = '_'.$order[0];
+        }
+        else {
+          $options['order'] = $order[0];
+        }
+      }
+    }
+    
     // Fields
     $fields = $this->_prepareFields('grid_set',array(),$data);
     // Show grid
