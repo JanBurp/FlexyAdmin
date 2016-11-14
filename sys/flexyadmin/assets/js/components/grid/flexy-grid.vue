@@ -49,7 +49,6 @@ export default {
   data : function() {
     return {
       items       : [],
-      findTerm    : this.find,
       selected    : [],
       draggable   : {
         item        : false,
@@ -60,6 +59,22 @@ export default {
         oldIndex    : 0,
         newIndex    : 0,
       },
+      findTerm            : this.find,
+      extendedFind        : true,
+      extendedTermDefault : { field:'',term:'',and:'OR',equals:'exist' },
+      extendedTerm        : [],
+    }
+  },
+  
+  mounted : function() {
+    this.extendedFind = false;
+    if (this.find.substr(0,1)==='[' || this.find.substr(0,1)==='{') {
+      this.extendedFind = true;
+      this.extendedTerm = JSON.parse(this.find);
+      this.findTerm = '';
+    }
+    else {
+      this.extendedTerm = [_.clone(this.extendedTermDefault)];
     }
   },
   
@@ -271,12 +286,15 @@ export default {
           }
           else {
             flexyState.addMessage( self.$options.filters.replace( self.$lang.deleted, removeIds.length), 'danger');
-            // Verwijder uit items -> reload page. TODO als ajax grid, dan hier pagina herladen
-            location.reload();
+            self.reloadPage();
           }
           return response;
         });
       }
+    },
+    
+    reloadPage : function() {
+      location.reload();
     },
     
     rowLevel:function(row) {
@@ -301,7 +319,7 @@ export default {
         offset  : _.isUndefined( this.info.offset) ? 0:this.info.offset,
       };
       parts = _.extend( defaults, parts );
-      return location.pathname + '?options={"offset":"'+parts.offset+'","order":"'+parts.order+'","find":"'+parts.find+'"}';
+      return location.pathname + '?options={"offset":"'+parts.offset+'","order":"'+parts.order+'","find":"'+jdb.encodeURL(parts.find)+'"}';
     },
     
     editUrl : function(id) {
@@ -310,10 +328,32 @@ export default {
     
     startFinding : function(event) {
       if (event) event.preventDefault();
-      var url = this.createdUrl({offset:0,find:this.findTerm});
+      var self = this;
+      var find = '';
+      if ( !self.extendedFind ) {
+        find = this.findTerm.replace(/'/g,'"');
+      }
+      else {
+        var filled = true;
+        for (var i = 0; i < this.extendedTerm.length; i++) {
+          if (this.extendedTerm[i].field === '') filled = false;
+          if (this.extendedTerm[i].term === '') filled = false;
+        }
+        if (this.extendedTerm.length<1) filled = false;
+        if (!filled) return false;
+        find = JSON.stringify(self.extendedTerm);
+      }
+      var url = this.createdUrl({offset:0,find:find});
       window.location.assign(url);
     },
     
+    extendedSearchAdd : function() {
+      this.extendedTerm.push( _.clone(this.extendedTermDefault) );
+    },
+    extendedSearchRemove : function(index) {
+      this.extendedTerm.splice(index,1);
+      if (this.extendedTerm.length<1) this.extendedTerm = [_.clone(this.extendedTermDefault)];
+    },
 
     /**
      * Dragging methods
@@ -446,13 +486,44 @@ export default {
     <div class="card-header">
       <h1>{{title}}</h1>
       <form class="form-inline" v-on:submit="startFinding($event)">
-        <div class="form-group"><input type="text" v-model.trim="findTerm" class="form-control form-control-sm" id="grid-find" :placeholder="$lang.grid_search"></div>
+        <div class="form-group" v-if="!extendedFind"><input type="text" v-model.trim="findTerm" class="form-control form-control-sm" id="grid-find" :placeholder="$lang.grid_search"></div>
         <div class="btn-group">
           <button type="submit" class="btn btn-warning"><span class="fa fa-search"></span></button>
-          <button type="button" class="btn btn-warning" disabled><span class="fa fa-chevron-down"></span></button>
+          <button type="button" class="btn btn-warning" v-if="!extendedFind" @click="extendedFind=true"><span class="fa fa-chevron-down"></span></button>
+          <button type="button" class="btn btn-warning" v-if="extendedFind" @click="extendedFind=false"><span class="fa fa-chevron-up"></span></button>
         </div>
       </form>
     </div>
+
+    <!-- EXTENDED SEARCH -->
+    <div class="card-header grid-extended-find" v-if="extendedFind">
+      <form v-for="(term,index) in extendedTerm" class="form-inline">
+        <div class="form-group grid-extended-search-and">
+          <select class="form-control form-control-sm" name="grid-extended-search-and[]" v-model="term.and">
+            <option value="OR" :selected="term.and=='OR'">of</option>
+            <option value="AND" :selected="term.and=='AND'">en</option>
+          </select>
+        </div>
+        <div class="form-group grid-extended-search-field" :class="{'has-danger':!term.field}">
+          <select class="form-control form-control-sm" name="grid-extended-search-field[]" v-model="term.field">
+            <option v-for="(field,key) in fields" :value="key" :selected="term.field===key">{{field.name}}</option>
+          </select>
+        </div>
+        <div class="form-group grid-extended-search-equals">
+          <select class="form-control form-control-sm" name="grid-extended-search-equals[]" v-model="term.equals">
+            <option value="exist" :selected="term.equals==='exist'">bevat</option>
+            <option value="word" :selected="term.equals==='word'">bevat woord</option>
+            <option value="exact" :selected="term.equals==='exact'">is gelijk aan</option>
+          </select>
+        </div>
+        <div class="form-group grid-extended-search-term" :class="{'has-danger':term.term===''}">
+          <input type="text" class="form-control form-control-sm" v-model="term.term" :placeholder="$lang.grid_search" name="grid-extended-search-term[]">
+        </div>
+        <button type="button" class="btn btn-danger" @click="extendedSearchRemove(index)"><span class="fa fa-remove"></span></button>
+        <button type="button" class="btn btn-warning" @click="extendedSearchAdd()"><span class="fa fa-plus"></span></button>
+      </form>
+    </div>
+    
     <!-- GRID HEADERS -->
     <div class="card-block table-responsive">
       <table class="table table-bordered table-sm">
@@ -517,6 +588,10 @@ export default {
   @import "../../../scss/theme";
 
   .grid .card-block {padding:0;}
+  .grid .card-header.grid-extended-find {background-color:$gray-lighter!important;color:$brand-primary!important;}
+  .grid .card-header.grid-extended-find form {clear:both;float:right!important;margin:0 0 .25rem;}
+  .grid .card-header.grid-extended-find form:first-child>div.grid-extended-search-and {display:none;}
+  .grid .card-header.grid-extended-find form:last-child{margin-bottom:0;}
   .grid .card-footer {padding:.35rem .35rem;}
   .grid .card-footer .actions {float:left;margin-top:.25rem;}
   .grid .pagination-info {margin-right:.25rem;float:right;}
@@ -526,13 +601,15 @@ export default {
   .grid th a {text-decoration:none;}
   .grid th span {white-space:nowrap;text-transform:uppercase;}
   .grid th > span.fa {position:relative;float:right;margin-top:1px;}
-  .grid th.grid-header-type-primary {width:6.2rem;max-width:6.2rem;white-space:nowrap;}
-  .grid.grid-type-tree th.grid-header-type-primary {width:8rem;max-width:8rem;}
+  .grid th.grid-header-type-primary {width:7rem;max-width:7rem;min-width:7rem;white-space:nowrap;}
+  .grid.grid-type-tree th.grid-header-type-primary {width:8rem;max-width:8rem;min-width:8rem;}
   .grid .draggable-handle {cursor:move;}
   .grid .sortable-fallback {display:none;}
   
   .grid .btn {width:1.85rem;height:1.6rem;padding:.1rem 0;text-align:center;}
   .grid .btn .fa {width:1rem;}
+  
+  .grid option, .grid select {text-transform:uppercase;}
   
   .grid.grid-media-view-thumbs tbody tr {
     display:block!important;

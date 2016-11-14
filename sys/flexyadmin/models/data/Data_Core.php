@@ -2086,7 +2086,8 @@ Class Data_Core extends CI_Model {
     
     // Find
     if ( $find ) {
-      if ( !isset($find['terms']))  {
+      // Simple find
+      if ( !is_array($find) )  {
         $fields = $grid_set['fields'];
         if (isset($grid_set['with'])) {
           foreach ($grid_set['with'] as $type => $with) {
@@ -2101,9 +2102,20 @@ Class Data_Core extends CI_Model {
           }
         }
         $find=array( 'terms'=>$find, 'fields'=>$fields, 'settings'=>array() );
+        $this->find( $find['terms'], $find['fields'], $find['settings'] );
       }
-      // trace_($find);
-      $this->find( $find['terms'], $find['fields'], $find['settings'] );
+      else {
+        $search_with = array_keys($grid_set['with']);
+        foreach ($find as $findItem) {
+          $settings = array(
+            'and'   => $findItem['and'],
+            'exact' => $findItem['equals'] === 'exact',
+            'word'  => $findItem['equals'] === 'word',
+            'with'  => $search_with,
+          );
+          $this->find( $findItem['term'], $findItem['field'], $settings );
+        }
+      }
     }
     
     // Pagination
@@ -3165,10 +3177,10 @@ Class Data_Core extends CI_Model {
       foreach ($fields as $field) {
         $relation=FALSE;
         if (is_array($field)) {
-          $relation=$field['relation'];
-          $field=$field['field'];
+          $relation = $field['relation'];
+          $field    = $field['field'];
         }
-        if ( $settings['many_exists'] AND $relation=='many_to_many') {
+        if ( $settings['many_exists'] AND $relation==='many_to_many') {
           // 'many_to_many' => ..._exists()
           if ( $settings['exact'] ) {
             $this->or_where_exists( $field, $terms );
