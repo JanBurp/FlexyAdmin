@@ -13,6 +13,10 @@ export default {
     media_view  : _flexy.media_view,
   },
   
+  getState : function(item) {
+    return this.state[item];
+  },
+  
   showProgress : function() {
     this.state.progress = 10;
     this.debug && console.log('state.progress',this.state.progress); 

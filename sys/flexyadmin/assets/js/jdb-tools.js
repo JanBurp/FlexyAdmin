@@ -35,4 +35,42 @@ export default {
   },
   
   
+  /**
+   * jdb.serializeJSON
+   * 
+   * Maakt normale POST data (string) van meegegeven Object
+   */
+  serializeJSON : function(data) {
+    var serializeString='';
+    if ( !_.isUndefined(data) ) {
+      // sort the keys, so the returned string has always same order of keys
+      var keys = Object.keys(data).sort();
+      // Loop the keys
+      for (var i = 0; i < keys.length; i++) {
+        var key=keys[i];
+        if (serializeString!=='') serializeString+='&';
+        // array
+        if (_.isArray(data[key])) {
+          data[key].forEach(function(el,index) {
+            if (serializeString!=='') serializeString+='&';
+            serializeString += encodeURIComponent(key) + '[]=' + encodeURIComponent(el);
+          });
+        }
+        // object
+        if (_.isObject(data[key])) {
+          _.forEach(data[key], function(el,index) {
+            if (serializeString!=='') serializeString+='&';
+            serializeString += encodeURIComponent(key) + '['+index+']=' + encodeURIComponent(el);
+          });
+        }
+        // normal
+        else {
+          serializeString += encodeURIComponent(key) + '=' + encodeURIComponent(data[key]);
+        }
+      }
+    }
+    return serializeString;
+  },
+  
+  
 };

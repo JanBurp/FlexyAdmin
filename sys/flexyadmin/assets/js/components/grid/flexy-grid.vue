@@ -240,10 +240,43 @@ export default {
     
     reverseSelection:function() {
       var ids = [];
-      for (var i = 0; i < this.data.length; i++) {
-        ids.push(this.data[i].id.value);
+      for (var i = 0; i < this.items.length; i++) {
+        ids.push(this.items[i].id.value);
       }
       this.selected = _.difference(ids,this.selected);
+    },
+    
+    removeItems : function(removeIds) {
+      var self = this;
+      if ( _.isUndefined(removeIds)) {
+        removeIds = this.selected;
+      }
+      else {
+        removeIds = [removeIds];
+      }
+      // Confirm
+      var message = this.$lang['confirm_delete_one'];
+      if (removeIds.length>1) message = this.$options.filters.replace( this.$lang['confirm_delete_multiple'], removeIds.length );
+      if (window.confirm(message)) {
+        return this.api({
+          url   : 'row',
+          data  : {
+            table : self.name,
+            where : removeIds,
+          },
+        }).then(function(response){
+          var error = response.error || (response.data.data===false);
+          if (error) {
+            flexyState.addMessage( self.$lang.error_delete, 'danger');
+          }
+          else {
+            flexyState.addMessage( self.$options.filters.replace( self.$lang.deleted, removeIds.length), 'danger');
+            // Verwijder uit items -> reload page. TODO als ajax grid, dan hier pagina herladen
+            location.reload();
+          }
+          return response;
+        });
+      }
     },
     
     rowLevel:function(row) {
@@ -428,7 +461,7 @@ export default {
             <template v-for="(field,key) in fields">
               <th v-if="isPrimaryHeader(field)" :class="headerClass(field)" class="text-primary">
                 <a class="btn btn-outline-warning" :href="editUrl(-1)"><span class="fa fa-plus"></span></a>
-                <div :class="{disabled:!hasSelection()}" class="btn btn-outline-danger action-delete"><span class="fa fa-remove"></span></div>
+                <div :class="{disabled:!hasSelection()}" class="btn btn-outline-danger action-delete" @click="removeItems()"><span class="fa fa-remove"></span></div>
                 <div v-on:click="reverseSelection()" class="btn btn-outline-info action-select"><span class="fa fa-square-o"></span></div>
               </th>
               <th v-if="isNormalVisibleHeader(field)" :class="headerClass(field)"  class="text-primary">
@@ -448,7 +481,7 @@ export default {
               <!-- PRIMARY CELL -->
               <td v-if="cell.type=='primary'" class="action">
                 <a class="btn btn-outline-warning" :href="editUrl(cell.value)"><span class="fa fa-pencil"></span></a>
-                <div class="btn btn-outline-danger action-delete"><span class="fa fa-remove"></span></div>
+                <div class="btn btn-outline-danger action-delete" @click="removeItems(row.id.value)"><span class="fa fa-remove"></span></div>
                 <div v-on:click="select(row.id.value)" class="btn btn-outline-info action-select"><span v-if="!isSelected(row.id.value)" class="fa fa-square-o"></span><span v-if="isSelected(row.id.value)" class="fa fa-check-square-o"></span></div>
                 <div v-if="gridType==='tree' || gridType==='ordered'"class="draggable-handle btn btn-outline-info action-move" :class="{'active':isDragging(row.id.value)}"><span class="fa fa-reorder"></span></div>
               </td>
