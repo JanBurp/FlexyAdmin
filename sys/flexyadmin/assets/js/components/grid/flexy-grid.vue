@@ -414,19 +414,22 @@ export default {
       <h1>{{title}}</h1>
       <form class="form-inline" v-on:submit="startFinding($event)">
         <div class="form-group"><input type="text" v-model.trim="findTerm" class="form-control form-control-sm" id="grid-find" :placeholder="$lang.grid_search"></div>
-        <button type="submit" class="btn btn-warning"><span class="fa fa-search"></span></button>
+        <div class="btn-group">
+          <button type="submit" class="btn btn-warning"><span class="fa fa-search"></span></button>
+          <button type="button" class="btn btn-warning" disabled><span class="fa fa-chevron-down"></span></button>
+        </div>
       </form>
     </div>
     <!-- GRID HEADERS -->
     <div class="card-block table-responsive">
-      <table class="table table-bordered table-hover table-sm">
+      <table class="table table-bordered table-sm">
         <thead>
           <tr>
             <template v-for="(field,key) in fields">
               <th v-if="isPrimaryHeader(field)" :class="headerClass(field)" class="text-primary">
-                <a class="btn btn-warning" :href="editUrl(-1)"><span class="fa fa-plus"></span></a>
-                <div :class="{disabled:!hasSelection()}" class="btn btn-danger action-delete"><span class="fa fa-remove"></span></div>
-                <div v-on:click="reverseSelection()" class="btn btn-info action-select"><span class="fa fa-square-o"></span></div>
+                <a class="btn btn-outline-warning" :href="editUrl(-1)"><span class="fa fa-plus"></span></a>
+                <div :class="{disabled:!hasSelection()}" class="btn btn-outline-danger action-delete"><span class="fa fa-remove"></span></div>
+                <div v-on:click="reverseSelection()" class="btn btn-outline-info action-select"><span class="fa fa-square-o"></span></div>
               </th>
               <th v-if="isNormalVisibleHeader(field)" :class="headerClass(field)"  class="text-primary">
                 <a :href="createdUrl({'order':(key==order?'_'+key:key)})"><span>{{field.name}}</span>
@@ -444,10 +447,10 @@ export default {
             <template v-for="cell in row">
               <!-- PRIMARY CELL -->
               <td v-if="cell.type=='primary'" class="action">
-                <a class="btn btn-warning" :href="editUrl(cell.value)"><span class="fa fa-pencil"></span></a>
-                <div class="btn btn-danger action-delete"><span class="fa fa-remove"></span></div>
-                <div v-on:click="select(row.id.value)" class="btn btn-info action-select"><span v-if="!isSelected(row.id.value)" class="fa fa-square-o"></span><span v-if="isSelected(row.id.value)" class="fa fa-check-square-o"></span></div>
-                <div v-if="gridType==='tree' || gridType==='ordered'"class="draggable-handle btn btn-info action-move" :class="{'active':isDragging(row.id.value)}"><span class="fa fa-reorder"></span></div>
+                <a class="btn btn-outline-warning" :href="editUrl(cell.value)"><span class="fa fa-pencil"></span></a>
+                <div class="btn btn-outline-danger action-delete"><span class="fa fa-remove"></span></div>
+                <div v-on:click="select(row.id.value)" class="btn btn-outline-info action-select"><span v-if="!isSelected(row.id.value)" class="fa fa-square-o"></span><span v-if="isSelected(row.id.value)" class="fa fa-check-square-o"></span></div>
+                <div v-if="gridType==='tree' || gridType==='ordered'"class="draggable-handle btn btn-outline-info action-move" :class="{'active':isDragging(row.id.value)}"><span class="fa fa-reorder"></span></div>
               </td>
               <!-- CELL -->
               <flexy-grid-cell v-else :type="cell.type" :name="cell.name" :value="cell.value" :level="rowLevel(row)" :primary="{'table':name,'id':row.id.value}" :editable="isEditable(cell.name)" :options="fields[cell.name]"></flexy-grid-cell>
@@ -486,7 +489,7 @@ export default {
   .grid .pagination-info {margin-right:.25rem;float:right;}
   
   .grid table {margin-bottom:0;}
-  .grid th {overflow:hidden;text-overflow:ellipsis;}
+  .grid th {overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .grid th a {text-decoration:none;}
   .grid th span {white-space:nowrap;text-transform:uppercase;}
   .grid th > span.fa {position:relative;float:right;margin-top:1px;}

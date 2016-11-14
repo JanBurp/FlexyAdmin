@@ -67,7 +67,7 @@ Class Data_Core extends CI_Model {
     'relations'       => array(),
     'field_info'      => array(),
     'options'         => array(),
-    'order_by'        => 'id',
+    'order_by'        => '',
     'max_rows'        => 0,
     'update_uris'     => true,
     'grid_set'        => array(),
