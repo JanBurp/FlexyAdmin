@@ -40,6 +40,6 @@ $config['grid_set'] = array(
 
 $config['form_set'] = array(
 		'fields'    => array('id','b_exists','file','path','str_type','str_title','dat_date','int_size','int_img_width','int_img_height'), 
-    // 'fieldsets' => array('res_media_files' => array('id','b_exists','file','path','str_type','str_title','dat_date','int_size','int_img_width','int_img_height') ),
+    'fieldsets' => array('res_media_files' => array('id','b_exists','file','path','str_type','str_title','dat_date','int_size','int_img_width','int_img_height') ),
 		'with'      => array(), 
 	);
