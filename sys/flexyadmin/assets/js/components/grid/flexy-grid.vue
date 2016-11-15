@@ -308,6 +308,12 @@ export default {
       return editable;
     },
     
+    isReadonly : function(name) {
+      var readonly = false;
+      if ( !_.isUndefined(this.fields[name]) ) readonly = this.fields[name].schema['readonly'];
+      return readonly;
+    },
+    
     
     /**
      * Create url, used for all links (pagination, edit, sort etc..)
@@ -566,7 +572,7 @@ export default {
                 <div v-if="gridType==='tree' || gridType==='ordered'"class="draggable-handle btn btn-outline-info action-move" :class="{'active':isDragging(row.id.value)}"><span class="fa fa-reorder"></span></div>
               </td>
               <!-- CELL -->
-              <flexy-grid-cell v-else :type="cell.type" :name="cell.name" :value="cell.value" :level="rowLevel(row)" :primary="{'table':name,'id':row.id.value}" :editable="isEditable(cell.name)" :options="fields[cell.name]"></flexy-grid-cell>
+              <flexy-grid-cell v-else :type="cell.type" :name="cell.name" :value="cell.value" :level="rowLevel(row)" :primary="{'table':name,'id':row.id.value}" :editable="isEditable(cell.name)" :readonly="isReadonly(cell.name)" :options="fields[cell.name]"></flexy-grid-cell>
             </template>
           </tr>
         </draggable>

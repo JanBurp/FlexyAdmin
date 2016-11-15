@@ -155,10 +155,12 @@ export default {
         <template v-for="field in fieldset">
           
           <template v-if="isType('primary',field)">
+            <!-- Primary -->
             <input type="hidden" :value="row[field]">
           </template>
           
           <div class="form-group row" :class="validationClass(field)" v-if="isType('textarea',field)">
+            <!-- Textarea -->
             <div v-if="validationErrors[field]" class="validation-error form-text text-danger">{{validationErrors[field]}}</div>
             <label class="col-xs-3 form-control-label" :for="field">{{fields[field]['name']}}</label>
             <div class="col-xs-9">
@@ -167,14 +169,16 @@ export default {
           </div>
 
           <div class="form-group row" :class="validationClass(field)" v-if="isType('checkbox',field)">
+            <!-- Checkbox -->
             <div v-if="validationErrors[field]" class="validation-error form-text text-danger">{{validationErrors[field]}}</div>
             <label class="col-xs-3 form-control-label" :for="field">{{fields[field]['name']}}</label>
             <div class="col-xs-9">
-              <input class="form-check-input" type="checkbox" :id="field" :name="field" :value="row[field]" v-on:input="updateField(field,$event.target.value)">
+              <input class="form-check-input" type="checkbox" :id="field" :name="field" v-model="row[field]" v-on:input="updateField(field,$event.target.value)">
             </div>
           </div>
           
           <div class="form-group row" :class="validationClass(field)" v-if="isType('select',field)">
+            <!-- Select -->
             <div v-if="validationErrors[field]" class="validation-error form-text text-danger">{{validationErrors[field]}}</div>
             <label class="col-xs-3 form-control-label" :for="field">{{fields[field]['name']}}</label>
             <div class="col-xs-9">
@@ -185,6 +189,7 @@ export default {
           </div>
 
           <div class="form-group row" :class="validationClass(field)" v-if="isType('default',field)">
+            <!-- Default -->
             <div v-if="validationErrors[field]" class="validation-error form-text text-danger">{{validationErrors[field]}}</div>
             <label class="col-xs-3 form-control-label" :for="field">{{fields[field]['name']}}</label>
             <div class="col-xs-9"><input type="text" class="form-control" :id="field" :name="field" :value="row[field]" v-on:input="updateField(field,$event.target.value)" placeholder=""></div>
