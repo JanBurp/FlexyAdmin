@@ -119,20 +119,36 @@ class Show extends AdminController {
  * @param string 	$table 	Table name
  * @param mixed 	$id 		id
  */
-	public function form( $name='',$id=false ) {
-    $this->name = $name;
+	public function form() {
+    $isMedia = false;
+    $args = func_get_args();
+    $name = array_shift($args);
+    if ($name === '_media_') {
+      $name = 'res_media_files';
+      $path = array_shift($args);
+      $isMedia = true;
+    }
+    $id = array_shift($args);
+      
     // Data
     $this->data->table($name);
+    if ($isMedia) $this->data->select('str_title');
     $data = $this->data->get_form($id);
     $options = $this->data->get_options();
     // Fields
     $fields = $this->_prepareFields('form_set',$options);
-    $fieldsets = $this->data->get_setting(array('form_set','fieldsets'));
+    if ($isMedia) {
+      $fields = array_keep_keys($fields,array('id','str_title'));
+      $fieldsets = array($path=>array_keys($fields));
+    }
+    else {
+      $fieldsets = $this->data->get_setting(array('form_set','fieldsets'));
+    }
     $fieldsetsKeys = $this->ui->get(array_keys($fieldsets));
     $fieldsets = array_combine($fieldsetsKeys,$fieldsets);
     // Show form
     $form = array(
-      'title'     => $this->ui->get($name),
+      'title'     => ($isMedia)?$this->ui->get($path):$this->ui->get($name),
       'name'      => $name,
       'id'        => $id,
       'fields'    => $fields,
@@ -140,7 +156,6 @@ class Show extends AdminController {
       'data'      => $data,
       'options'   => $options,
     );
-    // trace_($options);
 	  $this->view_admin( 'vue/form', $form );
 	}
   

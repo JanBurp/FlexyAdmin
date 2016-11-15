@@ -322,9 +322,18 @@ export default {
       return location.pathname + '?options={"offset":"'+parts.offset+'","order":"'+parts.order+'","find":"'+jdb.encodeURL(parts.find)+'"}';
     },
     
+    
     editUrl : function(id) {
-      return 'admin/show/form/'+this.name+'/'+id;
+      var url = '';
+      if (this.gridType==='media') {
+        url = 'admin/show/form/_media_/'+ this.name+'/'+id;
+      }
+      else {
+        url = 'admin/show/form/'+this.name+'/'+id;
+      }
+      return url;
     },
+    
     
     startFinding : function(event) {
       if (event) event.preventDefault();
