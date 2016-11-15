@@ -3,7 +3,7 @@ import flexyState from '../../flexy-state.js'
 
 export default {
   name: 'VueGridCell',
-  props:['type','name','primary','value','level','editable','options'],
+  props:['type','name','primary','value','level','editable','readonly','options'],
   
   // created : function() {
   //   console.log(this.options);
@@ -27,6 +27,7 @@ export default {
       var c = [];
       c.push('grid-cell-type-'+this.type);
       if (this.editable) c.push('grid-cell-editable');
+      if (this.readonly) c.push('text-muted');
       return c;
     },
     showTreeNode : function() {

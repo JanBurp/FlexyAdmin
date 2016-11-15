@@ -91,10 +91,10 @@ Class Res_media_files extends Data_Core {
     if ($with_thumb) $this->select( '`file` AS `media_thumb`' );
 
     $this->select( array(
+      '`str_title` AS `alt`',
       '`file` AS `name`',
       '`path`',
       '`str_type` AS `type`',
-      '`str_title` AS `alt`',
       'DATE_FORMAT(`dat_date`, "%Y %m %d") AS `rawdate`',
       'DATE_FORMAT(`dat_date`,"%d %b %Y") AS `date`',
       '`int_size` AS `size`',
