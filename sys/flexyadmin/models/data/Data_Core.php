@@ -2147,6 +2147,7 @@ Class Data_Core extends CI_Model {
     return $result;
   }
   
+  
   /**
    * Geeft resultaat terug specifiek voor een formulier van één item
    *
@@ -2167,7 +2168,7 @@ Class Data_Core extends CI_Model {
     }
 
     // Select
-    $this->select( $form_set['fields'] );
+    if (empty($this->tm_select)) $this->select( $form_set['fields'] );
     
     // Relations
     if (isset($form_set['with'])) {
