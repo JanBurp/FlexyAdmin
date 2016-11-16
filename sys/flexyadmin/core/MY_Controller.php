@@ -43,13 +43,16 @@ class MY_Controller extends CI_Controller {
         if ($file) {
           $file='db/'.$file;
           if (file_exists($file)) {
-            $testDB = read_file('db/'.$file);
+            $testDB = read_file($file);
             $this->load->dbutil();
             $this->dbutil->import($testDB);
-            echo "Test database (".$file.") Loaded\n";
+            echo "> Test database loaded. (".$file.")\n";
           }
         }
       }
+      // Reset cache
+      $this->cache->clean();
+      echo "> Cache cleared.\n\n";
       return;
     }
     

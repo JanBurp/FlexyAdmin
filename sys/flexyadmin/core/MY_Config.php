@@ -90,7 +90,10 @@ Class MY_Config extends CI_Config {
 	 * @return $this
 	 */
 	public function set_item($item, $value) {
-    $this->config = set_el( $this->config, $item, $value);
+    if (function_exists('set_el'))
+      $this->config = set_el( $this->config, $item, $value);
+    else
+      parent::set_item($item,$value);
     return $this;
 	}
 

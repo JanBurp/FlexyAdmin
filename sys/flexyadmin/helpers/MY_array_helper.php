@@ -80,10 +80,12 @@ function array2object($array,$recursive=TRUE) {
  */
 function object2array($object,$recursive=TRUE) {
 	$array=array();
-	foreach ($object as $key => $value) {
-		if ($recursive and is_object($value)) $value=object2array($value,$recursive);
-		$array[$key] = $value;
-	}
+  if (!empty($object)) {
+  	foreach ($object as $key => $value) {
+  		if ($recursive and is_object($value)) $value=object2array($value,$recursive);
+  		$array[$key] = $value;
+  	}
+  }
 	return $array;
 }
 
@@ -555,7 +557,7 @@ function filter_by_key($a,$preKey,$replaceKey=FALSE) {
 	$len=strlen($preKey);
 	foreach ($a as $key => $value) {
 		$newKey=$key;
-		if ($replaceKey) $newKey=str_replace($preKey,'',$newKey);
+		if ($replaceKey!==false) $newKey=str_replace($preKey,'',$newKey);
 		if (substr($key,0,$len)==$preKey) $arr[$newKey]=$value;
 	}
 	return $arr;

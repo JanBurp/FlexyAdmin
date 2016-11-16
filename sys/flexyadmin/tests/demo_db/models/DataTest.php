@@ -804,9 +804,8 @@ class DataTest extends CITestCase {
     // order_by & abstract test
     $first = current($page1);
     $this->assertEquals( 'Aafje', $first['str_first_name'] );
-    $this->assertEquals( 4, $first['id_adressen'] );
-    $this->assertEquals( 'Rekenpark 42|1234IJ', $first['tbl_adressen.abstract'] );
-    $this->assertEquals( 'Gym|vak', $first['tbl_groepen.abstract'] );
+    $this->assertEquals( '{"4":"Rekenpark 42|1234IJ"}', $first['id_adressen'] );
+    $this->assertEquals( '{"31":"Gym|vak"}', $first['id_groepen'] );
 
     // DESC
     $result = $this->CI->data->get_grid( 0,0, '_str_first_name');
@@ -820,6 +819,47 @@ class DataTest extends CITestCase {
     $result = $this->CI->data->get_grid( 0,0, '_str_last_name');
     $first = current($result);
     $this->assertEquals( 'Evertsen', $first['str_last_name'] );
+    
+    $result = $this->CI->data->get_grid( 0,0, 'id_adressen');
+    $first = current($result);
+    // var_dump($first);
+    // $this->assertEquals( 'Evy', $first['id_adressen'] );
+    
+    
+    
+  }
+  
+  
+  public function testCaching() {
+    $this->CI->data->table('tbl_groepen');
+    // Simple
+    $result = $this->CI->data->cache()->get_result();
+    $info   = $this->CI->data->get_query_info();
+    $cached_result = $this->CI->data->cache()->get_result();
+    $cached_info   = $this->CI->data->get_query_info();
+    $this->assertEquals($result,$cached_result);
+    $this->assertFalse($info['from_cache']);
+    $this->assertTrue($cached_info['from_cache']);
+
+    // Where, order, limit
+    $result = $this->CI->data->cache()->where('str_soort','groep')->order_by('id')->get_result(3);
+    $info   = $this->CI->data->get_query_info();
+    $cached_result = $this->CI->data->cache()->where('str_soort','groep')->order_by('id')->get_result(3);
+    $cached_info   = $this->CI->data->get_query_info();
+    $this->assertEquals($result,$cached_result);
+    $this->assertFalse($info['from_cache']);
+    $this->assertTrue($cached_info['from_cache']);
+
+    // Relations
+    $result = $this->CI->data->cache()->with('many_to_many')->get_result(3);
+    $info   = $this->CI->data->get_query_info();
+    $cached_result = $this->CI->data->cache()->with('many_to_many')->get_result(3);
+    $cached_info   = $this->CI->data->get_query_info();
+    $this->assertEquals($result,$cached_result);
+    $this->assertFalse($info['from_cache']);
+    $this->assertTrue($cached_info['from_cache']);
+    
+    $this->CI->data->clear_cache();
   }
 
 

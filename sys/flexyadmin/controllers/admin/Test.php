@@ -33,13 +33,9 @@ class Test extends MY_Controller {
   public function index() {
     if (!IS_LOCALHOST) return;
     
-    $this->data->table( 'tbl_groepen' );
-    $this->data->with( 'many_to_many' );
-    $this->data->find( 'straat' );
-    $result = $this->data->get_result();
+    $this->data->table( 'tbl_kinderen' );
+    $result = $this->data->get_grid(20,FALSE,'tbl_adressen.abstract');
     
-    trace_sql($this->data->last_query());
-    trace_($this->data->get_query_info());
     trace_($result);
     
   }
@@ -103,7 +99,7 @@ class Test extends MY_Controller {
     if (!IS_LOCALHOST) return;
     
     // many_to_one
-    $this->data->table( 'tbl_leerlingen' );
+    $this->data->table( 'tbl_kinderen' );
     $many_to_one['without']  = "";
     $many_to_one['normal']   = "->with( 'many_to_one' )";
     $many_to_one['specific'] = "->with( 'many_to_one', ['id_adressen'=>['str_zipcode','str_city']] )";
@@ -116,9 +112,9 @@ class Test extends MY_Controller {
     $this->data->table( 'tbl_adressen' );
     $one_to_many['without']  = "";
     $one_to_many['normal']   = "->with( 'one_to_many' )";
-    $one_to_many['specific'] = "->with( 'one_to_many', ['tbl_leerlingen'=>['str_first_name','str_last_name']] )";
-    $one_to_many['abstract'] = "->with( 'one_to_many', ['tbl_leerlingen'=>'abstract'] )";
-    $one_to_many['json']  = "->with_json( 'one_to_many', ['tbl_leerlingen'] )";
+    $one_to_many['specific'] = "->with( 'one_to_many', ['tbl_kinderen'=>['str_first_name','str_last_name']] )";
+    $one_to_many['abstract'] = "->with( 'one_to_many', ['tbl_kinderen'=>'abstract'] )";
+    $one_to_many['json']  = "->with_json( 'one_to_many', ['tbl_kinderen'] )";
     $this->eval_table('one_to_many',$one_to_many);
 
     // many_to_many

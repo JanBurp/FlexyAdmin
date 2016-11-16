@@ -5,3 +5,5 @@ sys/node_modules/*
 site/cache/log*.php
 site/stats/*.xml
 site/cache/data_settings_*
+/sys/build.txt
+site/cache/data_result_*
