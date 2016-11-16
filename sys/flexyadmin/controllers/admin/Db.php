@@ -292,6 +292,7 @@ class Db extends AdminController {
           $data=$_POST;
           unset($data['submit']);
           unset($data['update']);
+          unset($data['__form_id']);
           $sql='';
           foreach ($data as $rev => $nop) {
 						// load SQL

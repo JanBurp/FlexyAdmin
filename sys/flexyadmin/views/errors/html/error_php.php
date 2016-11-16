@@ -8,7 +8,7 @@
   <?php if (function_exists('backtrace_') and strpos($filepath,'Session.php')===false) { backtrace_(10); } ?>
 <?php else : ?>
   <?php
-	  $to="error@flexyadmin.com";
+	  $to="bug@flexyadmin.com";
     if (defined("ERROR_EMAIL")) $to=ERROR_EMAIL;
   ?>
   <h4 style="font-weight:bold;font-size: 14px;color: #696;">Sorry, an error (<?php echo $severity?>) has been encoutered</h4>
