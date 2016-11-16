@@ -88,7 +88,7 @@ define('DEBUGGING', false);
  * FLEXYADMIN: Set the emailadress of the webmaster here, bug reports will be send to this address
  *------------------------------------------------------------------------------------------------
  */
-// define("ERROR_EMAIL","error@flexyadmin.com");
+// define("ERROR_EMAIL","bug@flexyadmin.com");
 
 /*
  *------------------------------------------------------------------------------------------------

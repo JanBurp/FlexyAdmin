@@ -12,7 +12,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   <?php if (function_exists('backtrace_')) { backtrace_(); } ?>
 <?php else : ?>
   <?php
-	  $to="error@flexyadmin.com";
+	  $to="bug@flexyadmin.com";
     if (defined("ERROR_EMAIL")) $to=ERROR_EMAIL;
   ?>
   <h4 style="font-weight:bold;font-size: 14px;color: #696;">Sorry, an uncaught Exception was encountered</h4>
