@@ -369,6 +369,18 @@ export default {
       this.extendedTerm.splice(index,1);
       if (this.extendedTerm.length<1) this.extendedTerm = [_.clone(this.extendedTermDefault)];
     },
+    
+    filesDropped : function(event) {
+      event.stopPropagation();
+      event.preventDefault();
+      var files = event.target.files || event.dataTransfer.files;
+      console.log('filesDropped',event,files);
+    },
+    
+    filesChanged : function(event) {
+      var files = event.target.files || event.dataTransfer.files;
+      console.log('filesChanged',files);
+    },
 
     /**
      * Dragging methods
@@ -515,8 +527,8 @@ export default {
       <form v-for="(term,index) in extendedTerm" class="form-inline">
         <div class="form-group grid-extended-search-and">
           <select class="form-control form-control-sm" name="grid-extended-search-and[]" v-model="term.and">
-            <option value="OR" :selected="term.and=='OR'">of</option>
-            <option value="AND" :selected="term.and=='AND'">en</option>
+            <option value="OR" :selected="term.and=='OR'">{{$lang.grid_search_or}}</option>
+            <option value="AND" :selected="term.and=='AND'">{{$lang.grid_search_and}}</option>
           </select>
         </div>
         <div class="form-group grid-extended-search-field" :class="{'has-danger':!term.field}">
@@ -526,9 +538,9 @@ export default {
         </div>
         <div class="form-group grid-extended-search-equals">
           <select class="form-control form-control-sm" name="grid-extended-search-equals[]" v-model="term.equals">
-            <option value="exist" :selected="term.equals==='exist'">bevat</option>
-            <option value="word" :selected="term.equals==='word'">bevat woord</option>
-            <option value="exact" :selected="term.equals==='exact'">is gelijk aan</option>
+            <option value="exist" :selected="term.equals==='exist'">{{$lang.grid_search_exist}}</option>
+            <option value="word" :selected="term.equals==='word'">{{$lang.grid_search_word}}</option>
+            <option value="exact" :selected="term.equals==='exact'">{{$lang.grid_search_exact}}</option>
           </select>
         </div>
         <div class="form-group grid-extended-search-term" :class="{'has-danger':term.term===''}">
@@ -537,6 +549,12 @@ export default {
         <button type="button" class="btn btn-danger" @click="extendedSearchRemove(index)"><span class="fa fa-remove"></span></button>
         <button type="button" class="btn btn-warning" @click="extendedSearchAdd()"><span class="fa fa-plus"></span></button>
       </form>
+    </div>
+
+    <!-- UPLOAD BOX -->
+    <div v-if="gridType==='media'" class="card-block grid-upload" v-on:drop="filesDropped">
+      <button class="btn btn-primary"><span class="fa fa-folder-open"></span>{{$lang.browse}}</button><h2 class="text-primary">{{$lang.or_drag_files}} <span class="fa fa-cloud-download"></span></h2>
+      <input type="file" name="files[]" multiple="multiple" v-on:change="filesChanged" />
     </div>
     
     <!-- GRID HEADERS -->
@@ -607,6 +625,9 @@ export default {
   .grid .card-header.grid-extended-find form {clear:both;float:right!important;margin:0 0 .25rem;}
   .grid .card-header.grid-extended-find form:first-child>div.grid-extended-search-and {display:none;}
   .grid .card-header.grid-extended-find form:last-child{margin-bottom:0;}
+  .grid .card-block.grid-upload {padding: 1rem .5rem;background-color:$gray-lightest;}
+  .grid .card-block.grid-upload>button {text-transform:uppercase;}
+  .grid .card-block.grid-upload>h2 {text-transform:uppercase;display:inline-block;margin-left:1rem;position:relative;top:.35rem;}
   .grid .card-footer {padding:.35rem .35rem;}
   .grid .card-footer .actions {float:left;margin-top:.25rem;}
   .grid .pagination-info {margin-right:.25rem;float:right;}
@@ -621,7 +642,7 @@ export default {
   .grid .draggable-handle {cursor:move;}
   .grid .sortable-fallback {display:none;}
   
-  .grid .btn {width:1.85rem;height:1.6rem;padding:.1rem 0;text-align:center;}
+  .grid .card-header .btn, .grid thead .btn, .grid tbody .btn, .grid .card-footer .btn {width:1.85rem;height:1.6rem;padding:.1rem 0;text-align:center;}
   .grid .btn .fa {width:1rem;}
   
   .grid option, .grid select {text-transform:uppercase;}

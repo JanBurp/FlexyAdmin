@@ -1,13 +1,25 @@
 <?php 
 
-$lang['vue_cancel']                  = "Annuleer";
-$lang['vue_submit']                  = "Invoeren";
-$lang['vue_save']                    = "Bewaar";
-$lang['vue_remove']                  = "Verwijder";
+$lang['vue_cancel']        = "Annuleer";
+$lang['vue_submit']        = "Invoeren";
+$lang['vue_save']          = "Bewaar";
+$lang['vue_remove']        = "Verwijder";
+$lang['vue_browse']        = "Bladeren";
+$lang['vue_or_drag_files'] = "Of sleep bestanden hier";
+
 $lang['vue_confirm_delete_one']      = "Weet u zeker dat u het gekozen item wilt verwijderen?";
 $lang['vue_confirm_delete_multiple'] = "Weet u zeker dat u {0} geselecteerde items wilt verwijderen?";
 $lang['vue_deleted']                 = "{0} item(s) verwijderd.";
+
 $lang['vue_grid_search']             = "Zoeken";
+$lang['vue_grid_search_and']         = "en";
+$lang['vue_grid_search_or']          = "of";
+$lang['vue_grid_search_exist']       = 'bevat';
+$lang['vue_grid_search_word']        = 'bevat woord';
+$lang['vue_grid_search_exact']       = 'is gelijk aan';
+
+
+
 $lang['vue_grid_total']              = "{0} items";
 $lang['vue_grid_pagination']         = "{0} items / {1} pagina's";
 $lang['vue_grid_order_save_error']   = "<b>FOUT</b> tijdens bewaren van nieuwe volgorde. Volgorde is hersteld, probeer het nog eens.";
