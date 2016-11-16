@@ -127,7 +127,7 @@ class MY_Email extends CI_Email {
    * @author Jan den Besten
    */
   public function can_send() {
-	  $to="error@flexyadmin.com";
+	  $to="bug@flexyadmin.com";
     if (defined("ERROR_EMAIL")) $to=ERROR_EMAIL;
     $this->to($to);
     $this->from($to);

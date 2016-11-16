@@ -83,6 +83,7 @@ class Flexy_auth extends Ion_auth {
    */
 	public function login($identity, $password, $remember=false) {
 		if (parent::login($identity, $password, $remember)) {
+      if (!$this->current_user) $this->_set_current_user();
       $this->load->model('log_activity');
       $this->log_activity->auth();
 			return TRUE;
@@ -120,11 +121,21 @@ class Flexy_auth extends Ion_auth {
       $this->current_user = FALSE;
       return FALSE;
     }
+    $this->_set_current_user();
+    return (bool) $logged_in;
+	}
+
+  /**
+   * Helper: Sets current user
+   *
+   * @return void
+   * @author Jan den Besten
+   */
+  private function _set_current_user() {
     $user = $this->user()->row_array();
     $this->current_user = $this->_create_nice_user($user);
     if ( isset($this->current_user['id']) AND $this->in_group( 1, $this->current_user['id'] )) $this->current_user['is_super_admin'] = TRUE;
-    return (bool) $logged_in;
-	}
+  }
   
   
   /**
