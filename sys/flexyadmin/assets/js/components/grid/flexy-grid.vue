@@ -63,6 +63,7 @@ export default {
       extendedFind        : true,
       extendedTermDefault : { field:'',term:'',and:'OR',equals:'exist' },
       extendedTerm        : [],
+      uploadFiles : [],
     }
   },
   
@@ -370,16 +371,49 @@ export default {
       if (this.extendedTerm.length<1) this.extendedTerm = [_.clone(this.extendedTermDefault)];
     },
     
-    filesDropped : function(event) {
+    dropUploadFiles : function(event) {
       event.stopPropagation();
       event.preventDefault();
       var files = event.target.files || event.dataTransfer.files;
-      console.log('filesDropped',event,files);
+      this._addUploadFiles(files);
     },
-    
-    filesChanged : function(event) {
+    addUploadFiles : function(event) {
       var files = event.target.files || event.dataTransfer.files;
-      console.log('filesChanged',files);
+      this._addUploadFiles(files);
+    },
+    removeUploadFile : function(index) {
+      this.uploadFiles.splice(index,1);
+    },
+    _addUploadFiles : function(files) {
+      for (var i = 0; i < files.length; i++) {
+        this.uploadFiles.push({
+          name      : files[i].name,
+          size      : files[i].size,
+          type      : files[i].type,
+          progress  : 0,
+          status    : '',
+        });
+      }
+    },
+    startUpload : function() {
+      var self = this;
+      for (var i = 0; i < self.uploadFiles.length; i++) {
+        var file = new FormData();
+        file.append('file', self.uploadFiles[i].name);
+        this.api({
+          url   : 'media',
+          data  : {
+            path: self.name,
+            file: file,
+          },
+        }).then(function(response){
+          var error = response.error;
+          if (!error && response.data.data===false) error = true;
+          if (error) {
+          }
+          return response;
+        });
+      }
     },
 
     /**
@@ -515,9 +549,9 @@ export default {
       <form class="form-inline" v-on:submit="startFinding($event)">
         <div class="form-group" v-if="!extendedFind"><input type="text" v-model.trim="findTerm" class="form-control form-control-sm" id="grid-find" :placeholder="$lang.grid_search"></div>
         <div class="btn-group">
-          <button type="submit" class="btn btn-warning"><span class="fa fa-search"></span></button>
-          <button type="button" class="btn btn-warning" v-if="!extendedFind" @click="extendedFind=true"><span class="fa fa-chevron-down"></span></button>
-          <button type="button" class="btn btn-warning" v-if="extendedFind" @click="extendedFind=false"><span class="fa fa-chevron-up"></span></button>
+          <button type="submit" class="btn btn-icon btn-warning"><span class="fa fa-search"></span></button>
+          <button type="button" class="btn btn-icon btn-warning" v-if="!extendedFind" @click="extendedFind=true"><span class="fa fa-chevron-down"></span></button>
+          <button type="button" class="btn btn-icon btn-warning" v-if="extendedFind" @click="extendedFind=false"><span class="fa fa-chevron-up"></span></button>
         </div>
       </form>
     </div>
@@ -546,15 +580,28 @@ export default {
         <div class="form-group grid-extended-search-term" :class="{'has-danger':term.term===''}">
           <input type="text" class="form-control form-control-sm" v-model="term.term" :placeholder="$lang.grid_search" name="grid-extended-search-term[]">
         </div>
-        <button type="button" class="btn btn-danger" @click="extendedSearchRemove(index)"><span class="fa fa-remove"></span></button>
-        <button type="button" class="btn btn-warning" @click="extendedSearchAdd()"><span class="fa fa-plus"></span></button>
+        <button type="button" class="btn btn-icon btn-danger" @click="extendedSearchRemove(index)"><span class="fa fa-remove"></span></button>
+        <button type="button" class="btn btn-icon btn-warning" @click="extendedSearchAdd()"><span class="fa fa-plus"></span></button>
       </form>
     </div>
 
     <!-- UPLOAD BOX -->
-    <div v-if="gridType==='media'" class="card-block grid-upload" v-on:drop="filesDropped">
-      <button class="btn btn-primary"><span class="fa fa-folder-open"></span>{{$lang.browse}}</button><h2 class="text-primary">{{$lang.or_drag_files}} <span class="fa fa-cloud-download"></span></h2>
-      <input type="file" name="files[]" multiple="multiple" v-on:change="filesChanged" />
+    <div v-if="gridType==='media'" class="card-block grid-upload" @dragover.prevent  @drop="dropUploadFiles">
+      <label class="custom-file">
+        <input type="file" name="files[]" multiple="multiple" v-on:change="addUploadFiles" class="custom-file-input">
+        <span class="custom-file-control btn btn-primary"><span class="fa fa-folder-open"></span>{{$lang.browse}}</span>
+      </label>
+      <h2 class="text-primary">{{$lang.or_drag_files}} <span class="fa fa-cloud-download"></span></h2>
+      <template v-if="uploadFiles.length>0">
+        <table class="table table-sm">
+          <thead>
+            <tr><th>Filename</th><th>Size</th><th>Upload progress</th><th><button class="btn btn-icon btn-icon-text btn-warning" @click="startUpload"><span class="fa fa-upload"></span>Upload</button></th></tr>
+          </thead>
+          <tbody>
+            <tr v-for="(file,index) in uploadFiles"><td>{{file.name}}</td><td>{{Math.floor(file.size / 1024)}}k</td><td><progress class="progress progress-success progress-striped progress-animated" :value="file.progress" max="100"></td><td><button class="btn btn-icon btn-danger" @click="removeUploadFile(index)"><span class="fa fa-remove"></span></button></td></tr>
+          </tbody>
+        </table>
+      </template>
     </div>
     
     <!-- GRID HEADERS -->
@@ -564,9 +611,9 @@ export default {
           <tr>
             <template v-for="(field,key) in fields">
               <th v-if="isPrimaryHeader(field)" :class="headerClass(field)" class="text-primary">
-                <a class="btn btn-outline-warning" :href="editUrl(-1)"><span class="fa fa-plus"></span></a>
-                <div :class="{disabled:!hasSelection()}" class="btn btn-outline-danger action-delete" @click="removeItems()"><span class="fa fa-remove"></span></div>
-                <div v-on:click="reverseSelection()" class="btn btn-outline-info action-select"><span class="fa fa-square-o"></span></div>
+                <a class="btn btn-icon btn-outline-warning" :href="editUrl(-1)"><span class="fa fa-plus"></span></a>
+                <div :class="{disabled:!hasSelection()}" class="btn btn-icon btn-outline-danger action-delete" @click="removeItems()"><span class="fa fa-remove"></span></div>
+                <div v-on:click="reverseSelection()" class="btn btn-icon btn-outline-info action-select"><span class="fa fa-square-o"></span></div>
               </th>
               <th v-if="isNormalVisibleHeader(field)" :class="headerClass(field)"  class="text-primary">
                 <a :href="createdUrl({'order':(key==order?'_'+key:key)})"><span>{{field.name}}</span>
@@ -584,10 +631,10 @@ export default {
             <template v-for="cell in row">
               <!-- PRIMARY CELL -->
               <td v-if="cell.type=='primary'" class="action">
-                <a class="btn btn-outline-warning" :href="editUrl(cell.value)"><span class="fa fa-pencil"></span></a>
-                <div class="btn btn-outline-danger action-delete" @click="removeItems(row.id.value)"><span class="fa fa-remove"></span></div>
-                <div v-on:click="select(row.id.value)" class="btn btn-outline-info action-select"><span v-if="!isSelected(row.id.value)" class="fa fa-square-o"></span><span v-if="isSelected(row.id.value)" class="fa fa-check-square-o"></span></div>
-                <div v-if="gridType==='tree' || gridType==='ordered'"class="draggable-handle btn btn-outline-info action-move" :class="{'active':isDragging(row.id.value)}"><span class="fa fa-reorder"></span></div>
+                <a class="btn btn-icon btn-outline-warning" :href="editUrl(cell.value)"><span class="fa fa-pencil"></span></a>
+                <div class="btn btn-icon btn-outline-danger action-delete" @click="removeItems(row.id.value)"><span class="fa fa-remove"></span></div>
+                <div v-on:click="select(row.id.value)" class="btn btn-icon btn-outline-info action-select"><span v-if="!isSelected(row.id.value)" class="fa fa-square-o"></span><span v-if="isSelected(row.id.value)" class="fa fa-check-square-o"></span></div>
+                <div v-if="gridType==='tree' || gridType==='ordered'"class="draggable-handle btn btn-icon btn-outline-info action-move" :class="{'active':isDragging(row.id.value)}"><span class="fa fa-reorder"></span></div>
               </td>
               <!-- CELL -->
               <flexy-grid-cell v-else :type="cell.type" :name="cell.name" :value="cell.value" :level="rowLevel(row)" :primary="{'table':name,'id':row.id.value}" :editable="isEditable(cell.name)" :readonly="isReadonly(cell.name)" :options="fields[cell.name]"></flexy-grid-cell>
@@ -600,12 +647,12 @@ export default {
     <div class="card-footer text-muted">
       <div class="btn-group actions" v-if="gridType === 'media'">
         <template v-if="getMediaView()==='list'">
-          <button class="btn btn-primary"><span class="fa fa-bars fa-fw"></span></button>
-          <button class="btn btn-outline-primary" v-on:click="setMediaView('thumbs')"><span class="fa fa-picture-o fa-fw"></span></button>
+          <button class="btn btn-icon btn-primary"><span class="fa fa-bars fa-fw"></span></button>
+          <button class="btn btn-icon btn-outline-primary" v-on:click="setMediaView('thumbs')"><span class="fa fa-picture-o fa-fw"></span></button>
         </template>
         <template v-if="getMediaView()==='thumbs'">
-          <button class="btn btn-outline-primary" v-on:click="setMediaView('list')"><span class="fa fa-bars fa-fw"></span></button>
-          <button class="btn btn-primary"><span class="fa fa-picture-o fa-fw"></span></button>
+          <button class="btn btn-icon btn-outline-primary" v-on:click="setMediaView('list')"><span class="fa fa-bars fa-fw"></span></button>
+          <button class="btn btn-icon btn-primary"><span class="fa fa-picture-o fa-fw"></span></button>
         </template>
       </div>
       <flexy-pagination v-if="needsPagination" :total="info.total_rows" :pages="info.num_pages" :current="info.page + 1" :limit="info.limit" :url="createdUrl({'offset':'##'})"></flexy-pagination>
@@ -625,9 +672,19 @@ export default {
   .grid .card-header.grid-extended-find form {clear:both;float:right!important;margin:0 0 .25rem;}
   .grid .card-header.grid-extended-find form:first-child>div.grid-extended-search-and {display:none;}
   .grid .card-header.grid-extended-find form:last-child{margin-bottom:0;}
+
   .grid .card-block.grid-upload {padding: 1rem .5rem;background-color:$gray-lightest;}
-  .grid .card-block.grid-upload>button {text-transform:uppercase;}
-  .grid .card-block.grid-upload>h2 {text-transform:uppercase;display:inline-block;margin-left:1rem;position:relative;top:.35rem;}
+  .grid .card-block.grid-upload .custom-file {width:9.5rem;}
+  .grid .card-block.grid-upload .custom-file-control {
+    width:inherit;
+    text-transform:uppercase;
+    background-color:$brand-primary;
+    color:$body-bg;
+  }
+  .grid .card-block.grid-upload input {width:0;min-width:0}
+  .grid .card-block.grid-upload>h2 {text-transform:uppercase;display:inline-block;margin-left:1rem;position:relative;top:.5rem;}
+  .grid .card-block.grid-upload progress {margin:0;height:1.5rem;}
+  
   .grid .card-footer {padding:.35rem .35rem;}
   .grid .card-footer .actions {float:left;margin-top:.25rem;}
   .grid .pagination-info {margin-right:.25rem;float:right;}
@@ -641,9 +698,6 @@ export default {
   .grid.grid-type-tree th.grid-header-type-primary {width:8rem;max-width:8rem;min-width:8rem;}
   .grid .draggable-handle {cursor:move;}
   .grid .sortable-fallback {display:none;}
-  
-  .grid .card-header .btn, .grid thead .btn, .grid tbody .btn, .grid .card-footer .btn {width:1.85rem;height:1.6rem;padding:.1rem 0;text-align:center;}
-  .grid .btn .fa {width:1rem;}
   
   .grid option, .grid select {text-transform:uppercase;}
   
