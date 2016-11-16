@@ -29,7 +29,7 @@
 //@import "../../../node_modules/bootstrap/scss/dropdown";
 @import "../../../node_modules/bootstrap/scss/button-group";
 //@import "../../../node_modules/bootstrap/scss/input-group";
-//@import "../../../node_modules/bootstrap/scss/custom-forms";
+@import "../../../node_modules/bootstrap/scss/custom-forms";
 @import "../../../node_modules/bootstrap/scss/nav";
 @import "../../../node_modules/bootstrap/scss/navbar";
 @import "../../../node_modules/bootstrap/scss/card";
@@ -57,6 +57,9 @@
 a {outline: none !important;}
 a>.fa, .btn>.fa {margin-right:.35rem;margin-left:.35rem;}
 .btn.disabled {opacity:.5;}
+.btn.btn-icon {width:1.85rem;height:1.6rem;padding:.1rem 0;text-align:center;}
+.btn.btn-icon-text {width:auto;padding:.1rem .5rem 0 0;text-transform:uppercase;}
+.btn.btn-icon .fa {width:1rem;}
 
 /* LOGIN */
 #login-form {width:20rem;margin:20% auto;box-shadow:0 0 1.25rem $gray-dark;}
@@ -78,7 +81,7 @@ a>.fa, .btn>.fa {margin-right:.35rem;margin-left:.35rem;}
 #main {padding-right:.5rem;}
 
 /* PROGRESS */
-.progress {margin:0;height:2px;border-radius:0;}
+#header .progress {margin:0;height:2px;border-radius:0;}
 
 /* MESSAGES */
 #messages {
