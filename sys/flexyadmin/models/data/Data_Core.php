@@ -2102,8 +2102,8 @@ Class Data_Core extends CI_Model {
           }
         }
         $find=array( 'terms'=>$find, 'fields'=>$fields, 'settings'=>array() );
-        $this->find( $find['terms'], $find['fields'], $find['settings'] );
-      }
+      $this->find( $find['terms'], $find['fields'], $find['settings'] );
+    }
       else {
         $search_with = array_keys($grid_set['with']);
         foreach ($find as $findItem) {
@@ -3178,8 +3178,8 @@ Class Data_Core extends CI_Model {
       foreach ($fields as $field) {
         $relation=FALSE;
         if (is_array($field)) {
-          $relation = $field['relation'];
-          $field    = $field['field'];
+          $relation=$field['relation'];
+          $field=$field['field'];
         }
         if ( $settings['many_exists'] AND $relation==='many_to_many') {
           // 'many_to_many' => ..._exists()

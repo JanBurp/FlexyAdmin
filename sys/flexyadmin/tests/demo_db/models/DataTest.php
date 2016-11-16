@@ -806,8 +806,7 @@ class DataTest extends CITestCase {
     $first = current($page1);
     $this->assertEquals( 'Aafje', $first['str_first_name'] );
     $this->assertEquals( '{"4":"Rekenpark 42|1234IJ"}', $first['id_adressen'] );
-    // $this->assertEquals( 'Rekenpark 42|1234IJ', $first['tbl_adressen.abstract'] );
-    // $this->assertEquals( 'Gym|vak', $first['tbl_groepen.abstract'] );
+    $this->assertEquals( '{"31":"Gym|vak"}', $first['id_groepen'] );
 
     // DESC
     $result = $this->CI->data->get_grid( 0,0, '_str_first_name');
