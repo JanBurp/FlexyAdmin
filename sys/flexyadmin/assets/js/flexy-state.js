@@ -30,7 +30,7 @@ export default {
     }, 250);
   },
   setProgress : function(value,max) {
-    var percent = max / value * 100;
+    var percent = Math.round(value * 100 / max);
     if (percent<10) percent=10; // Start met minimaal 10%
     this.state.progress = percent;
     this.debug && console.log('state.progress',this.state.progress); 

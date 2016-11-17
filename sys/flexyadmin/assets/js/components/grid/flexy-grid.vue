@@ -63,7 +63,8 @@ export default {
       extendedFind        : true,
       extendedTermDefault : { field:'',term:'',and:'OR',equals:'exist' },
       extendedTerm        : [],
-      uploadFiles : [],
+      uploadFiles         : [],
+      uploadProgress      : {},
     }
   },
   
@@ -262,6 +263,21 @@ export default {
       this.selected = _.difference(ids,this.selected);
     },
     
+    newItem : function() {
+      if (this.gridType==='media') {
+        var event = new MouseEvent('click', {
+          'view': window,
+          'bubbles': true,
+          'cancelable': true
+          });
+        document.getElementById('browsefiles').dispatchEvent(event);
+      }
+      else {
+        var url = this.editUrl(-1);
+        window.location.assign(url);
+      }
+    },
+    
     removeItems : function(removeIds) {
       var self = this;
       if ( _.isUndefined(removeIds)) {
@@ -274,12 +290,14 @@ export default {
       var message = this.$lang['confirm_delete_one'];
       if (removeIds.length>1) message = this.$options.filters.replace( this.$lang['confirm_delete_multiple'], removeIds.length );
       if (window.confirm(message)) {
+        var data = {
+          table : self.name,
+          where : removeIds,
+        };
+        if (self.gridType==='media') data.table = 'res_media_files';
         return this.api({
           url   : 'row',
-          data  : {
-            table : self.name,
-            where : removeIds,
-          },
+          data  : data,
         }).then(function(response){
           var error = response.error || (response.data.data===false);
           if (error) {
@@ -386,34 +404,48 @@ export default {
     },
     _addUploadFiles : function(files) {
       for (var i = 0; i < files.length; i++) {
-        this.uploadFiles.push({
-          name      : files[i].name,
-          size      : files[i].size,
-          type      : files[i].type,
-          progress  : 0,
-          status    : '',
-        });
+        this.uploadFiles.push( files.item(i) );
       }
     },
     startUpload : function() {
       var self = this;
       for (var i = 0; i < self.uploadFiles.length; i++) {
-        var file = new FormData();
-        file.append('file', self.uploadFiles[i].name);
+        var file = self.uploadFiles[i];
+        self.uploadProgress[file.name] = 10;
+        var formData = new FormData();
+        formData.set( 'path', self.name );
+        formData.set( 'file', self.uploadFiles[i] );
+        formData.set( 'fileName', self.uploadFiles[i].name );
         this.api({
-          url   : 'media',
-          data  : {
-            path: self.name,
-            file: file,
+          url       : 'media',
+          data      : formData,
+          formData  : true,
+          onDownloadProgress : function(progressEvent) {
+            var response = progressEvent.target.response;
+            response = JSON.parse(response);
+            var fileName = response.args.fileName;
+            self.uploadProgress[fileName] = Math.round(progressEvent.loaded * 100 / progressEvent.total);
           },
         }).then(function(response){
-          var error = response.error;
+          var error = response.data.error;
           if (!error && response.data.data===false) error = true;
           if (error) {
+            // TODO
+          }
+          else {
+            var fileName = response.data.args.fileName;
+            var index = jdb.indexOfProperty(self.uploadFiles,'name',fileName);
+            self.uploadProgress[fileName] = 100;
+            self.removeUploadFile(index);
+          }
+          // Als alles is geuploade, reload
+          if (self.uploadFiles.length === 0 ) {
+            // self.reloadPage();
           }
           return response;
         });
       }
+      
     },
 
     /**
@@ -542,7 +574,7 @@ export default {
 </script>
 
 <template>
-  <div class="card grid" :class="gridTypeClass">
+  <div class="card grid" :class="gridTypeClass" @dragover.prevent  @drop="dropUploadFiles">
     <!-- MAIN HEADER -->
     <div class="card-header">
       <h1>{{title}}</h1>
@@ -586,22 +618,16 @@ export default {
     </div>
 
     <!-- UPLOAD BOX -->
-    <div v-if="gridType==='media'" class="card-block grid-upload" @dragover.prevent  @drop="dropUploadFiles">
-      <label class="custom-file">
-        <input type="file" name="files[]" multiple="multiple" v-on:change="addUploadFiles" class="custom-file-input">
-        <span class="custom-file-control btn btn-primary"><span class="fa fa-folder-open"></span>{{$lang.browse}}</span>
-      </label>
-      <h2 class="text-primary">{{$lang.or_drag_files}} <span class="fa fa-cloud-download"></span></h2>
-      <template v-if="uploadFiles.length>0">
-        <table class="table table-sm">
-          <thead>
-            <tr><th>Filename</th><th>Size</th><th>Upload progress</th><th><button class="btn btn-icon btn-icon-text btn-warning" @click="startUpload"><span class="fa fa-upload"></span>Upload</button></th></tr>
-          </thead>
-          <tbody>
-            <tr v-for="(file,index) in uploadFiles"><td>{{file.name}}</td><td>{{Math.floor(file.size / 1024)}}k</td><td><progress class="progress progress-success progress-striped progress-animated" :value="file.progress" max="100"></td><td><button class="btn btn-icon btn-danger" @click="removeUploadFile(index)"><span class="fa fa-remove"></span></button></td></tr>
-          </tbody>
-        </table>
-      </template>
+    <div v-if="gridType==='media'" v-show="uploadFiles.length > 0" class="card-block grid-upload">
+      <input id="browsefiles" @change="addUploadFiles"  type="file" name="files[]" multiple="multiple">
+      <table class="table table-sm">
+        <thead>
+          <tr><th>Filename</th><th>Size</th><th>Upload progress</th><th><button class="btn btn-icon btn-icon-text btn-warning" @click="startUpload"><span class="fa fa-upload"></span>Upload</button></th></tr>
+        </thead>
+        <tbody>
+          <tr v-for="(file,index) in uploadFiles"><td>{{file.name}}</td><td>{{Math.floor(file.size / 1024)}}k</td><td><progress class="progress progress-success progress-striped progress-animated" :value="uploadProgress[file.name] || 0" max="100"></td><td><button class="btn btn-icon btn-danger" @click="removeUploadFile(index)"><span class="fa fa-remove"></span></button></td></tr>
+        </tbody>
+      </table>
     </div>
     
     <!-- GRID HEADERS -->
@@ -611,9 +637,9 @@ export default {
           <tr>
             <template v-for="(field,key) in fields">
               <th v-if="isPrimaryHeader(field)" :class="headerClass(field)" class="text-primary">
-                <a class="btn btn-icon btn-outline-warning" :href="editUrl(-1)"><span class="fa fa-plus"></span></a>
-                <div :class="{disabled:!hasSelection()}" class="btn btn-icon btn-outline-danger action-delete" @click="removeItems()"><span class="fa fa-remove"></span></div>
-                <div v-on:click="reverseSelection()" class="btn btn-icon btn-outline-info action-select"><span class="fa fa-square-o"></span></div>
+                <div @click="newItem()" class="btn btn-icon btn-outline-warning"><span class="fa fa-plus"></span></div>
+                <div @click="removeItems()" :class="{disabled:!hasSelection()}" class="btn btn-icon btn-outline-danger action-delete"><span class="fa fa-remove"></span></div>
+                <div @click="reverseSelection()" class="btn btn-icon btn-outline-info action-select"><span class="fa fa-square-o"></span></div>
               </th>
               <th v-if="isNormalVisibleHeader(field)" :class="headerClass(field)"  class="text-primary">
                 <a :href="createdUrl({'order':(key==order?'_'+key:key)})"><span>{{field.name}}</span>
@@ -674,19 +700,11 @@ export default {
   .grid .card-header.grid-extended-find form:last-child{margin-bottom:0;}
 
   .grid .card-block.grid-upload {padding: 1rem .5rem;background-color:$gray-lightest;}
-  .grid .card-block.grid-upload .custom-file {width:9.5rem;}
-  .grid .card-block.grid-upload .custom-file-control {
-    width:inherit;
-    text-transform:uppercase;
-    background-color:$brand-primary;
-    color:$body-bg;
-  }
-  .grid .card-block.grid-upload input {width:0;min-width:0}
-  .grid .card-block.grid-upload>h2 {text-transform:uppercase;display:inline-block;margin-left:1rem;position:relative;top:.5rem;}
+  .grid .card-block.grid-upload input#browsefiles {display:none;}
   .grid .card-block.grid-upload progress {margin:0;height:1.5rem;}
   
   .grid .card-footer {padding:.35rem .35rem;}
-  .grid .card-footer .actions {float:left;margin-top:.25rem;}
+  .grid .card-footer .actions {float:left;margin-top:.25rem;margin-right:1rem;}
   .grid .pagination-info {margin-right:.25rem;float:right;}
   
   .grid table {margin-bottom:0;}
@@ -702,9 +720,9 @@ export default {
   .grid option, .grid select {text-transform:uppercase;}
   
   .grid.grid-media-view-thumbs tbody tr {
-    display:block!important;
     position:relative;
-    float:left;
+    display:inline-block!important;
+    float:left!important;
     width:102px;
     height:130px;
     margin:.5rem;
@@ -712,13 +730,12 @@ export default {
     overflow:hidden;
     border:solid 1px $brand-primary;
     border-radius:$border-radius;
-    overflow:visible;
   }
   .grid.grid-media-view-thumbs tbody td { position:absolute;float:left; border:none; padding:0px; background-color:transparent!important}
   .grid.grid-media-view-thumbs tbody td[name="media_thumb"] img {width:auto;height:100%;}
   .grid.grid-media-view-thumbs tbody td.action {width:100%;margin-top:102px;text-align:center;}
   .grid.grid-media-view-thumbs tbody td[name="alt"] {bottom:2rem;text-align:center;width:100%;}
-  
+
   .grid.grid-media-view-thumbs tbody td[name='name'],
   .grid.grid-media-view-thumbs tbody td[name='path'],
   .grid.grid-media-view-thumbs tbody td[name='type'],

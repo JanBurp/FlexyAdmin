@@ -4,6 +4,29 @@
 
 export default {
   name: 'jdb',
+  
+  /**
+   * jdb.indexOfProperty(array,property,value)
+   * 
+   * Vind de key van een array van objecten waar de waarde van een property van een object gelijk is aan value
+   * 
+   * @param array array De array van objecten waarin gezocht wordt
+   * @param string property Naam van de property
+   * @param mixed value De waarde waarnaar gezocht wordt
+   * @return integer index De index van het gevonden object, of -1 als niet is gevonden.
+   */
+  indexOfProperty : function(array,property,value) {
+    var index = false;
+    var i=0;
+    do {
+      if ( !_.isUndefined(array[i]) && !_.isUndefined(array[i][property]) && array[i][property]===value) {
+        index=i;
+      }
+      i++;
+    } while (index===false && i<array.length);
+    return index;
+  },
+  
 
   /**
    * jdb.moveMultipleArrayItems(array,from,many,to)
