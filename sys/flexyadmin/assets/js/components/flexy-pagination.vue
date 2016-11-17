@@ -66,8 +66,8 @@ export default {
 </script>
 
 <style>
-  .pagination-container {width:100%;height:2rem;}
+  .pagination-container {width:100%;height:2rem;margin-top:.25rem;}
   .pagination {margin:0;}
   .pagination-info {margin-top:.25rem;}
-  .pagination .page-link {padding:.2rem .5rem;}
+  .pagination .page-link {padding:0rem .5rem;}
 </style>

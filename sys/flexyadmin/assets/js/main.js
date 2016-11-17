@@ -62,14 +62,22 @@ Vue.mixin({
           'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8',
         },
         transformRequest: [function (data) {
-          var requestString='';
-          if (data) {
-            requestString = jdb.serializeJSON(data);
+          if (!options.formData) {
+            var requestString='';
+            if (data) {
+              requestString = jdb.serializeJSON(data);
+            }
+            return requestString;
           }
-          return requestString;
+          return data;
         }],
         onDownloadProgress: function (progressEvent) {
-          flexyState.setProgress(progressEvent.loaded,progressEvent.total);
+          if (options.onDownloadProgress) {
+            options.onDownloadProgress(progressEvent);
+          }
+          else {
+            flexyState.setProgress(progressEvent.loaded,progressEvent.total);
+          }
         },
       };
       flexyState.debug && console.log('api > ',request);
@@ -80,7 +88,7 @@ Vue.mixin({
       })
       .catch(function (error) {
         flexyState.hideProgress();
-        flexyState.addMessage( error.response.data,'danger');
+        flexyState.addMessage( self.$lang.error_api,'danger');
         console.log('api ERROR <',request,error);
         return {'error':error};
       });

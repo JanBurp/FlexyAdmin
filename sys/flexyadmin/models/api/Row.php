@@ -306,26 +306,18 @@ class Row extends Api_Model {
    */
   private function _delete_row() {
     $args=$this->_clean_args(array('table','where'));
-    $model='data';
-    // Media?
-    if ($args['table']==='res_media_files') {
-      $this->load->model('data/res_media_files');
-      $model = 'res_media_files';
-    }
-    else {
-      $this->$model->table( $args['table'] );
-    }
+    $this->data->table( $args['table'] );
     if (isset($args['where'])) {
       if (is_array($args['where'])) {
-        $primary_key = $this->$model->get_setting( 'primary_key' );
-        $this->$model->where_in( $primary_key, $args['where'] ); 
+        $primary_key = $this->data->get_setting( 'primary_key' );
+        $this->data->where_in( $primary_key, $args['where'] ); 
       }
       else {
-        $this->$model->where( $args['where'] ); 
+        $this->data->where( $args['where'] ); 
       }
     }
-    $id = $this->$model->delete();
-    $this->info=$this->$model->get_query_info();
+    $id = $this->data->delete();
+    $this->info=$this->data->get_query_info();
     return $id;
   }
 
