@@ -209,7 +209,7 @@ Class Res_media_files extends Data_Core {
    * @author Jan den Besten
    */
   private function _get_files_result( $path, $filter=array(), $limit=0, $offset=0 ) {
-    $query = $this->_get_files( $path, $filter=array(), $limit=0, $offset=0 );
+    $query = $this->_get_files( $path, $filter=array(), $limit, $offset );
     if ($query) {
       $result = $this->_make_result_array( $query );
       $query->free_result();
