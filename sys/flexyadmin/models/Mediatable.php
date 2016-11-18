@@ -260,6 +260,7 @@ class Mediatable extends CI_Model {
     }
     else {
       $this->data->table($this->table);
+      $this->data->where('b_exists',false);
       $this->data->set('b_exists',false);
       $this->data->update();
     }
