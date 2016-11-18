@@ -115,12 +115,12 @@ class DataTest extends CITestCase {
     $this->assertArrayHasKey( 'multiple', $options );
     $this->assertEquals( TRUE, $options['multiple'] );
     $this->assertArrayHasKey( 'data', $options );
-    $this->assertEquals( 2, count($options['data']) );
-    $current = current($options['data']);
-    $this->assertArrayHasKey( 'name', $current);
-    $this->assertInternalType( 'array', $current['name']);
-    $this->assertArrayHasKey( 'value', $current);
-    $this->assertInternalType( 'string', $current['value']);
+    $this->assertEquals( 0, count($options['data']) );
+    // $current = current($options['data']);
+    // $this->assertArrayHasKey( 'name', $current);
+    // $this->assertInternalType( 'array', $current['name']);
+    // $this->assertArrayHasKey( 'value', $current);
+    // $this->assertInternalType( 'string', $current['value']);
     // tbl_menu.self_parent
     $options = $this->CI->data->get_options( 'self_parent' );
     $this->assertInternalType( 'array', $options );
@@ -187,12 +187,12 @@ class DataTest extends CITestCase {
     $this->assertEquals( 'pictures', $options['path'] );
     $this->assertArrayNotHasKey( 'multiple', $options );
     $this->assertArrayHasKey( 'data', $options );
-    $this->assertEquals( 2, count($options['data']) );
-    $current = current($options['data']);
-    $this->assertArrayHasKey( 'name', $current);
-    $this->assertArrayHasKey( 'value', $current);
-    $this->assertInternalType( 'array', $current['name']);
-    $this->assertInternalType( 'string', $current['value']);
+    $this->assertEquals( 0, count($options['data']) );
+    // $current = current($options['data']);
+    // $this->assertArrayHasKey( 'name', $current);
+    // $this->assertArrayHasKey( 'value', $current);
+    // $this->assertInternalType( 'array', $current['name']);
+    // $this->assertInternalType( 'string', $current['value']);
     // tbl_groepen.tbl_adressen
     $options = $this->CI->data->get_options('tbl_adressen');
     $this->assertInternalType( 'array', $options );
