@@ -31,7 +31,7 @@ $config['THUMBCACHE']							= $config['ASSETS']."_thumbcache/";
 $config['STATS']									= $config['SITE'].'stats/';
 $config['PLUGINS']								= $config['SITE'].'plugins';
 
-$config['THUMBSIZE']							= array(100,100);
+$config['THUMBSIZE']							= array(200,200);
 $config['IGNORE_MIME']						= FALSE;
 
 
