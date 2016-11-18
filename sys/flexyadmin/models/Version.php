@@ -14,6 +14,7 @@ class Version extends CI_Model {
   private $date      = '';
   private $build     = '';
   private $buildFile = 'sys/build.txt';
+  private $latest_remote = '';
 
 	public function __construct() {
 		parent::__construct();
@@ -71,6 +72,21 @@ class Version extends CI_Model {
   
   public function get_build() {
     return $this->build;
+  }
+  
+  public function get_latest_remote() {
+    $tag = '';
+    exec("git ls-remote --tags https://Jan_db@bitbucket.org/Jan_db/flexyadmin.git", $output);
+    if ($output) {
+      $tags = array();
+      foreach ($output as $key => $line) {
+        $line_tag = get_suffix($line,'/');
+        if (strlen($line_tag)===5) $tags[] = $line_tag;
+      }
+      rsort($tags);
+      $tag = current($tags);
+    }
+    return $tag;
   }
   
 
