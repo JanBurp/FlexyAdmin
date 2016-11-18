@@ -1,26 +1,24 @@
-FLEXYADMIN
+FlexyAdmin
 ==========
 
 A Flexible and userfriendly CMS.
 (c) Jan den Besten - www.flexyadmin.com
 
 
-INSTALL
-=======
+Installing
+==========
 
-In the examples below, replace <dir> with the folder you'd like to have FlexyAdmin installed
+In the examples below, replace `<dir>` with the folder you'd like to have FlexyAdmin installed
 
-Complete repository
--------------------
+### Complete repository ###
 
-`git clone https://Jan_db@bitbucket.org/Jan_db/flexyadmin.git --depth 10 <dir>
+`git clone https://Jan_db@bitbucket.org/Jan_db/flexyadmin.git --depth 10 <dir>`
 
-Shallow repository (for just a simple website)
-----------------------------------------------
+### Shallow repository (for just a simple website) ###
 
-`git clone https://Jan_db@bitbucket.org/Jan_db/flexyadmin.git --depth 10 <dir>
+`git clone https://Jan_db@bitbucket.org/Jan_db/flexyadmin.git --depth 10 <dir>`
 
-LOGIN
+Login
 =====
 
 Two users exists with a fresh install in de demo database:
@@ -29,7 +27,7 @@ Two users exists with a fresh install in de demo database:
 - user/user
 
 
-LICENSE
+License
 =======
 
-For license see /sys/flexyadmin/flexyadmin_license.txt or /sys/flexyadmin/flexyadmin_license_nl.txt
+For license see */sys/flexyadmin/flexyadmin_license.txt*.
