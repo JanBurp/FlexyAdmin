@@ -41,7 +41,7 @@ class Plugin_controller extends AdminController {
         'title'   => 'Plugins',
         'plugins' => $plugins,
       );
-      $this->view_admin('plugins/plugins',$view_data);
+      return $this->view_admin('plugins/plugins',$view_data);
     }
     $this->view_404();
 	}
