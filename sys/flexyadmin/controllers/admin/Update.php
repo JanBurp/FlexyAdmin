@@ -32,19 +32,21 @@ class Update extends BasicController {
     $latest     = $this->_latest_tag();
     $latest_sql = $this->_latest_sql();
     
+    $latest_remote = $this->version->get_latest_remote();
+    
     $this->updates = array(
-      'sys'        => array(
-        'name'     => 'sys (build)',
-        'current'  => $this->version->get_revision(),
-        'latest'   => $latest,
-      ),
+      // 'sys'        => array(
+      //   'name'     => 'sys (build)',
+      //   'current'  => $this->version->get_version(),
+      //   'latest'   => $latest,
+      // ),
       'code'      => array(
-        'name'    => 'code (update scripts)',
-        'current' => $this->version->get_revision(),
-        'latest'  => '(unknown)',
+        'name'    => 'code',
+        'current' => $latest,
+        'latest'  => $latest_remote,
       ),
       'database'  => array(
-        'name'    => 'database (update sql)',
+        'name'    => 'database',
         'current' => $this->data->table('cfg_configurations')->get_field('str_revision'),
         'latest'  => $latest_sql,
       ),
@@ -53,9 +55,9 @@ class Update extends BasicController {
     $update_all=false;
     foreach ($this->updates as $key => $versions) {
       $update=false;
-      if (is_numeric($versions['latest']) and is_numeric($versions['current'])) {
+      // if (is_numeric($versions['latest']) and is_numeric($versions['current'])) {
         $update = ($versions['latest']<=$versions['current']);
-      }
+      // }
       $this->updates[$key]['update'] = $update;
       $update_all = ($update_all or $update);
     }
