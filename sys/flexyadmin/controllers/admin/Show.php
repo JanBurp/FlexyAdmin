@@ -198,6 +198,12 @@ class Show extends AdminController {
         }
       }
     }
+    if (empty($fields)) {
+      $fields['id'] = array(
+        'name'  => $this->ui->get('id'),
+        'schema'=> $this->_getSchema('id',$options,isset($extra['path']))
+      );
+    }
     return $fields;
   }
 

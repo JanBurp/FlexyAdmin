@@ -18,10 +18,6 @@ export default {
       type: [Array,Boolean],
       default:false
     },
-    // 'data-url':{
-    //   type: [String,Boolean],
-    //   default:false
-    // },
     'order': {
       type   :String,
       default:''
@@ -440,7 +436,7 @@ export default {
           }
           // Als alles is geuploade, reload
           if (self.uploadFiles.length === 0 ) {
-            // self.reloadPage();
+            self.reloadPage();
           }
           return response;
         });
@@ -632,11 +628,11 @@ export default {
     
     <!-- GRID HEADERS -->
     <div class="card-block table-responsive">
-      <table class="table table-bordered table-sm">
+      <table class="table table-bordered table-sm grid-data">
         <thead>
           <tr>
             <template v-for="(field,key) in fields">
-              <th v-if="isPrimaryHeader(field)" :class="headerClass(field)" class="text-primary">
+              <th v-if="isPrimaryHeader(field)" :class="headerClass(field)" class="text-primary grid-actions">
                 <div @click="newItem()" class="btn btn-icon btn-outline-warning"><span class="fa fa-plus"></span></div>
                 <div @click="removeItems()" :class="{disabled:!hasSelection()}" class="btn btn-icon btn-outline-danger action-delete"><span class="fa fa-remove"></span></div>
                 <div @click="reverseSelection()" class="btn btn-icon btn-outline-info action-select"><span class="fa fa-square-o"></span></div>
@@ -653,7 +649,7 @@ export default {
         <!-- GRID BODY -->
         <draggable  :list="items" element="tbody" :options="draggableOptions" @start="draggable_onStart" @end="draggable_onEnd">
           <!-- ROW -->
-          <tr v-for="row in items" :data-id="row.id.value" :class="{'table-warning':isSelected(row.id.value)}" v-show="!isHiddenChild(row.id.value)" :level="rowLevel(row)" :key="row.id.value">
+          <tr v-for="row in items" :data-id="row.id.value" :class="{'table-warning is-selected':isSelected(row.id.value)}" v-show="!isHiddenChild(row.id.value)" :level="rowLevel(row)" :key="row.id.value">
             <template v-for="cell in row">
               <!-- PRIMARY CELL -->
               <td v-if="cell.type=='primary'" class="action">
@@ -719,30 +715,56 @@ export default {
   
   .grid option, .grid select {text-transform:uppercase;}
   
-  .grid.grid-media-view-thumbs tbody tr {
+  .grid.grid-media-view-thumbs table.grid-data thead th:not(.grid-actions) {display:none;  }
+  .grid.grid-media-view-thumbs table.grid-data tbody { display:flex; flex-wrap:wrap; }
+  .grid.grid-media-view-thumbs table.grid-data tbody tr {
     position:relative;
-    display:inline-block!important;
-    float:left!important;
-    width:102px;
-    height:130px;
+    width:202px;
+    height:268px;
     margin:.5rem;
     padding:0;
-    overflow:hidden;
+    overflow:visible;
+    border:solid 1px $gray-lighter;
+    border-radius:$border-radius;
+    background-color:$gray-lightest;
+  }
+  .grid.grid-media-view-thumbs table.grid-data tbody tr:hover {border-color:$brand-primary;}
+  .grid.grid-media-view-thumbs table.grid-data tbody tr.is-selected {background-color:$gray-lighter;border-color:$brand-warning;}
+  .grid.grid-media-view-thumbs table.grid-data tbody td {border:none;padding:0px;background-color:transparent;}
+  .grid.grid-media-view-thumbs table.grid-data tbody td[name="media_thumb"] {
+    width:100%;
+    height:100%;
+  }
+  .grid.grid-media-view-thumbs table.grid-data tbody td[name="media_thumb"] img {
+    position:absolute;
+    width:auto;
+    height:auto;
+  	top: 50%; left:50%;
+  	transform: translate(-50%,-50%);
     border:solid 1px $brand-primary;
     border-radius:$border-radius;
   }
-  .grid.grid-media-view-thumbs tbody td { position:absolute;float:left; border:none; padding:0px; background-color:transparent!important}
-  .grid.grid-media-view-thumbs tbody td[name="media_thumb"] img {width:auto;height:100%;}
-  .grid.grid-media-view-thumbs tbody td.action {width:100%;margin-top:102px;text-align:center;}
-  .grid.grid-media-view-thumbs tbody td[name="alt"] {bottom:2rem;text-align:center;width:100%;}
+  .grid.grid-media-view-thumbs table.grid-data tbody td.action {
+    position:absolute;
+    text-align:center;
+    width:100%;
+    top:.25rem;
+  }
+  .grid.grid-media-view-thumbs table.grid-data tbody td[name="alt"] {
+    position:absolute;
+    bottom:.35rem;
+    width:100%;
+    text-align:center;
+    color:$brand-primary;
+  }
 
-  .grid.grid-media-view-thumbs tbody td[name='name'],
-  .grid.grid-media-view-thumbs tbody td[name='path'],
-  .grid.grid-media-view-thumbs tbody td[name='type'],
-  .grid.grid-media-view-thumbs tbody td[name='date'],
-  .grid.grid-media-view-thumbs tbody td[name='size'],
-  .grid.grid-media-view-thumbs tbody td[name='width'],
-  .grid.grid-media-view-thumbs tbody td[name='height'] {display:none}
+  .grid.grid-media-view-thumbs table.grid-data tbody td[name='name'],
+  .grid.grid-media-view-thumbs table.grid-data tbody td[name='path'],
+  .grid.grid-media-view-thumbs table.grid-data tbody td[name='type'],
+  .grid.grid-media-view-thumbs table.grid-data tbody td[name='date'],
+  .grid.grid-media-view-thumbs table.grid-data tbody td[name='size'],
+  .grid.grid-media-view-thumbs table.grid-data tbody td[name='width'],
+  .grid.grid-media-view-thumbs table.grid-data tbody td[name='height'] {display:none}
 
   
 </style>
