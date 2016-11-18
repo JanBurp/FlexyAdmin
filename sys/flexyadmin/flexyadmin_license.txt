@@ -1,4 +1,4 @@
-Copyright (c) 2009-2015, Jan den Besten, www.flexyadmin.com
+Copyright (c) 2009-2016, Jan den Besten, www.flexyadmin.com
 All rights reserved.
 
 Disclaimer
