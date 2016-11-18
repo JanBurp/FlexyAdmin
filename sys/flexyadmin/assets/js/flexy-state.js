@@ -57,9 +57,19 @@ export default {
   },
   
   setMediaView : function(view) {
+    var self = this;
     this.state.media_view = view;
-    // TODO api call to change it
     this.debug && console.log('state.media_view',this.state.media_view); 
+    // return this.api({
+    //   url : 'row',
+    //   'data': {
+    //     'table' : 'cfg_users',
+    //     'where' : 'current',
+    //     'data'  : {
+    //       'str_filemanager_view' : self.state.media_view,
+    //     }
+    //   },
+    // });
   },
   
 };
