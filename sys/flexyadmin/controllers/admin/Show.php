@@ -402,7 +402,6 @@ class Show extends AdminController {
      */
     $options = $this->data->get_options( '', array_keys($this->data->get_setting( array('form_set','with'))), FALSE );
 
-    // trace_($options);
     // trace_($this->data->get_settings());
     // die();
     
