@@ -1,0 +1,20 @@
+# Add meta/exif info for media table
+ALTER TABLE `res_media_files` ADD `stx_meta` MEDIUMTEXT  NOT NULL  AFTER `int_img_height`;
+
+# Update standard fields in cfg_ui for Help pages
+UPDATE `cfg_ui` SET `txt_help_nl` = '<p>Vul hier de titel in van je site.</p><p>De titel is zichtbaar in de kop van de <a href="admin/help/faq" target="_self">browser</a> en in de zoekresultaten van Google.</p>' WHERE `field_field` = 'tbl_site.str_title';
+UPDATE `cfg_ui` SET `txt_help_nl` = '<p>Vul hier je naam in.</p><p>De naam van de auteur is onzichtbaar voor bezoekers van de site, maar vindbaar voor zoekmachines, zodat bezoekers ook via jouw naam op je site terechtkomen.</p>' WHERE `field_field` = 'tbl_site.str_author';
+UPDATE `cfg_ui` SET `txt_help_nl` = '<p>Vul hier het webadres van je site in, bijvoorbeeld: "www.voorbeeldsite.nl"</p>' WHERE `field_field` = 'tbl_site.url_url';
+UPDATE `cfg_ui` SET `txt_help_nl` = '<p>Vul hier je e-mailadres in.</p><p>Heb je formulieren op je site staan? Als bezoekers ze invullen en opzenden, ontvang je ze via dit e-mailadres.</p>' WHERE `field_field` = 'tbl_site.email_email';
+UPDATE `cfg_ui` SET `txt_help_nl` = '<p>Vul hier een korte algemene omschrijving van je site in.</p><p>Die is onzichtbaar op de site, maar wordt gebruikt door zoekmachines.</p><p>Afhankelijk van de opzet van de site kun je voor elke pagina een eigen omschrijving maken. Die vervangt voor die pagina deze algemene omschrijving.</p>' WHERE `field_field` = 'tbl_site.stx_description';
+UPDATE `cfg_ui` SET `txt_help_nl` = '<p>Vul hier zoektermen in gescheiden door komma\'s.</p><p>Zoektermen worden door zoekmachines gebruikt om je site beter vindbaar te maken. Lees <a href="admin/help/tips_voor_een_goede_site" target="_self">hier meer over SEO</a>.<br /><br />Afhankelijk van de opzet van je site is het mogelijk om per pagina extra zoektermen toe te voegen.</p>' WHERE `field_field` = 'tbl_site.stx_keywords';
+UPDATE `cfg_ui` SET `txt_help_nl` = '<p>FlexyAdmin biedt statistieken over de bezoekers van je site. Als je uitgebreider statistieken wilt, kun je bijvoorbeeld <a href="http://www.google.com/intl/nl/analytics/" target="_blank">Google Analytics</a> gebruiken. Voer hier de code daarvan in.</p>' WHERE `field_field` = 'tbl_site.str_google_analytics';
+UPDATE `cfg_ui` SET `txt_help_nl` = '<p>Vul de titel van de pagina in.</p>' WHERE `field_field` = 'tbl_menu.str_title';
+UPDATE `cfg_ui` SET `txt_help_nl` = '<p>Wil je dat de nieuwe pagina onder een al bestaande pagina uit het hoofdmenu komt te staan? Geef dan hier aan onder welke pagina. Als je niets kiest dan komt de pagina in het hoofdmenu.</p>' WHERE `field_field` = 'tbl_menu.self_parent';
+UPDATE `cfg_ui` SET `txt_help_nl` = '<p>Vul hier de <a href="admin/help/tekst_aanpassen">tekst</a> van je pagina in.</p><p>Eventueel kun je hier ook <a href="admin/help/fotos">foto\'s</a> of <a href="admin/help/youtube_googlemaps_etc">YouTube</a> filmpjes tussen de tekst plaatsen.</p>' WHERE `field_field` = 'tbl_menu.txt_text';
+UPDATE `cfg_ui` SET `txt_help_nl` = '<p>Kies hier eventueel een module.</p><p>Modules voegen extra inhoud toe aan je pagina: een contactformulier, een overzicht van alle links, een agenda of een speciaal voor jouw site geschreven module.</p>' WHERE `field_field` = 'tbl_menu.str_module';
+UPDATE `cfg_ui` SET `txt_help_nl` = '<p>Vul hier een korte omschrijving van deze pagina in.</p><p>Die wordt gebruikt door zoekmachines als Google. Als je niets invult, wordt de algemene omschrijving gebruikt die je bij <strong><a href="admin/help/site">Site</a></strong> hebt ingevuld.</p>' WHERE `field_field` = 'tbl_menu.stx_description';
+UPDATE `cfg_ui` SET `txt_help_nl` = '<p>Vul hier zoektermen in voor deze pagina.</p><p>Ze worden toegevoegd aan de zoektermen die je bij <strong><a href="admin/help/site">Site</a></strong> hebt ingevoerd.</p>' WHERE `field_field` = 'tbl_menu.str_keywords';
+
+# Change db revision
+UPDATE `cfg_configurations` SET `str_revision` = '1957';
