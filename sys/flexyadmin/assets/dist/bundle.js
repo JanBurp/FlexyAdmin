@@ -28135,7 +28135,7 @@ created:function created(){this.row=this.data;},methods:{isType:function isType(
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _flexyState=__webpack_require__(/*! ../../flexy-state.js */ 3);var _flexyState2=_interopRequireDefault(_flexyState);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}exports.default={name:'VueGridCell',props:['type','name','primary','value','level','editable','readonly','options'],// created : function() {
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _flexyState=__webpack_require__(/*! ../../flexy-state.js */ 3);var _flexyState2=_interopRequireDefault(_flexyState);var _flexyThumb=__webpack_require__(/*! ../flexy-thumb.vue */ 90);var _flexyThumb2=_interopRequireDefault(_flexyThumb);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}exports.default={name:'VueGridCell',components:{flexyThumb:_flexyThumb2.default},props:['type','name','primary','value','level','editable','readonly','options'],// created : function() {
 //   console.log(this.options);
 // },
 computed:{fieldTypes:function fieldTypes(){var types={checkbox:['checkbox'],media:['media','medias'],color:['color'],url:['url'],relation:['relation']};types.default=[].concat(types.checkbox,types.media,types.color,types.url);return types;},cellClass:function cellClass(){var c=[];c.push('grid-cell-type-'+this.type);if(this.editable)c.push('grid-cell-editable');if(this.readonly)c.push('text-muted');return c;},showTreeNode:function showTreeNode(){return this.name==="str_title"&&this.level>0;}},data:function data(){return{item:this.value};},methods:{isType:function isType(type,fieldType){var is=false;if(type==='default'){is=this.fieldTypes['default'].indexOf(fieldType)===-1;}else{is=this.fieldTypes[type].indexOf(fieldType)>=0;}return is;},thumbs:function thumbs(media){var array=media.split('|');for(var i=0;i<array.length;i++){array[i]={src:'_media/thumb/'+this.options['path']+'/'+array[i],alt:array[i]};}return array;},complementColor:function complementColor(color){var complement='#'+(0xffffff^color).toString(16);return complement;},relationItems:function relationItems(string){var items=string.split(',');for(var i=0;i<items.length;i++){items[i]=items[i].replace(/{/,'').replace(/}/,'');}return items;},edit:function edit(){var self=this;if(this.editable){switch(this.type){case'checkbox':var currentValue=self.item;var newValue=1;if(currentValue)newValue=0;self.postField(newValue).then(function(response){if(!response.error){self.item=newValue;}});break;default:var currentValue=self.item;// var newValue = ....
@@ -28371,7 +28371,7 @@ exports = module.exports = __webpack_require__(/*! ./../../../../../~/css-loader
 
 
 // module
-exports.push([module.i, "\n.grid td {overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:250px;\n}\n.grid td.grid-cell-type-checkbox, .grid td.grid-cell-type-media {text-align:center;\n}\n.grid .color-thumb-sm {padding:0.125rem .5rem;margin:0;\n}\n.grid td.grid-cell-editable {cursor:pointer;\n}\n/* tree, branches & nodes */\n.grid-type-tree tbody td[level=\"1\"][name=\"str_title\"] {padding-left:1rem;\n}\n.grid-type-tree tbody td[level=\"2\"][name=\"str_title\"] {padding-left:2rem;\n}\n.grid-type-tree tbody td[level=\"3\"][name=\"str_title\"] {padding-left:3rem;\n}\n.grid-type-tree tbody td[level=\"4\"][name=\"str_title\"] {padding-left:4rem;\n}\n.grid-type-tree tbody td[level=\"5\"][name=\"str_title\"] {padding-left:5rem;\n}\n.grid-type-tree tbody td[level=\"6\"][name=\"str_title\"] {padding-left:6rem;\n}\n.grid-type-tree tbody td[level=\"7\"][name=\"str_title\"] {padding-left:7rem;\n}\n", "", {"version":3,"sources":["/./flexyadmin/assets/js/components/grid/flexy-grid-cell.vue?e34962fa"],"names":[],"mappings":";AA2KA,UAAA,gBAAA,uBAAA,mBAAA,gBAAA;CAAA;AACA,iEAAA,kBAAA;CAAA;AACA,uBAAA,uBAAA,SAAA;CAAA;AACA,6BAAA,eAAA;CAAA;AACA,4BAAA;AACA,uDAAA,kBAAA;CAAA;AACA,uDAAA,kBAAA;CAAA;AACA,uDAAA,kBAAA;CAAA;AACA,uDAAA,kBAAA;CAAA;AACA,uDAAA,kBAAA;CAAA;AACA,uDAAA,kBAAA;CAAA;AACA,uDAAA,kBAAA;CAAA","file":"flexy-grid-cell.vue","sourcesContent":["<script>\nimport flexyState from '../../flexy-state.js'\n\nexport default {\n  name: 'VueGridCell',\n  props:['type','name','primary','value','level','editable','readonly','options'],\n  \n  // created : function() {\n  //   console.log(this.options);\n  // },\n\n  computed:{\n    \n    fieldTypes : function() {\n      var types = {\n        checkbox  : ['checkbox'],\n        media     : ['media','medias'],\n        color     : ['color'],\n        url       : ['url'],\n        relation  : ['relation'],\n      };\n      types.default = [].concat( types.checkbox, types.media, types.color, types.url );\n      return types;\n    },\n    \n    cellClass : function() {\n      var c = [];\n      c.push('grid-cell-type-'+this.type);\n      if (this.editable) c.push('grid-cell-editable');\n      if (this.readonly) c.push('text-muted');\n      return c;\n    },\n    showTreeNode : function() {\n      return (this.name===\"str_title\" && this.level>0);\n    },\n  },\n  \n  data : function() {\n    return {\n      item : this.value,\n    }\n  },\n  \n  methods : {\n    \n    isType : function( type, fieldType ) {\n      var is = false;\n      if (type==='default') {\n        is = (this.fieldTypes['default'].indexOf(fieldType) === -1);\n      }\n      else {\n        is = (this.fieldTypes[type].indexOf(fieldType) >= 0);\n      }\n      return is;\n    },\n    \n    thumbs : function(media) {\n      var array = media.split('|');\n      for (var i = 0; i < array.length; i++) {\n        array[i] = {\n          src : '_media/thumb/' + this.options['path'] +'/'+ array[i],\n          alt : array[i],\n        }\n      }\n      return array;\n    },\n    \n    complementColor : function(color) {\n      var complement = '#'+(0xffffff ^ color).toString(16);\n      return complement;\n    },\n    \n    relationItems : function(string) {\n      var items = string.split(',');\n      for (var i = 0; i < items.length; i++) {\n        items[i] = items[i].replace(/{/,'').replace(/}/,'');\n      }\n      return items;\n    },\n    \n    edit : function() {\n      var self = this;\n      if (this.editable) {\n        switch(this.type) {\n\n          case 'checkbox':\n            var currentValue = self.item;\n            var newValue = 1;\n            if (currentValue) newValue=0;\n            self.postField(newValue).then(function(response){\n              if (!response.error) {\n                self.item = newValue;\n              }\n            });\n            break;\n          \n          default:\n            var currentValue = self.item;\n            // var newValue = ....\n            // self.postField(newValue).then(function(response){\n            //   if (!response.error) {\n            //     self.item = newValue;\n            //   }\n            // });\n            break;\n        }\n      }\n    },\n    \n    postField : function(value) {\n      var self=this;\n      var data = {};\n      data[self.name] = value;\n      return this.api({\n        url : 'row',\n        'data': {\n          'table'   : this.primary.table,\n          'where'   : this.primary.id,\n          'data'    : data,\n        },\n      }).then(function(response){\n        if (!response.error) {\n          if ( !_.isUndefined(response.data.info.validation) && response.data.info.validation===false) {\n            flexyState.addMessage(response.data.info.validation_errors,'danger');\n          }\n        }\n        else {\n          flexyState.addMessage( self.$lang.vue_form_save_error,'danger');\n        }\n        return response;\n      });\n    },    \n    \n    \n  },\n  \n}\n</script>\n\n<template>\n  <td v-if=\"type!=='hidden'\"  :type=\"type\" :name=\"name\" value=\"item\" :class=\"cellClass\" :level=\"level\" v-on:click=\"edit()\">\n    <span v-if=\"showTreeNode\" class=\"fa fa-level-up fa-rotate-90 text-muted\"></span>\n\n    <template v-if=\"isType('relation',type)\">\n      <span class=\"grid-relation-item\" v-for=\"item in relationItems(item)\">{{item}}</span>\n    </template>\n\n    <template v-if=\"isType('media',type)\">\n      <template v-if=\"item !==''\"><img class=\"media-thumb-sm\" v-for=\"img in thumbs(item)\" :src=\"img.src\" :alt=\"img.alt\" :title=\"img.alt\"></template>\n    </template>\n\n    <template v-if=\"isType('color',type)\">\n      <div class=\"color-thumb-sm\" :style=\"'color:'+complementColor(item)+';background-color:'+item\">{{item}}</div>\n    </template>\n\n    <template v-if=\"isType('checkbox',type)\">\n      <span v-if=\"item\" class=\"fa fa-check text-success\" :value=\"item\"></span>\n      <span v-else class=\"fa fa-minus text-warning\" :value=\"item\"></span>\n    </template>\n    \n    <template v-if=\"isType('url',type)\">\n      <a :href=\"item\" target=\"_blank\">{{item}}</a>\n    </template>\n\n    <template v-if=\"isType('default',type)\">{{item}}</template>\n\n  </td>\n</template>\n\n\n<style>\n  .grid td {overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:250px;}\n  .grid td.grid-cell-type-checkbox, .grid td.grid-cell-type-media {text-align:center;}\n  .grid .color-thumb-sm {padding:0.125rem .5rem;margin:0;}\n  .grid td.grid-cell-editable {cursor:pointer;}\n  /* tree, branches & nodes */\n  .grid-type-tree tbody td[level=\"1\"][name=\"str_title\"] {padding-left:1rem;}\n  .grid-type-tree tbody td[level=\"2\"][name=\"str_title\"] {padding-left:2rem;}\n  .grid-type-tree tbody td[level=\"3\"][name=\"str_title\"] {padding-left:3rem;}\n  .grid-type-tree tbody td[level=\"4\"][name=\"str_title\"] {padding-left:4rem;}\n  .grid-type-tree tbody td[level=\"5\"][name=\"str_title\"] {padding-left:5rem;}\n  .grid-type-tree tbody td[level=\"6\"][name=\"str_title\"] {padding-left:6rem;}\n  .grid-type-tree tbody td[level=\"7\"][name=\"str_title\"] {padding-left:7rem;}\n</style>"],"sourceRoot":"webpack://"}]);
+exports.push([module.i, "\n.grid td {overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:250px;\n}\n.grid td.grid-cell-type-checkbox, .grid td.grid-cell-type-media {text-align:center;\n}\n.grid .color-thumb-sm {padding:0.125rem .5rem;margin:0;\n}\n.grid td.grid-cell-editable {cursor:pointer;\n}\n/* tree, branches & nodes */\n.grid-type-tree tbody td[level=\"1\"][name=\"str_title\"] {padding-left:1rem;\n}\n.grid-type-tree tbody td[level=\"2\"][name=\"str_title\"] {padding-left:2rem;\n}\n.grid-type-tree tbody td[level=\"3\"][name=\"str_title\"] {padding-left:3rem;\n}\n.grid-type-tree tbody td[level=\"4\"][name=\"str_title\"] {padding-left:4rem;\n}\n.grid-type-tree tbody td[level=\"5\"][name=\"str_title\"] {padding-left:5rem;\n}\n.grid-type-tree tbody td[level=\"6\"][name=\"str_title\"] {padding-left:6rem;\n}\n.grid-type-tree tbody td[level=\"7\"][name=\"str_title\"] {padding-left:7rem;\n}\n", "", {"version":3,"sources":["/./flexyadmin/assets/js/components/grid/flexy-grid-cell.vue?3efee81c"],"names":[],"mappings":";AA+KA,UAAA,gBAAA,uBAAA,mBAAA,gBAAA;CAAA;AACA,iEAAA,kBAAA;CAAA;AACA,uBAAA,uBAAA,SAAA;CAAA;AACA,6BAAA,eAAA;CAAA;AACA,4BAAA;AACA,uDAAA,kBAAA;CAAA;AACA,uDAAA,kBAAA;CAAA;AACA,uDAAA,kBAAA;CAAA;AACA,uDAAA,kBAAA;CAAA;AACA,uDAAA,kBAAA;CAAA;AACA,uDAAA,kBAAA;CAAA;AACA,uDAAA,kBAAA;CAAA","file":"flexy-grid-cell.vue","sourcesContent":["<script>\nimport flexyState from '../../flexy-state.js'\nimport flexyThumb from '../flexy-thumb.vue'\n\nexport default {\n  name: 'VueGridCell',\n  components: {flexyThumb},\n  props:['type','name','primary','value','level','editable','readonly','options'],\n  \n  // created : function() {\n  //   console.log(this.options);\n  // },\n\n  computed:{\n    \n    fieldTypes : function() {\n      var types = {\n        checkbox  : ['checkbox'],\n        media     : ['media','medias'],\n        color     : ['color'],\n        url       : ['url'],\n        relation  : ['relation'],\n      };\n      types.default = [].concat( types.checkbox, types.media, types.color, types.url );\n      return types;\n    },\n    \n    cellClass : function() {\n      var c = [];\n      c.push('grid-cell-type-'+this.type);\n      if (this.editable) c.push('grid-cell-editable');\n      if (this.readonly) c.push('text-muted');\n      return c;\n    },\n    showTreeNode : function() {\n      return (this.name===\"str_title\" && this.level>0);\n    },\n  },\n  \n  data : function() {\n    return {\n      item : this.value,\n    }\n  },\n  \n  methods : {\n    \n    isType : function( type, fieldType ) {\n      var is = false;\n      if (type==='default') {\n        is = (this.fieldTypes['default'].indexOf(fieldType) === -1);\n      }\n      else {\n        is = (this.fieldTypes[type].indexOf(fieldType) >= 0);\n      }\n      return is;\n    },\n    \n    thumbs : function(media) {\n      var array = media.split('|');\n      for (var i = 0; i < array.length; i++) {\n        array[i] = {\n          src : '_media/thumb/' + this.options['path'] +'/'+ array[i],\n          alt : array[i],\n        }\n      }\n      return array;\n    },\n    \n    complementColor : function(color) {\n      var complement = '#'+(0xffffff ^ color).toString(16);\n      return complement;\n    },\n    \n    relationItems : function(string) {\n      var items = string.split(',');\n      for (var i = 0; i < items.length; i++) {\n        items[i] = items[i].replace(/{/,'').replace(/}/,'');\n      }\n      return items;\n    },\n    \n    edit : function() {\n      var self = this;\n      if (this.editable) {\n        switch(this.type) {\n\n          case 'checkbox':\n            var currentValue = self.item;\n            var newValue = 1;\n            if (currentValue) newValue=0;\n            self.postField(newValue).then(function(response){\n              if (!response.error) {\n                self.item = newValue;\n              }\n            });\n            break;\n          \n          default:\n            var currentValue = self.item;\n            // var newValue = ....\n            // self.postField(newValue).then(function(response){\n            //   if (!response.error) {\n            //     self.item = newValue;\n            //   }\n            // });\n            break;\n        }\n      }\n    },\n    \n    postField : function(value) {\n      var self=this;\n      var data = {};\n      data[self.name] = value;\n      return this.api({\n        url : 'row',\n        'data': {\n          'table'   : this.primary.table,\n          'where'   : this.primary.id,\n          'data'    : data,\n        },\n      }).then(function(response){\n        if (!response.error) {\n          if ( !_.isUndefined(response.data.info.validation) && response.data.info.validation===false) {\n            flexyState.addMessage(response.data.info.validation_errors,'danger');\n          }\n        }\n        else {\n          flexyState.addMessage( self.$lang.vue_form_save_error,'danger');\n        }\n        return response;\n      });\n    },    \n    \n    \n  },\n  \n}\n</script>\n\n<template>\n  <td v-if=\"type!=='hidden'\"  :type=\"type\" :name=\"name\" value=\"item\" :class=\"cellClass\" :level=\"level\" v-on:click=\"edit()\">\n    <span v-if=\"showTreeNode\" class=\"fa fa-level-up fa-rotate-90 text-muted\"></span>\n\n    <template v-if=\"isType('relation',type)\">\n      <span class=\"grid-relation-item\" v-for=\"item in relationItems(item)\">{{item}}</span>\n    </template>\n\n    <template v-if=\"isType('media',type)\">\n      <template v-if=\"item !==''\">\n        <flexy-thumb v-for=\"img in thumbs(item)\" :src=\"img.src\" :alt=\"img.alt\">\n      </template>\n    </template>\n\n    <template v-if=\"isType('color',type)\">\n      <div class=\"color-thumb-sm\" :style=\"'color:'+complementColor(item)+';background-color:'+item\">{{item}}</div>\n    </template>\n\n    <template v-if=\"isType('checkbox',type)\">\n      <span v-if=\"item\" class=\"fa fa-check text-success\" :value=\"item\"></span>\n      <span v-else class=\"fa fa-minus text-warning\" :value=\"item\"></span>\n    </template>\n    \n    <template v-if=\"isType('url',type)\">\n      <a :href=\"item\" target=\"_blank\">{{item}}</a>\n    </template>\n\n    <template v-if=\"isType('default',type)\">{{item}}</template>\n\n  </td>\n</template>\n\n\n<style>\n  .grid td {overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:250px;}\n  .grid td.grid-cell-type-checkbox, .grid td.grid-cell-type-media {text-align:center;}\n  .grid .color-thumb-sm {padding:0.125rem .5rem;margin:0;}\n  .grid td.grid-cell-editable {cursor:pointer;}\n  /* tree, branches & nodes */\n  .grid-type-tree tbody td[level=\"1\"][name=\"str_title\"] {padding-left:1rem;}\n  .grid-type-tree tbody td[level=\"2\"][name=\"str_title\"] {padding-left:2rem;}\n  .grid-type-tree tbody td[level=\"3\"][name=\"str_title\"] {padding-left:3rem;}\n  .grid-type-tree tbody td[level=\"4\"][name=\"str_title\"] {padding-left:4rem;}\n  .grid-type-tree tbody td[level=\"5\"][name=\"str_title\"] {padding-left:5rem;}\n  .grid-type-tree tbody td[level=\"6\"][name=\"str_title\"] {padding-left:6rem;}\n  .grid-type-tree tbody td[level=\"7\"][name=\"str_title\"] {padding-left:7rem;}\n</style>"],"sourceRoot":"webpack://"}]);
 
 // exports
 
@@ -30589,12 +30589,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
       staticClass: "grid-relation-item"
     }, [_vm._s(item)])
   })] : _vm._e(), " ", (_vm.isType('media', _vm.type)) ? [(_vm.item !== '') ? [_vm._l((_vm.thumbs(_vm.item)), function(img) {
-    return _h('img', {
-      staticClass: "media-thumb-sm",
+    return _h('flexy-thumb', {
       attrs: {
         "src": img.src,
-        "alt": img.alt,
-        "title": img.alt
+        "alt": img.alt
       }
     })
   })] : _vm._e()] : _vm._e(), " ", (_vm.isType('color', _vm.type)) ? [_h('div', {
@@ -31646,8 +31644,8 @@ module.exports = function(module) {
  * 
  * @author: Jan den Besten
  */var AUTH_TOKEN=_flexy.auth_token;var _=__webpack_require__(/*! lodash */ 16);// import FlexyModal       from './components/flexy-modal.vue'
-// Languaga settings
-var locales={};locales[_flexy.language]=JSON.parse(_flexy.language_keys);_vue2.default.use(_vueLang2.default,{lang:_flexy.language,locales:locales});_vue2.default.mixin({data:function data(){return{state:_flexyState2.default.state};},methods:{/**
+// Language settings
+var LOCALES={};LOCALES[_flexy.language]=JSON.parse(_flexy.language_keys);_vue2.default.use(_vueLang2.default,{lang:_flexy.language,locales:LOCALES});_vue2.default.mixin({data:function data(){return{state:_flexyState2.default.state};},methods:{/**
       Global method om Api aan te roepen. Options Object bevat de volgende properties:
       - url, de url van de api (auth,table,row, etc)
       - data, de mee te geven parameters
@@ -31656,6 +31654,154 @@ var locales={};locales[_flexy.language]=JSON.parse(_flexy.language_keys);_vue2.d
  Main Vue Instance
  */var vm=new _vue2.default({el:'#main',components:{FlexyBlocks:_flexyBlocks2.default,FlexyButton:_flexyButton2.default,// FlexyModal,
 FlexyMessages:_flexyMessages2.default,FlexyPagination:_flexyPagination2.default,FlexyGrid:_flexyGrid2.default,FlexyForm:_flexyForm2.default},data:{state:_flexyState2.default.state}});
+
+/***/ },
+/* 88 */
+/* unknown exports provided */
+/* all exports used */
+/*!*********************************************************************************************************************************!*\
+  !*** ./~/babel-loader/lib!./~/vue-loader/lib/selector.js?type=script&index=0!./flexyadmin/assets/js/components/flexy-thumb.vue ***!
+  \*********************************************************************************************************************************/
+/***/ function(module, exports) {
+
+"use strict";
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});exports.default={name:'flexyThumb',props:{'src':String,'alt':{type:String,default:''}},computed:{type:function type(){var DEFAULT='file';var TYPES={'jpg':'image','jpeg':'image','gif':'image','png':'image','zip':'fa-file-archive-o','pdf':'fa-file-pdf-o','mp3':'fa-file-audio-o','ogg':'fa-file-audio-o','mp4':'fa-file-audio-o','wav':'fa-file-audio-o','aiff':'fa-file-audio-o','xls':'fa-file-excel-o','xlsx':'fa-file-excel-o','doc':'fa-file-word-o','docx':'fa-file-word-o'};var ext=this.src.split('.');ext=ext[ext.length-1].toLowerCase();var type=DEFAULT;if(!_.isUndefined(TYPES[ext]))type=TYPES[ext];return type;}}};
+
+/***/ },
+/* 89 */
+/* unknown exports provided */
+/* all exports used */
+/*!*********************************************************************************************************************************************************************************************!*\
+  !*** ./~/css-loader?sourceMap!./~/vue-loader/lib/style-rewriter.js?id=data-v-29fbe676!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/flexy-thumb.vue ***!
+  \*********************************************************************************************************************************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ./../../../../~/css-loader/lib/css-base.js */ 1)();
+// imports
+
+
+// module
+exports.push([module.i, "\n.flexy-thumb .fa {font-size:1.6rem;\n}\n.grid-media-view-thumbs .flexy-thumb .fa {font-size:14rem;\n}\n", "", {"version":3,"sources":["/./flexyadmin/assets/js/components/flexy-thumb.vue?4d8afd0f"],"names":[],"mappings":";AAqDA,kBAAA,iBAAA;CAAA;AACA,0CAAA,gBAAA;CAAA","file":"flexy-thumb.vue","sourcesContent":["<script>\nexport default {\n  name: 'flexyThumb',\n  props:{\n    'src':String,\n    'alt':{\n      type:String,\n      default:'',\n    },\n  },\n  computed: {\n    type : function() {\n      const DEFAULT = 'file';\n      const TYPES   = {\n        'jpg'   : 'image',\n        'jpeg'  : 'image',\n        'gif'   : 'image',\n        'png'   : 'image',\n        \n        'zip'   : 'fa-file-archive-o',\n        'pdf'   : 'fa-file-pdf-o',\n        \n        'mp3'   : 'fa-file-audio-o',\n        'ogg'   : 'fa-file-audio-o',\n        'mp4'   : 'fa-file-audio-o',\n        'wav'   : 'fa-file-audio-o',\n        'aiff'  : 'fa-file-audio-o',\n\n        'xls'   : 'fa-file-excel-o',\n        'xlsx'  : 'fa-file-excel-o',\n        'doc'   : 'fa-file-word-o',\n        'docx'  : 'fa-file-word-o',\n      };\n      \n      var ext = this.src.split('.');\n      ext = ext[ext.length-1].toLowerCase();\n      \n      var type = DEFAULT;\n      if ( !_.isUndefined(TYPES[ext]) ) type = TYPES[ext];\n      return type;\n    },\n  },\n}\n</script>\n\n<template>\n  <div class=\"flexy-thumb\">\n    <img v-if=\"type==='image'\" class=\"media-thumb-sm\" :src=\"src\" :alt=\"alt\" :title=\"alt\">\n    <span v-if=\"type!=='image'\" class=\"fa\" :class=\"type\" :title=\"src\"></span>\n  </template>\n</template>\n\n<style>\n  .flexy-thumb .fa {font-size:1.6rem;}\n  .grid-media-view-thumbs .flexy-thumb .fa {font-size:14rem;}\n</style>\n"],"sourceRoot":"webpack://"}]);
+
+// exports
+
+
+/***/ },
+/* 90 */
+/* unknown exports provided */
+/* all exports used */
+/*!*********************************************************!*\
+  !*** ./flexyadmin/assets/js/components/flexy-thumb.vue ***!
+  \*********************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+var __vue_exports__, __vue_options__
+var __vue_styles__ = {}
+
+/* styles */
+__webpack_require__(/*! !vue-style-loader!css-loader?sourceMap!vue-loader/lib/style-rewriter?id=data-v-29fbe676!vue-loader/lib/selector?type=styles&index=0!./flexy-thumb.vue */ 92)
+
+/* script */
+__vue_exports__ = __webpack_require__(/*! !babel-loader!vue-loader/lib/selector?type=script&index=0!./flexy-thumb.vue */ 88)
+
+/* template */
+var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-29fbe676!vue-loader/lib/selector?type=template&index=0!./flexy-thumb.vue */ 91)
+__vue_options__ = __vue_exports__ = __vue_exports__ || {}
+if (
+  typeof __vue_exports__.default === "object" ||
+  typeof __vue_exports__.default === "function"
+) {
+if (Object.keys(__vue_exports__).some(function (key) { return key !== "default" && key !== "__esModule" })) {console.error("named exports are not supported in *.vue files.")}
+__vue_options__ = __vue_exports__ = __vue_exports__.default
+}
+if (typeof __vue_options__ === "function") {
+  __vue_options__ = __vue_options__.options
+}
+__vue_options__.__file = "/Users/jan/Sites/FlexyAdmin/FlexyAdmin/sys/flexyadmin/assets/js/components/flexy-thumb.vue"
+__vue_options__.render = __vue_template__.render
+__vue_options__.staticRenderFns = __vue_template__.staticRenderFns
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-29fbe676", __vue_options__)
+  } else {
+    hotAPI.reload("data-v-29fbe676", __vue_options__)
+  }
+})()}
+if (__vue_options__.functional) {console.error("[vue-loader] flexy-thumb.vue: functional components are not supported and should be defined in plain js files using render functions.")}
+
+module.exports = __vue_exports__
+
+
+/***/ },
+/* 91 */
+/* unknown exports provided */
+/* all exports used */
+/*!*************************************************************************************************************************************************************************!*\
+  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-29fbe676!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/components/flexy-thumb.vue ***!
+  \*************************************************************************************************************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('div', {
+    staticClass: "flexy-thumb"
+  }, [(_vm.type === 'image') ? _h('img', {
+    staticClass: "media-thumb-sm",
+    attrs: {
+      "src": _vm.src,
+      "alt": _vm.alt,
+      "title": _vm.alt
+    }
+  }) : _vm._e(), " ", (_vm.type !== 'image') ? _h('span', {
+    staticClass: "fa",
+    class: _vm.type,
+    attrs: {
+      "title": _vm.src
+    }
+  }) : _vm._e()])
+},staticRenderFns: []}
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-29fbe676", module.exports)
+  }
+}
+
+/***/ },
+/* 92 */
+/* unknown exports provided */
+/* all exports used */
+/*!******************************************************************************************************************************************************************************************************************!*\
+  !*** ./~/vue-style-loader!./~/css-loader?sourceMap!./~/vue-loader/lib/style-rewriter.js?id=data-v-29fbe676!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/flexy-thumb.vue ***!
+  \******************************************************************************************************************************************************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(/*! !./../../../../~/css-loader?sourceMap!./../../../../~/vue-loader/lib/style-rewriter.js?id=data-v-29fbe676!./../../../../~/vue-loader/lib/selector.js?type=styles&index=0!./flexy-thumb.vue */ 89);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(/*! ./../../../../~/vue-style-loader/addStyles.js */ 2)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!./../../../../node_modules/css-loader/index.js?sourceMap!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-29fbe676!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./flexy-thumb.vue", function() {
+			var newContent = require("!!./../../../../node_modules/css-loader/index.js?sourceMap!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-29fbe676!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./flexy-thumb.vue");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
 
 /***/ }
 /******/ ]);
