@@ -282,29 +282,32 @@ export default {
       else {
         removeIds = [removeIds];
       }
-      // Confirm
-      var message = this.$lang['confirm_delete_one'];
-      if (removeIds.length>1) message = this.$options.filters.replace( this.$lang['confirm_delete_multiple'], removeIds.length );
-      if (window.confirm(message)) {
-        var data = {
-          table : self.name,
-          where : removeIds,
-        };
-        if (self.gridType==='media') data.table = 'res_media_files';
-        return this.api({
-          url   : 'row',
-          data  : data,
-        }).then(function(response){
-          var error = response.error || (response.data.data===false);
-          if (error) {
-            flexyState.addMessage( self.$lang.error_delete, 'danger');
-          }
-          else {
-            flexyState.addMessage( self.$options.filters.replace( self.$lang.deleted, removeIds.length), 'danger');
-            self.reloadPage();
-          }
-          return response;
-        });
+      // Onlye when there are items to remove
+      if (removeIds.length>0) {
+        // Confirm
+        var message = this.$lang['confirm_delete_one'];
+        if (removeIds.length>1) message = this.$options.filters.replace( this.$lang['confirm_delete_multiple'], removeIds.length );
+        if (window.confirm(message)) {
+          var data = {
+            table : self.name,
+            where : removeIds,
+          };
+          if (self.gridType==='media') data.table = 'res_media_files';
+          return this.api({
+            url   : 'row',
+            data  : data,
+          }).then(function(response){
+            var error = response.error || (response.data.data===false);
+            if (error) {
+              flexyState.addMessage( self.$lang.error_delete, 'danger');
+            }
+            else {
+              flexyState.addMessage( self.$options.filters.replace( self.$lang.deleted, removeIds.length), 'danger');
+              self.reloadPage();
+            }
+            return response;
+          });
+        }
       }
     },
     
