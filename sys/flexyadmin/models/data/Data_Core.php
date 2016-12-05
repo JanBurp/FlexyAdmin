@@ -1792,11 +1792,12 @@ Class Data_Core extends CI_Model {
    * @return string
    * @author Jan den Besten
    */
-  protected function _fill_path( &$result, $key, $path_info ) {
+  protected function _fill_path( &$result, $key, $path_info, $counter=0 ) {
     $value = '';
     $parent = el( array($key,'self_parent'), $result, 0 );
-    if ( $parent>0 ) {
-      $value .= $this->_fill_path( $result, $parent, $path_info) . $path_info['split'];
+    if ( $parent>0 and $counter<20) {
+      // Counter voorkomt onneindige recursieve aanroep in het geval er een fout is ontstaan in de tabel.
+      $value .= $this->_fill_path( $result, $parent, $path_info, $counter+1) . $path_info['split'];
     }
     $part = el( array($key,$path_info['original_field']), $result );
     // Als parent niet in resultaat zit (bij where/like statements) zoek die dan op
