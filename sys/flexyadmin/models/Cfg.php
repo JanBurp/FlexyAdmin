@@ -28,7 +28,7 @@
  		$this->hasData = false;
  		$this->data = array();
 		$this->keys = array(
-			'cfg_table_info' => array( 'key' => 'table', 'fields' => '`id`,`order`,`table`,`str_order_by`' ),
+			'cfg_table_info' => array( 'key' => 'table', 'fields' => '`id`,`order`,`table`,`str_order_by`,`int_max_rows`' ),
 			'cfg_field_info' => array( 'key' => 'field_field' ),
 			'cfg_media_info' => array( 'key' => array('path','fields_media_fields') ),
 			'cfg_img_info'   => array( 'key' => 'path' ),
@@ -67,10 +67,7 @@
 		// set default keys/fields if not given
 		if (empty($key) and isset($this->keys[$table]['key'])) $key=$this->keys[$table]['key'];
 		if (empty($fields)) {
-			if ( ! $this->isAdmin and isset($this->keys[$table]['fields']) and !defined('PHPUNIT_TEST'))
-				$fields=$this->keys[$table]['fields'];
-			else
-				$fields='*';
+			$fields='*';
 		}
 		if (!empty($key) and !is_array($key)) $key=array($key);
 		
