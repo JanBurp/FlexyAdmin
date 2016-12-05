@@ -1,8 +1,10 @@
 <script>
 import flexyState from '../../flexy-state.js'
+import flexyThumb from '../flexy-thumb.vue'
 
 export default {
   name: 'VueGridCell',
+  components: {flexyThumb},
   props:['type','name','primary','value','level','editable','readonly','options'],
   
   // created : function() {
@@ -146,7 +148,9 @@ export default {
     </template>
 
     <template v-if="isType('media',type)">
-      <template v-if="item !==''"><img class="media-thumb-sm" v-for="img in thumbs(item)" :src="img.src" :alt="img.alt" :title="img.alt"></template>
+      <template v-if="item !==''">
+        <flexy-thumb v-for="img in thumbs(item)" :src="img.src" :alt="img.alt">
+      </template>
     </template>
 
     <template v-if="isType('color',type)">

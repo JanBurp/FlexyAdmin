@@ -1,0 +1,56 @@
+<script>
+export default {
+  name: 'flexyThumb',
+  props:{
+    'src':String,
+    'alt':{
+      type:String,
+      default:'',
+    },
+  },
+  computed: {
+    type : function() {
+      const DEFAULT = 'file';
+      const TYPES   = {
+        'jpg'   : 'image',
+        'jpeg'  : 'image',
+        'gif'   : 'image',
+        'png'   : 'image',
+        
+        'zip'   : 'fa-file-archive-o',
+        'pdf'   : 'fa-file-pdf-o',
+        
+        'mp3'   : 'fa-file-audio-o',
+        'ogg'   : 'fa-file-audio-o',
+        'mp4'   : 'fa-file-audio-o',
+        'wav'   : 'fa-file-audio-o',
+        'aiff'  : 'fa-file-audio-o',
+
+        'xls'   : 'fa-file-excel-o',
+        'xlsx'  : 'fa-file-excel-o',
+        'doc'   : 'fa-file-word-o',
+        'docx'  : 'fa-file-word-o',
+      };
+      
+      var ext = this.src.split('.');
+      ext = ext[ext.length-1].toLowerCase();
+      
+      var type = DEFAULT;
+      if ( !_.isUndefined(TYPES[ext]) ) type = TYPES[ext];
+      return type;
+    },
+  },
+}
+</script>
+
+<template>
+  <div class="flexy-thumb">
+    <img v-if="type==='image'" class="media-thumb-sm" :src="src" :alt="alt" :title="alt">
+    <span v-if="type!=='image'" class="fa" :class="type" :title="src"></span>
+  </template>
+</template>
+
+<style>
+  .flexy-thumb .fa {font-size:1.6rem;}
+  .grid-media-view-thumbs .flexy-thumb .fa {font-size:14rem;}
+</style>
