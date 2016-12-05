@@ -1,5 +1,6 @@
 <script>
 import flexyState       from '../../flexy-state.js'
+import flexyButton      from '../flexy-button.vue'
 
 import tab              from '../../vue-strap-src/components/Tab.vue'
 import tabs             from '../../vue-strap-src/components/Tabs.vue'
@@ -8,7 +9,7 @@ import tabs             from '../../vue-strap-src/components/Tabs.vue'
 
 export default {
   name: 'FlexyForm',
-  components: {tab,tabs},
+  components: {flexyButton,tab,tabs},
   props:{
     'title':String,
     'name':String,
@@ -142,9 +143,9 @@ export default {
   <div class="card-header">
     <h1>{{title}}</h1>
     <div class="btn-group" role="group">
-      <button type="button" v-on:click="cancel()" :disabled="isSaving" class="btn btn-sm btn-danger">{{$lang.cancel}}<span class="fa fa-close"></span></button>
-      <button type="button" v-on:click="save()"   :disabled="isSaving" class="btn btn-sm btn-warning">{{$lang.save}}<span class="fa fa-save"></span></button>
-      <button type="button" v-on:click="submit()" :disabled="isSaving" class="btn btn-sm btn-info">{{$lang.submit}}<span class="fa fa-check"></span></button>
+      <flexy-button @click.native="cancel()" icon="close" :text="$lang.cancel" :disabled="isSaving" class="btn-danger"/>
+      <flexy-button @click.native="save()"   icon="save" :text="$lang.save" :disabled="isSaving" class="btn-warning"/>
+      <flexy-button @click.native="submit()" icon="check" :text="$lang.submit" :disabled="isSaving" class="btn-info"/>
     </div>
   </div>
 
