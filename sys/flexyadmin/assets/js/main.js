@@ -27,10 +27,10 @@ import FlexyGrid        from './components/grid/flexy-grid.vue'
 import FlexyForm        from './components/form/flexy-form.vue'
 
 
-// Languaga settings
-const locales = {};
-locales[_flexy.language] = JSON.parse(_flexy.language_keys);
-Vue.use(Lang, {lang: _flexy.language, locales: locales});
+// Language settings
+const LOCALES = {};
+LOCALES[_flexy.language] = JSON.parse(_flexy.language_keys);
+Vue.use(Lang, {lang: _flexy.language, locales: LOCALES});
 
 
 Vue.mixin({
