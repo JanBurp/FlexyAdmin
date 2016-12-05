@@ -20,6 +20,7 @@ import flexyState       from './flexy-state.js'
 import FlexyMessages    from './components/flexy-messages.vue'
 
 import FlexyBlocks      from './components/flexy-blocks.vue'
+import FlexyButton      from './components/flexy-button.vue'
 // import FlexyModal       from './components/flexy-modal.vue'
 import FlexyPagination  from './components/flexy-pagination.vue'
 import FlexyGrid        from './components/grid/flexy-grid.vue'
@@ -106,6 +107,7 @@ var vm = new Vue({
   el:'#main',
   components: {
     FlexyBlocks,
+    FlexyButton,
     // FlexyModal,
     FlexyMessages,
     FlexyPagination,
