@@ -27637,7 +27637,7 @@ function VueFixer(vue){var vue2=!window.Vue||!window.Vue.partial;var mixin={comp
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _flexyState=__webpack_require__(/*! ../flexy-state.js */ 3);var _flexyState2=_interopRequireDefault(_flexyState);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}exports.default={name:'FlexyMessages',props:['messages'],methods:{typeClass:function typeClass(message){return'alert-'+message.type;},removeMessage:function removeMessage(id){_flexyState2.default.removeMessage(id);}}};
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _flexyState=__webpack_require__(/*! ../flexy-state.js */ 3);var _flexyState2=_interopRequireDefault(_flexyState);var _flexyButton=__webpack_require__(/*! ./flexy-button.vue */ 83);var _flexyButton2=_interopRequireDefault(_flexyButton);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}exports.default={name:'FlexyMessages',components:{flexyButton:_flexyButton2.default},props:['messages'],methods:{typeClass:function typeClass(message){return'alert-'+message.type;},removeMessage:function removeMessage(id){_flexyState2.default.removeMessage(id);}}};
 
 /***/ },
 /* 43 */
@@ -27688,8 +27688,8 @@ type:Number,default:5}},methods:{/**
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _flexyState=__webpack_require__(/*! ../../flexy-state.js */ 3);var _flexyState2=_interopRequireDefault(_flexyState);var _Tab=__webpack_require__(/*! ../../vue-strap-src/components/Tab.vue */ 61);var _Tab2=_interopRequireDefault(_Tab);var _Tabs=__webpack_require__(/*! ../../vue-strap-src/components/Tabs.vue */ 62);var _Tabs2=_interopRequireDefault(_Tabs);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}// import tabGroup         from '../../vue-strap-src/components/TabGroup.vue'
-exports.default={name:'FlexyForm',components:{tab:_Tab2.default,tabs:_Tabs2.default},props:{'title':String,'name':String,'primary':Number,'fields':[Object,Array],'fieldsets':[Object,Array],'data':[Object,Array],'options':[Object,Array]},computed:{fieldTypes:function fieldTypes(){var types={primary:['primary'],hidden:['hidden'],checkbox:['checkbox'],select:['select','media'],textarea:['textarea','wysiwyg']};types.default=[].concat(types.primary,types.hidden,types.checkbox,types.select,types.textarea);return types;}},// Copy of props.data
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _flexyState=__webpack_require__(/*! ../../flexy-state.js */ 3);var _flexyState2=_interopRequireDefault(_flexyState);var _flexyButton=__webpack_require__(/*! ../flexy-button.vue */ 83);var _flexyButton2=_interopRequireDefault(_flexyButton);var _Tab=__webpack_require__(/*! ../../vue-strap-src/components/Tab.vue */ 61);var _Tab2=_interopRequireDefault(_Tab);var _Tabs=__webpack_require__(/*! ../../vue-strap-src/components/Tabs.vue */ 62);var _Tabs2=_interopRequireDefault(_Tabs);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}// import tabGroup         from '../../vue-strap-src/components/TabGroup.vue'
+exports.default={name:'FlexyForm',components:{flexyButton:_flexyButton2.default,tab:_Tab2.default,tabs:_Tabs2.default},props:{'title':String,'name':String,'primary':Number,'fields':[Object,Array],'fieldsets':[Object,Array],'data':[Object,Array],'options':[Object,Array]},computed:{fieldTypes:function fieldTypes(){var types={primary:['primary'],hidden:['hidden'],checkbox:['checkbox'],select:['select','media'],textarea:['textarea','wysiwyg']};types.default=[].concat(types.primary,types.hidden,types.checkbox,types.select,types.textarea);return types;}},// Copy of props.data
 data:function data(){return{row:{},validationErrors:{},isSaving:false};},// Make copy of props.data
 created:function created(){this.row=this.data;},methods:{isType:function isType(type,field){if(type==='default'){return this.fieldTypes['default'].indexOf(this.fields[field].schema['form-type'])===-1;}return this.fieldTypes[type].indexOf(this.fields[field].schema['form-type'])>=0;},isMultiple:function isMultiple(field){var multiple=false;if(this.options[field].multiple)multiple='multiple';if(_flexyState2.default.debug)console.log('isMultiple',field,multiple);return multiple;},validationClass:function validationClass(field){var validation='';if(this.validationErrors[field])validation='has-danger';return validation;},cancel:function cancel(){if(!this.isSaving){var url='admin/show/grid/'+this.name;window.location.assign(url);}},save:function save(){if(!this.isSaving){this.postForm();}},submit:function submit(){if(!this.isSaving){var name=this.name;this.postForm().then(function(response){if(!response.error){var url='admin/show/grid/'+name;window.location.assign(url);}});}},postForm:function postForm(){var self=this;self.isSaving=true;return this.api({url:'row','data':{'table':this.name,'where':this.row['id'],'data':this.row}}).then(function(response){self.isSaving=false;if(!response.error){if(_.isUndefined(response.data.info)||response.data.info.validation!==false){_flexyState2.default.addMessage('Item saved');if(self.isNewItem()){self.row['id']=response.data.data.id;}}else{_flexyState2.default.addMessage(self.$lang.form_validation_error,'danger');if(!_.isUndefined(response.data.info))self.validationErrors=response.data.info.validation_errors;}}else{_flexyState2.default.addMessage(self.$lang.form_save_error,'danger');}return response;});},isNewItem:function isNewItem(){return this.row['id']===-1;},updateField:function updateField(field,value){this.row[field]=value;}}};
 
@@ -27724,7 +27724,7 @@ break;}}},postField:function postField(value){var self=this;var data={};data[sel
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _vuedraggable=__webpack_require__(/*! vuedraggable */ 79);var _vuedraggable2=_interopRequireDefault(_vuedraggable);var _jdbTools=__webpack_require__(/*! ../../jdb-tools.js */ 5);var _jdbTools2=_interopRequireDefault(_jdbTools);var _flexyState=__webpack_require__(/*! ../../flexy-state.js */ 3);var _flexyState2=_interopRequireDefault(_flexyState);var _flexyPagination=__webpack_require__(/*! ../flexy-pagination.vue */ 6);var _flexyPagination2=_interopRequireDefault(_flexyPagination);var _flexyGridCell=__webpack_require__(/*! ./flexy-grid-cell.vue */ 59);var _flexyGridCell2=_interopRequireDefault(_flexyGridCell);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}exports.default={name:'FlexyGrid',components:{draggable:_vuedraggable2.default,FlexyGridCell:_flexyGridCell2.default,FlexyPagination:_flexyPagination2.default},props:{'title':String,'name':String,'fields':[Object,Array],'data':{type:[Array,Boolean],default:false},'order':{type:String,default:''},'find':{type:[String,Object],default:''},'info':Object,'type':{type:String,default:'table'}},/**
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _vuedraggable=__webpack_require__(/*! vuedraggable */ 79);var _vuedraggable2=_interopRequireDefault(_vuedraggable);var _jdbTools=__webpack_require__(/*! ../../jdb-tools.js */ 5);var _jdbTools2=_interopRequireDefault(_jdbTools);var _flexyState=__webpack_require__(/*! ../../flexy-state.js */ 3);var _flexyState2=_interopRequireDefault(_flexyState);var _flexyButton=__webpack_require__(/*! ../flexy-button.vue */ 83);var _flexyButton2=_interopRequireDefault(_flexyButton);var _flexyPagination=__webpack_require__(/*! ../flexy-pagination.vue */ 6);var _flexyPagination2=_interopRequireDefault(_flexyPagination);var _flexyGridCell=__webpack_require__(/*! ./flexy-grid-cell.vue */ 59);var _flexyGridCell2=_interopRequireDefault(_flexyGridCell);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}exports.default={name:'FlexyGrid',components:{draggable:_vuedraggable2.default,flexyButton:_flexyButton2.default,FlexyGridCell:_flexyGridCell2.default,FlexyPagination:_flexyPagination2.default},props:{'title':String,'name':String,'fields':[Object,Array],'data':{type:[Array,Boolean],default:false},'order':{type:String,default:''},'find':{type:[String,Object],default:''},'info':Object,'type':{type:String,default:'table'}},/**
   * Maak items klaar voor tonen in het grid:
   * - Voeg informatie van een veld toe aan elke cell
   * - Bij een tree: voeg informatie aan elke row toe: {level:(int),is_child:(bool),has_children:(bool)}
@@ -27750,8 +27750,9 @@ level=0;}// add level info
 row._info.level=level;}// Keep new row
 data[i]=row;}// Add more tree info (has_children)
 if(isTree&&parents!=={}){_.forEach(data,function(row,key){var id=row.id.value;var level=parents[id];if(level){data[key]._info.has_children=true;}});}// Console
-if(isTree&&_flexyState2.default.debug){console.log('treeInfo:');_.forEach(data,function(row){console.log('id:',row.id.value,'order:',row.order.value,'level:',row._info.level,'isChild:',row._info.is_child,'hasChildren:',row._info.has_children,'title:',row.str_title.value);});}return data;},isPrimaryHeader:function isPrimaryHeader(field){var headerType=field.schema['grid-type']||field.schema['form-type'];return headerType==='primary';},isNormalVisibleHeader:function isNormalVisibleHeader(field){var headerType=field.schema['grid-type']||field.schema['form-type'];return headerType!=='hidden'&&headerType!=='primary';},getMediaView:function getMediaView(){return _flexyState2.default.getMediaView();},setMediaView:function setMediaView(view){return _flexyState2.default.setMediaView(view);},headerClass:function headerClass(field){return'grid-header-type-'+field.schema['form-type'];},hasSelection:function hasSelection(){return this.selected.length>0;},isSelected:function isSelected(id){return this.selected.indexOf(id)>-1;},select:function select(id){var index=this.selected.indexOf(id);if(index>-1){this.selected.splice(index,1);}else{this.selected.push(id);}},reverseSelection:function reverseSelection(){var ids=[];for(var i=0;i<this.items.length;i++){ids.push(this.items[i].id.value);}this.selected=_.difference(ids,this.selected);},newItem:function newItem(){if(this.gridType==='media'){var event=new MouseEvent('click',{'view':window,'bubbles':true,'cancelable':true});document.getElementById('browsefiles').dispatchEvent(event);}else{var url=this.editUrl(-1);window.location.assign(url);}},removeItems:function removeItems(removeIds){var self=this;if(_.isUndefined(removeIds)){removeIds=this.selected;}else{removeIds=[removeIds];}// Confirm
-var message=this.$lang['confirm_delete_one'];if(removeIds.length>1)message=this.$options.filters.replace(this.$lang['confirm_delete_multiple'],removeIds.length);if(window.confirm(message)){var data={table:self.name,where:removeIds};if(self.gridType==='media')data.table='res_media_files';return this.api({url:'row',data:data}).then(function(response){var error=response.error||response.data.data===false;if(error){_flexyState2.default.addMessage(self.$lang.error_delete,'danger');}else{_flexyState2.default.addMessage(self.$options.filters.replace(self.$lang.deleted,removeIds.length),'danger');self.reloadPage();}return response;});}},reloadPage:function reloadPage(){location.reload();},rowLevel:function rowLevel(row){if(_.isUndefined(row._info))return 0;return row._info.level;},isEditable:function isEditable(name){var editable=false;if(!_.isUndefined(this.fields[name]))editable=this.fields[name].schema['grid-edit'];return editable;},isReadonly:function isReadonly(name){var readonly=false;if(!_.isUndefined(this.fields[name]))readonly=this.fields[name].schema['readonly'];return readonly;},/**
+if(isTree&&_flexyState2.default.debug){console.log('treeInfo:');_.forEach(data,function(row){console.log('id:',row.id.value,'order:',row.order.value,'level:',row._info.level,'isChild:',row._info.is_child,'hasChildren:',row._info.has_children,'title:',row.str_title.value);});}return data;},isPrimaryHeader:function isPrimaryHeader(field){var headerType=field.schema['grid-type']||field.schema['form-type'];return headerType==='primary';},isNormalVisibleHeader:function isNormalVisibleHeader(field){var headerType=field.schema['grid-type']||field.schema['form-type'];return headerType!=='hidden'&&headerType!=='primary';},getMediaView:function getMediaView(){return _flexyState2.default.getMediaView();},setMediaView:function setMediaView(view){return _flexyState2.default.setMediaView(view);},headerClass:function headerClass(field){return'grid-header-type-'+field.schema['form-type'];},hasSelection:function hasSelection(){return this.selected.length>0;},isSelected:function isSelected(id){return this.selected.indexOf(id)>-1;},select:function select(id){var index=this.selected.indexOf(id);if(index>-1){this.selected.splice(index,1);}else{this.selected.push(id);}},reverseSelection:function reverseSelection(){var ids=[];for(var i=0;i<this.items.length;i++){ids.push(this.items[i].id.value);}this.selected=_.difference(ids,this.selected);},newItem:function newItem(){if(this.gridType==='media'){var event=new MouseEvent('click',{'view':window,'bubbles':true,'cancelable':true});document.getElementById('browsefiles').dispatchEvent(event);}else{this.editItem(-1);}},editItem:function editItem(id){var url=this.editUrl(id);window.location.assign(url);},removeItems:function removeItems(removeIds){var self=this;if(_.isUndefined(removeIds)){removeIds=this.selected;}else{removeIds=[removeIds];}// Only when there are items to remove
+if(removeIds.length>0){// Confirm
+var message=this.$lang['confirm_delete_one'];if(removeIds.length>1)message=this.$options.filters.replace(this.$lang['confirm_delete_multiple'],removeIds.length);if(window.confirm(message)){var data={table:self.name,where:removeIds};if(self.gridType==='media')data.table='res_media_files';return this.api({url:'row',data:data}).then(function(response){var error=response.error||response.data.data===false;if(error){_flexyState2.default.addMessage(self.$lang.error_delete,'danger');}else{_flexyState2.default.addMessage(self.$options.filters.replace(self.$lang.deleted,removeIds.length),'danger');self.reloadPage();}return response;});}}},reloadPage:function reloadPage(){location.reload();},rowLevel:function rowLevel(row){if(_.isUndefined(row._info))return 0;return row._info.level;},isEditable:function isEditable(name){var editable=false;if(!_.isUndefined(this.fields[name]))editable=this.fields[name].schema['grid-edit'];return editable;},isReadonly:function isReadonly(name){var readonly=false;if(!_.isUndefined(this.fields[name]))readonly=this.fields[name].schema['readonly'];return readonly;},/**
      * Create url, used for all links (pagination, edit, sort etc..)
      */createdUrl:function createdUrl(parts){var defaults={order:_.isUndefined(this.order)?'':this.order,find:_.isUndefined(this.find)?'':this.find,offset:_.isUndefined(this.info.offset)?0:this.info.offset};parts=_.extend(defaults,parts);return location.pathname+'?options={"offset":"'+parts.offset+'","order":"'+parts.order+'","find":"'+_jdbTools2.default.encodeURL(parts.find)+'"}';},editUrl:function editUrl(id){var url='';if(this.gridType==='media'){url='admin/show/form/_media_/'+this.name+'/'+id;}else{url='admin/show/form/'+this.name+'/'+id;}return url;},startFinding:function startFinding(event){if(event)event.preventDefault();var self=this;var find='';if(!self.extendedFind){find=this.findTerm.replace(/'/g,'"');}else{var filled=true;for(var i=0;i<this.extendedTerm.length;i++){if(this.extendedTerm[i].field==='')filled=false;if(this.extendedTerm[i].term==='')filled=false;}if(this.extendedTerm.length<1)filled=false;if(!filled)return false;find=JSON.stringify(self.extendedTerm);}var url=this.createdUrl({offset:0,find:find});window.location.assign(url);},extendedSearchAdd:function extendedSearchAdd(){this.extendedTerm.push(_.clone(this.extendedTermDefault));},extendedSearchRemove:function extendedSearchRemove(index){this.extendedTerm.splice(index,1);if(this.extendedTerm.length<1)this.extendedTerm=[_.clone(this.extendedTermDefault)];},dropUploadFiles:function dropUploadFiles(event){event.stopPropagation();event.preventDefault();var files=event.target.files||event.dataTransfer.files;this._addUploadFiles(files);},addUploadFiles:function addUploadFiles(event){var files=event.target.files||event.dataTransfer.files;this._addUploadFiles(files);},removeUploadFile:function removeUploadFile(index){this.uploadFiles.splice(index,1);},_addUploadFiles:function _addUploadFiles(files){for(var i=0;i<files.length;i++){this.uploadFiles.push(files.item(i));}},startUpload:function startUpload(){var self=this;for(var i=0;i<self.uploadFiles.length;i++){var file=self.uploadFiles[i];self.uploadProgress[file.name]=10;var formData=new FormData();formData.set('path',self.name);formData.set('file',self.uploadFiles[i]);formData.set('fileName',self.uploadFiles[i].name);this.api({url:'media',data:formData,formData:true,onDownloadProgress:function onDownloadProgress(progressEvent){var response=progressEvent.target.response;response=JSON.parse(response);var fileName=response.args.fileName;self.uploadProgress[fileName]=Math.round(progressEvent.loaded*100/progressEvent.total);}}).then(function(response){var error=response.data.error;if(!error&&response.data.data===false)error=true;if(error){// TODO
 }else{var fileName=response.data.args.fileName;var index=_jdbTools2.default.indexOfProperty(self.uploadFiles,'name',fileName);self.uploadProgress[fileName]=100;self.removeUploadFile(index);}// Als alles is geuploade, reload
@@ -27862,7 +27863,7 @@ exports = module.exports = __webpack_require__(/*! ./../../../../~/css-loader/li
 
 
 // module
-exports.push([module.i, "\n.message-text {width:90%;\n}\n.message-button {float:right;margin-top:-.25rem;\n}\n", "", {"version":3,"sources":["/./flexyadmin/assets/js/components/flexy-messages.vue?6813adb8"],"names":[],"mappings":";AA4BA,eAAA,UAAA;CAAA;AACA,iBAAA,YAAA,mBAAA;CAAA","file":"flexy-messages.vue","sourcesContent":["<script>\nimport flexyState from '../flexy-state.js'\nexport default {\n  name: 'FlexyMessages',\n  props:['messages'],\n  methods : {\n    typeClass : function(message) {\n      return 'alert-'+message.type;\n    },\n    removeMessage : function(id) {\n      flexyState.removeMessage(id);\n    },\n  }\n}\n</script>\n\n<template>\n  <div id=\"messages\">\n    <transition-group name=\"slideUp\" tag=\"div\">\n      <div v-for=\"(message,id) in state.messages\" :key=\"message\" class=\"alert\" :class=\"typeClass(message)\">\n        <button v-on:click=\"removeMessage(id)\" v-if=\"message.type==='danger'\" class=\"btn btn-sm btn-danger message-button\"><span class=\"fa fa-close\"></span></button>\n        <div v-html=\"message.text\" class=\"message-text\"></div>\n      </div>\n    </transition-group>\n  </div>\n</template>\n\n<style>\n  .message-text {width:90%;}\n  .message-button {float:right;margin-top:-.25rem;}\n</style>\n"],"sourceRoot":"webpack://"}]);
+exports.push([module.i, "\n.message-text {width:90%;\n}\n.message-button {float:right;margin-top:-.25rem;\n}\n", "", {"version":3,"sources":["/./flexyadmin/assets/js/components/flexy-messages.vue?35bcca69"],"names":[],"mappings":";AA+BA,eAAA,UAAA;CAAA;AACA,iBAAA,YAAA,mBAAA;CAAA","file":"flexy-messages.vue","sourcesContent":["<script>\nimport flexyState   from '../flexy-state.js'\nimport flexyButton  from './flexy-button.vue'\n\nexport default {\n  name: 'FlexyMessages',\n  components: {flexyButton},\n  props:['messages'],\n  methods : {\n    typeClass : function(message) {\n      return 'alert-'+message.type;\n    },\n    removeMessage : function(id) {\n      flexyState.removeMessage(id);\n    },\n  }\n}\n</script>\n\n<template>\n  <div id=\"messages\">\n    <transition-group name=\"slideUp\" tag=\"div\">\n      <div v-for=\"(message,id) in state.messages\" :key=\"message\" class=\"alert\" :class=\"typeClass(message)\">\n        <flexy-button @click.native=\"removeMessage(id)\" icon=\"close\" v-if=\"message.type==='danger'\" class=\"btn-danger message-button\" />\n        <div v-html=\"message.text\" class=\"message-text\"></div>\n      </div>\n    </transition-group>\n  </div>\n</template>\n\n<style>\n  .message-text {width:90%;}\n  .message-button {float:right;margin-top:-.25rem;}\n</style>\n"],"sourceRoot":"webpack://"}]);
 
 // exports
 
@@ -27957,7 +27958,7 @@ exports = module.exports = __webpack_require__(/*! ./../../../../../~/css-loader
 
 
 // module
-exports.push([module.i, "\n.form .form-group {min-height:2.35rem;\n}\n.form-control-label {text-transform:uppercase;font-weight:bold;padding-top:.5rem;padding-bottom:0;margin-bottom:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;\n}\ntextarea {min-height:10rem;max-height:20rem;\n}\n.form-check-input {margin-left:0;margin-top:.75rem;\n}\n.validation-error {padding:.25rem 1rem;font-weight:bold;\n}\n", "", {"version":3,"sources":["/./flexyadmin/assets/js/components/form/flexy-form.vue?71a2a383"],"names":[],"mappings":";AA8MA,mBAAA,mBAAA;CAAA;AACA,qBAAA,yBAAA,iBAAA,kBAAA,iBAAA,gBAAA,gBAAA,uBAAA,mBAAA;CAAA;AACA,UAAA,iBAAA,iBAAA;CAAA;AACA,mBAAA,cAAA,kBAAA;CAAA;AACA,mBAAA,oBAAA,iBAAA;CAAA","file":"flexy-form.vue","sourcesContent":["<script>\nimport flexyState       from '../../flexy-state.js'\n\nimport tab              from '../../vue-strap-src/components/Tab.vue'\nimport tabs             from '../../vue-strap-src/components/Tabs.vue'\n// import tabGroup         from '../../vue-strap-src/components/TabGroup.vue'\n\n\nexport default {\n  name: 'FlexyForm',\n  components: {tab,tabs},\n  props:{\n    'title':String,\n    'name':String,\n    'primary':Number,\n    'fields':[Object,Array],\n    'fieldsets':[Object,Array],\n    'data':[Object,Array],\n    'options':[Object,Array],\n  },\n  \n  computed : {\n    fieldTypes : function() {\n      var types = {\n        primary   : ['primary'],\n        hidden    : ['hidden'],\n        checkbox  : ['checkbox'],\n        select    : ['select','media'],\n        textarea  : ['textarea','wysiwyg'],\n      };\n      types.default = [].concat( types.primary, types.hidden, types.checkbox, types.select, types.textarea );\n      return types;\n    }\n  },\n  \n  // Copy of props.data\n  data : function() {\n    return {\n      row : {},\n      validationErrors : {},\n      isSaving : false,\n    }\n  },\n  // Make copy of props.data\n  created : function() {\n    this.row = this.data;\n  },\n  \n  methods:{\n    \n    isType : function( type,field ) {\n      if (type==='default') {\n        return this.fieldTypes['default'].indexOf(this.fields[field].schema['form-type']) === -1;\n      }\n      return this.fieldTypes[type].indexOf(this.fields[field].schema['form-type']) >= 0;\n    },\n    \n    isMultiple : function( field ) {\n      var multiple = false;\n      if (this.options[field].multiple) multiple='multiple';\n      if (flexyState.debug) console.log('isMultiple',field,multiple);\n      return multiple;\n    },\n    \n    validationClass : function(field) {\n      var validation='';\n      if (this.validationErrors[field]) validation = 'has-danger';\n      return validation;\n    },\n    \n    cancel : function() {\n      if (!this.isSaving) {\n        var url = 'admin/show/grid/' + this.name;\n        window.location.assign( url );\n      }\n    },\n    \n    save : function() {\n      if (!this.isSaving) {\n        this.postForm();\n      }\n    },\n    \n    submit : function() {\n      if (!this.isSaving) {\n        var name = this.name;\n        this.postForm().then(function (response) {\n          if (!response.error) {\n            var url = 'admin/show/grid/' + name;\n            window.location.assign( url );\n          }\n        })\n      }\n    },\n    \n    postForm : function() {\n      var self=this;\n      self.isSaving = true;\n      return this.api({\n        url : 'row',\n        'data': {\n          'table'   : this.name,\n          'where'   : this.row['id'],\n          'data'    : this.row\n        },\n      }).then(function(response){\n        self.isSaving = false;\n        if (!response.error) {\n          if ( _.isUndefined(response.data.info) || response.data.info.validation!==false) {\n            flexyState.addMessage('Item saved');\n            if (self.isNewItem()) {\n              self.row['id'] = response.data.data.id;\n            }\n          }\n          else {\n            flexyState.addMessage( self.$lang.form_validation_error, 'danger');\n            if ( !_.isUndefined(response.data.info) ) self.validationErrors = response.data.info.validation_errors;\n          }\n        }\n        else {\n          flexyState.addMessage( self.$lang.form_save_error, 'danger');\n        }\n        return response;\n      });\n    },\n    \n    isNewItem : function() {\n      return this.row['id'] === -1;\n    },\n    \n    updateField : function( field, value ) {\n      this.row[field] = value;\n    },\n    \n  }\n  \n}\n</script>\n\n<template>\n<div class=\"card form\">\n  <div class=\"card-header\">\n    <h1>{{title}}</h1>\n    <div class=\"btn-group\" role=\"group\">\n      <button type=\"button\" v-on:click=\"cancel()\" :disabled=\"isSaving\" class=\"btn btn-sm btn-danger\">{{$lang.cancel}}<span class=\"fa fa-close\"></span></button>\n      <button type=\"button\" v-on:click=\"save()\"   :disabled=\"isSaving\" class=\"btn btn-sm btn-warning\">{{$lang.save}}<span class=\"fa fa-save\"></span></button>\n      <button type=\"button\" v-on:click=\"submit()\" :disabled=\"isSaving\" class=\"btn btn-sm btn-info\">{{$lang.submit}}<span class=\"fa fa-check\"></span></button>\n    </div>\n  </div>\n\n  <div class=\"card-block\">\n    \n    <tabs navStyle=\"tabs\">\n      <tab v-for=\"(fieldset,name) in fieldsets\" :header=\"name\">\n        <template v-for=\"field in fieldset\">\n          \n          <template v-if=\"isType('primary',field)\">\n            <!-- Primary -->\n            <input type=\"hidden\" :value=\"row[field]\">\n          </template>\n          \n          <div class=\"form-group row\" :class=\"validationClass(field)\" v-if=\"isType('textarea',field)\">\n            <!-- Textarea -->\n            <div v-if=\"validationErrors[field]\" class=\"validation-error form-text text-danger\">{{validationErrors[field]}}</div>\n            <label class=\"col-xs-3 form-control-label\" :for=\"field\">{{fields[field]['name']}}</label>\n            <div class=\"col-xs-9\">\n              <textarea class=\"form-control\" :id=\"field\" :name=\"field\" :value=\"row[field]\" v-on:input=\"updateField(field,$event.target.value)\" placeholder=\"\">\n            </div>\n          </div>\n\n          <div class=\"form-group row\" :class=\"validationClass(field)\" v-if=\"isType('checkbox',field)\">\n            <!-- Checkbox -->\n            <div v-if=\"validationErrors[field]\" class=\"validation-error form-text text-danger\">{{validationErrors[field]}}</div>\n            <label class=\"col-xs-3 form-control-label\" :for=\"field\">{{fields[field]['name']}}</label>\n            <div class=\"col-xs-9\">\n              <input class=\"form-check-input\" type=\"checkbox\" :id=\"field\" :name=\"field\" v-model=\"row[field]\" v-on:input=\"updateField(field,$event.target.value)\">\n            </div>\n          </div>\n          \n          <div class=\"form-group row\" :class=\"validationClass(field)\" v-if=\"isType('select',field)\">\n            <!-- Select -->\n            <div v-if=\"validationErrors[field]\" class=\"validation-error form-text text-danger\">{{validationErrors[field]}}</div>\n            <label class=\"col-xs-3 form-control-label\" :for=\"field\">{{fields[field]['name']}}</label>\n            <div class=\"col-xs-9\">\n              <select class=\"form-control\" :id=\"field\" :name=\"field\" :value=\"row[field]\" v-on:input=\"updateField(field,$event.target.value)\" :multiple=\"isMultiple(field)\">\n                <option v-for=\"option in options[field]['data']\" :value=\"option.value\" :selected=\"option.value==row[field]\">{{option.name}}</option>\n              </select>\n            </div>\n          </div>\n\n          <div class=\"form-group row\" :class=\"validationClass(field)\" v-if=\"isType('default',field)\">\n            <!-- Default -->\n            <div v-if=\"validationErrors[field]\" class=\"validation-error form-text text-danger\">{{validationErrors[field]}}</div>\n            <label class=\"col-xs-3 form-control-label\" :for=\"field\">{{fields[field]['name']}}</label>\n            <div class=\"col-xs-9\"><input type=\"text\" class=\"form-control\" :id=\"field\" :name=\"field\" :value=\"row[field]\" v-on:input=\"updateField(field,$event.target.value)\" placeholder=\"\"></div>\n          </div>\n          \n        </template>\n      </tab>\n    </tabs>\n\n  </div>\n</div>\n</template>\n\n<style>\n  .form .form-group {min-height:2.35rem;}\n  .form-control-label {text-transform:uppercase;font-weight:bold;padding-top:.5rem;padding-bottom:0;margin-bottom:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}\n  textarea {min-height:10rem;max-height:20rem;}\n  .form-check-input {margin-left:0;margin-top:.75rem;}\n  .validation-error {padding:.25rem 1rem;font-weight:bold;}\n</style>\n"],"sourceRoot":"webpack://"}]);
+exports.push([module.i, "\n.form .form-group {min-height:2.35rem;\n}\n.form-control-label {text-transform:uppercase;font-weight:bold;padding-top:.5rem;padding-bottom:0;margin-bottom:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;\n}\ntextarea {min-height:10rem;max-height:20rem;\n}\n.form-check-input {margin-left:0;margin-top:.75rem;\n}\n.validation-error {padding:.25rem 1rem;font-weight:bold;\n}\n", "", {"version":3,"sources":["/./flexyadmin/assets/js/components/form/flexy-form.vue?24b2e959"],"names":[],"mappings":";AA+MA,mBAAA,mBAAA;CAAA;AACA,qBAAA,yBAAA,iBAAA,kBAAA,iBAAA,gBAAA,gBAAA,uBAAA,mBAAA;CAAA;AACA,UAAA,iBAAA,iBAAA;CAAA;AACA,mBAAA,cAAA,kBAAA;CAAA;AACA,mBAAA,oBAAA,iBAAA;CAAA","file":"flexy-form.vue","sourcesContent":["<script>\nimport flexyState       from '../../flexy-state.js'\nimport flexyButton      from '../flexy-button.vue'\n\nimport tab              from '../../vue-strap-src/components/Tab.vue'\nimport tabs             from '../../vue-strap-src/components/Tabs.vue'\n// import tabGroup         from '../../vue-strap-src/components/TabGroup.vue'\n\n\nexport default {\n  name: 'FlexyForm',\n  components: {flexyButton,tab,tabs},\n  props:{\n    'title':String,\n    'name':String,\n    'primary':Number,\n    'fields':[Object,Array],\n    'fieldsets':[Object,Array],\n    'data':[Object,Array],\n    'options':[Object,Array],\n  },\n  \n  computed : {\n    fieldTypes : function() {\n      var types = {\n        primary   : ['primary'],\n        hidden    : ['hidden'],\n        checkbox  : ['checkbox'],\n        select    : ['select','media'],\n        textarea  : ['textarea','wysiwyg'],\n      };\n      types.default = [].concat( types.primary, types.hidden, types.checkbox, types.select, types.textarea );\n      return types;\n    }\n  },\n  \n  // Copy of props.data\n  data : function() {\n    return {\n      row : {},\n      validationErrors : {},\n      isSaving : false,\n    }\n  },\n  // Make copy of props.data\n  created : function() {\n    this.row = this.data;\n  },\n  \n  methods:{\n    \n    isType : function( type,field ) {\n      if (type==='default') {\n        return this.fieldTypes['default'].indexOf(this.fields[field].schema['form-type']) === -1;\n      }\n      return this.fieldTypes[type].indexOf(this.fields[field].schema['form-type']) >= 0;\n    },\n    \n    isMultiple : function( field ) {\n      var multiple = false;\n      if (this.options[field].multiple) multiple='multiple';\n      if (flexyState.debug) console.log('isMultiple',field,multiple);\n      return multiple;\n    },\n    \n    validationClass : function(field) {\n      var validation='';\n      if (this.validationErrors[field]) validation = 'has-danger';\n      return validation;\n    },\n    \n    cancel : function() {\n      if (!this.isSaving) {\n        var url = 'admin/show/grid/' + this.name;\n        window.location.assign( url );\n      }\n    },\n    \n    save : function() {\n      if (!this.isSaving) {\n        this.postForm();\n      }\n    },\n    \n    submit : function() {\n      if (!this.isSaving) {\n        var name = this.name;\n        this.postForm().then(function (response) {\n          if (!response.error) {\n            var url = 'admin/show/grid/' + name;\n            window.location.assign( url );\n          }\n        })\n      }\n    },\n    \n    postForm : function() {\n      var self=this;\n      self.isSaving = true;\n      return this.api({\n        url : 'row',\n        'data': {\n          'table'   : this.name,\n          'where'   : this.row['id'],\n          'data'    : this.row\n        },\n      }).then(function(response){\n        self.isSaving = false;\n        if (!response.error) {\n          if ( _.isUndefined(response.data.info) || response.data.info.validation!==false) {\n            flexyState.addMessage('Item saved');\n            if (self.isNewItem()) {\n              self.row['id'] = response.data.data.id;\n            }\n          }\n          else {\n            flexyState.addMessage( self.$lang.form_validation_error, 'danger');\n            if ( !_.isUndefined(response.data.info) ) self.validationErrors = response.data.info.validation_errors;\n          }\n        }\n        else {\n          flexyState.addMessage( self.$lang.form_save_error, 'danger');\n        }\n        return response;\n      });\n    },\n    \n    isNewItem : function() {\n      return this.row['id'] === -1;\n    },\n    \n    updateField : function( field, value ) {\n      this.row[field] = value;\n    },\n    \n  }\n  \n}\n</script>\n\n<template>\n<div class=\"card form\">\n  <div class=\"card-header\">\n    <h1>{{title}}</h1>\n    <div class=\"btn-group\" role=\"group\">\n      <flexy-button @click.native=\"cancel()\" icon=\"close\" :text=\"$lang.cancel\" :disabled=\"isSaving\" class=\"btn-danger\"/>\n      <flexy-button @click.native=\"save()\"   icon=\"save\" :text=\"$lang.save\" :disabled=\"isSaving\" class=\"btn-warning\"/>\n      <flexy-button @click.native=\"submit()\" icon=\"check\" :text=\"$lang.submit\" :disabled=\"isSaving\" class=\"btn-info\"/>\n    </div>\n  </div>\n\n  <div class=\"card-block\">\n    \n    <tabs navStyle=\"tabs\">\n      <tab v-for=\"(fieldset,name) in fieldsets\" :header=\"name\">\n        <template v-for=\"field in fieldset\">\n          \n          <template v-if=\"isType('primary',field)\">\n            <!-- Primary -->\n            <input type=\"hidden\" :value=\"row[field]\">\n          </template>\n          \n          <div class=\"form-group row\" :class=\"validationClass(field)\" v-if=\"isType('textarea',field)\">\n            <!-- Textarea -->\n            <div v-if=\"validationErrors[field]\" class=\"validation-error form-text text-danger\">{{validationErrors[field]}}</div>\n            <label class=\"col-xs-3 form-control-label\" :for=\"field\">{{fields[field]['name']}}</label>\n            <div class=\"col-xs-9\">\n              <textarea class=\"form-control\" :id=\"field\" :name=\"field\" :value=\"row[field]\" v-on:input=\"updateField(field,$event.target.value)\" placeholder=\"\">\n            </div>\n          </div>\n\n          <div class=\"form-group row\" :class=\"validationClass(field)\" v-if=\"isType('checkbox',field)\">\n            <!-- Checkbox -->\n            <div v-if=\"validationErrors[field]\" class=\"validation-error form-text text-danger\">{{validationErrors[field]}}</div>\n            <label class=\"col-xs-3 form-control-label\" :for=\"field\">{{fields[field]['name']}}</label>\n            <div class=\"col-xs-9\">\n              <input class=\"form-check-input\" type=\"checkbox\" :id=\"field\" :name=\"field\" v-model=\"row[field]\" v-on:input=\"updateField(field,$event.target.value)\">\n            </div>\n          </div>\n          \n          <div class=\"form-group row\" :class=\"validationClass(field)\" v-if=\"isType('select',field)\">\n            <!-- Select -->\n            <div v-if=\"validationErrors[field]\" class=\"validation-error form-text text-danger\">{{validationErrors[field]}}</div>\n            <label class=\"col-xs-3 form-control-label\" :for=\"field\">{{fields[field]['name']}}</label>\n            <div class=\"col-xs-9\">\n              <select class=\"form-control\" :id=\"field\" :name=\"field\" :value=\"row[field]\" v-on:input=\"updateField(field,$event.target.value)\" :multiple=\"isMultiple(field)\">\n                <option v-for=\"option in options[field]['data']\" :value=\"option.value\" :selected=\"option.value==row[field]\">{{option.name}}</option>\n              </select>\n            </div>\n          </div>\n\n          <div class=\"form-group row\" :class=\"validationClass(field)\" v-if=\"isType('default',field)\">\n            <!-- Default -->\n            <div v-if=\"validationErrors[field]\" class=\"validation-error form-text text-danger\">{{validationErrors[field]}}</div>\n            <label class=\"col-xs-3 form-control-label\" :for=\"field\">{{fields[field]['name']}}</label>\n            <div class=\"col-xs-9\"><input type=\"text\" class=\"form-control\" :id=\"field\" :name=\"field\" :value=\"row[field]\" v-on:input=\"updateField(field,$event.target.value)\" placeholder=\"\"></div>\n          </div>\n          \n        </template>\n      </tab>\n    </tabs>\n\n  </div>\n</div>\n</template>\n\n<style>\n  .form .form-group {min-height:2.35rem;}\n  .form-control-label {text-transform:uppercase;font-weight:bold;padding-top:.5rem;padding-bottom:0;margin-bottom:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}\n  textarea {min-height:10rem;max-height:20rem;}\n  .form-check-input {margin-left:0;margin-top:.75rem;}\n  .validation-error {padding:.25rem 1rem;font-weight:bold;}\n</style>\n"],"sourceRoot":"webpack://"}]);
 
 // exports
 
@@ -29516,16 +29517,17 @@ module.exports={render:function (){var _vm=this;
       key: message,
       staticClass: "alert",
       class: _vm.typeClass(message)
-    }, [(message.type === 'danger') ? _vm._h('button', {
-      staticClass: "btn btn-sm btn-danger message-button",
-      on: {
+    }, [(message.type === 'danger') ? _vm._h('flexy-button', {
+      staticClass: "btn-danger message-button",
+      attrs: {
+        "icon": "close"
+      },
+      nativeOn: {
         "click": function($event) {
           _vm.removeMessage(id)
         }
       }
-    }, [_vm._h('span', {
-      staticClass: "fa fa-close"
-    })]) : _vm._e(), " ", _vm._h('div', {
+    }) : _vm._e(), " ", _vm._h('div', {
       staticClass: "message-text",
       domProps: {
         "innerHTML": _vm._s(message.text)
@@ -29627,31 +29629,45 @@ module.exports={render:function (){var _vm=this;
     }
   })]) : _vm._e(), " ", _vm._h('div', {
     staticClass: "btn-group"
-  }, [_vm._m(0), " ", (!_vm.extendedFind) ? _vm._h('button', {
-    staticClass: "btn btn-icon btn-warning",
+  }, [_vm._h('flexy-button', {
+    staticClass: "btn-warning",
     attrs: {
-      "type": "button"
+      "icon": "search"
     },
-    on: {
+    nativeOn: {
       "click": function($event) {
-        _vm.extendedFind = true
+        $event.stopPropagation();
+        $event.preventDefault();
+        _vm.startFinding($event)
       }
     }
-  }, [_vm._m(1)]) : _vm._e(), " ", (_vm.extendedFind) ? _vm._h('button', {
-    staticClass: "btn btn-icon btn-warning",
+  }), " ", _vm._h('flexy-button', {
+    staticClass: "btn-warning",
     attrs: {
-      "type": "button"
+      "icon": {
+        'chevron-up': _vm.extendedFind,
+        'chevron-down': !_vm.extendedFind
+      }
     },
-    on: {
+    nativeOn: {
       "click": function($event) {
-        _vm.extendedFind = false
+        $event.stopPropagation();
+        $event.preventDefault();
+        _vm.extendedFind = !_vm.extendedFind
       }
     }
-  }, [_vm._m(2)]) : _vm._e()])])]), " ", " ", (_vm.extendedFind) ? _vm._h('div', {
+  })])])]), " ", " ", (_vm.extendedFind) ? _vm._h('div', {
     staticClass: "card-header grid-extended-find"
   }, [_vm._l((_vm.extendedTerm), function(term, index) {
     return _vm._h('form', {
-      staticClass: "form-inline"
+      staticClass: "form-inline",
+      on: {
+        "submit": function($event) {
+          $event.stopPropagation();
+          $event.preventDefault();
+          _vm.startFinding($event)
+        }
+      }
     }, [_vm._h('div', {
       staticClass: "form-group grid-extended-search-and"
     }, [_vm._h('select', {
@@ -29793,27 +29809,31 @@ module.exports={render:function (){var _vm=this;
           term.term = $event.target.value
         }
       }
-    })]), " ", _vm._h('button', {
-      staticClass: "btn btn-icon btn-danger",
+    })]), " ", _vm._h('flexy-button', {
+      staticClass: "btn-danger",
       attrs: {
-        "type": "button"
+        "icon": "remove"
       },
-      on: {
+      nativeOn: {
         "click": function($event) {
+          $event.stopPropagation();
+          $event.preventDefault();
           _vm.extendedSearchRemove(index)
         }
       }
-    }, [_vm._m(3, true)]), " ", _vm._h('button', {
-      staticClass: "btn btn-icon btn-warning",
+    }), " ", _vm._h('flexy-button', {
+      staticClass: "btn-warning",
       attrs: {
-        "type": "button"
+        "icon": "plus"
       },
-      on: {
+      nativeOn: {
         "click": function($event) {
+          $event.stopPropagation();
+          $event.preventDefault();
           _vm.extendedSearchAdd()
         }
       }
-    }, [_vm._m(4, true)])])
+    })])
   })]) : _vm._e(), " ", " ", (_vm.gridType === 'media') ? _vm._h('div', {
     directives: [{
       name: "show",
@@ -29834,12 +29854,18 @@ module.exports={render:function (){var _vm=this;
     }
   }), " ", _vm._h('table', {
     staticClass: "table table-sm"
-  }, [_vm._h('thead', [_vm._h('tr', [_vm._m(5), _vm._m(6), _vm._m(7), _vm._h('th', [_vm._h('button', {
-    staticClass: "btn btn-icon btn-icon-text btn-warning",
-    on: {
-      "click": _vm.startUpload
+  }, [_vm._h('thead', [_vm._h('tr', [_vm._m(0), _vm._m(1), _vm._m(2), _vm._h('th', [_vm._h('flexy-button', {
+    staticClass: "btn-warning",
+    attrs: {
+      "icon": "upload",
+      "text": "Upload"
+    },
+    nativeOn: {
+      "click": function($event) {
+        _vm.startUpload($event)
+      }
     }
-  }, [_vm._m(8), "Upload"])])])]), " ", _vm._h('tbody', [_vm._l((_vm.uploadFiles), function(file, index) {
+  })])])]), " ", _vm._h('tbody', [_vm._l((_vm.uploadFiles), function(file, index) {
     return _vm._h('tr', [_vm._h('td', [_vm._s(file.name)]), _vm._h('td', [_vm._s(Math.floor(file.size / 1024)) + "k"]), _vm._h('td', [_vm._h('progress', {
       staticClass: "progress progress-success progress-striped progress-animated",
       attrs: {
@@ -29848,14 +29874,17 @@ module.exports={render:function (){var _vm=this;
       domProps: {
         "value": _vm.uploadProgress[file.name] || 0
       }
-    })]), _vm._h('td', [_vm._h('button', {
-      staticClass: "btn btn-icon btn-danger",
-      on: {
+    })]), _vm._h('td', [_vm._h('flexy-button', {
+      staticClass: "btn-danger",
+      attrs: {
+        "icon": "remove"
+      },
+      nativeOn: {
         "click": function($event) {
           _vm.removeUploadFile(index)
         }
       }
-    }, [_vm._m(9, true)])])])
+    })])])
   })])])]) : _vm._e(), " ", " ", _vm._h('div', {
     staticClass: "card-block table-responsive"
   }, [_vm._h('table', {
@@ -29864,31 +29893,40 @@ module.exports={render:function (){var _vm=this;
     return [(_vm.isPrimaryHeader(field)) ? _vm._h('th', {
       staticClass: "text-primary grid-actions",
       class: _vm.headerClass(field)
-    }, [_vm._h('div', {
-      staticClass: "btn btn-icon btn-outline-warning",
-      on: {
+    }, [_vm._h('flexy-button', {
+      staticClass: "btn-outline-warning",
+      attrs: {
+        "icon": "plus"
+      },
+      nativeOn: {
         "click": function($event) {
           _vm.newItem()
         }
       }
-    }, [_vm._m(10, true)]), " ", _vm._h('div', {
-      staticClass: "btn btn-icon btn-outline-danger action-delete",
+    }), " ", _vm._h('flexy-button', {
+      staticClass: "btn-outline-danger",
       class: {
         disabled: !_vm.hasSelection()
       },
-      on: {
+      attrs: {
+        "icon": "remove"
+      },
+      nativeOn: {
         "click": function($event) {
           _vm.removeItems()
         }
       }
-    }, [_vm._m(11, true)]), " ", _vm._h('div', {
-      staticClass: "btn btn-icon btn-outline-info action-select",
-      on: {
+    }), " ", _vm._h('flexy-button', {
+      staticClass: "btn-outline-info",
+      attrs: {
+        "icon": "square-o"
+      },
+      nativeOn: {
         "click": function($event) {
           _vm.reverseSelection()
         }
       }
-    }, [_vm._m(12, true)])]) : _vm._e(), " ", (_vm.isNormalVisibleHeader(field)) ? _vm._h('th', {
+    })]) : _vm._e(), " ", (_vm.isNormalVisibleHeader(field)) ? _vm._h('th', {
       staticClass: "text-primary",
       class: _vm.headerClass(field)
     }, [_vm._h('a', {
@@ -29931,41 +29969,48 @@ module.exports={render:function (){var _vm=this;
     }, [_vm._l((row), function(cell) {
       return [(cell.type == 'primary') ? _vm._h('td', {
         staticClass: "action"
-      }, [_vm._h('a', {
-        staticClass: "btn btn-icon btn-outline-warning",
+      }, [_vm._h('flexy-button', {
+        staticClass: "btn-outline-warning",
         attrs: {
-          "href": _vm.editUrl(cell.value)
+          "icon": "pencil"
+        },
+        nativeOn: {
+          "click": function($event) {
+            _vm.editItem(cell.value)
+          }
         }
-      }, [_vm._h('span', {
-        staticClass: "fa fa-pencil"
-      })]), " ", _vm._h('div', {
-        staticClass: "btn btn-icon btn-outline-danger action-delete",
-        on: {
+      }), " ", _vm._h('flexy-button', {
+        staticClass: "btn-outline-danger",
+        attrs: {
+          "icon": "remove"
+        },
+        nativeOn: {
           "click": function($event) {
             _vm.removeItems(row.id.value)
           }
         }
-      }, [_vm._h('span', {
-        staticClass: "fa fa-remove"
-      })]), " ", _vm._h('div', {
-        staticClass: "btn btn-icon btn-outline-info action-select",
-        on: {
+      }), " ", _vm._h('flexy-button', {
+        staticClass: "btn-outline-info",
+        attrs: {
+          "icon": {
+            'square-o': !_vm.isSelected(row.id.value),
+            'check-square-o': _vm.isSelected(row.id.value)
+          }
+        },
+        nativeOn: {
           "click": function($event) {
             _vm.select(row.id.value)
           }
         }
-      }, [(!_vm.isSelected(row.id.value)) ? _vm._h('span', {
-        staticClass: "fa fa-square-o"
-      }) : _vm._e(), (_vm.isSelected(row.id.value)) ? _vm._h('span', {
-        staticClass: "fa fa-check-square-o"
-      }) : _vm._e()]), " ", (_vm.gridType === 'tree' || _vm.gridType === 'ordered') ? _vm._h('div', {
-        staticClass: "draggable-handle btn btn-icon btn-outline-info action-move",
+      }), " ", (_vm.gridType === 'tree' || _vm.gridType === 'ordered') ? _vm._h('flexy-button', {
+        staticClass: "draggable-handle btn-outline-info",
         class: {
           'active': _vm.isDragging(row.id.value)
+        },
+        attrs: {
+          "icon": "reorder"
         }
-      }, [_vm._h('span', {
-        staticClass: "fa fa-reorder"
-      })]) : _vm._e()]) : _vm._h('flexy-grid-cell', {
+      }) : _vm._e()]) : _vm._h('flexy-grid-cell', {
         attrs: {
           "type": cell.type,
           "name": cell.name,
@@ -29987,21 +30032,37 @@ module.exports={render:function (){var _vm=this;
     staticClass: "card-footer text-muted"
   }, [(_vm.gridType === 'media') ? _vm._h('div', {
     staticClass: "btn-group actions"
-  }, [(_vm.getMediaView() === 'list') ? [_vm._m(13), " ", _vm._h('button', {
-    staticClass: "btn btn-icon btn-outline-primary",
-    on: {
+  }, [(_vm.getMediaView() === 'list') ? [_vm._h('flexy-button', {
+    staticClass: "btn-primary",
+    attrs: {
+      "icon": "bars"
+    }
+  }), " ", _vm._h('flexy-button', {
+    staticClass: "btn-outline-primary",
+    attrs: {
+      "icon": "picture-o"
+    },
+    nativeOn: {
       "click": function($event) {
         _vm.setMediaView('thumbs')
       }
     }
-  }, [_vm._m(14)])] : _vm._e(), " ", (_vm.getMediaView() === 'thumbs') ? [_vm._h('button', {
-    staticClass: "btn btn-icon btn-outline-primary",
-    on: {
+  })] : _vm._e(), " ", (_vm.getMediaView() === 'thumbs') ? [_vm._h('flexy-button', {
+    staticClass: "btn-outline-primary",
+    attrs: {
+      "icon": "bars"
+    },
+    nativeOn: {
       "click": function($event) {
         _vm.setMediaView('list')
       }
     }
-  }, [_vm._m(15)]), " ", _vm._m(16)] : _vm._e()]) : _vm._e(), " ", (_vm.needsPagination) ? _vm._h('flexy-pagination', {
+  }), " ", _vm._h('flexy-button', {
+    staticClass: "btn-primary",
+    attrs: {
+      "icon": "picture-o"
+    }
+  })] : _vm._e()]) : _vm._e(), " ", (_vm.needsPagination) ? _vm._h('flexy-pagination', {
     attrs: {
       "total": _vm.info.total_rows,
       "pages": _vm.info.num_pages,
@@ -30017,76 +30078,11 @@ module.exports={render:function (){var _vm=this;
     staticClass: "pagination-info text-primary"
   }, [_vm._s(_vm._f("replace")(_vm.$lang.grid_total, _vm.info.total_rows))])]) : _vm._e()])])
 },staticRenderFns: [function (){var _vm=this;
-  return _vm._h('button', {
-    staticClass: "btn btn-icon btn-warning",
-    attrs: {
-      "type": "submit"
-    }
-  }, [_vm._h('span', {
-    staticClass: "fa fa-search"
-  })])
-},function (){var _vm=this;
-  return _vm._h('span', {
-    staticClass: "fa fa-chevron-down"
-  })
-},function (){var _vm=this;
-  return _vm._h('span', {
-    staticClass: "fa fa-chevron-up"
-  })
-},function (){var _vm=this;
-  return _vm._h('span', {
-    staticClass: "fa fa-remove"
-  })
-},function (){var _vm=this;
-  return _vm._h('span', {
-    staticClass: "fa fa-plus"
-  })
-},function (){var _vm=this;
   return _vm._h('th', ["Filename"])
 },function (){var _vm=this;
   return _vm._h('th', ["Size"])
 },function (){var _vm=this;
   return _vm._h('th', ["Upload progress"])
-},function (){var _vm=this;
-  return _vm._h('span', {
-    staticClass: "fa fa-upload"
-  })
-},function (){var _vm=this;
-  return _vm._h('span', {
-    staticClass: "fa fa-remove"
-  })
-},function (){var _vm=this;
-  return _vm._h('span', {
-    staticClass: "fa fa-plus"
-  })
-},function (){var _vm=this;
-  return _vm._h('span', {
-    staticClass: "fa fa-remove"
-  })
-},function (){var _vm=this;
-  return _vm._h('span', {
-    staticClass: "fa fa-square-o"
-  })
-},function (){var _vm=this;
-  return _vm._h('button', {
-    staticClass: "btn btn-icon btn-primary"
-  }, [_vm._h('span', {
-    staticClass: "fa fa-bars fa-fw"
-  })])
-},function (){var _vm=this;
-  return _vm._h('span', {
-    staticClass: "fa fa-picture-o fa-fw"
-  })
-},function (){var _vm=this;
-  return _vm._h('span', {
-    staticClass: "fa fa-bars fa-fw"
-  })
-},function (){var _vm=this;
-  return _vm._h('button', {
-    staticClass: "btn btn-icon btn-primary"
-  }, [_vm._h('span', {
-    staticClass: "fa fa-picture-o fa-fw"
-  })])
 }]}
 if (false) {
   module.hot.accept()
@@ -30377,40 +30373,43 @@ module.exports={render:function (){var _vm=this;
     attrs: {
       "role": "group"
     }
-  }, [_vm._h('button', {
-    staticClass: "btn btn-sm btn-danger",
+  }, [_vm._h('flexy-button', {
+    staticClass: "btn-danger",
     attrs: {
-      "type": "button",
+      "icon": "close",
+      "text": _vm.$lang.cancel,
       "disabled": _vm.isSaving
     },
-    on: {
+    nativeOn: {
       "click": function($event) {
         _vm.cancel()
       }
     }
-  }, [_vm._s(_vm.$lang.cancel), _vm._m(0)]), " ", _vm._h('button', {
-    staticClass: "btn btn-sm btn-warning",
+  }), " ", _vm._h('flexy-button', {
+    staticClass: "btn-warning",
     attrs: {
-      "type": "button",
+      "icon": "save",
+      "text": _vm.$lang.save,
       "disabled": _vm.isSaving
     },
-    on: {
+    nativeOn: {
       "click": function($event) {
         _vm.save()
       }
     }
-  }, [_vm._s(_vm.$lang.save), _vm._m(1)]), " ", _vm._h('button', {
-    staticClass: "btn btn-sm btn-info",
+  }), " ", _vm._h('flexy-button', {
+    staticClass: "btn-info",
     attrs: {
-      "type": "button",
+      "icon": "check",
+      "text": _vm.$lang.submit,
       "disabled": _vm.isSaving
     },
-    on: {
+    nativeOn: {
       "click": function($event) {
         _vm.submit()
       }
     }
-  }, [_vm._s(_vm.$lang.submit), _vm._m(2)])])]), " ", _vm._h('div', {
+  })])]), " ", _vm._h('div', {
     staticClass: "card-block"
   }, [_vm._h('tabs', {
     attrs: {
@@ -30570,19 +30569,7 @@ module.exports={render:function (){var _vm=this;
       })])]) : _vm._e()]
     })])
   })])])])
-},staticRenderFns: [function (){var _vm=this;
-  return _vm._h('span', {
-    staticClass: "fa fa-close"
-  })
-},function (){var _vm=this;
-  return _vm._h('span', {
-    staticClass: "fa fa-save"
-  })
-},function (){var _vm=this;
-  return _vm._h('span', {
-    staticClass: "fa fa-check"
-  })
-}]}
+},staticRenderFns: []}
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
@@ -31180,7 +31167,7 @@ module.exports = function(module) {
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-'use strict';var _vue=__webpack_require__(/*! vue */ 20);var _vue2=_interopRequireDefault(_vue);var _vueLang=__webpack_require__(/*! vue-lang */ 15);var _vueLang2=_interopRequireDefault(_vueLang);var _axios=__webpack_require__(/*! axios */ 13);var _axios2=_interopRequireDefault(_axios);var _jdbTools=__webpack_require__(/*! ./jdb-tools.js */ 5);var _jdbTools2=_interopRequireDefault(_jdbTools);var _flexyState=__webpack_require__(/*! ./flexy-state.js */ 3);var _flexyState2=_interopRequireDefault(_flexyState);var _flexyMessages=__webpack_require__(/*! ./components/flexy-messages.vue */ 17);var _flexyMessages2=_interopRequireDefault(_flexyMessages);var _flexyBlocks=__webpack_require__(/*! ./components/flexy-blocks.vue */ 16);var _flexyBlocks2=_interopRequireDefault(_flexyBlocks);var _flexyPagination=__webpack_require__(/*! ./components/flexy-pagination.vue */ 6);var _flexyPagination2=_interopRequireDefault(_flexyPagination);var _flexyGrid=__webpack_require__(/*! ./components/grid/flexy-grid.vue */ 19);var _flexyGrid2=_interopRequireDefault(_flexyGrid);var _flexyForm=__webpack_require__(/*! ./components/form/flexy-form.vue */ 18);var _flexyForm2=_interopRequireDefault(_flexyForm);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}/**
+'use strict';var _vue=__webpack_require__(/*! vue */ 20);var _vue2=_interopRequireDefault(_vue);var _vueLang=__webpack_require__(/*! vue-lang */ 15);var _vueLang2=_interopRequireDefault(_vueLang);var _axios=__webpack_require__(/*! axios */ 13);var _axios2=_interopRequireDefault(_axios);var _jdbTools=__webpack_require__(/*! ./jdb-tools.js */ 5);var _jdbTools2=_interopRequireDefault(_jdbTools);var _flexyState=__webpack_require__(/*! ./flexy-state.js */ 3);var _flexyState2=_interopRequireDefault(_flexyState);var _flexyMessages=__webpack_require__(/*! ./components/flexy-messages.vue */ 17);var _flexyMessages2=_interopRequireDefault(_flexyMessages);var _flexyBlocks=__webpack_require__(/*! ./components/flexy-blocks.vue */ 16);var _flexyBlocks2=_interopRequireDefault(_flexyBlocks);var _flexyButton=__webpack_require__(/*! ./components/flexy-button.vue */ 83);var _flexyButton2=_interopRequireDefault(_flexyButton);var _flexyPagination=__webpack_require__(/*! ./components/flexy-pagination.vue */ 6);var _flexyPagination2=_interopRequireDefault(_flexyPagination);var _flexyGrid=__webpack_require__(/*! ./components/grid/flexy-grid.vue */ 19);var _flexyGrid2=_interopRequireDefault(_flexyGrid);var _flexyForm=__webpack_require__(/*! ./components/form/flexy-form.vue */ 18);var _flexyForm2=_interopRequireDefault(_flexyForm);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}/**
  * Bootstrapping FlexyAdmin:
  * - Import components
  * - Create Vue Instance
@@ -31196,8 +31183,149 @@ var locales={};locales[_flexy.language]=JSON.parse(_flexy.language_keys);_vue2.d
       - Laat ook progress bar & spinner zien
      */api:function api(options){var self=this;_flexyState2.default.showProgress();var method='GET';if(options.url==='row'&&!_.isUndefined(options.data.where))method='POST';var request={method:'POST',url:'_api/'+options.url,data:options.data,headers:{'Authorization':AUTH_TOKEN,'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'},transformRequest:[function(data){if(!options.formData){var requestString='';if(data){requestString=_jdbTools2.default.serializeJSON(data);}return requestString;}return data;}],onDownloadProgress:function onDownloadProgress(progressEvent){if(options.onDownloadProgress){options.onDownloadProgress(progressEvent);}else{_flexyState2.default.setProgress(progressEvent.loaded,progressEvent.total);}}};_flexyState2.default.debug&&console.log('api > ',request);return _axios2.default.request(request).then(function(response){_flexyState2.default.hideProgress();_flexyState2.default.debug&&console.log('api < ',response);return response;}).catch(function(error){_flexyState2.default.hideProgress();_flexyState2.default.addMessage(self.$lang.error_api,'danger');console.log('api ERROR <',request,error);return{'error':error};});}}});/**
  Main Vue Instance
- */var vm=new _vue2.default({el:'#main',components:{FlexyBlocks:_flexyBlocks2.default,// FlexyModal,
+ */var vm=new _vue2.default({el:'#main',components:{FlexyBlocks:_flexyBlocks2.default,FlexyButton:_flexyButton2.default,// FlexyModal,
 FlexyMessages:_flexyMessages2.default,FlexyPagination:_flexyPagination2.default,FlexyGrid:_flexyGrid2.default,FlexyForm:_flexyForm2.default},data:{state:_flexyState2.default.state}});
+
+/***/ },
+/* 83 */
+/* unknown exports provided */
+/* all exports used */
+/*!**********************************************************!*\
+  !*** ./flexyadmin/assets/js/components/flexy-button.vue ***!
+  \**********************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+var __vue_exports__, __vue_options__
+var __vue_styles__ = {}
+
+/* styles */
+__webpack_require__(/*! !vue-style-loader!css-loader?sourceMap!vue-loader/lib/style-rewriter?id=data-v-18e44f5a!vue-loader/lib/selector?type=styles&index=0!./flexy-button.vue */ 87)
+
+/* script */
+__vue_exports__ = __webpack_require__(/*! !babel-loader!vue-loader/lib/selector?type=script&index=0!./flexy-button.vue */ 84)
+
+/* template */
+var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-18e44f5a!vue-loader/lib/selector?type=template&index=0!./flexy-button.vue */ 86)
+__vue_options__ = __vue_exports__ = __vue_exports__ || {}
+if (
+  typeof __vue_exports__.default === "object" ||
+  typeof __vue_exports__.default === "function"
+) {
+if (Object.keys(__vue_exports__).some(function (key) { return key !== "default" && key !== "__esModule" })) {console.error("named exports are not supported in *.vue files.")}
+__vue_options__ = __vue_exports__ = __vue_exports__.default
+}
+if (typeof __vue_options__ === "function") {
+  __vue_options__ = __vue_options__.options
+}
+__vue_options__.__file = "/Users/jan/Sites/FlexyAdmin/FlexyAdmin/sys/flexyadmin/assets/js/components/flexy-button.vue"
+__vue_options__.render = __vue_template__.render
+__vue_options__.staticRenderFns = __vue_template__.staticRenderFns
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-18e44f5a", __vue_options__)
+  } else {
+    hotAPI.reload("data-v-18e44f5a", __vue_options__)
+  }
+})()}
+if (__vue_options__.functional) {console.error("[vue-loader] flexy-button.vue: functional components are not supported and should be defined in plain js files using render functions.")}
+
+module.exports = __vue_exports__
+
+
+/***/ },
+/* 84 */
+/* unknown exports provided */
+/* all exports used */
+/*!**********************************************************************************************************************************!*\
+  !*** ./~/babel-loader/lib!./~/vue-loader/lib/selector.js?type=script&index=0!./flexyadmin/assets/js/components/flexy-button.vue ***!
+  \**********************************************************************************************************************************/
+/***/ function(module, exports) {
+
+"use strict";
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol&&obj!==Symbol.prototype?"symbol":typeof obj;};exports.default={name:'flexyButton',props:{'icon':{type:[String,Object],default:''},'class':{type:String,default:''},'text':{type:String,default:''}},computed:{iconComputed:function iconComputed(){var iconComputed=this.icon;if(_typeof(this.icon)==='object'){for(var icon in this.icon){if(this.icon[icon])iconComputed=icon;}}return iconComputed;},buttonClass:function buttonClass(){var buttonClass='btn';if(this.iconComputed!=='')buttonClass+=' btn-icon';if(this.text!=='')buttonClass+=' btn-text';return buttonClass;},iconClass:function iconClass(){var iconClass='';if(this.iconComputed!==''){iconClass='fa fa-'+this.iconComputed;}return iconClass;}}};
+
+/***/ },
+/* 85 */
+/* unknown exports provided */
+/* all exports used */
+/*!**********************************************************************************************************************************************************************************************!*\
+  !*** ./~/css-loader?sourceMap!./~/vue-loader/lib/style-rewriter.js?id=data-v-18e44f5a!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/flexy-button.vue ***!
+  \**********************************************************************************************************************************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ./../../../../~/css-loader/lib/css-base.js */ 1)();
+// imports
+
+
+// module
+exports.push([module.i, "\n.flexy-button.disabled {opacity:.3;\n}\n.flexy-button.btn-icon {width:1.85rem;height:1.6rem;padding:.1rem 0 1.4rem;text-align:center;\n}\n.flexy-button.btn-icon .fa {width:1rem;\n}\n.flexy-button.btn-text {width:auto!important;padding-right:.55rem;text-transform:uppercase;\n}\n", "", {"version":3,"sources":["/./flexyadmin/assets/js/components/flexy-button.vue?46683227"],"names":[],"mappings":";AAuDA,wBAAA,WAAA;CAAA;AACA,wBAAA,cAAA,cAAA,uBAAA,kBAAA;CAAA;AACA,4BAAA,WAAA;CAAA;AACA,wBAAA,qBAAA,qBAAA,yBAAA;CAAA","file":"flexy-button.vue","sourcesContent":["<script>\nexport default {\n  name: 'flexyButton',\n  props:{\n    'icon':{\n      type: [String,Object],\n      default:''\n    },\n    'class':{\n      type: String,\n      default:''\n    },\n    'text':{\n      type: String,\n      default:''\n    },\n  },\n  \n  computed: {\n    \n    iconComputed : function() {\n      var iconComputed = this.icon;\n      if (typeof(this.icon)==='object') {\n        for (var icon in this.icon) {\n          if (this.icon[icon]) iconComputed = icon;\n        }\n      }\n      return iconComputed;\n    },\n    \n    buttonClass : function() {\n      var buttonClass='btn';\n      if (this.iconComputed!=='') buttonClass += ' btn-icon';\n      if (this.text!=='') buttonClass += ' btn-text';\n      return buttonClass;\n    },\n\n    iconClass : function() {\n      var iconClass = '';\n      if (this.iconComputed!=='') {\n        iconClass = 'fa fa-'+this.iconComputed;\n      }\n      return iconClass;\n    },\n\n  },\n  \n}\n</script>\n\n<template>\n  <button type=\"button\" class=\"flexy-button\" :class=\"buttonClass\"><span v-if=\"iconComputed!==''\" :class=\"iconClass\"></span><span v-if=\"text!==''\">{{text}}</span></button>\n</template>\n\n<style>\n  .flexy-button.disabled {opacity:.3;}\n  .flexy-button.btn-icon {width:1.85rem;height:1.6rem;padding:.1rem 0 1.4rem;text-align:center;}\n  .flexy-button.btn-icon .fa {width:1rem;}\n  .flexy-button.btn-text {width:auto!important;padding-right:.55rem;text-transform:uppercase;}\n</style>\n"],"sourceRoot":"webpack://"}]);
+
+// exports
+
+
+/***/ },
+/* 86 */
+/* unknown exports provided */
+/* all exports used */
+/*!**************************************************************************************************************************************************************************!*\
+  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-18e44f5a!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/components/flexy-button.vue ***!
+  \**************************************************************************************************************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;
+  return _vm._h('button', {
+    staticClass: "flexy-button",
+    class: _vm.buttonClass,
+    attrs: {
+      "type": "button"
+    }
+  }, [(_vm.iconComputed !== '') ? _vm._h('span', {
+    class: _vm.iconClass
+  }) : _vm._e(), (_vm.text !== '') ? _vm._h('span', [_vm._s(_vm.text)]) : _vm._e()])
+},staticRenderFns: []}
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-18e44f5a", module.exports)
+  }
+}
+
+/***/ },
+/* 87 */
+/* unknown exports provided */
+/* all exports used */
+/*!*******************************************************************************************************************************************************************************************************************!*\
+  !*** ./~/vue-style-loader!./~/css-loader?sourceMap!./~/vue-loader/lib/style-rewriter.js?id=data-v-18e44f5a!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/flexy-button.vue ***!
+  \*******************************************************************************************************************************************************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(/*! !./../../../../~/css-loader?sourceMap!./../../../../~/vue-loader/lib/style-rewriter.js?id=data-v-18e44f5a!./../../../../~/vue-loader/lib/selector.js?type=styles&index=0!./flexy-button.vue */ 85);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(/*! ./../../../../~/vue-style-loader/addStyles.js */ 2)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!./../../../../node_modules/css-loader/index.js?sourceMap!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-18e44f5a!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./flexy-button.vue", function() {
+			var newContent = require("!!./../../../../node_modules/css-loader/index.js?sourceMap!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-18e44f5a!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./flexy-button.vue");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
 
 /***/ }
 /******/ ]);
