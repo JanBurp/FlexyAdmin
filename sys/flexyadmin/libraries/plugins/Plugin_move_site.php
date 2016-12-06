@@ -35,21 +35,20 @@ class Plugin_move_site extends Plugin {
     $this->add_message('<pre><strong>Old site: </strong> '.$this->old.'</pre>');
     $this->add_message('<pre><strong>New site: </strong> '.$this->new.'</pre>');
 
-    // // Actions
-    // if (file_exists($this->old) and file_exists($this->new)) {
-    //   $this->empty_paths();
-    //   $this->move();
-    //   $this->merge();
-    // }
+    // Actions
+    if (file_exists($this->old) and file_exists($this->new)) {
+      $this->empty_paths();
+      $this->move();
+      $this->merge();
+    }
     
-    
-    // $this->add_message('<h2>Merge old database with fresh database</h2>');
-    // $old_db = $this->config['db'];
-    // if ($old_db) {
-    //   $this->oldDB = $this->CI->load->database( $this->config['db'], TRUE);
-    //   $this->truncate_demo_tables();
-    //   $this->import_database();
-    // }
+    $this->add_message('<h2>Merge old database with fresh database</h2>');
+    $old_db = $this->config['db'];
+    if ($old_db) {
+      $this->oldDB = $this->CI->load->database( $old_db, TRUE);
+      $this->truncate_demo_tables();
+      $this->import_database();
+    }
 	
   	return $this->view('admin/plugins/plugin');
   }
@@ -139,12 +138,7 @@ class Plugin_move_site extends Plugin {
               // Create the missing fields
               $field_info = $this->oldDB->field_data( $table );
               $field_info = object2array($field_info);
-              foreach ($field_info as $key => $info) {
-                if (in_array($info['name'],$missing_fields)) {
-                  $field_info[$info['name']] = $info;
-                }
-                unset($field_info[$key]);
-              }
+              $field_info = array_keep_keys($field_info,$missing_fields);
               // Create the fields
               foreach ($field_info as $name => $info) {
                 $settings = array( $name=>array( 'type' => strtoupper($info['type']) ));

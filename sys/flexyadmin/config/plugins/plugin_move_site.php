@@ -17,11 +17,11 @@ $config['old'] = str_replace(array('sys/flexyadmin/config/plugins','/www.'),arra
 $config['new'] = str_replace('sys/flexyadmin/config/plugins','',__DIR__);
 
 // Paths set by hand
-$config['old'] = '/Users/jan/Sites/projecten_2010/www.lekkodigidoc.org/';
-// $config['new'] = '';
+$config['old'] = '';
+$config['new'] = '';
 
 // Old database
-$config['db'] = 'old_db'; // set this group in config/database_local.php
+$config['db'] = 'import'; // set this group in config/database_local.php
 
 $config['truncate_demo_tables'] = array(
   'log_activity',
@@ -33,13 +33,13 @@ $config['truncate_demo_tables'] = array(
 );
 
 $config['merge_tables'] = array(
-  'cfg_admin_menu',
-  'cfg_auto_menu',
-  'cfg_field_info',
+  // 'cfg_admin_menu',
+  // 'cfg_auto_menu',
+  // 'cfg_field_info',
   'cfg_img_info',
-  'cfg_media_info',
-  'cfg_table_info',
-  'cfg_ui',
+  // 'cfg_media_info',
+  // 'cfg_table_info',
+  // 'cfg_ui',
   // 'cfg_user_groups',
   // 'cfg_users',
 );
@@ -48,7 +48,7 @@ $config['merge_and_complete_tables'] = array(
   'tbl_menu',
   'tbl_links',
   'tbl_site',
-  'res_menu_result',
+  // 'res_menu_result',
 );
 
 
@@ -63,11 +63,13 @@ $config['empty'] = array(
 
 // Paths & files  to move
 $config['move'] = array(
-  // 'ontwerp/',
-  // SITEPATH.'assets/',
+  SITEPATH.'assets/js',
   SITEPATH.'assets/img',
   SITEPATH.'assets/css',
-  SITEPATH.'assets/js',
+  SITEPATH.'assets/less-bootstrap',
+  SITEPATH.'assets/less-default',
+  SITEPATH.'assets/pictures',
+  SITEPATH.'assets/downloads',
   SITEPATH.'assets/lists',
 );
 
