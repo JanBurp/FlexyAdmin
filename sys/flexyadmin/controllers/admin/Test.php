@@ -33,8 +33,8 @@ class Test extends MY_Controller {
   public function index() {
     if (!IS_LOCALHOST) return;
     
-    $this->data->table( 'tbl_kinderen' );
-    $result = $this->data->get_grid(20,FALSE,'tbl_adressen.abstract');
+    $this->data->table( 'tbl_menu' );
+    $result = $this->data->get_grid();
     
     trace_($result);
     
