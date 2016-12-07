@@ -490,25 +490,27 @@ export default {
       var self = this;
       var oldIndex = event.oldIndex;
       var newIndex = event.newIndex;
+      if (_.isUndefined(newIndex)) newIndex = oldIndex;
 
       if (oldIndex!==newIndex) {
         this.draggable.oldIndex = oldIndex;
         this.draggable.newIndex = newIndex;
         
+        var parent_id = 0; 
         if (this.gridType==='tree') {
           var items = _.cloneDeep(this.draggable.oldItems);
           var number_of_children = this.draggable.children.length || 0;
           // Pas parent van verplaatste item aan
           // Bijna altijd 0, behalve als het volgende item een hoger level heeft: dan heeft het dezelfde parent als dat item, dus als er een item na komt, neem die parent.
           // Check eerst of het niet de laatste is, want dan hoeven we al niet verder te kijken
-          var parent_id = 0; 
           if (newIndex+1 < this.items.length) {
             parent_id = this.items[newIndex+1].self_parent.value;
           }
-          items[oldIndex].self_parent.value = parent_id;
           // Verplaats item & children
           this.items = jdb.moveMultipleArrayItems( items, oldIndex, number_of_children + 1, newIndex);
         }
+        items[oldIndex].self_parent.value = parent_id;
+        
         
         // Update 'order'
         var order = this.draggable.orderStart;
@@ -519,28 +521,30 @@ export default {
         // Vernieuw de tree info
         if (this.gridType=='tree') this.items = this.addInfo(this.items);
         
-        // Laat children weer zien
-        this.draggable.children = false;
-
         if (flexyState.debug) {
           console.log( 'draggable_onEnd ---------' );
           console.log(oldIndex,' => ',newIndex);
           self._log(self.items);
         }
         
-        self.postNewOrder().then(function(response){
+        var newOrder = this.draggable.orderStart + this.items[ this.draggable.newIndex ].order.value;
+        // if (self.draggable.children && newIndex>oldIndex) newOrder = newOrder - self.draggable.children.length;
+        self.postNewOrder( newOrder ).then(function(response){
           self.draggable.item = false;
         });
       }
       else {
         self.draggable.item = false;
       }
+      
+      // Laat children weer zien
+      this.draggable.children = false;
     },
     
-    postNewOrder : function() {
+    postNewOrder : function(newOrder) {
       var self=this;
       var itemId = this.draggable.item;
-      var newOrder = this.draggable.orderStart + this.items[ this.draggable.newIndex ].order.value;
+      // var newOrder = this.draggable.orderStart + this.items[ this.draggable.newIndex ].order.value;
       return this.api({
         url : 'table_order',
         'data': {
