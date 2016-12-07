@@ -49,9 +49,8 @@ class Flexy_auth extends Ion_auth {
     $this->load->model('data/data');
 		parent::__construct();
     // Stel site afhankelijke instelling in
-		$site_config = $this->data->table('tbl_site')->select('`str_title` AS `site_title`, `email_email` AS `admin_email`')->get_row();
-    // $this->db->select('`str_title` AS `site_title`, `email_email` AS `admin_email`');
-    // $site_config=$this->db->get('tbl_site')->row_array();
+    $this->db->select('`str_title` AS `site_title`, `email_email` AS `admin_email`');
+    $site_config=$this->db->get('tbl_site')->row_array();
     $this->set_config( $site_config );
     $this->tables = $this->config->item( 'tables', 'ion_auth');
 	}
