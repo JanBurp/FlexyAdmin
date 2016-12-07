@@ -113,7 +113,7 @@ Class cfg_users extends Data_Core {
    */
   public function get( $limit=0, $offset=0, $reset = true ) {
     if ($this->user_id) {
-      
+
       // Als geen rechten om users aan te passen dan geen id_user_group tonen/aanpassen
       if ( !$this->allowed_to_edit_users ) {
         if (isset($this->tm_with['many_to_many']['rel_users__groups'])) {
