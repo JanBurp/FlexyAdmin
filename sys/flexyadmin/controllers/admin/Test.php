@@ -33,8 +33,9 @@ class Test extends MY_Controller {
   public function index() {
     if (!IS_LOCALHOST) return;
     
-    $this->data->table( 'tbl_menu' );
-    $result = $this->data->get_grid();
+    $result = $this->data->table( 'cfg_users' )
+                         ->with( 'many_to_many' )
+                         ->get_result();
     
     trace_($result);
     
