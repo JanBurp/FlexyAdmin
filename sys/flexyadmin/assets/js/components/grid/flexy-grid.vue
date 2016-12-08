@@ -528,7 +528,7 @@ export default {
         }
         
         var newOrder = this.draggable.orderStart + this.items[ this.draggable.newIndex ].order.value;
-        // if (self.draggable.children && newIndex>oldIndex) newOrder = newOrder - self.draggable.children.length;
+        if (self.draggable.children && newIndex>oldIndex) newOrder = newOrder - self.draggable.children.length;
         self.postNewOrder( newOrder ).then(function(response){
           self.draggable.item = false;
         });
