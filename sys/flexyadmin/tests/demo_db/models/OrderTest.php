@@ -34,6 +34,23 @@ UPDATE `tbl_menu` SET `order`='4', `self_parent`='0', `uri`='contact' WHERE `id`
     $this->CI->data->order_by('order ASC');
     return $this->CI->data->get_result();
   }
+  
+  private function _dump_result($parent=false) {
+    $this->CI->data->table($this->table);
+    $this->CI->data->select('id,order,self_parent,uri');
+    if ($parent) $this->CI->data->select('self_parent');
+    $this->CI->data->order_by('order ASC');
+    $result = $this->CI->data->get_result();
+    echo "\n\n-- $this->table --\n";
+    foreach ($result as $id => $row) {
+      foreach ($row as $value) {
+        echo $value.' | ';
+      }
+      echo "\n";
+    }
+    echo "\n";
+    return $result;
+  }
 
 
   /**
@@ -206,55 +223,57 @@ UPDATE `tbl_menu` SET `order`='4', `self_parent`='0', `uri`='contact' WHERE `id`
     ); 
     $this->assertEquals($expected, $result);
 
+
+
     // Set 1 => 4 (geen kinderen)
     $new = $this->CI->order->set($this->table,1,4);
     $this->assertEquals( 4, $new );
-    $result = $this->_result();
+    $result = $this->_result(true);
     $expected = array(
-      '2'=>array( 'id'=>'2', 'order'=>'0' ),
-      '3'=>array( 'id'=>'3', 'order'=>'1' ),
-      '5'=>array( 'id'=>'5', 'order'=>'2' ),
-      '4'=>array( 'id'=>'4', 'order'=>'3' ),
-      '1'=>array( 'id'=>'1', 'order'=>'4' ),
+      '2'=>array( 'id'=>'2', 'order'=>'0', 'self_parent' => 0 ),
+      '3'=>array( 'id'=>'3', 'order'=>'1', 'self_parent' => 2 ),
+      '5'=>array( 'id'=>'5', 'order'=>'2', 'self_parent' => 2 ),
+      '4'=>array( 'id'=>'4', 'order'=>'3', 'self_parent' => 0 ),
+      '1'=>array( 'id'=>'1', 'order'=>'4', 'self_parent' => 0 ),
     );
     $this->assertEquals($expected, $result);
 
     // Set 4 => 0
     $new = $this->CI->order->set($this->table,4,0);
     $this->assertEquals( 0, $new );
-    $result = $this->_result();
+    $result = $this->_result(true);
     $expected = array(
-      '4'=>array( 'id'=>'4', 'order'=>'0' ),
-      '2'=>array( 'id'=>'2', 'order'=>'1' ),
-      '3'=>array( 'id'=>'3', 'order'=>'2' ),
-      '5'=>array( 'id'=>'5', 'order'=>'3' ),
-      '1'=>array( 'id'=>'1', 'order'=>'4' ),
+      '4'=>array( 'id'=>'4', 'order'=>'0', 'self_parent' => 0 ),
+      '2'=>array( 'id'=>'2', 'order'=>'1', 'self_parent' => 0 ),
+      '3'=>array( 'id'=>'3', 'order'=>'2', 'self_parent' => 2 ),
+      '5'=>array( 'id'=>'5', 'order'=>'3', 'self_parent' => 2 ),
+      '1'=>array( 'id'=>'1', 'order'=>'4', 'self_parent' => 0 ),
     );
     $this->assertEquals($expected, $result);
     
     // Set 2 => 0 (met kinderen)
     $new = $this->CI->order->set($this->table,2,0);
     $this->assertEquals( 0, $new );
-    $result = $this->_result();
+    $result = $this->_result(true);
     $expected = array(
-      '2'=>array( 'id'=>'2', 'order'=>'0' ),
-      '3'=>array( 'id'=>'3', 'order'=>'1' ),
-      '5'=>array( 'id'=>'5', 'order'=>'2' ),
-      '4'=>array( 'id'=>'4', 'order'=>'3' ),
-      '1'=>array( 'id'=>'1', 'order'=>'4' ),
+      '2'=>array( 'id'=>'2', 'order'=>'0', 'self_parent' => 0 ),
+      '3'=>array( 'id'=>'3', 'order'=>'1', 'self_parent' => 2 ),
+      '5'=>array( 'id'=>'5', 'order'=>'2', 'self_parent' => 2 ),
+      '4'=>array( 'id'=>'4', 'order'=>'3', 'self_parent' => 0 ),
+      '1'=>array( 'id'=>'1', 'order'=>'4', 'self_parent' => 0 ),
     );
     $this->assertEquals($expected, $result);
 
     // Set 2 => 2 (met kinderen)
     $new = $this->CI->order->set($this->table,2,2);
     $this->assertEquals( 2, $new );
-    $result = $this->_result();
+    $result = $this->_result(true);
     $expected = array(
-      '4'=>array( 'id'=>'4', 'order'=>'0' ),
-      '1'=>array( 'id'=>'1', 'order'=>'1' ),
-      '2'=>array( 'id'=>'2', 'order'=>'2' ),
-      '3'=>array( 'id'=>'3', 'order'=>'3' ),
-      '5'=>array( 'id'=>'5', 'order'=>'4' ),
+      '4'=>array( 'id'=>'4', 'order'=>'0', 'self_parent' => 0 ),
+      '1'=>array( 'id'=>'1', 'order'=>'1', 'self_parent' => 0 ),
+      '2'=>array( 'id'=>'2', 'order'=>'2', 'self_parent' => 0 ),
+      '3'=>array( 'id'=>'3', 'order'=>'3', 'self_parent' => 2 ),
+      '5'=>array( 'id'=>'5', 'order'=>'4', 'self_parent' => 2 ),
     );
     $this->assertEquals($expected, $result);
 
@@ -283,6 +302,47 @@ UPDATE `tbl_menu` SET `order`='4', `self_parent`='0', `uri`='contact' WHERE `id`
       '5'=>array( 'id'=>'5', 'order'=>'4', 'self_parent'=>2 ),
     );
     $this->assertEquals($expected, $result);
+
+    // Set 1 => 2 (word een kind)
+    $new = $this->CI->order->set($this->table,1,2);
+    $this->assertEquals( 2, $new );
+    $result = $this->_result(true);
+    $expected = array(
+      '4'=>array( 'id'=>'4', 'order'=>'0', 'self_parent'=>0 ),
+      '2'=>array( 'id'=>'2', 'order'=>'1', 'self_parent'=>0 ),
+      '1'=>array( 'id'=>'1', 'order'=>'2', 'self_parent'=>2 ),
+      '3'=>array( 'id'=>'3', 'order'=>'3', 'self_parent'=>2 ),
+      '5'=>array( 'id'=>'5', 'order'=>'4', 'self_parent'=>2 ),
+    );
+    $this->assertEquals($expected, $result);
+
+    // Set 2 => 0 (met alle kinderen)
+    $new = $this->CI->order->set($this->table,2,0);
+    $this->assertEquals( 0, $new );
+    $result = $this->_result(true);
+    $expected = array(
+      '2'=>array( 'id'=>'2', 'order'=>'0', 'self_parent'=>0 ),
+      '1'=>array( 'id'=>'1', 'order'=>'1', 'self_parent'=>2 ),
+      '3'=>array( 'id'=>'3', 'order'=>'2', 'self_parent'=>2 ),
+      '5'=>array( 'id'=>'5', 'order'=>'3', 'self_parent'=>2 ),
+      '4'=>array( 'id'=>'4', 'order'=>'4', 'self_parent'=>0 ),
+    );
+    $this->assertEquals($expected, $result);
+
+    // Set 2 => 1 (met alle kinderen)
+    $new = $this->CI->order->set($this->table,2,1);
+    $this->assertEquals( 1, $new );
+    $result = $this->_result(true);
+    $expected = array(
+      '4'=>array( 'id'=>'4', 'order'=>'0', 'self_parent'=>0 ),
+      '2'=>array( 'id'=>'2', 'order'=>'1', 'self_parent'=>0 ),
+      '1'=>array( 'id'=>'1', 'order'=>'2', 'self_parent'=>2 ),
+      '3'=>array( 'id'=>'3', 'order'=>'3', 'self_parent'=>2 ),
+      '5'=>array( 'id'=>'5', 'order'=>'4', 'self_parent'=>2 ),
+    );
+    $this->assertEquals($expected, $result);
+
+
 
   }
     
