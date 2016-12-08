@@ -280,8 +280,13 @@ class order extends CI_Model {
               ->select('id,self_parent,order')
               ->where( 'order', $childrenOrder )
               ->get_row();
-      if ($next and $next['self_parent']!==$parent) {
-        array_push($children_ids,$next['id']);
+      if ($next) {
+        if ($next['self_parent']===$parent) {
+          $next=false;
+        }
+        else {
+          array_push($children_ids,$next['id']);
+        }
       }
       $childrenOrder++;
     } while ($next);
