@@ -646,7 +646,7 @@ export default {
               <th v-if="isPrimaryHeader(field)" :class="headerClass(field)" class="text-primary grid-actions">
                 <flexy-button @click.native="newItem()" icon="plus" class="btn-outline-warning" />
                 <flexy-button @click.native="removeItems()" icon="remove" :class="{disabled:!hasSelection()}" class="btn-outline-danger" />
-                <flexy-button @click.native="reverseSelection()" icon="square-o" class="btn-outline-info" />
+                <flexy-button @click.native="reverseSelection()" icon="circle-o" class="btn-outline-info" />
               </th>
               <th v-if="isNormalVisibleHeader(field)" :class="headerClass(field)"  class="text-primary">
                 <a :href="createdUrl({'order':(key==order?'_'+key:key)})"><span>{{field.name}}</span>
@@ -666,11 +666,11 @@ export default {
               <td v-if="cell.type=='primary'" class="action">
                 <flexy-button @click.native="editItem(cell.value)" icon="pencil" class="btn-outline-warning" />
                 <flexy-button @click.native="removeItems(row.id.value)" icon="remove" class="btn-outline-danger" />
-                <flexy-button @click.native="select(row.id.value)" :icon="{'square-o':!isSelected(row.id.value),'check-square-o':isSelected(row.id.value)}" class="btn-outline-info" />
+                <flexy-button @click.native="select(row.id.value)" :icon="{'circle-o':!isSelected(row.id.value),'circle':isSelected(row.id.value)}" class="btn-outline-info" />
                 <flexy-button v-if="gridType==='tree' || gridType==='ordered'" icon="reorder" class="draggable-handle btn-outline-info" :class="{'active':isDragging(row.id.value)}" />
               </td>
               <!-- CELL -->
-              <flexy-grid-cell v-else :type="cell.type" :name="cell.name" :value="cell.value" :level="rowLevel(row)" :primary="{'table':name,'id':row.id.value}" :editable="isEditable(cell.name)" :readonly="isReadonly(cell.name)" :options="fields[cell.name]"></flexy-grid-cell>
+              <flexy-grid-cell v-else @select="select(row.id.value)" :type="cell.type" :name="cell.name" :value="cell.value" :level="rowLevel(row)" :primary="{'table':name,'id':row.id.value}" :editable="isEditable(cell.name)" :readonly="isReadonly(cell.name)" :options="fields[cell.name]"></flexy-grid-cell>
             </template>
           </tr>
         </draggable>
@@ -730,43 +730,48 @@ export default {
   .grid.grid-media-view-thumbs table.grid-data tbody { display:flex; flex-wrap:wrap; }
   .grid.grid-media-view-thumbs table.grid-data tbody tr {
     position:relative;
-    width:202px;
-    height:268px;
-    margin:.5rem;
-    padding:0;
+    width:15rem;
+    height:16.75rem;
+    margin:.75rem;
     overflow:visible;
-    border:solid 1px $gray-lighter;
     border-radius:$border-radius;
-    background-color:$gray-lightest;
+    overflow:hidden;
   }
-  .grid.grid-media-view-thumbs table.grid-data tbody tr:hover {border-color:$brand-primary;}
-  .grid.grid-media-view-thumbs table.grid-data tbody tr.is-selected {background-color:$gray-lighter;border-color:$brand-warning;}
+  .grid.grid-media-view-thumbs table.grid-data tbody tr:hover {border-color:$brand-primary;box-shadow:0 0 .1rem $gray;}
+  .grid.grid-media-view-thumbs table.grid-data tbody tr.is-selected {background-color:$gray-lighter;border-color:$brand-primary;box-shadow:0 0 .5rem $gray;}
   .grid.grid-media-view-thumbs table.grid-data tbody td {border:none;padding:0px;background-color:transparent;}
+  .grid.grid-media-view-thumbs table.grid-data tbody td.action {display:none;}
   .grid.grid-media-view-thumbs table.grid-data tbody td[name="media_thumb"] {
     width:100%;
     height:100%;
   }
-  .grid.grid-media-view-thumbs table.grid-data tbody td[name="media_thumb"] img {
+  .grid.grid-media-view-thumbs table.grid-data tbody td[name="media_thumb"] .flexy-thumb {
     position:absolute;
     width:auto;
     height:auto;
-  	top: 50%; left:50%;
-  	transform: translate(-50%,-50%);
-    border:solid 1px $brand-primary;
-    border-radius:$border-radius;
+    bottom: 2rem; left:50%;
+    transform: translate(-50%,0);
   }
-  .grid.grid-media-view-thumbs table.grid-data tbody td.action {
+  .grid.grid-media-view-thumbs table.grid-data tbody td[name="media_thumb"] .flexy-thumb {
     position:absolute;
-    text-align:center;
-    width:100%;
-    top:.25rem;
+    width:auto;
+    max-width:14rem;
+    height:auto;
+    max-height:16rem;
+    bottom: 2.25rem; left:50%;
+    transform: translate(-50%,0);
   }
+  .grid.grid-media-view-thumbs table.grid-data tbody td[name="media_thumb"] .flexy-thumb img {
+  }
+  
   .grid.grid-media-view-thumbs table.grid-data tbody td[name="alt"] {
     position:absolute;
     bottom:.35rem;
     width:100%;
     text-align:center;
-    color:$brand-primary;
+    color:$brand-primary!important;
+    overflow:hidden;
+    text-overflow:ellipsis;
   }
 
   .grid.grid-media-view-thumbs table.grid-data tbody td[name='name'],
