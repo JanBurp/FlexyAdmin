@@ -28,7 +28,7 @@
 //@import "../../../node_modules/bootstrap/scss/animation";
 @import "../../../node_modules/bootstrap/scss/dropdown";
 @import "../../../node_modules/bootstrap/scss/button-group";
-//@import "../../../node_modules/bootstrap/scss/input-group";
+@import "../../../node_modules/bootstrap/scss/input-group";
 @import "../../../node_modules/bootstrap/scss/custom-forms";
 @import "../../../node_modules/bootstrap/scss/nav";
 @import "../../../node_modules/bootstrap/scss/navbar";
@@ -101,6 +101,11 @@ a>.fa, .btn>.fa {margin-right:.35rem;margin-left:.35rem;}
 }
 .nav-pills .nav-link.active {background-color: $brand-primary; color: $body-bg!important;}
 .nav-pills .nav-link:not(.active):hover, .nav-pills .nav-link:not(.active):focus {background-color: $gray-lighter; color: $brand-primary!important;}
+
+/* Buttons */
+.btn-default {background-color:$body-bg;color:$brand-primary;}
+.btn-default:hover {background-color:$brand-info;color:$body-bg;}
+
 
 /* HELP */
 .flexy-help {

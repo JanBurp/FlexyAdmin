@@ -177,7 +177,7 @@ export default {
 
 <style>
   .grid td {overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:250px;}
-  .grid td.grid-cell-type-checkbox, .grid td.grid-cell-type-media {text-align:center;}
+  .grid td.grid-cell-type-checkbox {text-align:center;}
   .grid .color-thumb-sm {padding:0.125rem .5rem;margin:0;}
   .grid td.grid-cell-editable {cursor:pointer;}
   /* tree, branches & nodes */
