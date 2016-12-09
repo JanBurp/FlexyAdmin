@@ -455,7 +455,7 @@ mark,
   padding: 0.5rem 1rem;
   margin-bottom: 1rem;
   font-size: 1.25rem;
-  border-left: 0.25rem solid #DEA; }
+  border-left: 0.25rem solid #eceeef; }
 
 .blockquote-footer {
   display: block;
@@ -468,7 +468,7 @@ mark,
   padding-right: 1rem;
   padding-left: 0;
   text-align: right;
-  border-right: 0.25rem solid #DEA;
+  border-right: 0.25rem solid #eceeef;
   border-left: 0; }
 
 .blockquote-reverse .blockquote-footer::before {
@@ -1185,12 +1185,12 @@ dl.row > dd + dt {
   .table td {
     padding: 0.75rem;
     vertical-align: top;
-    border-top: 1px solid #DEA; }
+    border-top: 1px solid #eceeef; }
   .table thead th {
     vertical-align: bottom;
-    border-bottom: 2px solid #DEA; }
+    border-bottom: 2px solid #eceeef; }
   .table tbody + tbody {
-    border-top: 2px solid #DEA; }
+    border-top: 2px solid #eceeef; }
   .table .table {
     background-color: #fff; }
 
@@ -1199,10 +1199,10 @@ dl.row > dd + dt {
   padding: 0.3rem; }
 
 .table-bordered {
-  border: 1px solid #DEA; }
+  border: 1px solid #eceeef; }
   .table-bordered th,
   .table-bordered td {
-    border: 1px solid #DEA; }
+    border: 1px solid #eceeef; }
   .table-bordered thead th,
   .table-bordered thead td {
     border-bottom-width: 2px; }
@@ -1274,10 +1274,10 @@ dl.row > dd + dt {
 
 .thead-default th {
   color: #55595c;
-  background-color: #DEA; }
+  background-color: #eceeef; }
 
 .table-inverse {
-  color: #DEA;
+  color: #eceeef;
   background-color: #373a3c; }
   .table-inverse th,
   .table-inverse td,
@@ -1301,11 +1301,11 @@ dl.row > dd + dt {
 
 .table-reflow th,
 .table-reflow td {
-  border-top: 1px solid #DEA;
-  border-left: 1px solid #DEA; }
+  border-top: 1px solid #eceeef;
+  border-left: 1px solid #eceeef; }
   .table-reflow th:last-child,
   .table-reflow td:last-child {
-    border-right: 1px solid #DEA; }
+    border-right: 1px solid #eceeef; }
 
 .table-reflow thead:last-child tr:last-child th,
 .table-reflow thead:last-child tr:last-child td,
@@ -1313,14 +1313,14 @@ dl.row > dd + dt {
 .table-reflow tbody:last-child tr:last-child td,
 .table-reflow tfoot:last-child tr:last-child th,
 .table-reflow tfoot:last-child tr:last-child td {
-  border-bottom: 1px solid #DEA; }
+  border-bottom: 1px solid #eceeef; }
 
 .table-reflow tr {
   float: left; }
   .table-reflow tr th,
   .table-reflow tr td {
     display: block !important;
-    border: 1px solid #DEA; }
+    border: 1px solid #eceeef; }
 
 .form-control {
   display: block;
@@ -1346,7 +1346,7 @@ dl.row > dd + dt {
     color: #999;
     opacity: 1; }
   .form-control:disabled, .form-control[readonly] {
-    background-color: #DEA;
+    background-color: #eceeef;
     opacity: 1; }
   .form-control:disabled {
     cursor: not-allowed; }
@@ -2239,7 +2239,7 @@ input[type="button"].btn-block {
   .custom-select:disabled {
     color: #818a91;
     cursor: not-allowed;
-    background-color: #DEA; }
+    background-color: #eceeef; }
   .custom-select::-ms-expand {
     opacity: 0; }
 
@@ -2336,7 +2336,7 @@ input[type="button"].btn-block {
     border-top-right-radius: 0.25rem;
     border-top-left-radius: 0.25rem; }
     .nav-tabs .nav-link:focus, .nav-tabs .nav-link:hover {
-      border-color: #DEA #DEA #ddd; }
+      border-color: #eceeef #eceeef #ddd; }
     .nav-tabs .nav-link.disabled, .nav-tabs .nav-link.disabled:focus, .nav-tabs .nav-link.disabled:hover {
       color: #818a91;
       background-color: transparent;
@@ -2964,7 +2964,7 @@ input[type="button"].btn-block {
   border: 1px solid #ddd; }
   .page-link:focus, .page-link:hover {
     color: #476b47;
-    background-color: #DEA;
+    background-color: #eceeef;
     border-color: #ddd; }
 
 .pagination-lg .page-link {
@@ -3209,7 +3209,7 @@ base::-moz-progress-bar,
   vertical-align: text-top !important; }
 
 .bg-faded {
-  background-color: #f7fbea; }
+  background-color: #f7f7f9; }
 
 .bg-primary {
   background-color: #696 !important; }
@@ -3749,14 +3749,14 @@ a > .fa, .btn > .fa {
 #header, #footer {
   padding-top: 0px;
   padding-bottom: 0px;
-  background-color: #f7fbea; }
+  background-color: #f7f7f9; }
 
 #header {
-  border-bottom: solid 1px #DEA;
+  border-bottom: solid 1px #eceeef;
   height: 45.5px; }
 
 #footer {
-  border-top: solid 1px #DEA;
+  border-top: solid 1px #eceeef;
   min-height: 45.5px; }
 
 #header .nav, #footer .nav {
@@ -3786,8 +3786,8 @@ a > .fa, .btn > .fa {
 
 /* SIDEBAR MENU */
 #flexy-menu-side > ul {
-  background-color: #f7fbea;
-  border: solid 1px #DEA;
+  background-color: #f7f7f9;
+  border: solid 1px #eceeef;
   margin-bottom: 1rem;
   border-radius: .25rem; }
 
@@ -3803,7 +3803,7 @@ a > .fa, .btn > .fa {
   color: #fff !important; }
 
 .nav-pills .nav-link:not(.active):hover, .nav-pills .nav-link:not(.active):focus {
-  background-color: #DEA;
+  background-color: #eceeef;
   color: #696 !important; }
 
 /* HELP */
@@ -3850,11 +3850,11 @@ a > .fa, .btn > .fa {
 
 .card.form .form-group.row:hover {
   border-radius: 0.25rem;
-  background-color: #DEA; }
+  background-color: #eceeef; }
 
 /* SORTABLE */
 .sortable-chosen, .sortable-fallback {
-  background-color: #f7fbea;
+  background-color: #f7f7f9;
   box-shadow: 0 0 0.5rem #373a3c; }
 
 /* GRID / MEDIA */
@@ -3863,7 +3863,7 @@ a > .fa, .btn > .fa {
   border-radius: 0.125rem; }
 
 .grid .grid-relation-item {
-  border: solid 1px #DEA;
+  border: solid 1px #eceeef;
   border-radius: 0.25rem;
   padding: .15rem .35rem;
   margin-right: .25rem; }
