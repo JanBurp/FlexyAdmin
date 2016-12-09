@@ -97,7 +97,7 @@ export default {
             break;
           
           default:
-            var currentValue = self.item;
+            // var currentValue = self.item;
             // var newValue = ....
             // self.postField(newValue).then(function(response){
             //   if (!response.error) {
@@ -106,6 +106,9 @@ export default {
             // });
             break;
         }
+      }
+      else {
+        self.$emit('select');
       }
     },
     
@@ -140,7 +143,7 @@ export default {
 </script>
 
 <template>
-  <td v-if="type!=='hidden'"  :type="type" :name="name" value="item" :class="cellClass" :level="level" v-on:click="edit()">
+  <td v-if="type!=='hidden'" @click="edit()" :type="type" :name="name" value="item" :class="cellClass" :level="level">
     <span v-if="showTreeNode" class="fa fa-level-up fa-rotate-90 text-muted"></span>
 
     <template v-if="isType('relation',type)">
