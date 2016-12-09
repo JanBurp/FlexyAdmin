@@ -47,10 +47,12 @@ export default {
   <div class="flexy-thumb">
     <img v-if="type==='image'" class="media-thumb-sm" :src="src" :alt="alt" :title="alt">
     <span v-if="type!=='image'" class="fa" :class="type" :title="src"></span>
-  </template>
+  </div>
 </template>
 
 <style>
   .flexy-thumb .fa {font-size:1.6rem;}
-  .grid-media-view-thumbs .flexy-thumb .fa {font-size:14rem;}
+  .flexy-thumb img {width:auto;height:1.6rem;}
+  .grid-media-view-thumbs .flexy-thumb .fa {font-size:10rem;}
+  .grid-media-view-thumbs .flexy-thumb img {width:auto;max-width:14rem;height:auto;max-height:14rem;}
 </style>
