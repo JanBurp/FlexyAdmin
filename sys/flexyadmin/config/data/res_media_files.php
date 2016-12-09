@@ -25,7 +25,7 @@ $config['field_info'] = array(
 
 
 
-$config['order_by'] = 'dat_date DESC';
+$config['order_by'] = '_date';
 $config['abstract_fields'] = array('file','dat_date');
 
 $config['relations'] = array();

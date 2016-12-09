@@ -590,17 +590,18 @@ export default {
     <div class="card-header">
       <h1>{{title}}</h1>
       <form class="form-inline" @submit="startFinding($event)">
-        <div class="form-group" v-if="!extendedFind"><input type="text" v-model.trim="findTerm" class="form-control form-control-sm" id="grid-find" :placeholder="$lang.grid_search"></div>
+        <div class="form-group" v-if="!extendedFind"><input type="text" v-model.trim="findTerm" class="form-control form-control-sm" id="grid-find" :placeholder="$lang.grid_fast_search"></div>
         <div class="btn-group">
-          <flexy-button @click.native.stop.prevent="startFinding($event)" icon="search" class="btn-warning" />
-          <flexy-button @click.native.stop.prevent="extendedFind=!extendedFind" :icon="{'chevron-up':extendedFind,'chevron-down':!extendedFind}" class="btn-warning" />
+          <flexy-button @click.native.stop.prevent="startFinding($event)" icon="search" class="btn-default" />
+          <flexy-button @click.native.stop.prevent="extendedFind=!extendedFind" :icon="{'chevron-up':extendedFind,'chevron-down':!extendedFind}" class="btn-default" />
         </div>
       </form>
     </div>
 
     <!-- EXTENDED SEARCH -->
     <div class="card-header grid-extended-find" v-if="extendedFind">
-      <form v-for="(term,index) in extendedTerm" class="form-inline" @submit.stop.prevent="startFinding($event)">
+      <h4>{{$lang.grid_extended_search}}</h4>
+      <form v-for="(term,index) in extendedTerm" class="form-inline" @submit.stop.prevent="startFinding($event)" :index="index">
         <div class="form-group grid-extended-search-and">
           <select class="form-control form-control-sm" name="grid-extended-search-and[]" v-model="term.and">
             <option value="OR" :selected="term.and=='OR'">{{$lang.grid_search_or}}</option>
@@ -622,8 +623,8 @@ export default {
         <div class="form-group grid-extended-search-term" :class="{'has-danger':term.term===''}">
           <input type="text" class="form-control form-control-sm" v-model="term.term" :placeholder="$lang.grid_search" name="grid-extended-search-term[]">
         </div>
-        <flexy-button @click.native.stop.prevent="extendedSearchRemove(index)" icon="remove" class="btn-danger" />
-        <flexy-button @click.native.stop.prevent="extendedSearchAdd()" icon="plus" class="btn-warning" />
+        <flexy-button @click.native.stop.prevent="extendedSearchRemove(index)" icon="remove" class="btn-outline-danger" />
+        <flexy-button @click.native.stop.prevent="extendedSearchAdd()" icon="plus" class="btn-outline-warning" />
       </form>
     </div>
 
@@ -632,10 +633,10 @@ export default {
       <input id="browsefiles" @change="addUploadFiles"  type="file" name="files[]" multiple="multiple">
       <table class="table table-sm">
         <thead>
-          <tr><th>Filename</th><th>Size</th><th>Upload progress</th><th><flexy-button @click.native="startUpload" icon="upload" text="Upload" class="btn-warning" /></th></tr>
+          <tr><th>{{$lang.upload_file}}</th><th>{{$lang.upload_size}}</th><th>{{$lang.upload_progress}}</th><th><flexy-button @click.native="startUpload" icon="upload" :text="$lang.upload" class="btn-primary" /></th></tr>
         </thead>
         <tbody>
-          <tr v-for="(file,index) in uploadFiles"><td>{{file.name}}</td><td>{{Math.floor(file.size / 1024)}}k</td><td><progress class="progress progress-success progress-striped progress-animated" :value="uploadProgress[file.name] || 0" max="100"></td><td><flexy-button @click.native="removeUploadFile(index)" icon="remove" class="btn-danger" /></td></tr>
+          <tr v-for="(file,index) in uploadFiles"><td>{{file.name}}</td><td>{{Math.floor(file.size / 1024)}}k</td><td><progress class="progress progress-success progress-striped progress-animated" :value="uploadProgress[file.name] || 0" max="100"></td><td><flexy-button @click.native="removeUploadFile(index)" icon="remove" class="btn-outline-danger" /></td></tr>
         </tbody>
       </table>
     </div>
@@ -649,7 +650,7 @@ export default {
               <th v-if="isPrimaryHeader(field)" :class="headerClass(field)" class="text-primary grid-actions">
                 <flexy-button @click.native="newItem()" icon="plus" class="btn-outline-warning" />
                 <flexy-button @click.native="removeItems()" icon="remove" :class="{disabled:!hasSelection()}" class="btn-outline-danger" />
-                <flexy-button @click.native="reverseSelection()" icon="circle-o" class="btn-outline-info" />
+                <flexy-button @click.native="reverseSelection()" icon="dot-circle-o" class="btn-outline-info" />
                 
                 <div v-if="isMediaThumbs()" class="dropdown" id="dropdown-sort">
                   <flexy-button icon="sort-amount-asc" class="btn-outline-info" dropdown="dropdown-sort"/>
@@ -695,12 +696,12 @@ export default {
     <div class="card-footer text-muted">
       <div class="btn-group actions" v-if="gridType === 'media'">
         <template v-if="getMediaView()==='list'">
-          <flexy-button icon="bars" class="btn-primary" />
-          <flexy-button icon="picture-o" @click.native="setMediaView('thumbs')" class="btn-outline-primary" />
+          <flexy-button icon="bars" class="btn-primary" border="true" />
+          <flexy-button icon="picture-o" @click.native="setMediaView('thumbs')" class="btn-outline-primary" border="true"/>
         </template>
         <template v-if="getMediaView()==='thumbs'">
-          <flexy-button icon="bars" @click.native="setMediaView('list')" class="btn-outline-primary" />
-          <flexy-button icon="picture-o" class="btn-primary" />
+          <flexy-button icon="bars" @click.native="setMediaView('list')" class="btn-outline-primary" border="true"/>
+          <flexy-button icon="picture-o" class="btn-primary" border="true"/>
         </template>
       </div>
       <flexy-pagination v-if="needsPagination" :total="info.total_rows" :pages="info.num_pages" :current="info.page + 1" :limit="info.limit" :url="createdUrl({'offset':'##'})"></flexy-pagination>
@@ -717,13 +718,16 @@ export default {
 
   .grid .card-block {padding:0;}
   .grid .card-header.grid-extended-find {background-color:$gray-lighter!important;color:$brand-primary!important;}
-  .grid .card-header.grid-extended-find form {clear:both;float:right!important;margin:0 0 .25rem;}
-  .grid .card-header.grid-extended-find form:first-child>div.grid-extended-search-and {display:none;}
+  .grid .card-header.grid-extended-find h4 {float:left;color:$gray-light;opacity:.35;}
+  .grid .card-header.grid-extended-find form {float:right!important;margin:0 0 .25rem;}
+  .grid .card-header.grid-extended-find form[index="0"]>.grid-extended-search-and {display:none;}
   .grid .card-header.grid-extended-find form:last-child{margin-bottom:0;}
 
   .grid .card-block.grid-upload {padding: 1rem .5rem;background-color:$gray-lightest;}
   .grid .card-block.grid-upload input#browsefiles {display:none;}
   .grid .card-block.grid-upload progress {margin:0;height:1.5rem;}
+  .grid .card-block.grid-upload tr th {color:$brand-primary;}
+  .grid .card-block.grid-upload tr th:last-child, .grid .card-block.grid-upload tr td:last-child {text-align:right;}
   
   .grid .card-footer {padding:.35rem .35rem;}
   .grid .card-footer .actions {float:left;margin-top:.25rem;margin-right:1rem;}
