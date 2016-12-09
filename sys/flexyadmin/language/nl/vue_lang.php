@@ -12,13 +12,18 @@ $lang['vue_confirm_delete_multiple'] = "Weet u zeker dat u {0} geselecteerde ite
 $lang['vue_deleted']                 = "{0} item(s) verwijderd.";
 
 $lang['vue_grid_search']             = "Zoeken";
+$lang['vue_grid_fast_search']        = "Snel zoeken";
+$lang['vue_grid_extended_search']    = "Uitgebreid zoeken";
 $lang['vue_grid_search_and']         = "en";
 $lang['vue_grid_search_or']          = "of";
 $lang['vue_grid_search_exist']       = 'bevat';
 $lang['vue_grid_search_word']        = 'bevat woord';
 $lang['vue_grid_search_exact']       = 'is gelijk aan';
 
-
+$lang['vue_upload']            = 'Upload';
+$lang['vue_upload_file']       = 'Bestand';
+$lang['vue_upload_size']       = 'Omvang';
+$lang['vue_upload_progress']   = 'Voortgang';
 
 $lang['vue_grid_total']              = "{0} items";
 $lang['vue_grid_pagination']         = "{0} items / {1} pagina's";

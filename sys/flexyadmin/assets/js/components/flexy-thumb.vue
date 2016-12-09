@@ -52,7 +52,7 @@ export default {
 
 <style>
   .flexy-thumb .fa {font-size:1.6rem;}
-  .flexy-thumb img {width:auto;height:1.6rem;}
+  .flexy-thumb img {width:auto;height:1.8rem;}
   .grid-media-view-thumbs .flexy-thumb .fa {font-size:10rem;}
   .grid-media-view-thumbs .flexy-thumb img {width:auto;max-width:14rem;height:auto;max-height:14rem;}
 </style>

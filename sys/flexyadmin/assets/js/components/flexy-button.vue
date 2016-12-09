@@ -17,6 +17,10 @@ export default {
     'dropdown':{
       type:String,
       default:'',
+    },
+    'border': {
+      type:Boolean,
+      default:false,
     }
   },
   
@@ -37,6 +41,7 @@ export default {
       if (this.iconComputed!=='') buttonClass += ' btn-icon';
       if (this.text!=='') buttonClass += ' btn-text';
       if (this.dropdown!=='') buttonClass += ' dropdown-toggle';
+      if (!this.border) buttonClass += ' no-border';
       return buttonClass;
     },
 
@@ -69,6 +74,7 @@ export default {
 
 <style>
   .dropdown {position:absolute!important;margin-left:.35rem;}
+  .flexy-button.no-border {border-color:transparent;}
   .flexy-button.disabled {opacity:.3;}
   .flexy-button.btn-icon {width:1.85rem;height:1.6rem;padding:.1rem 0 1.4rem;text-align:center;}
   .flexy-button.btn-icon.dropdown-toggle {width:3.2rem;}
