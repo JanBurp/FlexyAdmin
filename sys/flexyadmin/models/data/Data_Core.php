@@ -1568,6 +1568,11 @@ Class Data_Core extends CI_Model {
     if ( !empty($this->tm_order_by) ) {
       foreach ($this->tm_order_by as $order_by) {
         $escape=TRUE;
+        $direction = '';
+        if (substr($order_by,0,1)==='_') {
+          $direction = 'DESC';
+          $order_by = substr($order_by,1);
+        }
         // order abstract
         if (has_string('.abstract',$order_by)) {
           $escape=FALSE;
@@ -1580,7 +1585,7 @@ Class Data_Core extends CI_Model {
           $order_by=explode(' ',$order_by);
           $order_by=trim('`'.str_replace('.','`.`',$order_by[0]).'` '.el(1,$order_by,''));
         }
-        $this->db->order_by( $order_by, '' ,$escape );
+        $this->db->order_by( $order_by, $direction ,$escape );
       }
     }
 
@@ -2063,15 +2068,15 @@ Class Data_Core extends CI_Model {
     }
     else {
       $sort_field = $sort;
-      $sort_desc = '';
+      $sort_direction = '';
       if (substr($sort,0,1)=='_') {
         $sort_field = trim($sort,'_');
-        $sort_desc  = 'DESC';
+        $sort_direction  = 'DESC';
       }
       if (isset($many_to_one_fields) and in_array($sort_field,$many_to_one_fields)) {
         $sort_field = $grid_set['with']['many_to_one'][$sort_field]['result_name'].'.abstract';
       }
-      $sort = trim($sort_field.' '.$sort_desc);
+      $sort = trim($sort_field.' '.$sort_direction);
     }
     $this->order_by( $sort );
     
@@ -3804,6 +3809,7 @@ Class Data_Core extends CI_Model {
    * - De eerste parameter kan een array van strings kan zijn.
    * - Als de eerste parameter een array is en de tweede parameter (direction) is meegegeven, dan geld die direction alleen voor de eerste waarde in de array.
    * - De direction parameter kan naast 'DESC','ASC' en 'RANDOM' ook 'RAND' zijn (dit lijkt meer op de SQL)
+   * - Als de naam van het veld begint met '_' dan wordt automatisch de direction op 'DESC' gezet
    * 
    * eerste parameter is een array
    * -----------------------------
