@@ -46,19 +46,7 @@ class Show extends AdminController {
     // trace_($data);
     
     // Default order
-    if (empty($options['order'])) {
-      $order = $this->data->get_setting('order_by');
-      if (!empty($order)) {
-        $order = explode(',',$order)[0];
-        $order = explode(' ',$order);
-        if (isset($order[1]) and strtoupper($order[1])==='DESC') {
-          $options['order'] = '_'.$order[0];
-        }
-        else {
-          $options['order'] = $order[0];
-        }
-      }
-    }
+    $options['order'] = $this->_order($options['order']);
     
     // Fields
     $fields = $this->_prepareFields('grid_set',array(),$data);
@@ -92,10 +80,14 @@ class Show extends AdminController {
     
     // Data
     $this->data->table('res_media_files');
+    $this->data->order_by($options['order']);
     $files = $this->data->get_files( $path, $options['find'], $options['limit'], $options['offset'], TRUE );
     
     // Fields
     $fields = $this->_prepareFields('',array(),$files,array('path'=>$path));
+    
+    // Default order
+    $options['order'] = $this->_order($options['order']);
     
     // Show grid
     $grid = array(
@@ -109,6 +101,30 @@ class Show extends AdminController {
       'type'    => 'media',
     );
 	  $this->view_admin( 'vue/grid', $grid );
+  }
+
+  /**
+   * Geeft standaard order
+   *
+   * @param string $order 
+   * @return void
+   * @author Jan den Besten
+   */
+  private function _order($order) {
+    if (empty($order)) {
+      $order = $this->data->get_setting('order_by');
+      if (!empty($order)) {
+        $order = explode(',',$order)[0];
+        $order = explode(' ',$order);
+        if (isset($order[1]) and strtoupper($order[1])==='DESC') {
+          $order = '_'.$order[0];
+        }
+        else {
+          $order = $order[0];
+        }
+      }
+    }
+    return $order;
   }
   
   
@@ -237,6 +253,8 @@ class Show extends AdminController {
     $schema=array_unset_keys($schema,array('grid','form','default','format' )); // TODO kan (deels) weg als oude ui weg is
     // Most fields are read-only when media
     if ($media and $field!=='alt') $schema['readonly'] = true;
+    if ($field==='media_thumb') $schema['sortable'] = false;
+    if ($field==='rawdate') $schema['sortable'] = false;
     return $schema;
   }
 

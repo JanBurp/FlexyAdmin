@@ -14,6 +14,10 @@ export default {
       type: String,
       default:''
     },
+    'dropdown':{
+      type:String,
+      default:'',
+    }
   },
   
   computed: {
@@ -32,6 +36,7 @@ export default {
       var buttonClass='btn';
       if (this.iconComputed!=='') buttonClass += ' btn-icon';
       if (this.text!=='') buttonClass += ' btn-text';
+      if (this.dropdown!=='') buttonClass += ' dropdown-toggle';
       return buttonClass;
     },
 
@@ -45,16 +50,28 @@ export default {
 
   },
   
+  methods :  {
+    
+    openDropdown : function() {
+      if (this.dropdown!=='') {
+        document.getElementById(this.dropdown).classList.toggle('open');
+      }
+    },
+    
+  },
+  
 }
 </script>
 
 <template>
-  <button type="button" class="flexy-button" :class="buttonClass"><span v-if="iconComputed!==''" :class="iconClass"></span><span v-if="text!==''">{{text}}</span></button>
+  <button @click="openDropdown" type="button" class="flexy-button" :class="buttonClass"><span v-if="iconComputed!==''" :class="iconClass"></span><span v-if="text!==''">{{text}}</span></button>
 </template>
 
 <style>
+  .dropdown {position:absolute!important;margin-left:.35rem;}
   .flexy-button.disabled {opacity:.3;}
   .flexy-button.btn-icon {width:1.85rem;height:1.6rem;padding:.1rem 0 1.4rem;text-align:center;}
+  .flexy-button.btn-icon.dropdown-toggle {width:3.2rem;}
   .flexy-button.btn-icon .fa {width:1rem;}
   .flexy-button.btn-text {width:auto!important;padding-right:.55rem;text-transform:uppercase;}
 </style>
