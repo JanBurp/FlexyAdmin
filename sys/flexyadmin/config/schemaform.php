@@ -16,11 +16,13 @@ $config['FIELDS_default'] = array(
   'type'       => 'string',
   'form-type'  => 'text',
   'readonly'   => false,
+  'sortable'   => true,
   'format'     => 'string',
   'grid'       => '%s',
   'form'       => '',
   'validation' => '',
   'default'    => ''
+    
 );
 
 /**
@@ -138,6 +140,7 @@ $config['FIELDS_prefix'] = array (
     'type'        => 'string',
     'form-type'   => 'password',
     'grid'        => '***',
+    'sortable'    => false,
     'form'        => 'password',
     'validation'  => 'trim|valid_password'
   ),
@@ -145,6 +148,7 @@ $config['FIELDS_prefix'] = array (
     'type'        => 'string',
     'form-type'   => 'password',
     'grid'        => '***',
+    'sortable'    => false,
     'form'        => 'password',
     'validation'  => 'trim|valid_password'
   ),
@@ -295,6 +299,7 @@ $config['FIELDS_special'] = array(
     'type'        => 'number',
     'form-type'   => 'primary',
     'readonly'    => true,
+    'sortable'    => false,
     'grid'        => 'function_primary_key',
     'form'        => 'function_primary_key',
     'validation'	=> 'trim|integer|required',
@@ -342,6 +347,7 @@ $config['FIELDS_special'] = array(
   'actions'   => array(
     'type'        => 'string',
     'form-type'   => 'text',
+    'sortable'    => false,
     'grid'        => 'function_actions',
     'form'        => '',
     'validation'	=> '',
@@ -352,6 +358,7 @@ $config['FIELDS_special'] = array(
     'type'        => 'number',
     'form-type'   => 'hidden',
     'readonly'    => true,
+    'sortable'    => false,
     'grid'        => 'function_order',
     'form'        => 'hidden',
     'validation'	=> 'trim',
@@ -360,6 +367,7 @@ $config['FIELDS_special'] = array(
 	'self_parent'	  => array(
     'type'        => 'integer',
     'form-type'   => 'select',
+    'sortable'    => false,
     'grid-type'   => 'hidden',
     'grid'        => 'function_self',
     'form'        => 'function_self',
@@ -435,6 +443,7 @@ $config['FIELDS_special'] = array(
     'form-type'  => 'select',
     'grid-type'  => 'select',
     'validation' => 'required|trim',
+    'sortable'    => false,
   ),
   'type' => array(
     'type'      => 'string',
