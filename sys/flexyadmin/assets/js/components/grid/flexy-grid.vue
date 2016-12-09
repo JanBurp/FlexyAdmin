@@ -220,6 +220,10 @@ export default {
       var headerType = field.schema['grid-type'] || field.schema['form-type'];
       return headerType!=='hidden' && headerType!=='primary'
     },
+
+    isMediaThumbs : function() {
+      return (this.gridType==='media' && this.getMediaView()==='thumbs');
+    },
     
     getMediaView : function() {
       return flexyState.getMediaView();
@@ -646,6 +650,18 @@ export default {
                 <flexy-button @click.native="newItem()" icon="plus" class="btn-outline-warning" />
                 <flexy-button @click.native="removeItems()" icon="remove" :class="{disabled:!hasSelection()}" class="btn-outline-danger" />
                 <flexy-button @click.native="reverseSelection()" icon="circle-o" class="btn-outline-info" />
+                
+                <div v-if="isMediaThumbs()" class="dropdown" id="dropdown-sort">
+                  <flexy-button icon="sort-amount-asc" class="btn-outline-info" dropdown="dropdown-sort"/>
+                  <div class="dropdown-menu">
+                    <a v-for="(field,key) in fields" v-if="field.schema.sortable" :href="createdUrl({'order':(key==order?'_'+key:key)})" class="dropdown-item" :class="{'selected':(order.indexOf(key)>=0)}">
+                      <span v-if="order==key" class="fa fa-caret-up"></span>
+                      <span v-if="order=='_'+key" class="fa fa-caret-down"></span>
+                      {{field.name}}
+                    </a>
+                  </div>
+                </div>
+                
               </th>
               <th v-if="isNormalVisibleHeader(field)" :class="headerClass(field)"  class="text-primary">
                 <a :href="createdUrl({'order':(key==order?'_'+key:key)})"><span>{{field.name}}</span>
@@ -715,6 +731,7 @@ export default {
   
   .grid table {margin-bottom:0;}
   .grid th {overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .grid th>* {display:inline-block;position:relative;}
   .grid th a {text-decoration:none;}
   .grid th span {white-space:nowrap;text-transform:uppercase;}
   .grid th > span.fa {position:relative;float:right;margin-top:1px;}
@@ -722,6 +739,10 @@ export default {
   .grid.grid-type-tree th.grid-header-type-primary {width:8rem;max-width:8rem;min-width:8rem;}
   .grid .draggable-handle {cursor:move;}
   .grid .sortable-fallback {display:none;}
+  
+  .grid #dropdown-sort .dropdown-menu {min-width:4rem;}
+  .grid #dropdown-sort .dropdown-item {padding:.1rem 1rem .1rem .35rem;padding-left:2rem;}
+  .grid #dropdown-sort .dropdown-item.selected {padding-left:.35rem;}
   
   .grid option, .grid select {text-transform:uppercase;}
   

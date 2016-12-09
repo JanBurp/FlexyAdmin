@@ -14,6 +14,7 @@ var _ = require('lodash');
 import Vue              from 'vue'
 import Lang             from 'vue-lang'
 import Axios            from 'axios'
+// import BootstrapVue     from 'bootstrap-vue';
 
 import jdb              from './jdb-tools.js'
 import flexyState       from './flexy-state.js'
@@ -26,6 +27,8 @@ import FlexyPagination  from './components/flexy-pagination.vue'
 import FlexyGrid        from './components/grid/flexy-grid.vue'
 import FlexyForm        from './components/form/flexy-form.vue'
 
+// Globally register bootstrap-vue components
+// Vue.use(BootstrapVue);
 
 // Language settings
 const LOCALES = {};
