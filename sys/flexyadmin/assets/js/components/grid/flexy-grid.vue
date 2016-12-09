@@ -506,11 +506,10 @@ export default {
           if (newIndex+1 < this.items.length) {
             parent_id = this.items[newIndex+1].self_parent.value;
           }
+          items[oldIndex].self_parent.value = parent_id;
           // Verplaats item & children
           this.items = jdb.moveMultipleArrayItems( items, oldIndex, number_of_children + 1, newIndex);
         }
-        items[oldIndex].self_parent.value = parent_id;
-        
         
         // Update 'order'
         var order = this.draggable.orderStart;
