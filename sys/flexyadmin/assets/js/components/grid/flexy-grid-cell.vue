@@ -40,6 +40,7 @@ export default {
   data : function() {
     return {
       item : this.value,
+      isEditing : false,
     }
   },
   
@@ -80,13 +81,14 @@ export default {
       return items;
     },
     
-    edit : function() {
+    startEdit : function() {
+      console.log('startEdit',this.type,this.editable);
       var self = this;
+      var currentValue = self.item;
       if (this.editable) {
         switch(this.type) {
 
           case 'checkbox':
-            var currentValue = self.item;
             var newValue = 1;
             if (currentValue) newValue=0;
             self.postField(newValue).then(function(response){
@@ -95,9 +97,13 @@ export default {
               }
             });
             break;
-          
+            
+          case 'text' :
+            self.isEditing = true;
+            document.getElementById("grid-cell-input").focus();
+            break;
+            
           default:
-            // var currentValue = self.item;
             // var newValue = ....
             // self.postField(newValue).then(function(response){
             //   if (!response.error) {
@@ -110,6 +116,11 @@ export default {
       else {
         self.$emit('select');
       }
+    },
+    
+    stopEdit : function() {
+      console.log('stopEdit');
+      self.isEditing = false;
     },
     
     postField : function(value) {
@@ -143,7 +154,7 @@ export default {
 </script>
 
 <template>
-  <td v-if="type!=='hidden'" @click="edit()" :type="type" :name="name" value="item" :class="cellClass" :level="level">
+  <td v-if="type!=='hidden'" @click="startEdit()" @onfocusout="stopEdit()" :type="type" :name="name" :value="item" :class="cellClass" :level="level">
     <span v-if="showTreeNode" class="fa fa-level-up fa-rotate-90 text-muted"></span>
 
     <template v-if="isType('relation',type)">
@@ -169,7 +180,10 @@ export default {
       <a :href="item" target="_blank">{{item}}</a>
     </template>
 
-    <template v-if="isType('default',type)">{{item}}</template>
+    <template v-if="isType('default',type)">
+      <input v-if="isEditing" :value="item" id="grid-cell-input">
+      <span v-else>{{item}}</span>
+    </template>
 
   </td>
 </template>

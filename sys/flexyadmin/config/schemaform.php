@@ -109,6 +109,7 @@ $config['FIELDS_prefix'] = array (
     'type'        => 'string',
     'form-type'   => 'text',
     'grid'        => '%s',
+    'grid-edit'   => true,
     'form'        => ''
   ),
   
