@@ -2454,10 +2454,10 @@ class MY_DB_mysqli_driver extends CI_DB_mysqli_driver {
           }
         }
         break;
+
       default:
         $value=random_string();
         break;
-      default:
     }
     
     return $value;
