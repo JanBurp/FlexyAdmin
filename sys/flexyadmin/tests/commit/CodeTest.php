@@ -31,9 +31,11 @@ class CodeTest extends CITestCase {
         $lines=file($file);
         foreach ($lines as $key => $line) {
           $found=preg_match("/^\s*\s*(trace_|backtrace_|xdebug_break|var_dump)\(/u", $line);
-          if ($found) echo 'Debug helper found in `'.$file.'` at line '.($key+1)."\n".$line;
+          $this->assertLessThan(1,$found, 'Debug helper found in `'.$file.'` at line '.($key+1)."\n".$line);
+          // if ($found) echo 'Debug helper found in `'.$file.'` at line '.($key+1)."\n".$line;
           $found=preg_match("/(<<<<<<<|>>>>>>>)/uim", $line);
-          if ($found) echo 'Subversion text found in `'.$file.'` at line '.($key+1)."\n".$line;
+          $this->assertLessThan(1,$found, 'Version text found in `'.$file.'` at line '.($key+1)."\n".$line);
+          // if ($found) echo 'Subversion text found in `'.$file.'` at line '.($key+1)."\n".$line;
         }
       }
     }
