@@ -34,7 +34,8 @@ class Queu extends CI_Model {
 		if (!empty($calls)) {
 			foreach ($calls as $call) {
 				if (method_exists($call['object'],$call['method'])) {
-					$call['object']->$call['method']($call['args']);
+          $method = $call['method'];
+					$call['object']->$method($call['args']);
 				}
 			}
 		}
