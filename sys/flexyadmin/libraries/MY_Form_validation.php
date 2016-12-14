@@ -208,7 +208,7 @@ class MY_Form_validation extends CI_Form_validation {
    * @author Jan den Besten
    */
 	private function _get_db_validation($table,$field) {
-		$validation='';
+		$validation=array();
 		$info=$this->CI->db->field_data($table,$field);
 		if (isset($info['type']))
 		switch ($info['type']) {
@@ -236,7 +236,7 @@ class MY_Form_validation extends CI_Form_validation {
    * @author Jan den Besten
    */
   private function _get_db_options_validation($table,$field) {
-    $validation='';
+    $validation=array();
 		$options=$this->CI->cfg->get('cfg_field_info',$table.'.'.$field,'str_options');
     if ($options) {
       $multiple=$this->CI->cfg->get('cfg_field_info',$table.'.'.$field,'b_multi_options');
