@@ -384,12 +384,14 @@ class Filemanager extends AdminController {
    * @return void
    * @author Jan den Besten
    */
-  public function edit($path,$file) {
+  public function edit($path,$file,$ext) {
     $this->lang->load("form");
     $this->load->library('form');
     
+    $file = $file.'.'.$ext;
     $path=pathdecode($path);
     $data=$this->mediatable->get_info($path.'/'.$file);
+    
     unset($data['b_exists']);
     if (!$data) {
       $data=get_full_file_info($path.'/'.$file,FALSE);
@@ -420,7 +422,7 @@ class Filemanager extends AdminController {
     if (isset($formData['str_type'])) $formData['str_type']['type']='hidden';
     // strace_($formData);
 
-		$actionUri=api_uri('API_filemanager_edit',pathencode($path),'/'.$file);
+		$actionUri=api_uri('API_filemanager_edit',pathencode($path).'/'.str_replace('.','/',$file));
 		$form=new form($actionUri);
 
     // Ui & Help

@@ -627,7 +627,7 @@ class File_manager extends CI_Model {
           // EDIT ACTIONS
 					$edit="";
 					if ($this->showDeleteButtons)	{
-            $uri=api_uri('API_filemanager_edit',pathencode($this->path).'/'.$name);
+            $uri=api_uri('API_filemanager_edit',pathencode($this->path).'/'.str_replace('.','/',$name) );
             $edit.= anchor( $uri, help(icon("edit"),lang('grid_edit')), array("class"=>"edit"));
             $edit.= help(icon("select"),lang('grid_select')).help(icon("delete item"),lang('grid_delete'));
 					}
