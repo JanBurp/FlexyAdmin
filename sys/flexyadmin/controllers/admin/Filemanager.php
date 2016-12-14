@@ -384,12 +384,14 @@ class Filemanager extends AdminController {
    * @return void
    * @author Jan den Besten
    */
-  public function edit($path,$file) {
+  public function edit($path,$file,$ext) {
     $this->lang->load("form");
     $this->load->library('form');
     
+    $file = $file.'.'.$ext;
     $path=pathdecode($path);
     $data=$this->mediatable->get_info($path.'/'.$file);
+    
     unset($data['b_exists']);
     if (!$data) {
       $data=get_full_file_info($path.'/'.$file,FALSE);
