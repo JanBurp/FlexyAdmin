@@ -46,6 +46,8 @@ class MY_Controller extends CI_Controller {
             $testDB = read_file($file);
             $this->load->dbutil();
             $this->dbutil->import($testDB);
+            echo "> FlexyAdmin ". read_file('sys/build.txt') . "\n";
+            echo "> Testing on PHP ". phpversion() . "\n";
             echo "> Test database loaded. (".$file.")\n";
           }
         }
