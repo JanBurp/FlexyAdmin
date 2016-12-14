@@ -47,6 +47,7 @@ export default {
     return {
       items       : [],
       selected    : [],
+      focus       : {id:false,cell:false},
       draggable   : {
         item        : false,
         orderStart  : 0,
@@ -78,6 +79,15 @@ export default {
   },
   
   computed:{
+    
+    dataName : function() {
+      var name = this.name;
+      if (this.gridType==='media') {
+        name = 'media_'+name;
+      }
+      return name;
+    },
+    
     /**
      * Bepaal het type grid: table, ordered of tree
      */
@@ -236,6 +246,17 @@ export default {
     
     headerClass : function(field) {
       return 'grid-header-type-'+field.schema['form-type'];
+    },
+    
+    setFocus : function(id,cell) {
+      this.focus = {id:id,cell:cell};
+    },
+    
+    hasFocus : function(id,cell) {
+      var hasFocus = true;
+      if (this.focus.id !== id) hasFocus = false;
+      if (this.focus.cell !== cell) hasFocus = false;
+      return hasFocus;
     },
     
     hasSelection : function() {
@@ -686,7 +707,7 @@ export default {
                 <flexy-button v-if="gridType==='tree' || gridType==='ordered'" icon="reorder" class="draggable-handle btn-outline-info" :class="{'active':isDragging(row.id.value)}" />
               </td>
               <!-- CELL -->
-              <flexy-grid-cell v-else @select="select(row.id.value)" :type="cell.type" :name="cell.name" :value="cell.value" :level="rowLevel(row)" :primary="{'table':name,'id':row.id.value}" :editable="isEditable(cell.name)" :readonly="isReadonly(cell.name)" :options="fields[cell.name]"></flexy-grid-cell>
+              <flexy-grid-cell v-else @select="select(row.id.value)" @click.native="setFocus(row.id.value,cell.name)" :focus="hasFocus(row.id.value,cell.name)" :type="cell.type" :name="cell.name" :value="cell.value" :level="rowLevel(row)" :primary="{'table':dataName,'id':row.id.value}" :editable="isEditable(cell.name)" :readonly="isReadonly(cell.name)" :options="fields[cell.name]"></flexy-grid-cell>
             </template>
           </tr>
         </draggable>
@@ -743,6 +764,8 @@ export default {
   .grid.grid-type-tree th.grid-header-type-primary {width:8rem;max-width:8rem;min-width:8rem;}
   .grid .draggable-handle {cursor:move;}
   .grid .sortable-fallback {display:none;}
+  
+  .grid td.has-focus {box-shadow:0px 0px 2px $gray-dark inset; background-color:lighten($brand-warning,30%);}
   
   .grid #dropdown-sort .dropdown-menu {min-width:4rem;}
   .grid #dropdown-sort .dropdown-item {padding:.1rem 1rem .1rem .35rem;padding-left:2rem;}

@@ -185,7 +185,7 @@ class Row extends Api_Model {
    * @author Jan den Besten
    */
   public function index() {
-    
+
     // Check rechten
     if ($this->args['table']==='res_media_files' AND isset($this->args['path'])) {
       if ( !$this->_has_rights('media_'.$this->args['path']) ) {
@@ -196,6 +196,12 @@ class Row extends Api_Model {
       if (!$this->_has_rights($this->args['table'])) {
         return $this->_result_status401();
       }
+    }
+    
+    // Media?
+    if (substr($this->args['table'],0,6)==='media_') {
+      $this->args['path']=substr($this->args['table'],6);
+      $this->args['table']='res_media_files';
     }
     
     // DEFAULTS
@@ -269,6 +275,7 @@ class Row extends Api_Model {
     // Alleen de velden die anders zijn dan huidige data
     $old_data = $this->data->where( $args['where'] )->get_row();
     $data = array_diff_multi($old_data,$data);
+    xdebug_break();
     if ($data) {
       // Save
       $this->data->set( $data );
@@ -277,7 +284,7 @@ class Row extends Api_Model {
       $this->info = $this->data->get_query_info();
       return array('id'=>$id);
     }
-    return array('id'=>$old_data['id']);
+    return false;
   }
 
 
