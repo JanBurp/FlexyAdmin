@@ -19,7 +19,7 @@ export default {
       default:'',
     },
     'border': {
-      type:Boolean,
+      type:[String,Boolean],
       default:false,
     }
   },
