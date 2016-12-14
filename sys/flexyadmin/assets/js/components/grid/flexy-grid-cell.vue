@@ -5,7 +5,7 @@ import flexyThumb from '../flexy-thumb.vue'
 export default {
   name: 'VueGridCell',
   components: {flexyThumb},
-  props:['type','name','primary','value','level','editable','readonly','options'],
+  props:['type','name','primary','value','level','editable','readonly','options','focus'],
   
   // created : function() {
   //   console.log(this.options);
@@ -30,8 +30,10 @@ export default {
       c.push('grid-cell-type-'+this.type);
       if (this.editable) c.push('grid-cell-editable');
       if (this.readonly) c.push('text-muted');
+      if (this.focus) c.push('has-focus');
       return c;
     },
+    
     showTreeNode : function() {
       return (this.name==="str_title" && this.level>0);
     },
@@ -39,8 +41,7 @@ export default {
   
   data : function() {
     return {
-      item : this.value,
-      isEditing : false,
+      item      : this.value,
     }
   },
   
@@ -81,46 +82,33 @@ export default {
       return items;
     },
     
-    startEdit : function() {
-      console.log('startEdit',this.type,this.editable);
+    contentChanged : function(event) {
       var self = this;
-      var currentValue = self.item;
-      if (this.editable) {
-        switch(this.type) {
-
-          case 'checkbox':
-            var newValue = 1;
-            if (currentValue) newValue=0;
-            self.postField(newValue).then(function(response){
-              if (!response.error) {
-                self.item = newValue;
-              }
-            });
-            break;
-            
-          case 'text' :
-            self.isEditing = true;
-            document.getElementById("grid-cell-input").focus();
-            break;
-            
-          default:
-            // var newValue = ....
-            // self.postField(newValue).then(function(response){
-            //   if (!response.error) {
-            //     self.item = newValue;
-            //   }
-            // });
-            break;
+      if (event.type==='blur') {
+        var oldValue = self.item;
+        var newValue = event.target.innerHTML;
+        if (oldValue!==newValue) {
+          self.postField(newValue).then(function(response){
+            if (!response.error) {
+              self.item = newValue;
+            }
+          });
         }
-      }
-      else {
-        self.$emit('select');
       }
     },
     
-    stopEdit : function() {
-      console.log('stopEdit');
-      self.isEditing = false;
+    clickEdit : function() {
+      var self = this;
+      var currentValue = self.item;
+      if (this.editable && this.type==='checkbox') {
+        var newValue = 1;
+        if (currentValue) newValue=0;
+        self.postField(newValue).then(function(response){
+          if (!response.error) {
+            self.item = newValue;
+          }
+        });
+      }
     },
     
     postField : function(value) {
@@ -154,7 +142,7 @@ export default {
 </script>
 
 <template>
-  <td v-if="type!=='hidden'" @click="startEdit()" @onfocusout="stopEdit()" :type="type" :name="name" :value="item" :class="cellClass" :level="level">
+  <td v-if="type!=='hidden'" :type="type" :name="name" :value="item" :class="cellClass" :level="level">
     <span v-if="showTreeNode" class="fa fa-level-up fa-rotate-90 text-muted"></span>
 
     <template v-if="isType('relation',type)">
@@ -172,8 +160,10 @@ export default {
     </template>
 
     <template v-if="isType('checkbox',type)">
-      <span v-if="item" class="fa fa-check text-success" :value="item"></span>
-      <span v-else class="fa fa-minus text-warning" :value="item"></span>
+      <div @click="clickEdit">
+        <span v-if="item" class="fa fa-check text-success" :value="item"></span>
+        <span v-else class="fa fa-minus text-warning" :value="item"></span>
+      </div>
     </template>
     
     <template v-if="isType('url',type)">
@@ -181,8 +171,7 @@ export default {
     </template>
 
     <template v-if="isType('default',type)">
-      <input v-if="isEditing" :value="item" id="grid-cell-input">
-      <span v-else>{{item}}</span>
+      <span :contenteditable="(editable && focus)" @keyup="contentChanged" @blur="contentChanged" @paste="contentChanged" @copy="contentChanged" @cut="contentChanged" @delete="contentChanged">{{item}}</span>
     </template>
 
   </td>

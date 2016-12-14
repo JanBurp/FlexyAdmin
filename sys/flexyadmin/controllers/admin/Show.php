@@ -253,6 +253,7 @@ class Show extends AdminController {
     $schema=array_unset_keys($schema,array('grid','form','default','format' )); // TODO kan (deels) weg als oude ui weg is
     // Most fields are read-only when media
     if ($media and $field!=='alt') $schema['readonly'] = true;
+    if ($media and $field==='alt') $schema['grid-edit'] = true;
     if ($field==='media_thumb') $schema['sortable'] = false;
     if ($field==='rawdate') $schema['sortable'] = false;
     return $schema;
