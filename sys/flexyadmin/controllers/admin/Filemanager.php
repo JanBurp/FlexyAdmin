@@ -422,7 +422,7 @@ class Filemanager extends AdminController {
     if (isset($formData['str_type'])) $formData['str_type']['type']='hidden';
     // strace_($formData);
 
-		$actionUri=api_uri('API_filemanager_edit',pathencode($path),'/'.$file);
+		$actionUri=api_uri('API_filemanager_edit',pathencode($path).'/'.str_replace('.','/',$file));
 		$form=new form($actionUri);
 
     // Ui & Help
