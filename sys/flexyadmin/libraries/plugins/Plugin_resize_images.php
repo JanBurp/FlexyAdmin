@@ -68,7 +68,7 @@ class Plugin_resize_images extends Plugin {
     $result=array('method'=>__METHOD__,'path'=>$path,'file'=>$file,'_message'=>'-');
 
     $this->CI->load->library('upload');
-    if ($this->CI->upload->resize_image($file,assets().$path)) {
+    if ($this->CI->upload->resize_image($path,$file)) {
       $result['_message']='resized';
     }
     else {

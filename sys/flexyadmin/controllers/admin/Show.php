@@ -77,9 +77,11 @@ class Show extends AdminController {
     );
     $options = object2array(json_decode($this->input->get('options')));
     $options = array_merge($default,$options);
+    $options['find'] = html_entity_decode($options['find']);
+    if (substr($options['find'],0,1)==='[') $options['find'] = json2array($options['find']);
     
     // Data
-    $this->data->table('res_media_files');
+    $this->data->table('res_assets');
     $this->data->order_by($options['order']);
     $files = $this->data->get_files( $path, $options['find'], $options['limit'], $options['offset'], TRUE );
     
@@ -97,7 +99,7 @@ class Show extends AdminController {
       'data'    => $files,
       'info'    => $this->data->get_query_info(),
       'order'   => $options['order'],
-      'find'    => $options['find'],
+      'find'    => is_array($options['find'])?array2json($options['find']):$options['find'],
       'type'    => 'media',
     );
 	  $this->view_admin( 'vue/grid', $grid );
@@ -140,7 +142,7 @@ class Show extends AdminController {
     $args = func_get_args();
     $name = array_shift($args);
     if ($name === '_media_') {
-      $name = 'res_media_files';
+      $name = 'res_assets';
       $path = array_shift($args);
       $isMedia = true;
     }

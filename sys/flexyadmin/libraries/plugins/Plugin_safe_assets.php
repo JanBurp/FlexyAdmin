@@ -61,7 +61,7 @@ class Plugin_safe_assets extends Plugin {
       SITEPATH.'stats'                    => 0040774,
       SITEPATH.'stats/.htaccess'          => 0100644,
     );
-    $media=$this->CI->mediatable->get_media_folders();
+    $media = $this->CI->assets->get_assets_folders();
     $media[]=$this->CI->config->item('ASSETS').'_thumbcache';
     $media[]=$this->CI->config->item('ASSETS').'lists';             // 0754
     foreach ($media as $folder) {

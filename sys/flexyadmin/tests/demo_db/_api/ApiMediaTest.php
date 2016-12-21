@@ -56,15 +56,15 @@ class ApiMediaTest extends ApiTestModel {
     
     
     // Test update some files
-    $files=$this->CI->mediatable->get_files('pictures',false);
+    $files=$this->CI->assets->get_files('pictures');
     $files=array_slice($files,0,3);
     foreach ($files as $id => $file) {
       $path=$file['path'];
       $name=$file['file'];
-      $old_title=$file['str_title'];
+      $old_title=$file['alt'];
       $new_title=random_string();
       // update
-      $this->CI->media->set_args( array('POST'=>array('path'=>$path, 'where'=>$name, 'data'=>array('str_title'=>$new_title)) ) );
+      $this->CI->media->set_args( array('POST'=>array('path'=>$path, 'where'=>$name, 'data'=>array('alt'=>$new_title)) ) );
       $result = $this->CI->media->index();
       
       $this->assertArrayNotHasKey( 'status', $result );
@@ -79,7 +79,7 @@ class ApiMediaTest extends ApiTestModel {
       $name=random_string();
       $new_title=random_string();
       // update
-      $this->CI->media->set_args( array('POST'=>array('path'=>$path, 'where'=>$name, 'data'=>array('str_title'=>$new_title)) ) );
+      $this->CI->media->set_args( array('POST'=>array('path'=>$path, 'where'=>$name, 'data'=>array('alt'=>$new_title)) ) );
       $result = $this->CI->media->index();
       
       $this->assertArrayNotHasKey( 'status', $result );

@@ -26,7 +26,7 @@ $config['db'] = 'import'; // set this group in config/database_local.php
 $config['truncate_demo_tables'] = array(
   'log_activity',
   'log_stats',
-  'res_media_files',
+  'res_assets',
   'res_menu_result',
   'tbl_links',
   'tbl_menu',

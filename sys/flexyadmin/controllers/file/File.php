@@ -18,6 +18,8 @@ class File extends CI_Controller {
 	
 	function __construct()	{
 		parent::__construct();
+    $this->load->model( 'data/Data_Core','data_core' );
+    $this->load->model( 'data/Data','data' );
 	}
 
   /**
@@ -32,7 +34,7 @@ class File extends CI_Controller {
 		if (!empty($path) and !empty($file)) {
       $fullpath = SITEPATH.'assets/'.$path.'/'.$file;
 			if ( file_exists($fullpath) ) {
-        if ( in_array($path,$this->serve_rights) or $this->mediatable->has_serve_rights($path,$file) ) {
+        if ( in_array($path,$this->serve_rights) or $this->assets->has_serve_rights($path,$file) ) {
           $type=get_suffix($file,'.');
           $this->output->set_content_type($type);
           $this->output->set_output(file_get_contents($fullpath));
@@ -48,7 +50,7 @@ class File extends CI_Controller {
 		if (!empty($path) and !empty($file)) {
       $fullpath = $this->config->item('THUMBCACHE').$path.'___'.$file;
 			if ( file_exists($fullpath) ) {
-        if ( in_array($path,$this->serve_rights) or $this->mediatable->has_serve_rights($path,$file) ) {
+        if ( in_array($path,$this->serve_rights) or $this->assets->has_serve_rights($path,$file) ) {
           $type=get_suffix($file,'.');
           $this->output->set_content_type($type);
           $this->output->set_output(file_get_contents($fullpath));

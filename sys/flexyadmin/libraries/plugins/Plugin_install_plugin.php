@@ -35,8 +35,8 @@ class Plugin_install_plugin extends Plugin {
         // Upload het bestand
         $settings['upload_path']='../cache';
 				$settings['allowed_types']='zip|sql';
-				$this->CI->file_manager->initialize( $settings );
-				$result=$this->CI->file_manager->upload_file('file_addon');
+				$this->CI->upload->initialize( $settings );
+				$result=$this->CI->upload->upload_file('file_addon');
 				if (!empty($result['file'])) {
           $path=SITEPATH.'assets/'.$settings['upload_path'];
           $file=$path.'/'.$result['file'];

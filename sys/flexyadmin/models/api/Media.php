@@ -172,8 +172,7 @@ class Media extends Api_Model {
   
 	public function __construct() {
 		parent::__construct();
-    $this->load->model('mediatable');
-    $this->load->model('file_manager','filemanager');
+    $this->load->model('assets');
 	}
   
   public function index() {
@@ -183,7 +182,7 @@ class Media extends Api_Model {
       return $this->_result_wrong_args();
     }
     // Does path exists in media_info?
-    if ( ! $this->cfg->get('cfg_media_info',$this->args['path']) ) {
+    if ( ! $this->assets->assets_folder_exists($this->args['path']) ) {
       $this->_set_error('PATH NOT FOUND');
       return $this->_result_ok();
     }
@@ -230,7 +229,7 @@ class Media extends Api_Model {
    */
   private function _get_files() {
     $args=$this->args;
-    $files=$this->mediatable->get_files($args['path'],false);
+    $files=$this->assets->get_files( $args['path'] );
     $this->info = array(
       'files'       => count($files),
       'total_files' => count($files),
@@ -247,7 +246,7 @@ class Media extends Api_Model {
    */
   private function _update_file() {
     $args=$this->args;
-    $result=$this->mediatable->edit_info($args['path'].'/'.$args['where'], $args['data']);
+    $result=$this->assets->update_file( $args['path'], $args['where'], $args['data'] );
     if (!$result) {
       $this->_set_error('MAYBE FILE NOT FOUND');
     }
@@ -262,47 +261,23 @@ class Media extends Api_Model {
    * @author Jan den Besten
    */
   private function _upload_file() {
-    $args=$this->args;
-    $path=$args['path'];
-		$types=$this->cfg->get('CFG_media_info',$path,'str_types');
-    
-    $this->load->model('file_manager');
-		$fileManager=new file_manager(array('upload_path'=>$path,'allowed_types'=>$types));
-		$result=$fileManager->upload_file();
-		$error=$result['error'];
-		$file=$result['file'];
-    $extra_files=$result['extra_files'];
+    $args = $this->args;
+    $path = $args['path'];
+		$file = $this->assets->upload_file( $args['path'] );
     
     // Error
-    if ($error) {
-			if (is_string($error))
-				$this->_set_error($error);
-			else
-				$this->_set_error(langp("upload_error",$file));
+    if ( !$file ) {
+  		$error = $this->assets->get_error();
+			$this->_set_error( $error );
       return false;
     }
     
-    // Good, add files to media table
-    $addFiles=array();
-    $addFiles[]=$file;
-    if (!empty($extra_files)) {
-      foreach ($extra_files as $extra) {
-        $addFiles[]=$extra['file'];
-      }
-    }
-    foreach ($addFiles as $addFile) {
-      if ( $this->cfg->get('CFG_media_info',$path,'b_user_restricted') ) {
-        $this->mediatable->add($addFile,$path,$this->user_id);
-      }
-      else {
-        $this->mediatable->add($addFile,$path);
-      }
-    }
-    
     // message
-		$this->_set_message(langp("upload_succes",$file));
+		$this->_set_message( langp("upload_succes",$file) );
+    
     // Return file info
-    return $this->mediatable->get_info($path.'/'.$file);
+    $file_info = $this->assets->get_file_info( $path, $file);
+    return $file_info;
   }
 
 
@@ -314,16 +289,9 @@ class Media extends Api_Model {
    */
   private function _delete_file() {
     $args=$this->args;
-    $this->filemanager->initialize($args['path']);
-    $result = $this->filemanager->delete_file($args['where']);
+    $result = $this->assets->delete_file($args['path'],$args['where']);
     if (!$result) {
       $this->_set_error('FILE NOT DELETED, MAYBE NOT FOUND OR NO RIGHTS');
-    }
-    else {
-      $result=$this->mediatable->delete($args['path'].'/'.$args['where'] );
-      if (!$result) {
-        $this->_set_message('FILE DELETED, BUT ERROR UPDATING IN DATABASE');
-      }
     }
     return $result;
   }

@@ -63,6 +63,7 @@ export default {
       extendedTerm        : [],
       uploadFiles         : [],
       uploadProgress      : {},
+      uploadStatus        : {},
     }
   },
   
@@ -322,7 +323,7 @@ export default {
             table : self.name,
             where : removeIds,
           };
-          if (self.gridType==='media') data.table = 'res_media_files';
+          if (self.gridType==='media') data.table = 'res_assets';
           return this.api({
             url   : 'row',
             data  : data,
@@ -441,6 +442,7 @@ export default {
       for (var i = 0; i < self.uploadFiles.length; i++) {
         var file = self.uploadFiles[i];
         self.uploadProgress[file.name] = 10;
+        self.uploadStatus[file.name] = self.$lang.upload_status_uploading;
         var formData = new FormData();
         formData.set( 'path', self.name );
         formData.set( 'file', self.uploadFiles[i] );
@@ -457,9 +459,10 @@ export default {
           },
         }).then(function(response){
           var error = response.data.error;
-          if (!error && response.data.data===false) error = true;
+          var fileName = response.data.args.fileName;
+          if (!error && response.data.data===false) error = self.$lang.upload_error;
           if (error) {
-            // TODO
+            self.uploadStatus[fileName] = error;
           }
           else {
             var fileName = response.data.args.fileName;
@@ -654,10 +657,10 @@ export default {
       <input id="browsefiles" @change="addUploadFiles"  type="file" name="files[]" multiple="multiple">
       <table class="table table-sm">
         <thead>
-          <tr><th>{{$lang.upload_file}}</th><th>{{$lang.upload_size}}</th><th>{{$lang.upload_progress}}</th><th><flexy-button @click.native="startUpload" icon="upload" :text="$lang.upload" class="btn-primary" /></th></tr>
+          <tr><th><flexy-button @click.native="startUpload" icon="upload" :text="$lang.upload" class="btn-primary" /></th><th>{{$lang.upload_file}}</th><th>{{$lang.upload_size}}</th><th>{{$lang.upload_progress}}</th><th>{{$lang.upload_status}}</th></tr>
         </thead>
         <tbody>
-          <tr v-for="(file,index) in uploadFiles"><td>{{file.name}}</td><td>{{Math.floor(file.size / 1024)}}k</td><td><progress class="progress progress-success progress-striped progress-animated" :value="uploadProgress[file.name] || 0" max="100"></td><td><flexy-button @click.native="removeUploadFile(index)" icon="remove" class="btn-outline-danger" /></td></tr>
+          <tr v-for="(file,index) in uploadFiles"><td><flexy-button @click.native="removeUploadFile(index)" icon="remove" class="btn-outline-danger" /></td><td>{{file.name}}</td><td>{{Math.floor(file.size / 1024)}}k</td><td><progress class="progress progress-success progress-striped progress-animated" :value="uploadProgress[file.name] || 0" max="100"></td><td>{{uploadStatus[file.name]}}</td></tr>
         </tbody>
       </table>
     </div>
@@ -739,8 +742,8 @@ export default {
 
   .grid .card-block {padding:0;}
   .grid .card-header.grid-extended-find {background-color:$gray-lighter!important;color:$brand-primary!important;}
-  .grid .card-header.grid-extended-find h4 {float:left;color:$gray-light;opacity:.35;}
-  .grid .card-header.grid-extended-find form {float:right!important;margin:0 0 .25rem;}
+  .grid .card-header.grid-extended-find h4 {float:left;position:absolute;color:$gray-light;opacity:.35;}
+  .grid .card-header.grid-extended-find form {float:right!important;margin:0 0 .25rem;clear:both;}
   .grid .card-header.grid-extended-find form[index="0"]>.grid-extended-search-and {display:none;}
   .grid .card-header.grid-extended-find form:last-child{margin-bottom:0;}
 
@@ -765,7 +768,11 @@ export default {
   .grid .draggable-handle {cursor:move;}
   .grid .sortable-fallback {display:none;}
   
-  .grid td.has-focus {box-shadow:0px 0px 2px $gray-dark inset; background-color:lighten($brand-warning,30%);}
+  .grid td.grid-cell-editable.has-focus {box-shadow:0px 0px 1px $brand-danger inset;}
+  *[contenteditable="true"]:active, *[contenteditable="true"]:focus {
+    border:none;
+    outline:none;
+  }
   
   .grid #dropdown-sort .dropdown-menu {min-width:4rem;}
   .grid #dropdown-sort .dropdown-item {padding:.1rem 1rem .1rem .35rem;padding-left:2rem;}
@@ -822,6 +829,7 @@ export default {
   }
 
   .grid.grid-media-view-thumbs table.grid-data tbody td[name='name'],
+  .grid.grid-media-view-thumbs table.grid-data tbody td[name='file'],
   .grid.grid-media-view-thumbs table.grid-data tbody td[name='path'],
   .grid.grid-media-view-thumbs table.grid-data tbody td[name='type'],
   .grid.grid-media-view-thumbs table.grid-data tbody td[name='date'],

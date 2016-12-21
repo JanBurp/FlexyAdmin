@@ -18,7 +18,7 @@ Class Options_Media extends CI_Model {
     $options=array();
     $path = $info['path'];
     $media = new Data();
-    $media->table( 'res_media_files' );
+    $media->table( 'res_assets' );
     $options = $media->get_files_as_options($path);
     return $options;
   }

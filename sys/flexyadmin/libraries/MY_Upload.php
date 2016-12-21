@@ -7,10 +7,17 @@
  * @author Jan den Besten
  */
 class MY_Upload extends CI_Upload {
+  
+	/**
+	 * Maximum duplicate filename increment ID
+	 */
+	public $max_filename_increment = 10000000;
+  
 
 	protected $settings;
 	protected $error='';
 	protected $result;
+  
   /**
    * Array met extra gecreerde bestanden door resizen
    */
@@ -31,58 +38,14 @@ class MY_Upload extends CI_Upload {
    * @return void
    * @author Jan den Besten
    */
-	public function config($config='') {
-		if (!isset($config['upload_path'])) 	$config['upload_path'] = assets();
-		if (!isset($config['allowed_types']))	$config['allowed_types'] = "jpg|jpeg|gif|png|mp3|wav|ogg|wma|pdf";
-		$this->settings=$config;
-		$this->resized=FALSE;
+	public function config( $config='' ) {
+		if (!isset($config['upload_path'])) 	    $config['upload_path'] = assets();
+		if (!isset($config['allowed_types']))	    $config['allowed_types'] = "jpg|jpeg|gif|png|mp3|wav|ogg|wma|pdf";
+    if (!is_array($config['allowed_types']))  $config['allowed_types'] = preg_split('/[|,]/u', $config['allowed_types']);
+		$this->settings = $config;
+		$this->resized = FALSE;
+    return $this;
 	}
-
-
-  /**
-   * Set the file name
-   *
-   * This function takes a filename/path as input and looks for the
-   * existence of a file with the same name. If found, it will append a
-   * number to the end of the filename to avoid overwriting a pre-existing file.
-   *
-   * JDB: Numbering is endless now, instead of 100.
-   *
-   * @param  string  $path
-   * @param  string  $filename
-   * @return  string
-   */
-  public function set_filename($path, $filename)
-  {
-    if ($this->encrypt_name === TRUE)
-    {
-      $filename = md5(uniqid(mt_rand())).$this->file_ext;
-    }
-
-    if ( ! file_exists($path.$filename))
-    {
-      return $filename;
-    }
-
-    $filename = str_replace($this->file_ext, '', $filename);
-
-    $new_filename = '';
-    // JDB Changes here: add timestamp to filename
-    $i=(int)date('YmdHis');
-    while (file_exists($path.$filename.'_'.$i.$this->file_ext)) { $i++; }
-    $new_filename = $filename.'_'.$i.$this->file_ext;
-    // Jdb To here
-
-    if ($new_filename === '')
-    {
-      $this->set_error('upload_bad_filename');
-      return FALSE;
-    }
-    else
-    {
-      return $new_filename;
-    }
-  }
 
 
   /**
@@ -104,6 +67,7 @@ class MY_Upload extends CI_Upload {
 	public function get_result() {
 		return $this->result;
 	}
+
 
   /**
    * Geeft filename terug
@@ -147,12 +111,12 @@ class MY_Upload extends CI_Upload {
    *
    * @param string $url De url van het externe bestand
    * @param string $path assets map waar bestand in moet komen
-   * @param string $prefix default='downloaded_' Prefix die aan het bestand moet worden toegevoegd.
+   * @param string $prefixfix default='downloaded_' Prefix die aan het bestand moet worden toegevoegd.
    * @return string Nieuwe naam van bestand
    * @author Jan den Besten
    */
-  public function download_and_add_file($url,$path,$prefix='downloaded_') {
-    $name=$prefix.get_suffix($url,'/');
+  public function download_and_add_file($url,$path,$prefixfix='downloaded_') {
+    $name=$prefixfix.get_suffix($url,'/');
     $name=clean_file_name($name);
     $fullpath=$this->_CI->config->item('ASSETS').$path;
     $fullname=$fullpath.'/'.$name;
@@ -184,60 +148,53 @@ class MY_Upload extends CI_Upload {
    * @return bool TRUE als is gelukt
    * @author Jan den Besten
    */
-	public function upload_file($file="userfile") {
-		$goodluck=FALSE;
-		$config=$this->settings;
-		$this->initialize($config);
-		$goodluck=$this->do_upload($file);
-		if ($goodluck) {
-      $this->error='';
-			$this->result=$this->data();
-			$this->file_name=$this->result['file_name'];
-			$cleanName = clean_file_name($this->file_name);
-      if (el('prefix',$config)) {
-        $cleanName=el('prefix',$config).$cleanName;
-      }
-			if ($cleanName!=$this->file_name) {
-				rename($config["upload_path"]."/".$this->file_name, $config["upload_path"]."/".$cleanName);
-				$this->file_name=$cleanName;
-			}
-      // strace_($this->file_name);
-			log_("info","[UPLOAD] uploaded: '$this->file_name'");
-		}
-    else {
-      $this->error=$this->display_errors();
+	public function upload_file( $file="userfile" ) {
+    $this->error = '';
+		$config = $this->settings;
+		$this->initialize( $config );
+    
+    // Start upload
+		if ( !$this->do_upload( $file ) ) {
+      $this->error = $this->display_errors();
 			log_("info","[UPLOAD] error while uploaded: '$this->file_name' [$this->error]");
+      return false;
     }
-		return $goodluck;
+    
+    // Als gelukt, pas naam aan als dat nodig is
+		$this->result = $this->data();
+		$this->file_name = $this->result['file_name'];
+		$cleanName = clean_file_name( $this->file_name );
+    if ( el('prefix',$config) ) {
+      $cleanName = el('prefix',$config).$cleanName;
+    }
+		if ($cleanName!=$this->file_name) {
+			rename( $config['upload_path'].'/'.$this->file_name, $config['upload_path'].'/'.$cleanName);
+			$this->file_name = $cleanName;
+		}
+		log_("info","[UPLOAD] uploaded: '$this->file_name'");
+    return true;
 	}
 	
   
   /**
    * Controleert of afbeelding groot genoeg is
    *
+   * @param string $path pad naar bestand
    * @param string $file het afbeeldingsbestand
-   * @param string $map pad naar bestand
    * @return bool TRUE als afbeelding groot genoeg is
    * @author Jan den Besten
    */
-   public function check_size($file,$map) {
-    $ok=FALSE;
-    $size=getimagesize($map.'/'.$file);
-    if (isset($size[0]) and isset($size[1])) {
-  		$uPath=str_replace($this->_CI->config->item('ASSETS'),"",$map);
-  		$cfg=$this->_CI->cfg->get('CFG_img_info',$uPath);
-      if (isset($cfg['int_min_width']) and $cfg['int_min_width']>0 and isset($cfg['int_min_height']) and $cfg['int_min_height']>0) {
-        // strace_($size);
-        // strace_($cfg);
-        // strace_($size[0]>=$cfg['int_min_width']);
-        $ok=($size[0]>=$cfg['int_min_width'] and $size[1]>=$cfg['int_min_height'] );
-      }
-      else {
-        $ok=TRUE;
+   public function check_size($path,$image,$sizes=array()) {
+    if (empty($sizes)) $sizes = $this->assets->get_folder_settings($path);
+    $size = getimagesize( $this->_CI->config->item('PUBLICASSETS').$path.'/'.$image);
+    if ( isset($size[0]) and isset($size[1]) ) {
+      if ( el('min_width',$sizes)>0 and el('min_height',$sizes)>0) {
+        return ( $size[0]>=$size['min_width'] and $size[1]>=$size['min_height'] );
       }
     }
-    return $ok;
+    return true;
   }
+  
   
   /**
    * Vult velden in database automatisch aan de hand van instellingen in **Media Info**
@@ -290,107 +247,102 @@ class MY_Upload extends CI_Upload {
    * @return bool
    * @author Jan den Besten
    */
-	public function resize_image($image,$path) {
-		$this->file_name=$image;
-		$goodluck=TRUE;
-		
-		$uPath=remove_assets($path);
-		$cfg=$this->_CI->cfg->get('CFG_img_info',$uPath);
+	public function resize_image( $path, $image, $sizes=array() ) {
+		$result=TRUE;
+		$this->file_name = $image;
+    if (empty($sizes)) $sizes = $this->assets->get_folder_settings($path);
+		$current_size = getimagesize( $this->_CI->config->item('PUBLICASSETS').$path.'/'.$this->file_name);
     
-		$currentSizes=getimagesize($path."/".$this->file_name);
-
-    // strace_($currentSizes);
-    // strace_($uPath);
-    // strace_($cfg);
-    // trace_($this->_CI->cfg->data);
-
-		// first resize copies
-		$nr=1;
-    $this->extraFiles=array();
-		while (isset($cfg["b_create_$nr"])) {
-			if ($cfg["b_create_$nr"]!=FALSE) {
-				// check if resize is not bigger than original (that would be strange)
-				if ($currentSizes[0]<$cfg["int_width_$nr"] and $currentSizes[1]<$cfg["int_height_$nr"] ) {
-					$cfg["int_width_$nr"]=$currentSizes[0];
-					$cfg["int_height_$nr"]=$currentSizes[1];
+    
+		// 1) resize copies
+		$nr = 1;
+    $this->extraFiles = array();
+		while ( isset($sizes["create_$nr"]) ) {
+			if ( $sizes["create_$nr"] ) {
+        
+				// check if resize is not bigger than original
+				if ($current_size[0]<$sizes["width_$nr"] and $current_size[1]<$sizes["height_$nr"] ) {
+					$sizes["width_$nr"]=$current_size[0];
+					$sizes["height_$nr"]=$current_size[1];
 				}
-				$pre=$cfg["str_prefix_$nr"];
-				$post=$cfg["str_suffix_$nr"];
-				$ext=get_file_extension($this->file_name);
-				$name=str_replace(".$ext","",$this->file_name);
-				$copyName=$pre.$name.$post.".".$ext;
-				$configResize['source_image'] 	= $path."/".$this->file_name;
-				$configResize['maintain_ratio'] = TRUE;
-				$configResize['width'] 					= $cfg["int_width_$nr"];
-				$configResize['height'] 				= $cfg["int_height_$nr"];
-				$configResize['new_image']			= $path."/".$copyName;
-				$configResize['master_dim']			= 'auto';
-				$this->_setMemory($currentSizes);
-        // trace_($configResize);
-				$this->_CI->image_lib->initialize($configResize);
+        // Name
+				$prefix = $sizes["prefix_$nr"];
+				$suffix = $sizes["suffix_$nr"];
+				$ext = get_file_extension($this->file_name);
+				$name = str_replace(".$ext","",$this->file_name);
+				$create_name = $prefix.$name.$suffix.".".$ext;
+        
+        // Resize config
+				$resize_config['source_image']   = $this->_CI->config->item('PUBLICASSETS').$path.'/'.$this->file_name;
+				$resize_config['maintain_ratio'] = TRUE;
+				$resize_config['width']          = $sizes["width_$nr"];
+				$resize_config['height']         = $sizes["height_$nr"];
+				$resize_config['new_image']      = $this->_CI->config->item('PUBLICASSETS').$path.'/'.$create_name;
+				$resize_config['master_dim']     = 'auto';
+        
+        // Zorg voor voldoende geheugen
+				$this->_setMemory($current_size);
+        
+        // Start resize
+				$this->_CI->image_lib->initialize($resize_config);
 				if ( !$this->_CI->image_lib->resize() ) {
-					$this->error=$this->_CI->image_lib->display_errors().' -- '.$nr;
-          // strace_($this->error);
-          // strace_($configResize);
-					$goodluck=FALSE;
+					$this->error = $this->_CI->image_lib->display_errors().' -- '.$nr;
+					$result = FALSE;
 				}
         else {
           // add extra files and set if they are visible or not
-          $this->extraFiles[$copyName]=array('file'=>$copyName,'path'=>$path,'hidden'=>substr($pre,0,1)=='_');
+          $this->extraFiles[$create_name]=array('file'=>$create_name,'path'=>$path,'hidden'=>substr($prefix,0,1)=='_');
         }
 				$this->_CI->image_lib->clear();
-				// trace_('Resized nr_'.$nr.' '.$configResize['new_image']);
 			}
 			$nr++;
 		}
 
 		// resize original
-		if ($cfg["b_resize_img"]!=FALSE) {
+		if ( $sizes["resize_img"] and ($sizes['img_width']>0 and $sizes['img_height']>0) ) {
+
 			// check if resize is necessary
-			if ($currentSizes[0]>$cfg["int_img_width"] or $currentSizes[1]>$cfg["int_img_height"] ) {
-				$configResize['source_image'] 	= $path."/".$this->file_name;
-				$configResize['maintain_ratio'] = TRUE;
-				$configResize['width'] 					= $cfg["int_img_width"];
-				$configResize['height'] 				= $cfg["int_img_height"];
-				$configResize['new_image']			= "";
-				$configResize['master_dim']			= 'auto';
+			if ($current_size[0]>$sizes['img_width'] or $current_size[1]>$sizes['img_height'] ) {
+				$resize_config['source_image']   = $this->_CI->config->item('PUBLICASSETS').$path.'/'.$this->file_name;
+				$resize_config['maintain_ratio'] = TRUE;
+				$resize_config['width']          = $sizes['img_width'];
+				$resize_config['height']         = $sizes['img_height'];
+				$resize_config['new_image']      = "";
+				$resize_config['master_dim']     = 'auto';
+
 				// set mem higher if needed
-				$this->_setMemory($currentSizes);
-				$this->_CI->image_lib->initialize($configResize);
+				$this->_setMemory($current_size);
+        
+        // Rezize
+				$this->_CI->image_lib->initialize($resize_config);
 				if ( !$this->_CI->image_lib->resize() ) {
-					$this->error=$this->_CI->image_lib->display_errors().' -- SELF';
-          // trace_($this->error);
-					$goodluck=FALSE;
+					$this->error = $this->_CI->image_lib->display_errors().' -- SELF';
+					$result = FALSE;
 				}
 				$this->_CI->image_lib->clear();
-				// trace_('Resized original');
 			}
 		}
 
-		// create cached thumb for flexyadmin if cache map exists
-		if (file_exists($this->_CI->config->item('THUMBCACHE')) ) {
+		// Create cached thumb
+		if ( file_exists($this->_CI->config->item('THUMBCACHE')) ) {
 			$thumbSize=$this->_CI->config->item('THUMBSIZE');
-			if ($currentSizes[0]>$thumbSize[0] or $currentSizes[1]>$thumbSize[1]) { 
-				$configResize['source_image'] 	= $path."/".$this->file_name;
-				$configResize['maintain_ratio'] = TRUE;
-				$configResize['width'] 					= $thumbSize[0];
-				$configResize['height'] 				= $thumbSize[1];
-				$configResize['new_image']			= $this->_CI->config->item('THUMBCACHE').pathencode($uPath."/".$this->file_name,FALSE);
-				$configResize['master_dim']			= 'auto';
-				// set mem higher if needed
-				$this->_setMemory($currentSizes);
-				// trace_($configResize);
-				$this->_CI->image_lib->initialize($configResize);
+			if ($current_size[0]>$thumbSize[0] or $current_size[1]>$thumbSize[1]) { 
+				$resize_config['source_image']   = $this->_CI->config->item('PUBLICASSETS').$path.'/'.$this->file_name;
+				$resize_config['maintain_ratio'] = TRUE;
+				$resize_config['width']          = $thumbSize[0];
+				$resize_config['height']         = $thumbSize[1];
+				$resize_config['new_image']      = $this->_CI->config->item('THUMBCACHE').pathencode($path.'/'.$this->file_name,FALSE);
+				$resize_config['master_dim']     = 'auto';
+				$this->_setMemory($current_size);
+				$this->_CI->image_lib->initialize($resize_config);
 				if (!$this->_CI->image_lib->resize()) {
 					$this->error=$this->_CI->image_lib->display_errors().' -- thumb';
-					// trace_($this->error);
-					$goodluck=FALSE;
+					$result = FALSE;
 				}
 				$this->_CI->image_lib->clear();
-				// trace_('Resized thumb in cache '.$configResize['new_image']);
 			}
 		}
-		return $goodluck;
+		return $result;
 	}
   
   
@@ -402,8 +354,8 @@ class MY_Upload extends CI_Upload {
    * @return bool $success
    * @author Jan den Besten
    */
-  public function restore_orientation($file,$path) {
-    $fileandpath=$path.'/'.$file;
+  public function restore_orientation($path,$file) {
+    $fileandpath = $path.'/'.$file;
 
     // Als niet bestaat, stop er dan meteen maar mee
     if(!file_exists($fileandpath)) return false;
