@@ -9,6 +9,7 @@ class CodeTest extends CITestCase {
     '/config/',
     '/language/',
     '/html2pdf/',
+    '/tests/',
   );
   
   private $excludedFiles = array(

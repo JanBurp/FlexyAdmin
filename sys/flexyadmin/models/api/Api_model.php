@@ -183,7 +183,7 @@ class Api_Model extends CI_Model {
     if (el('settings',$this->args,false)) {
       if (isset($this->args['table'])) {
         $this->result['settings'] = $this->_get_settings( $this->args['table'], 'table' );
-        if ($this->args['table']==='res_media_files' and isset($this->args['path'])) {
+        if ($this->args['table']==='res_assets' and isset($this->args['path'])) {
           $this->result['settings']['media_info'] = $this->_get_settings( $this->args['path'], 'path' );
         }
       }
@@ -292,7 +292,7 @@ class Api_Model extends CI_Model {
     }
     
     // table=_media_ ?
-    if (isset($args['table']) and $args['table']==='_media_') $args['table'] = 'res_media_files';
+    if (isset($args['table']) and $args['table']==='_media_') $args['table'] = 'res_assets';
     
     // merge with defaults
     $args=array_merge($this->needs,$args);

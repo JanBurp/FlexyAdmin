@@ -69,7 +69,8 @@ $lang['int_size']         = 'Omvang';
 $lang['size']             = 'Breedte x Hoogte';
 $lang['int_img_width']    = 'Breedte';
 $lang['int_img_height']   = 'Hoogte';
-$lang['USED']             = 'Gebruikt';
+$lang['b_used']           = 'Gebruikt';
+$lang['b_exists']         = 'Aanwezig';
 
 $lang['name']             = 'Bestand';
 $lang['path']             = 'Map';

@@ -420,7 +420,8 @@ Class Data_Core extends CI_Model {
     $fields = $this->settings['fields'];
     foreach ($fields as $field) {
       $options = array();
-      
+
+      $field_info = array();
       // 1) Uit (depricated) cfg_field_info
       $field_info = $this->cfg->get( 'cfg_field_info', $table.'.'.$field);
       if (!empty($field_info['str_options'])) {
@@ -3259,7 +3260,7 @@ Class Data_Core extends CI_Model {
       elseif (isset($item['term'])) {
         $term = $item['term'];
         $item_settings = array_unset_keys($item,array('term','field','settings'));
-        $item_settings = array_merge( $settings,$item['settings'],$item_settings );
+        $item_settings = array_merge( $settings, el('settings',$item,array()), $item_settings );
         $this->_find_term( $term, $item['field'], $item_settings );
       }
       
@@ -4106,7 +4107,6 @@ Class Data_Core extends CI_Model {
     unset($set[$this->settings['primary_key']]);
     unset($set['tme_last_changed']);
 
-        
     /**
      * Verwijder data die NULL is of waarvan het veld niet in de table bestaat.
      */

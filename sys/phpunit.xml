@@ -15,7 +15,8 @@
     <!-- Latest / Busy -->
     <testsuite name="busy">
       <!-- <file>flexyadmin/tests/demo_db/models/DataTest.php</file> -->
-      <file>flexyadmin/tests/commit/CodeTest.php</file>
+      <file>flexyadmin/tests/demo_db/models/Res_assetsTest.php</file>
+      <!-- <file>flexyadmin/tests/commit/CodeTest.php</file> -->
       <!-- <directory suffix="Test.php">flexyadmin/tests/fast</directory> -->
 		</testsuite>
     

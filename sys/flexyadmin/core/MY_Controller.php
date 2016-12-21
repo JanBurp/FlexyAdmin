@@ -37,7 +37,7 @@ class MY_Controller extends CI_Controller {
     if (defined('PHPUNIT_TEST')) {
       // Load test database
       $files = directory_map('db');
-      $key = in_array_like('unittest_',$files);
+      $key = in_array_like('unittest_v',$files);
       if ($key) {
         $file = el($key,$files);
         if ($file) {

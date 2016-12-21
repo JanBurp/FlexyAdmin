@@ -151,20 +151,18 @@ class Plugin_bulkupload extends Plugin {
     $moved=copy_file($bulkMap.'/'.$file, $map.'/'.$saveFile);
     if ($moved) {
       // resize
-      $resized=$this->CI->upload->resize_image($saveFile,$map);
+      $resized=$this->CI->upload->resize_image($path,$saveFile);
       // autofill
       $cfg=$mediaCfg[str_replace(SITEPATH.'assets/','',$path)];
       if (!isset($cfg['str_autofill']) or $cfg['str_autofill']=='bulk upload' or $cfg['str_autofill']=='both') {
         $autoFill=$this->CI->upload->auto_fill_fields($saveFile,$path);
       }
       // fill in media table
-      if ($this->CI->mediatable->exists()) {
-        $userRestricted=$this->CI->cfg->get('CFG_media_info',$path,'b_user_restricted');
-        if ($userRestricted)
-          $this->CI->mediatable->add($saveFile,$path,$userRestricted);
-        else
-          $this->CI->mediatable->add($saveFile,$path);
-      }
+      $userRestricted=$this->CI->cfg->get('CFG_media_info',$path,'b_user_restricted');
+      if ($userRestricted)
+        $this->CI->assets->insert_file($path,$saveFile,$userRestricted);
+      else
+        $this->CI->assets->insert_file($path,$saveFile);
       // delete original from Bulk map
       unlink($bulkMap.'/'.$file);
     }

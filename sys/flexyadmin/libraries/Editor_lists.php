@@ -121,16 +121,7 @@ class Editor_lists {
 				$files=array();
 				$path=$downloadPath["path"];
 				$map=$this->CI->config->item('ASSETS').$path;
-        
-        if ($this->CI->mediatable->exists()) {
-          $files=$this->CI->mediatable->get_files($map);
-        }
-        else {
-					$files=read_map($map);
-					$files=not_filter_by($files,"_");
-					ignorecase_ksort($files);
-        }
-        
+        $files=$this->CI->assets->get_files($path);
 				$data['-- '.strtoupper($this->CI->ui->get($path)).' ----------']=NULL;
 				$data=$data + $files;
 			}
@@ -170,7 +161,7 @@ class Editor_lists {
         if (!empty($file)) {
           $name=$file['name'];
           $filename=$this->CI->config->item('ASSETS').$file['path'].'/'.$name;
-          $name=$this->CI->mediatable->get_img_title($filename);
+          $name=$this->CI->assets->get_img_title($file['path'],$name);
   				if (!empty($name)) {
   					$list.='["'.str_replace($this->CI->config->item('ASSETS'),'',$filename).'","'.$filename.'"],';
   				}

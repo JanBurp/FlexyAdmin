@@ -6,7 +6,7 @@
  * ###Parameters:
  * 
  * - `table`                    // De gevraagde tabel
- * - `[path]`                   // Eventueel op te vragen map voor media/assets (bij table='res_media_files')
+ * - `[path]`                   // Eventueel op te vragen map voor media/assets (bij table='res_assets')
  * - `[limit=0]`                // Aantal rijen dat het resultaat moet bevatten. Als `0` dan worden alle rijen teruggegeven.
  * - `[offset=0]`               // Hoeveel rijen vanaf de start worden overgeslagen.
  * - `[sort='']`                // De volgorde van het resultaat, geef een veld, bijvoorbeeld `str_title` of `_str_title` voor DESC
@@ -125,7 +125,7 @@ class Table extends Api_Model {
     if (!$this->has_args()) return $this->_result_wrong_args(); 
     
     // Check rechten
-    if ($this->args['table']==='res_media_files' AND isset($this->args['path'])) {
+    if ($this->args['table']==='res_assets' AND isset($this->args['path'])) {
       if ( !$this->_has_rights('media_'.$this->args['path']) ) {
         return $this->_result_status401();
       }
@@ -167,7 +167,7 @@ class Table extends Api_Model {
       $this->args['sort'] = el( 'sort', $this->args, '' );
       $this->args['filter'] = el( 'filter', $this->args, '' );
       // Media?
-      if ( $this->args['table'] === 'res_media_files' AND isset($this->args['path']) ) $this->args['where'] = array( 'path' => $this->args['path'] );
+      if ( $this->args['table'] === 'res_assets' AND isset($this->args['path']) ) $this->args['where'] = array( 'path' => $this->args['path'] );
       // Where?
       if (!isset($this->args['where'])) $this->args['where'] = '';
       $items = $this->data->get_grid( $this->args['limit'], $this->args['offset'], $this->args['sort'], $this->args['filter'], $this->args['where'] );
