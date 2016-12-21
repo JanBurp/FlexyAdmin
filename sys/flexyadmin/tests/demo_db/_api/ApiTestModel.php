@@ -14,7 +14,7 @@ class ApiTestModel extends CITestCase {
     array(
       'username' => 'admin',
       'password' => 'admin',
-      'tables'   => array('tbl_site','tbl_menu','tbl_links','cfg_users','res_media_files')
+      'tables'   => array('tbl_site','tbl_menu','tbl_links','cfg_users','res_assets')
     ),
     array(
       'username' => 'user',
