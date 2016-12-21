@@ -490,8 +490,8 @@ $config["CFG_"]=array(
       'b_pagination'=>false
     ),
     
-    "res_media_files"=>array(
-      'table'=>'res_media_files',
+    "res_assets"=>array(
+      'table'=>'res_assets',
       'order'=>10,
       'b_pagination'=>true,
     )
@@ -731,11 +731,11 @@ $config["CFG_"]=array(
       'b_editable_in_grid' => true
     ),
       
-    'res_media_files.b_exists' => array(
+    'res_assets.b_exists' => array(
       'b_show_in_grid' => false,
       'b_show_in_form' => false
     ),
-    'res_media_files.file' => array(
+    'res_assets.file' => array(
       'b_show_in_form' => false
     ),
 
@@ -746,7 +746,7 @@ $config["CFG_"]=array(
 			"b_show_in_form"=>'1',
 			"b_editable_in_grid"=>1,
 			'str_fieldset'=>'More',
-			"str_options"=>'name|_name|rawdate|_rawdate|type|_type|size|_size|width|_width|height|_height',
+			"str_options"=>'file|_file|date|_date|type|_type|size|_size|width|_width|height|_height',
 			"b_multi_options"=>'0',
 			"str_validation_rules"=>''
  			),

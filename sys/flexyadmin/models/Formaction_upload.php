@@ -44,8 +44,8 @@
     				$mediaCfg=$this->cfg->get('CFG_media_info',$this->settings['upload_path']);
     				$this->settings['allowed_types']=$mediaCfg['str_types'];
           }
-					$this->file_manager->initialize( $this->settings );
-					$result=$this->file_manager->upload_file($key);
+					$this->upload->initialize( $this->settings );
+					$result=$this->upload->upload_file($key);
           // Gelukt?
 					if (!empty($result['file'])) {
             // Zo ja pas formdata aan, voeg bestand toe aan mediatable, en geef bericht
@@ -53,7 +53,7 @@
             $file=$result['file'];
 						$data[$key]=$file;
             unset($_FILES[$key]);
-            $this->mediatable->add($file,$path);
+            $this->assets->insert_file($path,$file);
 					}
           else {
             // Foutmelding

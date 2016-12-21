@@ -20,10 +20,13 @@ $lang['vue_grid_search_exist']       = 'bevat';
 $lang['vue_grid_search_word']        = 'bevat woord';
 $lang['vue_grid_search_exact']       = 'is gelijk aan';
 
-$lang['vue_upload']            = 'Upload';
-$lang['vue_upload_file']       = 'Bestand';
-$lang['vue_upload_size']       = 'Omvang';
-$lang['vue_upload_progress']   = 'Voortgang';
+$lang['vue_upload']                  = 'Upload';
+$lang['vue_upload_file']             = 'Bestand';
+$lang['vue_upload_size']             = 'Omvang';
+$lang['vue_upload_progress']         = 'Voortgang';
+$lang['vue_upload_status']           = 'Status';
+$lang['vue_upload_status_uploading'] = 'Uploading...';
+$lang['vue_upload_error']            = 'Onbekende fout.';
 
 $lang['vue_grid_total']              = "{0} items";
 $lang['vue_grid_pagination']         = "{0} items / {1} pagina's";

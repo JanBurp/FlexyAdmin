@@ -127,6 +127,19 @@ Class Data_Create extends CI_Model {
   }
   
   
+  public function save_config( $name, $template, $file, $config, $replace=array()) {
+    $config_template= file_get_contents( $template );
+    // Remove all comments from config_template
+    $config_template = preg_replace("~/\*\*.*\/\n~uUs", "", $config_template);
+    // All data to template and save this table model
+    $replace['DATE'] = date('D j F Y, H:i');
+    
+    $config = $this->replace_config($config_template,$config);
+    $config = $this->parser->parse_string( $config, $replace, true );
+    
+    file_put_contents( $file, $config );
+  }
+  
   
   
   /**
