@@ -24,6 +24,20 @@ import FlexyPagination  from './components/flexy-pagination.vue'
 import FlexyGrid        from './components/grid/flexy-grid.vue'
 import FlexyForm        from './components/form/flexy-form.vue'
 
+// // TinyMCE
+// import tinymce from 'tinymce/tinymce';
+// import 'tinymce/themes/modern/theme';
+// tinymce.init({
+//   selector: 'textarea',
+// });
+
+// TinyMCE
+tinymce.init({
+  selector: 'textarea',
+});
+
+
+
 
 // Language settings
 const LOCALES = {};
