@@ -678,17 +678,7 @@ function applyToTag(styleElement, obj) {
  * - progress bar
  * - messages
  */exports.default={name:'FlexyState',debug:false,state:{progress:0,messages:[],media_view:_flexy.media_view},getState:function getState(item){return this.state[item];},showProgress:function showProgress(){this.state.progress=10;this.debug&&console.log('state.progress',this.state.progress);},hideProgress:function hideProgress(){var self=this;self.state.progress=100;window.setTimeout(function(){self.state.progress=0;self.debug&&console.log('state.progress',self.state.progress);},250);},setProgress:function setProgress(value,max){var percent=Math.round(value*100/max);if(percent<10)percent=10;// Start met minimaal 10%
-this.state.progress=percent;this.debug&&console.log('state.progress',this.state.progress);},addMessage:function addMessage(message,type){if(_.isUndefined(type))type='success';var self=this;self.state.messages.push({'text':message,'type':type});self.debug&&console.log('state.messages',self.state.messages);if(type!=='danger'){window.setTimeout(function(){self.state.messages.shift();self.debug&&console.log('state.messages',self.state.messages);},3000);}},removeMessage:function removeMessage(id){this.state.messages.splice(id,1);},getMediaView:function getMediaView(){return this.state.media_view;},setMediaView:function setMediaView(view){var self=this;this.state.media_view=view;this.debug&&console.log('state.media_view',this.state.media_view);// return this.api({
-//   url : 'row',
-//   'data': {
-//     'table' : 'cfg_users',
-//     'where' : 'current',
-//     'data'  : {
-//       'str_filemanager_view' : self.state.media_view,
-//     }
-//   },
-// });
-}};
+this.state.progress=percent;this.debug&&console.log('state.progress',this.state.progress);},addMessage:function addMessage(message,type){if(_.isUndefined(type))type='success';var self=this;self.state.messages.push({'text':message,'type':type});self.debug&&console.log('state.messages',self.state.messages);if(type!=='danger'){window.setTimeout(function(){self.state.messages.shift();self.debug&&console.log('state.messages',self.state.messages);},3000);}},removeMessage:function removeMessage(id){this.state.messages.splice(id,1);},getMediaView:function getMediaView(){return this.state.media_view;},setMediaView:function setMediaView(view){var self=this;this.state.media_view=view;this.debug&&console.log('state.media_view',this.state.media_view);return this.api({url:'row','data':{'table':'cfg_users','where':'current','data':{'str_filemanager_view':self.state.media_view}}});}};
 
 /***/ },
 /* 4 */
@@ -30003,6 +29993,7 @@ module.exports = __vue_exports__
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
   return _h('div', {
+    staticClass: "navbar navbar-fixed-bottom",
     attrs: {
       "id": "messages"
     }
