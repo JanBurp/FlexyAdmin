@@ -41,6 +41,7 @@ export default {
   */
   created : function() {
     this.items = this.addInfo( this.data, true );
+    // window.addEventListener('keyup', this.key);
   },
   
   data : function() {
@@ -249,21 +250,40 @@ export default {
       return 'grid-header-type-'+field.schema['form-type'];
     },
     
-    setFocus : function(id,cell) {
-      this.focus = {id:id,cell:cell};
-    },
+    // setFocus : function(id,cell) {
+    //   this.focus = {id:id,cell:cell};
+    // },
     
     // setFocusNext : function() {
-    //   console.log(this.fields);
+    //   if (this.focus.id===false) {
+    //     this.focus.id = this.items[Object.keys(this.items)[0]]['id'].value;
+    //   }
+    //   if (this.focus.cell===false) {
+    //     console.log(Object.keys(this.fields)[4]);
+    //     this.focus.cell = Object.keys(this.fields)[4];
+    //   }
+    //   console.log('setFocusNext',this.focus.id,this.focus.cell);
     // },
-    //
     
-    hasFocus : function(id,cell) {
-      var hasFocus = true;
-      if (this.focus.id !== id) hasFocus = false;
-      if (this.focus.cell !== cell) hasFocus = false;
-      return hasFocus;
-    },
+    // key : function(event) {
+    //   console.log('key',event);
+    //   switch (event.key) {
+    //     case 'Tab':
+    //     case 'ArrowRight':
+    //       this.setFocusNext();
+    //       break;
+    //     case 'ArrowLeft':
+    //       this.setFocusPrev();
+    //       break;
+    //   }
+    // },
+    
+    // hasFocus : function(id,cell) {
+    //   var hasFocus = true;
+    //   if (this.focus.id !== id) hasFocus = false;
+    //   if (this.focus.cell !== cell) hasFocus = false;
+    //   return hasFocus;
+    // },
     
     hasSelection : function() {
       return this.selected.length>0;
@@ -707,6 +727,7 @@ export default {
           <!-- ROW -->
           <tr v-for="row in items" :data-id="row.id.value" :class="{'table-warning is-selected':isSelected(row.id.value)}" v-show="!isHiddenChild(row.id.value)" :level="rowLevel(row)" :key="row.id.value">
             <template v-for="cell in row">
+              
               <!-- PRIMARY CELL -->
               <td v-if="cell.type=='primary'" class="action">
                 <flexy-button @click.native="editItem(cell.value)" icon="pencil" class="btn-outline-warning" />
@@ -714,8 +735,21 @@ export default {
                 <flexy-button @click.native="select(row.id.value)" :icon="{'circle-o':!isSelected(row.id.value),'circle':isSelected(row.id.value)}" class="btn-outline-info" />
                 <flexy-button v-if="gridType==='tree' || gridType==='ordered'" icon="reorder" class="draggable-handle btn-outline-info" :class="{'active':isDragging(row.id.value)}" />
               </td>
+              
               <!-- CELL -->
-              <flexy-grid-cell v-else @select="select(row.id.value)" @click.native="setFocus(row.id.value,cell.name)" :focus="hasFocus(row.id.value,cell.name)" :type="cell.type" :name="cell.name" :value="cell.value" :level="rowLevel(row)" :primary="{'table':dataName,'id':row.id.value}" :editable="isEditable(cell.name)" :readonly="isReadonly(cell.name)" :options="fields[cell.name]"></flexy-grid-cell>
+              <flexy-grid-cell v-else
+                @select="select(row.id.value)"
+                :focus="false"
+                :type="cell.type"
+                :name="cell.name"
+                :value="cell.value"
+                :level="rowLevel(row)"
+                :primary="{'table':dataName,'id':row.id.value}"
+                :editable="isEditable(cell.name)"
+                :readonly="isReadonly(cell.name)"
+                :options="fields[cell.name]">
+              </flexy-grid-cell>
+              
             </template>
           </tr>
         </draggable>
@@ -774,11 +808,7 @@ export default {
   .grid .sortable-fallback {display:none;}
 
   .grid td.has-focus {background-color:lighten($brand-warning,40%);}
-  .grid td.grid-cell-editable.has-focus {box-shadow:0px 0px 1px $brand-danger inset;}
-  *[contenteditable="true"]:active, *[contenteditable="true"]:focus {
-    border:none;
-    outline:none;
-  }
+/*  .grid td.is-editing {padding:2px;box-shadow:0px 0px 1px $brand-danger inset;}*/
   
   .grid #dropdown-sort .dropdown-menu {min-width:4rem;}
   .grid #dropdown-sort .dropdown-item {padding:.1rem 1rem .1rem .35rem;padding-left:2rem;}
