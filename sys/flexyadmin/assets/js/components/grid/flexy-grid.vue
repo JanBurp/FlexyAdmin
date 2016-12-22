@@ -253,6 +253,11 @@ export default {
       this.focus = {id:id,cell:cell};
     },
     
+    // setFocusNext : function() {
+    //   console.log(this.fields);
+    // },
+    //
+    
     hasFocus : function(id,cell) {
       var hasFocus = true;
       if (this.focus.id !== id) hasFocus = false;
@@ -767,7 +772,8 @@ export default {
   .grid.grid-type-tree th.grid-header-type-primary {width:8rem;max-width:8rem;min-width:8rem;}
   .grid .draggable-handle {cursor:move;}
   .grid .sortable-fallback {display:none;}
-  
+
+  .grid td.has-focus {background-color:lighten($brand-warning,40%);}
   .grid td.grid-cell-editable.has-focus {box-shadow:0px 0px 1px $brand-danger inset;}
   *[contenteditable="true"]:active, *[contenteditable="true"]:focus {
     border:none;

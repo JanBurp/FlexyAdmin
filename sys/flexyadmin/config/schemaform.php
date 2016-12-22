@@ -376,6 +376,15 @@ $config['FIELDS_special'] = array(
     'default'     => 0,
   ),
   
+  //   // Media
+  // 'alt'        => array(
+  //     'type'        => 'string',
+  //     'form-type'   => 'text',
+  //     'grid'        => '%s',
+  //     'grid-edit'   => true,
+  //     'form'        => ''
+  //   ),
+  
 	'abstract'	=> array(
     'type'        => 'string',
     'form-type'   => 'text',
