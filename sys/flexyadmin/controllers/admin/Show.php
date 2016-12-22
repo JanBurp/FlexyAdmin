@@ -141,6 +141,7 @@ class Show extends AdminController {
     $isMedia = false;
     $args = func_get_args();
     $name = array_shift($args);
+    $path = false;
     if ($name === '_media_') {
       $name = 'res_assets';
       $path = array_shift($args);
@@ -168,6 +169,7 @@ class Show extends AdminController {
     $form = array(
       'title'     => ($isMedia)?$this->ui->get($path):$this->ui->get($name),
       'name'      => $name,
+      'path'      => $path,
       'id'        => $id,
       'fields'    => $fields,
       'fieldsets' => $fieldsets,

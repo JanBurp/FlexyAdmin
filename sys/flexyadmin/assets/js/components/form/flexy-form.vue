@@ -13,6 +13,7 @@ export default {
   props:{
     'title':String,
     'name':String,
+    'path':[Boolean,String],
     'primary':Number,
     'fields':[Object,Array],
     'fieldsets':[Object,Array],
@@ -70,27 +71,32 @@ export default {
     },
     
     cancel : function() {
+      var self=this;
       if (!this.isSaving) {
-        var url = 'admin/show/grid/' + this.name;
-        window.location.assign( url );
+        window.location.assign( self.returnUrl() );
       }
+    },
+    
+    submit : function() {
+      var self=this;
+      if (!this.isSaving) {
+        this.postForm().then(function (response) {
+          if (!response.error) {
+            window.location.assign( self.returnUrl() );
+          }
+        })
+      }
+    },
+    
+    returnUrl : function() {
+      var url = 'admin/show/grid/' + this.name;
+      if (this.path && this.path!=='false') url = 'admin/show/media/' + this.path;
+      return url;
     },
     
     save : function() {
       if (!this.isSaving) {
         this.postForm();
-      }
-    },
-    
-    submit : function() {
-      if (!this.isSaving) {
-        var name = this.name;
-        this.postForm().then(function (response) {
-          if (!response.error) {
-            var url = 'admin/show/grid/' + name;
-            window.location.assign( url );
-          }
-        })
       }
     },
     

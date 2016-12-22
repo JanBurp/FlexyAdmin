@@ -1,3 +1,14 @@
+Changes 3.5.0
+=============
+
+BIG CHANGES:
+- UI with Vue & Bootstrap
+- Old UI removed
+- Models: Filemanager, Mediatable removed
+- DB: res_media_files removed and replaced with res_assets
+-
+
+
 Changes 3.3.0
 =============
 

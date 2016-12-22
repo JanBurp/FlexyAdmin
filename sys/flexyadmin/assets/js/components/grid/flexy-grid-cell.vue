@@ -1,10 +1,11 @@
 <script>
 import flexyState from '../../flexy-state.js'
 import flexyThumb from '../flexy-thumb.vue'
+import flexyButton      from '../flexy-button.vue'
 
 export default {
   name: 'VueGridCell',
-  components: {flexyThumb},
+  components: {flexyThumb,flexyButton},
   props:['type','name','primary','value','level','editable','readonly','options','focus'],
   
   // created : function() {
@@ -31,6 +32,7 @@ export default {
       if (this.editable) c.push('grid-cell-editable');
       if (this.readonly) c.push('text-muted');
       if (this.focus) c.push('has-focus');
+      if (this.isEditing) c.push('is-editing');
       return c;
     },
     
@@ -42,6 +44,8 @@ export default {
   data : function() {
     return {
       item      : this.value,
+      oldItem   : this.value,
+      isEditing : false,
     }
   },
   
@@ -86,32 +90,32 @@ export default {
       this.$emit('select');
     },
     
-    contentChanged : function(event) {
-      var self = this;
-      var oldValue = self.item;
-      if (event.type==='blur') {
-        var newValue = event.target.innerHTML;
-        if (oldValue!==newValue) {
-          self.postField(newValue).then(function(response){
-            if (!response.error) {
-              self.item = newValue;
-            }
-            else {
-              self.cancelEdit(event.target);
-            }
-          });
-        }
-      }
-      // Reset when ESC is pressed
-      if (event.type==='keyup' && event.key==='Escape') {
-        self.cancelEdit(event.target);
-      }
-    },
+    // saveEdit : function(event) {
+    //   console.log('saveEdit',this.oldItem,this.item);
+    //   var self = this;
+    //   self.isEditing = false;
+    //   if (this.item!==this.oldItem) {
+    //     self.postField(this.item).then(function(response){
+    //       if (response.error) {
+    //         self.cancelEdit();
+    //       }
+    //     });
+    //   }
+    // },
     
-    cancelEdit : function(elem) {
-      elem.innerHTML = this.item;
-    },
+    // startEdit : function() {
+    //   if (this.focus && this.editable && !this.readonly) {
+    //     console.log('startEdit');
+    //     this.oldItem = this.item;
+    //     this.isEditing = true;
+    //   }
+    // },
     
+    // cancelEdit : function(elem) {
+    //   console.log('cancelEdit');
+    //   this.Item = this.oldItem;
+    //   this.isEditing = false;
+    // },
     
     
     clickEdit : function() {
@@ -191,7 +195,7 @@ export default {
     </template>
 
     <template v-if="isType('default',type)">
-      <span :contenteditable="(editable && focus)" @keyup="contentChanged" @blur="contentChanged" @paste="contentChanged" @copy="contentChanged" @cut="contentChanged" @delete="contentChanged">{{item}}</span>
+      <span>{{item}}</span>
     </template>
 
   </td>
@@ -201,8 +205,10 @@ export default {
 <style>
   .grid td {overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:250px;}
   .grid td.grid-cell-type-checkbox {text-align:center;}
+  .grid td input {padding:0;float:left;}
+/*  .grid td.is-editing .flexy-button {float:right;}*/
+/*  .grid td.grid-cell-editable {cursor:pointer;}*/
   .grid .color-thumb-sm {padding:0.125rem .5rem;margin:0;}
-  .grid td.grid-cell-editable {cursor:pointer;}
   /* tree, branches & nodes */
   .grid-type-tree tbody td[level="1"][name="str_title"] {padding-left:1rem;}
   .grid-type-tree tbody td[level="2"][name="str_title"] {padding-left:2rem;}
