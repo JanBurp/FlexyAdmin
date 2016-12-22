@@ -27,8 +27,3 @@ export default {
     </transition-group>
   </div>
 </template>
-
-<style>
-  .message-text {width:90%;}
-  .message-button {float:right;margin-top:-.25rem;}
-</style>

@@ -55,4 +55,5 @@ export default {
   .flexy-thumb img {width:auto;height:1.8rem;}
   .grid-media-view-thumbs .flexy-thumb .fa {font-size:10rem;}
   .grid-media-view-thumbs .flexy-thumb img {width:auto;max-width:14rem;height:auto;max-height:14rem;}
+  .media-thumb-sm {height:1.75rem;border-radius:2px;}
 </style>

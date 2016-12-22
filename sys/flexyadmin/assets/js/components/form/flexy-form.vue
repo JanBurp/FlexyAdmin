@@ -4,7 +4,6 @@ import flexyButton      from '../flexy-button.vue'
 
 import tab              from '../../vue-strap-src/components/Tab.vue'
 import tabs             from '../../vue-strap-src/components/Tabs.vue'
-// import tabGroup         from '../../vue-strap-src/components/TabGroup.vue'
 
 
 export default {
@@ -13,7 +12,7 @@ export default {
   props:{
     'title':String,
     'name':String,
-    'path':[Boolean,String],
+    'path':String,
     'primary':Number,
     'fields':[Object,Array],
     'fieldsets':[Object,Array],
@@ -90,7 +89,8 @@ export default {
     
     returnUrl : function() {
       var url = 'admin/show/grid/' + this.name;
-      if (this.path && this.path!=='false') url = 'admin/show/media/' + this.path;
+      if (this.path && this.path!=='false')  url='admin/show/media/' + this.path;
+      console.log(this.path,url);
       return url;
     },
     
@@ -103,6 +103,13 @@ export default {
     postForm : function() {
       var self=this;
       self.isSaving = true;
+      var data = this.row;
+      for (var field in data) {
+        if (this.isType('checkbox',field)) {
+          data[field] = (data[field]?1:0);
+        }
+      }
+      
       return this.api({
         url : 'row',
         'data': {
@@ -180,7 +187,7 @@ export default {
             <div v-if="validationErrors[field]" class="validation-error form-text text-danger">{{validationErrors[field]}}</div>
             <label class="col-xs-3 form-control-label" :for="field">{{fields[field]['name']}}</label>
             <div class="col-xs-9">
-              <input class="form-check-input" type="checkbox" :id="field" :name="field" v-model="row[field]" v-on:input="updateField(field,$event.target.value)">
+              <input class="form-check-input" type="checkbox" :id="field" :name="field" :checked="row[field]" @input="updateField(field,$event.target.checked)">
             </div>
           </div>
           
@@ -209,11 +216,3 @@ export default {
   </div>
 </div>
 </template>
-
-<style>
-  .form .form-group {min-height:2.35rem;}
-  .form-control-label {text-transform:uppercase;font-weight:bold;padding-top:.5rem;padding-bottom:0;margin-bottom:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-  textarea {min-height:10rem;max-height:20rem;}
-  .form-check-input {margin-left:0;margin-top:.75rem;}
-  .validation-error {padding:.25rem 1rem;font-weight:bold;}
-</style>
