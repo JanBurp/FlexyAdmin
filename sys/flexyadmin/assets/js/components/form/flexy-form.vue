@@ -110,7 +110,7 @@ export default {
         }
       }
       
-      return this.api({
+      return flexyState.api({
         url : 'row',
         'data': {
           'table'   : this.name,
