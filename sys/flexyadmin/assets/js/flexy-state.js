@@ -4,6 +4,9 @@
  * - messages
  */
 
+import Axios from 'axios';
+import jdb   from './jdb-tools.js'
+
 export default {
   name: 'FlexyState',
   debug: false,
@@ -60,7 +63,7 @@ export default {
     var self = this;
     this.state.media_view = view;
     this.debug && console.log('state.media_view',this.state.media_view); 
-    return this.api({
+    return self.api({
       url : 'row',
       'data': {
         'table' : 'cfg_users',
@@ -71,5 +74,59 @@ export default {
       },
     });
   },
+  
+  /**
+    Global method om Api aan te roepen. Options Object bevat de volgende properties:
+    - url, de url van de api (auth,table,row, etc)
+    - data, de mee te geven parameters
+    - Laat ook progress bar & spinner zien
+   */
+  api : function(options) {
+    var self = this;
+    self.showProgress();
+    var method = 'GET';
+    if (options.url==='row' && !_.isUndefined(options.data.where)) method = 'POST';
+    var request = {
+      method  : 'POST',
+      url     : '_api/'+options.url,
+      data    : options.data,
+      headers : {
+        'Authorization': _flexy.auth_token,
+        'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8',
+      },
+      transformRequest: [function (data) {
+        if (!options.formData) {
+          var requestString='';
+          if (data) {
+            requestString = jdb.serializeJSON(data);
+          }
+          return requestString;
+        }
+        return data;
+      }],
+      onDownloadProgress: function (progressEvent) {
+        if (options.onDownloadProgress) {
+          options.onDownloadProgress(progressEvent);
+        }
+        else {
+          self.setProgress(progressEvent.loaded,progressEvent.total);
+        }
+      },
+    };
+    self.debug && console.log('api > ',request);
+    return Axios.request( request ).then(function (response) {
+      self.hideProgress();
+      self.debug && console.log('api < ',response);
+      return response;
+    })
+    .catch(function (error) {
+      self.hideProgress();
+      // self.addMessage( 'ERROR','danger');
+      console.log('api ERROR <',request,error);
+      return {'error':error};
+    });
+  },
+  
+  
   
 };
