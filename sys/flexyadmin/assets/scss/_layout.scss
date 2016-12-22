@@ -1,0 +1,77 @@
+/* LOGIN */
+#login-form {
+  width:20rem;margin:20% auto;box-shadow:0 0 1.25rem $gray-dark;
+  h1 {text-transform:none;}
+}
+
+/* HEADER */
+#header {
+  padding-top:0px;
+  padding-bottom:0px;
+  background-color:$gray-lightest;
+  border-bottom:solid 1px $gray-lighter;
+  height:$font-size-root*3.25;
+  .nav {float:right;padding-top:.45rem;}
+  .progress {margin:0;height:2px;border-radius:0;}
+}
+
+/* MESSAGES */
+#messages {width:100%;margin-top:$font-size-root*4;}
+.message-text {width:90%;}
+.message-button {float:right;margin-top:-.25rem;}
+
+
+/* CONTENT */
+#content {margin:1rem 0px;}
+#flexy-menu-side {padding-left:0;}
+#main {padding-right:.5rem;}
+
+/* SIDEBAR MENU */
+#flexy-menu-side>ul {
+  background-color: $gray-lightest;
+  border:solid 1px $gray-lighter;
+  margin-bottom:1rem;
+  border-radius:.25rem;
+}
+
+/* HELP */
+.flexy-help {
+  display:none;
+  position:fixed;
+  top:0;
+  right:0;
+  width:25%;
+  height:100%;
+  box-shadow:0 0 .5rem $gray-dark;
+  z-index:9999;
+  >.card {height:100%;}
+}
+
+/* MAIN > CARD */
+#main {
+  >.card {
+    border:solid 1px $brand-primary;
+    >.card-header {background-color:$brand-primary;color:$body-bg;padding:.5rem;}
+  }
+}
+
+/* TRANSITIONS */
+.slideUp-enter-active {transition: all .2s ease;}
+.slideUp-leave-active {transition: all 1s ease;}
+.slideUp-enter, .slideUp-leave-active {margin-top: -$font-size-root*4;opacity: 0;}
+
+
+/* DEBUG HELPERS */
+.debug-info .card-block {
+  padding:0;
+  max-height:30rem;
+  background-color:#666;
+  overflow:auto;
+}
+._trace {
+  background-color:#FFF;
+  display:block;
+  font-family:monospace;
+  padding:.5rem;
+  margin:.5rem;
+}
