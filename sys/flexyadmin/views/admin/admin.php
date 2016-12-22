@@ -64,6 +64,7 @@ var _flexy = {
   'language_keys' : '<?=addslashes(array2json($lang_keys))?>',
 };
 </script>
+<script src='<?=admin_assets()?>js/tinymce/tinymce.min.js' type="text/javascript" charset="utf-8"></script>
 <script src="<?=admin_assets()?>dist/bundle.js" type="text/javascript" charset="utf-8"></script>
 
 </body>
