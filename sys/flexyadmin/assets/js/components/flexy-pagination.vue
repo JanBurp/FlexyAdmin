@@ -70,4 +70,5 @@ export default {
   .pagination {margin:0;}
   .pagination-info {margin-top:.25rem;}
   .pagination .page-link {padding:0rem .5rem;}
+  .pagination-info {margin-right:.25rem;float:right;}
 </style>

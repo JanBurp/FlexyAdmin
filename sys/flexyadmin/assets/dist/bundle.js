@@ -18690,9 +18690,6 @@ module.exports = __vue_exports__
 var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
 
-/* styles */
-__webpack_require__(/*! !vue-style-loader!css-loader?sourceMap!vue-loader/lib/style-rewriter?id=data-v-0236572d!vue-loader/lib/selector?type=styles&index=0!./flexy-messages.vue */ 81)
-
 /* script */
 __vue_exports__ = __webpack_require__(/*! !babel-loader!vue-loader/lib/selector?type=script&index=0!./flexy-messages.vue */ 45)
 
@@ -18742,9 +18739,6 @@ module.exports = __vue_exports__
 var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
 
-/* styles */
-__webpack_require__(/*! !vue-style-loader!css-loader?sourceMap!vue-loader/lib/style-rewriter?id=data-v-e9bdde50!vue-loader/lib/selector?type=styles&index=0!./flexy-form.vue */ 88)
-
 /* script */
 __vue_exports__ = __webpack_require__(/*! !babel-loader!vue-loader/lib/selector?type=script&index=0!./flexy-form.vue */ 48)
 
@@ -18793,9 +18787,6 @@ module.exports = __vue_exports__
 
 var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
-
-/* styles */
-__webpack_require__(/*! !vue-style-loader!css-loader?sourceMap!vue-loader/lib/style-rewriter?id=data-v-4dbe28d0!sass-loader!vue-loader/lib/selector?type=styles&index=0!./flexy-grid.vue */ 85)
 
 /* script */
 __vue_exports__ = __webpack_require__(/*! !babel-loader!vue-loader/lib/selector?type=script&index=0!./flexy-grid.vue */ 50)
@@ -28132,10 +28123,9 @@ type:Number,default:5}},methods:{/**
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _flexyState=__webpack_require__(/*! ../../flexy-state.js */ 3);var _flexyState2=_interopRequireDefault(_flexyState);var _flexyButton=__webpack_require__(/*! ../flexy-button.vue */ 4);var _flexyButton2=_interopRequireDefault(_flexyButton);var _Tab=__webpack_require__(/*! ../../vue-strap-src/components/Tab.vue */ 68);var _Tab2=_interopRequireDefault(_Tab);var _Tabs=__webpack_require__(/*! ../../vue-strap-src/components/Tabs.vue */ 69);var _Tabs2=_interopRequireDefault(_Tabs);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}// import tabGroup         from '../../vue-strap-src/components/TabGroup.vue'
-exports.default={name:'FlexyForm',components:{flexyButton:_flexyButton2.default,tab:_Tab2.default,tabs:_Tabs2.default},props:{'title':String,'name':String,'path':[Boolean,String],'primary':Number,'fields':[Object,Array],'fieldsets':[Object,Array],'data':[Object,Array],'options':[Object,Array]},computed:{fieldTypes:function fieldTypes(){var types={primary:['primary'],hidden:['hidden'],checkbox:['checkbox'],select:['select','media'],textarea:['textarea','wysiwyg']};types.default=[].concat(types.primary,types.hidden,types.checkbox,types.select,types.textarea);return types;}},// Copy of props.data
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _flexyState=__webpack_require__(/*! ../../flexy-state.js */ 3);var _flexyState2=_interopRequireDefault(_flexyState);var _flexyButton=__webpack_require__(/*! ../flexy-button.vue */ 4);var _flexyButton2=_interopRequireDefault(_flexyButton);var _Tab=__webpack_require__(/*! ../../vue-strap-src/components/Tab.vue */ 68);var _Tab2=_interopRequireDefault(_Tab);var _Tabs=__webpack_require__(/*! ../../vue-strap-src/components/Tabs.vue */ 69);var _Tabs2=_interopRequireDefault(_Tabs);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}exports.default={name:'FlexyForm',components:{flexyButton:_flexyButton2.default,tab:_Tab2.default,tabs:_Tabs2.default},props:{'title':String,'name':String,'path':String,'primary':Number,'fields':[Object,Array],'fieldsets':[Object,Array],'data':[Object,Array],'options':[Object,Array]},computed:{fieldTypes:function fieldTypes(){var types={primary:['primary'],hidden:['hidden'],checkbox:['checkbox'],select:['select','media'],textarea:['textarea','wysiwyg']};types.default=[].concat(types.primary,types.hidden,types.checkbox,types.select,types.textarea);return types;}},// Copy of props.data
 data:function data(){return{row:{},validationErrors:{},isSaving:false};},// Make copy of props.data
-created:function created(){this.row=this.data;},methods:{isType:function isType(type,field){if(type==='default'){return this.fieldTypes['default'].indexOf(this.fields[field].schema['form-type'])===-1;}return this.fieldTypes[type].indexOf(this.fields[field].schema['form-type'])>=0;},isMultiple:function isMultiple(field){var multiple=false;if(this.options[field].multiple)multiple='multiple';if(_flexyState2.default.debug)console.log('isMultiple',field,multiple);return multiple;},validationClass:function validationClass(field){var validation='';if(this.validationErrors[field])validation='has-danger';return validation;},cancel:function cancel(){var self=this;if(!this.isSaving){window.location.assign(self.returnUrl());}},submit:function submit(){var self=this;if(!this.isSaving){this.postForm().then(function(response){if(!response.error){window.location.assign(self.returnUrl());}});}},returnUrl:function returnUrl(){var url='admin/show/grid/'+this.name;if(this.path&&this.path!=='false')url='admin/show/media/'+this.path;return url;},save:function save(){if(!this.isSaving){this.postForm();}},postForm:function postForm(){var self=this;self.isSaving=true;return this.api({url:'row','data':{'table':this.name,'where':this.row['id'],'data':this.row}}).then(function(response){self.isSaving=false;if(!response.error){if(_.isUndefined(response.data.info)||response.data.info.validation!==false){_flexyState2.default.addMessage('Item saved');if(self.isNewItem()){self.row['id']=response.data.data.id;}}else{_flexyState2.default.addMessage(self.$lang.form_validation_error,'danger');if(!_.isUndefined(response.data.info))self.validationErrors=response.data.info.validation_errors;}}else{_flexyState2.default.addMessage(self.$lang.form_save_error,'danger');}return response;});},isNewItem:function isNewItem(){return this.row['id']===-1;},updateField:function updateField(field,value){this.row[field]=value;}}};
+created:function created(){this.row=this.data;},methods:{isType:function isType(type,field){if(type==='default'){return this.fieldTypes['default'].indexOf(this.fields[field].schema['form-type'])===-1;}return this.fieldTypes[type].indexOf(this.fields[field].schema['form-type'])>=0;},isMultiple:function isMultiple(field){var multiple=false;if(this.options[field].multiple)multiple='multiple';if(_flexyState2.default.debug)console.log('isMultiple',field,multiple);return multiple;},validationClass:function validationClass(field){var validation='';if(this.validationErrors[field])validation='has-danger';return validation;},cancel:function cancel(){var self=this;if(!this.isSaving){window.location.assign(self.returnUrl());}},submit:function submit(){var self=this;if(!this.isSaving){this.postForm().then(function(response){if(!response.error){window.location.assign(self.returnUrl());}});}},returnUrl:function returnUrl(){var url='admin/show/grid/'+this.name;if(this.path&&this.path!=='false')url='admin/show/media/'+this.path;console.log(this.path,url);return url;},save:function save(){if(!this.isSaving){this.postForm();}},postForm:function postForm(){var self=this;self.isSaving=true;var data=this.row;for(var field in data){if(this.isType('checkbox',field)){data[field]=data[field]?1:0;}}return this.api({url:'row','data':{'table':this.name,'where':this.row['id'],'data':this.row}}).then(function(response){self.isSaving=false;if(!response.error){if(_.isUndefined(response.data.info)||response.data.info.validation!==false){_flexyState2.default.addMessage('Item saved');if(self.isNewItem()){self.row['id']=response.data.data.id;}}else{_flexyState2.default.addMessage(self.$lang.form_validation_error,'danger');if(!_.isUndefined(response.data.info))self.validationErrors=response.data.info.validation_errors;}}else{_flexyState2.default.addMessage(self.$lang.form_save_error,'danger');}return response;});},isNewItem:function isNewItem(){return this.row['id']===-1;},updateField:function updateField(field,value){this.row[field]=value;}}};
 
 /***/ },
 /* 49 */
@@ -28344,25 +28334,7 @@ exports.default={components:{dropdown:_Dropdown2.default},props:{// effect: {typ
 justified:false,navStyle:{type:String,default:null},value:{type:Number,default:0}},data:function data(){var index=this.value||0;return{index:index,headers:[],tabs:[]};},watch:{index:function index(val){this.$emit('active',val);this.$emit('input',val);},value:function value(val){this.index=val;}},computed:{navStyleClass:function navStyleClass(){return['nav',~['pills','stacked'].indexOf(this.navStyle)?'nav-'+this.navStyle:'nav-tabs',{'nav-justified':_utils.coerce.boolean(this.justified),'nav-pills':this.navStyle==='stacked'}];},show:function show(){return this.tabs[this.index]||this.tabs[0];}},methods:{select:function select(tab){if(!tab.disabled){this.index=this.tabs.indexOf(tab);}}},created:function created(){this._isTabs=true;}};
 
 /***/ },
-/* 54 */
-/* unknown exports provided */
-/* all exports used */
-/*!************************************************************************************************************************************************************************************************!*\
-  !*** ./~/css-loader?sourceMap!./~/vue-loader/lib/style-rewriter.js?id=data-v-0236572d!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/flexy-messages.vue ***!
-  \************************************************************************************************************************************************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(/*! ./../../../../~/css-loader/lib/css-base.js */ 1)();
-// imports
-
-
-// module
-exports.push([module.i, "\n.message-text {width:90%;\n}\n.message-button {float:right;margin-top:-.25rem;\n}\n", "", {"version":3,"sources":["/./flexyadmin/assets/js/components/flexy-messages.vue?35bcca69"],"names":[],"mappings":";AA+BA,eAAA,UAAA;CAAA;AACA,iBAAA,YAAA,mBAAA;CAAA","file":"flexy-messages.vue","sourcesContent":["<script>\nimport flexyState   from '../flexy-state.js'\nimport flexyButton  from './flexy-button.vue'\n\nexport default {\n  name: 'FlexyMessages',\n  components: {flexyButton},\n  props:['messages'],\n  methods : {\n    typeClass : function(message) {\n      return 'alert-'+message.type;\n    },\n    removeMessage : function(id) {\n      flexyState.removeMessage(id);\n    },\n  }\n}\n</script>\n\n<template>\n  <div id=\"messages\">\n    <transition-group name=\"slideUp\" tag=\"div\">\n      <div v-for=\"(message,id) in state.messages\" :key=\"message\" class=\"alert\" :class=\"typeClass(message)\">\n        <flexy-button @click.native=\"removeMessage(id)\" icon=\"close\" v-if=\"message.type==='danger'\" class=\"btn-danger message-button\" />\n        <div v-html=\"message.text\" class=\"message-text\"></div>\n      </div>\n    </transition-group>\n  </div>\n</template>\n\n<style>\n  .message-text {width:90%;}\n  .message-button {float:right;margin-top:-.25rem;}\n</style>\n"],"sourceRoot":"webpack://"}]);
-
-// exports
-
-
-/***/ },
+/* 54 */,
 /* 55 */
 /* unknown exports provided */
 /* all exports used */
@@ -28395,7 +28367,7 @@ exports = module.exports = __webpack_require__(/*! ./../../../../~/css-loader/li
 
 
 // module
-exports.push([module.i, "\n.flexy-thumb .fa {font-size:1.6rem;\n}\n.flexy-thumb img {width:auto;height:1.8rem;\n}\n.grid-media-view-thumbs .flexy-thumb .fa {font-size:10rem;\n}\n.grid-media-view-thumbs .flexy-thumb img {width:auto;max-width:14rem;height:auto;max-height:14rem;\n}\n", "", {"version":3,"sources":["/./flexyadmin/assets/js/components/flexy-thumb.vue?7f94dad8"],"names":[],"mappings":";AAqDA,kBAAA,iBAAA;CAAA;AACA,kBAAA,WAAA,cAAA;CAAA;AACA,0CAAA,gBAAA;CAAA;AACA,0CAAA,WAAA,gBAAA,YAAA,iBAAA;CAAA","file":"flexy-thumb.vue","sourcesContent":["<script>\nexport default {\n  name: 'flexyThumb',\n  props:{\n    'src':String,\n    'alt':{\n      type:String,\n      default:'',\n    },\n  },\n  computed: {\n    type : function() {\n      const DEFAULT = 'file';\n      const TYPES   = {\n        'jpg'   : 'image',\n        'jpeg'  : 'image',\n        'gif'   : 'image',\n        'png'   : 'image',\n        \n        'zip'   : 'fa-file-archive-o',\n        'pdf'   : 'fa-file-pdf-o',\n        \n        'mp3'   : 'fa-file-audio-o',\n        'ogg'   : 'fa-file-audio-o',\n        'mp4'   : 'fa-file-audio-o',\n        'wav'   : 'fa-file-audio-o',\n        'aiff'  : 'fa-file-audio-o',\n\n        'xls'   : 'fa-file-excel-o',\n        'xlsx'  : 'fa-file-excel-o',\n        'doc'   : 'fa-file-word-o',\n        'docx'  : 'fa-file-word-o',\n      };\n      \n      var ext = this.src.split('.');\n      ext = ext[ext.length-1].toLowerCase();\n      \n      var type = DEFAULT;\n      if ( !_.isUndefined(TYPES[ext]) ) type = TYPES[ext];\n      return type;\n    },\n  },\n}\n</script>\n\n<template>\n  <div class=\"flexy-thumb\">\n    <img v-if=\"type==='image'\" class=\"media-thumb-sm\" :src=\"src\" :alt=\"alt\" :title=\"alt\">\n    <span v-if=\"type!=='image'\" class=\"fa\" :class=\"type\" :title=\"src\"></span>\n  </div>\n</template>\n\n<style>\n  .flexy-thumb .fa {font-size:1.6rem;}\n  .flexy-thumb img {width:auto;height:1.8rem;}\n  .grid-media-view-thumbs .flexy-thumb .fa {font-size:10rem;}\n  .grid-media-view-thumbs .flexy-thumb img {width:auto;max-width:14rem;height:auto;max-height:14rem;}\n</style>\n"],"sourceRoot":"webpack://"}]);
+exports.push([module.i, "\n.flexy-thumb .fa {font-size:1.6rem;\n}\n.flexy-thumb img {width:auto;height:1.8rem;\n}\n.grid-media-view-thumbs .flexy-thumb .fa {font-size:10rem;\n}\n.grid-media-view-thumbs .flexy-thumb img {width:auto;max-width:14rem;height:auto;max-height:14rem;\n}\n.media-thumb-sm {height:1.75rem;border-radius:2px;\n}\n", "", {"version":3,"sources":["/./flexyadmin/assets/js/components/flexy-thumb.vue?212fec97"],"names":[],"mappings":";AAqDA,kBAAA,iBAAA;CAAA;AACA,kBAAA,WAAA,cAAA;CAAA;AACA,0CAAA,gBAAA;CAAA;AACA,0CAAA,WAAA,gBAAA,YAAA,iBAAA;CAAA;AACA,iBAAA,eAAA,kBAAA;CAAA","file":"flexy-thumb.vue","sourcesContent":["<script>\nexport default {\n  name: 'flexyThumb',\n  props:{\n    'src':String,\n    'alt':{\n      type:String,\n      default:'',\n    },\n  },\n  computed: {\n    type : function() {\n      const DEFAULT = 'file';\n      const TYPES   = {\n        'jpg'   : 'image',\n        'jpeg'  : 'image',\n        'gif'   : 'image',\n        'png'   : 'image',\n        \n        'zip'   : 'fa-file-archive-o',\n        'pdf'   : 'fa-file-pdf-o',\n        \n        'mp3'   : 'fa-file-audio-o',\n        'ogg'   : 'fa-file-audio-o',\n        'mp4'   : 'fa-file-audio-o',\n        'wav'   : 'fa-file-audio-o',\n        'aiff'  : 'fa-file-audio-o',\n\n        'xls'   : 'fa-file-excel-o',\n        'xlsx'  : 'fa-file-excel-o',\n        'doc'   : 'fa-file-word-o',\n        'docx'  : 'fa-file-word-o',\n      };\n      \n      var ext = this.src.split('.');\n      ext = ext[ext.length-1].toLowerCase();\n      \n      var type = DEFAULT;\n      if ( !_.isUndefined(TYPES[ext]) ) type = TYPES[ext];\n      return type;\n    },\n  },\n}\n</script>\n\n<template>\n  <div class=\"flexy-thumb\">\n    <img v-if=\"type==='image'\" class=\"media-thumb-sm\" :src=\"src\" :alt=\"alt\" :title=\"alt\">\n    <span v-if=\"type!=='image'\" class=\"fa\" :class=\"type\" :title=\"src\"></span>\n  </div>\n</template>\n\n<style>\n  .flexy-thumb .fa {font-size:1.6rem;}\n  .flexy-thumb img {width:auto;height:1.8rem;}\n  .grid-media-view-thumbs .flexy-thumb .fa {font-size:10rem;}\n  .grid-media-view-thumbs .flexy-thumb img {width:auto;max-width:14rem;height:auto;max-height:14rem;}\n  .media-thumb-sm {height:1.75rem;border-radius:2px;}\n</style>\n"],"sourceRoot":"webpack://"}]);
 
 // exports
 
@@ -28420,44 +28392,8 @@ exports.push([module.i, "\n.flexy-block {text-transform:uppercase;margin-right:1
 
 
 /***/ },
-/* 58 */
-/* unknown exports provided */
-/* all exports used */
-/*!*****************************************************************************************************************************************************************************************************************!*\
-  !*** ./~/css-loader?sourceMap!./~/vue-loader/lib/style-rewriter.js?id=data-v-4dbe28d0!./~/sass-loader!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/grid/flexy-grid.vue ***!
-  \*****************************************************************************************************************************************************************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(/*! ./../../../../../~/css-loader/lib/css-base.js */ 1)();
-// imports
-
-
-// module
-exports.push([module.i, "/*!\n * FlexyAdmin\n * Copyright Jan den Besten\n */\nh1 {\n  text-transform: uppercase;\n}\n.grid .card-block {\n  padding: 0;\n}\n.grid .card-header.grid-extended-find {\n  background-color: #eceeef !important;\n  color: #696 !important;\n}\n.grid .card-header.grid-extended-find h4 {\n  float: left;\n  position: absolute;\n  color: #818a91;\n  opacity: .35;\n}\n.grid .card-header.grid-extended-find form {\n  float: right !important;\n  margin: 0 0 .25rem;\n  clear: both;\n}\n.grid .card-header.grid-extended-find form[index=\"0\"] > .grid-extended-search-and {\n  display: none;\n}\n.grid .card-header.grid-extended-find form:last-child {\n  margin-bottom: 0;\n}\n.grid .card-block.grid-upload {\n  padding: 1rem .5rem;\n  background-color: #f7f7f9;\n}\n.grid .card-block.grid-upload input#browsefiles {\n  display: none;\n}\n.grid .card-block.grid-upload progress {\n  margin: 0;\n  height: 1.5rem;\n}\n.grid .card-block.grid-upload tr th {\n  color: #696;\n}\n.grid .card-block.grid-upload tr th:last-child, .grid .card-block.grid-upload tr td:last-child {\n  text-align: right;\n}\n.grid .card-footer {\n  padding: .35rem .35rem;\n}\n.grid .card-footer .actions {\n  float: left;\n  margin-top: .25rem;\n  margin-right: 1rem;\n}\n.grid .pagination-info {\n  margin-right: .25rem;\n  float: right;\n}\n.grid table {\n  margin-bottom: 0;\n}\n.grid th {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.grid th > * {\n  display: inline-block;\n  position: relative;\n}\n.grid th a {\n  text-decoration: none;\n}\n.grid th span {\n  white-space: nowrap;\n  text-transform: uppercase;\n}\n.grid th > span.fa {\n  position: relative;\n  float: right;\n  margin-top: 1px;\n}\n.grid th.grid-header-type-primary {\n  width: 7rem;\n  max-width: 7rem;\n  min-width: 7rem;\n  white-space: nowrap;\n}\n.grid.grid-type-tree th.grid-header-type-primary {\n  width: 8rem;\n  max-width: 8rem;\n  min-width: 8rem;\n}\n.grid .draggable-handle {\n  cursor: move;\n}\n.grid .sortable-fallback {\n  display: none;\n}\n.grid td.has-focus {\n  background-color: #ffe5aa;\n}\n\n/*  .grid td.is-editing {padding:2px;box-shadow:0px 0px 1px $brand-danger inset;}*/\n.grid #dropdown-sort .dropdown-menu {\n  min-width: 4rem;\n}\n.grid #dropdown-sort .dropdown-item {\n  padding: .1rem 1rem .1rem .35rem;\n  padding-left: 2rem;\n}\n.grid #dropdown-sort .dropdown-item.selected {\n  padding-left: .35rem;\n}\n.grid option, .grid select {\n  text-transform: uppercase;\n}\n.grid.grid-media-view-thumbs table.grid-data thead th:not(.grid-actions) {\n  display: none;\n}\n.grid.grid-media-view-thumbs table.grid-data tbody {\n  display: flex;\n  flex-wrap: wrap;\n}\n.grid.grid-media-view-thumbs table.grid-data tbody tr {\n  position: relative;\n  width: 15rem;\n  height: 16.75rem;\n  margin: .75rem;\n  overflow: visible;\n  border-radius: 0.25rem;\n  overflow: hidden;\n}\n.grid.grid-media-view-thumbs table.grid-data tbody tr:hover {\n  border-color: #696;\n  box-shadow: 0 0 0.1rem #55595c;\n}\n.grid.grid-media-view-thumbs table.grid-data tbody tr.is-selected {\n  background-color: #eceeef;\n  border-color: #696;\n  box-shadow: 0 0 0.5rem #55595c;\n}\n.grid.grid-media-view-thumbs table.grid-data tbody td {\n  border: none;\n  padding: 0px;\n  background-color: transparent;\n}\n.grid.grid-media-view-thumbs table.grid-data tbody td.action {\n  display: none;\n}\n.grid.grid-media-view-thumbs table.grid-data tbody td[name=\"media_thumb\"] {\n  width: 100%;\n  height: 100%;\n}\n.grid.grid-media-view-thumbs table.grid-data tbody td[name=\"media_thumb\"] .flexy-thumb {\n  position: absolute;\n  width: auto;\n  height: auto;\n  bottom: 2rem;\n  left: 50%;\n  transform: translate(-50%, 0);\n}\n.grid.grid-media-view-thumbs table.grid-data tbody td[name=\"media_thumb\"] .flexy-thumb {\n  position: absolute;\n  width: auto;\n  max-width: 14rem;\n  height: auto;\n  max-height: 16rem;\n  bottom: 2.25rem;\n  left: 50%;\n  transform: translate(-50%, 0);\n}\n.grid.grid-media-view-thumbs table.grid-data tbody td[name=\"alt\"] {\n  position: absolute;\n  bottom: .35rem;\n  width: 100%;\n  text-align: center;\n  color: #696 !important;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.grid.grid-media-view-thumbs table.grid-data tbody td[name='name'],\n.grid.grid-media-view-thumbs table.grid-data tbody td[name='file'],\n.grid.grid-media-view-thumbs table.grid-data tbody td[name='path'],\n.grid.grid-media-view-thumbs table.grid-data tbody td[name='type'],\n.grid.grid-media-view-thumbs table.grid-data tbody td[name='date'],\n.grid.grid-media-view-thumbs table.grid-data tbody td[name='size'],\n.grid.grid-media-view-thumbs table.grid-data tbody td[name='width'],\n.grid.grid-media-view-thumbs table.grid-data tbody td[name='height'] {\n  display: none;\n}\n", "", {"version":3,"sources":["/./flexyadmin/assets/js/components/grid/flexy-grid.vue"],"names":[],"mappings":"AAAA;;;GAGG;AACH;EACE,0BAA0B;CAAE;AAE9B;EACE,WAAW;CAAE;AAEf;EACE,qCAAqC;EACrC,uBAAuB;CAAE;AAE3B;EACE,YAAY;EACZ,mBAAmB;EACnB,eAAe;EACf,aAAa;CAAE;AAEjB;EACE,wBAAwB;EACxB,mBAAmB;EACnB,YAAY;CAAE;AAEhB;EACE,cAAc;CAAE;AAElB;EACE,iBAAiB;CAAE;AAErB;EACE,oBAAoB;EACpB,0BAA0B;CAAE;AAE9B;EACE,cAAc;CAAE;AAElB;EACE,UAAU;EACV,eAAe;CAAE;AAEnB;EACE,YAAY;CAAE;AAEhB;EACE,kBAAkB;CAAE;AAEtB;EACE,uBAAuB;CAAE;AAE3B;EACE,YAAY;EACZ,mBAAmB;EACnB,mBAAmB;CAAE;AAEvB;EACE,qBAAqB;EACrB,aAAa;CAAE;AAEjB;EACE,iBAAiB;CAAE;AAErB;EACE,iBAAiB;EACjB,wBAAwB;EACxB,oBAAoB;CAAE;AAExB;EACE,sBAAsB;EACtB,mBAAmB;CAAE;AAEvB;EACE,sBAAsB;CAAE;AAE1B;EACE,oBAAoB;EACpB,0BAA0B;CAAE;AAE9B;EACE,mBAAmB;EACnB,aAAa;EACb,gBAAgB;CAAE;AAEpB;EACE,YAAY;EACZ,gBAAgB;EAChB,gBAAgB;EAChB,oBAAoB;CAAE;AAExB;EACE,YAAY;EACZ,gBAAgB;EAChB,gBAAgB;CAAE;AAEpB;EACE,aAAa;CAAE;AAEjB;EACE,cAAc;CAAE;AAElB;EACE,0BAA0B;CAAE;;AAE9B,mFAAmF;AACnF;EACE,gBAAgB;CAAE;AAEpB;EACE,iCAAiC;EACjC,mBAAmB;CAAE;AAEvB;EACE,qBAAqB;CAAE;AAEzB;EACE,0BAA0B;CAAE;AAE9B;EACE,cAAc;CAAE;AAElB;EACE,cAAc;EACd,gBAAgB;CAAE;AAEpB;EACE,mBAAmB;EACnB,aAAa;EACb,iBAAiB;EACjB,eAAe;EACf,kBAAkB;EAClB,uBAAuB;EACvB,iBAAiB;CAAE;AAErB;EACE,mBAAmB;EACnB,+BAA+B;CAAE;AAEnC;EACE,0BAA0B;EAC1B,mBAAmB;EACnB,+BAA+B;CAAE;AAEnC;EACE,aAAa;EACb,aAAa;EACb,8BAA8B;CAAE;AAElC;EACE,cAAc;CAAE;AAElB;EACE,YAAY;EACZ,aAAa;CAAE;AAEjB;EACE,mBAAmB;EACnB,YAAY;EACZ,aAAa;EACb,aAAa;EACb,UAAU;EACV,8BAA8B;CAAE;AAElC;EACE,mBAAmB;EACnB,YAAY;EACZ,iBAAiB;EACjB,aAAa;EACb,kBAAkB;EAClB,gBAAgB;EAChB,UAAU;EACV,8BAA8B;CAAE;AAElC;EACE,mBAAmB;EACnB,eAAe;EACf,YAAY;EACZ,mBAAmB;EACnB,uBAAuB;EACvB,iBAAiB;EACjB,wBAAwB;CAAE;AAE5B;;;;;;;;EAQE,cAAc;CAAE","file":"flexy-grid.vue","sourcesContent":["/*!\n * FlexyAdmin\n * Copyright Jan den Besten\n */\nh1 {\n  text-transform: uppercase; }\n\n.grid .card-block {\n  padding: 0; }\n\n.grid .card-header.grid-extended-find {\n  background-color: #eceeef !important;\n  color: #696 !important; }\n\n.grid .card-header.grid-extended-find h4 {\n  float: left;\n  position: absolute;\n  color: #818a91;\n  opacity: .35; }\n\n.grid .card-header.grid-extended-find form {\n  float: right !important;\n  margin: 0 0 .25rem;\n  clear: both; }\n\n.grid .card-header.grid-extended-find form[index=\"0\"] > .grid-extended-search-and {\n  display: none; }\n\n.grid .card-header.grid-extended-find form:last-child {\n  margin-bottom: 0; }\n\n.grid .card-block.grid-upload {\n  padding: 1rem .5rem;\n  background-color: #f7f7f9; }\n\n.grid .card-block.grid-upload input#browsefiles {\n  display: none; }\n\n.grid .card-block.grid-upload progress {\n  margin: 0;\n  height: 1.5rem; }\n\n.grid .card-block.grid-upload tr th {\n  color: #696; }\n\n.grid .card-block.grid-upload tr th:last-child, .grid .card-block.grid-upload tr td:last-child {\n  text-align: right; }\n\n.grid .card-footer {\n  padding: .35rem .35rem; }\n\n.grid .card-footer .actions {\n  float: left;\n  margin-top: .25rem;\n  margin-right: 1rem; }\n\n.grid .pagination-info {\n  margin-right: .25rem;\n  float: right; }\n\n.grid table {\n  margin-bottom: 0; }\n\n.grid th {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap; }\n\n.grid th > * {\n  display: inline-block;\n  position: relative; }\n\n.grid th a {\n  text-decoration: none; }\n\n.grid th span {\n  white-space: nowrap;\n  text-transform: uppercase; }\n\n.grid th > span.fa {\n  position: relative;\n  float: right;\n  margin-top: 1px; }\n\n.grid th.grid-header-type-primary {\n  width: 7rem;\n  max-width: 7rem;\n  min-width: 7rem;\n  white-space: nowrap; }\n\n.grid.grid-type-tree th.grid-header-type-primary {\n  width: 8rem;\n  max-width: 8rem;\n  min-width: 8rem; }\n\n.grid .draggable-handle {\n  cursor: move; }\n\n.grid .sortable-fallback {\n  display: none; }\n\n.grid td.has-focus {\n  background-color: #ffe5aa; }\n\n/*  .grid td.is-editing {padding:2px;box-shadow:0px 0px 1px $brand-danger inset;}*/\n.grid #dropdown-sort .dropdown-menu {\n  min-width: 4rem; }\n\n.grid #dropdown-sort .dropdown-item {\n  padding: .1rem 1rem .1rem .35rem;\n  padding-left: 2rem; }\n\n.grid #dropdown-sort .dropdown-item.selected {\n  padding-left: .35rem; }\n\n.grid option, .grid select {\n  text-transform: uppercase; }\n\n.grid.grid-media-view-thumbs table.grid-data thead th:not(.grid-actions) {\n  display: none; }\n\n.grid.grid-media-view-thumbs table.grid-data tbody {\n  display: flex;\n  flex-wrap: wrap; }\n\n.grid.grid-media-view-thumbs table.grid-data tbody tr {\n  position: relative;\n  width: 15rem;\n  height: 16.75rem;\n  margin: .75rem;\n  overflow: visible;\n  border-radius: 0.25rem;\n  overflow: hidden; }\n\n.grid.grid-media-view-thumbs table.grid-data tbody tr:hover {\n  border-color: #696;\n  box-shadow: 0 0 0.1rem #55595c; }\n\n.grid.grid-media-view-thumbs table.grid-data tbody tr.is-selected {\n  background-color: #eceeef;\n  border-color: #696;\n  box-shadow: 0 0 0.5rem #55595c; }\n\n.grid.grid-media-view-thumbs table.grid-data tbody td {\n  border: none;\n  padding: 0px;\n  background-color: transparent; }\n\n.grid.grid-media-view-thumbs table.grid-data tbody td.action {\n  display: none; }\n\n.grid.grid-media-view-thumbs table.grid-data tbody td[name=\"media_thumb\"] {\n  width: 100%;\n  height: 100%; }\n\n.grid.grid-media-view-thumbs table.grid-data tbody td[name=\"media_thumb\"] .flexy-thumb {\n  position: absolute;\n  width: auto;\n  height: auto;\n  bottom: 2rem;\n  left: 50%;\n  transform: translate(-50%, 0); }\n\n.grid.grid-media-view-thumbs table.grid-data tbody td[name=\"media_thumb\"] .flexy-thumb {\n  position: absolute;\n  width: auto;\n  max-width: 14rem;\n  height: auto;\n  max-height: 16rem;\n  bottom: 2.25rem;\n  left: 50%;\n  transform: translate(-50%, 0); }\n\n.grid.grid-media-view-thumbs table.grid-data tbody td[name=\"alt\"] {\n  position: absolute;\n  bottom: .35rem;\n  width: 100%;\n  text-align: center;\n  color: #696 !important;\n  overflow: hidden;\n  text-overflow: ellipsis; }\n\n.grid.grid-media-view-thumbs table.grid-data tbody td[name='name'],\n.grid.grid-media-view-thumbs table.grid-data tbody td[name='file'],\n.grid.grid-media-view-thumbs table.grid-data tbody td[name='path'],\n.grid.grid-media-view-thumbs table.grid-data tbody td[name='type'],\n.grid.grid-media-view-thumbs table.grid-data tbody td[name='date'],\n.grid.grid-media-view-thumbs table.grid-data tbody td[name='size'],\n.grid.grid-media-view-thumbs table.grid-data tbody td[name='width'],\n.grid.grid-media-view-thumbs table.grid-data tbody td[name='height'] {\n  display: none; }\n"],"sourceRoot":"webpack://"}]);
-
-// exports
-
-
-/***/ },
-/* 59 */
-/* unknown exports provided */
-/* all exports used */
-/*!******************************************************************************************************************************************************************************************************!*\
-  !*** ./~/css-loader?sourceMap!./~/vue-loader/lib/style-rewriter.js?id=data-v-5ab6a527!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/grid/flexy-grid-cell.vue ***!
-  \******************************************************************************************************************************************************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(/*! ./../../../../../~/css-loader/lib/css-base.js */ 1)();
-// imports
-
-
-// module
-exports.push([module.i, "\n.grid td {overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:250px;\n}\n.grid td.grid-cell-type-checkbox {text-align:center;\n}\n.grid td input {padding:0;float:left;\n}\n/*  .grid td.is-editing .flexy-button {float:right;}*/\n/*  .grid td.grid-cell-editable {cursor:pointer;}*/\n.grid .color-thumb-sm {padding:0.125rem .5rem;margin:0;\n}\n  /* tree, branches & nodes */\n.grid-type-tree tbody td[level=\"1\"][name=\"str_title\"] {padding-left:1rem;\n}\n.grid-type-tree tbody td[level=\"2\"][name=\"str_title\"] {padding-left:2rem;\n}\n.grid-type-tree tbody td[level=\"3\"][name=\"str_title\"] {padding-left:3rem;\n}\n.grid-type-tree tbody td[level=\"4\"][name=\"str_title\"] {padding-left:4rem;\n}\n.grid-type-tree tbody td[level=\"5\"][name=\"str_title\"] {padding-left:5rem;\n}\n.grid-type-tree tbody td[level=\"6\"][name=\"str_title\"] {padding-left:6rem;\n}\n.grid-type-tree tbody td[level=\"7\"][name=\"str_title\"] {padding-left:7rem;\n}\n", "", {"version":3,"sources":["/./flexyadmin/assets/js/components/grid/flexy-grid-cell.vue?351b62d5"],"names":[],"mappings":";AA6MA,UAAA,gBAAA,uBAAA,mBAAA,gBAAA;CAAA;AACA,kCAAA,kBAAA;CAAA;AACA,gBAAA,UAAA,WAAA;CAAA;AACA,sDAAA;AACA,mDAAA;AACA,uBAAA,uBAAA,SAAA;CAAA;EACA,4BAAA;AACA,uDAAA,kBAAA;CAAA;AACA,uDAAA,kBAAA;CAAA;AACA,uDAAA,kBAAA;CAAA;AACA,uDAAA,kBAAA;CAAA;AACA,uDAAA,kBAAA;CAAA;AACA,uDAAA,kBAAA;CAAA;AACA,uDAAA,kBAAA;CAAA","file":"flexy-grid-cell.vue","sourcesContent":["<script>\nimport flexyState from '../../flexy-state.js'\nimport flexyThumb from '../flexy-thumb.vue'\nimport flexyButton      from '../flexy-button.vue'\n\nexport default {\n  name: 'VueGridCell',\n  components: {flexyThumb,flexyButton},\n  props:['type','name','primary','value','level','editable','readonly','options','focus'],\n  \n  // created : function() {\n  //   console.log(this.options);\n  // },\n\n  computed:{\n    \n    fieldTypes : function() {\n      var types = {\n        checkbox  : ['checkbox'],\n        media     : ['media','medias'],\n        color     : ['color'],\n        url       : ['url'],\n        relation  : ['relation'],\n      };\n      types.default = [].concat( types.checkbox, types.media, types.color, types.url );\n      return types;\n    },\n    \n    cellClass : function() {\n      var c = [];\n      c.push('grid-cell-type-'+this.type);\n      if (this.editable) c.push('grid-cell-editable');\n      if (this.readonly) c.push('text-muted');\n      if (this.focus) c.push('has-focus');\n      if (this.isEditing) c.push('is-editing');\n      return c;\n    },\n    \n    showTreeNode : function() {\n      return (this.name===\"str_title\" && this.level>0);\n    },\n  },\n  \n  data : function() {\n    return {\n      item      : this.value,\n      oldItem   : this.value,\n      isEditing : false,\n    }\n  },\n  \n  methods : {\n    \n    isType : function( type, fieldType ) {\n      var is = false;\n      if (type==='default') {\n        is = (this.fieldTypes['default'].indexOf(fieldType) === -1);\n      }\n      else {\n        is = (this.fieldTypes[type].indexOf(fieldType) >= 0);\n      }\n      return is;\n    },\n    \n    thumbs : function(media) {\n      var array = media.split('|');\n      for (var i = 0; i < array.length; i++) {\n        array[i] = {\n          src : '_media/thumb/' + this.options['path'] +'/'+ array[i],\n          alt : array[i],\n        }\n      }\n      return array;\n    },\n    \n    complementColor : function(color) {\n      var complement = '#'+(0xffffff ^ color).toString(16);\n      return complement;\n    },\n    \n    relationItems : function(string) {\n      var items = string.split(',');\n      for (var i = 0; i < items.length; i++) {\n        items[i] = items[i].replace(/{/,'').replace(/}/,'');\n      }\n      return items;\n    },\n    \n    select : function() {\n      this.$emit('select');\n    },\n    \n    // saveEdit : function(event) {\n    //   console.log('saveEdit',this.oldItem,this.item);\n    //   var self = this;\n    //   self.isEditing = false;\n    //   if (this.item!==this.oldItem) {\n    //     self.postField(this.item).then(function(response){\n    //       if (response.error) {\n    //         self.cancelEdit();\n    //       }\n    //     });\n    //   }\n    // },\n    \n    // startEdit : function() {\n    //   if (this.focus && this.editable && !this.readonly) {\n    //     console.log('startEdit');\n    //     this.oldItem = this.item;\n    //     this.isEditing = true;\n    //   }\n    // },\n    \n    // cancelEdit : function(elem) {\n    //   console.log('cancelEdit');\n    //   this.Item = this.oldItem;\n    //   this.isEditing = false;\n    // },\n    \n    \n    clickEdit : function() {\n      var self = this;\n      var currentValue = self.item;\n      if (this.editable && this.type==='checkbox') {\n        var newValue = 1;\n        if (currentValue) newValue=0;\n        self.postField(newValue).then(function(response){\n          if (!response.error) {\n            self.item = newValue;\n          }\n        });\n      }\n    },\n    \n    postField : function(value) {\n      var self=this;\n      var data = {};\n      data[self.name] = value;\n      return this.api({\n        url : 'row',\n        'data': {\n          'table'   : this.primary.table,\n          'where'   : this.primary.id,\n          'data'    : data,\n        },\n      }).then(function(response){\n        if (!response.error) {\n          if ( !_.isUndefined(response.data.info.validation) && response.data.info.validation===false) {\n            response.error = true;\n            for (var error in response.data.info.validation_errors) {\n              flexyState.addMessage(response.data.info.validation_errors[error],'danger');\n            }\n          }\n        }\n        else {\n          flexyState.addMessage( self.$lang.vue_form_save_error,'danger');\n        }\n        return response;\n      });\n    },    \n    \n    \n  },\n  \n}\n</script>\n\n<template>\n  <td v-if=\"type!=='hidden'\" :type=\"type\" :name=\"name\" :value=\"item\" :class=\"cellClass\" :level=\"level\">\n    <span v-if=\"showTreeNode\" class=\"fa fa-level-up fa-rotate-90 text-muted\"></span>\n\n    <template v-if=\"isType('relation',type)\">\n      <span class=\"grid-relation-item\" v-for=\"item in relationItems(item)\">{{item}}</span>\n    </template>\n\n    <template v-if=\"isType('media',type)\">\n      <template v-if=\"item !==''\">\n        <flexy-thumb @click.native=\"select()\"  v-for=\"img in thumbs(item)\" :src=\"img.src\" :alt=\"img.alt\">\n      </template>\n    </template>\n\n    <template v-if=\"isType('color',type)\">\n      <div class=\"color-thumb-sm\" :style=\"'color:'+complementColor(item)+';background-color:'+item\">{{item}}</div>\n    </template>\n\n    <template v-if=\"isType('checkbox',type)\">\n      <div @click=\"clickEdit\">\n        <span v-if=\"item\" class=\"fa fa-check text-success\" :value=\"item\"></span>\n        <span v-else class=\"fa fa-minus text-warning\" :value=\"item\"></span>\n      </div>\n    </template>\n    \n    <template v-if=\"isType('url',type)\">\n      <a :href=\"item\" target=\"_blank\">{{item}}</a>\n    </template>\n\n    <template v-if=\"isType('default',type)\">\n      <span>{{item}}</span>\n    </template>\n\n  </td>\n</template>\n\n\n<style>\n  .grid td {overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:250px;}\n  .grid td.grid-cell-type-checkbox {text-align:center;}\n  .grid td input {padding:0;float:left;}\n/*  .grid td.is-editing .flexy-button {float:right;}*/\n/*  .grid td.grid-cell-editable {cursor:pointer;}*/\n  .grid .color-thumb-sm {padding:0.125rem .5rem;margin:0;}\n  /* tree, branches & nodes */\n  .grid-type-tree tbody td[level=\"1\"][name=\"str_title\"] {padding-left:1rem;}\n  .grid-type-tree tbody td[level=\"2\"][name=\"str_title\"] {padding-left:2rem;}\n  .grid-type-tree tbody td[level=\"3\"][name=\"str_title\"] {padding-left:3rem;}\n  .grid-type-tree tbody td[level=\"4\"][name=\"str_title\"] {padding-left:4rem;}\n  .grid-type-tree tbody td[level=\"5\"][name=\"str_title\"] {padding-left:5rem;}\n  .grid-type-tree tbody td[level=\"6\"][name=\"str_title\"] {padding-left:6rem;}\n  .grid-type-tree tbody td[level=\"7\"][name=\"str_title\"] {padding-left:7rem;}\n</style>"],"sourceRoot":"webpack://"}]);
-
-// exports
-
-
-/***/ },
+/* 58 */,
+/* 59 */,
 /* 60 */
 /* unknown exports provided */
 /* all exports used */
@@ -28471,31 +28407,13 @@ exports = module.exports = __webpack_require__(/*! ./../../../../~/css-loader/li
 
 
 // module
-exports.push([module.i, "\n.pagination-container {width:100%;height:2rem;margin-top:.25rem;\n}\n.pagination {margin:0;\n}\n.pagination-info {margin-top:.25rem;\n}\n.pagination .page-link {padding:0rem .5rem;\n}\n", "", {"version":3,"sources":["/./flexyadmin/assets/js/components/flexy-pagination.vue?9b8b2bba"],"names":[],"mappings":";AAoEA,uBAAA,WAAA,YAAA,kBAAA;CAAA;AACA,aAAA,SAAA;CAAA;AACA,kBAAA,kBAAA;CAAA;AACA,wBAAA,mBAAA;CAAA","file":"flexy-pagination.vue","sourcesContent":["<template>\n  <div class=\"pagination-container\">\n    <ul class=\"pagination\">\n      <li v-if=\"current>1  && pages>buttons\" class=\"page-item\"><a class=\"page-link\" :href=\"pageUrl(1)\"><span class=\"fa fa-fast-backward\"></span></a></li>\n      <li v-if=\"current>10 && pages>buttons\" class=\"page-item\"><a class=\"page-link\" :href=\"pageUrl(current-10)\"><span class=\"fa fa-backward\"></span></a></li>\n      <li v-if=\"current>1  && pages>buttons\" class=\"page-item\"><a class=\"page-link\" :href=\"pageUrl(current-1)\"><span class=\"fa fa-chevron-left\"></span></a></li>\n      \n      <li v-for=\"page in pagesButtons()\" class=\"page-item\" :class=\"{active:(page==current)}\"><a class=\"page-link\" :href=\"pageUrl(page)\">{{page}}</a></li>\n      \n      <li v-if=\"current<pages-1  && pages>buttons\" class=\"page-item\"><a class=\"page-link\" :href=\"pageUrl(current+1)\"><span class=\"fa fa-chevron-right\"></span></a></li>\n      <li v-if=\"current<pages-10 && pages>buttons\" class=\"page-item\"><a class=\"page-link\" :href=\"pageUrl(current+10)\"><span class=\"fa fa-forward\"></span></a></li>\n      <li v-if=\"current<pages-1  && pages>buttons\" class=\"page-item\"><a class=\"page-link\" :href=\"pageUrl(pages-1)\"><span class=\"fa fa-fast-forward\"></span></a></li>\n    </ul>\n    <span class=\"pagination-info text-primary\">{{$lang.grid_pagination | replace(total,pages)}}</span>\n  </div>\n</template>\n\n<script>\nexport default {\n  name : 'VuePagination',\n  props:{\n    'total'   : Number,     // total number of rows\n    'pages'   : Number,     // pages number of pages\n    'current' : Number,     // current page\n    'limit'   : Number,     // items per page\n    'url'     : String,     // template for building url, where {{offset}} will be replaced with the offset\n    'buttons' : {           // Number of page-buttons used for pagination\n      type:Number,\n      default:5\n    },\n  },\n  \n  methods:{\n    \n    /**\n      Calculates number of buttons needed, returns it as an array\n     */\n    pagesButtons : function() {\n      if (this.buttons>=this.pages) return this.pages;\n      var min = this.current - Math.floor(this.buttons/2);\n      var max = this.current + Math.floor(this.buttons/2);\n      while (min<=0) {\n        min++;\n        max++;\n      }\n      while (max>=this.pages) {\n        min--;\n        max--;\n      }\n      var numberButtons = [];\n      for (var i = min; i <= max; i++) {\n        numberButtons.push(i);\n      }\n      return numberButtons;\n    },\n\n    /**\n     * Creates the URL for each button\n     */\n    pageUrl : function(page) {\n      return this.url.replace('##',( (page-1) * this.limit ));\n    },\n    \n  }\n}\n</script>\n\n<style>\n  .pagination-container {width:100%;height:2rem;margin-top:.25rem;}\n  .pagination {margin:0;}\n  .pagination-info {margin-top:.25rem;}\n  .pagination .page-link {padding:0rem .5rem;}\n</style>"],"sourceRoot":"webpack://"}]);
+exports.push([module.i, "\n.pagination-container {width:100%;height:2rem;margin-top:.25rem;\n}\n.pagination {margin:0;\n}\n.pagination-info {margin-top:.25rem;\n}\n.pagination .page-link {padding:0rem .5rem;\n}\n.pagination-info {margin-right:.25rem;float:right;\n}\n", "", {"version":3,"sources":["/./flexyadmin/assets/js/components/flexy-pagination.vue?8a249c60"],"names":[],"mappings":";AAoEA,uBAAA,WAAA,YAAA,kBAAA;CAAA;AACA,aAAA,SAAA;CAAA;AACA,kBAAA,kBAAA;CAAA;AACA,wBAAA,mBAAA;CAAA;AACA,kBAAA,oBAAA,YAAA;CAAA","file":"flexy-pagination.vue","sourcesContent":["<template>\n  <div class=\"pagination-container\">\n    <ul class=\"pagination\">\n      <li v-if=\"current>1  && pages>buttons\" class=\"page-item\"><a class=\"page-link\" :href=\"pageUrl(1)\"><span class=\"fa fa-fast-backward\"></span></a></li>\n      <li v-if=\"current>10 && pages>buttons\" class=\"page-item\"><a class=\"page-link\" :href=\"pageUrl(current-10)\"><span class=\"fa fa-backward\"></span></a></li>\n      <li v-if=\"current>1  && pages>buttons\" class=\"page-item\"><a class=\"page-link\" :href=\"pageUrl(current-1)\"><span class=\"fa fa-chevron-left\"></span></a></li>\n      \n      <li v-for=\"page in pagesButtons()\" class=\"page-item\" :class=\"{active:(page==current)}\"><a class=\"page-link\" :href=\"pageUrl(page)\">{{page}}</a></li>\n      \n      <li v-if=\"current<pages-1  && pages>buttons\" class=\"page-item\"><a class=\"page-link\" :href=\"pageUrl(current+1)\"><span class=\"fa fa-chevron-right\"></span></a></li>\n      <li v-if=\"current<pages-10 && pages>buttons\" class=\"page-item\"><a class=\"page-link\" :href=\"pageUrl(current+10)\"><span class=\"fa fa-forward\"></span></a></li>\n      <li v-if=\"current<pages-1  && pages>buttons\" class=\"page-item\"><a class=\"page-link\" :href=\"pageUrl(pages-1)\"><span class=\"fa fa-fast-forward\"></span></a></li>\n    </ul>\n    <span class=\"pagination-info text-primary\">{{$lang.grid_pagination | replace(total,pages)}}</span>\n  </div>\n</template>\n\n<script>\nexport default {\n  name : 'VuePagination',\n  props:{\n    'total'   : Number,     // total number of rows\n    'pages'   : Number,     // pages number of pages\n    'current' : Number,     // current page\n    'limit'   : Number,     // items per page\n    'url'     : String,     // template for building url, where {{offset}} will be replaced with the offset\n    'buttons' : {           // Number of page-buttons used for pagination\n      type:Number,\n      default:5\n    },\n  },\n  \n  methods:{\n    \n    /**\n      Calculates number of buttons needed, returns it as an array\n     */\n    pagesButtons : function() {\n      if (this.buttons>=this.pages) return this.pages;\n      var min = this.current - Math.floor(this.buttons/2);\n      var max = this.current + Math.floor(this.buttons/2);\n      while (min<=0) {\n        min++;\n        max++;\n      }\n      while (max>=this.pages) {\n        min--;\n        max--;\n      }\n      var numberButtons = [];\n      for (var i = min; i <= max; i++) {\n        numberButtons.push(i);\n      }\n      return numberButtons;\n    },\n\n    /**\n     * Creates the URL for each button\n     */\n    pageUrl : function(page) {\n      return this.url.replace('##',( (page-1) * this.limit ));\n    },\n    \n  }\n}\n</script>\n\n<style>\n  .pagination-container {width:100%;height:2rem;margin-top:.25rem;}\n  .pagination {margin:0;}\n  .pagination-info {margin-top:.25rem;}\n  .pagination .page-link {padding:0rem .5rem;}\n  .pagination-info {margin-right:.25rem;float:right;}\n</style>"],"sourceRoot":"webpack://"}]);
 
 // exports
 
 
 /***/ },
-/* 61 */
-/* unknown exports provided */
-/* all exports used */
-/*!*************************************************************************************************************************************************************************************************!*\
-  !*** ./~/css-loader?sourceMap!./~/vue-loader/lib/style-rewriter.js?id=data-v-e9bdde50!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/form/flexy-form.vue ***!
-  \*************************************************************************************************************************************************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(/*! ./../../../../../~/css-loader/lib/css-base.js */ 1)();
-// imports
-
-
-// module
-exports.push([module.i, "\n.form .form-group {min-height:2.35rem;\n}\n.form-control-label {text-transform:uppercase;font-weight:bold;padding-top:.5rem;padding-bottom:0;margin-bottom:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;\n}\ntextarea {min-height:10rem;max-height:20rem;\n}\n.form-check-input {margin-left:0;margin-top:.75rem;\n}\n.validation-error {padding:.25rem 1rem;font-weight:bold;\n}\n", "", {"version":3,"sources":["/./flexyadmin/assets/js/components/form/flexy-form.vue?47e5d081"],"names":[],"mappings":";AAqNA,mBAAA,mBAAA;CAAA;AACA,qBAAA,yBAAA,iBAAA,kBAAA,iBAAA,gBAAA,gBAAA,uBAAA,mBAAA;CAAA;AACA,UAAA,iBAAA,iBAAA;CAAA;AACA,mBAAA,cAAA,kBAAA;CAAA;AACA,mBAAA,oBAAA,iBAAA;CAAA","file":"flexy-form.vue","sourcesContent":["<script>\nimport flexyState       from '../../flexy-state.js'\nimport flexyButton      from '../flexy-button.vue'\n\nimport tab              from '../../vue-strap-src/components/Tab.vue'\nimport tabs             from '../../vue-strap-src/components/Tabs.vue'\n// import tabGroup         from '../../vue-strap-src/components/TabGroup.vue'\n\n\nexport default {\n  name: 'FlexyForm',\n  components: {flexyButton,tab,tabs},\n  props:{\n    'title':String,\n    'name':String,\n    'path':[Boolean,String],\n    'primary':Number,\n    'fields':[Object,Array],\n    'fieldsets':[Object,Array],\n    'data':[Object,Array],\n    'options':[Object,Array],\n  },\n  \n  computed : {\n    fieldTypes : function() {\n      var types = {\n        primary   : ['primary'],\n        hidden    : ['hidden'],\n        checkbox  : ['checkbox'],\n        select    : ['select','media'],\n        textarea  : ['textarea','wysiwyg'],\n      };\n      types.default = [].concat( types.primary, types.hidden, types.checkbox, types.select, types.textarea );\n      return types;\n    }\n  },\n  \n  // Copy of props.data\n  data : function() {\n    return {\n      row : {},\n      validationErrors : {},\n      isSaving : false,\n    }\n  },\n  // Make copy of props.data\n  created : function() {\n    this.row = this.data;\n  },\n  \n  methods:{\n    \n    isType : function( type,field ) {\n      if (type==='default') {\n        return this.fieldTypes['default'].indexOf(this.fields[field].schema['form-type']) === -1;\n      }\n      return this.fieldTypes[type].indexOf(this.fields[field].schema['form-type']) >= 0;\n    },\n    \n    isMultiple : function( field ) {\n      var multiple = false;\n      if (this.options[field].multiple) multiple='multiple';\n      if (flexyState.debug) console.log('isMultiple',field,multiple);\n      return multiple;\n    },\n    \n    validationClass : function(field) {\n      var validation='';\n      if (this.validationErrors[field]) validation = 'has-danger';\n      return validation;\n    },\n    \n    cancel : function() {\n      var self=this;\n      if (!this.isSaving) {\n        window.location.assign( self.returnUrl() );\n      }\n    },\n    \n    submit : function() {\n      var self=this;\n      if (!this.isSaving) {\n        this.postForm().then(function (response) {\n          if (!response.error) {\n            window.location.assign( self.returnUrl() );\n          }\n        })\n      }\n    },\n    \n    returnUrl : function() {\n      var url = 'admin/show/grid/' + this.name;\n      if (this.path && this.path!=='false') url = 'admin/show/media/' + this.path;\n      return url;\n    },\n    \n    save : function() {\n      if (!this.isSaving) {\n        this.postForm();\n      }\n    },\n    \n    postForm : function() {\n      var self=this;\n      self.isSaving = true;\n      return this.api({\n        url : 'row',\n        'data': {\n          'table'   : this.name,\n          'where'   : this.row['id'],\n          'data'    : this.row\n        },\n      }).then(function(response){\n        self.isSaving = false;\n        if (!response.error) {\n          if ( _.isUndefined(response.data.info) || response.data.info.validation!==false) {\n            flexyState.addMessage('Item saved');\n            if (self.isNewItem()) {\n              self.row['id'] = response.data.data.id;\n            }\n          }\n          else {\n            flexyState.addMessage( self.$lang.form_validation_error, 'danger');\n            if ( !_.isUndefined(response.data.info) ) self.validationErrors = response.data.info.validation_errors;\n          }\n        }\n        else {\n          flexyState.addMessage( self.$lang.form_save_error, 'danger');\n        }\n        return response;\n      });\n    },\n    \n    isNewItem : function() {\n      return this.row['id'] === -1;\n    },\n    \n    updateField : function( field, value ) {\n      this.row[field] = value;\n    },\n    \n  }\n  \n}\n</script>\n\n<template>\n<div class=\"card form\">\n  <div class=\"card-header\">\n    <h1>{{title}}</h1>\n    <div class=\"btn-group\" role=\"group\">\n      <flexy-button @click.native=\"cancel()\" icon=\"close\" :text=\"$lang.cancel\" :disabled=\"isSaving\" class=\"btn-danger\"/>\n      <flexy-button @click.native=\"save()\"   icon=\"save\" :text=\"$lang.save\" :disabled=\"isSaving\" class=\"btn-warning\"/>\n      <flexy-button @click.native=\"submit()\" icon=\"check\" :text=\"$lang.submit\" :disabled=\"isSaving\" class=\"btn-info\"/>\n    </div>\n  </div>\n\n  <div class=\"card-block\">\n    \n    <tabs navStyle=\"tabs\">\n      <tab v-for=\"(fieldset,name) in fieldsets\" :header=\"name\">\n        <template v-for=\"field in fieldset\">\n          \n          <template v-if=\"isType('primary',field)\">\n            <!-- Primary -->\n            <input type=\"hidden\" :value=\"row[field]\">\n          </template>\n          \n          <div class=\"form-group row\" :class=\"validationClass(field)\" v-if=\"isType('textarea',field)\">\n            <!-- Textarea -->\n            <div v-if=\"validationErrors[field]\" class=\"validation-error form-text text-danger\">{{validationErrors[field]}}</div>\n            <label class=\"col-xs-3 form-control-label\" :for=\"field\">{{fields[field]['name']}}</label>\n            <div class=\"col-xs-9\">\n              <textarea class=\"form-control\" :id=\"field\" :name=\"field\" :value=\"row[field]\" v-on:input=\"updateField(field,$event.target.value)\" placeholder=\"\">\n            </div>\n          </div>\n\n          <div class=\"form-group row\" :class=\"validationClass(field)\" v-if=\"isType('checkbox',field)\">\n            <!-- Checkbox -->\n            <div v-if=\"validationErrors[field]\" class=\"validation-error form-text text-danger\">{{validationErrors[field]}}</div>\n            <label class=\"col-xs-3 form-control-label\" :for=\"field\">{{fields[field]['name']}}</label>\n            <div class=\"col-xs-9\">\n              <input class=\"form-check-input\" type=\"checkbox\" :id=\"field\" :name=\"field\" v-model=\"row[field]\" v-on:input=\"updateField(field,$event.target.value)\">\n            </div>\n          </div>\n          \n          <div class=\"form-group row\" :class=\"validationClass(field)\" v-if=\"isType('select',field)\">\n            <!-- Select -->\n            <div v-if=\"validationErrors[field]\" class=\"validation-error form-text text-danger\">{{validationErrors[field]}}</div>\n            <label class=\"col-xs-3 form-control-label\" :for=\"field\">{{fields[field]['name']}}</label>\n            <div class=\"col-xs-9\">\n              <select class=\"form-control\" :id=\"field\" :name=\"field\" :value=\"row[field]\" v-on:input=\"updateField(field,$event.target.value)\" :multiple=\"isMultiple(field)\">\n                <option v-for=\"option in options[field]['data']\" :value=\"option.value\" :selected=\"option.value==row[field]\">{{option.name}}</option>\n              </select>\n            </div>\n          </div>\n\n          <div class=\"form-group row\" :class=\"validationClass(field)\" v-if=\"isType('default',field)\">\n            <!-- Default -->\n            <div v-if=\"validationErrors[field]\" class=\"validation-error form-text text-danger\">{{validationErrors[field]}}</div>\n            <label class=\"col-xs-3 form-control-label\" :for=\"field\">{{fields[field]['name']}}</label>\n            <div class=\"col-xs-9\"><input type=\"text\" class=\"form-control\" :id=\"field\" :name=\"field\" :value=\"row[field]\" v-on:input=\"updateField(field,$event.target.value)\" placeholder=\"\"></div>\n          </div>\n          \n        </template>\n      </tab>\n    </tabs>\n\n  </div>\n</div>\n</template>\n\n<style>\n  .form .form-group {min-height:2.35rem;}\n  .form-control-label {text-transform:uppercase;font-weight:bold;padding-top:.5rem;padding-bottom:0;margin-bottom:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}\n  textarea {min-height:10rem;max-height:20rem;}\n  .form-check-input {margin-left:0;margin-top:.75rem;}\n  .validation-error {padding:.25rem 1rem;font-weight:bold;}\n</style>\n"],"sourceRoot":"webpack://"}]);
-
-// exports
-
-
-/***/ },
+/* 61 */,
 /* 62 */
 /* unknown exports provided */
 /* all exports used */
@@ -29887,9 +29805,6 @@ module.exports = __vue_exports__
 var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
 
-/* styles */
-__webpack_require__(/*! !vue-style-loader!css-loader?sourceMap!vue-loader/lib/style-rewriter?id=data-v-5ab6a527!vue-loader/lib/selector?type=styles&index=0!./flexy-grid-cell.vue */ 86)
-
 /* script */
 __vue_exports__ = __webpack_require__(/*! !babel-loader!vue-loader/lib/selector?type=script&index=0!./flexy-grid-cell.vue */ 49)
 
@@ -31136,12 +31051,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
       }, [_vm._s(_vm.fields[field]['name'])]), " ", _h('div', {
         staticClass: "col-xs-9"
       }, [_h('input', {
-        directives: [{
-          name: "model",
-          rawName: "v-model",
-          value: (_vm.row[field]),
-          expression: "row[field]"
-        }],
         staticClass: "form-check-input",
         attrs: {
           "type": "checkbox",
@@ -31149,27 +31058,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
           "name": field
         },
         domProps: {
-          "checked": Array.isArray(_vm.row[field]) ? _vm._i(_vm.row[field], null) > -1 : _vm._q(_vm.row[field], true)
+          "checked": _vm.row[field]
         },
         on: {
           "input": function($event) {
-            _vm.updateField(field, $event.target.value)
-          },
-          "change": function($event) {
-            var $$a = _vm.row[field],
-              $$el = $event.target,
-              $$c = $$el.checked ? (true) : (false);
-            if (Array.isArray($$a)) {
-              var $$v = null,
-                $$i = _vm._i($$a, $$v);
-              if ($$c) {
-                $$i < 0 && (_vm.row[field] = $$a.concat($$v))
-              } else {
-                $$i > -1 && (_vm.row[field] = $$a.slice(0, $$i).concat($$a.slice($$i + 1)))
-              }
-            } else {
-              _vm.row[field] = $$c
-            }
+            _vm.updateField(field, $event.target.checked)
           }
         }
       })])]) : _vm._e(), " ", (_vm.isType('select', field)) ? _h('div', {
@@ -31327,37 +31220,7 @@ if (false) {
 }
 
 /***/ },
-/* 81 */
-/* unknown exports provided */
-/* all exports used */
-/*!*********************************************************************************************************************************************************************************************************************!*\
-  !*** ./~/vue-style-loader!./~/css-loader?sourceMap!./~/vue-loader/lib/style-rewriter.js?id=data-v-0236572d!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/flexy-messages.vue ***!
-  \*********************************************************************************************************************************************************************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(/*! !./../../../../~/css-loader?sourceMap!./../../../../~/vue-loader/lib/style-rewriter.js?id=data-v-0236572d!./../../../../~/vue-loader/lib/selector.js?type=styles&index=0!./flexy-messages.vue */ 54);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(/*! ./../../../../~/vue-style-loader/addStyles.js */ 2)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!./../../../../node_modules/css-loader/index.js?sourceMap!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-0236572d!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./flexy-messages.vue", function() {
-			var newContent = require("!!./../../../../node_modules/css-loader/index.js?sourceMap!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-0236572d!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./flexy-messages.vue");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ },
+/* 81 */,
 /* 82 */
 /* unknown exports provided */
 /* all exports used */
@@ -31451,68 +31314,8 @@ if(false) {
 }
 
 /***/ },
-/* 85 */
-/* unknown exports provided */
-/* all exports used */
-/*!**************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./~/vue-style-loader!./~/css-loader?sourceMap!./~/vue-loader/lib/style-rewriter.js?id=data-v-4dbe28d0!./~/sass-loader!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/grid/flexy-grid.vue ***!
-  \**************************************************************************************************************************************************************************************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(/*! !./../../../../../~/css-loader?sourceMap!./../../../../../~/vue-loader/lib/style-rewriter.js?id=data-v-4dbe28d0!./../../../../../~/sass-loader!./../../../../../~/vue-loader/lib/selector.js?type=styles&index=0!./flexy-grid.vue */ 58);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(/*! ./../../../../../~/vue-style-loader/addStyles.js */ 2)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!./../../../../../node_modules/css-loader/index.js?sourceMap!./../../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-4dbe28d0!./../../../../../node_modules/sass-loader/index.js!./../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./flexy-grid.vue", function() {
-			var newContent = require("!!./../../../../../node_modules/css-loader/index.js?sourceMap!./../../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-4dbe28d0!./../../../../../node_modules/sass-loader/index.js!./../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./flexy-grid.vue");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ },
-/* 86 */
-/* unknown exports provided */
-/* all exports used */
-/*!***************************************************************************************************************************************************************************************************************************!*\
-  !*** ./~/vue-style-loader!./~/css-loader?sourceMap!./~/vue-loader/lib/style-rewriter.js?id=data-v-5ab6a527!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/grid/flexy-grid-cell.vue ***!
-  \***************************************************************************************************************************************************************************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(/*! !./../../../../../~/css-loader?sourceMap!./../../../../../~/vue-loader/lib/style-rewriter.js?id=data-v-5ab6a527!./../../../../../~/vue-loader/lib/selector.js?type=styles&index=0!./flexy-grid-cell.vue */ 59);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(/*! ./../../../../../~/vue-style-loader/addStyles.js */ 2)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!./../../../../../node_modules/css-loader/index.js?sourceMap!./../../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-5ab6a527!./../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./flexy-grid-cell.vue", function() {
-			var newContent = require("!!./../../../../../node_modules/css-loader/index.js?sourceMap!./../../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-5ab6a527!./../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./flexy-grid-cell.vue");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ },
+/* 85 */,
+/* 86 */,
 /* 87 */
 /* unknown exports provided */
 /* all exports used */
@@ -31544,37 +31347,7 @@ if(false) {
 }
 
 /***/ },
-/* 88 */
-/* unknown exports provided */
-/* all exports used */
-/*!**********************************************************************************************************************************************************************************************************************!*\
-  !*** ./~/vue-style-loader!./~/css-loader?sourceMap!./~/vue-loader/lib/style-rewriter.js?id=data-v-e9bdde50!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/form/flexy-form.vue ***!
-  \**********************************************************************************************************************************************************************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(/*! !./../../../../../~/css-loader?sourceMap!./../../../../../~/vue-loader/lib/style-rewriter.js?id=data-v-e9bdde50!./../../../../../~/vue-loader/lib/selector.js?type=styles&index=0!./flexy-form.vue */ 61);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(/*! ./../../../../../~/vue-style-loader/addStyles.js */ 2)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!./../../../../../node_modules/css-loader/index.js?sourceMap!./../../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-e9bdde50!./../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./flexy-form.vue", function() {
-			var newContent = require("!!./../../../../../node_modules/css-loader/index.js?sourceMap!./../../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-e9bdde50!./../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./flexy-form.vue");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ },
+/* 88 */,
 /* 89 */
 /* unknown exports provided */
 /* all exports used */
@@ -31890,10 +31663,7 @@ module.exports = function(module) {
  * - Global Vue Settings (Mixins)
  * 
  * @author: Jan den Besten
- */var AUTH_TOKEN=_flexy.auth_token;var _=__webpack_require__(/*! lodash */ 16);// import BootstrapVue     from 'bootstrap-vue';
-// import FlexyModal       from './components/flexy-modal.vue'
-// Globally register bootstrap-vue components
-// Vue.use(BootstrapVue);
+ */var AUTH_TOKEN=_flexy.auth_token;var _=__webpack_require__(/*! lodash */ 16);// import FlexyModal       from './components/flexy-modal.vue'
 // Language settings
 var LOCALES={};LOCALES[_flexy.language]=JSON.parse(_flexy.language_keys);_vue2.default.use(_vueLang2.default,{lang:_flexy.language,locales:LOCALES});_vue2.default.mixin({data:function data(){return{state:_flexyState2.default.state};},methods:{/**
       Global method om Api aan te roepen. Options Object bevat de volgende properties:
