@@ -113,9 +113,10 @@ Class Res_assets extends Data_Core {
       }
     }
     
-    $this->load->model('data/data_create');
-    $this->data_create->save_config( 'assets', 'sys/flexyadmin/config/assets.php', 'site/config/assets.php', array('assets'=>$assets) );
-    
+    if (!defined('PHPUNIT_TEST')) {
+      $this->load->model('data/data_create');
+      $this->data_create->save_config( 'assets', 'sys/flexyadmin/config/assets.php', 'site/config/assets.php', array('assets'=>$assets) );
+    }
     return $assets;
   }
   
