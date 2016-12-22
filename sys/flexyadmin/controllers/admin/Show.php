@@ -150,13 +150,13 @@ class Show extends AdminController {
       
     // Data
     $this->data->table($name);
-    if ($isMedia) $this->data->select('str_title');
+    if ($isMedia) $this->data->select('alt');
     $data = $this->data->get_form($id);
     $options = $this->data->get_options();
     // Fields
     $fields = $this->_prepareFields('form_set',$options);
     if ($isMedia) {
-      $fields = array_keep_keys($fields,array('id','str_title'));
+      $fields = array_keep_keys($fields,array('id','alt'));
       $fieldsets = array($path=>array_keys($fields));
     }
     else {
