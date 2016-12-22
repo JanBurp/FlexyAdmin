@@ -82,20 +82,37 @@ export default {
       return items;
     },
     
+    select : function() {
+      this.$emit('select');
+    },
+    
     contentChanged : function(event) {
       var self = this;
+      var oldValue = self.item;
       if (event.type==='blur') {
-        var oldValue = self.item;
         var newValue = event.target.innerHTML;
         if (oldValue!==newValue) {
           self.postField(newValue).then(function(response){
             if (!response.error) {
               self.item = newValue;
             }
+            else {
+              self.cancelEdit(event.target);
+            }
           });
         }
       }
+      // Reset when ESC is pressed
+      if (event.type==='keyup' && event.key==='Escape') {
+        self.cancelEdit(event.target);
+      }
     },
+    
+    cancelEdit : function(elem) {
+      elem.innerHTML = this.item;
+    },
+    
+    
     
     clickEdit : function() {
       var self = this;
@@ -125,7 +142,10 @@ export default {
       }).then(function(response){
         if (!response.error) {
           if ( !_.isUndefined(response.data.info.validation) && response.data.info.validation===false) {
-            flexyState.addMessage(response.data.info.validation_errors,'danger');
+            response.error = true;
+            for (var error in response.data.info.validation_errors) {
+              flexyState.addMessage(response.data.info.validation_errors[error],'danger');
+            }
           }
         }
         else {
@@ -151,7 +171,7 @@ export default {
 
     <template v-if="isType('media',type)">
       <template v-if="item !==''">
-        <flexy-thumb v-for="img in thumbs(item)" :src="img.src" :alt="img.alt">
+        <flexy-thumb @click.native="select()"  v-for="img in thumbs(item)" :src="img.src" :alt="img.alt">
       </template>
     </template>
 
