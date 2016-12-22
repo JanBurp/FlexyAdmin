@@ -349,7 +349,7 @@ export default {
             where : removeIds,
           };
           if (self.gridType==='media') data.table = 'res_assets';
-          return this.api({
+          return flexyState.api({
             url   : 'row',
             data  : data,
           }).then(function(response){
@@ -472,7 +472,7 @@ export default {
         formData.set( 'path', self.name );
         formData.set( 'file', self.uploadFiles[i] );
         formData.set( 'fileName', self.uploadFiles[i].name );
-        this.api({
+        flexyState.api({
           url       : 'media',
           data      : formData,
           formData  : true,
@@ -597,7 +597,7 @@ export default {
       var self=this;
       var itemId = this.draggable.item;
       // var newOrder = this.draggable.orderStart + this.items[ this.draggable.newIndex ].order.value;
-      return this.api({
+      return flexyState.api({
         url : 'table_order',
         'data': {
           'table' : self.name,

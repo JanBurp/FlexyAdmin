@@ -136,7 +136,7 @@ export default {
       var self=this;
       var data = {};
       data[self.name] = value;
-      return this.api({
+      return flexyState.api({
         url : 'row',
         'data': {
           'table'   : this.primary.table,

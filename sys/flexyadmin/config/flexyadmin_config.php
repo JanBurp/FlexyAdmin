@@ -134,7 +134,7 @@ $config['API_info']									= '/admin/info/';
 
 $config['AJAX']											= "/admin/ajax/";
 
-$config['FILES_view_types']					= array("list","icons");
+$config['FILES_view_types']					= array("list","thumbs");
 
 
 $config['FILES_thumb_path']					= "/thumb/";
@@ -961,7 +961,7 @@ $config["CFG_"]=array(
 			"field"=>'cfg_users.str_filemanager_view',
  			"b_show_in_grid"=>'0',
 			"b_show_in_form"=>'0',
-			"str_options"=>'icons|list|detailed',
+			"str_options"=>'list|thumbs',
 			"b_multi_options"=>'0',
 			"str_validation_rules"=>''
  			),
