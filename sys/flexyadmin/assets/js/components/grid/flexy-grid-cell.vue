@@ -200,21 +200,3 @@ export default {
 
   </td>
 </template>
-
-
-<style>
-  .grid td {overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:250px;}
-  .grid td.grid-cell-type-checkbox {text-align:center;}
-  .grid td input {padding:0;float:left;}
-/*  .grid td.is-editing .flexy-button {float:right;}*/
-/*  .grid td.grid-cell-editable {cursor:pointer;}*/
-  .grid .color-thumb-sm {padding:0.125rem .5rem;margin:0;}
-  /* tree, branches & nodes */
-  .grid-type-tree tbody td[level="1"][name="str_title"] {padding-left:1rem;}
-  .grid-type-tree tbody td[level="2"][name="str_title"] {padding-left:2rem;}
-  .grid-type-tree tbody td[level="3"][name="str_title"] {padding-left:3rem;}
-  .grid-type-tree tbody td[level="4"][name="str_title"] {padding-left:4rem;}
-  .grid-type-tree tbody td[level="5"][name="str_title"] {padding-left:5rem;}
-  .grid-type-tree tbody td[level="6"][name="str_title"] {padding-left:6rem;}
-  .grid-type-tree tbody td[level="7"][name="str_title"] {padding-left:7rem;}
-</style>

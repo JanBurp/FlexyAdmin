@@ -1,0 +1,48 @@
+// Label styling
+.form-control-label {
+  text-transform:uppercase;
+  font-weight:bold;
+  padding-top:.5rem;
+  padding-bottom:0;
+  margin-bottom:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+// Input Border color
+.form-group.row:not(.has-danger):hover {
+  input,select,textarea {
+    border-color:$brand-primary
+  };
+}
+
+// Background row
+.card.form {
+  .form-group.row:hover {
+    border-radius:$border-radius;
+    background-color:lighten($brand-warning,50%);
+  }
+}
+
+// Sizes
+.form {
+  .form-group {min-height:2.35rem;}
+}
+
+textarea {
+  min-height:10rem;
+  max-height:20rem;
+}
+
+.form-check-input {
+  margin-left:0;
+  margin-top:.75rem;
+}
+
+.validation-error {
+  padding:.25rem 1rem;
+  font-weight:bold;
+}
+
+
