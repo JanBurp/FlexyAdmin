@@ -27,12 +27,12 @@
     <?=$headermenu?>
   </div>
   
-  <flexy-messages :messages="state.messages"></flexy-messages>
-
   <div id="content" class="row">
     <div id="flexy-menu-side" class="col-sm-2"><?=$sidemenu?></div>
     <div id="main" class="col-sm-10"><?=$content?></div>
   </div>
+
+  <flexy-messages :messages="state.messages"></flexy-messages>
   
   <div class="flexy-help">
     <div class="card">
@@ -48,7 +48,12 @@
     </div>
   </div>
   
+  <div id="mask" v-show="state.progress>0">
+    <span class="spinner fa fa-spinner fa-pulse fa-fw"></span>
+  </div>
+  
 </div>
+
 
 
 <script type="text/javascript" charset="utf-8">
