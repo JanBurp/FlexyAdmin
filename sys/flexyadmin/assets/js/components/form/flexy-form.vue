@@ -143,6 +143,7 @@ export default {
     },
     
     updateField : function( field, value ) {
+      console.log(field,value);
       this.row[field] = value;
     },
     
@@ -178,7 +179,7 @@ export default {
             <div v-if="validationErrors[field]" class="validation-error form-text text-danger">{{validationErrors[field]}}</div>
             <label class="col-xs-3 form-control-label" :for="field">{{fields[field]['name']}}</label>
             <div class="col-xs-9">
-              <textarea class="form-control" :id="field" :name="field" :value="row[field]" v-on:input="updateField(field,$event.target.value)" placeholder="">
+              <textarea class="form-control" :id="field" :name="field" :value="row[field]" v-on:input="updateField(field,$event)" placeholder="">
             </div>
           </div>
 
