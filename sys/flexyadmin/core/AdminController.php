@@ -115,9 +115,12 @@ class AdminController extends BasicController {
       'toolbar1'   => $this->cfg->get('CFG_configurations',"str_buttons1"),
       'toolbar2'   => $this->cfg->get('CFG_configurations',"str_buttons2"),
       'toolbar3'   => $this->cfg->get('CFG_configurations',"str_buttons3"),
-      'statusbar'  => false,
 
-      'min_height' => 300,
+      // 'statusbar'  => false,
+      'plugins'    => "fullscreen",
+      // toolbar: "fullscreen"
+
+      'height' => 300,
     );
     if ($this->flexy_auth->is_super_admin()) {
       if (strpos($this->view_data['tinymceOptions']['toolbar1'],'code')===FALSE) $this->view_data['tinymceOptions']['toolbar1'].=',|,code';

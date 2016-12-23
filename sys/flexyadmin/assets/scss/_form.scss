@@ -12,7 +12,7 @@
 
 // Input Border color
 .form-group.row:not(.has-danger):hover {
-  input,select,textarea {
+  input,select,textarea,.mce-tinymce {
     border-color:$brand-primary
   };
 }
@@ -45,4 +45,12 @@ textarea {
   font-weight:bold;
 }
 
+// tinyMCE overrides
+.mce-tinymce {
+  border-radius:$border-radius;
+}
+body.mce-fullscreen .mce-tinymce{
+  z-index:9999999;
+//  margin-top:$font-size-root*4!important;
+}
 
