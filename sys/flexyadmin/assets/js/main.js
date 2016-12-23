@@ -7,8 +7,6 @@
  * @author: Jan den Besten
  */
 
-// var AUTH_TOKEN = _flexy.auth_token;
-
 var _ = require('lodash');
 
 import Vue              from 'vue'
@@ -24,6 +22,11 @@ import FlexyPagination  from './components/flexy-pagination.vue'
 import FlexyGrid        from './components/grid/flexy-grid.vue'
 import FlexyForm        from './components/form/flexy-form.vue'
 
+
+import VueTinymce from 'vue-tinymce'
+Vue.use(VueTinymce)
+
+
 // // TinyMCE
 // import tinymce from 'tinymce/tinymce';
 // import 'tinymce/themes/modern/theme';
@@ -32,9 +35,9 @@ import FlexyForm        from './components/form/flexy-form.vue'
 // });
 
 // TinyMCE
-tinymce.init({
-  selector: 'textarea',
-});
+// tinymce.init({
+//   selector: 'textarea',
+// });
 
 
 
