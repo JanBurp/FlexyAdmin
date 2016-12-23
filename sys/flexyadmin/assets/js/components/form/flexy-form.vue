@@ -27,11 +27,12 @@ export default {
         hidden    : ['hidden'],
         checkbox  : ['checkbox'],
         select    : ['select','media'],
-        textarea  : ['textarea','wysiwyg'],
+        textarea  : ['textarea'],
+        wysiwyg   : ['wysiwyg'],
       };
-      types.default = [].concat( types.primary, types.hidden, types.checkbox, types.select, types.textarea );
+      types.default = [].concat( types.primary, types.hidden, types.checkbox, types.select, types.textarea, types.wysiwyg );
       return types;
-    }
+    },
   },
   
   // Copy of props.data
@@ -40,11 +41,13 @@ export default {
       row : {},
       validationErrors : {},
       isSaving : false,
+      tinymceOptions : {},
     }
   },
   // Make copy of props.data
   created : function() {
     this.row = this.data;
+    this.tinymceOptions = JSON.parse(_flexy.tinymceOptions);
   },
   
   methods:{
@@ -143,9 +146,13 @@ export default {
     },
     
     updateField : function( field, value ) {
-      console.log(field,value);
       this.row[field] = value;
     },
+
+    // TinyMCE changed
+    updateText : function(editor,content) {
+      this.updateField(editor.id,content);
+    }
     
   }
   
@@ -179,9 +186,19 @@ export default {
             <div v-if="validationErrors[field]" class="validation-error form-text text-danger">{{validationErrors[field]}}</div>
             <label class="col-xs-3 form-control-label" :for="field">{{fields[field]['name']}}</label>
             <div class="col-xs-9">
-              <textarea class="form-control" :id="field" :name="field" :value="row[field]" v-on:input="updateField(field,$event)" placeholder="">
+              <textarea class="form-control" :id="field" :name="field" :value="row[field]" v-on:input="updateField(field,$event.target.value)" placeholder="">
             </div>
           </div>
+
+          <div class="form-group row" :class="validationClass(field)" v-if="isType('wysiwyg',field)">
+            <!-- wysiwyg : tinyMCE -->
+            <div v-if="validationErrors[field]" class="validation-error form-text text-danger">{{validationErrors[field]}}</div>
+            <label class="col-xs-3 form-control-label" :for="field">{{fields[field]['name']}}</label>
+            <div class="col-xs-9">
+              <tinymce :id="field" :options="tinymceOptions" @change="updateText" :content="row[field]"></tinymce>
+            </div>
+          </div>
+
 
           <div class="form-group row" :class="validationClass(field)" v-if="isType('checkbox',field)">
             <!-- Checkbox -->
