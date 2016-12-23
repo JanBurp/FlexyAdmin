@@ -62,6 +62,7 @@ var _flexy = {
   'language'      : '<?=$language?>',
   'media_view'    : '<?=$user['str_filemanager_view']?>',
   'language_keys' : '<?=addslashes(array2json($lang_keys))?>',
+  'tinymceOptions': '<?=array2json($tinymceOptions)?>',
 };
 </script>
 <script src='<?=admin_assets()?>js/tinymce/tinymce.min.js' type="text/javascript" charset="utf-8"></script>
