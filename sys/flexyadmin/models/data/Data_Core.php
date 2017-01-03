@@ -103,6 +103,8 @@ Class Data_Core extends CI_Model {
    * Hou SELECT bij om ervoor te zorgen dat SELECT in orde is
    */
   protected $tm_select  = FALSE;
+  protected $tm_select_include_primary  = TRUE;
+  
   
   /**
    * Eventuele velden die niet in SELECT mogen voorkomen
@@ -934,20 +936,21 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   public function reset() {
-    $this->tm_query_prepared = FALSE;
-    $this->tm_cache_result   = $this->caching;
-    $this->tm_cache_name     = '';
-    $this->tm_select         = FALSE;
-    $this->tm_unselect       = FALSE;
-    $this->tm_from           = '';
-    $this->tm_path           = FALSE;
-    $this->tm_where_path     = array();
-    $this->tm_order_by       = array();
-    $this->tm_limit          = 0;
-    $this->tm_offset         = 0;
-    $this->tm_jump_to_today  = FALSE;
-    $this->tm_find           = FALSE;
-    $this->tm_has_condition  = FALSE;
+    $this->tm_query_prepared         = FALSE;
+    $this->tm_cache_result           = $this->caching;
+    $this->tm_cache_name             = '';
+    $this->tm_select                 = FALSE;
+    $this->tm_select_include_primary = TRUE;
+    $this->tm_unselect               = FALSE;
+    $this->tm_from                   = '';
+    $this->tm_path                   = FALSE;
+    $this->tm_where_path             = array();
+    $this->tm_order_by               = array();
+    $this->tm_limit                  = 0;
+    $this->tm_offset                 = 0;
+    $this->tm_jump_to_today          = FALSE;
+    $this->tm_find                   = FALSE;
+    $this->tm_has_condition          = FALSE;
     $this->with(FALSE);
     $this->db->reset_query();
     return $this;
@@ -1634,8 +1637,9 @@ Class Data_Core extends CI_Model {
   protected function _make_result_array( $query ) {
     if ( $query===FALSE) return array();
     
-    $key = el( 'result_key', $this->settings, el( 'primary_key',$this->settings ) );
-    $result = array();
+    $id        = -1;
+    $key       = el( 'result_key', $this->settings, el( 'primary_key',$this->settings ) );
+    $result    = array();
     $with_data = array();
     
     // Pad fields
@@ -1652,7 +1656,12 @@ Class Data_Core extends CI_Model {
     // foreach ( $query->result_array() as $row) {
 
       // keys
-      $id = $row[$this->settings['primary_key']];
+      if ($this->tm_select_include_primary) {
+        $id = $row[$this->settings['primary_key']];
+      }
+      else {
+        $id++;
+      }
       $result_key = el($key,$row,$id);
       
       // defaults bij niet bestaande one_to_one
@@ -2332,6 +2341,32 @@ Class Data_Core extends CI_Model {
   
   
   /**
+   * Geef aan dat de primary_key niet hoeft mee te worden genomen in de select.
+   * Oa bij ->distinct() word dit standaard ingesteld.
+   *
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function exclude_primary_from_select() {
+    $this->tm_select_include_primary = FALSE;
+    return $this;
+  }
+  
+  /**
+   * Zelfde als Query Builder distinct(), maar nu wordt de primary_key niet meegenomen in select statement.
+   *
+   * @param bool [$distinct=TRUE]
+   * @return $this
+   * @author Jan den Besten
+   */
+  public function distinct( $distinct = TRUE ) {
+    $this->db->distinct( $distinct );
+    if ($distinct) $this->exclude_primary_from_select();
+    return $this;
+  }
+  
+  
+  /**
    * Zorg ervoor dat de meegegeven veld(en) niet in het SELECT deel van de query komen.
    *
    * @param mixed $unselect Veldnaam die uit de selectlijst gehaald moet worden, of een string met veldnamen gescheiden door komma's of een array van veldnamen.
@@ -2361,7 +2396,7 @@ Class Data_Core extends CI_Model {
       $this->tm_select = array_combine($this->settings['fields'],$this->settings['fields']);
     }
     // Zorgt ervoor dat iig primary_key wordt geselecteerd
-    if (!in_array( $this->settings['primary_key'], $this->tm_select ) ) {
+    if ( $this->tm_select_include_primary and !in_array( $this->settings['primary_key'], $this->tm_select ) ) {
       $id = $this->settings['primary_key'];
       $this->tm_select = array($id=>$id) + $this->tm_select;
     }
