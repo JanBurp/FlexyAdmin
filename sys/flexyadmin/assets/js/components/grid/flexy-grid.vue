@@ -473,14 +473,13 @@ export default {
         formData.set( 'file', self.uploadFiles[i] );
         formData.set( 'fileName', self.uploadFiles[i].name );
         flexyState.api({
+          method    : 'POST',
           url       : 'media',
           data      : formData,
           formData  : true,
-          onDownloadProgress : function(progressEvent) {
-            var response = progressEvent.target.response;
-            response = JSON.parse(response);
-            var fileName = response.args.fileName;
-            self.uploadProgress[fileName] = Math.round(progressEvent.loaded * 100 / progressEvent.total);
+          onUploadProgress : function(progressEvent) {
+            var uploadPercentage = Math.round(progressEvent.loaded * 100 / progressEvent.total);
+            self.uploadProgress[file.name] = uploadPercentage;
           },
         }).then(function(response){
           var error = response.data.error;
@@ -497,7 +496,7 @@ export default {
           }
           // Als alles is geuploade, reload
           if (self.uploadFiles.length === 0 ) {
-            self.reloadPage();
+            // self.reloadPage();
           }
           return response;
         });
