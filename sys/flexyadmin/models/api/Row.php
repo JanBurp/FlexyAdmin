@@ -272,8 +272,15 @@ class Row extends Api_Model {
     $args=$this->_clean_args(array('table','where','data'));
     $data=$this->args['data'];
     $this->data->table( $args['table'] );
+    $relations = $this->data->get_setting('relations');
     // Alleen de velden die anders zijn dan huidige data
-    $old_data = $this->data->select(array_keys($data))->where( $args['where'] )->get_row();
+    $this->data->select(array_keys($data))->where( $args['where'] );
+    if ($relations) {
+      foreach ($relations as $key => $info) {
+        $this->data->with($key);
+      }
+    }
+    $old_data = $this->data->get_row();
     unset($old_data['id']);
     $data = array_diff_multi($old_data,$data);
     if ($data) {
