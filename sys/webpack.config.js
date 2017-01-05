@@ -1,41 +1,42 @@
-var webpack = require('webpack');
-var path = require('path');
+var webpack           = require('webpack');
+var path              = require('path');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var LiveReloadPlugin = require('webpack-livereload-plugin');
+var LiveReloadPlugin  = require('webpack-livereload-plugin');
 
 module.exports = [
   
 {
-  name: 'js',
-  entry: "./flexyadmin/assets/js/main.js",
-  devtool: "source-map",
-  output: {
-    path: __dirname + '/flexyadmin/assets/dist/',
-    publicPath:'/flexyadmin/assets/dist/',
-    filename: "bundle.js",
-    devtoolLineToLine: true,
-    pathinfo: true,
+  name    : 'js',
+  entry   : "./flexyadmin/assets/js/main.js",
+  devtool : '#eval-source-map',
+  output  : {
+    path              : __dirname + '/flexyadmin/assets/dist/',
+    publicPath        : '/flexyadmin/assets/dist/',
+    filename          : "bundle.js",
+    sourceMapFilename : "bundle.js.map",
+    devtoolLineToLine : true,
+    pathinfo          : true,
   },
-  module: {
-      rules: [
+  module  : {
+      rules : [
         // eslint
         {
-          enforce: 'pre',
-          test: /.vue$/,
-          loader: 'eslint',
-          exclude: /node_modules/
+          enforce : 'pre',
+          test    : /.vue$/,
+          loader  : 'eslint',
+          exclude : /node_modules/
         },
         // vue loader
         {
-          test: /\.vue$/,
-          loader: 'vue',
-          options: {}
+          test    : /\.vue$/,
+          loader  : 'vue',
+          options : {}
         },
         // babel
         {
-          test: /\.js$/,
-          loader: 'babel',
-          exclude: /node_modules/
+          test    : /\.js$/,
+          loader  : 'babel',
+          exclude : /node_modules/
         }
         
       ]

@@ -35,6 +35,10 @@ textarea {
   max-height:30rem;
 }
 
+select.form-control:not([size]):not([multiple]) {
+  height:auto;
+}
+
 .form-check-input {
   margin-left:0;
   margin-top:.75rem;
@@ -53,4 +57,3 @@ body.mce-fullscreen .mce-tinymce{
   z-index:9999999;
 //  margin-top:$font-size-root*4!important;
 }
-
