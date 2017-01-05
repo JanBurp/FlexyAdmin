@@ -109,22 +109,16 @@ class AdminController extends BasicController {
     
     // Editor stuff
     $this->view_data['tinymceOptions'] = array(
+      'plugins'    => 'fullscreen,table',
       'language'   => $this->flexy_auth->get_user()['str_language'],
-
-      'menubar'    => false,
-      'toolbar1'   => $this->cfg->get('CFG_configurations',"str_buttons1"),
-      'toolbar2'   => $this->cfg->get('CFG_configurations',"str_buttons2"),
-      'toolbar3'   => $this->cfg->get('CFG_configurations',"str_buttons3"),
-
-      // 'statusbar'  => false,
-      'plugins'    => "fullscreen",
-      // toolbar: "fullscreen"
-
-      'height' => 300,
+      'height'     => 500,
+      'menubar'    => "edit format table",
+      // 'toolbar'    => false,
+      'toolbar1'   => 'cut copy paste | undo redo | bold italic | alignleft aligncenter alignright | bullist numlist | link unlink | charmap image | code | fullscreen',
+      // 'toolbar2'   => $this->cfg->get('CFG_configurations',"str_buttons2"),
+      // 'toolbar3'   => $this->cfg->get('CFG_configurations',"str_buttons3"),
     );
-    if ($this->flexy_auth->is_super_admin()) {
-      if (strpos($this->view_data['tinymceOptions']['toolbar1'],'code')===FALSE) $this->view_data['tinymceOptions']['toolbar1'].=',|,code';
-    }
+    
     // $formats=$this->cfg->get('CFG_configurations',"str_formats");
     // $styles=$this->cfg->get('CFG_configurations',"str_styles");
 
