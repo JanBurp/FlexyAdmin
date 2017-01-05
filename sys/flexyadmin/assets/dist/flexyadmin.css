@@ -4492,8 +4492,8 @@ h1 {
   min-height: 2.35rem; }
 
 textarea {
-  min-height: 10rem;
-  max-height: 20rem; }
+  min-height: 5rem;
+  max-height: 30rem; }
 
 .form-check-input {
   margin-left: 0;
