@@ -153,6 +153,7 @@ class Show extends AdminController {
     $this->data->table($name);
     if ($isMedia) $this->data->select('alt');
     $data = $this->data->get_form($id);
+    
     $options = $this->data->get_options();
     // Fields
     $fields = $this->_prepareFields('form_set',$options);
