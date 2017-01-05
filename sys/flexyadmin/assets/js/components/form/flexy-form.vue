@@ -1,4 +1,7 @@
 <script>
+
+import jdb              from '../../jdb-tools.js'
+
 import flexyState       from '../../flexy-state.js'
 import flexyButton      from '../flexy-button.vue'
 
@@ -24,7 +27,7 @@ export default {
     fieldTypes : function() {
       var types = {
         primary   : ['primary'],
-        hidden    : ['hidden'],
+        hidden    : ['hidden','primary','uri','order'],
         checkbox  : ['checkbox'],
         select    : ['select','media'],
         textarea  : ['textarea'],
@@ -53,6 +56,9 @@ export default {
   methods:{
     
     isType : function( type,field ) {
+      
+      if (_.isUndefined(this.fields[field])) return false;
+      
       if (type==='default') {
         return this.fieldTypes['default'].indexOf(this.fields[field].schema['form-type']) === -1;
       }
@@ -64,6 +70,20 @@ export default {
       if (this.options[field].multiple) multiple='multiple';
       if (flexyState.debug) console.log('isMultiple',field,multiple);
       return multiple;
+    },
+    
+    isSelectedOption : function(field,value,option) {
+      var selected = '';
+      if (typeof(value)!=='object') {
+        if (value===option) selected='selected';
+      }
+      else {
+        for(var item in value) {
+          var id = value[item]['id'];
+          if (id===option) selected='selected';
+        }
+      }
+      return selected;
     },
     
     validationClass : function(field) {
@@ -106,19 +126,26 @@ export default {
     postForm : function() {
       var self=this;
       self.isSaving = true;
-      var data = this.row;
+      var data = _.clone(this.row);
+      
       for (var field in data) {
         if (this.isType('checkbox',field)) {
           data[field] = (data[field]?1:0);
         }
+        if (field.indexOf('.abstract')>0) {
+          delete(data[field]);
+        }
       }
+      
+      console.log(data);
+      
       
       return flexyState.api({
         url : 'row',
         'data': {
           'table'   : this.name,
           'where'   : this.row['id'],
-          'data'    : this.row
+          'data'    : data
         },
       }).then(function(response){
         self.isSaving = false;
@@ -175,58 +202,44 @@ export default {
     <tabs navStyle="tabs">
       <tab v-for="(fieldset,name) in fieldsets" :header="name">
         <template v-for="field in fieldset">
+          <template v-if="!isType('hidden',field)">
           
-          <template v-if="isType('primary',field)">
-            <!-- Primary -->
-            <input type="hidden" :value="row[field]">
+            <div class="form-group row" :class="validationClass(field)">
+              <div v-if="validationErrors[field]" class="validation-error form-text text-danger">{{validationErrors[field]}}</div>
+              <label class="col-xs-3 form-control-label" :for="field">{{fields[field]['name']}}</label>
+              <div class="col-xs-9">
+
+                <template v-if="isType('textarea',field)">
+                  <!-- Textarea -->
+                  <textarea class="form-control" :id="field" :name="field" :value="row[field]" v-on:input="updateField(field,$event.target.value)" placeholder="">
+                </template>
+              
+                <template v-if="isType('wysiwyg',field)">
+                  <!-- WYSIWYG -->
+                  <tinymce :id="field" :options="tinymceOptions" @change="updateText" :content="row[field]"></tinymce>
+                </template>
+
+                <template v-if="isType('checkbox',field)">
+                  <!-- Checkbox -->
+                  <input class="form-check-input" type="checkbox" :id="field" :name="field" :checked="row[field]" @input="updateField(field,$event.target.checked)">
+                </template>
+              
+                <template v-if="isType('select',field)">
+                  <!-- Select -->
+                  <select class="form-control" :id="field" :name="field" v-on:input="updateField(field,$event.target.value)" :multiple="isMultiple(field)">
+                    <option v-for="option in options[field]['data']" :value="option.value" :selected="isSelectedOption(field,row[field],option.value)">{{option.name}}</option>
+                  </select>
+                </template>
+              
+                <template v-if="isType('default',field)">
+                  <!-- Default -->
+                  <input type="text" class="form-control" :id="field" :name="field" :value="row[field]" v-on:input="updateField(field,$event.target.value)" placeholder="">
+                </template>
+
+              </div>
+            </div>
+            
           </template>
-          
-          <div class="form-group row" :class="validationClass(field)" v-if="isType('textarea',field)">
-            <!-- Textarea -->
-            <div v-if="validationErrors[field]" class="validation-error form-text text-danger">{{validationErrors[field]}}</div>
-            <label class="col-xs-3 form-control-label" :for="field">{{fields[field]['name']}}</label>
-            <div class="col-xs-9">
-              <textarea class="form-control" :id="field" :name="field" :value="row[field]" v-on:input="updateField(field,$event.target.value)" placeholder="">
-            </div>
-          </div>
-
-          <div class="form-group row" :class="validationClass(field)" v-if="isType('wysiwyg',field)">
-            <!-- wysiwyg : tinyMCE -->
-            <div v-if="validationErrors[field]" class="validation-error form-text text-danger">{{validationErrors[field]}}</div>
-            <label class="col-xs-3 form-control-label" :for="field">{{fields[field]['name']}}</label>
-            <div class="col-xs-9">
-              <tinymce :id="field" :options="tinymceOptions" @change="updateText" :content="row[field]"></tinymce>
-            </div>
-          </div>
-
-
-          <div class="form-group row" :class="validationClass(field)" v-if="isType('checkbox',field)">
-            <!-- Checkbox -->
-            <div v-if="validationErrors[field]" class="validation-error form-text text-danger">{{validationErrors[field]}}</div>
-            <label class="col-xs-3 form-control-label" :for="field">{{fields[field]['name']}}</label>
-            <div class="col-xs-9">
-              <input class="form-check-input" type="checkbox" :id="field" :name="field" :checked="row[field]" @input="updateField(field,$event.target.checked)">
-            </div>
-          </div>
-          
-          <div class="form-group row" :class="validationClass(field)" v-if="isType('select',field)">
-            <!-- Select -->
-            <div v-if="validationErrors[field]" class="validation-error form-text text-danger">{{validationErrors[field]}}</div>
-            <label class="col-xs-3 form-control-label" :for="field">{{fields[field]['name']}}</label>
-            <div class="col-xs-9">
-              <select class="form-control" :id="field" :name="field" :value="row[field]" v-on:input="updateField(field,$event.target.value)" :multiple="isMultiple(field)">
-                <option v-for="option in options[field]['data']" :value="option.value" :selected="option.value==row[field]">{{option.name}}</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="form-group row" :class="validationClass(field)" v-if="isType('default',field)">
-            <!-- Default -->
-            <div v-if="validationErrors[field]" class="validation-error form-text text-danger">{{validationErrors[field]}}</div>
-            <label class="col-xs-3 form-control-label" :for="field">{{fields[field]['name']}}</label>
-            <div class="col-xs-9"><input type="text" class="form-control" :id="field" :name="field" :value="row[field]" v-on:input="updateField(field,$event.target.value)" placeholder=""></div>
-          </div>
-          
         </template>
       </tab>
     </tabs>

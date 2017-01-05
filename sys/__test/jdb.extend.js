@@ -109,7 +109,7 @@ jdb.indexOfProperty = function(array,property,value) {
   var index = false;
   var i=0;
   do {
-    if ( angular.isDefined(array[i]) && angular.isDefined(array[i][property]) && array[i][property]===value) {
+    if ( !_.isUndefined(array[i]) && !_.isUndefined(array[i][property]) && array[i][property]===value) {
       index=i;
     }
     i++;
