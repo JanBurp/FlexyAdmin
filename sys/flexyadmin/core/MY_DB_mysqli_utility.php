@@ -131,9 +131,23 @@ class MY_DB_mysqli_utility extends CI_DB_mysqli_utility {
         }
       }
     }
-
+    $this->reset_data_cache();
+    
     return array('comments'=>$comments,'queries'=>$lines,'errors'=>$errors);
   }
+  
+  
+  /**
+   * Verwijderd interne cache van db object
+   *
+   * @return this
+   * @author Jan den Besten
+   */
+  public function reset_data_cache() {
+    $this->db->data_cache = array();
+    return $this;
+  }
+
   
   
 	// --------------------------------------------------------------------
