@@ -35,6 +35,9 @@ class MY_Controller extends CI_Controller {
     $this->load->model( 'data/Data','data' );
       
     if (defined('PHPUNIT_TEST')) {
+      echo "> FlexyAdmin ". read_file('sys/build.txt') . "\n";
+      echo "> Testing on PHP ". phpversion() . "\n";
+      
       // Load test database
       $files = directory_map('db');
       $key = in_array_like('unittest_v',$files);
@@ -43,14 +46,19 @@ class MY_Controller extends CI_Controller {
         if ($file) {
           $file='db/'.$file;
           if (file_exists($file)) {
-            // Truncate all current tables
-            $this->db->truncate();
+
+            // DROP all current tables
+            $this->load->dbforge();
+            $tables = $this->db->list_tables();
+            foreach ($tables as $table) {
+              $this->dbforge->drop_table($table,TRUE);
+            }
+            echo "> dropped all current tables\n";
+
             // Import unittest database
             $testDB = read_file($file);
             $this->load->dbutil();
             $this->dbutil->import($testDB);
-            echo "> FlexyAdmin ". read_file('sys/build.txt') . "\n";
-            echo "> Testing on PHP ". phpversion() . "\n";
             echo "> Test database loaded. (".$file.")\n";
           }
         }
