@@ -699,7 +699,7 @@ class DataTest extends CITestCase {
     $nr_others = rand(3,6);
     $other_ids  = array();
     for ($i=0; $i < $nr_others; $i++) {
-      $other_ids[] = $this->CI->db->random_field_value( 'id_crud2', array() );
+      $other_ids[] = $this->CI->db->random_field_value( 'tbl_crud2.id_crud2', array() );
     }
     $set = array(
       'str_insert' => $insert_string,
