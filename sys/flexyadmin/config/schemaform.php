@@ -54,6 +54,7 @@ $config['FIELDS_prefix'] = array (
 	'rel'				=> array(
     'type'        => 'integer',
     'form-type'   => 'select',
+    'grid-type'   => 'relation',
     'grid'        => 'function_join',
     'form'        => 'function_join',
     'validation'	=> ''

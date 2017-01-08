@@ -83,6 +83,7 @@ export default {
     },
     
     relationItems : function(string) {
+      console.log(string);
       var items = string.split(',');
       for (var i = 0; i < items.length; i++) {
         items[i] = items[i].replace(/{/,'').replace(/}/,'').trim();
