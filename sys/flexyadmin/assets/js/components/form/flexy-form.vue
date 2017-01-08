@@ -75,11 +75,11 @@ export default {
     isSelectedOption : function(field,value,option) {
       var selected = '';
       if (typeof(value)!=='object') {
-        if (value===option) selected='selected';
+        if (parseInt(value)===option) selected='selected';
       }
       else {
         for(var item in value) {
-          var id = value[item]['id'];
+          var id = parseInt(value[item]['id']);
           if (id===option) selected='selected';
         }
       }
@@ -128,17 +128,25 @@ export default {
       self.isSaving = true;
       var data = _.clone(this.row);
       
+      // Prepare data for ajax call
       for (var field in data) {
-        if (this.isType('checkbox',field)) {
-          data[field] = (data[field]?1:0);
-        }
         if (field.indexOf('.abstract')>0) {
           delete(data[field]);
+        }
+        else {
+          if (this.isType('checkbox',field)) {
+            data[field] = (data[field]?1:0);
+          }
+          if (this.isType('select',field) && this.isMultiple(field)) {
+            data[field] = [];
+            for (var i = 0; i < this.row[field].length; i++) {
+              data[field].push(this.row[field][i].id);
+            }
+          }
         }
       }
       
       console.log(data);
-      
       
       return flexyState.api({
         url : 'row',
@@ -174,6 +182,20 @@ export default {
     
     updateField : function( field, value ) {
       this.row[field] = value;
+    },
+    
+    // update select (multiple)
+    updateSelect : function( field, selected ) {
+      if ( !this.isMultiple(field) ) {
+        var value = selected[0].value;
+      }
+      else {
+        var value = [];
+        for (var i = 0; i < selected.length; i++) {
+          value.push({'id':selected[i].value});
+        }
+      }
+      this.updateField(field,value);
     },
 
     // TinyMCE changed
@@ -226,7 +248,7 @@ export default {
               
                 <template v-if="isType('select',field)">
                   <!-- Select -->
-                  <select class="form-control" :id="field" :name="field" v-on:input="updateField(field,$event.target.value)" :multiple="isMultiple(field)">
+                  <select class="form-control" :id="field" :name="field" :value="row[field]" v-on:input="updateSelect(field,$event.target.selectedOptions)" :multiple="isMultiple(field)">
                     <option v-for="option in options[field]['data']" :value="option.value" :selected="isSelectedOption(field,row[field],option.value)">{{option.name}}</option>
                   </select>
                 </template>
