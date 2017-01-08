@@ -16,6 +16,7 @@
     padding:.15rem .35rem;
     margin-right:.25rem;
   }
+  .grid-relation-item:hover {border-color:$brand-primary;background-color:lighten($brand-warning,40%);};
   
   // Thumb
   .color-thumb-sm {
