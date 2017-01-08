@@ -4084,7 +4084,6 @@ Class Data_Core extends CI_Model {
       }
     }
     
-    
     /**
      * Split eventuele one_to_one data
      */
@@ -4349,14 +4348,14 @@ Class Data_Core extends CI_Model {
   }
   
   /**
-   * Zorg ervoor dat other_ids in orde zijn
+   * Zorg ervoor dat other_ids in orde zijn (geen string oid, maar altijd een array van ids)
    *
    * @param array $other_ids 
    * @return array
    * @author Jan den Besten
    */
   private function _check_other_ids($other_ids) {
-    if (is_string($other_ids)) $other_ids=explode('|',$other_ids);
+    if (is_string($other_ids)) $other_ids=preg_split('/[|,]/',$other_ids);
     if (is_null($other_ids)) $other_ids = array();
     if (!is_array($other_ids)) $other_ids=array($other_ids);
 		foreach ( $other_ids as $okey => $other_id ) {
