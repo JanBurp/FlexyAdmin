@@ -43,6 +43,9 @@ class MY_Controller extends CI_Controller {
         if ($file) {
           $file='db/'.$file;
           if (file_exists($file)) {
+            // Truncate all current tables
+            $this->db->truncate();
+            // Import unittest database
             $testDB = read_file($file);
             $this->load->dbutil();
             $this->dbutil->import($testDB);
