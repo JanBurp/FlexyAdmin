@@ -265,10 +265,8 @@ class Row extends Api_Model {
   private function _update_row() {
     $args=$this->_clean_args(array('table','where','data'));
     $data=$this->args['data'];
+    $fields=array_keys($data);
     $this->data->table( $args['table'] );
-    // Alleen de velden die anders zijn dan huidige data
-    $old_data = $this->data->where( $args['where'] )->get_row();
-    $data = array_diff_multi($old_data,$data);
     if ($data) {
       // Save
       $this->data->set( $data );
