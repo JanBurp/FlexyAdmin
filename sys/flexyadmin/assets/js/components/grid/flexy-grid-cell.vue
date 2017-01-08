@@ -22,7 +22,11 @@ export default {
         url       : ['url'],
         relation  : ['relation'],
       };
-      types.default = [].concat( types.checkbox, types.media, types.color, types.url );
+      var defaultTypes = [];
+      for(var type in types) {
+        defaultTypes = defaultTypes.concat(type);
+      }
+      types.default = defaultTypes;
       return types;
     },
     
@@ -81,7 +85,7 @@ export default {
     relationItems : function(string) {
       var items = string.split(',');
       for (var i = 0; i < items.length; i++) {
-        items[i] = items[i].replace(/{/,'').replace(/}/,'');
+        items[i] = items[i].replace(/{/,'').replace(/}/,'').trim();
       }
       return items;
     },
