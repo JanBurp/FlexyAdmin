@@ -175,7 +175,7 @@ class DataTest extends CITestCase {
     $this->CI->data->table( 'tbl_groepen' );
     $options = $this->CI->data->get_options();
     $this->assertInternalType( 'array', $options );
-    $this->assertEquals( 2, count($options) );
+    $this->assertEquals( 3, count($options) );
     // tbl_groepen.media_tekening
     $options = $this->CI->data->get_options('media_tekening');
     $this->assertInternalType( 'array', $options );
@@ -425,14 +425,14 @@ class DataTest extends CITestCase {
   public function test_many_to_many_data() {
     // tbl_groepen - abstract
     $query = $this->CI->data->table( 'tbl_groepen' )
-                                  ->select('str_title')
-                                  ->with( 'many_to_many', array('rel_groepen__adressen' => 'abstract') )
-                                  ->get();
-    $this->assertEquals( 52, $query->num_rows() );
+                            ->select('str_title')
+                            ->with( 'many_to_many', array('rel_groepen__adressen' => 'abstract') )
+                            ->get();
+    $this->assertEquals( 46, $query->num_rows() );
     $this->assertEquals( 4, $query->num_fields() );
     // data, klopt num_rows & num_fields?
     $array = $query->result_array();
-    $this->assertEquals( 52, count($array) );
+    $this->assertEquals( 46, count($array) );
     $row = current($array);
     $this->assertEquals( 4, count($row) );
     // kloppen keys in row?
@@ -445,11 +445,11 @@ class DataTest extends CITestCase {
     $query = $this->CI->data->select('str_title')
                                   ->with( 'many_to_many', array('rel_groepen__adressen'=>'str_address') )
                                   ->get();
-    $this->assertEquals( 52, $query->num_rows() );
+    $this->assertEquals( 46, $query->num_rows() );
     $this->assertEquals( 4, $query->num_fields() );
     // data, klopt num_rows & num_fields?
     $array = $query->result_array();
-    $this->assertEquals( 52, count($array) );
+    $this->assertEquals( 46, count($array) );
     $row = current($array);
     $this->assertEquals( 4, count($row) );
     // kloppen keys in row?
@@ -630,7 +630,7 @@ class DataTest extends CITestCase {
     $this->CI->data->find( 'straat' );
     $query = $this->CI->data->get();
     $info = $this->CI->data->get_query_info();
-    $this->assertEquals( 5, $info['num_rows'] );
+    $this->assertEquals( 4, $info['num_rows'] );
     // $this->assertEquals( 28, $info['num_rows'] );
 
     // Zoeken in many_to_many 'straat' result
