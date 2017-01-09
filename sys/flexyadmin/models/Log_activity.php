@@ -106,7 +106,7 @@ class Log_activity extends CI_Model {
     $user_row_id = 0;
     foreach ($result as $id => $row) {
       if ($row['id_user']===$user) {
-        $result[$user_row_id]['str_model'].='|'.$this->ui->get( $row['str_model'] );
+        $result[$user_row_id]['str_model'].=' | '.$this->ui->get( $row['str_model'] );
         unset($result[$id]);
       }
       else {
