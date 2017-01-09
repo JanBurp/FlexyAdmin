@@ -45,6 +45,7 @@ Vue.use(VueTinymce)
 // Language settings
 const LOCALES = {};
 LOCALES[_flexy.language] = JSON.parse(_flexy.language_keys);
+window.VueStrapLang = function() { return LOCALES[_flexy.language]['strap_lang']; }
 Vue.use(Lang, {lang: _flexy.language, locales: LOCALES});
 
 

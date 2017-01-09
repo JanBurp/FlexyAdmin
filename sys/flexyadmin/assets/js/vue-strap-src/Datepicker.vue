@@ -4,23 +4,23 @@
         :style="{width:width}"
         :value="value"
         @click="inputClick"
-        @input="this.$emit('input',$event.target.value)" />
-    <button v-if="clearButton && value" type="button" class="close" @click="value = ''">
+        @input="$emit('input',$event.target.value)" />
+    <button v-if="clearButton && value" type="button" class="close" @click="$emit('input', '')">
       <span>&times;</span>
     </button>
     <div class="datepicker-popup" v-show="displayDayView">
       <div class="datepicker-inner">
         <div class="datepicker-body">
           <div class="datepicker-ctrl">
-            <span class="datepicker-preBtn glyphicon glyphicon-chevron-left" aria-hidden="true" @click="preNextMonthClick(0)"></span>
-            <span class="datepicker-nextBtn glyphicon glyphicon-chevron-right" aria-hidden="true" @click="preNextMonthClick(1)"></span>
+            <span :class="preBtnClasses" aria-hidden="true" @click="preNextMonthClick(0)"></span>
+            <span :class="nextBtnClasses" aria-hidden="true" @click="preNextMonthClick(1)"></span>
             <p @click="switchMonthView">{{stringifyDayHeader(currDate)}}</p>
           </div>
           <div class="datepicker-weekRange">
             <span v-for="w in text.daysOfWeek">{{w}}</span>
           </div>
           <div class="datepicker-dateRange">
-            <span v-for="d in dateRange" :class="d.sclass" @click="daySelect(d.date,this)">{{d.text}}</span>
+            <span v-for="d in dateRange" :class="d.sclass" @click="daySelect(d)">{{d.text}}</span>
           </div>
         </div>
       </div>
@@ -29,8 +29,8 @@
       <div class="datepicker-inner">
         <div class="datepicker-body">
           <div class="datepicker-ctrl">
-            <span class="datepicker-preBtn glyphicon glyphicon-chevron-left" aria-hidden="true" @click="preNextYearClick(0)"></span>
-            <span class="datepicker-nextBtn glyphicon glyphicon-chevron-right" aria-hidden="true" @click="preNextYearClick(1)"></span>
+            <span :class="preBtnClasses" aria-hidden="true" @click="preNextYearClick(0)"></span>
+            <span :class="nextBtnClasses" aria-hidden="true" @click="preNextYearClick(1)"></span>
             <p @click="switchDecadeView">{{stringifyYearHeader(currDate)}}</p>
           </div>
           <div class="datepicker-monthRange">
@@ -49,8 +49,8 @@
       <div class="datepicker-inner">
         <div class="datepicker-body">
           <div class="datepicker-ctrl">
-            <span class="datepicker-preBtn glyphicon glyphicon-chevron-left" aria-hidden="true" @click="preNextDecadeClick(0)"></span>
-            <span class="datepicker-nextBtn glyphicon glyphicon-chevron-right" aria-hidden="true" @click="preNextDecadeClick(1)"></span>
+            <span :class="preBtnClasses" aria-hidden="true" @click="preNextDecadeClick(0)"></span>
+            <span :class="nextBtnClasses" aria-hidden="true" @click="preNextDecadeClick(1)"></span>
             <p>{{stringifyDecadeHeader(currDate)}}</p>
           </div>
           <div class="datepicker-monthRange decadeRange">
@@ -69,49 +69,16 @@
 <script>
 import {translations} from './utils/utils.js'
 // import $ from './utils/NodeList.js'
-
 export default {
   props: {
-    value: {
-      type: String
-    },
-    format: {
-      default: 'MM/dd/yyyy'
-    },
-    disabledDaysOfWeek: {
-      type: Array,
-      default () {
-        return []
-      }
-    },
-    width: {
-      type: String,
-      default: '200px'
-    },
-    clearButton: {
-      type: Boolean,
-      default: false
-    },
-    lang: {
-      type: String,
-      default: navigator.language
-    },
-    placeholder: {
-      type: String
-    }
-  },
-  mounted () {
-    let el = this.$el
-    this._blur = e => {
-      if (!el.contains(e.target)) 
-        this.close()
-    }
-    this.$emit('child-created', this)
-    this.currDate = this.parse(this.value) || this.parse(new Date())
-    window.addEventListener('click', this._blur);
-  },
-  beforeDestroy () {
-    window.removeEventListner('click', this._blur)
+    value: {type: String},
+    format: {default: 'MM/dd/yyyy'},
+    disabledDaysOfWeek: {type: Array, default () { return [] }},
+    width: {type: String/*, default: '200px'*/},
+    clearButton: {type: Boolean, default: false},
+    lang: {type: String, default: navigator.language},
+    placeholder: {type: String},
+    iconsFont: {type: String, default: 'fa'}
   },
   data () {
     return {
@@ -120,20 +87,29 @@ export default {
       decadeRange: [],
       displayDayView: false,
       displayMonthView: false,
-      displayYearView: false
+      displayYearView: false,
     }
   },
   watch: {
-    value (val) {
-      this.$emit('input', val)
-    },
     currDate () {
       this.getDateRange()
+    },
+    format () {
+      this.$emit('input', this.stringify(this.currDate))
     }
   },
   computed: {
     text () {
       return translations(this.lang)
+    },
+    preBtnClasses () {
+      return `datepicker-preBtn ${this.iconsFont} ${this.iconsFont}-chevron-left`
+    },
+    nextBtnClasses () {
+      return `datepicker-nextBtn ${this.iconsFont} ${this.iconsFont}-chevron-right`
+    },
+    disabledDaysArray () {
+      return this.disabledDaysOfWeek.map(d => parseInt(d, 10))
     }
   },
   methods: {
@@ -152,7 +128,6 @@ export default {
       const year = this.currDate.getFullYear()
       const months = this.currDate.getMonth()
       const date = this.currDate.getDate()
-
       if (flag === 0) {
         this.currDate = new Date(year - 10, months, date)
       } else {
@@ -163,7 +138,6 @@ export default {
       const year = this.currDate.getFullYear()
       const month = this.currDate.getMonth()
       const date = this.currDate.getDate()
-
       if (flag === 0) {
         const preMonth = this.getYearMonth(year, month - 1)
         this.currDate = new Date(preMonth.year, preMonth.month, date)
@@ -176,7 +150,6 @@ export default {
       const year = this.currDate.getFullYear()
       const months = this.currDate.getMonth()
       const date = this.currDate.getDate()
-
       if (flag === 0) {
         this.currDate = new Date(year - 1, months, date)
       } else {
@@ -188,16 +161,14 @@ export default {
       this.displayMonthView = true
       this.currDate = new Date(year, this.currDate.getMonth(), this.currDate.getDate())
     },
-    daySelect (date, el) {
-      if (this.$el.classList[0] === 'datepicker-item-disable') {
+    daySelect (day) {
+      if (day.sclass === 'datepicker-item-disable') {
         return false
       } else {
-        this.currDate = date
-        // this.value = this.stringify(this.currDate)
+        this.currDate = day.date
+        this.$emit('input', this.stringify(this.currDate))
         this.displayDayView = false
       }
-      console.log(this.currDate);
-      this.$emit('input',this.currDate);
     },
     switchMonthView () {
       this.displayDayView = false
@@ -244,7 +215,6 @@ export default {
       const month = date.getMonth() + 1
       const day = date.getDate()
       const monthName = this.parseMonth(date)
-
       return format
       .replace(/yyyy/g, year)
       .replace(/MMMM/g, monthName)
@@ -288,7 +258,6 @@ export default {
           text: firstYearOfDecade + i
         })
       }
-
       const currMonthFirstDay = new Date(time.year, time.month, 1)
       let firstDayWeek = currMonthFirstDay.getDay() + 1
       if (firstDayWeek === 0) {
@@ -300,30 +269,26 @@ export default {
         const prevMonthDayCount = this.getDayCount(preMonth.year, preMonth.month)
         for (let i = 1; i < firstDayWeek; i++) {
           const dayText = prevMonthDayCount - firstDayWeek + i + 1
+          const date = new Date(preMonth.year, preMonth.month, dayText)
+          let sclass = 'datepicker-item-gray'
+          if (this.disabledDaysArray.indexOf(date.getDay()) > -1) {
+            sclass = 'datepicker-item-disable'
+          }
           this.dateRange.push({
             text: dayText,
-            date: new Date(preMonth.year, preMonth.month, dayText),
+            date: date,
             sclass: 'datepicker-item-gray'
           })
         }
       }
-
       for (let i = 1; i <= dayCount; i++) {
         const date = new Date(time.year, time.month, i)
-        const week = date.getDay()
         let sclass = ''
-        this.disabledDaysOfWeek.forEach((el) => {
-          if (week === parseInt(el, 10)) sclass = 'datepicker-item-disable'
-        })
-        if (i === time.day) {
-          if (this.value) {
-            const valueDate = this.parse(this.value)
-            if (valueDate) {
-              if (valueDate.getFullYear() === time.year && valueDate.getMonth() === time.month) {
-                sclass = 'datepicker-dateRange-item-active'
-              }
-            }
-          }
+        if (this.disabledDaysArray.indexOf(date.getDay()) > -1) {
+          sclass = 'datepicker-item-disable'
+        }
+        if (i == time.day && date.getFullYear() == time.year && date.getMonth() == time.month){
+          sclass = 'datepicker-dateRange-item-active'
         }
         this.dateRange.push({
           text: i,
@@ -331,26 +296,42 @@ export default {
           sclass: sclass
         })
       }
-
       if (this.dateRange.length < 42) {
         const nextMonthNeed = 42 - this.dateRange.length
         const nextMonth = this.getYearMonth(time.year, time.month + 1)
-
         for (let i = 1; i <= nextMonthNeed; i++) {
+          const date = new Date(nextMonth.year, nextMonth.month, i)
+          let sclass = 'datepicker-item-gray'
+          if (this.disabledDaysArray.indexOf(date.getDay()) > -1) {
+            sclass = 'datepicker-item-disable'
+          }
           this.dateRange.push({
             text: i,
-            date: new Date(nextMonth.year, nextMonth.month, i),
-            sclass: 'datepicker-item-gray'
+            date: date,
+            sclass: sclass
           })
         }
       }
     }
+  },
+  mounted () {
+    let el = this.$el
+    this._blur = e => {
+      if (!el.contains(e.target))
+        this.close()
+    }
+    this.$emit('child-created', this)
+    this.currDate = this.parse(this.value) || this.parse(new Date())
+    window.addEventListener('click', this._blur);
+  },
+  beforeDestroy () {
+    window.removeEventListener('click', this._blur)
   }
 }
 </script>
 
 <style>
-.datepicker{
+.datepicker {
   position: relative;
   display: inline-block;
 }
@@ -372,7 +353,7 @@ input.datepicker-input.with-reset-button {
 .datepicker > button.close:focus {
   opacity: .2;
 }
-.datepicker-popup{
+.datepicker-popup {
   position: absolute;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -381,15 +362,15 @@ input.datepicker-input.with-reset-button {
   z-index: 1000;
   box-shadow: 0 6px 12px rgba(0,0,0,0.175);
 }
-.datepicker-inner{
+.datepicker-inner {
   width: 218px;
 }
-.datepicker-body{
+.datepicker-body {
   padding: 10px 10px;
 }
 .datepicker-ctrl p,
 .datepicker-ctrl span,
-.datepicker-body span{
+.datepicker-body span {
   display: inline-block;
   width: 28px;
   line-height: 28px;
@@ -405,7 +386,7 @@ input.datepicker-input.with-reset-button {
 .datepicker-body span {
   text-align: center;
 }
-.datepicker-monthRange span{
+.datepicker-monthRange span {
   width: 48px;
   height: 50px;
   line-height: 45px;
@@ -417,13 +398,12 @@ input.datepicker-input.with-reset-button {
 .decadeRange span:first-child,
 .decadeRange span:last-child,
 .datepicker-item-disable,
-.datepicker-item-gray{
+.datepicker-item-gray {
   color: #999;
 }
-
 .datepicker-dateRange-item-active:hover,
 .datepicker-dateRange-item-active {
-  background: rgb(50, 118, 177)!important;
+  background: rgb(50, 118, 177);
   color: white!important;
 }
 .datepicker-monthRange {
@@ -442,33 +422,33 @@ input.datepicker-input.with-reset-button {
 .datepicker-dateRange-item-hover {
   background-color : #eeeeee;
 }
-.datepicker-weekRange span{
+.datepicker-weekRange span {
   font-weight: bold;
 }
-.datepicker-label{
+.datepicker-label {
   background-color: #f8f8f8;
   font-weight: 700;
   padding: 7px 0;
   text-align: center;
 }
-.datepicker-ctrl{
+.datepicker-ctrl {
   position: relative;
   height: 30px;
   line-height: 30px;
   font-weight: bold;
   text-align: center;
 }
-.month-btn{
+.month-btn {
   font-weight: bold;
   -webkit-user-select:none;
   -moz-user-select:none;
   -ms-user-select:none;
   user-select:none;
 }
-.datepicker-preBtn{
+.datepicker-preBtn {
   left: 2px;
 }
-.datepicker-nextBtn{
+.datepicker-nextBtn {
   right: 2px;
 }
 </style>
