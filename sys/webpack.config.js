@@ -8,12 +8,12 @@ module.exports = [
 {
   name    : 'js',
   entry   : "./flexyadmin/assets/js/main.js",
-  devtool : '#eval-source-map',
+  // devtool : '#eval-source-map',
   output  : {
     path              : __dirname + '/flexyadmin/assets/dist/',
     publicPath        : '/flexyadmin/assets/dist/',
     filename          : "bundle.js",
-    sourceMapFilename : "bundle.js.map",
+    // sourceMapFilename : "bundle.js.map",
     devtoolLineToLine : true,
     pathinfo          : true,
   },

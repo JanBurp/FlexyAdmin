@@ -193,9 +193,11 @@ export default {
         return false
       } else {
         this.currDate = date
-        this.value = this.stringify(this.currDate)
+        // this.value = this.stringify(this.currDate)
         this.displayDayView = false
       }
+      console.log(this.currDate);
+      this.$emit('input',this.currDate);
     },
     switchMonthView () {
       this.displayDayView = false
