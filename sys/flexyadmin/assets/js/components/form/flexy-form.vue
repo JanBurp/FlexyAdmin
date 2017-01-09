@@ -200,11 +200,9 @@ export default {
     },
     
     updateField : function( field, value ) {
-      console.log('updateField',field,value);
       this.row[field] = value;
     },
     
-    // update select (multiple)
     updateSelect : function( field, selected ) {
       if ( !this.isMultiple(field) ) {
         var value = selected[0].value;
@@ -218,12 +216,6 @@ export default {
       this.updateField(field,value);
     },
     
-    updateDate : function(field,value) {
-      var stringValue = value.getFullYear() +'-'+ value.getMonth() +'-'+ value.getDate();
-      console.log('updateDate',field,value,stringValue);
-      this.updateField(field,stringValue);
-    },
-
     // TinyMCE changed
     updateText : function(editor,content) {
       this.updateField(editor.id,content);
@@ -274,7 +266,7 @@ export default {
 
                 <template v-if="isType('datepicker',field)">
                   <!-- Datepicker -->
-                  <datepicker :id="field" :name="field" :value="row[field]" format="yyyy-MM-dd" @input="updateDate(field,$event)"></datepicker>
+                  <datepicker :id="field" :name="field" :value="row[field]" format="yyyy-MM-dd" @input="updateField(field,$event)"></datepicker>
                 </template>
               
                 <template v-if="isType('select',field)">
