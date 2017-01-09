@@ -7,11 +7,12 @@ import flexyButton      from '../flexy-button.vue'
 
 import tab              from '../../vue-strap-src/components/Tab.vue'
 import tabs             from '../../vue-strap-src/components/Tabs.vue'
+import datepicker       from '../../vue-strap-src/Datepicker.vue'
 
 
 export default {
   name: 'FlexyForm',
-  components: {flexyButton,tab,tabs},
+  components: {flexyButton,tab,tabs,datepicker},
   props:{
     'title':String,
     'name':String,
@@ -26,14 +27,19 @@ export default {
   computed : {
     fieldTypes : function() {
       var types = {
-        primary   : ['primary'],
-        hidden    : ['hidden','primary','uri','order'],
-        checkbox  : ['checkbox'],
-        select    : ['select','media'],
-        textarea  : ['textarea'],
-        wysiwyg   : ['wysiwyg'],
+        primary     : ['primary'],
+        hidden      : ['hidden','primary','uri','order'],
+        checkbox    : ['checkbox'],
+        datepicker  : ['date'],
+        select      : ['select','media'],
+        textarea    : ['textarea'],
+        wysiwyg     : ['wysiwyg'],
       };
-      types.default = [].concat( types.primary, types.hidden, types.checkbox, types.select, types.textarea, types.wysiwyg );
+      var defaultTypes = [];
+      for(var type in types) {
+        defaultTypes = defaultTypes.concat(types[type]);
+      }
+      types.default = defaultTypes;
       return types;
     },
   },
@@ -84,6 +90,19 @@ export default {
         }
       }
       return selected;
+    },
+    
+    dateObject : function(value) {
+      if (value==='0000-00-00') {
+        var date  = new Date();
+      }
+      else {
+        var year  = value.substr(0,4);
+        var month = value.substr(5,2);
+        var day   = value.substr(8,2);
+        var date  = new Date(year,month,day);
+      }
+      return date;
     },
     
     validationClass : function(field) {
@@ -181,6 +200,7 @@ export default {
     },
     
     updateField : function( field, value ) {
+      console.log('updateField',field,value);
       this.row[field] = value;
     },
     
@@ -196,6 +216,12 @@ export default {
         }
       }
       this.updateField(field,value);
+    },
+    
+    updateDate : function(field,value) {
+      var stringValue = value.getFullYear() +'-'+ value.getMonth() +'-'+ value.getDate();
+      console.log('updateDate',field,value,stringValue);
+      this.updateField(field,stringValue);
     },
 
     // TinyMCE changed
@@ -244,6 +270,11 @@ export default {
                 <template v-if="isType('checkbox',field)">
                   <!-- Checkbox -->
                   <input class="form-check-input" type="checkbox" :id="field" :name="field" :checked="row[field]" @input="updateField(field,$event.target.checked)">
+                </template>
+
+                <template v-if="isType('datepicker',field)">
+                  <!-- Datepicker -->
+                  <datepicker :id="field" :name="field" :value="row[field]" format="yyyy-MM-dd" @input="updateDate(field,$event)"></datepicker>
                 </template>
               
                 <template v-if="isType('select',field)">
