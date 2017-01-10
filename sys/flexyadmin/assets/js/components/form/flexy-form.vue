@@ -6,6 +6,7 @@ import flexyState       from '../../flexy-state.js'
 import flexyButton      from '../flexy-button.vue'
 
 import timepicker       from './timepicker.vue'
+import datetimepicker   from './datetimepicker.vue'
 
 import tab              from '../../vue-strap-src/components/Tab.vue'
 import tabs             from '../../vue-strap-src/components/Tabs.vue'
@@ -14,7 +15,7 @@ import datepicker       from '../../vue-strap-src/Datepicker.vue'
 
 export default {
   name: 'FlexyForm',
-  components: {flexyButton,timepicker,tab,tabs,datepicker},
+  components: {flexyButton,timepicker,datetimepicker,tab,tabs,datepicker},
   props:{
     'title':String,
     'name':String,
@@ -34,7 +35,7 @@ export default {
         checkbox          : ['checkbox'],
         datepicker        : ['date'],
         timepicker        : ['time'],
-        // datetimepicker    : ['datetime'],
+        datetimepicker    : ['datetime'],
         select            : ['select','media'],
         textarea          : ['textarea'],
         wysiwyg           : ['wysiwyg'],
@@ -278,6 +279,13 @@ export default {
                   <!-- Timepicker -->
                   <timepicker :id="field" :name="field" :value="row[field]" @input="updateField(field,$event)"></timepicker>
                 </template>
+
+                <template v-if="isType('datetimepicker',field)">
+                  <!-- Datetimepicker -->
+                  <datetimepicker :id="field" :name="field" :value="row[field]" @input="updateField(field,$event)"></datepicker>
+                </template>
+
+
 
                 <template v-if="isType('select',field)">
                   <!-- Select -->
