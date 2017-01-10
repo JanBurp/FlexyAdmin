@@ -21,6 +21,8 @@ $lang['vue_grid_search_word']        = 'bevat woord';
 $lang['vue_grid_search_exact']       = 'is gelijk aan';
 
 $lang['vue_upload']                  = 'Upload';
+$lang['vue_upload_choose']           = 'Klik voor nieuwe bestanden';
+$lang['vue_upload_drop']             = 'Of sleep nieuwe bestanden hier in';
 $lang['vue_upload_file']             = 'Bestand';
 $lang['vue_upload_size']             = 'Omvang';
 $lang['vue_upload_progress']         = 'Voortgang';

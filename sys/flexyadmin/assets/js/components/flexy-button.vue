@@ -10,6 +10,10 @@ export default {
       type: String,
       default:''
     },
+    'size': {
+      type: String,
+      default:''
+    },
     'text':{
       type: String,
       default:''
@@ -42,6 +46,7 @@ export default {
       if (this.text!=='') buttonClass += ' btn-text';
       if (this.dropdown!=='') buttonClass += ' dropdown-toggle';
       if (!this.border) buttonClass += ' no-border';
+      if (this.size) buttonClass += ' btn-'+this.size;
       return buttonClass;
     },
 
@@ -80,4 +85,7 @@ export default {
   .flexy-button.btn-icon.dropdown-toggle {width:3.2rem;}
   .flexy-button.btn-icon .fa {width:1rem;}
   .flexy-button.btn-text {width:auto!important;padding-right:.55rem;text-transform:uppercase;}
+  
+  .flexy-button.btn-lg {width:3.25rem;height:3.15rem;padding:.5rem .5rem .5rem 0;}
+  .flexy-button.btn-lg .fa {font-size:2rem;}
 </style>
