@@ -214,28 +214,28 @@ $config['FIELDS_prefix'] = array (
 
 	'tme'				=> array(
     'type'        => 'string',
-    'form-type'   => 'text',
+    'form-type'   => 'datetime',
     'grid'        => '%s',
     'form'        => 'datetime',
     'validation'	=> ''
   ),
 	'datetime'	=> array(
     'type'        => 'string',
-    'form-type'   => 'text',
+    'form-type'   => 'datetime',
     'grid'        => '%s',
     'form'        => 'datetime',
     'validation'	=> ''
   ),
 	'dtm'				=> array(
     'type'        => 'string',
-    'form-type'   => 'text',
+    'form-type'   => 'datetime',
     'grid'        => '%s',
     'form'        => 'datetime',
     'validation'	=> ''
   ),
 	'time'			=> array(
     'type'        => 'string',
-    'form-type'   => 'text',
+    'form-type'   => 'time',
     'grid'        => '%s',
     'form'        => 'time',
     'validation'	=> ''

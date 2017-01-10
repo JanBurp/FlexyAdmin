@@ -5,6 +5,8 @@ import jdb              from '../../jdb-tools.js'
 import flexyState       from '../../flexy-state.js'
 import flexyButton      from '../flexy-button.vue'
 
+import timepicker       from './timepicker.vue'
+
 import tab              from '../../vue-strap-src/components/Tab.vue'
 import tabs             from '../../vue-strap-src/components/Tabs.vue'
 import datepicker       from '../../vue-strap-src/Datepicker.vue'
@@ -12,7 +14,7 @@ import datepicker       from '../../vue-strap-src/Datepicker.vue'
 
 export default {
   name: 'FlexyForm',
-  components: {flexyButton,tab,tabs,datepicker},
+  components: {flexyButton,timepicker,tab,tabs,datepicker},
   props:{
     'title':String,
     'name':String,
@@ -27,13 +29,15 @@ export default {
   computed : {
     fieldTypes : function() {
       var types = {
-        primary     : ['primary'],
-        hidden      : ['hidden','primary','uri','order'],
-        checkbox    : ['checkbox'],
-        datepicker  : ['date'],
-        select      : ['select','media'],
-        textarea    : ['textarea'],
-        wysiwyg     : ['wysiwyg'],
+        primary           : ['primary'],
+        hidden            : ['hidden','primary','uri','order'],
+        checkbox          : ['checkbox'],
+        datepicker        : ['date'],
+        timepicker        : ['time'],
+        // datetimepicker    : ['datetime'],
+        select            : ['select','media'],
+        textarea          : ['textarea'],
+        wysiwyg           : ['wysiwyg'],
       };
       var defaultTypes = [];
       for(var type in types) {
@@ -200,6 +204,7 @@ export default {
     },
     
     updateField : function( field, value ) {
+      console.log('updateField',field,value);
       this.row[field] = value;
     },
     
@@ -268,7 +273,12 @@ export default {
                   <!-- Datepicker -->
                   <datepicker :id="field" :name="field" :value="row[field]" format="yyyy-MM-dd" @input="updateField(field,$event)"></datepicker>
                 </template>
-              
+
+                <template v-if="isType('timepicker',field)">
+                  <!-- Timepicker -->
+                  <timepicker :id="field" :name="field" :value="row[field]" @input="updateField(field,$event)"></timepicker>
+                </template>
+
                 <template v-if="isType('select',field)">
                   <!-- Select -->
                   <select class="form-control" :id="field" :name="field" :value="row[field]" v-on:input="updateSelect(field,$event.target.selectedOptions)" :multiple="isMultiple(field)">

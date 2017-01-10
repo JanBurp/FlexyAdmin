@@ -4524,7 +4524,9 @@ body.mce-fullscreen .mce-tinymce {
 .datepicker-popup {
   border-color: #696 !important;
   background: #fff !important;
-  box-shadow: 0 0.5rem 1rem #55595c !important; }
+  box-shadow: 0 0.5rem 1rem #55595c !important;
+  top: -2px;
+  left: 8rem; }
 
 .decadeRange span:first-child,
 .decadeRange span:last-child,
