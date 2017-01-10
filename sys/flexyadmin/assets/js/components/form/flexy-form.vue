@@ -12,7 +12,6 @@ import tab              from '../../vue-strap-src/components/Tab.vue'
 import tabs             from '../../vue-strap-src/components/Tabs.vue'
 import datepicker       from '../../vue-strap-src/Datepicker.vue'
 
-
 export default {
   name: 'FlexyForm',
   components: {flexyButton,timepicker,datetimepicker,tab,tabs,datepicker},
@@ -36,6 +35,7 @@ export default {
         datepicker        : ['date'],
         timepicker        : ['time'],
         datetimepicker    : ['datetime'],
+        colorpicker       : ['color','rgb'],
         select            : ['select','media'],
         textarea          : ['textarea'],
         wysiwyg           : ['wysiwyg'],
@@ -285,7 +285,10 @@ export default {
                   <datetimepicker :id="field" :name="field" :value="row[field]" @input="updateField(field,$event)"></datepicker>
                 </template>
 
-
+                <template v-if="isType('colorpicker',field)">
+                  <!-- Colorpicker -->
+                  <input type="color" class="form-control colorpicker" :id="field" :name="field" :value="row[field]" v-on:input="updateField(field,$event.target.value)" placeholder="">
+                </template>
 
                 <template v-if="isType('select',field)">
                   <!-- Select -->
