@@ -4321,9 +4321,23 @@ a > .fa, .btn > .fa {
     background-color: #f7f7f9; }
     .grid .card-block.grid-upload input#browsefiles {
       display: none; }
+    .grid .card-block.grid-upload .grid-upload-choose {
+      color: #55595c; }
+      .grid .card-block.grid-upload .grid-upload-choose .flexy-button {
+        margin-right: 1rem;
+        float: left; }
+    .grid .card-block.grid-upload .grid-upload-dropbox {
+      color: #55595c;
+      border: dashed 3px #818a91;
+      border-radius: 0.25rem;
+      padding: .5rem 1.1rem; }
     .grid .card-block.grid-upload progress {
       margin: 0;
       height: 1.5rem; }
+    .grid .card-block.grid-upload table {
+      margin: .8rem; }
+      .grid .card-block.grid-upload table thead .flexy-button {
+        margin-right: 1rem; }
     .grid .card-block.grid-upload tr th {
       color: #696; }
     .grid .card-block.grid-upload tr th:last-child,
