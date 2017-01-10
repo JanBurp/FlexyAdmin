@@ -4142,7 +4142,7 @@ h1 {
 /* NAV */
 .nav-pills .nav-link {
   padding: .45rem .5rem;
-  text-transform: uppercase;
+  font-size: 1.15rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis; }
@@ -4346,8 +4346,7 @@ h1 {
     .grid th a {
       text-decoration: none; }
     .grid th span {
-      white-space: nowrap;
-      text-transform: uppercase; }
+      white-space: nowrap; }
     .grid th > span.fa {
       position: relative;
       float: right;

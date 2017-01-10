@@ -30995,7 +30995,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
           'active': _vm.isDragging(row.id.value)
         },
         attrs: {
-          "icon": "reorder"
+          "icon": "arrows-v"
         }
       }) : _vm._e()]) : _h('flexy-grid-cell', {
         attrs: {
