@@ -496,7 +496,7 @@ export default {
           }
           // Als alles is geuploade, reload
           if (self.uploadFiles.length === 0 ) {
-            // self.reloadPage();
+            self.reloadPage();
           }
           return response;
         });
@@ -678,16 +678,24 @@ export default {
     </div>
 
     <!-- UPLOAD BOX -->
-    <div v-if="gridType==='media'" v-show="uploadFiles.length > 0" class="card-block grid-upload">
-      <input id="browsefiles" @change="addUploadFiles"  type="file" name="files[]" multiple="multiple">
-      <table class="table table-sm">
-        <thead>
-          <tr><th><flexy-button @click.native="startUpload" icon="upload" :text="$lang.upload" class="btn-primary" /></th><th>{{$lang.upload_file}}</th><th>{{$lang.upload_size}}</th><th>{{$lang.upload_progress}}</th><th>{{$lang.upload_status}}</th></tr>
-        </thead>
-        <tbody>
-          <tr v-for="(file,index) in uploadFiles"><td><flexy-button @click.native="removeUploadFile(index)" icon="remove" class="btn-outline-danger" /></td><td>{{file.name}}</td><td>{{Math.floor(file.size / 1024)}}k</td><td><progress class="progress progress-success progress-striped progress-animated" :value="uploadProgress[file.name] || 0" max="100"></td><td>{{uploadStatus[file.name]}}</td></tr>
-        </tbody>
-      </table>
+    <div v-if="gridType==='media'" class="card-block grid-upload">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-3 grid-upload-choose"><flexy-button @click.native="newItem()" icon="plus" size="lg" class="btn-warning" />{{$lang.upload_choose}}</div>
+          <div class="col-sm-9 grid-upload-dropbox"><span class="fa fa-cloud-download fa-lg text-warning"></span>&nbsp;&nbsp;{{$lang.upload_drop}}</div>
+        </div>
+        <div class="row">
+          <input id="browsefiles" @change="addUploadFiles"  type="file" name="files[]" multiple="multiple">
+          <table class="table table-sm" v-show="uploadFiles.length > 0">
+            <thead>
+              <tr><th><flexy-button @click.native="startUpload" icon="upload" size="lg" class="btn-danger" />{{$lang.upload}}</th><th>{{$lang.upload_file}}</th><th>{{$lang.upload_size}}</th><th>{{$lang.upload_progress}}</th><th>{{$lang.upload_status}}</th></tr>
+            </thead>
+            <tbody>
+              <tr v-for="(file,index) in uploadFiles"><td><flexy-button @click.native="removeUploadFile(index)" icon="remove" class="btn-outline-danger" /></td><td>{{file.name}}</td><td>{{Math.floor(file.size / 1024)}}k</td><td><progress class="progress progress-success progress-striped progress-animated" :value="uploadProgress[file.name] || 0" max="100"></td><td>{{uploadStatus[file.name]}}</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
     
     <!-- GRID HEADERS -->
