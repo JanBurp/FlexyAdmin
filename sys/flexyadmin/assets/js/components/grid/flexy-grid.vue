@@ -597,6 +597,7 @@ export default {
       var itemId = this.draggable.item;
       // var newOrder = this.draggable.orderStart + this.items[ this.draggable.newIndex ].order.value;
       return flexyState.api({
+        method: 'POST',
         url : 'table_order',
         'data': {
           'table' : self.name,

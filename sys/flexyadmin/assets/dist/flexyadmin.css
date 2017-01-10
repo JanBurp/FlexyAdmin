@@ -4127,9 +4127,6 @@ a > .fa, .btn > .fa {
   margin-right: .35rem;
   margin-left: .35rem; }
 
-h1 {
-  text-transform: uppercase; }
-
 /* BTN */
 .btn-default {
   background-color: #fff;
@@ -4288,8 +4285,6 @@ h1 {
 
 .grid {
   /*  td.is-editing {padding:2px;box-shadow:0px 0px 1px $brand-danger inset;}*/ }
-  .grid option, .grid select {
-    text-transform: uppercase; }
   .grid td.has-focus {
     background-color: #ffe5aa; }
   .grid .grid-relation-item {
