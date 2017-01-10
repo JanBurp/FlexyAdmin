@@ -73,6 +73,8 @@ body.mce-fullscreen .mce-tinymce{
   border-color:$brand-primary!important;
   background: $body-bg!important;
   box-shadow: 0 .5rem 1rem $gray!important;
+  top:-2px;
+  left:8rem;
 }
 .decadeRange span:first-child,
 .decadeRange span:last-child,
