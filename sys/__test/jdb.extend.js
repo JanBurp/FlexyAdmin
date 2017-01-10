@@ -269,6 +269,15 @@ jdb.randomString = function(len,chars) {
   return randomstring;
 };
 
+jdb.prefixStringNumber = function(num,max) {
+  var s = num.toString();
+  while (num<max) {
+    s = '0'+s;
+    max = max / 10;
+  }
+  return s;
+}
+
 
 /**
  * jdb.randomInt()
