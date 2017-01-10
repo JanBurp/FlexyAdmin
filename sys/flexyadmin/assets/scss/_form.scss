@@ -56,6 +56,10 @@ textarea {
   max-height:30rem;
 }
 
+.custom-select {
+  height: calc(2.5rem - 1px);
+}
+
 // tinyMCE overrides
 .mce-tinymce {
   border-radius:$border-radius;

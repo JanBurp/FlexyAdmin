@@ -28159,8 +28159,7 @@ type:Number,default:5}},methods:{/**
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol&&obj!==Symbol.prototype?"symbol":typeof obj;};var _jdbTools=__webpack_require__(/*! ../../jdb-tools.js */ 6);var _jdbTools2=_interopRequireDefault(_jdbTools);var _flexyState=__webpack_require__(/*! ../../flexy-state.js */ 3);var _flexyState2=_interopRequireDefault(_flexyState);var _flexyButton=__webpack_require__(/*! ../flexy-button.vue */ 4);var _flexyButton2=_interopRequireDefault(_flexyButton);var _timepicker=__webpack_require__(/*! ./timepicker.vue */ 68);var _timepicker2=_interopRequireDefault(_timepicker);var _Tab=__webpack_require__(/*! ../../vue-strap-src/components/Tab.vue */ 72);var _Tab2=_interopRequireDefault(_Tab);var _Tabs=__webpack_require__(/*! ../../vue-strap-src/components/Tabs.vue */ 73);var _Tabs2=_interopRequireDefault(_Tabs);var _Datepicker=__webpack_require__(/*! ../../vue-strap-src/Datepicker.vue */ 70);var _Datepicker2=_interopRequireDefault(_Datepicker);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}exports.default={name:'FlexyForm',components:{flexyButton:_flexyButton2.default,timepicker:_timepicker2.default,tab:_Tab2.default,tabs:_Tabs2.default,datepicker:_Datepicker2.default},props:{'title':String,'name':String,'path':String,'primary':Number,'fields':[Object,Array],'fieldsets':[Object,Array],'data':[Object,Array],'options':[Object,Array]},computed:{fieldTypes:function fieldTypes(){var types={primary:['primary'],hidden:['hidden','primary','uri','order'],checkbox:['checkbox'],datepicker:['date'],timepicker:['time'],// datetimepicker    : ['datetime'],
-select:['select','media'],textarea:['textarea'],wysiwyg:['wysiwyg']};var defaultTypes=[];for(var type in types){defaultTypes=defaultTypes.concat(types[type]);}types.default=defaultTypes;return types;}},// Copy of props.data
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol&&obj!==Symbol.prototype?"symbol":typeof obj;};var _jdbTools=__webpack_require__(/*! ../../jdb-tools.js */ 6);var _jdbTools2=_interopRequireDefault(_jdbTools);var _flexyState=__webpack_require__(/*! ../../flexy-state.js */ 3);var _flexyState2=_interopRequireDefault(_flexyState);var _flexyButton=__webpack_require__(/*! ../flexy-button.vue */ 4);var _flexyButton2=_interopRequireDefault(_flexyButton);var _timepicker=__webpack_require__(/*! ./timepicker.vue */ 68);var _timepicker2=_interopRequireDefault(_timepicker);var _datetimepicker=__webpack_require__(/*! ./datetimepicker.vue */ 98);var _datetimepicker2=_interopRequireDefault(_datetimepicker);var _Tab=__webpack_require__(/*! ../../vue-strap-src/components/Tab.vue */ 72);var _Tab2=_interopRequireDefault(_Tab);var _Tabs=__webpack_require__(/*! ../../vue-strap-src/components/Tabs.vue */ 73);var _Tabs2=_interopRequireDefault(_Tabs);var _Datepicker=__webpack_require__(/*! ../../vue-strap-src/Datepicker.vue */ 70);var _Datepicker2=_interopRequireDefault(_Datepicker);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}exports.default={name:'FlexyForm',components:{flexyButton:_flexyButton2.default,timepicker:_timepicker2.default,datetimepicker:_datetimepicker2.default,tab:_Tab2.default,tabs:_Tabs2.default,datepicker:_Datepicker2.default},props:{'title':String,'name':String,'path':String,'primary':Number,'fields':[Object,Array],'fieldsets':[Object,Array],'data':[Object,Array],'options':[Object,Array]},computed:{fieldTypes:function fieldTypes(){var types={primary:['primary'],hidden:['hidden','primary','uri','order'],checkbox:['checkbox'],datepicker:['date'],timepicker:['time'],datetimepicker:['datetime'],select:['select','media'],textarea:['textarea'],wysiwyg:['wysiwyg']};var defaultTypes=[];for(var type in types){defaultTypes=defaultTypes.concat(types[type]);}types.default=defaultTypes;return types;}},// Copy of props.data
 data:function data(){return{row:{},validationErrors:{},isSaving:false,tinymceOptions:{}};},// Make copy of props.data
 created:function created(){this.row=this.data;this.tinymceOptions=JSON.parse(_flexy.tinymceOptions);},methods:{isType:function isType(type,field){if(_.isUndefined(this.fields[field]))return false;if(type==='default'){return this.fieldTypes['default'].indexOf(this.fields[field].schema['form-type'])===-1;}return this.fieldTypes[type].indexOf(this.fields[field].schema['form-type'])>=0;},isMultiple:function isMultiple(field){var multiple=false;if(this.options[field].multiple)multiple='multiple';if(_flexyState2.default.debug)console.log('isMultiple',field,multiple);return multiple;},isSelectedOption:function isSelectedOption(field,value,option){var selected='';if((typeof value==='undefined'?'undefined':_typeof(value))!=='object'){if(parseInt(value)===option)selected='selected';}else{for(var item in value){var id=parseInt(value[item]['id']);if(id===option)selected='selected';}}return selected;},dateObject:function dateObject(value){if(value==='0000-00-00'){var date=new Date();}else{var year=value.substr(0,4);var month=value.substr(5,2);var day=value.substr(8,2);var date=new Date(year,month,day);}return date;},validationClass:function validationClass(field){var validation='';if(this.validationErrors[field])validation='has-danger';return validation;},cancel:function cancel(){var self=this;if(!this.isSaving){window.location.assign(self.returnUrl());}},submit:function submit(){var self=this;if(!this.isSaving){this.postForm().then(function(response){if(!response.error){window.location.assign(self.returnUrl());}});}},returnUrl:function returnUrl(){var url='admin/show/grid/'+this.name;if(this.path&&this.path!=='false')url='admin/show/media/'+this.path;console.log(this.path,url);return url;},save:function save(){if(!this.isSaving){this.postForm();}},postForm:function postForm(){var self=this;self.isSaving=true;var data=_.clone(this.row);// Prepare data for ajax call
 for(var field in data){if(field.indexOf('.abstract')>0){delete data[field];}else{if(this.isType('checkbox',field)){data[field]=data[field]?1:0;}if(this.isType('select',field)&&this.isMultiple(field)){data[field]=[];for(var i=0;i<this.row[field].length;i++){data[field].push(this.row[field][i].id);}}}}console.log(data);return _flexyState2.default.api({url:'row','data':{'table':this.name,'where':this.row['id'],'data':data}}).then(function(response){self.isSaving=false;if(!response.error){if(_.isUndefined(response.data.info)||response.data.info.validation!==false){_flexyState2.default.addMessage('Item saved');if(self.isNewItem()){self.row['id']=response.data.data.id;}}else{_flexyState2.default.addMessage(self.$lang.form_validation_error,'danger');if(!_.isUndefined(response.data.info))self.validationErrors=response.data.info.validation_errors;}}else{_flexyState2.default.addMessage(self.$lang.form_save_error,'danger');}return response;});},isNewItem:function isNewItem(){return this.row['id']===-1;},updateField:function updateField(field,value){console.log('updateField',field,value);this.row[field]=value;},updateSelect:function updateSelect(field,selected){if(!this.isMultiple(field)){var value=selected[0].value;}else{var value=[];for(var i=0;i<selected.length;i++){value.push({'id':selected[i].value});}}this.updateField(field,value);},// TinyMCE changed
@@ -31634,6 +31633,17 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
             _vm.updateField(field, $event)
           }
         }
+      })] : _vm._e(), " ", (_vm.isType('datetimepicker', field)) ? [_h('datetimepicker', {
+        attrs: {
+          "id": field,
+          "name": field,
+          "value": _vm.row[field]
+        },
+        on: {
+          "input": function($event) {
+            _vm.updateField(field, $event)
+          }
+        }
       })] : _vm._e(), " ", (_vm.isType('select', field)) ? [_h('select', {
         staticClass: "form-control",
         attrs: {
@@ -32282,6 +32292,164 @@ var LOCALES={};LOCALES[_flexy.language]=JSON.parse(_flexy.language_keys);window.
  Main Vue Instance
  */var vm=new _vue2.default({el:'#main',components:{FlexyBlocks:_flexyBlocks2.default,FlexyButton:_flexyButton2.default,// FlexyModal,
 FlexyMessages:_flexyMessages2.default,FlexyPagination:_flexyPagination2.default,FlexyGrid:_flexyGrid2.default,FlexyForm:_flexyForm2.default},data:{state:_flexyState2.default.state}});
+
+/***/ },
+/* 97 */
+/* unknown exports provided */
+/* all exports used */
+/*!*****************************************************************************************************************************************!*\
+  !*** ./~/babel-loader/lib!./~/vue-loader/lib/selector.js?type=script&index=0!./flexyadmin/assets/js/components/form/datetimepicker.vue ***!
+  \*****************************************************************************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _Datepicker=__webpack_require__(/*! ../../vue-strap-src/Datepicker.vue */ 70);var _Datepicker2=_interopRequireDefault(_Datepicker);var _timepicker=__webpack_require__(/*! ./timepicker.vue */ 68);var _timepicker2=_interopRequireDefault(_timepicker);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}exports.default={name:'DateTimePicker',components:{timepicker:_timepicker2.default,datepicker:_Datepicker2.default},props:{'value':String,'name':String},computed:{name_date:function name_date(){return this.name+'_date';},name_time:function name_time(){return this.name+'_time';}},data:function data(){return{datetime:this.value};},methods:{date:function date(){return this.datetime.substr(0,10);},time:function time(){return this.datetime.substr(11,8);},changeDate:function changeDate(date){this.changeDateTime(date+' '+this.time());},changeTime:function changeTime(time){console.log('changeTime',time);this.changeDateTime(this.date()+' '+time);},changeDateTime:function changeDateTime(datetime){this.datetime=datetime;this.$emit('input',this.datetime);}}};
+
+/***/ },
+/* 98 */
+/* unknown exports provided */
+/* all exports used */
+/*!*****************************************************************!*\
+  !*** ./flexyadmin/assets/js/components/form/datetimepicker.vue ***!
+  \*****************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+var __vue_exports__, __vue_options__
+var __vue_styles__ = {}
+
+/* styles */
+__webpack_require__(/*! !vue-style-loader!css-loader!vue-loader/lib/style-rewriter?id=data-v-55b24e50!vue-loader/lib/selector?type=styles&index=0!./datetimepicker.vue */ 101)
+
+/* script */
+__vue_exports__ = __webpack_require__(/*! !babel-loader!vue-loader/lib/selector?type=script&index=0!./datetimepicker.vue */ 97)
+
+/* template */
+var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-55b24e50!vue-loader/lib/selector?type=template&index=0!./datetimepicker.vue */ 99)
+__vue_options__ = __vue_exports__ = __vue_exports__ || {}
+if (
+  typeof __vue_exports__.default === "object" ||
+  typeof __vue_exports__.default === "function"
+) {
+if (Object.keys(__vue_exports__).some(function (key) { return key !== "default" && key !== "__esModule" })) {console.error("named exports are not supported in *.vue files.")}
+__vue_options__ = __vue_exports__ = __vue_exports__.default
+}
+if (typeof __vue_options__ === "function") {
+  __vue_options__ = __vue_options__.options
+}
+__vue_options__.__file = "/Users/jan/Sites/FlexyAdmin/FlexyAdmin/sys/flexyadmin/assets/js/components/form/datetimepicker.vue"
+__vue_options__.render = __vue_template__.render
+__vue_options__.staticRenderFns = __vue_template__.staticRenderFns
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-55b24e50", __vue_options__)
+  } else {
+    hotAPI.reload("data-v-55b24e50", __vue_options__)
+  }
+})()}
+if (__vue_options__.functional) {console.error("[vue-loader] datetimepicker.vue: functional components are not supported and should be defined in plain js files using render functions.")}
+
+module.exports = __vue_exports__
+
+
+/***/ },
+/* 99 */
+/* unknown exports provided */
+/* all exports used */
+/*!*********************************************************************************************************************************************************************************!*\
+  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-55b24e50!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/components/form/datetimepicker.vue ***!
+  \*********************************************************************************************************************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('div', {
+    staticClass: "datetimepicker"
+  }, [_h('datepicker', {
+    attrs: {
+      "id": _vm.name_date,
+      "name": _vm.name_date,
+      "value": _vm.date(),
+      "format": "yyyy-MM-dd"
+    },
+    on: {
+      "input": function($event) {
+        _vm.changeDate($event)
+      }
+    }
+  }), " ", _h('timepicker', {
+    attrs: {
+      "id": _vm.name_time,
+      "name": _vm.name_time,
+      "value": _vm.time()
+    },
+    on: {
+      "input": function($event) {
+        _vm.changeTime($event)
+      }
+    }
+  })])
+},staticRenderFns: []}
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-55b24e50", module.exports)
+  }
+}
+
+/***/ },
+/* 100 */
+/* unknown exports provided */
+/* all exports used */
+/*!*******************************************************************************************************************************************************************************************!*\
+  !*** ./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-55b24e50!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/form/datetimepicker.vue ***!
+  \*******************************************************************************************************************************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ./../../../../../~/css-loader/lib/css-base.js */ 1)();
+// imports
+
+
+// module
+exports.push([module.i, "\n.datetimepicker .datepicker {float:left;margin-right:1rem;\n}\n.datetimepicker .timepicker {float:left;\n}\n", ""]);
+
+// exports
+
+
+/***/ },
+/* 101 */
+/* unknown exports provided */
+/* all exports used */
+/*!****************************************************************************************************************************************************************************************************************!*\
+  !*** ./~/vue-style-loader!./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-55b24e50!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/form/datetimepicker.vue ***!
+  \****************************************************************************************************************************************************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(/*! !./../../../../../~/css-loader!./../../../../../~/vue-loader/lib/style-rewriter.js?id=data-v-55b24e50!./../../../../../~/vue-loader/lib/selector.js?type=styles&index=0!./datetimepicker.vue */ 100);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(/*! ./../../../../../~/vue-style-loader/addStyles.js */ 2)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!./../../../../../node_modules/css-loader/index.js!./../../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-55b24e50!./../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./datetimepicker.vue", function() {
+			var newContent = require("!!./../../../../../node_modules/css-loader/index.js!./../../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-55b24e50!./../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./datetimepicker.vue");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
 
 /***/ }
 /******/ ]);
