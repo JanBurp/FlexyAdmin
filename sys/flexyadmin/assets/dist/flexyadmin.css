@@ -4520,6 +4520,9 @@ textarea {
   min-height: 5rem;
   max-height: 30rem; }
 
+.custom-select {
+  height: calc(2.5rem - 1px); }
+
 .mce-tinymce {
   border-radius: 0.25rem; }
 
