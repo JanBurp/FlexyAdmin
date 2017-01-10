@@ -4296,8 +4296,12 @@ a > .fa, .btn > .fa {
     border-color: #696;
     background-color: #ffe5aa; }
   .grid .color-thumb-sm {
+    width: 5.5rem;
     padding: 0.125rem .5rem;
-    margin: 0; }
+    margin: 0;
+    text-align: center;
+    text-transform: uppercase;
+    border-radius: 0.25rem; }
   .grid .card-header.grid-extended-find {
     background-color: #eceeef !important;
     color: #696 !important; }
@@ -4384,6 +4388,8 @@ a > .fa, .btn > .fa {
     .grid td input {
       padding: 0;
       float: left; }
+  .grid td.grid-cell-type-color {
+    max-width: 0; }
   .grid td.grid-cell-type-checkbox {
     text-align: center; }
   .grid .card-footer {
@@ -4557,5 +4563,9 @@ body.mce-fullscreen .mce-tinymce {
 .datepicker-dateRange span:hover,
 .datepicker-dateRange-item-hover {
   background: #D90 !important; }
+
+.colorpicker {
+  padding: 0;
+  width: 2rem; }
 
 /*# sourceMappingURL=flexyadmin.css.map*/

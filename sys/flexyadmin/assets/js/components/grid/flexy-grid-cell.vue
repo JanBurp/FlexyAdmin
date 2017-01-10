@@ -78,12 +78,12 @@ export default {
     },
     
     complementColor : function(color) {
-      var complement = '#'+(0xffffff ^ color).toString(16);
+      color = parseInt(color.replace('#',''),16);
+      var complement = '#'+('000000' + ((0xFFFFFF ^ color).toString(16))).slice(-6);
       return complement;
     },
     
     relationItems : function(string) {
-      console.log(string);
       var items = string.split(',');
       for (var i = 0; i < items.length; i++) {
         items[i] = items[i].replace(/{/,'').replace(/}/,'').trim();
