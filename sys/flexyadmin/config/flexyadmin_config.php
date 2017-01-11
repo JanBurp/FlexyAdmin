@@ -41,20 +41,17 @@ if (SAFE_INSTALL) {
   $config['PLUGINS']     = $config['SITE'].'plugins';
 }
 
-$config['THUMBSIZE']							= array(100,100);
-$config['IGNORE_MIME']						= FALSE;
-
-
-
 /*
 | UI settings
 */
-
+$config['THUMBSIZE']							= array(100,100);
 $config['FORM_NICE_DROPDOWNS']		= TRUE;
 $config['MULTIPLE_UPLOAD']		    = TRUE;
 $config['PAGINATION']             = TRUE;
 $config['GRID_EDIT']              = TRUE;
 $config['GRID_WHERE']             = FALSE;
+
+$config['IGNORE_MIME']						= FALSE;
 
 
 /*
