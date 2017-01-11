@@ -29,6 +29,11 @@ Two users exists with a fresh install in de demo database:
 - admin/admin
 - user/user
 
+# Online
+
+- Make sure the `public` is the root of the site.
+- Or read below to return to normal install.
+
 # From Safe install to (old) normal install
 
 - Move files from `public` to root
