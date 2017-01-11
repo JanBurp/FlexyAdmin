@@ -1,7 +1,9 @@
 <script>
-import flexyState from '../../flexy-state.js'
-import flexyThumb from '../flexy-thumb.vue'
-import flexyButton      from '../flexy-button.vue'
+
+import jdb          from '../../jdb-tools.js'
+import flexyState   from '../../flexy-state.js'
+import flexyThumb   from '../flexy-thumb.vue'
+import flexyButton  from '../flexy-button.vue'
 
 export default {
   name: 'VueGridCell',
@@ -78,9 +80,10 @@ export default {
     },
     
     complementColor : function(color) {
-      color = parseInt(color.replace('#',''),16);
-      var complement = '#'+('000000' + ((0xFFFFFF ^ color).toString(16))).slice(-6);
-      return complement;
+      return jdb.complementColor(color);
+      // color = parseInt(color.replace('#',''),16);
+      // var complement = '#'+('000000' + ((0xFFFFFF ^ color).toString(16))).slice(-6);
+      // return complement;
     },
     
     relationItems : function(string) {
