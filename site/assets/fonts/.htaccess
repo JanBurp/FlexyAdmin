@@ -1,5 +1,0 @@
-Order Allow,Deny
-Deny from all
-<Files ~ "\.(eot|svg|ttf|woff|EOT|SVG|TTF|WOFF)$">
-Allow from all
-</Files>
