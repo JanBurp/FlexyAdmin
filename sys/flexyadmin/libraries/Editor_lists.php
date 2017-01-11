@@ -179,7 +179,7 @@ class Editor_lists {
 		}
 		if (substr($list,strlen($list)-1)==',') $list=substr($list,0,strlen($list)-1);
 		$list.=");";
-		$ListFile = $this->CI->config->item('PUBLICASSETS')."lists/$jsFile.js";
+    $ListFile = $this->CI->config->item('ASSETSFOLDER')."lists/$jsFile.js";
     $list=str_replace('&nbsp;',' ',$list);
 		$result=write_file($ListFile, $list);
 		return $result;
