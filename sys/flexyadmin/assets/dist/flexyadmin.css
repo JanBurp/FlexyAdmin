@@ -4389,7 +4389,8 @@ a > .fa, .btn > .fa {
       padding: 0;
       float: left; }
   .grid td.grid-cell-type-color {
-    max-width: 0; }
+    max-width: 0;
+    min-width: 5rem; }
   .grid td.grid-cell-type-checkbox {
     text-align: center; }
   .grid .card-footer {
@@ -4563,9 +4564,5 @@ body.mce-fullscreen .mce-tinymce {
 .datepicker-dateRange span:hover,
 .datepicker-dateRange-item-hover {
   background: #D90 !important; }
-
-.colorpicker {
-  padding: 0;
-  width: 2rem; }
 
 /*# sourceMappingURL=flexyadmin.css.map*/

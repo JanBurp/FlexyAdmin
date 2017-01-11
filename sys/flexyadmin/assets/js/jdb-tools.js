@@ -100,4 +100,18 @@ export default {
   },
   
   
+  /**
+   * jdb.complementColor()
+   * 
+   * Geeft de tegenovergesteld kleur
+   * 
+   * @param string color
+   * @return string
+   */
+  complementColor : function(color) {
+    color = parseInt(color.replace('#',''),16);
+    var complement = '#'+('000000' + ((0xFFFFFF ^ color).toString(16))).slice(-6);
+    return complement;
+  },
+  
 };

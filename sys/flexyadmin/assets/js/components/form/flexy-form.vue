@@ -7,6 +7,7 @@ import flexyButton      from '../flexy-button.vue'
 
 import timepicker       from './timepicker.vue'
 import datetimepicker   from './datetimepicker.vue'
+import colorpicker      from './colorpicker.vue'
 
 import tab              from '../../vue-strap-src/components/Tab.vue'
 import tabs             from '../../vue-strap-src/components/Tabs.vue'
@@ -14,7 +15,7 @@ import datepicker       from '../../vue-strap-src/Datepicker.vue'
 
 export default {
   name: 'FlexyForm',
-  components: {flexyButton,timepicker,datetimepicker,tab,tabs,datepicker},
+  components: {flexyButton,timepicker,datetimepicker,colorpicker,tab,tabs,datepicker},
   props:{
     'title':String,
     'name':String,
@@ -86,7 +87,7 @@ export default {
     isSelectedOption : function(field,value,option) {
       var selected = '';
       if (typeof(value)!=='object') {
-        if (parseInt(value)===option) selected='selected';
+        if (parseInt(value)===option || value===option) selected='selected';
       }
       else {
         for(var item in value) {
@@ -95,6 +96,15 @@ export default {
         }
       }
       return selected;
+    },
+    
+    // Pas kleur van optie aan als het een kleurenveld is
+    selectStyle : function(field,option) {
+      var style = '';
+      if (field.substr(0,4)==='rgb_') {
+        style="background-color:"+option +';color:'+jdb.complementColor(option)+';';
+      }
+      return style;
     },
     
     dateObject : function(value) {
@@ -205,7 +215,7 @@ export default {
     },
     
     updateField : function( field, value ) {
-      console.log('updateField',field,value);
+      // console.log('updateField',field,value);
       this.row[field] = value;
     },
     
@@ -287,13 +297,13 @@ export default {
 
                 <template v-if="isType('colorpicker',field)">
                   <!-- Colorpicker -->
-                  <input type="color" class="form-control colorpicker" :id="field" :name="field" :value="row[field]" v-on:input="updateField(field,$event.target.value)" placeholder="">
+                  <colorpicker :id="field" :name="field" :value="row[field]" v-on:input="updateField(field,$event)"></colorpicker>
                 </template>
 
                 <template v-if="isType('select',field)">
                   <!-- Select -->
                   <select class="form-control" :id="field" :name="field" :value="row[field]" v-on:input="updateSelect(field,$event.target.selectedOptions)" :multiple="isMultiple(field)">
-                    <option v-for="option in options[field]['data']" :value="option.value" :selected="isSelectedOption(field,row[field],option.value)">{{option.name}}</option>
+                    <option v-for="option in options[field]['data']" :value="option.value" :selected="isSelectedOption(field,row[field],option.value)" :style="selectStyle(field,option.value)">{{option.name}}</option>
                   </select>
                 </template>
               
