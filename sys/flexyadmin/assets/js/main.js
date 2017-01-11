@@ -22,6 +22,9 @@ import FlexyPagination  from './components/flexy-pagination.vue'
 import FlexyGrid        from './components/grid/flexy-grid.vue'
 import FlexyForm        from './components/form/flexy-form.vue'
 
+import accordion        from './vue-strap-src/Accordion.vue'
+import panel            from './vue-strap-src/Panel.vue'
+
 
 import VueTinymce from 'vue-tinymce'
 Vue.use(VueTinymce)
@@ -72,6 +75,7 @@ var vm = new Vue({
     FlexyPagination,
     FlexyGrid,
     FlexyForm,
+    accordion,panel
   },
 
   data : {
