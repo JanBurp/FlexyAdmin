@@ -32,7 +32,7 @@ $config['rss_model'] = 'Rss_feed';
 */
 
 if (defined('PHPUNIT_TEST')) {
-  $config['base_url']="http://localhost/FlexyAdmin/FlexyAdmin/_tests";
+  $config['base_url']='';
 }
 elseif (isset($_SERVER['HTTP_HOST']) and isset($_SERVER['SCRIPT_NAME'])) {
   $protocol = 'http';
@@ -42,6 +42,7 @@ elseif (isset($_SERVER['HTTP_HOST']) and isset($_SERVER['SCRIPT_NAME'])) {
   $config['base_url']=$protocol."://".$_SERVER['HTTP_HOST'];
   $config['base_url'].=str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']);
 }
+
 
 /*
 |--------------------------------------------------------------------------
