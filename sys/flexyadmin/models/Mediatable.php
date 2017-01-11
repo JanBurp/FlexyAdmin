@@ -267,7 +267,7 @@ class Mediatable extends CI_Model {
     
     foreach ($paths as $key=>$path) {
       $info=$this->cfg->get('cfg_media_info',$path);
-      $path=add_assets($path);
+      $path=$this->config->item('ASSETSFOLDER').$path;
       $paths[$key]=$path;
       $files=read_map($path,'',FALSE,TRUE,$this->db->field_exists('stx_meta',$this->table)); // Get header info for jpg
       $files=not_filter_by($files,'_'); // remove hidden files

@@ -36,7 +36,7 @@ if (SAFE_INSTALL) {
   $config['PUBLICASSETS']= 'assets/';
   $config['ASSETS']      = '_media/';
   $config['ASSETSFOLDER']= SITEPATH.'assets/';
-  $config['THUMBCACHE']  = $config['ASSETS']."_thumbcache/";
+  $config['THUMBCACHE']  = $config['ASSETSFOLDER']."_thumbcache/";
   $config['STATS']       = $config['SITE'].'stats/';
   $config['PLUGINS']     = $config['SITE'].'plugins';
 }
