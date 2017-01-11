@@ -9,19 +9,19 @@ class Help extends AdminController {
 
 	public function __construct() {
 		parent::__construct();
+    $this->load->helper('markdown');
 	}
 
 	public function index($page='') {
 		$lang=$this->flexy_auth->get_user()['str_language'];
-    
-    $this->load->helper('markdown');
-    
 		$commonHelp=$this->cfg->get('CFG_configurations','txt_help');
 
+    // Lees alle help bestanden in en zet ze om naar HTML
     $map=APPPATH.'views/help';
     $helpFiles=read_map($map);
     ksort($helpFiles);
-    $helpHTML='';
+    
+    $help_items = array();
     foreach ($helpFiles as $file => $item) {
       $title=str_replace('_',' ',get_suffix(str_replace('.html','',$item['name']),'__'));
       if (!empty($title)) {
@@ -37,14 +37,23 @@ class Help extends AdminController {
           }
         }
         $html=Markdown($html);
-        $html=h($title).div('content').$html._div();
-        $helpHTML.=$html;
+        $html=str_replace('sys/flexyadmin/assets/',$this->config->item('ADMINASSETS'),$html);
+        
+        // $html=$this->load->view('admin/vue/card', array('title'=>$title, 'content'=>$html),true );
+        // $helpHTML.=$html;
+        
+        $uri = remove_prefix(remove_suffix($file,'.'),'__');
+        $help_items[$uri] = array(
+          'uri'     => $uri,
+          'title'   => $title,
+          'content' => $html,
+        );
+
       }
     }
-    $helpHTML = str_replace('sys/flexyadmin/assets/',$this->config->item('ADMINASSETS'),$helpHTML);
 
-		$this->_add_content($this->load->view("admin/help_".$lang,array('page'=>$page,'commonHelp'=>$commonHelp,'help'=>$helpHTML),true) );
-		$this->view_admin();
+		$content = $this->load->view( 'admin/vue/accordion', array('items'=>$help_items), true );
+		$this->view_admin('',array('content'=>$content));
 	}
 
 }
