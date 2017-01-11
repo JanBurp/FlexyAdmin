@@ -247,7 +247,6 @@ String.method('encodePath', function() {
 //   return s;
 // });
 
-
 /**
  * jdb.randomString()
  * 
