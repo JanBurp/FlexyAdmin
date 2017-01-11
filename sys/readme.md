@@ -22,3 +22,6 @@ First go to the `sys` folder before running these commands in terminal.
 
 `git push https://Jan_db@bitbucket.org/Jan_db/flexyadmin.git :refs/tags/...`
 
+### Update alle tags & branches
+
+`git push --all -u`
