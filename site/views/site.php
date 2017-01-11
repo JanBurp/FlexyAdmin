@@ -15,7 +15,6 @@
   <base href="<?=base_url()?>">
   <link rel="shortcut icon" href="<?=$publicassets?>img/favicon.ico" type="image/x-icon">
   <!-- <link rel="alternate" type="application/rss+xml" title="<?=ascii_to_entities($title);?>" href="<?=site_url('_rss');?>" /> -->
-  
 
   <title><?=ascii_to_entities($title);?></title>
   <meta name="Description" content="<?=ascii_to_entities($description);?>">
