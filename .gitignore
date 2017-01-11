@@ -9,3 +9,4 @@ site/cache/data_settings_*
 site/cache/data_result_*
 site/assets/**/*.*
 site/assets/lists/*.js
+site/assets/lists/img_list.js
