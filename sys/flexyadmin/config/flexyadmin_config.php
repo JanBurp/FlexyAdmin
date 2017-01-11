@@ -30,6 +30,16 @@ $config['ASSETSFOLDER']						= $config['ASSETS'];
 $config['THUMBCACHE']							= $config['ASSETS']."_thumbcache/";
 $config['STATS']									= $config['SITE'].'stats/';
 $config['PLUGINS']								= $config['SITE'].'plugins';
+if (SAFE_INSTALL) {
+  $config['SITE']        = SITEPATH;
+  $config['ADMINASSETS'] = "_admin_assets/";
+  $config['PUBLICASSETS']= 'assets/';
+  $config['ASSETS']      = '_media/';
+  $config['ASSETSFOLDER']= SITEPATH.'assets/';
+  $config['THUMBCACHE']  = $config['ASSETS']."_thumbcache/";
+  $config['STATS']       = $config['SITE'].'stats/';
+  $config['PLUGINS']     = $config['SITE'].'plugins';
+}
 
 $config['THUMBSIZE']							= array(100,100);
 $config['IGNORE_MIME']						= FALSE;
