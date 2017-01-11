@@ -30,6 +30,7 @@ a>.fa, .btn>.fa {margin-right:.35rem;margin-left:.35rem;}
   >.card-header {
     >* {margin:0 1rem 0 0;float:left;}
     >*:last-child {margin:0;float:right;}
+    >*:first-child {margin:0;float:left;}
     .btn {text-transform:uppercase};
   }
 }

@@ -4165,6 +4165,10 @@ a > .fa, .btn > .fa {
   margin: 0;
   float: right; }
 
+.card > .card-header > *:first-child {
+  margin: 0;
+  float: left; }
+
 .card > .card-header .btn {
   text-transform: uppercase; }
 

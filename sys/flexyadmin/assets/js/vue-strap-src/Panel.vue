@@ -1,11 +1,11 @@
 <template>
-  <div :class="['panel',panelType]">
-    <div :class="['panel-heading',{'accordion-toggle':inAccordion}]" @click.prevent="inAccordion&&toggle()">
-      <slot name="header"><h4 class="panel-title">{{ header }}</h4></slot>
+  <div :class="['card',panelType]">
+    <div :class="['card-header',{'accordion-toggle':inAccordion}]" class="bg-primary text-white" @click.prevent="inAccordion&&toggle()">
+      <slot name="header"><h1 class="card-title text-white">{{ header }}</h1></slot>
     </div>
     <transition name="collapse">
-      <div class="panel-collapse" v-if="open">
-        <div class="panel-body">
+      <div class="card-collapse" v-if="open">
+        <div class="card-block">
           <slot></slot>
         </div>
       </div>
@@ -32,7 +32,7 @@ export default {
   },
   computed: {
     inAccordion () { return this.$parent && this.$parent._isAccordion },
-    panelType () { return 'panel-' + (this.type || (this.$parent && this.$parent.type) || 'default') }
+    panelType () { return 'card-' + (this.type || (this.$parent && this.$parent.type) || 'default') }
   },
   methods: {
     toggle () {
@@ -61,17 +61,3 @@ export default {
   }
 }
 </script>
-
-<style>
-.accordion-toggle {
-  cursor: pointer;
-}
-.collapse-enter-active,
-.collapse-leave-active {
-  transition: max-height .5s ease;
-}
-.collapse-enter,
-.collapse-leave-active {
-  max-height: 0 !important;
-}
-</style>

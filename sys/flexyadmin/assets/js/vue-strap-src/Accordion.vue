@@ -1,9 +1,6 @@
-<template><div class="panel-group"><slot></slot></div></template>
+<template><div><slot></slot></div></template>
 
 <script>
-// let coerce = {
-//   oneAtAtime: 'boolean'
-// }
 
 export default {
   props: {
@@ -13,7 +10,7 @@ export default {
     },
     oneAtAtime: {
       type: Boolean,
-      default: false
+      default: true
     }
   },
   created () {
