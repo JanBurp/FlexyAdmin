@@ -15,6 +15,7 @@ class Cli extends CI_Controller {
 	public function __construct()	{
 		parent::__construct();
     $this->load->library('flexy_auth');
+    $this->load->helper('directory');
 	}
   
   public function index() {
@@ -54,7 +55,7 @@ class Cli extends CI_Controller {
     $this->load->library('documentation');
     echo "FlexyAdmin cli commands:".PHP_EOL.PHP_EOL;
     
-    $clis = scan_map('sys/flexyadmin/models/cli',$types='php',FALSE);
+    $clis = scan_map(APPPATH.'/models/cli',$types='php',FALSE);
     foreach ($clis as $cli) {
       $doc = $this->documentation->get($cli);
       echo $doc['name'].PHP_EOL;
