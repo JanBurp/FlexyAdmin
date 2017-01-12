@@ -25,6 +25,7 @@ These need to be run from root:
 ### FlexyAdmin CLI
 
 You need to be in the folder where index.php is. (`root` or `public`).
+Only works if you're working local and logged in as super_admin.
 
 `php index.php _cli` - Lists all CLI commands
 `php index.php _cli hello` -  A simple Hello world
