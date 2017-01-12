@@ -47,7 +47,8 @@ var watch_interval = 100;
 
 /** Paths (keep as is) */
 var bower     = 'bower_components';
-var assets    = 'site/assets';
+// var assets    = 'site/assets';
+var assets    = 'public/assets';
 
 
 /**
