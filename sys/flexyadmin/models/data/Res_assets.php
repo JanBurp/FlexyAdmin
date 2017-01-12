@@ -563,7 +563,7 @@ Class Res_assets extends Data_Core {
     );
     // img sizes
     if ( in_array($ext,$this->config->item('FILE_types_img')) ) {
-      $sizes = getimagesize( $name );
+      $sizes = @getimagesize( $name );
       if ($sizes) {
         $default_data['width'] = $sizes[0];
         $default_data['height'] = $sizes[1];
