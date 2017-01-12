@@ -21,7 +21,9 @@ Class Data_Create extends CI_Model {
     if (SAFE_INSTALL) {
       $this->paths = array(
         'sys_model'   => '../sys/flexyadmin/models/data/',
+        'site_model'  => SITEPATH.'models/data/',
         'sys_config'  => '../sys/flexyadmin/config/data/',
+        'site_config' => SITEPATH.'config/data/',
       );
     }
     
