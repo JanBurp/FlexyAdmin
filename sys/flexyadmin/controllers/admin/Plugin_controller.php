@@ -26,10 +26,10 @@ class Plugin_controller extends AdminController {
       foreach ($plugins as $name => $plugin) {
         $help='';
         if ($name!=='plugin_template' and $name!=='plugin' and isset($plugin['config']['admin_api_method'])) {
-          $help = $this->documentation->get('sys/flexyadmin/libraries/plugins/'.ucfirst($name).'.php');
+          $help = $this->documentation->get($this->config->item('SYS').'flexyadmin/libraries/plugins/'.ucfirst($name).'.php');
           $plugins[$name] = array(
             'name'   => str_replace('plugin_','',$name),
-            'uri'    => 'admin/plugin/'.$name,
+            'uri'    => 'admin/plugin/'.str_replace('plugin_','',$name),
             'doc'    => $help,
           );
         }
@@ -58,7 +58,7 @@ class Plugin_controller extends AdminController {
 
 		$args=func_get_args();
 		$ajax=false;
-
+    
 		if (!empty($args)) {
 			$ajax=($args[0]=='ajax');
 			if ($ajax) {
@@ -70,8 +70,8 @@ class Plugin_controller extends AdminController {
 			}
 			else {
 				// first arg is plugin name
-				$plugin=array_shift($args);
-        $content =  $this->plugin_handler->call_plugin_admin_api($plugin,$args);
+				$plugin  = 'plugin_'.array_shift($args);
+        $content = $this->plugin_handler->call_plugin_admin_api($plugin,$args);
 			}
 		}
 		// output
