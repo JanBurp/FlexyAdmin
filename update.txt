@@ -19,6 +19,17 @@ For recent sites the update processes described below should work:
 - perform all the steps from your version to the latest:
 
 
+UPDATE 3.4.x
+============
+
+- Vervang map sys
+- Maak de map `public` en vul die met de laatste installatie
+- Vervang de assets folder van `public` met die van je eigen site uit de map `site`.
+- Vervang in alle views `<?=SITEPATH?>/assets` naar `_media`
+- Run update script: `admin/update/....` (oa SQL update 3845)
+- LET OP: Standaard is FlexyAdmin nu met een veilige folder structuur. Lees de readme.md om te kijken hoe je terug kunt.
+
+
 UPDATE 3.3.x
 ============
 

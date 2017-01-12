@@ -13,15 +13,23 @@ class Version extends CI_Model {
   private $hash      = '0';
   private $date      = '';
   private $build     = '';
-  private $buildFile = 'sys/build.txt';
+  private $buildFile = 'build.txt';
   private $latest_remote = '';
 
 	public function __construct() {
 		parent::__construct();
+    
+    if (SAFE_INSTALL) {
+      $sys = '../sys/';
+    }
+    else {
+      $sys = 'sys/';
+    }
+    $this->buildFile = $sys.$this->buildFile;
 
     // version
-    if (file_exists('sys/package.json')) {
-      $package=file_get_contents('sys/package.json');
+    if (file_exists($sys.'package.json')) {
+      $package=file_get_contents($sys.'package.json');
       preg_match("/\"version\"\s?:\s?\"(.*)\"/uim", $package,$matches);
       $this->version = $matches[1];
     }

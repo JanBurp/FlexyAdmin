@@ -35,16 +35,24 @@ class MY_Controller extends CI_Controller {
     $this->load->model( 'data/Data','data' );
       
     if (defined('PHPUNIT_TEST')) {
-      echo "> FlexyAdmin ". read_file('sys/build.txt') . "\n";
+      if (SAFE_INSTALL) {
+        $buildfile = '../sys/build.txt';
+        $db_folder = '../db';
+      }
+      else {
+        $buildfile = 'sys/build.txt';
+        $db_folder = 'db';
+      }
+      echo "> FlexyAdmin ". read_file($buildfile) . "\n";
       echo "> Testing on PHP ". phpversion() . "\n";
       
       // Load test database
-      $files = directory_map('db');
-      $key = in_array_like('unittest_v',$files);
+      $files = directory_map($db_folder);
+      $key = in_array_like('unittest_',$files);
       if ($key) {
         $file = el($key,$files);
         if ($file) {
-          $file='db/'.$file;
+          $file=$db_folder.'/'.$file;
           if (file_exists($file)) {
 
             // DROP all current tables
