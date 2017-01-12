@@ -1,11 +1,3 @@
-Changes 3.4.0
-=============
-
-- Safe folder structure
-- Ready for PHP7
-- Tested with SSL Cerfiticates
-
-
 Changes 3.5.0
 =============
 
@@ -15,6 +7,13 @@ BIG CHANGES:
 - Models: Filemanager, Mediatable removed
 - DB: res_media_files removed and replaced with res_assets
 -
+
+Changes 3.4.0
+=============
+
+- Safe folder structure
+- Ready for PHP7
+- Tested with SSL Cerfiticates
 
 
 Changes 3.3.0
