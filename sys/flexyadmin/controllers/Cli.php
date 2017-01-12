@@ -35,10 +35,15 @@ class Cli extends CI_Controller {
         $this->flexy_auth->login( $username, $password );
       }
       
-      // Load Model
-      $this->load->model('cli/'.$model);
-      // Call model/method
-      echo call_user_func_array( array($this->$model,$method), $args );
+      if ( $this->flexy_auth->is_super_admin() ) {
+        // Load Model
+        $this->load->model('cli/'.$model);
+        // Call model/method
+        echo call_user_func_array( array($this->$model,$method), $args );
+      }
+      else {
+        echo "You nee to be a super_admin user...".PHP_EOL;
+      }
     }
     else {
       $this->_help();
