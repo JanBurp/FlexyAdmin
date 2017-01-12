@@ -262,8 +262,8 @@ export default {
           
             <div class="form-group row" :class="validationClass(field)">
               <div v-if="validationErrors[field]" class="validation-error form-text text-danger">{{validationErrors[field]}}</div>
-              <label class="col-xs-3 form-control-label" :for="field">{{fields[field]['name']}}</label>
-              <div class="col-xs-9">
+              <label class="col-md-3 form-control-label" :for="field">{{fields[field]['name']}}</label>
+              <div class="col-md-9">
 
                 <template v-if="isType('textarea',field)">
                   <!-- Textarea -->

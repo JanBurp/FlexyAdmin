@@ -34,3 +34,14 @@ a>.fa, .btn>.fa {margin-right:.35rem;margin-left:.35rem;}
     .btn {text-transform:uppercase};
   }
 }
+
+
+/* Responsive */
+
+// header nav icons only
+@include media-breakpoint-down(sm) {
+  #header .navbar-nav li {
+    .fa {margin:0;}
+   .nav-title {display:none;}
+  }
+}
