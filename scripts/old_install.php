@@ -1,5 +1,6 @@
-#!/usr/bin/php -q
 <?php
+if (!isset($_SERVER['SHELL'])) die('Only available from Terminal.');
+echo "\e[4;32mFlexyAdmin\n\n\e[0m";
 
 echo "Old folder structure.\n\n";
 
