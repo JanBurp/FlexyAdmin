@@ -77,6 +77,15 @@
 
 /*
  *------------------------------------------------------------------------------------------------
+ * FLEXYADMIN: Installed with safe folder structure
+ *------------------------------------------------------------------------------------------------
+ */
+// define('SAFE_INSTALL', false);
+define('SAFE_INSTALL', true);
+
+
+/*
+ *------------------------------------------------------------------------------------------------
  * FLEXYADMIN: Set debugging features on/off
  *------------------------------------------------------------------------------------------------
  */
@@ -134,6 +143,8 @@ if ( !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_RE
   define("IS_AJAX",true);
 else
   define("IS_AJAX",false);
+
+
 
 
 /*
@@ -211,8 +222,18 @@ switch (ENVIRONMENT)
  * Include the path if the folder is not in the same directory
  * as this file.
  */
-	$system_path = 'sys'.DIRECTORY_SEPARATOR.'codeigniter'; // FLEXYADMIN setting
-  $site_folder = 'site';                                  // FLEXYADMIN addition
+
+// FLEXYADMIN changes
+if (SAFE_INSTALL) {
+	$system_path = '../sys'.DIRECTORY_SEPARATOR.'codeigniter';
+  $site_folder = '../site';
+}
+else {
+  $system_path = 'sys'.DIRECTORY_SEPARATOR.'codeigniter';
+  $site_folder = 'site';
+}
+
+
 
 /*
  *---------------------------------------------------------------
@@ -229,7 +250,15 @@ switch (ENVIRONMENT)
  *
  * NO TRAILING SLASH!
  */
-	$application_folder = 'sys'.DIRECTORY_SEPARATOR.'flexyadmin';  // FLEXYADMIN setting
+
+// FLEXYADMIN changes
+if (SAFE_INSTALL) {
+	$application_folder = '../sys'.DIRECTORY_SEPARATOR.'flexyadmin';
+}
+else {
+  $application_folder = 'sys'.DIRECTORY_SEPARATOR.'flexyadmin';
+}
+
 
 /*
  *---------------------------------------------------------------
