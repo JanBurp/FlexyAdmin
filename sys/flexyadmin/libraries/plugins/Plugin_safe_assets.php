@@ -62,13 +62,13 @@ class Plugin_safe_assets extends Plugin {
       SITEPATH.'stats/.htaccess'          => 0100644,
     );
     $media=$this->CI->mediatable->get_media_folders();
-    $media[]=$this->CI->config->item('ASSETS').'_thumbcache';
-    $media[]=$this->CI->config->item('ASSETS').'lists';             // 0754
+    $media[]=$this->CI->config->item('ASSETSFOLDER').'_thumbcache';
+    $media[]=$this->CI->config->item('ASSETSFOLDER').'lists';             // 0754
     foreach ($media as $folder) {
       $files[$folder] = 0040776;              // 0776
       $files[$folder.'/.htaccess'] = 0100644; // 0664
     }
-    $files[$this->CI->config->item('ASSETS').'lists'] = 0040754;
+    $files[$this->CI->config->item('ASSETSFOLDER').'lists'] = 0040754;
     ksort($files);
 
     foreach ($files as $file => $permissions) {
