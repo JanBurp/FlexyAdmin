@@ -552,7 +552,7 @@ Class Res_assets extends Data_Core {
     $this->load->helper('date');
     $name = $this->config->item('PUBLICASSETS').$path.'/'.$file;
     $ext=strtolower(get_suffix($file,'.'));
-    $file_stats = stat($name);
+    $file_stats = @stat($name);
     $default_data = array(
       'path'  => $path,
       'file'  => $file,
