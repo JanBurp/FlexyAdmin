@@ -20,11 +20,15 @@
   
   <div id="header" class="navbar navbar-fixed-top">
     <progress class="progress progress-danger progress-striped" :value="state.progress" max="100"></progress>
-    <div class="navbar-text">
-      <a href="<?=$base_url?>" title="TokPit <?=$version?>"><span class="flexy-block btn btn-secondary">TokPit</span></a>
-      <flexy-blocks href="<?=$base_url?>" text="<?=$str_title?>"/>
+    <div class="navbar-brand navbar-collapse">
+      <a href="<?=$base_url?>" title="TokPit <?=$version?>"><span class="flexy-block btn btn-secondary">
+        <span class="fa fa-home fa-lg"></span>
+      </span></a>
+      <flexy-blocks href="<?=$base_url?>" text="<?=$str_title?>" class="hidden-md-down"/>
     </div>
-    <?=$headermenu?>
+    <div class="navbar-nav">
+      <?=$headermenu?>
+    </div>
   </div>
   
   <div id="content" class="row">
