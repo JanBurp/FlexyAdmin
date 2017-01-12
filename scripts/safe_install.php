@@ -5,8 +5,9 @@ echo "\e[4;32mFlexyAdmin\n\n\e[0m";
 echo "Safe folder structure.\n\n";
 
 // Check if it is the safe folder structure
-if (!file_exists('index.php')) {
-  echo "ERROR `index.php` does not exists, so it is allready the safe folder structure!\n\n";
+// if (!file_exists('index.php')) {
+if (false) {
+  die("ERROR `index.php` does not exists, so it is allready the safe folder structure!\n\n");
 }
 else {
   $public = 'public';
@@ -39,10 +40,11 @@ else {
     }
   }
   
-  foreach ($public_assets as $assets) {
-    recurse_copy( 'site/'.$assets, $public.'/assets/'.$assets );
-    recurse_rmdir( 'site/'.$assets );
-    echo "- moved assets/.$assets\n";
+  @mkdir($public.'/assets');
+  foreach ($public_assets as $asset) {
+    recurse_copy( $site.'/assets/'.$asset, $public.'/assets/'.$asset );
+    recurse_rmdir( $site.'/assets/'.$asset );
+    echo "- moved assets/$asset\n";
   }
   
 }
