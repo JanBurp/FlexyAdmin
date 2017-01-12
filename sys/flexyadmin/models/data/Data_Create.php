@@ -18,6 +18,12 @@ Class Data_Create extends CI_Model {
       'sys_config'  => 'sys/flexyadmin/config/data/',
       'site_config' => SITEPATH.'config/data/',
     );
+    if (SAFE_INSTALL) {
+      $this->paths = array(
+        'sys_model'   => '../sys/flexyadmin/models/data/',
+        'sys_config'  => '../sys/flexyadmin/config/data/',
+      );
+    }
     
     $this->load->library('parser');
     $this->load->library('form_validation');
