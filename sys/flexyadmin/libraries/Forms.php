@@ -151,7 +151,7 @@ class Forms extends Module {
       $ip = $this->CI->input->ip_address();
       $filled = $this->CI->data->table('log_forms_submit')->where('ip',$ip)->where('str_form',$this->form_id)->get_row();
       if ($filled) {
-        $date=mysql_to_unix($filled['dat_date']);
+        $date=human_to_unix($filled['dat_date']);
         $expire_date=unixdate_add_days($date,$this->settings('restrict_this_ip_days'));
         if (time()<$expire_date) {
           return $this->settings('restrict_message');

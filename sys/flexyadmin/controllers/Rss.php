@@ -30,7 +30,7 @@ class Rss extends FrontEndController {
         $post['title'] = $row['str_title'];
         $post['date']  = date('r');
         $post['body']  = '';
-        if (isset($row['dat_date'])) $post['date']  = date(DATE_ATOM, mysql_to_unix( $row['dat_date']));
+        if (isset($row['dat_date'])) $post['date']  = date(DATE_ATOM, human_to_unix( $row['dat_date']));
         if (isset($row['txt_text'])) $post['body']  = character_limiter( strip_tags($row['txt_text']), 250);
         $feed[]=$post;
       }
