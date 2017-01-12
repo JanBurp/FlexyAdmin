@@ -1,0 +1,49 @@
+//////////////////////////////////////////////////////
+// LESS mixins                   /////////////////////
+//////////////////////////////////////////////////////
+
+.vertical-center() {
+	position: relative;
+  height:auto;
+  max-height:none;
+  min-height:none;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.vertical-bottom() {
+	position: relative;
+	top: 100%;
+	transform: translateY(-100%);
+}
+
+.multiline-ellipsis(@height) {
+	overflow: hidden;
+	height: @height;
+
+	&:before {
+		content:" ";
+		float: left;
+		width: 1rem;
+    height: @height;
+  }
+	& > *:first-child {
+		float: right;
+		width: 100%;
+		margin-left: -1rem;
+  }
+	&:after {
+		content: "\02026";
+		float: right;
+    position: relative;
+		top:-(@height / 2);
+    left:100%; 
+		width:3rem;
+    margin-left:-3rem;
+		padding-right: 1rem;
+		text-align: right;
+		background: white;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0), white 50%, white)
+	}
+
+}

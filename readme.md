@@ -29,6 +29,20 @@ Two users exists with a fresh install in de demo database:
 - admin/admin
 - user/user
 
+# Online
+
+- Make sure the `public` is the root of the site.
+- Or read below to return to normal install.
+
+# From Safe install to (old) normal install
+
+(use script: `script/old_install.php` and `script/safe_install.php`)
+
+- Move files from `public` to root
+- Merge `public/assets` to `site/assets`
+- Use htaccess.htaccess
+- Set `SAFE_INSTALL` in `index.php[83]` to `FALSE`
+- Change `var assets` in `gulpfile.js[50]`
 
 # License
 
