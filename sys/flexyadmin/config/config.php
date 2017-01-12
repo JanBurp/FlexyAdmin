@@ -157,7 +157,11 @@ $config['subclass_prefix'] = 'MY_';
 | Note: This will NOT disable or override the CodeIgniter-specific
 |	autoloading (application/config/autoload.php)
 */
-$config['composer_autoload'] = 'sys/vendor/autoload.php';
+if (SAFE_INSTALL)
+  $config['composer_autoload'] = '../sys/vendor/autoload.php';
+else
+  $config['composer_autoload'] = '/sys/vendor/autoload.php';
+  
 
 
 
