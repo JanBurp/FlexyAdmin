@@ -1,0 +1,43 @@
+# Nice urls
+RewriteEngine on
+RewriteCond $1 !^(index\.php|site/assets|sys/flexyadmin/assets|sys/tinymce|sys/jquery|sitemap\.xml|robots\.txt)
+RewriteRule ^(.*)$ index.php/$1 [L]
+
+# gzip content
+<IfModule mod_deflate.c>
+    # Insert filter on all content
+   SetOutputFilter DEFLATE
+    # Netscape 4.x has some problems...
+   BrowserMatch ^Mozilla/4 gzip-only-text/html
+    # Netscape 4.06-4.08 have some more problems
+   BrowserMatch ^Mozilla/4\.0[678] no-gzip
+    # MSIE masquerades as Netscape, but it is fine
+   BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+    # Don't compress images (or gzipped files....)
+   SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png|gz)$ no-gzip dont-vary
+</IfModule>
+
+# Cache
+<IfModule mod_expires.c>
+ <FilesMatch \.(png|gif|jpg|js|css|js\.css)$>
+     # Enables generation of 'Expires' and 'Cache-Control' headers
+     ExpiresActive On
+      # Sets default expiration time
+     ExpiresDefault "access plus 1 month"
+      # Disables entity tags (ETags)
+     FileETag None
+ </FilesMatch>
+</IfModule>
+
+# Tell IE to use latest engine
+<FilesMatch "\.(htm|html|php)$">
+  <IfModule mod_headers.c>
+    BrowserMatch MSIE ie
+    Header set X-UA-Compatible "IE=Edge,chrome=1" env=ie
+  </IfModule>
+</FilesMatch>
+
+# If you need more memory: use these lines
+# php_value upload_max_filesize 64M
+# php_value post_max_size 64M
+# php_value memory_limit 512M
