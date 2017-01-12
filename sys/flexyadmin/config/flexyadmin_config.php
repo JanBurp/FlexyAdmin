@@ -30,21 +30,28 @@ $config['ASSETSFOLDER']						= $config['ASSETS'];
 $config['THUMBCACHE']							= $config['ASSETS']."_thumbcache/";
 $config['STATS']									= $config['SITE'].'stats/';
 $config['PLUGINS']								= $config['SITE'].'plugins';
-
-$config['THUMBSIZE']							= array(100,100);
-$config['IGNORE_MIME']						= FALSE;
-
-
+if (SAFE_INSTALL) {
+  $config['SITE']        = SITEPATH;
+  $config['ADMINASSETS'] = "_admin_assets/";
+  $config['PUBLICASSETS']= 'assets/';
+  $config['ASSETS']      = '_media/';
+  $config['ASSETSFOLDER']= SITEPATH.'assets/';
+  $config['THUMBCACHE']  = $config['ASSETSFOLDER']."_thumbcache/";
+  $config['STATS']       = $config['SITE'].'stats/';
+  $config['PLUGINS']     = $config['SITE'].'plugins';
+}
 
 /*
 | UI settings
 */
-
+$config['THUMBSIZE']							= array(100,100);
 $config['FORM_NICE_DROPDOWNS']		= TRUE;
 $config['MULTIPLE_UPLOAD']		    = TRUE;
 $config['PAGINATION']             = TRUE;
 $config['GRID_EDIT']              = TRUE;
 $config['GRID_WHERE']             = FALSE;
+
+$config['IGNORE_MIME']						= FALSE;
 
 
 /*

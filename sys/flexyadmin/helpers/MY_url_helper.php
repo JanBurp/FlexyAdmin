@@ -26,7 +26,7 @@ function assets($s="") {
   static $assets;
   if (empty($assets)) {
   	$CI =& get_instance();
-  	$assets=$CI->config->item('ASSETS').$s;
+  	$assets=$CI->config->item('ASSETSFOLDER').$s;
   }
   return $assets;
 }
@@ -72,7 +72,7 @@ function admin_assets($s="") {
  * @author Jan den Besten
  */
 function remove_assets($path) {
-  return str_replace(assets(),'',$path);
+  return str_replace('_media/','',str_replace(assets(),'',$path));
 }
 
 /**
