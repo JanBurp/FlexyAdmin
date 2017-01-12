@@ -1,6 +1,6 @@
 <?php
 
-require_once('sys/flexyadmin/tests/CITestCase.php');
+require_once(APPPATH.'/tests/CITestCase.php');
 
 
 class OrderTest extends CITestCase {

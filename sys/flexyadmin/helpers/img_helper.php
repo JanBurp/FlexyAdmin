@@ -88,6 +88,7 @@ function show_thumb($attr) {
 				}
           
         $a['src']=$cachedThumb;
+        $a['src'] = '_media/'.remove_assets($a['src']);
 				return img($a);
 			}
 		}

@@ -114,7 +114,7 @@ $isForm=has_string('form',$show_type);
 						theme_advanced_statusbar_location: "bottom",
 						theme_advanced_resizing : true,
 						theme_advanced_resize_horizontal : false,
-						content_css : "<?=assets()?>css/text.css,<?=public_assets()?>css/admin.css",
+						content_css : "<?=$this->config->item('ASSETS')?>css/text.css,<?=public_assets()?>css/admin.css",
 						<?php if (isset($formats)): ?>
 						theme_advanced_blockformats : "<?=$formats?>",
 						<?php else: ?>
@@ -122,10 +122,10 @@ $isForm=has_string('form',$show_type);
 						<?php endif; ?>
 						theme_advanced_styles : "<?=$styles;?>",
 						extended_valid_elements : "iframe[align<bottom?left?middle?right?top|class|frameborder|height|id|longdesc|marginheight|marginwidth|name|scrolling<auto?no?yes|src|style|title|width]",
-						external_image_list_url : "<?=assets()?>/lists/img_list.js?"+new Date().getTime(),
-						media_external_list_url : "<?=assets()?>/lists/media_list.js?"+new Date().getTime(),
-						external_embed_list_url : "<?=assets()?>/lists/embed_list.js?"+new Date().getTime(),
-						external_link_list_url : "<?=assets()?>lists/link_list.js?"+new Date().getTime(),
+						external_image_list_url : "<?=$this->config->item('ASSETS')?>lists/img_list.js?"+new Date().getTime(),
+						media_external_list_url : "<?=$this->config->item('ASSETS')?>lists/media_list.js?"+new Date().getTime(),
+						external_embed_list_url : "<?=$this->config->item('ASSETS')?>lists/embed_list.js?"+new Date().getTime(),
+						external_link_list_url : "<?=$this->config->item('ASSETS')?>lists/link_list.js?"+new Date().getTime(),
 						relative_urls : true,
 						entities : '160,nbsp,161,iexcl,162,cent,163,pound,164,curren,165,yen,166,brvbar,167,sect,168,uml,169,copy,170,ordf,'
 						        + '171,laquo,172,not,173,shy,174,reg,175,macr,176,deg,177,plusmn,178,sup2,179,sup3,180,acute,181,micro,182,para,'
