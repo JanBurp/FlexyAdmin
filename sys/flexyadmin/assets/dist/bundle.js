@@ -31265,7 +31265,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
   })]) : _vm._e(), " ", " ", (_vm.gridType === 'media') ? _h('div', {
     staticClass: "card-block grid-upload"
   }, [_h('div', {
-    staticClass: "container"
+    staticClass: "container-fluid"
   }, [_h('div', {
     staticClass: "row"
   }, [_h('div', {
@@ -32038,12 +32038,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
       }, [(_vm.validationErrors[field]) ? _h('div', {
         staticClass: "validation-error form-text text-danger"
       }, [_vm._s(_vm.validationErrors[field])]) : _vm._e(), " ", _h('label', {
-        staticClass: "col-xs-3 form-control-label",
+        staticClass: "col-md-3 form-control-label",
         attrs: {
           "for": field
         }
       }, [_vm._s(_vm.fields[field]['name'])]), " ", _h('div', {
-        staticClass: "col-xs-9"
+        staticClass: "col-md-9"
       }, [(_vm.isType('textarea', field)) ? [_h('textarea', {
         staticClass: "form-control",
         attrs: {

@@ -679,7 +679,7 @@ export default {
 
     <!-- UPLOAD BOX -->
     <div v-if="gridType==='media'" class="card-block grid-upload">
-      <div class="container">
+      <div class="container-fluid">
         <div class="row">
           <div class="col-sm-3 grid-upload-choose"><flexy-button @click.native="newItem()" icon="plus" size="lg" class="btn-warning" />{{$lang.upload_choose}}</div>
           <div class="col-sm-9 grid-upload-dropbox"><span class="fa fa-cloud-download fa-lg text-warning"></span>&nbsp;&nbsp;{{$lang.upload_drop}}</div>
