@@ -9,7 +9,8 @@ if (!file_exists('index.php')) {
   echo "ERROR `index.php` does not exists, so it is allready the safe folder structure!\n\n";
 }
 else {
-  $path = 'public';
+  $public = 'public';
+  $site = 'site';
   $root_files = array(
     '.htaccess',
     'htaccess.htaccess',
@@ -28,44 +29,64 @@ else {
     'less-default',
   );
   
-  $files = scandir($path);
-  foreach ($files as $file) {
-
-    if (is_file($path.'/'.$file)) {
-      // Just move the file
-      if (rename($path.'/'.$file, $file)) {
-        echo "- moved $file\n";
-      }
-      else {
-        echo "ERROR while moving $file\n";
-      }
+  foreach ($root_files as $file) {
+    // Just move the file
+    if (rename($file, $public.'/'.$file)) {
+      echo "- moved $file\n";
     }
     else {
-      if (is_dir($path.'/'.$file) and $file=='assets') {
-        // Merge assets folders
-        if (rename($path.'/'.$file, $file)) {
-          echo "- Merged `assets` folders: $file\n";
-        }
-        else {
-          echo "ERROR while merging `assets` folders.\n";
-        }
-      }
+      echo "ERROR while moving $file\n";
     }
   }
+  
+  foreach ($public_assets as $assets) {
+    recurse_copy( 'site/'.$assets, $public.'/assets/'.$assets );
+    recurse_rmdir( 'site/'.$assets );
+    echo "- moved assets/.$assets\n";
+  }
+  
 }
 
-if ( copy('htaccess.htaccess','.htaccess') ) {
+// Choose right .htaccess
+if ( copy($public.'/htaccess_safe.htaccess',$public.'/.htaccess') ) {
   echo "- `.htaccess` changed\n";
 }
 
-$index = file_get_contents('index.php');
-$index = preg_replace( "/\bdefine\(\'SAFE_INSTALL\', true\)/u","define('SAFE_INSTALL', false)", $index);
-file_put_contents('index.php',$index);
-echo "- Set `SAFE_INSTALL` in `index.php` to `FALSE`\n";
+// Set SAFE_INSTALL in index.php
+$index = file_get_contents($public.'/index.php');
+$index = preg_replace( "/\bdefine\(\'SAFE_INSTALL\', false\)/u","define('SAFE_INSTALL', true)", $index);
+file_put_contents($public.'/index.php',$index);
+echo "- Set `SAFE_INSTALL` in `index.php` to `TRUE`\n";
 
+// Set asstes in gulpfile.js
 $gulp = file_get_contents('gulpfile.js');
-$gulp = preg_replace("/\bvar assets\s=\s\'public\/assets\'/u", "var assets = 'site/assets'", $gulp);
+$gulp = preg_replace("/\bvar assets\s=\s\'site\/assets\'/u", "var assets = 'public/assets'", $gulp);
 file_put_contents('gulpfile.js',$gulp);
-echo "- Set `assets` in `gulpfile.js` to `site/assets`\n";
+echo "- Set `assets` in `gulpfile.js` to `public/assets`\n";
+
+
+function recurse_copy($src,$dst) { 
+  $dir = opendir($src);
+  if (!file_exists($dst)) @mkdir($dst); 
+  while(false !== ( $file = readdir($dir)) ) { 
+    if (( $file != '.' ) && ( $file != '..' )) { 
+      if ( is_dir($src . '/' . $file) ) { 
+        recurse_copy($src . '/' . $file,$dst . '/' . $file); 
+      } 
+      else { 
+        copy($src . '/' . $file,$dst . '/' . $file); 
+      } 
+    } 
+  } 
+  closedir($dir);
+}
+
+function recurse_rmdir($dir) { 
+  $files = array_diff(scandir($dir), array('.','..')); 
+  foreach ($files as $file) { 
+    (is_dir("$dir/$file")) ? recurse_rmdir("$dir/$file") : unlink("$dir/$file"); 
+  }
+  return rmdir($dir); 
+} 
   
 ?>
