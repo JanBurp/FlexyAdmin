@@ -16,13 +16,17 @@
 	public function _admin_api($args=NULL) {
     
     if ($this->CI->flexy_auth->is_super_admin()) {
-      if (isset($args[0]))
+      if (isset($args[0])) {
         $tables=array($args[0]);
-      else
+      }
+      else {
         $tables = $this->CI->data->list_tables();
+        $tables = not_filter_by($tables,'log');
+        $tables = not_filter_by($tables,'rel');
+      }
       
       $this->CI->load->model('data/data');
-      $this->CI->load->model('data/data_model_create');
+      $this->CI->load->model('data/data_create');
       
       $config = array();
       $keys = array();
@@ -50,13 +54,13 @@
                 break;
             }
           }
-          $this->CI->data_model_create->save_config_for( $table, $config );
+          $this->CI->data_create->save_config_for( $table, $config );
         }
         
         // Als er nog geen settings voor deze tabel zijn, maak het model aan
         elseif (is_null($settings)) {
           $this->add_message( p().$table.' => model &amp; config created'._p() );
-          $this->CI->data_model_create->create( $table );
+          $this->CI->data_create->create( $table );
         }
 
         // Als wel settings bestaat, bepaal het verschil

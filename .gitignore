@@ -2,9 +2,8 @@ bower_components/*
 node_modules/*
 sys/bower_components/*
 sys/node_modules/*
-site/cache/log*.php
+sys/build.txt
 site/stats/*.xml
+site/cache/log*.php
 site/cache/data_settings_*
 site/cache/data_result*
-sys/build.txt
-/sys/build.txt
