@@ -3,7 +3,7 @@
 /**
  * CLI 'Hello World!'
  * 
- * - hello _string_
+ * - hello _string_ login _username_ _password_
  *
  * @author: Jan den Besten
  * @copyright: (c) Jan den Besten

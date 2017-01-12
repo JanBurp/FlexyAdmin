@@ -28,7 +28,7 @@ class Cronjob extends CI_Model {
         if ($last===false)
           $job['last'] = 0;
         else
-          $job['last'] = mysql_to_unix($last);
+          $job['last'] = human_to_unix($last);
         $job['next'] = $this->_calc_next( $job['every'], $job['last'] );
         // Moet de job gebeuren?
         $job['run']  = ( time()>=$job['next'] );
