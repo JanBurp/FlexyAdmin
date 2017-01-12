@@ -27,4 +27,11 @@ function show_404($page = '', $log_error = TRUE)
  *
  * Bootstrap CodeIgniter from index.php as usual
  */
-require_once dirname(__FILE__) . '/../../../index.php';
+
+// Check if its SAFE_INSTALL of normal
+if (file_exists(dirname(__FILE__) . '/../../../public/index.php')) {
+  require_once dirname(__FILE__) . '/../../../public/index.php';  
+}
+else {
+  require_once dirname(__FILE__) . '/../../../index.php';  
+}
