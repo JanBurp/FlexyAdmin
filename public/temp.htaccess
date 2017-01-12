@@ -4,5 +4,5 @@
 # In site/config/config.php
 
 RewriteEngine on
-RewriteCond $1 !^(index\.php|site/assets|sys/flexyadmin/assets|sys/tinymce|sys/jquery|sitemap\.xml|robots\.txt)
+RewriteCond $1 !^(index\.php|robots\.txt)
 RewriteRule ^(.*)$ index_temp.html [L]
