@@ -7,7 +7,7 @@
   <div class="photo_gallery">
     <?php foreach ($medias_fotos as $media_foto): $title=get_img_title('pictures/'.$media_foto);?>
     <div class="photo">
-      <img src="<?=SITEPATH?>/assets/pictures/<?=$media_foto?>" alt="<?=$title?>" />
+      <img src="_media/pictures/<?=$media_foto?>" alt="<?=$title?>" />
       <p class="img_title"><?=$title?></p>
     </div>
     <?php endforeach ?>

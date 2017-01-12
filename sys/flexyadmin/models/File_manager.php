@@ -568,6 +568,7 @@ class File_manager extends CI_Model {
   	}
   	$a['width']='';
   	$a['height']='';
+    $a['src'] = '_media/'.remove_assets($a['src']);
   	return img($a,$index);
   }
 

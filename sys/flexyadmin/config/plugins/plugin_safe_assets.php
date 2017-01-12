@@ -35,7 +35,7 @@ $config['trigger'] = array(
 |
 */
 
-$config['create_htaccess'] = TRUE;
+$config['create_htaccess'] = !SAFE_INSTALL;
 
 
 /*
@@ -62,7 +62,7 @@ $config['file_types'] = array(
  */
 $config['logout_actions'] = array(
   'cleanup_captha' => true,
-  'clean_all'      => true
+  'clean_all'      => !SAFE_INSTALL,
 );
 
 
