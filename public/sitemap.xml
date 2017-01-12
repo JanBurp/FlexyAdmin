@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" >
+	<url>
+		<loc>http://www.flexyadmin.com/gelukt</loc>
+		<priority>1.00</priority>
+		<title>Gelukt!</title>
+		<content><![CDATA[Als je dit ziet is het je gelukt om FlexyAdmin te installeren en werkend te krijgen. Je hebt nu een standaard-installatie van een zeer eenvoudige basis-site. Hoe verder Pas de HTML aan in de map site/views. site.php is de basis view van je site en page.php de afzonderlijke pagina&#039;s. Pas de Stylesheets aan. Deze vindt je in de map site/assets/css. Handiger is om LESS te gebruiken. LESS FlexyAdmin ondersteund LESS in combinatie met een Gulp die het compileren verzorgd. Je vindt de LESS bestanden voor de standaard template in site/assets/less-default. Om LESS te compileren tot CSS heeft FlexyAdmin een handige Gulpfile, zie hierna. Gulp Als je gebruikt maakt van LESS heb je een compiler nodig om LESS om te zetten in CSS. FlexyAdmin maakt daarvoor gebruik van Gulp. Gulp is een zogenaamde &#039;taskmanager&#039; en verzorgt automatisch een aantal taken. De bij FlexyAdmin geleverde Gulpfile verzorgt deze taken voor LESS en CSS: Compileren van LESS naar CSS Samenvoegen van alle CSS bestanden tot &amp;eacute;&amp;eacute;n CSS bestand Automatisch prefixen van CSS regels voor diverse browser (moz-, o-, webkit- e.d.) Rem units omzetten naar px units zodat browser die geen rem units kennen terugvallen op px (met name IE8) Minificeren van het CSS bestand. En deze taken voor Javascript: Javascript testen op veel voorkomende fouten met JSHint Alle Javascript bestanden samenvoegen tot &amp;eacute;&amp;eacute;n bestand en deze minificeren. Bower Naast Gulp wordt FlexyAdmin ook geleverd met Bower. Daarmee kun je je al je externe plugins handig installeren en updaten (zoals jQuery en Bootstrap). gulpfile.js Hoe je Gulp en Bower aan de praat kunt krijgen en welke gulp commando&#039;s er allemaal zijn lees je aan het begin van de gulpfile in de root: gulpfile.js Bootstrap In plaats van het standaard minimale template kun je ook gebruik maken van Bootstrap: Je vindt de Bootstrap bestanden in site/assets/less-bootstrap Stel in site/config/config.php: $config[&#039;framework&#039;]=&#039;bootstrap&#039;; Stel in gulpfile.js: var framework = &#039;bootstrap&#039;; Bootstrap kun je alleen gebruiken in combinatie met LESS en Gulp. .]]></content>
+	</url>
+	<url>
+		<loc>http://www.flexyadmin.com/een_pagina</loc>
+		<priority>0.80</priority>
+		<title>Een pagina</title>
+		<content>.</content>
+	</url>
+	<url>
+		<loc>http://www.flexyadmin.com/een_pagina/subpagina</loc>
+		<priority>0.64</priority>
+		<title>Subpagina</title>
+		<content>Een subpagina.</content>
+	</url>
+	<url>
+		<loc>http://www.flexyadmin.com/een_pagina/een_pagina</loc>
+		<priority>0.64</priority>
+		<title>Nog een subpagina</title>
+		<content>.</content>
+	</url>
+	<url>
+		<loc>http://www.flexyadmin.com/contact</loc>
+		<priority>0.80</priority>
+		<title>Contact</title>
+		<content>Hier een voorbeeld van een eenvoudig contactformulier..</content>
+	</url>
+</urlset>
+

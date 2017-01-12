@@ -293,7 +293,6 @@ class MY_Upload extends CI_Upload {
 	public function resize_image($image,$path) {
 		$this->file_name=$image;
 		$goodluck=TRUE;
-		
 		$uPath=remove_assets($path);
 		$cfg=$this->_CI->cfg->get('CFG_img_info',$uPath);
     
