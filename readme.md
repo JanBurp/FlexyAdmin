@@ -36,6 +36,8 @@ Two users exists with a fresh install in de demo database:
 
 # From Safe install to (old) normal install
 
+(use script: `script/old_install.php` and `script/safe_install.php`)
+
 - Move files from `public` to root
 - Merge `public/assets` to `site/assets`
 - Use htaccess.htaccess
