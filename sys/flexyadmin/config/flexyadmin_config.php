@@ -23,7 +23,8 @@ $config['MENU_TABLES']						= array('res_menu_result','tbl_menu');
 
 // Directories
 $config['SITE']										= SITEPATH;
-$config['ADMINASSETS']						= "sys/flexyadmin/assets/";
+$config['SYS']										= 'sys/';
+$config['ADMINASSETS']						= $config['SYS'].'flexyadmin/assets/';
 $config['PUBLICASSETS']						= $config['SITE'].'assets/';
 $config['ASSETS']									= $config['PUBLICASSETS'];
 $config['ASSETSFOLDER']						= $config['ASSETS'];
@@ -31,7 +32,7 @@ $config['THUMBCACHE']							= $config['ASSETS']."_thumbcache/";
 $config['STATS']									= $config['SITE'].'stats/';
 $config['PLUGINS']								= $config['SITE'].'plugins';
 if (SAFE_INSTALL) {
-  $config['SITE']        = SITEPATH;
+  $config['SYS']				 = '../sys/';
   $config['ADMINASSETS'] = "_admin_assets/";
   $config['PUBLICASSETS']= 'assets/';
   $config['ASSETS']      = '_media/';
