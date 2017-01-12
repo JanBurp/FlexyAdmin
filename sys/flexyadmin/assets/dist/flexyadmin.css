@@ -4172,6 +4172,13 @@ a > .fa, .btn > .fa {
 .card > .card-header .btn {
   text-transform: uppercase; }
 
+/* Responsive */
+@media (max-width: 767px) {
+  #header .navbar-nav li .fa {
+    margin: 0; }
+  #header .navbar-nav li .nav-title {
+    display: none; } }
+
 /* LOGIN */
 #login-form {
   width: 20rem;
