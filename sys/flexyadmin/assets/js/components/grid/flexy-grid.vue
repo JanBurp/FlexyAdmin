@@ -52,6 +52,7 @@ export default {
   * - Bij een tree: voeg informatie aan elke row toe: {level:(int),is_child:(bool),has_children:(bool)}
   */
   created : function() {
+    console.log('grid',this.$options.propsData);
     if (this.data) {
       this.items = this.addInfo( this.data, true );
     }
@@ -187,12 +188,15 @@ export default {
     apiUrl : function(parts) {
       parts = _.extend( this.apiParts, parts );
       this.apiParts = parts;
-      return this.api + '?table='+this.name +
-        '&offset='+parts.offset + '&limit='+parts.limit +
-        '&order='+parts.order +
-        '&filter={'+jdb.encodeURL(parts.filter)+'}' +
-        '&txt_abstract='+parts.txt_abstract +
-        '&as_grid='+parts.as_grid ;
+      var url = this.api;
+      if (this.type==='media') {
+        url += '?table=res_assets&path='+this.name;
+      }
+      else {
+        url += '?table='+this.name + '&txt_abstract='+parts.txt_abstract + '&as_grid='+parts.as_grid;
+      }
+      url += '&offset='+parts.offset + '&limit='+parts.limit + '&order='+parts.order + '&filter={'+jdb.encodeURL(parts.filter)+'}';
+      return url;
     },
     
     newUrl : function(){
@@ -757,9 +761,9 @@ export default {
                 <div v-if="isMediaThumbs()" class="dropdown" id="dropdown-sort">
                   <flexy-button icon="sort-amount-asc" class="btn-outline-info" dropdown="dropdown-sort"/>
                   <div class="dropdown-menu">
-                    <a v-for="(field,key) in fields" v-if="field.schema.sortable" @click="reloadPage({'order':(key==apiParts.order?'_'+key:key)})" class="dropdown-item" :class="{'selected':(order.indexOf(key)>=0)}">
-                      <span v-if="order==key" class="fa fa-caret-up"></span>
-                      <span v-if="order=='_'+key" class="fa fa-caret-down"></span>
+                    <a v-for="(field,key) in fields" v-if="field.schema.sortable" @click="reloadPage({'order':(key==apiParts.order?'_'+key:key)})" class="dropdown-item" :class="{'selected':(apiParts.order.indexOf(key)>=0)}">
+                      <span v-if="apiParts.order==key" class="fa fa-caret-up"></span>
+                      <span v-if="apiParts.order=='_'+key" class="fa fa-caret-down"></span>
                       {{field.name}}
                     </a>
                   </div>

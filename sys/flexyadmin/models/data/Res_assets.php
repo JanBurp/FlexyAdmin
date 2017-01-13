@@ -18,7 +18,7 @@ Class Res_assets extends Data_Core {
   // Caching
   private $file_info      = array();
   private $find_in_fields = array();
-
+  
   private $default_assets = array(
     'types'            => array('jpg','jpeg','gif','png','pdf','doc','docx','xls','xlsx'),
     'encrypt_name'     => FALSE,
@@ -52,7 +52,7 @@ Class Res_assets extends Data_Core {
   
   public function __construct() {
     $this->autoset['assets'] = array();
-    parent::__construct();
+    parent::__construct('res_assets');
     $this->lang->load('update_delete');
     // Add current filemanager_view setting:
     $user_id = $this->get_user_id();
@@ -115,7 +115,7 @@ Class Res_assets extends Data_Core {
     
     if (!defined('PHPUNIT_TEST')) {
       $this->load->model('data/data_create');
-      $this->data_create->save_config( 'assets', 'sys/flexyadmin/config/assets.php', 'site/config/assets.php', array('assets'=>$assets) );
+      $this->data_create->save_config( 'assets', $this->config->item('SYS').'flexyadmin/config/assets.php', $this->config->item('SITE').'config/assets.php', array('assets'=>$assets) );
     }
     return $assets;
   }
@@ -297,7 +297,7 @@ Class Res_assets extends Data_Core {
   }
   
   /**
-   * Verdwijder verwijzingen van bestand uit de database (in andere tabellen)
+   * Verwijder verwijzingen van bestand uit de database (in andere tabellen)
    *
    * @param array $fields 
    * @param string $path 
@@ -376,19 +376,6 @@ Class Res_assets extends Data_Core {
     );
     $config = array_merge($config,$extra_config);
     $path_settings = $this->get_folder_settings($path);
-    
-		// TODO: misschien niet nodig? CI bug work around, make sure all imagesfiletypes are at the end
-    // $types = explode('|',$config['allowed_types']);
-    // $imgtypes = array();
-    // $cfg=$this->config->item('FILE_types_img');
-    // foreach ($types as $key=>$type) {
-    //   if (in_array($type,$cfg)) {
-    //     $imgtypes[]=$type;
-    //     unset($types[$key]);
-    //   }
-    // }
-    // $types=array_merge($types,$imgtypes);
-    // $config['allowed_types']=implode('|',$types);
     
     // Start upload
 		$this->upload->config($config);
@@ -715,19 +702,19 @@ Class Res_assets extends Data_Core {
    * - type   - alleen bestanden bepaalde type(n) bestanden
    * - ...    - nog meer eigen filters: vergelijkbaar zoals je aan ->where() mee kunt geven
    * 
-   * Het resultaat is wat anders dan een standaard database resultaat, de veldnamen wijken af en zijn alsvolgt:
+   * Het resultaat is wat anders dan een standaard database resultaat, de veldnamen wijken af en zijn als volgt:
    * 
-   * - id         = id in de tabel res_assets
-   * - file       = bestandsnaam
-   * - path       = map van bestand inclusief assets map
-   * - full_path  = complete beveiligde pad van bestand, deze kun je het best gebruiken om een bestand te tonen of niet
-   * - type       = extentie van het bestand
-   * - alt        = titel
-   * - size       = omvang in kb
-   * - date       = datum
-   * - width      = breedte in pixels, als het bestand een afbeelding is
-   * - height     = hoogte in pixels, als het bestand een afbeelding is
-   * [- user       = user id als dit veld bestaat]
+   * - id               = id in de tabel res_assets
+   * - file/media_thumb = bestandsnaam
+   * - path             = map van bestand inclusief assets map
+   * - full_path        = complete beveiligde pad van bestand, deze kun je het best gebruiken om een bestand te tonen of niet
+   * - type             = type bestand
+   * - alt              = titel
+   * - size             = omvang in kb
+   * - date             = datum
+   * - width            = breedte in pixels, als het bestand een afbeelding is
+   * - height           = hoogte in pixels, als het bestand een afbeelding is
+   * [- user            = user id als dit veld bestaat]
    *
    * @param string $path Geef hier de directory waar je de bestanden van wilt.
    * @param array $filter[]
@@ -740,9 +727,15 @@ Class Res_assets extends Data_Core {
   public function get_files( $path, $filter=array(), $limit=0, $offset=0, $with_thumb = FALSE ) {
     
     // Veldnamen
-    if ($with_thumb) $this->select( '`file` AS `media_thumb`' );
+    if ($with_thumb) {
+      $select = $this->get_setting(array('files','thumb_select'));
+      $select = str_replace('media_thumb','`file` AS `media_thumb`',$select);
+    }
+    else {
+      $select = $this->get_setting(array('files','select'));
+    }
+    $this->select( $select );
 
-    $this->select( $this->get_setting(array('files','select')) );
     
     // Van bepaalde user?
     if ( $this->field_exists('user') ) {

@@ -24,7 +24,7 @@ class Show extends AdminController {
 	 *
 	 * @param string $name name of datamodel
 	 */
-	public function grid( $name='') {
+	public function grid($name='',$path='') {
     // Options for grid result
     $default = array(
       'limit'   => 10,
@@ -37,6 +37,7 @@ class Show extends AdminController {
     
     // Data Api
     $this->data->table($name);
+    if ($path) $name=$path;
     // $data = $this->data->select_txt_abstract()->get_grid( $options['limit'], $options['offset'], $options['order'], $options['find'] );
     $api = 'table';
     
@@ -48,8 +49,10 @@ class Show extends AdminController {
     $options['order'] = $this->_order($options['order']);
     
     // Fields
-    // $fields = $this->_prepareFields('grid_set',array(),$data);
-    $fields = $this->_prepareFields('grid_set');
+    if ($path)
+      $fields = $this->_prepareFields('media_set',array('path'=>$path));
+    else
+      $fields = $this->_prepareFields('grid_set');
     
     // Show grid
     $grid = array(
@@ -62,6 +65,7 @@ class Show extends AdminController {
       'offset'   => $options['offset'],
       'limit'    => $options['limit'],
       'filter'   => $options['filter'],
+      'type'     => ($path)?'media':'table',
     );
 	  $this->view_admin( 'vue/grid', $grid );
 	}
@@ -72,40 +76,7 @@ class Show extends AdminController {
 	 * @param string $name name of path
 	 */
   public function media( $path ) {
-    $default = array(
-      'limit'   => 10,
-      'offset'  => false,
-      'order'   => '',
-      'find'    => ''
-    );
-    $options = object2array(json_decode($this->input->get('options')));
-    $options = array_merge($default,$options);
-    $options['find'] = html_entity_decode($options['find']);
-    if (substr($options['find'],0,1)==='[') $options['find'] = json2array($options['find']);
-    
-    // Data
-    $this->data->table('res_assets');
-    $this->data->order_by($options['order']);
-    $files = $this->data->get_files( $path, $options['find'], $options['limit'], $options['offset'], TRUE );
-    
-    // Fields
-    $fields = $this->_prepareFields('',array(),$files,array('path'=>$path));
-    
-    // Default order
-    $options['order'] = $this->_order($options['order']);
-    
-    // Show grid
-    $grid = array(
-      'title'   => $this->ui->get($path),
-      'name'    => $path,
-      'fields'  => $fields,
-      'data'    => $files,
-      'info'    => $this->data->get_query_info(),
-      'order'   => $options['order'],
-      'find'    => is_array($options['find'])?array2json($options['find']):$options['find'],
-      'type'    => 'media',
-    );
-	  $this->view_admin( 'vue/grid', $grid );
+    $this->grid('res_assets',$path);
   }
 
   /**
@@ -191,41 +162,28 @@ class Show extends AdminController {
    * @return array
    * @author Jan den Besten
    */
-  private function _prepareFields($set,$options=array(),$data=array(),$extra=array()) {
-    $fields = array();
-    if (empty($set)) {
-      if ($data) $fields = array_keys(current($data));
+  private function _prepareFields($set='grid_set',$options=array()) {
+    if ($set==='media_set') {
+      $fields = $this->data->get_setting(array('files','thumb_select'));
     }
     else {
       $fields = $this->data->get_setting(array($set,'fields'));
     }
     $fields = array_combine($fields,$fields);
+
     foreach ($fields as $field => $info) {
       $fields[$field] = array(
         'name'    => $this->ui->get($field),
-        'schema'  => $this->_getSchema($field,$options,isset($extra['path']))
+        'schema'  => $this->_getSchema($field,$options)
       );
       if ($validation = $this->data->get_setting(array('field_info',$field,'validation'))) $fields[$field]['schema']['validation'] = implode('|',$validation);
       if ($path = $this->data->get_setting(array('field_info',$field,'path'))) $fields[$field]['path'] = $path;
-      $fields[$field] = array_merge($fields[$field],$extra);
-    }
-    // More fields??
-    if ($data) {
-      $first = current($data);
-      $extraFields = array_diff( array_keys($first),array_keys($fields) );
-      if ($extraFields) {
-        foreach ($extraFields as $extraField) {
-          $fields[$extraField] = array(
-            'name'  => $this->ui->get($extraField),
-            'schema'=> $this->_getSchema($extraField,$options),
-          );
-        }
-      }
+      // $fields[$field] = array_merge($fields[$field],$extra);
     }
     if (empty($fields)) {
       $fields['id'] = array(
         'name'  => $this->ui->get('id'),
-        'schema'=> $this->_getSchema('id',$options,isset($extra['path']))
+        'schema'=> $this->_getSchema('id',$options)
       );
     }
     return $fields;
@@ -240,7 +198,7 @@ class Show extends AdminController {
    * @return array
    * @author Jan den Besten
    */
-  private function _getSchema($field,$options=array(),$media=FALSE) {
+  private function _getSchema($field,$options=array()) {
     $schema = $this->config->item('FIELDS_default');
     // from prefix
     $fieldPrefix = get_prefix($field);
@@ -260,10 +218,9 @@ class Show extends AdminController {
     // Only the needed stuff
     $schema=array_unset_keys($schema,array('grid','form','default','format' )); // TODO kan (deels) weg als oude ui weg is
     // Most fields are read-only when media
-    // if ($media and $field!=='alt') $schema['readonly'] = true;
-    // if ($media and $field==='alt') $schema['grid-edit'] = true;
     if ($field==='media_thumb') $schema['sortable'] = false;
     if ($field==='rawdate') $schema['sortable'] = false;
+    $schema = array_merge($schema,$options);
     return $schema;
   }
 
