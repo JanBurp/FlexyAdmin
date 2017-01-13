@@ -4156,6 +4156,23 @@ a > .fa, .btn > .fa {
 .nav-tabs > li > a.nav-link {
   text-transform: uppercase; }
 
+/* PAGINATION */
+.pagination-container {
+  width: 100%;
+  height: 2rem;
+  margin-top: .25rem; }
+  .pagination-container .pagination {
+    margin: 0; }
+    .pagination-container .pagination .page-link {
+      padding: 0rem .5rem;
+      cursor: pointer; }
+    .pagination-container .pagination .page-item:not(.active) {
+      color: #696; }
+  .pagination-container .pagination-info {
+    float: right;
+    margin-top: .25rem;
+    margin-right: .25rem; }
+
 /* CARD */
 .card > .card-header > * {
   margin: 0 1rem 0 0;

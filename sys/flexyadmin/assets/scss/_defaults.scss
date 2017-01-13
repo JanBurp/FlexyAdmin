@@ -25,6 +25,29 @@ a>.fa, .btn>.fa {margin-right:.35rem;margin-left:.35rem;}
    >li>a.nav-link {text-transform:uppercase;}
 }
 
+/* PAGINATION */
+.pagination-container {
+  width:100%;
+  height:2rem;
+  margin-top:.25rem;
+  .pagination {
+    margin:0;
+    .page-link {
+      padding:0rem .5rem;
+      cursor:pointer;
+    }
+    .page-item:not(.active) {
+      color:$brand-primary;
+    }
+  }
+  .pagination-info {
+    float:right;
+    margin-top:.25rem;
+    margin-right:.25rem;
+  }
+}
+
+
 /* CARD */
 .card {
   >.card-header {

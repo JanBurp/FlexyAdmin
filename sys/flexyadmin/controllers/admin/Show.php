@@ -28,18 +28,17 @@ class Show extends AdminController {
     // Options for grid result
     $default = array(
       'limit'   => 10,
-      'offset'  => false,
+      'offset'  => 0,
       'order'   => '',
-      'find'    => ''
+      'filter'  => ''
     );
     $options = object2array(json_decode($this->input->get('options')));
     $options = array_merge($default,$options);
-    $options['find'] = html_entity_decode($options['find']);
-    if (substr($options['find'],0,1)==='[') $options['find'] = json2array($options['find']);
     
-    // Data
+    // Data Api
     $this->data->table($name);
-    $data = $this->data->select_txt_abstract()->get_grid( $options['limit'], $options['offset'], $options['order'], $options['find'] );
+    // $data = $this->data->select_txt_abstract()->get_grid( $options['limit'], $options['offset'], $options['order'], $options['find'] );
+    $api = 'table';
     
     // trace_($options);
     // trace_($this->data->last_query());
@@ -49,16 +48,20 @@ class Show extends AdminController {
     $options['order'] = $this->_order($options['order']);
     
     // Fields
-    $fields = $this->_prepareFields('grid_set',array(),$data);
+    // $fields = $this->_prepareFields('grid_set',array(),$data);
+    $fields = $this->_prepareFields('grid_set');
+    
     // Show grid
     $grid = array(
-      'title'   => $this->ui->get($name),
-      'name'    => $name,
-      'fields'  => $fields,
-      'data'    => $data,
-      'info'    => $this->data->get_query_info(),
-      'order'   => $options['order'],
-      'find'    => is_array($options['find'])?array2json($options['find']):$options['find'],
+      'title'    => $this->ui->get($name),
+      'name'     => $name,
+      'fields'   => $fields,
+      'data'     => isset($data)?$data:null,
+      'api'      => $api,
+      'order'    => $options['order'],
+      'offset'   => $options['offset'],
+      'limit'    => $options['limit'],
+      'filter'   => $options['filter'],
     );
 	  $this->view_admin( 'vue/grid', $grid );
 	}
