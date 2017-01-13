@@ -52,7 +52,6 @@ export default {
   * - Bij een tree: voeg informatie aan elke row toe: {level:(int),is_child:(bool),has_children:(bool)}
   */
   created : function() {
-    console.log('grid',this.$options.propsData);
     if (this.data) {
       this.items = this.addInfo( this.data, true );
     }
@@ -458,7 +457,6 @@ export default {
       if ( !_.isUndefined(this.fields[name]) ) readonly = this.fields[name].schema['readonly'];
       return readonly;
     },
-    
     
     editUrl : function(id) {
       var url = '';
