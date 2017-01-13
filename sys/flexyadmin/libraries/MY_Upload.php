@@ -118,7 +118,7 @@ class MY_Upload extends CI_Upload {
   public function download_and_add_file($url,$path,$prefixfix='downloaded_') {
     $name=$prefixfix.get_suffix($url,'/');
     $name=clean_file_name($name);
-    $fullpath=$this->_CI->config->item('ASSETS').$path;
+    $fullpath=$this->_CI->config->item('ASSETSFOLDER').$path;
     $fullname=$fullpath.'/'.$name;
     
     $file = fopen ($url, "rb");
@@ -186,7 +186,7 @@ class MY_Upload extends CI_Upload {
    */
    public function check_size($path,$image,$sizes=array()) {
     if (empty($sizes)) $sizes = $this->assets->get_folder_settings($path);
-    $size = getimagesize( $this->_CI->config->item('PUBLICASSETS').$path.'/'.$image);
+    $size = @getimagesize( $this->_CI->config->item('ASSETSFOLDER').$path.'/'.$image);
     if (isset($size[0]) and isset($size[1])) {
       if ( el('min_width',$sizes)>0 and el('min_height',$sizes)>0) {
         return ( $size[0]>=$size['min_width'] and $size[1]>=$size['min_height'] );
@@ -251,7 +251,7 @@ class MY_Upload extends CI_Upload {
 		$result=TRUE;
 		$this->file_name=$image;
     if (empty($sizes)) $sizes = $this->assets->get_folder_settings($path);
-		$current_size = getimagesize( $this->_CI->config->item('PUBLICASSETS').$path.'/'.$this->file_name);
+		$current_size = @getimagesize( $this->_CI->config->item('ASSETSFOLDER').$path.'/'.$this->file_name);
     
     
 		// 1) resize copies
@@ -273,11 +273,11 @@ class MY_Upload extends CI_Upload {
 				$create_name = $prefix.$name.$suffix.".".$ext;
         
         // Resize config
-				$resize_config['source_image']   = $this->_CI->config->item('PUBLICASSETS').$path.'/'.$this->file_name;
+				$resize_config['source_image']   = $this->_CI->config->item('ASSETSFOLDER').$path.'/'.$this->file_name;
 				$resize_config['maintain_ratio'] = TRUE;
 				$resize_config['width']          = $sizes["width_$nr"];
 				$resize_config['height']         = $sizes["height_$nr"];
-				$resize_config['new_image']      = $this->_CI->config->item('PUBLICASSETS').$path.'/'.$create_name;
+				$resize_config['new_image']      = $this->_CI->config->item('ASSETSFOLDER').$path.'/'.$create_name;
 				$resize_config['master_dim']     = 'auto';
         
         // Zorg voor voldoende geheugen
@@ -303,7 +303,7 @@ class MY_Upload extends CI_Upload {
 
 			// check if resize is necessary
 			if ($current_size[0]>$sizes['img_width'] or $current_size[1]>$sizes['img_height'] ) {
-				$resize_config['source_image']   = $this->_CI->config->item('PUBLICASSETS').$path.'/'.$this->file_name;
+				$resize_config['source_image']   = $this->_CI->config->item('ASSETSFOLDER').$path.'/'.$this->file_name;
 				$resize_config['maintain_ratio'] = TRUE;
 				$resize_config['width']          = $sizes['img_width'];
 				$resize_config['height']         = $sizes['img_height'];
@@ -327,7 +327,7 @@ class MY_Upload extends CI_Upload {
 		if (file_exists($this->_CI->config->item('THUMBCACHE')) ) {
 			$thumbSize=$this->_CI->config->item('THUMBSIZE');
 			if ($current_size[0]>$thumbSize[0] or $current_size[1]>$thumbSize[1]) { 
-				$resize_config['source_image']   = $this->_CI->config->item('PUBLICASSETS').$path.'/'.$this->file_name;
+				$resize_config['source_image']   = $this->_CI->config->item('ASSETSFOLDER').$path.'/'.$this->file_name;
 				$resize_config['maintain_ratio'] = TRUE;
 				$resize_config['width']          = $thumbSize[0];
 				$resize_config['height']         = $thumbSize[1];
@@ -381,8 +381,8 @@ class MY_Upload extends CI_Upload {
     // Start rotation
     $rotateConfig=array(
       'source_image' => $fileandpath,
-      'new_image' => $fileandpath,
-      'quality' => '100%',
+      'new_image'    => $fileandpath,
+      'quality'      => '100%',
     );
     
     switch($exif['orientation']) {
