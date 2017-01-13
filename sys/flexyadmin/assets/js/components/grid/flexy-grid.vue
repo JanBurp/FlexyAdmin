@@ -19,15 +19,27 @@ export default {
       type: [Array,Boolean],
       default:false
     },
+    'api':{
+      type: [String,Boolean],
+      default:false,
+    },
     'order': {
       type   :String,
       default:''
     },
-    'find':{
+    'offset': {
+      type   :String,
+      default:'0'
+    },
+    'limit': {
+      type   :String,
+      default:''
+    },
+    'filter':{
       type   :[String,Object],
       default:'',
     },
-    'info':Object,
+    // 'info':[Object,Array],
     'type':{
       type:String,
       default:'table',
@@ -40,14 +52,32 @@ export default {
   * - Bij een tree: voeg informatie aan elke row toe: {level:(int),is_child:(bool),has_children:(bool)}
   */
   created : function() {
-    this.items = this.addInfo( this.data, true );
-    // window.addEventListener('keyup', this.key);
+    if (this.data) {
+      this.items = this.addInfo( this.data, true );
+    }
+    else {
+      this.reloadPage({
+        offset : this.offset,
+        limit  : this.limit,
+        order  : this.order,
+        filter : this.filter,
+      });
+    }
   },
   
   data : function() {
     return {
       items       : [],
+      dataInfo    : {},
       selected    : [],
+      apiParts    : {
+        order         : this.order,
+        filter        : this.filter,
+        offset        : 0,
+        limit         : this.limit,
+        txt_abstract  : true,
+        as_grid       : true,
+      },
       focus       : {id:false,cell:false},
       draggable   : {
         item        : false,
@@ -58,7 +88,7 @@ export default {
         oldIndex    : 0,
         newIndex    : 0,
       },
-      findTerm            : this.find,
+      findTerm            : this.filter,
       extendedFind        : true,
       extendedTermDefault : { field:'',term:'',and:'OR',equals:'exist' },
       extendedTerm        : [],
@@ -70,10 +100,10 @@ export default {
   
   mounted : function() {
     this.extendedFind = false;
-    if (this.find.substr(0,1)==='[' || this.find.substr(0,1)==='{') {
+    if (this.filter.substr(0,1)==='[' || this.filter.substr(0,1)==='{') {
       this.extendedFind = true;
-      this.extendedTerm = JSON.parse(this.find);
-      this.findTerm = '';
+      this.extendedTerm = JSON.parse(this.filter);
+      this.filterTerm = '';
     }
     else {
       this.extendedTerm = [_.clone(this.extendedTermDefault)];
@@ -95,8 +125,8 @@ export default {
      */
     gridType : function() {
       var type=this.type;
-      if (typeof(this.fields.order)!=='undefined' && (this.order==='' || this.order==='order') && this.find==='') type='ordered';
-      if (typeof(this.fields.self_parent)!=='undefined' && (this.order==='' || this.order==='order') && this.find==='') type='tree';
+      if (typeof(this.fields.order)!=='undefined' && (this.order==='' || this.order==='order') && this.filter==='') type='ordered';
+      if (typeof(this.fields.self_parent)!=='undefined' && (this.order==='' || this.order==='order') && this.filter==='') type='tree';
       return type;
     },
     /**
@@ -113,7 +143,7 @@ export default {
      * Test if grid needs pagination
      */
     needsPagination : function(){
-      return (typeof(this.info.num_pages)!=='undefined' &&  this.info.num_pages > 1);
+      return (typeof(this.dataInfo.num_pages)!=='undefined' &&  this.dataInfo.num_pages > 1);
     },
     /**
      * Options for draggable
@@ -135,6 +165,47 @@ export default {
   },
   
   methods:{
+    
+    reloadPage : function(uriparts) {
+      var self = this;
+      flexyState.api({
+        url       : self.apiUrl(uriparts),
+      })
+      .then(function(response){
+        if (!_.isUndefined(response.data)) {
+          if (response.data.success) {
+            self.newUrl();
+            var data = response.data.data;
+            self.items = self.addInfo( data, true );
+            self.dataInfo = response.data.info;
+          }
+        }
+        return response;
+      });
+    },
+    
+    apiUrl : function(parts) {
+      parts = _.extend( this.apiParts, parts );
+      this.apiParts = parts;
+      return this.api + '?table='+this.name +
+        '&offset='+parts.offset + '&limit='+parts.limit +
+        '&order='+parts.order +
+        '&filter={'+jdb.encodeURL(parts.filter)+'}' +
+        '&txt_abstract='+parts.txt_abstract +
+        '&as_grid='+parts.as_grid ;
+    },
+    
+    newUrl : function(){
+      var parts = this.apiParts;
+      var stateObj = parts;
+      history.pushState(stateObj, "", location.pathname + '?options={"offset":"'+parts.offset+'","order":"'+parts.order+'","filter":"'+jdb.encodeURL(parts.filter)+'"}');
+      // return location.pathname + '?options={"offset":"'+parts.offset+'","order":"'+parts.order+'","find":"'+jdb.encodeURL(parts.find)+'"}';
+    },
+    
+    
+    hasData : function() {
+      return this.items.length>0;
+    },
     
     /*
       Voeg (tree)info toe aan meegegeven items
@@ -366,11 +437,7 @@ export default {
         }
       }
     },
-    
-    reloadPage : function() {
-      location.reload();
-    },
-    
+        
     rowLevel:function(row) {
       if (_.isUndefined(row._info)) return 0;
       return row._info.level;
@@ -386,20 +453,6 @@ export default {
       var readonly = false;
       if ( !_.isUndefined(this.fields[name]) ) readonly = this.fields[name].schema['readonly'];
       return readonly;
-    },
-    
-    
-    /**
-     * Create url, used for all links (pagination, edit, sort etc..)
-     */
-    createdUrl : function(parts){
-      var defaults = {
-        order   : _.isUndefined( this.order ) ? '':this.order,
-        find    : _.isUndefined( this.find ) ? '':this.find,
-        offset  : _.isUndefined( this.info.offset) ? 0:this.info.offset,
-      };
-      parts = _.extend( defaults, parts );
-      return location.pathname + '?options={"offset":"'+parts.offset+'","order":"'+parts.order+'","find":"'+jdb.encodeURL(parts.find)+'"}';
     },
     
     
@@ -432,8 +485,7 @@ export default {
         if (!filled) return false;
         find = JSON.stringify(self.extendedTerm);
       }
-      var url = this.createdUrl({offset:0,find:find});
-      window.location.assign(url);
+      this.reloadPage({offset:0,filter:find});
     },
     
     extendedSearchAdd : function() {
@@ -705,7 +757,7 @@ export default {
                 <div v-if="isMediaThumbs()" class="dropdown" id="dropdown-sort">
                   <flexy-button icon="sort-amount-asc" class="btn-outline-info" dropdown="dropdown-sort"/>
                   <div class="dropdown-menu">
-                    <a v-for="(field,key) in fields" v-if="field.schema.sortable" :href="createdUrl({'order':(key==order?'_'+key:key)})" class="dropdown-item" :class="{'selected':(order.indexOf(key)>=0)}">
+                    <a v-for="(field,key) in fields" v-if="field.schema.sortable" @click="reloadPage({'order':(key==apiParts.order?'_'+key:key)})" class="dropdown-item" :class="{'selected':(order.indexOf(key)>=0)}">
                       <span v-if="order==key" class="fa fa-caret-up"></span>
                       <span v-if="order=='_'+key" class="fa fa-caret-down"></span>
                       {{field.name}}
@@ -715,16 +767,17 @@ export default {
                 
               </th>
               <th v-if="isNormalVisibleHeader(field)" :class="headerClass(field)"  class="text-primary">
-                <a :href="createdUrl({'order':(key==order?'_'+key:key)})"><span>{{field.name}}</span>
-                  <span v-if="order==key" class="fa fa-caret-up"></span>
-                  <span v-if="order=='_'+key" class="fa fa-caret-down"></span>
+                <a @click="reloadPage({'order':(key==apiParts.order?'_'+key:key)})"><span>{{field.name}}</span>
+                  <span v-if="apiParts.order==key" class="fa fa-caret-up"></span>
+                  <span v-if="apiParts.order=='_'+key" class="fa fa-caret-down"></span>
                 </a>  
               </th>
             </template>
           </tr>
         </thead>
+        
         <!-- GRID BODY -->
-        <draggable  :list="items" element="tbody" :options="draggableOptions" @start="draggable_onStart" @end="draggable_onEnd">
+        <draggable v-if="hasData()" :list="items" element="tbody" :options="draggableOptions" @start="draggable_onStart" @end="draggable_onEnd">
           <!-- ROW -->
           <tr v-for="row in items" :data-id="row.id.value" :class="{'table-warning is-selected':isSelected(row.id.value)}" v-show="!isHiddenChild(row.id.value)" :level="rowLevel(row)" :key="row.id.value">
             <template v-for="cell in row">
@@ -768,9 +821,9 @@ export default {
           <flexy-button icon="picture-o" class="btn-primary" border="true"/>
         </template>
       </div>
-      <flexy-pagination v-if="needsPagination" :total="info.total_rows" :pages="info.num_pages" :current="info.page + 1" :limit="info.limit" :url="createdUrl({'offset':'##'})"></flexy-pagination>
+      <flexy-pagination v-if="needsPagination" :total="dataInfo.total_rows" :pages="dataInfo.num_pages" :current="dataInfo.page + 1" :limit="dataInfo.limit" @newpage="reloadPage({offset:$event})"></flexy-pagination>
       <div v-if="!needsPagination" class="pagination-container">
-        <span class="pagination-info text-primary">{{$lang.grid_total | replace(info.total_rows)}}</span>
+        <span class="pagination-info text-primary">{{$lang.grid_total | replace(dataInfo.total_rows)}}</span>
       </div>
     </div>
   </div>
