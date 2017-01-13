@@ -9,7 +9,7 @@
  * - `[path]`                   // Eventueel op te vragen map voor media/assets (bij table='res_assets')
  * - `[limit=0]`                // Aantal rijen dat het resultaat moet bevatten. Als `0` dan worden alle rijen teruggegeven.
  * - `[offset=0]`               // Hoeveel rijen vanaf de start worden overgeslagen.
- * - `[sort='']`                // De volgorde van het resultaat, geef een veld, bijvoorbeeld `str_title` of `_str_title` voor DESC
+ * - `[order='']`               // De volgorde van het resultaat, geef een veld, bijvoorbeeld `str_title` of `_str_title` voor DESC
  * - `[filter='']`              // Eventuele string waarop alle data wordt gefilterd
  * - `[as_grid=FALSE]`          // Als `TRUE`, dan wordt de data als specifieke grid formaat teruggegeven zoals het de backend van de CMS wordt getoond. NB Kan onderstaande opties overrulen!
  * - `[txt_abstract=0]`         // Als `TRUE`, dan bevatten velden met de `txt_` prefix een ingekorte tekst zonder HTML tags. Of een integer waarde voor de lengte.
@@ -100,7 +100,7 @@ class Table extends Api_Model {
     'table'        => '',
     'limit'        => 0,
     'offset'       => false, // met false werkt jump_to_today
-    // 'sort'         => '',
+    // 'order'         => '',
     // 'filter'       => '',
     'as_grid'      => false,
     'as_options'   => false,
@@ -163,16 +163,23 @@ class Table extends Api_Model {
     
     // Normaal resultaat, of grid resultaat
     if ( el('as_grid',$this->args,false) ) {
-      // Grid, pagination, sort
-      $this->args['sort'] = el( 'sort', $this->args, '' );
+      // Grid, pagination, order
+      $this->args['order']  = el( 'order', $this->args, '' );
       $this->args['filter'] = el( 'filter', $this->args, '' );
+      if (!empty($this->args['filter'])) {
+        $this->args['filter'] = trim($this->args['filter'],'{}');
+        $this->args['filter'] = html_entity_decode($this->args['filter']);
+        if (substr($this->args['filter'],0,1)==='[') {
+          $this->args['filter'] = json2array($this->args['filter']);
+        }
+      }
       // Media?
       if ( $this->args['table'] === 'res_assets' AND isset($this->args['path']) ) $this->args['where'] = array( 'path' => $this->args['path'] );
       // Where?
       if (!isset($this->args['where'])) $this->args['where'] = '';
       // txt_abstract, options
       if ( isset($this->args['txt_abstract'])) $this->data->select_txt_abstract( $this->args['txt_abstract'] );
-      $items = $this->data->get_grid( $this->args['limit'], $this->args['offset'], $this->args['sort'], $this->args['filter'], $this->args['where'] );
+      $items = $this->data->get_grid( $this->args['limit'], $this->args['offset'], $this->args['order'], $this->args['filter'], $this->args['where'] );
     }
     else {
       // Normaal: where, txt_abstract, options

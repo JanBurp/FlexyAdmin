@@ -2,9 +2,11 @@
   title="<?=$title?>"
   name="<?=$name?>"
   :fields='<?=array2json($fields)?>'
-  :data='<?=array2json($data)?>'
+  api='<?=$api?>'
+  <?php if (isset($data)): ?>:data='<?=array2json($data)?>'<?php endif ?>
   order="<?=$order?>"
-  find="<?=htmlentities($find)?>"
-  :info='<?=json_encode($info)?>'
+  offset='<?=$offset?>'
+  limit="<?=$limit?>"
+  filter="<?=htmlentities($filter)?>"
   <?php if (isset($type)): ?> type='<?=$type?>'<?php endif ?>
 ></flexy-grid>
