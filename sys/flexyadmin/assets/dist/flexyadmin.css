@@ -4381,7 +4381,8 @@ a > .fa, .btn > .fa {
   .grid th {
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap; }
+    white-space: nowrap;
+    cursor: pointer; }
     .grid th > * {
       display: inline-block;
       position: relative; }
