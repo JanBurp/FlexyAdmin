@@ -31720,12 +31720,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.startEdit()
       }
     }
-  }, [_vm._s(_vm.item)]), " ", _h('input', {
+  }, [_vm._s(_vm.item)]), " ", (_vm.editable) ? _h('input', {
     directives: [{
       name: "show",
       rawName: "v-show",
-      value: (_vm.isEditing && _vm.editable),
-      expression: "isEditing && editable"
+      value: (_vm.isEditing),
+      expression: "isEditing"
     }],
     attrs: {
       "id": _vm.inputID
@@ -31742,7 +31742,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         _vm.cancelEdit()
       }
     }
-  })] : _vm._e()]) : _vm._e()
+  }) : _vm._e()] : _vm._e()]) : _vm._e()
 },staticRenderFns: []}
 if (false) {
   module.hot.accept()
