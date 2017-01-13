@@ -4384,14 +4384,10 @@ a > .fa, .btn > .fa {
   .grid #dropdown-sort .dropdown-item.selected {
     padding-left: .35rem; }
   .grid th.grid-header-type-primary {
-    width: 7rem;
-    max-width: 7rem;
-    min-width: 7rem;
-    white-space: nowrap; }
-  .grid .grid-type-tree th.grid-header-type-primary {
-    width: 8rem;
+    width: 4rem;
     max-width: 8rem;
-    min-width: 8rem; }
+    min-width: 4rem;
+    white-space: nowrap; }
   .grid td {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -4399,12 +4395,16 @@ a > .fa, .btn > .fa {
     max-width: 250px; }
     .grid td input {
       padding: 0;
-      float: left; }
+      float: left;
+      width: 100%;
+      color: #696; }
   .grid td.grid-cell-type-color {
     max-width: 0;
     min-width: 5rem; }
   .grid td.grid-cell-type-checkbox {
     text-align: center; }
+  .grid td.grid-cell-editable {
+    cursor: pointer; }
   .grid .card-footer {
     padding: .35rem .35rem; }
     .grid .card-footer .actions {
@@ -4458,6 +4458,8 @@ a > .fa, .btn > .fa {
     border: none;
     padding: 0px;
     background-color: transparent; }
+    .grid.grid-media-view-thumbs table.grid-data tbody td input {
+      text-align: center; }
   .grid.grid-media-view-thumbs table.grid-data tbody td.action {
     display: none; }
   .grid.grid-media-view-thumbs table.grid-data tbody td[name="media_thumb"] {
@@ -4477,7 +4479,6 @@ a > .fa, .btn > .fa {
     bottom: .35rem;
     width: 100%;
     text-align: center;
-    color: #696 !important;
     overflow: hidden;
     text-overflow: ellipsis; }
   .grid.grid-media-view-thumbs table.grid-data tbody td[name='name'],

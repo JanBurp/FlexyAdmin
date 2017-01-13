@@ -1,10 +1,6 @@
 // Defaults
 .grid {
   
-  // GENERAL
-  option, select {
-//    text-transform:uppercase;
-  }
   // Table cells Focus/Editing
   td.has-focus {background-color:lighten($brand-warning,40%);}
 /*  td.is-editing {padding:2px;box-shadow:0px 0px 1px $brand-danger inset;}*/
@@ -90,6 +86,7 @@
    }
    
    // Table
+   
    table {
      margin-bottom:0;
    }
@@ -127,18 +124,10 @@
    
    // Table primary header
    th.grid-header-type-primary {
-     width:7rem;
-     max-width:7rem;
-     min-width:7rem;
+     width:4rem;
+     max-width:8rem;
+     min-width:4rem;
      white-space:nowrap;
-   }
-   // Table tree header
-   .grid-type-tree {
-     th.grid-header-type-primary {
-       width:8rem;
-       max-width:8rem;
-       min-width:8rem;
-     }
    }
    
    // Table cell (grid-cell)
@@ -147,10 +136,11 @@
      text-overflow:ellipsis;
      white-space:nowrap;
      max-width:250px;
-     input {padding:0;float:left;}
+     input {padding:0;float:left;width:100%;color:$brand-primary;}
    }
    td.grid-cell-type-color {max-width:0;min-width:5rem;}
    td.grid-cell-type-checkbox {text-align:center;}
+   td.grid-cell-editable {cursor:pointer;}
    
    // FOOTER
    .card-footer {
@@ -214,6 +204,7 @@
         border:none;
         padding:0px;
         background-color:transparent;
+        input {text-align:center;}
       }
       td.action {display:none;}
       td[name="media_thumb"] {
@@ -234,7 +225,6 @@
         bottom:.35rem;
         width:100%;
         text-align:center;
-        color:$brand-primary!important;
         overflow:hidden;
         text-overflow:ellipsis;
       }
