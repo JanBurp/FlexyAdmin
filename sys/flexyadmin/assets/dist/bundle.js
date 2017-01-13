@@ -790,7 +790,15 @@ else{serializeString+=encodeURIComponent(key)+'='+encodeURIComponent(data[key]);
    * 
    * @param string color
    * @return string
-   */complementColor:function complementColor(color){color=parseInt(color.replace('#',''),16);var complement='#'+('000000'+(0xFFFFFF^color).toString(16)).slice(-6);return complement;}};
+   */complementColor:function complementColor(color){color=parseInt(color.replace('#',''),16);var complement='#'+('000000'+(0xFFFFFF^color).toString(16)).slice(-6);return complement;},/**
+   * jdb.createUUID()
+   * 
+   * Geeft unieke identifier
+   * 
+   * @param string uuid
+   * @return string
+   */createUUID:function createUUID(){var d=new Date().getTime();if(window.performance&&typeof window.performance.now==="function"){d+=performance.now();//use high-precision timer if available
+}var uuid='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){var r=(d+Math.random()*16)%16|0;d=Math.floor(d/16);return(c=='x'?r:r&0x3|0x8).toString(16);});return uuid;}};
 
 /***/ },
 /* 6 */
@@ -28425,34 +28433,10 @@ updateText:function updateText(editor,content){this.updateField(editor.id,conten
 'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _jdbTools=__webpack_require__(/*! ../../jdb-tools.js */ 5);var _jdbTools2=_interopRequireDefault(_jdbTools);var _flexyState=__webpack_require__(/*! ../../flexy-state.js */ 3);var _flexyState2=_interopRequireDefault(_flexyState);var _flexyThumb=__webpack_require__(/*! ../flexy-thumb.vue */ 77);var _flexyThumb2=_interopRequireDefault(_flexyThumb);var _flexyButton=__webpack_require__(/*! ../flexy-button.vue */ 4);var _flexyButton2=_interopRequireDefault(_flexyButton);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}exports.default={name:'VueGridCell',components:{flexyThumb:_flexyThumb2.default,flexyButton:_flexyButton2.default},props:['type','name','primary','value','level','editable','readonly','options','focus'],// created : function() {
 //   console.log(this.options);
 // },
-computed:{fieldTypes:function fieldTypes(){var types={checkbox:['checkbox'],media:['media','medias'],color:['color'],url:['url'],relation:['relation']};var defaultTypes=[];for(var type in types){defaultTypes=defaultTypes.concat(type);}types.default=defaultTypes;return types;},cellClass:function cellClass(){var c=[];c.push('grid-cell-type-'+this.type);if(this.editable)c.push('grid-cell-editable');if(this.readonly)c.push('text-muted');if(this.focus)c.push('has-focus');if(this.isEditing)c.push('is-editing');return c;},showTreeNode:function showTreeNode(){return this.name==="str_title"&&this.level>0;}},data:function data(){return{item:this.value,oldItem:this.value,isEditing:false};},methods:{isType:function isType(type,fieldType){var is=false;if(type==='default'){is=this.fieldTypes['default'].indexOf(fieldType)===-1;}else{is=this.fieldTypes[type].indexOf(fieldType)>=0;}return is;},thumbs:function thumbs(media){var array=media.split('|');for(var i=0;i<array.length;i++){array[i]={src:'_media/thumb/'+this.options['path']+'/'+array[i],alt:array[i]};}return array;},complementColor:function complementColor(color){return _jdbTools2.default.complementColor(color);// color = parseInt(color.replace('#',''),16);
-// var complement = '#'+('000000' + ((0xFFFFFF ^ color).toString(16))).slice(-6);
-// return complement;
-},relationItems:function relationItems(string){var items=string.split(',');for(var i=0;i<items.length;i++){items[i]=items[i].replace(/{/,'').replace(/}/,'').trim();}return items;},select:function select(){this.$emit('select');},// saveEdit : function(event) {
-//   console.log('saveEdit',this.oldItem,this.item);
-//   var self = this;
-//   self.isEditing = false;
-//   if (this.item!==this.oldItem) {
-//     self.postField(this.item).then(function(response){
-//       if (response.error) {
-//         self.cancelEdit();
-//       }
-//     });
-//   }
-// },
-// startEdit : function() {
-//   if (this.focus && this.editable && !this.readonly) {
-//     console.log('startEdit');
-//     this.oldItem = this.item;
-//     this.isEditing = true;
-//   }
-// },
-// cancelEdit : function(elem) {
-//   console.log('cancelEdit');
-//   this.Item = this.oldItem;
-//   this.isEditing = false;
-// },
-clickEdit:function clickEdit(){var self=this;var currentValue=self.item;if(this.editable&&this.type==='checkbox'){var newValue=1;if(currentValue)newValue=0;self.postField(newValue).then(function(response){if(!response.error){self.item=newValue;}});}},postField:function postField(value){var self=this;var data={};data[self.name]=value;return _flexyState2.default.api({url:'row','data':{'table':this.primary.table,'where':this.primary.id,'data':data}}).then(function(response){if(!response.error){if(!_.isUndefined(response.data.info.validation)&&response.data.info.validation===false){response.error=true;for(var error in response.data.info.validation_errors){_flexyState2.default.addMessage(response.data.info.validation_errors[error],'danger');}}}else{_flexyState2.default.addMessage(self.$lang.vue_form_save_error,'danger');}return response;});}}};
+computed:{inputID:function inputID(){return _jdbTools2.default.createUUID();},fieldTypes:function fieldTypes(){var types={checkbox:['checkbox'],media:['media','medias'],color:['color'],url:['url'],relation:['relation']};var defaultTypes=[];for(var type in types){defaultTypes=defaultTypes.concat(type);}types.default=defaultTypes;return types;},showTreeNode:function showTreeNode(){return this.name==="str_title"&&this.level>0;}},data:function data(){return{item:this.value,oldItem:this.value,isEditing:false};},methods:{cellClass:function cellClass(){var c=[];c.push('grid-cell-type-'+this.type);if(this.editable)c.push('grid-cell-editable');if(this.readonly)c.push('text-muted');if(this.focus)c.push('has-focus');if(this.isEditing)c.push('is-editing');return c;},isType:function isType(type,fieldType){var is=false;if(type==='default'){is=this.fieldTypes['default'].indexOf(fieldType)===-1;}else{is=this.fieldTypes[type].indexOf(fieldType)>=0;}return is;},thumbs:function thumbs(media){var array=media.split('|');for(var i=0;i<array.length;i++){array[i]={src:'_media/thumb/'+this.options['path']+'/'+array[i],alt:array[i]};}return array;},complementColor:function complementColor(color){return _jdbTools2.default.complementColor(color);},relationItems:function relationItems(string){var items=string.split(',');for(var i=0;i<items.length;i++){items[i]=items[i].replace(/{/,'').replace(/}/,'').trim();}return items;},select:function select(){this.$emit('select');},saveEdit:function saveEdit(value){var self=this;self.isEditing=false;if(value!==this.oldItem){self.postField(value).then(function(response){if(response.error){self.cancelEdit();}else{self.item=value;}});}},startEdit:function startEdit(){if(this.editable&&!this.readonly){this.isEditing=true;this.oldItem=this.item;var inputEL=document.getElementById(this.inputID);inputEL.style.display="block";inputEL.focus();}},cancelEdit:function cancelEdit(){this.item=this.oldItem;this.isEditing=false;},clickEdit:function clickEdit(){var self=this;var currentValue=self.item;if(this.editable&&this.type==='checkbox'){var newValue=1;if(currentValue)newValue=0;self.postField(newValue).then(function(response){if(!response.error){self.item=newValue;}});}},postField:function postField(value){var self=this;var data={};data[self.name]=value;return _flexyState2.default.api({url:'row','data':{'table':this.primary.table,'where':this.primary.id,'data':data}}).then(function(response){if(!response.error){if(!_.isUndefined(response.data.info.validation)&&response.data.info.validation===false){// Validaiton error
+response.error=true;for(var error in response.data.info.validation_errors){_flexyState2.default.addMessage(response.data.info.validation_errors[error],'danger');}}else{// Ok!
+_flexyState2.default.addMessage(self.$lang.grid_edit_success);}}else{// Error
+_flexyState2.default.addMessage(self.$lang.form_save_error,'danger');}return response;});}}};
 
 /***/ },
 /* 59 */
@@ -31435,7 +31419,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     }, [_vm._l((row), function(cell) {
       return [(cell.type == 'primary') ? _h('td', {
         staticClass: "action"
-      }, [_h('flexy-button', {
+      }, [(_vm.gridType !== 'media') ? _h('flexy-button', {
         staticClass: "btn-outline-warning",
         attrs: {
           "icon": "pencil"
@@ -31445,7 +31429,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
             _vm.editItem(cell.value)
           }
         }
-      }), " ", _h('flexy-button', {
+      }) : _vm._e(), " ", _h('flexy-button', {
         staticClass: "btn-outline-danger",
         attrs: {
           "icon": "remove"
@@ -31671,12 +31655,18 @@ if (false) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
   return (_vm.type !== 'hidden') ? _h('td', {
-    class: _vm.cellClass,
+    class: _vm.cellClass(),
     attrs: {
       "type": _vm.type,
       "name": _vm.name,
       "value": _vm.item,
       "level": _vm.level
+    },
+    on: {
+      "keyup": function($event) {
+        if (_vm._k($event.keyCode, "esc", 27)) { return; }
+        _vm.cancelEdit()
+      }
     }
   }, [(_vm.showTreeNode) ? _h('span', {
     staticClass: "fa fa-level-up fa-rotate-90 text-muted"
@@ -31718,7 +31708,41 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
       "href": _vm.item,
       "target": "_blank"
     }
-  }, [_vm._s(_vm.item)])] : _vm._e(), " ", (_vm.isType('default', _vm.type)) ? [_h('span', [_vm._s(_vm.item)])] : _vm._e()]) : _vm._e()
+  }, [_vm._s(_vm.item)])] : _vm._e(), " ", (_vm.isType('default', _vm.type)) ? [_h('span', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (!_vm.isEditing),
+      expression: "!isEditing"
+    }],
+    on: {
+      "click": function($event) {
+        _vm.startEdit()
+      }
+    }
+  }, [_vm._s(_vm.item)]), " ", _h('input', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.isEditing && _vm.editable),
+      expression: "isEditing && editable"
+    }],
+    attrs: {
+      "id": _vm.inputID
+    },
+    domProps: {
+      "value": _vm.item
+    },
+    on: {
+      "change": function($event) {
+        _vm.saveEdit($event.target.value)
+      },
+      "keyup": function($event) {
+        if (_vm._k($event.keyCode, "esc", 27)) { return; }
+        _vm.cancelEdit()
+      }
+    }
+  })] : _vm._e()]) : _vm._e()
 },staticRenderFns: []}
 if (false) {
   module.hot.accept()
