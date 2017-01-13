@@ -4332,31 +4332,32 @@ a > .fa, .btn > .fa {
   .grid .card-block {
     padding: 0; }
   .grid .card-block.grid-upload {
-    padding: 1rem .5rem;
+    padding: .5rem;
+    border-bottom: 1px solid #696;
     background-color: #f7f7f9; }
     .grid .card-block.grid-upload input#browsefiles {
       display: none; }
-    .grid .card-block.grid-upload .grid-upload-choose {
-      color: #55595c; }
-      .grid .card-block.grid-upload .grid-upload-choose .flexy-button {
-        margin-right: 1rem;
-        float: left; }
     .grid .card-block.grid-upload .grid-upload-dropbox {
       color: #55595c;
-      border: dashed 3px #818a91;
+      border: dashed 2px #eceeef;
       border-radius: 0.25rem;
-      padding: .5rem 1.1rem; }
+      padding: .5rem; }
+      .grid .card-block.grid-upload .grid-upload-dropbox .flexy-button {
+        margin-right: 1rem;
+        float: left; }
     .grid .card-block.grid-upload progress {
       margin: 0;
       height: 1.5rem; }
     .grid .card-block.grid-upload table {
-      margin: .8rem; }
+      margin-top: .5rem; }
       .grid .card-block.grid-upload table thead .flexy-button {
         margin-right: 1rem; }
     .grid .card-block.grid-upload tr th {
-      color: #696; }
-    .grid .card-block.grid-upload tr th:last-child,
-    .grid .card-block.grid-upload tr td:last-child {
+      color: #696;
+      vertical-align: top; }
+    .grid .card-block.grid-upload tr th:first-child, .grid .card-block.grid-upload tr td:first-child {
+      padding-left: .65rem; }
+    .grid .card-block.grid-upload tr th:last-child, .grid .card-block.grid-upload tr td:last-child {
       text-align: right; }
   .grid table {
     margin-bottom: 0; }

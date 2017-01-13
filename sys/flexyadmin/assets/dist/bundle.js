@@ -31265,29 +31265,18 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
   })]) : _vm._e(), " ", " ", (_vm.gridType === 'media') ? _h('div', {
     staticClass: "card-block grid-upload"
   }, [_h('div', {
-    staticClass: "container-fluid"
-  }, [_h('div', {
-    staticClass: "row"
-  }, [_h('div', {
-    staticClass: "col-sm-3 grid-upload-choose"
+    staticClass: "grid-upload-dropbox"
   }, [_h('flexy-button', {
     staticClass: "btn-warning",
     attrs: {
-      "icon": "plus",
-      "size": "lg"
+      "icon": "plus"
     },
     nativeOn: {
       "click": function($event) {
         _vm.newItem()
       }
     }
-  }), _vm._s(_vm.$lang.upload_choose)]), " ", _h('div', {
-    staticClass: "col-sm-9 grid-upload-dropbox"
-  }, [_h('span', {
-    staticClass: "fa fa-cloud-download fa-lg text-warning"
-  }), "  " + _vm._s(_vm.$lang.upload_drop)])]), " ", _h('div', {
-    staticClass: "row"
-  }, [_h('input', {
+  }), _vm._s(_vm.$lang.upload_choose)]), " ", _h('input', {
     attrs: {
       "id": "browsefiles",
       "type": "file",
@@ -31308,8 +31297,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
   }, [_h('thead', [_h('tr', [_h('th', [_h('flexy-button', {
     staticClass: "btn-danger",
     attrs: {
-      "icon": "upload",
-      "size": "lg"
+      "icon": "upload"
     },
     nativeOn: {
       "click": function($event) {
@@ -31334,7 +31322,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         "max": "100"
       }
     })]), _h('td', [_vm._s(_vm.uploadStatus[file.name])])])
-  })])])])])]) : _vm._e(), " ", " ", _h('div', {
+  })])])]) : _vm._e(), " ", " ", _h('div', {
     staticClass: "card-block table-responsive"
   }, [_h('table', {
     staticClass: "table table-bordered table-sm grid-data"
@@ -31342,7 +31330,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     return [(_vm.isPrimaryHeader(field)) ? _h('th', {
       staticClass: "text-primary grid-actions",
       class: _vm.headerClass(field)
-    }, [_h('flexy-button', {
+    }, [(_vm.gridType !== 'media') ? _h('flexy-button', {
       staticClass: "btn-outline-warning",
       attrs: {
         "icon": "plus"
@@ -31352,7 +31340,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
           _vm.newItem()
         }
       }
-    }), " ", _h('flexy-button', {
+    }) : _vm._e(), " ", _h('flexy-button', {
       staticClass: "btn-outline-danger",
       class: {
         disabled: !_vm.hasSelection()
