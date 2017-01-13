@@ -213,7 +213,7 @@ export default {
 
     <template v-if="isType('default',type)">
       <span v-show="!isEditing" @click="startEdit()">{{item}}</span>
-      <input v-show="isEditing && editable" :id="inputID" :value="item" @change="saveEdit($event.target.value)" @keyup.esc="cancelEdit()"/>
+      <input v-if="editable" v-show="isEditing" :id="inputID" :value="item" @change="saveEdit($event.target.value)" @keyup.esc="cancelEdit()"/>
     </template>
 
   </td>
