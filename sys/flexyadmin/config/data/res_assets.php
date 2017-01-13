@@ -32,7 +32,8 @@ $config['relations'] = array();
 
 /* Settings voor ->get_files() (en varianten) */
 $config['files'] = array(
-  'select'  => array('alt','file','path','type','date','size','width','height'),
+  'select'        => array('alt','file','path','type','date','size','width','height'),
+  'thumb_select'  => array('id','media_thumb','alt','type','date','size','width','height'),
 );
 
 
