@@ -222,7 +222,7 @@ Class Res_assets extends Data_Core {
    * @author Jan den Besten
    */
   public function delete_file($path,$file) {
-		$name = $this->config->item('PUBLICASSETS').$path.'/'.$file;
+		$name = $this->config->item('ASSETSFOLDER').$path.'/'.$file;
     $result=true;
     // A folder
     if (is_dir($name)) {
@@ -235,9 +235,9 @@ Class Res_assets extends Data_Core {
       $result=false;
       // Remove file
       if (file_exists($name) and !defined('PHPUNIT_TEST')) {
-          @chmod($name,0777);
-          $result=unlink($name);
-        }
+        @chmod($name,0777);
+        $result=unlink($name);
+      }
       else {
         $result=true;
       }
@@ -260,7 +260,7 @@ Class Res_assets extends Data_Core {
   			}
         // $files=filter_by($files,"_");
   			foreach( $files as $sizedFile ) {
-          $sizedName = $this->config->item('PUBLICASSETS').$path.'/'.$sizedFile;
+          $sizedName = $this->config->item('ASSETSFOLDER').$path.'/'.$sizedFile;
           if (file_exists($sizedName) and !defined('PHPUNIT_TEST')) {
             @chmod($sizedName,0777);
             unlink($sizedName);
@@ -368,7 +368,7 @@ Class Res_assets extends Data_Core {
 
     // Initialize
     $this->error_message = '';
-    $folder = $this->config->item('PUBLICASSETS') . $path;
+    $folder = $this->config->item('ASSETSFOLDER') . $path;
     $config = array(
       'upload_path'   => $folder,
       'allowed_types' => $this->get_setting(array('assets',$path,'types')),
@@ -471,7 +471,7 @@ Class Res_assets extends Data_Core {
     $assets = $this->get_setting('assets');
     $paths = array_keys($assets);
     foreach ($paths as $key => $path) {
-      if ($include_assets) $paths[$key] = $this->config->item('PUBLICASSETS').$path;
+      if ($include_assets) $paths[$key] = $this->config->item('ASSETSFOLDER').$path;
       if ($prefix) $paths[$key] = $prefix.$paths[$key];
     }
     return $paths;
@@ -550,7 +550,7 @@ Class Res_assets extends Data_Core {
   public function insert_file($path,$file,$data=array()) {
     // Default data
     $this->load->helper('date');
-    $name = $this->config->item('PUBLICASSETS').$path.'/'.$file;
+    $name = $this->config->item('ASSETSFOLDER').$path.'/'.$file;
     $ext=strtolower(get_suffix($file,'.'));
     $file_stats = @stat($name);
     $default_data = array(
