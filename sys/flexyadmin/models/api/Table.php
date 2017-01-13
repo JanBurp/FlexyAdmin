@@ -158,35 +158,41 @@ class Table extends Api_Model {
    * @author Jan den Besten
    */
   private function _get_data() {
-    
     $this->data->table( $this->args['table'] );
     
-    // Normaal resultaat, of grid resultaat
-    if ( el('as_grid',$this->args,false) ) {
-      // Grid, pagination, order
-      $this->args['order']  = el( 'order', $this->args, '' );
-      $this->args['filter'] = el( 'filter', $this->args, '' );
-      if (!empty($this->args['filter'])) {
-        $this->args['filter'] = trim($this->args['filter'],'{}');
-        $this->args['filter'] = html_entity_decode($this->args['filter']);
-        if (substr($this->args['filter'],0,1)==='[') {
-          $this->args['filter'] = json2array($this->args['filter']);
-        }
+    // Filter?
+    $this->args['filter'] = el( 'filter', $this->args, '' );
+    if (!empty($this->args['filter'])) {
+      $this->args['filter'] = trim($this->args['filter'],'{}');
+      $this->args['filter'] = html_entity_decode($this->args['filter']);
+      if (substr($this->args['filter'],0,1)==='[') {
+        $this->args['filter'] = json2array($this->args['filter']);
       }
-      // Media?
-      if ( $this->args['table'] === 'res_assets' AND isset($this->args['path']) ) $this->args['where'] = array( 'path' => $this->args['path'] );
-      // Where?
+    }
+    
+    // Grid resultaat?
+    if ( el('as_grid',$this->args,false) ) {
+      // pagination, order, filter
+      $this->args['order']  = el( 'order', $this->args, '' );
+      // Where
       if (!isset($this->args['where'])) $this->args['where'] = '';
       // txt_abstract, options
       if ( isset($this->args['txt_abstract'])) $this->data->select_txt_abstract( $this->args['txt_abstract'] );
       $items = $this->data->get_grid( $this->args['limit'], $this->args['offset'], $this->args['order'], $this->args['filter'], $this->args['where'] );
     }
     else {
-      // Normaal: where, txt_abstract, options
-      if ( isset($this->args['where']) ) $this->data->where( $this->args['where'] );
-      if ( isset($this->args['txt_abstract'])) $this->data->select_txt_abstract( $this->args['txt_abstract'] );
-      if ( el('as_options',$this->args,false) ) $this->data->select_abstract( TRUE );
-      $items = $this->data->get_result( $this->args['limit'], $this->args['offset'] );
+      // Media?
+      if ( $this->args['table'] === 'res_assets' AND isset($this->args['path']) ) {
+        $this->data->order_by( $this->args['order'] );
+        $items = $this->data->get_files( $this->args['path'], $this->args['filter'], $this->args['limit'], $this->args['offset'], TRUE );
+      }
+      else {
+        // Geen grid & geen media - where, txt_abstract, options
+        if ( isset($this->args['where']) ) $this->data->where( $this->args['where'] );
+        if ( isset($this->args['txt_abstract'])) $this->data->select_txt_abstract( $this->args['txt_abstract'] );
+        if ( el('as_options',$this->args,false) ) $this->data->select_abstract( TRUE );
+        $items = $this->data->get_result( $this->args['limit'], $this->args['offset'] );
+      }
     }
     
     // Info

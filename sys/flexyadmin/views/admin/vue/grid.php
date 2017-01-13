@@ -8,5 +8,5 @@
   offset='<?=$offset?>'
   limit="<?=$limit?>"
   filter="<?=htmlentities($filter)?>"
-  <?php if (isset($type)): ?> type='<?=$type?>'<?php endif ?>
+  type='<?=$type?>'
 ></flexy-grid>
