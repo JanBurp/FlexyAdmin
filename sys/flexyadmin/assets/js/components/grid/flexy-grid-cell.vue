@@ -16,6 +16,10 @@ export default {
 
   computed:{
     
+    inputID : function() {
+      return jdb.createUUID();
+    },
+    
     fieldTypes : function() {
       var types = {
         checkbox  : ['checkbox'],
@@ -32,16 +36,6 @@ export default {
       return types;
     },
     
-    cellClass : function() {
-      var c = [];
-      c.push('grid-cell-type-'+this.type);
-      if (this.editable) c.push('grid-cell-editable');
-      if (this.readonly) c.push('text-muted');
-      if (this.focus) c.push('has-focus');
-      if (this.isEditing) c.push('is-editing');
-      return c;
-    },
-    
     showTreeNode : function() {
       return (this.name==="str_title" && this.level>0);
     },
@@ -56,6 +50,16 @@ export default {
   },
   
   methods : {
+    
+    cellClass : function() {
+      var c = [];
+      c.push('grid-cell-type-'+this.type);
+      if (this.editable) c.push('grid-cell-editable');
+      if (this.readonly) c.push('text-muted');
+      if (this.focus) c.push('has-focus');
+      if (this.isEditing) c.push('is-editing');
+      return c;
+    },
     
     isType : function( type, fieldType ) {
       var is = false;
@@ -81,9 +85,6 @@ export default {
     
     complementColor : function(color) {
       return jdb.complementColor(color);
-      // color = parseInt(color.replace('#',''),16);
-      // var complement = '#'+('000000' + ((0xFFFFFF ^ color).toString(16))).slice(-6);
-      // return complement;
     },
     
     relationItems : function(string) {
@@ -98,33 +99,35 @@ export default {
       this.$emit('select');
     },
     
-    // saveEdit : function(event) {
-    //   console.log('saveEdit',this.oldItem,this.item);
-    //   var self = this;
-    //   self.isEditing = false;
-    //   if (this.item!==this.oldItem) {
-    //     self.postField(this.item).then(function(response){
-    //       if (response.error) {
-    //         self.cancelEdit();
-    //       }
-    //     });
-    //   }
-    // },
+    saveEdit : function(value) {
+      var self = this;
+      self.isEditing = false;
+      if (value!==this.oldItem) {
+        self.postField(value).then(function(response){
+          if (response.error) {
+            self.cancelEdit();
+          }
+          else {
+            self.item = value;
+          }
+        });
+      }
+    },
     
-    // startEdit : function() {
-    //   if (this.focus && this.editable && !this.readonly) {
-    //     console.log('startEdit');
-    //     this.oldItem = this.item;
-    //     this.isEditing = true;
-    //   }
-    // },
+    startEdit : function() {
+      if (this.editable && !this.readonly) {
+        this.isEditing = true;
+        this.oldItem = this.item;
+        var inputEL = document.getElementById(this.inputID);
+        inputEL.style.display= "block";
+        inputEL.focus();
+      }
+    },
     
-    // cancelEdit : function(elem) {
-    //   console.log('cancelEdit');
-    //   this.Item = this.oldItem;
-    //   this.isEditing = false;
-    // },
-    
+    cancelEdit : function() {
+      this.item = this.oldItem;
+      this.isEditing = false;
+    },
     
     clickEdit : function() {
       var self = this;
@@ -154,14 +157,20 @@ export default {
       }).then(function(response){
         if (!response.error) {
           if ( !_.isUndefined(response.data.info.validation) && response.data.info.validation===false) {
+            // Validaiton error
             response.error = true;
             for (var error in response.data.info.validation_errors) {
               flexyState.addMessage(response.data.info.validation_errors[error],'danger');
             }
           }
+          else {
+            // Ok!
+            flexyState.addMessage( self.$lang.grid_edit_success);
+          }
         }
         else {
-          flexyState.addMessage( self.$lang.vue_form_save_error,'danger');
+          // Error
+          flexyState.addMessage( self.$lang.form_save_error,'danger');
         }
         return response;
       });
@@ -174,7 +183,7 @@ export default {
 </script>
 
 <template>
-  <td v-if="type!=='hidden'" :type="type" :name="name" :value="item" :class="cellClass" :level="level">
+  <td v-if="type!=='hidden'" :type="type" :name="name" :value="item" :class="cellClass()" :level="level" @keyup.esc="cancelEdit()">
     <span v-if="showTreeNode" class="fa fa-level-up fa-rotate-90 text-muted"></span>
 
     <template v-if="isType('relation',type)">
@@ -203,7 +212,8 @@ export default {
     </template>
 
     <template v-if="isType('default',type)">
-      <span>{{item}}</span>
+      <span v-show="!isEditing" @click="startEdit()">{{item}}</span>
+      <input v-show="isEditing && editable" :id="inputID" :value="item" @change="saveEdit($event.target.value)" @keyup.esc="cancelEdit()"/>
     </template>
 
   </td>

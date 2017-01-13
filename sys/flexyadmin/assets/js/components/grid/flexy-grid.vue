@@ -731,7 +731,7 @@ export default {
               
               <!-- PRIMARY CELL -->
               <td v-if="cell.type=='primary'" class="action">
-                <flexy-button @click.native="editItem(cell.value)" icon="pencil" class="btn-outline-warning" />
+                <flexy-button v-if="gridType!=='media'" @click.native="editItem(cell.value)" icon="pencil" class="btn-outline-warning" />
                 <flexy-button @click.native="removeItems(row.id.value)" icon="remove" class="btn-outline-danger" />
                 <flexy-button @click.native="select(row.id.value)" :icon="{'circle-o':!isSelected(row.id.value),'circle':isSelected(row.id.value)}" class="btn-outline-info" />
                 <flexy-button v-if="gridType==='tree' || gridType==='ordered'" icon="arrows-v" class="draggable-handle btn-outline-info" :class="{'active':isDragging(row.id.value)}" />
