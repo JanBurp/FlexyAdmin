@@ -110,7 +110,7 @@ $config['FIELDS_prefix'] = array (
     'type'        => 'string',
     'form-type'   => 'text',
     'grid'        => '%s',
-    'grid-edit'   => true,
+    'grid-edit'   => false,
     'form'        => ''
   ),
   
@@ -377,15 +377,6 @@ $config['FIELDS_special'] = array(
     'default'     => 0,
   ),
   
-  //   // Media
-  // 'alt'        => array(
-  //     'type'        => 'string',
-  //     'form-type'   => 'text',
-  //     'grid'        => '%s',
-  //     'grid-edit'   => true,
-  //     'form'        => ''
-  //   ),
-  
 	'abstract'	=> array(
     'type'        => 'string',
     'form-type'   => 'text',
@@ -444,11 +435,6 @@ $config['FIELDS_special'] = array(
   
   // FILES
   
-  'name' => array(
-    'type'       => 'string',
-    'form-type'  => 'text',
-    'validation' => 'required|trim',
-  ),
   'path' => array(
     'type'       => 'string',
     'form-type'  => 'select',
@@ -458,14 +444,15 @@ $config['FIELDS_special'] = array(
   ),
   'type' => array(
     'type'      => 'string',
-    'form-type' => 'hidden',
+    'form-type' => 'text',
     'grid-type' => 'text',
     'readonly'  => true
   ),
-  'alt' => array(
-    'type'       => 'string',
-    'form-type'  => 'text',
-    'validation' => 'trim',
+  'alt'        => array(
+    'type'        => 'string',
+    'form-type'   => 'text',
+    'grid'        => '%s',
+    'grid-edit'   => true,
   ),
   'rawdate' => array(
     'type'       => 'date',
