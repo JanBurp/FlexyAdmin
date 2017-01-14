@@ -32866,10 +32866,29 @@ FlexyMessages:_flexyMessages2.default,FlexyPagination:_flexyPagination2.default,
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _flexyButton=__webpack_require__(/*! ../flexy-button.vue */ 4);var _flexyButton2=_interopRequireDefault(_flexyButton);var _flexyThumb=__webpack_require__(/*! ../flexy-thumb.vue */ 76);var _flexyThumb2=_interopRequireDefault(_flexyThumb);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}exports.default={name:'MediaPicker',components:{flexyButton:_flexyButton2.default,flexyThumb:_flexyThumb2.default},props:{'value':String,'name':String,'path':String},computed:{},data:function data(){return{media:this.value};},methods:{thumbs:function thumbs(){var media=this.media;var array=media.split('|');for(var i=0;i<array.length;i++){array[i]={src:'_media/thumb/'+this.path+'/'+array[i],alt:array[i]};}return array;},changeMedia:function changeMedia(media){this.media=media;this.$emit('input',this.media);}}};
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _vuedraggable=__webpack_require__(/*! vuedraggable */ 108);var _vuedraggable2=_interopRequireDefault(_vuedraggable);var _flexyButton=__webpack_require__(/*! ../flexy-button.vue */ 4);var _flexyButton2=_interopRequireDefault(_flexyButton);var _flexyThumb=__webpack_require__(/*! ../flexy-thumb.vue */ 76);var _flexyThumb2=_interopRequireDefault(_flexyThumb);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}exports.default={name:'MediaPicker',components:{draggable:_vuedraggable2.default,flexyButton:_flexyButton2.default,flexyThumb:_flexyThumb2.default},props:{'value':String,'name':String,'path':String},computed:{draggableOptions:function draggableOptions(){return{// group         : { name:'tree', pull:true},
+draggable:'div',forceFallback:true};}},data:function data(){return{media:this.value};},methods:{thumbs:function thumbs(){var media=this.media;var array=media.split('|');for(var i=0;i<array.length;i++){array[i]={value:array[i],src:'_media/thumb/'+this.path+'/'+array[i],alt:array[i]};}return array;},dragEnd:function dragEnd(event){var oldIndex=event.oldIndex;var newIndex=event.newIndex;var currentMedia=this.media.split('|');var newMedia=_.clone(currentMedia);newMedia.splice(newIndex,0,newMedia.splice(oldIndex,1)[0]);newMedia=_.join(newMedia,'|');this.changeMedia(newMedia);},changeMedia:function changeMedia(media){this.media=media;this.$emit('input',this.media);}}};
 
 /***/ },
-/* 112 */,
+/* 112 */
+/* unknown exports provided */
+/* all exports used */
+/*!****************************************************************************************************************************************************************************************!*\
+  !*** ./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-1ab6e8fb!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/form/mediapicker.vue ***!
+  \****************************************************************************************************************************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ./../../../../../~/css-loader/lib/css-base.js */ 1)();
+// imports
+
+
+// module
+exports.push([module.i, "\n.mediapicker .flexy-button {float:left;margin-right:.5rem;\n}\n.mediapicker .flexy-thumb {cursor:move;\n}\n", ""]);
+
+// exports
+
+
+/***/ },
 /* 113 */
 /* unknown exports provided */
 /* all exports used */
@@ -32880,6 +32899,9 @@ FlexyMessages:_flexyMessages2.default,FlexyPagination:_flexyPagination2.default,
 
 var __vue_exports__, __vue_options__
 var __vue_styles__ = {}
+
+/* styles */
+__webpack_require__(/*! !vue-style-loader!css-loader!vue-loader/lib/style-rewriter?id=data-v-1ab6e8fb!vue-loader/lib/selector?type=styles&index=0!./mediapicker.vue */ 115)
 
 /* script */
 __vue_exports__ = __webpack_require__(/*! !babel-loader!vue-loader/lib/selector?type=script&index=0!./mediapicker.vue */ 111)
@@ -32936,21 +32958,63 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
       "icon": "plus",
       "size": "xlg"
     }
-  }), " ", _vm._l((_vm.thumbs()), function(img) {
+  }), " ", _h('draggable', {
+    attrs: {
+      "list": _vm.thumbs(),
+      "options": _vm.draggableOptions
+    },
+    on: {
+      "end": function($event) {
+        _vm.dragEnd($event)
+      }
+    }
+  }, [_vm._l((_vm.thumbs()), function(img) {
     return _h('flexy-thumb', {
       attrs: {
         "size": "lg",
         "src": img.src,
-        "alt": img.alt
+        "alt": img.alt,
+        "value": img.value
       }
     })
-  })])
+  })])])
 },staticRenderFns: []}
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
      require("vue-hot-reload-api").rerender("data-v-1ab6e8fb", module.exports)
   }
+}
+
+/***/ },
+/* 115 */
+/* unknown exports provided */
+/* all exports used */
+/*!*************************************************************************************************************************************************************************************************************!*\
+  !*** ./~/vue-style-loader!./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-1ab6e8fb!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/form/mediapicker.vue ***!
+  \*************************************************************************************************************************************************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(/*! !./../../../../../~/css-loader!./../../../../../~/vue-loader/lib/style-rewriter.js?id=data-v-1ab6e8fb!./../../../../../~/vue-loader/lib/selector.js?type=styles&index=0!./mediapicker.vue */ 112);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(/*! ./../../../../../~/vue-style-loader/addStyles.js */ 2)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!./../../../../../node_modules/css-loader/index.js!./../../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-1ab6e8fb!./../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./mediapicker.vue", function() {
+			var newContent = require("!!./../../../../../node_modules/css-loader/index.js!./../../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-1ab6e8fb!./../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./mediapicker.vue");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
 }
 
 /***/ }
