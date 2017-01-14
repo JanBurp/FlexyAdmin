@@ -18,7 +18,7 @@
 
 <div id="main" class="container-fluid">
 
-  <flexy-messages :messages="state.messages"></flexy-messages>
+  <flexy-messages v-show="state.messages.length > 0" :messages="state.messages"></flexy-messages>
   
   <div id="header" class="navbar navbar-fixed-top">
     <progress class="progress progress-danger progress-striped" :value="state.progress" max="100"></progress>
