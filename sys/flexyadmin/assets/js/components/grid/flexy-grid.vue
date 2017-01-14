@@ -14,11 +14,6 @@ export default {
   props:{
     'title':String,
     'name':String,
-    // 'fields':[Object,Array],
-    // 'data':{
-    //   type: [Array,Boolean],
-    //   default:false
-    // },
     'api':{
       type: [String,Boolean],
       default:false,
@@ -39,7 +34,6 @@ export default {
       type   :[String,Object],
       default:'',
     },
-    // 'info':[Object,Array],
     'type':{
       type:String,
       default:'table',
@@ -115,7 +109,7 @@ export default {
     
     dataName : function() {
       var name = this.name;
-      if (this.gridType==='media') {
+      if (this.gridType()==='media') {
         name = 'media_'+name;
       }
       return name;
