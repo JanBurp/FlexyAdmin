@@ -1570,25 +1570,16 @@ Class Data_Core extends CI_Model {
     }
     if ( !empty($this->tm_order_by) ) {
       foreach ($this->tm_order_by as $order_by) {
-        $escape=TRUE;
+        $order_by = trim($order_by);
         $direction = '';
-        if (substr($order_by,0,1)==='_') {
-          $direction = 'DESC';
-          $order_by = substr($order_by,1);
-        }
-        // order abstract
-        if (has_string('.abstract',$order_by)) {
-          $escape=FALSE;
-          $order_by=explode(' ',$order_by);
-          $order_by=trim('`'.$order_by[0].'` '.el(1,$order_by,''));
-        }
+        $order_by = explode(' ',$order_by);
+        $direction = trim(el(1,$order_by,''));
+        $order_by = trim($order_by[0]);
         // order relations
-        elseif (has_string('.',$order_by)) {
-          $escape=FALSE;
-          $order_by=explode(' ',$order_by);
-          $order_by=trim('`'.str_replace('.','`.`',$order_by[0]).'` '.el(1,$order_by,''));
+        if (has_string('.',$order_by) and !has_string('.abstract',$order_by)) {
+          $order_by = str_replace('.','`.`',$order_by);
         }
-        $this->db->order_by( $order_by, $direction ,$escape );
+        $this->db->order_by( $order_by, $direction );
       }
     }
 
@@ -1817,7 +1808,7 @@ Class Data_Core extends CI_Model {
     $part = el( array($key,$path_info['original_field']), $result );
     // Als parent niet in resultaat zit (bij where/like statements) zoek die dan op
     if (is_null($part) and $key!==0) {
-      $sql = 'SELECT `'.$path_info['original_field'].'` FROM `'.$this->settings['table'].'` WHERE `'.$this->settings['primary_key'].'` = "'.$key.'" ORDER BY `'.implode('`,`',$this->tm_order_by).'` LIMIT 1';
+      $sql = 'SELECT `'.$path_info['original_field'].'` FROM `'.$this->settings['table'].'` WHERE `'.$this->settings['primary_key'].'` = "'.$key.'" ORDER BY '.implode(',',$this->tm_order_by).' LIMIT 1';
       $query = $this->db->query($sql);
       if ($query) {
         $row = $query->unbuffered_row('array'); ;
@@ -2074,18 +2065,6 @@ Class Data_Core extends CI_Model {
       else {
         $sort = el('order_by',$grid_set,$this->settings['order_by']);
       }
-    }
-    else {
-      $sort_field = $sort;
-      $sort_direction = '';
-      if (substr($sort,0,1)=='_') {
-        $sort_field = trim($sort,'_');
-        $sort_direction  = 'DESC';
-      }
-      if (isset($many_to_one_fields) and in_array($sort_field,$many_to_one_fields)) {
-        $sort_field = $grid_set['with']['many_to_one'][$sort_field]['result_name'].'.abstract';
-      }
-      $sort = trim($sort_field.' '.$sort_direction);
     }
     $this->order_by( $sort );
     
@@ -3869,6 +3848,12 @@ Class Data_Core extends CI_Model {
       }
       else {
         $orderby[0] = $orderby[0].' '.$direction;
+      }
+    }
+    // Vervang _field door field DESC
+    foreach ($orderby as $key => $order) {
+      if (substr($order,0,1)==='_') {
+        $orderby[$key] = trim($order,'_').' DESC';
       }
     }
     // merge met bestaande
