@@ -76,7 +76,7 @@ export default {
       var array = media.split('|');
       for (var i = 0; i < array.length; i++) {
         array[i] = {
-          src : '_media/thumb/' + this.options.schema['path'] +'/'+ array[i],
+          src : '_media/thumb/' + this.options.path +'/'+ array[i],
           alt : array[i],
         }
       }
