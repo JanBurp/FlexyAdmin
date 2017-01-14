@@ -38,12 +38,7 @@ class Show extends AdminController {
     // Data Api
     $this->data->table($name);
     if ($path) $name=$path;
-    // $data = $this->data->select_txt_abstract()->get_grid( $options['limit'], $options['offset'], $options['order'], $options['find'] );
     $api = 'table';
-    
-    // trace_($options);
-    // trace_($this->data->last_query());
-    // trace_($data);
     
     // Default order
     $options['order'] = $this->_order($options['order']);
@@ -59,7 +54,6 @@ class Show extends AdminController {
       'title'    => $this->ui->get($name),
       'name'     => $name,
       'fields'   => $fields,
-      'data'     => isset($data)?$data:null,
       'api'      => $api,
       'order'    => $options['order'],
       'offset'   => $options['offset'],

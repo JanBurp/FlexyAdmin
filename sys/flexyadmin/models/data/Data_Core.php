@@ -2194,114 +2194,114 @@ Class Data_Core extends CI_Model {
   
   
   
-  /**
-   * Creert schemaform van een standaard row uit de database
-   *
-   * @param array $row 
-   * @param string $name 
-   * @return array $schemaform
-   * @author Jan den Besten
-   */
-  public function schemaform( $row, $name='row' ) {
-    if (!is_array($row)) $row=array();
-    $this->config->load('schemaform');
-    $this->load->model('ui');
-    
-    // Alleen de rijen die in form_set ingesteld zijn
-    $row = array_keep_keys($row, $this->settings['form_set']['fields'] );
-    
-    // Default schema
-    $sf  = array(
-      'schema' => array(
-        'type'       => 'object',
-        'title'      => $name,
-        'properties' => array(),
-        'required'   => array(),
-      ),
-      'form'  => array(),
-    );
-    // Load schemaform config
-    $cfgDefault = $this->config->item('FIELDS_default');
-    $cfgPrefix  = $this->config->item('FIELDS_prefix');
-    $cfgSpecial = $this->config->item('FIELDS_special');
-    
-    foreach ($row as $name => $value) {
-      // default
-      $fieldProperties = $cfgDefault;
-      
-      // from prefix
-      $prefix = get_prefix($name);
-      if (el($prefix,$cfgPrefix)) {
-        $fieldProperties = array_merge($fieldProperties,el($prefix,$cfgPrefix));
-      }
-      // special
-      if (el($name,$cfgSpecial)) {
-        $fieldProperties = array_merge($fieldProperties,el($name,$cfgSpecial));
-      }
-      // keep only the needed info
-      $fieldProperties=array_unset_keys($fieldProperties,array('grid','form','default' )); // TODO kan (deels) weg als oude ui weg is
-      
-      // name
-      $fieldProperties['title'] = $name;
-      
-      // type (maak select als er opties zijn)
-      if (isset($this->settings['field_info'][$name]['options'])) {
-        $fieldProperties['form-type'] = 'select';
-      }
-
-      // get validation (set in field_info)
-      $validation = el( array('field_info',$name,'validation'), $this->settings, array() );
-      // split validation / required
-      $key = array_search('required',$validation);
-      if ( $key!==false ) {
-        unset($validation[$key]);
-        // Add requered
-        $sf['schema']['required'][]=$name;
-      }
-      
-      $fieldProperties['validation']=$validation;
-      
-      // Put in Schema
-      $sf['schema']['properties'][$name] = $fieldProperties;
-    }
-    
-    // FIELDSETS / TABS
-    $tabs = array();
-
-    // Prepare fieldsets
-    $default_fieldset = array( $this->settings['table'] => $this->settings['form_set']['fields'] );
-    $fieldsets = el(array('form_set','fieldsets'), $this->settings, $default_fieldset );
-    foreach ($fieldsets as $tabtitle => $items) {
-      foreach ($items as $i=>$item) {
-        $items[$i] = array(
-          'key'  => el( array('schema','properties',$item,'title'), $sf ),
-          'type' => el( array('schema','properties',$item,'form-type'), $sf ),
-        );
-      }
-      $tabs[]=array(
-        'title' => $this->ui->get($tabtitle),
-        'items' => $items,
-      );
-    }
-    // Tabs
-    if (count($tabs)>1) {
-      $sf['form'][] = array(
-        'type' => 'tabs',
-        'tabs' => $tabs,
-      );
-    }
-    // No tabs -> keep order of fields in form
-    else {
-      foreach ($sf['schema']['properties'] as $key => $item) {
-        $sf['form'][] = array(
-          'key'  => $key,
-          'type' => $item['form-type'],
-        );
-      }
-    }
-
-    return $sf;
-  }
+  // /**
+  //  * Creert schemaform van een standaard row uit de database
+  //  *
+  //  * @param array $row
+  //  * @param string $name
+  //  * @return array $schemaform
+  //  * @author Jan den Besten
+  //  */
+  // public function schemaform( $row, $name='row' ) {
+  //   if (!is_array($row)) $row=array();
+  //   $this->config->load('schemaform');
+  //   $this->load->model('ui');
+  //
+  //   // Alleen de rijen die in form_set ingesteld zijn
+  //   $row = array_keep_keys($row, $this->settings['form_set']['fields'] );
+  //
+  //   // Default schema
+  //   $sf  = array(
+  //     'schema' => array(
+  //       'type'       => 'object',
+  //       'title'      => $name,
+  //       'properties' => array(),
+  //       'required'   => array(),
+  //     ),
+  //     'form'  => array(),
+  //   );
+  //   // Load schemaform config
+  //   $cfgDefault = $this->config->item('FIELDS_default');
+  //   $cfgPrefix  = $this->config->item('FIELDS_prefix');
+  //   $cfgSpecial = $this->config->item('FIELDS_special');
+  //
+  //   foreach ($row as $name => $value) {
+  //     // default
+  //     $fieldProperties = $cfgDefault;
+  //
+  //     // from prefix
+  //     $prefix = get_prefix($name);
+  //     if (el($prefix,$cfgPrefix)) {
+  //       $fieldProperties = array_merge($fieldProperties,el($prefix,$cfgPrefix));
+  //     }
+  //     // special
+  //     if (el($name,$cfgSpecial)) {
+  //       $fieldProperties = array_merge($fieldProperties,el($name,$cfgSpecial));
+  //     }
+  //     // keep only the needed info
+  //     $fieldProperties=array_unset_keys($fieldProperties,array('grid','form','default' )); // TODO kan (deels) weg als oude ui weg is
+  //
+  //     // name
+  //     $fieldProperties['title'] = $name;
+  //
+  //     // type (maak select als er opties zijn)
+  //     if (isset($this->settings['field_info'][$name]['options'])) {
+  //       $fieldProperties['form-type'] = 'select';
+  //     }
+  //
+  //     // get validation (set in field_info)
+  //     $validation = el( array('field_info',$name,'validation'), $this->settings, array() );
+  //     // split validation / required
+  //     $key = array_search('required',$validation);
+  //     if ( $key!==false ) {
+  //       unset($validation[$key]);
+  //       // Add requered
+  //       $sf['schema']['required'][]=$name;
+  //     }
+  //
+  //     $fieldProperties['validation']=$validation;
+  //
+  //     // Put in Schema
+  //     $sf['schema']['properties'][$name] = $fieldProperties;
+  //   }
+  //
+  //   // FIELDSETS / TABS
+  //   $tabs = array();
+  //
+  //   // Prepare fieldsets
+  //   $default_fieldset = array( $this->settings['table'] => $this->settings['form_set']['fields'] );
+  //   $fieldsets = el(array('form_set','fieldsets'), $this->settings, $default_fieldset );
+  //   foreach ($fieldsets as $tabtitle => $items) {
+  //     foreach ($items as $i=>$item) {
+  //       $items[$i] = array(
+  //         'key'  => el( array('schema','properties',$item,'title'), $sf ),
+  //         'type' => el( array('schema','properties',$item,'form-type'), $sf ),
+  //       );
+  //     }
+  //     $tabs[]=array(
+  //       'title' => $this->ui->get($tabtitle),
+  //       'items' => $items,
+  //     );
+  //   }
+  //   // Tabs
+  //   if (count($tabs)>1) {
+  //     $sf['form'][] = array(
+  //       'type' => 'tabs',
+  //       'tabs' => $tabs,
+  //     );
+  //   }
+  //   // No tabs -> keep order of fields in form
+  //   else {
+  //     foreach ($sf['schema']['properties'] as $key => $item) {
+  //       $sf['form'][] = array(
+  //         'key'  => $key,
+  //         'type' => $item['form-type'],
+  //       );
+  //     }
+  //   }
+  //
+  //   return $sf;
+  // }
   
 
 

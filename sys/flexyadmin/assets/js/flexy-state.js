@@ -121,6 +121,13 @@ export default {
     
     self.debug && console.log('api > ',request);
     return Axios.request( request ).then(function (response) {
+      // trace/bug?
+      if (typeof(response.data)==='string' && response.data.substr(0,1)==='<') {
+        self.addMessage(response.data,'danger');
+        console.log('TRACE', jdb.stripHTML(response.data) );
+        var startOfObject = response.data.indexOf('{"success":');
+        response.data = JSON.parse(response.data.substr(startOfObject));
+      }
       self.hideProgress();
       self.debug && console.log('api < ',response);
       return response;
