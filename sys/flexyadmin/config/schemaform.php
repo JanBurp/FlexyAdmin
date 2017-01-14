@@ -442,6 +442,12 @@ $config['FIELDS_special'] = array(
     'validation' => 'required|trim',
     'sortable'    => false,
   ),
+  'media_thumb' => array(
+    'type'       => 'string',
+    'form-type'  => 'string',
+    'grid-type'  => 'string',
+    'sortable'    => false,
+  ),
   'type' => array(
     'type'      => 'string',
     'form-type' => 'text',
@@ -455,10 +461,11 @@ $config['FIELDS_special'] = array(
     'grid-edit'   => true,
   ),
   'rawdate' => array(
-    'type'       => 'date',
-    'form-type'  => 'hidden',
-    'grid-type'  => 'hidden',
-    'readonly'   => true,
+    'type'      => 'date',
+    'form-type' => 'hidden',
+    'grid-type' => 'hidden',
+    'readonly'  => true,
+    'sortable'  => false,
   ),
   'date' => array(
     'type'       => 'date',
