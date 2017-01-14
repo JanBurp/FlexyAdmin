@@ -99,39 +99,25 @@ class Show extends AdminController {
  * @param mixed 	$id 		id
  */
 	public function form() {
-    $isMedia = false;
     $args = func_get_args();
     $name = array_shift($args);
-    $path = false;
-    if ($name === '_media_') {
-      $name = 'res_assets';
-      $path = array_shift($args);
-      $isMedia = true;
-    }
     $id = array_shift($args);
       
     // Data
     $this->data->table($name);
-    if ($isMedia) $this->data->select('alt');
     $data = $this->data->get_form($id);
     
     $options = $this->data->get_options();
     // Fields
     $fields = $this->_prepareFields('form_set',$options);
-    if ($isMedia) {
-      $fields = array_keep_keys($fields,array('id','alt'));
-      $fieldsets = array($path=>array_keys($fields));
-    }
-    else {
-      $fieldsets = $this->data->get_setting(array('form_set','fieldsets'));
-    }
+    $fieldsets = $this->data->get_setting(array('form_set','fieldsets'));
     $fieldsetsKeys = $this->ui->get(array_keys($fieldsets));
     $fieldsets = array_combine($fieldsetsKeys,$fieldsets);
+    
     // Show form
     $form = array(
-      'title'     => ($isMedia)?$this->ui->get($path):$this->ui->get($name),
+      'title'     => $this->ui->get($name),
       'name'      => $name,
-      'path'      => $path,
       'id'        => $id,
       'fields'    => $fields,
       'fieldsets' => $fieldsets,
@@ -150,18 +136,13 @@ class Show extends AdminController {
    * @author Jan den Besten
    */
   private function _prepareFields($set='grid_set',$options=array()) {
-    if ($set==='media_set') {
-      $fields = $this->data->get_setting(array('files','thumb_select'));
-    }
-    else {
-      $fields = $this->data->get_setting(array($set,'fields'));
-    }
+    $fields = $this->data->get_setting(array($set,'fields'));
     $fields = array_combine($fields,$fields);
 
     foreach ($fields as $field => $info) {
       $fields[$field] = array(
         'name'    => $this->ui->get($field),
-        'schema'  => $this->_getSchema($field,$options)
+        'schema'  => $this->_getSchema($field,el($field,$options))
       );
       if ($validation = $this->data->get_setting(array('field_info',$field,'validation'))) $fields[$field]['schema']['validation'] = implode('|',$validation);
       if ($path = $this->data->get_setting(array('field_info',$field,'path'))) $fields[$field]['path'] = $path;
@@ -185,7 +166,7 @@ class Show extends AdminController {
    * @return array
    * @author Jan den Besten
    */
-  private function _getSchema($field,$options=array()) {
+  private function _getSchema($field,$options) {
     $schema = $this->config->item('FIELDS_default');
     // from prefix
     $fieldPrefix = get_prefix($field);
@@ -199,15 +180,12 @@ class Show extends AdminController {
       $schema = array_merge($schema,$specialSchema);
     }
     // Has options??
-    if (isset($options[$field])) {
+    if ($options) {
       $schema['form-type'] = 'select';
+      if ($fieldPrefix==='media' or $fieldPrefix==='medias') $schema['form-type'] = 'media';
     }
     // Only the needed stuff
     $schema=array_unset_keys($schema,array('grid','form','default','format' )); // TODO kan (deels) weg als oude ui weg is
-    // Most fields are read-only when media
-    if ($field==='media_thumb') $schema['sortable'] = false;
-    if ($field==='rawdate') $schema['sortable'] = false;
-    $schema = array_merge($schema,$options);
     return $schema;
   }
 

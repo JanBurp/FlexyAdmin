@@ -84,6 +84,12 @@ export default {
   .flexy-button.btn-icon.dropdown-toggle {width:3.2rem;}
   .flexy-button.btn-icon .fa {width:1rem;}
   .flexy-button.btn-text {width:auto!important;padding-right:.55rem;text-transform:uppercase;}
+
   .flexy-button.btn-lg {width:3.25rem;height:3.15rem;padding:.5rem .5rem .5rem 0;}
   .flexy-button.btn-lg .fa {font-size:2rem;}
+
+  .flexy-button.btn-xlg {width:5rem;height:5rem;padding:.7rem 1.5rem .5rem 0.15rem;}
+  .flexy-button.btn-xlg .fa {font-size:3.25rem;}
+
+
 </style>

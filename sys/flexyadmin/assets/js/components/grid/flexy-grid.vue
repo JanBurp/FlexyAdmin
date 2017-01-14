@@ -811,7 +811,7 @@ export default {
                 :name="cell.name"
                 :value="cell.value"
                 :level="rowLevel(row)"
-                :primary="{'table':dataName,'id':row.id.value}"
+                :primary="{ table:dataName, id:row.id.value }"
                 :editable="isEditable(cell.name)"
                 :readonly="isReadonly(cell.name)"
                 :options="fields[cell.name]">
