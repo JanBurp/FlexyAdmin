@@ -179,44 +179,56 @@ class Api_Model extends CI_Model {
    */
   protected function _result_ok() {
     log_message('info', 'API OK : '.array2json($this->args));
+
     // Add settings
-    if (el('settings',$this->args,false)) {
-      if (isset($this->args['table'])) {
-        $this->result['settings'] = $this->_get_settings( $this->args['table'], 'table' );
-        if ($this->args['table']==='res_assets' and isset($this->args['path'])) {
-          $this->result['settings']['media_info'] = $this->_get_settings( $this->args['path'], 'path' );
+    if (el('settings',$this->args,false) and isset($this->args['table'])) {
+      $this->data->table($this->args['table']);
+      if ( $this->args['settings']!==true and $this->args['settings']!=='true') {
+        $this->result['settings'] = array();
+        $types = explode('|',$this->args['settings']);
+        foreach ($types as $type) {
+          $this->result['settings'][$type] = $this->data->get_setting( $type );
         }
       }
-      if (isset($this->args['path'])) {
-        $this->result['settings']['media_info'] = $this->_get_settings( $this->args['path'], 'path' );
+      else {
+        $this->result['settings'] = $this->data->get_settings();
       }
     }
+
     // Prepare end result
     $this->result['success'] = true;
-    // args
+
+    // Add args
     $this->result['args'] = $this->args;
     if (isset($this->result['args']['password'])) $this->result['args']['password']='***';
     if (empty($this->result['args']['config'])) unset($this->result['args']['config']);
-    // unset some
+
+    // cleanup result
     unset($this->result['status']);
     unset($this->result['error']);
     unset($this->result['message']);
-    // error/succes
+
+    // Set error/succes 
     if ($this->error) {
       $this->result['error']=$this->error;
       $this->result['success']=false;
     }
-    // message
+    
+    // Add message
     if ($this->message) {
       $this->result['message']=$this->message;
     }
-    // format
+    
+    // Add format
     if (isset($this->args['format'])) $this->result['format']=$this->args['format'];
-    // info
+    
+    // Add info
     if (isset($this->info) and $this->info) $this->result['info']=$this->info;
-    // // options
+    
+    // // Add options
     // if (isset($this->args['options'])) $this->result['options']=$this->_add_options();
-    // user
+    
+    // Add user
     $this->result['user'] = FALSE;
     $user = $this->flexy_auth->get_user();
     if ($user) {
@@ -227,6 +239,7 @@ class Api_Model extends CI_Model {
         // 'group_name'  => $user['group_name'],
       );
     }
+    
     // cors
     if (!empty($this->cors)) {
       $this->result['cors'] = $this->cors;
@@ -410,73 +423,67 @@ class Api_Model extends CI_Model {
   }
   
   
-  /**
-   * Returns settings for table of path
-   * 
-   * @param string $what table_name or path
-   * @param string $type [table|path]
-   * @return array
-   * @author Jan den Besten
-   */
-  protected function _get_settings( $what, $type = 'table' ) {
-    $settings = null;
-    if ($type == 'table' and !empty($what) ) {
-      $settings = $this->_get_table_settings( $what );
-    }
-    elseif ($type == 'path' and !empty($what) ) {
-      $settings = $this->_get_path_settings( $what );
-    }
-    return $settings;
-  }
+  // /**
+  //  * Returns settings for table of path
+  //  *
+  //  * @param string $what table_name or path
+  //  * @param string $type [table|path]
+  //  * @return array
+  //  * @author Jan den Besten
+  //  */
+  // protected function get_settings( $what ) {
+  //
+  //   return $settings;
+  // }
   
-  /**
-   * Returns settings for table
-   * 
-   * @param string $table table_name or path
-   * @return array
-   * @author Jan den Besten
-   */
-  protected function _get_table_settings( $table ) {
-    $this->data->table( $table );
-    $settings = $this->data->get_settings();
-    $settings['options'] = $this->data->get_options();
-
-    $this->load->model('ui');
-    // field ui_names
-    if (isset($settings['field_info'])) {
-      foreach ($settings['field_info'] as $field => $info) {
-        $settings['field_info'][$field]['ui_name'] = $this->ui->get( $field, $settings['table'] );
-      }
-    }
-    $table_info = array();
-    // table ui_name
-    $table_info['ui_name']  = $this->ui->get( $settings['table'] );
-    // sortable | tree
-    $table_info['sortable'] = !in_array('order',$settings['fields']);
-    $table_info['tree']     = in_array('self_parent',$settings['fields']);
-    $settings = array_add_after( $settings, 'table', array('table_info'=>$table_info) );
-    return $settings;
-  }
-  
-  /**
-   * Returns settings for path
-   * 
-   * @param string $path path
-   * @return array
-   * @author Jan den Besten
-   */
-  protected function _get_path_settings( $path ) {
-    $this->load->model('ui');
-    $settings['ui_name'] = $this->ui->get( $path );
-    $settings['str_types'] = $this->cfg->get('cfg_media_info',$path,'str_types');
-    // $settings = array_keep_keys( $settings, array('str_types') );
-    $img_info = $this->cfg->get('cfg_img_info',$path);
-    if ($img_info) {
-      $img_info = array_keep_keys( $img_info, array('int_min_width','int_min_height') );
-      $settings = array_merge( $settings,$img_info );
-    }
-    return $settings;
-  }
+  // /**
+  //  * Returns settings for table
+  //  *
+  //  * @param string $table table_name or path
+  //  * @return array
+  //  * @author Jan den Besten
+  //  */
+  // protected function _get_table_settings( $table ) {
+  //   $this->data->table( $table );
+  //   $settings = $this->data->get_settings();
+  //   $settings['options'] = $this->data->get_options();
+  //
+  //   $this->load->model('ui');
+  //   // field ui_names
+  //   if (isset($settings['field_info'])) {
+  //     foreach ($settings['field_info'] as $field => $info) {
+  //       $settings['field_info'][$field]['ui_name'] = $this->ui->get( $field, $settings['table'] );
+  //     }
+  //   }
+  //   $table_info = array();
+  //   // table ui_name
+  //   $table_info['ui_name']  = $this->ui->get( $settings['table'] );
+  //   // sortable | tree
+  //   $table_info['sortable'] = !in_array('order',$settings['fields']);
+  //   $table_info['tree']     = in_array('self_parent',$settings['fields']);
+  //   $settings = array_add_after( $settings, 'table', array('table_info'=>$table_info) );
+  //   return $settings;
+  // }
+  //
+  // /**
+  //  * Returns settings for path
+  //  *
+  //  * @param string $path path
+  //  * @return array
+  //  * @author Jan den Besten
+  //  */
+  // protected function _get_path_settings( $path ) {
+  //   $this->load->model('ui');
+  //   $settings['ui_name'] = $this->ui->get( $path );
+  //   $settings['str_types'] = $this->cfg->get('cfg_media_info',$path,'str_types');
+  //   // $settings = array_keep_keys( $settings, array('str_types') );
+  //   $img_info = $this->cfg->get('cfg_img_info',$path);
+  //   if ($img_info) {
+  //     $img_info = array_keep_keys( $img_info, array('int_min_width','int_min_height') );
+  //     $settings = array_merge( $settings,$img_info );
+  //   }
+  //   return $settings;
+  // }
   
 }
 
