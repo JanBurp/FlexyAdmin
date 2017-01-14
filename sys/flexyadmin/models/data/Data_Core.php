@@ -1608,16 +1608,8 @@ Class Data_Core extends CI_Model {
     }
     if ( !empty($this->tm_order_by) ) {
       foreach ($this->tm_order_by as $order_by) {
-        $order_by = trim($order_by);
-        $direction = '';
-        $order_by = explode(' ',$order_by);
-        $direction = trim(el(1,$order_by,''));
-        $order_by = trim($order_by[0]);
-        // order relations
-        if (has_string('.',$order_by) and !has_string('.abstract',$order_by)) {
-          $order_by = str_replace('.','`.`',$order_by);
-        }
-        $this->db->order_by( $order_by, $direction );
+        $split = $this->_split_order($order_by);
+        $this->db->order_by( $split['field'], $split['direction'] );
       }
     }
 
@@ -1635,6 +1627,28 @@ Class Data_Core extends CI_Model {
     $this->tm_query_prepared = TRUE;
     return $this;
   }
+  
+  /**
+   * Split één order item in veld en direction
+   *
+   * @param string $order 
+   * @return array ['field'=>'...','direction'=>['ASC','DESC']] 
+   * @author Jan den Besten
+   */
+  private function _split_order($order) {
+    $order     = trim($order);
+    $direction = '';
+    $order     = explode(' ',$order);
+    $direction = trim(el(1,$order,'ASC'));
+    $order     = trim($order[0]);
+    // Relations?
+    if (has_string('.',$order) and !has_string('.abstract',$order)) {
+      $order = str_replace('.','`.`',$order);
+    }
+    return array('field'=>$order,'direction'=>$direction);
+  }
+  
+  
   
   
   /**
@@ -1846,7 +1860,12 @@ Class Data_Core extends CI_Model {
     $part = el( array($key,$path_info['original_field']), $result );
     // Als parent niet in resultaat zit (bij where/like statements) zoek die dan op
     if (is_null($part) and $key!==0) {
-      $sql = 'SELECT `'.$path_info['original_field'].'` FROM `'.$this->settings['table'].'` WHERE `'.$this->settings['primary_key'].'` = "'.$key.'" ORDER BY '.implode(',',$this->tm_order_by).' LIMIT 1';
+      $order = array();
+      foreach ($this->tm_order_by as $order_by) {
+        $split = $this->_split_order($order_by);
+        $order[]='`'.$split['field'].'` '.$split['direction'];
+      }
+      $sql = 'SELECT `'.$path_info['original_field'].'` FROM `'.$this->settings['table'].'` WHERE `'.$this->settings['primary_key'].'` = "'.$key.'" ORDER BY '.implode(',',$order).' LIMIT 1';
       $query = $this->db->query($sql);
       if ($query) {
         $row = $query->unbuffered_row('array'); ;
@@ -3910,7 +3929,6 @@ Class Data_Core extends CI_Model {
     $this->tm_order_by = array_merge( $this->tm_order_by, $orderby );
     return $this;
   }
-  
   
   /**
    * Zelfde als bij Query Builder, met als extra dat de limit instelling wordt bewaard voor intern gebruik.
