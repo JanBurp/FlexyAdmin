@@ -183,15 +183,22 @@ class Api_Model extends CI_Model {
     // Add settings
     if (el('settings',$this->args,false) and isset($this->args['table'])) {
       $this->data->table($this->args['table']);
+      $this->data->add_schemaform_info();
       if ( $this->args['settings']!==true and $this->args['settings']!=='true') {
         $this->result['settings'] = array();
         $types = explode('|',$this->args['settings']);
         foreach ($types as $type) {
-          $this->result['settings'][$type] = $this->data->get_setting( $type );
+          $type_elements = explode('.',$type);
+          $this->result['settings'][$type] = $this->data->get_setting( $type_elements );
         }
       }
       else {
         $this->result['settings'] = $this->data->get_settings();
+      }
+      // Alleen field_info van gevraagde velden
+      if (isset($this->result['settings']['field_info']) and $this->args['as_grid']) {
+        $fields = $this->data->get_setting(array('grid_set','fields'));
+        $this->result['settings']['field_info'] = array_keep_keys($this->result['settings']['field_info'],$fields);
       }
     }
 
