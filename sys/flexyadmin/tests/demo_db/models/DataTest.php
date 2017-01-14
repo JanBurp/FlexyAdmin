@@ -519,6 +519,26 @@ class DataTest extends CITestCase {
     $this->assertGreaterThanOrEqual( 1, count($found) );
     $this->assertLessThan( count($row['tbl_adressen']), count($found) );
   }
+  
+  public function test_order() {
+    $this->CI->data->table( 'tbl_menu' );
+
+    $this->CI->data->order_by('uri');
+    $first = $this->CI->data->select('id,uri,str_title,str_module')->get_row();
+    $this->assertEquals( 'contact', $first['uri'] );
+
+    $this->CI->data->order_by('uri','DESC');
+    $first = $this->CI->data->select('id,uri,str_title,str_module')->get_row();
+    $this->assertEquals( 'subpagina', $first['uri'] );
+
+    $this->CI->data->order_by('uri DESC');
+    $first = $this->CI->data->select('id,uri,str_title,str_module')->get_row();
+    $this->assertEquals( 'subpagina', $first['uri'] );
+
+    $this->CI->data->order_by('_uri');
+    $first = $this->CI->data->select('id,uri,str_title,str_module')->get_row();
+    $this->assertEquals( 'subpagina', $first['uri'] );
+  }
 
   public function test_find() {
     $this->CI->data->table('tbl_kinderen');
