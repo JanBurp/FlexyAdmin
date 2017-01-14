@@ -18,7 +18,7 @@ export default {
 </script>
 
 <template>
-  <div id="messages" class="navbar navbar-fixed-bottom">
+  <div id="messages" class="navbar navbar-fixed-top">
     <transition-group name="slideUp" tag="div">
       <div v-for="(message,id) in state.messages" :key="message" class="alert" :class="typeClass(message)">
         <flexy-button @click.native="removeMessage(id)" icon="close" v-if="message.type==='danger'" class="btn-danger message-button" />
