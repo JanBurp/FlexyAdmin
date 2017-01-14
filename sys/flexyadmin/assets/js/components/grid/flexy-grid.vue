@@ -486,6 +486,10 @@ export default {
       this.reloadPage({offset:0,filter:find});
     },
     
+    findChanged : function() {
+      if (this.findTerm==='') this.stopFind();
+    },
+    
     stopFind : function() {
       this.findTerm = '';
       this.extendedFind = false;
@@ -697,7 +701,9 @@ export default {
       <h1>{{title}}</h1>
       <!-- FAST SEARCH -->
       <form class="form-inline" @submit="startFinding($event)">
-        <div class="form-group" v-if="!extendedFind"><input type="text" v-model.trim="findTerm" class="form-control form-control-sm" id="grid-find" :placeholder="$lang.grid_fast_search"></div>
+        <div class="form-group" v-if="!extendedFind">
+          <input type="text" v-model.trim="findTerm" class="form-control form-control-sm" id="grid-find" :placeholder="$lang.grid_fast_search" @input="findChanged()">
+        </div>
         <div class="btn-group">
           <flexy-button @click.native.stop.prevent="startFinding($event)" icon="search" class="btn-default" />
           <flexy-button @click.native.stop.prevent="stopFind()" icon="remove" class="btn-default text-danger" v-if="findTerm!=='' || extendedFind" />
