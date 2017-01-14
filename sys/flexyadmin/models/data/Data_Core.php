@@ -1164,6 +1164,37 @@ Class Data_Core extends CI_Model {
     return $this;
   }
   
+  /**
+   * Voegt aan field_info in de settings, ook nog informatie uit schemaform toe
+   *
+   * @return void
+   * @author Jan den Besten
+   */
+  public function add_schemaform_info() {
+    $this->load->model('ui');
+    $this->config->load('schemaform',true);
+    $schemaform = $this->config->item('schemaform');
+    
+    $field_info = $this->settings['field_info'];
+    foreach ($field_info as $field => $info) {
+      // Default
+      $schema = $schemaform['FIELDS_default'];
+      // UI name
+      $schema['name'] = $this->ui->get($field);
+      // from prefix
+      $fieldPrefix  = get_prefix($field);
+      $schema       = array_merge($schema, el(array('FIELDS_prefix',$fieldPrefix),$schemaform,array()) );
+      // Special fields
+      $schema       = array_merge($schema, el(array('FIELDS_special',$field),$schemaform,array()) );
+      // Select if there are options set
+      if (isset($info['options'])) $schema['form-type'] = 'select';
+      
+      // Cleanup
+      $schema=array_unset_keys($schema,array('grid','form','default','format' ));
+      $this->settings['field_info'][$field]['schema'] = $schema;
+    }
+    return $this;
+  }
 
 
   /**
@@ -1178,7 +1209,6 @@ Class Data_Core extends CI_Model {
     return el( $key, $this->settings, el( $key, $this->autoset, $default ) );
   }
   
-
   /**
    * Geeft alle settings
    *
