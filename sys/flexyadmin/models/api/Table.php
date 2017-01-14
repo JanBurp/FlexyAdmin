@@ -13,10 +13,10 @@
  * - `[filter='']`              // Eventuele string waarop alle data wordt gefilterd
  * - `[as_grid=FALSE]`          // Als `TRUE`, dan wordt de data als specifieke grid formaat teruggegeven zoals het de backend van de CMS wordt getoond. NB Kan onderstaande opties overrulen!
  * - `[txt_abstract=0]`         // Als `TRUE`, dan bevatten velden met de `txt_` prefix een ingekorte tekst zonder HTML tags. Of een integer waarde voor de lengte.
+
  * - `[as_options=FALSE]`       // Als `TRUE`, dan wordt de data als opties teruggegeven die gebruikt kunnen worden in een dropdown field bijvoorbeeld. (`limit` en `offset` werken dan niet)
  * - `[options=FALSE]`          // Als `TRUE`, dan worden de mogelijke waarden van velden meegegeven.
  * - `[settings=FALSE]`         // Instellingen van de gevraagde tabel
- * - `[schemaform=FALSE]`       // Als TRUE dan wordt een json schemaform van het formulier toegevoegd (zie http://schemaform.io)
  * 
  * 
  * ###Voorbeelden:
@@ -197,11 +197,6 @@ class Table extends Api_Model {
     
     // Info
     $this->info = $this->data->get_query_info();
-    
-    // Schemaform
-    if ( el('schemaform',$this->args,false) ) {
-      $this->result['schemaform'] = $this->data->schemaform( current($items), el('table',$this->args) );
-    }
     
     return $items;
   }

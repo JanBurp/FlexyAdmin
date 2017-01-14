@@ -134,6 +134,18 @@ export default {
       return (c=='x' ? r : (r&0x3|0x8)).toString(16);
     });
     return uuid;
-  }
+  },
+  
+  
+  /**
+   * jdb.stripHTML()
+   * 
+   * Verwijderd alle tags van meegegeven string
+   * @return String
+   */
+  stripHTML : function(s) {
+    return s.replace(/(<([^>]+)>)/ig,"");
+  },
+  
   
 };

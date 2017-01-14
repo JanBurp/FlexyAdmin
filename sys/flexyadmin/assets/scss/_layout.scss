@@ -18,11 +18,13 @@
 /* MESSAGES */
 #messages {
   position:fixed;
-  bottom:0px;
-  margin-bottom:0px;
+  top:-1px;
+  max-height:100%;
+  overflow:auto;
+  z-index:99999999;
 }
 .message-text {width:90%;}
-.message-button {float:right;margin-top:-.25rem;}
+.message-button {float:right;}
 
 
 /* CONTENT */

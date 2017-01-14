@@ -121,31 +121,6 @@ export default {
     },
     
     /**
-     * Bepaal het type grid: table, ordered of tree
-     */
-    gridType : function() {
-      var type=this.type;
-      if (typeof(this.fields.order)!=='undefined' && (this.order==='' || this.order==='order') && this.filter==='') type='ordered';
-      if (typeof(this.fields.self_parent)!=='undefined' && (this.order==='' || this.order==='order') && this.filter==='') type='tree';
-      return type;
-    },
-    /**
-     * Geeft class van type grid
-     */
-    gridTypeClass : function() {
-      var c = 'grid-type-'+this.gridType;
-      if (this.gridType==='media') {
-        c += ' grid-media-view-'+this.getMediaView();
-      }
-      return c;
-    },
-    /**
-     * Test if grid needs pagination
-     */
-    needsPagination : function(){
-      return (typeof(this.dataInfo.num_pages)!=='undefined' &&  this.dataInfo.num_pages > 1);
-    },
-    /**
      * Options for draggable
      */
     draggableOptions : function() {
@@ -166,10 +141,10 @@ export default {
   
   methods:{
     
-    reloadPage : function(uriparts) {
+    reloadPage : function(apiParts) {
       var self = this;
       flexyState.api({
-        url       : self.apiUrl(uriparts),
+        url       : self.apiUrl(apiParts),
       })
       .then(function(response){
         if (!_.isUndefined(response.data)) {
@@ -195,6 +170,7 @@ export default {
         url += '?table='+this.name + '&txt_abstract='+parts.txt_abstract + '&as_grid='+parts.as_grid;
       }
       url += '&offset='+parts.offset + '&limit='+parts.limit + '&order='+parts.order + '&filter={'+jdb.encodeURL(parts.filter)+'}';
+      url += '&settings=fields|field_info';
       return url;
     },
     
@@ -205,7 +181,6 @@ export default {
       // return location.pathname + '?options={"offset":"'+parts.offset+'","order":"'+parts.order+'","find":"'+jdb.encodeURL(parts.find)+'"}';
     },
     
-    
     hasData : function() {
       return this.items.length>0;
     },
@@ -215,7 +190,7 @@ export default {
     */
     addInfo : function(items,addSchema) {
       var data     = items;
-      var isTree   = this.gridType=='tree';
+      var isTree   = this.gridType()=='tree';
       if (isTree) {
         var parents    = {};
         var level      = 0;
@@ -298,6 +273,26 @@ export default {
       return data;
     },
     
+    gridType : function() {
+      var type = this.type;
+      if (typeof(this.fields.order)!=='undefined' && (this.apiParts.order==='' || this.apiParts.order==='order') && this.apiParts.filter==='') type='ordered';
+      if (typeof(this.fields.self_parent)!=='undefined' && (this.apiParts.order==='' || this.apiParts.order==='order') && this.apiParts.filter==='') type='tree';
+      return type;
+    },
+
+    gridTypeClass : function() {
+      var c = 'grid-type-'+this.gridType();
+      if (this.gridType()==='media') {
+        c += ' grid-media-view-'+this.getMediaView();
+      }
+      return c;
+    },
+    
+    needsPagination : function(){
+      return (typeof(this.dataInfo.num_pages)!=='undefined' &&  this.dataInfo.num_pages > 1);
+    },
+    
+    
     isPrimaryHeader : function(field) {
       var headerType = field.schema['grid-type'] || field.schema['form-type'];
       return headerType==='primary'
@@ -308,7 +303,7 @@ export default {
     },
 
     isMediaThumbs : function() {
-      return (this.gridType==='media' && this.getMediaView()==='thumbs');
+      return (this.gridType()==='media' && this.getMediaView()==='thumbs');
     },
     
     getMediaView : function() {
@@ -386,7 +381,7 @@ export default {
     },
     
     newItem : function() {
-      if (this.gridType==='media') {
+      if (this.gridType()==='media') {
         var event = new MouseEvent('click', {
           'view': window,
           'bubbles': true,
@@ -422,7 +417,7 @@ export default {
             table : self.name,
             where : removeIds,
           };
-          if (self.gridType==='media') data.table = 'res_assets';
+          if (self.gridType()==='media') data.table = 'res_assets';
           return flexyState.api({
             url   : 'row',
             data  : data,
@@ -460,7 +455,7 @@ export default {
     
     editUrl : function(id) {
       var url = '';
-      if (this.gridType==='media') {
+      if (this.gridType()==='media') {
         url = 'admin/show/form/_media_/'+ this.name+'/'+id;
       }
       else {
@@ -578,7 +573,7 @@ export default {
       this.draggable.oldItems = _.cloneDeep(this.items);
       // Als tree, onthoud dan de children als die er zijn
       this.draggable.children = false;
-      if (this.gridType==='tree' && this.items[index]._info.has_children) {
+      if (this.gridType()==='tree' && this.items[index]._info.has_children) {
         this.draggable.children = [];
         var row = this.items[index]._info;
         var childIndex = index;
@@ -603,7 +598,7 @@ export default {
         this.draggable.newIndex = newIndex;
         
         var parent_id = 0; 
-        if (this.gridType==='tree') {
+        if (this.gridType()==='tree') {
           var items = _.cloneDeep(this.draggable.oldItems);
           var number_of_children = this.draggable.children.length || 0;
           // Pas parent van verplaatste item aan
@@ -624,7 +619,7 @@ export default {
           order++;
         }
         // Vernieuw de tree info
-        if (this.gridType=='tree') this.items = this.addInfo(this.items);
+        if (this.gridType()=='tree') this.items = this.addInfo(this.items);
         
         if (flexyState.debug) {
           console.log( 'draggable_onEnd ---------' );
@@ -674,7 +669,7 @@ export default {
     _log : function( items ) {
       var self = this;
       _.forEach(items,function(row){
-        if (self.gridType==='tree') {
+        if (self.gridType()==='tree') {
           console.log( row.id.value, row.order.value, 'tree:', row._info.level, row._info.is_child,row._info.has_children, row.str_title.value);
         }
         else {
@@ -688,7 +683,7 @@ export default {
 </script>
 
 <template>
-  <div class="card grid" :class="gridTypeClass" @dragover.prevent  @drop="dropUploadFiles">
+  <div class="card grid" :class="gridTypeClass()" @dragover.prevent  @drop="dropUploadFiles">
     <!-- MAIN HEADER -->
     <div class="card-header">
       <h1>{{title}}</h1>
@@ -732,7 +727,7 @@ export default {
     </div>
 
     <!-- UPLOAD BOX -->
-    <div v-if="gridType==='media'" class="card-block grid-upload">
+    <div v-if="gridType()==='media'" class="card-block grid-upload">
       <div class="grid-upload-dropbox"><flexy-button @click.native="newItem()" icon="plus" class="btn-warning" />{{$lang.upload_choose}}</div>
       <input id="browsefiles" @change="addUploadFiles"  type="file" name="files[]" multiple="multiple">
       <table class="table table-sm" v-show="uploadFiles.length > 0">
@@ -752,7 +747,7 @@ export default {
           <tr>
             <template v-for="(field,key) in fields">
               <th v-if="isPrimaryHeader(field)" :class="headerClass(field)" class="text-primary grid-actions">
-                <flexy-button v-if="gridType!=='media'" @click.native="newItem()" icon="plus" class="btn-outline-warning" />
+                <flexy-button v-if="gridType()!=='media'" @click.native="newItem()" icon="plus" class="btn-outline-warning" />
                 <flexy-button @click.native="removeItems()" icon="remove" :class="{disabled:!hasSelection()}" class="btn-outline-danger" />
                 <flexy-button @click.native="reverseSelection()" icon="dot-circle-o" class="btn-outline-info" />
                 
@@ -786,10 +781,10 @@ export default {
               
               <!-- PRIMARY CELL -->
               <td v-if="cell.type=='primary'" class="action">
-                <flexy-button v-if="gridType!=='media'" @click.native="editItem(cell.value)" icon="pencil" class="btn-outline-warning" />
+                <flexy-button v-if="gridType()!=='media'" @click.native="editItem(cell.value)" icon="pencil" class="btn-outline-warning" />
                 <flexy-button @click.native="removeItems(row.id.value)" icon="remove" class="btn-outline-danger" />
                 <flexy-button @click.native="select(row.id.value)" :icon="{'circle-o':!isSelected(row.id.value),'circle':isSelected(row.id.value)}" class="btn-outline-info" />
-                <flexy-button v-if="gridType==='tree' || gridType==='ordered'" icon="arrows-v" class="draggable-handle btn-outline-info" :class="{'active':isDragging(row.id.value)}" />
+                <flexy-button v-if="gridType()==='tree' || gridType()==='ordered'" icon="arrows-v" class="draggable-handle btn-outline-info" :class="{'active':isDragging(row.id.value)}" />
               </td>
               
               <!-- CELL -->
@@ -813,7 +808,7 @@ export default {
     </div>
     <!-- FOOTER -->
     <div class="card-footer text-muted">
-      <div class="btn-group actions" v-if="gridType === 'media'">
+      <div class="btn-group actions" v-if="gridType() === 'media'">
         <template v-if="getMediaView()==='list'">
           <flexy-button icon="bars" class="btn-primary" border="true" />
           <flexy-button icon="picture-o" @click.native="setMediaView('thumbs')" class="btn-outline-primary" border="true"/>
@@ -823,8 +818,8 @@ export default {
           <flexy-button icon="picture-o" class="btn-primary" border="true"/>
         </template>
       </div>
-      <flexy-pagination v-if="needsPagination" :total="dataInfo.total_rows" :pages="dataInfo.num_pages" :current="dataInfo.page + 1" :limit="dataInfo.limit" @newpage="reloadPage({offset:$event})"></flexy-pagination>
-      <div v-if="!needsPagination" class="pagination-container">
+      <flexy-pagination v-if="needsPagination()" :total="dataInfo.total_rows" :pages="dataInfo.num_pages" :current="dataInfo.page + 1" :limit="dataInfo.limit" @newpage="reloadPage({offset:$event})"></flexy-pagination>
+      <div v-if="!needsPagination()" class="pagination-container">
         <span class="pagination-info text-primary">{{$lang.grid_total | replace(dataInfo.total_rows)}}</span>
       </div>
     </div>
