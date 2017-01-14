@@ -445,7 +445,7 @@ $config['FIELDS_special'] = array(
   'media_thumb' => array(
     'type'       => 'string',
     'form-type'  => 'string',
-    'grid-type'  => 'string',
+    'grid-type'  => 'media',
     'sortable'    => false,
   ),
   'type' => array(

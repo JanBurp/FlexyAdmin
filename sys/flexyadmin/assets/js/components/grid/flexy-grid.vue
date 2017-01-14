@@ -14,11 +14,11 @@ export default {
   props:{
     'title':String,
     'name':String,
-    'fields':[Object,Array],
-    'data':{
-      type: [Array,Boolean],
-      default:false
-    },
+    // 'fields':[Object,Array],
+    // 'data':{
+    //   type: [Array,Boolean],
+    //   default:false
+    // },
     'api':{
       type: [String,Boolean],
       default:false,
@@ -52,22 +52,23 @@ export default {
   * - Bij een tree: voeg informatie aan elke row toe: {level:(int),is_child:(bool),has_children:(bool)}
   */
   created : function() {
-    if (this.data) {
-      this.items = this.addInfo( this.data, true );
-    }
-    else {
+    // if (this.data) {
+    //   this.items = this.addInfo( this.data, true );
+    // }
+    // else {
       this.reloadPage({
         offset : this.offset,
         limit  : this.limit,
         order  : this.order,
         filter : this.filter,
       });
-    }
+    // }
   },
   
   data : function() {
     return {
       items       : [],
+      fields      : [],
       dataInfo    : {},
       selected    : [],
       apiParts    : {
@@ -149,7 +150,13 @@ export default {
       .then(function(response){
         if (!_.isUndefined(response.data)) {
           if (response.data.success) {
+            // Stel url in van browser
             self.newUrl();
+            // Zijn er settings meegekomen?
+            if ( !_.isUndefined(response.data.settings) ) {
+              self.fields = response.data.settings.field_info;
+            }
+            // Data en die aanvullen met data
             var data = response.data.data;
             self.items = self.addInfo( data, true );
             self.dataInfo = response.data.info;
@@ -170,7 +177,7 @@ export default {
         url += '?table='+this.name + '&txt_abstract='+parts.txt_abstract + '&as_grid='+parts.as_grid;
       }
       url += '&offset='+parts.offset + '&limit='+parts.limit + '&order='+parts.order + '&filter={'+jdb.encodeURL(parts.filter)+'}';
-      url += '&settings=fields|field_info';
+      if (this.fields.length==0) url += '&settings=field_info';
       return url;
     },
     
@@ -427,7 +434,7 @@ export default {
               flexyState.addMessage( self.$lang.error_delete, 'danger');
             }
             else {
-              flexyState.addMessage( self.$options.filters.replace( self.$lang.deleted, removeIds.length), 'danger');
+              flexyState.addMessage( self.$options.filters.replace( self.$lang.deleted, removeIds.length));
               self.reloadPage();
             }
             return response;
@@ -708,7 +715,7 @@ export default {
         </div>
         <div class="form-group grid-extended-search-field" :class="{'has-danger':!term.field}">
           <select class="form-control form-control-sm" name="grid-extended-search-field[]" v-model="term.field">
-            <option v-for="(field,key) in fields" :value="key" :selected="term.field===key">{{field.name}}</option>
+            <option v-for="(field,key) in fields" :value="key" :selected="term.field===key">{{field.schema.name}}</option>
           </select>
         </div>
         <div class="form-group grid-extended-search-equals">
@@ -757,14 +764,14 @@ export default {
                     <a v-for="(field,key) in fields" v-if="field.schema.sortable" @click="reloadPage({'order':(key==apiParts.order?'_'+key:key)})" class="dropdown-item" :class="{'selected':(apiParts.order.indexOf(key)>=0)}">
                       <span v-if="apiParts.order==key" class="fa fa-caret-up"></span>
                       <span v-if="apiParts.order=='_'+key" class="fa fa-caret-down"></span>
-                      {{field.name}}
+                      {{field.schema.name}}
                     </a>
                   </div>
                 </div>
                 
               </th>
               <th v-if="isNormalVisibleHeader(field)" :class="headerClass(field)"  class="text-primary">
-                <a @click="reloadPage({'order':(key==apiParts.order?'_'+key:key)})"><span>{{field.name}}</span>
+                <a @click="reloadPage({'order':(key==apiParts.order?'_'+key:key)})"><span>{{field.schema.name}}</span>
                   <span v-if="apiParts.order==key" class="fa fa-caret-up"></span>
                   <span v-if="apiParts.order=='_'+key" class="fa fa-caret-down"></span>
                 </a>  
