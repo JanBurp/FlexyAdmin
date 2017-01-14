@@ -115,7 +115,7 @@ class DataTest extends CITestCase {
     $this->assertArrayHasKey( 'multiple', $options );
     $this->assertEquals( TRUE, $options['multiple'] );
     $this->assertArrayHasKey( 'data', $options );
-    $this->assertEquals( 0, count($options['data']) );
+    $this->assertEquals( 2, count($options['data']) );
     // $current = current($options['data']);
     // $this->assertArrayHasKey( 'name', $current);
     // $this->assertInternalType( 'array', $current['name']);
@@ -187,7 +187,7 @@ class DataTest extends CITestCase {
     $this->assertEquals( 'pictures', $options['path'] );
     $this->assertArrayNotHasKey( 'multiple', $options );
     $this->assertArrayHasKey( 'data', $options );
-    $this->assertEquals( 0, count($options['data']) );
+    $this->assertEquals( 2, count($options['data']) );
     // $current = current($options['data']);
     // $this->assertArrayHasKey( 'name', $current);
     // $this->assertArrayHasKey( 'value', $current);
