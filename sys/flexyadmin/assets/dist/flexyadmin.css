@@ -4153,9 +4153,6 @@ a > .fa, .btn > .fa {
   color: #696 !important; }
 
 /* TABS */
-.nav-tabs > li > a.nav-link {
-  text-transform: uppercase; }
-
 /* PAGINATION */
 .pagination-container {
   width: 100%;
@@ -4521,7 +4518,6 @@ a > .fa, .btn > .fa {
   display: none; }
 
 .form-control-label {
-  text-transform: uppercase;
   font-weight: bold;
   padding-top: .5rem;
   padding-bottom: 0;
@@ -4530,11 +4526,14 @@ a > .fa, .btn > .fa {
   text-overflow: ellipsis;
   white-space: nowrap; }
 
-.form-group.row:not(.has-danger):hover input, .form-group.row:not(.has-danger):hover select, .form-group.row:not(.has-danger):hover textarea, .form-group.row:not(.has-danger):hover .mce-tinymce, .form-group.row:not(.has-danger):hover .form-control:focus {
-  border-color: #696; }
+input, select, textarea, .mce-tinymce, .form-control, .mediapicker {
+  border-color: #818a91 !important; }
 
-.form-control:focus {
-  border-color: #696; }
+.form-group.row:not(.has-danger):hover label {
+  color: #696; }
+
+.form-group.row:not(.has-danger):hover input, .form-group.row:not(.has-danger):hover select, .form-group.row:not(.has-danger):hover textarea, .form-group.row:not(.has-danger):hover .mce-tinymce, .form-group.row:not(.has-danger):hover .form-control:focus, .form-group.row:not(.has-danger):hover .mediapicker {
+  border-color: #696 !important; }
 
 .card.form .form-group.row:hover {
   border-radius: 0.25rem;
@@ -4595,5 +4594,10 @@ body.mce-fullscreen .mce-tinymce {
 .datepicker-dateRange span:hover,
 .datepicker-dateRange-item-hover {
   background: #D90 !important; }
+
+.mediapicker {
+  border: solid 1px transparent;
+  border-radius: 0.25rem;
+  padding: .5rem; }
 
 /*# sourceMappingURL=flexyadmin.css.map*/

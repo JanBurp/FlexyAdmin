@@ -1,6 +1,6 @@
 // Label styling
 .form-control-label {
-  text-transform:uppercase;
+//  text-transform:uppercase;
   font-weight:bold;
   padding-top:.5rem;
   padding-bottom:0;
@@ -11,15 +11,16 @@
 }
 
 // Input Border color
+input, select, textarea, .mce-tinymce, .form-control, .mediapicker {
+  border-color:$gray-light!important;
+};
+
 .form-group.row:not(.has-danger):hover {
-  input, select, textarea, .mce-tinymce, .form-control:focus {
-    border-color:$brand-primary;
+  label {color:$brand-primary;}
+  input, select, textarea, .mce-tinymce, .form-control:focus, .mediapicker {
+    border-color:$brand-primary!important;
   };
 }
-.form-control:focus {
-  border-color:$brand-primary;
-}
-
 
 
 // Background row
@@ -103,4 +104,10 @@ body.mce-fullscreen .mce-tinymce{
 .datepicker-dateRange span:hover,
 .datepicker-dateRange-item-hover {
   background: $brand-warning!important;
+}
+
+.mediapicker {
+  border:solid 1px transparent;
+  border-radius:$border-radius;
+  padding:.5rem;
 }

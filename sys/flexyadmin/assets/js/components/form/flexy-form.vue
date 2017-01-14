@@ -5,9 +5,12 @@ import jdb              from '../../jdb-tools.js'
 import flexyState       from '../../flexy-state.js'
 import flexyButton      from '../flexy-button.vue'
 
+import flexyThumb       from '../flexy-thumb.vue'
+
 import timepicker       from './timepicker.vue'
 import datetimepicker   from './datetimepicker.vue'
 import colorpicker      from './colorpicker.vue'
+import mediapicker      from './mediapicker.vue'
 
 import tab              from '../../vue-strap-src/components/Tab.vue'
 import tabs             from '../../vue-strap-src/components/Tabs.vue'
@@ -15,7 +18,7 @@ import datepicker       from '../../vue-strap-src/Datepicker.vue'
 
 export default {
   name: 'FlexyForm',
-  components: {flexyButton,timepicker,datetimepicker,colorpicker,tab,tabs,datepicker},
+  components: {flexyButton,flexyThumb,timepicker,datetimepicker,colorpicker,mediapicker,tab,tabs,datepicker},
   props:{
     'title':String,
     'name':String,
@@ -37,7 +40,8 @@ export default {
         timepicker        : ['time'],
         datetimepicker    : ['datetime'],
         colorpicker       : ['color','rgb'],
-        select            : ['select','media'],
+        mediapicker       : ['media','medias'],
+        select            : ['select'],
         textarea          : ['textarea'],
         wysiwyg           : ['wysiwyg'],
       };
@@ -298,6 +302,11 @@ export default {
                 <template v-if="isType('colorpicker',field)">
                   <!-- Colorpicker -->
                   <colorpicker :id="field" :name="field" :value="row[field]" v-on:input="updateField(field,$event)"></colorpicker>
+                </template>
+
+                <template v-if="isType('mediapicker',field)">
+                  <!-- Mediapiacker -->
+                  <mediapicker :id="field" :name="field" :value="row[field]" :path="options[field].path" v-on:input="updateField(field,$event)"></mediapicker>
                 </template>
 
                 <template v-if="isType('select',field)">
