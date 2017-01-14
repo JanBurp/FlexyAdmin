@@ -3,7 +3,6 @@
   api='<?=$api?>'
   name="<?=$name?>"
   title="<?=$title?>"
-  :fields='<?=array2json($fields)?>'
   offset='<?=$offset?>'
   limit="<?=$limit?>"
   order="<?=$order?>"

@@ -1170,12 +1170,17 @@ Class Data_Core extends CI_Model {
    * @return void
    * @author Jan den Besten
    */
-  public function add_schemaform_info() {
+  public function add_schemaform_info($fields=array(),$extra=array()) {
     $this->load->model('ui');
     $this->config->load('schemaform',true);
     $schemaform = $this->config->item('schemaform');
     
     $field_info = $this->settings['field_info'];
+    // Extra velden?
+    if ($fields) {
+      $fields = array_combine($fields,$fields);
+      $field_info = array_merge($field_info,$fields);
+    }
     foreach ($field_info as $field => $info) {
       // Default
       $schema = $schemaform['FIELDS_default'];
@@ -1188,6 +1193,8 @@ Class Data_Core extends CI_Model {
       $schema       = array_merge($schema, el(array('FIELDS_special',$field),$schemaform,array()) );
       // Select if there are options set
       if (isset($info['options'])) $schema['form-type'] = 'select';
+      // Extra
+      $schema = array_merge($schema,$extra);
       
       // Cleanup
       $schema=array_unset_keys($schema,array('grid','form','default','format' ));

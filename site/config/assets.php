@@ -1,6 +1,6 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/* --- Settings for Assets --- Created @ Fri 13 January 2017, 23:13 */
+/* --- Settings for Assets --- Created @ Sat 14 January 2017, 10:51 */
 
 /* EXAMPLE:
 
