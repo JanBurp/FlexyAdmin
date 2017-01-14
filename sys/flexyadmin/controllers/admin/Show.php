@@ -43,17 +43,10 @@ class Show extends AdminController {
     // Default order
     $options['order'] = $this->_order($options['order']);
     
-    // Fields
-    if ($path)
-      $fields = $this->_prepareFields('media_set',array('path'=>$path));
-    else
-      $fields = $this->_prepareFields('grid_set');
-    
     // Show grid
     $grid = array(
       'title'    => $this->ui->get($name),
       'name'     => $name,
-      'fields'   => $fields,
       'api'      => $api,
       'order'    => $options['order'],
       'offset'   => $options['offset'],
