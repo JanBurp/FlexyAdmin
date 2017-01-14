@@ -17,6 +17,8 @@
 <body>
 
 <div id="main" class="container-fluid">
+
+  <flexy-messages :messages="state.messages"></flexy-messages>
   
   <div id="header" class="navbar navbar-fixed-top">
     <progress class="progress progress-danger progress-striped" :value="state.progress" max="100"></progress>
@@ -36,7 +38,6 @@
     <div id="main" class="col-sm-10"><?=$content?></div>
   </div>
 
-  <flexy-messages :messages="state.messages"></flexy-messages>
   
   <div class="flexy-help">
     <div class="card">
