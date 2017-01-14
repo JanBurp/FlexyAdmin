@@ -30554,7 +30554,7 @@ module.exports = __vue_exports__
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
   return _h('div', {
-    staticClass: "navbar navbar-fixed-bottom",
+    staticClass: "navbar navbar-fixed-top",
     attrs: {
       "id": "messages"
     }
