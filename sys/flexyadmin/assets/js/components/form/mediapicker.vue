@@ -18,7 +18,7 @@ export default {
     draggableOptions : function() {
       return {
         // group         : { name:'tree', pull:true},
-        draggable     : 'div',
+        // draggable     : 'div',
         forceFallback : true,
         // handle        : '.draggable-handle',
         // scroll        : true,
@@ -42,14 +42,25 @@ export default {
     thumbs : function() {
       var media = this.media;
       var array = media.split('|');
+      var thumbs = [];
       for (var i = 0; i < array.length; i++) {
-        array[i] = {
-          value : array[i],
-          src   : '_media/thumb/' + this.path +'/'+ array[i],
-          alt   : array[i],
+        if (array[i]!=='') {
+          thumbs[i] = {
+            value : array[i],
+            src   : '_media/thumb/' + this.path +'/'+ array[i],
+            alt   : array[i],
+          }
         }
       }
-      return array;
+      return thumbs;
+    },
+    
+    removeMedia: function(index) {
+      var currentMedia = this.media.split('|');
+      var newMedia = _.clone(currentMedia);
+      newMedia.splice(index, 1);
+      newMedia = _.join(newMedia,'|');
+      this.changeMedia(newMedia);
     },
     
     dragEnd : function(event) {
@@ -76,12 +87,17 @@ export default {
   <div class="mediapicker">
     <flexy-button icon="plus" class="btn-outline-warning" size="xlg" />
     <draggable :list="thumbs()" :options="draggableOptions" @end="dragEnd($event)">
-      <flexy-thumb v-for="img in thumbs()" size="lg" :src="img.src" :alt="img.alt" :value="img.value" />
+      <div v-for="(img,index) in thumbs()" class="mediapicker-thumb">
+        <flexy-button icon="remove" class="btn-danger" @click.native="removeMedia(index)"/>
+        <flexy-thumb size="lg" :src="img.src" :alt="img.alt" :value="img.value" />
+      </div>
     </draggable>
   </div>
 </template>
 
 <style>
-  .mediapicker .flexy-button {float:left;margin-right:.5rem;}
-  .mediapicker .flexy-thumb {cursor:move;}
+  .mediapicker {min-height:6rem;}
+  .mediapicker>.flexy-button {float:left;margin-right:.5rem;}
+  .mediapicker .mediapicker-thumb {display:inline;margin-right:.25rem;cursor:move;}
+  .mediapicker .mediapicker-thumb>.flexy-button {position:absolute;}
 </style>
