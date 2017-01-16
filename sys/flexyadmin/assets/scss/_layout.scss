@@ -70,14 +70,6 @@
   }
 }
 
-/* MAIN > CARD */
-#main {
-  >.card {
-    border:solid 1px $brand-primary;
-    >.card-header {background-color:$brand-primary;color:$body-bg;padding:.5rem;}
-  }
-}
-
 /* TRANSITIONS */
 .slideUp-enter-active {transition: all .2s ease;}
 .slideUp-leave-active {transition: all 1s ease;}

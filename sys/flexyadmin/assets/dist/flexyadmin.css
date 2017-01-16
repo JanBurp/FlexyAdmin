@@ -4247,7 +4247,6 @@ a > .fa, .btn > .fa {
   background-color: #eceeef;
   color: #696 !important; }
 
-/* TABS */
 /* PAGINATION */
 .pagination-container {
   width: 100%;
@@ -4266,20 +4265,24 @@ a > .fa, .btn > .fa {
     margin-right: .25rem; }
 
 /* CARD */
-.card > .card-header > * {
-  margin: 0 1rem 0 0;
-  float: left; }
-
-.card > .card-header > *:last-child {
+.card {
   margin: 0;
-  float: right; }
-
-.card > .card-header > *:first-child {
-  margin: 0;
-  float: left; }
-
-.card > .card-header .btn {
-  text-transform: uppercase; }
+  border: solid 1px #696; }
+  .card > .card-header {
+    background-color: #696;
+    color: #fff;
+    padding: .5rem; }
+    .card > .card-header > * {
+      margin: 0 1rem 0 0;
+      float: left; }
+    .card > .card-header > *:last-child {
+      margin: 0;
+      float: right; }
+    .card > .card-header > *:first-child {
+      margin: 0;
+      float: left; }
+    .card > .card-header .btn {
+      text-transform: uppercase; }
 
 /* Responsive */
 @media (max-width: 767px) {
@@ -4370,14 +4373,6 @@ a > .fa, .btn > .fa {
     font-size: 5rem;
     color: #696; }
 
-/* MAIN > CARD */
-#main > .card {
-  border: solid 1px #696; }
-  #main > .card > .card-header {
-    background-color: #696;
-    color: #fff;
-    padding: .5rem; }
-
 /* TRANSITIONS */
 .slideUp-enter-active {
   transition: all .2s ease; }
@@ -4422,6 +4417,9 @@ a > .fa, .btn > .fa {
     text-align: center;
     text-transform: uppercase;
     border-radius: 0.25rem; }
+  .grid .card-header .form-inline .form-group {
+    margin: 0;
+    min-height: 0; }
   .grid .card-header.grid-extended-find {
     background-color: #eceeef !important;
     color: #696 !important; }
@@ -4692,7 +4690,25 @@ body.mce-fullscreen .mce-tinymce {
 
 .mediapicker {
   border: solid 1px transparent;
-  border-radius: 0.25rem;
-  padding: .5rem; }
+  border-radius: 0.25rem; }
+  .mediapicker .mediapicker-selection {
+    min-height: 5rem;
+    margin: .25rem; }
+    .mediapicker .mediapicker-selection > .flexy-button {
+      float: left;
+      margin-right: .5rem; }
+    .mediapicker .mediapicker-selection .mediapicker-thumb {
+      display: inline;
+      margin-right: .25rem;
+      cursor: move; }
+      .mediapicker .mediapicker-selection .mediapicker-thumb > .flexy-button {
+        position: absolute; }
+  .mediapicker .mediapicker-choose {
+    margin: .5rem 0 0; }
+    .mediapicker .mediapicker-choose > .card {
+      border: none;
+      border-radius: 0; }
+      .mediapicker .mediapicker-choose > .card > .card-header {
+        border-radius: 0; }
 
 /*# sourceMappingURL=flexyadmin.css.map*/

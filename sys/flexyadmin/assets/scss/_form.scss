@@ -109,5 +109,33 @@ body.mce-fullscreen .mce-tinymce{
 .mediapicker {
   border:solid 1px transparent;
   border-radius:$border-radius;
-  padding:.5rem;
+  .mediapicker-selection {
+    min-height:5rem;
+    margin:.25rem;
+    >.flexy-button {
+      float:left;
+      margin-right:.5rem;
+    }
+    .mediapicker-thumb {
+      display:inline;
+      margin-right:.25rem;
+      cursor:move;
+      >.flexy-button {position:absolute;}
+    }
+  }
+  .mediapicker-choose {
+    margin:.5rem 0 0;
+    >.card {
+      border:none;
+      border-radius:0;
+      >.card-header {
+        border-radius:0;
+      }
+    }
+  }
+  
+
 }
+
+
+
