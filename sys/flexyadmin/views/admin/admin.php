@@ -20,6 +20,8 @@
 
   <flexy-messages v-show="state.messages.length > 0" :messages="state.messages"></flexy-messages>
   
+  <flexy-modal :options="state.modal"></flexy-modal>
+  
   <div id="header" class="navbar navbar-fixed-top">
     <progress class="progress progress-danger progress-striped" :value="state.progress" max="100"></progress>
     <div class="navbar-brand navbar-collapse">
@@ -64,9 +66,9 @@
 <script type="text/javascript" charset="utf-8">
 var _flexy = {
   'auth_token'    : '<?=$user['auth_token']?>',
-  'language'      : '<?=$language?>',
   'media_view'    : '<?=$user['str_filemanager_view']?>',
-  'language_keys' : '<?=addslashes(array2json($lang_keys))?>',
+  'language'      : '<?=$language?>',
+  'language_keys' : JSON.parse('<?=addslashes(array2json($lang_keys))?>'),
   'tinymceOptions': '<?=array2json($tinymceOptions)?>',
 };
 </script>

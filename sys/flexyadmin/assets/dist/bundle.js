@@ -729,12 +729,21 @@ module.exports = __vue_exports__
  * Simple State management for:
  * - progress bar
  * - messages
- */exports.default={name:'FlexyState',debug:false,state:{progress:0,messages:[],media_view:_flexy.media_view},getState:function getState(item){return this.state[item];},showProgress:function showProgress(){this.state.progress=10;this.debug&&console.log('state.progress',this.state.progress);},hideProgress:function hideProgress(){var self=this;self.state.progress=100;window.setTimeout(function(){self.state.progress=0;self.debug&&console.log('state.progress',self.state.progress);},250);},setProgress:function setProgress(value,max){var percent=Math.round(value*100/max);if(percent<10)percent=10;// Start met minimaal 10%
-this.state.progress=percent;this.debug&&console.log('state.progress',this.state.progress);},addMessage:function addMessage(message,type){if(_.isUndefined(type))type='success';var self=this;self.state.messages.push({'text':message,'type':type});self.debug&&console.log('state.messages',self.state.messages);if(type!=='danger'){window.setTimeout(function(){self.state.messages.shift();self.debug&&console.log('state.messages',self.state.messages);},3000);}},removeMessage:function removeMessage(id){this.state.messages.splice(id,1);},getMediaView:function getMediaView(){return this.state.media_view;},setMediaView:function setMediaView(view){var self=this;this.state.media_view=view;this.debug&&console.log('state.media_view',this.state.media_view);return self.api({url:'row','data':{'table':'cfg_users','where':'current','data':{'str_filemanager_view':self.state.media_view}}});},/**
-    Global method om Api aan te roepen. Options Object bevat de volgende properties:
-    - url, de url van de api (auth,table,row, etc)
-    - data, de mee te geven parameters
-    - Laat ook progress bar & spinner zien
+ */exports.default={name:'FlexyState',debug:false,state:{progress:0,messages:[],media_view:_flexy.media_view,_modal:{callback:undefined,state:undefined},modal:{show:false,title:'Title',body:'Message',buttons:[{type:'cancel',title:_flexy.language_keys.cancel,class:'btn-outline-primary',close:true},{type:'ok',title:_flexy.language_keys.ok,class:'btn-outline-danger',close:true}]}},getState:function getState(item){return this.state[item];},/**
+   * PROGRESS
+   */showProgress:function showProgress(){this.state.progress=10;this.debug&&console.log('state.progress',this.state.progress);},hideProgress:function hideProgress(){var self=this;self.state.progress=100;window.setTimeout(function(){self.state.progress=0;self.debug&&console.log('state.progress',self.state.progress);},250);},setProgress:function setProgress(value,max){var percent=Math.round(value*100/max);if(percent<10)percent=10;// Start met minimaal 10%
+this.state.progress=percent;this.debug&&console.log('state.progress',this.state.progress);},/**
+   * Modal
+   */openModal:function openModal(options,callback){if(!_.isUndefined(options))_.merge(this.state.modal,options);this.state.modal.show=true;this.state._modal.callback=callback;var buttonEL=document.querySelector('#flexyadmin-modal .modal-footer button:last-child');buttonEL.focus();},modalState:function modalState(state){this.state._modal.state=state;},closeModal:function closeModal(){this.state.modal.show=false;if(!_.isUndefined(this.state._modal.callback)){this.state._modal.callback.call(this,this.state._modal);}},/**
+   * Messages
+   */addMessage:function addMessage(message,type){if(_.isUndefined(type))type='success';var self=this;self.state.messages.push({'text':message,'type':type});self.debug&&console.log('state.messages',self.state.messages);if(type!=='danger'){window.setTimeout(function(){self.state.messages.shift();self.debug&&console.log('state.messages',self.state.messages);},3000);}},removeMessage:function removeMessage(id){this.state.messages.splice(id,1);},/**
+   * Media view
+   */getMediaView:function getMediaView(){return this.state.media_view;},setMediaView:function setMediaView(view){var self=this;this.state.media_view=view;this.debug&&console.log('state.media_view',this.state.media_view);return self.api({url:'row','data':{'table':'cfg_users','where':'current','data':{'str_filemanager_view':self.state.media_view}}});},/**
+   * API
+   * Global method om Api aan te roepen. Options Object bevat de volgende properties:
+   * - url, de url van de api (auth,table,row, etc)
+   * - data, de mee te geven parameters
+   * - Laat ook progress bar & spinner zien
    */api:function api(options){var self=this;self.showProgress();var method='GET';if(options.url==='row'&&!_.isUndefined(options.data.where))method='POST';var defaultRequest={method:method,headers:{'Authorization':_flexy.auth_token,'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'},transformRequest:[function(data){if(!options.formData){var requestString='';if(data){requestString=_jdbTools2.default.serializeJSON(data);}return requestString;}return data;}],onDownloadProgress:function onDownloadProgress(progressEvent){if(options.onDownloadProgress){options.onDownloadProgress(progressEvent);}else{self.setProgress(progressEvent.loaded,progressEvent.total);}}};// Request Options
 var request=_.extend(defaultRequest,options);// Standard URL for request
 request.url='_api/'+request.url;self.debug&&console.log('api > ',request);return _axios2.default.request(request).then(function(response){// trace/bug?
@@ -28813,7 +28822,7 @@ if(isTree&&_flexyState2.default.debug){console.log('treeInfo:');_.forEach(data,f
 // },
 hasSelection:function hasSelection(){return this.selected.length>0;},isSelected:function isSelected(id){return this.selected.indexOf(id)>-1;},select:function select(id){var index=this.selected.indexOf(id);if(index>-1){this.selected.splice(index,1);}else{this.selected.push(id);}},reverseSelection:function reverseSelection(){var ids=[];for(var i=0;i<this.items.length;i++){ids.push(this.items[i].id.value);}this.selected=_.difference(ids,this.selected);},newItem:function newItem(){if(this.gridType()==='media'){var event=new MouseEvent('click',{'view':window,'bubbles':true,'cancelable':true});document.getElementById('browsefiles').dispatchEvent(event);}else{this.editItem(-1);}},editItem:function editItem(id){var url=this.editUrl(id);window.location.assign(url);},removeItems:function removeItems(removeIds){var self=this;if(_.isUndefined(removeIds)){removeIds=this.selected;}else{removeIds=[removeIds];}// Only when there are items to remove
 if(removeIds.length>0){// Confirm
-var message=this.$lang['confirm_delete_one'];if(removeIds.length>1)message=this.$options.filters.replace(this.$lang['confirm_delete_multiple'],removeIds.length);if(window.confirm(message)){var data={table:self.name,where:removeIds};if(self.gridType()==='media')data.table='res_assets';return _flexyState2.default.api({url:'row',data:data}).then(function(response){var error=response.error||response.data.data===false;if(error){_flexyState2.default.addMessage(self.$lang.error_delete,'danger');}else{_flexyState2.default.addMessage(self.$options.filters.replace(self.$lang.deleted,removeIds.length));self.reloadPage();}return response;});}}},rowLevel:function rowLevel(row){if(_.isUndefined(row._info))return 0;return row._info.level;},isEditable:function isEditable(name){var editable=false;if(!_.isUndefined(this.fields[name]))editable=this.fields[name].schema['grid-edit'];return editable;},isReadonly:function isReadonly(name){var readonly=false;if(!_.isUndefined(this.fields[name]))readonly=this.fields[name].schema['readonly'];return readonly;},editUrl:function editUrl(id){var url='';if(this.gridType()==='media'){url='admin/show/form/_media_/'+this.name+'/'+id;}else{url='admin/show/form/'+this.name+'/'+id;}return url;},startFinding:function startFinding(event){if(event)event.preventDefault();var self=this;var find='';if(!self.extendedFind){find=this.findTerm.replace(/'/g,'"');}else{var filled=true;for(var i=0;i<this.extendedTerm.length;i++){if(this.extendedTerm[i].field==='')filled=false;if(this.extendedTerm[i].term==='')filled=false;}if(this.extendedTerm.length<1)filled=false;if(!filled)return false;find=JSON.stringify(self.extendedTerm);}this.reloadPage({offset:0,filter:find});},findChanged:function findChanged(){if(this.findTerm==='')this.stopFind();},stopFind:function stopFind(){this.findTerm='';this.extendedFind=false;this.extendedTerm=[_.clone(this.extendedTermDefault)];this.reloadPage({offset:0,filter:''});},extendedSearchAdd:function extendedSearchAdd(){this.extendedTerm.push(_.clone(this.extendedTermDefault));},extendedSearchRemove:function extendedSearchRemove(index){this.extendedTerm.splice(index,1);if(this.extendedTerm.length<1)this.extendedTerm=[_.clone(this.extendedTermDefault)];},dropUploadFiles:function dropUploadFiles(event){event.stopPropagation();event.preventDefault();var files=event.target.files||event.dataTransfer.files;this._addUploadFiles(files);},addUploadFiles:function addUploadFiles(event){var files=event.target.files||event.dataTransfer.files;this._addUploadFiles(files);},removeUploadFile:function removeUploadFile(index){this.uploadFiles.splice(index,1);},_addUploadFiles:function _addUploadFiles(files){for(var i=0;i<files.length;i++){this.uploadFiles.push(files.item(i));}},startUpload:function startUpload(){var self=this;for(var i=0;i<self.uploadFiles.length;i++){var file=self.uploadFiles[i];self.uploadProgress[file.name]=10;self.uploadStatus[file.name]=self.$lang.upload_status_uploading;var formData=new FormData();formData.set('path',self.name);formData.set('file',self.uploadFiles[i]);formData.set('fileName',self.uploadFiles[i].name);_flexyState2.default.api({method:'POST',url:'media',data:formData,formData:true,onUploadProgress:function onUploadProgress(progressEvent){var uploadPercentage=Math.round(progressEvent.loaded*100/progressEvent.total);self.uploadProgress[file.name]=uploadPercentage;}}).then(function(response){var error=response.data.error;var fileName=response.data.args.fileName;if(!error&&response.data.data===false)error=self.$lang.upload_error;if(error){self.uploadStatus[fileName]=error;}else{var fileName=response.data.args.fileName;var index=_jdbTools2.default.indexOfProperty(self.uploadFiles,'name',fileName);self.uploadProgress[fileName]=100;self.removeUploadFile(index);}// Als alles is geuploade, reload
+var message=this.$lang['confirm_delete_one'];if(removeIds.length>1)message=this.$options.filters.replace(this.$lang['confirm_delete_multiple'],removeIds.length);_flexyState2.default.openModal({'title':'','body':message},function(event){if(event.state.type==='ok'){var data={table:self.name,where:removeIds};if(self.gridType()==='media')data.table='res_assets';return _flexyState2.default.api({url:'row',data:data}).then(function(response){var error=response.error||response.data.data===false;if(error){_flexyState2.default.addMessage(self.$lang.error_delete,'danger');}else{_flexyState2.default.addMessage(self.$options.filters.replace(self.$lang.deleted,removeIds.length));self.reloadPage();}return response;});}});}},rowLevel:function rowLevel(row){if(_.isUndefined(row._info))return 0;return row._info.level;},isEditable:function isEditable(name){var editable=false;if(!_.isUndefined(this.fields[name]))editable=this.fields[name].schema['grid-edit'];return editable;},isReadonly:function isReadonly(name){var readonly=false;if(!_.isUndefined(this.fields[name]))readonly=this.fields[name].schema['readonly'];return readonly;},editUrl:function editUrl(id){var url='';if(this.gridType()==='media'){url='admin/show/form/_media_/'+this.name+'/'+id;}else{url='admin/show/form/'+this.name+'/'+id;}return url;},startFinding:function startFinding(event){if(event)event.preventDefault();var self=this;var find='';if(!self.extendedFind){find=this.findTerm.replace(/'/g,'"');}else{var filled=true;for(var i=0;i<this.extendedTerm.length;i++){if(this.extendedTerm[i].field==='')filled=false;if(this.extendedTerm[i].term==='')filled=false;}if(this.extendedTerm.length<1)filled=false;if(!filled)return false;find=JSON.stringify(self.extendedTerm);}this.reloadPage({offset:0,filter:find});},findChanged:function findChanged(){if(this.findTerm==='')this.stopFind();},stopFind:function stopFind(){this.findTerm='';this.extendedFind=false;this.extendedTerm=[_.clone(this.extendedTermDefault)];this.reloadPage({offset:0,filter:''});},extendedSearchAdd:function extendedSearchAdd(){this.extendedTerm.push(_.clone(this.extendedTermDefault));},extendedSearchRemove:function extendedSearchRemove(index){this.extendedTerm.splice(index,1);if(this.extendedTerm.length<1)this.extendedTerm=[_.clone(this.extendedTermDefault)];},dropUploadFiles:function dropUploadFiles(event){event.stopPropagation();event.preventDefault();var files=event.target.files||event.dataTransfer.files;this._addUploadFiles(files);},addUploadFiles:function addUploadFiles(event){var files=event.target.files||event.dataTransfer.files;this._addUploadFiles(files);},removeUploadFile:function removeUploadFile(index){this.uploadFiles.splice(index,1);},_addUploadFiles:function _addUploadFiles(files){for(var i=0;i<files.length;i++){this.uploadFiles.push(files.item(i));}},startUpload:function startUpload(){var self=this;for(var i=0;i<self.uploadFiles.length;i++){var file=self.uploadFiles[i];self.uploadProgress[file.name]=10;self.uploadStatus[file.name]=self.$lang.upload_status_uploading;var formData=new FormData();formData.set('path',self.name);formData.set('file',self.uploadFiles[i]);formData.set('fileName',self.uploadFiles[i].name);_flexyState2.default.api({method:'POST',url:'media',data:formData,formData:true,onUploadProgress:function onUploadProgress(progressEvent){var uploadPercentage=Math.round(progressEvent.loaded*100/progressEvent.total);self.uploadProgress[file.name]=uploadPercentage;}}).then(function(response){var error=response.data.error;var fileName=response.data.args.fileName;if(!error&&response.data.data===false)error=self.$lang.upload_error;if(error){self.uploadStatus[fileName]=error;}else{var fileName=response.data.args.fileName;var index=_jdbTools2.default.indexOfProperty(self.uploadFiles,'name',fileName);self.uploadProgress[fileName]=100;self.removeUploadFile(index);}// Als alles is geuploade, reload
 if(self.uploadFiles.length===0){self.reloadPage();}return response;});}},/**
      * Dragging methods
      */isHiddenChild:function isHiddenChild(id){if(this.draggable.children===false)return false;return this.draggable.children.indexOf(id)>=0;},isDragging:function isDragging(id){return this.draggable.item==id;},draggable_onStart:function draggable_onStart(event){var index=event.oldIndex;// Onthoud 'id' van draggable item
@@ -28829,7 +28838,7 @@ var order=this.draggable.orderStart;for(var i=0;i<this.items.length;i++){this.it
 if(this.gridType()=='tree')this.items=this.addInfo(this.items);if(_flexyState2.default.debug){console.log('draggable_onEnd ---------');console.log(oldIndex,' => ',newIndex);self._log(self.items);}var newOrder=this.draggable.orderStart+this.items[this.draggable.newIndex].order.value;if(self.draggable.children&&newIndex>oldIndex)newOrder=newOrder-self.draggable.children.length;self.postNewOrder(newOrder).then(function(response){self.draggable.item=false;});}else{self.draggable.item=false;}// Laat children weer zien
 this.draggable.children=false;},postNewOrder:function postNewOrder(newOrder){var self=this;var itemId=this.draggable.item;// var newOrder = this.draggable.orderStart + this.items[ this.draggable.newIndex ].order.value;
 return _flexyState2.default.api({method:'POST',url:'table_order','data':{'table':self.name,'id':itemId,'from':newOrder}}).then(function(response){var error=response.error;if(!error&&response.data.data===false)error=true;if(error){_flexyState2.default.addMessage(self.$lang.grid_order_save_error,'danger');// Terug naar oude situatie
-self.items=self.draggable.oldItems;}return response;});},_log:function _log(items){var self=this;_.forEach(items,function(row){if(self.gridType()==='tree'){console.log(row.id.value,row.order.value,'tree:',row._info.level,row._info.is_child,row._info.has_children,row.str_title.value);}else{console.log(row.id.value,row.order.value,row.str_title.value);}});}}};
+self.items=self.draggable.oldItems;}return response;});},_log:function _log(items){var self=this;_.forEach(items,function(row){if(self.gridType()==='tree'){console.log(row.id.value,row.order.value,'tree:',row._info.level,row._info.is_child,row._info.has_children,row.str_title.value);}else{console.log(row.id.value,row.order.value,row.str_title.value);}});}}};// import flexyModal       from '../flexy-modal.vue'
 
 /***/ },
 /* 63 */
@@ -33006,15 +33015,14 @@ module.exports = function(module) {
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-'use strict';var _vue=__webpack_require__(/*! vue */ 28);var _vue2=_interopRequireDefault(_vue);var _vueLang=__webpack_require__(/*! vue-lang */ 20);var _vueLang2=_interopRequireDefault(_vueLang);var _flexyState=__webpack_require__(/*! ./flexy-state.js */ 4);var _flexyState2=_interopRequireDefault(_flexyState);var _flexyMessages=__webpack_require__(/*! ./components/flexy-messages.vue */ 22);var _flexyMessages2=_interopRequireDefault(_flexyMessages);var _flexyBlocks=__webpack_require__(/*! ./components/flexy-blocks.vue */ 21);var _flexyBlocks2=_interopRequireDefault(_flexyBlocks);var _flexyButton=__webpack_require__(/*! ./components/flexy-button.vue */ 3);var _flexyButton2=_interopRequireDefault(_flexyButton);var _flexyPagination=__webpack_require__(/*! ./components/flexy-pagination.vue */ 9);var _flexyPagination2=_interopRequireDefault(_flexyPagination);var _flexyGrid=__webpack_require__(/*! ./components/grid/flexy-grid.vue */ 24);var _flexyGrid2=_interopRequireDefault(_flexyGrid);var _flexyForm=__webpack_require__(/*! ./components/form/flexy-form.vue */ 23);var _flexyForm2=_interopRequireDefault(_flexyForm);var _Accordion=__webpack_require__(/*! ./vue-strap-src/Accordion.vue */ 25);var _Accordion2=_interopRequireDefault(_Accordion);var _Panel=__webpack_require__(/*! ./vue-strap-src/Panel.vue */ 26);var _Panel2=_interopRequireDefault(_Panel);var _vueTinymce=__webpack_require__(/*! vue-tinymce */ 27);var _vueTinymce2=_interopRequireDefault(_vueTinymce);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}/**
+'use strict';var _vue=__webpack_require__(/*! vue */ 28);var _vue2=_interopRequireDefault(_vue);var _vueLang=__webpack_require__(/*! vue-lang */ 20);var _vueLang2=_interopRequireDefault(_vueLang);var _flexyState=__webpack_require__(/*! ./flexy-state.js */ 4);var _flexyState2=_interopRequireDefault(_flexyState);var _flexyMessages=__webpack_require__(/*! ./components/flexy-messages.vue */ 22);var _flexyMessages2=_interopRequireDefault(_flexyMessages);var _flexyBlocks=__webpack_require__(/*! ./components/flexy-blocks.vue */ 21);var _flexyBlocks2=_interopRequireDefault(_flexyBlocks);var _flexyButton=__webpack_require__(/*! ./components/flexy-button.vue */ 3);var _flexyButton2=_interopRequireDefault(_flexyButton);var _flexyModal=__webpack_require__(/*! ./components/flexy-modal.vue */ 116);var _flexyModal2=_interopRequireDefault(_flexyModal);var _flexyPagination=__webpack_require__(/*! ./components/flexy-pagination.vue */ 9);var _flexyPagination2=_interopRequireDefault(_flexyPagination);var _flexyGrid=__webpack_require__(/*! ./components/grid/flexy-grid.vue */ 24);var _flexyGrid2=_interopRequireDefault(_flexyGrid);var _flexyForm=__webpack_require__(/*! ./components/form/flexy-form.vue */ 23);var _flexyForm2=_interopRequireDefault(_flexyForm);var _Accordion=__webpack_require__(/*! ./vue-strap-src/Accordion.vue */ 25);var _Accordion2=_interopRequireDefault(_Accordion);var _Panel=__webpack_require__(/*! ./vue-strap-src/Panel.vue */ 26);var _Panel2=_interopRequireDefault(_Panel);var _vueTinymce=__webpack_require__(/*! vue-tinymce */ 27);var _vueTinymce2=_interopRequireDefault(_vueTinymce);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}/**
  * Bootstrapping FlexyAdmin:
  * - Import components
  * - Create Vue Instance
  * - Global Vue Settings (Mixins)
  * 
  * @author: Jan den Besten
- */var _=__webpack_require__(/*! lodash */ 19);// import FlexyModal       from './components/flexy-modal.vue'
-_vue2.default.use(_vueTinymce2.default);// // TinyMCE
+ */var _=__webpack_require__(/*! lodash */ 19);_vue2.default.use(_vueTinymce2.default);// // TinyMCE
 // import tinymce from 'tinymce/tinymce';
 // import 'tinymce/themes/modern/theme';
 // tinymce.init({
@@ -33025,10 +33033,201 @@ _vue2.default.use(_vueTinymce2.default);// // TinyMCE
 //   selector: 'textarea',
 // });
 // Language settings
-var LOCALES={};LOCALES[_flexy.language]=JSON.parse(_flexy.language_keys);window.VueStrapLang=function(){return LOCALES[_flexy.language]['strap_lang'];};_vue2.default.use(_vueLang2.default,{lang:_flexy.language,locales:LOCALES});_vue2.default.mixin({data:function data(){return{state:_flexyState2.default.state};}});/**
+var LOCALES={};// _flexy.language_keys = JSON.parse(_flexy.language_keys);
+LOCALES['lang']=_flexy.language;LOCALES[_flexy.language]=_flexy.language_keys;window.VueStrapLang=function(){return LOCALES[_flexy.language]['strap_lang'];};_vue2.default.use(_vueLang2.default,{lang:_flexy.language,locales:LOCALES});_vue2.default.mixin({data:function data(){return{state:_flexyState2.default.state};}});/**
  Main Vue Instance
- */var vm=new _vue2.default({el:'#main',components:{FlexyBlocks:_flexyBlocks2.default,FlexyButton:_flexyButton2.default,// FlexyModal,
-FlexyMessages:_flexyMessages2.default,FlexyPagination:_flexyPagination2.default,FlexyGrid:_flexyGrid2.default,FlexyForm:_flexyForm2.default,accordion:_Accordion2.default,panel:_Panel2.default},data:{state:_flexyState2.default.state}});
+ */var vm=new _vue2.default({el:'#main',components:{FlexyBlocks:_flexyBlocks2.default,FlexyButton:_flexyButton2.default,FlexyModal:_flexyModal2.default,FlexyMessages:_flexyMessages2.default,FlexyPagination:_flexyPagination2.default,FlexyGrid:_flexyGrid2.default,FlexyForm:_flexyForm2.default,accordion:_Accordion2.default,panel:_Panel2.default},data:{state:_flexyState2.default.state}});
+
+/***/ },
+/* 116 */
+/* unknown exports provided */
+/* all exports used */
+/*!*********************************************************!*\
+  !*** ./flexyadmin/assets/js/components/flexy-modal.vue ***!
+  \*********************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+var __vue_exports__, __vue_options__
+var __vue_styles__ = {}
+
+/* styles */
+__webpack_require__(/*! !vue-style-loader!css-loader!vue-loader/lib/style-rewriter?id=data-v-1d14121c!vue-loader/lib/selector?type=styles&index=0!./flexy-modal.vue */ 120)
+
+/* script */
+__vue_exports__ = __webpack_require__(/*! !babel-loader!vue-loader/lib/selector?type=script&index=0!./flexy-modal.vue */ 117)
+
+/* template */
+var __vue_template__ = __webpack_require__(/*! !vue-loader/lib/template-compiler?id=data-v-1d14121c!vue-loader/lib/selector?type=template&index=0!./flexy-modal.vue */ 118)
+__vue_options__ = __vue_exports__ = __vue_exports__ || {}
+if (
+  typeof __vue_exports__.default === "object" ||
+  typeof __vue_exports__.default === "function"
+) {
+if (Object.keys(__vue_exports__).some(function (key) { return key !== "default" && key !== "__esModule" })) {console.error("named exports are not supported in *.vue files.")}
+__vue_options__ = __vue_exports__ = __vue_exports__.default
+}
+if (typeof __vue_options__ === "function") {
+  __vue_options__ = __vue_options__.options
+}
+__vue_options__.__file = "/Users/jan/Sites/FlexyAdmin/FlexyAdmin/sys/flexyadmin/assets/js/components/flexy-modal.vue"
+__vue_options__.render = __vue_template__.render
+__vue_options__.staticRenderFns = __vue_template__.staticRenderFns
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-1d14121c", __vue_options__)
+  } else {
+    hotAPI.reload("data-v-1d14121c", __vue_options__)
+  }
+})()}
+if (__vue_options__.functional) {console.error("[vue-loader] flexy-modal.vue: functional components are not supported and should be defined in plain js files using render functions.")}
+
+module.exports = __vue_exports__
+
+
+/***/ },
+/* 117 */
+/* unknown exports provided */
+/* all exports used */
+/*!*********************************************************************************************************************************!*\
+  !*** ./~/babel-loader/lib!./~/vue-loader/lib/selector.js?type=script&index=0!./flexyadmin/assets/js/components/flexy-modal.vue ***!
+  \*********************************************************************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _flexyState=__webpack_require__(/*! ../flexy-state.js */ 4);var _flexyState2=_interopRequireDefault(_flexyState);var _flexyButton=__webpack_require__(/*! ./flexy-button.vue */ 3);var _flexyButton2=_interopRequireDefault(_flexyButton);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}exports.default={name:'FlexyModal',components:{flexyButton:_flexyButton2.default},props:{'options':{type:Object,default:{}}},data:function data(){return{settings:this.options};},methods:{close:function close(){_flexyState2.default.modalState({type:'close'});_flexyState2.default.closeModal();},enter:function enter(){_flexyState2.default.modalState({type:'enter'});_flexyState2.default.closeModal();},clickedButton:function clickedButton(index){var button=this.settings.buttons[index];_flexyState2.default.modalState({type:button.type,button:button});if(button.close)_flexyState2.default.closeModal();},buttonClass:function buttonClass(button){return this.options.button.class||'';},clicked:function clicked(button){return this.options.button.method;}}};
+
+/***/ },
+/* 118 */
+/* unknown exports provided */
+/* all exports used */
+/*!*************************************************************************************************************************************************************************!*\
+  !*** ./~/vue-loader/lib/template-compiler.js?id=data-v-1d14121c!./~/vue-loader/lib/selector.js?type=template&index=0!./flexyadmin/assets/js/components/flexy-modal.vue ***!
+  \*************************************************************************************************************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
+  return _h('div', {
+    staticClass: "modal flexy-modal",
+    class: {
+      'hidden': !_vm.settings.show
+    },
+    attrs: {
+      "id": "flexyadmin-modal"
+    }
+  }, [_h('div', {
+    staticClass: "modal-dialog modal-sm",
+    on: {
+      "keyup": [function($event) {
+        if (_vm._k($event.keyCode, "esc", 27)) { return; }
+        _vm.close()
+      }, function($event) {
+        if (_vm._k($event.keyCode, "enter", 13)) { return; }
+        _vm.enter()
+      }]
+    }
+  }, [_h('div', {
+    staticClass: "modal-content"
+  }, [_h('div', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.settings.title !== ''),
+      expression: "settings.title!==''"
+    }],
+    staticClass: "modal-header bg-primary text-white"
+  }, [_h('flexy-button', {
+    staticClass: "btn-danger",
+    attrs: {
+      "icon": "remove"
+    },
+    nativeOn: {
+      "click": function($event) {
+        _vm.close()
+      }
+    }
+  }), " ", _h('h4', {
+    staticClass: "modal-title"
+  }, [_vm._s(_vm.settings.title)])]), " ", _h('div', {
+    staticClass: "modal-body"
+  }, [_vm._s(_vm.settings.body)]), " ", _h('div', {
+    staticClass: "modal-footer"
+  }, [_vm._l((_vm.settings.buttons), function(button, index) {
+    return _h('button', {
+      staticClass: "btn",
+      class: button.class,
+      attrs: {
+        "type": "button"
+      },
+      on: {
+        "click": function($event) {
+          _vm.clickedButton(index)
+        }
+      }
+    }, [_vm._s(button.title)])
+  })])])])])
+},staticRenderFns: []}
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-1d14121c", module.exports)
+  }
+}
+
+/***/ },
+/* 119 */
+/* unknown exports provided */
+/* all exports used */
+/*!***********************************************************************************************************************************************************************************!*\
+  !*** ./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-1d14121c!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/flexy-modal.vue ***!
+  \***********************************************************************************************************************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ./../../../../~/css-loader/lib/css-base.js */ 1)();
+// imports
+
+
+// module
+exports.push([module.i, "\n.flexy-modal {display:block;height:auto;background-color:rgba(0,0,0,.5)\n}\n.flexy-modal.hidden {display:block;height:0px;\n}\n.flexy-modal .modal-header .flexy-button {float:right;\n}\n.flexy-modal .modal-footer .btn {margin-left:1rem;\n}\n", ""]);
+
+// exports
+
+
+/***/ },
+/* 120 */
+/* unknown exports provided */
+/* all exports used */
+/*!********************************************************************************************************************************************************************************************************!*\
+  !*** ./~/vue-style-loader!./~/css-loader!./~/vue-loader/lib/style-rewriter.js?id=data-v-1d14121c!./~/vue-loader/lib/selector.js?type=styles&index=0!./flexyadmin/assets/js/components/flexy-modal.vue ***!
+  \********************************************************************************************************************************************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(/*! !./../../../../~/css-loader!./../../../../~/vue-loader/lib/style-rewriter.js?id=data-v-1d14121c!./../../../../~/vue-loader/lib/selector.js?type=styles&index=0!./flexy-modal.vue */ 119);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(/*! ./../../../../~/vue-style-loader/addStyles.js */ 2)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-1d14121c!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./flexy-modal.vue", function() {
+			var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-1d14121c!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./flexy-modal.vue");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
 
 /***/ }
 /******/ ]);

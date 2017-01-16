@@ -17,7 +17,7 @@ import FlexyMessages    from './components/flexy-messages.vue'
 
 import FlexyBlocks      from './components/flexy-blocks.vue'
 import FlexyButton      from './components/flexy-button.vue'
-// import FlexyModal       from './components/flexy-modal.vue'
+import FlexyModal       from './components/flexy-modal.vue'
 import FlexyPagination  from './components/flexy-pagination.vue'
 import FlexyGrid        from './components/grid/flexy-grid.vue'
 import FlexyForm        from './components/form/flexy-form.vue'
@@ -47,7 +47,9 @@ Vue.use(VueTinymce)
 
 // Language settings
 const LOCALES = {};
-LOCALES[_flexy.language] = JSON.parse(_flexy.language_keys);
+// _flexy.language_keys = JSON.parse(_flexy.language_keys);
+LOCALES['lang'] = _flexy.language;
+LOCALES[_flexy.language] = _flexy.language_keys;
 window.VueStrapLang = function() { return LOCALES[_flexy.language]['strap_lang']; }
 Vue.use(Lang, {lang: _flexy.language, locales: LOCALES});
 
@@ -70,7 +72,7 @@ var vm = new Vue({
   components: {
     FlexyBlocks,
     FlexyButton,
-    // FlexyModal,
+    FlexyModal,
     FlexyMessages,
     FlexyPagination,
     FlexyGrid,

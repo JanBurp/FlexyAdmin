@@ -23,7 +23,8 @@
     "vue": "^2.0.1",
     "vue-lang": "^0.2.5",
     "vue-tinymce": "^1.0.4",
-    "vuedraggable": "^2.3.1"
+    "vuedraggable": "^2.3.1",
+    "wovue-dialog": "^1.2.1"
   },
   "devDependencies": {
     "babel-core": "^6.0.0",
