@@ -3,7 +3,6 @@ import draggable        from 'vuedraggable'
 
 import jdb              from '../../jdb-tools.js'
 import flexyState       from '../../flexy-state.js'
-// import flexyModal       from '../flexy-modal.vue'
 import flexyButton      from '../flexy-button.vue'
 
 import FlexyPagination  from '../flexy-pagination.vue'
@@ -378,6 +377,7 @@ export default {
       else {
         this.selected.push(id);
       }
+      this.emitAndResetSelectedMedia();
     },
     
     reverseSelection:function() {
@@ -386,6 +386,24 @@ export default {
         ids.push(this.items[i].id.value);
       }
       this.selected = _.difference(ids,this.selected);
+      this.emitAndResetSelectedMedia();
+    },
+    
+    emitAndResetSelectedMedia : function() {
+      if (this.type==='mediapicker') {
+        var selectedMedia = [];
+        for (var i = 0; i < this.selected.length; i++) {
+          for (var j = 0; j < this.items.length; j++) {
+            var index = this.items[j]['id'].value;
+            if (index===this.selected[i]) {
+              var media = this.items[j]['media_thumb'].value;
+              selectedMedia.push( media );
+            }
+          }
+        }
+        this.$emit('grid-selected',selectedMedia);
+        this.selected = [];
+      }
     },
     
     newItem : function() {
@@ -775,7 +793,7 @@ export default {
             <template v-for="(field,key) in fields">
               <th v-if="isPrimaryHeader(field)" :class="headerClass(field)" class="text-primary grid-actions">
                 <flexy-button v-if="gridType()!=='media'" @click.native="newItem()" icon="plus" class="btn-outline-warning" />
-                <flexy-button @click.native="removeItems()" icon="remove" :class="{disabled:!hasSelection()}" class="btn-outline-danger" />
+                <flexy-button v-if="type!=='mediapicker'" @click.native="removeItems()" icon="remove" :class="{disabled:!hasSelection()}" class="btn-outline-danger" />
                 <flexy-button @click.native="reverseSelection()" icon="dot-circle-o" class="btn-outline-info" />
                 
                 <div v-if="isMediaThumbs()" class="dropdown" id="dropdown-sort">
@@ -809,7 +827,7 @@ export default {
               <!-- PRIMARY CELL -->
               <td v-if="cell.type=='primary'" class="action">
                 <flexy-button v-if="gridType()!=='media'" @click.native="editItem(cell.value)" icon="pencil" class="btn-outline-warning" />
-                <flexy-button @click.native="removeItems(row.id.value)" icon="remove" class="btn-outline-danger" />
+                <flexy-button v-if="type!=='mediapicker'" @click.native="removeItems(row.id.value)" icon="remove" class="btn-outline-danger" />
                 <flexy-button @click.native="select(row.id.value)" :icon="{'circle-o':!isSelected(row.id.value),'circle':isSelected(row.id.value)}" class="btn-outline-info" />
                 <flexy-button v-if="gridType()==='tree' || gridType()==='ordered'" icon="arrows-v" class="draggable-handle btn-outline-info" :class="{'active':isDragging(row.id.value)}" />
               </td>
