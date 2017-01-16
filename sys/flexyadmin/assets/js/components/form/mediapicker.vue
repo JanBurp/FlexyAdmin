@@ -43,7 +43,7 @@ export default {
   methods : {
     
     thumbs : function() {
-      var media = this.media;
+      var media = _.trim(this.media,'|');
       var array = media.split('|');
       var thumbs = [];
       for (var i = 0; i < array.length; i++) {
@@ -58,25 +58,32 @@ export default {
       return thumbs;
     },
     
-    removeMedia: function(index) {
-      var currentMedia = this.media.split('|');
+    addMedia : function(media) {
+      var currentMedia = _.trim(this.media,'|').split('|');
+      var newMedia = _.clone(currentMedia);
+      newMedia = newMedia.concat(media);
+      newMedia = _.uniq(newMedia);
+      this.changeMedia(newMedia);
+    },
+    
+    removeMedia : function(index) {
+      var currentMedia = _.trim(this.media,'|').split('|');
       var newMedia = _.clone(currentMedia);
       newMedia.splice(index, 1);
-      newMedia = _.join(newMedia,'|');
       this.changeMedia(newMedia);
     },
     
     dragEnd : function(event) {
       var oldIndex = event.oldIndex;
       var newIndex = event.newIndex;
-      var currentMedia = this.media.split('|');
+      var currentMedia = _.trim(this.media,'|').split('|');
       var newMedia = _.clone(currentMedia);
       newMedia.splice(newIndex, 0, newMedia.splice(oldIndex,1)[0] );
-      newMedia = _.join(newMedia,'|');
       this.changeMedia(newMedia);
     },
     
     changeMedia : function(media) {
+      if (typeof(media)!=='string') media = _.join(media,'|');
       this.media = media;
       this.$emit('input',this.media);
     },
@@ -99,7 +106,7 @@ export default {
     </div>
     
     <div class="mediapicker-choose" v-if="choose">
-      <flexy-grid type='mediapicker' api='table' name="pictures" :title="$lang.file_select" offset="0" limit="10"></flexy-grid>
+      <flexy-grid type='mediapicker' api='table' name="pictures" :title="$lang.file_select" offset="0" limit="10" @grid-selected="addMedia($event)"></flexy-grid>
     </div>
     
   </div>
