@@ -26,6 +26,12 @@
   
   
   // HEADERS
+  .card-header {
+    .form-inline .form-group {
+      margin:0;
+      min-height:0;
+    }
+  }
   
   // Extended find Header
   .card-header.grid-extended-find {

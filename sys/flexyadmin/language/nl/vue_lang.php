@@ -23,6 +23,7 @@ $lang['vue_grid_search_exact']       = 'is gelijk aan';
 
 $lang['vue_grid_edit_success']       = 'Veld is aangepast';
 
+$lang['vue_file_select']             = 'Selecteer bestand(en)';
 $lang['vue_upload']                  = 'Upload';
 $lang['vue_upload_choose']           = 'Klik voor nieuwe bestanden, of sleep ze hiernaartoe.';
 $lang['vue_upload_file']             = 'Bestand';

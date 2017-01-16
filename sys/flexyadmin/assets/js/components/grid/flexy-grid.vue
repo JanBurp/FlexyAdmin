@@ -74,6 +74,7 @@ export default {
         txt_abstract  : true,
         as_grid       : true,
       },
+      changeUrlApi: true,
       focus       : {id:false,cell:false},
       draggable   : {
         item        : false,
@@ -165,7 +166,7 @@ export default {
       parts = _.extend( this.apiParts, parts );
       this.apiParts = parts;
       var url = this.api;
-      if (this.type==='media') {
+      if (this.gridType()==='media') {
         url += '?table=res_assets&path='+this.name;
       }
       else {
@@ -177,10 +178,11 @@ export default {
     },
     
     newUrl : function(){
-      var parts = this.apiParts;
-      var stateObj = parts;
-      history.pushState(stateObj, "", location.pathname + '?options={"offset":"'+parts.offset+'","order":"'+parts.order+'","filter":"'+jdb.encodeURL(parts.filter)+'"}');
-      // return location.pathname + '?options={"offset":"'+parts.offset+'","order":"'+parts.order+'","find":"'+jdb.encodeURL(parts.find)+'"}';
+      if (this.changeUrlApi) {
+        var parts = this.apiParts;
+        var stateObj = parts;
+        history.pushState(stateObj, "", location.pathname + '?options={"offset":"'+parts.offset+'","order":"'+parts.order+'","filter":"'+jdb.encodeURL(parts.filter)+'"}');
+      }
     },
     
     hasData : function() {
@@ -277,6 +279,10 @@ export default {
     
     gridType : function() {
       var type = this.type;
+      if (type==='mediapicker') {
+        type = 'media';
+        this.changeUrlApi = false;
+      }
       if (typeof(this.fields.order)!=='undefined' && (this.apiParts.order==='' || this.apiParts.order==='order') && this.apiParts.filter==='') type='ordered';
       if (typeof(this.fields.self_parent)!=='undefined' && (this.apiParts.order==='' || this.apiParts.order==='order') && this.apiParts.filter==='') type='tree';
       return type;
