@@ -172,7 +172,7 @@
 
 
 // MEDIA
-.grid.grid-media-view-thumbs {
+.grid.grid-media-view-thumbs, .grid.grid-media-view-small {
   
   table.grid-data {
     
@@ -249,6 +249,21 @@
     
   }
   
+}
+
+.grid.grid-media-view-small {
+  table.grid-data {
+    tbody {
+      tr {
+        width:7rem;
+        height:8.75rem;
+      }
+      td[name="media_thumb"] .flexy-thumb {
+        max-width:6rem;
+        max-height:8rem;
+      }
+    }
+  }
 }
   
   
