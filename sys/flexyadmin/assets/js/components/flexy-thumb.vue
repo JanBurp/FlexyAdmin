@@ -61,11 +61,18 @@ export default {
 </template>
 
 <style>
-  .flexy-thumb {display:inline;margin-right:.25rem;}
+  .flexy-thumb {display:inline;margin:0;}
   .flexy-thumb .fa {font-size:1.6rem;}
   .flexy-thumb img {width:auto;}
   .grid-media-view-thumbs .flexy-thumb .fa {font-size:10rem;}
   .grid-media-view-thumbs .flexy-thumb img {width:auto;max-width:14rem;height:auto;max-height:14rem;}
-  .media-thumb-sm {height:1.75rem;border-radius:2px;}
-  .media-thumb-lg {height:5rem;border-radius:2px;}
+
+  .media-thumb-sm {
+    height:1.75rem;
+    border-radius:2px;
+  }
+  .media-thumb-lg {
+    height:5rem;
+    border-radius:2px;
+  }
 </style>
