@@ -29173,7 +29173,7 @@ exports = module.exports = __webpack_require__(/*! ./../../../../~/css-loader/li
 
 
 // module
-exports.push([module.i, "\n.flexy-thumb {display:inline;margin:0;\n}\n.flexy-thumb .fa {font-size:1.6rem;\n}\n.flexy-thumb img {width:auto;\n}\n.grid-media-view-thumbs .flexy-thumb .fa {font-size:10rem;\n}\n.grid-media-view-thumbs .flexy-thumb img {width:auto;max-width:14rem;height:auto;max-height:14rem;\n}\n.media-thumb-sm {\n  height:1.75rem;\n  border-radius:2px;\n}\n.media-thumb-lg {\n  height:5rem;\n  border-radius:2px;\n}\n", ""]);
+exports.push([module.i, "\n.flexy-thumb {display:inline;margin:0;\n}\n.flexy-thumb .fa {font-size:1.6rem;\n}\n.flexy-thumb img {width:auto;\n}\n.grid-media-view-thumbs .flexy-thumb .fa {font-size:10rem;\n}\n.grid-media-view-thumbs .flexy-thumb img {width:auto;max-width:14rem;height:auto;max-height:14rem;\n}\n.grid-media-view-small .flexy-thumb .fa {font-size:5rem;\n}\n.grid-media-view-small .flexy-thumb img {width:auto;max-width:6rem;height:auto;max-height:6rem;\n}\n.media-thumb-sm {\n  height:1.75rem;\n  border-radius:2px;\n}\n.media-thumb-lg {\n  height:5rem;\n  border-radius:2px;\n}\n", ""]);
 
 // exports
 
@@ -32045,25 +32045,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     staticClass: "card-footer text-muted"
   }, [(_vm.gridType() === 'media') ? _h('div', {
     staticClass: "btn-group actions"
-  }, [(_vm.getMediaView() === 'list') ? [_h('flexy-button', {
-    staticClass: "btn-primary",
-    attrs: {
-      "icon": "bars",
-      "border": "true"
-    }
-  }), " ", _h('flexy-button', {
-    staticClass: "btn-outline-primary",
-    attrs: {
-      "icon": "picture-o",
-      "border": "true"
+  }, [_h('flexy-button', {
+    class: {
+      'btn-outline-primary': _vm.getMediaView() !== 'list', 'btn-primary': _vm.getMediaView() === 'list'
     },
-    nativeOn: {
-      "click": function($event) {
-        _vm.setMediaView('thumbs')
-      }
-    }
-  })] : _vm._e(), " ", (_vm.getMediaView() === 'thumbs') ? [_h('flexy-button', {
-    staticClass: "btn-outline-primary",
     attrs: {
       "icon": "bars",
       "border": "true"
@@ -32074,12 +32059,32 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
       }
     }
   }), " ", _h('flexy-button', {
-    staticClass: "btn-primary",
+    class: {
+      'btn-outline-primary': _vm.getMediaView() !== 'small', 'btn-primary': _vm.getMediaView() === 'small'
+    },
+    attrs: {
+      "icon": "th",
+      "border": "true"
+    },
+    nativeOn: {
+      "click": function($event) {
+        _vm.setMediaView('small')
+      }
+    }
+  }), " ", _h('flexy-button', {
+    class: {
+      'btn-outline-primary': _vm.getMediaView() !== 'thumbs', 'btn-primary': _vm.getMediaView() === 'thumbs'
+    },
     attrs: {
       "icon": "picture-o",
       "border": "true"
+    },
+    nativeOn: {
+      "click": function($event) {
+        _vm.setMediaView('thumbs')
+      }
     }
-  })] : _vm._e()]) : _vm._e(), " ", (_vm.needsPagination()) ? _h('flexy-pagination', {
+  })]) : _vm._e(), " ", (_vm.needsPagination()) ? _h('flexy-pagination', {
     attrs: {
       "total": _vm.dataInfo.total_rows,
       "pages": _vm.dataInfo.num_pages,

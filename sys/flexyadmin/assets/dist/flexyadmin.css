@@ -4539,13 +4539,13 @@ a > .fa, .btn > .fa {
 .grid.grid-type-tree tbody td[level="7"][name="str_title"] {
   padding-left: 7rem; }
 
-.grid.grid-media-view-thumbs table.grid-data thead th:not(.grid-actions) {
+.grid.grid-media-view-thumbs table.grid-data thead th:not(.grid-actions), .grid.grid-media-view-small table.grid-data thead th:not(.grid-actions) {
   display: none; }
 
-.grid.grid-media-view-thumbs table.grid-data tbody {
+.grid.grid-media-view-thumbs table.grid-data tbody, .grid.grid-media-view-small table.grid-data tbody {
   display: flex;
   flex-wrap: wrap; }
-  .grid.grid-media-view-thumbs table.grid-data tbody tr {
+  .grid.grid-media-view-thumbs table.grid-data tbody tr, .grid.grid-media-view-small table.grid-data tbody tr {
     position: relative;
     width: 15rem;
     height: 16.75rem;
@@ -4553,25 +4553,25 @@ a > .fa, .btn > .fa {
     overflow: visible;
     border-radius: 0.25rem;
     overflow: hidden; }
-  .grid.grid-media-view-thumbs table.grid-data tbody tr:hover {
+  .grid.grid-media-view-thumbs table.grid-data tbody tr:hover, .grid.grid-media-view-small table.grid-data tbody tr:hover {
     border-color: #696;
     box-shadow: 0 0 0.1rem #55595c; }
-  .grid.grid-media-view-thumbs table.grid-data tbody tr.is-selected {
+  .grid.grid-media-view-thumbs table.grid-data tbody tr.is-selected, .grid.grid-media-view-small table.grid-data tbody tr.is-selected {
     background-color: #eceeef;
     border-color: #696;
     box-shadow: 0 0 0.5rem #55595c; }
-  .grid.grid-media-view-thumbs table.grid-data tbody td {
+  .grid.grid-media-view-thumbs table.grid-data tbody td, .grid.grid-media-view-small table.grid-data tbody td {
     border: none;
     padding: 0px;
     background-color: transparent; }
-    .grid.grid-media-view-thumbs table.grid-data tbody td input {
+    .grid.grid-media-view-thumbs table.grid-data tbody td input, .grid.grid-media-view-small table.grid-data tbody td input {
       text-align: center; }
-  .grid.grid-media-view-thumbs table.grid-data tbody td.action {
+  .grid.grid-media-view-thumbs table.grid-data tbody td.action, .grid.grid-media-view-small table.grid-data tbody td.action {
     display: none; }
-  .grid.grid-media-view-thumbs table.grid-data tbody td[name="media_thumb"] {
+  .grid.grid-media-view-thumbs table.grid-data tbody td[name="media_thumb"], .grid.grid-media-view-small table.grid-data tbody td[name="media_thumb"] {
     width: 100%;
     height: 100%; }
-  .grid.grid-media-view-thumbs table.grid-data tbody td[name="media_thumb"] .flexy-thumb {
+  .grid.grid-media-view-thumbs table.grid-data tbody td[name="media_thumb"] .flexy-thumb, .grid.grid-media-view-small table.grid-data tbody td[name="media_thumb"] .flexy-thumb {
     position: absolute;
     width: auto;
     max-width: 14rem;
@@ -4580,7 +4580,7 @@ a > .fa, .btn > .fa {
     bottom: 2.25rem;
     left: 50%;
     transform: translate(-50%, 0); }
-  .grid.grid-media-view-thumbs table.grid-data tbody td[name="alt"] {
+  .grid.grid-media-view-thumbs table.grid-data tbody td[name="alt"], .grid.grid-media-view-small table.grid-data tbody td[name="alt"] {
     position: absolute;
     bottom: .35rem;
     width: 100%;
@@ -4594,8 +4594,23 @@ a > .fa, .btn > .fa {
   .grid.grid-media-view-thumbs table.grid-data tbody td[name='date'],
   .grid.grid-media-view-thumbs table.grid-data tbody td[name='size'],
   .grid.grid-media-view-thumbs table.grid-data tbody td[name='width'],
-  .grid.grid-media-view-thumbs table.grid-data tbody td[name='height'] {
+  .grid.grid-media-view-thumbs table.grid-data tbody td[name='height'], .grid.grid-media-view-small table.grid-data tbody td[name='name'],
+  .grid.grid-media-view-small table.grid-data tbody td[name='file'],
+  .grid.grid-media-view-small table.grid-data tbody td[name='path'],
+  .grid.grid-media-view-small table.grid-data tbody td[name='type'],
+  .grid.grid-media-view-small table.grid-data tbody td[name='date'],
+  .grid.grid-media-view-small table.grid-data tbody td[name='size'],
+  .grid.grid-media-view-small table.grid-data tbody td[name='width'],
+  .grid.grid-media-view-small table.grid-data tbody td[name='height'] {
     display: none; }
+
+.grid.grid-media-view-small table.grid-data tbody tr {
+  width: 7rem;
+  height: 8.75rem; }
+
+.grid.grid-media-view-small table.grid-data tbody td[name="media_thumb"] .flexy-thumb {
+  max-width: 6rem;
+  max-height: 8rem; }
 
 /* SORTABLE */
 .sortable-chosen {
