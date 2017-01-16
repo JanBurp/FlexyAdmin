@@ -4492,9 +4492,7 @@ a > .fa, .btn > .fa {
   .grid #dropdown-sort .dropdown-item.selected {
     padding-left: .35rem; }
   .grid th.grid-header-type-primary {
-    width: 4rem;
-    max-width: 8rem;
-    min-width: 4rem;
+    width: 2rem;
     white-space: nowrap; }
   .grid td {
     overflow: hidden;
