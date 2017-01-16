@@ -88,8 +88,8 @@ export default {
   .flexy-button.btn-lg {width:3.25rem;height:3.15rem;padding:.5rem .5rem .5rem 0;}
   .flexy-button.btn-lg .fa {font-size:2rem;}
 
-  .flexy-button.btn-xlg {width:5rem;height:5rem;padding:.7rem 1.5rem .5rem 0.15rem;}
-  .flexy-button.btn-xlg .fa {font-size:3.25rem;}
+  .flexy-button.btn-xlg {width:5rem;height:5rem;padding:.7rem 2.5rem .7rem .5rem;}
+  .flexy-button.btn-xlg .fa {font-size:3.5rem;}
 
 
 </style>

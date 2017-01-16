@@ -111,7 +111,7 @@ class AdminController extends BasicController {
     $this->view_data['tinymceOptions'] = array(
       'plugins'    => 'fullscreen,table',
       'language'   => $this->flexy_auth->get_user()['str_language'],
-      'height'     => 500,
+      'height'     => 400,
       'menubar'    => "edit format table",
       // 'toolbar'    => false,
       'toolbar1'   => 'cut copy paste | undo redo | bold italic | alignleft aligncenter alignright | bullist numlist | link unlink | charmap image | code | fullscreen',
