@@ -14,12 +14,38 @@ export default {
     progress    : 0,
     messages    : [],
     media_view  : _flexy.media_view,
+    _modal      : {
+      callback  : undefined,
+      state     : undefined,
+    },
+    modal       : {
+      show    : false,
+      title   : 'Title',
+      body    : 'Message',
+      buttons : [
+        {
+          type   : 'cancel',
+          title  : _flexy.language_keys.cancel,
+          class  : 'btn-outline-primary',
+          close  : true,
+        },
+        {
+          type   : 'ok',
+          title  : _flexy.language_keys.ok,
+          class  : 'btn-outline-danger',
+          close  : true,
+        },
+      ],
+    },
   },
   
   getState : function(item) {
     return this.state[item];
   },
   
+  /**
+   * PROGRESS
+   */
   showProgress : function() {
     this.state.progress = 10;
     this.debug && console.log('state.progress',this.state.progress); 
@@ -39,6 +65,29 @@ export default {
     this.debug && console.log('state.progress',this.state.progress); 
   },
   
+  /**
+   * Modal
+   */
+  openModal : function(options,callback) {
+    if (!_.isUndefined(options)) _.merge(this.state.modal,options);
+    this.state.modal.show = true;
+    this.state._modal.callback = callback;
+    var buttonEL = document.querySelector('#flexyadmin-modal .modal-footer button:last-child');
+    buttonEL.focus();
+  },
+  modalState : function(state) {
+    this.state._modal.state = state;
+  },
+  closeModal  : function() {
+    this.state.modal.show = false;
+    if ( !_.isUndefined(this.state._modal.callback) ) {
+      this.state._modal.callback.call( this, this.state._modal );
+    }
+  },
+  
+  /**
+   * Messages
+   */
   addMessage : function(message,type) {
     if (_.isUndefined(type)) type='success';
     var self = this;
@@ -55,10 +104,13 @@ export default {
     this.state.messages.splice(id,1);
   },
   
+  
+  /**
+   * Media view
+   */
   getMediaView : function() {
     return this.state.media_view;
   },
-  
   setMediaView : function(view) {
     var self = this;
     this.state.media_view = view;
@@ -75,11 +127,14 @@ export default {
     });
   },
   
+  
+  
   /**
-    Global method om Api aan te roepen. Options Object bevat de volgende properties:
-    - url, de url van de api (auth,table,row, etc)
-    - data, de mee te geven parameters
-    - Laat ook progress bar & spinner zien
+   * API
+   * Global method om Api aan te roepen. Options Object bevat de volgende properties:
+   * - url, de url van de api (auth,table,row, etc)
+   * - data, de mee te geven parameters
+   * - Laat ook progress bar & spinner zien
    */
   api : function(options) {
     var self = this;
