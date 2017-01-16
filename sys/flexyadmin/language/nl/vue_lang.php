@@ -2,6 +2,7 @@
 
 $lang['vue_cancel']        = "Annuleer";
 $lang['vue_submit']        = "Invoeren";
+$lang['vue_ok']            = "Ok";
 $lang['vue_save']          = "Bewaar";
 $lang['vue_remove']        = "Verwijder";
 $lang['vue_browse']        = "Bladeren";
