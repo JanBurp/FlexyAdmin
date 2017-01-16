@@ -5,9 +5,11 @@ import draggable        from 'vuedraggable'
 import flexyButton      from '../flexy-button.vue'
 import flexyThumb       from '../flexy-thumb.vue'
 
+import flexyGrid        from '../grid/flexy-grid.vue'
+
 export default {
   name: 'MediaPicker',
-  components: {draggable,flexyButton,flexyThumb},
+  components: {draggable,flexyButton,flexyThumb,flexyGrid},
   props:{
     'value'   : String,
     'name'    : String,
@@ -34,6 +36,7 @@ export default {
   data : function() {
     return {
       media : this.value,
+      choose: true,
     };
   },
   
@@ -85,19 +88,19 @@ export default {
 
 <template>
   <div class="mediapicker">
-    <flexy-button icon="plus" class="btn-outline-warning" size="xlg" />
-    <draggable :list="thumbs()" :options="draggableOptions" @end="dragEnd($event)">
-      <div v-for="(img,index) in thumbs()" class="mediapicker-thumb">
-        <flexy-button icon="remove" class="btn-danger" @click.native="removeMedia(index)"/>
-        <flexy-thumb size="lg" :src="img.src" :alt="img.alt" :value="img.value" />
-      </div>
-    </draggable>
+    <div class="mediapicker-selection">
+      <flexy-button :icon="{'plus':!choose,'chevron-up':choose}" :class="{'btn-outline-warning':!choose,'btn-outline-primary':choose}" size="xlg" @click.native="choose=!choose" />
+      <draggable :list="thumbs()" :options="draggableOptions" @end="dragEnd($event)">
+        <div v-for="(img,index) in thumbs()" class="mediapicker-thumb">
+          <flexy-button icon="remove" class="btn-danger" @click.native="removeMedia(index)"/>
+          <flexy-thumb size="lg" :src="img.src" :alt="img.alt" :value="img.value" />
+        </div>
+      </draggable>
+    </div>
+    
+    <div class="mediapicker-choose" v-if="choose">
+      <flexy-grid type='mediapicker' api='table' name="pictures" :title="$lang.file_select" offset="0" limit="10"></flexy-grid>
+    </div>
+    
   </div>
 </template>
-
-<style>
-  .mediapicker {min-height:6rem;}
-  .mediapicker>.flexy-button {float:left;margin-right:.5rem;}
-  .mediapicker .mediapicker-thumb {display:inline;margin-right:.25rem;cursor:move;}
-  .mediapicker .mediapicker-thumb>.flexy-button {position:absolute;}
-</style>
