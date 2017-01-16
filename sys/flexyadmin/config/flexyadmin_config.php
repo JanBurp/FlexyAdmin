@@ -973,7 +973,7 @@ $config["CFG_"]=array(
 			"field"=>'cfg_users.str_filemanager_view',
  			"b_show_in_grid"=>'0',
 			"b_show_in_form"=>'0',
-			"str_options"=>'list|thumbs',
+			"str_options"=>'list|small|thumbs',
 			"b_multi_options"=>'0',
 			"str_validation_rules"=>''
  			),

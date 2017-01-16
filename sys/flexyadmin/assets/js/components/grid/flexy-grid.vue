@@ -854,14 +854,9 @@ export default {
     <!-- FOOTER -->
     <div class="card-footer text-muted">
       <div class="btn-group actions" v-if="gridType() === 'media'">
-        <template v-if="getMediaView()==='list'">
-          <flexy-button icon="bars" class="btn-primary" border="true" />
-          <flexy-button icon="picture-o" @click.native="setMediaView('thumbs')" class="btn-outline-primary" border="true"/>
-        </template>
-        <template v-if="getMediaView()==='thumbs'">
-          <flexy-button icon="bars" @click.native="setMediaView('list')" class="btn-outline-primary" border="true"/>
-          <flexy-button icon="picture-o" class="btn-primary" border="true"/>
-        </template>
+        <flexy-button @click.native="setMediaView('list')"   icon="bars"       :class="{'btn-outline-primary':getMediaView()!=='list','btn-primary':getMediaView()==='list'}" border="true" />
+        <flexy-button @click.native="setMediaView('small')"  icon="th"         :class="{'btn-outline-primary':getMediaView()!=='small','btn-primary':getMediaView()==='small'}" border="true" />
+        <flexy-button @click.native="setMediaView('thumbs')" icon="picture-o"  :class="{'btn-outline-primary':getMediaView()!=='thumbs','btn-primary':getMediaView()==='thumbs'}" border="true" />
       </div>
       <flexy-pagination v-if="needsPagination()" :total="dataInfo.total_rows" :pages="dataInfo.num_pages" :current="dataInfo.page + 1" :limit="dataInfo.limit" @newpage="reloadPage({offset:$event})"></flexy-pagination>
       <div v-if="!needsPagination()" class="pagination-container">
