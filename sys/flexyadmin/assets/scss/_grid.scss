@@ -60,39 +60,34 @@
       padding:0;
    }
    
-   // Upload Block
-   .card-block.grid-upload {
-     padding:.5rem;
-     border-bottom:1px solid $brand-primary;
+   // UPLOAD ROW
+   .grid-upload {
      background-color:$gray-lightest;
      input#browsefiles {
        display:none;
      }
      .grid-upload-dropbox {
-       color:$gray;
-       border:dashed 2px $gray-lighter;
-       border-radius:$border-radius;
-       padding:.5rem;
-       .flexy-button {margin-right:1rem;float:left;}
+       color:$gray-light;
+       .flexy-button {
+         margin-right:.35rem;
+       }
+       .upload-spinner {
+         visibility:hidden;
+         margin-right:.5rem;
+       }
+       .upload-spinner.show {visibility:visible;}
      }
-     progress {
-       margin:0;
-       height:1.5rem;
-     }
-     table {
-       margin-top:.5rem;
-       thead .flexy-button {margin-right:1rem;}
-     }
-     tr {
-       th {color:$brand-primary;vertical-align:top;}
-       th:first-child, td:first-child {padding-left:.65rem;}
-       th:last-child, td:last-child {text-align:right;}
-       
+   }
+   .grid-upload.dropping {
+     background-color:$brand-warning!important;
+     color:$body-bg!important;
+     border-color:$brand-danger!important;
+     * {
+       color:$body-bg!important;
      }
    }
    
-   // Table
-   
+   // TABLE
    table {
      margin-bottom:0;
    }
@@ -245,6 +240,27 @@
         display:none
       }
       
+      
+      // UPLOAD ROW
+      tr.grid-upload {
+        background-color:$gray-lightest;
+        border:dashed 2px $gray-lighter;
+        td.grid-upload-dropbox {
+          display:block;
+          width:100%;
+          height:100%;
+          text-align:center;
+          padding:1rem;
+          white-space:normal;
+          .flexy-button {
+            display:block;
+            margin:auto;
+            margin-top:4rem;
+          }
+          .upload-spinner {display:block;margin:auto;}
+        }
+      }
+      
     }
     
   }
@@ -261,6 +277,15 @@
       td[name="media_thumb"] .flexy-thumb {
         max-width:6rem;
         max-height:8rem;
+      }
+      // UPLOAD ROW
+      tr.grid-upload {
+        td.grid-upload-dropbox {
+          padding:.25rem;
+          .flexy-button {
+            margin-top:0rem;
+          }
+        }
       }
     }
   }

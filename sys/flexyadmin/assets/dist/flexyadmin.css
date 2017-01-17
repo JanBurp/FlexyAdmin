@@ -4373,7 +4373,8 @@ a > .fa, .btn > .fa {
     left: 50%;
     top: 50%;
     font-size: 5rem;
-    color: #696; }
+    color: #D90;
+    text-shadow: 0px 0px 0.5rem #55595c; }
 
 /* TRANSITIONS */
 .slideUp-enter-active {
@@ -4440,34 +4441,25 @@ a > .fa, .btn > .fa {
       margin-bottom: 0; }
   .grid .card-block {
     padding: 0; }
-  .grid .card-block.grid-upload {
-    padding: .5rem;
-    border-bottom: 1px solid #696;
+  .grid .grid-upload {
     background-color: #f7f7f9; }
-    .grid .card-block.grid-upload input#browsefiles {
+    .grid .grid-upload input#browsefiles {
       display: none; }
-    .grid .card-block.grid-upload .grid-upload-dropbox {
-      color: #55595c;
-      border: dashed 2px #eceeef;
-      border-radius: 0.25rem;
-      padding: .5rem; }
-      .grid .card-block.grid-upload .grid-upload-dropbox .flexy-button {
-        margin-right: 1rem;
-        float: left; }
-    .grid .card-block.grid-upload progress {
-      margin: 0;
-      height: 1.5rem; }
-    .grid .card-block.grid-upload table {
-      margin-top: .5rem; }
-      .grid .card-block.grid-upload table thead .flexy-button {
-        margin-right: 1rem; }
-    .grid .card-block.grid-upload tr th {
-      color: #696;
-      vertical-align: top; }
-    .grid .card-block.grid-upload tr th:first-child, .grid .card-block.grid-upload tr td:first-child {
-      padding-left: .65rem; }
-    .grid .card-block.grid-upload tr th:last-child, .grid .card-block.grid-upload tr td:last-child {
-      text-align: right; }
+    .grid .grid-upload .grid-upload-dropbox {
+      color: #818a91; }
+      .grid .grid-upload .grid-upload-dropbox .flexy-button {
+        margin-right: .35rem; }
+      .grid .grid-upload .grid-upload-dropbox .upload-spinner {
+        visibility: hidden;
+        margin-right: .5rem; }
+      .grid .grid-upload .grid-upload-dropbox .upload-spinner.show {
+        visibility: visible; }
+  .grid .grid-upload.dropping {
+    background-color: #D90 !important;
+    color: #fff !important;
+    border-color: #D00 !important; }
+    .grid .grid-upload.dropping * {
+      color: #fff !important; }
   .grid table {
     margin-bottom: 0; }
   .grid th {
@@ -4605,6 +4597,23 @@ a > .fa, .btn > .fa {
   .grid.grid-media-view-small table.grid-data tbody td[name='width'],
   .grid.grid-media-view-small table.grid-data tbody td[name='height'] {
     display: none; }
+  .grid.grid-media-view-thumbs table.grid-data tbody tr.grid-upload, .grid.grid-media-view-small table.grid-data tbody tr.grid-upload {
+    background-color: #f7f7f9;
+    border: dashed 2px #eceeef; }
+    .grid.grid-media-view-thumbs table.grid-data tbody tr.grid-upload td.grid-upload-dropbox, .grid.grid-media-view-small table.grid-data tbody tr.grid-upload td.grid-upload-dropbox {
+      display: block;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      padding: 1rem;
+      white-space: normal; }
+      .grid.grid-media-view-thumbs table.grid-data tbody tr.grid-upload td.grid-upload-dropbox .flexy-button, .grid.grid-media-view-small table.grid-data tbody tr.grid-upload td.grid-upload-dropbox .flexy-button {
+        display: block;
+        margin: auto;
+        margin-top: 4rem; }
+      .grid.grid-media-view-thumbs table.grid-data tbody tr.grid-upload td.grid-upload-dropbox .upload-spinner, .grid.grid-media-view-small table.grid-data tbody tr.grid-upload td.grid-upload-dropbox .upload-spinner {
+        display: block;
+        margin: auto; }
 
 .grid.grid-media-view-small table.grid-data tbody tr {
   width: 7rem;
@@ -4613,6 +4622,11 @@ a > .fa, .btn > .fa {
 .grid.grid-media-view-small table.grid-data tbody td[name="media_thumb"] .flexy-thumb {
   max-width: 6rem;
   max-height: 8rem; }
+
+.grid.grid-media-view-small table.grid-data tbody tr.grid-upload td.grid-upload-dropbox {
+  padding: .25rem; }
+  .grid.grid-media-view-small table.grid-data tbody tr.grid-upload td.grid-upload-dropbox .flexy-button {
+    margin-top: 0rem; }
 
 /* SORTABLE */
 .sortable-chosen {
@@ -4711,7 +4725,8 @@ body.mce-fullscreen .mce-tinymce {
     margin: .25rem; }
     .mediapicker .mediapicker-selection > .flexy-button {
       float: left;
-      margin-right: .5rem; }
+      margin-right: .5rem;
+      margin-top: 3.25rem; }
     .mediapicker .mediapicker-selection .mediapicker-thumb {
       display: inline;
       margin-right: .25rem;

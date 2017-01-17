@@ -28782,7 +28782,7 @@ updateText:function updateText(editor,content){this.updateField(editor.id,conten
 "use strict";
 'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _vuedraggable=__webpack_require__(/*! vuedraggable */ 18);var _vuedraggable2=_interopRequireDefault(_vuedraggable);var _flexyButton=__webpack_require__(/*! ../flexy-button.vue */ 3);var _flexyButton2=_interopRequireDefault(_flexyButton);var _flexyThumb=__webpack_require__(/*! ../flexy-thumb.vue */ 8);var _flexyThumb2=_interopRequireDefault(_flexyThumb);var _flexyGrid=__webpack_require__(/*! ../grid/flexy-grid.vue */ 10);var _flexyGrid2=_interopRequireDefault(_flexyGrid);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}exports.default={name:'MediaPicker',components:{draggable:_vuedraggable2.default,flexyButton:_flexyButton2.default,flexyThumb:_flexyThumb2.default,flexyGrid:_flexyGrid2.default},props:{'value':String,'name':String,'path':String},computed:{draggableOptions:function draggableOptions(){return{// group         : { name:'tree', pull:true},
 // draggable     : 'div',
-forceFallback:true};}},data:function data(){return{media:this.value,choose:true};},methods:{thumbs:function thumbs(){var media=_.trim(this.media,'|');var array=media.split('|');var thumbs=[];for(var i=0;i<array.length;i++){if(array[i]!==''){thumbs[i]={value:array[i],src:'_media/thumb/'+this.path+'/'+array[i],alt:array[i]};}}return thumbs;},addMedia:function addMedia(media){var currentMedia=_.trim(this.media,'|').split('|');var newMedia=_.clone(currentMedia);newMedia=newMedia.concat(media);newMedia=_.uniq(newMedia);this.changeMedia(newMedia);},removeMedia:function removeMedia(index){var currentMedia=_.trim(this.media,'|').split('|');var newMedia=_.clone(currentMedia);newMedia.splice(index,1);this.changeMedia(newMedia);},dragEnd:function dragEnd(event){var oldIndex=event.oldIndex;var newIndex=event.newIndex;var currentMedia=_.trim(this.media,'|').split('|');var newMedia=_.clone(currentMedia);newMedia.splice(newIndex,0,newMedia.splice(oldIndex,1)[0]);this.changeMedia(newMedia);},changeMedia:function changeMedia(media){if(typeof media!=='string')media=_.join(media,'|');this.media=media;this.$emit('input',this.media);}}};
+forceFallback:true};}},data:function data(){return{media:this.value,choose:false};},methods:{thumbs:function thumbs(){var media=_.trim(this.media,'|');var array=media.split('|');var thumbs=[];for(var i=0;i<array.length;i++){if(array[i]!==''){thumbs[i]={value:array[i],src:'_media/thumb/'+this.path+'/'+array[i],alt:array[i]};}}return thumbs;},addMedia:function addMedia(media){var currentMedia=_.trim(this.media,'|').split('|');var newMedia=_.clone(currentMedia);newMedia=newMedia.concat(media);newMedia=_.uniq(newMedia);this.changeMedia(newMedia);},removeMedia:function removeMedia(index){var currentMedia=_.trim(this.media,'|').split('|');var newMedia=_.clone(currentMedia);newMedia.splice(index,1);this.changeMedia(newMedia);},dragEnd:function dragEnd(event){var oldIndex=event.oldIndex;var newIndex=event.newIndex;var currentMedia=_.trim(this.media,'|').split('|');var newMedia=_.clone(currentMedia);newMedia.splice(newIndex,0,newMedia.splice(oldIndex,1)[0]);this.changeMedia(newMedia);},changeMedia:function changeMedia(media){if(typeof media!=='string')media=_.join(media,'|');this.media=media;this.$emit('input',this.media);}}};
 
 /***/ },
 /* 62 */
@@ -28833,7 +28833,7 @@ _flexyState2.default.addMessage(self.$lang.form_save_error,'danger');}return res
 // }
 // else {
 this.reloadPage({offset:this.offset,limit:this.limit,order:this.order,filter:this.filter});// }
-},data:function data(){return{items:[],fields:[],dataInfo:{},selected:[],apiParts:{order:this.order,filter:this.filter,offset:0,limit:this.limit,txt_abstract:true,as_grid:true},changeUrlApi:true,focus:{id:false,cell:false},draggable:{item:false,orderStart:0,oldItems:false,children:false,newPage:false,oldIndex:0,newIndex:0},findTerm:this.filter,extendedFind:true,extendedTermDefault:{field:'',term:'',and:'OR',equals:'exist'},extendedTerm:[],uploadFiles:[],uploadProgress:{},uploadStatus:{}};},mounted:function mounted(){this.extendedFind=false;if(this.filter.substr(0,1)==='['||this.filter.substr(0,1)==='{'){this.extendedFind=true;this.extendedTerm=JSON.parse(this.filter);this.filterTerm='';}else{this.extendedTerm=[_.clone(this.extendedTermDefault)];}},computed:{dataName:function dataName(){var name=this.name;if(this.gridType()==='media'){name='media_'+name;}return name;},/**
+},data:function data(){return{items:[],fields:[],dataInfo:{},selected:[],apiParts:{order:this.order,filter:this.filter,offset:0,limit:this.limit,txt_abstract:true,as_grid:true},changeUrlApi:true,focus:{id:false,cell:false},draggable:{item:false,orderStart:0,oldItems:false,children:false,newPage:false,oldIndex:0,newIndex:0},findTerm:this.filter,extendedFind:true,extendedTermDefault:{field:'',term:'',and:'OR',equals:'exist'},extendedTerm:[],uploadFiles:[],dropUploadHover:false};},mounted:function mounted(){this.extendedFind=false;if(this.filter.substr(0,1)==='['||this.filter.substr(0,1)==='{'){this.extendedFind=true;this.extendedTerm=JSON.parse(this.filter);this.filterTerm='';}else{this.extendedTerm=[_.clone(this.extendedTermDefault)];}},computed:{dataName:function dataName(){var name=this.name;if(this.gridType()==='media'){name='media_'+name;}return name;},/**
      * Options for draggable
      */draggableOptions:function draggableOptions(){return{// group         : { name:'tree', pull:true},
 draggable:'tr',handle:'.draggable-handle',forceFallback:true};}},methods:{reloadPage:function reloadPage(apiParts){var self=this;_flexyState2.default.api({url:self.apiUrl(apiParts)}).then(function(response){if(!_.isUndefined(response.data)){if(response.data.success){// Stel url in van browser
@@ -28885,7 +28885,7 @@ if(isTree&&_flexyState2.default.debug){console.log('treeInfo:');_.forEach(data,f
 // },
 hasSelection:function hasSelection(){return this.selected.length>0;},isSelected:function isSelected(id){return this.selected.indexOf(id)>-1;},select:function select(id){var index=this.selected.indexOf(id);if(index>-1){this.selected.splice(index,1);}else{this.selected.push(id);}this.emitAndResetSelectedMedia();},reverseSelection:function reverseSelection(){var ids=[];for(var i=0;i<this.items.length;i++){ids.push(this.items[i].id.value);}this.selected=_.difference(ids,this.selected);this.emitAndResetSelectedMedia();},emitAndResetSelectedMedia:function emitAndResetSelectedMedia(){if(this.type==='mediapicker'){var selectedMedia=[];for(var i=0;i<this.selected.length;i++){for(var j=0;j<this.items.length;j++){var index=this.items[j]['id'].value;if(index===this.selected[i]){var media=this.items[j]['media_thumb'].value;selectedMedia.push(media);}}}this.$emit('grid-selected',selectedMedia);this.selected=[];}},newItem:function newItem(){if(this.gridType()==='media'){var event=new MouseEvent('click',{'view':window,'bubbles':true,'cancelable':true});document.getElementById('browsefiles').dispatchEvent(event);}else{this.editItem(-1);}},editItem:function editItem(id){var url=this.editUrl(id);window.location.assign(url);},removeItems:function removeItems(removeIds){var self=this;if(_.isUndefined(removeIds)){removeIds=this.selected;}else{removeIds=[removeIds];}// Only when there are items to remove
 if(removeIds.length>0){// Confirm
-var message=this.$lang['confirm_delete_one'];if(removeIds.length>1)message=this.$options.filters.replace(this.$lang['confirm_delete_multiple'],removeIds.length);_flexyState2.default.openModal({'title':'','body':message},function(event){if(event.state.type==='ok'){var data={table:self.name,where:removeIds};if(self.gridType()==='media')data.table='res_assets';return _flexyState2.default.api({url:'row',data:data}).then(function(response){var error=response.error||response.data.data===false;if(error){_flexyState2.default.addMessage(self.$lang.error_delete,'danger');}else{_flexyState2.default.addMessage(self.$options.filters.replace(self.$lang.deleted,removeIds.length));self.reloadPage();}return response;});}});}},rowLevel:function rowLevel(row){if(_.isUndefined(row._info))return 0;return row._info.level;},isEditable:function isEditable(name){var editable=false;if(!_.isUndefined(this.fields[name]))editable=this.fields[name].schema['grid-edit'];return editable;},isReadonly:function isReadonly(name){var readonly=false;if(!_.isUndefined(this.fields[name]))readonly=this.fields[name].schema['readonly'];return readonly;},editUrl:function editUrl(id){var url='';if(this.gridType()==='media'){url='admin/show/form/_media_/'+this.name+'/'+id;}else{url='admin/show/form/'+this.name+'/'+id;}return url;},startFinding:function startFinding(event){if(event)event.preventDefault();var self=this;var find='';if(!self.extendedFind){find=this.findTerm.replace(/'/g,'"');}else{var filled=true;for(var i=0;i<this.extendedTerm.length;i++){if(this.extendedTerm[i].field==='')filled=false;if(this.extendedTerm[i].term==='')filled=false;}if(this.extendedTerm.length<1)filled=false;if(!filled)return false;find=JSON.stringify(self.extendedTerm);}this.reloadPage({offset:0,filter:find});},findChanged:function findChanged(){if(this.findTerm==='')this.stopFind();},stopFind:function stopFind(){this.findTerm='';this.extendedFind=false;this.extendedTerm=[_.clone(this.extendedTermDefault)];this.reloadPage({offset:0,filter:''});},extendedSearchAdd:function extendedSearchAdd(){this.extendedTerm.push(_.clone(this.extendedTermDefault));},extendedSearchRemove:function extendedSearchRemove(index){this.extendedTerm.splice(index,1);if(this.extendedTerm.length<1)this.extendedTerm=[_.clone(this.extendedTermDefault)];},dropUploadFiles:function dropUploadFiles(event){event.stopPropagation();event.preventDefault();var files=event.target.files||event.dataTransfer.files;this._addUploadFiles(files);},addUploadFiles:function addUploadFiles(event){var files=event.target.files||event.dataTransfer.files;this._addUploadFiles(files);},removeUploadFile:function removeUploadFile(index){this.uploadFiles.splice(index,1);},_addUploadFiles:function _addUploadFiles(files){for(var i=0;i<files.length;i++){this.uploadFiles.push(files.item(i));}if(files.length>0){this.startUpload();}},startUpload:function startUpload(){var self=this;for(var i=0;i<self.uploadFiles.length;i++){var file=self.uploadFiles[i];self.uploadProgress[file.name]=10;self.uploadStatus[file.name]=self.$lang.upload_status_uploading;var formData=new FormData();formData.set('path',self.name);formData.set('file',self.uploadFiles[i]);formData.set('fileName',self.uploadFiles[i].name);_flexyState2.default.api({method:'POST',url:'media',data:formData,formData:true}).then(function(response){var fileName=response.data.args.fileName;var error=response.data.error;if(!error&&response.data.data===false)error=self.$lang.upload_error;if(error){_flexyState2.default.addMessage(error+' <b>`'+fileName+'`</b>','danger');}else{_flexyState2.default.addMessage(fileName+self.$lang.upload_ready);}// Uit de lijst halen
+var message=this.$lang['confirm_delete_one'];if(removeIds.length>1)message=this.$options.filters.replace(this.$lang['confirm_delete_multiple'],removeIds.length);_flexyState2.default.openModal({'title':'','body':message},function(event){if(event.state.type==='ok'){var data={table:self.name,where:removeIds};if(self.gridType()==='media')data.table='res_assets';return _flexyState2.default.api({url:'row',data:data}).then(function(response){var error=response.error||response.data.data===false;if(error){_flexyState2.default.addMessage(self.$lang.error_delete,'danger');}else{_flexyState2.default.addMessage(self.$options.filters.replace(self.$lang.deleted,removeIds.length));self.reloadPage();}return response;});}});}},rowLevel:function rowLevel(row){if(_.isUndefined(row._info))return 0;return row._info.level;},isEditable:function isEditable(name){var editable=false;if(!_.isUndefined(this.fields[name]))editable=this.fields[name].schema['grid-edit'];return editable;},isReadonly:function isReadonly(name){var readonly=false;if(!_.isUndefined(this.fields[name]))readonly=this.fields[name].schema['readonly'];return readonly;},editUrl:function editUrl(id){var url='';if(this.gridType()==='media'){url='admin/show/form/_media_/'+this.name+'/'+id;}else{url='admin/show/form/'+this.name+'/'+id;}return url;},startFinding:function startFinding(event){if(event)event.preventDefault();var self=this;var find='';if(!self.extendedFind){find=this.findTerm.replace(/'/g,'"');}else{var filled=true;for(var i=0;i<this.extendedTerm.length;i++){if(this.extendedTerm[i].field==='')filled=false;if(this.extendedTerm[i].term==='')filled=false;}if(this.extendedTerm.length<1)filled=false;if(!filled)return false;find=JSON.stringify(self.extendedTerm);}this.reloadPage({offset:0,filter:find});},findChanged:function findChanged(){if(this.findTerm==='')this.stopFind();},stopFind:function stopFind(){this.findTerm='';this.extendedFind=false;this.extendedTerm=[_.clone(this.extendedTermDefault)];this.reloadPage({offset:0,filter:''});},extendedSearchAdd:function extendedSearchAdd(){this.extendedTerm.push(_.clone(this.extendedTermDefault));},extendedSearchRemove:function extendedSearchRemove(index){this.extendedTerm.splice(index,1);if(this.extendedTerm.length<1)this.extendedTerm=[_.clone(this.extendedTermDefault)];},dropUploadFiles:function dropUploadFiles(event){event.stopPropagation();event.preventDefault();var files=event.target.files||event.dataTransfer.files;this._addUploadFiles(files);},addUploadFiles:function addUploadFiles(event){var files=event.target.files||event.dataTransfer.files;this._addUploadFiles(files);},removeUploadFile:function removeUploadFile(index){this.uploadFiles.splice(index,1);},_addUploadFiles:function _addUploadFiles(files){for(var i=0;i<files.length;i++){this.uploadFiles.push(files.item(i));}if(files.length>0){this.startUpload();}},startUpload:function startUpload(){this.dropUploadHover=false;var self=this;for(var i=0;i<self.uploadFiles.length;i++){var file=self.uploadFiles[i];var formData=new FormData();formData.set('path',self.name);formData.set('file',self.uploadFiles[i]);formData.set('fileName',self.uploadFiles[i].name);_flexyState2.default.api({method:'POST',url:'media',data:formData,formData:true}).then(function(response){var fileName=response.data.args.fileName;var error=response.data.error;if(!error&&response.data.data===false)error=self.$lang.upload_error;if(error){_flexyState2.default.addMessage(error+' <b>`'+fileName+'`</b>','danger');}else{_flexyState2.default.addMessage(fileName+self.$lang.upload_ready);}// Uit de lijst halen
 var index=_jdbTools2.default.indexOfProperty(self.uploadFiles,'name',fileName);self.removeUploadFile(index);// Als alles uit de lijst is geuploade, reload
 if(self.uploadFiles.length===0){self.reloadPage();}return response;});}},/**
      * Dragging methods
@@ -31052,15 +31052,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
   }, [_h('div', {
     staticClass: "mediapicker-selection"
   }, [_h('flexy-button', {
-    class: {
-      'btn-outline-warning': !_vm.choose, 'btn-outline-primary': _vm.choose
-    },
+    staticClass: "btn-outline-warning",
     attrs: {
       "icon": {
         'plus': !_vm.choose,
         'chevron-up': _vm.choose
-      },
-      "size": "xlg"
+      }
     },
     nativeOn: {
       "click": function($event) {
@@ -31534,10 +31531,21 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
     staticClass: "card grid",
     class: _vm.gridTypeClass(),
     on: {
-      "dragover": function($event) {
+      "dragover": [function($event) {
         $event.preventDefault();
+      }, function($event) {
+        _vm.dropUploadHover = true
+      }],
+      "drop": _vm.dropUploadFiles,
+      "dragenter": function($event) {
+        _vm.dropUploadHover = true
       },
-      "drop": _vm.dropUploadFiles
+      "dragleave": function($event) {
+        _vm.dropUploadHover = false
+      },
+      "dragend": function($event) {
+        _vm.dropUploadHover = false
+      }
     }
   }, [_h('div', {
     staticClass: "card-header"
@@ -31802,67 +31810,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
         }
       }
     })])
-  })]) : _vm._e(), " ", " ", (_vm.gridType() === 'media') ? _h('div', {
-    staticClass: "card-block grid-upload"
-  }, [_h('div', {
-    staticClass: "grid-upload-dropbox"
-  }, [_h('flexy-button', {
-    staticClass: "btn-warning",
-    attrs: {
-      "icon": "plus"
-    },
-    nativeOn: {
-      "click": function($event) {
-        _vm.newItem()
-      }
-    }
-  }), _vm._s(_vm.$lang.upload_choose)]), " ", _h('input', {
-    attrs: {
-      "id": "browsefiles",
-      "type": "file",
-      "name": "files[]",
-      "multiple": "multiple"
-    },
-    on: {
-      "change": _vm.addUploadFiles
-    }
-  }), " ", _h('table', {
-    directives: [{
-      name: "show",
-      rawName: "v-show",
-      value: (_vm.uploadFiles.length < 0),
-      expression: "uploadFiles.length < 0"
-    }],
-    staticClass: "table table-sm"
-  }, [_h('thead', [_h('tr', [_h('th', [_h('flexy-button', {
-    staticClass: "btn-danger",
-    attrs: {
-      "icon": "upload"
-    },
-    nativeOn: {
-      "click": function($event) {
-        _vm.startUpload($event)
-      }
-    }
-  }), _vm._s(_vm.$lang.upload)]), _h('th', [_vm._s(_vm.$lang.upload_file)]), _h('th', [_vm._s(_vm.$lang.upload_size)]), _h('th', [_vm._s(_vm.$lang.upload_progress)]), _h('th', [_vm._s(_vm.$lang.upload_status)])])]), " ", _h('tbody', [_vm._l((_vm.uploadFiles), function(file, index) {
-    return _h('tr', [_h('td', [_h('flexy-button', {
-      staticClass: "btn-outline-danger",
-      attrs: {
-        "icon": "remove"
-      },
-      nativeOn: {
-        "click": function($event) {
-          _vm.removeUploadFile(index)
-        }
-      }
-    })]), _h('td', [_vm._s(file.name)]), _h('td', [_vm._s(Math.floor(file.size / 1024)) + "k"]), _h('td', [_h('progress', {
-      staticClass: "progress progress-success progress-striped progress-animated",
-      attrs: {
-        "value": _vm.uploadProgress[file.name] || 0,
-        "max": "100"
-      }
-    })]), _h('td', [_vm._s(_vm.uploadStatus[file.name])])])
-  })])])]) : _vm._e(), " ", " ", _h('div', {
+  })]) : _vm._e(), " ", " ", _h('div', {
     staticClass: "card-block table-responsive"
   }, [_h('table', {
     staticClass: "table table-bordered table-sm grid-data"
@@ -31960,7 +31908,42 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;
       "start": _vm.draggable_onStart,
       "end": _vm.draggable_onEnd
     }
-  }, [_vm._l((_vm.items), function(row) {
+  }, [(_vm.gridType() === 'media') ? _h('tr', {
+    staticClass: "grid-upload",
+    class: {
+      'dropping': _vm.dropUploadHover
+    }
+  }, [_h('td', {
+    staticClass: "grid-upload-dropbox",
+    attrs: {
+      "colspan": "100"
+    }
+  }, [_h('flexy-button', {
+    staticClass: "btn-outline-warning",
+    attrs: {
+      "icon": "plus"
+    },
+    nativeOn: {
+      "click": function($event) {
+        _vm.newItem()
+      }
+    }
+  }), " ", _h('span', {
+    staticClass: "upload-spinner fa fa-spinner fa-pulse fa-fw",
+    class: {
+      'show': _vm.uploadFiles.length > 0
+    }
+  }), "\n            " + _vm._s(_vm.$lang.upload_choose) + "\n            ", _h('input', {
+    attrs: {
+      "id": "browsefiles",
+      "type": "file",
+      "name": "files[]",
+      "multiple": "multiple"
+    },
+    on: {
+      "change": _vm.addUploadFiles
+    }
+  })])]) : _vm._e(), " ", " ", _vm._l((_vm.items), function(row) {
     return _h('tr', {
       directives: [{
         name: "show",
