@@ -495,9 +495,25 @@ class Menu {
    * @author Jan den Besten
    */
 	public function add($item) {
+    if (empty($item)) return $this->add_seperator();
+    if ($item==='split') return $this->add_split();
 		$this->menu[$item['uri']]=$item;
     return $this;
 	}
+
+  /**
+   * Voeg één of meerdere menu items toe aan het eind van het huidige menu
+   *
+   * @param array $items array( "uri"=>uri, "name"=>name, "class"=>class ) 
+   * @return object this
+   * @author Jan den Besten
+   */
+  public function add_items($items) {
+    foreach ($items as $item) {
+      $this->add($item);
+    }
+    return $this;
+  }
   
   /**
    * Voeg seperator toe aan menu
