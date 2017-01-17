@@ -551,6 +551,9 @@ export default {
       for (var i = 0; i < files.length; i++) {
         this.uploadFiles.push( files.item(i) );
       }
+      if (files.length>0) {
+        this.startUpload();
+      }
     },
     startUpload : function() {
       var self = this;
@@ -567,24 +570,20 @@ export default {
           url       : 'media',
           data      : formData,
           formData  : true,
-          onUploadProgress : function(progressEvent) {
-            var uploadPercentage = Math.round(progressEvent.loaded * 100 / progressEvent.total);
-            self.uploadProgress[file.name] = uploadPercentage;
-          },
         }).then(function(response){
-          var error = response.data.error;
           var fileName = response.data.args.fileName;
+          var error = response.data.error;
           if (!error && response.data.data===false) error = self.$lang.upload_error;
           if (error) {
-            self.uploadStatus[fileName] = error;
+            flexyState.addMessage(error + ' <b>`'+fileName+'`</b>','danger');
           }
           else {
-            var fileName = response.data.args.fileName;
-            var index = jdb.indexOfProperty(self.uploadFiles,'name',fileName);
-            self.uploadProgress[fileName] = 100;
-            self.removeUploadFile(index);
+            flexyState.addMessage(fileName + self.$lang.upload_ready);
           }
-          // Als alles is geuploade, reload
+          // Uit de lijst halen
+          var index = jdb.indexOfProperty(self.uploadFiles,'name',fileName);
+          self.removeUploadFile(index);
+          // Als alles uit de lijst is geuploade, reload
           if (self.uploadFiles.length === 0 ) {
             self.reloadPage();
           }
@@ -775,7 +774,7 @@ export default {
     <div v-if="gridType()==='media'" class="card-block grid-upload">
       <div class="grid-upload-dropbox"><flexy-button @click.native="newItem()" icon="plus" class="btn-warning" />{{$lang.upload_choose}}</div>
       <input id="browsefiles" @change="addUploadFiles"  type="file" name="files[]" multiple="multiple">
-      <table class="table table-sm" v-show="uploadFiles.length > 0">
+      <table class="table table-sm" v-show="uploadFiles.length < 0">
         <thead>
           <tr><th><flexy-button @click.native="startUpload" icon="upload" class="btn-danger" />{{$lang.upload}}</th><th>{{$lang.upload_file}}</th><th>{{$lang.upload_size}}</th><th>{{$lang.upload_progress}}</th><th>{{$lang.upload_status}}</th></tr>
         </thead>

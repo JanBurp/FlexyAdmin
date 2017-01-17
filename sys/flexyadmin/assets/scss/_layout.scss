@@ -20,10 +20,12 @@
   top:-1px;
   max-height:100%;
   overflow:auto;
+  opacity:.9;
   z-index:99999999;
+  .alert {margin-bottom:.25rem;padding:.5rem;}
+  .message-text {width:90%;}
+  .message-button {float:right;}
 }
-.message-text {width:90%;}
-.message-button {float:right;}
 
 
 /* CONTENT */
