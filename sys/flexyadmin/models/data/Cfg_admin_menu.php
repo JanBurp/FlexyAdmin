@@ -9,50 +9,19 @@
 
 Class cfg_admin_menu extends Data_Core {
   
-  private $types=array('tbl'=>'table','cfg'=>'config','rel'=>'rel','log'=>'log','res'=>'result');
-  
+  private $types      = array('tbl'=>'table','cfg'=>'config','rel'=>'rel','log'=>'log','res'=>'result');
+  private $ui_config  = array();
+  private $user       = false;
 
   public function __construct() {
     parent::__construct();
+    $this->config->load('admin_ui',true);
+    $this->ui_config = $this->config->item('admin_ui');
     $this->load->model('ui');
     $this->load->helper('language');
     $this->lang->load('help');
+    $this->user = $this->flexy_auth->get_user();
   }
-  
-  /**
-   * Speciale get om gegenereerd menu op te halen 
-   *
-   * @return void
-   * @author Jan den Besten
-   */
-  public function get_menu() {
-    $user  = $this->flexy_auth->get_user();
-    if ( !$user ) return FALSE;
-    
-    $this->where( array(
-      'b_visible'=>true,
-      'id_user_group >=' => current(array_keys($user['groups'])),
-      'order >=' => 4,
-      'api !='=> 'API_plugin_stats'
-    ));
-    $result = $this->get_result();
-
-    $sidebar=$this->_process_menu($result);
-    
-
-    $header = array(
-      array( 'name' => lang('help'), 'uri'=>'help/index', 'type' => 'info' ),
-      array( 'name' => $user['username'], 'uri'=>'form/cfg_users/current', 'type' => 'form', 'args' => array('table'=>'cfg_users','id'=>$user['id'] )),
-      array( 'name' => lang('logout'), 'uri'=>'logout', 'type' => 'logout' )
-    );
-
-    $footer = array(
-      array( 'name' => lang('settings'), 'uri'=>'form/tbl_site/1', 'type' => 'form', 'args' => array('table'=>'tbl_site')),
-      array( 'name' => lang('statistics'), 'uri'=>'plugin/stats', 'type' => 'plugin', 'args' => array('plugin'=>'stats')),
-    );
-    return array('header'=>$header,'sidebar'=>$sidebar,'footer'=>$footer);
-  }
-  
   
   /**
    * Speciale get om gegenereerd menu op te halen 
@@ -61,62 +30,145 @@ Class cfg_admin_menu extends Data_Core {
    * @author Jan den Besten
    */
   public function get_menus( $base_url, $current_uri ) {
-    $user = $this->flexy_auth->get_user();
     
-    $this->where( array(
-      'b_visible'=>true,
-      'id_user_group >=' => current(array_keys($user['groups'])),
-      'order >=' => 4,
-      'api !='=> 'API_plugin_stats'
-    ));
-    $result = $this->get_result();
+    /**
+     * Headermenu
+     */
+    $headerMenu = new Menu();
+    $headerMenu->set('view_path','admin/menu-horizontal');
+    $headerMenu->set('framework','bootstrap');
+    $headerMenu->set_current($current_uri);
+    $headerMenu->add_items( $this->_process_items($base_url,$this->ui_config['header_menu']) );
+    // foreach ($this->ui_config['header_menu'] as $key => $item) {
+    //   $headerMenu->add( $this->_process_item($base_url,$item) );
+    // }
+    
+    /**
+     * Side menu
+     */
+    // $this->where( array(
+    //   'b_visible'        => true,
+    //   'id_user_group >=' => current(array_keys($this->user['groups'])),
+    //   'order >='         => 4,
+    //   'api !='           => 'API_plugin_stats'
+    // ));
+    // $result = $this->get_result();
 
     $sideMenu = new Menu();
     $sideMenu->set('view_path','admin/menu-vertical');
     $sideMenu->set('framework','bootstrap');
     $sideMenu->set_current($current_uri);
-    $sidebar=$this->_process_menu($result);
-    
-    foreach ($sidebar as $item) {
-      $class='text-muted';
-      if ($item['type']=='seperator') {
-        $sideMenu->add_split();
-      }
-      else {
-        switch ($item['type']) {
-          case 'tools': $icon='cog'; break;
-          case 'config': $icon='cog'; break;
-          case 'log': $icon='bar-chart'; break;
-          case 'rel': $icon='link'; break;
-          case 'result': $icon='cloud';$class=""; break;
-          case 'media': $icon='folder';$class=""; break;
-          case 'table': $class='';
-          default: $icon = '';
-        }
-        $sideMenu->add( array( 'name' => $item['name'], 'uri'=> $base_url.$item['uri'], 'icon' => $icon, 'class'=>$class ));
-      }
+
+    foreach ($this->ui_config['side_menu'] as $group) {
+      $sideMenu->add_items( $this->_process_items($base_url,$group) );
+    	$sideMenu->add_split();
     }
+
+    //
+    // $sidebar=$this->_process_menu($result);
+    //
+    // foreach ($sidebar as $item) {
+    //   $class='text-muted';
+    //   if ($item['type']=='seperator') {
+    //     $sideMenu->add_split();
+    //   }
+    //   else {
+    //     switch ($item['type']) {
+    //       case 'tools': $icon='cog'; break;
+    //       case 'config': $icon='cog'; break;
+    //       case 'log': $icon='bar-chart'; break;
+    //       case 'rel': $icon='link'; break;
+    //       case 'result': $icon='cloud';$class=""; break;
+    //       case 'media': $icon='folder';$class=""; break;
+    //       case 'table': $class='';
+    //       default: $icon = '';
+    //     }
+    //     $sideMenu->add( array( 'name' => $item['name'], 'uri'=> $base_url.$item['uri'], 'icon' => $icon, 'class'=>$class ));
+    //   }
+    // }
     
-    $headerMenu = new Menu();
-    $headerMenu->set('view_path','admin/menu-horizontal');
-    $headerMenu->set('framework','bootstrap');
-    $headerMenu->set_current($current_uri);
-    $headerMenu->add( array( 'name' => lang('statistics'), 'uri'=> $base_url.'plugin/stats', 'icon' => 'bar-chart'));
-    $headerMenu->add( array( 'name' => lang('settings'), 'uri'=> $base_url.'show/form/tbl_site/1', 'icon' => 'cog'));
-    $headerMenu->add( array( 'name' => $user['username'], 'uri'=> $base_url.'show/form/cfg_users/'.$user['id'], 'icon' => 'user') );
-    $headerMenu->add( array( 'name' => lang('logout'), 'uri'=> $base_url.'logout', 'icon' => 'power-off' ));
-    $headerMenu->add( array( 'name' => lang('help'), 'uri'=> $base_url.'help/index', 'icon' => 'question-circle' ));
-
-    // $footerMenu = new Menu();
-    // $footerMenu->set('view_path','admin/menu-horizontal');
-    // $footerMenu->set('framework','bootstrap');
-    // $footerMenu->set_current($current_uri);
-    // $footerMenu->add( array( 'name' => lang('settings'), 'uri'=> $base_url.'show/form/tbl_site/1', 'icon' => 'cog'));
-    // $footerMenu->add( array( 'name' => lang('statistics'), 'uri'=> $base_url.'plugin/stats', 'icon' => 'bar-chart'));
-
     return array('headermenu'=>$headerMenu->render(),'sidemenu'=>$sideMenu->render());
   }
   
+  /**
+   * Vertaal menu item
+   *
+   * @param string $base_url 
+   * @param array $item 
+   * @return array
+   * @author Jan den Besten
+   */
+  private function _process_item( $base_url, $item ) {
+    $menuItem = array(
+      'name'  => $item['name'],
+      'uri'   => $base_url.str_replace('{user_id}',$this->user['id'],$item['uri']),
+      'icon'  => el('icon',$item,''),
+      'class' => el('class',$item,''),
+    );
+    return $menuItem;
+  }
+  
+  /**
+   * Vertaal menu items van config naar echte menu items
+   *
+   * @param string $base_url 
+   * @param array $items 
+   * @return array
+   * @author Jan den Besten
+   */
+  private function _process_items( $base_url, $items ) {
+    $menuItems = array();
+    foreach ($items as $key=>$item) {
+
+      if (isset($item['type'])) {
+        switch ($item['type']) {
+
+          // Seperator
+          case 'seperator':
+            $menuItems[$key] = '';
+            break;
+
+          // Split
+          case 'split':
+            $menuItems[$key] = 'split';
+            break;
+
+          // One table
+          case 'table':
+            $table = el('table',$item,$key);
+            $menuItems[$table] = $this->_process_item($base_url, array(
+              'name'  => el('name',$item,$this->ui->get($table)),
+              'uri'   => 'show/grid/'.$table,
+              'class' => el('class',$item,''),
+            ));
+            break;
+            
+          // Multiple tables
+          case 'tables':
+            $tables = $this->list_tables();
+            $tables = filter_by($tables,$item['pre']);
+            foreach ($tables as $table) {
+              if (!isset($menuItems[$table])) {
+                $menuItems[$table] = $this->_process_item($base_url, array(
+                  'name'  => $this->ui->get($table),
+                  'uri'   => 'show/grid/'.$table,
+                  'icon'  => el('icon',$item,''),
+                  'class' => el('class',$item,''),
+                ));
+              }
+            }
+            break;
+        }
+        
+      }
+      else {
+        // Just one standard item
+        $item['name'] = $this->lang($item['name']);
+        $menuItems[$key]  = $this->_process_item($base_url,$item);
+      }
+    }
+    return $menuItems;
+  }
   
   
   /**
@@ -303,6 +355,26 @@ Class cfg_admin_menu extends Data_Core {
 		}
 		return $menu;
 	}
+  
+  /**
+   * Uitbreiding op normale lang, met extra variabelen om te parsen
+   *
+   * @param string $key 
+   * @return string
+   * @author Jan den Besten
+   */
+  private function lang($key) {
+    $lang = $key;
+    switch ($key) {
+      case '{username}':
+        $lang = $this->user['username'];
+        break;
+      default:
+        $lang = lang($key);
+        break;
+    }
+    return $lang;
+  }
   
 
 }
