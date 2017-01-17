@@ -11,9 +11,11 @@
 }
 
 // Input Border color
-input, select, textarea, .mce-tinymce, .form-control, .mediapicker {
-  border-color:$gray-light!important;
-};
+.form-group.row {
+  input, select, textarea, .mce-tinymce, .form-control, .mediapicker {
+    border-color:$gray-light!important;
+  };
+}
 
 .form-group.row:not(.has-danger):hover {
   label {color:$brand-primary;}
