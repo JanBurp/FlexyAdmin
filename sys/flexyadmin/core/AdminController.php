@@ -110,24 +110,9 @@ class AdminController extends BasicController {
     $this->view_data['uri'] = $this->current_uri;
     
     // Editor stuff
-    $this->view_data['tinymceOptions'] = array(
-      'plugins'    => 'fullscreen,table',
-      'language'   => $this->flexy_auth->get_user()['str_language'],
-      'height'     => 400,
-      'menubar'    => "edit format table",
-      // 'toolbar'    => false,
-      'toolbar1'   => 'cut copy paste | undo redo | bold italic | alignleft aligncenter alignright | bullist numlist | link unlink | charmap image | code | fullscreen',
-      // 'toolbar2'   => $this->cfg->get('CFG_configurations',"str_buttons2"),
-      // 'toolbar3'   => $this->cfg->get('CFG_configurations',"str_buttons3"),
-    );
-    
-    // $formats=$this->cfg->get('CFG_configurations',"str_formats");
-    // $styles=$this->cfg->get('CFG_configurations',"str_styles");
-
-    // $this->_show_message();
-    // $this->_show_content();
-    // $this->_show_trace();
-    // $this->_show_footer();
+    $this->config->load('admin_ui',true);
+    $this->view_data['tinymceOptions'] = $this->config->get_item(array('admin_ui','wysiwyg'));
+    $this->view_data['tinymceOptions']['language'] = $this->flexy_auth->get_user()['str_language'];
   }
   
   /**
