@@ -310,7 +310,7 @@ export default {
     },
 
     isMediaThumbs : function() {
-      return (this.gridType()==='media' && this.getMediaView()==='thumbs');
+      return (this.gridType()==='media' && this.getMediaView()!=='list');
     },
     
     getMediaView : function() {
