@@ -748,11 +748,15 @@ class Flexy_auth extends Ion_auth {
    * Test of gebruiker op z'n minst in deze groep zit (of een groep die meer rechten heeft)
    * TODO: werkt nu alleen op de volgorde van groepen, wordt alleen gebruikt in AdminMenu
    *
-   * @param int $group_id 
+   * @param mixed $group_id [or group name]
    * @return bool
    * @author Jan den Besten
    */
   public function at_least_in_group( $group_id ) {
+    if (is_string($group_id)) {
+      $group_id = $this->data->table('cfg_user_groups')->select('id')->where('name',$group_id)->get_row();
+      $group_id = el('id',$group_id,false);
+    }
     $yes = FALSE;
     foreach ($this->current_user['groups'] as $id => $group) {
       if ($id<=$group_id) $yes=TRUE;
