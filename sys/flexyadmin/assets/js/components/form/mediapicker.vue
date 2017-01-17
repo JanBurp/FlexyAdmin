@@ -36,7 +36,7 @@ export default {
   data : function() {
     return {
       media : this.value,
-      choose: true,
+      choose: false,
     };
   },
   
@@ -96,7 +96,7 @@ export default {
 <template>
   <div class="mediapicker">
     <div class="mediapicker-selection">
-      <flexy-button :icon="{'plus':!choose,'chevron-up':choose}" :class="{'btn-outline-warning':!choose,'btn-outline-primary':choose}" size="xlg" @click.native="choose=!choose" />
+      <flexy-button :icon="{'plus':!choose,'chevron-up':choose}" class="btn-outline-warning" @click.native="choose=!choose" />
       <draggable :list="thumbs()" :options="draggableOptions" @end="dragEnd($event)">
         <div v-for="(img,index) in thumbs()" class="mediapicker-thumb">
           <flexy-button icon="remove" class="btn-danger" @click.native="removeMedia(index)"/>
