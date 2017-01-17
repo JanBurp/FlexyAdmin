@@ -15,37 +15,38 @@ $config['header_menu'] = array(
 $config['side_menu'] = array(
   
   'tables'=> array(
-    'tbl_menu'  => array( 'type'=>'table', 'name'=>'MENU TEST' ),
-    'tbl_links' => array( 'type'=>'table' ),
-    '-' => array( 'type'=>'seperator' ),
+    // 'tbl_menu'  => array( 'type'=>'table', 'name'=>'MENU TEST' ),
+    // 'tbl_links' => array( 'type'=>'table' ),
+    // '-' => array( 'type'=>'seperator' ),
     'tables'    => array( 'type'=>'tables', 'pre'=>'tbl', 'user_group'=>'super_admin', 'icon'=>'' ),
   ),
     
-  // 'media'=> array(
-  //   'pictures' => array( 'type'=>'media' ),
-  //   'downloads'=> array( 'type'=>'media' ),
-  // ),
-  //
-  // 'tools'=> array(
-  //   'export'   => array( 'user_group'=>'super_admin', 'name'=>'db_export',          'uri'=>'db/export',   'icon'=>'cog' ),
-  //   'import'   => array( 'user_group'=>'super_admin', 'name'=>'db_import',          'uri'=>'db/import',   'icon'=>'cog' ),
-  //   'backup'   => array( 'user_group'=>'[b_backup]',  'name'=>'db_backup',          'uri'=>'db/backup',   'icon'=>'cog' ),
-  //   'restore'  => array( 'user_group'=>'[b_backup]',  'name'=>'db_restore',         'uri'=>'db/restore',  'icon'=>'cog' ),
-  //   'search'   => array( 'user_group'=>'[b_tools]',   'name'=>'sr_search_replace',  'uri'=>'search',      'icon'=>'cog' ),
-  //   'restore'  => array( 'user_group'=>'[b_tools]',   'name'=>'fill_fill',          'uri'=>'fill',        'icon'=>'cog' ),
-  // ),
-  //
-  'res_tables'=> array(
-    'res_tables' => array( 'user_group'=>'super_admin', 'type'=>'tables', 'pre'=>'res', 'icon'=>'cloud' ),
+  'media'=> array(
+    'medias'   => array( 'type'=>'medias', 'icon'=>'folder-open' ),
+    // 'pictures' => array( 'type'=>'media', 'icon'=>'folder-open' ),
+    // 'downloads'=> array( 'type'=>'media', 'icon'=>'folder-open' ),
   ),
 
-  'cfg_tables'=> array(
-    'cfg_tables' => array( 'user_group'=>'super_admin', 'type'=>'tables', 'pre'=>'cfg', 'icon'=>'cog', 'class'=>'text-muted' ),
-    'log_tables' => array( 'user_group'=>'super_admin', 'type'=>'tables', 'pre'=>'log', 'icon'=>'bar-chart', 'class'=>'text-muted' ),
+  'tools'=> array(
+    'export'   => array( 'user_group'=>'super_admin', 'name'=>'db_export',          'uri'=>'db/export',   'icon'=>'cog', 'class'=>'text-muted' ),
+    'import'   => array( 'user_group'=>'super_admin', 'name'=>'db_import',          'uri'=>'db/import',   'icon'=>'cog', 'class'=>'text-muted' ),
+    'backup'   => array( 'user_group'=>'[b_backup]',  'name'=>'db_backup',          'uri'=>'db/backup',   'icon'=>'cog', 'class'=>'text-muted' ),
+    'restore'  => array( 'user_group'=>'[b_backup]',  'name'=>'db_restore',         'uri'=>'db/restore',  'icon'=>'cog', 'class'=>'text-muted' ),
+    'search'   => array( 'user_group'=>'[b_tools]',   'name'=>'sr_search_replace',  'uri'=>'search',      'icon'=>'cog', 'class'=>'text-muted' ),
+    'restore'  => array( 'user_group'=>'[b_tools]',   'name'=>'fill_fill',          'uri'=>'fill',        'icon'=>'cog', 'class'=>'text-muted' ),
   ),
 
   'rel_tables'=> array(
     'rel_tables' => array( 'user_group'=>'super_admin', 'type'=>'tables', 'pre'=>'rel', 'icon'=>'link' ),
+  ),
+
+  'res_tables'=> array(
+    'res_tables' => array( 'user_group'=>'super_admin', 'type'=>'tables', 'pre'=>'res', 'icon'=>'cloud' ),
+  ),
+  
+  'cfg_tables'=> array(
+    'cfg_tables' => array( 'user_group'=>'super_admin', 'type'=>'tables', 'pre'=>'cfg', 'icon'=>'cog',       'class'=>'text-muted' ),
+    'log_tables' => array( 'user_group'=>'super_admin', 'type'=>'tables', 'pre'=>'log', 'icon'=>'bar-chart', 'class'=>'text-muted' ),
   ),
   
 );
