@@ -47,9 +47,14 @@ Class cfg_admin_menu extends Data_Core {
     $sideMenu->set('view_path','admin/menu-vertical');
     $sideMenu->set('framework','bootstrap');
     $sideMenu->set_current($current_uri);
+    $first=true;
     foreach ($this->ui_config['side_menu'] as $group) {
-      $sideMenu->add_items( $this->_process_items($base_url,$group) );
-    	$sideMenu->add_split();
+      $items = $this->_process_items($base_url,$group);
+      if ($items) {
+        if (!$first) $sideMenu->add_split();
+        $sideMenu->add_items( $this->_process_items($base_url,$group) );
+      }
+      $first=false;
     }
 
     return array('headermenu'=>$headerMenu->render(),'sidemenu'=>$sideMenu->render());
@@ -84,272 +89,111 @@ Class cfg_admin_menu extends Data_Core {
   private function _process_items( $base_url, $items ) {
     $menuItems = array();
     foreach ($items as $key=>$item) {
+      if ($this->has_rights($item)) {
+        if (isset($item['type'])) {
+          switch ($item['type']) {
 
-      if (isset($item['type'])) {
-        switch ($item['type']) {
+            // Seperator
+            case 'seperator':
+              $menuItems[$key] = 'seperator';
+              break;
 
-          // Seperator
-          case 'seperator':
-            $menuItems[$key] = '';
-            break;
+            // Split
+            case 'split':
+              $menuItems[$key] = 'split';
+              break;
 
-          // Split
-          case 'split':
-            $menuItems[$key] = 'split';
-            break;
-
-          // One table
-          case 'table':
-            $table = el('table',$item,$key);
-            $menuItems[$table] = $this->_process_item($base_url, array(
-              'name'  => el('name',$item,$this->ui->get($table)),
-              'uri'   => 'show/grid/'.$table,
-              'icon'  => el('icon',$item,''),
-              'class' => el('class',$item,''),
-            ));
-            break;
+            // One table
+            case 'table':
+              $table = el('table',$item,$key);
+              $menuItems[$table] = $this->_process_item($base_url, array(
+                'name'  => el('name',$item,$this->ui->get($table)),
+                'uri'   => 'show/grid/'.$table,
+                'icon'  => el('icon',$item,''),
+                'class' => el('class',$item,''),
+              ));
+              break;
             
-          // Multiple tables
-          case 'tables':
-            $tables = $this->list_tables();
-            $tables = filter_by($tables,$item['pre']);
-            foreach ($tables as $table) {
-              if (!in_array($table,$this->hidden_tables)) {
-                if (!isset($menuItems[$table])) {
-                  $menuItems[$table] = $this->_process_item($base_url, array(
-                    'name'  => $this->ui->get($table),
-                    'uri'   => 'show/grid/'.$table,
+            // Multiple tables
+            case 'tables':
+              $tables = $this->list_tables();
+              $tables = filter_by($tables,$item['pre']);
+              foreach ($tables as $table) {
+                if (!in_array($table,$this->hidden_tables)) {
+                  if (!isset($menuItems[$table])) {
+                    $menuItems[$table] = $this->_process_item($base_url, array(
+                      'name'  => $this->ui->get($table),
+                      'uri'   => 'show/grid/'.$table,
+                      'icon'  => el('icon',$item,''),
+                      'class' => el('class',$item,''),
+                    ));
+                  }
+                }
+              }
+              break;
+
+            // Media
+            case 'media':
+              $path = el('path',$item,$key);
+              $menuItems['media_'.$path] = $this->_process_item($base_url, array(
+                'name'  => el('name',$item,$this->ui->get($path)),
+                'uri'   => 'show/media/'.$path,
+                'icon'  => el('icon',$item,''),
+                'class' => el('class',$item,''),
+              ));
+              break;
+
+            // Multiple media
+            case 'medias':
+              $medias = $this->assets->get_assets_folders(false);
+              foreach ($medias as $media) {
+                if (!isset($menuItems['media_'.$media])) {
+                  $menuItems['media_'.$media] = $this->_process_item($base_url, array(
+                    'name'  => $this->ui->get($media),
+                    'uri'   => 'show/media/'.$media,
                     'icon'  => el('icon',$item,''),
                     'class' => el('class',$item,''),
                   ));
                 }
               }
-            }
-            break;
+              break;
 
-          // Media
-          case 'media':
-            $path = el('path',$item,$key);
-            $menuItems['media_'.$path] = $this->_process_item($base_url, array(
-              'name'  => el('name',$item,$this->ui->get($path)),
-              'uri'   => 'show/media/'.$path,
-              'icon'  => el('icon',$item,''),
-              'class' => el('class',$item,''),
-            ));
-            break;
-
-          // Multiple media
-          case 'medias':
-            $medias = $this->assets->get_assets_folders(false);
-            foreach ($medias as $media) {
-              if (!isset($menuItems['media_'.$media])) {
-                $menuItems['media_'.$media] = $this->_process_item($base_url, array(
-                  'name'  => $this->ui->get($media),
-                  'uri'   => 'show/media/'.$media,
-                  'icon'  => el('icon',$item,''),
-                  'class' => el('class',$item,''),
-                ));
-              }
-            }
-            break;
-
-        }
+          }
         
-      }
-      else {
-        // Just one standard item
-        $item['name'] = $this->lang($item['name']);
-        $menuItems[$key]  = $this->_process_item($base_url,$item);
+        }
+        else {
+          // Just one standard item
+          $item['name'] = $this->lang($item['name']);
+          $menuItems[$key]  = $this->_process_item($base_url,$item);
+        }
       }
     }
+    // Cleanup redundant splits & seperators
+    end($menuItems);
+    $item=current($menuItems);
+    while ($item) {
+      if ($item=='' or $item=='seperator' or $item=='split') {
+        $key = key($menuItems);
+        unset($menuItems[$key]);
+        $item=prev($menuItems);
+      }
+      else $item=false;
+    }
+    reset($menuItems);
     return $menuItems;
   }
   
-    //
-  //   /**
-  //    * Process database result from cfg_admin_menu to a menu array
-  //    *
-  //    * @param string $db_menu
-  //    * @param string $currentMenuItem
-  //    * @return void
-  //    * @author Jan den Besten
-  //    */
-  // private function _process_menu($db_menu,$currentMenuItem="") {
-  //     $user=$this->flexy_auth->get_user();
-  //     $user_group=current(array_keys($user['groups']));
-  //
-  //     $menu=array();
-  //   foreach ($db_menu as $item) {
-  //     switch($item['str_type']) {
-  //         case 'api' :
-  //           if (!isset($item['id_user_group']) or $item['id_user_group']===0 or $item['id_user_group']>=$user_group) {
-  //             $menu[] = array(
-  //               'name'    => lang(trim($item['str_uri']   ,'_')),
-  //               'uri'     => $item['str_uri']   ,
-  //               'type'    => 'api',
-  //               'args'    => array('api'=>api_uri($item['api']),'path'=>$item['path'],'table'=>$item['table'],'str_table_where'=>$item['str_table_where'])
-  //             );
-  //           }
-  //           break;
-  //
-  //         case 'seperator' :
-  //           $menu[]=array('type'=>'seperator');
-  //           break;
-  //
-  //         case 'tools':
-  //           // Database import/export tools
-  //           if ($this->flexy_auth->is_super_admin()) {
-  //             $menu[] = array(
-  //               'name'    => lang('db_export'),
-  //               'uri'     => 'db/export',
-  //               'type'    => 'tools',
-  //               'args'    => array('api'=>api_uri('API_db_export'))
-  //             );
-  //             $menu[] = array(
-  //               'name'    => lang('db_import'),
-  //               'uri'     => 'db/import',
-  //               'type'    => 'tools',
-  //               'args'    => array('api'=>api_uri('API_db_import'))
-  //             );
-  //           }
-  //           elseif ($this->flexy_auth->can_backup()) {
-  //             $menu[] = array(
-  //               'name'    => lang('db_backup'),
-  //               'uri'     => 'db/backup',
-  //               'type'    => 'tools',
-  //               'args'    => array('api'=>api_uri('API_db_backup'))
-  //             );
-  //             $menu[] = array(
-  //               'name'    => lang('db_restore'),
-  //               'uri'     => 'db/restore',
-  //               'type'    => 'tools',
-  //               'args'    => array('api'=>api_uri('API_db_restore'))
-  //             );
-  //           }
-  //           // Search&Replace AND Bulkupload tools
-  //           if ($this->flexy_auth->can_use_tools()) {
-  //             $menu[] = array(
-  //               'name'    => lang('sr_search_replace'),
-  //               'uri'     => 'search',
-  //               'type'    => 'tools',
-  //               'args'    => array('api'=>api_uri('API_search'))
-  //             );
-  //             $menu[] = array(
-  //               'name'    => lang('fill_fill'),
-  //               'uri'     => 'fill',
-  //               'type'    => 'tools',
-  //               'args'    => array('api'=>api_uri('API_fill'))
-  //             );
-  //           }
-  //           break;
-  //
-  //         // case 'table' :
-  //         //   $uri=api_uri('API_view_grid',$item['table']);
-  //         //   $uri.='/info/'.$item['id'];
-  //         //   $menu[$uri]=array("uri"=>$uri,'name'=>$item['str_uri']   ,"class"=>'tbl '.$item['table']);
-  //         //   break;
-  //
-  //         case 'all_tbl_tables' :
-  //           $tables=$this->list_tables();
-  //           $key=array_search('tbl_site',$tables);
-  //           if ($key) unset($tables[$key]);
-  //           $menu=array_merge($menu,$this->_show_table_menu($tables,$this->config->item('TABLE_prefix')));
-  //           break;
-  //
-  //         case 'all_cfg_tables' :
-  //           $tables=$this->list_tables();
-  //           $menu=array_merge($menu,$this->_show_table_menu($tables,$this->config->item('CFG_table_prefix')));
-  //           $menu=array_merge($menu,$this->_show_table_menu($tables,$this->config->item('LOG_table_prefix')));
-  //           $menu=array_merge($menu,$this->_show_table_menu($tables,$this->config->item('REL_table_prefix')));
-  //           break;
-  //
-  //         case 'all_res_tables' :
-  //           $tables=$this->list_tables();
-  //           $menu=array_merge($menu,$this->_show_table_menu($tables,$this->config->item('RES_table_prefix')));
-  //           break;
-  //
-  //         // case 'media' :
-  //         //   $uri=api_uri('API_filemanager','show',pathencode($item['path']));
-  //         //   $menu[$uri]=array("uri"=>$uri,'name'=>$item['str_uri']   ,"class"=>'media ');
-  //         //   break;
-  //
-  //         // TODO: hier moet op een andere manier de cfg_media_info uitgelezen gaan worden
-  //         case 'all_media':
-  //           $cfg_media_info = $this->config->item('CFG_table_prefix')."_".$this->config->item('CFG_media_info');
-  //           if ($this->db->table_exists($cfg_media_info)) {
-  //             $this->db->order_by("order");
-  //             $query=$this->db->get($cfg_media_info);
-  //             foreach($query->result_array() as $mediaInfo) {
-  //               if (!isset($mediaInfo['b_visible']) or $mediaInfo['b_visible']) {
-  //                 if (!isset($mediaInfo['path']) and isset($mediaInfo['str_path'])) $mediaInfo['path']=$mediaInfo['str_path'];
-  //                 $menu[] = array(
-  //                   'name'    => $this->ui->get($mediaInfo['path']),
-  //                   'uri'     => 'show/media/'.$mediaInfo['path'],
-  //                   'type'    => 'media',
-  //                   'args'    => array('path'=>$mediaInfo['path']),
-  //                   'help'    => $this->ui->get_help($mediaInfo["path"]),
-  //                 );
-  //               }
-  //             }
-  //             $query->free_result();
-  //           }
-  //           break;
-  //
-  //     }
-  //   }
-  //
-  //     // remove first and last seperators
-  //     while ($menu[0]['type']=='seperator') { array_shift($menu); }
-  //     while ($menu[count($menu)-1]['type']=='seperator') { array_pop($menu); }
-  //   // remove double seperators
-  //   $firstSeperator=false;
-  //   foreach ($menu as $key => $item) {
-  //     $isSeperator = empty($item) or ($item['type']=='seperator');
-  //     if ($isSeperator) {
-  //       if ( ! $firstSeperator)
-  //         $firstSeperator=true;
-  //       else
-  //         unset($menu[$key]);
-  //     }
-  //     else
-  //       $firstSeperator=false;
-  //   }
-  //
-  //     return $menu;
-  // }
-  //
-  //
-  //
-  // private function _show_table_menu($tables,$type) {
-  //   $menu=array();
-  //   $tables=filter_by($tables,$type."_");
-  //   $excluded=$this->config->item('MENU_excluded');
-  //   $cfgTables=$this->cfg->get("CFG_table");
-  //   $cfgTables=filter_by($cfgTables,$type);
-  //     $cfgTables=sort_by($cfgTables,"order");
-  //     // order and show tables according to cfg_table_info
-  //   $oTables=array();
-  //   foreach ($cfgTables as $row) {
-  //     if (in_array($row["table"],$tables)) {
-  //       unset($tables[array_search($row["table"],$tables)]);
-  //         if (!isset($row['b_visible']) or $row['b_visible'])
-  //           $oTables[]=$row["table"];
-  //     }
-  //     }
-  //     $oTables=array_merge($oTables,$tables);
-  //   foreach ($oTables as $table) {
-  //       if (!in_array($table,$excluded) and $this->flexy_auth->has_rights($table)) {
-  //         $menu[]=array(
-  //           'name'    => $this->ui->get($table),
-  //           'uri'     => 'show/grid/'.$table,
-  //           'type'    => $this->types[get_prefix($table)],
-  //           'args'    => array('table' => $table),
-  //           'help'    => $this->ui->get_help($table)
-  //         );
-  //       }
-  //   }
-  //   return $menu;
-  // }
+  private function has_rights($item) {
+    // All
+    if (!isset($item['user_group'])) return true;
+    // Tools
+    if ($item['user_group']==='[b_tools]' && $this->user['rights']['tools']) return true;
+    // Backup
+    if ($item['user_group']==='[b_backup]' && $this->user['rights']['backup']) return true;
+    // Group?
+    return $this->flexy_auth->at_least_in_group( $item['user_group'] );
+  }
+  
   
   /**
    * Uitbreiding op normale lang, met extra variabelen om te parsen
