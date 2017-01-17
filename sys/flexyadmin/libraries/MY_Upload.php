@@ -189,11 +189,11 @@ class MY_Upload extends CI_Upload {
     $size = @getimagesize( $this->_CI->config->item('ASSETSFOLDER').$path.'/'.$image);
     if (isset($size[0]) and isset($size[1])) {
       if ( el('min_width',$sizes)>0 and el('min_height',$sizes)>0) {
-        return ( $size[0]>=$size['min_width'] and $size[1]>=$size['min_height'] );
+        return ( $size[0]>=$sizes['min_width'] and $size[1]>=$sizes['min_height'] );
       }
-      }
-    return true;
     }
+    return true;
+  }
   
   
   /**
