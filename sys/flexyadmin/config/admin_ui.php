@@ -15,16 +15,16 @@ $config['header_menu'] = array(
 $config['side_menu'] = array(
   
   'tables'=> array(
-    // 'tbl_menu'  => array( 'type'=>'table', 'name'=>'MENU TEST' ),
-    // 'tbl_links' => array( 'type'=>'table' ),
-    // '-' => array( 'type'=>'seperator' ),
+    'tbl_menu'  => array( 'type'=>'table' ),
+    'tbl_links' => array( 'type'=>'table' ),
+    '-' => array( 'type'=>'seperator' ),
     'tables'    => array( 'type'=>'tables', 'pre'=>'tbl', 'user_group'=>'super_admin', 'icon'=>'' ),
   ),
     
   'media'=> array(
-    'medias'   => array( 'type'=>'medias', 'icon'=>'folder-open' ),
-    // 'pictures' => array( 'type'=>'media', 'icon'=>'folder-open' ),
-    // 'downloads'=> array( 'type'=>'media', 'icon'=>'folder-open' ),
+    // 'medias'   => array( 'type'=>'medias', 'icon'=>'folder-open' ),
+    'pictures' => array( 'type'=>'media', 'icon'=>'folder-open' ),
+    'downloads'=> array( 'type'=>'media', 'icon'=>'folder-open' ),
   ),
 
   'tools'=> array(
@@ -32,8 +32,9 @@ $config['side_menu'] = array(
     'import'   => array( 'user_group'=>'super_admin', 'name'=>'db_import',          'uri'=>'db/import',   'icon'=>'cog', 'class'=>'text-muted' ),
     'backup'   => array( 'user_group'=>'[b_backup]',  'name'=>'db_backup',          'uri'=>'db/backup',   'icon'=>'cog', 'class'=>'text-muted' ),
     'restore'  => array( 'user_group'=>'[b_backup]',  'name'=>'db_restore',         'uri'=>'db/restore',  'icon'=>'cog', 'class'=>'text-muted' ),
+    '-'        => array('type'=>'seperator'),
     'search'   => array( 'user_group'=>'[b_tools]',   'name'=>'sr_search_replace',  'uri'=>'search',      'icon'=>'cog', 'class'=>'text-muted' ),
-    'restore'  => array( 'user_group'=>'[b_tools]',   'name'=>'fill_fill',          'uri'=>'fill',        'icon'=>'cog', 'class'=>'text-muted' ),
+    'fill'     => array( 'user_group'=>'[b_tools]',   'name'=>'fill_fill',          'uri'=>'fill',        'icon'=>'cog', 'class'=>'text-muted' ),
   ),
 
   'rel_tables'=> array(

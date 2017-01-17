@@ -17,6 +17,9 @@ a>.fa, .btn>.fa {margin-right:.35rem;margin-left:.35rem;}
   .nav-link.active {background-color: $brand-primary; color: $body-bg!important;}
   .nav-link:not(.active):hover, .nav-link:not(.active):focus {background-color: $gray-lighter; color: $brand-primary!important;}
 }
+.nav-item.seperator {
+  border-top:solid 2px $gray-lighter;
+}
 
 /* PAGINATION */
 .pagination-container {
