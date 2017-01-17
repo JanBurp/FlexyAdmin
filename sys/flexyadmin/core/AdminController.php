@@ -101,6 +101,7 @@ class AdminController extends BasicController {
 
     // Version
     $this->view_data['version'] = $this->version->get_version();
+    $this->view_data['build'] = $this->version->get_build();
 
     // Menus
     $menus = $this->data->table('cfg_admin_menu')->get_menus( $this->view_data['base_url'], $this->current_uri );
