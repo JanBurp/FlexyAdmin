@@ -26,7 +26,8 @@ class AdminController extends BasicController {
     $this->load->library('flexy_auth');
     $this->load->model('version');
 		$this->load->model("ui");
-		$this->load->library("menu");
+    $this->load->model("admin_menu");
+    // $this->load->library("menu");
 
 		if ( ! $this->flexy_auth->logged_in() ) {
 			redirect($this->config->item('API_login'));
@@ -104,7 +105,7 @@ class AdminController extends BasicController {
     $this->view_data['build'] = $this->version->get_build();
 
     // Menus
-    $menus = $this->data->table('cfg_admin_menu')->get_menus( $this->view_data['base_url'], $this->current_uri );
+    $menus = $this->admin_menu->get_menus( $this->view_data['base_url'], $this->current_uri );
     $this->view_data = array_merge($this->view_data,$menus);
     $this->view_data['uri'] = $this->current_uri;
     

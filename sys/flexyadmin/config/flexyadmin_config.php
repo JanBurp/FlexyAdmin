@@ -262,11 +262,6 @@ $config["CFG_"]=array(
 			"txt_help_nl"=>'<p>Instellingen voor een samengesteld menu. Heeft res_menu_result nodig.</p>',
 			"txt_help_en"=>'<p>Settings for creating an automatic menu. Needs a res_menu_result table.</p>'
 			),
-		"cfg_admin_menu"=>array(
-			"table"=>'cfg_admin_menu',
-			"txt_help_nl"=>'<p>Pas het admin menu hier aan.</p>',
-			"txt_help_en"=>'<p>Change your admin menu here.</p>'
-			),
 		"cfg_media_info"=>array(
 			"table"=>'cfg_media_info',
 			"txt_help_nl"=>'<p>Instellingen voor bestandsmappen.</p>',
@@ -382,14 +377,6 @@ $config["CFG_"]=array(
 			"table"=>'cfg_auto_menu',
 			"b_grid_add_many"=>'0',
 			"str_abstract_fields"=>'str_description',
-			"str_order_by"=>'',
-			),
-		"cfg_admin_menu"=>array(
-			"order"=>'103',
-			"table"=>'cfg_admin_menu',
-			"b_grid_add_many"=>'0',
-      'b_pagination' => '0',
-			"str_abstract_fields"=>'',
 			"str_order_by"=>'',
 			),
 		"cfg_media_info"=>array(
@@ -548,28 +535,6 @@ $config["CFG_"]=array(
 		"cfg_ui.txt_help_en"=>array(
 			"str_fieldset"=>'English'
 			),
-
-
-		"cfg_admin_menu.str_ui_name"=>array(
-			"b_editable_in_grid"=>1,
-    ),
-		"cfg_admin_menu.path"=>array(
-			"b_editable_in_grid"=>1,
-    ),
-		"cfg_admin_menu.table"=>array(
-			"b_editable_in_grid"=>1,
-    ),
-		"cfg_admin_menu.str_table_where"=>array(
-			"b_editable_in_grid"=>1,
-    ),
-		"cfg_admin_menu.str_type"=>array(
-			"field"=>'cfg_admin_menu.str_type',
- 			"b_show_in_grid"=>'1',
-			"b_show_in_form"=>'1',
-			"str_options"=>'api|tools|table|all_tbl_tables|all_cfg_tables|all_res_tables|media|all_media|seperator',
-			"b_multi_options"=>'0',
-			"str_validation_rules"=>''
- 			),
 
 		"cfg_auto_menu.str_type"=>array(
 			"field"=>'cfg_auto_menu.str_type',

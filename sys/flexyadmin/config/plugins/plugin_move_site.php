@@ -33,7 +33,6 @@ $config['truncate_demo_tables'] = array(
 );
 
 $config['merge_tables'] = array(
-  // 'cfg_admin_menu',
   // 'cfg_auto_menu',
   // 'cfg_field_info',
   'cfg_img_info',
