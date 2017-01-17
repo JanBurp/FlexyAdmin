@@ -16,6 +16,8 @@ $lang['txt_error_en']     = 'Error EN';
 // Most used extra fields
 $lang['media_photo']      = "Foto";
 $lang['medias_photos']    = "Foto's";
+$lang['media_picture']    = "Foto";
+$lang['medias_pictures']  = "Foto's";
 $lang['b_visible']        = "Zichtbaar";
 $lang['b_active']         = "Aktief";
 $lang['b_restricted']     = "Afgeschermd";
