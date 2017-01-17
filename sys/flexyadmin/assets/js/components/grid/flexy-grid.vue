@@ -89,8 +89,7 @@ export default {
       extendedTermDefault : { field:'',term:'',and:'OR',equals:'exist' },
       extendedTerm        : [],
       uploadFiles         : [],
-      uploadProgress      : {},
-      uploadStatus        : {},
+      dropUploadHover     : false,
     }
   },
   
@@ -556,11 +555,10 @@ export default {
       }
     },
     startUpload : function() {
+      this.dropUploadHover = false;
       var self = this;
       for (var i = 0; i < self.uploadFiles.length; i++) {
         var file = self.uploadFiles[i];
-        self.uploadProgress[file.name] = 10;
-        self.uploadStatus[file.name] = self.$lang.upload_status_uploading;
         var formData = new FormData();
         formData.set( 'path', self.name );
         formData.set( 'file', self.uploadFiles[i] );
@@ -723,7 +721,7 @@ export default {
 </script>
 
 <template>
-  <div class="card grid" :class="gridTypeClass()" @dragover.prevent  @drop="dropUploadFiles">
+  <div class="card grid" :class="gridTypeClass()" @dragover.prevent  @drop="dropUploadFiles" @dragover="dropUploadHover=true" @dragenter="dropUploadHover=true" @dragleave="dropUploadHover=false" @dragend="dropUploadHover=false">
     <!-- MAIN HEADER -->
     <div class="card-header">
       <h1>{{title}}</h1>
@@ -770,20 +768,6 @@ export default {
       </form>
     </div>
 
-    <!-- UPLOAD BOX -->
-    <div v-if="gridType()==='media'" class="card-block grid-upload">
-      <div class="grid-upload-dropbox"><flexy-button @click.native="newItem()" icon="plus" class="btn-warning" />{{$lang.upload_choose}}</div>
-      <input id="browsefiles" @change="addUploadFiles"  type="file" name="files[]" multiple="multiple">
-      <table class="table table-sm" v-show="uploadFiles.length < 0">
-        <thead>
-          <tr><th><flexy-button @click.native="startUpload" icon="upload" class="btn-danger" />{{$lang.upload}}</th><th>{{$lang.upload_file}}</th><th>{{$lang.upload_size}}</th><th>{{$lang.upload_progress}}</th><th>{{$lang.upload_status}}</th></tr>
-        </thead>
-        <tbody>
-          <tr v-for="(file,index) in uploadFiles"><td><flexy-button @click.native="removeUploadFile(index)" icon="remove" class="btn-outline-danger" /></td><td>{{file.name}}</td><td>{{Math.floor(file.size / 1024)}}k</td><td><progress class="progress progress-success progress-striped progress-animated" :value="uploadProgress[file.name] || 0" max="100"></td><td>{{uploadStatus[file.name]}}</td></tr>
-        </tbody>
-      </table>
-    </div>
-    
     <!-- GRID HEADERS -->
     <div class="card-block table-responsive">
       <table class="table table-bordered table-sm grid-data">
@@ -819,6 +803,17 @@ export default {
         
         <!-- GRID BODY -->
         <draggable v-if="hasData()" :list="items" element="tbody" :options="draggableOptions" @start="draggable_onStart" @end="draggable_onEnd">
+
+          <!-- UPLOAD ROW -->
+          <tr v-if="gridType()==='media'" class="grid-upload" :class="{'dropping':dropUploadHover}">
+            <td colspan="100" class="grid-upload-dropbox">
+              <flexy-button @click.native="newItem()" icon="plus" class="btn-outline-warning" />
+              <span :class="{'show':uploadFiles.length>0}" class="upload-spinner fa fa-spinner fa-pulse fa-fw"></span>
+              {{$lang.upload_choose}}
+              <input id="browsefiles" @change="addUploadFiles"  type="file" name="files[]" multiple="multiple">
+            </td>
+          </tr>
+          
           <!-- ROW -->
           <tr v-for="row in items" :data-id="row.id.value" :class="{'table-warning is-selected':isSelected(row.id.value)}" v-show="!isHiddenChild(row.id.value)" :level="rowLevel(row)" :key="row.id.value">
             <template v-for="cell in row">
