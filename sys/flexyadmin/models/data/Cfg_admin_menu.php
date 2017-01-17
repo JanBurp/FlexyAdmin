@@ -154,13 +154,13 @@ Class cfg_admin_menu extends Data_Core {
           if ($this->flexy_auth->is_super_admin()) {
             $menu[] = array(
               'name'    => lang('db_export'),
-              'uri'     => 'tools/db_export',
+              'uri'     => 'db/export',
               'type'    => 'tools',
               'args'    => array('api'=>api_uri('API_db_export'))
             );
             $menu[] = array(
               'name'    => lang('db_import'),
-              'uri'     => 'tools/db_import',
+              'uri'     => 'db/import',
               'type'    => 'tools',
               'args'    => array('api'=>api_uri('API_db_import'))
             );
@@ -168,13 +168,13 @@ Class cfg_admin_menu extends Data_Core {
           elseif ($this->flexy_auth->can_backup()) {
             $menu[] = array(
               'name'    => lang('db_backup'),
-              'uri'     => 'tools/db_backup',
+              'uri'     => 'db/backup',
               'type'    => 'tools',
               'args'    => array('api'=>api_uri('API_db_backup'))
             );
             $menu[] = array(
               'name'    => lang('db_restore'),
-              'uri'     => 'tools/db_restore',
+              'uri'     => 'db/restore',
               'type'    => 'tools',
               'args'    => array('api'=>api_uri('API_db_restore'))
             );
@@ -183,13 +183,13 @@ Class cfg_admin_menu extends Data_Core {
           if ($this->flexy_auth->can_use_tools()) {
             $menu[] = array(
               'name'    => lang('sr_search_replace'),
-              'uri'     => 'tools/search',
+              'uri'     => 'search',
               'type'    => 'tools',
               'args'    => array('api'=>api_uri('API_search'))
             );
             $menu[] = array(
               'name'    => lang('fill_fill'),
-              'uri'     => 'tools/fill',
+              'uri'     => 'fill',
               'type'    => 'tools',
               'args'    => array('api'=>api_uri('API_fill'))
             );
