@@ -32,7 +32,6 @@
 			'cfg_field_info' => array( 'key' => 'field_field' ),
 			'cfg_media_info' => array( 'key' => array('path','fields_media_fields') ),
 			'cfg_img_info'   => array( 'key' => 'path' ),
-			'cfg_admin_menu' => array( 'key' => 'id' )		
 		);
   }
 
