@@ -62,7 +62,7 @@ class Db extends AdminController {
       "filename"    => array('label'=>"Filename",'value'=>$name)
     );
 		$form->set_data($data,"Export");
-		$this->_add_content($form->render('db_export'));
+    $this->view_admin('plugins/plugin',array('title'=>'DB Export','content'=>$form->render('db_export')));
 	}
 
 	function export() {
