@@ -1,6 +1,11 @@
 /* LOGIN */
 #login-form {
-  width:20rem;margin:20% auto;box-shadow:0 0 1.25rem $gray-dark;
+  position:absolute;
+  left:50%;
+  top:30%;
+  width:20rem;
+  box-shadow:0 0 1.25rem $gray-dark;
+  transform: translate(-50%,-50%);
   h1 {text-transform:none;}
 }
 
@@ -31,7 +36,12 @@
 /* CONTENT */
 #content {margin:$font-size-root*4 0px 0px;}
 #flexy-menu-side {padding-left:0;}
-#main {padding-right:.5rem;}
+#main {
+  padding-right:.5rem;
+  >.card {margin-top:1rem}
+  >.card:first-child {margin:0}
+}
+
 
 /* SIDEBAR MENU */
 #flexy-menu-side>ul {

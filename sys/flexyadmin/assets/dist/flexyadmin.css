@@ -4247,6 +4247,9 @@ a > .fa, .btn > .fa {
   background-color: #eceeef;
   color: #696 !important; }
 
+.nav-item.seperator {
+  border-top: solid 2px #eceeef; }
+
 /* PAGINATION */
 .pagination-container {
   width: 100%;
@@ -4293,9 +4296,12 @@ a > .fa, .btn > .fa {
 
 /* LOGIN */
 #login-form {
+  position: absolute;
+  left: 50%;
+  top: 30%;
   width: 20rem;
-  margin: 20% auto;
-  box-shadow: 0 0 1.25rem #373a3c; }
+  box-shadow: 0 0 1.25rem #373a3c;
+  transform: translate(-50%, -50%); }
   #login-form h1 {
     text-transform: none; }
 
@@ -4338,6 +4344,10 @@ a > .fa, .btn > .fa {
 
 #main {
   padding-right: .5rem; }
+  #main > .card {
+    margin-top: 1rem; }
+  #main > .card:first-child {
+    margin: 0; }
 
 /* SIDEBAR MENU */
 #flexy-menu-side > ul {
