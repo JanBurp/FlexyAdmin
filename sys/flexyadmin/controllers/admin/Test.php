@@ -45,7 +45,6 @@ class Test extends MY_Controller {
     if (!IS_LOCALHOST) return;
     
     $tables = $this->data->list_tables();
-    $tables = array('cfg_admin_menu');
     foreach ($tables as $table) {
       $this->data->table( $table );
       $options_settings = $this->data->get_setting('options');

@@ -20,49 +20,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 
-# Dump of table cfg_admin_menu
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `cfg_admin_menu`;
-
-CREATE TABLE `cfg_admin_menu` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `order` smallint(6) DEFAULT '0',
-  `str_ui_name` varchar(50) DEFAULT NULL,
-  `b_visible` tinyint(1) DEFAULT '1',
-  `id_user_group` int(11) NOT NULL DEFAULT '3',
-  `str_type` varchar(20) DEFAULT NULL,
-  `api` varchar(50) DEFAULT NULL,
-  `path` varchar(50) NOT NULL,
-  `table` varchar(25) DEFAULT NULL,
-  `str_table_where` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-LOCK TABLES `cfg_admin_menu` WRITE;
-/*!40000 ALTER TABLE `cfg_admin_menu` DISABLE KEYS */;
-
-INSERT INTO `cfg_admin_menu` (`id`, `order`, `str_ui_name`, `b_visible`, `id_user_group`, `str_type`, `api`, `path`, `table`, `str_table_where`)
-VALUES
-	(1,0,'Home',1,3,'api','API_home','','',''),
-	(2,1,'Logout',1,3,'api','API_logout','','',''),
-	(3,2,'Help',1,3,'api','API_help','','',''),
-	(4,4,'# all normal tables (if user has rights)',1,3,'all_tbl_tables','','','',''),
-	(5,5,'# all media (if user has rights)',1,3,'all_media','','','',''),
-	(6,9,'# all tools (if user has rights)',1,3,'tools','','','',''),
-	(7,13,'# all config tables (if user has rights)',1,1,'all_cfg_tables','','','',''),
-	(8,3,'',1,3,'seperator','','','',''),
-	(9,6,'',1,3,'seperator','','','',''),
-	(10,10,'',1,3,'seperator','','','',''),
-	(11,7,'_stats_menu',1,3,'api','API_plugin_stats','','',''),
-	(12,8,'',1,3,'seperator','','','',''),
-	(16,11,'# all result tables (if there are any)',1,1,'all_res_tables','','','',''),
-	(17,12,'',1,1,'seperator','','','','');
-
-/*!40000 ALTER TABLE `cfg_admin_menu` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
 # Dump of table cfg_configurations
 # ------------------------------------------------------------
 

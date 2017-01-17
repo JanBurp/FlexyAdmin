@@ -18,8 +18,8 @@ class get_admin_nav extends Api_Model {
   
   public function index() {
     if (!$this->logged_in()) return $this->_result_status401();
-    
-    $menu = $this->data->table('cfg_admin_menu')->get_menu();
+    $this->load->model('admin_menu');
+    $menu = $this->admin_menu->get_menu();
     $this->result['data']=$menu;
     return $this->_result_ok();
   }
