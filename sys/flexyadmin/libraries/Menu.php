@@ -495,7 +495,7 @@ class Menu {
    * @author Jan den Besten
    */
 	public function add($item) {
-    if (empty($item)) return $this->add_seperator();
+    if (empty($item) or $item==='seperator') return $this->add_seperator();
     if ($item==='split') return $this->add_split();
 		$this->menu[$item['uri']]=$item;
     return $this;
