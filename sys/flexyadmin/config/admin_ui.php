@@ -58,7 +58,14 @@ $config['side_menu'] = array(
  * TinyMCE settings
  */
 $config['wysiwyg'] = array(
-  
+  'plugins'    => 'fullscreen,table,image,link,code',
+  'height'     => 400,
+  // 'menubar'    => "edit format table",
+  'menubar'    => false,
+  // 'toolbar'    => false,
+  'toolbar1'   => 'cut copy paste | undo redo | bold italic | alignleft aligncenter alignright | bullist numlist | link unlink | charmap image | code fullscreen',
+  // 'toolbar2'   => $this->cfg->get('CFG_configurations',"str_buttons2"),
+  // 'toolbar3'   => $this->cfg->get('CFG_configurations',"str_buttons3"),
 );
 
 
