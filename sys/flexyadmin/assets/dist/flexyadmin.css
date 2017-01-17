@@ -4319,13 +4319,15 @@ a > .fa, .btn > .fa {
   top: -1px;
   max-height: 100%;
   overflow: auto;
+  opacity: .9;
   z-index: 99999999; }
-
-.message-text {
-  width: 90%; }
-
-.message-button {
-  float: right; }
+  #messages .alert {
+    margin-bottom: .25rem;
+    padding: .5rem; }
+  #messages .message-text {
+    width: 90%; }
+  #messages .message-button {
+    float: right; }
 
 /* CONTENT */
 #content {
