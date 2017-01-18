@@ -1197,7 +1197,12 @@ Class Data_Core extends CI_Model {
       // Special fields
       $schema       = array_merge($schema, el(array('FIELDS_special',$field),$schemaform,array()) );
       // Select if there are options set
-      if (isset($info['options'])) $schema['form-type'] = 'select';
+      $options = $this->get_options($field);
+      if ($options) {
+        $schema['options']   = $options;
+        $schema['form-type'] = 'select';
+        if ($fieldPrefix==='media' or $fieldPrefix==='medias') $schema['form-type'] = 'media';
+      }
       // Extra
       $schema = array_merge($schema,$extra);
       
@@ -1398,7 +1403,6 @@ Class Data_Core extends CI_Model {
       }
     }
     
-    
     // ..._to_many opties
     if ( in_array('many_to_many',$with) or in_array('one_to_many',$with) ) {
       foreach ($with as $type) {
@@ -1428,6 +1432,11 @@ Class Data_Core extends CI_Model {
           $options[$key]['data'] = $data;
         }
       }
+    }
+    
+    // Empty?
+    foreach ($options as $key => $row) {
+      if (count($row)===1 && isset($row['field'])) $options[$key] = FALSE;
     }
     
     if ($one!==FALSE) return $options[$one];

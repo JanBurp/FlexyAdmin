@@ -156,7 +156,7 @@ Class cfg_users extends Data_Core {
    */
   public function get_options( $fields='', $with=array('many_to_many'), $as_object = TRUE ) {
     $options = parent::get_options($fields,$with,$as_object);
-    if ($this->user_id) {
+    if ($this->user_id and $options) {
       if ( array_key_exists('rel_users__groups',$options) ) {
         foreach ($options['rel_users__groups']['data'] as $key=>$option) {
           if ( !in_array($key,$this->show_groups) ) {
