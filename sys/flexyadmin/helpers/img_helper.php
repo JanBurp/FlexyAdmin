@@ -122,8 +122,8 @@ function thumb($attr) {
 		if (!isset($attr["alt"])) $attr["alt"]=$attr["src"];
 		if (!isset($attr["longdesc"])) $attr["longdesc"]='file/serve/'.$map.'/'.$filename;
     $CI=&get_instance();
-		$cachedThumb = $CI->config->item('THUMBCACHE').pathencode($attr['src']);
-		if (file_exists($cachedThumb)) $attr['src']=$cachedThumb;
+		$cachedThumb = '_media/_thumbcache/'.pathencode($attr['src']);
+		$attr['src']=$cachedThumb;
 		return img($attr);
 	}
 }
