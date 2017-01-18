@@ -12,18 +12,17 @@
  * 
  * - `table`                    // De tabel waar de record van wordt opgevraagd.
  * - `where`                    // Hiermee wordt bepaald welk record wordt opgevraagd.
- * - `options`                  // Hiermee worden opties voor velden toegevoegd (zoals dropdowns etc)
- * - `schemaform`               // Als TRUE dan wordt een json schemaform van het formulier toegevoegd (zie http://schemaform.io)
+ * - `[as_form=FALSE]`          // Als `TRUE`, dan wordt de data als specifiek form formaat teruggegeven zoals het de backend van de CMS wordt getoond.
  * - `[settings=FALSE]`         // Instellingen van de gevraagde tabel
  * 
  * ###Voorbeelden:
  * 
  * - `_api/row?table=tbl_menu&where=3`
- * - `_api/row?table=tbl_menu&where=10&options=true`
+ * - `_api/row?table=tbl_menu&where=10`
  * 
  * ###Response:
  * 
- * Voorbeeld response (dump) van `_api/table?row=tbl_menu&where=3&options=true&schemaform=true`:
+ * Voorbeeld response (dump) van `_api/table?row=tbl_menu&where=3`:
  * 
  *     [success] => TRUE
  *     [test] => TRUE
@@ -31,10 +30,6 @@
  *       [table] => 'tbl_menu'
  *       [where] => '3'
  *       [type] => 'GET'
- *      )
- *     [options] => (
- *      )
- *     [schemaform] => (
  *      )
  *     [data] => (
  *       [id] => '3'
@@ -98,7 +93,6 @@
  * - `table`                    // De tabel waar de record aan wordt toegevoegd.
  * - `where`                    // Bepaal hiermee welk record moet worden aangepast
  * - `data`                     // De aangepaste data (hoeft niet compleet, alleen de aan te passen velden meegeven is genoeg).
- * - `[options=FALSE]`          // Als `TRUE`, dan worden de mogelijke waarden van velden meegegeven.
  * - `[settings=FALSE]`         // Instellingen van de gevraagde tabel
  * 
  * ###Voorbeeld:
@@ -214,9 +208,9 @@ class Row extends Api_Model {
     // GET
     if ($this->args['type']=='GET') {
       $this->result['data']=$this->_get_row();
-      if (el('schemaform',$this->args,false)==true) {
-        $this->result['schemaform'] = $this->data->schemaform( $this->result['data'],el('table',$this->args) );
-      }
+      // if (el('schemaform',$this->args,false)==true) {
+      //   $this->result['schemaform'] = $this->data->schemaform( $this->result['data'],el('table',$this->args) );
+      // }
       return $this->_result_ok();
     }
 
@@ -257,7 +251,12 @@ class Row extends Api_Model {
     $args=$this->_clean_args(array('table','where'));
     $this->data->table( $args['table'] );
     if (!isset($args['where'])) $args['where']=null;
-    $values = $this->data->get_row( $args['where'] );
+    if (el('as_form',$this->args,false)) {
+      $values = $this->data->get_form( $args['where'] );
+    }
+    else {
+      $values = $this->data->get_row( $args['where'] );
+    }
     $this->info=$this->data->get_query_info();
     return $values;
   }

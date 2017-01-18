@@ -105,24 +105,26 @@ class Show extends AdminController {
       
     // Data
     $this->data->table($name);
-    $data = $this->data->get_form($id);
-    
-    $options = $this->data->get_options();
+    $api = 'row';
+    // $data = $this->data->get_form($id);
+    // $options = $this->data->get_options();
+
     // Fields
-    $fields = $this->_prepareFields('form_set',$options);
-    $fieldsets = $this->data->get_setting(array('form_set','fieldsets'));
-    $fieldsetsKeys = $this->ui->get(array_keys($fieldsets));
-    $fieldsets = array_combine($fieldsetsKeys,$fieldsets);
+    // $fields = $this->_prepareFields('form_set',$options);
+    // $fieldsets = $this->data->get_setting(array('form_set','fieldsets'));
+    // $fieldsetsKeys = $this->ui->get(array_keys($fieldsets));
+    // $fieldsets = array_combine($fieldsetsKeys,$fieldsets);
     
     // Show form
     $form = array(
-      'title'     => $this->ui->get($name),
       'name'      => $name,
+      'title'     => $this->ui->get($name),
       'id'        => $id,
-      'fields'    => $fields,
-      'fieldsets' => $fieldsets,
-      'data'      => $data,
-      'options'   => $options,
+      'api'       => $api
+      // 'fields'    => $fields,
+      // 'fieldsets' => $fieldsets,
+      // 'data'      => $data,
+      // 'options'   => $options,
     );
 	  $this->view_admin( 'vue/form', $form );
 	}
@@ -141,11 +143,11 @@ class Show extends AdminController {
 
     foreach ($fields as $field => $info) {
       $fields[$field] = array(
-        'name'    => $this->ui->get($field),
+        // 'name'    => $this->ui->get($field),
         'schema'  => $this->_getSchema($field,el($field,$options))
       );
       if ($validation = $this->data->get_setting(array('field_info',$field,'validation'))) $fields[$field]['schema']['validation'] = implode('|',$validation);
-      if ($path = $this->data->get_setting(array('field_info',$field,'path'))) $fields[$field]['path'] = $path;
+      // if ($path = $this->data->get_setting(array('field_info',$field,'path'))) $fields[$field]['path'] = $path;
       // $fields[$field] = array_merge($fields[$field],$extra);
     }
     if (empty($fields)) {
