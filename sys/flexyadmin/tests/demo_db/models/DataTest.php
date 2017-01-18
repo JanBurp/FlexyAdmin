@@ -419,6 +419,26 @@ class DataTest extends CITestCase {
     $row=current($result);
     $keys = array_keys($row);
     $this->assertEquals( array( 'id', 'str_username', 'gpw_password', 'email_email', 'ip_address', 'salt', 'activation_code', 'forgotten_password_code', 'forgotten_password_time', 'remember_code', 'created_on', 'last_login', 'b_active', 'str_language', 'str_filemanager_view', 'rel_users__groups' ), $keys );
+
+
+    // Users resultaat zoals in admin
+    $result = $this->CI->data->table( 'cfg_users' )->get_grid();
+    // data, klopt num_rows & num_fields?
+    $this->assertEquals( 3, $this->CI->data->num_rows() );
+    $this->assertEquals( 6, $this->CI->data->num_fields() );
+    // kloppen keys in row?
+    $row=current($result);
+    $keys = array_keys($row);
+    $this->assertEquals( array( 'id', 'str_username', 'rel_users__groups', 'email_email', 'str_language', 'b_active' ), $keys );
+
+    // Users resultaat zoals in admin
+    $result = $this->CI->data->table( 'cfg_users' )->get_form();
+    // data, klopt num_rows & num_fields?
+    $this->assertEquals( 3, $this->CI->data->num_rows() );
+    $this->assertEquals( 6, $this->CI->data->num_fields() );
+    // kloppen keys in row?
+    $keys = array_keys($row);
+    $this->assertEquals( array( 'id', 'str_username', 'rel_users__groups', 'email_email', 'str_language', 'b_active' ), $keys );
   }
 
  
