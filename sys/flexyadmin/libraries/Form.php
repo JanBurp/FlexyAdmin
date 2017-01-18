@@ -1013,6 +1013,7 @@ class Form {
 				// Show images if it is an image dropdown
 				//
 				if ($field["type"]=="image_dropdown" or $field["type"]=="image_dragndrop") {
+          $field['path'] = remove_assets($field['path']);
 					// show values
 					if (!is_array($value)) $medias=array($value); else $medias=$value;
 					$field['control'].='<ul class="values '.$attr['class'].'">';

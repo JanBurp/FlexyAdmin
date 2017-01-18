@@ -3691,11 +3691,16 @@ Class Data_Core extends CI_Model {
       $this_foreign_key  = $this->settings['relations']['many_to_many'][$what]['this_key'];
       $other_foreign_key = $this->settings['relations']['many_to_many'][$what]['other_key'];
       $as                = $this->settings['relations']['many_to_many'][$what]['result_name'];
+      $sub_as            = '_'.$as.'_';
       // Select fields
       $this->_select_with_fields( 'many_to_many', $other_table, $as, $fields, '', $json );
       // Joins
-      $this->join( $rel_table.' AS '.$what,    $this_table.'.'.$id.' = '.$what.".".$this_foreign_key,     'left');
-      $this->join( $other_table,  $what. '.'.$other_foreign_key.' = '.$other_table.".".$id,  'left');
+      // $this->join( $rel_table.' AS '.$what,    $this_table.'.'.$id.' = '.$what.".".$this_foreign_key,     'left');
+      // $this->join( $other_table,  $what.'.'.$other_foreign_key.' = '.$other_table.".".$id,  'left');
+      $this->join( $rel_table.' AS '.$sub_as, $this_table.'.'.$id.' = '.$sub_as.".".$this_foreign_key, 'left');
+      $this->join( $other_table.' AS '.$as,   $sub_as.'.'.$other_foreign_key.' = '.$as.".".$id, 'left');
+      // $this->join( $rel_table.' AS '.'_'.$as,    $this_table.'.'.$id.' = '.'_'.$as.".".$this_foreign_key,     'left');
+      // $this->join( $other_table.' AS '.$as,  $rel_table.'.'.$other_foreign_key.' = '.$as.".".$id,  'left');
     }
     return $this;
   }
@@ -3764,8 +3769,8 @@ Class Data_Core extends CI_Model {
           'type'        => $field_type,
           'add_slashes' => !in_array($field_type, $this->config->item('FIELDS_number_fields')) and !in_array($field_type, $this->config->item('FIELDS_bool_fields')),
           'field'       => $field,
-          'select'      => '`' . ( $type==='many_to_many' ? $other_table : $as_table) . '`.`'.$field.'`',
-          // 'select'      => '`' . $as_table . '`.`'.$field.'`',
+          'select'      => '`' . $as_table . '`.`'.$field.'`',
+          // 'select'      => '`' . ( $type==='many_to_many' ? $other_table : $as_table) . '`.`'.$field.'`',
         );
       }
       // trace_($select_fields);
