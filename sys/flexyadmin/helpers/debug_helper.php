@@ -184,9 +184,10 @@ function trace_sql($sql) {
 function nice_sql($sql,$eol="\n") {
   $sql = preg_replace("/(SELECT)\s/uis", "$1$eol", $sql,1);
   $sql = str_replace("`, ", "`, $eol", $sql);
-  $sql = preg_replace("/(FROM)\s/uis", "$eol$1 ", $sql,1);
+  $sql = preg_replace("/(FROM)\s/uis", "$eol$eol$1 ", $sql,1);
   $sql = substr_replace( $sql,$eol."ORDER",strrpos($sql,'ORDER'),'5');
-  $sql = preg_replace("/(WHERE|SET|LEFT|RIGHT|GROUP)\s/uis", $eol."$1 ", $sql);
+  $sql = preg_replace("/(WHERE)\s/uis", $eol.$eol."$1 ", $sql,1);
+  $sql = preg_replace("/(SET|LEFT|RIGHT|GROUP)\s/uis", $eol.$eol."$1 ", $sql);
   return $sql;
 }
 
