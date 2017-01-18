@@ -181,12 +181,12 @@ function trace_sql($sql) {
   echo "<pre contenteditable=\"true\" class=\"_trace\">".highlight_code($sql)."</pre>";
 }
 
-function nice_sql($sql) {
-  $sql = preg_replace("/(SELECT)\s/uis", "$1\n", $sql,1);
-  $sql = str_replace("`, ", "`, \n", $sql);
-  $sql = preg_replace("/(FROM)\s/uis", "\n$1 ", $sql,1);
-  $sql = substr_replace( $sql,"\nORDER",strrpos($sql,'ORDER'),'5');
-  $sql = preg_replace("/(WHERE|SET|LEFT|RIGHT|GROUP)\s/uis", "\n$1 ", $sql);
+function nice_sql($sql,$eol="\n") {
+  $sql = preg_replace("/(SELECT)\s/uis", "$1$eol", $sql,1);
+  $sql = str_replace("`, ", "`, $eol", $sql);
+  $sql = preg_replace("/(FROM)\s/uis", "$eol$1 ", $sql,1);
+  $sql = substr_replace( $sql,$eol."ORDER",strrpos($sql,'ORDER'),'5');
+  $sql = preg_replace("/(WHERE|SET|LEFT|RIGHT|GROUP)\s/uis", $eol."$1 ", $sql);
   return $sql;
 }
 
