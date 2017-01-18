@@ -24,7 +24,7 @@ $config['relations'] = array(
 
 $config['grid_set'] = array(
   'fields'    => array( 'id','str_username', 'rel_users__groups', 'email_email', 'str_language','b_active'),
-  'order_by'  => 'cfg_user_groups.id, str_username',
+  'order_by'  => 'rel_users__groups.id, str_username',
   'with'      => array( 'many_to_many' => array('rel_users__groups'=>'abstract') ),
 );
 
