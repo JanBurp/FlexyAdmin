@@ -3694,8 +3694,12 @@ Class Data_Core extends CI_Model {
       // Select fields
       $this->_select_with_fields( 'many_to_many', $other_table, $as, $fields, '', $json );
       // Joins
-      $this->join( $rel_table.' AS '.$what,    $this_table.'.'.$id.' = '.$what.".".$this_foreign_key,     'left');
-      $this->join( $other_table,  $what. '.'.$other_foreign_key.' = '.$other_table.".".$id,  'left');
+      // $this->join( $rel_table.' AS '.$what,    $this_table.'.'.$id.' = '.$what.".".$this_foreign_key,     'left');
+      // $this->join( $other_table,  $what.'.'.$other_foreign_key.' = '.$other_table.".".$id,  'left');
+      $this->join( $rel_table.' AS '.$as,    $this_table.'.'.$id.' = '.$as.".".$this_foreign_key,     'left');
+      $this->join( $other_table,  $as.'.'.$other_foreign_key.' = '.$other_table.".".$id,  'left');
+      // $this->join( $rel_table.' AS '.'_'.$as,    $this_table.'.'.$id.' = '.'_'.$as.".".$this_foreign_key,     'left');
+      // $this->join( $other_table.' AS '.$as,  $rel_table.'.'.$other_foreign_key.' = '.$as.".".$id,  'left');
     }
     return $this;
   }
