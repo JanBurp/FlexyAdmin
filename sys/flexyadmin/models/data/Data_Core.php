@@ -45,6 +45,11 @@ Class Data_Core extends CI_Model {
 
 
   /**
+   * Set off while developing
+   */
+  private $settings_cachning = TRUE;
+
+  /**
    * Testing this
    */
   private $caching = FALSE;
@@ -286,7 +291,7 @@ Class Data_Core extends CI_Model {
         // Test of de noodzakelijke settings zijn ingesteld, zo niet doe de rest automatisch
         $this->_autoset( );
       }
-      $this->cache->save('data_settings_'.$table, $this->settings, TIME_YEAR );
+      if ($this->settings_cachning) $this->cache->save('data_settings_'.$table, $this->settings, TIME_YEAR );
     }
     // if ($table==='tbl_links')  trace_($this->settings['abstract_fields']);
     return $this->settings;
@@ -3728,12 +3733,12 @@ Class Data_Core extends CI_Model {
     }
     elseif ( $fields === 'abstract' ) {
       $abstract_fields = $this->get_other_table_abstract_fields( $other_table );
-      if ($type=='many_to_many') {
-        $abstract = $this->get_compiled_abstract_select( $other_table, $abstract_fields, $as_table.'.' );
-      }
-      else {
+      // if ($type=='many_to_many') {
+      //   $abstract = $this->get_compiled_abstract_select( $other_table, $abstract_fields, $as_table.'.' );
+      // }
+      // else {
         $abstract = $this->get_compiled_abstract_select( $as_table, $abstract_fields, $as_table.'.' );
-      }
+      // }
     }
     
     //
@@ -3749,10 +3754,11 @@ Class Data_Core extends CI_Model {
         // Als geen JSON, voeg dan ook de primary_key erbij (behalve bij many_to_one, daar is die al bekend)
         if ($type!=='many_to_one' ) {
           $other_primary_key = $this->get_other_table_setting( $other_table, 'primary_key', PRIMARY_KEY);
-          $select = '`'.$other_table.'`.`'.$other_primary_key.'` AS `'.$as_table.'.'.$other_primary_key.'`, '.$select;
+          $select = '`'.$as_table.'`.`'.$other_primary_key.'` AS `'.$as_table.'.'.$other_primary_key.'`, '.$select;
         }
       }
     }
+    
     //
     // SELECT anderen
     //
@@ -3773,7 +3779,6 @@ Class Data_Core extends CI_Model {
           // 'select'      => '`' . ( $type==='many_to_many' ? $other_table : $as_table) . '`.`'.$field.'`',
         );
       }
-      // trace_($select_fields);
       
       // SELECT normaal
       if (!$json) {
