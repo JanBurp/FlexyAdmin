@@ -22,12 +22,13 @@ export default {
   props:{
     'title':String,
     'name':String,
-    'path':String,
     'primary':Number,
-    'fields':[Object,Array],
-    'fieldsets':[Object,Array],
-    'data':[Object,Array],
-    'options':[Object,Array],
+    'api':String,
+    // 'path':String,
+    // 'fields':[Object,Array],
+    // 'fieldsets':[Object,Array],
+    // 'data':[Object,Array],
+    // 'options':[Object,Array],
   },
   
   computed : {
@@ -58,23 +59,58 @@ export default {
   data : function() {
     return {
       row : {},
+      fields : {},
+      fieldsets: {},
       validationErrors : {},
       isSaving : false,
       tinymceOptions : {},
     }
   },
-  // Make copy of props.data
+  
   created : function() {
-    this.row = this.data;
+    // settings
     this.tinymceOptions = JSON.parse(_flexy.tinymceOptions);
+    // Load Form
+    this.reloadForm();
   },
   
   methods:{
     
+    reloadForm : function(apiParts) {
+      var self = this;
+      flexyState.api({
+        url       : self.apiUrl(apiParts),
+      })
+      .then(function(response){
+        if (!_.isUndefined(response.data)) {
+          if (response.data.success) {
+            // Zijn er settings meegekomen?
+            if ( !_.isUndefined(response.data.settings) ) {
+              self.fields = response.data.settings.field_info;
+              self.fieldsets = response.data.settings.fieldsets;
+            }
+            // Data en die aanvullen met data
+            self.row = response.data.data;
+          }
+        }
+        return response;
+      });
+    },
+    
+    apiUrl : function(parts) {
+      parts = _.extend( this.apiParts, parts );
+      this.apiParts = parts;
+      var url = this.api + '?table='+this.name + '&where='+this.primary + '&as_form=true&settings=field_info|form_set.fieldsets';
+      return url;
+    },
+    
+    label : function(field) {
+      if (_.isUndefined(this.fields[field])) return field;
+      return this.fields[field].schema['name'];
+    },
+        
     isType : function( type,field ) {
-      
       if (_.isUndefined(this.fields[field])) return false;
-      
       if (type==='default') {
         return this.fieldTypes['default'].indexOf(this.fields[field].schema['form-type']) === -1;
       }
@@ -83,7 +119,8 @@ export default {
     
     isMultiple : function( field ) {
       var multiple = false;
-      if (this.options[field].multiple) multiple='multiple';
+      if (_.isUndefined(this.fields[field])) return false;
+      if (this.fields[field].schema.options.multiple) multiple='multiple';
       if (flexyState.debug) console.log('isMultiple',field,multiple);
       return multiple;
     },
@@ -266,7 +303,7 @@ export default {
           
             <div class="form-group row" :class="validationClass(field)">
               <div v-if="validationErrors[field]" class="validation-error form-text text-danger">{{validationErrors[field]}}</div>
-              <label class="col-md-3 form-control-label" :for="field">{{fields[field]['name']}}</label>
+              <label class="col-md-3 form-control-label" :for="field">{{label(field)}}</label>
               <div class="col-md-9">
 
                 <template v-if="isType('textarea',field)">
@@ -306,13 +343,13 @@ export default {
 
                 <template v-if="isType('mediapicker',field)">
                   <!-- Mediapiacker -->
-                  <mediapicker :id="field" :name="field" :value="row[field]" :path="options[field].path" v-on:input="updateField(field,$event)"></mediapicker>
+                  <mediapicker :id="field" :name="field" :value="row[field]" :path="fields[field].path" v-on:input="updateField(field,$event)"></mediapicker>
                 </template>
 
                 <template v-if="isType('select',field)">
                   <!-- Select -->
                   <select class="form-control" :id="field" :name="field" :value="row[field]" v-on:input="updateSelect(field,$event.target.selectedOptions)" :multiple="isMultiple(field)">
-                    <option v-for="option in options[field]['data']" :value="option.value" :selected="isSelectedOption(field,row[field],option.value)" :style="selectStyle(field,option.value)">{{option.name}}</option>
+                    <option v-for="option in fields[field].schema.options.data" :value="option.value" :selected="isSelectedOption(field,row[field],option.value)" :style="selectStyle(field,option.value)">{{option.name}}</option>
                   </select>
                 </template>
               

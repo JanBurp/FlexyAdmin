@@ -182,8 +182,12 @@ class Api_Model extends CI_Model {
 
     // Add settings
     if (el('settings',$this->args,false) and isset($this->args['table'])) {
+
+      // Init table & settings
       $this->data->table($this->args['table']);
       $this->data->add_schemaform_info();
+      
+      // Haal alle gevraagde settings op (enkele afzonderlijk, of alles)
       if ( $this->args['settings']!==true and $this->args['settings']!=='true') {
         $this->result['settings'] = array();
         $types = explode('|',$this->args['settings']);
@@ -196,9 +200,9 @@ class Api_Model extends CI_Model {
         $this->result['settings'] = $this->data->get_settings();
       }
       
-      // Alleen field_info van gevraagde velden
+      // Alleen field_info van gevraagde velden & Voeg er extra data aantoe (UIname,options etc)
       if (isset($this->result['settings']['field_info'])) {
-        if ($this->args['as_grid']) {
+        if (el('as_grid',$this->args,false)) {
           $fields = $this->data->get_setting(array('grid_set','fields'));
         }
         elseif ($this->args['table']==='res_assets' and $this->args['path']) {
@@ -212,6 +216,16 @@ class Api_Model extends CI_Model {
         $this->result['settings']['field_info'] = array_keep_keys($this->result['settings']['field_info'],$fields);
         $this->result['settings']['field_info'] = sort_keys($this->result['settings']['field_info'],$fields);
       }
+      
+      // Prepare fieldsets
+      if (isset($this->result['settings']['form_set.fieldsets'])) {
+        $fieldsets = $this->result['settings']['form_set.fieldsets'];
+        $fieldsetsKeys = $this->ui->get(array_keys($fieldsets));
+        $fieldsets = array_combine($fieldsetsKeys,$fieldsets);
+        $this->result['settings']['fieldsets'] = $fieldsets;
+        if (isset($this->result['settings']['form_set.fieldsets'])) unset($this->result['settings']['form_set.fieldsets']);
+      }
+      
     }
 
     // Prepare end result
@@ -243,9 +257,6 @@ class Api_Model extends CI_Model {
     
     // Add info
     if (isset($this->info) and $this->info) $this->result['info']=$this->info;
-    
-    // // Add options
-    // if (isset($this->args['options'])) $this->result['options']=$this->_add_options();
     
     // Add user
     $this->result['user'] = FALSE;
