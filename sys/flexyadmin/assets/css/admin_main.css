@@ -1167,7 +1167,7 @@ body.normal_dropdowns select.image_dropdown {margin-top:0px;}
 .flexyFormField.fieldtype_medias {min-height:132px;}
 body.normal_dropdowns .flexyFormField.fieldtype_medias {
 /*  float:left;*/
-  height:200px;
+  min-height:200px;
 }
 
 .flexyFormField .flash,
