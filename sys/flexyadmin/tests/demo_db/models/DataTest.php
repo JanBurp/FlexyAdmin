@@ -424,9 +424,9 @@ class DataTest extends CITestCase {
   public function test_many_to_many_data() {
     // tbl_groepen - abstract
     $query = $this->CI->data->table( 'tbl_groepen' )
-                                  ->select('str_title')
-                                  ->with( 'many_to_many', array('rel_groepen__adressen' => 'abstract') )
-                                  ->get();
+                              ->select('str_title')
+                              ->with( 'many_to_many', array('rel_groepen__adressen' => 'abstract') )
+                              ->get();
     $this->assertEquals( 52, $query->num_rows() );
     $this->assertEquals( 4, $query->num_fields() );
     // data, klopt num_rows & num_fields?
