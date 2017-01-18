@@ -31,9 +31,9 @@ class __ extends AdminController {
     $this->userguide  = $this->path.'/userguide/FlexyAdmin/';
     
     $this->upload_path = $_SERVER['DOCUMENT_ROOT'].$this->upload_path;
-    $doxygen = file_get_contents('userguide/doxygen.cfg');
-    $doxygen = preg_replace("/(PROJECT_NUMBER\s*=)(.*)/uim", "$1 ".$this->version->get_version().'&nbsp;('.$this->version->get_revision().')', $doxygen);
-    file_put_contents('userguide/doxygen.cfg',$doxygen);
+    // $doxygen = file_get_contents('userguide/doxygen.cfg');
+    // $doxygen = preg_replace("/(PROJECT_NUMBER\s*=)(.*)/uim", "$1 ".$this->version->get_version().'&nbsp;('.$this->version->get_revision().')', $doxygen);
+    // file_put_contents('userguide/doxygen.cfg',$doxygen);
 	}
 
 	public function index() {
