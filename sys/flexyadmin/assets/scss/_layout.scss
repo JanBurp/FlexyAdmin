@@ -9,7 +9,20 @@
   h1 {text-transform:none;}
 }
 
-.progress {position:absolute;margin:0;height:2px;border-radius:0;width:100%;}
+.progress {
+  position:absolute;
+  left:0px;
+  top:-2px;
+  height:6px;
+  margin:0;
+  border-radius:0;
+  width:100%;
+  z-index:99999999;
+}
+.progress[value] {color:$brand-danger} /* IE10 */
+.progress::-webkit-progress-bar-value {background:$brand-danger}
+.progress::-webkit-progress-value {background:$brand-danger}
+.progress::-moz-progress-bar {background:$brand-danger}
 
 /* HEADER */
 #header {
@@ -39,7 +52,7 @@
 }
 #flexy-menu-side {padding-left:0;}
 #main {
-  padding-right:.5rem;
+  padding:0 .5rem .5rem;
   >.card {margin-top:1rem}
   >.card:first-child {margin:0}
 }
