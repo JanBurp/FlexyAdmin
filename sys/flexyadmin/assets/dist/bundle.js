@@ -32705,7 +32705,7 @@ if (false) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "pagination-container"
+    staticClass: "pagination-container d-flex justify-content-between"
   }, [_c('ul', {
     staticClass: "pagination"
   }, [(_vm.current > 1 && _vm.pages > _vm.buttons) ? _c('li', {
