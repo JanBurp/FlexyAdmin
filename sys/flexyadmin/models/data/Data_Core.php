@@ -1170,63 +1170,6 @@ Class Data_Core extends CI_Model {
   }
   
   /**
-   * Voegt aan field_info in de settings, ook nog informatie uit schemaform toe
-   *
-   * @return void
-   * @author Jan den Besten
-   */
-  public function add_schemaform_info($fields=array(),$extra=array()) {
-    $this->load->model('ui');
-    $this->config->load('schemaform',true);
-    $schemaform = $this->config->item('schemaform');
-    
-    $field_info = $this->settings['field_info'];
-    // Extra velden?
-    if ($fields) {
-      $fields = array_combine($fields,$fields);
-      $field_info = array_merge($field_info,$fields);
-    }
-    foreach ($field_info as $field => $info) {
-      // Default
-      $schema = $schemaform['FIELDS_default'];
-      // UI name
-      $schema['name'] = $this->ui->get($field);
-      // from prefix
-      $fieldPrefix  = get_prefix($field);
-      $schema       = array_merge($schema, el(array('FIELDS_prefix',$fieldPrefix),$schemaform,array()) );
-      // Special fields
-      $schema       = array_merge($schema, el(array('FIELDS_special',$field),$schemaform,array()) );
-      // Select if there are options set
-      $options = $this->get_options($field);
-      if ($options) {
-        $schema['options']   = $options;
-        $schema['form-type'] = 'select';
-        if ($fieldPrefix==='media' or $fieldPrefix==='medias') $schema['form-type'] = 'media';
-      }
-      // Extra
-      $schema = array_merge($schema,$extra);
-      
-      // Cleanup
-      $schema=array_unset_keys($schema,array('grid','form','default','format' ));
-      $this->settings['field_info'][$field]['schema'] = $schema;
-    }
-    return $this;
-  }
-
-
-  /**
-   * Geeft een setting. Als deze niet bestaan dan wordt eerste geprobeerd een autoset waarde te geven, anders default [NULL].
-   *
-   * @param mixed $key een met de gevraagde key, of array van gevraagde keys
-   * @param mixed $default [null]
-   * @return mixed
-   * @author Jan den Besten
-   */
-  public function get_setting( $key, $default=null ) {
-    return el( $key, $this->settings, el( $key, $this->autoset, $default ) );
-  }
-  
-  /**
    * Geeft alle settings
    *
    * @return array
@@ -1234,6 +1177,126 @@ Class Data_Core extends CI_Model {
    */
   public function get_settings() {
     return $this->settings;
+  }
+
+  /**
+   * Geeft een gevraagde setting.
+   * - Werkt zoals el(), dus de key kan een array zijn van keys om dieper in de settings array iets op te graven
+   * - Als de gevraagde setting niet bestaat dan wordt eerste geprobeerd een autoset waarde te geven, als dat niet lukt wordt default [NULL] teruggegeven.
+   * - Als voor de gevraagde key(s) een method bestaat (get_setting_{key}) dan wordt die aangeroepen om de setting op te vragen.
+   *
+   * @param mixed $key een met de gevraagde key, of array van gevraagde keys
+   * @param mixed $default [null]
+   * @return mixed
+   * @author Jan den Besten
+   */
+  public function get_setting( $key, $default=null ) {
+    if (is_string($key) and method_exists($this,'get_setting_'.$key)) {
+      $method = 'get_setting_'.$key;
+      $arguments = func_get_args();
+      return call_user_func_array( array($this,$method), $arguments );
+    }
+    return el( $key, $this->settings, el( $key, $this->autoset, $default ) );
+  }
+  
+  
+  /**
+   * Geeft $settings['field_info'] Met alse extra:
+   * - 'name'       - de ui name van het veld
+   * - 'schema'     - informatie uit config schemaform voor het veld, eventueel aangevuld
+   * - ['options']  - Als het veld options heeft, wordt hier de informatie ingestopt
+   * - ['path']     - Als het een media veld betreft
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_setting_field_info_extended($fields=array(),$extra=array(),$include_options=FALSE) {
+    $this->load->model('ui');
+    $this->config->load('schemaform',true);
+    $schemaform = $this->config->item('schemaform');
+    
+    // Standaard velden, of meegegeven (met mogelijk extra) velden
+    if (!$fields) $fields = $this->settings['fields'];
+    $fields = array_combine($fields,$fields);
+    // Vul field_info aan met eventuele extra velden
+    $field_info = $this->settings['field_info'];
+    $field_info = array_merge($field_info,$fields);
+    // Alleen de meegegeven velden
+    $field_info = array_keep_keys($field_info,$fields);
+    
+    // Loop alle velden en vul informatie aan
+    foreach ($field_info as $field => $info) {
+      if (!is_array($info)) $info=array();
+      // UI name
+      $info['name'] = $this->ui->get($field);
+      // Schema: default
+      $schema = $schemaform['FIELDS_default'];
+      // Schema: from prefix
+      $fieldPrefix  = get_prefix($field);
+      $schema       = array_merge($schema, el(array('FIELDS_prefix',$fieldPrefix),$schemaform,array()) );
+      // Schema: from fieldname
+      $schema       = array_merge($schema, el(array('FIELDS_special',$field),$schemaform,array()) );
+      // Options
+      $options = $this->get_options($field);
+      if ($options) {
+        $schema['form-type'] = 'select';
+        if ($fieldPrefix==='media' or $fieldPrefix==='medias') {
+          $info['path']        = $options['path'];
+          $schema['form-type'] = 'media';
+          unset($options['path']);
+        }
+        if ($include_options) {
+          $options=array_keep_keys($options,array('data','multiple','api'));
+          $info['options'] = $options;
+        }
+      }
+      // Schema: Cleanup old schema keys TODO: kan wellicht weg in de toekomst
+      $schema=array_unset_keys($schema,array('grid','form','default','format' ));
+      // Extra
+      $info = array_merge($info,$extra);
+      // Stop in array
+      $info['schema'] = $schema;
+      $field_info[$field] = $info;
+    }
+    return $field_info;
+  }
+  
+  /**
+   * Geeft de grid_set settings, met als extra:
+   * - field_info_extended
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_setting_grid_set() {
+    $grid_set = el('grid_set',$this->settings);
+    $field_info = $this->get_setting_field_info_extended($grid_set['fields']);
+    $grid_set['field_info'] = $field_info;
+    return $grid_set;
+  }
+  
+  /**
+   * Geeft de form_set settings, met als extra:
+   * - field_info_extended
+   * - options
+   *
+   * @return array
+   * @author Jan den Besten
+   */
+  public function get_setting_form_set() {
+    $form_set = el('form_set',$this->settings);
+    $fields = el('fields',$form_set);
+    // Als fields niet bestaat, haal die uit de fieldsets
+    if (!$fields) {
+      $fields=array();
+      foreach($form_set['fieldsets'] as $fieldsetfields) {
+        $fields=array_merge($fields,$fieldsetfields);
+      }
+      $form_set['fields'] = $fields;
+    }
+    $field_info = $this->get_setting_field_info_extended($form_set['fields'],array(),true);
+    $form_set['field_info'] = $field_info;
+    return $form_set;
   }
   
   
@@ -2104,7 +2167,7 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   public function get_grid( $limit = 20, $offset = FALSE, $sort = '', $find = '', $where = '' ) {
-    $grid_set = $this->settings['grid_set'];
+    $grid_set = $this->get_setting_grid_set();
     
     // Select
     $this->select( $grid_set['fields'] );
@@ -2222,16 +2285,7 @@ Class Data_Core extends CI_Model {
    * @author Jan den Besten
    */
   public function get_form( $where = '' ) {
-    $form_set = $this->settings['form_set'];
-    
-    // Haal fields uit fieldset als niet gegeven
-    if (!isset($form_set['fields']) and isset($form_set['fieldsets'])) {
-      $fields=array();
-      foreach($form_set['fieldsets'] as $fieldsetfields) {
-        $fields=array_merge($fields,$fieldsetfields);
-      }
-      $form_set['fields'] = $fields;
-    }
+    $form_set = $this->get_setting_form_set();
 
     // Select
     if (empty($this->tm_select)) $this->select( $form_set['fields'] );
@@ -2252,12 +2306,6 @@ Class Data_Core extends CI_Model {
         }
       }
     }
-    
-    // Paths als menu tabel
-    // if ( $this->is_menu_table() ) {
-    //   $title_field = $this->list_fields( 'str',1 );
-    //   // $this->path( 'uri' );//->path( $title_field );
-    // }
     
     return $this->get_row( $where, 'form' );
   }
