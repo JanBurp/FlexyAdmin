@@ -45,6 +45,11 @@ Class Data_Core extends CI_Model {
 
 
   /**
+   * Set off while developing
+   */
+  private $settings_cachning = TRUE;
+
+  /**
    * Testing this
    */
   private $caching = FALSE;
@@ -286,7 +291,7 @@ Class Data_Core extends CI_Model {
         // Test of de noodzakelijke settings zijn ingesteld, zo niet doe de rest automatisch
         $this->_autoset( );
       }
-      $this->cache->save('data_settings_'.$table, $this->settings, TIME_YEAR );
+      if ($this->settings_cachning) $this->cache->save('data_settings_'.$table, $this->settings, TIME_YEAR );
     }
     // if ($table==='tbl_links')  trace_($this->settings['abstract_fields']);
     return $this->settings;
@@ -3691,13 +3696,14 @@ Class Data_Core extends CI_Model {
       $this_foreign_key  = $this->settings['relations']['many_to_many'][$what]['this_key'];
       $other_foreign_key = $this->settings['relations']['many_to_many'][$what]['other_key'];
       $as                = $this->settings['relations']['many_to_many'][$what]['result_name'];
+      $sub_as            = '_'.$as.'_';
       // Select fields
       $this->_select_with_fields( 'many_to_many', $other_table, $as, $fields, '', $json );
       // Joins
       // $this->join( $rel_table.' AS '.$what,    $this_table.'.'.$id.' = '.$what.".".$this_foreign_key,     'left');
       // $this->join( $other_table,  $what.'.'.$other_foreign_key.' = '.$other_table.".".$id,  'left');
-      $this->join( $rel_table.' AS '.$as,    $this_table.'.'.$id.' = '.$as.".".$this_foreign_key,     'left');
-      $this->join( $other_table,  $as.'.'.$other_foreign_key.' = '.$other_table.".".$id,  'left');
+      $this->join( $rel_table.' AS '.$sub_as, $this_table.'.'.$id.' = '.$sub_as.".".$this_foreign_key, 'left');
+      $this->join( $other_table.' AS '.$as,   $sub_as.'.'.$other_foreign_key.' = '.$as.".".$id, 'left');
       // $this->join( $rel_table.' AS '.'_'.$as,    $this_table.'.'.$id.' = '.'_'.$as.".".$this_foreign_key,     'left');
       // $this->join( $other_table.' AS '.$as,  $rel_table.'.'.$other_foreign_key.' = '.$as.".".$id,  'left');
     }
@@ -3727,12 +3733,12 @@ Class Data_Core extends CI_Model {
     }
     elseif ( $fields === 'abstract' ) {
       $abstract_fields = $this->get_other_table_abstract_fields( $other_table );
-      if ($type=='many_to_many') {
-        $abstract = $this->get_compiled_abstract_select( $other_table, $abstract_fields, $as_table.'.' );
-      }
-      else {
+      // if ($type=='many_to_many') {
+      //   $abstract = $this->get_compiled_abstract_select( $other_table, $abstract_fields, $as_table.'.' );
+      // }
+      // else {
         $abstract = $this->get_compiled_abstract_select( $as_table, $abstract_fields, $as_table.'.' );
-      }
+      // }
     }
     
     //
@@ -3748,10 +3754,11 @@ Class Data_Core extends CI_Model {
         // Als geen JSON, voeg dan ook de primary_key erbij (behalve bij many_to_one, daar is die al bekend)
         if ($type!=='many_to_one' ) {
           $other_primary_key = $this->get_other_table_setting( $other_table, 'primary_key', PRIMARY_KEY);
-          $select = '`'.$other_table.'`.`'.$other_primary_key.'` AS `'.$as_table.'.'.$other_primary_key.'`, '.$select;
+          $select = '`'.$as_table.'`.`'.$other_primary_key.'` AS `'.$as_table.'.'.$other_primary_key.'`, '.$select;
         }
       }
     }
+    
     //
     // SELECT anderen
     //
@@ -3768,11 +3775,10 @@ Class Data_Core extends CI_Model {
           'type'        => $field_type,
           'add_slashes' => !in_array($field_type, $this->config->item('FIELDS_number_fields')) and !in_array($field_type, $this->config->item('FIELDS_bool_fields')),
           'field'       => $field,
-          'select'      => '`' . ( $type==='many_to_many' ? $other_table : $as_table) . '`.`'.$field.'`',
-          // 'select'      => '`' . $as_table . '`.`'.$field.'`',
+          'select'      => '`' . $as_table . '`.`'.$field.'`',
+          // 'select'      => '`' . ( $type==='many_to_many' ? $other_table : $as_table) . '`.`'.$field.'`',
         );
       }
-      // trace_($select_fields);
       
       // SELECT normaal
       if (!$json) {
