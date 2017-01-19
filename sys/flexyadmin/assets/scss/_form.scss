@@ -1,13 +1,15 @@
 // Label styling
 .form-control-label {
-//  text-transform:uppercase;
   font-weight:bold;
-  padding-top:.5rem;
+  padding-top:.25rem;
   padding-bottom:0;
   margin-bottom:0;
   overflow:hidden;
   text-overflow:ellipsis;
   white-space:nowrap;
+}
+.form-control {
+  padding-bottom:.25rem;
 }
 
 // Input Border color
@@ -24,7 +26,6 @@
   };
 }
 
-
 // Background row
 .card.form {
   .form-group.row:hover {
@@ -35,16 +36,20 @@
 
 // Sizes
 .form {
-  .form-group {min-height:2.35rem;}
+//  .form-group {min-height:2.35rem;}
 }
 
 select.form-control:not([size]):not([multiple]) {
   height:auto;
 }
+.custom-select {
+  height: 2.13rem;
+  padding-top:0.5rem;
+}
 
 .form-check-input {
   margin-left:0;
-  margin-top:.75rem;
+//  margin-top:.75rem;
 }
 
 .validation-error {
@@ -64,10 +69,6 @@ textarea {
 //  max-width:100%;
 //}
 
-.custom-select {
-  height: calc(2.5rem - 1px);
-}
-
 // tinyMCE overrides
 .mce-tinymce {
   border-radius:$border-radius;
@@ -80,6 +81,7 @@ body.mce-fullscreen .mce-tinymce{
 // DatePicker overrides
 .form-control.datepicker-input {
   width:7rem;
+  margin-bottom:0;
 }
 .datepicker-popup {
   border-color:$brand-primary!important;

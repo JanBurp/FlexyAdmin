@@ -26,12 +26,11 @@
   
   
   // HEADERS
-  .card-header {
-    .form-inline .form-group {
-      margin:0;
-      min-height:0;
-    }
+  #grid-find {
+    padding-top:.4rem;
+    padding-bottom:0.1rem;
   }
+
   
   // Extended find Header
   .card-header.grid-extended-find {

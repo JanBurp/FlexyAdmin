@@ -18,7 +18,7 @@
 
 <div id="main" class="container-fluid">
 
-  <progress class="progress progress-danger progress-striped" :value="state.progress" max="100"></progress>
+  <progress class="progress" v-show="state.progress > 0" :value="state.progress" max="100"></progress>
   <flexy-messages v-show="state.messages.length > 0" :messages="state.messages"></flexy-messages>
   <flexy-modal :options="state.modal"></flexy-modal>
   

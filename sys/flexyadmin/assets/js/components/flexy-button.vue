@@ -74,16 +74,21 @@ export default {
 </script>
 
 <template>
-  <button @click="openDropdown" type="button" class="flexy-button" :class="buttonClass"><span v-if="iconComputed!==''" :class="iconClass" :disabled="buttonClass.indexOf('disabled')"></span><span v-if="text!==''">{{text}}</span></button>
+  <button @click="openDropdown" type="button" class="flexy-button" :class="buttonClass">
+    <span v-if="iconComputed!==''" :class="iconClass" :disabled="buttonClass.indexOf('disabled')"></span>
+    <span v-if="text!==''" class="flexy-button-text">{{text}}</span>
+  </button>
 </template>
 
 <style>
   .dropdown {position:absolute!important;margin-left:.35rem;}
+  .flexy-button {cursor:pointer;}
   .flexy-button.no-border {border-color:transparent;}
-  .flexy-button.btn-icon {width:1.85rem;height:1.6rem;padding:.1rem 0 1.4rem;text-align:center;}
+  .flexy-button.btn-icon {width:1.8rem;height:1.55rem;padding:.1rem 0 1rem;text-align:center;}
   .flexy-button.btn-icon.dropdown-toggle {width:3.2rem;}
   .flexy-button.btn-icon .fa {width:1rem;}
   .flexy-button.btn-text {width:auto!important;padding-right:.55rem;text-transform:uppercase;}
+  .flexy-button-text {position:relative;top:.1rem;}
 
   .flexy-button.btn-lg {width:3.25rem;height:3.15rem;padding:.5rem .5rem .5rem 0;}
   .flexy-button.btn-lg .fa {font-size:2rem;}
