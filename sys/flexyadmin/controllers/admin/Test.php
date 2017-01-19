@@ -30,14 +30,22 @@ class Test extends MY_Controller {
     $this->table->set_template($template);
 	}
   
-  public function index() {
+  public function settings() {
     if (!IS_LOCALHOST) return;
-    
-    $this->data->table( 'tbl_kinderen' );
-    $result = $this->data->get_grid();
-    
-    trace_($result);
-    
+
+    $tables = $this->data->list_tables();
+    $tables = filter_by($tables,'tbl');
+    $tables = array('tbl_menu');
+    foreach ($tables as $table) {
+      $this->data->table( $table );
+      echo h($table);
+      echo h('grid_set',3);
+      trace_( $this->data->get_setting('grid_set') );
+      echo h('form_set',3);
+      trace_( $this->data->get_setting('form_set'));
+      echo hr();
+    }
+
   }
 
 
