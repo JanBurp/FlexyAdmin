@@ -35,7 +35,7 @@ class Show extends AdminController {
     $options = object2array(json_decode($this->input->get('options')));
     $options = array_merge($default,$options);
     
-    // Data Api
+    // Api
     $this->data->table($name);
     if ($path) $name=$path;
     $api = 'table';
@@ -90,8 +90,6 @@ class Show extends AdminController {
     return $order;
   }
   
-  
-
 /**
  * This controls the form view
  *
@@ -117,68 +115,6 @@ class Show extends AdminController {
 	  $this->view_admin( 'vue/form', $form );
 	}
   
-  
-  // /**
-  //  * Geeft alle velden met nuttige informatie per veld
-  //  *
-  //  * @param string $set [grid_set|form_set]
-  //  * @return array
-  //  * @author Jan den Besten
-  //  */
-  // private function _prepareFields($set='grid_set',$options=array()) {
-  //   $fields = $this->data->get_setting(array($set,'fields'));
-  //   $fields = array_combine($fields,$fields);
-  //
-  //   foreach ($fields as $field => $info) {
-  //     $fields[$field] = array(
-  //       // 'name'    => $this->ui->get($field),
-  //       'schema'  => $this->_getSchema($field,el($field,$options))
-  //     );
-  //     if ($validation = $this->data->get_setting(array('field_info',$field,'validation'))) $fields[$field]['schema']['validation'] = implode('|',$validation);
-  //     // if ($path = $this->data->get_setting(array('field_info',$field,'path'))) $fields[$field]['path'] = $path;
-  //     // $fields[$field] = array_merge($fields[$field],$extra);
-  //   }
-  //   if (empty($fields)) {
-  //     $fields['id'] = array(
-  //       'name'  => $this->ui->get('id'),
-  //       'schema'=> $this->_getSchema('id',$options)
-  //     );
-  //   }
-  //   return $fields;
-  // }
-  //
-  //
-  //
-  // /**
-  //  * Geeft schema(form) van gegeven veld
-  //  *
-  //  * @param string $field
-  //  * @return array
-  //  * @author Jan den Besten
-  //  */
-  // private function _getSchema($field,$options) {
-  //   $schema = $this->config->item('FIELDS_default');
-  //   // from prefix
-  //   $fieldPrefix = get_prefix($field);
-  //   $cfgPrefix  = $this->config->item('FIELDS_prefix');
-  //   if ( $prefixSchema = el($fieldPrefix,$cfgPrefix) ) {
-  //     $schema = array_merge($schema,$prefixSchema);
-  //   }
-  //   // Special fields
-  //   $cfgSpecial = $this->config->item('FIELDS_special');
-  //   if ( $specialSchema = el($field,$cfgSpecial)) {
-  //     $schema = array_merge($schema,$specialSchema);
-  //   }
-  //   // Has options??
-  //   if ($options) {
-  //     $schema['form-type'] = 'select';
-  //     if ($fieldPrefix==='media' or $fieldPrefix==='medias') $schema['form-type'] = 'media';
-  //   }
-  //   // Only the needed stuff
-  //   $schema=array_unset_keys($schema,array('grid','form','default','format' )); // TODO kan (deels) weg als oude ui weg is
-  //   return $schema;
-  // }
-
 
 }
 
