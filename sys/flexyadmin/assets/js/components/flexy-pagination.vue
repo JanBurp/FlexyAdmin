@@ -1,5 +1,5 @@
 <template>
-  <div class="pagination-container">
+  <div class="pagination-container d-flex justify-content-between">
     <ul class="pagination">
       <li v-if="current>1  && pages>buttons" class="page-item"><a class="page-link" @click="jumpToPage(1)"><span class="fa fa-fast-backward"></span></a></li>
       <li v-if="current>10 && pages>buttons" class="page-item"><a class="page-link" @click="jumpToPage(current-10)"><span class="fa fa-backward"></span></a></li>
