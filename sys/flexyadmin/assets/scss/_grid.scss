@@ -122,6 +122,9 @@
      .dropdown-item {padding:.1rem 1rem .1rem .35rem;padding-left:2rem;}
      .dropdown-item.selected {padding-left:.35rem;}
    }
+   #dropdown-sort:hover, #dropdown-sort.dropdown.open {
+     .dropdown-menu {display:block;}
+   }
    
    // Table primary header
    th.grid-header-type-primary {
