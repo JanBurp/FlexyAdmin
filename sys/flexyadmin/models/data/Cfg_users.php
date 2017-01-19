@@ -157,13 +157,13 @@ Class cfg_users extends Data_Core {
   public function get_options( $fields='', $with=array('many_to_many'), $as_object = TRUE ) {
     $options = parent::get_options($fields,$with,$as_object);
     if ($this->user_id and $options) {
-      if ( array_key_exists('rel_users__groups',$options) ) {
-        foreach ($options['rel_users__groups']['data'] as $key=>$option) {
-          if ( !in_array($key,$this->show_groups) ) {
-            unset($options['rel_users__groups']['data'][$key]);
+      if (el('table',$options)==='cfg_user_groups') {
+        foreach ($options['data'] as $key=>$option) {
+          if ( !in_array($option['value'],$this->show_groups) ) {
+            unset($options['data'][$key]);
           }
         }
-        $options['rel_users__groups']['multiple'] = $this->get_setting('multiple_groups',el('multiple',$options['rel_users__groups'],FALSE));
+        $options['multiple'] = $this->get_setting('multiple_groups',FALSE);
       }
     }
     return $options;

@@ -8,7 +8,6 @@ $config['fields']   = array( 'id', 'str_username', 'gpw_password', 'email_email'
 $config['order_by'] = 'str_username,id';
 
 $config['relations'] = array(
-
   'many_to_many' => array (
     'rel_users__groups' => array(
       'this_table'  => 'cfg_users',
@@ -19,7 +18,6 @@ $config['relations'] = array(
       'result_name' => 'rel_users__groups'
     ),
   ),
-
 );
 
 $config['grid_set'] = array(

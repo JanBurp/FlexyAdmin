@@ -26,24 +26,9 @@ import accordion        from './vue-strap-src/Accordion.vue'
 import panel            from './vue-strap-src/Panel.vue'
 
 
-import VueTinymce from 'vue-tinymce'
-Vue.use(VueTinymce)
-
-
-// // TinyMCE
-// import tinymce from 'tinymce/tinymce';
-// import 'tinymce/themes/modern/theme';
-// tinymce.init({
-//   selector: 'textarea',
-// });
-
-// TinyMCE
-// tinymce.init({
-//   selector: 'textarea',
-// });
-
-
-
+// TinyMCE Global
+_flexy.tinymceOptions = JSON.parse(_flexy.tinymceOptions);
+tinymce.init( _flexy.tinymceOptions );
 
 // Language settings
 const LOCALES = {};

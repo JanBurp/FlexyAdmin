@@ -35,7 +35,7 @@ class Test extends MY_Controller {
 
     $tables = $this->data->list_tables();
     $tables = filter_by($tables,'tbl');
-    $tables = array('tbl_menu');
+    $tables = array('res_assets');
     foreach ($tables as $table) {
       $this->data->table( $table );
       echo h($table);
